@@ -1,0 +1,339 @@
+{
+  "nombre": "Repositorio Matemáticas ICFES",
+  "areas_tematicas": [
+    {
+      "id": "01",
+      "nombre": "Números Reales",
+      "pensamiento": "Pensamiento Numérico",
+      "ruta": "01-Numeros-Reales/Pensamiento-Numerico",
+      "subtemas": [
+        {
+          "nombre": "Números Racionales",
+          "ruta": "01-Numeros-Reales/Pensamiento-Numerico/01-Numeros-Racionales"
+        },
+        {
+          "nombre": "Números Irracionales",
+          "ruta": "01-Numeros-Reales/Pensamiento-Numerico/02-Numeros-Irracionales"
+        },
+        {
+          "nombre": "Números Reales",
+          "ruta": "01-Numeros-Reales/Pensamiento-Numerico/03-Numeros-Reales"
+        },
+        {
+          "nombre": "Propiedades Expresiones Decimales",
+          "ruta": "01-Numeros-Reales/Pensamiento-Numerico/04-Propiedades-Expresiones-Decimales"
+        },
+        {
+          "nombre": "Conjunto Reales Desigualdades",
+          "ruta": "01-Numeros-Reales/Pensamiento-Numerico/05-Conjunto-Reales-Desigualdades"
+        },
+        {
+          "nombre": "Valor Absoluto",
+          "ruta": "01-Numeros-Reales/Pensamiento-Numerico/06-Valor-Absoluto"
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "nombre": "Funciones",
+      "pensamiento": "Pensamiento Variacional Espacial",
+      "ruta": "02-Funciones/Pensamiento-Variacional-Espacial",
+      "subtemas": [
+        {
+          "nombre": "Concepto De Funcion, Dominio Y Recorrido",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/01-Concepto-De-Funcion_Dominio-Y-Recorrido"
+        },
+        {
+          "nombre": "Operaciones Con Funciones",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/02-Operaciones-Con-Funciones"
+        },
+        {
+          "nombre": "Composicion De Funciones",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/03-Composicion-De-Funciones"
+        },
+        {
+          "nombre": "Funciones Inyectivas, Funciones Inversas",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/04-Funciones-Inyectivas_Funciones_Inversas"
+        },
+        {
+          "nombre": "Propiedades De Las Funciones",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/05-Propiedades-De-Las-Funciones"
+        },
+        {
+          "nombre": "Funciones Pares E Impares",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/06-Funciones-Pares-E-Impares"
+        },
+        {
+          "nombre": "Funciones Periodicas",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/07-Funciones-Periodicas"
+        },
+        {
+          "nombre": "Funcion Exponencial",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/08-Funcion-Exponencial"
+        },
+        {
+          "nombre": "Funcion Logaritmica",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/09-Funcion-Logaritmica"
+        },
+        {
+          "nombre": "Traslación Y Dilatacion",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/10-Traslación-Y-Dilatacion"
+        },
+        {
+          "nombre": "Variacion Lineal Y Exponencial",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/11-Variacion-Lineal-Y-Exponencial_Razon-De-Cambio",
+          "subtemas": [
+            {
+              "nombre": "Variación Lineal Auto Viajero 09",
+              "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/11-Variacion-Lineal-Y-Exponencial_Razon-De-Cambio/Variación-Lineal-Auto-Viajero-09"
+            }
+          ]
+        },
+        {
+          "nombre": "Introduccion Al Limite De Una Sucesion",
+          "ruta": "02-Funciones/Pensamiento-Variacional-Espacial/12-Introduccion-Al-Limite-De-Una-Sucesion"
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "nombre": "Razones Trigonometricas",
+      "pensamiento": "Pensamiento Espacial Metrico Y Variacional",
+      "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional",
+      "subtemas": [
+        {
+          "nombre": "Medidas De Angulos",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/01-Medidas-De-Angulos"
+        },
+        {
+          "nombre": "Triangulos",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/02-Triangulos"
+        },
+        {
+          "nombre": "Razones Trigonometricas En Un Triangulo Rectangulo",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/03-Razones-Trigonometricas-En-Un-Triangulo-Rectangulo"
+        },
+        {
+          "nombre": "Razones Trigonometricas De Angulos Notables",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/04-Razones-Trigonometricas-De-Angulos-Notables"
+        },
+        {
+          "nombre": "Resolucion De Triangulos Rectangulos",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/05-Resolucion-De-Triangulos-Rectangulos"
+        },
+        {
+          "nombre": "Angulo De Elevacion Angulo De Depresion",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/06-Angulo-De-Elevacion_Angulo-De-Depresion"
+        },
+        {
+          "nombre": "Circunferencia Unitaria",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/07-Circunferencia-Unitaria"
+        },
+        {
+          "nombre": "Razones Trigonometricas En La Circunferencia Unitaria",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/08-Razones-Trigonometricas-En-La-Circunferencia-Unitaria"
+        },
+        {
+          "nombre": "Calculo De Razones Trigonometricas Usando Angulos De Referencia",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/09-Calculo-De-Razones-Trigonometricas-Usando-Angulos-De-Referencia"
+        },
+        {
+          "nombre": "Razones Trigonometricas Para Angulos Negativos Complementarios Y Coterminales",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/10-Razones-Trigonometricas-Para-Angulos-Negativos-Complementarios-Y-Coterminales"
+        },
+        {
+          "nombre": "Definicion De Las Funciones Trigonometricas",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/11-Definicion-De-Las-Funciones-Trigonometricas"
+        },
+        {
+          "nombre": "Teorema Del Seno",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/12-Teorema-Del-Seno"
+        },
+        {
+          "nombre": "Teorema Del Coseno",
+          "ruta": "03-Razones-Trigonometricas/Pensamiento-Espacial-Metrico-Y-Variacional/13-Teorema-Del-Coseno"
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "nombre": "Funciones Identidades Trigonometricas",
+      "pensamiento": "Pensamiento Espacial Y Variacional",
+      "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional",
+      "subtemas": [
+        {
+          "nombre": "Funcion Seno",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/01-Funcion-Seno"
+        },
+        {
+          "nombre": "Funcion Coseno",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/02-Funcion-Coseno"
+        },
+        {
+          "nombre": "Graficas De Las Funciones Sinusoidales",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/03-Graficas-De-Las-Funciones-Sinusoidales"
+        },
+        {
+          "nombre": "Funcion Tangente",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/04-Funcion-Tangente"
+        },
+        {
+          "nombre": "Funcion Cotangente",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/05-Funcion-Cotangente"
+        },
+        {
+          "nombre": "Funcion Secante",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/06-Funcion-Secante"
+        },
+        {
+          "nombre": "Funcion Cosecante",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/07-Funcion-Cosecante"
+        },
+        {
+          "nombre": "Identidades Trigonometricas Fundamentales",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/08-Identidades-Trigonometricas-Fundamentales"
+        },
+        {
+          "nombre": "Funciones Trigonometricas En Terminos De-las-Otras",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/09-Funciones-Trigonometricas-En-Terminos-De-las-Otras"
+        },
+        {
+          "nombre": "Simplificacion De Expresiones Trigonometricas",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/10-Simplificacion-De-Expresiones-Trigonometricas"
+        },
+        {
+          "nombre": "Coordenadas Polares Y Cartesianas",
+          "ruta": "04-Funciones_Identidades-Trigonometricas/Pensamiento-Espacial-Y-Variacional/11-Coordenadas-Polares-Y-Cartesianas"
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "nombre": "Geometria Analitica",
+      "pensamiento": "Pensamiento Espacial",
+      "ruta": "05-Geometria-Analitica/Pensamiento-Espacial",
+      "subtemas": [
+        {
+          "nombre": "Coordenadas Cartesianas",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/01-Coordenadas-Cartesianas"
+        },
+        {
+          "nombre": "La Linea Recta",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/02-La-Linea-Recta"
+        },
+        {
+          "nombre": "Posiciones Relativas De Dos Rectas En El Plano",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/03-Posiciones-Relativas-De-Dos-Rectas-En-El-Plano"
+        },
+        {
+          "nombre": "Secciones Conicas",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/04-Secciones-Conicas"
+        },
+        {
+          "nombre": "La Circunferencia",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/05-La-Circunferencia"
+        },
+        {
+          "nombre": "Ecuacion Canonica De La Circunferencia Con Centro En hk",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/06-Ecuacion-Canonica-De-La-Circunferencia-Con-Centro-En-hk"
+        },
+        {
+          "nombre": "Ecuacion General De La Circunferencia",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/07-Ecuacion-General-De-La-Circunferencia"
+        },
+        {
+          "nombre": "La Parabola",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/08-La-Parabola"
+        },
+        {
+          "nombre": "Ecuacion Canonica De La Parabola Con Vertice En hk",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/09-Ecuacion-Canonica-De-La-Parabola-Con-Vertice-En-hk"
+        },
+        {
+          "nombre": "Ecuacion General De La Parabola",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/10-Ecuacion-General-De-La-Parabola"
+        },
+        {
+          "nombre": "La Elipse",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/11-La-Elipse"
+        },
+        {
+          "nombre": "Ecuacion Canonica De La Elipse Con Centro En hk",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/12-Ecuacion-Canonica-De-La-Elipse-Con-Centro-En-hk"
+        },
+        {
+          "nombre": "Ecuacion General De La Elipse",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/13-Ecuacion-General-De-La-Elipse"
+        },
+        {
+          "nombre": "La Hiperbola",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/14-La-Hiperbola"
+        },
+        {
+          "nombre": "Ecuacion Canonica De La Hiperbola Con Centro En hk",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/15-Ecuacion-Canonica-De-La-Hiperbola-Con-Centro-En-hk"
+        },
+        {
+          "nombre": "Ecuacion General De La Hiperbola",
+          "ruta": "05-Geometria-Analitica/Pensamiento-Espacial/16-Ecuacion-General-De-La-Hiperbola"
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "nombre": "Estadística Y Probabilidad",
+      "pensamiento": "Pensamiento Aleatorio",
+      "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio",
+      "subtemas": [
+        {
+          "nombre": "Variables Cualitativas Distribucion De Frecuencias",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/01-Variables-Cualitativas_Distribucion-De-Frecuencias",
+          "subtemas": [
+            {
+              "nombre": "Graficos Estadisticos Adopcion Mascotas",
+              "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/01-Variables-Cualitativas_Distribucion-De-Frecuencias/Graficos_Estadisticos_Adopcion_Mascotas"
+            }
+          ]
+        },
+        {
+          "nombre": "Variables Cuantitativas Discretas Distribucion De Frecuencias",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/02-Variables-Cuantitativas-Discretas_Distribucion-De-Frecuencias"
+        },
+        {
+          "nombre": "Variables Cuantitativas Continuas Distribucion De Frecuencias",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/03-Variables-Cuantitativas-Continuas_Distribucion-De-Frecuencias"
+        },
+        {
+          "nombre": "Medidas De Tendencia Central",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/04-Medidas-De-Tendencia-Central/Media/Promedios-Borrados"
+        },
+        {
+          "nombre": "Medidas De Dispersion",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/05-Medidas-De-Dispersion"
+        },
+        {
+          "nombre": "Medidas De Posicion",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/06-Medidas-De-Posicion"
+        },
+        {
+          "nombre": "Probabilidad Principios Aditivo Y Multiplicativo",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo",
+          "subtemas": [
+            {
+              "nombre": "Diagramas de Venn",
+              "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/Diagramas de Venn/GénerosMusicales"
+            }
+          ]
+        },
+        {
+          "nombre": "Probabilidad De La Union De Sucesos",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/08-Probabilidad-De-La-Union-De-Sucesos"
+        },
+        {
+          "nombre": "Probabilidad Condicionada Independencia De Sucesos",
+          "ruta": "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos"
+        }
+      ]
+    }
+  ]
+}

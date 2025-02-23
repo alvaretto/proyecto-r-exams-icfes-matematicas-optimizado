@@ -1,0 +1,85 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r data generation, echo = FALSE, results = "hide"}
+# Generación de datos aleatorios
+library(exams)
+
+# Tiempo
+duracion <- sample(2:4, 1)  # Entre 2 y 4 horas
+
+# Distancia como múltiplo del tiempo
+rapidez <- sample(30:100, 1)  # Rapidez en km/h
+distancia <- rapidez * duracion  # Distancia es múltiplo exacto del tiempo
+
+# Posiciones
+pos_inicial <- sample(10:50, 1)  # Entre 10 y 50 km
+pos_final <- pos_inicial + distancia
+
+# Horas
+hora_inicial <- sample(6:10, 1)  # Entre 6:00 y 10:00
+hora_final <- hora_inicial + duracion
+
+# Formato de horas para mostrar
+hora_inicial_str <- sprintf("%02d:00", hora_inicial)
+hora_final_str <- sprintf("%02d:00", hora_final)
+
+# Cálculos
+tiempo <- duracion  # en horas
+
+# Modificación para introducir error en el Paso 2
+tiempo_incorrecto <- tiempo + sample(1:2, 1)  # Añadir 1 o 2 horas adicionales
+
+# Distractores para las respuestas
+distractor1 <- pos_final - pos_inicial  # Confunde distancia con rapidez
+distractor2 <- distancia %/% (hora_final - hora_inicial + 1)  # Error en tiempo
+distractor3 <- pos_inicial - pos_final  # Invierte la resta
+distractor4 <- sample(-10:10, 1)
+```
+
+Question
+========
+Se sabe que un auto viaja con rapidez constante. A las `r hora_inicial_str`, ya se ha alejado `r pos_inicial` km del pueblo donde inició su recorrido, y a las `r hora_final_str`, se encuentra a `r pos_final` km de dicho pueblo. Para calcular la rapidez media en km/h de este recorrido, se realizaron los siguientes pasos:
+
+Paso 1. Se calcula cuánta distancia se recorrió: `r pos_final` km - `r pos_inicial` km = `r distancia` km
+
+Paso 2. Se calcula el tiempo que transcurrió: `r hora_final` h - `r hora_inicial` h = `r tiempo_incorrecto` h
+
+Paso 3. Se halla el cociente entre los valores obtenidos: `r distancia` km / `r tiempo` h = `r distancia / tiempo` km/h
+
+¿En qué paso se cometió un error y por qué?
+
+Answerlist
+----------
+* En el paso 1, ya que la distancia recorrida es diferente a `r distancia` km
+* En el paso 2, ya que el tiempo transcurrido es `r hora_final` h - `r hora_inicial` h = `r tiempo` h y no `r tiempo_incorrecto` h
+* En el paso 3, ya que el cociente es `r rapidez` km/h
+* En el paso 1, ya que la distancia recorrida es `r pos_inicial` - `r pos_final` km = `r distractor3` km
+
+Solution
+========
+La respuesta correcta es 'En el paso 2, ya que el tiempo transcurrido es `r hora_final` h - `r hora_inicial` h = `r tiempo` h y no `r tiempo_incorrecto` h.'
+
+Explicación detallada:
+
+1. Análisis del Paso 1: Cálculo de la distancia
+   * Se realizó correctamente: `r pos_final` km - `r pos_inicial` km = `r distancia` km
+   * La distancia es la diferencia entre la posición final y la inicial
+
+2. Análisis del Paso 2: Cálculo del tiempo
+   * Se cometió un error: El tiempo transcurrido es `r tiempo` h, pero se calculó como `r tiempo_incorrecto` h
+   * El cálculo correcto es `r hora_final` h - `r hora_inicial` h = `r tiempo` h
+
+3. análisis del Paso 3: Cálculo de la rapidez media
+   * Basado en el tiempo correcto, el cálculo es correcto: `r rapidez` km/h
+ 
+Meta-information
+============
+exname: Rapidez Media
+extype: schoice
+exsolution: 0100
+exshuffle: TRUE

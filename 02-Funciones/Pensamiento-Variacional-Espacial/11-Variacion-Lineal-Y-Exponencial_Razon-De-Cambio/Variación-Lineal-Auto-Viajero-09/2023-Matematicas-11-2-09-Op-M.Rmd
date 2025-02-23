@@ -1,0 +1,193 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r data generation, echo = FALSE, results = "hide"}
+# Generación de datos aleatorios
+library(exams)
+
+# Tiempo
+duracion <- sample(2:6, 1)  # Entre 2 y 6 horas (aumentado el rango)
+
+# Distancia como múltiplo del tiempo
+rapidez <- sample(30:120, 1)  # Rapidez en km/h (aumentado el rango)
+distancia <- rapidez * duracion  # Distancia es múltiplo exacto del tiempo
+
+# Posiciones
+pos_inicial <- sample(10:80, 1)  # Entre 10 y 80 km (aumentado el rango)
+pos_final <- pos_inicial + distancia
+
+# Horas
+hora_inicial <- sample(6:12, 1)  # Entre 6:00 y 12:00 (aumentado el rango)
+hora_final <- hora_inicial + duracion
+
+# Formato de horas para mostrar
+hora_inicial_str <- sprintf("%02d:00", hora_inicial)
+hora_final_str <- sprintf("%02d:00", hora_final)
+
+# Cálculos
+tiempo <- duracion  # en horas
+
+# Función para generar valores incorrectos garantizados
+generar_incorrecto <- function(valor_correcto, minimo, maximo, rango_excluyente=2){
+  rango <- maximo - minimo + 1
+  incorrecto <- valor_correcto
+  
+  while(abs(incorrecto - valor_correcto) <= rango_excluyente){
+    incorrecto <- sample(minimo:maximo, 1)
+    # Asegurar que el valor incorrecto esté fuera del rango excluyente
+    if(abs(incorrecto - valor_correcto) <= rango_excluyente){
+      incorrecto <- ifelse(incorrecto > valor_correcto,
+                           sample(minimo:(valor_correcto - rango_excluyente), 1),
+                           sample((valor_correcto + rango_excluyente):maximo, 1))
+    }
+    # Asegurar que el valor sea entero
+    incorrecto <- round(incorrecto)
+  }
+  
+  # Verificación final
+  if(incorrecto == valor_correcto){
+    incorrecto <- ifelse(incorrecto > (maximo+minimo)/2,
+                         valor_correcto - rango_excluyente,
+                         valor_correcto + rango_excluyente)
+  }
+  
+  # Verificación sextuple
+  if(abs(incorrecto - valor_correcto) <= rango_excluyente){
+    incorrecto <- ifelse(incorrecto > (maximo+minimo)/2,
+                         valor_correcto - rango_excluyente*2,
+                         valor_correcto + rango_excluyente*2)
+  }
+  
+  if(abs(incorrecto - valor_correcto) <= rango_excluyente){
+    incorrecto <- ifelse(incorrecto > (maximo+minimo)/2,
+                         valor_correcto - rango_excluyente*3,
+                         valor_correcto + rango_excluyente*3)
+  }
+  
+  if(abs(incorrecto - valor_correcto) <= rango_excluyente){
+    incorrecto <- ifelse(incorrecto > (maximo+minimo)/2,
+                         valor_correcto - rango_excluyente*4,
+                         valor_correcto + rango_excluyente*4)
+  }
+  
+  if(abs(incorrecto - valor_correcto) <= rango_excluyente){
+    incorrecto <- ifelse(incorrecto > (maximo+minimo)/2,
+                         valor_correcto - rango_excluyente*5,
+                         valor_correcto + rango_excluyente*5)
+  }
+  
+  return(incorrecto)
+}
+
+# Distribución equitativa usando módulo
+# Contador global para distribución equitativa
+contador_archivo <- "contador_global.txt"
+if(file.exists(contador_archivo)){
+  contador <- as.numeric(readLines(contador_archivo))
+} else {
+  contador <- 0
+}
+contador <- contador + 1
+writeLines(as.character(contador), contador_archivo)
+
+tipo_error <- c("distancia", "tiempo", "ambos")[contador %% 3 + 1]
+
+if(tipo_error == "distancia"){
+  distancia_incorrecta <- generar_incorrecto(distancia, 100, 600, rango_excluyente=100)
+  tiempo_incorrecto <- tiempo
+} else if(tipo_error == "tiempo"){
+  tiempo_incorrecto <- generar_incorrecto(tiempo, 1, 12, rango_excluyente=6)
+  distancia_incorrecta <- distancia
+} else {
+  distancia_incorrecta <- generar_incorrecto(distancia, 100, 600, rango_excluyente=100)
+  tiempo_incorrecto <- generar_incorrecto(tiempo, 1, 12, rango_excluyente=6)
+}
+
+# Distractores para las respuestas
+distractor1 <- pos_final - pos_inicial  # Confunde distancia con rapidez
+distractor2 <- tryCatch({
+  valor <- distancia %/% (hora_final - hora_inicial + sample(c(-6,6), 1))
+  if(is.infinite(valor) || is.nan(valor) || abs(valor - distancia) < 100){
+    valor <- distancia %/% (hora_final - hora_inicial + sample(c(-7,7), 1))
+  }
+  if(abs(valor - distancia) < 100){
+    valor <- distancia %/% (hora_final - hora_inicial + sample(c(-8,8), 1))
+  }
+  round(valor)
+}, error = function(e) {
+  distancia %/% (hora_final - hora_inicial + sample(c(-8,8), 1))
+})
+
+distractor3 <- pos_inicial - pos_final  # Invierte la resta
+distractor4 <- sample(-20:20, 1)  # Aumentado el rango de distractores
+
+# Validación de distractores
+if(abs(distractor2 - distancia) < 100 || is.infinite(distractor2) || is.nan(distractor2)){
+  distractor2 <- distancia %/% (hora_final - hora_inicial + sample(c(-9,9), 1))
+}
+
+# Asegurar valores enteros
+distractor2 <- round(distractor2)
+
+# Generación de variabilidad adicional
+variaciones <- list(
+  error_distancia = distancia_incorrecta,
+  error_tiempo = tiempo_incorrecto,
+  error_rapidez = distancia_incorrecta / tiempo_incorrecto,
+  tipo_error = tipo_error
+)
+```
+
+Question
+========
+Se sabe que un auto viaja con rapidez constante. A las `r hora_inicial_str`, ya se ha alejado `r pos_inicial` km del pueblo donde inició su recorrido, y a las `r hora_final_str`, se encuentra a `r pos_final` km de dicho pueblo. Para calcular la rapidez media en km/h de este recorrido, se realizaron los siguientes pasos:
+
+Paso 1. Se calcula cuánta distancia se recorrió: `r pos_final` km - `r pos_inicial` km = `r distancia_incorrecta` km
+
+Paso 2. Se calcula el tiempo que transcurrió: `r hora_final` h - `r hora_inicial` h = `r tiempo_incorrecto` h
+
+Paso 3. Se halla el cociente entre los valores obtenidos: `r distancia_incorrecta` km / `r tiempo_incorrecto` h = `r distancia_incorrecta / tiempo_incorrecto` km/h
+
+¿En qué pasos se cometieron errores y por qué?
+
+Answerlist
+----------
+* En el paso 1, ya que la distancia recorrida es diferente a `r distancia_incorrecta` km
+* En el paso 2, ya que el tiempo transcurrido es `r hora_final` h - `r hora_inicial` h = `r tiempo` h y no `r tiempo_incorrecto` h
+* En el paso 3, ya que el cociente es `r rapidez` km/h
+* En el paso 1, ya que la distancia recorrida es `r pos_inicial` - `r pos_final` km = `r distractor3` km
+
+Solution
+========
+La respuesta correcta es:
+- `r if(variaciones$tipo_error == 'distancia') 'En el paso 1' else ''`
+- `r if(variaciones$tipo_error == 'tiempo') 'En el paso 2' else ''`
+- `r if(variaciones$tipo_error == 'ambos') 'En el paso 1 y 2' else ''`
+
+Explicación detallada:
+
+1. Análisis del Paso 1: Cálculo de la distancia
+   * Se realizó: `r pos_final` km - `r pos_inicial` km = `r distancia_incorrecta` km
+   * El cálculo correcto es: `r pos_final` km - `r pos_inicial` km = `r distancia` km
+   * `r if(variaciones$tipo_error %in% c('distancia','ambos')) 'Este paso contiene un error' else 'Este paso es correcto'`
+
+2. Análisis del Paso 2: Cálculo del tiempo
+   * Se realizó: `r hora_final` h - `r hora_inicial` h = `r tiempo_incorrecto` h
+   * El cálculo correcto es: `r hora_final` h - `r hora_inicial` h = `r tiempo` h
+   * `r if(variaciones$tipo_error %in% c('tiempo','ambos')) 'Este paso contiene un error' else 'Este paso es correcto'`
+
+3. Análisis del Paso 3: Cálculo de la rapidez media
+   * Basado en valores `r if(variaciones$tipo_error != '') 'incorrectos' else 'correctos'`
+   * El cálculo realizado fue: `r distancia_incorrecta` km / `r tiempo_incorrecto` h = `r distancia_incorrecta / tiempo_incorrecto` km/h
+   * El cálculo correcto es: `r distancia` km / `r tiempo` h = `r rapidez` km/h
+
+Meta-information
+===========
+exname: Rapidez Media
+extype: mchoice
+exsolution: `r if(variaciones$tipo_error == 'distancia') '1000' else if(variaciones$tipo_error == 'tiempo') '0100' else if(variaciones$tipo_error == 'ambos') '1100' else '0010'`
+exshuffle: TRUE

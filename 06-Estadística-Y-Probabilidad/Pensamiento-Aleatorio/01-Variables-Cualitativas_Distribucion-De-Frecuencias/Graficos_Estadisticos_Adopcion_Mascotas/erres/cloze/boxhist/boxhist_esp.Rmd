@@ -1,0 +1,107 @@
+```{r generacion de datos, echo = FALSE, results = "hide"}
+library(exams)
+
+## DATOS
+n <- sample(30:50, 1)
+m <- sample(1:4, 1)
+s <- runif(1, 0.5, 2)
+delta <- ifelse(runif(1) < 0.2, sample(8:12), 0)
+p2 <- runif(1, 0.45, 0.55)
+sesgado <- izquierda <- FALSE
+if(!delta) {
+    sesgado <- runif(1) < 0.6
+    izquierda <- runif(1) < 0.3
+}
+
+dgpDiagramaCaja <- function(n = 40, media = 0, de = 1, delta = 0,
+  p2 = 0.5, sesgado = FALSE, izquierda = FALSE)
+{
+  SK <- function(x) abs(diff(diff(fivenum(x)[2:4]))/diff(fivenum(x)[c(2, 4)]))
+  sim <- function(x){
+    x <- rnorm(n)
+    if(sesgado) exp(x) else x
+  }
+
+  x <- sim()
+  if(sesgado) while(SK(x) < 0.7) x <- sim() else while(SK(x) > 0.15) x <- sim()
+  if(izquierda) x <- -x
+
+  x <- media + de * scale(x)
+  k <- sample(1:n, round(p2 * n))
+  x[k] <- x[k] + delta
+  as.vector(sample(x))
+}
+x <- round(dgpDiagramaCaja(n = n, media = m, de = s, delta = delta, 
+  p2 = p2, sesgado = sesgado, izquierda = izquierda), digits = 2)
+
+b <- boxplot(x, plot = FALSE)
+dispersion <- tol <- signif(diff(range(c(b$stats, b$out)))/25, 1)
+
+write.csv(data.frame(x), file = "boxhist.csv", quote = FALSE, row.names = FALSE)
+
+## PREGUNTA/SOLUCIÓN
+preguntas <- soluciones <- explicaciones <- rep(list(""), 6)
+tipo <- rep(list("schoice"), 6)
+
+preguntas[[1]] <- paste("La distribución es ", c("", "_no_ "), "unimodal.", sep = "")
+soluciones[[1]] <- c(delta < 1, delta > 1)
+
+preguntas[[2]] <- paste("La distribución es", c("simétrica.", "sesgada a la derecha.", "sesgada a la izquierda."))
+soluciones[[2]] <- c(!sesgado, sesgado & !izquierda, sesgado & izquierda)
+    
+preguntas[[3]] <- paste("El diagrama de caja muestra ", c("", "_ningún_ "), "valor atípico.", sep = "")
+soluciones[[3]] <- c(length(b$out) > 0, length(b$out) < 1)
+
+preguntas[[4]] <- "¿Qué valor es menor que un cuarto de las observaciones?"
+soluciones[[4]] <- explicaciones[[4]] <- signif(b$stats[[2]], 3)
+tipo[[4]] <- "num"
+    
+preguntas[[5]] <- "¿Qué valor es mayor que un cuarto de las observaciones?"
+soluciones[[5]] <- explicaciones[[5]] <- signif(b$stats[[4]], 3)
+tipo[[5]] <- "num"
+
+preguntas[[6]] <- paste("La mitad de las observaciones son",
+  sample(c("menores", "mayores"), 1), "que ¿qué valor?")
+soluciones[[6]] <- explicaciones[[6]] <- signif(b$stats[[3]], 3)
+tipo[[6]] <- "num"
+
+explicaciones[1:3] <- lapply(soluciones[1:3], function(x) ifelse(x, "Verdadero", "Falso"))
+soluciones[1:3] <- lapply(soluciones[1:3], mchoice2string)
+if(any(explicaciones[4:6] < 0)) explicaciones[4:6] <- lapply(soluciones[4:6], function(x) paste("$", x, "$", sep = ""))
+```
+
+Question
+========
+Para las `r n` observaciones de la variable `x` en el archivo de datos
+[boxhist.csv](boxhist.csv) dibuje un histograma, un diagrama de caja y un gráfico de puntos.
+Basándose en los gráficos, responda las siguientes preguntas o marque las afirmaciones
+correctas, respectivamente. _(Comentario: La tolerancia para respuestas numéricas es
+$\pm`r tol`$, las afirmaciones verdadero/falso son o bien correctas o claramente incorrectas.)_
+
+```{r listadepreguntas, echo = FALSE, results = "asis"}
+answerlist(unlist(preguntas), markup = "markdown")
+```
+
+Solution
+========
+\
+```{r diagrama_caja_hist, echo = FALSE, results = "hide", fig.height = 4.5, fig.width = 9, fig.path = "", fig.cap = ""}
+par(mfrow = c(1, 2))
+boxplot(x, axes = FALSE)
+axis(2, at = signif(b$stats, 3), las = 1)
+box()
+hist(x, freq = FALSE, main = "")
+rug(x)
+```
+
+```{r listasoluciones, echo = FALSE, results = "asis"}
+answerlist(unlist(explicaciones), markup = "markdown")
+```
+
+Meta-information
+================
+extype: cloze
+exsolution: `r paste(soluciones, collapse = "|")`
+exclozetype: `r paste(tipo, collapse = "|")`
+exname: Diagrama de caja e histograma
+extol: `r tol`

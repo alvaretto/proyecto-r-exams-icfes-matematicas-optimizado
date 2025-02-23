@@ -1,0 +1,90 @@
+ 
+```{r, echo = FALSE, results = "hide"}
+# usar el mismo tipo de gráficos (pdf, svg, png) que la llamada actual de xweave()
+tipo <- match_exams_device()
+
+## código tikz del autómata con dos marcadores de posición
+automata <- '
+\\begin{tikzpicture}[shorten >=1pt,node distance=2cm]
+\\node[state, initial%s] (A)              {A};
+\\node[state%s]          (B) [below=of A] {B};
+\\node[state%s]          (C) [right=of A] {C};
+\\node[state%s]          (D) [below=of C] {D};
+\\path[->] (A) edge [bend left=20] node [right] {1} (B)
+           (A) edge [bend left=20] node [above] {0} (C)
+           (B) edge [bend left=20] node [left]  {1} (A)
+           (B) edge [bend left=20] node [above] {0} (D)
+           (C) edge [bend left=20] node [right] {1} (D)
+           (C) edge [bend left=20] node [below] {0} (A)
+           (D) edge [bend left=20] node [left]  {1} (C)
+           (D) edge [bend left=20] node [below] {0} (B);
+\\end{tikzpicture}
+'
+
+## muestra el estado de aceptación e inserciones
+aceptar <- sample(c("A", "B", "C", "D"), 1)
+automata <- sprintf(automata,
+  if(aceptar == "A") ", accepting" else "",
+  if(aceptar == "B") ", accepting" else "",
+  if(aceptar == "C") ", accepting" else "",
+  if(aceptar == "D") ", accepting" else "")
+
+## asegurar secuencias únicas
+ok <- FALSE
+while(!ok) {
+
+## cinco secuencias aleatorias
+secuencias <- replicate(5,
+  sample(0:1, sample(4:7, 1), replace = TRUE),
+  simplify = FALSE
+)
+
+## comprobar si las secuencias pares o impares conducen al estado de aceptación
+par0 <- aceptar %in% c("A", "B")
+par1 <- aceptar %in% c("A", "C")
+n1 <- sapply(secuencias, sum)
+n0 <- sapply(secuencias, length) - n1
+sol <- (par0 == (n0 %% 2L < 1L)) & (par1 == (n1 %% 2L < 1L))
+secuencias <- sapply(secuencias, paste, collapse = "")
+
+ok <- all(!duplicated(secuencias)) && any(sol) && any(!sol)
+}
+```
+
+
+Question
+========
+
+Considere el siguiente autómata con estado inicial A y estado de aceptación `r aceptar`:
+\
+```{r, echo = FALSE, results = "asis"}
+include_tikz(automata, name = "automata", format = tipo, markup = "markdown",
+  library = c("automata", "positioning"),
+  width = "5cm")
+```
+
+
+¿Cuáles de las siguientes secuencias son aceptadas?
+
+```{r, echo = FALSE, results = "asis"}
+answerlist(secuencias, markup = "markdown")
+```
+
+
+Solution
+========
+
+El autómata dado acepta cadenas de entrada que consisten en un número
+`r if(par1) "par" else "impar"` de unos y un número
+`r if(par0) "par" else "impar"` de ceros.
+
+```{r, echo = FALSE, results = "asis"}
+answerlist(ifelse(sol, "Aceptada", "No aceptada"), markup = "markdown")
+```
+
+
+Meta-information
+================
+exname: Autómata
+extype: mchoice
+exsolution: `r mchoice2string(sol)`
