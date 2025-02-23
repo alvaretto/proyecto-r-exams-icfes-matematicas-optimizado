@@ -1,11 +1,9 @@
 # Repositorio Matemáticas ICFES
 
-**Nota Importante:** Este proyecto se encuentra en su etapa inicial de estructuración. 
-El contenido irá creciendo progresivamente con los aportes del creador principal y los 
-futuros colaboradores. La estructura actual servirá como base para el desarrollo 
-continuo de materiales educativos.
+El contenido irá creciendo progresivamente con los aportes del creador principal y los futuros colaboradores. La estructura actual servirá como base para el desarrollo continuo de materiales educativos.
 
 ## Estado Actual
+
 - El repositorio está estableciendo su estructura base
 - Contiene una organización preliminar de temas y subtemas
 - Los contenidos se irán añadiendo y refinando con el tiempo
@@ -100,7 +98,12 @@ continuo de materiales educativos.
   - Variables Cuantitativas Continuas y Distribución de Frecuencias
   - Medidas de Tendencia Central
     - **Estado Actual:**
-      - Contenido pendiente de desarrollo
+      - Media (Promedios)
+      - Caso Práctico: Notas Faltantes
+      - Recursos disponibles:
+        - Archivos RMarkdown (.Rmd)
+        - Scripts R
+        - Documentación
   - Medidas de Dispersión
   - Medidas de Posición
   - Probabilidad: Principios Aditivo y Multiplicativo de Conteo
@@ -114,3 +117,9 @@ continuo de materiales educativos.
         - Recursos multimedia
   - Probabilidad de la Unión de Sucesos
   - Probabilidad Condicionada e Independencia de Sucesos
+
+## Novedades
+
+- Se han añadido nuevos subtemas en varias áreas temáticas.
+- Se han actualizado los recursos disponibles en la sección de Variables Cualitativas y Distribución de Frecuencias.
+- Se han incluido ejemplos prácticos en la sección de Probabilidad.

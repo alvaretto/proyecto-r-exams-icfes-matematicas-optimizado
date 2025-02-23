@@ -3,7 +3,7 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "DVenn_All_GenMus_02.Rmd"
-archivos <- 300
+archivos <- 400
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
