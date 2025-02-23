@@ -1,0 +1,1 @@
+"Genera un archivo markdown (.md) que liste todas las carpetas que contienen archivos .Rmd en el directorio actual y sus subdirectorios. Si una carpeta contiene varios archivos .Rmd, debe listarse solo una vez."

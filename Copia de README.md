@@ -1,9 +1,8 @@
-# Repositorio Matemáticas ICFES
-
-El contenido irá creciendo progresivamente con los aportes del creador principal y los futuros colaboradores. La estructura actual servirá como base para el desarrollo continuo de materiales educativos.
+El contenido irá creciendo progresivamente con los aportes del creador principal y los 
+futuros colaboradores. La estructura actual servirá como base para el desarrollo 
+continuo de materiales educativos.
 
 ## Estado Actual
-
 - El repositorio está estableciendo su estructura base
 - Contiene una organización preliminar de temas y subtemas
 - Los contenidos se irán añadiendo y refinando con el tiempo
@@ -79,47 +78,3 @@ El contenido irá creciendo progresivamente con los aportes del creador principa
   - La Elipse
   - Ecuación Canónica de la Elipse con Centro en (h,k)
   - Ecuación General de la Elipse
-  - La Hipérbola
-  - Ecuación Canónica de la Hipérbola con Centro en (h,k)
-  - Ecuación General de la Hipérbola
-
-### 6. Estadística y Probabilidad
-- **Pensamiento Aleatorio**
-  - Variables Cualitativas y Distribución de Frecuencias
-    - **Contenido Actual:**
-      - Gráficos Estadísticos de Adopción de Mascotas
-      - Recursos disponibles:
-        - Archivos RMarkdown (.Rmd)
-        - Scripts R
-        - Documentación
-        - Recursos multimedia
-        - Ejercicios y recursos adicionales
-  - Variables Cuantitativas Discretas y Distribución de Frecuencias
-  - Variables Cuantitativas Continuas y Distribución de Frecuencias
-  - Medidas de Tendencia Central
-    - **Estado Actual:**
-      - Media (Promedios)
-      - Caso Práctico: Notas Faltantes
-      - Recursos disponibles:
-        - Archivos RMarkdown (.Rmd)
-        - Scripts R
-        - Documentación
-  - Medidas de Dispersión
-  - Medidas de Posición
-  - Probabilidad: Principios Aditivo y Multiplicativo de Conteo
-    - **Contenido Actual:**
-      - Diagramas de Venn
-      - Caso Práctico: Géneros Musicales
-      - Recursos disponibles:
-        - Archivos RMarkdown (.Rmd)
-        - Scripts R
-        - Documentación
-        - Recursos multimedia
-  - Probabilidad de la Unión de Sucesos
-  - Probabilidad Condicionada e Independencia de Sucesos
-
-## Novedades
-
-- Se han añadido nuevos subtemas en varias áreas temáticas.
-- Se han actualizado los recursos disponibles en la sección de Variables Cualitativas y Distribución de Frecuencias.
-- Se han incluido ejemplos prácticos en la sección de Probabilidad.
