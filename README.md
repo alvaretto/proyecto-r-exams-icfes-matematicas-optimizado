@@ -1,6 +1,14 @@
 # Repositorio Matemáticas ICFES
 
-Este repositorio contiene materiales educativos estructurados para el estudio de matemáticas según los lineamientos del ICFES. La organización del contenido sigue una estructura jerárquica basada en áreas temáticas y subtemas específicos.
+**Nota Importante:** Este proyecto se encuentra en su etapa inicial de estructuración. 
+El contenido irá creciendo progresivamente con los aportes del creador principal y los 
+futuros colaboradores. La estructura actual servirá como base para el desarrollo 
+continuo de materiales educativos.
+
+## Estado Actual
+- El repositorio está estableciendo su estructura base
+- Contiene una organización preliminar de temas y subtemas
+- Los contenidos se irán añadiendo y refinando con el tiempo
 
 ## Áreas Temáticas
 
