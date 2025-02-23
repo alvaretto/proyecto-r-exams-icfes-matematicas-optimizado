@@ -13,112 +13,104 @@ continuo de materiales educativos.
 ## Áreas Temáticas
 
 ### 1. Números Reales
-- **Pensamiento:** Numérico
-- **Subtemas:**
+- **Pensamiento Numérico**
   - Números Racionales
   - Números Irracionales
   - Números Reales
-  - Propiedades Expresiones Decimales
-  - Conjunto Reales Desigualdades
+  - Propiedades de Expresiones Decimales
+  - Conjunto de Reales y Desigualdades
   - Valor Absoluto
 
 ### 2. Funciones
-- **Pensamiento:** Variacional Espacial
-- **Subtemas:**
-  - Concepto De Funcion Dominio Y Recorrido
-  - Operaciones Con Funciones
-  - Composicion De Funciones
-  - Funciones Inyectivas Funciones Inversas
-  - Propiedades De Las Funciones
-  - Funciones Pares E Impares
-  - Funciones Periodicas
-  - Funcion Exponencial
-  - Funcion Logaritmica
-  - Traslación Y Dilatacion
-  - Variacion Lineal Y Exponencial
-  - Introduccion Al Limite De Una Sucesion
+- **Pensamiento Variacional y Espacial**
+  - Concepto de Función, Dominio y Recorrido
+  - Operaciones con Funciones
+  - Composición de Funciones
+  - Funciones Inyectivas y Funciones Inversas
+  - Propiedades de las Funciones
+  - Funciones Pares e Impares
+  - Funciones Periódicas
+  - Función Exponencial
+  - Función Logarítmica
+  - Traslación y Dilatación
+  - Variación Lineal y Exponencial, Razón de Cambio
+  - Introducción al Límite de una Sucesión
 
-### 3. Razones Trigonometricas
-- **Pensamiento:** Espacial Metrico Y Variacional
-- **Subtemas:**
-  - Medidas De Angulos
-  - Triangulos
-  - Razones Trigonometricas En Un Triangulo Rectangulo
-  - Razones Trigonometricas De Angulos Notables
-  - Resolucion De Triangulos Rectangulos
-  - Angulo De Elevacion Angulo De Depresion
+### 3. Razones Trigonométricas
+- **Pensamiento Espacial Métrico y Variacional**
+  - Medidas de Ángulos
+  - Triángulos
+  - Razones Trigonométricas en un Triángulo Rectángulo
+  - Razones Trigonométricas de Ángulos Notables
+  - Resolución de Triángulos Rectángulos
+  - Ángulo de Elevación y Ángulo de Depresión
   - Circunferencia Unitaria
-  - Razones Trigonometricas En La Circunferencia Unitaria
-  - Calculo De Razones Trigonometricas Usando Angulos De Referencia
-  - Razones Trigonometricas Para Angulos Negativos Complementarios Y Coterminales
-  - Definicion De Las Funciones Trigonometricas
-  - Teorema Del Seno
-  - Teorema Del Coseno
+  - Razones Trigonométricas en la Circunferencia Unitaria
+  - Cálculo de Razones Trigonométricas Usando Ángulos de Referencia
+  - Razones Trigonométricas para Ángulos Negativos, Complementarios y Coterminales
+  - Definición de las Funciones Trigonométricas
+  - Teorema del Seno
+  - Teorema del Coseno
 
-### 4. Funciones Identidades Trigonometricas
-- **Pensamiento:** Espacial Y Variacional
-- **Subtemas:**
-  - Funcion Seno
-  - Funcion Coseno
-  - Graficas De Las Funciones Sinusoidales
-  - Funcion Tangente
-  - Funcion Cotangente
-  - Funcion Secante
-  - Funcion Cosecante
-  - Identidades Trigonometricas Fundamentales
-  - Funciones Trigonometricas En Terminos De-las-Otras
-  - Simplificacion De Expresiones Trigonometricas
-  - Coordenadas Polares Y Cartesianas
+### 4. Funciones e Identidades Trigonométricas
+- **Pensamiento Espacial y Variacional**
+  - Función Seno
+  - Función Coseno
+  - Gráficas de las Funciones Sinusoidales
+  - Función Tangente
+  - Función Cotangente
+  - Función Secante
+  - Función Cosecante
+  - Identidades Trigonométricas Fundamentales
+  - Funciones Trigonométricas en Términos de las Otras
+  - Simplificación de Expresiones Trigonométricas
+  - Coordenadas Polares y Cartesianas
 
-### 5. Geometria Analitica
-- **Pensamiento:** Espacial
-- **Subtemas:**
+### 5. Geometría Analítica
+- **Pensamiento Espacial**
   - Coordenadas Cartesianas
-  - La Linea Recta
-  - Posiciones Relativas De Dos Rectas En El Plano
-  - Secciones Conicas
+  - La Línea Recta
+  - Posiciones Relativas de Dos Rectas en el Plano
+  - Secciones Cónicas
   - La Circunferencia
-  - Ecuacion Canonica De La Circunferencia Con Centro En hk
-  - Ecuacion General De La Circunferencia
-  - La Parabola
-  - Ecuacion Canonica De La Parabola Con Vertice En hk
-  - Ecuacion General De La Parabola
+  - Ecuación Canónica de la Circunferencia con Centro en (h,k)
+  - Ecuación General de la Circunferencia
+  - La Parábola
+  - Ecuación Canónica de la Parábola con Vértice en (h,k)
+  - Ecuación General de la Parábola
   - La Elipse
-  - Ecuacion Canonica De La Elipse Con Centro En hk
-  - Ecuacion General De La Elipse
-  - La Hiperbola
-  - Ecuacion Canonica De La Hiperbola Con Centro En hk
-  - Ecuacion General De La Hiperbola
+  - Ecuación Canónica de la Elipse con Centro en (h,k)
+  - Ecuación General de la Elipse
+  - La Hipérbola
+  - Ecuación Canónica de la Hipérbola con Centro en (h,k)
+  - Ecuación General de la Hipérbola
 
-### 6. Estadística Y Probabilidad
-- **Pensamiento:** Aleatorio
-- **Subtemas:**
-  - Variables Cualitativas Distribucion De Frecuencias
-    - Graficos Estadisticos Adopcion Mascotas
-  - Variables Cuantitativas Discretas Distribucion De Frecuencias
-  - Variables Cuantitativas Continuas Distribucion De Frecuencias
-  - Medidas De Tendencia Central
-  - Medidas De Dispersion
-  - Medidas De Posicion
-  - Probabilidad Principios Aditivo Y Multiplicativo
-    - Diagramas de Venn
-  - Probabilidad De La Union De Sucesos
-  - Probabilidad Condicionada Independencia De Sucesos
-
-## Notas Importantes
-- Cada tema incluye materiales educativos en formato Rmd, PDF, y otros recursos didácticos.
-- El repositorio está organizado siguiendo una estructura jerárquica que facilita la navegación y el acceso a los contenidos específicos.
-- Se incluyen ejercicios prácticos y ejemplos para cada tema.
-
-## Contribuciones
-Las contribuciones son bienvenidas. Si deseas contribuir al proyecto, por favor sigue estos pasos:
-1. Crea un fork del repositorio
-2. Crea una nueva rama (git checkout -b feature/NombreCaracteristica)
-3. Realiza tus cambios
-4. Envía un pull request
-
-## Licencia
-Este proyecto está bajo la Licencia MIT.
-
-## Contacto
-Para cualquier pregunta o comentario, por favor contacta a alvaroangelm@gmail.com.
+### 6. Estadística y Probabilidad
+- **Pensamiento Aleatorio**
+  - Variables Cualitativas y Distribución de Frecuencias
+    - **Contenido Actual:**
+      - Gráficos Estadísticos de Adopción de Mascotas
+      - Recursos disponibles:
+        - Archivos RMarkdown (.Rmd)
+        - Scripts R
+        - Documentación
+        - Recursos multimedia
+        - Ejercicios y recursos adicionales
+  - Variables Cuantitativas Discretas y Distribución de Frecuencias
+  - Variables Cuantitativas Continuas y Distribución de Frecuencias
+  - Medidas de Tendencia Central
+    - **Estado Actual:**
+      - Contenido pendiente de desarrollo
+  - Medidas de Dispersión
+  - Medidas de Posición
+  - Probabilidad: Principios Aditivo y Multiplicativo de Conteo
+    - **Contenido Actual:**
+      - Diagramas de Venn
+      - Caso Práctico: Géneros Musicales
+      - Recursos disponibles:
+        - Archivos RMarkdown (.Rmd)
+        - Scripts R
+        - Documentación
+        - Recursos multimedia
+  - Probabilidad de la Unión de Sucesos
+  - Probabilidad Condicionada e Independencia de Sucesos
