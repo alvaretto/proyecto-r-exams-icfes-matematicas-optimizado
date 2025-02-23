@@ -1,0 +1,339 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+```{r inicio, include=FALSE}
+library(exams)
+library(tidyverse)
+library(datasets)
+library(readxl)
+library(data.table)
+library(reticulate)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen=999)
+#options(tinytex.verbose = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r DefiniciónDeVariables, message=FALSE, warning=FALSE, results='asis'}
+
+# Vector de mascotas
+mascotas <- c('loro', 'perro', 'gato', 'gallina', 'hamster', 'cerdo', 'ternero', 'caballo', 'cabra')
+
+# Seleccionar una muestra aleatoria de 3 elementos sin repetición
+selmascota <- sample(mascotas, 3)
+selmascota[3]
+
+nombremascota1 <- selmascota[1]
+nombremascota2 <- selmascota[2]
+nombremascota3 <- selmascota[3]
+
+# Crear secuencia del 60 al 300 de 10 en 10
+numeros <- seq(60, 600, 10)
+
+# Eliminamos el número 100 del vector
+numeros_sin_100 <- setdiff(numeros, 100)
+numeros_sin_100
+
+# Ahora hacemos el muestreo de este nuevo vector
+enkuestados <- sample(numeros_sin_100, 1)
+```
+
+```{r DefiniciónDeVariables2, message=FALSE, warning=FALSE, results='asis'}
+# Generar tres números para los porcentajes. Su suma siempre debe ser igual a 100
+generar_vector_unico <- function() {
+  repetir <- TRUE
+  while (repetir) {
+    # Generar el primer número como un múltiplo de 5 entre 5 y 60.
+    # Esto aumenta las posibilidades de tener tres números únicos.
+    primer_numero <- sample(seq(5, 60, by = 5), 1)
+    
+    # Calcular el máximo valor posible para el segundo número,
+    # asegurándose de que haya espacio para un tercer número único.
+    max_segundo_numero <- 95 - primer_numero
+    
+    # Generar el segundo número asegurando que sea diferente al primero
+    posibles_segundos <- seq(5, max_segundo_numero, by = 5)
+    posibles_segundos <- posibles_segundos[posibles_segundos != primer_numero]
+    if (length(posibles_segundos) > 0) {
+      segundo_numero <- sample(posibles_segundos, 1)
+    } else {
+      next
+    }
+    
+    # Calcular el tercer número necesario para que la suma sea 100,
+    # asegurándose de que sea diferente a los dos anteriores.
+    tercer_numero <- 100 - primer_numero - segundo_numero
+    
+    # Verificar si los tres números son únicos
+    if (length(unique(c(primer_numero, segundo_numero, tercer_numero))) == 3) {
+      repetir <- FALSE
+    }
+  }
+  
+  # Crear el vector
+  vector <- c(primer_numero, segundo_numero, tercer_numero)
+  
+  return(vector)
+}
+
+# Generar y mostrar el vector de porcentajes
+vector_resultado <- generar_vector_unico()
+vector_resultado
+
+# El vector_resultado contiene tres porcentajes únicos que suman 100.
+
+mashor <- max(vector_resultado)
+mashor
+
+porxentaje1 <- vector_resultado[1]
+porxentaje2 <- vector_resultado[2]
+porxentaje3 <- vector_resultado[3]
+####################################################
+
+maskota1 <- (enkuestados*vector_resultado[1])/100 # Número de personas que adoptan maskota1
+maskota1
+maskota2 <- (enkuestados*vector_resultado[2])/100
+maskota2
+maskota3 <- (enkuestados*vector_resultado[3])/100
+maskota3
+
+mashiormaskota <- max(maskota1, maskota2, maskota3)
+mashiormaskota
+```
+
+```{r GeneracionGraficosTikZ, results='asis', warning=FALSE, message=FALSE}
+
+image01 <- '
+\\begin{tikzpicture}
+  \\node{
+\\begin{tabular}{|l|c|}
+\\hline
+\\textbf{Animal} & \\textbf{Porcentaje de personas } \\\\ 
+     & \\textbf{interesadas en adoptar} \\\\ \\hline
+     %s & %s \\\\ \\hline
+     %s & %s \\\\ \\hline
+     %s & %s \\\\ \\hline
+\\end{tabular}
+};
+\\end{tikzpicture}
+'
+
+demas <- sample
+
+image01 <-sprintf(image01, selmascota[1], porxentaje1, selmascota[2], porxentaje2, selmascota[3], porxentaje3)
+```
+
+Question
+========
+
+El líder de un programa de adopción de mascotas encuestó a `r enkuestados` personas para conocer qué animal les interesaría adoptar. Del total de encuestados, el `r vector_resultado[1]`% adoptaría un `r selmascota[1]`, el `r vector_resultado[2]`% adoptaría un(a) `r selmascota[2]` y el `r vector_resultado[3]`% adoptaría un(a) `r selmascota[3]`. 
+
+
+¿Cuál de las siguientes representaciones muestra correctamente la información recolectada en la encuesta?
+\
+
+Answerlist
+----------
+- 
+<br/> 
+```{r Tabla01, warning=FALSE,echo = FALSE, results = "asis"}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+include_tikz(image01, name = "image01", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "8.5cm")
+```
+
+- 
+<br/> 
+```{python BarraVertical, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+import matplotlib.pyplot as plt
+import numpy as np
+
+mascota1py = r.nombremascota1 # De R a Python
+mascota2py = r.nombremascota2
+mascota3py = r.nombremascota3
+
+porcentaje1py = r.porxentaje1 # De R a Python
+porcentaje2py = r.porxentaje2
+porcentaje3py = r.porxentaje3
+
+mashorpy = r.mashor
+
+# Datos
+animales = [mascota1py, mascota2py, mascota3py]
+cantidad = [porcentaje1py, porcentaje2py, porcentaje3py]
+
+# Definir colores en tonos de azul
+colores_azules = ['#00B3E6', '#0066CC', '#000099']  
+
+# Crear el gráfico de barras
+fig, ax = plt.subplots(figsize=(6, 5))
+
+# Ajustar el ancho de las barras aquí para controlar indirectamente el espacio entre ellas
+ancho_barras = 0.6  # Un valor más pequeño de lo normal
+
+# Dibujar las barras con el ancho especificado
+bars = ax.bar(animales, cantidad, color=colores_azules, width=ancho_barras)
+
+# Resto del código de personalización
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
+plt.xticks(fontweight='bold')
+plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold')
+plt.xlabel(" Animales", fontweight='bold')
+plt.ylabel("Cantidad de personas \ninteresadas en adoptar", fontweight='bold')
+
+#plt.tight_layout()
+plt.show()
+```
+
+- 
+<br/> 
+```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+import matplotlib.pyplot as plt
+import numpy as np
+
+mascota1py = r.nombremascota1 # De R a Python
+mascota2py = r.nombremascota2
+mascota3py = r.nombremascota3
+
+porcentaje1py = r.porxentaje1 # De R a Python
+porcentaje2py = r.porxentaje2
+porcentaje3py = r.porxentaje3
+
+padrino1py = r.maskota1
+padrino2py = r.maskota2
+padrino3py = r.maskota3
+
+mashorpy = r.mashor
+mashiormaskotapy = r.mashiormaskota
+niveles = mashiormaskotapy/10
+
+# Datos
+animales = [mascota3py, mascota2py, mascota1py]
+cantidad = [padrino3py, padrino2py, padrino1py]
+
+# Definir colores en tonos de azul
+colores_azules = ['#00B3E6', '#0066CC', '#000099']  
+
+# Crear el gráfico de barras horizontales
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Ajustar el alto de las barras aquí para controlar indirectamente el espacio entre ellas
+alto_barras = 0.6  # Un valor más pequeño de lo normal
+
+# Dibujar las barras horizontales con el alto especificado
+bars = ax.barh(animales, cantidad, color=colores_azules, height=alto_barras)
+
+for bar in bars:
+    # Obtener la posición y el valor de la barra
+    valor = bar.get_width()
+    # Posicionar el texto ligeramente debajo de la barra. Ajustar el '-0.05' según sea necesario.
+    posicion = bar.get_y() - 0.05
+    
+    # Añadir texto debajo de la barra, a su extrema derecha
+    # 'va' cambia a 'top' para alinear el texto en la parte superior del punto especificado,
+    # efectivamente moviéndolo debajo de la barra.
+    ax.text(valor, posicion, f'{valor}', va='top', ha='right', color='black', fontweight='bold', fontsize=10)
+
+# Ajustes finales y mostrar el gráfico
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.xaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
+plt.yticks(fontweight='bold')
+plt.xticks(np.arange(0, max(cantidad)+10, niveles), fontweight='bold')  # Ajuste en el rango para xticks basado en la máxima cantidad
+plt.ylabel("Animales", fontweight='bold')
+plt.xlabel("Porcentaje de personas \ninteresadas en adoptar", fontweight='bold')
+
+#plt.tight_layout()
+plt.show()
+```
+
+- 
+<br/> 
+```{python Torta, echo = FALSE, results = "hide"}
+# Re-importing necessary libraries after execution state reset
+from matplotlib import pyplot as plt
+
+adoptantes1py = r.maskota1 # De R a Python
+adoptantes2py = r.maskota2
+adoptantes3py = r.maskota3
+
+# Re-defining data for the pie chart
+labels = ['Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota1py),
+          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota2py),
+          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota3py)]
+sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Actual values for calculations
+sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on the labels
+colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
+explode = (0, 0, 0)  # No slice is exploded
+
+# Labels with the sizes values
+pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, sizes2)]
+
+# Plot
+fig, ax = plt.subplots(figsize=(6, 4), tight_layout=True)  # Ajustar el tamaño y el diseño de la figura.
+ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors, shadow=True, startangle=0)
+ax.axis('equal')  # La relación de aspecto igual garantiza que el gráfico circular se dibuje como un círculo.
+
+# Reducing left and top margins
+plt.subplots_adjust(left=0.1, top=0.9)
+
+# Display the plot
+plt.show()
+```
+
+Solution
+========
+
+\
+Esta tabla representa la información recolectada en la encuesta, mostrando el porcentaje de personas interesadas en adoptar cada tipo de mascota:
+\
+
+```{r, echo = FALSE, results = "asis"}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+include_tikz(image01, name = "image01_solution", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "8.5cm")
+```
+
+```{r version diversity test, echo = FALSE, results = "hide"}
+# Prueba de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  # Generar y almacenar 1000 versiones
+  versiones <- list()
+  for(i in 1:1000) {
+    # Generar las variables
+    selmascota <- sample(mascotas, 3)
+    enkuestados <- sample(numeros_sin_100, 1)
+    vector_resultado <- generar_vector_unico()
+
+    # Combine the variables into a single string
+    version_string <- paste(enkuestados, paste(vector_resultado, collapse = "-"), paste(selmascota, collapse = "-"), collapse = "-")
+    
+    # Create a hash of the data
+    versiones[[i]] <- digest::digest(version_string)
+  }
+
+  # Verificar al menos 300 versiones únicas
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+Meta-information
+================
+
+exname: I_1796473/2023-Cuadernillo-Matematicas-11-2(single-choice)
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE

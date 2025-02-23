@@ -1,0 +1,114 @@
+---
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    latex_engine: xelatex
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+---
+```{r inicio, include=FALSE}
+# Generación de datos
+library(exams)
+library(ggplot2)
+library(knitr)
+
+# Parámetros del círculo
+radio <- sample(4:8, 1)
+angulo <- sample(30:60, 1)
+angulo_rad <- angulo * pi/180
+
+# Cálculos
+cuerda <- 2 * radio * sin(angulo_rad/2)
+area_sector <- (angulo/360) * pi * radio^2
+area_triangulo <- (radio^2 * sin(angulo_rad))/2
+area_segmento <- area_sector - area_triangulo
+
+# Crear el gráfico
+p <- ggplot() + 
+    # Círculo completo
+    stat_function(fun = function(x) sqrt(radio^2 - x^2), 
+                 xlim = c(-radio, radio)) +
+    stat_function(fun = function(x) -sqrt(radio^2 - x^2), 
+                 xlim = c(-radio, radio)) +
+    # Líneas del sector
+    geom_segment(aes(x = 0, y = 0, 
+                    xend = radio * cos(angulo_rad), 
+                    yend = radio * sin(angulo_rad))) +
+    geom_segment(aes(x = 0, y = 0, 
+                    xend = radio, 
+                    yend = 0)) +
+    # Configuración del gráfico
+    coord_fixed() +
+    theme_minimal() +
+    theme(axis.text = element_blank(),
+          axis.title = element_blank(),
+          panel.grid = element_blank()) +
+    xlim(-radio-1, radio+1) +
+    ylim(-radio-1, radio+1)
+
+# Guardar el gráfico
+ggsave("sector_circular.png", p, width = 6, height = 6)
+
+# Opciones de respuesta
+resp_correcta <- round(area_segmento, 2)
+distractores <- c(
+    round(area_sector, 2),
+    round(area_triangulo, 2),
+    round(cuerda * radio / 2, 2)
+)
+
+# Mezclar las opciones
+opciones <- c(resp_correcta, distractores)
+opciones <- sample(opciones)
+solucion <- which(opciones == resp_correcta)
+```
+
+Question
+========
+En un círculo de radio `r radio` unidades, se traza un sector circular que forma un ángulo central de `r angulo`°, como se muestra en la figura:
+
+```{r, echo=FALSE, results="asis"}
+typ <- match_exams_device()
+include_graphics("sector_circular.png")
+```
+
+¿Cuál es el área del segmento circular (región sombreada) formado por el arco y la cuerda?
+
+Answerlist
+----------
+* `r opciones[1]` unidades cuadradas
+* `r opciones[2]` unidades cuadradas
+* `r opciones[3]` unidades cuadradas
+* `r opciones[4]` unidades cuadradas
+
+Solution
+========
+La solución se puede encontrar siguiendo estos pasos:
+
+1) Primero, calculamos el área del sector circular:
+   * Área del sector = ($\theta$/360°) × $\pi$r²
+   * Área del sector = (`r angulo`/360) × $\pi$ × `r radio`² = `r round(area_sector,2)`
+
+2) Luego, calculamos el área del triángulo formado por los radios y la cuerda:
+   * Área del triángulo = (r² × sin $\theta$)/2
+   * Área del triángulo = (`r radio`² × sin(`r angulo`°))/2 = `r round(area_triangulo,2)`
+
+3) El área del segmento circular es la diferencia entre el área del sector y el área del triángulo:
+   * Área del segmento = Área del sector - Área del triángulo
+   * Área del segmento = `r round(area_sector,2)` - `r round(area_triangulo,2)` = `r round(area_segmento,2)`
+
+La respuesta correcta es `r round(area_segmento,2)` unidades cuadradas.
+
+Meta-information
+============
+exname: Área de Segmento Circular
+extype: schoice
+exsolution: `r mchoice2string(c(1,0,0,0)[order(opciones)])`
+exshuffle: TRUE
