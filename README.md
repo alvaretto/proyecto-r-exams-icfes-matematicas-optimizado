@@ -110,7 +110,7 @@ Las contribuciones son bienvenidas. Si deseas contribuir al proyecto, por favor 
 4. Envía un pull request
 
 ## Licencia
-Este proyecto está bajo la Licencia [especificar licencia aquí].
+Este proyecto está bajo la Licencia MIT.
 
 ## Contacto
-Para cualquier pregunta o comentario, por favor contacta a [información de contacto].
+Para cualquier pregunta o comentario, por favor contacta a alvaroangelm@gmail.com.
