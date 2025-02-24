@@ -32,13 +32,13 @@ El contenido irá creciendo progresivamente con los aportes del creador principa
   - Función Logarítmica
   - Traslación y Dilatación
   - Variación Lineal y Exponencial, Razón de Cambio
-   - **Contenido Actual:**
-       - Función Lineal. Auto Viajero
-       - Recursos disponibles:
-         - Archivos RMarkdown (.Rmd)
-         - Scripts R
-         - Documentación
-         - Ejercicios y recursos adicionales
+    - **Contenido Actual:**
+        - Función Lineal. Auto Viajero
+        - Recursos disponibles:
+          - Archivos RMarkdown (.Rmd)
+          - Scripts R
+          - Documentación
+          - Ejercicios y recursos adicionales
   - Introducción al Límite de una Sucesión
 
 ### 3. Razones Trigonométricas
