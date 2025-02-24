@@ -127,6 +127,3 @@ El contenido irá creciendo progresivamente con los aportes del creador principa
 
 ## Novedades
 
-- Se han añadido nuevos subtemas en varias áreas temáticas.
-- Se han actualizado los recursos disponibles en la sección de Variables Cualitativas y Distribución de Frecuencias.
-- Se han incluido ejemplos prácticos en la sección de Probabilidad.
