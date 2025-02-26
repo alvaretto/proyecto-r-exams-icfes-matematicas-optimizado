@@ -15,41 +15,12 @@ nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 # Configurar el motor LaTeX y el entorno
-options(tinytex.latex_engine = "xelatex")
+# Cambiamos de xelatex a pdflatex que tiene mejor compatibilidad
+options(tinytex.latex_engine = "pdflatex")
 Sys.setenv(LANG = "es_ES.UTF-8")
 
 # Configurar opciones de knitr
 opts_knit$set(concordance = TRUE)
-
-################################################################################
-# Generación de archivos individuales para PDF, sólo 'archivos', no importa 'numpreg'
-
-# for(i in 1:archivos) {
-#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-#   exams2pdf(archivo_examen, 
-#             n = 1, 
-#             name = nombre_archivo, 
-#             encoding = "UTF-8",
-#             template = "solpcielo", 
-#             dir = dir_salida, 
-#             edir = dir_ejercicios)
-# }
-
-################################################################################
-# Generación de archivos individuales para Pandoc (docx), sólo 'archivos', 
-# no importa 'numpreg
-
-# for(i in 1:archivos) {
-#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-#   exams2pandoc(archivo_examen, 
-#                n = 1, 
-#                name = nombre_archivo, 
-#                encoding = "UTF-8",
-#                template = "plain.tex", 
-#                dir = dir_salida, 
-#                edir = dir_ejercicios,
-#                format = "docx")
-# }
 
 ################################################################################
 # Generación de n archivos en un solo archivo de salida para PDF
@@ -94,22 +65,5 @@ exams2pandoc(rep(archivo_examen, numpreg),
 
 exams2html(rep(archivo_examen, numpreg),
            svg = FALSE)
-
-################################################################################
-# Generación para Moodle, solo configura manualmente 'archivos'
-# no importa 'numpreg'
-
-# set.seed(semilla)
-# exams2moodle(archivo_examen,
-#              n = archivos,
-#              svg = TRUE,
-#              name = nombre_arch,
-#              encoding = "UTF-8",
-#              dir = "salida",
-#              edir = "ejercicios",
-#              mchoice = list(shuffle = TRUE,
-#                             answernumbering = "ABCD",
-#                             eval = list(partial = TRUE,
-#                                         rule = "none")))
 
 ################################################################################
