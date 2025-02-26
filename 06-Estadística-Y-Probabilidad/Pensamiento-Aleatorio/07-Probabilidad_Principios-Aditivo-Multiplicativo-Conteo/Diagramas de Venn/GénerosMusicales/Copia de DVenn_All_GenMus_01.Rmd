@@ -119,13 +119,12 @@ questions <- c(
   sprintf("¿Cuántas personas disfrutan de %s o %s, o ambos?", A, C),
   sprintf("¿Cuál es el número de entrevistados que no escuchan %s ni %s?", B, C),
   "¿Cuántos adolescentes escuchan al menos uno de estos géneros musicales?",
-  "¿Cuántas personas escuchan exactamente un género musical?"
+  "¿Cuántas personas escuchan exactamente un género musical?",
+  "¿Cuál es el total de personas que escuchan máximo dos géneros musicales?",
+  "¿Cuál es el total de personas que escuchan máximo tres géneros musicales?"
 )
 
-# Seleccionar 4 preguntas aleatorias
-selected_questions <- sample(questions, 4)
-
-# Respuestas correspondientes a las preguntas seleccionadas
+# Respuestas correspondientes a las preguntas
 answers <- c(
   n_AB_only,
   n_AC_only,
@@ -140,8 +139,13 @@ answers <- c(
   n_A + n_C - n_AC,
   n_total - (n_B + n_C - n_BC),
   n_total - n_none,
-  n_only_A + n_only_B + n_only_C
+  n_only_A + n_only_B + n_only_C,
+  n_only_A + n_only_B + n_only_C + n_AB_only + n_AC_only + n_BC_only,
+  n_total - n_none
 )
+
+# Seleccionar 4 preguntas aleatorias
+selected_questions <- sample(questions, 4)
 
 # Seleccionar las respuestas correspondientes a las preguntas seleccionadas
 selected_answers <- sapply(seq_along(selected_questions), function(i) {
