@@ -4,7 +4,7 @@ library(knitr)  # Explicitly load knitr
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "DVenn_All_GenMus_01.Rmd"
 archivos <- 1
-numpreg <- 10
+numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
