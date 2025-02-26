@@ -1,37 +1,40 @@
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-```
-
 ```{r GeneracionDeDatos, echo = FALSE, results = "hide"}
+
+# Configuración inicial para no mostrar código, advertencias ni mensajes en el documento final
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Generación de Datos
+# Cargar las librerías necesarias
 library(exams)
 library(knitr)
 
 # Función para generar datos válidos
+# Esta función genera datos aleatorios que cumplen con las restricciones del problema
 generate_valid_data <- function(max_attempts = 1000) {
   for (attempt in 1:max_attempts) {
-    # Generar números aleatorios
-    n_total <- sample(30:50, 1)
-    n_A <- sample(15:25, 1)
-    n_B <- sample(15:25, 1)
-    n_C <- sample(20:30, 1)
-
-    # Calcular intersecciones
-    n_AB <- sample(3:8, 1)
-    n_AC <- sample(5:10, 1)
-    n_BC <- sample(3:8, 1)
-    n_all <- sample(2:5, 1)
-
-    # Calcular valores para cada región
-    n_only_A <- n_A - n_AB - n_AC + n_all
-    n_only_B <- n_B - n_AB - n_BC + n_all
-    n_only_C <- n_C - n_AC - n_BC + n_all
-    n_AB_only <- n_AB - n_all
-    n_AC_only <- n_AC - n_all
-    n_BC_only <- n_BC - n_all
-
+    # Generar números aleatorios para el total de personas y las intersecciones
+    n_total <- sample(30:50, 1)  # Total de personas entrevistadas
+    n_A <- sample(15:25, 1)      # Personas que escuchan género A
+    n_B <- sample(15:25, 1)      # Personas que escuchan género B
+    n_C <- sample(20:30, 1)      # Personas que escuchan género C
+    
+    # Calcular intersecciones entre los conjuntos
+    n_AB <- sample(3:8, 1)       # Personas que escuchan A y B
+    n_AC <- sample(5:10, 1)      # Personas que escuchan A y C
+    n_BC <- sample(3:8, 1)       # Personas que escuchan B y C
+    n_all <- sample(2:5, 1)      # Personas que escuchan A, B y C
+    
+    # Calcular valores para cada región del diagrama de Venn
+    n_only_A <- n_A - n_AB - n_AC + n_all  # Solo escuchan A
+    n_only_B <- n_B - n_AB - n_BC + n_all  # Solo escuchan B
+    n_only_C <- n_C - n_AC - n_BC + n_all  # Solo escuchan C
+    n_AB_only <- n_AB - n_all              # Solo escuchan A y B
+    n_AC_only <- n_AC - n_all              # Solo escuchan A y C
+    n_BC_only <- n_BC - n_all              # Solo escuchan B y C
+    
     # Calcular el número de personas que no escuchan ninguno
     n_none <- n_total - (n_A + n_B + n_C - n_AB - n_AC - n_BC + n_all)
-
+    
     # Verificar que todos los valores sean no negativos
     if (all(c(n_only_A, n_only_B, n_only_C, n_AB_only, n_AC_only, n_BC_only, n_all, n_none) >= 0)) {
       # Devolver los valores generados
@@ -48,13 +51,14 @@ generate_valid_data <- function(max_attempts = 1000) {
 }
 
 # Función para generar géneros musicales aleatorios
+# Esta función selecciona aleatoriamente tres géneros musicales de una lista predefinida
 generate_random_genres <- function() {
-  genres <- c("Vallenato", "Salsa", "Merengue", "Reggaeton", "Bachata", "Cumbia",
-              "Rap", "Electrónica")
+  genres <- c("Vallenato", "Salsa", "Merengue", "Reggaeton", "Bachata", "Cumbia", "Rap", "Electrónica", "Tango", "Gospel")
   sample(genres, 3)
 }
 
 # Función para generar texto aleatorio con números consistentes
+# Esta función crea un texto descriptivo basado en los datos generados
 generate_random_text <- function(data, A, B, C) {
   templates <- c(
     "- %d de ellos escuchan %s y %s,\n- %d escuchan %s y %s, y\n- %d %s y %s.",
@@ -71,10 +75,10 @@ generate_random_text <- function(data, A, B, C) {
     c(data$n_AB, data$n_AC, data$n_BC_only)
   )
   chosen_values <- switch(which(templates == template),
-                        values[[1]],
-                        values[[2]],
-                        values[[3]],
-                        values[[4]])
+                          values[[1]],
+                          values[[2]],
+                          values[[3]],
+                          values[[4]])
   
   sprintf(
     "Se ha entrevistado a %d adolescentes sobre los géneros musicales que escuchan.\n\n- %d de ellos escuchan %s, \n- %d escuchan %s, y \n- %d %s. \n\nAdemás sabemos que \n\n%s",
@@ -191,7 +195,6 @@ include_venn <- function() {
 
 Question
 ========
-
 `r random_text`
 
 Por último sabemos que solamente `r n_all` escuchan los tres géneros musicales.
@@ -200,7 +203,6 @@ Considerando esa información:
 
 Answerlist
 ----------
-
 * `r selected_questions[1]`
 * `r selected_questions[2]`
 * `r selected_questions[3]`
@@ -208,7 +210,6 @@ Answerlist
 
 Solution
 ========
-
 Para resolver este problema, analizamos el diagrama de Venn que representa la intersección de los tres conjuntos: `r A`, `r B` y `r C`.
 
 ```{r venn-diagram-solution, echo=FALSE, results="asis", fig.align="center", fig.width=6, fig.height=6}
@@ -217,17 +218,13 @@ include_venn()
 
 Explicación detallada:
 
-a) `r selected_questions[1]`: `r selected_answers[1]`
-   
-b) `r selected_questions[2]`: `r selected_answers[2]`
-   
-c) `r selected_questions[3]`: `r selected_answers[3]`
-   
+a) `r selected_questions[1]`: `r selected_answers[1]`  
+b) `r selected_questions[2]`: `r selected_answers[2]`  
+c) `r selected_questions[3]`: `r selected_answers[3]`  
 d) `r selected_questions[4]`: `r selected_answers[4]`
 
 Answerlist
 ----------
-
 * La respuesta es `r selected_answers[1]`.
 * La respuesta es `r selected_answers[2]`.
 * La respuesta es `r selected_answers[3]`.
@@ -235,9 +232,9 @@ Answerlist
 
 Meta-information
 ================
-exname: Géneros musicales
-extype: cloze
-exclozetype: num|num|num|num
-exsolution: `r selected_answers[1]`|`r selected_answers[2]`|`r selected_answers[3]`|`r selected_answers[4]`
-extol: 0
+exname: Géneros musicales  
+extype: cloze  
+exclozetype: num|num|num|num  
+exsolution: `r selected_answers[1]`|`r selected_answers[2]`|`r selected_answers[3]`|`r selected_answers[4]`  
+extol: 0  
 exsection: Diagrama de Venn
