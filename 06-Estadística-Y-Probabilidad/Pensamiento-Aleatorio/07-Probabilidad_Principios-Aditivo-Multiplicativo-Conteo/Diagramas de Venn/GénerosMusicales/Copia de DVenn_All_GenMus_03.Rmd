@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 ```{r GeneracionDeDatos, echo = FALSE, results = "hide"}
 
 # Configuración inicial para no mostrar código, advertencias ni mensajes en el documento final
@@ -136,16 +142,16 @@ answers <- c(
   n_all,
   n_none,
   n_only_A + n_only_B + n_only_C,
-  n_AB + n_AC + n_BC - 2*n_all,
-  n_AB_only + n_AC_only + n_BC_only,
-  n_only_A + n_only_B,
-  n_only_A + n_AC_only,
+  n_AB_only + n_AC_only + n_BC_only + n_all, # Personas que escuchan al menos dos géneros
+  n_AB_only + n_AC_only + n_BC_only, # Personas que escuchan exactamente dos géneros
+  n_only_A + n_only_B + n_AC_only + n_BC_only, # Personas que escuchan A o B, pero no ambos
+  n_only_A + n_AC_only, # Personas que escuchan A pero no B
   n_A + n_C - n_AC,
   n_total - (n_B + n_C - n_BC),
   n_total - n_none,
   n_only_A + n_only_B + n_only_C,
-  n_only_A + n_only_B + n_only_C + n_AB_only + n_AC_only + n_BC_only,
-  n_total - n_none
+  n_none + n_only_A + n_only_B + n_only_C + n_AB_only + n_AC_only + n_BC_only, # Personas que escuchan máximo dos géneros
+  n_total # Todas las personas escuchan máximo tres géneros
 )
 
 # Seleccionar 4 preguntas aleatorias
@@ -162,6 +168,8 @@ typ <- match_exams_device()
 # Código TikZ para el Diagrama de Venn
 tikz_venn <- sprintf('
 \\begin{tikzpicture}[scale=0.7]
+  %% Dibujar un rectángulo para representar el conjunto universal
+  \\draw[thick] (-5,-5) rectangle (5,5) node[above right] {$U$};
   \\begin{scope}[opacity=0.5]
     \\fill[red]   ( 90:1.5) circle (2);
     \\fill[green] (210:1.5) circle (2);
@@ -177,7 +185,7 @@ tikz_venn <- sprintf('
   \\node at (150:1.7) {%d};
   \\node at (270:1.7) {%d};
   \\node at (0:0) {%d};
-  \\node at (270:3.5) {Ninguno: %d};
+  \\node at (0,-3.5) {Ninguno: %d};
 \\end{tikzpicture}
 ', A, B, C, n_only_A, n_only_B, n_only_C, n_AC_only, n_AB_only, n_BC_only, n_all, n_none)
 
