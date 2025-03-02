@@ -1,95 +1,72 @@
-# Carga de la librería r-exams
 library(exams)
 
-# Definición del archivo de examen y configuración inicial
-archivo_examen <- "I_1796473-Opc-A2.Rmd"
+qqq <- rep("General/erres/cloze/boxhist2/boxhist2_esp.Rmd", 2) # Usar la ruta completa al archivo
 copias <- 1
-numpreg <- 3
-semilla <- sample(100:1e8, 1)
-set.seed(semilla)
-dir_salida <- "salida"
-dir_ejercicios <- "ejercicios"
 
-# Nombre del archivo sin la extensión .Rmd
-nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)
+nombre_sin_extension <- sub("\\.Rmd$", "", qqq)
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
-################################################################################
-# Generación de copias individuales para PDF
+examen01 <- qqq
 
-# for(i in 1:copias) {
-#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-#   exams2pdf(archivo_examen, n = 1, name = nombre_archivo, encoding = "UTF-8", 
-#             template = "solpcielo", dir = dir_salida, edir = dir_ejercicios)
-# }
+semilla <- sample(100:1e8, 1)
+semilla
+#set.seed(semilla)
+##set.seed(11001)
 
-################################################################################
-# Generación de copias individuales para Pandoc (docx)
-
-# for(i in 1:copias) {
-#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-#   exams2pandoc(archivo_examen, n = 1, name = nombre_archivo, encoding = "UTF-8", 
-#                template = "plain.tex", dir = dir_salida, edir = dir_ejercicios, 
-#                format = "docx")
-# }
+# Para Moodle 'copias'
+# Para los demás, 'rep'
 
 ################################################################################
-# Generación para Moodle
-
 # set.seed(semilla)
-# exams2moodle(archivo_examen,
-#              n = copias,
-#              svg = TRUE,
-#              name = nombre_arch,
-#              encoding = "UTF-8",
-#              dir = "salida",
-#              edir = "ejercicios",
-#              mchoice = list(shuffle = TRUE,
-#                             answernumbering = "ABCD",
-#                             eval = list(partial = TRUE,
-#                                         rule = "none")))
-
+exams2html(examen01,
+           svg = TRUE,
+           results = "asis") # Evitar cualquier intento de abrir un navegador
 ################################################################################
 
-# Creación del examen en formato HTML
-
-exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE)
-
-# ################################################################################
-# Generación de n copias en un solo archivo de salida para PDF
-
-exams2pdf(rep(archivo_examen, numpreg),
-          n = copias,
+set.seed(semilla)
+exams2pdf(examen01,
           name = nombre_arch,
           encoding = "UTF-8",
+          n = copias,
           template = "solpcielo",
-          dir = dir_salida,
-          edir = dir_ejercicios)
-
+          dir = "salida",
+          edir = "General/erres/cloze/boxhist2/") # Usar la ruta correcta al directorio de ejercicios
 ################################################################################
-# Generación de n copias en un solo archivo .docx
 
-exams2pandoc(rep(archivo_examen, numpreg),
+set.seed(semilla)
+exams2moodle(examen01,
              n = copias,
+             svg = TRUE,
              name = nombre_arch,
              encoding = "UTF-8",
-             template = "pcielo.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE,
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = FALSE,
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+             dir = "salida",
+             edir = "General/erres/cloze/boxhist2/", # Usar la ruta correcta al directorio de ejercicios
+             mchoice = list(shuffle = FALSE,
+                            answernumbering = "ABCD",
+                            eval = list(partial = TRUE,
+                                        rule = "none")),
+             tdir = "temp_dir") # Establecer un directorio temporal válido
+################################################################################
 
-###############################################################################
+exams2pandoc(examen01, 
+             n = copias, 
+             nsamp = NULL, 
+             dir = "salida",
+             name = nombre_arch,
+             type = "docx", 
+             template = "plain.tex",
+             header = list(Date = Sys.Date()), 
+             inputs = NULL, 
+             options = NULL,
+             quiet = TRUE, 
+             resolution = 100, 
+             width = 4, 
+             height = 4, 
+             svg = TRUE,
+             encoding = "UTF-8", 
+             edir = "General/erres/cloze/boxhist2/", # Usar la ruta correcta al directorio de ejercicios
+             tdir = "temp_dir", # Establecer un directorio temporal válido
+             sdir = NULL,
+             verbose = FALSE, 
+             points = NULL, 
+             exshuffle = NULL)

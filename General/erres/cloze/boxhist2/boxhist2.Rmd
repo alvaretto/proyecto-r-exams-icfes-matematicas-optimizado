@@ -1,4 +1,5 @@
 ```{r data generation, echo = FALSE, results = "hide"}
+library(exams)
 ## DATA
 n <- sample(30:50, 1)
 m <- sample(1:4, 1)
@@ -93,7 +94,7 @@ answerlist(unlist(questions), markup = "markdown")
 
 Solution
 ========
-\
+
 ```{r boxplot_hist, echo = FALSE, results = "hide", fig.height = 4.5, fig.width = 9, fig.path = "", fig.cap = ""}
 par(mfrow = c(1, 2))
 boxplot(x, axes = FALSE)
