@@ -1,0 +1,17 @@
+﻿\begin{tikzpicture}[x={5mm}, y={5mm}, >=latex, rotate=270]
+    \fill[left color=green!25!yellow, right color=white, draw=black] (-8, 0) arc(180:360:4cm and 1cm) -- (8, 0) -- (8, 3) arc(0:-180:4cm and 1cm) -- cycle;
+    \fill[right color=white, left color=green!25!yellow, draw=black] (8, 3) arc(0:360:4cm and 1cm);
+    \draw (-5, 3) arc(180:360:2.5cm and .5cm);
+    \fill[inner color=white, outer color=green!25!yellow] (-5, 3) arc(180:0:2.5cm and .5cm) -- (0, 24) -- cycle;
+    \draw[dashed] (-5, 3) arc(180:0:2.5cm and .5cm);
+    \draw (5, 3) -- (0, 24) -- (-5, 3);
+    \draw[<->] (8.25, 3) -- (8.25, 24) node[midway, fill=white] {24 cm};
+    \draw[dashed] (5, 3) -- (8.5, 3);
+    \draw[dashed] (0, 24) -- (8.5, 24);
+    \draw[<->] (-8.5, 0) -- (-8.5, 3) node[midway, above] {3 cm};
+    \draw[red] (0, 3) -- (-5, 3);
+    \draw[<-] (-2.5, 3) -- +(120:5) node[above] {5 cm};
+    \draw[<->] (-8, -4) -- (8, -4) node[midway, fill=white] {16 cm};
+    \draw[dashed] (-8, 0) -- (-8, -4.5);
+    \draw[dashed] (8, 0) -- (8, -4.5);
+\end{tikzpicture}

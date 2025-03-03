@@ -1,0 +1,34 @@
+\documentclass[12pt,a4paper]{standalone}
+\usepackage{tikz}
+\definecolor{fillcub}{RGB}{255,238,170}
+\definecolor{fillsphere}{RGB}{85,153,255}
+
+\begin{document}
+\begin{tikzpicture}
+	\coordinate (O) at (0,0);
+	\coordinate (A) at (-30:4);
+	\coordinate (B) at (270:4);
+	\coordinate (C) at (210:4);
+	\coordinate (D) at (150:4);
+	\coordinate (E) at (90:4);
+	\coordinate (F) at (30:4);
+	\draw[dotted] (O) -- (A);
+	\draw[dotted] (O) -- (C);
+	\draw[dotted] (O) -- (E);
+	\draw (O) -- (B);
+	\draw (A) -- (B);
+	\draw (C) -- (B);
+	\draw (C) -- (D);
+	\draw (O) -- (D);
+	\draw (D) -- (E);
+	\draw (E) -- (F);
+	\draw (O) -- (F);
+	\draw (A) -- (F);
+	\draw (O) circle [radius=2.5];
+	\draw[dotted] (2.5,0) arc [start angle=0, end angle=180,x radius=2.5, y radius=0.625];
+	\draw[] (-2.5,0) arc [start angle=180, end angle=360,x radius=2.5, y radius=0.625];
+	\fill[color=fillsphere, opacity=0.5] circle (2.5);
+	\fill[color=fillcub, opacity=0.25] (B) -- (C) -- (D) -- (O) -- cycle;
+	\fill[color=fillcub, opacity=0.25] (O) -- (D) -- (E) -- (F) -- cycle;
+\end{tikzpicture}
+\end{document}

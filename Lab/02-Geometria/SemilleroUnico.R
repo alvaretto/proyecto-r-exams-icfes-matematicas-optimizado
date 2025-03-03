@@ -5,8 +5,8 @@ library(exams)
 library(knitr)
 
 # Definir directorio de trabajo y archivos
-setwd("/home/manjaro_lenovo/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams")
-archivo_rmd <- "Geometria.Rmd"
+#setwd("/home/manjaro_lenovo/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams")
+archivo_rmd <- "Cilindro_Hueco.Rmd"
 n_preguntas <- 5  # Número de variantes a generar
 
 # Crear directorio para los ejercicios si no existe
@@ -22,7 +22,7 @@ exams2pdf(archivo_rmd,
           n = n_preguntas,
           name = "Geometria_Semejanza_Triangulos",
           dir = "salida",
-          template = c("plain", "solution"),
+          template = c("pcielo", "solpcielo"),
           encoding = "UTF-8")
 
 # Generar DOCX

@@ -1,0 +1,25 @@
+﻿\usetikzlibrary{3d, angles,calc}
+
+\begin{tikzpicture}[x={(-20:5mm)}, y={5mm}, z={(15:5mm)}, >=latex]
+    \begin{scope}[canvas is xz plane at y=0, rotate=-10]
+        \draw[dashed] (7, 0) ++(120:7) -- ++(180:7) -- ++(240:7) -- +(300:7);
+        \draw (-7, 0) ++(300:7) -- ++(0:7) -- ++(60:7) -- +(120:7);
+    \end{scope}
+
+    \draw ({7*cos(-10)}, 0, {7*sin(-10)}) coordinate (B) -- (0, 10, 0) coordinate (V);
+    \draw ({7*cos(50)}, 0, {7*sin(50)}) coordinate (F) -- (V);
+    \draw[dashed] ({7*cos(110)}, 0, {7*sin(110)}) -- (V);
+    \draw[dashed] ({7*cos(170)}, 0, {7*sin(170)}) -- (V);
+    \draw ({7*cos(230)}, 0, {7*sin(230)}) -- (V);
+    \draw ({7*cos(290)}, 0, {7*sin(290)}) coordinate (A) -- (V);
+
+    \draw[dashed] (0, 0, 0) coordinate (O) -- ({6.06*cos(20)}, 0, {6.06*sin(20)}) coordinate (R);
+    \draw[<-] ({3.03*cos(20)}, 0, {3.03*sin(20)}) -- ({7*cos(20)}, 5, {7*sin(20)}) node[above] {6.06 cm};
+    \draw pic[draw, red] {right angle=O--R--F};
+    \draw[dashed] (O) -- (V);
+    \draw pic[draw, red] {right angle=V--O--R};
+    \draw[<->] ({7.5*cos(230)}, 0, {7.5*sin(230)}) -- ({7.5*cos(230)}, 10, {7.5*sin(230)}) node[midway, fill=white] {10 cm};
+    \draw[dashed] (O) -- ({8*cos(230)}, 0, {8*sin(230)});
+    \draw[dashed] (V) -- ({8*cos(230)}, 10, {8*sin(230)});
+    \draw[<->] ($(A) + (0, -.75, 0)$) -- ($(B) + (0, -.75, 0)$) node[midway, fill=white] {7 cm};
+\end{tikzpicture}
