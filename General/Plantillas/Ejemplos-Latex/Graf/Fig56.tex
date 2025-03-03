@@ -1,0 +1,31 @@
+% A cone in 3D
+% Author: Marco Daniel
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\begin{document}
+	
+	\tdplotsetmaincoords{60}{10}
+	\begin{tikzpicture}[tdplot_main_coords]
+		\def\RI{1.25}
+		\def\RII{1.25}
+		
+		\draw[thick] (\RI,0)
+		\foreach \x in {0,300,240,180} { --  (\x:\RI) node at (\x:\RI) (R1-\x) {} };
+		\draw[dashed,thick] (R1-0.center)
+		\foreach \x in {60,120,180} { --  (\x:\RI) node at (\x:\RI) (R1-\x) {} };
+		\path[fill=gray!30] (\RI,0)
+		\foreach \x in {0,60,120,180,240,300} { --  (\x:\RI)};
+		
+		\begin{scope}[yshift=3cm]
+			\draw[thick,fill=gray!30,opacity=0.2] (\RII,0)
+			\foreach \x in {0,60,120,180,240,300,360}
+			{ --  (\x:\RII) node at (\x:\RII) (R2-\x) {}};
+		\end{scope}
+		
+		\foreach \x in {0,180,240,300} { \draw (R1-\x.center)--(R2-\x.center); };
+		\foreach \x in {60,120} { \draw[dashed] (R1-\x.center)--(R2-\x.center); };
+		\draw[|<->|,>=latex] (1.6, 0) -- (0.55, 5.95) node[midway, right] {\small 18 cm};
+		\draw[|<->|,>=latex] (0.78, -1.4) -- (1.4, -0.3) node[midway, below right] {\small 8 cm};
+	\end{tikzpicture}
+\end{document}

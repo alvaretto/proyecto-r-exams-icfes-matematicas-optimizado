@@ -1,0 +1,25 @@
+﻿\usetikzlibrary{3d, angles,calc}
+
+\begin{tikzpicture}[x={(-20:5mm)}, y={5mm}, z={(15:5mm)}, >=latex]
+    \begin{scope}[canvas is xz plane at y=0, rotate=-25]
+        \draw[dashed] (0, 8.5) -- ++(216:10) -- ++(288:10);
+        \draw (234:8.5) -- ++(0:10) -- ++(72:10) -- ++(144:10) coordinate (F);
+        \draw[<->, dashed] (0, 0) coordinate (O2D) -- ++(54:6.88) coordinate (R) node[midway, fill=white] {6.88 cm};
+        \draw pic[draw, red] {right angle=O2D--R--F};
+    \end{scope}
+    \draw (0, 15, 0) -- ({8.5*cos(-7)}, 0, {8.5*sin(-7)}) coordinate (A);
+    \draw (0, 15, 0) -- ({8.5*cos(65)}, 0, {8.5*sin(65)}) coordinate (C);
+    \draw[dashed] (0, 15, 0) -- ({8.5*cos(137)}, 0, {8.5*sin(137)});
+    \draw (0, 15, 0) -- ({8.5*cos(209)}, 0, {8.5*sin(209)}) coordinate (D);
+    \draw (0, 15, 0) -- ({8.5*cos(281)}, 0, {8.5*sin(281)}) coordinate (B);
+    \draw[dashed] (0, 0, 0) coordinate (O) -- (0, 15, 0) coordinate (V);
+    \coordinate (F3D) at ({8.5*cos(29)}, 0, {8.5*sin(29)});
+    \draw pic[draw, red] {right angle=V--O--F3D};
+    \draw[<->] ($(A) + (0, -.75, 0)$) -- ($(B) + (0, -.75, 0)$) node[midway, fill=white] {10 cm};
+    \draw[dashed] ($(O) + (-5.25, 0, -6.25)$) -- (O);
+    \draw[dashed] ($(V) + (-5.25, 0, -6.25)$) -- (V);
+    \draw[<->] ($(O) + (-5, 0, -6)$) -- ($(V) + (-5, 0, -6)$) node[midway, fill=white] {15 cm};
+    \shade[inner color=white, outer color=green!25!yellow, opacity=.25] (A) -- (B) -- (V) -- cycle;
+    \shade[right color=green!35!yellow, opacity=.25] (C) -- (A) -- (V) -- cycle;
+    \shade[left color=green!15!yellow, opacity=.25] (D) -- (B) -- (V) -- cycle;
+\end{tikzpicture}

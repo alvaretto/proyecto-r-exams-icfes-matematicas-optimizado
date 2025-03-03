@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+    \draw[dashed] (2, 0) arc(0:180:2cm and .5cm);
+    \draw[dashed] (2, -6) arc(0:180:2cm and .5cm);
+    \draw[<->] (2.15, 4) -- (2.15, 0) node[midway, right] {4 cm};
+    \draw[<->] (0, -6.15) -- (2, -6.15) node[midway, below] {2 cm};
+    \draw[<->] (2.15, -6) -- (2.15, 0) node[midway, right] {6 cm};
+    \fill[left color=magenta, right color=white, opacity=.35, draw=black] (-2, 0) arc(180:360:2cm and .5cm) -- (0, 4) -- cycle;
+    \fill[right color = white, left color = magenta, opacity = .35, draw=black] (-2, -6) arc(180:360:2cm and .5cm) -- (2, 0) arc(360:180:2cm and .5cm) -- cycle;
+\end{tikzpicture}

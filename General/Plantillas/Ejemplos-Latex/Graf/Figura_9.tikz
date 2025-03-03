@@ -1,0 +1,11 @@
+﻿\begin{tikzpicture}[rotate=-250]
+    \draw[dashed] (3, 0) arc(0:180:2.5cm and .5cm);
+    \draw[dashed] (3, -6) arc(0:180:2.5cm and .5cm);
+    \draw[<->] (-2.25, 4) -- (-2.25, 0) node[midway, fill=white] {4 u};
+    \draw[<->] (.5, -2.15) -- (3, -2.15) node[midway, left] {3 u};
+    \draw[dashed] (.5, 0) -- (.5, -2.25);
+    \draw[magenta] (.5, 0) -- (3, 0);
+    \draw[<->] (-2.25, -6) -- (-2.25, 0) node[midway, fill=white] {10 u};
+    \fill[top color=white, bottom color=green!50!yellow, opacity=.35, draw=black] (-2, 0) arc(180:360:2.5cm and .5cm) -- (.5, 4) -- cycle;
+    \fill[top color=white, bottom color=green!50!yellow, opacity = .35, draw=black] (-2, -6) arc(180:360:2.5cm and .5cm) -- (3, 0) arc(360:180:2.5cm and .5cm) -- cycle;
+\end{tikzpicture}

@@ -1,0 +1,26 @@
+Actúa como un experto programador y asistente en [ÁREA_ESPECÍFICA].
+
+CONTEXTO:
+- Estoy trabajando en [DESCRIPCIÓN_DEL_PROYECTO]
+- El objetivo es [OBJETIVO_ESPECÍFICO]
+- Las tecnologías/herramientas que estoy utilizando son [TECNOLOGÍAS]
+
+TAREA ACTUAL:
+[DESCRIPCIÓN_DETALLADA_DE_LA_TAREA]
+
+REQUISITOS:
+1. [REQUISITO_1]
+2. [REQUISITO_2]
+3. [REQUISITO_3]
+
+RESTRICCIONES O CONSIDERACIONES ESPECIALES:
+- [RESTRICCIÓN_1]
+- [RESTRICCIÓN_2]
+
+FORMATO DE RESPUESTA DESEADO:
+- Proporciona explicaciones claras y concisas
+- Incluye ejemplos prácticos cuando sea relevante
+- Si es código, incluye comentarios explicativos
+- Sugiere mejores prácticas y optimizaciones
+
+¿Podrías ayudarme con esta tarea proporcionando [TIPO_DE_AYUDA_REQUERIDA]?

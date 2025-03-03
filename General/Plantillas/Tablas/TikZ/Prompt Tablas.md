@@ -1,0 +1,74 @@
+1. Generar un archivo '.Rmd' con el código r-exams que recrea el escenario matemático 
+mostrado en la imagen, incluyendo su aleatorización, para una pregunta con opción múltiple
+y única respuesta.
+
+   - Incluye sus diferentes secciones:
+   
+     - (```{r GeneracionDeDatos, echo = FALSE, results = "hide"}
+       library(exams)
+       library...
+       ```)
+     - Question
+========
+     - Answerlist
+----------
+     
+     (En caso de que sea schoice o mchoice)
+     - Solution
+========
+     - Meta-information
+================
+
+2. Al generar la tabla, adaptar el siguiente código TikZ de tal manera que:
+
+   a) Se genere un código inicial para la función de creación de la tabla TikZ similar, pero no idéntica a este:
+
+   ```r
+   # Función para crear la tabla TikZ
+   tikz_tabla_iluminacion <- function(datos) {
+     c("\\begin{tikzpicture}",
+       "\\node[inner sep=0pt] {",
+       "  \\small",
+       "  \\begin{tabular}{|c|c|c|}",
+       "    \\hline",
+       "    \\textbf{Luz} & \\textbf{Área del cuadro} & \\textbf{Área de la pared} \\\\",
+       "    \\textbf{} & \\textbf{iluminada} & \\textbf{iluminada} \\\\",
+       "    \\hline",
+       paste(datos$Luz, "&", 
+             paste0(datos$Area_cuadro, "\\%"), "&", 
+             paste0(datos$Area_pared, "\\%"), "\\\\"),
+       "    \\hline",
+       "  \\end{tabular}",
+       "};",
+       "\\end{tikzpicture}")
+   }
+   ```
+
+   b) Se incluya el código para imprimir la tabla en la sección 'Question', 
+   'Answerlist' y/o 'Solution', según sea el caso y, que ese código sea similar 
+   pero no idéntico a este:
+
+   ```{r, echo = FALSE, results = "asis"}
+   include_tikz(tikz_tabla_iluminacion(datos),
+                name = "tabla_iluminacion", 
+                markup = "markdown",
+                format = typ,
+                packages = c("tikz", "adjustbox"),
+                width = "9cm")
+   ```
+
+3. Asegurarse de que el código generado optimice las salidas exams2moodle, exams2pdf, exams2html y exams2pandoc.
+
+4. Las tablas deben generarse siempre en código TikZ.
+
+5. No borrar ni dejar de incluir 
+
+'```{r datos, echo = FALSE, results = "hide"}
+library(exams)
+library(tikzDevice)
+
+typ <- match_exams_device()'
+
+6. Proporcionar explicaciones claras sobre cómo se ha adaptado el código para recrear el escenario matemático de la imagen original.
+
+7. Abstenerse de realizar cambios ajenos a lo aquí solicitado.
