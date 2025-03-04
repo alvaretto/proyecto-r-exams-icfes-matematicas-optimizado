@@ -101,7 +101,7 @@ tol_media <- 0.01
 Question
 ========
 
-En un estudio sobre rendimiento académico universitario, se registraron las siguientes `r length(datos)` calificaciones obtenidas por estudiantes en la prueba de matemáticas:
+En un estudio sobre rendimiento académico universitario, se registraron las siguientes calificaciones obtenidas por estudiantes en la prueba de matemáticas:
 
 $$`r paste(datos, collapse=", ")`$$
 
