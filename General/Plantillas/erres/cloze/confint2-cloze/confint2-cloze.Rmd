@@ -1,0 +1,69 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+```{r generacion_de_datos, echo = FALSE, results = "hide"}
+## GENERACIÓN DE DATOS
+# n: Número de turistas encuestados, generado aleatoriamente entre 50 y 150
+numero_turistas <- sample(50:150, 1)
+# gastos: Gastos diarios de los turistas, generados aleatoriamente con distribución normal
+gastos <- rnorm(numero_turistas, runif(1, 100, 200), runif(1, 10, 15))
+
+## GENERACIÓN DE PREGUNTA/RESPUESTA
+# media_gastos: Media de los gastos diarios, redondeada a 1 decimal
+media_gastos <- round(mean(gastos), digits = 1)
+# varianza_gastos: Varianza de los gastos diarios, redondeada a 1 decimal
+varianza_gastos <- round(var(gastos), digits = 1)
+# desviacion_estandar: Desviación estándar de los gastos diarios
+desviacion_estandar <- sqrt(varianza_gastos/numero_turistas)
+# intervalo_inferior: Límite inferior del intervalo de confianza al 95%
+intervalo_inferior <- round(media_gastos - 1.96*desviacion_estandar, 3)
+# intervalo_superior: Límite superior del intervalo de confianza al 95%
+intervalo_superior <- round(media_gastos + 1.96*desviacion_estandar, 3)
+```
+
+Question
+========
+
+Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a $`r numero_turistas`$ turistas. Esto muestra que los
+turistas gastan en promedio $`r media_gastos`$ EUR. La varianza muestral
+$s^2_{n-1}$ es igual a $`r varianza_gastos`$.
+
+Determine un intervalo de confianza del $95\%$ para los gastos diarios
+promedio (en EUR) de un turista.
+
+Answerlist
+----------
+* ¿Cuál es el límite inferior del intervalo de confianza?
+* ¿Cuál es el límite superior del intervalo de confianza?
+
+Solution
+========
+
+El intervalo de confianza del $95\%$ para los gastos promedio $\mu$ está
+dado por:
+$$
+\begin{aligned}
+&   & \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+& = & \left[ `r media_gastos` \, - \, 1.96\sqrt{\frac{`r varianza_gastos`}{`r numero_turistas`}}, \;
+             `r media_gastos` \, + \, 1.96\sqrt{\frac{`r varianza_gastos`}{`r numero_turistas`}}\right] \\
+& = & \left[`r intervalo_inferior`, \, `r intervalo_superior`\right].
+\end{aligned}
+$$
+
+Answerlist
+----------
+* El límite inferior del intervalo de confianza es $`r intervalo_inferior`$.
+* El límite superior del intervalo de confianza es $`r intervalo_superior`$.
+
+Meta-information
+============
+extype: cloze
+exclozetype: num|num
+exsolution: `r intervalo_inferior`|`r intervalo_superior`
+exname: Intervalo de confianza
+extol: 0.01
