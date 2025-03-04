@@ -39,8 +39,13 @@ mediana <- median(datos)
 encontrar_moda <- function(x) {
   tabla <- table(x)
   modas <- as.numeric(names(tabla[tabla == max(tabla)]))
-  # Si hay más de un valor con la misma frecuencia máxima, devolvemos el primero
-  return(modas[1])
+  if (length(modas) > 1) {
+    # Selecciona una moda al azar si hay múltiples
+    moda <- sample(modas, 1)
+  } else {
+    moda <- modas[1]
+  }
+  return(moda)
 }
 
 moda <- encontrar_moda(datos)
@@ -50,12 +55,35 @@ while (length(unique(c(round(media, 2), mediana, moda))) < 3) {
   # Regenerar datos si la media, mediana y moda son iguales
   datos_base <- sample(1:20, n-1, replace = TRUE)
   moda_valor <- sample(1:20, 1)
+  moda_repeticiones <- sample(2:3, 1)
   datos <- c(datos_base, rep(moda_valor, moda_repeticiones))
   datos <- sample(datos, length(datos))
   
   media <- mean(datos)
   mediana <- median(datos)
   moda <- encontrar_moda(datos)
+}
+
+# Verificar si hay más de una moda
+tabla_frec <- table(datos)
+max_freq <- max(tabla_frec)
+modas <- as.numeric(names(tabla_frec[tabla_frec == max_freq]))
+
+while (length(modas) > 1) {
+  # Regenerar datos si hay más de una moda
+  datos_base <- sample(1:20, n-1, replace = TRUE)
+  moda_valor <- sample(1:20, 1)
+  moda_repeticiones <- sample(2:3, 1)
+  datos <- c(datos_base, rep(moda_valor, moda_repeticiones))
+  datos <- sample(datos, length(datos))
+  
+  media <- mean(datos)
+  mediana <- median(datos)
+  moda <- encontrar_moda(datos)
+
+  tabla_frec <- table(datos)
+  max_freq <- max(tabla_frec)
+  modas <- as.numeric(names(tabla_frec[tabla_frec == max_freq]))
 }
 
 # Redondear la media a 2 decimales para la solución
