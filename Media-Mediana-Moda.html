@@ -11,7 +11,7 @@
 
 
 
-<title>Cilindro_Hueco.knit</title>
+<title>Media-Mediana-Moda.knit</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -354,59 +354,63 @@ display: none;
 
 <div id="question" class="section level1">
 <h1>Question</h1>
-<p>Nicolás necesita determinar el volumen de combustible que puede
-contener el cilindro interno pero solamente cuenta con las medidas de
-las dimensiones que muestra la figura.</p>
-<p>¿Qué medida le falta a Nicolás para hallar la cantidad deseada?</p>
-<div id="answerlist" class="section level2">
-<h2>Answerlist</h2>
-<ul>
-<li>Altura del cilindro</li>
-<li>Diámetro externo</li>
-<li>Radio externo</li>
-<li>Perímetro del cilindro</li>
-</ul>
-</div>
+<p>A continuación se muestra un conjunto de 13 valores numéricos
+enteros:</p>
+<p><span class="math display">\[7, 5, 12, 5, 3, 12, 8, 19, 3, 9, 5, 7,
+9\]</span></p>
+<p>Complete la siguiente tabla con los valores correspondientes a las
+medidas de tendencia central (con dos decimales para la media si es
+necesario):</p>
+<table border="1" style="border-collapse: collapse; width: 50%;">
+  <tr>
+    <th style="padding: 8px; text-align: center;">Medida</th>
+    <th style="padding: 8px; text-align: center;">Valor</th>
+  </tr>
+  <tr>
+    <td style="padding: 8px;">Media</td>
+    <td style="padding: 8px; text-align: center;">##ANSWER1##</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;">Mediana</td>
+    <td style="padding: 8px; text-align: center;">##ANSWER2##</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;">Moda</td>
+    <td style="padding: 8px; text-align: center;">##ANSWER3##</td>
+  </tr>
+</table>
 </div>
 <div id="solution" class="section level1">
 <h1>Solution</h1>
-<p>Para resolver este problema, debemos analizar qué información
-necesitamos para calcular el volumen del cilindro interno, que
-determinará la cantidad de combustible que puede contener.</p>
-<p>El volumen de un cilindro se calcula con la fórmula: <span class="math inline">\(V = \pi \cdot r^2 \cdot h\)</span></p>
-<p>Donde: - <span class="math inline">\(r\)</span> es el radio del
-cilindro - <span class="math inline">\(h\)</span> es la altura del
-cilindro</p>
-<p>En la figura se muestra: - Radio interno = 1.6 m - Grosor = 0.2 m
-(que determina el radio externo = 1.8 m)</p>
-<p>Podemos calcular: - Radio externo = Radio interno + Grosor = 1.6 +
-0.2 = 1.8 m - Diámetro externo = 2 × Radio externo = 2 × 1.8 = 3.6 m</p>
-<p>Para calcular el volumen del cilindro interno necesitamos: 1. El
-radio interno (ya lo tenemos: 1.6 m) 2. La altura del cilindro (esta
-información falta)</p>
-<p>Por lo tanto, a Nicolás le falta conocer la altura del cilindro para
-poder calcular la cantidad de combustible que puede contener el cilindro
-interno.</p>
-<div id="answerlist-1" class="section level2">
-<h2>Answerlist</h2>
-<ul>
-<li>Este es correcto. Para calcular el volumen del cilindro interno
-necesitamos conocer su altura del cilindro</li>
-<li>Este es incorrecto. Conocer el diámetro externo no es suficiente
-para calcular el volumen, ya tenemos esta información o no es
-necesaria</li>
-<li>Este es incorrecto. Conocer la radio externo no es suficiente para
-calcular el volumen, ya tenemos esta información o no es necesaria</li>
-<li>Este es incorrecto. Conocer el perímetro del cilindro no es
-suficiente para calcular el volumen, ya tenemos esta información o no es
-necesaria</li>
-</ul>
-</div>
+<p>Para este conjunto de datos: <span class="math inline">\(7, 5, 12, 5,
+3, 12, 8, 19, 3, 9, 5, 7, 9\)</span></p>
+<p><strong>Media</strong>: La media se calcula sumando todos los valores
+y dividiendo por el número total de valores.</p>
+<p><span class="math display">\[\text{Media} = \frac{7 + 5 + 12 + 5 + 3
++ 12 + 8 + 19 + 3 + 9 + 5 + 7 + 9}{13} = \frac{104}{13} = 8\]</span></p>
+<p><strong>Mediana</strong>: La mediana es el valor central cuando los
+datos están ordenados.</p>
+<p>Datos ordenados: <span class="math inline">\(3, 3, 5, 5, 5, 7, 7, 8,
+9, 9, 12, 12, 19\)</span></p>
+<p>Como hay 13 valores (número impar), la mediana es el valor central:
+7.</p>
+<p><span class="math display">\[\text{Mediana} = 7\]</span></p>
+<p><strong>Moda</strong>: La moda es el valor que aparece con mayor
+frecuencia.</p>
+<p>Frecuencias de cada valor: El valor 3 aparece 2 veces</p>
+<p>El valor 5 aparece 3 veces</p>
+<p>El valor 7 aparece 2 veces</p>
+<p>El valor 8 aparece 1 veces</p>
+<p>El valor 9 aparece 2 veces</p>
+<p>El valor 12 aparece 2 veces</p>
+<p>El valor 19 aparece 1 veces</p>
+<p>El valor 5 aparece con mayor frecuencia (3 veces), por lo tanto:</p>
+<p><span class="math display">\[\text{Moda} = 5\]</span></p>
 </div>
 <div id="meta-information" class="section level1">
 <h1>Meta-information</h1>
-<p>exname: Cilindro_Hueco_Volumen extype: schoice exsolution: 1000
-exshuffle: TRUE</p>
+<p>extype: cloze exsolution: 8|7|5 exclozetype: num|num|num exname:
+Media Mediana Moda extol: 0.01|0|0</p>
 </div>
 
 
