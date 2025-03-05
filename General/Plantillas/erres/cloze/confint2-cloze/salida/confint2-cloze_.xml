@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/confint2-cloze_/Exercise 1</text>
+</category>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R01 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(126\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(107.3\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(179.8\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=104.959:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=109.641:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 107.3 \, - \, 1.96\sqrt{\frac{179.8}{126}}, \;
+             107.3 \, + \, 1.96\sqrt{\frac{179.8}{126}}\right] \\
+&amp; = &amp; \left[104.959, \, 109.641\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(104.959\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(109.641\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R02 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(129\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(106.1\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(130.6\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=104.128:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=108.072:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 106.1 \, - \, 1.96\sqrt{\frac{130.6}{129}}, \;
+             106.1 \, + \, 1.96\sqrt{\frac{130.6}{129}}\right] \\
+&amp; = &amp; \left[104.128, \, 108.072\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(104.128\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(108.072\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R03 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(75\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(198.4\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(122.9\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=195.891:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=200.909:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 198.4 \, - \, 1.96\sqrt{\frac{122.9}{75}}, \;
+             198.4 \, + \, 1.96\sqrt{\frac{122.9}{75}}\right] \\
+&amp; = &amp; \left[195.891, \, 200.909\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(195.891\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(200.909\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R04 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(55\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(129.9\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(123\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=126.969:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=132.831:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 129.9 \, - \, 1.96\sqrt{\frac{123}{55}}, \;
+             129.9 \, + \, 1.96\sqrt{\frac{123}{55}}\right] \\
+&amp; = &amp; \left[126.969, \, 132.831\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(126.969\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(132.831\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R05 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(138\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(130.9\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(189.9\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=128.601:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=133.199:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 130.9 \, - \, 1.96\sqrt{\frac{189.9}{138}}, \;
+             130.9 \, + \, 1.96\sqrt{\frac{189.9}{138}}\right] \\
+&amp; = &amp; \left[128.601, \, 133.199\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(128.601\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(133.199\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R06 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(52\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(134.3\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(165.4\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=130.804:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=137.796:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 134.3 \, - \, 1.96\sqrt{\frac{165.4}{52}}, \;
+             134.3 \, + \, 1.96\sqrt{\frac{165.4}{52}}\right] \\
+&amp; = &amp; \left[130.804, \, 137.796\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(130.804\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(137.796\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R07 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(63\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(167.4\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(187.4\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=164.02:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=170.78:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 167.4 \, - \, 1.96\sqrt{\frac{187.4}{63}}, \;
+             167.4 \, + \, 1.96\sqrt{\frac{187.4}{63}}\right] \\
+&amp; = &amp; \left[164.02, \, 170.78\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(164.02\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(170.78\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R08 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(144\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(197.8\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(197.3\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=195.506:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=200.094:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 197.8 \, - \, 1.96\sqrt{\frac{197.3}{144}}, \;
+             197.8 \, + \, 1.96\sqrt{\frac{197.3}{144}}\right] \\
+&amp; = &amp; \left[195.506, \, 200.094\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(195.506\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(200.094\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R09 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(93\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(161\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(128.4\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=158.697:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=163.303:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 161 \, - \, 1.96\sqrt{\frac{128.4}{93}}, \;
+             161 \, + \, 1.96\sqrt{\frac{128.4}{93}}\right] \\
+&amp; = &amp; \left[158.697, \, 163.303\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(158.697\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(163.303\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R10 Q1 : confint2-cloze </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se analizan los gastos diarios de los turistas de verano en Viena.
+Se realiza una encuesta a <span class="math inline">\(133\)</span> turistas. Esto muestra que los
+turistas gastan en promedio <span class="math inline">\(130.2\)</span> EUR. La varianza muestral
+<span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(130\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos diarios
+promedio (en EUR) de un turista.</p>
+¿Cuál es el límite inferior del intervalo de confianza? {1:NUMERICAL:=128.262:0.01}
+¿Cuál es el límite superior del intervalo de confianza? {1:NUMERICAL:=132.138:0.01}
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(95\%\)</span> para los gastos promedio <span class="math inline">\(\mu\)</span> está
+dado por:
+<span class="math display">\[
+\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 130.2 \, - \, 1.96\sqrt{\frac{130}{133}}, \;
+             130.2 \, + \, 1.96\sqrt{\frac{130}{133}}\right] \\
+&amp; = &amp; \left[128.262, \, 132.138\right].
+\end{aligned}
+\]</span></p>
+<ul>
+<li> El límite inferior del intervalo de confianza es <span class="math inline">\(128.262\)</span>. </li>
+<li> El límite superior del intervalo de confianza es <span class="math inline">\(132.138\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+</quiz>
