@@ -112,6 +112,14 @@ El contenido irá creciendo progresivamente con los aportes del creador principa
         - Scripts R
         - Documentación
   - Medidas de Dispersión
+    - **Estado Actual:**
+      - Intervalo de Confianza
+      - Caso Práctico: Gastos Turísticos
+      - Recursos disponibles:
+        - Archivos RMarkdown (.Rmd) 
+        - Scripts R
+        - Documentación
+        - Ejercicios y recursos adicionales
   - Medidas de Posición
   - Probabilidad: Principios Aditivo y Multiplicativo de Conteo
     - **Contenido Actual:**
