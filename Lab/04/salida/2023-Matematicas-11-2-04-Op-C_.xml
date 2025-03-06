@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/2023-Matematicas-11-2-04-Op-C_/Exercise 1</text>
+</category>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> Q1 : 2023-Matematicas-11-2-04-Op-C </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>La empresa TechLife realizó pruebas de rendimiento en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante cinco pruebas diferentes:</p>
+<table class="table_shade">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Modelo K</th>
+<th style="text-align: right;">Modelo J</th>
+<th style="text-align: right;">Modelo B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Prueba 1</td>
+<td style="text-align: right;">638</td>
+<td style="text-align: right;">796</td>
+<td style="text-align: right;">711</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prueba 2</td>
+<td style="text-align: right;">756</td>
+<td style="text-align: right;">633</td>
+<td style="text-align: right;">757</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Prueba 3</td>
+<td style="text-align: right;">737</td>
+<td style="text-align: right;">723</td>
+<td style="text-align: right;">653</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prueba 4</td>
+<td style="text-align: right;">725</td>
+<td style="text-align: right;">737</td>
+<td style="text-align: right;">796</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Prueba 5</td>
+<td style="text-align: right;">791</td>
+<td style="text-align: right;">758</td>
+<td style="text-align: right;">841</td>
+</tr>
+</tbody>
+</table>
+<p>Al comparar la mediana de las duraciones de la batería de los tres modelos, ¿cuál de las siguientes afirmaciones es correcta?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>La respuesta correcta es: El Modelo K tiene una mediana igual a la del Modelo J y menor que la del Modelo B.</p>
+<p>Para resolver este problema, debemos:</p>
+<ol style="list-style-type: decimal">
+<li>Ordenar los datos de cada modelo y encontrar su mediana:</li>
+</ol>
+<ul>
+<li>Modelo K: 633, 723, 737, 758, 796 → Mediana = 737</li>
+<li>Modelo J: 653, 711, 757, 796, 841 → Mediana = 757</li>
+<li>Modelo B: 638, 725, 737, 756, 791 → Mediana = 737</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>Comparar las medianas:</li>
+</ol>
+<ul>
+<li>Mediana de Modelo K (737) = Mediana de Modelo J (757)</li>
+<li>Mediana de Modelo K (737) &lt; Mediana de Modelo B (737)</li>
+</ul>
+<p>Por lo tanto, el Modelo K tiene una mediana igual a la del Modelo J y menor que la del Modelo B.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+El Modelo K tiene una mediana mayor que la del Modelo J y menor que la del Modelo B.
+</p>]]></text>
+</answer>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+El Modelo K tiene una mediana igual a la del Modelo J y menor que la del Modelo B.
+</p>]]></text>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+El Modelo K tiene una mediana mayor que la del Modelo J y que la del Modelo B.
+</p>]]></text>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+El Modelo K tiene una mediana igual a la del Modelo B y mayor que la del Modelo J.
+</p>]]></text>
+</answer>
+</question>
+
+</quiz>
