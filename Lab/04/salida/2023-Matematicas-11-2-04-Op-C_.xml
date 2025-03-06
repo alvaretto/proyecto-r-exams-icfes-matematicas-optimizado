@@ -38,46 +38,46 @@
 }
 </style>
 <p>
-<p>La empresa TechLife realizó pruebas de rendimiento en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante cinco pruebas diferentes:</p>
+<p>La empresa SmartCell realizó pruebas de eficiencia en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante cinco pruebas diferentes:</p>
 <table class="table_shade">
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">Modelo K</th>
-<th style="text-align: right;">Modelo J</th>
-<th style="text-align: right;">Modelo B</th>
+<th style="text-align: right;">Modelo P</th>
+<th style="text-align: right;">Modelo L</th>
+<th style="text-align: right;">Modelo D</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Prueba 1</td>
-<td style="text-align: right;">638</td>
-<td style="text-align: right;">796</td>
-<td style="text-align: right;">711</td>
+<td style="text-align: right;">526</td>
+<td style="text-align: right;">536</td>
+<td style="text-align: right;">731</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Prueba 2</td>
-<td style="text-align: right;">756</td>
-<td style="text-align: right;">633</td>
-<td style="text-align: right;">757</td>
+<td style="text-align: right;">565</td>
+<td style="text-align: right;">666</td>
+<td style="text-align: right;">734</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Prueba 3</td>
-<td style="text-align: right;">737</td>
-<td style="text-align: right;">723</td>
-<td style="text-align: right;">653</td>
+<td style="text-align: right;">666</td>
+<td style="text-align: right;">574</td>
+<td style="text-align: right;">613</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Prueba 4</td>
-<td style="text-align: right;">725</td>
-<td style="text-align: right;">737</td>
-<td style="text-align: right;">796</td>
+<td style="text-align: right;">682</td>
+<td style="text-align: right;">713</td>
+<td style="text-align: right;">668</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Prueba 5</td>
-<td style="text-align: right;">791</td>
-<td style="text-align: right;">758</td>
-<td style="text-align: right;">841</td>
+<td style="text-align: right;">733</td>
+<td style="text-align: right;">692</td>
+<td style="text-align: right;">652</td>
 </tr>
 </tbody>
 </table>
@@ -86,24 +86,24 @@
 </questiontext>
 <generalfeedback format="html">
 <text><![CDATA[<p>
-<p>La respuesta correcta es: El Modelo K tiene una mediana igual a la del Modelo J y menor que la del Modelo B.</p>
+<p>La respuesta correcta es: El Modelo P tiene una mediana igual a la del Modelo L y menor que la del Modelo D.</p>
 <p>Para resolver este problema, debemos:</p>
 <ol style="list-style-type: decimal">
 <li>Ordenar los datos de cada modelo y encontrar su mediana:</li>
 </ol>
 <ul>
-<li>Modelo K: 633, 723, 737, 758, 796 → Mediana = 737</li>
-<li>Modelo J: 653, 711, 757, 796, 841 → Mediana = 757</li>
-<li>Modelo B: 638, 725, 737, 756, 791 → Mediana = 737</li>
+<li>Modelo L: 536, 574, 666, 692, 713 → Mediana = 666</li>
+<li>Modelo D: 613, 652, 668, 731, 734 → Mediana = 668</li>
+<li>Modelo P: 526, 565, 666, 682, 733 → Mediana = 666</li>
 </ul>
 <ol start="2" style="list-style-type: decimal">
 <li>Comparar las medianas:</li>
 </ol>
 <ul>
-<li>Mediana de Modelo K (737) = Mediana de Modelo J (757)</li>
-<li>Mediana de Modelo K (737) &lt; Mediana de Modelo B (737)</li>
+<li>Mediana de Modelo P (666) = Mediana de Modelo L (666)</li>
+<li>Mediana de Modelo P (666) &lt; Mediana de Modelo D (668)</li>
 </ul>
-<p>Por lo tanto, el Modelo K tiene una mediana igual a la del Modelo J y menor que la del Modelo B.</p>
+<p>Por lo tanto, el Modelo P tiene una mediana igual a la del Modelo L y menor que la del Modelo D.</p>
 </p>]]></text>
 </generalfeedback>
 <penalty>0</penalty>
@@ -113,22 +113,22 @@
 <answernumbering>ABCD</answernumbering>
 <answer fraction="0" format="html">
 <text><![CDATA[<p>
-El Modelo K tiene una mediana mayor que la del Modelo J y menor que la del Modelo B.
+El Modelo P tiene una mediana mayor que la del Modelo D y que la del Modelo L.
+</p>]]></text>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+El Modelo P tiene una mediana mayor que la del Modelo L y menor que la del Modelo D.
 </p>]]></text>
 </answer>
 <answer fraction="100" format="html">
 <text><![CDATA[<p>
-El Modelo K tiene una mediana igual a la del Modelo J y menor que la del Modelo B.
+El Modelo P tiene una mediana igual a la del Modelo L y menor que la del Modelo D.
 </p>]]></text>
 </answer>
 <answer fraction="0" format="html">
 <text><![CDATA[<p>
-El Modelo K tiene una mediana mayor que la del Modelo J y que la del Modelo B.
-</p>]]></text>
-</answer>
-<answer fraction="0" format="html">
-<text><![CDATA[<p>
-El Modelo K tiene una mediana igual a la del Modelo B y mayor que la del Modelo J.
+El Modelo P tiene una mediana igual a la del Modelo D y menor que la del Modelo L.
 </p>]]></text>
 </answer>
 </question>
