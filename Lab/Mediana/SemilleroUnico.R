@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "2023-Matematicas-11-2-04-Op-B.Rmd"
+archivo_examen <- "2023-Matematicas-11-2-04-Op-D-V2.Rmd"
 copias <- 500
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
