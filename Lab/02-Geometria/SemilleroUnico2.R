@@ -2,10 +2,11 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "Cilindro_Hueco.Rmd"
-copias <- 1
-numpreg <- 2
+archivo_examen <- "Geometria_vuelo.Rmd"
+copias <- 5  # Generar 5 copias para verificar la aleatorización
+numpreg <- 1  # Solo usar 1 pregunta por copia para facilitar la revisión
 semilla <- sample(100:1e8, 1)
+cat("Usando semilla:", semilla, "\n")  # Mostrar la semilla utilizada
 set.seed(semilla)
 dir_salida <- "salida"
 dir_ejercicios <- "ejercicios"
@@ -45,6 +46,19 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # }
 
 #################################################################################
+# Saltamos la creación de HTML por ahora debido a problemas con las gráficas
+# exams2html(rep(archivo_examen, numpreg),
+#            n = 1,
+#            name = nombre_arch,
+#            solution = TRUE,
+#            mathjax = TRUE,
+#            resolution = 100,
+#            width = 600,
+#            height = 400,
+#            encoding = "UTF-8",
+#            dir = dir_salida)
+
+################################################################################
 # Generación de n copias en un solo archivo de salida para PDF
 
 exams2pdf(rep(archivo_examen, numpreg),
@@ -64,8 +78,6 @@ exams2pandoc(rep(archivo_examen, numpreg),
              encoding = "UTF-8",
              template = "pcielo.tex",
              header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
              quiet = TRUE,
              resolution = 100,
              width = 4,
@@ -73,18 +85,7 @@ exams2pandoc(rep(archivo_examen, numpreg),
              svg = TRUE,
              dir = dir_salida,
              edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = FALSE,
-             points = NULL,
-             exshuffle = NULL,
              type = "docx")
-
-################################################################################
-# Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
-
-exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE)
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'copias'
