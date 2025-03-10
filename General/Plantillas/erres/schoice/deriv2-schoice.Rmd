@@ -1,0 +1,61 @@
+```{r generacion_datos, echo = FALSE, results = "hide"}
+library(exams)
+
+# Inicialización de la variable de selección múltiple
+seleccion_multiple <- NULL
+
+while(is.null(seleccion_multiple)) {
+  ## Parámetros de la función exponencial
+  exponente <- sample(2:9, 1)          # Exponente entre 2 y 9
+  coef_exp <- sample(seq(2, 4, 0.1), 1) # Coeficiente exponencial entre 2 y 4
+  punto_eval <- sample(seq(0.6, 0.9, 0.01), 1) # Punto de evaluación entre 0.6 y 0.9
+  
+  ## Cálculo de la solución correcta
+  resultado <- exp(coef_exp * punto_eval) * (exponente * punto_eval^(exponente-1) + coef_exp * punto_eval^exponente)
+  
+  ## Generación de opciones incorrectas pero plausibles
+  errores <- c(
+    exponente * punto_eval^(exponente-1) * exp(coef_exp * punto_eval),
+    exponente * punto_eval^(exponente-1) * exp(coef_exp * punto_eval) + punto_eval^exponente * exp(coef_exp * punto_eval)
+  )
+  
+  # Rango para generar distractores adicionales
+  rango <- if(resultado < 4) c(0.5, 5.5) else resultado * c(0.5, 1.5)
+  
+  # Genera opciones de selección múltiple
+  seleccion_multiple <- num_to_schoice(resultado, wrong = errores, range = rango, delta = 0.1)
+}
+```
+
+Question
+========
+¿Cuál es la derivada de $f(x) = x^{`r exponente`} e^{`r coef_exp` x}$, evaluada en $x = `r punto_eval`$?
+
+```{r lista_preguntas, echo = FALSE, results = "asis"}
+answerlist(seleccion_multiple$questions, markup = "markdown")
+```
+
+Solution
+========
+Usando la regla del producto para $f(x) = g(x) \cdot h(x)$, donde $g(x) := x^{`r exponente`}$ y $h(x) := e^{`r coef_exp` x}$, obtenemos:
+$$
+\begin{aligned}
+f'(x) &= [g(x) \cdot h(x)]' = g'(x) \cdot h(x) + g(x) \cdot h'(x) \\
+      &= `r exponente` x^{`r exponente` - 1} \cdot e^{`r coef_exp` x} + x^{`r exponente`} \cdot e^{`r coef_exp` x} \cdot `r coef_exp` \\
+      &= e^{`r coef_exp` x} \cdot(`r exponente` x^`r exponente-1` + `r coef_exp` x^{`r exponente`}) \\
+      &= e^{`r coef_exp` x} \cdot x^`r exponente-1` \cdot (`r exponente` + `r coef_exp` x).
+\end{aligned}
+$$
+Evaluada en $x = `r punto_eval`$, la respuesta es:
+$$ e^{`r coef_exp` \cdot `r punto_eval`} \cdot `r punto_eval`^`r exponente-1` \cdot (`r exponente` + `r coef_exp` \cdot `r punto_eval`) = `r fmt(resultado, 6)`. $$
+Por lo tanto, redondeando a dos decimales tenemos $f'(`r punto_eval`) = `r fmt(resultado)`$.
+
+```{r lista_soluciones, echo = FALSE, results = "asis"}
+answerlist(ifelse(seleccion_multiple$solutions, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(seleccion_multiple$solutions)`
+exname: derivada exponencial
