@@ -1,5 +1,6 @@
 ```{r data generation, echo = FALSE, results = "hide"}
 library(xtable)
+library(exams)
 
 # Función para generar datos aleatorios y crear diagrama de caja
 crear_ejercicio_estatura <- function(base_min = 155, base_max = 172, 
