@@ -1,0 +1,120 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r configuracion, include=FALSE}
+library(exams)
+knitr::opts_chunk$set(echo = FALSE, results = "hide", fig.path = "", fig.cap = "")
+
+# Función para detectar valores atípicos
+is.outlier <- function(x) {
+  q1 <- quantile(x, 0.25)
+  q3 <- quantile(x, 0.75)
+  ric <- q3 - q1
+  x < (q1 - 1.5 * ric) | x > (q3 + 1.5 * ric)
+}
+```
+
+```{r generacion_datos}
+# Generar datos para las dos muestras
+set.seed(sample(1:1000, 1))  # Semilla aleatoria
+
+# Generar muestra A: distribución normal
+n_A <- sample(40:50, 1)  # Tamaño entre 40-50
+media_A <- sample(8:12, 1)  # Media entre 8-12
+desv_A <- runif(1, 1.5, 2)  # Desviación entre 1.5-2
+A <- rnorm(n_A, media_A, desv_A)
+
+# Generar muestra B: puede ser normal o sesgada
+n_B <- sample(35:45, 1)  # Tamaño entre 35-45
+tipo_B <- sample(c("normal", "sesgada"), 1)
+
+if(tipo_B == "normal") {
+  media_B <- media_A + sample(c(-2, 2), 1)  # Media diferente a A
+  desv_B <- runif(1, 1.5, 2)  # Desviación similar a A
+  B <- rnorm(n_B, media_B, desv_B)
+} else {
+  # Distribución log-normal para sesgo
+  B <- exp(rnorm(n_B, 1.5, 0.5))
+  # Escalar para que coincida aproximadamente con el rango de A
+  B <- scale(B) * sd(A) + mean(A)
+}
+
+# Calcular estadísticas para las preguntas
+stats_A <- fivenum(A)  # Mínimo, Q1, Mediana, Q3, Máximo de A
+stats_B <- fivenum(B)  # Mínimo, Q1, Mediana, Q3, Máximo de B
+rango_A <- diff(range(A))
+rango_B <- diff(range(B))
+iqr_A <- stats_A[4] - stats_A[2]  # Rango intercuartílico de A
+iqr_B <- stats_B[4] - stats_B[2]  # Rango intercuartílico de B
+
+# Generar preguntas y respuestas
+preguntas <- c(
+  "La mediana de A es mayor que la mediana de B.",
+  "La dispersión en A es menor que en B.",
+  "La distribución B presenta mayor asimetría que A.",
+  "Hay valores atípicos en ambas distribuciones.",
+  "El rango intercuartílico de A es similar al de B."
+)
+
+# Determinar soluciones
+soluciones <- c(
+  stats_A[3] > stats_B[3],  # Comparación de medianas
+  rango_A < rango_B,        # Comparación de dispersión
+  tipo_B == "sesgada",      # Asimetría
+  any(is.outlier(A)) && any(is.outlier(B)),  # Valores atípicos
+  abs(iqr_A - iqr_B) < mean(c(iqr_A, iqr_B)) * 0.2  # RIC similar (diferencia < 20%)
+)
+
+# Generar explicaciones
+explicaciones <- c(
+  paste("La mediana de A es", round(stats_A[3], 2), "y la de B es", round(stats_B[3], 2)),
+  paste("El rango de A es", round(rango_A, 2), "y el de B es", round(rango_B, 2)),
+  ifelse(tipo_B == "sesgada", 
+         "B muestra una clara asimetría mientras A es aproximadamente simétrica",
+         "Ambas distribuciones son aproximadamente simétricas"),
+  paste("Hay", sum(is.outlier(A)), "valores atípicos en A y", sum(is.outlier(B)), "en B"),
+  paste("RIC de A:", round(iqr_A, 2), ", RIC de B:", round(iqr_B, 2))
+)
+```
+
+Pregunta
+========
+En la siguiente figura se representan las distribuciones de una variable
+mediante dos diagramas de caja paralelos (muestras A y B).
+¿Cuáles de las siguientes afirmaciones son correctas? _(Nota: Las
+afirmaciones son claramente verdaderas o falsas.)_
+
+```{r grafico_cajas, fig.height = 4, fig.width = 5}
+# Configuración de márgenes del gráfico
+par(mar = c(2.5, 2, 1, 0.5))
+
+# Crear dataframe con los datos
+datos <- data.frame(
+    valores = c(A, B),
+    grupos = factor(rep(c("A", "B"), c(length(A), length(B))))
+)
+
+# Crear diagrama de cajas paralelos
+boxplot(valores ~ grupos, data = datos, xlab = "", ylab = "")
+```
+
+```{r lista_preguntas, results = "asis"}
+answerlist(preguntas, markup = "markdown")
+```
+
+Solución
+========
+
+```{r lista_soluciones, results = "asis"}
+answerlist(ifelse(soluciones, "Verdadero", "Falso"), explicaciones, markup = "markdown")
+```
+
+Meta-information
+================
+extype: mchoice
+exsolution: `r mchoice2string(soluciones)`
+exname: Diagramas de caja paralelos

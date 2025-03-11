@@ -1,0 +1,249 @@
+```{r data generation, echo = FALSE, results = "hide"}
+library(xtable)
+
+# Función para generar datos aleatorios y crear diagrama de caja
+crear_ejercicio_estatura <- function(base_min = 155, base_max = 172, 
+                                    min_n = 7, max_n = 19, 
+                                    solo_impares = TRUE,
+                                    variacion = 10) {
+  
+  # Generar límites aleatorios dentro del rango de variación
+  min_valor <- base_min - sample(0:variacion, 1)
+  max_valor <- base_max + sample(0:variacion, 1)
+  
+  # Generar tamaño de la muestra
+  n <- if (solo_impares) {
+    min_n <- if (min_n %% 2 == 0) min_n + 1 else min_n
+    max_n <- if (max_n %% 2 == 0) max_n - 1 else max_n
+    posibles_n <- seq(min_n, max_n, by = 2)
+    sample(posibles_n, 1)
+  } else {
+    sample(min_n:max_n, 1)
+  }
+  
+  # Generar datos aleatorios con distribución uniforme truncada
+  datos <- round(runif(n, min_valor, max_valor))
+  
+  # Asegurar que al menos algunos datos estén cerca de los extremos
+  datos[1] <- min_valor + sample(-2:2, 1)
+  datos[2] <- max_valor + sample(-2:2, 1)
+  
+  # Mantener una copia desordenada para mostrar
+  datos_desordenados <- sample(datos)
+  
+  # Ordenar los datos para cálculos
+  datos <- sort(datos)
+  
+  # Calcular estadísticas
+  minimo <- min(datos)
+  q1 <- as.numeric(quantile(datos, 0.25, type = 7))
+  mediana <- median(datos)
+  q3 <- as.numeric(quantile(datos, 0.75, type = 7))
+  maximo <- max(datos)
+  
+  return(list(datos = datos,
+              datos_desordenados = datos_desordenados,
+              minimo = minimo,
+              q1 = q1,
+              mediana = mediana,
+              q3 = q3,
+              maximo = maximo))
+}
+
+# Función para crear un diagrama individual en estilo simple
+crear_diagrama_simple <- function(minimo, q1, mediana, q3, maximo, tipo) {
+  # Modificar valores según el tipo de diagrama
+  if (tipo == "escala_10") {
+    # Multiplicar todos los valores por 10
+    minimo <- minimo * 10
+    q1 <- q1 * 10
+    mediana <- mediana * 10
+    q3 <- q3 * 10
+    maximo <- maximo * 10
+    
+    # Ajustar límites
+    y_min <- min(minimo - 30, floor(minimo/10)*10 - 10)
+    y_max <- max(maximo + 30, ceiling(maximo/10)*10 + 10)
+    
+    # Crear secuencia para eje Y
+    paso <- 10
+    secuencia_y <- seq(floor(y_min/paso)*paso, ceiling(y_max/paso)*paso, by = paso)
+  } else {
+    # Para los otros diagramas, usar escala normal
+    y_min <- min(minimo - 5, floor(minimo/5)*5 - 5)
+    y_max <- max(maximo + 5, ceiling(maximo/5)*5 + 5)
+    
+    # Secuencia para eje Y
+    paso <- 1
+    secuencia_y <- seq(floor(y_min), ceiling(y_max), by = paso)
+    
+    if (tipo == "invertido") {
+      # Intercambiar Q1 y Q3
+      temp <- q1
+      q1 <- q3
+      q3 <- temp
+    } else if (tipo == "mediana_falsa") {
+      # Usar media de min y max como falsa mediana
+      mediana <- mean(c(minimo, maximo))
+    }
+  }
+  
+  # Crear gráfico muy simple, similar al de la imagen
+  par(mar = c(2, 4, 3, 2))
+  plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min, y_max), 
+       xaxt = "n", yaxt = "n", xlab = "", ylab = "",
+       bty = "n", main = "")  # Eliminada la etiqueta con letra
+  
+  # Dibujar caja (rectángulo Q1-Q3)
+  rect(0.75, q1, 1.25, q3, border = "black", col = "white")
+  
+  # Dibujar línea de mediana
+  segments(0.75, mediana, 1.25, mediana, lwd = 1)
+  
+  # Dibujar bigotes
+  segments(1, q1, 1, minimo, lwd = 1)
+  segments(1, q3, 1, maximo, lwd = 1)
+  
+  # Líneas en extremos de bigotes
+  segments(0.85, minimo, 1.15, minimo, lwd = 1)
+  segments(0.85, maximo, 1.15, maximo, lwd = 1)
+  
+  # Agregar etiquetas
+  text(1.35, minimo, "Mín.", cex = 0.8)
+  text(1.35, q1, "Q1", cex = 0.8)
+  text(1.35, mediana, "Q2", cex = 0.8)
+  text(1.35, q3, "Q3", cex = 0.8)
+  text(1.35, maximo, "Máx.", cex = 0.8)
+  
+  # Eje Y con valores numéricos
+  axis(2, at = secuencia_y, las = 1, cex.axis = 0.7)
+  
+  # Borde del gráfico
+  box()
+}
+
+# Generar datos aleatorios
+set.seed(sample(1:10000, 1))
+resultado <- crear_ejercicio_estatura()
+datos <- resultado$datos
+datos_desordenados <- resultado$datos_desordenados
+minimo <- resultado$minimo
+q1 <- resultado$q1
+mediana <- resultado$mediana
+q3 <- resultado$q3
+maximo <- resultado$maximo
+
+# Asegurar que todos los valores estén redondeados para presentación
+q1_presentacion <- round(q1)
+q3_presentacion <- round(q3)
+media_min_max <- round(mean(c(minimo, maximo)))
+
+# Preparar tabla de datos (desordenados y sin decimales)
+datos_tabla <- data.frame(
+  "Dato N°" = 1:length(datos_desordenados),
+  "Estatura (cm)" = datos_desordenados
+)
+```
+
+Question
+========
+
+En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Las dimensiones del cuerpo humano varían de acuerdo al sexo, edad, raza, nivel socioeconómico, etc.; por lo que esta ciencia dedicada a investigar, recopilar y analizar estos datos resulta fundamental en diversos campos.
+
+Los datos de estatura se muestran en la siguiente tabla:
+
+```{r, echo = FALSE, results = "asis"}
+# En lugar de configurar options(digits = 0), usamos parámetros específicos de xtable
+tabla_xtable <- xtable(datos_tabla,
+                       caption = "Datos de estaturas",
+                       label = "tabla:datos",
+                       align = c("l", "c", "c"),
+                       digits = c(0, 0, 0))  # Esto controla los decimales por columna
+
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
+
+¿Cuál de los siguientes diagramas de caja (boxplots) representa correctamente la estatura de los estudiantes?
+
+Answerlist
+----------
+- 
+<br/>
+```{r DiagramaA, echo = FALSE, fig.width = 6, fig.height = 5}
+# Diagrama A - Correcto
+crear_diagrama_simple(minimo, q1, mediana, q3, maximo, tipo = "correcto")
+```
+
+- 
+<br/>
+```{r DiagramaB, echo = FALSE, fig.width = 6, fig.height = 5}
+# Diagrama B - Escala multiplicada por 10
+crear_diagrama_simple(minimo, q1, mediana, q3, maximo, tipo = "escala_10")
+```
+
+- 
+<br/>
+```{r DiagramaC, echo = FALSE, fig.width = 6, fig.height = 5}
+# Diagrama C - Cuartiles invertidos
+crear_diagrama_simple(minimo, q1, mediana, q3, maximo, tipo = "invertido")
+```
+
+- 
+<br/>
+```{r DiagramaD, echo = FALSE, fig.width = 6, fig.height = 5}
+# Diagrama D - Mediana incorrecta
+crear_diagrama_simple(minimo, q1, mediana, q3, maximo, tipo = "mediana_falsa")
+```
+
+Solution
+========
+Para determinar cuál diagrama de caja representa correctamente los datos, necesitamos identificar las estadísticas principales:
+
+```{r, echo = FALSE, results = "asis"}
+# Crear tabla de estadísticas usando los valores redondeados
+stats_tabla <- data.frame(
+  "Estadística" = c("Mínimo", "Primer Cuartil (Q1)", "Mediana (Q2)", "Tercer Cuartil (Q3)", "Máximo"),
+  "Valor (cm)" = c(minimo, q1_presentacion, mediana, q3_presentacion, maximo)
+)
+
+# Usar parámetros específicos de xtable
+stats_xtable <- xtable(stats_tabla,
+                       caption = "Estadísticas calculadas de las estaturas",
+                       label = "tabla:stats",
+                       align = c("l", "l", "c"),
+                       digits = c(0, 0, 0))  # Sin decimales
+
+print(stats_xtable,
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
+
+Analizando cada diagrama, el correcto es el que muestra:
+* Valor mínimo: `r minimo` cm
+* Primer cuartil (Q1): `r q1_presentacion` cm
+* Mediana (Q2): `r mediana` cm
+* Tercer cuartil (Q3): `r q3_presentacion` cm
+* Valor máximo: `r maximo` cm
+
+Los diagramas incorrectos presentan alguna de estas alteraciones:
+* Valores multiplicados por 10
+* Cuartiles Q1 y Q3 invertidos
+* Mediana calculada como la media entre el valor mínimo y máximo (`r media_min_max` cm) en lugar de la verdadera mediana.
+
+Answerlist
+==========
+* Correcto. Este diagrama muestra correctamente el mínimo (`r minimo`), Q1 (`r q1_presentacion`), mediana (`r mediana`), Q3 (`r q3_presentacion`) y máximo (`r maximo`).
+* Incorrecto. Este diagrama muestra valores multiplicados por 10, lo que cambia completamente la escala.
+* Incorrecto. Este diagrama tiene los cuartiles Q1 y Q3 invertidos.
+* Incorrecto. Este diagrama muestra una mediana incorrecta, calculada como la media entre el valor mínimo y máximo.
+
+Meta-information
+================
+exname: Cuartiles en Diagrama de Caja de Estaturas
+extype: schoice
+exsolution: 1000
+exshuffle: true

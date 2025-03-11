@@ -2,7 +2,7 @@ library(exams)
 library(knitr)  # Explicitly load knitr
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "DVenn_All_GenMus_03.Rmd"
+archivo_examen <- "cuartil-estatura.Rmd"
 archivos <- 1
 numpreg <- 3
 semilla <- sample(100:1e8, 1)
@@ -15,8 +15,8 @@ nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 # Configurar el motor LaTeX y el entorno
-options(tinytex.latex_engine = "xelatex")
-Sys.setenv(LANG = "es_ES.UTF-8")
+# options(tinytex.latex_engine = "xelatex")
+# Sys.setenv(LANG = "es_ES.UTF-8")
 
 # Configurar opciones de knitr
 opts_knit$set(concordance = TRUE)
@@ -87,13 +87,15 @@ exams2pandoc(rep(archivo_examen, numpreg),
              points = NULL,
              exshuffle = NULL,
              type = "docx",
-             engine = "knitr")  # Corrected from "xelatex" to "knitr"
+             engine = "knitr")
 
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'archivos' = 1
 
+# Comentado para evitar error de navegador
 exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE)
+           svg = FALSE,
+           engine = "knitr")
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'archivos'
@@ -107,8 +109,10 @@ exams2html(rep(archivo_examen, numpreg),
 #              encoding = "UTF-8",
 #              dir = "salida",
 #              edir = "ejercicios",
+#              engine = "knitr",
 #              mchoice = list(shuffle = TRUE,
 #                             answernumbering = "ABCD",
+#                             solution = TRUE,
 #                             eval = list(partial = TRUE,
 #                                         rule = "none")))
 
