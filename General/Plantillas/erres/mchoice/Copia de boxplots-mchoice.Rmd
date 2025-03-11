@@ -1,4 +1,11 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 ```{r data generation, echo = FALSE, results = "hide"}
+library(exams)
 ok <- FALSE
 while(!ok) {
 ## convenience functions
