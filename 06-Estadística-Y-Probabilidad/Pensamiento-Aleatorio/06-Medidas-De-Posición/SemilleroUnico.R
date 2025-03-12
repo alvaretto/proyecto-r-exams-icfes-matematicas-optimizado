@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "cuartil-estatura.Rmd"
+archivo_examen <- "cuartil-estatura-02.Rmd"
 archivos <- 400
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
