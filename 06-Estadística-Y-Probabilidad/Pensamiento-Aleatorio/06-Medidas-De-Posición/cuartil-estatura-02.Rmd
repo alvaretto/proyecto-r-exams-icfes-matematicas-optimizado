@@ -1,0 +1,170 @@
+```{r setup, include=FALSE}
+library(exams)
+library(xtable)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Función para generar datos de estatura
+generar_datos_estatura <- function(
+    base_min = sample(145:165, 1), 
+    base_max = sample(168:188, 1),
+    n = sample(seq(7, 25, 2), 1)  # Directamente genera n impar
+) {
+    # Generar límites con variación
+    variacion <- sample(5:15, 1)
+    min_valor <- base_min - sample(0:variacion, 1)
+    max_valor <- base_max + sample(0:variacion, 1)
+    
+    # Generar datos y asegurar distribución
+    datos <- sort(round(runif(n, min_valor, max_valor)))
+    
+    # Calcular estadísticas
+    stats <- list(
+        datos = datos,
+        datos_desordenados = sample(datos),
+        minimo = min(datos),
+        q1 = round(quantile(datos, 0.25, type = 1)),
+        mediana = median(datos),
+        q3 = round(quantile(datos, 0.75, type = 1)),
+        maximo = max(datos)
+    )
+    
+    return(stats)
+}
+
+# Función para crear diagramas
+crear_diagrama <- function(stats, tipo = "correcto") {
+    # Configuración base del gráfico
+    rango <- stats$maximo - stats$minimo
+    y_min <- stats$minimo - rango * 0.15
+    y_max <- stats$maximo + rango * 0.15
+    
+    # Modificar valores según tipo
+    valores <- switch(tipo,
+        "correcto" = stats,
+        "escala_10" = lapply(stats, function(x) if(is.numeric(x)) x * 10 else x),
+        "invertido" = {
+            tmp <- stats
+            tmp$q1 <- stats$q3
+            tmp$q3 <- stats$q1
+            tmp
+        },
+        "mediana_falsa" = {
+            tmp <- stats
+            tmp$mediana <- round(mean(c(stats$minimo, stats$maximo)))
+            tmp
+        }
+    )
+    
+    # Dibujar boxplot
+    segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
+    rect(0.8, valores$q1, 1.2, valores$q3, col = "white", border = "black")
+    segments(0.8, valores$mediana, 1.2, valores$mediana, lwd = 2)
+    segments(c(0.8, 0.8), c(valores$minimo, valores$maximo),
+            c(1.2, 1.2), c(valores$minimo, valores$maximo), lwd = 2)
+
+    # Agregar etiquetas
+    text(1.3, valores$minimo, paste("Mín =", valores$minimo), pos = 4, cex = 0.8)
+    text(1.3, valores$q1, paste("Q1 =", valores$q1), pos = 4, cex = 0.8)
+    text(1.3, valores$mediana, paste("Q2 =", valores$mediana), pos = 4, cex = 0.8)
+    text(1.3, valores$q3, paste("Q3 =", valores$q3), pos = 4, cex = 0.8)
+    text(1.3, valores$maximo, paste("Máx =", valores$maximo), pos = 4, cex = 0.8)
+
+    # Ejes y marco
+    axis(2, las = 1)
+    box()
+}
+```
+
+```{r, echo = FALSE, results = "hide"}
+# Generar datos iniciales
+stats <- generar_datos_estatura()
+```
+
+Question
+========
+En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
+
+```{r tabla, results='asis'}
+datos_tabla <- data.frame(
+    "Estudiante" = 1:length(stats$datos_desordenados),
+    "Estatura (cm)" = stats$datos_desordenados
+)
+print(xtable(datos_tabla), type = "html", include.rownames = FALSE)
+```
+
+¿Cuál diagrama de caja representa correctamente estos datos?
+
+Answerlist
+----------
+- 
+<br/>
+```{r DiagramaA, fig.width = 7, fig.height = 5, results='asis'}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+crear_diagrama(stats, "correcto")
+```
+
+- 
+<br/>
+```{r DiagramaB, fig.width = 7, fig.height = 5, results='asis'}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(stats$minimo*10 - (stats$maximo*10 - stats$minimo*10) * 0.15, stats$maximo*10 + (stats$maximo*10 - stats$minimo*10) * 0.15),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+crear_diagrama(stats, "escala_10")
+```
+
+- 
+<br/>
+```{r DiagramaC, fig.width = 7, fig.height = 5, results='asis'}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+crear_diagrama(stats, "invertido")
+```
+
+- 
+<br/>
+```{r DiagramaD, fig.width = 7, fig.height = 5, results='asis'}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+crear_diagrama(stats, "mediana_falsa")
+```
+
+Solution
+========
+El diagrama correcto es el que muestra:
+
+* Mínimo: `r stats$minimo` cm
+* Q1: `r stats$q1` cm
+* Mediana: `r stats$mediana` cm
+* Q3: `r stats$q3` cm
+* Máximo: `r stats$maximo` cm
+
+<br/>
+```{r DiagramaAsol, fig.width = 7, fig.height = 5, results='asis'}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+crear_diagrama(stats, "correcto")
+```
+
+Answerlist
+----------
+* Correcto. Este diagrama representa fielmente todos los valores estadísticos.
+* Incorrecto. Los valores están multiplicados por 10.
+* Incorrecto. Los cuartiles Q1 y Q3 están invertidos.
+* Incorrecto. La mediana está mal calculada.
+
+Meta-information
+============
+exname: Diagrama de Caja - Estaturas
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
