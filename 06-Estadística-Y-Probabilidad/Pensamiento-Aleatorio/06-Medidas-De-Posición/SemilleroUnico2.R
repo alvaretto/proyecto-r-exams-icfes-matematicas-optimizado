@@ -4,7 +4,7 @@ library(knitr)  # Explicitly load knitr
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "cuartil-estatura.Rmd"
 archivos <- 1
-numpreg <- 3
+numpreg <- 5
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"

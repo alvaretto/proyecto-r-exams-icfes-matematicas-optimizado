@@ -180,7 +180,7 @@ tabla_xtable <- xtable(datos_tabla,
                        digits = c(0, 0, 0))  # Esto controla los decimales por columna
 
 print(tabla_xtable, 
-      type = "html",
+      type = "latex",
       include.rownames = FALSE,
       html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
 ```
