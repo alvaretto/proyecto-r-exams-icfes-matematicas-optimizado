@@ -15,16 +15,16 @@ generar_datos_estatura <- function(
     max_valor <- base_max + sample(0:variacion, 1)
     
     # Generar datos y asegurar distribución
-    datos <- sort(round(runif(n, min_valor, max_valor), digits = 0))
-
+    datos <- sort(round(runif(n, min_valor, max_valor)))
+    
     # Calcular estadísticas
     stats <- list(
         datos = datos,
         datos_desordenados = sample(datos),
         minimo = min(datos),
-        q1 = quantile(datos, 0.25, type = 1),
+        q1 = round(quantile(datos, 0.25, type = 1)),
         mediana = median(datos),
-        q3 = quantile(datos, 0.75, type = 1),
+        q3 = round(quantile(datos, 0.75, type = 1)),
         maximo = max(datos)
     )
     
@@ -46,12 +46,12 @@ crear_diagrama <- function(stats, tipo = "correcto") {
             tmp <- stats
             tmp$q1 <- stats$q3
             tmp$q3 <- stats$q1
-            tmp  # Retornar tmp
+            tmp
         },
         "mediana_falsa" = {
             tmp <- stats
             tmp$mediana <- round(mean(c(stats$minimo, stats$maximo)))
-            tmp  # Retornar tmp
+            tmp
         }
     )
     
@@ -89,14 +89,7 @@ datos_tabla <- data.frame(
     "Estudiante" = 1:length(stats$datos_desordenados),
     "Estatura (cm)" = stats$datos_desordenados
 )
-tabla_xtable <- xtable(datos_tabla,
-                       align = c("l", "c", "c"),
-                       digits = c(0, 0, 0))
-
-print(tabla_xtable, 
-      type = "html",
-      include.rownames = FALSE,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+print(xtable(datos_tabla), type = "html", include.rownames = FALSE)
 ```
 
 ¿Cuál diagrama de caja representa correctamente estos datos?
