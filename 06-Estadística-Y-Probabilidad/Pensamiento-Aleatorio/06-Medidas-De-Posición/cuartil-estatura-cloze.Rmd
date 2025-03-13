@@ -280,14 +280,14 @@ tabla_xtable <- xtable(datos_tabla,
                        digits = c(0, 0, 0))
 
 print(tabla_xtable, 
-      type = "html",
+      type = "latex",
       include.rownames = FALSE,
       html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
 ```
 
 Para analizar estos datos, estudiaremos los diagramas de caja (también llamados diagramas de caja y bigotes o boxplots). Observe los siguientes diagramas y responda:
 
-```{r DiagramaA, fig.width = 7, fig.height = 4}
+```{r DiagramaA, fig.width = 7, fig.height = 4, fig.cap=""}
 par(mar = c(4, 4, 2, 6))
 plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
      xlab = "", ylab = "Estatura (cm)", main = "Diagrama A", axes = FALSE)
@@ -298,7 +298,7 @@ if (tipo_error_diagramas[1] == "etiqueta") {
 }
 ```
 
-```{r DiagramaB, fig.width = 7, fig.height = 4}
+```{r DiagramaB, fig.width = 7, fig.height = 4, fig.cap=""}
 par(mar = c(4, 4, 2, 6))
 plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
      xlab = "", ylab = "Estatura (cm)", main = "Diagrama B", axes = FALSE)
@@ -309,7 +309,7 @@ if (tipo_error_diagramas[2] == "etiqueta") {
 }
 ```
 
-```{r DiagramaC, fig.width = 7, fig.height = 4}
+```{r DiagramaC, fig.width = 7, fig.height = 4, fig.cap=""}
 par(mar = c(4, 4, 2, 6))
 plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
      xlab = "", ylab = "Estatura (cm)", main = "Diagrama C", axes = FALSE)
@@ -320,7 +320,7 @@ if (tipo_error_diagramas[3] == "etiqueta") {
 }
 ```
 
-```{r DiagramaD, fig.width = 7, fig.height = 4}
+```{r DiagramaD, fig.width = 7, fig.height = 4, fig.cap=""}
 par(mar = c(4, 4, 2, 6))
 plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
      xlab = "", ylab = "Estatura (cm)", main = "Diagrama D", axes = FALSE)
@@ -333,22 +333,32 @@ if (tipo_error_diagramas[4] == "etiqueta") {
 
 ## Parte 1: Identificación del diagrama correcto
 ¿Qué diagrama(s) representa(n) correctamente los datos en cuanto a sus valores de cuartiles (Q1, mediana y Q3)?
+\
+
 ##ANSWER1##
 
 ## Parte 2: Identificación de error estructural
 ¿Qué diagrama tiene un error estructural en la representación? (Un error estructural significa que algún elemento está ubicado donde no debería estar según la definición de diagrama de caja)
+\
+
 ##ANSWER2##
 
 ## Parte 3: Cálculo básico
 Calcule el rango intercuartílico (RIC) de los datos. Recuerde que RIC = Q3 - Q1.
+\
+
 ##ANSWER3##
 
 ## Parte 4: Interpretación básica
 Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dentro de la "caja" del diagrama)?
+\
+
 ##ANSWER4##
 
 ## Parte 5: Conceptos fundamentales
 Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirmar sobre la distribución de estos datos?
+\
+
 ##ANSWER5##
 
 Answerlist
@@ -361,7 +371,7 @@ Answerlist
 * Diagrama B
 * Diagrama C
 * Diagrama D
-* ##ANSWER3##
+* 
 * 25%
 * 50%
 * 75%
@@ -377,6 +387,7 @@ Solution
 
 ### Parte 1: Identificación del diagrama correcto
 El **Diagrama `r LETTERS[posicion_correcto]`** es el único que representa correctamente los datos con los valores precisos de:
+
 - Mínimo = `r stats$minimo` cm
 - Q1 = `r stats$q1` cm
 - Mediana (Q2) = `r stats$mediana` cm
@@ -386,12 +397,15 @@ El **Diagrama `r LETTERS[posicion_correcto]`** es el único que representa corre
 Los otros diagramas contienen errores en los valores, la estructura o las etiquetas.
 
 ### Parte 2: Identificación de error estructural
-El **Diagrama `r LETTERS[diagrama_estructura_incorrecta]`** tiene un error estructural: `r if(grepl("mediana_fuera", errores_seleccionados[[1]])) {paste0("la mediana (Q2 = ", valores_diagramas[[diagrama_estructura_incorrecta]]$mediana, " cm) está ubicada fuera de la caja (", valores_diagramas[[diagrama_estructura_incorrecta]]$q1, "-", valores_diagramas[[diagrama_estructura_incorrecta]]$q3, " cm)")} else if(grepl("caja_invertida", errores_seleccionados[[1]])) {"Q1 y Q3 están invertidos, lo que hace que la caja sea incorrecta"} else {"los bigotes no terminan en valores reales de los datos"}`.
+El **Diagrama `r LETTERS[diagrama_estructura_incorrecta]`** tiene un error estructural: 
+
+`r if(grepl("mediana_fuera", errores_seleccionados[[1]])) {paste0("la mediana (Q2 = ", valores_diagramas[[diagrama_estructura_incorrecta]]$mediana, " cm) está ubicada fuera de la caja (", valores_diagramas[[diagrama_estructura_incorrecta]]$q1, "-", valores_diagramas[[diagrama_estructura_incorrecta]]$q3, " cm)")} else if(grepl("caja_invertida", errores_seleccionados[[1]])) {"Q1 y Q3 están invertidos, lo que hace que la caja sea incorrecta"} else {"los bigotes no terminan en valores reales de los datos"}`.
 
 En un diagrama de caja correcto, la mediana siempre debe estar dentro de la caja, entre Q1 y Q3, y los bigotes deben terminar en valores reales.
 
 ### Parte 3: Cálculo básico
 El rango intercuartílico (RIC) se calcula como Q3 - Q1:
+
 RIC = `r stats$q3` cm - `r stats$q1` cm = **`r stats$rango_intercuartil` cm**
 
 ### Parte 4: Interpretación básica
@@ -399,6 +413,7 @@ Por definición, entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos.
 
 ### Parte 5: Conceptos fundamentales
 Analizando la posición de la mediana dentro de la caja:
+
 - Q1 = `r stats$q1` cm
 - Mediana = `r stats$mediana` cm
 - Q3 = `r stats$q3` cm
@@ -423,7 +438,7 @@ Answerlist
 * Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3.
 * Incorrecto. Aunque el porcentaje exacto puede variar ligeramente con datos discretos, conceptualmente siempre es aproximadamente el 50%.
 * Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma.
-* `r ifelse(indice_respuesta_correcta == 2, "Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 ≈ distancia a Q3), la distribución tiende a ser simétrica.", "Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica.")`
+* `r ifelse(indice_respuesta_correcta == 2, "Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 $\\approx$ distancia a Q3), la distribución tiende a ser simétrica.", "Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica.")`
 * `r ifelse(indice_respuesta_correcta == 3, "Correcto. Como la distancia de la mediana a Q3 es mayor que la distancia a Q1, la distribución presenta un sesgo hacia valores más altos (sesgo positivo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos.")`
 * `r ifelse(indice_respuesta_correcta == 4, "Correcto. Como la distancia de la mediana a Q1 es mayor que la distancia a Q3, la distribución presenta un sesgo hacia valores más bajos (sesgo negativo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos.")`
 
