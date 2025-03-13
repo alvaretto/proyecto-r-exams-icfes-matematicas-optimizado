@@ -58,7 +58,7 @@ exams2pdf(rep(archivo_examen, numpreg),
           n = archivos,
           name = nombre_arch,
           encoding = "UTF-8",
-          template = "plain",
+          template = "solpcielo",
           dir = dir_salida,
           edir = dir_ejercicios,
           engine = "knitr")  # Explicitly set to knitr
