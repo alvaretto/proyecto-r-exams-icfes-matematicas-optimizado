@@ -2,7 +2,7 @@ library(exams)
 library(knitr)  # Explicitly load knitr
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "cuartil-estatura-02.Rmd"
+archivo_examen <- "cuartil-estatura-mchoice.Rmd"
 archivos <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
