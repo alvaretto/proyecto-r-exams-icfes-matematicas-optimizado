@@ -48,35 +48,13 @@ generar_datos_estatura <- function(
     return(stats)
 }
 
-# Función para crear diagramas de caja con diferentes variantes
-crear_diagrama <- function(stats, tipo = "correcto") {
+# Función para crear un diagrama de caja con los valores estadísticos proporcionados
+crear_diagrama <- function(valores) {
     # Calcular el rango de los datos para dimensionar el gráfico
-    rango <- stats$maximo - stats$minimo
-    # Calcular el límite inferior del eje y añadiendo un margen del 15% del rango
-    y_min <- stats$minimo - rango * 0.15
-    # Calcular el límite superior del eje y añadiendo un margen del 15% del rango
-    y_max <- stats$maximo + rango * 0.15
-    
-    # Según el tipo de diagrama solicitado, modificar los valores estadísticos
-    valores <- switch(tipo,
-        # Usar valores originales para el diagrama correcto
-        "correcto" = stats,
-        # Multiplicar por 10 todos los valores numéricos para crear un diagrama incorrecto
-        "escala_10" = lapply(stats, function(x) if(is.numeric(x)) x * 10 else x),
-        # Invertir Q1 y Q3 para crear un diagrama incorrecto con cuartiles invertidos
-        "invertido" = {
-            tmp <- stats
-            tmp$q1 <- stats$q3
-            tmp$q3 <- stats$q1
-            tmp  # Retornar tmp
-        },
-        # Calcular una mediana incorrecta usando el promedio de mínimo y máximo
-        "mediana_falsa" = {
-            tmp <- stats
-            tmp$mediana <- round(mean(c(stats$minimo, stats$maximo)))
-            tmp  # Retornar tmp
-        }
-    )
+    rango <- valores$maximo - valores$minimo
+    # Calcular límites del eje y con margen del 15%
+    y_min <- valores$minimo - rango * 0.15
+    y_max <- valores$maximo + rango * 0.15
     
     # Dibujar el diagrama de caja:
     # Línea vertical central que va del mínimo al máximo
@@ -102,9 +80,51 @@ crear_diagrama <- function(stats, tipo = "correcto") {
 }
 ```
 
-```{r, echo = FALSE, results = "hide"}
+```{r generacion-datos, echo = FALSE, results = "hide"}
 # Generar el conjunto de datos de estaturas para este ejercicio
 stats <- generar_datos_estatura()
+
+# Definir respuestas utilizando num2schoice para garantizar opciones distintas
+indice_correcto <- 1 # La primera opción será la correcta
+
+# Lista con valores originales (serán la respuesta correcta)
+diagrama_correcto <- stats
+
+# Creamos variantes para las otras opciones
+# Variante 1: Multiplicar por un factor aleatorio (distinto de 10 para evitar patrones obvios)
+factor_escala <- sample(c(2, 3, 4, 5), 1)
+diagrama_escala <- lapply(stats, function(x) if(is.numeric(x)) x * factor_escala else x)
+
+# Variante 2: Intercambiar Q1 y Q3
+diagrama_invertido <- stats
+diagrama_invertido$q1 <- stats$q3
+diagrama_invertido$q3 <- stats$q1
+
+# Variante 3: Mediana incorrecta (promedio de extremos o valor aleatorio)
+diagrama_mediana_falsa <- stats
+diagrama_mediana_falsa$mediana <- ifelse(
+  sample(c(TRUE, FALSE), 1),
+  round(mean(c(stats$minimo, stats$maximo))), # Promedio de min y max
+  sample(seq(stats$q1, stats$q3, by = 1), 1)  # Valor aleatorio entre Q1 y Q3, pero distinto de la mediana
+)
+
+# Asegurarse de que la mediana falsa sea distinta de la mediana real
+while(diagrama_mediana_falsa$mediana == stats$mediana) {
+  diagrama_mediana_falsa$mediana <- sample(seq(stats$q1, stats$q3, by = 1), 1)
+}
+
+# Crear vector con todas las opciones de diagramas
+diagramas <- list(
+  diagrama_correcto,
+  diagrama_escala,
+  diagrama_invertido,
+  diagrama_mediana_falsa
+)
+
+# Generar soluciones mezcladas usando num2schoice
+sol <- num2schoice(indice_correcto, range = c(1, 4), method = "random")
+# Ordenar diagramas según la solución generada
+diagramas_ordenados <- diagramas[sol$solutions]
 ```
 
 Question
@@ -142,16 +162,20 @@ Answerlist
 ----------
 - 
 <br/>
-```{r DiagramaA, fig.width = 7, fig.height = 5, results='asis'}
+```{r DiagramaA, fig.width = 7, fig.height = 5, results='asis', seed=1234}
 # Configurar márgenes del gráfico (inferior, izquierdo, superior, derecho)
 par(mar = c(4, 4, 2, 6))
+# Valores para el diagrama A
+valores_A <- diagramas_ordenados[[1]]
+# Calcular el rango y límites para el diagrama
+rango_A <- valores_A$maximo - valores_A$minimo
 # Crear un gráfico vacío con dimensiones apropiadas para el diagrama de caja
 plot(NA, 
      # Límites del eje x para centrar el diagrama
      xlim = c(0.5, 1.5), 
      # Límites del eje y calculados a partir de los datos con margen adicional
-     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
-             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     ylim = c(valores_A$minimo - rango_A * 0.15, 
+              valores_A$maximo + rango_A * 0.15),
      # Sin etiqueta para el eje x
      xlab = "", 
      # Etiqueta para el eje y
@@ -160,22 +184,26 @@ plot(NA,
      main = "", 
      # No mostrar ejes automáticamente
      axes = FALSE)
-# Dibujar el diagrama de caja correcto
-crear_diagrama(stats, "correcto")
+# Dibujar el diagrama de caja 
+crear_diagrama(valores_A)
 ```
 
 - 
 <br/>
-```{r DiagramaB, fig.width = 7, fig.height = 5, results='asis'}
+```{r DiagramaB, fig.width = 7, fig.height = 5, results='asis', seed=2345}
 # Configurar márgenes del gráfico
 par(mar = c(4, 4, 2, 6))
-# Crear gráfico vacío para el diagrama con escala multiplicada por 10
+# Valores para el diagrama B
+valores_B <- diagramas_ordenados[[2]]
+# Calcular el rango y límites para el diagrama
+rango_B <- valores_B$maximo - valores_B$minimo
+# Crear gráfico vacío
 plot(NA, 
      # Límites del eje x
      xlim = c(0.5, 1.5), 
-     # Límites del eje y multiplicados por 10 con margen adicional
-     ylim = c(stats$minimo*10 - (stats$maximo*10 - stats$minimo*10) * 0.15, 
-             stats$maximo*10 + (stats$maximo*10 - stats$minimo*10) * 0.15),
+     # Límites del eje y calculados
+     ylim = c(valores_B$minimo - rango_B * 0.15, 
+              valores_B$maximo + rango_B * 0.15),
      # Sin etiqueta para el eje x
      xlab = "", 
      # Etiqueta para el eje y
@@ -184,22 +212,26 @@ plot(NA,
      main = "", 
      # No mostrar ejes automáticamente
      axes = FALSE)
-# Dibujar el diagrama con valores multiplicados por 10
-crear_diagrama(stats, "escala_10")
+# Dibujar el diagrama
+crear_diagrama(valores_B)
 ```
 
 - 
 <br/>
-```{r DiagramaC, fig.width = 7, fig.height = 5, results='asis'}
+```{r DiagramaC, fig.width = 7, fig.height = 5, results='asis', seed=3456}
 # Configurar márgenes del gráfico
 par(mar = c(4, 4, 2, 6))
-# Crear gráfico vacío para el diagrama con cuartiles invertidos
+# Valores para el diagrama C
+valores_C <- diagramas_ordenados[[3]]
+# Calcular el rango y límites para el diagrama
+rango_C <- valores_C$maximo - valores_C$minimo
+# Crear gráfico vacío
 plot(NA, 
      # Límites del eje x
      xlim = c(0.5, 1.5), 
-     # Límites del eje y con margen adicional
-     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
-             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     # Límites del eje y calculados
+     ylim = c(valores_C$minimo - rango_C * 0.15, 
+              valores_C$maximo + rango_C * 0.15),
      # Sin etiqueta para el eje x
      xlab = "", 
      # Etiqueta para el eje y
@@ -208,22 +240,26 @@ plot(NA,
      main = "", 
      # No mostrar ejes automáticamente
      axes = FALSE)
-# Dibujar el diagrama con Q1 y Q3 invertidos
-crear_diagrama(stats, "invertido")
+# Dibujar el diagrama
+crear_diagrama(valores_C)
 ```
 
 - 
 <br/>
-```{r DiagramaD, fig.width = 7, fig.height = 5, results='asis'}
+```{r DiagramaD, fig.width = 7, fig.height = 5, results='asis', seed=4567}
 # Configurar márgenes del gráfico
 par(mar = c(4, 4, 2, 6))
-# Crear gráfico vacío para el diagrama con mediana falsa
+# Valores para el diagrama D
+valores_D <- diagramas_ordenados[[4]]
+# Calcular el rango y límites para el diagrama
+rango_D <- valores_D$maximo - valores_D$minimo
+# Crear gráfico vacío
 plot(NA, 
      # Límites del eje x
      xlim = c(0.5, 1.5), 
-     # Límites del eje y con margen adicional
-     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
-             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     # Límites del eje y calculados
+     ylim = c(valores_D$minimo - rango_D * 0.15, 
+              valores_D$maximo + rango_D * 0.15),
      # Sin etiqueta para el eje x
      xlab = "", 
      # Etiqueta para el eje y
@@ -232,8 +268,8 @@ plot(NA,
      main = "", 
      # No mostrar ejes automáticamente
      axes = FALSE)
-# Dibujar el diagrama con una mediana incorrecta
-crear_diagrama(stats, "mediana_falsa")
+# Dibujar el diagrama
+crear_diagrama(valores_D)
 ```
 
 Solution
@@ -247,7 +283,7 @@ El diagrama correcto es el que muestra:
 * Máximo: `r stats$maximo` cm
 
 <br/>
-```{r DiagramaAsol, fig.width = 7, fig.height = 5, results='asis'}
+```{r DiagramaSolucion, fig.width = 7, fig.height = 5, results='asis'}
 # Configurar márgenes del gráfico para la solución
 par(mar = c(4, 4, 2, 6))
 # Crear gráfico vacío para mostrar el diagrama correcto
@@ -266,13 +302,13 @@ plot(NA,
      # No mostrar ejes automáticamente
      axes = FALSE)
 # Dibujar el diagrama correcto en la solución
-crear_diagrama(stats, "correcto")
+crear_diagrama(stats)
 ```
 
 Answerlist
 ----------
 * Correcto. Este diagrama representa fielmente todos los valores estadísticos.
-* Incorrecto. Los valores están multiplicados por 10.
+* Incorrecto. Los valores están multiplicados por un factor distinto.
 * Incorrecto. Los cuartiles Q1 y Q3 están invertidos.
 * Incorrecto. La mediana está mal calculada.
 
