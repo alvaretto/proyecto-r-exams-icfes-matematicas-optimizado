@@ -1,4 +1,3 @@
-
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
