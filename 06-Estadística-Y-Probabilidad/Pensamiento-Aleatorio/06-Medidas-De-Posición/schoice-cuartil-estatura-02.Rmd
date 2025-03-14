@@ -374,6 +374,27 @@ box()
 
 Solution
 ========
+
+```{r, echo = FALSE, results = "asis"}
+# Crear tabla con los datos ordenados
+datos_ordenados <- sort(stats$datos)
+datos_tabla_ordenada <- data.frame(
+  "Dato N°" = 1:length(datos_ordenados),
+  "Estatura (cm)" = datos_ordenados
+)
+
+# Mostrar la tabla ordenada
+tabla_xtable <- xtable(datos_tabla_ordenada,
+                       caption = "Datos de estaturas ordenados",
+                       label = "tabla:datos_ordenados",
+                       align = c("l", "c", "c"))
+
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
+
 La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
 
 <br/>
