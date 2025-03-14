@@ -10,6 +10,9 @@ library(exams)
 library(xtable)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
+# Establecer semilla aleatoria basada en la hora actual para garantizar variabilidad
+set.seed(as.integer(Sys.time()) %% 10000)
+
 # Función para calcular cuartiles usando el método tradicional
 calcular_cuartiles_tradicional <- function(datos) {
     n <- length(datos)
@@ -106,7 +109,7 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     
     # Calcular espacios para evitar solapamiento de etiquetas
     rango <- valores$maximo - valores$minimo
-    min_espacio <- rango * 0.12  # Aumentado para mayor separación
+    min_espacio <- rango * 0.15  # Aumentado para mayor separación
     
     # Valores originales para las etiquetas
     valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
@@ -122,71 +125,23 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     # Posiciones iniciales para las etiquetas
     posiciones <- valores_orig
     
-    # Ordenar las posiciones de menor a mayor para ajustar
-    orden <- order(posiciones)
-    posiciones_ordenadas <- posiciones[orden]
-    etiquetas_ordenadas <- etiquetas[orden]
-    
     # Ajustar posiciones para evitar solapamiento
     for (i in 2:5) {
-        if (posiciones_ordenadas[i] - posiciones_ordenadas[i-1] < min_espacio) {
-            posiciones_ordenadas[i] <- posiciones_ordenadas[i-1] + min_espacio
+        if (posiciones[i] - posiciones[i-1] < min_espacio) {
+            # Distribuir uniformemente si hay valores muy cercanos
+            posiciones[i] <- posiciones[i-1] + min_espacio
         }
     }
-    
-    # Restaurar el orden original
-    posiciones_ajustadas <- numeric(5)
-    posiciones_ajustadas[orden] <- posiciones_ordenadas
     
     # Dibujar etiquetas con posiciones ajustadas
     for (i in 1:5) {
-        text(1.3, posiciones_ajustadas[i], etiquetas[i], pos = 4, cex = 0.9)
-        # Líneas de conexión para etiquetas desplazadas
-        if (abs(posiciones_ajustadas[i] - valores_orig[i]) > 0.01) {
-            segments(1.2, valores_orig[i], 1.3, posiciones_ajustadas[i], lty = 2, col = "gray")
-        }
+        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = 0.9)
     }
-}
-
-# Función para crear diagramas de caja con diferentes variantes
-crear_diagrama <- function(stats, tipo = "correcto") {
-    # Calcular el rango para dimensionar el gráfico
-    rango <- stats$maximo - stats$minimo
-    y_min <- stats$minimo - rango * 0.15
-    y_max <- stats$maximo + rango * 0.15
-    
-    # Modificar valores según el tipo de diagrama
-    valores <- switch(tipo,
-        "correcto" = stats,
-        "escala_10" = {
-            tmp <- stats
-            tmp$minimo <- tmp$minimo * 10
-            tmp$q1 <- tmp$q1 * 10
-            tmp$mediana <- tmp$mediana * 10
-            tmp$q3 <- tmp$q3 * 10
-            tmp$maximo <- tmp$maximo * 10
-            tmp
-        },
-        "invertido" = {
-            tmp <- stats
-            tmp$q1 <- stats$q3
-            tmp$q3 <- stats$q1
-            # Aseguramos que los valores estén en orden para el algoritmo de posicionamiento
-            tmp
-        },
-        "mediana_falsa" = {
-            tmp <- stats
-            tmp$mediana <- round(mean(c(stats$minimo, stats$maximo)))
-            tmp
-        }
-    )
-    
-    # Dibujar el diagrama de caja
-    dibujar_boxplot(valores)
 }
 
 # Función para verificar si dos diagramas son diferentes
 son_diagramas_diferentes <- function(diag1, diag2) {
+    # Verificar si al menos uno de los valores es diferente
     return(
         diag1$minimo != diag2$minimo ||
         diag1$q1 != diag2$q1 ||
@@ -196,9 +151,40 @@ son_diagramas_diferentes <- function(diag1, diag2) {
     )
 }
 
-# Función para verificar la diversidad de diagramas generados
-verificar_diversidad_diagramas <- function(n_simulaciones = 300) {
-    # Almacenar huellas digitales de diagramas
+# Función para calcular valores para los diagramas
+calcular_valores_diagrama <- function(stats, tipo = "correcto") {
+    # Valores base
+    valores <- list(
+        minimo = stats$minimo,
+        q1 = stats$q1,
+        mediana = stats$mediana,
+        q3 = stats$q3,
+        maximo = stats$maximo
+    )
+    
+    # Modificar según el tipo de diagrama
+    if (tipo == "escala") {
+        # Multiplicar todos los valores por 10
+        valores$minimo <- valores$minimo * 10
+        valores$q1 <- valores$q1 * 10
+        valores$mediana <- valores$mediana * 10
+        valores$q3 <- valores$q3 * 10
+        valores$maximo <- valores$maximo * 10
+    } else if (tipo == "invertido") {
+        # Invertir Q1 y Q3
+        temp <- valores$q1
+        valores$q1 <- valores$q3
+        valores$q3 <- temp
+    } else if (tipo == "mediana_falsa") {
+        # Usar la media como mediana
+        valores$mediana <- round(mean(stats$datos))
+    }
+    
+    return(valores)
+}
+
+# Función para verificar la diversidad de diagramas que podemos generar
+verificar_diversidad_diagramas <- function(n_simulaciones = 1000) {
     huellas_digitales <- character(n_simulaciones)
     
     for (i in 1:n_simulaciones) {
@@ -234,46 +220,47 @@ if (!diversidad$suficiente_diversidad) {
 ```
 
 ```{r generate, echo = FALSE, results = "hide"}
-# Generar el conjunto de datos de estaturas
+# Generar una nueva semilla aleatoria para cada renderización
+set.seed(as.integer(Sys.time()) %% 10000 + sample(1:1000, 1))
+
+# Generar datos y calcular estadísticas
 stats <- generar_datos_estatura()
 
-# Crear las variantes de diagramas
-diag_correcto <- stats
-diag_escala_10 <- list(
-    minimo = stats$minimo * 10,
-    q1 = stats$q1 * 10,
-    mediana = stats$mediana * 10,
-    q3 = stats$q3 * 10,
-    maximo = stats$maximo * 10
-)
-diag_invertido <- list(
-    minimo = stats$minimo,
-    q1 = stats$q3,
-    mediana = stats$mediana,
-    q3 = stats$q1,
-    maximo = stats$maximo
-)
-diag_mediana_falsa <- list(
-    minimo = stats$minimo,
-    q1 = stats$q1,
-    mediana = round(mean(c(stats$minimo, stats$maximo))),
-    q3 = stats$q3,
-    maximo = stats$maximo
+# Crear diagramas con diferentes variaciones
+diagramas <- list(
+    correcto = calcular_valores_diagrama(stats, "correcto"),
+    escala = calcular_valores_diagrama(stats, "escala"),
+    invertido = calcular_valores_diagrama(stats, "invertido"),
+    mediana_falsa = calcular_valores_diagrama(stats, "mediana_falsa")
 )
 
-# Verificar que todos los diagramas sean diferentes
-if (!son_diagramas_diferentes(diag_correcto, diag_escala_10) ||
-    !son_diagramas_diferentes(diag_correcto, diag_invertido) ||
-    !son_diagramas_diferentes(diag_correcto, diag_mediana_falsa) ||
-    !son_diagramas_diferentes(diag_escala_10, diag_invertido) ||
-    !son_diagramas_diferentes(diag_escala_10, diag_mediana_falsa) ||
-    !son_diagramas_diferentes(diag_invertido, diag_mediana_falsa)) {
-    # Regenerar datos si hay diagramas idénticos
-    stats <- generar_datos_estatura()
-}
+# Aleatorizar la posición de la respuesta correcta
+posiciones <- sample(1:4)
+respuesta_correcta <- which(posiciones == 1)
 
-# Definir la solución
-sol <- "1000"
+# Asignar letras a las posiciones
+letras <- c("A", "B", "C", "D")
+solucion <- letras[respuesta_correcta]
+
+# Crear vector con los tipos de diagramas en orden aleatorio
+tipos_diagramas <- c("correcto", "escala", "invertido", "mediana_falsa")
+tipos_ordenados <- tipos_diagramas[posiciones]
+
+# Crear vector de solución para exams
+sol <- rep(0, 4)
+sol[respuesta_correcta] <- 1
+sol <- paste(sol, collapse = "")
+
+# Guardar la posición correcta para la solución
+posicion_correcta <- respuesta_correcta
+
+# Crear lista de diagramas ordenados según las posiciones
+diagramas_ordenados <- list(
+    diagramas[[tipos_ordenados[1]]],
+    diagramas[[tipos_ordenados[2]]],
+    diagramas[[tipos_ordenados[3]]],
+    diagramas[[tipos_ordenados[4]]]
+)
 ```
 
 Question
@@ -291,7 +278,7 @@ tabla_xtable <- xtable(datos_tabla,
                        digits = c(0, 0, 0))
 
 print(tabla_xtable, 
-      type = "html",
+      type = "latex",
       include.rownames = FALSE,
       html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
 ```
@@ -302,73 +289,61 @@ Answerlist
 ----------
 - 
 <br/>
-```{r DiagramaA, fig.width = 7, fig.height = 5}
-# Diagrama correcto
-par(mar = c(4, 4, 2, 6))
+```{r diagrama-A, fig.width=6, fig.height=4}
+par(mar = c(4, 4, 2, 2))
 plot(NA, 
      xlim = c(0.5, 1.5), 
-     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
-             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
-     xlab = "", 
-     ylab = "Estatura (cm)", 
-     main = "", 
-     axes = FALSE)
-crear_diagrama(stats, "correcto")
-axis(2, las = 1)
+     ylim = c(diagramas_ordenados[[1]]$minimo - (diagramas_ordenados[[1]]$maximo - diagramas_ordenados[[1]]$minimo) * 0.15, 
+              diagramas_ordenados[[1]]$maximo + (diagramas_ordenados[[1]]$maximo - diagramas_ordenados[[1]]$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)",
+     xaxt = "n", main = "Diagrama")
+dibujar_boxplot(diagramas_ordenados[[1]])
+axis(1, at = 1, labels = "")
 box()
 ```
 
 - 
 <br/>
-```{r DiagramaB, fig.width = 7, fig.height = 5}
-# Diagrama con escala multiplicada por 10
-par(mar = c(4, 4, 2, 6))
+```{r diagrama-B, fig.width=6, fig.height=4}
+par(mar = c(4, 4, 2, 2))
 plot(NA, 
      xlim = c(0.5, 1.5), 
-     ylim = c(stats$minimo * 10 - (stats$maximo - stats$minimo) * 1.5, 
-             stats$maximo * 10 + (stats$maximo - stats$minimo) * 1.5),
-     xlab = "", 
-     ylab = "Estatura (cm)", 
-     main = "", 
-     axes = FALSE)
-crear_diagrama(stats, "escala_10")
-axis(2, las = 1)
+     ylim = c(diagramas_ordenados[[2]]$minimo - (diagramas_ordenados[[2]]$maximo - diagramas_ordenados[[2]]$minimo) * 0.15, 
+              diagramas_ordenados[[2]]$maximo + (diagramas_ordenados[[2]]$maximo - diagramas_ordenados[[2]]$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)",
+     xaxt = "n", main = "Diagrama")
+dibujar_boxplot(diagramas_ordenados[[2]])
+axis(1, at = 1, labels = "")
 box()
 ```
 
 - 
 <br/>
-```{r DiagramaC, fig.width = 7, fig.height = 5}
-# Diagrama con cuartiles invertidos
-par(mar = c(4, 4, 2, 6))
+```{r diagrama-C, fig.width=6, fig.height=4}
+par(mar = c(4, 4, 2, 2))
 plot(NA, 
      xlim = c(0.5, 1.5), 
-     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
-             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
-     xlab = "", 
-     ylab = "Estatura (cm)", 
-     main = "", 
-     axes = FALSE)
-crear_diagrama(stats, "invertido")
-axis(2, las = 1)
+     ylim = c(diagramas_ordenados[[3]]$minimo - (diagramas_ordenados[[3]]$maximo - diagramas_ordenados[[3]]$minimo) * 0.15, 
+              diagramas_ordenados[[3]]$maximo + (diagramas_ordenados[[3]]$maximo - diagramas_ordenados[[3]]$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)",
+     xaxt = "n", main = "Diagrama")
+dibujar_boxplot(diagramas_ordenados[[3]])
+axis(1, at = 1, labels = "")
 box()
 ```
 
 - 
 <br/>
-```{r DiagramaD, fig.width = 7, fig.height = 5}
-# Diagrama con mediana falsa
-par(mar = c(4, 4, 2, 6))
+```{r diagrama-D, fig.width=6, fig.height=4}
+par(mar = c(4, 4, 2, 2))
 plot(NA, 
      xlim = c(0.5, 1.5), 
-     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
-             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
-     xlab = "", 
-     ylab = "Estatura (cm)", 
-     main = "", 
-     axes = FALSE)
-crear_diagrama(stats, "mediana_falsa")
-axis(2, las = 1)
+     ylim = c(diagramas_ordenados[[4]]$minimo - (diagramas_ordenados[[4]]$maximo - diagramas_ordenados[[4]]$minimo) * 0.15, 
+              diagramas_ordenados[[4]]$maximo + (diagramas_ordenados[[4]]$maximo - diagramas_ordenados[[4]]$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)",
+     xaxt = "n", main = "Diagrama")
+dibujar_boxplot(diagramas_ordenados[[4]])
+axis(1, at = 1, labels = "")
 box()
 ```
 
@@ -377,7 +352,18 @@ Solution
 La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
 
 <br/>
-```{r DiagramaAsol, fig.width = 7, fig.height = 5}
+```{r DiagramaSol, fig.width = 7, fig.height = 5}
+# Determinar cuál es la opción correcta según el valor de sol
+if (sol == "1000") {
+  correct_index <- 1
+} else if (sol == "0100") {
+  correct_index <- 2
+} else if (sol == "0010") {
+  correct_index <- 3
+} else if (sol == "0001") {
+  correct_index <- 4
+}
+
 # Diagrama correcto
 par(mar = c(4, 4, 2, 6))
 plot(NA, 
@@ -388,21 +374,27 @@ plot(NA,
      ylab = "Estatura (cm)", 
      main = "", 
      axes = FALSE)
-crear_diagrama(stats, "correcto")
+dibujar_boxplot(diagramas_ordenados[[correct_index]])
 axis(2, las = 1)
 box()
 ```
 
-Answerlist
-----------
-* Correcto. Este diagrama representa fielmente todos los valores estadísticos.
-* Incorrecto. Los valores están multiplicados por 10.
-* Incorrecto. Los cuartiles Q1 y Q3 están invertidos.
-* Incorrecto. La mediana está mal calculada.
+```{r solutionlist, echo = FALSE, results = "asis"}
+# Crear vector de respuestas (Verdadero/Falso)
+respuestas <- c(
+  ifelse(sol == "1000", "Verdadero", "Falso"),
+  ifelse(sol == "0100", "Verdadero", "Falso"),
+  ifelse(sol == "0010", "Verdadero", "Falso"),
+  ifelse(sol == "0001", "Verdadero", "Falso")
+)
+
+# Mostrar la lista de respuestas
+answerlist(respuestas, markup = "markdown")
+```
 
 Meta-information
-============
-exname: Diagrama de Caja - Estaturas
+================
+exname: Diagrama de caja para estaturas
 extype: schoice
 exsolution: `r sol`
 exshuffle: TRUE

@@ -1,0 +1,257 @@
+```{r setup, include=FALSE}
+library(exams)
+library(xtable)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Función para generar datos de estatura - sin cambios
+generar_datos_estatura <- function(
+    base_min = sample(145:165, 1), 
+    base_max = sample(168:188, 1),
+    n = sample(seq(7, 25, 2), 1)
+) {
+    # Generar límites con variación
+    variacion <- sample(5:15, 1)
+    min_valor <- base_min - sample(0:variacion, 1)
+    max_valor <- base_max + sample(0:variacion, 1)
+    
+    # Generar datos y asegurar distribución
+    datos <- sort(round(runif(n, min_valor, max_valor), digits = 0))
+
+    # Calcular estadísticas
+    stats <- list(
+        datos = datos,
+        datos_desordenados = sample(datos),
+        minimo = min(datos),
+        q1 = quantile(datos, 0.25, type = 1),
+        mediana = median(datos),
+        q3 = quantile(datos, 0.75, type = 1),
+        maximo = max(datos),
+        # Agregar estadísticos adicionales
+        rango_intercuartil = as.numeric(quantile(datos, 0.75, type = 1) - quantile(datos, 0.25, type = 1)),
+        media = mean(datos)
+    )
+    
+    return(stats)
+}
+
+# Función modificada para calcular valores pero no dibujar directamente
+calcular_valores_diagrama <- function(stats, tipo = "correcto") {
+    # Configuración base del gráfico
+    rango <- stats$maximo - stats$minimo
+    
+    # Modificar valores según tipo de diagrama
+    valores <- switch(tipo,
+        # Diagrama completamente correcto - muestra todos los datos correctamente
+        "correcto" = stats,
+        
+        # Diagrama con mediana correcta pero cuartiles incorrectos
+        "mediana_correcta" = {
+            tmp <- stats
+            # Distorsionar Q1 (menor) y Q3 (mayor)
+            tmp$q1 <- max(tmp$minimo + 2, tmp$q1 * 0.85)
+            tmp$q3 <- min(tmp$maximo - 2, tmp$q3 * 1.15)
+            tmp
+        },
+        
+        # Diagrama con valores extremos (mín y máx) correctos pero cuartiles y mediana incorrectos
+        "extremos_correctos" = {
+            tmp <- stats
+            # Distorsionar valores centrales
+            tmp$q1 <- stats$q1 + round(rango * 0.1)
+            tmp$mediana <- stats$mediana + round(rango * 0.08)
+            tmp$q3 <- stats$q3 + round(rango * 0.05)
+            tmp
+        },
+        
+        # Diagrama con dispersión central correcta (RIC) pero escalada incorrectamente
+        "dispersion_escalada" = {
+            tmp <- stats
+            factor_escala <- 1.5  # Escalar por 1.5x
+            
+            # Calcular nueva mediana central escalada
+            nueva_mediana <- stats$minimo + (stats$maximo - stats$minimo) * 0.5
+            
+            # Mantener el RIC pero escalado y centrado en la nueva mediana
+            tmp$q1 <- nueva_mediana - (stats$rango_intercuartil * factor_escala * 0.5)
+            tmp$q3 <- nueva_mediana + (stats$rango_intercuartil * factor_escala * 0.5)
+            tmp$mediana <- nueva_mediana
+            
+            # Ajustar mínimo y máximo para mantener proporción
+            tmp$minimo <- nueva_mediana - (stats$maximo - stats$mediana) * factor_escala
+            tmp$maximo <- nueva_mediana + (stats$mediana - stats$minimo) * factor_escala
+            
+            tmp
+        }
+    )
+    
+    # Calcular límites y para el gráfico según los valores modificados
+    y_min <- min(valores$minimo, stats$minimo) - rango * 0.15
+    y_max <- max(valores$maximo, stats$maximo) + rango * 0.15
+    
+    # Devolver los valores y límites calculados
+    return(list(
+        valores = valores,
+        y_min = y_min,
+        y_max = y_max
+    ))
+}
+
+# Nueva función para dibujar el diagrama después de crear el plot
+dibujar_diagrama <- function(valores) {
+    # Dibujar boxplot
+    segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
+    rect(0.8, valores$q1, 1.2, valores$q3, col = "white", border = "black")
+    segments(0.8, valores$mediana, 1.2, valores$mediana, lwd = 2)
+    segments(c(0.8, 0.8), c(valores$minimo, valores$maximo),
+            c(1.2, 1.2), c(valores$minimo, valores$maximo), lwd = 2)
+
+    # Agregar etiquetas
+    text(1.3, valores$minimo, paste("Mín =", valores$minimo), pos = 4, cex = 0.8)
+    text(1.3, valores$q1, paste("Q1 =", valores$q1), pos = 4, cex = 0.8)
+    text(1.3, valores$mediana, paste("Q2 =", valores$mediana), pos = 4, cex = 0.8)
+    text(1.3, valores$q3, paste("Q3 =", valores$q3), pos = 4, cex = 0.8)
+    text(1.3, valores$maximo, paste("Máx =", valores$maximo), pos = 4, cex = 0.8)
+
+    # Ejes y marco
+    axis(2, las = 1)
+    box()
+}
+```
+
+```{r, echo = FALSE, results = "hide"}
+# Generar datos iniciales
+stats <- generar_datos_estatura()
+
+# Calcular los valores para cada tipo de diagrama una sola vez
+valores_correcto <- calcular_valores_diagrama(stats, "correcto")
+valores_mediana_correcta <- calcular_valores_diagrama(stats, "mediana_correcta")
+valores_extremos_correctos <- calcular_valores_diagrama(stats, "extremos_correctos")
+valores_dispersion_escalada <- calcular_valores_diagrama(stats, "dispersion_escalada")
+
+# Calcular límites globales para todos los gráficos
+y_min_global <- min(
+  valores_correcto$y_min,
+  valores_mediana_correcta$y_min,
+  valores_extremos_correctos$y_min,
+  valores_dispersion_escalada$y_min
+)
+
+y_max_global <- max(
+  valores_correcto$y_max,
+  valores_mediana_correcta$y_max,
+  valores_extremos_correctos$y_max,
+  valores_dispersion_escalada$y_max
+)
+```
+
+Question
+========
+En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
+
+```{r tabla, results='asis'}
+datos_tabla <- data.frame(
+    "Estudiante" = 1:length(stats$datos_desordenados),
+    "Estatura (cm)" = stats$datos_desordenados
+)
+tabla_xtable <- xtable(datos_tabla,
+                       align = c("l", "c", "c"),
+                       digits = c(0, 0, 0))
+
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
+
+A continuación se presentan 4 diagramas de caja diferentes. **Seleccione todos los diagramas que:**
+
+- muestran correctamente la mediana de los datos, o
+- muestran correctamente los extremos de los datos, o
+- muestran correctamente todos los datos, o
+- muestran la dispersión central correcta pero mal escalada
+
+Answerlist
+----------
+- Diagrama A
+<br/>
+```{r DiagramaA, fig.width = 7, fig.height = 5}
+par(mar = c(4, 4, 2, 6))
+# Diagrama completamente correcto (muestra todos los datos correctamente)
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+dibujar_diagrama(valores_correcto$valores)
+```
+
+- Diagrama B
+<br/>
+```{r DiagramaB, fig.width = 7, fig.height = 5}
+par(mar = c(4, 4, 2, 6))
+# Diagrama con mediana correcta pero cuartiles incorrectos
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+dibujar_diagrama(valores_mediana_correcta$valores)
+```
+
+- Diagrama C
+<br/>
+```{r DiagramaC, fig.width = 7, fig.height = 5}
+par(mar = c(4, 4, 2, 6))
+# Diagrama con extremos correctos (mínimo y máximo)
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+dibujar_diagrama(valores_extremos_correctos$valores)
+```
+
+- Diagrama D
+<br/>
+```{r DiagramaD, fig.width = 7, fig.height = 5}
+par(mar = c(4, 4, 2, 6))
+# Diagrama con dispersión central (RIC) correcta pero mal escalada
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", 
+     main = "", axes = FALSE)
+dibujar_diagrama(valores_dispersion_escalada$valores)
+```
+
+Solution
+========
+Las estadísticas correctas para este conjunto de datos son:
+
+* Mínimo: **`r stats$minimo` cm**
+* Q1: **`r stats$q1` cm**
+* Mediana: **`r stats$mediana` cm**
+* Q3: **`r stats$q3` cm**
+* Máximo: **`r stats$maximo` cm**
+* Rango intercuartil (RIC = Q3-Q1): **`r stats$rango_intercuartil` cm**
+
+**Análisis de cada diagrama:**
+
+* **Diagrama A**: Muestra TODAS las estadísticas correctamente. Este diagrama satisface TODOS los criterios.
+
+* **Diagrama B**: Muestra la MEDIANA correcta (`r stats$mediana` cm), pero los cuartiles están distorsionados.
+
+* **Diagrama C**: Muestra los EXTREMOS (mínimo y máximo) correctamente: mínimo = `r stats$minimo` cm y máximo = `r stats$maximo` cm, pero los valores internos están incorrectos.
+
+* **Diagrama D**: Muestra la DISPERSIÓN CENTRAL a una escala diferente. El rango intercuartil está multiplicado (escalado) pero la proporción relativa se mantiene. Este diagrama ilustra cómo la variabilidad relativa puede preservarse incluso cuando los valores absolutos cambian.
+
+Todos los diagramas presentados cumplen con al menos uno de los criterios solicitados.
+
+Answerlist
+----------
+* Correcto. El Diagrama A muestra todos los datos correctamente: mediana = `r stats$mediana` cm, extremos (mín = `r stats$minimo` cm, máx = `r stats$maximo` cm) y todas las demás estadísticas.
+
+* Correcto. El Diagrama B muestra la mediana correcta = `r stats$mediana` cm, aunque los cuartiles Q1 y Q3 están distorsionados.
+
+* Correcto. El Diagrama C muestra los extremos correctamente: mínimo = `r stats$minimo` cm y máximo = `r stats$maximo` cm, aunque la mediana y cuartiles son incorrectos.
+
+* Correcto. El Diagrama D muestra la dispersión central (rango intercuartil) a una escala diferente, manteniendo las proporciones relativas pero con valores absolutos diferentes.
+
+Meta-information
+============
+exname: Diagrama de Caja - Estaturas - Análisis Profundo
+extype: mchoice
+exsolution: 1111
+exshuffle: TRUE
