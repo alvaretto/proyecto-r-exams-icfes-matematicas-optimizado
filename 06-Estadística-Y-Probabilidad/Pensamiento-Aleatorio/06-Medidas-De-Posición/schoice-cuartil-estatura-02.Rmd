@@ -316,9 +316,23 @@ Para resolver este ejercicio, es necesario comparar los valores calculados a par
 * Q2 = Mediana: `r stats$mediana` cm
 * Q3: `r stats$q3` cm
 * Máximo: `r stats$maximo` cm
-`r sol`
 
-La opción correcta es aquella cuyo diagrama muestra exactamente estos valores.
+La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
+
+<br/>
+```{r DiagramaAsol, fig.width = 7, fig.height = 5}
+# Diagrama correcto
+par(mar = c(4, 4, 2, 6))
+plot(NA, 
+     xlim = c(0.5, 1.5), 
+     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
+             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", 
+     ylab = "Estatura (cm)", 
+     main = "", 
+     axes = FALSE)
+crear_diagrama(stats, "correcto")
+```
 
 Answerlist
 ----------
