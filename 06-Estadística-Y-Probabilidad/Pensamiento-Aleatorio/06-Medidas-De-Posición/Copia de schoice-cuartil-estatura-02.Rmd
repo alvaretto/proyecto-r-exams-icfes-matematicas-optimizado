@@ -1,0 +1,309 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r configuracion-inicial, include=FALSE}
+# Cargar librerías necesarias
+library(exams)
+library(xtable)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Función para generar datos aleatorios de estatura
+generar_datos_estatura <- function(
+    base_min = sample(145:165, 1), 
+    base_max = sample(168:188, 1),
+    # Permitir tamaños de muestra pares o impares
+    n = sample(7:25, 1)
+) {
+    variacion <- sample(5:15, 1)
+    min_valor <- base_min - sample(0:variacion, 1)
+    max_valor <- base_max + sample(0:variacion, 1)
+    
+    # Generar datos aleatorios y ordenarlos
+    datos <- sort(round(runif(n, min_valor, max_valor), digits = 0))
+
+    # Calcular estadísticas usando método de Tukey (type=7)
+    stats <- list(
+        datos = datos,
+        datos_desordenados = sample(datos),
+        minimo = min(datos),
+        q1 = quantile(datos, 0.25, type = 7),
+        mediana = median(datos),
+        q3 = quantile(datos, 0.75, type = 7),
+        maximo = max(datos)
+    )
+    
+    # Redondear cuartiles para permitir un decimal si no es .0
+    stats$q1 <- redondear_cuartil(stats$q1)
+    stats$mediana <- redondear_cuartil(stats$mediana)
+    stats$q3 <- redondear_cuartil(stats$q3)
+    
+    return(stats)
+}
+
+# Función para redondear cuartiles según las reglas especificadas
+redondear_cuartil <- function(valor) {
+    valor_redondeado <- round(valor, 1)
+    if (valor_redondeado %% 1 == 0) {
+        return(as.integer(valor_redondeado))
+    } else {
+        return(valor_redondeado)
+    }
+}
+
+# Función para crear diagramas de caja con diferentes variantes
+crear_diagrama <- function(stats, tipo = "correcto") {
+    # Calcular el rango para dimensionar el gráfico
+    rango <- stats$maximo - stats$minimo
+    y_min <- stats$minimo - rango * 0.15
+    y_max <- stats$maximo + rango * 0.15
+    
+    # Modificar valores según el tipo de diagrama
+    valores <- switch(tipo,
+        "correcto" = stats,
+        "escala_10" = {
+            tmp <- stats
+            tmp$minimo <- tmp$minimo * 10
+            tmp$q1 <- tmp$q1 * 10
+            tmp$mediana <- tmp$mediana * 10
+            tmp$q3 <- tmp$q3 * 10
+            tmp$maximo <- tmp$maximo * 10
+            tmp
+        },
+        "invertido" = {
+            tmp <- stats
+            tmp$q1 <- stats$q3
+            tmp$q3 <- stats$q1
+            tmp
+        },
+        "mediana_falsa" = {
+            tmp <- stats
+            # Usar un valor diferente para la mediana falsa
+            tmp$mediana <- round(mean(c(stats$minimo, stats$maximo)))
+            tmp
+        }
+    )
+    
+    # Dibujar el diagrama de caja
+    dibujar_boxplot(valores)
+}
+
+# Función para dibujar el boxplot evitando solapamiento de etiquetas
+dibujar_boxplot <- function(valores) {
+    # Dibujar línea vertical central
+    segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
+    
+    # Dibujar la caja (rectángulo)
+    rect(0.8, valores$q1, 1.2, valores$q3, col = "white", border = "black")
+    
+    # Dibujar la mediana
+    segments(0.8, valores$mediana, 1.2, valores$mediana, lwd = 2)
+    
+    # Dibujar los bigotes
+    segments(0.8, valores$minimo, 1.2, valores$minimo, lwd = 2)
+    segments(0.8, valores$maximo, 1.2, valores$maximo, lwd = 2)
+    
+    # Calcular espacios para evitar solapamiento de etiquetas
+    rango <- valores$maximo - valores$minimo
+    min_espacio <- rango * 0.08  # Espacio mínimo entre etiquetas
+    
+    # Posiciones iniciales para las etiquetas
+    posiciones <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
+    etiquetas <- c(
+        paste("Mín =", valores$minimo),
+        paste("Q1 =", valores$q1),
+        paste("Q2 =", valores$mediana),
+        paste("Q3 =", valores$q3),
+        paste("Máx =", valores$maximo)
+    )
+    
+    # Ajustar posiciones para evitar solapamiento
+    for (i in 2:5) {
+        if (posiciones[i] - posiciones[i-1] < min_espacio) {
+            # Ajustar posición para evitar solapamiento
+            posiciones[i] <- posiciones[i-1] + min_espacio
+        }
+    }
+    
+    # Dibujar etiquetas en las posiciones ajustadas
+    for (i in 1:5) {
+        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = 0.8)
+    }
+    
+    # Añadir eje vertical y marco
+    axis(2, las = 1)
+    box()
+}
+
+# Función para verificar que los diagramas sean diferentes
+son_diagramas_diferentes <- function(diag1, diag2) {
+    # Comparar valores clave
+    return(
+        diag1$minimo != diag2$minimo ||
+        diag1$q1 != diag2$q1 ||
+        diag1$mediana != diag2$mediana ||
+        diag1$q3 != diag2$q3 ||
+        diag1$maximo != diag2$maximo
+    )
+}
+```
+
+```{r generate, echo = FALSE, results = "hide"}
+# Generar el conjunto de datos de estaturas
+stats <- generar_datos_estatura()
+
+# Crear las variantes de diagramas
+diag_correcto <- stats
+diag_escala_10 <- list(
+    minimo = stats$minimo * 10,
+    q1 = stats$q1 * 10,
+    mediana = stats$mediana * 10,
+    q3 = stats$q3 * 10,
+    maximo = stats$maximo * 10
+)
+diag_invertido <- list(
+    minimo = stats$minimo,
+    q1 = stats$q3,
+    mediana = stats$mediana,
+    q3 = stats$q1,
+    maximo = stats$maximo
+)
+diag_mediana_falsa <- list(
+    minimo = stats$minimo,
+    q1 = stats$q1,
+    mediana = round(mean(c(stats$minimo, stats$maximo))),
+    q3 = stats$q3,
+    maximo = stats$maximo
+)
+
+# Verificar que todos los diagramas sean diferentes
+if (!son_diagramas_diferentes(diag_correcto, diag_escala_10) ||
+    !son_diagramas_diferentes(diag_correcto, diag_invertido) ||
+    !son_diagramas_diferentes(diag_correcto, diag_mediana_falsa) ||
+    !son_diagramas_diferentes(diag_escala_10, diag_invertido) ||
+    !son_diagramas_diferentes(diag_escala_10, diag_mediana_falsa) ||
+    !son_diagramas_diferentes(diag_invertido, diag_mediana_falsa)) {
+    # Regenerar datos si hay diagramas idénticos
+    stats <- generar_datos_estatura()
+}
+
+# Definir la solución
+sol <- "1000"
+```
+
+Question
+========
+En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
+
+```{r tabla, results='asis'}
+# Crear tabla con los datos desordenados
+datos_tabla <- data.frame(
+    "Estudiante" = 1:length(stats$datos_desordenados),
+    "Estatura (cm)" = stats$datos_desordenados
+)
+tabla_xtable <- xtable(datos_tabla,
+                       align = c("l", "c", "c"),
+                       digits = c(0, 0, 0))
+
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
+
+¿Cuál diagrama de caja representa correctamente estos datos?
+
+Answerlist
+----------
+- 
+<br/>
+```{r DiagramaA, fig.width = 7, fig.height = 5}
+# Diagrama correcto
+par(mar = c(4, 4, 2, 6))
+plot(NA, 
+     xlim = c(0.5, 1.5), 
+     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
+             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", 
+     ylab = "Estatura (cm)", 
+     main = "", 
+     axes = FALSE)
+crear_diagrama(stats, "correcto")
+```
+
+- 
+<br/>
+```{r DiagramaB, fig.width = 7, fig.height = 5}
+# Diagrama con escala multiplicada por 10
+par(mar = c(4, 4, 2, 6))
+plot(NA, 
+     xlim = c(0.5, 1.5), 
+     ylim = c(stats$minimo * 10 - (stats$maximo - stats$minimo) * 1.5, 
+             stats$maximo * 10 + (stats$maximo - stats$minimo) * 1.5),
+     xlab = "", 
+     ylab = "Estatura (cm)", 
+     main = "", 
+     axes = FALSE)
+crear_diagrama(stats, "escala_10")
+```
+
+- 
+<br/>
+```{r DiagramaC, fig.width = 7, fig.height = 5}
+# Diagrama con cuartiles invertidos
+par(mar = c(4, 4, 2, 6))
+plot(NA, 
+     xlim = c(0.5, 1.5), 
+     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
+             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", 
+     ylab = "Estatura (cm)", 
+     main = "", 
+     axes = FALSE)
+crear_diagrama(stats, "invertido")
+```
+
+- 
+<br/>
+```{r DiagramaD, fig.width = 7, fig.height = 5}
+# Diagrama con mediana falsa
+par(mar = c(4, 4, 2, 6))
+plot(NA, 
+     xlim = c(0.5, 1.5), 
+     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
+             stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", 
+     ylab = "Estatura (cm)", 
+     main = "", 
+     axes = FALSE)
+crear_diagrama(stats, "mediana_falsa")
+```
+
+Solution
+========
+Para resolver este ejercicio, es necesario comparar los valores calculados a partir del conjunto de datos con los valores mostrados en cada diagrama de caja:
+
+* Mínimo: `r stats$minimo` cm
+* Q1: `r stats$q1` cm
+* Q2 = Mediana: `r stats$mediana` cm
+* Q3: `r stats$q3` cm
+* Máximo: `r stats$maximo` cm
+`r sol`
+
+La opción correcta es aquella cuyo diagrama muestra exactamente estos valores.
+
+Answerlist
+----------
+* Correcto. Este diagrama representa fielmente todos los valores estadísticos.
+* Incorrecto. Los valores están multiplicados por 10.
+* Incorrecto. Los cuartiles Q1 y Q3 están invertidos.
+* Incorrecto. La mediana está mal calculada.
+
+Meta-information
+============
+exname: Diagrama de Caja - Estaturas
+extype: schoice
+exsolution: `r sol`
+exshuffle: TRUE
