@@ -76,6 +76,8 @@ crear_diagrama <- function(stats, tipo = "correcto") {
             tmp <- stats
             tmp$q1 <- stats$q3
             tmp$q3 <- stats$q1
+            # Aseguramos que los valores estén en orden para el algoritmo de posicionamiento
+            tmp$valores_ordenados <- c(tmp$minimo, tmp$q1, tmp$mediana, tmp$q3, tmp$maximo)
             tmp
         },
         "mediana_falsa" = {
@@ -87,11 +89,11 @@ crear_diagrama <- function(stats, tipo = "correcto") {
     )
     
     # Dibujar el diagrama de caja
-    dibujar_boxplot(valores)
+    dibujar_boxplot(valores, tipo)
 }
 
-# Función para dibujar el boxplot evitando solapamiento de etiquetas
-dibujar_boxplot <- function(valores) {
+# Función modificada para manejar mejor los casos especiales
+dibujar_boxplot <- function(valores, tipo = "correcto") {
     # Dibujar línea vertical central
     segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
     
@@ -107,10 +109,19 @@ dibujar_boxplot <- function(valores) {
     
     # Calcular espacios para evitar solapamiento de etiquetas
     rango <- valores$maximo - valores$minimo
-    min_espacio <- rango * 0.08  # Espacio mínimo entre etiquetas
+    min_espacio <- rango * 0.10
     
-    # Posiciones iniciales para las etiquetas
-    posiciones <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
+    # Valores originales para las etiquetas
+    valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
+    
+    # Para el caso invertido, necesitamos ordenar los valores para el algoritmo de posicionamiento
+    if (tipo == "invertido") {
+        # Ordenar los valores para el algoritmo de posicionamiento
+        valores_ordenados <- sort(valores_orig)
+    } else {
+        valores_ordenados <- valores_orig
+    }
+    
     etiquetas <- c(
         paste("Mín =", valores$minimo),
         paste("Q1 =", valores$q1),
@@ -119,17 +130,32 @@ dibujar_boxplot <- function(valores) {
         paste("Máx =", valores$maximo)
     )
     
+    # Posiciones ajustadas para evitar solapamiento
+    posiciones <- valores_orig
+    
+    # Ordenar las posiciones de menor a mayor para evitar solapamiento
+    orden <- order(posiciones)
+    posiciones_ordenadas <- posiciones[orden]
+    etiquetas_ordenadas <- etiquetas[orden]
+    
     # Ajustar posiciones para evitar solapamiento
     for (i in 2:5) {
-        if (posiciones[i] - posiciones[i-1] < min_espacio) {
-            # Ajustar posición para evitar solapamiento
-            posiciones[i] <- posiciones[i-1] + min_espacio
+        if (posiciones_ordenadas[i] - posiciones_ordenadas[i-1] < min_espacio) {
+            posiciones_ordenadas[i] <- posiciones_ordenadas[i-1] + min_espacio
         }
     }
     
-    # Dibujar etiquetas en las posiciones ajustadas
+    # Restaurar el orden original
+    posiciones_ajustadas <- numeric(5)
+    posiciones_ajustadas[orden] <- posiciones_ordenadas
+    
+    # Dibujar etiquetas con líneas conectoras si se movieron
     for (i in 1:5) {
-        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = 0.8)
+        if (abs(posiciones_ajustadas[i] - valores_orig[i]) > 0.01) {
+            # Dibujar línea conectora si la etiqueta se movió
+            segments(1.2, valores_orig[i], 1.3, posiciones_ajustadas[i], lty = 2, col = "gray")
+        }
+        text(1.35, posiciones_ajustadas[i], etiquetas[i], pos = 4, cex = 0.8)
     }
     
     # Añadir eje vertical y marco
