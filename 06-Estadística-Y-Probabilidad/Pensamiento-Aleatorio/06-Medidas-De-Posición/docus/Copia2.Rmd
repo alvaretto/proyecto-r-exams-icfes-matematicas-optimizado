@@ -219,7 +219,26 @@ crear_diagrama_simple(minimo, q1, mediana, q3, maximo, tipo = "mediana_falsa")
 
 Solution
 ========
-Para determinar cuál diagrama de caja representa correctamente los datos, necesitamos identificar las estadísticas principales:
+
+```{r, echo = FALSE, results = "asis"}
+# Crear tabla con los datos ordenados
+datos_ordenados <- sort(datos)
+datos_tabla_ordenada <- data.frame(
+  "Dato N°" = 1:length(datos_ordenados),
+  "Estatura (cm)" = datos_ordenados
+)
+
+# Mostrar la tabla ordenada
+tabla_xtable <- xtable(datos_tabla_ordenada,
+                       caption = "Datos de estaturas ordenados",
+                       label = "tabla:datos_ordenados",
+                       align = c("l", "c", "c"))
+
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
 
 ```{r, echo = FALSE, results = "asis"}
 # Crear tabla de estadísticas usando los valores redondeados
