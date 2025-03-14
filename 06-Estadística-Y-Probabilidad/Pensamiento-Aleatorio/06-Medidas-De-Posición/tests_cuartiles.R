@@ -21,248 +21,255 @@ test_metodo_tukey <- function() {
     stop("Error: Los cuartiles no se calculan con el método Tukey (type=7)")
   }
   
-  cat("   Método Tukey implementado correctamente\n")
+  cat("✅ Método Tukey implementado correctamente\n")
   return(TRUE)
 }
 
 # Prueba 2: Verificar redondeo de cuartiles
 test_redondeo_cuartiles <- function() {
-  cat("Verificando reglas de redondeo para cuartiles...\n")
+  cat("Verificando función de redondeo de cuartiles...\n")
   
-  # Función de redondeo importada del script principal
-  redondear_cuartil <- function(valor) {
-    valor_redondeado <- round(valor, 1)
-    if (valor_redondeado %% 1 == 0) {
-      return(as.integer(valor_redondeado))
-    } else {
-      return(valor_redondeado)
-    }
-  }
+  # Cargar la función desde el archivo principal
+  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
   
-  # Casos de prueba - usando valores explícitos para evitar problemas de tipo
+  # Casos de prueba
   casos <- list(
-    list(valor = 2.5, esperado = 2.5),     # Debe mantener el decimal .5
-    list(valor = 3.0, esperado = 3L),      # Debe convertir a entero (L indica integer)
-    list(valor = 4.05, esperado = 4.1),    # Debe redondear a un decimal
-    list(valor = 5.96, esperado = 6L),     # Debe redondear a entero
-    list(valor = 7.33, esperado = 7.3)     # Debe redondear a un decimal
+    list(valor = 150.0, esperado = 150),
+    list(valor = 150.5, esperado = 150.5),
+    list(valor = 150.2, esperado = 150.2),
+    list(valor = 150.9, esperado = 150.9)
   )
   
   for (caso in casos) {
     resultado <- redondear_cuartil(caso$valor)
-    # Comprobar si es entero y convertir correctamente para la comparación
-    if (is.integer(caso$esperado)) {
-      if (!is.integer(resultado)) {
-        stop(paste("Error de tipo: para", caso$valor, 
-                   "se esperaba un entero pero se obtuvo", typeof(resultado)))
-      }
-      if (resultado != caso$esperado) {
-        stop(paste("Error de redondeo: para", caso$valor, 
-                   "se esperaba", caso$esperado, "pero se obtuvo", resultado))
-      }
-    } else {
-      if (abs(resultado - caso$esperado) > 0.001) {
-        stop(paste("Error de redondeo: para", caso$valor, 
-                   "se esperaba", caso$esperado, "pero se obtuvo", resultado))
-      }
+    if (!identical(resultado, caso$esperado)) {
+      stop(paste("Error en redondeo: para", caso$valor, "se esperaba", caso$esperado, "pero se obtuvo", resultado))
     }
   }
   
-  cat("   Reglas de redondeo implementadas correctamente\n")
+  cat("✅ Función de redondeo implementada correctamente\n")
   return(TRUE)
 }
 
-# Prueba 3: Verificar generación de conjuntos par e impar sin duplicados
-test_datos_par_impar <- function() {
-  cat("Verificando generación de conjuntos par e impar sin duplicados...\n")
-  
-  # Función simplificada para probar generación de datos
-  generar_datos_prueba <- function(n) {
-    # Usar un rango mucho más grande para evitar duplicados
-    rango_min <- 100
-    rango_max <- 300 + n*10  # Rango amplio que crece con n
-    
-    datos <- sort(round(runif(n, rango_min, rango_max), digits = 0))
-    intentos <- 0
-    max_intentos <- 20
-    
-    while(length(unique(datos)) < length(datos) && intentos < max_intentos) {
-      datos <- sort(round(runif(n, rango_min, rango_max), digits = 0))
-      intentos <- intentos + 1
-    }
-    
-    # Si después de los intentos aún hay duplicados, resolverlo añadiendo valores
-    if (length(unique(datos)) < length(datos)) {
-      datos_unicos <- unique(datos)
-      while (length(datos_unicos) < n) {
-        nuevo_valor <- max(datos_unicos) + 1
-        datos_unicos <- c(datos_unicos, nuevo_valor)
-      }
-      datos <- sort(datos_unicos)
-    }
-    
-    return(datos)
-  }
-  
-  # Probar con tamaños par e impar
-  for (n in c(8, 9, 12, 13)) {
-    datos <- generar_datos_prueba(n)
-    
-    # Verificar longitud
-    if (length(datos) != n) {
-      stop(paste("Error: Se generaron", length(datos), "datos en lugar de", n))
-    }
-    
-    # Verificar que no hay duplicados
-    if (length(unique(datos)) != length(datos)) {
-      stop(paste("Error: El conjunto de tamaño", n, "contiene valores duplicados"))
-    }
-    
-    # Verificar que está ordenado
-    if (!all(diff(datos) >= 0)) {
-      stop(paste("Error: El conjunto de tamaño", n, "no está ordenado correctamente"))
-    }
-  }
-  
-  cat("   Generación de conjuntos par/impar sin duplicados correcta\n")
-  return(TRUE)
-}
-
-# Prueba 4: Verificar detección de diagramas idénticos
+# Prueba 3: Verificar que los diagramas son diferentes
 test_diagramas_diferentes <- function() {
-  cat("Verificando detección de diagramas idénticos...\n")
+  cat("Verificando que los diagramas son visualmente diferentes...\n")
   
-  # Función de comparación
+  # Cargar las funciones desde el archivo principal
+  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
+  
+  # Generar datos de prueba
+  set.seed(123)
+  stats <- generar_datos_estatura()
+  
+  # Crear los diferentes diagramas
+  diag_correcto <- list(
+    minimo = stats$minimo,
+    q1 = stats$q1,
+    mediana = stats$mediana,
+    q3 = stats$q3,
+    maximo = stats$maximo
+  )
+  
+  diag_escala_10 <- list(
+    minimo = stats$minimo * 10,
+    q1 = stats$q1 * 10,
+    mediana = stats$mediana * 10,
+    q3 = stats$q3 * 10,
+    maximo = stats$maximo * 10
+  )
+  
+  diag_invertido <- list(
+    minimo = stats$minimo,
+    q1 = stats$q3,
+    mediana = stats$mediana,
+    q3 = stats$q1,
+    maximo = stats$maximo
+  )
+  
+  diag_mediana_falsa <- list(
+    minimo = stats$minimo,
+    q1 = stats$q1,
+    mediana = round(mean(c(stats$minimo, stats$maximo))),
+    q3 = stats$q3,
+    maximo = stats$maximo
+  )
+  
+  # Función para verificar si dos diagramas son diferentes
   son_diagramas_diferentes <- function(diag1, diag2) {
-    if (identical(diag1$minimo, diag2$minimo) && 
-        identical(diag1$q1, diag2$q1) && 
-        identical(diag1$mediana, diag2$mediana) && 
-        identical(diag1$q3, diag2$q3) && 
-        identical(diag1$maximo, diag2$maximo)) {
-      return(FALSE)
-    }
-    return(TRUE)
+    # Comparar todos los valores clave
+    return(
+      diag1$minimo != diag2$minimo ||
+        diag1$q1 != diag2$q1 ||
+        diag1$mediana != diag2$mediana ||
+        diag1$q3 != diag2$q3 ||
+        diag1$maximo != diag2$maximo
+    )
   }
   
-  # Crear diagramas de prueba
-  diag1 <- list(minimo=150, q1=160, mediana=170, q3=180, maximo=190)
-  diag2 <- list(minimo=150, q1=161, mediana=170, q3=180, maximo=190)
-  diag3 <- list(minimo=150, q1=160, mediana=170, q3=180, maximo=190)
-  
-  # Verificar que diag1 y diag2 son diferentes
-  if (!son_diagramas_diferentes(diag1, diag2)) {
-    stop("Error: La función no detecta como diferentes diagramas que tienen valores distintos")
+  # Verificar que todos los diagramas sean diferentes entre sí
+  if (!son_diagramas_diferentes(diag_correcto, diag_escala_10)) {
+    stop("Error: El diagrama correcto y el de escala 10 no son visualmente diferentes")
   }
   
-  # Verificar que diag1 y diag3 son idénticos
-  if (son_diagramas_diferentes(diag1, diag3)) {
-    stop("Error: La función detecta como diferentes diagramas que son idénticos")
+  if (!son_diagramas_diferentes(diag_correcto, diag_invertido)) {
+    stop("Error: El diagrama correcto y el invertido no son visualmente diferentes")
   }
   
-  cat("   Detección de diagramas idénticos funciona correctamente\n")
+  if (!son_diagramas_diferentes(diag_correcto, diag_mediana_falsa)) {
+    stop("Error: El diagrama correcto y el de mediana falsa no son visualmente diferentes")
+  }
+  
+  if (!son_diagramas_diferentes(diag_escala_10, diag_invertido)) {
+    stop("Error: El diagrama de escala 10 y el invertido no son visualmente diferentes")
+  }
+  
+  if (!son_diagramas_diferentes(diag_escala_10, diag_mediana_falsa)) {
+    stop("Error: El diagrama de escala 10 y el de mediana falsa no son visualmente diferentes")
+  }
+  
+  if (!son_diagramas_diferentes(diag_invertido, diag_mediana_falsa)) {
+    stop("Error: El diagrama invertido y el de mediana falsa no son visualmente diferentes")
+  }
+  
+  cat("✅ Todos los diagramas son visualmente diferentes\n")
   return(TRUE)
 }
 
-# Prueba 5: Verificar posible variedad de diagramas
-test_variedad_diagramas <- function() {
-  cat("Verificando la variedad posible de diagramas...\n")
+# Prueba 4: Verificar el posicionamiento de etiquetas
+test_posicionamiento_etiquetas <- function() {
+  cat("Verificando el posicionamiento de etiquetas...\n")
   
-  # Función para generar estadísticas aleatorias de diagramas
-  generar_stats_aleatorias <- function() {
-    min_val <- sample(150:160, 1)
-    max_val <- sample(180:190, 1)
-    q1_val <- sample((min_val+1):(min_val+10), 1)
-    q3_val <- sample((max_val-10):(max_val-1), 1)
-    med_val <- sample((q1_val+1):(q3_val-1), 1)
+  # Cargar las funciones desde el archivo principal
+  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
+  
+  # Generar datos de prueba con valores muy cercanos
+  set.seed(456)
+  datos_cercanos <- c(150, 151, 152, 153, 154)
+  
+  # Crear un objeto stats simulado
+  stats_cercanos <- list(
+    datos = datos_cercanos,
+    datos_desordenados = sample(datos_cercanos),
+    minimo = 150,
+    q1 = 151,
+    mediana = 152,
+    q3 = 153,
+    maximo = 154
+  )
+  
+  # Verificar que la función no genere errores con valores cercanos
+  tryCatch({
+    # Crear un dispositivo gráfico temporal
+    pdf(NULL)
     
-    return(list(
-      minimo = min_val,
-      q1 = q1_val,
-      mediana = med_val,
-      q3 = q3_val,
-      maximo = max_val
-    ))
+    # Intentar dibujar los diagramas con diferentes tipos
+    crear_diagrama(stats_cercanos, "correcto")
+    crear_diagrama(stats_cercanos, "escala_10")
+    crear_diagrama(stats_cercanos, "invertido")
+    crear_diagrama(stats_cercanos, "mediana_falsa")
+    
+    # Cerrar el dispositivo gráfico
+    dev.off()
+    
+    cat("✅ El posicionamiento de etiquetas funciona correctamente\n")
+    return(TRUE)
+  }, error = function(e) {
+    dev.off()
+    stop(paste("Error en el posicionamiento de etiquetas:", e$message))
+  })
+}
+
+# Prueba 5: Verificar manejo de datos pares e impares
+test_datos_par_impar <- function() {
+  cat("Verificando manejo de conjuntos de datos pares e impares...\n")
+  
+  # Cargar las funciones desde el archivo principal
+  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
+  
+  # Probar con conjunto de datos impar
+  set.seed(789)
+  stats_impar <- generar_datos_estatura(n = 9)
+  
+  # Probar con conjunto de datos par
+  set.seed(789)
+  stats_par <- generar_datos_estatura(n = 10)
+  
+  # Verificar que ambos casos generan estadísticas válidas
+  if (is.null(stats_impar$q1) || is.null(stats_impar$mediana) || is.null(stats_impar$q3)) {
+    stop("Error: No se generaron estadísticas válidas para conjunto de datos impar")
   }
   
-  # Verificar que podemos generar al menos 300 diagramas diferentes
-  set.seed(123)  # Fijar semilla para reproducibilidad
-  diagramas <- list()
-  for (i in 1:350) {  # Generar algunos más para asegurar
-    diagramas[[i]] <- generar_stats_aleatorias()
+  if (is.null(stats_par$q1) || is.null(stats_par$mediana) || is.null(stats_par$q3)) {
+    stop("Error: No se generaron estadísticas válidas para conjunto de datos par")
   }
   
-  # Calcular "huella digital" para cada diagrama
-  huellas_digitales <- sapply(diagramas, function(d) {
-    paste(d$minimo, d$q1, d$mediana, d$q3, d$maximo, sep="-")
+  cat("✅ Manejo correcto de conjuntos de datos pares e impares\n")
+  return(TRUE)
+}
+
+# Ejecutar todas las pruebas y mostrar resultados
+run_all_tests <- function() {
+  cat("==== PRUEBAS UNITARIAS PARA DIAGRAMAS DE CAJA CON CUARTILES ====\n\n")
+  
+  # Registrar pruebas pasadas
+  pruebas_pasadas <- 0
+  total_pruebas <- 5
+  
+  # Test 1
+  tryCatch({
+    test_metodo_tukey()
+    pruebas_pasadas <- pruebas_pasadas + 1
+  }, error = function(e) {
+    cat("❌ FALLO en test_metodo_tukey:", e$message, "\n")
   })
   
-  # Contar combinaciones únicas
-  total_unicos <- length(unique(huellas_digitales))
+  # Test 2
+  tryCatch({
+    test_redondeo_cuartiles()
+    pruebas_pasadas <- pruebas_pasadas + 1
+  }, error = function(e) {
+    cat("❌ FALLO en test_redondeo_cuartiles:", e$message, "\n")
+  })
   
-  if (total_unicos < 300) {
-    stop(paste("Error: El método solo puede generar", total_unicos, 
-               "diagramas diferentes, pero se requieren al menos 300"))
+  # Test 3
+  tryCatch({
+    test_diagramas_diferentes()
+    pruebas_pasadas <- pruebas_pasadas + 1
+  }, error = function(e) {
+    cat("❌ FALLO en test_diagramas_diferentes:", e$message, "\n")
+  })
+  
+  # Test 4
+  tryCatch({
+    test_posicionamiento_etiquetas()
+    pruebas_pasadas <- pruebas_pasadas + 1
+  }, error = function(e) {
+    cat("❌ FALLO en test_posicionamiento_etiquetas:", e$message, "\n")
+  })
+  
+  # Test 5
+  tryCatch({
+    test_datos_par_impar()
+    pruebas_pasadas <- pruebas_pasadas + 1
+  }, error = function(e) {
+    cat("❌ FALLO en test_datos_par_impar:", e$message, "\n")
+  })
+  
+  # Mostrar resumen
+  cat("\n==== RESUMEN DE PRUEBAS UNITARIAS ====\n")
+  cat("Pruebas pasadas:", pruebas_pasadas, "de", total_pruebas, "\n")
+  
+  if (pruebas_pasadas == total_pruebas) {
+    cat("✅ TODAS LAS PRUEBAS PASARON CORRECTAMENTE\n")
+  } else {
+    cat("⚠️ ALGUNAS PRUEBAS FALLARON. Revisa los mensajes de error.\n")
   }
   
-  cat("   Se pueden generar al menos", total_unicos, "diagramas diferentes\n")
-  return(TRUE)
+  cat("=======================================\n")
 }
 
-# Ejecutar todas las pruebas
-cat("==== Ejecutando pruebas unitarias para diagramas de caja ====\n\n")
-
-# Registrar pruebas pasadas
-pruebas_pasadas <- 0
-total_pruebas <- 5
-
-# Test 1
-tryCatch({
-  test_metodo_tukey()
-  pruebas_pasadas <- pruebas_pasadas + 1
-}, error = function(e) {
-  cat("❌ FALLO en test_metodo_tukey:", e$message, "\n")
-})
-
-# Test 2
-tryCatch({
-  test_redondeo_cuartiles()
-  pruebas_pasadas <- pruebas_pasadas + 1
-}, error = function(e) {
-  cat("❌ FALLO en test_redondeo_cuartiles:", e$message, "\n")
-})
-
-# Test 3
-tryCatch({
-  test_datos_par_impar()
-  pruebas_pasadas <- pruebas_pasadas + 1
-}, error = function(e) {
-  cat("❌ FALLO en test_datos_par_impar:", e$message, "\n")
-})
-
-# Test 4
-tryCatch({
-  test_diagramas_diferentes()
-  pruebas_pasadas <- pruebas_pasadas + 1
-}, error = function(e) {
-  cat("❌ FALLO en test_diagramas_diferentes:", e$message, "\n")
-})
-
-# Test 5
-tryCatch({
-  test_variedad_diagramas()
-  pruebas_pasadas <- pruebas_pasadas + 1
-}, error = function(e) {
-  cat("❌ FALLO en test_variedad_diagramas:", e$message, "\n")
-})
-
-# Mostrar resumen
-cat("\n==== Resumen de pruebas unitarias ====\n")
-cat("Pruebas pasadas:", pruebas_pasadas, "de", total_pruebas, "\n")
-
-if (pruebas_pasadas == total_pruebas) {
-  cat("✅ TODAS LAS PRUEBAS PASARON CORRECTAMENTE\n")
-} else {
-  cat("⚠️ ALGUNAS PRUEBAS FALLARON. Revisa los mensajes de error.\n")
+# Ejecutar las pruebas si este archivo se ejecuta directamente
+if (!interactive()) {
+  run_all_tests()
 }
-
-cat("=======================================\n")
