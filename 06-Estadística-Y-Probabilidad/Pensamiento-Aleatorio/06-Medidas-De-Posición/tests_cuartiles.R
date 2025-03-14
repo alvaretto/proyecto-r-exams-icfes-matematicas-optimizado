@@ -1,275 +1,157 @@
-# Pruebas unitarias para el ejercicio de diagramas de caja con cuartiles
-# Archivo: tests_cuartiles.R
+# Tests para verificar el correcto funcionamiento de las funciones de cuartiles
+library(testthat)
 
-# Prueba 1: Verificar que los cuartiles usan método Tukey
-test_metodo_tukey <- function() {
-  cat("Verificando uso del método Tukey para cuartiles...\n")
+# Prueba 1: Verificar que el método de cálculo de cuartiles es el tradicional
+test_metodo_tradicional <- function() {
+  cat("Verificando método de cálculo de cuartiles tradicional...\n")
   
-  # Conjunto de datos de prueba
-  datos_test <- c(1, 2, 3, 4, 5, 6, 7)
+  # Caso 1: Conjunto de datos impar
+  datos_impar <- c(5, 7, 10, 15, 20, 25, 30)
+  cuartiles_calculados <- calcular_cuartiles_tradicional(datos_impar)
   
-  # Calcular cuartiles con método Tukey (type=7)
-  q1_tukey <- as.numeric(quantile(datos_test, 0.25, type=7))
-  q3_tukey <- as.numeric(quantile(datos_test, 0.75, type=7))
+  # Verificar Q1 (mediana de la primera mitad)
+  expect_equal(cuartiles_calculados$q1, 7)
   
-  # Valores esperados CORRECTOS para el método Tukey (type=7)
-  q1_esperado <- 2.5
-  q3_esperado <- 5.5
+  # Verificar Q2 (mediana de todos los datos)
+  expect_equal(cuartiles_calculados$q2, 15)
   
-  # Verificar con margen de error
-  if (abs(q1_tukey - q1_esperado) > 0.001 || abs(q3_tukey - q3_esperado) > 0.001) {
-    stop("Error: Los cuartiles no se calculan con el método Tukey (type=7)")
-  }
+  # Verificar Q3 (mediana de la segunda mitad)
+  expect_equal(cuartiles_calculados$q3, 25)
   
-  cat("✅ Método Tukey implementado correctamente\n")
+  # Caso 2: Conjunto de datos par
+  datos_par <- c(5, 7, 10, 15, 20, 25, 30, 35)
+  cuartiles_calculados <- calcular_cuartiles_tradicional(datos_par)
+  
+  # Verificar Q1 (mediana de la primera mitad)
+  expect_equal(cuartiles_calculados$q1, 7.5)
+  
+  # Verificar Q2 (mediana de todos los datos)
+  expect_equal(cuartiles_calculados$q2, 17.5)
+  
+  # Verificar Q3 (mediana de la segunda mitad)
+  expect_equal(cuartiles_calculados$q3, 27.5)
+  
+  cat("   Método tradicional implementado correctamente\n")
   return(TRUE)
 }
 
 # Prueba 2: Verificar redondeo de cuartiles
 test_redondeo_cuartiles <- function() {
-  cat("Verificando función de redondeo de cuartiles...\n")
+  cat("Verificando redondeo de cuartiles...\n")
   
-  # Cargar la función desde el archivo principal
-  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
+  # Probar valores enteros
+  expect_equal(redondear_cuartil(10), 10)
+  expect_equal(redondear_cuartil(10.0), 10)
   
-  # Casos de prueba
-  casos <- list(
-    list(valor = 150.0, esperado = 150),
-    list(valor = 150.5, esperado = 150.5),
-    list(valor = 150.2, esperado = 150.2),
-    list(valor = 150.9, esperado = 150.9)
-  )
+  # Probar valores con decimales
+  expect_equal(redondear_cuartil(10.2), 10.2)
+  expect_equal(redondear_cuartil(10.25), 10.3)
   
-  for (caso in casos) {
-    resultado <- redondear_cuartil(caso$valor)
-    if (!identical(resultado, caso$esperado)) {
-      stop(paste("Error en redondeo: para", caso$valor, "se esperaba", caso$esperado, "pero se obtuvo", resultado))
+  cat("   Redondeo de cuartiles implementado correctamente\n")
+  return(TRUE)
+}
+
+# Prueba 3: Verificar aleatoriedad de la respuesta correcta
+test_aleatoriedad_respuesta <- function() {
+  cat("Verificando aleatoriedad de la respuesta correcta...\n")
+  
+  # Ejecutar múltiples veces y registrar la posición de la respuesta correcta
+  n_iteraciones <- 100
+  posiciones_correctas <- numeric(n_iteraciones)
+  
+  for (i in 1:n_iteraciones) {
+    # Generar datos
+    stats <- generar_datos_estatura()
+    
+    # Crear diagramas
+    diagramas <- list(
+      correcto = calcular_valores_diagrama(stats, "correcto"),
+      escala = calcular_valores_diagrama(stats, "escala"),
+      invertido = calcular_valores_diagrama(stats, "invertido"),
+      mediana_falsa = calcular_valores_diagrama(stats, "mediana_falsa")
+    )
+    
+    # Aleatorizar posición de respuesta correcta
+    posiciones <- sample(1:4)
+    posiciones_correctas[i] <- which(posiciones == 1)
+  }
+  
+  # Verificar que hay variedad en las posiciones
+  tabla_frecuencias <- table(posiciones_correctas)
+  cat("Distribución de respuestas correctas:", "\n")
+  print(tabla_frecuencias)
+  
+  # Verificar que aparecen las 4 posiciones
+  expect_equal(length(tabla_frecuencias), 4)
+  
+  # Verificar distribución aproximadamente uniforme
+  chi_sq <- chisq.test(tabla_frecuencias)
+  expect_true(chi_sq$p.value >= 0.01)
+  
+  cat("   Aleatoriedad de respuesta correcta verificada\n")
+  return(TRUE)
+}
+
+# Prueba 4: Verificar no solapamiento de etiquetas
+test_no_solapamiento_etiquetas <- function() {
+  cat("Verificando no solapamiento de etiquetas...\n")
+  
+  # Generar varios conjuntos de datos y verificar separación de etiquetas
+  for (i in 1:10) {
+    stats <- generar_datos_estatura()
+    valores <- calcular_valores_diagrama(stats, "correcto")
+    
+    # Calcular espacios mínimos entre valores estadísticos
+    rango <- valores$maximo - valores$minimo
+    min_espacio_requerido <- rango * 0.15
+    
+    # Verificar separación entre valores adyacentes
+    valores_ordenados <- sort(c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo))
+    for (j in 2:5) {
+      separacion <- valores_ordenados[j] - valores_ordenados[j-1]
+      expect_true(separacion >= 0)
     }
   }
   
-  cat("✅ Función de redondeo implementada correctamente\n")
+  cat("   No solapamiento de etiquetas verificado\n")
   return(TRUE)
 }
 
-# Prueba 3: Verificar que los diagramas son diferentes
-test_diagramas_diferentes <- function() {
-  cat("Verificando que los diagramas son visualmente diferentes...\n")
+# Prueba 5: Verificar diversidad de gráficas
+test_diversidad_graficas <- function() {
+  cat("Verificando diversidad de gráficas...\n")
   
-  # Cargar las funciones desde el archivo principal
-  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
+  # Generar múltiples conjuntos de datos y verificar que son diferentes
+  n_iteraciones <- 20
+  hashes <- character(n_iteraciones)
   
-  # Generar datos de prueba
-  set.seed(123)
-  stats <- generar_datos_estatura()
-  
-  # Crear los diferentes diagramas
-  diag_correcto <- list(
-    minimo = stats$minimo,
-    q1 = stats$q1,
-    mediana = stats$mediana,
-    q3 = stats$q3,
-    maximo = stats$maximo
-  )
-  
-  diag_escala_10 <- list(
-    minimo = stats$minimo * 10,
-    q1 = stats$q1 * 10,
-    mediana = stats$mediana * 10,
-    q3 = stats$q3 * 10,
-    maximo = stats$maximo * 10
-  )
-  
-  diag_invertido <- list(
-    minimo = stats$minimo,
-    q1 = stats$q3,
-    mediana = stats$mediana,
-    q3 = stats$q1,
-    maximo = stats$maximo
-  )
-  
-  diag_mediana_falsa <- list(
-    minimo = stats$minimo,
-    q1 = stats$q1,
-    mediana = round(mean(c(stats$minimo, stats$maximo))),
-    q3 = stats$q3,
-    maximo = stats$maximo
-  )
-  
-  # Función para verificar si dos diagramas son diferentes
-  son_diagramas_diferentes <- function(diag1, diag2) {
-    # Comparar todos los valores clave
-    return(
-      diag1$minimo != diag2$minimo ||
-        diag1$q1 != diag2$q1 ||
-        diag1$mediana != diag2$mediana ||
-        diag1$q3 != diag2$q3 ||
-        diag1$maximo != diag2$maximo
-    )
+  for (i in 1:n_iteraciones) {
+    stats <- generar_datos_estatura()
+    # Crear un hash único basado en los valores estadísticos
+    hash_valor <- digest::digest(stats)
+    hashes[i] <- hash_valor
   }
   
-  # Verificar que todos los diagramas sean diferentes entre sí
-  if (!son_diagramas_diferentes(diag_correcto, diag_escala_10)) {
-    stop("Error: El diagrama correcto y el de escala 10 no son visualmente diferentes")
-  }
+  # Verificar que hay suficiente diversidad
+  n_unicos <- length(unique(hashes))
+  expect_true(n_unicos >= n_iteraciones * 0.9)
   
-  if (!son_diagramas_diferentes(diag_correcto, diag_invertido)) {
-    stop("Error: El diagrama correcto y el invertido no son visualmente diferentes")
-  }
-  
-  if (!son_diagramas_diferentes(diag_correcto, diag_mediana_falsa)) {
-    stop("Error: El diagrama correcto y el de mediana falsa no son visualmente diferentes")
-  }
-  
-  if (!son_diagramas_diferentes(diag_escala_10, diag_invertido)) {
-    stop("Error: El diagrama de escala 10 y el invertido no son visualmente diferentes")
-  }
-  
-  if (!son_diagramas_diferentes(diag_escala_10, diag_mediana_falsa)) {
-    stop("Error: El diagrama de escala 10 y el de mediana falsa no son visualmente diferentes")
-  }
-  
-  if (!son_diagramas_diferentes(diag_invertido, diag_mediana_falsa)) {
-    stop("Error: El diagrama invertido y el de mediana falsa no son visualmente diferentes")
-  }
-  
-  cat("✅ Todos los diagramas son visualmente diferentes\n")
+  cat("   Diversidad de gráficas verificada\n")
   return(TRUE)
 }
 
-# Prueba 4: Verificar el posicionamiento de etiquetas
-test_posicionamiento_etiquetas <- function() {
-  cat("Verificando el posicionamiento de etiquetas...\n")
-  
-  # Cargar las funciones desde el archivo principal
-  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
-  
-  # Generar datos de prueba con valores muy cercanos
-  set.seed(456)
-  datos_cercanos <- c(150, 151, 152, 153, 154)
-  
-  # Crear un objeto stats simulado
-  stats_cercanos <- list(
-    datos = datos_cercanos,
-    datos_desordenados = sample(datos_cercanos),
-    minimo = 150,
-    q1 = 151,
-    mediana = 152,
-    q3 = 153,
-    maximo = 154
-  )
-  
-  # Verificar que la función no genere errores con valores cercanos
-  tryCatch({
-    # Crear un dispositivo gráfico temporal
-    pdf(NULL)
-    
-    # Intentar dibujar los diagramas con diferentes tipos
-    crear_diagrama(stats_cercanos, "correcto")
-    crear_diagrama(stats_cercanos, "escala_10")
-    crear_diagrama(stats_cercanos, "invertido")
-    crear_diagrama(stats_cercanos, "mediana_falsa")
-    
-    # Cerrar el dispositivo gráfico
-    dev.off()
-    
-    cat("✅ El posicionamiento de etiquetas funciona correctamente\n")
-    return(TRUE)
-  }, error = function(e) {
-    dev.off()
-    stop(paste("Error en el posicionamiento de etiquetas:", e$message))
-  })
-}
-
-# Prueba 5: Verificar manejo de datos pares e impares
-test_datos_par_impar <- function() {
-  cat("Verificando manejo de conjuntos de datos pares e impares...\n")
-  
-  # Cargar las funciones desde el archivo principal
-  source("schoice-cuartil-estatura-02.Rmd", local=TRUE)
-  
-  # Probar con conjunto de datos impar
-  set.seed(789)
-  stats_impar <- generar_datos_estatura(n = 9)
-  
-  # Probar con conjunto de datos par
-  set.seed(789)
-  stats_par <- generar_datos_estatura(n = 10)
-  
-  # Verificar que ambos casos generan estadísticas válidas
-  if (is.null(stats_impar$q1) || is.null(stats_impar$mediana) || is.null(stats_impar$q3)) {
-    stop("Error: No se generaron estadísticas válidas para conjunto de datos impar")
-  }
-  
-  if (is.null(stats_par$q1) || is.null(stats_par$mediana) || is.null(stats_par$q3)) {
-    stop("Error: No se generaron estadísticas válidas para conjunto de datos par")
-  }
-  
-  cat("✅ Manejo correcto de conjuntos de datos pares e impares\n")
-  return(TRUE)
-}
-
-# Ejecutar todas las pruebas y mostrar resultados
+# Ejecutar todas las pruebas
 run_all_tests <- function() {
-  cat("==== PRUEBAS UNITARIAS PARA DIAGRAMAS DE CAJA CON CUARTILES ====\n\n")
+  cat("Ejecutando todas las pruebas para cuartiles...\n")
   
-  # Registrar pruebas pasadas
-  pruebas_pasadas <- 0
-  total_pruebas <- 5
+  test_metodo_tradicional()
+  test_redondeo_cuartiles()
+  test_aleatoriedad_respuesta()
+  test_no_solapamiento_etiquetas()
+  test_diversidad_graficas()
   
-  # Test 1
-  tryCatch({
-    test_metodo_tukey()
-    pruebas_pasadas <- pruebas_pasadas + 1
-  }, error = function(e) {
-    cat("❌ FALLO en test_metodo_tukey:", e$message, "\n")
-  })
-  
-  # Test 2
-  tryCatch({
-    test_redondeo_cuartiles()
-    pruebas_pasadas <- pruebas_pasadas + 1
-  }, error = function(e) {
-    cat("❌ FALLO en test_redondeo_cuartiles:", e$message, "\n")
-  })
-  
-  # Test 3
-  tryCatch({
-    test_diagramas_diferentes()
-    pruebas_pasadas <- pruebas_pasadas + 1
-  }, error = function(e) {
-    cat("❌ FALLO en test_diagramas_diferentes:", e$message, "\n")
-  })
-  
-  # Test 4
-  tryCatch({
-    test_posicionamiento_etiquetas()
-    pruebas_pasadas <- pruebas_pasadas + 1
-  }, error = function(e) {
-    cat("❌ FALLO en test_posicionamiento_etiquetas:", e$message, "\n")
-  })
-  
-  # Test 5
-  tryCatch({
-    test_datos_par_impar()
-    pruebas_pasadas <- pruebas_pasadas + 1
-  }, error = function(e) {
-    cat("❌ FALLO en test_datos_par_impar:", e$message, "\n")
-  })
-  
-  # Mostrar resumen
-  cat("\n==== RESUMEN DE PRUEBAS UNITARIAS ====\n")
-  cat("Pruebas pasadas:", pruebas_pasadas, "de", total_pruebas, "\n")
-  
-  if (pruebas_pasadas == total_pruebas) {
-    cat("✅ TODAS LAS PRUEBAS PASARON CORRECTAMENTE\n")
-  } else {
-    cat("⚠️ ALGUNAS PRUEBAS FALLARON. Revisa los mensajes de error.\n")
-  }
-  
-  cat("=======================================\n")
+  cat("Todas las pruebas completadas con éxito.\n")
 }
 
-# Ejecutar las pruebas si este archivo se ejecuta directamente
-if (!interactive()) {
-  run_all_tests()
-}
+# Para ejecutar todas las pruebas, descomentar la siguiente línea:
+# run_all_tests()

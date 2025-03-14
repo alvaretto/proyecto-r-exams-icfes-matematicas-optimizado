@@ -54,6 +54,7 @@ opts_knit$set(concordance = TRUE)
 ################################################################################
 # Generación de n archivos en un solo archivo de salida para PDF
 
+set.seed(semilla)
 exams2pdf(rep(archivo_examen, numpreg),
           n = archivos,
           name = nombre_arch,
@@ -66,6 +67,7 @@ exams2pdf(rep(archivo_examen, numpreg),
 ################################################################################
 # Generación de n archivos en un solo archivo .docx
 
+set.seed(semilla)
 exams2pandoc(rep(archivo_examen, numpreg),
              n = archivos,
              name = nombre_arch,
@@ -93,6 +95,8 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Creación del examen en formato HTML, sólo 'numpreg', 'archivos' = 1
 
 # Comentado para evitar error de navegador
+
+set.seed(semilla)
 exams2html(rep(archivo_examen, numpreg),
            svg = FALSE,
            engine = "knitr")
