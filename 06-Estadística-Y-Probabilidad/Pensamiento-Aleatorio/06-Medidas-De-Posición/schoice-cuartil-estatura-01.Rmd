@@ -280,7 +280,7 @@ tabla_xtable <- xtable(datos_tabla,
 print(tabla_xtable, 
       type = "latex",
       include.rownames = FALSE,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
 ```
 
 ¿Cuál diagrama de caja representa correctamente estos datos?
@@ -368,7 +368,7 @@ tabla_xtable <- xtable(datos_tabla_ordenada,
 print(tabla_xtable, 
       type = "latex",
       include.rownames = FALSE,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
 ```
 
 La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
@@ -399,6 +399,7 @@ plot(NA,
 dibujar_boxplot(diagramas_ordenados[[correct_index]])
 axis(2, las = 1)
 box()
+```
 
 ```{r solutionlist, echo = FALSE, results = "asis"}
 # Crear vector de respuestas (Verdadero/Falso)
