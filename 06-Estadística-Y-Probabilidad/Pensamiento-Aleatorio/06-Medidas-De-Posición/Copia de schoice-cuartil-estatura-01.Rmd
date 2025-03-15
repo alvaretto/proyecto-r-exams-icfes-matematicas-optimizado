@@ -62,7 +62,7 @@ generar_datos_estatura <- function(
     base_min = sample(145:165, 1), 
     base_max = sample(168:188, 1),
     # Permitir tamaños de muestra pares o impares
-    n = sample(7:25, 1)
+    n = sample(9:25, 1)
 ) {
     variacion <- sample(5:15, 1)
     min_valor <- base_min - sample(0:variacion, 1)
@@ -109,7 +109,7 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     
     # Calcular espacios para evitar solapamiento de etiquetas
     rango <- valores$maximo - valores$minimo
-    min_espacio <- rango * 0.15  # Aumentado para mayor separación
+    min_espacio <- rango * 0.13  # Aumentado para mayor separación
     
     # Valores originales para las etiquetas
     valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
@@ -126,12 +126,12 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     posiciones <- valores_orig
     
     # Ajustar posiciones para evitar solapamiento
-    for (i in 2:5) {
-        if (posiciones[i] - posiciones[i-1] < min_espacio) {
-            # Distribuir uniformemente si hay valores muy cercanos
-            posiciones[i] <- posiciones[i-1] + min_espacio
-        }
-    }
+    # for (i in 2:5) {
+    #     if (posiciones[i] - posiciones[i-1] < min_espacio) {
+    #         # Distribuir uniformemente si hay valores muy cercanos
+    #         posiciones[i] <- posiciones[i-1] + min_espacio
+    #     }
+    # }
     
     # Dibujar etiquetas con posiciones ajustadas
     for (i in 1:5) {
@@ -280,7 +280,7 @@ tabla_xtable <- xtable(datos_tabla,
 print(tabla_xtable, 
       type = "html",
       include.rownames = FALSE,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
 ```
 
 ¿Cuál diagrama de caja representa correctamente estos datos?
@@ -349,6 +349,28 @@ box()
 
 Solution
 ========
+
+```{r tabla_ordenada, echo = FALSE, results = "asis"}
+# Crear tabla con los datos ordenados
+datos_ordenados <- sort(stats$datos)
+datos_tabla_ordenada <- data.frame(
+  "Dato N°" = 1:length(datos_ordenados),
+  "Estatura (cm)" = datos_ordenados
+)
+
+# Mostrar la tabla ordenada
+tabla_xtable <- xtable(datos_tabla_ordenada,
+                       caption = "Datos de estaturas ordenados",
+                       label = "tabla:datos_ordenados",
+                       align = c("l", "c", "c"),
+                       digits = c(0, 0, 0))
+
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
+```
+
 La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
 
 <br/>
