@@ -278,7 +278,7 @@ tabla_xtable <- xtable(datos_tabla,
                        digits = c(0, 0, 0))
 
 print(tabla_xtable, 
-      type = "latex",
+      type = "html",
       include.rownames = FALSE,
       html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
 ```
@@ -366,7 +366,7 @@ tabla_xtable <- xtable(datos_tabla_ordenada,
                        digits = c(0, 0, 0))
 
 print(tabla_xtable, 
-      type = "latex",
+      type = "html",
       include.rownames = FALSE,
       html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
 ```
