@@ -13,38 +13,36 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 # Establecer semilla aleatoria basada en la hora actual para garantizar variabilidad
 set.seed(as.integer(Sys.time()) %% 10000)
 
-# Función para calcular cuartiles usando el método tradicional
+# Función para calcular cuartiles con soporte para decimales
 calcular_cuartiles_tradicional <- function(datos) {
     n <- length(datos)
-    datos_ordenados <- sort(datos)
     
-    # Calcular Q2 (mediana)
-    if (n %% 2 == 0) {
-        # Número par de elementos
-        pos_med1 <- n/2
-        pos_med2 <- pos_med1 + 1
-        q2 <- (datos_ordenados[pos_med1] + datos_ordenados[pos_med2]) / 2
-        
-        # Dividir en dos mitades
-        primera_mitad <- datos_ordenados[1:pos_med1]
-        segunda_mitad <- datos_ordenados[pos_med2:n]
-    } else {
-        # Número impar de elementos
-        pos_med <- ceiling(n/2)
-        q2 <- datos_ordenados[pos_med]
-        
-        # Dividir en dos mitades
-        primera_mitad <- datos_ordenados[1:(pos_med-1)]
-        segunda_mitad <- datos_ordenados[(pos_med+1):n]
-    }
+    # Calcular posiciones de cuartiles
+    pos_q1 <- (n + 1) / 4
+    pos_q2 <- (n + 1) / 2
+    pos_q3 <- 3 * (n + 1) / 4
     
-    # Calcular Q1 (mediana de la primera mitad)
-    q1 <- median(primera_mitad)
-    
-    # Calcular Q3 (mediana de la segunda mitad)
-    q3 <- median(segunda_mitad)
+    # Calcular valores de cuartiles (permitiendo decimales)
+    q1 <- calcular_valor_posicion(datos, pos_q1)
+    q2 <- calcular_valor_posicion(datos, pos_q2)
+    q3 <- calcular_valor_posicion(datos, pos_q3)
     
     return(list(q1 = q1, q2 = q2, q3 = q3))
+}
+
+# Función auxiliar para calcular valor en una posición (incluso decimal)
+calcular_valor_posicion <- function(datos, posicion) {
+    if (posicion %% 1 == 0) {
+        # Posición entera
+        return(datos[posicion])
+    } else {
+        # Posición decimal - interpolación lineal
+        pos_inferior <- floor(posicion)
+        pos_superior <- ceiling(posicion)
+        fraccion <- posicion - pos_inferior
+        
+        return(datos[pos_inferior] + fraccion * (datos[pos_superior] - datos[pos_inferior]))
+    }
 }
 
 # Función para redondear cuartiles según las reglas especificadas
@@ -92,24 +90,11 @@ generar_datos_estatura <- function(
     return(stats)
 }
 
-# Función mejorada para evitar solapamiento de etiquetas
-dibujar_boxplot <- function(valores, tipo = "correcto") {
-    # Dibujar línea vertical central
-    segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
-    
-    # Dibujar la caja (rectángulo)
-    rect(0.8, valores$q1, 1.2, valores$q3, col = "white", border = "black")
-    
-    # Dibujar la mediana
-    segments(0.8, valores$mediana, 1.2, valores$mediana, lwd = 2)
-    
-    # Dibujar los bigotes
-    segments(0.8, valores$minimo, 1.2, valores$minimo, lwd = 2)
-    segments(0.8, valores$maximo, 1.2, valores$maximo, lwd = 2)
-    
-    # Calcular espacios para evitar solapamiento de etiquetas
-    rango <- valores$maximo - valores$minimo
-    min_espacio <- rango * 0.13  # Aumentado para mayor separación
+# Función para dibujar un boxplot con etiquetas no solapadas
+dibujar_boxplot <- function(valores, min_espacio = 5) {
+    # Dibujar el boxplot básico
+    boxplot(valores$datos, horizontal = TRUE, add = TRUE, at = 1, 
+            boxwex = 0.5, col = "lightblue", outline = FALSE, axes = FALSE)
     
     # Valores originales para las etiquetas
     valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
@@ -126,12 +111,12 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     posiciones <- valores_orig
     
     # Ajustar posiciones para evitar solapamiento
-    # for (i in 2:5) {
-    #     if (posiciones[i] - posiciones[i-1] < min_espacio) {
-    #         # Distribuir uniformemente si hay valores muy cercanos
-    #         posiciones[i] <- posiciones[i-1] + min_espacio
-    #     }
-    # }
+    for (i in 2:5) {
+        if (posiciones[i] - posiciones[i-1] < min_espacio) {
+            # Distribuir uniformemente si hay valores muy cercanos
+            posiciones[i] <- posiciones[i-1] + min_espacio
+        }
+    }
     
     # Dibujar etiquetas con posiciones ajustadas
     for (i in 1:5) {
@@ -206,7 +191,7 @@ verificar_diversidad_diagramas <- function(n_simulaciones = 1000) {
     
     return(list(
         total_unicos = n_unicos,
-        suficiente_diversidad = n_unicos >= 300
+        suficiente_diversidad = n_unicos >= 400
     ))
 }
 
@@ -215,7 +200,7 @@ set.seed(123)  # Para reproducibilidad
 diversidad <- verificar_diversidad_diagramas()
 if (!diversidad$suficiente_diversidad) {
     warning(paste("¡Advertencia! Solo se pueden generar", diversidad$total_unicos, 
-                 "diagramas diferentes. Se requieren al menos 300."))
+                 "diagramas diferentes. Se requieren al menos 400."))
 }
 ```
 
@@ -233,6 +218,29 @@ diagramas <- list(
     invertido = calcular_valores_diagrama(stats, "invertido"),
     mediana_falsa = calcular_valores_diagrama(stats, "mediana_falsa")
 )
+
+# Verificar que todos los diagramas sean diferentes entre sí
+son_todos_diferentes <- TRUE
+for (i in 1:(length(diagramas)-1)) {
+    for (j in (i+1):length(diagramas)) {
+        if (!son_diagramas_diferentes(diagramas[[i]], diagramas[[j]])) {
+            son_todos_diferentes <- FALSE
+            break
+        }
+    }
+    if (!son_todos_diferentes) break
+}
+
+# Si hay diagramas idénticos, regenerar datos
+if (!son_todos_diferentes) {
+    stats <- generar_datos_estatura(n = sample(10:24, 1))
+    diagramas <- list(
+        correcto = calcular_valores_diagrama(stats, "correcto"),
+        escala = calcular_valores_diagrama(stats, "escala"),
+        invertido = calcular_valores_diagrama(stats, "invertido"),
+        mediana_falsa = calcular_valores_diagrama(stats, "mediana_falsa")
+    )
+}
 
 # Aleatorizar la posición de la respuesta correcta
 posiciones <- sample(1:4)
@@ -254,39 +262,28 @@ sol <- paste(sol, collapse = "")
 # Guardar la posición correcta para la solución
 posicion_correcta <- respuesta_correcta
 
-# Crear lista de diagramas ordenados según las posiciones
-diagramas_ordenados <- list(
-    diagramas[[tipos_ordenados[1]]],
-    diagramas[[tipos_ordenados[2]]],
-    diagramas[[tipos_ordenados[3]]],
-    diagramas[[tipos_ordenados[4]]]
-)
+# Crear diagramas ordenados para mostrar
+diagramas_ordenados <- list()
+for (i in 1:4) {
+    diagramas_ordenados[[i]] <- diagramas[[tipos_ordenados[i]]]
+}
 ```
 
 Question
 ========
-En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
 
-```{r tabla, results='asis'}
-# Crear tabla con los datos desordenados
-datos_tabla <- data.frame(
-    "Estudiante" = 1:length(stats$datos_desordenados),
-    "Estatura (cm)" = stats$datos_desordenados
-)
-tabla_xtable <- xtable(datos_tabla,
-                       align = c("l", "c", "c"),
-                       digits = c(0, 0, 0))
+Se realizó un estudio sobre la estatura de un grupo de estudiantes. A continuación se muestran los datos obtenidos (en centímetros):
 
-print(tabla_xtable, 
-      type = "html",
-      include.rownames = FALSE,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
+```{r datos_desordenados, echo = FALSE, results = "asis"}
+# Mostrar los datos desordenados
+cat(paste(stats$datos_desordenados, collapse = ", "))
 ```
 
-¿Cuál diagrama de caja representa correctamente estos datos?
+¿Cuál de los siguientes diagramas de caja representa correctamente los datos anteriores?
 
 Answerlist
 ----------
+
 - 
 <br/>
 ```{r diagrama-A, fig.width=6, fig.height=4}
@@ -296,7 +293,7 @@ plot(NA,
      ylim = c(diagramas_ordenados[[1]]$minimo - (diagramas_ordenados[[1]]$maximo - diagramas_ordenados[[1]]$minimo) * 0.15, 
               diagramas_ordenados[[1]]$maximo + (diagramas_ordenados[[1]]$maximo - diagramas_ordenados[[1]]$minimo) * 0.15),
      xlab = "", ylab = "Estatura (cm)",
-     xaxt = "n", main = "Diagrama")
+     xaxt = "n", main = "Diagrama A")
 dibujar_boxplot(diagramas_ordenados[[1]])
 axis(1, at = 1, labels = "")
 box()
@@ -311,7 +308,7 @@ plot(NA,
      ylim = c(diagramas_ordenados[[2]]$minimo - (diagramas_ordenados[[2]]$maximo - diagramas_ordenados[[2]]$minimo) * 0.15, 
               diagramas_ordenados[[2]]$maximo + (diagramas_ordenados[[2]]$maximo - diagramas_ordenados[[2]]$minimo) * 0.15),
      xlab = "", ylab = "Estatura (cm)",
-     xaxt = "n", main = "Diagrama")
+     xaxt = "n", main = "Diagrama B")
 dibujar_boxplot(diagramas_ordenados[[2]])
 axis(1, at = 1, labels = "")
 box()
@@ -326,7 +323,7 @@ plot(NA,
      ylim = c(diagramas_ordenados[[3]]$minimo - (diagramas_ordenados[[3]]$maximo - diagramas_ordenados[[3]]$minimo) * 0.15, 
               diagramas_ordenados[[3]]$maximo + (diagramas_ordenados[[3]]$maximo - diagramas_ordenados[[3]]$minimo) * 0.15),
      xlab = "", ylab = "Estatura (cm)",
-     xaxt = "n", main = "Diagrama")
+     xaxt = "n", main = "Diagrama C")
 dibujar_boxplot(diagramas_ordenados[[3]])
 axis(1, at = 1, labels = "")
 box()
@@ -341,7 +338,7 @@ plot(NA,
      ylim = c(diagramas_ordenados[[4]]$minimo - (diagramas_ordenados[[4]]$maximo - diagramas_ordenados[[4]]$minimo) * 0.15, 
               diagramas_ordenados[[4]]$maximo + (diagramas_ordenados[[4]]$maximo - diagramas_ordenados[[4]]$minimo) * 0.15),
      xlab = "", ylab = "Estatura (cm)",
-     xaxt = "n", main = "Diagrama")
+     xaxt = "n", main = "Diagrama D")
 dibujar_boxplot(diagramas_ordenados[[4]])
 axis(1, at = 1, labels = "")
 box()
@@ -394,11 +391,18 @@ plot(NA,
              stats$maximo + (stats$maximo - stats$minimo) * 0.15),
      xlab = "", 
      ylab = "Estatura (cm)", 
-     main = "", 
+     main = paste("Diagrama", letras[correct_index]), 
      axes = FALSE)
 dibujar_boxplot(diagramas_ordenados[[correct_index]])
 axis(2, las = 1)
 box()
+
+# Mostrar los valores clave
+cat("Mínimo:", stats$minimo, "\n")
+cat("Q1:", stats$q1, "\n")
+cat("Mediana:", stats$mediana, "\n")
+cat("Q3:", stats$q3, "\n")
+cat("Máximo:", stats$maximo, "\n")
 ```
 
 ```{r solutionlist, echo = FALSE, results = "asis"}

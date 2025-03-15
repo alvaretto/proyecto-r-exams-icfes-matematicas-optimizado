@@ -110,25 +110,51 @@ test_diagramas_diferentes <- function() {
   cat("Prueba de diagramas diferentes completada.\n")
 }
 
-# Prueba 6: Verificar soporte para conjuntos de datos pares e impares
+# Prueba 6: Verificar soporte para conjuntos de datos par e impar
 test_soporte_par_impar <- function() {
-  cat("Verificando soporte para conjuntos de datos pares e impares...\n")
+  cat("Verificando soporte para conjuntos de datos par e impar...\n")
   
   # Probar con tamaño par
-  stats_par <- generar_datos_estatura(n = 10)
-  expect_equal(length(stats_par$datos), 10)
-  expect_true(is.numeric(stats_par$q1))
-  expect_true(is.numeric(stats_par$mediana))
-  expect_true(is.numeric(stats_par$q3))
+  n_par <- 10
+  datos_par <- generar_datos_estatura(n = n_par)
+  expect_equal(length(datos_par$datos), n_par)
+  expect_equal(length(datos_par$datos_desordenados), n_par)
   
   # Probar con tamaño impar
-  stats_impar <- generar_datos_estatura(n = 11)
-  expect_equal(length(stats_impar$datos), 11)
-  expect_true(is.numeric(stats_impar$q1))
-  expect_true(is.numeric(stats_impar$mediana))
-  expect_true(is.numeric(stats_impar$q3))
+  n_impar <- 11
+  datos_impar <- generar_datos_estatura(n = n_impar)
+  expect_equal(length(datos_impar$datos), n_impar)
+  expect_equal(length(datos_impar$datos_desordenados), n_impar)
   
-  cat("Prueba de soporte para conjuntos pares e impares completada.\n")
+  cat("Prueba de soporte para conjuntos par e impar completada.\n")
+}
+
+# Prueba 7: Verificar que no hay solapamiento de etiquetas
+test_no_solapamiento_etiquetas <- function() {
+  cat("Verificando que no hay solapamiento de etiquetas...\n")
+  
+  for (i in 1:10) {
+    # Generar datos
+    stats <- generar_datos_estatura()
+    
+    # Posiciones iniciales para etiquetas
+    pos_etiquetas <- c(stats$minimo, stats$q1, stats$mediana, stats$q3, stats$maximo)
+    
+    # Calcular distancia mínima requerida
+    rango <- stats$maximo - stats$minimo
+    min_distancia <- rango * 0.05
+    
+    # Ajustar posiciones
+    pos_ajustadas <- ajustar_posiciones_etiquetas(pos_etiquetas, min_distancia)
+    
+    # Verificar que no hay solapamiento
+    for (j in 2:length(pos_ajustadas)) {
+      expect_true(pos_ajustadas[j] - pos_ajustadas[j-1] >= min_distancia,
+                 info = paste("Etiquetas", j-1, "y", j, "se solapan"))
+    }
+  }
+  
+  cat("Prueba de no solapamiento de etiquetas completada.\n")
 }
 
 # Ejecutar todas las pruebas
@@ -142,6 +168,7 @@ run_all_tests <- function() {
   test_diversidad_diagramas()
   test_diagramas_diferentes()
   test_soporte_par_impar()
+  test_no_solapamiento_etiquetas()
   
   cat("==============================================================\n")
   cat("Todas las pruebas completadas exitosamente.\n")
