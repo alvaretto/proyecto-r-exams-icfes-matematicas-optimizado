@@ -109,7 +109,7 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     
     # Calcular espacios para evitar solapamiento de etiquetas
     rango <- valores$maximo - valores$minimo
-    min_espacio <- rango * 0.15  # Aumentado para mayor separación
+    min_espacio <- rango * 0.13  # Aumentado para mayor separación
     
     # Valores originales para las etiquetas
     valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
@@ -349,6 +349,28 @@ box()
 
 Solution
 ========
+
+```{r tabla_ordenada, echo = FALSE, results = "asis"}
+# Crear tabla con los datos ordenados
+datos_ordenados <- sort(stats$datos)
+datos_tabla_ordenada <- data.frame(
+  "Dato N°" = 1:length(datos_ordenados),
+  "Estatura (cm)" = datos_ordenados
+)
+
+# Mostrar la tabla ordenada
+tabla_xtable <- xtable(datos_tabla_ordenada,
+                       caption = "Datos de estaturas ordenados",
+                       label = "tabla:datos_ordenados",
+                       align = c("l", "c", "c"),
+                       digits = c(0, 0, 0))
+
+print(tabla_xtable, 
+      type = "latex",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+```
+
 La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
 
 <br/>
@@ -377,7 +399,6 @@ plot(NA,
 dibujar_boxplot(diagramas_ordenados[[correct_index]])
 axis(2, las = 1)
 box()
-```
 
 ```{r solutionlist, echo = FALSE, results = "asis"}
 # Crear vector de respuestas (Verdadero/Falso)
