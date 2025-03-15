@@ -62,7 +62,7 @@ generar_datos_estatura <- function(
     base_min = sample(145:165, 1), 
     base_max = sample(168:188, 1),
     # Permitir tamaños de muestra pares o impares
-    n = sample(7:25, 1)
+    n = sample(9:25, 1)
 ) {
     variacion <- sample(5:15, 1)
     min_valor <- base_min - sample(0:variacion, 1)
@@ -126,12 +126,12 @@ dibujar_boxplot <- function(valores, tipo = "correcto") {
     posiciones <- valores_orig
     
     # Ajustar posiciones para evitar solapamiento
-    for (i in 2:5) {
-        if (posiciones[i] - posiciones[i-1] < min_espacio) {
-            # Distribuir uniformemente si hay valores muy cercanos
-            posiciones[i] <- posiciones[i-1] + min_espacio
-        }
-    }
+    # for (i in 2:5) {
+    #     if (posiciones[i] - posiciones[i-1] < min_espacio) {
+    #         # Distribuir uniformemente si hay valores muy cercanos
+    #         posiciones[i] <- posiciones[i-1] + min_espacio
+    #     }
+    # }
     
     # Dibujar etiquetas con posiciones ajustadas
     for (i in 1:5) {
