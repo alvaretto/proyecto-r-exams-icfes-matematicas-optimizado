@@ -3,54 +3,56 @@ library(exams)
 library(xtable)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
-# Función para calcular cuartiles usando el método tradicional
+# Función para calcular cuartiles con método tradicional
 calcular_cuartiles_tradicional <- function(datos) {
     n <- length(datos)
-    datos_ordenados <- sort(datos)
     
-    # Calcular Q2 (mediana)
-    if (n %% 2 == 0) {
-        # Número par de elementos
-        pos_med1 <- n/2
-        pos_med2 <- pos_med1 + 1
-        q2 <- (datos_ordenados[pos_med1] + datos_ordenados[pos_med2]) / 2
-        
-        # Dividir en dos mitades
-        primera_mitad <- datos_ordenados[1:pos_med1]
-        segunda_mitad <- datos_ordenados[pos_med2:n]
+    # Calcular posiciones
+    pos_q1 <- (n + 1) / 4
+    pos_q2 <- (n + 1) / 2
+    pos_q3 <- 3 * (n + 1) / 4
+    
+    # Calcular valores
+    q1 <- if(pos_q1 %% 1 == 0) {
+        datos[pos_q1]
     } else {
-        # Número impar de elementos
-        pos_med <- ceiling(n/2)
-        q2 <- datos_ordenados[pos_med]
-        
-        # Dividir en dos mitades
-        primera_mitad <- datos_ordenados[1:(pos_med-1)]
-        segunda_mitad <- datos_ordenados[(pos_med+1):n]
+        parte_entera <- floor(pos_q1)
+        parte_decimal <- pos_q1 - parte_entera
+        datos[parte_entera] + parte_decimal * (datos[parte_entera + 1] - datos[parte_entera])
     }
     
-    # Calcular Q1 (mediana de la primera mitad)
-    q1 <- median(primera_mitad)
+    q2 <- if(pos_q2 %% 1 == 0) {
+        datos[pos_q2]
+    } else {
+        parte_entera <- floor(pos_q2)
+        parte_decimal <- pos_q2 - parte_entera
+        datos[parte_entera] + parte_decimal * (datos[parte_entera + 1] - datos[parte_entera])
+    }
     
-    # Calcular Q3 (mediana de la segunda mitad)
-    q3 <- median(segunda_mitad)
+    q3 <- if(pos_q3 %% 1 == 0) {
+        datos[pos_q3]
+    } else {
+        parte_entera <- floor(pos_q3)
+        parte_decimal <- pos_q3 - parte_entera
+        datos[parte_entera] + parte_decimal * (datos[parte_entera + 1] - datos[parte_entera])
+    }
     
     return(list(q1 = q1, q2 = q2, q3 = q3))
 }
 
-# Función para redondear cuartiles según las reglas especificadas
+# Función para redondear cuartiles (permitir un decimal si no es .0)
 redondear_cuartil <- function(valor) {
-    valor_redondeado <- round(valor, 1)
-    if (valor_redondeado %% 1 == 0) {
-        return(as.integer(valor_redondeado))
+    if(abs(valor - round(valor)) < 0.01) {
+        return(round(valor))
     } else {
-        return(valor_redondeado)
+        return(round(valor, 1))
     }
 }
 
 # Función para generar datos de estatura con diferentes distribuciones
 generar_datos_estatura <- function(
     tipo_distribucion = sample(c("simetrica", "sesgo_derecha", "sesgo_izquierda"), 1),
-    n = sample(9:25, 1)  # Permitir tamaños pares e impares
+    n = sample(9:25, 1)  # Permitir tamaños pares o impares
 ) {
     # Configuraciones base según tipo de distribución
     if (tipo_distribucion == "simetrica") {
@@ -87,7 +89,7 @@ generar_datos_estatura <- function(
         mediana = cuartiles$q2,
         q3 = cuartiles$q3,
         maximo = max(datos),
-        rango_intercuartil = as.numeric(cuartiles$q3 - cuartiles$q1),
+        rango_intercuartil = cuartiles$q3 - cuartiles$q1,
         tipo_distribucion = tipo_distribucion
     )
     
@@ -160,11 +162,6 @@ aplicar_error <- function(stats, tipo_error) {
         valores$maximo <- valores$maximo - sample(2:5, 1)
     }
     
-    # Redondear valores para consistencia
-    valores$q1 <- redondear_cuartil(valores$q1)
-    valores$mediana <- redondear_cuartil(valores$mediana)
-    valores$q3 <- redondear_cuartil(valores$q3)
-    
     return(valores)
 }
 
@@ -172,38 +169,67 @@ aplicar_error <- function(stats, tipo_error) {
 dibujar_diagrama <- function(valores, error_etiqueta = NULL) {
     # Dibujar boxplot básico
     segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
-    rect(0.7, valores$q1, 1.3, valores$q3, col = "lightblue", border = "blue")
-    segments(0.7, valores$mediana, 1.3, valores$mediana, lwd = 2, col = "darkblue")
-    segments(0.7, valores$minimo, 1.3, valores$minimo, lwd = 1.5)
-    segments(0.7, valores$maximo, 1.3, valores$maximo, lwd = 1.5)
     
-    # Añadir etiquetas
-    text(1.5, valores$minimo, paste("Mín =", valores$minimo), pos = 4)
-    text(1.5, valores$q1, paste("Q1 =", valores$q1), pos = 4)
-    text(1.5, valores$mediana, paste("Med =", valores$mediana), pos = 4)
-    text(1.5, valores$q3, paste("Q3 =", valores$q3), pos = 4)
-    text(1.5, valores$maximo, paste("Máx =", valores$maximo), pos = 4)
+    # Dibujar la caja (rectángulo)
+    rect(0.8, valores$q1, 1.2, valores$q3, col = "white", border = "black")
     
-    # Añadir etiqueta de error si se proporciona
+    # Dibujar la mediana
+    segments(0.8, valores$mediana, 1.2, valores$mediana, lwd = 2)
+    
+    # Dibujar los bigotes
+    segments(0.8, valores$minimo, 1.2, valores$minimo, lwd = 2)
+    segments(0.8, valores$maximo, 1.2, valores$maximo, lwd = 2)
+    
+    # Calcular espacios para evitar solapamiento de etiquetas
+    rango <- valores$maximo - valores$minimo
+    min_espacio <- rango * 0.15  # Espacio mínimo entre etiquetas
+    
+    # Valores originales para las etiquetas
+    valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
+    
+    etiquetas <- c(
+        paste("Mín =", valores$minimo),
+        paste("Q1 =", valores$q1),
+        paste("Q2 =", valores$mediana),
+        paste("Q3 =", valores$q3),
+        paste("Máx =", valores$maximo)
+    )
+    
+    # Posiciones iniciales para las etiquetas
+    posiciones <- valores_orig
+    
+    # Ajustar posiciones para evitar solapamiento
+    for (i in 2:5) {
+        if (posiciones[i] - posiciones[i-1] < min_espacio) {
+            # Distribuir uniformemente si hay valores muy cercanos
+            posiciones[i] <- posiciones[i-1] + min_espacio
+        }
+    }
+    
+    # Dibujar etiquetas con posiciones ajustadas
+    for (i in 1:5) {
+        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = 0.9)
+    }
+    
+    # Si hay error en etiqueta, mostrarla
     if (!is.null(error_etiqueta)) {
-        text(1, valores$minimo - 10, error_etiqueta, col = "red", font = 2)
+        text(1, valores$maximo + rango * 0.1, error_etiqueta, col = "red", cex = 0.9)
     }
 }
 
 # Función para verificar si dos diagramas son diferentes
 son_diagramas_diferentes <- function(diag1, diag2) {
     # Verificar si al menos uno de los valores es diferente
-    if (identical(diag1$minimo, diag2$minimo) && 
-        identical(diag1$q1, diag2$q1) && 
-        identical(diag1$mediana, diag2$mediana) && 
-        identical(diag1$q3, diag2$q3) && 
-        identical(diag1$maximo, diag2$maximo)) {
-        return(FALSE)
-    }
-    return(TRUE)
+    return(
+        diag1$minimo != diag2$minimo ||
+        diag1$q1 != diag2$q1 ||
+        diag1$mediana != diag2$mediana ||
+        diag1$q3 != diag2$q3 ||
+        diag1$maximo != diag2$maximo
+    )
 }
 
-# Mejorar la función para verificar diversidad de diagramas
+# Función para verificar la diversidad de diagramas que podemos generar
 verificar_diversidad_diagramas <- function(n_simulaciones = 1000) {
     huellas_digitales <- character(n_simulaciones)
     
@@ -230,160 +256,181 @@ verificar_diversidad_diagramas <- function(n_simulaciones = 1000) {
     ))
 }
 
-# Función para dibujar diagramas de caja evitando solapamiento de etiquetas
-dibujar_diagrama_caja <- function(valores, titulo = "", ylim = NULL) {
-    # Calcular límites si no se proporcionan
-    if (is.null(ylim)) {
-        rango <- valores$maximo - valores$minimo
-        ylim <- c(valores$minimo - rango * 0.1, valores$maximo + rango * 0.1)
-    }
-    
-    # Crear un boxplot básico
-    boxplot(
-        valores$datos, 
-        horizontal = TRUE, 
-        main = titulo,
-        xlim = ylim,
-        axes = FALSE,
-        col = "lightblue"
-    )
-    
-    # Añadir ejes y etiquetas con espaciado para evitar solapamiento
-    axis(1, at = c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo),
-         labels = c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo),
-         las = 1, cex.axis = 0.8)
-    
-    # Añadir líneas de referencia
-    abline(v = c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo), 
-           col = "gray", lty = 2)
+# Ejecutar verificación al inicio
+set.seed(123)  # Para reproducibilidad
+diversidad <- verificar_diversidad_diagramas()
+if (!diversidad$suficiente_diversidad) {
+    warning(paste("¡Advertencia! Solo se pueden generar", diversidad$total_unicos, 
+                 "diagramas diferentes. Se requieren al menos 400."))
 }
+```
 
-# Función para generar diagramas con diferencias garantizadas
-generar_diagramas_diferentes <- function(stats) {
-    # Crear el diagrama correcto
-    diagramas <- list(correcto = stats)
-    
-    # Crear diagramas con errores
-    tipos_error <- c("mediana_fuera", "caja_invertida", "q1_incorrecto", "q3_incorrecto")
-    
-    # Asegurar que cada diagrama sea único
-    for (tipo in tipos_error) {
-        nuevo_diagrama <- aplicar_error(stats, tipo)
-        
-        # Verificar que no sea idéntico a ninguno existente
-        es_unico <- TRUE
-        for (diagrama_existente in diagramas) {
-            if (!son_diagramas_diferentes(nuevo_diagrama, diagrama_existente)) {
-                es_unico <- FALSE
-                break
-            }
-        }
-        
-        # Si no es único, intentar regenerarlo hasta 3 veces
-        intentos <- 1
-        while (!es_unico && intentos <= 3) {
-            nuevo_diagrama <- aplicar_error(stats, tipo)
-            es_unico <- TRUE
-            for (diagrama_existente in diagramas) {
-                if (!son_diagramas_diferentes(nuevo_diagrama, diagrama_existente)) {
-                    es_unico <- FALSE
-                    break
-                }
-            }
-            intentos <- intentos + 1
-        }
-        
-        diagramas[[tipo]] <- nuevo_diagrama
-    }
-    
-    return(diagramas)
-}
+```{r, echo = FALSE, results = "hide"}
+# Generar conjunto de datos aleatorio con distribución aleatoria
+set.seed(sample.int(1e5, 1))
+tipo_distribucion <- sample(c("simetrica", "sesgo_derecha", "sesgo_izquierda"), 1)
+stats <- generar_datos_estatura(tipo_distribucion)
 
-# Generar datos y diagramas
-set.seed(sample(1:100000, 1))
-stats <- generar_datos_estatura()
+# Aleatorizar qué diagrama será el correcto
+posicion_correcto <- sample(1:4, 1)
 
-# Crear diagramas con diferentes errores
-diagramas <- list(
-    correcto = stats,
-    error1 = aplicar_error(stats, "mediana_fuera"),
-    error2 = aplicar_error(stats, "caja_invertida"),
-    error3 = aplicar_error(stats, "q1_incorrecto"),
-    error4 = aplicar_error(stats, "q3_incorrecto")
+# Categorías de errores disponibles
+errores_por_categoria <- list(
+  valores = c("q1_incorrecto", "q3_incorrecto", "mediana_incorrecta", "extremos_incorrectos"),
+  estructura = c("mediana_fuera", "caja_invertida", "bigote_incorrecto"),
+  etiqueta = c("confundir_min_q1", "llamar_percentiles", "q4_incorrecto")
 )
 
-# Asegurar que todos los diagramas son diferentes entre sí
-nombres <- names(diagramas)
-for (i in 1:(length(nombres)-1)) {
-    for (j in (i+1):length(nombres)) {
-        diag1 <- diagramas[[nombres[i]]]
-        diag2 <- diagramas[[nombres[j]]]
-        
-        # Si son iguales, volver a aplicar el error al segundo
-        intentos <- 0
-        while (!son_diagramas_diferentes(diag1, diag2) && intentos < 5) {
-            diag2 <- aplicar_error(stats, sub("error", "", nombres[j]))
-            diagramas[[nombres[j]]] <- diag2
-            intentos <- intentos + 1
-        }
+# Asegurar que hay un diagrama con error estructural
+errores_seleccionados <- vector("list", 3)
+# Seleccionar un error estructural para algún diagrama
+errores_seleccionados[[1]] <- sample(errores_por_categoria$estructura, 1)
+# Seleccionar un error de valores para algún diagrama
+errores_seleccionados[[2]] <- sample(errores_por_categoria$valores, 1)
+# Seleccionar un error de etiqueta para algún diagrama
+errores_seleccionados[[3]] <- sample(errores_por_categoria$etiqueta, 1)
+
+# Asignar al azar los diagramas
+valores_diagramas <- vector("list", 4)
+tipo_error_diagramas <- character(4)
+indices_errores <- sample(1:3)
+
+# Construir los diagramas
+for (i in 1:4) {
+  if (i == posicion_correcto) {
+    valores_diagramas[[i]] <- stats
+    tipo_error_diagramas[i] <- "ninguno"
+  } else {
+    # Asignar uno de los errores seleccionados
+    error_indice <- indices_errores[i - (i > posicion_correcto)]
+    error_seleccionado <- errores_seleccionados[[error_indice]]
+    
+    if (error_indice == 3) { # Error de etiqueta
+      valores_diagramas[[i]] <- stats
+      tipo_error_diagramas[i] <- "etiqueta"
+    } else {
+      valores_diagramas[[i]] <- aplicar_error(stats, error_seleccionado)
+      if (error_indice == 1) {
+        tipo_error_diagramas[i] <- "estructura"
+      } else {
+        tipo_error_diagramas[i] <- "valores"
+      }
     }
+  }
 }
 
-# Seleccionar aleatoriamente cuál será el diagrama con error estructural
-error_estructural_idx <- sample(2:3, 1)
-error_estructural_nombre <- nombres[error_estructural_idx]
+# Determinar qué diagrama tiene error estructural
+diagrama_estructura_incorrecta <- which(tipo_error_diagramas == "estructura")
+diagrama_etiqueta_incorrecta <- which(tipo_error_diagramas == "etiqueta")
 
-# Seleccionar aleatoriamente cuál será el diagrama correcto
-correcto_idx <- 1  # El primero siempre es el correcto
+# Calcular el límite global para los gráficos
+todos_valores <- unlist(lapply(valores_diagramas, function(x) 
+  c(x$minimo, x$q1, x$mediana, x$q3, x$maximo)))
+y_min_global <- min(todos_valores) - 5
+y_max_global <- max(todos_valores) + 5
 
-# Preparar soluciones
-sol_p1 <- rep(0, length(diagramas))
-sol_p1[correcto_idx] <- 1
-sol_p1_str <- paste(sol_p1, collapse = "")
+# Analizar simetría de los datos para la pregunta 5
+q1 <- stats$q1
+q2 <- stats$mediana
+q3 <- stats$q3
+dist_q1_q2 <- q2 - q1
+dist_q2_q3 <- q3 - q2
+diferencia_cuartiles <- dist_q2_q3 - dist_q1_q2
 
-sol_p2 <- rep(0, length(diagramas))
-sol_p2[error_estructural_idx] <- 1
-sol_p2_str <- paste(sol_p2, collapse = "")
-
-# Preparar solución para la parte 4 (porcentaje de datos entre Q1 y Q3)
-sol_p4 <- "0100"  # Siempre es 50%
-
-# Preparar solución para la parte 5 (interpretación de la distribución)
-if (stats$tipo_distribucion == "simetrica") {
-    sol_p5 <- c(1, 0, 0, 0)
-} else if (stats$tipo_distribucion == "sesgo_derecha") {
-    sol_p5 <- c(0, 1, 0, 0)
-} else { # sesgo_izquierda
-    sol_p5 <- c(0, 0, 1, 0)
+# Determinar descripción de la simetría
+if (abs(diferencia_cuartiles) < 3) {
+  descripcion_simetria <- "tiende a ser simétrica"
+  indice_respuesta_correcta <- 2
+} else if (diferencia_cuartiles > 0) {
+  descripcion_simetria <- "presenta sesgo hacia valores más altos (positivo)"
+  indice_respuesta_correcta <- 3
+} else {
+  descripcion_simetria <- "presenta sesgo hacia valores más bajos (negativo)"
+  indice_respuesta_correcta <- 4
 }
-sol_p5_str <- paste(sol_p5, collapse = "")
+
+# Calcular porcentaje aproximado de datos entre Q1 y Q3
+# (Teóricamente 50%, pero puede aproximarse)
+porcentaje_central <- 50
+
+# Preparar soluciones para las preguntas
+sol_p1 <- rep(0, 4)
+sol_p1[posicion_correcto] <- 1
+sol_p1_str <- paste(sol_p1, collapse="")
+
+sol_p2 <- rep(0, 4)
+sol_p2[diagrama_estructura_incorrecta] <- 1
+sol_p2_str <- paste(sol_p2, collapse="")
+
+sol_p4 <- c(0, 1, 0, 0) # Siempre es 50% aproximadamente
+
+sol_p5 <- rep(0, 4)
+sol_p5[indice_respuesta_correcta] <- 1
+sol_p5_str <- paste(sol_p5, collapse="")
 ```
 
 Question
 ========
+En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
 
-Un grupo de estudiantes de secundaria participó en un estudio sobre estaturas. A continuación se presentan los datos de estatura (en cm) de los participantes:
-
-```{r}
-# Mostrar datos en formato de tabla
+```{r tabla, results='asis'}
 datos_tabla <- data.frame(
-  "Estatura (cm)" = stats$datos_desordenados
+    "Estudiante" = 1:length(stats$datos_desordenados),
+    "Estatura (cm)" = stats$datos_desordenados
 )
-knitr::kable(datos_tabla, align = 'c')
+tabla_xtable <- xtable(datos_tabla,
+                       align = c("l", "c", "c"),
+                       digits = c(0, 0, 0))
+
+print(tabla_xtable, 
+      type = "latex",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
 ```
 
-Se han elaborado varios diagramas de caja para representar estos datos. Observe cuidadosamente cada uno y responda las siguientes preguntas:
+Para analizar estos datos, estudiaremos los diagramas de caja (también llamados diagramas de caja y bigotes o boxplots). Observe los siguientes diagramas y responda:
 
-```{r fig.width=10, fig.height=12}
-par(mfrow = c(length(diagramas), 1), mar = c(2, 2, 2, 6))
+```{r DiagramaA, fig.width = 7, fig.height = 4, fig.cap=""}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", main = "Diagrama A", axes = FALSE)
+if (tipo_error_diagramas[1] == "etiqueta") {
+    dibujar_diagrama(valores_diagramas[[1]], errores_seleccionados[[3]])
+} else {
+    dibujar_diagrama(valores_diagramas[[1]])
+}
+```
 
-# Dibujar cada diagrama con su etiqueta
-for (i in 1:length(diagramas)) {
-    plot(0, 0, type = "n", xlim = c(0, 2), ylim = c(min(stats$minimo - 15, diagramas[[i]]$minimo - 15), 
-                                                   max(stats$maximo + 15, diagramas[[i]]$maximo + 15)),
-         xaxt = "n", yaxt = "s", xlab = "", ylab = "")
-    title(paste("Diagrama", LETTERS[i]))
-    dibujar_diagrama(diagramas[[i]])
+```{r DiagramaB, fig.width = 7, fig.height = 4, fig.cap=""}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", main = "Diagrama B", axes = FALSE)
+if (tipo_error_diagramas[2] == "etiqueta") {
+    dibujar_diagrama(valores_diagramas[[2]], errores_seleccionados[[3]])
+} else {
+    dibujar_diagrama(valores_diagramas[[2]])
+}
+```
+
+```{r DiagramaC, fig.width = 7, fig.height = 4, fig.cap=""}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", main = "Diagrama C", axes = FALSE)
+if (tipo_error_diagramas[3] == "etiqueta") {
+    dibujar_diagrama(valores_diagramas[[3]], errores_seleccionados[[3]])
+} else {
+    dibujar_diagrama(valores_diagramas[[3]])
+}
+```
+
+```{r DiagramaD, fig.width = 7, fig.height = 4, fig.cap=""}
+par(mar = c(4, 4, 2, 6))
+plot(NA, xlim = c(0.5, 1.5), ylim = c(y_min_global, y_max_global),
+     xlab = "", ylab = "Estatura (cm)", main = "Diagrama D", axes = FALSE)
+if (tipo_error_diagramas[4] == "etiqueta") {
+    dibujar_diagrama(valores_diagramas[[4]], errores_seleccionados[[3]])
+} else {
+    dibujar_diagrama(valores_diagramas[[4]])
 }
 ```
 
@@ -411,76 +458,92 @@ Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dent
 
 ##ANSWER4##
 
-## Parte 5: Interpretación de la distribución
-Basándose en el diagrama correcto, ¿qué se puede decir sobre la distribución de los datos?
+## Parte 5: Conceptos fundamentales
+Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirmar sobre la distribución de estos datos?
 \
 
 ##ANSWER5##
 
 Answerlist
 ----------
-* El diagrama A representa correctamente los datos.
-* El diagrama B representa correctamente los datos.
-* El diagrama C representa correctamente los datos.
-* El diagrama D representa correctamente los datos.
-* El diagrama E representa correctamente los datos.
-
-* El diagrama A tiene un error estructural.
-* El diagrama B tiene un error estructural.
-* El diagrama C tiene un error estructural.
-* El diagrama D tiene un error estructural.
-* El diagrama E tiene un error estructural.
-
+* Diagrama A
+* Diagrama B
+* Diagrama C
+* Diagrama D
+* Diagrama A
+* Diagrama B
+* Diagrama C
+* Diagrama D
+* 
 * 25%
 * 50%
 * 75%
-* 100%
-
-* La distribución es aproximadamente simétrica.
-* La distribución tiene sesgo a la derecha (asimetría positiva).
-* La distribución tiene sesgo a la izquierda (asimetría negativa).
-* No se puede determinar la forma de la distribución con un diagrama de caja.
+* Depende del número de datos
+* La distribución es exactamente simétrica
+* La distribución tiende a ser simétrica
+* La distribución presenta sesgo hacia valores más altos
+* La distribución presenta sesgo hacia valores más bajos
 
 Solution
 ========
+## Solución con explicaciones básicas
 
-## Parte 1: Identificación del diagrama correcto
-El diagrama `r LETTERS[correcto_idx]` representa correctamente los datos. Los valores de los cuartiles son:
+### Parte 1: Identificación del diagrama correcto
+El **Diagrama `r LETTERS[posicion_correcto]`** es el único que representa correctamente los datos con los valores precisos de:
 
-- Mínimo: `r stats$minimo`
-- Q1: `r stats$q1`
-- Mediana: `r stats$mediana`
-- Q3: `r stats$q3`
-- Máximo: `r stats$maximo`
+- Mínimo = `r stats$minimo` cm
+- Q1 = `r stats$q1` cm
+- Mediana (Q2) = `r stats$mediana` cm
+- Q3 = `r stats$q3` cm
+- Máximo = `r stats$maximo` cm
 
-## Parte 2: Identificación de error estructural
-El diagrama `r LETTERS[error_estructural_idx]` tiene un error estructural. 
-```{r}
-if (error_estructural_nombre == "error1") {
-  cat("La mediana está ubicada fuera de la caja (entre Q1 y Q3), lo cual viola la definición de diagrama de caja.")
-} else if (error_estructural_nombre == "error2") {
-  cat("Q1 y Q3 están invertidos, lo cual hace que la caja no tenga sentido estadístico.")
-}
-```
+Los otros diagramas contienen errores en los valores, la estructura o las etiquetas.
 
-## Parte 3: Cálculo básico
+### Parte 2: Identificación de error estructural
+El **Diagrama `r LETTERS[diagrama_estructura_incorrecta]`** tiene un error estructural: 
+
+`r if(grepl("mediana_fuera", errores_seleccionados[[1]])) {paste0("la mediana (Q2 = ", valores_diagramas[[diagrama_estructura_incorrecta]]$mediana, " cm) está ubicada fuera de la caja (", valores_diagramas[[diagrama_estructura_incorrecta]]$q1, "-", valores_diagramas[[diagrama_estructura_incorrecta]]$q3, " cm)")} else if(grepl("caja_invertida", errores_seleccionados[[1]])) {"Q1 y Q3 están invertidos, lo que hace que la caja sea incorrecta"} else {"los bigotes no terminan en valores reales de los datos"}`.
+
+En un diagrama de caja correcto, la mediana siempre debe estar dentro de la caja, entre Q1 y Q3, y los bigotes deben terminar en valores reales.
+
+### Parte 3: Cálculo básico
 El rango intercuartílico (RIC) se calcula como Q3 - Q1:
 
-RIC = `r stats$q3` - `r stats$q1` = `r stats$rango_intercuartil`
+RIC = `r stats$q3` cm - `r stats$q1` cm = **`r stats$rango_intercuartil` cm**
 
-## Parte 4: Interpretación básica
-En un diagrama de caja, la caja contiene aproximadamente el 50% de los datos, que son los que se encuentran entre Q1 y Q3.
+### Parte 4: Interpretación básica
+Por definición, entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos.
 
-## Parte 5: Interpretación de la distribución
-```{r}
-if (stats$tipo_distribucion == "simetrica") {
-  cat("La distribución es aproximadamente simétrica, ya que la mediana está aproximadamente en el centro de la caja y los bigotes tienen longitudes similares.")
-} else if (stats$tipo_distribucion == "sesgo_derecha") {
-  cat("La distribución tiene sesgo a la derecha (asimetría positiva), ya que el bigote superior es más largo que el inferior y/o la mediana está más cerca de Q1 que de Q3.")
-} else { # sesgo_izquierda
-  cat("La distribución tiene sesgo a la izquierda (asimetría negativa), ya que el bigote inferior es más largo que el superior y/o la mediana está más cerca de Q3 que de Q1.")
-}
-```
+### Parte 5: Conceptos fundamentales
+Analizando la posición de la mediana dentro de la caja:
+
+- Q1 = `r stats$q1` cm
+- Mediana = `r stats$mediana` cm
+- Q3 = `r stats$q3` cm
+- Distancia Q1 a Mediana = `r dist_q1_q2` cm
+- Distancia Mediana a Q3 = `r dist_q2_q3` cm
+
+Como estas distancias son `r ifelse(abs(diferencia_cuartiles) < 3, "bastante similares, la distribución tiende a ser simétrica", ifelse(diferencia_cuartiles > 0, "diferentes (la distancia de la mediana a Q3 es mayor), la distribución presenta sesgo hacia valores más altos", "diferentes (la distancia de la mediana a Q1 es mayor), la distribución presenta sesgo hacia valores más bajos"))`.
+
+Answerlist
+----------
+* `r ifelse(posicion_correcto == 1, "Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales.", "Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas.")`
+* `r ifelse(posicion_correcto == 2, "Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales.", "Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas.")`
+* `r ifelse(posicion_correcto == 3, "Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales.", "Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas.")`
+* `r ifelse(posicion_correcto == 4, "Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales.", "Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas.")`
+* `r ifelse(diagrama_estructura_incorrecta == 1, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
+* `r ifelse(diagrama_estructura_incorrecta == 2, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
+* `r ifelse(diagrama_estructura_incorrecta == 3, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
+* `r ifelse(diagrama_estructura_incorrecta == 4, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
+* `r stats$rango_intercuartil`
+* Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3.
+* Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles.
+* Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3.
+* Incorrecto. Aunque el porcentaje exacto puede variar ligeramente con datos discretos, conceptualmente siempre es aproximadamente el 50%.
+* Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma.
+* `r ifelse(indice_respuesta_correcta == 2, "Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 $\\approx$ distancia a Q3), la distribución tiende a ser simétrica.", "Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica.")`
+* `r ifelse(indice_respuesta_correcta == 3, "Correcto. Como la distancia de la mediana a Q3 es mayor que la distancia a Q1, la distribución presenta un sesgo hacia valores más altos (sesgo positivo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos.")`
+* `r ifelse(indice_respuesta_correcta == 4, "Correcto. Como la distancia de la mediana a Q1 es mayor que la distancia a Q3, la distribución presenta un sesgo hacia valores más bajos (sesgo negativo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos.")`
 
 Meta-information
 ============

@@ -3,8 +3,8 @@ library(knitr)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "cloze-cuartil-estatura-00.Rmd"
-archivos <- 2
-numpreg <- 3
+archivos <- 1
+numpreg <- 12
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -20,32 +20,32 @@ opts_knit$set(concordance = TRUE)
 ################################################################################
 # Generación de archivos individuales para PDF, sólo 'archivos', no importa 'numpreg'
 
-for(i in 1:archivos) {
-  nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-  exams2pdf(archivo_examen,
-            n = 1,
-            name = nombre_archivo,
-            encoding = "UTF-8",
-            template = "solpcielo",
-            dir = dir_salida,
-            edir = dir_ejercicios)
-}
+# for(i in 1:archivos) {
+#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
+#   exams2pdf(archivo_examen,
+#             n = 1,
+#             name = nombre_archivo,
+#             encoding = "UTF-8",
+#             template = "solpcielo",
+#             dir = dir_salida,
+#             edir = dir_ejercicios)
+# }
 
 ################################################################################
 # Generación de archivos individuales para Pandoc (docx), sólo 'archivos', 
 # no importa 'numpreg'
 
-for(i in 1:archivos) {
-  nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-  exams2pandoc(archivo_examen,
-               n = 1,
-               name = nombre_archivo,
-               encoding = "UTF-8",
-               template = "plain.tex",
-               dir = dir_salida,
-               edir = dir_ejercicios,
-               format = "docx")
-}
+# for(i in 1:archivos) {
+#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
+#   exams2pandoc(archivo_examen,
+#                n = 1,
+#                name = nombre_archivo,
+#                encoding = "UTF-8",
+#                template = "plain.tex",
+#                dir = dir_salida,
+#                edir = dir_ejercicios,
+#                format = "docx")
+# }
 
 ################################################################################
 # Generación de n archivos en un solo archivo de salida para PDF
@@ -90,13 +90,13 @@ exams2pandoc(rep(archivo_examen, numpreg),
 ################################################################################
 # Creación del examen en formato HTML
 
-exams2html(rep(archivo_examen, numpreg),
-           n = archivos,
-           name = nombre_arch,
-           solution = TRUE,  # Mostrar soluciones
-           mathjax = TRUE,   # Habilitar MathJax para fórmulas
-           svg = TRUE,       # Usar SVG para gráficos
-           dir = dir_salida,
-           edir = dir_ejercicios,
-           engine = "knitr",
-           envir = new.env())  # Nuevo entorno para evitar interferencias
+# exams2html(rep(archivo_examen, numpreg),
+#            n = archivos,
+#            name = nombre_arch,
+#            solution = TRUE,  # Mostrar soluciones
+#            mathjax = TRUE,   # Habilitar MathJax para fórmulas
+#            svg = TRUE,       # Usar SVG para gráficos
+#            dir = dir_salida,
+#            edir = dir_ejercicios,
+#            engine = "knitr",
+#            envir = new.env())  # Nuevo entorno para evitar interferencias
