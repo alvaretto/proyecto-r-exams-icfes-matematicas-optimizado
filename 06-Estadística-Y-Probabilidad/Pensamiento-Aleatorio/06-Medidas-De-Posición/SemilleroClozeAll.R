@@ -4,7 +4,7 @@ library(knitr)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "cloze-cuartil-estatura-00.Rmd"
 archivos <- 1
-numpreg <- 7
+numpreg <- 10
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -63,40 +63,40 @@ exams2pdf(rep(archivo_examen, numpreg),
 ################################################################################
 # Generación de n archivos en un solo archivo .docx
 
-exams2pandoc(rep(archivo_examen, numpreg),
-             n = archivos,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             template = "pcielo.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE,
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = FALSE,
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx",
-             engine = "knitr",
-             envir = new.env())  # Nuevo entorno para evitar interferencias
+# exams2pandoc(rep(archivo_examen, numpreg),
+#              n = archivos,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              template = "pcielo.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = TRUE,
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = FALSE,
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx",
+#              engine = "knitr",
+#              envir = new.env())  # Nuevo entorno para evitar interferencias
 
 ################################################################################
 # Creación del examen en formato HTML
 
-exams2html(rep(archivo_examen, numpreg),
-           n = archivos,
-           name = nombre_arch,
-           solution = TRUE,  # Mostrar soluciones
-           mathjax = TRUE,   # Habilitar MathJax para fórmulas
-           svg = TRUE,       # Usar SVG para gráficos
-           dir = dir_salida,
-           edir = dir_ejercicios,
-           engine = "knitr",
-           envir = new.env())  # Nuevo entorno para evitar interferencias
+# exams2html(rep(archivo_examen, numpreg),
+#            n = archivos,
+#            name = nombre_arch,
+#            solution = TRUE,  # Mostrar soluciones
+#            mathjax = TRUE,   # Habilitar MathJax para fórmulas
+#            svg = TRUE,       # Usar SVG para gráficos
+#            dir = dir_salida,
+#            edir = dir_ejercicios,
+#            engine = "knitr",
+#            envir = new.env())  # Nuevo entorno para evitar interferencias
