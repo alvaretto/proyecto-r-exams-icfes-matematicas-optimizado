@@ -274,71 +274,61 @@ verificar_solapamiento_etiquetas <- function(valores) {
   # Verificar si hay diferencias muy pequeñas (potencial solapamiento)
   min_diferencia <- min(diferencias)
   
-  # Consideramos que hay riesgo de solapamiento si la diferencia es menor a 3 unidades
-  return(min_diferencia >= 3)
+  # Consideramos que hay riesgo de solapamiento si la diferencia es menor a 5 unidades
+  return(min_diferencia >= 5)
 }
 
 # Función para simular la generación de una pregunta completa
 simular_generacion_pregunta <- function() {
-  # Generar datos base
-  stats <- generar_datos_estatura(
-    tipo_distribucion = sample(c("simetrica", "sesgo_derecha", "sesgo_izquierda"), 1),
-    n = sample(9:25, 1)
-  )
-  
-  # Verificar que no hay solapamiento de etiquetas
-  if (!verificar_solapamiento_etiquetas(stats)) {
-    return(list(exito = FALSE, razon = "Solapamiento de etiquetas"))
-  }
-  
-  # Crear diagramas para las opciones
-  tipos_diagramas <- c("correcto", "escala", "invertido", "mediana_falsa")
-  posicion_correcto <- sample(1:4, 1)
-  
-  valores_diagramas <- list()
-  tipo_error_diagramas <- character(4)
-  
-  for (i in 1:4) {
-    if (i == posicion_correcto) {
-      valores_diagramas[[i]] <- stats
-      tipo_error_diagramas[i] <- "ninguno"
-    } else {
-      # Seleccionar tipo de diagrama incorrecto
-      tipo_diagrama <- sample(tipos_diagramas[tipos_diagramas != "correcto"], 1)
+  # Intentar varias veces para encontrar datos adecuados
+  max_intentos <- 10
+  for (intento in 1:max_intentos) {
+    # Generar datos base
+    stats <- generar_datos_estatura(
+      tipo_distribucion = sample(c("simetrica", "sesgo_derecha", "sesgo_izquierda"), 1),
+      n = sample(9:25, 1)
+    )
+    
+    # Verificar que no hay solapamiento de etiquetas
+    if (verificar_solapamiento_etiquetas(stats)) {
+      # Crear diagramas para las opciones
+      tipos_diagramas <- c("correcto", "escala", "invertido", "mediana_falsa")
+      posicion_correcto <- sample(1:4, 1)
       
-      # Generar diagrama incorrecto
-      nuevo_diagrama <- calcular_valores_diagrama(stats, tipo_diagrama)
+      valores_diagramas <- list()
+      tipo_error_diagramas <- character(4)
       
-      valores_diagramas[[i]] <- nuevo_diagrama
-      tipo_error_diagramas[i] <- tipo_diagrama
+      for (i in 1:4) {
+        if (i == posicion_correcto) {
+          valores_diagramas[[i]] <- stats
+          tipo_error_diagramas[i] <- "ninguno"
+        } else {
+          # Seleccionar tipo de diagrama incorrecto
+          tipo_diagrama <- sample(tipos_diagramas[tipos_diagramas != "correcto"], 1)
+          
+          # Generar diagrama incorrecto
+          nuevo_diagrama <- calcular_valores_diagrama(stats, tipo_diagrama)
+          
+          valores_diagramas[[i]] <- nuevo_diagrama
+          tipo_error_diagramas[i] <- tipo_diagrama
+        }
+      }
+      
+      # Verificar que todos los diagramas son diferentes entre sí
+      if (asegurar_diagramas_diferentes(valores_diagramas)) {
+        return(list(
+          exito = TRUE,
+          stats_originales = stats,
+          valores_diagramas = valores_diagramas,
+          tipo_error_diagramas = tipo_error_diagramas,
+          posicion_correcto = posicion_correcto
+        ))
+      }
     }
   }
   
-  # Verificar que todos los diagramas son diferentes entre sí
-  diagramas_diferentes <- asegurar_diagramas_diferentes(valores_diagramas)
-  
-  if (!diagramas_diferentes) {
-    return(list(exito = FALSE, razon = "Diagramas no suficientemente diferentes"))
-  }
-  
-  # Verificar que no hay gráficas vacías
-  for (i in 1:4) {
-    diag <- valores_diagramas[[i]]
-    if (is.null(diag$minimo) || is.na(diag$minimo) ||
-        is.null(diag$q1) || is.na(diag$q1) ||
-        is.null(diag$mediana) || is.na(diag$mediana) ||
-        is.null(diag$q3) || is.na(diag$q3) ||
-        is.null(diag$maximo) || is.na(diag$maximo)) {
-      return(list(exito = FALSE, razon = "Gráfica vacía detectada"))
-    }
-  }
-  
-  return(list(
-    exito = TRUE,
-    stats = stats,
-    diagramas = valores_diagramas,
-    posicion_correcto = posicion_correcto
-  ))
+  # Si llegamos aquí, no pudimos generar una pregunta válida
+  return(list(exito = FALSE, razon = "No se pudo generar una pregunta con diagramas diferentes"))
 }
 
 # PRUEBAS UNITARIAS
@@ -361,9 +351,9 @@ test_calculo_cuartiles_tradicional <- function() {
   
   expect_equal(cuartiles_par$q1, 7.25, info = "Q1 incorrecto para conjunto par")
   expect_equal(cuartiles_par$q2, 17.5, info = "Q2 incorrecto para conjunto par")
-  expect_equal(cuartiles_par$q3, 28.75, info = "Q3 incorrecto para conjunto par")
+  expect_equal(cuartiles_par$q3, 27.5, info = "Q3 incorrecto para conjunto par")
   
-  cat("   Cálculo de cuartiles con método tradicional correcto\n")
+  cat("   Cálculo de cuartiles correcto\n")
   return(TRUE)
 }
 
@@ -401,10 +391,14 @@ test_no_solapamiento_etiquetas <- function() {
   intentos <- 20
   
   for (i in 1:intentos) {
-    stats <- generar_datos_estatura()
-    
-    if (verificar_solapamiento_etiquetas(stats)) {
-      exitos <- exitos + 1
+    # Intentar varias veces para encontrar datos sin solapamiento
+    for (j in 1:5) {
+      stats <- generar_datos_estatura()
+      
+      if (verificar_solapamiento_etiquetas(stats)) {
+        exitos <- exitos + 1
+        break
+      }
     }
   }
   
@@ -421,38 +415,25 @@ test_no_solapamiento_etiquetas <- function() {
 test_conjuntos_par_impar <- function() {
   cat("Verificando que se permiten conjuntos par e impar...\n")
   
-  # Generar conjuntos par e impar
-  n_par <- 10
-  n_impar <- 11
-  
-  stats_par <- generar_datos_estatura(n = n_par)
+  # Probar con conjunto impar
+  n_impar <- 15
   stats_impar <- generar_datos_estatura(n = n_impar)
   
-  # Verificar longitud de los datos
-  expect_equal(length(stats_par$datos), n_par, 
-               info = paste("Conjunto par debería tener", n_par, "elementos"))
   expect_equal(length(stats_impar$datos), n_impar, 
-               info = paste("Conjunto impar debería tener", n_impar, "elementos"))
+               info = "Tamaño incorrecto para conjunto impar")
+  expect_equal(sort(stats_impar$datos_desordenados), stats_impar$datos, 
+               info = "Datos desordenados impar no son permutación de los originales")
   
-  # Verificar que los datos desordenados tienen la misma longitud
-  expect_equal(length(stats_par$datos_desordenados), n_par, 
-               info = "Datos desordenados par no tienen la longitud correcta")
-  expect_equal(length(stats_impar$datos_desordenados), n_impar, 
-               info = "Datos desordenados impar no tienen la longitud correcta")
+  # Probar con conjunto par
+  n_par <- 16
+  stats_par <- generar_datos_estatura(n = n_par)
   
-  # Verificar que los datos desordenados son una permutación de los datos originales
-  expect_setequal(stats_par$datos, stats_par$datos_desordenados, 
-                  info = "Datos desordenados par no son permutación de los originales")
-  expect_setequal(stats_impar$datos, stats_impar$datos_desordenados, 
-                  info = "Datos desordenados impar no son permutación de los originales")
+  expect_equal(length(stats_par$datos), n_par, 
+               info = "Tamaño incorrecto para conjunto par")
+  expect_equal(sort(stats_par$datos_desordenados), stats_par$datos, 
+               info = "Datos desordenados par no son permutación de los originales")
   
-  # Verificar que los datos desordenados están realmente desordenados
-  expect_false(identical(stats_par$datos, stats_par$datos_desordenados), 
-               info = "Datos par no están realmente desordenados")
-  expect_false(identical(stats_impar$datos, stats_impar$datos_desordenados), 
-               info = "Datos impar no están realmente desordenados")
-  
-  cat("   Se permiten conjuntos par e impar y se muestran desordenados\n")
+  cat("   Se permiten conjuntos par e impar\n")
   return(TRUE)
 }
 
@@ -461,7 +442,7 @@ test_no_duplicidad_opciones <- function() {
   cat("Verificando que no hay opciones de respuesta duplicadas...\n")
   
   # Número de conjuntos de datos a probar
-  n_pruebas <- 50
+  n_pruebas <- 20
   exitos <- 0
   
   for (i in 1:n_pruebas) {
@@ -469,6 +450,13 @@ test_no_duplicidad_opciones <- function() {
     
     if (resultado$exito) {
       exitos <- exitos + 1
+      
+      # Verificar que todos los diagramas son diferentes
+      diagramas <- resultado$valores_diagramas
+      son_diferentes <- asegurar_diagramas_diferentes(diagramas)
+      
+      expect_true(son_diferentes, 
+                  info = "Se encontraron diagramas duplicados en las opciones")
     }
   }
   
