@@ -454,10 +454,10 @@ if (abs(diferencia_cuartiles) < 3) {
 
 # Calcular porcentaje aproximado de datos entre Q1 y Q3 y aleatorizar la respuesta
 # Generar un escenario aleatorio para determinar qué opción será correcta
-escenario_p4 <- sample(1:4, 1)
+escenario_p4 <- sample(1:3, 1)
 
-# Definir las opciones de porcentaje
-opciones_porcentaje <- c("25%", "50%", "75%", "Depende del número de datos")
+# Definir las opciones de porcentaje (eliminando "Depende del número de datos")
+opciones_porcentaje <- c("25%", "50%", "75%")
 
 # Variable para almacenar la explicación de la respuesta correcta
 explicacion_p4 <- ""
@@ -471,18 +471,14 @@ if (escenario_p4 == 1) {
   # En este escenario, 50% es correcto (caso normal)
   respuesta_correcta_idx <- 2
   explicacion_p4 <- "Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos."
-} else if (escenario_p4 == 3) {
+} else {
   # En este escenario, 75% podría ser correcto (caso especial con datos agrupados)
   respuesta_correcta_idx <- 3
   explicacion_p4 <- "En este conjunto específico de datos, debido a cómo están distribuidos, aproximadamente el 75% de los valores se concentra entre Q1 y Q3. Esto puede ocurrir cuando hay datos muy dispersos en los extremos."
-} else {
-  # En este escenario, "Depende del número de datos" es correcto
-  respuesta_correcta_idx <- 4
-  explicacion_p4 <- "El porcentaje exacto de datos entre Q1 y Q3 depende del número de datos y su distribución. Aunque teóricamente es aproximadamente 50%, el porcentaje exacto varía según el conjunto específico de datos que estemos analizando."
 }
 
 # Aleatorizar el orden de las opciones para que la respuesta correcta no siempre esté en la misma posición
-nueva_posicion <- sample(1:4, 1)
+nueva_posicion <- sample(1:3, 1)
 if (nueva_posicion != respuesta_correcta_idx) {
   # Intercambiar la opción correcta con otra posición aleatoria
   temp <- opciones_porcentaje[respuesta_correcta_idx]
@@ -546,7 +542,7 @@ sol_p2 <- rep(0, 4)
 sol_p2[diagrama_estructura_incorrecta] <- 1
 sol_p2_str <- paste(sol_p2, collapse="")
 
-sol_p4 <- rep(0, 4)
+sol_p4 <- rep(0, 3)
 sol_p4[respuesta_correcta_idx] <- 1
 sol_p4_str <- paste(sol_p4, collapse="")
 
@@ -692,7 +688,6 @@ Answerlist
 * `r opciones_porcentaje[1]`
 * `r opciones_porcentaje[2]`
 * `r opciones_porcentaje[3]`
-* `r opciones_porcentaje[4]`
 * La distribución es exactamente simétrica
 * La distribución tiende a ser simétrica
 * La distribución presenta sesgo hacia valores más altos
@@ -765,10 +760,9 @@ Answerlist
 * `r ifelse(diagrama_estructura_incorrecta == 3, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
 * `r ifelse(diagrama_estructura_incorrecta == 4, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
 * `r stats$rango_intercuartil`
-* `r if(opciones_porcentaje[1] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[1] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else if(opciones_porcentaje[1] == "75%") {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."} else {"Incorrecto. Aunque el porcentaje exacto puede variar ligeramente con datos discretos, conceptualmente siempre es aproximadamente el 50%."}`
-* `r if(opciones_porcentaje[2] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[2] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else if(opciones_porcentaje[2] == "75%") {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."} else {"Incorrecto. Aunque el porcentaje exacto puede variar ligeramente con datos discretos, conceptualmente siempre es aproximadamente el 50%."}`
-* `r if(opciones_porcentaje[3] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[3] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else if(opciones_porcentaje[3] == "75%") {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."} else {"Incorrecto. Aunque el porcentaje exacto puede variar ligeramente con datos discretos, conceptualmente siempre es aproximadamente el 50%."}`
-* `r if(opciones_porcentaje[4] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[4] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else if(opciones_porcentaje[4] == "75%") {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."} else {"Incorrecto. Aunque el porcentaje exacto puede variar ligeramente con datos discretos, conceptualmente siempre es aproximadamente el 50%."}`
+* `r if(opciones_porcentaje[1] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[1] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."}`
+* `r if(opciones_porcentaje[2] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[2] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."}`
+* `r if(opciones_porcentaje[3] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[3] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."}`
 * Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma.
 * `r ifelse(indice_respuesta_correcta == 2, "Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 $\\approx$ distancia a Q3), la distribución tiende a ser simétrica.", "Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica.")`
 * `r ifelse(indice_respuesta_correcta == 3, "Correcto. Como la distancia de la mediana a Q3 es mayor que la distancia a Q1, la distribución presenta un sesgo hacia valores más altos (sesgo positivo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos.")`
