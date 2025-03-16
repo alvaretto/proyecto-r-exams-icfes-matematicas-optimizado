@@ -1,0 +1,1103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/test_final/Exercise 1</text>
+</category>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R1 Q1 : cloze-cuartil-estatura-00 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:</p>
+<!-- html table generated in R 4.4.3 by xtable 1.8-4 package -->
+<!-- Sun Mar 16 14:33:01 2025 -->
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th>
+Estudiante
+</th>
+<th>
+Estatura..cm.
+</th>
+</tr>
+<tr>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+158
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+2
+</td>
+<td style="text-align: center;">
+156
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+3
+</td>
+<td style="text-align: center;">
+164
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+4
+</td>
+<td style="text-align: center;">
+173
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+5
+</td>
+<td style="text-align: center;">
+154
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+6
+</td>
+<td style="text-align: center;">
+168
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+7
+</td>
+<td style="text-align: center;">
+164
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+8
+</td>
+<td style="text-align: center;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+9
+</td>
+<td style="text-align: center;">
+148
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+10
+</td>
+<td style="text-align: center;">
+150
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+11
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+12
+</td>
+<td style="text-align: center;">
+150
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+13
+</td>
+<td style="text-align: center;">
+164
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+14
+</td>
+<td style="text-align: center;">
+151
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+15
+</td>
+<td style="text-align: center;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+16
+</td>
+<td style="text-align: center;">
+167
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+17
+</td>
+<td style="text-align: center;">
+153
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+18
+</td>
+<td style="text-align: center;">
+150
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+19
+</td>
+<td style="text-align: center;">
+148
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+20
+</td>
+<td style="text-align: center;">
+155
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+21
+</td>
+<td style="text-align: center;">
+161
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+22
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+23
+</td>
+<td style="text-align: center;">
+157
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+24
+</td>
+<td style="text-align: center;">
+164
+</td>
+</tr>
+</table>
+<p>Para analizar estos datos, estudiaremos los diagramas de caja (también llamados diagramas de caja y bigotes o boxplots). Observe los siguientes diagramas y responda:</p>
+<p><img src="@@PLUGINFILE@@/DiagramaA-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaB-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaC-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaD-1.png" /></p>
+<h2 id="parte-1-identificación-del-diagrama-correcto">Parte 1: Identificación del diagrama correcto</h2>
+<p>¿Qué diagrama(s) representa(n) correctamente los datos en cuanto a sus valores de cuartiles (Q1, mediana y Q3)?<br />
+</p>
+<p>{1:MULTIRESPONSE:%-33.33333%Diagrama A~%-33.33333%Diagrama B~=Diagrama C~%-33.33333%Diagrama D}</p>
+<h2 id="parte-2-identificación-de-error-estructural">Parte 2: Identificación de error estructural</h2>
+<p>¿Qué diagrama tiene un error estructural en la representación? (Un error estructural significa que algún elemento está ubicado donde no debería estar según la definición de diagrama de caja)<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%Diagrama A~%-33.33333%Diagrama B~%-33.33333%Diagrama C~=Diagrama D}</p>
+<h2 id="parte-3-cálculo-básico">Parte 3: Cálculo básico</h2>
+<p>Calcule el rango intercuartílico (RIC) de los datos. Recuerde que RIC = Q3 - Q1.<br />
+</p>
+<p> {1:NUMERICAL:=12.75:0}</p>
+<h2 id="parte-4-interpretación-básica">Parte 4: Interpretación básica</h2>
+<p>Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dentro de la “caja” del diagrama)?<br />
+</p>
+<p>{1:MULTICHOICE:%-50%25%~=50%~%-50%75%}</p>
+<h2 id="parte-5-conceptos-fundamentales">Parte 5: Conceptos fundamentales</h2>
+<p>Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirmar sobre la distribución de estos datos?<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%La distribución es exactamente simétrica~=La distribución tiende a ser simétrica~%-33.33333%La distribución presenta sesgo hacia valores más altos~%-33.33333%La distribución presenta sesgo hacia valores más bajos}</p>
+<h2 id="parte-6-aplicación">Parte 6: Aplicación</h2>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, ¿cuál de los siguientes estadísticos se vería más afectado?<br />
+</p>
+<p>{1:MULTICHOICE:%-25%Mínimo~=Media aritmética~%-25%Máximo~%-25%Mediana~%-25%Rango intercuartílico}</p>
+</p>]]></text>
+<file name="DiagramaD-1.png" encoding="base64">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</file>
+<file name="DiagramaC-1.png" encoding="base64">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dZrTecsbvN7Yo3P2Icn6cOvPvJZ7Hq+x7PJC1JFfSGUWenDeHt+/28/btzve+PvHW3/mdc7wwi3veqWJeHGo5dTSL9zyrle6sGAQsUeHu+UHDl4Vb/myryHFHh1wAfFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFCFvFC1l8C0Ac53aFk1gAAAABJRU5ErkJggg==</file>
+<file name="DiagramaB-1.png" encoding="base64">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pDIKPThrT58/HefjxwO/+eenrT/zPGd445Z3vtJAvDjVdGjpN2555yutLBhE7NFht/yBg3fFW76vVUixRwesIF7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7IIl7I+h+zM/shga093AAAAABJRU5ErkJggg==</file>
+<file name="DiagramaA-1.png" encoding="base64">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uhJ8ynuseL9++aWZzyl9bnfvX74++jOfUkxrvOdPfr/YOs3pvOUNXm/s0Tn7lGR9evRnXsu9jNdYdnkj6vxcvVGFHpy3l48f2nn3ruGdf3x59Gde5wx3bnnXG03Ei10tp5a+c8u73ujKgkHEHh2elh84eFO85du+hhR7dMAVxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZxAtZ/wfN0YdYOPZfJgAAAABJRU5ErkJggg==</file>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<h2 id="solución-con-explicaciones-básicas">Solución con explicaciones básicas</h2>
+<h3 id="parte-1-identificación-del-diagrama-correcto-1">Parte 1: Identificación del diagrama correcto</h3>
+<p>El <strong>Diagrama C</strong> es el único que representa correctamente los datos con los valores precisos de:</p>
+<ul>
+<li>Mínimo = 148 cm</li>
+<li>Q1 = 151.2 cm</li>
+<li>Mediana (Q2) = 156.5 cm</li>
+<li>Q3 = 164 cm</li>
+<li>Máximo = 173 cm</li>
+</ul>
+<p>Los otros diagramas contienen errores en los valores, la estructura o las etiquetas.</p>
+<h3 id="parte-2-identificación-de-error-estructural-1">Parte 2: Identificación de error estructural</h3>
+<p>El <strong>Diagrama D</strong> tiene un error estructural:</p>
+<p>Q1 y Q3 están invertidos, lo que hace que la caja sea incorrecta.</p>
+<p>En un diagrama de caja correcto, la mediana siempre debe estar dentro de la caja, entre Q1 y Q3, y los bigotes deben terminar en valores reales.</p>
+<h3 id="parte-3-cálculo-básico-1">Parte 3: Cálculo básico</h3>
+<p>El rango intercuartílico (RIC) se calcula como Q3 - Q1:</p>
+<p>RIC = 164 cm - 151.2 cm = <strong>12.75 cm</strong></p>
+<h3 id="parte-4-interpretación-básica-1">Parte 4: Interpretación básica</h3>
+<p>Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos.</p>
+<p>La opción correcta es <strong>50%</strong>.</p>
+<h3 id="parte-5-conceptos-fundamentales-1">Parte 5: Conceptos fundamentales</h3>
+<p>Analizando la posición de la mediana dentro de la caja:</p>
+<ul>
+<li>Q1 = 151.2 cm</li>
+<li>Mediana = 156.5 cm</li>
+<li>Q3 = 164 cm</li>
+<li>Distancia Q1 a Mediana = 5.3 cm</li>
+<li>Distancia Mediana a Q3 = 7.5 cm</li>
+</ul>
+<p>Como estas distancias son bastante similares, la distribución tiende a ser simétrica.</p>
+<h3 id="parte-6-aplicación-1">Parte 6: Aplicación</h3>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos:</p>
+<p>La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética.</p>
+<p>La opción correcta es <strong>Media aritmética</strong>.</p>
+<ul>
+<li> Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. </li>
+<li> Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja. </li>
+<li> 12.75 </li>
+<li> Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos. / Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central. / Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos. </li>
+<li> Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma. / Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 <span class="math inline">\(\approx\)</span> distancia a Q3), la distribución tiende a ser simétrica. / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos. / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos. </li>
+<li> Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos. / Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos. / Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética. / Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados. / Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>6</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R2 Q1 : cloze-cuartil-estatura-00 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:</p>
+<!-- html table generated in R 4.4.3 by xtable 1.8-4 package -->
+<!-- Sun Mar 16 14:33:03 2025 -->
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th>
+Estudiante
+</th>
+<th>
+Estatura..cm.
+</th>
+</tr>
+<tr>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+167
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+2
+</td>
+<td style="text-align: center;">
+163
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+3
+</td>
+<td style="text-align: center;">
+174
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+4
+</td>
+<td style="text-align: center;">
+165
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+5
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+6
+</td>
+<td style="text-align: center;">
+167
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+7
+</td>
+<td style="text-align: center;">
+168
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+8
+</td>
+<td style="text-align: center;">
+173
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+9
+</td>
+<td style="text-align: center;">
+168
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+10
+</td>
+<td style="text-align: center;">
+166
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+11
+</td>
+<td style="text-align: center;">
+172
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+12
+</td>
+<td style="text-align: center;">
+178
+</td>
+</tr>
+</table>
+<p>Para analizar estos datos, estudiaremos los diagramas de caja (también llamados diagramas de caja y bigotes o boxplots). Observe los siguientes diagramas y responda:</p>
+<p><img src="@@PLUGINFILE@@/DiagramaA-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaB-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaC-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaD-1.png" /></p>
+<h2 id="parte-1-identificación-del-diagrama-correcto">Parte 1: Identificación del diagrama correcto</h2>
+<p>¿Qué diagrama(s) representa(n) correctamente los datos en cuanto a sus valores de cuartiles (Q1, mediana y Q3)?<br />
+</p>
+<p>{1:MULTIRESPONSE:%-33.33333%Diagrama A~=Diagrama B~%-33.33333%Diagrama C~%-33.33333%Diagrama D}</p>
+<h2 id="parte-2-identificación-de-error-estructural">Parte 2: Identificación de error estructural</h2>
+<p>¿Qué diagrama tiene un error estructural en la representación? (Un error estructural significa que algún elemento está ubicado donde no debería estar según la definición de diagrama de caja)<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%Diagrama A~%-33.33333%Diagrama B~%-33.33333%Diagrama C~=Diagrama D}</p>
+<h2 id="parte-3-cálculo-básico">Parte 3: Cálculo básico</h2>
+<p>Calcule el rango intercuartílico (RIC) de los datos. Recuerde que RIC = Q3 - Q1.<br />
+</p>
+<p> {1:NUMERICAL:=7.5:0}</p>
+<h2 id="parte-4-interpretación-básica">Parte 4: Interpretación básica</h2>
+<p>Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dentro de la “caja” del diagrama)?<br />
+</p>
+<p>{1:MULTICHOICE:=50%~%-50%25%~%-50%75%}</p>
+<h2 id="parte-5-conceptos-fundamentales">Parte 5: Conceptos fundamentales</h2>
+<p>Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirmar sobre la distribución de estos datos?<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%La distribución es exactamente simétrica~%-33.33333%La distribución tiende a ser simétrica~=La distribución presenta sesgo hacia valores más altos~%-33.33333%La distribución presenta sesgo hacia valores más bajos}</p>
+<h2 id="parte-6-aplicación">Parte 6: Aplicación</h2>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, ¿cuál de los siguientes estadísticos se vería más afectado?<br />
+</p>
+<p>{1:MULTICHOICE:%-25%Mínimo~%-25%Máximo~%-25%Mediana~=Media aritmética~%-25%Rango intercuartílico}</p>
+</p>]]></text>
+<file name="DiagramaD-1.png" encoding="base64">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uecOT+v+Ys4b1rzs50USwwtrr4132JVWrZRTSj57wDLihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihaw/ACMwOr7F9Jn7AAAAAElFTkSuQmCC</file>
+<file name="DiagramaC-1.png" encoding="base64">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</file>
+<file name="DiagramaB-1.png" encoding="base64">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</file>
+<file name="DiagramaA-1.png" encoding="base64">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</file>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<h2 id="solución-con-explicaciones-básicas">Solución con explicaciones básicas</h2>
+<h3 id="parte-1-identificación-del-diagrama-correcto-1">Parte 1: Identificación del diagrama correcto</h3>
+<p>El <strong>Diagrama B</strong> es el único que representa correctamente los datos con los valores precisos de:</p>
+<ul>
+<li>Mínimo = 160 cm</li>
+<li>Q1 = 165.2 cm</li>
+<li>Mediana (Q2) = 167.5 cm</li>
+<li>Q3 = 172.8 cm</li>
+<li>Máximo = 178 cm</li>
+</ul>
+<p>Los otros diagramas contienen errores en los valores, la estructura o las etiquetas.</p>
+<h3 id="parte-2-identificación-de-error-estructural-1">Parte 2: Identificación de error estructural</h3>
+<p>El <strong>Diagrama D</strong> tiene un error estructural:</p>
+<p>Q1 y Q3 están invertidos, lo que hace que la caja sea incorrecta.</p>
+<p>En un diagrama de caja correcto, la mediana siempre debe estar dentro de la caja, entre Q1 y Q3, y los bigotes deben terminar en valores reales.</p>
+<h3 id="parte-3-cálculo-básico-1">Parte 3: Cálculo básico</h3>
+<p>El rango intercuartílico (RIC) se calcula como Q3 - Q1:</p>
+<p>RIC = 172.8 cm - 165.2 cm = <strong>7.5 cm</strong></p>
+<h3 id="parte-4-interpretación-básica-1">Parte 4: Interpretación básica</h3>
+<p>Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos.</p>
+<p>La opción correcta es <strong>50%</strong>.</p>
+<h3 id="parte-5-conceptos-fundamentales-1">Parte 5: Conceptos fundamentales</h3>
+<p>Analizando la posición de la mediana dentro de la caja:</p>
+<ul>
+<li>Q1 = 165.2 cm</li>
+<li>Mediana = 167.5 cm</li>
+<li>Q3 = 172.8 cm</li>
+<li>Distancia Q1 a Mediana = 2.3 cm</li>
+<li>Distancia Mediana a Q3 = 5.3 cm</li>
+</ul>
+<p>Como estas distancias son diferentes (la distancia de la mediana a Q3 es mayor), la distribución presenta sesgo hacia valores más altos.</p>
+<h3 id="parte-6-aplicación-1">Parte 6: Aplicación</h3>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos:</p>
+<p>La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética.</p>
+<p>La opción correcta es <strong>Media aritmética</strong>.</p>
+<ul>
+<li> Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. </li>
+<li> Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja. </li>
+<li> 7.5 </li>
+<li> Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central. / Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos. / Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos. </li>
+<li> Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma. / Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica. / Correcto. Como la distancia de la mediana a Q3 es mayor que la distancia a Q1, la distribución presenta un sesgo hacia valores más altos (sesgo positivo). / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos. </li>
+<li> Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos. / Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética. / Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados. / Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos. / Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>6</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R3 Q1 : cloze-cuartil-estatura-00 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:</p>
+<!-- html table generated in R 4.4.3 by xtable 1.8-4 package -->
+<!-- Sun Mar 16 14:33:05 2025 -->
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th>
+Estudiante
+</th>
+<th>
+Estatura..cm.
+</th>
+</tr>
+<tr>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+158
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+2
+</td>
+<td style="text-align: center;">
+156
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+3
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+4
+</td>
+<td style="text-align: center;">
+150
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+5
+</td>
+<td style="text-align: center;">
+157
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+6
+</td>
+<td style="text-align: center;">
+155
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+7
+</td>
+<td style="text-align: center;">
+168
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+8
+</td>
+<td style="text-align: center;">
+154
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+9
+</td>
+<td style="text-align: center;">
+163
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+10
+</td>
+<td style="text-align: center;">
+164
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+11
+</td>
+<td style="text-align: center;">
+150
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+12
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+13
+</td>
+<td style="text-align: center;">
+149
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+14
+</td>
+<td style="text-align: center;">
+161
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+15
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+16
+</td>
+<td style="text-align: center;">
+153
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+17
+</td>
+<td style="text-align: center;">
+152
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+18
+</td>
+<td style="text-align: center;">
+158
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+19
+</td>
+<td style="text-align: center;">
+161
+</td>
+</tr>
+</table>
+<p>Para analizar estos datos, estudiaremos los diagramas de caja (también llamados diagramas de caja y bigotes o boxplots). Observe los siguientes diagramas y responda:</p>
+<p><img src="@@PLUGINFILE@@/DiagramaA-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaB-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaC-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaD-1.png" /></p>
+<h2 id="parte-1-identificación-del-diagrama-correcto">Parte 1: Identificación del diagrama correcto</h2>
+<p>¿Qué diagrama(s) representa(n) correctamente los datos en cuanto a sus valores de cuartiles (Q1, mediana y Q3)?<br />
+</p>
+<p>{1:MULTIRESPONSE:%-33.33333%Diagrama A~%-33.33333%Diagrama B~=Diagrama C~%-33.33333%Diagrama D}</p>
+<h2 id="parte-2-identificación-de-error-estructural">Parte 2: Identificación de error estructural</h2>
+<p>¿Qué diagrama tiene un error estructural en la representación? (Un error estructural significa que algún elemento está ubicado donde no debería estar según la definición de diagrama de caja)<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%Diagrama A~%-33.33333%Diagrama B~%-33.33333%Diagrama C~=Diagrama D}</p>
+<h2 id="parte-3-cálculo-básico">Parte 3: Cálculo básico</h2>
+<p>Calcule el rango intercuartílico (RIC) de los datos. Recuerde que RIC = Q3 - Q1.<br />
+</p>
+<p> {1:NUMERICAL:=8:0}</p>
+<h2 id="parte-4-interpretación-básica">Parte 4: Interpretación básica</h2>
+<p>Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dentro de la “caja” del diagrama)?<br />
+</p>
+<p>{1:MULTICHOICE:%-50%25%~%-50%75%~=50%}</p>
+<h2 id="parte-5-conceptos-fundamentales">Parte 5: Conceptos fundamentales</h2>
+<p>Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirmar sobre la distribución de estos datos?<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%La distribución es exactamente simétrica~=La distribución tiende a ser simétrica~%-33.33333%La distribución presenta sesgo hacia valores más altos~%-33.33333%La distribución presenta sesgo hacia valores más bajos}</p>
+<h2 id="parte-6-aplicación">Parte 6: Aplicación</h2>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, ¿cuál de los siguientes estadísticos se vería más afectado?<br />
+</p>
+<p>{1:MULTICHOICE:=Media aritmética~%-25%Máximo~%-25%Mínimo~%-25%Mediana~%-25%Rango intercuartílico}</p>
+</p>]]></text>
+<file name="DiagramaD-1.png" encoding="base64">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</file>
+<file name="DiagramaC-1.png" encoding="base64">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dO1tXh1J8cLdu453d3nhTqwH2P94b/LPb/8a6tt/XXubV4c4XR1c5ov5/PwhNN6AAd/iGee8xzns7vIccVp+CNvbcO78UJ4y3pNDnJbv4vkZtuNlrr/KRsQbocJrGwa8Z00bInhhTok/A4og3pKxa90Q71jEG0G8JdtnvIeOWbxjWbwGefxJr3jHso33wcO5L/GO5SmmCwfiHYsnKSKIt2Tx18PjzxvEOxZPUkQQb8nmiDni7ZN4Szbxjl2veMci3gjiLVkeSiXjSBM3EO9YFnsbQo7xcwPxjmXsWjfEOxbxRhBviVeVRRBviVeVRRBviVeVRRBvyVNMFw7EO5bpwrnhiHcsy/28pg3dEm/J5tjDY9cr3rF4bUME8ZaIN4J4SxbThpAjCt9AvGNZ/hnQ6O2KdzBj17oh3rGIN4J4S+YHacuPgxLvWMQbQbwl4o1w+2H9D2fOLjUvu9uFPNkq3gi3vqHK+l2Fi4utlsrY5S/eCBXeOHt+U6DiUqeJ95+CeCPUeePs3atb3tIl+yXeCNXee/i1acPivayuvcZ2DrPzp/hTCvG+Zct7zPjaq2zmueL97d9C/aZ6vMW3b91/Z/uVXvU/wor+8+Of7+aHafrhfj/9x/9ee5u/as67X3L96K1f3Q8wxedp+vzoMZRsprCXt7yHD0F7G6ig13j3R6F7+37e5f+d63+EIbqNdz8PeOO04bBYxKOfgCFm6DjeYYm3EvG2J95KxNueeCsRb3virUS87Ym3EvG2J95KxNueeCsRb3virUS87Ym3EvG2J95KxNueeCsRb3virUS87Ym3EvG2J95KxNueeCsRb3virUS87Ym3EvG2J95KxNueeCsRb3virUS87Ym3EvG2J95KxNueeCsRb3viraTXeDcHl37jhe42nKpChtm/jHhfWXZ1ov+j5nQ+vBzdxnt8q5TX210dUTLgYHt9jy5I5/Ee3533fMOLg/GJ97n0Hu/uePDH89OB4zZ6jrfrProeXJJ+492nuDxy6eV4d+Lt0aef7+bjNH2830+/4W3Ydvts52nD4nimZw4wPRW+2aGuB1fb+ynW+2tv87T87w3xTqsvircbH949KL2bvftw7W2e5wxXxXv1um6h79Fxs32Qb453vtDqK13qe3Tc7PjEWiHe0rLziVXXXep8eNxq+SDs6+LtX8gw4ZR4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmL9D6mthrieLudDAAAAAElFTkSuQmCC</file>
+<file name="DiagramaB-1.png" encoding="base64">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KAcYf7yb/PHqF1Gv/lz7MxeHOC0OLvNkOj99EI1XYMBbnHHOO85hu+tzxJR/EHu0Yel8U04Z78UhTut38fQM23id9TfphHglGLy2ocF7lmmDBF6YU8OfAUkg3pq2a50h3rYQrwTirZk/4910zMTbluw1yO1Peom3LfN4Dx7Ovoi3LaeYLgyIty08SSGBeGuyvx5uf95AvG3hSQoJxFszO2IO8cZEvDWzeNuul3jbQrwSiLcmP5SKxpEmNiDetmSPNogc42cD4m1L27XOEG9biFcC8dbwqjIJxFvDq8okEG8NryqTQLw1p5guDIi3LenKueYQb1vyx3mZNoRFvDWzYw+3Xe854y32ZRbv3zRfVqAEXtsgweZYZd2tePMD7wmUQLwSbN6TYvn5//EQZbMLYsumDSJHFN7glPEOn1Nxtr5cfsRTgRLKf2ptt3vqeLu74h2PEinxO1hgiHaI9545bxp336MTGKKdT9/8Kupr83irR0bvv6Ky9zMN88a/zBb88/an3bxJ6c1+3/3tl7U/84vmvP2SKq8VOFW8e/qS0urA9jS+J0V/drr8yntSFEvGRbxGosb74sd5xZ6kIF4DYePtH0K4b9qQbYwFSiBeI3HjbRfxGiFef8RrhHj99bN5nYdHoiJef8RrhHj9EasR4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea+RqPGOR+lP2ZmbV9ptOKZEhhmfRrw3li1OxD9maPDh6Qgb7/huE7fbTfmJ6e2Bwoo9OiHB403DG/0sN5ym9wEi3nOJHm83xHvlEOLjNnqKN3QfoQenJG68fYpjvN3ytre8Rke8kXz+uJsPKX3Y77uvfuvhPsU0xdtf+PRpthkev5YqXwwo9OCsvU+y3q/9mVP+3x3xpuJC4g3j8eGg9DZ7eFz7M09zhlXxrr1ZF7FHh836IO+Od7pScUlIsUeHzcYn1irx1padThRdhxR8eNgq3wl7WbzxiQwTuES8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kEW8kPUvzdIRJ/kfBeUAAAAASUVORK5CYII=</file>
+<file name="DiagramaA-1.png" encoding="base64">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</file>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<h2 id="solución-con-explicaciones-básicas">Solución con explicaciones básicas</h2>
+<h3 id="parte-1-identificación-del-diagrama-correcto-1">Parte 1: Identificación del diagrama correcto</h3>
+<p>El <strong>Diagrama C</strong> es el único que representa correctamente los datos con los valores precisos de:</p>
+<ul>
+<li>Mínimo = 149 cm</li>
+<li>Q1 = 153 cm</li>
+<li>Mediana (Q2) = 158 cm</li>
+<li>Q3 = 161 cm</li>
+<li>Máximo = 168 cm</li>
+</ul>
+<p>Los otros diagramas contienen errores en los valores, la estructura o las etiquetas.</p>
+<h3 id="parte-2-identificación-de-error-estructural-1">Parte 2: Identificación de error estructural</h3>
+<p>El <strong>Diagrama D</strong> tiene un error estructural:</p>
+<p>los bigotes no terminan en valores reales de los datos.</p>
+<p>En un diagrama de caja correcto, la mediana siempre debe estar dentro de la caja, entre Q1 y Q3, y los bigotes deben terminar en valores reales.</p>
+<h3 id="parte-3-cálculo-básico-1">Parte 3: Cálculo básico</h3>
+<p>El rango intercuartílico (RIC) se calcula como Q3 - Q1:</p>
+<p>RIC = 161 cm - 153 cm = <strong>8 cm</strong></p>
+<h3 id="parte-4-interpretación-básica-1">Parte 4: Interpretación básica</h3>
+<p>Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos.</p>
+<p>La opción correcta es <strong>50%</strong>.</p>
+<h3 id="parte-5-conceptos-fundamentales-1">Parte 5: Conceptos fundamentales</h3>
+<p>Analizando la posición de la mediana dentro de la caja:</p>
+<ul>
+<li>Q1 = 153 cm</li>
+<li>Mediana = 158 cm</li>
+<li>Q3 = 161 cm</li>
+<li>Distancia Q1 a Mediana = 5 cm</li>
+<li>Distancia Mediana a Q3 = 3 cm</li>
+</ul>
+<p>Como estas distancias son bastante similares, la distribución tiende a ser simétrica.</p>
+<h3 id="parte-6-aplicación-1">Parte 6: Aplicación</h3>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos:</p>
+<p>La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética.</p>
+<p>La opción correcta es <strong>Media aritmética</strong>.</p>
+<ul>
+<li> Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. </li>
+<li> Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja. </li>
+<li> 8 </li>
+<li> Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos. / Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos. / Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central. </li>
+<li> Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma. / Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 <span class="math inline">\(\approx\)</span> distancia a Q3), la distribución tiende a ser simétrica. / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos. / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos. </li>
+<li> Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos. / Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética. / Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos. / Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados. / Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>6</defaultgrade>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> R4 Q1 : cloze-cuartil-estatura-00 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:</p>
+<!-- html table generated in R 4.4.3 by xtable 1.8-4 package -->
+<!-- Sun Mar 16 14:33:07 2025 -->
+<table border="1" cellpadding="5" cellspacing="0">
+<tr>
+<th>
+Estudiante
+</th>
+<th>
+Estatura..cm.
+</th>
+</tr>
+<tr>
+<td style="text-align: center;">
+1
+</td>
+<td style="text-align: center;">
+171
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+2
+</td>
+<td style="text-align: center;">
+163
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+3
+</td>
+<td style="text-align: center;">
+165
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+4
+</td>
+<td style="text-align: center;">
+168
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+5
+</td>
+<td style="text-align: center;">
+164
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+6
+</td>
+<td style="text-align: center;">
+160
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+7
+</td>
+<td style="text-align: center;">
+171
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+8
+</td>
+<td style="text-align: center;">
+175
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+9
+</td>
+<td style="text-align: center;">
+178
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+10
+</td>
+<td style="text-align: center;">
+185
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+11
+</td>
+<td style="text-align: center;">
+175
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+12
+</td>
+<td style="text-align: center;">
+167
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+13
+</td>
+<td style="text-align: center;">
+159
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+14
+</td>
+<td style="text-align: center;">
+172
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+15
+</td>
+<td style="text-align: center;">
+171
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+16
+</td>
+<td style="text-align: center;">
+180
+</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+17
+</td>
+<td style="text-align: center;">
+176
+</td>
+</tr>
+</table>
+<p>Para analizar estos datos, estudiaremos los diagramas de caja (también llamados diagramas de caja y bigotes o boxplots). Observe los siguientes diagramas y responda:</p>
+<p><img src="@@PLUGINFILE@@/DiagramaA-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaB-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaC-1.png" /></p>
+<p><img src="@@PLUGINFILE@@/DiagramaD-1.png" /></p>
+<h2 id="parte-1-identificación-del-diagrama-correcto">Parte 1: Identificación del diagrama correcto</h2>
+<p>¿Qué diagrama(s) representa(n) correctamente los datos en cuanto a sus valores de cuartiles (Q1, mediana y Q3)?<br />
+</p>
+<p>{1:MULTIRESPONSE:=Diagrama A~%-33.33333%Diagrama B~%-33.33333%Diagrama C~%-33.33333%Diagrama D}</p>
+<h2 id="parte-2-identificación-de-error-estructural">Parte 2: Identificación de error estructural</h2>
+<p>¿Qué diagrama tiene un error estructural en la representación? (Un error estructural significa que algún elemento está ubicado donde no debería estar según la definición de diagrama de caja)<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%Diagrama A~%-33.33333%Diagrama B~%-33.33333%Diagrama C~=Diagrama D}</p>
+<h2 id="parte-3-cálculo-básico">Parte 3: Cálculo básico</h2>
+<p>Calcule el rango intercuartílico (RIC) de los datos. Recuerde que RIC = Q3 - Q1.<br />
+</p>
+<p> {1:NUMERICAL:=11:0}</p>
+<h2 id="parte-4-interpretación-básica">Parte 4: Interpretación básica</h2>
+<p>Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dentro de la “caja” del diagrama)?<br />
+</p>
+<p>{1:MULTICHOICE:%-50%25%~%-50%75%~=50%}</p>
+<h2 id="parte-5-conceptos-fundamentales">Parte 5: Conceptos fundamentales</h2>
+<p>Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirmar sobre la distribución de estos datos?<br />
+</p>
+<p>{1:MULTICHOICE:%-33.33333%La distribución es exactamente simétrica~=La distribución tiende a ser simétrica~%-33.33333%La distribución presenta sesgo hacia valores más altos~%-33.33333%La distribución presenta sesgo hacia valores más bajos}</p>
+<h2 id="parte-6-aplicación">Parte 6: Aplicación</h2>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, ¿cuál de los siguientes estadísticos se vería más afectado?<br />
+</p>
+<p>{1:MULTICHOICE:%-25%Mínimo~%-25%Máximo~=Media aritmética~%-25%Mediana~%-25%Rango intercuartílico}</p>
+</p>]]></text>
+<file name="DiagramaD-1.png" encoding="base64">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4x3XpCkPdDnV7bLZ6dXpY5jHe/LsHOuS8Q7fN+MdLlteL/Jj8SWGC4Mrx3vvnu7DnobH4wVxV2o8SSHBLN7tDbbqmLc4FcqljlVGvGl+f5fTZdMovGKLJykk2Ix5t1ag0vF2HKsssGf3NqRFuxtr3un07LxoZvEGnUsjV4y3PxZSv593/dF1GBJ3+Qbb7Ug0UVe8xKvhqaeHU38srwfinTbo8hFE1CiyMS/HKouL1zbUFE+ksMEWFfHWtF3rDPG2hXglEG8NryqTQLw1vKpMAvHW8KoyCcRbc4nhwoB425I2TjXn9zf/FvWGeCvy/bzNDxv++8NfDvMmpTfH/fYf/nf2soto9kL7xus90Fc+e9jdpV7bcKS48RZb4qv377Tlnn8fr3/kDO5GvEbCxlu+uGY73uGFk/kLKIOG+6ds2BD4tW8Cosabv3t4401A5SvQyxf+HjZvz8ofHELPaHRh4x2+z15jXp2uGu8Rc2Uj8KxpiR7v/A0S1emG4XE+TA785FXMuRLUSLzdcsy7ebVTTXN554/DNrV4N989vHgDRcxVL/EaiR7v42Ne4r2csPEOg9n+5HT+xruH86ECw4b2RY03f/dw98CTFOPxJPN3Dsdc8RKvlbDxdtO7h7u78Y6r6OG98l0XNl3iNRM43mYRrxHi9dc/aXiRt1IciHj9Ea8R4vVHrEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGiFef8RrhHj9XSreb7/96zC/pvTrcb/9t29nL7uILhXvj0nWj2cvu4guFe8v3x93HMdjjxL5/S9nL7uILhXvkb4y5nVHvEaI1x/xGiFef8RrhHj9Ea8R4vVHvEaI1x/xGoka7+zg0tvT9lOm4AcbGUSfPxka8d6Z9jbhLd7Ah3kaxJ47IWHjnY5CdufOnq1vAx9gbxB77oQEj3dama5+MMUQ73jFLnoesedOSPR4u3EkkFZHA8OU0xAj9rgh9MwpiRtvfzy6fBi7Ge+4iu6IN5Avn346zMeUPh732z992fs33zJMU7z9mS/f0rhnocvO7sZ19NoII4jQM2ftw9EvXDzOh71/81TuMt7KtMNPaX5ORLHnztjn9++O8/btgb/8/ee9f/M0Znhwzbvc5RBW7LnD027PTbxizTt8YT8vzjY+sfbwsGFYGRcr5ZCCzx6wjnghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3ghi3gh6//RFC76s8hv8QAAAABJRU5ErkJggg==</file>
+<file name="DiagramaC-1.png" encoding="base64">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/XuoN7+svc2zeMvsDj9ZLjHe/aWEIa/3pxLrz2tv8yTeMp7aPpkvd+lIqF2ZH+opYcyr/eW334b6zV/X3ubhcE+zo+Wci3d2uWveSRHh2l1l5WQvmXjDPGS8o0znwU6W2i87vdy3h5o2PGa8e+Xld8uU0cfpuX55G1AEL8xZsu1aZ8S7LeKNIN4lifumVxPvtoxeKrf9Sa94t2Ue752Hc1vi3ZaHmC4ciHdbPEkRQbxLHKssgniXeJIigniXOFZZBPEucbinCOJdIt4I4l3iWGURxLvEscoiiHfJtmudEe+2iDeCeJd4VVkE8S7xqrIIV7+Hbbhwdqlh4clp17yqLMI17x6eHLDhQryH98fP3iffqYeYLhw8YryTas9uncrouKbleNq58sKlzXnIeA+n87cHLy0Xtikb7+c1behWtQPtXYr3cHSSiBTGv5gZE50riPdSvGX6r3OP9dqGN/c+2uNab6rHu3i4p0PBQ8l9e6h4f/3+DzfzXSnf3e7av/917W3++jlvYLynxxHka3wp5cu9x7BkOErk/uLx89vZ8j7P0Psfb7d6jfer9vOGznm5Urfx7p9he9W0YdjhlLHjKWCIGfqNd7uOD9Iu/GbyMvG2J95KxNueeCsRb3virUS87Ym3EvG2J95KxNueeCsRb3v7p18e5K0UNyTe9sRbiXjbE2sl4m1PvJWItz3xViLe9sRbiXjbE28l4m1PvJWItz3xViLe9sRbiXjbE28l4m1PvJWItz3xViLe9sRbiXjbE28l4m1PvJWItz3xViLe9sRbiXjbE28l4m1PvJWItz3xViLe9sRbiXjbE28lvcY7HJi3jC6cW3a/5HCc05uO7Hq9jy9GRrwXln1esJSQA0z3Pbog3cY7bE8v3dmz7e3xOP/d6nt0QTqP97gxPfsn1sZ/BXMn3kfSe7y7YSZQzs4GDksepxh9zxu6HlySfuPdH49uPI19Md5hE70Tb0c+f/zxZj6U8uF21/7x89rb/JxhOca7/+TTydKfs9p/5fjIrV9dD6629yXW+7W3+VjuabwLyx7OlflnetT36Cr79O6H23n79oZX/u7T2tt8nDO8cst7usuhW32PjqvtDwP6+i3v4YP9vNzb8MTaq6cNh43xZKPcpc6HB+eJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJJV5iiZdY4iWWeIklXmKJl1jiJZZ4iSVeYomXWOIllniJ9V9Isfo0abnczgAAAABJRU5ErkJggg==</file>
+<file name="DiagramaB-1.png" encoding="base64">iVBORw0KGgoAAAANSUhEUgAAArwAAAGQCAMAAAB74kOhAAAAeFBMVEUAAAABAQECAgIEBAQODg4PDw8QEBARERESEhITExMhISEiIiIlJSUxMTEzMzM5OTlzc3N0dHR7e3uRkZGSkpKtra2zs7O7u7u8vLzExMTIyMjMzMzPz8/d3d3h4eHi4uLj4+Pl5eXm5ubx8fHy8vL09PT8/Pz///9pFq/RAAAACXBIWXMAAA9hAAAPYQGoP6dpAAALnElEQVR4nO3di3rbRBRF4YEChV4oFFoKLZRbqvd/Q0psSaPxyErko6OzR+v/2ji25WQir8hjOVFSB4hKew8AWIt4IYt4IYt4IYt4IYt4IYt4IYt4IYt4IYt4IYt4IYt4K9K97Nw2n4B1fyNWYEUanM9t+wmwEmuvIk3i2jRe1v8NWHkVfVObtbX5JzgGVl5F1laaLWx2s3x/m4d9go54b8HKq8jaSlmlKY865RdPrv789vR+PmuezhDY8ppg5VVciTd/txLv5OqLS/JPwJz3dqy8ikq841Z1OmGYPqmrXT29cvi4pHs7Vl9Fbct7cb4y573I9uK24/vkeztWXkU13iG2eryTSUJ5dWXaMP1EWIOVVzEz5+3OexKG8royw5l4sytrnwArse4qsiIrc97alvfxc97iHazAuqsoN6cXm9/avGD+7eXsePrdgZVYdxXT51N9gPkFxQS3ctHMbWufACux8iqmaWXFVvf5jje5spEeblv5BFiJtVcx7ar2eN/VJgOzM4zabSn3dqzAx5s8R8N+uAMeb5jI7j2Qo+MOWIFH/Ri4ByCLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeCGLeBs3Ho/yfLrfUMy19LWgooh38f7OD70W/dAqgYcGC2nI8XRuafHsOMPnxeMmEndkMHGOd3rEv9MVtaWz64gXO+vj7YYDBZ/u9Lk7vhJv2EbCDgw2hlbzDWmaL3JyyHbixZ5OzaY03NPFYYMvDto+Xhj+iIJhBwYbKfs37ETI7vZ6vKdr+iXcBvtIYQcGG/mcYZw2LG15T9dkl4QUd2QwMbQ6M+e9Ei97G7CvU7xdN+5tSA/Y28CLFMCmiBeyiBeyiBeyiBeyiBeyiBeyiBeyiBeyiBeyiBeyiBeyiBeyiBeyDhXvpw/vt/Pu3YYf/MOnvdddRIeK93WS9XrvdRfRoeJ98+L5Zp6l9Gy7j/7izd7rLqJDxbulu5Tu9h7D0RCvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNcf8RohXn/Ea4R4/RGvEeL1R7xGiNdfH28623UwyojX332tY7Xkuxbx+vu/1Wmw5LsK8fqjVCPE6494jRCvvyFenrHdhnj9lXsbiHcl4vWXilOsFDfebKN0ZeuUxkXTeMFw4cZjXId4jYSNN6Xh7enNzGLFe2l8TN5wcLcRGKKGqPGOe/D7rWt9qTS9QVKKlydsNwobb3+68Bibpu8khcdknrAZiR5vV2xQ55ZL/eZ5WsZm47uFwPeXBpl4F7a8w9Ti4oJ4iNeIRrzjaflAm02NK0/sYm56BablGqLH+/kOzvY7zC6X7zHLFoyZB0/YjISNN5vr5jOAuS1veYHEtIF4bxM13vtuz3fs/e6yq3Peoub+BkGziDkqQWHjPT9LO9e7sLehEm/YdMuHiaijFBA43mZNX1gJ+z0WH/H6K/Y2UO9axOuv3M9LvCsRrz/iNUK8/pg2GCFef+WLFHuORRrx+qNWI8Trj3iNEK+/yksT9LwG8fq7eP2Pae86xOuv38nAD+bciHj9Tfc27DkSccTrj16NEK+/Y8X76y+beZvS2+0++m97r7mQDhXvX0++F/Xk773XXUSHivfjd3uPYK1v/9x7BBERrwTirSFeCcRbU8bbdMzE25ZD/eo78bal/NX3XQezNeJtS/4bFKnxWQPxNqaIt+16ibctxCuBeGuyOe94LLZWHTPe7LnMI/4mhUIIk4OO8IQtqhvi7Y/z1D3kWGXDDbTiPYIjxjtsdLvKbx5kS5UHKVMI41DHazhkvP1puhZv/hBcnA+sHHPTjhzv0maqOICHRA/5VKf5VymId3nOq/RQXL7CpjDm1Yg3/3Nr83+TYnK7wBTGaObI8S4dwracLSiEoTBGM4eM97zjq2x36W9SKIRxqGnDH09/F/XNx9VfdL6f99pi48LZ+dimY2y73e6HJOvH9V/1/e37F6Hu368udV52ej62Yoxt1/vTl09FffHz3usuIn6TQgI/mFNDvBKIt+ZQ0wbibQu/BiSBeGvarrVAvG0hXgnEW6P48xirEW9b+n3T6QiTXuJtSxnvzsPZFvG25RDThR7xtoUXKSQQb035w8nEGxLx1vAihQTircnnvKnxWQPxNqaIt+16ibctxCuBeGuyOS/HKouLeGuyvQ0qB/lZj3jb0natBeJtC/FKIN4afqpMAvHW8FNlEoi3hp8qk0C8NYeYLvSIty3pyrnmHDPeySPq7D08HCUylbeJ+4ic7+cNO0grh4w3O1ZZtxhv6nf4F7ePafz2GkberiPGO6l2duvUb3DPb9Tizf4365Dx9qdpcra+XO0ZUOAiiFeC2WH9l+JN/SxDYMqbf2Ne+ytdbSDepXjzOe/wFO7azXaV/xpQ6+12H79+L+or83jL/frZnDevtrt8P46Qg9rKP6++38zLlF5u99Ff/bv2a378nJd4D+cupbu9x1CT/02K7qFb3jziSdCxjBOahe9MXBc13kft583nvOX/gIjXSNh4s79J0S2/SJG9wtaN4QetgniNxI23XcRrhHj9Ea8R4vVHvEaI1x/xGiFef8Mr2Yf4VYoNEa8/4jVCvP6I1Qjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I1wjx+iNeI8Trj3iNEK8/4jVCvP6I10jUePs/hZ5SdmZu2fOSKaXsNK7YoxMSN94+yeU7O/UL5qeBxR+hiLDxdmO8C0sm4j2o4PHen5y2vvOzgTS86STKEBiihsDxpi6P93RuZtnuPNVN42lgsUcnJG683TTe84Uzy45vri0YROzRGXvz4vlmnqX0bLuP/uLN2q855f+KJlOxdc3ek5j4hh6ctddJ1uu1X/Op2Xq8lWX794g3mk8f3m/n3bsNP/iHT2u/5nHO8MAtL9MGRDG8NvHgOW+a/g8s9uhws0fHqzJn6IgXwogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsogXsv4DkQRXSKGgO0IAAAAASUVORK5CYII=</file>
+<file name="DiagramaA-1.png" encoding="base64">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2hzrb7/vvc9VvKl6wlfLKcY7nlMY8n7/TLL+tfc+F/GmfGr7ol7u2pFQQ6nG2He9P//la1Ff/LL3Ps+He0r1kZHseKvzobEnhYR7N5Wl1VYy4hVzynizTOtgi6XGZcvzsZ1q2nDOeEfp8t4yKftanoqL3YAk8MEcS9+1Voi3L8QrgXgtitumdyPevmQflet/0ku8fanjffBwjkW8fTnFdGFCvH3hTQoJxGupP6hBvCERr4U3KSQQryWf86bOZw3E25kq3r7rJd6+EK8E4rVkc16OVRYX8VqKPZ55wRYV8Vr6rrVCvH0hXgnEa+FTZRKI18KnyiQQr4VPlUkgXssppgsT4u1LunCuO8Tbl3w7L9OGsIjXsrzD9vrBnK7rJd6+8NkGCcRrIV4JxGvJpg31cQT7Q7x9yXcD6r3dk8ZbbMDffIKXDf71knG3/8cc1UFOGe94gN76EKarxealquNFBg33T3FHdoAzxpv/NaDtz7ym+o+vJZV486Nbxh2pg1PGO32/8vzW8Sq890q8Etz+GtC1acN0GOp6v/K9v/5QxCuhWbzDHG6x5o2Zxbni/eu/RX3lHq/5Nynm1e9QlRBz1XuqeJ///sNhvk/p++Nu/R//23ufb5/zWp+PJd6uPaf0/OgxWKYtZfWmsgtr3nJJpg39ixrveFCDt23nzY9+8LppbfkX0Lj17yS7UhwobLzjJPZN04Zi++5Qv8ERDvE6CRxvt4jVCfG2R7xOiLc94nVCvO0RrxPibY94nRBve8TrhHjbI14nxNse8Toh3vaI1wnxtke8Toi3PeJ1QrztEa8T4m2PeJ0Qb3vE64R42yNeJ8TbHvE6Id72iNcJ8bZHvE6Itz3idUK87RGvE+Jtj3idRI23Okrk5WXHJVPwvYYn0ccnQyPeK8u+LphS8OM1TGKPTkjYeLODRV9Z7xqHoY6dR+zRCQke77Iy3TzCdHWAaeI9j+jxDvNMIG3OBqYllylG7HlD6MEpiRvveDy6fBp7Md55FT0QbyBPn346zMeUPh5365+e9t7n1wzTEu/4w5dv1pEix0uWV25xhR6ctw9J1oe993kpdx2vsex06tpBJUOIPTpnn9//eJx37w688fef997nZc7wxjXvepNDWLFHh7uNhwF9+5p3+sJ2Xjza/Mbam6cN08q4WCmHFHx4wDbihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihSzihaz/A7Qs/2GjqDjWAAAAAElFTkSuQmCC</file>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<h2 id="solución-con-explicaciones-básicas">Solución con explicaciones básicas</h2>
+<h3 id="parte-1-identificación-del-diagrama-correcto-1">Parte 1: Identificación del diagrama correcto</h3>
+<p>El <strong>Diagrama A</strong> es el único que representa correctamente los datos con los valores precisos de:</p>
+<ul>
+<li>Mínimo = 159 cm</li>
+<li>Q1 = 164.5 cm</li>
+<li>Mediana (Q2) = 171 cm</li>
+<li>Q3 = 175.5 cm</li>
+<li>Máximo = 185 cm</li>
+</ul>
+<p>Los otros diagramas contienen errores en los valores, la estructura o las etiquetas.</p>
+<h3 id="parte-2-identificación-de-error-estructural-1">Parte 2: Identificación de error estructural</h3>
+<p>El <strong>Diagrama D</strong> tiene un error estructural:</p>
+<p>la mediana (Q2 = 161.5 cm) está ubicada fuera de la caja (166.5-173.5 cm).</p>
+<p>En un diagrama de caja correcto, la mediana siempre debe estar dentro de la caja, entre Q1 y Q3, y los bigotes deben terminar en valores reales.</p>
+<h3 id="parte-3-cálculo-básico-1">Parte 3: Cálculo básico</h3>
+<p>El rango intercuartílico (RIC) se calcula como Q3 - Q1:</p>
+<p>RIC = 175.5 cm - 164.5 cm = <strong>11 cm</strong></p>
+<h3 id="parte-4-interpretación-básica-1">Parte 4: Interpretación básica</h3>
+<p>Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos.</p>
+<p>La opción correcta es <strong>50%</strong>.</p>
+<h3 id="parte-5-conceptos-fundamentales-1">Parte 5: Conceptos fundamentales</h3>
+<p>Analizando la posición de la mediana dentro de la caja:</p>
+<ul>
+<li>Q1 = 164.5 cm</li>
+<li>Mediana = 171 cm</li>
+<li>Q3 = 175.5 cm</li>
+<li>Distancia Q1 a Mediana = 6.5 cm</li>
+<li>Distancia Mediana a Q3 = 4.5 cm</li>
+</ul>
+<p>Como estas distancias son bastante similares, la distribución tiende a ser simétrica.</p>
+<h3 id="parte-6-aplicación-1">Parte 6: Aplicación</h3>
+<p>Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos:</p>
+<p>La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética.</p>
+<p>La opción correcta es <strong>Media aritmética</strong>.</p>
+<ul>
+<li> Correcto. Este diagrama muestra los valores exactos de los cuartiles calculados a partir de los datos originales. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. / Incorrecto. Este diagrama contiene errores en los valores, estructura o etiquetas. </li>
+<li> Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores). / Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja. </li>
+<li> 11 </li>
+<li> Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos. / Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos. / Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central. </li>
+<li> Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma. / Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 <span class="math inline">\(\approx\)</span> distancia a Q3), la distribución tiende a ser simétrica. / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos. / Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos. </li>
+<li> Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos. / Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética. / Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos. / Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados. / Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>6</defaultgrade>
+</question>
+
+</quiz>
