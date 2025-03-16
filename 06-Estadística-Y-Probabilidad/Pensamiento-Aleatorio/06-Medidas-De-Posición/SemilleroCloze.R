@@ -1,8 +1,8 @@
 library(exams)
 
 # Definición del archivo de examen y configuración
-archivo_examen <- "cuartil-estatura-cloze.Rmd" 
-archivos <- 4
+archivo_examen <- "cloze-cuartil-estatura-00.Rmd" 
+archivos <- 10
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"

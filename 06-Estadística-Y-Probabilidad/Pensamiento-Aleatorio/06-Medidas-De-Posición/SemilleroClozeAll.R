@@ -4,7 +4,7 @@ library(knitr)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "cloze-cuartil-estatura-00.Rmd"
 archivos <- 1
-numpreg <- 12
+numpreg <- 7
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -90,13 +90,13 @@ exams2pandoc(rep(archivo_examen, numpreg),
 ################################################################################
 # Creación del examen en formato HTML
 
-# exams2html(rep(archivo_examen, numpreg),
-#            n = archivos,
-#            name = nombre_arch,
-#            solution = TRUE,  # Mostrar soluciones
-#            mathjax = TRUE,   # Habilitar MathJax para fórmulas
-#            svg = TRUE,       # Usar SVG para gráficos
-#            dir = dir_salida,
-#            edir = dir_ejercicios,
-#            engine = "knitr",
-#            envir = new.env())  # Nuevo entorno para evitar interferencias
+exams2html(rep(archivo_examen, numpreg),
+           n = archivos,
+           name = nombre_arch,
+           solution = TRUE,  # Mostrar soluciones
+           mathjax = TRUE,   # Habilitar MathJax para fórmulas
+           svg = TRUE,       # Usar SVG para gráficos
+           dir = dir_salida,
+           edir = dir_ejercicios,
+           engine = "knitr",
+           envir = new.env())  # Nuevo entorno para evitar interferencias
