@@ -608,11 +608,6 @@ Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, ¿
 
 ##ANSWER6##
 
-## Parte 7: Comprensión
-Complete el siguiente enunciado: En un diagrama de caja, la línea dentro de la caja representa la ____________, mientras que los extremos de la caja representan el __________ y el __________.
-\
-
-##ANSWER7##
 
 Answerlist
 ----------
@@ -638,10 +633,6 @@ Answerlist
 * Media aritmética
 * Mediana
 * Rango intercuartílico
-* mediana | primer cuartil | tercer cuartil
-* mediana | tercer cuartil | primer cuartil
-* media | primer cuartil | tercer cuartil
-* media | percentil 25 | percentil 75
 
 Solution
 ========
@@ -687,8 +678,6 @@ Como estas distancias son `r ifelse(abs(diferencia_cuartiles) < 3, "bastante sim
 ### Parte 6: Aplicación
 Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, la **media aritmética** se vería más afectada. La media es sensible a valores extremos, mientras que la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos.
 
-### Parte 7: Comprensión
-En un diagrama de caja, la línea dentro de la caja representa la **mediana**, mientras que los extremos de la caja representan el **primer cuartil** y el **tercer cuartil**.
 
 Answerlist
 ----------
@@ -714,15 +703,11 @@ Answerlist
 * Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico.
 * Incorrecto. La mediana es un estadístico robusto que no se ve muy afectado por valores atípicos.
 * Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos.
-* Correcto. Esta es la definición correcta de las partes principales de un diagrama de caja.
-* Incorrecto. El orden de los cuartiles está invertido.
-* Incorrecto. La línea central representa la mediana, no la media.
-* Incorrecto. Los términos correctos son primer cuartil y tercer cuartil, no percentiles.
 
 Meta-information
 ============
 exname: Análisis Básico de Cuartiles y Diagramas de Caja
 extype: cloze
-exclozetype: mchoice|schoice|num|schoice|schoice|schoice|string
-exsolution: `r sol_p1_str`|`r sol_p2_str`|`r stats$rango_intercuartil`|0100|`r sol_p5_str`|00100|10000
-extol: 0|0|0|0|0|0|0
+exclozetype: mchoice|schoice|num|schoice|schoice|schoice
+exsolution: `r sol_p1_str`|`r sol_p2_str`|`r stats$rango_intercuartil`|0100|`r sol_p5_str`|00100
+extol: 0|0|0|0|0|0
