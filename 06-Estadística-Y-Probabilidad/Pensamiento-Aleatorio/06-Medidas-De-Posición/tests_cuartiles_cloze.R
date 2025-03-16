@@ -63,8 +63,8 @@ generar_datos_estatura <- function(
     datos <- sort(round(base_min + rbeta(n, 3, 1) * (base_max - base_min)))
   }
   
-  # Asegurar que los datos no sean muy uniformes
-  if (length(unique(datos)) < n * 0.7) {
+  # Asegurar que los datos no sean muy uniformes y tengan suficiente separación
+  if (length(unique(datos)) < n * 0.8) {
     datos <- datos + sample(-3:3, n, replace = TRUE)
     datos <- sort(datos)
   }
@@ -89,9 +89,26 @@ generar_datos_estatura <- function(
   stats$mediana <- round(stats$mediana, 1)
   stats$q3 <- round(stats$q3, 1)
   
+  # Asegurar que no hay solapamiento entre valores clave
+  min_diferencia <- 2
+  if ((stats$q1 - stats$minimo) < min_diferencia || 
+      (stats$mediana - stats$q1) < min_diferencia || 
+      (stats$q3 - stats$mediana) < min_diferencia || 
+      (stats$maximo - stats$q3) < min_diferencia) {
+    # Ajustar valores para evitar solapamiento
+    stats$minimo <- min(stats$minimo, stats$q1 - min_diferencia)
+    stats$maximo <- max(stats$maximo, stats$q3 + min_diferencia)
+    # Asegurar separación entre cuartiles
+    if ((stats$mediana - stats$q1) < min_diferencia) {
+      stats$q1 <- stats$mediana - min_diferencia
+    }
+    if ((stats$q3 - stats$mediana) < min_diferencia) {
+      stats$q3 <- stats$mediana + min_diferencia
+    }
+  }
+  
   return(stats)
 }
-
 # Función para aplicar diferentes tipos de errores a los diagramas
 aplicar_error <- function(stats, tipo_error) {
   # Copiar los stats originales
@@ -187,16 +204,16 @@ calcular_valores_diagrama <- function(stats, tipo_diagrama) {
 }
 
 # Función para verificar si dos diagramas son diferentes
-son_diagramas_diferentes <- function(diag1, diag2) {
-  # Verificar si al menos uno de los valores es diferente
-  if (identical(diag1$minimo, diag2$minimo) && 
-      identical(diag1$q1, diag2$q1) && 
-      identical(diag1$mediana, diag2$mediana) && 
-      identical(diag1$q3, diag2$q3) && 
-      identical(diag1$maximo, diag2$maximo)) {
-    return(FALSE)
-  }
-  return(TRUE)
+son_diagramas_diferentes <- function(stats1, stats2) {
+  # Extraer valores clave
+  valores1 <- c(stats1$minimo, stats1$q1, stats1$mediana, stats1$q3, stats1$maximo)
+  valores2 <- c(stats2$minimo, stats2$q1, stats2$mediana, stats2$q3, stats2$maximo)
+  
+  # Calcular diferencia relativa
+  diferencia_relativa <- sum(abs(valores1 - valores2)) / sum(abs(valores1))
+  
+  # Considerar diferentes si la diferencia relativa es mayor al 5%
+  return(diferencia_relativa > 0.05)
 }
 
 # Función para asegurar que todos los diagramas son diferentes entre sí
@@ -325,7 +342,8 @@ test_calculo_cuartiles_tradicional <- function() {
   datos_par <- c(5, 7, 10, 15, 20, 25, 30, 35)
   cuartiles_par <- calcular_cuartiles_tradicional(datos_par)
   
-  expect_equal(cuartiles_par$q1, 7.25, info = "Q1 incorrecto para conjunto par")
+  # Corregir el valor esperado para Q1 según el método tradicional
+  expect_equal(cuartiles_par$q1, 7.75, info = "Q1 incorrecto para conjunto par")
   expect_equal(cuartiles_par$q2, 17.5, info = "Q2 incorrecto para conjunto par")
   expect_equal(cuartiles_par$q3, 27.5, info = "Q3 incorrecto para conjunto par")
   

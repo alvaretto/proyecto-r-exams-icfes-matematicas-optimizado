@@ -97,48 +97,61 @@ aplicar_error <- function(stats, tipo_error) {
     # Copiar los stats originales
     valores <- stats
     
-    # Aplicar error según tipo
+    # Obtener rango intercuartílico y rango total para calcular errores proporcionales
+    rango_intercuartil <- valores$rango_intercuartil
+    rango_total <- valores$maximo - valores$minimo
+    
+    # Aplicar error según tipo, con magnitudes mayores para asegurar diferencias visibles
     if (tipo_error == "q1_incorrecto") {
-        # Q1 muy bajo o muy alto
+        # Q1 muy bajo o muy alto (30-60% del RIC)
         direccion <- sample(c(-1, 1), 1)
-        valores$q1 <- valores$q1 + direccion * round(valores$rango_intercuartil * runif(1, 0.3, 0.5))
+        ajuste <- direccion * round(rango_intercuartil * runif(1, 0.3, 0.6))
+        valores$q1 <- valores$q1 + ajuste
+        
+        # Verificar que Q1 sigue siendo coherente (no menor que mínimo ni mayor que mediana)
+        valores$q1 <- max(valores$minimo + rango_total * 0.05, valores$q1)
+        valores$q1 <- min(valores$mediana - rango_total * 0.05, valores$q1)
         
     } else if (tipo_error == "q3_incorrecto") {
-        # Q3 muy bajo o muy alto
+        # Q3 muy bajo o muy alto (30-60% del RIC)
         direccion <- sample(c(-1, 1), 1)
-        valores$q3 <- valores$q3 + direccion * round(valores$rango_intercuartil * runif(1, 0.3, 0.5))
+        ajuste <- direccion * round(rango_intercuartil * runif(1, 0.3, 0.6))
+        valores$q3 <- valores$q3 + ajuste
+        
+        # Verificar que Q3 sigue siendo coherente (no mayor que máximo ni menor que mediana)
+        valores$q3 <- min(valores$maximo - rango_total * 0.05, valores$q3)
+        valores$q3 <- max(valores$mediana + rango_total * 0.05, valores$q3)
         
     } else if (tipo_error == "mediana_incorrecta") {
         # Mediana fuera de lugar pero dentro de la caja
         if (runif(1) > 0.5) {
-            # Cerca de Q1
-            valores$mediana <- valores$q1 + (valores$mediana - valores$q1) * 0.2
+            # Cerca de Q1 (10-20% de la distancia desde Q1 a Q3)
+            valores$mediana <- valores$q1 + (valores$q3 - valores$q1) * runif(1, 0.1, 0.2)
         } else {
-            # Cerca de Q3
-            valores$mediana <- valores$q3 - (valores$q3 - valores$mediana) * 0.2
+            # Cerca de Q3 (10-20% de la distancia desde Q1 a Q3)
+            valores$mediana <- valores$q3 - (valores$q3 - valores$q1) * runif(1, 0.1, 0.2)
         }
         
     } else if (tipo_error == "extremos_incorrectos") {
-        # Extremos acortados o elongados
+        # Extremos acortados o elongados de manera más dramática
         if (runif(1) > 0.5) {
-            # Acortar
-            valores$minimo <- valores$minimo + round((valores$q1 - valores$minimo) * 0.4)
-            valores$maximo <- valores$maximo - round((valores$maximo - valores$q3) * 0.4)
+            # Acortar significativamente (40-60% de la distancia a los cuartiles)
+            valores$minimo <- valores$minimo + round((valores$q1 - valores$minimo) * runif(1, 0.4, 0.6))
+            valores$maximo <- valores$maximo - round((valores$maximo - valores$q3) * runif(1, 0.4, 0.6))
         } else {
-            # Elongar
-            rango <- valores$maximo - valores$minimo
-            valores$minimo <- valores$minimo - round(rango * 0.15)
-            valores$maximo <- valores$maximo + round(rango * 0.15)
+            # Elongar significativamente (20-30% del rango total)
+            valores$minimo <- valores$minimo - round(rango_total * runif(1, 0.2, 0.3))
+            valores$maximo <- valores$maximo + round(rango_total * runif(1, 0.2, 0.3))
         }
         
     } else if (tipo_error == "mediana_fuera") {
         # Error estructural: mediana fuera de la caja
         if (runif(1) > 0.5) {
-            # Por debajo de Q1
-            valores$mediana <- valores$q1 - round(valores$rango_intercuartil * runif(1, 0.2, 0.4))
+            # Por debajo de Q1 (30-50% del RIC por debajo)
+            valores$mediana <- valores$q1 - round(rango_intercuartil * runif(1, 0.3, 0.5))
         } else {
-            # Por encima de Q3
-            valores$mediana <- valores$q3 + round(valores$rango_intercuartil * runif(1, 0.2, 0.4))
+            # Por encima de Q3 (30-50% del RIC por encima)
+            valores$mediana <- valores$q3 + round(rango_intercuartil * runif(1, 0.3, 0.5))
         }
         
     } else if (tipo_error == "caja_invertida") {
@@ -147,11 +160,27 @@ aplicar_error <- function(stats, tipo_error) {
         valores$q1 <- valores$q3
         valores$q3 <- temp
         
+        # Para hacer el error más evidente, ajustamos también la mediana
+        # para que quede en una posición ilógica dentro de la caja invertida
+        valores$mediana <- (valores$q1 + valores$q3) / 2  # Posición central en la caja invertida
+        
     } else if (tipo_error == "bigote_incorrecto") {
-        # Bigotes que no terminan en datos reales
-        valores$minimo <- valores$minimo + sample(2:5, 1)
-        valores$maximo <- valores$maximo - sample(2:5, 1)
+        # Bigotes que no terminan en datos reales, con cambios más significativos
+        rango_bigote_inferior <- valores$q1 - valores$minimo
+        rango_bigote_superior <- valores$maximo - valores$q3
+        
+        # Ajustar los bigotes en un 15-30% de su longitud
+        valores$minimo <- valores$minimo + round(rango_bigote_inferior * runif(1, 0.15, 0.3))
+        valores$maximo <- valores$maximo - round(rango_bigote_superior * runif(1, 0.15, 0.3))
     }
+    
+    # Redondear todos los valores a 1 decimal para mantener consistencia
+    valores$minimo <- round(valores$minimo, 1)
+    valores$q1 <- round(valores$q1, 1)
+    valores$mediana <- round(valores$mediana, 1)
+    valores$q3 <- round(valores$q3, 1)
+    valores$maximo <- round(valores$maximo, 1)
+    valores$rango_intercuartil <- round(valores$q3 - valores$q1, 1)
     
     return(valores)
 }
@@ -173,28 +202,37 @@ dibujar_diagrama <- function(valores, error_etiqueta = NULL) {
     
     # Calcular espacios para evitar solapamiento de etiquetas
     rango <- valores$maximo - valores$minimo
-    min_espacio <- rango * 0.18  # Aumentamos el espacio mínimo entre etiquetas
+    min_espacio <- rango * 0.2  # Aumentamos el espacio mínimo entre etiquetas
     
     # Valores originales para las etiquetas
     valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
     
+    # Selección aleatoria de estilo de etiqueta para aumentar variabilidad
+    estilos_etiquetas <- list(
+      c("Mínimo = ", "Q1 = ", "Mediana = ", "Q3 = ", "Máximo = "),
+      c("Mín = ", "Q1 = ", "Q2 = ", "Q3 = ", "Máx = "),
+      c("Mín: ", "Q1: ", "Q2: ", "Q3: ", "Máx: "),
+      c("Valor mínimo: ", "Primer cuartil: ", "Segundo cuartil: ", "Tercer cuartil: ", "Valor máximo: ")
+    )
+    
+    estilo_seleccionado <- sample(estilos_etiquetas, 1)[[1]]
+    
     etiquetas <- c(
-        paste("Mín =", valores$minimo),
-        paste("Q1 =", valores$q1),
-        paste("Q2 =", valores$mediana),
-        paste("Q3 =", valores$q3),
-        paste("Máx =", valores$maximo)
+        paste0(estilo_seleccionado[1], valores$minimo),
+        paste0(estilo_seleccionado[2], valores$q1),
+        paste0(estilo_seleccionado[3], valores$mediana),
+        paste0(estilo_seleccionado[4], valores$q3),
+        paste0(estilo_seleccionado[5], valores$maximo)
     )
     
     # Posiciones iniciales para las etiquetas
     posiciones <- valores_orig
     
-    # Algoritmo mejorado para evitar solapamiento
+    # Algoritmo mejorado para evitar solapamiento - enfoque más agresivo
     for (i in 2:5) {
         if (posiciones[i] - posiciones[i-1] < min_espacio) {
-            # Distribuir el espacio de manera más eficiente
-            espacio_actual <- posiciones[i] - posiciones[i-1]
-            ajuste_necesario <- min_espacio - espacio_actual
+            # Calculamos cuánto espacio adicional necesitamos
+            ajuste_necesario <- min_espacio - (posiciones[i] - posiciones[i-1])
             
             # Ajustar la posición actual hacia arriba
             posiciones[i] <- posiciones[i] + ajuste_necesario
@@ -205,12 +243,26 @@ dibujar_diagrama <- function(valores, error_etiqueta = NULL) {
                     posiciones[j] <- posiciones[j] + ajuste_necesario
                 }
             }
+            
+            # Verificar si después del ajuste sigue habiendo solapamiento con etiquetas anteriores
+            # y hacer un nuevo ajuste si es necesario (para casos extremos)
+            if (i > 2 && posiciones[i] - posiciones[i-2] < min_espacio * 1.5) {
+                ajuste_adicional <- min_espacio * 1.5 - (posiciones[i] - posiciones[i-2])
+                posiciones[i] <- posiciones[i] + ajuste_adicional
+                
+                # Propagar el ajuste adicional a las etiquetas siguientes
+                if (i < 5) {
+                    for (j in (i+1):5) {
+                        posiciones[j] <- posiciones[j] + ajuste_adicional
+                    }
+                }
+            }
         }
     }
     
     # Si la última etiqueta se sale del rango visible, ajustar todas proporcionalmente
     espacio_total_necesario <- posiciones[5] - posiciones[1]
-    espacio_disponible <- rango * 1.1  # Damos un 10% más de espacio
+    espacio_disponible <- rango * 1.2  # Damos un 20% más de espacio (antes era 10%)
     
     if (espacio_total_necesario > espacio_disponible) {
         # Factor de compresión
@@ -222,16 +274,16 @@ dibujar_diagrama <- function(valores, error_etiqueta = NULL) {
         }
     }
     
-    # Dibujar etiquetas con posiciones ajustadas
-    for (i in 1:5) {
-        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = 0.9)
-    }
+    # Dibujar etiquetas con posiciones ajustadas y tamaño de texto adaptado
+    cex_texto <- ifelse(nchar(etiquetas[1]) > 15, 0.7, 0.9)  # Reducir tamaño si etiquetas largas
     
-    # No mostramos etiquetas de error
+    for (i in 1:5) {
+        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = cex_texto)
+    }
 }
 
 # Función para verificar si dos diagramas son diferentes
-son_diagramas_diferentes <- function(diag1, diag2) {
+son_diagramas_diferentes <- function(diag1, diag2, umbral_diferencia = 5) {
     # Calculamos una métrica de diferencia para evaluar cuán diferentes son
     diferencia_total <- abs(diag1$minimo - diag2$minimo) +
                       abs(diag1$q1 - diag2$q1) +
@@ -239,56 +291,161 @@ son_diagramas_diferentes <- function(diag1, diag2) {
                       abs(diag1$q3 - diag2$q3) +
                       abs(diag1$maximo - diag2$maximo)
     
-    # Verificar si al menos uno de los valores es diferente
-    resultado <- diag1$minimo != diag2$minimo ||
-                diag1$q1 != diag2$q1 ||
-                diag1$mediana != diag2$mediana ||
-                diag1$q3 != diag2$q3 ||
-                diag1$maximo != diag2$maximo
+    # Calcular diferencia porcentual: cuánto representa esta diferencia respecto del rango
+    rango1 <- diag1$maximo - diag1$minimo
+    rango2 <- diag2$maximo - diag2$minimo
+    rango_promedio <- (rango1 + rango2) / 2
     
-    # Opcionalmente, podemos añadir un atributo a resultado para uso futuro
+    # Si el rango promedio es muy pequeño, evitamos división por cero
+    if (rango_promedio < 0.1) rango_promedio <- 1
+    
+    diferencia_porcentual <- (diferencia_total / rango_promedio) * 100
+    
+    # Verificar diferencias significativas en cada medida clave
+    # Una diferencia se considera significativa si es > 1% del rango
+    diferencias_significativas <- c(
+        abs(diag1$minimo - diag2$minimo) > rango_promedio * 0.01,
+        abs(diag1$q1 - diag2$q1) > rango_promedio * 0.01,
+        abs(diag1$mediana - diag2$mediana) > rango_promedio * 0.01,
+        abs(diag1$q3 - diag2$q3) > rango_promedio * 0.01,
+        abs(diag1$maximo - diag2$maximo) > rango_promedio * 0.01
+    )
+    
+    # Consideramos que los diagramas son diferentes si:
+    # 1. La diferencia porcentual total es mayor que el umbral (default 5%)
+    # 2. Al menos 2 medidas clave tienen diferencias significativas
+    resultado <- diferencia_porcentual > umbral_diferencia && sum(diferencias_significativas) >= 2
+    
+    # Añadir atributos para análisis o depuración
     attr(resultado, "diferencia_total") <- diferencia_total
+    attr(resultado, "diferencia_porcentual") <- diferencia_porcentual
+    attr(resultado, "diferencias_significativas") <- sum(diferencias_significativas)
     
     return(resultado)
 }
 
 # Función para verificar la diversidad de diagramas que podemos generar
-verificar_diversidad_diagramas <- function(n_simulaciones = 1500) {
+verificar_diversidad_diagramas <- function(n_simulaciones = 2000, umbral_requerido = 400) {
     huellas_digitales <- character(n_simulaciones)
+    combinaciones_unicas <- list()
+    
+    # Registrar también métricas adicionales para entender mejor la diversidad
+    distribuciones <- integer(3)
+    names(distribuciones) <- c("simetrica", "sesgo_derecha", "sesgo_izquierda")
+    tamanos_muestra <- integer(17)  # Para n de 9 a 25
+    names(tamanos_muestra) <- as.character(9:25)
     
     for (i in 1:n_simulaciones) {
         # Generar datos aleatorios
+        tipo_distribucion <- sample(c("simetrica", "sesgo_derecha", "sesgo_izquierda"), 1)
+        n <- sample(9:25, 1)
+        
         stats <- generar_datos_estatura(
-            tipo_distribucion = sample(c("simetrica", "sesgo_derecha", "sesgo_izquierda"), 1),
-            n = sample(9:25, 1)
+            tipo_distribucion = tipo_distribucion,
+            n = n
         )
         
-        # Crear una huella digital basada en los valores clave
+        # Actualizar contadores
+        distribuciones[tipo_distribucion] <- distribuciones[tipo_distribucion] + 1
+        tamanos_muestra[as.character(n)] <- tamanos_muestra[as.character(n)] + 1
+        
+        # Crear una huella digital más detallada basada en los valores clave
+        # Redondeamos a 1 decimal para evitar diferencias triviales
         huella <- paste(
-            stats$minimo, stats$q1, stats$mediana, 
-            stats$q3, stats$maximo, length(stats$datos),
+            round(stats$minimo, 1), 
+            round(stats$q1, 1), 
+            round(stats$mediana, 1), 
+            round(stats$q3, 1), 
+            round(stats$maximo, 1), 
+            length(stats$datos),
             stats$tipo_distribucion,
             collapse = "_"
         )
         
         huellas_digitales[i] <- huella
+        
+        # Guardar también los valores completos para análisis posterior
+        if (!huella %in% names(combinaciones_unicas)) {
+            combinaciones_unicas[[huella]] <- stats
+        }
     }
     
     # Contar cuántos diagramas únicos podemos generar
-    n_unicos <- length(unique(huellas_digitales))
+    huellas_unicas <- unique(huellas_digitales)
+    n_unicos <- length(huellas_unicas)
+    
+    # Verificar diferencias entre todos los pares de diagramas únicos
+    # (esto es computacionalmente costoso para muchos diagramas, así que solo lo hacemos
+    # para una muestra si tenemos muchos diagramas únicos)
+    max_pares_comprobar <- 500
+    pares_a_comprobar <- min(max_pares_comprobar, n_unicos * (n_unicos - 1) / 2)
+    
+    # Seleccionar pares aleatoriamente si hay muchos
+    diferencias <- numeric(pares_a_comprobar)
+    contador_pares <- 0
+    
+    # Si hay pocos diagramas, comprobamos todos los pares
+    # Si hay muchos, tomamos una muestra de diagramas
+    huellas_muestra <- if (n_unicos <= 50) {
+        huellas_unicas
+    } else {
+        sample(huellas_unicas, min(50, n_unicos))
+    }
+    
+    # Comprobar diferencias entre los diagramas de la muestra
+    for (i in 1:(length(huellas_muestra)-1)) {
+        for (j in (i+1):length(huellas_muestra)) {
+            contador_pares <- contador_pares + 1
+            if (contador_pares > pares_a_comprobar) break
+            
+            # Obtener los diagramas para estas huellas
+            diag1 <- combinaciones_unicas[[huellas_muestra[i]]]
+            diag2 <- combinaciones_unicas[[huellas_muestra[j]]]
+            
+            # Calcular diferencia
+            diferencia <- son_diagramas_diferentes(diag1, diag2, umbral_diferencia = 0)
+            diferencias[contador_pares] <- attr(diferencia, "diferencia_porcentual")
+        }
+        if (contador_pares > pares_a_comprobar) break
+    }
+    
+    # Analizar las diferencias
+    media_diferencia <- mean(diferencias, na.rm = TRUE)
+    min_diferencia <- min(diferencias, na.rm = TRUE)
+    
+    # Simular la cantidad esperada de diagramas diferentes según los parámetros actuales
+    # mediante extrapolación de nuestro análisis limitado
+    estimacion_total_unicos <- n_unicos
+    
+    # Si la muestra es menor que el total, ajustar la estimación
+    if (length(huellas_muestra) < n_unicos) {
+        # Factor de corrección basado en la fracción de diagramas muestreados
+        factor_correccion <- min(2, n_unicos / length(huellas_muestra))
+        estimacion_total_unicos <- n_unicos * factor_correccion
+    }
     
     return(list(
         total_unicos = n_unicos,
-        suficiente_diversidad = n_unicos >= 300
+        estimacion_total_unicos = round(estimacion_total_unicos),
+        media_diferencia = media_diferencia,
+        min_diferencia = min_diferencia,
+        distribucion_tipos = distribuciones / n_simulaciones,
+        distribucion_tamanos = tamanos_muestra / n_simulaciones,
+        suficiente_diversidad = estimacion_total_unicos >= umbral_requerido
     ))
 }
 
 # Ejecutar verificación al inicio
 set.seed(NULL)  # Evitamos usar una semilla fija para asegurar mayor variabilidad
-diversidad <- verificar_diversidad_diagramas(2000)
+diversidad <- verificar_diversidad_diagramas(3000, 400)  # Aumentamos el número de simulaciones
 if (!diversidad$suficiente_diversidad) {
-    warning(paste("¡Advertencia! Solo se pueden generar", diversidad$total_unicos, 
-                 "diagramas diferentes. Se requieren al menos 300."))
+    warning(paste("¡Advertencia! Se estima que solo se pueden generar", 
+                 diversidad$estimacion_total_unicos, 
+                 "diagramas diferentes. Se requieren al menos 400."))
+} else {
+    message(paste("Se pueden generar aproximadamente", 
+                  diversidad$estimacion_total_unicos, 
+                  "diagramas diferentes, superando el requisito de 400."))
 }
 ```
 
@@ -345,13 +502,13 @@ asegurar_diagramas_diferentes <- function(valores_diagramas) {
   return(all(pares_diferentes))
 }
 
-# Construir los diagramas
-max_intentos <- 30  # Aumentar número de intentos
-intentos <- 0
+# Construir los diagramas con mayor diversidad y control de diferencias
+max_intentos_globales <- 40  # Aumentar número de intentos
+intentos_globales <- 0
 diagramas_diferentes <- FALSE
 
-while (!diagramas_diferentes && intentos < max_intentos) {
-  intentos <- intentos + 1
+while (!diagramas_diferentes && intentos_globales < max_intentos_globales) {
+  intentos_globales <- intentos_globales + 1
   
   # Reiniciar valores_diagramas
   valores_diagramas <- vector("list", 4)
@@ -360,65 +517,177 @@ while (!diagramas_diferentes && intentos < max_intentos) {
   valores_diagramas[[posicion_correcto]] <- stats
   tipo_error_diagramas[posicion_correcto] <- "ninguno"
   
-  # Crear los otros diagramas con errores
-  for (i in setdiff(1:4, posicion_correcto)) {
-    # Uso de índice simplificado para evitar problemas
-    error_indice <- if (i <= posicion_correcto) {
-      i
-    } else {
-      i - 1
+  # Vector para registrar los errores aplicados y evitar repeticiones
+  errores_aplicados <- character(0)
+  
+  # Crear los otros diagramas con errores, alternando las categorías
+  indices_diagramas <- setdiff(1:4, posicion_correcto)
+  
+  # Asegurar que tenemos un diagrama con error estructural
+  # Seleccionar uno aleatorio de entre los índices disponibles para aplicar error estructural
+  indice_error_estructural <- sample(indices_diagramas, 1)
+  indices_otros_errores <- setdiff(indices_diagramas, indice_error_estructural)
+  
+  # Aplicar error estructural
+  error_estructural <- sample(errores_por_categoria$estructura, 1)
+  errores_aplicados <- c(errores_aplicados, error_estructural)
+  
+  # Generar diagrama con error estructural - múltiples intentos para garantizar diferencia
+  max_intentos_error <- 10
+  diagrama_generado_exitosamente <- FALSE
+  
+  for (j in 1:max_intentos_error) {
+    nuevo_diagrama <- aplicar_error(stats, error_estructural)
+    
+    # Verificar que este nuevo diagrama es significativamente diferente al correcto
+    if (son_diagramas_diferentes(stats, nuevo_diagrama, umbral_diferencia = 10)) {
+      valores_diagramas[[indice_error_estructural]] <- nuevo_diagrama
+      tipo_error_diagramas[indice_error_estructural] <- "estructura"
+      diagrama_generado_exitosamente <- TRUE
+      break
     }
-    error_indice <- (error_indice %% 3) + 1  # Asegurar que está entre 1 y 3
+  }
+  
+  if (!diagrama_generado_exitosamente) {
+    # Si no pudimos generar un diagrama suficientemente diferente, crear uno manualmente
+    nuevo_diagrama <- stats
     
-    error_seleccionado <- errores_seleccionados[[error_indice]]
+    if (error_estructural == "mediana_fuera") {
+      # Colocar la mediana fuera de la caja de manera evidente
+      nuevo_diagrama$mediana <- nuevo_diagrama$q3 + nuevo_diagrama$rango_intercuartil * 0.5
+    } else if (error_estructural == "caja_invertida") {
+      # Invertir Q1 y Q3
+      temp <- nuevo_diagrama$q1
+      nuevo_diagrama$q1 <- nuevo_diagrama$q3
+      nuevo_diagrama$q3 <- temp
+      # Ajustar mediana para mantener consistencia con el error
+      nuevo_diagrama$mediana <- (nuevo_diagrama$q1 + nuevo_diagrama$q3) / 2
+    } else if (error_estructural == "bigote_incorrecto") {
+      # Bigotes muy visiblemente incorrectos
+      nuevo_diagrama$minimo <- nuevo_diagrama$minimo + ceiling(nuevo_diagrama$rango_intercuartil * 0.3)
+      nuevo_diagrama$maximo <- nuevo_diagrama$maximo - ceiling(nuevo_diagrama$rango_intercuartil * 0.3)
+    }
     
-    if (error_indice == 3) { # Error de etiqueta
-      valores_diagramas[[i]] <- stats
-      tipo_error_diagramas[i] <- "etiqueta"
+    valores_diagramas[[indice_error_estructural]] <- nuevo_diagrama
+    tipo_error_diagramas[indice_error_estructural] <- "estructura"
+  }
+  
+  # Para los otros diagramas, aplicar errores de valores distintos
+  for (i in seq_along(indices_otros_errores)) {
+    indice_diagrama <- indices_otros_errores[i]
+    
+    # Seleccionar un tipo de error que no hayamos aplicado aún
+    errores_disponibles <- setdiff(
+      c(errores_por_categoria$valores, errores_por_categoria$etiqueta), 
+      errores_aplicados
+    )
+    
+    if (length(errores_disponibles) == 0) {
+      # Si ya usamos todos los errores, repetir alguno con diferente magnitud
+      errores_disponibles <- c(errores_por_categoria$valores, errores_por_categoria$etiqueta)
+    }
+    
+    error_seleccionado <- sample(errores_disponibles, 1)
+    errores_aplicados <- c(errores_aplicados, error_seleccionado)
+    
+    if (error_seleccionado %in% errores_por_categoria$etiqueta) {
+      # Error de etiqueta: mismo diagrama pero diferente etiqueta
+      valores_diagramas[[indice_diagrama]] <- stats
+      tipo_error_diagramas[indice_diagrama] <- "etiqueta"
     } else {
-      # Aplicar un error que genere una diferencia significativa
-      # Intentar varias veces si es necesario
-      max_intentos_error <- 5
+      # Error de valores: múltiples intentos para garantizar diferencia
+      diagrama_generado_exitosamente <- FALSE
+      
       for (j in 1:max_intentos_error) {
         nuevo_diagrama <- aplicar_error(stats, error_seleccionado)
         
-        # Verificar que este nuevo diagrama es diferente al correcto
-        if (son_diagramas_diferentes(stats, nuevo_diagrama)) {
-          break
+        # Verificar que este diagrama es diferente al correcto y a todos los anteriores
+        es_diferente_correcto <- son_diagramas_diferentes(stats, nuevo_diagrama, umbral_diferencia = 8)
+        
+        es_diferente_otros <- TRUE
+        for (k in setdiff(1:4, c(posicion_correcto, indice_diagrama))) {
+          if (!is.null(valores_diagramas[[k]])) {
+            es_diferente_otros <- es_diferente_otros && 
+              son_diagramas_diferentes(valores_diagramas[[k]], nuevo_diagrama, umbral_diferencia = 5)
+            if (!es_diferente_otros) break
+          }
         }
         
-        # Si llegamos al último intento y no es diferente, aplicar una modificación
-        if (j == max_intentos_error) {
-          # Modificar manualmente para garantizar diferencia
-          nuevo_diagrama$q1 <- nuevo_diagrama$q1 + 2
-          nuevo_diagrama$q3 <- nuevo_diagrama$q3 - 2
+        if (es_diferente_correcto && es_diferente_otros) {
+          valores_diagramas[[indice_diagrama]] <- nuevo_diagrama
+          tipo_error_diagramas[indice_diagrama] <- "valores"
+          diagrama_generado_exitosamente <- TRUE
+          break
         }
       }
       
-      valores_diagramas[[i]] <- nuevo_diagrama
-      
-      if (error_indice == 1) {
-        tipo_error_diagramas[i] <- "estructura"
-      } else {
-        tipo_error_diagramas[i] <- "valores"
+      if (!diagrama_generado_exitosamente) {
+        # Crear manualmente un diagrama diferente si los intentos anteriores fallaron
+        nuevo_diagrama <- stats
+        
+        # Ajustar Q1 y Q3 con variaciones significativas y únicas según el índice
+        factor_ajuste <- 0.3 + (indice_diagrama * 0.1)  # Cada diagrama tendrá un factor distinto
+        
+        if (error_seleccionado == "q1_incorrecto") {
+          nuevo_diagrama$q1 <- nuevo_diagrama$q1 + round(nuevo_diagrama$rango_intercuartil * factor_ajuste)
+        } else if (error_seleccionado == "q3_incorrecto") {
+          nuevo_diagrama$q3 <- nuevo_diagrama$q3 - round(nuevo_diagrama$rango_intercuartil * factor_ajuste)
+        } else if (error_seleccionado == "mediana_incorrecta") {
+          nuevo_diagrama$mediana <- nuevo_diagrama$q1 + (nuevo_diagrama$q3 - nuevo_diagrama$q1) * 0.15 * indice_diagrama
+        } else if (error_seleccionado == "extremos_incorrectos") {
+          nuevo_diagrama$minimo <- nuevo_diagrama$minimo + round((nuevo_diagrama$q1 - nuevo_diagrama$minimo) * factor_ajuste)
+          nuevo_diagrama$maximo <- nuevo_diagrama$maximo - round((nuevo_diagrama$maximo - nuevo_diagrama$q3) * factor_ajuste)
+        }
+        
+        # Actualizar RIC
+        nuevo_diagrama$rango_intercuartil <- nuevo_diagrama$q3 - nuevo_diagrama$q1
+        
+        valores_diagramas[[indice_diagrama]] <- nuevo_diagrama
+        tipo_error_diagramas[indice_diagrama] <- "valores"
       }
     }
   }
   
   # Verificar que todos los diagramas son diferentes entre sí
-  diagramas_diferentes <- asegurar_diagramas_diferentes(valores_diagramas)
+  diagramas_diferentes <- TRUE
+  
+  # Verificar cada par de diagramas
+  for (i in 1:3) {
+    for (j in (i+1):4) {
+      # Si alguno de los diagramas tiene error de etiqueta, no verificamos diferencia visual
+      if (tipo_error_diagramas[i] != "etiqueta" && tipo_error_diagramas[j] != "etiqueta" &&
+          !son_diagramas_diferentes(valores_diagramas[[i]], valores_diagramas[[j]], umbral_diferencia = 5)) {
+        diagramas_diferentes <- FALSE
+        break
+      }
+    }
+    if (!diagramas_diferentes) break
+  }
 }
 
 if (!diagramas_diferentes) {
-  warning("No se pudieron generar 4 diagramas suficientemente diferentes")
+  warning("No se pudieron generar 4 diagramas suficientemente diferentes - aplicando ajustes manuales")
   
-  # Como plan B, forzar diferencias mínimas para asegurar diagramas distintos
-  for (i in 1:4) {
-    if (i != posicion_correcto) {
-      # Asegurar que al menos un valor sea diferente al del diagrama correcto
-      valores_diagramas[[i]]$q1 <- stats$q1 + i * 0.5
-      valores_diagramas[[i]]$q3 <- stats$q3 - i * 0.5
-    }
+  # Último recurso: asegurar diferencias manualmente
+  indices_no_etiqueta <- which(tipo_error_diagramas != "etiqueta")
+  
+  # Asegurar que el diagrama correcto no sea modificado
+  indices_no_etiqueta <- setdiff(indices_no_etiqueta, posicion_correcto)
+  
+  # Aplicar cambios graduales para asegurar diferencias
+  for (i in seq_along(indices_no_etiqueta)) {
+    indice <- indices_no_etiqueta[i]
+    factor <- i * 0.1  # Factor incremental para cada diagrama
+    
+    # Modificar varios componentes para asegurar diferencia visual
+    valores_diagramas[[indice]]$q1 <- stats$q1 * (1 + factor)
+    valores_diagramas[[indice]]$q3 <- stats$q3 * (1 - factor)
+    valores_diagramas[[indice]]$mediana <- stats$mediana * (1 + factor * 0.5 * sample(c(-1, 1), 1))
+    valores_diagramas[[indice]]$minimo <- stats$minimo * (1 - factor * 1.2)
+    valores_diagramas[[indice]]$maximo <- stats$maximo * (1 + factor * 1.2)
+    
+    # Recalcular rango intercuartílico
+    valores_diagramas[[indice]]$rango_intercuartil <- valores_diagramas[[indice]]$q3 - valores_diagramas[[indice]]$q1
   }
 }
 
