@@ -452,22 +452,36 @@ if (abs(diferencia_cuartiles) < 3) {
   indice_respuesta_correcta <- 4
 }
 
-# Calcular porcentaje aproximado de datos entre Q1 y Q3
-# Por definición matemática, siempre es aproximadamente el 50%
+# Aleatorizar combinaciones de cuartiles para la parte 4
+# Para añadir variabilidad en las preguntas
+
+# Posibles combinaciones de cuartiles y sus porcentajes correspondientes
+combinaciones_cuartiles <- list(
+  list(cuartiles = "Q1 y Q3", porcentaje = "50%", explicacion = "Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos."),
+  list(cuartiles = "Q1 y Q2", porcentaje = "25%", explicacion = "Por definición, aproximadamente el 25% de los datos se encuentra entre Q1 y Q2. Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q2 (la mediana) es el valor por debajo del cual se encuentra el 50% de los datos. Por lo tanto, entre Q1 y Q2 se encuentra el 50% - 25% = 25% de los datos."),
+  list(cuartiles = "Q2 y Q3", porcentaje = "25%", explicacion = "Por definición, aproximadamente el 25% de los datos se encuentra entre Q2 y Q3. Q2 (la mediana) es el valor por debajo del cual se encuentra el 50% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q2 y Q3 se encuentra el 75% - 50% = 25% de los datos."),
+  list(cuartiles = "Mínimo y Q1", porcentaje = "25%", explicacion = "Por definición, aproximadamente el 25% de los datos se encuentra entre el valor mínimo y Q1. Este es el primer 25% de los datos ordenados de menor a mayor."),
+  list(cuartiles = "Q3 y Máximo", porcentaje = "25%", explicacion = "Por definición, aproximadamente el 25% de los datos se encuentra entre Q3 y el valor máximo. Este es el último 25% de los datos ordenados de menor a mayor.")
+)
+
+# Seleccionar una combinación al azar
+combinacion_seleccionada <- sample(combinaciones_cuartiles, 1)[[1]]
+
+# Extraer valores de la combinación seleccionada
+cuartiles_pregunta <- combinacion_seleccionada$cuartiles
+porcentaje_respuesta <- combinacion_seleccionada$porcentaje
+explicacion_p4 <- combinacion_seleccionada$explicacion
 
 # Definir opciones para la parte 4 (Interpretación básica)
 opciones_porcentaje <- c("25%", "50%", "75%")
 
-# El 50% es siempre la respuesta correcta matemáticamente
-respuesta_correcta_idx <- 2
+# Establecer el índice de la respuesta correcta según el porcentaje seleccionado
+respuesta_correcta_idx <- which(opciones_porcentaje == porcentaje_respuesta)
 
-# Explicación matemáticamente correcta
-explicacion_p4 <- "Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos."
-
-# Aleatorizar el orden de las opciones para que la respuesta correcta no siempre esté en la misma posición
+# Aleatorizar el orden de las opciones
 nueva_posicion <- sample(1:3, 1)
 if (nueva_posicion != respuesta_correcta_idx) {
-  # Intercambiar la opción correcta (50%) con otra posición aleatoria
+  # Intercambiar la opción correcta con otra posición aleatoria
   temp <- opciones_porcentaje[respuesta_correcta_idx]
   opciones_porcentaje[respuesta_correcta_idx] <- opciones_porcentaje[nueva_posicion]
   opciones_porcentaje[nueva_posicion] <- temp
@@ -476,17 +490,46 @@ if (nueva_posicion != respuesta_correcta_idx) {
   respuesta_correcta_idx <- nueva_posicion
 }
 
+# Aleatorizar escenarios para la parte 6 (Aplicación)
+escenarios_p6 <- list(
+  list(
+    escenario = "añadiéramos un dato muy grande (un valor atípico)", 
+    respuesta = "Media aritmética", 
+    explicacion = "La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico grande. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética."
+  ),
+  list(
+    escenario = "añadiéramos un dato muy pequeño (un valor atípico)", 
+    respuesta = "Media aritmética", 
+    explicacion = "La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico pequeño. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El mínimo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética."
+  ),
+  list(
+    escenario = "elimináramos el dato más grande", 
+    respuesta = "Media aritmética", 
+    explicacion = "La media aritmética se ve más afectada porque es sensible a todos los valores del conjunto de datos, incluyendo los extremos. Al eliminar el dato más grande, la media se reducirá notablemente. La mediana y los cuartiles son estadísticos robustos que podrían no cambiar si el dato eliminado está fuera del rango intercuartílico."
+  ),
+  list(
+    escenario = "elimináramos el dato más pequeño", 
+    respuesta = "Media aritmética", 
+    explicacion = "La media aritmética se ve más afectada porque es sensible a todos los valores del conjunto de datos, incluyendo los extremos. Al eliminar el dato más pequeño, la media aumentará notablemente. La mediana y los cuartiles son estadísticos robustos que podrían no cambiar si el dato eliminado está fuera del rango intercuartílico."
+  ),
+  list(
+    escenario = "duplicáramos todos los datos (añadiéramos una copia exacta de cada dato)",
+    respuesta = "Rango intercuartílico",
+    explicacion = "El rango intercuartílico no cambiaría, ya que al duplicar todos los datos, los cuartiles seguirían siendo los mismos. Sin embargo, el recuento total de datos y su distribución cambiarían, lo que afectaría a cómo se interpretan los cuartiles en el contexto del conjunto completo de datos."
+  )
+)
+
+# Seleccionar un escenario al azar
+escenario_seleccionado <- sample(escenarios_p6, 1)[[1]]
+escenario_p6 <- escenario_seleccionado$escenario
+respuesta_correcta_p6 <- escenario_seleccionado$respuesta
+explicacion_p6 <- escenario_seleccionado$explicacion
+
 # Definir opciones para la parte 6 (Aplicación)
 opciones_estadisticos <- c("Mínimo", "Máximo", "Media aritmética", "Mediana", "Rango intercuartílico")
 
-# En términos matemáticos y estadísticos, la media aritmética es la que se ve más afectada
-# por valores atípicos grandes, ya que es muy sensible a valores extremos
-
-# La media aritmética es siempre la respuesta correcta matemáticamente
-respuesta_correcta_p6_idx <- 3
-
-# Explicación matemáticamente correcta
-explicacion_p6 <- "La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética."
+# Establecer el índice de la respuesta correcta
+respuesta_correcta_p6_idx <- which(opciones_estadisticos == respuesta_correcta_p6)
 
 # Aleatorizar el orden de las opciones para la parte 6
 nueva_posicion_p6 <- sample(1:5, 1)
@@ -623,7 +666,7 @@ Calcule el rango intercuartílico (RIC) de los datos. Recuerde que RIC = Q3 - Q1
 ##ANSWER3##
 
 ## Parte 4: Interpretación básica
-Aproximadamente, ¿qué porcentaje de los datos se encuentra entre Q1 y Q3 (dentro de la "caja" del diagrama)?
+Aproximadamente, ¿qué porcentaje de los datos se encuentra entre `r cuartiles_pregunta` (dentro de la "caja" del diagrama)?
 \
 
 ##ANSWER4##
@@ -635,7 +678,7 @@ Basándose en la posición de la mediana dentro de la caja, ¿qué podemos afirm
 ##ANSWER5##
 
 ## Parte 6: Aplicación
-Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, ¿cuál de los siguientes estadísticos se vería más afectado?
+Si `r escenario_p6` al conjunto de datos, ¿cuál de los siguientes estadísticos se vería más afectado?
 \
 
 ##ANSWER6##
@@ -709,7 +752,7 @@ Analizando la posición de la mediana dentro de la caja:
 Como estas distancias son `r ifelse(abs(diferencia_cuartiles) < 3, "bastante similares, la distribución tiende a ser simétrica", ifelse(diferencia_cuartiles > 0, "diferentes (la distancia de la mediana a Q3 es mayor), la distribución presenta sesgo hacia valores más altos", "diferentes (la distancia de la mediana a Q1 es mayor), la distribución presenta sesgo hacia valores más bajos"))`.
 
 ### Parte 6: Aplicación
-Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos:
+Si `r escenario_p6` al conjunto de datos:
 
 `r explicacion_p6`
 
@@ -727,18 +770,18 @@ Answerlist
 * `r ifelse(diagrama_estructura_incorrecta == 3, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
 * `r ifelse(diagrama_estructura_incorrecta == 4, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
 * `r stats$rango_intercuartil`
-* `r if(opciones_porcentaje[1] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos."} else if(opciones_porcentaje[1] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos."}`
-* `r if(opciones_porcentaje[2] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos."} else if(opciones_porcentaje[2] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos."}`
-* `r if(opciones_porcentaje[3] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos."} else if(opciones_porcentaje[3] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos."}`
+* `r if(opciones_porcentaje[1] == porcentaje_respuesta) {paste0("Correcto. ", explicacion_p4)} else if(opciones_porcentaje[1] == "25%" && porcentaje_respuesta == "50%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 50% de los datos, no el 25%.")} else if(opciones_porcentaje[1] == "50%" && porcentaje_respuesta == "25%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 25% de los datos, no el 50%.")} else if(opciones_porcentaje[1] == "75%" && porcentaje_respuesta == "25%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 25% de los datos, no el 75%.")} else if(opciones_porcentaje[1] == "75%" && porcentaje_respuesta == "50%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 50% de los datos, no el 75%.")} else {paste0("Incorrecto. Este porcentaje no corresponde a la proporción de datos entre ", cuartiles_pregunta, ".")}`
+* `r if(opciones_porcentaje[2] == porcentaje_respuesta) {paste0("Correcto. ", explicacion_p4)} else if(opciones_porcentaje[2] == "25%" && porcentaje_respuesta == "50%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 50% de los datos, no el 25%.")} else if(opciones_porcentaje[2] == "50%" && porcentaje_respuesta == "25%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 25% de los datos, no el 50%.")} else if(opciones_porcentaje[2] == "75%" && porcentaje_respuesta == "25%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 25% de los datos, no el 75%.")} else if(opciones_porcentaje[2] == "75%" && porcentaje_respuesta == "50%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 50% de los datos, no el 75%.")} else {paste0("Incorrecto. Este porcentaje no corresponde a la proporción de datos entre ", cuartiles_pregunta, ".")}`
+* `r if(opciones_porcentaje[3] == porcentaje_respuesta) {paste0("Correcto. ", explicacion_p4)} else if(opciones_porcentaje[3] == "25%" && porcentaje_respuesta == "50%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 50% de los datos, no el 25%.")} else if(opciones_porcentaje[3] == "50%" && porcentaje_respuesta == "25%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 25% de los datos, no el 50%.")} else if(opciones_porcentaje[3] == "75%" && porcentaje_respuesta == "25%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 25% de los datos, no el 75%.")} else if(opciones_porcentaje[3] == "75%" && porcentaje_respuesta == "50%") {paste0("Incorrecto. Entre ", cuartiles_pregunta, " se encuentra aproximadamente el 50% de los datos, no el 75%.")} else {paste0("Incorrecto. Este porcentaje no corresponde a la proporción de datos entre ", cuartiles_pregunta, ".")}`
 * Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma.
 * `r ifelse(indice_respuesta_correcta == 2, "Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 $\\approx$ distancia a Q3), la distribución tiende a ser simétrica.", "Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica.")`
 * `r ifelse(indice_respuesta_correcta == 3, "Correcto. Como la distancia de la mediana a Q3 es mayor que la distancia a Q1, la distribución presenta un sesgo hacia valores más altos (sesgo positivo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos.")`
 * `r ifelse(indice_respuesta_correcta == 4, "Correcto. Como la distancia de la mediana a Q1 es mayor que la distancia a Q3, la distribución presenta un sesgo hacia valores más bajos (sesgo negativo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos.")`
-* `r if(opciones_estadisticos[1] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[1] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[1] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[1] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
-* `r if(opciones_estadisticos[2] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[2] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[2] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[2] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
-* `r if(opciones_estadisticos[3] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[3] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[3] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[3] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
-* `r if(opciones_estadisticos[4] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[4] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[4] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[4] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
-* `r if(opciones_estadisticos[5] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[5] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[5] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[5] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
+* `r if(opciones_estadisticos[1] == respuesta_correcta_p6) {paste0("Correcto. ", explicacion_p6)} else {paste0("Incorrecto. ", switch(opciones_estadisticos[1], "Mínimo" = "El mínimo no se vería significativamente afectado en este escenario.", "Máximo" = "El máximo no se vería significativamente afectado en este escenario.", "Media aritmética" = "Otros estadísticos se verían más afectados que la media aritmética en este escenario.", "Mediana" = "La mediana es un estadístico robusto que no se vería significativamente afectado en este escenario.", "Rango intercuartílico" = "El rango intercuartílico no se vería significativamente afectado en este escenario."))}`
+* `r if(opciones_estadisticos[2] == respuesta_correcta_p6) {paste0("Correcto. ", explicacion_p6)} else {paste0("Incorrecto. ", switch(opciones_estadisticos[2], "Mínimo" = "El mínimo no se vería significativamente afectado en este escenario.", "Máximo" = "El máximo no se vería significativamente afectado en este escenario.", "Media aritmética" = "Otros estadísticos se verían más afectados que la media aritmética en este escenario.", "Mediana" = "La mediana es un estadístico robusto que no se vería significativamente afectado en este escenario.", "Rango intercuartílico" = "El rango intercuartílico no se vería significativamente afectado en este escenario."))}`
+* `r if(opciones_estadisticos[3] == respuesta_correcta_p6) {paste0("Correcto. ", explicacion_p6)} else {paste0("Incorrecto. ", switch(opciones_estadisticos[3], "Mínimo" = "El mínimo no se vería significativamente afectado en este escenario.", "Máximo" = "El máximo no se vería significativamente afectado en este escenario.", "Media aritmética" = "Otros estadísticos se verían más afectados que la media aritmética en este escenario.", "Mediana" = "La mediana es un estadístico robusto que no se vería significativamente afectado en este escenario.", "Rango intercuartílico" = "El rango intercuartílico no se vería significativamente afectado en este escenario."))}`
+* `r if(opciones_estadisticos[4] == respuesta_correcta_p6) {paste0("Correcto. ", explicacion_p6)} else {paste0("Incorrecto. ", switch(opciones_estadisticos[4], "Mínimo" = "El mínimo no se vería significativamente afectado en este escenario.", "Máximo" = "El máximo no se vería significativamente afectado en este escenario.", "Media aritmética" = "Otros estadísticos se verían más afectados que la media aritmética en este escenario.", "Mediana" = "La mediana es un estadístico robusto que no se vería significativamente afectado en este escenario.", "Rango intercuartílico" = "El rango intercuartílico no se vería significativamente afectado en este escenario."))}`
+* `r if(opciones_estadisticos[5] == respuesta_correcta_p6) {paste0("Correcto. ", explicacion_p6)} else {paste0("Incorrecto. ", switch(opciones_estadisticos[5], "Mínimo" = "El mínimo no se vería significativamente afectado en este escenario.", "Máximo" = "El máximo no se vería significativamente afectado en este escenario.", "Media aritmética" = "Otros estadísticos se verían más afectados que la media aritmética en este escenario.", "Mediana" = "La mediana es un estadístico robusto que no se vería significativamente afectado en este escenario.", "Rango intercuartílico" = "El rango intercuartílico no se vería significativamente afectado en este escenario."))}`
 
 Meta-information
 ============
