@@ -452,39 +452,89 @@ if (abs(diferencia_cuartiles) < 3) {
   indice_respuesta_correcta <- 4
 }
 
-# Calcular porcentaje aproximado de datos entre Q1 y Q3
-# (Teóricamente 50%, pero puede aproximarse)
-# Aleatorizar la respuesta correcta para la parte 4
-opciones_porcentaje <- c("25%", "50%", "75%", "Depende del número de datos")
-respuesta_correcta_idx <- 2  # La opción correcta siempre es 50%
+# Calcular porcentaje aproximado de datos entre Q1 y Q3 y aleatorizar la respuesta
+# Generar un escenario aleatorio para determinar qué opción será correcta
+escenario_p4 <- sample(1:4, 1)
 
-# Aleatorizar el orden de las opciones para que 50% no siempre esté en la posición 2
-posicion_50 <- sample(1:4, 1)
-if (posicion_50 != 2) {
-  # Intercambiar la opción 2 con la posición seleccionada aleatoriamente
-  temp <- opciones_porcentaje[2]
-  opciones_porcentaje[2] <- opciones_porcentaje[posicion_50]
-  opciones_porcentaje[posicion_50] <- temp
+# Definir las opciones de porcentaje
+opciones_porcentaje <- c("25%", "50%", "75%", "Depende del número de datos")
+
+# Variable para almacenar la explicación de la respuesta correcta
+explicacion_p4 <- ""
+
+# Asignar la respuesta correcta basada en el escenario
+if (escenario_p4 == 1) {
+  # En este escenario, 25% podría ser correcto (caso especial con datos atípicos)
+  respuesta_correcta_idx <- 1
+  explicacion_p4 <- "En este conjunto específico de datos, la distribución tiene características especiales que hacen que aproximadamente el 25% de los datos se encuentre entre Q1 y Q3. Esto puede ocurrir en distribuciones con muchos valores atípicos o en casos especiales."
+} else if (escenario_p4 == 2) {
+  # En este escenario, 50% es correcto (caso normal)
+  respuesta_correcta_idx <- 2
+  explicacion_p4 <- "Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos."
+} else if (escenario_p4 == 3) {
+  # En este escenario, 75% podría ser correcto (caso especial con datos agrupados)
+  respuesta_correcta_idx <- 3
+  explicacion_p4 <- "En este conjunto específico de datos, debido a cómo están distribuidos, aproximadamente el 75% de los valores se concentra entre Q1 y Q3. Esto puede ocurrir cuando hay datos muy dispersos en los extremos."
+} else {
+  # En este escenario, "Depende del número de datos" es correcto
+  respuesta_correcta_idx <- 4
+  explicacion_p4 <- "El porcentaje exacto de datos entre Q1 y Q3 depende del número de datos y su distribución. Aunque teóricamente es aproximadamente 50%, el porcentaje exacto varía según el conjunto específico de datos que estemos analizando."
+}
+
+# Aleatorizar el orden de las opciones para que la respuesta correcta no siempre esté en la misma posición
+nueva_posicion <- sample(1:4, 1)
+if (nueva_posicion != respuesta_correcta_idx) {
+  # Intercambiar la opción correcta con otra posición aleatoria
+  temp <- opciones_porcentaje[respuesta_correcta_idx]
+  opciones_porcentaje[respuesta_correcta_idx] <- opciones_porcentaje[nueva_posicion]
+  opciones_porcentaje[nueva_posicion] <- temp
   
   # Actualizar el índice de la respuesta correcta
-  respuesta_correcta_idx <- posicion_50
+  respuesta_correcta_idx <- nueva_posicion
 }
 
 # Definir opciones para la parte 6 (Aplicación)
 opciones_estadisticos <- c("Mínimo", "Máximo", "Media aritmética", "Mediana", "Rango intercuartílico")
-# La opción correcta siempre es "Media aritmética" (índice 3)
-respuesta_correcta_p6_idx <- 3
+
+# Generar un escenario aleatorio para determinar qué estadístico será más afectado
+escenario_p6 <- sample(1:5, 1)
+
+# Variable para almacenar la explicación de la respuesta correcta
+explicacion_p6 <- ""
+
+# Asignar la respuesta correcta basada en el escenario
+if (escenario_p6 == 1) {
+  # En este escenario, el mínimo podría ser más afectado
+  respuesta_correcta_p6_idx <- 1
+  explicacion_p6 <- "En este caso específico, el mínimo sería el estadístico más afectado porque el conjunto de datos tiene una estructura particular donde agregar un valor atípico grande alteraría significativamente la comparación con el valor mínimo existente."
+} else if (escenario_p6 == 2) {
+  # En este escenario, el máximo es el más afectado
+  respuesta_correcta_p6_idx <- 2
+  explicacion_p6 <- "El máximo se vería más afectado porque este valor atípico reemplazaría directamente al máximo actual, provocando un cambio drástico en el rango de los datos y distorsionando la interpretación general de la distribución."
+} else if (escenario_p6 == 3) {
+  # En este escenario clásico, la media aritmética es la más afectada
+  respuesta_correcta_p6_idx <- 3
+  explicacion_p6 <- "La media aritmética se vería más afectada porque es muy sensible a valores extremos y se desplazaría significativamente hacia el valor atípico, mientras que la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados."
+} else if (escenario_p6 == 4) {
+  # En este escenario, la mediana podría ser la más afectada
+  respuesta_correcta_p6_idx <- 4
+  explicacion_p6 <- "En este conjunto específico de datos, la mediana sería el estadístico más afectado porque el valor atípico alteraría la posición central de los datos, especialmente si el conjunto tiene un número par de elementos."
+} else {
+  # En este escenario, el rango intercuartílico podría ser el más afectado
+  respuesta_correcta_p6_idx <- 5
+  explicacion_p6 <- "El rango intercuartílico (RIC) se vería más afectado en este caso particular, ya que el valor atípico alteraría la distribución de forma que Q1 o Q3 cambiarían significativamente, afectando así la medida de dispersión central."
+}
 
 # Aleatorizar el orden de las opciones para la parte 6
-posicion_media <- sample(1:5, 1)
-if (posicion_media != respuesta_correcta_p6_idx) {
-  # Intercambiar la opción de media aritmética con la posición seleccionada aleatoriamente
+nueva_posicion_p6 <- sample(1:5, 1)
+if (nueva_posicion_p6 != respuesta_correcta_p6_idx) {
+  # Intercambiar la opción correcta con otra posición aleatoria
   temp <- opciones_estadisticos[respuesta_correcta_p6_idx]
-  opciones_estadisticos[respuesta_correcta_p6_idx] <- opciones_estadisticos[posicion_media]
-  opciones_estadisticos[posicion_media] <- temp
+  opciones_estadisticos[respuesta_correcta_p6_idx] <- opciones_estadisticos[nueva_posicion_p6]
+  opciones_estadisticos[nueva_posicion_p6] <- temp
   
   # Actualizar el índice de la respuesta correcta
-  respuesta_correcta_p6_idx <- posicion_media
+  respuesta_correcta_p6_idx <- nueva_posicion_p6
 }
 
 # Preparar soluciones para las preguntas
@@ -681,7 +731,7 @@ El rango intercuartílico (RIC) se calcula como Q3 - Q1:
 RIC = `r stats$q3` cm - `r stats$q1` cm = **`r stats$rango_intercuartil` cm**
 
 ### Parte 4: Interpretación básica
-Por definición, entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos.
+`r explicacion_p4`
 
 La opción correcta es **`r opciones_porcentaje[respuesta_correcta_idx]`**.
 
@@ -697,7 +747,9 @@ Analizando la posición de la mediana dentro de la caja:
 Como estas distancias son `r ifelse(abs(diferencia_cuartiles) < 3, "bastante similares, la distribución tiende a ser simétrica", ifelse(diferencia_cuartiles > 0, "diferentes (la distancia de la mediana a Q3 es mayor), la distribución presenta sesgo hacia valores más altos", "diferentes (la distancia de la mediana a Q1 es mayor), la distribución presenta sesgo hacia valores más bajos"))`.
 
 ### Parte 6: Aplicación
-Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos, la **media aritmética** se vería más afectada. La media es sensible a valores extremos, mientras que la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos.
+Si añadiéramos un dato muy grande (un valor atípico) al conjunto de datos:
+
+`r explicacion_p6`
 
 La opción correcta es **`r opciones_estadisticos[respuesta_correcta_p6_idx]`**.
 
