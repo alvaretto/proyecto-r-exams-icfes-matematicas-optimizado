@@ -452,35 +452,22 @@ if (abs(diferencia_cuartiles) < 3) {
   indice_respuesta_correcta <- 4
 }
 
-# Calcular porcentaje aproximado de datos entre Q1 y Q3 y aleatorizar la respuesta
-# Generar un escenario aleatorio para determinar qué opción será correcta
-escenario_p4 <- sample(1:3, 1)
+# Calcular porcentaje aproximado de datos entre Q1 y Q3
+# Por definición matemática, siempre es aproximadamente el 50%
 
-# Definir las opciones de porcentaje (eliminando "Depende del número de datos")
+# Definir opciones para la parte 4 (Interpretación básica)
 opciones_porcentaje <- c("25%", "50%", "75%")
 
-# Variable para almacenar la explicación de la respuesta correcta
-explicacion_p4 <- ""
+# El 50% es siempre la respuesta correcta matemáticamente
+respuesta_correcta_idx <- 2
 
-# Asignar la respuesta correcta basada en el escenario
-if (escenario_p4 == 1) {
-  # En este escenario, 25% podría ser correcto (caso especial con datos atípicos)
-  respuesta_correcta_idx <- 1
-  explicacion_p4 <- "En este conjunto específico de datos, la distribución tiene características especiales que hacen que aproximadamente el 25% de los datos se encuentre entre Q1 y Q3. Esto puede ocurrir en distribuciones con muchos valores atípicos o en casos especiales."
-} else if (escenario_p4 == 2) {
-  # En este escenario, 50% es correcto (caso normal)
-  respuesta_correcta_idx <- 2
-  explicacion_p4 <- "Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos."
-} else {
-  # En este escenario, 75% podría ser correcto (caso especial con datos agrupados)
-  respuesta_correcta_idx <- 3
-  explicacion_p4 <- "En este conjunto específico de datos, debido a cómo están distribuidos, aproximadamente el 75% de los valores se concentra entre Q1 y Q3. Esto puede ocurrir cuando hay datos muy dispersos en los extremos."
-}
+# Explicación matemáticamente correcta
+explicacion_p4 <- "Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 es el valor por debajo del cual se encuentra el 25% de los datos, y Q3 es el valor por debajo del cual se encuentra el 75% de los datos. Por lo tanto, entre Q1 y Q3 se encuentra el 75% - 25% = 50% de los datos."
 
 # Aleatorizar el orden de las opciones para que la respuesta correcta no siempre esté en la misma posición
 nueva_posicion <- sample(1:3, 1)
 if (nueva_posicion != respuesta_correcta_idx) {
-  # Intercambiar la opción correcta con otra posición aleatoria
+  # Intercambiar la opción correcta (50%) con otra posición aleatoria
   temp <- opciones_porcentaje[respuesta_correcta_idx]
   opciones_porcentaje[respuesta_correcta_idx] <- opciones_porcentaje[nueva_posicion]
   opciones_porcentaje[nueva_posicion] <- temp
@@ -492,34 +479,14 @@ if (nueva_posicion != respuesta_correcta_idx) {
 # Definir opciones para la parte 6 (Aplicación)
 opciones_estadisticos <- c("Mínimo", "Máximo", "Media aritmética", "Mediana", "Rango intercuartílico")
 
-# Generar un escenario aleatorio para determinar qué estadístico será más afectado
-escenario_p6 <- sample(1:5, 1)
+# En términos matemáticos y estadísticos, la media aritmética es la que se ve más afectada
+# por valores atípicos grandes, ya que es muy sensible a valores extremos
 
-# Variable para almacenar la explicación de la respuesta correcta
-explicacion_p6 <- ""
+# La media aritmética es siempre la respuesta correcta matemáticamente
+respuesta_correcta_p6_idx <- 3
 
-# Asignar la respuesta correcta basada en el escenario
-if (escenario_p6 == 1) {
-  # En este escenario, el mínimo podría ser más afectado
-  respuesta_correcta_p6_idx <- 1
-  explicacion_p6 <- "En este caso específico, el mínimo sería el estadístico más afectado porque el conjunto de datos tiene una estructura particular donde agregar un valor atípico grande alteraría significativamente la comparación con el valor mínimo existente."
-} else if (escenario_p6 == 2) {
-  # En este escenario, el máximo es el más afectado
-  respuesta_correcta_p6_idx <- 2
-  explicacion_p6 <- "El máximo se vería más afectado porque este valor atípico reemplazaría directamente al máximo actual, provocando un cambio drástico en el rango de los datos y distorsionando la interpretación general de la distribución."
-} else if (escenario_p6 == 3) {
-  # En este escenario clásico, la media aritmética es la más afectada
-  respuesta_correcta_p6_idx <- 3
-  explicacion_p6 <- "La media aritmética se vería más afectada porque es muy sensible a valores extremos y se desplazaría significativamente hacia el valor atípico, mientras que la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados."
-} else if (escenario_p6 == 4) {
-  # En este escenario, la mediana podría ser la más afectada
-  respuesta_correcta_p6_idx <- 4
-  explicacion_p6 <- "En este conjunto específico de datos, la mediana sería el estadístico más afectado porque el valor atípico alteraría la posición central de los datos, especialmente si el conjunto tiene un número par de elementos."
-} else {
-  # En este escenario, el rango intercuartílico podría ser el más afectado
-  respuesta_correcta_p6_idx <- 5
-  explicacion_p6 <- "El rango intercuartílico (RIC) se vería más afectado en este caso particular, ya que el valor atípico alteraría la distribución de forma que Q1 o Q3 cambiarían significativamente, afectando así la medida de dispersión central."
-}
+# Explicación matemáticamente correcta
+explicacion_p6 <- "La media aritmética se ve más afectada porque es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico. A diferencia de la media, la mediana y los cuartiles son estadísticos robustos que no se ven tan afectados por valores atípicos. El máximo también cambiará, pero su efecto en la interpretación estadística es menor que el efecto en la media aritmética."
 
 # Aleatorizar el orden de las opciones para la parte 6
 nueva_posicion_p6 <- sample(1:5, 1)
@@ -760,18 +727,18 @@ Answerlist
 * `r ifelse(diagrama_estructura_incorrecta == 3, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
 * `r ifelse(diagrama_estructura_incorrecta == 4, "Correcto. Este diagrama tiene un error estructural fundamental que contradice la definición de un diagrama de caja.", "Incorrecto. Este diagrama no presenta un error estructural fundamental (aunque puede tener otros tipos de errores).")`
 * `r stats$rango_intercuartil`
-* `r if(opciones_porcentaje[1] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[1] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."}`
-* `r if(opciones_porcentaje[2] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[2] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."}`
-* `r if(opciones_porcentaje[3] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3."} else if(opciones_porcentaje[3] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3."}`
+* `r if(opciones_porcentaje[1] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos."} else if(opciones_porcentaje[1] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos."}`
+* `r if(opciones_porcentaje[2] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos."} else if(opciones_porcentaje[2] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos."}`
+* `r if(opciones_porcentaje[3] == "25%") {"Incorrecto. Aproximadamente el 25% de los datos está por debajo de Q1, y otro 25% está por encima de Q3. Por definición, entre Q1 y Q3 hay aproximadamente el 50% de los datos."} else if(opciones_porcentaje[3] == "50%") {"Correcto. Por definición, aproximadamente el 50% de los datos se encuentra entre Q1 y Q3. Esta es una propiedad fundamental de los cuartiles: Q1 separa el 25% inferior de los datos, y Q3 el 75% inferior, por lo que entre ellos queda el 50% central."} else {"Incorrecto. Aproximadamente el 75% de los datos está por debajo de Q3, no entre Q1 y Q3. Entre Q1 y Q3 se encuentra aproximadamente el 50% de los datos."}`
 * Incorrecto. Para que una distribución sea exactamente simétrica, la mediana debería estar exactamente en el centro de la caja y la distancia entre los bigotes debería ser la misma.
 * `r ifelse(indice_respuesta_correcta == 2, "Correcto. Como la mediana está ubicada aproximadamente en el centro de la caja (distancia a Q1 $\\approx$ distancia a Q3), la distribución tiende a ser simétrica.", "Incorrecto. La posición de la mediana dentro de la caja no indica que la distribución sea aproximadamente simétrica.")`
 * `r ifelse(indice_respuesta_correcta == 3, "Correcto. Como la distancia de la mediana a Q3 es mayor que la distancia a Q1, la distribución presenta un sesgo hacia valores más altos (sesgo positivo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más altos.")`
 * `r ifelse(indice_respuesta_correcta == 4, "Correcto. Como la distancia de la mediana a Q1 es mayor que la distancia a Q3, la distribución presenta un sesgo hacia valores más bajos (sesgo negativo).", "Incorrecto. La posición de la mediana no indica un sesgo hacia valores más bajos.")`
-* `r if(opciones_estadisticos[1] == "Mínimo") {"Incorrecto. El mínimo no se ve muy afectado por la adición de un valor atípico grande."} else if(opciones_estadisticos[1] == "Máximo") {"Incorrecto. El máximo cambiará al nuevo valor atípico, pero este cambio no afecta a la interpretación estadística tanto como afecta a la media."} else if(opciones_estadisticos[1] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico."} else if(opciones_estadisticos[1] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve muy afectado por valores atípicos."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos."}`
-* `r if(opciones_estadisticos[2] == "Mínimo") {"Incorrecto. El mínimo no se ve muy afectado por la adición de un valor atípico grande."} else if(opciones_estadisticos[2] == "Máximo") {"Incorrecto. El máximo cambiará al nuevo valor atípico, pero este cambio no afecta a la interpretación estadística tanto como afecta a la media."} else if(opciones_estadisticos[2] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico."} else if(opciones_estadisticos[2] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve muy afectado por valores atípicos."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos."}`
-* `r if(opciones_estadisticos[3] == "Mínimo") {"Incorrecto. El mínimo no se ve muy afectado por la adición de un valor atípico grande."} else if(opciones_estadisticos[3] == "Máximo") {"Incorrecto. El máximo cambiará al nuevo valor atípico, pero este cambio no afecta a la interpretación estadística tanto como afecta a la media."} else if(opciones_estadisticos[3] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico."} else if(opciones_estadisticos[3] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve muy afectado por valores atípicos."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos."}`
-* `r if(opciones_estadisticos[4] == "Mínimo") {"Incorrecto. El mínimo no se ve muy afectado por la adición de un valor atípico grande."} else if(opciones_estadisticos[4] == "Máximo") {"Incorrecto. El máximo cambiará al nuevo valor atípico, pero este cambio no afecta a la interpretación estadística tanto como afecta a la media."} else if(opciones_estadisticos[4] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico."} else if(opciones_estadisticos[4] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve muy afectado por valores atípicos."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos."}`
-* `r if(opciones_estadisticos[5] == "Mínimo") {"Incorrecto. El mínimo no se ve muy afectado por la adición de un valor atípico grande."} else if(opciones_estadisticos[5] == "Máximo") {"Incorrecto. El máximo cambiará al nuevo valor atípico, pero este cambio no afecta a la interpretación estadística tanto como afecta a la media."} else if(opciones_estadisticos[5] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico."} else if(opciones_estadisticos[5] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve muy afectado por valores atípicos."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos."}`
+* `r if(opciones_estadisticos[1] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[1] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[1] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[1] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
+* `r if(opciones_estadisticos[2] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[2] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[2] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[2] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
+* `r if(opciones_estadisticos[3] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[3] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[3] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[3] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
+* `r if(opciones_estadisticos[4] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[4] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[4] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[4] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
+* `r if(opciones_estadisticos[5] == "Mínimo") {"Incorrecto. El mínimo no se ve afectado por la adición de un valor atípico grande, ya que este valor atípico sería mayor que todos los demás datos."} else if(opciones_estadisticos[5] == "Máximo") {"Incorrecto. Aunque el máximo cambiará al nuevo valor atípico, este cambio no afecta a las propiedades estadísticas globales tanto como el cambio en la media aritmética."} else if(opciones_estadisticos[5] == "Media aritmética") {"Correcto. La media aritmética es muy sensible a valores extremos y se desplazará significativamente hacia el valor atípico, distorsionando la medida de tendencia central. A diferencia de la media, los otros estadísticos son más robustos frente a valores atípicos."} else if(opciones_estadisticos[5] == "Mediana") {"Incorrecto. La mediana es un estadístico robusto que no se ve afectado por valores atípicos grandes, ya que solo considera la posición central de los datos ordenados."} else {"Incorrecto. El rango intercuartílico (Q3-Q1) es bastante robusto frente a valores atípicos, ya que los cuartiles no se ven muy afectados por valores extremos."}`
 
 Meta-information
 ============
