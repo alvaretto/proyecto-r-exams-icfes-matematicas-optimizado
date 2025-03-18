@@ -91,7 +91,7 @@ data <- data.frame(
   Edad = c(rep("##ANSWER1##", 2), edades_al)
 )
 # Imprimir sin nombres de filas y comentario
-print(xtable(data, align = c('l', 'l', 'c')), type = 'html', include.rownames = FALSE, comment = FALSE)
+print(xtable(data, align = c('l', 'l', 'c')), type = 'latex', include.rownames = FALSE, comment = FALSE)
 ```
 \
 Si se sabe que `r nombres_s[1]` y `r nombres_s[2]` tienen la misma edad, ¿cuántos años tiene cada uno de ellos?
