@@ -1,9 +1,9 @@
 ---
 output:
   pdf_document: default
+  word_document: default
   html_document: default
 ---
-
 ```{r configuracion-inicial, include=FALSE}
 # Cargar librerías necesarias
 library(exams)
@@ -49,19 +49,23 @@ redondear_cuartil <- function(valor) {
     }
 }
 
-# Función para generar datos aleatorios de estatura
-generar_datos_estatura <- function(
-    base_min = sample(145:165, 1), 
-    base_max = sample(168:188, 1),
-    n = sample(9:25, 1)
-) {
-    variacion <- sample(5:15, 1)
+# Función para generar datos aleatorios de estatura con mayor variabilidad
+generar_datos_estatura <- function() {
+    # Parámetros base con mayor variabilidad
+    base_min <- sample(140:170, 1)
+    base_max <- sample(175:200, 1)
+    n <- sample(10:30, 1)  # Más datos posibles
+    
+    # Mayor variación en la distribución
+    variacion <- sample(10:25, 1)
     min_valor <- base_min - sample(0:variacion, 1)
     max_valor <- base_max + sample(0:variacion, 1)
     
+    # Generar datos con distribución más natural
     datos <- sort(round(runif(n, min_valor, max_valor), digits = 0))
     cuartiles <- calcular_cuartiles_tradicional(datos)
     
+    # Redondear valores
     stats <- list(
         datos = datos,
         datos_desordenados = sample(datos),
@@ -108,14 +112,66 @@ dibujar_boxplot <- function(valores) {
 # Generar datos
 stats <- generar_datos_estatura()
 
-# Generar opciones para schoice (pregunta 1)
-opciones <- c(stats$q1, stats$q1 + sample(1:5, 1), stats$q1 - sample(1:5, 1), stats$mediana)
-opciones <- sample(opciones)
-sol_schoice <- which(opciones == stats$q1)
+# Aleatorizar el tipo de pregunta para schoice
+pregunta_tipo <- sample(c("q1", "q3", "minimo", "maximo"), 1)
 
-# Generar opciones para mchoice (pregunta 2)
-opciones_mchoice <- c(stats$minimo, stats$q1, stats$mediana, stats$q3, stats$maximo)
-sol_mchoice <- c(0, 1, 0, 1, 0)  # Q1 y Q3 son cuartiles
+# Generar opciones para schoice
+generar_opciones_schoice <- function(respuesta_correcta) {
+    opciones <- c(
+        respuesta_correcta,
+        respuesta_correcta + sample(2:7, 1),
+        respuesta_correcta - sample(2:7, 1),
+        sample(stats$minimo:stats$maximo, 1),
+        stats$mediana
+    )
+    opciones <- sample(opciones, 4)
+    return(opciones)
+}
+
+# Generar opciones para mchoice
+generar_opciones_mchoice <- function() {
+    opciones <- c(stats$minimo, stats$q1, stats$mediana, stats$q3, stats$maximo)
+    soluciones <- rep(0, 5)  # Initialize with zeros
+    
+    # Assign values one by one to avoid vector operations in conditions
+    if (sample(c(TRUE, FALSE), 1)) soluciones[2] <- 1  # Q1
+    if (sample(c(TRUE, FALSE), 1)) soluciones[4] <- 1  # Q3
+    if (sample(c(TRUE, FALSE), 1)) {
+        soluciones[1] <- 1  # Mínimo
+        soluciones[5] <- 1  # Máximo
+    }
+    if (sample(c(TRUE, FALSE), 1)) soluciones[3] <- 1  # Mediana
+    
+    # Ensure at least one option is selected
+    if (sum(soluciones) == 0) soluciones[sample(1:5, 1)] <- 1
+    
+    return(list(opciones = opciones, soluciones = soluciones))
+}
+
+# Generar opciones para cada tipo de pregunta
+switch(pregunta_tipo,
+       q1 = {
+           opciones_schoice <- generar_opciones_schoice(stats$q1)
+           sol_schoice <- which(opciones_schoice == stats$q1)
+       },
+       q3 = {
+           opciones_schoice <- generar_opciones_schoice(stats$q3)
+           sol_schoice <- which(opciones_schoice == stats$q3)
+       },
+       minimo = {
+           opciones_schoice <- generar_opciones_schoice(stats$minimo)
+           sol_schoice <- which(opciones_schoice == stats$minimo)
+       },
+       maximo = {
+           opciones_schoice <- generar_opciones_schoice(stats$maximo)
+           sol_schoice <- which(opciones_schoice == stats$maximo)
+       }
+)
+
+# Generar opciones para mchoice
+mchoice_info <- generar_opciones_mchoice()
+opciones_mchoice <- mchoice_info$opciones
+sol_mchoice <- mchoice_info$soluciones
 
 # Solución para verdadero/falso (pregunta 3)
 sol_verdadero_falso <- ifelse(stats$mediana == median(stats$datos), 1, 0)
@@ -145,31 +201,40 @@ print(tabla_xtable,
 
 Responda las siguientes preguntas basándose en los datos proporcionados:
 
-1. **(schoice)** ¿Cuál es el valor del primer cuartil (Q1)?  
-   ```{r, echo=FALSE, results='asis'}
-   answerlist(c(
-       paste(opciones[1]),
-       paste(opciones[2]),
-       paste(opciones[3]),
-       paste(opciones[4])
-   ), markup = "markdown")
-   ```
+1. **(schoice)** 
+```{r, echo=FALSE, results='asis'}
+# Generar texto de la pregunta aleatorizada
+switch(pregunta_tipo,
+       q1 = cat("¿Cuál es el valor del primer cuartil (Q1)?\n"),
+       q3 = cat("¿Cuál es el valor del tercer cuartil (Q3)?\n"),
+       minimo = cat("¿Cuál es el valor del mínimo?\n"),
+       maximo = cat("¿Cuál es el valor del máximo?\n")
+)
 
-2. **(mchoice)** Seleccione los valores que corresponden a cuartiles de los datos.  
-   ```{r, echo=FALSE, results='asis'}
-   answerlist(c(
-       paste(stats$minimo),
-       paste(stats$q1),
-       paste(stats$mediana),
-       paste(stats$q3),
-       paste(stats$maximo)
-   ), markup = "markdown")
-   ```
+answerlist(c(
+    paste(opciones_schoice[1]),
+    paste(opciones_schoice[2]),
+    paste(opciones_schoice[3]),
+    paste(opciones_schoice[4])
+), markup = "markdown")
+```
+
+2. **(mchoice)** 
+```{r, echo=FALSE, results='asis'}
+cat("Seleccione los valores que corresponden a cuartiles de los datos.\n")
+answerlist(c(
+    paste(opciones_mchoice[1]),
+    paste(opciones_mchoice[2]),
+    paste(opciones_mchoice[3]),
+    paste(opciones_mchoice[4]),
+    paste(opciones_mchoice[5])
+), markup = "markdown")
+```
 
 3. **(verdadero/falso)** La mediana de los datos es igual al valor de Q2 calculado con el método tradicional.  
-   ```{r, echo=FALSE, results='asis'}
-   answerlist(c("Verdadero", "Falso"), markup = "markdown")
-   ```
+```{r, echo=FALSE, results='asis'}
+answerlist(c("Verdadero", "Falso"), markup = "markdown")
+```
 
 4. **(num)** ¿Cuál es el valor del tercer cuartil (Q3)? Escriba su respuesta con un decimal si es necesario.
 
@@ -179,11 +244,43 @@ Solution
 ========
 Solución de las preguntas:
 
-1. La opción correcta es: **{`r opciones[sol_schoice]`}**
-2. Valores que son cuartiles: **{`r paste(opciones_mchoice[sol_mchoice == 1], collapse = ", ")`}**
-3. Respuesta: **{`r ifelse(sol_verdadero_falso == 1, "Verdadero", "Falso")`}**
-4. Q3 = **{`r sol_num`}**
-5. Mediana = **{`r sol_string`}**
+1. La opción correcta es: 
+```{r, echo=FALSE, results='asis'}
+switch(pregunta_tipo,
+       q1 = cat("**", opciones_schoice[sol_schoice], "**\n"),
+       q3 = cat("**", opciones_schoice[sol_schoice], "**\n"),
+       minimo = cat("**", opciones_schoice[sol_schoice], "**\n"),
+       maximo = cat("**", opciones_schoice[sol_schoice], "**\n")
+)
+```
+
+2. Valores que son cuartiles: 
+```{r, echo=FALSE, results='asis'}
+cat("**")
+cat(paste(opciones_mchoice[sol_mchoice == 1], collapse = ", "))
+cat("**\n")
+```
+
+3. Respuesta: 
+```{r, echo=FALSE, results='asis'}
+cat("**")
+if (sol_verdadero_falso == 1) {
+    cat("Verdadero")
+} else {
+    cat("Falso")
+}
+cat("**\n")
+```
+
+4. Q3 = 
+```{r, echo=FALSE, results='asis'}
+cat("**", sol_num, "**\n")
+```
+
+5. Mediana = 
+```{r, echo=FALSE, results='asis'}
+cat("**", sol_string, "**\n")
+```
 
 ```{r diagrama-sol, fig.width=7, fig.height=5}
 par(mar = c(4, 4, 2, 6))
@@ -201,6 +298,16 @@ Meta-information
 ================
 exname: Cuartiles de estaturas - Cloze
 extype: cloze
-exsolution: `r paste(sol_schoice - 1, paste(sol_mchoice, collapse = ""), sol_verdadero_falso, sol_num, sol_string, sep = "|")`
+exsolution: 
+```{r, echo=FALSE, results='asis'}
+cat(paste(
+    sol_schoice - 1, 
+    paste(sol_mchoice, collapse = ""), 
+    sol_verdadero_falso, 
+    sol_num, 
+    sol_string, 
+    sep = "|"
+))
+```
 exclozetype: schoice|mchoice|schoice|num|string
 exshuffle: TRUE
