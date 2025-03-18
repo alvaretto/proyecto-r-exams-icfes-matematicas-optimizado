@@ -1,0 +1,314 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r configuracion-inicial, include=FALSE}
+# Cargar librerías necesarias
+library(exams)
+library(xtable)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Establecer semilla aleatoria basada en la hora actual para garantizar variabilidad
+set.seed(as.integer(Sys.time()) %% 10000)
+
+# Función para calcular cuartiles usando el método tradicional
+calcular_cuartiles_tradicional <- function(datos) {
+    n <- length(datos)
+    datos_ordenados <- sort(datos)
+    
+    # Calcular Q2 (mediana)
+    if (n %% 2 == 0) {
+        pos_med1 <- n/2
+        pos_med2 <- pos_med1 + 1
+        q2 <- (datos_ordenados[pos_med1] + datos_ordenados[pos_med2]) / 2
+        primera_mitad <- datos_ordenados[1:pos_med1]
+        segunda_mitad <- datos_ordenados[pos_med2:n]
+    } else {
+        pos_med <- ceiling(n/2)
+        q2 <- datos_ordenados[pos_med]
+        primera_mitad <- datos_ordenados[1:(pos_med-1)]
+        segunda_mitad <- datos_ordenados[(pos_med+1):n]
+    }
+    
+    # Calcular Q1 y Q3
+    q1 <- median(primera_mitad)
+    q3 <- median(segunda_mitad)
+    
+    return(list(q1 = q1, q2 = q2, q3 = q3))
+}
+
+# Función para redondear cuartiles
+redondear_cuartil <- function(valor) {
+    valor_redondeado <- round(valor, 1)
+    if (valor_redondeado %% 1 == 0) {
+        return(as.integer(valor_redondeado))
+    } else {
+        return(valor_redondeado)
+    }
+}
+
+# Función para generar datos aleatorios de estatura con mayor variabilidad
+generar_datos_estatura <- function() {
+    # Parámetros base con mayor variabilidad
+    base_min <- sample(140:170, 1)
+    base_max <- sample(175:200, 1)
+    n <- sample(10:30, 1)  # Más datos posibles
+    
+    # Mayor variación en la distribución
+    variacion <- sample(10:25, 1)
+    min_valor <- base_min - sample(0:variacion, 1)
+    max_valor <- base_max + sample(0:variacion, 1)
+    
+    # Generar datos con distribución más natural
+    datos <- sort(round(runif(n, min_valor, max_valor), digits = 0))
+    cuartiles <- calcular_cuartiles_tradicional(datos)
+    
+    # Redondear valores
+    stats <- list(
+        datos = datos,
+        datos_desordenados = sample(datos),
+        minimo = min(datos),
+        q1 = cuartiles$q1,
+        mediana = cuartiles$q2,
+        q3 = cuartiles$q3,
+        maximo = max(datos)
+    )
+    
+    stats$q1 <- redondear_cuartil(stats$q1)
+    stats$mediana <- redondear_cuartil(stats$mediana)
+    stats$q3 <- redondear_cuartil(stats$q3)
+    
+    return(stats)
+}
+
+# Función para dibujar boxplot
+dibujar_boxplot <- function(valores) {
+    segments(1, valores$minimo, 1, valores$maximo, lwd = 2)
+    rect(0.8, valores$q1, 1.2, valores$q3, col = "white", border = "black")
+    segments(0.8, valores$mediana, 1.2, valores$mediana, lwd = 2)
+    segments(0.8, valores$minimo, 1.2, valores$minimo, lwd = 2)
+    segments(0.8, valores$maximo, 1.2, valores$maximo, lwd = 2)
+    
+    rango <- valores$maximo - valores$minimo
+    min_espacio <- rango * 0.13
+    valores_orig <- c(valores$minimo, valores$q1, valores$mediana, valores$q3, valores$maximo)
+    etiquetas <- c(
+        paste("Mín =", valores$minimo),
+        paste("Q1 =", valores$q1),
+        paste("Q2 =", valores$mediana),
+        paste("Q3 =", valores$q3),
+        paste("Máx =", valores$maximo)
+    )
+    posiciones <- valores_orig
+    for (i in 1:5) {
+        text(1.3, posiciones[i], etiquetas[i], pos = 4, cex = 0.9)
+    }
+}
+```
+
+```{r generate, echo = FALSE, results = "hide"}
+# Generar datos
+stats <- generar_datos_estatura()
+
+# Aleatorizar el tipo de pregunta para schoice
+pregunta_tipo <- sample(c("q1", "q3", "minimo", "maximo"), 1)
+
+# Generar opciones para schoice
+generar_opciones_schoice <- function(respuesta_correcta) {
+    opciones <- c(
+        respuesta_correcta,
+        respuesta_correcta + sample(2:7, 1),
+        respuesta_correcta - sample(2:7, 1),
+        sample(stats$minimo:stats$maximo, 1),
+        stats$mediana
+    )
+    opciones <- sample(opciones, 4)
+    return(opciones)
+}
+
+# Generar opciones para mchoice
+generar_opciones_mchoice <- function() {
+    opciones <- c(stats$minimo, stats$q1, stats$mediana, stats$q3, stats$maximo)
+    soluciones <- c(0, 0, 0, 0, 0)
+    
+    # Aleatorizar qué valores se consideran correctos
+    if (sample(c(TRUE, FALSE), 1)) {
+        soluciones[2] <- 1  # Q1
+    }
+    if (sample(c(TRUE, FALSE), 1)) {
+        soluciones[4] <- 1  # Q3
+    }
+    if (sample(c(TRUE, FALSE), 1)) {
+        soluciones[c(1,5)] <- 1  # Mínimo y máximo
+    }
+    if (sample(c(TRUE, FALSE), 1)) {
+        soluciones[3] <- 1  # Mediana
+    }
+    
+    return(list(opciones = opciones, soluciones = soluciones))
+}
+
+# Generar opciones para cada tipo de pregunta
+switch(pregunta_tipo,
+       q1 = {
+           opciones_schoice <- generar_opciones_schoice(stats$q1)
+           sol_schoice <- which(opciones_schoice == stats$q1)
+       },
+       q3 = {
+           opciones_schoice <- generar_opciones_schoice(stats$q3)
+           sol_schoice <- which(opciones_schoice == stats$q3)
+       },
+       minimo = {
+           opciones_schoice <- generar_opciones_schoice(stats$minimo)
+           sol_schoice <- which(opciones_schoice == stats$minimo)
+       },
+       maximo = {
+           opciones_schoice <- generar_opciones_schoice(stats$maximo)
+           sol_schoice <- which(opciones_schoice == stats$maximo)
+       }
+)
+
+# Generar opciones para mchoice
+mchoice_info <- generar_opciones_mchoice()
+opciones_mchoice <- mchoice_info$opciones
+sol_mchoice <- mchoice_info$soluciones
+
+# Solución para verdadero/falso (pregunta 3)
+sol_verdadero_falso <- ifelse(stats$mediana == median(stats$datos), 1, 0)
+
+# Solución numérica (pregunta 4)
+sol_num <- stats$q3
+
+# Solución string (pregunta 5)
+sol_string <- as.character(stats$mediana)
+```
+
+Question
+========
+Se midieron las estaturas (en cm) de un grupo de estudiantes. Los datos obtenidos son:
+
+```{r tabla, results='asis'}
+datos_tabla <- data.frame(
+    "Estudiante" = 1:length(stats$datos_desordenados),
+    "Estatura (cm)" = stats$datos_desordenados
+)
+tabla_xtable <- xtable(datos_tabla, align = c("l", "c", "c"), digits = c(0, 0, 0))
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"', comment = FALSE)
+```
+
+Responda las siguientes preguntas basándose en los datos proporcionados:
+
+1. **(schoice)** 
+```{r, echo=FALSE, results='asis'}
+# Generar texto de la pregunta aleatorizada
+switch(pregunta_tipo,
+       q1 = cat("¿Cuál es el valor del primer cuartil (Q1)?\n"),
+       q3 = cat("¿Cuál es el valor del tercer cuartil (Q3)?\n"),
+       minimo = cat("¿Cuál es el valor del mínimo?\n"),
+       maximo = cat("¿Cuál es el valor del máximo?\n")
+)
+
+answerlist(c(
+    paste(opciones_schoice[1]),
+    paste(opciones_schoice[2]),
+    paste(opciones_schoice[3]),
+    paste(opciones_schoice[4])
+), markup = "markdown")
+```
+
+2. **(mchoice)** 
+```{r, echo=FALSE, results='asis'}
+cat("Seleccione los valores que corresponden a cuartiles de los datos.\n")
+answerlist(c(
+    paste(opciones_mchoice[1]),
+    paste(opciones_mchoice[2]),
+    paste(opciones_mchoice[3]),
+    paste(opciones_mchoice[4]),
+    paste(opciones_mchoice[5])
+), markup = "markdown")
+```
+
+3. **(verdadero/falso)** La mediana de los datos es igual al valor de Q2 calculado con el método tradicional.  
+```{r, echo=FALSE, results='asis'}
+answerlist(c("Verdadero", "Falso"), markup = "markdown")
+```
+
+4. **(num)** ¿Cuál es el valor del tercer cuartil (Q3)? Escriba su respuesta con un decimal si es necesario.
+
+5. **(string)** ¿Cuál es el valor de la mediana de los datos? Escriba el número como texto.
+
+Solution
+========
+Solución de las preguntas:
+
+1. La opción correcta es: 
+```{r, echo=FALSE, results='asis'}
+switch(pregunta_tipo,
+       q1 = cat("**", opciones_schoice[sol_schoice], "**\n"),
+       q3 = cat("**", opciones_schoice[sol_schoice], "**\n"),
+       minimo = cat("**", opciones_schoice[sol_schoice], "**\n"),
+       maximo = cat("**", opciones_schoice[sol_schoice], "**\n")
+)
+```
+
+2. Valores que son cuartiles: 
+```{r, echo=FALSE, results='asis'}
+cat("**")
+cat(paste(opciones_mchoice[sol_mchoice == 1], collapse = ", "))
+cat("**\n")
+```
+
+3. Respuesta: 
+```{r, echo=FALSE, results='asis'}
+cat("**")
+if (sol_verdadero_falso == 1) {
+    cat("Verdadero")
+} else {
+    cat("Falso")
+}
+cat("**\n")
+```
+
+4. Q3 = 
+```{r, echo=FALSE, results='asis'}
+cat("**", sol_num, "**\n")
+```
+
+5. Mediana = 
+```{r, echo=FALSE, results='asis'}
+cat("**", sol_string, "**\n")
+```
+
+```{r diagrama-sol, fig.width=7, fig.height=5}
+par(mar = c(4, 4, 2, 6))
+plot(NA, 
+     xlim = c(0.5, 1.5), 
+     ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15, 
+              stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+     xlab = "", ylab = "Estatura (cm)", main = "", axes = FALSE)
+dibujar_boxplot(stats)
+axis(2, las = 1)
+box()
+```
+
+Meta-information
+================
+exname: Cuartiles de estaturas - Cloze
+extype: cloze
+exsolution: 
+```{r, echo=FALSE, results='asis'}
+cat(paste(
+    sol_schoice - 1, 
+    paste(sol_mchoice, collapse = ""), 
+    sol_verdadero_falso, 
+    sol_num, 
+    sol_string, 
+    sep = "|"
+))
+```
+exclozetype: schoice|mchoice|schoice|num|string
+exshuffle: TRUE

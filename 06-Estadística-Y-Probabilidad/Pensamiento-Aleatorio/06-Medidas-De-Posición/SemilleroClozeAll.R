@@ -2,7 +2,7 @@ library(exams)
 library(knitr)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "cloze-cuartil-estatura-00.Rmd"
+archivo_examen <- "cloze-cuartil-estatura-01.Rmd"
 archivos <- 1
 numpreg <- 10
 semilla <- sample(100:1e8, 1)
