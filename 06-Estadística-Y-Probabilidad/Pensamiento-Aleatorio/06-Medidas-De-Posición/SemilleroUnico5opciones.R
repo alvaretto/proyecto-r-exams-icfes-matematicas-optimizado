@@ -1,8 +1,10 @@
+
+
 library(exams)
-library(knitr)  # Explicitly load knitr
+library(knitr) # Explicitly load knitr
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "schoice-cuartil-estatura-02-py.Rmd"
+archivo_examen <- "schoice-cuartil-estatura-03-py.Rmd"
 archivos <- 1
 numpreg <- 10
 semilla <- sample(100:1e8, 1)
@@ -23,32 +25,30 @@ opts_knit$set(concordance = TRUE)
 
 ################################################################################
 # Generación de archivos individuales para PDF, sólo 'archivos', no importa 'numpreg'
-
 # for(i in 1:archivos) {
-#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-#   exams2pdf(archivo_examen, 
-#             n = 1, 
-#             name = nombre_archivo, 
-#             encoding = "UTF-8",
-#             template = "solpcielo", 
-#             dir = dir_salida, 
-#             edir = dir_ejercicios)
+#     nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
+#     exams2pdf(archivo_examen,
+#              n = 1,
+#              name = nombre_archivo,
+#              encoding = "UTF-8",
+#              template = "solpcielo",
+#              dir = dir_salida,
+#              edir = dir_ejercicios)
 # }
 
 ################################################################################
-# Generación de archivos individuales para Pandoc (docx), sólo 'archivos', 
-# no importa 'numpreg
-
+# Generación de archivos individuales para Pandoc (docx), solo 'archivos',
+# no importa 'numpreg'
 # for(i in 1:archivos) {
-#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-#   exams2pandoc(archivo_examen, 
-#                n = 1, 
-#                name = nombre_archivo, 
-#                encoding = "UTF-8",
-#                template = "plain.tex", 
-#                dir = dir_salida, 
-#                edir = dir_ejercicios,
-#                format = "docx")
+#     nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
+#     exams2pandoc(archivo_examen,
+#              n = 1,
+#              name = nombre_archivo,
+#              encoding = "UTF-8",
+#              template = "plain.tex",
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              format = "docx")
 # }
 
 ################################################################################
@@ -62,7 +62,7 @@ exams2pdf(rep(archivo_examen, numpreg),
           template = "solpcielo",
           dir = dir_salida,
           edir = dir_ejercicios,
-          engine = "knitr")  # Explicitly set to knitr
+          engine = "knitr") # Explicitly set to knitr
 
 ################################################################################
 # Generación de n archivos en un solo archivo .docx
@@ -119,5 +119,3 @@ exams2moodle(archivo_examen,
                             solution = TRUE,
                             eval = list(partial = TRUE,
                                         rule = "none")))
-
-################################################################################
