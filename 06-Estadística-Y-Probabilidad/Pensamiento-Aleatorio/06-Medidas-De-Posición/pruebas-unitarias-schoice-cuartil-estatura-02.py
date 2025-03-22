@@ -1,9 +1,3 @@
-```{r setup, include=FALSE}
-library(reticulate)
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-```
-
-```{python, echo=FALSE}
 # Importar bibliotecas necesarias
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,7 +11,7 @@ import sys
 # Aumentar el límite de recursión (solo por precaución)
 sys.setrecursionlimit(2000)
 
-# Funciones auxiliares
+# Funciones auxiliares igual que antes...
 def calcular_cuartiles_tradicional(datos):
     n = len(datos)
     datos_ordenados = sorted(datos)
@@ -54,6 +48,32 @@ def verificar_separacion_minima(valores, min_diferencia=1.0):
                 return False
     
     return True
+
+# Nueva función para verificar diferencias visuales
+def verificar_diferencia_visual(diagrama1, diagrama2):
+    """Verifica que dos diagramas sean visualmente distintos."""
+    # Calcular características visuales
+    rango1 = diagrama1['maximo'] - diagrama1['minimo']
+    rango2 = diagrama2['maximo'] - diagrama2['minimo']
+    
+    ric1 = max(diagrama1['q1'], diagrama1['q3']) - min(diagrama1['q1'], diagrama1['q3'])
+    ric2 = max(diagrama2['q1'], diagrama2['q3']) - min(diagrama2['q1'], diagrama2['q3'])
+    
+    pos_med1 = (diagrama1['mediana'] - diagrama1['minimo']) / rango1 if rango1 > 0 else 0.5
+    pos_med2 = (diagrama2['mediana'] - diagrama2['minimo']) / rango2 if rango2 > 0 else 0.5
+    
+    simetria1 = abs((diagrama1['mediana'] - diagrama1['minimo']) - (diagrama1['maximo'] - diagrama1['mediana']))
+    simetria2 = abs((diagrama2['mediana'] - diagrama2['minimo']) - (diagrama2['maximo'] - diagrama2['mediana']))
+    
+    # Verificar diferencias significativas
+    diferencias = [
+        abs(rango1 - rango2) > 1,
+        abs(ric1 - ric2) > 1,
+        abs(pos_med1 - pos_med2) > 0.1,
+        abs(simetria1 - simetria2) > 2
+    ]
+    
+    return any(diferencias)
 
 # Función modificada para generar exactamente 5 opciones (1 correcta + 4 incorrectas)
 def generar_ejercicio():
@@ -92,17 +112,21 @@ def generar_ejercicio():
         diagramas.append(stats.copy())
         
         try:
-            # Incorrecto 1: intercambiar Q1 y Q3
+            # Incorrecto 1: intercambiar Q1 y Q3 y ajustar un poco más
             incorrecto1 = stats.copy()
             incorrecto1['q1'], incorrecto1['q3'] = incorrecto1['q3'], incorrecto1['q1']
+            incorrecto1['minimo'] += 3  # Ajuste adicional para mayor diferencia visual
+            if not (incorrecto1['minimo'] < incorrecto1['q1'] < incorrecto1['mediana'] < 
+                    incorrecto1['q3'] < incorrecto1['maximo']):
+                continue
             if not verificar_separacion_minima(incorrecto1, min_diferencia):
                 continue
             diagramas.append(incorrecto1)
             
-            # Incorrecto 2: ajustar mínimo y máximo
+            # Incorrecto 2: ajustar mínimo y máximo más significativamente
             incorrecto2 = stats.copy()
-            incorrecto2['minimo'] += 5
-            incorrecto2['maximo'] -= 5
+            incorrecto2['minimo'] += 7  # Aumento significativo
+            incorrecto2['maximo'] -= 7  # Reducción significativa
             if not (incorrecto2['minimo'] < incorrecto2['q1'] < incorrecto2['mediana'] < 
                     incorrecto2['q3'] < incorrecto2['maximo']):
                 continue
@@ -110,19 +134,21 @@ def generar_ejercicio():
                 continue
             diagramas.append(incorrecto2)
             
-            # Incorrecto 3: ajustar mediana
+            # Incorrecto 3: ajustar mediana y máximo
             incorrecto3 = stats.copy()
-            incorrecto3['mediana'] += 10
-            if not (incorrecto3['q1'] < incorrecto3['mediana'] < incorrecto3['q3']):
+            incorrecto3['mediana'] += 15  # Cambio más drástico en la mediana
+            incorrecto3['maximo'] += 5   # Ajuste adicional al máximo
+            if not (incorrecto3['q1'] < incorrecto3['mediana'] < incorrecto3['q3'] < incorrecto3['maximo']):
                 continue
             if not verificar_separacion_minima(incorrecto3, min_diferencia):
                 continue
             diagramas.append(incorrecto3)
             
-            # Incorrecto 4: expandir el rango intercuartílico
+            # Incorrecto 4: expandir el rango intercuartílico y ajustar mínimo
             incorrecto4 = stats.copy()
-            incorrecto4['q1'] -= 5
-            incorrecto4['q3'] += 5
+            incorrecto4['q1'] -= 7  # Reducción significativa de Q1
+            incorrecto4['q3'] += 7  # Aumento significativo de Q3
+            incorrecto4['minimo'] += 3  # Ajuste adicional al mínimo
             if not (incorrecto4['minimo'] < incorrecto4['q1'] < incorrecto4['mediana'] < 
                     incorrecto4['q3'] < incorrecto4['maximo']):
                 continue
@@ -132,6 +158,19 @@ def generar_ejercicio():
             
             # Verificamos que tengamos exactamente 5 diagramas
             if len(diagramas) != 5:
+                continue
+            
+            # Verificar que todos los diagramas sean visualmente diferentes
+            todos_distintos_visualmente = True
+            for i in range(len(diagramas)):
+                for j in range(i+1, len(diagramas)):
+                    if not verificar_diferencia_visual(diagramas[i], diagramas[j]):
+                        todos_distintos_visualmente = False
+                        break
+                if not todos_distintos_visualmente:
+                    break
+            
+            if not todos_distintos_visualmente:
                 continue
             
             # Verificar que todos los diagramas son diferentes entre sí
@@ -190,13 +229,13 @@ def generar_ejercicio():
         'datos': estaturas_default
     }
     
-    # Exactamente 5 diagramas predeterminados
+    # Exactamente 5 diagramas predeterminados con diferencias visuales claras
     diagramas_default = [
         stats_default.copy(),
         {'minimo': 160, 'q1': 177, 'mediana': 171, 'q3': 165, 'maximo': 182, 'datos': estaturas_default},
-        {'minimo': 165, 'q1': 167, 'mediana': 171, 'q3': 177, 'maximo': 180, 'datos': estaturas_default},
-        {'minimo': 160, 'q1': 165, 'mediana': 181, 'q3': 177, 'maximo': 182, 'datos': estaturas_default},
-        {'minimo': 160, 'q1': 162, 'mediana': 171, 'q3': 179, 'maximo': 182, 'datos': estaturas_default}
+        {'minimo': 167, 'q1': 170, 'mediana': 171, 'q3': 177, 'maximo': 180, 'datos': estaturas_default},
+        {'minimo': 160, 'q1': 165, 'mediana': 186, 'q3': 177, 'maximo': 190, 'datos': estaturas_default},
+        {'minimo': 163, 'q1': 158, 'mediana': 171, 'q3': 184, 'maximo': 182, 'datos': estaturas_default}
     ]
     
     random.seed(42)
@@ -223,19 +262,22 @@ def generar_ejercicio():
         'sol': sol_default
     }
 
-# Las demás funciones se mantienen igual
+# FUNCIÓN MODIFICADA para eliminar el warning de Matplotlib
 def dibujar_boxplot_simple(valores, indice=0):
     fig = Figure(figsize=(7.0, 4.0))
     canvas = FigureCanvas(fig)
     ax = fig.add_subplot(111)
-    #ax.set_title(f"Diagrama {indice+1}")
-    ax.set_title(f"Diagrama de Caja")
+    ax.set_title(f"Diagrama {indice+1}")
     ax.set_ylabel("Estatura (cm)")
     ax.set_xlim(0, 2.5)
     ax.set_xticks([])
     q1_plot = min(valores['q1'], valores['q3'])
     q3_plot = max(valores['q1'], valores['q3'])
-    box = plt.Rectangle((1-0.3, q1_plot), 0.6, q3_plot-q1_plot, fill=True, color='lightblue', edgecolor='blue')
+    
+    # Cambio de color='lightblue' a facecolor='lightblue' para evitar el warning
+    box = plt.Rectangle((1-0.3, q1_plot), 0.6, q3_plot-q1_plot, 
+                       fill=True, facecolor='lightblue', edgecolor='blue')
+    
     ax.add_patch(box)
     ax.hlines(y=valores['mediana'], xmin=0.7, xmax=1.3, color='red', linewidth=2)
     min_plot = min(valores['minimo'], q1_plot)
@@ -308,92 +350,3 @@ diagrama5_html = dibujar_boxplot_simple(diagramas_ordenados[4], 4)
 
 # Generar el diagrama correcto
 diagrama_correcto = dibujar_boxplot_simple(diagramas_ordenados[respuesta_correcta], respuesta_correcta)
-
-# Verificación explícita
-# print(f"Número de diagramas: {len(diagramas_ordenados)}")
-# print(f"Solución (exsolution): {sol}")
-# print(f"Longitud de la solución: {len(sol)}")
-# print(f"Índice correcto: {respuesta_correcta}")
-```
-
-Question
-========
-
-En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
-
-```{r, echo=FALSE, results='asis'}
-# Mostrar tabla con datos desordenados
-cat(py$tabla_desordenada)
-```
-
-¿Cuál diagrama de caja representa correctamente estos datos?
-
-Answerlist
-----------
-
-```{r, echo=FALSE, results='asis'}
-# Mostrar el primer diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama1_html)
-cat("</div>\n")
-
-# Mostrar el segundo diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama2_html)
-cat("</div>\n")
-
-# Mostrar el tercer diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama3_html)
-cat("</div>\n")
-
-# Mostrar el cuarto diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama4_html)
-cat("</div>\n")
-
-# Mostrar el quinto diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px;'>")
-cat(py$diagrama5_html)
-cat("</div>\n")
-```
-
-Solution
-========
-
-```{r, echo=FALSE, results='asis'}
-# Mostrar la tabla ordenada
-cat(py$tabla_ordenada)
-```
-
-La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
-
-```{r, echo=FALSE, results='asis'}
-# Mostrar el diagrama correcto
-cat(py$diagrama_correcto)
-```
-
-Answerlist
-----------
-```{r, echo=FALSE, results='asis'}
-# Crear lista de respuestas (Verdadero/Falso)
-respuestas = c("Falso", "Falso", "Falso", "Falso", "Falso")
-respuestas[py$respuesta_correcta + 1] = "Verdadero" # Ajustar índice de Python a R
-
-# Mostrar las respuestas
-for (i in 1:5) {
-cat(paste("- ", respuestas[i], "\n"))
-}
-```
-
-Meta-information
-================
-exname: Diagrama de caja para estaturas
-extype: schoice
-exsolution: `r py$sol`
-exshuffle: TRUE
