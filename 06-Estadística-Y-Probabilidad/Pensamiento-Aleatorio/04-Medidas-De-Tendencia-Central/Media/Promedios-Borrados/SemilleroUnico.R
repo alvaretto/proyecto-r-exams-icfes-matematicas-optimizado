@@ -4,7 +4,7 @@ library(exams)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "p25_SAI_CFA11S123.Rmd"
 copias <- 1
-numpreg <- 5
+numpreg <- 15
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -70,11 +70,24 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF
 
+set.seed(semilla)
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
           name = nombre_arch,
           encoding = "UTF-8",
           template = "solpcielo",
+          dir = dir_salida,
+          edir = dir_ejercicios)
+
+################################################################################
+# Generación de n copias en un solo archivo de salida para PDF
+
+set.seed(semilla)
+exams2pdf(rep(archivo_examen, numpreg),
+          n = copias,
+          name = "01-promedios-espitia",
+          encoding = "UTF-8",
+          template = "exam",
           dir = dir_salida,
           edir = dir_ejercicios)
 

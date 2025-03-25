@@ -65,29 +65,46 @@ def generar_tabla_xtable(datos):
     return pd.DataFrame(matriz_datos).astype(str).replace('nan', '')
 
 def generar_diagrama_boxplot(stats):
-    fig, ax = plt.subplots(figsize=(6, 4))
-    bp = ax.boxplot([stats['datos']], patch_artist=True, widths=0.5)
+    fig, ax = plt.subplots(figsize=(8, 6))
     
-    # Estilos del diagrama
-    plt.setp(bp['boxes'], facecolor='#90caf9', edgecolor='#1a237e')
-    plt.setp(bp['whiskers'], color='#1a237e', linestyle='-')
-    plt.setp(bp['medians'], color='#d32f2f', linewidth=2)
+    # SOLUCIÓN RADICAL: Dibujar el diagrama manualmente en lugar de usar boxplot
+    # para tener control total sobre cada elemento
     
-    # Mejorar alineación de las etiquetas con sus valores correspondientes
-    y_range = stats['maximo'] - stats['minimo']
+    # Definir coordenadas
+    x_pos = 1
+    box_width = 0.7
+    whisker_width = 0.25
     
-    # Posicionar etiquetas a la derecha, alineadas exactamente con sus valores correspondientes
+    # Dibujar caja
+    box = plt.Rectangle((x_pos - box_width/2, stats['q1']), box_width, stats['q3'] - stats['q1'], 
+                       fill=True, color='#90caf9', edgecolor='#1a237e', alpha=0.8)
+    ax.add_patch(box)
+    
+    # Dibujar mediana
+    ax.hlines(stats['mediana'], x_pos - box_width/2, x_pos + box_width/2, colors='#ff9090', linewidth=2)
+    
+    # Dibujar whiskers (bigotes)
+    ax.vlines(x_pos, stats['q1'], stats['minimo'], colors='#1a237e', linestyle='-')
+    ax.vlines(x_pos, stats['q3'], stats['maximo'], colors='#1a237e', linestyle='-')
+    
+    # Dibujar líneas horizontales en extremos de los bigotes
+    ax.hlines(stats['minimo'], x_pos - whisker_width/2, x_pos + whisker_width/2, colors='#1a237e')
+    ax.hlines(stats['maximo'], x_pos - whisker_width/2, x_pos + whisker_width/2, colors='#1a237e')
+    
+    # Posicionar etiquetas, alineadas exactamente con sus valores correspondientes
     ax.text(0.65, stats['minimo'], f"Mín: {stats['minimo']}", 
-            ha='left', va='center', fontsize=9)
+            ha='left', va='center', fontsize=10)
     ax.text(1.26, stats['q1'], f"Q1: {stats['q1']}", 
-            ha='left', va='center', fontsize=9)
-    ax.text(0.59, stats['mediana'], f"Med: {stats['mediana']}", 
-            ha='left', va='center', fontsize=9)
+            ha='left', va='center', fontsize=10)
+    ax.text(0.65, stats['mediana'], f"Med: {stats['mediana']}", 
+            ha='left', va='center', fontsize=10)
     ax.text(1.26, stats['q3'], f"Q3: {stats['q3']}", 
-            ha='left', va='center', fontsize=9)
+            ha='left', va='center', fontsize=10)
     ax.text(0.65, stats['maximo'], f"Máx: {stats['maximo']}", 
-            ha='left', va='center', fontsize=9)
+            ha='left', va='center', fontsize=10)
     
+    # Ajustar límites del eje y
+    y_range = stats['maximo'] - stats['minimo']
     ax.set_ylim(stats['minimo'] - y_range*0.1, stats['maximo'] + y_range*0.1)
     ax.set_xticks([])
     
@@ -186,7 +203,7 @@ tabla_xtable <- xtable(py$resultado$tabla_df,
                       align = rep("c", ncol(py$resultado$tabla_df) + 1))
 
 print(tabla_xtable, 
-      type = "latex",
+      type = "html",
       include.rownames = FALSE,
       include.colnames = FALSE,
       sanitize.text.function = function(x) x,
@@ -278,7 +295,7 @@ print(tabla_ordenada,
    - La caja debe ubicarse entre Q1 y Q3
    - La línea de la mediana debe coincidir con el cálculo
 
-**Respuesta correcta:** Opción `r py$resultado$posicion_correcta`
+**Respuesta correcta:**
 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
 # Si existe el índice correcto, mostrar ese diagrama; si no, mostrar un mensaje de error
