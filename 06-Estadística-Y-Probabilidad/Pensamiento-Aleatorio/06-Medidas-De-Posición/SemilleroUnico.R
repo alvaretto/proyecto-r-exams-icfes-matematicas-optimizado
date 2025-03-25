@@ -1,9 +1,9 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "schoice-cuartil-estatura-03-py.Rmd"
-archivos <- 10
-numpreg <- 1
+archivo_examen <- "schoice-cuartil-estatura-04-py.Rmd"
+archivos <- 1
+numpreg <- 5
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -82,24 +82,24 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'archivos' = 1
 
-# exams2html(rep(archivo_examen, numpreg),
-#            svg = FALSE)
+exams2html(rep(archivo_examen, numpreg),
+           svg = FALSE)
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'archivos'
 # no importa 'numpreg'
 
-set.seed(semilla)
-exams2moodle(archivo_examen,
-             n = archivos,
-             svg = TRUE,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             dir = "salida",
-             edir = "ejercicios",
-             mchoice = list(shuffle = TRUE,
-                            answernumbering = "ABCD",
-                            eval = list(partial = TRUE,
-                                        rule = "none")))
+# set.seed(semilla)
+# exams2moodle(archivo_examen,
+#              n = archivos,
+#              svg = TRUE,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              dir = "salida",
+#              edir = "ejercicios",
+#              mchoice = list(shuffle = TRUE,
+#                             answernumbering = "ABCD",
+#                             eval = list(partial = TRUE,
+#                                         rule = "none")))
 
 ################################################################################

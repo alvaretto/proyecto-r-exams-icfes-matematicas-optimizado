@@ -2,9 +2,9 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "Media-Mediana-Moda.Rmd"
+archivo_examen <- "Media-Mediana-Moda-pdf.Rmd"
 copias <- 1
-numpreg <- 10
+numpreg <- 12
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
