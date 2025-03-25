@@ -2,9 +2,9 @@ library(exams)
 library(knitr)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "schoice-cuartil-estatura-02-py.Rmd"
+archivo_examen <- "schoice-cuartil-estatura-03-py.Rmd"
 archivos <- 1
-numpreg <- 10
+numpreg <- 5
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -50,15 +50,15 @@ opts_knit$set(concordance = TRUE)
 ################################################################################
 # Generación de n archivos en un solo archivo de salida para PDF
 
-# exams2pdf(rep(archivo_examen, numpreg),
-#           n = archivos,
-#           name = nombre_arch,
-#           encoding = "UTF-8",
-#           template = "solpcielo",
-#           dir = dir_salida,
-#           edir = dir_ejercicios,
-#           engine = "knitr",
-#           envir = new.env())  # Nuevo entorno para evitar interferencias
+exams2pdf(rep(archivo_examen, numpreg),
+          n = archivos,
+          name = nombre_arch,
+          encoding = "UTF-8",
+          template = "solpcielo",
+          dir = dir_salida,
+          edir = dir_ejercicios,
+          engine = "knitr",
+          envir = new.env())  # Nuevo entorno para evitar interferencias
 
 ################################################################################
 # Creación del examen en formato HTML

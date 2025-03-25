@@ -1,12 +1,12 @@
 ---
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 ```{r inicio, include=FALSE}
 library(exams)
-library(tidyverse)
+#library(tidyverse)
 library(datasets)
 library(readxl)
 library(data.table)
@@ -296,34 +296,3 @@ exname: I_1796473/2023-Cuadernillo-Matematicas-11-2(single-choice)
 extype: schoice
 exsolution: 1000
 exshuffle: TRUE
-
-```{r additional unit tests, echo = FALSE, results = "hide"}
-#source("additional_unit_tests.R")
-```
-
-```{r version diversity test, echo = FALSE, results = "hide"}
-#source("version_diversity_test.R")
-```
-
-```{r unit_tests, echo = FALSE, results = "hide"}
-library(testthat)
-
-# Pruebas unitarias adicionales
-test_that("Pruebas de validación de datos", {
-  # Pruebas de estructura
-  expect_type(mascotas, "character")
-  expect_type(selmascota, "character")
-  expect_length(selmascota, 3)
-
-  # Pruebas de rango
-  expect_true(all(vector_resultado >= 0 & vector_resultado <= 100))
-  expect_equal(sum(vector_resultado), 100)
-  expect_true(enkuestados >= 60 && enkuestados <= 600)
-
-  # Pruebas de distribución (ejemplo)
-  expect_true(mashor == max(vector_resultado))
-
-  # Pruebas de relación entre variables
-  tolerance <- 1
-  expect_true(abs(maskota1 + maskota2 + maskota3 - enkuestados) < tolerance)
-})

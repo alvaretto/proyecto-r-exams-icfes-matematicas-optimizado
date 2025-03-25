@@ -4,7 +4,7 @@ library(knitr)  # Explicitly load knitr
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "schoice-cuartil-estatura-02-py.Rmd"
 archivos <- 1
-numpreg <- 10
+numpreg <- 3
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -96,28 +96,28 @@ exams2pandoc(rep(archivo_examen, numpreg),
 
 # Comentado para evitar error de navegador
 
-set.seed(semilla)
-exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE,
-           engine = "knitr")
+# set.seed(semilla)
+# exams2html(rep(archivo_examen, numpreg),
+#            svg = FALSE,
+#            engine = "knitr")
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'archivos'
 # no importa 'numpreg'
 
-set.seed(semilla)
-exams2moodle(archivo_examen,
-             n = archivos,
-             svg = TRUE,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             dir = "salida",
-             edir = "ejercicios",
-             engine = "knitr",
-             mchoice = list(shuffle = TRUE,
-                            answernumbering = "ABCD",
-                            solution = TRUE,
-                            eval = list(partial = TRUE,
-                                        rule = "none")))
+# set.seed(semilla)
+# exams2moodle(archivo_examen,
+#              n = archivos,
+#              svg = TRUE,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              dir = "salida",
+#              edir = "ejercicios",
+#              engine = "knitr",
+#              mchoice = list(shuffle = TRUE,
+#                             answernumbering = "ABCD",
+#                             solution = TRUE,
+#                             eval = list(partial = TRUE,
+#                                         rule = "none")))
 
 ################################################################################
