@@ -5,23 +5,10 @@ output:
 ---
 ```{r inicio, include=FALSE}
 library(exams)
-library(tidyverse)
 library(datasets)
 library(readxl)
 library(data.table)
 library(reticulate)
-
-# Opciones de entornos Python
-python_paths <- c("/usr/bin/python3.11", "/home/garuda/.virtualenvs/r-reticulate/bin/python")
-
-# Intenta establecer el entorno Python utilizando la primera ruta válida
-for (path in python_paths) {
-  use_python(path, required = FALSE)
-  if (py_config()$python_version != "") {
-    cat("Usando Python en:", path, "\n")
-    break
-  }
-}
 
 typ <- match_exams_device()
 options(scipen=999)

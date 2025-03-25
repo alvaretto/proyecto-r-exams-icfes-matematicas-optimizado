@@ -2,9 +2,9 @@ library(exams)
 library(knitr)  # Explicitly load knitr
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "Tipos_Triangulos_ICFES.Rmd"
+archivo_examen <- "schoice-cuartil-estatura-02-py.Rmd"
 archivos <- 1
-numpreg <- 2
+numpreg <- 10
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -15,8 +15,8 @@ nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 # Configurar el motor LaTeX y el entorno
-options(tinytex.latex_engine = "xelatex")
-Sys.setenv(LANG = "es_ES.UTF-8")
+# options(tinytex.latex_engine = "xelatex")
+# Sys.setenv(LANG = "es_ES.UTF-8")
 
 # Configurar opciones de knitr
 opts_knit$set(concordance = TRUE)
@@ -54,11 +54,12 @@ opts_knit$set(concordance = TRUE)
 ################################################################################
 # Generación de n archivos en un solo archivo de salida para PDF
 
+set.seed(semilla)
 exams2pdf(rep(archivo_examen, numpreg),
           n = archivos,
           name = nombre_arch,
           encoding = "UTF-8",
-          template = "plain",
+          template = "solpcielo",
           dir = dir_salida,
           edir = dir_ejercicios,
           engine = "knitr")  # Explicitly set to knitr
@@ -66,6 +67,7 @@ exams2pdf(rep(archivo_examen, numpreg),
 ################################################################################
 # Generación de n archivos en un solo archivo .docx
 
+set.seed(semilla)
 exams2pandoc(rep(archivo_examen, numpreg),
              n = archivos,
              name = nombre_arch,
@@ -87,29 +89,35 @@ exams2pandoc(rep(archivo_examen, numpreg),
              points = NULL,
              exshuffle = NULL,
              type = "docx",
-             engine = "xelatex")
+             engine = "knitr")
 
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'archivos' = 1
 
+# Comentado para evitar error de navegador
+
+set.seed(semilla)
 exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE)
+           svg = FALSE,
+           engine = "knitr")
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'archivos'
 # no importa 'numpreg'
 
-# set.seed(semilla)
-# exams2moodle(archivo_examen,
-#              n = archivos,
-#              svg = TRUE,
-#              name = nombre_arch,
-#              encoding = "UTF-8",
-#              dir = "salida",
-#              edir = "ejercicios",
-#              mchoice = list(shuffle = TRUE,
-#                             answernumbering = "ABCD",
-#                             eval = list(partial = TRUE,
-#                                         rule = "none")))
+set.seed(semilla)
+exams2moodle(archivo_examen,
+             n = archivos,
+             svg = TRUE,
+             name = nombre_arch,
+             encoding = "UTF-8",
+             dir = "salida",
+             edir = "ejercicios",
+             engine = "knitr",
+             mchoice = list(shuffle = TRUE,
+                            answernumbering = "ABCD",
+                            solution = TRUE,
+                            eval = list(partial = TRUE,
+                                        rule = "none")))
 
 ################################################################################

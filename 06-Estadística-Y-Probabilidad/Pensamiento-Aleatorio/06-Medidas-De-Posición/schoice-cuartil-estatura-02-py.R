@@ -1,0 +1,247 @@
+## ----setup, include=FALSE-----------------------------------------------------
+library(exams)
+library(reticulate)
+library(xtable)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+
+## # Configure Python environment
+## import matplotlib
+## matplotlib.use('Agg')  # Use non-interactive backend to prevent display issues
+## import matplotlib.pyplot as plt
+## import numpy as np
+## import io
+## import base64
+## import random
+## import pandas as pd
+## import sys
+## 
+## # Make Python objects available to R
+## resultado = None
+## 
+## # Funciones auxiliares mejoradas
+## def calcular_cuartiles_tradicional(datos):
+##     n = len(datos)
+##     datos_ordenados = sorted(datos)
+##     if n % 2 == 0:
+##         pos_med1 = n // 2
+##         pos_med2 = pos_med1 + 1
+##         q2 = (datos_ordenados[pos_med1-1] + datos_ordenados[pos_med2-1]) / 2
+##         primera_mitad = datos_ordenados[:pos_med1]
+##         segunda_mitad = datos_ordenados[pos_med1:]
+##     else:
+##         pos_med = (n + 1) // 2
+##         q2 = datos_ordenados[pos_med-1]
+##         primera_mitad = datos_ordenados[:(pos_med-1)]
+##         segunda_mitad = datos_ordenados[pos_med:]
+##     q1 = np.median(primera_mitad)
+##     q3 = np.median(segunda_mitad)
+##     return {"q1": q1, "q2": q2, "q3": q3}
+## 
+## def redondear_cuartil(valor):
+##     return round(valor, 1) if abs(valor - round(valor)) >= 0.05 else round(valor)
+## 
+## def verificar_separacion_minima(valores, min_diferencia=1.0):
+##     valores_clave = [valores['q1'], valores['mediana'], valores['q3']]
+##     for i in range(len(valores_clave)-1):
+##         if abs(valores_clave[i+1] - valores_clave[i]) < min_diferencia:
+##             return False
+##     return True
+## 
+## def generar_tabla_xtable(datos):
+##     filas_por_columna = 10
+##     num_columnas = (len(datos) + filas_por_columna - 1) // filas_por_columna
+##     matriz_datos = []
+##     for i in range(filas_por_columna):
+##         fila = []
+##         for j in range(num_columnas):
+##             idx = j * filas_por_columna + i
+##             fila.append(datos[idx] if idx < len(datos) else "")
+##         matriz_datos.append(fila)
+##     return pd.DataFrame(matriz_datos).fillna("")
+## 
+## def generar_diagrama_boxplot(stats):
+##     fig, ax = plt.subplots(figsize=(6, 4))
+##     bp = ax.boxplot([stats['datos']], patch_artist=True, widths=0.5)
+## 
+##     # Estilos del diagrama
+##     plt.setp(bp['boxes'], facecolor='#90caf9', edgecolor='#1a237e')
+##     plt.setp(bp['whiskers'], color='#1a237e', linestyle='-')
+##     plt.setp(bp['medians'], color='#d32f2f', linewidth=2)
+## 
+##     # Anotaciones mejoradas
+##     y_range = stats['maximo'] - stats['minimo']
+##     offset = y_range * 0.08
+## 
+##     ax.text(1.3, stats['minimo'] - offset, f"Mín: {stats['minimo']}",
+##             ha='left', va='top', fontsize=9)
+##     ax.text(1.3, stats['q1'] - offset, f"Q1: {stats['q1']}",
+##             ha='left', va='top', fontsize=9)
+##     ax.text(1.3, stats['mediana'] - offset, f"Med: {stats['mediana']}",
+##             ha='left', va='top', fontsize=9)
+##     ax.text(1.3, stats['q3'] - offset, f"Q3: {stats['q3']}",
+##             ha='left', va='top', fontsize=9)
+##     ax.text(1.3, stats['maximo'] + offset, f"Máx: {stats['maximo']}",
+##             ha='left', va='bottom', fontsize=9)
+## 
+##     ax.set_ylim(stats['minimo'] - y_range*0.1, stats['maximo'] + y_range*0.1)
+##     ax.set_xticks([])
+## 
+##     # Convertir a HTML
+##     buf = io.BytesIO()
+##     plt.savefig(buf, format='png', dpi=120, bbox_inches='tight')
+##     plt.close(fig)  # Explicitly close figure
+##     return f'<img src="data:image/png;base64,{base64.b64encode(buf.getvalue()).decode()}" style="max-width: 600px;">'
+## 
+## def generar_datos(n):
+##     media = np.random.uniform(155, 175)
+##     desviacion = np.random.uniform(5, 10)
+##     datos = np.random.normal(media, desviacion, n)
+##     return np.round(np.clip(datos, 140, 200)).astype(int)
+## 
+## def calcular_estadisticas(datos):
+##     datos_ordenados = sorted(datos)
+##     cuartiles = calcular_cuartiles_tradicional(datos)
+##     return {
+##         'datos': datos,
+##         'minimo': int(min(datos)),
+##         'q1': redondear_cuartil(cuartiles["q1"]),
+##         'mediana': redondear_cuartil(cuartiles["q2"]),
+##         'q3': redondear_cuartil(cuartiles["q3"]),
+##         'maximo': int(max(datos))
+##     }
+## 
+## # Generadores de distractores mejorados
+## def generar_distractor_shift(stats):
+##     shift = np.random.choice([-5, -3, 3, 5])
+##     return {
+##         'minimo': stats['minimo'] + shift,
+##         'q1': redondear_cuartil(stats['q1'] + shift),
+##         'mediana': redondear_cuartil(stats['mediana'] + shift),
+##         'q3': redondear_cuartil(stats['q3'] + shift),
+##         'maximo': stats['maximo'] + shift,
+##         'datos': [x + shift for x in stats['datos']]
+##     }
+## 
+## def generar_distractor_invertido(stats):
+##     rango = stats['maximo'] - stats['minimo']
+##     return {
+##         'minimo': stats['maximo'] - rango,
+##         'q1': stats['q3'],
+##         'mediana': stats['mediana'],
+##         'q3': stats['q1'],
+##         'maximo': stats['minimo'] + rango,
+##         'datos': stats['datos']
+##     }
+## 
+## def generar_ejercicio():
+##     for _ in range(100):
+##         try:
+##             n = np.random.randint(25, 36)
+##             datos = generar_datos(n)
+##             stats = calcular_estadisticas(datos)
+## 
+##             if not verificar_separacion_minima(stats):
+##                 continue
+## 
+##             # Generar opciones
+##             opciones = [stats]
+##             while len(opciones) < 5:
+##                 tipo = np.random.choice(['shift', 'invertido'])
+##                 if tipo == 'shift':
+##                     opciones.append(generar_distractor_shift(stats))
+##                 else:
+##                     opciones.append(generar_distractor_invertido(stats))
+## 
+##             random.shuffle(opciones)
+##             correcta = next(i for i, op in enumerate(opciones) if op == stats)
+## 
+##             return {
+##                 'stats': stats,
+##                 'diagramas_html': [generar_diagrama_boxplot(op) for op in opciones],
+##                 'tabla_df': generar_tabla_xtable(stats['datos']),
+##                 'posicion_correcta': correcta + 1
+##             }
+##         except Exception as e:
+##             continue
+##     raise ValueError("No se pudo generar ejercicio válido")
+## 
+## # Generar el ejercicio y hacer accesible globalmente
+## resultado = generar_ejercicio()
+## globals()['resultado'] = resultado
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+tabla_xtable <- xtable(py$resultado$tabla_df,
+                      caption = "Datos de estaturas",
+                      align = rep("c", ncol(py$resultado$tabla_df) + 1))
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      sanitize.text.function = function(x) x,
+      html.table.attributes = 'style="border: 1px solid #ddd; padding: 6px; margin: 1em auto;"')
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+tryCatch({
+  cat(py$resultado$diagramas_html[1])
+}, error = function(e) {
+  cat("Error: No se generó el diagrama correctamente")
+})
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+tryCatch({
+  cat(py$resultado$diagramas_html[2])
+}, error = function(e) {
+  cat("Error: No se generó el diagrama correctamente")
+})
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+tryCatch({
+  cat(py$resultado$diagramas_html[3])
+}, error = function(e) {
+  cat("Error: No se generó el diagrama correctamente")
+})
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+tryCatch({
+  cat(py$resultado$diagramas_html[4])
+}, error = function(e) {
+  cat("Error: No se generó el diagrama correctamente")
+})
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+tryCatch({
+  cat(py$resultado$diagramas_html[5])
+}, error = function(e) {
+  cat("Error: No se generó el diagrama correctamente")
+})
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+datos_ordenados <- sort(py$resultado$stats$datos)
+filas <- 10
+n <- length(datos_ordenados)
+columnas <- ceiling(n / filas)
+datos_padded <- c(datos_ordenados, rep(NA, columnas*filas - n))
+matriz_ordenada <- matrix(datos_padded, nrow=filas, byrow=FALSE)
+matriz_ordenada[is.na(matriz_ordenada)] <- ""
+print(xtable(matriz_ordenada,
+             caption = "Datos ordenados",
+             align = rep("c", ncol(matriz_ordenada)+1)),
+      include.rownames = FALSE,
+      include.colnames = FALSE)
+
+
+## ----echo=FALSE, results="asis"-----------------------------------------------
+# Si existe el índice correcto, mostrar ese diagrama; si no, mostrar un mensaje de error
+tryCatch({
+  cat(py$resultado$diagramas_html[py$resultado$posicion_correcta])
+}, error = function(e) {
+  cat("Error: No se generó el diagrama correctamente")
+})
+

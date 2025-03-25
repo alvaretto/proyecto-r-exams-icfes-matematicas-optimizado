@@ -1,23 +1,27 @@
 ```{r setup, include=FALSE}
+library(exams)
 library(reticulate)
+library(xtable)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+options(browser = "firefox")
 ```
 
 ```{python, echo=FALSE}
-# Importar bibliotecas necesarias
+# Configure Python environment
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend to prevent display issues
 import matplotlib.pyplot as plt
 import numpy as np
 import io
 import base64
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import random
+import pandas as pd
 import sys
 
-# Aumentar el límite de recursión (solo por precaución)
-sys.setrecursionlimit(2000)
+# Make Python objects available to R
+resultado = None
 
-# Funciones auxiliares
+# Funciones auxiliares mejoradas
 def calcular_cuartiles_tradicional(datos):
     n = len(datos)
     datos_ordenados = sorted(datos)
@@ -37,363 +41,257 @@ def calcular_cuartiles_tradicional(datos):
     return {"q1": q1, "q2": q2, "q3": q3}
 
 def redondear_cuartil(valor):
-    valor_redondeado = round(valor, 1)
-    if valor_redondeado % 1 == 0:
-        return int(valor_redondeado)
-    else:
-        return valor_redondeado
+    return round(valor, 1) if abs(valor - round(valor)) >= 0.05 else round(valor)
 
 def verificar_separacion_minima(valores, min_diferencia=1.0):
-    valores_unicos = sorted(set([valores['minimo'], valores['q1'], 
-                                valores['mediana'], valores['q3'], 
-                                valores['maximo']]))
-    
-    if len(valores_unicos) > 1:
-        for i in range(len(valores_unicos) - 1):
-            if valores_unicos[i+1] - valores_unicos[i] < min_diferencia:
-                return False
-    
+    valores_clave = [valores['q1'], valores['mediana'], valores['q3']]
+    for i in range(len(valores_clave)-1):
+        if abs(valores_clave[i+1] - valores_clave[i]) < min_diferencia:
+            return False
     return True
 
-# Función modificada para generar exactamente 5 opciones (1 correcta + 4 incorrectas)
-def generar_ejercicio():
-    max_intentos = 150
-    min_diferencia = 1.0
+def generar_tabla_xtable(datos):
+    filas_por_columna = 10
+    num_columnas = (len(datos) + filas_por_columna - 1) // filas_por_columna
+    matriz_datos = []
+    for i in range(filas_por_columna):
+        fila = []
+        for j in range(num_columnas):
+            idx = j * filas_por_columna + i
+            # Convertir explícitamente a string para evitar problemas de visualización
+            valor = str(datos[idx]) if idx < len(datos) else ""
+            fila.append(valor)
+        matriz_datos.append(fila)
+    return pd.DataFrame(matriz_datos).astype(str).replace('nan', '')
+
+def generar_diagrama_boxplot(stats):
+    fig, ax = plt.subplots(figsize=(6, 4))
+    bp = ax.boxplot([stats['datos']], patch_artist=True, widths=0.5)
     
-    for intento in range(max_intentos):
-        n = np.random.randint(9, 26)
-        base_min = np.random.randint(145, 166)
-        base_max = np.random.randint(168, 189)
-        estaturas = np.round(np.random.uniform(base_min, base_max, n)).astype(int)
-        cuartiles = calcular_cuartiles_tradicional(estaturas)
-        q1 = redondear_cuartil(cuartiles["q1"])
-        q2 = redondear_cuartil(cuartiles["q2"])
-        q3 = redondear_cuartil(cuartiles["q3"])
-        
-        valores = sorted([np.min(estaturas), q1, q2, q3, np.max(estaturas)])
-        hay_valores_cercanos = any(valores[i] - valores[i-1] < min_diferencia for i in range(1, len(valores)))
-        
-        if hay_valores_cercanos:
-            continue
-            
-        stats = {
-            'minimo': int(np.min(estaturas)),
-            'q1': q1,
-            'mediana': q2,
-            'q3': q3,
-            'maximo': int(np.max(estaturas)),
-            'datos': estaturas.tolist()
-        }
-        
-        # Lista para almacenar EXACTAMENTE 5 diagramas
-        diagramas = []
-        
-        # Diagrama correcto
-        diagramas.append(stats.copy())
-        
+    # Estilos del diagrama
+    plt.setp(bp['boxes'], facecolor='#90caf9', edgecolor='#1a237e')
+    plt.setp(bp['whiskers'], color='#1a237e', linestyle='-')
+    plt.setp(bp['medians'], color='#d32f2f', linewidth=2)
+    
+    # Mejorar alineación de las etiquetas con sus valores correspondientes
+    y_range = stats['maximo'] - stats['minimo']
+    
+    # Posicionar etiquetas a la derecha, alineadas exactamente con sus valores correspondientes
+    ax.text(0.65, stats['minimo'], f"Mín: {stats['minimo']}", 
+            ha='left', va='center', fontsize=9)
+    ax.text(1.26, stats['q1'], f"Q1: {stats['q1']}", 
+            ha='left', va='center', fontsize=9)
+    ax.text(0.59, stats['mediana'], f"Med: {stats['mediana']}", 
+            ha='left', va='center', fontsize=9)
+    ax.text(1.26, stats['q3'], f"Q3: {stats['q3']}", 
+            ha='left', va='center', fontsize=9)
+    ax.text(0.65, stats['maximo'], f"Máx: {stats['maximo']}", 
+            ha='left', va='center', fontsize=9)
+    
+    ax.set_ylim(stats['minimo'] - y_range*0.1, stats['maximo'] + y_range*0.1)
+    ax.set_xticks([])
+    
+    # Convertir a HTML
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=120, bbox_inches='tight')
+    plt.close(fig)  # Explicitly close figure
+    return f'<img src="data:image/png;base64,{base64.b64encode(buf.getvalue()).decode()}" style="max-width: 600px;">'
+
+def generar_datos(n):
+    media = np.random.uniform(155, 175)
+    desviacion = np.random.uniform(5, 10)
+    datos = np.random.normal(media, desviacion, n)
+    return np.round(np.clip(datos, 140, 200)).astype(int)
+
+def calcular_estadisticas(datos):
+    datos_ordenados = sorted(datos)
+    cuartiles = calcular_cuartiles_tradicional(datos)
+    return {
+        'datos': datos,
+        'minimo': int(min(datos)),
+        'q1': redondear_cuartil(cuartiles["q1"]),
+        'mediana': redondear_cuartil(cuartiles["q2"]),
+        'q3': redondear_cuartil(cuartiles["q3"]),
+        'maximo': int(max(datos))
+    }
+
+# Generadores de distractores mejorados
+def generar_distractor_shift(stats):
+    shift = np.random.choice([-5, -3, 3, 5])
+    return {
+        'minimo': stats['minimo'] + shift,
+        'q1': redondear_cuartil(stats['q1'] + shift),
+        'mediana': redondear_cuartil(stats['mediana'] + shift),
+        'q3': redondear_cuartil(stats['q3'] + shift),
+        'maximo': stats['maximo'] + shift,
+        'datos': [x + shift for x in stats['datos']]
+    }
+
+def generar_distractor_invertido(stats):
+    rango = stats['maximo'] - stats['minimo']
+    return {
+        'minimo': stats['maximo'] - rango,
+        'q1': stats['q3'],
+        'mediana': stats['mediana'],
+        'q3': stats['q1'],
+        'maximo': stats['minimo'] + rango,
+        'datos': stats['datos']
+    }
+
+def generar_ejercicio():
+    for _ in range(100):
         try:
-            # Incorrecto 1: intercambiar Q1 y Q3
-            incorrecto1 = stats.copy()
-            incorrecto1['q1'], incorrecto1['q3'] = incorrecto1['q3'], incorrecto1['q1']
-            if not verificar_separacion_minima(incorrecto1, min_diferencia):
-                continue
-            diagramas.append(incorrecto1)
+            n = np.random.randint(25, 36)
+            datos = generar_datos(n)
+            stats = calcular_estadisticas(datos)
             
-            # Incorrecto 2: ajustar mínimo y máximo
-            incorrecto2 = stats.copy()
-            incorrecto2['minimo'] += 5
-            incorrecto2['maximo'] -= 5
-            if not (incorrecto2['minimo'] < incorrecto2['q1'] < incorrecto2['mediana'] < 
-                    incorrecto2['q3'] < incorrecto2['maximo']):
+            if not verificar_separacion_minima(stats):
                 continue
-            if not verificar_separacion_minima(incorrecto2, min_diferencia):
-                continue
-            diagramas.append(incorrecto2)
+                
+            # Generar opciones
+            opciones = [stats]
+            while len(opciones) < 5:
+                tipo = np.random.choice(['shift', 'invertido'])
+                if tipo == 'shift':
+                    opciones.append(generar_distractor_shift(stats))
+                else:
+                    opciones.append(generar_distractor_invertido(stats))
             
-            # Incorrecto 3: ajustar mediana
-            incorrecto3 = stats.copy()
-            incorrecto3['mediana'] += 10
-            if not (incorrecto3['q1'] < incorrecto3['mediana'] < incorrecto3['q3']):
-                continue
-            if not verificar_separacion_minima(incorrecto3, min_diferencia):
-                continue
-            diagramas.append(incorrecto3)
-            
-            # Incorrecto 4: expandir el rango intercuartílico
-            incorrecto4 = stats.copy()
-            incorrecto4['q1'] -= 5
-            incorrecto4['q3'] += 5
-            if not (incorrecto4['minimo'] < incorrecto4['q1'] < incorrecto4['mediana'] < 
-                    incorrecto4['q3'] < incorrecto4['maximo']):
-                continue
-            if not verificar_separacion_minima(incorrecto4, min_diferencia):
-                continue
-            diagramas.append(incorrecto4)
-            
-            # Verificamos que tengamos exactamente 5 diagramas
-            if len(diagramas) != 5:
-                continue
-            
-            # Verificar que todos los diagramas son diferentes entre sí
-            todos_diferentes = True
-            for i in range(len(diagramas)):
-                for j in range(i+1, len(diagramas)):
-                    if (diagramas[i]['minimo'] == diagramas[j]['minimo'] and 
-                        diagramas[i]['q1'] == diagramas[j]['q1'] and 
-                        diagramas[i]['mediana'] == diagramas[j]['mediana'] and 
-                        diagramas[i]['q3'] == diagramas[j]['q3'] and 
-                        diagramas[i]['maximo'] == diagramas[j]['maximo']):
-                        todos_diferentes = False
-                        break
-                if not todos_diferentes:
-                    break
-            
-            if not todos_diferentes:
-                continue
-            
-            # Mezclar los diagramas
-            random.seed(42)
-            random.shuffle(diagramas)
-            
-            # Encontrar el índice del diagrama correcto después de mezclar
-            indice_correcto = None
-            for i, diagrama in enumerate(diagramas):
-                if (diagrama['minimo'] == stats['minimo'] and 
-                    diagrama['q1'] == stats['q1'] and 
-                    diagrama['mediana'] == stats['mediana'] and 
-                    diagrama['q3'] == stats['q3'] and 
-                    diagrama['maximo'] == stats['maximo']):
-                    indice_correcto = i
-                    break
-            
-            # Crear string de solución para exsolution (exactamente 5 bits)
-            sol = "".join(["1" if i == indice_correcto else "0" for i in range(5)])
+            random.shuffle(opciones)
+            correcta = next(i for i, op in enumerate(opciones) if op == stats)
             
             return {
                 'stats': stats,
-                'diagramas_ordenados': diagramas,
-                'respuesta_correcta': indice_correcto,
-                'sol': sol
+                'diagramas_html': [generar_diagrama_boxplot(op) for op in opciones],
+                'tabla_df': generar_tabla_xtable(stats['datos']),
+                'posicion_correcta': correcta + 1
             }
-        except:
+        except Exception as e:
             continue
-    
-    # Valores predeterminados por si no se encuentra una solución válida
-    estaturas_default = [160, 163, 165, 168, 170, 172, 175, 177, 180, 182]
-    cuartiles_default = calcular_cuartiles_tradicional(estaturas_default)
-    stats_default = {
-        'minimo': 160,
-        'q1': 165,
-        'mediana': 171,
-        'q3': 177,
-        'maximo': 182,
-        'datos': estaturas_default
-    }
-    
-    # Exactamente 5 diagramas predeterminados
-    diagramas_default = [
-        stats_default.copy(),
-        {'minimo': 160, 'q1': 177, 'mediana': 171, 'q3': 165, 'maximo': 182, 'datos': estaturas_default},
-        {'minimo': 165, 'q1': 167, 'mediana': 171, 'q3': 177, 'maximo': 180, 'datos': estaturas_default},
-        {'minimo': 160, 'q1': 165, 'mediana': 181, 'q3': 177, 'maximo': 182, 'datos': estaturas_default},
-        {'minimo': 160, 'q1': 162, 'mediana': 171, 'q3': 179, 'maximo': 182, 'datos': estaturas_default}
-    ]
-    
-    random.seed(42)
-    random.shuffle(diagramas_default)
-    
-    # Encontrar el índice del diagrama correcto después de mezclar
-    indice_correcto_default = None
-    for i, diagrama in enumerate(diagramas_default):
-        if (diagrama['minimo'] == stats_default['minimo'] and 
-            diagrama['q1'] == stats_default['q1'] and 
-            diagrama['mediana'] == stats_default['mediana'] and 
-            diagrama['q3'] == stats_default['q3'] and 
-            diagrama['maximo'] == stats_default['maximo']):
-            indice_correcto_default = i
-            break
-    
-    # Exactamente 5 bits
-    sol_default = "".join(["1" if i == indice_correcto_default else "0" for i in range(5)])
-    
-    return {
-        'stats': stats_default,
-        'diagramas_ordenados': diagramas_default,
-        'respuesta_correcta': indice_correcto_default,
-        'sol': sol_default
-    }
+    raise ValueError("No se pudo generar ejercicio válido")
 
-# Las demás funciones se mantienen igual
-def dibujar_boxplot_simple(valores, indice=0):
-    fig = Figure(figsize=(7.0, 4.0))
-    canvas = FigureCanvas(fig)
-    ax = fig.add_subplot(111)
-    #ax.set_title(f"Diagrama {indice+1}")
-    ax.set_title(f"Diagrama de Caja")
-    ax.set_ylabel("Estatura (cm)")
-    ax.set_xlim(0, 2.5)
-    ax.set_xticks([])
-    q1_plot = min(valores['q1'], valores['q3'])
-    q3_plot = max(valores['q1'], valores['q3'])
-    box = plt.Rectangle((1-0.3, q1_plot), 0.6, q3_plot-q1_plot, fill=True, color='lightblue', edgecolor='blue')
-    ax.add_patch(box)
-    ax.hlines(y=valores['mediana'], xmin=0.7, xmax=1.3, color='red', linewidth=2)
-    min_plot = min(valores['minimo'], q1_plot)
-    max_plot = max(valores['maximo'], q3_plot)
-    ax.vlines(x=1, ymin=min_plot, ymax=q1_plot, color='blue', linewidth=1.5)
-    ax.vlines(x=1, ymin=q3_plot, ymax=max_plot, color='blue', linewidth=1.5)
-    ax.hlines(y=min_plot, xmin=0.85, xmax=1.15, color='blue', linewidth=1.5)
-    ax.hlines(y=max_plot, xmin=0.85, xmax=1.15, color='blue', linewidth=1.5)
-    ax.text(1.5, valores['minimo'], f"Mínimo: {valores['minimo']}", va='center')
-    ax.text(1.5, valores['q1'], f"Q1: {valores['q1']}", va='center')
-    ax.text(1.5, valores['mediana'], f"Mediana: {valores['mediana']}", va='center')
-    ax.text(1.5, valores['q3'], f"Q3: {valores['q3']}", va='center')
-    ax.text(1.5, valores['maximo'], f"Máximo: {valores['maximo']}", va='center')
-    todos_valores = [valores['minimo'], valores['q1'], valores['mediana'], valores['q3'], valores['maximo'], min_plot, max_plot]
-    margen = 5
-    ax.set_ylim(min(todos_valores) - margen, max(todos_valores) + margen)
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-    img_str = base64.b64encode(buf.read()).decode('utf-8')
-    return f'<img src="data:image/png;base64,{img_str}" alt="Boxplot {indice+1}">'
-
-def obtener_datos_desordenados(stats):
-    datos = stats['datos'].copy()
-    random.seed(42)
-    random.shuffle(datos)
-    return datos
-
-def obtener_datos_ordenados(stats):
-    return sorted(stats['datos'])
-
-def generar_tabla_html(datos, titulo="Datos de estaturas"):
-    filas_por_columna = 10
-    num_columnas = (len(datos) + filas_por_columna - 1) // filas_por_columna
-    html = f"<p><strong>{titulo}</strong></p>"
-    html += "<table border='1' style='border-collapse: collapse; margin: 10px;'>"
-    for i in range(filas_por_columna):
-        html += "<tr>"
-        for j in range(num_columnas):
-            idx = j * filas_por_columna + i
-            if idx < len(datos):
-                html += f"<td style='padding: 5px;'>{datos[idx]}</td>"
-            else:
-                html += "<td></td>"
-        html += "</tr>"
-    html += "</table>"
-    return html
-
-# Generar el ejercicio
-ejercicio = generar_ejercicio()
-stats = ejercicio['stats']
-diagramas_ordenados = ejercicio['diagramas_ordenados']
-respuesta_correcta = ejercicio['respuesta_correcta']
-sol = ejercicio['sol']
-
-# Generar datos desordenados y ordenados
-datos_desordenados = obtener_datos_desordenados(stats)
-datos_ordenados = obtener_datos_ordenados(stats)
-
-# Generar tablas HTML
-tabla_desordenada = generar_tabla_html(datos_desordenados)
-tabla_ordenada = generar_tabla_html(datos_ordenados, 'Datos de estaturas ordenados')
-
-# Generar HTML para cada diagrama individualmente (solo 5)
-diagrama1_html = dibujar_boxplot_simple(diagramas_ordenados[0], 0)
-diagrama2_html = dibujar_boxplot_simple(diagramas_ordenados[1], 1)
-diagrama3_html = dibujar_boxplot_simple(diagramas_ordenados[2], 2)
-diagrama4_html = dibujar_boxplot_simple(diagramas_ordenados[3], 3)
-diagrama5_html = dibujar_boxplot_simple(diagramas_ordenados[4], 4)
-
-# Generar el diagrama correcto
-diagrama_correcto = dibujar_boxplot_simple(diagramas_ordenados[respuesta_correcta], respuesta_correcta)
-
-# Verificación explícita
-# print(f"Número de diagramas: {len(diagramas_ordenados)}")
-# print(f"Solución (exsolution): {sol}")
-# print(f"Longitud de la solución: {len(sol)}")
-# print(f"Índice correcto: {respuesta_correcta}")
+# Generar el ejercicio y hacer accesible globalmente
+resultado = generar_ejercicio()
+globals()['resultado'] = resultado
 ```
 
 Question
 ========
+Un grupo de estudiantes registró sus estaturas (en centímetros) como se muestra en la siguiente tabla:
 
-En una clase de antropometría, se midió la estatura (en cm) de un grupo de estudiantes. Los datos obtenidos son:
+```{r, echo=FALSE, results="asis"}
+# Mejorar la visualización de la tabla
+tabla_xtable <- xtable(py$resultado$tabla_df,
+                      caption = "Datos de estaturas",
+                      align = rep("c", ncol(py$resultado$tabla_df) + 1))
 
-```{r, echo=FALSE, results='asis'}
-# Mostrar tabla con datos desordenados
-cat(py$tabla_desordenada)
+print(tabla_xtable, 
+      type = "html",
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      sanitize.text.function = function(x) x,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 1em auto;"')
 ```
 
-¿Cuál diagrama de caja representa correctamente estos datos?
+¿Cuál de los siguientes diagramas de caja representa correctamente la distribución de estos datos?
 
 Answerlist
 ----------
-
-```{r, echo=FALSE, results='asis'}
-# Mostrar el primer diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama1_html)
-cat("</div>\n")
-
-# Mostrar el segundo diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama2_html)
-cat("</div>\n")
-
-# Mostrar el tercer diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama3_html)
-cat("</div>\n")
-
-# Mostrar el cuarto diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px; border-bottom:1px solid #ccc;'>")
-cat(py$diagrama4_html)
-cat("</div>\n")
-
-# Mostrar el quinto diagrama
-cat("- \n")
-cat("<div style='margin-bottom:15px; padding:10px;'>")
-cat(py$diagrama5_html)
-cat("</div>\n")
+* 
+```{r, echo=FALSE, results="asis", warning=FALSE}
+tryCatch({
+  cat(py$resultado$diagramas_html[1])
+}, error = function(e) {
+  cat("<p>Error: No se generó el diagrama correctamente</p>")
+})
+```
+* 
+```{r, echo=FALSE, results="asis", warning=FALSE}
+tryCatch({
+  cat(py$resultado$diagramas_html[2])
+}, error = function(e) {
+  cat("<p>Error: No se generó el diagrama correctamente</p>")
+})
+```
+* 
+```{r, echo=FALSE, results="asis", warning=FALSE}
+tryCatch({
+  cat(py$resultado$diagramas_html[3])
+}, error = function(e) {
+  cat("<p>Error: No se generó el diagrama correctamente</p>")
+})
+```
+* 
+```{r, echo=FALSE, results="asis", warning=FALSE}
+tryCatch({
+  cat(py$resultado$diagramas_html[4])
+}, error = function(e) {
+  cat("<p>Error: No se generó el diagrama correctamente</p>")
+})
+```
+* 
+```{r, echo=FALSE, results="asis", warning=FALSE}
+tryCatch({
+  cat(py$resultado$diagramas_html[5])
+}, error = function(e) {
+  cat("<p>Error: No se generó el diagrama correctamente</p>")
+})
 ```
 
 Solution
 ========
+**Pasos para resolver:**
 
-```{r, echo=FALSE, results='asis'}
-# Mostrar la tabla ordenada
-cat(py$tabla_ordenada)
+1. **Ordenar los datos:**
+```{r, echo=FALSE, results="asis"}
+# Ordenar datos y mejorar la visualización de la tabla
+datos_ordenados <- sort(py$resultado$stats$datos)
+filas <- 10
+n <- length(datos_ordenados)
+columnas <- ceiling(n / filas)
+datos_padded <- c(datos_ordenados, rep(NA, columnas*filas - n))
+matriz_ordenada <- matrix(datos_padded, nrow=filas, byrow=FALSE)
+matriz_ordenada[is.na(matriz_ordenada)] <- ""
+
+# Convertir a tabla y establecer propiedades de visualización
+tabla_ordenada <- xtable(matriz_ordenada,
+                        caption = "Datos ordenados",
+                        align = rep("c", ncol(matriz_ordenada)+1))
+
+print(tabla_ordenada,
+      type = "html",
+      include.rownames = FALSE,
+      include.colnames = FALSE,
+      sanitize.text.function = function(x) x,
+      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 1em auto;"')
 ```
 
-La opción correcta es aquella cuyo diagrama muestra exactamente estos valores:
+2. **Calcular estadísticos clave:**
+   - Mínimo: `r py$resultado$stats$minimo`
+   - Q1: `r py$resultado$stats$q1`
+   - Mediana: `r py$resultado$stats$mediana`
+   - Q3: `r py$resultado$stats$q3`
+   - Máximo: `r py$resultado$stats$maximo`
 
-```{r, echo=FALSE, results='asis'}
-# Mostrar el diagrama correcto
-cat(py$diagrama_correcto)
-```
+3. **Identificar características del diagrama correcto:**
+   - Los bigotes deben llegar exactamente a los valores mínimo y máximo
+   - La caja debe ubicarse entre Q1 y Q3
+   - La línea de la mediana debe coincidir con el cálculo
 
-Answerlist
-----------
-```{r, echo=FALSE, results='asis'}
-# Crear lista de respuestas (Verdadero/Falso)
-respuestas = c("Falso", "Falso", "Falso", "Falso", "Falso")
-respuestas[py$respuesta_correcta + 1] = "Verdadero" # Ajustar índice de Python a R
+**Respuesta correcta:** Opción `r py$resultado$posicion_correcta`
 
-# Mostrar las respuestas
-for (i in 1:5) {
-cat(paste("- ", respuestas[i], "\n"))
-}
+```{r, echo=FALSE, results="asis", warning=FALSE}
+# Si existe el índice correcto, mostrar ese diagrama; si no, mostrar un mensaje de error
+tryCatch({
+  cat(py$resultado$diagramas_html[py$resultado$posicion_correcta])
+}, error = function(e) {
+  cat("<p>Error: No se generó el diagrama correctamente</p>")
+})
 ```
 
 Meta-information
 ================
-exname: Diagrama de caja para estaturas
+exname: Diagrama de caja
 extype: schoice
-exsolution: `r py$sol`
+exsolution: `r paste(ifelse(1:5 == py$resultado$posicion_correcta, 1, 0), collapse="")`
 exshuffle: TRUE
