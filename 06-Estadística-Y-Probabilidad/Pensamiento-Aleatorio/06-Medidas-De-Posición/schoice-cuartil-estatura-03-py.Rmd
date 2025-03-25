@@ -3,23 +3,35 @@ library(exams)
 library(reticulate)
 library(xtable)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-options(browser = "firefox")
+options(width = 100)  # Previene wrapping de código en PDFs
+
+# Detectar formato de salida para adaptar el comportamiento
+output_format <- knitr::opts_knit$get("rmarkdown.pandoc.to")
+is_html <- !is.null(output_format) && output_format %in% c("html", "html4", "html5")
+is_latex <- !is.null(output_format) && output_format %in% c("latex", "beamer", "pdf") || is.null(output_format)
+
+# Para documentos LaTeX (incluidos PDF), sobrescribir include_supplement
+if (is_latex) {
+  include_supplement <- function(file, dir = NULL, type = NULL) {
+    if (is.null(dir)) dir <- ""
+    fname <- if (length(grep("/", file, fixed = TRUE)) || length(grep("\\", file, fixed = TRUE)))
+      file else file.path(dir, file)
+    return(fname)
+  }
+}
 ```
 
 ```{python, echo=FALSE}
 # Configure Python environment
 import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend to prevent display issues
+matplotlib.use('Agg')  # Usar backend no interactivo para prevenir errores
 import matplotlib.pyplot as plt
 import numpy as np
 import io
 import base64
 import random
 import pandas as pd
-import sys
-
-# Make Python objects available to R
-resultado = None
+import os
 
 # Funciones auxiliares mejoradas
 def calcular_cuartiles_tradicional(datos):
@@ -58,13 +70,13 @@ def generar_tabla_xtable(datos):
         fila = []
         for j in range(num_columnas):
             idx = j * filas_por_columna + i
-            # Convertir explícitamente a string para evitar problemas de visualización
             valor = str(datos[idx]) if idx < len(datos) else ""
             fila.append(valor)
         matriz_datos.append(fila)
     return pd.DataFrame(matriz_datos).astype(str).replace('nan', '')
 
-def generar_diagrama_boxplot(stats):
+def generar_diagrama_boxplot(stats, indice=0):
+    """Genera un diagrama de caja compatible con HTML y PDF"""
     fig, ax = plt.subplots(figsize=(6, 4))
     bp = ax.boxplot([stats['datos']], patch_artist=True, widths=0.5)
     
@@ -73,29 +85,42 @@ def generar_diagrama_boxplot(stats):
     plt.setp(bp['whiskers'], color='#1a237e', linestyle='-')
     plt.setp(bp['medians'], color='#d32f2f', linewidth=2)
     
-    # Mejorar alineación de las etiquetas con sus valores correspondientes
+    # Mejorar alineación de las etiquetas
     y_range = stats['maximo'] - stats['minimo']
     
-    # Posicionar etiquetas a la derecha, alineadas exactamente con sus valores correspondientes
-    ax.text(0.65, stats['minimo'], f"Mín: {stats['minimo']}", 
+    # Posicionar etiquetas 
+    ax.text(1.2, stats['minimo'], f"Mín: {stats['minimo']}", 
             ha='left', va='center', fontsize=9)
-    ax.text(1.26, stats['q1'], f"Q1: {stats['q1']}", 
+    ax.text(1.2, stats['q1'], f"Q1: {stats['q1']}", 
             ha='left', va='center', fontsize=9)
-    ax.text(0.59, stats['mediana'], f"Med: {stats['mediana']}", 
+    ax.text(1.2, stats['mediana'], f"Med: {stats['mediana']}", 
             ha='left', va='center', fontsize=9)
-    ax.text(1.26, stats['q3'], f"Q3: {stats['q3']}", 
+    ax.text(1.2, stats['q3'], f"Q3: {stats['q3']}", 
             ha='left', va='center', fontsize=9)
-    ax.text(0.65, stats['maximo'], f"Máx: {stats['maximo']}", 
+    ax.text(1.2, stats['maximo'], f"Máx: {stats['maximo']}", 
             ha='left', va='center', fontsize=9)
     
     ax.set_ylim(stats['minimo'] - y_range*0.1, stats['maximo'] + y_range*0.1)
     ax.set_xticks([])
     
-    # Convertir a HTML
+    # Crear nombre único para la imagen basado en su índice y datos
+    img_name = f"boxplot_opcion_{indice+1}.png"
+    
+    # Guardar como archivo local
+    plt.savefig(img_name, format='png', dpi=150, bbox_inches='tight')
+    
+    # Convertir a base64 para HTML
     buf = io.BytesIO()
-    plt.savefig(buf, format='png', dpi=120, bbox_inches='tight')
-    plt.close(fig)  # Explicitly close figure
-    return f'<img src="data:image/png;base64,{base64.b64encode(buf.getvalue()).decode()}" style="max-width: 600px;">'
+    plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    
+    # Guardar la ruta del archivo para recuperarla después
+    img_data = {
+        'path': img_name,
+        'base64': base64.b64encode(buf.getvalue()).decode()
+    }
+    
+    return img_data
 
 def generar_datos(n):
     media = np.random.uniform(155, 175)
@@ -115,7 +140,7 @@ def calcular_estadisticas(datos):
         'maximo': int(max(datos))
     }
 
-# Generadores de distractores mejorados
+# Generadores de distractores
 def generar_distractor_shift(stats):
     shift = np.random.choice([-5, -3, 3, 5])
     return {
@@ -160,9 +185,15 @@ def generar_ejercicio():
             random.shuffle(opciones)
             correcta = next(i for i, op in enumerate(opciones) if op == stats)
             
+            # Generar diagramas y guardar como archivos (para PDF) y como base64 (para HTML)
+            diagramas = []
+            for i, op in enumerate(opciones):
+                diagramas.append(generar_diagrama_boxplot(op, i))
+            
             return {
                 'stats': stats,
-                'diagramas_html': [generar_diagrama_boxplot(op) for op in opciones],
+                'opciones': opciones,
+                'diagramas': diagramas,
                 'tabla_df': generar_tabla_xtable(stats['datos']),
                 'posicion_correcta': correcta + 1
             }
@@ -180,17 +211,30 @@ Question
 Un grupo de estudiantes registró sus estaturas (en centímetros) como se muestra en la siguiente tabla:
 
 ```{r, echo=FALSE, results="asis"}
-# Mejorar la visualización de la tabla
-tabla_xtable <- xtable(py$resultado$tabla_df,
-                      caption = "Datos de estaturas",
-                      align = rep("c", ncol(py$resultado$tabla_df) + 1))
+# Crear tabla adaptable a múltiples formatos
+tabla_datos <- xtable(py$resultado$tabla_df,
+                    caption = "Datos de estaturas",
+                    align = rep("c", ncol(py$resultado$tabla_df) + 1))
 
-print(tabla_xtable, 
-      type = "latex",
-      include.rownames = FALSE,
-      include.colnames = FALSE,
-      sanitize.text.function = function(x) x,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 1em auto;"')
+# Adaptar la salida según el formato
+if (is_html) {
+  print(tabla_datos, 
+        type = "html",
+        include.rownames = FALSE,
+        include.colnames = FALSE,
+        sanitize.text.function = function(x) x,
+        html.table.attributes = 'border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 1em auto;"')
+} else {
+  # Para LaTeX/PDF
+  print(tabla_datos, 
+        type = "latex",
+        include.rownames = FALSE,
+        include.colnames = FALSE,
+        sanitize.text.function = function(x) x,
+        table.placement = "H",
+        latex.environments = "center",
+        booktabs = TRUE)
+}
 ```
 
 ¿Cuál de los siguientes diagramas de caja representa correctamente la distribución de estos datos?
@@ -199,43 +243,57 @@ Answerlist
 ----------
 * 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
-tryCatch({
-  cat(py$resultado$diagramas_html[1])
-}, error = function(e) {
-  cat("<p>Error: No se generó el diagrama correctamente</p>")
-})
+if (is_html) {
+  # Para HTML usamos la versión base64
+  cat(paste0('<img src="data:image/png;base64,', py$resultado$diagramas[[1]]$base64, '" style="max-width:100%;">'))
+} else {
+  # Para PDF/LaTeX incluimos la imagen como archivo
+  cat(paste0("\\includegraphics[width=10cm]{", py$resultado$diagramas[[1]]$path, "}"))
+}
 ```
+
 * 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
-tryCatch({
-  cat(py$resultado$diagramas_html[2])
-}, error = function(e) {
-  cat("<p>Error: No se generó el diagrama correctamente</p>")
-})
+if (is_html) {
+  # Para HTML usamos la versión base64
+  cat(paste0('<img src="data:image/png;base64,', py$resultado$diagramas[[2]]$base64, '" style="max-width:100%;">'))
+} else {
+  # Para PDF/LaTeX incluimos la imagen como archivo
+  cat(paste0("\\includegraphics[width=10cm]{", py$resultado$diagramas[[2]]$path, "}"))
+}
 ```
+
 * 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
-tryCatch({
-  cat(py$resultado$diagramas_html[3])
-}, error = function(e) {
-  cat("<p>Error: No se generó el diagrama correctamente</p>")
-})
+if (is_html) {
+  # Para HTML usamos la versión base64
+  cat(paste0('<img src="data:image/png;base64,', py$resultado$diagramas[[3]]$base64, '" style="max-width:100%;">'))
+} else {
+  # Para PDF/LaTeX incluimos la imagen como archivo
+  cat(paste0("\\includegraphics[width=10cm]{", py$resultado$diagramas[[3]]$path, "}"))
+}
 ```
+
 * 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
-tryCatch({
-  cat(py$resultado$diagramas_html[4])
-}, error = function(e) {
-  cat("<p>Error: No se generó el diagrama correctamente</p>")
-})
+if (is_html) {
+  # Para HTML usamos la versión base64
+  cat(paste0('<img src="data:image/png;base64,', py$resultado$diagramas[[4]]$base64, '" style="max-width:100%;">'))
+} else {
+  # Para PDF/LaTeX incluimos la imagen como archivo
+  cat(paste0("\\includegraphics[width=10cm]{", py$resultado$diagramas[[4]]$path, "}"))
+}
 ```
+
 * 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
-tryCatch({
-  cat(py$resultado$diagramas_html[5])
-}, error = function(e) {
-  cat("<p>Error: No se generó el diagrama correctamente</p>")
-})
+if (is_html) {
+  # Para HTML usamos la versión base64
+  cat(paste0('<img src="data:image/png;base64,', py$resultado$diagramas[[5]]$base64, '" style="max-width:100%;">'))
+} else {
+  # Para PDF/LaTeX incluimos la imagen como archivo
+  cat(paste0("\\includegraphics[width=10cm]{", py$resultado$diagramas[[5]]$path, "}"))
+}
 ```
 
 Solution
@@ -244,7 +302,7 @@ Solution
 
 1. **Ordenar los datos:**
 ```{r, echo=FALSE, results="asis"}
-# Ordenar datos y mejorar la visualización de la tabla
+# Ordenar datos y generar tabla para la solución
 datos_ordenados <- sort(py$resultado$stats$datos)
 filas <- 10
 n <- length(datos_ordenados)
@@ -253,17 +311,28 @@ datos_padded <- c(datos_ordenados, rep(NA, columnas*filas - n))
 matriz_ordenada <- matrix(datos_padded, nrow=filas, byrow=FALSE)
 matriz_ordenada[is.na(matriz_ordenada)] <- ""
 
-# Convertir a tabla y establecer propiedades de visualización
+# Crear y mostrar tabla según formato
 tabla_ordenada <- xtable(matriz_ordenada,
                         caption = "Datos ordenados",
                         align = rep("c", ncol(matriz_ordenada)+1))
 
-print(tabla_ordenada,
-      type = "html",
-      include.rownames = FALSE,
-      include.colnames = FALSE,
-      sanitize.text.function = function(x) x,
-      html.table.attributes = 'border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 1em auto;"')
+if (is_html) {
+  print(tabla_ordenada,
+        type = "html",
+        include.rownames = FALSE,
+        include.colnames = FALSE,
+        sanitize.text.function = function(x) x,
+        html.table.attributes = 'border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 1em auto;"')
+} else {
+  print(tabla_ordenada,
+        type = "latex",
+        include.rownames = FALSE,
+        include.colnames = FALSE,
+        sanitize.text.function = function(x) x,
+        table.placement = "H",
+        latex.environments = "center",
+        booktabs = TRUE)
+}
 ```
 
 2. **Calcular estadísticos clave:**
@@ -281,12 +350,15 @@ print(tabla_ordenada,
 **Respuesta correcta:** Opción `r py$resultado$posicion_correcta`
 
 ```{r, echo=FALSE, results="asis", warning=FALSE}
-# Si existe el índice correcto, mostrar ese diagrama; si no, mostrar un mensaje de error
-tryCatch({
-  cat(py$resultado$diagramas_html[py$resultado$posicion_correcta])
-}, error = function(e) {
-  cat("<p>Error: No se generó el diagrama correctamente</p>")
-})
+# Mostrar el diagrama correcto
+respuesta_correcta <- py$resultado$posicion_correcta
+if (is_html) {
+  # Para HTML usamos la versión base64
+  cat(paste0('<img src="data:image/png;base64,', py$resultado$diagramas[[respuesta_correcta]]$base64, '" style="max-width:100%;">'))
+} else {
+  # Para PDF/LaTeX incluimos la imagen como archivo
+  cat(paste0("\\includegraphics[width=10cm]{", py$resultado$diagramas[[respuesta_correcta]]$path, "}"))
+}
 ```
 
 Meta-information
