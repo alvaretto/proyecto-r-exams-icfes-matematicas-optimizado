@@ -1,0 +1,209 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Metadatos ICFES}\label{metadatos-icfes}
+
+icfes: competencia: - interpretacion\_representacion nivel\_dificultad:
+2 contenido: categoria: estadistica tipo: generico contexto: laboral
+eje\_axial: eje4 componente: aleatorio
+
+\section{Question}\label{question}
+
+Una empresa farmacéutica calculó el porcentaje de efectividad de un
+tratamiento para una enfermedad. Para ello, hizo cinco estudios y, de
+cada estudio, se conoció el porcentaje de efectividad que tuvo el
+tratamiento. De los cinco porcentajes, solo hay una moda que es 93\% y
+la mediana es 98\%.
+
+¿Es CORRECTO afirmar que la efectividad mínima mostrada en los estudios
+fue de 93\%?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  Sí, porque la mediana debe tener dos valores mayores y dos menores, y
+  la moda garantiza que los dos menores son 93\%.
+\item
+  No, porque la mediana es resultado de un estudio y la moda el de otros
+  dos, luego alguno de los restantes podría ser menor que 93\%.
+\item
+  No, porque la mediana podría ser esa, por dos estudios muy cercanos a
+  100\%, dos iguales y uno menor que 93\%.
+\item
+  Sí, porque la mediana es el resultado de uno de los estudios y la moda
+  el de todos los demás, entonces el menor es 93\%.
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+La afirmación es \textbf{CORRECTA}. Analicemos por qué:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Datos y Orden:} Tenemos 5 porcentajes de efectividad. Si los
+  ordenamos de menor a mayor, los llamamos \(x_1\), \(x_2\), \(x_3\),
+  \(x_4\), \(x_5\).
+\item
+  \textbf{Mediana:} Al ser 5 datos (un número impar), la mediana es el
+  valor central (el 3º). Se nos dice que la mediana es 98\%. Por lo
+  tanto, \(x_3 = 98%
+  \). La lista ordenada es: \(x_1\), \(x_2\), \(98%
+  \), \(x_4\), \(x_5\). Esto implica que \(x_1\) es menor o igual que
+  \(x_2\), que a su vez es menor o igual que \(98%
+  \), y que \(98%
+  \) es menor o igual que \(x_4\), que a su vez es menor o igual que
+  \(x_5\).
+\item
+  \textbf{Moda:} La moda es el valor que más se repite. Se nos dice que
+  la moda es 93\% y es \emph{única}.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Para que 93\% sea la moda en 5 datos, debe aparecer al menos dos
+    veces.
+  \item
+    ¿Podría aparecer 3 o más veces? No, porque si apareciera 3 veces, al
+    ordenar los datos, el valor central (la mediana, \(x_3\)) sería
+    93\%, lo cual contradice que la mediana es 98\% (ya que 93\% es
+    diferente de 98\%).
+  \item
+    Por lo tanto, 93\% aparece exactamente \emph{dos} veces.
+  \item
+    Al ser la \emph{única} moda, ningún otro valor puede repetirse dos o
+    más veces. Esto significa que \(x_4\) es diferente de 98\%, \(x_5\)
+    es diferente de 98\%, y \(x_4\) es diferente de \(x_5\).
+  \end{itemize}
+\item
+  \textbf{Combinando Mediana y Moda:} Sabemos que la lista ordenada es
+  \(x_1\), \(x_2\), \(98%
+  \), \(x_4\), \(x_5\) y que dos de estos valores son 93\%.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Dado que 93\% (la moda) es menor que 98\% (la mediana), los dos
+    valores de 93\% deben estar necesariamente en las posiciones por
+    debajo de la mediana. Es decir, deben ser \(x_1\) y \(x_2\).
+  \item
+    La única estructura posible para la lista ordenada es: \(93%
+    \), \(93%
+    \), \(98%
+    \), \(x_4\), \(x_5\), donde además se cumple \(98% < x_4 < x_5
+    \).
+  \end{itemize}
+\item
+  \textbf{Conclusión sobre el Mínimo:} En la lista ordenada (\(93%
+  \), \(93%
+  \), \(98%
+  \), \(x_4\), \(x_5\)), el valor mínimo es \(x_1\), que hemos
+  determinado que debe ser 93\%.
+\end{enumerate}
+
+\textbf{Tabla de datos ordenados:}
+
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+Posición & Valor & Descripción \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(x_1\) & 93\% & Moda (valor mínimo) \\
+\(x_2\) & 93\% & Moda (repetido) \\
+\(x_3\) & 98\% & Mediana (valor central) \\
+\(x_4\) & \textgreater{} 98\% & Mayor que la mediana \\
+\(x_5\) & \textgreater{} 98\% & Mayor que la mediana \\
+\end{longtable}
+
+Por lo tanto, es correcto afirmar que la efectividad mínima mostrada fue
+93\%.
+
+\section{Meta-information}\label{meta-information}
+
+exname: Efectividad tratamiento farmaceutico ICFES extype: schoice
+exsolution: 1000 exshuffle: TRUE exnumeric: FALSE extol: 0.01 expoints:
+1
+
+\end{document}

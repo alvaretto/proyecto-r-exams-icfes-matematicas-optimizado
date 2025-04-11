@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/vuelo_acrobatico_mejorado_D_/Interpretación de gráficas</text>
+</category>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> Q1 : vuelo_acrobatico_mejorado_D </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>En una entrevista para una cadena de televisión, un piloto de un avión de acrobacias comenta en detalle cómo fue su presentación:</p>
+<p>“Durante los primeros 30 segundos aumenté la altura de manera constante y luego, realicé una pirueta en la que descendí de manera constante durante 7 segundos. Después del descenso, necesité recuperar la altitud para la siguiente maniobra, así que elevé nuevamente el avión durante 6 segundos hasta alcanzar la altura máxima inicial. Una vez recuperada la altura, comencé a girar en torno al eje del avión durante 20 segundos, manteniendo la misma altura. Para finalizar, aterricé reduciendo la altura de manera constante durante 20 segundos”.</p>
+<p>¿Cuál de las siguientes gráficas representa de forma CORRECTA la información dada por el piloto?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>La gráfica correcta es la que representa adecuadamente las cinco fases del vuelo acrobático descritas por el piloto:</p>
+<ol style="list-style-type: decimal">
+<li>Durante los primeros 30 segundos: aumento constante de altura (línea ascendente).</li>
+<li>Pirueta con descenso constante durante 7 segundos (línea descendente).</li>
+<li>Recuperación de altitud durante 6 segundos hasta alcanzar la altura máxima inicial (línea ascendente).</li>
+<li>Giro alrededor del eje del avión durante 20 segundos manteniendo la misma altura (línea horizontal).</li>
+<li>Aterrizaje con reducción constante de altura durante 20 segundos (línea descendente final).</li>
+</ol>
+<pre><code># Generar explicación detallada basada en los errores específicos seleccionados
+explicaciones_errores &lt;- list(
+  error1 = &quot;- Falta la fase de recuperación de altitud después de la pirueta. En esta gráfica el avión permanece a media altura después de la pirueta, cuando debería elevarse nuevamente hasta la altura máxima.&quot;,
+  error2 = &quot;- La pirueta no muestra un descenso constante como indicó el piloto, sino que presenta un pico hacia arriba (aumento de altura) antes del descenso, lo cual contradice la descripción.&quot;,
+  error3 = &quot;- No muestra la pirueta con descenso constante. En cambio, mantiene la altura constante después del ascenso inicial, contradiciendo la descripción del piloto.&quot;,
+  error4 = &quot;- Durante la fase de giro, la altura disminuye gradualmente cuando el piloto especificó que mantuvo la misma altura durante esta fase.&quot;,
+  error5 = &quot;- La altura máxima alcanzada es significativamente mayor que la mencionada por el piloto, lo que distorsiona toda la trayectoria del vuelo.&quot;,
+  error6 = &quot;- El aterrizaje muestra oscilaciones en lugar del descenso constante descrito por el piloto.&quot;
+)
+
+# Obtener explicaciones para los errores seleccionados
+explicaciones_seleccionadas &lt;- explicaciones_errores[paste0(&quot;error&quot;, errores_seleccionados)]
+
+# Generar explicación basada en la posición correcta y los errores
+cat(&quot;La gráfica correcta es la opción&quot;, LETTERS[posicion_correcta], &quot;, que tiene color&quot;, color_correcto, &quot;y muestra exactamente las cinco fases descritas por el piloto, incluyendo la fase de recuperación de altitud después de la pirueta.\n\n&quot;)</code></pre>
+<p>La gráfica correcta es la opción B , que tiene color darkgreen y muestra exactamente las cinco fases descritas por el piloto, incluyendo la fase de recuperación de altitud después de la pirueta.</p>
+<pre><code>cat(&quot;Las demás opciones contienen los siguientes errores:\n\n&quot;)</code></pre>
+<p>Las demás opciones contienen los siguientes errores:</p>
+<pre><code># Mostrar explicaciones de los errores
+for (explicacion in explicaciones_seleccionadas) {
+  cat(explicacion, &quot;\n&quot;)
+}</code></pre>
+<ul>
+<li>No muestra la pirueta con descenso constante. En cambio, mantiene la altura constante después del ascenso inicial, contradiciendo la descripción del piloto.</li>
+<li>El aterrizaje muestra oscilaciones en lugar del descenso constante descrito por el piloto.</li>
+<li>La pirueta no muestra un descenso constante como indicó el piloto, sino que presenta un pico hacia arriba (aumento de altura) antes del descenso, lo cual contradice la descripción.</li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+<code>{python grafico2, echo=FALSE, message=FALSE, comment='', warning=FALSE, results='hide', fig.cap=''} # Gráfica 2 import matplotlib.pyplot as plt import numpy as np  # Configuración para eliminar etiquetas plt.rcParams['figure.figsize'] = (8, 5) plt.rcParams['figure.titlesize'] = 0  # Obtener variables de R tiempo_aumento = r.tiempos_aumento tiempo_pirueta = r.tiempos_pirueta tiempo_elevacion = r.tiempos_elevacion tiempo_giro = r.tiempos_giro tiempo_aterrizaje = r.tiempos_aterrizaje altura_max = r.altura_maxima  # Definir puntos clave para la gráfica correcta # Fase 1: Aumento constante de altura x1 = np.array([0, tiempo_aumento]) y1 = np.array([0, altura_max])  # Fase 2: Pirueta (descenso constante) x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta]) y2 = np.array([altura_max, altura_max/3])  # Fase 3: Elevación adicional x_elevacion = np.array([tiempo_aumento + tiempo_pirueta, tiempo_aumento + tiempo_pirueta + tiempo_elevacion]) y_elevacion = np.array([altura_max/3, altura_max])  # Fase 4: Giro a altura constante x3 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro]) y3 = np.array([altura_max, altura_max])  # Fase 5: Aterrizaje (descenso constante) x4 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje]) y4 = np.array([altura_max, 0])  # Crear figura fig = plt.figure() ax = fig.add_subplot(111)  # Graficar cada segmento ax.plot(x1, y1, color='darkgreen', linestyle='dashed', linewidth=2.5) ax.plot(x2, y2, color='darkgreen', linestyle='dashed', linewidth=2.5) ax.plot(x_elevacion, y_elevacion, color='darkgreen', linestyle='dashed', linewidth=2.5) ax.plot(x3, y3, color='darkgreen', linestyle='dashed', linewidth=2.5) ax.plot(x4, y4, color='darkgreen', linestyle='dashed', linewidth=2.5)  # Configuración del gráfico ax.set_xlabel('Segundos', fontweight='bold') ax.set_ylabel('Altura (m)', fontweight='bold') ax.grid(True, linestyle='--', alpha=0.7) ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5) ax.set_ylim(0, altura_max * 1.1)  # Ajustar márgenes plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9) plt.show()</code>
+</p>]]></text>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+<code>{python grafico4, echo=FALSE, message=FALSE, comment='', warning=FALSE, results='hide', fig.cap=''} # Gráfica 4 import matplotlib.pyplot as plt import numpy as np  # Configuración para eliminar etiquetas plt.rcParams['figure.figsize'] = (8, 5) plt.rcParams['figure.titlesize'] = 0  # Obtener variables de R tiempo_aumento = r.tiempos_aumento tiempo_pirueta = r.tiempos_pirueta tiempo_elevacion = r.tiempos_elevacion tiempo_giro = r.tiempos_giro tiempo_aterrizaje = r.tiempos_aterrizaje altura_max = r.altura_maxima  # Definir puntos clave para la gráfica con error: Pirueta con pico # Fase 1: Aumento constante de altura x1 = np.array([0, tiempo_aumento]) y1 = np.array([0, altura_max])  # Fase 2: Pirueta (con pico incorrecto) x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta/2, tiempo_aumento + tiempo_pirueta]) y2 = np.array([altura_max, altura_max*1.3, altura_max/2])  # Fase 3: Elevación adicional x_elevacion = np.array([tiempo_aumento + tiempo_pirueta, tiempo_aumento + tiempo_pirueta + tiempo_elevacion]) y_elevacion = np.array([altura_max/2, altura_max])  # Fase 4: Giro a altura constante x3 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro]) y3 = np.array([altura_max, altura_max])  # Fase 5: Aterrizaje (descenso constante) x4 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje]) y4 = np.array([altura_max, 0])  # Crear figura fig = plt.figure() ax = fig.add_subplot(111)  # Graficar cada segmento ax.plot(x1, y1, color='brown', linewidth=2) ax.plot(x2, y2, color='brown', linewidth=2) ax.plot(x_elevacion, y_elevacion, color='brown', linewidth=2) ax.plot(x3, y3, color='brown', linewidth=2) ax.plot(x4, y4, color='brown', linewidth=2)  # Configuración del gráfico ax.set_xlabel('Segundos', fontweight='bold') ax.set_ylabel('Altura (m)', fontweight='bold') ax.grid(True, linestyle='--', alpha=0.7) ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5) ax.set_ylim(0, altura_max * 1.1)  # Ajustar márgenes plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9) plt.show()</code>
+</p>]]></text>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+<code>{python grafico1, echo=FALSE, message=FALSE, comment='', warning=FALSE, results='hide', fig.cap=''} # Gráfica 1 import matplotlib.pyplot as plt import numpy as np  # Configuración para eliminar etiquetas plt.rcParams['figure.figsize'] = (8, 5) plt.rcParams['figure.titlesize'] = 0  # Obtener variables de R tiempo_aumento = r.tiempos_aumento tiempo_pirueta = r.tiempos_pirueta tiempo_elevacion = r.tiempos_elevacion tiempo_giro = r.tiempos_giro tiempo_aterrizaje = r.tiempos_aterrizaje altura_max = r.altura_maxima  # Definir puntos clave para la gráfica con error: Sin pirueta, mantiene altura # Fase 1: Aumento constante de altura x1 = np.array([0, tiempo_aumento]) y1 = np.array([0, altura_max])  # Fase 2: Mantener altura en vez de hacer pirueta (incorrecto) x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta + tiempo_elevacion]) y2 = np.array([altura_max, altura_max])  # Fase 3: Giro a altura constante x3 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro]) y3 = np.array([altura_max, altura_max])  # Fase 4: Aterrizaje (descenso constante) x4 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje]) y4 = np.array([altura_max, 0])  # Crear figura fig = plt.figure() ax = fig.add_subplot(111)  # Graficar cada segmento ax.plot(x1, y1, color='red', linewidth=2) ax.plot(x2, y2, color='red', linewidth=2) ax.plot(x3, y3, color='red', linewidth=2) ax.plot(x4, y4, color='red', linewidth=2)  # Configuración del gráfico ax.set_xlabel('Segundos', fontweight='bold') ax.set_ylabel('Altura (m)', fontweight='bold') ax.grid(True, linestyle='--', alpha=0.7) ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5) ax.set_ylim(0, altura_max * 1.1)  # Ajustar márgenes plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9) plt.show()</code>
+</p>]]></text>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+<code>{python grafico3, echo=FALSE, message=FALSE, comment='', warning=FALSE, results='hide', fig.cap=''} # Gráfica 3 import matplotlib.pyplot as plt import numpy as np  # Configuración para eliminar etiquetas plt.rcParams['figure.figsize'] = (8, 5) plt.rcParams['figure.titlesize'] = 0  # Obtener variables de R tiempo_aumento = r.tiempos_aumento tiempo_pirueta = r.tiempos_pirueta tiempo_elevacion = r.tiempos_elevacion tiempo_giro = r.tiempos_giro tiempo_aterrizaje = r.tiempos_aterrizaje altura_max = r.altura_maxima  # Definir puntos clave para la gráfica con error: Aterrizaje con oscilaciones # Fase 1: Aumento constante de altura x1 = np.array([0, tiempo_aumento]) y1 = np.array([0, altura_max])  # Fase 2: Pirueta (descenso constante) x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta]) y2 = np.array([altura_max, altura_max/3])  # Fase 3: Elevación adicional x_elevacion = np.array([tiempo_aumento + tiempo_pirueta, tiempo_aumento + tiempo_pirueta + tiempo_elevacion]) y_elevacion = np.array([altura_max/3, altura_max])  # Fase 4: Giro a altura constante x3 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro]) y3 = np.array([altura_max, altura_max])  # Fase 5: Aterrizaje con oscilaciones (incorrecto) t_aterrizaje = np.linspace(tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje, 50) h_aterrizaje = altura_max * (1 - (t_aterrizaje - (tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro))/tiempo_aterrizaje) + altura_max * 0.1 * np.sin(10 * t_aterrizaje) h_aterrizaje = np.clip(h_aterrizaje, 0, None)  # Asegurar que no haya alturas negativas  # Crear figura fig = plt.figure() ax = fig.add_subplot(111)  # Graficar cada segmento ax.plot(x1, y1, color='orange', linewidth=2) ax.plot(x2, y2, color='orange', linewidth=2) ax.plot(x_elevacion, y_elevacion, color='orange', linewidth=2) ax.plot(x3, y3, color='orange', linewidth=2) ax.plot(t_aterrizaje, h_aterrizaje, color='orange', linewidth=2)  # Configuración del gráfico ax.set_xlabel('Segundos', fontweight='bold') ax.set_ylabel('Altura (m)', fontweight='bold') ax.grid(True, linestyle='--', alpha=0.7) ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5) ax.set_ylim(0, altura_max * 1.1)  # Ajustar márgenes plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9) plt.show()</code>
+</p>]]></text>
+</answer>
+</question>
+
+</quiz>

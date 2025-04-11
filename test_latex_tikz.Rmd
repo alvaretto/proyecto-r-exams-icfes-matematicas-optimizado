@@ -1,0 +1,210 @@
+---
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+
+# Configurar opciones de knitr
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.width = 6,
+                      fig.height = 4,
+                      fig.align = "center")
+
+# Definir triángulos pitagóricos comunes
+triangulos_pitagoricos <- list(
+  c(3, 4, 5),
+  c(5, 12, 13),
+  c(6, 8, 10),
+  c(8, 15, 17),
+  c(9, 12, 15),
+  c(5, 12, 13),
+  c(7, 24, 25)
+)
+
+# Seleccionar un triángulo pitagórico aleatorio
+set.seed(sample(1:1000, 1))
+triangulo <- sample(triangulos_pitagoricos, 1)[[1]]
+
+# Asignar valores a los catetos y la hipotenusa
+a <- triangulo[1]
+b <- triangulo[2]
+c <- triangulo[3]
+
+# Lista de nombres para contextualizar el problema
+nombres <- c("Ana", "Carlos", "María", "Juan", "Sofía", "Pedro", "Laura", "Diego", "Valentina", "Gabriel")
+
+# Lista de contextos para el problema
+contextos <- c(
+  "En un terreno rectangular",
+  "En un parque triangular",
+  "En un plano cartesiano",
+  "En un diseño arquitectónico",
+  "En un proyecto de carpintería",
+  "En una construcción",
+  "En un jardín triangular",
+  "En un problema de navegación"
+)
+
+# Seleccionar nombre y contexto aleatorios
+nombre <- sample(nombres, 1)
+contexto <- sample(contextos, 1)
+
+# Unidades de medida posibles
+unidades <- c("cm", "m", "km", "pulgadas")
+unidad <- sample(unidades, 1)
+```
+
+Question
+========
+
+```{r generar_pregunta, results='asis'}
+# Generar diferentes formatos de pregunta
+formatos_pregunta <- c(
+  paste0(contexto, ", ", nombre, " tiene un triángulo rectángulo donde uno de los catetos mide $a = ", a, "$ ", unidad, " y el otro cateto mide $b = ", b, "$ ", unidad, ". ¿Cuál es la longitud de la hipotenusa $c$?"),
+  paste0(nombre, " está resolviendo un problema con un triángulo rectángulo. Si los catetos miden $a = ", a, "$ ", unidad, " y $b = ", b, "$ ", unidad, ", ¿cuánto mide la hipotenusa?"),
+  paste0("Para un proyecto de matemáticas, ", nombre, " dibuja un triángulo rectángulo con catetos de $a = ", a, "$ ", unidad, " y $b = ", b, "$ ", unidad, ". ¿Cuál es el valor de la hipotenusa $c$?")
+)
+
+# Seleccionar un formato aleatorio
+pregunta <- sample(formatos_pregunta, 1)
+cat(pregunta)
+```
+
+```{r generar_tikz, echo=FALSE, results="hide"}
+# Función para generar el código TikZ del triángulo rectángulo
+generate_triangle_tikz <- function(a, b, unidad) {
+  # Calcular factor de escala para mantener proporciones adecuadas
+  escala <- 5 / max(a, b)
+  ax <- a * escala
+  by <- b * escala
+
+  # Crear el código TikZ
+  tikz_code <- paste0("\\begin{tikzpicture}
+    % Dibujar el triángulo con las dimensiones escaladas
+    \\draw (0,0) -- (", ax, ",0) -- (", ax, ",", by, ") -- cycle;
+    % Dibujar el ángulo recto
+    \\draw (", ax - 0.3, ",0) -- (", ax - 0.3, ",0.3) -- (", ax, ",0.3);
+    % Añadir etiquetas
+    \\node at (", ax / 2, ",0) [below] {$a = ", a, "$ ", unidad, "};
+    \\node at (", ax, ",", by / 2, ") [right] {$b = ", b, "$ ", unidad, "};
+    \\node at (", ax / 2, ",", by / 2, ") [above left] {$c = ?$};
+  \\end{tikzpicture}")
+
+  return(tikz_code)
+}
+
+# Generar el código TikZ
+triangle_tikz <- generate_triangle_tikz(a, b, unidad)
+
+# Función para incluir el diagrama TikZ
+include_triangle <- function() {
+  include_tikz(triangle_tikz,
+              name = "triangulo_rectangulo",
+              markup = "markdown",
+              format = match_exams_device(),
+              width = "8cm",
+              height = "6cm")
+}
+```
+
+```{r triangulo-rectangulo, echo=FALSE, results="asis", fig.align="center", fig.width=8, fig.height=6}
+include_triangle()
+```
+
+## Opciones
+
+```{r questionlist, results="asis"}
+# Crear opciones de respuesta
+# La respuesta correcta es c (la hipotenusa)
+respuesta_correcta <- c
+
+# Crear distractores comunes en problemas de Pitágoras
+distractores <- c(
+  a + b,                                # Suma de catetos (error común)
+  round(sqrt(abs(a^2 - b^2)), 1),       # Diferencia de cuadrados (error común)
+  respuesta_correcta + 2,                # Valor cercano mayor
+  respuesta_correcta - 1                 # Valor cercano menor
+)
+
+# Eliminar duplicados y valores negativos
+distractores <- unique(distractores[distractores > 0])
+distractores <- distractores[distractores != respuesta_correcta]
+
+# Tomar solo 3 distractores
+if (length(distractores) > 3) {
+  distractores <- sample(distractores, 3)
+} else {
+  # Si no hay suficientes distractores, crear algunos adicionales
+  while (length(distractores) < 3) {
+    nuevo <- respuesta_correcta + sample(c(-3:-1, 1:3), 1)
+    if (nuevo > 0 && !(nuevo %in% distractores) && nuevo != respuesta_correcta) {
+      distractores <- c(distractores, nuevo)
+    }
+  }
+}
+
+# Combinar con la respuesta correcta y mezclar
+opciones <- c(respuesta_correcta, distractores)
+
+# Guardar la posición de la respuesta correcta antes de mezclar
+sol_pos <- 1
+
+# Mezclar las opciones
+orden <- sample(1:4)
+opciones <- opciones[orden]
+
+# Encontrar la nueva posición de la respuesta correcta
+solucion <- which(opciones == respuesta_correcta)
+
+# Mostrar opciones
+answerlist(opciones, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solutionlist, results="asis"}
+# Explicación con valores dinámicos
+cat(paste0("Aplicando el teorema de Pitágoras:
+
+$c^2 = a^2 + b^2$
+
+$c^2 = ", a, "^2 + ", b, "^2$
+
+$c^2 = ", a^2, " + ", b^2, "$
+
+$c^2 = ", a^2 + b^2, "$
+
+$c = ", c, "$ ", unidad, "
+
+Por lo tanto, la longitud de la hipotenusa es ", c, " ", unidad, "."))
+```
+
+# Generar lista de soluciones
+
+```{r answerlist, results="asis"}
+# Crear vector de soluciones dinámico basado en la posición de la respuesta correcta
+sol_string <- rep("0", length(opciones))
+sol_string[solucion] <- "1"
+sol_string <- paste(sol_string, collapse = "")
+
+answerlist(ifelse(seq_along(opciones) == solucion, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+```{r meta, results="asis"}
+# Generar nombre dinámico para el ejercicio
+cat(paste0("exname: Teorema-Pitagoras-", a, "-", b, "-", c, "\n"))
+cat(paste0("extype: schoice\n"))
+cat(paste0("exsolution: ", sol_string, "\n"))
+cat(paste0("extol: 0\n"))
+cat(paste0("exshuffle: TRUE\n"))
+```

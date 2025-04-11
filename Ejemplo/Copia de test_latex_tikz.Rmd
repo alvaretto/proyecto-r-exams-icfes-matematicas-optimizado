@@ -1,0 +1,77 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+knitr::opts_chunk$set(echo = FALSE, 
+                     warning = FALSE, 
+                     message = FALSE,
+                     fig.width = 6, 
+                     fig.height = 4,
+                     fig.align = "center")
+```
+
+Question
+========
+
+En un triángulo rectángulo, si uno de los catetos mide $a = 3$ cm y el otro cateto mide $b = 4$ cm, ¿cuál es la longitud de la hipotenusa $c$?
+
+```{tikz, fig.cap = "Triángulo rectángulo", fig.ext = 'png', fig.width = 3, fig.height = 3}
+\begin{tikzpicture}
+  \draw (0,0) -- (3,0) -- (3,4) -- cycle;
+  \draw (2.7,0) -- (2.7,0.3) -- (3,0.3);
+  \node at (1.5,0) [below] {$a = 3$ cm};
+  \node at (3,2) [right] {$b = 4$ cm};
+  \node at (1.5,2) [above left] {$c = ?$};
+\end{tikzpicture}
+```
+
+## Opciones
+
+```{r questionlist, results="asis"}
+# Generar opciones
+opciones <- c(5, 6, 7, 8)
+solucion <- 1  # La respuesta correcta es 5
+
+# Mostrar opciones
+answerlist(opciones, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solutionlist, results="asis"}
+# Explicación
+cat("Aplicando el teorema de Pitágoras:
+
+$c^2 = a^2 + b^2$
+
+$c^2 = 3^2 + 4^2$
+
+$c^2 = 9 + 16$
+
+$c^2 = 25$
+
+$c = 5$ cm
+
+Por lo tanto, la longitud de la hipotenusa es 5 cm.")
+```
+
+# Generar lista de soluciones
+
+```{r answerlist, results="asis"}
+answerlist(ifelse(1:length(opciones) == solucion, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+exname: Teorema-Pitagoras
+extype: schoice
+exsolution: 1000
+extol: 0
+exshuffle: TRUE
