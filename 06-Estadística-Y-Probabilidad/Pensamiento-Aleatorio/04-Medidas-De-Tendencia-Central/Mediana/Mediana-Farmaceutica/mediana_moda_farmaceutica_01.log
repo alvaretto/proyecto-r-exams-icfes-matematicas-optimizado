@@ -1,0 +1,13 @@
+
+
+! kpathsea: Running mktexfmt xelatex.fmt
+! mktexfmt: mktexfmt is using the following fmtutil.cnf files (in precedence order):
+! mktexfmt:   /etc/texmf/web2c/fmtutil.cnf
+! mktexfmt: mktexfmt is using the following fmtutil.cnf file for writing changes:
+! mktexfmt:   /home/manjaro_lenovo/.texlive/texmf-config/web2c/fmtutil.cnf
+! mktexfmt [INFO]: writing formats under /home/manjaro_lenovo/.texlive/texmf-var/web2c
+! mktexfmt [INFO]: Did not find entry for byfmt=xelatex skipped
+! mktexfmt [INFO]: disabled formats: 3
+! mktexfmt [INFO]: not selected formats: 34
+! mktexfmt [INFO]: total formats: 37
+! mktexfmt [INFO]: exiting with status 0

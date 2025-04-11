@@ -1,0 +1,216 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+# Metadatos ICFES
+icfes:
+  competencia: 
+    - interpretacion_representacion  # Valores posibles: interpretacion_representacion, formulacion_ejecucion, argumentacion
+    # Puedes incluir múltiples competencias si el ejercicio las abarca
+  nivel_dificultad: 2                # Valores posibles: 1, 2, 3, 4
+  contenido:
+    categoria: estadistica           # Valores posibles: algebra_calculo, geometria, estadistica
+    tipo: generico                   # Valores posibles: generico, no_generico
+  contexto: familiar                 # Valores posibles: familiar, laboral, comunitario, matematico
+  eje_axial: eje4                    # Valores posibles: eje1, eje2, eje3, eje4
+  componente: aleatorio              # Valores posibles: geometrico_metrico, numerico_variacional, aleatorio
+
+```{r setup, include=FALSE}
+# Carga de librerías necesarias
+library(exams)
+library(ggplot2)  # Para gráficos avanzados
+library(dplyr)    # Para manipulación de datos
+library(knitr)    # Para formateo de salida
+library(scales)   # Para escalas en gráficos
+
+# Configuración general
+knitr::opts_chunk$set(echo = FALSE, 
+                     warning = FALSE, 
+                     message = FALSE,
+                     fig.width = 6, 
+                     fig.height = 4,
+                     fig.align = "center")
+
+# Tipo de dispositivo para gráficos
+typ <- match_exams_device()
+
+# Configuración para números
+options(scipen = 999)  # Evitar notación científica
+
+# Semilla para reproducibilidad
+set.seed(NULL)  # Cambiar por un número fijo para depuración
+```
+
+```{r generacion-datos}
+# =====================================================
+# GENERACIÓN DE DATOS
+# =====================================================
+
+# Variables para el ejercicio
+# Modificar según el tipo de ejercicio
+
+# Para ejercicios de Interpretación y Representación
+# Ejemplo: Datos para un gráfico o tabla
+n <- sample(30:50, 1)  # Tamaño de muestra aleatorio
+datos <- data.frame(
+  categoria = factor(sample(LETTERS[1:5], n, replace = TRUE)),
+  valor = round(runif(n, 10, 100))
+)
+
+# Para ejercicios de Formulación y Ejecución
+# Ejemplo: Parámetros para un problema
+parametro_a <- sample(2:10, 1)
+parametro_b <- sample(5:15, 1)
+solucion_correcta <- parametro_a * parametro_b + sample(-5:5, 1)
+
+# Para ejercicios de Argumentación
+# Ejemplo: Afirmaciones para analizar
+afirmaciones <- c(
+  "La media siempre es mayor que la mediana en distribuciones sesgadas a la derecha.",
+  "El rango intercuartílico no se ve afectado por valores extremos.",
+  "La desviación estándar siempre es positiva."
+)
+verdadero <- c(TRUE, TRUE, TRUE)  # Ajustar según corresponda
+
+# Selección aleatoria para este ejercicio
+indice_afirmacion <- sample(1:length(afirmaciones), 1)
+afirmacion_seleccionada <- afirmaciones[indice_afirmacion]
+es_verdadera <- verdadero[indice_afirmacion]
+
+# Generación de opciones de respuesta según el tipo de ejercicio
+# Ejemplo para ejercicio de selección múltiple
+if (exists("solucion_correcta")) {
+  # Para ejercicios de cálculo
+  opciones <- c(
+    solucion_correcta,
+    solucion_correcta + sample(c(-10:-1, 1:10), 3)
+  )
+  opciones <- sample(opciones)  # Aleatorizar orden
+  solucion <- which(opciones == solucion_correcta)
+} else if (exists("es_verdadera")) {
+  # Para ejercicios de argumentación
+  opciones <- c(
+    "La afirmación es verdadera",
+    "La afirmación es falsa"
+  )
+  solucion <- if(es_verdadera) 1 else 2
+}
+```
+
+```{r visualizacion, results="asis"}
+# =====================================================
+# VISUALIZACIÓN DE DATOS
+# =====================================================
+
+# Ejemplo para ejercicios de Interpretación y Representación
+if (exists("datos")) {
+  # Crear gráfico según el tipo de datos
+  p <- ggplot(datos, aes(x = categoria)) +
+    geom_bar(fill = "steelblue") +
+    labs(
+      title = "Distribución por Categoría",
+      x = "Categoría",
+      y = "Frecuencia"
+    ) +
+    theme_minimal() +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 12),
+      axis.title = element_text(size = 10),
+      axis.text = element_text(size = 9)
+    )
+  
+  # Mostrar el gráfico
+  print(p)
+  
+  # Alternativamente, mostrar una tabla
+  # kable(table(datos$categoria), col.names = c("Categoría", "Frecuencia"))
+}
+```
+
+Question
+========
+
+<!-- Instrucciones para diferentes tipos de competencias -->
+
+<!-- Para Interpretación y Representación -->
+Observe el gráfico que muestra la distribución de frecuencias por categoría.
+
+¿Cuál de las siguientes afirmaciones es correcta sobre los datos presentados?
+
+<!-- Para Formulación y Ejecución -->
+<!-- 
+Un producto tiene un costo inicial de $`r parametro_a` y aumenta su precio en $`r parametro_b` cada mes debido a la inflación.
+
+¿Cuál será el precio del producto después de 12 meses?
+-->
+
+<!-- Para Argumentación -->
+<!-- 
+Analice la siguiente afirmación:
+
+"`r afirmacion_seleccionada`"
+
+¿Es esta afirmación verdadera o falsa? Justifique su respuesta.
+-->
+
+```{r questionlist, results="asis"}
+# Generar lista de opciones según el tipo de ejercicio
+answerlist(opciones, markup = "markdown")
+```
+
+Solution
+========
+
+<!-- Solución detallada según el tipo de competencia -->
+
+<!-- Para Interpretación y Representación -->
+La respuesta correcta es la opción `r solucion`.
+
+La categoría con mayor frecuencia es `r names(which.max(table(datos$categoria)))` con `r max(table(datos$categoria))` observaciones.
+
+<!-- Para Formulación y Ejecución -->
+<!-- 
+La respuesta correcta es la opción `r solucion`.
+
+Para resolver este problema, calculamos el precio después de 12 meses:
+Precio inicial: $`r parametro_a`
+Aumento mensual: $`r parametro_b`
+Precio final = Precio inicial + (12 meses × Aumento mensual)
+Precio final = $`r parametro_a` + (12 × $`r parametro_b`) = $`r parametro_a + 12*parametro_b`
+-->
+
+<!-- Para Argumentación -->
+<!-- 
+La respuesta correcta es la opción `r solucion`.
+
+`r if(es_verdadera) {
+  "La afirmación es verdadera porque..."
+} else {
+  "La afirmación es falsa porque..."
+}`
+
+Explicación detallada:
+`r if(indice_afirmacion == 1) {
+  "En distribuciones sesgadas a la derecha, los valores extremos altos 'jalan' la media hacia la derecha, mientras que la mediana es más resistente a estos valores extremos. Por lo tanto, en estas distribuciones, la media es típicamente mayor que la mediana."
+} else if(indice_afirmacion == 2) {
+  "El rango intercuartílico (IQR) se calcula como Q3 - Q1, donde Q1 es el primer cuartil y Q3 es el tercer cuartil. Como los cuartiles son medidas de posición, no se ven significativamente afectados por valores extremos, a diferencia del rango que sí se ve afectado."
+} else if(indice_afirmacion == 3) {
+  "La desviación estándar se calcula como la raíz cuadrada de la varianza. Como la varianza implica elevar al cuadrado las diferencias respecto a la media, siempre es un valor no negativo. Por lo tanto, su raíz cuadrada (la desviación estándar) siempre es un valor no negativo."
+}`
+-->
+
+```{r solutionlist, results="asis"}
+# Generar lista de soluciones
+answerlist(ifelse(1:length(opciones) == solucion, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+exname: Ejemplo-ICFES
+extype: schoice
+exsolution: `r mchoice2string(1:length(opciones) == solucion)`
+extol: 0
+exshuffle: TRUE
