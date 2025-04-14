@@ -104,25 +104,3 @@ exams2moodle(archivo_examen,
                                         rule = "none")))
 
 ################################################################################
-# Generación para NOPS (exámenes escaneables)
-
-set.seed(semilla)
-exams2nops(rep(archivo_examen, numpreg),
-           n = copias,
-           name = paste0(nombre_sin_extension, "_nops_"),
-           encoding = "UTF-8",
-           dir = dir_salida,
-           edir = dir_ejercicios,
-           language = "es",                      # Idioma español
-           title = "Evaluación de Matemáticas",  # Título del examen
-           institution = "I. E. Pedacito de Cielo",               # Nombre de la institución
-           logo = NULL,                         # Sin logo (opcional)
-           date = Sys.Date(),                   # Fecha actual
-           replacement = FALSE,                 # Sin preguntas de reemplazo
-           blank = 0,                           # Sin páginas adicionales
-           duplex = TRUE,                       # Impresión a doble cara
-           pages = NULL,                        # Número de páginas automático
-           points = NULL,                       # Puntos por pregunta automático
-           showpoints = FALSE)                  # No mostrar puntos en el examen
-
-################################################################################
