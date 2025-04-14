@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 ```{r setup, include=FALSE}
@@ -125,10 +125,10 @@ colores_disponibles <- colores_disponibles[colores_disponibles != color_hombres_
 color_mujeres_correcto <- sample(colores_disponibles, 1)
 
 # Aleatorizar etiquetas de género
-etiquetas_masculino <- c("Masculino")
+etiquetas_masculino <- c("Género Masculino")
 etiqueta_masculino <- sample(etiquetas_masculino, 1)
 
-etiquetas_femenino <- c("Femenino")
+etiquetas_femenino <- c("Género Femenino")
 etiqueta_femenino <- sample(etiquetas_femenino, 1)
 
 # Establecer la gráfica de líneas separadas A como la única correcta
