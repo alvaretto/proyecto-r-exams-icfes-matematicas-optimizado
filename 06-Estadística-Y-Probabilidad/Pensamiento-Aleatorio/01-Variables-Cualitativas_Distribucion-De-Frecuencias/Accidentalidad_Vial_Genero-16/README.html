@@ -404,6 +404,26 @@ estilos de tabla</li>
 opciones incorrectas</li>
 </ul>
 </div>
+<div id="características-técnicas-destacadas" class="section level2">
+<h2>Características Técnicas Destacadas</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Integración R-Python</strong>: Utiliza
+<code>reticulate</code> para generar gráficas con matplotlib desde
+R</li>
+<li><strong>Visualización avanzada</strong>: Combina TikZ para tablas y
+matplotlib para gráficas</li>
+<li><strong>Alta aleatorización</strong>: Genera más de 51 trillones de
+combinaciones posibles</li>
+<li><strong>Pruebas unitarias</strong>: Implementa pruebas exhaustivas
+para garantizar coherencia matemática</li>
+<li><strong>Distractores pedagógicos</strong>: Las opciones incorrectas
+representan errores comunes de interpretación</li>
+<li><strong>Adaptabilidad</strong>: Funciona con múltiples formatos de
+salida (HTML, PDF, DOCX)</li>
+<li><strong>Validación automática</strong>: Verifica que se pueden
+generar más de 300 versiones diferentes</li>
+</ol>
+</div>
 <div id="documentación-técnica-del-código" class="section level2">
 <h2>Documentación Técnica del Código</h2>
 <div id="configuración-inicial-líneas-7-44" class="section level3">
@@ -541,19 +561,19 @@ generar_tabla_tikz &lt;- function(años, datos_hombres, color_tabla, etiqueta_ma
     paste0(&quot;    \\textbf{Año} &amp; \\textbf{Personas de &quot;, tolower(etiqueta_masculino), &quot;} \\\\&quot;),
     paste0(&quot;    \\textbf{} &amp; \\textbf{víctimas de &quot;, sample(c(&quot;accidentalidad vial&quot;, &quot;siniestros de tránsito&quot;, &quot;incidentes de tráfico&quot;), 1), &quot;} \\\\&quot;),
     &quot;    \\hline&quot;)
-  
+
   # Añadir filas con datos
   for (i in 1:length(años)) {
     tabla_code &lt;- c(tabla_code, paste0(&quot;    &quot;, años[i], &quot; &amp; &quot;, format(datos_hombres[i], big.mark = &quot;,&quot;), &quot; \\\\&quot;))
     tabla_code &lt;- c(tabla_code, &quot;    \\hline&quot;)
   }
-  
+
   # Cerrar la tabla
   tabla_code &lt;- c(tabla_code,
     &quot;  \\end{tabular}&quot;,
     &quot;};&quot;,
     &quot;\\end{tikzpicture}&quot;)
-  
+
   return(tabla_code)
 }
 
@@ -587,9 +607,9 @@ etiqueta_femenino = &#39;%s&#39;
 &quot;
 
 # Reemplazar valores en el código Python
-codigo_python_base &lt;- sprintf(codigo_base_python, 
-                            paste(años, collapse=&quot;, &quot;), 
-                            paste(mortalidad_hombres, collapse=&quot;, &quot;), 
+codigo_python_base &lt;- sprintf(codigo_base_python,
+                            paste(años, collapse=&quot;, &quot;),
+                            paste(mortalidad_hombres, collapse=&quot;, &quot;),
                             paste(mortalidad_mujeres, collapse=&quot;, &quot;),
                             color_hombres_correcto,
                             color_mujeres_correcto,
@@ -691,7 +711,7 @@ Una `r termino_empresa` dedicada a tratar los datos del tránsito en varias de l
 cat(&quot;![](grafica_total.png)&quot;)</code></pre>
 <p>Se necesita clasificar estos datos por género masculino y femenino.
 La tabla muestra el número de víctimas de género masculino por año.</p>
-<p><code>{r tabla_tikz, echo=FALSE, results=&#39;asis&#39;} include_tikz(tabla_tikz,               name = &quot;tabla_datos&quot;,               markup = &quot;markdown&quot;,              format = typ,              packages = c(&quot;tikz&quot;, &quot;colortbl&quot;),              width = &quot;8cm&quot;)</code></p>
+<p><code>{r tabla_tikz, echo=FALSE, results=&#39;asis&#39;} include_tikz(tabla_tikz,              name = &quot;tabla_datos&quot;,              markup = &quot;markdown&quot;,              format = typ,              packages = c(&quot;tikz&quot;, &quot;colortbl&quot;),              width = &quot;8cm&quot;)</code></p>
 <p>¿Cuál es la gráfica que muestra los resultados de
 <code>r termino_mortalidad</code> por <code>r termino_accidente</code>
 diferenciados por género?</p>
@@ -769,7 +789,7 @@ exsection: Interpretación de gráficas ```</p>
 <li>Sección temática (Interpretación de gráficas)</li>
 </ul></li>
 </ul>
-<div id="características-técnicas-destacadas" class="section level2">
+<div id="características-técnicas-destacadas-1" class="section level2">
 <h2>Características Técnicas Destacadas</h2>
 <ol style="list-style-type: decimal">
 <li><strong>Integración R-Python</strong>: Utiliza
@@ -778,11 +798,15 @@ R</li>
 <li><strong>Visualización avanzada</strong>: Combina TikZ para tablas y
 matplotlib para gráficas</li>
 <li><strong>Alta aleatorización</strong>: Genera múltiples versiones del
-mismo ejercicio</li>
+mismo ejercicio (más de 51 trillones de combinaciones posibles)</li>
+<li><strong>Pruebas unitarias</strong>: Implementa pruebas exhaustivas
+para garantizar coherencia matemática y variabilidad</li>
 <li><strong>Distractores pedagógicos</strong>: Las opciones incorrectas
 representan errores comunes de interpretación</li>
 <li><strong>Adaptabilidad</strong>: Funciona con múltiples formatos de
 salida (HTML, PDF, DOCX)</li>
+<li><strong>Validación automática</strong>: Verifica que se pueden
+generar más de 300 versiones diferentes</li>
 </ol>
 </div>
 <div id="requisitos-técnicos" class="section level2">
@@ -807,6 +831,79 @@ en todos los formatos</li>
 variabilidad de las versiones</li>
 </ul>
 </div>
+<div id="pruebas-unitarias-implementadas" class="section level2">
+<h2>Pruebas Unitarias Implementadas</h2>
+<p>Se han añadido pruebas unitarias exhaustivas para garantizar la
+calidad y variabilidad del ejercicio:</p>
+<div id="coherencia-matemática" class="section level3">
+<h3>1. Coherencia Matemática</h3>
+<p>Verifica que los datos generados sean matemáticamente coherentes:</p>
+<ul>
+<li>La suma de mortalidad por género debe ser igual al total</li>
+<li>Las proporciones de víctimas masculinas deben estar en un rango
+realista (75-85%)</li>
+<li>Las tendencias temporales deben ser coherentes con el patrón
+seleccionado</li>
+<li>Los años deben ser consecutivos</li>
+</ul>
+</div>
+<div id="variabilidad-garantizada" class="section level3">
+<h3>2. Variabilidad Garantizada</h3>
+<p>Asegura que el ejercicio puede generar más de 300 versiones
+diferentes:</p>
+<ul>
+<li>Cálculo del número total de combinaciones posibles (más de 51
+trillones)</li>
+<li>Verificación de diversidad en los datos generados</li>
+<li>Validación de que hay suficiente variación en las proporciones</li>
+</ul>
+</div>
+<div id="simulación-de-versiones-únicas" class="section level3">
+<h3>3. Simulación de Versiones Únicas</h3>
+<p>Realiza una simulación para confirmar la unicidad de las
+versiones:</p>
+<ul>
+<li>Genera 50 versiones diferentes del ejercicio con semillas aleatorias
+distintas</li>
+<li>Crea un hash único para cada versión generada</li>
+<li>Verifica que todas las versiones generadas son únicas</li>
+</ul>
+</div>
+<div id="validación-de-opciones" class="section level3">
+<h3>4. Validación de Opciones</h3>
+<p>Comprueba que las opciones de respuesta están correctamente
+definidas:</p>
+<ul>
+<li>La opción correcta debe estar bien identificada</li>
+<li>Los colores para hombres y mujeres deben ser diferentes</li>
+<li>Las etiquetas de género deben ser distintas</li>
+</ul>
+</div>
+<div id="script-independiente-para-pruebas" class="section level3">
+<h3>Script Independiente para Pruebas</h3>
+<p>Se ha creado un script independiente <code>ejecutar_pruebas.R</code>
+que permite ejecutar todas las pruebas unitarias sin necesidad de
+generar el ejercicio completo.</p>
+</div>
+</div>
+<div id="archivos-del-ejercicio" class="section level2">
+<h2>Archivos del Ejercicio</h2>
+<ul>
+<li><code>accidentalidad-vial-genero-01.Rmd</code>: Archivo principal
+con código R, Python y pruebas unitarias</li>
+<li><code>ejecutar_pruebas.R</code>: Script independiente para ejecutar
+las pruebas unitarias</li>
+<li><code>README.md</code>: Documentación del ejercicio</li>
+</ul>
+</div>
+<div id="requisitos-técnicos-1" class="section level2">
+<h2>Requisitos Técnicos</h2>
+<ul>
+<li>R con los paquetes: exams, reticulate, digest, testthat</li>
+<li>Python con matplotlib y numpy</li>
+<li>LaTeX con TikZ y colortbl para la generación de tablas</li>
+</ul>
+</div>
 <div id="posibles-mejoras" class="section level2">
 <h2>Posibles Mejoras</h2>
 <ul>
@@ -815,6 +912,8 @@ etc.)</li>
 <li>Añadir más distractores pedagógicos basados en errores comunes</li>
 <li>Incorporar análisis estadísticos más complejos</li>
 <li>Mejorar la accesibilidad visual de las gráficas</li>
+<li>Ampliar las pruebas unitarias para cubrir más aspectos del
+ejercicio</li>
 </ul>
 </div>
 </div>
