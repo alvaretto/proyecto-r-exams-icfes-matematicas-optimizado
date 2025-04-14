@@ -1,512 +1,220 @@
-})
-# Asignar valores a variables individuales
-for (name in names(data)) {
-assign(name, data[[name]])
-}
-# Crear géneros musicales aleatorios
-genres <- generate_random_genres()
-A <- genres[1]
-B <- genres[2]
-C <- genres[3]
-# Generar texto aleatorio con números consistentes
-random_text <- generate_random_text(data, A, B, C)
-# Lista de preguntas
-questions <- c(
-sprintf("¿Cuántas personas escuchan solamente %s y %s?", A, B),
-sprintf("¿Cuántos adolescentes disfrutan únicamente de %s y %s?", A, C),
-sprintf("¿Cuál es el número de entrevistados que solo escuchan %s y %s?", B, C),
-"¿Cuántas personas escuchan los tres géneros musicales?",
-"¿Cuántos adolescentes no escuchan ninguno de estos géneros musicales?",
-"¿Cuál es el total de personas que escuchan solo uno de estos géneros musicales?",
-"¿Cuántos entrevistados disfrutan de al menos dos géneros musicales?",
-"¿Cuántas personas escuchan exactamente dos géneros musicales?",
-sprintf("¿Cuál es el número de adolescentes que escuchan %s o %s, pero no ambos?", A, B),
-sprintf("¿Cuántos jóvenes escuchan %s pero no %s?", A, B),
-sprintf("¿Cuántas personas disfrutan de %s o %s, o ambos?", A, C),
-sprintf("¿Cuál es el número de entrevistados que no escuchan %s ni %s?", B, C),
-"¿Cuántos adolescentes escuchan al menos uno de estos géneros musicales?",
-"¿Cuántas personas escuchan exactamente un género musical?",
-"¿Cuál es el total de personas que escuchan máximo dos géneros musicales?",
-"¿Cuál es el total de personas que escuchan máximo tres géneros musicales?"
-)
-# Respuestas correspondientes a las preguntas
-answers <- c(
-n_AB_only,
-n_AC_only,
-n_BC_only,
-n_all,
-n_none,
-n_only_A + n_only_B + n_only_C,
-n_AB + n_AC + n_BC - 2*n_all,
-n_AB_only + n_AC_only + n_BC_only,
-n_only_A + n_only_B,
-n_only_A + n_AC_only,
-n_A + n_C - n_AC,
-n_total - (n_B + n_C - n_BC),
-n_total - n_none,
-n_only_A + n_only_B + n_only_C,
-n_only_A + n_only_B + n_only_C + n_AB_only + n_AC_only + n_BC_only,
-n_total - n_none
-)
-# Seleccionar una pregunta aleatoria para la pregunta principal
-question_index <- sample(1:length(questions), 1)
-main_question <- questions[question_index]
-correct_answer <- answers[question_index]
-# Generar distractores (respuestas incorrectas pero plausibles)
-generate_distractors <- function(correct, n = 3) {
-# Crear distractores cercanos al valor correcto
-distractors <- c()
-# Distractor 1: Valor cercano por debajo
-dist1 <- max(1, correct - sample(1:3, 1))
-distractors <- c(distractors, dist1)
-# Distractor 2: Valor cercano por encima
-dist2 <- correct + sample(1:3, 1)
-distractors <- c(distractors, dist2)
-# Distractor 3: Valor más alejado
-if (runif(1) > 0.5) {
-dist3 <- max(1, correct - sample(4:6, 1))
-} else {
-dist3 <- correct + sample(4:6, 1)
-}
-distractors <- c(distractors, dist3)
-return(distractors)
-}
-# Generar distractores
-distractors <- generate_distractors(correct_answer)
-# Crear opciones de respuesta (correcta + distractores)
-options <- c(correct_answer, distractors)
-# Mezclar las opciones
-options <- sample(options)
-# Identificar la posición de la respuesta correcta
-solution_index <- which(options == correct_answer)
-# Usar el mismo tipo de gráfico (pdf, svg, png) que la llamada actual de xweave()
-typ <- match_exams_device()
-# Código TikZ para el Diagrama de Venn
-tikz_venn <- sprintf('
-\\begin{tikzpicture}[scale=0.7]
-\\begin{scope}[opacity=0.5]
-\\fill[red]   ( 90:1.5) circle (2);
-\\fill[green] (210:1.5) circle (2);
-\\fill[blue]  (330:1.5) circle (2);
-\\end{scope}
-\\node at ( 90:3.3) {%s};
-\\node at (210:3.3) {%s};
-\\node at (330:3.3) {%s};
-\\node at ( 90:1.3) {%d};
-\\node at (210:1.3) {%d};
-\\node at (330:1.3) {%d};
-\\node at ( 30:1.7) {%d};
-\\node at (150:1.7) {%d};
-\\node at (270:1.7) {%d};
-\\node at (0:0) {%d};
-\\node at (270:3.5) {Ninguno: %d};
-\\end{tikzpicture}
-', A, B, C, n_only_A, n_only_B, n_only_C, n_AC_only, n_AB_only, n_BC_only, n_all, n_none)
-# Configuración de knitr para TikZ
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-# Función para incluir el diagrama TikZ
-include_venn <- function() {
-include_tikz(tikz_venn, name = "venn_diagram", markup = "markdown",
-format = typ, library = c("shapes", "backgrounds"),
-packages = c("tikz"),
-width = "6cm")
-}
-include_venn()
-include_venn()
-# Configuración inicial para no mostrar código, advertencias ni mensajes en el documento final
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-# Generación de Datos
-# Cargar las librerías necesarias
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/Proyecto-Rexams-2025/r_exams_project/Repositorio_Matematicas_ICFES_PISA/Estadistica/Graficos_Estadisticos_Adopcion_Mascotas/SemilleroUnico.R")
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/06-Medidas-De-Posición/SemilleroUnico2.R", echo=TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 library(exams)
-library(knitr)
-# Función para generar datos válidos
-# Esta función genera datos aleatorios que cumplen con las restricciones del problema
-generate_valid_data <- function(max_attempts = 1000) {
-for (attempt in 1:max_attempts) {
-# Generar números aleatorios para el total de personas y las intersecciones
-n_total <- sample(30:50, 1)  # Total de personas entrevistadas
-n_A <- sample(15:25, 1)      # Personas que escuchan género A
-n_B <- sample(15:25, 1)      # Personas que escuchan género B
-n_C <- sample(20:30, 1)      # Personas que escuchan género C
-# Calcular intersecciones entre los conjuntos
-n_AB <- sample(3:8, 1)       # Personas que escuchan A y B
-n_AC <- sample(5:10, 1)      # Personas que escuchan A y C
-n_BC <- sample(3:8, 1)       # Personas que escuchan B y C
-n_all <- sample(2:5, 1)      # Personas que escuchan A, B y C
-# Calcular valores para cada región del diagrama de Venn
-n_only_A <- n_A - n_AB - n_AC + n_all  # Solo escuchan A
-n_only_B <- n_B - n_AB - n_BC + n_all  # Solo escuchan B
-n_only_C <- n_C - n_AC - n_BC + n_all  # Solo escuchan C
-n_AB_only <- n_AB - n_all              # Solo escuchan A y B
-n_AC_only <- n_AC - n_all              # Solo escuchan A y C
-n_BC_only <- n_BC - n_all              # Solo escuchan B y C
-# Calcular el número de personas que no escuchan ninguno
-n_none <- n_total - (n_A + n_B + n_C - n_AB - n_AC - n_BC + n_all)
-# Verificar que todos los valores sean no negativos
-if (all(c(n_only_A, n_only_B, n_only_C, n_AB_only, n_AC_only, n_BC_only, n_all, n_none) >= 0)) {
-# Devolver los valores generados
+library(xtable)
+# Función para generar datos de estatura
+generar_datos_estatura <- function() {
+# Generar número impar de datos entre 7 y 19
+n <- sample(seq(7, 19, by = 2), 1)
+# Generar datos base
+base_min <- 155
+base_max <- 172
+variacion <- 10
+# Generar límites aleatorios
+min_valor <- base_min - sample(0:variacion, 1)
+max_valor <- base_max + sample(0:variacion, 1)
+# Generar datos aleatorios
+datos <- round(runif(n, min_valor, max_valor))
+# Asegurar que al menos algunos datos estén cerca de los extremos
+datos[1] <- min_valor + sample(-2:2, 1)
+datos[2] <- max_valor + sample(-2:2, 1)
+# Calcular estadísticas
+datos_ordenados <- sort(datos)
+minimo <- min(datos)
+maximo <- max(datos)
+mediana <- median(datos)
+q1 <- quantile(datos, 0.25)
+q3 <- quantile(datos, 0.75)
 return(list(
-n_total = n_total, n_A = n_A, n_B = n_B, n_C = n_C,
-n_AB = n_AB, n_AC = n_AC, n_BC = n_BC, n_all = n_all,
-n_only_A = n_only_A, n_only_B = n_only_B, n_only_C = n_only_C,
-n_AB_only = n_AB_only, n_AC_only = n_AC_only, n_BC_only = n_BC_only,
-n_none = n_none
+datos_desordenados = datos,
+datos_ordenados = datos_ordenados,
+minimo = minimo,
+q1 = q1,
+mediana = mediana,
+q3 = q3,
+maximo = maximo
 ))
 }
-}
-stop("No se pudieron generar datos válidos después de ", max_attempts, " intentos")
-}
-# Función para generar géneros musicales aleatorios
-# Esta función selecciona aleatoriamente tres géneros musicales de una lista predefinida
-generate_random_genres <- function() {
-genres <- c("Vallenato", "Salsa", "Merengue", "Reggaeton", "Bachata", "Cumbia", "Rap", "Electrónica", "Tango", "Gospel")
-sample(genres, 3)
-}
-# Función para generar texto aleatorio con números consistentes
-# Esta función crea un texto descriptivo basado en los datos generados
-generate_random_text <- function(data, A, B, C) {
-templates <- c(
-"- %d de ellos escuchan %s y %s,\n- %d escuchan %s y %s, y\n- %d %s y %s.",
-"- %d de ellos escuchan solamente %s y %s,\n- %d escuchan %s y %s, y\n- %d %s y %s.",
-"- %d de ellos escuchan %s y %s,\n- %d solo escuchan %s y %s, y\n- %d %s y %s.",
-"- %d de ellos escuchan %s y %s,\n- %d escuchan %s y %s, y\n- %d solamente %s y %s."
+# Función para crear diagramas
+crear_diagrama <- function(valores, tipo) {
+if(tipo == "correcto") {
+boxplot(valores$datos_ordenados,
+horizontal = FALSE,
+axes = FALSE,
+col = "lightblue",
+border = "blue",
+outline = TRUE,
+whisklty = 1,
+staplelty = 1,
+outpch = 16,
+outcol = "blue")
+axis(2, las = 1)
+box()
+# Agregar etiquetas
+text(1.3, valores$minimo, paste("Mín =", valores$minimo), pos = 4, cex = 0.8)
+text(1.3, valores$q1, paste("Q1 =", valores$q1), pos = 4, cex = 0.8)
+text(1.3, valores$mediana, paste("Q2 =", valores$mediana), pos = 4, cex = 0.8)
+text(1.3, valores$q3, paste("Q3 =", valores$q3), pos = 4, cex = 0.8)
+text(1.3, valores$maximo, paste("Máx =", valores$maximo), pos = 4, cex = 0.8)
+} else if(tipo == "escala_10") {
+valores_escalados <- list(
+datos_ordenados = valores$datos_ordenados * 10,
+minimo = valores$minimo * 10,
+q1 = valores$q1 * 10,
+mediana = valores$mediana * 10,
+q3 = valores$q3 * 10,
+maximo = valores$maximo * 10
 )
-template <- sample(templates, 1)
-values <- list(
-c(data$n_AB, data$n_AC, data$n_BC),
-c(data$n_AB_only, data$n_AC, data$n_BC),
-c(data$n_AB, data$n_AC_only, data$n_BC),
-c(data$n_AB, data$n_AC, data$n_BC_only)
+boxplot(valores_escalados$datos_ordenados,
+horizontal = FALSE,
+axes = FALSE,
+col = "lightblue",
+border = "blue",
+outline = TRUE,
+whisklty = 1,
+staplelty = 1,
+outpch = 16,
+outcol = "blue")
+axis(2, las = 1)
+box()
+# Agregar etiquetas
+text(1.3, valores_escalados$minimo, paste("Mín =", valores_escalados$minimo), pos = 4, cex = 0.8)
+text(1.3, valores_escalados$q1, paste("Q1 =", valores_escalados$q1), pos = 4, cex = 0.8)
+text(1.3, valores_escalados$mediana, paste("Q2 =", valores_escalados$mediana), pos = 4, cex = 0.8)
+text(1.3, valores_escalados$q3, paste("Q3 =", valores_escalados$q3), pos = 4, cex = 0.8)
+text(1.3, valores_escalados$maximo, paste("Máx =", valores_escalados$maximo), pos = 4, cex = 0.8)
+} else if(tipo == "invertido") {
+# Invertir Q1 y Q3
+datos_mod <- valores$datos_ordenados
+q1_idx <- floor(length(datos_mod) * 0.25)
+q3_idx <- ceiling(length(datos_mod) * 0.75)
+temp <- datos_mod[q1_idx]
+datos_mod[q1_idx] <- datos_mod[q3_idx]
+datos_mod[q3_idx] <- temp
+valores_invertidos <- list(
+datos_ordenados = datos_mod,
+minimo = valores$minimo,
+q1 = valores$q3,  # Intercambiados
+mediana = valores$mediana,
+q3 = valores$q1,  # Intercambiados
+maximo = valores$maximo
 )
-chosen_values <- switch(which(templates == template),
-values[[1]],
-values[[2]],
-values[[3]],
-values[[4]])
-sprintf(
-"Se ha entrevistado a %d adolescentes sobre los géneros musicales que escuchan.\n\n- %d de ellos escuchan %s, \n- %d escuchan %s, y \n- %d %s. \n\nAdemás sabemos que \n\n%s",
-data$n_total, data$n_A, A, data$n_B, B, data$n_C, C,
-sprintf(template, chosen_values[1], A, B, chosen_values[2], A, C, chosen_values[3], B, C)
+boxplot(datos_mod,
+horizontal = FALSE,
+axes = FALSE,
+col = "lightblue",
+border = "blue",
+outline = TRUE,
+whisklty = 1,
+staplelty = 1,
+outpch = 16,
+outcol = "blue")
+axis(2, las = 1)
+box()
+# Agregar etiquetas
+text(1.3, valores_invertidos$minimo, paste("Mín =", valores_invertidos$minimo), pos = 4, cex = 0.8)
+text(1.3, valores_invertidos$q1, paste("Q1 =", valores_invertidos$q1), pos = 4, cex = 0.8)
+text(1.3, valores_invertidos$mediana, paste("Q2 =", valores_invertidos$mediana), pos = 4, cex = 0.8)
+text(1.3, valores_invertidos$q3, paste("Q3 =", valores_invertidos$q3), pos = 4, cex = 0.8)
+text(1.3, valores_invertidos$maximo, paste("Máx =", valores_invertidos$maximo), pos = 4, cex = 0.8)
+} else if(tipo == "mediana_falsa") {
+# Modificar la mediana
+datos_mod <- valores$datos_ordenados
+med_idx <- ceiling(length(datos_mod)/2)
+nueva_mediana <- mean(c(valores$minimo, valores$maximo))
+datos_mod[med_idx] <- nueva_mediana
+valores_mediana_falsa <- list(
+datos_ordenados = datos_mod,
+minimo = valores$minimo,
+q1 = valores$q1,
+mediana = nueva_mediana,
+q3 = valores$q3,
+maximo = valores$maximo
 )
+boxplot(datos_mod,
+horizontal = FALSE,
+axes = FALSE,
+col = "lightblue",
+border = "blue",
+outline = TRUE,
+whisklty = 1,
+staplelty = 1,
+outpch = 16,
+outcol = "blue")
+axis(2, las = 1)
+box()
+# Agregar etiquetas
+text(1.3, valores_mediana_falsa$minimo, paste("Mín =", valores_mediana_falsa$minimo), pos = 4, cex = 0.8)
+text(1.3, valores_mediana_falsa$q1, paste("Q1 =", valores_mediana_falsa$q1), pos = 4, cex = 0.8)
+text(1.3, valores_mediana_falsa$mediana, paste("Q2 =", valores_mediana_falsa$mediana), pos = 4, cex = 0.8)
+text(1.3, valores_mediana_falsa$q3, paste("Q3 =", valores_mediana_falsa$q3), pos = 4, cex = 0.8)
+text(1.3, valores_mediana_falsa$maximo, paste("Máx =", valores_mediana_falsa$maximo), pos = 4, cex = 0.8)
 }
-# Generar datos válidos
-tryCatch({
-data <- generate_valid_data()
-}, error = function(e) {
-stop("Error al generar datos válidos: ", e$message)
-})
-# Asignar valores a variables individuales
-for (name in names(data)) {
-assign(name, data[[name]])
 }
-# Crear géneros musicales aleatorios
-genres <- generate_random_genres()
-A <- genres[1]
-B <- genres[2]
-C <- genres[3]
-# Generar texto aleatorio con números consistentes
-random_text <- generate_random_text(data, A, B, C)
-# Lista de preguntas
-questions <- c(
-sprintf("¿Cuántas personas escuchan solamente %s y %s?", A, B),
-sprintf("¿Cuántos adolescentes disfrutan únicamente de %s y %s?", A, C),
-sprintf("¿Cuál es el número de entrevistados que solo escuchan %s y %s?", B, C),
-"¿Cuántas personas escuchan los tres géneros musicales?",
-"¿Cuántos adolescentes no escuchan ninguno de estos géneros musicales?",
-"¿Cuál es el total de personas que escuchan solo uno de estos géneros musicales?",
-"¿Cuántos entrevistados disfrutan de al menos dos géneros musicales?",
-"¿Cuántas personas escuchan exactamente dos géneros musicales?",
-sprintf("¿Cuál es el número de adolescentes que escuchan %s o %s, pero no ambos?", A, B),
-sprintf("¿Cuántos jóvenes escuchan %s pero no %s?", A, B),
-sprintf("¿Cuántas personas disfrutan de %s o %s, o ambos?", A, C),
-sprintf("¿Cuál es el número de entrevistados que no escuchan %s ni %s?", B, C),
-"¿Cuántos adolescentes escuchan al menos uno de estos géneros musicales?",
-"¿Cuántas personas escuchan exactamente un género musical?",
-"¿Cuál es el total de personas que escuchan máximo dos géneros musicales?",
-"¿Cuál es el total de personas que escuchan máximo tres géneros musicales?"
+# Genera datos iniciales
+stats <- generar_datos_estatura()
+# Crea y muestra la tabla
+datos_tabla <- data.frame(
+"Estudiante" = 1:length(stats$datos_desordenados),
+"Estatura (cm)" = stats$datos_desordenados
 )
-# Respuestas correspondientes a las preguntas
-answers <- c(
-n_AB_only,
-n_AC_only,
-n_BC_only,
-n_all,
-n_none,
-n_only_A + n_only_B + n_only_C,
-n_AB + n_AC + n_BC - 2*n_all,
-n_AB_only + n_AC_only + n_BC_only,
-n_only_A + n_only_B,
-n_only_A + n_AC_only,
-n_A + n_C - n_AC,
-n_total - (n_B + n_C - n_BC),
-n_total - n_none,
-n_only_A + n_only_B + n_only_C,
-n_only_A + n_only_B + n_only_C + n_AB_only + n_AC_only + n_BC_only,
-n_total - n_none
-)
-# Seleccionar una pregunta aleatoria para la pregunta principal
-question_index <- sample(1:length(questions), 1)
-main_question <- questions[question_index]
-correct_answer <- answers[question_index]
-# Generar distractores (respuestas incorrectas pero plausibles)
-generate_distractors <- function(correct, n = 3) {
-# Crear distractores cercanos al valor correcto
-distractors <- c()
-# Distractor 1: Valor cercano por debajo
-dist1 <- max(1, correct - sample(1:3, 1))
-distractors <- c(distractors, dist1)
-# Distractor 2: Valor cercano por encima
-dist2 <- correct + sample(1:3, 1)
-distractors <- c(distractors, dist2)
-# Distractor 3: Valor más alejado
-if (runif(1) > 0.5) {
-dist3 <- max(1, correct - sample(4:6, 1))
-} else {
-dist3 <- correct + sample(4:6, 1)
-}
-distractors <- c(distractors, dist3)
-return(distractors)
-}
-# Generar distractores
-distractors <- generate_distractors(correct_answer)
-# Crear opciones de respuesta (correcta + distractores)
-options <- c(correct_answer, distractors)
-# Mezclar las opciones
-options <- sample(options)
-# Identificar la posición de la respuesta correcta
-solution_index <- which(options == correct_answer)
-# Usar el mismo tipo de gráfico (pdf, svg, png) que la llamada actual de xweave()
-typ <- match_exams_device()
-# Código TikZ para el Diagrama de Venn
-tikz_venn <- sprintf('
-\\begin{tikzpicture}[scale=0.7]
-\\begin{scope}[opacity=0.5]
-\\fill[red]   ( 90:1.5) circle (2);
-\\fill[green] (210:1.5) circle (2);
-\\fill[blue]  (330:1.5) circle (2);
-\\end{scope}
-\\node at ( 90:3.3) {%s};
-\\node at (210:3.3) {%s};
-\\node at (330:3.3) {%s};
-\\node at ( 90:1.3) {%d};
-\\node at (210:1.3) {%d};
-\\node at (330:1.3) {%d};
-\\node at ( 30:1.7) {%d};
-\\node at (150:1.7) {%d};
-\\node at (270:1.7) {%d};
-\\node at (0:0) {%d};
-\\node at (270:3.5) {Ninguno: %d};
-\\end{tikzpicture}
-', A, B, C, n_only_A, n_only_B, n_only_C, n_AC_only, n_AB_only, n_BC_only, n_all, n_none)
-# Configuración de knitr para TikZ
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-# Función para incluir el diagrama TikZ
-include_venn <- function() {
-include_tikz(tikz_venn, name = "venn_diagram", markup = "markdown",
-format = typ, library = c("shapes", "backgrounds"),
-packages = c("tikz"),
-width = "6cm")
-}
-include_venn()
-include_venn()
+tabla_xtable <- xtable(datos_tabla,
+align = c("l", "c", "c"),
+digits = c(0, 0, 0))
+print(tabla_xtable,
+type = "html",
+include.rownames = FALSE,
+html.table.attributes = 'border="1" cellpadding="5" cellspacing="0"')
+# Genera los diagramas como archivos PNG
+# Diagrama A (correcto)
+png("DiagramaA.png", width = 700, height = 500, res = 100)
+par(mar = c(4, 4, 2, 2))
+plot(NA, xlim = c(0.5, 1.5),
+ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15,
+stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+xlab = "", ylab = "Estatura (cm)",
+main = "", axes = FALSE)
+crear_diagrama(stats, "correcto")
+dev.off()
+# Diagrama B (escala x10)
+png("DiagramaB.png", width = 700, height = 500, res = 100)
+par(mar = c(4, 4, 2, 2))
+plot(NA, xlim = c(0.5, 1.5),
+ylim = c(stats$minimo*10 - (stats$maximo*10 - stats$minimo*10) * 0.15,
+stats$maximo*10 + (stats$maximo*10 - stats$minimo*10) * 0.15),
+xlab = "", ylab = "Estatura (cm)",
+main = "", axes = FALSE)
+crear_diagrama(stats, "escala_10")
+dev.off()
+# Diagrama C (cuartiles invertidos)
+png("DiagramaC.png", width = 700, height = 500, res = 100)
+par(mar = c(4, 4, 2, 2))
+plot(NA, xlim = c(0.5, 1.5),
+ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15,
+stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+xlab = "", ylab = "Estatura (cm)",
+main = "", axes = FALSE)
+crear_diagrama(stats, "invertido")
+dev.off()
+# Diagrama D (mediana incorrecta)
+png("DiagramaD.png", width = 700, height = 500, res = 100)
+par(mar = c(4, 4, 2, 2))
+plot(NA, xlim = c(0.5, 1.5),
+ylim = c(stats$minimo - (stats$maximo - stats$minimo) * 0.15,
+stats$maximo + (stats$maximo - stats$minimo) * 0.15),
+xlab = "", ylab = "Estatura (cm)",
+main = "", axes = FALSE)
+crear_diagrama(stats, "mediana_falsa")
+dev.off()
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/06-Medidas-De-Posición/SemilleroUnico2.R", echo=TRUE)
 setwd("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1")
-source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/SemilleroUnico3.R")
-source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/SemilleroUnico3.R")
-# Configuración inicial para no mostrar código, advertencias ni mensajes en el documento final
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-# Generación de Datos
-# Cargar las librerías necesarias
-library(exams)
-library(knitr)
-# Función para generar datos válidos
-# Esta función genera datos aleatorios que cumplen con las restricciones del problema
-generate_valid_data <- function(max_attempts = 1000) {
-for (attempt in 1:max_attempts) {
-# Generar números aleatorios para el total de personas y las intersecciones
-n_total <- sample(30:50, 1)  # Total de personas entrevistadas
-n_A <- sample(15:25, 1)      # Personas que escuchan género A
-n_B <- sample(15:25, 1)      # Personas que escuchan género B
-n_C <- sample(20:30, 1)      # Personas que escuchan género C
-# Calcular intersecciones entre los conjuntos
-n_AB <- sample(3:8, 1)       # Personas que escuchan A y B
-n_AC <- sample(5:10, 1)      # Personas que escuchan A y C
-n_BC <- sample(3:8, 1)       # Personas que escuchan B y C
-n_all <- sample(2:5, 1)      # Personas que escuchan A, B y C
-# Calcular valores para cada región del diagrama de Venn
-n_only_A <- n_A - n_AB - n_AC + n_all  # Solo escuchan A
-n_only_B <- n_B - n_AB - n_BC + n_all  # Solo escuchan B
-n_only_C <- n_C - n_AC - n_BC + n_all  # Solo escuchan C
-n_AB_only <- n_AB - n_all              # Solo escuchan A y B
-n_AC_only <- n_AC - n_all              # Solo escuchan A y C
-n_BC_only <- n_BC - n_all              # Solo escuchan B y C
-# Calcular el número de personas que no escuchan ninguno
-n_none <- n_total - (n_A + n_B + n_C - n_AB - n_AC - n_BC + n_all)
-# Verificar que todos los valores sean no negativos
-if (all(c(n_only_A, n_only_B, n_only_C, n_AB_only, n_AC_only, n_BC_only, n_all, n_none) >= 0)) {
-# Devolver los valores generados
-return(list(
-n_total = n_total, n_A = n_A, n_B = n_B, n_C = n_C,
-n_AB = n_AB, n_AC = n_AC, n_BC = n_BC, n_all = n_all,
-n_only_A = n_only_A, n_only_B = n_only_B, n_only_C = n_only_C,
-n_AB_only = n_AB_only, n_AC_only = n_AC_only, n_BC_only = n_BC_only,
-n_none = n_none
-))
-}
-}
-stop("No se pudieron generar datos válidos después de ", max_attempts, " intentos")
-}
-# Función para generar géneros musicales aleatorios
-# Esta función selecciona aleatoriamente tres géneros musicales de una lista predefinida
-generate_random_genres <- function() {
-genres <- c("Vallenato", "Salsa", "Merengue", "Reggaeton", "Bachata", "Cumbia", "Rap", "Electrónica", "Tango", "Gospel")
-sample(genres, 3)
-}
-# Función para generar texto aleatorio con números consistentes
-# Esta función crea un texto descriptivo basado en los datos generados
-generate_random_text <- function(data, A, B, C) {
-templates <- c(
-"- %d de ellos escuchan %s y %s,\n- %d escuchan %s y %s, y\n- %d %s y %s.",
-"- %d de ellos escuchan solamente %s y %s,\n- %d escuchan %s y %s, y\n- %d %s y %s.",
-"- %d de ellos escuchan %s y %s,\n- %d solo escuchan %s y %s, y\n- %d %s y %s.",
-"- %d de ellos escuchan %s y %s,\n- %d escuchan %s y %s, y\n- %d solamente %s y %s."
-)
-template <- sample(templates, 1)
-values <- list(
-c(data$n_AB, data$n_AC, data$n_BC),
-c(data$n_AB_only, data$n_AC, data$n_BC),
-c(data$n_AB, data$n_AC_only, data$n_BC),
-c(data$n_AB, data$n_AC, data$n_BC_only)
-)
-chosen_values <- switch(which(templates == template),
-values[[1]],
-values[[2]],
-values[[3]],
-values[[4]])
-sprintf(
-"Se ha entrevistado a %d adolescentes sobre los géneros musicales que escuchan.\n\n- %d de ellos escuchan %s, \n- %d escuchan %s, y \n- %d %s. \n\nAdemás sabemos que \n\n%s",
-data$n_total, data$n_A, A, data$n_B, B, data$n_C, C,
-sprintf(template, chosen_values[1], A, B, chosen_values[2], A, C, chosen_values[3], B, C)
-)
-}
-# Generar datos válidos
-tryCatch({
-data <- generate_valid_data()
-}, error = function(e) {
-stop("Error al generar datos válidos: ", e$message)
-})
-# Asignar valores a variables individuales
-for (name in names(data)) {
-assign(name, data[[name]])
-}
-# Crear géneros musicales aleatorios
-genres <- generate_random_genres()
-A <- genres[1]
-B <- genres[2]
-C <- genres[3]
-# Generar texto aleatorio con números consistentes
-random_text <- generate_random_text(data, A, B, C)
-# Lista de preguntas
-questions <- c(
-sprintf("¿Cuántas personas escuchan solamente %s y %s?", A, B),
-sprintf("¿Cuántos adolescentes disfrutan únicamente de %s y %s?", A, C),
-sprintf("¿Cuál es el número de entrevistados que solo escuchan %s y %s?", B, C),
-"¿Cuántas personas escuchan los tres géneros musicales?",
-"¿Cuántos adolescentes no escuchan ninguno de estos géneros musicales?",
-"¿Cuál es el total de personas que escuchan solo uno de estos géneros musicales?",
-"¿Cuántos entrevistados disfrutan de al menos dos géneros musicales?",
-"¿Cuántas personas escuchan exactamente dos géneros musicales?",
-sprintf("¿Cuál es el número de adolescentes que escuchan %s o %s, pero no ambos?", A, B),
-sprintf("¿Cuántos jóvenes escuchan %s pero no %s?", A, B),
-sprintf("¿Cuántas personas disfrutan de %s o %s, o ambos?", A, C),
-sprintf("¿Cuál es el número de entrevistados que no escuchan %s ni %s?", B, C),
-"¿Cuántos adolescentes escuchan al menos uno de estos géneros musicales?",
-"¿Cuántas personas escuchan exactamente un género musical?",
-"¿Cuál es el total de personas que escuchan máximo dos géneros musicales?",
-"¿Cuál es el total de personas que escuchan máximo tres géneros musicales?"
-)
-# Respuestas correspondientes a las preguntas
-answers <- c(
-n_AB_only,
-n_AC_only,
-n_BC_only,
-n_all,
-n_none,
-n_only_A + n_only_B + n_only_C,
-n_AB + n_AC + n_BC - 2*n_all,
-n_AB_only + n_AC_only + n_BC_only,
-n_only_A + n_only_B,
-n_only_A + n_AC_only,
-n_A + n_C - n_AC,
-n_total - (n_B + n_C - n_BC),
-n_total - n_none,
-n_only_A + n_only_B + n_only_C,
-n_only_A + n_only_B + n_only_C + n_AB_only + n_AC_only + n_BC_only,
-n_total - n_none
-)
-# Seleccionar una pregunta aleatoria para la pregunta principal
-question_index <- sample(1:length(questions), 1)
-main_question <- questions[question_index]
-correct_answer <- answers[question_index]
-# Generar distractores (respuestas incorrectas pero plausibles)
-generate_distractors <- function(correct, n = 3) {
-# Crear distractores cercanos al valor correcto
-distractors <- c()
-# Distractor 1: Valor cercano por debajo
-dist1 <- max(1, correct - sample(1:3, 1))
-distractors <- c(distractors, dist1)
-# Distractor 2: Valor cercano por encima
-dist2 <- correct + sample(1:3, 1)
-distractors <- c(distractors, dist2)
-# Distractor 3: Valor más alejado
-if (runif(1) > 0.5) {
-dist3 <- max(1, correct - sample(4:6, 1))
-} else {
-dist3 <- correct + sample(4:6, 1)
-}
-distractors <- c(distractors, dist3)
-return(distractors)
-}
-# Generar distractores
-distractors <- generate_distractors(correct_answer)
-# Crear opciones de respuesta (correcta + distractores)
-options <- c(correct_answer, distractors)
-# Mezclar las opciones
-options <- sample(options)
-# Identificar la posición de la respuesta correcta
-solution_index <- which(options == correct_answer)
-# Usar el mismo tipo de gráfico (pdf, svg, png) que la llamada actual de xweave()
-typ <- match_exams_device()
-# Código TikZ para el Diagrama de Venn
-tikz_venn <- sprintf('
-\\begin{tikzpicture}[scale=0.7]
-\\begin{scope}[opacity=0.5]
-\\fill[red]   ( 90:1.5) circle (2);
-\\fill[green] (210:1.5) circle (2);
-\\fill[blue]  (330:1.5) circle (2);
-\\end{scope}
-\\node at ( 90:3.3) {%s};
-\\node at (210:3.3) {%s};
-\\node at (330:3.3) {%s};
-\\node at ( 90:1.3) {%d};
-\\node at (210:1.3) {%d};
-\\node at (330:1.3) {%d};
-\\node at ( 30:1.7) {%d};
-\\node at (150:1.7) {%d};
-\\node at (270:1.7) {%d};
-\\node at (0:0) {%d};
-\\node at (270:3.5) {Ninguno: %d};
-\\end{tikzpicture}
-', A, B, C, n_only_A, n_only_B, n_only_C, n_AC_only, n_AB_only, n_BC_only, n_all, n_none)
-# Configuración de knitr para TikZ
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-# Función para incluir el diagrama TikZ
-include_venn <- function() {
-include_tikz(tikz_venn, name = "venn_diagram", markup = "markdown",
-format = typ, library = c("shapes", "backgrounds"),
-packages = c("tikz"),
-width = "6cm")
-}
-include_venn()
-include_venn()
-source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/SemilleroUnico3.R")
-source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/TestScript.R")
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/TestScript_Legal2Col.R", echo=TRUE)
+setwd("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1")
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/TestScript_Legal2Col.R", echo=TRUE)
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/TestScript_Legal2Col.R", echo=TRUE)
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/TestScript_Legal2Col.R", echo=TRUE)
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/TestScript_Legal2Col.R", echo=TRUE)
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/SemilleroUnificado_Legal2Col.R", echo=TRUE)
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/SemilleroUnico3.R", echo=TRUE)
+source("~/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/ExamenFinPeriodo-1/SemilleroUnico3.R", echo=TRUE)
