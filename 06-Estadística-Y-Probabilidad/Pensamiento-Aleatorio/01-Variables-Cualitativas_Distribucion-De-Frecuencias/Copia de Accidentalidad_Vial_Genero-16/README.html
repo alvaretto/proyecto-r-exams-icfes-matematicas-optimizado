@@ -352,353 +352,470 @@ display: none;
 </div>
 
 
-<div id="repositorio-matemáticas-icfes---r-exams" class="section level1">
-<h1>Repositorio Matemáticas ICFES - R-Exams</h1>
+<div id="ejercicio-accidentalidad-vial-por-género" class="section level1">
+<h1>Ejercicio: Accidentalidad Vial por Género</h1>
 <div id="descripción-general" class="section level2">
 <h2>Descripción General</h2>
-<p>Este repositorio contiene una colección de ejercicios de matemáticas
-para preparación de pruebas ICFES, desarrollados con el paquete R-exams.
-El proyecto está diseñado para generar preguntas dinámicas con alto
-grado de aleatorización, permitiendo crear múltiples versiones de cada
-ejercicio con diferentes variables, textos, nombres y situaciones.</p>
+<p>Este ejercicio forma parte del proyecto de Matemáticas ICFES con
+R-Exams, específicamente en el área de Estadística y Probabilidad,
+Pensamiento Aleatorio. El ejercicio
+<code>accidentalidad-vial-genero-01.Rmd</code> presenta un problema de
+interpretación de gráficas estadísticas relacionadas con la mortalidad
+por accidentes de tránsito, diferenciada por género.</p>
 </div>
-<div id="estado-actual" class="section level2">
-<h2>Estado Actual</h2>
+<div id="objetivo-pedagógico" class="section level2">
+<h2>Objetivo Pedagógico</h2>
+<p>El objetivo de este ejercicio es evaluar la capacidad del estudiante
+para:</p>
 <ul>
-<li>El repositorio cuenta con una estructura organizada por áreas
-temáticas de matemáticas</li>
-<li>Se han implementado ejercicios en varias áreas, con énfasis en
-estadística y probabilidad</li>
-<li>Se han añadido pruebas unitarias para garantizar la coherencia
-matemática y diversidad de versiones</li>
-<li>Se utilizan tecnologías como TikZ para la generación de gráficos y
-tablas de alta calidad</li>
-<li>El proyecto soporta múltiples formatos de salida (PDF, HTML,
-NOPS)</li>
+<li>Interpretar gráficas estadísticas</li>
+<li>Analizar datos presentados en tablas y gráficos</li>
+<li>Identificar la representación gráfica correcta de un conjunto de
+datos</li>
+<li>Comprender la distribución de frecuencias en variables cualitativas
+(género)</li>
 </ul>
 </div>
-<div id="requisitos-del-sistema" class="section level2">
-<h2>Requisitos del Sistema</h2>
-<ul>
-<li><strong>R</strong>: Versión 4.0 o superior</li>
-<li><strong>RStudio</strong>: Recomendado para una mejor experiencia de
-desarrollo</li>
-<li><strong>LaTeX</strong>: Necesario para la generación de documentos
-PDF</li>
-<li><strong>TikZ</strong>: Requerido para la generación de gráficos
-vectoriales</li>
-<li><strong>Paquetes R</strong>: exams, knitr, ggplot2, entre otros (ver
-script install_packages.R)</li>
-</ul>
-</div>
-<div id="estructura-del-repositorio" class="section level2">
-<h2>Estructura del Repositorio</h2>
-<p>El repositorio está organizado siguiendo la estructura temática del
-currículo de matemáticas para ICFES:</p>
-<pre><code>├── 01-Numeros-Reales/
-├── 02-Funciones/
-├── 03-Razones-Trigonometricas/
-├── 04-Funciones_Identidades-Trigonometricas/
-├── 05-Geometria-Analitica/
-├── 06-Estadística-Y-Probabilidad/
-└── General/
-    └── Plantillas/</code></pre>
-<p>Cada ejercicio sigue una estructura común:</p>
-<pre><code>├── ejercicios/     # Archivos .Rmd con el código fuente
-├── docus/          # Documentación adicional
-├── salida/         # Archivos generados
-└── _snaps/         # Capturas para pruebas (opcional)</code></pre>
-</div>
-<div id="áreas-temáticas" class="section level2">
-<h2>Áreas Temáticas</h2>
-<div id="números-reales" class="section level3">
-<h3>1. Números Reales</h3>
-<ul>
-<li><strong>Pensamiento Numérico</strong>
-<ul>
-<li>Números Racionales</li>
-<li>Números Irracionales</li>
-<li>Números Reales</li>
-<li>Propiedades de Expresiones Decimales</li>
-<li>Conjunto de Reales y Desigualdades</li>
-<li>Valor Absoluto</li>
-</ul></li>
-</ul>
-</div>
-<div id="funciones" class="section level3">
-<h3>2. Funciones</h3>
-<ul>
-<li><strong>Pensamiento Variacional y Espacial</strong>
-<ul>
-<li>Concepto de Función, Dominio y Recorrido</li>
-<li>Operaciones con Funciones</li>
-<li>Composición de Funciones</li>
-<li>Funciones Inyectivas y Funciones Inversas</li>
-<li>Propiedades de las Funciones</li>
-<li>Funciones Pares e Impares</li>
-<li>Funciones Periódicas</li>
-<li>Función Exponencial</li>
-<li>Función Logarítmica</li>
-<li>Traslación y Dilatación</li>
-<li>Variación Lineal y Exponencial, Razón de Cambio
-<ul>
-<li><strong>Contenido Actual:</strong>
-<ul>
-<li>Función Lineal. Auto Viajero</li>
-<li>Recursos disponibles:
-<ul>
-<li>Archivos RMarkdown (.Rmd)</li>
-<li>Scripts R</li>
-<li>Documentación</li>
-<li>Ejercicios y recursos adicionales</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Introducción al Límite de una Sucesión</li>
-</ul></li>
-</ul>
-</div>
-<div id="razones-trigonométricas" class="section level3">
-<h3>3. Razones Trigonométricas</h3>
-<ul>
-<li><strong>Pensamiento Espacial Métrico y Variacional</strong>
-<ul>
-<li>Medidas de Ángulos</li>
-<li>Triángulos</li>
-<li>Razones Trigonométricas en un Triángulo Rectángulo</li>
-<li>Razones Trigonométricas de Ángulos Notables</li>
-<li>Resolución de Triángulos Rectángulos</li>
-<li>Ángulo de Elevación y Ángulo de Depresión</li>
-<li>Circunferencia Unitaria</li>
-<li>Razones Trigonométricas en la Circunferencia Unitaria</li>
-<li>Cálculo de Razones Trigonométricas Usando Ángulos de Referencia</li>
-<li>Razones Trigonométricas para Ángulos Negativos, Complementarios y
-Coterminales</li>
-<li>Definición de las Funciones Trigonométricas</li>
-<li>Teorema del Seno</li>
-<li>Teorema del Coseno</li>
-</ul></li>
-</ul>
-</div>
-<div id="funciones-e-identidades-trigonométricas" class="section level3">
-<h3>4. Funciones e Identidades Trigonométricas</h3>
-<ul>
-<li><strong>Pensamiento Espacial y Variacional</strong>
-<ul>
-<li>Función Seno</li>
-<li>Función Coseno</li>
-<li>Gráficas de las Funciones Sinusoidales</li>
-<li>Función Tangente</li>
-<li>Función Cotangente</li>
-<li>Función Secante</li>
-<li>Función Cosecante</li>
-<li>Identidades Trigonométricas Fundamentales</li>
-<li>Funciones Trigonométricas en Términos de las Otras</li>
-<li>Simplificación de Expresiones Trigonométricas</li>
-<li>Coordenadas Polares y Cartesianas</li>
-</ul></li>
-</ul>
-</div>
-<div id="geometría-analítica" class="section level3">
-<h3>5. Geometría Analítica</h3>
-<ul>
-<li><strong>Pensamiento Espacial</strong>
-<ul>
-<li>Coordenadas Cartesianas</li>
-<li>La Línea Recta</li>
-<li>Posiciones Relativas de Dos Rectas en el Plano</li>
-<li>Secciones Cónicas</li>
-<li>La Circunferencia</li>
-<li>Ecuación Canónica de la Circunferencia con Centro en (h,k)</li>
-<li>Ecuación General de la Circunferencia</li>
-<li>La Parábola</li>
-<li>Ecuación Canónica de la Parábola con Vértice en (h,k)</li>
-<li>Ecuación General de la Parábola</li>
-<li>La Elipse</li>
-<li>Ecuación Canónica de la Elipse con Centro en (h,k)</li>
-<li>Ecuación General de la Elipse</li>
-<li>La Hipérbola</li>
-<li>Ecuación Canónica de la Hipérbola con Centro en (h,k)</li>
-<li>Ecuación General de la Hipérbola</li>
-</ul></li>
-</ul>
-</div>
-<div id="estadística-y-probabilidad" class="section level3">
-<h3>6. Estadística y Probabilidad</h3>
-<ul>
-<li><strong>Pensamiento Aleatorio</strong>
-<ul>
-<li>Variables Cualitativas y Distribución de Frecuencias
-<ul>
-<li><strong>Contenido Actual:</strong>
-<ul>
-<li>Gráficos Estadísticos de Adopción de Mascotas</li>
-<li>Accidentalidad Vial por Género (con pruebas unitarias)</li>
-<li>Recursos disponibles:
-<ul>
-<li>Archivos RMarkdown (.Rmd)</li>
-<li>Scripts R</li>
-<li>Documentación</li>
-<li>Recursos multimedia</li>
-<li>Pruebas unitarias para validación matemática</li>
-<li>Ejercicios y recursos adicionales</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Variables Cuantitativas Discretas y Distribución de Frecuencias</li>
-<li>Variables Cuantitativas Continuas y Distribución de Frecuencias</li>
-<li>Medidas de Tendencia Central
-<ul>
-<li><strong>Estado Actual:</strong>
-<ul>
-<li>Media (Promedios)</li>
-<li>Caso Práctico: Notas Faltantes</li>
-<li>Recursos disponibles:
-<ul>
-<li>Archivos RMarkdown (.Rmd)</li>
-<li>Scripts R</li>
-<li>Documentación</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Medidas de Dispersión
-<ul>
-<li><strong>Estado Actual:</strong>
-<ul>
-<li>Intervalo de Confianza</li>
-<li>Caso Práctico: Gastos Turísticos</li>
-<li>Recursos disponibles:
-<ul>
-<li>Archivos RMarkdown (.Rmd)</li>
-<li>Scripts R</li>
-<li>Documentación</li>
-<li>Ejercicios y recursos adicionales</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Medidas de Posición</li>
-<li>Probabilidad: Principios Aditivo y Multiplicativo de Conteo
-<ul>
-<li><strong>Contenido Actual:</strong>
-<ul>
-<li>Diagramas de Venn</li>
-<li>Caso Práctico: Géneros Musicales</li>
-<li>Recursos disponibles:
-<ul>
-<li>Archivos RMarkdown (.Rmd)</li>
-<li>Scripts R</li>
-<li>Documentación</li>
-<li>Recursos multimedia</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li>Probabilidad de la Unión de Sucesos</li>
-<li>Probabilidad Condicionada e Independencia de Sucesos</li>
-</ul></li>
-</ul>
-</div>
-</div>
-<div id="características-principales" class="section level2">
-<h2>Características Principales</h2>
-<ul>
-<li><strong>Alta aleatorización</strong>: Cada ejercicio puede generar
-cientos de versiones diferentes</li>
-<li><strong>Pruebas unitarias</strong>: Validación automática de la
-coherencia matemática</li>
-<li><strong>Gráficos dinámicos</strong>: Generación de visualizaciones
-personalizadas con TikZ y ggplot2</li>
-<li><strong>Tablas dinámicas</strong>: Creación de tablas con datos
-aleatorios usando TikZ y kable</li>
-<li><strong>Múltiples formatos</strong>: Soporte para PDF, HTML, NOPS y
-otros formatos de salida</li>
-<li><strong>Plantillas reutilizables</strong>: Estructura modular para
-facilitar la creación de nuevos ejercicios</li>
-<li><strong>Compatibilidad con LaTeX</strong>: Soporte completo para
-notación matemática avanzada</li>
-</ul>
-</div>
-<div id="guía-de-uso" class="section level2">
-<h2>Guía de Uso</h2>
-<div id="generación-de-ejercicios" class="section level3">
-<h3>Generación de Ejercicios</h3>
-<p>Para generar ejercicios en formato PDF:</p>
-<pre class="r"><code>library(exams)
-exams2pdf(&quot;ruta/al/ejercicio.Rmd&quot;, n = 5)  # Genera 5 versiones diferentes</code></pre>
-<p>Para generar ejercicios en formato HTML:</p>
-<pre class="r"><code>library(exams)
-exams2html(&quot;ruta/al/ejercicio.Rmd&quot;, n = 5)  # Genera 5 versiones diferentes</code></pre>
-</div>
-<div id="ejecución-de-pruebas-unitarias" class="section level3">
-<h3>Ejecución de Pruebas Unitarias</h3>
-<p>Para ejecutar las pruebas unitarias de un ejercicio:</p>
-<pre class="r"><code>source(&quot;ruta/al/script_de_pruebas.R&quot;)</code></pre>
-</div>
-</div>
-<div id="novedades" class="section level2">
-<h2>Novedades</h2>
-<div id="julio-2024" class="section level3">
-<h3>Julio 2024</h3>
-<ul>
-<li><strong>Implementación de pruebas unitarias en ejercicios de
-estadística</strong>
-<ul>
-<li>Se han añadido pruebas unitarias al ejercicio de Accidentalidad Vial
-por Género</li>
-<li>Las pruebas garantizan:
-<ul>
-<li>Coherencia matemática en los datos generados</li>
-<li>Proporciones realistas en los datos de género</li>
-<li>Tendencias temporales coherentes</li>
-<li>Generación de más de 300 versiones diferentes del ejercicio</li>
-<li>Validación de la diversidad en los datos</li>
-</ul></li>
-<li>Se incluye un script independiente para ejecutar las pruebas</li>
-</ul></li>
-</ul>
-</div>
-<div id="junio-2024" class="section level3">
-<h3>Junio 2024</h3>
-<ul>
-<li><strong>Mejoras en la generación de gráficos con TikZ</strong>
-<ul>
-<li>Eliminación de etiquetas automáticas como ‘plot of chunk
-GraficoA’</li>
-<li>Mayor personalización de colores y estilos</li>
-<li>Soporte mejorado para tablas dinámicas</li>
-</ul></li>
-</ul>
-</div>
-</div>
-<div id="contribuciones" class="section level2">
-<h2>Contribuciones</h2>
-<p>Este repositorio está abierto a contribuciones. Si deseas
-colaborar:</p>
+<div id="estructura-del-ejercicio" class="section level2">
+<h2>Estructura del Ejercicio</h2>
+<p>El ejercicio presenta:</p>
 <ol style="list-style-type: decimal">
-<li>Revisa la estructura de carpetas y las plantillas existentes</li>
-<li>Sigue las convenciones de nomenclatura y organización</li>
-<li>Asegúrate de incluir pruebas unitarias para validar la coherencia
-matemática</li>
-<li>Documenta adecuadamente el código y los ejercicios</li>
+<li>Un escenario contextualizado sobre accidentalidad vial</li>
+<li>Una gráfica que muestra la mortalidad total por años</li>
+<li>Una tabla con datos específicos de víctimas de género masculino</li>
+<li>Cuatro opciones de gráficas que representan los datos por
+género</li>
+<li>El estudiante debe identificar la gráfica que representa
+correctamente los datos</li>
 </ol>
 </div>
-<div id="recursos-adicionales" class="section level2">
-<h2>Recursos Adicionales</h2>
+<div id="aleatorización-y-variabilidad" class="section level2">
+<h2>Aleatorización y Variabilidad</h2>
+<p>Este ejercicio implementa una amplia aleatorización para generar
+múltiples versiones:</p>
 <ul>
-<li><a href="http://www.r-exams.org/">Documentación oficial de
-R-exams</a></li>
-<li><a href="https://www.overleaf.com/learn/latex/TikZ_package">Tutorial
-de TikZ</a></li>
-<li><a href="./guia_implementacion_icfes.html">Guía de implementación
-ICFES</a></li>
-<li><a href="./matriz_alineacion_icfes.html">Matriz de alineación
-ICFES</a></li>
+<li><strong>Contexto</strong>: Ciudades, términos utilizados (estudio,
+análisis, mortalidad, etc.)</li>
+<li><strong>Datos</strong>: Años del estudio, valores de mortalidad,
+tendencias</li>
+<li><strong>Visualización</strong>: Colores de gráficas, etiquetas,
+estilos de tabla</li>
+<li><strong>Distractores</strong>: Diferentes tipos de errores en las
+opciones incorrectas</li>
 </ul>
 </div>
-<div id="contacto" class="section level2">
-<h2>Contacto</h2>
-<p>Para consultas o sugerencias relacionadas con este repositorio,
-puedes contactar al mantenedor principal a través de GitHub.</p>
-<p><a href="https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado">GitHub:</a></p>
+<div id="documentación-técnica-del-código" class="section level2">
+<h2>Documentación Técnica del Código</h2>
+<div id="configuración-inicial-líneas-7-44" class="section level3">
+<h3>Configuración Inicial (líneas 7-44)</h3>
+<pre class="r"><code># Configuración para todos los formatos de salida
+Sys.setlocale(category = &quot;LC_NUMERIC&quot;, locale = &quot;C&quot;)
+options(OutDec = &quot;.&quot;)
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = &quot;pdflatex&quot;)
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  &quot;\\usepackage{tikz}&quot;,
+  &quot;\\usepackage{colortbl}&quot;
+))
+
+# Carga de librerías necesarias
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+
+# Configuración del dispositivo de salida y opciones de chunks
+typ &lt;- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = &quot;&quot;,
+  fig.keep = &#39;all&#39;,
+  dev = c(&quot;png&quot;, &quot;pdf&quot;),
+  dpi = 150
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, &#39;&#39;)
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which(&quot;python&quot;), required = TRUE)</code></pre>
+<p>Esta sección establece:</p>
+<ul>
+<li>La configuración del formato numérico (punto decimal)</li>
+<li>Configuración de LaTeX para TikZ (usado en tablas)</li>
+<li>Carga de librerías necesarias</li>
+<li>Configuración de opciones para chunks de R</li>
+<li>Configuración del motor Python a través de reticulate</li>
+</ul>
+</div>
+<div id="definición-de-variables-líneas-46-142" class="section level3">
+<h3>Definición de Variables (líneas 46-142)</h3>
+<pre class="r"><code># Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorizar ciudades para el contexto del problema
+ciudades &lt;- c(&quot;Lima&quot;, &quot;Bogotá&quot;, &quot;Ciudad de México&quot;, &quot;Santiago&quot;, &quot;Buenos Aires&quot;, ...)
+ciudades_seleccionadas &lt;- sample(ciudades, sample(3:5, 1))
+ciudades_texto &lt;- paste(ciudades_seleccionadas, collapse = &quot;, &quot;)
+
+# Aleatorizar términos para el contexto del problema
+terminos_estudio &lt;- c(&quot;estudio&quot;, &quot;análisis&quot;, &quot;investigación&quot;, &quot;informe&quot;, &quot;reporte&quot;)
+termino_estudio &lt;- sample(terminos_estudio, 1)
+...
+
+# Aleatorizar años para el estudio (mantener 4 años consecutivos)
+año_inicial &lt;- sample(2000:2018, 1)
+años &lt;- año_inicial:(año_inicial + 3)
+años_texto &lt;- paste(min(años), &quot;y&quot;, max(años))
+
+# Generar datos de mortalidad total con tendencia realista
+base_mortalidad &lt;- sample(4000:8000, 1)
+variacion_maxima &lt;- round(base_mortalidad * 0.2)  # Variación máxima de 20%
+
+# Generar tendencia aleatoria para mortalidad total
+tendencias &lt;- c(&quot;creciente&quot;, &quot;decreciente&quot;, &quot;pico&quot;, &quot;valle&quot;, &quot;ondulante&quot;)
+tendencia &lt;- sample(tendencias, 1)
+
+# Generación de datos según la tendencia seleccionada
+mortalidad_total &lt;- numeric(4)
+if (tendencia == &quot;creciente&quot;) {
+  factor_incremento &lt;- seq(1, 1.2, length.out = 4)
+  mortalidad_total &lt;- round(base_mortalidad * factor_incremento + rnorm(4, 0, variacion_maxima * 0.3))
+} else if (tendencia == &quot;decreciente&quot;) {
+  ...
+}
+
+# Generar datos para hombres (aproximadamente 75-85% del total - proporción realista)
+proporcion_hombres &lt;- runif(4, 0.75, 0.85)
+mortalidad_hombres &lt;- round(mortalidad_total * proporcion_hombres)
+
+# Calcular datos para mujeres (el resto)
+mortalidad_mujeres &lt;- mortalidad_total - mortalidad_hombres
+
+# Aleatorizar colores y etiquetas
+colores_disponibles &lt;- c(&quot;blue&quot;, &quot;red&quot;, &quot;green&quot;, &quot;purple&quot;, &quot;orange&quot;, &quot;brown&quot;, &quot;black&quot;, &quot;magenta&quot;, &quot;cyan&quot;)
+color_hombres_correcto &lt;- sample(colores_disponibles, 1)
+...
+
+# Establecer la gráfica correcta
+opciones &lt;- c(&quot;lineas_separadas_A&quot;, &quot;lineas_separadas_B&quot;, &quot;lineas_separadas_C&quot;, &quot;lineas_separadas_D&quot;)
+opcion_correcta &lt;- &quot;lineas_separadas_A&quot;
+indice_correcto &lt;- 1  # Índice de &quot;lineas_separadas_A&quot; en el vector opciones
+
+# Vector de solución para r-exams
+solucion &lt;- integer(4)
+solucion[indice_correcto] &lt;- 1</code></pre>
+<p>Esta sección:</p>
+<ul>
+<li>Establece una semilla aleatoria para reproducibilidad</li>
+<li>Aleatoriza elementos del contexto (ciudades, términos)</li>
+<li>Define el rango de años para el estudio</li>
+<li>Genera datos de mortalidad total con diferentes tendencias</li>
+<li>Calcula la distribución por género (hombres/mujeres)</li>
+<li>Aleatoriza colores y etiquetas para las gráficas</li>
+<li>Define la opción correcta y el vector de solución</li>
+</ul>
+</div>
+<div id="generación-de-tabla-tikz-líneas-144-181" class="section level3">
+<h3>Generación de Tabla TikZ (líneas 144-181)</h3>
+<pre class="r"><code># Aleatorizar colores de la tabla
+color_fondo_tabla &lt;- sample(c(&quot;orange&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;red&quot;, &quot;yellow&quot;, &quot;cyan&quot;), 1)
+intensidad_color &lt;- sample(c(10, 15, 20, 25, 30), 1)
+color_tabla &lt;- paste0(color_fondo_tabla, &quot;!&quot;, intensidad_color)
+
+# Función para generar el código TikZ de la tabla
+generar_tabla_tikz &lt;- function(años, datos_hombres, color_tabla, etiqueta_masculino) {
+  # Crear tabla con TikZ
+  tabla_code &lt;- c(&quot;\\begin{tikzpicture}&quot;,
+    &quot;\\node[inner sep=0pt] {&quot;,
+    &quot;  \\begin{tabular}{|c|c|}&quot;,
+    &quot;    \\hline&quot;,
+    paste0(&quot;    \\rowcolor{&quot;, color_tabla, &quot;}&quot;),
+    paste0(&quot;    \\textbf{Año} &amp; \\textbf{Personas de &quot;, tolower(etiqueta_masculino), &quot;} \\\\&quot;),
+    paste0(&quot;    \\textbf{} &amp; \\textbf{víctimas de &quot;, sample(c(&quot;accidentalidad vial&quot;, &quot;siniestros de tránsito&quot;, &quot;incidentes de tráfico&quot;), 1), &quot;} \\\\&quot;),
+    &quot;    \\hline&quot;)
+  
+  # Añadir filas con datos
+  for (i in 1:length(años)) {
+    tabla_code &lt;- c(tabla_code, paste0(&quot;    &quot;, años[i], &quot; &amp; &quot;, format(datos_hombres[i], big.mark = &quot;,&quot;), &quot; \\\\&quot;))
+    tabla_code &lt;- c(tabla_code, &quot;    \\hline&quot;)
+  }
+  
+  # Cerrar la tabla
+  tabla_code &lt;- c(tabla_code,
+    &quot;  \\end{tabular}&quot;,
+    &quot;};&quot;,
+    &quot;\\end{tikzpicture}&quot;)
+  
+  return(tabla_code)
+}
+
+# Generar código TikZ para la tabla
+tabla_tikz &lt;- generar_tabla_tikz(años, mortalidad_hombres, color_tabla, etiqueta_masculino)</code></pre>
+<p>Esta sección:</p>
+<ul>
+<li>Aleatoriza los colores y estilos de la tabla</li>
+<li>Define una función para generar código TikZ que crea una tabla
+estilizada</li>
+<li>Genera el código TikZ para la tabla con los datos de mortalidad
+masculina</li>
+</ul>
+</div>
+<div id="generación-de-gráficas-con-python-líneas-183-400" class="section level3">
+<h3>Generación de Gráficas con Python (líneas 183-400)</h3>
+<pre class="r"><code># Código Python para las gráficas
+codigo_base_python &lt;- &quot;
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib
+matplotlib.rcParams[&#39;font.size&#39;] = 9
+
+años = %s
+mortalidad_hombres = %s
+mortalidad_mujeres = %s
+color_hombres = &#39;%s&#39;
+color_mujeres = &#39;%s&#39;
+etiqueta_masculino = &#39;%s&#39;
+etiqueta_femenino = &#39;%s&#39;
+&quot;
+
+# Reemplazar valores en el código Python
+codigo_python_base &lt;- sprintf(codigo_base_python, 
+                            paste(años, collapse=&quot;, &quot;), 
+                            paste(mortalidad_hombres, collapse=&quot;, &quot;), 
+                            paste(mortalidad_mujeres, collapse=&quot;, &quot;),
+                            color_hombres_correcto,
+                            color_mujeres_correcto,
+                            etiqueta_masculino,
+                            etiqueta_femenino)
+
+# Código para graficar los totales
+codigo_python_grafica_total &lt;- paste0(codigo_python_base, &quot;
+# Configuración de la figura
+plt.figure(figsize=(6, 3.5))
+
+# Datos totales
+mortalidad_total = [h + m for h, m in zip(mortalidad_hombres, mortalidad_mujeres)]
+
+# Graficar los puntos y líneas
+plt.plot(años, mortalidad_total, marker=&#39;o&#39;, color=&#39;&quot;, color_total, &quot;&#39;, linestyle=&#39;-&#39;, linewidth=2, markersize=8)
+...
+&quot;)
+
+# Opción A: CORRECTA - Representa los datos originales correctamente
+codigo_python_opcion1 &lt;- paste0(codigo_python_base, &quot;
+plt.figure(figsize=(5, 3.5))
+
+# Graficar líneas separadas para hombres y mujeres (datos correctos)
+plt.plot(años, mortalidad_hombres, marker=&#39;o&#39;, color=color_hombres, linestyle=&#39;-&#39;, label=etiqueta_masculino, linewidth=2)
+plt.plot(años, mortalidad_mujeres, marker=&#39;o&#39;, color=color_mujeres, linestyle=&#39;-&#39;, label=etiqueta_femenino, linewidth=2)
+...
+&quot;)
+
+# Opción B: INCORRECTA - Valores duplicados o modificados de forma significativa
+distractor_b_factor &lt;- runif(1, 1.8, 2.2)
+codigo_python_opcion2 &lt;- paste0(codigo_python_base, &quot;
+plt.figure(figsize=(5, 3.5))
+
+# Crear datos incorrectos para esta opción
+# Distractor: valores significativamente más altos
+mortalidad_hombres_opcion2 = [int(h * &quot;, distractor_b_factor, &quot;) for h in mortalidad_hombres]
+mortalidad_mujeres_opcion2 = mortalidad_mujeres  # Mantener estos valores correctos
+...
+&quot;)
+
+# Opción C: INCORRECTA - Intercambia hombres y mujeres
+codigo_python_opcion3 &lt;- paste0(codigo_python_base, &quot;
+plt.figure(figsize=(5, 3.5))
+
+# Intercambiar datos para esta opción (distractor)
+mortalidad_hombres_opcion3 = mortalidad_mujeres  # Las líneas que deberían ser de mujeres
+mortalidad_mujeres_opcion3 = mortalidad_hombres  # Las líneas que deberían ser de hombres
+...
+&quot;)
+
+# Opción D: INCORRECTA - Años invertidos (tendencia temporal incorrecta)
+codigo_python_opcion4 &lt;- paste0(codigo_python_base, &quot;
+plt.figure(figsize=(5, 3.5))
+
+# Invertir el orden de los años para crear un distractor convincente
+años_invertidos = list(reversed(años))
+# Usar list() en lugar de .copy() para evitar el error con tuplas
+mortalidad_hombres_opcion4 = list(mortalidad_hombres)
+mortalidad_mujeres_opcion4 = list(mortalidad_mujeres)
+...
+&quot;)
+
+# Ejecutar los códigos de Python para generar las gráficas
+py_run_string(codigo_python_grafica_total)
+py_run_string(codigo_python_opcion1)
+py_run_string(codigo_python_opcion2)
+py_run_string(codigo_python_opcion3)
+py_run_string(codigo_python_opcion4)</code></pre>
+<p>Esta sección:</p>
+<ul>
+<li>Define un código base de Python para generar gráficas con
+matplotlib</li>
+<li>Crea una gráfica de la mortalidad total</li>
+<li>Genera cuatro opciones de gráficas:
+<ol style="list-style-type: decimal">
+<li><strong>Opción A (correcta)</strong>: Muestra los datos originales
+correctamente</li>
+<li><strong>Opción B (incorrecta)</strong>: Muestra valores modificados
+(multiplicados por un factor)</li>
+<li><strong>Opción C (incorrecta)</strong>: Intercambia los datos de
+hombres y mujeres</li>
+<li><strong>Opción D (incorrecta)</strong>: Invierte la tendencia
+temporal (años en orden inverso)</li>
+</ol></li>
+<li>Ejecuta el código Python para generar las imágenes de las
+gráficas</li>
+</ul>
+</div>
+<div id="presentación-del-problema-líneas-403-439" class="section level3">
+<h3>Presentación del Problema (líneas 403-439)</h3>
+<pre class="r"><code>Question
+========
+
+Una `r termino_empresa` dedicada a tratar los datos del tránsito en varias de las ciudades del continente americano (`r ciudades_texto`), ha realizado un `r termino_estudio` donde se muestran los `r termino_registro`s de `r termino_mortalidad` por `r termino_accidente` entre los años `r años[1]` y `r años[4]`.
+
+```{r grafica_total, echo=FALSE, results=&#39;asis&#39;, fig.align=&#39;center&#39;}
+# Usando método alternativo para incluir imágenes
+cat(&quot;![](grafica_total.png)&quot;)</code></pre>
+<p>Se necesita clasificar estos datos por género masculino y femenino.
+La tabla muestra el número de víctimas de género masculino por año.</p>
+<p><code>{r tabla_tikz, echo=FALSE, results=&#39;asis&#39;} include_tikz(tabla_tikz,               name = &quot;tabla_datos&quot;,               markup = &quot;markdown&quot;,              format = typ,              packages = c(&quot;tikz&quot;, &quot;colortbl&quot;),              width = &quot;8cm&quot;)</code></p>
+<p>¿Cuál es la gráfica que muestra los resultados de
+<code>r termino_mortalidad</code> por <code>r termino_accidente</code>
+diferenciados por género?</p>
+</div>
+</div>
+<div id="answerlist" class="section level2">
+<h2>Answerlist</h2>
+<p><code>{r options, echo=FALSE, results=&#39;asis&#39;} # Mostrar las opciones de gráficas usando método alternativo cat(&quot;-\n&quot;) cat(&quot;![](opcion1.png)\n\n&quot;) cat(&quot;-\n&quot;) cat(&quot;![](opcion2.png)\n\n&quot;) cat(&quot;-\n&quot;) cat(&quot;![](opcion3.png)\n\n&quot;) cat(&quot;-\n&quot;) cat(&quot;![](opcion4.png)\n\n&quot;)</code></p>
+<pre><code>
+Esta sección:
+
+- Presenta el problema utilizando los términos y datos aleatorizados
+- Muestra la gráfica de mortalidad total
+- Incluye la tabla TikZ con los datos de víctimas masculinas
+- Plantea la pregunta sobre cuál gráfica representa correctamente los datos por género
+- Muestra las cuatro opciones de gráficas generadas
+
+### Solución y Metadatos (líneas 441-471)
+
+```r
+Solution
+========
+
+La respuesta correcta es la gráfica que representa de manera precisa los datos de `r termino_mortalidad` por género:
+
+```{r solucion_grafica, echo=FALSE, results=&#39;asis&#39;, fig.align=&#39;center&#39;}
+# Incluir la imagen de la opción correcta (opción 1) en la sección de solución
+cat(&quot;![](opcion1.png)&quot;)</code></pre>
+<ul>
+<li>Número total de víctimas por año:
+<code>r paste(format(mortalidad_total, big.mark=&quot;,&quot;), collapse=&quot;, &quot;)</code></li>
+<li>Víctimas de género <code>r tolower(etiqueta_masculino)</code> por
+año:
+<code>r paste(format(mortalidad_hombres, big.mark=&quot;,&quot;), collapse=&quot;, &quot;)</code></li>
+<li>Víctimas de género <code>r tolower(etiqueta_femenino)</code> por
+año:
+<code>r paste(format(mortalidad_mujeres, big.mark=&quot;,&quot;), collapse=&quot;, &quot;)</code></li>
+</ul>
+<p>La gráfica correcta debe mostrar claramente la diferencia entre la
+mortalidad masculina y femenina para cada año del estudio. En este caso,
+los datos muestran que hay aproximadamente
+<code>r round(mean(mortalidad_hombres/mortalidad_mujeres))</code> veces
+más víctimas masculinas que femeninas en los
+<code>r termino_accidente</code>.</p>
+</div>
+<div id="answerlist-1" class="section level2">
+<h2>Answerlist</h2>
+<ul>
+<li><code>r if(solucion[1] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;</code></li>
+<li><code>r if(solucion[2] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;</code></li>
+<li><code>r if(solucion[3] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;</code></li>
+<li><code>r if(solucion[4] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;</code></li>
+</ul>
+</div>
+</div>
+<div id="meta-information" class="section level1">
+<h1>Meta-information</h1>
+<p>exname:
+<code>r paste0(termino_mortalidad, &quot;_&quot;, gsub(&quot; &quot;, &quot;_&quot;, termino_accidente), &quot;_genero&quot;)</code>
+extype: schoice exsolution:
+<code>r paste(as.integer(solucion), collapse=&quot;&quot;)</code> exshuffle: TRUE
+exsection: Interpretación de gráficas ```</p>
+<p>Esta sección:</p>
+<ul>
+<li>Proporciona la solución correcta (Opción A)</li>
+<li>Muestra los datos completos para verificación</li>
+<li>Explica por qué la opción A es la correcta</li>
+<li>Incluye la lista de respuestas (Verdadero/Falso)</li>
+<li>Define los metadatos del ejercicio para R-exams:
+<ul>
+<li>Nombre del ejercicio (aleatorizado)</li>
+<li>Tipo de ejercicio (schoice = selección única)</li>
+<li>Vector de solución (1000 = primera opción correcta)</li>
+<li>Configuración de barajado (TRUE = opciones en orden aleatorio)</li>
+<li>Sección temática (Interpretación de gráficas)</li>
+</ul></li>
+</ul>
+<div id="características-técnicas-destacadas" class="section level2">
+<h2>Características Técnicas Destacadas</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Integración R-Python</strong>: Utiliza
+<code>reticulate</code> para generar gráficas con matplotlib desde
+R</li>
+<li><strong>Visualización avanzada</strong>: Combina TikZ para tablas y
+matplotlib para gráficas</li>
+<li><strong>Alta aleatorización</strong>: Genera múltiples versiones del
+mismo ejercicio</li>
+<li><strong>Distractores pedagógicos</strong>: Las opciones incorrectas
+representan errores comunes de interpretación</li>
+<li><strong>Adaptabilidad</strong>: Funciona con múltiples formatos de
+salida (HTML, PDF, DOCX)</li>
+</ol>
+</div>
+<div id="requisitos-técnicos" class="section level2">
+<h2>Requisitos Técnicos</h2>
+<ul>
+<li>R con los paquetes: exams, reticulate, digest, testthat</li>
+<li>Python con matplotlib y numpy</li>
+<li>LaTeX con TikZ y colortbl para la generación de tablas</li>
+<li>Configuración adecuada de pdflatex para procesamiento de código
+TikZ</li>
+</ul>
+</div>
+<div id="notas-de-implementación" class="section level2">
+<h2>Notas de Implementación</h2>
+<ul>
+<li>El ejercicio está diseñado para funcionar con los formatos de salida
+de R-exams: exams2html, exams2pdf, exams2docx</li>
+<li>Las gráficas se generan dinámicamente en cada ejecución</li>
+<li>La tabla se genera con TikZ para una visualización de alta calidad
+en todos los formatos</li>
+<li>Se utilizan múltiples técnicas de aleatorización para maximizar la
+variabilidad de las versiones</li>
+</ul>
+</div>
+<div id="posibles-mejoras" class="section level2">
+<h2>Posibles Mejoras</h2>
+<ul>
+<li>Implementar más variaciones en los tipos de gráficas (barras, áreas,
+etc.)</li>
+<li>Añadir más distractores pedagógicos basados en errores comunes</li>
+<li>Incorporar análisis estadísticos más complejos</li>
+<li>Mejorar la accesibilidad visual de las gráficas</li>
+</ul>
 </div>
 </div>
 
