@@ -32,6 +32,16 @@ Este ejercicio implementa una amplia aleatorización para generar múltiples ver
 - **Visualización**: Colores de gráficas, etiquetas, estilos de tabla
 - **Distractores**: Diferentes tipos de errores en las opciones incorrectas
 
+## Características Técnicas Destacadas
+
+1. **Integración R-Python**: Utiliza `reticulate` para generar gráficas con matplotlib desde R
+2. **Visualización avanzada**: Combina TikZ para tablas y matplotlib para gráficas
+3. **Alta aleatorización**: Genera más de 51 trillones de combinaciones posibles
+4. **Pruebas unitarias**: Implementa pruebas exhaustivas para garantizar coherencia matemática
+5. **Distractores pedagógicos**: Las opciones incorrectas representan errores comunes de interpretación
+6. **Adaptabilidad**: Funciona con múltiples formatos de salida (HTML, PDF, DOCX)
+7. **Validación automática**: Verifica que se pueden generar más de 300 versiones diferentes
+
 ## Documentación Técnica del Código
 
 ### Configuración Inicial (líneas 7-44)
@@ -174,19 +184,19 @@ generar_tabla_tikz <- function(años, datos_hombres, color_tabla, etiqueta_mascu
     paste0("    \\textbf{Año} & \\textbf{Personas de ", tolower(etiqueta_masculino), "} \\\\"),
     paste0("    \\textbf{} & \\textbf{víctimas de ", sample(c("accidentalidad vial", "siniestros de tránsito", "incidentes de tráfico"), 1), "} \\\\"),
     "    \\hline")
-  
+
   # Añadir filas con datos
   for (i in 1:length(años)) {
     tabla_code <- c(tabla_code, paste0("    ", años[i], " & ", format(datos_hombres[i], big.mark = ","), " \\\\"))
     tabla_code <- c(tabla_code, "    \\hline")
   }
-  
+
   # Cerrar la tabla
   tabla_code <- c(tabla_code,
     "  \\end{tabular}",
     "};",
     "\\end{tikzpicture}")
-  
+
   return(tabla_code)
 }
 
@@ -220,9 +230,9 @@ etiqueta_femenino = '%s'
 "
 
 # Reemplazar valores en el código Python
-codigo_python_base <- sprintf(codigo_base_python, 
-                            paste(años, collapse=", "), 
-                            paste(mortalidad_hombres, collapse=", "), 
+codigo_python_base <- sprintf(codigo_base_python,
+                            paste(años, collapse=", "),
+                            paste(mortalidad_hombres, collapse=", "),
                             paste(mortalidad_mujeres, collapse=", "),
                             color_hombres_correcto,
                             color_mujeres_correcto,
@@ -321,8 +331,8 @@ cat("![](grafica_total.png)")
 Se necesita clasificar estos datos por género masculino y femenino. La tabla muestra el número de víctimas de género masculino por año.
 
 ```{r tabla_tikz, echo=FALSE, results='asis'}
-include_tikz(tabla_tikz, 
-             name = "tabla_datos", 
+include_tikz(tabla_tikz,
+             name = "tabla_datos",
              markup = "markdown",
              format = typ,
              packages = c("tikz", "colortbl"),
@@ -407,9 +417,11 @@ Esta sección:
 
 1. **Integración R-Python**: Utiliza `reticulate` para generar gráficas con matplotlib desde R
 2. **Visualización avanzada**: Combina TikZ para tablas y matplotlib para gráficas
-3. **Alta aleatorización**: Genera múltiples versiones del mismo ejercicio
-4. **Distractores pedagógicos**: Las opciones incorrectas representan errores comunes de interpretación
-5. **Adaptabilidad**: Funciona con múltiples formatos de salida (HTML, PDF, DOCX)
+3. **Alta aleatorización**: Genera múltiples versiones del mismo ejercicio (más de 51 trillones de combinaciones posibles)
+4. **Pruebas unitarias**: Implementa pruebas exhaustivas para garantizar coherencia matemática y variabilidad
+5. **Distractores pedagógicos**: Las opciones incorrectas representan errores comunes de interpretación
+6. **Adaptabilidad**: Funciona con múltiples formatos de salida (HTML, PDF, DOCX)
+7. **Validación automática**: Verifica que se pueden generar más de 300 versiones diferentes
 
 ## Requisitos Técnicos
 
@@ -425,9 +437,63 @@ Esta sección:
 - La tabla se genera con TikZ para una visualización de alta calidad en todos los formatos
 - Se utilizan múltiples técnicas de aleatorización para maximizar la variabilidad de las versiones
 
+## Pruebas Unitarias Implementadas
+
+Se han añadido pruebas unitarias exhaustivas para garantizar la calidad y variabilidad del ejercicio:
+
+### 1. Coherencia Matemática
+
+Verifica que los datos generados sean matemáticamente coherentes:
+
+- La suma de mortalidad por género debe ser igual al total
+- Las proporciones de víctimas masculinas deben estar en un rango realista (75-85%)
+- Las tendencias temporales deben ser coherentes con el patrón seleccionado
+- Los años deben ser consecutivos
+
+### 2. Variabilidad Garantizada
+
+Asegura que el ejercicio puede generar más de 300 versiones diferentes:
+
+- Cálculo del número total de combinaciones posibles (más de 51 trillones)
+- Verificación de diversidad en los datos generados
+- Validación de que hay suficiente variación en las proporciones
+
+### 3. Simulación de Versiones Únicas
+
+Realiza una simulación para confirmar la unicidad de las versiones:
+
+- Genera 50 versiones diferentes del ejercicio con semillas aleatorias distintas
+- Crea un hash único para cada versión generada
+- Verifica que todas las versiones generadas son únicas
+
+### 4. Validación de Opciones
+
+Comprueba que las opciones de respuesta están correctamente definidas:
+
+- La opción correcta debe estar bien identificada
+- Los colores para hombres y mujeres deben ser diferentes
+- Las etiquetas de género deben ser distintas
+
+### Script Independiente para Pruebas
+
+Se ha creado un script independiente `ejecutar_pruebas.R` que permite ejecutar todas las pruebas unitarias sin necesidad de generar el ejercicio completo.
+
+## Archivos del Ejercicio
+
+- `accidentalidad-vial-genero-01.Rmd`: Archivo principal con código R, Python y pruebas unitarias
+- `ejecutar_pruebas.R`: Script independiente para ejecutar las pruebas unitarias
+- `README.md`: Documentación del ejercicio
+
+## Requisitos Técnicos
+
+- R con los paquetes: exams, reticulate, digest, testthat
+- Python con matplotlib y numpy
+- LaTeX con TikZ y colortbl para la generación de tablas
+
 ## Posibles Mejoras
 
 - Implementar más variaciones en los tipos de gráficas (barras, áreas, etc.)
 - Añadir más distractores pedagógicos basados en errores comunes
 - Incorporar análisis estadísticos más complejos
 - Mejorar la accesibilidad visual de las gráficas
+- Ampliar las pruebas unitarias para cubrir más aspectos del ejercicio
