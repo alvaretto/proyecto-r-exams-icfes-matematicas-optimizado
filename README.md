@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 # Repositorio Matemáticas ICFES - R-Exams
 
 ## Descripción General
