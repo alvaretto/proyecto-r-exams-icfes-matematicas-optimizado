@@ -1,0 +1,130 @@
+```{r, eval=TRUE, echo=FALSE, results="hide"}
+library(exams)
+
+# Aleatorización de variables
+set.seed(as.integer(Sys.time()) %% 10000)
+
+# Aleatorizar radio y altura dentro de rangos razonables
+radio <- sample(2:5, 1)
+altura <- sample(6:10, 1)
+
+# Calcular resultados para las diferentes opciones
+volumen <- round(pi * radio^2 * altura, 2)
+area_tapa <- round(pi * radio^2, 2)
+perimetro_tapa <- round(2 * pi * radio, 2)
+area_lateral <- round(2 * pi * radio * altura, 2)
+
+# Aleatorizar contexto
+contextos <- c(
+  "Un estudiante tiene un vaso de forma cilíndrica",
+  "En un experimento de laboratorio se utiliza un recipiente cilíndrico",
+  "Un ingeniero diseña un tanque cilíndrico",
+  "En una clase de geometría, se analiza un cilindro"
+)
+contexto <- sample(contextos, 1)
+
+# Aleatorizar términos
+terminos_base <- c("base circular", "base", "superficie circular")
+termino_base <- sample(terminos_base, 1)
+
+terminos_altura <- c("altura", "profundidad", "longitud")
+termino_altura <- sample(terminos_altura, 1)
+
+# Solución (siempre es el volumen en este caso)
+solucion <- c(1, 0, 0, 0)
+
+# Aleatorizar orden de las opciones
+orden <- sample(1:4)
+opciones_ordenadas <- c("volumen del vaso", "área de la tapa del vaso", 
+                        "perímetro de la tapa del vaso", "área lateral del vaso")[orden]
+solucion <- solucion[orden]
+resultado_correcto <- c(volumen, area_tapa, perimetro_tapa, area_lateral)[orden]
+```
+
+```{r, eval=TRUE, echo=FALSE, results="asis"}
+# Código TikZ para la representación del cilindro
+tikz_code <- paste0('
+\\begin{tikzpicture}[scale=0.6]
+  % Dibujar base inferior (elipse)
+  \\draw[red, dashed] (0,0) ellipse (', radio, ' and 0.5);
+  
+  % Dibujar líneas laterales
+  \\draw[red] (', -radio, ',0) -- (', -radio, ',', altura, ');
+  \\draw[red] (', radio, ',0) -- (', radio, ',', altura, ');
+  
+  % Dibujar base superior (elipse)
+  \\draw[red] (0,', altura, ') ellipse (', radio, ' and 0.5);
+  
+  % Marcar el radio
+  \\draw[<->, thick] (0,0) -- (', radio, ',0) node[midway, above] {$', radio, '$ cm};
+  
+  % Marcar la altura
+  \\draw[<->, thick] (', radio + 1, ',0) -- (', radio + 1, ',', altura, ') node[midway, right] {$', altura, '$ cm};
+  
+\\end{tikzpicture}
+')
+```
+
+Question
+========
+
+`r contexto`. El vaso tiene una `r termino_base` de radio `r radio` cm y una `r termino_altura` de `r altura` cm, como se muestra en la figura.
+
+```{r, echo=FALSE, results="asis"}
+# Utilizando la función include_tikz sin especificar el formato
+include_tikz(tikz_code, 
+             name = "cilindro", 
+             width = "6cm", 
+             packages = c("tikz"),
+             libs = c("arrows", "patterns"),
+             header = "\\usetikzlibrary{arrows,patterns}")
+```
+
+A partir de la información anterior, el estudiante plantea la siguiente operación:
+
+$$ \\pi \\times `r radio`^2 \\times `r altura` = `r volumen` $$
+
+¿A qué corresponde el resultado de la anterior operación?
+
+Answerlist
+----------
+* Al `r opciones_ordenadas[1]`.
+* Al `r opciones_ordenadas[2]`.
+* Al `r opciones_ordenadas[3]`.
+* Al `r opciones_ordenadas[4]`.
+
+Solution
+========
+
+Para resolver este problema, debemos identificar qué fórmula se está utilizando y qué calcula.
+
+El cálculo realizado es:
+$$ \\pi \\times `r radio`^2 \\times `r altura` = `r volumen` $$
+
+Esta fórmula corresponde al cálculo del volumen de un cilindro:
+$$ V = \\pi \\times r^2 \\times h $$
+
+Donde:
+- $r$ es el radio de la base del cilindro (`r radio` cm)
+- $h$ es la altura del cilindro (`r altura` cm)
+
+Las otras operaciones serían:
+- Área de la tapa (base circular): $A = \\pi \\times r^2 = \\pi \\times `r radio`^2 = `r area_tapa` \\text{ cm}^2$
+- Perímetro de la tapa: $P = 2 \\times \\pi \\times r = 2 \\times \\pi \\times `r radio` = `r perimetro_tapa` \\text{ cm}$
+- Área lateral: $A_{lateral} = 2 \\times \\pi \\times r \\times h = 2 \\times \\pi \\times `r radio` \\times `r altura` = `r area_lateral` \\text{ cm}^2$
+
+Por lo tanto, el resultado corresponde al volumen del vaso cilíndrico.
+
+Answerlist
+----------
+* `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: Volumen de un cilindro
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: TRUE
