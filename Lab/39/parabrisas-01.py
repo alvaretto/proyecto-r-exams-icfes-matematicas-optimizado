@@ -27,7 +27,7 @@ def dibujar_abanico(x_origin, y_origin, radius, lines_count=5):
             ax.plot([x_origin, x_end], [y_origin, y_end],
                     color='gray', linestyle='dashed', dashes=(4,4), linewidth=0.8)
 
-# Posición de los abanicos más hacia la izquierda
+# Posición de los abanicos
 dibujar_abanico(1, 0, 2.5, lines_count=5)
 dibujar_abanico(3.75, 0, 2.5, lines_count=5)
 
