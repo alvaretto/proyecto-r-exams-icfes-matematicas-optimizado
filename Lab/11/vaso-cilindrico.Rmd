@@ -2,8 +2,8 @@
 output:
   pdf_document:
     latex_engine: pdflatex
-  word_document: default
   html_document: default
+  word_document: default
 header-includes:
 - \usepackage[spanish]{babel}
 - \usepackage{amsmath}
@@ -127,19 +127,16 @@ Solution
 Para resolver este problema, debemos identificar qué cálculo se está realizando con la fórmula $\pi \times `r radio`^2 \times `r altura` = `r volumen_redondeado`$.
 
 Analizando la fórmula:
-
 - $\pi \times r^2$ corresponde al área de la base circular del cilindro
 - Al multiplicar esta área por la altura $h$, obtenemos el volumen del cilindro
 
 Por lo tanto, la fórmula $V = \pi \times r^2 \times h$ es la fórmula del volumen de un cilindro.
 
 Sustituyendo los valores:
-
 - Radio de la base: $r = `r radio` \text{ cm}$
 - Altura: $h = `r altura` \text{ cm}$
 
 Calculamos:
-
 $V = \pi \times (`r radio`)^2 \times `r altura` = \pi \times `r radio^2` \times `r altura` = `r volumen_redondeado` \text{ cm}^3$
 
 El resultado corresponde al volumen del vaso cilíndrico.
