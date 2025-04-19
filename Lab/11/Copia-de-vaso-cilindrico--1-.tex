@@ -1,0 +1,148 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+Un estudiante tiene un vaso de forma cilíndrica. El vaso tiene una base
+circular de radio 5 cm y una altura de 5 cm, como se muestra en la
+figura.
+
+\begin{center}
+\\begin{tikzpicture}[scale=0.7]
+  % Dibujar cilindro
+  \\draw[thick] (0,0) ellipse (5 and 1);
+  \\draw[thick] (0,5) ellipse (5 and 1);
+  \\draw[thick] (-5,0) -- (-5,5);
+  \\draw[thick] (5,0) -- (5,5);
+  \\draw[dashed] (0,0) -- (5,0);
+  
+  % Etiquetas y dimensiones
+  \\draw[<->] (5.5,0) -- (5.5,5) node[midway,right] {5 cm};
+  \\draw[<->] (-5,-1.5) -- (5,-1.5) node[midway,below] {10 cm};
+  \\node at (2.5,-0.5) {5 cm};
+  
+  % Texto de la operación
+  \\node[align=center] at (5,2.5) {$\\pi \\times 5^2 \\times 5 = 392.7$};
+\\end{tikzpicture}
+\end{center}
+
+A partir de la información anterior, el estudiante plantea la siguiente
+operación:
+
+π × 5² × 5 = 392.7
+
+¿A qué corresponde el resultado de la anterior operación?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  Al volumen del vaso.
+\item
+  Al área de la tapa del vaso.
+\item
+  Al perímetro de la tapa del vaso.
+\item
+  Al área lateral del vaso.
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+La operación π × 5 ² × 5 = 392.7 corresponde al \textbf{área lateral del
+vaso}.
+
+Fórmula del área lateral de un cilindro: A = 2π × r × h
+
+Donde: - r es el radio de la base = 5 cm - h es la altura = 5 cm
+
+Sustituyendo: A = 2π × 5 × 5 = 157.08 cm²
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso
+\item
+  Falso
+\item
+  Falso
+\item
+  Verdadero
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: Volumen de un cilindro extype: schoice exsolution: 0001
+exshuffle: TRUE
+
+\end{document}

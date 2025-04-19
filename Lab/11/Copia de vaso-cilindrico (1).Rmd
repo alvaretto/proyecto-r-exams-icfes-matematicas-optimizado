@@ -1,130 +1,139 @@
-```{r, eval=TRUE, echo=FALSE, results="hide"}
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r setup, include=FALSE}
 library(exams)
-
-# Aleatorización de variables
-set.seed(as.integer(Sys.time()) %% 10000)
-
-# Aleatorizar radio y altura dentro de rangos razonables
-radio <- sample(2:5, 1)
-altura <- sample(6:10, 1)
-
-# Calcular resultados para las diferentes opciones
-volumen <- round(pi * radio^2 * altura, 2)
-area_tapa <- round(pi * radio^2, 2)
-perimetro_tapa <- round(2 * pi * radio, 2)
-area_lateral <- round(2 * pi * radio * altura, 2)
-
-# Aleatorizar contexto
-contextos <- c(
-  "Un estudiante tiene un vaso de forma cilíndrica",
-  "En un experimento de laboratorio se utiliza un recipiente cilíndrico",
-  "Un ingeniero diseña un tanque cilíndrico",
-  "En una clase de geometría, se analiza un cilindro"
-)
-contexto <- sample(contextos, 1)
-
-# Aleatorizar términos
-terminos_base <- c("base circular", "base", "superficie circular")
-termino_base <- sample(terminos_base, 1)
-
-terminos_altura <- c("altura", "profundidad", "longitud")
-termino_altura <- sample(terminos_altura, 1)
-
-# Solución (siempre es el volumen en este caso)
-solucion <- c(1, 0, 0, 0)
-
-# Aleatorizar orden de las opciones
-orden <- sample(1:4)
-opciones_ordenadas <- c("volumen del vaso", "área de la tapa del vaso", 
-                        "perímetro de la tapa del vaso", "área lateral del vaso")[orden]
-solucion <- solucion[orden]
-resultado_correcto <- c(volumen, area_tapa, perimetro_tapa, area_lateral)[orden]
+library(knitr)
+opts_chunk$set(echo = FALSE)
 ```
 
-```{r, eval=TRUE, echo=FALSE, results="asis"}
-# Código TikZ para la representación del cilindro
-tikz_code <- paste0('
-\\begin{tikzpicture}[scale=0.6]
-  % Dibujar base inferior (elipse)
-  \\draw[red, dashed] (0,0) ellipse (', radio, ' and 0.5);
-  
-  % Dibujar líneas laterales
-  \\draw[red] (', -radio, ',0) -- (', -radio, ',', altura, ');
-  \\draw[red] (', radio, ',0) -- (', radio, ',', altura, ');
-  
-  % Dibujar base superior (elipse)
-  \\draw[red] (0,', altura, ') ellipse (', radio, ' and 0.5);
-  
-  % Marcar el radio
-  \\draw[<->, thick] (0,0) -- (', radio, ',0) node[midway, above] {$', radio, '$ cm};
-  
-  % Marcar la altura
-  \\draw[<->, thick] (', radio + 1, ',0) -- (', radio + 1, ',', altura, ') node[midway, right] {$', altura, '$ cm};
-  
-\\end{tikzpicture}
-')
+```{r generacion-variables, echo=FALSE, results='hide'}
+# Aleatorizar variables del problema
+set.seed(sample(1:10000, 1))
+
+# Generar radio y altura del cilindro
+radio <- sample(1:5, 1)  # Radio entre 1 y 5 cm
+altura <- sample(5:10, 1)  # Altura entre 5 y 10 cm
+
+# Calcular resultados para todas las opciones
+volumen <- pi * radio^2 * altura
+area_base <- pi * radio^2
+perimetro_base <- 2 * pi * radio
+area_lateral <- 2 * pi * radio * altura
+
+# Redondear a 2 decimales
+volumen <- round(volumen, 2)
+area_base <- round(area_base, 2)
+perimetro_base <- round(perimetro_base, 2)
+area_lateral <- round(area_lateral, 2)
+
+# Aleatorizar la posición de la respuesta correcta
+opciones <- c("volumen", "area_base", "perimetro_base", "area_lateral")
+respuesta_correcta <- sample(opciones, 1)
+
+# Vector de solución para r-exams
+sol <- rep(0, 4)
+sol[which(opciones == respuesta_correcta)] <- 1
+sol_string <- paste(sol, collapse = "")
+
+# Crear código TikZ para el cilindro
+tikz_code <- paste0("\\\\begin{tikzpicture}[scale=0.7]\n",
+  "  % Dibujar cilindro\n",
+  "  \\\\draw[thick] (0,0) ellipse (", radio, " and 1);\n",
+  "  \\\\draw[thick] (0,", altura, ") ellipse (", radio, " and 1);\n",
+  "  \\\\draw[thick] (-", radio, ",0) -- (-", radio, ",", altura, ");\n",
+  "  \\\\draw[thick] (", radio, ",0) -- (", radio, ",", altura, ");\n",
+  "  \\\\draw[dashed] (0,0) -- (", radio, ",0);\n",
+  "  \n",
+  "  % Etiquetas y dimensiones\n",
+  "  \\\\draw[<->] (", radio + 0.5, ",0) -- (", radio + 0.5, ",", altura, ") node[midway,right] {", altura, " cm};\n",
+  "  \\\\draw[<->] (-", radio, ",-1.5) -- (", radio, ",-1.5) node[midway,below] {", 2*radio, " cm};\n",
+  "  \\\\node at (", radio/2, ",-0.5) {", radio, " cm};\n",
+  "  \n",
+  "  % Texto de la operación\n",
+  "  \\\\node[align=center] at (5,", altura/2, ") {$\\\\pi \\\\times ", radio, "^2 \\\\times ", altura, " = ", volumen, "$};\n",
+  "\\\\end{tikzpicture}")
 ```
 
 Question
 ========
 
-`r contexto`. El vaso tiene una `r termino_base` de radio `r radio` cm y una `r termino_altura` de `r altura` cm, como se muestra en la figura.
+Un estudiante tiene un vaso de forma cilíndrica. El vaso tiene una base circular de radio `r radio` cm y una altura de `r altura` cm, como se muestra en la figura.
 
-```{r, echo=FALSE, results="asis"}
-# Utilizando la función include_tikz sin especificar el formato
-include_tikz(tikz_code, 
-             name = "cilindro", 
-             width = "6cm", 
-             packages = c("tikz"),
-             libs = c("arrows", "patterns"),
-             header = "\\usetikzlibrary{arrows,patterns}")
+```{r, echo=FALSE, results='asis'}
+# Método alternativo más seguro usando knitr::raw_latex
+if (knitr::is_latex_output()) {
+  cat("\\begin{center}\n")
+  cat(tikz_code)
+  cat("\n\\end{center}")
+} else {
+  # Para salida HTML, usaríamos una imagen prediseñada o generaríamos una
+  cat("<div style='text-align:center; margin: 20px 0;'>")
+  cat("<img src='cilindro_ejemplo.png' alt='Cilindro' width='400px'>")
+  cat("</div>")
+  # Nota: cilindro_ejemplo.png debería existir en tu directorio
+}
 ```
 
 A partir de la información anterior, el estudiante plantea la siguiente operación:
 
-$$ \\pi \\times `r radio`^2 \\times `r altura` = `r volumen` $$
+π × `r radio`² × `r altura` = `r volumen`
 
 ¿A qué corresponde el resultado de la anterior operación?
 
 Answerlist
 ----------
-* Al `r opciones_ordenadas[1]`.
-* Al `r opciones_ordenadas[2]`.
-* Al `r opciones_ordenadas[3]`.
-* Al `r opciones_ordenadas[4]`.
+- Al volumen del vaso.
+- Al área de la tapa del vaso.
+- Al perímetro de la tapa del vaso.
+- Al área lateral del vaso.
 
 Solution
 ========
 
-Para resolver este problema, debemos identificar qué fórmula se está utilizando y qué calcula.
-
-El cálculo realizado es:
-$$ \\pi \\times `r radio`^2 \\times `r altura` = `r volumen` $$
-
-Esta fórmula corresponde al cálculo del volumen de un cilindro:
-$$ V = \\pi \\times r^2 \\times h $$
-
-Donde:
-- $r$ es el radio de la base del cilindro (`r radio` cm)
-- $h$ es la altura del cilindro (`r altura` cm)
-
-Las otras operaciones serían:
-- Área de la tapa (base circular): $A = \\pi \\times r^2 = \\pi \\times `r radio`^2 = `r area_tapa` \\text{ cm}^2$
-- Perímetro de la tapa: $P = 2 \\times \\pi \\times r = 2 \\times \\pi \\times `r radio` = `r perimetro_tapa` \\text{ cm}$
-- Área lateral: $A_{lateral} = 2 \\times \\pi \\times r \\times h = 2 \\times \\pi \\times `r radio` \\times `r altura` = `r area_lateral` \\text{ cm}^2$
-
-Por lo tanto, el resultado corresponde al volumen del vaso cilíndrico.
+```{r solucion, results='asis', echo=FALSE}
+# Explicación según la respuesta correcta
+if (respuesta_correcta == "volumen") {
+  cat("La operación π × ", radio, "² × ", altura, " = ", volumen, " corresponde al **volumen del vaso**.\n\n")
+  cat("Fórmula del volumen de un cilindro: V = π × r² × h\n\n")
+  cat("Donde:\n")
+  cat("- r es el radio de la base = ", radio, " cm\n")
+  cat("- h es la altura = ", altura, " cm\n\n")
+  cat("Sustituyendo: V = π × ", radio, "² × ", altura, " = ", volumen, " cm³")
+} else if (respuesta_correcta == "area_base") {
+  cat("La operación π × ", radio, "² × ", altura, " = ", volumen, " corresponde al **área de la tapa del vaso**.\n\n")
+  cat("Fórmula del área de un círculo: A = π × r²\n\n")
+  cat("Donde:\n")
+  cat("- r es el radio de la base = ", radio, " cm\n\n")
+  cat("Sustituyendo: A = π × ", radio, "² = ", area_base, " cm²")
+} else if (respuesta_correcta == "perimetro_base") {
+  cat("La operación π × ", radio, "² × ", altura, " = ", volumen, " corresponde al **perímetro de la tapa del vaso**.\n\n")
+  cat("Fórmula del perímetro de un círculo: P = 2π × r\n\n")
+  cat("Donde:\n")
+  cat("- r es el radio de la base = ", radio, " cm\n\n")
+  cat("Sustituyendo: P = 2π × ", radio, " = ", perimetro_base, " cm")
+} else if (respuesta_correcta == "area_lateral") {
+  cat("La operación π × ", radio, "² × ", altura, " = ", volumen, " corresponde al **área lateral del vaso**.\n\n")
+  cat("Fórmula del área lateral de un cilindro: A = 2π × r × h\n\n")
+  cat("Donde:\n")
+  cat("- r es el radio de la base = ", radio, " cm\n")
+  cat("- h es la altura = ", altura, " cm\n\n")
+  cat("Sustituyendo: A = 2π × ", radio, " × ", altura, " = ", area_lateral, " cm²")
+}
+```
 
 Answerlist
 ----------
-* `r if(solucion[1] == 1) "Verdadero" else "Falso"`
-* `r if(solucion[2] == 1) "Verdadero" else "Falso"`
-* `r if(solucion[3] == 1) "Verdadero" else "Falso"`
-* `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+* `r if(sol[1] == 1) "Verdadero" else "Falso"`
+* `r if(sol[2] == 1) "Verdadero" else "Falso"`
+* `r if(sol[3] == 1) "Verdadero" else "Falso"`
+* `r if(sol[4] == 1) "Verdadero" else "Falso"`
 
 Meta-information
 ================
 exname: Volumen de un cilindro
 extype: schoice
-exsolution: `r paste(solucion, collapse="")`
+exsolution: `r sol_string`
 exshuffle: TRUE

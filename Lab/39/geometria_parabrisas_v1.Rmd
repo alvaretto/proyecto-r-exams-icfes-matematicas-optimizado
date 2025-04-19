@@ -1,0 +1,193 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r inicio, include=FALSE}
+# Configuración inicial y carga de bibliotecas necesarias
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+library(exams)
+library(reticulate)
+
+# Configuración de ambientes para múltiples dispositivos
+typ <- match_exams_device()
+
+# Control de la semilla para reproducibilidad
+set.seed(1234)
+
+# Opciones generales chunk
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+
+# Definir motores para python y tikz en r-exams
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+# Aleatorización avanzada: Parámetros y variantes para dimensiones y contextos
+
+# Contextualización: nombres del objeto y descripción
+objetos_posibles <- c("parabrisas", "ventanas laterales", "pantallas de instrumentos")
+objeto <- sample(objetos_posibles,1) # Contexto principal
+
+# Dimensiones del parabrisas: dos medidas principales (largo x ancho)
+largo_parabrisas <- 13 # cm fijo según enunciado de la imagen
+# Aleatorizamos el ancho principal, compatible con valores mostrados en imagen
+ancho_parabrisas <- sample(c(8, 9, 10), 1) # para variante
+
+# Plumillas (escobillas): número, longitud y apertura angular
+num_plumillas <- 2 # fijo en problema
+
+# Aleatorizamos la longitud de las plumillas (en cm, rango plausible 5-7)
+longitud_plumilla <- sample(c(6,7), 1) 
+
+# Ángulo de apertura de las plumillas: fijo 90 grados en imagen,
+# se admite variación para aleatorización pero aquí fijo para precisión del problema original.
+angulo_apertura <- 90
+
+# Configuración de opciones de dibujo y estilo para TikZ
+color_linea_tabla <- "red!80!black"
+color_plumilla <- "black"
+ancho_linea <- "thick"
+
+# Numeración de opciones y texto
+# Para aleatorización completa se puede permutar opciones, pero aquí igual para preservar opción correcta señalada.
+
+# Variables para las dimensiones presentadas en opciones (para validar en solución):
+# Opciones equivalentes a las de la imagen — a, b, c, d — con distinta correspondencia:
+
+# Opción A:
+# alto caja 13cm, ancho caja 8 cm; plumillas 6 cm + 6 cm
+
+# Opción B:
+# alto caja 8cm, ancho caja 13 cm; plumillas 6 cm y 8 cm
+
+# Opción C:
+# alto caja 8cm, ancho caja 13 cm; plumillas 6 cm y 6 cm
+
+# Opción D:
+# alto caja 6 cm, ancho caja 13 cm; plumillas 8 cm y 8 cm
+
+# Los datos para cada opción (más paramétricos y aleatorios):
+opciones_lista <- list(
+  a = list(alto = 13, ancho = 8, plumilla1 = 6, plumilla2 = 6),
+  b = list(alto = 8, ancho = 13, plumilla1 = 6, plumilla2 = 8),
+  c = list(alto = 8, ancho = 13, plumilla1 = 6, plumilla2 = 6),
+  d = list(alto = 6, ancho = 13, plumilla1 = 8, plumilla2 = 8)
+)
+
+# Correcta es la opción a:
+opcion_correcta <- "a"
+
+# Variables para labels y títulos formateados
+titulo_parabrisas <- paste0("Dimensiones del ", objeto)
+```
+
+```{r generar_tablas_tikz, results='asis', echo=FALSE}
+# Funciones para crear código TikZ con la estructura pedida
+# Se generan 4 opciones alternativas, con estilos diferenciados pero claros
+
+# Función para generar un único esquema tikz de puerta/tamaño/plumillas
+generar_tikz_parabrisas <- function(alto, ancho, plumilla1, plumilla2, label, color_linea="red!80!black") {
+  # Creación puntual del esquema vectorial
+  tikz_code <- c(
+    "\\begin{tikzpicture}[scale=0.6]",
+    paste0("\\draw[thick, color=", color_linea, "] (0,0) rectangle (", ancho, ",", alto, ");"), # Rectángulo externo
+    # Marca dimensiones
+    paste0("\\draw[|-|, color=", color_linea, "] (-0.4,0) -- node[left]{", alto, " cm} (-0.4,", alto, ");"),
+    paste0("\\draw[|-|, color=", color_linea, "] (0,-0.4) -- node[below]{", ancho, " cm} (", ancho, ",-0.4);"),
+    # Dos plumillas (arcos de circunferencia con centros en esquinas)
+    # Plumilla izq: centro inferior izquierdo con radio plumilla1, arco 90 grados
+    paste0("\\draw[thick] (0,0) arc (180:90:", plumilla1, ");"),
+    paste0("\\draw[thick] (", plumilla1, ",0) -- (0,0);"),
+    paste0("\\draw[thick] (0,", plumilla1, ") -- (0,0);"),
+    # Plumilla derecha: centro inferior derecho con radio plumilla2
+    paste0("\\draw[thick] (", ancho, ",0) arc (0:90:", plumilla2, ");"),
+    paste0("\\draw[thick] (", ancho - plumilla2, ",0) -- (", ancho, ",0);"),
+    paste0("\\draw[thick] (", ancho, ",", plumilla2, ") -- (", ancho, ",0);"),
+    # Etiqueta de opción
+    paste0("\\node at (", ancho/2, ", -1) {", label, ");"),
+    "\\end{tikzpicture}"
+  )
+  return(tikz_code)
+}
+
+# Generar los 4 códigos TikZ para cada opción
+tikz_opcion_a <- generar_tikz_parabrisas(
+  alto = opciones_lista$a$alto, ancho = opciones_lista$a$ancho, 
+  plumilla1 = opciones_lista$a$plumilla1, plumilla2 = opciones_lista$a$plumilla2, 
+  label = "(A)"
+)
+tikz_opcion_b <- generar_tikz_parabrisas(
+  alto = opciones_lista$b$alto, ancho = opciones_lista$b$ancho, 
+  plumilla1 = opciones_lista$b$plumilla1, plumilla2 = opciones_lista$b$plumilla2, 
+  label = "(B)"
+)
+tikz_opcion_c <- generar_tikz_parabrisas(
+  alto = opciones_lista$c$alto, ancho = opciones_lista$c$ancho, 
+  plumilla1 = opciones_lista$c$plumilla1, plumilla2 = opciones_lista$c$plumilla2, 
+  label = "(C)"
+)
+tikz_opcion_d <- generar_tikz_parabrisas(
+  alto = opciones_lista$d$alto, ancho = opciones_lista$d$ancho, 
+  plumilla1 = opciones_lista$d$plumilla1, plumilla2 = opciones_lista$d$plumilla2, 
+  label = "(D)"
+)
+
+# Combinar en una lista, que será usada abajo para presentar opciones
+lista_tikz_opciones <- list(
+  tikz_opcion_a,
+  tikz_opcion_b,
+  tikz_opcion_c,
+  tikz_opcion_d
+)
+```
+
+Question
+========
+
+Las dimensiones de un `r objeto` son `r largo_parabrisas` cm de largo y `r ancho_parabrisas` cm de ancho. 
+
+Este objeto es plano y de forma rectangular, correspondiente a un carrito de juguete que cuenta con 2 plumillas de `r longitud_plumilla` cm cada una para limpiar esta superficie. Estas plumillas tienen un ángulo de apertura de 90°, tal como se muestra en la siguiente ilustración.
+
+¿Cuál de las siguientes opciones representa correctamente el esquema que modela las dimensiones del `r objeto` y sus plumillas?
+
+Answerlist
+----------
+
+```{r imprimir_opciones, results='asis', echo=FALSE}
+# Para presentar las opciones – imprimir cada tikz
+for(i in 1:4){
+  cat(paste(lista_tikz_opciones[[i]], collapse="\n"))
+  cat("\n\n")
+}
+```
+
+Solution
+========
+
+La opción correcta es la que representa las dimensiones originales dadas y las plumillas tal y como se describen:
+
+- Largo (alto del rectángulo) `r opciones_lista$a$alto` cm
+- Ancho (ancho del rectángulo) `r opciones_lista$a$ancho` cm
+- Plumillas de longitud `r opciones_lista$a$plumilla1` cm y `r opciones_lista$a$plumilla2` cm respectivamente
+- Ángulo de apertura 90°
+
+Este es el dibujo que corresponde exactamente a las medidas descritas en el problema inicial.
+
+Answerlist
+----------
+- "Verdadero"
+- "Falso"
+- "Falso"
+- "Falso"
+
+Meta-information
+================
+exname: parabrisas_dimensiones_esquema_v1
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+exsection: Geometría y representación gráfica
