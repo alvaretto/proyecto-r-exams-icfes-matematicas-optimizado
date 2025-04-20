@@ -469,27 +469,33 @@ rect_y = [0, 0, 3, 3, 0]
 ax.plot(rect_x, rect_y, linestyle="dashed", color="gray", dashes=(4, 4))
 
 def dibujar_abanico(x_origin, y_origin, radius, lines_count=5):
-    # Arco punteado
+    # Arco sólido (ya no punteado)
     theta = np.linspace(0, np.pi/2, 100)
     ax.plot(x_origin + radius * np.cos(theta), y_origin + radius * np.sin(theta),
-            color="gray", linestyle="dashed", dashes=(4,4))
+            color="black", linestyle="solid")
     
-    # Líneas radiales
+    # Líneas radiales - ahora todas sólidas y negras
     for i in range(lines_count):
         angle = (np.pi/2) * i / (lines_count - 1)
         x_end = x_origin + radius * np.cos(angle)
         y_end = y_origin + radius * np.sin(angle)
         
-        if i == 0 or i == 3:  
-            linewidth = 2.0 if i == 0 else 1.5
+        # Todas las líneas sólidas
+        if i == 0 or i == lines_count-1:  
+            linewidth = 1.5
             ax.plot([x_origin, x_end], [y_origin, y_end], color="black", linewidth=linewidth)
         else:
-            ax.plot([x_origin, x_end], [y_origin, y_end],
-                    color="gray", linestyle="dashed", dashes=(4,4), linewidth=0.8)
+            pass
+    
+    # Añadir símbolo de 90 grados en el vértice
+    square_size = 0.15
+    x_square = [x_origin, x_origin + square_size, x_origin + square_size, x_origin, x_origin]
+    y_square = [y_origin, y_origin, y_origin + square_size, y_origin + square_size, y_origin]
+    ax.plot(x_square, y_square, color="black", linewidth=0.8)
 
 # Posición de los abanicos
-dibujar_abanico(1, 0, 2.5, lines_count=5)
-dibujar_abanico(3.75, 0, 2.5, lines_count=5)
+dibujar_abanico(1, 0, 2.5, lines_count=2)
+dibujar_abanico(3.75, 0, 2.5, lines_count=2)
 
 # Ajustar la posición de la flecha y texto "Plumilla"
 ax.annotate("Plumilla", xy=(1.7, 1.7), xytext=(0.5, 1.5),
@@ -551,7 +557,6 @@ Para verificar cuál es el esquema correcto, debemos comparar las especificacion
 - Las `r terminos_limpiador`s tienen un ángulo de apertura de `r angulo`.
 
 La opción `r opcion_correcta` muestra correctamente:
-
 - Un rectángulo de `r largo_texto` cm × `r ancho_texto` cm.
 - Dos `r terminos_limpiador`s con longitud de `r longitud_plumilla_texto` cm cada una.
 - Ambas `r terminos_limpiador`s tienen un ángulo de barrido de 90°.

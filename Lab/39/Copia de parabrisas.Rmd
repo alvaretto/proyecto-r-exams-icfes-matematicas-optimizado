@@ -244,7 +244,7 @@ py_run_string(codigo_opcion_D)
 ```{r generar_diagrama_wiper, results='hide'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
-# Código Python mejorado para generar el diagrama de plumillas con ángulo
+# Código Python para generar el diagrama de plumillas con ángulo
 codigo_diagrama_plumilla <- '
 import matplotlib.pyplot as plt
 import numpy as np
@@ -268,7 +268,7 @@ def dibujar_abanico(x_origin, y_origin, radius, lines_count=5):
         x_end = x_origin + radius * np.cos(angle)
         y_end = y_origin + radius * np.sin(angle)
         
-        if i == 0 or i == lines_count-1:  
+        if i == 0 or i == 3:  
             linewidth = 2.0 if i == 0 else 1.5
             ax.plot([x_origin, x_end], [y_origin, y_end], color="black", linewidth=linewidth)
         else:
@@ -283,11 +283,6 @@ dibujar_abanico(3.75, 0, 2.5, lines_count=5)
 ax.annotate("Plumilla", xy=(1.7, 1.7), xytext=(0.5, 1.5),
             arrowprops=dict(facecolor="black", arrowstyle="->", linewidth=1),
             fontsize=10, ha="right", va="center")
-
-# Añadir etiqueta para la segunda plumilla
-ax.annotate("Plumilla", xy=(4.45, 1.7), xytext=(5.6, 1.5),
-            arrowprops=dict(facecolor="black", arrowstyle="->", linewidth=1),
-            fontsize=10, ha="left", va="center")
 
 # Ajustes de gráficos
 ax.set_aspect("equal")

@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "geometria_parabrisas_v1.Rmd"
+archivo_examen <- "parabrisas-2.Rmd"
 copias <- 1
 numpreg <- 2
 semilla <- sample(100:1e8, 1)
