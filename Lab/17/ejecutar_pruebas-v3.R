@@ -5,7 +5,7 @@ library(reticulate)
 # library(stringr) # No estrictamente necesario para estas pruebas, pero útil a menudo
 
 # Define la ruta del archivo Rmd (asumiendo que está en el mismo directorio)
-rmd_file <- "interpretacion_grafica_viaje.Rmd"
+rmd_file <- "interpretacion_grafica_viaje_vers3.Rmd"
 # Define el número de versiones a probar
 N_VERSIONS <- 310 # Un poco más de 300 por seguridad
 
@@ -79,9 +79,9 @@ context(paste("Probando generación de", rmd_file, "(", N_VERSIONS, "versiones )
 
 # Almacena resultados entre iteraciones para verificar variedad
 generated_conductors <- vector("character", N_VERSIONS) # Preasignar vector
-generated_initial_fuel <- vector("numeric", N_VERSIONS)
+generated_initial_cost <- vector("numeric", N_VERSIONS) # Cambiado de combustible a costo
 generated_final_distance <- vector("numeric", N_VERSIONS)
-generated_final_fuel <- vector("numeric", N_VERSIONS) # Comprobación añadida
+generated_final_cost <- vector("numeric", N_VERSIONS) # Cambiado de combustible a costo
 generated_sol_strings <- vector("character", N_VERSIONS)
 generated_option_orders <- vector("character", N_VERSIONS) # Almacena orden como string
 all_runs_passed_basic <- TRUE # Bandera para rastrear si alguna ejecución falló comprobaciones esenciales
@@ -107,15 +107,15 @@ for (i in 1:N_VERSIONS) {
     skip_if(!is.null(run_error), "Saltando comprobaciones básicas debido a error en ejecución de código R.")
 
     # 2. Comprobar si se crearon los objetos R esenciales
-    expect_true(exists("conductor", envir = test_env))#, info = "Objeto 'conductor' debe existir.") # Eliminado info
-    expect_true(exists("datos", envir = test_env))#, info = "Objeto 'datos' debe existir.")
-    expect_true(exists("opciones", envir = test_env))#, info = "Objeto 'opciones' debe existir.")
-    expect_true(exists("solucion", envir = test_env))#, info = "Objeto 'solucion' debe existir.")
-    expect_true(exists("sol_string", envir = test_env))#, info = "Objeto 'sol_string' debe existir.")
-    expect_true(exists("tiempos", envir = test_env))#, info = "Objeto 'tiempos' debe existir.")
-    expect_true(exists("costo_viaje", envir = test_env))#, info = "Objeto 'costo_viaje' debe existir.")
-    expect_true(exists("combustible", envir = test_env))#, info = "Objeto 'combustible' debe existir.")
-    expect_true(exists("distancia", envir = test_env))#, info = "Objeto 'distancia' debe existir.")
+    expect_true(exists("conductor", envir = test_env))
+    expect_true(exists("datos", envir = test_env))
+    expect_true(exists("opciones", envir = test_env))
+    expect_true(exists("solucion", envir = test_env))
+    expect_true(exists("sol_string", envir = test_env))
+    expect_true(exists("tiempos", envir = test_env))
+    expect_true(exists("costo_viaje", envir = test_env))
+    expect_true(exists("combustible", envir = test_env))
+    expect_true(exists("distancia", envir = test_env))
 
     # 3. Información del estado de dependencia de Python (mensaje opcional)
     #    No usamos expect_true aquí, ya que fallar la verificación/búsqueda no es un fallo de la ejecución de R en sí.
@@ -129,9 +129,9 @@ for (i in 1:N_VERSIONS) {
     # Añadimos una comprobación extra por si acaso run_error es NULL pero falta 'datos'
     if (exists("datos", envir=test_env) && exists("conductor", envir=test_env) && exists("sol_string", envir=test_env) && exists("opciones", envir=test_env)) {
       generated_conductors[i] <- test_env$conductor
-      generated_initial_fuel[i] <- test_env$datos$Combustible[1]
+      generated_initial_cost[i] <- test_env$datos$Costo[1] # Cambiado de Combustible a Costo
       generated_final_distance[i] <- test_env$datos$Distancia[nrow(test_env$datos)]
-      generated_final_fuel[i] <- test_env$datos$Combustible[nrow(test_env$datos)]
+      generated_final_cost[i] <- test_env$datos$Costo[nrow(test_env$datos)] # Cambiado de Combustible a Costo
       generated_sol_strings[i] <- test_env$sol_string
       generated_option_orders[i] <- paste(test_env$opciones, collapse = "")
     } else {
@@ -162,64 +162,61 @@ for (i in 1:N_VERSIONS) {
 
     # Comprobar Estructura de Datos
     skip_if(!is.data.frame(datos_actuales), "'datos' no es un data frame.") # Comprueba antes de usar expect_s3_class
-    expect_s3_class(datos_actuales, "data.frame")#, info = "Objeto 'datos' debe ser un data frame.") # Eliminado info
-    expect_equal(ncol(datos_actuales), 4)#, info = "Data frame 'datos' debe tener 4 columnas.")
-    expect_equal(nrow(datos_actuales), 5)#, info = "Data frame 'datos' debe tener 5 filas (verificar si tiempo cambió).")
-    expect_equal(colnames(datos_actuales), c("Tiempo", "Costo", "Combustible", "Distancia"))#, info = "Nombres de columna de 'datos' no coinciden.")
+    expect_s3_class(datos_actuales, "data.frame")
+    expect_equal(ncol(datos_actuales), 4)
+    expect_equal(nrow(datos_actuales), 5)
+    expect_equal(colnames(datos_actuales), c("Tiempo", "Costo", "Combustible", "Distancia"))
 
     # Comprobar Tiempo (debería ser fijo)
-    expect_equal(datos_actuales$Tiempo, c(0, 2, 4, 6, 8))#, info = "Secuencia de Tiempo debe ser 0, 2, 4, 6, 8.")
+    expect_equal(datos_actuales$Tiempo, c(0, 2, 4, 6, 8))
 
     # Comprobar Conductor (debería ser uno de los predefinidos)
     possible_conductores <- c("un conductor", "una conductora", "un taxista", "un mensajero", "un repartidor")
-    expect_true(conductor_actual %in% possible_conductores)#, info = "'conductor' seleccionado no está en la lista predefinida.")
+    expect_true(conductor_actual %in% possible_conductores)
 
     # Comprobar Costo
-    expect_equal(datos_actuales$Costo[1], 0)#, info = "Costo inicial debe ser 0.")
-    expect_true(all(datos_actuales$Costo >= 0))#, info = "Todos los valores de Costo deben ser no negativos.")
+    expect_equal(datos_actuales$Costo[1], 0)
+    expect_true(all(datos_actuales$Costo >= 0))
     # Comprobar tendencia general (permitir ruido)
-    expect_true( sum(diff(datos_actuales$Costo) >= -5) >= (length(datos_actuales$Costo) - 2) )#,
-    # info = "Costo debe aumentar generalmente (permitiendo pequeño ruido).")
-    expect_gt(datos_actuales$Costo[5], datos_actuales$Costo[2] - 5)#, info = "Costo final debe ser generalmente > que valores iniciales (permitiendo ruido).")
+    expect_true( sum(diff(datos_actuales$Costo) >= -5) >= (length(datos_actuales$Costo) - 2) )
+    expect_gt(datos_actuales$Costo[5], datos_actuales$Costo[2] - 5)
 
     # Comprobar Combustible
-    expect_gt(datos_actuales$Combustible[1], 0)#, info = "Combustible inicial debe ser positivo.")
-    expect_true(all(datos_actuales$Combustible >= 0))#, info = "Todos los valores de Combustible deben ser no negativos.")
+    expect_gt(datos_actuales$Combustible[1], 0)
+    expect_true(all(datos_actuales$Combustible >= 0))
     # Comprobar tendencia general (permitir ruido)
-    expect_true( sum(diff(datos_actuales$Combustible) <= 5) >= (length(datos_actuales$Combustible) - 2) )#,
-    #info = "Combustible debe disminuir generalmente (permitiendo pequeño ruido).")
-    expect_lt(datos_actuales$Combustible[5], datos_actuales$Combustible[1] + 5)#, info = "Combustible final debe ser generalmente menor que inicial (permitiendo ruido).")
-    expect_gte(datos_actuales$Combustible[1], datos_actuales$Combustible[2] - 5)#, info = "Combustible inicial debe ser >= segundo valor (permitiendo ruido).")
+    expect_true( sum(diff(datos_actuales$Combustible) <= 5) >= (length(datos_actuales$Combustible) - 2) )
+    expect_lt(datos_actuales$Combustible[5], datos_actuales$Combustible[1] + 5)
+    expect_gte(datos_actuales$Combustible[1], datos_actuales$Combustible[2] - 5)
 
     # Comprobar Distancia
-    expect_equal(datos_actuales$Distancia[1], 0)#, info = "Distancia inicial debe ser 0.")
-    expect_true(all(datos_actuales$Distancia >= 0))#, info = "Todos los valores de Distancia deben ser no negativos.")
+    expect_equal(datos_actuales$Distancia[1], 0)
+    expect_true(all(datos_actuales$Distancia >= 0))
     # Comprobar tendencia general (permitir ruido)
-    expect_true( sum(diff(datos_actuales$Distancia) >= -5) >= (length(datos_actuales$Distancia) - 2) )#,
-    #info = "Distancia debe aumentar generalmente (permitiendo pequeño ruido).")
-    expect_gt(datos_actuales$Distancia[5], datos_actuales$Distancia[2] - 5)#, info = "Distancia final debe ser generalmente > que valores iniciales (permitiendo ruido).")
-    expect_gt(datos_actuales$Distancia[5], 0 + 1e-9)#, info = "Distancia final debe ser mayor que 0.")
+    expect_true( sum(diff(datos_actuales$Distancia) >= -5) >= (length(datos_actuales$Distancia) - 2) )
+    expect_gt(datos_actuales$Distancia[5], datos_actuales$Distancia[2] - 5)
+    expect_gt(datos_actuales$Distancia[5], 0 + 1e-9)
 
     # Comprobar Opciones y Cadena de Solución
     expect_type(opciones_actuales, "character")
-    expect_equal(length(opciones_actuales), 4)#, info = "Debe haber 4 opciones.")
-    expect_setequal(opciones_actuales, LETTERS[1:4])#, info = "Opciones deben ser una permutación de A, B, C, D.")
+    expect_equal(length(opciones_actuales), 4)
+    expect_setequal(opciones_actuales, LETTERS[1:4])
 
     expect_type(solucion_actual, "integer")
     expect_length(solucion_actual, 1)
-    expect_true(solucion_actual %in% 1:4)#, info = "Índice de solución fuera de límites.")
+    expect_true(solucion_actual %in% 1:4)
 
     expect_type(sol_string_actual, "character")
     expect_length(sol_string_actual, 1)
-    expect_match(sol_string_actual, "^[01]{4}$")#, info = "Cadena de solución debe ser 4 ceros o unos.")
-    expect_equal(sum(as.numeric(strsplit(sol_string_actual, "")[[1]])), 1)#, info = "Cadena de solución debe contener exactamente un '1'.")
+    expect_match(sol_string_actual, "^[01]{4}$")
+    expect_equal(sum(as.numeric(strsplit(sol_string_actual, "")[[1]])), 1)
 
     # Comprobar si sol_string apunta correctamente a la posición de 'A'
     correct_position <- which(opciones_actuales == "A")
-    expect_equal(solucion_actual, correct_position)#, info = "Variable 'solucion' debe coincidir con el índice de 'A' en 'opciones'.")
+    expect_equal(solucion_actual, correct_position)
     expected_sol_vector <- rep(0, 4)
     expected_sol_vector[correct_position] <- 1
-    expect_equal(sol_string_actual, paste(expected_sol_vector, collapse = ""))#, info = "Cadena de solución no coincide con la posición aleatoria de la respuesta correcta 'A'.")
+    expect_equal(sol_string_actual, paste(expected_sol_vector, collapse = ""))
 
   }) # Fin test_that para Coherencia Versión i
 
@@ -245,9 +242,9 @@ test_that(paste("Variedad a través de", N_VERSIONS, "ejecuciones"), {
 
   # Filtrar datos solo de ejecuciones válidas
   valid_conductors <- generated_conductors[valid_entries]
-  valid_initial_fuel <- generated_initial_fuel[valid_entries]
+  valid_initial_cost <- generated_initial_cost[valid_entries] # Cambiado de combustible a costo
   valid_final_distance <- generated_final_distance[valid_entries]
-  valid_final_fuel <- generated_final_fuel[valid_entries]
+  valid_final_cost <- generated_final_cost[valid_entries] # Cambiado de combustible a costo
   valid_option_orders <- generated_option_orders[valid_entries]
   valid_sol_strings <- generated_sol_strings[valid_entries]
 
@@ -255,44 +252,42 @@ test_that(paste("Variedad a través de", N_VERSIONS, "ejecuciones"), {
   unique_conductors <- unique(valid_conductors)
   n_unique_conductors <- length(unique_conductors)
   print(paste("Conductores únicos generados:", n_unique_conductors, "de", length(possible_conductores), "posibles"))
-  expect_gt(n_unique_conductors, 1)#, info = "Se esperaba más de 1 conductor único entre las ejecuciones.") # Eliminado info
+  expect_gt(n_unique_conductors, 1)
   possible_conductores_count <- length(c("un conductor", "una conductora", "un taxista", "un mensajero", "un repartidor"))
-  expect_gt(n_unique_conductors, min(possible_conductores_count - 2, n_valid_entries/50))#, info = "Se esperaba una variedad razonable de conductores.")
+  expect_gt(n_unique_conductors, min(possible_conductores_count - 2, n_valid_entries/50))
 
   # Comprobar si los datos numéricos varían
-  unique_initial_fuel <- unique(round(valid_initial_fuel, 4))
+  unique_initial_cost <- unique(round(valid_initial_cost, 4)) # Cambiado de combustible a costo
   unique_final_dist <- unique(round(valid_final_distance, 4))
-  unique_final_fuel <- unique(round(valid_final_fuel, 4))
-  n_unique_initial_fuel <- length(unique_initial_fuel)
+  unique_final_cost <- unique(round(valid_final_cost, 4)) # Cambiado de combustible a costo
+  n_unique_initial_cost <- length(unique_initial_cost) # Cambiado de combustible a costo
   n_unique_final_dist <- length(unique_final_dist)
-  n_unique_final_fuel <- length(unique_final_fuel)
+  n_unique_final_cost <- length(unique_final_cost) # Cambiado de combustible a costo
 
-  print(paste("Valores únicos de combustible inicial (aprox):", n_unique_initial_fuel))
+  print(paste("Valores únicos de costo inicial (aprox):", n_unique_initial_cost)) # Cambiado de combustible a costo
   print(paste("Valores únicos de distancia final (aprox):", n_unique_final_dist))
-  print(paste("Valores únicos de combustible final (aprox):", n_unique_final_fuel))
+  print(paste("Valores únicos de costo final (aprox):", n_unique_final_cost)) # Cambiado de combustible a costo
 
   # Esperar una buena porción de valores únicos si la aleatorización es efectiva
-  expect_gt(n_unique_initial_fuel, n_valid_entries * 0.1)#, info = "Se esperaba variación significativa (>10%) en combustible inicial.")
-  expect_gt(n_unique_final_dist, n_valid_entries * 0.1)#, info = "Se esperaba variación significativa (>10%) en distancia final.")
-  expect_gt(n_unique_final_fuel, n_valid_entries * 0.1)#, info = "Se esperaba variación significativa (>10%) en combustible final.")
+  expect_gt(n_unique_initial_cost, n_valid_entries * 0.1) # Cambiado de combustible a costo
+  expect_gt(n_unique_final_dist, n_valid_entries * 0.1)
+  expect_gt(n_unique_final_cost, n_valid_entries * 0.1) # Cambiado de combustible a costo
 
   # Comprobar si el orden de las opciones varió
   unique_option_orders <- unique(valid_option_orders)
   n_unique_option_orders <- length(unique_option_orders)
   possible_orders_count <- factorial(4) # 4! = 24
   print(paste("Órdenes de opciones únicos generados:", n_unique_option_orders, "de", possible_orders_count, "posibles"))
-  expect_gt(n_unique_option_orders, min(possible_orders_count / 2, n_valid_entries * 0.05))#, info = "Se esperaban múltiples órdenes de opciones diferentes.")
+  expect_gt(n_unique_option_orders, min(possible_orders_count / 2, n_valid_entries * 0.05))
 
   # Comprobar si la cadena de solución varió (debido al cambio de orden de opciones)
   unique_sol_strings <- unique(valid_sol_strings)
   n_unique_sol_strings <- length(unique_sol_strings)
   print(paste("Cadenas de solución únicas generadas:", n_unique_sol_strings))
-  expect_gt(n_unique_sol_strings, 1)#, info = "Se esperaba más de 1 cadena de solución única (debido al cambio de orden).")
-  expect_lte(n_unique_sol_strings, 4)#, info = "No puede haber más de 4 cadenas de solución únicas para esta configuración.")
-  # Debería idealmente coincidir con el número de posiciones únicas que tomó 'A'
-  # expect_equal(n_unique_sol_strings, length(unique(substr(valid_option_orders, 1, 4))), info="Número de cadenas de solución únicas debe coincidir con número de posiciones únicas que tomó A") # Info eliminado
+  expect_gt(n_unique_sol_strings, 1)
+  expect_lte(n_unique_sol_strings, 4)
 
   # Confirmación final del número objetivo de variaciones *intentadas* y *exitosas*
-  expect_equal(n_valid_entries, N_VERSIONS)#, info="El bucle debería haber completado N_VERSIONS veces y almacenado datos para (casi) todas.") # Ajustado a n_valid_entries
+  expect_equal(n_valid_entries, N_VERSIONS)
 
 })

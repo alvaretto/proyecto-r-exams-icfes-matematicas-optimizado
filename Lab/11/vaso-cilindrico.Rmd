@@ -1,8 +1,8 @@
 ---
 output:
+  html_document: default
   pdf_document:
     latex_engine: pdflatex
-  html_document: default
   word_document: default
 header-includes:
 - \usepackage[spanish]{babel}
@@ -99,6 +99,7 @@ Question
 
 Un estudiante tiene un vaso de forma cilíndrica. El vaso tiene una base circular de radio `r radio` cm y una altura de `r altura` cm, como se muestra en la figura.
 
+
 ```{r cilindro, echo=FALSE, results="asis", fig.align='center'}
 include_tikz(cilindro_tikz,
              name = "cilindro",
@@ -108,6 +109,7 @@ include_tikz(cilindro_tikz,
              width = "8cm")
 ```
 
+\
 A partir de la información anterior, el estudiante plantea la siguiente operación:
 
 $$\pi \times `r radio`^2 \times `r altura` = `r volumen_redondeado`$$

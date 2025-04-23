@@ -1,8 +1,8 @@
 ---
 output:
+  pdf_document: default
   word_document: default
   html_document: default
-  pdf_document: default
 ---
 ```{r setup, include=FALSE}
 library(exams)
@@ -232,6 +232,7 @@ La gráfica correcta debe mostrar:
 2. La distancia recorrida aumentando con el tiempo, empezando en `r distancia[1]` km y llegando a `r distancia[5]` km.
 
 Analizando los datos de la tabla, vemos que mientras el tiempo aumenta:
+
 - El combustible disponible disminuye constantemente
 - La distancia recorrida aumenta constantemente
 
