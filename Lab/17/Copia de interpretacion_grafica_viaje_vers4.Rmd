@@ -191,7 +191,7 @@ plt.close()
 ```{r opciones, echo=FALSE, results="asis"}
 # Aleatorizar el orden de las opciones
 opciones <- sample(LETTERS[1:4])
-solucion <- match("A", opciones)
+solucion <- match("D", opciones)
 
 # Vector de solución para exams
 sol_vector <- rep(0, 4)
@@ -212,7 +212,7 @@ knitr::kable(datos,
              align = "c")
 ```
 
-Después de analizar los datos del viaje, se generaron diversas interpretaciones gráficas. ¿Cuál de las siguientes gráficas representa CORRECTAMENTE la relación entre la distancia recorrida y el combustible disponible en función del tiempo, considerando las características físicas del desplazamiento y el consumo esperado del vehículo?
+Después de analizar los datos del viaje, se generaron diversas interpretaciones gráficas. ¿Cuál de las siguientes gráficas representa INCORRECTAMENTE la relación entre la distancia recorrida y el combustible disponible en función del tiempo, considerando las características físicas del desplazamiento y el consumo esperado del vehículo?
 
 Answerlist
 ----------
@@ -226,7 +226,7 @@ for (i in 1:4) {
 Solution
 ========
 
-Para determinar la gráfica correcta, es necesario analizar las relaciones físicas y matemáticas que gobiernan el movimiento del vehículo y su consumo de combustible:
+Para determinar la gráfica incorrecta, es necesario analizar las relaciones físicas y matemáticas que gobiernan el movimiento del vehículo y su consumo de combustible:
 
 1. **Comportamiento del combustible**: Al examinar los datos, se observa una disminución progresiva desde `r combustible[1]` litros al inicio hasta `r combustible[5]` litros al final. Esta reducción es consistente con el consumo esperado de un vehículo en movimiento continuo, donde el combustible se consume a una tasa aproximadamente proporcional al tiempo y distancia recorrida.
 
@@ -234,16 +234,16 @@ Para determinar la gráfica correcta, es necesario analizar las relaciones físi
 
 3. **Relación entre variables**: La relación inversamente proporcional entre combustible disponible (decreciente) y distancia recorrida (creciente) representa el fenómeno físico de conversión de energía química del combustible en energía cinética y trabajo mecánico.
 
-La gráfica correcta
+La gráfica incorrecta es la que muestra:
 
 ```{python grafica_solucion, echo=FALSE}
-# Dibujar nuevamente la gráfica correcta para la solución
+# Dibujar la gráfica incorrecta (opción D) para la solución
 import matplotlib.pyplot as plt
 
-# Usar los mismos datos y colores que en la gráfica correcta (opción A)
+# Usar los mismos datos y colores que en la gráfica D
 plt.figure(figsize=(5, 3.5))
-plt.plot(r_tiempos, r_combustible, 'o-', color=color_combustible, label='Combustible disponible (litros)')
-plt.plot(r_tiempos, r_distancia, 'o-', color=color_distancia, label='Distancia recorrida (kilómetros)')
+plt.plot(r_tiempos, r_combustible, 'o-', color=color_combustible_D, label='Costo del viaje (miles de pesos)')
+plt.plot(r_tiempos, r_distancia, 'o-', color=color_distancia_D, label='Distancia recorrida (kilómetros)')
 plt.xlabel('Tiempo (horas)')
 plt.ylabel('Valores')
 plt.grid(True, linestyle='--', alpha=0.7)
@@ -255,21 +255,20 @@ plt.close()
 
 ![](grafica_solucion.png)
 
-es la única que preserva:
+Esta gráfica es incorrecta porque:
 
-- La tendencia decreciente del combustible desde un valor inicial máximo
-- La tendencia creciente de la distancia desde un valor inicial cero
-- Una relación consistente con el rendimiento del vehículo
-- Las etiquetas correctas para cada variable representada
+- Aunque los datos representados siguen el patrón correcto (una línea decreciente y otra creciente), la etiqueta "Costo del viaje" es errónea para la línea decreciente.
+- El costo del viaje debería aumentar con el tiempo y la distancia recorrida, no disminuir.
+- Los datos mostrados corresponden realmente al combustible disponible, que sí disminuye a medida que avanza el viaje.
 
-Las demás opciones presentan anomalías físicamente inconsistentes o errores en el etiquetado. En particular, una de las opciones muestra exactamente los mismos datos que la gráfica correcta, pero con la etiqueta "Costo del viaje" en lugar de "Combustible disponible", lo que es incorrecto ya que el comportamiento decreciente corresponde al combustible que se consume durante el viaje, no al costo que aumenta con el tiempo.
+Las otras gráficas, aunque presentan variaciones en los patrones de consumo o velocidad, mantienen la coherencia física y el etiquetado correcto de las variables, por lo que son representaciones válidas (aunque algunas con características particulares como recargas de combustible o patrones de aceleración/desaceleración).
 
 Answerlist
 ----------
 ```{r solucion_lista, echo=FALSE, results="asis"}
 # Generar lista de respuestas verdadero/falso
 for (i in 1:4) {
-  if (opciones[i] == "A") {
+  if (opciones[i] == "D") {
     cat("- Verdadero\n")
   } else {
     cat("- Falso\n")
