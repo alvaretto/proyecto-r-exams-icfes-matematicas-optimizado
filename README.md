@@ -1,14 +1,30 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 # Repositorio Matemáticas ICFES - R-Exams
 
+<div align="center">
+  <img src="https://www.r-exams.org/images/rexams_logo.svg" alt="R-exams Logo" width="200"/>
+</div>
+
 ## Descripción General
 
-Este repositorio contiene una colección de ejercicios de matemáticas para preparación de pruebas ICFES, desarrollados con el paquete R-exams. El proyecto está diseñado para generar preguntas dinámicas con alto grado de aleatorización, permitiendo crear múltiples versiones de cada ejercicio con diferentes variables, textos, nombres y situaciones.
+Este repositorio contiene una colección de ejercicios de matemáticas para preparación de pruebas ICFES, desarrollados con el paquete R-exams. El proyecto está diseñado para generar preguntas dinámicas con alto grado de aleatorización, permitiendo crear múltiples versiones de cada ejercicio con diferentes variables, textos, nombres y situaciones, garantizando un mínimo de 300 variantes por ejercicio.
+
+## Características Principales
+
+- **Alta aleatorización**: Cada ejercicio puede generar cientos de versiones diferentes con variables, textos y situaciones dinámicas
+- **Pruebas unitarias**: Validación automática de la coherencia matemática y diversidad de versiones
+- **Gráficos dinámicos**: Generación de visualizaciones personalizadas con TikZ y matplotlib (vía reticulate)
+- **Tablas dinámicas**: Creación de tablas con datos aleatorios usando TikZ y kable
+- **Múltiples formatos**: Soporte para PDF, HTML, NOPS y otros formatos de salida
+- **Plantillas reutilizables**: Estructura modular para facilitar la creación de nuevos ejercicios
+- **Compatibilidad con LaTeX**: Soporte completo para notación matemática avanzada
+- **Integración R-Python**: Utiliza reticulate para generar gráficas con matplotlib desde R
+- **Metadatos ICFES**: Sistema de etiquetado para alinear ejercicios con el marco de referencia ICFES
 
 ## Estado Actual
 
@@ -17,6 +33,7 @@ Este repositorio contiene una colección de ejercicios de matemáticas para prep
 - Se han añadido pruebas unitarias para garantizar la coherencia matemática y diversidad de versiones
 - Se utilizan tecnologías como TikZ para la generación de gráficos y tablas de alta calidad
 - El proyecto soporta múltiples formatos de salida (PDF, HTML, NOPS)
+- Se ha implementado un sistema de metadatos ICFES para clasificar y organizar los ejercicios
 
 ## Requisitos del Sistema
 
@@ -24,7 +41,8 @@ Este repositorio contiene una colección de ejercicios de matemáticas para prep
 - **RStudio**: Recomendado para una mejor experiencia de desarrollo
 - **LaTeX**: Necesario para la generación de documentos PDF
 - **TikZ**: Requerido para la generación de gráficos vectoriales
-- **Paquetes R**: exams, knitr, ggplot2, entre otros (ver script install_packages.R)
+- **Python** (opcional): Para la generación de gráficos con matplotlib vía reticulate
+- **Paquetes R**: exams, knitr, ggplot2, dplyr, testthat, reticulate, entre otros (ver script install_packages.R)
 
 ## Estructura del Repositorio
 
@@ -34,11 +52,18 @@ El repositorio está organizado siguiendo la estructura temática del currículo
 ├── 01-Numeros-Reales/
 ├── 02-Funciones/
 ├── 03-Razones-Trigonometricas/
-├── 04-Funciones_Identidades-Trigonometricas/
+├── 04-Funciones-Identidades-Trigonometricas/
 ├── 05-Geometria-Analitica/
 ├── 06-Estadística-Y-Probabilidad/
+├── Auxiliares/     # Scripts y documentación auxiliar
+│   ├── guia_implementacion_icfes.md
+│   ├── matriz_alineacion_icfes.md
+│   ├── plantilla_metadatos_icfes.md
+│   ├── actualizar_metadatos_icfes.R
+│   └── setup_project.R
+├── Lab/            # Ejercicios experimentales y pruebas
 └── General/
-    └── Plantillas/
+    └── Plantillas/ # Plantillas para nuevos ejercicios
 ```
 
 Cada ejercicio sigue una estructura común:
@@ -47,6 +72,7 @@ Cada ejercicio sigue una estructura común:
 ├── ejercicios/     # Archivos .Rmd con el código fuente
 ├── docus/          # Documentación adicional
 ├── salida/         # Archivos generados
+├── erres/          # Scripts R para generación y pruebas
 └── _snaps/         # Capturas para pruebas (opcional)
 ```
 
@@ -177,17 +203,19 @@ Cada ejercicio sigue una estructura común:
   - Probabilidad de la Unión de Sucesos
   - Probabilidad Condicionada e Independencia de Sucesos
 
-## Características Principales
-
-- **Alta aleatorización**: Cada ejercicio puede generar cientos de versiones diferentes
-- **Pruebas unitarias**: Validación automática de la coherencia matemática
-- **Gráficos dinámicos**: Generación de visualizaciones personalizadas con TikZ y ggplot2
-- **Tablas dinámicas**: Creación de tablas con datos aleatorios usando TikZ y kable
-- **Múltiples formatos**: Soporte para PDF, HTML, NOPS y otros formatos de salida
-- **Plantillas reutilizables**: Estructura modular para facilitar la creación de nuevos ejercicios
-- **Compatibilidad con LaTeX**: Soporte completo para notación matemática avanzada
-
 ## Guía de Uso
+
+### Configuración Inicial
+
+Para configurar el entorno de trabajo:
+
+```r
+# Instalar paquetes necesarios (primera vez)
+source("Auxiliares/install_packages.R")
+
+# Configurar el entorno de trabajo
+source("Auxiliares/setup_project.R")
+```
 
 ### Generación de Ejercicios
 
@@ -195,14 +223,33 @@ Para generar ejercicios en formato PDF:
 
 ```r
 library(exams)
-exams2pdf("ruta/al/ejercicio.Rmd", n = 5)  # Genera 5 versiones diferentes
+# Generar 5 versiones diferentes
+exams2pdf("ruta/al/ejercicio.Rmd", n = 5)
+
+# Generar versiones con formato NOPS para escaneo y corrección automática
+exams2nops("ruta/al/ejercicio.Rmd", n = 30, language = "es")
 ```
 
 Para generar ejercicios en formato HTML:
 
 ```r
 library(exams)
-exams2html("ruta/al/ejercicio.Rmd", n = 5)  # Genera 5 versiones diferentes
+# Generar 5 versiones diferentes
+exams2html("ruta/al/ejercicio.Rmd", n = 5)
+
+# Generar versiones para Moodle
+exams2moodle("ruta/al/ejercicio.Rmd", n = 30)
+```
+
+### Creación de Nuevos Ejercicios
+
+Para crear un nuevo ejercicio con metadatos ICFES:
+
+```bash
+# Copiar la plantilla
+cp Auxiliares/plantilla_ejercicio_icfes.Rmd mi_nuevo_ejercicio.Rmd
+
+# Editar el archivo y completar los metadatos ICFES
 ```
 
 ### Ejecución de Pruebas Unitarias
@@ -210,10 +257,24 @@ exams2html("ruta/al/ejercicio.Rmd", n = 5)  # Genera 5 versiones diferentes
 Para ejecutar las pruebas unitarias de un ejercicio:
 
 ```r
-source("ruta/al/script_de_pruebas.R")
+# Ejecutar pruebas para un ejercicio específico
+source("ruta/al/ejercicio/erres/ejecutar_pruebas.R")
+
+# Verificar la diversidad de versiones
+source("ruta/al/ejercicio/erres/verificar_diversidad.R")
 ```
 
 ## Novedades
+
+### Agosto 2024
+- **Implementación del sistema de metadatos ICFES**
+  - Se ha añadido un sistema de etiquetado para alinear ejercicios con el marco de referencia ICFES
+  - Nuevos documentos de referencia:
+    - `matriz_alineacion_icfes.md`: Mapeo entre la estructura del repositorio y el marco ICFES
+    - `plantilla_metadatos_icfes.md`: Descripción del sistema de etiquetado ICFES
+    - `plantilla_ejercicio_icfes.Rmd`: Plantilla para crear nuevos ejercicios con metadatos ICFES
+  - Script `actualizar_metadatos_icfes.R` para añadir metadatos a ejercicios existentes
+  - Clasificación de ejercicios por competencias, nivel de dificultad, contenido, contexto y eje axial
 
 ### Julio 2024
 - **Implementación de pruebas unitarias en ejercicios de estadística**
@@ -227,10 +288,32 @@ source("ruta/al/script_de_pruebas.R")
   - Se incluye un script independiente para ejecutar las pruebas
 
 ### Junio 2024
-- **Mejoras en la generación de gráficos con TikZ**
+- **Mejoras en la generación de gráficos**
+  - Integración con Python mediante reticulate para usar matplotlib
   - Eliminación de etiquetas automáticas como 'plot of chunk GraficoA'
-  - Mayor personalización de colores y estilos
+  - Mayor personalización de colores y estilos en TikZ
   - Soporte mejorado para tablas dinámicas
+  - Optimización de la visualización en diferentes formatos de salida
+
+## Sistema de Metadatos ICFES
+
+El repositorio implementa un sistema de metadatos para alinear los ejercicios con el marco de referencia ICFES:
+
+```yaml
+# Metadatos ICFES
+icfes:
+  competencia:
+    - interpretacion_representacion  # Valores posibles: interpretacion_representacion, formulacion_ejecucion, argumentacion
+  nivel_dificultad: 2                # Valores posibles: 1, 2, 3, 4
+  contenido:
+    categoria: estadistica           # Valores posibles: algebra_calculo, geometria, estadistica
+    tipo: generico                   # Valores posibles: generico, no_generico
+  contexto: familiar                 # Valores posibles: familiar, laboral, comunitario, matematico
+  eje_axial: eje4                    # Valores posibles: eje1, eje2, eje3, eje4
+  componente: aleatorio              # Valores posibles: geometrico_metrico, numerico_variacional, aleatorio
+```
+
+Para más detalles, consulta la [Guía de implementación ICFES](./Auxiliares/guia_implementacion_icfes.md).
 
 ## Contribuciones
 
@@ -240,16 +323,19 @@ Este repositorio está abierto a contribuciones. Si deseas colaborar:
 2. Sigue las convenciones de nomenclatura y organización
 3. Asegúrate de incluir pruebas unitarias para validar la coherencia matemática
 4. Documenta adecuadamente el código y los ejercicios
+5. Incluye los metadatos ICFES en tus ejercicios
 
 ## Recursos Adicionales
 
 - [Documentación oficial de R-exams](http://www.r-exams.org/)
 - [Tutorial de TikZ](https://www.overleaf.com/learn/latex/TikZ_package)
-- [Guía de implementación ICFES](./guia_implementacion_icfes.html)
-- [Matriz de alineación ICFES](./matriz_alineacion_icfes.html)
+- [Documentación de matplotlib](https://matplotlib.org/stable/index.html)
+- [Guía de implementación ICFES](./Auxiliares/guia_implementacion_icfes.md)
+- [Matriz de alineación ICFES](./Auxiliares/matriz_alineacion_icfes.md)
+- [Estándares Básicos de Competencias en Matemáticas](https://www.mineducacion.gov.co/1621/articles-116042_archivo_pdf2.pdf)
 
 ## Contacto
 
 Para consultas o sugerencias relacionadas con este repositorio, puedes contactar al mantenedor principal a través de GitHub.
 
-[GitHub:](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
+[GitHub: proyecto-r-exams-icfes-matematicas-optimizado](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)

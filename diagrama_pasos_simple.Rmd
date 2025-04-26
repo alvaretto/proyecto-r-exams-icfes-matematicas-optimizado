@@ -1,0 +1,69 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+
+# Configuración general
+options(scipen = 999)
+
+# Configurar salida para distintos formatos
+knitr::opts_chunk$set(
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+```
+
+# Diagrama de pasos para resolución de problemas
+
+```{r tabla-diagrama, echo=FALSE, results='asis'}
+# Versión compatible con todos los formatos de salida
+cat('<div style="border: 2px solid #4472C4; border-radius: 10px; padding: 0; max-width: 600px; margin: 0 auto; overflow: hidden;">')
+
+# Título
+cat('<div style="background-color: #4472C4; color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 1.2em;">Diagrama</div>')
+
+# Paso 1
+cat('<div style="padding: 15px; border-bottom: 1px solid #E0E0E0;">')
+cat('<div style="display: flex; align-items: flex-start;">')
+cat('<div style="background-color: #4472C4; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; margin-right: 15px; flex-shrink: 0; font-weight: bold;">1</div>')
+cat('<div>')
+cat('<strong>Determinar la medida de la hipotenusa</strong><br>')
+cat('Del triángulo rectángulo de catetos a = 3 y b = 4, utilizando el teorema de Pitágoras.')
+cat('</div>')
+cat('</div>')
+cat('</div>')
+
+# Flecha
+cat('<div style="text-align: center; padding: 5px;"><span style="color: #4472C4; font-size: 1.5em;">↓</span></div>')
+
+# Paso 2
+cat('<div style="padding: 15px;">')
+cat('<div style="display: flex; align-items: flex-start;">')
+cat('<div style="background-color: #4472C4; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; margin-right: 15px; flex-shrink: 0; font-weight: bold;">2</div>')
+cat('<div>')
+cat('<strong>Calcular el área sombreada</strong><br>')
+cat('Como el producto h × h.')
+cat('</div>')
+cat('</div>')
+cat('</div>')
+
+cat('</div>')
+```
+
+## Solución
+
+Siguiendo los pasos del diagrama:
+
+1. Aplicamos el teorema de Pitágoras para encontrar la hipotenusa:
+   $c^2 = a^2 + b^2 = 3^2 + 4^2 = 9 + 16 = 25$
+   $c = \sqrt{25} = 5$
+
+2. Calculamos el área sombreada:
+   $\text{Área} = h \times h = h^2$

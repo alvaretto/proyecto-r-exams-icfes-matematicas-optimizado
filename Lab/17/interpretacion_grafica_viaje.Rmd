@@ -1,9 +1,21 @@
 ---
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - interpretacion_representacion  # Valores posibles: interpretacion_representacion, formulacion_ejecucion, argumentacion
+  nivel_dificultad: 2                # Valores posibles: 1, 2, 3, 4
+  contenido:
+    categoria: estadistica           # Valores posibles: algebra_calculo, geometria, estadistica
+    tipo: generico                   # Valores posibles: generico, no_generico
+  contexto: laboral                  # Valores posibles: familiar, laboral, comunitario, matematico
+  eje_axial: eje1                    # Valores posibles: eje1, eje2, eje3, eje4
+  componente: aleatorio              # Valores posibles: geometrico_metrico, numerico_variacional, aleatorio
 ```{r setup, include=FALSE}
 library(exams)
 library(reticulate)

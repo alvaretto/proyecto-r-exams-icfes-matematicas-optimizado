@@ -1,0 +1,57 @@
+% Código TikZ para tabla de pasos - estilo moderno
+\begin{tikzpicture}[
+    box/.style={
+        rectangle,
+        rounded corners=5mm,
+        draw=gray!30,
+        thick,
+        fill=white,
+        drop shadow={shadow xshift=0.7mm, shadow yshift=-0.7mm, opacity=0.3},
+        text width=0.9\textwidth,
+        inner sep=12pt
+    },
+    step number/.style={
+        circle,
+        minimum size=1.8em,
+        inner sep=0pt,
+        font=\bfseries\large,
+        text=white,
+        fill=blue!60!black
+    }
+]
+
+% Título
+\node[rectangle, rounded corners=3mm, fill=blue!60!black, text=white, 
+      font=\Large\bfseries, inner sep=10pt, text width=0.9\textwidth] 
+      at (0,0) {Diagrama};
+
+% Paso 1
+\node[box] (box1) at (0,-1.5) {
+    \begin{minipage}{0.1\linewidth}
+        \centering
+        \tikz\node[step number] {1};
+    \end{minipage}%
+    \begin{minipage}{0.9\linewidth}
+        \textbf{Determinar la medida de la hipotenusa} \\
+        \vspace{0.2cm}
+        Del triángulo rectángulo de catetos $a = 3$ y $b = 4$, utilizando el teorema de Pitágoras.
+    \end{minipage}
+};
+
+% Paso 2
+\node[box] (box2) at (0,-3.5) {
+    \begin{minipage}{0.1\linewidth}
+        \centering
+        \tikz\node[step number] {2};
+    \end{minipage}%
+    \begin{minipage}{0.9\linewidth}
+        \textbf{Calcular el área sombreada} \\
+        \vspace{0.2cm}
+        Como el producto $h \times h$.
+    \end{minipage}
+};
+
+% Flecha conectora
+\draw[-stealth, ultra thick, blue!30] (box1.south) -- (box2.north);
+
+\end{tikzpicture}
