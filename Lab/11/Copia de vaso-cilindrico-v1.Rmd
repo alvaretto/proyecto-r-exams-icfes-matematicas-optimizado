@@ -24,29 +24,43 @@ nombres <- c("Juan", "María", "Carlos", "Ana", "Pedro", "Sofía", "Luis", "Laur
 nombre <- sample(nombres, 1)
 
 # Aleatorizar dimensiones del cilindro
-radio <- sample(2:5, 1)  # Radio entre 2 y 5 cm
-altura <- sample(6:10, 1)  # Altura entre 6 y 10 cm
+radio <- sample(20:50, 1)  # Radio entre 20 y 50 cm
+altura <- sample(60:100, 1)  # Altura entre 60 y 100 cm
 
 # Calcular el volumen del cilindro
 volumen <- pi * radio^2 * altura
-volumen_redondeado <- round(volumen, 2)
+# Formatear el volumen para evitar notación científica
+volumen_redondeado <- format(round(volumen, 2),
+                             scientific = FALSE,
+                             big.mark = "\\,")
+# Eliminar espacios en blanco al inicio y final si existen
+volumen_redondeado <- trimws(volumen_redondeado)
 
 # Calcular otras medidas para las opciones incorrectas
 area_base <- pi * radio^2
-area_base_redondeada <- round(area_base, 2)
+area_base_redondeada <- format(round(area_base, 2),
+                               scientific = FALSE,
+                               big.mark = "\\,")
+area_base_redondeada <- trimws(area_base_redondeada)
 
 perimetro_base <- 2 * pi * radio
-perimetro_base_redondeado <- round(perimetro_base, 2)
+perimetro_base_redondeado <- format(round(perimetro_base, 2),
+                                    scientific = FALSE,
+                                    big.mark = "\\,")
+perimetro_base_redondeado <- trimws(perimetro_base_redondeado)
 
 area_lateral <- 2 * pi * radio * altura
-area_lateral_redondeada <- round(area_lateral, 2)
+area_lateral_redondeada <- format(round(area_lateral, 2),
+                                  scientific = FALSE,
+                                  big.mark = "\\,")
+area_lateral_redondeada <- trimws(area_lateral_redondeada)
 
 # Crear vector de opciones
 opciones <- c(
-  paste("Al volumen del vaso:", volumen_redondeado, "cm³"),
-  paste("Al área de la tapa del vaso:", area_base_redondeada, "cm²"),
-  paste("Al perímetro de la tapa del vaso:", perimetro_base_redondeado, "cm"),
-  paste("Al área lateral del vaso:", area_lateral_redondeada, "cm²")
+  paste("Al volumen del vaso"),
+  paste("Al área de la tapa del vaso"),
+  paste("Al perímetro de la tapa del vaso"),
+  paste("Al área lateral del vaso")
 )
 
 # La respuesta correcta es la opción 1 (volumen)
@@ -64,33 +78,49 @@ sol[solucion_mezclada] <- 1
 
 ```{r, echo=FALSE}
 # Código para generar el cilindro con TikZ
-cilindro_tikz <- paste0("\\begin{tikzpicture}[>=latex, scale=0.8]
+# Definir factor de escala para mantener proporciones con valores grandes
+factor_escala <- 0.1
+radio_escalado <- radio * factor_escala
+altura_escalada <- altura * factor_escala
+
+cilindro_tikz <- paste0("\\begin{tikzpicture}[>=latex]
     % Definir la relación de aspecto para la perspectiva
     \\def\\relacionAspecto{0.4} % Relación para la elipse
 
     % Dibujar la parte trasera del cilindro (líneas punteadas)
-    \\draw[dashed] (-", radio, ",0) -- (-", radio, ",", altura, ");
-    \\draw[dashed] (0,0) ellipse (", radio, " and ", radio, "*\\relacionAspecto);
+    \\draw[dashed] (-", radio_escalado, ",0) --
+        (-", radio_escalado, ",", altura_escalada, ");
+    \\draw[dashed] (0,0) ellipse
+        (", radio_escalado, " and ", radio_escalado, "*\\relacionAspecto);
 
     % Sombrear el cilindro para dar efecto 3D
     \\fill[left color=blue!10, right color=blue!30, opacity=0.3]
-        (-", radio, ",0) arc(180:360:", radio, " and ", radio, "*\\relacionAspecto) --
-        (", radio, ",", altura, ") arc(0:-180:", radio, " and ", radio, "*\\relacionAspecto) --
+        (-", radio_escalado, ",0)
+        arc(180:360:", radio_escalado, " and ",
+            radio_escalado, "*\\relacionAspecto) --
+        (", radio_escalado, ",", altura_escalada, ")
+        arc(0:-180:", radio_escalado, " and ",
+            radio_escalado, "*\\relacionAspecto) --
         cycle;
 
     % Dibujar la parte frontal del cilindro (líneas sólidas)
-    \\draw (", radio, ",0) -- (", radio, ",", altura, ");
-    \\draw (0,", altura, ") ellipse (", radio, " and ", radio, "*\\relacionAspecto);
+    \\draw (", radio_escalado, ",0) --
+        (", radio_escalado, ",", altura_escalada, ");
+    \\draw (0,", altura_escalada, ") ellipse
+        (", radio_escalado, " and ", radio_escalado, "*\\relacionAspecto);
 
     % Añadir etiquetas y medidas
-    \\draw[<->] (", radio + 0.5, ",0) -- (", radio + 0.5, ",", altura, ")
-        node[midway, right] {", altura, " cm};
-    \\draw[<->] (0,", altura + 0.5, ") -- (", radio, ",", altura + 0.5, ")
-        node[midway, above] {", radio, " cm};
+    \\draw[<->] (", radio_escalado + 0.5, ",0) --
+        (", radio_escalado + 0.5, ",", altura_escalada, ")
+        node[midway, right, font=\\large] {", altura, " cm};
+    \\draw[<->] (0,", altura_escalada + 0.5, ") --
+        (", radio_escalado, ",", altura_escalada + 0.5, ")
+        node[midway, above, font=\\large] {", radio, " cm};
 
     % Añadir la operación matemática
-    \\node[align=center] at (0,-1.5)
-        {$\\pi \\times ", radio, "^2 \\times ", altura, " = ", volumen_redondeado, "$};
+    \\node[align=center, font=\\large] at (0,-2)
+        {$\\pi \\times ", radio, "^2 \\times ", altura, " = ",
+            volumen_redondeado, "$};
 \\end{tikzpicture}")
 ```
 
@@ -129,17 +159,20 @@ Solution
 Para resolver este problema, debemos identificar qué cálculo se está realizando con la fórmula $\pi \times `r radio`^2 \times `r altura` = `r volumen_redondeado`$.
 
 Analizando la fórmula:
+
 - $\pi \times r^2$ corresponde al área de la base circular del cilindro
 - Al multiplicar esta área por la altura $h$, obtenemos el volumen del cilindro
 
 Por lo tanto, la fórmula $V = \pi \times r^2 \times h$ es la fórmula del volumen de un cilindro.
 
 Sustituyendo los valores:
+
 - Radio de la base: $r = `r radio` \text{ cm}$
 - Altura: $h = `r altura` \text{ cm}$
 
 Calculamos:
-$V = \pi \times (`r radio`)^2 \times `r altura` = \pi \times `r radio^2` \times `r altura` = `r volumen_redondeado` \text{ cm}^3$
+
+$V = \pi \times (`r radio`)^2 \times `r altura` = \pi \times `r format(radio^2, scientific = FALSE)` \times `r altura` = `r volumen_redondeado` \text{ cm}^3$
 
 El resultado corresponde al volumen del vaso cilíndrico.
 

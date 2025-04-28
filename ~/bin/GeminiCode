@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Este script ejecuta GeminiCode desde su ubicación original
+/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google\ Drive/RepositorioMatematicasICFES_R_Exams/GeminiCode "$@"
