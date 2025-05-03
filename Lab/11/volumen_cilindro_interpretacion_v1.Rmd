@@ -1,8 +1,8 @@
 ---
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
@@ -89,7 +89,7 @@ unidad <- sample(unidades_lista, 1)
 unidad_tex <- ifelse(unidad == "pulgadas", "\\text{pulgadas}", paste0("\\text{", unidad, "}")) # Para LaTeX
 
 # 3. Objeto cilíndrico
-objetos_lista <- c("vaso", "cilindro", "tanque", "recipiente", "tubo", "envase")
+objetos_lista <- c("vaso", "tanque", "recipiente", "tubo", "envase")
 objeto <- sample(objetos_lista, 1)
 
 # 4. Contexto/Actor
