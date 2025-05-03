@@ -1,8 +1,8 @@
 ---
 output:
-  word_document: default
-  html_document: default
   pdf_document: default
+  html_document: default
+  word_document: default
 ---
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
@@ -67,7 +67,7 @@ adjetivos_interno <- c("interno", "hueco", "vacío", "interior")
 adjetivo_interno <- sample(adjetivos_interno, 1)
 
 # Aleatorizar líquidos
-liquidos <- c("agua", "aceite", "combustible", "líquido", "fluido")
+liquidos <- c("aceite", "combustible", "líquido", "fluido")
 liquido <- sample(liquidos, 1)
 
 # Aleatorizar lo que se desea calcular
@@ -142,7 +142,7 @@ solucion <- c(0, 0, 1, 0)
 ```{r generar_cilindro_python, message=FALSE, warning=FALSE}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
-# Código Python para generar el cilindro basado en cilindro_v5.py
+# Código Python para generar el cilindro
 codigo_python <- paste0("
 import matplotlib.pyplot as plt
 import numpy as np
@@ -194,38 +194,78 @@ ax.add_patch(Ellipse((0, altura), width=2*radio_interno, height=2*radio_interno*
 ax.plot([-radio_interno, -radio_interno], [0, altura], 'k--')
 ax.plot([radio_interno, radio_interno], [0, altura], 'k--')
 
-# Añadir etiquetas con flechas - tamaño reducido para mantener proporción
+# Añadir etiquetas con flechas - corregidas para terminar exactamente en los límites
 # Diámetro externo en la parte superior
-ax.annotate(f'Diámetro externo = {diametro_externo} {unidad}', xy=(0, altura + 0.15*altura),
-            xytext=(0, altura + 0.15*altura), ha='center', va='center', fontsize=9)
-ax.arrow(-radio_externo, altura + 0.1*altura, 2*radio_externo, 0,
-         head_width=0.04*altura, head_length=0.04*radio_externo, fc='black', ec='black')
-ax.arrow(radio_externo, altura + 0.1*altura, -2*radio_externo, 0,
-         head_width=0.04*altura, head_length=0.04*radio_externo, fc='black', ec='black')
+ax.annotate(f'Diámetro externo = {diametro_externo} {unidad}',
+            xy=(0, altura + 0.15*altura),
+            xytext=(0, altura + 0.15*altura),
+            ha='center', va='center', fontsize=9)
 
-# Radio interno
-ax.annotate(f'Radio interno = {radio_interno} {unidad}', xy=(radio_interno/2, altura + 0.07*altura),
-            xytext=(radio_interno/2, altura + 0.07*altura), ha='center', va='center', fontsize=9)
-ax.arrow(0, altura, radio_interno, 0, head_width=0.04*altura, head_length=0.04*radio_interno,
-         fc='black', ec='black')
+# Usar annotate con arrowprops para flechas precisas del diámetro externo
+ax.annotate('',
+            xy=(-radio_externo, altura + 0.1*altura),  # Punto exacto donde termina la flecha
+            xytext=(radio_externo, altura + 0.1*altura),  # Punto de inicio
+            arrowprops=dict(arrowstyle='<->', color='black', lw=1))
 
-# Grosor
-ax.annotate(f'Grosor = {grosor} {unidad}', xy=(-radio_externo - 0.2*radio_externo, altura/1.5),
-            xytext=(-radio_externo - 0.2*radio_externo, altura/1.5), ha='center', va='center', fontsize=9)
-ax.arrow(-radio_externo, altura/1.5, grosor, 0, head_width=0.04*altura, head_length=0.04*grosor,
-         fc='black', ec='black')
+# Radio interno - flecha precisa
+ax.annotate(f'Radio interno = {radio_interno} {unidad}',
+            xy=(radio_interno/2, altura + 0.07*altura),
+            xytext=(radio_interno/2, altura + 0.07*altura),
+            ha='center', va='center', fontsize=9)
+ax.annotate('',
+            xy=(radio_interno, altura),  # Punto exacto donde termina la flecha
+            xytext=(0, altura),  # Punto de inicio
+            arrowprops=dict(arrowstyle='->', color='black', lw=1))
 
-# Altura
-ax.annotate('Altura', xy=(radio_externo + 0.2*radio_externo, altura/2),
-            xytext=(radio_externo + 0.2*radio_externo, altura/2), ha='center', va='center', fontsize=9)
-ax.arrow(radio_externo + 0.1*radio_externo, 0, 0, altura, head_width=0.04*radio_externo,
-         head_length=0.04*altura, fc='black', ec='black')
+# Grosor - Reposicionado para mejor visibilidad
+ax.annotate(f'Grosor = {grosor} {unidad}',
+            xy=(-(radio_interno + grosor/2), altura/2),  # Punto medio entre radio interno y externo
+            xytext=(-radio_externo - 0.3*radio_externo, altura/2),
+            ha='right', va='center', fontsize=9,
+            arrowprops=dict(arrowstyle='->', color='black', lw=1))
 
-# Radio externo
-ax.annotate(f'Radio externo = {radio_externo} {unidad}', xy=(radio_interno, -0.1*altura),
-            xytext=(radio_interno, -0.05*altura), ha='center', va='center', fontsize=9)
-ax.arrow(0, 0, radio_externo, 0, head_width=0.04*altura, head_length=0.04*radio_externo,
-         fc='black', ec='black')
+# Línea horizontal para mostrar el grosor - engrosada para mayor visibilidad
+ax.plot([-radio_externo, -radio_interno], [altura/2, altura/2], 'k-', lw=3.0)  # Línea más gruesa
+# Marcas verticales más visibles
+ax.plot([-radio_externo, -radio_externo], [altura/2-0.07*altura, altura/2+0.07*altura], 'k-', lw=2.5)
+ax.plot([-radio_interno, -radio_interno], [altura/2-0.07*altura, altura/2+0.07*altura], 'k-', lw=2.5)
+
+# Añadir sombreado para destacar el grosor
+import matplotlib.patches as patches
+rect = patches.Rectangle(
+    (-radio_externo, altura/2-0.03*altura),  # Posición (x,y) de la esquina inferior izquierda
+    grosor,  # Ancho
+    0.06*altura,  # Alto
+    linewidth=0,
+    color='lightgray',
+    alpha=0.5
+)
+ax.add_patch(rect)
+
+# Altura - flecha precisa con etiqueta mejorada
+# Texto de altura separado y más visible
+ax.text(radio_externo + 0.3*radio_externo, altura/2, 'Altura',
+        ha='center', va='center', fontsize=10, fontweight='bold')
+
+# Flecha bidireccional para la altura
+ax.annotate('',
+            xy=(radio_externo + 0.1*radio_externo, altura),  # Punto exacto donde termina la flecha arriba
+            xytext=(radio_externo + 0.1*radio_externo, 0),  # Punto exacto donde termina la flecha abajo
+            arrowprops=dict(arrowstyle='<->', color='black', lw=1.5))
+
+# Líneas horizontales para marcar los límites de la altura
+ax.plot([radio_externo, radio_externo + 0.2*radio_externo], [0, 0], 'k-', lw=1)
+ax.plot([radio_externo, radio_externo + 0.2*radio_externo], [altura, altura], 'k-', lw=1)
+
+# Radio externo - flecha precisa
+ax.annotate(f'Radio externo = {radio_externo} {unidad}',
+            xy=(radio_interno, -0.1*altura),
+            xytext=(radio_interno, -0.05*altura),
+            ha='center', va='center', fontsize=9)
+ax.annotate('',
+            xy=(radio_externo, 0),  # Punto exacto donde termina la flecha
+            xytext=(0, 0),  # Punto de inicio
+            arrowprops=dict(arrowstyle='->', color='black', lw=1))
 
 plt.tight_layout()
 plt.savefig('cilindro_hueco.png', dpi=150, bbox_inches='tight')
@@ -235,12 +275,15 @@ plt.close()
 # Ejecutar código Python para generar la figura
 py_run_string(codigo_python)
 ```
+
 Question
 ========
 
+`r nombre` desea saber cuánto `r liquido` se necesita para llenar el `r recipiente` interno, pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
+
 ```{r mostrar_cilindro_python, echo=FALSE, results='asis', fig.align='center'}
 # Mostrar la imagen del cilindro generada con Python
-cat("![Cilindro hueco](cilindro_hueco.png)")
+cat("![](cilindro_hueco.png)")
 ```
 
 ¿Cuál medida le falta a `r nombre` para hallar la cantidad deseada?
@@ -288,3 +331,20 @@ extype: schoice
 exsolution: 0010
 exshuffle: TRUE
 exsection: Geometría|Volumen|Cilindro
+
+# Metadatos ICFES
+exextra[Tópico]: Geometría
+exextra[Competencia]: Razonamiento
+exextra[Dificultad]: Media
+exextra[Estandar]: Utilizo técnicas y herramientas para la construcción de figuras planas y cuerpos con medidas dadas.
+exextra[Aprendizaje]: Establecer y utilizar diferentes procedimientos de cálculo para hallar medidas de superficies y volúmenes.
+exextra[Evidencia]: Resolver problemas que involucran el cálculo de volúmenes de cilindros.
+exextra[Componente]: Espacial-Métrico
+exextra[Proceso]: Resolución de problemas
+exextra[Contexto]: Científico
+exextra[Estrategia]: Identificar los datos faltantes para resolver un problema de volumen de un cilindro hueco.
+exextra[Tiempo]: 3 minutos
+exextra[Pregunta]: 1
+exextra[Aleatorización]: Si
+exextra[Esquema]: Selección múltiple con única respuesta
+exextra[Formato]: Imagen
