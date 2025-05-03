@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 ```{r setup, include=FALSE}
@@ -156,8 +156,8 @@ altura = ", altura, "  # ", unidad, "
 diametro_externo = 2 * radio_externo  # ", d_ext, " ", unidad, "
 unidad = '", unidad, "'
 
-# Crear figura y ejes - reducida en un 25%
-fig, ax = plt.subplots(figsize=(7.5, 9))  # Reducido de (10, 12) a (7.5, 9)
+# Crear figura y ejes
+fig, ax = plt.subplots(figsize=(10, 12))
 
 # Ajustar límites del gráfico
 ax.set_xlim(-radio_externo*1.5, radio_externo*1.5)
@@ -194,37 +194,37 @@ ax.add_patch(Ellipse((0, altura), width=2*radio_interno, height=2*radio_interno*
 ax.plot([-radio_interno, -radio_interno], [0, altura], 'k--')
 ax.plot([radio_interno, radio_interno], [0, altura], 'k--')
 
-# Añadir etiquetas con flechas - tamaño reducido para mantener proporción
+# Añadir etiquetas con flechas
 # Diámetro externo en la parte superior
 ax.annotate(f'Diámetro externo = {diametro_externo} {unidad}', xy=(0, altura + 0.15*altura),
-            xytext=(0, altura + 0.15*altura), ha='center', va='center', fontsize=9)
+            xytext=(0, altura + 0.15*altura), ha='center', va='center', fontsize=11)
 ax.arrow(-radio_externo, altura + 0.1*altura, 2*radio_externo, 0,
-         head_width=0.04*altura, head_length=0.04*radio_externo, fc='black', ec='black')
+         head_width=0.05*altura, head_length=0.05*radio_externo, fc='black', ec='black')
 ax.arrow(radio_externo, altura + 0.1*altura, -2*radio_externo, 0,
-         head_width=0.04*altura, head_length=0.04*radio_externo, fc='black', ec='black')
+         head_width=0.05*altura, head_length=0.05*radio_externo, fc='black', ec='black')
 
 # Radio interno
 ax.annotate(f'Radio interno = {radio_interno} {unidad}', xy=(radio_interno/2, altura + 0.07*altura),
-            xytext=(radio_interno/2, altura + 0.07*altura), ha='center', va='center', fontsize=9)
-ax.arrow(0, altura, radio_interno, 0, head_width=0.04*altura, head_length=0.04*radio_interno,
+            xytext=(radio_interno/2, altura + 0.07*altura), ha='center', va='center', fontsize=11)
+ax.arrow(0, altura, radio_interno, 0, head_width=0.05*altura, head_length=0.05*radio_interno,
          fc='black', ec='black')
 
 # Grosor
 ax.annotate(f'Grosor = {grosor} {unidad}', xy=(-radio_externo - 0.2*radio_externo, altura/1.5),
-            xytext=(-radio_externo - 0.2*radio_externo, altura/1.5), ha='center', va='center', fontsize=9)
-ax.arrow(-radio_externo, altura/1.5, grosor, 0, head_width=0.04*altura, head_length=0.04*grosor,
+            xytext=(-radio_externo - 0.2*radio_externo, altura/1.5), ha='center', va='center', fontsize=11)
+ax.arrow(-radio_externo, altura/1.5, grosor, 0, head_width=0.05*altura, head_length=0.05*grosor,
          fc='black', ec='black')
 
 # Altura
 ax.annotate('Altura', xy=(radio_externo + 0.2*radio_externo, altura/2),
-            xytext=(radio_externo + 0.2*radio_externo, altura/2), ha='center', va='center', fontsize=9)
-ax.arrow(radio_externo + 0.1*radio_externo, 0, 0, altura, head_width=0.04*radio_externo,
-         head_length=0.04*altura, fc='black', ec='black')
+            xytext=(radio_externo + 0.2*radio_externo, altura/2), ha='center', va='center', fontsize=11)
+ax.arrow(radio_externo + 0.1*radio_externo, 0, 0, altura, head_width=0.05*radio_externo,
+         head_length=0.05*altura, fc='black', ec='black')
 
 # Radio externo
 ax.annotate(f'Radio externo = {radio_externo} {unidad}', xy=(radio_interno, -0.1*altura),
-            xytext=(radio_interno, -0.05*altura), ha='center', va='center', fontsize=9)
-ax.arrow(0, 0, radio_externo, 0, head_width=0.04*altura, head_length=0.04*radio_externo,
+            xytext=(radio_interno, -0.05*altura), ha='center', va='center', fontsize=11)
+ax.arrow(0, 0, radio_externo, 0, head_width=0.05*altura, head_length=0.05*radio_externo,
          fc='black', ec='black')
 
 plt.tight_layout()

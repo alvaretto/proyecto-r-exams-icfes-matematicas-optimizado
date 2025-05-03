@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Ellipse, Rectangle, Arrow, FancyArrowPatch
 
+# Create a variable to track image titles
+_mfajlsdf98q21_image_title_list = []
+
 # Crear figura y ejes
 fig, ax = plt.subplots(figsize=(10, 12))
 
@@ -53,10 +56,10 @@ ax.annotate("Diámetro externo", xy=(0, altura + 0.6), xytext=(0, altura + 0.8),
 ax.arrow(-radio_externo, altura + 0.7, 2*radio_externo, 0, head_width=0.1, head_length=0.1, fc='black', ec='black')
 ax.arrow(radio_externo, altura + 0.7, -2*radio_externo, 0, head_width=0.1, head_length=0.1, fc='black', ec='black')
 
-# Radio interno
-ax.annotate("Radio interno = 1 m", xy=(radio_interno/2, altura/2 + 0.3), xytext=(radio_interno/2, altura/2 + 0.3),
+# Radio interno 
+ax.annotate("Radio interno = 1 m", xy=(radio_interno/2, altura + 0.2), xytext=(radio_interno/2, altura + 0.2),
             ha='center', va='center', fontsize=11)
-ax.arrow(0, altura/2, radio_interno, 0, head_width=0.1, head_length=0.1, fc='black', ec='black')
+ax.arrow(0, altura, radio_interno, 0, head_width=0.1, head_length=0.1, fc='black', ec='black')
 
 # Grosor
 ax.annotate("Grosor = 0,5 m", xy=(-radio_externo - 0.5, altura/1.5), xytext=(-radio_externo - 0.5, altura/1.5),
@@ -73,9 +76,9 @@ ax.annotate("Radio externo", xy=(radio_externo/2, -0.5), xytext=(radio_externo/2
             ha='center', va='center', fontsize=11)
 ax.arrow(0, -0.0, radio_externo, 0, head_width=0.1, head_length=0.1, fc='black', ec='black')
 
-# Guardar y mostrar
-plt.title('Cilindro Hueco', fontsize=14, pad=20)
+#title = 'Cilindro Hueco'
+#plt.title(title, fontsize=14, pad=20)
+#_mfajlsdf98q21_image_title_list.append(title)
 plt.tight_layout()
-plt.savefig('cilindro_hueco.png', dpi=300, bbox_inches='tight')
+plt.savefig('cilindro_hueco_modificado.png', dpi=300, bbox_inches='tight')
 plt.show()
-plt.close()
