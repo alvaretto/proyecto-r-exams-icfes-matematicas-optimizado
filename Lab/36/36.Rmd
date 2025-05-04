@@ -10,6 +10,24 @@ header-includes:
    - \usepackage{amsmath}
 ---
 
+# Metadatos ICFES
+exextra[Tópico]: Geometría
+exextra[Competencia]: Argumentación
+exextra[Dificultad]: Alta
+exextra[Estandar]: Interpreto analítica y críticamente información estadística.
+exextra[Aprendizaje]: Establecer procedimientos para hallar medidas de superficies y volúmenes.
+exextra[Evidencia]: Resolver problemas que involucran el cálculo de áreas y volúmenes.
+exextra[Componente]: Espacial-Métrico
+exextra[Proceso]: Argumentación
+exextra[Contexto]: Matemático
+exextra[Estrategia]: Analizar información presentada en gráficos estadísticos.
+exextra[Tiempo]: 8 minutos
+exextra[Pregunta]: 1
+exextra[Aleatorización]: No
+exextra[Esquema]: Selección múltiple con única respuesta
+exextra[Formato]: Imagen
+
+
 ![](01.png)
 
 ![](02.png)

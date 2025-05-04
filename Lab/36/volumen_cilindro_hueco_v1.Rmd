@@ -4,6 +4,19 @@ output:
   pdf_document: default
   word_document: default
 ---
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 3
+  contenido:
+    categoria: geometria
+    tipo: no_generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -335,20 +348,3 @@ extype: schoice
 exsolution: 0010
 exshuffle: TRUE
 exsection: Geometría|Volumen|Cilindro
-
-# Metadatos ICFES
-exextra[Tópico]: Geometría
-exextra[Competencia]: Razonamiento
-exextra[Dificultad]: Media
-exextra[Estandar]: Utilizo técnicas y herramientas para la construcción de figuras planas y cuerpos con medidas dadas.
-exextra[Aprendizaje]: Establecer y utilizar diferentes procedimientos de cálculo para hallar medidas de superficies y volúmenes.
-exextra[Evidencia]: Resolver problemas que involucran el cálculo de volúmenes de cilindros.
-exextra[Componente]: Espacial-Métrico
-exextra[Proceso]: Resolución de problemas
-exextra[Contexto]: Científico
-exextra[Estrategia]: Identificar los datos faltantes para resolver un problema de volumen de un cilindro hueco.
-exextra[Tiempo]: 3 minutos
-exextra[Pregunta]: 1
-exextra[Aleatorización]: Si
-exextra[Esquema]: Selección múltiple con única respuesta
-exextra[Formato]: Imagen
