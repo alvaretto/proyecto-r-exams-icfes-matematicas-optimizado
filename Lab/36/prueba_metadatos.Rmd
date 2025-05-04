@@ -1,0 +1,82 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Metadatos ICFES
+icfes:
+  competencia: 
+    - interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: no_generico
+  contexto: matematico
+  eje_axial: eje4
+  componente: aleatorio
+
+
+```{r setup, include=FALSE}
+library(exams)
+library(tidyverse)
+library(reticulate)
+
+# Configurar Python
+use_python(Sys.which("python"), required = TRUE)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Vector de mascotas
+mascotas <- c('loro', 'perro', 'gato', 'gallina', 'hamster', 'cerdo', 'ternero', 'caballo', 'cabra')
+mascota <- sample(mascotas, 1)
+
+# Vector de nombres
+nombres <- c('Juan', 'María', 'Pedro', 'Ana', 'Luis', 'Sofía', 'Carlos', 'Laura', 'Diego')
+nombre <- sample(nombres, 1)
+
+# Generar datos para un problema de probabilidad
+total_animales <- sample(20:50, 1)
+num_mascota <- sample(5:15, 1)
+probabilidad <- round(num_mascota / total_animales, 2)
+```
+
+Question
+========
+
+`r nombre` tiene una granja con `r total_animales` animales, de los cuales `r num_mascota` son `r mascota`s. Si `r nombre` selecciona un animal al azar, ¿cuál es la probabilidad de que sea un `r mascota`?
+
+Answerlist
+----------
+* `r probabilidad`
+* `r round(1 - probabilidad, 2)`
+* `r round(probabilidad / 2, 2)`
+* `r round(probabilidad + 0.1, 2)`
+
+Solution
+========
+
+La probabilidad de seleccionar un `r mascota` es el número de `r mascota`s dividido por el número total de animales:
+
+$$P(\text{`r mascota`}) = \frac{\text{Número de `r mascota`s}}{\text{Número total de animales}} = \frac{`r num_mascota`}{`r total_animales`} = `r probabilidad`$$
+
+Answerlist
+----------
+* Verdadero
+* Falso
+* Falso
+* Falso
+
+Meta-information
+================
+exname: probabilidad_simple
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE

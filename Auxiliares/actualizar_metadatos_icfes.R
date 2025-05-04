@@ -5,17 +5,40 @@
 add_icfes_metadata <- function(file_path, metadata) {
   # Leer el contenido del archivo
   content <- readLines(file_path, warn = FALSE)
-  
+
   # Verificar si ya tiene metadatos ICFES
   if (any(grepl("# Metadatos ICFES", content))) {
-    message("El archivo ya tiene metadatos ICFES: ", file_path)
-    return(FALSE)
+    # Leer el contenido para verificar si los metadatos son correctos
+    content_text <- paste(content, collapse = " ")
+
+    # Verificar si es un problema de geometría pero está clasificado como estadística
+    if (grepl("volumen|cilindro|cubo|esfera|cono|pirámide|prisma", content_text, ignore.case = TRUE) &&
+        grepl("categoria: estadistica", content_text, ignore.case = TRUE)) {
+      message("Corrigiendo metadatos incorrectos en: ", file_path)
+      # Eliminar los metadatos existentes para reemplazarlos
+      start_idx <- which(grepl("# Metadatos ICFES", content))
+      end_idx <- start_idx
+      for (i in (start_idx + 1):length(content)) {
+        if (grepl("^```", content[i])) {
+          end_idx <- i - 1
+          break
+        }
+        if (i == length(content)) {
+          end_idx <- i
+          break
+        }
+      }
+      content <- content[-(start_idx:end_idx)]
+    } else {
+      message("El archivo ya tiene metadatos ICFES: ", file_path)
+      return(FALSE)
+    }
   }
-  
+
   # Verificar si tiene encabezado YAML
   has_yaml <- FALSE
   yaml_end <- 0
-  
+
   if (content[1] == "---") {
     for (i in 2:length(content)) {
       if (content[i] == "---") {
@@ -25,13 +48,13 @@ add_icfes_metadata <- function(file_path, metadata) {
       }
     }
   }
-  
-  # Preparar los metadatos ICFES
+
+  # Preparar los metadatos ICFES en formato YAML
   icfes_metadata <- c(
     "",
     "# Metadatos ICFES",
     "icfes:",
-    paste0("  competencia: "),
+    "  competencia: ",
     paste0("    - ", metadata$competencia[1]),
     if (length(metadata$competencia) > 1) paste0("    - ", metadata$competencia[2]) else NULL,
     if (length(metadata$competencia) > 2) paste0("    - ", metadata$competencia[3]) else NULL,
@@ -44,7 +67,7 @@ add_icfes_metadata <- function(file_path, metadata) {
     paste0("  componente: ", metadata$componente),
     ""
   )
-  
+
   # Insertar los metadatos ICFES
   if (has_yaml) {
     # Si tiene encabezado YAML, insertar después del encabezado
@@ -65,7 +88,7 @@ add_icfes_metadata <- function(file_path, metadata) {
       content
     )
   }
-  
+
   # Escribir el nuevo contenido al archivo
   writeLines(new_content, file_path)
   message("Metadatos ICFES añadidos a: ", file_path)
@@ -82,8 +105,8 @@ find_rmd_files <- function(dir_path) {
 classify_exercise <- function(file_path) {
   # Leer el contenido del archivo
   content <- paste(readLines(file_path, warn = FALSE), collapse = " ")
-  
-  # Clasificación por defecto
+
+  # Clasificación por defecto según el sistema de etiquetado ICFES
   metadata <- list(
     competencia = c("interpretacion_representacion"),
     nivel_dificultad = 2,
@@ -95,56 +118,95 @@ classify_exercise <- function(file_path) {
     eje_axial = "eje4",
     componente = "aleatorio"
   )
-  
-  # Clasificación por ruta del archivo
-  if (grepl("Estadística-Y-Probabilidad", file_path)) {
-    metadata$contenido$categoria <- "estadistica"
-    metadata$componente <- "aleatorio"
-    metadata$eje_axial <- "eje4"
-  } else if (grepl("Geometria-Analitica", file_path)) {
+
+  # Clasificación por contenido para determinar categoría y componente
+  # Primero verificamos si hay palabras clave específicas de geometría
+  if (grepl("cilindro|volumen|área|superficie|geometría|figura|triángulo|círculo|esfera|paralelogramo|cubo|prisma|pirámide|cono|radio|diámetro",
+            content, ignore.case = TRUE)) {
     metadata$contenido$categoria <- "geometria"
     metadata$componente <- "geometrico_metrico"
     metadata$eje_axial <- "eje2"
-  } else if (grepl("Funciones", file_path)) {
-    metadata$contenido$categoria <- "algebra_calculo"
-    metadata$componente <- "numerico_variacional"
-    metadata$eje_axial <- "eje3"
-  } else if (grepl("Numeros-Reales", file_path)) {
+  }
+  # Luego verificamos palabras clave de álgebra y cálculo
+  else if (grepl("función|ecuación|variable|expresión|álgebra|número|operación|polinomio|derivada|integral|límite",
+                 content, ignore.case = TRUE)) {
     metadata$contenido$categoria <- "algebra_calculo"
     metadata$componente <- "numerico_variacional"
     metadata$eje_axial <- "eje3"
   }
-  
-  # Clasificación por contenido
-  if (grepl("Venn|probabilidad|conjunto", content, ignore.case = TRUE)) {
+  # Finalmente verificamos palabras clave de estadística
+  else if (grepl("Venn|probabilidad|conjunto|estadística|datos|gráfico|diagrama|frecuencia|media|mediana|moda|desviación",
+                 content, ignore.case = TRUE)) {
     metadata$contenido$categoria <- "estadistica"
     metadata$componente <- "aleatorio"
-  } else if (grepl("triángulo|círculo|esfera|paralelogramo", content, ignore.case = TRUE)) {
+    metadata$eje_axial <- "eje4"
+  }
+
+  # Verificación adicional para casos específicos
+  # Si menciona "volumen" o "cilindro", es casi seguro que es geometría
+  if (grepl("volumen|cilindro|cubo|esfera|cono|pirámide|prisma", content, ignore.case = TRUE)) {
     metadata$contenido$categoria <- "geometria"
     metadata$componente <- "geometrico_metrico"
-  } else if (grepl("función|ecuación|variable|expresión", content, ignore.case = TRUE)) {
-    metadata$contenido$categoria <- "algebra_calculo"
-    metadata$componente <- "numerico_variacional"
+    metadata$eje_axial <- "eje2"
   }
-  
+
   # Clasificación por nivel de dificultad
-  if (grepl("justifica|argumenta|valida|refuta", content, ignore.case = TRUE)) {
+  if (grepl("justifica|argumenta|valida|refuta|demuestra|prueba|verifica",
+            content, ignore.case = TRUE)) {
     metadata$nivel_dificultad <- 4
     metadata$competencia <- c("argumentacion")
-  } else if (grepl("modela|resuelve problema|estrategia", content, ignore.case = TRUE)) {
+  } else if (grepl("modela|resuelve problema|estrategia|plantea|formula|ejecuta",
+                   content, ignore.case = TRUE)) {
     metadata$nivel_dificultad <- 3
     metadata$competencia <- c("formulacion_ejecucion")
+  } else if (grepl("compara|identifica|reconoce|representa",
+                   content, ignore.case = TRUE)) {
+    metadata$nivel_dificultad <- 2
+    metadata$competencia <- c("interpretacion_representacion")
+  } else if (grepl("lee|observa|extrae", content, ignore.case = TRUE)) {
+    metadata$nivel_dificultad <- 1
+    metadata$competencia <- c("interpretacion_representacion")
   }
-  
+
   # Clasificación por contexto
-  if (grepl("familia|hogar|salud|recreación", content, ignore.case = TRUE)) {
+  if (grepl("familia|hogar|salud|recreación|personal", content, ignore.case = TRUE)) {
     metadata$contexto <- "familiar"
-  } else if (grepl("trabajo|empleo|ocupación|profesión", content, ignore.case = TRUE)) {
+  } else if (grepl("trabajo|empleo|ocupación|profesión|laboral",
+                   content, ignore.case = TRUE)) {
     metadata$contexto <- "laboral"
-  } else if (grepl("sociedad|comunidad|política|economía|ambiente", content, ignore.case = TRUE)) {
+  } else if (grepl("sociedad|comunidad|política|economía|ambiente|social",
+                   content, ignore.case = TRUE)) {
     metadata$contexto <- "comunitario"
+  } else {
+    metadata$contexto <- "matematico"
   }
-  
+
+  # Clasificación por tipo de contenido
+  if (grepl("ciudadano|cotidiano|diario|común", content, ignore.case = TRUE)) {
+    metadata$contenido$tipo <- "generico"
+  } else {
+    metadata$contenido$tipo <- "no_generico"
+  }
+
+  # Clasificación por ruta del archivo (si hay información específica)
+  if (grepl("Estadística|Probabilidad", file_path, ignore.case = TRUE)) {
+    metadata$contenido$categoria <- "estadistica"
+    metadata$componente <- "aleatorio"
+    metadata$eje_axial <- "eje4"
+  } else if (grepl("Geometria|Analitica", file_path, ignore.case = TRUE)) {
+    metadata$contenido$categoria <- "geometria"
+    metadata$componente <- "geometrico_metrico"
+    metadata$eje_axial <- "eje2"
+  } else if (grepl("Funciones|Algebra", file_path, ignore.case = TRUE)) {
+    metadata$contenido$categoria <- "algebra_calculo"
+    metadata$componente <- "numerico_variacional"
+    metadata$eje_axial <- "eje3"
+  } else if (grepl("Numeros|Reales", file_path, ignore.case = TRUE)) {
+    metadata$contenido$categoria <- "algebra_calculo"
+    metadata$componente <- "numerico_variacional"
+    metadata$eje_axial <- "eje3"
+  }
+
   return(metadata)
 }
 
@@ -152,23 +214,24 @@ classify_exercise <- function(file_path) {
 update_all_metadata <- function(dir_path) {
   # Buscar archivos .Rmd
   rmd_files <- find_rmd_files(dir_path)
-  
+
   # Contador de archivos actualizados
   updated_count <- 0
-  
+
   # Procesar cada archivo
   for (file_path in rmd_files) {
     # Clasificar el ejercicio
     metadata <- classify_exercise(file_path)
-    
+
     # Añadir metadatos ICFES
     if (add_icfes_metadata(file_path, metadata)) {
       updated_count <- updated_count + 1
     }
   }
-  
+
   message("Proceso completado. ", updated_count, " archivos actualizados de ", length(rmd_files), " archivos .Rmd encontrados.")
 }
 
 # Ejemplo de uso:
-update_all_metadata("RepositorioMatematicasICFES_R_Exams")
+# Para ejecutar en el directorio actual:
+update_all_metadata(".")
