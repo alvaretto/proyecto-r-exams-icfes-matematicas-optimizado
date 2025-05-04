@@ -1,11 +1,9 @@
 ---
 output:
+  word_document: default
   html_document: default
   pdf_document: default
-  word_document: default
 ---
-
-# Metadatos ICFES
 icfes:
   competencia:
     - formulacion_ejecucion
@@ -179,14 +177,41 @@ altura = ", altura, "  # ", unidad, "
 diametro_externo = 2 * radio_externo  # ", d_ext, " ", unidad, "
 unidad = '", unidad, "'
 
-# Crear figura y ejes - optimizada para ocupar menos espacio
-fig, ax = plt.subplots(figsize=(5.5, 6))  # Reducido para optimizar espacio
+# Calcular la relación altura/radio para ajustar dinámicamente la visualización
+relacion_altura_radio = altura / radio_externo
 
-# Ajustar límites del gráfico - más compactos
-ax.set_xlim(-radio_externo*1.3, radio_externo*1.3)
-ax.set_ylim(-altura*0.15, altura*1.2)
-ax.axis('equal')
-ax.axis('off')
+# Ajustar el tamaño de la figura según la relación altura/radio
+# Si el cilindro es alto y delgado, aumentamos la altura de la figura
+if relacion_altura_radio > 5:
+    fig_height = 8  # Mayor altura para cilindros muy altos
+    fig_width = 6
+elif relacion_altura_radio > 3:
+    fig_height = 7
+    fig_width = 6
+else:
+    fig_height = 6
+    fig_width = 5.5
+
+# Crear figura y ejes con tamaño adaptativo
+fig, ax = plt.subplots(figsize=(fig_width, fig_height))
+
+# Calcular márgenes dinámicos basados en las proporciones del cilindro
+margen_x = max(0.5, min(1.5, 5/relacion_altura_radio)) * radio_externo
+margen_y_inferior = max(0.15, min(0.3, 1/relacion_altura_radio)) * altura
+margen_y_superior = max(0.2, min(0.5, 2/relacion_altura_radio)) * altura
+
+# Ajustar límites del gráfico dinámicamente
+ax.set_xlim(-radio_externo - margen_x, radio_externo + margen_x)
+ax.set_ylim(-margen_y_inferior, altura + margen_y_superior)
+
+# Desactivar la relación de aspecto igual para cilindros muy altos
+if relacion_altura_radio > 4:
+    # No usar axis('equal') para cilindros muy altos
+    pass
+else:
+    ax.axis('equal')  # Mantener para cilindros con proporciones normales
+
+ax.axis('off')  # Ocultar ejes
 
 # Factor de compresión para la perspectiva
 factor_compresion = 0.4
@@ -217,83 +242,108 @@ ax.add_patch(Ellipse((0, altura), width=2*radio_interno, height=2*radio_interno*
 ax.plot([-radio_interno, -radio_interno], [0, altura], 'k--')
 ax.plot([radio_interno, radio_interno], [0, altura], 'k--')
 
-# Añadir etiquetas con flechas - optimizadas para ocupar menos espacio
-# Diámetro externo en la parte superior
-ax.annotate(f'Diámetro externo = {diametro_externo} {unidad}',
-            xy=(0, altura + 0.15*altura),
-            xytext=(0, altura + 0.15*altura),
-            ha='center', va='center', fontsize=9)
+# Calcular espaciado adaptativo para etiquetas
+espacio_etiqueta_superior = min(0.15 * altura, max(5, 0.05 * altura))
+espacio_etiqueta_inferior = min(0.15 * altura, max(5, 0.05 * altura))
 
-# Usar annotate con arrowprops para flechas precisas del diámetro externo
-ax.annotate('',
-            xy=(-radio_externo, altura + 0.05*altura),  # Punto exacto donde termina la flecha
-            xytext=(radio_externo, altura + 0.05*altura),  # Punto de inicio
-            arrowprops=dict(arrowstyle='<->', color='black', lw=1))
-
-# Radio interno - flecha precisa (ahora con etiqueta debajo)
+# Diámetro externo en la parte superior - Ajustado para mejor visibilidad
 # Primero dibujamos la flecha
 ax.annotate('',
-            xy=(radio_interno, altura),  # Punto exacto donde termina la flecha
-            xytext=(0, altura),  # Punto de inicio
+            xy=(-radio_externo, altura + espacio_etiqueta_superior/2),
+            xytext=(radio_externo, altura + espacio_etiqueta_superior/2),
+            arrowprops=dict(arrowstyle='<->', color='black', lw=1.5))
+
+# Luego colocamos la etiqueta encima de la flecha con fondo blanco
+ax.annotate(f'Diámetro externo = {diametro_externo} {unidad}',
+            xy=(0, altura + espacio_etiqueta_superior),
+            xytext=(0, altura + espacio_etiqueta_superior),
+            ha='center', va='center', fontsize=10,
+            bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='none', alpha=0.8))
+
+# Calcular posición adaptativa para etiqueta de radio interno
+# Si el cilindro es muy alto, colocar la etiqueta más cerca del borde superior
+if relacion_altura_radio > 4:
+    pos_etiqueta_radio_interno = altura - altura * 0.05
+else:
+    pos_etiqueta_radio_interno = altura - min(0.1 * altura, radio_externo)
+
+# Radio interno - flecha precisa con etiqueta adaptativa
+ax.annotate('',
+            xy=(radio_interno, altura),
+            xytext=(0, altura),
             arrowprops=dict(arrowstyle='->', color='black', lw=1))
-# Luego colocamos la etiqueta debajo de la flecha
+
+# Etiqueta de radio interno con fondo blanco para mayor visibilidad
 ax.annotate(f'Radio interno = {radio_interno} {unidad}',
-            xy=(radio_interno/2, altura - 0.1*altura),  # Posición debajo de la flecha
-            xytext=(radio_interno/2, altura - 0.1*altura),
-            ha='center', va='center', fontsize=9)
+            xy=(radio_interno/2, pos_etiqueta_radio_interno),
+            xytext=(radio_interno/2, pos_etiqueta_radio_interno),
+            ha='center', va='center', fontsize=9,
+            bbox=dict(boxstyle='round,pad=0.2', fc='white', ec='none', alpha=0.8))
+
+# Calcular posición adaptativa para la etiqueta de grosor
+# Para cilindros muy altos, usar una posición relativa
+pos_grosor_y = altura * 0.5  # Siempre en la mitad de la altura
 
 # Grosor - Reposicionado para mejor visibilidad
 ax.annotate(f'Grosor = {grosor} {unidad}',
-            xy=(-(radio_interno + grosor/2), altura/2),  # Punto medio entre radio interno y externo
-            xytext=(-radio_externo - 0.2*radio_externo, altura/2),
+            xy=(-(radio_interno + grosor/2), pos_grosor_y),
+            xytext=(-radio_externo - margen_x * 0.5, pos_grosor_y),
             ha='right', va='center', fontsize=9,
+            bbox=dict(boxstyle='round,pad=0.2', fc='white', ec='none', alpha=0.8),
             arrowprops=dict(arrowstyle='->', color='black', lw=1))
 
 # Línea horizontal para mostrar el grosor - engrosada para mayor visibilidad
-ax.plot([-radio_externo, -radio_interno], [altura/2, altura/2], 'k-', lw=2.5)  # Línea más gruesa
+ax.plot([-radio_externo, -radio_interno], [pos_grosor_y, pos_grosor_y], 'k-', lw=2.5)
 # Marcas verticales más visibles
-ax.plot([-radio_externo, -radio_externo], [altura/2-0.05*altura, altura/2+0.05*altura], 'k-', lw=2.0)
-ax.plot([-radio_interno, -radio_interno], [altura/2-0.05*altura, altura/2+0.05*altura], 'k-', lw=2.0)
+ax.plot([-radio_externo, -radio_externo], [pos_grosor_y-0.02*altura, pos_grosor_y+0.02*altura], 'k-', lw=2.0)
+ax.plot([-radio_interno, -radio_interno], [pos_grosor_y-0.02*altura, pos_grosor_y+0.02*altura], 'k-', lw=2.0)
 
 # Añadir sombreado para destacar el grosor
 import matplotlib.patches as patches
 rect = patches.Rectangle(
-    (-radio_externo, altura/2-0.025*altura),  # Posición (x,y) de la esquina inferior izquierda
-    grosor,  # Ancho
-    0.05*altura,  # Alto
+    (-radio_externo, pos_grosor_y-0.02*altura),
+    grosor,
+    0.04*altura,
     linewidth=0,
     color='lightgray',
     alpha=0.5
 )
 ax.add_patch(rect)
 
-# Altura - flecha precisa con etiqueta mejorada
-# Texto de altura separado y más visible
-ax.text(radio_externo + 0.2*radio_externo, altura/2, 'Altura',
-        ha='center', va='center', fontsize=10, fontweight='bold')
+# Calcular posición adaptativa para la etiqueta de altura
+# Para cilindros muy altos, ajustar la posición horizontal
+pos_altura_x = radio_externo + margen_x * 0.5
+
+# Altura - etiqueta y flecha adaptativas
+ax.text(pos_altura_x, altura/2, 'Altura',
+        ha='center', va='center', fontsize=10, fontweight='bold',
+        bbox=dict(boxstyle='round,pad=0.2', fc='white', ec='none', alpha=0.8))
 
 # Flecha bidireccional para la altura
 ax.annotate('',
-            xy=(radio_externo + 0.08*radio_externo, altura),  # Punto exacto donde termina la flecha arriba
-            xytext=(radio_externo + 0.08*radio_externo, 0),  # Punto exacto donde termina la flecha abajo
+            xy=(radio_externo + margen_x * 0.25, altura),
+            xytext=(radio_externo + margen_x * 0.25, 0),
             arrowprops=dict(arrowstyle='<->', color='black', lw=1.5))
 
 # Líneas horizontales para marcar los límites de la altura
-ax.plot([radio_externo, radio_externo + 0.15*radio_externo], [0, 0], 'k-', lw=1)
-ax.plot([radio_externo, radio_externo + 0.15*radio_externo], [altura, altura], 'k-', lw=1)
+ax.plot([radio_externo, radio_externo + margen_x * 0.4], [0, 0], 'k-', lw=1)
+ax.plot([radio_externo, radio_externo + margen_x * 0.4], [altura, altura], 'k-', lw=1)
 
-# Radio externo - flecha precisa
-ax.annotate(f'Radio externo = {radio_externo} {unidad}',
-            xy=(radio_interno, -0.08*altura),
-            xytext=(radio_interno, -0.08*altura),
-            ha='center', va='center', fontsize=9)
+# Radio externo - flecha precisa con fondo blanco
 ax.annotate('',
-            xy=(radio_externo, 0),  # Punto exacto donde termina la flecha
-            xytext=(0, 0),  # Punto de inicio
-            arrowprops=dict(arrowstyle='->', color='black', lw=1))
+            xy=(radio_externo, 0),
+            xytext=(0, 0),
+            arrowprops=dict(arrowstyle='->', color='black', lw=1.5))
+
+# Etiqueta de radio externo con fondo blanco
+ax.annotate(f'Radio externo = {radio_externo} {unidad}',
+            xy=(radio_interno, -espacio_etiqueta_inferior/2),
+            xytext=(radio_interno, -espacio_etiqueta_inferior/2),
+            ha='center', va='center', fontsize=10,
+            bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='none', alpha=0.8))
 
 # Optimizar el layout para eliminar espacios vacíos
-plt.tight_layout(pad=0.5)  # Reducir el padding
+plt.tight_layout(pad=0.5)
 # Guardar con recorte ajustado y mayor resolución para mantener calidad
 plt.savefig('cilindro_hueco.png', dpi=180, bbox_inches='tight', pad_inches=0.1)
 plt.close()
@@ -306,11 +356,48 @@ py_run_string(codigo_python)
 Question
 ========
 
-`r nombre` desea saber cuánto `r liquido` se necesita para llenar el `r recipiente` interno, pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
+`r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno, pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
 
 ```{r mostrar_cilindro_python, echo=FALSE, results='asis', fig.align='center'}
 # Mostrar la imagen del cilindro generada con Python
 cat("![](cilindro_hueco.png)")
+```
+
+```{r generar_tabla_tikz, echo=FALSE, results='asis'}
+# Aleatorizar colores de la tabla
+color_fondo_tabla <- sample(c("orange", "blue", "green", "cyan"), 1)
+intensidad_color <- sample(c(10, 15, 20, 25), 1)
+color_tabla <- paste0(color_fondo_tabla, "!", intensidad_color)
+
+# Crear tabla con TikZ
+tabla_tikz <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|c|c|c|}",
+  "    \\hline",
+  paste0("    \\rowcolor{", color_tabla, "}"),
+  "    \\textbf{Dimensión} & \\textbf{Valor} & \\textbf{Unidad} \\\\",
+  "    \\hline",
+  paste0("    Radio interno & ", r_int, " & ", unidad, " \\\\"),
+  "    \\hline",
+  paste0("    Radio externo & ", r_ext, " & ", unidad, " \\\\"),
+  "    \\hline",
+  paste0("    Diámetro externo & ", d_ext, " & ", unidad, " \\\\"),
+  "    \\hline",
+  paste0("    Grosor & ", r_ext - r_int, " & ", unidad, " \\\\"),
+  "    \\hline",
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+
+# Incluir la tabla TikZ
+include_tikz(tabla_tikz,
+             name = "tabla_datos",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "8cm")
 ```
 
 ¿Cuál medida le falta a `r nombre` para hallar la cantidad deseada?
