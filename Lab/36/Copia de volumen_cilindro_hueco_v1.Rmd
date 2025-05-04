@@ -4,6 +4,19 @@ output:
   pdf_document: default
   word_document: default
 ---
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 3
+  contenido:
+    categoria: geometria
+    tipo: no_generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -54,53 +67,63 @@ set.seed(sample(1:10000, 1))
 # Aleatorizamos los nombres para contextualizar el problema
 nombres <- c("Camilo", "Andrés", "Sofía", "Manuel", "Laura", "Carlos",
              "Daniela", "Miguel", "Valentina", "Eduardo", "Natalia",
-             "José", "Isabella", "Gabriel", "Mariana")
+             "José", "Isabella", "Gabriel", "Mariana", "Santiago", "Lucía",
+             "Alejandro", "Catalina", "Mateo", "Valeria", "Sebastián", "Juliana")
 nombre <- sample(nombres, 1)
 
 # Aleatorizamos los tipos de recipientes
 recipientes <- c("cilindro", "tubo", "conducto", "tanque cilíndrico",
-                 "recipiente cilíndrico", "contenedor cilíndrico")
+                 "recipiente cilíndrico", "contenedor cilíndrico",
+                 "ducto cilíndrico", "depósito cilíndrico", "cañería cilíndrica")
 recipiente <- sample(recipientes, 1)
 
 # Aleatorizar adjetivos para el cilindro interno
-adjetivos_interno <- c("interno", "hueco", "vacío", "interior")
+adjetivos_interno <- c("interno", "hueco", "vacío", "interior", "central", "medio")
 adjetivo_interno <- sample(adjetivos_interno, 1)
 
 # Aleatorizar líquidos
-liquidos <- c("aceite", "combustible", "líquido", "fluido")
+liquidos <- c("aceite", "combustible", "líquido", "fluido", "agua", "refrigerante",
+              "solución", "mezcla", "sustancia")
 liquido <- sample(liquidos, 1)
 
 # Aleatorizar lo que se desea calcular
-calculos <- c("la cantidad de", "el volumen de", "cuánto", "qué cantidad de")
+calculos <- c("la cantidad de", "el volumen de", "cuánto", "qué cantidad de",
+              "cuántos litros de", "qué volumen de", "la capacidad de")
 calculo <- sample(calculos, 1)
 
+# Aleatorizar verbos para la acción
+verbos <- c("llenar", "contener", "almacenar", "ocupar", "requerir")
+verbo <- sample(verbos, 1)
+
 # Aleatorizar medidas del cilindro (manteniendo consistencia matemática)
-# Diámetro externo (entre 0.3 y 0.8 metros)
-d_ext <- round(runif(1, 0.3, 0.8), 1)
+# Primero generamos el radio interno (entre 0.1 y 0.4 metros)
+r_int <- round(runif(1, 0.1, 0.4), 2)
 
-# Radio interno (entre 0.5 y 1.5 metros)
-r_int <- round(runif(1, 0.5, 1.5), 1)
+# Luego generamos el radio externo, asegurando que sea mayor que el interno
+# Radio externo entre 1.5 y 2.5 veces el radio interno
+factor_radio <- runif(1, 1.5, 2.5)
+r_ext <- round(r_int * factor_radio, 2)
 
-# Altura del cilindro (entre 1 y 3 metros)
-altura <- round(runif(1, 1, 3), 1)
+# Calculamos el diámetro externo (exactamente 2 veces el radio externo)
+d_ext <- 2 * r_ext
 
-# Asegurar que las dimensiones tengan sentido (radio interno < radio externo)
-while (r_int >= d_ext/2) {
-  d_ext <- round(runif(1, max(r_int * 2.1, 0.3), max(r_int * 3, 0.8)), 1)
+# Altura del cilindro (entre 0.5 y 4 metros)
+altura <- round(runif(1, 0.5, 4), 2)
+
+# Calcular el grosor de la pared del cilindro
+grosor <- r_ext - r_int
+
+# Verificar coherencia física
+if (grosor < 0.05) {
+  # Asegurar un grosor mínimo de 0.05 unidades
+  grosor <- round(runif(1, 0.05, 0.2), 2)
+  r_ext <- r_int + grosor
+  # Asegurar que el diámetro externo sea exactamente 2 veces el radio externo
+  d_ext <- 2 * r_ext
 }
-
-# Calcular radio externo
-r_ext <- d_ext / 2
 
 # Calcular el volumen necesario (es el volumen del cilindro interior)
-volumen <- pi * (r_int^2) * altura
-
-# Verificar dimensiones para coherencia física
-# El diámetro externo debe ser mayor que dos veces el radio interno
-if (d_ext <= 2 * r_int) {
-  d_ext <- 2 * r_int + round(runif(1, 0.1, 0.5), 1)
-  r_ext <- d_ext / 2
-}
+volumen <- round(pi * (r_int^2) * altura, 2)
 
 # Aleatorizar unidades de medida
 unidades_longitud <- c("m", "cm", "dm")
@@ -335,20 +358,3 @@ extype: schoice
 exsolution: 0010
 exshuffle: TRUE
 exsection: Geometría|Volumen|Cilindro
-
-# Metadatos ICFES
-exextra[Tópico]: Geometría
-exextra[Competencia]: Razonamiento
-exextra[Dificultad]: Media
-exextra[Estandar]: Utilizo técnicas y herramientas para la construcción de figuras planas y cuerpos con medidas dadas.
-exextra[Aprendizaje]: Establecer y utilizar diferentes procedimientos de cálculo para hallar medidas de superficies y volúmenes.
-exextra[Evidencia]: Resolver problemas que involucran el cálculo de volúmenes de cilindros.
-exextra[Componente]: Espacial-Métrico
-exextra[Proceso]: Resolución de problemas
-exextra[Contexto]: Científico
-exextra[Estrategia]: Identificar los datos faltantes para resolver un problema de volumen de un cilindro hueco.
-exextra[Tiempo]: 3 minutos
-exextra[Pregunta]: 1
-exextra[Aleatorización]: Si
-exextra[Esquema]: Selección múltiple con única respuesta
-exextra[Formato]: Imagen
