@@ -1,11 +1,30 @@
 # ejecutar_pruebas_cilindro_visual.R
 # Script para analizar la coherencia visual de las gráficas en volumen_cilindro_hueco_v1.Rmd
 
-library(testthat)
-library(png)
-library(exams)
-library(reticulate)
-library(digest)
+# Función para verificar e instalar paquetes necesarios
+check_and_install_packages <- function(packages) {
+  missing_packages <- packages[!sapply(packages, requireNamespace, quietly = TRUE)]
+  if (length(missing_packages) > 0) {
+    cat("Los siguientes paquetes son necesarios pero no están instalados:\n")
+    cat(paste(" -", missing_packages, collapse = "\n"), "\n\n")
+
+    install_choice <- readline(prompt = "¿Desea instalar estos paquetes ahora? (s/n): ")
+    if (tolower(install_choice) == "s") {
+      install.packages(missing_packages)
+    } else {
+      stop("No se pueden ejecutar las pruebas sin los paquetes necesarios.")
+    }
+  }
+
+  # Cargar los paquetes
+  for (pkg in packages) {
+    library(pkg, character.only = TRUE)
+  }
+}
+
+# Verificar e instalar paquetes necesarios
+required_packages <- c("testthat", "png", "exams", "reticulate", "digest")
+check_and_install_packages(required_packages)
 
 # Archivo a probar
 archivo_rmd <- "volumen_cilindro_hueco_v1.Rmd"
