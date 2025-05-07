@@ -1,4 +1,16 @@
-﻿\begin{tikzpicture}[
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+% Cargar bibliotecas adicionales de TikZ
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{fadings}
+
+\begin{document}
+
+\begin{tikzpicture}[
   % Definir estilos globales para mejorar la apariencia
   line cap=round,
   line join=round,
@@ -6,9 +18,6 @@
   thick, % Líneas más gruesas por defecto
   scale=1.1, % Escalar ligeramente toda la figura
 ]
-
-% Cargar bibliotecas adicionales
-\usetikzlibrary{calc,decorations.markings,shadows.blur,fadings}
 
 % Definimos algunas variables utilizando \pgfmathsetmacro
 \pgfmathsetmacro{\altura}{3} % Altura del cilindro (unidad arbitraria, ej: metros)
@@ -95,7 +104,7 @@
 \coordinate (puntoControlRadioInterno) at ($(etiquetaRadioInterno) + (-1.0, -0.6)$);
 \coordinate (puntoFinalRadioInterno) at ($(centrosuperior)!0.65!(r0t) + (0.1, 0.1)$);
 \draw [linea_indicadora] (etiquetaRadioInterno) -- (puntoControlRadioInterno) -- (puntoFinalRadioInterno);
-\node[etiqueta, fill=white, rounded corners=3pt, inner sep=3pt] at (etiquetaRadioInterno) {Radio interno = \radiointerno{} m};
+\node[etiqueta, fill=white, fill opacity=0.7, text opacity=1, rounded corners=3pt, inner sep=3pt] at (etiquetaRadioInterno) {Radio interno = \radiointerno{} m};
 
 % Grosor = 0,5 m (mantener línea original y añadir etiqueta alejada) - Movido a la izquierda
 \draw [linea_medicion] (-r0t) -- (-R0t);
@@ -103,7 +112,7 @@
 \coordinate (puntoControlGrosor) at ($(etiquetaGrosor) + (0.7, -0.7)$);
 \coordinate (puntoFinalGrosor) at ($(-r0t)!0.5!(-R0t) + (-0.1, 0.1)$);
 \draw [linea_indicadora] (etiquetaGrosor) -- (puntoControlGrosor) -- (puntoFinalGrosor);
-\node[etiqueta, fill=white, rounded corners=3pt, inner sep=3pt] at (etiquetaGrosor) {Grosor = \grosor{} m};
+\node[etiqueta, fill=white, fill opacity=0.7, text opacity=1, rounded corners=3pt, inner sep=3pt] at (etiquetaGrosor) {Grosor = \grosor{} m};
 
 % Diámetro externo (mantener línea original y añadir etiqueta alejada)
 \coordinate (diamExtIzq) at ($(-R0t) + (0, 0.75)$);
@@ -113,7 +122,7 @@
 \coordinate (puntoControlDiametro) at ($(etiquetaDiametro) + (0, -0.6)$);
 \coordinate (puntoFinalDiametro) at ($(diamExtIzq)!0.5!(diamExtDer) + (0, 0.1)$);
 \draw [linea_indicadora] (etiquetaDiametro) -- (puntoControlDiametro) -- (puntoFinalDiametro);
-\node[etiqueta, fill=white, rounded corners=3pt, inner sep=3pt] at (etiquetaDiametro) {Diámetro externo};
+\node[etiqueta, fill=white, fill opacity=0.7, text opacity=1, rounded corners=3pt, inner sep=3pt] at (etiquetaDiametro) {Diámetro externo};
 
 % Radio externo (mantener línea original y añadir etiqueta alejada)
 \draw [linea_radio] (centroinferior) -- (R0b);
@@ -121,6 +130,8 @@
 \coordinate (puntoControlRadioExterno) at ($(etiquetaRadioExterno) + (-1.0, 0.4)$);
 \coordinate (puntoFinalRadioExterno) at ($(centroinferior)!0.7!(R0b) + (0.1, -0.1)$);
 \draw [linea_indicadora] (etiquetaRadioExterno) -- (puntoControlRadioExterno) -- (puntoFinalRadioExterno);
-\node[etiqueta, fill=white, rounded corners=3pt, inner sep=3pt] at (etiquetaRadioExterno) {Radio externo};
+\node[etiqueta, fill=white, fill opacity=0.7, text opacity=1, rounded corners=3pt, inner sep=3pt] at (etiquetaRadioExterno) {Radio externo};
 
 \end{tikzpicture}
+
+\end{document}

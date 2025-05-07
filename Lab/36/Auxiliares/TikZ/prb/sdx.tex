@@ -1,0 +1,21 @@
+\documentclass[border=0.2cm]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+\node[cylinder, 
+	draw = violet, 
+	text = purple,
+	cylinder uses custom fill, 
+	cylinder body fill = magenta!10, 
+	cylinder end fill = magenta!40,
+	aspect = 0.3, 
+	shape border rotate = 100] (c) at (0,0) {Cylinder};
+
+\end{tikzpicture}
+
+\end{document}
