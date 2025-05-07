@@ -1,0 +1,458 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 3
+  contenido:
+    categoria: geometria
+    tipo: no_generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage[utf8]{inputenc}",
+  "\\usepackage[T1]{fontenc}",
+  "\\usepackage{amsmath,amssymb}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorizamos los nombres para contextualizar el problema
+nombres <- c("Camilo", "Andrés", "Sofía", "Manuel", "Laura", "Carlos",
+             "Daniela", "Miguel", "Valentina", "Eduardo", "Natalia",
+             "José", "Isabella", "Gabriel", "Mariana", "Santiago", "Lucía",
+             "Alejandro", "Catalina", "Mateo", "Valeria", "Sebastián", "Juliana")
+nombre <- sample(nombres, 1)
+
+# Aleatorizamos los tipos de recipientes
+recipientes <- c("cilindro", "tubo", "conducto", "tanque cilíndrico",
+                 "recipiente cilíndrico", "contenedor cilíndrico",
+                 "ducto cilíndrico", "depósito cilíndrico", "cañería cilíndrica")
+recipiente <- sample(recipientes, 1)
+
+# Aleatorizar adjetivos para el cilindro interno
+adjetivos_interno <- c("interno", "hueco", "vacío", "interior", "central", "medio")
+adjetivo_interno <- sample(adjetivos_interno, 1)
+
+# Aleatorizar líquidos
+liquidos <- c("aceite", "combustible", "líquido", "fluido", "agua", "refrigerante",
+              "solución", "mezcla", "sustancia")
+liquido <- sample(liquidos, 1)
+
+# Aleatorizar lo que se desea calcular
+calculos <- c("la cantidad de", "el volumen de", "cuánto", "qué cantidad de",
+              "cuántos litros de", "qué volumen de", "la capacidad de")
+calculo <- sample(calculos, 1)
+
+# Aleatorizar verbos para la acción
+verbos <- c("llenar", "contener", "almacenar", "ocupar", "requerir")
+verbo <- sample(verbos, 1)
+
+# Aleatorizar medidas del cilindro (manteniendo consistencia matemática)
+# Primero generamos el radio interno (entre 0.1 y 0.4 metros)
+r_int <- round(runif(1, 0.1, 0.4), 2)
+
+# Luego generamos el radio externo, asegurando que sea mayor que el interno
+# Radio externo entre 1.5 y 2.5 veces el radio interno
+factor_radio <- runif(1, 1.5, 2.5)
+r_ext <- round(r_int * factor_radio, 2)
+
+# Calculamos el diámetro externo (exactamente 2 veces el radio externo)
+d_ext <- 2 * r_ext
+
+# Altura del cilindro (entre 0.5 y 4 metros)
+altura <- round(runif(1, 0.5, 4), 2)
+
+# Calcular el grosor de la pared del cilindro
+grosor <- r_ext - r_int
+
+# Verificar coherencia física
+if (grosor < 0.05) {
+  # Asegurar un grosor mínimo de 0.05 unidades
+  grosor <- round(runif(1, 0.05, 0.2), 2)
+  r_ext <- r_int + grosor
+  # Asegurar que el diámetro externo sea exactamente 2 veces el radio externo
+  d_ext <- 2 * r_ext
+}
+
+# Calcular el volumen necesario (es el volumen del cilindro interior)
+volumen <- round(pi * (r_int^2) * altura, 2)
+
+# Aleatorizar unidades de medida
+unidades_longitud <- c("m", "cm", "dm")
+unidad <- sample(unidades_longitud, 1)
+
+# Ajustar valores según la unidad
+factor_conversion <- 1
+if (unidad == "cm") {
+  factor_conversion <- 100
+  d_ext <- d_ext * factor_conversion
+  r_int <- r_int * factor_conversion
+  altura <- altura * factor_conversion
+  volumen <- volumen * (factor_conversion^3)
+  r_ext <- r_ext * factor_conversion
+} else if (unidad == "dm") {
+  factor_conversion <- 10
+  d_ext <- d_ext * factor_conversion
+  r_int <- r_int * factor_conversion
+  altura <- altura * factor_conversion
+  volumen <- volumen * (factor_conversion^3)
+  r_ext <- r_ext * factor_conversion
+}
+
+# Redondear todos los valores para mayor claridad
+d_ext <- round(d_ext, 1)
+r_int <- round(r_int, 1)
+altura <- round(altura, 1)
+r_ext <- round(r_ext, 1)
+volumen <- round(volumen, 1)
+
+# La respuesta correcta es "C) Altura del cilindro"
+# Ya que para calcular el volumen necesitaríamos conocer la altura
+opcion_correcta <- 3 # Índice de "Altura del cilindro" en el vector de opciones
+
+# Vector de solución para r-exams (1 para la correcta, 0 para las incorrectas)
+solucion <- c(0, 0, 1, 0)
+```
+
+```{r generar_cilindro_python, message=FALSE, warning=FALSE}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Código Python para generar el cilindro hueco similar a la imagen de referencia
+codigo_python <- paste0("
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Ellipse, FancyArrowPatch, Polygon
+
+# Parámetros del cilindro
+radiointerno = ", r_int, "  # ", unidad, "
+radioexterno = ", r_ext, "  # ", unidad, "
+altura = ", altura, "  # ", unidad, "
+diametro_externo = ", d_ext, "  # ", unidad, "
+grosor = radioexterno - radiointerno  # ", unidad, "
+unidad = '", unidad, "'
+
+# Crear figura
+fig, ax = plt.subplots(figsize=(8, 8))
+
+# Colores
+azul_cilindro = '#4682B4'  # Azul para contornos
+azul_relleno = '#EBF5FF'   # Azul muy claro para el relleno
+gris_linea = '#BBBBBB'     # Gris para líneas punteadas
+
+# Factores de perspectiva para las elipses
+factor_elipse = 0.35
+vradio_ext = radioexterno * factor_elipse
+vradio_int = radiointerno * factor_elipse
+
+# Centros del cilindro
+centro_superior = (0, altura)
+centro_inferior = (0, 0)
+
+# Rellenar el cilindro con color azul claro
+# Crear coordenadas para el cuerpo exterior visible
+theta_vals = np.linspace(-np.pi, 0, 50)
+x_ext_front = radioexterno * np.cos(theta_vals)
+y_ext_front_inf = vradio_ext * np.sin(theta_vals)
+y_ext_front_sup = altura + vradio_ext * np.sin(theta_vals)
+
+# Polígono para el cuerpo exterior
+ext_body_points = []
+for i in range(len(theta_vals)):
+    ext_body_points.append((x_ext_front[i], y_ext_front_inf[i]))
+ext_body_points.append((radioexterno, 0))
+ext_body_points.append((radioexterno, altura))
+for i in range(len(theta_vals)-1, -1, -1):
+    ext_body_points.append((x_ext_front[i], y_ext_front_sup[i]))
+ext_body_polygon = Polygon(ext_body_points, closed=True, facecolor=azul_relleno, 
+                         edgecolor='none', alpha=0.5, zorder=1)
+ax.add_patch(ext_body_polygon)
+
+# Polígono para el cuerpo interior (hueco)
+x_int_front = radiointerno * np.cos(theta_vals)
+y_int_front_inf = vradio_int * np.sin(theta_vals)
+y_int_front_sup = altura + vradio_int * np.sin(theta_vals)
+
+int_body_points = []
+for i in range(len(theta_vals)):
+    int_body_points.append((x_int_front[i], y_int_front_inf[i]))
+int_body_points.append((radiointerno, 0))
+int_body_points.append((radiointerno, altura))
+for i in range(len(theta_vals)-1, -1, -1):
+    int_body_points.append((x_int_front[i], y_int_front_sup[i]))
+int_body_polygon = Polygon(int_body_points, closed=True, facecolor='white', 
+                         edgecolor='none', zorder=2)
+ax.add_patch(int_body_polygon)
+
+# LÍNEAS PUNTEADAS PARA MEJORAR LA PERSPECTIVA 3D
+# 1. Líneas punteadas en la parte posterior (arcos)
+theta_back = np.linspace(0, np.pi, 50)
+x_back_ext = radioexterno * np.cos(theta_back)
+y_back_ext_inf = vradio_ext * np.sin(theta_back)
+y_back_ext_sup = altura + vradio_ext * np.sin(theta_back)
+x_back_int = radiointerno * np.cos(theta_back)
+y_back_int_inf = vradio_int * np.sin(theta_back)
+y_back_int_sup = altura + vradio_int * np.sin(theta_back)
+
+# Arcos posteriores inferiores
+ax.plot(x_back_ext, y_back_ext_inf, linestyle='--', color=gris_linea, linewidth=1, zorder=3)
+ax.plot(x_back_int, y_back_int_inf, linestyle='--', color=gris_linea, linewidth=1, zorder=3)
+
+# Arcos posteriores superiores
+ax.plot(x_back_ext, y_back_ext_sup, linestyle='--', color=gris_linea, linewidth=1, zorder=3)
+ax.plot(x_back_int, y_back_int_sup, linestyle='--', color=gris_linea, linewidth=1, zorder=3)
+
+# 2. Líneas verticales punteadas en la parte posterior
+# Obtener puntos específicos en la parte posterior para las líneas verticales
+# Estos serán en 45°, 90° y 135° para dar buena perspectiva
+angles = [np.pi/4, np.pi/2, 3*np.pi/4]  # 45°, 90°, 135°
+for angle in angles:
+    # Puntos para el radio externo
+    x_ext = radioexterno * np.cos(angle)
+    y_ext_inf = vradio_ext * np.sin(angle)
+    y_ext_sup = altura + vradio_ext * np.sin(angle)
+    ax.plot([x_ext, x_ext], [y_ext_inf, y_ext_sup], linestyle='--', color=gris_linea, linewidth=1, zorder=3)
+    
+    # Puntos para el radio interno
+    x_int = radiointerno * np.cos(angle)
+    y_int_inf = vradio_int * np.sin(angle)
+    y_int_sup = altura + vradio_int * np.sin(angle)
+    ax.plot([x_int, x_int], [y_int_inf, y_int_sup], linestyle='--', color=gris_linea, linewidth=1, zorder=3)
+
+# Dibujar líneas del cilindro (visibles)
+# 1. Líneas verticales frontales
+ax.plot([radioexterno, radioexterno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([-radioexterno, -radioexterno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([radiointerno, radiointerno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([-radiointerno, -radiointerno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+
+# 2. Elipses (bases)
+elipse_sup_ext = Ellipse(centro_superior, 2*radioexterno, 2*vradio_ext, 
+                        fill=False, edgecolor=azul_cilindro, linewidth=1.5, zorder=5)
+ax.add_patch(elipse_sup_ext)
+
+elipse_inf_ext = Ellipse(centro_inferior, 2*radioexterno, 2*vradio_ext, 
+                        fill=False, edgecolor=azul_cilindro, linewidth=1.5, zorder=5)
+ax.add_patch(elipse_inf_ext)
+
+elipse_sup_int = Ellipse(centro_superior, 2*radiointerno, 2*vradio_int, 
+                        fill=False, edgecolor=azul_cilindro, linewidth=1.5, zorder=5)
+ax.add_patch(elipse_sup_int)
+
+elipse_inf_int = Ellipse(centro_inferior, 2*radiointerno, 2*vradio_int, 
+                        fill=False, edgecolor=azul_cilindro, linewidth=1.5, zorder=5)
+ax.add_patch(elipse_inf_int)
+
+# 3. Arcos frontales (semielipses inferiores)
+theta_front = np.linspace(-np.pi, 0, 50)
+x_front_ext = radioexterno * np.cos(theta_front)
+y_front_ext_inf = vradio_ext * np.sin(theta_front)
+x_front_int = radiointerno * np.cos(theta_front)
+y_front_int_inf = vradio_int * np.sin(theta_front)
+
+ax.plot(x_front_ext, y_front_ext_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot(x_front_int, y_front_int_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
+
+# Añadir puntos centrales
+ax.plot(0, altura, 'o', color=azul_cilindro, markersize=4, zorder=6)
+ax.plot(0, 0, 'o', color=azul_cilindro, markersize=4, zorder=6)
+
+# Añadir flechas de radio
+ax.add_patch(FancyArrowPatch((0, altura), (radiointerno, altura), arrowstyle='->', 
+                           color=azul_cilindro, linewidth=1, mutation_scale=10, zorder=6))
+ax.add_patch(FancyArrowPatch((0, 0), (radioexterno, 0), arrowstyle='->', 
+                           color=azul_cilindro, linewidth=1, mutation_scale=10, zorder=6))
+
+# FLECHAS Y ETIQUETAS DE DIMENSIONES
+# Propiedades comunes para flechas
+flecha_props = dict(arrowstyle='<->', color='black', linewidth=1, mutation_scale=10)
+
+# 1. DIÁMETRO EXTERNO
+diam_y = altura + vradio_ext*2 + altura*0.15
+ax.add_patch(FancyArrowPatch((-radioexterno, diam_y), (radioexterno, diam_y), **flecha_props))
+ax.text(0, diam_y + altura*0.08, 'Diámetro externo', fontweight='bold', ha='center', va='center')
+
+# 2. ALTURA
+altura_x = radioexterno + radioexterno*0.4
+ax.add_patch(FancyArrowPatch((altura_x, 0), (altura_x, altura), **flecha_props))
+ax.text(altura_x + radioexterno*0.15, altura/2, 'Altura', fontweight='bold', rotation=90, ha='center', va='center')
+
+# 3. RADIO INTERNO
+radio_int_label_pos = (radiointerno*2, altura + altura*0.3)
+ax.plot([radiointerno, radio_int_label_pos[0]], [altura, radio_int_label_pos[1]], 'k-', linewidth=0.8)
+ax.plot([radio_int_label_pos[0]-0.1, radio_int_label_pos[0]], [radio_int_label_pos[1], radio_int_label_pos[1]], 'k-', linewidth=0.8)
+ax.text(radio_int_label_pos[0], radio_int_label_pos[1], 
+       f'Radio interno = {radiointerno} {unidad}', fontweight='bold', ha='left', va='center')
+
+# 4. GROSOR
+ax.add_patch(FancyArrowPatch((-radiointerno, altura), (-radioexterno, altura), **flecha_props, zorder=6))
+grosor_label_pos = (-radioexterno*2, altura + altura*0.3)
+ax.plot([-radioexterno, grosor_label_pos[0]], [altura, grosor_label_pos[1]], 'k-', linewidth=0.8)
+ax.plot([grosor_label_pos[0], grosor_label_pos[0]+0.1], [grosor_label_pos[1], grosor_label_pos[1]], 'k-', linewidth=0.8)
+ax.text(grosor_label_pos[0], grosor_label_pos[1], 
+       f'Grosor = {grosor} {unidad}', fontweight='bold', ha='right', va='center')
+
+# 5. RADIO EXTERNO
+radio_ext_label_pos = (radioexterno*2, -altura*0.25)
+ax.plot([radioexterno, radio_ext_label_pos[0]], [0, radio_ext_label_pos[1]], 'k-', linewidth=0.8)
+ax.plot([radio_ext_label_pos[0]-0.1, radio_ext_label_pos[0]], [radio_ext_label_pos[1], radio_ext_label_pos[1]], 'k-', linewidth=0.8)
+ax.text(radio_ext_label_pos[0], radio_ext_label_pos[1], 
+       'Radio externo', fontweight='bold', ha='left', va='center')
+
+# Ajustar límites y aspecto de la figura
+margin = max(radioexterno, altura) * 0.8
+ax.set_xlim(-radioexterno - margin, radioexterno + margin)
+ax.set_ylim(-margin, altura + margin)
+ax.set_aspect('equal')
+ax.axis('off')
+
+# Guardar la figura
+plt.tight_layout(pad=1.0)
+plt.savefig('cilindro_hueco.png', dpi=300, bbox_inches='tight', transparent=True)
+plt.close()
+")
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+```
+
+Question
+========
+
+`r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno, pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
+
+```{r mostrar_cilindro_python, echo=FALSE, results='asis', fig.align='center'}
+# Mostrar la imagen del cilindro generada con Python
+cat("![](cilindro_hueco.png)")
+```
+
+```{r generar_tabla_tikz, echo=FALSE, results='asis'}
+# Aleatorizar colores de la tabla
+color_fondo_tabla <- sample(c("orange", "blue", "green", "cyan"), 1)
+intensidad_color <- sample(c(10, 15, 20, 25), 1)
+color_tabla <- paste0(color_fondo_tabla, "!", intensidad_color)
+
+# Crear tabla con TikZ
+tabla_tikz <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|c|c|c|}",
+  "    \\hline",
+  paste0("    \\rowcolor{", color_tabla, "}"),
+  "    \\textbf{Dimensión} & \\textbf{Valor} & \\textbf{Unidad} \\\\",
+  "    \\hline",
+  paste0("    Radio interno & ", r_int, " & ", unidad, " \\\\"),
+  "    \\hline",
+  paste0("    Radio externo & ", r_ext, " & ", unidad, " \\\\"),
+  "    \\hline",
+  paste0("    Diámetro externo & ", d_ext, " & ", unidad, " \\\\"),
+  "    \\hline",
+  paste0("    Grosor & ", r_ext - r_int, " & ", unidad, " \\\\"),
+  "    \\hline",
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+
+# Incluir la tabla TikZ
+include_tikz(tabla_tikz,
+             name = "tabla_datos",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "8cm")
+```
+
+¿Cuál medida le falta a `r nombre` para hallar la cantidad deseada?
+
+Answerlist
+----------
+- Radio externo.
+- Diámetro externo.
+- Altura del cilindro.
+- Perímetro del cilindro.
+
+Solution
+========
+
+La respuesta correcta es: **Altura del cilindro**.
+
+Para calcular el volumen de `r liquido` necesario para llenar el `r recipiente` `r adjetivo_interno`, necesitamos calcular el volumen de un cilindro, cuya fórmula es:
+
+$V = \pi \cdot r^2 \cdot h$
+
+Donde:
+
+- $r$ es el radio (en este caso, el radio interno = `r r_int` `r unidad`)
+- $h$ es la altura del cilindro
+
+En el problema se nos proporciona:
+
+- Diámetro externo = `r d_ext` `r unidad`
+- Radio interno = `r r_int` `r unidad`
+
+Sin embargo, no se nos proporciona la altura del cilindro, que es esencial para calcular el volumen. Por lo tanto, a `r nombre` le falta conocer la altura del cilindro para poder calcular la cantidad de `r liquido` necesaria.
+
+Si tuviéramos la altura, el volumen se calcularía así:
+
+$V = \pi \cdot (`r r_int`)^2 \cdot h = `r round(pi * (r_int^2), 2)` \cdot h$ `r unidad`³
+
+Answerlist
+----------
+- Falso
+- Falso
+- Verdadero
+- Falso
+
+Meta-information
+================
+exname: volumen_cilindro_hueco
+extype: schoice
+exsolution: 0010
+exshuffle: TRUE
+exsection: Geometría|Volumen|Cilindro
