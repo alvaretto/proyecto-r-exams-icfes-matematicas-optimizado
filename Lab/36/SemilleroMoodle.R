@@ -3,7 +3,7 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "volumen_cilindro_hueco_py_v1.Rmd"
-copias <- 5
+copias <- 250
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)

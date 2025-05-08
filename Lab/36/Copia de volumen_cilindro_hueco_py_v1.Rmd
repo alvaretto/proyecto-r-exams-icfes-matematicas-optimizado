@@ -47,9 +47,9 @@ knitr::opts_chunk$set(
   fig.keep = 'all',
   dev = c("png", "pdf"),
   dpi = 150,
-  fig.width = 5,
-  fig.height = 5,
-  out.width = "60%"
+  fig.width = 4,      # Reducido de 5 a 4
+  fig.height = 4,     # Reducido de 5 a 4
+  out.width = "40%"   # Reducido de 60% a 40%
 )
 
 # Configuración para chunks de Python
@@ -202,7 +202,7 @@ grosor = ", grosor, "  # ", unidad, " (valor calculado directamente en R)
 unidad = '", unidad, "'
 
 # Crear figura con tamaño reducido
-fig, ax = plt.subplots(figsize=(5, 5))  # Reducido de 8x8 a 5x5
+fig, ax = plt.subplots(figsize=(4, 4))  # Reducido de 5x5 a 4x4
 
 # Colores
 azul_cilindro = '#4682B4'  # Azul para contornos
@@ -254,10 +254,10 @@ poligono_cuerpo_int = Polygon(puntos_cuerpo_int, closed=True, facecolor='white',
 ax.add_patch(poligono_cuerpo_int)
 
 # Dibujar líneas verticales
-ax.plot([radio_externo, radio_externo], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot([-radio_externo, -radio_externo], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot([radio_interno, radio_interno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot([-radio_interno, -radio_interno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([radio_externo, radio_externo], [0, altura], color=azul_cilindro, linewidth=1.2, zorder=5)
+ax.plot([-radio_externo, -radio_externo], [0, altura], color=azul_cilindro, linewidth=1.2, zorder=5)
+ax.plot([radio_interno, radio_interno], [0, altura], color=azul_cilindro, linewidth=1.2, zorder=5)
+ax.plot([-radio_interno, -radio_interno], [0, altura], color=azul_cilindro, linewidth=1.2, zorder=5)
 
 # LÍNEAS PUNTEADAS PARA LAS PARTES NO VISIBLES DE LAS TAPAS SUPERIOR E INFERIOR
 # Semielipses posteriores (arco trasero)
@@ -270,7 +270,7 @@ y_trasero_int_inf = vradio_int * np.sin(angulos_traseros)
 y_trasero_int_sup = altura + vradio_int * np.sin(angulos_traseros)
 
 # Dibujar líneas punteadas para las semielipses posteriores
-linea_punteada = {'linestyle': '--', 'color': gris_linea, 'linewidth': 1.2, 'zorder': 3,
+linea_punteada = {'linestyle': '--', 'color': gris_linea, 'linewidth': 1.0, 'zorder': 3,
                  'dashes': [3, 2]}  # Líneas punteadas correctas
 
 # Semielipses posteriores inferiores
@@ -289,77 +289,77 @@ y_frontal_ext_inf = vradio_ext * np.sin(angulos_frontales)
 x_frontal_int = radio_interno * np.cos(angulos_frontales)
 y_frontal_int_inf = vradio_int * np.sin(angulos_frontales)
 
-ax.plot(x_frontal_ext, y_frontal_ext_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot(x_frontal_int, y_frontal_int_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot(x_frontal_ext, y_frontal_ext_inf, color=azul_cilindro, linewidth=1.2, zorder=5)
+ax.plot(x_frontal_int, y_frontal_int_inf, color=azul_cilindro, linewidth=1.2, zorder=5)
 
 # Semielipses frontales superiores
 y_frontal_ext_sup = altura + vradio_ext * np.sin(angulos_frontales)
 y_frontal_int_sup = altura + vradio_int * np.sin(angulos_frontales)
-ax.plot(x_frontal_ext, y_frontal_ext_sup, color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot(x_frontal_int, y_frontal_int_sup, color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot(x_frontal_ext, y_frontal_ext_sup, color=azul_cilindro, linewidth=1.2, zorder=5)
+ax.plot(x_frontal_int, y_frontal_int_sup, color=azul_cilindro, linewidth=1.2, zorder=5)
 
 # Añadir puntos centrales
-ax.plot(0, altura, 'o', color=azul_cilindro, markersize=4, zorder=6)
-ax.plot(0, 0, 'o', color=azul_cilindro, markersize=4, zorder=6)
+ax.plot(0, altura, 'o', color=azul_cilindro, markersize=3, zorder=6)
+ax.plot(0, 0, 'o', color=azul_cilindro, markersize=3, zorder=6)
 
 # Añadir flechas de radio
 ax.add_patch(FancyArrowPatch((0, altura), (radio_interno, altura), arrowstyle='->', 
-                           color=azul_cilindro, linewidth=1, mutation_scale=10, zorder=6))
+                           color=azul_cilindro, linewidth=0.8, mutation_scale=8, zorder=6))
 ax.add_patch(FancyArrowPatch((0, 0), (radio_externo, 0), arrowstyle='->', 
-                           color=azul_cilindro, linewidth=1, mutation_scale=10, zorder=6))
+                           color=azul_cilindro, linewidth=0.8, mutation_scale=8, zorder=6))
 
 # FLECHAS Y ETIQUETAS DE DIMENSIONES
-# Propiedades comunes para flechas (reducidas para mejor proporción)
-flecha_props = dict(arrowstyle='<->', color='black', linewidth=0.8, mutation_scale=8)
+# Propiedades comunes para flechas
+flecha_props = dict(arrowstyle='<->', color='black', linewidth=0.6, mutation_scale=6)
 
 # 1. DIÁMETRO EXTERNO
-diam_y = altura + vradio_ext*2 + altura*0.2
+diam_y = altura + vradio_ext*2 + altura*0.15
 ax.add_patch(FancyArrowPatch((-radio_externo, diam_y), (radio_externo, diam_y), **flecha_props))
-ax.text(0, diam_y + altura*0.08, f'Diámetro externo = {", d_ext_fmt, "} {unidad}', 
-       fontweight='bold', ha='center', va='center', fontsize=8)
+ax.text(0, diam_y + altura*0.06, f'Diámetro externo = {", d_ext_fmt, "} {unidad}', 
+       fontweight='bold', ha='center', va='center', fontsize=7)
 
 # 2. ALTURA
-altura_x = radio_externo + radio_externo*0.4
+altura_x = radio_externo + radio_externo*0.3
 ax.add_patch(FancyArrowPatch((altura_x, 0), (altura_x, altura), **flecha_props))
-ax.text(altura_x + radio_externo*0.12, altura/2, 'Altura', 
-       fontweight='bold', rotation=90, ha='center', va='center', fontsize=8)
+ax.text(altura_x + radio_externo*0.1, altura/2, 'Altura', 
+       fontweight='bold', rotation=90, ha='center', va='center', fontsize=7)
 
 # 3. RADIO INTERNO
-radio_int_label_pos = (radio_interno*2.2, altura + altura*0.25)
-ax.plot([radio_interno, radio_int_label_pos[0]], [altura, radio_int_label_pos[1]], 'k-', linewidth=0.7)
-ax.plot([radio_int_label_pos[0]-0.1, radio_int_label_pos[0]], [radio_int_label_pos[1], radio_int_label_pos[1]], 'k-', linewidth=0.7)
+radio_int_label_pos = (radio_interno*2.0, altura + altura*0.2)
+ax.plot([radio_interno, radio_int_label_pos[0]], [altura, radio_int_label_pos[1]], 'k-', linewidth=0.6)
+ax.plot([radio_int_label_pos[0]-0.1, radio_int_label_pos[0]], [radio_int_label_pos[1], radio_int_label_pos[1]], 'k-', linewidth=0.6)
 ax.text(radio_int_label_pos[0], radio_int_label_pos[1], 
        f'Radio interno = {", r_int_fmt, "} {unidad}', 
-       fontweight='bold', ha='left', va='center', fontsize=8)
+       fontweight='bold', ha='left', va='center', fontsize=7)
 
 # 4. GROSOR
 grosor_start = -radio_externo + (radio_externo - radio_interno)/2
 ax.add_patch(FancyArrowPatch((-radio_interno, altura), (-radio_externo, altura), **flecha_props, zorder=6))
-grosor_label_pos = (-radio_externo*2.2, altura + altura*0.25)
-ax.plot([-radio_externo, grosor_label_pos[0]], [altura, grosor_label_pos[1]], 'k-', linewidth=0.7)
-ax.plot([grosor_label_pos[0], grosor_label_pos[0]+0.1], [grosor_label_pos[1], grosor_label_pos[1]], 'k-', linewidth=0.7)
+grosor_label_pos = (-radio_externo*2.0, altura + altura*0.2)
+ax.plot([-radio_externo, grosor_label_pos[0]], [altura, grosor_label_pos[1]], 'k-', linewidth=0.6)
+ax.plot([grosor_label_pos[0], grosor_label_pos[0]+0.1], [grosor_label_pos[1], grosor_label_pos[1]], 'k-', linewidth=0.6)
 ax.text(grosor_label_pos[0], grosor_label_pos[1], 
        f'Grosor = {", grosor_fmt, "} {unidad}', 
-       fontweight='bold', ha='right', va='center', fontsize=8)
+       fontweight='bold', ha='right', va='center', fontsize=7)
 
 # 5. RADIO EXTERNO
-radio_ext_label_pos = (radio_externo*2.2, -altura*0.25)
-ax.plot([radio_externo, radio_ext_label_pos[0]], [0, radio_ext_label_pos[1]], 'k-', linewidth=0.7)
-ax.plot([radio_ext_label_pos[0]-0.1, radio_ext_label_pos[0]], [radio_ext_label_pos[1], radio_ext_label_pos[1]], 'k-', linewidth=0.7)
+radio_ext_label_pos = (radio_externo*2.0, -altura*0.2)
+ax.plot([radio_externo, radio_ext_label_pos[0]], [0, radio_ext_label_pos[1]], 'k-', linewidth=0.6)
+ax.plot([radio_ext_label_pos[0]-0.1, radio_ext_label_pos[0]], [radio_ext_label_pos[1], radio_ext_label_pos[1]], 'k-', linewidth=0.6)
 ax.text(radio_ext_label_pos[0], radio_ext_label_pos[1], 
        f'Radio externo = {", r_ext_fmt, "} {unidad}', 
-       fontweight='bold', ha='left', va='center', fontsize=8)
+       fontweight='bold', ha='left', va='center', fontsize=7)
 
 # Ajustar límites y aspecto de la figura
-margen = max(radio_externo, altura) * 0.8
+margen = max(radio_externo, altura) * 0.7  # Reducido de 0.8 a 0.7
 ax.set_xlim(-radio_externo - margen, radio_externo + margen)
-ax.set_ylim(-margen*0.7, altura + margen*1.1)
+ax.set_ylim(-margen*0.6, altura + margen)  # Ajustado para reducir espacio vertical
 ax.set_aspect('equal')
 ax.axis('off')
 
 # Guardar la figura con espacio ajustado para etiquetas
-plt.tight_layout(pad=1.0)
-plt.savefig('cilindro_hueco.png', dpi=200, bbox_inches='tight', transparent=True)
+plt.tight_layout(pad=0.8)  # Reducido de 1.0 a 0.8
+plt.savefig('cilindro_hueco.png', dpi=150, bbox_inches='tight', transparent=True)  # Reducido DPI de 200 a 150
 plt.close()
 ")
 
@@ -373,8 +373,15 @@ Question
 `r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno(a), pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
 
 ```{r mostrar_cilindro_python, echo=FALSE, results='asis', fig.align='center'}
+# Detectar si se está generando para Moodle
+es_moodle <- (match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat"))
+
 # Mostrar la imagen del cilindro generada con Python con ancho controlado
-cat("![](cilindro_hueco.png){width=60%}")
+if(es_moodle) {
+  cat("![](cilindro_hueco.png){width=30%}")  # Más pequeño para Moodle
+} else {
+  cat("![](cilindro_hueco.png){width=50%}")  # Tamaño normal para PDF/Word
+}
 ```
 
 ```{r generar_tabla_tikz, echo=FALSE, results='asis'}
@@ -382,6 +389,10 @@ cat("![](cilindro_hueco.png){width=60%}")
 color_fondo_tabla <- sample(c("orange", "blue", "green", "cyan"), 1)
 intensidad_color <- sample(c(10, 15, 20, 25), 1)
 color_tabla <- paste0(color_fondo_tabla, "!", intensidad_color)
+
+# Detectar si se está generando para Moodle para ajustar el ancho de la tabla
+es_moodle <- (match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat"))
+ancho_tabla <- if(es_moodle) "4.5cm" else "6cm"
 
 # Crear tabla con TikZ asegurando que grosor sea el mismo que en la imagen
 tabla_tikz <- c(
@@ -411,7 +422,7 @@ include_tikz(tabla_tikz,
              markup = "markdown",
              format = typ,
              packages = c("tikz", "colortbl"),
-             width = "6cm")
+             width = ancho_tabla)
 ```
 
 ¿Cuál medida le falta a `r nombre` para hallar la cantidad deseada?
