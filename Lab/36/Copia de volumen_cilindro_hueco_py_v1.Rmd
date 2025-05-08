@@ -1,9 +1,22 @@
 ---
 output:
   pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
 ---
+
+# Metadatos ICFES
+icfes:
+  competencia: 
+    - argumentacion
+  nivel_dificultad: 4
+  contenido:
+    categoria: geometria
+    tipo: no_generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+
 icfes:
   competencia:
     - formulacion_ejecucion
@@ -44,7 +57,10 @@ knitr::opts_chunk$set(
   fig.cap = "",
   fig.keep = 'all',
   dev = c("png", "pdf"),
-  dpi = 150
+  dpi = 150,
+  fig.width = 5,
+  fig.height = 5,
+  out.width = "60%"
 )
 
 # Configuración para chunks de Python
@@ -109,7 +125,7 @@ d_ext <- 2 * r_ext
 altura <- round(runif(1, 0.5, 4), 2)
 
 # Calcular el grosor de la pared del cilindro
-grosor <- r_ext - r_int
+grosor <- round(r_ext - r_int, 1)  # Asegurar que grosor se redondea a 1 decimal
 
 # Verificar coherencia física
 if (grosor < 0.05) {
@@ -136,6 +152,7 @@ if (unidad == "cm") {
   altura <- altura * factor_conversion
   volumen <- volumen * (factor_conversion^3)
   r_ext <- r_ext * factor_conversion
+  grosor <- grosor * factor_conversion
 } else if (unidad == "dm") {
   factor_conversion <- 10
   d_ext <- d_ext * factor_conversion
@@ -143,6 +160,7 @@ if (unidad == "cm") {
   altura <- altura * factor_conversion
   volumen <- volumen * (factor_conversion^3)
   r_ext <- r_ext * factor_conversion
+  grosor <- grosor * factor_conversion
 }
 
 # Redondear todos los valores para mayor claridad
@@ -150,6 +168,7 @@ d_ext <- round(d_ext, 1)
 r_int <- round(r_int, 1)
 altura <- round(altura, 1)
 r_ext <- round(r_ext, 1)
+grosor <- round(grosor, 1)
 volumen <- round(volumen, 1)
 
 # La respuesta correcta es "C) Altura del cilindro"
@@ -177,7 +196,7 @@ d_ext_fmt <- formatear_numero(d_ext)
 r_ext_fmt <- formatear_numero(r_ext)
 r_int_fmt <- formatear_numero(r_int)
 altura_fmt <- formatear_numero(altura)
-grosor_fmt <- formatear_numero(grosor)
+grosor_fmt <- formatear_numero(grosor)  # Asegura consistencia usando el grosor precalculado
 
 # Código Python para generar el cilindro hueco similar a la imagen de referencia
 codigo_python <- paste0("
@@ -185,16 +204,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Ellipse, FancyArrowPatch, Polygon
 
-# Parámetros del cilindro
-radiointerno = ", r_int, "  # ", unidad, "
-radioexterno = ", r_ext, "  # ", unidad, "
+# Parámetros del cilindro (en español)
+radio_interno = ", r_int, "  # ", unidad, "
+radio_externo = ", r_ext, "  # ", unidad, "
 altura = ", altura, "  # ", unidad, "
 diametro_externo = ", d_ext, "  # ", unidad, "
-grosor = radioexterno - radiointerno  # ", unidad, "
+grosor = ", grosor, "  # ", unidad, " (valor calculado directamente en R)
 unidad = '", unidad, "'
 
-# Crear figura
-fig, ax = plt.subplots(figsize=(8, 8))
+# Crear figura con tamaño reducido
+fig, ax = plt.subplots(figsize=(5, 5))  # Reducido de 8x8 a 5x5
 
 # Colores
 azul_cilindro = '#4682B4'  # Azul para contornos
@@ -203,8 +222,8 @@ gris_linea = '#777777'     # Gris para líneas punteadas
 
 # Factores de perspectiva para las elipses
 factor_elipse = 0.35
-vradio_ext = radioexterno * factor_elipse
-vradio_int = radiointerno * factor_elipse
+vradio_ext = radio_externo * factor_elipse
+vradio_int = radio_interno * factor_elipse
 
 # Centros del cilindro
 centro_superior = (0, altura)
@@ -212,146 +231,146 @@ centro_inferior = (0, 0)
 
 # Rellenar el cilindro con color azul claro
 # Crear coordenadas para el cuerpo exterior visible
-theta_vals = np.linspace(-np.pi, 0, 50)
-x_ext_front = radioexterno * np.cos(theta_vals)
-y_ext_front_inf = vradio_ext * np.sin(theta_vals)
-y_ext_front_sup = altura + vradio_ext * np.sin(theta_vals)
+angulos = np.linspace(-np.pi, 0, 50)
+x_ext_frontal = radio_externo * np.cos(angulos)
+y_ext_frontal_inf = vradio_ext * np.sin(angulos)
+y_ext_frontal_sup = altura + vradio_ext * np.sin(angulos)
 
 # Polígono para el cuerpo exterior
-ext_body_points = []
-for i in range(len(theta_vals)):
-    ext_body_points.append((x_ext_front[i], y_ext_front_inf[i]))
-ext_body_points.append((radioexterno, 0))
-ext_body_points.append((radioexterno, altura))
-for i in range(len(theta_vals)-1, -1, -1):
-    ext_body_points.append((x_ext_front[i], y_ext_front_sup[i]))
-ext_body_polygon = Polygon(ext_body_points, closed=True, facecolor=azul_relleno, 
+puntos_cuerpo_ext = []
+for i in range(len(angulos)):
+    puntos_cuerpo_ext.append((x_ext_frontal[i], y_ext_frontal_inf[i]))
+puntos_cuerpo_ext.append((radio_externo, 0))
+puntos_cuerpo_ext.append((radio_externo, altura))
+for i in range(len(angulos)-1, -1, -1):
+    puntos_cuerpo_ext.append((x_ext_frontal[i], y_ext_frontal_sup[i]))
+poligono_cuerpo_ext = Polygon(puntos_cuerpo_ext, closed=True, facecolor=azul_relleno, 
                          edgecolor='none', alpha=0.5, zorder=1)
-ax.add_patch(ext_body_polygon)
+ax.add_patch(poligono_cuerpo_ext)
 
 # Polígono para el cuerpo interior (hueco)
-x_int_front = radiointerno * np.cos(theta_vals)
-y_int_front_inf = vradio_int * np.sin(theta_vals)
-y_int_front_sup = altura + vradio_int * np.sin(theta_vals)
+x_int_frontal = radio_interno * np.cos(angulos)
+y_int_frontal_inf = vradio_int * np.sin(angulos)
+y_int_frontal_sup = altura + vradio_int * np.sin(angulos)
 
-int_body_points = []
-for i in range(len(theta_vals)):
-    int_body_points.append((x_int_front[i], y_int_front_inf[i]))
-int_body_points.append((radiointerno, 0))
-int_body_points.append((radiointerno, altura))
-for i in range(len(theta_vals)-1, -1, -1):
-    int_body_points.append((x_int_front[i], y_int_front_sup[i]))
-int_body_polygon = Polygon(int_body_points, closed=True, facecolor='white', 
+puntos_cuerpo_int = []
+for i in range(len(angulos)):
+    puntos_cuerpo_int.append((x_int_frontal[i], y_int_frontal_inf[i]))
+puntos_cuerpo_int.append((radio_interno, 0))
+puntos_cuerpo_int.append((radio_interno, altura))
+for i in range(len(angulos)-1, -1, -1):
+    puntos_cuerpo_int.append((x_int_frontal[i], y_int_frontal_sup[i]))
+poligono_cuerpo_int = Polygon(puntos_cuerpo_int, closed=True, facecolor='white', 
                          edgecolor='none', zorder=2)
-ax.add_patch(int_body_polygon)
+ax.add_patch(poligono_cuerpo_int)
 
 # Dibujar líneas verticales
-ax.plot([radioexterno, radioexterno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot([-radioexterno, -radioexterno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot([radiointerno, radiointerno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot([-radiointerno, -radiointerno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([radio_externo, radio_externo], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([-radio_externo, -radio_externo], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([radio_interno, radio_interno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot([-radio_interno, -radio_interno], [0, altura], color=azul_cilindro, linewidth=1.5, zorder=5)
 
 # LÍNEAS PUNTEADAS PARA LAS PARTES NO VISIBLES DE LAS TAPAS SUPERIOR E INFERIOR
 # Semielipses posteriores (arco trasero)
-theta_back = np.linspace(0, np.pi, 100)  # Más puntos para curvas más suaves
-x_back_ext = radioexterno * np.cos(theta_back)
-y_back_ext_inf = vradio_ext * np.sin(theta_back)
-y_back_ext_sup = altura + vradio_ext * np.sin(theta_back)
-x_back_int = radiointerno * np.cos(theta_back)
-y_back_int_inf = vradio_int * np.sin(theta_back)
-y_back_int_sup = altura + vradio_int * np.sin(theta_back)
+angulos_traseros = np.linspace(0, np.pi, 100)  # Más puntos para curvas más suaves
+x_trasero_ext = radio_externo * np.cos(angulos_traseros)
+y_trasero_ext_inf = vradio_ext * np.sin(angulos_traseros)
+y_trasero_ext_sup = altura + vradio_ext * np.sin(angulos_traseros)
+x_trasero_int = radio_interno * np.cos(angulos_traseros)
+y_trasero_int_inf = vradio_int * np.sin(angulos_traseros)
+y_trasero_int_sup = altura + vradio_int * np.sin(angulos_traseros)
 
 # Dibujar líneas punteadas para las semielipses posteriores
 linea_punteada = {'linestyle': '--', 'color': gris_linea, 'linewidth': 1.2, 'zorder': 3,
                  'dashes': [3, 2]}  # Líneas punteadas correctas
 
 # Semielipses posteriores inferiores
-ax.plot(x_back_ext, y_back_ext_inf, **linea_punteada)
-ax.plot(x_back_int, y_back_int_inf, **linea_punteada)
+ax.plot(x_trasero_ext, y_trasero_ext_inf, **linea_punteada)
+ax.plot(x_trasero_int, y_trasero_int_inf, **linea_punteada)
 
 # Semielipses posteriores superiores
-ax.plot(x_back_ext, y_back_ext_sup, **linea_punteada)
-ax.plot(x_back_int, y_back_int_sup, **linea_punteada)
+ax.plot(x_trasero_ext, y_trasero_ext_sup, **linea_punteada)
+ax.plot(x_trasero_int, y_trasero_int_sup, **linea_punteada)
 
 # Dibujar semielipses frontales visibles
 # Semielipses frontales inferiores
-theta_front = np.linspace(-np.pi, 0, 100)
-x_front_ext = radioexterno * np.cos(theta_front)
-y_front_ext_inf = vradio_ext * np.sin(theta_front)
-x_front_int = radiointerno * np.cos(theta_front)
-y_front_int_inf = vradio_int * np.sin(theta_front)
+angulos_frontales = np.linspace(-np.pi, 0, 100)
+x_frontal_ext = radio_externo * np.cos(angulos_frontales)
+y_frontal_ext_inf = vradio_ext * np.sin(angulos_frontales)
+x_frontal_int = radio_interno * np.cos(angulos_frontales)
+y_frontal_int_inf = vradio_int * np.sin(angulos_frontales)
 
-ax.plot(x_front_ext, y_front_ext_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot(x_front_int, y_front_int_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot(x_frontal_ext, y_frontal_ext_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot(x_frontal_int, y_frontal_int_inf, color=azul_cilindro, linewidth=1.5, zorder=5)
 
 # Semielipses frontales superiores
-y_front_ext_sup = altura + vradio_ext * np.sin(theta_front)
-y_front_int_sup = altura + vradio_int * np.sin(theta_front)
-ax.plot(x_front_ext, y_front_ext_sup, color=azul_cilindro, linewidth=1.5, zorder=5)
-ax.plot(x_front_int, y_front_int_sup, color=azul_cilindro, linewidth=1.5, zorder=5)
+y_frontal_ext_sup = altura + vradio_ext * np.sin(angulos_frontales)
+y_frontal_int_sup = altura + vradio_int * np.sin(angulos_frontales)
+ax.plot(x_frontal_ext, y_frontal_ext_sup, color=azul_cilindro, linewidth=1.5, zorder=5)
+ax.plot(x_frontal_int, y_frontal_int_sup, color=azul_cilindro, linewidth=1.5, zorder=5)
 
 # Añadir puntos centrales
 ax.plot(0, altura, 'o', color=azul_cilindro, markersize=4, zorder=6)
 ax.plot(0, 0, 'o', color=azul_cilindro, markersize=4, zorder=6)
 
 # Añadir flechas de radio
-ax.add_patch(FancyArrowPatch((0, altura), (radiointerno, altura), arrowstyle='->', 
+ax.add_patch(FancyArrowPatch((0, altura), (radio_interno, altura), arrowstyle='->', 
                            color=azul_cilindro, linewidth=1, mutation_scale=10, zorder=6))
-ax.add_patch(FancyArrowPatch((0, 0), (radioexterno, 0), arrowstyle='->', 
+ax.add_patch(FancyArrowPatch((0, 0), (radio_externo, 0), arrowstyle='->', 
                            color=azul_cilindro, linewidth=1, mutation_scale=10, zorder=6))
 
 # FLECHAS Y ETIQUETAS DE DIMENSIONES
-# Propiedades comunes para flechas
-flecha_props = dict(arrowstyle='<->', color='black', linewidth=1, mutation_scale=10)
+# Propiedades comunes para flechas (reducidas para mejor proporción)
+flecha_props = dict(arrowstyle='<->', color='black', linewidth=0.8, mutation_scale=8)
 
-# 1. DIÁMETRO EXTERNO (ajustado para mejor visibilidad)
-diam_y = altura + vradio_ext*2 + altura*0.25
-ax.add_patch(FancyArrowPatch((-radioexterno, diam_y), (radioexterno, diam_y), **flecha_props))
-ax.text(0, diam_y + altura*0.1, f'Diámetro externo = {", d_ext_fmt, "} {unidad}', 
-       fontweight='bold', ha='center', va='center', fontsize=9)
+# 1. DIÁMETRO EXTERNO
+diam_y = altura + vradio_ext*2 + altura*0.2
+ax.add_patch(FancyArrowPatch((-radio_externo, diam_y), (radio_externo, diam_y), **flecha_props))
+ax.text(0, diam_y + altura*0.08, f'Diámetro externo = {", d_ext_fmt, "} {unidad}', 
+       fontweight='bold', ha='center', va='center', fontsize=8)
 
-# 2. ALTURA (ajustado para mejor espacio)
-altura_x = radioexterno + radioexterno*0.5
+# 2. ALTURA
+altura_x = radio_externo + radio_externo*0.4
 ax.add_patch(FancyArrowPatch((altura_x, 0), (altura_x, altura), **flecha_props))
-ax.text(altura_x + radioexterno*0.15, altura/2, 'Altura', 
-       fontweight='bold', rotation=90, ha='center', va='center', fontsize=9)
+ax.text(altura_x + radio_externo*0.12, altura/2, 'Altura', 
+       fontweight='bold', rotation=90, ha='center', va='center', fontsize=8)
 
-# 3. RADIO INTERNO (ajustado para mejor posición)
-radio_int_label_pos = (radiointerno*2.5, altura + altura*0.3)
-ax.plot([radiointerno, radio_int_label_pos[0]], [altura, radio_int_label_pos[1]], 'k-', linewidth=0.8)
-ax.plot([radio_int_label_pos[0]-0.1, radio_int_label_pos[0]], [radio_int_label_pos[1], radio_int_label_pos[1]], 'k-', linewidth=0.8)
+# 3. RADIO INTERNO
+radio_int_label_pos = (radio_interno*2.2, altura + altura*0.25)
+ax.plot([radio_interno, radio_int_label_pos[0]], [altura, radio_int_label_pos[1]], 'k-', linewidth=0.7)
+ax.plot([radio_int_label_pos[0]-0.1, radio_int_label_pos[0]], [radio_int_label_pos[1], radio_int_label_pos[1]], 'k-', linewidth=0.7)
 ax.text(radio_int_label_pos[0], radio_int_label_pos[1], 
        f'Radio interno = {", r_int_fmt, "} {unidad}', 
-       fontweight='bold', ha='left', va='center', fontsize=9)
+       fontweight='bold', ha='left', va='center', fontsize=8)
 
-# 4. GROSOR (ajustado para mejor posición)
-grosor_start = -radioexterno + (radioexterno - radiointerno)/2
-ax.add_patch(FancyArrowPatch((-radiointerno, altura), (-radioexterno, altura), **flecha_props, zorder=6))
-grosor_label_pos = (-radioexterno*2.5, altura + altura*0.25)
-ax.plot([-radioexterno, grosor_label_pos[0]], [altura, grosor_label_pos[1]], 'k-', linewidth=0.8)
-ax.plot([grosor_label_pos[0], grosor_label_pos[0]+0.1], [grosor_label_pos[1], grosor_label_pos[1]], 'k-', linewidth=0.8)
+# 4. GROSOR
+grosor_start = -radio_externo + (radio_externo - radio_interno)/2
+ax.add_patch(FancyArrowPatch((-radio_interno, altura), (-radio_externo, altura), **flecha_props, zorder=6))
+grosor_label_pos = (-radio_externo*2.2, altura + altura*0.25)
+ax.plot([-radio_externo, grosor_label_pos[0]], [altura, grosor_label_pos[1]], 'k-', linewidth=0.7)
+ax.plot([grosor_label_pos[0], grosor_label_pos[0]+0.1], [grosor_label_pos[1], grosor_label_pos[1]], 'k-', linewidth=0.7)
 ax.text(grosor_label_pos[0], grosor_label_pos[1], 
        f'Grosor = {", grosor_fmt, "} {unidad}', 
-       fontweight='bold', ha='right', va='center', fontsize=9)
+       fontweight='bold', ha='right', va='center', fontsize=8)
 
-# 5. RADIO EXTERNO (ajustado para mejor visibilidad)
-radio_ext_label_pos = (radioexterno*2.5, -altura*0.3)
-ax.plot([radioexterno, radio_ext_label_pos[0]], [0, radio_ext_label_pos[1]], 'k-', linewidth=0.8)
-ax.plot([radio_ext_label_pos[0]-0.1, radio_ext_label_pos[0]], [radio_ext_label_pos[1], radio_ext_label_pos[1]], 'k-', linewidth=0.8)
+# 5. RADIO EXTERNO
+radio_ext_label_pos = (radio_externo*2.2, -altura*0.25)
+ax.plot([radio_externo, radio_ext_label_pos[0]], [0, radio_ext_label_pos[1]], 'k-', linewidth=0.7)
+ax.plot([radio_ext_label_pos[0]-0.1, radio_ext_label_pos[0]], [radio_ext_label_pos[1], radio_ext_label_pos[1]], 'k-', linewidth=0.7)
 ax.text(radio_ext_label_pos[0], radio_ext_label_pos[1], 
        f'Radio externo = {", r_ext_fmt, "} {unidad}', 
-       fontweight='bold', ha='left', va='center', fontsize=9)
+       fontweight='bold', ha='left', va='center', fontsize=8)
 
-# Ajustar límites y aspecto de la figura (ampliado para incluir todas las etiquetas)
-margin = max(radioexterno, altura) * 0.9
-ax.set_xlim(-radioexterno - margin, radioexterno + margin)
-ax.set_ylim(-margin*0.8, altura + margin*1.2)
+# Ajustar límites y aspecto de la figura
+margen = max(radio_externo, altura) * 0.8
+ax.set_xlim(-radio_externo - margen, radio_externo + margen)
+ax.set_ylim(-margen*0.7, altura + margen*1.1)
 ax.set_aspect('equal')
 ax.axis('off')
 
-# Guardar la figura con más espacio para etiquetas
-plt.tight_layout(pad=1.5)
-plt.savefig('cilindro_hueco.png', dpi=300, bbox_inches='tight', transparent=True)
+# Guardar la figura con espacio ajustado para etiquetas
+plt.tight_layout(pad=1.0)
+plt.savefig('cilindro_hueco.png', dpi=200, bbox_inches='tight', transparent=True)
 plt.close()
 ")
 
@@ -362,11 +381,11 @@ py_run_string(codigo_python)
 Question
 ========
 
-`r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno, pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
+`r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno(a), pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
 
 ```{r mostrar_cilindro_python, echo=FALSE, results='asis', fig.align='center'}
-# Mostrar la imagen del cilindro generada con Python
-cat("![](cilindro_hueco.png)")
+# Mostrar la imagen del cilindro generada con Python con ancho controlado
+cat("![](cilindro_hueco.png){width=60%}")
 ```
 
 ```{r generar_tabla_tikz, echo=FALSE, results='asis'}
@@ -375,7 +394,7 @@ color_fondo_tabla <- sample(c("orange", "blue", "green", "cyan"), 1)
 intensidad_color <- sample(c(10, 15, 20, 25), 1)
 color_tabla <- paste0(color_fondo_tabla, "!", intensidad_color)
 
-# Crear tabla con TikZ
+# Crear tabla con TikZ asegurando que grosor sea el mismo que en la imagen
 tabla_tikz <- c(
   "\\begin{tikzpicture}",
   "\\node[inner sep=0pt] {",
@@ -390,7 +409,7 @@ tabla_tikz <- c(
   "    \\hline",
   paste0("    Diámetro externo & ", d_ext, " & ", unidad, " \\\\"),
   "    \\hline",
-  paste0("    Grosor & ", r_ext - r_int, " & ", unidad, " \\\\"),
+  paste0("    Grosor & ", grosor, " & ", unidad, " \\\\"),
   "    \\hline",
   "  \\end{tabular}",
   "};",
@@ -403,7 +422,7 @@ include_tikz(tabla_tikz,
              markup = "markdown",
              format = typ,
              packages = c("tikz", "colortbl"),
-             width = "8cm")
+             width = "6cm")
 ```
 
 ¿Cuál medida le falta a `r nombre` para hallar la cantidad deseada?
