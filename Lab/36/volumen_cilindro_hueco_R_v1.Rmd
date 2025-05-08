@@ -7,17 +7,6 @@ output:
 
 # Metadatos ICFES
 icfes:
-  competencia: 
-    - argumentacion
-  nivel_dificultad: 4
-  contenido:
-    categoria: geometria
-    tipo: no_generico
-  contexto: matematico
-  eje_axial: eje2
-  componente: geometrico_metrico
-
-icfes:
   competencia:
     - formulacion_ejecucion
   nivel_dificultad: 3
