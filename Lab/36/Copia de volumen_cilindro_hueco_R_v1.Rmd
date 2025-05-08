@@ -1,9 +1,22 @@
 ---
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
+
+# Metadatos ICFES
+icfes:
+  competencia: 
+    - argumentacion
+  nivel_dificultad: 4
+  contenido:
+    categoria: geometria
+    tipo: no_generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+
 icfes:
   competencia:
     - formulacion_ejecucion
@@ -314,16 +327,19 @@ Para calcular el volumen de `r liquido` necesario para llenar el `r recipiente` 
 $V = \pi \cdot r^2 \cdot h$
 
 Donde:
+
 - $r$ es el radio (en este caso, el radio interno = `r r_int` `r unidad`)
 - $h$ es la altura del cilindro
 
 En el problema se nos proporciona:
+
 - Diámetro externo = `r d_ext` `r unidad`
 - Radio interno = `r r_int` `r unidad`
 
 Sin embargo, no se nos proporciona la altura del cilindro, que es esencial para calcular el volumen. Por lo tanto, a `r nombre` le falta conocer la altura del cilindro para poder calcular la cantidad de `r liquido` necesaria.
 
 Si tuviéramos la altura, el volumen se calcularía así:
+
 $V = \pi \cdot (`r r_int`)^2 \cdot h = `r round(pi * (r_int^2), 2)` \cdot h$ `r unidad`³
 
 Answerlist
