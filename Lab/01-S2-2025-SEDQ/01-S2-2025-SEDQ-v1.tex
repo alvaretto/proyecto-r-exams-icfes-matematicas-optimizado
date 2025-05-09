@@ -1,0 +1,431 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Establecer semilla aleatoria para reproducibilidad}
+\FunctionTok{set.seed}\NormalTok{(}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10000}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\CommentTok{\# Aleatorizar contexto empresarial}
+\NormalTok{tipos\_empresa }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"empresa"}\NormalTok{, }\StringTok{"compañía"}\NormalTok{, }\StringTok{"organización"}\NormalTok{, }\StringTok{"corporación"}\NormalTok{, }\StringTok{"entidad"}\NormalTok{, }\StringTok{"firma"}\NormalTok{, }\StringTok{"institución"}\NormalTok{, }\StringTok{"negocio"}\NormalTok{)}
+\NormalTok{tipo\_empresa }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_empresa, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{sectores\_empresa }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"tecnológica"}\NormalTok{, }\StringTok{"financiera"}\NormalTok{, }\StringTok{"industrial"}\NormalTok{, }\StringTok{"comercial"}\NormalTok{, }\StringTok{"de servicios"}\NormalTok{, }\StringTok{"consultora"}\NormalTok{, }\StringTok{"energética"}\NormalTok{,}
+                     \StringTok{"automotriz"}\NormalTok{, }\StringTok{"farmacéutica"}\NormalTok{, }\StringTok{"alimentaria"}\NormalTok{, }\StringTok{"textil"}\NormalTok{, }\StringTok{"educativa"}\NormalTok{)}
+\NormalTok{sector\_empresa }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(sectores\_empresa, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_encuesta }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"encuesta"}\NormalTok{, }\StringTok{"sondeo"}\NormalTok{, }\StringTok{"estudio"}\NormalTok{, }\StringTok{"investigación"}\NormalTok{, }\StringTok{"censo"}\NormalTok{, }\StringTok{"análisis"}\NormalTok{, }\StringTok{"relevamiento"}\NormalTok{, }\StringTok{"consulta"}\NormalTok{)}
+\NormalTok{termino\_encuesta }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_encuesta, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorizar bienes}
+\NormalTok{bienes\_vivienda }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"casa"}\NormalTok{, }\StringTok{"apartamento"}\NormalTok{, }\StringTok{"vivienda"}\NormalTok{, }\StringTok{"piso"}\NormalTok{, }\StringTok{"chalet"}\NormalTok{, }\StringTok{"dúplex"}\NormalTok{, }\StringTok{"residencia"}\NormalTok{, }\StringTok{"inmueble"}
+\NormalTok{)}
+\NormalTok{bien\_vivienda1 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(bienes\_vivienda, }\DecValTok{1}\NormalTok{)}
+\NormalTok{bienes\_vivienda\_restantes }\OtherTok{\textless{}{-}}\NormalTok{ bienes\_vivienda[bienes\_vivienda }\SpecialCharTok{!=}\NormalTok{ bien\_vivienda1]}
+\NormalTok{bien\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(bienes\_vivienda\_restantes, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{bienes\_transporte }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"carro"}\NormalTok{, }\StringTok{"automóvil"}\NormalTok{, }\StringTok{"vehículo"}\NormalTok{, }\StringTok{"coche"}
+\NormalTok{)}
+\NormalTok{bien\_transporte }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(bienes\_transporte, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorizar los porcentajes del gráfico circular manteniendo coherencia}
+\CommentTok{\# Valores originales: 24\% (carro y apartamento), 20\% (solo apartamento), 31\% (solo casa),}
+\CommentTok{\#                     6\% (solo carro), 19\% (carro y casa)}
+
+\CommentTok{\# Generar variaciones de los porcentajes manteniendo suma = 100\% y relaciones coherentes}
+\NormalTok{total\_puntos\_porcentaje }\OtherTok{\textless{}{-}} \DecValTok{100}
+
+\CommentTok{\# Aleatorizar el porcentaje para "bien\_transporte y bien\_vivienda1" (equivalente a "carro y apartamento")}
+\NormalTok{p\_bien\_transporte\_y\_vivienda1 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{18}\SpecialCharTok{:}\DecValTok{28}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorizar el porcentaje para "solo bien\_vivienda2" (equivalente a "solo casa")}
+\NormalTok{p\_solo\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{25}\SpecialCharTok{:}\DecValTok{35}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorizar el porcentaje para "bien\_transporte y bien\_vivienda2" (equivalente a "carro y casa")}
+\NormalTok{p\_bien\_transporte\_y\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{15}\SpecialCharTok{:}\DecValTok{25}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorizar el porcentaje para "solo bien\_transporte" (equivalente a "solo carro")}
+\NormalTok{p\_solo\_bien\_transporte }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{4}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Calcular el porcentaje restante para "solo bien\_vivienda1" (equivalente a "solo apartamento")}
+\NormalTok{p\_solo\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ total\_puntos\_porcentaje }\SpecialCharTok{{-}}\NormalTok{ (p\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{+}\NormalTok{ p\_solo\_vivienda2 }\SpecialCharTok{+}
+\NormalTok{                                              p\_bien\_transporte\_y\_vivienda2 }\SpecialCharTok{+}\NormalTok{ p\_solo\_bien\_transporte)}
+
+\CommentTok{\# Verificar que el porcentaje restante sea positivo y razonable}
+\ControlFlowTok{while}\NormalTok{ (p\_solo\_vivienda1 }\SpecialCharTok{\textless{}} \DecValTok{15}\NormalTok{) \{}
+  \CommentTok{\# Reajustar los porcentajes si es necesario}
+\NormalTok{  p\_bien\_transporte\_y\_vivienda1 }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(p\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{, }\DecValTok{18}\NormalTok{)}
+\NormalTok{  p\_solo\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(p\_solo\_vivienda2 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{, }\DecValTok{25}\NormalTok{)}
+\NormalTok{  p\_bien\_transporte\_y\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(p\_bien\_transporte\_y\_vivienda2 }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{, }\DecValTok{15}\NormalTok{)}
+
+  \CommentTok{\# Recalcular el porcentaje restante}
+\NormalTok{  p\_solo\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ total\_puntos\_porcentaje }\SpecialCharTok{{-}}\NormalTok{ (p\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{+}\NormalTok{ p\_solo\_vivienda2 }\SpecialCharTok{+}
+\NormalTok{                                                p\_bien\_transporte\_y\_vivienda2 }\SpecialCharTok{+}\NormalTok{ p\_solo\_bien\_transporte)}
+\NormalTok{\}}
+
+\CommentTok{\# Vector con todos los porcentajes}
+\NormalTok{porcentajes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+\NormalTok{  p\_bien\_transporte\_y\_vivienda1,  }\CommentTok{\# Carro y apartamento}
+\NormalTok{  p\_solo\_vivienda1,              }\CommentTok{\# Solo apartamento}
+\NormalTok{  p\_solo\_vivienda2,              }\CommentTok{\# Solo casa}
+\NormalTok{  p\_solo\_bien\_transporte,        }\CommentTok{\# Solo carro}
+\NormalTok{  p\_bien\_transporte\_y\_vivienda2  }\CommentTok{\# Carro y casa}
+\NormalTok{)}
+
+\CommentTok{\# Validar que la suma sea exactamente 100}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(porcentajes) }\SpecialCharTok{!=} \DecValTok{100}\NormalTok{) \{}
+  \CommentTok{\# Ajustar el valor más grande para que la suma sea 100}
+\NormalTok{  idx\_max }\OtherTok{\textless{}{-}} \FunctionTok{which.max}\NormalTok{(porcentajes)}
+\NormalTok{  porcentajes[idx\_max] }\OtherTok{\textless{}{-}}\NormalTok{ porcentajes[idx\_max] }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{100} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(porcentajes))}
+\NormalTok{\}}
+
+\CommentTok{\# Asignar los porcentajes a variables individuales}
+\NormalTok{p\_bien\_transporte\_y\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ porcentajes[}\DecValTok{1}\NormalTok{]}
+\NormalTok{p\_solo\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ porcentajes[}\DecValTok{2}\NormalTok{]}
+\NormalTok{p\_solo\_vivienda2 }\OtherTok{\textless{}{-}}\NormalTok{ porcentajes[}\DecValTok{3}\NormalTok{]}
+\NormalTok{p\_solo\_bien\_transporte }\OtherTok{\textless{}{-}}\NormalTok{ porcentajes[}\DecValTok{4}\NormalTok{]}
+\NormalTok{p\_bien\_transporte\_y\_vivienda2 }\OtherTok{\textless{}{-}}\NormalTok{ porcentajes[}\DecValTok{5}\NormalTok{]}
+
+\CommentTok{\# Aleatorizar el número total de personas que tienen bien\_transporte y bien\_vivienda1}
+\CommentTok{\# (equivalente a "carro y apartamento")}
+\NormalTok{total\_bien\_transporte\_y\_vivienda1 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{48}\NormalTok{, }\DecValTok{60}\NormalTok{, }\DecValTok{72}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{120}\NormalTok{, }\DecValTok{144}\NormalTok{, }\DecValTok{150}\NormalTok{, }\DecValTok{180}\NormalTok{, }\DecValTok{200}\NormalTok{, }\DecValTok{250}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Calcular el total de personas en la empresa basado en el porcentaje}
+\NormalTok{total\_personas }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{*} \DecValTok{100} \SpecialCharTok{/}\NormalTok{ p\_bien\_transporte\_y\_vivienda1)}
+
+\CommentTok{\# Calcular el número de personas para cada categoría}
+\NormalTok{total\_solo\_vivienda1 }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_personas }\SpecialCharTok{*}\NormalTok{ p\_solo\_vivienda1 }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+\NormalTok{total\_solo\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_personas }\SpecialCharTok{*}\NormalTok{ p\_solo\_vivienda2 }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+\NormalTok{total\_solo\_bien\_transporte }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_personas }\SpecialCharTok{*}\NormalTok{ p\_solo\_bien\_transporte }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+\NormalTok{total\_bien\_transporte\_y\_vivienda2 }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_personas }\SpecialCharTok{*}\NormalTok{ p\_bien\_transporte\_y\_vivienda2 }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+
+\CommentTok{\# Ajustar el total para que coincida con la suma de todas las categorías}
+\NormalTok{total\_calculado }\OtherTok{\textless{}{-}}\NormalTok{ total\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{+}\NormalTok{ total\_solo\_vivienda1 }\SpecialCharTok{+}\NormalTok{ total\_solo\_vivienda2 }\SpecialCharTok{+}
+\NormalTok{                  total\_solo\_bien\_transporte }\SpecialCharTok{+}\NormalTok{ total\_bien\_transporte\_y\_vivienda2}
+\ControlFlowTok{if}\NormalTok{ (total\_calculado }\SpecialCharTok{!=}\NormalTok{ total\_personas) \{}
+  \CommentTok{\# Ajustar la categoría más grande para mantener el total correcto}
+\NormalTok{  diferencia }\OtherTok{\textless{}{-}}\NormalTok{ total\_personas }\SpecialCharTok{{-}}\NormalTok{ total\_calculado}
+\NormalTok{  idx\_max }\OtherTok{\textless{}{-}} \FunctionTok{which.max}\NormalTok{(}\FunctionTok{c}\NormalTok{(total\_bien\_transporte\_y\_vivienda1, total\_solo\_vivienda1, total\_solo\_vivienda2,}
+\NormalTok{                        total\_solo\_bien\_transporte, total\_bien\_transporte\_y\_vivienda2))}
+
+  \ControlFlowTok{if}\NormalTok{ (idx\_max }\SpecialCharTok{==} \DecValTok{1}\NormalTok{) total\_bien\_transporte\_y\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ total\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{+}\NormalTok{ diferencia}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (idx\_max }\SpecialCharTok{==} \DecValTok{2}\NormalTok{) total\_solo\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ total\_solo\_vivienda1 }\SpecialCharTok{+}\NormalTok{ diferencia}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (idx\_max }\SpecialCharTok{==} \DecValTok{3}\NormalTok{) total\_solo\_vivienda2 }\OtherTok{\textless{}{-}}\NormalTok{ total\_solo\_vivienda2 }\SpecialCharTok{+}\NormalTok{ diferencia}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (idx\_max }\SpecialCharTok{==} \DecValTok{4}\NormalTok{) total\_solo\_bien\_transporte }\OtherTok{\textless{}{-}}\NormalTok{ total\_solo\_bien\_transporte }\SpecialCharTok{+}\NormalTok{ diferencia}
+  \ControlFlowTok{else}\NormalTok{ total\_bien\_transporte\_y\_vivienda2 }\OtherTok{\textless{}{-}}\NormalTok{ total\_bien\_transporte\_y\_vivienda2 }\SpecialCharTok{+}\NormalTok{ diferencia}
+\NormalTok{\}}
+
+\CommentTok{\# Verificar nuevamente la consistencia}
+\NormalTok{total\_recalculado }\OtherTok{\textless{}{-}}\NormalTok{ total\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{+}\NormalTok{ total\_solo\_vivienda1 }\SpecialCharTok{+}\NormalTok{ total\_solo\_vivienda2 }\SpecialCharTok{+}
+\NormalTok{                    total\_solo\_bien\_transporte }\SpecialCharTok{+}\NormalTok{ total\_bien\_transporte\_y\_vivienda2}
+\FunctionTok{stopifnot}\NormalTok{(total\_recalculado }\SpecialCharTok{==}\NormalTok{ total\_personas)}
+
+\CommentTok{\# Generar opciones de respuesta}
+\CommentTok{\# La respuesta correcta es el número de personas que poseen solo bien\_vivienda1 (apartamento)}
+\NormalTok{respuesta\_correcta }\OtherTok{\textless{}{-}}\NormalTok{ total\_solo\_vivienda1}
+
+\CommentTok{\# Generar distractores plausibles}
+\NormalTok{distractor1 }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_bien\_transporte\_y\_vivienda1 }\SpecialCharTok{*}\NormalTok{ p\_solo\_vivienda1 }\SpecialCharTok{/}\NormalTok{ p\_bien\_transporte\_y\_vivienda1)}
+\NormalTok{distractor2 }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(total\_personas }\SpecialCharTok{*}\NormalTok{ p\_solo\_vivienda1 }\SpecialCharTok{/}\NormalTok{ p\_bien\_transporte\_y\_vivienda1)}
+\NormalTok{distractor3 }\OtherTok{\textless{}{-}}\NormalTok{ total\_personas }\SpecialCharTok{{-}}\NormalTok{ total\_solo\_vivienda1}
+
+\CommentTok{\# Asegurar que los distractores sean diferentes entre sí y de la respuesta correcta}
+\ControlFlowTok{while}\NormalTok{ (}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{c}\NormalTok{(respuesta\_correcta, distractor1, distractor2, distractor3))) }\SpecialCharTok{\textless{}} \DecValTok{4}\NormalTok{) \{}
+\NormalTok{  distractor1 }\OtherTok{\textless{}{-}}\NormalTok{ distractor1 }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{  distractor2 }\OtherTok{\textless{}{-}}\NormalTok{ distractor2 }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{  distractor3 }\OtherTok{\textless{}{-}}\NormalTok{ distractor3 }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\SpecialCharTok{:}\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Crear el vector de opciones y mezclarlas}
+\NormalTok{opciones }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(respuesta\_correcta, distractor1, distractor2, distractor3)}
+\NormalTok{indice\_correcto }\OtherTok{\textless{}{-}} \DecValTok{1}  \CommentTok{\# Posición actual de la respuesta correcta}
+\NormalTok{opciones\_mezcladas }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(opciones)}
+\NormalTok{indice\_correcto }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(opciones\_mezcladas }\SpecialCharTok{==}\NormalTok{ respuesta\_correcta)}
+
+\CommentTok{\# Vector de solución para r{-}exams (0 = falso, 1 = verdadero)}
+\NormalTok{solucion }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{solucion[indice\_correcto] }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# Aleatorizar colores para el gráfico circular usando colores compatibles con matplotlib}
+\CommentTok{\# Definir paletas de colores para matplotlib (nombres de colores estándar y códigos hexadecimales)}
+\NormalTok{paleta\_colores1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#4C72B0"}\NormalTok{, }\StringTok{"\#55A868"}\NormalTok{, }\StringTok{"\#C44E52"}\NormalTok{, }\StringTok{"\#8172B3"}\NormalTok{, }\StringTok{"\#CCB974"}\NormalTok{, }\StringTok{"\#64B5CD"}\NormalTok{)}
+\NormalTok{paleta\_colores2 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#1F77B4"}\NormalTok{, }\StringTok{"\#FF7F0E"}\NormalTok{, }\StringTok{"\#2CA02C"}\NormalTok{, }\StringTok{"\#D62728"}\NormalTok{, }\StringTok{"\#9467BD"}\NormalTok{, }\StringTok{"\#8C564B"}\NormalTok{)}
+\NormalTok{paleta\_colores3 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#E41A1C"}\NormalTok{, }\StringTok{"\#377EB8"}\NormalTok{, }\StringTok{"\#4DAF4A"}\NormalTok{, }\StringTok{"\#984EA3"}\NormalTok{, }\StringTok{"\#FF7F00"}\NormalTok{, }\StringTok{"\#FFFF33"}\NormalTok{)}
+
+\CommentTok{\# Seleccionar una paleta aleatoria}
+\NormalTok{paleta\_seleccionada }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{list}\NormalTok{(paleta\_colores1, paleta\_colores2, paleta\_colores3), }\DecValTok{1}\NormalTok{)[[}\DecValTok{1}\NormalTok{]]}
+
+\CommentTok{\# Mezclar la paleta para obtener combinaciones aleatorias}
+\NormalTok{paleta\_mezclada }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(paleta\_seleccionada)}
+
+\CommentTok{\# Asignar colores a cada sección del gráfico}
+\NormalTok{color\_bien\_transporte\_y\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ paleta\_mezclada[}\DecValTok{1}\NormalTok{]}
+\NormalTok{color\_solo\_vivienda1 }\OtherTok{\textless{}{-}}\NormalTok{ paleta\_mezclada[}\DecValTok{2}\NormalTok{]}
+\NormalTok{color\_solo\_vivienda2 }\OtherTok{\textless{}{-}}\NormalTok{ paleta\_mezclada[}\DecValTok{3}\NormalTok{]}
+\NormalTok{color\_solo\_bien\_transporte }\OtherTok{\textless{}{-}}\NormalTok{ paleta\_mezclada[}\DecValTok{4}\NormalTok{]}
+\NormalTok{color\_bien\_transporte\_y\_vivienda2 }\OtherTok{\textless{}{-}}\NormalTok{ paleta\_mezclada[}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Código Python para generar el gráfico circular}
+\NormalTok{codigo\_python\_grafico }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}
+\StringTok{\textquotesingle{}}
+\StringTok{import matplotlib.pyplot as plt}
+\StringTok{import numpy as np}
+
+\StringTok{\# Datos para el gráfico circular}
+\StringTok{categorias = ["\%s y \%s", "Solo \%s", "Solo \%s", "Solo \%s", "\%s y \%s"]}
+\StringTok{porcentajes = [\%d, \%d, \%d, \%d, \%d]}
+
+\StringTok{\# Crear los valores exactos como etiquetas}
+\StringTok{etiquetas = [f"\{categorias[0]\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{n\{porcentajes[0]\}\%\%",}
+\StringTok{            f"\{categorias[1]\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{n\{porcentajes[1]\}\%\%",}
+\StringTok{            f"\{categorias[2]\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{n\{porcentajes[2]\}\%\%",}
+\StringTok{            f"\{categorias[3]\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{n\{porcentajes[3]\}\%\%",}
+\StringTok{            f"\{categorias[4]\}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{n\{porcentajes[4]\}\%\%"]}
+
+\StringTok{\# Aleatorizar posición de inicio (ángulo)}
+\StringTok{angulo\_inicio = np.random.randint(0, 360)}
+\StringTok{angulo\_separacion = 0.05  \# Separación entre segmentos}
+
+\StringTok{\# Configuración de colores}
+\StringTok{colores = ["\%s", "\%s", "\%s", "\%s", "\%s"]}
+
+\StringTok{\# Crear el gráfico circular}
+\StringTok{plt.figure(figsize=(6, 5))}
+\StringTok{cunas, textos = plt.pie(}
+\StringTok{    porcentajes,}
+\StringTok{    labels=None,}
+\StringTok{    colors=colores,}
+\StringTok{    startangle=angulo\_inicio,}
+\StringTok{    explode=[0.05, 0.05, 0.05, 0.05, 0.05],  \# Separación de todos los segmentos}
+\StringTok{    wedgeprops=\{"edgecolor": "white", "linewidth": 1\}}
+\StringTok{)}
+
+\StringTok{\# Añadir etiquetas con porcentajes fuera del gráfico}
+\StringTok{plt.legend(cunas, etiquetas, loc="center left", bbox\_to\_anchor=(1, 0.5))}
+
+\StringTok{\# Ajustar diseño}
+\StringTok{plt.axis("equal")}
+\StringTok{plt.tight\_layout()}
+
+\StringTok{\# Guardar el gráfico}
+\StringTok{plt.savefig("grafico\_circular.png", dpi=150, bbox\_inches="tight")}
+\StringTok{plt.close()}
+\StringTok{\textquotesingle{}}\NormalTok{,}
+\NormalTok{bien\_transporte, bien\_vivienda1, bien\_vivienda1, bien\_vivienda2, bien\_transporte, bien\_transporte, bien\_vivienda2,}
+\NormalTok{p\_bien\_transporte\_y\_vivienda1, p\_solo\_vivienda1, p\_solo\_vivienda2, p\_solo\_bien\_transporte, p\_bien\_transporte\_y\_vivienda2,}
+\NormalTok{color\_bien\_transporte\_y\_vivienda1, color\_solo\_vivienda1, color\_solo\_vivienda2, color\_solo\_bien\_transporte, color\_bien\_transporte\_y\_vivienda2}
+\NormalTok{)}
+
+\CommentTok{\# Ejecutar el código Python}
+\FunctionTok{py\_run\_string}\NormalTok{(codigo\_python\_grafico)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Question}\label{question}
+
+Se realizó un(a) censo a un grupo de personas de una firma comercial
+sobre el tipo de bienes que poseen. Los resultados se presentan en la
+gráfica.
+
+\textbackslash begin\{figure\}
+
+\{\centering \textbackslash includegraphics{[}width=0,75\linewidth{]}\{grafico\_circular\}
+
+\}
+
+\textbackslash end\{figure\}
+
+Si 120 personas de el(la) firma poseen coche y(e) apartamento, ¿cuántas
+personas poseen solo apartamento?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  171
+\item
+  898
+\item
+  170
+\item
+  462
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos usar las relaciones proporcionadas
+en el gráfico circular y aplicar proporciones.
+
+Primero, identificamos los datos conocidos:
+
+\begin{itemize}
+\tightlist
+\item
+  19\% de las personas tienen coche y apartamento
+\item
+  27\% de las personas tienen solo apartamento (este es el dato que
+  buscamos)
+\item
+  Sabemos que 120 personas tienen coche y apartamento
+\end{itemize}
+
+Paso 1: Calcular el número total de personas en la firma. Si 120
+personas representan el 19\% del total, entonces:
+
+\[\text{Total de personas} = \frac{\text{Personas con coche y apartamento} \times 100\%}{\text{Porcentaje de personas con coche y apartamento}}\]
+
+\[\text{Total de personas} = \frac{120 \times 100\%}{19\%} = 632\]
+
+Paso 2: Calcular cuántas personas tienen solo apartamento. El porcentaje
+de personas que tienen solo apartamento es 27\% del total, por lo tanto:
+
+\[\text{Personas con solo apartamento} = \text{Total de personas} \times \frac{\text{Porcentaje de personas con solo apartamento}}{100\%}\]
+
+\[\text{Personas con solo apartamento} = 632 \times \frac{27\%}{100\%} = 170\]
+
+Por lo tanto, 170 personas poseen solo apartamento.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso
+\item
+  Falso
+\item
+  Verdadero
+\item
+  Falso
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: interpretacion\_grafico\_circular\_proporciones extype: schoice
+exsolution: 0010 exshuffle: TRUE exsection: Interpretación de
+gráficos\textbar Proporciones\textbar Porcentajes extol: 0
+exextra{[}tipoicfes{]}: SAI exextra{[}nivel{]}: Básico
+exextra{[}componente{]}: Aleatorio exextra{[}competencia{]}:
+Interpretación y representación exextra{[}tema{]}: Interpretación de
+gráficos circulares
+
+\end{document}
