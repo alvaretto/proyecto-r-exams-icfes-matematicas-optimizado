@@ -1,10 +1,10 @@
 ---
 output:
   word_document: default
+  html_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
-  html_document: default
 ---
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
@@ -185,8 +185,8 @@ test_that("Los porcentajes ajustados suman 100%", {
 })
 
 # Determinar la respuesta correcta y generar tres distractores plausibles
-# La respuesta correcta es el número de personas con solo bien3
-respuesta_correcta <- personas_solo_bien3
+# La respuesta correcta es el número de personas con solo bien2
+respuesta_correcta <- personas_solo_bien2
 
 # Generar distractores plausibles
 distractor1 <- round(personas_bien1_bien3 / 4)  # Un cuarto del valor dado en el problema
@@ -382,7 +382,7 @@ if (es_moodle) {
 }
 ```
 
-Si `r personas_bien1_bien3` `r termino_personas` de el(la) `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen solo `r bien3`?
+Si `r personas_bien1_bien3` `r termino_personas` de el(la) `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen solo `r bien2`?
 
 Answerlist
 ----------
@@ -399,31 +399,35 @@ Para resolver este problema, necesitamos aplicar proporciones y regla de tres a 
 ### Paso 1: Identificar los datos conocidos
 * Sabemos que `r personas_bien1_bien3` `r termino_personas` poseen `r bien1` y `r bien3`.
 * Según el gráfico circular, este grupo representa el `r p_bien1_bien3`% del total.
-* También observamos en el gráfico que las personas que poseen solo `r bien3` representan el `r p_solo_bien3`% del total.
+* También observamos en el gráfico que las personas que poseen solo `r bien2` representan el `r p_solo_bien2`% del total.
 
 ### Paso 2: Calcular el número total de personas
 Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
 
 Si `r p_bien1_bien3`% del total = `r personas_bien1_bien3` `r termino_personas`
+
 Entonces 100% del total = X `r termino_personas`
 
 Aplicando regla de tres:
+
 * X = (`r personas_bien1_bien3` × 100%) ÷ `r p_bien1_bien3`%
 * X = `r personas_bien1_bien3 * 100` ÷ `r p_bien1_bien3`
 * X = `r total_personas` `r termino_personas`
 
 Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
 
-### Paso 3: Calcular el número de personas que poseen solo `r bien3`
-Una vez conocido el total, podemos calcular cuántas personas poseen solo `r bien3` utilizando el porcentaje correspondiente del gráfico circular:
+### Paso 3: Calcular el número de personas que poseen solo `r bien2`
+Una vez conocido el total, podemos calcular cuántas personas poseen solo `r bien2` utilizando el porcentaje correspondiente del gráfico circular:
 
-Si 100% del total = `r total_personas` `r termino_personas`
-Entonces `r p_solo_bien3`% del total = Y `r termino_personas`
+Si 100% del total = `r total_personas` `r termino_personas`.
+
+Entonces `r p_solo_bien2`% del total = Y `r termino_personas`
 
 Aplicando regla de tres:
-* Y = (`r p_solo_bien3`% × `r total_personas`) ÷ 100%
-* Y = (`r p_solo_bien3` × `r total_personas`) ÷ 100
-* Y = `r p_solo_bien3 * total_personas / 100`
+
+* Y = (`r p_solo_bien2`% × `r total_personas`) ÷ 100%
+* Y = (`r p_solo_bien2` × `r total_personas`) ÷ 100
+* Y = `r p_solo_bien2 * total_personas / 100`
 * Y = `r respuesta_correcta` `r termino_personas`
 
 ### Paso 4: Verificación de la respuesta
@@ -433,12 +437,12 @@ Podemos verificar nuestra respuesta comprobando que los números calculados son 
 * Solo `r bien3`: `r respuesta_correcta` `r termino_personas` (`r p_solo_bien3`% del total)
 * Solo `r bien2`: `r personas_solo_bien2` `r termino_personas` (`r p_solo_bien2`% del total)
 * Solo `r bien1`: `r personas_solo_bien1` `r termino_personas` (`r p_solo_bien1`% del total)
-* `r bien1` y `r bien2`: `r personas_bien1_bien2` `r termino_personas` (`r p_bien1_bien2`% del total)
+* `r bien1` y `r bien2`: `r personas_bien1_bien2` `r termino_personas` (`r p_bien1_bien2`% del total).
 
 La suma de todas estas categorías es `r sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2))` `r termino_personas`, que coincide con nuestro total calculado de `r total_personas` `r termino_personas`.
 
 ### Conclusión
-Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen solo `r bien3`.
+Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen solo `r bien2`.
 
 Answerlist
 ----------

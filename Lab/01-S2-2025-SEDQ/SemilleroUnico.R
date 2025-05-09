@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "grafico_circular_bienes_v1.Rmd"
+archivo_examen <- "grafico_circular_bienes_v2.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)

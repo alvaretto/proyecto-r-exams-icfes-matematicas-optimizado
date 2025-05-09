@@ -10,7 +10,7 @@ El archivo principal `grafico_circular_bienes_v1.Rmd` genera un problema matemá
 
 - **grafico_circular_bienes_v1.Rmd**: Archivo principal que genera el ejercicio con aleatorización de variables.
 - **pruebas_unitarias_grafico_circular_bienes.R**: Conjunto de pruebas unitarias para verificar la calidad y robustez del ejercicio.
-- **ejecutar_pruebas_grafico_circular.R**: Script ejecutable para correr las pruebas unitarias.
+- **01-ejecutar_pruebas_grafico_circular.R**: Script ejecutable para correr las pruebas unitarias.
 - **README.md**: Este archivo, que proporciona documentación sobre el proyecto.
 
 ## Características Principales
