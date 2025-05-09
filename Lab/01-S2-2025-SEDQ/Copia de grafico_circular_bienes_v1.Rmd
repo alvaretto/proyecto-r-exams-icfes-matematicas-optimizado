@@ -65,7 +65,7 @@ contexto <- sample(contextos, 1)
 # Aleatorización de los tipos de bienes
 tipos_bien1 <- c("carro", "auto", "vehículo", "automóvil", "coche")
 tipos_bien2 <- c("casa", "vivienda", "residencia", "hogar", "domicilio")
-tipos_bien3 <- c("apartamento", "departamento", "piso", "flat", "condominio")
+tipos_bien3 <- c("apartamento", "departamento", "piso", "condominio")
 
 bien1 <- sample(tipos_bien1, 1)
 bien2 <- sample(tipos_bien2, 1)
@@ -382,7 +382,7 @@ if (es_moodle) {
 }
 ```
 
-Si `r personas_bien1_bien3` `r termino_personas` de la `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen solo `r bien3`?
+Si `r personas_bien1_bien3` `r termino_personas` de el(la) `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen solo `r bien3`?
 
 Answerlist
 ----------
