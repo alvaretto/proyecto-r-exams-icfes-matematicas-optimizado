@@ -79,17 +79,15 @@
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
 \setlength{\emergencystretch}{3em} % prevent overfull lines
@@ -97,6 +95,9 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{graphicx}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -283,11 +284,16 @@
 \begin{Highlighting}[]
 \FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
 
+\CommentTok{\# Obtener la ruta temporal para guardar la imagen}
+\NormalTok{temp\_dir }\OtherTok{\textless{}{-}} \FunctionTok{tempdir}\NormalTok{()}
+\NormalTok{grafico\_path }\OtherTok{\textless{}{-}} \FunctionTok{file.path}\NormalTok{(temp\_dir, }\StringTok{"grafico\_circular"}\NormalTok{)}
+
 \CommentTok{\# Código Python para generar el gráfico circular}
 \NormalTok{codigo\_python\_grafico }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}
 \StringTok{\textquotesingle{}}
 \StringTok{import matplotlib.pyplot as plt}
 \StringTok{import numpy as np}
+\StringTok{import os}
 
 \StringTok{\# Datos para el gráfico circular}
 \StringTok{categorias = ["\%s y \%s", "Solo \%s", "Solo \%s", "Solo \%s", "\%s y \%s"]}
@@ -325,49 +331,74 @@
 \StringTok{plt.axis("equal")}
 \StringTok{plt.tight\_layout()}
 
-\StringTok{\# Guardar el gráfico}
-\StringTok{plt.savefig("grafico\_circular.png", dpi=150, bbox\_inches="tight")}
+\StringTok{\# Guardar el gráfico en múltiples formatos para asegurar compatibilidad}
+\StringTok{plt.savefig("\%s.png", dpi=150, bbox\_inches="tight", format="png")}
+\StringTok{plt.savefig("\%s.pdf", dpi=150, bbox\_inches="tight", format="pdf")}
 \StringTok{plt.close()}
 \StringTok{\textquotesingle{}}\NormalTok{,}
 \NormalTok{bien\_transporte, bien\_vivienda1, bien\_vivienda1, bien\_vivienda2, bien\_transporte, bien\_transporte, bien\_vivienda2,}
 \NormalTok{p\_bien\_transporte\_y\_vivienda1, p\_solo\_vivienda1, p\_solo\_vivienda2, p\_solo\_bien\_transporte, p\_bien\_transporte\_y\_vivienda2,}
-\NormalTok{color\_bien\_transporte\_y\_vivienda1, color\_solo\_vivienda1, color\_solo\_vivienda2, color\_solo\_bien\_transporte, color\_bien\_transporte\_y\_vivienda2}
+\NormalTok{color\_bien\_transporte\_y\_vivienda1, color\_solo\_vivienda1, color\_solo\_vivienda2, color\_solo\_bien\_transporte, color\_bien\_transporte\_y\_vivienda2,}
+\NormalTok{grafico\_path, grafico\_path}
 \NormalTok{)}
 
 \CommentTok{\# Ejecutar el código Python}
 \FunctionTok{py\_run\_string}\NormalTok{(codigo\_python\_grafico)}
+
+\CommentTok{\# Copiar los archivos a la carpeta actual para que estén disponibles}
+\FunctionTok{file.copy}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(grafico\_path, }\StringTok{".png"}\NormalTok{), }\StringTok{"grafico\_circular.png"}\NormalTok{, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Verificar si se generó el archivo PDF}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(grafico\_path, }\StringTok{".pdf"}\NormalTok{))) \{}
+  \FunctionTok{file.copy}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(grafico\_path, }\StringTok{".pdf"}\NormalTok{), }\StringTok{"grafico\_circular.pdf"}\NormalTok{, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \CommentTok{\# Si no se generó el PDF, convertir el PNG a PDF usando magick}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{requireNamespace}\NormalTok{(}\StringTok{"magick"}\NormalTok{, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{)) \{}
+\NormalTok{    img }\OtherTok{\textless{}{-}}\NormalTok{ magick}\SpecialCharTok{::}\FunctionTok{image\_read}\NormalTok{(}\StringTok{"grafico\_circular.png"}\NormalTok{)}
+\NormalTok{    magick}\SpecialCharTok{::}\FunctionTok{image\_write}\NormalTok{(img, }\StringTok{"grafico\_circular.pdf"}\NormalTok{, }\AttributeTok{format =} \StringTok{"pdf"}\NormalTok{)}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"Convertido PNG a PDF usando magick"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{warning}\NormalTok{(}\StringTok{"No se pudo generar el archivo PDF del gráfico. Se usará PNG en su lugar."}\NormalTok{)}
+\NormalTok{  \}}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
 \section{Question}\label{question}
 
-Se realizó un(a) censo a un grupo de personas de una firma comercial
-sobre el tipo de bienes que poseen. Los resultados se presentan en la
-gráfica.
+Se realizó un(a) estudio a un grupo de personas de una organización
+tecnológica sobre el tipo de bienes que poseen. Los resultados se
+presentan en la gráfica.
 
-\textbackslash begin\{figure\}
+\includegraphics[width=0.75\linewidth]{grafico_circular.pdf}
 
-\{\centering \textbackslash includegraphics{[}width=0,75\linewidth{]}\{grafico\_circular\}
-
-\}
-
-\textbackslash end\{figure\}
-
-Si 120 personas de el(la) firma poseen coche y(e) apartamento, ¿cuántas
-personas poseen solo apartamento?
+Si 180 personas de el(la) organización poseen coche y(e) piso, ¿cuántas
+personas poseen solo piso?
 
 \subsection{Answerlist}\label{answerlist}
 
 \begin{itemize}
 \tightlist
 \item
-  171
+  340
 \item
-  898
+  1894
 \item
-  170
+  339
 \item
-  462
+  656
 \end{itemize}
 
 \section{Solution}\label{solution}
@@ -380,40 +411,39 @@ Primero, identificamos los datos conocidos:
 \begin{itemize}
 \tightlist
 \item
-  19\% de las personas tienen coche y apartamento
+  18\% de las personas tienen coche y piso
 \item
-  27\% de las personas tienen solo apartamento (este es el dato que
-  buscamos)
+  34\% de las personas tienen solo piso (este es el dato que buscamos)
 \item
-  Sabemos que 120 personas tienen coche y apartamento
+  Sabemos que 180 personas tienen coche y piso
 \end{itemize}
 
-Paso 1: Calcular el número total de personas en la firma. Si 120
-personas representan el 19\% del total, entonces:
+Paso 1: Calcular el número total de personas en la organización. Si 180
+personas representan el 18\% del total, entonces:
 
-\[\text{Total de personas} = \frac{\text{Personas con coche y apartamento} \times 100\%}{\text{Porcentaje de personas con coche y apartamento}}\]
+\[\text{Total de personas} = \frac{\text{Personas con coche y piso} \times 100\%}{\text{Porcentaje de personas con coche y piso}}\]
 
-\[\text{Total de personas} = \frac{120 \times 100\%}{19\%} = 632\]
+\[\text{Total de personas} = \frac{180 \times 100\%}{18\%} = 1000\]
 
-Paso 2: Calcular cuántas personas tienen solo apartamento. El porcentaje
-de personas que tienen solo apartamento es 27\% del total, por lo tanto:
+Paso 2: Calcular cuántas personas tienen solo piso. El porcentaje de
+personas que tienen solo piso es 34\% del total, por lo tanto:
 
-\[\text{Personas con solo apartamento} = \text{Total de personas} \times \frac{\text{Porcentaje de personas con solo apartamento}}{100\%}\]
+\[\text{Personas con solo piso} = \text{Total de personas} \times \frac{\text{Porcentaje de personas con solo piso}}{100\%}\]
 
-\[\text{Personas con solo apartamento} = 632 \times \frac{27\%}{100\%} = 170\]
+\[\text{Personas con solo piso} = 1000 \times \frac{34\%}{100\%} = 340\]
 
-Por lo tanto, 170 personas poseen solo apartamento.
+Por lo tanto, 340 personas poseen solo piso.
 
 \subsection{Answerlist}\label{answerlist-1}
 
 \begin{itemize}
 \tightlist
 \item
-  Falso
-\item
-  Falso
-\item
   Verdadero
+\item
+  Falso
+\item
+  Falso
 \item
   Falso
 \end{itemize}
@@ -421,11 +451,7 @@ Por lo tanto, 170 personas poseen solo apartamento.
 \section{Meta-information}\label{meta-information}
 
 exname: interpretacion\_grafico\_circular\_proporciones extype: schoice
-exsolution: 0010 exshuffle: TRUE exsection: Interpretación de
+exsolution: 1000 exshuffle: TRUE exsection: Interpretación de
 gráficos\textbar Proporciones\textbar Porcentajes extol: 0
-exextra{[}tipoicfes{]}: SAI exextra{[}nivel{]}: Básico
-exextra{[}componente{]}: Aleatorio exextra{[}competencia{]}:
-Interpretación y representación exextra{[}tema{]}: Interpretación de
-gráficos circulares
 
 \end{document}
