@@ -1,11 +1,11 @@
 ---
 output:
   word_document: default
-  html_document: default
   pdf_document:
     keep_tex: true
     includes:
       in_header:
+  html_document: default
 header-includes:
   - \usepackage{graphicx}
 ---
@@ -217,11 +217,16 @@ color_bien_transporte_y_vivienda2 <- paleta_mezclada[5]
 ```{r generar_grafico_circular_python}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
+# Obtener la ruta temporal para guardar la imagen
+temp_dir <- tempdir()
+grafico_path <- file.path(temp_dir, "grafico_circular")
+
 # Código Python para generar el gráfico circular
 codigo_python_grafico <- sprintf(
 '
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # Datos para el gráfico circular
 categorias = ["%s y %s", "Solo %s", "Solo %s", "Solo %s", "%s y %s"]
@@ -259,17 +264,36 @@ plt.legend(cunas, etiquetas, loc="center left", bbox_to_anchor=(1, 0.5))
 plt.axis("equal")
 plt.tight_layout()
 
-# Guardar el gráfico
-plt.savefig("grafico_circular.png", dpi=150, bbox_inches="tight")
+# Guardar el gráfico en múltiples formatos para asegurar compatibilidad
+plt.savefig("%s.png", dpi=150, bbox_inches="tight", format="png")
+plt.savefig("%s.pdf", dpi=150, bbox_inches="tight", format="pdf")
 plt.close()
 ',
 bien_transporte, bien_vivienda1, bien_vivienda1, bien_vivienda2, bien_transporte, bien_transporte, bien_vivienda2,
 p_bien_transporte_y_vivienda1, p_solo_vivienda1, p_solo_vivienda2, p_solo_bien_transporte, p_bien_transporte_y_vivienda2,
-color_bien_transporte_y_vivienda1, color_solo_vivienda1, color_solo_vivienda2, color_solo_bien_transporte, color_bien_transporte_y_vivienda2
+color_bien_transporte_y_vivienda1, color_solo_vivienda1, color_solo_vivienda2, color_solo_bien_transporte, color_bien_transporte_y_vivienda2,
+grafico_path, grafico_path
 )
 
 # Ejecutar el código Python
 py_run_string(codigo_python_grafico)
+
+# Copiar los archivos a la carpeta actual para que estén disponibles
+file.copy(paste0(grafico_path, ".png"), "grafico_circular.png", overwrite = TRUE)
+
+# Verificar si se generó el archivo PDF
+if (file.exists(paste0(grafico_path, ".pdf"))) {
+  file.copy(paste0(grafico_path, ".pdf"), "grafico_circular.pdf", overwrite = TRUE)
+} else {
+  # Si no se generó el PDF, convertir el PNG a PDF usando magick
+  if (requireNamespace("magick", quietly = TRUE)) {
+    img <- magick::image_read("grafico_circular.png")
+    magick::image_write(img, "grafico_circular.pdf", format = "pdf")
+    message("Convertido PNG a PDF usando magick")
+  } else {
+    warning("No se pudo generar el archivo PDF del gráfico. Se usará PNG en su lugar.")
+  }
+}
 ```
 
 Question
@@ -277,8 +301,21 @@ Question
 
 Se realizó un(a) `r termino_encuesta` a un grupo de personas de una `r tipo_empresa` `r sector_empresa` sobre el tipo de bienes que poseen. Los resultados se presentan en la gráfica.
 
-```{r grafico_circular, echo=FALSE, fig.align='center', out.width='.75\\linewidth'}
-knitr::include_graphics("grafico_circular.png")
+```{r grafico_circular, echo=FALSE, fig.align='center', out.width='.75\\linewidth', results='asis'}
+# Detectar el formato de salida y usar la imagen apropiada
+if (knitr::is_latex_output() || grepl("pdf|nops|pandoc", typ)) {
+  # Para salidas PDF (exams2pdf, exams2nops, exams2pandoc)
+  # Verificar si existe el archivo PDF, si no, usar el PNG
+  if (file.exists("grafico_circular.pdf")) {
+    cat("\\includegraphics[width=0.75\\linewidth]{grafico_circular.pdf}")
+  } else {
+    # Si no existe el PDF, usar el PNG directamente
+    cat("\\includegraphics[width=0.75\\linewidth]{grafico_circular.png}")
+  }
+} else {
+  # Para salidas HTML y otros formatos
+  knitr::include_graphics("grafico_circular.png")
+}
 ```
 
 Si `r total_bien_transporte_y_vivienda1` personas de el(la) `r tipo_empresa` poseen `r bien_transporte` y(e) `r bien_vivienda1`, ¿cuántas personas poseen solo `r bien_vivienda1`?
@@ -332,8 +369,3 @@ exsolution: `r paste(solucion, collapse="")`
 exshuffle: TRUE
 exsection: Interpretación de gráficos|Proporciones|Porcentajes
 extol: 0
-exextra[tipoicfes]: SAI
-exextra[nivel]: Básico
-exextra[componente]: Aleatorio
-exextra[competencia]: Interpretación y representación
-exextra[tema]: Interpretación de gráficos circulares
