@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 
@@ -187,7 +187,7 @@ r_int_fmt <- formatear_numero(r_int)
 altura_fmt <- formatear_numero(altura)
 grosor_fmt <- formatear_numero(grosor)  # Asegura consistencia usando el grosor precalculado
 
-# Código Python para generar el cilindro hueco similar a la imagen de referencia
+# Código Python para generar el cilindro hueco
 codigo_python <- paste0("
 import matplotlib.pyplot as plt
 import numpy as np
