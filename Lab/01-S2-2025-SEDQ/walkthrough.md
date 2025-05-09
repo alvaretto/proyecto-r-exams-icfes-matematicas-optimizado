@@ -1,16 +1,41 @@
 ---
 output:
+  pdf_document: default
+  html_document: default
+---
+# Walkthrough del código de grafico_circular_bienes_v1.Rmd
+
+Este documento presenta un análisis detallado del código, explicando cada sección, 
+su propósito y funcionamiento.
+
+## 1. Configuración inicial (Metadatos YAML y setup)
+
+```yaml
+---
+output:
   word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
   html_document: default
 ---
+```
+
+Esta sección define los formatos de salida soportados (Word, PDF y HTML) con 
+configuraciones específicas para PDF que incluyen mantener el archivo TEX 
+intermedio y añadir dependencias para manejo de gráficos y posicionamiento.
+
+```r
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
+```
 
+Estas líneas configuran el entorno R para usar punto como separador decimal, 
+lo cual es crucial para la consistencia en diferentes configuraciones regionales.
+
+```r
 # Configurar el motor LaTeX globalmente
 options(tikzLatex = "pdflatex")
 options(tikzXelatex = FALSE)
@@ -20,13 +45,27 @@ options(tikzLatexPackages = c(
   "\\usepackage{graphicx}",
   "\\usepackage{float}"
 ))
+```
 
+Aquí se configura el motor LaTeX para la generación de PDF, especificando 
+pdflatex como compilador y cargando paquetes necesarios para gráficos y tablas.
+
+```r
 library(exams)
 library(reticulate)
 library(digest)
 library(testthat)
 library(knitr)
+```
 
+Carga las bibliotecas necesarias:
+- `exams`: Para la generación de ejercicios
+- `reticulate`: Para la integración con Python
+- `digest`: Para funciones hash (usado en pruebas)
+- `testthat`: Para pruebas unitarias
+- `knitr`: Para la generación de documentos
+
+```r
 typ <- match_exams_device()
 options(scipen = 999)
 knitr::opts_chunk$set(
@@ -39,7 +78,17 @@ knitr::opts_chunk$set(
   dpi = 150,
   fig.pos = "H"
 )
+```
 
+Esta sección configura opciones globales para los chunks de código:
+
+- Desactiva notación científica
+- Suprime advertencias y mensajes
+- Configura la generación de figuras en formatos PNG y PDF
+- Establece la resolución de las imágenes a 150 DPI
+- Fija la posición de las figuras como "H" (here) para LaTeX
+
+```r
 # Configuración para chunks de Python
 knitr::knit_engines$set(python = function(options) {
   knitr::engine_output(options, options$code, '')
@@ -49,19 +98,35 @@ knitr::knit_engines$set(python = function(options) {
 use_python(Sys.which("python"), required = TRUE)
 ```
 
+Configura el motor de Python para reticulate y asegura que Python esté disponible 
+en el sistema.
+
+## 2. Definición y aleatorización de variables
+
+```r
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
 set.seed(sample(1:10000, 1))
+```
 
+Inicia la sección de definición de variables, asegurando el uso del punto 
+decimal y estableciendo una semilla aleatoria para garantizar reproducibilidad 
+pero con variación entre ejecuciones.
+
+```r
 # Aleatorización del contexto del problema
 contextos <- c(
   "empresa", "organización", "compañía", "institución", "corporación",
   "entidad", "firma", "negocio", "sociedad", "grupo empresarial"
 )
 contexto <- sample(contextos, 1)
+```
 
+Define y aleatoriza el contexto organizacional del problema.
+
+```r
 # Aleatorización de los tipos de bienes
 tipos_bien1 <- c("carro", "auto", "vehículo", "automóvil", "coche")
 tipos_bien2 <- c("casa", "vivienda", "residencia", "hogar", "domicilio")
@@ -70,7 +135,11 @@ tipos_bien3 <- c("apartamento", "departamento", "piso", "condominio")
 bien1 <- sample(tipos_bien1, 1)
 bien2 <- sample(tipos_bien2, 1)
 bien3 <- sample(tipos_bien3, 1)
+```
 
+Define y aleatoriza los tipos de bienes que se utilizarán en el problema.
+
+```r
 # Aleatorización de términos para el enunciado
 terminos_encuesta <- c("encuesta", "sondeo", "estudio", "investigación", "consulta")
 termino_encuesta <- sample(terminos_encuesta, 1)
@@ -81,9 +150,13 @@ termino_personas <- sample(terminos_personas, 1)
 terminos_bienes <- c("bienes", "posesiones", "propiedades", "activos", "patrimonios")
 termino_bienes <- sample(terminos_bienes, 1)
 
-terminos_resultados <- c("resultados", "datos", "estadísticas", "cifras")
+terminos_resultados <- c("resultados", "datos", "información", "estadísticas", "cifras")
 termino_resultados <- sample(terminos_resultados, 1)
+```
 
+Aleatoriza términos adicionales para enriquecer el enunciado del problema.
+
+```r
 # Aleatorización de colores para el gráfico circular (paletas oscuras)
 paleta_colores <- list(
   c("#C62828", "#2E7D32", "#1565C0", "#EF6C00", "#6A1B9A"),  # Paleta oscura 1
@@ -93,7 +166,11 @@ paleta_colores <- list(
   c("#880E4F", "#1B5E20", "#0D47A1", "#BF360C", "#4A148C")   # Paleta oscura 4
 )
 paleta_seleccionada <- sample(paleta_colores, 1)[[1]]
+```
 
+Define y selecciona aleatoriamente una paleta de colores para el gráfico circular.
+
+```r
 # Aleatorización de los porcentajes manteniendo coherencia matemática
 # Generación de porcentajes iniciales para cada categoría
 set_porcentajes <- function() {
@@ -113,7 +190,12 @@ set_porcentajes <- function() {
     }
   }
 }
+```
 
+Define una función para generar porcentajes aleatorios que sumen exactamente 100% 
+y estén dentro de rangos razonables.
+
+```r
 # Obtener porcentajes válidos
 porcentajes <- set_porcentajes()
 
@@ -127,7 +209,11 @@ p_bien1_bien2 <- porcentajes[5]  # Porcentaje de bien1 y bien2
 test_that("Los porcentajes suman 100%", {
   expect_equal(sum(porcentajes), 100)
 })
+```
 
+Genera los porcentajes y verifica que sumen exactamente 100%.
+
+```r
 # Valor conocido para el cálculo: Número de personas con bien1 y bien3
 personas_bien1_bien3 <- sample(c(72, 96, 120, 144, 168, 192, 216, 240), 1)
 
@@ -142,7 +228,12 @@ personas_bien1_bien2 <- round(total_personas * p_bien1_bien2 / 100)
 
 # Recalcular personas_bien1_bien3 para asegurar que el total sea correcto
 personas_bien1_bien3 <- total_personas - (personas_solo_bien3 + personas_solo_bien2 + personas_solo_bien1 + personas_bien1_bien2)
+```
 
+Selecciona aleatoriamente un valor conocido (personas con bien1 y bien3) y 
+calcula el resto de valores manteniendo la coherencia matemática.
+
+```r
 # Asegurar que todos los valores son positivos y razonables
 personas <- c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2)
 test_that("Todas las categorías tienen al menos una persona", {
@@ -153,7 +244,11 @@ test_that("Todas las categorías tienen al menos una persona", {
 test_that("La suma de todas las categorías es igual al total", {
   expect_equal(sum(personas), total_personas)
 })
+```
 
+Verifica que todos los valores calculados sean positivos y que la suma sea correcta.
+
+```r
 # Recalcular los porcentajes reales basados en los números de personas (para mantener coherencia)
 p_bien1_bien3 <- round(personas_bien1_bien3 / total_personas * 100)
 p_solo_bien3 <- round(personas_solo_bien3 / total_personas * 100)
@@ -172,7 +267,12 @@ if (total_porcentaje > 100) {
   min_idx <- which.min(porcentajes)
   porcentajes[min_idx] <- porcentajes[min_idx] + (100 - total_porcentaje)
 }
+```
 
+Recalcula los porcentajes basados en los números de personas y ajusta para 
+asegurar que sumen exactamente 100%.
+
+```r
 p_bien1_bien3 <- porcentajes[1]
 p_solo_bien3 <- porcentajes[2]
 p_solo_bien2 <- porcentajes[3]
@@ -183,7 +283,11 @@ p_bien1_bien2 <- porcentajes[5]
 test_that("Los porcentajes ajustados suman 100%", {
   expect_equal(sum(porcentajes), 100)
 })
+```
 
+Actualiza los porcentajes y verifica nuevamente que sumen 100%.
+
+```r
 # Determinar la respuesta correcta y generar tres distractores plausibles
 # La respuesta correcta es el número de personas con solo bien3
 respuesta_correcta <- personas_solo_bien3
@@ -204,7 +308,12 @@ while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
   if (distractor2 == distractor3) distractor2 <- distractor2 - sample(5:10, 1)
   if (distractor1 == distractor3) distractor3 <- distractor3 + sample(5:10, 1)
 }
+```
 
+Define la respuesta correcta y genera distractores plausibles basados en errores 
+comunes, asegurando que sean diferentes entre sí y de la respuesta correcta.
+
+```r
 # Crear un vector con todas las opciones y mezclarlas
 opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
 names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
@@ -218,6 +327,11 @@ solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
 ```
 
+Mezcla las opciones de respuesta y crea el vector de solución para r-exams.
+
+## 3. Generación del gráfico circular
+
+```r
 ```{r generar_grafico_circular, message=FALSE, warning=FALSE}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
@@ -236,7 +350,12 @@ sizes = [", p_bien1_bien3, ", ", p_solo_bien3, ", ", p_solo_bien2, ",
 colors = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
           '", paleta_seleccionada[3], "', '", paleta_seleccionada[4], "',
           '", paleta_seleccionada[5], "']
+```
 
+Inicia la generación del gráfico circular con Python, definiendo las etiquetas, 
+tamaños y colores.
+
+```python
 # Explode para destacar ligeramente el sector con bien1 y bien3
 explode = (0.03, 0, 0, 0, 0)
 
@@ -255,7 +374,11 @@ wedges, texts, autotexts = plt.pie(
     wedgeprops={'edgecolor': 'white', 'linewidth': 1},
     textprops={'fontsize': 10, 'fontweight': 'bold', 'color': 'white'}
 )
+```
 
+Crea el gráfico circular con configuraciones detalladas para mejorar la visualización.
+
+```python
 # Configuración estética de los textos de porcentaje con recuadros
 for autotext in autotexts:
     autotext.set_fontsize(9)  # Tamaño de fuente para porcentajes
@@ -270,7 +393,12 @@ for autotext in autotexts:
 # Eliminar los textos del pie (los reemplazaremos con etiquetas externas)
 for text in texts:
     text.set_visible(False)
+```
 
+Configura los textos de porcentaje con recuadros y elimina las etiquetas 
+predeterminadas para reemplazarlas con etiquetas externas.
+
+```python
 # Crear etiquetas externas con líneas conectoras
 bbox_props = {'boxstyle': 'round,pad=0.3',
              'facecolor': 'white',
@@ -304,7 +432,12 @@ def get_label_position(angle_rad, wedge_size):
         y *= 1.1
 
     return x, y, ha, va
+```
 
+Define una función para calcular posiciones óptimas para las etiquetas externas, 
+evitando solapamientos.
+
+```python
 # Colocar etiquetas externas con líneas conectoras
 for i, wedge in enumerate(wedges):
     # Calcular ángulo medio del sector
@@ -333,7 +466,11 @@ for i, wedge in enumerate(wedges):
             va=va,
             bbox=bbox_props,
             zorder=10)
+```
 
+Coloca las etiquetas externas con líneas conectoras a los sectores del gráfico.
+
+```python
 # Asegurar que el gráfico sea un círculo
 plt.axis('equal')
 
@@ -360,10 +497,16 @@ plt.close()
 py_run_string(codigo_python)
 ```
 
+Finaliza la configuración del gráfico, añade un título, ajusta los márgenes y 
+guarda la figura en formatos PNG y PDF.
+
+## 4. Pregunta y opciones de respuesta
+
+```r
 Question
 ========
 
-Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
+Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los `r termino_resultados` se presentan en la gráfica.
 
 ```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
@@ -390,7 +533,24 @@ Answerlist
 - `r opciones_mezcladas[2]`
 - `r opciones_mezcladas[3]`
 - `r opciones_mezcladas[4]`
+```
 
+Define la pregunta, muestra el gráfico circular (con tamaño adaptado según el 
+formato de salida) y presenta las opciones de respuesta.
+
+Aspectos destacables de esta sección:
+
+1. **Adaptabilidad al formato de salida**: El código detecta si se está generando para Moodle u otro formato y ajusta el tamaño de la imagen en consecuencia.
+
+2. **Uso de variables aleatorizadas**: El enunciado utiliza las variables aleatorizadas previamente definidas, lo que permite generar múltiples versiones del mismo problema.
+
+3. **Estructura clara**: La pregunta está estructurada de manera clara, proporcionando primero el contexto, luego mostrando el gráfico, y finalmente planteando la pregunta específica.
+
+4. **Opciones de respuesta mezcladas**: Las opciones de respuesta se presentan en orden aleatorio, con una única respuesta correcta y tres distractores plausibles.
+
+## 5. Solución
+
+```r
 Solution
 ========
 
@@ -446,7 +606,25 @@ Answerlist
 - `r if(solucion[2] == 1) "Verdadero" else "Falso"`
 - `r if(solucion[3] == 1) "Verdadero" else "Falso"`
 - `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+```
 
+Proporciona una solución detallada paso a paso, explicando el razonamiento matemático y verificando la respuesta.
+
+Aspectos destacables de esta sección:
+
+1. **Estructura pedagógica**: La solución está organizada en pasos claros y secuenciales, facilitando la comprensión del proceso de resolución.
+
+2. **Explicación detallada**: Cada paso incluye una explicación detallada del razonamiento matemático aplicado.
+
+3. **Uso de variables aleatorizadas**: La solución utiliza las variables aleatorizadas, lo que permite que sea coherente con la versión específica del problema generado.
+
+4. **Verificación de la respuesta**: Incluye un paso de verificación que demuestra la coherencia de la solución con los datos del problema.
+
+5. **Formato matemático claro**: Presenta las operaciones matemáticas de manera clara y estructurada, facilitando el seguimiento del proceso de cálculo.
+
+## 6. Metainformación
+
+```r
 Meta-information
 ================
 exname: proporciones_diagrama_circular
@@ -454,3 +632,29 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Estadística|Proporciones|Interpretación de gráficos
+```
+
+Define la metainformación para r-exams:
+- `exname`: Nombre del ejercicio
+- `extype`: Tipo de ejercicio (schoice = selección única)
+- `exsolution`: Vector de solución (1 para la respuesta correcta, 0 para las incorrectas)
+- `exshuffle`: Indica si las opciones deben mezclarse
+- `exsection`: Categorización del ejercicio
+
+## Aspectos destacables del código
+
+1. **Aleatorización robusta**: El código implementa múltiples capas de aleatorización (términos, valores, colores) para generar numerosas variantes del mismo problema.
+
+2. **Coherencia matemática**: Se realizan múltiples verificaciones para asegurar que los cálculos sean matemáticamente coherentes.
+
+3. **Visualización avanzada**: El gráfico circular incluye características avanzadas como etiquetas externas con líneas conectoras, recuadros para los porcentajes y optimización para evitar solapamientos.
+
+4. **Adaptabilidad a diferentes formatos**: El código detecta el formato de salida y ajusta la presentación en consecuencia.
+
+5. **Solución pedagógica**: La solución está estructurada de manera didáctica, explicando paso a paso el razonamiento matemático.
+
+6. **Distractores plausibles**: Los distractores se generan basados en errores comunes, haciéndolos plausibles pero inequívocamente incorrectos.
+
+7. **Pruebas integradas**: El código incluye pruebas unitarias integradas para verificar la coherencia de los datos generados.
+
+Este ejercicio es un excelente ejemplo de cómo utilizar r-exams para crear problemas matemáticos interactivos con alta variabilidad y calidad pedagógica. La combinación de R y Python permite aprovechar las fortalezas de ambos lenguajes: R para la lógica del ejercicio y Python para la visualización avanzada.

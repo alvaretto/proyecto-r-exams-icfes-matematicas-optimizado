@@ -11,7 +11,7 @@
 
 
 
-<title>README</title>
+<title>walkthrough</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,240 +352,592 @@ display: none;
 </div>
 
 
-<div id="ejercicio-de-gráfico-circular-de-bienes" class="section level1">
-<h1>Ejercicio de Gráfico Circular de Bienes</h1>
-<div id="descripción-general" class="section level2">
-<h2>Descripción General</h2>
-<p>Este proyecto contiene un ejercicio interactivo de matemáticas para
-evaluar la interpretación de gráficos circulares (diagramas de pastel) y
-el cálculo de proporciones. El ejercicio está diseñado para ser
-utilizado en plataformas educativas como Moodle a través del paquete
-R-Exams.</p>
-<p>El archivo principal <code>grafico_circular_bienes_v1.Rmd</code>
-genera un problema matemático donde los estudiantes deben interpretar un
-gráfico circular que muestra la distribución de diferentes tipos de
-bienes (como carros, casas y apartamentos) que poseen las personas de
-una organización, y calcular valores específicos utilizando reglas de
-tres y proporciones.</p>
-</div>
-<div id="archivos-del-proyecto" class="section level2">
-<h2>Archivos del Proyecto</h2>
-<ul>
-<li><strong>grafico_circular_bienes_v1.Rmd</strong>: Archivo principal
-que genera el ejercicio con aleatorización de variables.</li>
-<li><strong>pruebas_unitarias_grafico_circular_bienes.R</strong>:
-Conjunto de pruebas unitarias para verificar la calidad y robustez del
-ejercicio.</li>
-<li><strong>01-ejecutar_pruebas_grafico_circular.R</strong>: Script
-ejecutable para correr las pruebas unitarias.</li>
-<li><strong>README.md</strong>: Este archivo, que proporciona
-documentación sobre el proyecto.</li>
-</ul>
-</div>
-<div id="características-principales" class="section level2">
-<h2>Características Principales</h2>
-<div id="aleatorización-avanzada" class="section level3">
-<h3>Aleatorización Avanzada</h3>
-<p>El ejercicio implementa una aleatorización robusta que incluye:</p>
-<ul>
-<li><strong>Términos contextuales</strong>: Variación en los términos
-utilizados para describir bienes (carro, auto, vehículo, etc.),
-contextos organizacionales (empresa, organización, compañía, etc.) y
-otros elementos narrativos.</li>
-<li><strong>Valores numéricos</strong>: Aleatorización de porcentajes y
-cantidades manteniendo coherencia matemática.</li>
-<li><strong>Elementos visuales</strong>: Variación en las paletas de
-colores del gráfico circular.</li>
-<li><strong>Opciones de respuesta</strong>: Generación de distractores
-plausibles pero inequívocamente incorrectos.</li>
-</ul>
-</div>
-<div id="visualización-de-alta-calidad" class="section level3">
-<h3>Visualización de Alta Calidad</h3>
-<ul>
-<li><p>Gráfico circular generado con Python (matplotlib) que
-incluye:</p>
-<ul>
-<li>Etiquetas externas con líneas conectoras</li>
-<li>Porcentajes visibles en cada sector</li>
-<li>Paletas de colores visualmente atractivas</li>
-<li>Diseño optimizado para evitar solapamiento de etiquetas</li>
-</ul></li>
-</ul>
-</div>
-<div id="compatibilidad-con-múltiples-formatos" class="section level3">
-<h3>Compatibilidad con Múltiples Formatos</h3>
-<p>El ejercicio está diseñado para funcionar correctamente en diferentes
-formatos de salida:</p>
-<ul>
-<li>Moodle (HTML)</li>
-<li>PDF</li>
-<li>Word</li>
-<li>NOPS (exámenes impresos escaneables)</li>
-</ul>
-</div>
-</div>
-<div id="objetivos-pedagógicos" class="section level2">
-<h2>Objetivos Pedagógicos</h2>
-<ol style="list-style-type: decimal">
-<li><strong>Interpretación de gráficos</strong>: Desarrollar la
-capacidad de extraer información de representaciones visuales de
-datos.</li>
-<li><strong>Cálculo de proporciones</strong>: Practicar el uso de reglas
-de tres y cálculos porcentuales.</li>
-<li><strong>Resolución de problemas</strong>: Aplicar razonamiento
-matemático para resolver situaciones contextualizadas.</li>
-<li><strong>Pensamiento crítico</strong>: Evaluar diferentes opciones de
-respuesta y descartar distractores.</li>
-</ol>
-</div>
-<div id="requisitos-técnicos" class="section level2">
-<h2>Requisitos Técnicos</h2>
-<ul>
-<li>R (versión 3.6 o superior)</li>
-<li>Paquetes de R:
-<ul>
-<li>exams</li>
-<li>reticulate</li>
-<li>digest</li>
-<li>testthat</li>
-<li>knitr</li>
-</ul></li>
-<li>Python (versión 3.6 o superior)</li>
-<li>Bibliotecas de Python:
-<ul>
-<li>matplotlib</li>
-<li>numpy</li>
-</ul></li>
-</ul>
-</div>
-<div id="uso" class="section level2">
-<h2>Uso</h2>
-<div id="generación-del-ejercicio" class="section level3">
-<h3>Generación del Ejercicio</h3>
-<p>Para generar el ejercicio en diferentes formatos:</p>
+<div id="walkthrough-del-código-de-grafico_circular_bienes_v1.rmd" class="section level1">
+<h1>Walkthrough del código de grafico_circular_bienes_v1.Rmd</h1>
+<p>Este documento presenta un análisis detallado del código, explicando
+cada sección, su propósito y funcionamiento.</p>
+<div id="configuración-inicial-metadatos-yaml-y-setup" class="section level2">
+<h2>1. Configuración inicial (Metadatos YAML y setup)</h2>
+<pre class="yaml"><code>---
+output:
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: [&quot;graphicx&quot;, &quot;float&quot;]
+  html_document: default
+---</code></pre>
+<p>Esta sección define los formatos de salida soportados (Word, PDF y
+HTML) con configuraciones específicas para PDF que incluyen mantener el
+archivo TEX intermedio y añadir dependencias para manejo de gráficos y
+posicionamiento.</p>
+<pre class="r"><code>```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = &quot;LC_NUMERIC&quot;, locale = &quot;C&quot;)
+options(OutDec = &quot;.&quot;)</code></pre>
+<p>Estas líneas configuran el entorno R para usar punto como separador
+decimal, lo cual es crucial para la consistencia en diferentes
+configuraciones regionales.</p>
+<pre class="r"><code># Configurar el motor LaTeX globalmente
+options(tikzLatex = &quot;pdflatex&quot;)
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  &quot;\\usepackage{tikz}&quot;,
+  &quot;\\usepackage{colortbl}&quot;,
+  &quot;\\usepackage{graphicx}&quot;,
+  &quot;\\usepackage{float}&quot;
+))</code></pre>
+<p>Aquí se configura el motor LaTeX para la generación de PDF,
+especificando pdflatex como compilador y cargando paquetes necesarios
+para gráficos y tablas.</p>
 <pre class="r"><code>library(exams)
-
-# Para Moodle
-exams2moodle(&quot;Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd&quot;, n = 10)
-
-# Para PDF
-exams2pdf(&quot;Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd&quot;, n = 10)
-
-# Para Word
-exams2docx(&quot;Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd&quot;, n = 10)</code></pre>
-</div>
-<div id="ejecución-de-pruebas-unitarias" class="section level3">
-<h3>Ejecución de Pruebas Unitarias</h3>
-<p>Para verificar la calidad y robustez del ejercicio:</p>
-<pre class="bash"><code>Rscript Lab/01-S2-2025-SEDQ/ejecutar_pruebas_grafico_circular.R</code></pre>
-</div>
-</div>
-<div id="garantías-de-calidad" class="section level2">
-<h2>Garantías de Calidad</h2>
-<p>Las pruebas unitarias verifican:</p>
-<ol style="list-style-type: decimal">
-<li><strong>Variabilidad</strong>: Capacidad de generar al menos 300
-versiones diferentes del ejercicio.</li>
-<li><strong>Coherencia matemática</strong>: Validez de los cálculos en
-todas las versiones.</li>
-<li><strong>Opciones de respuesta</strong>: Unicidad y plausibilidad de
-las opciones.</li>
-<li><strong>Estructura del ejercicio</strong>: Conformidad con los
-estándares de R-Exams.</li>
-<li><strong>Elementos visuales</strong>: Correcta generación del gráfico
-circular con Python.</li>
-</ol>
-</div>
-<div id="posibilidades-de-mejora" class="section level2">
-<h2>Posibilidades de Mejora</h2>
-<ol style="list-style-type: decimal">
-<li><strong>Ampliación de contextos</strong>: Incorporar más escenarios
-y contextos para aumentar la variabilidad.</li>
-<li><strong>Niveles de dificultad</strong>: Implementar diferentes
-niveles de complejidad matemática.</li>
-<li><strong>Accesibilidad</strong>: Mejorar la accesibilidad para
-estudiantes con discapacidad visual mediante descripciones
-alternativas.</li>
-<li><strong>Interactividad</strong>: Añadir elementos interactivos para
-versiones HTML.</li>
-<li><strong>Feedback adaptativo</strong>: Proporcionar retroalimentación
-específica según el tipo de error cometido.</li>
-<li><strong>Integración con análisis de datos</strong>: Recopilar y
-analizar patrones de respuesta para identificar conceptos erróneos
-comunes.</li>
-<li><strong>Expansión a otros tipos de gráficos</strong>: Crear
-variantes con gráficos de barras, líneas o dispersión.</li>
-<li><strong>Multilenguaje</strong>: Implementar soporte para múltiples
-idiomas.</li>
-</ol>
-</div>
-<div id="contribución" class="section level2">
-<h2>Contribución</h2>
-<p>Para contribuir a este proyecto:</p>
-<ol style="list-style-type: decimal">
-<li>Realice un fork del repositorio</li>
-<li>Cree una rama para su característica
-(<code>git checkout -b feature/nueva-caracteristica</code>)</li>
-<li>Realice sus cambios y asegúrese de que las pruebas unitarias
-pasen</li>
-<li>Envíe un pull request</li>
-</ol>
-</div>
-<div id="licencia" class="section level2">
-<h2>Licencia</h2>
-<p>Este proyecto está disponible bajo la licencia [especificar
-licencia].</p>
-</div>
-<div id="contacto" class="section level2">
-<h2>Contacto</h2>
-<p>Para preguntas o sugerencias, contacte a [especificar contacto].</p>
-<hr />
-</div>
-<div id="notas-técnicas" class="section level2">
-<h2>Notas Técnicas</h2>
-<div id="estructura-del-código" class="section level3">
-<h3>Estructura del Código</h3>
-<p>El archivo <code>grafico_circular_bienes_v1.Rmd</code> está
-organizado en secciones:</p>
-<ol style="list-style-type: decimal">
-<li><strong>Configuración inicial</strong>: Metadatos YAML y
-configuración del entorno R</li>
-<li><strong>Definición de variables</strong>: Aleatorización de
-términos, valores y elementos visuales</li>
-<li><strong>Generación del gráfico</strong>: Código Python para crear el
-gráfico circular</li>
-<li><strong>Pregunta</strong>: Enunciado del problema con variables
-aleatorizadas</li>
-<li><strong>Opciones de respuesta</strong>: Lista de posibles
-respuestas</li>
-<li><strong>Solución</strong>: Explicación detallada del proceso de
-resolución</li>
-<li><strong>Metainformación</strong>: Datos para R-Exams</li>
-</ol>
-</div>
-<div id="algoritmo-de-aleatorización" class="section level3">
-<h3>Algoritmo de Aleatorización</h3>
-<p>El ejercicio utiliza un enfoque de aleatorización por capas:</p>
-<ol style="list-style-type: decimal">
-<li>Aleatorización de términos contextuales (léxico)</li>
-<li>Aleatorización de valores numéricos con restricciones de
-coherencia</li>
-<li>Aleatorización de elementos visuales (colores, estilos)</li>
-<li>Generación de distractores basados en errores comunes</li>
-</ol>
-</div>
-<div id="consideraciones-para-implementación-en-producción" class="section level3">
-<h3>Consideraciones para Implementación en Producción</h3>
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)</code></pre>
+<p>Carga las bibliotecas necesarias: - <code>exams</code>: Para la
+generación de ejercicios - <code>reticulate</code>: Para la integración
+con Python - <code>digest</code>: Para funciones hash (usado en pruebas)
+- <code>testthat</code>: Para pruebas unitarias - <code>knitr</code>:
+Para la generación de documentos</p>
+<pre class="r"><code>typ &lt;- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = &quot;&quot;,
+  fig.keep = &#39;all&#39;,
+  dev = c(&quot;png&quot;, &quot;pdf&quot;),
+  dpi = 150,
+  fig.pos = &quot;H&quot;
+)</code></pre>
+<p>Esta sección configura opciones globales para los chunks de
+código:</p>
 <ul>
-<li>Asegúrese de que Python esté correctamente configurado en el
-servidor</li>
-<li>Verifique la compatibilidad con la versión de Moodle u otra
-plataforma LMS</li>
-<li>Considere el tiempo de generación al crear grandes bancos de
-preguntas</li>
+<li>Desactiva notación científica</li>
+<li>Suprime advertencias y mensajes</li>
+<li>Configura la generación de figuras en formatos PNG y PDF</li>
+<li>Establece la resolución de las imágenes a 150 DPI</li>
+<li>Fija la posición de las figuras como “H” (here) para LaTeX</li>
 </ul>
+<pre class="r"><code># Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, &#39;&#39;)
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which(&quot;python&quot;), required = TRUE)</code></pre>
+<p>Configura el motor de Python para reticulate y asegura que Python
+esté disponible en el sistema.</p>
 </div>
+<div id="definición-y-aleatorización-de-variables" class="section level2">
+<h2>2. Definición y aleatorización de variables</h2>
+<pre class="r"><code>```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results=&#39;asis&#39;}
+options(OutDec = &quot;.&quot;)  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))</code></pre>
+<p>Inicia la sección de definición de variables, asegurando el uso del
+punto decimal y estableciendo una semilla aleatoria para garantizar
+reproducibilidad pero con variación entre ejecuciones.</p>
+<pre class="r"><code># Aleatorización del contexto del problema
+contextos &lt;- c(
+  &quot;empresa&quot;, &quot;organización&quot;, &quot;compañía&quot;, &quot;institución&quot;, &quot;corporación&quot;,
+  &quot;entidad&quot;, &quot;firma&quot;, &quot;negocio&quot;, &quot;sociedad&quot;, &quot;grupo empresarial&quot;
+)
+contexto &lt;- sample(contextos, 1)</code></pre>
+<p>Define y aleatoriza el contexto organizacional del problema.</p>
+<pre class="r"><code># Aleatorización de los tipos de bienes
+tipos_bien1 &lt;- c(&quot;carro&quot;, &quot;auto&quot;, &quot;vehículo&quot;, &quot;automóvil&quot;, &quot;coche&quot;)
+tipos_bien2 &lt;- c(&quot;casa&quot;, &quot;vivienda&quot;, &quot;residencia&quot;, &quot;hogar&quot;, &quot;domicilio&quot;)
+tipos_bien3 &lt;- c(&quot;apartamento&quot;, &quot;departamento&quot;, &quot;piso&quot;, &quot;condominio&quot;)
+
+bien1 &lt;- sample(tipos_bien1, 1)
+bien2 &lt;- sample(tipos_bien2, 1)
+bien3 &lt;- sample(tipos_bien3, 1)</code></pre>
+<p>Define y aleatoriza los tipos de bienes que se utilizarán en el
+problema.</p>
+<pre class="r"><code># Aleatorización de términos para el enunciado
+terminos_encuesta &lt;- c(&quot;encuesta&quot;, &quot;sondeo&quot;, &quot;estudio&quot;, &quot;investigación&quot;, &quot;consulta&quot;)
+termino_encuesta &lt;- sample(terminos_encuesta, 1)
+
+terminos_personas &lt;- c(&quot;personas&quot;, &quot;empleados&quot;, &quot;trabajadores&quot;, &quot;colaboradores&quot;, &quot;miembros&quot;)
+termino_personas &lt;- sample(terminos_personas, 1)
+
+terminos_bienes &lt;- c(&quot;bienes&quot;, &quot;posesiones&quot;, &quot;propiedades&quot;, &quot;activos&quot;, &quot;patrimonios&quot;)
+termino_bienes &lt;- sample(terminos_bienes, 1)
+
+terminos_resultados &lt;- c(&quot;resultados&quot;, &quot;datos&quot;, &quot;información&quot;, &quot;estadísticas&quot;, &quot;cifras&quot;)
+termino_resultados &lt;- sample(terminos_resultados, 1)</code></pre>
+<p>Aleatoriza términos adicionales para enriquecer el enunciado del
+problema.</p>
+<pre class="r"><code># Aleatorización de colores para el gráfico circular (paletas oscuras)
+paleta_colores &lt;- list(
+  c(&quot;#C62828&quot;, &quot;#2E7D32&quot;, &quot;#1565C0&quot;, &quot;#EF6C00&quot;, &quot;#6A1B9A&quot;),  # Paleta oscura 1
+  c(&quot;#D32F2F&quot;, &quot;#388E3C&quot;, &quot;#1976D2&quot;, &quot;#F57C00&quot;, &quot;#7B1FA2&quot;),  # Paleta saturada
+  c(&quot;#B71C1C&quot;, &quot;#1B5E20&quot;, &quot;#0D47A1&quot;, &quot;#E65100&quot;, &quot;#4A148C&quot;),  # Paleta oscura 2
+  c(&quot;#AD1457&quot;, &quot;#00695C&quot;, &quot;#283593&quot;, &quot;#FF6F00&quot;, &quot;#4A148C&quot;),  # Paleta oscura 3
+  c(&quot;#880E4F&quot;, &quot;#1B5E20&quot;, &quot;#0D47A1&quot;, &quot;#BF360C&quot;, &quot;#4A148C&quot;)   # Paleta oscura 4
+)
+paleta_seleccionada &lt;- sample(paleta_colores, 1)[[1]]</code></pre>
+<p>Define y selecciona aleatoriamente una paleta de colores para el
+gráfico circular.</p>
+<pre class="r"><code># Aleatorización de los porcentajes manteniendo coherencia matemática
+# Generación de porcentajes iniciales para cada categoría
+set_porcentajes &lt;- function() {
+  repeat {
+    # Generar valores base aleatorios
+    p_bien1_bien3 &lt;- sample(15:35, 1)  # Porcentaje de bien1 y bien3
+    p_solo_bien3 &lt;- sample(15:30, 1)   # Porcentaje solo bien3
+    p_solo_bien2 &lt;- sample(25:40, 1)   # Porcentaje solo bien2
+    p_solo_bien1 &lt;- sample(5:10, 1)    # Porcentaje solo bien1
+
+    # Calcular el porcentaje restante para bien1 y bien2
+    p_bien1_bien2 &lt;- 100 - (p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1)
+
+    # Validar que el porcentaje restante sea positivo y razonable
+    if (p_bien1_bien2 &gt;= 10 &amp;&amp; p_bien1_bien2 &lt;= 25) {
+      return(c(p_bien1_bien3, p_solo_bien3, p_solo_bien2, p_solo_bien1, p_bien1_bien2))
+    }
+  }
+}</code></pre>
+<p>Define una función para generar porcentajes aleatorios que sumen
+exactamente 100% y estén dentro de rangos razonables.</p>
+<pre class="r"><code># Obtener porcentajes válidos
+porcentajes &lt;- set_porcentajes()
+
+p_bien1_bien3 &lt;- porcentajes[1]  # Porcentaje de bien1 y bien3
+p_solo_bien3 &lt;- porcentajes[2]   # Porcentaje solo bien3
+p_solo_bien2 &lt;- porcentajes[3]   # Porcentaje solo bien2
+p_solo_bien1 &lt;- porcentajes[4]   # Porcentaje solo bien1
+p_bien1_bien2 &lt;- porcentajes[5]  # Porcentaje de bien1 y bien2
+
+# Verificar que suman 100%
+test_that(&quot;Los porcentajes suman 100%&quot;, {
+  expect_equal(sum(porcentajes), 100)
+})</code></pre>
+<p>Genera los porcentajes y verifica que sumen exactamente 100%.</p>
+<pre class="r"><code># Valor conocido para el cálculo: Número de personas con bien1 y bien3
+personas_bien1_bien3 &lt;- sample(c(72, 96, 120, 144, 168, 192, 216, 240), 1)
+
+# Calcular el total de personas
+total_personas &lt;- round(personas_bien1_bien3 * 100 / p_bien1_bien3)
+
+# Calcular el número de personas en cada categoría
+personas_solo_bien3 &lt;- round(total_personas * p_solo_bien3 / 100)
+personas_solo_bien2 &lt;- round(total_personas * p_solo_bien2 / 100)
+personas_solo_bien1 &lt;- round(total_personas * p_solo_bien1 / 100)
+personas_bien1_bien2 &lt;- round(total_personas * p_bien1_bien2 / 100)
+
+# Recalcular personas_bien1_bien3 para asegurar que el total sea correcto
+personas_bien1_bien3 &lt;- total_personas - (personas_solo_bien3 + personas_solo_bien2 + personas_solo_bien1 + personas_bien1_bien2)</code></pre>
+<p>Selecciona aleatoriamente un valor conocido (personas con bien1 y
+bien3) y calcula el resto de valores manteniendo la coherencia
+matemática.</p>
+<pre class="r"><code># Asegurar que todos los valores son positivos y razonables
+personas &lt;- c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2)
+test_that(&quot;Todas las categorías tienen al menos una persona&quot;, {
+  expect_true(all(personas &gt; 0))
+})
+
+# Asegurar que la suma de todas las categorías es igual al total
+test_that(&quot;La suma de todas las categorías es igual al total&quot;, {
+  expect_equal(sum(personas), total_personas)
+})</code></pre>
+<p>Verifica que todos los valores calculados sean positivos y que la
+suma sea correcta.</p>
+<pre class="r"><code># Recalcular los porcentajes reales basados en los números de personas (para mantener coherencia)
+p_bien1_bien3 &lt;- round(personas_bien1_bien3 / total_personas * 100)
+p_solo_bien3 &lt;- round(personas_solo_bien3 / total_personas * 100)
+p_solo_bien2 &lt;- round(personas_solo_bien2 / total_personas * 100)
+p_solo_bien1 &lt;- round(personas_solo_bien1 / total_personas * 100)
+p_bien1_bien2 &lt;- round(personas_bien1_bien2 / total_personas * 100)
+
+# Ajustar para asegurar que suman 100%
+total_porcentaje &lt;- p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1 + p_bien1_bien2
+if (total_porcentaje &gt; 100) {
+  # Si suman más de 100, restar la diferencia de la categoría más grande
+  max_idx &lt;- which.max(porcentajes)
+  porcentajes[max_idx] &lt;- porcentajes[max_idx] - (total_porcentaje - 100)
+} else if (total_porcentaje &lt; 100) {
+  # Si suman menos de 100, añadir la diferencia a la categoría más pequeña
+  min_idx &lt;- which.min(porcentajes)
+  porcentajes[min_idx] &lt;- porcentajes[min_idx] + (100 - total_porcentaje)
+}</code></pre>
+<p>Recalcula los porcentajes basados en los números de personas y ajusta
+para asegurar que sumen exactamente 100%.</p>
+<pre class="r"><code>p_bien1_bien3 &lt;- porcentajes[1]
+p_solo_bien3 &lt;- porcentajes[2]
+p_solo_bien2 &lt;- porcentajes[3]
+p_solo_bien1 &lt;- porcentajes[4]
+p_bien1_bien2 &lt;- porcentajes[5]
+
+# Asegurar que los porcentajes suman exactamente 100%
+test_that(&quot;Los porcentajes ajustados suman 100%&quot;, {
+  expect_equal(sum(porcentajes), 100)
+})</code></pre>
+<p>Actualiza los porcentajes y verifica nuevamente que sumen 100%.</p>
+<pre class="r"><code># Determinar la respuesta correcta y generar tres distractores plausibles
+# La respuesta correcta es el número de personas con solo bien3
+respuesta_correcta &lt;- personas_solo_bien3
+
+# Generar distractores plausibles
+distractor1 &lt;- round(personas_bien1_bien3 / 4)  # Un cuarto del valor dado en el problema
+distractor2 &lt;- round(total_personas * p_bien1_bien3 / 100)  # Confundir entre porcentaje y valor absoluto
+distractor3 &lt;- personas_bien1_bien3  # El mismo valor dado en el problema
+
+# Asegurarse de que todos los distractores son diferentes de la respuesta correcta
+if (distractor1 == respuesta_correcta) distractor1 &lt;- distractor1 + sample(5:15, 1)
+if (distractor2 == respuesta_correcta) distractor2 &lt;- distractor2 - sample(5:15, 1)
+if (distractor3 == respuesta_correcta) distractor3 &lt;- distractor3 + sample(5:15, 1)
+
+# Asegurarse de que todos los distractores son diferentes entre sí
+while (length(unique(c(distractor1, distractor2, distractor3))) &lt; 3) {
+  if (distractor1 == distractor2) distractor1 &lt;- distractor1 + sample(5:10, 1)
+  if (distractor2 == distractor3) distractor2 &lt;- distractor2 - sample(5:10, 1)
+  if (distractor1 == distractor3) distractor3 &lt;- distractor3 + sample(5:10, 1)
+}</code></pre>
+<p>Define la respuesta correcta y genera distractores plausibles basados
+en errores comunes, asegurando que sean diferentes entre sí y de la
+respuesta correcta.</p>
+<pre class="r"><code># Crear un vector con todas las opciones y mezclarlas
+opciones &lt;- c(respuesta_correcta, distractor1, distractor2, distractor3)
+names(opciones) &lt;- c(&quot;correcta&quot;, &quot;distractor1&quot;, &quot;distractor2&quot;, &quot;distractor3&quot;)
+opciones_mezcladas &lt;- sample(opciones)
+
+# Identificar la posición de la respuesta correcta en las opciones mezcladas
+indice_correcto &lt;- which(opciones_mezcladas == respuesta_correcta)
+
+# Crear el vector de solución para r-exams
+solucion &lt;- rep(0, 4)
+solucion[indice_correcto] &lt;- 1</code></pre>
+<p>Mezcla las opciones de respuesta y crea el vector de solución para
+r-exams.</p>
+</div>
+<div id="generación-del-gráfico-circular" class="section level2">
+<h2>3. Generación del gráfico circular</h2>
+<pre class="r"><code>```{r generar_grafico_circular, message=FALSE, warning=FALSE}
+options(OutDec = &quot;.&quot;)  # Asegurar punto decimal en este chunk
+
+# Código Python para generar el gráfico circular
+codigo_python &lt;- paste0(&quot;
+import matplotlib
+matplotlib.use(&#39;Agg&#39;)  # Usar backend no interactivo
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Datos para el gráfico
+labels = [&#39;&quot;, bien1, &quot; y &quot;, bien3, &quot;&#39;, &#39;Solo &quot;, bien3, &quot;&#39;, &#39;Solo &quot;, bien2, &quot;&#39;,
+          &#39;Solo &quot;, bien1, &quot;&#39;, &#39;&quot;, bien1, &quot; y &quot;, bien2, &quot;&#39;]
+sizes = [&quot;, p_bien1_bien3, &quot;, &quot;, p_solo_bien3, &quot;, &quot;, p_solo_bien2, &quot;,
+         &quot;, p_solo_bien1, &quot;, &quot;, p_bien1_bien2, &quot;]
+colors = [&#39;&quot;, paleta_seleccionada[1], &quot;&#39;, &#39;&quot;, paleta_seleccionada[2], &quot;&#39;,
+          &#39;&quot;, paleta_seleccionada[3], &quot;&#39;, &#39;&quot;, paleta_seleccionada[4], &quot;&#39;,
+          &#39;&quot;, paleta_seleccionada[5], &quot;&#39;]</code></pre>
+<p>Inicia la generación del gráfico circular con Python, definiendo las
+etiquetas, tamaños y colores.</p>
+<pre class="python"><code># Explode para destacar ligeramente el sector con bien1 y bien3
+explode = (0.03, 0, 0, 0, 0)
+
+# Crear figura con más espacio para acomodar las etiquetas externas
+plt.figure(figsize=(7, 6))  # Aumentar tamaño para dar espacio a las etiquetas
+
+# Crear gráfico circular con bordes blancos
+wedges, texts, autotexts = plt.pie(
+    sizes,
+    explode=explode,
+    colors=colors,
+    shadow=True,
+    startangle=45,  # Cambiar ángulo para mejor distribución
+    autopct=&#39;%d%%&#39;,
+    pctdistance=0.75,  # Ubicar porcentajes más cerca del borde exterior
+    wedgeprops={&#39;edgecolor&#39;: &#39;white&#39;, &#39;linewidth&#39;: 1},
+    textprops={&#39;fontsize&#39;: 10, &#39;fontweight&#39;: &#39;bold&#39;, &#39;color&#39;: &#39;white&#39;}
+)</code></pre>
+<p>Crea el gráfico circular con configuraciones detalladas para mejorar
+la visualización.</p>
+<pre class="python"><code># Configuración estética de los textos de porcentaje con recuadros
+for autotext in autotexts:
+    autotext.set_fontsize(9)  # Tamaño de fuente para porcentajes
+    autotext.set_weight(&#39;bold&#39;)
+    # Crear un recuadro semitransparente para los porcentajes
+    bbox_props = {&#39;boxstyle&#39;: &#39;round,pad=0.2&#39;,
+                 &#39;facecolor&#39;: &#39;black&#39;,
+                 &#39;alpha&#39;: 0.7,
+                 &#39;edgecolor&#39;: &#39;none&#39;}
+    autotext.set_bbox(bbox_props)
+
+# Eliminar los textos del pie (los reemplazaremos con etiquetas externas)
+for text in texts:
+    text.set_visible(False)</code></pre>
+<p>Configura los textos de porcentaje con recuadros y elimina las
+etiquetas predeterminadas para reemplazarlas con etiquetas externas.</p>
+<pre class="python"><code># Crear etiquetas externas con líneas conectoras
+bbox_props = {&#39;boxstyle&#39;: &#39;round,pad=0.3&#39;,
+             &#39;facecolor&#39;: &#39;white&#39;,
+             &#39;edgecolor&#39;: &#39;gray&#39;,
+             &#39;alpha&#39;: 0.9}
+
+# Calcular posiciones de etiquetas externas optimizadas para evitar solapamiento
+def get_label_position(angle_rad, wedge_size):
+    # Ajustar distancia basada en el tamaño del sector
+    # Sectores más pequeños tienen etiquetas más alejadas para evitar solapamiento
+    distance_factor = 1.25 if wedge_size &lt; 15 else 1.15
+
+    # Determinar coordenadas
+    x = distance_factor * np.cos(angle_rad)
+    y = distance_factor * np.sin(angle_rad)
+
+    # Ajustar alineación basada en cuadrante
+    if x &lt; 0:
+        ha = &#39;right&#39;
+    else:
+        ha = &#39;left&#39;
+
+    if y &lt; 0:
+        va = &#39;top&#39;
+    else:
+        va = &#39;bottom&#39;
+
+    # Para sectores muy pequeños, ajustar más la posición para evitar solapamiento
+    if wedge_size &lt; 10:
+        x *= 1.1
+        y *= 1.1
+
+    return x, y, ha, va</code></pre>
+<p>Define una función para calcular posiciones óptimas para las
+etiquetas externas, evitando solapamientos.</p>
+<pre class="python"><code># Colocar etiquetas externas con líneas conectoras
+for i, wedge in enumerate(wedges):
+    # Calcular ángulo medio del sector
+    ang = (wedge.theta1 + wedge.theta2) / 2
+    ang_rad = np.radians(ang)
+
+    # Calcular coordenadas para el inicio de la línea conectora (en el borde del sector)
+    # El factor 0.85 asegura que la línea empiece cerca del borde del sector
+    x_edge = 0.85 * np.cos(ang_rad)
+    y_edge = 0.85 * np.sin(ang_rad)
+
+    # Obtener posición optimizada para la etiqueta
+    x_label, y_label, ha, va = get_label_position(ang_rad, sizes[i])
+
+    # Dibujar línea conectora
+    con = plt.annotate(&#39;&#39;,
+                      xy=(x_edge, y_edge),  # Inicio (en el borde del sector)
+                      xytext=(x_label * 0.95, y_label * 0.95),  # Fin (cerca de la etiqueta)
+                      arrowprops=dict(arrowstyle=&#39;-&#39;, color=&#39;gray&#39;, lw=0.8))
+
+    # Añadir etiqueta con recuadro blanco
+    plt.text(x_label, y_label, labels[i],
+            fontsize=8,
+            fontweight=&#39;bold&#39;,
+            ha=ha,
+            va=va,
+            bbox=bbox_props,
+            zorder=10)</code></pre>
+<p>Coloca las etiquetas externas con líneas conectoras a los sectores
+del gráfico.</p>
+<pre class="python"><code># Asegurar que el gráfico sea un círculo
+plt.axis(&#39;equal&#39;)
+
+# Añadir título en la parte inferior del gráfico
+plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
+           &#39;Distribución de bienes&#39;,
+           fontsize=12,
+           fontweight=&#39;bold&#39;,
+           color=&#39;#333333&#39;,
+           ha=&#39;center&#39;)  # Alineación horizontal centrada
+
+# Ajustar los márgenes para dejar espacio a las etiquetas externas
+plt.tight_layout(pad=1.5, rect=[0, 0.05, 1, 0.95])  # Ajustar rect para dar más espacio
+
+# Guardar en múltiples formatos para asegurar compatibilidad
+plt.savefig(&#39;grafico_circular.png&#39;, dpi=150, bbox_inches=&#39;tight&#39;,
+           transparent=True, format=&#39;png&#39;)
+plt.savefig(&#39;grafico_circular.pdf&#39;, dpi=150, bbox_inches=&#39;tight&#39;,
+           transparent=True, format=&#39;pdf&#39;)
+plt.close()
+&quot;)
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)</code></pre>
+<p>Finaliza la configuración del gráfico, añade un título, ajusta los
+márgenes y guarda la figura en formatos PNG y PDF.</p>
+</div>
+<div id="pregunta-y-opciones-de-respuesta" class="section level2">
+<h2>4. Pregunta y opciones de respuesta</h2>
+<pre class="r"><code>Question
+========
+
+Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los `r termino_resultados` se presentan en la gráfica.
+
+```{r mostrar_grafico_circular, echo=FALSE, results=&#39;asis&#39;, fig.align=&quot;center&quot;}
+# Detectar si se está generando para Moodle
+# Formatos para Moodle y similares
+formatos_moodle &lt;- c(&quot;exams2moodle&quot;, &quot;exams2qti12&quot;,
+                     &quot;exams2qti21&quot;, &quot;exams2openolat&quot;)
+es_moodle &lt;- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar la imagen del gráfico circular
+if (es_moodle) {
+  # Tamaño para Moodle
+  cat(&quot;![](grafico_circular.png){width=60%}&quot;)
+} else {
+  # Tamaño para PDF/Word
+  cat(&quot;![](grafico_circular.png){width=70%}&quot;)
+}</code></pre>
+<p>Si <code>r personas_bien1_bien3</code>
+<code>r termino_personas</code> de el(la) <code>r contexto</code> poseen
+<code>r bien1</code> y <code>r bien3</code>, ¿cuántas personas poseen
+solo <code>r bien3</code>?</p>
+</div>
+<div id="answerlist" class="section level2">
+<h2>Answerlist</h2>
+<ul>
+<li><code>r opciones_mezcladas[1]</code></li>
+<li><code>r opciones_mezcladas[2]</code></li>
+<li><code>r opciones_mezcladas[3]</code></li>
+<li><code>r opciones_mezcladas[4]</code></li>
+</ul>
+<pre><code>
+Define la pregunta, muestra el gráfico circular (con tamaño adaptado según el 
+formato de salida) y presenta las opciones de respuesta.
+
+Aspectos destacables de esta sección:
+
+1. **Adaptabilidad al formato de salida**: El código detecta si se está generando para Moodle u otro formato y ajusta el tamaño de la imagen en consecuencia.
+
+2. **Uso de variables aleatorizadas**: El enunciado utiliza las variables aleatorizadas previamente definidas, lo que permite generar múltiples versiones del mismo problema.
+
+3. **Estructura clara**: La pregunta está estructurada de manera clara, proporcionando primero el contexto, luego mostrando el gráfico, y finalmente planteando la pregunta específica.
+
+4. **Opciones de respuesta mezcladas**: Las opciones de respuesta se presentan en orden aleatorio, con una única respuesta correcta y tres distractores plausibles.
+
+## 5. Solución
+
+```r
+Solution
+========
+
+Para resolver este problema, necesitamos aplicar proporciones y regla de tres a partir de la información dada en el gráfico circular y el enunciado. Seguiremos un proceso paso a paso:
+
+### Paso 1: Identificar los datos conocidos
+* Sabemos que `r personas_bien1_bien3` `r termino_personas` poseen `r bien1` y `r bien3`.
+* Según el gráfico circular, este grupo representa el `r p_bien1_bien3`% del total.
+* También observamos en el gráfico que las personas que poseen solo `r bien3` representan el `r p_solo_bien3`% del total.
+
+### Paso 2: Calcular el número total de personas
+Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
+
+Si `r p_bien1_bien3`% del total = `r personas_bien1_bien3` `r termino_personas`
+Entonces 100% del total = X `r termino_personas`
+
+Aplicando regla de tres:
+* X = (`r personas_bien1_bien3` × 100%) ÷ `r p_bien1_bien3`%
+* X = `r personas_bien1_bien3 * 100` ÷ `r p_bien1_bien3`
+* X = `r total_personas` `r termino_personas`
+
+Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
+
+### Paso 3: Calcular el número de personas que poseen solo `r bien3`
+Una vez conocido el total, podemos calcular cuántas personas poseen solo `r bien3` utilizando el porcentaje correspondiente del gráfico circular:
+
+Si 100% del total = `r total_personas` `r termino_personas`
+Entonces `r p_solo_bien3`% del total = Y `r termino_personas`
+
+Aplicando regla de tres:
+* Y = (`r p_solo_bien3`% × `r total_personas`) ÷ 100%
+* Y = (`r p_solo_bien3` × `r total_personas`) ÷ 100
+* Y = `r p_solo_bien3 * total_personas / 100`
+* Y = `r respuesta_correcta` `r termino_personas`
+
+### Paso 4: Verificación de la respuesta
+Podemos verificar nuestra respuesta comprobando que los números calculados son coherentes con los porcentajes del gráfico:
+
+* `r bien1` y `r bien3`: `r personas_bien1_bien3` `r termino_personas` (`r p_bien1_bien3`% del total)
+* Solo `r bien3`: `r respuesta_correcta` `r termino_personas` (`r p_solo_bien3`% del total)
+* Solo `r bien2`: `r personas_solo_bien2` `r termino_personas` (`r p_solo_bien2`% del total)
+* Solo `r bien1`: `r personas_solo_bien1` `r termino_personas` (`r p_solo_bien1`% del total)
+* `r bien1` y `r bien2`: `r personas_bien1_bien2` `r termino_personas` (`r p_bien1_bien2`% del total)
+
+La suma de todas estas categorías es `r sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2))` `r termino_personas`, que coincide con nuestro total calculado de `r total_personas` `r termino_personas`.
+
+### Conclusión
+Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen solo `r bien3`.
+
+Answerlist
+----------
+- `r if(solucion[1] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;`
+- `r if(solucion[2] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;`
+- `r if(solucion[3] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;`
+- `r if(solucion[4] == 1) &quot;Verdadero&quot; else &quot;Falso&quot;`</code></pre>
+<p>Proporciona una solución detallada paso a paso, explicando el
+razonamiento matemático y verificando la respuesta.</p>
+<p>Aspectos destacables de esta sección:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Estructura pedagógica</strong>: La solución está
+organizada en pasos claros y secuenciales, facilitando la comprensión
+del proceso de resolución.</p></li>
+<li><p><strong>Explicación detallada</strong>: Cada paso incluye una
+explicación detallada del razonamiento matemático aplicado.</p></li>
+<li><p><strong>Uso de variables aleatorizadas</strong>: La solución
+utiliza las variables aleatorizadas, lo que permite que sea coherente
+con la versión específica del problema generado.</p></li>
+<li><p><strong>Verificación de la respuesta</strong>: Incluye un paso de
+verificación que demuestra la coherencia de la solución con los datos
+del problema.</p></li>
+<li><p><strong>Formato matemático claro</strong>: Presenta las
+operaciones matemáticas de manera clara y estructurada, facilitando el
+seguimiento del proceso de cálculo.</p></li>
+</ol>
+</div>
+<div id="metainformación" class="section level2">
+<h2>6. Metainformación</h2>
+<pre class="r"><code>Meta-information
+================
+exname: proporciones_diagrama_circular
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse=&quot;&quot;)`
+exshuffle: TRUE
+exsection: Estadística|Proporciones|Interpretación de gráficos</code></pre>
+<p>Define la metainformación para r-exams: - <code>exname</code>: Nombre
+del ejercicio - <code>extype</code>: Tipo de ejercicio (schoice =
+selección única) - <code>exsolution</code>: Vector de solución (1 para
+la respuesta correcta, 0 para las incorrectas) - <code>exshuffle</code>:
+Indica si las opciones deben mezclarse - <code>exsection</code>:
+Categorización del ejercicio</p>
+</div>
+<div id="aspectos-destacables-del-código" class="section level2">
+<h2>Aspectos destacables del código</h2>
+<ol style="list-style-type: decimal">
+<li><p><strong>Aleatorización robusta</strong>: El código implementa
+múltiples capas de aleatorización (términos, valores, colores) para
+generar numerosas variantes del mismo problema.</p></li>
+<li><p><strong>Coherencia matemática</strong>: Se realizan múltiples
+verificaciones para asegurar que los cálculos sean matemáticamente
+coherentes.</p></li>
+<li><p><strong>Visualización avanzada</strong>: El gráfico circular
+incluye características avanzadas como etiquetas externas con líneas
+conectoras, recuadros para los porcentajes y optimización para evitar
+solapamientos.</p></li>
+<li><p><strong>Adaptabilidad a diferentes formatos</strong>: El código
+detecta el formato de salida y ajusta la presentación en
+consecuencia.</p></li>
+<li><p><strong>Solución pedagógica</strong>: La solución está
+estructurada de manera didáctica, explicando paso a paso el razonamiento
+matemático.</p></li>
+<li><p><strong>Distractores plausibles</strong>: Los distractores se
+generan basados en errores comunes, haciéndolos plausibles pero
+inequívocamente incorrectos.</p></li>
+<li><p><strong>Pruebas integradas</strong>: El código incluye pruebas
+unitarias integradas para verificar la coherencia de los datos
+generados.</p></li>
+</ol>
+<p>Este ejercicio es un excelente ejemplo de cómo utilizar r-exams para
+crear problemas matemáticos interactivos con alta variabilidad y calidad
+pedagógica. La combinación de R y Python permite aprovechar las
+fortalezas de ambos lenguajes: R para la lógica del ejercicio y Python
+para la visualización avanzada.</p>
 </div>
 </div>
 
