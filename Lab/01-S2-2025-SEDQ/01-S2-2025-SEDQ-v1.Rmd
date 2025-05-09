@@ -1,11 +1,11 @@
 ---
 output:
+  word_document: default
   html_document: default
   pdf_document:
     keep_tex: true
     includes:
       in_header:
-  word_document: default
 header-includes:
   - \usepackage{graphicx}
 ---
@@ -277,7 +277,7 @@ Question
 
 Se realizó un(a) `r termino_encuesta` a un grupo de personas de una `r tipo_empresa` `r sector_empresa` sobre el tipo de bienes que poseen. Los resultados se presentan en la gráfica.
 
-```{r grafico_circular, echo=FALSE, fig.align='center', out.width='75%'}
+```{r grafico_circular, echo=FALSE, fig.align='center', out.width='.75\\linewidth'}
 knitr::include_graphics("grafico_circular.png")
 ```
 
