@@ -1,0 +1,432 @@
+---
+output:
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float"]
+  html_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorización del contexto del problema
+contextos <- c(
+  "empresa", "organización", "compañía", "institución", "corporación",
+  "entidad", "firma", "negocio", "sociedad", "grupo empresarial"
+)
+contexto <- sample(contextos, 1)
+
+# Aleatorización de los tipos de bienes
+tipos_bien1 <- c("carro", "auto", "vehículo", "automóvil", "coche")
+tipos_bien2 <- c("casa", "vivienda", "residencia", "hogar", "domicilio")
+tipos_bien3 <- c("apartamento", "departamento", "piso", "flat", "condominio")
+
+bien1 <- sample(tipos_bien1, 1)
+bien2 <- sample(tipos_bien2, 1)
+bien3 <- sample(tipos_bien3, 1)
+
+# Aleatorización de términos para el enunciado
+terminos_encuesta <- c("encuesta", "sondeo", "estudio", "investigación", "consulta")
+termino_encuesta <- sample(terminos_encuesta, 1)
+
+terminos_personas <- c("personas", "empleados", "trabajadores", "colaboradores", "miembros")
+termino_personas <- sample(terminos_personas, 1)
+
+terminos_bienes <- c("bienes", "posesiones", "propiedades", "activos", "patrimonios")
+termino_bienes <- sample(terminos_bienes, 1)
+
+terminos_resultados <- c("resultados", "datos", "información", "estadísticas", "cifras")
+termino_resultados <- sample(terminos_resultados, 1)
+
+# Aleatorización de colores para el gráfico circular (paletas oscuras)
+paleta_colores <- list(
+  c("#C62828", "#2E7D32", "#1565C0", "#EF6C00", "#6A1B9A"),  # Paleta oscura 1
+  c("#D32F2F", "#388E3C", "#1976D2", "#F57C00", "#7B1FA2"),  # Paleta saturada
+  c("#B71C1C", "#1B5E20", "#0D47A1", "#E65100", "#4A148C"),  # Paleta oscura 2
+  c("#AD1457", "#00695C", "#283593", "#FF6F00", "#4A148C"),  # Paleta oscura 3
+  c("#880E4F", "#1B5E20", "#0D47A1", "#BF360C", "#4A148C")   # Paleta oscura 4
+)
+paleta_seleccionada <- sample(paleta_colores, 1)[[1]]
+
+# Aleatorización de los porcentajes manteniendo coherencia matemática
+# Generación de porcentajes iniciales para cada categoría
+set_porcentajes <- function() {
+  repeat {
+    # Generar valores base aleatorios
+    p_bien1_bien3 <- sample(15:35, 1)  # Porcentaje de bien1 y bien3
+    p_solo_bien3 <- sample(15:30, 1)   # Porcentaje solo bien3
+    p_solo_bien2 <- sample(25:40, 1)   # Porcentaje solo bien2
+    p_solo_bien1 <- sample(5:10, 1)    # Porcentaje solo bien1
+
+    # Calcular el porcentaje restante para bien1 y bien2
+    p_bien1_bien2 <- 100 - (p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1)
+
+    # Validar que el porcentaje restante sea positivo y razonable
+    if (p_bien1_bien2 >= 10 && p_bien1_bien2 <= 25) {
+      return(c(p_bien1_bien3, p_solo_bien3, p_solo_bien2, p_solo_bien1, p_bien1_bien2))
+    }
+  }
+}
+
+# Obtener porcentajes válidos
+porcentajes <- set_porcentajes()
+
+p_bien1_bien3 <- porcentajes[1]  # Porcentaje de bien1 y bien3
+p_solo_bien3 <- porcentajes[2]   # Porcentaje solo bien3
+p_solo_bien2 <- porcentajes[3]   # Porcentaje solo bien2
+p_solo_bien1 <- porcentajes[4]   # Porcentaje solo bien1
+p_bien1_bien2 <- porcentajes[5]  # Porcentaje de bien1 y bien2
+
+# Verificar que suman 100%
+test_that("Los porcentajes suman 100%", {
+  expect_equal(sum(porcentajes), 100)
+})
+
+# Valor conocido para el cálculo: Número de personas con bien1 y bien3
+personas_bien1_bien3 <- sample(c(72, 96, 120, 144, 168, 192, 216, 240), 1)
+
+# Calcular el total de personas
+total_personas <- round(personas_bien1_bien3 * 100 / p_bien1_bien3)
+
+# Calcular el número de personas en cada categoría
+personas_solo_bien3 <- round(total_personas * p_solo_bien3 / 100)
+personas_solo_bien2 <- round(total_personas * p_solo_bien2 / 100)
+personas_solo_bien1 <- round(total_personas * p_solo_bien1 / 100)
+personas_bien1_bien2 <- round(total_personas * p_bien1_bien2 / 100)
+
+# Recalcular personas_bien1_bien3 para asegurar que el total sea correcto
+personas_bien1_bien3 <- total_personas - (personas_solo_bien3 + personas_solo_bien2 + personas_solo_bien1 + personas_bien1_bien2)
+
+# Asegurar que todos los valores son positivos y razonables
+personas <- c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2)
+test_that("Todas las categorías tienen al menos una persona", {
+  expect_true(all(personas > 0))
+})
+
+# Asegurar que la suma de todas las categorías es igual al total
+test_that("La suma de todas las categorías es igual al total", {
+  expect_equal(sum(personas), total_personas)
+})
+
+# Recalcular los porcentajes reales basados en los números de personas (para mantener coherencia)
+p_bien1_bien3 <- round(personas_bien1_bien3 / total_personas * 100)
+p_solo_bien3 <- round(personas_solo_bien3 / total_personas * 100)
+p_solo_bien2 <- round(personas_solo_bien2 / total_personas * 100)
+p_solo_bien1 <- round(personas_solo_bien1 / total_personas * 100)
+p_bien1_bien2 <- round(personas_bien1_bien2 / total_personas * 100)
+
+# Ajustar para asegurar que suman 100%
+total_porcentaje <- p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1 + p_bien1_bien2
+if (total_porcentaje > 100) {
+  # Si suman más de 100, restar la diferencia de la categoría más grande
+  max_idx <- which.max(porcentajes)
+  porcentajes[max_idx] <- porcentajes[max_idx] - (total_porcentaje - 100)
+} else if (total_porcentaje < 100) {
+  # Si suman menos de 100, añadir la diferencia a la categoría más pequeña
+  min_idx <- which.min(porcentajes)
+  porcentajes[min_idx] <- porcentajes[min_idx] + (100 - total_porcentaje)
+}
+
+p_bien1_bien3 <- porcentajes[1]
+p_solo_bien3 <- porcentajes[2]
+p_solo_bien2 <- porcentajes[3]
+p_solo_bien1 <- porcentajes[4]
+p_bien1_bien2 <- porcentajes[5]
+
+# Asegurar que los porcentajes suman exactamente 100%
+test_that("Los porcentajes ajustados suman 100%", {
+  expect_equal(sum(porcentajes), 100)
+})
+
+# Determinar la respuesta correcta y generar tres distractores plausibles
+# La respuesta correcta es el número de personas con solo bien3
+respuesta_correcta <- personas_solo_bien3
+
+# Generar distractores plausibles
+distractor1 <- round(personas_bien1_bien3 / 4)  # Un cuarto del valor dado en el problema
+distractor2 <- round(total_personas * p_bien1_bien3 / 100)  # Confundir entre porcentaje y valor absoluto
+distractor3 <- personas_bien1_bien3  # El mismo valor dado en el problema
+
+# Asegurarse de que todos los distractores son diferentes de la respuesta correcta
+if (distractor1 == respuesta_correcta) distractor1 <- distractor1 + sample(5:15, 1)
+if (distractor2 == respuesta_correcta) distractor2 <- distractor2 - sample(5:15, 1)
+if (distractor3 == respuesta_correcta) distractor3 <- distractor3 + sample(5:15, 1)
+
+# Asegurarse de que todos los distractores son diferentes entre sí
+while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
+  if (distractor1 == distractor2) distractor1 <- distractor1 + sample(5:10, 1)
+  if (distractor2 == distractor3) distractor2 <- distractor2 - sample(5:10, 1)
+  if (distractor1 == distractor3) distractor3 <- distractor3 + sample(5:10, 1)
+}
+
+# Crear un vector con todas las opciones y mezclarlas
+opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
+names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
+opciones_mezcladas <- sample(opciones)
+
+# Identificar la posición de la respuesta correcta en las opciones mezcladas
+indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
+
+# Crear el vector de solución para r-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+```
+
+```{r generar_grafico_circular, message=FALSE, warning=FALSE}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Código Python para generar el gráfico circular
+codigo_python <- paste0("
+import matplotlib
+matplotlib.use('Agg')  # Usar backend no interactivo
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Datos para el gráfico
+labels = ['", bien1, " y ", bien3, "', 'Solo ", bien3, "', 'Solo ", bien2, "',
+          'Solo ", bien1, "', '", bien1, " y ", bien2, "']
+sizes = [", p_bien1_bien3, ", ", p_solo_bien3, ", ", p_solo_bien2, ",
+         ", p_solo_bien1, ", ", p_bien1_bien2, "]
+colors = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
+          '", paleta_seleccionada[3], "', '", paleta_seleccionada[4], "',
+          '", paleta_seleccionada[5], "']
+
+# Explode para destacar ligeramente el sector con bien1 y bien3
+explode = (0.03, 0, 0, 0, 0)
+
+# Crear figura con tamaño controlado - Ajustar sin leyenda
+plt.figure(figsize=(5.5, 5))
+
+# Crear gráfico circular con bordes blancos
+patches, texts, autotexts = plt.pie(
+    sizes,
+    explode=explode,
+    colors=colors,
+    shadow=True,
+    startangle=45,  # Cambiar ángulo para mejor distribución
+    autopct='%d%%',
+    pctdistance=0.6,  # Más cerca del centro para evitar solapamiento
+    wedgeprops={'edgecolor': 'white', 'linewidth': 1},
+    textprops={'fontsize': 9}  # Tamaño de fuente para las etiquetas
+)
+
+# Crear etiquetas más visibles para cada sector
+# Definir nombres cortos para las etiquetas (para mostrar en los sectores)
+# Usamos las mismas etiquetas que ya están definidas en 'labels'
+
+# Añadir etiquetas directamente en los sectores
+for i, p in enumerate(patches):
+    # Obtener el ángulo medio del sector en radianes
+    ang = (p.theta1 + p.theta2)/2
+    # Convertir a radianes
+    ang_rad = np.pi * ang/180
+
+    # Calcular la posición para las etiquetas (más cerca del borde)
+    # Factor más grande para posicionar más lejos del centro
+    x = 0.75 * np.cos(ang_rad)
+    y = 0.75 * np.sin(ang_rad)
+
+    # Añadir recuadros con las etiquetas cortas directamente en los sectores
+    # Estos reemplazarán a los porcentajes que ya están en el gráfico
+    bbox_props = {'boxstyle': 'round,pad=0.3',
+                 'facecolor': 'white',
+                 'edgecolor': 'black',
+                 'alpha': 0.9}  # Mayor opacidad
+
+    # Determinar la alineación horizontal según la posición
+    ha = 'center'
+    va = 'center'
+
+    # Añadir la etiqueta con un recuadro blanco
+    plt.text(x, y, labels[i],
+            fontsize=8,
+            fontweight='bold',
+            ha=ha,
+            va=va,
+            bbox=bbox_props,
+            zorder=10)  # Mayor zorder para asegurar que esté encima
+
+# Configuración estética de los textos de porcentaje con recuadros
+for autotext in autotexts:
+    autotext.set_fontsize(9)  # Tamaño de fuente más pequeño
+    autotext.set_weight('bold')
+    autotext.set_color('white')
+    # Crear un recuadro semitransparente detrás del texto
+    # Configurar recuadro con propiedades
+    bbox_props = {'boxstyle': 'round,pad=0.2',  # Padding más pequeño
+                 'facecolor': 'black',
+                 'alpha': 0.7,  # Mayor opacidad para mejor contraste
+                 'edgecolor': 'none'}
+    autotext.set_bbox(bbox_props)
+
+# Ya no necesitamos leyenda separada porque tenemos etiquetas en los sectores
+plt.axis('equal')  # Asegurar que el gráfico sea un círculo
+# Eliminamos plt.legend() ya que tenemos etiquetas en los sectores
+
+# Eliminar el título de la parte superior y añadirlo en la parte inferior
+# plt.title() ya no se usa aquí
+
+# Añadir título en la parte inferior del gráfico
+plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
+           'Distribución de bienes',
+           fontsize=12,
+           fontweight='bold',
+           color='#333333',
+           ha='center')  # Alineación horizontal centrada
+
+# Ajustar los márgenes para el título inferior
+# [izquierda, inferior, derecha, superior]
+plt.tight_layout(pad=1.5, rect=[0, 0.05, 1, 1])
+
+# Guardar en múltiples formatos para asegurar compatibilidad
+plt.savefig('grafico_circular.png', dpi=150, bbox_inches='tight',
+           transparent=True, format='png')
+plt.savefig('grafico_circular.pdf', dpi=150, bbox_inches='tight',
+           transparent=True, format='pdf')
+plt.close()
+")
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+```
+
+Question
+========
+
+Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los `r termino_resultados` se presentan en la gráfica.
+
+```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
+# Detectar si se está generando para Moodle
+# Formatos para Moodle y similares
+formatos_moodle <- c("exams2moodle", "exams2qti12",
+                     "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar la imagen del gráfico circular
+if (es_moodle) {
+  # Tamaño para Moodle
+  cat("![](grafico_circular.png){width=60%}")
+} else {
+  # Tamaño para PDF/Word
+  cat("![](grafico_circular.png){width=70%}")
+}
+```
+
+Si `r personas_bien1_bien3` `r termino_personas` de la `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen solo `r bien3`?
+
+Answerlist
+----------
+- `r opciones_mezcladas[1]`
+- `r opciones_mezcladas[2]`
+- `r opciones_mezcladas[3]`
+- `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para resolver este problema, necesitamos aplicar proporciones y regla de tres a partir de la información dada en el gráfico circular y el enunciado. Seguiremos un proceso paso a paso:
+
+### Paso 1: Identificar los datos conocidos
+* Sabemos que `r personas_bien1_bien3` `r termino_personas` poseen `r bien1` y `r bien3`.
+* Según el gráfico circular, este grupo representa el `r p_bien1_bien3`% del total.
+* También observamos en el gráfico que las personas que poseen solo `r bien3` representan el `r p_solo_bien3`% del total.
+
+### Paso 2: Calcular el número total de personas
+Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
+
+Si `r p_bien1_bien3`% del total = `r personas_bien1_bien3` `r termino_personas`
+Entonces 100% del total = X `r termino_personas`
+
+Aplicando regla de tres:
+* X = (`r personas_bien1_bien3` × 100%) ÷ `r p_bien1_bien3`%
+* X = `r personas_bien1_bien3 * 100` ÷ `r p_bien1_bien3`
+* X = `r total_personas` `r termino_personas`
+
+Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
+
+### Paso 3: Calcular el número de personas que poseen solo `r bien3`
+Una vez conocido el total, podemos calcular cuántas personas poseen solo `r bien3` utilizando el porcentaje correspondiente del gráfico circular:
+
+Si 100% del total = `r total_personas` `r termino_personas`
+Entonces `r p_solo_bien3`% del total = Y `r termino_personas`
+
+Aplicando regla de tres:
+* Y = (`r p_solo_bien3`% × `r total_personas`) ÷ 100%
+* Y = (`r p_solo_bien3` × `r total_personas`) ÷ 100
+* Y = `r p_solo_bien3 * total_personas / 100`
+* Y = `r respuesta_correcta` `r termino_personas`
+
+### Paso 4: Verificación de la respuesta
+Podemos verificar nuestra respuesta comprobando que los números calculados son coherentes con los porcentajes del gráfico:
+
+* `r bien1` y `r bien3`: `r personas_bien1_bien3` `r termino_personas` (`r p_bien1_bien3`% del total)
+* Solo `r bien3`: `r respuesta_correcta` `r termino_personas` (`r p_solo_bien3`% del total)
+* Solo `r bien2`: `r personas_solo_bien2` `r termino_personas` (`r p_solo_bien2`% del total)
+* Solo `r bien1`: `r personas_solo_bien1` `r termino_personas` (`r p_solo_bien1`% del total)
+* `r bien1` y `r bien2`: `r personas_bien1_bien2` `r termino_personas` (`r p_bien1_bien2`% del total)
+
+La suma de todas estas categorías es `r sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2))` `r termino_personas`, que coincide con nuestro total calculado de `r total_personas` `r termino_personas`.
+
+### Conclusión
+Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen solo `r bien3`.
+
+Answerlist
+----------
+- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: proporciones_diagrama_circular
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Estadística|Proporciones|Interpretación de gráficos
