@@ -240,77 +240,102 @@ colors = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
 # Explode para destacar ligeramente el sector con bien1 y bien3
 explode = (0.03, 0, 0, 0, 0)
 
-# Crear figura con tamaño controlado - Ajustar sin leyenda
-plt.figure(figsize=(5.5, 5))
+# Crear figura con más espacio para acomodar las etiquetas externas
+plt.figure(figsize=(7, 6))  # Aumentar tamaño para dar espacio a las etiquetas
 
 # Crear gráfico circular con bordes blancos
-patches, texts, autotexts = plt.pie(
+wedges, texts, autotexts = plt.pie(
     sizes,
     explode=explode,
     colors=colors,
     shadow=True,
     startangle=45,  # Cambiar ángulo para mejor distribución
     autopct='%d%%',
-    pctdistance=0.6,  # Más cerca del centro para evitar solapamiento
+    pctdistance=0.75,  # Ubicar porcentajes más cerca del borde exterior
     wedgeprops={'edgecolor': 'white', 'linewidth': 1},
-    textprops={'fontsize': 9}  # Tamaño de fuente para las etiquetas
+    textprops={'fontsize': 10, 'fontweight': 'bold', 'color': 'white'}
 )
 
-# Crear etiquetas más visibles para cada sector
-# Definir nombres cortos para las etiquetas (para mostrar en los sectores)
-# Usamos las mismas etiquetas que ya están definidas en 'labels'
+# Configuración estética de los textos de porcentaje con recuadros
+for autotext in autotexts:
+    autotext.set_fontsize(9)  # Tamaño de fuente para porcentajes
+    autotext.set_weight('bold')
+    # Crear un recuadro semitransparente para los porcentajes
+    bbox_props = {'boxstyle': 'round,pad=0.2',
+                 'facecolor': 'black',
+                 'alpha': 0.7,
+                 'edgecolor': 'none'}
+    autotext.set_bbox(bbox_props)
 
-# Añadir etiquetas directamente en los sectores
-for i, p in enumerate(patches):
-    # Obtener el ángulo medio del sector en radianes
-    ang = (p.theta1 + p.theta2)/2
-    # Convertir a radianes
-    ang_rad = np.pi * ang/180
+# Eliminar los textos del pie (los reemplazaremos con etiquetas externas)
+for text in texts:
+    text.set_visible(False)
 
-    # Calcular la posición para las etiquetas (más cerca del borde)
-    # Factor más grande para posicionar más lejos del centro
-    x = 0.75 * np.cos(ang_rad)
-    y = 0.75 * np.sin(ang_rad)
+# Crear etiquetas externas con líneas conectoras
+bbox_props = {'boxstyle': 'round,pad=0.3',
+             'facecolor': 'white',
+             'edgecolor': 'gray',
+             'alpha': 0.9}
 
-    # Añadir recuadros con las etiquetas cortas directamente en los sectores
-    # Estos reemplazarán a los porcentajes que ya están en el gráfico
-    bbox_props = {'boxstyle': 'round,pad=0.3',
-                 'facecolor': 'white',
-                 'edgecolor': 'black',
-                 'alpha': 0.9}  # Mayor opacidad
+# Calcular posiciones de etiquetas externas optimizadas para evitar solapamiento
+def get_label_position(angle_rad, wedge_size):
+    # Ajustar distancia basada en el tamaño del sector
+    # Sectores más pequeños tienen etiquetas más alejadas para evitar solapamiento
+    distance_factor = 1.25 if wedge_size < 15 else 1.15
 
-    # Determinar la alineación horizontal según la posición
-    ha = 'center'
-    va = 'center'
+    # Determinar coordenadas
+    x = distance_factor * np.cos(angle_rad)
+    y = distance_factor * np.sin(angle_rad)
 
-    # Añadir la etiqueta con un recuadro blanco
-    plt.text(x, y, labels[i],
+    # Ajustar alineación basada en cuadrante
+    if x < 0:
+        ha = 'right'
+    else:
+        ha = 'left'
+
+    if y < 0:
+        va = 'top'
+    else:
+        va = 'bottom'
+
+    # Para sectores muy pequeños, ajustar más la posición para evitar solapamiento
+    if wedge_size < 10:
+        x *= 1.1
+        y *= 1.1
+
+    return x, y, ha, va
+
+# Colocar etiquetas externas con líneas conectoras
+for i, wedge in enumerate(wedges):
+    # Calcular ángulo medio del sector
+    ang = (wedge.theta1 + wedge.theta2) / 2
+    ang_rad = np.radians(ang)
+
+    # Calcular coordenadas para el inicio de la línea conectora (en el borde del sector)
+    # El factor 0.85 asegura que la línea empiece cerca del borde del sector
+    x_edge = 0.85 * np.cos(ang_rad)
+    y_edge = 0.85 * np.sin(ang_rad)
+
+    # Obtener posición optimizada para la etiqueta
+    x_label, y_label, ha, va = get_label_position(ang_rad, sizes[i])
+
+    # Dibujar línea conectora
+    con = plt.annotate('',
+                      xy=(x_edge, y_edge),  # Inicio (en el borde del sector)
+                      xytext=(x_label * 0.95, y_label * 0.95),  # Fin (cerca de la etiqueta)
+                      arrowprops=dict(arrowstyle='-', color='gray', lw=0.8))
+
+    # Añadir etiqueta con recuadro blanco
+    plt.text(x_label, y_label, labels[i],
             fontsize=8,
             fontweight='bold',
             ha=ha,
             va=va,
             bbox=bbox_props,
-            zorder=10)  # Mayor zorder para asegurar que esté encima
+            zorder=10)
 
-# Configuración estética de los textos de porcentaje con recuadros
-for autotext in autotexts:
-    autotext.set_fontsize(9)  # Tamaño de fuente más pequeño
-    autotext.set_weight('bold')
-    autotext.set_color('white')
-    # Crear un recuadro semitransparente detrás del texto
-    # Configurar recuadro con propiedades
-    bbox_props = {'boxstyle': 'round,pad=0.2',  # Padding más pequeño
-                 'facecolor': 'black',
-                 'alpha': 0.7,  # Mayor opacidad para mejor contraste
-                 'edgecolor': 'none'}
-    autotext.set_bbox(bbox_props)
-
-# Ya no necesitamos leyenda separada porque tenemos etiquetas en los sectores
-plt.axis('equal')  # Asegurar que el gráfico sea un círculo
-# Eliminamos plt.legend() ya que tenemos etiquetas en los sectores
-
-# Eliminar el título de la parte superior y añadirlo en la parte inferior
-# plt.title() ya no se usa aquí
+# Asegurar que el gráfico sea un círculo
+plt.axis('equal')
 
 # Añadir título en la parte inferior del gráfico
 plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
@@ -320,9 +345,8 @@ plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
            color='#333333',
            ha='center')  # Alineación horizontal centrada
 
-# Ajustar los márgenes para el título inferior
-# [izquierda, inferior, derecha, superior]
-plt.tight_layout(pad=1.5, rect=[0, 0.05, 1, 1])
+# Ajustar los márgenes para dejar espacio a las etiquetas externas
+plt.tight_layout(pad=1.5, rect=[0, 0.05, 1, 0.95])  # Ajustar rect para dar más espacio
 
 # Guardar en múltiples formatos para asegurar compatibilidad
 plt.savefig('grafico_circular.png', dpi=150, bbox_inches='tight',

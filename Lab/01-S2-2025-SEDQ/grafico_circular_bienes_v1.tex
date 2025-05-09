@@ -79,17 +79,15 @@
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 % Set default figure placement to htbp
+\makeatletter
 \def\fps@figure{htbp}
 \makeatother
 \setlength{\emergencystretch}{3em} % prevent overfull lines
@@ -98,6 +96,9 @@
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{graphicx}
 \usepackage{float}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -146,13 +147,13 @@
 \NormalTok{terminos\_resultados }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"resultados"}\NormalTok{, }\StringTok{"datos"}\NormalTok{, }\StringTok{"información"}\NormalTok{, }\StringTok{"estadísticas"}\NormalTok{, }\StringTok{"cifras"}\NormalTok{)}
 \NormalTok{termino\_resultados }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_resultados, }\DecValTok{1}\NormalTok{)}
 
-\CommentTok{\# Aleatorización de colores para el gráfico circular}
+\CommentTok{\# Aleatorización de colores para el gráfico circular (paletas oscuras)}
 \NormalTok{paleta\_colores }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
-  \FunctionTok{c}\NormalTok{(}\StringTok{"\#E57373"}\NormalTok{, }\StringTok{"\#81C784"}\NormalTok{, }\StringTok{"\#64B5F6"}\NormalTok{, }\StringTok{"\#FFB74D"}\NormalTok{, }\StringTok{"\#BA68C8"}\NormalTok{),  }\CommentTok{\# Paleta pastel}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#C62828"}\NormalTok{, }\StringTok{"\#2E7D32"}\NormalTok{, }\StringTok{"\#1565C0"}\NormalTok{, }\StringTok{"\#EF6C00"}\NormalTok{, }\StringTok{"\#6A1B9A"}\NormalTok{),  }\CommentTok{\# Paleta oscura 1}
   \FunctionTok{c}\NormalTok{(}\StringTok{"\#D32F2F"}\NormalTok{, }\StringTok{"\#388E3C"}\NormalTok{, }\StringTok{"\#1976D2"}\NormalTok{, }\StringTok{"\#F57C00"}\NormalTok{, }\StringTok{"\#7B1FA2"}\NormalTok{),  }\CommentTok{\# Paleta saturada}
-  \FunctionTok{c}\NormalTok{(}\StringTok{"\#FFCDD2"}\NormalTok{, }\StringTok{"\#C8E6C9"}\NormalTok{, }\StringTok{"\#BBDEFB"}\NormalTok{, }\StringTok{"\#FFE0B2"}\NormalTok{, }\StringTok{"\#E1BEE7"}\NormalTok{),  }\CommentTok{\# Paleta suave}
-  \FunctionTok{c}\NormalTok{(}\StringTok{"\#EF9A9A"}\NormalTok{, }\StringTok{"\#A5D6A7"}\NormalTok{, }\StringTok{"\#90CAF9"}\NormalTok{, }\StringTok{"\#FFCC80"}\NormalTok{, }\StringTok{"\#CE93D8"}\NormalTok{),  }\CommentTok{\# Paleta media}
-  \FunctionTok{c}\NormalTok{(}\StringTok{"\#B71C1C"}\NormalTok{, }\StringTok{"\#1B5E20"}\NormalTok{, }\StringTok{"\#0D47A1"}\NormalTok{, }\StringTok{"\#E65100"}\NormalTok{, }\StringTok{"\#4A148C"}\NormalTok{)   }\CommentTok{\# Paleta oscura}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#B71C1C"}\NormalTok{, }\StringTok{"\#1B5E20"}\NormalTok{, }\StringTok{"\#0D47A1"}\NormalTok{, }\StringTok{"\#E65100"}\NormalTok{, }\StringTok{"\#4A148C"}\NormalTok{),  }\CommentTok{\# Paleta oscura 2}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#AD1457"}\NormalTok{, }\StringTok{"\#00695C"}\NormalTok{, }\StringTok{"\#283593"}\NormalTok{, }\StringTok{"\#FF6F00"}\NormalTok{, }\StringTok{"\#4A148C"}\NormalTok{),  }\CommentTok{\# Paleta oscura 3}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#880E4F"}\NormalTok{, }\StringTok{"\#1B5E20"}\NormalTok{, }\StringTok{"\#0D47A1"}\NormalTok{, }\StringTok{"\#BF360C"}\NormalTok{, }\StringTok{"\#4A148C"}\NormalTok{)   }\CommentTok{\# Paleta oscura 4}
 \NormalTok{)}
 \NormalTok{paleta\_seleccionada }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(paleta\_colores, }\DecValTok{1}\NormalTok{)[[}\DecValTok{1}\NormalTok{]]}
 
@@ -328,41 +329,113 @@ Test passed
 \StringTok{\# Explode para destacar ligeramente el sector con bien1 y bien3}
 \StringTok{explode = (0.03, 0, 0, 0, 0)}
 
-\StringTok{\# Crear figura con tamaño controlado}
-\StringTok{plt.figure(figsize=(5, 4))}
+\StringTok{\# Crear figura con más espacio para acomodar las etiquetas externas}
+\StringTok{plt.figure(figsize=(7, 6))  \# Aumentar tamaño para dar espacio a las etiquetas}
 
 \StringTok{\# Crear gráfico circular con bordes blancos}
-\StringTok{patches, texts, autotexts = plt.pie(}
+\StringTok{wedges, texts, autotexts = plt.pie(}
 \StringTok{    sizes,}
 \StringTok{    explode=explode,}
 \StringTok{    colors=colors,}
 \StringTok{    shadow=True,}
-\StringTok{    startangle=90,}
+\StringTok{    startangle=45,  \# Cambiar ángulo para mejor distribución}
 \StringTok{    autopct=\textquotesingle{}\%d\%\%\textquotesingle{},}
-\StringTok{    pctdistance=0.85,}
-\StringTok{    wedgeprops=\{\textquotesingle{}edgecolor\textquotesingle{}: \textquotesingle{}white\textquotesingle{}, \textquotesingle{}linewidth\textquotesingle{}: 1\}}
+\StringTok{    pctdistance=0.75,  \# Ubicar porcentajes más cerca del borde exterior}
+\StringTok{    wedgeprops=\{\textquotesingle{}edgecolor\textquotesingle{}: \textquotesingle{}white\textquotesingle{}, \textquotesingle{}linewidth\textquotesingle{}: 1\},}
+\StringTok{    textprops=\{\textquotesingle{}fontsize\textquotesingle{}: 10, \textquotesingle{}fontweight\textquotesingle{}: \textquotesingle{}bold\textquotesingle{}, \textquotesingle{}color\textquotesingle{}: \textquotesingle{}white\textquotesingle{}\}}
 \StringTok{)}
 
-\StringTok{\# Configuración estética de los textos de porcentaje}
+\StringTok{\# Configuración estética de los textos de porcentaje con recuadros}
 \StringTok{for autotext in autotexts:}
-\StringTok{    autotext.set\_fontsize(9)}
+\StringTok{    autotext.set\_fontsize(9)  \# Tamaño de fuente para porcentajes}
 \StringTok{    autotext.set\_weight(\textquotesingle{}bold\textquotesingle{})}
-\StringTok{    autotext.set\_color(\textquotesingle{}white\textquotesingle{})}
+\StringTok{    \# Crear un recuadro semitransparente para los porcentajes}
+\StringTok{    bbox\_props = \{\textquotesingle{}boxstyle\textquotesingle{}: \textquotesingle{}round,pad=0.2\textquotesingle{},}
+\StringTok{                 \textquotesingle{}facecolor\textquotesingle{}: \textquotesingle{}black\textquotesingle{},}
+\StringTok{                 \textquotesingle{}alpha\textquotesingle{}: 0.7,}
+\StringTok{                 \textquotesingle{}edgecolor\textquotesingle{}: \textquotesingle{}none\textquotesingle{}\}}
+\StringTok{    autotext.set\_bbox(bbox\_props)}
 
-\StringTok{\# Crear leyenda por separado}
-\StringTok{plt.axis(\textquotesingle{}equal\textquotesingle{})  \# Asegurar que el gráfico sea un círculo}
-\StringTok{plt.legend(}
-\StringTok{    labels,}
-\StringTok{    loc=\textquotesingle{}upper left\textquotesingle{},}
-\StringTok{    bbox\_to\_anchor=({-}0.1, 1),}
-\StringTok{    fontsize=8,}
-\StringTok{    frameon=False}
-\StringTok{)}
+\StringTok{\# Eliminar los textos del pie (los reemplazaremos con etiquetas externas)}
+\StringTok{for text in texts:}
+\StringTok{    text.set\_visible(False)}
 
-\StringTok{\# Añadir título centrado en la parte superior}
-\StringTok{plt.title(\textquotesingle{}Resultados de la encuesta\textquotesingle{}, fontsize=10)}
+\StringTok{\# Crear etiquetas externas con líneas conectoras}
+\StringTok{bbox\_props = \{\textquotesingle{}boxstyle\textquotesingle{}: \textquotesingle{}round,pad=0.3\textquotesingle{},}
+\StringTok{             \textquotesingle{}facecolor\textquotesingle{}: \textquotesingle{}white\textquotesingle{},}
+\StringTok{             \textquotesingle{}edgecolor\textquotesingle{}: \textquotesingle{}gray\textquotesingle{},}
+\StringTok{             \textquotesingle{}alpha\textquotesingle{}: 0.9\}}
 
-\StringTok{plt.tight\_layout()}
+\StringTok{\# Calcular posiciones de etiquetas externas optimizadas para evitar solapamiento}
+\StringTok{def get\_label\_position(angle\_rad, wedge\_size):}
+\StringTok{    \# Ajustar distancia basada en el tamaño del sector}
+\StringTok{    \# Sectores más pequeños tienen etiquetas más alejadas para evitar solapamiento}
+\StringTok{    distance\_factor = 1.25 if wedge\_size \textless{} 15 else 1.15}
+
+\StringTok{    \# Determinar coordenadas}
+\StringTok{    x = distance\_factor * np.cos(angle\_rad)}
+\StringTok{    y = distance\_factor * np.sin(angle\_rad)}
+
+\StringTok{    \# Ajustar alineación basada en cuadrante}
+\StringTok{    if x \textless{} 0:}
+\StringTok{        ha = \textquotesingle{}right\textquotesingle{}}
+\StringTok{    else:}
+\StringTok{        ha = \textquotesingle{}left\textquotesingle{}}
+
+\StringTok{    if y \textless{} 0:}
+\StringTok{        va = \textquotesingle{}top\textquotesingle{}}
+\StringTok{    else:}
+\StringTok{        va = \textquotesingle{}bottom\textquotesingle{}}
+
+\StringTok{    \# Para sectores muy pequeños, ajustar más la posición para evitar solapamiento}
+\StringTok{    if wedge\_size \textless{} 10:}
+\StringTok{        x *= 1.1}
+\StringTok{        y *= 1.1}
+
+\StringTok{    return x, y, ha, va}
+
+\StringTok{\# Colocar etiquetas externas con líneas conectoras}
+\StringTok{for i, wedge in enumerate(wedges):}
+\StringTok{    \# Calcular ángulo medio del sector}
+\StringTok{    ang = (wedge.theta1 + wedge.theta2) / 2}
+\StringTok{    ang\_rad = np.radians(ang)}
+
+\StringTok{    \# Calcular coordenadas para el inicio de la línea conectora (en el borde del sector)}
+\StringTok{    \# El factor 0.85 asegura que la línea empiece cerca del borde del sector}
+\StringTok{    x\_edge = 0.85 * np.cos(ang\_rad)}
+\StringTok{    y\_edge = 0.85 * np.sin(ang\_rad)}
+
+\StringTok{    \# Obtener posición optimizada para la etiqueta}
+\StringTok{    x\_label, y\_label, ha, va = get\_label\_position(ang\_rad, sizes[i])}
+
+\StringTok{    \# Dibujar línea conectora}
+\StringTok{    con = plt.annotate(\textquotesingle{}\textquotesingle{},}
+\StringTok{                      xy=(x\_edge, y\_edge),  \# Inicio (en el borde del sector)}
+\StringTok{                      xytext=(x\_label * 0.95, y\_label * 0.95),  \# Fin (cerca de la etiqueta)}
+\StringTok{                      arrowprops=dict(arrowstyle=\textquotesingle{}{-}\textquotesingle{}, color=\textquotesingle{}gray\textquotesingle{}, lw=0.8))}
+
+\StringTok{    \# Añadir etiqueta con recuadro blanco}
+\StringTok{    plt.text(x\_label, y\_label, labels[i],}
+\StringTok{            fontsize=8,}
+\StringTok{            fontweight=\textquotesingle{}bold\textquotesingle{},}
+\StringTok{            ha=ha,}
+\StringTok{            va=va,}
+\StringTok{            bbox=bbox\_props,}
+\StringTok{            zorder=10)}
+
+\StringTok{\# Asegurar que el gráfico sea un círculo}
+\StringTok{plt.axis(\textquotesingle{}equal\textquotesingle{})}
+
+\StringTok{\# Añadir título en la parte inferior del gráfico}
+\StringTok{plt.figtext(0.5, 0.01,  \# Posición x=0.5 (centro), y=0.01 (parte inferior)}
+\StringTok{           \textquotesingle{}Distribución de bienes\textquotesingle{},}
+\StringTok{           fontsize=12,}
+\StringTok{           fontweight=\textquotesingle{}bold\textquotesingle{},}
+\StringTok{           color=\textquotesingle{}\#333333\textquotesingle{},}
+\StringTok{           ha=\textquotesingle{}center\textquotesingle{})  \# Alineación horizontal centrada}
+
+\StringTok{\# Ajustar los márgenes para dejar espacio a las etiquetas externas}
+\StringTok{plt.tight\_layout(pad=1.5, rect=[0, 0.05, 1, 0.95])  \# Ajustar rect para dar más espacio}
 
 \StringTok{\# Guardar en múltiples formatos para asegurar compatibilidad}
 \StringTok{plt.savefig(\textquotesingle{}grafico\_circular.png\textquotesingle{}, dpi=150, bbox\_inches=\textquotesingle{}tight\textquotesingle{},}
@@ -379,13 +452,13 @@ Test passed
 
 \section{Question}\label{question}
 
-Se realizó un(a) investigación a un grupo de empleados de un(a) firma
-sobre el tipo de posesiones que poseen. Los estadísticas se presentan en
-la gráfica.
+Se realizó un(a) estudio a un grupo de colaboradores de un(a) sociedad
+sobre el tipo de bienes que poseen. Los estadísticas se presentan en la
+gráfica.
 
-\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{grafico_circular.png}
+\includegraphics[width=0.7\textwidth,height=\textheight]{grafico_circular.png}
 
-Si 119 empleados de la firma poseen automóvil y condominio, ¿cuántas
+Si 168 colaboradores de la sociedad poseen carro y condominio, ¿cuántas
 personas poseen solo condominio?
 
 \subsection{Answerlist}\label{answerlist}
@@ -393,39 +466,88 @@ personas poseen solo condominio?
 \begin{itemize}
 \tightlist
 \item
+  168
+\item
   120
 \item
-  30
+  42
 \item
-  218
-\item
-  119
+  163
 \end{itemize}
 
 \section{Solution}\label{solution}
 
-Para resolver este problema, necesitamos aplicar proporciones a partir
-de la información dada:
+Para resolver este problema, necesitamos aplicar proporciones y regla de
+tres a partir de la información dada en el gráfico circular y el
+enunciado. Seguiremos un proceso paso a paso:
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
-\item
-  Sabemos que 119 empleados poseen automóvil y condominio, lo que
-  representa el 16\% del total según el gráfico circular.
-\item
-  Primero calculamos el número total de empleados en la firma:
+\subsubsection{Paso 1: Identificar los datos
+conocidos}\label{paso-1-identificar-los-datos-conocidos}
 
-  Total de empleados = (119 × 100\%) ÷ 16\% = 750
+\begin{itemize}
+\tightlist
 \item
-  Según el gráfico, los que poseen solo condominio representan el 29\%
-  del total.
+  Sabemos que 168 colaboradores poseen carro y condominio.
 \item
-  Por lo tanto, el número de empleados que poseen solo condominio es:
+  Según el gráfico circular, este grupo representa el 21\% del total.
+\item
+  También observamos en el gráfico que las personas que poseen solo
+  condominio representan el 15\% del total.
+\end{itemize}
 
-  29\% × 750 = 218
-\end{enumerate}
+\subsubsection{Paso 2: Calcular el número total de
+personas}\label{paso-2-calcular-el-nuxfamero-total-de-personas}
 
-Así, 218 empleados de la firma poseen solo condominio.
+Para encontrar el total de colaboradores en la sociedad, utilizamos la
+siguiente relación de proporcionalidad:
+
+Si 21\% del total = 168 colaboradores Entonces 100\% del total = X
+colaboradores
+
+Aplicando regla de tres: * X = (168 × 100\%) ÷ 21\% * X = 16800 ÷ 21 * X
+= 800 colaboradores
+
+Por lo tanto, el total de colaboradores en la sociedad es 800.
+
+\subsubsection{Paso 3: Calcular el número de personas que poseen solo
+condominio}\label{paso-3-calcular-el-nuxfamero-de-personas-que-poseen-solo-condominio}
+
+Una vez conocido el total, podemos calcular cuántas personas poseen solo
+condominio utilizando el porcentaje correspondiente del gráfico
+circular:
+
+Si 100\% del total = 800 colaboradores Entonces 15\% del total = Y
+colaboradores
+
+Aplicando regla de tres: * Y = (15\% × 800) ÷ 100\% * Y = (15 × 800) ÷
+100 * Y = 120 * Y = 120 colaboradores
+
+\subsubsection{Paso 4: Verificación de la
+respuesta}\label{paso-4-verificaciuxf3n-de-la-respuesta}
+
+Podemos verificar nuestra respuesta comprobando que los números
+calculados son coherentes con los porcentajes del gráfico:
+
+\begin{itemize}
+\tightlist
+\item
+  carro y condominio: 168 colaboradores (21\% del total)
+\item
+  Solo condominio: 120 colaboradores (15\% del total)
+\item
+  Solo residencia: 296 colaboradores (37\% del total)
+\item
+  Solo carro: 72 colaboradores (9\% del total)
+\item
+  carro y residencia: 144 colaboradores (18\% del total)
+\end{itemize}
+
+La suma de todas estas categorías es 800 colaboradores, que coincide con
+nuestro total calculado de 800 colaboradores.
+
+\subsubsection{Conclusión}\label{conclusiuxf3n}
+
+Por lo tanto, 120 colaboradores de la sociedad poseen solo condominio.
 
 \subsection{Answerlist}\label{answerlist-1}
 
@@ -434,9 +556,9 @@ Así, 218 empleados de la firma poseen solo condominio.
 \item
   Falso
 \item
-  Falso
-\item
   Verdadero
+\item
+  Falso
 \item
   Falso
 \end{itemize}
@@ -444,7 +566,7 @@ Así, 218 empleados de la firma poseen solo condominio.
 \section{Meta-information}\label{meta-information}
 
 exname: proporciones\_diagrama\_circular extype: schoice exsolution:
-0010 exshuffle: TRUE exsection:
+0100 exshuffle: TRUE exsection:
 Estadística\textbar Proporciones\textbar Interpretación de gráficos
 
 \end{document}
