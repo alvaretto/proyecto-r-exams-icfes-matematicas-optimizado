@@ -2,9 +2,9 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "grafico_circular_bienes_v3.Rmd"
+archivo_examen <- "grafico_circular_bienes_v4.Rmd"
 copias <- 1
-numpreg <- 3
+numpreg <- 10
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
