@@ -81,7 +81,7 @@ termino_personas <- sample(terminos_personas, 1)
 terminos_bienes <- c("bienes", "posesiones", "propiedades", "activos", "patrimonios")
 termino_bienes <- sample(terminos_bienes, 1)
 
-terminos_resultados <- c("resultados", "datos", "información", "estadísticas", "cifras")
+terminos_resultados <- c("resultados", "datos", "estadísticas", "cifras")
 termino_resultados <- sample(terminos_resultados, 1)
 
 # Aleatorización de colores para el gráfico circular (paletas oscuras)
@@ -363,7 +363,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los `r termino_resultados` se presentan en la gráfica.
+Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
 
 ```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
