@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
@@ -418,7 +418,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
+En La Tebaida se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
 
 ```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
@@ -451,18 +451,22 @@ Solution
 
 Para resolver este problema, necesitamos aplicar proporciones y regla de tres a partir de la información dada en el gráfico circular y el enunciado. Seguiremos un proceso paso a paso:
 
-### Paso 1: Identificar los datos conocidos
+### Paso 1: Identificar los datos conocidos:
+
 * Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`.
 * Según el gráfico circular, este grupo representa el `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
 * También observamos en el gráfico que las personas que poseen `r texto_pregunta` representan el `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
 
-### Paso 2: Calcular el número total de personas
+### Paso 2: Calcular el número total de personas:
+
 Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
 
-Si `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = `r valor_condicion` `r termino_personas`
+Si `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = `r valor_condicion` `r termino_personas`.
+
 Entonces 100% del total = X `r termino_personas`
 
 Aplicando regla de tres:
+
 * X = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
 * X = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
 * X = `r total_personas` `r termino_personas`
@@ -472,10 +476,12 @@ Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_pe
 ### Paso 3: Calcular el número de personas que poseen `r texto_pregunta`
 Una vez conocido el total, podemos calcular cuántas personas poseen `r texto_pregunta` utilizando el porcentaje correspondiente del gráfico circular:
 
-Si 100% del total = `r total_personas` `r termino_personas`
+Si 100% del total = `r total_personas` `r termino_personas`.
+
 Entonces `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = Y `r termino_personas`
 
 Aplicando regla de tres:
+
 * Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
 * Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3` × `r total_personas`) ÷ 100
 * Y = `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100`
