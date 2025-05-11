@@ -4,11 +4,11 @@
 
 Este proyecto contiene un ejercicio interactivo de matemáticas para evaluar la interpretación de gráficos circulares (diagramas de pastel) y el cálculo de proporciones. El ejercicio está diseñado para ser utilizado en plataformas educativas como Moodle a través del paquete R-Exams.
 
-El archivo principal `grafico_circular_bienes_v1.Rmd` genera un problema matemático donde los estudiantes deben interpretar un gráfico circular que muestra la distribución de diferentes tipos de bienes (como carros, casas y apartamentos) que poseen las personas de una organización, y calcular valores específicos utilizando reglas de tres y proporciones.
+El archivo principal `grafico_circular_bienes_v0.Rmd` genera un problema matemático donde los estudiantes deben interpretar un gráfico circular que muestra la distribución de diferentes tipos de bienes (como carros, casas y apartamentos) que poseen las personas de una organización, y calcular valores específicos utilizando reglas de tres y proporciones.
 
 ## Archivos del Proyecto
 
-- **grafico_circular_bienes_v1.Rmd**: Archivo principal que genera el ejercicio con aleatorización de variables.
+- **grafico_circular_bienes_v0.Rmd**: Archivo principal que genera el ejercicio con aleatorización de variables.
 - **pruebas_unitarias_grafico_circular_bienes.R**: Conjunto de pruebas unitarias para verificar la calidad y robustez del ejercicio.
 - **01-ejecutar_pruebas_grafico_circular.R**: Script ejecutable para correr las pruebas unitarias.
 - **README.md**: Este archivo, que proporciona documentación sobre el proyecto.
@@ -73,13 +73,16 @@ Para generar el ejercicio en diferentes formatos:
 library(exams)
 
 # Para Moodle
-exams2moodle("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd", n = 10)
+exams2moodle("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v0.Rmd", n = 10)
 
 # Para PDF
-exams2pdf("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd", n = 10)
+exams2pdf("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v0.Rmd", n = 10)
 
 # Para Word
-exams2docx("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd", n = 10)
+exams2docx("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v0.Rmd", n = 10)
+
+# Para NOPS (exámenes impresos escaneables)
+exams2nops("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v0.Rmd", n = 10)
 ```
 
 ### Ejecución de Pruebas Unitarias
@@ -87,7 +90,7 @@ exams2docx("Lab/01-S2-2025-SEDQ/grafico_circular_bienes_v1.Rmd", n = 10)
 Para verificar la calidad y robustez del ejercicio:
 
 ```bash
-Rscript Lab/01-S2-2025-SEDQ/ejecutar_pruebas_grafico_circular.R
+Rscript Lab/01-S2-2025-SEDQ/01-ejecutar_pruebas_grafico_circular.R
 ```
 
 ## Garantías de Calidad
@@ -122,11 +125,11 @@ Para contribuir a este proyecto:
 
 ## Licencia
 
-Este proyecto está disponible bajo la licencia [especificar licencia].
+Este proyecto está disponible bajo la licencia Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0).
 
 ## Contacto
 
-Para preguntas o sugerencias, contacte a [especificar contacto].
+Para preguntas o sugerencias, contacte a través del repositorio o mediante los canales oficiales del proyecto.
 
 ---
 
@@ -134,7 +137,7 @@ Para preguntas o sugerencias, contacte a [especificar contacto].
 
 ### Estructura del Código
 
-El archivo `grafico_circular_bienes_v1.Rmd` está organizado en secciones:
+El archivo `grafico_circular_bienes_v0.Rmd` está organizado en secciones:
 
 1. **Configuración inicial**: Metadatos YAML y configuración del entorno R
 2. **Definición de variables**: Aleatorización de términos, valores y elementos visuales
@@ -158,3 +161,4 @@ El ejercicio utiliza un enfoque de aleatorización por capas:
 - Asegúrese de que Python esté correctamente configurado en el servidor
 - Verifique la compatibilidad con la versión de Moodle u otra plataforma LMS
 - Considere el tiempo de generación al crear grandes bancos de preguntas
+- Ejecute las pruebas unitarias antes de implementar en producción para verificar la calidad del ejercicio

@@ -1,11 +1,11 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
-# Walkthrough del código de grafico_circular_bienes_v1.Rmd
+# Walkthrough del código de grafico_circular_bienes_v0.Rmd
 
-Este documento presenta un análisis detallado del código, explicando cada sección, 
+Este documento presenta un análisis detallado del código, explicando cada sección,
 su propósito y funcionamiento.
 
 ## 1. Configuración inicial (Metadatos YAML y setup)
@@ -21,8 +21,8 @@ output:
 ---
 ```
 
-Esta sección define los formatos de salida soportados (Word, PDF y HTML) con 
-configuraciones específicas para PDF que incluyen mantener el archivo TEX 
+Esta sección define los formatos de salida soportados (Word, PDF y HTML) con
+configuraciones específicas para PDF que incluyen mantener el archivo TEX
 intermedio y añadir dependencias para manejo de gráficos y posicionamiento.
 
 ```r
@@ -32,7 +32,7 @@ Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 ```
 
-Estas líneas configuran el entorno R para usar punto como separador decimal, 
+Estas líneas configuran el entorno R para usar punto como separador decimal,
 lo cual es crucial para la consistencia en diferentes configuraciones regionales.
 
 ```r
@@ -47,7 +47,7 @@ options(tikzLatexPackages = c(
 ))
 ```
 
-Aquí se configura el motor LaTeX para la generación de PDF, especificando 
+Aquí se configura el motor LaTeX para la generación de PDF, especificando
 pdflatex como compilador y cargando paquetes necesarios para gráficos y tablas.
 
 ```r
@@ -59,6 +59,7 @@ library(knitr)
 ```
 
 Carga las bibliotecas necesarias:
+
 - `exams`: Para la generación de ejercicios
 - `reticulate`: Para la integración con Python
 - `digest`: Para funciones hash (usado en pruebas)
@@ -98,7 +99,7 @@ knitr::knit_engines$set(python = function(options) {
 use_python(Sys.which("python"), required = TRUE)
 ```
 
-Configura el motor de Python para reticulate y asegura que Python esté disponible 
+Configura el motor de Python para reticulate y asegura que Python esté disponible
 en el sistema.
 
 ## 2. Definición y aleatorización de variables
@@ -111,8 +112,8 @@ options(OutDec = ".")  # Asegurar punto decimal en este chunk
 set.seed(sample(1:10000, 1))
 ```
 
-Inicia la sección de definición de variables, asegurando el uso del punto 
-decimal y estableciendo una semilla aleatoria para garantizar reproducibilidad 
+Inicia la sección de definición de variables, asegurando el uso del punto
+decimal y estableciendo una semilla aleatoria para garantizar reproducibilidad
 pero con variación entre ejecuciones.
 
 ```r
@@ -192,7 +193,7 @@ set_porcentajes <- function() {
 }
 ```
 
-Define una función para generar porcentajes aleatorios que sumen exactamente 100% 
+Define una función para generar porcentajes aleatorios que sumen exactamente 100%
 y estén dentro de rangos razonables.
 
 ```r
@@ -230,7 +231,7 @@ personas_bien1_bien2 <- round(total_personas * p_bien1_bien2 / 100)
 personas_bien1_bien3 <- total_personas - (personas_solo_bien3 + personas_solo_bien2 + personas_solo_bien1 + personas_bien1_bien2)
 ```
 
-Selecciona aleatoriamente un valor conocido (personas con bien1 y bien3) y 
+Selecciona aleatoriamente un valor conocido (personas con bien1 y bien3) y
 calcula el resto de valores manteniendo la coherencia matemática.
 
 ```r
@@ -269,7 +270,7 @@ if (total_porcentaje > 100) {
 }
 ```
 
-Recalcula los porcentajes basados en los números de personas y ajusta para 
+Recalcula los porcentajes basados en los números de personas y ajusta para
 asegurar que sumen exactamente 100%.
 
 ```r
@@ -288,14 +289,69 @@ test_that("Los porcentajes ajustados suman 100%", {
 Actualiza los porcentajes y verifica nuevamente que sumen 100%.
 
 ```r
-# Determinar la respuesta correcta y generar tres distractores plausibles
-# La respuesta correcta es el número de personas con solo bien3
-respuesta_correcta <- personas_solo_bien3
+# Aleatorizar el tipo de pregunta y la condición inicial
+tipos_pregunta <- c(
+  "solo_bien1",
+  "solo_bien2",
+  "solo_bien3",
+  "bien1_bien2",
+  "bien1_bien3"
+)
 
-# Generar distractores plausibles
-distractor1 <- round(personas_bien1_bien3 / 4)  # Un cuarto del valor dado en el problema
-distractor2 <- round(total_personas * p_bien1_bien3 / 100)  # Confundir entre porcentaje y valor absoluto
-distractor3 <- personas_bien1_bien3  # El mismo valor dado en el problema
+# Aleatorizar la condición inicial (dato conocido)
+tipos_condicion <- c(
+  "bien1_bien3",
+  "solo_bien3",
+  "solo_bien2",
+  "solo_bien1",
+  "bien1_bien2"
+)
+
+# Seleccionar aleatoriamente el tipo de pregunta y condición
+tipo_pregunta <- sample(tipos_pregunta, 1)
+tipo_condicion <- sample(tipos_condicion, 1)
+
+# Determinar la respuesta correcta según el tipo de pregunta
+if (tipo_pregunta == "solo_bien1") {
+  respuesta_correcta <- personas_solo_bien1
+  texto_pregunta <- paste0("solo ", bien1)
+} else if (tipo_pregunta == "solo_bien2") {
+  respuesta_correcta <- personas_solo_bien2
+  texto_pregunta <- paste0("solo ", bien2)
+} else if (tipo_pregunta == "solo_bien3") {
+  respuesta_correcta <- personas_solo_bien3
+  texto_pregunta <- paste0("solo ", bien3)
+} else if (tipo_pregunta == "bien1_bien2") {
+  respuesta_correcta <- personas_bien1_bien2
+  texto_pregunta <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta == "bien1_bien3") {
+  respuesta_correcta <- personas_bien1_bien3
+  texto_pregunta <- paste0(bien1, " y ", bien3)
+}
+
+# Determinar el valor y texto de la condición inicial
+if (tipo_condicion == "bien1_bien3") {
+  valor_condicion <- personas_bien1_bien3
+  texto_condicion <- paste0(bien1, " y ", bien3)
+} else if (tipo_condicion == "solo_bien3") {
+  valor_condicion <- personas_solo_bien3
+  texto_condicion <- paste0("solo ", bien3)
+} else if (tipo_condicion == "solo_bien2") {
+  valor_condicion <- personas_solo_bien2
+  texto_condicion <- paste0("solo ", bien2)
+} else if (tipo_condicion == "solo_bien1") {
+  valor_condicion <- personas_solo_bien1
+  texto_condicion <- paste0("solo ", bien1)
+} else if (tipo_condicion == "bien1_bien2") {
+  valor_condicion <- personas_bien1_bien2
+  texto_condicion <- paste0(bien1, " y ", bien2)
+}
+
+# Generar distractores plausibles según el tipo de pregunta
+# Usamos diferentes valores para crear distractores convincentes
+distractor1 <- round(respuesta_correcta * sample(c(0.7, 0.8, 1.2, 1.3), 1))  # Variación porcentual
+distractor2 <- round(total_personas * sample(c(0.15, 0.2, 0.25, 0.3), 1))    # Porcentaje arbitrario del total
+distractor3 <- valor_condicion  # El valor dado en la condición inicial
 
 # Asegurarse de que todos los distractores son diferentes de la respuesta correcta
 if (distractor1 == respuesta_correcta) distractor1 <- distractor1 + sample(5:15, 1)
@@ -310,8 +366,11 @@ while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
 }
 ```
 
-Define la respuesta correcta y genera distractores plausibles basados en errores 
-comunes, asegurando que sean diferentes entre sí y de la respuesta correcta.
+Aleatoriza el tipo de pregunta y la condición inicial, determinando la respuesta 
+correcta y generando distractores plausibles basados en errores comunes, 
+asegurando que sean diferentes entre sí y de la respuesta correcta. Esta 
+aleatorización permite generar múltiples variantes del mismo problema, preguntando 
+por diferentes categorías de bienes.
 
 ```r
 # Crear un vector con todas las opciones y mezclarlas
@@ -352,7 +411,7 @@ colors = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
           '", paleta_seleccionada[5], "']
 ```
 
-Inicia la generación del gráfico circular con Python, definiendo las etiquetas, 
+Inicia la generación del gráfico circular con Python, definiendo las etiquetas,
 tamaños y colores.
 
 ```python
@@ -376,7 +435,8 @@ wedges, texts, autotexts = plt.pie(
 )
 ```
 
-Crea el gráfico circular con configuraciones detalladas para mejorar la visualización.
+Crea el gráfico circular con configuraciones detalladas para mejorar la 
+visualización.
 
 ```python
 # Configuración estética de los textos de porcentaje con recuadros
@@ -395,7 +455,7 @@ for text in texts:
     text.set_visible(False)
 ```
 
-Configura los textos de porcentaje con recuadros y elimina las etiquetas 
+Configura los textos de porcentaje con recuadros y elimina las etiquetas
 predeterminadas para reemplazarlas con etiquetas externas.
 
 ```python
@@ -434,7 +494,7 @@ def get_label_position(angle_rad, wedge_size):
     return x, y, ha, va
 ```
 
-Define una función para calcular posiciones óptimas para las etiquetas externas, 
+Define una función para calcular posiciones óptimas para las etiquetas externas,
 evitando solapamientos.
 
 ```python
@@ -497,7 +557,7 @@ plt.close()
 py_run_string(codigo_python)
 ```
 
-Finaliza la configuración del gráfico, añade un título, ajusta los márgenes y 
+Finaliza la configuración del gráfico, añade un título, ajusta los márgenes y
 guarda la figura en formatos PNG y PDF.
 
 ## 4. Pregunta y opciones de respuesta
@@ -506,7 +566,9 @@ guarda la figura en formatos PNG y PDF.
 Question
 ========
 
-Se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los `r termino_resultados` se presentan en la gráfica.
+En La Tebaida se realizó un(a) `r termino_encuesta` a un grupo de 
+`r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` 
+que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
 
 ```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
@@ -525,7 +587,8 @@ if (es_moodle) {
 }
 ```
 
-Si `r personas_bien1_bien3` `r termino_personas` de el(la) `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen solo `r bien3`?
+Si `r valor_condicion` `r termino_personas` de el(la) `r contexto` poseen 
+`r texto_condicion`, ¿cuántas personas poseen `r texto_pregunta`?
 
 Answerlist
 ----------
@@ -535,18 +598,20 @@ Answerlist
 - `r opciones_mezcladas[4]`
 ```
 
-Define la pregunta, muestra el gráfico circular (con tamaño adaptado según el 
+Define la pregunta, muestra el gráfico circular (con tamaño adaptado según el
 formato de salida) y presenta las opciones de respuesta.
 
 Aspectos destacables de esta sección:
 
 1. **Adaptabilidad al formato de salida**: El código detecta si se está generando para Moodle u otro formato y ajusta el tamaño de la imagen en consecuencia.
 
-2. **Uso de variables aleatorizadas**: El enunciado utiliza las variables aleatorizadas previamente definidas, lo que permite generar múltiples versiones del mismo problema.
+2. **Uso de variables aleatorizadas**: El enunciado utiliza las variables aleatorizadas previamente definidas, lo que permite generar múltiples versiones del mismo problema. Además, incluye la ubicación "La Tebaida" como contexto geográfico.
 
 3. **Estructura clara**: La pregunta está estructurada de manera clara, proporcionando primero el contexto, luego mostrando el gráfico, y finalmente planteando la pregunta específica.
 
-4. **Opciones de respuesta mezcladas**: Las opciones de respuesta se presentan en orden aleatorio, con una única respuesta correcta y tres distractores plausibles.
+4. **Flexibilidad en la pregunta**: Gracias a la aleatorización del tipo de pregunta y condición inicial, el ejercicio puede preguntar por cualquiera de las cinco categorías de bienes (solo bien1, solo bien2, solo bien3, bien1 y bien2, bien1 y bien3) basándose en cualquiera de estas mismas categorías como dato conocido.
+
+5. **Opciones de respuesta mezcladas**: Las opciones de respuesta se presentan en orden aleatorio, con una única respuesta correcta y tres distractores plausibles.
 
 ## 5. Solución
 
@@ -554,40 +619,50 @@ Aspectos destacables de esta sección:
 Solution
 ========
 
-Para resolver este problema, necesitamos aplicar proporciones y regla de tres a partir de la información dada en el gráfico circular y el enunciado. Seguiremos un proceso paso a paso:
+Para resolver este problema, necesitamos aplicar proporciones y regla de tres a 
+partir de la información dada en el gráfico circular y el enunciado. Seguiremos 
+un proceso paso a paso:
 
-### Paso 1: Identificar los datos conocidos
-* Sabemos que `r personas_bien1_bien3` `r termino_personas` poseen `r bien1` y `r bien3`.
-* Según el gráfico circular, este grupo representa el `r p_bien1_bien3`% del total.
-* También observamos en el gráfico que las personas que poseen solo `r bien3` representan el `r p_solo_bien3`% del total.
+### Paso 1: Identificar los datos conocidos:
 
-### Paso 2: Calcular el número total de personas
-Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
+* Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`.
+* Según el gráfico circular, este grupo representa el `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
+* También observamos en el gráfico que las personas que poseen `r texto_pregunta` representan el `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
 
-Si `r p_bien1_bien3`% del total = `r personas_bien1_bien3` `r termino_personas`
+### Paso 2: Calcular el número total de personas:
+
+Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos 
+la siguiente relación de proporcionalidad:
+
+Si `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = `r valor_condicion` `r termino_personas`.
+
 Entonces 100% del total = X `r termino_personas`
 
 Aplicando regla de tres:
-* X = (`r personas_bien1_bien3` × 100%) ÷ `r p_bien1_bien3`%
-* X = `r personas_bien1_bien3 * 100` ÷ `r p_bien1_bien3`
+
+* X = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
+* X = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
 * X = `r total_personas` `r termino_personas`
 
 Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
 
-### Paso 3: Calcular el número de personas que poseen solo `r bien3`
-Una vez conocido el total, podemos calcular cuántas personas poseen solo `r bien3` utilizando el porcentaje correspondiente del gráfico circular:
+### Paso 3: Calcular el número de personas que poseen `r texto_pregunta`
+Una vez conocido el total, podemos calcular cuántas personas poseen `r texto_pregunta` utilizando el porcentaje correspondiente del gráfico circular:
 
-Si 100% del total = `r total_personas` `r termino_personas`
-Entonces `r p_solo_bien3`% del total = Y `r termino_personas`
+Si 100% del total = `r total_personas` `r termino_personas`.
+
+Entonces `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = Y `r termino_personas`
 
 Aplicando regla de tres:
-* Y = (`r p_solo_bien3`% × `r total_personas`) ÷ 100%
-* Y = (`r p_solo_bien3` × `r total_personas`) ÷ 100
-* Y = `r p_solo_bien3 * total_personas / 100`
+
+* Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
+* Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3` × `r total_personas`) ÷ 100
+* Y = `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100`
 * Y = `r respuesta_correcta` `r termino_personas`
 
 ### Paso 4: Verificación de la respuesta
-Podemos verificar nuestra respuesta comprobando que los números calculados son coherentes con los porcentajes del gráfico:
+Podemos verificar nuestra respuesta comprobando que los números calculados son 
+coherentes con los porcentajes del gráfico:
 
 * `r bien1` y `r bien3`: `r personas_bien1_bien3` `r termino_personas` (`r p_bien1_bien3`% del total)
 * Solo `r bien3`: `r respuesta_correcta` `r termino_personas` (`r p_solo_bien3`% del total)
@@ -598,7 +673,8 @@ Podemos verificar nuestra respuesta comprobando que los números calculados son 
 La suma de todas estas categorías es `r sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2))` `r termino_personas`, que coincide con nuestro total calculado de `r total_personas` `r termino_personas`.
 
 ### Conclusión
-Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen solo `r bien3`.
+Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` 
+poseen solo `r bien3`.
 
 Answerlist
 ----------
@@ -616,11 +692,13 @@ Aspectos destacables de esta sección:
 
 2. **Explicación detallada**: Cada paso incluye una explicación detallada del razonamiento matemático aplicado.
 
-3. **Uso de variables aleatorizadas**: La solución utiliza las variables aleatorizadas, lo que permite que sea coherente con la versión específica del problema generado.
+3. **Uso de variables aleatorizadas**: La solución utiliza las variables aleatorizadas, lo que permite que sea coherente con la versión específica del problema generado. Además, se adapta dinámicamente al tipo de pregunta y condición inicial seleccionados.
 
 4. **Verificación de la respuesta**: Incluye un paso de verificación que demuestra la coherencia de la solución con los datos del problema.
 
 5. **Formato matemático claro**: Presenta las operaciones matemáticas de manera clara y estructurada, facilitando el seguimiento del proceso de cálculo.
+
+6. **Adaptabilidad**: La solución se adapta automáticamente a cualquier combinación de tipo de pregunta y condición inicial, manteniendo la coherencia matemática en todas las variantes.
 
 ## 6. Metainformación
 
@@ -635,6 +713,7 @@ exsection: Estadística|Proporciones|Interpretación de gráficos
 ```
 
 Define la metainformación para r-exams:
+
 - `exname`: Nombre del ejercicio
 - `extype`: Tipo de ejercicio (schoice = selección única)
 - `exsolution`: Vector de solución (1 para la respuesta correcta, 0 para las incorrectas)
@@ -643,18 +722,20 @@ Define la metainformación para r-exams:
 
 ## Aspectos destacables del código
 
-1. **Aleatorización robusta**: El código implementa múltiples capas de aleatorización (términos, valores, colores) para generar numerosas variantes del mismo problema.
+1. **Aleatorización robusta y flexible**: El código implementa múltiples capas de aleatorización (términos, valores, colores, tipos de pregunta, condiciones iniciales) para generar numerosas variantes del mismo problema. La aleatorización del tipo de pregunta y condición inicial permite generar 25 combinaciones diferentes de preguntas (5 tipos de pregunta × 5 tipos de condición).
 
-2. **Coherencia matemática**: Se realizan múltiples verificaciones para asegurar que los cálculos sean matemáticamente coherentes.
+2. **Coherencia matemática**: Se realizan múltiples verificaciones para asegurar que los cálculos sean matemáticamente coherentes en todas las variantes posibles.
 
 3. **Visualización avanzada**: El gráfico circular incluye características avanzadas como etiquetas externas con líneas conectoras, recuadros para los porcentajes y optimización para evitar solapamientos.
 
 4. **Adaptabilidad a diferentes formatos**: El código detecta el formato de salida y ajusta la presentación en consecuencia.
 
-5. **Solución pedagógica**: La solución está estructurada de manera didáctica, explicando paso a paso el razonamiento matemático.
+5. **Solución pedagógica dinámica**: La solución está estructurada de manera didáctica, explicando paso a paso el razonamiento matemático, y se adapta automáticamente al tipo específico de pregunta y condición inicial.
 
-6. **Distractores plausibles**: Los distractores se generan basados en errores comunes, haciéndolos plausibles pero inequívocamente incorrectos.
+6. **Distractores plausibles contextualizados**: Los distractores se generan basados en errores comunes y se adaptan al contexto específico de cada variante del problema, haciéndolos plausibles pero inequívocamente incorrectos.
 
 7. **Pruebas integradas**: El código incluye pruebas unitarias integradas para verificar la coherencia de los datos generados.
+
+8. **Contextualización geográfica**: El ejercicio incluye una referencia geográfica específica ("La Tebaida"), lo que añade realismo al problema.
 
 Este ejercicio es un excelente ejemplo de cómo utilizar r-exams para crear problemas matemáticos interactivos con alta variabilidad y calidad pedagógica. La combinación de R y Python permite aprovechar las fortalezas de ambos lenguajes: R para la lógica del ejercicio y Python para la visualización avanzada.
