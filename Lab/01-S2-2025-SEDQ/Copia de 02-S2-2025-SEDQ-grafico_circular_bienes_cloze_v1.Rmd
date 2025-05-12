@@ -131,9 +131,34 @@ test_that("Los porcentajes suman 100%", {
 # Valor conocido para el cálculo: Número de personas con bien1 y bien3
 personas_bien1_bien3 <- sample(c(72, 96, 120, 144, 168, 192, 216, 240), 1)
 
-# Calcular el total de personas
-# Usamos floor() para redondear hacia abajo, asegurando que no se sobrestime el total
-total_personas <- floor(personas_bien1_bien3 * 100 / p_bien1_bien3)
+# Calcular el total de personas de manera exacta
+# Usamos una función específica para garantizar precisión en el cálculo
+calcular_total_exacto <- function(valor_conocido, porcentaje) {
+  # Aplicamos la regla de tres: Si porcentaje% del total = valor_conocido, entonces 100% = X
+  total <- (valor_conocido * 100) / porcentaje
+  # Devolvemos el valor exacto sin redondear
+  return(total)
+}
+
+# Calculamos el total exacto
+total_exacto <- calcular_total_exacto(personas_bien1_bien3, p_bien1_bien3)
+
+# Para el total de personas, aplicamos el redondeo estándar (round)
+# Si la parte decimal es < 0.5, redondea hacia abajo; si es >= 0.5, redondea hacia arriba
+total_personas <- round(total_exacto)
+
+# Verificamos que el cálculo sea correcto
+test_that("El cálculo del total es correcto", {
+  # El valor recalculado debe ser igual o muy cercano al valor original
+  recalculado <- total_personas * p_bien1_bien3 / 100
+  expect_true(abs(recalculado - personas_bien1_bien3) < 1)
+})
+
+# Imprimimos los valores para verificación
+cat("Valor conocido:", personas_bien1_bien3, "personas\n")
+cat("Porcentaje:", p_bien1_bien3, "%\n")
+cat("Total exacto:", total_exacto, "\n")
+cat("Total redondeado:", total_personas, "personas\n")
 
 # Calcular el número de personas en cada categoría
 personas_solo_bien3 <- round(total_personas * p_solo_bien3 / 100)
@@ -437,7 +462,7 @@ if (es_moodle) {
 Answerlist
 ----------
 - Según el gráfico, si `r valor_condicion` `r termino_personas` de la `r contexto` poseen `r texto_condicion`, ¿cuántos `r termino_personas` poseen `r texto_pregunta1`?
-- Si se escoge una persona del grupo al azar, ¿cuál es la probabilidad de que tenga `r texto_pregunta2`?
+- Si se escoge una persona del grupo al azar, ¿cuál es la probabilidad de que tenga `r texto_pregunta2`? (Exprese la respuesta como un número decimal con 4 decimales, por ejemplo: 0.2500)
 - ¿Cuántas personas de la `r contexto` fueron encuestadas en total?
 
 Solution
@@ -451,16 +476,27 @@ Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`,
 
 Para calcular el total de personas:
 
-* Total = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
-* Total = (`r valor_condicion` × 100) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
-* Total = `r total_personas` `r termino_personas`
+```
+Total = (valor_conocido × 100%) ÷ porcentaje_conocido
+Total = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
+Total = (`r valor_condicion` × 100) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
+Total = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
+Total = `r sprintf("%.4f", valor_condicion * 100 / (if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3))`
+Total = `r round(valor_condicion * 100 / (if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3))` `r termino_personas` (redondeando al entero más cercano)
+```
 
 Ahora podemos calcular cuántas personas poseen `r texto_pregunta1`:
 
 * Según el gráfico, las personas con `r texto_pregunta1` representan el `r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
-* Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
-* Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3` × `r total_personas`) ÷ 100
-* Número de personas = `r respuesta1` `r termino_personas`
+
+```
+Número de personas = (porcentaje_buscado × total_personas) ÷ 100%
+Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
+Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3` × `r total_personas`) ÷ 100
+Número de personas = `r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 * total_personas else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 * total_personas else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 * total_personas else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 * total_personas else p_bien1_bien3 * total_personas` ÷ 100
+Número de personas = `r sprintf("%.4f", if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100)`
+Número de personas = `r round(if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100)` `r termino_personas` (redondeando al entero más cercano)
+```
 
 ### Pregunta 2: Probabilidad de que una persona tenga `r texto_pregunta2`
 
