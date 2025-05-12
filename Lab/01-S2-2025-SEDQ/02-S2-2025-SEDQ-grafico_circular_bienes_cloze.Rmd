@@ -184,93 +184,53 @@ test_that("Los porcentajes ajustados suman 100%", {
   expect_equal(sum(porcentajes), 100)
 })
 
-# Aleatorizar el tipo de pregunta y la condición inicial
-tipos_pregunta <- c(
-  "solo_bien1",
-  "solo_bien2",
-  "solo_bien3",
-  "bien1_bien2",
-  "bien1_bien3"
-)
+# Aleatorizar las preguntas para el formato cloze
+# Pregunta 1: Cuántas personas poseen un bien específico
+bienes_pregunta1 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
+tipo_pregunta1 <- sample(bienes_pregunta1, 1)
 
-# Aleatorizar la condición inicial (dato conocido)
-tipos_condicion <- c(
-  "bien1_bien3",
-  "solo_bien3",
-  "solo_bien2",
-  "solo_bien1",
-  "bien1_bien2"
-)
-
-# Seleccionar aleatoriamente el tipo de pregunta y condición
-tipo_pregunta <- sample(tipos_pregunta, 1)
-tipo_condicion <- sample(tipos_condicion, 1)
-
-# Determinar la respuesta correcta según el tipo de pregunta
-if (tipo_pregunta == "solo_bien1") {
-  respuesta_correcta <- personas_solo_bien1
-  texto_pregunta <- paste0("solo ", bien1)
-} else if (tipo_pregunta == "solo_bien2") {
-  respuesta_correcta <- personas_solo_bien2
-  texto_pregunta <- paste0("solo ", bien2)
-} else if (tipo_pregunta == "solo_bien3") {
-  respuesta_correcta <- personas_solo_bien3
-  texto_pregunta <- paste0("solo ", bien3)
-} else if (tipo_pregunta == "bien1_bien2") {
-  respuesta_correcta <- personas_bien1_bien2
-  texto_pregunta <- paste0(bien1, " y ", bien2)
-} else if (tipo_pregunta == "bien1_bien3") {
-  respuesta_correcta <- personas_bien1_bien3
-  texto_pregunta <- paste0(bien1, " y ", bien3)
+# Determinar el texto y la respuesta para la pregunta 1
+if (tipo_pregunta1 == "solo_bien1") {
+  respuesta1 <- personas_solo_bien1
+  texto_pregunta1 <- paste0("solo ", bien1)
+} else if (tipo_pregunta1 == "solo_bien2") {
+  respuesta1 <- personas_solo_bien2
+  texto_pregunta1 <- paste0("solo ", bien2)
+} else if (tipo_pregunta1 == "solo_bien3") {
+  respuesta1 <- personas_solo_bien3
+  texto_pregunta1 <- paste0("solo ", bien3)
+} else if (tipo_pregunta1 == "bien1_bien2") {
+  respuesta1 <- personas_bien1_bien2
+  texto_pregunta1 <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta1 == "bien1_bien3") {
+  respuesta1 <- personas_bien1_bien3
+  texto_pregunta1 <- paste0(bien1, " y ", bien3)
 }
 
-# Determinar el valor y texto de la condición inicial
-if (tipo_condicion == "bien1_bien3") {
-  valor_condicion <- personas_bien1_bien3
-  texto_condicion <- paste0(bien1, " y ", bien3)
-} else if (tipo_condicion == "solo_bien3") {
-  valor_condicion <- personas_solo_bien3
-  texto_condicion <- paste0("solo ", bien3)
-} else if (tipo_condicion == "solo_bien2") {
-  valor_condicion <- personas_solo_bien2
-  texto_condicion <- paste0("solo ", bien2)
-} else if (tipo_condicion == "solo_bien1") {
-  valor_condicion <- personas_solo_bien1
-  texto_condicion <- paste0("solo ", bien1)
-} else if (tipo_condicion == "bien1_bien2") {
-  valor_condicion <- personas_bien1_bien2
-  texto_condicion <- paste0(bien1, " y ", bien2)
+# Pregunta 2: Probabilidad de tener un bien específico
+bienes_pregunta2 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
+tipo_pregunta2 <- sample(bienes_pregunta2[bienes_pregunta2 != tipo_pregunta1], 1)
+
+# Determinar el texto y la respuesta para la pregunta 2
+if (tipo_pregunta2 == "solo_bien1") {
+  respuesta2 <- round(personas_solo_bien1 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien1)
+} else if (tipo_pregunta2 == "solo_bien2") {
+  respuesta2 <- round(personas_solo_bien2 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien2)
+} else if (tipo_pregunta2 == "solo_bien3") {
+  respuesta2 <- round(personas_solo_bien3 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien3)
+} else if (tipo_pregunta2 == "bien1_bien2") {
+  respuesta2 <- round(personas_bien1_bien2 / total_personas, 3)
+  texto_pregunta2 <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta2 == "bien1_bien3") {
+  respuesta2 <- round(personas_bien1_bien3 / total_personas, 3)
+  texto_pregunta2 <- paste0(bien1, " y ", bien3)
 }
 
-# Generar distractores plausibles según el tipo de pregunta
-# Usamos diferentes valores para crear distractores convincentes
-distractor1 <- round(respuesta_correcta * sample(c(0.7, 0.8, 1.2, 1.3), 1))  # Variación porcentual
-distractor2 <- round(total_personas * sample(c(0.15, 0.2, 0.25, 0.3), 1))    # Porcentaje arbitrario del total
-distractor3 <- valor_condicion  # El valor dado en la condición inicial
-
-# Asegurarse de que todos los distractores son diferentes de la respuesta correcta
-if (distractor1 == respuesta_correcta) distractor1 <- distractor1 + sample(5:15, 1)
-if (distractor2 == respuesta_correcta) distractor2 <- distractor2 - sample(5:15, 1)
-if (distractor3 == respuesta_correcta) distractor3 <- distractor3 + sample(5:15, 1)
-
-# Asegurarse de que todos los distractores son diferentes entre sí
-while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
-  if (distractor1 == distractor2) distractor1 <- distractor1 + sample(5:10, 1)
-  if (distractor2 == distractor3) distractor2 <- distractor2 - sample(5:10, 1)
-  if (distractor1 == distractor3) distractor3 <- distractor3 + sample(5:10, 1)
-}
-
-# Crear un vector con todas las opciones y mezclarlas
-opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
-names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
-opciones_mezcladas <- sample(opciones)
-
-# Identificar la posición de la respuesta correcta en las opciones mezcladas
-indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
-
-# Crear el vector de solución para r-exams
-solucion <- rep(0, 4)
-solucion[indice_correcto] <- 1
+# Pregunta 3: Total de personas encuestadas
+respuesta3 <- total_personas
 ```
 
 ```{r generar_grafico_circular, message=FALSE, warning=FALSE}
@@ -437,81 +397,55 @@ if (es_moodle) {
 }
 ```
 
-Si `r valor_condicion` `r termino_personas` de el(la) `r contexto` poseen `r texto_condicion`, ¿cuántas personas poseen `r texto_pregunta`?
-
 Answerlist
 ----------
-- `r opciones_mezcladas[1]`
-- `r opciones_mezcladas[2]`
-- `r opciones_mezcladas[3]`
-- `r opciones_mezcladas[4]`
+- Si `r personas_bien1_bien3` `r termino_personas` de la `r contexto` poseen `r bien1` y `r bien3`, ¿cuántas personas poseen `r texto_pregunta1`?
+- Si se escoge una persona del grupo al azar, ¿cuál es la probabilidad de que tenga `r texto_pregunta2`?
+- ¿Cuántas personas de la `r contexto` fueron encuestadas?
 
 Solution
 ========
 
-Para resolver este problema, necesitamos aplicar proporciones y regla de tres a partir de la información dada en el gráfico circular y el enunciado. Seguiremos un proceso paso a paso:
+Para resolver este problema, necesitamos analizar la información proporcionada en el gráfico circular y aplicar conceptos de proporcionalidad y probabilidad.
 
-### Paso 1: Identificar los datos conocidos:
+### Pregunta 1: Número de personas que poseen `r texto_pregunta1`
 
-* Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`.
-* Según el gráfico circular, este grupo representa el `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
-* También observamos en el gráfico que las personas que poseen `r texto_pregunta` representan el `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
+Sabemos que `r personas_bien1_bien3` `r termino_personas` poseen `r bien1` y `r bien3`, lo que representa el `r p_bien1_bien3`% del total según el gráfico.
 
-### Paso 2: Calcular el número total de personas:
+Para calcular el total de personas:
+* Total = (`r personas_bien1_bien3` × 100%) ÷ `r p_bien1_bien3`%
+* Total = `r personas_bien1_bien3 * 100` ÷ `r p_bien1_bien3`
+* Total = `r total_personas` `r termino_personas`
 
-Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
+Ahora podemos calcular cuántas personas poseen `r texto_pregunta1`:
+* Según el gráfico, las personas con `r texto_pregunta1` representan el `r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
+* Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
+* Número de personas = `r respuesta1` `r termino_personas`
 
-Si `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = `r valor_condicion` `r termino_personas`.
+### Pregunta 2: Probabilidad de que una persona tenga `r texto_pregunta2`
 
-Entonces 100% del total = X `r termino_personas`
+La probabilidad se calcula dividiendo el número de casos favorables entre el número total de casos posibles:
 
-Aplicando regla de tres:
+* Número de personas con `r texto_pregunta2` = `r if(tipo_pregunta2 == "solo_bien1") personas_solo_bien1 else if(tipo_pregunta2 == "solo_bien2") personas_solo_bien2 else if(tipo_pregunta2 == "solo_bien3") personas_solo_bien3 else if(tipo_pregunta2 == "bien1_bien2") personas_bien1_bien2 else personas_bien1_bien3` `r termino_personas`
+* Total de personas = `r total_personas` `r termino_personas`
+* Probabilidad = `r if(tipo_pregunta2 == "solo_bien1") personas_solo_bien1 else if(tipo_pregunta2 == "solo_bien2") personas_solo_bien2 else if(tipo_pregunta2 == "solo_bien3") personas_solo_bien3 else if(tipo_pregunta2 == "bien1_bien2") personas_bien1_bien2 else personas_bien1_bien3` ÷ `r total_personas`
+* Probabilidad = `r respuesta2`
 
-* X = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
-* X = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
-* X = `r total_personas` `r termino_personas`
+### Pregunta 3: Total de personas encuestadas
 
-Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
-
-### Paso 3: Calcular el número de personas que poseen `r texto_pregunta`
-Una vez conocido el total, podemos calcular cuántas personas poseen `r texto_pregunta` utilizando el porcentaje correspondiente del gráfico circular:
-
-Si 100% del total = `r total_personas` `r termino_personas`.
-
-Entonces `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total = Y `r termino_personas`
-
-Aplicando regla de tres:
-
-* Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
-* Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3` × `r total_personas`) ÷ 100
-* Y = `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100`
-* Y = `r respuesta_correcta` `r termino_personas`
-
-### Paso 4: Verificación de la respuesta
-Podemos verificar nuestra respuesta comprobando que los números calculados son coherentes con los porcentajes del gráfico:
-
-* `r bien1` y `r bien3`: `r personas_bien1_bien3` `r termino_personas` (`r p_bien1_bien3`% del total)
-* Solo `r bien3`: `r personas_solo_bien3` `r termino_personas` (`r p_solo_bien3`% del total)
-* Solo `r bien2`: `r personas_solo_bien2` `r termino_personas` (`r p_solo_bien2`% del total)
-* Solo `r bien1`: `r personas_solo_bien1` `r termino_personas` (`r p_solo_bien1`% del total)
-* `r bien1` y `r bien2`: `r personas_bien1_bien2` `r termino_personas` (`r p_bien1_bien2`% del total)
-
-La suma de todas estas categorías es `r sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2))` `r termino_personas`, que coincide con nuestro total calculado de `r total_personas` `r termino_personas`.
-
-### Conclusión
-Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen `r texto_pregunta`.
+Como calculamos en la primera pregunta, el total de personas encuestadas es `r total_personas` `r termino_personas`.
 
 Answerlist
 ----------
-- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+* La respuesta es `r respuesta1`.
+* La respuesta es `r respuesta2`.
+* La respuesta es `r respuesta3`.
 
 Meta-information
 ================
 exname: proporciones_diagrama_circular
-extype: schoice
-exsolution: `r paste(as.integer(solucion), collapse="")`
-exshuffle: TRUE
+extype: cloze
+exclozetype: num|num|num
+exsolution: `r respuesta1`|`r respuesta2`|`r respuesta3`
+extol: 0
 exsection: Estadística|Proporciones|Interpretación de gráficos
