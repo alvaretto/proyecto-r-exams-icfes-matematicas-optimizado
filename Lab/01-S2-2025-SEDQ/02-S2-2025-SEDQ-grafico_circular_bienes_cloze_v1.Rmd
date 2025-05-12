@@ -184,54 +184,6 @@ test_that("Los porcentajes ajustados suman 100%", {
   expect_equal(sum(porcentajes), 100)
 })
 
-# Aleatorización para las preguntas en formato cloze
-# Pregunta 1: Cuántas personas poseen un bien específico
-bienes_pregunta1 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
-tipo_pregunta1 <- sample(bienes_pregunta1, 1)
-
-# Determinar el texto y la respuesta para la pregunta 1
-if (tipo_pregunta1 == "solo_bien1") {
-  respuesta1 <- personas_solo_bien1
-  texto_pregunta1 <- paste0("solo ", bien1)
-} else if (tipo_pregunta1 == "solo_bien2") {
-  respuesta1 <- personas_solo_bien2
-  texto_pregunta1 <- paste0("solo ", bien2)
-} else if (tipo_pregunta1 == "solo_bien3") {
-  respuesta1 <- personas_solo_bien3
-  texto_pregunta1 <- paste0("solo ", bien3)
-} else if (tipo_pregunta1 == "bien1_bien2") {
-  respuesta1 <- personas_bien1_bien2
-  texto_pregunta1 <- paste0(bien1, " y ", bien2)
-} else if (tipo_pregunta1 == "bien1_bien3") {
-  respuesta1 <- personas_bien1_bien3
-  texto_pregunta1 <- paste0(bien1, " y ", bien3)
-}
-
-# Pregunta 2: Probabilidad de tener un bien específico
-bienes_pregunta2 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
-tipo_pregunta2 <- sample(bienes_pregunta2[bienes_pregunta2 != tipo_pregunta1], 1)
-
-# Determinar el texto y la respuesta para la pregunta 2
-if (tipo_pregunta2 == "solo_bien1") {
-  respuesta2 <- round(personas_solo_bien1 / total_personas, 3)
-  texto_pregunta2 <- paste0("solo ", bien1)
-} else if (tipo_pregunta2 == "solo_bien2") {
-  respuesta2 <- round(personas_solo_bien2 / total_personas, 3)
-  texto_pregunta2 <- paste0("solo ", bien2)
-} else if (tipo_pregunta2 == "solo_bien3") {
-  respuesta2 <- round(personas_solo_bien3 / total_personas, 3)
-  texto_pregunta2 <- paste0("solo ", bien3)
-} else if (tipo_pregunta2 == "bien1_bien2") {
-  respuesta2 <- round(personas_bien1_bien2 / total_personas, 3)
-  texto_pregunta2 <- paste0(bien1, " y ", bien2)
-} else if (tipo_pregunta2 == "bien1_bien3") {
-  respuesta2 <- round(personas_bien1_bien3 / total_personas, 3)
-  texto_pregunta2 <- paste0(bien1, " y ", bien3)
-}
-
-# Pregunta 3: Total de personas encuestadas
-respuesta3 <- total_personas
-
 # Seleccionar un valor conocido para el enunciado
 tipos_condicion <- c("bien1_bien3", "solo_bien3", "solo_bien2", "solo_bien1", "bien1_bien2")
 tipo_condicion <- sample(tipos_condicion, 1)
@@ -253,6 +205,58 @@ if (tipo_condicion == "bien1_bien3") {
   valor_condicion <- personas_bien1_bien2
   texto_condicion <- paste0(bien1, " y ", bien2)
 }
+
+# Aleatorización para las preguntas en formato cloze
+# Pregunta 1: Cuántas personas poseen un bien específico
+# Excluimos el tipo_condicion para evitar preguntas redundantes
+bienes_pregunta1 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
+bienes_pregunta1 <- bienes_pregunta1[bienes_pregunta1 != tipo_condicion]
+tipo_pregunta1 <- sample(bienes_pregunta1, 1)
+
+# Determinar el texto y la respuesta para la pregunta 1
+if (tipo_pregunta1 == "solo_bien1") {
+  respuesta1 <- personas_solo_bien1
+  texto_pregunta1 <- paste0("solo ", bien1)
+} else if (tipo_pregunta1 == "solo_bien2") {
+  respuesta1 <- personas_solo_bien2
+  texto_pregunta1 <- paste0("solo ", bien2)
+} else if (tipo_pregunta1 == "solo_bien3") {
+  respuesta1 <- personas_solo_bien3
+  texto_pregunta1 <- paste0("solo ", bien3)
+} else if (tipo_pregunta1 == "bien1_bien2") {
+  respuesta1 <- personas_bien1_bien2
+  texto_pregunta1 <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta1 == "bien1_bien3") {
+  respuesta1 <- personas_bien1_bien3
+  texto_pregunta1 <- paste0(bien1, " y ", bien3)
+}
+
+# Pregunta 2: Probabilidad de tener un bien específico
+# Excluimos tanto tipo_condicion como tipo_pregunta1 para evitar redundancias
+bienes_pregunta2 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
+bienes_pregunta2 <- bienes_pregunta2[!(bienes_pregunta2 %in% c(tipo_condicion, tipo_pregunta1))]
+tipo_pregunta2 <- sample(bienes_pregunta2, 1)
+
+# Determinar el texto y la respuesta para la pregunta 2
+if (tipo_pregunta2 == "solo_bien1") {
+  respuesta2 <- round(personas_solo_bien1 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien1)
+} else if (tipo_pregunta2 == "solo_bien2") {
+  respuesta2 <- round(personas_solo_bien2 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien2)
+} else if (tipo_pregunta2 == "solo_bien3") {
+  respuesta2 <- round(personas_solo_bien3 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien3)
+} else if (tipo_pregunta2 == "bien1_bien2") {
+  respuesta2 <- round(personas_bien1_bien2 / total_personas, 3)
+  texto_pregunta2 <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta2 == "bien1_bien3") {
+  respuesta2 <- round(personas_bien1_bien3 / total_personas, 3)
+  texto_pregunta2 <- paste0(bien1, " y ", bien3)
+}
+
+# Pregunta 3: Total de personas encuestadas
+respuesta3 <- total_personas
 ```
 
 ```{r generar_grafico_circular, message=FALSE, warning=FALSE}
@@ -421,9 +425,9 @@ if (es_moodle) {
 
 Answerlist
 ----------
-- Si `r valor_condicion` `r termino_personas` de la `r contexto` poseen `r texto_condicion`, ¿cuántas personas poseen `r texto_pregunta1`?
+- Según el gráfico, si `r valor_condicion` `r termino_personas` de la `r contexto` poseen `r texto_condicion`, ¿cuántos `r termino_personas` poseen `r texto_pregunta1`?
 - Si se escoge una persona del grupo al azar, ¿cuál es la probabilidad de que tenga `r texto_pregunta2`?
-- ¿Cuántas personas de la `r contexto` fueron encuestadas?
+- ¿Cuántas personas de la `r contexto` fueron encuestadas en total?
 
 Solution
 ========
@@ -435,11 +439,13 @@ Para resolver este problema, necesitamos analizar la información proporcionada 
 Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`, lo que representa el `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total según el gráfico.
 
 Para calcular el total de personas:
+
 * Total = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
 * Total = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
 * Total = `r total_personas` `r termino_personas`
 
 Ahora podemos calcular cuántas personas poseen `r texto_pregunta1`:
+
 * Según el gráfico, las personas con `r texto_pregunta1` representan el `r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
 * Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
 * Número de personas = `r respuesta1` `r termino_personas`
@@ -453,9 +459,9 @@ La probabilidad se calcula dividiendo el número de casos favorables entre el n�
 * Probabilidad = `r if(tipo_pregunta2 == "solo_bien1") personas_solo_bien1 else if(tipo_pregunta2 == "solo_bien2") personas_solo_bien2 else if(tipo_pregunta2 == "solo_bien3") personas_solo_bien3 else if(tipo_pregunta2 == "bien1_bien2") personas_bien1_bien2 else personas_bien1_bien3` ÷ `r total_personas`
 * Probabilidad = `r respuesta2`
 
-### Pregunta 3: Total de personas encuestadas
+### Pregunta 3: Total de personas encuestadas en la `r contexto`
 
-Como calculamos en la primera pregunta, el total de personas encuestadas es `r total_personas` `r termino_personas`.
+Como calculamos en la primera pregunta, el total de personas encuestadas en la `r contexto` es `r total_personas` `r termino_personas`.
 
 Answerlist
 ----------
