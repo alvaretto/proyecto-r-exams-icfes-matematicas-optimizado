@@ -132,7 +132,8 @@ test_that("Los porcentajes suman 100%", {
 personas_bien1_bien3 <- sample(c(72, 96, 120, 144, 168, 192, 216, 240), 1)
 
 # Calcular el total de personas
-total_personas <- round(personas_bien1_bien3 * 100 / p_bien1_bien3)
+# Usamos floor() para redondear hacia abajo, asegurando que no se sobrestime el total
+total_personas <- floor(personas_bien1_bien3 * 100 / p_bien1_bien3)
 
 # Calcular el número de personas en cada categoría
 personas_solo_bien3 <- round(total_personas * p_solo_bien3 / 100)
@@ -244,20 +245,23 @@ if (tipo_condicion == "bien1_bien3") {
 
 # Generar distractores plausibles según el tipo de pregunta
 # Usamos diferentes valores para crear distractores convincentes
-distractor1 <- round(respuesta_correcta * sample(c(0.7, 0.8, 1.2, 1.3), 1))  # Variación porcentual
-distractor2 <- round(total_personas * sample(c(0.15, 0.2, 0.25, 0.3), 1))    # Porcentaje arbitrario del total
-distractor3 <- valor_condicion  # El valor dado en la condición inicial
+# Utilizamos signif() para mantener precisión en los cálculos
+distractor1 <- signif(round(respuesta_correcta * sample(c(0.7, 0.8, 1.2, 1.3), 1)), 4)  # Variación porcentual
+distractor2 <- signif(round(total_personas * sample(c(0.15, 0.2, 0.25, 0.3), 1)), 4)    # Porcentaje arbitrario del total
+distractor3 <- signif(valor_condicion, 4)  # El valor dado en la condición inicial
 
 # Asegurarse de que todos los distractores son diferentes de la respuesta correcta
-if (distractor1 == respuesta_correcta) distractor1 <- distractor1 + sample(5:15, 1)
-if (distractor2 == respuesta_correcta) distractor2 <- distractor2 - sample(5:15, 1)
-if (distractor3 == respuesta_correcta) distractor3 <- distractor3 + sample(5:15, 1)
+# Usamos ajustes más precisos para evitar problemas de redondeo
+if (abs(distractor1 - respuesta_correcta) < 1) distractor1 <- signif(distractor1 + sample(5:15, 1), 4)
+if (abs(distractor2 - respuesta_correcta) < 1) distractor2 <- signif(distractor2 - sample(5:15, 1), 4)
+if (abs(distractor3 - respuesta_correcta) < 1) distractor3 <- signif(distractor3 + sample(5:15, 1), 4)
 
 # Asegurarse de que todos los distractores son diferentes entre sí
-while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
-  if (distractor1 == distractor2) distractor1 <- distractor1 + sample(5:10, 1)
-  if (distractor2 == distractor3) distractor2 <- distractor2 - sample(5:10, 1)
-  if (distractor1 == distractor3) distractor3 <- distractor3 + sample(5:10, 1)
+# Usamos una tolerancia pequeña para comparaciones
+while (length(unique(signif(c(distractor1, distractor2, distractor3), 3))) < 3) {
+  if (abs(distractor1 - distractor2) < 1) distractor1 <- signif(distractor1 + sample(5:10, 1), 4)
+  if (abs(distractor2 - distractor3) < 1) distractor2 <- signif(distractor2 - sample(5:10, 1), 4)
+  if (abs(distractor1 - distractor3) < 1) distractor3 <- signif(distractor3 + sample(5:10, 1), 4)
 }
 
 # Crear un vector con todas las opciones y mezclarlas
@@ -468,7 +472,7 @@ Entonces 100% del total = X `r termino_personas`
 Aplicando regla de tres:
 
 * X = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
-* X = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
+* X = (`r valor_condicion` × 100) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
 * X = `r total_personas` `r termino_personas`
 
 Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
@@ -484,8 +488,8 @@ Aplicando regla de tres:
 
 * Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
 * Y = (`r if(tipo_pregunta == "solo_bien1") p_solo_bien1 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3` × `r total_personas`) ÷ 100
-* Y = `r if(tipo_pregunta == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100`
-* Y = `r respuesta_correcta` `r termino_personas`
+* Y = `r format(if(tipo_pregunta == "solo_bien1") p_solo_bien1 * total_personas / 100 else if(tipo_pregunta == "solo_bien2") p_solo_bien2 * total_personas / 100 else if(tipo_pregunta == "solo_bien3") p_solo_bien3 * total_personas / 100 else if(tipo_pregunta == "bien1_bien2") p_bien1_bien2 * total_personas / 100 else p_bien1_bien3 * total_personas / 100, nsmall=2)`
+* Y = `r format(respuesta_correcta, nsmall=0)` `r termino_personas`
 
 ### Paso 4: Verificación de la respuesta
 Podemos verificar nuestra respuesta comprobando que los números calculados son coherentes con los porcentajes del gráfico:
@@ -514,4 +518,5 @@ exname: proporciones_diagrama_circular
 extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
+extol: 0.0001
 exsection: Estadística|Proporciones|Interpretación de gráficos
