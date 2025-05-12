@@ -1,0 +1,479 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float"]
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorización del contexto del problema
+contextos <- c(
+  "empresa", "organización", "compañía", "institución", "corporación",
+  "entidad", "firma", "negocio", "sociedad", "grupo empresarial"
+)
+contexto <- sample(contextos, 1)
+
+# Aleatorización de los tipos de bienes
+tipos_bien1 <- c("carro", "auto", "vehículo", "automóvil", "coche")
+tipos_bien2 <- c("casa", "vivienda", "residencia", "hogar", "domicilio")
+tipos_bien3 <- c("apartamento", "departamento", "piso", "condominio")
+
+bien1 <- sample(tipos_bien1, 1)
+bien2 <- sample(tipos_bien2, 1)
+bien3 <- sample(tipos_bien3, 1)
+
+# Aleatorización de términos para el enunciado
+terminos_encuesta <- c("encuesta", "sondeo", "estudio", "investigación", "consulta")
+termino_encuesta <- sample(terminos_encuesta, 1)
+
+terminos_personas <- c("personas", "empleados", "trabajadores", "colaboradores", "miembros")
+termino_personas <- sample(terminos_personas, 1)
+
+terminos_bienes <- c("bienes", "posesiones", "propiedades", "activos", "patrimonios")
+termino_bienes <- sample(terminos_bienes, 1)
+
+terminos_resultados <- c("resultados", "datos", "estadísticas", "cifras")
+termino_resultados <- sample(terminos_resultados, 1)
+
+# Aleatorización de colores para el gráfico circular (paletas oscuras)
+paleta_colores <- list(
+  c("#C62828", "#2E7D32", "#1565C0", "#EF6C00", "#6A1B9A"),  # Paleta oscura 1
+  c("#D32F2F", "#388E3C", "#1976D2", "#F57C00", "#7B1FA2"),  # Paleta saturada
+  c("#B71C1C", "#1B5E20", "#0D47A1", "#E65100", "#4A148C"),  # Paleta oscura 2
+  c("#AD1457", "#00695C", "#283593", "#FF6F00", "#4A148C"),  # Paleta oscura 3
+  c("#880E4F", "#1B5E20", "#0D47A1", "#BF360C", "#4A148C")   # Paleta oscura 4
+)
+paleta_seleccionada <- sample(paleta_colores, 1)[[1]]
+
+# Aleatorización de los porcentajes manteniendo coherencia matemática
+# Generación de porcentajes iniciales para cada categoría
+set_porcentajes <- function() {
+  repeat {
+    # Generar valores base aleatorios
+    p_bien1_bien3 <- sample(15:35, 1)  # Porcentaje de bien1 y bien3
+    p_solo_bien3 <- sample(15:30, 1)   # Porcentaje solo bien3
+    p_solo_bien2 <- sample(25:40, 1)   # Porcentaje solo bien2
+    p_solo_bien1 <- sample(5:10, 1)    # Porcentaje solo bien1
+
+    # Calcular el porcentaje restante para bien1 y bien2
+    p_bien1_bien2 <- 100 - (p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1)
+
+    # Validar que el porcentaje restante sea positivo y razonable
+    if (p_bien1_bien2 >= 10 && p_bien1_bien2 <= 25) {
+      return(c(p_bien1_bien3, p_solo_bien3, p_solo_bien2, p_solo_bien1, p_bien1_bien2))
+    }
+  }
+}
+
+# Obtener porcentajes válidos
+porcentajes <- set_porcentajes()
+
+p_bien1_bien3 <- porcentajes[1]  # Porcentaje de bien1 y bien3
+p_solo_bien3 <- porcentajes[2]   # Porcentaje solo bien3
+p_solo_bien2 <- porcentajes[3]   # Porcentaje solo bien2
+p_solo_bien1 <- porcentajes[4]   # Porcentaje solo bien1
+p_bien1_bien2 <- porcentajes[5]  # Porcentaje de bien1 y bien2
+
+# Verificar que suman 100%
+test_that("Los porcentajes suman 100%", {
+  expect_equal(sum(porcentajes), 100)
+})
+
+# Valor conocido para el cálculo: Número de personas con bien1 y bien3
+personas_bien1_bien3 <- sample(c(72, 96, 120, 144, 168, 192, 216, 240), 1)
+
+# Calcular el total de personas
+total_personas <- round(personas_bien1_bien3 * 100 / p_bien1_bien3)
+
+# Calcular el número de personas en cada categoría
+personas_solo_bien3 <- round(total_personas * p_solo_bien3 / 100)
+personas_solo_bien2 <- round(total_personas * p_solo_bien2 / 100)
+personas_solo_bien1 <- round(total_personas * p_solo_bien1 / 100)
+personas_bien1_bien2 <- round(total_personas * p_bien1_bien2 / 100)
+
+# Recalcular personas_bien1_bien3 para asegurar que el total sea correcto
+personas_bien1_bien3 <- total_personas - (personas_solo_bien3 + personas_solo_bien2 + personas_solo_bien1 + personas_bien1_bien2)
+
+# Asegurar que todos los valores son positivos y razonables
+personas <- c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2)
+test_that("Todas las categorías tienen al menos una persona", {
+  expect_true(all(personas > 0))
+})
+
+# Asegurar que la suma de todas las categorías es igual al total
+test_that("La suma de todas las categorías es igual al total", {
+  expect_equal(sum(personas), total_personas)
+})
+
+# Recalcular los porcentajes reales basados en los números de personas (para mantener coherencia)
+p_bien1_bien3 <- round(personas_bien1_bien3 / total_personas * 100)
+p_solo_bien3 <- round(personas_solo_bien3 / total_personas * 100)
+p_solo_bien2 <- round(personas_solo_bien2 / total_personas * 100)
+p_solo_bien1 <- round(personas_solo_bien1 / total_personas * 100)
+p_bien1_bien2 <- round(personas_bien1_bien2 / total_personas * 100)
+
+# Ajustar para asegurar que suman 100%
+total_porcentaje <- p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1 + p_bien1_bien2
+if (total_porcentaje > 100) {
+  # Si suman más de 100, restar la diferencia de la categoría más grande
+  max_idx <- which.max(porcentajes)
+  porcentajes[max_idx] <- porcentajes[max_idx] - (total_porcentaje - 100)
+} else if (total_porcentaje < 100) {
+  # Si suman menos de 100, añadir la diferencia a la categoría más pequeña
+  min_idx <- which.min(porcentajes)
+  porcentajes[min_idx] <- porcentajes[min_idx] + (100 - total_porcentaje)
+}
+
+p_bien1_bien3 <- porcentajes[1]
+p_solo_bien3 <- porcentajes[2]
+p_solo_bien2 <- porcentajes[3]
+p_solo_bien1 <- porcentajes[4]
+p_bien1_bien2 <- porcentajes[5]
+
+# Asegurar que los porcentajes suman exactamente 100%
+test_that("Los porcentajes ajustados suman 100%", {
+  expect_equal(sum(porcentajes), 100)
+})
+
+# Seleccionar un valor conocido para el enunciado
+tipos_condicion <- c("bien1_bien3", "solo_bien3", "solo_bien2", "solo_bien1", "bien1_bien2")
+tipo_condicion <- sample(tipos_condicion, 1)
+
+# Determinar el valor y texto de la condición inicial
+if (tipo_condicion == "bien1_bien3") {
+  valor_condicion <- personas_bien1_bien3
+  texto_condicion <- paste0(bien1, " y ", bien3)
+} else if (tipo_condicion == "solo_bien3") {
+  valor_condicion <- personas_solo_bien3
+  texto_condicion <- paste0("solo ", bien3)
+} else if (tipo_condicion == "solo_bien2") {
+  valor_condicion <- personas_solo_bien2
+  texto_condicion <- paste0("solo ", bien2)
+} else if (tipo_condicion == "solo_bien1") {
+  valor_condicion <- personas_solo_bien1
+  texto_condicion <- paste0("solo ", bien1)
+} else if (tipo_condicion == "bien1_bien2") {
+  valor_condicion <- personas_bien1_bien2
+  texto_condicion <- paste0(bien1, " y ", bien2)
+}
+
+# Aleatorización para las preguntas en formato cloze
+# Pregunta 1: Cuántas personas poseen un bien específico
+# Excluimos el tipo_condicion para evitar preguntas redundantes
+bienes_pregunta1 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
+bienes_pregunta1 <- bienes_pregunta1[bienes_pregunta1 != tipo_condicion]
+tipo_pregunta1 <- sample(bienes_pregunta1, 1)
+
+# Determinar el texto y la respuesta para la pregunta 1
+if (tipo_pregunta1 == "solo_bien1") {
+  respuesta1 <- personas_solo_bien1
+  texto_pregunta1 <- paste0("solo ", bien1)
+} else if (tipo_pregunta1 == "solo_bien2") {
+  respuesta1 <- personas_solo_bien2
+  texto_pregunta1 <- paste0("solo ", bien2)
+} else if (tipo_pregunta1 == "solo_bien3") {
+  respuesta1 <- personas_solo_bien3
+  texto_pregunta1 <- paste0("solo ", bien3)
+} else if (tipo_pregunta1 == "bien1_bien2") {
+  respuesta1 <- personas_bien1_bien2
+  texto_pregunta1 <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta1 == "bien1_bien3") {
+  respuesta1 <- personas_bien1_bien3
+  texto_pregunta1 <- paste0(bien1, " y ", bien3)
+}
+
+# Pregunta 2: Probabilidad de tener un bien específico
+# Excluimos tanto tipo_condicion como tipo_pregunta1 para evitar redundancias
+bienes_pregunta2 <- c("solo_bien1", "solo_bien2", "solo_bien3", "bien1_bien2", "bien1_bien3")
+bienes_pregunta2 <- bienes_pregunta2[!(bienes_pregunta2 %in% c(tipo_condicion, tipo_pregunta1))]
+tipo_pregunta2 <- sample(bienes_pregunta2, 1)
+
+# Determinar el texto y la respuesta para la pregunta 2
+if (tipo_pregunta2 == "solo_bien1") {
+  respuesta2 <- round(personas_solo_bien1 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien1)
+} else if (tipo_pregunta2 == "solo_bien2") {
+  respuesta2 <- round(personas_solo_bien2 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien2)
+} else if (tipo_pregunta2 == "solo_bien3") {
+  respuesta2 <- round(personas_solo_bien3 / total_personas, 3)
+  texto_pregunta2 <- paste0("solo ", bien3)
+} else if (tipo_pregunta2 == "bien1_bien2") {
+  respuesta2 <- round(personas_bien1_bien2 / total_personas, 3)
+  texto_pregunta2 <- paste0(bien1, " y ", bien2)
+} else if (tipo_pregunta2 == "bien1_bien3") {
+  respuesta2 <- round(personas_bien1_bien3 / total_personas, 3)
+  texto_pregunta2 <- paste0(bien1, " y ", bien3)
+}
+
+# Pregunta 3: Total de personas encuestadas
+respuesta3 <- total_personas
+```
+
+```{r generar_grafico_circular, message=FALSE, warning=FALSE}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Código Python para generar el gráfico circular
+codigo_python <- paste0("
+import matplotlib
+matplotlib.use('Agg')  # Usar backend no interactivo
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Datos para el gráfico
+labels = ['", bien1, " y ", bien3, "', 'Solo ", bien3, "', 'Solo ", bien2, "',
+          'Solo ", bien1, "', '", bien1, " y ", bien2, "']
+sizes = [", p_bien1_bien3, ", ", p_solo_bien3, ", ", p_solo_bien2, ",
+         ", p_solo_bien1, ", ", p_bien1_bien2, "]
+colors = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
+          '", paleta_seleccionada[3], "', '", paleta_seleccionada[4], "',
+          '", paleta_seleccionada[5], "']
+
+# Explode para destacar ligeramente el sector con bien1 y bien3
+explode = (0.03, 0, 0, 0, 0)
+
+# Crear figura con más espacio para acomodar las etiquetas externas
+plt.figure(figsize=(7, 6))  # Aumentar tamaño para dar espacio a las etiquetas
+
+# Crear gráfico circular con bordes blancos
+wedges, texts, autotexts = plt.pie(
+    sizes,
+    explode=explode,
+    colors=colors,
+    shadow=True,
+    startangle=45,  # Cambiar ángulo para mejor distribución
+    autopct='%d%%',
+    pctdistance=0.75,  # Ubicar porcentajes más cerca del borde exterior
+    wedgeprops={'edgecolor': 'white', 'linewidth': 1},
+    textprops={'fontsize': 10, 'fontweight': 'bold', 'color': 'white'}
+)
+
+# Configuración estética de los textos de porcentaje con recuadros
+for autotext in autotexts:
+    autotext.set_fontsize(9)  # Tamaño de fuente para porcentajes
+    autotext.set_weight('bold')
+    # Crear un recuadro semitransparente para los porcentajes
+    bbox_props = {'boxstyle': 'round,pad=0.2',
+                 'facecolor': 'black',
+                 'alpha': 0.7,
+                 'edgecolor': 'none'}
+    autotext.set_bbox(bbox_props)
+
+# Eliminar los textos del pie (los reemplazaremos con etiquetas externas)
+for text in texts:
+    text.set_visible(False)
+
+# Crear etiquetas externas con líneas conectoras
+bbox_props = {'boxstyle': 'round,pad=0.3',
+             'facecolor': 'white',
+             'edgecolor': 'gray',
+             'alpha': 0.9}
+
+# Calcular posiciones de etiquetas externas optimizadas para evitar solapamiento
+def get_label_position(angle_rad, wedge_size):
+    # Ajustar distancia basada en el tamaño del sector
+    # Sectores más pequeños tienen etiquetas más alejadas para evitar solapamiento
+    distance_factor = 1.25 if wedge_size < 15 else 1.15
+
+    # Determinar coordenadas
+    x = distance_factor * np.cos(angle_rad)
+    y = distance_factor * np.sin(angle_rad)
+
+    # Ajustar alineación basada en cuadrante
+    if x < 0:
+        ha = 'right'
+    else:
+        ha = 'left'
+
+    if y < 0:
+        va = 'top'
+    else:
+        va = 'bottom'
+
+    # Para sectores muy pequeños, ajustar más la posición para evitar solapamiento
+    if wedge_size < 10:
+        x *= 1.1
+        y *= 1.1
+
+    return x, y, ha, va
+
+# Colocar etiquetas externas con líneas conectoras
+for i, wedge in enumerate(wedges):
+    # Calcular ángulo medio del sector
+    ang = (wedge.theta1 + wedge.theta2) / 2
+    ang_rad = np.radians(ang)
+
+    # Calcular coordenadas para el inicio de la línea conectora (en el borde del sector)
+    # El factor 0.85 asegura que la línea empiece cerca del borde del sector
+    x_edge = 0.85 * np.cos(ang_rad)
+    y_edge = 0.85 * np.sin(ang_rad)
+
+    # Obtener posición optimizada para la etiqueta
+    x_label, y_label, ha, va = get_label_position(ang_rad, sizes[i])
+
+    # Dibujar línea conectora
+    con = plt.annotate('',
+                      xy=(x_edge, y_edge),  # Inicio (en el borde del sector)
+                      xytext=(x_label * 0.95, y_label * 0.95),  # Fin (cerca de la etiqueta)
+                      arrowprops=dict(arrowstyle='-', color='gray', lw=0.8))
+
+    # Añadir etiqueta con recuadro blanco
+    plt.text(x_label, y_label, labels[i],
+            fontsize=8,
+            fontweight='bold',
+            ha=ha,
+            va=va,
+            bbox=bbox_props,
+            zorder=10)
+
+# Asegurar que el gráfico sea un círculo
+plt.axis('equal')
+
+# Añadir título en la parte inferior del gráfico
+plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
+           'Distribución de bienes',
+           fontsize=12,
+           fontweight='bold',
+           color='#333333',
+           ha='center')  # Alineación horizontal centrada
+
+# Ajustar los márgenes para dejar espacio a las etiquetas externas
+plt.tight_layout(pad=1.5, rect=[0, 0.05, 1, 0.95])  # Ajustar rect para dar más espacio
+
+# Guardar en múltiples formatos para asegurar compatibilidad
+plt.savefig('grafico_circular.png', dpi=150, bbox_inches='tight',
+           transparent=True, format='png')
+plt.savefig('grafico_circular.pdf', dpi=150, bbox_inches='tight',
+           transparent=True, format='pdf')
+plt.close()
+")
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+```
+
+Question
+========
+
+En La Tebaida se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
+
+```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
+# Detectar si se está generando para Moodle
+# Formatos para Moodle y similares
+formatos_moodle <- c("exams2moodle", "exams2qti12",
+                     "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar la imagen del gráfico circular
+if (es_moodle) {
+  # Tamaño para Moodle
+  cat("![](grafico_circular.png){width=60%}")
+} else {
+  # Tamaño para PDF/Word
+  cat("![](grafico_circular.png){width=70%}")
+}
+```
+
+Answerlist
+----------
+- Según el gráfico, si `r valor_condicion` `r termino_personas` de la `r contexto` poseen `r texto_condicion`, ¿cuántos `r termino_personas` poseen `r texto_pregunta1`?
+- Si se escoge una persona del grupo al azar, ¿cuál es la probabilidad de que tenga `r texto_pregunta2`?
+- ¿Cuántas personas de la `r contexto` fueron encuestadas en total?
+
+Solution
+========
+
+Para resolver este problema, necesitamos analizar la información proporcionada en el gráfico circular y aplicar conceptos de proporcionalidad y probabilidad.
+
+### Pregunta 1: Número de personas que poseen `r texto_pregunta1`
+
+Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`, lo que representa el `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total según el gráfico.
+
+Para calcular el total de personas:
+
+* Total = (`r valor_condicion` × 100%) ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`%
+* Total = `r valor_condicion * 100` ÷ `r if(tipo_condicion == "solo_bien1") p_solo_bien1 else if(tipo_condicion == "solo_bien2") p_solo_bien2 else if(tipo_condicion == "solo_bien3") p_solo_bien3 else if(tipo_condicion == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`
+* Total = `r total_personas` `r termino_personas`
+
+Ahora podemos calcular cuántas personas poseen `r texto_pregunta1`:
+
+* Según el gráfico, las personas con `r texto_pregunta1` representan el `r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% del total.
+* Número de personas = (`r if(tipo_pregunta1 == "solo_bien1") p_solo_bien1 else if(tipo_pregunta1 == "solo_bien2") p_solo_bien2 else if(tipo_pregunta1 == "solo_bien3") p_solo_bien3 else if(tipo_pregunta1 == "bien1_bien2") p_bien1_bien2 else p_bien1_bien3`% × `r total_personas`) ÷ 100%
+* Número de personas = `r respuesta1` `r termino_personas`
+
+### Pregunta 2: Probabilidad de que una persona tenga `r texto_pregunta2`
+
+La probabilidad se calcula dividiendo el número de casos favorables entre el número total de casos posibles:
+
+* Número de personas con `r texto_pregunta2` = `r if(tipo_pregunta2 == "solo_bien1") personas_solo_bien1 else if(tipo_pregunta2 == "solo_bien2") personas_solo_bien2 else if(tipo_pregunta2 == "solo_bien3") personas_solo_bien3 else if(tipo_pregunta2 == "bien1_bien2") personas_bien1_bien2 else personas_bien1_bien3` `r termino_personas`
+* Total de personas = `r total_personas` `r termino_personas`
+* Probabilidad = `r if(tipo_pregunta2 == "solo_bien1") personas_solo_bien1 else if(tipo_pregunta2 == "solo_bien2") personas_solo_bien2 else if(tipo_pregunta2 == "solo_bien3") personas_solo_bien3 else if(tipo_pregunta2 == "bien1_bien2") personas_bien1_bien2 else personas_bien1_bien3` ÷ `r total_personas`
+* Probabilidad = `r respuesta2`
+
+### Pregunta 3: Total de personas encuestadas en la `r contexto`
+
+Como calculamos en la primera pregunta, el total de personas encuestadas en la `r contexto` es `r total_personas` `r termino_personas`.
+
+Answerlist
+----------
+* La respuesta es `r respuesta1`.
+* La respuesta es `r respuesta2`.
+* La respuesta es `r respuesta3`.
+
+Meta-information
+================
+exname: proporciones_diagrama_circular
+extype: cloze
+exclozetype: num|num|num
+exsolution: `r respuesta1`|`r respuesta2`|`r respuesta3`
+extol: 0
+exsection: Estadística|Proporciones|Interpretación de gráficos
