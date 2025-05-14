@@ -599,7 +599,7 @@ plt.axis('equal')
 
 # Añadir título en la parte inferior del gráfico
 plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
-           'Distribución de bienes (total: ", total_personas, " personas)',
+           'Distribución de bienes',
            fontsize=12,
            fontweight='bold',
            color='#333333',
