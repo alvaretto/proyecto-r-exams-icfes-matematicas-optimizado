@@ -7,11 +7,8 @@ output:
 library(exams)
 #library(tidyverse)
 
-# Establecer una semilla fija para depuración
-#set.seed(12345)
-
 options(scipen=999)
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, error = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 
@@ -54,8 +51,7 @@ generar_fraccion_similar <- function(target_fraction) {
 
   # Generar una fracción similar pero no igual
   # Intentar mantener un nivel similar de simplificación
-  max_intentos <- 100  # Limitar el número de intentos para evitar bucles infinitos
-  for (intento in 1:max_intentos) {
+  repeat {
     # Generar un denominador cercano al original
     new_denom <- sample(max(target_denom - 10, 15):min(target_denom + 10, 60), 1)
 
@@ -82,12 +78,6 @@ generar_fraccion_similar <- function(target_fraction) {
       }
     }
   }
-
-  # Si después de max_intentos no se encontró una fracción adecuada,
-  # devolver una fracción por defecto que sea diferente a la original
-  default_num <- target_num + 1
-  default_denom <- target_denom + 2
-  return(c(default_num, default_denom))
 }
 
 # Función mejorada para generar distractores coherentes y plausibles
