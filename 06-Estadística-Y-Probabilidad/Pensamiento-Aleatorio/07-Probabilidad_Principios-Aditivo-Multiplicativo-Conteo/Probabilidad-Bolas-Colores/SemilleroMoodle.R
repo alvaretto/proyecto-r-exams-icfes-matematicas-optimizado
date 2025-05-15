@@ -3,7 +3,7 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "11_C01_G09_2020_Tipo1.Rmd"
-copias <- 1000  # Reducido para pruebas
+copias <- 10  # Reducido para pruebas
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)

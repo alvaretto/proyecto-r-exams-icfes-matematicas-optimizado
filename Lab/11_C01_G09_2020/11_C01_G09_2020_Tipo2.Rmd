@@ -1,11 +1,10 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 ```{r setup, include=FALSE}
-library(exams)
-library(tidyverse)
+
 
 options(scipen=999)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
