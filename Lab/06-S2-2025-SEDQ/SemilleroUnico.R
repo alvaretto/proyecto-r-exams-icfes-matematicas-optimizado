@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "11_C01_G09_2020_Tipo1.Rmd"
+archivo_examen <- "logica_puntaje_campeonato_v1.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
