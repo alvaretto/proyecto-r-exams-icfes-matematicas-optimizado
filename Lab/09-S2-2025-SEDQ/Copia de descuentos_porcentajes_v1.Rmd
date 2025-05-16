@@ -1,0 +1,361 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "amsmath"]
+  word_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{amsmath}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorización del precio original
+precios_base <- c(50000, 60000, 75000, 80000, 90000, 100000, 120000, 125000,
+                 150000, 180000, 200000, 250000, 300000, 350000, 400000, 450000, 500000)
+precio_original <- sample(precios_base, 1)
+
+# Aleatorización del porcentaje de descuento
+porcentajes <- c(10, 15, 20, 25, 30, 33, 40, 50)
+porcentaje_descuento <- sample(porcentajes, 1)
+
+# Aleatorización del contexto del problema
+contextos_articulos <- list(
+  c("un televisor", "televisor", "electrónico"),
+  c("un celular", "celular", "electrónico"),
+  c("un computador", "computador", "electrónico"),
+  c("una lavadora", "lavadora", "electrodoméstico"),
+  c("un refrigerador", "refrigerador", "electrodoméstico"),
+  c("una bicicleta", "bicicleta", "artículo deportivo"),
+  c("un sofá", "sofá", "mueble"),
+  c("una mesa", "mesa", "mueble"),
+  c("un vestido", "vestido", "prenda"),
+  c("un traje", "traje", "prenda"),
+  c("unos zapatos", "zapatos", "calzado"),
+  c("un reloj", "reloj", "accesorio"),
+  c("una joya", "joya", "accesorio"),
+  c("un libro", "libro", "artículo educativo"),
+  c("un boleto de avión", "boleto", "servicio")
+)
+contexto_seleccionado <- sample(contextos_articulos, 1)[[1]]
+articulo <- contexto_seleccionado[1]
+tipo_articulo <- contexto_seleccionado[2]
+categoria <- contexto_seleccionado[3]
+
+# Aleatorización de términos para el enunciado
+terminos_ahorro <- c("ahorró", "economizó", "se descontó", "dejó de pagar", "redujo del pago")
+termino_ahorro <- sample(terminos_ahorro, 1)
+
+terminos_descuento <- c("descuento", "rebaja", "reducción", "oferta", "promoción")
+termino_descuento <- sample(terminos_descuento, 1)
+
+terminos_compra <- c("comprar", "adquirir", "obtener", "conseguir")
+termino_compra <- sample(terminos_compra, 1)
+
+terminos_costo <- c("costaba", "tenía un precio de", "valía", "estaba marcado en")
+termino_costo <- sample(terminos_costo, 1)
+
+terminos_procedimiento <- c("procedimientos", "métodos", "cálculos", "operaciones", "fórmulas")
+termino_procedimiento <- sample(terminos_procedimiento, 1)
+
+# Cálculos para las opciones
+# Valor del descuento (ahorro)
+valor_descuento <- precio_original * porcentaje_descuento / 100
+# Precio final después del descuento
+precio_final <- precio_original - valor_descuento
+# Factor para el precio final (1 - porcentaje_descuento/100)
+factor_precio_final <- 1 - porcentaje_descuento/100
+
+# Generar las opciones de respuesta
+# Opción A: Fracción equivalente al porcentaje × precio
+fraccion <- switch(as.character(porcentaje_descuento),
+                  "10" = "\\frac{1}{10}",
+                  "15" = "\\frac{3}{20}",
+                  "20" = "\\frac{1}{5}",
+                  "25" = "\\frac{1}{4}",
+                  "30" = "\\frac{3}{10}",
+                  "33" = "\\frac{1}{3}",
+                  "40" = "\\frac{2}{5}",
+                  "50" = "\\frac{1}{2}")
+
+opcion_a <- paste0(fraccion, " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+
+# Opción B: Decimal equivalente al porcentaje × precio
+decimal <- porcentaje_descuento / 100
+opcion_b <- paste0(format(decimal, nsmall=2, decimal.mark=","), " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+
+# Opción C: Fórmula estándar de porcentaje
+opcion_c <- paste0("\\frac{", format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "}{100}")
+
+# Opción D: Factor para precio final × precio (NO calcula el ahorro)
+opcion_d <- paste0(format(factor_precio_final, nsmall=2, decimal.mark=","), " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+
+# Crear vector con todas las opciones
+opciones <- c(opcion_a, opcion_b, opcion_c, opcion_d)
+
+# La respuesta correcta es la opción D (que NO calcula el ahorro)
+indice_correcto <- 4
+
+# Crear el vector de solución para r-exams (1 para la respuesta correcta, 0 para las incorrectas)
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+
+# Formatear valores para Python
+precio_original_formateado <- gsub("\\.", ",", format(precio_original, big.mark="."))
+valor_descuento_formateado <- gsub("\\.", ",", format(round(valor_descuento), big.mark="."))
+```
+
+```{r generar_visualizacion, message=FALSE, warning=FALSE}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Crear un archivo Python temporal con el código
+archivo_python <- tempfile(fileext = ".py")
+
+# Preparar el código Python sin usar sprintf para evitar problemas con los marcadores %
+codigo_python <- paste0('
+import matplotlib
+matplotlib.use("Agg")  # Usar backend no interactivo
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Rectangle
+import matplotlib.patheffects as path_effects
+
+# Configuración de colores
+color_precio_original = "#3498db"  # Azul
+color_descuento = "#e74c3c"        # Rojo
+color_precio_final = "#2ecc71"     # Verde
+
+# Crear figura
+fig, ax = plt.subplots(figsize=(8, 4))
+
+# Datos para la visualización
+precio_original = ', precio_original, '
+porcentaje_descuento = ', porcentaje_descuento, '
+valor_descuento = precio_original * porcentaje_descuento / 100
+precio_final = precio_original - valor_descuento
+
+# Crear barras para representar los precios
+bar_width = 0.4
+x_pos = [0, 1]
+
+# Barra para precio original
+ax.bar(x_pos[0], precio_original, bar_width, color=color_precio_original,
+       edgecolor="black", linewidth=1.5, label="Precio original")
+
+# Barra para precio final y descuento
+ax.bar(x_pos[1], precio_final, bar_width, color=color_precio_final,
+       edgecolor="black", linewidth=1.5, label="Precio final")
+ax.bar(x_pos[1], valor_descuento, bar_width, bottom=precio_final,
+       color=color_descuento, edgecolor="black", linewidth=1.5,
+       hatch="///", label="Descuento (', porcentaje_descuento, '%)")
+
+# Añadir etiquetas con valores
+def add_value_label(x, y, value, color="black", fontsize=10, fontweight="bold"):
+    text = ax.text(x, y, f"${value:,.0f}".replace(",", "."),
+                  ha="center", va="bottom", fontsize=fontsize, fontweight=fontweight)
+    text.set_path_effects([path_effects.withStroke(linewidth=3, foreground="white")])
+    return text
+
+# Etiqueta para precio original
+add_value_label(x_pos[0], precio_original, precio_original)
+
+# Etiqueta para precio final
+add_value_label(x_pos[1], precio_final/2, precio_final)
+
+# Etiqueta para descuento
+add_value_label(x_pos[1], precio_final + valor_descuento/2, valor_descuento)
+
+# Añadir porcentaje de descuento
+ax.text(x_pos[1] + 0.25, precio_final + valor_descuento/2,
+       f"{porcentaje_descuento}%", ha="left", va="center",
+       fontsize=12, fontweight="bold", color=color_descuento)
+
+# Configurar ejes
+ax.set_xticks(x_pos)
+ax.set_xticklabels(["Precio original", "Precio con descuento"], fontsize=10, fontweight="bold")
+ax.set_ylabel("Precio ($)", fontsize=10, fontweight="bold")
+ax.set_title("Representación del descuento", fontsize=14, fontweight="bold", pad=15)
+
+# Eliminar bordes superiores y derechos
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+# Añadir leyenda
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), ncol=3, frameon=False, fontsize=9)
+
+# Crear una imagen separada para las fórmulas
+fig_formula = plt.figure(figsize=(6, 1.2))
+plt.axis("off")
+plt.text(0.5, 0.7, "Ahorro = Precio original × Porcentaje de descuento ÷ 100",
+         ha="center", va="center", fontsize=10)
+
+# Formatear los valores directamente en Python sin el símbolo $
+precio_formateado = "{:,.0f}".format(precio_original).replace(",", ".")
+descuento_formateado = "{:,.0f}".format(valor_descuento).replace(",", ".")
+
+# Usar formato simple sin símbolos $ para evitar problemas
+ejemplo_texto = "Ejemplo: " + precio_formateado + " × " + str(porcentaje_descuento) + "% ÷ 100 = " + descuento_formateado
+plt.text(0.5, 0.3, ejemplo_texto,
+         ha="center", va="center", fontsize=10)
+
+plt.tight_layout()
+plt.savefig("formula_descuento.png", dpi=150, bbox_inches="tight", transparent=True)
+plt.close(fig_formula)
+
+# Ajustar diseño
+plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+
+# Guardar en múltiples formatos para asegurar compatibilidad
+plt.savefig("visualizacion_descuento.png", dpi=150, bbox_inches="tight", format="png")
+plt.savefig("visualizacion_descuento.pdf", dpi=150, bbox_inches="tight", format="pdf")
+plt.close()
+')
+
+# Escribir el código Python en el archivo temporal
+writeLines(codigo_python, archivo_python)
+
+# Ejecutar el archivo Python
+py_run_file(archivo_python)
+
+# Eliminar el archivo temporal
+unlink(archivo_python)
+```
+
+Question
+========
+
+Se quiere saber cuánto dinero `r termino_ahorro` una persona al `r termino_compra` `r articulo` que `r termino_costo` $`r format(precio_original, big.mark=".", decimal.mark=",")`  y tenía un `r termino_descuento` del `r porcentaje_descuento`%.
+
+¿Cuál de los siguientes `r termino_procedimiento` **NO** permite calcular este valor?
+
+```{r mostrar_visualizacion, echo=FALSE, results='asis', fig.align="center"}
+# Detectar si se está generando para Moodle
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar la imagen de la visualización
+if (es_moodle) {
+  # Tamaño para Moodle
+  cat("![](visualizacion_descuento.png){width=70%}\n\n")
+  cat("![](formula_descuento.png){width=70%}")
+} else {
+  # Tamaño para PDF/Word
+  cat("![](visualizacion_descuento.png){width=80%}\n\n")
+  cat("![](formula_descuento.png){width=80%}")
+}
+```
+
+Answerlist
+----------
+- A. $`r opcion_a`$
+- B. $`r opcion_b`$
+- C. $`r opcion_c`$
+- D. $`r opcion_d`$
+
+Solution
+========
+
+Para resolver este problema, debemos analizar cada uno de los procedimientos propuestos y determinar cuál **NO** permite calcular el ahorro obtenido al aplicar un descuento del `r porcentaje_descuento`% a un artículo que cuesta $`r format(precio_original, big.mark=".", decimal.mark=",")`.
+
+### Análisis de cada opción:
+
+#### Opción A: $`r opcion_a`$
+Esta opción representa la fracción equivalente al porcentaje de descuento multiplicada por el precio original:
+- $`r fraccion`$ es equivalente a `r porcentaje_descuento`%
+- Al multiplicar esta fracción por el precio original, obtenemos el valor del descuento:
+  $`r fraccion` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
+- **Este procedimiento SÍ permite calcular el ahorro.**
+
+#### Opción B: $`r opcion_b`$
+Esta opción representa el porcentaje de descuento expresado como decimal multiplicado por el precio original:
+- $`r format(decimal, nsmall=2, decimal.mark=",")`$ es equivalente a `r porcentaje_descuento`%
+- Al multiplicar este decimal por el precio original, obtenemos el valor del descuento:
+  $`r format(decimal, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
+- **Este procedimiento SÍ permite calcular el ahorro.**
+
+#### Opción C: $`r opcion_c`$
+Esta opción representa la fórmula estándar para calcular un porcentaje del precio original:
+- $\frac{`r format(precio_original, big.mark=".", decimal.mark=",")` \times `r porcentaje_descuento`}{100} = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
+- **Este procedimiento SÍ permite calcular el ahorro.**
+
+#### Opción D: $`r opcion_d`$
+Esta opción representa el factor para calcular el precio final (después del descuento) multiplicado por el precio original:
+- $`r format(factor_precio_final, nsmall=2, decimal.mark=",")`$ es equivalente a $(1 - `r porcentaje_descuento`/100)$
+- Al multiplicar este factor por el precio original, obtenemos el precio final después del descuento:
+  $`r format(factor_precio_final, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(precio_final, big.mark=".", decimal.mark=",")`$
+- Este cálculo nos da el precio final después del descuento, NO el ahorro.
+- **Este procedimiento NO permite calcular el ahorro.**
+
+### Verificación matemática:
+- Precio original: $`r format(precio_original, big.mark=".", decimal.mark=",")`
+- Porcentaje de descuento: `r porcentaje_descuento`%
+- Valor del descuento (ahorro): $`r format(valor_descuento, big.mark=".", decimal.mark=",")` (calculado como `r porcentaje_descuento`% de $`r format(precio_original, big.mark=".", decimal.mark=",")`)
+- Precio final: $`r format(precio_final, big.mark=".", decimal.mark=",")` (calculado como $`r format(precio_original, big.mark=".", decimal.mark=",")` - $`r format(valor_descuento, big.mark=".", decimal.mark=",")`)
+
+### Conclusión:
+La opción D ($`r opcion_d`$) es la única que **NO** permite calcular el ahorro, ya que calcula el precio final después del descuento en lugar del monto ahorrado.
+
+Answerlist
+----------
+- Falso
+- Falso
+- Falso
+- Verdadero
+
+Meta-information
+================
+exname: descuentos_porcentajes
+extype: schoice
+exsolution: 0001
+exshuffle: TRUE
+exsection: Aritmética|Porcentajes|Descuentos
+exextra[ICFES,character]: Competencia: Interpretación y representación
+exextra[ICFES,character]: Afirmación: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos
+exextra[ICFES,character]: Evidencia: Da cuenta de las características básicas de la información presentada en diferentes formatos como series, gráficas, tablas y esquemas
+exextra[ICFES,character]: Nivel: Medio
