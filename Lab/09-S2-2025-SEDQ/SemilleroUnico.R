@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "descuentos_porcentajes_v1.Rmd"
+archivo_examen <- "descuentos_porcentajes_v2.Rmd"
 copias <- 1
 numpreg <- 10
 semilla <- sample(100:1e8, 1)
