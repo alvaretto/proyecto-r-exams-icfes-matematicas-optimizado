@@ -20,7 +20,7 @@ icfes:
     - Sub-Ítem: Cálculo de porcentajes en contextos de descuento
   generico: false
   eje_axial: Pensamiento numérico y sistemas numéricos
-  tarea: Identificar la expresión que no representa el cálculo del ahorro en un descuento porcentual.
+  tarea: Identificar la expresión que representa el cálculo del ahorro en un descuento porcentual.
   grado: 7° (Séptimo grado de educación básica secundaria)
 ---
 ```{r setup, include=FALSE}
@@ -195,21 +195,60 @@ opcion_c <- paste0("\\frac{", format(precio_original, big.mark=".", decimal.mark
 # Opción D: Factor para precio final × precio (NO calcula el ahorro)
 opcion_d <- paste0(format(factor_precio_final, nsmall=2, decimal.mark=","), " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
 
-# Generar opciones con diferentes presentaciones para garantizar que sean distintas
-# Opción A: Fracción con formato específico y paréntesis
-opcion_a <- paste0(fraccion, " \\cdot (", format(precio_original, big.mark=".", decimal.mark=","), ")")
+# Definir fracciones invertidas para cada porcentaje (para opciones incorrectas)
+fraccion_invertida <- switch(as.character(porcentaje_descuento),
+                           "10" = "\\frac{10}{1}",
+                           "12" = "\\frac{25}{3}",
+                           "15" = "\\frac{20}{3}",
+                           "18" = "\\frac{50}{9}",
+                           "20" = "\\frac{5}{1}",
+                           "22" = "\\frac{50}{11}",
+                           "25" = "\\frac{4}{1}",
+                           "28" = "\\frac{25}{7}",
+                           "30" = "\\frac{10}{3}",
+                           "33" = "\\frac{3}{1}",
+                           "35" = "\\frac{20}{7}",
+                           "38" = "\\frac{50}{19}",
+                           "40" = "\\frac{5}{2}",
+                           "45" = "\\frac{20}{9}",
+                           "48" = "\\frac{25}{12}")
 
-# Opción B: Decimal con formato específico y notación de porcentaje
-opcion_b <- paste0(format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "\\%", " \\div 100")
+# Elegir aleatoriamente cuál opción (A, B o C) será la correcta
+indice_correcto <- sample(1:3, 1)
 
-# Opción C: Alternar entre fracción y decimal (círculo 1)
-if (usar_fraccion_opcion_c) {
-  opcion_c <- paste0("\\frac{", porcentaje_descuento, "}{100}", " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+# Generar opciones según el índice correcto
+# Opción A
+if (indice_correcto == 1) {
+  # Opción A correcta: Fracción correcta × precio
+  opcion_a <- paste0(fraccion, " \\cdot (", format(precio_original, big.mark=".", decimal.mark=","), ")")
 } else {
-  opcion_c <- paste0(format(decimal, nsmall=2, decimal.mark=","), " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+  # Opción A incorrecta: Fracción invertida × precio
+  opcion_a <- paste0(fraccion_invertida, " \\cdot (", format(precio_original, big.mark=".", decimal.mark=","), ")")
 }
 
-# Opción D: Alternar entre decimal y fracción (círculo 2)
+# Opción B
+if (indice_correcto == 2) {
+  # Opción B correcta: precio × porcentaje ÷ 100
+  opcion_b <- paste0(format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "\\%", " \\div 100")
+} else {
+  # Opción B incorrecta: precio × porcentaje × 100
+  opcion_b <- paste0(format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "\\%", " \\times 100")
+}
+
+# Opción C
+if (indice_correcto == 3) {
+  # Opción C correcta: precio × porcentaje / 100
+  if (usar_fraccion_opcion_c) {
+    opcion_c <- paste0("\\frac{", porcentaje_descuento, "}{100}", " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+  } else {
+    opcion_c <- paste0("\\frac{", format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "}{100}")
+  }
+} else {
+  # Opción C incorrecta: precio × 100 / porcentaje
+  opcion_c <- paste0("\\frac{", format(precio_original, big.mark=".", decimal.mark=","), " \\times 100}{", porcentaje_descuento, "}")
+}
+
+# Opción D: Siempre incorrecta, calcula el precio final
 if (usar_fraccion_opcion_d) {
   opcion_d <- paste0(fraccion_factor, " \\cdot ", format(precio_original, big.mark=".", decimal.mark=","))
 } else {
@@ -239,10 +278,8 @@ if (length(unique(opciones_temp)) < 4) {
 # Crear vector con todas las opciones
 opciones <- c(opcion_a, opcion_b, opcion_c, opcion_d)
 
-# La respuesta correcta es la opción D (que NO calcula el ahorro)
-indice_correcto <- 4
-
 # Crear el vector de solución para r-exams (1 para la respuesta correcta, 0 para las incorrectas)
+# El índice correcto ya fue seleccionado aleatoriamente en la generación de opciones
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
 
@@ -393,6 +430,18 @@ Question
 
 Se quiere saber cuánto dinero `r termino_ahorro` una persona al `r termino_compra` `r articulo` que `r termino_costo` $`r format(precio_original, big.mark=".", decimal.mark=",")`  y tenía un(a) `r termino_descuento` del `r porcentaje_descuento`%.
 
+¿Cuál de las siguientes `r termino_procedimiento` permite calcular este valor?
+
+Answerlist
+----------
+- $`r opcion_a`$
+- $`r opcion_b`$
+- $`r opcion_c`$
+- $`r opcion_d`$
+
+Solution
+========
+
 ```{r mostrar_visualizacion, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
@@ -410,78 +459,78 @@ if (es_moodle) {
 }
 ```
 
-¿Cuál de los siguientes `r termino_procedimiento` **NO** permite calcular este valor?
 
-Answerlist
-----------
-- $`r opcion_a`$
-- $`r opcion_b`$
-- $`r opcion_c`$
-- $`r opcion_d`$
+Para resolver este problema, debemos analizar cada uno de los procedimientos propuestos y determinar cuál permite calcular correctamente el ahorro obtenido al aplicar un descuento del `r porcentaje_descuento`% a un artículo que cuesta $`r format(precio_original, big.mark=".", decimal.mark=",")`.
 
-Solution
-========
-
-Para resolver este problema, debemos analizar cada uno de los procedimientos propuestos y determinar cuál **NO** permite calcular el ahorro obtenido al aplicar un descuento del `r porcentaje_descuento`% a un artículo que cuesta $`r format(precio_original, big.mark=".", decimal.mark=",")`.
-
-### Análisis de cada opción:
-
-#### Opción $`r opcion_a`$
-Esta opción representa la fracción equivalente al porcentaje de descuento multiplicada por el precio original:
-
-- $`r fraccion`$ es equivalente a `r porcentaje_descuento`%
-- Al multiplicar esta fracción por el precio original, obtenemos el valor del descuento:
-
-  $`r fraccion` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
-- **Este procedimiento SÍ permite calcular el ahorro.**
-
-#### Opción $`r opcion_b`$
-Esta opción representa el porcentaje de descuento expresado como decimal multiplicado por el precio original:
-
-- $`r format(decimal, nsmall=2, decimal.mark=",")`$ es equivalente a `r porcentaje_descuento`%
-- Al multiplicar este decimal por el precio original, obtenemos el valor del descuento:
-
-  $`r format(decimal, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
-- **Este procedimiento SÍ permite calcular el ahorro.**
-
-#### Opción $`r opcion_c`$
-Esta opción representa la fórmula estándar para calcular un porcentaje del precio original:
-
-- $\frac{`r format(precio_original, big.mark=".", decimal.mark=",")` \times `r porcentaje_descuento`}{100} = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
-- **Este procedimiento SÍ permite calcular el ahorro.**
-
-#### Opción $`r opcion_d`$
-Esta opción representa el factor para calcular el precio final (después del descuento) multiplicado por el precio original:
-
-- $`r format(factor_precio_final, nsmall=2, decimal.mark=",")`$ es equivalente a $(1 - `r porcentaje_descuento`/100)$
-- Al multiplicar este factor por el precio original, obtenemos el precio final después del descuento:
-
-  $`r format(factor_precio_final, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(precio_final, big.mark=".", decimal.mark=",")`$
-- Este cálculo nos da el precio final después del descuento, NO el ahorro.
-- **Este procedimiento NO permite calcular el ahorro.**
-
-### Verificación matemática:
-
+### Datos del problema:
 - Precio original: $`r format(precio_original, big.mark=".", decimal.mark=",")`
 - Porcentaje de descuento: `r porcentaje_descuento`%
 - Valor del descuento (ahorro): $`r format(valor_descuento, big.mark=".", decimal.mark=",")` (calculado como `r porcentaje_descuento`% de $`r format(precio_original, big.mark=".", decimal.mark=",")`)
-- Precio final: $`r format(precio_final, big.mark=".", decimal.mark=",")` (calculado como $`r format(precio_original, big.mark=".", decimal.mark=",")` - $`r format(valor_descuento, big.mark=".", decimal.mark=",")`)
 
-### Conclusión:
+### Análisis de cada opción:
 
-La opción ($`r opcion_d`$) es la única que **NO** permite calcular el ahorro, ya que calcula el precio final después del descuento en lugar del monto ahorrado.
+#### * Opción: $`r opcion_a`$
+`r if(indice_correcto == 1) {
+  paste0("Esta opción representa la fracción equivalente al porcentaje de descuento multiplicada por el precio original. $",
+         fraccion, "$ es equivalente a ", porcentaje_descuento, "%, y al multiplicar por el precio original obtenemos el valor del descuento: $",
+         fraccion, " \\times ", format(precio_original, big.mark=".", decimal.mark=","), " = ",
+         format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento SÍ permite calcular correctamente el ahorro.**")
+} else {
+  resultado_incorrecto_a <- precio_original * (1 / (porcentaje_descuento / 100))
+  paste0("Esta opción utiliza una fracción invertida, lo que produce un resultado incorrecto. La fracción correcta para ",
+         porcentaje_descuento, "% sería $", fraccion, "$, pero aquí se usa $", fraccion_invertida, "$. Al multiplicar esta fracción invertida por el precio original, obtenemos un valor incorrecto: $",
+         fraccion_invertida, " \\times ", format(precio_original, big.mark=".", decimal.mark=","), " = ",
+         format(resultado_incorrecto_a, big.mark=".", decimal.mark=","), "$. Este resultado no corresponde al ahorro de $",
+         format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento NO permite calcular correctamente el ahorro.**")
+}`
 
-Answerlist
-----------
-- Falso
-- Falso
-- Falso
-- Verdadero
+#### * Opción: $`r opcion_b`$
+`r if(indice_correcto == 2) {
+  paste0("Esta opción representa el cálculo directo del porcentaje de descuento sobre el precio original. Al multiplicar el precio por el porcentaje y dividir por 100, obtenemos el valor del descuento: $",
+         format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "\\% \\div 100 = ",
+         format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento SÍ permite calcular correctamente el ahorro.**")
+} else {
+  resultado_incorrecto_b <- precio_original * porcentaje_descuento * 100
+  paste0("Esta opción contiene un error común: multiplicar por 100 en lugar de dividir por 100. La operación correcta sería dividir por 100, pero aquí se multiplica por 100: $",
+         format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "\\% \\times 100 = ",
+         format(resultado_incorrecto_b, big.mark=".", decimal.mark=","), "$. Este resultado es 10,000 veces mayor que el ahorro real de $",
+         format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento NO permite calcular correctamente el ahorro.**")
+}`
+
+#### * Opción: $`r opcion_c`$
+`r if(indice_correcto == 3) {
+  if (usar_fraccion_opcion_c) {
+    paste0("Esta opción representa la fórmula estándar para calcular un porcentaje del precio original: $\\frac{",
+           porcentaje_descuento, "}{100} \\times ", format(precio_original, big.mark=".", decimal.mark=","), " = ",
+           format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento SÍ permite calcular correctamente el ahorro.**")
+  } else {
+    paste0("Esta opción representa la fórmula estándar para calcular un porcentaje del precio original: $\\frac{",
+           format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "}{100} = ",
+           format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento SÍ permite calcular correctamente el ahorro.**")
+  }
+} else {
+  resultado_incorrecto_c <- precio_original * 100 / porcentaje_descuento
+  paste0("Esta opción contiene un error en la fórmula: se divide el producto del precio por 100 entre el porcentaje, en lugar de multiplicar el precio por el porcentaje y dividir por 100. La fórmula correcta sería $\\frac{",
+         format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "}{100}$, pero aquí se usa $\\frac{",
+         format(precio_original, big.mark=".", decimal.mark=","), " \\times 100}{", porcentaje_descuento, "}$. Este cálculo da como resultado $",
+         format(resultado_incorrecto_c, big.mark=".", decimal.mark=","), "$, que no corresponde al ahorro de $",
+         format(valor_descuento, big.mark=".", decimal.mark=","), "$. **Este procedimiento NO permite calcular correctamente el ahorro.**")
+}`
+
+#### * Opción: $`r opcion_d`$
+Esta opción representa el factor para calcular el precio final (después del descuento) multiplicado por el precio original. $`r format(factor_precio_final, nsmall=2, decimal.mark=",")`$ es equivalente a $(1 - `r porcentaje_descuento`/100)$. Al multiplicar este factor por el precio original, obtenemos el precio final después del descuento: $`r format(factor_precio_final, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(precio_final, big.mark=".", decimal.mark=",")`$. Este cálculo nos da el precio final después del descuento, NO el ahorro. **Este procedimiento NO permite calcular correctamente el ahorro.**
+
+### Verificación matemática:
+
+Para calcular correctamente el ahorro en un descuento porcentual, debemos multiplicar el precio original por el porcentaje de descuento y dividir por 100:
+
+Ahorro = Precio original × Porcentaje de descuento ÷ 100
+Ahorro = $`r format(precio_original, big.mark=".", decimal.mark=",")` × `r porcentaje_descuento`% ÷ 100 = $`r format(valor_descuento, big.mark=".", decimal.mark=",")`
 
 Meta-information
 ================
 exname: descuentos_porcentajes
 extype: schoice
-exsolution: 0001
+exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Aritmética|Porcentajes|Descuentos
