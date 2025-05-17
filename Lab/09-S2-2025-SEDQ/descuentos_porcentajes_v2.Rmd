@@ -93,7 +93,7 @@ precio_original <- sample(precios_base, 1)
 # Ampliamos la variedad de porcentajes para aumentar la variabilidad
 porcentajes <- c(
   # Porcentajes comunes
-  10, 15, 20, 25, 30, 33, 40, 50,
+  10, 15, 20, 25, 30, 33, 40,
   # Porcentajes adicionales
   12, 18, 22, 28, 35, 38, 45, 48
 )
@@ -163,8 +163,7 @@ fraccion <- switch(as.character(porcentaje_descuento),
                   "38" = "\\frac{19}{50}",
                   "40" = "\\frac{2}{5}",
                   "45" = "\\frac{9}{20}",
-                  "48" = "\\frac{12}{25}",
-                  "50" = "\\frac{1}{2}")
+                  "48" = "\\frac{12}{25}")
 
 # Fracción equivalente al factor (1 - porcentaje/100)
 fraccion_factor <- switch(as.character(porcentaje_descuento),
@@ -182,8 +181,7 @@ fraccion_factor <- switch(as.character(porcentaje_descuento),
                         "38" = "\\frac{31}{50}",
                         "40" = "\\frac{3}{5}",
                         "45" = "\\frac{11}{20}",
-                        "48" = "\\frac{13}{25}",
-                        "50" = "\\frac{1}{2}")
+                        "48" = "\\frac{13}{25}")
 
 opcion_a <- paste0(fraccion, " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
 
@@ -393,7 +391,7 @@ unlink(archivo_python)
 Question
 ========
 
-Se quiere saber cuánto dinero `r termino_ahorro` una persona al `r termino_compra` `r articulo` que `r termino_costo` $`r format(precio_original, big.mark=".", decimal.mark=",")`  y tenía un `r termino_descuento` del `r porcentaje_descuento`%.
+Se quiere saber cuánto dinero `r termino_ahorro` una persona al `r termino_compra` `r articulo` que `r termino_costo` $`r format(precio_original, big.mark=".", decimal.mark=",")`  y tenía un(a) `r termino_descuento` del `r porcentaje_descuento`%.
 
 ```{r mostrar_visualizacion, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
