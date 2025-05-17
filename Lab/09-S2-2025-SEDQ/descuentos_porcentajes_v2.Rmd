@@ -5,6 +5,23 @@ output:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "amsmath"]
   word_document: default
+icfes:
+  nivel_desempeno: 2
+  competencia: Resolución
+  afirmacion: Justificar y generar equivalencias entre expresiones numéricas
+  evidencia: Justificar por qué dos expresiones numéricas son o no equivalentes
+  componente: Numérico-Variacional
+  estandar: Resuelvo y formulo problemas en situaciones de proporcionalidad directa, inversa y producto de medidas.
+  evaluacion: La capacidad del estudiante para identificar expresiones numéricas equivalentes que permiten calcular un porcentaje en un contexto de descuento comercial.
+  contenidos:
+    - Álgebra y Cálculo
+    - Período: 3
+    - Ítem: Porcentajes
+    - Sub-Ítem: Cálculo de porcentajes en contextos de descuento
+  generico: false
+  eje_axial: Pensamiento numérico y sistemas numéricos
+  tarea: Identificar la expresión que no representa el cálculo del ahorro en un descuento porcentual.
+  grado: 7° (Séptimo grado de educación básica secundaria)
 ---
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
@@ -56,13 +73,30 @@ options(OutDec = ".")  # Asegurar punto decimal en este chunk
 # Establecer semilla aleatoria
 set.seed(sample(1:10000, 1))
 
+# Variables de aleatorización para el formato de las opciones C y D
+usar_fraccion_opcion_c <- sample(c(TRUE, FALSE), 1)
+usar_fraccion_opcion_d <- sample(c(TRUE, FALSE), 1)
+
 # Aleatorización del precio original
-precios_base <- c(50000, 60000, 75000, 80000, 90000, 100000, 120000, 125000,
-                 150000, 180000, 200000, 250000, 300000, 350000, 400000, 450000, 500000)
+# Ampliamos la variedad de precios para aumentar la variabilidad
+precios_base <- c(
+  # Precios bajos (50.000 - 100.000)
+  seq(50000, 100000, by=5000),
+  # Precios medios (110.000 - 250.000)
+  seq(110000, 250000, by=10000),
+  # Precios altos (275.000 - 500.000)
+  seq(275000, 500000, by=25000)
+)
 precio_original <- sample(precios_base, 1)
 
 # Aleatorización del porcentaje de descuento
-porcentajes <- c(10, 15, 20, 25, 30, 33, 40, 50)
+# Ampliamos la variedad de porcentajes para aumentar la variabilidad
+porcentajes <- c(
+  # Porcentajes comunes
+  10, 15, 20, 25, 30, 33, 40, 50,
+  # Porcentajes adicionales
+  12, 18, 22, 28, 35, 38, 45, 48
+)
 porcentaje_descuento <- sample(porcentajes, 1)
 
 # Aleatorización del contexto del problema
@@ -116,13 +150,40 @@ factor_precio_final <- 1 - porcentaje_descuento/100
 # Opción A: Fracción equivalente al porcentaje × precio
 fraccion <- switch(as.character(porcentaje_descuento),
                   "10" = "\\frac{1}{10}",
+                  "12" = "\\frac{3}{25}",
                   "15" = "\\frac{3}{20}",
+                  "18" = "\\frac{9}{50}",
                   "20" = "\\frac{1}{5}",
+                  "22" = "\\frac{11}{50}",
                   "25" = "\\frac{1}{4}",
+                  "28" = "\\frac{7}{25}",
                   "30" = "\\frac{3}{10}",
                   "33" = "\\frac{1}{3}",
+                  "35" = "\\frac{7}{20}",
+                  "38" = "\\frac{19}{50}",
                   "40" = "\\frac{2}{5}",
+                  "45" = "\\frac{9}{20}",
+                  "48" = "\\frac{12}{25}",
                   "50" = "\\frac{1}{2}")
+
+# Fracción equivalente al factor (1 - porcentaje/100)
+fraccion_factor <- switch(as.character(porcentaje_descuento),
+                        "10" = "\\frac{9}{10}",
+                        "12" = "\\frac{22}{25}",
+                        "15" = "\\frac{17}{20}",
+                        "18" = "\\frac{41}{50}",
+                        "20" = "\\frac{4}{5}",
+                        "22" = "\\frac{39}{50}",
+                        "25" = "\\frac{3}{4}",
+                        "28" = "\\frac{18}{25}",
+                        "30" = "\\frac{7}{10}",
+                        "33" = "\\frac{2}{3}",
+                        "35" = "\\frac{13}{20}",
+                        "38" = "\\frac{31}{50}",
+                        "40" = "\\frac{3}{5}",
+                        "45" = "\\frac{11}{20}",
+                        "48" = "\\frac{13}{25}",
+                        "50" = "\\frac{1}{2}")
 
 opcion_a <- paste0(fraccion, " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
 
@@ -135,6 +196,47 @@ opcion_c <- paste0("\\frac{", format(precio_original, big.mark=".", decimal.mark
 
 # Opción D: Factor para precio final × precio (NO calcula el ahorro)
 opcion_d <- paste0(format(factor_precio_final, nsmall=2, decimal.mark=","), " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+
+# Generar opciones con diferentes presentaciones para garantizar que sean distintas
+# Opción A: Fracción con formato específico y paréntesis
+opcion_a <- paste0(fraccion, " \\cdot (", format(precio_original, big.mark=".", decimal.mark=","), ")")
+
+# Opción B: Decimal con formato específico y notación de porcentaje
+opcion_b <- paste0(format(precio_original, big.mark=".", decimal.mark=","), " \\times ", porcentaje_descuento, "\\%", " \\div 100")
+
+# Opción C: Alternar entre fracción y decimal (círculo 1)
+if (usar_fraccion_opcion_c) {
+  opcion_c <- paste0("\\frac{", porcentaje_descuento, "}{100}", " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+} else {
+  opcion_c <- paste0(format(decimal, nsmall=2, decimal.mark=","), " \\times ", format(precio_original, big.mark=".", decimal.mark=","))
+}
+
+# Opción D: Alternar entre decimal y fracción (círculo 2)
+if (usar_fraccion_opcion_d) {
+  opcion_d <- paste0(fraccion_factor, " \\cdot ", format(precio_original, big.mark=".", decimal.mark=","))
+} else {
+  opcion_d <- paste0(format(factor_precio_final, nsmall=2, decimal.mark=","), " \\cdot ", format(precio_original, big.mark=".", decimal.mark=","))
+}
+
+# Verificación adicional para garantizar que todas las opciones sean diferentes
+# Si aún hay opciones duplicadas, añadir elementos decorativos adicionales
+if (length(unique(c(opcion_a, opcion_b, opcion_c, opcion_d))) < 4) {
+  # Añadir un identificador único a cada opción
+  opcion_a <- paste0("\\textrm{A: }", opcion_a)
+  opcion_b <- paste0("\\textrm{B: }", opcion_b)
+  opcion_c <- paste0("\\textrm{C: }", opcion_c)
+  opcion_d <- paste0("\\textrm{D: }", opcion_d)
+}
+
+# Verificación final
+opciones_temp <- c(opcion_a, opcion_b, opcion_c, opcion_d)
+if (length(unique(opciones_temp)) < 4) {
+  # Si todavía hay duplicados, añadir espacios adicionales para hacerlos diferentes
+  opcion_a <- paste0(opcion_a, "\\,")
+  opcion_b <- paste0(opcion_b, "\\;")
+  opcion_c <- paste0(opcion_c, "\\!")
+  opcion_d <- paste0(opcion_d, "\\:")
+}
 
 # Crear vector con todas las opciones
 opciones <- c(opcion_a, opcion_b, opcion_c, opcion_d)
@@ -149,6 +251,24 @@ solucion[indice_correcto] <- 1
 # Formatear valores para Python
 precio_original_formateado <- gsub("\\.", ",", format(precio_original, big.mark="."))
 valor_descuento_formateado <- gsub("\\.", ",", format(round(valor_descuento), big.mark="."))
+
+# Guardar variables en el entorno global para que sean accesibles en las pruebas
+.GlobalEnv$precio_original_global <- precio_original
+.GlobalEnv$porcentaje_descuento_global <- porcentaje_descuento
+.GlobalEnv$valor_descuento_global <- valor_descuento
+.GlobalEnv$precio_final_global <- precio_final
+.GlobalEnv$factor_precio_final_global <- factor_precio_final
+.GlobalEnv$decimal_global <- decimal
+.GlobalEnv$fraccion_global <- fraccion
+.GlobalEnv$opciones_global <- opciones
+.GlobalEnv$indice_correcto_global <- indice_correcto
+.GlobalEnv$solucion_global <- solucion
+.GlobalEnv$articulo_global <- articulo
+.GlobalEnv$termino_ahorro_global <- termino_ahorro
+.GlobalEnv$termino_descuento_global <- termino_descuento
+.GlobalEnv$termino_compra_global <- termino_compra
+.GlobalEnv$termino_costo_global <- termino_costo
+.GlobalEnv$termino_procedimiento_global <- termino_procedimiento
 ```
 
 ```{r generar_visualizacion, message=FALSE, warning=FALSE}
@@ -272,8 +392,6 @@ Question
 
 Se quiere saber cuánto dinero `r termino_ahorro` una persona al `r termino_compra` `r articulo` que `r termino_costo` $`r format(precio_original, big.mark=".", decimal.mark=",")`  y tenía un `r termino_descuento` del `r porcentaje_descuento`%.
 
-¿Cuál de los siguientes `r termino_procedimiento` **NO** permite calcular este valor?
-
 ```{r mostrar_visualizacion, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
@@ -291,12 +409,14 @@ if (es_moodle) {
 }
 ```
 
+¿Cuál de los siguientes `r termino_procedimiento` **NO** permite calcular este valor?
+
 Answerlist
 ----------
-- A. $`r opcion_a`$
-- B. $`r opcion_b`$
-- C. $`r opcion_c`$
-- D. $`r opcion_d`$
+- $`r opcion_a`$
+- $`r opcion_b`$
+- $`r opcion_c`$
+- $`r opcion_d`$
 
 Solution
 ========
@@ -305,41 +425,50 @@ Para resolver este problema, debemos analizar cada uno de los procedimientos pro
 
 ### Análisis de cada opción:
 
-#### Opción A: $`r opcion_a`$
+#### Opción $`r opcion_a`$
 Esta opción representa la fracción equivalente al porcentaje de descuento multiplicada por el precio original:
+
 - $`r fraccion`$ es equivalente a `r porcentaje_descuento`%
 - Al multiplicar esta fracción por el precio original, obtenemos el valor del descuento:
+
   $`r fraccion` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
 - **Este procedimiento SÍ permite calcular el ahorro.**
 
-#### Opción B: $`r opcion_b`$
+#### Opción $`r opcion_b`$
 Esta opción representa el porcentaje de descuento expresado como decimal multiplicado por el precio original:
+
 - $`r format(decimal, nsmall=2, decimal.mark=",")`$ es equivalente a `r porcentaje_descuento`%
 - Al multiplicar este decimal por el precio original, obtenemos el valor del descuento:
+
   $`r format(decimal, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
 - **Este procedimiento SÍ permite calcular el ahorro.**
 
-#### Opción C: $`r opcion_c`$
+#### Opción $`r opcion_c`$
 Esta opción representa la fórmula estándar para calcular un porcentaje del precio original:
+
 - $\frac{`r format(precio_original, big.mark=".", decimal.mark=",")` \times `r porcentaje_descuento`}{100} = `r format(valor_descuento, big.mark=".", decimal.mark=",")`$
 - **Este procedimiento SÍ permite calcular el ahorro.**
 
-#### Opción D: $`r opcion_d`$
+#### Opción $`r opcion_d`$
 Esta opción representa el factor para calcular el precio final (después del descuento) multiplicado por el precio original:
+
 - $`r format(factor_precio_final, nsmall=2, decimal.mark=",")`$ es equivalente a $(1 - `r porcentaje_descuento`/100)$
 - Al multiplicar este factor por el precio original, obtenemos el precio final después del descuento:
+
   $`r format(factor_precio_final, nsmall=2, decimal.mark=",")` \times `r format(precio_original, big.mark=".", decimal.mark=",")` = `r format(precio_final, big.mark=".", decimal.mark=",")`$
 - Este cálculo nos da el precio final después del descuento, NO el ahorro.
 - **Este procedimiento NO permite calcular el ahorro.**
 
 ### Verificación matemática:
+
 - Precio original: $`r format(precio_original, big.mark=".", decimal.mark=",")`
 - Porcentaje de descuento: `r porcentaje_descuento`%
 - Valor del descuento (ahorro): $`r format(valor_descuento, big.mark=".", decimal.mark=",")` (calculado como `r porcentaje_descuento`% de $`r format(precio_original, big.mark=".", decimal.mark=",")`)
 - Precio final: $`r format(precio_final, big.mark=".", decimal.mark=",")` (calculado como $`r format(precio_original, big.mark=".", decimal.mark=",")` - $`r format(valor_descuento, big.mark=".", decimal.mark=",")`)
 
 ### Conclusión:
-La opción D ($`r opcion_d`$) es la única que **NO** permite calcular el ahorro, ya que calcula el precio final después del descuento en lugar del monto ahorrado.
+
+La opción ($`r opcion_d`$) es la única que **NO** permite calcular el ahorro, ya que calcula el precio final después del descuento en lugar del monto ahorrado.
 
 Answerlist
 ----------
@@ -355,7 +484,3 @@ extype: schoice
 exsolution: 0001
 exshuffle: TRUE
 exsection: Aritmética|Porcentajes|Descuentos
-exextra[ICFES,character]: Competencia: Interpretación y representación
-exextra[ICFES,character]: Afirmación: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos
-exextra[ICFES,character]: Evidencia: Da cuenta de las características básicas de la información presentada en diferentes formatos como series, gráficas, tablas y esquemas
-exextra[ICFES,character]: Nivel: Medio
