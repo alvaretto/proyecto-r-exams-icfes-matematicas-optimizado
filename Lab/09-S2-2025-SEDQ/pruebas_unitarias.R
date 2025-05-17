@@ -49,6 +49,17 @@ extraer_variables <- function(ejercicio_compilado) {
       solucion = get("solucion_global", envir = .GlobalEnv)
     )
 
+    # Intentar obtener las variables de aleatorización si existen
+    if (exists("usar_fraccion_opcion_c", envir = .GlobalEnv)) {
+      variables$usar_fraccion_opcion_c = get("usar_fraccion_opcion_c", envir = .GlobalEnv)
+    }
+    if (exists("usar_fraccion_opcion_d", envir = .GlobalEnv)) {
+      variables$usar_fraccion_opcion_d = get("usar_fraccion_opcion_d", envir = .GlobalEnv)
+    }
+    if (exists("fraccion_factor", envir = .GlobalEnv)) {
+      variables$fraccion_factor = get("fraccion_factor", envir = .GlobalEnv)
+    }
+
     # Obtener las opciones
     opciones <- get("opciones_global", envir = .GlobalEnv)
     variables$opcion_a <- opciones[1]
@@ -129,6 +140,32 @@ verificar_coherencia_matematica <- function(vars) {
                  info = "La fracción no es equivalente al porcentaje")
   }
 
+  # Verificar que la fracción del factor es equivalente al factor de precio final
+  fraccion_factor_valor <- switch(as.character(vars$porcentaje_descuento),
+                                "10" = 9/10,
+                                "12" = 22/25,
+                                "15" = 17/20,
+                                "18" = 41/50,
+                                "20" = 4/5,
+                                "22" = 39/50,
+                                "25" = 3/4,
+                                "28" = 18/25,
+                                "30" = 7/10,
+                                "33" = 2/3,
+                                "35" = 13/20,
+                                "38" = 31/50,
+                                "40" = 3/5,
+                                "45" = 11/20,
+                                "48" = 13/25,
+                                "50" = 1/2)
+
+  # Si el porcentaje no está en la lista, omitir esta verificación
+  if (!is.null(fraccion_factor_valor)) {
+    expect_equal(fraccion_factor_valor, vars$factor_precio_final,
+                 tolerance = 0.01,
+                 info = "La fracción del factor no es equivalente al factor de precio final")
+  }
+
   # Verificar que el decimal es equivalente al porcentaje
   expect_equal(vars$decimal, vars$porcentaje_descuento/100,
                tolerance = 0.0001,
@@ -170,6 +207,14 @@ generar_hash_variante <- function(vars) {
     termino_costo = vars$termino_costo,
     termino_procedimiento = vars$termino_procedimiento
   )
+
+  # Añadir variables de aleatorización si existen
+  if (!is.null(vars$usar_fraccion_opcion_c)) {
+    valores_clave$usar_fraccion_opcion_c <- vars$usar_fraccion_opcion_c
+  }
+  if (!is.null(vars$usar_fraccion_opcion_d)) {
+    valores_clave$usar_fraccion_opcion_d <- vars$usar_fraccion_opcion_d
+  }
 
   # Generar un hash único basado en estos valores
   hash <- digest(valores_clave, algo = "md5")
@@ -266,12 +311,22 @@ ejecutar_pruebas <- function() {
   articulos <- sapply(resultados, function(x) x$articulo)
   terminos_ahorro <- sapply(resultados, function(x) x$termino_ahorro)
 
+  # Extraer variables de aleatorización si existen
+  usar_fraccion_opcion_c <- sapply(resultados, function(x) {
+    if (!is.null(x$usar_fraccion_opcion_c)) x$usar_fraccion_opcion_c else NA
+  })
+  usar_fraccion_opcion_d <- sapply(resultados, function(x) {
+    if (!is.null(x$usar_fraccion_opcion_d)) x$usar_fraccion_opcion_d else NA
+  })
+
   # Crear dataframe para análisis
   df_analisis <- data.frame(
     precio_original = precios_originales,
     porcentaje_descuento = porcentajes_descuento,
     articulo = articulos,
-    termino_ahorro = terminos_ahorro
+    termino_ahorro = terminos_ahorro,
+    usar_fraccion_opcion_c = usar_fraccion_opcion_c,
+    usar_fraccion_opcion_d = usar_fraccion_opcion_d
   )
 
   # Mostrar resumen de distribución de parámetros numéricos
@@ -286,6 +341,17 @@ ejecutar_pruebas <- function() {
 
   cat("\nDistribución de términos para 'ahorro':\n")
   print(table(terminos_ahorro))
+
+  # Mostrar distribución de las variables de aleatorización
+  if (!all(is.na(usar_fraccion_opcion_c))) {
+    cat("\nDistribución de formato para opción C (círculo 1):\n")
+    print(table(usar_fraccion_opcion_c, useNA = "ifany"))
+  }
+
+  if (!all(is.na(usar_fraccion_opcion_d))) {
+    cat("\nDistribución de formato para opción D (círculo 2):\n")
+    print(table(usar_fraccion_opcion_d, useNA = "ifany"))
+  }
 
   # 7. Generar informe final
   cat("\n=== RESUMEN DE PRUEBAS ===\n")

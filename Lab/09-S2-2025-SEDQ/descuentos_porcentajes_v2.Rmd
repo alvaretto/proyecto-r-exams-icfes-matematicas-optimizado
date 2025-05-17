@@ -260,6 +260,7 @@ valor_descuento_formateado <- gsub("\\.", ",", format(round(valor_descuento), bi
 .GlobalEnv$factor_precio_final_global <- factor_precio_final
 .GlobalEnv$decimal_global <- decimal
 .GlobalEnv$fraccion_global <- fraccion
+.GlobalEnv$fraccion_factor_global <- fraccion_factor
 .GlobalEnv$opciones_global <- opciones
 .GlobalEnv$indice_correcto_global <- indice_correcto
 .GlobalEnv$solucion_global <- solucion
@@ -269,6 +270,8 @@ valor_descuento_formateado <- gsub("\\.", ",", format(round(valor_descuento), bi
 .GlobalEnv$termino_compra_global <- termino_compra
 .GlobalEnv$termino_costo_global <- termino_costo
 .GlobalEnv$termino_procedimiento_global <- termino_procedimiento
+.GlobalEnv$usar_fraccion_opcion_c <- usar_fraccion_opcion_c
+.GlobalEnv$usar_fraccion_opcion_d <- usar_fraccion_opcion_d
 ```
 
 ```{r generar_visualizacion, message=FALSE, warning=FALSE}
