@@ -393,6 +393,19 @@ Question
 
 Se quiere saber cuánto dinero `r termino_ahorro` una persona al `r termino_compra` `r articulo` que `r termino_costo` $`r format(precio_original, big.mark=".", decimal.mark=",")`  y tenía un(a) `r termino_descuento` del `r porcentaje_descuento`%.
 
+
+¿Cuál de los siguientes `r termino_procedimiento` **NO** permite calcular este valor?
+
+Answerlist
+----------
+- $`r opcion_a`$
+- $`r opcion_b`$
+- $`r opcion_c`$
+- $`r opcion_d`$
+
+Solution
+========
+
 ```{r mostrar_visualizacion, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
@@ -410,17 +423,6 @@ if (es_moodle) {
 }
 ```
 
-¿Cuál de los siguientes `r termino_procedimiento` **NO** permite calcular este valor?
-
-Answerlist
-----------
-- $`r opcion_a`$
-- $`r opcion_b`$
-- $`r opcion_c`$
-- $`r opcion_d`$
-
-Solution
-========
 
 Para resolver este problema, debemos analizar cada uno de los procedimientos propuestos y determinar cuál **NO** permite calcular el ahorro obtenido al aplicar un descuento del `r porcentaje_descuento`% a un artículo que cuesta $`r format(precio_original, big.mark=".", decimal.mark=",")`.
 
