@@ -1,0 +1,481 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Establecer semilla aleatoria}
+\FunctionTok{set.seed}\NormalTok{(}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10000}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\CommentTok{\# Aleatorización del precio original}
+\NormalTok{precios\_base }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{50000}\NormalTok{, }\DecValTok{60000}\NormalTok{, }\DecValTok{75000}\NormalTok{, }\DecValTok{80000}\NormalTok{, }\DecValTok{90000}\NormalTok{, }\DecValTok{100000}\NormalTok{, }\DecValTok{120000}\NormalTok{, }\DecValTok{125000}\NormalTok{,}
+                 \DecValTok{150000}\NormalTok{, }\DecValTok{180000}\NormalTok{, }\DecValTok{200000}\NormalTok{, }\DecValTok{250000}\NormalTok{, }\DecValTok{300000}\NormalTok{, }\DecValTok{350000}\NormalTok{, }\DecValTok{400000}\NormalTok{, }\DecValTok{450000}\NormalTok{, }\DecValTok{500000}\NormalTok{)}
+\NormalTok{precio\_original }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(precios\_base, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorización del porcentaje de descuento}
+\NormalTok{porcentajes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{33}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{50}\NormalTok{)}
+\NormalTok{porcentaje\_descuento }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(porcentajes, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorización del contexto del problema}
+\NormalTok{contextos\_articulos }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un televisor"}\NormalTok{, }\StringTok{"televisor"}\NormalTok{, }\StringTok{"electrónico"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un celular"}\NormalTok{, }\StringTok{"celular"}\NormalTok{, }\StringTok{"electrónico"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un computador"}\NormalTok{, }\StringTok{"computador"}\NormalTok{, }\StringTok{"electrónico"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"una lavadora"}\NormalTok{, }\StringTok{"lavadora"}\NormalTok{, }\StringTok{"electrodoméstico"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un refrigerador"}\NormalTok{, }\StringTok{"refrigerador"}\NormalTok{, }\StringTok{"electrodoméstico"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"una bicicleta"}\NormalTok{, }\StringTok{"bicicleta"}\NormalTok{, }\StringTok{"artículo deportivo"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un sofá"}\NormalTok{, }\StringTok{"sofá"}\NormalTok{, }\StringTok{"mueble"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"una mesa"}\NormalTok{, }\StringTok{"mesa"}\NormalTok{, }\StringTok{"mueble"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un vestido"}\NormalTok{, }\StringTok{"vestido"}\NormalTok{, }\StringTok{"prenda"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un traje"}\NormalTok{, }\StringTok{"traje"}\NormalTok{, }\StringTok{"prenda"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"unos zapatos"}\NormalTok{, }\StringTok{"zapatos"}\NormalTok{, }\StringTok{"calzado"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un reloj"}\NormalTok{, }\StringTok{"reloj"}\NormalTok{, }\StringTok{"accesorio"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"una joya"}\NormalTok{, }\StringTok{"joya"}\NormalTok{, }\StringTok{"accesorio"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un libro"}\NormalTok{, }\StringTok{"libro"}\NormalTok{, }\StringTok{"artículo educativo"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"un boleto de avión"}\NormalTok{, }\StringTok{"boleto"}\NormalTok{, }\StringTok{"servicio"}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{contexto\_seleccionado }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(contextos\_articulos, }\DecValTok{1}\NormalTok{)[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{articulo }\OtherTok{\textless{}{-}}\NormalTok{ contexto\_seleccionado[}\DecValTok{1}\NormalTok{]}
+\NormalTok{tipo\_articulo }\OtherTok{\textless{}{-}}\NormalTok{ contexto\_seleccionado[}\DecValTok{2}\NormalTok{]}
+\NormalTok{categoria }\OtherTok{\textless{}{-}}\NormalTok{ contexto\_seleccionado[}\DecValTok{3}\NormalTok{]}
+
+\CommentTok{\# Aleatorización de términos para el enunciado}
+\NormalTok{terminos\_ahorro }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"ahorró"}\NormalTok{, }\StringTok{"economizó"}\NormalTok{, }\StringTok{"se descontó"}\NormalTok{, }\StringTok{"dejó de pagar"}\NormalTok{, }\StringTok{"redujo del pago"}\NormalTok{)}
+\NormalTok{termino\_ahorro }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_ahorro, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_descuento }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"descuento"}\NormalTok{, }\StringTok{"rebaja"}\NormalTok{, }\StringTok{"reducción"}\NormalTok{, }\StringTok{"oferta"}\NormalTok{, }\StringTok{"promoción"}\NormalTok{)}
+\NormalTok{termino\_descuento }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_descuento, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_compra }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"comprar"}\NormalTok{, }\StringTok{"adquirir"}\NormalTok{, }\StringTok{"obtener"}\NormalTok{, }\StringTok{"conseguir"}\NormalTok{)}
+\NormalTok{termino\_compra }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_compra, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_costo }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"costaba"}\NormalTok{, }\StringTok{"tenía un precio de"}\NormalTok{, }\StringTok{"valía"}\NormalTok{, }\StringTok{"estaba marcado en"}\NormalTok{)}
+\NormalTok{termino\_costo }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_costo, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_procedimiento }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"procedimientos"}\NormalTok{, }\StringTok{"métodos"}\NormalTok{, }\StringTok{"cálculos"}\NormalTok{, }\StringTok{"operaciones"}\NormalTok{, }\StringTok{"fórmulas"}\NormalTok{)}
+\NormalTok{termino\_procedimiento }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_procedimiento, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Cálculos para las opciones}
+\CommentTok{\# Valor del descuento (ahorro)}
+\NormalTok{valor\_descuento }\OtherTok{\textless{}{-}}\NormalTok{ precio\_original }\SpecialCharTok{*}\NormalTok{ porcentaje\_descuento }\SpecialCharTok{/} \DecValTok{100}
+\CommentTok{\# Precio final después del descuento}
+\NormalTok{precio\_final }\OtherTok{\textless{}{-}}\NormalTok{ precio\_original }\SpecialCharTok{{-}}\NormalTok{ valor\_descuento}
+\CommentTok{\# Factor para el precio final (1 {-} porcentaje\_descuento/100)}
+\NormalTok{factor\_precio\_final }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ porcentaje\_descuento}\SpecialCharTok{/}\DecValTok{100}
+
+\CommentTok{\# Generar las opciones de respuesta}
+\CommentTok{\# Opción A: Fracción equivalente al porcentaje × precio}
+\NormalTok{fraccion }\OtherTok{\textless{}{-}} \ControlFlowTok{switch}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(porcentaje\_descuento),}
+                  \StringTok{"10"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{10\}"}\NormalTok{,}
+                  \StringTok{"15"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{20\}"}\NormalTok{,}
+                  \StringTok{"20"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{5\}"}\NormalTok{,}
+                  \StringTok{"25"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{4\}"}\NormalTok{,}
+                  \StringTok{"30"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{10\}"}\NormalTok{,}
+                  \StringTok{"33"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{3\}"}\NormalTok{,}
+                  \StringTok{"40"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{2\}\{5\}"}\NormalTok{,}
+                  \StringTok{"50"} \OtherTok{=} \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{)}
+
+\NormalTok{opcion\_a }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(fraccion, }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{times "}\NormalTok{, }\FunctionTok{format}\NormalTok{(precio\_original, }\AttributeTok{big.mark=}\StringTok{"."}\NormalTok{, }\AttributeTok{decimal.mark=}\StringTok{","}\NormalTok{))}
+
+\CommentTok{\# Opción B: Decimal equivalente al porcentaje × precio}
+\NormalTok{decimal }\OtherTok{\textless{}{-}}\NormalTok{ porcentaje\_descuento }\SpecialCharTok{/} \DecValTok{100}
+\NormalTok{opcion\_b }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\FunctionTok{format}\NormalTok{(decimal, }\AttributeTok{nsmall=}\DecValTok{2}\NormalTok{, }\AttributeTok{decimal.mark=}\StringTok{","}\NormalTok{), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{times "}\NormalTok{, }\FunctionTok{format}\NormalTok{(precio\_original, }\AttributeTok{big.mark=}\StringTok{"."}\NormalTok{, }\AttributeTok{decimal.mark=}\StringTok{","}\NormalTok{))}
+
+\CommentTok{\# Opción C: Fórmula estándar de porcentaje}
+\NormalTok{opcion\_c }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{"}\NormalTok{, }\FunctionTok{format}\NormalTok{(precio\_original, }\AttributeTok{big.mark=}\StringTok{"."}\NormalTok{, }\AttributeTok{decimal.mark=}\StringTok{","}\NormalTok{), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{times "}\NormalTok{, porcentaje\_descuento, }\StringTok{"\}\{100\}"}\NormalTok{)}
+
+\CommentTok{\# Opción D: Factor para precio final × precio (NO calcula el ahorro)}
+\NormalTok{opcion\_d }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\FunctionTok{format}\NormalTok{(factor\_precio\_final, }\AttributeTok{nsmall=}\DecValTok{2}\NormalTok{, }\AttributeTok{decimal.mark=}\StringTok{","}\NormalTok{), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{times "}\NormalTok{, }\FunctionTok{format}\NormalTok{(precio\_original, }\AttributeTok{big.mark=}\StringTok{"."}\NormalTok{, }\AttributeTok{decimal.mark=}\StringTok{","}\NormalTok{))}
+
+\CommentTok{\# Crear vector con todas las opciones}
+\NormalTok{opciones }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(opcion\_a, opcion\_b, opcion\_c, opcion\_d)}
+
+\CommentTok{\# La respuesta correcta es la opción D (que NO calcula el ahorro)}
+\NormalTok{indice\_correcto }\OtherTok{\textless{}{-}} \DecValTok{4}
+
+\CommentTok{\# Crear el vector de solución para r{-}exams (1 para la respuesta correcta, 0 para las incorrectas)}
+\NormalTok{solucion }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{solucion[indice\_correcto] }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# Formatear valores para Python}
+\NormalTok{precio\_original\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{."}\NormalTok{, }\StringTok{","}\NormalTok{, }\FunctionTok{format}\NormalTok{(precio\_original, }\AttributeTok{big.mark=}\StringTok{"."}\NormalTok{))}
+\NormalTok{valor\_descuento\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{."}\NormalTok{, }\StringTok{","}\NormalTok{, }\FunctionTok{format}\NormalTok{(}\FunctionTok{round}\NormalTok{(valor\_descuento), }\AttributeTok{big.mark=}\StringTok{"."}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Crear un archivo Python temporal con el código}
+\NormalTok{archivo\_python }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".py"}\NormalTok{)}
+
+\CommentTok{\# Preparar el código Python sin usar sprintf para evitar problemas con los marcadores \%}
+\NormalTok{codigo\_python }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{\textquotesingle{}}
+\StringTok{import matplotlib}
+\StringTok{matplotlib.use("Agg")  \# Usar backend no interactivo}
+\StringTok{import matplotlib.pyplot as plt}
+\StringTok{import numpy as np}
+\StringTok{from matplotlib.patches import Rectangle}
+\StringTok{import matplotlib.patheffects as path\_effects}
+
+\StringTok{\# Configuración de colores}
+\StringTok{color\_precio\_original = "\#3498db"  \# Azul}
+\StringTok{color\_descuento = "\#e74c3c"        \# Rojo}
+\StringTok{color\_precio\_final = "\#2ecc71"     \# Verde}
+
+\StringTok{\# Crear figura}
+\StringTok{fig, ax = plt.subplots(figsize=(8, 4))}
+
+\StringTok{\# Datos para la visualización}
+\StringTok{precio\_original = \textquotesingle{}}\NormalTok{, precio\_original, }\StringTok{\textquotesingle{}}
+\StringTok{porcentaje\_descuento = \textquotesingle{}}\NormalTok{, porcentaje\_descuento, }\StringTok{\textquotesingle{}}
+\StringTok{valor\_descuento = precio\_original * porcentaje\_descuento / 100}
+\StringTok{precio\_final = precio\_original {-} valor\_descuento}
+
+\StringTok{\# Crear barras para representar los precios}
+\StringTok{bar\_width = 0.4}
+\StringTok{x\_pos = [0, 1]}
+
+\StringTok{\# Barra para precio original}
+\StringTok{ax.bar(x\_pos[0], precio\_original, bar\_width, color=color\_precio\_original,}
+\StringTok{       edgecolor="black", linewidth=1.5, label="Precio original")}
+
+\StringTok{\# Barra para precio final y descuento}
+\StringTok{ax.bar(x\_pos[1], precio\_final, bar\_width, color=color\_precio\_final,}
+\StringTok{       edgecolor="black", linewidth=1.5, label="Precio final")}
+\StringTok{ax.bar(x\_pos[1], valor\_descuento, bar\_width, bottom=precio\_final,}
+\StringTok{       color=color\_descuento, edgecolor="black", linewidth=1.5,}
+\StringTok{       hatch="///", label="Descuento (\textquotesingle{}}\NormalTok{, porcentaje\_descuento, }\StringTok{\textquotesingle{}\%)")}
+
+\StringTok{\# Añadir etiquetas con valores}
+\StringTok{def add\_value\_label(x, y, value, color="black", fontsize=10, fontweight="bold"):}
+\StringTok{    text = ax.text(x, y, f"$\{value:,.0f\}".replace(",", "."),}
+\StringTok{                  ha="center", va="bottom", fontsize=fontsize, fontweight=fontweight)}
+\StringTok{    text.set\_path\_effects([path\_effects.withStroke(linewidth=3, foreground="white")])}
+\StringTok{    return text}
+
+\StringTok{\# Etiqueta para precio original}
+\StringTok{add\_value\_label(x\_pos[0], precio\_original, precio\_original)}
+
+\StringTok{\# Etiqueta para precio final}
+\StringTok{add\_value\_label(x\_pos[1], precio\_final/2, precio\_final)}
+
+\StringTok{\# Etiqueta para descuento}
+\StringTok{add\_value\_label(x\_pos[1], precio\_final + valor\_descuento/2, valor\_descuento)}
+
+\StringTok{\# Añadir porcentaje de descuento}
+\StringTok{ax.text(x\_pos[1] + 0.25, precio\_final + valor\_descuento/2,}
+\StringTok{       f"\{porcentaje\_descuento\}\%", ha="left", va="center",}
+\StringTok{       fontsize=12, fontweight="bold", color=color\_descuento)}
+
+\StringTok{\# Configurar ejes}
+\StringTok{ax.set\_xticks(x\_pos)}
+\StringTok{ax.set\_xticklabels(["Precio original", "Precio con descuento"], fontsize=10, fontweight="bold")}
+\StringTok{ax.set\_ylabel("Precio ($)", fontsize=10, fontweight="bold")}
+\StringTok{ax.set\_title("Representación del descuento", fontsize=14, fontweight="bold", pad=15)}
+
+\StringTok{\# Eliminar bordes superiores y derechos}
+\StringTok{ax.spines["top"].set\_visible(False)}
+\StringTok{ax.spines["right"].set\_visible(False)}
+
+\StringTok{\# Añadir leyenda}
+\StringTok{ax.legend(loc="upper center", bbox\_to\_anchor=(0.5, {-}0.15), ncol=3, frameon=False, fontsize=9)}
+
+\StringTok{\# Crear una imagen separada para las fórmulas}
+\StringTok{fig\_formula = plt.figure(figsize=(6, 1.2))}
+\StringTok{plt.axis("off")}
+\StringTok{plt.text(0.5, 0.7, "Ahorro = Precio original × Porcentaje de descuento ÷ 100",}
+\StringTok{         ha="center", va="center", fontsize=10)}
+
+\StringTok{\# Formatear los valores directamente en Python sin el símbolo $}
+\StringTok{precio\_formateado = "\{:,.0f\}".format(precio\_original).replace(",", ".")}
+\StringTok{descuento\_formateado = "\{:,.0f\}".format(valor\_descuento).replace(",", ".")}
+
+\StringTok{\# Usar formato simple sin símbolos $ para evitar problemas}
+\StringTok{ejemplo\_texto = "Ejemplo: " + precio\_formateado + " × " + str(porcentaje\_descuento) + "\% ÷ 100 = " + descuento\_formateado}
+\StringTok{plt.text(0.5, 0.3, ejemplo\_texto,}
+\StringTok{         ha="center", va="center", fontsize=10)}
+
+\StringTok{plt.tight\_layout()}
+\StringTok{plt.savefig("formula\_descuento.png", dpi=150, bbox\_inches="tight", transparent=True)}
+\StringTok{plt.close(fig\_formula)}
+
+\StringTok{\# Ajustar diseño}
+\StringTok{plt.tight\_layout(rect=[0, 0.05, 1, 0.95])}
+
+\StringTok{\# Guardar en múltiples formatos para asegurar compatibilidad}
+\StringTok{plt.savefig("visualizacion\_descuento.png", dpi=150, bbox\_inches="tight", format="png")}
+\StringTok{plt.savefig("visualizacion\_descuento.pdf", dpi=150, bbox\_inches="tight", format="pdf")}
+\StringTok{plt.close()}
+\StringTok{\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# Escribir el código Python en el archivo temporal}
+\FunctionTok{writeLines}\NormalTok{(codigo\_python, archivo\_python)}
+
+\CommentTok{\# Ejecutar el archivo Python}
+\FunctionTok{py\_run\_file}\NormalTok{(archivo\_python)}
+
+\CommentTok{\# Eliminar el archivo temporal}
+\FunctionTok{unlink}\NormalTok{(archivo\_python)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Question}\label{question}
+
+Se quiere saber cuánto dinero redujo del pago una persona al conseguir
+unos zapatos que valía \$80.000 y tenía un promoción del 33\%.
+
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio]{visualizacion_descuento.png}
+
+\includegraphics[width=0.8\linewidth,height=\textheight,keepaspectratio]{formula_descuento.png}
+
+¿Cuál de los siguientes métodos \textbf{NO} permite calcular este valor?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\frac{1}{3} \times 80.000\)
+\item
+  \(0,33 \times 80.000\)
+\item
+  \(\frac{80.000 \times 33}{100}\)
+\item
+  \(0,67 \times 80.000\)
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos analizar cada uno de los
+procedimientos propuestos y determinar cuál \textbf{NO} permite calcular
+el ahorro obtenido al aplicar un descuento del 33\% a un artículo que
+cuesta \$80.000.
+
+\subsubsection{Análisis de cada
+opción:}\label{anuxe1lisis-de-cada-opciuxf3n}
+
+\paragraph{\texorpdfstring{1.
+\(\frac{1}{3} \times 80.000\).}{1. \textbackslash frac\{1\}\{3\} \textbackslash times 80.000.}}\label{frac13-times-80.000.}
+
+Esta opción representa la fracción equivalente al porcentaje de
+descuento multiplicada por el precio original:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\frac{1}{3}\) es equivalente a 33\%
+\item
+  Al multiplicar esta fracción por el precio original, obtenemos el
+  valor del descuento: \(\frac{1}{3} \times 80.000 = 26.400\)
+\item
+  \textbf{Este procedimiento SÍ permite calcular el ahorro.}
+\end{itemize}
+
+\paragraph{\texorpdfstring{2.
+\(0,33 \times 80.000\)}{2. 0,33 \textbackslash times 80.000}}\label{times-80.000}
+
+Esta opción representa el porcentaje de descuento expresado como decimal
+multiplicado por el precio original:
+
+\begin{itemize}
+\item
+  \(0,33\) es equivalente a 33\%
+\item
+  Al multiplicar este decimal por el precio original, obtenemos el valor
+  del descuento:
+
+  \(0,33 \times 80.000 = 26.400\)
+\item
+  \textbf{Este procedimiento SÍ permite calcular el ahorro.}
+\end{itemize}
+
+\paragraph{\texorpdfstring{3.
+\(\frac{80.000 \times 33}{100}\)}{3. \textbackslash frac\{80.000 \textbackslash times 33\}\{100\}}}\label{frac80.000-times-33100}
+
+Esta opción representa la fórmula estándar para calcular un porcentaje
+del precio original:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\frac{80.000 \times 33}{100} = 26.400\)
+\item
+  \textbf{Este procedimiento SÍ permite calcular el ahorro.}
+\end{itemize}
+
+\paragraph{\texorpdfstring{4.
+\(0,67 \times 80.000\)}{4. 0,67 \textbackslash times 80.000}}\label{times-80.000-1}
+
+Esta opción representa el factor para calcular el precio final (después
+del descuento) multiplicado por el precio original:
+
+\begin{itemize}
+\tightlist
+\item
+  \(0,67\) es equivalente a \((1 - 33/100)\)
+\item
+  Al multiplicar este factor por el precio original, obtenemos el precio
+  final después del descuento: \(0,67 \times 80.000 = 53.600\)
+\item
+  Este cálculo nos da el precio final después del descuento, NO el
+  ahorro.
+\item
+  \textbf{Este procedimiento NO permite calcular el ahorro.}
+\end{itemize}
+
+\subsubsection{Verificación
+matemática:}\label{verificaciuxf3n-matemuxe1tica}
+
+\begin{itemize}
+\tightlist
+\item
+  Precio original: \$80.000
+\item
+  Porcentaje de descuento: 33\%
+\item
+  Valor del descuento (ahorro): \$26.400 (calculado como 33\% de
+  \$80.000)
+\item
+  Precio final: \$53.600 (calculado como \$80.000 - \$26.400)
+\end{itemize}
+
+\subsubsection{Conclusión:}\label{conclusiuxf3n}
+
+La opción (\(0,67 \times 80.000\)) es la única que \textbf{NO} permite
+calcular el ahorro, ya que calcula el precio final después del descuento
+en lugar del monto ahorrado.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso
+\item
+  Falso
+\item
+  Falso
+\item
+  Verdadero
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: descuentos\_porcentajes extype: schoice exsolution: 0001
+exshuffle: TRUE exsection:
+Aritmética\textbar Porcentajes\textbar Descuentos
+
+\end{document}
