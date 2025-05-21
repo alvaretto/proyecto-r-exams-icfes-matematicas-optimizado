@@ -432,10 +432,10 @@ Question
 
 En un `r contexto` de `r grupo_inicial` personas, el `r porcentaje_inicial`% de estas tiene `r servicio`. Se va a `r termino_ampliacion` el `r contexto` hasta completar un `r termino_nuevo` de `r grupo_final` personas, de manera que, en este `r termino_nuevo`, el porcentaje de personas que tengan `r servicio` en sus hogares sea del `r porcentaje_final`%.
 
-```{r mostrar_contexto, echo=FALSE, out.width="70%", fig.align='center'}
-# Mostrar la imagen de contexto
-knitr::include_graphics("contexto_porcentajes.png")
-```
+<!-- # ```{r mostrar_contexto, echo=FALSE, out.width="70%", fig.align='center'} -->
+<!-- # # Mostrar la imagen de contexto -->
+<!-- # knitr::include_graphics("contexto_porcentajes.png") -->
+<!-- # ``` -->
 
 Es necesario saber cuántas de las personas que ingresan nuevas deben tener `r servicio`, y, `r termino_proposito`, se `r verbo_instruccion` los siguientes `r termino_pasos`:
 
