@@ -1,0 +1,523 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: numerica
+    tipo: porcentajes
+  contexto: social
+  eje_axial: eje1
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage[utf8]{inputenc}",
+  "\\usepackage[T1]{fontenc}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{amsmath,amssymb}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.width = 4,    
+  fig.height = 4,   
+  out.width = "40%" 
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorización del contexto del problema
+# Contexto general del problema
+contextos <- c(
+  "grupo inicial", "muestra preliminar", "encuesta piloto", "estudio base", 
+  "investigación inicial", "censo preliminar", "sondeo inicial", "grupo control"
+)
+contexto <- sample(contextos, 1)
+
+# Aleatorizar servicios o características
+servicios <- c(
+  "internet en su hogar", "computador propio", "teléfono inteligente", 
+  "acceso a agua potable", "seguro médico", "vehículo propio", 
+  "educación universitaria", "vivienda propia", "televisión por cable",
+  "servicio de streaming", "energía solar"
+)
+servicio <- sample(servicios, 1)
+
+# Aleatorizar términos para ampliar el grupo
+terminos_ampliacion <- c(
+  "aumentar", "incrementar", "expandir", "crecer", "extender", "ampliar"
+)
+termino_ampliacion <- sample(terminos_ampliacion, 1)
+
+terminos_nuevos <- c(
+  "nuevo grupo", "grupo ampliado", "grupo extendido", "muestra completa", 
+  "población final", "estudio completo", "grupo objetivo", "muestra definitiva"
+)
+termino_nuevo <- sample(terminos_nuevos, 1)
+
+terminos_proposito <- c(
+  "Para hacerlo", "Con este fin", "Para lograrlo", "Para ejecutar este plan",
+  "Para realizar este procedimiento", "Como parte del proceso"
+)
+termino_proposito <- sample(terminos_proposito, 1)
+
+# Aleatorizar verbos para la instrucción
+verbos_instruccion <- c(
+  "se proponen", "se establecen", "se definen", "se plantean", 
+  "se sugieren", "se especifican", "se indican"
+)
+verbo_instruccion <- sample(verbos_instruccion, 1)
+
+# Aleatorizar términos para los pasos
+terminos_pasos <- c(
+  "pasos", "etapas", "procedimientos", "fases", "secuencias", "operaciones"
+)
+termino_pasos <- sample(terminos_pasos, 1)
+
+# Parámetros numéricos
+# Tamaño del grupo inicial (entre 100 y 500, múltiplo de 10)
+grupo_inicial <- sample(seq(100, 500, by = 10), 1)
+
+# Porcentaje inicial (entre 10% y 35%, múltiplo de 5%)
+porcentaje_inicial <- sample(seq(10, 35, by = 5), 1)
+
+# Porcentaje final (entre 40% y 70%, múltiplo de 5%)
+porcentaje_final <- sample(seq(40, 70, by = 5), 1)
+
+# Tamaño del grupo final (entre 1.5 y 3 veces el grupo inicial, múltiplo de 100)
+factor_aumento <- sample(seq(1.5, 3, by = 0.5), 1)
+grupo_final <- round(grupo_inicial * factor_aumento / 100) * 100
+
+# Cálculos para la solución
+valor_paso1 <- (porcentaje_inicial / 100) * grupo_inicial
+valor_paso2 <- (porcentaje_final / 100) * grupo_final
+valor_paso3 <- valor_paso2 - valor_paso1
+
+# Verificación de coherencia matemática
+# Asegurar que el número de personas nuevas con el servicio sea positivo
+while (valor_paso3 <= 0) {
+  porcentaje_final <- sample(seq(40, 70, by = 5), 1)
+  valor_paso2 <- (porcentaje_final / 100) * grupo_final
+  valor_paso3 <- valor_paso2 - valor_paso1
+}
+
+# Asegurar que el número de personas nuevas con el servicio sea un número entero
+valor_paso1 <- round(valor_paso1)
+valor_paso2 <- round(valor_paso2)
+valor_paso3 <- round(valor_paso3)
+
+# Generar alternativas de respuesta (distractores)
+# Distractor 1: División en lugar de resta
+distractor1 <- round(valor_paso2 / valor_paso1)
+
+# Distractor 2: Usar porcentaje del grupo final para calcular grupo inicial
+distractor2 <- round((porcentaje_final / 100) * grupo_inicial)
+
+# Distractor 3: Restar porcentajes y aplicar al grupo final
+distractor3 <- round(((porcentaje_final - porcentaje_inicial) / 100) * grupo_final)
+
+# Distractor 4: Sumar en lugar de restar
+distractor4 <- round(valor_paso1 + valor_paso2)
+
+# Asegurar que los distractores sean diferentes entre sí y de la respuesta correcta
+distractores <- c(distractor1, distractor2, distractor3, distractor4)
+respuesta_correcta <- valor_paso3
+
+# Si algún distractor es igual a la respuesta correcta, modificarlo ligeramente
+for (i in 1:length(distractores)) {
+  if (distractores[i] == respuesta_correcta) {
+    distractores[i] <- distractores[i] + sample(c(-10, 10, -20, 20), 1)
+  }
+}
+
+# Asegurar que los distractores son diferentes entre sí
+for (i in 1:(length(distractores) - 1)) {
+  for (j in (i+1):length(distractores)) {
+    if (distractores[i] == distractores[j]) {
+      distractores[j] <- distractores[j] + sample(c(-5, 5, -15, 15), 1)
+    }
+  }
+}
+
+# Seleccionar 3 distractores aleatorios de los 4 generados
+distractores_seleccionados <- sample(distractores, 3)
+
+# Crear opciones de respuesta y determinar la correcta
+opciones <- c(respuesta_correcta, distractores_seleccionados)
+opciones <- sort(opciones)  # Ordenar de menor a mayor para consistencia
+indice_correcto <- which(opciones == respuesta_correcta)
+
+# Vector de solución para r-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+```
+
+```{r generar_grafico_python, message=FALSE, warning=FALSE}
+# Código Python para generar un gráfico explicativo
+codigo_python <- paste0("
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib
+matplotlib.rcParams['font.size'] = 10
+
+# Datos del problema
+grupo_inicial = ", grupo_inicial, "
+grupo_final = ", grupo_final, "
+porcentaje_inicial = ", porcentaje_inicial, "
+porcentaje_final = ", porcentaje_final, "
+valor_paso1 = ", valor_paso1, "
+valor_paso2 = ", valor_paso2, "
+valor_paso3 = ", valor_paso3, "
+
+# Aleatorizar colores para el gráfico
+import random
+colores = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c']
+random.shuffle(colores)
+
+# Crear figura
+fig, ax = plt.subplots(figsize=(6, 4))
+
+# Configurar el ancho de las barras
+ancho_barra = 0.35
+
+# Posiciones de las barras en el eje x
+x = np.array([0, 1])
+
+# Barras para personas con el servicio
+personas_con_servicio = [valor_paso1, valor_paso2]
+barras1 = ax.bar(x - ancho_barra/2, personas_con_servicio, ancho_barra, color=colores[0], 
+                label=f'Con servicio ({porcentaje_inicial}% → {porcentaje_final}%)')
+
+# Barras para personas sin el servicio
+personas_sin_servicio = [grupo_inicial - valor_paso1, grupo_final - valor_paso2]
+barras2 = ax.bar(x + ancho_barra/2, personas_sin_servicio, ancho_barra, color=colores[1], 
+                label=f'Sin servicio ({100-porcentaje_inicial}% → {100-porcentaje_final}%)')
+
+# Barras para el total
+ax.bar(x, [grupo_inicial, grupo_final], ancho_barra*2, alpha=0.1, color='gray', 
+      label=f'Total ({grupo_inicial} → {grupo_final})')
+
+# Etiquetas en las barras
+def agregar_etiquetas(barras):
+    for barra in barras:
+        altura = barra.get_height()
+        ax.annotate(f'{int(altura)}',
+                    xy=(barra.get_x() + barra.get_width() / 2, altura),
+                    xytext=(0, 3),  # 3 puntos de desplazamiento vertical
+                    textcoords='offset points',
+                    ha='center', va='bottom')
+
+agregar_etiquetas(barras1)
+agregar_etiquetas(barras2)
+
+# Etiquetas, título y leyenda
+ax.set_ylabel('Número de personas')
+ax.set_title('Distribución de la población antes y después')
+ax.set_xticks(x)
+ax.set_xticklabels(['Grupo inicial', 'Grupo final'])
+ax.legend()
+
+# Flecha indicando personas nuevas con servicio
+ax.annotate('',
+            xy=(1, valor_paso2/2), xycoords='data',
+            xytext=(0, valor_paso1/2), textcoords='data',
+            arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0.2', color=colores[2], lw=2))
+
+ax.annotate(f'Diferencia: {valor_paso3}\\npersonas nuevas\\ncon el servicio',
+            xy=(0.5, (valor_paso1 + valor_paso2)/4),
+            ha='center', va='center',
+            bbox=dict(boxstyle='round,pad=0.5', fc=colores[2], alpha=0.7))
+
+plt.tight_layout()
+plt.savefig('grafico_porcentajes.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+```
+
+```{r generar_codigo_python_tabla, message=FALSE, warning=FALSE}
+# Aleatorizar colores para la tabla
+color_fila_titulo <- sample(c('#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c'), 1)
+color_fila_par <- sample(c('#f5f5f5', '#e8f4f8', '#f0f9e8', '#fff5e6', '#f0e6fa', '#e5f9f5'), 1)
+color_fila_impar <- "#ffffff"
+color_borde <- sample(c('#34495e', '#7f8c8d', '#2c3e50', '#95a5a6'), 1)
+
+# Generar tabla usando Python/Matplotlib
+codigo_python_tabla <- paste0("
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.table import Table
+
+# Datos de la tabla
+pasos = ['Paso 1', 'Paso 2', 'Paso 3']
+procedimientos = [
+    'Hallar el ", porcentaje_inicial, "% del número de personas del ", contexto, ".',
+    'Hallar el ", porcentaje_final, "% del número de personas del ", termino_nuevo, " de ", grupo_final, " personas.',
+    'Restar el valor obtenido en el paso 1 del valor obtenido en el paso 2.'
+]
+
+# Crear figura con dimensiones adecuadas
+fig, ax = plt.subplots(figsize=(10, 3.5))
+
+# Ocultar ejes
+ax.axis('off')
+ax.axis('tight')
+
+# Crear tabla
+tabla = ax.table(
+    cellText=[[pasos[0], procedimientos[0]], [pasos[1], procedimientos[1]], [pasos[2], procedimientos[2]]],
+    colLabels=['Paso', 'Procedimiento'],
+    colWidths=[0.1, 0.9],  # Ancho relativo de las columnas
+    loc='center',
+    cellLoc='left'
+)
+
+# Configurar estilo de la tabla
+tabla.auto_set_font_size(False)
+tabla.set_fontsize(9)
+
+# Altura de las filas
+for key, cell in tabla.get_celld().items():
+    cell.set_height(0.25)
+    cell.set_text_props(va='center', ha='left', wrap=True)
+    cell.set_edgecolor('", color_borde, "')
+
+    # Estilo para el encabezado
+    if key[0] == 0:
+        cell.set_fontsize(10)
+        cell.set_text_props(weight='bold', ha='center')
+        cell.set_facecolor('", color_fila_titulo, "')
+    # Estilo para filas alternas
+    elif key[0] % 2 == 0:
+        cell.set_facecolor('", color_fila_par, "')
+    else:
+        cell.set_facecolor('", color_fila_impar, "')
+
+# Guardar la tabla como imagen en el directorio actual
+import os
+plt.tight_layout()
+plt.savefig('tabla_pasos.png', dpi=150, bbox_inches='tight', transparent=True)
+# También guardar en el directorio temporal que usa R-exams
+plt.savefig(os.path.join(os.getcwd(), 'tabla_pasos.png'), dpi=150, bbox_inches='tight', transparent=True)
+plt.close()
+")
+
+# Ejecutar código Python para generar la tabla
+py_run_string(codigo_python_tabla)
+```
+
+```{r generar_imagen_contexto, message=FALSE, warning=FALSE}
+# Generar una imagen de contexto usando iconos para mostrar el problema
+codigo_python_contexto <- paste0("
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib
+matplotlib.rcParams['font.size'] = 10
+
+# Datos del problema
+grupo_inicial = ", grupo_inicial, "
+grupo_final = ", grupo_final, "
+porcentaje_inicial = ", porcentaje_inicial, "
+porcentaje_final = ", porcentaje_final, "
+
+# Crear figura
+fig, ax = plt.subplots(figsize=(8, 3.5))
+ax.axis('off')
+
+# Coordenadas iniciales
+y_inicial = 0.7
+y_final = 0.3
+x_centro = 0.5
+ancho_grupo = 0.4
+
+# Grupo inicial (círculo superior)
+circle_inicial = plt.Circle((x_centro, y_inicial), 0.25, fill=True, alpha=0.2,
+                           edgecolor='black', linewidth=1.5, zorder=1)
+ax.add_patch(circle_inicial)
+
+# Grupo final (círculo inferior)
+circle_final = plt.Circle((x_centro, y_final), 0.4, fill=True, alpha=0.2,
+                         edgecolor='black', linewidth=1.5, zorder=1)
+ax.add_patch(circle_final)
+
+# Flecha de transición
+ax.arrow(x_centro, y_inicial-0.25, 0, -0.1, head_width=0.05,
+        head_length=0.03, fc='black', ec='black', zorder=2)
+
+# Textos en los círculos
+ax.text(x_centro, y_inicial+0.02, f'Grupo inicial\\n{grupo_inicial} personas\\n{porcentaje_inicial}% con servicio',
+       ha='center', va='center', fontweight='bold', fontsize=11)
+
+ax.text(x_centro, y_final+0.02, f'Grupo final\\n{grupo_final} personas\\n{porcentaje_final}% con servicio',
+       ha='center', va='center', fontweight='bold', fontsize=11)
+
+# Definir área de personas con servicio en el grupo inicial (usando sombreado)
+servicio_inicial = circle_inicial.get_radius() * (porcentaje_inicial/100)**0.5
+circle_servicio_inicial = plt.Circle((x_centro, y_inicial), servicio_inicial,
+                                   fill=True, facecolor='#3498db', alpha=0.5,
+                                   edgecolor='black', linewidth=1, zorder=2)
+ax.add_patch(circle_servicio_inicial)
+
+# Definir área de personas con servicio en el grupo final (usando sombreado)
+servicio_final = circle_final.get_radius() * (porcentaje_final/100)**0.5
+circle_servicio_final = plt.Circle((x_centro, y_final), servicio_final,
+                                 fill=True, facecolor='#3498db', alpha=0.5,
+                                 edgecolor='black', linewidth=1, zorder=2)
+ax.add_patch(circle_servicio_final)
+
+# Añadir interrogante para la pregunta
+ax.text(x_centro+0.5, y_final-0.05, '?',
+       ha='center', va='center', fontweight='bold', fontsize=24,
+       bbox=dict(boxstyle='circle', facecolor='#e74c3c', alpha=0.8, pad=0.5))
+
+# Establecer límites
+ax.set_xlim(0, 1)
+ax.set_ylim(0, 1)
+ax.set_aspect('equal')
+
+plt.savefig('contexto_porcentajes.png', dpi=150, bbox_inches='tight', transparent=True)
+plt.close()
+")
+
+# Ejecutar código Python para generar la imagen de contexto
+py_run_string(codigo_python_contexto)
+```
+
+Question
+========
+
+En un `r contexto` de `r grupo_inicial` personas, el `r porcentaje_inicial`% de estas tiene `r servicio`. Se va a `r termino_ampliacion` el `r contexto` hasta completar un `r termino_nuevo` de `r grupo_final` personas, de manera que, en este `r termino_nuevo`, el porcentaje de personas que tengan `r servicio` en sus hogares sea del `r porcentaje_final`%.
+
+```{r mostrar_contexto, echo=FALSE, out.width="70%", fig.align='center'}
+# Mostrar la imagen de contexto
+knitr::include_graphics("contexto_porcentajes.png")
+```
+
+Es necesario saber cuántas de las personas que ingresan nuevas deben tener `r servicio`, y, `r termino_proposito`, se `r verbo_instruccion` los siguientes `r termino_pasos`:
+
+```{r tabla_pasos, echo=FALSE, results='asis', fig.align='center'}
+# Usar una tabla HTML en lugar de una imagen generada
+cat("<table style='margin: 0 auto; border-collapse: collapse; width: 80%;'>")
+cat("<tr style='background-color: #3498db;'>")
+cat("<th style='border: 1px solid #ddd; padding: 8px; text-align: center;'>Paso</th>")
+cat("<th style='border: 1px solid #ddd; padding: 8px; text-align: left;'>Procedimiento</th>")
+cat("</tr>")
+
+cat("<tr style='background-color: #f2f2f2;'>")
+cat("<td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>1</td>")
+cat(paste0("<td style='border: 1px solid #ddd; padding: 8px;'>Hallar el ", porcentaje_inicial, "% del número de personas del ", contexto, ".</td>"))
+cat("</tr>")
+
+cat("<tr>")
+cat("<td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>2</td>")
+cat(paste0("<td style='border: 1px solid #ddd; padding: 8px;'>Hallar el ", porcentaje_final, "% del número de personas del ", termino_nuevo, " de ", grupo_final, " personas.</td>"))
+cat("</tr>")
+
+cat("<tr style='background-color: #f2f2f2;'>")
+cat("<td style='border: 1px solid #ddd; padding: 8px; text-align: center;'>3</td>")
+cat("<td style='border: 1px solid #ddd; padding: 8px;'>Restar el valor obtenido en el paso 1 del valor obtenido en el paso 2.</td>")
+cat("</tr>")
+
+cat("</table>")
+```
+
+¿Cuál es el valor obtenido en el último paso del procedimiento anterior?
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+La respuesta correcta es: **`r respuesta_correcta`**.
+
+Para resolver este problema, seguimos los pasos indicados:
+
+**Paso 1**: Hallar el `r porcentaje_inicial`% del número de personas del `r contexto`.
+
+$`r porcentaje_inicial`\% \text{ de } `r grupo_inicial` = \frac{`r porcentaje_inicial`}{100} \times `r grupo_inicial` = `r valor_paso1`$
+
+**Paso 2**: Hallar el `r porcentaje_final`% del número de personas del `r termino_nuevo` de `r grupo_final` personas.
+
+$`r porcentaje_final`\% \text{ de } `r grupo_final` = \frac{`r porcentaje_final`}{100} \times `r grupo_final` = `r valor_paso2`$
+
+**Paso 3**: Restar el valor obtenido en el paso 1 del valor obtenido en el paso 2.
+
+$`r valor_paso2` - `r valor_paso1` = `r valor_paso3`$
+
+Por lo tanto, se necesitan `r valor_paso3` personas nuevas que tengan `r servicio`.
+
+**Verificación**:
+
+- En el `r contexto` inicial, hay `r valor_paso1` personas con `r servicio` (`r porcentaje_inicial`% de `r grupo_inicial`).
+- El número total de personas nuevas es `r grupo_final - grupo_inicial`.
+- De estas personas nuevas, `r valor_paso3` deben tener `r servicio`.
+- Al final, habrá `r valor_paso1` + `r valor_paso3` = `r valor_paso2` personas con `r servicio` (`r porcentaje_final`% de `r grupo_final`).
+
+```{r grafico_solucion, echo=FALSE, out.width="70%", fig.align='center'}
+# Incluir el gráfico explicativo en la solución
+knitr::include_graphics("grafico_porcentajes.png")
+```
+
+Answerlist
+----------
+- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: porcentajes_grupos_poblacion
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Porcentajes|Aplicaciones porcentuales

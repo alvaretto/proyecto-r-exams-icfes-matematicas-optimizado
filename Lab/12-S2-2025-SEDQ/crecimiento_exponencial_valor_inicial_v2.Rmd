@@ -199,7 +199,7 @@ Question
 ========
 `r adjetivo_especie` especie de `r organismo_plural` `r verbo_accion` según la función $`r funcion_texto`$, donde $`r simbolo_tiempo`$ se mide en `r unidad_tiempo_plural` y $`r simbolo_cantidad`$ es la cantidad de `r organismo_plural`.
 
-De acuerdo con la información anterior, la cantidad de `r organismo_plural` que había a los(as) `r tiempo_evaluacion` `r unidad_tiempo_plural` de iniciado `r contexto_estudio`, es:
+De acuerdo con la información anterior, la cantidad de `r organismo_plural` que había a los(as) `r tiempo_evaluacion` `r unidad_tiempo_plural` de iniciado(a) `r contexto_estudio`, es:
 
 Answerlist
 ----------

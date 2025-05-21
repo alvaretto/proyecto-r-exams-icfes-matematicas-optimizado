@@ -2,9 +2,9 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "crecimiento_exponencial_valor_inicial_v2.Rmd"
-copias <- 1
-numpreg <- 5
+archivo_examen <- "01-S2-2025-SEDQ-grafico_circular_bienes_v0.Rmd"
+copias <- 300
+numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -47,44 +47,44 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF
 
-exams2pdf(rep(archivo_examen, numpreg),
-          n = copias,
-          name = nombre_arch,
-          encoding = "UTF-8",
-          template = "solpcielo",
-          dir = dir_salida,
-          edir = dir_ejercicios)
+# exams2pdf(rep(archivo_examen, numpreg),
+#           n = copias,
+#           name = nombre_arch,
+#           encoding = "UTF-8",
+#           template = "solpcielo",
+#           dir = dir_salida,
+#           edir = dir_ejercicios)
 
 ################################################################################
 # Generación de n copias en un solo archivo .docx
 
-exams2pandoc(rep(archivo_examen, numpreg),
-             n = copias,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             template = "pcielo.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE,
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = FALSE,
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+# exams2pandoc(rep(archivo_examen, numpreg),
+#              n = copias,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              template = "pcielo.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = TRUE,
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = FALSE,
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
 
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
 
-exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE)
+# exams2html(rep(archivo_examen, numpreg),
+#            svg = FALSE)
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'copias'
@@ -106,23 +106,23 @@ exams2moodle(archivo_examen,
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
 
-set.seed(semilla)
-exams2nops(rep(archivo_examen, numpreg),
-           n = copias,
-           name = paste0(nombre_sin_extension, "_nops_"),
-           encoding = "UTF-8",
-           dir = dir_salida,
-           edir = dir_ejercicios,
-           language = "es",                      # Idioma español
-           title = "Evaluación de Matemáticas",  # Título del examen
-           institution = "I. E. Pedacito de Cielo", # Nombre de la institución
-           logo = NULL,                         # Sin logo (opcional)
-           date = Sys.Date(),                   # Fecha actual
-           replacement = FALSE,                 # Sin preguntas de reemplazo
-           blank = 0,                           # Sin páginas adicionales
-           duplex = TRUE,                       # Impresión a doble cara
-           pages = NULL,                        # Número de páginas automático
-           points = NULL,                       # Puntos por pregunta automático
-           showpoints = FALSE)                  # No mostrar puntos en el examen
+# set.seed(semilla)
+# exams2nops(rep(archivo_examen, numpreg),
+#            n = copias,
+#            name = paste0(nombre_sin_extension, "_nops_"),
+#            encoding = "UTF-8",
+#            dir = dir_salida,
+#            edir = dir_ejercicios,
+#            language = "es",                      # Idioma español
+#            title = "Evaluación de Matemáticas",  # Título del examen
+#            institution = "I. E. Pedacito de Cielo", # Nombre de la institución
+#            logo = NULL,                         # Sin logo (opcional)
+#            date = Sys.Date(),                   # Fecha actual
+#            replacement = FALSE,                 # Sin preguntas de reemplazo
+#            blank = 0,                           # Sin páginas adicionales
+#            duplex = TRUE,                       # Impresión a doble cara
+#            pages = NULL,                        # Número de páginas automático
+#            points = NULL,                       # Puntos por pregunta automático
+#            showpoints = FALSE)                  # No mostrar puntos en el examen
 
 ################################################################################

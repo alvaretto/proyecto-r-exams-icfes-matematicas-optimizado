@@ -2,9 +2,9 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "crecimiento_exponencial_valor_inicial_v2.Rmd"
+archivo_examen <- "porcentajes_grupos_poblacion_v1.Rmd"
 copias <- 1
-numpreg <- 5
+numpreg <- 3
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
