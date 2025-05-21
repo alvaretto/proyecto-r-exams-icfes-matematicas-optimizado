@@ -353,216 +353,221 @@ display: none;
 
 
 <pre class="r"><code># Establecer semilla aleatoria para reproducibilidad
-# set.seed(123) # Descomentar para pruebas fijas, comentar para aleatoriedad total en generación
-set.seed(sample(1:100000, 1))
+#set.seed(sample(1:100000, 1))
 
 # --- Aleatorización de Parámetros ---
-
-# 1. Coeficiente inicial (cantidad inicial del organismo)
 coeficientes_posibles &lt;- c(20, 25, 30, 40, 50, 60, 75, 80, 100, 120, 150, 200)
 coef_inicial &lt;- sample(coeficientes_posibles, 1)
 
-# 2. Base de la función exponencial
-bases_posibles &lt;- c(1.5, 2, 2.2, 2.5, 3) # Bases mayores a 1 para crecimiento
+bases_posibles &lt;- c(1.5, 2, 2.2, 2.5, 3)
 base_exponencial &lt;- sample(bases_posibles, 1)
 
-# 3. Factor multiplicador en el exponente del tiempo
 factores_tiempo_posibles &lt;- c(0.2, 0.25, 0.4, 0.5, 0.75, 0.8, 1, 1.2, 1.5)
 factor_tiempo &lt;- sample(factores_tiempo_posibles, 1)
 
-# 4. Tipo de organismo
 organismos_plural &lt;- c(&quot;ranas&quot;, &quot;peces&quot;, &quot;insectos&quot;, &quot;aves&quot;, &quot;conejos&quot;, &quot;bacterias&quot;, &quot;algas&quot;, &quot;hongos&quot;, &quot;plantas&quot;, &quot;virus&quot;)
-organismos_singular &lt;- c(&quot;rana&quot;, &quot;pez&quot;, &quot;insecto&quot;, &quot;ave&quot;, &quot;conejo&quot;, &quot;bacteria&quot;, &quot;alga&quot;, &quot;hongo&quot;, &quot;planta&quot;, &quot;virus&quot;)
 idx_organismo &lt;- sample(1:length(organismos_plural), 1)
 organismo_plural &lt;- organismos_plural[idx_organismo]
-organismo_singular &lt;- organismos_singular[idx_organismo]
 
-# 5. Unidad de tiempo
 unidades_tiempo_plural &lt;- c(&quot;semanas&quot;, &quot;días&quot;, &quot;meses&quot;, &quot;horas&quot;, &quot;años&quot;, &quot;minutos&quot;)
-unidades_tiempo_singular &lt;- c(&quot;semana&quot;, &quot;día&quot;, &quot;mes&quot;, &quot;hora&quot;, &quot;año&quot;, &quot;minuto&quot;)
 idx_unidad &lt;- sample(1:length(unidades_tiempo_plural), 1)
 unidad_tiempo_plural &lt;- unidades_tiempo_plural[idx_unidad]
-unidad_tiempo_singular &lt;- unidades_tiempo_singular[idx_unidad]
 
-# 6. Verbo para la acción de reproducción/crecimiento
 verbos_accion &lt;- c(&quot;se reproduce&quot;, &quot;crece&quot;, &quot;aumenta su población&quot;, &quot;se multiplica&quot;, &quot;evoluciona su cantidad&quot;)
 verbo_accion &lt;- sample(verbos_accion, 1)
 
-# 7. Contexto del estudio/observación
 contextos_estudio &lt;- c(&quot;un estudio científico&quot;, &quot;una observación de campo&quot;, &quot;un experimento de laboratorio&quot;, &quot;un análisis poblacional&quot;, &quot;un monitoreo ecológico&quot;)
 contexto_estudio &lt;- sample(contextos_estudio, 1)
 
-# 8. Variable que representa la cantidad (r, P, N, Q)
 simbolo_cantidad &lt;- sample(c(&quot;r&quot;, &quot;P&quot;, &quot;N&quot;, &quot;Q&quot;, &quot;C&quot;), 1)
-
-# 9. Variable que representa el tiempo (t, x, k)
 simbolo_tiempo &lt;- sample(c(&quot;t&quot;, &quot;x&quot;, &quot;k&quot;), 1)
 
-# 10. Adjetivo para la especie
 adjetivos_especie &lt;- c(&quot;cierta&quot;, &quot;una determinada&quot;, &quot;una particular&quot;, &quot;una nueva&quot;, &quot;una exótica&quot;)
 adjetivo_especie &lt;- sample(adjetivos_especie, 1)
 
 # --- Formulación de la función ---
-# r(t) = coef_inicial * (base_exponencial)^(factor_tiempo * t)
-# Usamos glue para formatear la función con los símbolos aleatorios
 funcion_texto &lt;- glue::glue(&quot;{simbolo_cantidad}({simbolo_tiempo}) = {coef_inicial} \\cdot ({base_exponencial})^{{{factor_tiempo} \\cdot {simbolo_tiempo}}}&quot;)
-# Para mostrar sin el cdot y con parentesis si la base es decimal
 funcion_display &lt;- glue::glue(&quot;{simbolo_cantidad}({simbolo_tiempo}) = {coef_inicial}({base_exponencial})^{{{factor_tiempo}{simbolo_tiempo}}}&quot;)
 
-
 # --- Cálculo de la Solución ---
-# La cantidad inicial es cuando el tiempo (simbolo_tiempo) es 0.
-# {simbolo_cantidad}(0) = coef_inicial * (base_exponencial)^(factor_tiempo * 0)
-# {simbolo_cantidad}(0) = coef_inicial * (base_exponencial)^0
-# {simbolo_cantidad}(0) = coef_inicial * 1
-# {simbolo_cantidad}(0) = coef_inicial
 respuesta_correcta &lt;- coef_inicial
 
-# --- Generación de Opciones Incorrectas (Distractores) ---
+# --- Generación de Opciones de Respuesta ---
 opciones &lt;- numeric(4)
-opciones[1] &lt;- respuesta_correcta
+opciones[1] &lt;- respuesta_correcta 
 
-# Distractor 1: coef_inicial * base_exponencial
-distractor1 &lt;- round(coef_inicial * base_exponencial)
-if (distractor1 == respuesta_correcta) {
-  distractor1 &lt;- round(coef_inicial * base_exponencial + sample(1:5,1)) # Pequeña variación si coincide
-}
+distractores_candidatos &lt;- c(
+  round(coef_inicial * base_exponencial), round(coef_inicial / 2), round(coef_inicial * 1.5),
+  round(coef_inicial * 0.75), round(coef_inicial + base_exponencial), round(abs(coef_inicial - base_exponencial)),
+  round(coef_inicial + factor_tiempo * 10), as.integer(base_exponencial), as.integer(factor_tiempo),
+  sample(c(2,5,10,15,20), 1) * sample(c(1,2),1)
+)
 
-# Distractor 2: coef_inicial / base_exponencial (si es razonable y entero) o coef_inicial / 2
-if (coef_inicial %% base_exponencial == 0 &amp; base_exponencial != 1) {
-  distractor2 &lt;- round(coef_inicial / base_exponencial)
+distractores_candidatos &lt;- round(distractores_candidatos)
+distractores_candidatos &lt;- unique(distractores_candidatos)
+distractores_candidatos &lt;- distractores_candidatos[!is.na(distractores_candidatos)]
+distractores_candidatos &lt;- distractores_candidatos[distractores_candidatos &gt; 0]
+distractores_candidatos &lt;- distractores_candidatos[distractores_candidatos != respuesta_correcta]
+
+if (length(distractores_candidatos) &gt;= 3) {
+  opciones[2:4] &lt;- sample(distractores_candidatos, 3)
 } else {
-  distractor2 &lt;- round(coef_inicial / 2)
-}
-if (distractor2 == respuesta_correcta || distractor2 == distractor1) {
-  distractor2 &lt;- round(coef_inicial / (base_exponencial + 0.5)) # Variación
-  if (distractor2 &lt;=0) distractor2 &lt;- round(coef_inicial * 0.75)
-}
-
-
-# Distractor 3: base_exponencial o factor_tiempo (si son enteros y pequeños) o un valor aleatorio pequeño
-if (base_exponencial %% 1 == 0 &amp;&amp; base_exponencial &gt; 1 &amp;&amp; base_exponencial &lt; 10) {
-  distractor3 &lt;- base_exponencial
-} else if (factor_tiempo %% 1 == 0 &amp;&amp; factor_tiempo &gt; 1 &amp;&amp; factor_tiempo &lt; 10) {
-  distractor3 &lt;- factor_tiempo
-} else {
-  distractor3 &lt;- sample(c(2,3,4,5,10),1)
-}
-
-# Asegurar que todos los distractores sean únicos y diferentes de la respuesta correcta
-# y que sean positivos
-distractores_potenciales &lt;- c(distractor1, distractor2, distractor3)
-distractores_unicos &lt;- unique(distractores_potenciales[distractores_potenciales &gt; 0 &amp; distractores_potenciales != respuesta_correcta])
-
-# Si no tenemos suficientes distractores únicos, generamos más
-iter_seguridad = 0
-while(length(distractores_unicos) &lt; 3 &amp;&amp; iter_seguridad &lt; 20) {
-    nuevos_distractores &lt;- c(
-        round(coef_inicial * (base_exponencial + runif(1, -0.5, 0.5))),
-        round(coef_inicial * runif(1, 0.25, 2.5)),
-        round(coef_inicial + sample(c(-1,1),1) * sample(5:15,1)),
-        sample(c(1,2,3,4,5,10,15,20),1) * sample(c(1,2),1)
-    )
-    distractores_potenciales &lt;- c(distractores_unicos, nuevos_distractores)
-    distractores_unicos &lt;- unique(distractores_potenciales[distractores_potenciales &gt; 0 &amp; distractores_potenciales != respuesta_correcta])
-    distractores_unicos &lt;- distractores_unicos[!is.na(distractores_unicos)] # Eliminar NA
-    iter_seguridad = iter_seguridad + 1
-}
-
-# Si después de los intentos aún no hay suficientes, usar valores fijos relativos a la respuesta
-if (length(distractores_unicos) &lt; 3) {
-    distractores_fijos = c(round(respuesta_correcta * 1.5), round(respuesta_correcta * 0.5), round(respuesta_correcta + 10))
-    distractores_unicos = unique(c(distractores_unicos, distractores_fijos))
-    distractores_unicos = distractores_unicos[distractores_unicos &gt; 0 &amp; distractores_unicos != respuesta_correcta &amp; !is.na(distractores_unicos)]
-}
-
-# Tomar los primeros 3 distractores únicos
-opciones[2:4] &lt;- sample(distractores_unicos, min(3, length(distractores_unicos)))[1:min(3, length(distractores_unicos))]
-
-# Si faltan opciones, rellenar con valores genéricos para asegurar 4 opciones
-# Esto es un fallback, idealmente los distractores generados son suficientes
-if (any(is.na(opciones[2:4])) || length(unique(opciones)) &lt; 4 ) {
-    opciones_faltantes_idx &lt;- which(is.na(opciones) | duplicated(opciones, fromLast = TRUE) | duplicated(opciones))
-    
-    # Asegurar que las opciones sean enteras
-    opciones &lt;- round(opciones)
-    
-    # Generar valores de relleno si es necesario
-    rellenos_base &lt;- c(respuesta_correcta * 2, 
-                       max(1, round(respuesta_correcta / 2)), 
-                       respuesta_correcta + base_exponencial, 
-                       max(1, respuesta_correcta - base_exponencial),
-                       base_exponencial,
-                       coef_inicial + 5,
-                       coef_inicial - 5)
-    rellenos_validos &lt;- unique(round(rellenos_base[rellenos_base &gt; 0]))
-    rellenos_disponibles &lt;- setdiff(rellenos_validos, opciones)
-    
-    idx_reemplazo = 2 # Empezar a reemplazar desde la segunda opción si es necesario
-    while(length(unique(opciones)) &lt; 4 &amp;&amp; idx_reemplazo &lt;= 4 &amp;&amp; length(rellenos_disponibles) &gt; 0) {
-        if (opciones[idx_reemplazo] == respuesta_correcta || sum(opciones == opciones[idx_reemplazo]) &gt; 1) {
-            opciones[idx_reemplazo] = rellenos_disponibles[1]
-            rellenos_disponibles = rellenos_disponibles[-1]
-        }
-        idx_reemplazo = idx_reemplazo + 1
-        opciones &lt;- round(opciones) # Asegurar enteros
+  if (length(distractores_candidatos) &gt; 0) {
+    opciones[2:(1 + length(distractores_candidatos))] &lt;- distractores_candidatos
+  }
+  valores_usados &lt;- na.omit(opciones) 
+  for (i in which(is.na(opciones))) {
+    nuevo_distractor &lt;- max(valores_usados, respuesta_correcta, 1) + sample(1:5,1) + i 
+    while(nuevo_distractor %in% valores_usados || nuevo_distractor &lt;= 0) {
+      nuevo_distractor &lt;- nuevo_distractor + sample(1:3,1)
+      if(nuevo_distractor &lt;=0) nuevo_distractor &lt;- max(valores_usados, respuesta_correcta, 1) + 7 
     }
-    # Si aún no hay 4 opciones únicas, forzar valores simples
-    if (length(unique(opciones)) &lt; 4) {
-        opciones_unicas_actuales &lt;- unique(opciones[!is.na(opciones)])
-        complemento &lt;- c(1,2,3,4,5,10,15,20,25,30,40,60,70,80,90) # Valores de relleno
-        complemento_disponible &lt;- setdiff(complemento, opciones_unicas_actuales)
-        
-        for(i in 1:4){
-            if(sum(opciones == opciones[i]) &gt; 1 || is.na(opciones[i])){ # Si está duplicada o NA
-                 if(length(complemento_disponible) &gt; 0){
-                    opciones[i] &lt;- complemento_disponible[1]
-                    complemento_disponible &lt;- complemento_disponible[-1]
-                 } else {
-                    opciones[i] &lt;- respuesta_correcta + i*5 # Último recurso
-                 }
-            }
-        }
-    }
+    opciones[i] &lt;- round(nuevo_distractor)
+    valores_usados &lt;- c(valores_usados, opciones[i])
+  }
 }
-opciones &lt;- round(opciones) # Asegurar que todas las opciones sean enteras
+opciones &lt;- round(as.numeric(opciones))
 
-# Ordenar las opciones para la presentación (opcional, exshuffle=TRUE se encarga)
-# opciones_ordenadas &lt;- sample(opciones) # Mezclar opciones
-opciones_ordenadas &lt;- opciones # Mantener el orden para que la solución coincida con el índice 1
+if(any(is.na(opciones)) || length(unique(opciones)) &lt; 4) {
+  warning(&quot;Fallback extremo activado para la generación de opciones.&quot;)
+  opciones_nuevas &lt;- c(respuesta_correcta)
+  
+  # Intentar añadir otros valores únicos de las opciones pre-existentes
+  if (exists(&quot;opciones&quot;) &amp;&amp; length(opciones) &gt; 0) {
+    for (val_existente in unique(na.omit(round(as.numeric(opciones))))) {
+      if (length(opciones_nuevas) &lt; 4 &amp;&amp; !(val_existente %in% opciones_nuevas) &amp;&amp; val_existente &gt; 0) {
+        opciones_nuevas &lt;- c(opciones_nuevas, val_existente)
+      }
+    }
+  }
+  
+  iter_seguridad_fallback &lt;- 1
+  while (length(opciones_nuevas) &lt; 4 &amp;&amp; iter_seguridad_fallback &lt; 25) {
+    candidato_relleno &lt;- respuesta_correcta + sample(c(-1,1),1) * sample(1:15,1) * iter_seguridad_fallback %/% 2 + sample(1:5,1)
+    candidato_relleno &lt;- round(candidato_relleno)
+    if (!(candidato_relleno %in% opciones_nuevas) &amp;&amp; candidato_relleno &gt; 0 &amp;&amp; candidato_relleno != respuesta_correcta) {
+      opciones_nuevas &lt;- c(opciones_nuevas, candidato_relleno)
+    }
+    iter_seguridad_fallback &lt;- iter_seguridad_fallback + 1
+  }
+  
+  # Si aún no hay 4, forzar valores muy simples y únicos
+  if (length(unique(opciones_nuevas)) &lt; 4) {
+      opciones_nuevas &lt;- unique(opciones_nuevas) # Asegurar unicidad de lo que hay
+      relleno_simple_idx &lt;- 1
+      while(length(opciones_nuevas) &lt; 4){
+          val_simple &lt;- respuesta_correcta + c(5, -5, 10, -10, 1, -1, 2, -2, 15, -15)[relleno_simple_idx]
+          val_simple &lt;- round(val_simple)
+          if(!(val_simple %in% opciones_nuevas) &amp;&amp; val_simple &gt; 0){
+              opciones_nuevas &lt;- c(opciones_nuevas, val_simple)
+          } else { # Si sigue colisionando o es &lt;=0, probar otro offset
+              val_simple &lt;- max(opciones_nuevas, respuesta_correcta, 1) + 3 + relleno_simple_idx * 2
+              if(!(val_simple %in% opciones_nuevas) &amp;&amp; val_simple &gt; 0) {
+                 opciones_nuevas &lt;- c(opciones_nuevas, round(val_simple))
+              } else { # Último recurso para este slot
+                 opciones_nuevas &lt;- c(opciones_nuevas, round(max(opciones_nuevas, respuesta_correcta, 1) + 7 + relleno_simple_idx * 5))
+              }
+          }
+          opciones_nuevas &lt;- unique(opciones_nuevas[opciones_nuevas &gt; 0]) # Limpiar y asegurar positivos
+          relleno_simple_idx &lt;- relleno_simple_idx + 1
+          if(relleno_simple_idx &gt; 20) break # Evitar bucle infinito extremo
+      }
+  }
+  opciones &lt;- opciones_nuevas
+  # Asegurar que &#39;opciones&#39; tenga exactamente 4 elementos únicos.
+  # Si después de todo el esfuerzo hay menos de 4, es un problema, pero intentamos rellenar.
+  if(length(unique(opciones)) &lt; 4){
+      opciones_final_final &lt;- unique(opciones[opciones&gt;0])
+      idx_ff = 1
+      while(length(opciones_final_final) &lt; 4 &amp;&amp; idx_ff &lt; 10){
+          val_ff = max(opciones_final_final, respuesta_correcta, 1) + idx_ff * sample(1:3,1) + sample(1:7,1)
+          if(!val_ff %in% opciones_final_final &amp;&amp; val_ff &gt; 0) opciones_final_final &lt;- c(opciones_final_final, round(val_ff))
+          idx_ff = idx_ff + 1
+      }
+      # Si todavía no, forzar secuencia simple
+      if(length(unique(opciones_final_final)) &lt; 4) {
+          opciones_final_final &lt;- c(respuesta_correcta, respuesta_correcta+1, respuesta_correcta+2, respuesta_correcta+3)
+          opciones_final_final &lt;- unique(round(opciones_final_final[opciones_final_final&gt;0]))
+          # Rellenar si respuesta_correcta es negativa o algo raro pasó
+          idx_fff = 1
+          while(length(opciones_final_final) &lt; 4 &amp;&amp; idx_fff &lt; 10){
+             opciones_final_final &lt;- c(opciones_final_final, max(opciones_final_final,1)+idx_fff)
+             opciones_final_final &lt;- unique(round(opciones_final_final[opciones_final_final&gt;0]))
+             idx_fff = idx_fff + 1
+          }
+      }
+      opciones &lt;- opciones_final_final[1:4] # Tomar los primeros 4, puede haber NA si no se generaron 4
+  }
+  # Asegurar que la respuesta correcta esté en las opciones finales
+  if (!respuesta_correcta %in% opciones) {
+    # Buscar un NA para reemplazar, si no, uno aleatorio
+    idx_replace_rc &lt;- if(any(is.na(opciones))) which(is.na(opciones))[1] else sample(1:4,1)
+    opciones[idx_replace_rc] &lt;- respuesta_correcta
+  }
+  # Última limpieza de NAs y duplicados si la RC causó uno
+  if(any(is.na(opciones)) || length(unique(opciones)) &lt; 4){
+      opciones_limpias &lt;- unique(na.omit(opciones))
+      idx_fill_last = 1
+      while(length(opciones_limpias) &lt; 4 &amp;&amp; idx_fill_last &lt; 10){
+          val_fill_last = max(opciones_limpias, respuesta_correcta, 1) + idx_fill_last * 3 + sample(1:3,1)
+          if(!val_fill_last %in% opciones_limpias &amp;&amp; val_fill_last &gt; 0) opciones_limpias &lt;- c(opciones_limpias, round(val_fill_last))
+          idx_fill_last = idx_fill_last + 1
+      }
+      if(length(opciones_limpias) &gt;= 4) opciones &lt;- opciones_limpias[1:4]
+      else { # Fallback absoluto
+          opciones &lt;- round(c(respuesta_correcta, respuesta_correcta+sample(1:5,1), respuesta_correcta+sample(6:10,1), respuesta_correcta+sample(11:15,1)))
+          opciones &lt;- unique(opciones)
+          # Si aún no son 4 únicos (ej. por redondeo o RC muy grande), ajustar
+          add_val = 1
+          while(length(opciones) &lt; 4){
+              opciones &lt;- unique(c(opciones, respuesta_correcta + 15 + add_val))
+              add_val = add_val + 1
+          }
+      }
+  }
+}
 
-# Crear el vector de solución para r-exams (TRUE/FALSE)
-solucion_logica &lt;- opciones_ordenadas == respuesta_correcta</code></pre>
+opciones_ordenadas &lt;- round(opciones) # Asegurar enteros al final
+solucion_logica &lt;- (opciones_ordenadas == respuesta_correcta)
+
+if(any(is.na(opciones_ordenadas))) { stop(&quot;CRÍTICO: &#39;opciones_ordenadas&#39; contiene NAs.&quot;) }
+if(length(unique(opciones_ordenadas)) &lt; 4) { stop(&quot;CRÍTICO: &#39;opciones_ordenadas&#39; no tiene 4 opciones únicas.&quot;) }
+if(sum(solucion_logica) != 1) { 
+    stop(paste0(&quot;CRÍTICO: &#39;solucion_logica&#39; no tiene un TRUE. Sol: &quot;, paste(solucion_logica, collapse=&quot;,&quot;), 
+                &quot;. Opt: &quot;, paste(opciones_ordenadas, collapse=&quot;,&quot;), &quot;. RC: &quot;, respuesta_correcta))
+}</code></pre>
 <div id="question" class="section level1">
 <h1>Question</h1>
-<p>una exótica especie de virus se reproduce según la función <span class="math inline">\(N(k) = 200 \cdot (2)^{0.5 \cdot k}\)</span>, donde
-<span class="math inline">\(k\)</span> se mide en días y <span class="math inline">\(N\)</span> es la cantidad de virus.</p>
-<p>De acuerdo con la información anterior, la cantidad de virus que
-había al iniciar un análisis poblacional, es:</p>
+<p>cierta especie de plantas crece según la función <span class="math inline">\(P(k) = 40 \cdot (1.5)^{0.2 \cdot k}\)</span>,
+donde <span class="math inline">\(k\)</span> se mide en días y <span class="math inline">\(P\)</span> es la cantidad de plantas.</p>
+<p>De acuerdo con la información anterior, la cantidad de plantas que
+había al iniciar un experimento de laboratorio, es:</p>
 <div id="answerlist" class="section level2">
 <h2>Answerlist</h2>
 <ul>
-<li>200 virus.</li>
-<li>400 virus.</li>
-<li>100 virus.</li>
-<li>2 virus.</li>
+<li>40 plantas.</li>
+<li>38 plantas.</li>
+<li>60 plantas.</li>
+<li>1 plantas.</li>
 </ul>
 </div>
 </div>
 <div id="solution" class="section level1">
 <h1>Solution</h1>
-<p>Para determinar la cantidad de virus que había al iniciar un análisis
-poblacional, necesitamos evaluar la función de población <span class="math inline">\(N(k) = 200(2)^{0.5k}\)</span> en el momento
+<p>Para determinar la cantidad de plantas que había al iniciar un
+experimento de laboratorio, necesitamos evaluar la función de población
+<span class="math inline">\(P(k) = 40(1.5)^{0.2k}\)</span> en el momento
 inicial, es decir, cuando el tiempo <span class="math inline">\(k =
 0\)</span>.</p>
-<p>La función dada es: <span class="math inline">\(N(k) =
-200(2)^{0.5k}\)</span></p>
+<p>La función dada es: <span class="math inline">\(P(k) =
+40(1.5)^{0.2k}\)</span></p>
 <p>Sustituimos <span class="math inline">\(k = 0\)</span> en la función:
-<span class="math inline">\(N(0) = 200(2)^{0.5 \cdot 0}\)</span> <span class="math inline">\(N(0) = 200(2)^0\)</span></p>
+<span class="math inline">\(P(0) = 40(1.5)^{0.2 \cdot 0}\)</span> <span class="math inline">\(P(0) = 40(1.5)^0\)</span></p>
 <p>Cualquier número (distinto de cero) elevado a la potencia 0 es igual
-a 1. Por lo tanto, <span class="math inline">\((2)^0 = 1\)</span>. <span class="math inline">\(N(0) = 200 \cdot 1\)</span> <span class="math inline">\(N(0) = 200\)</span></p>
-<p>Así, la cantidad de virus que había al iniciar un análisis
-poblacional es 200.</p>
+a 1. Por lo tanto, <span class="math inline">\((1.5)^0 = 1\)</span>.
+<span class="math inline">\(P(0) = 40 \cdot 1\)</span> <span class="math inline">\(P(0) = 40\)</span></p>
+<p>Así, la cantidad de plantas que había al iniciar un experimento de
+laboratorio es 40.</p>
 <div id="answerlist-1" class="section level2">
 <h2>Answerlist</h2>
 <ul>
@@ -576,11 +581,8 @@ poblacional es 200.</p>
 <div id="meta-information" class="section level1">
 <h1>Meta-information</h1>
 <p>exname: crecimiento_exponencial_valor_inicial extype: schoice
-exsolution: 1000 exshuffle: TRUE # Mezclar el orden de las opciones de
-respuesta exsection: Álgebra y Cálculo/Funciones Exponenciales/Modelado
-de Poblaciones extol: 0.01 # Tolerancia para respuestas numéricas (no
-aplica a schoice directamente) expoints: 1 # Puntos asignados a esta
-pregunta</p>
+exsolution: 1000 exshuffle: TRUE exsection: Álgebra y Cálculo/Funciones
+Exponenciales/Modelado de Poblaciones extol: 0.01 expoints: 1</p>
 </div>
 
 
