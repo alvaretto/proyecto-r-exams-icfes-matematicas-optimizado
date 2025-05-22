@@ -1,0 +1,11 @@
+FROM codercom/code-server:latest
+
+# Crear un directorio temporal para las extensiones
+RUN mkdir -p /tmp/extensions
+
+# Configurar un script de inicio personalizado
+COPY start-vscode.sh /usr/local/bin/start-vscode.sh
+RUN chmod +x /usr/local/bin/start-vscode.sh
+
+# Usar el script como punto de entrada
+ENTRYPOINT ["/usr/local/bin/start-vscode.sh"]
