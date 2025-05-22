@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  vscode:
+    image: codercom/code-server:latest
+    container_name: vscode-server
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/home/coder/project
+    restart: unless-stopped
+    environment:
+      - PASSWORD=oleoleole;;  # Contraseña fija establecida
+    command: >
+      --auth password
+      --disable-telemetry
