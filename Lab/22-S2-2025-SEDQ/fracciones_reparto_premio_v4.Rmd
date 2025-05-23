@@ -164,7 +164,7 @@ test_that("La suma de los tres montos es igual al premio total", {
 })
 
 # Generar opciones de respuesta
-respuesta_correcta <- monto_tercer_puesto
+respuesta_correcta <- monto_segundo_puesto
 
 # Generar distractores plausibles
 distractor1 <- round(premio_total * valor_f1 * valor_f2) # F1 * F2 del total (error común)
@@ -338,7 +338,7 @@ if (es_moodle) {
 }
 ```
 
-¿Qué cantidad de `r termino_dinero` recibe el tercer puesto?
+¿Qué cantidad de monto recibe el segundo puesto?
 
 Answerlist
 ----------
@@ -350,13 +350,13 @@ Answerlist
 Solution
 ========
 
-Para resolver este problema, debemos calcular secuencialmente la cantidad de `r termino_dinero` asignada a cada puesto.
+Para resolver este problema, debemos calcular secuencialmente la cantidad de `r termino_dinero` asignada al primer y segundo puesto.
 
 ### Paso 1: Identificar los datos del problema
 - Premio total: `r premio_total` millones de pesos.
 - Fracción para el primer puesto (del total): `r fraccion_primer_puesto_str` (que es `r valor_f1`).
 - Fracción para el segundo puesto (del restante): `r fraccion_segundo_puesto_str` (que es `r valor_f2`).
-- El tercer puesto recibe lo que queda al final.
+- El tercer puesto recibe lo que queda al final (aunque no se pregunta directamente, es útil para el contexto general).
 
 ### Paso 2: Calcular el monto para el primer puesto
 Multiplicamos la fracción del primer puesto por el premio total:
@@ -384,36 +384,23 @@ Monto del segundo puesto = `r restante_despues_primero` × `r valor_f2` = `r mon
 
 Después de redondear (si es necesario), el segundo puesto recibe: `r monto_segundo_puesto` millones.
 
-### Paso 5: Calcular el monto para el tercer puesto
-El tercer puesto recibe el `r termino_dinero` que queda después de asignar los premios al primer y segundo puesto. Esto se puede calcular restando el monto del segundo puesto del dinero que quedaba después del primer puesto:
+### Paso 5: Conclusión
+El monto calculado para el segundo puesto en el Paso 4 es la respuesta a la pregunta.
 
-Monto del tercer puesto = Dinero restante después del primer puesto - Monto del segundo puesto.
+### Verificación (Opcional, pero útil para entender el reparto completo)
+Podemos calcular el monto del tercer puesto para asegurar que la distribución es coherente.
+Monto del tercer puesto = Dinero restante después del primer puesto - Monto del segundo puesto
+Monto del tercer puesto = `r restante_despues_primero` millones - `r monto_segundo_puesto` millones = `r monto_tercer_puesto` millones.
 
-Monto del tercer puesto = `r restante_despues_primero` millones - `r monto_segundo_puesto` millones.
-
-Monto del tercer puesto = `r monto_tercer_puesto` millones.
-
-Alternativamente, y para asegurar que la suma total sea correcta después de los redondeos:
-
-Monto del tercer puesto = Premio total - (Monto del primer puesto + Monto del segundo puesto).
-
-Monto del tercer puesto = `r premio_total` - (`r monto_primer_puesto` + `r monto_segundo_puesto`).
-
-Monto del tercer puesto = `r premio_total` - `r monto_primer_puesto + monto_segundo_puesto`.
-
-Monto del tercer puesto = `r monto_tercer_puesto` millones.
-
-### Verificación
-Comprobemos que la suma de los tres montos es igual al premio total:
-
+Suma de los montos:
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
-- Total: `r monto_primer_puesto` + `r monto_segundo_puesto` + `r monto_tercer_puesto` = `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones.
+- Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones.
 
 Esto coincide con el premio total de `r premio_total` millones.
 
-Por lo tanto, el tercer puesto recibe `r monto_tercer_puesto` millones de pesos.
+Por lo tanto, el segundo puesto recibe `r monto_segundo_puesto` millones de pesos.
 
 Answerlist
 ----------

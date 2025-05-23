@@ -2,9 +2,9 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "fracciones_reparto_premio_v1.Rmd"
+archivo_examen <- "fracciones_reparto_premio_v3.Rmd"
 copias <- 1
-numpreg <- 1
+numpreg <- 3
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"

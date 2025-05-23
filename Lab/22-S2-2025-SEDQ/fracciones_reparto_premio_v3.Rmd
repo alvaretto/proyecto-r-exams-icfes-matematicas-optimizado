@@ -171,8 +171,8 @@ test_that("La suma de los tres montos es igual al premio total", {
 })
 
 # Generar opciones de respuesta
-# La respuesta correcta es el monto del tercer puesto
-respuesta_correcta <- monto_tercer_puesto
+# La respuesta correcta es el monto del segundo puesto
+respuesta_correcta <- monto_segundo_puesto
 
 # Generar distractores plausibles
 distractor1 <- round(premio_total * 0.05)  # 5% del premio total
@@ -348,7 +348,7 @@ if (es_moodle) {
 }
 ```
 
-¿Qué cantidad de `r termino_dinero` recibe el tercer puesto?
+¿Qué cantidad de monto recibe el segundo puesto?
 
 Answerlist
 ----------
@@ -360,42 +360,39 @@ Answerlist
 Solution
 ========
 
-Para resolver este problema, debemos calcular qué fracción del premio total corresponde al tercer puesto y luego convertirlo a millones de pesos.
+Para resolver este problema, debemos calcular qué fracción del premio total corresponde al segundo puesto y luego convertirlo a millones de pesos.
 
 ### Paso 1: Identificar los datos del problema
 - Premio total: `r premio_total` millones de pesos
 - Primer puesto: `r fraccion_primer_puesto` del dinero total
 - Segundo puesto: `r fraccion_segundo_puesto` del dinero total
-- Tercer puesto: el dinero restante
+- Tercer puesto: el dinero restante (aunque no se pregunta directamente, es útil para el contexto general)
 
 ### Paso 2: Convertir las fracciones a decimales
 - Primer puesto: `r fraccion_primer_puesto` = `r valor_primer_puesto`
 - Segundo puesto: `r fraccion_segundo_puesto` = `r valor_segundo_puesto`
 
-### Paso 3: Calcular la fracción que corresponde al tercer puesto
-Para calcular la fracción del tercer puesto, restamos del total (1) las fracciones del primer y segundo puesto:
+### Paso 3: Calcular el monto en millones de pesos para el segundo puesto
+Multiplicamos la fracción del segundo puesto por el premio total:
 
-- Fracción del tercer puesto = 1 - (`r valor_primer_puesto` + `r valor_segundo_puesto`)
-- Fracción del tercer puesto = 1 - `r valor_primer_puesto + valor_segundo_puesto`
-- Fracción del tercer puesto = `r valor_tercer_puesto`
+- Monto del segundo puesto = `r valor_segundo_puesto` × `r premio_total` millones
+- Monto del segundo puesto = `r monto_segundo_puesto` millones de pesos
 
-### Paso 4: Calcular el monto en millones de pesos para el tercer puesto
-Multiplicamos la fracción del tercer puesto por el premio total:
+### Verificación (Opcional, pero útil para entender el reparto completo)
+Podemos calcular el monto del primer y tercer puesto para asegurar que la distribución es coherente.
+- Monto del primer puesto = `r valor_primer_puesto` × `r premio_total` millones = `r monto_primer_puesto` millones
+- Fracción del tercer puesto = 1 - (`r valor_primer_puesto` + `r valor_segundo_puesto`) = `r valor_tercer_puesto`
+- Monto del tercer puesto = `r valor_tercer_puesto` × `r premio_total` millones = `r monto_tercer_puesto` millones
 
-- Monto del tercer puesto = `r valor_tercer_puesto` × `r premio_total` millones
-- Monto del tercer puesto = `r monto_tercer_puesto` millones de pesos
-
-### Verificación
-Comprobemos que la suma de los tres montos es igual al premio total:
-
+Suma de los montos:
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
 - Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones
 
-Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, confirmamos que nuestra respuesta es correcta.
+Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, la distribución es consistente.
 
-Por lo tanto, el tercer puesto recibe `r monto_tercer_puesto` millones de pesos.
+Por lo tanto, el segundo puesto recibe `r monto_segundo_puesto` millones de pesos.
 
 Answerlist
 ----------
