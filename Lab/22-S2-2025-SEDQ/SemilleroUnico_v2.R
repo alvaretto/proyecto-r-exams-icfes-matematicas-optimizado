@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "fracciones_reparto_premio_v1.Rmd"
+archivo_examen <- "fracciones_reparto_premio_v4.Rmd"
 copias <- 500
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
@@ -25,7 +25,8 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #             encoding = "UTF-8",
 #             template = "solpcielo",
 #             dir = dir_salida,
-#             edir = dir_ejercicios)
+#             edir = dir_ejercicios,
+#             verbose = TRUE)
 # }
 
 ################################################################################
@@ -41,7 +42,8 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #                template = "plain.tex",
 #                dir = dir_salida,
 #                edir = dir_ejercicios,
-#                format = "docx")
+#                format = "docx",
+#                verbose = TRUE)
 # }
 
 #################################################################################
@@ -53,7 +55,8 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #           encoding = "UTF-8",
 #           template = "solpcielo",
 #           dir = dir_salida,
-#           edir = dir_ejercicios)
+#           edir = dir_ejercicios,
+#           verbose = TRUE)
 
 ################################################################################
 # Generación de n copias en un solo archivo .docx
@@ -66,7 +69,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #              header = list(Date = Sys.Date()),
 #              inputs = NULL,
 #              options = NULL,
-#              quiet = TRUE,
+#              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
 #              resolution = 100,
 #              width = 4,
 #              height = 4,
@@ -75,7 +78,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #              edir = dir_ejercicios,
 #              tdir = NULL,
 #              sdir = NULL,
-#              verbose = FALSE,
+#              verbose = TRUE, # Added verbose
 #              points = NULL,
 #              exshuffle = NULL,
 #              type = "docx")
@@ -84,7 +87,8 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
 
 # exams2html(rep(archivo_examen, numpreg),
-#            svg = FALSE)
+#            svg = FALSE,
+#            verbose = TRUE)
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'copias'
@@ -101,7 +105,8 @@ exams2moodle(archivo_examen,
              mchoice = list(shuffle = TRUE,
                             answernumbering = "ABCD",
                             eval = list(partial = TRUE,
-                                        rule = "none")))
+                                        rule = "none")),
+             verbose = TRUE)
 
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
@@ -123,6 +128,7 @@ exams2moodle(archivo_examen,
 #            duplex = TRUE,                       # Impresión a doble cara
 #            pages = NULL,                        # Número de páginas automático
 #            points = NULL,                       # Puntos por pregunta automático
-#            showpoints = FALSE)                  # No mostrar puntos en el examen
+#            showpoints = FALSE,                  # No mostrar puntos en el examen
+#            verbose = TRUE)
 
 ################################################################################
