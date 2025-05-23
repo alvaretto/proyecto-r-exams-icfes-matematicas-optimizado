@@ -61,7 +61,7 @@ use_python(Sys.which("python"), required = TRUE)
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
-set.seed(sample(1:10000, 1))
+#set.seed(sample(1:10000, 1))
 
 # Aleatorización del contexto del problema
 contextos <- c(
