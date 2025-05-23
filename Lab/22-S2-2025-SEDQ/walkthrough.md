@@ -1,10 +1,20 @@
 ---
 output:
+  pdf_document: default
+  html_document: default
+---
+# Walkthrough del código fracciones_reparto_premio_v1.Rmd
+
+## Parte 1: Configuración inicial y metadatos
+
+```yaml
+---
+output:
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
   html_document: default
-  word_document: default
 icfes:
   competencia: Resolución de problemas
   componente: Numérico-variacional
@@ -13,6 +23,16 @@ icfes:
   nivel: Medio
   tematica: Fracciones y operaciones con fracciones
 ---
+```
+
+Esta sección contiene:
+
+- **Configuración de salida**: Define los formatos de salida (Word, PDF, HTML) y sus opciones.
+- **Metadatos ICFES**: Información específica para categorizar el ejercicio según estándares ICFES (competencia, componente, afirmación, etc.).
+
+## Parte 2: Configuración de R y bibliotecas
+
+```r
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -57,11 +77,22 @@ knitr::knit_engines$set(python = function(options) {
 use_python(Sys.which("python"), required = TRUE)
 ```
 
+Esta sección:
+
+- **Configura el entorno R**: Establece la configuración regional para números (punto decimal).
+- **Configura LaTeX**: Define opciones para el motor LaTeX.
+- **Carga bibliotecas**: Importa las bibliotecas necesarias (exams, reticulate, testthat, etc.).
+- **Configura knitr**: Establece opciones para los chunks de código.
+- **Configura Python**: Asegura que Python esté disponible para usar con reticulate.
+
+## Parte 3: Definición y aleatorización de variables
+
+```r
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
-#set.seed(sample(1:10000, 1))
+set.seed(sample(1:10000, 1))
 
 # Aleatorización del contexto del problema
 contextos <- c(
@@ -72,7 +103,7 @@ contexto <- sample(contextos, 1)
 
 # Aleatorización del tipo de competencia
 competencias <- c(
-  "maratón", "carrera", "competencia atlética", "torneo deportivo",
+  "maratón", "carrera", "competencia atlética", "torneo deportivo", 
   "olimpiada deportiva", "evento deportivo", "justa deportiva",
   "campeonato", "concurso deportivo", "prueba atlética"
 )
@@ -91,7 +122,19 @@ grupo_edad <- sample(edades, 1)
 # Generamos valores que sean divisibles por 10 para facilitar cálculos
 premios_posibles <- c(30, 40, 50, 60, 70, 80, 90, 100, 120, 150)
 premio_total <- sample(premios_posibles, 1)
+```
 
+Esta parte:
+
+- **Establece una semilla aleatoria**: Garantiza reproducibilidad pero con variación entre ejecuciones.
+- **Aleatoriza el contexto**: Selecciona aleatoriamente un contexto (ciudad, municipio, etc.).
+- **Aleatoriza el tipo de competencia**: Selecciona un tipo de evento deportivo.
+- **Aleatoriza el grupo de edad**: Selecciona una descripción para el grupo de participantes.
+- **Aleatoriza el premio total**: Selecciona un valor entre 30 y 150 millones.
+
+## Parte 4: Aleatorización de términos y expresiones
+
+```r
 # Aleatorización de términos para el enunciado
 terminos_premiar <- c("premiar", "recompensar", "reconocer", "galardonar", "incentivar")
 termino_premiar <- sample(terminos_premiar, 1)
@@ -110,7 +153,16 @@ termino_puestos <- sample(terminos_puestos, 1)
 
 terminos_dinero <- c("dinero", "premio", "recompensa", "incentivo", "monto")
 termino_dinero <- sample(terminos_dinero, 1)
+```
 
+Esta sección:
+
+- **Aleatoriza términos del enunciado**: Selecciona aleatoriamente diferentes verbos y sustantivos para variar la redacción del problema.
+- Esto permite generar múltiples variantes del mismo problema con diferente redacción.
+
+## Parte 5: Aleatorización de fracciones y cálculos matemáticos
+
+```r
 # Aleatorización de fracciones para los puestos
 # Definimos conjuntos de fracciones que sumen menos de 1 para que quede algo para el tercer puesto
 conjuntos_fracciones <- list(
@@ -171,7 +223,21 @@ if (suma_actual != premio_total) {
 test_that("La suma de los tres montos es igual al premio total", {
   expect_equal(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto, premio_total)
 })
+```
 
+Esta sección:
+
+- **Define conjuntos de fracciones**: Crea 10 conjuntos diferentes de fracciones para el primer y segundo puesto.
+- **Selecciona un conjunto aleatorio**: Elige uno de los conjuntos para usar en el problema.
+- **Convierte fracciones a valores numéricos**: Crea una función para convertir fracciones en texto a valores decimales.
+- **Calcula el valor del tercer puesto**: Resta del total (1) la suma de los valores del primer y segundo puesto.
+- **Verifica la validez**: Comprueba que el valor del tercer puesto sea positivo.
+- **Calcula los montos en millones**: Multiplica los valores por el premio total.
+- **Ajusta para coherencia**: Asegura que la suma de los tres montos sea exactamente igual al premio total.
+
+## Parte 6: Generación de opciones de respuesta
+
+```r
 # Generar opciones de respuesta
 # La respuesta correcta es el monto del tercer puesto
 respuesta_correcta <- monto_tercer_puesto
@@ -204,8 +270,20 @@ indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
 # Crear el vector de solución para r-exams
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
+```
 
-# Aleatorización de colores para la tabla TikZ
+Esta sección:
+
+- **Define la respuesta correcta**: El monto calculado para el tercer puesto.
+- **Genera distractores plausibles**: Crea tres opciones incorrectas pero plausibles.
+- **Asegura la unicidad**: Verifica que todas las opciones sean diferentes entre sí.
+- **Aleatoriza el orden**: Mezcla las opciones para que la respuesta correcta no siempre esté en la misma posición.
+- **Crea el vector de solución**: Genera un vector binario donde 1 indica la respuesta correcta.
+
+## Parte 7: Aleatorización de colores y generación de la tabla
+
+```r
+# Aleatorización de colores para la tabla
 paletas_colores <- list(
   c("#4285F4", "#EA4335", "#FBBC05", "#34A853"),  # Google colors
   c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728"),  # Tableau colors
@@ -220,6 +298,15 @@ color_segundo_puesto <- paleta_seleccionada[3]
 color_tercer_puesto <- paleta_seleccionada[4]
 ```
 
+Esta sección:
+
+- **Define paletas de colores**: Crea 5 paletas diferentes con combinaciones armónicas.
+- **Selecciona una paleta aleatoria**: Elige una de las paletas para usar en la visualización.
+- **Asigna colores**: Distribuye los colores para el encabezado y cada puesto.
+
+## Parte 8: Generación de la tabla con Python/Matplotlib
+
+```r
 ```{r generar_tabla_tikz, results='asis'}
 # Crear código Python para generar la tabla usando matplotlib
 codigo_python <- paste0('
@@ -243,7 +330,7 @@ gs = GridSpec(4, 2, height_ratios=[1, 1, 1, 1], width_ratios=[3, 7])
 # Encabezado (ocupa todo el ancho)
 ax_header = plt.subplot(gs[0, :])
 ax_header.set_facecolor(color_encabezado)
-ax_header.text(0.5, 0.5, "Distribución del premio de ', premio_total, ' millones de pesos",
+ax_header.text(0.5, 0.5, "Distribución del premio de ', premio_total, ' millones de pesos", 
               ha="center", va="center", color="white", fontweight="bold", fontsize=11)
 ax_header.set_xticks([])
 ax_header.set_yticks([])
@@ -263,62 +350,7 @@ ax_p1_label.spines["bottom"].set_visible(True)
 ax_p1_label.spines["left"].set_visible(True)
 ax_p1_label.spines["right"].set_visible(True)
 
-ax_p1_value = plt.subplot(gs[1, 1])
-ax_p1_value.set_facecolor("white")
-ax_p1_value.text(0.5, 0.5, "', fraccion_primer_puesto, ' del ', termino_dinero, ' total",
-                ha="center", va="center", color="black", fontsize=10)
-ax_p1_value.set_xticks([])
-ax_p1_value.set_yticks([])
-ax_p1_value.spines["top"].set_visible(True)
-ax_p1_value.spines["bottom"].set_visible(True)
-ax_p1_value.spines["left"].set_visible(True)
-ax_p1_value.spines["right"].set_visible(True)
-
-# Segunda fila
-ax_p2_label = plt.subplot(gs[2, 0])
-ax_p2_label.set_facecolor(color_segundo_puesto)
-ax_p2_label.text(0.5, 0.5, "Segundo puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
-ax_p2_label.set_xticks([])
-ax_p2_label.set_yticks([])
-ax_p2_label.spines["top"].set_visible(True)
-ax_p2_label.spines["bottom"].set_visible(True)
-ax_p2_label.spines["left"].set_visible(True)
-ax_p2_label.spines["right"].set_visible(True)
-
-ax_p2_value = plt.subplot(gs[2, 1])
-ax_p2_value.set_facecolor("white")
-ax_p2_value.text(0.5, 0.5, "', fraccion_segundo_puesto, ' del ', termino_dinero, ' total",
-                ha="center", va="center", color="black", fontsize=10)
-ax_p2_value.set_xticks([])
-ax_p2_value.set_yticks([])
-ax_p2_value.spines["top"].set_visible(True)
-ax_p2_value.spines["bottom"].set_visible(True)
-ax_p2_value.spines["left"].set_visible(True)
-ax_p2_value.spines["right"].set_visible(True)
-
-# Tercera fila
-ax_p3_label = plt.subplot(gs[3, 0])
-ax_p3_label.set_facecolor(color_tercer_puesto)
-ax_p3_label.text(0.5, 0.5, "Tercer puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
-ax_p3_label.set_xticks([])
-ax_p3_label.set_yticks([])
-ax_p3_label.spines["top"].set_visible(True)
-ax_p3_label.spines["bottom"].set_visible(True)
-ax_p3_label.spines["left"].set_visible(True)
-ax_p3_label.spines["right"].set_visible(True)
-
-ax_p3_value = plt.subplot(gs[3, 1])
-ax_p3_value.set_facecolor("white")
-ax_p3_value.text(0.5, 0.5, "el ', termino_dinero, ' restante",
-                ha="center", va="center", color="black", fontsize=10)
-ax_p3_value.set_xticks([])
-ax_p3_value.set_yticks([])
-ax_p3_value.spines["top"].set_visible(True)
-ax_p3_value.spines["bottom"].set_visible(True)
-ax_p3_value.spines["left"].set_visible(True)
-ax_p3_value.spines["right"].set_visible(True)
-
-plt.tight_layout(pad=0.5)
+# ... [código similar para las demás celdas de la tabla]
 
 # Guardar la figura
 plt.savefig("tabla_distribucion.png", dpi=150, bbox_inches="tight")
@@ -330,10 +362,19 @@ plt.close()
 py_run_string(codigo_python)
 ```
 
+Esta sección:
+
+- **Genera código Python**: Crea dinámicamente código Python con los valores y colores aleatorizados.
+- **Crea una tabla visual**: Utiliza Matplotlib para generar una tabla con el mismo aspecto que tendría en TikZ.
+- **Guarda la figura**: Almacena la tabla en formatos PNG y PDF para su uso en diferentes salidas.
+
+## Parte 9: Formulación de la pregunta
+
+```r
 Question
 ========
 
-En un(a) `r contexto` se realizará un(a) `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los(las) `r termino_participantes`, la `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los(as) tres `r termino_puestos`, como se indica a continuación:
+En un(a) `r contexto` se realizará un(a) `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los(las) `r termino_participantes`, la `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los tres primeros `r termino_puestos`, como se indica a continuación:
 
 ```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
 # Detectar si se está generando para Moodle u otros formatos
@@ -358,7 +399,16 @@ Answerlist
 - `r opciones_mezcladas[2]` millones.
 - `r opciones_mezcladas[3]` millones.
 - `r opciones_mezcladas[4]` millones.
+```
 
+Esta sección:
+- **Formula la pregunta**: Utiliza las variables aleatorizadas para crear el enunciado del problema.
+- **Incluye la tabla**: Inserta la tabla generada con Python, adaptando su tamaño según el formato de salida.
+- **Presenta las opciones**: Muestra las opciones de respuesta mezcladas.
+
+## Parte 10: Solución detallada
+
+```r
 Solution
 ========
 
@@ -376,14 +426,12 @@ Para resolver este problema, debemos calcular qué fracción del premio total co
 
 ### Paso 3: Calcular la fracción que corresponde al tercer puesto
 Para calcular la fracción del tercer puesto, restamos del total (1) las fracciones del primer y segundo puesto:
-
 - Fracción del tercer puesto = 1 - (`r valor_primer_puesto` + `r valor_segundo_puesto`)
 - Fracción del tercer puesto = 1 - `r valor_primer_puesto + valor_segundo_puesto`
 - Fracción del tercer puesto = `r valor_tercer_puesto`
 
 ### Paso 4: Calcular el monto en millones de pesos para el tercer puesto
 Multiplicamos la fracción del tercer puesto por el premio total:
-
 - Monto del tercer puesto = `r valor_tercer_puesto` × `r premio_total` millones
 - Monto del tercer puesto = `r monto_tercer_puesto` millones de pesos
 
@@ -405,7 +453,18 @@ Answerlist
 - `r if(solucion[2] == 1) "Verdadero" else "Falso"`
 - `r if(solucion[3] == 1) "Verdadero" else "Falso"`
 - `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+```
 
+Esta sección:
+
+- **Explica la solución paso a paso**: Detalla el proceso de resolución del problema.
+- **Muestra los cálculos**: Incluye los valores numéricos en cada paso.
+- **Verifica la respuesta**: Comprueba que la suma de los tres montos sea igual al premio total.
+- **Indica la respuesta correcta**: Marca cuál de las opciones es la correcta.
+
+## Parte 11: Metainformación para r-exams
+
+```r
 Meta-information
 ================
 exname: fracciones_reparto_premio
@@ -413,3 +472,12 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Aritmética|Fracciones|Reparto proporcional
+```
+
+Esta sección:
+
+- **Define el nombre del ejercicio**: Asigna un identificador único.
+- **Especifica el tipo de ejercicio**: Indica que es una pregunta de selección única (schoice).
+- **Codifica la solución**: Convierte el vector de solución en una cadena de 0s y 1s.
+- **Habilita la aleatorización de opciones**: Permite que las opciones se mezclen en cada generación.
+- **Categoriza el ejercicio**: Asigna etiquetas temáticas para facilitar la organización.
