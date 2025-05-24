@@ -63,18 +63,35 @@ options(OutDec = ".")  # Asegurar punto decimal en este chunk
 # Establecer semilla aleatoria
 #set.seed(sample(1:10000, 1))
 
-# Aleatorización del contexto del problema
-contextos <- c(
-  "ciudad", "localidad", "comunidad", "comarca", "provincia", "zona")
-contexto <- sample(contextos, 1)
-
-# Aleatorización del tipo de competencia
-competencias <- c(
-  "maratón", "carrera", "competencia atlética", "torneo deportivo",
-  "olimpiada deportiva", "evento deportivo", "justa deportiva",
-  "campeonato", "concurso deportivo", "prueba atlética"
+# Aleatorización del contexto del problema con concordancia de género
+contextos_data <- data.frame(
+  nombre = c("ciudad", "localidad", "comunidad", "comarca", "provincia", "zona",
+             "municipio", "distrito", "territorio", "sector", "barrio", "pueblo"),
+  genero = c("f", "f", "f", "f", "f", "f",
+             "m", "m", "m", "m", "m", "m"),
+  articulo = c("una", "una", "una", "una", "una", "una",
+               "un", "un", "un", "un", "un", "un"),
+  stringsAsFactors = FALSE
 )
-competencia <- sample(competencias, 1)
+contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
+contexto <- contexto_seleccionado$nombre
+articulo_contexto <- contexto_seleccionado$articulo
+
+# Aleatorización del tipo de competencia con concordancia de género
+competencias_data <- data.frame(
+  nombre = c("carrera", "competencia atlética", "olimpiada deportiva",
+             "justa deportiva", "prueba atlética", "competencia deportiva",
+             "maratón", "torneo deportivo", "evento deportivo",
+             "campeonato", "concurso deportivo", "certamen deportivo"),
+  genero = c("f", "f", "f", "f", "f", "f",
+             "m", "m", "m", "m", "m", "m"),
+  articulo = c("una", "una", "una", "una", "una", "una",
+               "un", "un", "un", "un", "un", "un"),
+  stringsAsFactors = FALSE
+)
+competencia_seleccionada <- competencias_data[sample(nrow(competencias_data), 1), ]
+competencia <- competencia_seleccionada$nombre
+articulo_competencia <- competencia_seleccionada$articulo
 
 # Aleatorización del grupo de edad
 edades <- c(
@@ -93,20 +110,28 @@ premio_total <- sample(premios_posibles, 1)
 terminos_premiar <- c("premiar", "recompensar", "reconocer", "galardonar", "incentivar")
 termino_premiar <- sample(terminos_premiar, 1)
 
-terminos_participantes <- c("participantes", "competidores", "concursantes", "atletas", "deportistas")
+terminos_participantes <- c("participantes", "competidores", "concursantes", "deportistas")
 termino_participantes <- sample(terminos_participantes, 1)
 
-terminos_cuenta <- c("cuenta con", "dispone de", "tiene asignado", "ha destinado", "ha reservado")
+terminos_cuenta <- c("cuenta con", "dispone de", "tiene asignados", "ha destinado", "ha reservado")
 termino_cuenta <- sample(terminos_cuenta, 1)
 
 terminos_repartiran <- c("repartirán", "distribuirán", "dividirán", "asignarán", "otorgarán")
 termino_repartiran <- sample(terminos_repartiran, 1)
 
-terminos_puestos <- c("primeros puestos", "primeras posiciones", "ganadores", "mejores lugares", "primeros lugares")
+terminos_puestos <- c("primeros puestos", "ganadores", "mejores lugares", "primeros lugares", "mejores posiciones")
 termino_puestos <- sample(terminos_puestos, 1)
 
-terminos_dinero <- c("dinero", "premio", "incentivo", "monto")
-termino_dinero <- sample(terminos_dinero, 1)
+# Aleatorización de términos para dinero con concordancia de género
+terminos_dinero_data <- data.frame(
+  nombre = c("dinero", "premio", "incentivo", "monto"),
+  genero = c("m", "m", "m", "m"),
+  articulo_este = c("Este", "Este", "Este", "Este"),
+  stringsAsFactors = FALSE
+)
+termino_dinero_seleccionado <- terminos_dinero_data[sample(nrow(terminos_dinero_data), 1), ]
+termino_dinero <- termino_dinero_seleccionado$nombre
+articulo_este_dinero <- termino_dinero_seleccionado$articulo_este
 
 # Aleatorización de fracciones para los puestos
 # F1 para el primer puesto (del total), F2 para el segundo puesto (del restante)
@@ -325,7 +350,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-En un(a) `r contexto` se realizará un(a) `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los(las) `r termino_participantes`, la `r contexto` `r termino_cuenta` `r premio_total` millones de pesos. Este `r termino_dinero` se `r termino_repartiran` entre los(as) tres `r termino_puestos` de la siguiente manera:
+En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == "f") "la" else "el"` `r contexto` `r termino_cuenta` `r premio_total` millones de pesos. `r articulo_este_dinero` `r termino_dinero` se `r gsub("án$", "á", termino_repartiran)` entre los tres `r termino_puestos` de la siguiente manera:
 
 
 ```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
@@ -338,7 +363,7 @@ if (es_moodle) {
 }
 ```
 
-¿Qué cantidad de `r termino_dinero` recibe el tercer puesto?
+¿Qué cantidad de `r termino_dinero` recibirá el tercer puesto?
 
 Answerlist
 ----------
