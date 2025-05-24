@@ -85,7 +85,9 @@ extraer_datos_directo <- function(i) {
       "fraccion_primer_puesto", "fraccion_segundo_puesto", "valor_tercer_puesto",
       "monto_primer_puesto", "monto_segundo_puesto", "monto_tercer_puesto",
       "opciones", "opciones_mezcladas", "respuesta_correcta", "termino_dinero",
-      "paleta_seleccionada"
+      "paleta_seleccionada", "articulo_contexto", "articulo_competencia",
+      "contexto_seleccionado", "competencia_seleccionada", "termino_dinero_seleccionado",
+      "articulo_este_dinero", "termino_participantes", "termino_puestos"
     )
     
     for (var in variables_clave) {
@@ -263,6 +265,53 @@ if (num_suma_incorrecta == 0 && num_tercer_puesto_negativo == 0 && num_respuesta
 }
 
 # =====================================================================
+# PRUEBA 4: Verificar coherencia semántica de género
+# =====================================================================
+cat("\nPRUEBA 4: Verificación de coherencia semántica de género\n")
+
+# Verificar que los artículos concuerden con el género de los términos
+verificar_coherencia_genero <- function(r) {
+  coherencia_total <- TRUE
+  
+  # Verificar contexto
+  if (all(c("contexto_seleccionado", "articulo_contexto") %in% names(r))) {
+    if (is.list(r$contexto_seleccionado) && "genero" %in% names(r$contexto_seleccionado)) {
+      genero_contexto <- r$contexto_seleccionado$genero
+      articulo_esperado <- if (genero_contexto == "f") "una" else "un"
+      if (r$articulo_contexto != articulo_esperado) {
+        coherencia_total <- FALSE
+      }
+    }
+  }
+  
+  # Verificar competencia
+  if (all(c("competencia_seleccionada", "articulo_competencia") %in% names(r))) {
+    if (is.list(r$competencia_seleccionada) && "genero" %in% names(r$competencia_seleccionada)) {
+      genero_competencia <- r$competencia_seleccionada$genero
+      articulo_esperado <- if (genero_competencia == "f") "una" else "un"
+      if (r$articulo_competencia != articulo_esperado) {
+        coherencia_total <- FALSE
+      }
+    }
+  }
+  
+  return(coherencia_total)
+}
+
+# Aplicar verificación
+coherencia_genero <- sapply(resultados_validos, verificar_coherencia_genero)
+num_incoherencia_genero <- sum(!coherencia_genero)
+
+cat("Casos con incoherencia de género:", num_incoherencia_genero, "de", num_resultados_validos, "\n")
+
+# Verificar si cumple el requisito
+if (num_incoherencia_genero == 0) {
+  cat("✓ APROBADO: Todos los casos mantienen coherencia de género\n")
+} else {
+  cat("✗ FALLIDO:", num_incoherencia_genero, "casos presentan incoherencia de género\n")
+}
+
+# =====================================================================
 # RESUMEN FINAL
 # =====================================================================
 cat("\n=== RESUMEN DE PRUEBAS ===\n")
@@ -270,13 +319,15 @@ cat("\n=== RESUMEN DE PRUEBAS ===\n")
 pruebas_aprobadas <- c(
   porcentaje_unicidad >= 90,
   num_con_duplicados == 0,
-  num_suma_incorrecta == 0 && num_tercer_puesto_negativo == 0 && num_respuesta_incorrecta == 0
+  num_suma_incorrecta == 0 && num_tercer_puesto_negativo == 0 && num_respuesta_incorrecta == 0,
+  num_incoherencia_genero == 0
 )
 
 nombres_pruebas <- c(
   "Alta variabilidad (proyección de al menos 300 versiones diferentes)",
   "No duplicidad de opciones de respuesta",
-  "Coherencia matemática"
+  "Coherencia matemática",
+  "Coherencia semántica de género"
 )
 
 for (i in 1:length(pruebas_aprobadas)) {
