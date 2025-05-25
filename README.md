@@ -507,6 +507,6 @@ Para consultas o sugerencias relacionadas con este repositorio, puedes contactar
 
 ---
 
-**Última actualización**: Enero 2025
+**Última actualización**: Mayo 2025
 **Versión del README**: 2.0
 **Estado del proyecto**: En desarrollo activo
