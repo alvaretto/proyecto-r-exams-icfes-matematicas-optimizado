@@ -28,12 +28,17 @@ Este repositorio contiene una colección de ejercicios de matemáticas para prep
 
 ## Estado Actual
 
-- El repositorio cuenta con una estructura organizada por áreas temáticas de matemáticas
-- Se han implementado ejercicios en varias áreas, con énfasis en estadística y probabilidad
-- Se han añadido pruebas unitarias para garantizar la coherencia matemática y diversidad de versiones
-- Se utilizan tecnologías como TikZ para la generación de gráficos y tablas de alta calidad
-- El proyecto soporta múltiples formatos de salida (PDF, HTML, NOPS)
-- Se ha implementado un sistema de metadatos ICFES para clasificar y organizar los ejercicios
+- **Repositorio en crecimiento activo**: Más de 50 ejercicios implementados y en desarrollo
+- **Estructura organizada**: Organización por áreas temáticas de matemáticas y laboratorio de desarrollo
+- **Ejercicios de alta calidad**: Implementados en múltiples áreas con énfasis en estadística, probabilidad, funciones y geometría
+- **Pruebas unitarias robustas**: Sistema de validación automática para garantizar coherencia matemática y diversidad de versiones (mínimo 300 variantes por ejercicio)
+- **Tecnologías avanzadas**:
+  - TikZ para gráficos vectoriales y tablas de alta calidad
+  - Python (matplotlib) vía reticulate para visualizaciones dinámicas
+  - LaTeX para notación matemática avanzada
+- **Múltiples formatos de salida**: PDF, HTML, Word, NOPS, Moodle XML
+- **Sistema de metadatos ICFES**: Clasificación completa por competencias, nivel de dificultad, contenido, contexto y eje axial
+- **Laboratorio activo**: Carpeta Lab/ con ejercicios experimentales y en desarrollo para el semestre 2025
 
 ## Requisitos del Sistema
 
@@ -50,18 +55,33 @@ El repositorio está organizado siguiendo la estructura temática del currículo
 
 ```
 ├── 01-Numeros-Reales/
+│   └── Pensamiento-Numerico/
 ├── 02-Funciones/
-├── 03-Razones-Trigonometricas/
-├── 04-Funciones-Identidades-Trigonometricas/
-├── 05-Geometria-Analitica/
+│   └── Pensamiento-Variacional-Espacial/
 ├── 06-Estadística-Y-Probabilidad/
+│   └── Pensamiento-Aleatorio/
 ├── Auxiliares/     # Scripts y documentación auxiliar
 │   ├── guia_implementacion_icfes.md
 │   ├── matriz_alineacion_icfes.md
 │   ├── plantilla_metadatos_icfes.md
 │   ├── actualizar_metadatos_icfes.R
-│   └── setup_project.R
-├── Lab/            # Ejercicios experimentales y pruebas
+│   ├── setup_project.R
+│   ├── Instalaciones/
+│   └── ExamenFinPeriodo-1/
+├── Lab/            # Laboratorio de desarrollo activo (2025)
+│   ├── 01-S2-2025-SEDQ/    # Gráficos circulares y proporciones
+│   ├── 05-S2-2025-SEDQ/    # Lógica de torneos deportivos
+│   ├── 09-S2-2025-SEDQ/    # Descuentos y porcentajes
+│   ├── 12-S2-2025-SEDQ/    # Crecimiento exponencial
+│   ├── 14-S2-2025-SEDQ/    # Porcentajes y grupos poblacionales
+│   ├── 11/                 # Volumen de cilindros
+│   ├── 17/                 # Interpretación gráfica de viajes
+│   ├── 19/                 # Ordenamiento de sabores
+│   ├── 36/                 # Cilindros huecos
+│   ├── 37/                 # Semicírculos y radios
+│   ├── 39/                 # Geometría de limpiaparabrisas
+│   ├── 43/                 # Probabilidad con extracción de bolas
+│   └── Real-*/             # Ejercicios basados en pruebas reales ICFES
 └── General/
     └── Plantillas/ # Plantillas para nuevos ejercicios
 ```
@@ -86,6 +106,10 @@ Cada ejercicio sigue una estructura común:
   - Propiedades de Expresiones Decimales
   - Conjunto de Reales y Desigualdades
   - Valor Absoluto
+  - **Porcentajes y Descuentos** (Lab/09-S2-2025-SEDQ/)
+    - Cálculo de descuentos comerciales
+    - Aplicación de porcentajes en contextos reales
+    - Problemas de precios y ofertas
 
 ### 2. Funciones
 - **Pensamiento Variacional y Espacial**
@@ -102,6 +126,12 @@ Cada ejercicio sigue una estructura común:
   - Variación Lineal y Exponencial, Razón de Cambio
     - **Contenido Actual:**
         - Función Lineal. Auto Viajero
+        - **Interpretación Gráfica de Viajes** (Lab/17/)
+          - Análisis de gráficas de distancia vs tiempo
+          - Interpretación de movimiento y velocidad
+        - **Crecimiento Exponencial** (Lab/12-S2-2025-SEDQ/)
+          - Modelado de poblaciones con funciones exponenciales
+          - Cálculo de valores en tiempos específicos
         - Recursos disponibles:
           - Archivos RMarkdown (.Rmd)
           - Scripts R
@@ -157,6 +187,16 @@ Cada ejercicio sigue una estructura común:
   - La Hipérbola
   - Ecuación Canónica de la Hipérbola con Centro en (h,k)
   - Ecuación General de la Hipérbola
+  - **Geometría Aplicada** (Laboratorio)
+    - **Volumen de Cilindros** (Lab/11/, Lab/36/)
+      - Cálculo de volúmenes de cilindros simples y huecos
+      - Aplicaciones en problemas de capacidad
+    - **Semicírculos y Radios** (Lab/37/)
+      - Problemas geométricos con semicírculos
+      - Cálculos de áreas y perímetros
+    - **Geometría de Limpiaparabrisas** (Lab/39/)
+      - Aplicación de conceptos geométricos en contextos reales
+      - Análisis de movimientos circulares
 
 ### 6. Estadística y Probabilidad
 - **Pensamiento Aleatorio**
@@ -164,6 +204,11 @@ Cada ejercicio sigue una estructura común:
     - **Contenido Actual:**
       - Gráficos Estadísticos de Adopción de Mascotas
       - Accidentalidad Vial por Género (con pruebas unitarias)
+      - **Gráficos Circulares y Proporciones** (Lab/01-S2-2025-SEDQ/)
+        - Interpretación de diagramas de pastel
+        - Cálculo de proporciones con regla de tres
+        - Aleatorización avanzada con 25+ variantes de pregunta
+        - Visualización con Python/matplotlib
       - Recursos disponibles:
         - Archivos RMarkdown (.Rmd)
         - Scripts R
@@ -191,10 +236,20 @@ Cada ejercicio sigue una estructura común:
         - Documentación
         - Ejercicios y recursos adicionales
   - Medidas de Posición
+    - **Contenido Actual:**
+      - **Porcentajes y Grupos Poblacionales** (Lab/14-S2-2025-SEDQ/)
+        - Análisis de distribuciones poblacionales
+        - Cálculos de porcentajes y proporciones
   - Probabilidad: Principios Aditivo y Multiplicativo de Conteo
     - **Contenido Actual:**
       - Diagramas de Venn
       - Caso Práctico: Géneros Musicales
+      - **Probabilidad con Extracción de Bolas** (Lab/43/)
+        - Cálculos de probabilidad con combinaciones
+        - Problemas de extracción sin reemplazo
+      - **Lógica de Torneos Deportivos** (Lab/05-S2-2025-SEDQ/)
+        - Sistemas de puntuación en competencias
+        - Análisis combinatorio de resultados
       - Recursos disponibles:
         - Archivos RMarkdown (.Rmd)
         - Scripts R
@@ -262,9 +317,47 @@ source("ruta/al/ejercicio/erres/ejecutar_pruebas.R")
 
 # Verificar la diversidad de versiones
 source("ruta/al/ejercicio/erres/verificar_diversidad.R")
+
+# Ejemplo específico para ejercicios del laboratorio
+source("Lab/01-S2-2025-SEDQ/01-ejecutar_pruebas_grafico_circular.R")
+source("Lab/43/ejecutar_pruebas.R")
+```
+
+### Trabajando con el Laboratorio de Ejercicios
+
+La carpeta `Lab/` contiene ejercicios experimentales y en desarrollo activo:
+
+```r
+# Generar ejercicios de la serie S2-2025-SEDQ
+library(exams)
+
+# Gráficos circulares
+exams2moodle("Lab/01-S2-2025-SEDQ/01-S2-2025-SEDQ-grafico_circular_bienes_v0.Rmd", n = 10)
+
+# Torneos deportivos
+exams2pdf("Lab/05-S2-2025-SEDQ/05-S2-205-SEDQ-clasificacion_torneo_futbol_v2.Rmd", n = 5)
+
+# Crecimiento exponencial
+exams2html("Lab/12-S2-2025-SEDQ/crecimiento_exponencial_valor_inicial_v2.Rmd", n = 8)
 ```
 
 ## Novedades
+
+### Enero 2025
+- **Expansión masiva del laboratorio de ejercicios**
+  - **Serie S2-2025-SEDQ**: Nueva colección de ejercicios para el segundo semestre 2025
+    - Gráficos circulares con aleatorización avanzada (25+ variantes de pregunta)
+    - Lógica de torneos deportivos con sistemas de puntuación complejos
+    - Descuentos y porcentajes en contextos comerciales
+    - Crecimiento exponencial con modelado poblacional
+    - Análisis de grupos poblacionales y distribuciones
+  - **Ejercicios de geometría aplicada**
+    - Volumen de cilindros simples y huecos con visualización 3D
+    - Problemas de semicírculos y radios
+    - Geometría de limpiaparabrisas (aplicación real)
+  - **Ejercicios basados en pruebas reales ICFES** (Real-*/): Adaptación de problemas oficiales
+  - **Interpretación gráfica avanzada**: Análisis de viajes y movimiento
+  - **Probabilidad aplicada**: Extracción de bolas y combinaciones
 
 ### Agosto 2024
 - **Implementación del sistema de metadatos ICFES**
@@ -315,6 +408,49 @@ icfes:
 
 Para más detalles, consulta la [Guía de implementación ICFES](./Auxiliares/guia_implementacion_icfes.md).
 
+## Ejercicios Destacados del Laboratorio
+
+### Serie S2-2025-SEDQ (Segundo Semestre 2025)
+
+1. **Gráficos Circulares y Proporciones** (Lab/01-S2-2025-SEDQ/)
+   - Interpretación de diagramas de pastel con aleatorización avanzada
+   - 25+ variantes de pregunta con diferentes tipos de bienes y contextos
+   - Visualización con Python/matplotlib y pruebas unitarias integradas
+
+2. **Lógica de Torneos Deportivos** (Lab/05-S2-2025-SEDQ/)
+   - Sistemas de puntuación complejos en competencias deportivas
+   - Análisis combinatorio de resultados y clasificaciones
+   - Tablas dinámicas con TikZ
+
+3. **Descuentos y Porcentajes** (Lab/09-S2-2025-SEDQ/)
+   - Problemas comerciales con descuentos múltiples
+   - Cálculos de precios finales y ofertas
+   - Contextos de compras y ventas
+
+4. **Crecimiento Exponencial** (Lab/12-S2-2025-SEDQ/)
+   - Modelado de poblaciones con funciones exponenciales
+   - Cálculo de valores en tiempos específicos
+   - Aplicaciones en biología y ecología
+
+### Ejercicios de Geometría Aplicada
+
+5. **Volumen de Cilindros** (Lab/11/, Lab/36/)
+   - Cálculos de volúmenes simples y cilindros huecos
+   - Visualización 3D con Python
+   - Aplicaciones en problemas de capacidad
+
+6. **Geometría de Limpiaparabrisas** (Lab/39/)
+   - Aplicación real de conceptos geométricos
+   - Análisis de movimientos circulares
+   - Problemas de áreas y sectores
+
+### Ejercicios Basados en Pruebas Reales
+
+7. **Real-07-S01-01-2024** y **Real-31-S01-01-2024**
+   - Adaptaciones de problemas oficiales del ICFES
+   - Mantenimiento de la estructura y dificultad original
+   - Aleatorización respetando el formato oficial
+
 ## Contribuciones
 
 Este repositorio está abierto a contribuciones. Si deseas colaborar:
@@ -324,6 +460,8 @@ Este repositorio está abierto a contribuciones. Si deseas colaborar:
 3. Asegúrate de incluir pruebas unitarias para validar la coherencia matemática
 4. Documenta adecuadamente el código y los ejercicios
 5. Incluye los metadatos ICFES en tus ejercicios
+6. Considera desarrollar en la carpeta `Lab/` antes de mover a las carpetas principales
+7. Implementa aleatorización robusta (mínimo 300 variantes por ejercicio)
 
 ## Recursos Adicionales
 
@@ -334,8 +472,41 @@ Este repositorio está abierto a contribuciones. Si deseas colaborar:
 - [Matriz de alineación ICFES](./Auxiliares/matriz_alineacion_icfes.md)
 - [Estándares Básicos de Competencias en Matemáticas](https://www.mineducacion.gov.co/1621/articles-116042_archivo_pdf2.pdf)
 
+## Estadísticas del Proyecto
+
+- **Ejercicios implementados**: 50+ ejercicios activos
+- **Variantes por ejercicio**: Mínimo 300 versiones diferentes
+- **Formatos soportados**: PDF, HTML, Word, NOPS, Moodle XML
+- **Áreas temáticas cubiertas**: 6 áreas principales de matemáticas ICFES
+- **Tecnologías integradas**: R, Python, LaTeX, TikZ
+- **Pruebas unitarias**: Sistema de validación automática implementado
+- **Metadatos ICFES**: Sistema completo de clasificación pedagógica
+
+## Roadmap 2025
+
+### Próximos Desarrollos
+- [ ] Expansión de ejercicios de trigonometría
+- [ ] Implementación de ejercicios interactivos para HTML
+- [ ] Sistema de análisis de respuestas y patrones de error
+- [ ] Integración con plataformas LMS adicionales
+- [ ] Desarrollo de ejercicios adaptativos por nivel
+- [ ] Creación de bancos de preguntas por competencias específicas
+
+### Mejoras Técnicas Planificadas
+- [ ] Optimización de tiempos de generación
+- [ ] Mejora en la accesibilidad de ejercicios
+- [ ] Sistema de versionado automático
+- [ ] Documentación interactiva
+- [ ] API para integración externa
+
 ## Contacto
 
 Para consultas o sugerencias relacionadas con este repositorio, puedes contactar al mantenedor principal a través de GitHub.
 
 [GitHub: proyecto-r-exams-icfes-matematicas-optimizado](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
+
+---
+
+**Última actualización**: Enero 2025
+**Versión del README**: 2.0
+**Estado del proyecto**: En desarrollo activo
