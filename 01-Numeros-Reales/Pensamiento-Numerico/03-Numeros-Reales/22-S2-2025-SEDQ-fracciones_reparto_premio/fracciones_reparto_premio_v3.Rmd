@@ -120,7 +120,7 @@ termino_cuenta <- sample(terminos_cuenta, 1)
 terminos_repartiran <- c("repartirán", "distribuirán", "dividirán", "asignarán", "otorgarán")
 termino_repartiran <- sample(terminos_repartiran, 1)
 
-terminos_puestos <- c("primeros puestos", "ganadores", "mejores lugares", "primeros lugares", "mejores posiciones")
+terminos_puestos <- c("primeros puestos", "ganadores", "mejores lugares", "primeros lugares")
 termino_puestos <- sample(terminos_puestos, 1)
 
 # Aleatorización de términos para dinero con concordancia de género
@@ -465,6 +465,7 @@ Podemos calcular el monto del primer y tercer puesto para asegurar que la distri
 - Monto del tercer puesto = `r valor_tercer_puesto` × `r premio_total` millones = `r monto_tercer_puesto` millones
 
 Suma de los montos:
+
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
