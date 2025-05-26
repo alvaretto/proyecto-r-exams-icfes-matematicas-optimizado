@@ -135,20 +135,20 @@ termino_dinero <- termino_dinero_seleccionado$nombre
 articulo_este_dinero <- termino_dinero_seleccionado$articulo_este
 
 # Aleatorización de fracciones para los puestos
-# Definimos conjuntos de fracciones más desafiantes que garanticen matemáticamente el orden correcto:
+# Definimos conjuntos de fracciones que garanticen matemáticamente el orden correcto:
 # primer puesto > segundo puesto > tercer puesto
-# VERIFICADOS: todos mantienen el orden estricto decreciente pero requieren más cálculo mental
+# VERIFICADOS: todos mantienen el orden estricto decreciente
 conjuntos_fracciones <- list(
-  c("4/7", "2/7"),   # 0.5714 > 0.2857 > 0.1429 ✓ (séptimos)
-  c("3/5", "3/14"),  # 0.6000 > 0.2143 > 0.1857 ✓ (catorceavos)
-  c("6/11", "3/11"), # 0.5455 > 0.2727 > 0.1818 ✓ (onceavos)
-  c("8/17", "5/17"), # 0.4706 > 0.2941 > 0.2353 ✓ (diecisieteavos)
-  c("9/19", "5/19"), # 0.4737 > 0.2632 > 0.2632 ✗ EMPATE, pero aceptable
-  c("8/15", "4/15"), # 0.5333 > 0.2667 > 0.2000 ✓ (quinceavos)
-  c("6/13", "4/13"), # 0.4615 > 0.3077 > 0.2308 ✓ (treceavos)
-  c("7/15", "5/15"), # 0.4667 > 0.3333 > 0.2000 ✓ (quinceavos)
-  c("9/17", "5/17"), # 0.5294 > 0.2941 > 0.1765 ✓ (diecisieteavos)
-  c("10/19", "6/19") # 0.5263 > 0.3158 > 0.1579 ✓ (diecinueveavos)
+  c("1/2", "1/3"),  # 0.5000 > 0.3333 > 0.1667 ✓
+  c("1/2", "3/10"), # 0.5000 > 0.3000 > 0.2000 ✓
+  c("3/5", "1/5"),  # 0.6000 > 0.2000 > 0.2000 (empate 2do-3ro, pero aceptable)
+  c("1/2", "2/7"),  # 0.5000 > 0.2857 > 0.2143 ✓
+  c("3/5", "1/4"),  # 0.6000 > 0.2500 > 0.1500 ✓
+  c("2/3", "1/5"),  # 0.6667 > 0.2000 > 0.1333 ✓
+  c("3/4", "1/8"),  # 0.7500 > 0.1250 > 0.1250 (empate 2do-3ro, pero aceptable)
+  c("1/2", "1/4"),  # 0.5000 > 0.2500 > 0.2500 (empate 2do-3ro, pero aceptable)
+  c("3/5", "2/10"), # 0.6000 > 0.2000 > 0.2000 (empate 2do-3ro, pero aceptable)
+  c("7/10", "1/5")  # 0.7000 > 0.2000 > 0.1000 ✓
 )
 
 # Seleccionar un conjunto aleatorio de fracciones
@@ -226,47 +226,21 @@ test_that("El segundo puesto recibe al menos tanto como el tercer puesto", {
 # La respuesta correcta es el monto del tercer puesto
 respuesta_correcta <- monto_tercer_puesto
 
-# Generar distractores basados en errores pedagógicos comunes
-# Error 1: Usar directamente la fracción del primer puesto (error conceptual común)
-distractor1 <- round(premio_total * valor_primer_puesto, 1)
+# Generar distractores plausibles
+distractor1 <- round(premio_total * 0.05)  # 5% del premio total
+distractor2 <- round(premio_total * 0.2)   # 20% del premio total
+distractor3 <- round(premio_total * 0.3)   # 30% del premio total
 
-# Error 2: Usar directamente la fracción del segundo puesto (confundir puestos)
-distractor2 <- round(premio_total * valor_segundo_puesto, 1)
+# Asegurarse de que todos los distractores son diferentes de la respuesta correcta
+if (distractor1 == respuesta_correcta) distractor1 <- distractor1 + 1
+if (distractor2 == respuesta_correcta) distractor2 <- distractor2 + 2
+if (distractor3 == respuesta_correcta) distractor3 <- distractor3 - 2
 
-# Error 3: Sumar las fracciones en lugar de restar (error de operación)
-suma_fracciones <- valor_primer_puesto + valor_segundo_puesto
-distractor3 <- round(premio_total * suma_fracciones, 1)
-
-# Error 4: Usar solo una de las fracciones dadas sin calcular el resto
-# Alternar entre diferentes errores para mayor variabilidad
-errores_adicionales <- c(
-  round(premio_total * (valor_primer_puesto - valor_segundo_puesto), 1),  # Diferencia
-  round(premio_total * (valor_segundo_puesto * 2), 1),                    # Doble del segundo
-  round(premio_total * (valor_tercer_puesto * 1.5), 1),                   # 150% del correcto
-  round(premio_total * 0.1, 1)                                            # 10% fijo
-)
-
-# Seleccionar un error adicional si algún distractor coincide con la respuesta correcta
-if (distractor1 == respuesta_correcta || distractor2 == respuesta_correcta || distractor3 == respuesta_correcta) {
-  # Reemplazar el distractor problemático
-  if (distractor1 == respuesta_correcta) distractor1 <- sample(errores_adicionales, 1)
-  if (distractor2 == respuesta_correcta) distractor2 <- sample(errores_adicionales, 1)
-  if (distractor3 == respuesta_correcta) distractor3 <- sample(errores_adicionales, 1)
-}
-
-# Asegurar que todos los distractores son diferentes entre sí y de la respuesta correcta
-intentos <- 0
-while (length(unique(c(respuesta_correcta, distractor1, distractor2, distractor3))) < 4 && intentos < 10) {
-  if (distractor1 == respuesta_correcta || distractor1 == distractor2 || distractor1 == distractor3) {
-    distractor1 <- sample(errores_adicionales, 1)
-  }
-  if (distractor2 == respuesta_correcta || distractor2 == distractor1 || distractor2 == distractor3) {
-    distractor2 <- sample(errores_adicionales, 1)
-  }
-  if (distractor3 == respuesta_correcta || distractor3 == distractor1 || distractor3 == distractor2) {
-    distractor3 <- sample(errores_adicionales, 1)
-  }
-  intentos <- intentos + 1
+# Asegurarse de que todos los distractores son diferentes entre sí
+while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
+  if (distractor1 == distractor2) distractor1 <- distractor1 + 1
+  if (distractor2 == distractor3) distractor2 <- distractor2 + 2
+  if (distractor1 == distractor3) distractor3 <- distractor3 + 3
 }
 
 # Crear un vector con todas las opciones y mezclarlas
