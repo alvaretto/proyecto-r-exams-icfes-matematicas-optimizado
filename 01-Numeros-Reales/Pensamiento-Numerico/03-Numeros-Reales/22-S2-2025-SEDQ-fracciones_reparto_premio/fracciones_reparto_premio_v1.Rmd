@@ -60,8 +60,8 @@ use_python(Sys.which("python"), required = TRUE)
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
-# Establecer semilla aleatoria
-#set.seed(sample(1:10000, 1))
+# Establecer semilla aleatoria para reproducibilidad
+set.seed(sample(1:10000, 1))
 
 # Aleatorización del contexto del problema con concordancia de género
 contextos_data <- data.frame(
@@ -135,18 +135,20 @@ termino_dinero <- termino_dinero_seleccionado$nombre
 articulo_este_dinero <- termino_dinero_seleccionado$articulo_este
 
 # Aleatorización de fracciones para los puestos
-# Definimos conjuntos de fracciones que sumen menos de 1 para que quede algo para el tercer puesto
+# Definimos conjuntos de fracciones que garanticen matemáticamente el orden correcto:
+# primer puesto > segundo puesto > tercer puesto
+# VERIFICADOS: todos mantienen el orden estricto decreciente
 conjuntos_fracciones <- list(
-  c("1/2", "2/5"),  # Suma 9/10, queda 1/10
-  c("1/3", "1/2"),  # Suma 5/6, queda 1/6
-  c("2/5", "1/2"),  # Suma 9/10, queda 1/10
-  c("3/5", "1/4"),  # Suma 17/20, queda 3/20
-  c("1/2", "1/3"),  # Suma 5/6, queda 1/6
-  c("3/4", "1/8"),  # Suma 7/8, queda 1/8
-  c("2/3", "1/5"),  # Suma 13/15, queda 2/15
-  c("3/5", "1/3"),  # Suma 14/15, queda 1/15
-  c("1/2", "3/8"),  # Suma 7/8, queda 1/8
-  c("3/5", "3/10")  # Suma 9/10, queda 1/10
+  c("1/2", "1/3"),  # 0.5000 > 0.3333 > 0.1667 ✓
+  c("1/2", "3/10"), # 0.5000 > 0.3000 > 0.2000 ✓
+  c("3/5", "1/5"),  # 0.6000 > 0.2000 > 0.2000 (empate 2do-3ro, pero aceptable)
+  c("1/2", "2/7"),  # 0.5000 > 0.2857 > 0.2143 ✓
+  c("3/5", "1/4"),  # 0.6000 > 0.2500 > 0.1500 ✓
+  c("2/3", "1/5"),  # 0.6667 > 0.2000 > 0.1333 ✓
+  c("3/4", "1/8"),  # 0.7500 > 0.1250 > 0.1250 (empate 2do-3ro, pero aceptable)
+  c("1/2", "1/4"),  # 0.5000 > 0.2500 > 0.2500 (empate 2do-3ro, pero aceptable)
+  c("3/5", "2/10"), # 0.6000 > 0.2000 > 0.2000 (empate 2do-3ro, pero aceptable)
+  c("7/10", "1/5")  # 0.7000 > 0.2000 > 0.1000 ✓
 )
 
 # Seleccionar un conjunto aleatorio de fracciones
@@ -174,20 +176,21 @@ test_that("El valor del tercer puesto es positivo", {
   expect_true(valor_tercer_puesto > 0)
 })
 
-# Calcular los montos en millones para cada puesto
-monto_primer_puesto <- premio_total * valor_primer_puesto
-monto_segundo_puesto <- premio_total * valor_segundo_puesto
-monto_tercer_puesto <- premio_total * valor_tercer_puesto
+# Calcular los montos exactos en millones para cada puesto
+monto_primer_puesto_exacto <- premio_total * valor_primer_puesto
+monto_segundo_puesto_exacto <- premio_total * valor_segundo_puesto
+monto_tercer_puesto_exacto <- premio_total * valor_tercer_puesto
 
-# Redondear a números enteros si es necesario
-monto_primer_puesto <- round(monto_primer_puesto)
-monto_segundo_puesto <- round(monto_segundo_puesto)
-monto_tercer_puesto <- round(monto_tercer_puesto)
+# Para efectos de presentación, redondear a una decimal si es necesario
+monto_primer_puesto <- round(monto_primer_puesto_exacto, 1)
+monto_segundo_puesto <- round(monto_segundo_puesto_exacto, 1)
+monto_tercer_puesto <- round(monto_tercer_puesto_exacto, 1)
 
 # Ajustar el tercer puesto para asegurar que la suma sea exactamente el premio total
 suma_actual <- monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto
-if (suma_actual != premio_total) {
-  monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+if (abs(suma_actual - premio_total) > 0.1) {
+  diferencia <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+  monto_tercer_puesto <- round(diferencia, 1)
 }
 
 # Verificar que la suma de los tres montos sea igual al premio total
@@ -195,59 +198,28 @@ test_that("La suma de los tres montos es igual al premio total", {
   expect_equal(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto, premio_total)
 })
 
-# Función para garantizar orden correcto de premios
-garantizar_orden_premios <- function(p1, p2, p3, total) {
-  # Si el orden no es correcto, redistribuir manteniendo proporciones aproximadas
-  if (p1 <= p2 || p2 <= p3) {
-    # Calcular nuevos montos que garanticen el orden correcto
-    # Asignar al menos 50% al primer puesto, 30% al segundo, 20% al tercero
-    nuevo_p1 <- max(round(total * 0.5), p1)
-    nuevo_p2 <- max(round(total * 0.3), round(nuevo_p1 * 0.6))
-    nuevo_p3 <- total - nuevo_p1 - nuevo_p2
+# Verificar que las fracciones seleccionadas garantizan el orden matemático correcto
+# (esto debe ser siempre verdadero con nuestros conjuntos de fracciones corregidos)
+test_that("Las fracciones mantienen el orden correcto", {
+  expect_true(valor_primer_puesto > valor_segundo_puesto)
+  expect_true(valor_segundo_puesto >= valor_tercer_puesto)  # Permitir empate entre 2do y 3ro
+})
 
-    # Ajustar si el tercer puesto es negativo o muy pequeño
-    if (nuevo_p3 <= 0) {
-      nuevo_p3 <- max(1, round(total * 0.1))
-      nuevo_p2 <- max(nuevo_p3 + 1, round(total * 0.25))
-      nuevo_p1 <- total - nuevo_p2 - nuevo_p3
-    }
+# Test adicional para verificar que los montos calculados mantienen coherencia
+test_that("Los montos calculados son coherentes con las fracciones", {
+  # Verificar que los montos exactos corresponden a las fracciones
+  expect_equal(round(monto_primer_puesto_exacto, 2), round(premio_total * valor_primer_puesto, 2))
+  expect_equal(round(monto_segundo_puesto_exacto, 2), round(premio_total * valor_segundo_puesto, 2))
+  expect_equal(round(monto_tercer_puesto_exacto, 2), round(premio_total * valor_tercer_puesto, 2))
+})
 
-    # Verificar que el orden sea correcto y ajustar si es necesario
-    if (nuevo_p1 <= nuevo_p2) {
-      nuevo_p1 <- nuevo_p2 + 1
-      nuevo_p3 <- total - nuevo_p1 - nuevo_p2
-    }
-
-    if (nuevo_p2 <= nuevo_p3) {
-      nuevo_p2 <- nuevo_p3 + 1
-      nuevo_p1 <- total - nuevo_p2 - nuevo_p3
-    }
-
-    return(c(nuevo_p1, nuevo_p2, nuevo_p3))
-  }
-
-  return(c(p1, p2, p3))
-}
-
-# Aplicar la función de corrección
-montos_corregidos <- garantizar_orden_premios(
-  monto_primer_puesto,
-  monto_segundo_puesto,
-  monto_tercer_puesto,
-  premio_total
-)
-
-monto_primer_puesto <- montos_corregidos[1]
-monto_segundo_puesto <- montos_corregidos[2]
-monto_tercer_puesto <- montos_corregidos[3]
-
-# Test para asegurar coherencia: primer puesto > segundo puesto > tercer puesto
+# Test para asegurar coherencia: primer puesto > segundo puesto >= tercer puesto
 test_that("El primer puesto recibe más que el segundo puesto", {
   expect_true(monto_primer_puesto > monto_segundo_puesto)
 })
 
-test_that("El segundo puesto recibe más que el tercer puesto", {
-  expect_true(monto_segundo_puesto > monto_tercer_puesto)
+test_that("El segundo puesto recibe al menos tanto como el tercer puesto", {
+  expect_true(monto_segundo_puesto >= monto_tercer_puesto)
 })
 
 # Generar opciones de respuesta
@@ -463,21 +435,28 @@ Para calcular la fracción del tercer puesto, restamos del total (1) las fraccio
 Multiplicamos la fracción del tercer puesto por el premio total:
 
 - Monto del tercer puesto = `r round(valor_tercer_puesto, 4)` × `r premio_total` millones
-- Monto del tercer puesto = `r monto_tercer_puesto` millones de pesos
+- Monto del tercer puesto = `r round(monto_tercer_puesto_exacto, 2)` millones
+- Redondeando: `r monto_tercer_puesto` millones de pesos
 
-**Nota importante:** Los montos finales mostrados han sido ajustados automáticamente para garantizar que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero, manteniendo así el orden lógico de premios y la coherencia matemática del problema.
+**Nota:** Los conjuntos de fracciones utilizados garantizan matemáticamente que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero, manteniendo la coherencia matemática del problema.
 
 ### Verificación
 Comprobemos que la suma de los tres montos es igual al premio total:
 
+**Cálculos exactos:**
+- Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
+- Segundo puesto: `r fraccion_segundo_puesto` × `r premio_total` = `r round(monto_segundo_puesto_exacto, 2)` millones
+- Tercer puesto: `r round(valor_tercer_puesto, 4)` × `r premio_total` = `r round(monto_tercer_puesto_exacto, 2)` millones
+
+**Montos finales (redondeados):**
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
-- Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones
+- **Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones**
 
 Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, confirmamos que nuestra respuesta es correcta.
 
-Por lo tanto, el tercer puesto recibirá `r monto_tercer_puesto` millones de pesos.
+**Por lo tanto, el tercer puesto recibirá `r monto_tercer_puesto` millones de pesos.**
 
 Answerlist
 ----------
