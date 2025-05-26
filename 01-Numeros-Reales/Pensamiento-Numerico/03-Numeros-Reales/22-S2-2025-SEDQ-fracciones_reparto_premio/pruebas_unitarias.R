@@ -222,9 +222,9 @@ verificar_coherencia_genero <- function(datos) {
 
 # Función para probar una versión específica
 probar_version <- function(archivo_rmd) {
-  cat("\n", "="*80, "\n", sep="")
+  cat("\n", paste(rep("=", 80), collapse=""), "\n", sep="")
   cat("PROBANDO:", archivo_rmd, "\n")
-  cat("="*80, "\n")
+  cat(paste(rep("=", 80), collapse=""), "\n")
 
   start_time <- Sys.time()
 
@@ -405,9 +405,9 @@ end_time_total <- Sys.time()
 # REPORTE FINAL CONSOLIDADO
 # =============================================================================
 
-cat("\n", "="*80, "\n", sep="")
+cat("\n", paste(rep("=", 80), collapse=""), "\n", sep="")
 cat("REPORTE FINAL CONSOLIDADO\n")
-cat("="*80, "\n")
+cat(paste(rep("=", 80), collapse=""), "\n")
 cat("Tiempo total de ejecución:", difftime(end_time_total, start_time_total, units = "mins"), "minutos\n\n")
 
 # Resumen por versión
@@ -442,4 +442,4 @@ archivo_reporte <- paste0("reporte_pruebas_", timestamp, ".RData")
 save(resultados_todas_versiones, file = archivo_reporte)
 cat("\nResultados detallados guardados en:", archivo_reporte, "\n")
 
-cat("="*80, "\n")
+cat(paste(rep("=", 80), collapse=""), "\n")
