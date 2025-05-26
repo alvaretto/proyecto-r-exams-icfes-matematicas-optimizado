@@ -1,9 +1,9 @@
 ---
 output:
-  html_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+  html_document: default
   word_document: default
 icfes:
   competencia: Resolución de problemas
@@ -63,35 +63,20 @@ options(OutDec = ".")  # Asegurar punto decimal en este chunk
 # Establecer semilla aleatoria
 #set.seed(sample(1:10000, 1))
 
-# Aleatorización del contexto del problema con concordancia de género
-contextos_data <- data.frame(
-  nombre = c("ciudad", "localidad", "comunidad", "comarca", "provincia", "zona",
-             "municipio", "distrito", "territorio", "sector", "barrio", "pueblo"),
-  genero = c("f", "f", "f", "f", "f", "f",
-             "m", "m", "m", "m", "m", "m"),
-  articulo = c("una", "una", "una", "una", "una", "una",
-               "un", "un", "un", "un", "un", "un"),
-  stringsAsFactors = FALSE
+# Aleatorización del contexto del problema
+contextos <- c(
+  "ciudad", "municipio", "localidad", "comunidad", "pueblo",
+  "distrito", "barrio", "región", "provincia", "zona"
 )
-contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
-contexto <- contexto_seleccionado$nombre
-articulo_contexto <- contexto_seleccionado$articulo
+contexto <- sample(contextos, 1)
 
-# Aleatorización del tipo de competencia con concordancia de género
-competencias_data <- data.frame(
-  nombre = c("carrera", "competencia atlética", "olimpiada deportiva",
-             "justa deportiva", "prueba atlética", "competencia deportiva",
-             "maratón", "torneo deportivo", "evento deportivo",
-             "campeonato", "concurso deportivo", "certamen deportivo"),
-  genero = c("f", "f", "f", "f", "f", "f",
-             "m", "m", "m", "m", "m", "m"),
-  articulo = c("una", "una", "una", "una", "una", "una",
-               "un", "un", "un", "un", "un", "un"),
-  stringsAsFactors = FALSE
+# Aleatorización del tipo de competencia
+competencias <- c(
+  "maratón", "carrera", "competencia atlética", "torneo deportivo",
+  "olimpiada deportiva", "evento deportivo", "justa deportiva",
+  "campeonato", "concurso deportivo", "prueba atlética"
 )
-competencia_seleccionada <- competencias_data[sample(nrow(competencias_data), 1), ]
-competencia <- competencia_seleccionada$nombre
-articulo_competencia <- competencia_seleccionada$articulo
+competencia <- sample(competencias, 1)
 
 # Aleatorización del grupo de edad
 edades <- c(
@@ -103,36 +88,28 @@ edades <- c(
 grupo_edad <- sample(edades, 1)
 
 # Aleatorización del premio total (en millones)
-# Todos los múltiplos de 2 desde 30 hasta 400 para mayor variabilidad
-premios_posibles <- seq(30, 400, by = 2)
+# Generamos valores que sean divisibles por 10 para facilitar cálculos
+premios_posibles <- c(30, 40, 50, 60, 70, 80, 90, 100, 120, 150)
 premio_total <- sample(premios_posibles, 1)
 
 # Aleatorización de términos para el enunciado
 terminos_premiar <- c("premiar", "recompensar", "reconocer", "galardonar", "incentivar")
 termino_premiar <- sample(terminos_premiar, 1)
 
-terminos_participantes <- c("participantes", "competidores", "concursantes", "deportistas")
+terminos_participantes <- c("participantes", "competidores", "concursantes", "atletas", "deportistas")
 termino_participantes <- sample(terminos_participantes, 1)
 
-terminos_cuenta <- c("cuenta con", "dispone de", "tiene asignados", "ha destinado", "ha reservado")
+terminos_cuenta <- c("cuenta con", "dispone de", "tiene asignado", "ha destinado", "ha reservado")
 termino_cuenta <- sample(terminos_cuenta, 1)
 
 terminos_repartiran <- c("repartirán", "distribuirán", "dividirán", "asignarán", "otorgarán")
 termino_repartiran <- sample(terminos_repartiran, 1)
 
-terminos_puestos <- c("primeros puestos", "ganadores", "mejores lugares", "primeros lugares", "mejores posiciones")
+terminos_puestos <- c("primeros puestos", "primeras posiciones", "ganadores", "mejores lugares", "primeros lugares")
 termino_puestos <- sample(terminos_puestos, 1)
 
-# Aleatorización de términos para dinero con concordancia de género
-terminos_dinero_data <- data.frame(
-  nombre = c("dinero", "premio", "incentivo", "monto"),
-  genero = c("m", "m", "m", "m"),
-  articulo_este = c("Este", "Este", "Este", "Este"),
-  stringsAsFactors = FALSE
-)
-termino_dinero_seleccionado <- terminos_dinero_data[sample(nrow(terminos_dinero_data), 1), ]
-termino_dinero <- termino_dinero_seleccionado$nombre
-articulo_este_dinero <- termino_dinero_seleccionado$articulo_este
+terminos_dinero <- c("dinero", "premio", "recompensa", "incentivo", "monto")
+termino_dinero <- sample(terminos_dinero, 1)
 
 # Aleatorización de fracciones para los puestos
 # Definimos conjuntos de fracciones que sumen menos de 1 para que quede algo para el tercer puesto
@@ -196,8 +173,8 @@ test_that("La suma de los tres montos es igual al premio total", {
 })
 
 # Generar opciones de respuesta
-# La respuesta correcta es el monto del tercer puesto
-respuesta_correcta <- monto_tercer_puesto
+# La respuesta correcta es el monto del segundo puesto
+respuesta_correcta <- monto_segundo_puesto
 
 # Generar distractores plausibles
 distractor1 <- round(premio_total * 0.05)  # 5% del premio total
@@ -356,7 +333,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == "f") "la" else "el"` `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los tres `r termino_puestos`, como se indica a continuación:
+En un(a) `r contexto` se realizará un(a) `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los(las) `r termino_participantes`, la `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los(as) tres `r termino_puestos`, como se indica a continuación:
 
 ```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
 # Detectar si se está generando para Moodle u otros formatos
@@ -373,7 +350,7 @@ if (es_moodle) {
 }
 ```
 
-¿Qué cantidad de `r termino_dinero` recibirá el tercer puesto?
+¿Qué cantidad de monto recibe el segundo puesto?
 
 Answerlist
 ----------
@@ -385,42 +362,39 @@ Answerlist
 Solution
 ========
 
-Para resolver este problema, debemos calcular qué fracción del premio total corresponde al tercer puesto y luego convertirlo a millones de pesos.
+Para resolver este problema, debemos calcular qué fracción del premio total corresponde al segundo puesto y luego convertirlo a millones de pesos.
 
 ### Paso 1: Identificar los datos del problema
 - Premio total: `r premio_total` millones de pesos
-- Primer puesto: `r fraccion_primer_puesto` del `r termino_dinero` total
-- Segundo puesto: `r fraccion_segundo_puesto` del `r termino_dinero` total
-- Tercer puesto: el `r termino_dinero` restante
+- Primer puesto: `r fraccion_primer_puesto` del dinero total
+- Segundo puesto: `r fraccion_segundo_puesto` del dinero total
+- Tercer puesto: el dinero restante (aunque no se pregunta directamente, es útil para el contexto general)
 
 ### Paso 2: Convertir las fracciones a decimales
 - Primer puesto: `r fraccion_primer_puesto` = `r valor_primer_puesto`
 - Segundo puesto: `r fraccion_segundo_puesto` = `r valor_segundo_puesto`
 
-### Paso 3: Calcular la fracción que corresponde al tercer puesto
-Para calcular la fracción del tercer puesto, restamos del total (1) las fracciones del primer y segundo puesto:
+### Paso 3: Calcular el monto en millones de pesos para el segundo puesto
+Multiplicamos la fracción del segundo puesto por el premio total:
 
-- Fracción del tercer puesto = 1 - (`r valor_primer_puesto` + `r valor_segundo_puesto`)
-- Fracción del tercer puesto = 1 - `r round(valor_primer_puesto + valor_segundo_puesto, 4)`
-- Fracción del tercer puesto = `r round(valor_tercer_puesto, 4)`
+- Monto del segundo puesto = `r valor_segundo_puesto` × `r premio_total` millones
+- Monto del segundo puesto = `r monto_segundo_puesto` millones de pesos
 
-### Paso 4: Calcular el monto en millones de pesos para el tercer puesto
-Multiplicamos la fracción del tercer puesto por el premio total:
+### Verificación (Opcional, pero útil para entender el reparto completo)
+Podemos calcular el monto del primer y tercer puesto para asegurar que la distribución es coherente.
+- Monto del primer puesto = `r valor_primer_puesto` × `r premio_total` millones = `r monto_primer_puesto` millones
+- Fracción del tercer puesto = 1 - (`r valor_primer_puesto` + `r valor_segundo_puesto`) = `r valor_tercer_puesto`
+- Monto del tercer puesto = `r valor_tercer_puesto` × `r premio_total` millones = `r monto_tercer_puesto` millones
 
-- Monto del tercer puesto = `r round(valor_tercer_puesto, 4)` × `r premio_total` millones
-- Monto del tercer puesto = `r monto_tercer_puesto` millones de pesos
-
-### Verificación
-Comprobemos que la suma de los tres montos es igual al premio total:
-
+Suma de los montos:
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
 - Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones
 
-Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, confirmamos que nuestra respuesta es correcta.
+Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, la distribución es consistente.
 
-Por lo tanto, el tercer puesto recibirá `r monto_tercer_puesto` millones de pesos.
+Por lo tanto, el segundo puesto recibe `r monto_segundo_puesto` millones de pesos.
 
 Answerlist
 ----------
