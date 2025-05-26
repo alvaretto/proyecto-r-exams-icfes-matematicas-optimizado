@@ -184,22 +184,51 @@ test_that("El monto del tercer puesto es no negativo", {
   expect_true(monto_tercer_puesto >= 0)
 })
 
-# Verificar coherencia y ajustar si es necesario debido a redondeos
-if (monto_segundo_puesto >= monto_primer_puesto) {
-  # Ajustar para mantener la coherencia: primer puesto > segundo puesto
-  diferencia <- monto_segundo_puesto - monto_primer_puesto + 1
-  monto_primer_puesto <- monto_primer_puesto + diferencia
-  monto_segundo_puesto <- monto_segundo_puesto - diferencia
-  # Recalcular el tercer puesto
-  monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+# Función para garantizar orden correcto de premios
+garantizar_orden_premios <- function(p1, p2, p3, total) {
+  # Si el orden no es correcto, redistribuir manteniendo proporciones aproximadas
+  if (p1 <= p2 || p2 <= p3) {
+    # Calcular nuevos montos que garanticen el orden correcto
+    # Asignar al menos 50% al primer puesto, 30% al segundo, 20% al tercero
+    nuevo_p1 <- max(round(total * 0.5), p1)
+    nuevo_p2 <- max(round(total * 0.3), round(nuevo_p1 * 0.6))
+    nuevo_p3 <- total - nuevo_p1 - nuevo_p2
+
+    # Ajustar si el tercer puesto es negativo o muy pequeño
+    if (nuevo_p3 <= 0) {
+      nuevo_p3 <- max(1, round(total * 0.1))
+      nuevo_p2 <- max(nuevo_p3 + 1, round(total * 0.25))
+      nuevo_p1 <- total - nuevo_p2 - nuevo_p3
+    }
+
+    # Verificar que el orden sea correcto y ajustar si es necesario
+    if (nuevo_p1 <= nuevo_p2) {
+      nuevo_p1 <- nuevo_p2 + 1
+      nuevo_p3 <- total - nuevo_p1 - nuevo_p2
+    }
+
+    if (nuevo_p2 <= nuevo_p3) {
+      nuevo_p2 <- nuevo_p3 + 1
+      nuevo_p1 <- total - nuevo_p2 - nuevo_p3
+    }
+
+    return(c(nuevo_p1, nuevo_p2, nuevo_p3))
+  }
+
+  return(c(p1, p2, p3))
 }
 
-if (monto_tercer_puesto >= monto_segundo_puesto) {
-  # Ajustar para mantener la coherencia: segundo puesto > tercer puesto
-  diferencia <- monto_tercer_puesto - monto_segundo_puesto + 1
-  monto_segundo_puesto <- monto_segundo_puesto + diferencia
-  monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
-}
+# Aplicar la función de corrección
+montos_corregidos <- garantizar_orden_premios(
+  monto_primer_puesto,
+  monto_segundo_puesto,
+  monto_tercer_puesto,
+  premio_total
+)
+
+monto_primer_puesto <- montos_corregidos[1]
+monto_segundo_puesto <- montos_corregidos[2]
+monto_tercer_puesto <- montos_corregidos[3]
 
 # Test para asegurar coherencia: primer puesto > segundo puesto > tercer puesto
 test_that("El primer puesto recibe más que el segundo puesto", {
