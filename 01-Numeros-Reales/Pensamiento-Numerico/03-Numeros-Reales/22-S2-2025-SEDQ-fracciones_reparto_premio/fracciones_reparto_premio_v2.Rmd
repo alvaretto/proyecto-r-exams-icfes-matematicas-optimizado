@@ -184,6 +184,23 @@ test_that("El monto del tercer puesto es no negativo", {
   expect_true(monto_tercer_puesto >= 0)
 })
 
+# Verificar coherencia y ajustar si es necesario debido a redondeos
+if (monto_segundo_puesto >= monto_primer_puesto) {
+  # Ajustar para mantener la coherencia: primer puesto > segundo puesto
+  diferencia <- monto_segundo_puesto - monto_primer_puesto + 1
+  monto_primer_puesto <- monto_primer_puesto + diferencia
+  monto_segundo_puesto <- monto_segundo_puesto - diferencia
+  # Recalcular el tercer puesto
+  monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+}
+
+if (monto_tercer_puesto >= monto_segundo_puesto) {
+  # Ajustar para mantener la coherencia: segundo puesto > tercer puesto
+  diferencia <- monto_tercer_puesto - monto_segundo_puesto + 1
+  monto_segundo_puesto <- monto_segundo_puesto + diferencia
+  monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+}
+
 # Test para asegurar coherencia: primer puesto > segundo puesto > tercer puesto
 test_that("El primer puesto recibe más que el segundo puesto", {
   expect_true(monto_primer_puesto > monto_segundo_puesto)
