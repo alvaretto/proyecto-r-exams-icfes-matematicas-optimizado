@@ -139,13 +139,13 @@ articulo_este_dinero <- termino_dinero_seleccionado$articulo_este
 # Asegurar que F1 < 1 y F2 < 1
 conjuntos_fracciones <- list(
   c("1/2", "1/3"),  # Ej: 100 -> 1ro: 50, Rest: 50. 2do: 50*(1/3) ~ 17. 3ro: ~33
-  c("1/3", "1/2"),  # Ej: 60 -> 1ro: 20, Rest: 40. 2do: 40*(1/2) = 20. 3ro: 20
+  c("3/5", "1/4"),  # Ej: 100 -> 1ro: 60, Rest: 40. 2do: 40*(1/4) = 10. 3ro: 30
   c("2/5", "1/4"),  # Ej: 100 -> 1ro: 40, Rest: 60. 2do: 60*(1/4) = 15. 3ro: 45
   c("3/5", "1/3"),  # Ej: 50 -> 1ro: 30, Rest: 20. 2do: 20*(1/3) ~ 7. 3ro: ~13
-  c("1/4", "2/3"),  # Ej: 80 -> 1ro: 20, Rest: 60. 2do: 60*(2/3) = 40. 3ro: 20
+  c("1/2", "1/4"),  # Ej: 80 -> 1ro: 40, Rest: 40. 2do: 40*(1/4) = 10. 3ro: 30
   c("3/4", "1/5"),  # Ej: 100 -> 1ro: 75, Rest: 25. 2do: 25*(1/5) = 5. 3ro: 20
-  c("2/3", "3/4"),  # Ej: 90 -> 1ro: 60, Rest: 30. 2do: 30*(3/4) = 22.5. 3ro: 7.5
-  c("1/2", "2/5")
+  c("2/3", "1/4"),  # Ej: 90 -> 1ro: 60, Rest: 30. 2do: 30*(1/4) = 7.5. 3ro: 22.5
+  c("1/2", "2/5")   # Ej: 100 -> 1ro: 50, Rest: 50. 2do: 50*(2/5) = 20. 3ro: 30
 )
 indice_conjunto <- sample(1:length(conjuntos_fracciones), 1)
 fracciones_seleccionadas <- conjuntos_fracciones[[indice_conjunto]]
@@ -182,6 +182,15 @@ monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puest
 # Esto es más un sanity check; con fracciones < 1, debería ser positivo.
 test_that("El monto del tercer puesto es no negativo", {
   expect_true(monto_tercer_puesto >= 0)
+})
+
+# Test para asegurar coherencia: primer puesto > segundo puesto > tercer puesto
+test_that("El primer puesto recibe más que el segundo puesto", {
+  expect_true(monto_primer_puesto > monto_segundo_puesto)
+})
+
+test_that("El segundo puesto recibe más que el tercer puesto", {
+  expect_true(monto_segundo_puesto > monto_tercer_puesto)
 })
 
 # Verificar que la suma de los tres montos sea igual al premio total
