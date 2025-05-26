@@ -103,8 +103,8 @@ edades <- c(
 grupo_edad <- sample(edades, 1)
 
 # Aleatorización del premio total (en millones)
-# Generamos valores que sean divisibles por 10 para facilitar cálculos
-premios_posibles <- c(30, 40, 50, 60, 70, 80, 90, 100, 120, 150)
+# Todos los múltiplos de 2 desde 30 hasta 400 para mayor variabilidad
+premios_posibles <- seq(30, 400, by = 2)
 premio_total <- sample(premios_posibles, 1)
 
 # Aleatorización de términos para el enunciado
