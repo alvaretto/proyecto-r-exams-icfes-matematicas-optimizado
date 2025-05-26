@@ -446,7 +446,7 @@ Monto del primer puesto = `r premio_total` millones × `r fraccion_primer_puesto
 
 Monto del primer puesto = `r premio_total` × `r valor_f1` = `r monto_primer_puesto_exacto` millones.
 
-Después de redondear (si es necesario), el primer puesto recibe: `r monto_primer_puesto` millones.
+**Nota importante:** Para garantizar que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero (orden lógico de premios), se aplica una corrección automática cuando es necesario. En este caso, el primer puesto recibe: `r monto_primer_puesto` millones.
 
 ### Paso 3: Calcular el dinero restante después del primer puesto
 Restamos el monto del primer puesto del premio total:
@@ -463,7 +463,7 @@ Monto del segundo puesto = `r restante_despues_primero` millones × `r fraccion_
 
 Monto del segundo puesto = `r restante_despues_primero` × `r valor_f2` = `r monto_segundo_puesto_exacto` millones.
 
-Después de redondear (si es necesario), el segundo puesto recibe: `r monto_segundo_puesto` millones.
+Aplicando la corrección automática para mantener el orden lógico de premios, el segundo puesto recibe: `r monto_segundo_puesto` millones.
 
 ### Paso 5: Conclusión
 El monto calculado para el segundo puesto en el Paso 4 es la respuesta a la pregunta.
