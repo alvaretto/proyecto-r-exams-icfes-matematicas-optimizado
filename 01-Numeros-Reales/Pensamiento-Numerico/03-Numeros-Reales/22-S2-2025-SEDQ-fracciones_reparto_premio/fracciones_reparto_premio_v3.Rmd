@@ -458,6 +458,8 @@ Multiplicamos la fracción del segundo puesto por el premio total:
 - Monto del segundo puesto = `r valor_segundo_puesto` × `r premio_total` millones
 - Monto del segundo puesto = `r monto_segundo_puesto` millones de pesos
 
+**Nota importante:** Los montos finales mostrados han sido ajustados automáticamente para garantizar que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero, manteniendo así el orden lógico de premios y la coherencia matemática del problema.
+
 ### Verificación (Opcional, pero útil para entender el reparto completo)
 Podemos calcular el monto del primer y tercer puesto para asegurar que la distribución es coherente.
 - Monto del primer puesto = `r valor_primer_puesto` × `r premio_total` millones = `r monto_primer_puesto` millones

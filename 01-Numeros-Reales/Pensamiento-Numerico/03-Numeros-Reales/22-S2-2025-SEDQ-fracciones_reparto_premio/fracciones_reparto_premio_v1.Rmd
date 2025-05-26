@@ -465,6 +465,8 @@ Multiplicamos la fracción del tercer puesto por el premio total:
 - Monto del tercer puesto = `r round(valor_tercer_puesto, 4)` × `r premio_total` millones
 - Monto del tercer puesto = `r monto_tercer_puesto` millones de pesos
 
+**Nota importante:** Los montos finales mostrados han sido ajustados automáticamente para garantizar que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero, manteniendo así el orden lógico de premios y la coherencia matemática del problema.
+
 ### Verificación
 Comprobemos que la suma de los tres montos es igual al premio total:
 
