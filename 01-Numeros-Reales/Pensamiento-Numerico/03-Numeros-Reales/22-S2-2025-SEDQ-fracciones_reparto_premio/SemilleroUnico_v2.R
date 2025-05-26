@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "fracciones_reparto_premio_v4.Rmd"
+archivo_examen <- "fracciones_reparto_premio_v1.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
@@ -94,19 +94,19 @@ exams2html(rep(archivo_examen, numpreg),
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-set.seed(semilla)
-exams2moodle(archivo_examen,
-             n = copias,
-             svg = TRUE,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             dir = "salida",
-             edir = "ejercicios",
-             mchoice = list(shuffle = TRUE,
-                            answernumbering = "ABCD",
-                            eval = list(partial = TRUE,
-                                        rule = "none")),
-             verbose = TRUE)
+# set.seed(semilla)
+# exams2moodle(archivo_examen,
+#              n = copias,
+#              svg = TRUE,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              dir = "salida",
+#              edir = "ejercicios",
+#              mchoice = list(shuffle = TRUE,
+#                             answernumbering = "ABCD",
+#                             eval = list(partial = TRUE,
+#                                         rule = "none")),
+#              verbose = TRUE)
 
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
