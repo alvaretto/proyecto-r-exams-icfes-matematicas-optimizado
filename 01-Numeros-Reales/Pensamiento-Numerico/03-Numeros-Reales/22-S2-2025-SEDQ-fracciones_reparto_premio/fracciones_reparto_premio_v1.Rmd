@@ -229,31 +229,30 @@ test_that("El segundo puesto recibe al menos tanto como el tercer puesto", {
 # La respuesta correcta es el monto del tercer puesto
 respuesta_correcta <- monto_tercer_puesto
 
-# NUEVA ESTRATEGIA: Distractores distribuidos alrededor del valor correcto
-# para evitar que la respuesta correcta siempre sea la más pequeña
+# NUEVA ESTRATEGIA: Distractores completamente aleatorios sin patrones predecibles
+# para que la respuesta correcta pueda aparecer en cualquier posición
 
-# Calcular rango de variación basado en el valor correcto
-rango_base <- max(respuesta_correcta * 0.3, 5)  # Al menos 30% del valor o 5 millones
-
-# Generar distractores pedagógicamente plausibles distribuidos alrededor del valor correcto
+# Generar un pool amplio de distractores candidatos con variación aleatoria
+set.seed(NULL)  # Asegurar aleatoriedad real
 distractores_candidatos <- c(
-  # Errores que resultan en valores MENORES que la respuesta correcta
-  round(respuesta_correcta * 0.6, 1),                                    # 60% del correcto
-  round(respuesta_correcta * 0.75, 1),                                   # 75% del correcto
-  round(premio_total * (valor_segundo_puesto / 2), 1),                   # Mitad del segundo puesto
-  round(premio_total * (valor_primer_puesto / 3), 1),                    # Tercio del primer puesto
+  # Variaciones aleatorias MUY amplias para cubrir todo el espectro
+  round(respuesta_correcta * runif(4, 0.15, 0.6), 1),                    # 15%-60% del correcto (muy menores)
+  round(respuesta_correcta * runif(4, 0.7, 0.95), 1),                    # 70%-95% del correcto (menores)
+  round(respuesta_correcta * runif(4, 1.05, 1.8), 1),                    # 105%-180% del correcto (mayores)
+  round(respuesta_correcta * runif(4, 2.0, 4.5), 1),                     # 200%-450% del correcto (muy mayores)
 
-  # Errores que resultan en valores CERCANOS al correcto
-  round(respuesta_correcta * 1.2, 1),                                    # 120% del correcto
-  round(respuesta_correcta * 1.4, 1),                                    # 140% del correcto
-  round(respuesta_correcta + rango_base * 0.5, 1),                       # Correcto + variación
-  round(respuesta_correcta - rango_base * 0.3, 1),                       # Correcto - variación
+  # Errores conceptuales con rangos amplios
+  round(premio_total * (valor_primer_puesto * runif(2, 0.2, 1.2)), 1),   # Variación amplia del primer puesto
+  round(premio_total * (valor_segundo_puesto * runif(2, 0.3, 1.5)), 1),  # Variación amplia del segundo puesto
+  round(premio_total * (valor_tercer_puesto * runif(2, 0.4, 3.0)), 1),   # Variación amplia del tercer puesto
 
-  # Errores conceptuales plausibles
-  round(premio_total * abs(valor_primer_puesto - valor_segundo_puesto), 1), # Diferencia absoluta
-  round(premio_total * (valor_tercer_puesto * 1.8), 1),                     # Error de multiplicación
-  round(premio_total * (valor_segundo_puesto * 0.7), 1),                    # 70% del segundo
-  round(premio_total * ((valor_primer_puesto + valor_segundo_puesto) / 4), 1) # Cuarto de la suma
+  # Errores de cálculo con rango muy amplio
+  round(respuesta_correcta + runif(3, -respuesta_correcta*0.8, respuesta_correcta*2), 1), # Errores proporcionales
+  round(respuesta_correcta * runif(3, 0.3, 3.5), 1),                     # Multiplicadores muy amplios
+
+  # Valores completamente aleatorios en rangos pedagógicamente plausibles
+  round(runif(3, 5, respuesta_correcta * 0.8), 1),                       # Valores menores aleatorios
+  round(runif(3, respuesta_correcta * 1.2, respuesta_correcta * 4), 1)   # Valores mayores aleatorios
 )
 
 # Filtrar distractores válidos (diferentes de la respuesta correcta y positivos)
@@ -262,48 +261,33 @@ distractores_validos <- distractores_candidatos[distractores_candidatos != respu
 # Asegurar que tenemos suficientes distractores únicos
 distractores_validos <- unique(distractores_validos)
 
-# Si no tenemos suficientes, generar algunos adicionales
-while (length(distractores_validos) < 6) {
-  nuevo_distractor <- round(respuesta_correcta * runif(1, 0.4, 2.0), 1)
+# Si no tenemos suficientes, generar algunos adicionales completamente aleatorios
+while (length(distractores_validos) < 10) {
+  nuevo_distractor <- round(respuesta_correcta * runif(1, 0.2, 3.5), 1)
   if (nuevo_distractor != respuesta_correcta && nuevo_distractor > 0) {
     distractores_validos <- c(distractores_validos, nuevo_distractor)
   }
 }
 
-# Seleccionar estratégicamente 3 distractores para garantizar distribución alrededor del valor correcto
-distractores_menores <- distractores_validos[distractores_validos < respuesta_correcta]
-distractores_mayores <- distractores_validos[distractores_validos > respuesta_correcta]
+# SELECCIÓN COMPLETAMENTE ALEATORIA - SIN PATRONES FORZADOS
+# Simplemente seleccionar 3 distractores al azar del pool disponible
+distractores_seleccionados <- sample(distractores_validos, 3)
+distractor1 <- distractores_seleccionados[1]
+distractor2 <- distractores_seleccionados[2]
+distractor3 <- distractores_seleccionados[3]
 
-# Estrategia de selección balanceada
-if (length(distractores_menores) >= 1 && length(distractores_mayores) >= 2) {
-  # Caso ideal: 1 menor + 2 mayores
-  distractor1 <- sample(distractores_menores, 1)
-  distractor2 <- sample(distractores_mayores, 1)
-  distractor3 <- sample(distractores_mayores[distractores_mayores != distractor2], 1)
-} else if (length(distractores_menores) >= 2 && length(distractores_mayores) >= 1) {
-  # Caso alternativo: 2 menores + 1 mayor
-  distractor1 <- sample(distractores_menores, 1)
-  distractor2 <- sample(distractores_menores[distractores_menores != distractor1], 1)
-  distractor3 <- sample(distractores_mayores, 1)
-} else {
-  # Caso de respaldo: seleccionar los 3 mejores disponibles
-  distractores_seleccionados <- sample(distractores_validos, min(3, length(distractores_validos)))
-  distractor1 <- distractores_seleccionados[1]
-  distractor2 <- if(length(distractores_seleccionados) > 1) distractores_seleccionados[2] else round(respuesta_correcta * 1.3, 1)
-  distractor3 <- if(length(distractores_seleccionados) > 2) distractores_seleccionados[3] else round(respuesta_correcta * 0.8, 1)
-}
-
-# Verificación final de unicidad
+# Verificación final de unicidad (solo si es necesario)
 intentos <- 0
-while (length(unique(c(respuesta_correcta, distractor1, distractor2, distractor3))) < 4 && intentos < 5) {
+while (length(unique(c(respuesta_correcta, distractor1, distractor2, distractor3))) < 4 && intentos < 3) {
+  # Regenerar solo los distractores que causan duplicados
   if (distractor1 == respuesta_correcta || distractor1 == distractor2 || distractor1 == distractor3) {
-    distractor1 <- round(respuesta_correcta * runif(1, 0.5, 1.8), 1)
+    distractor1 <- round(respuesta_correcta * runif(1, 0.3, 2.8), 1)
   }
   if (distractor2 == respuesta_correcta || distractor2 == distractor1 || distractor2 == distractor3) {
-    distractor2 <- round(respuesta_correcta * runif(1, 0.6, 1.9), 1)
+    distractor2 <- round(respuesta_correcta * runif(1, 0.3, 2.8), 1)
   }
   if (distractor3 == respuesta_correcta || distractor3 == distractor1 || distractor3 == distractor2) {
-    distractor3 <- round(respuesta_correcta * runif(1, 0.7, 2.0), 1)
+    distractor3 <- round(respuesta_correcta * runif(1, 0.3, 2.8), 1)
   }
   intentos <- intentos + 1
 }
