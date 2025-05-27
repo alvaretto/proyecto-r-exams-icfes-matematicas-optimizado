@@ -106,6 +106,18 @@ Cada ejercicio sigue una estructura común:
   - Propiedades de Expresiones Decimales
   - Conjunto de Reales y Desigualdades
   - Valor Absoluto
+  - **Fracciones y Reparto Proporcional** (22-S2-2025-SEDQ-fracciones_reparto_premio/)
+    - Distribución de premios usando fracciones
+    - Cálculo de montos exactos por posición en competencias
+    - Reparto proporcional con múltiples beneficiarios
+    - Aplicación de fracciones en contextos deportivos y concursos
+    - Múltiples versiones con diferentes métodos de reparto
+    - Recursos disponibles:
+      - 4 versiones del ejercicio (v1-v4) con diferentes enfoques
+      - Scripts de generación masiva (SemilleroUnico.R, SemilleroMoodle.R)
+      - Pruebas unitarias especializadas
+      - Documentación técnica (walkthrough.md)
+      - Múltiples formatos de salida (PDF, Word, Moodle XML, NOPS)
   - **Porcentajes y Descuentos** (Lab/09-S2-2025-SEDQ/)
     - Cálculo de descuentos comerciales
     - Aplicación de porcentajes en contextos reales
