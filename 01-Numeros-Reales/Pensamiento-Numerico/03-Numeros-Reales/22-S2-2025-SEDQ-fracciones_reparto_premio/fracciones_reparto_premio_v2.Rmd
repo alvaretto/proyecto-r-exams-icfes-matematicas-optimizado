@@ -500,12 +500,14 @@ El tercer puesto recibe lo que resta después de los dos primeros puestos:
 Comprobemos que la suma de los tres montos es igual al premio total:
 
 **Cálculos exactos con la nueva lógica:**
+
 - Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
 - Dinero restante: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
 - Segundo puesto: `r fraccion_segundo_puesto` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
 - Tercer puesto: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` - `r round(monto_segundo_puesto_exacto, 2)` = `r round(monto_tercer_puesto_exacto, 2)` millones
 
 **Montos finales (redondeados):**
+
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones

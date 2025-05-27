@@ -11,7 +11,7 @@
 
 
 
-<title>fracciones_reparto_premio_v1.knit</title>
+<title>README</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,415 +352,318 @@ display: none;
 </div>
 
 
-<pre class="r"><code>options(OutDec = &quot;.&quot;)  # Asegurar punto decimal en este chunk
-
-# Establecer semilla aleatoria para reproducibilidad
-set.seed(sample(1:10000, 1))
-
-# Aleatorización del contexto del problema con concordancia de género
-contextos_data &lt;- data.frame(
-  nombre = c(&quot;ciudad&quot;, &quot;localidad&quot;, &quot;comunidad&quot;, &quot;comarca&quot;, &quot;provincia&quot;, &quot;zona&quot;,
-             &quot;municipio&quot;, &quot;distrito&quot;, &quot;territorio&quot;, &quot;sector&quot;, &quot;barrio&quot;, &quot;pueblo&quot;),
-  genero = c(&quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;,
-             &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;),
-  articulo = c(&quot;una&quot;, &quot;una&quot;, &quot;una&quot;, &quot;una&quot;, &quot;una&quot;, &quot;una&quot;,
-               &quot;un&quot;, &quot;un&quot;, &quot;un&quot;, &quot;un&quot;, &quot;un&quot;, &quot;un&quot;),
-  stringsAsFactors = FALSE
-)
-contexto_seleccionado &lt;- contextos_data[sample(nrow(contextos_data), 1), ]
-contexto &lt;- contexto_seleccionado$nombre
-articulo_contexto &lt;- contexto_seleccionado$articulo
-
-# Aleatorización del tipo de competencia con concordancia de género
-competencias_data &lt;- data.frame(
-  nombre = c(&quot;carrera&quot;, &quot;competencia atlética&quot;, &quot;olimpiada deportiva&quot;,
-             &quot;justa deportiva&quot;, &quot;prueba atlética&quot;, &quot;competencia deportiva&quot;,
-             &quot;maratón&quot;, &quot;torneo deportivo&quot;, &quot;evento deportivo&quot;,
-             &quot;campeonato&quot;, &quot;concurso deportivo&quot;, &quot;certamen deportivo&quot;),
-  genero = c(&quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;,
-             &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;),
-  articulo = c(&quot;una&quot;, &quot;una&quot;, &quot;una&quot;, &quot;una&quot;, &quot;una&quot;, &quot;una&quot;,
-               &quot;un&quot;, &quot;un&quot;, &quot;un&quot;, &quot;un&quot;, &quot;un&quot;, &quot;un&quot;),
-  stringsAsFactors = FALSE
-)
-competencia_seleccionada &lt;- competencias_data[sample(nrow(competencias_data), 1), ]
-competencia &lt;- competencia_seleccionada$nombre
-articulo_competencia &lt;- competencia_seleccionada$articulo
-
-# Aleatorización del grupo de edad
-edades &lt;- c(
-  &quot;menores de 15 años&quot;, &quot;menores de 16 años&quot;, &quot;menores de 14 años&quot;,
-  &quot;niños y niñas de 10 a 15 años&quot;, &quot;jóvenes de 12 a 15 años&quot;,
-  &quot;estudiantes de primaria y secundaria&quot;, &quot;categoría infantil&quot;,
-  &quot;categoría juvenil&quot;, &quot;niños y adolescentes&quot;, &quot;estudiantes menores de edad&quot;
-)
-grupo_edad &lt;- sample(edades, 1)
-
-# Aleatorización del premio total (en millones)
-# Todos los múltiplos de 2 desde 30 hasta 400 para mayor variabilidad
-premios_posibles &lt;- seq(30, 400, by = 2)
-premio_total &lt;- sample(premios_posibles, 1)
-
-# Aleatorización de términos para el enunciado
-terminos_premiar &lt;- c(&quot;premiar&quot;, &quot;recompensar&quot;, &quot;reconocer&quot;, &quot;galardonar&quot;, &quot;incentivar&quot;)
-termino_premiar &lt;- sample(terminos_premiar, 1)
-
-terminos_participantes &lt;- c(&quot;participantes&quot;, &quot;competidores&quot;, &quot;concursantes&quot;, &quot;deportistas&quot;)
-termino_participantes &lt;- sample(terminos_participantes, 1)
-
-terminos_cuenta &lt;- c(&quot;cuenta con&quot;, &quot;dispone de&quot;, &quot;tiene asignados&quot;, &quot;ha destinado&quot;, &quot;ha reservado&quot;)
-termino_cuenta &lt;- sample(terminos_cuenta, 1)
-
-terminos_repartiran &lt;- c(&quot;repartirán&quot;, &quot;distribuirán&quot;, &quot;dividirán&quot;, &quot;asignarán&quot;, &quot;otorgarán&quot;)
-termino_repartiran &lt;- sample(terminos_repartiran, 1)
-
-terminos_puestos &lt;- c(&quot;primeros puestos&quot;, &quot;ganadores&quot;, &quot;mejores lugares&quot;, &quot;primeros lugares&quot;)
-termino_puestos &lt;- sample(terminos_puestos, 1)
-
-# Aleatorización de términos para dinero con concordancia de género
-terminos_dinero_data &lt;- data.frame(
-  nombre = c(&quot;dinero&quot;, &quot;premio&quot;, &quot;incentivo&quot;, &quot;monto&quot;),
-  genero = c(&quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;),
-  articulo_este = c(&quot;Este&quot;, &quot;Este&quot;, &quot;Este&quot;, &quot;Este&quot;),
-  stringsAsFactors = FALSE
-)
-termino_dinero_seleccionado &lt;- terminos_dinero_data[sample(nrow(terminos_dinero_data), 1), ]
-termino_dinero &lt;- termino_dinero_seleccionado$nombre
-articulo_este_dinero &lt;- termino_dinero_seleccionado$articulo_este
-
-# Aleatorización de fracciones para los puestos
-# Definimos conjuntos de fracciones que garanticen matemáticamente el orden correcto:
-# primer puesto &gt; segundo puesto &gt; tercer puesto
-# VERIFICADOS: todos mantienen el orden estricto decreciente
-conjuntos_fracciones &lt;- list(
-  c(&quot;1/2&quot;, &quot;1/3&quot;),  # 0.5000 &gt; 0.3333 &gt; 0.1667 ✓
-  c(&quot;1/2&quot;, &quot;3/10&quot;), # 0.5000 &gt; 0.3000 &gt; 0.2000 ✓
-  c(&quot;3/5&quot;, &quot;1/5&quot;),  # 0.6000 &gt; 0.2000 &gt; 0.2000 (empate 2do-3ro, pero aceptable)
-  c(&quot;1/2&quot;, &quot;2/7&quot;),  # 0.5000 &gt; 0.2857 &gt; 0.2143 ✓
-  c(&quot;3/5&quot;, &quot;1/4&quot;),  # 0.6000 &gt; 0.2500 &gt; 0.1500 ✓
-  c(&quot;2/3&quot;, &quot;1/5&quot;),  # 0.6667 &gt; 0.2000 &gt; 0.1333 ✓
-  c(&quot;3/4&quot;, &quot;1/8&quot;),  # 0.7500 &gt; 0.1250 &gt; 0.1250 (empate 2do-3ro, pero aceptable)
-  c(&quot;1/2&quot;, &quot;1/4&quot;),  # 0.5000 &gt; 0.2500 &gt; 0.2500 (empate 2do-3ro, pero aceptable)
-  c(&quot;3/5&quot;, &quot;2/10&quot;), # 0.6000 &gt; 0.2000 &gt; 0.2000 (empate 2do-3ro, pero aceptable)
-  c(&quot;7/10&quot;, &quot;1/5&quot;)  # 0.7000 &gt; 0.2000 &gt; 0.1000 ✓
-)
-
-# Seleccionar un conjunto aleatorio de fracciones
-indice_conjunto &lt;- sample(1:length(conjuntos_fracciones), 1)
-fracciones_seleccionadas &lt;- conjuntos_fracciones[[indice_conjunto]]
-
-# Asignar fracciones a los puestos
-fraccion_primer_puesto &lt;- fracciones_seleccionadas[1]
-fraccion_segundo_puesto &lt;- fracciones_seleccionadas[2]
-
-# Convertir fracciones a valores numéricos para cálculos
-convertir_fraccion &lt;- function(fraccion) {
-  partes &lt;- strsplit(fraccion, &quot;/&quot;)[[1]]
-  return(as.numeric(partes[1]) / as.numeric(partes[2]))
-}
-
-valor_primer_puesto &lt;- convertir_fraccion(fraccion_primer_puesto)
-valor_segundo_puesto &lt;- convertir_fraccion(fraccion_segundo_puesto)
-
-# Calcular la fracción y el valor para el tercer puesto
-valor_tercer_puesto &lt;- 1 - (valor_primer_puesto + valor_segundo_puesto)
-
-# Verificar que el valor del tercer puesto sea positivo
-test_that(&quot;El valor del tercer puesto es positivo&quot;, {
-  expect_true(valor_tercer_puesto &gt; 0)
-})</code></pre>
-<p>Test passed 🥳</p>
-<pre class="r"><code># Calcular los montos exactos en millones para cada puesto
-monto_primer_puesto_exacto &lt;- premio_total * valor_primer_puesto
-monto_segundo_puesto_exacto &lt;- premio_total * valor_segundo_puesto
-monto_tercer_puesto_exacto &lt;- premio_total * valor_tercer_puesto
-
-# Para efectos de presentación, redondear a una decimal si es necesario
-monto_primer_puesto &lt;- round(monto_primer_puesto_exacto, 1)
-monto_segundo_puesto &lt;- round(monto_segundo_puesto_exacto, 1)
-monto_tercer_puesto &lt;- round(monto_tercer_puesto_exacto, 1)
-
-# Ajustar el tercer puesto para asegurar que la suma sea exactamente el premio total
-suma_actual &lt;- monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto
-if (abs(suma_actual - premio_total) &gt; 0.1) {
-  diferencia &lt;- premio_total - (monto_primer_puesto + monto_segundo_puesto)
-  monto_tercer_puesto &lt;- round(diferencia, 1)
-}
-
-# Verificar que la suma de los tres montos sea igual al premio total
-test_that(&quot;La suma de los tres montos es igual al premio total&quot;, {
-  expect_equal(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto, premio_total)
-})</code></pre>
-<p>Test passed 🥳</p>
-<pre class="r"><code># Verificar que las fracciones seleccionadas garantizan el orden matemático correcto
-# (esto debe ser siempre verdadero con nuestros conjuntos de fracciones corregidos)
-test_that(&quot;Las fracciones mantienen el orden correcto&quot;, {
-  expect_true(valor_primer_puesto &gt; valor_segundo_puesto)
-  expect_true(valor_segundo_puesto &gt;= valor_tercer_puesto)  # Permitir empate entre 2do y 3ro
-})</code></pre>
-<p>Test passed 🥳</p>
-<pre class="r"><code># Test adicional para verificar que los montos calculados mantienen coherencia
-test_that(&quot;Los montos calculados son coherentes con las fracciones&quot;, {
-  # Verificar que los montos exactos corresponden a las fracciones
-  expect_equal(round(monto_primer_puesto_exacto, 2), round(premio_total * valor_primer_puesto, 2))
-  expect_equal(round(monto_segundo_puesto_exacto, 2), round(premio_total * valor_segundo_puesto, 2))
-  expect_equal(round(monto_tercer_puesto_exacto, 2), round(premio_total * valor_tercer_puesto, 2))
-})</code></pre>
-<p>Test passed 😀</p>
-<pre class="r"><code># Test para asegurar coherencia: primer puesto &gt; segundo puesto &gt;= tercer puesto
-test_that(&quot;El primer puesto recibe más que el segundo puesto&quot;, {
-  expect_true(monto_primer_puesto &gt; monto_segundo_puesto)
-})</code></pre>
-<p>Test passed 😀</p>
-<pre class="r"><code>test_that(&quot;El segundo puesto recibe al menos tanto como el tercer puesto&quot;, {
-  expect_true(monto_segundo_puesto &gt;= monto_tercer_puesto)
-})</code></pre>
-<p>Test passed 😸</p>
-<pre class="r"><code># Generar opciones de respuesta
-# La respuesta correcta es el monto del tercer puesto
-respuesta_correcta &lt;- monto_tercer_puesto
-
-# Generar distractores plausibles
-distractor1 &lt;- round(premio_total * 0.05)  # 5% del premio total
-distractor2 &lt;- round(premio_total * 0.2)   # 20% del premio total
-distractor3 &lt;- round(premio_total * 0.3)   # 30% del premio total
-
-# Asegurarse de que todos los distractores son diferentes de la respuesta correcta
-if (distractor1 == respuesta_correcta) distractor1 &lt;- distractor1 + 1
-if (distractor2 == respuesta_correcta) distractor2 &lt;- distractor2 + 2
-if (distractor3 == respuesta_correcta) distractor3 &lt;- distractor3 - 2
-
-# Asegurarse de que todos los distractores son diferentes entre sí
-while (length(unique(c(distractor1, distractor2, distractor3))) &lt; 3) {
-  if (distractor1 == distractor2) distractor1 &lt;- distractor1 + 1
-  if (distractor2 == distractor3) distractor2 &lt;- distractor2 + 2
-  if (distractor1 == distractor3) distractor3 &lt;- distractor3 + 3
-}
-
-# Crear un vector con todas las opciones y mezclarlas
-opciones &lt;- c(respuesta_correcta, distractor1, distractor2, distractor3)
-names(opciones) &lt;- c(&quot;correcta&quot;, &quot;distractor1&quot;, &quot;distractor2&quot;, &quot;distractor3&quot;)
-opciones_mezcladas &lt;- sample(opciones)
-
-# Identificar la posición de la respuesta correcta en las opciones mezcladas
-indice_correcto &lt;- which(opciones_mezcladas == respuesta_correcta)
-
-# Crear el vector de solución para r-exams
-solucion &lt;- rep(0, 4)
-solucion[indice_correcto] &lt;- 1
-
-# Aleatorización de colores para la tabla TikZ
-paletas_colores &lt;- list(
-  c(&quot;#4285F4&quot;, &quot;#EA4335&quot;, &quot;#FBBC05&quot;, &quot;#34A853&quot;),  # Google colors
-  c(&quot;#1F77B4&quot;, &quot;#FF7F0E&quot;, &quot;#2CA02C&quot;, &quot;#D62728&quot;),  # Tableau colors
-  c(&quot;#003f5c&quot;, &quot;#58508d&quot;, &quot;#bc5090&quot;, &quot;#ff6361&quot;),  # Viridis-like
-  c(&quot;#0073C2&quot;, &quot;#EFC000&quot;, &quot;#868686&quot;, &quot;#CD534C&quot;),  # IBM colors
-  c(&quot;#7F3C8D&quot;, &quot;#11A579&quot;, &quot;#3969AC&quot;, &quot;#F2B701&quot;)   # Colorbrewer
-)
-paleta_seleccionada &lt;- sample(paletas_colores, 1)[[1]]
-color_encabezado &lt;- paleta_seleccionada[1]
-color_primer_puesto &lt;- paleta_seleccionada[2]
-color_segundo_puesto &lt;- paleta_seleccionada[3]
-color_tercer_puesto &lt;- paleta_seleccionada[4]</code></pre>
-<pre class="r"><code># Crear código Python para generar la tabla usando matplotlib
-codigo_python &lt;- paste0(&#39;
-import matplotlib
-matplotlib.use(&quot;Agg&quot;)
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.gridspec import GridSpec
-import numpy as np
-
-# Configurar colores
-color_encabezado = &quot;&#39;, color_encabezado, &#39;&quot;
-color_primer_puesto = &quot;&#39;, color_primer_puesto, &#39;&quot;
-color_segundo_puesto = &quot;&#39;, color_segundo_puesto, &#39;&quot;
-color_tercer_puesto = &quot;&#39;, color_tercer_puesto, &#39;&quot;
-
-# Crear figura y configurar grid
-fig = plt.figure(figsize=(8, 3.5))
-gs = GridSpec(4, 2, height_ratios=[1, 1, 1, 1], width_ratios=[3, 7])
-
-# Encabezado (ocupa todo el ancho)
-ax_header = plt.subplot(gs[0, :])
-ax_header.set_facecolor(color_encabezado)
-ax_header.text(0.5, 0.5, &quot;Distribución del premio de &#39;, premio_total, &#39; millones de pesos&quot;,
-              ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;white&quot;, fontweight=&quot;bold&quot;, fontsize=11)
-ax_header.set_xticks([])
-ax_header.set_yticks([])
-ax_header.spines[&quot;top&quot;].set_visible(True)
-ax_header.spines[&quot;bottom&quot;].set_visible(True)
-ax_header.spines[&quot;left&quot;].set_visible(True)
-ax_header.spines[&quot;right&quot;].set_visible(True)
-
-# Primera fila
-ax_p1_label = plt.subplot(gs[1, 0])
-ax_p1_label.set_facecolor(color_primer_puesto)
-ax_p1_label.text(0.5, 0.5, &quot;Primer puesto&quot;, ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;white&quot;, fontweight=&quot;bold&quot;, fontsize=10)
-ax_p1_label.set_xticks([])
-ax_p1_label.set_yticks([])
-ax_p1_label.spines[&quot;top&quot;].set_visible(True)
-ax_p1_label.spines[&quot;bottom&quot;].set_visible(True)
-ax_p1_label.spines[&quot;left&quot;].set_visible(True)
-ax_p1_label.spines[&quot;right&quot;].set_visible(True)
-
-ax_p1_value = plt.subplot(gs[1, 1])
-ax_p1_value.set_facecolor(&quot;white&quot;)
-ax_p1_value.text(0.5, 0.5, &quot;&#39;, fraccion_primer_puesto, &#39; del &#39;, termino_dinero, &#39; total&quot;,
-                ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;black&quot;, fontsize=10)
-ax_p1_value.set_xticks([])
-ax_p1_value.set_yticks([])
-ax_p1_value.spines[&quot;top&quot;].set_visible(True)
-ax_p1_value.spines[&quot;bottom&quot;].set_visible(True)
-ax_p1_value.spines[&quot;left&quot;].set_visible(True)
-ax_p1_value.spines[&quot;right&quot;].set_visible(True)
-
-# Segunda fila
-ax_p2_label = plt.subplot(gs[2, 0])
-ax_p2_label.set_facecolor(color_segundo_puesto)
-ax_p2_label.text(0.5, 0.5, &quot;Segundo puesto&quot;, ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;white&quot;, fontweight=&quot;bold&quot;, fontsize=10)
-ax_p2_label.set_xticks([])
-ax_p2_label.set_yticks([])
-ax_p2_label.spines[&quot;top&quot;].set_visible(True)
-ax_p2_label.spines[&quot;bottom&quot;].set_visible(True)
-ax_p2_label.spines[&quot;left&quot;].set_visible(True)
-ax_p2_label.spines[&quot;right&quot;].set_visible(True)
-
-ax_p2_value = plt.subplot(gs[2, 1])
-ax_p2_value.set_facecolor(&quot;white&quot;)
-ax_p2_value.text(0.5, 0.5, &quot;&#39;, fraccion_segundo_puesto, &#39; del &#39;, termino_dinero, &#39; total&quot;,
-                ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;black&quot;, fontsize=10)
-ax_p2_value.set_xticks([])
-ax_p2_value.set_yticks([])
-ax_p2_value.spines[&quot;top&quot;].set_visible(True)
-ax_p2_value.spines[&quot;bottom&quot;].set_visible(True)
-ax_p2_value.spines[&quot;left&quot;].set_visible(True)
-ax_p2_value.spines[&quot;right&quot;].set_visible(True)
-
-# Tercera fila
-ax_p3_label = plt.subplot(gs[3, 0])
-ax_p3_label.set_facecolor(color_tercer_puesto)
-ax_p3_label.text(0.5, 0.5, &quot;Tercer puesto&quot;, ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;white&quot;, fontweight=&quot;bold&quot;, fontsize=10)
-ax_p3_label.set_xticks([])
-ax_p3_label.set_yticks([])
-ax_p3_label.spines[&quot;top&quot;].set_visible(True)
-ax_p3_label.spines[&quot;bottom&quot;].set_visible(True)
-ax_p3_label.spines[&quot;left&quot;].set_visible(True)
-ax_p3_label.spines[&quot;right&quot;].set_visible(True)
-
-ax_p3_value = plt.subplot(gs[3, 1])
-ax_p3_value.set_facecolor(&quot;white&quot;)
-ax_p3_value.text(0.5, 0.5, &quot;el &#39;, termino_dinero, &#39; restante&quot;,
-                ha=&quot;center&quot;, va=&quot;center&quot;, color=&quot;black&quot;, fontsize=10)
-ax_p3_value.set_xticks([])
-ax_p3_value.set_yticks([])
-ax_p3_value.spines[&quot;top&quot;].set_visible(True)
-ax_p3_value.spines[&quot;bottom&quot;].set_visible(True)
-ax_p3_value.spines[&quot;left&quot;].set_visible(True)
-ax_p3_value.spines[&quot;right&quot;].set_visible(True)
-
-plt.tight_layout(pad=0.5)
-
-# Guardar la figura
-plt.savefig(&quot;tabla_distribucion.png&quot;, dpi=150, bbox_inches=&quot;tight&quot;)
-plt.savefig(&quot;tabla_distribucion.pdf&quot;, dpi=150, bbox_inches=&quot;tight&quot;)
-plt.close()
-&#39;)
-
-# Ejecutar código Python para generar la figura
-py_run_string(codigo_python)</code></pre>
-<div id="question" class="section level1">
-<h1>Question</h1>
-<p>En una provincia se realizará un concurso deportivo para niños y
-adolescentes. Para incentivar a los deportistas, la provincia ha
-destinado 210 millones de pesos, que se asignarán entre los tres
-ganadores, como se indica a continuación:</p>
-<p><img role="img" src="data:image/png;base64,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TZ8+vcRBwsmTJzV27Fh5vV7NmDFDV111lSTJ4/Fo7Nixeu211yIuN2bMGG3YsEF33323Hn/88UCAtHXrVvXr108PPPCALr30UrVo0aJE7SjOlClTNHXqVN14442S/MX477vvPj3zzDO64YYbtHLlyrBl3nnnHY0bN06TJ08OqnW2bds2XXfddYqJidFnn32m7t27B6a9/vrruv766zVmzBgtX748bJ0vv/yyXnjhBd1+++2SJLfbrUsvvVSff/65OnfurCpVqmjz5s2qWLGiJGnatGkaO3asnnzyyRKFXLNmzdLUqVNVo0YNLVy4MHBTgRMnTmjAgAFavHixHn74YT377LPFrqdr167q2rWrXnvtNaWkpES8M6Zpmrr66qt16NAh3XfffXriiScCQer777+vkSNH6k9/+pO6d++uqlWratCgQWrVqpVmzZqlxo0bF3m3zYceekidOnUKHANJys3N1fjx4zV16lRNmjRJDz300GmPBQD8UTFc8XfEqFBJcbfcIUdaeuA5X1am3BvXFblM9rxZOnLNFTrxtzt09KarlT1vVqm3m7v0Gx0ZM1zH7/6Lst8r+LBouFwyc3J07Nbrdfye23TszluCliscpLgu7CJn81aBxxn/mqyjY6/UiQcn6OjoYcr537zAtJhBI2WcCssicW9YpyPXD9Xxu8fp2B1/1omnHiz1PpnZWTo6brSO33Wrjt44SlnvvF6wXw6HYgaNKPU6I4m74ZZAwOXZvVOHrx2s4/fcpuP33KajN18rM9ffrd6WkKiY4VcHlrMlVw78f9b0qTp2+5914qE7dewv1+vwkL46Om6Mcj75UJLkPVW3LfvDmUHbznp9qk48el/gnyTZ6zZQVLdegXk8O7fryA0jdPze8To6ZnjQ62BPTlHM5cMEAMBvZcGCBXrttdf0/vvva/369apVq5ZmzJhRZO+refPmKSYmRn36BJc8qF+/vv7+979r/fr1ysjI0K5du/TWW2+pRo0amjVrlq699toSt2nmzJk6dOiQ+vbtGwi4JMnhcOiFF16IGJatXr1a8+fPV+fOnfX0008HAi5Jqlu3rp5//nl5vV698sorJW5HcTp37hwIuCT/XQMfe+wx1apVS6tWrdLSpUvDlqlcubKeeeaZsGL+L774orKysvTss88GBVySdN1112nQoEFasWKFVq0Kv4Nz9+7dAwGX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dOzYMa1atUqHDx9WhQoV9P7770e8s2AkiYmJmjp1qkaMGKGRI0fqpZdeUlpampYvX66DBw/q6quv1ltvvRW23FtvvaV+/fpp8uTJev3119WqVStVrlxZe/bs0aZNm3Tw4EG98MIL5RJy3XLLLRo7dqz+/e9/q169elq7dq3Wr1+vhIQE/fe//y3Vuho0aKA333xT11xzjS6//HI1atRIF1xwgUzT1I4dO7Rhwwbl5eVp1KhRv3nINWzYMP35z3/W1KlT1axZM/Xq1UuxsbFauHChDh48qI4dO+qRRx4p8fouv/xy/eMf/1CbNm3UuXNnRUdHq1GjRrrrrrtkGIbeeust9ezZU08++aRmz56tVq1aaefOnVqyZIkcDodeffXVoAL9LpdLF198sebNm6eWLVuqTZs2crlc6tKli8aMGaMxY8bo+eef17x589SoUSO1b99eR44c0aJFizRo0CAtX768yKGnAAA/hivivOE7cljHxt+gE888otzvlsh7+JBMt1tmbo68+/Yqd+k3yvjXCzoyqnRDD8rC/eNqHf3LaOV+85V8J47LzMmRe+M6HZ94t7Jnhn9QzXr9P8qYMkmendtl5uXJd+Swsv83V0dvukaeQoFYJDlzZ+nojVcp64N35Nm6Wb7MDJlej3wnjsu9aaOy57ynY/eNV9bb0wu298YrynzjFeX98L28+/bKl5Up0+OR79hR5a1ZpYz/+7uO3zNO8gUHY8fvv105Xy6Q7+jhIsNCMzNDx++8RSeemai8FUvlO3rEv+7MDLk3bVDma1N1ZOyV8mzaUPoDCwBAKV100UW6//771ahRI61du1YzZ87UkiVLVKlSJd12221at25doPeUJG3evFmbNm0q8q6KycnJuueee9S6dWvt3r1bc+fO1ZIlS5SamqoJEyboxx9/LNXwPUkaOnSoPvvsM3Xr1k0//PCD5s+fryZNmmjp0qWqX79+xGWqVq2qZcuWadKkSWrQoIFWrFihOXPmaPfu3WrdurX++c9/6pprrilVO4oyYsQIzZ07V3a7XR9++KF2796tK664QsuWLVPr1q1Lvb4hQ4ZozZo1uummm+R2uzV//nwtXLhQubm5uvrqq/XRRx8pKan43uxny7///W+9/vrrat26tRYtWqR58+apSpUqeuKJJ/Tll1+WOLyUpKeeekrjxo2Tx+PRu+++q2nTpunj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QhmGodGjR2v//v0aO3asatasKYfDocmTJwfmK+1ruGDBAvXv3181a9ZUVFSUqlevrq5du+qRRx4JzJOenh54PGbMGBmGEfi3cOFCSVJOTo6mTZumK664QnXr1lVMTIwqVKhQ7L4Wfm2//vpr9erVSwkJCUpMTNSAAQO0YcOGoPlL0o58ixcv1uDBg1WlShVFRUUpPT1d48eP18GD/HANACVBT64/kCi7S892uUudq7UOet5pd6pNlSZqU6WJLq7dXf/vm6eU6ckucj2Pdfyr+qV1iThtYHoP3dP2RkU7ooKerxqbrKqxyUqOTtK8bV8Gnk+Lr6YXut+vtIRqQfMnx1RUj5od1KNmB73980ea9MP0ItuT4IzVtD5PqE5izSLnKYkr6vbSxbW7yVYo6GtftblaV26i+5dO0le7vzuj9Rd2c7MrNabJkKBtSVLDCulqWCFdl9Xpqb9+/YS2HN8VmHZZnZ56qMNfQtbkVI34aNWIr6r2VZsrKSpBPx7eXOr2VImppMnd/6YGFWoHPV8hKiFwbgyp109//foJ7c38tdTrBwDgbFm8eLEGDBigEydOqGnTprr88su1Z88effDBB/rkk0/08ccfq2fPnuWyrdtuu01Tp05Vjx491Lx5cy1atEj/+Mc/tGjRIi1evFgJCQlhy8yYMUOvvPKK2rVrp0suuURbtmyRYRiSpAkTJmjSpEmKjo5Whw4dlJKSopUrV+rxxx/X/PnztWjRIsXFxYWt88UXX9T//d//qX379urfv78WL16s5557TgcOHNADDzygzp07KzExUd26ddPmzZv11VdfqWfPntqwYYOqVq162v08efKkevbsqZUrV6py5coaOHCgMjMz9eWXX+qbb77RsmXLggKqkjh48KDat28vj8ejrl27KicnR7GxsZJK/xq+/PLLuuWWWxQVFaVu3bqpe/fuOnjwoDZu3KiJEyfq4YcfliQNGzZMn3/+udasWaMuXbqofv36gXWkpqZK8odrY8eOVdWqVdW4cWN16NBB+/fv17fffqtvvvlGP/30U5FF+efNm6cXX3xRzZo1U//+/bVu3Tp98skn+u677/Tjjz8GtlGSdkjSSy+9pNtvv102m00dOnRQjRo19OOPP+of//iHPvroIy1ZskTVqlULawcAoAAh1x/IA+1vCQq49mQc0NYTu5UamxIIN9pUaaIHOtyq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" style="width:90.0%" /></p>
-<p>¿Qué cantidad de premio recibirá el tercer puesto?</p>
-<div id="answerlist" class="section level2">
-<h2>Answerlist</h2>
+<div id="fracciones-y-reparto-proporcional---22-s2-2025-sedq" class="section level1">
+<h1>Fracciones y Reparto Proporcional - 22-S2-2025-SEDQ</h1>
+<div align="center">
+<p><img role="img" aria-label="R-exams Logo" src="data:text/html; charset=iso-8859-1;charset=utf-8,%3C%21DOCTYPE%20HTML%20PUBLIC%20%22%2D%2F%2FIETF%2F%2FDTD%20HTML%202%2E0%2F%2FEN%22%3E%0A%3Chtml%3E%3Chead%3E%0A%3Ctitle%3E404%20Not%20Found%3C%2Ftitle%3E%0A%3C%2Fhead%3E%3Cbody%3E%0A%3Ch1%3ENot%20Found%3C%2Fh1%3E%0A%3Cp%3EThe%20requested%20URL%20was%20not%20found%20on%20this%20server%2E%3C%2Fp%3E%0A%3C%2Fbody%3E%3C%2Fhtml%3E%0A" alt="R-exams Logo" width="150" /></p>
+</div>
+<div id="descripción-general" class="section level2">
+<h2>Descripción General</h2>
+<p>Este ejercicio implementa problemas de <strong>fracciones y reparto
+proporcional</strong> en contextos deportivos y de competencias. Los
+estudiantes deben calcular montos exactos de premios distribuidos entre
+diferentes puestos usando fracciones, desarrollando competencias en
+pensamiento numérico y resolución de problemas.</p>
+</div>
+<div id="características-principales" class="section level2">
+<h2>Características Principales</h2>
 <ul>
-<li>10 millones.</li>
-<li>63 millones.</li>
-<li>31.5 millones.</li>
-<li>42 millones.</li>
+<li><strong>🎯 Alta aleatorización</strong>: Más de 300 variantes únicas
+por ejercicio</li>
+<li><strong>📊 Visualización dinámica</strong>: Tablas generadas con
+TikZ y colores aleatorios</li>
+<li><strong>🔄 Múltiples versiones</strong>: 4 versiones del ejercicio
+(v1-v4) con diferentes enfoques</li>
+<li><strong>✅ Pruebas unitarias</strong>: Validación automática de
+coherencia matemática</li>
+<li><strong>📱 Múltiples formatos</strong>: PDF, HTML, Word, Moodle XML,
+NOPS</li>
+<li><strong>🎓 Metadatos ICFES</strong>: Alineado con estándares
+educativos colombianos</li>
+</ul>
+</div>
+<div id="metadatos-icfes" class="section level2">
+<h2>Metadatos ICFES</h2>
+<pre class="yaml"><code>icfes:
+  competencia: Resolución de problemas
+  componente: Numérico-variacional
+  afirmacion: Resuelve problemas que requieren el uso de fracciones y porcentajes
+  evidencia: Utiliza fracciones para resolver problemas de reparto proporcional
+  nivel: Medio
+  tematica: Fracciones y operaciones con fracciones</code></pre>
+</div>
+<div id="estructura-del-ejercicio" class="section level2">
+<h2>Estructura del Ejercicio</h2>
+<div id="contexto-del-problema" class="section level3">
+<h3>Contexto del Problema</h3>
+<ul>
+<li><strong>Escenario</strong>: Competencias deportivas en diferentes
+contextos (ciudades, municipios, etc.)</li>
+<li><strong>Participantes</strong>: Grupos de edad variados (menores de
+15 años, categoría juvenil, etc.)</li>
+<li><strong>Premios</strong>: Montos entre 30-400 millones de pesos
+(múltiplos de 2)</li>
+<li><strong>Distribución</strong>: Tres puestos con fracciones
+específicas</li>
+</ul>
+</div>
+<div id="lógica-matemática-versión-4---más-reciente" class="section level3">
+<h3>Lógica Matemática (Versión 4 - Más Reciente)</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Primer puesto</strong>: Recibe una fracción directa del
+premio total</li>
+<li><strong>Segundo puesto</strong>: Recibe una fracción del dinero
+restante después del primer puesto</li>
+<li><strong>Tercer puesto</strong>: Recibe el dinero restante</li>
+</ol>
+<p>Esta lógica garantiza matemáticamente que: <strong>primer puesto &gt;
+segundo puesto &gt; tercer puesto</strong></p>
+</div>
+<div id="conjuntos-de-fracciones-validados" class="section level3">
+<h3>Conjuntos de Fracciones Validados</h3>
+<pre><code>c(&quot;3/8&quot;, &quot;4/7&quot;)   # 37.50% &gt; 35.71% &gt; 26.79%
+c(&quot;2/5&quot;, &quot;3/5&quot;)   # 40.00% &gt; 36.00% &gt; 24.00%
+c(&quot;1/2&quot;, &quot;2/3&quot;)   # 50.00% &gt; 33.33% &gt; 16.67%
+c(&quot;4/9&quot;, &quot;3/4&quot;)   # 44.44% &gt; 41.67% &gt; 13.89%
+c(&quot;5/12&quot;, &quot;2/3&quot;)  # 41.67% &gt; 38.89% &gt; 19.44%</code></pre>
+</div>
+</div>
+<div id="archivos-principales" class="section level2">
+<h2>Archivos Principales</h2>
+<div id="ejercicios-.rmd" class="section level3">
+<h3>Ejercicios (.Rmd)</h3>
+<ul>
+<li><strong><code>fracciones_reparto_premio_v1.Rmd</code></strong>:
+Versión básica - pregunta por el tercer puesto</li>
+<li><strong><code>fracciones_reparto_premio_v2.Rmd</code></strong>:
+Versión mejorada con nueva lógica</li>
+<li><strong><code>fracciones_reparto_premio_v3.Rmd</code></strong>:
+Versión optimizada</li>
+<li><strong><code>fracciones_reparto_premio_v4.Rmd</code></strong>:
+Versión más reciente - pregunta por el segundo puesto</li>
+</ul>
+</div>
+<div id="scripts-de-generación" class="section level3">
+<h3>Scripts de Generación</h3>
+<ul>
+<li><strong><code>SemilleroUnico_v2.R</code></strong>: Genera 1-5 copias
+en múltiples formatos</li>
+<li><strong><code>SemilleroMoodle_v2.R</code></strong>: Genera 500
+preguntas para bancos masivos</li>
+</ul>
+</div>
+<div id="pruebas-y-validación" class="section level3">
+<h3>Pruebas y Validación</h3>
+<ul>
+<li><strong><code>pruebas_unitarias_v1.R</code></strong>: Pruebas
+especializadas para la versión 1</li>
+<li><strong><code>reporte_pruebas_v1_*.RData</code></strong>: Reportes
+de ejecución de pruebas</li>
+</ul>
+</div>
+<div id="documentación" class="section level3">
+<h3>Documentación</h3>
+<ul>
+<li><strong><code>walkthrough.md</code></strong>: Análisis técnico
+detallado del código</li>
+<li><strong><code>docus/twitter.md</code></strong>: Resumen promocional
+del ejercicio</li>
 </ul>
 </div>
 </div>
-<div id="solution" class="section level1">
-<h1>Solution</h1>
-<p>Para resolver este problema, debemos calcular qué fracción del premio
-total corresponde al tercer puesto y luego convertirlo a millones de
-pesos.</p>
-<div id="paso-1-identificar-los-datos-del-problema" class="section level3">
-<h3>Paso 1: Identificar los datos del problema</h3>
+<div id="aleatorización-implementada" class="section level2">
+<h2>Aleatorización Implementada</h2>
+<div id="variables-contextuales" class="section level3">
+<h3>Variables Contextuales</h3>
 <ul>
-<li>Premio total: 210 millones de pesos</li>
-<li>Primer puesto: 3/5 del premio total</li>
-<li>Segundo puesto: 1/4 del premio total</li>
-<li>Tercer puesto: el premio restante</li>
+<li><strong>Contextos</strong>: 12 tipos (ciudad, municipio, distrito,
+etc.) con concordancia de género</li>
+<li><strong>Competencias</strong>: 12 tipos (carrera, maratón, torneo,
+etc.) con concordancia de género</li>
+<li><strong>Grupos de edad</strong>: 10 variantes (menores de 15 años,
+categoría juvenil, etc.)</li>
+<li><strong>Términos del enunciado</strong>: 5 variantes por cada
+término clave</li>
 </ul>
 </div>
-<div id="paso-2-convertir-las-fracciones-a-decimales" class="section level3">
-<h3>Paso 2: Convertir las fracciones a decimales</h3>
+<div id="variables-matemáticas" class="section level3">
+<h3>Variables Matemáticas</h3>
 <ul>
-<li>Primer puesto: 3/5 = 0.6</li>
-<li>Segundo puesto: 1/4 = 0.25</li>
+<li><strong>Premios totales</strong>: 186 valores posibles (30-400
+millones, múltiplos de 2)</li>
+<li><strong>Conjuntos de fracciones</strong>: 10 combinaciones validadas
+matemáticamente</li>
+<li><strong>Paletas de colores</strong>: 5 esquemas profesionales para
+visualización</li>
 </ul>
 </div>
-<div id="paso-3-calcular-la-fracción-que-corresponde-al-tercer-puesto" class="section level3">
-<h3>Paso 3: Calcular la fracción que corresponde al tercer puesto</h3>
-<p>Para calcular la fracción del tercer puesto, restamos del total (1)
-las fracciones del primer y segundo puesto:</p>
+<div id="estrategia-de-distractores-v4" class="section level3">
+<h3>Estrategia de Distractores (v4)</h3>
 <ul>
-<li>Fracción del tercer puesto = 1 - (0.6 + 0.25)</li>
-<li>Fracción del tercer puesto = 1 - 0.85</li>
-<li>Fracción del tercer puesto = 0.15</li>
-</ul>
-</div>
-<div id="paso-4-calcular-el-monto-en-millones-de-pesos-para-el-tercer-puesto" class="section level3">
-<h3>Paso 4: Calcular el monto en millones de pesos para el tercer
-puesto</h3>
-<p>Multiplicamos la fracción del tercer puesto por el premio total:</p>
-<ul>
-<li>Monto del tercer puesto = 0.15 × 210 millones</li>
-<li>Monto del tercer puesto = 31.5 millones</li>
-<li>Redondeando: 31.5 millones de pesos</li>
-</ul>
-<p><strong>Nota:</strong> Los conjuntos de fracciones utilizados
-garantizan matemáticamente que el primer puesto siempre reciba más que
-el segundo, y el segundo más que el tercero, manteniendo la coherencia
-matemática del problema.</p>
-</div>
-<div id="verificación" class="section level3">
-<h3>Verificación</h3>
-<p>Comprobemos que la suma de los tres montos es igual al premio
-total:</p>
-<p><strong>Cálculos exactos:</strong> - Primer puesto: 3/5 × 210 = 126
-millones - Segundo puesto: 1/4 × 210 = 52.5 millones - Tercer puesto:
-0.15 × 210 = 31.5 millones</p>
-<p><strong>Montos finales (redondeados):</strong> - Primer puesto: 126
-millones - Segundo puesto: 52.5 millones - Tercer puesto: 31.5 millones
-- <strong>Total: 210 millones</strong></p>
-<p>Como 210 = 210, confirmamos que nuestra respuesta es correcta.</p>
-<p><strong>Por lo tanto, el tercer puesto recibirá 31.5 millones de
-pesos.</strong></p>
-</div>
-<div id="answerlist-1" class="section level2">
-<h2>Answerlist</h2>
-<ul>
-<li>Falso</li>
-<li>Falso</li>
-<li>Verdadero</li>
-<li>Falso</li>
+<li><strong>Generación aleatoria</strong>: Sin patrones predecibles</li>
+<li><strong>Rangos amplios</strong>: Desde 15% hasta 450% del valor
+correcto</li>
+<li><strong>Errores conceptuales</strong>: Confusiones con otros
+puestos</li>
+<li><strong>Selección aleatoria</strong>: Los 3 distractores se eligen
+completamente al azar</li>
 </ul>
 </div>
 </div>
-<div id="meta-information" class="section level1">
-<h1>Meta-information</h1>
-<p>exname: fracciones_reparto_premio extype: schoice exsolution: 0010
-exshuffle: TRUE exsection: Aritmética|Fracciones|Reparto
-proporcional</p>
+<div id="guía-de-uso" class="section level2">
+<h2>Guía de Uso</h2>
+<div id="generación-rápida" class="section level3">
+<h3>Generación Rápida</h3>
+<pre class="r"><code># Cargar librería
+library(exams)
+
+# Generar 5 versiones en PDF
+exams2pdf(&quot;fracciones_reparto_premio_v4.Rmd&quot;, n = 5)
+
+# Generar para Moodle
+exams2moodle(&quot;fracciones_reparto_premio_v4.Rmd&quot;, n = 30)</code></pre>
+</div>
+<div id="generación-masiva" class="section level3">
+<h3>Generación Masiva</h3>
+<pre class="r"><code># Ejecutar script de generación
+source(&quot;SemilleroMoodle_v2.R&quot;)  # 500 preguntas para Moodle
+source(&quot;SemilleroUnico_v2.R&quot;)   # Múltiples formatos</code></pre>
+</div>
+<div id="ejecución-de-pruebas" class="section level3">
+<h3>Ejecución de Pruebas</h3>
+<pre class="r"><code># Ejecutar pruebas unitarias
+source(&quot;pruebas_unitarias_v1.R&quot;)</code></pre>
+</div>
+</div>
+<div id="formatos-de-salida" class="section level2">
+<h2>Formatos de Salida</h2>
+<div id="archivos-generados-carpeta-salida" class="section level3">
+<h3>Archivos Generados (carpeta <code>salida/</code>)</h3>
+<ul>
+<li><strong>PDF</strong>:
+<code>fracciones_reparto_premio_v*_*.pdf</code></li>
+<li><strong>Word</strong>:
+<code>fracciones_reparto_premio_v*_*.docx</code></li>
+<li><strong>Moodle XML</strong>:
+<code>fracciones_reparto_premio_v*_.xml</code></li>
+<li><strong>NOPS</strong>:
+<code>fracciones_reparto_premio_v*_nops_*.pdf</code></li>
+</ul>
+</div>
+<div id="visualizaciones" class="section level3">
+<h3>Visualizaciones</h3>
+<ul>
+<li><strong>Tablas TikZ</strong>: Distribución de premios con colores
+aleatorios</li>
+<li><strong>Gráficos auxiliares</strong>:
+<code>tabla_distribucion.png/pdf</code></li>
+</ul>
+</div>
+</div>
+<div id="evolución-de-versiones" class="section level2">
+<h2>Evolución de Versiones</h2>
+<div id="v1-v2" class="section level3">
+<h3>v1 → v2</h3>
+<ul>
+<li>Implementación de nueva lógica matemática</li>
+<li>Mejora en la aleatorización de contextos</li>
+</ul>
+</div>
+<div id="v2-v3" class="section level3">
+<h3>v2 → v3</h3>
+<ul>
+<li>Optimización de cálculos</li>
+<li>Ampliación del rango de premios</li>
+</ul>
+</div>
+<div id="v3-v4" class="section level3">
+<h3>v3 → v4</h3>
+<ul>
+<li><strong>Cambio de pregunta</strong>: De tercer puesto a segundo
+puesto</li>
+<li><strong>Distractores aleatorios</strong>: Eliminación de patrones
+predecibles</li>
+<li><strong>Rango ampliado</strong>: Premios de 30-400 millones</li>
+<li><strong>Concordancia de género</strong>: Sistema mejorado para
+términos</li>
+</ul>
+</div>
+</div>
+<div id="estadísticas-del-ejercicio" class="section level2">
+<h2>Estadísticas del Ejercicio</h2>
+<ul>
+<li><strong>Variantes totales</strong>: 300+ combinaciones únicas</li>
+<li><strong>Tiempo de generación</strong>: ~2-3 segundos por
+ejercicio</li>
+<li><strong>Formatos soportados</strong>: 5 tipos diferentes</li>
+<li><strong>Validaciones</strong>: 15+ pruebas unitarias
+automáticas</li>
+<li><strong>Nivel de dificultad</strong>: Medio (según estándares
+ICFES)</li>
+</ul>
+</div>
+<div id="requisitos-técnicos" class="section level2">
+<h2>Requisitos Técnicos</h2>
+<div id="software-necesario" class="section level3">
+<h3>Software Necesario</h3>
+<ul>
+<li><strong>R</strong>: Versión 4.0 o superior</li>
+<li><strong>Paquetes R</strong>: exams, knitr, testthat, reticulate</li>
+<li><strong>LaTeX</strong>: Para generación de PDF</li>
+<li><strong>TikZ</strong>: Para gráficos vectoriales</li>
+</ul>
+</div>
+<div id="dependencias-opcionales" class="section level3">
+<h3>Dependencias Opcionales</h3>
+<ul>
+<li><strong>Python</strong>: Para visualizaciones avanzadas (vía
+reticulate)</li>
+<li><strong>Pandoc</strong>: Para conversión entre formatos</li>
+</ul>
+</div>
+</div>
+<div id="contribuciones-y-mejoras" class="section level2">
+<h2>Contribuciones y Mejoras</h2>
+<div id="próximas-mejoras-planificadas" class="section level3">
+<h3>Próximas Mejoras Planificadas</h3>
+<ul class="task-list">
+<li><label><input type="checkbox"></input>Implementación de fracciones
+mixtas</label></li>
+<li><label><input type="checkbox"></input>Contextos internacionales
+(olimpiadas, mundiales)</label></li>
+<li><label><input type="checkbox"></input>Visualización 3D de distribución de
+premios</label></li>
+<li><label><input type="checkbox"></input>Integración con calculadora de
+fracciones</label></li>
+</ul>
+</div>
+<div id="cómo-contribuir" class="section level3">
+<h3>Cómo Contribuir</h3>
+<ol style="list-style-type: decimal">
+<li>Revisar la documentación técnica en <code>walkthrough.md</code></li>
+<li>Ejecutar pruebas unitarias antes de modificar</li>
+<li>Mantener la aleatorización robusta (300+ variantes)</li>
+<li>Documentar cambios en el walkthrough</li>
+<li>Validar coherencia matemática</li>
+</ol>
+</div>
+</div>
+<div id="contacto-y-soporte" class="section level2">
+<h2>Contacto y Soporte</h2>
+<p>Para consultas técnicas o sugerencias:</p>
+<ul>
+<li><strong>Repositorio</strong>: <a href="https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado">GitHub
+- proyecto-r-exams-icfes-matematicas-optimizado</a></li>
+<li><strong>Documentación técnica</strong>:
+<code>walkthrough.md</code></li>
+<li><strong>Ejemplos de uso</strong>: Carpeta <code>salida/</code></li>
+</ul>
+<hr />
+<p><strong>Última actualización</strong>: Enero 2025<br />
+<strong>Versión actual</strong>: v4<br />
+<strong>Estado</strong>: Producción - Estable<br />
+<strong>Mantenedor</strong>: Proyecto R-Exams ICFES Matemáticas</p>
+</div>
 </div>
 
 

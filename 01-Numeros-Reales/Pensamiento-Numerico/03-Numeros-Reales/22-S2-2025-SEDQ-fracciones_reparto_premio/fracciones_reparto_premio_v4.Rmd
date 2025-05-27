@@ -484,6 +484,7 @@ Para resolver este problema, debemos calcular qué cantidad del premio total cor
 
 ### Paso 4: Calcular el monto del segundo puesto
 El segundo puesto recibe `r fraccion_segundo_puesto` del dinero restante:
+
 - Segundo puesto: `r fraccion_segundo_puesto` = `r round(valor_segundo_puesto_fraccion, 4)`
 - Monto del segundo puesto = `r round(valor_segundo_puesto_fraccion, 4)` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
 - Redondeando: `r monto_segundo_puesto` millones de pesos
@@ -494,11 +495,13 @@ El segundo puesto recibe `r fraccion_segundo_puesto` del dinero restante:
 Comprobemos que nuestro cálculo del segundo puesto es correcto:
 
 **Cálculo paso a paso:**
+
 - Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
 - Dinero restante: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
 - Segundo puesto: `r fraccion_segundo_puesto` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
 
 **Verificación con todos los montos:**
+
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones

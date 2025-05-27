@@ -486,11 +486,13 @@ Para calcular el monto que recibirá el segundo puesto, multiplicamos directamen
 Comprobemos que la suma de los tres montos es igual al premio total:
 
 **Cálculos exactos:**
+
 - Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
 - Segundo puesto: `r fraccion_segundo_puesto` × `r premio_total` = `r round(monto_segundo_puesto_exacto, 2)` millones
 - Tercer puesto: `r round(valor_tercer_puesto, 4)` × `r premio_total` = `r round(monto_tercer_puesto_exacto, 2)` millones
 
 **Montos finales (redondeados):**
+
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
