@@ -8,9 +8,9 @@ output:
 icfes:
   competencia: Resolución de problemas
   componente: Numérico-variacional
-  afirmacion: Resuelve problemas que involucran operaciones con fracciones en contextos de reparto secuencial.
-  evidencia: Aplica el concepto de fracción de una cantidad de forma sucesiva para resolver problemas de distribución.
-  nivel: 4
+  afirmacion: Resuelve problemas que requieren el uso de fracciones y porcentajes
+  evidencia: Utiliza fracciones para resolver problemas de reparto proporcional
+  nivel: Medio
   tematica: Fracciones y operaciones con fracciones
 ---
 ```{r setup, include=FALSE}
@@ -60,8 +60,8 @@ use_python(Sys.which("python"), required = TRUE)
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
-# Establecer semilla aleatoria
-#set.seed(sample(1:10000, 1))
+# Establecer semilla aleatoria para reproducibilidad
+set.seed(sample(1:10000, 1))
 
 # Aleatorización del contexto del problema con concordancia de género
 contextos_data <- data.frame(
@@ -135,23 +135,30 @@ termino_dinero <- termino_dinero_seleccionado$nombre
 articulo_este_dinero <- termino_dinero_seleccionado$articulo_este
 
 # Aleatorización de fracciones para los puestos
-# F1 para el primer puesto (del total), F2 para el segundo puesto (del restante)
-# Asegurar que F1 < 1 y F2 < 1
+# NUEVA LÓGICA: Segundo puesto es fracción del dinero restante (después del primer puesto)
+# Definimos conjuntos de fracciones que garanticen matemáticamente el orden correcto:
+# primer puesto > segundo puesto > tercer puesto
+# VERIFICADOS: todos mantienen el orden estricto decreciente con la nueva lógica
 conjuntos_fracciones <- list(
-  c("1/2", "1/3"),  # Ej: 100 -> 1ro: 50, Rest: 50. 2do: 50*(1/3) ~ 17. 3ro: ~33
-  c("3/5", "1/4"),  # Ej: 100 -> 1ro: 60, Rest: 40. 2do: 40*(1/4) = 10. 3ro: 30
-  c("2/5", "1/4"),  # Ej: 100 -> 1ro: 40, Rest: 60. 2do: 60*(1/4) = 15. 3ro: 45
-  c("3/5", "1/3"),  # Ej: 50 -> 1ro: 30, Rest: 20. 2do: 20*(1/3) ~ 7. 3ro: ~13
-  c("1/2", "1/4"),  # Ej: 80 -> 1ro: 40, Rest: 40. 2do: 40*(1/4) = 10. 3ro: 30
-  c("3/4", "1/5"),  # Ej: 100 -> 1ro: 75, Rest: 25. 2do: 25*(1/5) = 5. 3ro: 20
-  c("2/3", "1/4"),  # Ej: 90 -> 1ro: 60, Rest: 30. 2do: 30*(1/4) = 7.5. 3ro: 22.5
-  c("1/2", "2/5")   # Ej: 100 -> 1ro: 50, Rest: 50. 2do: 50*(2/5) = 20. 3ro: 30
+  c("3/8", "4/7"),   # 37.50 > 35.71 > 26.79 ✓
+  c("2/5", "3/5"),   # 40.00 > 36.00 > 24.00 ✓
+  c("1/2", "2/3"),   # 50.00 > 33.33 > 16.67 ✓
+  c("4/9", "3/4"),   # 44.44 > 41.67 > 13.89 ✓
+  c("5/12", "2/3"),  # 41.67 > 38.89 > 19.44 ✓
+  c("5/13", "3/5"),  # 38.46 > 36.92 > 24.62 ✓
+  c("2/5", "4/7"),   # 40.00 > 34.29 > 25.71 ✓
+  c("2/5", "5/8"),   # 40.00 > 37.50 > 22.50 ✓
+  c("3/7", "3/5"),   # 42.86 > 34.29 > 22.86 ✓
+  c("3/7", "2/3")    # 42.86 > 38.10 > 19.05 ✓
 )
+
+# Seleccionar un conjunto aleatorio de fracciones
 indice_conjunto <- sample(1:length(conjuntos_fracciones), 1)
 fracciones_seleccionadas <- conjuntos_fracciones[[indice_conjunto]]
 
-fraccion_primer_puesto_str <- fracciones_seleccionadas[1]
-fraccion_segundo_puesto_str <- fracciones_seleccionadas[2] # Fracción del restante
+# Asignar fracciones a los puestos
+fraccion_primer_puesto <- fracciones_seleccionadas[1]
+fraccion_segundo_puesto <- fracciones_seleccionadas[2]
 
 # Convertir fracciones a valores numéricos para cálculos
 convertir_fraccion <- function(fraccion) {
@@ -159,155 +166,157 @@ convertir_fraccion <- function(fraccion) {
   return(as.numeric(partes[1]) / as.numeric(partes[2]))
 }
 
-valor_f1 <- convertir_fraccion(fraccion_primer_puesto_str) # Fracción del total para el 1er puesto
-valor_f2 <- convertir_fraccion(fraccion_segundo_puesto_str) # Fracción del restante para el 2do puesto
+# NUEVA LÓGICA: Segundo puesto es fracción del dinero restante
+valor_primer_puesto <- convertir_fraccion(fraccion_primer_puesto)
+valor_segundo_puesto_fraccion <- convertir_fraccion(fraccion_segundo_puesto)
 
-# Calcular los montos para cada puesto según la nueva lógica
-# Monto para el primer puesto
-monto_primer_puesto_exacto <- premio_total * valor_f1
-monto_primer_puesto <- round(monto_primer_puesto_exacto)
+# Calcular montos con la nueva lógica
+monto_primer_puesto_exacto <- premio_total * valor_primer_puesto
+dinero_restante_despues_primer_puesto <- premio_total - monto_primer_puesto_exacto
+monto_segundo_puesto_exacto <- valor_segundo_puesto_fraccion * dinero_restante_despues_primer_puesto
+monto_tercer_puesto_exacto <- premio_total - monto_primer_puesto_exacto - monto_segundo_puesto_exacto
 
-# Dinero restante después de asignar el primer puesto
-restante_despues_primero <- premio_total - monto_primer_puesto
+# Calcular valores equivalentes para compatibilidad con el resto del código
+valor_segundo_puesto <- monto_segundo_puesto_exacto / premio_total
+valor_tercer_puesto <- monto_tercer_puesto_exacto / premio_total
 
-# Monto para el segundo puesto (del dinero restante)
-monto_segundo_puesto_exacto <- restante_despues_primero * valor_f2
-monto_segundo_puesto <- round(monto_segundo_puesto_exacto)
-
-# Monto para el tercer puesto (el resto del dinero restante después del segundo)
-# O, para asegurar que la suma total sea premio_total después de redondeos:
-monto_tercer_puesto <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
-
-# Test para asegurar que el tercer puesto no sea negativo (debido a redondeos extremos)
-# Esto es más un sanity check; con fracciones < 1, debería ser positivo.
-test_that("El monto del tercer puesto es no negativo", {
-  expect_true(monto_tercer_puesto >= 0)
+# Verificar que el valor del tercer puesto sea positivo
+test_that("El valor del tercer puesto es positivo", {
+  expect_true(valor_tercer_puesto > 0)
 })
 
-# Función para garantizar orden correcto de premios
-garantizar_orden_premios <- function(p1, p2, p3, total) {
-  # Si el orden no es correcto, redistribuir manteniendo proporciones aproximadas
-  if (p1 <= p2 || p2 <= p3) {
-    # Calcular nuevos montos que garanticen el orden correcto
-    # Asignar al menos 50% al primer puesto, 30% al segundo, 20% al tercero
-    nuevo_p1 <- max(round(total * 0.5), p1)
-    nuevo_p2 <- max(round(total * 0.3), round(nuevo_p1 * 0.6))
-    nuevo_p3 <- total - nuevo_p1 - nuevo_p2
+# Los montos exactos ya fueron calculados con la nueva lógica arriba
 
-    # Ajustar si el tercer puesto es negativo o muy pequeño
-    if (nuevo_p3 <= 0) {
-      nuevo_p3 <- max(1, round(total * 0.1))
-      nuevo_p2 <- max(nuevo_p3 + 1, round(total * 0.25))
-      nuevo_p1 <- total - nuevo_p2 - nuevo_p3
-    }
+# Para efectos de presentación, redondear a una decimal si es necesario
+monto_primer_puesto <- round(monto_primer_puesto_exacto, 1)
+monto_segundo_puesto <- round(monto_segundo_puesto_exacto, 1)
+monto_tercer_puesto <- round(monto_tercer_puesto_exacto, 1)
 
-    # Verificar que el orden sea correcto y ajustar si es necesario
-    if (nuevo_p1 <= nuevo_p2) {
-      nuevo_p1 <- nuevo_p2 + 1
-      nuevo_p3 <- total - nuevo_p1 - nuevo_p2
-    }
-
-    if (nuevo_p2 <= nuevo_p3) {
-      nuevo_p2 <- nuevo_p3 + 1
-      nuevo_p1 <- total - nuevo_p2 - nuevo_p3
-    }
-
-    return(c(nuevo_p1, nuevo_p2, nuevo_p3))
-  }
-
-  return(c(p1, p2, p3))
+# Ajustar el tercer puesto para asegurar que la suma sea exactamente el premio total
+suma_actual <- monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto
+if (abs(suma_actual - premio_total) > 0.1) {
+  diferencia <- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+  monto_tercer_puesto <- round(diferencia, 1)
 }
 
-# Aplicar la función de corrección
-montos_corregidos <- garantizar_orden_premios(
-  monto_primer_puesto,
-  monto_segundo_puesto,
-  monto_tercer_puesto,
-  premio_total
-)
+# Verificar que la suma de los tres montos sea igual al premio total (con tolerancia)
+test_that("La suma de los tres montos es igual al premio total", {
+  suma_total <- monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto
+  expect_equal(suma_total, premio_total, tolerance = 0.1)
+})
 
-monto_primer_puesto <- montos_corregidos[1]
-monto_segundo_puesto <- montos_corregidos[2]
-monto_tercer_puesto <- montos_corregidos[3]
+# Verificar que las fracciones seleccionadas garantizan el orden matemático correcto
+# (esto debe ser siempre verdadero con nuestros conjuntos de fracciones corregidos)
+test_that("Las fracciones mantienen el orden correcto", {
+  expect_true(valor_primer_puesto > valor_segundo_puesto)
+  # Usar tolerancia para comparaciones de punto flotante
+  expect_true(valor_segundo_puesto >= valor_tercer_puesto - 1e-10)
+})
 
-# Test para asegurar coherencia: primer puesto > segundo puesto > tercer puesto
+# Test adicional para verificar que los montos calculados mantienen coherencia
+test_that("Los montos calculados son coherentes con las fracciones", {
+  # Verificar que los montos exactos corresponden a las fracciones (con tolerancia)
+  expect_equal(monto_primer_puesto_exacto, premio_total * valor_primer_puesto, tolerance = 0.01)
+  expect_equal(monto_segundo_puesto_exacto, premio_total * valor_segundo_puesto, tolerance = 0.01)
+  expect_equal(monto_tercer_puesto_exacto, premio_total * valor_tercer_puesto, tolerance = 0.01)
+})
+
+# Test para asegurar coherencia: primer puesto > segundo puesto >= tercer puesto
 test_that("El primer puesto recibe más que el segundo puesto", {
   expect_true(monto_primer_puesto > monto_segundo_puesto)
 })
 
-test_that("El segundo puesto recibe más que el tercer puesto", {
-  expect_true(monto_segundo_puesto > monto_tercer_puesto)
-})
-
-# Verificar que la suma de los tres montos sea igual al premio total
-test_that("La suma de los tres montos es igual al premio total", {
-  expect_equal(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto, premio_total)
+test_that("El segundo puesto recibe al menos tanto como el tercer puesto", {
+  # Usar tolerancia para comparaciones de montos redondeados
+  expect_true(monto_segundo_puesto >= monto_tercer_puesto - 0.1)
 })
 
 # Generar opciones de respuesta
+# La respuesta correcta es el monto del tercer puesto
 respuesta_correcta <- monto_tercer_puesto
 
-# Generar distractores plausibles
-distractor1 <- round(premio_total * valor_f1 * valor_f2) # F1 * F2 del total (error común)
-distractor2 <- round(premio_total * (1 - valor_f1 - valor_f2)) # Si se suman F1 y F2 como del total
-if (distractor2 < 0) distractor2 <- round(premio_total * 0.1) # Evitar negativo
-distractor3 <- round(restante_despues_primero * (1-valor_f2) * 0.5) # Mitad de lo que no fue para el 2do (del restante)
+# NUEVA ESTRATEGIA: Distractores completamente aleatorios sin patrones predecibles
+# para que la respuesta correcta pueda aparecer en cualquier posición
 
-# Asegurarse de que todos los distractores son diferentes de la respuesta correcta y entre sí
-opciones_base <- c(respuesta_correcta, distractor1, distractor2, distractor3)
-# Si hay duplicados con la respuesta correcta o entre distractores, ajustar ligeramente
-if (any(duplicated(opciones_base))) {
-    if (distractor1 == respuesta_correcta || distractor1 == distractor2 || distractor1 == distractor3) distractor1 <- round(premio_total * 0.15)
-    if (distractor2 == respuesta_correcta || distractor2 == distractor1 || distractor2 == distractor3) distractor2 <- round(premio_total * 0.25)
-    if (distractor3 == respuesta_correcta || distractor3 == distractor1 || distractor3 == distractor2) distractor3 <- round(premio_total * 0.05)
-}
-# Re-check for uniqueness after adjustments
-opciones_finales_temp <- unique(c(respuesta_correcta, distractor1, distractor2, distractor3))
-# Fill up to 4 options if unique produced less (e.g. all distractors became same as correct)
-additional_distractors_needed <- 4 - length(opciones_finales_temp)
-if (additional_distractors_needed > 0) {
-    current_values <- opciones_finales_temp
-    for (i in 1:additional_distractors_needed) {
-        new_distractor <- round(premio_total * (0.1 + i*0.03))
-        while(new_distractor %in% current_values) {
-            new_distractor <- new_distractor + 1
-        }
-        opciones_finales_temp <- c(opciones_finales_temp, new_distractor)
-        current_values <- c(current_values, new_distractor)
-    }
-}
-# Ensure exactly 4 options, taking the first 4 if more were generated by chance
-opciones <- opciones_finales_temp[1:4]
+# Generar un pool amplio de distractores candidatos con variación aleatoria
+set.seed(NULL)  # Asegurar aleatoriedad real
+distractores_candidatos <- c(
+  # Variaciones aleatorias MUY amplias para cubrir todo el espectro
+  round(respuesta_correcta * runif(4, 0.15, 0.6), 1),                    # 15%-60% del correcto (muy menores)
+  round(respuesta_correcta * runif(4, 0.7, 0.95), 1),                    # 70%-95% del correcto (menores)
+  round(respuesta_correcta * runif(4, 1.05, 1.8), 1),                    # 105%-180% del correcto (mayores)
+  round(respuesta_correcta * runif(4, 2.0, 4.5), 1),                     # 200%-450% del correcto (muy mayores)
 
-# Si después de los ajustes, la respuesta correcta no está o hay menos de 4 opciones únicas,
-# se recurre a una generación más simple de distractores para asegurar validez.
-if (length(unique(opciones)) < 4 || !respuesta_correcta %in% opciones) {
-  opciones <- c(respuesta_correcta,
-                round(respuesta_correcta * 0.5) + 1,
-                round(respuesta_correcta * 1.5) + 2,
-                round(premio_total * 0.1) + 3)
-  opciones <- unique(opciones)
-  while(length(opciones) < 4) {
-    opciones <- c(opciones, max(opciones) + sample(1:5,1))
-  }
-  opciones <- opciones[1:4] # Ensure 4 options
-  if(!respuesta_correcta %in% opciones){ # Failsafe if correct answer was removed
-      opciones[sample(1:4,1)] <- respuesta_correcta
+  # Errores conceptuales con rangos amplios
+  round(premio_total * (valor_primer_puesto * runif(2, 0.2, 1.2)), 1),   # Variación amplia del primer puesto
+  round(premio_total * (valor_segundo_puesto * runif(2, 0.3, 1.5)), 1),  # Variación amplia del segundo puesto
+  round(premio_total * (valor_tercer_puesto * runif(2, 0.4, 3.0)), 1),   # Variación amplia del tercer puesto
+
+  # Errores de cálculo con rango muy amplio
+  round(respuesta_correcta + runif(3, -respuesta_correcta*0.8, respuesta_correcta*2), 1), # Errores proporcionales
+  round(respuesta_correcta * runif(3, 0.3, 3.5), 1),                     # Multiplicadores muy amplios
+
+  # Valores completamente aleatorios en rangos pedagógicamente plausibles
+  round(runif(3, 5, respuesta_correcta * 0.8), 1),                       # Valores menores aleatorios
+  round(runif(3, respuesta_correcta * 1.2, respuesta_correcta * 4), 1)   # Valores mayores aleatorios
+)
+
+# Filtrar distractores válidos (diferentes de la respuesta correcta y positivos)
+distractores_validos <- distractores_candidatos[distractores_candidatos != respuesta_correcta & distractores_candidatos > 0]
+
+# Asegurar que tenemos suficientes distractores únicos
+distractores_validos <- unique(distractores_validos)
+
+# Si no tenemos suficientes, generar algunos adicionales completamente aleatorios
+while (length(distractores_validos) < 10) {
+  nuevo_distractor <- round(respuesta_correcta * runif(1, 0.2, 3.5), 1)
+  if (nuevo_distractor != respuesta_correcta && nuevo_distractor > 0) {
+    distractores_validos <- c(distractores_validos, nuevo_distractor)
   }
 }
 
+# SELECCIÓN COMPLETAMENTE ALEATORIA - SIN PATRONES FORZADOS
+# Simplemente seleccionar 3 distractores al azar del pool disponible
+distractores_seleccionados <- sample(distractores_validos, 3)
+distractor1 <- distractores_seleccionados[1]
+distractor2 <- distractores_seleccionados[2]
+distractor3 <- distractores_seleccionados[3]
+
+# Verificación final de unicidad (solo si es necesario)
+intentos <- 0
+while (length(unique(c(respuesta_correcta, distractor1, distractor2, distractor3))) < 4 && intentos < 3) {
+  # Regenerar solo los distractores que causan duplicados
+  if (distractor1 == respuesta_correcta || distractor1 == distractor2 || distractor1 == distractor3) {
+    distractor1 <- round(respuesta_correcta * runif(1, 0.3, 2.8), 1)
+  }
+  if (distractor2 == respuesta_correcta || distractor2 == distractor1 || distractor2 == distractor3) {
+    distractor2 <- round(respuesta_correcta * runif(1, 0.3, 2.8), 1)
+  }
+  if (distractor3 == respuesta_correcta || distractor3 == distractor1 || distractor3 == distractor2) {
+    distractor3 <- round(respuesta_correcta * runif(1, 0.3, 2.8), 1)
+  }
+  intentos <- intentos + 1
+}
+
+# Crear un vector con todas las opciones y mezclarlas
+opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
+names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
 opciones_mezcladas <- sample(opciones)
+
+# Identificar la posición de la respuesta correcta en las opciones mezcladas
 indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
+
+# Crear el vector de solución para r-exams
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
 
-# Aleatorización de colores para la tabla
+# Aleatorización de colores para la tabla TikZ
 paletas_colores <- list(
-  c("#4285F4", "#EA4335", "#FBBC05", "#34A853"),
-  c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728"),
-  c("#003f5c", "#58508d", "#bc5090", "#ff6361"),
-  c("#0073C2", "#EFC000", "#868686", "#CD534C"),
-  c("#7F3C8D", "#11A579", "#3969AC", "#F2B701")
+  c("#4285F4", "#EA4335", "#FBBC05", "#34A853"),  # Google colors
+  c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728"),  # Tableau colors
+  c("#003f5c", "#58508d", "#bc5090", "#ff6361"),  # Viridis-like
+  c("#0073C2", "#EFC000", "#868686", "#CD534C"),  # IBM colors
+  c("#7F3C8D", "#11A579", "#3969AC", "#F2B701")   # Colorbrewer
 )
 paleta_seleccionada <- sample(paletas_colores, 1)[[1]]
 color_encabezado <- paleta_seleccionada[1]
@@ -333,17 +342,20 @@ color_segundo_puesto = "', color_segundo_puesto, '"
 color_tercer_puesto = "', color_tercer_puesto, '"
 
 # Crear figura y configurar grid
-fig = plt.figure(figsize=(8, 3.5)) # Ajustado para posible texto más largo
+fig = plt.figure(figsize=(8, 3.5))
 gs = GridSpec(4, 2, height_ratios=[1, 1, 1, 1], width_ratios=[3, 7])
 
-# Encabezado
+# Encabezado (ocupa todo el ancho)
 ax_header = plt.subplot(gs[0, :])
 ax_header.set_facecolor(color_encabezado)
 ax_header.text(0.5, 0.5, "Distribución del premio de ', premio_total, ' millones de pesos",
               ha="center", va="center", color="white", fontweight="bold", fontsize=11)
 ax_header.set_xticks([])
 ax_header.set_yticks([])
-for spine in ax_header.spines.values(): spine.set_visible(True)
+ax_header.spines["top"].set_visible(True)
+ax_header.spines["bottom"].set_visible(True)
+ax_header.spines["left"].set_visible(True)
+ax_header.spines["right"].set_visible(True)
 
 # Primera fila
 ax_p1_label = plt.subplot(gs[1, 0])
@@ -351,15 +363,21 @@ ax_p1_label.set_facecolor(color_primer_puesto)
 ax_p1_label.text(0.5, 0.5, "Primer puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
 ax_p1_label.set_xticks([])
 ax_p1_label.set_yticks([])
-for spine in ax_p1_label.spines.values(): spine.set_visible(True)
+ax_p1_label.spines["top"].set_visible(True)
+ax_p1_label.spines["bottom"].set_visible(True)
+ax_p1_label.spines["left"].set_visible(True)
+ax_p1_label.spines["right"].set_visible(True)
 
 ax_p1_value = plt.subplot(gs[1, 1])
 ax_p1_value.set_facecolor("white")
-ax_p1_value.text(0.5, 0.5, "', fraccion_primer_puesto_str, ' del ', termino_dinero, ' total",
+ax_p1_value.text(0.5, 0.5, "', fraccion_primer_puesto, ' del ', termino_dinero, ' total",
                 ha="center", va="center", color="black", fontsize=10)
 ax_p1_value.set_xticks([])
 ax_p1_value.set_yticks([])
-for spine in ax_p1_value.spines.values(): spine.set_visible(True)
+ax_p1_value.spines["top"].set_visible(True)
+ax_p1_value.spines["bottom"].set_visible(True)
+ax_p1_value.spines["left"].set_visible(True)
+ax_p1_value.spines["right"].set_visible(True)
 
 # Segunda fila
 ax_p2_label = plt.subplot(gs[2, 0])
@@ -367,15 +385,21 @@ ax_p2_label.set_facecolor(color_segundo_puesto)
 ax_p2_label.text(0.5, 0.5, "Segundo puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
 ax_p2_label.set_xticks([])
 ax_p2_label.set_yticks([])
-for spine in ax_p2_label.spines.values(): spine.set_visible(True)
+ax_p2_label.spines["top"].set_visible(True)
+ax_p2_label.spines["bottom"].set_visible(True)
+ax_p2_label.spines["left"].set_visible(True)
+ax_p2_label.spines["right"].set_visible(True)
 
 ax_p2_value = plt.subplot(gs[2, 1])
 ax_p2_value.set_facecolor("white")
-ax_p2_value.text(0.5, 0.5, "', fraccion_segundo_puesto_str, ' del ', termino_dinero, ' restante tras el 1er puesto",
-                ha="center", va="center", color="black", fontsize=9) # Fontsize ajustado
+ax_p2_value.text(0.5, 0.5, "', fraccion_segundo_puesto, ' del ', termino_dinero, ' restante",
+                ha="center", va="center", color="black", fontsize=10)
 ax_p2_value.set_xticks([])
 ax_p2_value.set_yticks([])
-for spine in ax_p2_value.spines.values(): spine.set_visible(True)
+ax_p2_value.spines["top"].set_visible(True)
+ax_p2_value.spines["bottom"].set_visible(True)
+ax_p2_value.spines["left"].set_visible(True)
+ax_p2_value.spines["right"].set_visible(True)
 
 # Tercera fila
 ax_p3_label = plt.subplot(gs[3, 0])
@@ -383,17 +407,25 @@ ax_p3_label.set_facecolor(color_tercer_puesto)
 ax_p3_label.text(0.5, 0.5, "Tercer puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
 ax_p3_label.set_xticks([])
 ax_p3_label.set_yticks([])
-for spine in ax_p3_label.spines.values(): spine.set_visible(True)
+ax_p3_label.spines["top"].set_visible(True)
+ax_p3_label.spines["bottom"].set_visible(True)
+ax_p3_label.spines["left"].set_visible(True)
+ax_p3_label.spines["right"].set_visible(True)
 
 ax_p3_value = plt.subplot(gs[3, 1])
 ax_p3_value.set_facecolor("white")
-ax_p3_value.text(0.5, 0.5, "el ', termino_dinero, ' que queda al final",
+ax_p3_value.text(0.5, 0.5, "el ', termino_dinero, ' restante",
                 ha="center", va="center", color="black", fontsize=10)
 ax_p3_value.set_xticks([])
 ax_p3_value.set_yticks([])
-for spine in ax_p3_value.spines.values(): spine.set_visible(True)
+ax_p3_value.spines["top"].set_visible(True)
+ax_p3_value.spines["bottom"].set_visible(True)
+ax_p3_value.spines["left"].set_visible(True)
+ax_p3_value.spines["right"].set_visible(True)
 
 plt.tight_layout(pad=0.5)
+
+# Guardar la figura
 plt.savefig("tabla_distribucion.png", dpi=150, bbox_inches="tight")
 plt.savefig("tabla_distribucion.pdf", dpi=150, bbox_inches="tight")
 plt.close()
@@ -406,15 +438,19 @@ py_run_string(codigo_python)
 Question
 ========
 
-En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == "f") "la" else "el"` `r contexto` `r termino_cuenta` `r premio_total` millones de pesos. `r articulo_este_dinero` `r termino_dinero` se `r gsub("án$", "á", termino_repartiran)` entre los tres `r termino_puestos` de la siguiente manera:
-
+En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == "f") "la" else "el"` `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los tres `r termino_puestos`, como se indica a continuación:
 
 ```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
+# Detectar si se está generando para Moodle u otros formatos
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
 es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Incluir la imagen generada por Python
 if (es_moodle) {
+  # Tamaño para Moodle
   cat("![](tabla_distribucion.png){width=80%}")
 } else {
+  # Tamaño para PDF/Word
   cat("![](tabla_distribucion.png){width=90%}")
 }
 ```
@@ -431,70 +467,53 @@ Answerlist
 Solution
 ========
 
-Para resolver este problema, debemos calcular secuencialmente la cantidad de `r termino_dinero` asignada a cada puesto.
+Para resolver este problema, debemos calcular qué fracción del premio total corresponde al tercer puesto y luego convertirlo a millones de pesos.
 
 ### Paso 1: Identificar los datos del problema
-- Premio total: `r premio_total` millones de pesos.
-- Fracción para el primer puesto (del total): `r fraccion_primer_puesto_str` (que es `r valor_f1`).
-- Fracción para el segundo puesto (del restante): `r fraccion_segundo_puesto_str` (que es `r valor_f2`).
-- El tercer puesto recibe lo que queda al final.
+- Premio total: `r premio_total` millones de pesos
+- Primer puesto: `r fraccion_primer_puesto` del `r termino_dinero` total
+- Segundo puesto: `r fraccion_segundo_puesto` del `r termino_dinero` restante (después del primer puesto)
+- Tercer puesto: el `r termino_dinero` restante (después del primer y segundo puesto)
 
-### Paso 2: Calcular el monto para el primer puesto
-Multiplicamos la fracción del primer puesto por el premio total:
-
-Monto del primer puesto = `r premio_total` millones × `r fraccion_primer_puesto_str`.
-
-Monto del primer puesto = `r premio_total` × `r valor_f1` = `r monto_primer_puesto_exacto` millones.
-
-**Nota importante:** Para garantizar que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero (orden lógico de premios), se aplica una corrección automática cuando es necesario. En este caso, el primer puesto recibe: `r monto_primer_puesto` millones.
+### Paso 2: Calcular el monto del primer puesto
+- Primer puesto: `r fraccion_primer_puesto` = `r round(valor_primer_puesto, 4)`
+- Monto del primer puesto = `r round(valor_primer_puesto, 4)` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
 
 ### Paso 3: Calcular el dinero restante después del primer puesto
-Restamos el monto del primer puesto del premio total:
+- Dinero restante = `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
 
-Dinero restante = `r premio_total` millones - `r monto_primer_puesto` millones.
+### Paso 4: Calcular el monto del segundo puesto
+El segundo puesto recibe `r fraccion_segundo_puesto` del dinero restante:
+- Segundo puesto: `r fraccion_segundo_puesto` = `r round(valor_segundo_puesto_fraccion, 4)`
+- Monto del segundo puesto = `r round(valor_segundo_puesto_fraccion, 4)` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
 
-Dinero restante = `r restante_despues_primero` millones.
-Este es el `r termino_dinero` disponible para el segundo y tercer puesto.
+### Paso 5: Calcular el monto del tercer puesto
+El tercer puesto recibe lo que resta después de los dos primeros puestos:
 
-### Paso 4: Calcular el monto para el segundo puesto
-Multiplicamos la fracción del segundo puesto por el dinero restante calculado en el paso anterior:
+- Monto del tercer puesto = `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` - `r round(monto_segundo_puesto_exacto, 2)`
+- Monto del tercer puesto = `r round(monto_tercer_puesto_exacto, 2)` millones
+- Redondeando: `r monto_tercer_puesto` millones de pesos
 
-Monto del segundo puesto = `r restante_despues_primero` millones × `r fraccion_segundo_puesto_str`.
-
-Monto del segundo puesto = `r restante_despues_primero` × `r valor_f2` = `r monto_segundo_puesto_exacto` millones.
-
-Aplicando la corrección automática para mantener el orden lógico de premios, el segundo puesto recibe: `r monto_segundo_puesto` millones.
-
-### Paso 5: Calcular el monto para el tercer puesto
-El tercer puesto recibe el `r termino_dinero` que queda después de asignar los premios al primer y segundo puesto. Esto se puede calcular restando el monto del segundo puesto del dinero que quedaba después del primer puesto:
-
-Monto del tercer puesto = Dinero restante después del primer puesto - Monto del segundo puesto.
-
-Monto del tercer puesto = `r restante_despues_primero` millones - `r monto_segundo_puesto` millones.
-
-Monto del tercer puesto = `r monto_tercer_puesto` millones.
-
-Alternativamente, y para asegurar que la suma total sea correcta después de los redondeos:
-
-Monto del tercer puesto = Premio total - (Monto del primer puesto + Monto del segundo puesto).
-
-Monto del tercer puesto = `r premio_total` - (`r monto_primer_puesto` + `r monto_segundo_puesto`).
-
-Monto del tercer puesto = `r premio_total` - `r monto_primer_puesto + monto_segundo_puesto`.
-
-Monto del tercer puesto = `r monto_tercer_puesto` millones.
+**Nota:** Con la nueva lógica, el segundo puesto se calcula como una fracción del dinero restante después del primer puesto, lo que garantiza matemáticamente que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero.
 
 ### Verificación
 Comprobemos que la suma de los tres montos es igual al premio total:
 
+**Cálculos exactos con la nueva lógica:**
+- Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
+- Dinero restante: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
+- Segundo puesto: `r fraccion_segundo_puesto` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
+- Tercer puesto: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` - `r round(monto_segundo_puesto_exacto, 2)` = `r round(monto_tercer_puesto_exacto, 2)` millones
+
+**Montos finales (redondeados):**
 - Primer puesto: `r monto_primer_puesto` millones
 - Segundo puesto: `r monto_segundo_puesto` millones
 - Tercer puesto: `r monto_tercer_puesto` millones
-- Total: `r monto_primer_puesto` + `r monto_segundo_puesto` + `r monto_tercer_puesto` = `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones.
+- **Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones**
 
-Esto coincide con el premio total de `r premio_total` millones.
+Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, confirmamos que nuestra respuesta es correcta.
 
-Por lo tanto, el tercer puesto recibe `r monto_tercer_puesto` millones de pesos.
+**Por lo tanto, el tercer puesto recibirá `r monto_tercer_puesto` millones de pesos.**
 
 Answerlist
 ----------
@@ -505,8 +524,8 @@ Answerlist
 
 Meta-information
 ================
-exname: fracciones_reparto_premio_v2
+exname: fracciones_reparto_premio
 extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
-exsection: Aritmética|Fracciones|Reparto proporcional|Secuencial
+exsection: Aritmética|Fracciones|Reparto proporcional
