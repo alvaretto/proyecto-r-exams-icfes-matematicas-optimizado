@@ -697,18 +697,21 @@ exsection: Aritmética|Fracciones|Reparto proporcional
 La versión 4 de este código representa una evolución significativa en la generación automática de ejercicios educativos, incorporando mejoras revolucionarias:
 
 ### Avances Técnicos Principales:
+
 - **Nueva lógica matemática**: Garantiza orden correcto de puestos de forma inherente
 - **Aleatoriedad total**: Eliminación de patrones predecibles en distractores
 - **Variabilidad extrema**: Rango ampliado de premios y mayor diversidad
 - **Validación robusta**: Tests unitarios con tolerancia para punto flotante
 
 ### Beneficios Educativos:
+
 - **Mayor realismo**: La nueva lógica refleja mejor distribuciones reales de premios
 - **Dificultad variable**: Imposible identificar respuesta correcta por patrones
 - **Precisión mejorada**: Cálculos más exactos con manejo inteligente de redondeo
 - **Escalabilidad**: Fácil expansión y modificación del sistema
 
 ### Calidad del Código:
+
 - **Rigor matemático**: Cálculos precisos y validados con múltiples tests
 - **Coherencia lingüística**: Concordancia de género y número mantenida
 - **Variabilidad controlada**: Decenas de miles de versiones únicas posibles
@@ -716,10 +719,14 @@ La versión 4 de este código representa una evolución significativa en la gene
 - **Estándares educativos**: Alineado con el marco ICFES
 
 ### Impacto Pedagógico:
-La implementación demuestra cómo la tecnología puede crear contenido educativo de alta calidad que:
+
+La implementación demuestra cómo la tecnología puede crear contenido educativo 
+de alta calidad que:
+
 - Mantiene la precisión matemática
 - Preserva la riqueza lingüística del español
 - Elimina sesgos en la presentación de opciones
 - Proporciona experiencias de aprendizaje más auténticas y desafiantes
 
-Esta versión establece un nuevo estándar para la generación automática de ejercicios matemáticos, combinando innovación técnica con excelencia pedagógica.
+Esta versión establece un nuevo estándar para la generación automática de 
+ejercicios matemáticos, combinando innovación técnica con excelencia pedagógica.

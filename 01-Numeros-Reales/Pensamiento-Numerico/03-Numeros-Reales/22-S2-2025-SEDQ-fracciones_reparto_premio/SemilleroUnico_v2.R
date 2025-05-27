@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "fracciones_reparto_premio_v1.Rmd"
+archivo_examen <- "fracciones_reparto_premio_v4.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
@@ -46,6 +46,13 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 #                verbose = TRUE)
 # }
 
+################################################################################
+# Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
+
+exams2html(rep(archivo_examen, numpreg),
+           svg = FALSE,
+           verbose = TRUE)
+
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF
 
@@ -82,13 +89,6 @@ exams2pandoc(rep(archivo_examen, numpreg),
              points = NULL,
              exshuffle = NULL,
              type = "docx")
-
-################################################################################
-# Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
-
-exams2html(rep(archivo_examen, numpreg),
-           svg = FALSE,
-           verbose = TRUE)
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'copias'

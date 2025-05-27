@@ -192,6 +192,7 @@ source("pruebas_unitarias_v1.R")
 ## Contacto y Soporte
 
 Para consultas técnicas o sugerencias:
+
 - **Repositorio**: [GitHub - proyecto-r-exams-icfes-matematicas-optimizado](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
 - **Documentación técnica**: `walkthrough.md`
 - **Ejemplos de uso**: Carpeta `salida/`

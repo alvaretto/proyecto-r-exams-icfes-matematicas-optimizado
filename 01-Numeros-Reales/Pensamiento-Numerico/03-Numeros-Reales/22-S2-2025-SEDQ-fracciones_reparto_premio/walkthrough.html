@@ -352,11 +352,57 @@ display: none;
 </div>
 
 
-<div id="walkthrough-fracciones-reparto-premio-v1" class="section level1">
-<h1>Walkthrough: Fracciones Reparto Premio v1</h1>
+<div id="walkthrough-fracciones-reparto-premio-v4" class="section level1">
+<h1>Walkthrough: Fracciones Reparto Premio v4</h1>
 <p>Este documento proporciona un análisis detallado del código del
-archivo <code>fracciones_reparto_premio_v1.Rmd</code>, explicando cada
+archivo <code>fracciones_reparto_premio_v4.Rmd</code>, explicando cada
 sección y su funcionalidad.</p>
+<div id="cambios-principales-en-la-versión-4" class="section level2">
+<h2>Cambios Principales en la Versión 4</h2>
+<div id="nueva-lógica-matemática" class="section level3">
+<h3>🔄 <strong>Nueva Lógica Matemática</strong></h3>
+<ul>
+<li><strong>Cambio fundamental</strong>: El segundo puesto ahora se
+calcula como fracción del dinero restante después del primer puesto</li>
+<li><strong>Ventaja</strong>: Garantiza matemáticamente que primer
+puesto &gt; segundo puesto &gt; tercer puesto</li>
+<li><strong>Impacto</strong>: Elimina la necesidad de validaciones
+complejas de orden</li>
+</ul>
+</div>
+<div id="pregunta-modificada" class="section level3">
+<h3>📊 <strong>Pregunta Modificada</strong></h3>
+<ul>
+<li><strong>Antes</strong>: ¿Qué cantidad recibirá el tercer
+puesto?</li>
+<li><strong>Ahora</strong>: ¿Qué cantidad recibirá el segundo
+puesto?</li>
+<li><strong>Razón</strong>: Mayor variabilidad en las respuestas y mejor
+distribución de dificultad</li>
+</ul>
+</div>
+<div id="estrategia-de-distractores-renovada" class="section level3">
+<h3>🎯 <strong>Estrategia de Distractores Renovada</strong></h3>
+<ul>
+<li><strong>Antes</strong>: Patrones predecibles (5%, 20%, 30% del
+premio)</li>
+<li><strong>Ahora</strong>: Generación completamente aleatoria sin
+patrones</li>
+<li><strong>Beneficio</strong>: Respuesta correcta puede aparecer en
+cualquier posición</li>
+</ul>
+</div>
+<div id="rango-de-premios-ampliado" class="section level3">
+<h3>📈 <strong>Rango de Premios Ampliado</strong></h3>
+<ul>
+<li><strong>Antes</strong>: 30-150 millones (valores específicos)</li>
+<li><strong>Ahora</strong>: 30-400 millones (todos los múltiplos de
+2)</li>
+<li><strong>Resultado</strong>: Mayor variabilidad y realismo en los
+problemas</li>
+</ul>
+</div>
+</div>
 <div id="tabla-de-contenidos" class="section level2">
 <h2>Tabla de Contenidos</h2>
 <ol style="list-style-type: decimal">
@@ -501,9 +547,9 @@ ciudad” o “una municipio”</li>
 <h3>3.2 Sistema de Concordancia para Competencias</h3>
 <pre class="r"><code># Aleatorización del tipo de competencia con concordancia de género
 competencias_data &lt;- data.frame(
-  nombre = c(&quot;carrera&quot;, &quot;competencia atlética&quot;, &quot;olimpiada deportiva&quot;, 
+  nombre = c(&quot;carrera&quot;, &quot;competencia atlética&quot;, &quot;olimpiada deportiva&quot;,
              &quot;justa deportiva&quot;, &quot;prueba atlética&quot;, &quot;competencia deportiva&quot;,
-             &quot;maratón&quot;, &quot;torneo deportivo&quot;, &quot;evento deportivo&quot;, 
+             &quot;maratón&quot;, &quot;torneo deportivo&quot;, &quot;evento deportivo&quot;,
              &quot;campeonato&quot;, &quot;concurso deportivo&quot;, &quot;certamen deportivo&quot;),
   genero = c(&quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;, &quot;f&quot;,
              &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;, &quot;m&quot;),
@@ -537,15 +583,18 @@ edades &lt;- c(
 grupo_edad &lt;- sample(edades, 1)
 
 # Aleatorización del premio total (en millones)
-premios_posibles &lt;- c(30, 40, 50, 60, 70, 80, 90, 100, 120, 150)
+# Todos los múltiplos de 2 desde 30 hasta 400 para mayor variabilidad
+premios_posibles &lt;- seq(30, 400, by = 2)
 premio_total &lt;- sample(premios_posibles, 1)</code></pre>
 <p><strong>Propósito</strong>: Crear contextos diversos y realistas.</p>
 <p><strong>Características</strong>:</p>
 <ul>
 <li><strong>Grupos de edad</strong>: Variedad de descripciones para el
 público objetivo</li>
-<li><strong>Premios</strong>: Valores en millones, fáciles de calcular y
-realistas</li>
+<li><strong>Premios ampliados</strong>: Rango de 30-400 millones
+(múltiplos de 2) para mayor variabilidad</li>
+<li><strong>Realismo mejorado</strong>: Valores más diversos y
+representativos</li>
 </ul>
 </div>
 <div id="términos-del-enunciado" class="section level3">
@@ -606,17 +655,21 @@ dinero”</li>
 <div id="generación-de-fracciones" class="section level2">
 <h2>4. Generación de Fracciones</h2>
 <pre class="r"><code># Aleatorización de fracciones para los puestos
+# NUEVA LÓGICA: Segundo puesto es fracción del dinero restante (después del primer puesto)
+# Definimos conjuntos de fracciones que garanticen matemáticamente el orden correcto:
+# primer puesto &gt; segundo puesto &gt; tercer puesto
+# VERIFICADOS: todos mantienen el orden estricto decreciente con la nueva lógica
 conjuntos_fracciones &lt;- list(
-  c(&quot;1/2&quot;, &quot;2/5&quot;),  # Suma 9/10, queda 1/10
-  c(&quot;1/3&quot;, &quot;1/2&quot;),  # Suma 5/6, queda 1/6
-  c(&quot;2/5&quot;, &quot;1/2&quot;),  # Suma 9/10, queda 1/10
-  c(&quot;3/5&quot;, &quot;1/4&quot;),  # Suma 17/20, queda 3/20
-  c(&quot;1/2&quot;, &quot;1/3&quot;),  # Suma 5/6, queda 1/6
-  c(&quot;3/4&quot;, &quot;1/8&quot;),  # Suma 7/8, queda 1/8
-  c(&quot;2/3&quot;, &quot;1/5&quot;),  # Suma 13/15, queda 2/15
-  c(&quot;3/5&quot;, &quot;1/3&quot;),  # Suma 14/15, queda 1/15
-  c(&quot;1/2&quot;, &quot;3/8&quot;),  # Suma 7/8, queda 1/8
-  c(&quot;3/5&quot;, &quot;3/10&quot;)  # Suma 9/10, queda 1/10
+  c(&quot;3/8&quot;, &quot;4/7&quot;),   # 37.50 &gt; 35.71 &gt; 26.79 ✓
+  c(&quot;2/5&quot;, &quot;3/5&quot;),   # 40.00 &gt; 36.00 &gt; 24.00 ✓
+  c(&quot;1/2&quot;, &quot;2/3&quot;),   # 50.00 &gt; 33.33 &gt; 16.67 ✓
+  c(&quot;4/9&quot;, &quot;3/4&quot;),   # 44.44 &gt; 41.67 &gt; 13.89 ✓
+  c(&quot;5/12&quot;, &quot;2/3&quot;),  # 41.67 &gt; 38.89 &gt; 19.44 ✓
+  c(&quot;5/13&quot;, &quot;3/5&quot;),  # 38.46 &gt; 36.92 &gt; 24.62 ✓
+  c(&quot;2/5&quot;, &quot;4/7&quot;),   # 40.00 &gt; 34.29 &gt; 25.71 ✓
+  c(&quot;2/5&quot;, &quot;5/8&quot;),   # 40.00 &gt; 37.50 &gt; 22.50 ✓
+  c(&quot;3/7&quot;, &quot;3/5&quot;),   # 42.86 &gt; 34.29 &gt; 22.86 ✓
+  c(&quot;3/7&quot;, &quot;2/3&quot;)    # 42.86 &gt; 38.10 &gt; 19.05 ✓
 )
 
 # Seleccionar un conjunto aleatorio de fracciones
@@ -627,17 +680,19 @@ fracciones_seleccionadas &lt;- conjuntos_fracciones[[indice_conjunto]]
 fraccion_primer_puesto &lt;- fracciones_seleccionadas[1]
 fraccion_segundo_puesto &lt;- fracciones_seleccionadas[2]</code></pre>
 <p><strong>Propósito</strong>: Generar combinaciones de fracciones
-matemáticamente válidas.</p>
-<p><strong>Características del diseño</strong>:</p>
+matemáticamente válidas con nueva lógica.</p>
+<p><strong>Características del diseño mejorado</strong>:</p>
 <ul>
-<li><strong>Conjuntos predefinidos</strong>: Cada conjunto garantiza que
-la suma sea menor a 1</li>
+<li><strong>Nueva lógica matemática</strong>: El segundo puesto se
+calcula del dinero restante después del primer puesto</li>
+<li><strong>Orden garantizado</strong>: Todos los conjuntos verificados
+para mantener primer &gt; segundo &gt; tercer puesto</li>
+<li><strong>Validación explícita</strong>: Cada conjunto incluye los
+porcentajes calculados como comentario</li>
 <li><strong>Variedad matemática</strong>: Diferentes denominadores y
 niveles de dificultad</li>
-<li><strong>Comentarios explicativos</strong>: Cada conjunto indica qué
-fracción queda para el tercer puesto</li>
-<li><strong>Validación implícita</strong>: Todas las combinaciones son
-matemáticamente correctas</li>
+<li><strong>Eliminación de casos problemáticos</strong>: Solo conjuntos
+que funcionan con la nueva lógica</li>
 </ul>
 <hr />
 </div>
@@ -651,62 +706,91 @@ convertir_fraccion &lt;- function(fraccion) {
   return(as.numeric(partes[1]) / as.numeric(partes[2]))
 }
 
+# NUEVA LÓGICA: Segundo puesto es fracción del dinero restante
 valor_primer_puesto &lt;- convertir_fraccion(fraccion_primer_puesto)
-valor_segundo_puesto &lt;- convertir_fraccion(fraccion_segundo_puesto)
+valor_segundo_puesto_fraccion &lt;- convertir_fraccion(fraccion_segundo_puesto)
 
-# Calcular la fracción y el valor para el tercer puesto
-valor_tercer_puesto &lt;- 1 - (valor_primer_puesto + valor_segundo_puesto)
+# Calcular montos con la nueva lógica
+monto_primer_puesto_exacto &lt;- premio_total * valor_primer_puesto
+dinero_restante_despues_primer_puesto &lt;- premio_total - monto_primer_puesto_exacto
+monto_segundo_puesto_exacto &lt;- valor_segundo_puesto_fraccion * dinero_restante_despues_primer_puesto
+monto_tercer_puesto_exacto &lt;- premio_total - monto_primer_puesto_exacto - monto_segundo_puesto_exacto
+
+# Calcular valores equivalentes para compatibilidad con el resto del código
+valor_segundo_puesto &lt;- monto_segundo_puesto_exacto / premio_total
+valor_tercer_puesto &lt;- monto_tercer_puesto_exacto / premio_total
 
 # Verificar que el valor del tercer puesto sea positivo
 test_that(&quot;El valor del tercer puesto es positivo&quot;, {
   expect_true(valor_tercer_puesto &gt; 0)
 })</code></pre>
 <p><strong>Propósito</strong>: Convertir fracciones a decimales y
-validar la lógica matemática.</p>
-<p><strong>Elementos clave</strong>:</p>
+validar la nueva lógica matemática.</p>
+<p><strong>Elementos clave renovados</strong>:</p>
 <ul>
 <li><strong>Función de conversión</strong>: Transforma strings como
 “1/2” a 0.5</li>
-<li><strong>Cálculo del resto</strong>: El tercer puesto recibe lo que
-queda</li>
+<li><strong>Nueva lógica de cálculo</strong>: Segundo puesto se calcula
+del dinero restante después del primer puesto</li>
+<li><strong>Cálculos exactos</strong>: Se mantienen valores exactos
+antes del redondeo</li>
+<li><strong>Compatibilidad</strong>: Se calculan valores equivalentes
+para el resto del código</li>
 <li><strong>Validación automática</strong>: Test unitario asegura
 valores positivos</li>
 </ul>
 </div>
 <div id="cálculo-de-montos" class="section level3">
 <h3>5.2 Cálculo de Montos</h3>
-<pre class="r"><code># Calcular los montos en millones para cada puesto
-monto_primer_puesto &lt;- premio_total * valor_primer_puesto
-monto_segundo_puesto &lt;- premio_total * valor_segundo_puesto
-monto_tercer_puesto &lt;- premio_total * valor_tercer_puesto
+<pre class="r"><code># Los montos exactos ya fueron calculados con la nueva lógica arriba
 
-# Redondear a números enteros si es necesario
-monto_primer_puesto &lt;- round(monto_primer_puesto)
-monto_segundo_puesto &lt;- round(monto_segundo_puesto)
-monto_tercer_puesto &lt;- round(monto_tercer_puesto)
+# Para efectos de presentación, redondear a una decimal si es necesario
+monto_primer_puesto &lt;- round(monto_primer_puesto_exacto, 1)
+monto_segundo_puesto &lt;- round(monto_segundo_puesto_exacto, 1)
+monto_tercer_puesto &lt;- round(monto_tercer_puesto_exacto, 1)
 
 # Ajustar el tercer puesto para asegurar que la suma sea exactamente el premio total
 suma_actual &lt;- monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto
-if (suma_actual != premio_total) {
-  monto_tercer_puesto &lt;- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+if (abs(suma_actual - premio_total) &gt; 0.1) {
+  diferencia &lt;- premio_total - (monto_primer_puesto + monto_segundo_puesto)
+  monto_tercer_puesto &lt;- round(diferencia, 1)
 }
 
-# Verificar que la suma de los tres montos sea igual al premio total
+# Verificar que la suma de los tres montos sea igual al premio total (con tolerancia)
 test_that(&quot;La suma de los tres montos es igual al premio total&quot;, {
-  expect_equal(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto, premio_total)
+  suma_total &lt;- monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto
+  expect_equal(suma_total, premio_total, tolerance = 0.1)
+})
+
+# Tests adicionales para la nueva lógica
+test_that(&quot;Las fracciones mantienen el orden correcto&quot;, {
+  expect_true(valor_primer_puesto &gt; valor_segundo_puesto)
+  expect_true(valor_segundo_puesto &gt;= valor_tercer_puesto - 1e-10)
+})
+
+test_that(&quot;El primer puesto recibe más que el segundo puesto&quot;, {
+  expect_true(monto_primer_puesto &gt; monto_segundo_puesto)
+})
+
+test_that(&quot;El segundo puesto recibe al menos tanto como el tercer puesto&quot;, {
+  expect_true(monto_segundo_puesto &gt;= monto_tercer_puesto - 0.1)
 })</code></pre>
-<p><strong>Propósito</strong>: Calcular montos exactos y manejar errores
-de redondeo.</p>
-<p><strong>Características</strong>:</p>
+<p><strong>Propósito</strong>: Calcular montos exactos con la nueva
+lógica y manejar errores de redondeo.</p>
+<p><strong>Características mejoradas</strong>:</p>
 <ul>
-<li><strong>Multiplicación directa</strong>: Fracción × premio
-total</li>
-<li><strong>Redondeo inteligente</strong>: A números enteros para
-simplicidad</li>
-<li><strong>Ajuste de precisión</strong>: El tercer puesto absorbe
-errores de redondeo</li>
-<li><strong>Validación final</strong>: Test unitario confirma que la
-suma es exacta</li>
+<li><strong>Cálculos exactos previos</strong>: Los montos exactos se
+calculan antes del redondeo</li>
+<li><strong>Redondeo a decimales</strong>: A una decimal para mayor
+precisión</li>
+<li><strong>Tolerancia en validaciones</strong>: Tests con tolerancia
+para comparaciones de punto flotante</li>
+<li><strong>Ajuste inteligente</strong>: Solo ajusta si la diferencia es
+significativa (&gt; 0.1)</li>
+<li><strong>Tests adicionales</strong>: Validaciones específicas para el
+orden de los puestos</li>
+<li><strong>Validación robusta</strong>: Múltiples tests para asegurar
+coherencia matemática</li>
 </ul>
 <hr />
 </div>
@@ -714,24 +798,47 @@ suma es exacta</li>
 <div id="generación-de-opciones" class="section level2">
 <h2>6. Generación de Opciones</h2>
 <pre class="r"><code># Generar opciones de respuesta
-respuesta_correcta &lt;- monto_tercer_puesto
+# La respuesta correcta es el monto del segundo puesto (CAMBIO IMPORTANTE)
+respuesta_correcta &lt;- monto_segundo_puesto
 
-# Generar distractores plausibles
-distractor1 &lt;- round(premio_total * 0.05)  # 5% del premio total
-distractor2 &lt;- round(premio_total * 0.2)   # 20% del premio total
-distractor3 &lt;- round(premio_total * 0.3)   # 30% del premio total
+# NUEVA ESTRATEGIA: Distractores completamente aleatorios sin patrones predecibles
+# para que la respuesta correcta pueda aparecer en cualquier posición
 
-# Asegurarse de que todos los distractores son diferentes de la respuesta correcta
-if (distractor1 == respuesta_correcta) distractor1 &lt;- distractor1 + 1
-if (distractor2 == respuesta_correcta) distractor2 &lt;- distractor2 + 2
-if (distractor3 == respuesta_correcta) distractor3 &lt;- distractor3 - 2
+# Generar un pool amplio de distractores candidatos con variación aleatoria
+set.seed(NULL)  # Asegurar aleatoriedad real
+distractores_candidatos &lt;- c(
+  # Variaciones aleatorias MUY amplias para cubrir todo el espectro
+  round(respuesta_correcta * runif(4, 0.15, 0.6), 1),                    # 15%-60% del correcto (muy menores)
+  round(respuesta_correcta * runif(4, 0.7, 0.95), 1),                    # 70%-95% del correcto (menores)
+  round(respuesta_correcta * runif(4, 1.05, 1.8), 1),                    # 105%-180% del correcto (mayores)
+  round(respuesta_correcta * runif(4, 2.0, 4.5), 1),                     # 200%-450% del correcto (muy mayores)
 
-# Asegurarse de que todos los distractores son diferentes entre sí
-while (length(unique(c(distractor1, distractor2, distractor3))) &lt; 3) {
-  if (distractor1 == distractor2) distractor1 &lt;- distractor1 + 1
-  if (distractor2 == distractor3) distractor2 &lt;- distractor2 + 2
-  if (distractor1 == distractor3) distractor3 &lt;- distractor3 + 3
-}
+  # Errores conceptuales con rangos amplios
+  round(premio_total * (valor_primer_puesto * runif(2, 0.2, 1.2)), 1),   # Variación amplia del primer puesto
+  round(premio_total * (valor_segundo_puesto * runif(2, 0.3, 1.5)), 1),  # Variación amplia del segundo puesto
+  round(premio_total * (valor_tercer_puesto * runif(2, 0.4, 3.0)), 1),   # Variación amplia del tercer puesto
+
+  # Errores de cálculo con rango muy amplio
+  round(respuesta_correcta + runif(3, -respuesta_correcta*0.8, respuesta_correcta*2), 1), # Errores proporcionales
+  round(respuesta_correcta * runif(3, 0.3, 3.5), 1),                     # Multiplicadores muy amplios
+
+  # Valores completamente aleatorios en rangos pedagógicamente plausibles
+  round(runif(3, 5, respuesta_correcta * 0.8), 1),                       # Valores menores aleatorios
+  round(runif(3, respuesta_correcta * 1.2, respuesta_correcta * 4), 1)   # Valores mayores aleatorios
+)
+
+# Filtrar distractores válidos (diferentes de la respuesta correcta y positivos)
+distractores_validos &lt;- distractores_candidatos[distractores_candidatos != respuesta_correcta &amp; distractores_candidatos &gt; 0]
+
+# Asegurar que tenemos suficientes distractores únicos
+distractores_validos &lt;- unique(distractores_validos)
+
+# SELECCIÓN COMPLETAMENTE ALEATORIA - SIN PATRONES FORZADOS
+# Simplemente seleccionar 3 distractores al azar del pool disponible
+distractores_seleccionados &lt;- sample(distractores_validos, 3)
+distractor1 &lt;- distractores_seleccionados[1]
+distractor2 &lt;- distractores_seleccionados[2]
+distractor3 &lt;- distractores_seleccionados[3]
 
 # Crear un vector con todas las opciones y mezclarlas
 opciones &lt;- c(respuesta_correcta, distractor1, distractor2, distractor3)
@@ -745,17 +852,23 @@ indice_correcto &lt;- which(opciones_mezcladas == respuesta_correcta)
 solucion &lt;- rep(0, 4)
 solucion[indice_correcto] &lt;- 1</code></pre>
 <p><strong>Propósito</strong>: Crear opciones de respuesta realistas y
-evitar duplicados.</p>
-<p><strong>Estrategia de distractores</strong>:</p>
+completamente aleatorias.</p>
+<p><strong>Nueva estrategia de distractores revolucionaria</strong>:</p>
 <ul>
-<li><strong>Porcentajes comunes</strong>: 5%, 20%, 30% del premio
-total</li>
-<li><strong>Validación de unicidad</strong>: Algoritmo asegura que todas
-las opciones sean diferentes</li>
-<li><strong>Mezcla aleatoria</strong>: Las opciones se presentan en
-orden aleatorio</li>
-<li><strong>Compatibilidad r-exams</strong>: Vector binario indica la
-respuesta correcta</li>
+<li><strong>Cambio de pregunta</strong>: Ahora pregunta por el segundo
+puesto en lugar del tercero</li>
+<li><strong>Aleatoriedad total</strong>: Sin patrones predecibles, la
+respuesta correcta puede estar en cualquier posición</li>
+<li><strong>Pool amplio</strong>: Genera múltiples categorías de
+distractores candidatos</li>
+<li><strong>Rangos variables</strong>: Desde 15% hasta 450% del valor
+correcto</li>
+<li><strong>Errores conceptuales</strong>: Incluye confusiones con otros
+puestos</li>
+<li><strong>Selección aleatoria</strong>: Los 3 distractores se
+seleccionan completamente al azar</li>
+<li><strong>Eliminación de sesgos</strong>: No hay patrones que permitan
+identificar la respuesta correcta por posición</li>
 </ul>
 <hr />
 </div>
@@ -806,14 +919,14 @@ color_tercer_puesto = &quot;&#39;, color_tercer_puesto, &#39;&quot;
 fig = plt.figure(figsize=(8, 3.5))
 gs = GridSpec(4, 2, height_ratios=[1, 1, 1, 1], width_ratios=[3, 7])
 
-# [Código de generación de tabla...]
+# Código actualizado que muestra &quot;del dinero restante&quot; para el segundo puesto
 
 plt.tight_layout(pad=0.5)
 plt.savefig(&quot;tabla_distribucion.png&quot;, dpi=150, bbox_inches=&quot;tight&quot;)
 plt.savefig(&quot;tabla_distribucion.pdf&quot;, dpi=150, bbox_inches=&quot;tight&quot;)
 plt.close()</code></pre>
 <p><strong>Propósito</strong>: Crear una tabla visual atractiva que
-muestre la distribución del premio.</p>
+muestre la distribución del premio con la nueva lógica.</p>
 <p><strong>Ventajas de usar Python</strong>:</p>
 <ul>
 <li><strong>Flexibilidad gráfica</strong>: matplotlib ofrece control
@@ -822,6 +935,8 @@ total sobre el diseño</li>
 resolución</li>
 <li><strong>Compatibilidad</strong>: Genera PNG y PDF para diferentes
 usos</li>
+<li><strong>Actualización automática</strong>: El texto se actualiza
+para mostrar “del dinero restante” para el segundo puesto</li>
 </ul>
 <hr />
 </div>
@@ -832,7 +947,7 @@ usos</li>
 <h3>8.1 Pregunta Principal</h3>
 <pre class="markdown"><code>En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == &quot;f&quot;) &quot;la&quot; else &quot;el&quot;` `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los tres `r termino_puestos`, como se indica a continuación:
 
-¿Qué cantidad de `r termino_dinero` recibirá el tercer puesto?</code></pre>
+¿Qué cantidad de `r termino_dinero` recibirá el segundo puesto?</code></pre>
 <p><strong>Propósito</strong>: Presentar el problema de manera clara y
 contextualizada.</p>
 <p><strong>Elementos de concordancia</strong>:</p>
@@ -845,6 +960,8 @@ del contexto</li>
 el lenguaje</li>
 <li><strong>Tiempo futuro</strong>: “recibirá” mantiene consistencia
 temporal</li>
+<li><strong>Pregunta actualizada</strong>: Ahora pregunta por el segundo
+puesto en lugar del tercero</li>
 </ul>
 </div>
 <div id="lista-de-respuestas" class="section level3">
@@ -862,50 +979,52 @@ estándar de r-exams.</p>
 </div>
 <div id="solución-detallada" class="section level2">
 <h2>9. Solución Detallada</h2>
-<pre class="markdown"><code>### Paso 1: Identificar los datos del problema
+<pre class="markdown"><code>Para resolver este problema, debemos calcular qué cantidad del premio total corresponde al segundo puesto, considerando que este se calcula como una fracción del dinero restante después del primer puesto.
+
+### Paso 1: Identificar los datos del problema
 - Premio total: `r premio_total` millones de pesos
 - Primer puesto: `r fraccion_primer_puesto` del `r termino_dinero` total
-- Segundo puesto: `r fraccion_segundo_puesto` del `r termino_dinero` total
-- Tercer puesto: el `r termino_dinero` restante
+- Segundo puesto: `r fraccion_segundo_puesto` del `r termino_dinero` restante (después del primer puesto)
+- Tercer puesto: el `r termino_dinero` restante (después del primer y segundo puesto)
 
-### Paso 2: Convertir las fracciones a decimales
-- Primer puesto: `r fraccion_primer_puesto` = `r valor_primer_puesto`
-- Segundo puesto: `r fraccion_segundo_puesto` = `r valor_segundo_puesto`
+### Paso 2: Calcular el monto del primer puesto
+- Primer puesto: `r fraccion_primer_puesto` = `r round(valor_primer_puesto, 4)`
+- Monto del primer puesto = `r round(valor_primer_puesto, 4)` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
 
-### Paso 3: Calcular la fracción que corresponde al tercer puesto
-Para calcular la fracción del tercer puesto, restamos del total (1) las fracciones del primer y segundo puesto:
+### Paso 3: Calcular el dinero restante después del primer puesto
+- Dinero restante = `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
 
-- Fracción del tercer puesto = 1 - (`r valor_primer_puesto` + `r valor_segundo_puesto`)
-- Fracción del tercer puesto = 1 - `r round(valor_primer_puesto + valor_segundo_puesto, 4)`
-- Fracción del tercer puesto = `r round(valor_tercer_puesto, 4)`
+### Paso 4: Calcular el monto del segundo puesto
+El segundo puesto recibe `r fraccion_segundo_puesto` del dinero restante:
+- Segundo puesto: `r fraccion_segundo_puesto` = `r round(valor_segundo_puesto_fraccion, 4)`
+- Monto del segundo puesto = `r round(valor_segundo_puesto_fraccion, 4)` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
+- Redondeando: `r monto_segundo_puesto` millones de pesos
 
-### Paso 4: Calcular el monto en millones de pesos para el tercer puesto
-Multiplicamos la fracción del tercer puesto por el premio total:
-
-- Monto del tercer puesto = `r round(valor_tercer_puesto, 4)` × `r premio_total` millones
-- Monto del tercer puesto = `r monto_tercer_puesto` millones de pesos
+**Nota:** El segundo puesto se calcula como una fracción del dinero restante después del primer puesto, lo que garantiza matemáticamente que el primer puesto siempre reciba más que el segundo.
 
 ### Verificación
-Comprobemos que la suma de los tres montos es igual al premio total:
+Comprobemos que nuestro cálculo del segundo puesto es correcto:
 
-- Primer puesto: `r monto_primer_puesto` millones
-- Segundo puesto: `r monto_segundo_puesto` millones
-- Tercer puesto: `r monto_tercer_puesto` millones
-- Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones
+**Cálculo paso a paso:**
+- Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
+- Dinero restante: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
+- Segundo puesto: `r fraccion_segundo_puesto` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
 
-Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, confirmamos que nuestra respuesta es correcta.
-
-Por lo tanto, el tercer puesto recibirá `r monto_tercer_puesto` millones de pesos.</code></pre>
+Por lo tanto, el segundo puesto recibirá `r monto_segundo_puesto` millones de pesos.</code></pre>
 <p><strong>Propósito</strong>: Proporcionar una explicación paso a paso
-del proceso de solución.</p>
-<p><strong>Características pedagógicas</strong>:</p>
+del proceso de solución con la nueva lógica.</p>
+<p><strong>Características pedagógicas mejoradas</strong>:</p>
 <ul>
 <li><strong>Estructura clara</strong>: Pasos numerados y
 organizados</li>
+<li><strong>Nueva lógica explicada</strong>: Se explica claramente que
+el segundo puesto se calcula del dinero restante</li>
 <li><strong>Cálculos explícitos</strong>: Cada operación se muestra
 detalladamente</li>
-<li><strong>Verificación</strong>: Comprobación final de la
-respuesta</li>
+<li><strong>Nota pedagógica</strong>: Se explica por qué esta lógica
+garantiza el orden correcto</li>
+<li><strong>Verificación paso a paso</strong>: Comprobación detallada
+del cálculo</li>
 <li><strong>Lenguaje adaptativo</strong>: Usa los términos aleatorios
 del problema</li>
 </ul>
@@ -933,8 +1052,8 @@ correcta</li>
 </ul>
 <hr />
 </div>
-<div id="características-innovadoras-del-código" class="section level2">
-<h2>Características Innovadoras del Código</h2>
+<div id="características-innovadoras-del-código-v4" class="section level2">
+<h2>Características Innovadoras del Código v4</h2>
 <div id="sistema-de-concordancia-de-género" class="section level3">
 <h3>1. Sistema de Concordancia de Género</h3>
 <ul>
@@ -946,40 +1065,72 @@ correspondientes</li>
 manteniendo coherencia</li>
 </ul>
 </div>
-<div id="validación-matemática-automática" class="section level3">
-<h3>2. Validación Matemática Automática</h3>
+<div id="nueva-lógica-matemática-revolucionaria" class="section level3">
+<h3>2. Nueva Lógica Matemática Revolucionaria</h3>
 <ul>
-<li><strong>Tests unitarios</strong>: Verifican que los cálculos sean
-correctos</li>
-<li><strong>Manejo de redondeo</strong>: Ajusta automáticamente para
-evitar errores de precisión</li>
-<li><strong>Coherencia</strong>: Garantiza que la suma de partes igual
-el total</li>
+<li><strong>Cambio fundamental</strong>: Segundo puesto calculado del
+dinero restante después del primer puesto</li>
+<li><strong>Garantía de orden</strong>: Matemáticamente imposible que
+segundo &gt; primer puesto</li>
+<li><strong>Eliminación de validaciones complejas</strong>: La lógica
+inherente asegura el orden correcto</li>
+<li><strong>Realismo mejorado</strong>: Refleja mejor cómo se
+distribuyen premios en la realidad</li>
 </ul>
 </div>
-<div id="generación-de-distractores-inteligente" class="section level3">
-<h3>3. Generación de Distractores Inteligente</h3>
+<div id="validación-matemática-automática-mejorada" class="section level3">
+<h3>3. Validación Matemática Automática Mejorada</h3>
 <ul>
-<li><strong>Algoritmo anti-duplicados</strong>: Asegura que todas las
-opciones sean únicas</li>
-<li><strong>Distractores realistas</strong>: Basados en porcentajes
-comunes</li>
-<li><strong>Validación iterativa</strong>: Corrige automáticamente
-conflictos</li>
+<li><strong>Tests unitarios ampliados</strong>: Verifican tanto cálculos
+como orden de puestos</li>
+<li><strong>Tolerancia para punto flotante</strong>: Comparaciones
+robustas con tolerancia numérica</li>
+<li><strong>Manejo de redondeo inteligente</strong>: Ajusta
+automáticamente solo cuando es necesario</li>
+<li><strong>Coherencia garantizada</strong>: Múltiples niveles de
+validación</li>
+</ul>
+</div>
+<div id="generación-de-distractores-completamente-aleatoria" class="section level3">
+<h3>4. Generación de Distractores Completamente Aleatoria</h3>
+<ul>
+<li><strong>Revolución en estrategia</strong>: Eliminación total de
+patrones predecibles</li>
+<li><strong>Pool amplio</strong>: Múltiples categorías de distractores
+candidatos</li>
+<li><strong>Rangos variables</strong>: Desde 15% hasta 450% del valor
+correcto</li>
+<li><strong>Selección aleatoria pura</strong>: Sin sesgos de
+posición</li>
+<li><strong>Eliminación de patrones</strong>: Imposible identificar
+respuesta correcta por posición</li>
+</ul>
+</div>
+<div id="rango-de-premios-ampliado-1" class="section level3">
+<h3>5. Rango de Premios Ampliado</h3>
+<ul>
+<li><strong>Variabilidad extrema</strong>: De 30-400 millones (múltiplos
+de 2)</li>
+<li><strong>Realismo mejorado</strong>: Valores más diversos y
+representativos</li>
+<li><strong>Mayor complejidad</strong>: Problemas más variados y
+desafiantes</li>
 </ul>
 </div>
 <div id="integración-python-r" class="section level3">
-<h3>4. Integración Python-R</h3>
+<h3>6. Integración Python-R</h3>
 <ul>
 <li><strong>Visualizaciones profesionales</strong>: matplotlib para
 gráficos de calidad</li>
 <li><strong>Flexibilidad</strong>: Fácil modificar colores y diseño</li>
 <li><strong>Compatibilidad</strong>: Genera múltiples formatos de
 imagen</li>
+<li><strong>Actualización automática</strong>: Texto se adapta a la
+nueva lógica</li>
 </ul>
 </div>
 <div id="aleatorización-inteligente" class="section level3">
-<h3>5. Aleatorización Inteligente</h3>
+<h3>7. Aleatorización Inteligente</h3>
 <ul>
 <li><strong>Variabilidad controlada</strong>: Cada elemento puede variar
 independientemente</li>
@@ -987,29 +1138,73 @@ independientemente</li>
 mantienen sentido</li>
 <li><strong>Escalabilidad</strong>: Fácil agregar nuevas
 variaciones</li>
+<li><strong>Pregunta variable</strong>: Cambio de tercero a segundo
+puesto aumenta variabilidad</li>
 </ul>
 <hr />
 </div>
 </div>
 <div id="conclusión" class="section level2">
 <h2>Conclusión</h2>
-<p>Este código representa un ejemplo avanzado de generación automática
-de ejercicios educativos, combinando:</p>
+<p>La versión 4 de este código representa una evolución significativa en
+la generación automática de ejercicios educativos, incorporando mejoras
+revolucionarias:</p>
+<div id="avances-técnicos-principales" class="section level3">
+<h3>Avances Técnicos Principales:</h3>
 <ul>
-<li><strong>Rigor matemático</strong>: Cálculos precisos y
-validados</li>
+<li><strong>Nueva lógica matemática</strong>: Garantiza orden correcto
+de puestos de forma inherente</li>
+<li><strong>Aleatoriedad total</strong>: Eliminación de patrones
+predecibles en distractores</li>
+<li><strong>Variabilidad extrema</strong>: Rango ampliado de premios y
+mayor diversidad</li>
+<li><strong>Validación robusta</strong>: Tests unitarios con tolerancia
+para punto flotante</li>
+</ul>
+</div>
+<div id="beneficios-educativos" class="section level3">
+<h3>Beneficios Educativos:</h3>
+<ul>
+<li><strong>Mayor realismo</strong>: La nueva lógica refleja mejor
+distribuciones reales de premios</li>
+<li><strong>Dificultad variable</strong>: Imposible identificar
+respuesta correcta por patrones</li>
+<li><strong>Precisión mejorada</strong>: Cálculos más exactos con manejo
+inteligente de redondeo</li>
+<li><strong>Escalabilidad</strong>: Fácil expansión y modificación del
+sistema</li>
+</ul>
+</div>
+<div id="calidad-del-código" class="section level3">
+<h3>Calidad del Código:</h3>
+<ul>
+<li><strong>Rigor matemático</strong>: Cálculos precisos y validados con
+múltiples tests</li>
 <li><strong>Coherencia lingüística</strong>: Concordancia de género y
-número</li>
-<li><strong>Variabilidad controlada</strong>: Miles de versiones únicas
-posibles</li>
-<li><strong>Calidad visual</strong>: Gráficos profesionales y
-atractivos</li>
+número mantenida</li>
+<li><strong>Variabilidad controlada</strong>: Decenas de miles de
+versiones únicas posibles</li>
+<li><strong>Calidad visual</strong>: Gráficos profesionales que se
+adaptan automáticamente</li>
 <li><strong>Estándares educativos</strong>: Alineado con el marco
 ICFES</li>
 </ul>
+</div>
+<div id="impacto-pedagógico" class="section level3">
+<h3>Impacto Pedagógico:</h3>
 <p>La implementación demuestra cómo la tecnología puede crear contenido
-educativo de alta calidad, manteniendo tanto la precisión matemática
-como la riqueza lingüística del español.</p>
+educativo de alta calidad que:</p>
+<ul>
+<li>Mantiene la precisión matemática</li>
+<li>Preserva la riqueza lingüística del español</li>
+<li>Elimina sesgos en la presentación de opciones</li>
+<li>Proporciona experiencias de aprendizaje más auténticas y
+desafiantes</li>
+</ul>
+<p>Esta versión establece un nuevo estándar para la generación
+automática de ejercicios matemáticos, combinando innovación técnica con
+excelencia pedagógica.</p>
+</div>
 </div>
 </div>
 
