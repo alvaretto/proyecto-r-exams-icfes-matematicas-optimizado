@@ -328,35 +328,122 @@ if (max(valores_equipos) > tamano_muestra * 0.4) {
 # Colores para el gráfico
 colores <- c("#2E8B57", "#4682B4", "#CD853F", "#9370DB", "#DC143C")
 
-# Generar opciones de respuesta
-# La respuesta correcta es sobre el equipo seleccionado ALEATORIAMENTE (no siempre el de más votos)
+# FUNCIÓN PARA CALCULAR EL MÁXIMO COMÚN DIVISOR (MCD)
+calcular_mcd <- function(a, b) {
+  while (b != 0) {
+    temp <- b
+    b <- a %% b
+    a <- temp
+  }
+  return(a)
+}
+
+# FUNCIÓN PARA GENERAR FRACCIÓN REDUCIDA
+generar_fraccion_reducida <- function(numerador, denominador) {
+  mcd <- calcular_mcd(numerador, denominador)
+  return(c(numerador / mcd, denominador / mcd))
+}
+
+# Generar opciones de respuesta MEJORADAS Y MÁS DESAFIANTES
+# La respuesta correcta es sobre el equipo seleccionado ALEATORIAMENTE
 proporcion_correcta <- round(valor_correcto / tamano_muestra * 100)
 respuesta_correcta <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", tamano_muestra_fmt, " ",
                             termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
 
-# Distractores plausibles (INDEPENDIENTES DEL EQUIPO CORRECTO SELECCIONADO)
-# Distractor 1: Confunde muestra con población usando el equipo correcto
-distractor1 <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", poblacion_total_fmt, " ",
-                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+# GENERAR FRACCIÓN REDUCIDA PARA DISTRACTOR DESAFIANTE
+fraccion_reducida <- generar_fraccion_reducida(valor_correcto, tamano_muestra)
+numerador_reducido <- fraccion_reducida[1]
+denominador_reducido <- fraccion_reducida[2]
 
-# Distractor 2: Afirma que ninguno prefiere un equipo no incluido en la muestra
-distractor2 <- paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
-                     " del ", contexto, " da por favorito al ",
-                     sample(setdiff(equipos_disponibles, equipos_seleccionados), 1), ".")
+# Formatear números de la fracción reducida
+numerador_reducido_fmt <- formatear_entero(numerador_reducido)
+denominador_reducido_fmt <- formatear_entero(denominador_reducido)
 
-# Distractor 3: Confunde tamaño de muestra con preferencias totales
-distractor3 <- paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
-                     termino_usuarios, " del ", contexto,
-                     " tienen preferencia por un equipo para ganar la ", competicion, ".")
+# POOL DE DISTRACTORES DESAFIANTES - Seleccionar 3 aleatoriamente
+distractores_disponibles <- list()
 
-# Crear vector de opciones y mezclar
-opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
+# Distractor tipo 1: Fracción reducida equivalente (MUY DESAFIANTE)
+distractores_disponibles[[1]] <- paste0("alrededor de ", numerador_reducido_fmt, " de cada ", denominador_reducido_fmt, " ",
+                                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+
+# Distractor tipo 2: Confunde muestra con población usando el equipo correcto
+distractores_disponibles[[2]] <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", poblacion_total_fmt, " ",
+                                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+
+# Distractor tipo 3: Usa fracción reducida pero con población total (DOBLE CONFUSIÓN)
+distractores_disponibles[[3]] <- paste0("alrededor de ", numerador_reducido_fmt, " de cada ", poblacion_total_fmt, " ",
+                                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+
+# Distractor tipo 4: Afirma que ninguno prefiere un equipo no incluido en la muestra
+distractores_disponibles[[4]] <- paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
+                                        " del ", contexto, " da por favorito al ",
+                                        sample(setdiff(equipos_disponibles, equipos_seleccionados), 1), ".")
+
+# Distractor tipo 5: Confunde tamaño de muestra con preferencias totales
+distractores_disponibles[[5]] <- paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
+                                        termino_usuarios, " del ", contexto,
+                                        " tienen preferencia por un equipo para ganar la ", competicion, ".")
+
+# Distractor tipo 6: Usa proporción incorrecta con otro equipo de la muestra
+otro_equipo_idx <- sample(setdiff(1:5, indice_equipo_correcto), 1)
+otro_equipo <- equipos_seleccionados[otro_equipo_idx]
+otro_valor <- valores_equipos[otro_equipo_idx]
+otro_valor_fmt <- formatear_entero(otro_valor)
+distractores_disponibles[[6]] <- paste0("alrededor de ", otro_valor_fmt, " de cada ", tamano_muestra_fmt, " ",
+                                        termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, ".")
+
+# Distractor tipo 7: Fracción reducida con otro equipo (TRIPLE CONFUSIÓN)
+fraccion_otro <- generar_fraccion_reducida(otro_valor, tamano_muestra)
+num_otro_red <- formatear_entero(fraccion_otro[1])
+den_otro_red <- formatear_entero(fraccion_otro[2])
+distractores_disponibles[[7]] <- paste0("alrededor de ", num_otro_red, " de cada ", den_otro_red, " ",
+                                        termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, ".")
+
+# SELECCIÓN INTELIGENTE DE DISTRACTORES
+# Asegurar que siempre se incluya el distractor de fracción reducida (tipo 1) si es diferente de la respuesta correcta
+distractores_seleccionados <- list()
+
+# Verificar si la fracción reducida es diferente de la original (para evitar duplicados)
+if (numerador_reducido != valor_correcto || denominador_reducido != tamano_muestra) {
+  # Incluir SIEMPRE el distractor de fracción reducida como primer distractor
+  distractores_seleccionados[[1]] <- distractores_disponibles[[1]]
+  # Seleccionar 2 distractores adicionales de los restantes (excluyendo el tipo 1)
+  indices_restantes <- sample(2:7, 2)
+  distractores_seleccionados[[2]] <- distractores_disponibles[[indices_restantes[1]]]
+  distractores_seleccionados[[3]] <- distractores_disponibles[[indices_restantes[2]]]
+} else {
+  # Si la fracción ya está reducida, seleccionar 3 distractores diferentes
+  indices_seleccionados <- sample(2:7, 3)
+  distractores_seleccionados[[1]] <- distractores_disponibles[[indices_seleccionados[1]]]
+  distractores_seleccionados[[2]] <- distractores_disponibles[[indices_seleccionados[2]]]
+  distractores_seleccionados[[3]] <- distractores_disponibles[[indices_seleccionados[3]]]
+}
+
+# Crear vector final de opciones y mezclar
+opciones <- c(respuesta_correcta, distractores_seleccionados[[1]],
+              distractores_seleccionados[[2]], distractores_seleccionados[[3]])
 opciones_mezcladas <- sample(opciones)
 indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
 
 # Vector de solución para r-exams
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
+
+# VALIDACIONES DE INTEGRIDAD PARA DISTRACTORES
+# Verificar que no hay opciones duplicadas
+if (length(unique(opciones)) != 4) {
+  stop("Error: Se generaron opciones duplicadas. Opciones: ", paste(opciones, collapse=" | "))
+}
+
+# Verificar que la respuesta correcta está incluida
+if (!(respuesta_correcta %in% opciones)) {
+  stop("Error: La respuesta correcta no está en las opciones finales")
+}
+
+# Verificar coherencia matemática de la fracción reducida
+if (numerador_reducido * tamano_muestra != denominador_reducido * valor_correcto) {
+  stop("Error: La fracción reducida no es matemáticamente equivalente")
+}
 ```
 
 ```{r generar_grafico, message=FALSE, warning=FALSE}
@@ -460,11 +547,17 @@ Los datos del gráfico representan únicamente la muestra de `r tamano_muestra_f
 **Opción correcta**: "`r respuesta_correcta`"
 Esta opción es correcta porque interpreta adecuadamente que `r valor_correcto_fmt` de cada `r tamano_muestra_fmt` `r termino_usuarios` **de la muestra** prefieren al `r equipo_correcto`. Esto representa una proporción del `r round(valor_correcto/tamano_muestra*100, 1)`% en la muestra.
 
-**Análisis de distractores**:
+**Análisis de distractores mejorados**:
 
-- Las opciones que mencionan proporciones sobre la población total de `r poblacion_total_fmt` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra_fmt` personas.
-- Las opciones que afirman que "ninguno" prefiere cierto equipo son incorrectas porque no podemos hacer esa generalización a partir de una muestra.
-- Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan los datos.
+- **Distractores con fracciones reducidas**: Opciones como "`r numerador_reducido_fmt` de cada `r denominador_reducido_fmt`" son matemáticamente equivalentes a la respuesta correcta (`r valor_correcto_fmt` de cada `r tamano_muestra_fmt`), pero pueden confundir a estudiantes que no reconocen la equivalencia de fracciones. Aunque matemáticamente correctas, estas opciones son **más sutiles y desafiantes**.
+
+- **Distractores de confusión muestra-población**: Las opciones que mencionan proporciones sobre la población total de `r poblacion_total_fmt` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra_fmt` personas.
+
+- **Distractores de equipos incorrectos**: Las opciones que usan datos de otros equipos de la muestra malinterpretan cuál es el equipo de referencia en la pregunta.
+
+- **Distractores de generalización indebida**: Las opciones que afirman que "ninguno" prefiere cierto equipo son incorrectas porque no podemos hacer esa generalización a partir de una muestra limitada.
+
+- **Distractores de confusión conceptual**: Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan fundamentalmente los datos.
 
 ### Paso 4: Verificación matemática
 En la muestra de `r tamano_muestra_fmt` `r termino_usuarios`:
@@ -477,8 +570,20 @@ En la muestra de `r tamano_muestra_fmt` `r termino_usuarios`:
 
 Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra_fmt` `r termino_usuarios` ✓
 
+### Paso 5: Verificación de equivalencia de fracciones (para distractores desafiantes)
+Es importante reconocer que las fracciones pueden expresarse de diferentes formas equivalentes:
+
+- **Fracción original**: `r valor_correcto_fmt` de cada `r tamano_muestra_fmt` = `r valor_correcto_fmt`/`r tamano_muestra_fmt`
+- **Fracción reducida**: `r numerador_reducido_fmt` de cada `r denominador_reducido_fmt` = `r numerador_reducido_fmt`/`r denominador_reducido_fmt`
+
+**Verificación matemática de equivalencia**:
+`r valor_correcto_fmt`/`r tamano_muestra_fmt` = `r round(valor_correcto/tamano_muestra, 4)`
+`r numerador_reducido_fmt`/`r denominador_reducido_fmt` = `r round(numerador_reducido/denominador_reducido, 4)`
+
+Ambas fracciones son **matemáticamente equivalentes**, pero la fracción reducida puede ser más difícil de reconocer como correcta, lo que aumenta el desafío del problema.
+
 ### Conclusión
-La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no a la población total.
+La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no a la población total. Los distractores mejorados incluyen opciones con fracciones equivalentes que requieren mayor análisis matemático para ser identificadas correctamente.
 
 Answerlist
 ----------
