@@ -359,69 +359,143 @@ denominador_reducido <- fraccion_reducida[2]
 numerador_reducido_fmt <- formatear_entero(numerador_reducido)
 denominador_reducido_fmt <- formatear_entero(denominador_reducido)
 
-# POOL DE DISTRACTORES DESAFIANTES - Seleccionar 3 aleatoriamente
-distractores_disponibles <- list()
+# GENERACIÓN ROBUSTA DE DISTRACTORES ÚNICOS
+# Sistema mejorado que garantiza exactamente 4 opciones únicas (1 correcta + 3 distractores)
 
-# Distractor tipo 1: Fracción reducida equivalente (MUY DESAFIANTE)
-distractores_disponibles[[1]] <- paste0("alrededor de ", numerador_reducido_fmt, " de cada ", denominador_reducido_fmt, " ",
-                                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+# Función para generar distractores de respaldo únicos
+generar_distractores_respaldo <- function(base_valor, base_muestra, base_poblacion, base_equipo, base_contexto, base_usuarios) {
+  distractores_respaldo <- c()
 
-# Distractor tipo 2: Confunde muestra con población usando el equipo correcto
-distractores_disponibles[[2]] <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", poblacion_total_fmt, " ",
-                                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+  # Respaldo 1: Usar porcentaje directo
+  porcentaje <- round(base_valor / base_muestra * 100)
+  distractores_respaldo <- c(distractores_respaldo,
+    paste0("el ", porcentaje, "% de los ", formatear_entero(base_muestra), " ", base_usuarios,
+           " del ", base_contexto, " da por favorito al ", base_equipo, "."))
 
-# Distractor tipo 3: Usa fracción reducida pero con población total (DOBLE CONFUSIÓN)
-distractores_disponibles[[3]] <- paste0("alrededor de ", numerador_reducido_fmt, " de cada ", poblacion_total_fmt, " ",
-                                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+  # Respaldo 2: Usar valor absoluto con población
+  distractores_respaldo <- c(distractores_respaldo,
+    paste0("exactamente ", formatear_entero(base_valor), " de los ", formatear_entero(base_poblacion), " ",
+           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
 
-# Distractor tipo 4: Afirma que ninguno prefiere un equipo no incluido en la muestra
-distractores_disponibles[[4]] <- paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
-                                        " del ", contexto, " da por favorito al ",
-                                        sample(setdiff(equipos_disponibles, equipos_seleccionados), 1), ".")
+  # Respaldo 3: Usar fracción con denominador diferente
+  nuevo_denominador <- base_muestra + sample(c(10, 20, 30, 50), 1)
+  nuevo_numerador <- round(base_valor * nuevo_denominador / base_muestra)
+  distractores_respaldo <- c(distractores_respaldo,
+    paste0("aproximadamente ", formatear_entero(nuevo_numerador), " de cada ", formatear_entero(nuevo_denominador), " ",
+           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
 
-# Distractor tipo 5: Confunde tamaño de muestra con preferencias totales
-distractores_disponibles[[5]] <- paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
-                                        termino_usuarios, " del ", contexto,
-                                        " tienen preferencia por un equipo para ganar la ", competicion, ".")
+  # Respaldo 4: Usar múltiplo de la fracción original
+  multiplicador <- sample(c(2, 3, 4, 5), 1)
+  mult_numerador <- base_valor * multiplicador
+  mult_denominador <- base_muestra * multiplicador
+  distractores_respaldo <- c(distractores_respaldo,
+    paste0("alrededor de ", formatear_entero(mult_numerador), " de cada ", formatear_entero(mult_denominador), " ",
+           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
 
-# Distractor tipo 6: Usa proporción incorrecta con otro equipo de la muestra
+  return(distractores_respaldo)
+}
+
+# POOL COMPLETO DE DISTRACTORES CANDIDATOS
+distractores_candidatos <- c()
+
+# Candidato 1: Fracción reducida equivalente (solo si es diferente)
+if (numerador_reducido != valor_correcto || denominador_reducido != tamano_muestra) {
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", numerador_reducido_fmt, " de cada ", denominador_reducido_fmt, " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, "."))
+}
+
+# Candidato 2: Confunde muestra con población
+distractores_candidatos <- c(distractores_candidatos,
+  paste0("alrededor de ", valor_correcto_fmt, " de cada ", poblacion_total_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, "."))
+
+# Candidato 3: Fracción reducida con población (solo si fracción reducida es diferente)
+if (numerador_reducido != valor_correcto) {
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", numerador_reducido_fmt, " de cada ", poblacion_total_fmt, " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, "."))
+}
+
+# Candidato 4: Equipo no incluido en muestra
+equipo_no_incluido <- sample(setdiff(equipos_disponibles, equipos_seleccionados), 1)
+distractores_candidatos <- c(distractores_candidatos,
+  paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
+         " del ", contexto, " da por favorito al ", equipo_no_incluido, "."))
+
+# Candidato 5: Confusión conceptual
+distractores_candidatos <- c(distractores_candidatos,
+  paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
+         termino_usuarios, " del ", contexto,
+         " tienen preferencia por un equipo para ganar la ", competicion, "."))
+
+# Candidato 6: Otro equipo de la muestra
 otro_equipo_idx <- sample(setdiff(1:5, indice_equipo_correcto), 1)
 otro_equipo <- equipos_seleccionados[otro_equipo_idx]
 otro_valor <- valores_equipos[otro_equipo_idx]
 otro_valor_fmt <- formatear_entero(otro_valor)
-distractores_disponibles[[6]] <- paste0("alrededor de ", otro_valor_fmt, " de cada ", tamano_muestra_fmt, " ",
-                                        termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, ".")
+distractores_candidatos <- c(distractores_candidatos,
+  paste0("alrededor de ", otro_valor_fmt, " de cada ", tamano_muestra_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, "."))
 
-# Distractor tipo 7: Fracción reducida con otro equipo (TRIPLE CONFUSIÓN)
+# Candidato 7: Fracción reducida con otro equipo (solo si es diferente)
 fraccion_otro <- generar_fraccion_reducida(otro_valor, tamano_muestra)
-num_otro_red <- formatear_entero(fraccion_otro[1])
-den_otro_red <- formatear_entero(fraccion_otro[2])
-distractores_disponibles[[7]] <- paste0("alrededor de ", num_otro_red, " de cada ", den_otro_red, " ",
-                                        termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, ".")
-
-# SELECCIÓN INTELIGENTE DE DISTRACTORES
-# Asegurar que siempre se incluya el distractor de fracción reducida (tipo 1) si es diferente de la respuesta correcta
-distractores_seleccionados <- list()
-
-# Verificar si la fracción reducida es diferente de la original (para evitar duplicados)
-if (numerador_reducido != valor_correcto || denominador_reducido != tamano_muestra) {
-  # Incluir SIEMPRE el distractor de fracción reducida como primer distractor
-  distractores_seleccionados[[1]] <- distractores_disponibles[[1]]
-  # Seleccionar 2 distractores adicionales de los restantes (excluyendo el tipo 1)
-  indices_restantes <- sample(2:7, 2)
-  distractores_seleccionados[[2]] <- distractores_disponibles[[indices_restantes[1]]]
-  distractores_seleccionados[[3]] <- distractores_disponibles[[indices_restantes[2]]]
-} else {
-  # Si la fracción ya está reducida, seleccionar 3 distractores diferentes
-  indices_seleccionados <- sample(2:7, 3)
-  distractores_seleccionados[[1]] <- distractores_disponibles[[indices_seleccionados[1]]]
-  distractores_seleccionados[[2]] <- distractores_disponibles[[indices_seleccionados[2]]]
-  distractores_seleccionados[[3]] <- distractores_disponibles[[indices_seleccionados[3]]]
+if (fraccion_otro[1] != otro_valor || fraccion_otro[2] != tamano_muestra) {
+  num_otro_red <- formatear_entero(fraccion_otro[1])
+  den_otro_red <- formatear_entero(fraccion_otro[2])
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", num_otro_red, " de cada ", den_otro_red, " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, "."))
 }
 
-# Crear vector final de opciones y mezclar
-opciones <- c(respuesta_correcta, distractores_seleccionados[[1]],
-              distractores_seleccionados[[2]], distractores_seleccionados[[3]])
+# Candidato 8: Segundo equipo alternativo
+if (length(setdiff(1:5, indice_equipo_correcto)) >= 2) {
+  segundo_equipo_idx <- sample(setdiff(setdiff(1:5, indice_equipo_correcto), otro_equipo_idx), 1)
+  segundo_equipo <- equipos_seleccionados[segundo_equipo_idx]
+  segundo_valor <- valores_equipos[segundo_equipo_idx]
+  segundo_valor_fmt <- formatear_entero(segundo_valor)
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", segundo_valor_fmt, " de cada ", tamano_muestra_fmt, " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", segundo_equipo, "."))
+}
+
+# ELIMINAR DUPLICADOS Y RESPUESTA CORRECTA
+distractores_unicos <- unique(distractores_candidatos)
+distractores_unicos <- distractores_unicos[distractores_unicos != respuesta_correcta]
+
+# AÑADIR DISTRACTORES DE RESPALDO SI NO HAY SUFICIENTES
+if (length(distractores_unicos) < 3) {
+  distractores_respaldo <- generar_distractores_respaldo(valor_correcto, tamano_muestra, poblacion_total,
+                                                        equipo_correcto, contexto, termino_usuarios)
+  distractores_respaldo <- distractores_respaldo[!(distractores_respaldo %in% c(respuesta_correcta, distractores_unicos))]
+  distractores_unicos <- c(distractores_unicos, distractores_respaldo)
+  distractores_unicos <- unique(distractores_unicos)
+}
+
+# SELECCIONAR EXACTAMENTE 3 DISTRACTORES ÚNICOS
+if (length(distractores_unicos) >= 3) {
+  distractores_finales <- sample(distractores_unicos, 3)
+} else {
+  # Caso extremo: usar todos los disponibles y completar con modificaciones
+  distractores_finales <- distractores_unicos
+  while (length(distractores_finales) < 3) {
+    # Generar distractor adicional modificando ligeramente uno existente
+    base_distractor <- sample(distractores_finales, 1)
+    nuevo_distractor <- gsub("alrededor de", "aproximadamente", base_distractor)
+    if (!(nuevo_distractor %in% c(respuesta_correcta, distractores_finales))) {
+      distractores_finales <- c(distractores_finales, nuevo_distractor)
+    } else {
+      # Último recurso: modificar número ligeramente
+      nuevo_distractor <- gsub(valor_correcto_fmt, formatear_entero(valor_correcto + 1), base_distractor)
+      if (!(nuevo_distractor %in% c(respuesta_correcta, distractores_finales))) {
+        distractores_finales <- c(distractores_finales, nuevo_distractor)
+      }
+    }
+  }
+}
+
+# CREAR OPCIONES FINALES Y MEZCLAR
+opciones <- c(respuesta_correcta, distractores_finales[1], distractores_finales[2], distractores_finales[3])
 opciones_mezcladas <- sample(opciones)
 indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
 
@@ -429,20 +503,29 @@ indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
 
-# VALIDACIONES DE INTEGRIDAD PARA DISTRACTORES
-# Verificar que no hay opciones duplicadas
+# VALIDACIONES FINALES ROBUSTAS
+# Verificar que hay exactamente 4 opciones únicas
 if (length(unique(opciones)) != 4) {
-  stop("Error: Se generaron opciones duplicadas. Opciones: ", paste(opciones, collapse=" | "))
+  stop("Error crítico: No se pudieron generar 4 opciones únicas. Opciones: ", paste(opciones, collapse=" | "))
 }
 
 # Verificar que la respuesta correcta está incluida
 if (!(respuesta_correcta %in% opciones)) {
-  stop("Error: La respuesta correcta no está en las opciones finales")
+  stop("Error crítico: La respuesta correcta no está en las opciones finales")
 }
 
 # Verificar coherencia matemática de la fracción reducida
 if (numerador_reducido * tamano_muestra != denominador_reducido * valor_correcto) {
   stop("Error: La fracción reducida no es matemáticamente equivalente")
+}
+
+# Verificar que todas las opciones son diferentes
+for (i in 1:4) {
+  for (j in 1:4) {
+    if (i != j && opciones[i] == opciones[j]) {
+      stop("Error: Opciones duplicadas detectadas en posiciones ", i, " y ", j)
+    }
+  }
 }
 ```
 
