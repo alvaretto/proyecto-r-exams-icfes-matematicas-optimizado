@@ -43,23 +43,73 @@ contextos <- c("canal de deportes", "plataforma de streaming", "revista deportiv
                "portal web deportivo", "aplicación móvil", "blog de fútbol")
 contexto <- sample(contextos, 1)
 
-competiciones <- c("Champions League", "Copa del Mundo", "Liga Europa",
-                   "Copa América", "Eurocopa", "Copa Libertadores")
-competicion <- sample(competiciones, 1)
-
-terminos_usuarios <- c("suscriptores", "seguidores", "usuarios", "miembros", "aficionados")
-termino_usuarios <- sample(terminos_usuarios, 1)
-
 # Aleatorización de términos para encuesta
 terminos_encuesta <- c("encuesta", "sondeo", "consulta", "estudio", "investigación")
 termino_encuesta <- sample(terminos_encuesta, 1)
 
-# Equipos aleatorios
-equipos_disponibles <- c("Manchester City", "FC Barcelona", "Real Madrid", "Liverpool",
-                        "Bayern de Múnich", "Paris Saint-Germain", "Chelsea",
-                        "Manchester United", "Arsenal", "Juventus", "AC Milan",
-                        "Atlético de Madrid", "Borussia Dortmund", "Ajax", "Benfica")
+# Determinar género del término de encuesta para concordancia
+terminos_femeninos <- c("encuesta", "consulta", "investigación")
+es_femenino <- termino_encuesta %in% terminos_femeninos
+articulo_encuesta <- if(es_femenino) "la" else "el"
 
+terminos_usuarios <- c("suscriptores", "seguidores", "usuarios", "miembros", "aficionados")
+termino_usuarios <- sample(terminos_usuarios, 1)
+
+# Definir competiciones y equipos compatibles
+competiciones_clubes_europeos <- c("Champions League", "Liga Europa")
+competiciones_clubes_sudamericanos <- c("Copa Libertadores")
+competiciones_selecciones_europeas <- c("Eurocopa")
+competiciones_selecciones_sudamericanas <- c("Copa América")
+competiciones_selecciones_mundiales <- c("Copa del Mundo")
+
+# Equipos por región
+equipos_europeos <- c("Manchester City", "FC Barcelona", "Real Madrid", "Liverpool",
+                     "Bayern de Múnich", "Paris Saint-Germain", "Chelsea",
+                     "Manchester United", "Arsenal", "Juventus", "AC Milan",
+                     "Atlético de Madrid", "Borussia Dortmund", "Ajax", "Benfica")
+
+equipos_sudamericanos <- c("Boca Juniors", "River Plate", "Flamengo", "Palmeiras",
+                          "São Paulo", "Santos", "Corinthians", "Atlético Nacional",
+                          "Millonarios", "Colo-Colo", "Universidad de Chile", "Peñarol",
+                          "Nacional", "Olimpia", "Cerro Porteño")
+
+selecciones_europeas <- c("España", "Francia", "Alemania", "Italia", "Inglaterra",
+                         "Portugal", "Países Bajos", "Bélgica", "Croacia", "Polonia",
+                         "Suiza", "Austria", "Dinamarca", "Suecia", "Ucrania")
+
+selecciones_sudamericanas <- c("Brasil", "Argentina", "Uruguay", "Colombia", "Chile",
+                              "Perú", "Ecuador", "Paraguay", "Bolivia", "Venezuela")
+
+selecciones_mundiales <- c("Brasil", "Argentina", "Francia", "España", "Inglaterra",
+                          "Portugal", "Alemania", "Italia", "Países Bajos", "Croacia",
+                          "Uruguay", "Colombia", "México", "Estados Unidos", "Japón")
+
+# Seleccionar competición y equipos compatibles
+tipo_competicion <- sample(1:5, 1)
+
+if (tipo_competicion == 1) {
+  # Competiciones de clubes europeos
+  competicion <- sample(competiciones_clubes_europeos, 1)
+  equipos_disponibles <- equipos_europeos
+} else if (tipo_competicion == 2) {
+  # Competiciones de clubes sudamericanos
+  competicion <- sample(competiciones_clubes_sudamericanos, 1)
+  equipos_disponibles <- equipos_sudamericanos
+} else if (tipo_competicion == 3) {
+  # Competiciones de selecciones europeas
+  competicion <- sample(competiciones_selecciones_europeas, 1)
+  equipos_disponibles <- selecciones_europeas
+} else if (tipo_competicion == 4) {
+  # Competiciones de selecciones sudamericanas
+  competicion <- sample(competiciones_selecciones_sudamericanas, 1)
+  equipos_disponibles <- selecciones_sudamericanas
+} else {
+  # Competiciones de selecciones mundiales
+  competicion <- sample(competiciones_selecciones_mundiales, 1)
+  equipos_disponibles <- selecciones_mundiales
+}
+
+# Seleccionar 5 equipos/selecciones de la lista compatible
 equipos_seleccionados <- sample(equipos_disponibles, 5)
 equipo1 <- equipos_seleccionados[1]
 equipo2 <- equipos_seleccionados[2]
@@ -67,8 +117,8 @@ equipo3 <- equipos_seleccionados[3]
 equipo4 <- equipos_seleccionados[4]
 equipo5 <- equipos_seleccionados[5]
 
-# Población y muestra
-poblacion_total <- sample(c(30000, 40000, 50000, 60000, 75000, 80000, 100000), 1)
+# Población y muestra (usando números enteros simples)
+poblacion_total <- sample(c(25000, 30000, 40000, 50000, 60000, 75000, 81000, 90000, 100000), 1)
 tamano_muestra <- sample(c(80, 90, 100, 110, 120, 130, 140, 150), 1)
 
 # Generar valores para el gráfico que sumen exactamente el tamaño de muestra
@@ -326,7 +376,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-Un `r contexto` realizó un `r termino_encuesta` a un grupo de sus `r poblacion_total` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar la `r competicion`. Los resultados se muestran en la gráfica.
+Un `r contexto` realizó un(a) `r termino_encuesta` a un grupo de sus `r poblacion_total` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar la `r competicion`. Los resultados se muestran en la gráfica.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Detectar formato de salida
@@ -341,7 +391,7 @@ if (es_moodle) {
 }
 ```
 
-De acuerdo con los datos obtenidos en el `r termino_encuesta`, es correcto afirmar que
+De acuerdo con los datos obtenidos en `r articulo_encuesta` `r termino_encuesta`, es correcto afirmar que
 
 Answerlist
 ----------
@@ -357,7 +407,7 @@ Para resolver este problema, necesitamos interpretar correctamente los datos del
 
 ### Paso 1: Identificar los datos conocidos
 * El `r contexto` tiene un total de `r poblacion_total` `r termino_usuarios`.
-* Se realizó un `r termino_encuesta` a una muestra de `r tamano_muestra` `r termino_usuarios` seleccionados al azar.
+* Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra` `r termino_usuarios` seleccionados al azar.
 * Según el gráfico, `r valor1` `r termino_usuarios` de la muestra prefieren al `r equipo1`.
 
 ### Paso 2: Interpretar correctamente las proporciones
@@ -370,7 +420,7 @@ Esta opción es correcta porque interpreta adecuadamente que `r valor1` de cada 
 
 **Análisis de distractores**:
 
-- Las opciones que mencionan proporciones sobre la población total de `r poblacion_total` `r termino_usuarios` son incorrectas, ya que el `r termino_encuesta` solo se realizó a `r tamano_muestra` personas.
+- Las opciones que mencionan proporciones sobre la población total de `r poblacion_total` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra` personas.
 - Las opciones que afirman que "ninguno" prefiere cierto equipo son incorrectas porque no podemos hacer esa generalización a partir de una muestra.
 - Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan los datos.
 
