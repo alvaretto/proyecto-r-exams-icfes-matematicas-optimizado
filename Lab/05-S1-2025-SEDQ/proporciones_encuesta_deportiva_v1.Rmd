@@ -395,73 +395,117 @@ generar_distractores_respaldo <- function(base_valor, base_muestra, base_poblaci
   return(distractores_respaldo)
 }
 
-# POOL COMPLETO DE DISTRACTORES CANDIDATOS
-distractores_candidatos <- c()
+# SISTEMA ANTI-PATRÓN: DIVERSIFICACIÓN OBLIGATORIA DE EQUIPOS
+# Garantiza que cada opción mencione un equipo diferente para evitar patrones detectables
 
-# Candidato 1: Fracción reducida equivalente (solo si es diferente)
-if (numerador_reducido != valor_correcto || denominador_reducido != tamano_muestra) {
-  distractores_candidatos <- c(distractores_candidatos,
-    paste0("alrededor de ", numerador_reducido_fmt, " de cada ", denominador_reducido_fmt, " ",
-           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, "."))
+# Seleccionar equipos únicos para cada distractor
+equipos_otros_indices <- setdiff(1:5, indice_equipo_correcto)
+if (length(equipos_otros_indices) < 3) {
+  stop("Error: Se necesitan al menos 4 equipos diferentes en la muestra para evitar patrones")
 }
 
-# Candidato 2: Confunde muestra con población
-distractores_candidatos <- c(distractores_candidatos,
-  paste0("alrededor de ", valor_correcto_fmt, " de cada ", poblacion_total_fmt, " ",
-         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, "."))
+# Seleccionar 3 equipos diferentes para los distractores
+equipos_distractores_indices <- sample(equipos_otros_indices, 3)
+equipo_distractor1_idx <- equipos_distractores_indices[1]
+equipo_distractor2_idx <- equipos_distractores_indices[2]
+equipo_distractor3_idx <- equipos_distractores_indices[3]
 
-# Candidato 3: Fracción reducida con población (solo si fracción reducida es diferente)
-if (numerador_reducido != valor_correcto) {
-  distractores_candidatos <- c(distractores_candidatos,
-    paste0("alrededor de ", numerador_reducido_fmt, " de cada ", poblacion_total_fmt, " ",
-           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, "."))
+# Obtener datos de los equipos seleccionados para distractores
+equipo_distractor1 <- equipos_seleccionados[equipo_distractor1_idx]
+valor_distractor1 <- valores_equipos[equipo_distractor1_idx]
+valor_distractor1_fmt <- formatear_entero(valor_distractor1)
+
+equipo_distractor2 <- equipos_seleccionados[equipo_distractor2_idx]
+valor_distractor2 <- valores_equipos[equipo_distractor2_idx]
+valor_distractor2_fmt <- formatear_entero(valor_distractor2)
+
+equipo_distractor3 <- equipos_seleccionados[equipo_distractor3_idx]
+valor_distractor3 <- valores_equipos[equipo_distractor3_idx]
+valor_distractor3_fmt <- formatear_entero(valor_distractor3)
+
+# POOL DE DISTRACTORES CON EQUIPOS ÚNICOS GARANTIZADOS
+distractores_por_tipo <- list()
+
+# TIPO 1: Distractores con equipo_distractor1
+distractores_tipo1 <- c()
+
+# 1A: Proporción correcta con equipo incorrecto
+distractores_tipo1 <- c(distractores_tipo1,
+  paste0("alrededor de ", valor_distractor1_fmt, " de cada ", tamano_muestra_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor1, "."))
+
+# 1B: Confusión muestra-población con equipo incorrecto
+distractores_tipo1 <- c(distractores_tipo1,
+  paste0("alrededor de ", valor_distractor1_fmt, " de cada ", poblacion_total_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor1, "."))
+
+# 1C: Fracción reducida con equipo incorrecto
+fraccion_dist1 <- generar_fraccion_reducida(valor_distractor1, tamano_muestra)
+if (fraccion_dist1[1] != valor_distractor1 || fraccion_dist1[2] != tamano_muestra) {
+  num_dist1_red <- formatear_entero(fraccion_dist1[1])
+  den_dist1_red <- formatear_entero(fraccion_dist1[2])
+  distractores_tipo1 <- c(distractores_tipo1,
+    paste0("alrededor de ", num_dist1_red, " de cada ", den_dist1_red, " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor1, "."))
 }
 
-# Candidato 4: Equipo no incluido en muestra
-equipo_no_incluido <- sample(setdiff(equipos_disponibles, equipos_seleccionados), 1)
-distractores_candidatos <- c(distractores_candidatos,
-  paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
-         " del ", contexto, " da por favorito al ", equipo_no_incluido, "."))
+distractores_por_tipo[["tipo1"]] <- distractores_tipo1
 
-# Candidato 5: Confusión conceptual
-distractores_candidatos <- c(distractores_candidatos,
+# TIPO 2: Distractores con equipo_distractor2
+distractores_tipo2 <- c()
+
+# 2A: Proporción correcta con equipo incorrecto
+distractores_tipo2 <- c(distractores_tipo2,
+  paste0("alrededor de ", valor_distractor2_fmt, " de cada ", tamano_muestra_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor2, "."))
+
+# 2B: Confusión muestra-población con equipo incorrecto
+distractores_tipo2 <- c(distractores_tipo2,
+  paste0("alrededor de ", valor_distractor2_fmt, " de cada ", poblacion_total_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor2, "."))
+
+# 2C: Fracción reducida con equipo incorrecto
+fraccion_dist2 <- generar_fraccion_reducida(valor_distractor2, tamano_muestra)
+if (fraccion_dist2[1] != valor_distractor2 || fraccion_dist2[2] != tamano_muestra) {
+  num_dist2_red <- formatear_entero(fraccion_dist2[1])
+  den_dist2_red <- formatear_entero(fraccion_dist2[2])
+  distractores_tipo2 <- c(distractores_tipo2,
+    paste0("alrededor de ", num_dist2_red, " de cada ", den_dist2_red, " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor2, "."))
+}
+
+distractores_por_tipo[["tipo2"]] <- distractores_tipo2
+
+# TIPO 3: Distractores con equipo_distractor3 o conceptuales
+distractores_tipo3 <- c()
+
+# 3A: Proporción correcta con equipo incorrecto
+distractores_tipo3 <- c(distractores_tipo3,
+  paste0("alrededor de ", valor_distractor3_fmt, " de cada ", tamano_muestra_fmt, " ",
+         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_distractor3, "."))
+
+# 3B: Confusión conceptual (sin equipo específico)
+distractores_tipo3 <- c(distractores_tipo3,
   paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
          termino_usuarios, " del ", contexto,
          " tienen preferencia por un equipo para ganar la ", competicion, "."))
 
-# Candidato 6: Otro equipo de la muestra
-otro_equipo_idx <- sample(setdiff(1:5, indice_equipo_correcto), 1)
-otro_equipo <- equipos_seleccionados[otro_equipo_idx]
-otro_valor <- valores_equipos[otro_equipo_idx]
-otro_valor_fmt <- formatear_entero(otro_valor)
-distractores_candidatos <- c(distractores_candidatos,
-  paste0("alrededor de ", otro_valor_fmt, " de cada ", tamano_muestra_fmt, " ",
-         termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, "."))
+# 3C: Equipo no incluido en muestra
+equipo_no_incluido <- sample(setdiff(equipos_disponibles, equipos_seleccionados), 1)
+distractores_tipo3 <- c(distractores_tipo3,
+  paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
+         " del ", contexto, " da por favorito al ", equipo_no_incluido, "."))
 
-# Candidato 7: Fracción reducida con otro equipo (solo si es diferente)
-fraccion_otro <- generar_fraccion_reducida(otro_valor, tamano_muestra)
-if (fraccion_otro[1] != otro_valor || fraccion_otro[2] != tamano_muestra) {
-  num_otro_red <- formatear_entero(fraccion_otro[1])
-  den_otro_red <- formatear_entero(fraccion_otro[2])
-  distractores_candidatos <- c(distractores_candidatos,
-    paste0("alrededor de ", num_otro_red, " de cada ", den_otro_red, " ",
-           termino_usuarios, " del ", contexto, " da por favorito al ", otro_equipo, "."))
-}
+distractores_por_tipo[["tipo3"]] <- distractores_tipo3
 
-# Candidato 8: Segundo equipo alternativo
-if (length(setdiff(1:5, indice_equipo_correcto)) >= 2) {
-  segundo_equipo_idx <- sample(setdiff(setdiff(1:5, indice_equipo_correcto), otro_equipo_idx), 1)
-  segundo_equipo <- equipos_seleccionados[segundo_equipo_idx]
-  segundo_valor <- valores_equipos[segundo_equipo_idx]
-  segundo_valor_fmt <- formatear_entero(segundo_valor)
-  distractores_candidatos <- c(distractores_candidatos,
-    paste0("alrededor de ", segundo_valor_fmt, " de cada ", tamano_muestra_fmt, " ",
-           termino_usuarios, " del ", contexto, " da por favorito al ", segundo_equipo, "."))
-}
+# SELECCIÓN GARANTIZADA DE EQUIPOS ÚNICOS
+# Seleccionar exactamente un distractor de cada tipo para garantizar diversidad
+distractor_final1 <- sample(distractores_por_tipo[["tipo1"]], 1)
+distractor_final2 <- sample(distractores_por_tipo[["tipo2"]], 1)
+distractor_final3 <- sample(distractores_por_tipo[["tipo3"]], 1)
 
-# ELIMINAR DUPLICADOS Y RESPUESTA CORRECTA
-distractores_unicos <- unique(distractores_candidatos)
-distractores_unicos <- distractores_unicos[distractores_unicos != respuesta_correcta]
+# Crear lista de distractores únicos garantizados
+distractores_unicos <- c(distractor_final1, distractor_final2, distractor_final3)
 
 # AÑADIR DISTRACTORES DE RESPALDO SI NO HAY SUFICIENTES
 if (length(distractores_unicos) < 3) {
@@ -526,6 +570,38 @@ for (i in 1:4) {
       stop("Error: Opciones duplicadas detectadas en posiciones ", i, " y ", j)
     }
   }
+}
+
+# VALIDACIÓN ANTI-PATRÓN: Verificar diversidad de equipos mencionados
+equipos_mencionados <- c()
+for (opcion in opciones) {
+  # Extraer equipos mencionados en cada opción
+  for (equipo in equipos_seleccionados) {
+    if (grepl(equipo, opcion, fixed = TRUE)) {
+      equipos_mencionados <- c(equipos_mencionados, equipo)
+    }
+  }
+  # También verificar equipos no incluidos
+  for (equipo in setdiff(equipos_disponibles, equipos_seleccionados)) {
+    if (grepl(equipo, opcion, fixed = TRUE)) {
+      equipos_mencionados <- c(equipos_mencionados, equipo)
+    }
+  }
+}
+
+# Verificar que no hay más de una opción por equipo específico
+tabla_equipos <- table(equipos_mencionados)
+equipos_repetidos <- names(tabla_equipos)[tabla_equipos > 1]
+
+if (length(equipos_repetidos) > 0) {
+  stop("Error anti-patrón: Los siguientes equipos aparecen en múltiples opciones: ",
+       paste(equipos_repetidos, collapse=", "),
+       ". Esto crea un patrón detectable para estudiantes.")
+}
+
+# Verificar que hay suficiente diversidad (al menos 3 equipos diferentes mencionados)
+if (length(unique(equipos_mencionados)) < 3) {
+  stop("Error: Insuficiente diversidad de equipos. Se requieren al menos 3 equipos diferentes mencionados.")
 }
 ```
 
