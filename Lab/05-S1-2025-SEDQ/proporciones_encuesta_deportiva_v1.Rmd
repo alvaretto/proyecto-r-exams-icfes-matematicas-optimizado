@@ -144,108 +144,116 @@ tamano_muestra <- sample(c(80, 90, 100, 110, 120, 130, 140, 150), 1)
 poblacion_total_fmt <- formatear_entero(poblacion_total)
 tamano_muestra_fmt <- formatear_entero(tamano_muestra)
 
-# Generar valores para el gráfico que sumen exactamente el tamaño de muestra
-generar_valores_coherentes <- function(total) {
+# FUNCIÓN ROBUSTA PARA GENERAR VALORES CON VARIABILIDAD GARANTIZADA
+generar_valores_coherentes <- function(total, max_intentos = 100) {
   # Definir rangos apropiados basados en el total
   min_valor <- max(8, round(total * 0.08))  # Mínimo 8% del total
   max_valor <- min(40, round(total * 0.35)) # Máximo 35% del total
 
-  # MÉTODO ULTRA-SIMPLE: Distribución controlada garantizada
-
-  # Paso 1: Calcular valor base
-  valor_base <- round(total / 5)
-
-  # Paso 2: Crear distribución inicial
-  valores <- rep(valor_base, 5)
-  suma_inicial <- sum(valores)
-  diferencia <- total - suma_inicial
-
-  # Paso 3: Distribuir la diferencia exacta
-  if (diferencia > 0) {
-    # Añadir la diferencia al primer valor
-    valores[1] <- valores[1] + diferencia
-  } else if (diferencia < 0) {
-    # Quitar la diferencia del primer valor
-    valores[1] <- valores[1] + diferencia  # diferencia es negativa
+  # VERIFICACIÓN INICIAL
+  if (min_valor * 5 > total) {
+    stop("ERROR: Imposible generar 5 valores con min_valor = ", min_valor, " y total = ", total)
   }
 
-  # VERIFICACIÓN CRÍTICA 1
-  if (sum(valores) != total) {
-    stop("ERROR CRÍTICO 1: suma = ", sum(valores), ", esperado = ", total)
-  }
+  for (intento in 1:max_intentos) {
+    # ESTRATEGIA ROBUSTA: Generar valores diversos desde el inicio
 
-  # Paso 4: Verificar rangos y redistribuir si es necesario
-  intentos_redistribucion <- 0
-  while ((any(valores < min_valor) || any(valores > max_valor)) && intentos_redistribucion < 10) {
-    intentos_redistribucion <- intentos_redistribucion + 1
+    # Método 1: Distribución escalonada (primeros 50 intentos)
+    if (intento <= 50) {
+      valor_base <- round(total / 5)
+      variacion <- min(6, round(valor_base * 0.3))
 
-    # Encontrar valores fuera de rango
-    muy_altos <- which(valores > max_valor)
-    muy_bajos <- which(valores < min_valor)
+      # Crear valores escalonados para garantizar variabilidad
+      valores <- c(
+        valor_base - variacion,
+        valor_base - round(variacion/2),
+        valor_base,
+        valor_base + round(variacion/2),
+        valor_base + variacion
+      )
 
-    # Redistribuir desde valores muy altos a valores muy bajos
-    if (length(muy_altos) > 0 && length(muy_bajos) > 0) {
-      idx_alto <- muy_altos[1]
-      idx_bajo <- muy_bajos[1]
+      # Asegurar que están en rango válido
+      valores <- pmax(valores, min_valor)
+      valores <- pmin(valores, max_valor)
 
-      # Calcular cuánto transferir
-      exceso <- valores[idx_alto] - max_valor
-      deficit <- min_valor - valores[idx_bajo]
-      transferir <- min(exceso, deficit, 3)  # Máximo 3 unidades por vez
-
-      valores[idx_alto] <- valores[idx_alto] - transferir
-      valores[idx_bajo] <- valores[idx_bajo] + transferir
-
-      # VERIFICACIÓN CRÍTICA 2
-      if (sum(valores) != total) {
-        stop("ERROR CRÍTICO 2: suma cambió a ", sum(valores), " durante redistribución")
-      }
     } else {
-      break  # No hay más redistribuciones posibles
-    }
-  }
-
-  # Paso 5: Si aún hay valores fuera de rango, usar distribución forzada
-  if (any(valores < min_valor) || any(valores > max_valor)) {
-    # Distribución uniforme dentro de rangos
-    valor_uniforme <- floor(total / 5)
-    resto <- total %% 5
-
-    valores <- rep(valor_uniforme, 5)
-
-    # Distribuir resto
-    for (i in 1:resto) {
-      valores[i] <- valores[i] + 1
+      # Método 2: Distribución completamente aleatoria (últimos 50 intentos)
+      valores <- sample(min_valor:max_valor, 5, replace = TRUE)
     }
 
-    # VERIFICACIÓN CRÍTICA 3
-    if (sum(valores) != total) {
-      stop("ERROR CRÍTICO 3: suma incorrecta en distribución forzada")
-    }
-  }
+    # Ajustar para que sumen exactamente el total
+    diferencia <- total - sum(valores)
 
-  # Paso 6: Añadir variabilidad mínima SIN cambiar la suma
-  if (all(valores >= min_valor) && all(valores <= max_valor)) {
-    for (intento in 1:5) {  # Solo 5 intentos de variabilidad
-      pos1 <- sample(1:5, 1)
-      pos2 <- sample(setdiff(1:5, pos1), 1)
-
-      # Transferir solo 1 unidad
-      if (valores[pos1] - 1 >= min_valor && valores[pos2] + 1 <= max_valor) {
-        valores[pos1] <- valores[pos1] - 1
-        valores[pos2] <- valores[pos2] + 1
-
-        # VERIFICACIÓN CRÍTICA 4
-        if (sum(valores) != total) {
-          stop("ERROR CRÍTICO 4: suma cambió durante variabilidad")
+    # Distribuir la diferencia de manera inteligente
+    intentos_ajuste <- 0
+    while (diferencia != 0 && intentos_ajuste < 30) {
+      if (diferencia > 0) {
+        # Necesitamos aumentar algunos valores
+        indices_validos <- which(valores < max_valor)
+        if (length(indices_validos) > 0) {
+          idx <- sample(indices_validos, 1)
+          incremento <- min(diferencia, max_valor - valores[idx])
+          valores[idx] <- valores[idx] + incremento
+          diferencia <- diferencia - incremento
+        } else {
+          break  # No se puede ajustar más
+        }
+      } else {
+        # Necesitamos disminuir algunos valores
+        indices_validos <- which(valores > min_valor)
+        if (length(indices_validos) > 0) {
+          idx <- sample(indices_validos, 1)
+          decremento <- min(abs(diferencia), valores[idx] - min_valor)
+          valores[idx] <- valores[idx] - decremento
+          diferencia <- diferencia + decremento
+        } else {
+          break  # No se puede ajustar más
         }
       }
+      intentos_ajuste <- intentos_ajuste + 1
+    }
+
+    # Verificar si el resultado es válido
+    if (sum(valores) == total &&
+        all(valores >= min_valor) &&
+        all(valores <= max_valor) &&
+        length(unique(valores)) >= 3) {  # Al menos 3 valores únicos
+
+      # Mezclar el orden para mayor aleatoriedad
+      valores <- sample(valores)
+
+      # VERIFICACIÓN FINAL
+      if (sum(valores) != total) {
+        stop("ERROR FINAL: suma = ", sum(valores), ", esperado = ", total)
+      }
+
+      return(valores)
     }
   }
 
-  # VERIFICACIÓN FINAL OBLIGATORIA
+  # Si llegamos aquí, usar método de emergencia
+  cat("ADVERTENCIA: Usando método de emergencia para total =", total, "\n")
+
+  # Método de emergencia: distribución simple pero garantizada
+  valor_base <- floor(total / 5)
+  resto <- total %% 5
+
+  valores <- rep(valor_base, 5)
+
+  # Distribuir resto para crear variabilidad mínima
+  for (i in 1:resto) {
+    valores[i] <- valores[i] + 1
+  }
+
+  # Añadir variabilidad mínima si es posible
+  if (valores[1] > min_valor && valores[5] < max_valor) {
+    valores[1] <- valores[1] - 1
+    valores[5] <- valores[5] + 1
+  }
+
+  # VERIFICACIÓN FINAL DE EMERGENCIA
   if (sum(valores) != total) {
-    stop("ERROR FINAL: suma = ", sum(valores), ", esperado = ", total)
+    stop("ERROR CRÍTICO DE EMERGENCIA: suma = ", sum(valores), ", esperado = ", total)
   }
 
   return(valores)
@@ -299,9 +307,12 @@ if (!all(valores_equipos >= min_esperado) || !all(valores_equipos <= max_esperad
   stop("Error: Algunos valores están fuera del rango esperado [", min_esperado, ", ", max_esperado, "]")
 }
 
-# Verificar que hay variabilidad
-if (length(unique(valores_equipos)) < 2) {
-  stop("Error: No hay suficiente variabilidad en los valores")
+# VALIDACIÓN ROBUSTA DE VARIABILIDAD
+valores_unicos <- unique(valores_equipos)
+if (length(valores_unicos) < 3) {
+  stop("Error: Variabilidad insuficiente. Solo ", length(valores_unicos),
+       " valores únicos de 5. Valores: [", paste(valores_equipos, collapse=", "),
+       "]. Se requieren al menos 3 valores únicos.")
 }
 
 # Verificar que todos los valores son positivos
