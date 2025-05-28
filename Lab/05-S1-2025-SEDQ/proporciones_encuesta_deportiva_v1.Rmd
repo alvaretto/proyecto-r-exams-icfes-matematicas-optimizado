@@ -118,7 +118,7 @@ equipo4 <- equipos_seleccionados[4]
 equipo5 <- equipos_seleccionados[5]
 
 # Población y muestra (usando números enteros simples)
-poblacion_total <- sample(c(25000, 30000, 40000, 50000, 60000, 75000, 81000, 90000, 100000), 1)
+poblacion_total <- sample(c(1296, 25000, 30000, 40000, 50000, 60000, 75000, 81000, 90000, 100000), 1)
 tamano_muestra <- sample(c(80, 90, 100, 110, 120, 130, 140, 150), 1)
 
 # Generar valores para el gráfico que sumen exactamente el tamaño de muestra
