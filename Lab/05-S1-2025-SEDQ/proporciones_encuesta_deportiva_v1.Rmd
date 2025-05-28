@@ -74,110 +74,135 @@ generar_valores_coherentes <- function(total) {
   min_valor <- max(8, round(total * 0.08))  # Mínimo 8% del total
   max_valor <- min(40, round(total * 0.35)) # Máximo 35% del total
 
-  # Método 1: Intentar generación aleatoria optimizada
-  for (intento in 1:50) {
-    # Generar 4 valores aleatorios
-    valores <- sample(min_valor:max_valor, 4, replace = TRUE)
+  # MÉTODO ULTRA-SIMPLE: Distribución controlada garantizada
 
-    # Calcular el 5to valor para que sume exactamente el total
-    valor5 <- total - sum(valores)
+  # Paso 1: Calcular valor base
+  valor_base <- round(total / 5)
 
-    # Verificar si el 5to valor está en el rango válido
-    if (valor5 >= min_valor && valor5 <= max_valor) {
-      return(c(valores, valor5))
+  # Paso 2: Crear distribución inicial
+  valores <- rep(valor_base, 5)
+  suma_inicial <- sum(valores)
+  diferencia <- total - suma_inicial
+
+  # Paso 3: Distribuir la diferencia exacta
+  if (diferencia > 0) {
+    # Añadir la diferencia al primer valor
+    valores[1] <- valores[1] + diferencia
+  } else if (diferencia < 0) {
+    # Quitar la diferencia del primer valor
+    valores[1] <- valores[1] + diferencia  # diferencia es negativa
+  }
+
+  # VERIFICACIÓN CRÍTICA 1
+  if (sum(valores) != total) {
+    stop("ERROR CRÍTICO 1: suma = ", sum(valores), ", esperado = ", total)
+  }
+
+  # Paso 4: Verificar rangos y redistribuir si es necesario
+  intentos_redistribucion <- 0
+  while ((any(valores < min_valor) || any(valores > max_valor)) && intentos_redistribucion < 10) {
+    intentos_redistribucion <- intentos_redistribucion + 1
+
+    # Encontrar valores fuera de rango
+    muy_altos <- which(valores > max_valor)
+    muy_bajos <- which(valores < min_valor)
+
+    # Redistribuir desde valores muy altos a valores muy bajos
+    if (length(muy_altos) > 0 && length(muy_bajos) > 0) {
+      idx_alto <- muy_altos[1]
+      idx_bajo <- muy_bajos[1]
+
+      # Calcular cuánto transferir
+      exceso <- valores[idx_alto] - max_valor
+      deficit <- min_valor - valores[idx_bajo]
+      transferir <- min(exceso, deficit, 3)  # Máximo 3 unidades por vez
+
+      valores[idx_alto] <- valores[idx_alto] - transferir
+      valores[idx_bajo] <- valores[idx_bajo] + transferir
+
+      # VERIFICACIÓN CRÍTICA 2
+      if (sum(valores) != total) {
+        stop("ERROR CRÍTICO 2: suma cambió a ", sum(valores), " durante redistribución")
+      }
+    } else {
+      break  # No hay más redistribuciones posibles
     }
   }
 
-  # Método 2: Distribución garantizada con suma exacta
-  # Calcular distribución base
-  valor_base <- floor(total / 5)
-  resto <- total - (valor_base * 5)  # Resto exacto
+  # Paso 5: Si aún hay valores fuera de rango, usar distribución forzada
+  if (any(valores < min_valor) || any(valores > max_valor)) {
+    # Distribución uniforme dentro de rangos
+    valor_uniforme <- floor(total / 5)
+    resto <- total %% 5
 
-  # Crear vector base
-  valores <- rep(valor_base, 5)
+    valores <- rep(valor_uniforme, 5)
 
-  # Distribuir resto de forma determinística
-  if (resto > 0) {
+    # Distribuir resto
     for (i in 1:resto) {
       valores[i] <- valores[i] + 1
     }
+
+    # VERIFICACIÓN CRÍTICA 3
+    if (sum(valores) != total) {
+      stop("ERROR CRÍTICO 3: suma incorrecta en distribución forzada")
+    }
   }
 
-  # Verificación crítica de suma
-  if (sum(valores) != total) {
-    stop("Error crítico en distribución base: suma = ", sum(valores), ", esperado = ", total)
-  }
+  # Paso 6: Añadir variabilidad mínima SIN cambiar la suma
+  if (all(valores >= min_valor) && all(valores <= max_valor)) {
+    for (intento in 1:5) {  # Solo 5 intentos de variabilidad
+      pos1 <- sample(1:5, 1)
+      pos2 <- sample(setdiff(1:5, pos1), 1)
 
-  # Añadir variabilidad manteniendo la suma exacta
-  intentos_variabilidad <- 0
-  max_intentos <- 30
+      # Transferir solo 1 unidad
+      if (valores[pos1] - 1 >= min_valor && valores[pos2] + 1 <= max_valor) {
+        valores[pos1] <- valores[pos1] - 1
+        valores[pos2] <- valores[pos2] + 1
 
-  while (intentos_variabilidad < max_intentos) {
-    # Seleccionar dos posiciones diferentes
-    pos1 <- sample(1:5, 1)
-    pos2 <- sample(setdiff(1:5, pos1), 1)
-
-    # Cantidad a transferir (1 o 2 unidades)
-    transferir <- sample(1:2, 1)
-
-    # Calcular nuevos valores
-    nuevo_val1 <- valores[pos1] - transferir
-    nuevo_val2 <- valores[pos2] + transferir
-
-    # Verificar que la transferencia mantiene rangos válidos
-    if (nuevo_val1 >= min_valor && nuevo_val1 <= max_valor &&
-        nuevo_val2 >= min_valor && nuevo_val2 <= max_valor) {
-
-      # Aplicar transferencia
-      valores[pos1] <- nuevo_val1
-      valores[pos2] <- nuevo_val2
-
-      # Verificación de seguridad
-      if (sum(valores) != total) {
-        stop("Error en variabilidad: suma cambió a ", sum(valores))
+        # VERIFICACIÓN CRÍTICA 4
+        if (sum(valores) != total) {
+          stop("ERROR CRÍTICO 4: suma cambió durante variabilidad")
+        }
       }
     }
-
-    intentos_variabilidad <- intentos_variabilidad + 1
   }
 
-  # Verificación final obligatoria
+  # VERIFICACIÓN FINAL OBLIGATORIA
   if (sum(valores) != total) {
-    stop("Error final: suma = ", sum(valores), ", esperado = ", total)
+    stop("ERROR FINAL: suma = ", sum(valores), ", esperado = ", total)
   }
 
   return(valores)
 }
 
 valores_equipos <- generar_valores_coherentes(tamano_muestra)
+
+# Ordenar equipos y valores para que el primer equipo tenga el valor más alto
+idx_max <- which.max(valores_equipos)
+if (idx_max != 1) {
+  # Intercambiar valores
+  temp_valor <- valores_equipos[1]
+  valores_equipos[1] <- valores_equipos[idx_max]
+  valores_equipos[idx_max] <- temp_valor
+
+  # Intercambiar equipos
+  temp_equipo <- equipos_seleccionados[1]
+  equipos_seleccionados[1] <- equipos_seleccionados[idx_max]
+  equipos_seleccionados[idx_max] <- temp_equipo
+}
+
+# Asignar variables individuales DESPUÉS del ordenamiento
 valor1 <- valores_equipos[1]
 valor2 <- valores_equipos[2]
 valor3 <- valores_equipos[3]
 valor4 <- valores_equipos[4]
 valor5 <- valores_equipos[5]
 
-# Ordenar para que el primer equipo tenga el valor más alto
-if (valor1 < max(valores_equipos)) {
-  idx_max <- which.max(valores_equipos)
-  temp_valor <- valor1
-  temp_equipo <- equipo1
-  valor1 <- valores_equipos[idx_max]
-  equipo1 <- equipos_seleccionados[idx_max]
-  valores_equipos[idx_max] <- temp_valor
-  equipos_seleccionados[idx_max] <- temp_equipo
-
-  # Actualizar todas las variables de valores después del intercambio
-  valor2 <- valores_equipos[2]
-  valor3 <- valores_equipos[3]
-  valor4 <- valores_equipos[4]
-  valor5 <- valores_equipos[5]
-
-  # Actualizar también los equipos
-  equipo2 <- equipos_seleccionados[2]
-  equipo3 <- equipos_seleccionados[3]
-  equipo4 <- equipos_seleccionados[4]
-  equipo5 <- equipos_seleccionados[5]
-}
+equipo1 <- equipos_seleccionados[1]
+equipo2 <- equipos_seleccionados[2]
+equipo3 <- equipos_seleccionados[3]
+equipo4 <- equipos_seleccionados[4]
+equipo5 <- equipos_seleccionados[5]
 
 # Validaciones matemáticas robustas
 # Verificar que los valores suman exactamente el tamaño de muestra
