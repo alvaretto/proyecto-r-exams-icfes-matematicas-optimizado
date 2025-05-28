@@ -651,7 +651,7 @@ En la muestra de `r tamano_muestra_fmt` `r termino_usuarios`:
 - `r equipo4`: `r valor4_fmt` `r termino_usuarios` (`r round(valor4/tamano_muestra*100, 1)`%)
 - `r equipo5`: `r valor5_fmt` `r termino_usuarios` (`r round(valor5/tamano_muestra*100, 1)`%)
 
-Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra_fmt` `r termino_usuarios` ✓
+Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra_fmt` `r termino_usuarios` (correcto)
 
 ### Paso 5: Verificación de equivalencia de fracciones (para distractores desafiantes)
 Es importante reconocer que las fracciones pueden expresarse de diferentes formas equivalentes:
