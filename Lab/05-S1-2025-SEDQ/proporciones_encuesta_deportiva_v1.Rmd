@@ -21,7 +21,6 @@ options(OutDec = ".")
 
 library(exams)
 library(reticulate)
-library(testthat)
 library(knitr)
 
 knitr::opts_chunk$set(
@@ -69,23 +68,85 @@ equipo5 <- equipos_seleccionados[5]
 poblacion_total <- sample(c(30000, 40000, 50000, 60000, 75000, 80000, 100000), 1)
 tamano_muestra <- sample(c(80, 90, 100, 110, 120, 130, 140, 150), 1)
 
-# Generar valores para el gráfico que sumen el tamaño de muestra
+# Generar valores para el gráfico que sumen exactamente el tamaño de muestra
 generar_valores_coherentes <- function(total) {
-  repeat {
-    valores <- sample(8:35, 5)
-    if (sum(valores) == total && all(valores >= 8) && all(valores <= 35)) {
-      return(valores)
-    }
-    # Si no suma exacto, ajustar
-    diferencia <- total - sum(valores)
-    if (abs(diferencia) <= 10) {
-      idx <- sample(1:5, 1)
-      valores[idx] <- valores[idx] + diferencia
-      if (valores[idx] >= 8 && valores[idx] <= 35) {
-        return(valores)
-      }
+  # Definir rangos apropiados basados en el total
+  min_valor <- max(8, round(total * 0.08))  # Mínimo 8% del total
+  max_valor <- min(40, round(total * 0.35)) # Máximo 35% del total
+
+  # Método 1: Intentar generación aleatoria optimizada
+  for (intento in 1:50) {
+    # Generar 4 valores aleatorios
+    valores <- sample(min_valor:max_valor, 4, replace = TRUE)
+
+    # Calcular el 5to valor para que sume exactamente el total
+    valor5 <- total - sum(valores)
+
+    # Verificar si el 5to valor está en el rango válido
+    if (valor5 >= min_valor && valor5 <= max_valor) {
+      return(c(valores, valor5))
     }
   }
+
+  # Método 2: Distribución garantizada con suma exacta
+  # Calcular distribución base
+  valor_base <- floor(total / 5)
+  resto <- total - (valor_base * 5)  # Resto exacto
+
+  # Crear vector base
+  valores <- rep(valor_base, 5)
+
+  # Distribuir resto de forma determinística
+  if (resto > 0) {
+    for (i in 1:resto) {
+      valores[i] <- valores[i] + 1
+    }
+  }
+
+  # Verificación crítica de suma
+  if (sum(valores) != total) {
+    stop("Error crítico en distribución base: suma = ", sum(valores), ", esperado = ", total)
+  }
+
+  # Añadir variabilidad manteniendo la suma exacta
+  intentos_variabilidad <- 0
+  max_intentos <- 30
+
+  while (intentos_variabilidad < max_intentos) {
+    # Seleccionar dos posiciones diferentes
+    pos1 <- sample(1:5, 1)
+    pos2 <- sample(setdiff(1:5, pos1), 1)
+
+    # Cantidad a transferir (1 o 2 unidades)
+    transferir <- sample(1:2, 1)
+
+    # Calcular nuevos valores
+    nuevo_val1 <- valores[pos1] - transferir
+    nuevo_val2 <- valores[pos2] + transferir
+
+    # Verificar que la transferencia mantiene rangos válidos
+    if (nuevo_val1 >= min_valor && nuevo_val1 <= max_valor &&
+        nuevo_val2 >= min_valor && nuevo_val2 <= max_valor) {
+
+      # Aplicar transferencia
+      valores[pos1] <- nuevo_val1
+      valores[pos2] <- nuevo_val2
+
+      # Verificación de seguridad
+      if (sum(valores) != total) {
+        stop("Error en variabilidad: suma cambió a ", sum(valores))
+      }
+    }
+
+    intentos_variabilidad <- intentos_variabilidad + 1
+  }
+
+  # Verificación final obligatoria
+  if (sum(valores) != total) {
+    stop("Error final: suma = ", sum(valores), ", esperado = ", total)
+  }
+
+  return(valores)
 }
 
 valores_equipos <- generar_valores_coherentes(tamano_muestra)
@@ -104,12 +165,48 @@ if (valor1 < max(valores_equipos)) {
   equipo1 <- equipos_seleccionados[idx_max]
   valores_equipos[idx_max] <- temp_valor
   equipos_seleccionados[idx_max] <- temp_equipo
+
+  # Actualizar todas las variables de valores después del intercambio
+  valor2 <- valores_equipos[2]
+  valor3 <- valores_equipos[3]
+  valor4 <- valores_equipos[4]
+  valor5 <- valores_equipos[5]
+
+  # Actualizar también los equipos
+  equipo2 <- equipos_seleccionados[2]
+  equipo3 <- equipos_seleccionados[3]
+  equipo4 <- equipos_seleccionados[4]
+  equipo5 <- equipos_seleccionados[5]
 }
 
-# Validación matemática
-test_that("Los valores suman el tamaño de muestra", {
-  expect_equal(sum(valores_equipos), tamano_muestra)
-})
+# Validaciones matemáticas robustas
+# Verificar que los valores suman exactamente el tamaño de muestra
+if (sum(valores_equipos) != tamano_muestra) {
+  stop("Error: Los valores no suman el tamaño de muestra. Suma: ", sum(valores_equipos),
+       ", Esperado: ", tamano_muestra)
+}
+
+# Verificar rangos apropiados
+min_esperado <- max(8, round(tamano_muestra * 0.08))
+max_esperado <- min(40, round(tamano_muestra * 0.35))
+if (!all(valores_equipos >= min_esperado) || !all(valores_equipos <= max_esperado)) {
+  stop("Error: Algunos valores están fuera del rango esperado [", min_esperado, ", ", max_esperado, "]")
+}
+
+# Verificar que hay variabilidad
+if (length(unique(valores_equipos)) < 2) {
+  stop("Error: No hay suficiente variabilidad en los valores")
+}
+
+# Verificar que todos los valores son positivos
+if (!all(valores_equipos > 0)) {
+  stop("Error: Algunos valores no son positivos")
+}
+
+# Verificar que ningún equipo domina excesivamente
+if (max(valores_equipos) > tamano_muestra * 0.4) {
+  stop("Error: Un equipo tiene demasiados votos (>40% del total)")
+}
 
 # Colores para el gráfico
 colores <- c("#2E8B57", "#4682B4", "#CD853F", "#9370DB", "#DC143C")
