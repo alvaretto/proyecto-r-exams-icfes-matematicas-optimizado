@@ -253,19 +253,12 @@ generar_valores_coherentes <- function(total) {
 
 valores_equipos <- generar_valores_coherentes(tamano_muestra)
 
-# Ordenar equipos y valores para que el primer equipo tenga el valor más alto
-idx_max <- which.max(valores_equipos)
-if (idx_max != 1) {
-  # Intercambiar valores
-  temp_valor <- valores_equipos[1]
-  valores_equipos[1] <- valores_equipos[idx_max]
-  valores_equipos[idx_max] <- temp_valor
+# SELECCIÓN ALEATORIA DEL EQUIPO CORRECTO (SOLUCIÓN ANTI-PATRÓN)
+# En lugar de siempre usar el equipo con más votos, seleccionar aleatoriamente
+# cualquiera de los 5 equipos como respuesta correcta
+indice_equipo_correcto <- sample(1:5, 1)
 
-  # Intercambiar equipos
-  temp_equipo <- equipos_seleccionados[1]
-  equipos_seleccionados[1] <- equipos_seleccionados[idx_max]
-  equipos_seleccionados[idx_max] <- temp_equipo
-}
+# No reordenar - mantener orden original aleatorio para evitar patrones
 
 # Asignar variables individuales DESPUÉS del ordenamiento
 valor1 <- valores_equipos[1]
@@ -286,6 +279,11 @@ equipo2 <- equipos_seleccionados[2]
 equipo3 <- equipos_seleccionados[3]
 equipo4 <- equipos_seleccionados[4]
 equipo5 <- equipos_seleccionados[5]
+
+# VARIABLES DINÁMICAS PARA EL EQUIPO CORRECTO SELECCIONADO ALEATORIAMENTE
+equipo_correcto <- equipos_seleccionados[indice_equipo_correcto]
+valor_correcto <- valores_equipos[indice_equipo_correcto]
+valor_correcto_fmt <- formatear_entero(valor_correcto)
 
 # Validaciones matemáticas robustas
 # Verificar que los valores suman exactamente el tamaño de muestra
@@ -320,19 +318,22 @@ if (max(valores_equipos) > tamano_muestra * 0.4) {
 colores <- c("#2E8B57", "#4682B4", "#CD853F", "#9370DB", "#DC143C")
 
 # Generar opciones de respuesta
-# La respuesta correcta es sobre la proporción del equipo con más votos
-proporcion_correcta <- round(valor1 / tamano_muestra * 100)
-respuesta_correcta <- paste0("alrededor de ", valor1_fmt, " de cada ", tamano_muestra_fmt, " ",
-                            termino_usuarios, " del ", contexto, " da por favorito al ", equipo1, ".")
+# La respuesta correcta es sobre el equipo seleccionado ALEATORIAMENTE (no siempre el de más votos)
+proporcion_correcta <- round(valor_correcto / tamano_muestra * 100)
+respuesta_correcta <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", tamano_muestra_fmt, " ",
+                            termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
 
-# Distractores plausibles (USANDO VARIABLES FORMATEADAS)
-distractor1 <- paste0("alrededor de ", valor1_fmt, " de cada ", poblacion_total_fmt, " ",
-                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo1, ".")
+# Distractores plausibles (INDEPENDIENTES DEL EQUIPO CORRECTO SELECCIONADO)
+# Distractor 1: Confunde muestra con población usando el equipo correcto
+distractor1 <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", poblacion_total_fmt, " ",
+                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
 
+# Distractor 2: Afirma que ninguno prefiere un equipo no incluido en la muestra
 distractor2 <- paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
                      " del ", contexto, " da por favorito al ",
                      sample(setdiff(equipos_disponibles, equipos_seleccionados), 1), ".")
 
+# Distractor 3: Confunde tamaño de muestra con preferencias totales
 distractor3 <- paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
                      termino_usuarios, " del ", contexto,
                      " tienen preferencia por un equipo para ganar la ", competicion, ".")
@@ -438,7 +439,7 @@ Para resolver este problema, necesitamos interpretar correctamente los datos del
 ### Paso 1: Identificar los datos conocidos
 * `r articulo_contexto` `r contexto` tiene un total de `r poblacion_total_fmt` `r termino_usuarios`.
 * Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra_fmt` `r termino_usuarios` seleccionados al azar.
-* Según el gráfico, `r valor1_fmt` `r termino_usuarios` de la muestra prefieren al `r equipo1`.
+* Según el gráfico, `r valor_correcto_fmt` `r termino_usuarios` de la muestra prefieren al `r equipo_correcto`.
 
 ### Paso 2: Interpretar correctamente las proporciones
 Los datos del gráfico representan únicamente la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no la población total de `r poblacion_total_fmt` `r termino_usuarios`.
@@ -446,7 +447,7 @@ Los datos del gráfico representan únicamente la muestra de `r tamano_muestra_f
 ### Paso 3: Analizar cada opción
 
 **Opción correcta**: "`r respuesta_correcta`"
-Esta opción es correcta porque interpreta adecuadamente que `r valor1_fmt` de cada `r tamano_muestra_fmt` `r termino_usuarios` **de la muestra** prefieren al `r equipo1`. Esto representa una proporción del `r round(valor1/tamano_muestra*100, 1)`% en la muestra.
+Esta opción es correcta porque interpreta adecuadamente que `r valor_correcto_fmt` de cada `r tamano_muestra_fmt` `r termino_usuarios` **de la muestra** prefieren al `r equipo_correcto`. Esto representa una proporción del `r round(valor_correcto/tamano_muestra*100, 1)`% en la muestra.
 
 **Análisis de distractores**:
 
