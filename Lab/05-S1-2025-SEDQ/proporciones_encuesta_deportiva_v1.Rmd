@@ -7,12 +7,11 @@ nivel_dificultad: "Medio"
 tiempo_estimado: "3 minutos"
 autor: "Sistema R-Exams ICFES"
 version: "1.0"
-
 output:
-  word_document: default
+  html_document: default
   pdf_document:
     keep_tex: true
-  html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -50,6 +49,10 @@ competicion <- sample(competiciones, 1)
 
 terminos_usuarios <- c("suscriptores", "seguidores", "usuarios", "miembros", "aficionados")
 termino_usuarios <- sample(terminos_usuarios, 1)
+
+# Aleatorización de términos para encuesta
+terminos_encuesta <- c("encuesta", "sondeo", "consulta", "estudio", "investigación")
+termino_encuesta <- sample(terminos_encuesta, 1)
 
 # Equipos aleatorios
 equipos_disponibles <- c("Manchester City", "FC Barcelona", "Real Madrid", "Liverpool",
@@ -366,12 +369,14 @@ Los datos del gráfico representan únicamente la muestra de `r tamano_muestra` 
 Esta opción es correcta porque interpreta adecuadamente que `r valor1` de cada `r tamano_muestra` `r termino_usuarios` **de la muestra** prefieren al `r equipo1`. Esto representa una proporción del `r round(valor1/tamano_muestra*100, 1)`% en la muestra.
 
 **Análisis de distractores**:
+
 - Las opciones que mencionan proporciones sobre la población total de `r poblacion_total` `r termino_usuarios` son incorrectas, ya que el `r termino_encuesta` solo se realizó a `r tamano_muestra` personas.
 - Las opciones que afirman que "ninguno" prefiere cierto equipo son incorrectas porque no podemos hacer esa generalización a partir de una muestra.
 - Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan los datos.
 
 ### Paso 4: Verificación matemática
 En la muestra de `r tamano_muestra` `r termino_usuarios`:
+
 - `r equipo1`: `r valor1` `r termino_usuarios` (`r round(valor1/tamano_muestra*100, 1)`%)
 - `r equipo2`: `r valor2` `r termino_usuarios` (`r round(valor2/tamano_muestra*100, 1)`%)
 - `r equipo3`: `r valor3` `r termino_usuarios` (`r round(valor3/tamano_muestra*100, 1)`%)
