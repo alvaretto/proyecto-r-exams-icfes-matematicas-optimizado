@@ -18,6 +18,10 @@ output:
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 
+# CONFIGURACIÓN RADICAL ANTI-NOTACIÓN CIENTÍFICA
+options(scipen = 999)  # Evitar notación científica completamente
+options(digits = 10)   # Suficientes dígitos para números grandes
+
 library(exams)
 library(reticulate)
 library(knitr)
@@ -36,7 +40,17 @@ use_python(Sys.which("python"), required = TRUE)
 
 ```{r variables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")
+# REFORZAR CONFIGURACIÓN ANTI-NOTACIÓN CIENTÍFICA
+options(scipen = 999)
+options(digits = 10)
+
 set.seed(sample(1:10000, 1))
+
+# FUNCIÓN RADICAL DE FORMATEO ENTERO
+formatear_entero <- function(numero) {
+  # Forzar formato entero sin notación científica JAMÁS
+  formatC(as.numeric(numero), format = "d", big.mark = "")
+}
 
 # Aleatorización del contexto
 contextos <- c("canal de deportes", "plataforma de streaming", "revista deportiva",
@@ -125,6 +139,10 @@ equipo5 <- equipos_seleccionados[5]
 # Población y muestra (usando números enteros simples)
 poblacion_total <- sample(c(256, 1296, 25000, 30000, 40000, 50000, 60000, 75000, 81000, 90000, 100000), 1)
 tamano_muestra <- sample(c(80, 90, 100, 110, 120, 130, 140, 150), 1)
+
+# CREAR VARIABLES FORMATEADAS PARA MOSTRAR (SOLUCIÓN RADICAL)
+poblacion_total_fmt <- formatear_entero(poblacion_total)
+tamano_muestra_fmt <- formatear_entero(tamano_muestra)
 
 # Generar valores para el gráfico que sumen exactamente el tamaño de muestra
 generar_valores_coherentes <- function(total) {
@@ -256,6 +274,13 @@ valor3 <- valores_equipos[3]
 valor4 <- valores_equipos[4]
 valor5 <- valores_equipos[5]
 
+# CREAR VARIABLES FORMATEADAS PARA VALORES DE EQUIPOS
+valor1_fmt <- formatear_entero(valor1)
+valor2_fmt <- formatear_entero(valor2)
+valor3_fmt <- formatear_entero(valor3)
+valor4_fmt <- formatear_entero(valor4)
+valor5_fmt <- formatear_entero(valor5)
+
 equipo1 <- equipos_seleccionados[1]
 equipo2 <- equipos_seleccionados[2]
 equipo3 <- equipos_seleccionados[3]
@@ -297,18 +322,18 @@ colores <- c("#2E8B57", "#4682B4", "#CD853F", "#9370DB", "#DC143C")
 # Generar opciones de respuesta
 # La respuesta correcta es sobre la proporción del equipo con más votos
 proporcion_correcta <- round(valor1 / tamano_muestra * 100)
-respuesta_correcta <- paste0("alrededor de ", valor1, " de cada ", tamano_muestra, " ",
+respuesta_correcta <- paste0("alrededor de ", valor1_fmt, " de cada ", tamano_muestra_fmt, " ",
                             termino_usuarios, " del ", contexto, " da por favorito al ", equipo1, ".")
 
-# Distractores plausibles
-distractor1 <- paste0("alrededor de ", valor1, " de cada ", poblacion_total, " ",
+# Distractores plausibles (USANDO VARIABLES FORMATEADAS)
+distractor1 <- paste0("alrededor de ", valor1_fmt, " de cada ", poblacion_total_fmt, " ",
                      termino_usuarios, " del ", contexto, " da por favorito al ", equipo1, ".")
 
-distractor2 <- paste0("ninguno de los ", poblacion_total, " ", termino_usuarios,
+distractor2 <- paste0("ninguno de los ", poblacion_total_fmt, " ", termino_usuarios,
                      " del ", contexto, " da por favorito al ",
                      sample(setdiff(equipos_disponibles, equipos_seleccionados), 1), ".")
 
-distractor3 <- paste0("sólo ", tamano_muestra, " de los ", poblacion_total, " ",
+distractor3 <- paste0("sólo ", tamano_muestra_fmt, " de los ", poblacion_total_fmt, " ",
                      termino_usuarios, " del ", contexto,
                      " tienen preferencia por un equipo para ganar la ", competicion, ".")
 
@@ -381,7 +406,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-`r articulo_contexto` `r contexto` realizó `r articulo_encuesta` `r termino_encuesta` a un grupo de sus `r poblacion_total` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
+`r articulo_contexto` `r contexto` realizó `r articulo_encuesta` `r termino_encuesta` a un grupo de sus `r poblacion_total_fmt` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra_fmt` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Detectar formato de salida
@@ -411,37 +436,37 @@ Solution
 Para resolver este problema, necesitamos interpretar correctamente los datos del gráfico de barras y entender la diferencia entre muestra y población total.
 
 ### Paso 1: Identificar los datos conocidos
-* `r articulo_contexto` `r contexto` tiene un total de `r poblacion_total` `r termino_usuarios`.
-* Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra` `r termino_usuarios` seleccionados al azar.
-* Según el gráfico, `r valor1` `r termino_usuarios` de la muestra prefieren al `r equipo1`.
+* `r articulo_contexto` `r contexto` tiene un total de `r poblacion_total_fmt` `r termino_usuarios`.
+* Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra_fmt` `r termino_usuarios` seleccionados al azar.
+* Según el gráfico, `r valor1_fmt` `r termino_usuarios` de la muestra prefieren al `r equipo1`.
 
 ### Paso 2: Interpretar correctamente las proporciones
-Los datos del gráfico representan únicamente la muestra de `r tamano_muestra` `r termino_usuarios`, no la población total de `r poblacion_total` `r termino_usuarios`.
+Los datos del gráfico representan únicamente la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no la población total de `r poblacion_total_fmt` `r termino_usuarios`.
 
 ### Paso 3: Analizar cada opción
 
 **Opción correcta**: "`r respuesta_correcta`"
-Esta opción es correcta porque interpreta adecuadamente que `r valor1` de cada `r tamano_muestra` `r termino_usuarios` **de la muestra** prefieren al `r equipo1`. Esto representa una proporción del `r round(valor1/tamano_muestra*100, 1)`% en la muestra.
+Esta opción es correcta porque interpreta adecuadamente que `r valor1_fmt` de cada `r tamano_muestra_fmt` `r termino_usuarios` **de la muestra** prefieren al `r equipo1`. Esto representa una proporción del `r round(valor1/tamano_muestra*100, 1)`% en la muestra.
 
 **Análisis de distractores**:
 
-- Las opciones que mencionan proporciones sobre la población total de `r poblacion_total` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra` personas.
+- Las opciones que mencionan proporciones sobre la población total de `r poblacion_total_fmt` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra_fmt` personas.
 - Las opciones que afirman que "ninguno" prefiere cierto equipo son incorrectas porque no podemos hacer esa generalización a partir de una muestra.
 - Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan los datos.
 
 ### Paso 4: Verificación matemática
-En la muestra de `r tamano_muestra` `r termino_usuarios`:
+En la muestra de `r tamano_muestra_fmt` `r termino_usuarios`:
 
-- `r equipo1`: `r valor1` `r termino_usuarios` (`r round(valor1/tamano_muestra*100, 1)`%)
-- `r equipo2`: `r valor2` `r termino_usuarios` (`r round(valor2/tamano_muestra*100, 1)`%)
-- `r equipo3`: `r valor3` `r termino_usuarios` (`r round(valor3/tamano_muestra*100, 1)`%)
-- `r equipo4`: `r valor4` `r termino_usuarios` (`r round(valor4/tamano_muestra*100, 1)`%)
-- `r equipo5`: `r valor5` `r termino_usuarios` (`r round(valor5/tamano_muestra*100, 1)`%)
+- `r equipo1`: `r valor1_fmt` `r termino_usuarios` (`r round(valor1/tamano_muestra*100, 1)`%)
+- `r equipo2`: `r valor2_fmt` `r termino_usuarios` (`r round(valor2/tamano_muestra*100, 1)`%)
+- `r equipo3`: `r valor3_fmt` `r termino_usuarios` (`r round(valor3/tamano_muestra*100, 1)`%)
+- `r equipo4`: `r valor4_fmt` `r termino_usuarios` (`r round(valor4/tamano_muestra*100, 1)`%)
+- `r equipo5`: `r valor5_fmt` `r termino_usuarios` (`r round(valor5/tamano_muestra*100, 1)`%)
 
-Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra` `r termino_usuarios` ✓
+Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra_fmt` `r termino_usuarios` ✓
 
 ### Conclusión
-La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de `r tamano_muestra` `r termino_usuarios`, no a la población total.
+La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no a la población total.
 
 Answerlist
 ----------
