@@ -43,6 +43,11 @@ contextos <- c("canal de deportes", "plataforma de streaming", "revista deportiv
                "portal web deportivo", "aplicación móvil", "blog de fútbol")
 contexto <- sample(contextos, 1)
 
+# Determinar género del contexto para concordancia
+contextos_femeninos <- c("plataforma de streaming", "revista deportiva", "aplicación móvil")
+es_contexto_femenino <- contexto %in% contextos_femeninos
+articulo_contexto <- if(es_contexto_femenino) "Una" else "Un"
+
 # Aleatorización de términos para encuesta
 terminos_encuesta <- c("encuesta", "sondeo", "consulta", "estudio", "investigación")
 termino_encuesta <- sample(terminos_encuesta, 1)
@@ -118,7 +123,7 @@ equipo4 <- equipos_seleccionados[4]
 equipo5 <- equipos_seleccionados[5]
 
 # Población y muestra (usando números enteros simples)
-poblacion_total <- sample(c(1296, 25000, 30000, 40000, 50000, 60000, 75000, 81000, 90000, 100000), 1)
+poblacion_total <- sample(c(256, 1296, 25000, 30000, 40000, 50000, 60000, 75000, 81000, 90000, 100000), 1)
 tamano_muestra <- sample(c(80, 90, 100, 110, 120, 130, 140, 150), 1)
 
 # Generar valores para el gráfico que sumen exactamente el tamaño de muestra
@@ -376,7 +381,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-Un `r contexto` realizó un(a) `r termino_encuesta` a un grupo de sus `r poblacion_total` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar la `r competicion`. Los resultados se muestran en la gráfica.
+`r articulo_contexto` `r contexto` realizó `r articulo_encuesta` `r termino_encuesta` a un grupo de sus `r poblacion_total` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Detectar formato de salida
@@ -406,7 +411,7 @@ Solution
 Para resolver este problema, necesitamos interpretar correctamente los datos del gráfico de barras y entender la diferencia entre muestra y población total.
 
 ### Paso 1: Identificar los datos conocidos
-* El `r contexto` tiene un total de `r poblacion_total` `r termino_usuarios`.
+* `r articulo_contexto` `r contexto` tiene un total de `r poblacion_total` `r termino_usuarios`.
 * Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra` `r termino_usuarios` seleccionados al azar.
 * Según el gráfico, `r valor1` `r termino_usuarios` de la muestra prefieren al `r equipo1`.
 
