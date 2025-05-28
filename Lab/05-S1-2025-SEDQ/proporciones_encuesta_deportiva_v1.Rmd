@@ -51,6 +51,10 @@ competicion <- sample(competiciones, 1)
 terminos_usuarios <- c("suscriptores", "seguidores", "usuarios", "miembros", "aficionados")
 termino_usuarios <- sample(terminos_usuarios, 1)
 
+# Aleatorización de términos para encuesta
+terminos_encuesta <- c("encuesta", "sondeo", "consulta", "estudio", "investigación")
+termino_encuesta <- sample(terminos_encuesta, 1)
+
 # Equipos aleatorios
 equipos_disponibles <- c("Manchester City", "FC Barcelona", "Real Madrid", "Liverpool",
                         "Bayern de Múnich", "Paris Saint-Germain", "Chelsea",
