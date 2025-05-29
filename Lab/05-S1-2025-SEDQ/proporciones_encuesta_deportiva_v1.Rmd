@@ -8,9 +8,9 @@ tiempo_estimado: "3 minutos"
 autor: "Sistema R-Exams ICFES"
 version: "1.0"
 output:
-  html_document: default
   pdf_document:
     keep_tex: true
+  html_document: default
   word_document: default
 ---
 
@@ -44,7 +44,7 @@ options(OutDec = ".")
 options(scipen = 999)
 options(digits = 10)
 
-set.seed(sample(1:10000, 1))
+#set.seed(sample(1:10000, 1))
 
 # FUNCIÓN RADICAL DE FORMATEO ENTERO
 formatear_entero <- function(numero) {
