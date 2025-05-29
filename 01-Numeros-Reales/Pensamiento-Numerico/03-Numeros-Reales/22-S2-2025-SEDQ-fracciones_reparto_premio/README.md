@@ -1,8 +1,8 @@
 ---
 output:
-  html_document: default
   word_document: default
   pdf_document: default
+  html_document: default
 ---
 
 # Fracciones y Reparto Proporcional - 22-S2-2025-SEDQ

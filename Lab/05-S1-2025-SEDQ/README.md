@@ -734,6 +734,7 @@ diagnosticar_sistema()
 #### 📧 Información de Contacto
 
 Para problemas específicos de este ejercicio:
+
 - **Autor**: Sistema R-Exams ICFES
 - **Versión**: 1.0
 - **Última actualización**: 2025

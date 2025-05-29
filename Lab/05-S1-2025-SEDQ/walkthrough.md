@@ -18,12 +18,14 @@
 
 ### ¿Qué hace este ejercicio?
 Este archivo .Rmd genera un ejercicio de **estadística y proporciones** que evalúa la capacidad del estudiante para:
+
 - Interpretar gráficos de barras horizontales
 - Distinguir entre muestra y población total
 - Comprender proporciones y fracciones equivalentes
 - Evitar errores conceptuales comunes en estadística
 
 ### Características principales:
+
 - **Aleatorización extrema**: Más de 15 parámetros aleatorios
 - **Sistema anti-patrón**: Evita respuestas predecibles
 - **Distractores desafiantes**: Incluye fracciones equivalentes y errores conceptuales típicos
@@ -74,6 +76,7 @@ library(knitr)
 ```
 
 **Funciones clave**:
+
 - **`Sys.setlocale()`**: Asegura formato numérico consistente
 - **`options(scipen = 999)`**: Elimina completamente la notación científica
 - **`options(digits = 10)`**: Garantiza precisión numérica
@@ -107,6 +110,7 @@ articulo_contexto <- if(es_contexto_femenino) "Una" else "Un"
 ```
 
 **Características avanzadas**:
+
 - **Concordancia de género**: Ajusta automáticamente artículos según el contexto
 - **Variabilidad semántica**: 6 contextos diferentes mantienen coherencia temática
 - **Flexibilidad lingüística**: Sistema robusto para español
@@ -127,6 +131,7 @@ selecciones_europeas <- c("España", "Francia", "Alemania", ...)
 ```
 
 **Sistema de compatibilidad inteligente**:
+
 - **Coherencia temática**: Los equipos siempre coinciden con la competición
 - **Realismo**: Evita combinaciones imposibles (ej: Boca Juniors en Champions League)
 - **Diversidad geográfica**: Incluye equipos de múltiples continentes
@@ -148,6 +153,7 @@ if (tipo_competicion == 1) {
 ```
 
 **Ventajas del sistema**:
+
 - **Coherencia automática**: Imposible generar combinaciones incorrectas
 - **Escalabilidad**: Fácil agregar nuevas competiciones/equipos
 - **Mantenimiento**: Cambios centralizados en las listas
@@ -167,6 +173,7 @@ tamano_muestra_fmt <- formatear_entero(tamano_muestra)
 ```
 
 **Estrategia de valores**:
+
 - **Números realistas**: Poblaciones y muestras con tamaños apropiados
 - **Formateo consistente**: Todos los números se formatean uniformemente
 - **Variabilidad controlada**: Rangos que permiten cálculos manejables
@@ -227,6 +234,7 @@ while (diferencia != 0 && intentos_ajuste < 30) {
 ```
 
 **Validaciones robustas**:
+
 - **Suma exacta**: Los 5 valores deben sumar exactamente el tamaño de muestra
 - **Rangos válidos**: Cada valor entre 8% y 35% del total
 - **Variabilidad mínima**: Al menos 3 valores únicos
@@ -250,6 +258,7 @@ if (length(valores_unicos) < 3) {
 ```
 
 **Propósito de las validaciones**:
+
 - **Integridad matemática**: Garantiza coherencia numérica
 - **Calidad pedagógica**: Asegura que el ejercicio sea educativamente válido
 - **Detección temprana**: Identifica problemas antes de generar el ejercicio completo
@@ -276,11 +285,13 @@ valor_correcto_fmt <- formatear_entero(valor_correcto)
 **¿Por qué es importante el sistema anti-patrón?**
 
 #### Problema tradicional:
+
 - Los estudiantes aprenden que "la respuesta correcta siempre es el valor más alto"
 - Esto convierte el ejercicio en una simple búsqueda visual
 - No evalúa realmente la comprensión de proporciones
 
 #### Solución implementada:
+
 - **Aleatorización completa**: Cualquier equipo puede ser la respuesta correcta
 - **Orden preservado**: No se reordenan los valores para evitar patrones
 - **Diversidad garantizada**: Cada ejecución puede tener diferentes equipos como correctos
@@ -301,6 +312,7 @@ equipos_distractores_indices <- sample(equipos_otros_indices, 3)
 ```
 
 **Ventajas del sistema**:
+
 - **Imposible detectar patrones**: Cada opción menciona un equipo diferente
 - **Realismo aumentado**: Refleja situaciones reales donde cualquier equipo puede ser favorito
 - **Evaluación auténtica**: Obliga a los estudiantes a calcular proporciones reales
@@ -330,6 +342,7 @@ if (length(equipos_repetidos) > 0) {
 ```
 
 **Importancia de la validación**:
+
 - **Control de calidad**: Asegura que el sistema anti-patrón funcione correctamente
 - **Prevención de errores**: Detecta casos donde el mismo equipo aparece en múltiples opciones
 - **Garantía pedagógica**: Mantiene la integridad educativa del ejercicio
@@ -380,6 +393,7 @@ ax.set_axisbelow(True)
 ```
 
 **Ventajas de usar Python para gráficos**:
+
 - **Calidad superior**: Matplotlib produce gráficos de alta calidad
 - **Control total**: Personalización completa de todos los elementos visuales
 - **Compatibilidad**: Funciona en todos los formatos de salida (PDF, HTML, Word, Moodle)
@@ -400,6 +414,7 @@ if (es_moodle) {
 ```
 
 **Adaptación inteligente**:
+
 - **Detección automática**: Identifica el formato de salida
 - **Tamaños optimizados**: Ajusta el tamaño según el destino
 - **Compatibilidad universal**: Funciona en todos los sistemas de exámenes
@@ -498,6 +513,7 @@ distractores_tipo3 <- c(distractores_tipo3,
 ```
 
 **Estrategias de distractores**:
+
 - **Confusión muestra-población**: El error más común en estadística
 - **Equipos incorrectos**: Usar datos reales pero del equipo equivocado
 - **Fracciones equivalentes**: Matemáticamente correctas pero difíciles de reconocer
@@ -533,6 +549,7 @@ if (length(distractores_unicos) >= 3) {
 ```
 
 **Garantías del sistema**:
+
 - **Exactamente 4 opciones**: 1 correcta + 3 distractores únicos
 - **Diversidad de equipos**: Cada opción menciona un equipo diferente
 - **Fallbacks robustos**: Métodos de emergencia si no se pueden generar suficientes distractores únicos
@@ -572,16 +589,19 @@ for (i in 1:4) {
 **Tipos de validaciones**:
 
 #### 1. Validaciones de integridad:
+
 - **Unicidad de opciones**: Exactamente 4 opciones diferentes
 - **Presencia de respuesta correcta**: La opción correcta debe estar incluida
 - **No duplicación**: Ninguna opción puede repetirse
 
 #### 2. Validaciones matemáticas:
+
 - **Equivalencia de fracciones**: Las fracciones reducidas deben ser matemáticamente equivalentes
 - **Coherencia numérica**: Todos los cálculos deben ser consistentes
 - **Rangos válidos**: Los valores deben estar en rangos apropiados
 
 #### 3. Validaciones pedagógicas:
+
 - **Diversidad de equipos**: Cada opción debe mencionar un equipo diferente
 - **Calidad de distractores**: Los distractores deben ser plausibles pero incorrectos
 - **Variabilidad suficiente**: Debe haber suficiente diversidad en los datos
@@ -608,6 +628,7 @@ if (max(valores_equipos) > tamano_muestra * 0.4) {
 ```
 
 **Importancia de las validaciones tempranas**:
+
 - **Detección rápida**: Identifica problemas antes de generar todo el ejercicio
 - **Ahorro de recursos**: Evita cálculos innecesarios si hay errores básicos
 - **Debugging eficiente**: Proporciona mensajes de error específicos y útiles
@@ -634,6 +655,7 @@ Answerlist
 ```
 
 **Características del enunciado**:
+
 - **Contextualización completa**: Establece claramente el escenario de la encuesta
 - **Distinción muestra-población**: Especifica tanto el total de usuarios como el tamaño de muestra
 - **Integración de variables**: Usa todas las variables aleatorizadas para crear coherencia
@@ -710,6 +732,7 @@ exsection: Estadística|Proporciones|Interpretación de gráficos|Muestreo
 ```
 
 **Elementos clave de la metainformación**:
+
 - **exname**: Identificador único del ejercicio
 - **extype**: Tipo de pregunta (schoice = selección múltiple con única respuesta)
 - **exsolution**: Vector binario que indica la respuesta correcta
