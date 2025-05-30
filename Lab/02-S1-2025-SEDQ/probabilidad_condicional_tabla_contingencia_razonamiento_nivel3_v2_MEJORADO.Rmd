@@ -29,9 +29,13 @@ library(testthat)
 library(knitr)
 library(stringr)
 
-# Configuración para suprimir emojis de testthat y evitar errores Unicode en LaTeX
+# Configuración robusta para suprimir TODOS los emojis de testthat y evitar errores Unicode en LaTeX
 options(testthat.use_colours = FALSE)
 options(testthat.unicode = FALSE)
+options(testthat.progress = FALSE)
+options(testthat.summary = FALSE)
+Sys.setenv("TESTTHAT_UNICODE" = "false")
+Sys.setenv("TESTTHAT_COLOURS" = "false")
 
 typ <- match_exams_device()
 options(scipen = 999)
@@ -47,7 +51,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='hide'}
+```{r DefinicionDeVariables, include=FALSE}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
@@ -201,7 +205,7 @@ dato_conocido_seleccionado <- sample(datos_conocidos_disponibles, 1)[[1]]
 porcentaje_conocido <- round(dato_conocido_seleccionado$valor * 100, 0)
 ```
 
-```{r generar_tabla_contingencia_mejorada, message=FALSE, warning=FALSE, results='hide'}
+```{r generar_tabla_contingencia_mejorada, include=FALSE}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Aleatorizar colores de la tabla siguiendo el patrón exitoso de ejemplos funcionales
