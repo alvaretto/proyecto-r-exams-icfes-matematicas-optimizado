@@ -15,42 +15,42 @@ options(OutDec = ".")  # Asegurar punto decimal en este chunk
 # Establecer semilla aleatoria
 set.seed(sample(1:10000, 1))
 
-# Aleatorización del contexto del problema
-contextos <- c(
+# Aleatorización del contexto del problema (12 opciones)
+contextos_educativos <- c(
   "curso vacacional", "taller de verano", "seminario", "programa de capacitación",
   "curso de extensión", "diplomado", "workshop", "capacitación", "entrenamiento",
   "curso intensivo", "programa educativo", "actividad formativa"
 )
-contexto <- sample(contextos, 1)
+contexto_seleccionado <- sample(contextos_educativos, 1)
 
-# Aleatorización de la edad de corte
-edades_corte <- c(16, 17, 18, 19, 20, 21)
-edad_corte <- sample(edades_corte, 1)
+# Aleatorización de la edad de corte (6 opciones)
+edades_corte_disponibles <- c(16, 17, 18, 19, 20, 21)
+edad_corte_seleccionada <- sample(edades_corte_disponibles, 1)
 
-# Aleatorización de términos para géneros
-terminos_masculino <- c("hombres", "varones", "participantes masculinos", "estudiantes masculinos")
-terminos_femenino <- c("mujeres", "participantes femeninas", "estudiantes femeninas")
-termino_masculino <- sample(terminos_masculino, 1)
-termino_femenino <- sample(terminos_femenino, 1)
+# Aleatorización de términos para géneros (4 + 3 opciones)
+terminos_masculino_disponibles <- c("hombres", "varones", "participantes masculinos", "estudiantes masculinos")
+terminos_femenino_disponibles <- c("mujeres", "participantes femeninas", "estudiantes femeninas")
+termino_masculino_seleccionado <- sample(terminos_masculino_disponibles, 1)
+termino_femenino_seleccionado <- sample(terminos_femenino_disponibles, 1)
 
-# Aleatorización de términos para grupos de edad
-terminos_menores <- c("menores", "con menos", "que tienen menos")
-terminos_mayores <- c("mayores", "con más", "que tienen más")
-termino_menores <- sample(terminos_menores, 1)
-termino_mayores <- sample(terminos_mayores, 1)
+# Aleatorización de términos para grupos de edad (3 + 3 opciones)
+terminos_menores_disponibles <- c("menores", "con menos", "que tienen menos")
+terminos_mayores_disponibles <- c("mayores", "con más", "que tienen más")
+termino_menores_seleccionado <- sample(terminos_menores_disponibles, 1)
+termino_mayores_seleccionado <- sample(terminos_mayores_disponibles, 1)
 
-# Aleatorización de términos generales
-terminos_participantes <- c("participantes", "estudiantes", "asistentes", "inscritos", "matriculados")
-termino_participantes <- sample(terminos_participantes, 1)
+# Aleatorización de términos generales (5 + 4 + 4 opciones)
+terminos_participantes_disponibles <- c("participantes", "estudiantes", "asistentes", "inscritos", "matriculados")
+termino_participantes_seleccionado <- sample(terminos_participantes_disponibles, 1)
 
-terminos_tabla <- c("tabla", "cuadro", "matriz", "esquema")
-termino_tabla <- sample(terminos_tabla, 1)
+terminos_tabla_disponibles <- c("tabla", "cuadro", "matriz", "esquema")
+termino_tabla_seleccionado <- sample(terminos_tabla_disponibles, 1)
 
-terminos_proporciones <- c("proporciones", "porcentajes", "frecuencias relativas", "distribución")
-termino_proporciones <- sample(terminos_proporciones, 1)
+terminos_proporciones_disponibles <- c("proporciones", "porcentajes", "frecuencias relativas", "distribución")
+termino_proporciones_seleccionado <- sample(terminos_proporciones_disponibles, 1)
 
-# Generación de proporciones aleatorias manteniendo coherencia matemática
-generar_proporciones <- function() {
+# Función para generar proporciones aleatorias manteniendo coherencia matemática
+generar_proporciones_validas <- function() {
   repeat {
     # Generar valores base para cada celda (multiplicados por 10 para trabajar con enteros)
     p11_base <- sample(5:15, 1)   # Menores masculino
@@ -85,19 +85,19 @@ generar_proporciones <- function() {
 }
 
 # Obtener proporciones válidas
-proporciones <- generar_proporciones()
-p_menor_masc <- proporciones[1]  # P(Menor ∩ Masculino)
-p_menor_fem <- proporciones[2]   # P(Menor ∩ Femenino)
-p_mayor_masc <- proporciones[3]  # P(Mayor ∩ Masculino)
-p_mayor_fem <- proporciones[4]   # P(Mayor ∩ Femenino)
+proporciones_generadas <- generar_proporciones_validas()
+p_menor_masc <- proporciones_generadas[1]  # P(Menor ∩ Masculino)
+p_menor_fem <- proporciones_generadas[2]   # P(Menor ∩ Femenino)
+p_mayor_masc <- proporciones_generadas[3]  # P(Mayor ∩ Masculino)
+p_mayor_fem <- proporciones_generadas[4]   # P(Mayor ∩ Femenino)
 
-# Verificar que suman 1.0
+# Scripts de prueba de integridad matemática
 test_that("Las proporciones suman 1.0", {
-  expect_equal(sum(proporciones), 1.0, tolerance = 0.01)
+  expect_equal(sum(proporciones_generadas), 1.0, tolerance = 0.01)
 })
 ```
 
-Test passed 😸
+Test passed 😀
 
 ``` r
 # Calcular probabilidades marginales
@@ -113,77 +113,79 @@ test_that("Probabilidades marginales son coherentes", {
 })
 ```
 
-Test passed 🥇
+Test passed 🌈
 
 ``` r
-# Aleatorización del tipo de pregunta (qué probabilidad condicional calcular)
-tipos_pregunta <- list(
+# Aleatorización del tipo de pregunta (4 tipos diferentes de probabilidad condicional)
+tipos_pregunta_disponibles <- list(
   list(condicion = "femenino", evento = "mayor",
-       texto_condicion = termino_femenino, texto_evento = paste(termino_mayores, "de", edad_corte, "años"),
+       texto_condicion = termino_femenino_seleccionado,
+       texto_evento = paste(termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_mayor_fem, denominador = p_femenino),
   list(condicion = "masculino", evento = "mayor",
-       texto_condicion = termino_masculino, texto_evento = paste(termino_mayores, "de", edad_corte, "años"),
+       texto_condicion = termino_masculino_seleccionado,
+       texto_evento = paste(termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_mayor_masc, denominador = p_masculino),
   list(condicion = "femenino", evento = "menor",
-       texto_condicion = termino_femenino, texto_evento = paste(termino_menores, "de", edad_corte, "años"),
+       texto_condicion = termino_femenino_seleccionado,
+       texto_evento = paste(termino_menores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_menor_fem, denominador = p_femenino),
   list(condicion = "masculino", evento = "menor",
-       texto_condicion = termino_masculino, texto_evento = paste(termino_menores, "de", edad_corte, "años"),
+       texto_condicion = termino_masculino_seleccionado,
+       texto_evento = paste(termino_menores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_menor_masc, denominador = p_masculino)
 )
 
-pregunta_seleccionada <- sample(tipos_pregunta, 1)[[1]]
+pregunta_seleccionada <- sample(tipos_pregunta_disponibles, 1)[[1]]
 
 # Calcular la respuesta correcta
 respuesta_correcta_fraccion <- paste0(pregunta_seleccionada$numerador, "/", pregunta_seleccionada$denominador)
 respuesta_correcta_decimal <- round(pregunta_seleccionada$numerador / pregunta_seleccionada$denominador, 3)
 
-# Generar distractores plausibles basados en errores comunes
+# Generar distractores plausibles basados en errores conceptuales comunes
 distractor1 <- paste0(pregunta_seleccionada$denominador, "/", pregunta_seleccionada$numerador)  # Invertir fracción
 distractor2 <- paste0(pregunta_seleccionada$numerador, "/1.0")  # Usar probabilidad conjunta directamente
 distractor3 <- paste0(pregunta_seleccionada$numerador, "/", round(1 - pregunta_seleccionada$denominador, 1))  # Usar complemento del denominador
 
-# Crear vector con todas las opciones
-opciones <- c(respuesta_correcta_fraccion, distractor1, distractor2, distractor3)
-names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
-
-# Mezclar opciones
-opciones_mezcladas <- sample(opciones)
+# Crear vector con todas las opciones y mezclarlas
+opciones_respuesta <- c(respuesta_correcta_fraccion, distractor1, distractor2, distractor3)
+names(opciones_respuesta) <- c("correcta", "distractor1", "distractor2", "distractor3")
+opciones_mezcladas <- sample(opciones_respuesta)
 
 # Identificar posición de la respuesta correcta
 indice_correcto <- which(opciones_mezcladas == respuesta_correcta_fraccion)
 
 # Crear vector de solución para r-exams
-solucion <- rep(0, 4)
-solucion[indice_correcto] <- 1
+solucion_vector <- rep(0, 4)
+solucion_vector[indice_correcto] <- 1
 
-# Aleatorización del dato conocido en el enunciado
-datos_conocidos <- list(
-  list(valor = p_menor_masc, descripcion = paste(termino_masculino, termino_menores, "de", edad_corte, "años")),
-  list(valor = p_menor_fem, descripcion = paste(termino_femenino, termino_menores, "de", edad_corte, "años")),
-  list(valor = p_mayor_masc, descripcion = paste(termino_masculino, termino_mayores, "de", edad_corte, "años")),
-  list(valor = p_mayor_fem, descripcion = paste(termino_femenino, termino_mayores, "de", edad_corte, "años"))
+# Aleatorización del dato conocido en el enunciado (4 opciones)
+datos_conocidos_disponibles <- list(
+  list(valor = p_menor_masc, descripcion = paste(termino_masculino_seleccionado, termino_menores_seleccionado, "de", edad_corte_seleccionada, "años")),
+  list(valor = p_menor_fem, descripcion = paste(termino_femenino_seleccionado, termino_menores_seleccionado, "de", edad_corte_seleccionada, "años")),
+  list(valor = p_mayor_masc, descripcion = paste(termino_masculino_seleccionado, termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años")),
+  list(valor = p_mayor_fem, descripcion = paste(termino_femenino_seleccionado, termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años"))
 )
 
-dato_conocido <- sample(datos_conocidos, 1)[[1]]
-porcentaje_conocido <- round(dato_conocido$valor * 100, 0)
+dato_conocido_seleccionado <- sample(datos_conocidos_disponibles, 1)[[1]]
+porcentaje_conocido <- round(dato_conocido_seleccionado$valor * 100, 0)
 ```
 
 
 ``` r
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
-# Aleatorizar colores de la tabla siguiendo el patrón de ejemplos funcionales
-colores_fondo_tabla <- c("orange", "blue", "green", "red", "cyan", "purple")
-intensidades_color <- c(10, 15, 20, 25, 30)
-color_fondo_seleccionado <- sample(colores_fondo_tabla, 1)
-intensidad_seleccionada <- sample(intensidades_color, 1)
+# Aleatorizar colores de la tabla siguiendo el patrón exitoso de ejemplos funcionales
+colores_fondo_disponibles <- c("orange", "blue", "green", "red", "cyan", "purple")
+intensidades_disponibles <- c(10, 15, 20, 25, 30)
+color_fondo_seleccionado <- sample(colores_fondo_disponibles, 1)
+intensidad_seleccionada <- sample(intensidades_disponibles, 1)
 color_tabla_final <- paste0(color_fondo_seleccionado, "!", intensidad_seleccionada)
 
-# Función para generar tabla TikZ siguiendo el patrón de ejemplos funcionales
-generar_tabla_contingencia_tikz <- function(termino_masc, termino_fem, termino_men, termino_may,
-                                           edad, p_men_masc, p_men_fem, p_may_masc, p_may_fem,
-                                           color_tabla, termino_part) {
+# Función para generar tabla TikZ siguiendo el patrón exitoso de ejemplos funcionales
+generar_tabla_contingencia_tikz_robusta <- function(termino_masc, termino_fem, termino_men, termino_may,
+                                                   edad, p_men_masc, p_men_fem, p_may_masc, p_may_fem,
+                                                   color_tabla, termino_part) {
   # Crear tabla con TikZ usando el patrón exitoso de los ejemplos
   tabla_codigo <- c(
     "\\begin{tikzpicture}",
@@ -206,10 +208,11 @@ generar_tabla_contingencia_tikz <- function(termino_masc, termino_fem, termino_m
 }
 
 # Generar código TikZ para la tabla de contingencia
-tabla_tikz_codigo <- generar_tabla_contingencia_tikz(
-  termino_masculino, termino_femenino, termino_menores, termino_mayores,
-  edad_corte, p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem,
-  color_tabla_final, termino_participantes
+tabla_tikz_codigo <- generar_tabla_contingencia_tikz_robusta(
+  termino_masculino_seleccionado, termino_femenino_seleccionado,
+  termino_menores_seleccionado, termino_mayores_seleccionado,
+  edad_corte_seleccionada, p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem,
+  color_tabla_final, termino_participantes_seleccionado
 )
 
 # Scripts de prueba de integridad y calidad de funciones
@@ -230,7 +233,7 @@ test_that("Código TikZ se genera correctamente", {
 # Prueba de calidad de la función generadora de TikZ
 test_that("Función generadora de tabla TikZ es robusta", {
   # Probar con diferentes parámetros
-  tabla_prueba <- generar_tabla_contingencia_tikz(
+  tabla_prueba <- generar_tabla_contingencia_tikz_robusta(
     "hombres", "mujeres", "menores", "mayores",
     18, 0.1, 0.2, 0.3, 0.4, "blue!20", "participantes"
   )
@@ -267,7 +270,7 @@ test_that("Coherencia matemática post-cambios", {
 ```
 
 ```
-## Test passed 😀
+## Test passed 😸
 ```
 
 ``` r
@@ -289,35 +292,35 @@ test_that("Calidad de distractores matemáticos", {
 ```
 
 ```
-## Test passed 🥇
+## Test passed 😸
 ```
 
 Question
 ========
 
-En la matriz se muestran las frecuencias relativas de inscritos en un curso de extensión, dependiendo del género y la edad.
+En la tabla se muestran las distribución de asistentes en un seminario, dependiendo del género y la edad.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Grupo de edad} & \textbf{Participantes Masculinos} & \textbf{Participantes Femeninas} \\
+\textbf{Grupo de edad} & \textbf{Hombres} & \textbf{Estudiantes Femeninas} \\
 \hline
-Que Tienen Menos de 21 años & 0.1 & 0.2 \\
+Menores de 20 años & 0.1 & 0.2 \\
 \hline
-Con Más de 21 años & 0.3 & 0.4 \\
+Con Más de 20 años & 0.3 & 0.4 \\
 \hline
 \end{tabular}
 \end{center}
-Test passed 🎉
+Test passed 🥳
 
-Por ejemplo, el 10% de los inscritos son participantes masculinos que tienen menos de 21 años. Según la matriz, ¿cuál es la probabilidad de que al escoger una persona al azar tenga que tienen menos de 21 años, si ya se sabe que es participantes masculinos?
+Por ejemplo, el 30% de los asistentes son hombres con más de 20 años. Según la tabla, ¿cuál es la probabilidad de que al escoger una persona al azar tenga con más de 20 años, si ya se sabe que es estudiantes femeninas?
 
 Answerlist
 ----------
-- 0.4/0.1
-- 0.1/0.6
-- 0.1/0.4
-- 0.1/1.0
+- 0.4/0.4
+- 0.4/1.0
+- 0.4/0.6
+- 0.6/0.4
 
 Solution
 ========
@@ -326,15 +329,15 @@ Para resolver este problema de probabilidad condicional, necesitamos aplicar la 
 
 ### Paso 1: Identificar el tipo de problema
 Este es un problema de **probabilidad condicional**, donde buscamos:
-$$P(\\text{que tienen menos de 21 años} | \\text{participantes masculinos})$$
+$$P(\\text{con más de 20 años} | \\text{estudiantes femeninas})$$
 
 ### Paso 2: Recordar la fórmula de probabilidad condicional
 La probabilidad condicional se calcula como:
 $$P(A|B) = \\frac{P(A \\cap B)}{P(B)}$$
 
 Donde:
-- $A$ = evento de interés (que tienen menos de 21 años)
-- $B$ = condición dada (participantes masculinos)
+- $A$ = evento de interés (con más de 20 años)
+- $B$ = condición dada (estudiantes femeninas)
 - $P(A \\cap B)$ = probabilidad de que ocurran ambos eventos
 - $P(B)$ = probabilidad de la condición
 
@@ -342,37 +345,37 @@ Donde:
 De la tabla de contingencia podemos obtener:
 
 **Probabilidades conjuntas:**
-- P(que tienen menos de 21 años ∩ participantes masculinos) = 0.1
-- P(que tienen menos de 21 años ∩ participantes femeninas) = 0.2
-- P(con más de 21 años ∩ participantes masculinos) = 0.3
-- P(con más de 21 años ∩ participantes femeninas) = 0.4
+- P(menores de 20 años ∩ hombres) = 0.1
+- P(menores de 20 años ∩ estudiantes femeninas) = 0.2
+- P(con más de 20 años ∩ hombres) = 0.3
+- P(con más de 20 años ∩ estudiantes femeninas) = 0.4
 
 **Probabilidades marginales:**
-- P(participantes masculinos) = 0.1 + 0.3 = 0.4
-- P(participantes femeninas) = 0.2 + 0.4 = 0.6
-- P(que tienen menos de 21 años) = 0.1 + 0.2 = 0.3
-- P(con más de 21 años) = 0.3 + 0.4 = 0.7
+- P(hombres) = 0.1 + 0.3 = 0.4
+- P(estudiantes femeninas) = 0.2 + 0.4 = 0.6
+- P(menores de 20 años) = 0.1 + 0.2 = 0.3
+- P(con más de 20 años) = 0.3 + 0.4 = 0.7
 
 ### Paso 4: Aplicar la fórmula
 Para nuestro problema específico:
-$$P(\\text{que tienen menos de 21 años} | \\text{participantes masculinos}) = \\frac{P(\\text{que tienen menos de 21 años} \\cap \\text{participantes masculinos})}{P(\\text{participantes masculinos})}$$
+$$P(\\text{con más de 20 años} | \\text{estudiantes femeninas}) = \\frac{P(\\text{con más de 20 años} \\cap \\text{estudiantes femeninas})}{P(\\text{estudiantes femeninas})}$$
 
 Sustituyendo los valores:
-$$P(\\text{que tienen menos de 21 años} | \\text{participantes masculinos}) = \\frac{0.1}{0.4}$$
+$$P(\\text{con más de 20 años} | \\text{estudiantes femeninas}) = \\frac{0.4}{0.6}$$
 
 ### Paso 5: Verificación
 Podemos verificar que este resultado tiene sentido:
-- El numerador (0.1) representa la probabilidad conjunta del evento y la condición
-- El denominador (0.4) representa la probabilidad marginal de la condición
-- El resultado 0.1/0.4 = 0.25 está entre 0 y 1, como debe ser toda probabilidad
+- El numerador (0.4) representa la probabilidad conjunta del evento y la condición
+- El denominador (0.6) representa la probabilidad marginal de la condición
+- El resultado 0.4/0.6 = 0.667 está entre 0 y 1, como debe ser toda probabilidad
 
 ### Análisis de distractores comunes:
-- **0.4/0.1**: Error de invertir numerador y denominador
-- **0.1/1.0**: Error de usar solo la probabilidad conjunta sin dividir por la probabilidad de la condición
-- **0.1/0.6**: Error de usar el complemento de la probabilidad de la condición
+- **0.6/0.4**: Error de invertir numerador y denominador
+- **0.4/1.0**: Error de usar solo la probabilidad conjunta sin dividir por la probabilidad de la condición
+- **0.4/0.4**: Error de usar el complemento de la probabilidad de la condición
 
 ### Conclusión
-Por lo tanto, la probabilidad de que una persona tenga que tienen menos de 21 años, dado que es participantes masculinos, es **0.1/0.4**.
+Por lo tanto, la probabilidad de que una persona tenga con más de 20 años, dado que es estudiantes femeninas, es **0.4/0.6**.
 
 Answerlist
 ----------
@@ -383,7 +386,7 @@ Answerlist
 
 Meta-information
 ================
-exname: probabilidad_condicional_tabla_contingencia
+exname: probabilidad_condicional_tabla_contingencia_mejorado
 extype: schoice
 exsolution: 0010
 exshuffle: TRUE
