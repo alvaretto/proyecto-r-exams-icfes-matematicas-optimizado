@@ -95,11 +95,7 @@ p_mayor_fem <- proporciones_generadas[4]   # P(Mayor ∩ Femenino)
 test_that("Las proporciones suman 1.0", {
   expect_equal(sum(proporciones_generadas), 1.0, tolerance = 0.01)
 })
-```
 
-Test passed 😀
-
-``` r
 # Calcular probabilidades marginales
 p_masculino <- p_menor_masc + p_mayor_masc
 p_femenino <- p_menor_fem + p_mayor_fem
@@ -111,11 +107,7 @@ test_that("Probabilidades marginales son coherentes", {
   expect_equal(p_masculino + p_femenino, 1.0, tolerance = 0.01)
   expect_equal(p_menor + p_mayor, 1.0, tolerance = 0.01)
 })
-```
 
-Test passed 🌈
-
-``` r
 # Aleatorización del tipo de pregunta (4 tipos diferentes de probabilidad condicional)
 tipos_pregunta_disponibles <- list(
   list(condicion = "femenino", evento = "mayor",
@@ -223,13 +215,7 @@ test_that("Código TikZ se genera correctamente", {
   expect_true(any(grepl("\\\\begin\\{tabular\\}", tabla_tikz_codigo)))
   expect_true(any(grepl("\\\\end\\{tabular\\}", tabla_tikz_codigo)))
 })
-```
 
-```
-## Test passed 🌈
-```
-
-``` r
 # Prueba de calidad de la función generadora de TikZ
 test_that("Función generadora de tabla TikZ es robusta", {
   # Probar con diferentes parámetros
@@ -243,13 +229,7 @@ test_that("Función generadora de tabla TikZ es robusta", {
   expect_true(any(grepl("0\\.1", tabla_prueba)))
   expect_true(any(grepl("0\\.4", tabla_prueba)))
 })
-```
 
-```
-## Test passed 🥳
-```
-
-``` r
 # Prueba de coherencia matemática después de los cambios
 test_that("Coherencia matemática post-cambios", {
   # Verificar que las proporciones siguen siendo válidas
@@ -267,13 +247,7 @@ test_that("Coherencia matemática post-cambios", {
   # Verificar que ninguna proporción es mayor que 1
   expect_true(all(c(p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem) < 1))
 })
-```
 
-```
-## Test passed 😸
-```
-
-``` r
 # Prueba de calidad de distractores
 test_that("Calidad de distractores matemáticos", {
   # Verificar que la respuesta correcta es diferente de todos los distractores
@@ -289,38 +263,40 @@ test_that("Calidad de distractores matemáticos", {
   # Verificar que el valor decimal de la respuesta correcta está en rango válido [0,1]
   expect_true(respuesta_correcta_decimal >= 0 && respuesta_correcta_decimal <= 1)
 })
-```
 
-```
-## Test passed 😸
+# Script de prueba temporal para verificar coherencia de género
+test_that("Coherencia de términos de género", {
+  expect_true(termino_masculino_seleccionado %in% c("hombres", "varones", "participantes masculinos", "estudiantes masculinos"))
+  expect_true(termino_femenino_seleccionado %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
+  expect_false(termino_masculino_seleccionado == termino_femenino_seleccionado)
+})
 ```
 
 Question
 ========
 
-En la tabla se muestran las distribución de asistentes en un seminario, dependiendo del género y la edad.
+En la matriz se muestran las porcentajes de estudiantes en un taller de verano, dependiendo del género y la edad.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Grupo de edad} & \textbf{Hombres} & \textbf{Estudiantes Femeninas} \\
+\textbf{Grupo de edad} & \textbf{Participantes Masculinos} & \textbf{Participantes Femeninas} \\
 \hline
 Menores de 20 años & 0.1 & 0.2 \\
 \hline
-Con Más de 20 años & 0.3 & 0.4 \\
+Que Tienen Más de 20 años & 0.3 & 0.4 \\
 \hline
 \end{tabular}
 \end{center}
-Test passed 🥳
 
-Por ejemplo, el 30% de los asistentes son hombres con más de 20 años. Según la tabla, ¿cuál es la probabilidad de que al escoger una persona al azar tenga con más de 20 años, si ya se sabe que es estudiantes femeninas?
+Por ejemplo, el 40% de los estudiantes son participantes femeninas que tienen más de 20 años. Según la matriz, ¿cuál es la probabilidad de que al escoger una persona al azar tenga menores de 20 años, si ya se sabe que es participantes masculinos?
 
 Answerlist
 ----------
-- 0.4/0.4
-- 0.4/1.0
-- 0.4/0.6
-- 0.6/0.4
+- 0.1/1.0
+- 0.4/0.1
+- 0.1/0.4
+- 0.1/0.6
 
 Solution
 ========
@@ -329,15 +305,15 @@ Para resolver este problema de probabilidad condicional, necesitamos aplicar la 
 
 ### Paso 1: Identificar el tipo de problema
 Este es un problema de **probabilidad condicional**, donde buscamos:
-$$P(\\text{con más de 20 años} | \\text{estudiantes femeninas})$$
+$$P(\\text{menores de 20 años} | \\text{participantes masculinos})$$
 
 ### Paso 2: Recordar la fórmula de probabilidad condicional
 La probabilidad condicional se calcula como:
 $$P(A|B) = \\frac{P(A \\cap B)}{P(B)}$$
 
 Donde:
-- $A$ = evento de interés (con más de 20 años)
-- $B$ = condición dada (estudiantes femeninas)
+- $A$ = evento de interés (menores de 20 años)
+- $B$ = condición dada (participantes masculinos)
 - $P(A \\cap B)$ = probabilidad de que ocurran ambos eventos
 - $P(B)$ = probabilidad de la condición
 
@@ -345,37 +321,37 @@ Donde:
 De la tabla de contingencia podemos obtener:
 
 **Probabilidades conjuntas:**
-- P(menores de 20 años ∩ hombres) = 0.1
-- P(menores de 20 años ∩ estudiantes femeninas) = 0.2
-- P(con más de 20 años ∩ hombres) = 0.3
-- P(con más de 20 años ∩ estudiantes femeninas) = 0.4
+- P(menores de 20 años ∩ participantes masculinos) = 0.1
+- P(menores de 20 años ∩ participantes femeninas) = 0.2
+- P(que tienen más de 20 años ∩ participantes masculinos) = 0.3
+- P(que tienen más de 20 años ∩ participantes femeninas) = 0.4
 
 **Probabilidades marginales:**
-- P(hombres) = 0.1 + 0.3 = 0.4
-- P(estudiantes femeninas) = 0.2 + 0.4 = 0.6
+- P(participantes masculinos) = 0.1 + 0.3 = 0.4
+- P(participantes femeninas) = 0.2 + 0.4 = 0.6
 - P(menores de 20 años) = 0.1 + 0.2 = 0.3
-- P(con más de 20 años) = 0.3 + 0.4 = 0.7
+- P(que tienen más de 20 años) = 0.3 + 0.4 = 0.7
 
 ### Paso 4: Aplicar la fórmula
 Para nuestro problema específico:
-$$P(\\text{con más de 20 años} | \\text{estudiantes femeninas}) = \\frac{P(\\text{con más de 20 años} \\cap \\text{estudiantes femeninas})}{P(\\text{estudiantes femeninas})}$$
+$$P(\\text{menores de 20 años} | \\text{participantes masculinos}) = \\frac{P(\\text{menores de 20 años} \\cap \\text{participantes masculinos})}{P(\\text{participantes masculinos})}$$
 
 Sustituyendo los valores:
-$$P(\\text{con más de 20 años} | \\text{estudiantes femeninas}) = \\frac{0.4}{0.6}$$
+$$P(\\text{menores de 20 años} | \\text{participantes masculinos}) = \\frac{0.1}{0.4}$$
 
 ### Paso 5: Verificación
 Podemos verificar que este resultado tiene sentido:
-- El numerador (0.4) representa la probabilidad conjunta del evento y la condición
-- El denominador (0.6) representa la probabilidad marginal de la condición
-- El resultado 0.4/0.6 = 0.667 está entre 0 y 1, como debe ser toda probabilidad
+- El numerador (0.1) representa la probabilidad conjunta del evento y la condición
+- El denominador (0.4) representa la probabilidad marginal de la condición
+- El resultado 0.1/0.4 = 0.25 está entre 0 y 1, como debe ser toda probabilidad
 
 ### Análisis de distractores comunes:
-- **0.6/0.4**: Error de invertir numerador y denominador
-- **0.4/1.0**: Error de usar solo la probabilidad conjunta sin dividir por la probabilidad de la condición
-- **0.4/0.4**: Error de usar el complemento de la probabilidad de la condición
+- **0.4/0.1**: Error de invertir numerador y denominador
+- **0.1/1.0**: Error de usar solo la probabilidad conjunta sin dividir por la probabilidad de la condición
+- **0.1/0.6**: Error de usar el complemento de la probabilidad de la condición
 
 ### Conclusión
-Por lo tanto, la probabilidad de que una persona tenga con más de 20 años, dado que es estudiantes femeninas, es **0.4/0.6**.
+Por lo tanto, la probabilidad de que una persona tenga menores de 20 años, dado que es participantes masculinos, es **0.1/0.4**.
 
 Answerlist
 ----------

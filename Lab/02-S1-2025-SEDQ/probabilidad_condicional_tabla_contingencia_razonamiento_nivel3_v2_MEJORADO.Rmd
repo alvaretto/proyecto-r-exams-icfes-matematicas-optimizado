@@ -29,6 +29,10 @@ library(testthat)
 library(knitr)
 library(stringr)
 
+# Configuración para suprimir emojis de testthat y evitar errores Unicode en LaTeX
+options(testthat.use_colours = FALSE)
+options(testthat.unicode = FALSE)
+
 typ <- match_exams_device()
 options(scipen = 999)
 knitr::opts_chunk$set(
@@ -43,7 +47,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='hide'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
@@ -197,7 +201,7 @@ dato_conocido_seleccionado <- sample(datos_conocidos_disponibles, 1)[[1]]
 porcentaje_conocido <- round(dato_conocido_seleccionado$valor * 100, 0)
 ```
 
-```{r generar_tabla_contingencia_mejorada, message=FALSE, warning=FALSE}
+```{r generar_tabla_contingencia_mejorada, message=FALSE, warning=FALSE, results='hide'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Aleatorizar colores de la tabla siguiendo el patrón exitoso de ejemplos funcionales
@@ -296,6 +300,13 @@ test_that("Calidad de distractores matemáticos", {
   # Verificar que el valor decimal de la respuesta correcta está en rango válido [0,1]
   expect_true(respuesta_correcta_decimal >= 0 && respuesta_correcta_decimal <= 1)
 })
+
+# Script de prueba temporal para verificar coherencia de género
+test_that("Coherencia de términos de género", {
+  expect_true(termino_masculino_seleccionado %in% c("hombres", "varones", "participantes masculinos", "estudiantes masculinos"))
+  expect_true(termino_femenino_seleccionado %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
+  expect_false(termino_masculino_seleccionado == termino_femenino_seleccionado)
+})
 ```
 
 Question
@@ -339,13 +350,6 @@ mostrar_tabla_tikz_segura <- function(codigo_tikz, ancho, nombre_tabla = "tabla_
 
 # Mostrar la tabla de contingencia
 mostrar_tabla_tikz_segura(tabla_tikz_codigo, ancho_tabla_contingencia, "tabla_contingencia")
-
-# Script de prueba temporal para verificar coherencia de género
-test_that("Coherencia de términos de género", {
-  expect_true(termino_masculino_seleccionado %in% c("hombres", "varones", "participantes masculinos", "estudiantes masculinos"))
-  expect_true(termino_femenino_seleccionado %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
-  expect_false(termino_masculino_seleccionado == termino_femenino_seleccionado)
-})
 ```
 
 Por ejemplo, el `r porcentaje_conocido`% de los `r termino_participantes_seleccionado` son `r dato_conocido_seleccionado$descripcion`. Según la `r termino_tabla_seleccionado`, ¿cuál es la probabilidad de que al escoger una persona al azar tenga `r pregunta_seleccionada$texto_evento`, si ya se sabe que es `r pregunta_seleccionada$texto_condicion`?
