@@ -14,31 +14,10 @@ output:
   word_document: default
 ---
 
-```{r setup, include=FALSE}
-Sys.setlocale(category = "LC_NUMERIC", locale = "C")
-options(OutDec = ".")
 
-# CONFIGURACIÓN RADICAL ANTI-NOTACIÓN CIENTÍFICA
-options(scipen = 999)  # Evitar notación científica completamente
-options(digits = 10)   # Suficientes dígitos para números grandes
 
-library(exams)
-library(reticulate)
-library(knitr)
 
-knitr::opts_chunk$set(
-  warning = FALSE,
-  message = FALSE,
-  fig.cap = "",
-  fig.keep = 'all',
-  dev = c("png", "pdf"),
-  dpi = 150
-)
-
-use_python(Sys.which("python"), required = TRUE)
-```
-
-```{r variables, message=FALSE, warning=FALSE, results='asis'}
+``` r
 options(OutDec = ".")
 # REFORZAR CONFIGURACIÓN ANTI-NOTACIÓN CIENTÍFICA
 options(scipen = 999)
@@ -548,7 +527,8 @@ if (equipo_correcto %in% equipos_en_distractores) {
 }
 ```
 
-```{r generar_grafico, message=FALSE, warning=FALSE}
+
+``` r
 options(OutDec = ".")
 
 # Código Python para generar el gráfico de barras horizontal
@@ -607,29 +587,18 @@ py_run_string(codigo_python)
 Question
 ========
 
-`r articulo_contexto` `r contexto` realizó `r articulo_encuesta` `r termino_encuesta` a un grupo de sus `r poblacion_total_fmt` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra_fmt` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
+Un blog de fútbol realizó el sondeo a un grupo de sus 100000 miembros sobre la preferencia de su equipo favorito para ganar la Copa del Mundo. Para esto escogió al azar a 140 miembros y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
 
-```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
-# Detectar formato de salida
-formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
-es_moodle <- (match_exams_call() %in% formatos_moodle)
+![](grafico_barras.png){width=80%}
 
-# Mostrar la imagen del gráfico
-if (es_moodle) {
-  cat("![](grafico_barras.png){width=70%}")
-} else {
-  cat("![](grafico_barras.png){width=80%}")
-}
-```
-
-De acuerdo con los datos obtenidos en `r articulo_encuesta` `r termino_encuesta`, es correcto afirmar que
+De acuerdo con los datos obtenidos en el sondeo, es correcto afirmar que
 
 Answerlist
 ----------
-- `r opciones_mezcladas[1]`
-- `r opciones_mezcladas[2]`
-- `r opciones_mezcladas[3]`
-- `r opciones_mezcladas[4]`
+- alrededor de 22 de cada 140 miembros del blog de fútbol da por favorito al Países Bajos.
+- alrededor de 28 de cada 100000 miembros del blog de fútbol da por favorito al Inglaterra.
+- alrededor de 18 de cada 140 miembros del blog de fútbol da por favorito al Portugal.
+- alrededor de 31 de cada 140 miembros del blog de fútbol da por favorito al España.
 
 Solution
 ========
@@ -637,21 +606,21 @@ Solution
 Para resolver este problema, necesitamos interpretar correctamente los datos del gráfico de barras y entender la diferencia entre muestra y población total.
 
 ### Paso 1: Identificar los datos conocidos
-* `r articulo_contexto` `r contexto` tiene un total de `r poblacion_total_fmt` `r termino_usuarios`.
-* Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra_fmt` `r termino_usuarios` seleccionados al azar.
-* Según el gráfico, `r valor_correcto_fmt` `r termino_usuarios` de la muestra prefieren al `r equipo_correcto`.
+* Un blog de fútbol tiene un total de 100000 miembros.
+* Se realizó un(a) sondeo a una muestra de 140 miembros seleccionados al azar.
+* Según el gráfico, 22 miembros de la muestra prefieren al Países Bajos.
 
 ### Paso 2: Interpretar correctamente las proporciones
-Los datos del gráfico representan únicamente la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no la población total de `r poblacion_total_fmt` `r termino_usuarios`.
+Los datos del gráfico representan únicamente la muestra de 140 miembros, no la población total de 100000 miembros.
 
 ### Paso 3: Analizar cada opción
 
-**Opción correcta**: "`r respuesta_correcta`"
-Esta opción es correcta porque interpreta adecuadamente que `r valor_correcto_fmt` de cada `r tamano_muestra_fmt` `r termino_usuarios` **de la muestra** prefieren al `r equipo_correcto`. Esto representa una proporción del `r round(valor_correcto/tamano_muestra*100, 1)`% en la muestra.
+**Opción correcta**: "alrededor de 22 de cada 140 miembros del blog de fútbol da por favorito al Países Bajos."
+Esta opción es correcta porque interpreta adecuadamente que 22 de cada 140 miembros **de la muestra** prefieren al Países Bajos. Esto representa una proporción del 15.7% en la muestra.
 
 **Análisis de distractores incorrectos**:
 
-- **Distractores de confusión muestra-población**: Las opciones que mencionan proporciones sobre la población total de `r poblacion_total_fmt` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra_fmt` personas.
+- **Distractores de confusión muestra-población**: Las opciones que mencionan proporciones sobre la población total de 100000 miembros son incorrectas, ya que el sondeo solo se realizó a 140 personas.
 
 - **Distractores de equipos incorrectos**: Las opciones que usan datos de otros equipos de la muestra malinterpretan cuál es el equipo de referencia en la pregunta.
 
@@ -662,33 +631,33 @@ Esta opción es correcta porque interpreta adecuadamente que `r valor_correcto_f
 - **Distractores de confusión conceptual**: Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan fundamentalmente los datos.
 
 ### Paso 4: Verificación matemática
-En la muestra de `r tamano_muestra_fmt` `r termino_usuarios`:
+En la muestra de 140 miembros:
 
-- `r equipo1`: `r valor1_fmt` `r termino_usuarios` (`r round(valor1/tamano_muestra*100, 1)`%)
-- `r equipo2`: `r valor2_fmt` `r termino_usuarios` (`r round(valor2/tamano_muestra*100, 1)`%)
-- `r equipo3`: `r valor3_fmt` `r termino_usuarios` (`r round(valor3/tamano_muestra*100, 1)`%)
-- `r equipo4`: `r valor4_fmt` `r termino_usuarios` (`r round(valor4/tamano_muestra*100, 1)`%)
-- `r equipo5`: `r valor5_fmt` `r termino_usuarios` (`r round(valor5/tamano_muestra*100, 1)`%)
+- Países Bajos: 22 miembros (15.7%)
+- Portugal: 25 miembros (17.9%)
+- Italia: 34 miembros (24.3%)
+- España: 31 miembros (22.1%)
+- Inglaterra: 28 miembros (20%)
 
-Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra_fmt` `r termino_usuarios` (correcto)
+Total: 140 miembros = 140 miembros (correcto)
 
 ### Paso 5: Principio de respuesta única
 En un examen de selección múltiple válido, debe existir **exactamente una respuesta correcta** y tres distractores inequívocamente incorrectos. La respuesta correcta es única y se basa en la interpretación correcta de los datos de la muestra.
 
 ### Conclusión
-La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no a la población total. Todos los distractores son inequívocamente incorrectos por diferentes razones conceptuales o de interpretación de datos.
+La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de 140 miembros, no a la población total. Todos los distractores son inequívocamente incorrectos por diferentes razones conceptuales o de interpretación de datos.
 
 Answerlist
 ----------
-- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+- Verdadero
+- Falso
+- Falso
+- Falso
 
 Meta-information
 ================
 exname: proporciones_encuesta_deportiva
 extype: schoice
-exsolution: `r paste(as.integer(solucion), collapse="")`
+exsolution: 1000
 exshuffle: TRUE
 exsection: Estadística|Proporciones|Interpretación de gráficos|Muestreo
