@@ -86,10 +86,10 @@ generar_proporciones_validas <- function() {
 
 # Obtener proporciones válidas
 proporciones_generadas <- generar_proporciones_validas()
-p_menor_masc <- proporciones_generadas[1]  # P(Menor ∩ Masculino)
-p_menor_fem <- proporciones_generadas[2]   # P(Menor ∩ Femenino)
-p_mayor_masc <- proporciones_generadas[3]  # P(Mayor ∩ Masculino)
-p_mayor_fem <- proporciones_generadas[4]   # P(Mayor ∩ Femenino)
+p_menor_masc <- proporciones_generadas[1]  # P(Menor interseccion Masculino)
+p_menor_fem <- proporciones_generadas[2]   # P(Menor interseccion Femenino)
+p_mayor_masc <- proporciones_generadas[3]  # P(Mayor interseccion Masculino)
+p_mayor_fem <- proporciones_generadas[4]   # P(Mayor interseccion Femenino)
 
 # Scripts de prueba de integridad matemática
 test_that("Las proporciones suman 1.0", {
@@ -275,28 +275,28 @@ test_that("Coherencia de términos de género", {
 Question
 ========
 
-En la matriz se muestran las porcentajes de estudiantes en un taller de verano, dependiendo del género y la edad.
+En la esquema se muestran las distribución de participantes en un curso de extensión, dependiendo del género y la edad.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{Grupo de edad} & \textbf{Participantes Masculinos} & \textbf{Participantes Femeninas} \\
+\textbf{Grupo de edad} & \textbf{Estudiantes Masculinos} & \textbf{Estudiantes Femeninas} \\
 \hline
-Menores de 20 años & 0.1 & 0.2 \\
+Con Menos de 16 años & 0.1 & 0.2 \\
 \hline
-Que Tienen Más de 20 años & 0.3 & 0.4 \\
+Mayores de 16 años & 0.3 & 0.4 \\
 \hline
 \end{tabular}
 \end{center}
 
-Por ejemplo, el 40% de los estudiantes son participantes femeninas que tienen más de 20 años. Según la matriz, ¿cuál es la probabilidad de que al escoger una persona al azar tenga menores de 20 años, si ya se sabe que es participantes masculinos?
+Por ejemplo, el 40% de los participantes son estudiantes femeninas mayores de 16 años. Según la esquema, ¿cuál es la probabilidad de que al escoger una persona al azar tenga con menos de 16 años, si ya se sabe que es estudiantes masculinos?
 
 Answerlist
 ----------
+- 0.1/0.6
+- 0.1/0.4
 - 0.1/1.0
 - 0.4/0.1
-- 0.1/0.4
-- 0.1/0.6
 
 Solution
 ========
@@ -305,15 +305,15 @@ Para resolver este problema de probabilidad condicional, necesitamos aplicar la 
 
 ### Paso 1: Identificar el tipo de problema
 Este es un problema de **probabilidad condicional**, donde buscamos:
-$$P(\\text{menores de 20 años} | \\text{participantes masculinos})$$
+$$P(\\text{con menos de 16 años} | \\text{estudiantes masculinos})$$
 
 ### Paso 2: Recordar la fórmula de probabilidad condicional
 La probabilidad condicional se calcula como:
 $$P(A|B) = \\frac{P(A \\cap B)}{P(B)}$$
 
 Donde:
-- $A$ = evento de interés (menores de 20 años)
-- $B$ = condición dada (participantes masculinos)
+- $A$ = evento de interés (con menos de 16 años)
+- $B$ = condición dada (estudiantes masculinos)
 - $P(A \\cap B)$ = probabilidad de que ocurran ambos eventos
 - $P(B)$ = probabilidad de la condición
 
@@ -321,23 +321,23 @@ Donde:
 De la tabla de contingencia podemos obtener:
 
 **Probabilidades conjuntas:**
-- P(menores de 20 años ∩ participantes masculinos) = 0.1
-- P(menores de 20 años ∩ participantes femeninas) = 0.2
-- P(que tienen más de 20 años ∩ participantes masculinos) = 0.3
-- P(que tienen más de 20 años ∩ participantes femeninas) = 0.4
+- P(con menos de 16 años $\cap$ estudiantes masculinos) = 0.1
+- P(con menos de 16 años $\cap$ estudiantes femeninas) = 0.2
+- P(mayores de 16 años $\cap$ estudiantes masculinos) = 0.3
+- P(mayores de 16 años $\cap$ estudiantes femeninas) = 0.4
 
 **Probabilidades marginales:**
-- P(participantes masculinos) = 0.1 + 0.3 = 0.4
-- P(participantes femeninas) = 0.2 + 0.4 = 0.6
-- P(menores de 20 años) = 0.1 + 0.2 = 0.3
-- P(que tienen más de 20 años) = 0.3 + 0.4 = 0.7
+- P(estudiantes masculinos) = 0.1 + 0.3 = 0.4
+- P(estudiantes femeninas) = 0.2 + 0.4 = 0.6
+- P(con menos de 16 años) = 0.1 + 0.2 = 0.3
+- P(mayores de 16 años) = 0.3 + 0.4 = 0.7
 
 ### Paso 4: Aplicar la fórmula
 Para nuestro problema específico:
-$$P(\\text{menores de 20 años} | \\text{participantes masculinos}) = \\frac{P(\\text{menores de 20 años} \\cap \\text{participantes masculinos})}{P(\\text{participantes masculinos})}$$
+$$P(\\text{con menos de 16 años} | \\text{estudiantes masculinos}) = \\frac{P(\\text{con menos de 16 años} \\cap \\text{estudiantes masculinos})}{P(\\text{estudiantes masculinos})}$$
 
 Sustituyendo los valores:
-$$P(\\text{menores de 20 años} | \\text{participantes masculinos}) = \\frac{0.1}{0.4}$$
+$$P(\\text{con menos de 16 años} | \\text{estudiantes masculinos}) = \\frac{0.1}{0.4}$$
 
 ### Paso 5: Verificación
 Podemos verificar que este resultado tiene sentido:
@@ -351,20 +351,20 @@ Podemos verificar que este resultado tiene sentido:
 - **0.1/0.6**: Error de usar el complemento de la probabilidad de la condición
 
 ### Conclusión
-Por lo tanto, la probabilidad de que una persona tenga menores de 20 años, dado que es participantes masculinos, es **0.1/0.4**.
+Por lo tanto, la probabilidad de que una persona tenga con menos de 16 años, dado que es estudiantes masculinos, es **0.1/0.4**.
 
 Answerlist
 ----------
 - Falso
-- Falso
 - Verdadero
+- Falso
 - Falso
 
 Meta-information
 ================
 exname: probabilidad_condicional_tabla_contingencia_mejorado
 extype: schoice
-exsolution: 0010
+exsolution: 0100
 exshuffle: TRUE
 exsection: Probabilidad|Probabilidad condicional|Tablas de contingencia
 exextra[Type]: Cálculo

@@ -124,10 +124,10 @@ generar_proporciones_validas <- function() {
 
 # Obtener proporciones válidas
 proporciones_generadas <- generar_proporciones_validas()
-p_menor_masc <- proporciones_generadas[1]  # P(Menor ∩ Masculino)
-p_menor_fem <- proporciones_generadas[2]   # P(Menor ∩ Femenino)
-p_mayor_masc <- proporciones_generadas[3]  # P(Mayor ∩ Masculino)
-p_mayor_fem <- proporciones_generadas[4]   # P(Mayor ∩ Femenino)
+p_menor_masc <- proporciones_generadas[1]  # P(Menor interseccion Masculino)
+p_menor_fem <- proporciones_generadas[2]   # P(Menor interseccion Femenino)
+p_mayor_masc <- proporciones_generadas[3]  # P(Mayor interseccion Masculino)
+p_mayor_fem <- proporciones_generadas[4]   # P(Mayor interseccion Femenino)
 
 # Scripts de prueba de integridad matemática
 test_that("Las proporciones suman 1.0", {
@@ -384,10 +384,10 @@ Donde:
 De la tabla de contingencia podemos obtener:
 
 **Probabilidades conjuntas:**
-- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años ∩ `r termino_masculino_seleccionado`) = `r p_menor_masc`
-- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años ∩ `r termino_femenino_seleccionado`) = `r p_menor_fem`
-- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años ∩ `r termino_masculino_seleccionado`) = `r p_mayor_masc`
-- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años ∩ `r termino_femenino_seleccionado`) = `r p_mayor_fem`
+- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_masculino_seleccionado`) = `r p_menor_masc`
+- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_femenino_seleccionado`) = `r p_menor_fem`
+- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_masculino_seleccionado`) = `r p_mayor_masc`
+- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_femenino_seleccionado`) = `r p_mayor_fem`
 
 **Probabilidades marginales:**
 - P(`r termino_masculino_seleccionado`) = `r p_menor_masc` + `r p_mayor_masc` = `r p_masculino`
