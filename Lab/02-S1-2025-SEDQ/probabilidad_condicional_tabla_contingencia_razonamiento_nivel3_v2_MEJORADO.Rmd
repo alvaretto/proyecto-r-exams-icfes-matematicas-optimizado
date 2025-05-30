@@ -203,6 +203,56 @@ datos_conocidos_disponibles <- list(
 
 dato_conocido_seleccionado <- sample(datos_conocidos_disponibles, 1)[[1]]
 porcentaje_conocido <- round(dato_conocido_seleccionado$valor * 100, 0)
+
+# Función para escapar caracteres especiales en LaTeX
+escapar_latex <- function(texto) {
+  # Reemplazar caracteres especiales comunes en español
+  texto <- gsub("á", "\\\\'{a}", texto, fixed = TRUE)
+  texto <- gsub("é", "\\\\'{e}", texto, fixed = TRUE)
+  texto <- gsub("í", "\\\\'{i}", texto, fixed = TRUE)
+  texto <- gsub("ó", "\\\\'{o}", texto, fixed = TRUE)
+  texto <- gsub("ú", "\\\\'{u}", texto, fixed = TRUE)
+  texto <- gsub("ñ", "\\\\~{n}", texto, fixed = TRUE)
+  texto <- gsub("Á", "\\\\'{A}", texto, fixed = TRUE)
+  texto <- gsub("É", "\\\\'{E}", texto, fixed = TRUE)
+  texto <- gsub("Í", "\\\\'{I}", texto, fixed = TRUE)
+  texto <- gsub("Ó", "\\\\'{O}", texto, fixed = TRUE)
+  texto <- gsub("Ú", "\\\\'{U}", texto, fixed = TRUE)
+  texto <- gsub("Ñ", "\\\\~{N}", texto, fixed = TRUE)
+  # Reemplazar espacios con espacios LaTeX seguros
+  texto <- gsub(" ", "\\\\ ", texto, fixed = TRUE)
+  return(texto)
+}
+
+# Crear versiones LaTeX-safe de los textos para usar en fórmulas matemáticas
+texto_evento_latex_safe <- escapar_latex(pregunta_seleccionada$texto_evento)
+texto_condicion_latex_safe <- escapar_latex(pregunta_seleccionada$texto_condicion)
+
+# Crear versiones simplificadas para fórmulas (sin caracteres especiales)
+texto_evento_simple <- gsub("[^a-zA-Z0-9 ]", "", pregunta_seleccionada$texto_evento)
+texto_condicion_simple <- gsub("[^a-zA-Z0-9 ]", "", pregunta_seleccionada$texto_condicion)
+
+# Crear etiquetas matemáticas más robustas
+etiqueta_evento_matematica <- paste0("E_{", gsub(" ", "", texto_evento_simple), "}")
+etiqueta_condicion_matematica <- paste0("C_{", gsub(" ", "", texto_condicion_simple), "}")
+
+# Scripts de prueba para verificar que las funciones de escape funcionan correctamente
+test_that("Función de escape LaTeX funciona correctamente", {
+  # Probar con texto que contiene caracteres especiales
+  texto_prueba <- "más de 21 años"
+  texto_escapado <- escapar_latex(texto_prueba)
+  expect_true(grepl("m\\\\'{a}s", texto_escapado))
+  expect_true(grepl("a\\\\~{n}os", texto_escapado))
+  expect_false(grepl("á", texto_escapado))
+  expect_false(grepl("ñ", texto_escapado))
+})
+
+test_that("Variables LaTeX-safe se generan correctamente", {
+  expect_true(nchar(texto_evento_latex_safe) > 0)
+  expect_true(nchar(texto_condicion_latex_safe) > 0)
+  expect_true(nchar(etiqueta_evento_matematica) > 0)
+  expect_true(nchar(etiqueta_condicion_matematica) > 0)
+})
 ```
 
 ```{r generar_tabla_contingencia_mejorada, include=FALSE}
@@ -289,6 +339,29 @@ test_that("Coherencia matemática post-cambios", {
   expect_true(all(c(p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem) < 1))
 })
 
+# Pruebas de integridad para renderizado LaTeX
+test_that("Renderizado LaTeX es seguro y correcto", {
+  # Verificar que las etiquetas matemáticas no contienen caracteres problemáticos
+  expect_false(grepl("[áéíóúñ]", etiqueta_evento_matematica))
+  expect_false(grepl("[áéíóúñ]", etiqueta_condicion_matematica))
+
+  # Verificar que las etiquetas tienen formato matemático válido
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_evento_matematica))
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_condicion_matematica))
+
+  # Verificar que los textos LaTeX-safe no contienen caracteres sin escapar
+  expect_false(grepl("[áéíóúñ]", texto_evento_latex_safe))
+  expect_false(grepl("[áéíóúñ]", texto_condicion_latex_safe))
+
+  # Verificar que los textos escapados contienen las secuencias LaTeX correctas
+  if(grepl("á", pregunta_seleccionada$texto_evento)) {
+    expect_true(grepl("\\\\'{a}", texto_evento_latex_safe))
+  }
+  if(grepl("ñ", pregunta_seleccionada$texto_evento)) {
+    expect_true(grepl("\\\\~{n}", texto_evento_latex_safe))
+  }
+})
+
 # Prueba de calidad de distractores
 test_that("Calidad de distractores matemáticos", {
   # Verificar que la respuesta correcta es diferente de todos los distractores
@@ -372,7 +445,11 @@ Para resolver este problema de probabilidad condicional, necesitamos aplicar la 
 
 ### Paso 1: Identificar el tipo de problema
 Este es un problema de **probabilidad condicional**, donde buscamos:
-$$P(\\text{`r pregunta_seleccionada$texto_evento`} | \\text{`r pregunta_seleccionada$texto_condicion`})$$
+$$P(`r etiqueta_evento_matematica` | `r etiqueta_condicion_matematica`)$$
+
+Donde:
+- $`r etiqueta_evento_matematica`$ representa el evento: `r pregunta_seleccionada$texto_evento`
+- $`r etiqueta_condicion_matematica`$ representa la condición: `r pregunta_seleccionada$texto_condicion`
 
 ### Paso 2: Recordar la fórmula de probabilidad condicional
 La probabilidad condicional se calcula como:
@@ -401,10 +478,10 @@ De la tabla de contingencia podemos obtener:
 
 ### Paso 4: Aplicar la fórmula
 Para nuestro problema específico:
-$$P(\\text{`r pregunta_seleccionada$texto_evento`} | \\text{`r pregunta_seleccionada$texto_condicion`}) = \\frac{P(\\text{`r pregunta_seleccionada$texto_evento`} \\cap \\text{`r pregunta_seleccionada$texto_condicion`})}{P(\\text{`r pregunta_seleccionada$texto_condicion`})}$$
+$$P(`r etiqueta_evento_matematica` | `r etiqueta_condicion_matematica`) = \frac{P(`r etiqueta_evento_matematica` \cap `r etiqueta_condicion_matematica`)}{P(`r etiqueta_condicion_matematica`)}$$
 
-Sustituyendo los valores:
-$$P(\\text{`r pregunta_seleccionada$texto_evento`} | \\text{`r pregunta_seleccionada$texto_condicion`}) = \\frac{`r pregunta_seleccionada$numerador`}{`r pregunta_seleccionada$denominador`}$$
+Sustituyendo los valores de la tabla:
+$$P(`r etiqueta_evento_matematica` | `r etiqueta_condicion_matematica`) = \frac{`r pregunta_seleccionada$numerador`}{`r pregunta_seleccionada$denominador`}$$
 
 ### Paso 5: Verificación
 Podemos verificar que este resultado tiene sentido:
