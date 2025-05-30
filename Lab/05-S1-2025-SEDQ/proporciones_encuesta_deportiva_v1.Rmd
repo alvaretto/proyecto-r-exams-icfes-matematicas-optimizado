@@ -334,67 +334,11 @@ if (max(valores_equipos) > tamano_muestra * 0.4) {
 # Colores para el gráfico
 colores <- c("#2E8B57", "#4682B4", "#CD853F", "#9370DB", "#DC143C")
 
-# FUNCIÓN PARA CALCULAR EL MÁXIMO COMÚN DIVISOR (MCD)
-calcular_mcd <- function(a, b) {
-  while (b != 0) {
-    temp <- b
-    b <- a %% b
-    a <- temp
-  }
-  return(a)
-}
-
-# FUNCIÓN PARA GENERAR FRACCIÓN REDUCIDA
-generar_fraccion_reducida <- function(numerador, denominador) {
-  mcd <- calcular_mcd(numerador, denominador)
-  return(c(numerador / mcd, denominador / mcd))
-}
-
 # Generar opciones de respuesta MEJORADAS Y MÁS DESAFIANTES
 # La respuesta correcta es sobre el equipo seleccionado ALEATORIAMENTE
 proporcion_correcta <- round(valor_correcto / tamano_muestra * 100)
 respuesta_correcta <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", tamano_muestra_fmt, " ",
                             termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
-
-# ELIMINAR GENERACIÓN DE FRACCIONES EQUIVALENTES
-# Las fracciones reducidas son matemáticamente equivalentes a la respuesta correcta
-# Por lo tanto, NO deben usarse como distractores en un examen de selección múltiple
-# Se mantienen las variables para compatibilidad pero no se usan en distractores
-
-# GENERACIÓN ROBUSTA DE DISTRACTORES ÚNICOS
-# Sistema mejorado que garantiza exactamente 4 opciones únicas (1 correcta + 3 distractores)
-
-# Función para generar distractores de respaldo únicos
-generar_distractores_respaldo <- function(base_valor, base_muestra, base_poblacion, base_equipo, base_contexto, base_usuarios) {
-  distractores_respaldo <- c()
-
-  # Respaldo 1: Usar porcentaje directo
-  porcentaje <- round(base_valor / base_muestra * 100)
-  distractores_respaldo <- c(distractores_respaldo,
-    paste0("el ", porcentaje, "% de los ", formatear_entero(base_muestra), " ", base_usuarios,
-           " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-
-  # Respaldo 2: Usar valor absoluto con población
-  distractores_respaldo <- c(distractores_respaldo,
-    paste0("exactamente ", formatear_entero(base_valor), " de los ", formatear_entero(base_poblacion), " ",
-           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-
-  # Respaldo 3: Error de interpretación de datos (confundir valores absolutos)
-  valor_incorrecto <- sample(setdiff(c(10, 15, 20, 25, 30, 35, 40), base_valor), 1)
-  distractores_respaldo <- c(distractores_respaldo,
-    paste0("aproximadamente ", formatear_entero(valor_incorrecto), " de cada ", formatear_entero(base_muestra), " ",
-           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-
-  # Respaldo 4: Error conceptual (usar porcentaje como valor absoluto)
-  porcentaje_como_valor <- round(base_valor / base_muestra * 100)
-  if (porcentaje_como_valor != base_valor && porcentaje_como_valor > 0) {
-    distractores_respaldo <- c(distractores_respaldo,
-      paste0("alrededor de ", formatear_entero(porcentaje_como_valor), " de cada ", formatear_entero(base_muestra), " ",
-             base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-  }
-
-  return(distractores_respaldo)
-}
 
 # SISTEMA ANTI-PATRÓN MEJORADO: DIVERSIFICACIÓN OBLIGATORIA DE EQUIPOS
 # Garantiza que cada opción mencione un equipo diferente para evitar patrones detectables
@@ -430,114 +374,169 @@ if (length(unique(equipos_para_distractores)) != 3) {
   stop("Error crítico: Los equipos para distractores no son únicos")
 }
 
-# SISTEMA ROBUSTO DE GENERACIÓN DE DISTRACTORES ÚNICOS - VERSIÓN DEFINITIVA
-# Esta versión garantiza distractores únicos en todos los casos posibles
-
-# FUNCIÓN PARA GENERAR DISTRACTORES ÚNICOS GARANTIZADOS
-generar_distractores_unicos <- function(equipo_correcto, valor_correcto, tamano_muestra, poblacion_total,
-                                       equipo_dist1, valor_dist1, equipo_dist2, valor_dist2,
-                                       equipo_dist3, valor_dist3, contexto, termino_usuarios, competicion) {
-
-  distractores <- c()
-  intentos_maximos <- 50
-
-  # DISTRACTOR 1: Proporción correcta con equipo incorrecto (SIEMPRE ÚNICO)
-  distractor1 <- paste0("alrededor de ", formatear_entero(valor_dist1), " de cada ", formatear_entero(tamano_muestra), " ",
+# FUNCIÓN MEJORADA PARA GENERAR DISTRACTORES ÚNICOS GARANTIZADOS - VERSIÓN 3
+# Esta versión corrige el problema de múltiples respuestas correctas
+generar_distractores_unicos_v3 <- function(equipo_correcto, valor_correcto, tamano_muestra, poblacion_total,
+                                         equipo_dist1, valor_dist1, equipo_dist2, valor_dist2,
+                                         equipo_dist3, valor_dist3, contexto, termino_usuarios, competicion) {
+  
+  # Lista para almacenar distractores candidatos
+  distractores_candidatos <- c()
+  distractores_finales <- c()
+  
+  # DEFINICIÓN DE LA RESPUESTA CORRECTA PARA COMPARACIÓN
+  respuesta_correcta_completa <- paste0("alrededor de ", formatear_entero(valor_correcto), " de cada ", formatear_entero(tamano_muestra), " ",
+                          termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+  
+  # Extraer patrón para detectar respuestas matemáticamente equivalentes
+  patron_correcto <- paste0("de cada ", formatear_entero(tamano_muestra), " ",
+                         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto)
+  
+  # ESTRATEGIA 1: DISTRACTORES RADICALMENTE DIFERENTES
+  
+  # Distractor 1: Confusión muestra-población
+  distractor1 <- paste0("alrededor de ", formatear_entero(valor_dist1), " de cada ", formatear_entero(poblacion_total), " ",
                        termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist1, ".")
-  distractores <- c(distractores, distractor1)
-
-  # DISTRACTOR 2: Confusión muestra-población (SIEMPRE ÚNICO)
-  distractor2 <- paste0("alrededor de ", formatear_entero(valor_dist2), " de cada ", formatear_entero(poblacion_total), " ",
-                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
-  distractores <- c(distractores, distractor2)
-
-  # DISTRACTOR 3: Generar con múltiples estrategias para garantizar unicidad
-  distractor3 <- NULL
-  for (intento in 1:intentos_maximos) {
-
-    if (intento <= 10) {
-      # Estrategia 1: Error de porcentaje
-      porcentaje <- round(valor_dist3 / tamano_muestra * 100)
-      if (porcentaje != valor_dist3 && porcentaje > 0 && porcentaje <= 50) {
-        distractor3_candidato <- paste0("alrededor de ", formatear_entero(porcentaje), " de cada ", formatear_entero(tamano_muestra), " ",
-                                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-      } else {
-        next  # Probar siguiente estrategia
-      }
-
-    } else if (intento <= 20) {
-      # Estrategia 2: Valor modificado matemáticamente
-      valor_modificado <- valor_dist3 + sample(c(-3, -2, -1, 1, 2, 3), 1)
-      valor_modificado <- max(1, min(tamano_muestra - 1, valor_modificado))
-      distractor3_candidato <- paste0("alrededor de ", formatear_entero(valor_modificado), " de cada ", formatear_entero(tamano_muestra), " ",
-                                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-
-    } else if (intento <= 30) {
-      # Estrategia 3: Confusión conceptual con población
-      distractor3_candidato <- paste0("alrededor de ", formatear_entero(valor_dist3), " de cada ", formatear_entero(poblacion_total), " ",
-                                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-
-    } else if (intento <= 40) {
-      # Estrategia 4: Error de escala
-      valor_escala <- round(valor_dist3 / 2)
-      if (valor_escala > 0 && valor_escala != valor_dist3) {
-        distractor3_candidato <- paste0("alrededor de ", formatear_entero(valor_escala), " de cada ", formatear_entero(tamano_muestra), " ",
-                                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-      } else {
-        next
-      }
-
-    } else {
-      # Estrategia 5: Confusión conceptual sin equipo específico (ÚLTIMO RECURSO)
-      distractor3_candidato <- paste0("sólo ", formatear_entero(tamano_muestra), " de los ", formatear_entero(poblacion_total), " ",
-                                     termino_usuarios, " del ", contexto,
-                                     " tienen preferencia por un equipo para ganar la ", competicion, ".")
-    }
-
-    # Verificar que el candidato es único
-    if (!(distractor3_candidato %in% distractores)) {
-      distractor3 <- distractor3_candidato
-      break
+  
+  # Verificar que no es equivalente a la respuesta correcta
+  if (!grepl(patron_correcto, distractor1, fixed = TRUE) && distractor1 != respuesta_correcta_completa) {
+    distractores_candidatos <- c(distractores_candidatos, distractor1)
+  }
+  
+  # Distractor 2: Confusión porcentaje vs número absoluto
+  porcentaje2 <- round(valor_dist2 / tamano_muestra * 100)
+  if (porcentaje2 > 0 && porcentaje2 <= 100 && porcentaje2 != valor_dist2) {
+    distractor2 <- paste0("el ", porcentaje2, "% de los ", formatear_entero(tamano_muestra), " ",
+                         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
+    
+    # Verificar que no es equivalente a la respuesta correcta
+    if (!grepl(patron_correcto, distractor2, fixed = TRUE) && distractor2 != respuesta_correcta_completa) {
+      distractores_candidatos <- c(distractores_candidatos, distractor2)
     }
   }
-
-  # Si no se pudo generar un distractor único, usar método de emergencia
-  if (is.null(distractor3)) {
-    # Método de emergencia: usar un valor fijo que garantice unicidad
-    valor_emergencia <- round(tamano_muestra * 0.6)  # 60% del tamaño de muestra
-    distractor3 <- paste0("alrededor de ", formatear_entero(valor_emergencia), " de cada ", formatear_entero(tamano_muestra), " ",
+  
+  # Distractor 3: Confusión de equipos
+  valor_modificado3 <- min(valor_dist3 + 5, tamano_muestra - 1)  # Modificar para asegurar que es diferente
+  if (valor_modificado3 != valor_correcto) { # Asegurar que no coincida con el valor correcto
+    distractor3 <- paste0("alrededor de ", formatear_entero(valor_modificado3), " de cada ", formatear_entero(tamano_muestra), " ",
                          termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-
-    # Si aún así no es único, modificar ligeramente
-    contador_emergencia <- 1
-    while (distractor3 %in% distractores && contador_emergencia <= 10) {
-      valor_emergencia <- valor_emergencia + contador_emergencia
-      distractor3 <- paste0("alrededor de ", formatear_entero(valor_emergencia), " de cada ", formatear_entero(tamano_muestra), " ",
-                           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-      contador_emergencia <- contador_emergencia + 1
+    
+    # Verificar que no es equivalente a la respuesta correcta
+    if (!grepl(patron_correcto, distractor3, fixed = TRUE) && distractor3 != respuesta_correcta_completa) {
+      distractores_candidatos <- c(distractores_candidatos, distractor3)
     }
   }
-
-  distractores <- c(distractores, distractor3)
-
-  # VERIFICACIÓN FINAL DE UNICIDAD
-  if (length(unique(distractores)) != 3) {
-    stop("ERROR CRÍTICO: No se pudieron generar 3 distractores únicos después de todos los intentos")
+  
+  # ESTRATEGIA 2: DISTRACTORES ADICIONALES COMO RESPALDO
+  
+  # Distractor 4: Cambio de significado completo
+  distractor4 <- paste0("la mayoría de los ", termino_usuarios, " del ", contexto,
+                       " prefiere al ", equipo_dist1, " sobre cualquier otro equipo.")
+  
+  # Verificar que no es equivalente a la respuesta correcta
+  if (!grepl(patron_correcto, distractor4, fixed = TRUE) && distractor4 != respuesta_correcta_completa) {
+    distractores_candidatos <- c(distractores_candidatos, distractor4)
   }
-
-  return(distractores)
+  
+  # Distractor 5: Confusión conceptual
+  distractor5 <- paste0("sólo ", formatear_entero(tamano_muestra), " de los ", formatear_entero(poblacion_total), " ",
+                       termino_usuarios, " del ", contexto, " tienen un equipo favorito para la ", competicion, ".")
+  
+  # Verificar que no es equivalente a la respuesta correcta
+  if (!grepl(patron_correcto, distractor5, fixed = TRUE) && distractor5 != respuesta_correcta_completa) {
+    distractores_candidatos <- c(distractores_candidatos, distractor5)
+  }
+  
+  # Distractor 6: Valor claramente incorrecto (valor extremo)
+  valor_extremo <- max(round(tamano_muestra * 0.75), tamano_muestra - 10)
+  if (valor_extremo != valor_correcto) {
+    distractor6 <- paste0("alrededor de ", formatear_entero(valor_extremo), " de cada ", formatear_entero(tamano_muestra), " ",
+                         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
+    
+    # Verificar que no es equivalente a la respuesta correcta
+    if (!grepl(patron_correcto, distractor6, fixed = TRUE) && distractor6 != respuesta_correcta_completa) {
+      distractores_candidatos <- c(distractores_candidatos, distractor6)
+    }
+  }
+  
+  # VERIFICAR SI HAY SUFICIENTES CANDIDATOS
+  if (length(distractores_candidatos) < 3) {
+    # Generar distractores de emergencia adicionales
+    for (i in 1:10) {
+      # Generar valores claramente diferentes al correcto
+      valor_emergencia <- sample(c(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75), 1)
+      if (abs(valor_emergencia - valor_correcto) > 5) {
+        distractor_emergencia <- paste0("aproximadamente ", formatear_entero(valor_emergencia), " ",
+                                      termino_usuarios, " del ", contexto, " prefieren al ", 
+                                      sample(equipos_para_distractores, 1), ".")
+        
+        # Verificar que no es equivalente a la respuesta correcta
+        if (!grepl(patron_correcto, distractor_emergencia, fixed = TRUE) && 
+            distractor_emergencia != respuesta_correcta_completa) {
+          distractores_candidatos <- c(distractores_candidatos, distractor_emergencia)
+        }
+      }
+    }
+  }
+  
+  # ELIMINAR DUPLICADOS Y ASEGURAR QUE NO INCLUIMOS LA RESPUESTA CORRECTA
+  distractores_candidatos <- unique(distractores_candidatos)
+  distractores_candidatos <- distractores_candidatos[distractores_candidatos != respuesta_correcta_completa]
+  
+  # VERIFICACIÓN CRÍTICA: Asegurar que no hay distractores matemáticamente equivalentes a la correcta
+  distractores_finales <- c()
+  for (distractor in distractores_candidatos) {
+    # Verificar que el distractor NO contiene el mismo patrón que la respuesta correcta
+    if (!grepl(patron_correcto, distractor, fixed = TRUE)) {
+      distractores_finales <- c(distractores_finales, distractor)
+    }
+  }
+  
+  # VERIFICAR QUE TENEMOS SUFICIENTES DISTRACTORES
+  if (length(distractores_finales) < 3) {
+    stop("Error crítico: No se pudieron generar 3 distractores únicos y diferentes a la respuesta correcta")
+  }
+  
+  # SELECCIONAR 3 DISTRACTORES FINALES
+  # Tomar 3 distractores de la lista, priorizando diversidad
+  distractores_seleccionados <- sample(distractores_finales, 3)
+  
+  # VERIFICACIÓN FINAL DE UNICIDAD Y DIFERENCIA CON LA RESPUESTA CORRECTA
+  if (length(unique(distractores_seleccionados)) != 3) {
+    stop("Error crítico: Los distractores seleccionados no son únicos")
+  }
+  
+  if (respuesta_correcta_completa %in% distractores_seleccionados) {
+    stop("Error crítico: La respuesta correcta se coló en los distractores finales")
+  }
+  
+  return(distractores_seleccionados)
 }
 
-# GENERAR DISTRACTORES ÚNICOS USANDO LA FUNCIÓN ROBUSTA
-distractores_finales <- generar_distractores_unicos(
+# GENERAR DISTRACTORES ÚNICOS USANDO LA FUNCIÓN MEJORADA V3
+distractores_finales <- generar_distractores_unicos_v3(
   equipo_correcto, valor_correcto, tamano_muestra, poblacion_total,
   equipo_distractor1, valor_distractor1, equipo_distractor2, valor_distractor2,
   equipo_distractor3, valor_distractor3, contexto, termino_usuarios, competicion
 )
 
-# VERIFICACIÓN ADICIONAL DE UNICIDAD (REDUNDANTE PERO SEGURA)
+# VERIFICACIÓN ADICIONAL DE UNICIDAD Y DIFERENCIA CON LA RESPUESTA CORRECTA
 if (length(unique(distractores_finales)) != 3) {
   stop("Error crítico: Los distractores generados no son únicos")
+}
+
+if (respuesta_correcta %in% distractores_finales) {
+  stop("Error crítico: La respuesta correcta aparece como un distractor")
+}
+
+# VERIFICACIÓN DE MÚLTIPLES RESPUESTAS CORRECTAS
+patron_correcto <- paste0("de cada ", formatear_entero(tamano_muestra), " ",
+                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto)
+                       
+for (distractor in distractores_finales) {
+  if (grepl(patron_correcto, distractor, fixed = TRUE)) {
+    stop("Error crítico: Hay un distractor matemáticamente equivalente a la respuesta correcta")
+  }
 }
 
 # CREAR OPCIONES FINALES Y MEZCLAR
@@ -569,53 +568,25 @@ for (i in 1:4) {
   }
 }
 
-# VALIDACIÓN ANTI-PATRÓN MEJORADA: Verificar diversidad de equipos mencionados
-equipos_mencionados <- c()
+# Verificar que solo hay una respuesta correcta
+patron_correcto_exacto <- paste0("alrededor de ", formatear_entero(valor_correcto), " de cada ", formatear_entero(tamano_muestra), " ",
+                          termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto, ".")
+respuestas_correctas <- sum(opciones == patron_correcto_exacto)
+if (respuestas_correctas != 1) {
+  stop("Error crítico: Hay ", respuestas_correctas, " respuestas correctas en las opciones finales.")
+}
+
+# VERIFICACIÓN ADICIONAL PARA EVITAR RESPUESTAS MATEMÁTICAMENTE EQUIVALENTES
+patron_equivalencia <- paste0("de cada ", formatear_entero(tamano_muestra), " ",
+                           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_correcto)
+count_equivalentes <- 0
 for (opcion in opciones) {
-  # Extraer equipos mencionados en cada opción usando coincidencia exacta
-  for (equipo in equipos_seleccionados) {
-    if (grepl(paste0("\\b", gsub("([\\[\\]\\(\\)\\{\\}\\^\\$\\*\\+\\?\\|\\\\])", "\\\\\\1", equipo), "\\b"),
-              opcion, perl = TRUE)) {
-      equipos_mencionados <- c(equipos_mencionados, equipo)
-    }
+  if (grepl(patron_equivalencia, opcion, fixed = TRUE)) {
+    count_equivalentes <- count_equivalentes + 1
   }
 }
-
-# Verificar que no hay más de una opción por equipo específico
-tabla_equipos <- table(equipos_mencionados)
-equipos_repetidos <- names(tabla_equipos)[tabla_equipos > 1]
-
-if (length(equipos_repetidos) > 0) {
-  stop("Error anti-patrón: Los siguientes equipos aparecen en múltiples opciones: ",
-       paste(equipos_repetidos, collapse=", "),
-       ". Esto crea un patrón detectable para estudiantes.")
-}
-
-# Verificar que hay suficiente diversidad (al menos 3 equipos diferentes mencionados)
-if (length(unique(equipos_mencionados)) < 3) {
-  stop("Error: Insuficiente diversidad de equipos. Se requieren al menos 3 equipos diferentes mencionados.")
-}
-
-# PRUEBAS DE INTEGRIDAD ADICIONALES
-# Verificar que cada distractor usa un equipo diferente
-equipos_en_distractores <- c()
-for (distractor in distractores_finales) {
-  for (equipo in equipos_seleccionados) {
-    if (grepl(paste0("\\b", gsub("([\\[\\]\\(\\)\\{\\}\\^\\$\\*\\+\\?\\|\\\\])", "\\\\\\1", equipo), "\\b"),
-              distractor, perl = TRUE)) {
-      equipos_en_distractores <- c(equipos_en_distractores, equipo)
-    }
-  }
-}
-
-# Verificar que no hay equipos repetidos en distractores
-if (length(equipos_en_distractores) != length(unique(equipos_en_distractores))) {
-  stop("Error de integridad: Hay equipos repetidos en los distractores")
-}
-
-# Verificar que el equipo correcto no aparece en ningún distractor
-if (equipo_correcto %in% equipos_en_distractores) {
-  stop("Error de integridad: El equipo correcto aparece en un distractor")
+if (count_equivalentes > 1) {
+  stop("Error crítico: Hay ", count_equivalentes, " opciones matemáticamente equivalentes.")
 }
 ```
 

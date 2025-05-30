@@ -14,10 +14,31 @@ output:
   word_document: default
 ---
 
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
 
+# CONFIGURACIÓN RADICAL ANTI-NOTACIÓN CIENTÍFICA
+options(scipen = 999)  # Evitar notación científica completamente
+options(digits = 10)   # Suficientes dígitos para números grandes
 
+library(exams)
+library(reticulate)
+library(knitr)
 
-``` r
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r variables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")
 # REFORZAR CONFIGURACIÓN ANTI-NOTACIÓN CIENTÍFICA
 options(scipen = 999)
@@ -340,41 +361,6 @@ respuesta_correcta <- paste0("alrededor de ", valor_correcto_fmt, " de cada ", t
 # Por lo tanto, NO deben usarse como distractores en un examen de selección múltiple
 # Se mantienen las variables para compatibilidad pero no se usan en distractores
 
-# GENERACIÓN ROBUSTA DE DISTRACTORES ÚNICOS
-# Sistema mejorado que garantiza exactamente 4 opciones únicas (1 correcta + 3 distractores)
-
-# Función para generar distractores de respaldo únicos
-generar_distractores_respaldo <- function(base_valor, base_muestra, base_poblacion, base_equipo, base_contexto, base_usuarios) {
-  distractores_respaldo <- c()
-
-  # Respaldo 1: Usar porcentaje directo
-  porcentaje <- round(base_valor / base_muestra * 100)
-  distractores_respaldo <- c(distractores_respaldo,
-    paste0("el ", porcentaje, "% de los ", formatear_entero(base_muestra), " ", base_usuarios,
-           " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-
-  # Respaldo 2: Usar valor absoluto con población
-  distractores_respaldo <- c(distractores_respaldo,
-    paste0("exactamente ", formatear_entero(base_valor), " de los ", formatear_entero(base_poblacion), " ",
-           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-
-  # Respaldo 3: Error de interpretación de datos (confundir valores absolutos)
-  valor_incorrecto <- sample(setdiff(c(10, 15, 20, 25, 30, 35, 40), base_valor), 1)
-  distractores_respaldo <- c(distractores_respaldo,
-    paste0("aproximadamente ", formatear_entero(valor_incorrecto), " de cada ", formatear_entero(base_muestra), " ",
-           base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-
-  # Respaldo 4: Error conceptual (usar porcentaje como valor absoluto)
-  porcentaje_como_valor <- round(base_valor / base_muestra * 100)
-  if (porcentaje_como_valor != base_valor && porcentaje_como_valor > 0) {
-    distractores_respaldo <- c(distractores_respaldo,
-      paste0("alrededor de ", formatear_entero(porcentaje_como_valor), " de cada ", formatear_entero(base_muestra), " ",
-             base_usuarios, " del ", base_contexto, " da por favorito al ", base_equipo, "."))
-  }
-
-  return(distractores_respaldo)
-}
-
 # SISTEMA ANTI-PATRÓN MEJORADO: DIVERSIFICACIÓN OBLIGATORIA DE EQUIPOS
 # Garantiza que cada opción mencione un equipo diferente para evitar patrones detectables
 
@@ -409,106 +395,193 @@ if (length(unique(equipos_para_distractores)) != 3) {
   stop("Error crítico: Los equipos para distractores no son únicos")
 }
 
-# SISTEMA ROBUSTO DE GENERACIÓN DE DISTRACTORES ÚNICOS - VERSIÓN DEFINITIVA
-# Esta versión garantiza distractores únicos en todos los casos posibles
-
-# FUNCIÓN PARA GENERAR DISTRACTORES ÚNICOS GARANTIZADOS
-generar_distractores_unicos <- function(equipo_correcto, valor_correcto, tamano_muestra, poblacion_total,
-                                       equipo_dist1, valor_dist1, equipo_dist2, valor_dist2,
-                                       equipo_dist3, valor_dist3, contexto, termino_usuarios, competicion) {
-
-  distractores <- c()
-  intentos_maximos <- 50
-
-  # DISTRACTOR 1: Proporción correcta con equipo incorrecto (SIEMPRE ÚNICO)
-  distractor1 <- paste0("alrededor de ", formatear_entero(valor_dist1), " de cada ", formatear_entero(tamano_muestra), " ",
-                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist1, ".")
-  distractores <- c(distractores, distractor1)
-
-  # DISTRACTOR 2: Confusión muestra-población (SIEMPRE ÚNICO)
-  distractor2 <- paste0("alrededor de ", formatear_entero(valor_dist2), " de cada ", formatear_entero(poblacion_total), " ",
-                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
-  distractores <- c(distractores, distractor2)
-
-  # DISTRACTOR 3: Generar con múltiples estrategias para garantizar unicidad
-  distractor3 <- NULL
-  for (intento in 1:intentos_maximos) {
-
-    if (intento <= 10) {
-      # Estrategia 1: Error de porcentaje
-      porcentaje <- round(valor_dist3 / tamano_muestra * 100)
-      if (porcentaje != valor_dist3 && porcentaje > 0 && porcentaje <= 50) {
-        distractor3_candidato <- paste0("alrededor de ", formatear_entero(porcentaje), " de cada ", formatear_entero(tamano_muestra), " ",
-                                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-      } else {
-        next  # Probar siguiente estrategia
-      }
-
-    } else if (intento <= 20) {
-      # Estrategia 2: Valor modificado matemáticamente
-      valor_modificado <- valor_dist3 + sample(c(-3, -2, -1, 1, 2, 3), 1)
-      valor_modificado <- max(1, min(tamano_muestra - 1, valor_modificado))
-      distractor3_candidato <- paste0("alrededor de ", formatear_entero(valor_modificado), " de cada ", formatear_entero(tamano_muestra), " ",
-                                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-
-    } else if (intento <= 30) {
-      # Estrategia 3: Confusión conceptual con población
-      distractor3_candidato <- paste0("alrededor de ", formatear_entero(valor_dist3), " de cada ", formatear_entero(poblacion_total), " ",
-                                     termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-
-    } else if (intento <= 40) {
-      # Estrategia 4: Error de escala
-      valor_escala <- round(valor_dist3 / 2)
-      if (valor_escala > 0 && valor_escala != valor_dist3) {
-        distractor3_candidato <- paste0("alrededor de ", formatear_entero(valor_escala), " de cada ", formatear_entero(tamano_muestra), " ",
-                                       termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-      } else {
-        next
-      }
-
+# FUNCIÓN MEJORADA PARA GENERAR DISTRACTORES ÚNICOS GARANTIZADOS
+generar_distractores_unicos_v2 <- function(equipo_correcto, valor_correcto, tamano_muestra, poblacion_total,
+                                         equipo_dist1, valor_dist1, equipo_dist2, valor_dist2,
+                                         equipo_dist3, valor_dist3, contexto, termino_usuarios, competicion) {
+  
+  # Lista para almacenar distractores candidatos
+  distractores_candidatos <- c()
+  distractores_finales <- c()
+  
+  # ESTRATEGIA 1: DISTRACTORES BASADOS EN EQUIPOS DIFERENTES
+  
+  # Distractor Tipo A: Proporción con equipo incorrecto (valores originales)
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", formatear_entero(valor_dist1), " de cada ", formatear_entero(tamano_muestra), " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist1, ".")
+  )
+  
+  # Distractor Tipo B: Confusión muestra-población
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", formatear_entero(valor_dist2), " de cada ", formatear_entero(poblacion_total), " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
+  )
+  
+  # ESTRATEGIA 2: DISTRACTORES BASADOS EN ERRORES CONCEPTUALES
+  
+  # Distractor Tipo C: Error de porcentaje vs valor absoluto
+  porcentaje1 <- round(valor_dist1 / tamano_muestra * 100)
+  if (porcentaje1 != valor_dist1) {
+    distractores_candidatos <- c(distractores_candidatos,
+      paste0("el ", porcentaje1, "% de los ", formatear_entero(tamano_muestra), " ",
+             termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist1, ".")
+    )
+  }
+  
+  # Distractor Tipo D: Porcentaje sobre población total
+  porcentaje2 <- round(valor_dist2 / tamano_muestra * 100)
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("el ", porcentaje2, "% de los ", formatear_entero(poblacion_total), " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
+  )
+  
+  # ESTRATEGIA 3: DISTRACTORES CONCEPTUALES SIN NÚMERO ESPECÍFICO
+  
+  # Distractor Tipo E: Generalización incorrecta
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("la mayoría de los ", termino_usuarios, " del ", contexto,
+           " da por favorito al ", equipo_dist3, " para ganar la ", competicion, ".")
+  )
+  
+  # Distractor Tipo F: Cambio de significado
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("sólo ", formatear_entero(tamano_muestra), " de los ", formatear_entero(poblacion_total), " ",
+           termino_usuarios, " del ", contexto, " tienen un equipo favorito para la ", competicion, ".")
+  )
+  
+  # ESTRATEGIA 4: DISTRACTORES MATEMÁTICOS CON VALORES MODIFICADOS
+  
+  # Distractor Tipo G: Valor modificado matemáticamente
+  valores_modificados <- c(
+    round(valor_dist3 * 1.5),
+    round(valor_dist3 * 2),
+    round(tamano_muestra / 2),
+    round(tamano_muestra / 3),
+    round(tamano_muestra / 4)
+  )
+  
+  # Filtrar valores modificados válidos (diferentes al valor original)
+  valores_modificados <- valores_modificados[valores_modificados != valor_dist3]
+  
+  for (valor_mod in valores_modificados) {
+    if (valor_mod > 0 && valor_mod < tamano_muestra) {
+      distractores_candidatos <- c(distractores_candidatos,
+        paste0("alrededor de ", formatear_entero(valor_mod), " de cada ", formatear_entero(tamano_muestra), " ",
+               termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
+      )
+    }
+  }
+  
+  # ESTRATEGIA 5: INTERCAMBIO DE PARÁMETROS
+  
+  # Distractor Tipo H: Intercambio de valores entre equipos
+  distractores_candidatos <- c(distractores_candidatos,
+    paste0("alrededor de ", formatear_entero(valor_dist1), " de cada ", formatear_entero(tamano_muestra), " ",
+           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist2, ".")
+  )
+  
+  # Distractor Tipo I: Intercambio valor-porcentaje
+  porcentaje3 <- round(valor_dist3 / tamano_muestra * 100)
+  if (porcentaje3 > 0 && porcentaje3 <= 100 && porcentaje3 != valor_dist3) {
+    distractores_candidatos <- c(distractores_candidatos,
+      paste0("alrededor de ", formatear_entero(porcentaje3), " de cada ", formatear_entero(tamano_muestra), " ",
+             termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
+    )
+  }
+  
+  # ESTRATEGIA 6: DISTRACTORES DE EMERGENCIA
+  
+  # Distractor Tipo J: Valores fijos significativamente diferentes
+  valores_emergencia <- c(5, 10, 15, 25, 30, 50, 60, 75)
+  valores_emergencia <- valores_emergencia[
+    valores_emergencia != valor_correcto &
+    valores_emergencia != valor_dist1 &
+    valores_emergencia != valor_dist2 &
+    valores_emergencia != valor_dist3
+  ]
+  
+  for (valor_em in valores_emergencia) {
+    if (valor_em > 0 && valor_em < tamano_muestra) {
+      distractores_candidatos <- c(distractores_candidatos,
+        paste0("alrededor de ", formatear_entero(valor_em), " de cada ", formatear_entero(tamano_muestra), " ",
+               termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
+      )
+    }
+  }
+  
+  # ELIMINAR DUPLICADOS EXACTOS
+  distractores_candidatos <- unique(distractores_candidatos)
+  
+  # ELIMINAR OPCIÓN CORRECTA SI SE COLÓ EN LOS CANDIDATOS
+  distractores_candidatos <- distractores_candidatos[distractores_candidatos != respuesta_correcta]
+  
+  # VERIFICAR QUE HAY SUFICIENTES CANDIDATOS
+  if (length(distractores_candidatos) < 3) {
+    # Generar distractores de emergencia con formato radicalmente diferente si no hay suficientes
+    distractores_emergencia <- c(
+      paste0("todos los ", termino_usuarios, " del ", contexto, " prefieren al ", equipo_dist1, "."),
+      paste0("ningún ", termino_usuarios, " del ", contexto, " tiene preferencia por algún equipo."),
+      paste0("exactamente la mitad de los ", termino_usuarios, " del ", contexto, " prefiere al ", equipo_dist2, ".")
+    )
+    distractores_candidatos <- c(distractores_candidatos, distractores_emergencia)
+  }
+  
+  # SELECCIONAR 3 DISTRACTORES DIFERENTES
+  # Tomamos los primeros 3 asegurando máxima diversidad
+  if (length(distractores_candidatos) >= 3) {
+    # Maximizar diversidad: tomar primero el distractor con equipo_dist1
+    candidatos_equipo1 <- grep(paste0("\\b", equipo_dist1, "\\b"), distractores_candidatos, perl = TRUE)
+    if (length(candidatos_equipo1) > 0) {
+      distractor1 <- distractores_candidatos[candidatos_equipo1[1]]
+      distractores_finales <- c(distractores_finales, distractor1)
+      distractores_candidatos <- distractores_candidatos[-candidatos_equipo1[1]]
     } else {
-      # Estrategia 5: Confusión conceptual sin equipo específico (ÚLTIMO RECURSO)
-      distractor3_candidato <- paste0("sólo ", formatear_entero(tamano_muestra), " de los ", formatear_entero(poblacion_total), " ",
-                                     termino_usuarios, " del ", contexto,
-                                     " tienen preferencia por un equipo para ganar la ", competicion, ".")
+      distractor1 <- distractores_candidatos[1]
+      distractores_finales <- c(distractores_finales, distractor1)
+      distractores_candidatos <- distractores_candidatos[-1]
     }
-
-    # Verificar que el candidato es único
-    if (!(distractor3_candidato %in% distractores)) {
-      distractor3 <- distractor3_candidato
-      break
+    
+    # Luego tomar un distractor con equipo_dist2
+    candidatos_equipo2 <- grep(paste0("\\b", equipo_dist2, "\\b"), distractores_candidatos, perl = TRUE)
+    if (length(candidatos_equipo2) > 0) {
+      distractor2 <- distractores_candidatos[candidatos_equipo2[1]]
+      distractores_finales <- c(distractores_finales, distractor2)
+      distractores_candidatos <- distractores_candidatos[-candidatos_equipo2[1]]
+    } else {
+      distractor2 <- distractores_candidatos[1]
+      distractores_finales <- c(distractores_finales, distractor2)
+      distractores_candidatos <- distractores_candidatos[-1]
     }
+    
+    # Finalmente, tomar un distractor con equipo_dist3 o cualquier otro
+    candidatos_equipo3 <- grep(paste0("\\b", equipo_dist3, "\\b"), distractores_candidatos, perl = TRUE)
+    if (length(candidatos_equipo3) > 0) {
+      distractor3 <- distractores_candidatos[candidatos_equipo3[1]]
+      distractores_finales <- c(distractores_finales, distractor3)
+    } else {
+      distractor3 <- distractores_candidatos[1]
+      distractores_finales <- c(distractores_finales, distractor3)
+    }
+  } else {
+    stop("Error crítico: No hay suficientes distractores candidatos después de todos los intentos")
   }
-
-  # Si no se pudo generar un distractor único, usar método de emergencia
-  if (is.null(distractor3)) {
-    # Método de emergencia: usar un valor fijo que garantice unicidad
-    valor_emergencia <- round(tamano_muestra * 0.6)  # 60% del tamaño de muestra
-    distractor3 <- paste0("alrededor de ", formatear_entero(valor_emergencia), " de cada ", formatear_entero(tamano_muestra), " ",
-                         termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-
-    # Si aún así no es único, modificar ligeramente
-    contador_emergencia <- 1
-    while (distractor3 %in% distractores && contador_emergencia <= 10) {
-      valor_emergencia <- valor_emergencia + contador_emergencia
-      distractor3 <- paste0("alrededor de ", formatear_entero(valor_emergencia), " de cada ", formatear_entero(tamano_muestra), " ",
-                           termino_usuarios, " del ", contexto, " da por favorito al ", equipo_dist3, ".")
-      contador_emergencia <- contador_emergencia + 1
-    }
-  }
-
-  distractores <- c(distractores, distractor3)
-
+  
   # VERIFICACIÓN FINAL DE UNICIDAD
-  if (length(unique(distractores)) != 3) {
-    stop("ERROR CRÍTICO: No se pudieron generar 3 distractores únicos después de todos los intentos")
+  if (length(unique(distractores_finales)) != 3) {
+    stop("Error crítico: Los distractores finales no son únicos después de todo el proceso de selección")
   }
-
-  return(distractores)
+  
+  # Verificar que no haya coincidencia con la respuesta correcta
+  if (any(distractores_finales == respuesta_correcta)) {
+    stop("Error crítico: Uno de los distractores coincide con la respuesta correcta")
+  }
+  
+  return(distractores_finales)
 }
 
-# GENERAR DISTRACTORES ÚNICOS USANDO LA FUNCIÓN ROBUSTA
-distractores_finales <- generar_distractores_unicos(
+# GENERAR DISTRACTORES ÚNICOS USANDO LA FUNCIÓN MEJORADA
+distractores_finales <- generar_distractores_unicos_v2(
   equipo_correcto, valor_correcto, tamano_muestra, poblacion_total,
   equipo_distractor1, valor_distractor1, equipo_distractor2, valor_distractor2,
   equipo_distractor3, valor_distractor3, contexto, termino_usuarios, competicion
@@ -598,8 +671,7 @@ if (equipo_correcto %in% equipos_en_distractores) {
 }
 ```
 
-
-``` r
+```{r generar_grafico, message=FALSE, warning=FALSE}
 options(OutDec = ".")
 
 # Código Python para generar el gráfico de barras horizontal
@@ -658,18 +730,29 @@ py_run_string(codigo_python)
 Question
 ========
 
-Un blog de fútbol realizó el sondeo a un grupo de sus 40000 usuarios sobre la preferencia de su equipo favorito para ganar la Copa Libertadores. Para esto escogió al azar a 120 usuarios y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
+`r articulo_contexto` `r contexto` realizó `r articulo_encuesta` `r termino_encuesta` a un grupo de sus `r poblacion_total_fmt` `r termino_usuarios` sobre la preferencia de su equipo favorito para ganar la `r competicion`. Para esto escogió al azar a `r tamano_muestra_fmt` `r termino_usuarios` y les preguntó sobre su equipo favorito para ganar dicha competición. Los resultados se muestran en la gráfica.
 
-![](grafico_barras.png){width=80%}
+```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
+# Detectar formato de salida
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
 
-De acuerdo con los datos obtenidos en el sondeo, es correcto afirmar que
+# Mostrar la imagen del gráfico
+if (es_moodle) {
+  cat("![](grafico_barras.png){width=70%}")
+} else {
+  cat("![](grafico_barras.png){width=80%}")
+}
+```
+
+De acuerdo con los datos obtenidos en `r articulo_encuesta` `r termino_encuesta`, es correcto afirmar que
 
 Answerlist
 ----------
-- alrededor de 27 de cada 120 usuarios del blog de fútbol da por favorito al Peñarol.
-- alrededor de 30 de cada 40000 usuarios del blog de fútbol da por favorito al Universidad de Chile.
-- alrededor de 18 de cada 120 usuarios del blog de fútbol da por favorito al Olimpia.
-- alrededor de 20 de cada 120 usuarios del blog de fútbol da por favorito al Colo-Colo.
+- `r opciones_mezcladas[1]`
+- `r opciones_mezcladas[2]`
+- `r opciones_mezcladas[3]`
+- `r opciones_mezcladas[4]`
 
 Solution
 ========
@@ -677,21 +760,21 @@ Solution
 Para resolver este problema, necesitamos interpretar correctamente los datos del gráfico de barras y entender la diferencia entre muestra y población total.
 
 ### Paso 1: Identificar los datos conocidos
-* Un blog de fútbol tiene un total de 40000 usuarios.
-* Se realizó un(a) sondeo a una muestra de 120 usuarios seleccionados al azar.
-* Según el gráfico, 18 usuarios de la muestra prefieren al Olimpia.
+* `r articulo_contexto` `r contexto` tiene un total de `r poblacion_total_fmt` `r termino_usuarios`.
+* Se realizó un(a) `r termino_encuesta` a una muestra de `r tamano_muestra_fmt` `r termino_usuarios` seleccionados al azar.
+* Según el gráfico, `r valor_correcto_fmt` `r termino_usuarios` de la muestra prefieren al `r equipo_correcto`.
 
 ### Paso 2: Interpretar correctamente las proporciones
-Los datos del gráfico representan únicamente la muestra de 120 usuarios, no la población total de 40000 usuarios.
+Los datos del gráfico representan únicamente la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no la población total de `r poblacion_total_fmt` `r termino_usuarios`.
 
 ### Paso 3: Analizar cada opción
 
-**Opción correcta**: "alrededor de 18 de cada 120 usuarios del blog de fútbol da por favorito al Olimpia."
-Esta opción es correcta porque interpreta adecuadamente que 18 de cada 120 usuarios **de la muestra** prefieren al Olimpia. Esto representa una proporción del 15% en la muestra.
+**Opción correcta**: "`r respuesta_correcta`"
+Esta opción es correcta porque interpreta adecuadamente que `r valor_correcto_fmt` de cada `r tamano_muestra_fmt` `r termino_usuarios` **de la muestra** prefieren al `r equipo_correcto`. Esto representa una proporción del `r round(valor_correcto/tamano_muestra*100, 1)`% en la muestra.
 
 **Análisis de distractores incorrectos**:
 
-- **Distractores de confusión muestra-población**: Las opciones que mencionan proporciones sobre la población total de 40000 usuarios son incorrectas, ya que el sondeo solo se realizó a 120 personas.
+- **Distractores de confusión muestra-población**: Las opciones que mencionan proporciones sobre la población total de `r poblacion_total_fmt` `r termino_usuarios` son incorrectas, ya que `r articulo_encuesta` `r termino_encuesta` solo se realizó a `r tamano_muestra_fmt` personas.
 
 - **Distractores de equipos incorrectos**: Las opciones que usan datos de otros equipos de la muestra malinterpretan cuál es el equipo de referencia en la pregunta.
 
@@ -702,33 +785,33 @@ Esta opción es correcta porque interpreta adecuadamente que 18 de cada 120 usua
 - **Distractores de confusión conceptual**: Las opciones que confunden el tamaño de la muestra con las preferencias totales malinterpretan fundamentalmente los datos.
 
 ### Paso 4: Verificación matemática
-En la muestra de 120 usuarios:
+En la muestra de `r tamano_muestra_fmt` `r termino_usuarios`:
 
-- Peñarol: 27 usuarios (22.5%)
-- Olimpia: 18 usuarios (15%)
-- Universidad de Chile: 30 usuarios (25%)
-- Colo-Colo: 24 usuarios (20%)
-- River Plate: 21 usuarios (17.5%)
+- `r equipo1`: `r valor1_fmt` `r termino_usuarios` (`r round(valor1/tamano_muestra*100, 1)`%)
+- `r equipo2`: `r valor2_fmt` `r termino_usuarios` (`r round(valor2/tamano_muestra*100, 1)`%)
+- `r equipo3`: `r valor3_fmt` `r termino_usuarios` (`r round(valor3/tamano_muestra*100, 1)`%)
+- `r equipo4`: `r valor4_fmt` `r termino_usuarios` (`r round(valor4/tamano_muestra*100, 1)`%)
+- `r equipo5`: `r valor5_fmt` `r termino_usuarios` (`r round(valor5/tamano_muestra*100, 1)`%)
 
-Total: 120 usuarios = 120 usuarios (correcto)
+Total: `r sum(c(valor1, valor2, valor3, valor4, valor5))` `r termino_usuarios` = `r tamano_muestra_fmt` `r termino_usuarios` (correcto)
 
 ### Paso 5: Principio de respuesta única
 En un examen de selección múltiple válido, debe existir **exactamente una respuesta correcta** y tres distractores inequívocamente incorrectos. La respuesta correcta es única y se basa en la interpretación correcta de los datos de la muestra.
 
 ### Conclusión
-La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de 120 usuarios, no a la población total. Todos los distractores son inequívocamente incorrectos por diferentes razones conceptuales o de interpretación de datos.
+La respuesta correcta interpreta adecuadamente que los datos del gráfico se refieren a la muestra de `r tamano_muestra_fmt` `r termino_usuarios`, no a la población total. Todos los distractores son inequívocamente incorrectos por diferentes razones conceptuales o de interpretación de datos.
 
 Answerlist
 ----------
-- Falso
-- Falso
-- Verdadero
-- Falso
+- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
 
 Meta-information
 ================
 exname: proporciones_encuesta_deportiva
 extype: schoice
-exsolution: 0010
+exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Estadística|Proporciones|Interpretación de gráficos|Muestreo
