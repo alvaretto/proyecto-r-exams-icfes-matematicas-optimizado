@@ -491,6 +491,20 @@ test_that("Coherencia de términos de género", {
   expect_true(termino_femenino_seleccionado %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
   expect_false(termino_masculino_seleccionado == termino_femenino_seleccionado)
 })
+
+# Test crítico para verificar vector de solución (patrón exitoso)
+test_that("Vector de solución se genera correctamente", {
+  # Verificar que el vector tiene exactamente 4 elementos
+  expect_equal(length(solucion_vector), 4)
+
+  # Verificar que tiene exactamente un 1 y tres 0s
+  expect_equal(sum(solucion_vector), 1)
+  expect_equal(sum(solucion_vector == 0), 3)
+  expect_equal(sum(solucion_vector == 1), 1)
+
+  # Verificar que todos los valores son 0 o 1
+  expect_true(all(solucion_vector %in% c(0, 1)))
+})
 ```
 
 Question
@@ -560,12 +574,12 @@ Donde:
 
 ### Paso 2: Recordar la fórmula de probabilidad condicional
 La probabilidad condicional se calcula como:
-$$P(A|B) = \\frac{P(A \\cap B)}{P(B)}$$
+$$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
 
 Donde:
 - $A$ = evento de interés (`r pregunta_seleccionada$texto_evento`)
 - $B$ = condición dada (`r pregunta_seleccionada$texto_condicion`)
-- $P(A \\cap B)$ = probabilidad de que ocurran ambos eventos
+- $P(A \cap B)$ = probabilidad de que ocurran ambos eventos
 - $P(B)$ = probabilidad de la condición
 
 ### Paso 3: Extraer información de la tabla
