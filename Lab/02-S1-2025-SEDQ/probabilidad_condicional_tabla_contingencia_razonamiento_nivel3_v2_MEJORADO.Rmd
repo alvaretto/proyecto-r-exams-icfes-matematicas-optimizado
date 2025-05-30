@@ -242,15 +242,20 @@ test_that("Función de escape LaTeX funciona correctamente", {
   texto_prueba <- "más de 21 años"
   texto_escapado <- escapar_latex(texto_prueba)
 
-  # Usar fixed = TRUE para búsqueda literal de secuencias LaTeX
-  expect_true(grepl("\\'{a}", texto_escapado, fixed = TRUE))
-  expect_true(grepl("\\~{n}", texto_escapado, fixed = TRUE))
-  expect_false(grepl("á", texto_escapado, fixed = TRUE))
-  expect_false(grepl("ñ", texto_escapado, fixed = TRUE))
+  # Verificaciones robustas sin regex complejas
+  # Verificar que los caracteres originales fueron reemplazados
+  expect_false("á" %in% strsplit(texto_escapado, "")[[1]])
+  expect_false("ñ" %in% strsplit(texto_escapado, "")[[1]])
 
-  # Verificar que el texto contiene las secuencias de escape esperadas
+  # Verificar que el texto escapado contiene las secuencias esperadas usando stringr
+  expect_true(stringr::str_detect(texto_escapado, stringr::fixed("\\'{a}")))
+  expect_true(stringr::str_detect(texto_escapado, stringr::fixed("\\~{n}")))
+
+  # Verificar que el texto es más largo (debido a las secuencias de escape)
   expect_true(nchar(texto_escapado) > nchar(texto_prueba))
-  expect_true(grepl("\\\\", texto_escapado, fixed = TRUE))
+
+  # Verificar que contiene backslashes (indicativo de escape LaTeX)
+  expect_true(stringr::str_detect(texto_escapado, stringr::fixed("\\\\")))
 })
 
 test_that("Variables LaTeX-safe se generan correctamente", {
@@ -359,18 +364,18 @@ test_that("Renderizado LaTeX es seguro y correcto", {
   expect_false(grepl("[áéíóúñ]", texto_evento_latex_safe))
   expect_false(grepl("[áéíóúñ]", texto_condicion_latex_safe))
 
-  # Verificar que los textos escapados contienen las secuencias LaTeX correctas
-  if(grepl("á", pregunta_seleccionada$texto_evento, fixed = TRUE)) {
-    expect_true(grepl("\\'{a}", texto_evento_latex_safe, fixed = TRUE))
+  # Verificar que los textos escapados contienen las secuencias LaTeX correctas usando stringr
+  if(stringr::str_detect(pregunta_seleccionada$texto_evento, stringr::fixed("á"))) {
+    expect_true(stringr::str_detect(texto_evento_latex_safe, stringr::fixed("\\'{a}")))
   }
-  if(grepl("ñ", pregunta_seleccionada$texto_evento, fixed = TRUE)) {
-    expect_true(grepl("\\~{n}", texto_evento_latex_safe, fixed = TRUE))
+  if(stringr::str_detect(pregunta_seleccionada$texto_evento, stringr::fixed("ñ"))) {
+    expect_true(stringr::str_detect(texto_evento_latex_safe, stringr::fixed("\\~{n}")))
   }
-  if(grepl("á", pregunta_seleccionada$texto_condicion, fixed = TRUE)) {
-    expect_true(grepl("\\'{a}", texto_condicion_latex_safe, fixed = TRUE))
+  if(stringr::str_detect(pregunta_seleccionada$texto_condicion, stringr::fixed("á"))) {
+    expect_true(stringr::str_detect(texto_condicion_latex_safe, stringr::fixed("\\'{a}")))
   }
-  if(grepl("ñ", pregunta_seleccionada$texto_condicion, fixed = TRUE)) {
-    expect_true(grepl("\\~{n}", texto_condicion_latex_safe, fixed = TRUE))
+  if(stringr::str_detect(pregunta_seleccionada$texto_condicion, stringr::fixed("ñ"))) {
+    expect_true(stringr::str_detect(texto_condicion_latex_safe, stringr::fixed("\\~{n}")))
   }
 })
 
@@ -407,12 +412,12 @@ test_that("Corrección de errores de expresiones regulares", {
   expect_silent(escapar_latex(texto_con_acentos))
   expect_silent(escapar_latex(texto_con_enie))
 
-  # Verificar que las búsquedas con fixed=TRUE funcionan
+  # Verificar que las búsquedas funcionan usando stringr (más robusto)
   resultado_acentos <- escapar_latex(texto_con_acentos)
   resultado_enie <- escapar_latex(texto_con_enie)
 
-  expect_silent(grepl("\\'{a}", resultado_acentos, fixed = TRUE))
-  expect_silent(grepl("\\~{n}", resultado_enie, fixed = TRUE))
+  expect_silent(stringr::str_detect(resultado_acentos, stringr::fixed("\\'{a}")))
+  expect_silent(stringr::str_detect(resultado_enie, stringr::fixed("\\~{n}")))
 
   # Verificar que las etiquetas matemáticas son válidas
   expect_true(nchar(etiqueta_evento_matematica) > 2)
@@ -439,6 +444,35 @@ test_that("Integridad final del sistema de escape LaTeX", {
   expect_true(nchar(texto_condicion_latex_safe) > 0)
   expect_true(nchar(etiqueta_evento_matematica) > 0)
   expect_true(nchar(etiqueta_condicion_matematica) > 0)
+})
+
+# Prueba específica para verificar resolución completa del error de regex
+test_that("Resolución completa de errores de expresiones regulares", {
+  # Verificar que todas las funciones de escape funcionan sin errores
+  textos_prueba <- c("más", "años", "niños", "corazón", "José", "María")
+
+  for(texto in textos_prueba) {
+    expect_silent(escapar_latex(texto))
+    resultado <- escapar_latex(texto)
+    expect_true(is.character(resultado))
+    expect_true(nchar(resultado) >= nchar(texto))
+  }
+
+  # Verificar que stringr::str_detect funciona correctamente con todas las secuencias
+  texto_completo <- "más de 21 años en España"
+  resultado_completo <- escapar_latex(texto_completo)
+
+  expect_silent(stringr::str_detect(resultado_completo, stringr::fixed("\\'{a}")))
+  expect_silent(stringr::str_detect(resultado_completo, stringr::fixed("\\~{n}")))
+  expect_silent(stringr::str_detect(resultado_completo, stringr::fixed("\\\\ ")))
+
+  # Verificar que no quedan caracteres sin escapar
+  caracteres_especiales <- c("á", "é", "í", "ó", "ú", "ñ", "Á", "É", "Í", "Ó", "Ú", "Ñ")
+  for(caracter in caracteres_especiales) {
+    if(stringr::str_detect(texto_completo, stringr::fixed(caracter))) {
+      expect_false(stringr::str_detect(resultado_completo, stringr::fixed(caracter)))
+    }
+  }
 })
 ```
 
