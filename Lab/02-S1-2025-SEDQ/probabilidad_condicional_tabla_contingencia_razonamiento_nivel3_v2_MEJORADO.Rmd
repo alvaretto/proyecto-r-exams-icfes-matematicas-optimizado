@@ -241,10 +241,16 @@ test_that("Función de escape LaTeX funciona correctamente", {
   # Probar con texto que contiene caracteres especiales
   texto_prueba <- "más de 21 años"
   texto_escapado <- escapar_latex(texto_prueba)
-  expect_true(grepl("m\\\\'{a}s", texto_escapado))
-  expect_true(grepl("a\\\\~{n}os", texto_escapado))
-  expect_false(grepl("á", texto_escapado))
-  expect_false(grepl("ñ", texto_escapado))
+
+  # Usar fixed = TRUE para búsqueda literal de secuencias LaTeX
+  expect_true(grepl("\\'{a}", texto_escapado, fixed = TRUE))
+  expect_true(grepl("\\~{n}", texto_escapado, fixed = TRUE))
+  expect_false(grepl("á", texto_escapado, fixed = TRUE))
+  expect_false(grepl("ñ", texto_escapado, fixed = TRUE))
+
+  # Verificar que el texto contiene las secuencias de escape esperadas
+  expect_true(nchar(texto_escapado) > nchar(texto_prueba))
+  expect_true(grepl("\\\\", texto_escapado, fixed = TRUE))
 })
 
 test_that("Variables LaTeX-safe se generan correctamente", {
@@ -354,11 +360,17 @@ test_that("Renderizado LaTeX es seguro y correcto", {
   expect_false(grepl("[áéíóúñ]", texto_condicion_latex_safe))
 
   # Verificar que los textos escapados contienen las secuencias LaTeX correctas
-  if(grepl("á", pregunta_seleccionada$texto_evento)) {
-    expect_true(grepl("\\\\'{a}", texto_evento_latex_safe))
+  if(grepl("á", pregunta_seleccionada$texto_evento, fixed = TRUE)) {
+    expect_true(grepl("\\'{a}", texto_evento_latex_safe, fixed = TRUE))
   }
-  if(grepl("ñ", pregunta_seleccionada$texto_evento)) {
-    expect_true(grepl("\\\\~{n}", texto_evento_latex_safe))
+  if(grepl("ñ", pregunta_seleccionada$texto_evento, fixed = TRUE)) {
+    expect_true(grepl("\\~{n}", texto_evento_latex_safe, fixed = TRUE))
+  }
+  if(grepl("á", pregunta_seleccionada$texto_condicion, fixed = TRUE)) {
+    expect_true(grepl("\\'{a}", texto_condicion_latex_safe, fixed = TRUE))
+  }
+  if(grepl("ñ", pregunta_seleccionada$texto_condicion, fixed = TRUE)) {
+    expect_true(grepl("\\~{n}", texto_condicion_latex_safe, fixed = TRUE))
   }
 })
 
@@ -383,6 +395,50 @@ test_that("Coherencia de términos de género", {
   expect_true(termino_masculino_seleccionado %in% c("hombres", "varones", "participantes masculinos", "estudiantes masculinos"))
   expect_true(termino_femenino_seleccionado %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
   expect_false(termino_masculino_seleccionado == termino_femenino_seleccionado)
+})
+
+# Prueba temporal específica para verificar corrección de errores de expresiones regulares
+test_that("Corrección de errores de expresiones regulares", {
+  # Verificar que las funciones de escape no causan errores de regex
+  texto_con_acentos <- "más años"
+  texto_con_enie <- "niños"
+
+  # Estas llamadas no deben generar errores
+  expect_silent(escapar_latex(texto_con_acentos))
+  expect_silent(escapar_latex(texto_con_enie))
+
+  # Verificar que las búsquedas con fixed=TRUE funcionan
+  resultado_acentos <- escapar_latex(texto_con_acentos)
+  resultado_enie <- escapar_latex(texto_con_enie)
+
+  expect_silent(grepl("\\'{a}", resultado_acentos, fixed = TRUE))
+  expect_silent(grepl("\\~{n}", resultado_enie, fixed = TRUE))
+
+  # Verificar que las etiquetas matemáticas son válidas
+  expect_true(nchar(etiqueta_evento_matematica) > 2)
+  expect_true(nchar(etiqueta_condicion_matematica) > 2)
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_evento_matematica))
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_condicion_matematica))
+})
+
+# Prueba de integridad final para verificar que todo funciona correctamente
+test_that("Integridad final del sistema de escape LaTeX", {
+  # Verificar que todas las variables críticas están definidas
+  expect_true(exists("texto_evento_latex_safe"))
+  expect_true(exists("texto_condicion_latex_safe"))
+  expect_true(exists("etiqueta_evento_matematica"))
+  expect_true(exists("etiqueta_condicion_matematica"))
+
+  # Verificar que no hay valores NA o vacíos
+  expect_false(is.na(texto_evento_latex_safe))
+  expect_false(is.na(texto_condicion_latex_safe))
+  expect_false(is.na(etiqueta_evento_matematica))
+  expect_false(is.na(etiqueta_condicion_matematica))
+
+  expect_true(nchar(texto_evento_latex_safe) > 0)
+  expect_true(nchar(texto_condicion_latex_safe) > 0)
+  expect_true(nchar(etiqueta_evento_matematica) > 0)
+  expect_true(nchar(etiqueta_condicion_matematica) > 0)
 })
 ```
 
