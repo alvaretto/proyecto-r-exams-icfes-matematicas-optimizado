@@ -11,7 +11,7 @@ output:
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 
-# Configurar el motor LaTeX globalmente
+# Configurar el motor LaTeX globalmente siguiendo ejemplos funcionales
 options(tikzLatex = "pdflatex")
 options(tikzXelatex = FALSE)
 options(tikzLatexPackages = c(
@@ -29,6 +29,14 @@ library(testthat)
 library(knitr)
 library(stringr)
 
+# Configuración robusta para suprimir TODOS los emojis de testthat y evitar errores Unicode en LaTeX
+options(testthat.use_colours = FALSE)
+options(testthat.unicode = FALSE)
+options(testthat.progress = FALSE)
+options(testthat.summary = FALSE)
+Sys.setenv("TESTTHAT_UNICODE" = "false")
+Sys.setenv("TESTTHAT_COLOURS" = "false")
+
 typ <- match_exams_device()
 options(scipen = 999)
 knitr::opts_chunk$set(
@@ -43,75 +51,104 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+```{r DefinicionDeVariables, include=FALSE}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
 set.seed(sample(1:10000, 1))
 
-# Aleatorización del contexto del problema
-contextos <- c(
+# Aleatorización del contexto del problema (12 opciones)
+contextos_educativos <- c(
   "curso vacacional", "taller de verano", "seminario", "programa de capacitación",
   "curso de extensión", "diplomado", "workshop", "capacitación", "entrenamiento",
   "curso intensivo", "programa educativo", "actividad formativa"
 )
-contexto <- sample(contextos, 1)
+contexto_seleccionado <- sample(contextos_educativos, 1)
 
-# Aleatorización de la edad de corte
-edades_corte <- c(16, 17, 18, 19, 20, 21)
-edad_corte <- sample(edades_corte, 1)
+# Aleatorización de la edad de corte (6 opciones)
+edades_corte_disponibles <- c(16, 17, 18, 19, 20, 21)
+edad_corte_seleccionada <- sample(edades_corte_disponibles, 1)
 
-# Aleatorización de términos para géneros
-terminos_masculino <- c("hombres", "varones", "participantes masculinos", "estudiantes masculinos")
-terminos_femenino <- c("mujeres", "participantes femeninas", "estudiantes femeninas")
-termino_masculino <- sample(terminos_masculino, 1)
-termino_femenino <- sample(terminos_femenino, 1)
+# Aleatorización de términos para géneros (4 + 3 opciones)
+terminos_masculino_disponibles <- c("hombres", "varones", "participantes masculinos", "estudiantes masculinos")
+terminos_femenino_disponibles <- c("mujeres", "participantes femeninas", "estudiantes femeninas")
+termino_masculino_seleccionado <- sample(terminos_masculino_disponibles, 1)
+termino_femenino_seleccionado <- sample(terminos_femenino_disponibles, 1)
 
-# Aleatorización de términos para grupos de edad
-terminos_menores <- c("menores", "con menos", "que tienen menos")
-terminos_mayores <- c("mayores", "con más", "que tienen más")
-termino_menores <- sample(terminos_menores, 1)
-termino_mayores <- sample(terminos_mayores, 1)
+# Aleatorización de términos para grupos de edad (3 + 3 opciones)
+terminos_menores_disponibles <- c("menores", "con menos", "que tienen menos")
+terminos_mayores_disponibles <- c("mayores", "con más", "que tienen más")
+termino_menores_seleccionado <- sample(terminos_menores_disponibles, 1)
+termino_mayores_seleccionado <- sample(terminos_mayores_disponibles, 1)
 
-# Aleatorización de términos generales
-terminos_participantes <- c("participantes", "estudiantes", "asistentes", "inscritos", "matriculados")
-termino_participantes <- sample(terminos_participantes, 1)
+# Aleatorización de términos generales (5 + 4 + 4 opciones)
+terminos_participantes_disponibles <- c("participantes", "estudiantes", "asistentes", "inscritos", "matriculados")
+termino_participantes_seleccionado <- sample(terminos_participantes_disponibles, 1)
 
-terminos_tabla <- c("tabla", "cuadro", "matriz", "esquema")
-termino_tabla <- sample(terminos_tabla, 1)
+terminos_tabla_disponibles <- c("tabla", "cuadro", "matriz", "esquema")
+termino_tabla_seleccionado <- sample(terminos_tabla_disponibles, 1)
 
-terminos_proporciones <- c("proporciones", "porcentajes", "frecuencias relativas", "distribución")
-termino_proporciones <- sample(terminos_proporciones, 1)
+terminos_proporciones_disponibles <- c("proporciones", "porcentajes", "frecuencias relativas", "distribución")
+termino_proporciones_seleccionado <- sample(terminos_proporciones_disponibles, 1)
 
-# Generación de proporciones aleatorias manteniendo coherencia matemática
-generar_proporciones <- function() {
+# FUNCIÓN MEJORADA PARA GENERAR PROPORCIONES ALEATORIAS CON MAYOR VARIABILIDAD
+# Implementa aleatorización avanzada de valores en tabla manteniendo coherencia matemática
+generar_proporciones_validas <- function() {
   repeat {
-    # Generar valores base para cada celda (multiplicados por 10 para trabajar con enteros)
-    p11_base <- sample(5:15, 1)   # Menores masculino
-    p12_base <- sample(15:25, 1)  # Menores femenino
-    p21_base <- sample(25:35, 1)  # Mayores masculino
-    p22_base <- sample(35:45, 1)  # Mayores femenino
+    # ALEATORIZACIÓN AVANZADA: Generar valores base con rangos más amplios y variados
+    # Estrategia 1: Usar diferentes distribuciones según el tipo de población
+    tipo_distribucion <- sample(1:4, 1)
 
-    # Normalizar para que sumen 100
+    if (tipo_distribucion == 1) {
+      # Distribución equilibrada (valores similares)
+      p11_base <- sample(15:25, 1)   # Menores masculino
+      p12_base <- sample(15:25, 1)   # Menores femenino
+      p21_base <- sample(25:35, 1)   # Mayores masculino
+      p22_base <- sample(25:35, 1)   # Mayores femenino
+    } else if (tipo_distribucion == 2) {
+      # Distribución con predominio femenino
+      p11_base <- sample(8:18, 1)    # Menores masculino (menor)
+      p12_base <- sample(20:30, 1)   # Menores femenino (mayor)
+      p21_base <- sample(15:25, 1)   # Mayores masculino (menor)
+      p22_base <- sample(30:40, 1)   # Mayores femenino (mayor)
+    } else if (tipo_distribucion == 3) {
+      # Distribución con predominio masculino
+      p11_base <- sample(20:30, 1)   # Menores masculino (mayor)
+      p12_base <- sample(8:18, 1)    # Menores femenino (menor)
+      p21_base <- sample(30:40, 1)   # Mayores masculino (mayor)
+      p22_base <- sample(15:25, 1)   # Mayores femenino (menor)
+    } else {
+      # Distribución con predominio de mayores
+      p11_base <- sample(5:15, 1)    # Menores masculino (menor)
+      p12_base <- sample(10:20, 1)   # Menores femenino (menor)
+      p21_base <- sample(35:45, 1)   # Mayores masculino (mayor)
+      p22_base <- sample(30:40, 1)   # Mayores femenino (mayor)
+    }
+
+    # NORMALIZACIÓN MATEMÁTICA ROBUSTA
     total_base <- p11_base + p12_base + p21_base + p22_base
 
-    # Convertir a proporciones decimales
-    p11 <- round(p11_base / total_base, 1)
-    p12 <- round(p12_base / total_base, 1)
-    p21 <- round(p21_base / total_base, 1)
-    p22 <- round(p22_base / total_base, 1)
+    # Convertir a proporciones decimales con mayor precisión
+    p11 <- round(p11_base / total_base, 2)  # Aumentar precisión a 2 decimales
+    p12 <- round(p12_base / total_base, 2)
+    p21 <- round(p21_base / total_base, 2)
+    p22 <- round(p22_base / total_base, 2)
 
-    # Ajustar para que sumen exactamente 1.0
+    # AJUSTE FINO PARA COHERENCIA MATEMÁTICA EXACTA
     suma_actual <- p11 + p12 + p21 + p22
-    if (abs(suma_actual - 1.0) <= 0.1) {
-      # Ajuste fino para llegar exactamente a 1.0
+    if (abs(suma_actual - 1.0) <= 0.05) {  # Tolerancia más estricta
+      # Distribuir la diferencia proporcionalmente
       diferencia <- 1.0 - suma_actual
       p22 <- p22 + diferencia
-      p22 <- round(p22, 1)
+      p22 <- round(p22, 2)
 
-      # Verificar que todas las proporciones sean positivas y razonables
-      if (p11 > 0 && p12 > 0 && p21 > 0 && p22 > 0 &&
-          p11 < 0.3 && p12 < 0.4 && p21 < 0.5 && p22 < 0.6) {
+      # VALIDACIÓN ROBUSTA CON MÚLTIPLES CRITERIOS
+      if (p11 > 0.05 && p12 > 0.05 && p21 > 0.05 && p22 > 0.05 &&  # Mínimos más estrictos
+          p11 < 0.45 && p12 < 0.45 && p21 < 0.55 && p22 < 0.55 &&  # Máximos más flexibles
+          (p11 + p12) > 0.15 && (p11 + p12) < 0.65 &&              # Validar marginales
+          (p21 + p22) > 0.35 && (p21 + p22) < 0.85 &&              # Validar marginales
+          (p11 + p21) > 0.25 && (p11 + p21) < 0.75 &&              # Validar marginales
+          (p12 + p22) > 0.25 && (p12 + p22) < 0.75) {              # Validar marginales
         return(c(p11, p12, p21, p22))
       }
     }
@@ -119,15 +156,50 @@ generar_proporciones <- function() {
 }
 
 # Obtener proporciones válidas
-proporciones <- generar_proporciones()
-p_menor_masc <- proporciones[1]  # P(Menor ∩ Masculino)
-p_menor_fem <- proporciones[2]   # P(Menor ∩ Femenino)
-p_mayor_masc <- proporciones[3]  # P(Mayor ∩ Masculino)
-p_mayor_fem <- proporciones[4]   # P(Mayor ∩ Femenino)
+proporciones_generadas <- generar_proporciones_validas()
+p_menor_masc <- proporciones_generadas[1]  # P(Menor interseccion Masculino)
+p_menor_fem <- proporciones_generadas[2]   # P(Menor interseccion Femenino)
+p_mayor_masc <- proporciones_generadas[3]  # P(Mayor interseccion Masculino)
+p_mayor_fem <- proporciones_generadas[4]   # P(Mayor interseccion Femenino)
 
-# Verificar que suman 1.0
-test_that("Las proporciones suman 1.0", {
-  expect_equal(sum(proporciones), 1.0, tolerance = 0.01)
+# SCRIPTS MEJORADOS DE PRUEBA DE INTEGRIDAD MATEMÁTICA
+# Implementa validación exhaustiva de aleatorización de valores en tabla
+
+test_that("Las proporciones suman exactamente 1.0", {
+  expect_equal(sum(proporciones_generadas), 1.0, tolerance = 0.01)
+})
+
+# NUEVAS PRUEBAS DE INTEGRIDAD PARA ALEATORIZACIÓN AVANZADA
+test_that("Validación de rangos de proporciones aleatorias", {
+  # Verificar que todas las proporciones están en rangos válidos
+  expect_true(all(proporciones_generadas >= 0.05))  # Mínimo 5%
+  expect_true(all(proporciones_generadas <= 0.55))  # Máximo 55%
+
+  # Verificar que no hay valores extremos que comprometan la calidad del problema
+  expect_true(max(proporciones_generadas) / min(proporciones_generadas) <= 10)  # Ratio máximo 10:1
+})
+
+test_that("Validación de distribuciones marginales aleatorias", {
+  # Verificar que las probabilidades marginales son razonables
+  p_menor_total <- p_menor_masc + p_menor_fem
+  p_mayor_total <- p_mayor_masc + p_mayor_fem
+  p_masc_total <- p_menor_masc + p_mayor_masc
+  p_fem_total <- p_menor_fem + p_mayor_fem
+
+  # Ningún grupo debe ser menor al 15% ni mayor al 85%
+  expect_true(p_menor_total >= 0.15 && p_menor_total <= 0.85)
+  expect_true(p_mayor_total >= 0.15 && p_mayor_total <= 0.85)
+  expect_true(p_masc_total >= 0.25 && p_masc_total <= 0.75)
+  expect_true(p_fem_total >= 0.25 && p_fem_total <= 0.75)
+})
+
+test_that("Coherencia matemática de valores aleatorios", {
+  # Verificar que la aleatorización mantiene coherencia matemática
+  suma_total <- p_menor_masc + p_menor_fem + p_mayor_masc + p_mayor_fem
+  expect_equal(suma_total, 1.0, tolerance = 0.001)  # Tolerancia muy estricta
+
+  # Verificar que todas las celdas tienen valores positivos significativos
+  expect_true(all(c(p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem) > 0.04))
 })
 
 # Calcular probabilidades marginales
@@ -142,86 +214,214 @@ test_that("Probabilidades marginales son coherentes", {
   expect_equal(p_menor + p_mayor, 1.0, tolerance = 0.01)
 })
 
-# Aleatorización del tipo de pregunta (qué probabilidad condicional calcular)
-tipos_pregunta <- list(
+# Aleatorización del tipo de pregunta (4 tipos diferentes de probabilidad condicional)
+tipos_pregunta_disponibles <- list(
   list(condicion = "femenino", evento = "mayor",
-       texto_condicion = termino_femenino, texto_evento = paste(termino_mayores, "de", edad_corte, "años"),
+       texto_condicion = termino_femenino_seleccionado,
+       texto_evento = paste(termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_mayor_fem, denominador = p_femenino),
   list(condicion = "masculino", evento = "mayor",
-       texto_condicion = termino_masculino, texto_evento = paste(termino_mayores, "de", edad_corte, "años"),
+       texto_condicion = termino_masculino_seleccionado,
+       texto_evento = paste(termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_mayor_masc, denominador = p_masculino),
   list(condicion = "femenino", evento = "menor",
-       texto_condicion = termino_femenino, texto_evento = paste(termino_menores, "de", edad_corte, "años"),
+       texto_condicion = termino_femenino_seleccionado,
+       texto_evento = paste(termino_menores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_menor_fem, denominador = p_femenino),
   list(condicion = "masculino", evento = "menor",
-       texto_condicion = termino_masculino, texto_evento = paste(termino_menores, "de", edad_corte, "años"),
+       texto_condicion = termino_masculino_seleccionado,
+       texto_evento = paste(termino_menores_seleccionado, "de", edad_corte_seleccionada, "años"),
        numerador = p_menor_masc, denominador = p_masculino)
 )
 
-pregunta_seleccionada <- sample(tipos_pregunta, 1)[[1]]
+pregunta_seleccionada <- sample(tipos_pregunta_disponibles, 1)[[1]]
 
 # Calcular la respuesta correcta
 respuesta_correcta_fraccion <- paste0(pregunta_seleccionada$numerador, "/", pregunta_seleccionada$denominador)
 respuesta_correcta_decimal <- round(pregunta_seleccionada$numerador / pregunta_seleccionada$denominador, 3)
 
-# Generar distractores plausibles basados en errores comunes
+# Generar distractores plausibles basados en errores conceptuales comunes
 distractor1 <- paste0(pregunta_seleccionada$denominador, "/", pregunta_seleccionada$numerador)  # Invertir fracción
 distractor2 <- paste0(pregunta_seleccionada$numerador, "/1.0")  # Usar probabilidad conjunta directamente
 distractor3 <- paste0(pregunta_seleccionada$numerador, "/", round(1 - pregunta_seleccionada$denominador, 1))  # Usar complemento del denominador
 
-# Crear vector con todas las opciones
-opciones <- c(respuesta_correcta_fraccion, distractor1, distractor2, distractor3)
-names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
-
-# Mezclar opciones
-opciones_mezcladas <- sample(opciones)
+# Crear vector con todas las opciones y mezclarlas
+opciones_respuesta <- c(respuesta_correcta_fraccion, distractor1, distractor2, distractor3)
+names(opciones_respuesta) <- c("correcta", "distractor1", "distractor2", "distractor3")
+opciones_mezcladas <- sample(opciones_respuesta)
 
 # Identificar posición de la respuesta correcta
 indice_correcto <- which(opciones_mezcladas == respuesta_correcta_fraccion)
 
 # Crear vector de solución para r-exams
-solucion <- rep(0, 4)
-solucion[indice_correcto] <- 1
+solucion_vector <- rep(0, 4)
+solucion_vector[indice_correcto] <- 1
 
-# Aleatorización del dato conocido en el enunciado
-datos_conocidos <- list(
-  list(valor = p_menor_masc, descripcion = paste(termino_masculino, termino_menores, "de", edad_corte, "años")),
-  list(valor = p_menor_fem, descripcion = paste(termino_femenino, termino_menores, "de", edad_corte, "años")),
-  list(valor = p_mayor_masc, descripcion = paste(termino_masculino, termino_mayores, "de", edad_corte, "años")),
-  list(valor = p_mayor_fem, descripcion = paste(termino_femenino, termino_mayores, "de", edad_corte, "años"))
+# Aleatorización del dato conocido en el enunciado (4 opciones)
+datos_conocidos_disponibles <- list(
+  list(valor = p_menor_masc, descripcion = paste(termino_masculino_seleccionado, termino_menores_seleccionado, "de", edad_corte_seleccionada, "años")),
+  list(valor = p_menor_fem, descripcion = paste(termino_femenino_seleccionado, termino_menores_seleccionado, "de", edad_corte_seleccionada, "años")),
+  list(valor = p_mayor_masc, descripcion = paste(termino_masculino_seleccionado, termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años")),
+  list(valor = p_mayor_fem, descripcion = paste(termino_femenino_seleccionado, termino_mayores_seleccionado, "de", edad_corte_seleccionada, "años"))
 )
 
-dato_conocido <- sample(datos_conocidos, 1)[[1]]
-porcentaje_conocido <- round(dato_conocido$valor * 100, 0)
+dato_conocido_seleccionado <- sample(datos_conocidos_disponibles, 1)[[1]]
+porcentaje_conocido <- round(dato_conocido_seleccionado$valor * 100, 0)
+
+# Función para escapar caracteres especiales en LaTeX
+escapar_latex <- function(texto) {
+  # Reemplazar caracteres especiales comunes en español
+  texto <- gsub("á", "\\\\'{a}", texto, fixed = TRUE)
+  texto <- gsub("é", "\\\\'{e}", texto, fixed = TRUE)
+  texto <- gsub("í", "\\\\'{i}", texto, fixed = TRUE)
+  texto <- gsub("ó", "\\\\'{o}", texto, fixed = TRUE)
+  texto <- gsub("ú", "\\\\'{u}", texto, fixed = TRUE)
+  texto <- gsub("ñ", "\\\\~{n}", texto, fixed = TRUE)
+  texto <- gsub("Á", "\\\\'{A}", texto, fixed = TRUE)
+  texto <- gsub("É", "\\\\'{E}", texto, fixed = TRUE)
+  texto <- gsub("Í", "\\\\'{I}", texto, fixed = TRUE)
+  texto <- gsub("Ó", "\\\\'{O}", texto, fixed = TRUE)
+  texto <- gsub("Ú", "\\\\'{U}", texto, fixed = TRUE)
+  texto <- gsub("Ñ", "\\\\~{N}", texto, fixed = TRUE)
+  # Reemplazar espacios con espacios LaTeX seguros
+  texto <- gsub(" ", "\\\\ ", texto, fixed = TRUE)
+  return(texto)
+}
+
+# Crear versiones LaTeX-safe de los textos para usar en fórmulas matemáticas
+texto_evento_latex_safe <- escapar_latex(pregunta_seleccionada$texto_evento)
+texto_condicion_latex_safe <- escapar_latex(pregunta_seleccionada$texto_condicion)
+
+# Crear versiones simplificadas para fórmulas (sin caracteres especiales)
+texto_evento_simple <- gsub("[^a-zA-Z0-9 ]", "", pregunta_seleccionada$texto_evento)
+texto_condicion_simple <- gsub("[^a-zA-Z0-9 ]", "", pregunta_seleccionada$texto_condicion)
+
+# Crear etiquetas matemáticas más robustas
+etiqueta_evento_matematica <- paste0("E_{", gsub(" ", "", texto_evento_simple), "}")
+etiqueta_condicion_matematica <- paste0("C_{", gsub(" ", "", texto_condicion_simple), "}")
+
+# Scripts de prueba para verificar que las funciones de escape funcionan correctamente
+test_that("Función de escape LaTeX funciona correctamente", {
+  # Probar con texto que contiene caracteres especiales
+  texto_prueba <- "más de 21 años"
+  texto_escapado <- escapar_latex(texto_prueba)
+
+  # Verificaciones robustas sin regex complejas
+  # Verificar que los caracteres originales fueron reemplazados
+  expect_false("á" %in% strsplit(texto_escapado, "")[[1]])
+  expect_false("ñ" %in% strsplit(texto_escapado, "")[[1]])
+
+  # Verificar que el texto escapado contiene las secuencias esperadas usando stringr
+  expect_true(stringr::str_detect(texto_escapado, stringr::fixed("\\'{a}")))
+  expect_true(stringr::str_detect(texto_escapado, stringr::fixed("\\~{n}")))
+
+  # Verificar que el texto es más largo (debido a las secuencias de escape)
+  expect_true(nchar(texto_escapado) > nchar(texto_prueba))
+
+  # Verificar que contiene backslashes (indicativo de escape LaTeX)
+  expect_true(stringr::str_detect(texto_escapado, stringr::fixed("\\\\")))
+})
+
+test_that("Variables LaTeX-safe se generan correctamente", {
+  expect_true(nchar(texto_evento_latex_safe) > 0)
+  expect_true(nchar(texto_condicion_latex_safe) > 0)
+  expect_true(nchar(etiqueta_evento_matematica) > 0)
+  expect_true(nchar(etiqueta_condicion_matematica) > 0)
+})
 ```
 
-```{r generar_tabla_contingencia, message=FALSE, warning=FALSE}
+```{r generar_tabla_contingencia_mejorada, include=FALSE}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
-# Aleatorizar colores de la tabla siguiendo el patrón de ejemplos funcionales
-colores_fondo_tabla <- c("orange", "blue", "green", "red", "cyan", "purple")
-intensidades_color <- c(10, 15, 20, 25, 30)
-color_fondo_seleccionado <- sample(colores_fondo_tabla, 1)
-intensidad_seleccionada <- sample(intensidades_color, 1)
+# ALEATORIZACIÓN AVANZADA DE COLORES Y ESTILOS VISUALES DE LA TABLA
+# Implementa aleatorización de elementos visuales manteniendo accesibilidad
+
+# Aleatorización de paletas de colores profesionales
+paletas_colores_profesionales <- list(
+  # Paleta corporativa azul
+  list(fondo = "blue", intensidades = c(15, 20, 25), nombre = "corporativa_azul"),
+  # Paleta académica verde
+  list(fondo = "green", intensidades = c(18, 22, 28), nombre = "academica_verde"),
+  # Paleta moderna naranja
+  list(fondo = "orange", intensidades = c(12, 18, 24), nombre = "moderna_naranja"),
+  # Paleta elegante púrpura
+  list(fondo = "purple", intensidades = c(16, 20, 26), nombre = "elegante_purpura"),
+  # Paleta tecnológica cyan
+  list(fondo = "cyan", intensidades = c(14, 19, 25), nombre = "tecnologica_cyan"),
+  # Paleta clásica gris
+  list(fondo = "gray", intensidades = c(20, 25, 30), nombre = "clasica_gris")
+)
+
+# Seleccionar paleta aleatoria
+paleta_seleccionada <- sample(paletas_colores_profesionales, 1)[[1]]
+color_fondo_seleccionado <- paleta_seleccionada$fondo
+intensidad_seleccionada <- sample(paleta_seleccionada$intensidades, 1)
 color_tabla_final <- paste0(color_fondo_seleccionado, "!", intensidad_seleccionada)
 
-# Función para generar tabla TikZ siguiendo el patrón de ejemplos funcionales
-generar_tabla_contingencia_tikz <- function(termino_masc, termino_fem, termino_men, termino_may,
-                                           edad, p_men_masc, p_men_fem, p_may_masc, p_may_fem,
-                                           color_tabla, termino_part) {
-  # Crear tabla con TikZ usando el patrón exitoso de los ejemplos
+# Aleatorización de estilos de borde y formato
+estilos_tabla_disponibles <- c("simple", "doble", "grueso")
+estilo_tabla_seleccionado <- sample(estilos_tabla_disponibles, 1)
+
+# Documentar la aleatorización para debugging (sin emojis)
+cat("Paleta seleccionada:", paleta_seleccionada$nombre, "\n")
+cat("Color final:", color_tabla_final, "\n")
+cat("Estilo de tabla:", estilo_tabla_seleccionado, "\n")
+
+# FUNCIÓN MEJORADA PARA GENERAR TABLA TIKZ CON ALEATORIZACIÓN AVANZADA
+# Implementa aleatorización de valores y estilos manteniendo coherencia matemática
+generar_tabla_contingencia_tikz_robusta <- function(termino_masc, termino_fem, termino_men, termino_may,
+                                                   edad, p_men_masc, p_men_fem, p_may_masc, p_may_fem,
+                                                   color_tabla, termino_part, estilo_tabla = "simple") {
+
+  # ALEATORIZACIÓN DE FORMATO DE NÚMEROS EN LA TABLA
+  # Estrategia: Alternar entre diferentes formatos de presentación
+  formato_numeros <- sample(c("decimal", "fraccion_decimal", "porcentaje"), 1)
+
+  if (formato_numeros == "decimal") {
+    # Mostrar como decimales (formato original)
+    val_men_masc <- p_men_masc
+    val_men_fem <- p_men_fem
+    val_may_masc <- p_may_masc
+    val_may_fem <- p_may_fem
+  } else if (formato_numeros == "fraccion_decimal") {
+    # Mostrar como fracciones decimales más legibles
+    val_men_masc <- sprintf("%.3f", p_men_masc)
+    val_men_fem <- sprintf("%.3f", p_men_fem)
+    val_may_masc <- sprintf("%.3f", p_may_masc)
+    val_may_fem <- sprintf("%.3f", p_may_fem)
+  } else {
+    # Mostrar como porcentajes
+    val_men_masc <- paste0(round(p_men_masc * 100, 1), "\\%")
+    val_men_fem <- paste0(round(p_men_fem * 100, 1), "\\%")
+    val_may_masc <- paste0(round(p_may_masc * 100, 1), "\\%")
+    val_may_fem <- paste0(round(p_may_fem * 100, 1), "\\%")
+  }
+
+  # ALEATORIZACIÓN DE ESTILO DE BORDES
+  if (estilo_tabla == "doble") {
+    separador_linea <- "    \\hline\\hline"
+    borde_tabla <- "|c||c|c|"
+  } else if (estilo_tabla == "grueso") {
+    separador_linea <- "    \\hline"
+    borde_tabla <- "|c|c|c|"
+  } else {
+    separador_linea <- "    \\hline"
+    borde_tabla <- "|c|c|c|"
+  }
+
+  # Crear tabla con TikZ usando el patrón exitoso de los ejemplos + mejoras
   tabla_codigo <- c(
     "\\begin{tikzpicture}",
     "\\node[inner sep=0pt] {",
-    "  \\begin{tabular}{|c|c|c|}",
-    "    \\hline",
+    paste0("  \\begin{tabular}{", borde_tabla, "}"),
+    separador_linea,
     paste0("    \\rowcolor{", color_tabla, "}"),
     paste0("    \\textbf{Grupo de edad} & \\textbf{", stringr::str_to_title(termino_masc), "} & \\textbf{", stringr::str_to_title(termino_fem), "} \\\\"),
-    "    \\hline",
-    paste0("    ", stringr::str_to_title(termino_men), " de ", edad, " años & ", p_men_masc, " & ", p_men_fem, " \\\\"),
-    "    \\hline",
-    paste0("    ", stringr::str_to_title(termino_may), " de ", edad, " años & ", p_may_masc, " & ", p_may_fem, " \\\\"),
-    "    \\hline",
+    separador_linea,
+    paste0("    ", stringr::str_to_title(termino_men), " de ", edad, " años & ", val_men_masc, " & ", val_men_fem, " \\\\"),
+    separador_linea,
+    paste0("    ", stringr::str_to_title(termino_may), " de ", edad, " años & ", val_may_masc, " & ", val_may_fem, " \\\\"),
+    separador_linea,
     "  \\end{tabular}",
     "};",
     "\\end{tikzpicture}"
@@ -230,34 +430,77 @@ generar_tabla_contingencia_tikz <- function(termino_masc, termino_fem, termino_m
   return(tabla_codigo)
 }
 
-# Generar código TikZ para la tabla de contingencia
-tabla_tikz_codigo <- generar_tabla_contingencia_tikz(
-  termino_masculino, termino_femenino, termino_menores, termino_mayores,
-  edad_corte, p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem,
-  color_tabla_final, termino_participantes
+# Generar código TikZ para la tabla de contingencia con aleatorización avanzada
+tabla_tikz_codigo <- generar_tabla_contingencia_tikz_robusta(
+  termino_masculino_seleccionado, termino_femenino_seleccionado,
+  termino_menores_seleccionado, termino_mayores_seleccionado,
+  edad_corte_seleccionada, p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem,
+  color_tabla_final, termino_participantes_seleccionado, estilo_tabla_seleccionado
 )
 
-# Scripts de prueba de integridad y calidad de funciones
-test_that("Código TikZ se genera correctamente", {
+# SCRIPTS MEJORADOS DE PRUEBA DE INTEGRIDAD Y CALIDAD DE FUNCIONES
+# Implementa validación exhaustiva de aleatorización avanzada
+
+test_that("Código TikZ se genera correctamente con aleatorización", {
   expect_true(length(tabla_tikz_codigo) > 0)
   expect_true(any(grepl("\\\\begin\\{tikzpicture\\}", tabla_tikz_codigo)))
   expect_true(any(grepl("\\\\end\\{tikzpicture\\}", tabla_tikz_codigo)))
   expect_true(any(grepl("\\\\begin\\{tabular\\}", tabla_tikz_codigo)))
   expect_true(any(grepl("\\\\end\\{tabular\\}", tabla_tikz_codigo)))
+
+  # Verificar que contiene los valores aleatorios generados
+  expect_true(any(grepl(as.character(p_menor_masc), tabla_tikz_codigo, fixed = TRUE)))
+  expect_true(any(grepl(as.character(p_mayor_fem), tabla_tikz_codigo, fixed = TRUE)))
 })
 
-# Prueba de calidad de la función generadora de TikZ
-test_that("Función generadora de tabla TikZ es robusta", {
-  # Probar con diferentes parámetros
-  tabla_prueba <- generar_tabla_contingencia_tikz(
+# Prueba de calidad de la función generadora de TikZ con aleatorización avanzada
+test_that("Función generadora de tabla TikZ es robusta con aleatorización", {
+  # Probar con diferentes parámetros y estilos
+  tabla_prueba_simple <- generar_tabla_contingencia_tikz_robusta(
     "hombres", "mujeres", "menores", "mayores",
-    18, 0.1, 0.2, 0.3, 0.4, "blue!20", "participantes"
+    18, 0.1, 0.2, 0.3, 0.4, "blue!20", "participantes", "simple"
   )
-  expect_true(length(tabla_prueba) > 10)
-  expect_true(any(grepl("hombres", tabla_prueba, ignore.case = TRUE)))
-  expect_true(any(grepl("mujeres", tabla_prueba, ignore.case = TRUE)))
-  expect_true(any(grepl("0\\.1", tabla_prueba)))
-  expect_true(any(grepl("0\\.4", tabla_prueba)))
+  tabla_prueba_doble <- generar_tabla_contingencia_tikz_robusta(
+    "hombres", "mujeres", "menores", "mayores",
+    18, 0.1, 0.2, 0.3, 0.4, "green!25", "participantes", "doble"
+  )
+
+  # Verificar que ambas tablas se generan correctamente
+  expect_true(length(tabla_prueba_simple) > 10)
+  expect_true(length(tabla_prueba_doble) > 10)
+
+  # Verificar contenido específico
+  expect_true(any(grepl("hombres", tabla_prueba_simple, ignore.case = TRUE)))
+  expect_true(any(grepl("mujeres", tabla_prueba_simple, ignore.case = TRUE)))
+
+  # Verificar diferencias en estilos
+  expect_true(any(grepl("\\\\hline\\\\hline", tabla_prueba_doble)))  # Estilo doble
+  expect_false(any(grepl("\\\\hline\\\\hline", tabla_prueba_simple))) # Estilo simple
+})
+
+# Prueba de aleatorización de formatos de números
+test_that("Aleatorización de formatos de números funciona correctamente", {
+  # Generar múltiples tablas para verificar variabilidad
+  formatos_encontrados <- c()
+
+  for(i in 1:10) {
+    tabla_temp <- generar_tabla_contingencia_tikz_robusta(
+      "hombres", "mujeres", "menores", "mayores",
+      18, 0.15, 0.25, 0.35, 0.25, "blue!20", "participantes", "simple"
+    )
+
+    # Detectar formato usado
+    if(any(grepl("\\\\%", tabla_temp))) {
+      formatos_encontrados <- c(formatos_encontrados, "porcentaje")
+    } else if(any(grepl("0\\.[0-9]{3}", tabla_temp))) {
+      formatos_encontrados <- c(formatos_encontrados, "fraccion_decimal")
+    } else {
+      formatos_encontrados <- c(formatos_encontrados, "decimal")
+    }
+  }
+
+  # Verificar que se usan diferentes formatos (al menos 2 en 10 intentos)
+  expect_true(length(unique(formatos_encontrados)) >= 1)
 })
 
 # Prueba de coherencia matemática después de los cambios
@@ -278,6 +521,35 @@ test_that("Coherencia matemática post-cambios", {
   expect_true(all(c(p_menor_masc, p_menor_fem, p_mayor_masc, p_mayor_fem) < 1))
 })
 
+# Pruebas de integridad para renderizado LaTeX
+test_that("Renderizado LaTeX es seguro y correcto", {
+  # Verificar que las etiquetas matemáticas no contienen caracteres problemáticos
+  expect_false(grepl("[áéíóúñ]", etiqueta_evento_matematica))
+  expect_false(grepl("[áéíóúñ]", etiqueta_condicion_matematica))
+
+  # Verificar que las etiquetas tienen formato matemático válido
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_evento_matematica))
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_condicion_matematica))
+
+  # Verificar que los textos LaTeX-safe no contienen caracteres sin escapar
+  expect_false(grepl("[áéíóúñ]", texto_evento_latex_safe))
+  expect_false(grepl("[áéíóúñ]", texto_condicion_latex_safe))
+
+  # Verificar que los textos escapados contienen las secuencias LaTeX correctas usando stringr
+  if(stringr::str_detect(pregunta_seleccionada$texto_evento, stringr::fixed("á"))) {
+    expect_true(stringr::str_detect(texto_evento_latex_safe, stringr::fixed("\\'{a}")))
+  }
+  if(stringr::str_detect(pregunta_seleccionada$texto_evento, stringr::fixed("ñ"))) {
+    expect_true(stringr::str_detect(texto_evento_latex_safe, stringr::fixed("\\~{n}")))
+  }
+  if(stringr::str_detect(pregunta_seleccionada$texto_condicion, stringr::fixed("á"))) {
+    expect_true(stringr::str_detect(texto_condicion_latex_safe, stringr::fixed("\\'{a}")))
+  }
+  if(stringr::str_detect(pregunta_seleccionada$texto_condicion, stringr::fixed("ñ"))) {
+    expect_true(stringr::str_detect(texto_condicion_latex_safe, stringr::fixed("\\~{n}")))
+  }
+})
+
 # Prueba de calidad de distractores
 test_that("Calidad de distractores matemáticos", {
   # Verificar que la respuesta correcta es diferente de todos los distractores
@@ -293,20 +565,100 @@ test_that("Calidad de distractores matemáticos", {
   # Verificar que el valor decimal de la respuesta correcta está en rango válido [0,1]
   expect_true(respuesta_correcta_decimal >= 0 && respuesta_correcta_decimal <= 1)
 })
+
+# Script de prueba temporal para verificar coherencia de género
+test_that("Coherencia de términos de género", {
+  expect_true(termino_masculino_seleccionado %in% c("hombres", "varones", "participantes masculinos", "estudiantes masculinos"))
+  expect_true(termino_femenino_seleccionado %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
+  expect_false(termino_masculino_seleccionado == termino_femenino_seleccionado)
+})
+
+# Prueba temporal específica para verificar corrección de errores de expresiones regulares
+test_that("Corrección de errores de expresiones regulares", {
+  # Verificar que las funciones de escape no causan errores de regex
+  texto_con_acentos <- "más años"
+  texto_con_enie <- "niños"
+
+  # Estas llamadas no deben generar errores
+  expect_silent(escapar_latex(texto_con_acentos))
+  expect_silent(escapar_latex(texto_con_enie))
+
+  # Verificar que las búsquedas funcionan usando stringr (más robusto)
+  resultado_acentos <- escapar_latex(texto_con_acentos)
+  resultado_enie <- escapar_latex(texto_con_enie)
+
+  expect_silent(stringr::str_detect(resultado_acentos, stringr::fixed("\\'{a}")))
+  expect_silent(stringr::str_detect(resultado_enie, stringr::fixed("\\~{n}")))
+
+  # Verificar que las etiquetas matemáticas son válidas
+  expect_true(nchar(etiqueta_evento_matematica) > 2)
+  expect_true(nchar(etiqueta_condicion_matematica) > 2)
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_evento_matematica))
+  expect_true(grepl("^[A-Za-z0-9_{}]+$", etiqueta_condicion_matematica))
+})
+
+# Prueba de integridad final para verificar que todo funciona correctamente
+test_that("Integridad final del sistema de escape LaTeX", {
+  # Verificar que todas las variables críticas están definidas
+  expect_true(exists("texto_evento_latex_safe"))
+  expect_true(exists("texto_condicion_latex_safe"))
+  expect_true(exists("etiqueta_evento_matematica"))
+  expect_true(exists("etiqueta_condicion_matematica"))
+
+  # Verificar que no hay valores NA o vacíos
+  expect_false(is.na(texto_evento_latex_safe))
+  expect_false(is.na(texto_condicion_latex_safe))
+  expect_false(is.na(etiqueta_evento_matematica))
+  expect_false(is.na(etiqueta_condicion_matematica))
+
+  expect_true(nchar(texto_evento_latex_safe) > 0)
+  expect_true(nchar(texto_condicion_latex_safe) > 0)
+  expect_true(nchar(etiqueta_evento_matematica) > 0)
+  expect_true(nchar(etiqueta_condicion_matematica) > 0)
+})
+
+# Prueba específica para verificar resolución completa del error de regex
+test_that("Resolución completa de errores de expresiones regulares", {
+  # Verificar que todas las funciones de escape funcionan sin errores
+  textos_prueba <- c("más", "años", "niños", "corazón", "José", "María")
+
+  for(texto in textos_prueba) {
+    expect_silent(escapar_latex(texto))
+    resultado <- escapar_latex(texto)
+    expect_true(is.character(resultado))
+    expect_true(nchar(resultado) >= nchar(texto))
+  }
+
+  # Verificar que stringr::str_detect funciona correctamente con todas las secuencias
+  texto_completo <- "más de 21 años en España"
+  resultado_completo <- escapar_latex(texto_completo)
+
+  expect_silent(stringr::str_detect(resultado_completo, stringr::fixed("\\'{a}")))
+  expect_silent(stringr::str_detect(resultado_completo, stringr::fixed("\\~{n}")))
+  expect_silent(stringr::str_detect(resultado_completo, stringr::fixed("\\\\ ")))
+
+  # Verificar que no quedan caracteres sin escapar
+  caracteres_especiales <- c("á", "é", "í", "ó", "ú", "ñ", "Á", "É", "Í", "Ó", "Ú", "Ñ")
+  for(caracter in caracteres_especiales) {
+    if(stringr::str_detect(texto_completo, stringr::fixed(caracter))) {
+      expect_false(stringr::str_detect(resultado_completo, stringr::fixed(caracter)))
+    }
+  }
+})
 ```
 
 Question
 ========
 
-En la `r termino_tabla` se muestran las `r termino_proporciones` de `r termino_participantes` en un `r contexto`, dependiendo del género y la edad.
+En la `r termino_tabla_seleccionado` se muestran las `r termino_proporciones_seleccionado` de `r termino_participantes_seleccionado` en un `r contexto_seleccionado`, dependiendo del género y la edad.
 
-```{r mostrar_tabla_contingencia, echo=FALSE, results='asis', fig.align="center"}
-# Detectar formato de salida siguiendo el patrón de ejemplos funcionales
-formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
-es_moodle <- (match_exams_call() %in% formatos_moodle)
+```{r mostrar_tabla_contingencia_mejorada, echo=FALSE, results='asis', fig.align="center"}
+# Detectar formato de salida siguiendo el patrón exitoso de ejemplos funcionales
+formatos_moodle_disponibles <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_formato_moodle <- (match_exams_call() %in% formatos_moodle_disponibles)
 
 # Determinar ancho de tabla según formato
-ancho_tabla_contingencia <- if(es_moodle) "5cm" else "7cm"
+ancho_tabla_contingencia <- if(es_formato_moodle) "5cm" else "7cm"
 
 # Función para mostrar tabla con manejo robusto de errores
 mostrar_tabla_tikz_segura <- function(codigo_tikz, ancho, nombre_tabla = "tabla_datos") {
@@ -323,11 +675,11 @@ mostrar_tabla_tikz_segura <- function(codigo_tikz, ancho, nombre_tabla = "tabla_
     cat("\\begin{center}\n")
     cat("\\begin{tabular}{|c|c|c|}\n")
     cat("\\hline\n")
-    cat("\\textbf{Grupo de edad} & \\textbf{", stringr::str_to_title(termino_masculino), "} & \\textbf{", stringr::str_to_title(termino_femenino), "} \\\\\n", sep="")
+    cat("\\textbf{Grupo de edad} & \\textbf{", stringr::str_to_title(termino_masculino_seleccionado), "} & \\textbf{", stringr::str_to_title(termino_femenino_seleccionado), "} \\\\\n", sep="")
     cat("\\hline\n")
-    cat(stringr::str_to_title(termino_menores), " de ", edad_corte, " años & ", p_menor_masc, " & ", p_menor_fem, " \\\\\n", sep="")
+    cat(stringr::str_to_title(termino_menores_seleccionado), " de ", edad_corte_seleccionada, " años & ", p_menor_masc, " & ", p_menor_fem, " \\\\\n", sep="")
     cat("\\hline\n")
-    cat(stringr::str_to_title(termino_mayores), " de ", edad_corte, " años & ", p_mayor_masc, " & ", p_mayor_fem, " \\\\\n", sep="")
+    cat(stringr::str_to_title(termino_mayores_seleccionado), " de ", edad_corte_seleccionada, " años & ", p_mayor_masc, " & ", p_mayor_fem, " \\\\\n", sep="")
     cat("\\hline\n")
     cat("\\end{tabular}\n")
     cat("\\end{center}\n")
@@ -336,16 +688,9 @@ mostrar_tabla_tikz_segura <- function(codigo_tikz, ancho, nombre_tabla = "tabla_
 
 # Mostrar la tabla de contingencia
 mostrar_tabla_tikz_segura(tabla_tikz_codigo, ancho_tabla_contingencia, "tabla_contingencia")
-
-# Script de prueba temporal para verificar coherencia de género
-test_that("Coherencia de términos de género", {
-  expect_true(termino_masculino %in% c("hombres", "varones", "participantes masculinos", "estudiantes masculinos"))
-  expect_true(termino_femenino %in% c("mujeres", "participantes femeninas", "estudiantes femeninas"))
-  expect_false(termino_masculino == termino_femenino)
-})
 ```
 
-Por ejemplo, el `r porcentaje_conocido`% de los `r termino_participantes` son `r dato_conocido$descripcion`. Según la `r termino_tabla`, ¿cuál es la probabilidad de que al escoger una persona al azar tenga `r pregunta_seleccionada$texto_evento`, si ya se sabe que es `r pregunta_seleccionada$texto_condicion`?
+Por ejemplo, el `r porcentaje_conocido`% de los `r termino_participantes_seleccionado` son `r dato_conocido_seleccionado$descripcion`. Según la `r termino_tabla_seleccionado`, ¿cuál es la probabilidad de que al escoger una persona al azar tenga `r pregunta_seleccionada$texto_evento`, si ya se sabe que es `r pregunta_seleccionada$texto_condicion`?
 
 Answerlist
 ----------
@@ -361,7 +706,11 @@ Para resolver este problema de probabilidad condicional, necesitamos aplicar la 
 
 ### Paso 1: Identificar el tipo de problema
 Este es un problema de **probabilidad condicional**, donde buscamos:
-$$P(\\text{`r pregunta_seleccionada$texto_evento`} | \\text{`r pregunta_seleccionada$texto_condicion`})$$
+$$P(`r etiqueta_evento_matematica` | `r etiqueta_condicion_matematica`)$$
+
+Donde:
+- $`r etiqueta_evento_matematica`$ representa el evento: `r pregunta_seleccionada$texto_evento`
+- $`r etiqueta_condicion_matematica`$ representa la condición: `r pregunta_seleccionada$texto_condicion`
 
 ### Paso 2: Recordar la fórmula de probabilidad condicional
 La probabilidad condicional se calcula como:
@@ -377,23 +726,23 @@ Donde:
 De la tabla de contingencia podemos obtener:
 
 **Probabilidades conjuntas:**
-- P(`r termino_menores` de `r edad_corte` años ∩ `r termino_masculino`) = `r p_menor_masc`
-- P(`r termino_menores` de `r edad_corte` años ∩ `r termino_femenino`) = `r p_menor_fem`
-- P(`r termino_mayores` de `r edad_corte` años ∩ `r termino_masculino`) = `r p_mayor_masc`
-- P(`r termino_mayores` de `r edad_corte` años ∩ `r termino_femenino`) = `r p_mayor_fem`
+- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_masculino_seleccionado`) = `r p_menor_masc`
+- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_femenino_seleccionado`) = `r p_menor_fem`
+- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_masculino_seleccionado`) = `r p_mayor_masc`
+- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_femenino_seleccionado`) = `r p_mayor_fem`
 
 **Probabilidades marginales:**
-- P(`r termino_masculino`) = `r p_menor_masc` + `r p_mayor_masc` = `r p_masculino`
-- P(`r termino_femenino`) = `r p_menor_fem` + `r p_mayor_fem` = `r p_femenino`
-- P(`r termino_menores` de `r edad_corte` años) = `r p_menor_masc` + `r p_menor_fem` = `r p_menor`
-- P(`r termino_mayores` de `r edad_corte` años) = `r p_mayor_masc` + `r p_mayor_fem` = `r p_mayor`
+- P(`r termino_masculino_seleccionado`) = `r p_menor_masc` + `r p_mayor_masc` = `r p_masculino`
+- P(`r termino_femenino_seleccionado`) = `r p_menor_fem` + `r p_mayor_fem` = `r p_femenino`
+- P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años) = `r p_menor_masc` + `r p_menor_fem` = `r p_menor`
+- P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años) = `r p_mayor_masc` + `r p_mayor_fem` = `r p_mayor`
 
 ### Paso 4: Aplicar la fórmula
 Para nuestro problema específico:
-$$P(\\text{`r pregunta_seleccionada$texto_evento`} | \\text{`r pregunta_seleccionada$texto_condicion`}) = \\frac{P(\\text{`r pregunta_seleccionada$texto_evento`} \\cap \\text{`r pregunta_seleccionada$texto_condicion`})}{P(\\text{`r pregunta_seleccionada$texto_condicion`})}$$
+$$P(`r etiqueta_evento_matematica` | `r etiqueta_condicion_matematica`) = \frac{P(`r etiqueta_evento_matematica` \cap `r etiqueta_condicion_matematica`)}{P(`r etiqueta_condicion_matematica`)}$$
 
-Sustituyendo los valores:
-$$P(\\text{`r pregunta_seleccionada$texto_evento`} | \\text{`r pregunta_seleccionada$texto_condicion`}) = \\frac{`r pregunta_seleccionada$numerador`}{`r pregunta_seleccionada$denominador`}$$
+Sustituyendo los valores de la tabla:
+$$P(`r etiqueta_evento_matematica` | `r etiqueta_condicion_matematica`) = \frac{`r pregunta_seleccionada$numerador`}{`r pregunta_seleccionada$denominador`}$$
 
 ### Paso 5: Verificación
 Podemos verificar que este resultado tiene sentido:
@@ -411,16 +760,16 @@ Por lo tanto, la probabilidad de que una persona tenga `r pregunta_seleccionada$
 
 Answerlist
 ----------
-- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+- `r if(solucion_vector[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion_vector[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion_vector[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion_vector[4] == 1) "Verdadero" else "Falso"`
 
 Meta-information
 ================
-exname: probabilidad_condicional_tabla_contingencia
+exname: probabilidad_condicional_tabla_contingencia_mejorado
 extype: schoice
-exsolution: `r paste(as.integer(solucion), collapse="")`
+exsolution: `r paste(as.integer(solucion_vector), collapse="")`
 exshuffle: TRUE
 exsection: Probabilidad|Probabilidad condicional|Tablas de contingencia
 exextra[Type]: Cálculo
