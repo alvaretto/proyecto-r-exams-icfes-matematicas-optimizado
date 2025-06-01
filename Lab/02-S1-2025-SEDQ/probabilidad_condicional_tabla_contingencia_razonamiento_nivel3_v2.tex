@@ -1,0 +1,254 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+En el diagrama se muestran los valores proporcionales de participantes
+en un entrenamiento técnico, dependiendo del género y la edad.
+
+\includegraphics[width=7cm,height=\textheight,keepaspectratio]{tabla_contingencia_corregida.png}
+
+Por ejemplo, el 26.8\% de los participantes son participantes de género
+femenino mayores de 17 años. Según el diagrama, ¿cuál es la probabilidad
+de que al escoger una persona al azar pertenezca al grupo de los menores
+de 17 años, si ya se sabe que hace parte del grupo de participantes
+masculinos?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  0.196/0.464
+\item
+  0.361/0.464
+\item
+  0.361/0.629
+\item
+  0.175/0.536
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema de \textbf{probabilidad condicional},
+necesitamos aplicar correctamente la fórmula de probabilidad condicional
+y trabajar con la información de la tabla de contingencia.
+
+\subsubsection{Paso 1: Identificar el tipo de problema y la
+fórmula}\label{paso-1-identificar-el-tipo-de-problema-y-la-fuxf3rmula}
+
+Este es un problema de \textbf{probabilidad condicional}, donde
+buscamos:
+
+\[P(\text{menores de 17 años} | \text{participantes masculinos})\]
+
+La fórmula de probabilidad condicional es:
+\[P(A|B) = \frac{P(A \cap B)}{P(B)}\]
+
+Donde:
+
+\begin{itemize}
+\tightlist
+\item
+  \(A\) = evento de interés: menores de 17 años
+\item
+  \(B\) = condición dada: participantes masculinos
+\item
+  \(P(A \cap B)\) = probabilidad de que ocurran ambos eventos
+  simultáneamente
+\item
+  \(P(B)\) = probabilidad marginal de la condición
+\end{itemize}
+
+\subsubsection{Paso 2: Extraer información de la tabla de
+contingencia}\label{paso-2-extraer-informaciuxf3n-de-la-tabla-de-contingencia}
+
+De la tabla podemos obtener las siguientes \textbf{probabilidades
+conjuntas}:
+
+\begin{itemize}
+\tightlist
+\item
+  P(menores de 17 años \(\cap\) participantes masculinos) = 0.175
+\item
+  P(menores de 17 años \(\cap\) participantes de género femenino) =
+  0.196
+\item
+  P(mayores de 17 años \(\cap\) participantes masculinos) = 0.361
+\item
+  P(mayores de 17 años \(\cap\) participantes de género femenino) =
+  0.268
+\end{itemize}
+
+\subsubsection{Paso 3: Calcular probabilidades
+marginales}\label{paso-3-calcular-probabilidades-marginales}
+
+Las \textbf{probabilidades marginales} se obtienen sumando las
+probabilidades conjuntas:
+
+\textbf{Por género:}
+
+\begin{itemize}
+\tightlist
+\item
+  P(participantes masculinos) = 0.175 + 0.361 = 0.536
+\item
+  P(participantes de género femenino) = 0.196 + 0.268 = 0.464
+\end{itemize}
+
+\textbf{Por edad:}
+
+\begin{itemize}
+\tightlist
+\item
+  P(menores de 17 años) = 0.175 + 0.196 = 0.371
+\item
+  P(mayores de 17 años) = 0.361 + 0.268 = 0.629
+\end{itemize}
+
+\subsubsection{Paso 4: Aplicar la fórmula para nuestro problema
+específico}\label{paso-4-aplicar-la-fuxf3rmula-para-nuestro-problema-especuxedfico}
+
+Para nuestro problema:
+
+\[P(\text{menores de 17 años} | \text{participantes masculinos}) = \frac{P(\text{menores de 17 años} \cap \text{participantes masculinos})}{P(\text{participantes masculinos})}\]
+
+Sustituyendo los valores de la tabla:
+\[P(\text{menores de 17 años} | \text{participantes masculinos}) = \frac{0.175}{0.536}\]
+
+\subsubsection{Paso 5: Verificación y análisis de
+distractores}\label{paso-5-verificaciuxf3n-y-anuxe1lisis-de-distractores}
+
+\textbf{Respuesta correcta:} 0.175/0.536 = 0.326
+
+\textbf{Análisis de errores conceptuales comunes (distractores):}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{0.361/0.629}: Error de \textbf{intercambio conceptual} -
+  confundir la dirección de la probabilidad condicional o usar
+  probabilidades marginales incorrectas
+\item
+  \textbf{0.196/0.464}: Error de \textbf{aplicación incorrecta de la
+  fórmula} - usar probabilidades conjuntas o marginales en posiciones
+  incorrectas de la fracción
+\item
+  \textbf{0.361/0.464}: Error de \textbf{cálculo sutil} - aplicar
+  operaciones incorrectas como complementos o usar valores de celdas
+  adyacentes de la tabla
+\end{enumerate}
+
+\subsubsection{Conclusión}\label{conclusiuxf3n}
+
+Por lo tanto, la probabilidad de que una persona pertenezca al grupo de
+menores de 17 años, dado que es participantes masculinos, es
+\textbf{0.175/0.536}.
+
+Esta respuesta tiene sentido porque:
+
+\begin{itemize}
+\tightlist
+\item
+  El resultado está entre 0 y 1 (como toda probabilidad)
+\item
+  El numerador representa la intersección de los dos eventos
+\item
+  El denominador representa la probabilidad de la condición dada
+\item
+  La interpretación es coherente con el contexto del problema
+\end{itemize}
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso
+\item
+  Falso
+\item
+  Falso
+\item
+  Verdadero
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: probabilidad\_condicional\_tabla\_contingencia\_corregido
+extype: schoice exsolution: 0001 exshuffle: TRUE exsection:
+Probabilidad\textbar Probabilidad condicional\textbar Tablas de
+contingencia\textbar Razonamiento matemático exextra{[}Type{]}: Cálculo
+exextra{[}Program{]}: R exextra{[}Language{]}: es exextra{[}Level{]}: 3
+
+\end{document}
