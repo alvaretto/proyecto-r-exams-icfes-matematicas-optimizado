@@ -1,7 +1,7 @@
 # Carga de la librería r-exams
 library(exams)
 
-bezes <- 3
+bezes <- 4
 
 # Definición del archivo de examen y configuración inicial
 preg01 <- sample(c("2023-Matematicas-11-2-09-Opc-A.Rmd",
@@ -37,54 +37,54 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Generación de n copias en un solo archivo .docx
 
-set.seed(semilla)
-exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
-             n = copias,
-             name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2-docx",
-             encoding = "UTF-8",
-             template = "pcielo.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = TRUE, # Added verbose
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+# set.seed(semilla)
+# exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
+#              n = copias,
+#              name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2-docx",
+#              encoding = "UTF-8",
+#              template = "pcielo.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = TRUE, # Added verbose
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
 
 ################################################################################
 # Generación de n copias, sin Solution, en un solo archivo .docx
 
-set.seed(semilla)
-exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
-             n = copias,
-             name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
-             encoding = "UTF-8",
-             template = "pcielo_sin_sol.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = TRUE, # Added verbose
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+# set.seed(semilla)
+# exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
+#              n = copias,
+#              name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
+#              encoding = "UTF-8",
+#              template = "pcielo_sin_sol.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = TRUE, # Added verbose
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
 
 
 ################################################################################
@@ -93,7 +93,7 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
           n = copias,
-          name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sol",
+          name = "Espitia-Matemáticas-P2_sol",
           encoding = "UTF-8",
           template = "solpcielo",
           dir = dir_salida,
@@ -106,7 +106,7 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cad
 set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
           n = copias,
-          name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2",  # Corregido: nombre como string
+          name = "Espitia-Matemáticas-P2",  # Corregido: nombre como string
           encoding = "UTF-8",
           template = "exam",
           dir = dir_salida,
