@@ -1,7 +1,7 @@
 # Carga de la librería r-exams
 library(exams)
 
-bezes <- 4
+bezes <- 3
 
 # Definición del archivo de examen y configuración inicial
 preg01 <- sample(c("2023-Matematicas-11-2-09-Opc-A.Rmd",
@@ -31,7 +31,7 @@ dir_salida <- "salida"
 dir_ejercicios <- "ejercicios"
 
 # Nombre del archivo sin la extensión .Rmd
-nombre_sin_extension <- "Evaluacion_Fin_de_Periodo_3"  # Cambiado a un nombre genérico para el taller
+nombre_sin_extension <- "10A-Evaluacion_Fin_de_Periodo_2"  # Cambiado a un nombre genérico para el taller
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 ################################################################################
@@ -40,7 +40,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
           n = copias,
-          name = "Evaluacion_Fin_de_Periodo_3_sol",
+          name = "10A-Evaluacion_Fin_de_Periodo_2_sol",
           encoding = "UTF-8",
           template = "solpcielo",
           dir = dir_salida,
@@ -53,7 +53,7 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cad
 set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
           n = copias,
-          name = "Evaluacion_Fin_de_Periodo_3",  # Corregido: nombre como string
+          name = "10A-Evaluacion_Fin_de_Periodo_2",  # Corregido: nombre como string
           encoding = "UTF-8",
           template = "exam",
           dir = dir_salida,
@@ -66,7 +66,7 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cad
 set.seed(semilla)
 exams2pandoc(rep(archivo_examen, numpreg),
              n = copias,
-             name = "Evaluacion_Fin_de_Periodo_3-docx",
+             name = "10A-Evaluacion_Fin_de_Periodo_2-docx",
              encoding = "UTF-8",
              template = "pcielo.tex",
              header = list(Date = Sys.Date()),
@@ -86,3 +86,27 @@ exams2pandoc(rep(archivo_examen, numpreg),
              exshuffle = NULL,
              type = "docx")
 
+# Generación de n copias, sin Solution, en un solo archivo .docx
+
+set.seed(semilla)
+exams2pandoc(rep(archivo_examen, numpreg),
+             n = copias,
+             name = "10A-Evaluacion_Fin_de_Periodo_2-docx_sin_sol",
+             encoding = "UTF-8",
+             template = "pcielo_sin_sol.tex",
+             header = list(Date = Sys.Date()),
+             inputs = NULL,
+             options = NULL,
+             quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
+             resolution = 100,
+             width = 4,
+             height = 4,
+             svg = TRUE,
+             dir = dir_salida,
+             edir = dir_ejercicios,
+             tdir = NULL,
+             sdir = NULL,
+             verbose = TRUE, # Added verbose
+             points = NULL,
+             exshuffle = NULL,
+             type = "docx")
