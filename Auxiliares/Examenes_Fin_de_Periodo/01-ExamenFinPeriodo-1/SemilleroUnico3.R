@@ -6,12 +6,12 @@ library(exams)
 archivo_examen <- c(
   "2023-Matematicas-11-2-04-Op-B-V2.Rmd", "2023-Matematicas-11-2-09-Opc-A.Rmd",
   "2023-Matematicas-11-2-04-Op-C.Rmd", "2023-Matematicas-11-2-09-Opc-B.Rmd",
-  "2023-Matematicas-11-2-04-Op-C-V2.Rmd", "DVenn_All_GenMus_01.Rmd", "DVenn_All_GenMus_01.Rmd",
- "schoice-DVenn_All_GenMus_01_modified.Rmd", "schoice-DVenn_All_GenMus_01_modified.Rmd",
- "schoice-DVenn_All_GenMus_01_modified.Rmd", "schoice-DVenn_All_GenMus_01_modified.Rmd",
- "schoice-DVenn_All_GenMus_01_modified.Rmd",
+  "2023-Matematicas-11-2-04-Op-C-V2.Rmd", "DVenn_All_GenMus_01.Rmd",
+  "DVenn_All_GenMus_01.Rmd", "DVenn_All_GenMus_01.Rmd", "DVenn_All_GenMus_01.Rmd",
+  "DVenn_All_GenMus_01.Rmd", "DVenn_All_GenMus_01.Rmd", "DVenn_All_GenMus_01.Rmd",
   "2023-Matematicas-11-2-04-Op-D.Rmd",
- "2023-Matematicas-11-2-04-Op-D-V2.Rmd", "2023-Matematicas-11-2-04-Op-D-V2.Rmd")
+  "2023-Matematicas-11-2-04-Op-D-V2.Rmd", "2023-Matematicas-11-2-04-Op-D-V2.Rmd")
+
 copias <- 1
 numpreg_por_archivo <- 1  # n preguntas por cada archivo
 semilla <- sample(100:1e8, 1)

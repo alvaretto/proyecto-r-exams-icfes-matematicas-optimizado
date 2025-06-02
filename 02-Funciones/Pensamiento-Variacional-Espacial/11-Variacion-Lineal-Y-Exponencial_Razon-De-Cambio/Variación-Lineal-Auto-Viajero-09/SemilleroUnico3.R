@@ -12,7 +12,7 @@ dir_salida <- "salida"
 dir_ejercicios <- "ejercicios"
 
 # Nombre del archivo sin la extensión .Rmd
-nombre_sin_extension <- "Taller_Matematicas"  # Cambiado a un nombre genérico para el taller
+nombre_sin_extension <- "Evaluacion_Fin_de_Periodo_3"  # Cambiado a un nombre genérico para el taller
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 ################################################################################
