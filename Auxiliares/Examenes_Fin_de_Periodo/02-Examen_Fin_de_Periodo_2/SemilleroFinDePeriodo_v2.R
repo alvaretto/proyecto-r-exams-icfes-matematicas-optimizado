@@ -5,9 +5,9 @@ bezes <- 3
 
 # Definición del archivo de examen y configuración inicial
 preg01 <- sample(c("2023-Matematicas-11-2-09-Opc-A.Rmd",
-                    "2023-Matematicas-11-2-09-Opc-B.Rmd",
-                    "2023-Matematicas-11-2-09-Op-C.Rmd",
-                    "2023-Matematicas-11-2-09-Op-D.Rmd"), bezes)
+                   "2023-Matematicas-11-2-09-Opc-B.Rmd",
+                   "2023-Matematicas-11-2-09-Op-C.Rmd",
+                   "2023-Matematicas-11-2-09-Op-D.Rmd"), bezes)
 
 preg02 <- sample(c("fracciones_reparto_premio_v1.Rmd",
                    "fracciones_reparto_premio_v2.Rmd",
@@ -64,7 +64,7 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cad
 # Generación de n copias en un solo archivo .docx
 
 set.seed(semilla)
-exams2pandoc(rep(archivo_examen, numpreg),
+exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "10A-Evaluacion_Fin_de_Periodo_2-docx",
              encoding = "UTF-8",
@@ -89,7 +89,7 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Generación de n copias, sin Solution, en un solo archivo .docx
 
 set.seed(semilla)
-exams2pandoc(rep(archivo_examen, numpreg),
+exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "10A-Evaluacion_Fin_de_Periodo_2-docx_sin_sol",
              encoding = "UTF-8",
