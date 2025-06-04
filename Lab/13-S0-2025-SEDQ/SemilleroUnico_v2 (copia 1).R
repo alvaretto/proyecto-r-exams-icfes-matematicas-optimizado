@@ -8,7 +8,7 @@ numpreg <- 3
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
-dir_ejercicios <- "."
+dir_ejercicios <- "ejercicios"
 
 
 # Nombre del archivo sin la extensión .Rmd
