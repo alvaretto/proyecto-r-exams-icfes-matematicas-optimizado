@@ -1,7 +1,7 @@
 # Carga de la librería r-exams
 library(exams)
 
-bezes <- 3
+bezes <- 1
 
 # Definición del archivo de examen y configuración inicial
 preg01 <- sample(c("2023-Matematicas-11-2-09-Opc-A.Rmd",
@@ -68,7 +68,8 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
              encoding = "UTF-8",
-             template = "pcielo_sin_sol.tex",
+             template = "pcielo_nosol.tex",
+             solution = FALSE,  # Desactivar completamente las soluciones
              header = list(Date = Sys.Date()),
              inputs = NULL,
              options = NULL,
