@@ -1,0 +1,66 @@
+=== EXAMINANDO make_exams_write_pandoc ===
+Código de make_exams_write_pandoc:
+=====================================
+Líneas problemáticas encontradas:
+1: pd$questionlist <- append(li[-ix], qli, after = ix -
+2: pd$solutionlist <- append(li[-ix], sli, after = ix -
+3: pd_body <- append(template, pd_body, after = pd_after)
+
+Líneas con make_pd_item_list:
+1: make_pd_item_list <- function(k) {
+2: pd_body_j <- make_pd_item_list(nli)
+
+Primeras 50 líneas de la función:
+=================================
+  1: function (name = "pandoc", type = "docx", template = "plain.tex", 
+  2:     question = "Question", solution = "Solution", header = list(Date = Sys.Date()), 
+  3:     inputs = NULL, options = NULL) 
+  4: {
+  5:     via1 <- tolower(file_ext(template))
+  6:     via2 <- switch(via1, tex = "latex", html = "html", md = "markdown")
+  7:     if (is.null(name)) 
+  8:         name <- file_path_sans_ext(basename(template))
+  9:     template <- if (is.null(template)) {
+ 10:         file.path(find.package("exams"), "pandoc", "plain.tex")
+ 11:     }
+ 12:     else path.expand(template)
+ 13:     template <- ifelse(file.exists(template), template, file.path(find.package("exams"), 
+ 14:         "pandoc", basename(template)))
+ 15:     if (!all(file.exists(template))) {
+ 16:         stop(paste("The following files cannot be found: ", paste(template[!file.exists(template)], 
+ 17:             collapse = ", "), ".", sep = ""))
+ 18:     }
+ 19:     template <- readLines(template)
+ 20:     pd_exercises <- which(template == "#-")
+ 21:     if (length(pd_exercises) != 9L) 
+ 22:         stop(sprintf("invalid template: exactly 9 '#-' lines required (and %s found)", 
+ 23:             length(pd_exercises)))
+ 24:     pd_item <- split(template, rep.int(1L:10L, diff(c(1L, pd_exercises, 
+ 25:         length(template) + 1L))))[2L:9L]
+ 26:     pd_item <- lapply(pd_item, "[", -1L)
+ 27:     names(pd_item) <- c("start", "questionheader", "question", 
+ 28:         "questionlist", "solutionheader", "solution", "solutionlist", 
+ 29:         "end")
+ 30:     pd_after <- pd_exercises[1L] - 1L
+ 31:     template <- template[-(pd_exercises[1L]:pd_exercises[9L])]
+ 32:     if (identical(question, FALSE)) {
+ 33:         pd_item$questionheader <- pd_item$question <- pd_item$questionlist <- NULL
+ 34:     }
+ 35:     else {
+ 36:         header$Questionheader <- question
+ 37:     }
+ 38:     if (identical(solution, FALSE)) {
+ 39:         pd_item$solutionheader <- pd_item$solution <- pd_item$solutionlist <- NULL
+ 40:     }
+ 41:     else {
+ 42:         header$Solutionheader <- solution
+ 43:     }
+ 44:     make_pd_item_list <- function(k) {
+ 45:         pd <- pd_item
+ 46:         k <- rep_len(k, 2L)
+ 47:         if (k[1L] == 0L) 
+ 48:             pd$questionlist <- NULL
+ 49:         if (k[2L] == 0L) 
+ 50:             pd$solutionlist <- NULL
+
+=== FIN DEL EXAMEN ===
