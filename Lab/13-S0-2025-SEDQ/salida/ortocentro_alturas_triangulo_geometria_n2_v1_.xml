@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/ortocentro_alturas_triangulo_geometria_n2_v1_/Geometría</text>
+<text>$course$/ortocentro_alturas_triangulo_geometria_n2_v1_/Triángulos</text>
+<text>$course$/ortocentro_alturas_triangulo_geometria_n2_v1_/Puntos notables</text>
+<text>$course$/ortocentro_alturas_triangulo_geometria_n2_v1_/Ortocentro</text>
+</category>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> R1 Q1 : ortocentro_alturas_triangulo_geometria_n2_v1 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>El ortocentro se define como el posición espacial en el cual se encuentran las tres perpendiculares de un figura triangular. En la figura, se le han construido las perpendiculares al figura triangular LNQ y se ha marcado su ortocentro.</p>
+<p><em>[Diagrama del triángulo LNQ con las tres alturas trazadas desde cada vértice hacia el lado opuesto. Las alturas se intersectan en el ortocentro marcado como punto H ]</em></p>
+<p>¿En cuál posición se ubica el ortocentro del figura triangular?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>Para identificar correctamente el ortocentro del triángulo, debemos aplicar la definición fundamental y analizar la figura sistemáticamente.</p>
+<h3 id="paso-1-recordar-la-definición-de-ortocentro">Paso 1: Recordar la definición de ortocentro</h3>
+<p>El <strong>ortocentro</strong> es el punto de intersección de las tres alturas de un triángulo. Una altura es la línea perpendicular que va desde un vértice hasta el lado opuesto (o su prolongación).</p>
+<h3 id="paso-2-identificar-las-alturas-en-la-figura">Paso 2: Identificar las alturas en la figura</h3>
+<p>En el figura triangular LNQ, podemos observar:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Altura desde N</strong>: La línea dotted que va desde el vértice N hasta el punto B en la base LQ. Esta línea es perpendicular a la base, como se indica con el símbolo del ángulo recto.</p></li>
+<li><p><strong>Altura desde L</strong>: La línea dotted que va desde el vértice L hacia el lado opuesto NQ.</p></li>
+<li><p><strong>Altura desde Q</strong>: La línea dotted que va desde el vértice Q hacia el lado opuesto LN.</p></li>
+</ol>
+<h3 id="paso-3-localizar-el-punto-de-convergencia">Paso 3: Localizar el punto de convergencia</h3>
+<p>Al observar cuidadosamente la figura, podemos ver que todas las perpendiculares se intersectan en un único punto. Este punto de convergencia es precisamente el <strong>punto H</strong>, que está marcado con un círculo morado en el diagrama.</p>
+<h3 id="paso-4-verificar-la-respuesta">Paso 4: Verificar la respuesta</h3>
+<p>Según la teoría geométrica:
+- En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
+- Este punto de intersección es el <strong>ortocentro</strong>
+- En la figura mostrada, este punto es claramente <strong>H</strong></p>
+<h3 id="paso-5-ubicación-del-ortocentro-según-el-tipo-de-triángulo">Paso 5: Ubicación del ortocentro según el tipo de triángulo</h3>
+<p>Es importante recordar que:
+- En un <strong>triángulo acutángulo</strong>: el ortocentro se encuentra <strong>dentro</strong> del triángulo
+- En un <strong>triángulo rectángulo</strong>: el ortocentro coincide con el <strong>vértice del ángulo recto</strong>
+- En un <strong>triángulo obtusángulo</strong>: el ortocentro se encuentra <strong>fuera</strong> del triángulo</p>
+<p>En este caso, el triángulo es acutángulo y el ortocentro se encuentra en la posición correspondiente.</p>
+<h3 id="paso-6-descartar-distractores">Paso 6: Descartar distractores</h3>
+<ul>
+<li><strong>Punto L</strong>: Es un vértice del triángulo, no el punto donde convergen las alturas</li>
+<li><strong>Punto N</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+<li><strong>Punto Q</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+</ul>
+<h3 id="conclusión">Conclusión</h3>
+<p>El ortocentro del figura triangular LNQ se ubica en el <strong>punto H</strong>, ya que es el lugar espacial donde se encuentran las tres perpendiculares del figura triangular.</p>
+<p><strong>Concepto clave</strong>: El ortocentro puede ubicarse dentro, sobre o fuera del triángulo dependiendo del tipo de triángulo (acutángulo, rectángulo u obtusángulo), pero siempre es el punto único donde convergen las tres alturas.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+Q
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+L
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+H
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Verdadero
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+N
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> R2 Q1 : ortocentro_alturas_triangulo_geometria_n2_v1 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>El ortocentro se define como el ubicación plano en el cual se cruzan las tres perpendiculares de un forma triangular. En la figura, se le han construido las perpendiculares al forma triangular DEF y se ha marcado su ortocentro.</p>
+<p><em>[Diagrama del triángulo DEF con las tres alturas trazadas desde cada vértice hacia el lado opuesto. Las alturas se intersectan en el ortocentro marcado como punto H ]</em></p>
+<p>¿En cuál ubicación se ubica el ortocentro del forma triangular?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>Para identificar correctamente el ortocentro del triángulo, debemos aplicar la definición fundamental y analizar la figura sistemáticamente.</p>
+<h3 id="paso-1-recordar-la-definición-de-ortocentro">Paso 1: Recordar la definición de ortocentro</h3>
+<p>El <strong>ortocentro</strong> es el punto de intersección de las tres alturas de un triángulo. Una altura es la línea perpendicular que va desde un vértice hasta el lado opuesto (o su prolongación).</p>
+<h3 id="paso-2-identificar-las-alturas-en-la-figura">Paso 2: Identificar las alturas en la figura</h3>
+<p>En el forma triangular DEF, podemos observar:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Altura desde E</strong>: La línea dashdotted que va desde el vértice E hasta el punto B en la base DF. Esta línea es perpendicular a la base, como se indica con el símbolo del ángulo recto.</p></li>
+<li><p><strong>Altura desde D</strong>: La línea dashdotted que va desde el vértice D hacia el lado opuesto EF.</p></li>
+<li><p><strong>Altura desde F</strong>: La línea dashdotted que va desde el vértice F hacia el lado opuesto DE.</p></li>
+</ol>
+<h3 id="paso-3-localizar-el-punto-de-convergencia">Paso 3: Localizar el punto de convergencia</h3>
+<p>Al observar cuidadosamente la figura, podemos ver que todas las perpendiculares se intersectan en un único punto. Este punto de convergencia es precisamente el <strong>punto H</strong>, que está marcado con un círculo morado en el diagrama.</p>
+<h3 id="paso-4-verificar-la-respuesta">Paso 4: Verificar la respuesta</h3>
+<p>Según la teoría geométrica:
+- En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
+- Este punto de intersección es el <strong>ortocentro</strong>
+- En la figura mostrada, este punto es claramente <strong>H</strong></p>
+<h3 id="paso-5-ubicación-del-ortocentro-según-el-tipo-de-triángulo">Paso 5: Ubicación del ortocentro según el tipo de triángulo</h3>
+<p>Es importante recordar que:
+- En un <strong>triángulo acutángulo</strong>: el ortocentro se encuentra <strong>dentro</strong> del triángulo
+- En un <strong>triángulo rectángulo</strong>: el ortocentro coincide con el <strong>vértice del ángulo recto</strong>
+- En un <strong>triángulo obtusángulo</strong>: el ortocentro se encuentra <strong>fuera</strong> del triángulo</p>
+<p>En este caso, el triángulo es acutángulo y el ortocentro se encuentra en la posición correspondiente.</p>
+<h3 id="paso-6-descartar-distractores">Paso 6: Descartar distractores</h3>
+<ul>
+<li><strong>Punto D</strong>: Es un vértice del triángulo, no el punto donde convergen las alturas</li>
+<li><strong>Punto E</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+<li><strong>Punto F</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+</ul>
+<h3 id="conclusión">Conclusión</h3>
+<p>El ortocentro del forma triangular DEF se ubica en el <strong>punto H</strong>, ya que es el lugar plano donde se cruzan las tres perpendiculares del forma triangular.</p>
+<p><strong>Concepto clave</strong>: El ortocentro puede ubicarse dentro, sobre o fuera del triángulo dependiendo del tipo de triángulo (acutángulo, rectángulo u obtusángulo), pero siempre es el punto único donde convergen las tres alturas.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+D
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+F
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+E
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+H
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Verdadero
+</p>]]></text>
+</feedback>
+</answer>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> R3 Q1 : ortocentro_alturas_triangulo_geometria_n2_v1 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>El ortocentro se define como el lugar espacial en el cual se encuentran las tres perpendiculares de un forma triangular. En la figura, se le han construido las perpendiculares al forma triangular RST y se ha marcado su ortocentro.</p>
+<p><em>[Diagrama del triángulo RST con las tres alturas trazadas desde cada vértice hacia el lado opuesto. Las alturas se intersectan en el ortocentro marcado como punto H ]</em></p>
+<p>¿En cuál lugar se ubica el ortocentro del forma triangular?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>Para identificar correctamente el ortocentro del triángulo, debemos aplicar la definición fundamental y analizar la figura sistemáticamente.</p>
+<h3 id="paso-1-recordar-la-definición-de-ortocentro">Paso 1: Recordar la definición de ortocentro</h3>
+<p>El <strong>ortocentro</strong> es el punto de intersección de las tres alturas de un triángulo. Una altura es la línea perpendicular que va desde un vértice hasta el lado opuesto (o su prolongación).</p>
+<h3 id="paso-2-identificar-las-alturas-en-la-figura">Paso 2: Identificar las alturas en la figura</h3>
+<p>En el forma triangular RST, podemos observar:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Altura desde S</strong>: La línea dashed que va desde el vértice S hasta el punto N en la base RT. Esta línea es perpendicular a la base, como se indica con el símbolo del ángulo recto.</p></li>
+<li><p><strong>Altura desde R</strong>: La línea dashed que va desde el vértice R hacia el lado opuesto ST.</p></li>
+<li><p><strong>Altura desde T</strong>: La línea dashed que va desde el vértice T hacia el lado opuesto RS.</p></li>
+</ol>
+<h3 id="paso-3-localizar-el-punto-de-convergencia">Paso 3: Localizar el punto de convergencia</h3>
+<p>Al observar cuidadosamente la figura, podemos ver que todas las perpendiculares se intersectan en un único punto. Este punto de convergencia es precisamente el <strong>punto H</strong>, que está marcado con un círculo morado en el diagrama.</p>
+<h3 id="paso-4-verificar-la-respuesta">Paso 4: Verificar la respuesta</h3>
+<p>Según la teoría geométrica:
+- En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
+- Este punto de intersección es el <strong>ortocentro</strong>
+- En la figura mostrada, este punto es claramente <strong>H</strong></p>
+<h3 id="paso-5-ubicación-del-ortocentro-según-el-tipo-de-triángulo">Paso 5: Ubicación del ortocentro según el tipo de triángulo</h3>
+<p>Es importante recordar que:
+- En un <strong>triángulo acutángulo</strong>: el ortocentro se encuentra <strong>dentro</strong> del triángulo
+- En un <strong>triángulo rectángulo</strong>: el ortocentro coincide con el <strong>vértice del ángulo recto</strong>
+- En un <strong>triángulo obtusángulo</strong>: el ortocentro se encuentra <strong>fuera</strong> del triángulo</p>
+<p>En este caso, el triángulo es acutángulo y el ortocentro se encuentra en la posición correspondiente.</p>
+<h3 id="paso-6-descartar-distractores">Paso 6: Descartar distractores</h3>
+<ul>
+<li><strong>Punto R</strong>: Es un vértice del triángulo, no el punto donde convergen las alturas</li>
+<li><strong>Punto S</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+<li><strong>Punto T</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+</ul>
+<h3 id="conclusión">Conclusión</h3>
+<p>El ortocentro del forma triangular RST se ubica en el <strong>punto H</strong>, ya que es el lugar espacial donde se encuentran las tres perpendiculares del forma triangular.</p>
+<p><strong>Concepto clave</strong>: El ortocentro puede ubicarse dentro, sobre o fuera del triángulo dependiendo del tipo de triángulo (acutángulo, rectángulo u obtusángulo), pero siempre es el punto único donde convergen las tres alturas.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+H
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Verdadero
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+S
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+R
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+T
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> R4 Q1 : ortocentro_alturas_triangulo_geometria_n2_v1 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>El ortocentro se define como el lugar geométrico en el cual se intersectan las tres alturas de un triángulo. En la figura, se le han construido las alturas al triángulo XYZ y se ha marcado su ortocentro.</p>
+<p><em>[Diagrama del triángulo XYZ con las tres alturas trazadas desde cada vértice hacia el lado opuesto. Las alturas se intersectan en el ortocentro marcado como punto H ]</em></p>
+<p>¿En cuál lugar se ubica el ortocentro del triángulo?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>Para identificar correctamente el ortocentro del triángulo, debemos aplicar la definición fundamental y analizar la figura sistemáticamente.</p>
+<h3 id="paso-1-recordar-la-definición-de-ortocentro">Paso 1: Recordar la definición de ortocentro</h3>
+<p>El <strong>ortocentro</strong> es el punto de intersección de las tres alturas de un triángulo. Una altura es la línea perpendicular que va desde un vértice hasta el lado opuesto (o su prolongación).</p>
+<h3 id="paso-2-identificar-las-alturas-en-la-figura">Paso 2: Identificar las alturas en la figura</h3>
+<p>En el triángulo XYZ, podemos observar:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Altura desde Y</strong>: La línea dotted que va desde el vértice Y hasta el punto L en la base XZ. Esta línea es perpendicular a la base, como se indica con el símbolo del ángulo recto.</p></li>
+<li><p><strong>Altura desde X</strong>: La línea dotted que va desde el vértice X hacia el lado opuesto YZ.</p></li>
+<li><p><strong>Altura desde Z</strong>: La línea dotted que va desde el vértice Z hacia el lado opuesto XY.</p></li>
+</ol>
+<h3 id="paso-3-localizar-el-punto-de-convergencia">Paso 3: Localizar el punto de convergencia</h3>
+<p>Al observar cuidadosamente la figura, podemos ver que todas las alturas se intersectan en un único punto. Este punto de convergencia es precisamente el <strong>punto H</strong>, que está marcado con un círculo morado en el diagrama.</p>
+<h3 id="paso-4-verificar-la-respuesta">Paso 4: Verificar la respuesta</h3>
+<p>Según la teoría geométrica:
+- En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
+- Este punto de intersección es el <strong>ortocentro</strong>
+- En la figura mostrada, este punto es claramente <strong>H</strong></p>
+<h3 id="paso-5-ubicación-del-ortocentro-según-el-tipo-de-triángulo">Paso 5: Ubicación del ortocentro según el tipo de triángulo</h3>
+<p>Es importante recordar que:
+- En un <strong>triángulo acutángulo</strong>: el ortocentro se encuentra <strong>dentro</strong> del triángulo
+- En un <strong>triángulo rectángulo</strong>: el ortocentro coincide con el <strong>vértice del ángulo recto</strong>
+- En un <strong>triángulo obtusángulo</strong>: el ortocentro se encuentra <strong>fuera</strong> del triángulo</p>
+<p>En este caso, el triángulo es acutángulo y el ortocentro se encuentra en la posición correspondiente.</p>
+<h3 id="paso-6-descartar-distractores">Paso 6: Descartar distractores</h3>
+<ul>
+<li><strong>Punto X</strong>: Es un vértice del triángulo, no el punto donde convergen las alturas</li>
+<li><strong>Punto Y</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+<li><strong>Punto Z</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+</ul>
+<h3 id="conclusión">Conclusión</h3>
+<p>El ortocentro del triángulo XYZ se ubica en el <strong>punto H</strong>, ya que es el lugar geométrico donde se intersectan las tres alturas del triángulo.</p>
+<p><strong>Concepto clave</strong>: El ortocentro puede ubicarse dentro, sobre o fuera del triángulo dependiendo del tipo de triángulo (acutángulo, rectángulo u obtusángulo), pero siempre es el punto único donde convergen las tres alturas.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+H
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Verdadero
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+Y
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+Z
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+X
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> R5 Q1 : ortocentro_alturas_triangulo_geometria_n2_v1 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>El ortocentro se define como el posición espacial en el cual se cruzan las tres altitudes de un forma triangular. En la figura, se le han trazado las altitudes al forma triangular XYZ y se ha marcado su ortocentro.</p>
+<p><em>[Diagrama del triángulo XYZ con las tres alturas trazadas desde cada vértice hacia el lado opuesto. Las alturas se intersectan en el ortocentro marcado como punto H ]</em></p>
+<p>¿En cuál posición se ubica el ortocentro del forma triangular?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>Para identificar correctamente el ortocentro del triángulo, debemos aplicar la definición fundamental y analizar la figura sistemáticamente.</p>
+<h3 id="paso-1-recordar-la-definición-de-ortocentro">Paso 1: Recordar la definición de ortocentro</h3>
+<p>El <strong>ortocentro</strong> es el punto de intersección de las tres alturas de un triángulo. Una altura es la línea perpendicular que va desde un vértice hasta el lado opuesto (o su prolongación).</p>
+<h3 id="paso-2-identificar-las-alturas-en-la-figura">Paso 2: Identificar las alturas en la figura</h3>
+<p>En el forma triangular XYZ, podemos observar:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Altura desde Y</strong>: La línea dashed que va desde el vértice Y hasta el punto O en la base XZ. Esta línea es perpendicular a la base, como se indica con el símbolo del ángulo recto.</p></li>
+<li><p><strong>Altura desde X</strong>: La línea dashed que va desde el vértice X hacia el lado opuesto YZ.</p></li>
+<li><p><strong>Altura desde Z</strong>: La línea dashed que va desde el vértice Z hacia el lado opuesto XY.</p></li>
+</ol>
+<h3 id="paso-3-localizar-el-punto-de-convergencia">Paso 3: Localizar el punto de convergencia</h3>
+<p>Al observar cuidadosamente la figura, podemos ver que todas las altitudes se intersectan en un único punto. Este punto de convergencia es precisamente el <strong>punto H</strong>, que está marcado con un círculo morado en el diagrama.</p>
+<h3 id="paso-4-verificar-la-respuesta">Paso 4: Verificar la respuesta</h3>
+<p>Según la teoría geométrica:
+- En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
+- Este punto de intersección es el <strong>ortocentro</strong>
+- En la figura mostrada, este punto es claramente <strong>H</strong></p>
+<h3 id="paso-5-ubicación-del-ortocentro-según-el-tipo-de-triángulo">Paso 5: Ubicación del ortocentro según el tipo de triángulo</h3>
+<p>Es importante recordar que:
+- En un <strong>triángulo acutángulo</strong>: el ortocentro se encuentra <strong>dentro</strong> del triángulo
+- En un <strong>triángulo rectángulo</strong>: el ortocentro coincide con el <strong>vértice del ángulo recto</strong>
+- En un <strong>triángulo obtusángulo</strong>: el ortocentro se encuentra <strong>fuera</strong> del triángulo</p>
+<p>En este caso, el triángulo es acutángulo y el ortocentro se encuentra en la posición correspondiente.</p>
+<h3 id="paso-6-descartar-distractores">Paso 6: Descartar distractores</h3>
+<ul>
+<li><strong>Punto X</strong>: Es un vértice del triángulo, no el punto donde convergen las alturas</li>
+<li><strong>Punto Y</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+<li><strong>Punto Z</strong>: Es otro vértice del triángulo, no el ortocentro</li>
+</ul>
+<h3 id="conclusión">Conclusión</h3>
+<p>El ortocentro del forma triangular XYZ se ubica en el <strong>punto H</strong>, ya que es el lugar espacial donde se cruzan las tres altitudes del forma triangular.</p>
+<p><strong>Concepto clave</strong>: El ortocentro puede ubicarse dentro, sobre o fuera del triángulo dependiendo del tipo de triángulo (acutángulo, rectángulo u obtusángulo), pero siempre es el punto único donde convergen las tres alturas.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+Y
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+X
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+Z
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+H
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Verdadero
+</p>]]></text>
+</feedback>
+</answer>
+</question>
+
+</quiz>
