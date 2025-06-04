@@ -63,52 +63,52 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Generación de n copias, sin Solution, en un solo archivo .docx
 
-# set.seed(semilla)
-# exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
-#              n = copias,
-#              name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
-#              encoding = "UTF-8",
-#              template = "pcielo_sin_sol.tex",
-#              header = list(Date = Sys.Date()),
-#              inputs = NULL,
-#              options = NULL,
-#              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
-#              resolution = 100,
-#              width = 4,
-#              height = 4,
-#              svg = TRUE,
-#              dir = dir_salida,
-#              edir = dir_ejercicios,
-#              tdir = NULL,
-#              sdir = NULL,
-#              verbose = TRUE, # Added verbose
-#              points = NULL,
-#              exshuffle = NULL,
-#              type = "docx")
+set.seed(semilla)
+exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
+             n = copias,
+             name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
+             encoding = "UTF-8",
+             template = "pcielo_sin_sol.tex",
+             header = list(Date = Sys.Date()),
+             inputs = NULL,
+             options = NULL,
+             quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
+             resolution = 100,
+             width = 4,
+             height = 4,
+             svg = TRUE,
+             dir = dir_salida,
+             edir = dir_ejercicios,
+             tdir = NULL,
+             sdir = NULL,
+             verbose = TRUE, # Added verbose
+             points = NULL,
+             exshuffle = NULL,
+             type = "docx")
 
 
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión con soluciones)
 
-set.seed(semilla)
-exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
-          n = copias,
-          name = "Espitia-Matemáticas-P2_sol",
-          encoding = "UTF-8",
-          template = "solpcielo",
-          dir = dir_salida,
-          edir = dir_ejercicios,
-          verbose = TRUE)
+# set.seed(semilla)
+# exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
+#           n = copias,
+#           name = "Espitia-Matemáticas-P2_sol",
+#           encoding = "UTF-8",
+#           template = "solpcielo",
+#           dir = dir_salida,
+#           edir = dir_ejercicios,
+#           verbose = TRUE)
 
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión de examen)
 
-set.seed(semilla)
-exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
-          n = copias,
-          name = "Espitia-Matemáticas-P2",  # Corregido: nombre como string
-          encoding = "UTF-8",
-          template = "exam",
-          dir = dir_salida,
-          edir = dir_ejercicios,
-          verbose = TRUE)
+# set.seed(semilla)
+# exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
+#           n = copias,
+#           name = "Espitia-Matemáticas-P2",  # Corregido: nombre como string
+#           encoding = "UTF-8",
+#           template = "exam",
+#           dir = dir_salida,
+#           edir = dir_ejercicios,
+#           verbose = TRUE)

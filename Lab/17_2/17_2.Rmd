@@ -1,0 +1,464 @@
+---
+output:
+word_document: default
+pdf_document:
+keep_tex: true
+extra_dependencies: ["graphicx", "float", "amsmath"]
+html_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+"\\usepackage{tikz}",
+"\\usepackage{colortbl}",
+"\\usepackage{graphicx}",
+"\\usepackage{float}",
+"\\usepackage{amsmath}"
+))
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+warning = FALSE,
+message = FALSE,
+fig.showtext = FALSE,
+fig.cap = "",
+fig.keep = 'all',
+dev = c("png", "pdf"),
+dpi = 150,
+fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".") # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+#set.seed(sample(1:10000, 1))
+
+# Aleatorización del contexto del problema
+contextos <- c(
+"empresa", "fábrica", "almacén", "bodega", "depósito",
+"centro de distribución", "tienda", "comercio", "negocio", "planta industrial"
+)
+contexto <- sample(contextos, 1)
+
+# Aleatorización de los objetos que se empaquetan
+objetos <- c(
+"empacar alimentos", "almacenar productos", "guardar mercancía", 
+"transportar artículos", "organizar inventario", "embalar pedidos",
+"distribuir materiales", "empaquetar suministros", "enviar paquetes", "despachar órdenes"
+)
+objeto <- sample(objetos, 1)
+
+# Aleatorización de términos para el enunciado
+terminos_imagen <- c("imagen", "figura", "ilustración", "gráfico", "representación")
+termino_imagen <- sample(terminos_imagen, 1)
+terminos_dimensiones <- c("dimensiones", "medidas", "tamaños", "proporciones", "magnitudes")
+termino_dimensiones <- sample(terminos_dimensiones, 1)
+terminos_cajas <- c("cajas", "contenedores", "recipientes", "envases", "empaques")
+termino_cajas <- sample(terminos_cajas, 1)
+terminos_empresa <- c("se utilizan", "se emplean", "se usan", "se requieren", "se necesitan")
+termino_empresa <- sample(terminos_empresa, 1)
+
+# Generar dimensiones aleatorias manteniendo proporciones que generen relaciones enteras
+# Estrategia: generar factores que produzcan relaciones de volumen enteras
+# Generar factor de relación entre volúmenes (entero entre 2 y 5)
+factor_volumen <- sample(2:5, 1)
+# Dimensiones base para la caja cúbica (Caja 2)
+dimension_cubo <- sample(c(5, 10, 15, 20, 25), 1)
+# Para la caja rectangular (Caja 1), necesitamos que su volumen sea factor_volumen veces el de la caja 2
+volumen_cubo <- dimension_cubo^3
+volumen_rectangulo <- factor_volumen * volumen_cubo
+
+# Generar dimensiones para la caja rectangular manteniendo dos dimensiones iguales al cubo
+# y variando la tercera para obtener el volumen deseado
+altura_caja1 <- dimension_cubo
+profundidad_caja1 <- dimension_cubo
+largo_caja1 <- volumen_rectangulo / (altura_caja1 * profundidad_caja1)
+
+# Verificar que largo_caja1 sea entero
+test_that("El largo de la caja 1 es entero", {
+expect_equal(largo_caja1, as.integer(largo_caja1))
+})
+
+# Aleatorizar qué caja es más grande
+if (runif(1) > 0.5) {
+# Caja 1 es la más grande (rectangular)
+nombre_caja1 <- "Caja 1"
+nombre_caja2 <- "Caja 2"
+
+# Dimensiones finales
+dim1_caja1 <- largo_caja1
+dim2_caja1 <- altura_caja1
+dim3_caja1 <- profundidad_caja1
+dim1_caja2 <- dimension_cubo
+dim2_caja2 <- dimension_cubo
+dim3_caja2 <- dimension_cubo
+volumen_caja1 <- volumen_rectangulo
+volumen_caja2 <- volumen_cubo
+} else {
+# Caja 2 es la más grande (rectangular)
+nombre_caja1 <- "Caja 2"
+nombre_caja2 <- "Caja 1"
+# Dimensiones finales (intercambiadas)
+dim1_caja1 <- dimension_cubo
+dim2_caja1 <- dimension_cubo
+dim3_caja1 <- dimension_cubo
+dim1_caja2 <- largo_caja1
+dim2_caja2 <- altura_caja1
+dim3_caja2 <- profundidad_caja1
+volumen_caja1 <- volumen_cubo
+volumen_caja2 <- volumen_rectangulo
+}
+
+# Verificar volúmenes
+test_that("Los volúmenes se calculan correctamente", {
+expect_equal(dim1_caja1 * dim2_caja1 * dim3_caja1, volumen_caja1)
+expect_equal(dim1_caja2 * dim2_caja2 * dim3_caja2, volumen_caja2)
+})
+
+# Determinar cuál caja tiene mayor volumen
+if (volumen_caja1 > volumen_caja2) {
+caja_mayor <- nombre_caja1
+caja_menor <- nombre_caja2
+relacion <- volumen_caja1 / volumen_caja2
+} else {
+caja_mayor <- nombre_caja2
+caja_menor <- nombre_caja1
+relacion <- volumen_caja2 / volumen_caja1
+}
+
+# Verificar que la relación es entera
+test_that("La relación entre volúmenes es entera", {
+expect_equal(relacion, as.integer(relacion))
+})
+
+# Generar respuesta correcta y distractores
+# La respuesta correcta depende de la relación entre volúmenes
+relacion_int <- as.integer(relacion)
+
+# Generar opciones con diferentes tipos de errores conceptuales
+opciones_texto <- c(
+sprintf("la %s ocupa %s del volumen de la %s", 
+tolower(caja_mayor), 
+ifelse(relacion_int == 2, "el doble", 
+ifelse(relacion_int == 3, "el triple",
+ifelse(relacion_int == 4, "el cuádruple",
+paste(relacion_int, "veces el volumen")))),
+tolower(caja_menor)),
+sprintf("la %s ocupa %s del volumen de la %s", 
+tolower(caja_menor), 
+ifelse(relacion_int == 2, "el doble", 
+ifelse(relacion_int == 3, "el triple",
+ifelse(relacion_int == 4, "el cuádruple",
+paste(relacion_int, "veces el volumen")))),
+tolower(caja_mayor)),
+sprintf("%s %s %s ocupan el mismo volumen que %s %s %s",
+ifelse(relacion_int + 1 <= 5, 
+c("dos", "tres", "cuatro", "cinco")[relacion_int + 1 - 2],
+as.character(relacion_int + 1)),
+termino_cajas,
+nombre_caja1,
+ifelse(relacion_int <= 5,
+c("dos", "tres", "cuatro", "cinco")[relacion_int - 1],
+as.character(relacion_int)),
+termino_cajas,
+nombre_caja2),
+sprintf("%s %s %s ocupan el mismo volumen que una %s",
+ifelse(relacion_int <= 5,
+c("dos", "tres", "cuatro", "cinco")[relacion_int - 1],
+as.character(relacion_int)),
+termino_cajas,
+nombre_caja2,
+tolower(caja_mayor))
+)
+
+# Identificar cuál es la opción correcta
+if (volumen_caja1 > volumen_caja2) {
+# Si Caja 1 es mayor
+if (nombre_caja1 == "Caja 1") {
+# Caja 1 es mayor y se llama Caja 1
+opcion_correcta <- 1 # "la caja 1 ocupa X veces el volumen de la caja 2"
+} else {
+# Caja 1 es mayor pero se llama Caja 2
+opcion_correcta <- 1 # "la caja 2 ocupa X veces el volumen de la caja 1"
+}
+} else {
+# Si Caja 2 es mayor
+if (nombre_caja2 == "Caja 2") {
+# Caja 2 es mayor y se llama Caja 2
+opcion_correcta <- 1 # "la caja 2 ocupa X veces el volumen de la caja 1"
+} else {
+# Caja 2 es mayor pero se llama Caja 1
+opcion_correcta <- 1 # "la caja 1 ocupa X veces el volumen de la caja 2"
+}
+}
+
+# Reordenar para que la respuesta correcta sea la última opción
+opciones_texto_final <- c(opciones_texto[2], opciones_texto[3], opciones_texto[4], opciones_texto[1])
+
+# Mezclar las opciones
+indices_mezclados <- sample(1:4)
+opciones_mezcladas <- opciones_texto_final[indices_mezclados]
+
+# Encontrar dónde quedó la respuesta correcta
+indice_correcto <- which(indices_mezclados == 4)
+# Crear el vector de solución para r-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+# Aleatorización de unidades de medida
+unidades <- c("cm", "mm", "dm")
+unidad <- sample(unidades, 1)
+# Convertir dimensiones según la unidad seleccionada
+factor_conversion <- switch(unidad,
+"cm" = 1,
+"mm" = 10,
+"dm" = 0.1
+)
+dim1_caja1_mostrar <- dim1_caja1 * factor_conversion
+dim2_caja1_mostrar <- dim2_caja1 * factor_conversion
+dim3_caja1_mostrar <- dim3_caja1 * factor_conversion
+dim1_caja2_mostrar <- dim1_caja2 * factor_conversion
+dim2_caja2_mostrar <- dim2_caja2 * factor_conversion
+dim3_caja2_mostrar <- dim3_caja2 * factor_conversion
+```
+```{r generar_diagrama_cajas, message=FALSE, warning=FALSE}
+options(OutDec = ".") # Asegurar punto decimal en este chunk
+
+# Código Python para generar el diagrama de las cajas
+codigo_python <- paste0("
+import matplotlib
+matplotlib.use('Agg') # Usar backend no interactivo
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+import numpy as np
+# Función para dibujar una caja 3D
+def draw_box(ax, origin, width, height, depth, color='lightgray', alpha=0.7):
+# Definir los vértices de la caja
+x, y, z = origin
+vertices = [
+[x, y, z],
+[x + width, y, z],
+[x + width, y + height, z],
+[x, y + height, z],
+[x, y, z + depth],
+[x + width, y, z + depth],
+[x + width, y + height, z + depth],
+[x, y + height, z + depth]
+]
+# Definir las caras de la caja
+faces = [
+[vertices[0], vertices[1], vertices[5], vertices[4]], # Cara frontal
+[vertices[2], vertices[3], vertices[7], vertices[6]], # Cara trasera
+[vertices[0], vertices[3], vertices[7], vertices[4]], # Cara izquierda
+[vertices[1], vertices[2], vertices[6], vertices[5]], # Cara derecha
+[vertices[0], vertices[1], vertices[2], vertices[3]], # Cara inferior
+[vertices[4], vertices[5], vertices[6], vertices[7]] # Cara superior
+]
+# Crear la colección de polígonos 3D
+poly3d = Poly3DCollection(faces, alpha=alpha, linewidths=1, edgecolors='black')
+poly3d.set_facecolor(color)
+ax.add_collection3d(poly3d)
+return vertices
+# Crear figura con dos subplots
+fig = plt.figure(figsize=(12, 6))
+# Configurar dimensiones de las cajas
+dim1_caja1 = ", dim1_caja1_mostrar, "
+dim2_caja1 = ", dim2_caja1_mostrar, "
+dim3_caja1 = ", dim3_caja1_mostrar, "
+dim1_caja2 = ", dim1_caja2_mostrar, "
+dim2_caja2 = ", dim2_caja2_mostrar, "
+dim3_caja2 = ", dim3_caja2_mostrar, "
+# Encontrar dimensiones máximas para escalar apropiadamente
+max_dim = max(dim1_caja1, dim2_caja1, dim3_caja1, dim1_caja2, dim2_caja2, dim3_caja2)
+# Subplot 1: ", nombre_caja1, "
+ax1 = fig.add_subplot(121, projection='3d')
+vertices1 = draw_box(ax1, (0, 0, 0), dim1_caja1, dim2_caja1, dim3_caja1, 'lightgray', 0.6)
+# Configurar límites y aspecto
+ax1.set_xlim(0, max_dim * 1.2)
+ax1.set_ylim(0, max_dim * 1.2)
+ax1.set_zlim(0, max_dim * 1.2)
+# Añadir líneas de dimensión para ", nombre_caja1, "
+# Línea horizontal (largo)
+ax1.plot([0, dim1_caja1], [0, 0], [0, 0], 'k--', linewidth=1)
+ax1.text(dim1_caja1/2, -max_dim*0.15, 0, f'{dim1_caja1:.0f} ", unidad, "', 
+ha='center', va='top', fontsize=10)
+# Línea vertical (alto)
+ax1.plot([0, 0], [0, dim2_caja1], [0, 0], 'k--', linewidth=1)
+ax1.text(-max_dim*0.15, dim2_caja1/2, 0, f'{dim2_caja1:.0f} ", unidad, "', 
+ha='right', va='center', fontsize=10, rotation=90)
+# Línea de profundidad
+ax1.plot([dim1_caja1, dim1_caja1], [0, 0], [0, dim3_caja1], 'k--', linewidth=1)
+ax1.text(dim1_caja1 + max_dim*0.1, 0, dim3_caja1/2, f'{dim3_caja1:.0f} ", unidad, "', 
+ha='left', va='center', fontsize=10)
+# Configurar vista y etiquetas
+ax1.view_init(elev=20, azim=45)
+ax1.set_title('", nombre_caja1, "', fontsize=16, fontweight='bold', pad=20)
+ax1.grid(False)
+ax1.set_xticks([])
+ax1.set_yticks([])
+ax1.set_zticks([])
+# Subplot 2: ", nombre_caja2, "
+ax2 = fig.add_subplot(122, projection='3d')
+vertices2 = draw_box(ax2, (0, 0, 0), dim1_caja2, dim2_caja2, dim3_caja2, 'lightgray', 0.6)
+# Configurar límites y aspecto
+ax2.set_xlim(0, max_dim * 1.2)
+ax2.set_ylim(0, max_dim * 1.2)
+ax2.set_zlim(0, max_dim * 1.2)
+# Añadir líneas de dimensión para ", nombre_caja2, "
+# Línea horizontal (largo)
+ax2.plot([0, dim1_caja2], [0, 0], [0, 0], 'k--', linewidth=1)
+ax2.text(dim1_caja2/2, -max_dim*0.15, 0, f'{dim1_caja2:.0f} ", unidad, "', 
+ha='center', va='top', fontsize=10)
+# Línea vertical (alto)
+ax2.plot([0, 0], [0, dim2_caja2], [0, 0], 'k--', linewidth=1)
+ax2.text(-max_dim*0.15, dim2_caja2/2, 0, f'{dim2_caja2:.0f} ", unidad, "', 
+ha='right', va='center', fontsize=10, rotation=90)
+# Línea de profundidad
+ax2.plot([dim1_caja2, dim1_caja2], [0, 0], [0, dim3_caja2], 'k--', linewidth=1)
+ax2.text(dim1_caja2 + max_dim*0.1, 0, dim3_caja2/2, f'{dim3_caja2:.0f} ", unidad, "', 
+ha='left', va='center', fontsize=10)
+# Configurar vista y etiquetas
+ax2.view_init(elev=20, azim=45)
+ax2.set_title('", nombre_caja2, "', fontsize=16, fontweight='bold', pad=20)
+ax2.grid(False)
+ax2.set_xticks([])
+ax2.set_yticks([])
+ax2.set_zticks([])
+# Ajustar el diseño
+plt.tight_layout()
+# Guardar en múltiples formatos para asegurar compatibilidad
+plt.savefig('diagrama_cajas.png', dpi=150, bbox_inches='tight', transparent=True, format='png')
+plt.savefig('diagrama_cajas.pdf', dpi=150, bbox_inches='tight', transparent=True, format='pdf')
+plt.close()
+")
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+```
+
+Question
+========
+La siguiente `r termino_imagen` muestra las `r termino_dimensiones` de 2 `r termino_cajas`: `r nombre_caja1` y `r nombre_caja2` que `r termino_empresa` en una `r contexto` para `r objeto`.
+
+```{r mostrar_diagrama_cajas, echo=FALSE, results='asis', fig.align="center"}
+
+# Detectar si se está generando para Moodle
+# Formatos para Moodle y similares
+formatos_moodle <- c("exams2moodle", "exams2qti12",
+"exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar la imagen del diagrama de cajas
+if (es_moodle) {
+# Tamaño para Moodle
+cat("![](diagrama_cajas.png){width=70%}")
+} else {
+# Tamaño para PDF/Word
+cat("![](diagrama_cajas.png){width=80%}")
+}
+```
+
+De acuerdo con la información anterior, respecto al volumen de las `r termino_cajas`, es correcto afirmar que
+
+Answerlist
+----------
+- `r opciones_mezcladas[1]`.
+- `r opciones_mezcladas[2]`.
+- `r opciones_mezcladas[3]`.
+- `r opciones_mezcladas[4]`.
+
+Solution
+========
+Para resolver este problema, necesitamos calcular el volumen de cada caja y luego comparar los resultados. El volumen de un prisma rectangular (o caja) se calcula multiplicando sus tres dimensiones: largo × ancho × alto.
+
+### Paso 1: Calcular el volumen de `r nombre_caja1`
+Las dimensiones de `r nombre_caja1` son:
+
+- Largo: `r dim1_caja1_mostrar` `r unidad`
+- Ancho: `r dim2_caja1_mostrar` `r unidad` 
+- Alto: `r dim3_caja1_mostrar` `r unidad`
+
+Volumen de `r nombre_caja1` = largo × ancho × alto
+V₁ = `r dim1_caja1_mostrar` × `r dim2_caja1_mostrar` × `r dim3_caja1_mostrar`
+V₁ = `r dim1_caja1_mostrar * dim2_caja1_mostrar * dim3_caja1_mostrar` `r unidad`³
+
+### Paso 2: Calcular el volumen de `r nombre_caja2`
+Las dimensiones de `r nombre_caja2` son:
+
+- Largo: `r dim1_caja2_mostrar` `r unidad`
+- Ancho: `r dim2_caja2_mostrar` `r unidad`
+- Alto: `r dim3_caja2_mostrar` `r unidad`
+
+Volumen de `r nombre_caja2` = largo × ancho × alto
+V₂ = `r dim1_caja2_mostrar` × `r dim2_caja2_mostrar` × `r dim3_caja2_mostrar`
+V₂ = `r dim1_caja2_mostrar * dim2_caja2_mostrar * dim3_caja2_mostrar` `r unidad`³
+
+### Paso 3: Comparar los volúmenes
+Ahora comparemos los volúmenes calculados:
+
+- Volumen de `r nombre_caja1`: `r dim1_caja1_mostrar * dim2_caja1_mostrar * dim3_caja1_mostrar` `r unidad`³
+- Volumen de `r nombre_caja2`: `r dim1_caja2_mostrar * dim2_caja2_mostrar * dim3_caja2_mostrar` `r unidad`³
+
+Para encontrar la relación entre los volúmenes:
+
+`r if(volumen_caja1 > volumen_caja2) paste0("V₁ ÷ V₂") else paste0("V₂ ÷ V₁")` = `r if(volumen_caja1 > volumen_caja2) paste0(dim1_caja1_mostrar * dim2_caja1_mostrar * dim3_caja1_mostrar, " ÷ ", dim1_caja2_mostrar * dim2_caja2_mostrar * dim3_caja2_mostrar) else paste0(dim1_caja2_mostrar * dim2_caja2_mostrar * dim3_caja2_mostrar, " ÷ ", dim1_caja1_mostrar * dim2_caja1_mostrar * dim3_caja1_mostrar)` = `r relacion_int`
+
+### Paso 4: Verificación de la relación
+Esto significa que `r caja_mayor` tiene `r if(relacion_int == 2) "el doble" else if(relacion_int == 3) "el triple" else if(relacion_int == 4) "el cuádruple" else paste(relacion_int, "veces")` del volumen de `r caja_menor`.
+
+Podemos verificar esto de otra manera:
+
+- `r relacion_int` × Volumen de `r caja_menor` = `r relacion_int` × `r if(volumen_caja1 < volumen_caja2) paste0(dim1_caja1_mostrar * dim2_caja1_mostrar * dim3_caja1_mostrar) else paste0(dim1_caja2_mostrar * dim2_caja2_mostrar * dim3_caja2_mostrar)` = `r if(volumen_caja1 < volumen_caja2) paste0(relacion_int * dim1_caja1_mostrar * dim2_caja1_mostrar * dim3_caja1_mostrar) else paste0(relacion_int * dim1_caja2_mostrar * dim2_caja2_mostrar * dim3_caja2_mostrar)` `r unidad`³
+
+- Esto es igual al volumen de `r caja_mayor`.
+
+### Análisis de las opciones incorrectas
+
+Es importante entender por qué las otras opciones son incorrectas:
+
+1. Si alguien confunde cuál caja es mayor, podría pensar que `r caja_menor` ocupa `r if(relacion_int == 2) "el doble" else if(relacion_int == 3) "el triple" else if(relacion_int == 4) "el cuádruple" else paste(relacion_int, "veces el volumen")` de `r caja_mayor`, lo cual es incorrecto porque es exactamente al revés.
+
+2. Los errores en las relaciones numéricas pueden surgir de cálculos incorrectos o de confundir las operaciones de multiplicación y división al comparar volúmenes.
+
+### Conclusión
+
+Por lo tanto, la afirmación correcta es: **`r opciones_texto_final[4]`**
+
+Answerlist
+----------
+- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: volumen_prismas_comparacion
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Geometría|Volumen|Prismas rectangulares
+exextra[saber11.competencia]: Razonamiento cuantitativo
+exextra[saber11.contexto]: Matemáticas y ciencias
+exextra[saber11.nivel]: 2
+exextra[saber11.tipo]: Comparación y relación
