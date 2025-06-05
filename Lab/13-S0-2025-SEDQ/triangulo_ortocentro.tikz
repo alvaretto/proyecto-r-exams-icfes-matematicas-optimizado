@@ -1,0 +1,39 @@
+
+\begin{tikzpicture}[scale=1.2]
+  % Definir coordenadas de los vértices
+  \coordinate (X) at (0,0);
+  \coordinate (Y) at (3,4);
+  \coordinate (Z) at (4,0);
+  \coordinate (Q) at (3,0);
+  \coordinate (P1) at (3.76,0.94);
+  \coordinate (P3) at (1.44,1.92);
+  \coordinate (H) at (3,0.75);
+
+  % Dibujar el triángulo principal
+  \draw[thick, black]
+    (X) -- (Y) -- (Z) -- cycle;
+
+  % Dibujar las tres alturas
+  \draw[thick, dashed, blue]
+    (Y) -- (Q);
+
+  \draw[thick, dashed, red]
+    (X) -- (P1);
+
+  \draw[thick, dashed, green]
+    (Z) -- (P3);
+
+  % Marcar el ortocentro con un punto destacado
+  \fill[color=purple] (H) circle (0.08);
+
+  % Marcar el ángulo recto en el pie de la altura principal
+  \draw[thick] (3.15,0) -- (3.15,0.15) -- (3,0.15);
+
+  % Etiquetas de los vértices
+  \node[font=\Large\bfseries] at (-0.3,-0.2) {X};
+  \node[font=\Large\bfseries] at (3,4.3) {Y};
+  \node[font=\Large\bfseries] at (4.3,-0.2) {Z};
+  \node[font=\Large\bfseries] at (3,-0.3) {Q};
+  \node[font=\Large\bfseries, color=purple] at (3.3,0.95) {H};
+\end{tikzpicture}
+
