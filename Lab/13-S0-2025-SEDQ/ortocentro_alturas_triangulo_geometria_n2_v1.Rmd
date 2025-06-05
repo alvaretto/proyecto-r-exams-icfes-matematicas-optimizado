@@ -341,12 +341,14 @@ Al observar cuidadosamente la figura, podemos ver que todas las `r termino_altur
 
 ### Paso 4: Verificar la respuesta
 Según la teoría geométrica:
+
 - En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
 - Este punto de intersección es el **ortocentro**
 - En la figura mostrada, este punto es claramente **`r ortocentro_label`**
 
 ### Paso 5: Ubicación del ortocentro según el tipo de triángulo
 Es importante recordar que:
+
 - En un **triángulo acutángulo**: el ortocentro se encuentra **dentro** del triángulo
 - En un **triángulo rectángulo**: el ortocentro coincide con el **vértice del ángulo recto**
 - En un **triángulo obtusángulo**: el ortocentro se encuentra **fuera** del triángulo
