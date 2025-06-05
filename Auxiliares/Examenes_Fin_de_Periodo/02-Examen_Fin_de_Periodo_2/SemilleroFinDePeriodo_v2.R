@@ -28,7 +28,7 @@ numpreg_por_archivo <- 1  # 3 preguntas por cada archivo
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
-dir_ejercicios <- "ejercicios"
+dir_ejercicios <- "."
 
 # Nombre del archivo sin la extensión .Rmd
 nombre_sin_extension <- "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2"  # Cambiado a un nombre genérico para el taller

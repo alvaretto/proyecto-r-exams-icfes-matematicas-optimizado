@@ -26,7 +26,6 @@ options(tikzLatexPackages = c(
 
 library(exams)
 library(digest)
-library(testthat)
 library(knitr)
 
 typ <- match_exams_device()
@@ -47,7 +46,7 @@ knitr::opts_chunk$set(
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria para reproducibilidad
-#set.seed(sample(1:10000, 1))
+#set.seed(123)  # Semilla fija para debugging
 
 # Aleatorización del contexto geométrico
 terminos_triangulo <- c("triángulo", "polígono triangular", "figura triangular", "forma triangular")
@@ -82,7 +81,7 @@ conjuntos_vertices <- list(
 
 vertices_seleccionados <- sample(conjuntos_vertices, 1)[[1]]
 vertice1 <- vertices_seleccionados[1]  # Vértice izquierdo
-vertice2 <- vertices_seleccionados[2]  # Vértice superior (ortocentro)
+vertice2 <- vertices_seleccionados[2]  # Vértice superior
 vertice3 <- vertices_seleccionados[3]  # Vértice derecho
 
 # Aleatorización de la letra para el pie de altura
@@ -148,23 +147,31 @@ ortocentro_label <- "H"
 # La respuesta correcta es la etiqueta del ortocentro
 respuesta_correcta <- ortocentro_label
 
-# Generar distractores plausibles
-distractor1 <- vertice1  # Vértice izquierdo (error común: confundir con un vértice)
-distractor2 <- vertice2  # Vértice superior (error común: confundir con el vértice más alto)
-distractor3 <- vertice3  # Vértice derecho (error común: confundir con un vértice)
+# Generar distractores plausibles diferentes entre sí y diferentes a la respuesta correcta
+# Conjunto de posibles distractores
+posibles_distractores <- c(vertice1, vertice2, vertice3, pie_altura)
+# Filtrar para eliminar la respuesta correcta
+posibles_distractores <- setdiff(posibles_distractores, respuesta_correcta)
+# Asegurar que tengamos al menos 3 distractores distintos
+if(length(unique(posibles_distractores)) < 3) {
+  # Si no hay suficientes distractores, añadir algunas letras más
+  mas_letras <- setdiff(LETTERS, c(posibles_distractores, respuesta_correcta))
+  posibles_distractores <- c(posibles_distractores, sample(mas_letras, 3 - length(unique(posibles_distractores))))
+}
+# Seleccionar 3 distractores únicos
+distractores <- sample(unique(posibles_distractores), 3)
 
-# Verificar que todos los distractores son únicos
-distractores <- c(distractor1, distractor2, distractor3)
-test_that("Todos los distractores son únicos", {
-  expect_equal(length(unique(distractores)), 3)
-})
+# Verificamos manualmente
+if(length(unique(distractores)) != 3) {
+  warning("Los distractores no son todos únicos")
+}
 
-test_that("La respuesta correcta no está entre los distractores", {
-  expect_false(respuesta_correcta %in% distractores)
-})
+if(respuesta_correcta %in% distractores) {
+  warning("La respuesta correcta está entre los distractores")
+}
 
 # Crear vector con todas las opciones y mezclarlas
-opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
+opciones <- c(respuesta_correcta, distractores[1], distractores[2], distractores[3])
 names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
 opciones_mezcladas <- sample(opciones)
 
@@ -174,6 +181,11 @@ indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
 # Crear vector de solución para r-exams
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
+
+# Verificación manual de la solución
+if(sum(solucion) != 1) {
+  stop("La solución debe tener exactamente un 1 y el resto 0")
+}
 
 # Aleatorización de colores para el diagrama
 paletas_colores <- list(
@@ -263,6 +275,9 @@ tikz_code <- paste0("
   \\node[font=\\Large\\bfseries, color=purple] at (", round(ortocentro_x + 0.3, 2), ",", round(ortocentro_y + 0.2, 2), ") {", ortocentro_label, "};
 \\end{tikzpicture}
 ")
+
+# Para depuración, guardar el código TikZ en un archivo
+write(tikz_code, file = "triangulo_ortocentro.tikz")
 ```
 
 Question
@@ -282,11 +297,16 @@ if (knitr::is_latex_output() || !es_moodle) {
                markup = "markdown",
                width = "12cm")
 } else {
-  # Para otros formatos, usar descripción textual mejorada
+  # Fallback para otros formatos si hay problemas con TikZ
   cat("*[Diagrama del triángulo ", paste(vertices_seleccionados, collapse=""),
       " con las tres alturas trazadas desde cada vértice hacia el lado opuesto. ",
       "Las alturas se intersectan en el ortocentro marcado como punto ",
       ortocentro_label, "]*\n\n")
+  
+  # Alternativa: guardar la imagen y mostrarla como PNG
+  # exams::tex2image(tikz_code, name = "triangulo_ortocentro", 
+  #                dir = ".", format = "png", packages = c("tikz", "amsmath", "graphicx"))
+  # knitr::include_graphics("triangulo_ortocentro.png")
 }
 ```
 
@@ -294,10 +314,10 @@ if (knitr::is_latex_output() || !es_moodle) {
 
 Answerlist
 ----------
-- `r opciones_mezcladas[1]`
-- `r opciones_mezcladas[2]`
-- `r opciones_mezcladas[3]`
-- `r opciones_mezcladas[4]`
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
 
 Solution
 ========
@@ -334,9 +354,9 @@ Es importante recordar que:
 En este caso, el triángulo es `r tipo_triangulo` y el ortocentro se encuentra en la posición correspondiente.
 
 ### Paso 6: Descartar distractores
-- **Punto `r vertice1`**: Es un vértice del triángulo, no el punto donde convergen las alturas
-- **Punto `r vertice2`**: Es otro vértice del triángulo, no el ortocentro
-- **Punto `r vertice3`**: Es otro vértice del triángulo, no el ortocentro
+- **Punto `r distractores[1]`**: No es el punto donde convergen las alturas
+- **Punto `r distractores[2]`**: No es el punto donde convergen las alturas
+- **Punto `r distractores[3]`**: No es el punto donde convergen las alturas
 
 ### Conclusión
 El ortocentro del `r termino_triangulo` `r paste(vertices_seleccionados, collapse="")` se ubica en el **punto `r ortocentro_label`**, ya que es el lugar `r termino_geometrico` donde se `r termino_cruzan` las tres `r termino_altura` del `r termino_triangulo`.
@@ -345,10 +365,10 @@ El ortocentro del `r termino_triangulo` `r paste(vertices_seleccionados, collaps
 
 Answerlist
 ----------
-- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
-- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[4] == 1) "Verdadero" else "Falso"`
 
 Meta-information
 ================
