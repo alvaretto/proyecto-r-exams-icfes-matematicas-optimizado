@@ -50,15 +50,16 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
 
-exams2html(rep(archivo_examen, numpreg),
+exams2html(archivo_examen,
+           n = 1,
            svg = FALSE,
            verbose = TRUE)
 
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF
 
-exams2pdf(rep(archivo_examen, numpreg),
-          n = copias,
+exams2pdf(archivo_examen,
+          n = 1,
           name = nombre_arch,
           encoding = "UTF-8",
           template = "solpcielo",
@@ -69,8 +70,8 @@ exams2pdf(rep(archivo_examen, numpreg),
 ################################################################################
 # Generación de n copias en un solo archivo .docx
 
-exams2pandoc(rep(archivo_examen, numpreg),
-             n = copias,
+exams2pandoc(archivo_examen,
+             n = 1,
              name = nombre_arch,
              encoding = "UTF-8",
              template = "pcielo.tex",
@@ -113,8 +114,8 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Generación para NOPS (exámenes escaneables)
 
 set.seed(semilla)
-exams2nops(rep(archivo_examen, numpreg),
-           n = copias,
+exams2nops(archivo_examen,
+           n = 1,
            name = paste0(nombre_sin_extension, "_nops_"),
            encoding = "UTF-8",
            dir = dir_salida,

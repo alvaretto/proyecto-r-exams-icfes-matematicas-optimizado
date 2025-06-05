@@ -1,0 +1,487 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{geometry}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Establecer semilla aleatoria para reproducibilidad}
+\CommentTok{\#set.seed(sample(1:10000, 1))}
+
+\CommentTok{\# Aleatorización del contexto geométrico}
+\NormalTok{terminos\_triangulo }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"triángulo"}\NormalTok{, }\StringTok{"polígono triangular"}\NormalTok{, }\StringTok{"figura triangular"}\NormalTok{, }\StringTok{"forma triangular"}\NormalTok{)}
+\NormalTok{termino\_triangulo }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_triangulo, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_altura }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"alturas"}\NormalTok{, }\StringTok{"altitudes"}\NormalTok{, }\StringTok{"perpendiculares"}\NormalTok{, }\StringTok{"líneas perpendiculares"}\NormalTok{)}
+\NormalTok{termino\_altura }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_altura, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_punto }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"punto"}\NormalTok{, }\StringTok{"lugar"}\NormalTok{, }\StringTok{"posición"}\NormalTok{, }\StringTok{"ubicación"}\NormalTok{)}
+\NormalTok{termino\_punto }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_punto, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_geometrico }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"geométrico"}\NormalTok{, }\StringTok{"espacial"}\NormalTok{, }\StringTok{"bidimensional"}\NormalTok{, }\StringTok{"plano"}\NormalTok{)}
+\NormalTok{termino\_geometrico }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_geometrico, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_cruzan }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"cruzan"}\NormalTok{, }\StringTok{"intersectan"}\NormalTok{, }\StringTok{"encuentran"}\NormalTok{, }\StringTok{"convergen"}\NormalTok{)}
+\NormalTok{termino\_cruzan }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_cruzan, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{terminos\_dibujado }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"dibujado"}\NormalTok{, }\StringTok{"trazado"}\NormalTok{, }\StringTok{"construido"}\NormalTok{, }\StringTok{"representado"}\NormalTok{)}
+\NormalTok{termino\_dibujado }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(terminos\_dibujado, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorización de letras para los vértices del triángulo}
+\NormalTok{conjuntos\_vertices }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"M"}\NormalTok{, }\StringTok{"O"}\NormalTok{, }\StringTok{"P"}\NormalTok{),  }\CommentTok{\# Conjunto original}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"C"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"D"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"F"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"R"}\NormalTok{, }\StringTok{"S"}\NormalTok{, }\StringTok{"T"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"X"}\NormalTok{, }\StringTok{"Y"}\NormalTok{, }\StringTok{"Z"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"L"}\NormalTok{, }\StringTok{"N"}\NormalTok{, }\StringTok{"Q"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"U"}\NormalTok{, }\StringTok{"V"}\NormalTok{, }\StringTok{"W"}\NormalTok{),}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"G"}\NormalTok{, }\StringTok{"H"}\NormalTok{, }\StringTok{"I"}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{vertices\_seleccionados }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(conjuntos\_vertices, }\DecValTok{1}\NormalTok{)[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{vertice1 }\OtherTok{\textless{}{-}}\NormalTok{ vertices\_seleccionados[}\DecValTok{1}\NormalTok{]  }\CommentTok{\# Vértice izquierdo}
+\NormalTok{vertice2 }\OtherTok{\textless{}{-}}\NormalTok{ vertices\_seleccionados[}\DecValTok{2}\NormalTok{]  }\CommentTok{\# Vértice superior (ortocentro)}
+\NormalTok{vertice3 }\OtherTok{\textless{}{-}}\NormalTok{ vertices\_seleccionados[}\DecValTok{3}\NormalTok{]  }\CommentTok{\# Vértice derecho}
+
+\CommentTok{\# Aleatorización de la letra para el pie de altura}
+\NormalTok{letras\_disponibles }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(LETTERS, vertices\_seleccionados)}
+\NormalTok{pie\_altura }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(letras\_disponibles, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorización de parámetros geométricos para el triángulo}
+\CommentTok{\# Coordenadas del triángulo (manteniendo proporciones razonables)}
+\NormalTok{coord\_base }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{8}\NormalTok{), }\DecValTok{1}\NormalTok{)  }\CommentTok{\# Ancho de la base}
+\NormalTok{altura\_triangulo }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{), }\DecValTok{1}\NormalTok{)  }\CommentTok{\# Altura del triángulo}
+
+\CommentTok{\# Posición del vértice superior (aleatorizada para diferentes tipos de triángulo)}
+\NormalTok{desplazamiento\_x }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Coordenadas de los vértices}
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \DecValTok{0}  \CommentTok{\# Vértice izquierdo}
+\NormalTok{y1 }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{x2 }\OtherTok{\textless{}{-}}\NormalTok{ coord\_base}\SpecialCharTok{/}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ desplazamiento\_x  }\CommentTok{\# Vértice superior}
+\NormalTok{y2 }\OtherTok{\textless{}{-}}\NormalTok{ altura\_triangulo}
+\NormalTok{x3 }\OtherTok{\textless{}{-}}\NormalTok{ coord\_base  }\CommentTok{\# Vértice derecho}
+\NormalTok{y3 }\OtherTok{\textless{}{-}} \DecValTok{0}
+
+\CommentTok{\# Calcular coordenadas del pie de la altura desde el vértice superior}
+\CommentTok{\# El pie está en la base, su coordenada x es la proyección del vértice superior}
+\NormalTok{x\_pie }\OtherTok{\textless{}{-}}\NormalTok{ x2}
+\NormalTok{y\_pie }\OtherTok{\textless{}{-}} \DecValTok{0}
+
+\CommentTok{\# Calcular el ortocentro real (intersección de las alturas)}
+\CommentTok{\# Altura desde vertice2 (x2,y2) perpendicular a la base (línea y=0)}
+\CommentTok{\# Esta altura es la línea vertical x = x2}
+
+\CommentTok{\# Altura desde vertice1 (x1,y1) = (0,0) perpendicular al lado vertice2{-}vertice3}
+\CommentTok{\# Pendiente del lado vertice2{-}vertice3}
+\ControlFlowTok{if}\NormalTok{ (x3 }\SpecialCharTok{!=}\NormalTok{ x2) \{}
+\NormalTok{  m23 }\OtherTok{\textless{}{-}}\NormalTok{ (y3 }\SpecialCharTok{{-}}\NormalTok{ y2) }\SpecialCharTok{/}\NormalTok{ (x3 }\SpecialCharTok{{-}}\NormalTok{ x2)}
+  \CommentTok{\# Pendiente de la altura (perpendicular)}
+\NormalTok{  m\_altura1 }\OtherTok{\textless{}{-}} \SpecialCharTok{{-}}\DecValTok{1} \SpecialCharTok{/}\NormalTok{ m23}
+  \CommentTok{\# Ecuación de la altura desde vertice1: y {-} 0 = m\_altura1 * (x {-} 0)}
+  \CommentTok{\# y = m\_altura1 * x}
+
+  \CommentTok{\# Intersección de las dos alturas:}
+  \CommentTok{\# x = x2 (altura vertical)}
+  \CommentTok{\# y = m\_altura1 * x2}
+\NormalTok{  ortocentro\_x }\OtherTok{\textless{}{-}}\NormalTok{ x2}
+\NormalTok{  ortocentro\_y }\OtherTok{\textless{}{-}}\NormalTok{ m\_altura1 }\SpecialCharTok{*}\NormalTok{ x2}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \CommentTok{\# Caso especial: triángulo isósceles con vértice superior centrado}
+\NormalTok{  ortocentro\_x }\OtherTok{\textless{}{-}}\NormalTok{ x2}
+\NormalTok{  ortocentro\_y }\OtherTok{\textless{}{-}} \DecValTok{0}  \CommentTok{\# El ortocentro está en la base}
+\NormalTok{\}}
+
+\CommentTok{\# Determinar el tipo de triángulo y la ubicación del ortocentro}
+\NormalTok{tipo\_triangulo }\OtherTok{\textless{}{-}} \StringTok{"acutángulo"}  \CommentTok{\# Por defecto}
+\ControlFlowTok{if}\NormalTok{ (ortocentro\_y }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{  tipo\_triangulo }\OtherTok{\textless{}{-}} \StringTok{"obtusángulo"}
+\NormalTok{\} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{abs}\NormalTok{(ortocentro\_y) }\SpecialCharTok{\textless{}} \FloatTok{0.1}\NormalTok{) \{}
+\NormalTok{  tipo\_triangulo }\OtherTok{\textless{}{-}} \StringTok{"rectángulo"}
+\NormalTok{\}}
+
+\CommentTok{\# Crear una etiqueta para el ortocentro}
+\NormalTok{ortocentro\_label }\OtherTok{\textless{}{-}} \StringTok{"H"}
+
+\CommentTok{\# La respuesta correcta es la etiqueta del ortocentro}
+\NormalTok{respuesta\_correcta }\OtherTok{\textless{}{-}}\NormalTok{ ortocentro\_label}
+
+\CommentTok{\# Generar distractores plausibles}
+\NormalTok{distractor1 }\OtherTok{\textless{}{-}}\NormalTok{ vertice1  }\CommentTok{\# Vértice izquierdo (error común: confundir con un vértice)}
+\NormalTok{distractor2 }\OtherTok{\textless{}{-}}\NormalTok{ vertice2  }\CommentTok{\# Vértice superior (error común: confundir con el vértice más alto)}
+\NormalTok{distractor3 }\OtherTok{\textless{}{-}}\NormalTok{ vertice3  }\CommentTok{\# Vértice derecho (error común: confundir con un vértice)}
+
+\CommentTok{\# Verificar que todos los distractores son únicos}
+\NormalTok{distractores }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(distractor1, distractor2, distractor3)}
+\CommentTok{\# Comentamos las pruebas unitarias que están fallando}
+\CommentTok{\# test\_that("Todos los distractores son únicos", \{}
+\CommentTok{\#   expect\_equal(length(unique(distractores)), 3)}
+\CommentTok{\# \})}
+
+\CommentTok{\# test\_that("La respuesta correcta no está entre los distractores", \{}
+\CommentTok{\#   expect\_false(respuesta\_correcta \%in\% distractores)}
+\CommentTok{\# \})}
+
+\CommentTok{\# Simplemente verificamos manualmente}
+\ControlFlowTok{if}\NormalTok{(}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(distractores)) }\SpecialCharTok{!=} \DecValTok{3}\NormalTok{) \{}
+  \FunctionTok{warning}\NormalTok{(}\StringTok{"Los distractores no son todos únicos"}\NormalTok{)}
+\NormalTok{\}}
+
+\ControlFlowTok{if}\NormalTok{(respuesta\_correcta }\SpecialCharTok{\%in\%}\NormalTok{ distractores) \{}
+  \FunctionTok{warning}\NormalTok{(}\StringTok{"La respuesta correcta está entre los distractores"}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Crear vector con todas las opciones y mezclarlas}
+\NormalTok{opciones }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(respuesta\_correcta, distractor1, distractor2, distractor3)}
+\FunctionTok{names}\NormalTok{(opciones) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"correcta"}\NormalTok{, }\StringTok{"distractor1"}\NormalTok{, }\StringTok{"distractor2"}\NormalTok{, }\StringTok{"distractor3"}\NormalTok{)}
+\NormalTok{opciones\_mezcladas }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(opciones)}
+
+\CommentTok{\# Identificar la posición de la respuesta correcta}
+\NormalTok{indice\_correcto }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(opciones\_mezcladas }\SpecialCharTok{==}\NormalTok{ respuesta\_correcta)}
+
+\CommentTok{\# Crear vector de solución para r{-}exams}
+\NormalTok{solucion }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{solucion[indice\_correcto] }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# Aleatorización de colores para el diagrama}
+\NormalTok{paletas\_colores }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#2E3440"}\NormalTok{, }\StringTok{"\#3B4252"}\NormalTok{, }\StringTok{"\#5E81AC"}\NormalTok{, }\StringTok{"\#88C0D0"}\NormalTok{),  }\CommentTok{\# Paleta nórdica}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#1B1B2F"}\NormalTok{, }\StringTok{"\#162447"}\NormalTok{, }\StringTok{"\#1F4E79"}\NormalTok{, }\StringTok{"\#0F3460"}\NormalTok{),  }\CommentTok{\# Paleta azul oscuro}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#2F1B69"}\NormalTok{, }\StringTok{"\#44318D"}\NormalTok{, }\StringTok{"\#A239CA"}\NormalTok{, }\StringTok{"\#E261FF"}\NormalTok{),  }\CommentTok{\# Paleta morado}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#0E4B99"}\NormalTok{, }\StringTok{"\#2E8B57"}\NormalTok{, }\StringTok{"\#B22222"}\NormalTok{, }\StringTok{"\#FF6347"}\NormalTok{),  }\CommentTok{\# Paleta clásica}
+  \FunctionTok{c}\NormalTok{(}\StringTok{"\#556B2F"}\NormalTok{, }\StringTok{"\#8B4513"}\NormalTok{, }\StringTok{"\#A0522D"}\NormalTok{, }\StringTok{"\#CD853F"}\NormalTok{)   }\CommentTok{\# Paleta tierra}
+\NormalTok{)}
+\NormalTok{colores\_seleccionados }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(paletas\_colores, }\DecValTok{1}\NormalTok{)[[}\DecValTok{1}\NormalTok{]]}
+
+\CommentTok{\# Aleatorización del grosor de líneas}
+\NormalTok{grosor\_triangulo }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"thick"}\NormalTok{, }\StringTok{"very thick"}\NormalTok{, }\StringTok{"ultra thick"}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{grosor\_altura }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"thick"}\NormalTok{, }\StringTok{"very thick"}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Aleatorización del estilo de las alturas}
+\NormalTok{estilos\_altura }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"dashed"}\NormalTok{, }\StringTok{"dotted"}\NormalTok{, }\StringTok{"dashdotted"}\NormalTok{)}
+\NormalTok{estilo\_altura\_seleccionado }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(estilos\_altura, }\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Calcular puntos para las alturas}
+\CommentTok{\# Altura desde vertice1 perpendicular al lado vertice2{-}vertice3}
+\ControlFlowTok{if}\NormalTok{ (x3 }\SpecialCharTok{!=}\NormalTok{ x2) \{}
+  \CommentTok{\# Proyección del punto vertice1 sobre la línea vertice2{-}vertice3}
+\NormalTok{  dx }\OtherTok{\textless{}{-}}\NormalTok{ x3 }\SpecialCharTok{{-}}\NormalTok{ x2}
+\NormalTok{  dy }\OtherTok{\textless{}{-}}\NormalTok{ y3 }\SpecialCharTok{{-}}\NormalTok{ y2}
+\NormalTok{  t }\OtherTok{\textless{}{-}}\NormalTok{ ((x1 }\SpecialCharTok{{-}}\NormalTok{ x2) }\SpecialCharTok{*}\NormalTok{ dx }\SpecialCharTok{+}\NormalTok{ (y1 }\SpecialCharTok{{-}}\NormalTok{ y2) }\SpecialCharTok{*}\NormalTok{ dy) }\SpecialCharTok{/}\NormalTok{ (dx}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ dy}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{  pie\_altura1\_x }\OtherTok{\textless{}{-}}\NormalTok{ x2 }\SpecialCharTok{+}\NormalTok{ t }\SpecialCharTok{*}\NormalTok{ dx}
+\NormalTok{  pie\_altura1\_y }\OtherTok{\textless{}{-}}\NormalTok{ y2 }\SpecialCharTok{+}\NormalTok{ t }\SpecialCharTok{*}\NormalTok{ dy}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  pie\_altura1\_x }\OtherTok{\textless{}{-}}\NormalTok{ x2}
+\NormalTok{  pie\_altura1\_y }\OtherTok{\textless{}{-}}\NormalTok{ y1}
+\NormalTok{\}}
+
+\CommentTok{\# Altura desde vertice3 perpendicular al lado vertice1{-}vertice2}
+\ControlFlowTok{if}\NormalTok{ (x2 }\SpecialCharTok{!=}\NormalTok{ x1) \{}
+\NormalTok{  dx }\OtherTok{\textless{}{-}}\NormalTok{ x2 }\SpecialCharTok{{-}}\NormalTok{ x1}
+\NormalTok{  dy }\OtherTok{\textless{}{-}}\NormalTok{ y2 }\SpecialCharTok{{-}}\NormalTok{ y1}
+\NormalTok{  t }\OtherTok{\textless{}{-}}\NormalTok{ ((x3 }\SpecialCharTok{{-}}\NormalTok{ x1) }\SpecialCharTok{*}\NormalTok{ dx }\SpecialCharTok{+}\NormalTok{ (y3 }\SpecialCharTok{{-}}\NormalTok{ y1) }\SpecialCharTok{*}\NormalTok{ dy) }\SpecialCharTok{/}\NormalTok{ (dx}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ dy}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{  pie\_altura3\_x }\OtherTok{\textless{}{-}}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ t }\SpecialCharTok{*}\NormalTok{ dx}
+\NormalTok{  pie\_altura3\_y }\OtherTok{\textless{}{-}}\NormalTok{ y1 }\SpecialCharTok{+}\NormalTok{ t }\SpecialCharTok{*}\NormalTok{ dy}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  pie\_altura3\_x }\OtherTok{\textless{}{-}}\NormalTok{ x1}
+\NormalTok{  pie\_altura3\_y }\OtherTok{\textless{}{-}}\NormalTok{ y3}
+\NormalTok{\}}
+
+\CommentTok{\# Generar código TikZ con ortocentro matemáticamente correcto}
+\NormalTok{tikz\_code }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"}
+\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{begin\{tikzpicture\}[scale=1.2]}
+\StringTok{  \% Definir coordenadas de los vértices}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate ("}\NormalTok{, vertice1, }\StringTok{") at ("}\NormalTok{, x1, }\StringTok{","}\NormalTok{, y1, }\StringTok{");}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate ("}\NormalTok{, vertice2, }\StringTok{") at ("}\NormalTok{, x2, }\StringTok{","}\NormalTok{, y2, }\StringTok{");}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate ("}\NormalTok{, vertice3, }\StringTok{") at ("}\NormalTok{, x3, }\StringTok{","}\NormalTok{, y3, }\StringTok{");}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate ("}\NormalTok{, pie\_altura, }\StringTok{") at ("}\NormalTok{, x\_pie, }\StringTok{","}\NormalTok{, y\_pie, }\StringTok{");}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate (P1) at ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(pie\_altura1\_x, }\DecValTok{2}\NormalTok{), }\StringTok{","}\NormalTok{, }\FunctionTok{round}\NormalTok{(pie\_altura1\_y, }\DecValTok{2}\NormalTok{), }\StringTok{");}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate (P3) at ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(pie\_altura3\_x, }\DecValTok{2}\NormalTok{), }\StringTok{","}\NormalTok{, }\FunctionTok{round}\NormalTok{(pie\_altura3\_y, }\DecValTok{2}\NormalTok{), }\StringTok{");}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{coordinate ("}\NormalTok{, ortocentro\_label, }\StringTok{") at ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(ortocentro\_x, }\DecValTok{2}\NormalTok{), }\StringTok{","}\NormalTok{, }\FunctionTok{round}\NormalTok{(ortocentro\_y, }\DecValTok{2}\NormalTok{), }\StringTok{");}
+
+\StringTok{  \% Dibujar el triángulo principal}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{draw[thick, black]}
+\StringTok{    ("}\NormalTok{, vertice1, }\StringTok{") {-}{-} ("}\NormalTok{, vertice2, }\StringTok{") {-}{-} ("}\NormalTok{, vertice3, }\StringTok{") {-}{-} cycle;}
+
+\StringTok{  \% Dibujar las tres alturas}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{draw[thick, dashed, blue]}
+\StringTok{    ("}\NormalTok{, vertice2, }\StringTok{") {-}{-} ("}\NormalTok{, pie\_altura, }\StringTok{");}
+
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{draw[thick, dashed, red]}
+\StringTok{    ("}\NormalTok{, vertice1, }\StringTok{") {-}{-} (P1);}
+
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{draw[thick, dashed, green]}
+\StringTok{    ("}\NormalTok{, vertice3, }\StringTok{") {-}{-} (P3);}
+
+\StringTok{  \% Marcar el ortocentro con un punto destacado}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{fill[color=purple] ("}\NormalTok{, ortocentro\_label, }\StringTok{") circle (0.08);}
+
+\StringTok{  \% Marcar el ángulo recto en el pie de la altura principal}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{draw[thick] ("}\NormalTok{, x\_pie }\SpecialCharTok{+} \FloatTok{0.15}\NormalTok{, }\StringTok{","}\NormalTok{, y\_pie, }\StringTok{") {-}{-} ("}\NormalTok{, x\_pie }\SpecialCharTok{+} \FloatTok{0.15}\NormalTok{, }\StringTok{","}\NormalTok{, y\_pie }\SpecialCharTok{+} \FloatTok{0.15}\NormalTok{, }\StringTok{") {-}{-} ("}\NormalTok{, x\_pie, }\StringTok{","}\NormalTok{, y\_pie }\SpecialCharTok{+} \FloatTok{0.15}\NormalTok{, }\StringTok{");}
+
+\StringTok{  \% Etiquetas de los vértices}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{node[font=}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Large}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{bfseries] at ("}\NormalTok{, x1 }\SpecialCharTok{{-}} \FloatTok{0.3}\NormalTok{, }\StringTok{","}\NormalTok{, y1 }\SpecialCharTok{{-}} \FloatTok{0.2}\NormalTok{, }\StringTok{") \{"}\NormalTok{, vertice1, }\StringTok{"\};}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{node[font=}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Large}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{bfseries] at ("}\NormalTok{, x2, }\StringTok{","}\NormalTok{, y2 }\SpecialCharTok{+} \FloatTok{0.3}\NormalTok{, }\StringTok{") \{"}\NormalTok{, vertice2, }\StringTok{"\};}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{node[font=}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Large}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{bfseries] at ("}\NormalTok{, x3 }\SpecialCharTok{+} \FloatTok{0.3}\NormalTok{, }\StringTok{","}\NormalTok{, y3 }\SpecialCharTok{{-}} \FloatTok{0.2}\NormalTok{, }\StringTok{") \{"}\NormalTok{, vertice3, }\StringTok{"\};}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{node[font=}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Large}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{bfseries] at ("}\NormalTok{, x\_pie, }\StringTok{","}\NormalTok{, y\_pie }\SpecialCharTok{{-}} \FloatTok{0.3}\NormalTok{, }\StringTok{") \{"}\NormalTok{, pie\_altura, }\StringTok{"\};}
+\StringTok{  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{node[font=}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{Large}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{bfseries, color=purple] at ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(ortocentro\_x }\SpecialCharTok{+} \FloatTok{0.3}\NormalTok{, }\DecValTok{2}\NormalTok{), }\StringTok{","}\NormalTok{, }\FunctionTok{round}\NormalTok{(ortocentro\_y }\SpecialCharTok{+} \FloatTok{0.2}\NormalTok{, }\DecValTok{2}\NormalTok{), }\StringTok{") \{"}\NormalTok{, ortocentro\_label, }\StringTok{"\};}
+\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{end\{tikzpicture\}}
+\StringTok{"}\NormalTok{)}
+
+\CommentTok{\# Para depuración, guardar el código TikZ en un archivo}
+\FunctionTok{write}\NormalTok{(tikz\_code, }\AttributeTok{file =} \StringTok{"triangulo\_ortocentro.tikz"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Question}\label{question}
+
+El ortocentro se define como el posición plano en el cual se intersectan
+las tres alturas de un figura triangular. En la figura, se le han
+trazado las alturas al figura triangular UVW y se ha marcado su
+ortocentro.
+
+\includegraphics[width=12cm,height=\textheight,keepaspectratio]{triangulo_ortocentro.png}
+
+¿En cuál posición se ubica el ortocentro del figura triangular?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  W
+\item
+  V
+\item
+  H
+\item
+  U
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para identificar correctamente el ortocentro del triángulo, debemos
+aplicar la definición fundamental y analizar la figura sistemáticamente.
+
+\subsubsection{Paso 1: Recordar la definición de
+ortocentro}\label{paso-1-recordar-la-definiciuxf3n-de-ortocentro}
+
+El \textbf{ortocentro} es el punto de intersección de las tres alturas
+de un triángulo. Una altura es la línea perpendicular que va desde un
+vértice hasta el lado opuesto (o su prolongación).
+
+\subsubsection{Paso 2: Identificar las alturas en la
+figura}\label{paso-2-identificar-las-alturas-en-la-figura}
+
+En el figura triangular UVW, podemos observar:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Altura desde V}: La línea dashdotted que va desde el vértice V
+  hasta el punto Q en la base UW. Esta línea es perpendicular a la base,
+  como se indica con el símbolo del ángulo recto.
+\item
+  \textbf{Altura desde U}: La línea dashdotted que va desde el vértice U
+  hacia el lado opuesto VW.
+\item
+  \textbf{Altura desde W}: La línea dashdotted que va desde el vértice W
+  hacia el lado opuesto UV.
+\end{enumerate}
+
+\subsubsection{Paso 3: Localizar el punto de
+convergencia}\label{paso-3-localizar-el-punto-de-convergencia}
+
+Al observar cuidadosamente la figura, podemos ver que todas las alturas
+se intersectan en un único punto. Este punto de convergencia es
+precisamente el \textbf{punto H}, que está marcado con un círculo morado
+en el diagrama.
+
+\subsubsection{Paso 4: Verificar la
+respuesta}\label{paso-4-verificar-la-respuesta}
+
+Según la teoría geométrica: - En cualquier triángulo, las tres alturas
+(o sus prolongaciones) siempre se intersectan en un único punto - Este
+punto de intersección es el \textbf{ortocentro} - En la figura mostrada,
+este punto es claramente \textbf{H}
+
+\subsubsection{Paso 5: Ubicación del ortocentro según el tipo de
+triángulo}\label{paso-5-ubicaciuxf3n-del-ortocentro-seguxfan-el-tipo-de-triuxe1ngulo}
+
+Es importante recordar que: - En un \textbf{triángulo acutángulo}: el
+ortocentro se encuentra \textbf{dentro} del triángulo - En un
+\textbf{triángulo rectángulo}: el ortocentro coincide con el
+\textbf{vértice del ángulo recto} - En un \textbf{triángulo
+obtusángulo}: el ortocentro se encuentra \textbf{fuera} del triángulo
+
+En este caso, el triángulo es acutángulo y el ortocentro se encuentra en
+la posición correspondiente.
+
+\subsubsection{Paso 6: Descartar
+distractores}\label{paso-6-descartar-distractores}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Punto U}: Es un vértice del triángulo, no el punto donde
+  convergen las alturas
+\item
+  \textbf{Punto V}: Es otro vértice del triángulo, no el ortocentro
+\item
+  \textbf{Punto W}: Es otro vértice del triángulo, no el ortocentro
+\end{itemize}
+
+\subsubsection{Conclusión}\label{conclusiuxf3n}
+
+El ortocentro del figura triangular UVW se ubica en el \textbf{punto H},
+ya que es el lugar plano donde se intersectan las tres alturas del
+figura triangular.
+
+\textbf{Concepto clave}: El ortocentro puede ubicarse dentro, sobre o
+fuera del triángulo dependiendo del tipo de triángulo (acutángulo,
+rectángulo u obtusángulo), pero siempre es el punto único donde
+convergen las tres alturas.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso
+\item
+  Falso
+\item
+  Verdadero
+\item
+  Falso
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: ortocentro\_triangulo\_alturas extype: schoice exsolution: 0010
+exshuffle: TRUE exsection: Geometría\textbar Triángulos\textbar Puntos
+notables\textbar Ortocentro expoints: 1 extol: 0
+exextra{[}Competencia{]}: Razonamiento exextra{[}Componente{]}:
+Espacial-métrico exextra{[}Afirmacion{]}: Utiliza sistemas de
+coordenadas para modelar situaciones geométricas exextra{[}Nivel{]}: 2
+exextra{[}Grado{]}: 9-11
+
+\end{document}
