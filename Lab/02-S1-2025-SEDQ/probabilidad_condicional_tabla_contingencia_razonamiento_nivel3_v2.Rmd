@@ -1,11 +1,11 @@
 
 ---
 output:
+  html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
-  word_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -582,7 +582,9 @@ Solution
 
 Para resolver este problema de **probabilidad condicional**, necesitamos aplicar correctamente la fórmula de probabilidad condicional y trabajar con la información de la tabla de contingencia.
 
-### Paso 1: Identificar el tipo de problema y la fórmula
+### Paso 1: 
+
+Identificar el tipo de problema y la fórmula
 Este es un problema de **probabilidad condicional**, donde buscamos:
 
 $$P(\text{`r pregunta_seleccionada$texto_evento`} | \text{`r pregunta_seleccionada$texto_condicion`})$$
@@ -597,7 +599,9 @@ Donde:
 - $P(A \cap B)$ = probabilidad de que ocurran ambos eventos simultáneamente
 - $P(B)$ = probabilidad marginal de la condición
 
-### Paso 2: Extraer información de la tabla de contingencia
+### Paso 2: 
+
+Extraer información de la tabla de contingencia.
 De la tabla podemos obtener las siguientes **probabilidades conjuntas**:
 
 - P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_masculino_seleccionado`) = `r sprintf("%.3f", p_menor_masc)`
@@ -605,7 +609,9 @@ De la tabla podemos obtener las siguientes **probabilidades conjuntas**:
 - P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_masculino_seleccionado`) = `r sprintf("%.3f", p_mayor_masc)`
 - P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años $\cap$ `r termino_femenino_seleccionado`) = `r sprintf("%.3f", p_mayor_fem)`
 
-### Paso 3: Calcular probabilidades marginales
+### Paso 3: 
+
+Calcular probabilidades marginales
 Las **probabilidades marginales** se obtienen sumando las probabilidades conjuntas:
 
 **Por género:**
@@ -618,7 +624,9 @@ Las **probabilidades marginales** se obtienen sumando las probabilidades conjunt
 - P(`r termino_menores_seleccionado` de `r edad_corte_seleccionada` años) = `r sprintf("%.3f", p_menor_masc)` + `r sprintf("%.3f", p_menor_fem)` = `r sprintf("%.3f", p_menor)`
 - P(`r termino_mayores_seleccionado` de `r edad_corte_seleccionada` años) = `r sprintf("%.3f", p_mayor_masc)` + `r sprintf("%.3f", p_mayor_fem)` = `r sprintf("%.3f", p_mayor)`
 
-### Paso 4: Aplicar la fórmula para nuestro problema específico
+### Paso 4: 
+
+Aplicar la fórmula para nuestro problema específico
 Para nuestro problema:
 
 $$P(\text{`r pregunta_seleccionada$texto_evento`} | \text{`r pregunta_seleccionada$texto_condicion`}) = \frac{P(\text{`r pregunta_seleccionada$texto_evento`} \cap \text{`r pregunta_seleccionada$texto_condicion`})}{P(\text{`r pregunta_seleccionada$texto_condicion`})}$$
@@ -626,9 +634,13 @@ $$P(\text{`r pregunta_seleccionada$texto_evento`} | \text{`r pregunta_selecciona
 Sustituyendo los valores de la tabla:
 $$P(\text{`r pregunta_seleccionada$texto_evento`} | \text{`r pregunta_seleccionada$texto_condicion`}) = \frac{`r sprintf("%.3f", pregunta_seleccionada$numerador)`}{`r sprintf("%.3f", pregunta_seleccionada$denominador)`}$$
 
-### Paso 5: Verificación y análisis de distractores
-**Respuesta correcta:** `r respuesta_correcta_fraccion` = `r sprintf("%.3f", respuesta_correcta_decimal)`
+### Paso 5:
 
+Verificación y análisis de distractores
+
+**Respuesta correcta:** `r respuesta_correcta_fraccion` = `r sprintf("%.3f", respuesta_correcta_decimal)`.
+
+\
 **Análisis de errores conceptuales comunes (distractores):**
 
 1. **`r distractores_generados[1]`**: Error de **condición incorrecta** - usar el numerador correcto pero con una probabilidad marginal diferente como denominador
