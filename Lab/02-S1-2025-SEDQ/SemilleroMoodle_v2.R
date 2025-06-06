@@ -2,13 +2,13 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "fracciones_reparto_premio_v4.Rmd"
-copias <- 500
+archivo_examen <- "probabilidad_condicional_tabla_contingencia_razonamiento_nivel3_v2.Rmd"
+copias <- 400
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
-dir_ejercicios <- "ejercicios"
+dir_ejercicios <- "."
 
 # Nombre del archivo sin la extensión .Rmd
 nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)

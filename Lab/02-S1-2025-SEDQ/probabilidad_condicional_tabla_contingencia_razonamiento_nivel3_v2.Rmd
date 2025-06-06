@@ -1,11 +1,11 @@
 
 ---
 output:
-  word_document: default
-  html_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -47,7 +47,7 @@ knitr::opts_chunk$set(
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
-set.seed(sample(1:10000, 1))
+#set.seed(sample(1:10000, 1))
 
 # ALEATORIZACIÓN AVANZADA DEL CONTEXTO DEL PROBLEMA (15 opciones)
 contextos_educativos <- c(
