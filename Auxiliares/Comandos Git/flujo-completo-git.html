@@ -522,6 +522,30 @@ completamente</li>
 seguro que <code>--force</code> simple</li>
 </ul>
 </div>
+<div id="desde-otro-computador" class="section level2">
+<h2>Desde otro computador</h2>
+<p>Otro computador que ya tiene rama principal</p>
+</div>
+<div id="pasos-para-acceder-a-experimentos-seguros" class="section level2">
+<h2><strong>🔄 Pasos para Acceder a experimentos-seguros</strong></h2>
+<div id="actualizar-información-de-ramas-remotas" class="section level3">
+<h3><strong>1. Actualizar información de ramas remotas:</strong></h3>
+<pre class="bash"><code>git fetch origin</code></pre>
+</div>
+<div id="ver-todas-las-ramas-disponibles" class="section level3">
+<h3><strong>2. Ver todas las ramas disponibles:</strong></h3>
+<pre class="bash"><code>git branch -a</code></pre>
+</div>
+<div id="cambiar-a-experimentos-seguros" class="section level3">
+<h3><strong>3. Cambiar a experimentos-seguros:</strong></h3>
+<pre class="bash"><code>git checkout experimentos-seguros</code></pre>
+</div>
+<div id="sincronizar-con-la-nube" class="section level3">
+<h3><strong>4. Sincronizar con la nube:</strong></h3>
+<pre class="bash"><code>git reset --hard origin/experimentos-seguros
+git clean -fd</code></pre>
+</div>
+</div>
 </div>
 
 

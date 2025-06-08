@@ -161,3 +161,33 @@ git branch                          # El asterisco (*) marca la rama activa
 - **Cambio de contexto**: `git checkout` cambia toda la carpeta al estado de esa rama
 - **Sincronización forzosa**: Los comandos con `--hard` y `--force` sobrescriben completamente
 - **Seguridad**: `--force-with-lease` es más seguro que `--force` simple
+
+
+
+## Desde otro computador
+
+Otro computador que ya tiene rama principal
+
+## **🔄 Pasos para Acceder a experimentos-seguros**
+
+### **1. Actualizar información de ramas remotas:**
+```bash
+git fetch origin
+```
+
+### **2. Ver todas las ramas disponibles:**
+```bash
+git branch -a
+```
+
+### **3. Cambiar a experimentos-seguros:**
+```bash
+git checkout experimentos-seguros
+```
+
+### **4. Sincronizar con la nube:**
+```bash
+git reset --hard origin/experimentos-seguros
+git clean -fd
+```
+
