@@ -374,7 +374,8 @@ py_run_string(codigo_python)
 Question
 ========
 
-`r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno(a), pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
+`r nombre` desea saber cuánto(a) `r liquido` se necesita para llenar un `r recipiente` interno(a), 
+pero solamente cuenta con las medidas de las dimensiones que muestra la figura.
 
 ```{r mostrar_cilindro_python, echo=FALSE, results='asis', fig.align='center'}
 # Detectar si se está generando para Moodle
