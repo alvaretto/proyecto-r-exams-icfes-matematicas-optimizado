@@ -407,7 +407,10 @@ py_run_string(codigo_python_opcion4)
 Question
 ========
 
-Una `r termino_empresa` dedicada a tratar los datos del tránsito en varias de las ciudades del continente americano (`r ciudades_texto`), ha realizado un `r termino_estudio` donde se muestran los `r termino_registro`s de `r termino_mortalidad` por `r termino_accidente` entre los años `r años[1]` y `r años[4]`.
+Una `r termino_empresa` dedicada a tratar los datos del tránsito en varias de las 
+ciudades del continente americano (`r ciudades_texto`), ha realizado un 
+`r termino_estudio` donde se muestran los `r termino_registro`s de `r termino_mortalidad` 
+por `r termino_accidente` entre los años `r años[1]` y `r años[4]`.
 
 ```{r grafica_total, echo=FALSE, results='asis', fig.align='center'}
 # Usando método alternativo para incluir imágenes
