@@ -7,3 +7,20 @@
 .windsurfrules
 
 **/.claude/settings.local.json
+
+# Archivos con datos sensibles de Git/GitHub
+*_PRIVADO.md
+*_privado.md
+*_secreto.md
+github_automatico.md
+github_config_privado.md
+.env
+.env.local
+config_personal.txt
+
+# Tokens y claves
+*.key
+*.pem
+*.p12
+*token*
+*secret*
