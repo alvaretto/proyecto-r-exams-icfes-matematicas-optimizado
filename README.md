@@ -552,4 +552,7 @@ Si encuentras problemas durante la instalación:
    - LaTeX: https://www.latex-project.org/help/documentation/
    - Manjaro: https://wiki.manjaro.org/
 3. Verifica los foros de Manjaro para problemas específicos del sistema
-4. Consulta el repositorio de GitHub del proyecto para problemas específicos 
+4. Consulta el repositorio de GitHub del proyecto para problemas específicos
+
+---
+*Última actualización: Configuración Git automatizada - Enero 2025*
