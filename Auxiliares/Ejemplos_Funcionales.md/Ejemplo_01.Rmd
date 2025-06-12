@@ -1,7 +1,3 @@
-## CÓDIGO DE EJEMPLO COMPLETO
-Usa el siguiente código como referencia técnica, adaptándolo al escenario actual:
-
-```r
 ---
 output:
   html_document: default
@@ -475,4 +471,3 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Interpretación de gráficas
-```

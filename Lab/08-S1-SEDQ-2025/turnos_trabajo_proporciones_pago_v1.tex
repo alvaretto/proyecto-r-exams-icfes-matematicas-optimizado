@@ -1,0 +1,183 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+En una complejo industrial, los empleados pueden trabajar cada semana en
+dos turnos: diurno y nocturno. Existen dos clasificaciones para los días
+de trabajo normales (de lunes a sábado) y dominicales. En el turno
+diurno del domingo se paga un 20\% más que en el turno diurno de días
+normales. En el turno nocturno de un día cualquiera, la hora de trabajo
+se paga un 60\% más que en el turno diurno de ese mismo día.
+
+Un obrero laboró durante una semana 9 horas diurnas cada día. ¿Cuál es
+la gráfica que representa correctamente la proporción de dinero recibido
+cada día de la semana?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\item
+  \pandocbounded{\includegraphics[keepaspectratio]{opcion_a.png}}
+\item
+  \pandocbounded{\includegraphics[keepaspectratio]{opcion_b.png}}
+\item
+  \pandocbounded{\includegraphics[keepaspectratio]{opcion_c.png}}
+\item
+  \pandocbounded{\includegraphics[keepaspectratio]{opcion_d.png}}
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos calcular la proporción de dinero
+que recibe el trabajador cada día de la semana.
+
+\subsubsection{Análisis del problema}\label{analisis-problema-4993}
+
+\textbf{Condiciones de pago:}
+
+\begin{itemize}
+\tightlist
+\item
+  Turno diurno días normales (lunes a sábado): pago base
+\item
+  Turno diurno domingo: pago base + 20\%
+\item
+  Turno nocturno cualquier día: pago diurno del día + 60\%
+\end{itemize}
+
+\textbf{Datos del trabajador:}
+
+\begin{itemize}
+\tightlist
+\item
+  Trabajó 9 horas diurnas cada día
+\item
+  Solo trabajó turnos diurnos (no nocturnos)
+\end{itemize}
+
+\subsubsection{Cálculo de proporciones}\label{calculo-proporciones-6443}
+
+Si consideramos el pago base del turno diurno de días normales como 1
+unidad:
+
+\textbf{Pago por día:}
+
+\begin{itemize}
+\tightlist
+\item
+  Lunes a Sábado: 1 unidad cada día = 6 unidades
+\item
+  Domingo: 1 + 20\% = 1.2 unidades
+\end{itemize}
+
+\textbf{Total semanal:} 7.2 unidades
+
+\textbf{Proporciones por día:} - Lunes: 13.9\% - Martes: 13.9\% -
+Miércoles: 13.9\% - Jueves: 13.9\% - Viernes: 13.9\% - Sábado: 13.9\% -
+Domingo: 16.7\%
+
+\subsubsection{Gráfica correcta}\label{grafica-correcta-6841}
+
+\pandocbounded{\includegraphics[keepaspectratio]{opcion_a.png}}
+
+La gráfica correcta debe mostrar: - Lunes a Sábado: barras de igual
+altura (misma proporción aprox. 13.9\%) - Domingo: barra más alta
+(proporción aprox. 16.7\%)
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Verdadero. Esta gráfica representa correctamente las proporciones
+  calculadas.
+\item
+  Falso. Esta gráfica muestra todos los días con la misma proporción,
+  ignorando el pago extra del domingo.
+\item
+  Falso. Esta gráfica incorrectamente asigna pago extra también al
+  sábado.
+\item
+  Falso. Esta gráfica muestra un patrón creciente que no corresponde a
+  las condiciones del problema.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: turnos\_trabajo\_proporciones\_pago extype: schoice exsolution:
+1000 exshuffle: TRUE exsection: Interpretación de gráficas -
+Proporciones laborales
+
+\end{document}
