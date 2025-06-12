@@ -1,0 +1,355 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+  html_document: default
+  word_document: default
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: numerico_variacional
+    tipo: generico
+  contexto: laboral
+  eje_axial: eje2
+  componente: numerico_variacional
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Aleatorización del contexto laboral
+  contextos <- c("fábrica", "empresa manufacturera", "planta industrial", 
+                 "compañía textil", "industria automotriz", "planta de producción",
+                 "empresa de manufactura", "centro de producción", "complejo industrial")
+  contexto <- sample(contextos, 1)
+  
+  # Aleatorización del tipo de trabajador
+  trabajadores <- c("empleado", "operario", "trabajador", "técnico", "obrero")
+  trabajador <- sample(trabajadores, 1)
+  
+  # Aleatorización de horas trabajadas diarias
+  horas_diarias <- sample(6:10, 1)
+  
+  # Aleatorización de porcentajes extra
+  porcentaje_domingo <- sample(c(15, 20, 25, 30), 1)
+  porcentaje_nocturno <- sample(c(40, 50, 60, 70), 1)
+  
+  # Días de la semana
+  dias <- c("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
+  
+  # Cálculo de proporciones de pago
+  # Pago base = 1 unidad para días normales diurnos
+  pago_base <- 1
+  pago_domingo <- pago_base * (1 + porcentaje_domingo/100)
+  
+  # Vector de pagos por día (solo turnos diurnos)
+  pagos_diarios <- c(rep(pago_base, 6), pago_domingo)
+  total_pago <- sum(pagos_diarios)
+  
+  # Proporciones como porcentajes
+  proporciones <- (pagos_diarios / total_pago) * 100
+  
+  # Aleatorización de colores
+  colores_disponibles <- c("blue", "green", "red", "purple", "orange", "brown", "darkblue", "darkgreen")
+  color_principal <- sample(colores_disponibles, 1)
+  
+  return(list(
+    contexto = contexto,
+    trabajador = trabajador,
+    horas_diarias = horas_diarias,
+    porcentaje_domingo = porcentaje_domingo,
+    porcentaje_nocturno = porcentaje_nocturno,
+    dias = dias,
+    proporciones = proporciones,
+    color_principal = color_principal,
+    pago_domingo = pago_domingo,
+    pago_base = pago_base
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+contexto <- datos$contexto
+trabajador <- datos$trabajador
+horas_diarias <- datos$horas_diarias
+porcentaje_domingo <- datos$porcentaje_domingo
+porcentaje_nocturno <- datos$porcentaje_nocturno
+dias <- datos$dias
+proporciones <- datos$proporciones
+color_principal <- datos$color_principal
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r generar_graficos_python, echo=FALSE, results="hide"}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Código Python para las gráficas siguiendo el patrón del ejemplo funcional
+codigo_base_python <- "
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+matplotlib.rcParams['font.size'] = 9
+
+dias = %s
+proporciones_correctas = %s
+color_principal = '%s'
+porcentaje_domingo = %d
+"
+
+# Reemplazar valores en el código Python base
+codigo_python_base <- sprintf(codigo_base_python,
+                            paste0("[", paste0("'", dias, "'", collapse=", "), "]"),
+                            paste0("[", paste(format(round(proporciones, 2), nsmall=2, decimal.mark="."), collapse=", "), "]"),
+                            color_principal,
+                            porcentaje_domingo)
+
+# Código para Opción A: CORRECTA
+codigo_python_opcion_a <- paste0(codigo_python_base, "
+plt.figure(figsize=(8, 5))
+bars = plt.bar(dias, proporciones_correctas, color=color_principal, alpha=0.8, edgecolor='black')
+
+# Añadir valores en las barras
+for i, (dia, prop) in enumerate(zip(dias, proporciones_correctas)):
+    plt.text(i, prop + 0.2, f'{prop:.1f}%', ha='center', va='bottom', fontweight='bold')
+
+plt.title('Proporción de dinero recibido por día', fontsize=12, fontweight='bold')
+plt.xlabel('Día de la semana', fontsize=11)
+plt.ylabel('Proporción del dinero recibido (%)', fontsize=11)
+plt.xticks(rotation=45)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('opcion_a.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+
+# Código para Opción B: INCORRECTA - Todos los días iguales
+codigo_python_opcion_b <- paste0(codigo_python_base, "
+proporciones_iguales = [100/7] * 7
+plt.figure(figsize=(8, 5))
+bars = plt.bar(dias, proporciones_iguales, color='red', alpha=0.8, edgecolor='black')
+
+for i, (dia, prop) in enumerate(zip(dias, proporciones_iguales)):
+    plt.text(i, prop + 0.2, f'{prop:.1f}%', ha='center', va='bottom', fontweight='bold')
+
+plt.title('Proporción de dinero recibido por día', fontsize=12, fontweight='bold')
+plt.xlabel('Día de la semana', fontsize=11)
+plt.ylabel('Proporción del dinero recibido (%)', fontsize=11)
+plt.xticks(rotation=45)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('opcion_b.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+
+# Código para Opción C: INCORRECTA - Sábado y domingo altos
+codigo_python_opcion_c <- paste0(codigo_python_base, "
+# Usar list() en lugar de .copy() para evitar errores
+proporciones_c = list(proporciones_correctas)
+proporciones_c[5] = proporciones_c[6]  # Sábado igual a domingo
+proporciones_c = [p * 100/sum(proporciones_c) for p in proporciones_c]
+
+plt.figure(figsize=(8, 5))
+bars = plt.bar(dias, proporciones_c, color='green', alpha=0.8, edgecolor='black')
+
+for i, (dia, prop) in enumerate(zip(dias, proporciones_c)):
+    plt.text(i, prop + 0.2, f'{prop:.1f}%', ha='center', va='bottom', fontweight='bold')
+
+plt.title('Proporción de dinero recibido por día', fontsize=12, fontweight='bold')
+plt.xlabel('Día de la semana', fontsize=11)
+plt.ylabel('Proporción del dinero recibido (%)', fontsize=11)
+plt.xticks(rotation=45)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('opcion_c.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+
+# Código para Opción D: INCORRECTA - Patrón creciente
+codigo_python_opcion_d <- paste0(codigo_python_base, "
+proporciones_d = [10, 11, 12, 13, 14, 15, 25]
+plt.figure(figsize=(8, 5))
+bars = plt.bar(dias, proporciones_d, color='purple', alpha=0.8, edgecolor='black')
+
+for i, (dia, prop) in enumerate(zip(dias, proporciones_d)):
+    plt.text(i, prop + 0.2, f'{prop:.1f}%', ha='center', va='bottom', fontweight='bold')
+
+plt.title('Proporción de dinero recibido por día', fontsize=12, fontweight='bold')
+plt.xlabel('Día de la semana', fontsize=11)
+plt.ylabel('Proporción del dinero recibido (%)', fontsize=11)
+plt.xticks(rotation=45)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('opcion_d.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+
+# Ejecutar los códigos de Python para generar las gráficas
+py_run_string(codigo_python_opcion_a)
+py_run_string(codigo_python_opcion_b)
+py_run_string(codigo_python_opcion_c)
+py_run_string(codigo_python_opcion_d)
+```
+
+Question
+========
+
+En una `r contexto`, los empleados pueden trabajar cada semana en dos turnos: diurno y nocturno. Existen dos clasificaciones para los días de trabajo normales (de lunes a sábado) y dominicales. En el turno diurno del domingo se paga un `r porcentaje_domingo`% más que en el turno diurno de días normales. En el turno nocturno de un día cualquiera, la hora de trabajo se paga un `r porcentaje_nocturno`% más que en el turno diurno de ese mismo día.
+
+Un `r trabajador` laboró durante una semana `r horas_diarias` horas diurnas cada día. ¿Cuál es la gráfica que representa correctamente la proporción de dinero recibido cada día de la semana?
+
+Answerlist
+----------
+
+```{r options, echo=FALSE, results='asis'}
+# Detectar si se está generando para Moodle u otros formatos
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar las opciones de gráficas con tamaño apropiado
+if (es_moodle) {
+  # Tamaño para Moodle
+  cat("- ![](opcion_a.png){width=80%}\n\n")
+  cat("- ![](opcion_b.png){width=80%}\n\n")
+  cat("- ![](opcion_c.png){width=80%}\n\n")
+  cat("- ![](opcion_d.png){width=80%}\n\n")
+} else {
+  # Tamaño para PDF/Word
+  cat("- ![](opcion_a.png){width=90%}\n\n")
+  cat("- ![](opcion_b.png){width=90%}\n\n")
+  cat("- ![](opcion_c.png){width=90%}\n\n")
+  cat("- ![](opcion_d.png){width=90%}\n\n")
+}
+```
+
+Solution
+========
+
+Para resolver este problema, debemos calcular la proporción de dinero que recibe el trabajador cada día de la semana.
+
+### Análisis del problema {#analisis-problema-`r sample(1:10000, 1)`}
+
+**Condiciones de pago:**
+
+- Turno diurno días normales (lunes a sábado): pago base
+- Turno diurno domingo: pago base + `r porcentaje_domingo`%
+- Turno nocturno cualquier día: pago diurno del día + `r porcentaje_nocturno`%
+
+**Datos del trabajador:**
+
+- Trabajó `r horas_diarias` horas diurnas cada día
+- Solo trabajó turnos diurnos (no nocturnos)
+
+### Cálculo de proporciones {#calculo-proporciones-`r sample(1:10000, 1)`}
+
+Si consideramos el pago base del turno diurno de días normales como 1 unidad:
+
+**Pago por día:**
+
+- Lunes a Sábado: 1 unidad cada día = 6 unidades
+- Domingo: 1 + `r porcentaje_domingo`% = `r round(datos$pago_domingo, 3)` unidades
+
+**Total semanal:** `r round(6 + datos$pago_domingo, 3)` unidades
+
+**Proporciones por día:**
+```{r solucion_calculos, echo=FALSE, results='asis'}
+for(i in 1:7) {
+  cat(paste0("- ", dias[i], ": ", round(proporciones[i], 1), "%\n"))
+}
+```
+
+### Gráfica correcta {#grafica-correcta-`r sample(1:10000, 1)`}
+
+```{r solucion_grafica, echo=FALSE, results='asis', fig.align='center'}
+# Detectar formato y ajustar tamaño
+if (es_moodle) {
+  cat("![](opcion_a.png){width=80%}")
+} else {
+  cat("![](opcion_a.png){width=90%}")
+}
+```
+
+La gráfica correcta debe mostrar:
+- Lunes a Sábado: barras de igual altura (misma proporción aprox. `r round(proporciones[1], 1)`%)
+- Domingo: barra más alta (proporción aprox. `r round(proporciones[7], 1)`%)
+
+Answerlist
+----------
+- Verdadero. Esta gráfica representa correctamente las proporciones calculadas.
+- Falso. Esta gráfica muestra todos los días con la misma proporción, ignorando el pago extra del domingo.
+- Falso. Esta gráfica incorrectamente asigna pago extra también al sábado.
+- Falso. Esta gráfica muestra un patrón creciente que no corresponde a las condiciones del problema.
+
+Meta-information
+================
+exname: turnos_trabajo_proporciones_pago
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+exsection: Interpretación de gráficas - Proporciones laborales
