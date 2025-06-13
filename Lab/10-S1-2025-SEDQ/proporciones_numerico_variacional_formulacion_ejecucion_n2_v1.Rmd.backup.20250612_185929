@@ -1,0 +1,429 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: algebra_calculo
+    tipo: generico
+  contexto: comunitario
+  eje_axial: eje2
+  componente: numerico_variacional
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(ggplot2)
+library(knitr)
+library(reticulate)
+library(testthat)
+library(data.table)
+library(readxl)
+library(datasets)
+library(stringr)
+library(digest)
+
+# Configurar Python si es necesario
+use_python("/usr/bin/python3", required = TRUE)
+
+# Configuración global
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE, 
+  message = FALSE,
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Contextos posibles
+  contextos <- list(
+    list(entidad = "Ministerio de Transporte", elemento = "vehículos", condicion = "asegurados"),
+    list(entidad = "DANE", elemento = "hogares", condicion = "con internet"),
+    list(entidad = "Ministerio de Educación", elemento = "estudiantes", condicion = "becados"),
+    list(entidad = "Superintendencia Financiera", elemento = "empresas", condicion = "certificadas"),
+    list(entidad = "ICBF", elemento = "familias", condicion = "beneficiarias"),
+    list(entidad = "Ministerio de Salud", elemento = "centros médicos", condicion = "acreditados")
+  )
+  
+  # Seleccionar contexto aleatorio
+  contexto <- sample(contextos, 1)[[1]]
+  
+  # Fracciones posibles (numerador menor que denominador)
+  fracciones <- list(
+    list(num = 1, den = 3), list(num = 2, den = 5), list(num = 3, den = 7),
+    list(num = 4, den = 9), list(num = 2, den = 7), list(num = 3, den = 8),
+    list(num = 1, den = 4), list(num = 3, den = 5), list(num = 5, den = 8),
+    list(num = 2, den = 9), list(num = 4, den = 7), list(num = 1, den = 5)
+  )
+  
+  fraccion <- sample(fracciones, 1)[[1]]
+  
+  # Total de elementos (entre 500,000 y 5,000,000)
+  total <- sample(seq(500000, 5000000, 100000), 1)
+  
+  # Calcular cantidad que cumple la condición
+  cantidad_condicion <- total * fraccion$num / fraccion$den
+  
+  # Generar distractores
+  distractor_doble <- total * 2
+  distractor_promedio <- total / 2
+  distractor_porcentaje <- (fraccion$num / fraccion$den) * 100
+  
+  return(list(
+    entidad = contexto$entidad,
+    elemento = contexto$elemento,
+    condicion = contexto$condicion,
+    total = total,
+    numerador = fraccion$num,
+    denominador = fraccion$den,
+    cantidad_condicion = cantidad_condicion,
+    distractor_doble = distractor_doble,
+    distractor_promedio = distractor_promedio,
+    distractor_porcentaje = distractor_porcentaje
+  ))
+}
+
+# Función para corregir concordancia de género
+corregir_concordancia_genero <- function(elemento, adjetivo) {
+  # Diccionario de géneros para elementos comunes
+  generos_masculinos <- c("vehículos", "hogares", "estudiantes", "centros médicos")
+  generos_femeninos <- c("familias", "empresas")
+
+  # Diccionario de adjetivos con sus formas
+  adjetivos_formas <- list(
+    "matriculado" = list(masc_sing = "matriculado", masc_plur = "matriculados",
+                        fem_sing = "matriculada", fem_plur = "matriculadas"),
+    "registrado" = list(masc_sing = "registrado", masc_plur = "registrados",
+                       fem_sing = "registrada", fem_plur = "registradas"),
+    "beneficiario" = list(masc_sing = "beneficiario", masc_plur = "beneficiarios",
+                         fem_sing = "beneficiaria", fem_plur = "beneficiarias"),
+    "asegurado" = list(masc_sing = "asegurado", masc_plur = "asegurados",
+                      fem_sing = "asegurada", fem_plur = "aseguradas"),
+    "certificado" = list(masc_sing = "certificado", masc_plur = "certificados",
+                        fem_sing = "certificada", fem_plur = "certificadas"),
+    "acreditado" = list(masc_sing = "acreditado", masc_plur = "acreditados",
+                       fem_sing = "acreditada", fem_plur = "acreditadas"),
+    "becado" = list(masc_sing = "becado", masc_plur = "becados",
+                   fem_sing = "becada", fem_plur = "becadas")
+  )
+
+  # Determinar género y número
+  es_femenino <- elemento %in% generos_femeninos
+  es_plural <- TRUE  # Asumimos plural por defecto para elementos como "familias"
+
+  # Buscar la forma base del adjetivo
+  adjetivo_base <- str_extract(adjetivo, "^[a-z]+")
+
+  if (adjetivo_base %in% names(adjetivos_formas)) {
+    formas <- adjetivos_formas[[adjetivo_base]]
+
+    if (es_femenino && es_plural) {
+      return(formas$fem_plur)
+    } else if (es_femenino && !es_plural) {
+      return(formas$fem_sing)
+    } else if (!es_femenino && es_plural) {
+      return(formas$masc_plur)
+    } else {
+      return(formas$masc_sing)
+    }
+  }
+
+  return(adjetivo)  # Si no se encuentra, devolver original
+}
+
+# Función para corregir errores semánticos comunes
+corregir_semantica <- function(texto, elemento, condicion) {
+  # Diccionario completo de correcciones específicas
+  correcciones_especificas <- list(
+    # Errores con "matriculados"
+    "familias matriculados" = "familias matriculadas",
+    "empresas matriculados" = "empresas matriculadas",
+
+    # Errores con "registrados"
+    "familias registrados" = "familias registradas",
+    "empresas registrados" = "empresas registradas",
+
+    # Errores con "certificados"
+    "familias certificados" = "familias certificadas",
+    "empresas certificados" = "empresas certificadas",
+
+    # Errores con "beneficiarios"
+    "familias beneficiarios" = "familias beneficiarias",
+    "empresas beneficiarios" = "empresas beneficiarias",
+
+    # Errores con "asegurados"
+    "familias asegurados" = "familias aseguradas",
+    "empresas asegurados" = "empresas aseguradas",
+
+    # Errores con "acreditados"
+    "familias acreditados" = "familias acreditadas",
+    "empresas acreditados" = "empresas acreditadas",
+
+    # Errores con "becados"
+    "familias becados" = "familias becadas",
+    "empresas becados" = "empresas becadas"
+  )
+
+  # Aplicar todas las correcciones específicas
+  for (error in names(correcciones_especificas)) {
+    texto <- str_replace_all(texto, fixed(error), correcciones_especificas[[error]])
+  }
+
+  # Corrección dinámica basada en elemento y condición
+  if (str_detect(texto, "matriculados|registrados|certificados|beneficiarios|asegurados|acreditados|becados")) {
+    condicion_corregida <- corregir_concordancia_genero(elemento, condicion)
+
+    # Reemplazar formas masculinas incorrectas
+    patrones_masculinos <- c("matriculados", "registrados", "certificados",
+                           "beneficiarios", "asegurados", "acreditados", "becados")
+
+    for (patron in patrones_masculinos) {
+      if (str_detect(texto, paste(elemento, patron))) {
+        texto <- str_replace_all(texto,
+                               paste(elemento, patron),
+                               paste(elemento, condicion_corregida))
+      }
+    }
+  }
+
+  return(texto)
+}
+
+# Función para validar coherencia del texto
+validar_coherencia <- function(entidad, elemento, condicion, total) {
+  errores <- c()
+
+  # Validar que la entidad sea coherente con el elemento
+  coherencias <- list(
+    "ICBF" = c("familias"),
+    "Ministerio de Transporte" = c("vehículos"),
+    "DANE" = c("hogares"),
+    "Ministerio de Educación" = c("estudiantes"),
+    "Superintendencia Financiera" = c("empresas"),
+    "Ministerio de Salud" = c("centros médicos")
+  )
+
+  if (entidad %in% names(coherencias)) {
+    if (!(elemento %in% coherencias[[entidad]])) {
+      errores <- c(errores, paste("Incoherencia: ", entidad, " no maneja ", elemento))
+    }
+  }
+
+  # Validar que el total sea realista
+  if (total < 1000 || total > 10000000) {
+    errores <- c(errores, "Total fuera de rango realista")
+  }
+
+  return(errores)
+}
+
+# Función para detectar y corregir todos los errores de concordancia
+corregir_todos_errores_concordancia <- function(texto) {
+  # Patrones de errores comunes (sustantivo femenino + adjetivo masculino)
+  errores_concordancia <- c(
+    "familias matriculados" = "familias matriculadas",
+    "familias registrados" = "familias registradas",
+    "familias certificados" = "familias certificadas",
+    "familias beneficiarios" = "familias beneficiarias",
+    "familias asegurados" = "familias aseguradas",
+    "familias acreditados" = "familias acreditadas",
+    "familias becados" = "familias becadas",
+
+    "empresas matriculados" = "empresas matriculadas",
+    "empresas registrados" = "empresas registradas",
+    "empresas certificados" = "empresas certificadas",
+    "empresas beneficiarios" = "empresas beneficiarias",
+    "empresas asegurados" = "empresas aseguradas",
+    "empresas acreditados" = "empresas acreditadas",
+    "empresas becados" = "empresas becadas"
+  )
+
+  # Aplicar todas las correcciones
+  for (error in names(errores_concordancia)) {
+    texto <- str_replace_all(texto, fixed(error), errores_concordancia[[error]])
+  }
+
+  return(texto)
+}
+
+# Función para aplicar correcciones de estilo
+aplicar_correcciones_estilo <- function(texto) {
+  # Primero corregir errores de concordancia
+  texto <- corregir_todos_errores_concordancia(texto)
+
+  # Corregir espaciado
+  texto <- str_replace_all(texto, "\\s+", " ")
+  texto <- str_trim(texto)
+
+  # Corregir puntuación
+  texto <- str_replace_all(texto, "\\s+\\.", ".")
+  texto <- str_replace_all(texto, "\\s+,", ",")
+  texto <- str_replace_all(texto, "\\s+:", ":")
+
+  # Asegurar mayúscula después de punto
+  texto <- str_replace_all(texto, "\\. ([a-z])", ". \\U\\1")
+
+  return(texto)
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Validar coherencia de los datos generados
+errores_coherencia <- validar_coherencia(datos$entidad, datos$elemento,
+                                        datos$condicion, datos$total)
+if (length(errores_coherencia) > 0) {
+  warning("Errores de coherencia detectados: ", paste(errores_coherencia, collapse = ", "))
+}
+
+# Extraer variables individuales para facilitar uso
+entidad <- datos$entidad
+elemento <- datos$elemento
+condicion <- datos$condicion
+condicion_corregida <- corregir_concordancia_genero(elemento, condicion)
+total <- datos$total
+numerador <- datos$numerador
+denominador <- datos$denominador
+cantidad_condicion <- datos$cantidad_condicion
+
+# Aplicar correcciones semánticas a textos que se usarán
+elemento_texto <- aplicar_correcciones_estilo(elemento)
+condicion_texto <- aplicar_correcciones_estilo(condicion_corregida)
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r semantic_correction_test, echo=FALSE, results="hide"}
+# Pruebas de corrección semántica y gramatical
+test_that("Pruebas de corrección semántica", {
+  # Probar corrección de concordancia de género
+  expect_equal(corregir_concordancia_genero("familias", "matriculado"), "matriculadas")
+  expect_equal(corregir_concordancia_genero("vehículos", "asegurado"), "asegurados")
+  expect_equal(corregir_concordancia_genero("empresas", "certificado"), "certificadas")
+  expect_equal(corregir_concordancia_genero("empresas", "registrado"), "registradas")
+
+  # Probar corrección de todos los errores de concordancia
+  expect_equal(corregir_todos_errores_concordancia("empresas registrados"), "empresas registradas")
+  expect_equal(corregir_todos_errores_concordancia("familias matriculados"), "familias matriculadas")
+  expect_equal(corregir_todos_errores_concordancia("empresas certificados"), "empresas certificadas")
+
+  # Probar corrección semántica
+  texto_error <- "familias matriculados"
+  texto_corregido <- corregir_semantica(texto_error, "familias", "beneficiarias")
+  expect_true(!str_detect(texto_corregido, "familias matriculados"))
+
+  # Probar validación de coherencia
+  errores <- validar_coherencia("ICBF", "vehículos", "beneficiarios", 1000000)
+  expect_true(length(errores) > 0)  # Debe detectar incoherencia
+
+  errores_ok <- validar_coherencia("ICBF", "familias", "beneficiarias", 1000000)
+  expect_true(length(errores_ok) == 0)  # No debe haber errores
+
+  # Probar correcciones de estilo (que incluye concordancia)
+  texto_con_errores <- "empresas registrados y familias matriculados"
+  texto_corregido_estilo <- aplicar_correcciones_estilo(texto_con_errores)
+  expect_equal(texto_corregido_estilo, "empresas registradas y familias matriculadas")
+})
+
+# Aplicar correcciones finales a las variables de texto
+elemento_final <- aplicar_correcciones_estilo(elemento_texto)
+condicion_final <- aplicar_correcciones_estilo(condicion_texto)
+```
+
+Question
+========
+
+Según el `r entidad`, en el país solo `r numerador` de cada `r denominador` `r elemento_texto` están `r condicion_texto`. Si el total de `r elemento_texto` registrados es `r format(total, big.mark = ".", decimal.mark = ",")`, al realizar la operación `r format(total, big.mark = ".", decimal.mark = ",")` por `r numerador`/`r denominador` se calcularía:
+
+Answerlist
+----------
+- el doble de `r elemento_texto` registrados.
+- la cantidad de `r elemento_texto` `r condicion_texto`.
+- el promedio de `r elemento_texto` registrados.
+- el porcentaje de `r elemento_texto` `r condicion_texto`.
+
+Solution
+========
+
+Para resolver este problema, debemos analizar qué representa la operación matemática `r format(total, big.mark = ".", decimal.mark = ",")` × `r numerador`/`r denominador`.
+
+**Análisis del problema:**
+
+- Total de `r elemento_texto` registrados: `r format(total, big.mark = ".", decimal.mark = ",")`
+- Proporción de `r elemento_texto` `r condicion_texto`: `r numerador` de cada `r denominador`
+- Operación a analizar: `r format(total, big.mark = ".", decimal.mark = ",")` × `r numerador`/`r denominador`
+
+**Interpretación matemática:**
+
+Cuando multiplicamos el total por una fracción, estamos calculando qué parte del total representa esa fracción.
+
+En este caso:
+
+- `r format(total, big.mark = ".", decimal.mark = ",")` × `r numerador`/`r denominador` = `r format(cantidad_condicion, big.mark = ".", decimal.mark = ",")`
+
+Este resultado representa la **cantidad de `r elemento_texto` `r condicion_texto`**.
+
+**Verificación de las opciones:**
+
+- **Opción A:** El doble sería `r format(total * 2, big.mark = ".", decimal.mark = ",")`
+- **Opción B:** La cantidad de `r elemento_texto` `r condicion_texto` es `r format(cantidad_condicion, big.mark = ".", decimal.mark = ",")`
+- **Opción C:** El promedio sería `r format(total / 2, big.mark = ".", decimal.mark = ",")`
+- **Opción D:** El porcentaje sería `r round((numerador/denominador)*100, 1)`%
+
+Answerlist
+----------
+- Falso. El doble de `r elemento_texto` registrados sería `r format(total * 2, big.mark = ".", decimal.mark = ",")`.
+- Verdadero. La operación calcula exactamente la cantidad de `r elemento_texto` `r condicion_texto`.
+- Falso. El promedio de `r elemento_texto` registrados sería `r format(total / 2, big.mark = ".", decimal.mark = ",")`.
+- Falso. El porcentaje de `r elemento_texto` `r condicion_texto` es `r round((numerador/denominador)*100, 1)`%, no el resultado de la multiplicación.
+
+Meta-information
+================
+exname: Interpretación de operaciones con fracciones en contexto
+extype: schoice
+exsolution: 0100
+exshuffle: TRUE
+exsection: Proporciones y Fracciones

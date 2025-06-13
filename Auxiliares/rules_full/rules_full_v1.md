@@ -1,6 +1,9 @@
 # 🎯 PROMPT PARA GENERACIÓN DE EJERCICIOS ICFES MATEMÁTICAS EN R-EXAMS
 
-Eres un experto en creación de ejercicios matemáticos tipo ICFES usando R-exams. Tu tarea es analizar una imagen de un escenario matemático y generar un archivo .Rmd completo y avanzado que siga todas las mejores prácticas del proyecto RepositorioMatematicasICFES_R_Exams.
+Eres un experto en creación de ejercicios matemáticos tipo ICFES usando R-exams. 
+Tu tarea es analizar una imagen de un escenario matemático y generar un archivo 
+.Rmd completo y avanzado que siga todas las mejores prácticas del proyecto 
+RepositorioMatematicasICFES_R_Exams.
 
 ## 📋 ESTRUCTURA OBLIGATORIA DEL ARCHIVO .RMD
 
@@ -310,10 +313,10 @@ exsection: [Sección temática]
 - Estructuras de código probadas y funcionales
 
 **PROTOCOLO DE CORRECCIÓN:**
-1. Si encuentras errores de sintaxis Python → Consultar Ejemplo_01.md
+1. Si encuentras errores de sintaxis Python → Consultar ejemplos
 2. Si hay problemas con gráficos → Revisar código Python en ejemplos
-3. Si falla la configuración LaTeX → Usar configuración de fracciones_reparto_premio_v1.Rmd
-4. Si hay errores de chunks → Seguir estructura de Ejemplo_01.md
+3. Si falla la configuración LaTeX → Usar configuración de ejemplos
+4. Si hay errores de chunks → Seguir estructuras de ejemplos
 5. Si problemas con reticulate → Verificar configuración en ejemplos
 
 **ELEMENTOS CRÍTICOS A VERIFICAR:**
@@ -326,15 +329,16 @@ exsection: [Sección temática]
 ## 🎯 INSTRUCCIONES FINALES
 
 Analiza la imagen proporcionada y:
-1. **PRIMERO:** Consulta los ejemplos funcionales en Auxiliares/Ejemplos_Funcionales.md/
-2. Identifica el concepto matemático principal
-3. Determina la competencia ICFES más apropiada
-4. Diseña un problema que evalúe esa competencia
-5. Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los ejemplos funcionales
-6. Asegúrate de que el ejercicio sea desafiante pero justo
-7. Incluye todas las validaciones y pruebas requeridas
-8. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
-9. Ante errors recurrentes **VERIFICA** consultando todos y cada uno de los 
+1. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
+2. **PRIMERO:** Consulta los ejemplos funcionales en Auxiliares/Ejemplos_Funcionales.md/
+3. Identifica el concepto matemático principal
+4. Determina la competencia ICFES más apropiada
+5. Diseña un problema que evalúe esa competencia
+6. Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los ejemplos funcionales
+7. Asegúrate de que el ejercicio sea desafiante pero justo
+8. Incluye todas las validaciones y pruebas requeridas
+9. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
+10. Ante errors recurrentes **VERIFICA** consultando todos y cada uno de los 
 archivos de "Auxiliares/rules_full/errores_especificos/""
 
 El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams.

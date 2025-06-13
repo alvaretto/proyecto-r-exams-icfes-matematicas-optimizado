@@ -336,6 +336,7 @@ if (es_moodle) {
 ```
 
 La gráfica correcta debe mostrar:
+
 - Lunes a Sábado: barras de igual altura (misma proporción aprox. `r round(proporciones[1], 1)`%)
 - Domingo: barra más alta (proporción aprox. `r round(proporciones[7], 1)`%)
 
