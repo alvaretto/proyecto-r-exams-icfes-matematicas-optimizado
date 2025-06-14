@@ -1,0 +1,50 @@
+[
+  {
+    "name": "context7",
+    "command": "npx -y @upstash/context7-mcp@latest",
+    "arguments": "",
+    "useShellInterpolation": true,
+    "id": "a4ca7aa3-0f8b-4224-bd0a-be430aac47b8",
+    "tools": ["resolve-library-id", "get-library-docs"],
+    "disabledTools": []
+  },
+  {
+    "name": "memory",
+    "command": "npx -y @modelcontextprotocol/server-memory",
+    "arguments": "",
+    "useShellInterpolation": true,
+    "id": "5584317e-10b3-4ca6-b6c0-d1212fc458fc",
+    "tools": ["create_entities", "create_relations", "add_observations", "delete_entities", "delete_observations", "delete_relations", "read_graph", "search_nodes", "open_nodes"],
+    "disabledTools": []
+  },
+  {
+    "name": "sequential-thinking",
+    "command": "npx -y @modelcontextprotocol/server-sequential-thinking",
+    "arguments": "",
+    "useShellInterpolation": true,
+    "id": "70cffa85-a5e4-4927-96a2-3f97ebb9814f",
+    "tools": ["sequentialthinking"],
+    "disabledTools": []
+  },
+  {
+    "name": "brave-search",
+    "command": "npx -y @modelcontextprotocol/server-brave-search",
+    "arguments": "",
+    "useShellInterpolation": true,
+    "env": {
+      "BRAVE_API_KEY": "BSAS5oaQUW-1WJp43DoU7E3biWGxLAo"
+    },
+    "id": "57db63bf-88fe-4482-853f-243e170c7bf0",
+    "tools": ["brave_web_search", "brave_local_search"],
+    "disabledTools": []
+  },
+  {
+    "name": "supermemory",
+    "command": "node /home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/MCPs/SuperMemory/supermemory-simple.js",
+    "arguments": "",
+    "useShellInterpolation": true,
+    "id": "41803fe6-7058-4a2d-945f-57c4e4664008",
+    "tools": ["remember"],
+    "disabledTools": []
+  }
+]

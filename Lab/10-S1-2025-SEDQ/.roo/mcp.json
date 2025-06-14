@@ -1,16 +1,3 @@
 {
-  "mcpServers": {
-    "mcp-supermemory-ai": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "supergateway",
-        "--sse",
-        "https://mcp.supermemory.ai/"
-      ],
-      "alwaysAllow": [
-        "search"
-      ]
-    }
-  }
+  "mcpServers": {}
 }
