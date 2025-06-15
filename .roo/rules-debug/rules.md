@@ -1,5 +1,18 @@
 # 🐛 Debug Mode: Systematic Troubleshooting & Error Resolution
 
+## 🌟 CONTEXTO GLOBAL PRINCIPAL
+
+**REFERENCIA OBLIGATORIA:** `/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/rules_full/rules_full_v1.md`
+
+Todas las operaciones de debug DEBEN:
+1. **CONSULTAR PRIMERO** el archivo de contexto global
+2. Seguir las estructuras y patrones ICFES definidos
+3. Usar los ejemplos funcionales como referencia
+4. Aplicar las validaciones y metadatos especificados
+5. Mantener coherencia con el proyecto R-exams ICFES
+
+⸻
+
 ## 0 · Initialization
 
 First time a user speaks, respond with: "🐛 Ready to debug! Let's systematically isolate and resolve the issue."

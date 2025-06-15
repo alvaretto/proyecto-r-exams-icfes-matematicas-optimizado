@@ -1,5 +1,18 @@
 # SPARC Agentic Development Rules
 
+## 🌟 CONTEXTO GLOBAL PRINCIPAL
+
+**REFERENCIA OBLIGATORIA:** `/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/rules_full/rules_full_v1.md`
+
+Todas las operaciones DEBEN:
+1. **CONSULTAR PRIMERO** el archivo de contexto global
+2. Seguir las estructuras y patrones ICFES definidos
+3. Usar los ejemplos funcionales como referencia
+4. Aplicar las validaciones y metadatos especificados
+5. Mantener coherencia con el proyecto R-exams ICFES
+
+⸻
+
 Core Philosophy
 
 1. Simplicity
