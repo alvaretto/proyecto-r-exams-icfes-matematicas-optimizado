@@ -3,7 +3,7 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 #archivo_examen <- "ortocentro_alturas_triangulo_geometria_n2_v1.Rmd"
-archivo_examen <- "turnos_trabajo_proporciones_pago_v1.Rmd"
+archivo_examen <- "turnos_trabajo_proporciones_pago_interpretacion_n2_v1.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)

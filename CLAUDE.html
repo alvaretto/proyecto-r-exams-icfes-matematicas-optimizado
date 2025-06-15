@@ -11,7 +11,7 @@
 
 
 
-<title>augment_educator</title>
+<title>CLAUDE</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,253 +352,393 @@ display: none;
 </div>
 
 
-<div id="propuesta-para-plan-educativo-gratuito---augment-ai" class="section level1">
-<h1>📧 PROPUESTA PARA PLAN EDUCATIVO GRATUITO - AUGMENT AI</h1>
-<p><strong>Para:</strong> Equipo de Augment Code<br />
-<strong>De:</strong> [Tu Nombre y Cargo]<br />
-<strong>Institución:</strong> [Nombre de tu Institución Educativa]<br />
-<strong>Fecha:</strong> [Fecha actual]<br />
-<strong>Asunto:</strong> Solicitud de Plan Educativo Gratuito para
-Proyecto de Innovación Matemática</p>
-<hr />
-<div id="información-de-contacto-augment-ai" class="section level2">
-<h2>📞 INFORMACIÓN DE CONTACTO AUGMENT AI</h2>
-<p><strong>Canales oficiales para enviar esta propuesta:</strong></p>
+<div id="sistema-de-generación-de-ejercicios-icfes-matemáticas-en-r-exams" class="section level1">
+<h1>🎯 SISTEMA DE GENERACIÓN DE EJERCICIOS ICFES MATEMÁTICAS EN
+R-EXAMS</h1>
+<div id="configuración-activa" class="section level2">
+<h2>📋 CONFIGURACIÓN ACTIVA</h2>
+<div id="experto-en-creación-de-ejercicios-matemáticos-tipo-icfes-usando-r-exams" class="section level3">
+<h3>Experto en creación de ejercicios matemáticos tipo ICFES usando
+R-exams</h3>
 <ul>
-<li><strong>Contact Sales:</strong> <a href="https://www.augmentcode.com/contact" class="uri">https://www.augmentcode.com/contact</a></li>
-<li><strong>Contact Support:</strong> <a href="https://support.augmentcode.com/" class="uri">https://support.augmentcode.com/</a></li>
-<li><strong>Press Inquiries:</strong> <a href="mailto:press@augmentcode.com" class="email">press@augmentcode.com</a></li>
-</ul>
-<p><strong>Recomendación:</strong> Usar Contact Sales para solicitudes
-de planes educativos</p>
-<hr />
-</div>
-<div id="presentación-institucional" class="section level2">
-<h2>🎓 PRESENTACIÓN INSTITUCIONAL</h2>
-<p>Estimado equipo de Augment Code,</p>
-<p>Mi nombre es [Tu Nombre] y soy [Tu Cargo] en [Nombre de la
-Institución Educativa], una institución educativa [pública/privada sin
-fines de lucro] ubicada en [Ciudad, País]. Nuestra institución atiende
-aproximadamente [número] estudiantes de [niveles educativos], con un
-enfoque especial en la mejora de la calidad educativa en
-matemáticas.</p>
-</div>
-<div id="descripción-del-proyecto-educativo" class="section level2">
-<h2>🚀 DESCRIPCIÓN DEL PROYECTO EDUCATIVO</h2>
-<div id="proyecto-repositoriomatematicasicfes_r_exams" class="section level3">
-<h3><strong>Proyecto:
-“RepositorioMatematicasICFES_R_Exams”</strong></h3>
-<p>Estoy desarrollando un proyecto innovador de generación automatizada
-de ejercicios matemáticos tipo ICFES utilizando R-exams, con las
-siguientes características:</p>
-<p><strong>Objetivos del Proyecto:</strong></p>
-<ul>
-<li>Crear un repositorio de ejercicios matemáticos adaptativos para
-preparación ICFES</li>
-<li>Generar automáticamente cientos de versiones únicas de cada
-ejercicio</li>
-<li>Mejorar significativamente los resultados de nuestros estudiantes en
-pruebas estandarizadas</li>
-<li>Democratizar el acceso a material de calidad para preparación
-académica</li>
-</ul>
-<p><strong>Características Técnicas:</strong></p>
-<ul>
-<li>Sistema de aleatorización avanzada (300+ versiones por
-ejercicio)</li>
-<li>Integración R-Python para visualizaciones matemáticas complejas</li>
-<li>Metadatos ICFES completos (competencias, niveles, componentes)</li>
-<li>Gráficos dinámicos con TikZ, ggplot2 y matplotlib</li>
-<li>Sistema de corrección gramatical automatizada</li>
-</ul>
-<p><strong>Impacto Educativo Actual:</strong></p>
-<ul>
-<li>[Número] estudiantes beneficiados directamente</li>
-<li>Mejora del [X]% en comprensión de conceptos matemáticos</li>
-<li>Reducción del [X]% en tiempo de preparación de material docente</li>
-<li>Implementación en [número] cursos de matemáticas</li>
+<li>Analizar imágenes de escenarios matemáticos proporcionadas por el
+usuario</li>
+<li>Generar archivos .Rmd completos y avanzados</li>
+<li>Seguir todas las mejores prácticas del proyecto
+RepositorioMatematicasICFES_R_Exams</li>
 </ul>
 </div>
 </div>
-<div id="justificación-de-la-solicitud" class="section level2">
-<h2>🎯 JUSTIFICACIÓN DE LA SOLICITUD</h2>
-<div id="por-qué-necesitamos-augment-ai" class="section level3">
-<h3><strong>¿Por qué necesitamos Augment AI?</strong></h3>
+<div id="estructura-obligatoria-del-archivo-.rmd" class="section level2">
+<h2>🔧 ESTRUCTURA OBLIGATORIA DEL ARCHIVO .RMD</h2>
+<div id="encabezado-yaml-completo" class="section level3">
+<h3>1. ENCABEZADO YAML COMPLETO</h3>
+<pre class="yaml"><code>---
+output:
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: true
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+---</code></pre>
+</div>
+<div id="metadatos-icfes-obligatorios" class="section level3">
+<h3>2. METADATOS ICFES OBLIGATORIOS</h3>
+<pre class="yaml"><code># Metadatos ICFES
+icfes:
+  competencia: 
+    - [interpretacion_representacion|formulacion_ejecucion|argumentacion]
+  nivel_dificultad: [1|2|3|4]
+  contenido:
+    categoria: [algebra_calculo|geometria|estadistica]
+    tipo: [generico|no_generico]
+  contexto: [familiar|laboral|comunitario|matematico]
+  eje_axial: [eje1|eje2|eje3|eje4]
+  componente: [geometrico_metrico|numerico_variacional|aleatorio]</code></pre>
+</div>
+<div id="chunk-de-configuración-inicial" class="section level3">
+<h3>3. CHUNK DE CONFIGURACIÓN INICIAL</h3>
+<pre class="r"><code>```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(tidyverse)
+library(ggplot2)
+library(knitr)
+library(reticulate)
+library(testthat)
+library(data.table)
+library(readxl)
+library(datasets)
+
+# Configurar Python si es necesario
+use_python(&quot;/usr/bin/python3&quot;, required = TRUE)
+
+# Configuración global
+typ &lt;- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE, 
+  message = FALSE,
+  fig.keep = &#39;all&#39;,
+  dev = c(&quot;png&quot;, &quot;pdf&quot;),
+  dpi = 150,
+  echo = FALSE,
+  results = &quot;hide&quot;
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))</code></pre>
+</div>
+<div id="chunk-de-generación-de-datos" class="section level3">
+<h3>4. CHUNK DE GENERACIÓN DE DATOS</h3>
+<pre class="r"><code>```{r data_generation, echo=FALSE, results=&quot;hide&quot;}
+# Función principal de generación de datos
+generar_datos &lt;- function() {
+  # IMPLEMENTAR LÓGICA ESPECÍFICA SEGÚN EL PROBLEMA
+  # Debe generar al menos 300 versiones únicas
+  # Incluir validaciones y manejo de errores
+  # Retornar lista con todos los parámetros necesarios
+}
+
+# Generar datos del ejercicio
+datos &lt;- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+# [Definir variables específicas según el problema]</code></pre>
+</div>
+<div id="chunk-de-prueba-de-diversidad" class="section level3">
+<h3>5. CHUNK DE PRUEBA DE DIVERSIDAD</h3>
+<pre class="r"><code>```{r version_diversity_test, echo=FALSE, results=&quot;hide&quot;}
+# Prueba obligatoria de diversidad de versiones
+test_that(&quot;Prueba de diversidad de versiones&quot;, {
+  versiones &lt;- list()
+  for(i in 1:1000) {
+    datos_test &lt;- generar_datos()
+    versiones[[i]] &lt;- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas &lt;- length(unique(versiones))
+  expect_true(n_versiones_unicas &gt;= 300,
+              info = paste(&quot;Solo se generaron&quot;, n_versiones_unicas,
+                          &quot;versiones únicas. Se requieren al menos 300.&quot;))
+})</code></pre>
+</div>
+<div id="chunks-de-gráficos-y-visualizaciones" class="section level3">
+<h3>6. CHUNKS DE GRÁFICOS Y VISUALIZACIONES</h3>
+<div id="para-gráficos-con-ggplot2" class="section level4">
+<h4>Para gráficos con ggplot2:</h4>
+<pre class="r"><code>```{r generar_graficos_r, echo=FALSE, results=&quot;asis&quot;}
+# Crear gráficos usando ggplot2
+grafico_principal &lt;- ggplot(data = datos_grafico) +
+  geom_[tipo_apropiado](...) +
+  theme_minimal() +
+  labs(title = &quot;...&quot;, x = &quot;...&quot;, y = &quot;...&quot;) +
+  theme(
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14, face = &quot;bold&quot;),
+    plot.title = element_text(size = 16, face = &quot;bold&quot;, hjust = 0.5)
+  )
+
+# Guardar gráfico
+ggsave(&quot;grafico_principal.png&quot;, grafico_principal, 
+       width = 8, height = 6, dpi = 150)</code></pre>
+</div>
+<div id="para-gráficos-con-python" class="section level4">
+<h4>Para gráficos con Python:</h4>
+<pre class="python"><code>```{python generar_graficos_python, echo=FALSE, results=&quot;hide&quot;}
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Recibir datos desde R
+datos_r = r.datos_variable
+
+# Configuración de colores aleatorios
+colores_disponibles = [&#39;blue&#39;, &#39;green&#39;, &#39;red&#39;, &#39;purple&#39;, &#39;orange&#39;, &#39;brown&#39;]
+color_principal = random.choice(colores_disponibles)
+
+# Crear gráfico
+fig, ax = plt.subplots(figsize=(8, 6))
+# [Implementar lógica específica del gráfico]
+
+plt.tight_layout()
+plt.savefig(&#39;grafico_python.png&#39;, dpi=150, bbox_inches=&#39;tight&#39;)
+plt.close()</code></pre>
+</div>
+<div id="para-diagramas-tikz" class="section level4">
+<h4>Para diagramas TikZ:</h4>
+<pre class="r"><code>```{r generar_tikz, echo=FALSE, results=&quot;asis&quot;}
+# Plantilla TikZ parametrizada
+tikz_diagram &lt;- &#39;
+\\begin{tikzpicture}[scale=1.2]
+  % [Código TikZ específico según el problema]
+\\end{tikzpicture}
+&#39;
+
+# Renderizar con include_tikz
+include_tikz(tikz_diagram, 
+             name = &quot;diagrama_tikz&quot;, 
+             markup = &quot;markdown&quot;,
+             format = typ, 
+             library = c(&quot;3d&quot;, &quot;babel&quot;), 
+             packages = c(&quot;tikz&quot;, &quot;xcolor&quot;, &quot;pgfplots&quot;),
+             width = &quot;10cm&quot;)</code></pre>
+</div>
+</div>
+<div id="sección-question" class="section level3">
+<h3>7. SECCIÓN QUESTION</h3>
+<pre class="markdown"><code>Question
+========
+
+[Contexto del problema basado en la imagen analizada]
+
+[Descripción clara y precisa del escenario matemático]
+
+[Pregunta específica que evalúa la competencia ICFES correspondiente]
+
+Answerlist
+----------
+- [Opción A con justificación matemática]
+- [Opción B - distractor plausible]
+- [Opción C - distractor plausible]  
+- [Opción D - distractor plausible]</code></pre>
+</div>
+<div id="sección-solution" class="section level3">
+<h3>8. SECCIÓN SOLUTION</h3>
+<pre class="markdown"><code>Solution
+========
+
+[Explicación detallada del proceso de solución]
+
+[Gráficos o diagramas de apoyo si es necesario]
+
+[Justificación matemática completa]
+
+Answerlist
+----------
+- Verdadero/Falso para cada opción con explicación</code></pre>
+</div>
+<div id="meta-information-obligatoria" class="section level3">
+<h3>9. META-INFORMATION OBLIGATORIA</h3>
+<pre class="markdown"><code>Meta-information
+================
+exname: [Nombre descriptivo del ejercicio]
+extype: schoice
+exsolution: [Patrón de respuesta, ej: 1000]
+exshuffle: TRUE
+exsection: [Sección temática]</code></pre>
+</div>
+</div>
+<div id="criterios-de-calidad-obligatorios" class="section level2">
+<h2>🎯 CRITERIOS DE CALIDAD OBLIGATORIOS</h2>
+<div id="aleatorización-avanzada" class="section level3">
+<h3>ALEATORIZACIÓN AVANZADA:</h3>
+<ul>
+<li>Mínimo 300 versiones únicas verificadas con test</li>
+<li>Parámetros numéricos variables con rangos realistas</li>
+<li>Contextos alternativos (nombres, situaciones, objetos)</li>
+<li>Colores aleatorios en gráficos</li>
+<li>Orden aleatorio de opciones</li>
+</ul>
+</div>
+<div id="robustez-matemática" class="section level3">
+<h3>ROBUSTEZ MATEMÁTICA:</h3>
+<ul>
+<li>Validaciones de coherencia matemática</li>
+<li>Manejo de casos extremos</li>
+<li>Precisión numérica apropiada</li>
+<li>Unidades consistentes</li>
+</ul>
+</div>
+<div id="calidad-gráfica" class="section level3">
+<h3>CALIDAD GRÁFICA:</h3>
+<ul>
+<li>Resolución mínima 150 DPI</li>
+<li>Etiquetas claras y legibles</li>
+<li>Colores contrastantes</li>
+<li>Escalas apropiadas</li>
+<li>Leyendas cuando sea necesario</li>
+</ul>
+</div>
+<div id="alineación-icfes" class="section level3">
+<h3>ALINEACIÓN ICFES:</h3>
+<ul>
+<li>Competencia claramente evaluada</li>
+<li>Nivel de dificultad apropiado</li>
+<li>Contexto realista y relevante</li>
+<li>Distractores plausibles y educativos</li>
+</ul>
+</div>
+</div>
+<div id="tipos-de-problemas-específicos" class="section level2">
+<h2>📊 TIPOS DE PROBLEMAS ESPECÍFICOS</h2>
+<div id="álgebra-y-cálculo" class="section level3">
+<h3>ÁLGEBRA Y CÁLCULO:</h3>
+<ul>
+<li>Funciones lineales, cuadráticas, exponenciales</li>
+<li>Sistemas de ecuaciones</li>
+<li>Optimización</li>
+<li>Límites y derivadas básicas</li>
+</ul>
+</div>
+<div id="geometría" class="section level3">
+<h3>GEOMETRÍA:</h3>
+<ul>
+<li>Áreas y perímetros</li>
+<li>Volúmenes y superficies</li>
+<li>Teorema de Pitágoras</li>
+<li>Trigonometría básica</li>
+<li>Transformaciones geométricas</li>
+</ul>
+</div>
+<div id="estadística-y-probabilidad" class="section level3">
+<h3>ESTADÍSTICA Y PROBABILIDAD:</h3>
+<ul>
+<li>Medidas de tendencia central</li>
+<li>Gráficos estadísticos</li>
+<li>Probabilidad básica</li>
+<li>Distribuciones de frecuencia</li>
+</ul>
+</div>
+</div>
+<div id="herramientas-técnicas-avanzadas" class="section level2">
+<h2>🔧 HERRAMIENTAS TÉCNICAS AVANZADAS</h2>
+<div id="integración-r-python" class="section level3">
+<h3>INTEGRACIÓN R-PYTHON:</h3>
+<ul>
+<li>Usar reticulate para gráficos complejos</li>
+<li>Transferir datos entre R y Python</li>
+<li>Aprovechar matplotlib para visualizaciones avanzadas</li>
+</ul>
+</div>
+<div id="tikz-para-diagramas" class="section level3">
+<h3>TIKZ PARA DIAGRAMAS:</h3>
+<ul>
+<li>Geometría precisa</li>
+<li>Diagramas matemáticos profesionales</li>
+<li>Anotaciones y etiquetas</li>
+</ul>
+</div>
+<div id="testing-automatizado" class="section level3">
+<h3>TESTING AUTOMATIZADO:</h3>
+<ul>
+<li>Verificar diversidad de versiones</li>
+<li>Validar coherencia matemática</li>
+<li>Comprobar rangos de valores</li>
+</ul>
+</div>
+</div>
+<div id="restricciones-críticas" class="section level2">
+<h2>⚠️ RESTRICCIONES CRÍTICAS</h2>
 <ol style="list-style-type: decimal">
-<li><strong>Desarrollo de Código Complejo:</strong> El proyecto requiere
-integración avanzada entre R, Python, LaTeX y sistemas de testing
-automatizado</li>
-<li><strong>Optimización de Algoritmos:</strong> Necesitamos optimizar
-la generación de ejercicios para máxima diversidad matemática</li>
-<li><strong>Corrección de Errores:</strong> Depuración eficiente de
-código R-exams complejo</li>
-<li><strong>Documentación Técnica:</strong> Creación de tutoriales y
-documentación para replicabilidad</li>
+<li><strong>NUNCA</strong> usar set.seed() fijo - debe ser
+aleatorio</li>
+<li><strong>SIEMPRE</strong> incluir prueba de diversidad de
+versiones</li>
+<li><strong>OBLIGATORIO</strong> metadatos ICFES completos</li>
+<li><strong>REQUERIDO</strong> mínimo 4 opciones de respuesta</li>
+<li><strong>ESENCIAL</strong> explicación detallada en Solution</li>
 </ol>
 </div>
-<div id="por-qué-no-podemos-pagar-una-membresía" class="section level3">
-<h3><strong>¿Por qué no podemos pagar una membresía?</strong></h3>
-<p>Como institución educativa [pública/sin fines de lucro], nuestros
-recursos están destinados íntegramente a: - Becas y apoyo estudiantil -
-Infraestructura educativa básica - Materiales didácticos esenciales -
-Capacitación docente</p>
-<p>No contamos con presupuesto para herramientas de software premium,
-pero el impacto educativo justifica plenamente la solicitud.</p>
+<div id="corrección-de-errores-obligatoria" class="section level2">
+<h2>🔧 CORRECCIÓN DE ERRORES OBLIGATORIA</h2>
+<p><strong>ANTES de generar cualquier código, DEBES consultar los
+ejemplos funcionales en:</strong> -
+<code>Auxiliares/Ejemplos_Funcionales.md/</code></p>
+<p><strong>ESTOS ARCHIVOS CONTIENEN:</strong> - Configuraciones
+correctas de chunks - Sintaxis Python corregida para matplotlib - Manejo
+adecuado de reticulate - Configuraciones LaTeX funcionales - Estructuras
+de código probadas y funcionales</p>
+<p><strong>PROTOCOLO DE CORRECCIÓN:</strong> 1. Si encuentras errores de
+sintaxis Python → Consultar ejemplos 2. Si hay problemas con gráficos →
+Revisar código Python en ejemplos 3. Si falla la configuración LaTeX →
+Usar configuración de ejemplos 4. Si hay errores de chunks → Seguir
+estructuras de ejemplos 5. Si problemas con reticulate → Verificar
+configuración en ejemplos</p>
+<p><strong>ELEMENTOS CRÍTICOS A VERIFICAR:</strong> - Sintaxis correcta
+de plt.plot() en Python - Configuración adecuada de use_python() -
+Chunks de configuración inicial completos - Manejo correcto de variables
+entre R y Python - Configuración LaTeX compatible</p>
 </div>
+<div id="instrucciones-finales" class="section level2">
+<h2>🎯 INSTRUCCIONES FINALES</h2>
+<p>Cuando el usuario proporcione una imagen: 1. Generar el archivo
+“[ejercicio]<em>[componente]</em>[competencia]_n[Nivel [1, 2, 3 o
+4]]_v[versión].Rmd” 2. <strong>PRIMERO:</strong> Consultar los ejemplos
+funcionales en Auxiliares/Ejemplos_Funcionales.md/ 3. Identificar el
+concepto matemático principal 4. Determinar la competencia ICFES más
+apropiada 5. Diseñar un problema que evalúe esa competencia 6. Generar
+el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los
+ejemplos funcionales 7. Asegurar que el ejercicio sea desafiante pero
+justo 8. Incluir todas las validaciones y pruebas requeridas 9.
+<strong>VERIFICAR</strong> que el código siga los patrones de los
+ejemplos funcionales 10. Ante errores recurrentes
+<strong>VERIFICAR</strong> consultando todos y cada uno de los archivos
+de “Auxiliares/rules_full/errores_especificos/”</p>
+<p>El archivo resultante debe ser completamente funcional y listo para
+compilar en el proyecto RepositorioMatematicasICFES_R_Exams.</p>
 </div>
-<div id="beneficios-mutuos-para-augment-ai" class="section level2">
-<h2>💡 BENEFICIOS MUTUOS PARA AUGMENT AI</h2>
-<div id="lo-que-ofrecemos-a-cambio" class="section level3">
-<h3><strong>Lo que ofrecemos a cambio:</strong></h3>
-<ol style="list-style-type: decimal">
-<li><strong>Caso de Estudio Educativo:</strong> Documentar el uso de
-Augment AI en educación matemática</li>
-<li><strong>Testimonial Institucional:</strong> Compartir resultados y
-experiencias públicamente</li>
-<li><strong>Feedback Especializado:</strong> Retroalimentación desde
-perspectiva educativa</li>
-<li><strong>Promoción en Comunidad Académica:</strong> Recomendar
-Augment AI en conferencias y publicaciones educativas</li>
-<li><strong>Datos de Impacto:</strong> Métricas reales de mejora
-educativa usando Augment AI</li>
-</ol>
-</div>
-<div id="visibilidad-y-reconocimiento" class="section level3">
-<h3><strong>Visibilidad y Reconocimiento:</strong></h3>
+<div id="estado-del-sistema" class="section level2">
+<h2>📋 ESTADO DEL SISTEMA</h2>
 <ul>
-<li>Menciones en publicaciones académicas</li>
-<li>Presentaciones en congresos de educación matemática</li>
-<li>Casos de éxito en redes sociales educativas</li>
-<li>Recomendaciones a otras instituciones educativas</li>
+<li>✅ Configuración cargada</li>
+<li>✅ Estructura de archivos .Rmd definida</li>
+<li>✅ Criterios de calidad establecidos</li>
+<li>✅ Herramientas técnicas disponibles</li>
+<li>⏳ Esperando imagen del usuario para procesar</li>
 </ul>
-</div>
-</div>
-<div id="solicitud-específica" class="section level2">
-<h2>📊 SOLICITUD ESPECÍFICA</h2>
-<p><strong>Solicitamos acceso gratuito a:</strong></p>
-<ul>
-<li>Augment AI Pro o plan equivalente</li>
-<li>Duración: [12 meses inicialmente, renovable según resultados]</li>
-<li>Usuarios: [1-3 educadores del proyecto]</li>
-</ul>
-<p><strong>Compromisos de nuestra parte:</strong></p>
-<ul>
-<li>Uso exclusivamente educativo y sin fines de lucro</li>
-<li>Reporte trimestral de avances y resultados</li>
-<li>Participación en estudios de caso si Augment lo requiere</li>
-<li>Promoción ética y profesional de Augment AI</li>
-</ul>
-</div>
-<div id="métricas-de-impacto-esperadas" class="section level2">
-<h2>📈 MÉTRICAS DE IMPACTO ESPERADAS</h2>
-<p><strong>En 6 meses:</strong></p>
-<ul>
-<li><label><input type="checkbox" checked></input>ejercicios matemáticos
-únicos generados</label></li>
-<li>[X]% mejora en comprensión estudiantil</li>
-<li><label><input type="checkbox" checked></input>horas de trabajo docente
-optimizadas</label></li>
-</ul>
-<p><strong>En 12 meses:</strong></p>
-<ul>
-<li>Repositorio completo de matemáticas ICFES</li>
-<li>Implementación en [X] instituciones adicionales</li>
-<li>Publicación académica sobre el proyecto</li>
-<li><label><input type="checkbox" checked></input>estudiantes beneficiados
-indirectamente</label></li>
-</ul>
-</div>
-<div id="propuesta-de-colaboración" class="section level2">
-<h2>🤝 PROPUESTA DE COLABORACIÓN</h2>
-<p>Estamos abiertos a:</p>
-<ul>
-<li><strong>Piloto Educativo:</strong> Ser institución piloto para
-Augment AI en educación</li>
-<li><strong>Desarrollo Conjunto:</strong> Colaborar en funcionalidades
-específicas para educación</li>
-<li><strong>Investigación Aplicada:</strong> Estudios sobre IA en
-generación de contenido educativo</li>
-</ul>
-</div>
-<div id="información-de-contacto" class="section level2">
-<h2>📞 INFORMACIÓN DE CONTACTO</h2>
-<p><strong>Contacto Principal:</strong></p>
-<ul>
-<li>Nombre: [Tu Nombre Completo]</li>
-<li>Cargo: [Tu Cargo]</li>
-<li>Email: [<a href="mailto:tu.email@institucion.edu" class="email">tu.email@institucion.edu</a>]</li>
-<li>Teléfono: [Tu Teléfono]</li>
-</ul>
-<p><strong>Institución:</strong></p>
-<ul>
-<li>Nombre: [Nombre Completo de la Institución]</li>
-<li>Dirección: [Dirección Completa]</li>
-<li>Sitio Web: [www.institucion.edu]</li>
-</ul>
-</div>
-<div id="agradecimiento" class="section level2">
-<h2>🙏 AGRADECIMIENTO</h2>
-<p>Agradecemos de antemano su consideración de esta solicitud. Creemos
-firmemente que esta colaboración puede generar un impacto educativo
-significativo mientras proporciona a Augment AI valiosos insights sobre
-aplicaciones educativas de IA.</p>
-<p>Estamos disponibles para una reunión virtual o llamada para discutir
-esta propuesta en mayor detalle.</p>
-<p><strong>Atentamente,</strong></p>
-<p>[Tu Nombre]<br />
-[Tu Cargo]<br />
-[Nombre de la Institución]<br />
-[Fecha]</p>
-<hr />
-</div>
-<div id="anexos-sugeridos" class="section level2">
-<h2>📋 ANEXOS SUGERIDOS</h2>
-<ol style="list-style-type: decimal">
-<li><strong>Portafolio del Proyecto:</strong> Screenshots del
-repositorio R-exams</li>
-<li><strong>Carta Institucional:</strong> Respaldo oficial de la
-institución</li>
-<li><strong>Métricas Actuales:</strong> Datos de impacto educativo
-existente</li>
-<li><strong>Plan de Trabajo:</strong> Cronograma detallado de uso de
-Augment AI</li>
-</ol>
-<hr />
-</div>
-<div id="instrucciones-para-envío" class="section level2">
-<h2>💡 INSTRUCCIONES PARA ENVÍO</h2>
-<div id="pasos-para-enviar-la-propuesta" class="section level3">
-<h3><strong>Pasos para enviar la propuesta:</strong></h3>
-<ol style="list-style-type: decimal">
-<li><strong>Personaliza</strong> todos los campos entre [corchetes]</li>
-<li><strong>Completa</strong> la información específica de tu
-institución</li>
-<li><strong>Adjunta</strong> evidencias del proyecto actual</li>
-<li><strong>Envía</strong> a través de: <a href="https://www.augmentcode.com/contact" class="uri">https://www.augmentcode.com/contact</a></li>
-<li><strong>Haz seguimiento</strong> después de 1-2 semanas</li>
-</ol>
-</div>
-<div id="documentos-adicionales-recomendados" class="section level3">
-<h3><strong>Documentos adicionales recomendados:</strong></h3>
-<ul>
-<li>Carta oficial de la institución</li>
-<li>Screenshots del proyecto R-exams</li>
-<li>Datos de impacto educativo actual</li>
-<li>Plan detallado de uso de Augment AI</li>
-</ul>
-</div>
-<div id="consejos-para-el-envío" class="section level3">
-<h3><strong>Consejos para el envío:</strong></h3>
-<ul>
-<li>Usa un asunto claro: “Solicitud Plan Educativo - [Nombre
-Institución]”</li>
-<li>Mantén un tono profesional pero cercano</li>
-<li>Enfatiza el impacto educativo y social</li>
-<li>Ofrece contrapartidas valiosas para Augment AI</li>
-</ul>
-<hr />
-<p><strong>📧 ¡Buena suerte con tu solicitud!</strong></p>
-</div>
 </div>
 </div>
 
