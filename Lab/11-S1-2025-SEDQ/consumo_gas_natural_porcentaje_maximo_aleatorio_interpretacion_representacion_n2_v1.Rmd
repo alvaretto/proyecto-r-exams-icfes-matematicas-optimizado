@@ -85,56 +85,70 @@ porcentajes_objetivo <- c(60, 65, 70, 75, 80, 85, 90)
 porcentaje_junio <- sample(porcentajes_objetivo, 1)
 consumo_junio <- round((porcentaje_junio * consumo_maximo) / 100)
 
-# Generar datos de consumo mensual realistas
-meses <- c("Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre")
-meses_abrev <- c("Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct")
+# Aleatorizar meses involucrados en el problema
+meses_disponibles <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
 
-# Consumos base realistas (junio será el valor calculado)
-consumos_base <- c(
-  sample(10:13, 1),  # Abril
-  sample(11:14, 1),  # Mayo
-  consumo_junio,     # Junio (valor clave)
-  sample(10:13, 1),  # Julio
-  sample(10:13, 1),  # Agosto
-  sample(11:14, 1),  # Septiembre
-  sample(12:15, 1)   # Octubre
-)
+# Seleccionar 7 meses consecutivos aleatoriamente
+inicio_mes <- sample(1:6, 1)  # Asegurar que quepan 7 meses
+meses_seleccionados <- meses_disponibles[inicio_mes:(inicio_mes + 6)]
+
+# Asignar roles: mes de la pregunta (posición aleatoria) y mes de la factura (último mes)
+posicion_pregunta <- sample(1:6, 1)  # No puede ser el último mes (reservado para factura)
+mes_pregunta <- meses_seleccionados[posicion_pregunta]
+mes_factura <- meses_seleccionados[7]  # Último mes para la factura
+
+# Crear vector de meses y consumos
+meses <- meses_seleccionados
+consumo_pregunta <- round((porcentaje_junio * consumo_maximo) / 100)
+
+# Generar consumos base realistas
+consumos_base <- numeric(7)
+for(i in 1:7) {
+  if(i == posicion_pregunta) {
+    consumos_base[i] <- consumo_pregunta  # Mes de la pregunta (valor clave)
+  } else {
+    consumos_base[i] <- sample(10:15, 1)  # Otros meses
+  }
+}
 
 # Asegurar que ningún consumo exceda el máximo menos 1
-for(i in c(1,2,4,5,6,7)) {
-  consumos_base[i] <- min(consumos_base[i], consumo_maximo - 1)
+for(i in 1:7) {
+  if(i != posicion_pregunta) {  # No modificar el mes de la pregunta
+    consumos_base[i] <- min(consumos_base[i], consumo_maximo - 1)
+  }
 }
 
 consumos <- consumos_base
 names(consumos) <- meses
 
-# Generar datos económicos coherentes con el consumo de octubre
+# Generar datos económicos coherentes con el consumo del mes de factura
 cargo_fijo <- sample(c(2500, 2700, 2800, 3000, 3200), 1)
 
-# Obtener el consumo de octubre de la gráfica
-consumo_octubre <- consumos[which(names(consumos) == "Octubre")]
+# Obtener el consumo del mes de factura de la gráfica
+consumo_factura <- consumos[which(names(consumos) == mes_factura)]
 
-# Calcular el costo variable basado en el consumo de octubre
+# Calcular el costo variable basado en el consumo del mes de factura
 # Precio por metro cúbico entre $800 y $1200
 precio_por_m3 <- sample(seq(800, 1200, 50), 1)
-costo_variable <- consumo_octubre * precio_por_m3
+costo_variable <- consumo_factura * precio_por_m3
 
-# Calcular el total de la factura de octubre
+# Calcular el total de la factura
 total_factura <- cargo_fijo + costo_variable
 
 # Calcular respuesta correcta
-porcentaje_correcto <- round((consumo_junio / consumo_maximo) * 100)
+porcentaje_correcto <- round((consumo_pregunta / consumo_maximo) * 100)
 
 # Generar distractores plausibles y matemáticamente coherentes
 distractores <- c()
 
 # Distractor 1: Error conceptual - usar el valor absoluto como porcentaje
-if(consumo_junio <= 100 && consumo_junio != porcentaje_correcto) {
-  distractores <- c(distractores, consumo_junio)
+if(consumo_pregunta <= 100 && consumo_pregunta != porcentaje_correcto) {
+  distractores <- c(distractores, consumo_pregunta)
 }
 
 # Distractor 2: Error de cálculo - usar otro mes
-meses_alternativos <- which(names(consumos) != "Junio")
+meses_alternativos <- which(names(consumos) != mes_pregunta)
 mes_alternativo <- sample(meses_alternativos, 1)
 porcentaje_alternativo <- round((consumos[mes_alternativo] / consumo_maximo) * 100)
 if(porcentaje_alternativo != porcentaje_correcto && !porcentaje_alternativo %in% distractores) {
@@ -143,7 +157,7 @@ if(porcentaje_alternativo != porcentaje_correcto && !porcentaje_alternativo %in%
 
 # Distractor 3: Error matemático común - denominador incorrecto
 denominador_error <- consumo_maximo - sample(2:5, 1)
-porcentaje_error <- round((consumo_junio / denominador_error) * 100)
+porcentaje_error <- round((consumo_pregunta / denominador_error) * 100)
 if(porcentaje_error <= 100 && porcentaje_error != porcentaje_correcto && !porcentaje_error %in% distractores) {
   distractores <- c(distractores, porcentaje_error)
 }
@@ -181,7 +195,7 @@ es_moodle <- (match_exams_call() %in% formatos_moodle)
 # PRUEBAS DE VALIDACIÓN MATEMÁTICA
 test_that("Validación de datos generados", {
   expect_true(consumo_maximo %in% c(18, 20, 22, 25))
-  expect_true(consumo_junio > 0 && consumo_junio <= consumo_maximo)
+  expect_true(consumo_pregunta > 0 && consumo_pregunta <= consumo_maximo)
   expect_true(porcentaje_correcto >= 50 && porcentaje_correcto <= 100)
   expect_true(all(consumos > 0 & consumos <= consumo_maximo))
   expect_equal(length(opciones), 4)
@@ -191,11 +205,14 @@ test_that("Validación de datos generados", {
   expect_true(nombre1 %in% c(nombre_masculino, nombre_femenino))
   expect_true(nombre2 %in% c(nombre_masculino, nombre_femenino))
   expect_true(nombre1 != nombre2)  # Los nombres deben ser diferentes
+  expect_true(mes_pregunta %in% meses)
+  expect_true(mes_factura %in% meses)
+  expect_true(mes_pregunta != mes_factura)  # Los meses deben ser diferentes
 })
 
 test_that("Validación de coherencia matemática", {
   # Verificar que el cálculo del porcentaje es correcto
-  porcentaje_calculado <- round((consumo_junio / consumo_maximo) * 100)
+  porcentaje_calculado <- round((consumo_pregunta / consumo_maximo) * 100)
   expect_equal(porcentaje_correcto, porcentaje_calculado)
 
   # Verificar que la respuesta correcta está en las opciones
@@ -206,8 +223,8 @@ test_that("Validación de coherencia matemática", {
 })
 
 test_that("Validación de coherencia económica", {
-  # Verificar que la factura es coherente con el consumo de octubre
-  factura_calculada <- cargo_fijo + (consumo_octubre * precio_por_m3)
+  # Verificar que la factura es coherente con el consumo del mes de factura
+  factura_calculada <- cargo_fijo + (consumo_factura * precio_por_m3)
   expect_equal(total_factura, factura_calculada)
 
   # Verificar que el precio por m³ está en el rango esperado
@@ -284,7 +301,7 @@ test_that("Validación del gráfico Python", {
 Question
 ========
 
-`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En octubre consumieron `r consumo_octubre` metros cúbicos de gas natural y la factura fue de $`r format(total_factura, big.mark = ".", decimal.mark = ",")`$, incluido el cargo fijo de $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")`$ que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r consumo_factura` metros cúbicos de gas natural y la factura fue de $`r format(total_factura, big.mark = ".", decimal.mark = ",")`, incluido el cargo fijo de $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico generado con Python
@@ -296,7 +313,7 @@ if (es_moodle) {
 }
 ```
 
-Un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes. ¿A qué porcentaje del consumo máximo posible corresponde el consumo de junio?
+Un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes. ¿A qué porcentaje del consumo máximo posible corresponde el consumo de `r tolower(mes_pregunta)`?
 
 Answerlist
 ----------
@@ -323,17 +340,18 @@ Observando la gráfica de consumo histórico de `r nombre1` y `r nombre2`:
 ```{r analisis_datos, echo=FALSE, results='asis'}
 cat("**Consumos mensuales registrados:**\n\n")
 for(i in 1:length(meses)) {
-  cat(paste0("- ", meses[i], ": ", consumos[i], " metros cúbicos\n"))
+  destacar <- if(meses[i] == mes_pregunta) " ← **MES DE LA PREGUNTA**" else if(meses[i] == mes_factura) " ← **MES DE LA FACTURA**" else ""
+  cat(paste0("- ", meses[i], ": ", consumos[i], " metros cúbicos", destacar, "\n"))
 }
 cat("\n")
 ```
 
-**El consumo de junio fue de `r consumo_junio` metros cúbicos.**
+**El consumo de `r tolower(mes_pregunta)` fue de `r consumo_pregunta` metros cúbicos.**
 
 ### Paso 2: Datos del problema
 
 - **Consumo máximo posible:** `r consumo_maximo` metros cúbicos (dato del enunciado)
-- **Consumo real de junio:** `r consumo_junio` metros cúbicos (dato de la gráfica)
+- **Consumo real de `r tolower(mes_pregunta)`:** `r consumo_pregunta` metros cúbicos (dato de la gráfica)
 
 ### Paso 3: Aplicación de la fórmula de porcentaje
 
@@ -343,7 +361,7 @@ $$\text{Porcentaje} = \frac{\text{Valor observado}}{\text{Valor máximo}} \times
 
 Sustituyendo los valores:
 
-$$\text{Porcentaje} = \frac{`r consumo_junio`}{`r consumo_maximo`} \times 100\% = `r porcentaje_correcto`\%$$
+$$\text{Porcentaje} = \frac{`r consumo_pregunta`}{`r consumo_maximo`} \times 100\% = `r porcentaje_correcto`\%$$
 
 ### Verificación y análisis de distractores
 
@@ -356,11 +374,11 @@ cat("**Análisis de errores conceptuales comunes:**\n\n")
 for(i in 1:length(distractores)) {
   distractor <- distractores[i]
 
-  if(distractor == consumo_junio && consumo_junio <= 100) {
-    cat(paste0("- **", distractor, "%**: Error conceptual - confundir el valor absoluto (", consumo_junio, " m³) con el porcentaje\n"))
+  if(distractor == consumo_pregunta && consumo_pregunta <= 100) {
+    cat(paste0("- **", distractor, "%**: Error conceptual - confundir el valor absoluto (", consumo_pregunta, " m³) con el porcentaje\n"))
   } else if(distractor %in% round((consumos / consumo_maximo) * 100)) {
     mes_error <- names(consumos)[which(round((consumos / consumo_maximo) * 100) == distractor)][1]
-    cat(paste0("- **", distractor, "%**: Error de lectura - usar el consumo de ", mes_error, " en lugar de junio\n"))
+    cat(paste0("- **", distractor, "%**: Error de lectura - usar el consumo de ", tolower(mes_error), " en lugar de ", tolower(mes_pregunta), "\n"))
   } else {
     cat(paste0("- **", distractor, "%**: Error de cálculo - aplicar incorrectamente la fórmula de porcentaje\n"))
   }
@@ -369,13 +387,15 @@ for(i in 1:length(distractores)) {
 
 ### Conclusión
 
-El consumo de junio (`r consumo_junio` metros cúbicos) representa el **`r porcentaje_correcto`%** del consumo máximo posible (`r consumo_maximo` metros cúbicos).
+El consumo de `r tolower(mes_pregunta)` (`r consumo_pregunta` metros cúbicos) representa el **`r porcentaje_correcto`%** del consumo máximo posible (`r consumo_maximo` metros cúbicos).
 
 Esta respuesta es coherente porque:
 
 - Se basa en una lectura correcta de la gráfica
 - Aplica correctamente la fórmula de porcentaje
 - El resultado está dentro del rango esperado (0% a 100%)
+
+**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r format(total_factura, big.mark = ".", decimal.mark = ",")`) corresponde exactamente al consumo mostrado en la gráfica (`r consumo_factura` m³ × $`r format(precio_por_m3, big.mark = ".", decimal.mark = ",")` + $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` cargo fijo).
 
 ```{r solucion, echo=FALSE, results="asis"}
 answerlist(ifelse(solucion_mezclada, "Correcto", "Incorrecto"), markup = "markdown")
