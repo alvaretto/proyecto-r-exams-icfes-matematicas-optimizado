@@ -17,25 +17,32 @@ Este ejercicio evalúa la competencia de **interpretación y representación** e
 
 ### Contexto
 - Dos personas (un nombre masculino y uno femenino, orden aleatorio) comparten gastos de gas natural en su vivienda
-- Se presenta información coherente sobre la factura de octubre (monto calculado basado en el consumo real mostrado en la gráfica)
-- Un gráfico de barras muestra el consumo histórico mensual en metros cúbicos
+- Se presenta información coherente sobre la factura del último mes del período (monto calculado basado en el consumo real mostrado en la gráfica)
+- Un gráfico de barras muestra el consumo histórico de 7 meses consecutivos aleatorios
+- La pregunta se refiere a cualquier mes del período excepto el último (mes de la factura)
 
 ### Pregunta Central
-¿A qué porcentaje del consumo máximo posible corresponde el consumo de junio?
+¿A qué porcentaje del consumo máximo posible corresponde el consumo del mes seleccionado aleatoriamente?
 
 ### Elementos Aleatorizados
 1. **Nombres de los personajes**:
    - 10 nombres masculinos: Pedro, Carlos, Miguel, Antonio, Diego, Sebastián, Andrés, Luis, José, Francisco
    - 10 nombres femeninos: María, Ana, Carmen, Laura, Sofía, Valentina, Isabella, Camila, Daniela, Alejandra
-   - Orden aleatorio de mención (100 combinaciones posibles)
-2. **Tipo de vivienda**: apartamento, casa, hogar, residencia
-3. **Consumo máximo**: 18, 20, 22, o 25 metros cúbicos
-4. **Porcentaje objetivo**: 60%, 65%, 70%, 75%, 80%, 85%, o 90%
-5. **Datos económicos coherentes**:
-   - Cargo fijo: $2,500 a $3,200
-   - Precio por m³: $800 a $1,200
-   - Total factura = cargo fijo + (consumo octubre × precio por m³)
-6. **Consumos mensuales**: valores realistas con variación aleatoria
+   - Orden aleatorio de mención (200 combinaciones posibles)
+2. **Período temporal**:
+   - 6 períodos posibles de 7 meses consecutivos (Enero-Julio, Febrero-Agosto, etc.)
+   - Mes de pregunta: cualquiera de los primeros 6 meses del período
+   - Mes de factura: siempre el último mes del período
+   - **36 combinaciones únicas de meses**
+3. **Tipo de vivienda**: apartamento, casa, hogar, residencia
+4. **Consumo máximo**: 18, 20, 22, o 25 metros cúbicos
+5. **Porcentaje objetivo**: 60%, 65%, 70%, 75%, 80%, 85%, o 90%
+6. **Datos económicos coherentes con formato monetario profesional**:
+   - Cargo fijo: $2.500 a $3.200 (símbolo $ incluido)
+   - Precio por m³: $800 a $1.200 (símbolo $ incluido)
+   - Total factura = cargo fijo + (consumo del mes de factura × precio por m³)
+   - Formato colombiano: separador de miles (.) y símbolo $ antes de cada valor
+7. **Consumos mensuales**: valores realistas con variación aleatoria
 
 ## Características Técnicas
 
@@ -103,9 +110,10 @@ source("test_consumo_gas_natural.R")
 ## Garantías de Calidad
 
 ### Diversidad de Versiones
-- Más de 1,000 versiones únicas posibles
-- 100 combinaciones de nombres (10 masculinos × 10 femeninos × 2 órdenes)
-- Combinaciones aleatorias de todos los parámetros
+- **Más de 4 millones de versiones únicas posibles**
+- 200 combinaciones de nombres (10 masculinos × 10 femeninos × 2 órdenes)
+- 36 combinaciones de períodos temporales y meses
+- Múltiples parámetros económicos y de consumo
 - Mantenimiento de coherencia matemática en todas las versiones
 
 ### Compatibilidad Técnica
@@ -128,6 +136,8 @@ source("test_consumo_gas_natural.R")
 - `test_consumo_gas_natural.R`: Script de pruebas y validación
 - `demo_nombres_mixtos.R`: Demostración de diversidad de nombres
 - `demo_coherencia_factura.R`: Demostración de coherencia económica
+- `demo_meses_aleatorios.R`: Demostración de aleatorización temporal
+- `demo_simbolos_moneda.R`: Demostración de formato monetario
 - `SemilleroUnico_v2.R`: Script de configuración para generación masiva
 - `README.md`: Este archivo de documentación
 
