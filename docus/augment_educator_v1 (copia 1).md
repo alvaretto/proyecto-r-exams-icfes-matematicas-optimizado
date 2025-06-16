@@ -1,9 +1,25 @@
+# 📧 PROPUESTA PARA PLAN EDUCATIVO GRATUITO - AUGMENT AI
+
+**Para:** Equipo de Augment Code  
+**De:** Alvaro Angel Molina | Profesor de Matemáticas 
+**Institución:**  Institución Educativa Pedacito de Cielo | La Tebaida | Quindío | Colombia 
+**Fecha:** Lunes, 16 de junio de 2025 
+**Asunto:** Solicitud de Plan Educativo Gratuito para Proyecto de Innovación Matemática
+
 ---
-output:
-  word_document: default
-  html_document: default
-  pdf_document: default
+
+## 📞 INFORMACIÓN DE CONTACTO AUGMENT AI
+
+**Canales oficiales para enviar esta propuesta:**
+
+- **Contact Sales:** https://www.augmentcode.com/contact
+- **Contact Support:** https://support.augmentcode.com/
+- **Press Inquiries:** press@augmentcode.com
+
+**Recomendación:** Usar Contact Sales para solicitudes de planes educativos
+
 ---
+
 ## 🎓 PRESENTACIÓN INSTITUCIONAL
 
 Estimado equipo de Augment Code,
@@ -18,7 +34,7 @@ un enfoque especial en la mejora de la calidad educativa en matemáticas (Proyec
 
 ### **Proyecto: "RepositorioMatematicasICFES_R_Exams"**
 
-Estamos desarrollando un proyecto innovador de generación automatizada de ejercicios 
+Estoy desarrollando un proyecto innovador de generación automatizada de ejercicios 
 matemáticos tipo ICFES utilizando R-exams, con las siguientes características:
 
 **Objetivos del Proyecto:**
@@ -51,13 +67,12 @@ matemáticos tipo ICFES utilizando R-exams, con las siguientes características:
 2. **Optimización de Algoritmos:** Necesitamos optimizar la generación de ejercicios para máxima diversidad matemática
 3. **Corrección de Errores:** Depuración eficiente de código R-exams complejo
 4. **Documentación Técnica:** Creación de tutoriales y documentación para replicabilidad
-5. **Calidad de respuestas IA:** La calidad de las respuestas suministradas por Augment AI ha sido, según nuestras estadísticas, la mejor entre varias opciones analizadas.
+5. **Calidad de respuestas IA:** La calidad de las respuestas suministradaspor Augment AI ha sido, según nuestras estadísticas, la mejor entre varias opciones analizadas.
 
 ### **¿Por qué no podemos pagar una membresía?**
 
 Como institución educativa pública sin fines de lucro, nuestros recursos están 
 destinados íntegramente a:
-
 - Apoyo estudiantil
 - Infraestructura educativa básica
 - Materiales didácticos esenciales
@@ -146,9 +161,9 @@ esta propuesta en mayor detalle.
 
 **Atentamente,**
 
-Alvaro Angel Molina \
-Pofesor de Matemáticas \
-Institución Educativa Pedacito de Cielo \
+Alvaro Angel Molina 
+Pofesor de Matemáticas
+Institución Educativa Pedacito de Cielo 
 Lunes 06 de junio de 2025
 
 ---
@@ -158,3 +173,33 @@ Lunes 06 de junio de 2025
 1. **Portafolio del Proyecto:** https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado
 2. **Métricas Actuales:** Datos de impacto educativo existente
 4. **Plan de Trabajo:** Hemos usado Augment AI para la generación/Corrección/Optimización de más de 20 preguntas tipo ICFES Matemáticas
+
+---
+
+## 💡 INSTRUCCIONES PARA ENVÍO
+
+### **Pasos para enviar la propuesta:**
+
+1. **Personaliza** todos los campos entre [corchetes]
+2. **Completa** la información específica de tu institución
+3. **Adjunta** evidencias del proyecto actual
+4. **Envía** a través de: https://www.augmentcode.com/contact
+5. **Haz seguimiento** después de 1-2 semanas
+
+### **Documentos adicionales recomendados:**
+
+- Carta oficial de la institución
+- Screenshots del proyecto R-exams
+- Datos de impacto educativo actual
+- Plan detallado de uso de Augment AI
+
+### **Consejos para el envío:**
+
+- Usa un asunto claro: "Solicitud Plan Educativo - [Nombre Institución]"
+- Mantén un tono profesional pero cercano
+- Enfatiza el impacto educativo y social
+- Ofrece contrapartidas valiosas para Augment AI
+
+---
+
+**📧 ¡Buena suerte con tu solicitud!**

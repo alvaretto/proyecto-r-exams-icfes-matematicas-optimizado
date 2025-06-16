@@ -1,42 +1,49 @@
 ---
 output:
-  pdf_document:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document: 
+    latex_engine: xelatex
     keep_tex: true
-    extra_dependencies: ["graphicx", "float", "amsmath"]
   word_document: default
-  html_document: default
-icfes:
-  competencia: interpretacion_representacion
-  nivel_dificultad: 2
-  contenido:
-    categoria: estadistica
-    tipo: no_generico
-  contexto: familiar
-  eje_axial: eje4
-  componente: aleatorio
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
 ---
 
 ```{r setup, include=FALSE}
-# Configuración para todos los formatos de salida
-Sys.setlocale(category = "LC_NUMERIC", locale = "C")
-options(OutDec = ".")
-
+# Librerías esenciales
 library(exams)
-library(reticulate)
+library(ggplot2)
 library(knitr)
+library(reticulate)
 library(testthat)
+library(data.table)
+library(readxl)
+library(datasets)
 
+# Configurar Python si es necesario
+use_python(Sys.which("python"), required = TRUE)
+
+# Configuración global
 typ <- match_exams_device()
 options(scipen = 999)
 knitr::opts_chunk$set(
-  warning = FALSE,
+  warning = FALSE, 
   message = FALSE,
-  echo = FALSE,
-  fig.showtext = FALSE,
-  fig.cap = "",
   fig.keep = 'all',
   dev = c("png", "pdf"),
   dpi = 150,
+  echo = FALSE,
+  results = "hide",
   fig.pos = "H"
 )
 
@@ -76,15 +83,6 @@ if(sample(c(TRUE, FALSE), 1)) {
 tipos_vivienda <- c("apartamento", "hogar", "aparta-estudio")
 tipo_vivienda <- sample(tipos_vivienda, 1)
 
-# Generar consumo máximo posible (variable clave del problema)
-consumos_maximos_posibles <- c(18, 20, 22, 25)
-consumo_maximo <- sample(consumos_maximos_posibles, 1)
-
-# Generar porcentajes objetivo que den resultados "limpios"
-porcentajes_objetivo <- c(60, 65, 70, 75, 80, 85, 90)
-porcentaje_junio <- sample(porcentajes_objetivo, 1)
-consumo_junio <- round((porcentaje_junio * consumo_maximo) / 100)
-
 # Aleatorizar meses involucrados en el problema
 meses_disponibles <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
@@ -98,73 +96,56 @@ posicion_pregunta <- sample(1:6, 1)  # No puede ser el último mes (reservado pa
 mes_pregunta <- meses_seleccionados[posicion_pregunta]
 mes_factura <- meses_seleccionados[7]  # Último mes para la factura
 
-# Crear vector de meses y consumos
+# Crear vector de meses y consumos (mantenemos la gráfica de consumos)
 meses <- meses_seleccionados
-consumo_pregunta <- round((porcentaje_junio * consumo_maximo) / 100)
 
-# Generar consumos base realistas
+# Generar consumos base realistas para la gráfica
 consumos_base <- numeric(7)
 for(i in 1:7) {
-  if(i == posicion_pregunta) {
-    consumos_base[i] <- consumo_pregunta  # Mes de la pregunta (valor clave)
-  } else {
-    consumos_base[i] <- sample(10:15, 1)  # Otros meses
-  }
-}
-
-# Asegurar que ningún consumo exceda el máximo menos 1
-for(i in 1:7) {
-  if(i != posicion_pregunta) {  # No modificar el mes de la pregunta
-    consumos_base[i] <- min(consumos_base[i], consumo_maximo - 1)
-  }
+  consumos_base[i] <- sample(10:18, 1)  # Consumos realistas
 }
 
 consumos <- consumos_base
 names(consumos) <- meses
 
-# Generar datos económicos coherentes con el consumo del mes de factura
-cargo_fijo <- sample(c(2500, 2700, 2800, 3000, 3200), 1)
+# Generar datos económicos para el cálculo del costo promedio diario
+# Generar cobro total del mes de la pregunta (entre $15,000 y $25,000)
+cobro_total <- sample(15000:25000, 1)
 
-# Obtener el consumo del mes de factura de la gráfica
-consumo_factura <- consumos[which(names(consumos) == mes_factura)]
+# Generar valor por servicio fijo (entre $3,000 y $8,000)
+valor_fijo <- sample(3000:8000, 1)
 
-# Calcular el costo variable basado en el consumo del mes de factura
-# Precio por metro cúbico entre $800 y $1200
-precio_por_m3 <- sample(seq(800, 1200, 50), 1)
-costo_variable <- consumo_factura * precio_por_m3
-
-# Calcular el total de la factura
-total_factura <- cargo_fijo + costo_variable
+# Calcular costo promedio diario
+costo_consumo_variable <- cobro_total - valor_fijo
+costo_promedio_diario <- round(costo_consumo_variable / 30, 0)
 
 # Calcular respuesta correcta
-porcentaje_correcto <- round((consumo_pregunta / consumo_maximo) * 100)
+respuesta_correcta <- costo_promedio_diario
 
-# Generar distractores plausibles y matemáticamente coherentes
+# Generar distractores basados en errores comunes
 distractores <- c()
 
-# Distractor 1: Error conceptual - usar el valor absoluto como porcentaje
-if(consumo_pregunta <= 100 && consumo_pregunta != porcentaje_correcto) {
-  distractores <- c(distractores, consumo_pregunta)
+# Distractor 1: No restar el valor fijo
+distractor_1 <- round(cobro_total / 30, 0)
+if(distractor_1 != respuesta_correcta && distractor_1 > 0) {
+  distractores <- c(distractores, distractor_1)
 }
 
-# Distractor 2: Error de cálculo - usar otro mes
-meses_alternativos <- which(names(consumos) != mes_pregunta)
-mes_alternativo <- sample(meses_alternativos, 1)
-porcentaje_alternativo <- round((consumos[mes_alternativo] / consumo_maximo) * 100)
-if(porcentaje_alternativo != porcentaje_correcto && !porcentaje_alternativo %in% distractores) {
-  distractores <- c(distractores, porcentaje_alternativo)
+# Distractor 2: Dividir entre 31 días en lugar de 30
+distractor_2 <- round(costo_consumo_variable / 31, 0)
+if(distractor_2 != respuesta_correcta && distractor_2 > 0 && !distractor_2 %in% distractores) {
+  distractores <- c(distractores, distractor_2)
 }
 
-# Distractor 3: Error matemático común - denominador incorrecto
-denominador_error <- consumo_maximo - sample(2:5, 1)
-porcentaje_error <- round((consumo_pregunta / denominador_error) * 100)
-if(porcentaje_error <= 100 && porcentaje_error != porcentaje_correcto && !porcentaje_error %in% distractores) {
-  distractores <- c(distractores, porcentaje_error)
+# Distractor 3: Usar solo el valor fijo dividido entre 30
+distractor_3 <- round(valor_fijo / 30, 0)
+if(distractor_3 != respuesta_correcta && distractor_3 > 0 && !distractor_3 %in% distractores) {
+  distractores <- c(distractores, distractor_3)
 }
 
 # Completar distractores con opciones plausibles si es necesario
-opciones_adicionales <- c(15, 25, 35, 45, 55, 65, 85, 95, 100)
-opciones_adicionales <- opciones_adicionales[opciones_adicionales != porcentaje_correcto]
+opciones_adicionales <- c(90, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950)
+opciones_adicionales <- opciones_adicionales[opciones_adicionales != respuesta_correcta]
 
 for(opcion in sample(opciones_adicionales)) {
   if(length(distractores) >= 3) break
@@ -177,8 +158,8 @@ for(opcion in sample(opciones_adicionales)) {
 distractores <- distractores[1:3]
 
 # Crear opciones finales
-opciones <- c(porcentaje_correcto, distractores)
-opciones_texto <- paste0(opciones, "%")
+opciones <- c(respuesta_correcta, distractores)
+opciones_texto <- opciones
 
 # Vector de solución para r-exams
 solucion <- c(TRUE, FALSE, FALSE, FALSE)
@@ -194,10 +175,11 @@ es_moodle <- (match_exams_call() %in% formatos_moodle)
 
 # PRUEBAS DE VALIDACIÓN MATEMÁTICA
 test_that("Validación de datos generados", {
-  expect_true(consumo_maximo %in% c(18, 20, 22, 25))
-  expect_true(consumo_pregunta > 0 && consumo_pregunta <= consumo_maximo)
-  expect_true(porcentaje_correcto >= 50 && porcentaje_correcto <= 100)
-  expect_true(all(consumos > 0 & consumos <= consumo_maximo))
+  expect_true(cobro_total >= 15000 && cobro_total <= 25000)
+  expect_true(valor_fijo >= 3000 && valor_fijo <= 8000)
+  expect_true(cobro_total > valor_fijo)  # El cobro total debe ser mayor al valor fijo
+  expect_true(costo_promedio_diario > 0)
+  expect_true(all(consumos > 0 & consumos <= 20))
   expect_equal(length(opciones), 4)
   expect_equal(length(unique(opciones)), 4)  # Todas las opciones deben ser diferentes
   expect_true(nombre_masculino %in% nombres_masculinos)
@@ -211,27 +193,26 @@ test_that("Validación de datos generados", {
 })
 
 test_that("Validación de coherencia matemática", {
-  # Verificar que el cálculo del porcentaje es correcto
-  porcentaje_calculado <- round((consumo_pregunta / consumo_maximo) * 100)
-  expect_equal(porcentaje_correcto, porcentaje_calculado)
+  # Verificar que el cálculo del costo promedio diario es correcto
+  costo_calculado <- round((cobro_total - valor_fijo) / 30, 0)
+  expect_equal(costo_promedio_diario, costo_calculado)
 
   # Verificar que la respuesta correcta está en las opciones
-  expect_true(porcentaje_correcto %in% opciones)
+  expect_true(respuesta_correcta %in% opciones)
 
   # Verificar que los distractores son diferentes de la respuesta correcta
-  expect_true(all(distractores != porcentaje_correcto))
+  expect_true(all(distractores != respuesta_correcta))
 })
 
 test_that("Validación de coherencia económica", {
-  # Verificar que la factura es coherente con el consumo del mes de factura
-  factura_calculada <- cargo_fijo + (consumo_factura * precio_por_m3)
-  expect_equal(total_factura, factura_calculada)
+  # Verificar que el costo consumo variable es correcto
+  expect_equal(costo_consumo_variable, cobro_total - valor_fijo)
 
-  # Verificar que el precio por m³ está en el rango esperado
-  expect_true(precio_por_m3 >= 800 && precio_por_m3 <= 1200)
+  # Verificar que el costo promedio diario es razonable
+  expect_true(costo_promedio_diario >= 100 && costo_promedio_diario <= 1000)
 
-  # Verificar que el cargo fijo es razonable
-  expect_true(cargo_fijo >= 2500 && cargo_fijo <= 3200)
+  # Verificar que los consumos son razonables
+  expect_true(all(consumos >= 10 & consumos <= 18))
 })
 ```
 
@@ -321,7 +302,7 @@ test_that("Validación del gráfico Python", {
 Question
 ========
 
-`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r consumo_factura` metros cúbicos de gas natural y la factura fue de $`r format(total_factura, big.mark = ".", decimal.mark = ",")`, incluido el cargo fijo de $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. Para saber cuál es el costo promedio del consumo diario, se resta del cobro total de ese mes el valor por servicio fijo, y luego se divide entre 30, que es el número de días que se utiliza para facturar un mes. En `r tolower(mes_pregunta)` el cobro total fue de $`r format(cobro_total, big.mark = ".", decimal.mark = ",")` y el valor por servicio fijo fue de $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")`. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico generado con Python
@@ -333,7 +314,7 @@ if (es_moodle) {
 }
 ```
 
-Un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes. ¿A qué porcentaje del consumo máximo posible corresponde el consumo de `r tolower(mes_pregunta)`?
+¿Cuál es el costo promedio aproximado, en pesos, del consumo diario de `r tolower(mes_pregunta)`?
 
 Answerlist
 ----------
@@ -347,45 +328,37 @@ Solution
 
 ### Análisis del problema
 
-Este problema requiere **interpretación de gráficos de barras** y **cálculo de porcentajes**. Los pasos son:
+Este problema requiere **interpretación de datos económicos** y **cálculo de costo promedio diario**. Los pasos son:
 
-1. **Leer correctamente la gráfica** para identificar el consumo de junio
-2. **Identificar el consumo máximo posible** según el enunciado
-3. **Aplicar la fórmula de porcentaje** para encontrar la relación
+1. **Identificar los datos económicos** del enunciado
+2. **Aplicar la fórmula de costo promedio diario** según las instrucciones
+3. **Realizar el cálculo** correctamente
 
-### Paso 1: Lectura de la gráfica
+### Paso 1: Datos del problema
 
-Observando la gráfica de consumo histórico de `r nombre1` y `r nombre2`:
+Según el enunciado, para `r tolower(mes_pregunta)`:
 
-```{r analisis_datos, echo=FALSE, results='asis'}
-cat("**Consumos mensuales registrados:**\n\n")
-for(i in 1:length(meses)) {
-  destacar <- if(meses[i] == mes_pregunta) " ← **MES DE LA PREGUNTA**" else if(meses[i] == mes_factura) " ← **MES DE LA FACTURA**" else ""
-  cat(paste0("- ", meses[i], ": ", consumos[i], " metros cúbicos", destacar, "\n"))
-}
-cat("\n")
-```
+- **Cobro total del mes:** $`r format(cobro_total, big.mark = ".", decimal.mark = ",")`
+- **Valor por servicio fijo:** $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")`
+- **Número de días para facturar:** 30 días
 
-**El consumo de `r tolower(mes_pregunta)` fue de `r consumo_pregunta` metros cúbicos.**
+### Paso 2: Aplicación de la fórmula
 
-### Paso 2: Datos del problema
+Según las instrucciones del problema:
 
-- **Consumo máximo posible:** `r consumo_maximo` metros cúbicos (dato del enunciado)
-- **Consumo real de `r tolower(mes_pregunta)`:** `r consumo_pregunta` metros cúbicos (dato de la gráfica)
+**Costo promedio diario = (Cobro total - Valor por servicio fijo) ÷ 30**
 
-### Paso 3: Aplicación de la fórmula de porcentaje
+### Paso 3: Cálculo paso a paso
 
-Para calcular qué porcentaje representa el consumo de junio respecto al máximo posible:
+1. **Calcular el costo variable:**
+   Costo variable = $`r format(cobro_total, big.mark = ".", decimal.mark = ",")` - $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")` = $`r format(costo_consumo_variable, big.mark = ".", decimal.mark = ",")`
 
-$$\text{Porcentaje} = \frac{\text{Valor observado}}{\text{Valor máximo}} \times 100\%$$
-
-Sustituyendo los valores:
-
-$$\text{Porcentaje} = \frac{`r consumo_pregunta`}{`r consumo_maximo`} \times 100\% = `r porcentaje_correcto`\%$$
+2. **Calcular el costo promedio diario:**
+   Costo promedio diario = $`r format(costo_consumo_variable, big.mark = ".", decimal.mark = ",")` ÷ 30 = $`r costo_promedio_diario`
 
 ### Verificación y análisis de distractores
 
-**Respuesta correcta:** `r porcentaje_correcto`%
+**Respuesta correcta:** $`r costo_promedio_diario`
 
 ```{r analisis_distractores, echo=FALSE, results='asis'}
 cat("**Análisis de errores conceptuales comunes:**\n\n")
@@ -394,28 +367,32 @@ cat("**Análisis de errores conceptuales comunes:**\n\n")
 for(i in 1:length(distractores)) {
   distractor <- distractores[i]
 
-  if(distractor == consumo_pregunta && consumo_pregunta <= 100) {
-    cat(paste0("- **", distractor, "%**: Error conceptual - confundir el valor absoluto (", consumo_pregunta, " m³) con el porcentaje\n"))
-  } else if(distractor %in% round((consumos / consumo_maximo) * 100)) {
-    mes_error <- names(consumos)[which(round((consumos / consumo_maximo) * 100) == distractor)][1]
-    cat(paste0("- **", distractor, "%**: Error de lectura - usar el consumo de ", tolower(mes_error), " en lugar de ", tolower(mes_pregunta), "\n"))
+  if(distractor == round(cobro_total / 30, 0)) {
+    cat(paste0("- **$", distractor, "**: Error conceptual - no restar el valor por servicio fijo\n"))
+  } else if(distractor == round(costo_consumo_variable / 31, 0)) {
+    cat(paste0("- **$", distractor, "**: Error de cálculo - dividir entre 31 días en lugar de 30\n"))
+  } else if(distractor == round(valor_fijo / 30, 0)) {
+    cat(paste0("- **$", distractor, "**: Error conceptual - usar solo el valor fijo dividido entre 30\n"))
   } else {
-    cat(paste0("- **", distractor, "%**: Error de cálculo - aplicar incorrectamente la fórmula de porcentaje\n"))
+    cat(paste0("- **$", distractor, "**: Error de cálculo - aplicar incorrectamente la fórmula\n"))
   }
 }
 ```
 
 ### Conclusión
 
-El consumo de `r tolower(mes_pregunta)` (`r consumo_pregunta` metros cúbicos) representa el **`r porcentaje_correcto`%** del consumo máximo posible (`r consumo_maximo` metros cúbicos).
+El costo promedio diario del consumo de `r tolower(mes_pregunta)` es de **$`r costo_promedio_diario`**.
 
 Esta respuesta es coherente porque:
 
-- Se basa en una lectura correcta de la gráfica
-- Aplica correctamente la fórmula de porcentaje
-- El resultado está dentro del rango esperado (0% a 100%)
+- Se basa en los datos económicos proporcionados en el enunciado
+- Aplica correctamente la fórmula indicada: (Cobro total - Valor fijo) ÷ 30
+- El resultado es razonable para un costo diario de consumo de gas natural
 
-**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r format(total_factura, big.mark = ".", decimal.mark = ",")`) corresponde exactamente al consumo mostrado en la gráfica (`r consumo_factura` m³ × $`r format(precio_por_m3, big.mark = ".", decimal.mark = ",")` + $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` cargo fijo).
+**Verificación del cálculo**:
+
+- Costo variable: $`r format(cobro_total, big.mark = ".", decimal.mark = ",")` - $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")` = $`r format(costo_consumo_variable, big.mark = ".", decimal.mark = ",")`
+- Costo promedio diario: $`r format(costo_consumo_variable, big.mark = ".", decimal.mark = ",")` ÷ 30 = $`r costo_promedio_diario`
 
 ```{r solucion, echo=FALSE, results="asis"}
 answerlist(ifelse(solucion_mezclada, "Correcto", "Incorrecto"), markup = "markdown")
@@ -423,16 +400,16 @@ answerlist(ifelse(solucion_mezclada, "Correcto", "Incorrecto"), markup = "markdo
 
 Meta-information
 ================
-exname: Consumo Gas Natural Porcentaje Máximo
+exname: Consumo Gas Natural Costo Promedio Diario
 extype: schoice
 exsolution: `r paste(as.integer(solucion_mezclada), collapse="")`
 exshuffle: TRUE
-exsection: Estadística|Interpretación de gráficos|Porcentajes|Análisis de datos
+exsection: Aritmética|Cálculo de promedios|Análisis económico|Operaciones básicas
 exextra[Type]: Cálculo
 exextra[Program]: R
 exextra[Language]: es
 exextra[Level]: 2
-exextra[Competencia]: Interpretación y representación
-exextra[Componente]: Aleatorio y sistemas de datos
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico variacional
 exextra[Contexto]: Familiar
 exextra[Dificultad]: Media
