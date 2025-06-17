@@ -1,0 +1,417 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - argumentacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje4
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+library(stringr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos para competencia ARGUMENTACIÓN
+generar_datos <- function() {
+  # Contextos aleatorios ampliados para mayor diversidad
+  contextos <- list(
+    list(lugar = "centro comercial", tipo = "tiendas", unidad = "ventas diarias", medida = "productos vendidos"),
+    list(lugar = "complejo deportivo", tipo = "canchas", unidad = "partidos jugados", medida = "goles anotados"),
+    list(lugar = "centro cultural", tipo = "salas", unidad = "presentaciones", medida = "asistentes por función"),
+    list(lugar = "plaza de comidas", tipo = "restaurantes", unidad = "pedidos", medida = "tiempo de espera (min)"),
+    list(lugar = "centro de convenciones", tipo = "salones", unidad = "eventos", medida = "participantes registrados"),
+    list(lugar = "parque temático", tipo = "atracciones", unidad = "turnos", medida = "tiempo de espera (min)"),
+    list(lugar = "hospital", tipo = "consultorios", unidad = "citas", medida = "tiempo de consulta (min)"),
+    list(lugar = "universidad", tipo = "aulas", unidad = "clases", medida = "estudiantes presentes"),
+    list(lugar = "biblioteca", tipo = "salas", unidad = "sesiones", medida = "libros consultados"),
+    list(lugar = "hotel", tipo = "habitaciones", unidad = "estadías", medida = "noches de hospedaje")
+  )
+
+  contexto_sel <- sample(contextos, 1)[[1]]
+
+  # Aleatorizar número de datos entre 7 y 11 (para argumentación más compleja)
+  n_datos <- sample(7:11, 1)
+
+  # Generar conjunto de datos realista
+  mediana_real <- sample(15:45, 1)
+  
+  # Generar datos con distribución controlada
+  if(n_datos %% 2 == 1) {
+    # Caso impar: mediana es el valor central
+    pos_mediana <- (n_datos + 1) / 2
+    n_menores <- pos_mediana - 1
+    n_mayores <- n_datos - pos_mediana
+    
+    # Generar valores menores
+    if(n_menores > 0) {
+      valores_menores <- sample((mediana_real - 15):(mediana_real - 1), n_menores, replace = FALSE)
+    } else {
+      valores_menores <- c()
+    }
+    
+    # Generar valores mayores
+    if(n_mayores > 0) {
+      valores_mayores <- sample((mediana_real + 1):(mediana_real + 15), n_mayores, replace = FALSE)
+    } else {
+      valores_mayores <- c()
+    }
+    
+    datos_completos <- c(valores_menores, mediana_real, valores_mayores)
+    
+  } else {
+    # Caso par: mediana es promedio de dos valores centrales
+    pos1 <- n_datos / 2
+    pos2 <- pos1 + 1
+    
+    # Generar dos valores centrales que promediados den la mediana
+    val_central1 <- mediana_real + sample(c(-2, -1, 1, 2), 1)
+    val_central2 <- 2 * mediana_real - val_central1
+    
+    # Generar valores menores
+    n_menores <- pos1 - 1
+    if(n_menores > 0) {
+      valores_menores <- sample((mediana_real - 15):(min(val_central1, val_central2) - 1), n_menores, replace = FALSE)
+    } else {
+      valores_menores <- c()
+    }
+    
+    # Generar valores mayores
+    n_mayores <- n_datos - pos2
+    if(n_mayores > 0) {
+      valores_mayores <- sample((max(val_central1, val_central2) + 1):(mediana_real + 15), n_mayores, replace = FALSE)
+    } else {
+      valores_mayores <- c()
+    }
+    
+    datos_completos <- c(valores_menores, val_central1, val_central2, valores_mayores)
+  }
+  
+  # Ordenar datos
+  datos_ordenados <- sort(datos_completos)
+  
+  # Calcular mediana real
+  if(n_datos %% 2 == 1) {
+    mediana_calculada <- datos_ordenados[(n_datos + 1) / 2]
+  } else {
+    pos1 <- n_datos / 2
+    pos2 <- pos1 + 1
+    mediana_calculada <- (datos_ordenados[pos1] + datos_ordenados[pos2]) / 2
+  }
+  
+  # Generar afirmaciones para evaluar (COMPETENCIA ARGUMENTACIÓN)
+  afirmaciones <- list()
+  
+  # Afirmación CORRECTA (siempre una)
+  if(n_datos %% 2 == 1) {
+    afirmacion_correcta <- paste0("La mediana es ", mediana_calculada, " porque es el valor que ocupa la posición central cuando los datos están ordenados")
+  } else {
+    afirmacion_correcta <- paste0("La mediana es ", mediana_calculada, " porque es el promedio de los dos valores centrales (", datos_ordenados[n_datos/2], " y ", datos_ordenados[n_datos/2 + 1], ")")
+  }
+  
+  # Afirmaciones INCORRECTAS (distractores con errores conceptuales comunes)
+  afirmaciones_incorrectas <- c()
+  
+  # Error 1: Confundir mediana con media
+  media_calculada <- round(mean(datos_ordenados), 1)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas, 
+    paste0("La mediana es ", media_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"))
+  
+  # Error 2: Confundir mediana con moda
+  tabla_freq <- table(datos_ordenados)
+  if(max(tabla_freq) > 1) {
+    moda <- as.numeric(names(tabla_freq)[which.max(tabla_freq)])
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", moda, " porque es el valor que más se repite en el conjunto de datos"))
+  } else {
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", datos_ordenados[1], " porque no hay valores repetidos, entonces se toma el menor"))
+  }
+  
+  # Error 3: Posición incorrecta
+  if(n_datos %% 2 == 1) {
+    pos_incorrecta <- sample(c(1, 2, n_datos-1, n_datos), 1)
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", datos_ordenados[pos_incorrecta], " porque está en la posición ", pos_incorrecta, " de los datos ordenados"))
+  } else {
+    valor_incorrecto <- datos_ordenados[sample(c(1, n_datos), 1)]
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", valor_incorrecto, " porque es uno de los valores extremos del conjunto"))
+  }
+  
+  # Error 4: Cálculo incorrecto para datos pares
+  if(n_datos %% 2 == 0) {
+    suma_incorrecta <- datos_ordenados[n_datos/2] + datos_ordenados[n_datos/2 + 1]
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", suma_incorrecta, " porque se suman los dos valores centrales sin dividir"))
+  } else {
+    # Para impares, error de promedio innecesario
+    promedio_innecesario <- round((datos_ordenados[(n_datos+1)/2 - 1] + datos_ordenados[(n_datos+1)/2] + datos_ordenados[(n_datos+1)/2 + 1]) / 3, 1)
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", promedio_innecesario, " porque se promedian los tres valores centrales"))
+  }
+  
+  # Seleccionar 3 afirmaciones incorrectas
+  afirmaciones_incorrectas_sel <- sample(afirmaciones_incorrectas, 3)
+  
+  # Crear opciones y mezclar
+  todas_afirmaciones <- c(afirmacion_correcta, afirmaciones_incorrectas_sel)
+  opciones_mezcladas <- sample(todas_afirmaciones)
+  
+  # Identificar posición correcta
+  pos_correcta <- which(opciones_mezcladas == afirmacion_correcta)
+  
+  return(list(
+    contexto = contexto_sel,
+    datos_ordenados = datos_ordenados,
+    n_datos = n_datos,
+    mediana_calculada = mediana_calculada,
+    media_calculada = media_calculada,
+    afirmacion_correcta = afirmacion_correcta,
+    opciones = opciones_mezcladas,
+    pos_correcta = pos_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+contexto <- datos$contexto
+datos_ordenados <- datos$datos_ordenados
+n_datos <- datos$n_datos
+mediana_calculada <- datos$mediana_calculada
+media_calculada <- datos$media_calculada
+afirmacion_correcta <- datos$afirmacion_correcta
+opciones <- datos$opciones
+pos_correcta <- datos$pos_correcta
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba de diversidad de versiones para competencia ARGUMENTACIÓN
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:300) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 250,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 250."))
+})
+
+test_that("Prueba de coherencia matemática", {
+  for(i in 1:20) {
+    datos_test <- generar_datos()
+    
+    # Verificar que la mediana calculada sea correcta
+    if(datos_test$n_datos %% 2 == 1) {
+      pos_esperada <- (datos_test$n_datos + 1) / 2
+      mediana_esperada <- datos_test$datos_ordenados[pos_esperada]
+    } else {
+      pos1 <- datos_test$n_datos / 2
+      pos2 <- pos1 + 1
+      mediana_esperada <- (datos_test$datos_ordenados[pos1] + datos_test$datos_ordenados[pos2]) / 2
+    }
+    
+    expect_equal(datos_test$mediana_calculada, mediana_esperada,
+                info = "La mediana calculada debe ser correcta")
+    
+    # Verificar que todas las opciones sean diferentes
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = "Las 4 opciones de respuesta deben ser diferentes")
+  }
+})
+```
+
+```{r generar_tabla_datos, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# Crear tabla con los datos usando TikZ (siguiendo ejemplos funcionales)
+# Organizar datos en dos columnas para mejor presentación
+n_filas <- ceiling(length(datos_ordenados) / 2)
+
+if (length(datos_ordenados) %% 2 == 0) {
+  col1 <- datos_ordenados[1:n_filas]
+  col2 <- datos_ordenados[(n_filas + 1):length(datos_ordenados)]
+} else {
+  col1 <- datos_ordenados[1:n_filas]
+  col2 <- c(datos_ordenados[(n_filas + 1):length(datos_ordenados)], "")
+}
+
+# Aleatorizar color de la tabla
+colores_tabla <- c("blue", "green", "red", "orange", "purple")
+color_seleccionado <- sample(colores_tabla, 1)
+intensidad <- sample(c(15, 20, 25), 1)
+color_tabla <- paste0(color_seleccionado, "!", intensidad)
+
+# Generar código TikZ para la tabla
+tabla_tikz <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|c|c|}",
+  "    \\hline",
+  paste0("    \\rowcolor{", color_tabla, "}"),
+  paste0("    \\textbf{", contexto$medida, "} & \\textbf{", contexto$medida, "} \\\\"),
+  "    \\hline"
+)
+
+for (i in seq_along(col1)) {
+  if (i <= length(col2) && col2[i] != "") {
+    tabla_tikz <- c(tabla_tikz, paste0("    ", col1[i], " & ", col2[i], " \\\\"))
+  } else {
+    tabla_tikz <- c(tabla_tikz, paste0("    ", col1[i], " & \\\\"))
+  }
+  tabla_tikz <- c(tabla_tikz, "    \\hline")
+}
+
+tabla_tikz <- c(tabla_tikz,
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+```
+
+Question
+========
+
+Un administrador de un `r contexto$lugar` está analizando los datos de `r contexto$medida` registrados en `r n_datos` `r contexto$tipo` diferentes durante la última semana. Los datos recopilados se muestran en la siguiente tabla:
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+include_tikz(tabla_tikz,
+             name = "tabla_datos",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "8cm")
+```
+
+El administrador necesita calcular la mediana de estos datos para su informe semanal. Cuatro analistas han propuesto diferentes afirmaciones sobre cuál es la mediana y cómo se calcula.
+
+**¿Cuál de las siguientes afirmaciones es CORRECTA y está BIEN JUSTIFICADA matemáticamente?**
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+Para resolver este problema de **argumentación matemática**, debemos evaluar cada afirmación y determinar cuál está correctamente justificada según las propiedades de la mediana.
+
+**Datos ordenados:** `r paste(datos_ordenados, collapse = ", ")`
+
+**Análisis de la mediana:**
+
+```{r analisis_mediana, echo=FALSE, results='asis'}
+if(n_datos %% 2 == 1) {
+  pos_mediana <- (n_datos + 1) / 2
+  cat("Como tenemos", n_datos, "datos (número **impar**), la mediana es el valor que ocupa la posición central.\n\n")
+  cat("Posición de la mediana = (n + 1) ÷ 2 = (", n_datos, "+ 1) ÷ 2 =", pos_mediana, "\n\n")
+  cat("Por lo tanto, la mediana es:", datos_ordenados[pos_mediana], "\n\n")
+} else {
+  pos1 <- n_datos / 2
+  pos2 <- pos1 + 1
+  cat("Como tenemos", n_datos, "datos (número **par**), la mediana es el promedio de los dos valores centrales.\n\n")
+  cat("Posiciones centrales:", pos1, "y", pos2, "\n\n")
+  cat("Valores centrales:", datos_ordenados[pos1], "y", datos_ordenados[pos2], "\n\n")
+  cat("Mediana = (", datos_ordenados[pos1], "+", datos_ordenados[pos2], ") ÷ 2 =", mediana_calculada, "\n\n")
+}
+```
+
+**Evaluación de las afirmaciones:**
+
+La afirmación correcta es: **"`r afirmacion_correcta`"**
+
+**¿Por qué es correcta?**
+
+- Aplica correctamente la definición de mediana
+- Utiliza el procedimiento matemático apropiado según el número de datos
+- La justificación es coherente con las propiedades estadísticas
+
+**¿Por qué las otras afirmaciones son incorrectas?**
+
+- Confunden conceptos estadísticos (media, moda, mediana)
+- Aplican procedimientos incorrectos
+- No siguen las reglas matemáticas establecidas para el cálculo de la mediana
+
+Answerlist
+----------
+```{r respuestas, echo=FALSE, results='asis'}
+for(i in 1:4) {
+  if(i == pos_correcta) {
+    cat("- Verdadero\n")
+  } else {
+    cat("- Falso\n")
+  }
+}
+```
+
+Meta-information
+================
+exname: mediana_argumentacion_estadistica
+extype: schoice
+exsolution: `r paste(as.integer(1:4 == pos_correcta), collapse="")`
+exshuffle: TRUE
+exsection: Argumentación en Estadística
