@@ -137,7 +137,13 @@
 - [ ] **❓ 5.1 Sección Question**
   - Redactar contexto realista y relevante
   - Formular pregunta clara según competencia ICFES
-  - Crear 4 opciones con distractores plausibles y educativos
+  - **🎯 Crear 4 opciones con sistema avanzado de distractores:**
+    - Generar 8+ tipos diferentes de distractores (confusión conceptual, errores de cálculo, posiciones incorrectas, etc.)
+    - **30% probabilidad**: Incluir valores duplicados con justificaciones diferentes (ej: "mediana es 30 porque promedio centrales" vs "mediana es 30 porque suma/división")
+    - **70% probabilidad**: Mantener todos los valores diferentes (modo tradicional)
+    - Selección estratégica: 1 distractor con valor duplicado + 2 con valores diferentes
+    - Verificar que las 4 opciones sean textualmente únicas
+    - Asegurar distractores plausibles y educativos
   - Incluir gráficos/tablas si es necesario
 
 - [ ] **💡 5.2 Sección Solution**
@@ -166,7 +172,12 @@
   - Ejecutar pruebas de diversidad de versiones
   - Verificar validaciones matemáticas
   - Comprobar coherencia de datos generados
-  - Validar que todas las opciones sean diferentes
+  - **🎯 Validar sistema avanzado de distractores:**
+    - Verificar que las 4 opciones sean textualmente únicas
+    - Comprobar funcionamiento de valores duplicados (30% casos)
+    - Validar selección estratégica de distractores
+    - Confirmar justificaciones alternativas apropiadas
+    - Probar múltiples generaciones para verificar diversidad
 
 - [ ] **🔧 6.2 Corrección de Errores**
   - **PRIMERO**: Revisar nuevamente `/Auxiliares/Ejemplos_Funcionales.md/`
@@ -206,6 +217,14 @@
 - Contexto realista y relevante
 - Distractores plausibles y educativos
 
+### ✅ **Sistema Avanzado de Distractores:**
+- **Diversidad**: Mínimo 8 tipos diferentes de errores conceptuales
+- **Valores Duplicados**: 30% probabilidad de opciones con mismo valor numérico pero justificaciones diferentes
+- **Selección Estratégica**: 1 distractor duplicado + 2 diferentes cuando aplique
+- **Verificación Textual**: Las 4 opciones siempre textualmente únicas
+- **Justificaciones Alternativas**: Múltiples explicaciones incorrectas para valores correctos
+- **Pedagogía**: Distractores que reflejan errores comunes de estudiantes
+
 ---
 
 ## 🌐 **INVESTIGACIÓN WEB PARA MATEMÁTICAS ICFES**
@@ -237,6 +256,75 @@
 - Verificar fecha de publicación (preferir 2023-2025)
 - Contrastar con múltiples fuentes oficiales
 - Validar coherencia con ejemplos funcionales existentes
+
+---
+
+## 🎯 **IMPLEMENTACIÓN DEL SISTEMA AVANZADO DE DISTRACTORES**
+
+### 📝 **Código Base para Distractores con Valores Duplicados:**
+
+```r
+# DECISIÓN ALEATORIA: ¿Permitir valores duplicados con justificaciones diferentes?
+# 30% de probabilidad de generar opciones con mismo valor pero diferentes justificaciones
+permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+
+# SISTEMA AMPLIADO DE DISTRACTORES (8+ opciones para mayor diversidad)
+afirmaciones_incorrectas <- c()
+
+# DISTRACTOR 1: Confundir concepto principal con media
+media_calculada <- round(mean(datos_ordenados), 1)
+afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+  paste0("La [concepto] es ", media_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"))
+
+# DISTRACTOR 2-8: [Implementar según el concepto matemático específico]
+# - Confusión con moda, extremos, posiciones incorrectas
+# - Errores de cálculo comunes
+# - Aplicación incorrecta de fórmulas
+# - Interpretaciones erróneas del procedimiento
+
+# JUSTIFICACIONES ALTERNATIVAS para el valor correcto (pero con razonamiento incorrecto)
+justificaciones_incorrectas_valor_correcto <- c(
+  paste0("La [concepto] es ", valor_correcto, " porque representa el punto medio del rango"),
+  paste0("La [concepto] es ", valor_correcto, " porque es el valor que mejor representa el conjunto"),
+  paste0("La [concepto] es ", valor_correcto, " porque se obtiene al aplicar la fórmula básica")
+)
+
+# LÓGICA DE SELECCIÓN ADAPTADA
+if(permitir_valores_duplicados) {
+  # Incluir 1 justificación incorrecta para el valor correcto + 2 valores diferentes
+  # [Implementar lógica de selección estratégica]
+} else {
+  # Modo tradicional: todos los valores diferentes
+  # [Implementar selección estándar]
+}
+
+# VERIFICACIÓN FINAL: Asegurar 4 opciones textualmente únicas
+expect_equal(length(unique(todas_afirmaciones)), 4,
+            info = "Las 4 opciones deben ser textualmente diferentes")
+```
+
+### 🧪 **Pruebas Específicas para Distractores:**
+
+```r
+test_that("Prueba del sistema avanzado de distractores", {
+  for(i in 1:50) {
+    datos_test <- generar_datos()
+
+    # Verificar opciones textualmente únicas
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = "Las 4 opciones deben ser textualmente diferentes")
+
+    # Verificar diversidad de distractores
+    valores_numericos <- extraer_valores_numericos(datos_test$opciones)
+    expect_true(length(unique(valores_numericos)) >= 2,
+               info = "Debe haber al menos 2 valores numéricos diferentes")
+
+    # Verificar respuesta correcta presente
+    expect_true(datos_test$afirmacion_correcta %in% datos_test$opciones,
+               info = "La respuesta correcta debe estar presente")
+  }
+})
+```
 
 ---
 
@@ -282,3 +370,10 @@ rmarkdown::render('archivo.Rmd', 'html_document')
 - Combinar investigación teórica oficial con implementación técnica probada
 - Asegurar alineación perfecta entre competencia ICFES y ejercicio desarrollado
 - Validar que el ejercicio cumple estándares oficiales actualizados
+
+### 🎯 **Sistema de Distractores Avanzado:**
+- **IMPLEMENTAR SIEMPRE** el sistema de valores duplicados con justificaciones diferentes
+- Generar mínimo 8 tipos de distractores para máxima diversidad pedagógica
+- Verificar que los distractores reflejen errores conceptuales reales de estudiantes
+- Asegurar que las justificaciones alternativas sean matemáticamente plausibles pero incorrectas
+- Probar múltiples generaciones para confirmar variedad en combinaciones de opciones

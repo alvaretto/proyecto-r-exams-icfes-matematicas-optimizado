@@ -165,16 +165,22 @@ generar_datos <- function() {
     afirmacion_correcta <- paste0("La mediana es ", mediana_calculada, " porque es el promedio de los dos valores centrales (", datos_ordenados[n_datos/2], " y ", datos_ordenados[n_datos/2 + 1], ")")
   }
   
-  # Afirmaciones INCORRECTAS (distractores con errores conceptuales comunes)
+  # SISTEMA AMPLIADO DE DISTRACTORES (5+ opciones para mayor diversidad)
   afirmaciones_incorrectas <- c()
-  
-  # Error 1: Confundir mediana con media
+
+  # Calcular valores necesarios para los distractores
   media_calculada <- round(mean(datos_ordenados), 1)
-  afirmaciones_incorrectas <- c(afirmaciones_incorrectas, 
-    paste0("La mediana es ", media_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"))
-  
-  # Error 2: Confundir mediana con moda
   tabla_freq <- table(datos_ordenados)
+
+  # DECISIÓN ALEATORIA: ¿Permitir valores duplicados con justificaciones diferentes?
+  # 30% de probabilidad de generar opciones con mismo valor pero diferentes justificaciones
+  permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+
+  # DISTRACTOR 1: Confundir mediana con media
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0("La mediana es ", media_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"))
+
+  # DISTRACTOR 2: Confundir mediana con moda o valor mínimo
   if(max(tabla_freq) > 1) {
     moda <- as.numeric(names(tabla_freq)[which.max(tabla_freq)])
     afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
@@ -183,37 +189,267 @@ generar_datos <- function() {
     afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
       paste0("La mediana es ", datos_ordenados[1], " porque no hay valores repetidos, entonces se toma el menor"))
   }
-  
-  # Error 3: Posición incorrecta
-  if(n_datos %% 2 == 1) {
-    pos_incorrecta <- sample(c(1, 2, n_datos-1, n_datos), 1)
+
+  # DISTRACTOR 3: Posición incorrecta (primer o último valor)
+  valor_extremo <- sample(c(datos_ordenados[1], datos_ordenados[n_datos]), 1)
+  if(valor_extremo == datos_ordenados[1]) {
     afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
-      paste0("La mediana es ", datos_ordenados[pos_incorrecta], " porque está en la posición ", pos_incorrecta, " de los datos ordenados"))
+      paste0("La mediana es ", valor_extremo, " porque es el primer valor cuando los datos están ordenados"))
   } else {
-    valor_incorrecto <- datos_ordenados[sample(c(1, n_datos), 1)]
     afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
-      paste0("La mediana es ", valor_incorrecto, " porque es uno de los valores extremos del conjunto"))
+      paste0("La mediana es ", valor_extremo, " porque es el último valor cuando los datos están ordenados"))
   }
-  
-  # Error 4: Cálculo incorrecto para datos pares
+
+  # DISTRACTOR 4: Error en cálculo para datos pares/impares
   if(n_datos %% 2 == 0) {
+    # Para pares: sumar sin dividir
     suma_incorrecta <- datos_ordenados[n_datos/2] + datos_ordenados[n_datos/2 + 1]
     afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
       paste0("La mediana es ", suma_incorrecta, " porque se suman los dos valores centrales sin dividir"))
   } else {
-    # Para impares, error de promedio innecesario
-    promedio_innecesario <- round((datos_ordenados[(n_datos+1)/2 - 1] + datos_ordenados[(n_datos+1)/2] + datos_ordenados[(n_datos+1)/2 + 1]) / 3, 1)
-    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
-      paste0("La mediana es ", promedio_innecesario, " porque se promedian los tres valores centrales"))
+    # Para impares: promediar tres valores centrales
+    pos_central <- (n_datos + 1) / 2
+    if(pos_central > 1 && pos_central < n_datos) {
+      promedio_tres <- round((datos_ordenados[pos_central - 1] + datos_ordenados[pos_central] + datos_ordenados[pos_central + 1]) / 3, 1)
+      afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+        paste0("La mediana es ", promedio_tres, " porque se promedian los tres valores centrales"))
+    }
   }
-  
-  # Seleccionar 3 afirmaciones incorrectas
-  afirmaciones_incorrectas_sel <- sample(afirmaciones_incorrectas, 3)
-  
-  # Crear opciones y mezclar
+
+  # DISTRACTOR 5: Valor en posición incorrecta específica
+  if(n_datos >= 3) {
+    pos_incorrecta <- sample(c(2, n_datos-1), 1)
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", datos_ordenados[pos_incorrecta], " porque está en la posición ", pos_incorrecta, " de los datos ordenados"))
+  }
+
+  # DISTRACTOR 6: Confusión con rango o valor máximo
+  rango <- max(datos_ordenados) - min(datos_ordenados)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0("La mediana es ", max(datos_ordenados), " porque es el valor máximo del conjunto de datos"))
+
+  # DISTRACTOR 7: Error conceptual adicional (promedio de extremos)
+  promedio_extremos <- round((datos_ordenados[1] + datos_ordenados[n_datos]) / 2, 1)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0("La mediana es ", promedio_extremos, " porque se promedian el valor mínimo y máximo"))
+
+  # DISTRACTOR 8: Valor central incorrecto para pares
+  if(n_datos %% 2 == 0) {
+    valor_central_incorrecto <- datos_ordenados[sample(c(n_datos/2 - 1, n_datos/2 + 2), 1)]
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0("La mediana es ", valor_central_incorrecto, " porque es uno de los valores cercanos al centro"))
+  }
+
+  # DISTRACTORES ADICIONALES CON JUSTIFICACIONES ALTERNATIVAS
+  # (Para permitir valores duplicados con diferentes explicaciones)
+
+  # Justificaciones alternativas para la mediana correcta (pero con razonamiento incorrecto)
+  justificaciones_incorrectas_mediana <- c()
+
+  if(mediana_calculada == media_calculada) {
+    # Si mediana = media, crear justificación incorrecta diferente
+    justificaciones_incorrectas_mediana <- c(justificaciones_incorrectas_mediana,
+      paste0("La mediana es ", mediana_calculada, " porque es el valor que más se acerca al promedio"))
+  } else {
+    # Justificación incorrecta usando el valor correcto
+    justificaciones_incorrectas_mediana <- c(justificaciones_incorrectas_mediana,
+      paste0("La mediana es ", mediana_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"))
+  }
+
+  # Más justificaciones incorrectas para el valor correcto
+  justificaciones_incorrectas_mediana <- c(justificaciones_incorrectas_mediana,
+    paste0("La mediana es ", mediana_calculada, " porque es el valor que aparece en el centro de la tabla"),
+    paste0("La mediana es ", mediana_calculada, " porque representa el punto medio del rango"),
+    paste0("La mediana es ", mediana_calculada, " porque es el resultado de sumar los extremos y dividir por 2"))
+
+  # Justificaciones alternativas para otros valores
+  justificaciones_alternativas <- list()
+
+  # Para la media
+  if(media_calculada != mediana_calculada) {
+    justificaciones_alternativas[[as.character(media_calculada)]] <- c(
+      paste0("La mediana es ", media_calculada, " porque es el valor que mejor representa el conjunto"),
+      paste0("La mediana es ", media_calculada, " porque es el punto de equilibrio de los datos"),
+      paste0("La mediana es ", media_calculada, " porque se obtiene al promediar todos los valores")
+    )
+  }
+
+  # Para valores extremos
+  justificaciones_alternativas[[as.character(datos_ordenados[1])]] <- c(
+    paste0("La mediana es ", datos_ordenados[1], " porque es el valor de referencia del conjunto"),
+    paste0("La mediana es ", datos_ordenados[1], " porque representa el límite inferior de los datos")
+  )
+
+  justificaciones_alternativas[[as.character(datos_ordenados[n_datos])]] <- c(
+    paste0("La mediana es ", datos_ordenados[n_datos], " porque es el valor máximo alcanzado"),
+    paste0("La mediana es ", datos_ordenados[n_datos], " porque representa el límite superior de los datos")
+  )
+
+  # Agregar justificaciones alternativas a la lista de distractores
+  for(valor in names(justificaciones_alternativas)) {
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas, justificaciones_alternativas[[valor]])
+  }
+
+  # Agregar justificaciones incorrectas para la mediana correcta
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas, justificaciones_incorrectas_mediana)
+
+  # Eliminar duplicados y valores NA
+  afirmaciones_incorrectas <- unique(afirmaciones_incorrectas[!is.na(afirmaciones_incorrectas)])
+
+  # SISTEMA ROBUSTO PARA GARANTIZAR 4 OPCIONES DIFERENTES
+  # Paso 1: Asegurar que tenemos suficientes distractores únicos
+  max_intentos <- 50
+  intento <- 1
+
+  while(length(afirmaciones_incorrectas) < 10 && intento <= max_intentos) {
+    # Generar distractores adicionales con valores y justificaciones variadas
+    valores_adicionales <- sample(setdiff(1:60, datos_ordenados), 3)
+    justificaciones_adicionales <- c(
+      "porque es el valor más frecuente en el análisis",
+      "porque representa el punto medio del rango",
+      "porque es el resultado de aplicar la fórmula correcta",
+      "porque es el valor que mejor representa el conjunto",
+      "porque se obtiene al ordenar y seleccionar el centro",
+      "porque es el promedio de los valores más representativos"
+    )
+
+    for(i in 1:length(valores_adicionales)) {
+      nueva_afirmacion <- paste0("La mediana es ", valores_adicionales[i], " ",
+                                sample(justificaciones_adicionales, 1))
+      if(!nueva_afirmacion %in% afirmaciones_incorrectas &&
+         nueva_afirmacion != afirmacion_correcta) {
+        afirmaciones_incorrectas <- c(afirmaciones_incorrectas, nueva_afirmacion)
+      }
+    }
+
+    afirmaciones_incorrectas <- unique(afirmaciones_incorrectas)
+    intento <- intento + 1
+  }
+
+  # Paso 2: Seleccionar 3 distractores con lógica adaptada para valores duplicados
+  afirmaciones_incorrectas_sel <- c()
+  intentos_seleccion <- 0
+  max_intentos_seleccion <- 100
+
+  if(permitir_valores_duplicados) {
+    # MODO: Permitir valores duplicados con justificaciones diferentes
+
+    # Extraer valores numéricos de todas las afirmaciones
+    extraer_valor <- function(afirmacion) {
+      patron <- "La mediana es ([0-9.]+)"
+      match <- regmatches(afirmacion, regexpr(patron, afirmacion))
+      if(length(match) > 0) {
+        return(as.numeric(gsub("La mediana es ", "", match)))
+      }
+      return(NA)
+    }
+
+    valor_correcto <- extraer_valor(afirmacion_correcta)
+
+    # Buscar afirmaciones incorrectas que tengan el mismo valor que la correcta
+    afirmaciones_mismo_valor <- c()
+    afirmaciones_otros_valores <- c()
+
+    for(afirmacion in afirmaciones_incorrectas) {
+      if(!is.na(extraer_valor(afirmacion)) && extraer_valor(afirmacion) == valor_correcto) {
+        afirmaciones_mismo_valor <- c(afirmaciones_mismo_valor, afirmacion)
+      } else {
+        afirmaciones_otros_valores <- c(afirmaciones_otros_valores, afirmacion)
+      }
+    }
+
+    # Estrategia: incluir 1 afirmación con el mismo valor (si existe) y 2 con valores diferentes
+    if(length(afirmaciones_mismo_valor) > 0) {
+      afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel,
+                                       sample(afirmaciones_mismo_valor, 1))
+    }
+
+    # Completar con afirmaciones de valores diferentes
+    while(length(afirmaciones_incorrectas_sel) < 3 && length(afirmaciones_otros_valores) > 0) {
+      candidato <- sample(afirmaciones_otros_valores, 1)
+      if(!candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+      afirmaciones_otros_valores <- setdiff(afirmaciones_otros_valores, candidato)
+    }
+
+    # Si aún faltan, completar con cualquier afirmación disponible
+    while(length(afirmaciones_incorrectas_sel) < 3 && length(afirmaciones_incorrectas) > 0) {
+      candidato <- sample(afirmaciones_incorrectas, 1)
+      if(candidato != afirmacion_correcta && !candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+    }
+
+  } else {
+    # MODO TRADICIONAL: Todas las afirmaciones deben ser completamente diferentes
+    while(length(afirmaciones_incorrectas_sel) < 3 && intentos_seleccion < max_intentos_seleccion) {
+      candidato <- sample(afirmaciones_incorrectas, 1)
+
+      # Verificar que el candidato sea diferente de la respuesta correcta y de los ya seleccionados
+      if(candidato != afirmacion_correcta &&
+         !candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+
+      intentos_seleccion <- intentos_seleccion + 1
+    }
+  }
+
+  # Paso 3: Crear las 4 opciones finales y verificar según el modo seleccionado
   todas_afirmaciones <- c(afirmacion_correcta, afirmaciones_incorrectas_sel)
+
+  # Verificación adaptada según si se permiten valores duplicados
+  if(permitir_valores_duplicados) {
+    # MODO: Valores duplicados permitidos - verificar que las afirmaciones sean textualmente diferentes
+    if(length(unique(todas_afirmaciones)) != 4) {
+      # Si hay afirmaciones idénticas (no solo valores), usar fallback
+      todas_afirmaciones <- c(
+        afirmacion_correcta,
+        paste0("La mediana es ", media_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"),
+        paste0("La mediana es ", datos_ordenados[1], " porque es el primer valor cuando los datos están ordenados"),
+        paste0("La mediana es ", mediana_calculada, " porque representa el punto medio del rango")
+      )
+    }
+  } else {
+    # MODO TRADICIONAL: Verificar que las 4 opciones sean completamente diferentes
+    if(length(unique(todas_afirmaciones)) != 4) {
+      # Si hay duplicados, regenerar con método alternativo
+      valores_unicos <- unique(c(mediana_calculada, media_calculada,
+                                datos_ordenados[1], datos_ordenados[n_datos]))
+
+      # Crear opciones completamente diferentes
+      todas_afirmaciones <- c(
+        afirmacion_correcta,
+        paste0("La mediana es ", media_calculada, " porque se calcula sumando todos los valores y dividiendo por el número de datos"),
+        paste0("La mediana es ", datos_ordenados[1], " porque es el primer valor cuando los datos están ordenados"),
+        paste0("La mediana es ", datos_ordenados[n_datos], " porque es el último valor cuando los datos están ordenados")
+      )
+
+      # Si aún hay duplicados, usar valores numéricos diferentes
+      if(length(unique(todas_afirmaciones)) != 4) {
+        valores_diferentes <- c(mediana_calculada, media_calculada,
+                               min(datos_ordenados), max(datos_ordenados))
+        if(length(unique(valores_diferentes)) < 4) {
+          valores_diferentes <- c(valores_diferentes,
+                                 round(median(datos_ordenados) + 1, 1),
+                                 round(median(datos_ordenados) - 1, 1))
+        }
+        valores_diferentes <- unique(valores_diferentes)[1:4]
+
+        todas_afirmaciones <- c(
+          afirmacion_correcta,
+          paste0("La mediana es ", valores_diferentes[2], " porque se calcula como el promedio aritmético"),
+          paste0("La mediana es ", valores_diferentes[3], " porque es el valor mínimo del conjunto"),
+          paste0("La mediana es ", valores_diferentes[4], " porque es el valor máximo del conjunto")
+        )
+      }
+    }
+  }
+
+  # Mezclar las opciones
   opciones_mezcladas <- sample(todas_afirmaciones)
-  
+
   # Identificar posición correcta
   pos_correcta <- which(opciones_mezcladas == afirmacion_correcta)
   
@@ -261,7 +497,7 @@ test_that("Prueba de diversidad de versiones", {
 test_that("Prueba de coherencia matemática", {
   for(i in 1:20) {
     datos_test <- generar_datos()
-    
+
     # Verificar que la mediana calculada sea correcta
     if(datos_test$n_datos %% 2 == 1) {
       pos_esperada <- (datos_test$n_datos + 1) / 2
@@ -271,13 +507,27 @@ test_that("Prueba de coherencia matemática", {
       pos2 <- pos1 + 1
       mediana_esperada <- (datos_test$datos_ordenados[pos1] + datos_test$datos_ordenados[pos2]) / 2
     }
-    
+
     expect_equal(datos_test$mediana_calculada, mediana_esperada,
                 info = "La mediana calculada debe ser correcta")
-    
-    # Verificar que todas las opciones sean diferentes
+
+    # VERIFICACIÓN CRÍTICA: Las 4 opciones deben ser textualmente diferentes
+    # (Pueden tener el mismo valor numérico pero diferente justificación)
     expect_equal(length(unique(datos_test$opciones)), 4,
-                info = "Las 4 opciones de respuesta deben ser diferentes")
+                info = paste("Las 4 opciones de respuesta deben ser textualmente diferentes. Opciones generadas:",
+                           paste(datos_test$opciones, collapse = " | ")))
+
+    # Verificar que la respuesta correcta esté presente
+    expect_true(datos_test$afirmacion_correcta %in% datos_test$opciones,
+               info = "La afirmación correcta debe estar entre las opciones")
+
+    # Verificar que la posición correcta sea válida
+    expect_true(datos_test$pos_correcta >= 1 && datos_test$pos_correcta <= 4,
+               info = "La posición correcta debe estar entre 1 y 4")
+
+    # Verificar que no haya opciones vacías o NA
+    expect_true(all(!is.na(datos_test$opciones) & nchar(datos_test$opciones) > 0),
+               info = "Todas las opciones deben tener contenido válido")
   }
 })
 ```
