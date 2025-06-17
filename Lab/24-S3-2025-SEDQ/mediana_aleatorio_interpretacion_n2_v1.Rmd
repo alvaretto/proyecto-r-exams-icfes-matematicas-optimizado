@@ -1,0 +1,316 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+  word_document: default
+  html_document: default
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje3
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+library(stringr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+#set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Contextos aleatorios
+  contextos <- list(
+    list(lugar = "centro comercial", tipo = "salas de cine", unidad = "asistentes"),
+    list(lugar = "complejo deportivo", tipo = "canchas de tenis", unidad = "jugadores"),
+    list(lugar = "centro cultural", tipo = "auditorios", unidad = "espectadores"),
+    list(lugar = "plaza de comidas", tipo = "restaurantes", unidad = "comensales"),
+    list(lugar = "centro de convenciones", tipo = "salones", unidad = "participantes"),
+    list(lugar = "parque temático", tipo = "atracciones", unidad = "visitantes")
+  )
+  
+  contexto_sel <- sample(contextos, 1)[[1]]
+  
+  # Generar mediana objetivo (valor central)
+  mediana_objetivo <- sample(300:500, 1)
+  
+  # Generar 4 valores conocidos de forma más controlada
+  # Necesitamos exactamente 1 valor menor que mediana_objetivo para que N pueda ser el segundo menor
+  val1 <- sample((mediana_objetivo - 100):(mediana_objetivo - 30), 1)  # Menor que mediana
+  val2 <- sample((mediana_objetivo + 10):(mediana_objetivo + 50), 1)   # Mayor que mediana
+  val3 <- sample((mediana_objetivo + 60):(mediana_objetivo + 120), 1)  # Mayor que mediana
+  val4 <- mediana_objetivo  # Exactamente la mediana
+
+  valores_conocidos <- c(val1, val2, val3, val4)
+
+  # Para que la mediana sea mediana_objetivo cuando tenemos 5 valores:
+  # Necesitamos que mediana_objetivo esté en la posición 3 cuando se ordenan
+  # Esto significa que necesitamos exactamente 2 valores menores que mediana_objetivo
+
+  # Ya tenemos val1 < mediana_objetivo
+  # N debe ser el segundo valor menor, pero N < mediana_objetivo
+  # Para maximizar N: val1 < N < mediana_objetivo
+
+  n_max <- mediana_objetivo - 1  # El mayor valor posible para N
+  n_min <- val1 + 1              # Debe ser mayor que val1
+  
+  # Generar opciones de respuesta
+  respuesta_correcta <- n_max
+  
+  # Generar distractores
+  distractor1 <- respuesta_correcta + sample(1:10, 1)  # Ligeramente mayor
+  distractor2 <- respuesta_correcta - sample(5:15, 1)  # Menor
+  distractor3 <- mediana_objetivo  # Valor de la mediana (error común)
+  
+  opciones <- c(respuesta_correcta, distractor1, distractor2, distractor3)
+  opciones_mezcladas <- sample(opciones)
+  
+  # Identificar posición correcta
+  pos_correcta <- which(opciones_mezcladas == respuesta_correcta)
+  
+  return(list(
+    contexto = contexto_sel,
+    mediana_objetivo = mediana_objetivo,
+    valores_conocidos = valores_conocidos,
+    n_max = n_max,
+    n_min = n_min,
+    respuesta_correcta = respuesta_correcta,
+    opciones = opciones_mezcladas,
+    pos_correcta = pos_correcta,
+    distractor1 = distractor1,
+    distractor2 = distractor2,
+    distractor3 = distractor3
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+contexto <- datos$contexto
+mediana_objetivo <- datos$mediana_objetivo
+valores_conocidos <- datos$valores_conocidos
+respuesta_correcta <- datos$respuesta_correcta
+opciones <- datos$opciones
+pos_correcta <- datos$pos_correcta
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r generar_tabla, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# Crear tabla con los valores conocidos
+salas <- c("A", "B", "C", "D", "E")
+valores_tabla <- c(valores_conocidos, "N")
+
+# Mezclar el orden de las salas (excepto la última que siempre será N)
+indices_mezclados <- sample(1:4)
+salas_mezcladas <- c(salas[indices_mezclados], "E")
+valores_mezclados <- c(valores_conocidos[indices_mezclados], "N")
+
+# Crear la tabla usando TikZ para mejor control visual
+tabla_tikz <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|c|c|}",
+  "    \\hline",
+  paste0("    \\textbf{", stringr::str_to_title(contexto$tipo), "} & \\textbf{Punto medio} \\\\"),
+  "    \\hline"
+)
+
+for (i in 1:5) {
+  tabla_tikz <- c(tabla_tikz, paste0("    ", salas_mezcladas[i], " & ", valores_mezclados[i], " \\\\"))
+  tabla_tikz <- c(tabla_tikz, "    \\hline")
+}
+
+tabla_tikz <- c(tabla_tikz,
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+```
+
+Question
+========
+
+Si la mediana de la asistencia a las cinco `r contexto$tipo` de un `r contexto$lugar` es `r mediana_objetivo` y no hay dos `r contexto$tipo` con el mismo número de `r contexto$unidad`, ¿cuál es el mayor valor posible para "N"?
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+# Detectar formato de salida
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+if (es_moodle) {
+  # Para Moodle, usar tabla HTML simple
+  cat("<table border='1' style='border-collapse: collapse; margin: 0 auto;'>")
+  cat("<tr><th style='padding: 8px; text-align: center; background-color: #f0f0f0;'>")
+  cat(paste0(stringr::str_to_title(contexto$tipo)))
+  cat("</th><th style='padding: 8px; text-align: center; background-color: #f0f0f0;'>")
+  cat("Punto medio")
+  cat("</th></tr>")
+
+  for (i in 1:5) {
+    cat("<tr>")
+    cat("<td style='padding: 8px; text-align: center;'>", salas_mezcladas[i], "</td>")
+    cat("<td style='padding: 8px; text-align: center;'>", valores_mezclados[i], "</td>")
+    cat("</tr>")
+  }
+  cat("</table>")
+} else {
+  # Para PDF/Word, usar TikZ
+  include_tikz(tabla_tikz,
+               name = "tabla_datos",
+               markup = "markdown",
+               format = typ,
+               packages = c("tikz", "colortbl"),
+               width = "8cm")
+}
+```
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+### Análisis del problema {#analisis-problema-`r sample(1:10000, 1)`}
+
+Para resolver este problema, necesitamos entender qué significa que la mediana sea `r mediana_objetivo` en un conjunto de 5 valores.
+
+**Datos conocidos:**
+
+- Tenemos 5 `r contexto$tipo`: `r paste(salas_mezcladas, collapse = ", ")`
+- Sus valores son: `r paste(valores_mezclados, collapse = ", ")`
+- La mediana del conjunto es `r mediana_objetivo`
+- No hay dos valores iguales
+
+### Concepto de mediana {#concepto-mediana-`r sample(1:10000, 1)`}
+
+La mediana de 5 valores ordenados de menor a mayor es el valor que ocupa la **posición central (posición 3)**.
+
+Para que la mediana sea `r mediana_objetivo`, cuando ordenemos los 5 valores de menor a mayor, el valor en la posición 3 debe ser exactamente `r mediana_objetivo`.
+
+### Análisis de casos {#analisis-casos-`r sample(1:10000, 1)`}
+
+Los valores conocidos son: `r paste(valores_conocidos, collapse = ", ")`
+
+Analicemos dónde puede ubicarse N para que la mediana sea `r mediana_objetivo`:
+
+\
+
+```{r analisis_detallado, echo=FALSE, results='asis'}
+# Calcular valores para el análisis
+valores_ord <- sort(valores_conocidos)
+val_menor <- min(valores_conocidos[valores_conocidos < mediana_objetivo])
+
+cat("**Caso 1:** Si N es menor o igual a", val_menor, "(muy pequeño)\n")
+cat("- Orden: N,", paste(valores_ord, collapse = ", "), "\n")
+cat("- Mediana =", valores_ord[2], "diferente de", mediana_objetivo, "\n\n")
+
+cat("**Caso 2:** Si", val_menor, "< N <", mediana_objetivo, "\n")
+cat("- El valor", mediana_objetivo, "queda en posición 3\n")
+cat("- Mediana =", mediana_objetivo, "(CORRECTO)\n\n")
+
+cat("**Caso 3:** Si N =", mediana_objetivo, "\n")
+cat("- No es válido porque no puede haber valores iguales\n\n")
+
+cat("**Caso 4:** Si N >", mediana_objetivo, "\n")
+cat("- El valor", mediana_objetivo, "no estaría en posición 3\n")
+cat("- Mediana diferente de", mediana_objetivo, "\n\n")
+```
+
+### Conclusión {#conclusion-`r sample(1:10000, 1)`}
+
+```{r conclusion_detallada, echo=FALSE, results='asis'}
+val_menor <- min(valores_conocidos[valores_conocidos < mediana_objetivo])
+cat("Para que la mediana sea", mediana_objetivo, ", N debe cumplir:\n")
+cat(val_menor, "< N <", mediana_objetivo, "\n\n")
+```
+
+El **mayor valor posible** para N es **`r respuesta_correcta`** (justo menor que `r mediana_objetivo`).
+
+Answerlist
+----------
+- `r if(pos_correcta == 1) "Verdadero" else "Falso"`
+- `r if(pos_correcta == 2) "Verdadero" else "Falso"`
+- `r if(pos_correcta == 3) "Verdadero" else "Falso"`
+- `r if(pos_correcta == 4) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: mediana_asistencia_salas_cine
+extype: schoice
+exsolution: `r paste(as.integer(c(pos_correcta == 1, pos_correcta == 2, pos_correcta == 3, pos_correcta == 4)), collapse="")`
+exshuffle: TRUE
+exsection: Estadística|Medidas de posición|Mediana|Interpretación
+exextra[Type]: Interpretación y representación
+exextra[Level]: 2
+exextra[Language]: es
+exextra[Course]: Matemáticas ICFES
