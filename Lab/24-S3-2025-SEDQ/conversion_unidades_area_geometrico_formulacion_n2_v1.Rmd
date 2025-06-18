@@ -1,0 +1,347 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje1
+  componente: geometrico_metrico
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(ggplot2)
+library(knitr)
+library(reticulate)
+library(testthat)
+library(data.table)
+library(readxl)
+library(datasets)
+
+# Configurar Python si es necesario
+use_python("/usr/bin/python3", required = TRUE)
+
+# Configuración global
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE, 
+  message = FALSE,
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Objetos rectangulares variados para el contexto
+  objetos <- c("espejo", "cuadro", "televisor", "ventana", "mesa", "alfombra", 
+               "tapete", "pizarra", "cartel", "azulejo", "baldosa", "panel")
+  
+  lugares <- c("sala", "habitación", "cocina", "oficina", "aula", "comedor",
+               "estudio", "recibidor", "dormitorio", "salón")
+  
+  acciones <- c("ubicarlo", "colocarlo", "instalarlo", "montarlo", "fijarlo", "ponerlo")
+  
+  # Seleccionar elementos aleatorios
+  objeto <- sample(objetos, 1)
+  lugar <- sample(lugares, 1)
+  accion <- sample(acciones, 1)
+  
+  # Generar dimensiones en cm que den áreas manejables
+  # Rangos realistas para diferentes objetos
+  ancho_min <- if(objeto %in% c("espejo", "cuadro", "cartel")) 30 else 50
+  ancho_max <- if(objeto %in% c("espejo", "cuadro", "cartel")) 120 else 200
+  
+  largo_min <- if(objeto %in% c("mesa", "alfombra", "tapete")) 60 else 40
+  largo_max <- if(objeto %in% c("mesa", "alfombra", "tapete")) 250 else 180
+  
+  # Generar dimensiones que sean múltiplos de 10 para facilitar cálculos
+  ancho_cm <- sample(seq(ancho_min, ancho_max, by = 10), 1)
+  largo_cm <- sample(seq(largo_min, largo_max, by = 10), 1)
+  
+  # Calcular área en cm²
+  area_cm2 <- ancho_cm * largo_cm
+  
+  # Área correcta en m²
+  area_m2_correcta <- area_cm2 / 10000
+  
+  # Generar distractores plausibles
+  # Error común 1: dividir solo por 100 (confundir conversión lineal con área)
+  distractor_1 <- area_cm2 / 100
+  
+  # Error común 2: dividir por 1000 
+  distractor_2 <- area_cm2 / 1000
+  
+  # Error común 3: no convertir (mantener en cm²)
+  distractor_3 <- area_cm2
+  
+  # Crear lista de opciones
+  opciones <- c(area_m2_correcta, distractor_1, distractor_2, distractor_3)
+  
+  # Asegurar que todas las opciones sean diferentes
+  while(length(unique(opciones)) < 4) {
+    # Regenerar si hay duplicados
+    distractor_2 <- area_cm2 / sample(c(500, 1500, 2000), 1)
+    opciones <- c(area_m2_correcta, distractor_1, distractor_2, distractor_3)
+  }
+  
+  # Determinar cuál opción es la correcta
+  respuesta_correcta <- which(opciones == area_m2_correcta)
+  
+  return(list(
+    objeto = objeto,
+    lugar = lugar,
+    accion = accion,
+    ancho_cm = ancho_cm,
+    largo_cm = largo_cm,
+    area_cm2 = area_cm2,
+    area_m2_correcta = area_m2_correcta,
+    opciones = opciones,
+    respuesta_correcta = respuesta_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+objeto <- datos$objeto
+lugar <- datos$lugar
+accion <- datos$accion
+ancho_cm <- datos$ancho_cm
+largo_cm <- datos$largo_cm
+area_cm2 <- datos$area_cm2
+area_m2_correcta <- datos$area_m2_correcta
+opciones <- datos$opciones
+respuesta_correcta <- datos$respuesta_correcta
+
+# Formatear opciones para mostrar
+opciones_formateadas <- sapply(opciones, function(x) {
+  if(x >= 1000) {
+    paste0(format(x, big.mark = ".", decimal.mark = ","), " m²")
+  } else {
+    paste0(format(x, decimal.mark = ","), " m²")
+  }
+})
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    # Crear hash único basado en elementos clave
+    elementos_clave <- paste(datos_test$objeto, datos_test$lugar, 
+                            datos_test$ancho_cm, datos_test$largo_cm, 
+                            collapse = "_")
+    versiones[[i]] <- digest::digest(elementos_clave)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{python generar_graficos_python, echo=FALSE, results="hide"}
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+import random
+
+# Recibir datos desde R
+ancho_cm_py = r.ancho_cm
+largo_cm_py = r.largo_cm
+objeto_py = r.objeto
+
+# Configuración de colores aleatorios
+colores_principales = ['steelblue', 'forestgreen', 'crimson', 'darkorange', 'purple', 'chocolate']
+colores_bordes = ['navy', 'darkgreen', 'darkred', 'darkorange', 'indigo', 'brown']
+
+color_principal = random.choice(colores_principales)
+color_borde = random.choice(colores_bordes)
+
+# Crear figura con el rectángulo que representa el objeto
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# Calcular proporciones para visualización
+ratio = largo_cm_py / ancho_cm_py
+if ratio > 2:
+    width_viz = 4
+    height_viz = 8
+elif ratio < 0.5:
+    width_viz = 8
+    height_viz = 4
+else:
+    width_viz = 6
+    height_viz = 6 * ratio
+
+# Crear rectángulo
+rectangle = patches.Rectangle((1, 1), width_viz, height_viz, 
+                            linewidth=3, edgecolor=color_borde, 
+                            facecolor=color_principal, alpha=0.7)
+ax.add_patch(rectangle)
+
+# Añadir dimensiones como etiquetas
+ax.annotate(f'{ancho_cm_py} cm', xy=(1 + width_viz/2, 0.5), 
+           ha='center', va='top', fontsize=14, fontweight='bold')
+ax.annotate(f'{largo_cm_py} cm', xy=(0.5, 1 + height_viz/2), 
+           ha='center', va='center', fontsize=14, fontweight='bold', rotation=90)
+
+# Añadir título
+ax.set_title(f'Dimensiones del {objeto_py}', fontsize=16, fontweight='bold', pad=20)
+
+# Configurar ejes
+ax.set_xlim(0, max(10, width_viz + 2))
+ax.set_ylim(0, max(10, height_viz + 2))
+ax.set_aspect('equal')
+ax.axis('off')
+
+# Añadir información del área en una caja de texto
+textstr = f'Área = {ancho_cm_py} cm × {largo_cm_py} cm = {r.area_cm2:,.0f} cm²'
+props = dict(boxstyle='round', facecolor='lightgray', alpha=0.8)
+ax.text(0.02, 0.98, textstr, transform=ax.transAxes, fontsize=12,
+        verticalalignment='top', bbox=props)
+
+plt.tight_layout()
+plt.savefig('diagrama_objeto.png', dpi=150, bbox_inches='tight')
+plt.close()
+
+# Crear segundo gráfico mostrando la conversión de unidades
+fig2, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+
+# Panel izquierdo: 1 m² representado
+square_m = patches.Rectangle((0, 0), 1, 1, linewidth=2, 
+                           edgecolor='blue', facecolor='lightblue', alpha=0.7)
+ax1.add_patch(square_m)
+ax1.set_xlim(-0.2, 1.2)
+ax1.set_ylim(-0.2, 1.2)
+ax1.set_aspect('equal')
+ax1.set_title('1 m² = 10,000 cm²', fontsize=14, fontweight='bold')
+ax1.annotate('1 m = 100 cm', xy=(0.5, -0.1), ha='center', va='top', fontsize=12)
+ax1.annotate('1 m = 100 cm', xy=(-0.1, 0.5), ha='center', va='center', 
+            fontsize=12, rotation=90)
+
+# Panel derecho: Fórmula de conversión
+ax2.text(0.5, 0.7, 'Conversión de unidades:', ha='center', va='center', 
+         fontsize=16, fontweight='bold', transform=ax2.transAxes)
+ax2.text(0.5, 0.5, f'{r.area_cm2:,.0f} cm²', ha='center', va='center', 
+         fontsize=14, transform=ax2.transAxes)
+ax2.text(0.5, 0.4, '÷ 10,000', ha='center', va='center', 
+         fontsize=14, transform=ax2.transAxes)
+ax2.text(0.5, 0.3, f'= {r.area_m2_correcta:,.3f} m²', ha='center', va='center', 
+         fontsize=14, fontweight='bold', color='red', transform=ax2.transAxes)
+ax2.axis('off')
+
+plt.tight_layout()
+plt.savefig('conversion_unidades.png', dpi=150, bbox_inches='tight')
+plt.close()
+```
+
+Question
+========
+
+Después de haber comprado un `r objeto` rectangular, una persona desea `r accion` en la pared de su `r lugar`. El `r objeto` tiene un área de `r format(area_cm2, big.mark = ".", decimal.mark = ",")` cm² y dimensiones de `r ancho_cm` cm de ancho y `r largo_cm` cm de largo.
+
+Teniendo en cuenta que 1 m equivale a 100 cm, ¿cuál es el área que ocupa el `r objeto` en m²?
+
+![Diagrama del objeto](diagrama_objeto.png)
+
+![Conversión de unidades](conversion_unidades.png)
+
+Answerlist
+----------
+- `r opciones_formateadas[1]`
+- `r opciones_formateadas[2]`
+- `r opciones_formateadas[3]`
+- `r opciones_formateadas[4]`
+
+Solution
+========
+
+Para resolver este problema de conversión de unidades de área, debemos recordar la relación entre centímetros cuadrados (cm²) y metros cuadrados (m²).
+
+**Paso 1: Verificar el área dada**
+
+El área del `r objeto` es `r format(area_cm2, big.mark = ".", decimal.mark = ",")` cm².
+
+Podemos verificar: `r ancho_cm` cm × `r largo_cm` cm = `r format(area_cm2, big.mark = ".", decimal.mark = ",")` cm²
+
+**Paso 2: Recordar la conversión de unidades**
+
+- 1 m = 100 cm
+- Por tanto: 1 m² = 100 cm × 100 cm = 10,000 cm²
+
+**Paso 3: Aplicar la conversión**
+
+Para convertir de cm² a m², debemos dividir entre 10,000:
+
+Área en m² = `r format(area_cm2, big.mark = ".", decimal.mark = ",")` cm² ÷ 10,000 = **`r format(area_m2_correcta, decimal.mark = ",")` m²**
+
+**Análisis de errores comunes:**
+
+- Si dividimos solo entre 100 (error común al confundir conversión lineal con área): `r format(area_cm2/100, decimal.mark = ",")` m²
+- Si dividimos entre 1,000: `r format(area_cm2/1000, decimal.mark = ",")` m²
+- Si no convertimos las unidades: `r format(area_cm2, big.mark = ".", decimal.mark = ",")` m² (mantener cm²)
+
+La respuesta correcta es **`r format(area_m2_correcta, decimal.mark = ",")` m²**.
+
+Answerlist
+----------
+```{r, echo=FALSE, results="asis"}
+# Generar la lista de respuestas con explicaciones
+for(i in 1:4) {
+  if(i == respuesta_correcta) {
+    cat("- Verdadero. Esta es la conversión correcta: ", opciones_formateadas[i], "\n")
+  } else {
+    if(opciones[i] == area_cm2/100) {
+      cat("- Falso. Error común: dividir solo entre 100 en lugar de 10,000.\n")
+    } else if(opciones[i] == area_cm2/1000) {
+      cat("- Falso. Conversión incorrecta: dividir entre 1,000.\n")
+    } else if(opciones[i] == area_cm2) {
+      cat("- Falso. No se realizó la conversión de unidades.\n")
+    } else {
+      cat("- Falso. Conversión incorrecta de unidades.\n")
+    }
+  }
+}
+```
+
+Meta-information
+================
+exname: Conversión de unidades de área - Objetos rectangulares
+extype: schoice
+exsolution: `r paste(as.integer(1:4 == respuesta_correcta), collapse="")`
+exshuffle: TRUE
+exsection: Geometría/Conversión de Unidades
