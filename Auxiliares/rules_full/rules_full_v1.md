@@ -330,7 +330,7 @@ exsection: [Sección temática]
 
 Analiza la imagen proporcionada y:
 1. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
-2. **PRIMERO:** Consulta los ejemplos funcionales en Auxiliares/Ejemplos_Funcionales.md/
+2. **PRIMERO:** Consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/
 3. Identifica el concepto matemático principal
 4. Determina la competencia ICFES más apropiada
 5. Diseña un problema que evalúe esa competencia
@@ -339,6 +339,6 @@ Analiza la imagen proporcionada y:
 8. Incluye todas las validaciones y pruebas requeridas
 9. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
 10. Ante errors recurrentes **VERIFICA** consultando todos y cada uno de los 
-archivos de "Auxiliares/rules_full/errores_especificos/""
+archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/
 
 El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams.
