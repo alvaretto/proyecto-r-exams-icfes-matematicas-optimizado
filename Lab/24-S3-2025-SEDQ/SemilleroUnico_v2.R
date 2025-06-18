@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "mediana_aleatorio_formulacion_n2_v1.Rmd"
+archivo_examen <- "mediana_salas_cine_formulacion_ejecucion_v1.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
@@ -49,11 +49,11 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
-# Comentado para evitar error de browser
 
 exams2html(rep(archivo_examen, numpreg),
            svg = FALSE,
-           verbose = TRUE)
+           verbose = TRUE,
+           template = "plain")
 
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF

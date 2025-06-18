@@ -542,7 +542,21 @@ Question</strong></label></p>
 <ul>
 <li>Redactar contexto realista y relevante</li>
 <li>Formular pregunta clara según competencia ICFES</li>
-<li>Crear 4 opciones con distractores plausibles y educativos</li>
+<li><strong>🎯 Crear 4 opciones con sistema avanzado de
+distractores:</strong>
+<ul>
+<li>Generar 8+ tipos diferentes de distractores (confusión conceptual,
+errores de cálculo, posiciones incorrectas, etc.)</li>
+<li><strong>30% probabilidad</strong>: Incluir valores duplicados con
+justificaciones diferentes (ej: “mediana es 30 porque promedio
+centrales” vs “mediana es 30 porque suma/división”)</li>
+<li><strong>70% probabilidad</strong>: Mantener todos los valores
+diferentes (modo tradicional)</li>
+<li>Selección estratégica: 1 distractor con valor duplicado + 2 con
+valores diferentes</li>
+<li>Verificar que las 4 opciones sean textualmente únicas</li>
+<li>Asegurar distractores plausibles y educativos</li>
+</ul></li>
 <li>Incluir gráficos/tablas si es necesario</li>
 </ul></li>
 <li><p><label><input type="checkbox"></input><strong>💡 5.2 Sección
@@ -575,7 +589,14 @@ Automatizado</strong></label>
 <li>Ejecutar pruebas de diversidad de versiones</li>
 <li>Verificar validaciones matemáticas</li>
 <li>Comprobar coherencia de datos generados</li>
-<li>Validar que todas las opciones sean diferentes</li>
+<li><strong>🎯 Validar sistema avanzado de distractores:</strong>
+<ul>
+<li>Verificar que las 4 opciones sean textualmente únicas</li>
+<li>Comprobar funcionamiento de valores duplicados (30% casos)</li>
+<li>Validar selección estratégica de distractores</li>
+<li>Confirmar justificaciones alternativas apropiadas</li>
+<li>Probar múltiples generaciones para verificar diversidad</li>
+</ul></li>
 </ul></li>
 <li><label><input type="checkbox"></input><strong>🔧 6.2 Corrección de
 Errores</strong></label>
@@ -638,6 +659,23 @@ Final</strong></label>
 <li>Contexto realista y relevante</li>
 <li>Distractores plausibles y educativos</li>
 </ul>
+</div>
+<div id="sistema-avanzado-de-distractores" class="section level3">
+<h3>✅ <strong>Sistema Avanzado de Distractores:</strong></h3>
+<ul>
+<li><strong>Diversidad</strong>: Mínimo 8 tipos diferentes de errores
+conceptuales</li>
+<li><strong>Valores Duplicados</strong>: 30% probabilidad de opciones
+con mismo valor numérico pero justificaciones diferentes</li>
+<li><strong>Selección Estratégica</strong>: 1 distractor duplicado + 2
+diferentes cuando aplique</li>
+<li><strong>Verificación Textual</strong>: Las 4 opciones siempre
+textualmente únicas</li>
+<li><strong>Justificaciones Alternativas</strong>: Múltiples
+explicaciones incorrectas para valores correctos</li>
+<li><strong>Pedagogía</strong>: Distractores que reflejan errores
+comunes de estudiantes</li>
+</ul>
 <hr />
 </div>
 </div>
@@ -687,6 +725,73 @@ formatos</li>
 <li>Contrastar con múltiples fuentes oficiales</li>
 <li>Validar coherencia con ejemplos funcionales existentes</li>
 </ul>
+<hr />
+</div>
+</div>
+<div id="implementación-del-sistema-avanzado-de-distractores" class="section level2">
+<h2>🎯 <strong>IMPLEMENTACIÓN DEL SISTEMA AVANZADO DE
+DISTRACTORES</strong></h2>
+<div id="código-base-para-distractores-con-valores-duplicados" class="section level3">
+<h3>📝 <strong>Código Base para Distractores con Valores
+Duplicados:</strong></h3>
+<pre class="r"><code># DECISIÓN ALEATORIA: ¿Permitir valores duplicados con justificaciones diferentes?
+# 30% de probabilidad de generar opciones con mismo valor pero diferentes justificaciones
+permitir_valores_duplicados &lt;- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+
+# SISTEMA AMPLIADO DE DISTRACTORES (8+ opciones para mayor diversidad)
+afirmaciones_incorrectas &lt;- c()
+
+# DISTRACTOR 1: Confundir concepto principal con media
+media_calculada &lt;- round(mean(datos_ordenados), 1)
+afirmaciones_incorrectas &lt;- c(afirmaciones_incorrectas,
+  paste0(&quot;La [concepto] es &quot;, media_calculada, &quot; porque se calcula sumando todos los valores y dividiendo por el número de datos&quot;))
+
+# DISTRACTOR 2-8: [Implementar según el concepto matemático específico]
+# - Confusión con moda, extremos, posiciones incorrectas
+# - Errores de cálculo comunes
+# - Aplicación incorrecta de fórmulas
+# - Interpretaciones erróneas del procedimiento
+
+# JUSTIFICACIONES ALTERNATIVAS para el valor correcto (pero con razonamiento incorrecto)
+justificaciones_incorrectas_valor_correcto &lt;- c(
+  paste0(&quot;La [concepto] es &quot;, valor_correcto, &quot; porque representa el punto medio del rango&quot;),
+  paste0(&quot;La [concepto] es &quot;, valor_correcto, &quot; porque es el valor que mejor representa el conjunto&quot;),
+  paste0(&quot;La [concepto] es &quot;, valor_correcto, &quot; porque se obtiene al aplicar la fórmula básica&quot;)
+)
+
+# LÓGICA DE SELECCIÓN ADAPTADA
+if(permitir_valores_duplicados) {
+  # Incluir 1 justificación incorrecta para el valor correcto + 2 valores diferentes
+  # [Implementar lógica de selección estratégica]
+} else {
+  # Modo tradicional: todos los valores diferentes
+  # [Implementar selección estándar]
+}
+
+# VERIFICACIÓN FINAL: Asegurar 4 opciones textualmente únicas
+expect_equal(length(unique(todas_afirmaciones)), 4,
+            info = &quot;Las 4 opciones deben ser textualmente diferentes&quot;)</code></pre>
+</div>
+<div id="pruebas-específicas-para-distractores" class="section level3">
+<h3>🧪 <strong>Pruebas Específicas para Distractores:</strong></h3>
+<pre class="r"><code>test_that(&quot;Prueba del sistema avanzado de distractores&quot;, {
+  for(i in 1:50) {
+    datos_test &lt;- generar_datos()
+
+    # Verificar opciones textualmente únicas
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = &quot;Las 4 opciones deben ser textualmente diferentes&quot;)
+
+    # Verificar diversidad de distractores
+    valores_numericos &lt;- extraer_valores_numericos(datos_test$opciones)
+    expect_true(length(unique(valores_numericos)) &gt;= 2,
+               info = &quot;Debe haber al menos 2 valores numéricos diferentes&quot;)
+
+    # Verificar respuesta correcta presente
+    expect_true(datos_test$afirmacion_correcta %in% datos_test$opciones,
+               info = &quot;La respuesta correcta debe estar presente&quot;)
+  }
+})</code></pre>
 <hr />
 </div>
 </div>
@@ -744,6 +849,21 @@ probada</li>
 desarrollado</li>
 <li>Validar que el ejercicio cumple estándares oficiales
 actualizados</li>
+</ul>
+</div>
+<div id="sistema-de-distractores-avanzado" class="section level3">
+<h3>🎯 <strong>Sistema de Distractores Avanzado:</strong></h3>
+<ul>
+<li><strong>IMPLEMENTAR SIEMPRE</strong> el sistema de valores
+duplicados con justificaciones diferentes</li>
+<li>Generar mínimo 8 tipos de distractores para máxima diversidad
+pedagógica</li>
+<li>Verificar que los distractores reflejen errores conceptuales reales
+de estudiantes</li>
+<li>Asegurar que las justificaciones alternativas sean matemáticamente
+plausibles pero incorrectas</li>
+<li>Probar múltiples generaciones para confirmar variedad en
+combinaciones de opciones</li>
 </ul>
 </div>
 </div>
