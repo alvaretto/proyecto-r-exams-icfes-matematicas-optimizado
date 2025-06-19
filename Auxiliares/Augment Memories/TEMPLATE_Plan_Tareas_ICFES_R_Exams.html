@@ -835,9 +835,35 @@ oficiales</li>
 <li><strong>SIEMPRE</strong> consultar ejemplos funcionales ANTES de
 cualquier generación, corrección u optimización</li>
 <li>Seguir patrones técnicos probados en
-<code>/Auxiliares/Ejemplos_Funcionales.md/</code></li>
+<code>/Auxiliares/Ejemplos-Funcionales-Rmd/</code></li>
 <li>Aplicar configuraciones exitosas de chunks, librerías y
 sintaxis</li>
+</ul>
+</div>
+<div id="restricción-crítica---caracteres-especiales" class="section level3">
+<h3>⚠️ <strong>RESTRICCIÓN CRÍTICA - CARACTERES
+ESPECIALES:</strong></h3>
+<ul>
+<li><strong>NO USAR CARACTERES ESPECIALES UNICODE</strong> en ninguna
+parte del código R-exams</li>
+<li><strong>USAR ÚNICAMENTE</strong>:
+<ul>
+<li>Expresiones LaTeX para símbolos matemáticos: <code>$\alpha$</code>,
+<code>$\beta$</code>, <code>$\pi$</code>, <code>$\sum$</code>,
+<code>$\int$</code>, etc.</li>
+<li>Sintaxis TikZ para diagramas y figuras geométricas</li>
+<li>Caracteres ASCII estándar para texto</li>
+</ul></li>
+<li><strong>EVITAR COMPLETAMENTE</strong>:
+<ul>
+<li>Símbolos Unicode: α, β, π, ∑, ∫, ≤, ≥, ≠, etc.</li>
+<li>Caracteres especiales directos en el texto</li>
+<li>Emojis o símbolos decorativos</li>
+</ul></li>
+<li><strong>EJEMPLO CORRECTO</strong>:
+<code>La función $f(x) = \pi x^2$ tiene derivada $f&#39;(x) = 2\pi x$</code></li>
+<li><strong>EJEMPLO INCORRECTO</strong>:
+<code>La función f(x) = π x² tiene derivada f&#39;(x) = 2π x</code></li>
 </ul>
 </div>
 <div id="calidad-final" class="section level3">
@@ -849,6 +875,8 @@ probada</li>
 desarrollado</li>
 <li>Validar que el ejercicio cumple estándares oficiales
 actualizados</li>
+<li><strong>VERIFICAR</strong> que no hay caracteres Unicode en todo el
+documento</li>
 </ul>
 </div>
 <div id="sistema-de-distractores-avanzado" class="section level3">
