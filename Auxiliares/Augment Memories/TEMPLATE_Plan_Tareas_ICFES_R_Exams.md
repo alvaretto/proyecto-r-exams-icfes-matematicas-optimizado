@@ -185,6 +185,7 @@
   - **🌐 Si es error conceptual**: Investigar información oficial ICFES actualizada
   - Aplicar correcciones basadas en patrones exitosos
   - Verificar sintaxis Python/matplotlib con ejemplos
+  - **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 
 - [ ] **✅ 6.3 Compilación Final**
   - Verificar compilación HTML: `rmarkdown::render(archivo, 'html_document')`
@@ -365,6 +366,7 @@ rmarkdown::render('archivo.Rmd', 'html_document')
 - **SIEMPRE** consultar ejemplos funcionales ANTES de cualquier generación, corrección u optimización
 - Seguir patrones técnicos probados en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 - Aplicar configuraciones exitosas de chunks, librerías y sintaxis
+- **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 
 ### ⚠️ **RESTRICCIÓN CRÍTICA - CARACTERES ESPECIALES:**
 - **NO USAR CARACTERES ESPECIALES UNICODE** en ninguna parte del código R-exams
