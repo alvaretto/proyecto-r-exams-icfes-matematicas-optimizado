@@ -363,13 +363,27 @@ rmarkdown::render('archivo.Rmd', 'html_document')
 
 ### 🛠️ **Desarrollo Técnico:**
 - **SIEMPRE** consultar ejemplos funcionales ANTES de cualquier generación, corrección u optimización
-- Seguir patrones técnicos probados en `/Auxiliares/Ejemplos_Funcionales.md/`
+- Seguir patrones técnicos probados en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 - Aplicar configuraciones exitosas de chunks, librerías y sintaxis
+
+### ⚠️ **RESTRICCIÓN CRÍTICA - CARACTERES ESPECIALES:**
+- **NO USAR CARACTERES ESPECIALES UNICODE** en ninguna parte del código R-exams
+- **USAR ÚNICAMENTE**:
+  - Expresiones LaTeX para símbolos matemáticos: `$\alpha$`, `$\beta$`, `$\pi$`, `$\sum$`, `$\int$`, etc.
+  - Sintaxis TikZ para diagramas y figuras geométricas
+  - Caracteres ASCII estándar para texto
+- **EVITAR COMPLETAMENTE**:
+  - Símbolos Unicode: α, β, π, ∑, ∫, ≤, ≥, ≠, etc.
+  - Caracteres especiales directos en el texto
+  - Emojis o símbolos decorativos
+- **EJEMPLO CORRECTO**: `La función $f(x) = \pi x^2$ tiene derivada $f'(x) = 2\pi x$`
+- **EJEMPLO INCORRECTO**: `La función f(x) = π x² tiene derivada f'(x) = 2π x`
 
 ### 🎯 **Calidad Final:**
 - Combinar investigación teórica oficial con implementación técnica probada
 - Asegurar alineación perfecta entre competencia ICFES y ejercicio desarrollado
 - Validar que el ejercicio cumple estándares oficiales actualizados
+- **VERIFICAR** que no hay caracteres Unicode en todo el documento
 
 ### 🎯 **Sistema de Distractores Avanzado:**
 - **IMPLEMENTAR SIEMPRE** el sistema de valores duplicados con justificaciones diferentes

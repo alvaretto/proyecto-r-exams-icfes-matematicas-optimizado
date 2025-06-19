@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "conversion_unidades_area_geometrico_formulacion_n2_v1.Rmd"
+archivo_examen <- "conversion_unidades_area_formulacion_ejecucion_n2_v1.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
