@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "juegos_deportivos_aleatorio_interpretacion_representacion_n2_opcA_v1.Rmd"
+archivo_examen <- "juegos_deportivos_aleatorio_interpretacion_representacion_n2_opcB_v1.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)

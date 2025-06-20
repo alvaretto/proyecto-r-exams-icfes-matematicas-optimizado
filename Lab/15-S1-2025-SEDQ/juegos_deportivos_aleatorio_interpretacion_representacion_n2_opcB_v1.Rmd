@@ -87,7 +87,7 @@ generar_datos <- function() {
   contexto_sel <- sample(contextos_deportivos, 1)[[1]]
   
   # Generar 5 años consecutivos aleatorios (entre 2010-2023)
-  año_inicial <- sample(2010:2019, 1)
+  año_inicial <- sample(1998:2008, 1)
   años <- seq(año_inicial, año_inicial + 16, by = 4)[1:5]  # Cada 4 años como eventos deportivos reales
   
   # Generar datos realistas para cada año
