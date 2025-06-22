@@ -1,0 +1,62 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Pregunta 14
+
+-------------------
+
+```{r grafica, warning=FALSE, echo = FALSE, results = "hide", fig.width=7.8, fig.height=8.45, out.width="56%"}
+library(ggplot2)
+
+# Definición de las figuras originales
+P <- data.frame(x = c(0, 8, 8, 0), y = c(0, 0, 8, 8)) # Cuadrado P (8x8)
+S <- data.frame(x = c(8, 8, 14), y = c(0, 8, 0)) # Triángulo S
+R <- data.frame(x = c(8, 14, 14, 8), y = c(-6, -6, 0, 0)) # Cuadrado R
+
+# Definición del símbolo de ángulo recto
+right_angle <- data.frame(
+x = c(8, 8.5, 8.5, 8),
+y = c(0, 0, 0.5, 0.5)
+)
+
+ggplot() +
+# Figuras geométricas originales
+geom_polygon(data = P, aes(x, y), fill = NA, color = "black", linewidth = 1.3) + # Aumentado grosor de línea
+geom_polygon(data = S, aes(x, y), fill = NA, color = "black", linewidth = 1.3) +
+geom_polygon(data = R, aes(x, y), fill = NA, color = "black", linewidth = 1.3) +
+# Símbolo de ángulo recto
+geom_polygon(data = right_angle, aes(x, y), fill = NA, color = "black", linewidth = 0.65) +
+
+# Etiquetas centradas con tamaño aumentado
+annotate("text", x = 4, y = 4, label = "P", size = 10.4, vjust = 0.3) +
+annotate("text", x = 11, y = -3, label = "R", size = 10.4, vjust = 0.3) +
+annotate("text", x = 9.8, y = 2.5, label = "S", size = 10.4, hjust = 0.3) +
+
+# Medidas alineadas con tamaño aumentado
+annotate("text", x = 4, y = -0.7, label = "8 m", size = 6.5, fontface = "bold") +
+annotate("text", x = 11, y = -6.5, label = "6 m", size = 6.5, fontface = "bold") +
+
+# Ajustes de visualización
+coord_fixed(xlim = c(-1, 15), ylim = c(-7, 9), ratio = 1) +
+theme_void() +
+theme(plot.margin = margin(26, 26, 26, 26)) # Aumentado el margen
+```
+
+-------------------
+
+### Análisis
+
+
+
+------------------------
+
+### Análisis de la Pregunta 2023-Matematicas-11-1-14, según SABER 11 ICFES
+
