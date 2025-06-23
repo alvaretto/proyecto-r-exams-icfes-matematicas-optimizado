@@ -1,0 +1,360 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+  html_document: default
+  word_document: default
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: algebra_calculo
+    tipo: generico
+  contexto: laboral
+  eje_axial: eje3
+  componente: numerico_variacional
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos para competencia FORMULACIÓN Y EJECUCIÓN
+generar_datos <- function() {
+  # Nombres aleatorios para los socios (diversidad de género)
+  nombres_masculinos <- c("Mario", "Carlos", "Luis", "Pedro", "Juan", "Diego", "Andrés", "Miguel", "José", "Roberto", "Fernando", "Alejandro")
+  nombres_femeninos <- c("Carolina", "Lucía", "María", "Ana", "Patricia", "Laura", "Carmen", "Rosa", "Elena", "Isabel", "Sofía", "Valentina")
+  
+  # Seleccionar 3 nombres (al menos uno de cada género)
+  nombre1 <- sample(nombres_masculinos, 1)
+  nombre2 <- sample(nombres_femeninos, 1)
+  nombre3 <- sample(c(nombres_masculinos, nombres_femeninos), 1)
+  
+  # Asegurar que los 3 nombres sean diferentes
+  while(nombre3 == nombre1 || nombre3 == nombre2) {
+    nombre3 <- sample(c(nombres_masculinos, nombres_femeninos), 1)
+  }
+  
+  nombres <- c(nombre1, nombre2, nombre3)
+  
+  # Generar cantidades de acciones que sumen un número fácil de manejar
+  # Usar múltiplos que faciliten los cálculos - ampliado para mayor diversidad
+  total_acciones_opciones <- c(15, 18, 20, 21, 24, 25, 28, 30, 32, 35, 36, 40, 42, 45, 48, 50, 54, 56, 60, 63, 64, 70, 72, 75, 80, 84, 90, 96, 100)
+  total_acciones <- sample(total_acciones_opciones, 1)
+  
+  # Generar distribución de acciones más diversa
+  # Asegurar que cada socio tenga al menos 1 acción
+  min_acciones <- 1
+  acciones_restantes <- total_acciones - (3 * min_acciones)
+  
+  # Método mejorado para distribución más aleatoria
+  if(acciones_restantes > 0) {
+    # Generar dos cortes aleatorios en el rango
+    cortes <- sort(sample(0:acciones_restantes, 2, replace = TRUE))
+    acciones1 <- min_acciones + cortes[1]
+    acciones2 <- min_acciones + (cortes[2] - cortes[1])
+    acciones3 <- min_acciones + (acciones_restantes - cortes[2])
+  } else {
+    acciones1 <- min_acciones
+    acciones2 <- min_acciones  
+    acciones3 <- min_acciones
+  }
+  
+  # Verificar y ajustar si es necesario
+  if(acciones1 + acciones2 + acciones3 != total_acciones) {
+    acciones3 <- total_acciones - acciones1 - acciones2
+  }
+  
+  acciones <- c(acciones1, acciones2, acciones3)
+  
+  # Generar ganancias totales (en millones) - ampliado para mayor diversidad
+  ganancias_opciones <- c(50, 60, 75, 80, 90, 100, 120, 125, 140, 150, 160, 175, 180, 200, 210, 225, 240, 250, 270, 280, 300, 320, 350, 360, 375, 400, 420, 450, 480, 500, 525, 540, 560, 600, 625, 640, 675, 700, 720, 750, 800, 840, 900, 960, 1000)
+  ganancias_total <- sample(ganancias_opciones, 1)
+  
+  # Calcular la ganancia correcta para el primer socio
+  ganancia_correcta <- (acciones[1] / total_acciones) * ganancias_total
+  
+  # Generar procedimientos aleatorios con mayor diversidad
+  # Variaciones del procedimiento correcto
+  procedimientos_correctos <- list(
+    list(
+      texto = paste0("Dividir las ganancias en ", total_acciones, " partes y, luego, multiplicar ese valor por ", acciones[1]),
+      calculo = ganancia_correcta
+    ),
+    list(
+      texto = paste0("Calcular ", acciones[1], "/", total_acciones, " de las ganancias totales"),
+      calculo = ganancia_correcta
+    ),
+    list(
+      texto = paste0("Multiplicar las ganancias por ", acciones[1], " y dividir por ", total_acciones),
+      calculo = ganancia_correcta
+    )
+  )
+  
+  # Variaciones de procedimientos incorrectos
+  multiplicadores_error <- c(10, 100, 1000)
+  divisores_error <- c(10, 100, 1000)
+  mult_error <- sample(multiplicadores_error, 1)
+  div_error <- sample(divisores_error, 1)
+  
+  procedimientos_incorrectos <- list(
+    list(
+      texto = paste0("Multiplicar las ganancias por ", acciones[1], " y, luego, dividir ese resultado en ", total_acciones * mult_error),
+      calculo = (ganancias_total * acciones[1]) / (total_acciones * mult_error)
+    ),
+    list(
+      texto = paste0("Dividir las ganancias por ", acciones[1], " y, luego, multiplicar por ", total_acciones),
+      calculo = (ganancias_total / acciones[1]) * total_acciones
+    ),
+    list(
+      texto = paste0("Multiplicar las ganancias por ", total_acciones, " y, luego, dividir por ", acciones[1] * div_error),
+      calculo = (ganancias_total * total_acciones) / (acciones[1] * div_error)
+    ),
+    list(
+      texto = paste0("Dividir ", acciones[1], " por ", total_acciones, " y multiplicar por ", mult_error),
+      calculo = (acciones[1] / total_acciones) * mult_error
+    ),
+    list(
+      texto = paste0("Sumar ", acciones[1], " más ", total_acciones, " y dividir las ganancias por ese resultado"),
+      calculo = ganancias_total / (acciones[1] + total_acciones)
+    )
+  )
+  
+  # Seleccionar procedimientos
+  proc_correcto <- sample(procedimientos_correctos, 1)[[1]]
+  proc_incorrecto <- sample(procedimientos_incorrectos, 1)[[1]]
+  
+  # Decidir el orden de presentación
+  orden <- sample(c(TRUE, FALSE), 1)
+  if(orden) {
+    procedimiento1 <- proc_correcto
+    procedimiento2 <- proc_incorrecto
+    respuesta_correcta <- "Solo el procedimiento 1 es correcto"
+  } else {
+    procedimiento1 <- proc_incorrecto
+    procedimiento2 <- proc_correcto
+    respuesta_correcta <- "Solo el procedimiento 2 es correcto"
+  }
+  
+  return(list(
+    nombres = nombres,
+    acciones = acciones,
+    total_acciones = total_acciones,
+    ganancias_total = ganancias_total,
+    ganancia_correcta = ganancia_correcta,
+    procedimiento1 = procedimiento1,
+    procedimiento2 = procedimiento2,
+    respuesta_correcta = respuesta_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+nombres <- datos$nombres
+acciones <- datos$acciones
+total_acciones <- datos$total_acciones
+ganancias_total <- datos$ganancias_total
+ganancia_correcta <- datos$ganancia_correcta
+procedimiento1 <- datos$procedimiento1
+procedimiento2 <- datos$procedimiento2
+respuesta_correcta <- datos$respuesta_correcta
+
+# Generar opciones de respuesta
+opciones_texto <- c(
+  "Ambos procedimientos son correctos",
+  "Solo el procedimiento 1 es correcto", 
+  "Solo el procedimiento 2 es correcto",
+  "Ninguno de los procedimientos es correcto"
+)
+
+# Crear vector de opciones mezcladas
+opciones_mezcladas <- sample(opciones_texto)
+
+# Identificar la posición de la respuesta correcta
+indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
+
+# Crear el vector de solución para r-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+
+# Aleatorización de colores para gráficos
+colores <- sample(c("#4285F4", "#EA4335", "#FBBC05", "#34A853", "#9C27B0", "#FF9800"), 3)
+```
+
+```{r generar_graficos_r, echo=FALSE, results="hide"}
+# Crear gráfico simple usando R base
+png("distribucion_acciones.png", width = 800, height = 400, res = 150)
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+
+# Gráfico de barras
+barplot(acciones, names.arg = nombres, col = colores,
+        main = "Distribución de Acciones por Socio",
+        xlab = "Socios", ylab = "Número de Acciones",
+        cex.main = 1.2, cex.lab = 1.1)
+
+# Agregar valores en las barras
+text(seq_along(acciones), acciones + max(acciones)*0.05,
+     labels = acciones, pos = 3, cex = 1.1, font = 2)
+
+# Gráfico circular
+pie(acciones, labels = paste(nombres, "\n", round(acciones/total_acciones*100, 1), "%"),
+    col = colores, main = "Proporción de Acciones", cex.main = 1.2)
+
+dev.off()
+```
+
+Question
+========
+
+`r nombres[1]`, `r nombres[2]` y `r nombres[3]` son los únicos dueños de una empresa. `r nombres[1]` tiene `r acciones[1]` acciones; `r nombres[2]`, `r acciones[2]`; y `r nombres[3]`, `r acciones[3]`. El año pasado, las ganancias fueron de $`r format(ganancias_total * 1000000, big.mark=".", decimal.mark=",")` y ellos quieren repartirlas proporcionalmente, de modo que, a quien más tenga acciones, le correspondan más ganancias. Para saber qué parte del dinero le correspondió a `r nombres[1]`, este plantea dos procedimientos:
+
+**Procedimiento 1.** `r procedimiento1$texto`.
+
+**Procedimiento 2.** `r procedimiento2$texto`.
+
+```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
+# Detectar si se está generando para Moodle u otros formatos
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Incluir la imagen generada por R
+if (es_moodle) {
+  # Tamaño para Moodle
+  cat("![](distribucion_acciones.png){width=80%}")
+} else {
+  # Tamaño para PDF/Word
+  cat("![](distribucion_acciones.png){width=90%}")
+}
+```
+
+¿Cuál o cuáles de los procedimientos es o son correctos?
+
+Answerlist
+----------
+- `r opciones_mezcladas[1]`
+- `r opciones_mezcladas[2]`
+- `r opciones_mezcladas[3]`
+- `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para resolver este problema de reparto proporcional, debemos analizar cada procedimiento y verificar si calcula correctamente la parte que le corresponde a `r nombres[1]`.
+
+### Datos del problema:
+
+- `r nombres[1]`: `r acciones[1]` acciones
+- `r nombres[2]`: `r acciones[2]` acciones  
+- `r nombres[3]`: `r acciones[3]` acciones
+- **Total de acciones**: `r total_acciones` acciones
+- **Ganancias totales**: $`r format(ganancias_total * 1000000, big.mark=".", decimal.mark=",")`
+
+### Método correcto para el reparto proporcional:
+
+El reparto debe ser proporcional al número de acciones que posee cada socio. La fórmula correcta es:
+
+**Ganancia de cada socio = (Número de acciones del socio ÷ Total de acciones) × Ganancias totales**
+
+Para `r nombres[1]`:
+
+Ganancia = (`r acciones[1]` ÷ `r total_acciones`) × $`r format(ganancias_total * 1000000, big.mark=".", decimal.mark=",")`
+
+Esto es equivalente a:
+
+1. Dividir las ganancias totales entre el número total de acciones para obtener el valor por acción
+2. Multiplicar ese valor por el número de acciones de `r nombres[1]`
+
+**Valor por acción** = $`r format(ganancias_total * 1000000, big.mark=".", decimal.mark=",")` ÷ `r total_acciones` = $`r format((ganancias_total * 1000000) / total_acciones, big.mark=".", decimal.mark=",")`
+
+**Ganancia de `r nombres[1]`** = $`r format((ganancias_total * 1000000) / total_acciones, big.mark=".", decimal.mark=",")` × `r acciones[1]` = $`r format(ganancia_correcta * 1000000, big.mark=".", decimal.mark=",")`
+
+### Análisis de los procedimientos:
+
+**Procedimiento 1:** 
+
+`r procedimiento1$texto`
+
+- Resultado: $`r format(procedimiento1$calculo * 1000000, big.mark=".", decimal.mark=",")`
+- `r if(abs(procedimiento1$calculo - ganancia_correcta) < 0.01) "CORRECTO" else "INCORRECTO"`
+
+**Procedimiento 2:** 
+
+`r procedimiento2$texto`  
+
+- Resultado: $`r format(procedimiento2$calculo * 1000000, big.mark=".", decimal.mark=",")`
+- `r if(abs(procedimiento2$calculo - ganancia_correcta) < 0.01) "CORRECTO" else "INCORRECTO"`
+
+### Verificación:
+
+Comprobemos que el reparto es proporcional:
+
+- `r nombres[1]` (`r acciones[1]` acciones): $`r format(ganancia_correcta * 1000000, big.mark=".", decimal.mark=",")` = `r round((acciones[1]/total_acciones)*100, 1)`% del total
+- `r nombres[2]` (`r acciones[2]` acciones): $`r format(((acciones[2]/total_acciones) * ganancias_total) * 1000000, big.mark=".", decimal.mark=",")` = `r round((acciones[2]/total_acciones)*100, 1)`% del total  
+- `r nombres[3]` (`r acciones[3]` acciones): $`r format(((acciones[3]/total_acciones) * ganancias_total) * 1000000, big.mark=".", decimal.mark=",")` = `r round((acciones[3]/total_acciones)*100, 1)`% del total
+
+**Total verificado**: $`r format(ganancias_total * 1000000, big.mark=".", decimal.mark=",")`
+
+Por lo tanto, **`r respuesta_correcta`**.
+
+Answerlist
+----------
+- `r if(opciones_mezcladas[1] == respuesta_correcta) "Verdadero" else "Falso"`
+- `r if(opciones_mezcladas[2] == respuesta_correcta) "Verdadero" else "Falso"`
+- `r if(opciones_mezcladas[3] == respuesta_correcta) "Verdadero" else "Falso"`
+- `r if(opciones_mezcladas[4] == respuesta_correcta) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: proporcionalidad_empresarial_formulacion_ejecucion
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: TRUE
+exsection: Álgebra y Cálculo|Proporcionalidad|Reparto proporcional
