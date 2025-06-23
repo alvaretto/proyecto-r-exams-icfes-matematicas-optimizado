@@ -232,21 +232,26 @@ colores <- sample(c("#4285F4", "#EA4335", "#FBBC05", "#34A853", "#9C27B0", "#FF9
 ```{r generar_graficos_r, echo=FALSE, results="hide"}
 # Crear gráficos separados en filas diferentes para mejor visibilidad
 png("distribucion_acciones.png", width = 800, height = 800, res = 150)
-par(mfrow = c(2, 1), mar = c(4, 4, 3, 1))
+par(mfrow = c(2, 1), mar = c(4, 4, 4, 1))
 
-# Gráfico de barras
+# Gráfico de barras con espacio generoso para etiquetas
 barplot(acciones, names.arg = nombres, col = colores,
         main = "Distribución de Acciones por Socio",
         xlab = "Socios", ylab = "Número de Acciones",
-        cex.main = 1.2, cex.lab = 1.1)
+        cex.main = 1.2, cex.lab = 1.1,
+        ylim = c(0, max(acciones) * 1.4))
 
-# Agregar valores en las barras
-text(seq_along(acciones), acciones + max(acciones)*0.05,
+# Agregar valores en las barras con espacio suficiente
+text(seq_along(acciones), acciones + max(acciones)*0.1,
      labels = acciones, pos = 3, cex = 1.1, font = 2)
 
-# Gráfico circular
-pie(acciones, labels = paste(nombres, "\n", round(acciones/total_acciones*100, 1), "%"),
-    col = colores, main = "Proporción de Acciones", cex.main = 1.2)
+# Gráfico circular más grande con etiquetas mejoradas
+par(mar = c(3, 3, 3, 3))
+# Crear etiquetas más compactas para evitar solapamiento
+etiquetas_pie <- paste0(nombres, "\n", round(acciones/total_acciones*100, 1), "%")
+pie(acciones, labels = etiquetas_pie,
+    col = colores, main = "Proporción de Acciones", cex.main = 1.2,
+    radius = 0.8, cex = 0.9)
 
 dev.off()
 ```
