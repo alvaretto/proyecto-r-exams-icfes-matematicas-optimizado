@@ -230,9 +230,9 @@ colores <- sample(c("#4285F4", "#EA4335", "#FBBC05", "#34A853", "#9C27B0", "#FF9
 ```
 
 ```{r generar_graficos_r, echo=FALSE, results="hide"}
-# Crear gráfico simple usando R base
-png("distribucion_acciones.png", width = 800, height = 400, res = 150)
-par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+# Crear gráficos separados en filas diferentes para mejor visibilidad
+png("distribucion_acciones.png", width = 800, height = 800, res = 150)
+par(mfrow = c(2, 1), mar = c(4, 4, 3, 1))
 
 # Gráfico de barras
 barplot(acciones, names.arg = nombres, col = colores,
