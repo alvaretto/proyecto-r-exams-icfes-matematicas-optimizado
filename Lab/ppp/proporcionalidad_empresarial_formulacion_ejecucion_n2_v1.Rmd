@@ -260,6 +260,18 @@ Question
 
 **Procedimiento 2.** `r procedimiento2$texto`.
 
+¿Cuál o cuáles de los procedimientos es o son correctos?
+
+Answerlist
+----------
+- `r opciones_mezcladas[1]`
+- `r opciones_mezcladas[2]`
+- `r opciones_mezcladas[3]`
+- `r opciones_mezcladas[4]`
+
+Solution
+========
+
 ```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
 # Detectar si se está generando para Moodle u otros formatos
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
@@ -274,18 +286,6 @@ if (es_moodle) {
   cat("![](distribucion_acciones.png){width=90%}")
 }
 ```
-
-¿Cuál o cuáles de los procedimientos es o son correctos?
-
-Answerlist
-----------
-- `r opciones_mezcladas[1]`
-- `r opciones_mezcladas[2]`
-- `r opciones_mezcladas[3]`
-- `r opciones_mezcladas[4]`
-
-Solution
-========
 
 Para resolver este problema de reparto proporcional, debemos analizar cada procedimiento y verificar si calcula correctamente la parte que le corresponde a `r nombres[1]`.
 
