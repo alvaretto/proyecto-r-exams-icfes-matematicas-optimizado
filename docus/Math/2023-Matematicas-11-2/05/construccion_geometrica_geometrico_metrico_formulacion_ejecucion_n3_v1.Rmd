@@ -1,0 +1,539 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 3
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+library(stringr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos para competencia FORMULACIÓN Y EJECUCIÓN
+generar_datos <- function() {
+  # Configuraciones de puntos aleatorios para mayor diversidad
+  configuraciones_puntos <- list(
+    list(p1 = "P", p2 = "Q", p3 = "R", p4 = "S"),
+    list(p1 = "A", p2 = "B", p3 = "C", p4 = "D"),
+    list(p1 = "M", p2 = "N", p3 = "O", p4 = "T"),
+    list(p1 = "X", p2 = "Y", p3 = "Z", p4 = "W"),
+    list(p1 = "E", p2 = "F", p3 = "G", p4 = "H"),
+    list(p1 = "U", p2 = "V", p3 = "K", p4 = "L")
+  )
+  
+  puntos <- sample(configuraciones_puntos, 1)[[1]]
+  
+  # Factores objetivo posibles (potencias de 2 para construcción geométrica)
+  factores_objetivo <- c(8, 16, 32, 64)
+  factor_objetivo <- sample(factores_objetivo, 1)
+  
+  # Factores mostrados en el ejemplo (siempre menor que el objetivo)
+  factores_ejemplo <- c(2, 4, 8)
+  factor_ejemplo <- sample(factores_ejemplo[factores_ejemplo < factor_objetivo], 1)
+  
+  # Calcular número de círculos necesarios
+  circulos_objetivo <- log2(factor_objetivo)
+  circulos_ejemplo <- log2(factor_ejemplo)
+  
+  # Contextos de presentación aleatorios
+  contextos_presentacion <- c(
+    "procedimiento geométrico",
+    "construcción con regla y compás",
+    "método de duplicación de segmentos",
+    "técnica de construcción geométrica",
+    "proceso de ampliación de segmentos"
+  )
+  
+  contexto_presentacion <- sample(contextos_presentacion, 1)
+  
+  # Colores aleatorios para el diagrama
+  colores_disponibles <- c("blue", "red", "green", "purple", "orange", "brown")
+  color_principal <- sample(colores_disponibles, 1)
+  color_secundario <- sample(setdiff(colores_disponibles, color_principal), 1)
+  
+  # Generar afirmaciones para evaluar (COMPETENCIA FORMULACIÓN Y EJECUCIÓN)
+  afirmaciones <- list()
+  
+  # Afirmación CORRECTA
+  afirmacion_correcta <- paste0(circulos_objetivo, " círculos, porque cada círculo duplica la longitud del segmento anterior")
+  
+  # SISTEMA AMPLIADO DE DISTRACTORES
+  afirmaciones_incorrectas <- c()
+  
+  # DECISIÓN ALEATORIA: ¿Permitir valores duplicados con justificaciones diferentes?
+  permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+  
+  # DISTRACTOR 1: Confundir con el número de pasos del procedimiento
+  num_pasos <- 4
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(num_pasos, " círculos, porque el procedimiento tiene ", num_pasos, " pasos"))
+  
+  # DISTRACTOR 2: Error aritmético - sumar en lugar de usar potencias
+  suma_incorrecta <- factor_objetivo / 2
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(suma_incorrecta, " círculos, porque se necesita la mitad del factor de ampliación"))
+  
+  # DISTRACTOR 3: Usar el factor objetivo directamente
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(factor_objetivo, " círculos, porque se necesita un círculo por cada unidad de ampliación"))
+  
+  # DISTRACTOR 4: Error en el cálculo de potencias (uno menos)
+  if(circulos_objetivo > 1) {
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0(circulos_objetivo - 1, " círculos, porque el primer segmento ya está dado"))
+  }
+  
+  # DISTRACTOR 5: Error en el cálculo de potencias (uno más)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(circulos_objetivo + 1, " círculos, porque se necesita un círculo adicional para completar"))
+  
+  # DISTRACTOR 6: Confundir con el doble del número correcto
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(circulos_objetivo * 2, " círculos, porque se necesita duplicar el proceso"))
+  
+  # DISTRACTOR 7: Usar el número de círculos del ejemplo mostrado
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(circulos_ejemplo, " círculos, porque es el mismo procedimiento mostrado en el ejemplo"))
+  
+  # DISTRACTOR 8: Error conceptual - división incorrecta
+  division_incorrecta <- ceiling(factor_objetivo / 4)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(division_incorrecta, " círculos, porque cada círculo amplifica por 4"))
+  
+  # JUSTIFICACIONES ALTERNATIVAS para el valor correcto (pero con razonamiento incorrecto)
+  justificaciones_incorrectas_correctas <- c(
+    paste0(circulos_objetivo, " círculos, porque es el resultado de dividir ", factor_objetivo, " entre 4"),
+    paste0(circulos_objetivo, " círculos, porque se necesita un círculo por cada duplicación del ejemplo"),
+    paste0(circulos_objetivo, " círculos, porque es el número de pasos necesarios en el procedimiento"),
+    paste0(circulos_objetivo, " círculos, porque se calcula como la raíz cuadrada de ", factor_objetivo)
+  )
+  
+  # Agregar justificaciones incorrectas para el valor correcto
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas, justificaciones_incorrectas_correctas)
+  
+  # Eliminar duplicados y valores NA
+  afirmaciones_incorrectas <- unique(afirmaciones_incorrectas[!is.na(afirmaciones_incorrectas)])
+  
+  # SISTEMA ROBUSTO PARA GARANTIZAR 4 OPCIONES DIFERENTES
+  max_intentos <- 50
+  intento <- 1
+  
+  while(length(afirmaciones_incorrectas) < 10 && intento <= max_intentos) {
+    # Generar distractores adicionales
+    valores_adicionales <- sample(setdiff(1:20, circulos_objetivo), 3)
+    justificaciones_adicionales <- c(
+      "porque es el resultado del cálculo geométrico",
+      "porque se obtiene aplicando la fórmula de construcción",
+      "porque es el número óptimo de círculos necesarios",
+      "porque se calcula dividiendo el factor por 2",
+      "porque es el resultado de la progresión geométrica"
+    )
+    
+    for(i in 1:length(valores_adicionales)) {
+      nueva_afirmacion <- paste0(valores_adicionales[i], " círculos, ",
+                                sample(justificaciones_adicionales, 1))
+      if(!nueva_afirmacion %in% afirmaciones_incorrectas &&
+         nueva_afirmacion != afirmacion_correcta) {
+        afirmaciones_incorrectas <- c(afirmaciones_incorrectas, nueva_afirmacion)
+      }
+    }
+    
+    afirmaciones_incorrectas <- unique(afirmaciones_incorrectas)
+    intento <- intento + 1
+  }
+  
+  # Seleccionar 3 distractores con lógica adaptada
+  afirmaciones_incorrectas_sel <- c()
+  
+  if(permitir_valores_duplicados) {
+    # MODO: Permitir valores duplicados con justificaciones diferentes
+    extraer_valor <- function(afirmacion) {
+      patron <- "([0-9]+) círculos"
+      match <- regmatches(afirmacion, regexpr(patron, afirmacion))
+      if(length(match) > 0) {
+        return(as.numeric(gsub(" círculos", "", match)))
+      }
+      return(NA)
+    }
+    
+    valor_correcto <- extraer_valor(afirmacion_correcta)
+    
+    # Buscar afirmaciones con el mismo valor
+    afirmaciones_mismo_valor <- c()
+    afirmaciones_otros_valores <- c()
+    
+    for(afirmacion in afirmaciones_incorrectas) {
+      if(!is.na(extraer_valor(afirmacion)) && extraer_valor(afirmacion) == valor_correcto) {
+        afirmaciones_mismo_valor <- c(afirmaciones_mismo_valor, afirmacion)
+      } else {
+        afirmaciones_otros_valores <- c(afirmaciones_otros_valores, afirmacion)
+      }
+    }
+    
+    # Incluir 1 afirmación con el mismo valor (si existe) y 2 con valores diferentes
+    if(length(afirmaciones_mismo_valor) > 0) {
+      afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel,
+                                       sample(afirmaciones_mismo_valor, 1))
+    }
+    
+    # Completar con afirmaciones de valores diferentes
+    while(length(afirmaciones_incorrectas_sel) < 3 && length(afirmaciones_otros_valores) > 0) {
+      candidato <- sample(afirmaciones_otros_valores, 1)
+      if(!candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+      afirmaciones_otros_valores <- setdiff(afirmaciones_otros_valores, candidato)
+    }
+    
+  } else {
+    # MODO TRADICIONAL: Todas las afirmaciones diferentes
+    while(length(afirmaciones_incorrectas_sel) < 3 && length(afirmaciones_incorrectas) > 0) {
+      candidato <- sample(afirmaciones_incorrectas, 1)
+      if(candidato != afirmacion_correcta && !candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+    }
+  }
+  
+  # Crear las 4 opciones finales
+  todas_afirmaciones <- c(afirmacion_correcta, afirmaciones_incorrectas_sel)
+  
+  # Verificación y fallback si es necesario
+  if(length(unique(todas_afirmaciones)) != 4) {
+    todas_afirmaciones <- c(
+      afirmacion_correcta,
+      paste0(num_pasos, " círculos, porque el procedimiento tiene ", num_pasos, " pasos"),
+      paste0(factor_objetivo, " círculos, porque se necesita un círculo por cada unidad de ampliación"),
+      paste0(circulos_objetivo + 1, " círculos, porque se necesita un círculo adicional")
+    )
+  }
+  
+  # Mezclar las opciones
+  opciones_mezcladas <- sample(todas_afirmaciones)
+  
+  # Identificar posición correcta
+  pos_correcta <- which(opciones_mezcladas == afirmacion_correcta)
+  
+  return(list(
+    puntos = puntos,
+    factor_objetivo = factor_objetivo,
+    factor_ejemplo = factor_ejemplo,
+    circulos_objetivo = circulos_objetivo,
+    circulos_ejemplo = circulos_ejemplo,
+    contexto_presentacion = contexto_presentacion,
+    color_principal = color_principal,
+    color_secundario = color_secundario,
+    afirmacion_correcta = afirmacion_correcta,
+    opciones = opciones_mezcladas,
+    pos_correcta = pos_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+puntos <- datos$puntos
+factor_objetivo <- datos$factor_objetivo
+factor_ejemplo <- datos$factor_ejemplo
+circulos_objetivo <- datos$circulos_objetivo
+circulos_ejemplo <- datos$circulos_ejemplo
+contexto_presentacion <- datos$contexto_presentacion
+color_principal <- datos$color_principal
+color_secundario <- datos$color_secundario
+afirmacion_correcta <- datos$afirmacion_correcta
+opciones <- datos$opciones
+pos_correcta <- datos$pos_correcta
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba de diversidad de versiones para competencia FORMULACIÓN Y EJECUCIÓN
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:300) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 250,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 250."))
+})
+
+test_that("Prueba de coherencia matemática", {
+  for(i in 1:20) {
+    datos_test <- generar_datos()
+
+    # Verificar que el número de círculos es correcto
+    expect_equal(datos_test$circulos_objetivo, log2(datos_test$factor_objetivo),
+                info = "El número de círculos debe ser log2 del factor objetivo")
+
+    # Verificar que hay 4 opciones únicas
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = "Debe haber exactamente 4 opciones diferentes")
+
+    # Verificar que la respuesta correcta está presente
+    expect_true(datos_test$afirmacion_correcta %in% datos_test$opciones,
+               info = "La respuesta correcta debe estar en las opciones")
+  }
+})
+
+test_that("Prueba del sistema avanzado de distractores", {
+  for(i in 1:50) {
+    datos_test <- generar_datos()
+
+    # Verificar opciones textualmente únicas
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = "Las 4 opciones deben ser textualmente diferentes")
+
+    # Verificar que la respuesta correcta está presente
+    expect_true(datos_test$afirmacion_correcta %in% datos_test$opciones,
+               info = "La respuesta correcta debe estar presente")
+  }
+})
+```
+
+```{r generar_diagrama_python, echo=FALSE, results="hide"}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Mapeo de colores
+colores_map <- list(
+  "blue" = "#0066CC",
+  "red" = "#CC0000",
+  "green" = "#00AA00",
+  "purple" = "#8800CC",
+  "orange" = "#FF6600",
+  "brown" = "#996633"
+)
+
+color_principal_hex <- colores_map[[color_principal]]
+color_secundario_hex <- colores_map[[color_secundario]]
+
+# Código Python para generar el diagrama
+codigo_python_diagrama <- sprintf("
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+
+# Configuración de colores
+color_principal = '%s'
+color_secundario = '%s'
+
+# Crear figura
+fig, ax = plt.subplots(figsize=(12, 8))
+
+# Coordenadas de los puntos (espaciados uniformemente)
+puntos_x = [0, 2, 4, 6]
+puntos_y = [0, 0, 0, 0]
+puntos_nombres = ['%s', '%s', '%s', '%s']
+
+# Línea horizontal principal (extendida)
+ax.plot([-0.5, 7], [0, 0], 'k-', linewidth=2, color='gray')
+
+# Puntos principales
+for i, (x, y, nombre) in enumerate(zip(puntos_x, puntos_y, puntos_nombres)):
+    ax.plot(x, y, 'o', markersize=8, color=color_principal)
+    # Etiquetas de puntos
+    ax.text(x, y-0.3, nombre, ha='center', va='top', fontsize=14, fontweight='bold')
+
+# Primer círculo: centro en Q (x=2), radio = 2
+circle1 = patches.Circle((2, 0), 2, linewidth=2, edgecolor=color_secundario,
+                        facecolor='none', linestyle='--', alpha=0.8)
+ax.add_patch(circle1)
+
+# Segundo círculo: centro en R (x=4), radio = 2
+circle2 = patches.Circle((4, 0), 2, linewidth=2, edgecolor=color_secundario,
+                        facecolor='none', linestyle='--', alpha=0.8)
+ax.add_patch(circle2)
+
+# Segmento grueso de P a S
+ax.plot([0, 6], [0, 0], linewidth=6, color=color_principal, alpha=0.7)
+
+# Etiquetas de distancia d
+for i in range(3):
+    x_start = i * 2
+    x_end = (i + 1) * 2
+    y_pos = 0.4
+
+    # Líneas de medida
+    ax.plot([x_start, x_end], [y_pos, y_pos], 'k-', linewidth=1)
+    ax.plot([x_start, x_start], [y_pos-0.1, y_pos+0.1], 'k-', linewidth=1)
+    ax.plot([x_end, x_end], [y_pos-0.1, y_pos+0.1], 'k-', linewidth=1)
+
+    # Etiqueta d
+    ax.text((x_start + x_end)/2, y_pos+0.2, 'd', ha='center', va='bottom', fontsize=12)
+
+# Etiqueta del segmento completo
+ax.annotate('', xy=(6, -0.8), xytext=(0, -0.8),
+            arrowprops=dict(arrowstyle='<->', color=color_principal, lw=3))
+ax.text(3, -1.1, 'Segmento %d veces mayor', ha='center', va='top',
+        fontsize=12, fontweight='bold', color=color_principal)
+
+# Etiquetas de los pasos (como en la imagen original)
+pasos_texto = [
+    'Paso 1: Prolongar\\nla línea',
+    'Paso 2: Círculo\\ncentro %s',
+    'Paso 3: Círculo\\ncentro %s',
+    'Paso 4: Segmento\\n%s%s'
+]
+
+pasos_x = [0.5, 2.5, 4.5, 6.5]
+for i, (x_pos, texto) in enumerate(zip(pasos_x, pasos_texto)):
+    ax.text(x_pos, 2.8, texto, ha='center', va='bottom', fontsize=10,
+            fontweight='bold', bbox=dict(boxstyle='round,pad=0.3', facecolor='lightblue', alpha=0.7))
+
+# Configuración de ejes
+ax.set_xlim(-1, 8)
+ax.set_ylim(-2, 4)
+ax.set_aspect('equal')
+ax.axis('off')
+
+# Título
+ax.text(3, 3.5, 'Construcción Geométrica de Segmentos', ha='center', va='center',
+        fontsize=16, fontweight='bold')
+
+plt.tight_layout()
+plt.savefig('construccion_geometrica_python.png', dpi=150, bbox_inches='tight',
+            facecolor='white', edgecolor='none')
+plt.close()
+",
+color_principal_hex, color_secundario_hex,
+puntos$p1, puntos$p2, puntos$p3, puntos$p4,
+factor_ejemplo,
+puntos$p2, puntos$p3, puntos$p1, puntos$p4)
+
+# Ejecutar el código Python
+py_run_string(codigo_python_diagrama)
+```
+
+Question
+========
+
+En geometría, existe un `r contexto_presentacion` que permite construir segmentos de longitudes específicas usando únicamente regla y compás.
+
+Dado un segmento $`r puntos$p1``r puntos$p2`$, se puede construir un nuevo segmento que tenga `r factor_ejemplo` veces la longitud de $`r puntos$p1``r puntos$p2`$. Para esto, se debe realizar el procedimiento que se muestra en la figura:
+
+![Construcción geométrica de segmentos](construccion_geometrica_python.png)
+
+**Paso 1.** Prolongar la línea que contiene el segmento $`r puntos$p1``r puntos$p2`$.
+
+**Paso 2.** Trazar un círculo con centro en $`r puntos$p2`$ que pase por el punto $`r puntos$p1`$ e identificar el punto $`r puntos$p3`$, donde se cortan nuevamente la línea y el círculo.
+
+**Paso 3.** Trazar un nuevo círculo con centro en $`r puntos$p3`$ que pase por el punto $`r puntos$p1`$ e identificar el punto $`r puntos$p4`$, donde se cortan nuevamente la línea y el círculo.
+
+**Paso 4.** Crear el segmento $`r puntos$p1``r puntos$p4`$ uniendo el punto $`r puntos$p1`$ y el punto $`r puntos$p4`$.
+
+Si se quiere hacer un proceso similar para construir un segmento `r factor_objetivo` veces más grande que el segmento inicial, ¿cuál es la cantidad mínima de círculos que se deben usar?
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+Para resolver este problema, es necesario entender el patrón de la construcción geométrica mostrada.
+
+**Análisis del procedimiento:**
+
+En el ejemplo mostrado:
+- El segmento inicial $`r puntos$p1``r puntos$p2`$ tiene longitud $d$
+- Cada círculo trazado tiene radio igual a la longitud del segmento original ($d$)
+- Cada círculo "duplica" la longitud del segmento construido hasta ese momento
+
+**Patrón de crecimiento:**
+- Segmento inicial: $`r puntos$p1``r puntos$p2`$ = $d$
+- Después del primer círculo: $`r puntos$p1``r puntos$p3`$ = $2d$
+- Después del segundo círculo: $`r puntos$p1``r puntos$p4`$ = $4d$
+
+Por lo tanto, cada círculo duplica la longitud del segmento anterior.
+
+**Generalización:**
+Para obtener un segmento $n$ veces más largo que el original, donde $n$ es una potencia de 2, se necesitan $\log_2(n)$ círculos.
+
+**Aplicación al problema:**
+Para construir un segmento `r factor_objetivo` veces más grande:
+- `r factor_objetivo` = $2^{`r circulos_objetivo`}$
+- Por lo tanto, se necesitan `r circulos_objetivo` círculos
+
+**Verificación:**
+- 1 círculo: $2^1 = 2$ veces el segmento original
+- 2 círculos: $2^2 = 4$ veces el segmento original
+- 3 círculos: $2^3 = 8$ veces el segmento original
+- `r circulos_objetivo` círculos: $2^{`r circulos_objetivo`} = `r factor_objetivo`$ veces el segmento original
+
+Answerlist
+----------
+- `r if(opciones[1] == afirmacion_correcta) "Verdadero" else "Falso"`. `r if(opciones[1] == afirmacion_correcta) paste("Esta es la respuesta correcta. Se necesitan", circulos_objetivo, "círculos porque cada círculo duplica la longitud y", factor_objetivo, "= 2^", circulos_objetivo, ".") else paste("Incorrecto.", opciones[1])`
+- `r if(opciones[2] == afirmacion_correcta) "Verdadero" else "Falso"`. `r if(opciones[2] == afirmacion_correcta) paste("Esta es la respuesta correcta. Se necesitan", circulos_objetivo, "círculos porque cada círculo duplica la longitud y", factor_objetivo, "= 2^", circulos_objetivo, ".") else paste("Incorrecto.", opciones[2])`
+- `r if(opciones[3] == afirmacion_correcta) "Verdadero" else "Falso"`. `r if(opciones[3] == afirmacion_correcta) paste("Esta es la respuesta correcta. Se necesitan", circulos_objetivo, "círculos porque cada círculo duplica la longitud y", factor_objetivo, "= 2^", circulos_objetivo, ".") else paste("Incorrecto.", opciones[3])`
+- `r if(opciones[4] == afirmacion_correcta) "Verdadero" else "Falso"`. `r if(opciones[4] == afirmacion_correcta) paste("Esta es la respuesta correcta. Se necesitan", circulos_objetivo, "círculos porque cada círculo duplica la longitud y", factor_objetivo, "= 2^", circulos_objetivo, ".") else paste("Incorrecto.", opciones[4])`
+
+Meta-information
+================
+exname: Construcción geométrica de segmentos con regla y compás
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[pos_correcta]`
+exshuffle: TRUE
+exsection: Geometría/Construcciones geométricas
