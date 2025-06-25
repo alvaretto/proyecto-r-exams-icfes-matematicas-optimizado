@@ -60,7 +60,7 @@ knitr::knit_engines$set(python = function(options) {
 use_python(Sys.which("python"), required = TRUE)
 
 # Semilla aleatoria para diversidad de versiones
-set.seed(sample(1:100000, 1))
+#set.seed(sample(1:100000, 1))
 ```
 
 ```{r data_generation, echo=FALSE, results="hide"}
@@ -217,10 +217,34 @@ wedges, texts, autotexts = plt.pie(porcentajes, labels=materiales, autopct='%1.0
 # Configurar título
 plt.title('Composición de Materiales del Empaque', fontsize=16, weight='bold', pad=20)
 
-# Mejorar apariencia
+# Agregar rectángulos negros como fondo de las etiquetas de porcentaje
+ax = plt.gca()
+for autotext in autotexts:
+    # Obtener posición del texto
+    x, y = autotext.get_position()
+    
+    # Obtener el texto para calcular el tamaño del rectángulo
+    texto = autotext.get_text()
+    
+    # Calcular dimensiones del rectángulo para abarcar completamente el texto
+    # Ajustar según el tamaño de fuente (12pt) y contenido del texto
+    ancho_rect = len(texto) * 0.045  # Ancho extra ampliado para máxima cobertura número + símbolo %
+    alto_rect = 0.12  # Más alto para mejor cobertura del texto
+    
+    # Posicionar el rectángulo exactamente detrás del texto (mismo centro)
+    rect_x = x - ancho_rect/2
+    rect_y = y - alto_rect/2
+    
+    # Agregar rectángulo negro como fondo
+    rect = plt.Rectangle((rect_x, rect_y), ancho_rect, alto_rect, 
+                        facecolor='black', alpha=0.8, zorder=1)
+    ax.add_patch(rect)
+
+# Mejorar apariencia de las etiquetas de porcentaje
 for autotext in autotexts:
     autotext.set_color('white')
     autotext.set_weight('bold')
+    autotext.set_zorder(2)  # Asegurar que el texto esté encima del rectángulo
 
 plt.tight_layout()
 plt.savefig('grafico_composicion.png', dpi=150, bbox_inches='tight')
@@ -366,22 +390,22 @@ La persona afirma que al reducir las dimensiones del empaque a `r escala_reducci
 **¿Por qué es falsa la afirmación?**
 
 ```{r analisis_escalamiento, echo=FALSE, results='asis'}
-cat("**Principio fundamental:** Los porcentajes representan proporciones relativas, no cantidades absolutas.\n\n")
+cat("**Principio fundamental:** \nLos porcentajes representan proporciones relativas, no cantidades absolutas.\n\n")
 
-cat("**Escalamiento de dimensiones:**\n")
-cat("- Factor de reducción lineal: ", factor_lineal, "\n")
+cat("**Escalamiento de dimensiones:**\n\n")
+cat("- Factor de reducción lineal: ", factor_lineal, "\n\n")
 cat("- Factor de reducción volumétrica: ", factor_lineal, "³ = ", round(factor_volumen, 4), "\n\n")
 
-cat("**Composición del empaque original:**\n")
+cat("**Composición del empaque original:**\n\n")
 for(i in 1:length(materiales)) {
-  cat("- ", materiales[i], ": ", porcentajes[i], "%\n")
+  cat("- ", materiales[i], ": ", porcentajes[i], "%\n\n")
 }
 cat("\n")
 
-cat("**Composición del empaque reducido:**\n")
+cat("**Composición del empaque reducido:**\n\n")
 cat("Los porcentajes se mantienen **exactamente iguales** porque:\n\n")
-cat("1. **Proporcionalidad:** Todos los materiales se reducen en la misma proporción\n")
-cat("2. **Conservación de ratios:** La relación entre materiales no cambia\n")
+cat("1. **Proporcionalidad:** Todos los materiales se reducen en la misma proporción\n\n")
+cat("2. **Conservación de ratios:** La relación entre materiales no cambia\n\n")
 cat("3. **Escalamiento uniforme:** Las 6 capas mantienen sus proporciones relativas\n\n")
 ```
 
