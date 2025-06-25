@@ -204,8 +204,70 @@ matplotlib.rcParams['font.size'] = 9
 materiales = ", materiales_str, "
 porcentajes = ", porcentajes_str, "
 
-# Configuración de colores aleatorios
-colores_disponibles = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
+# Sistema avanzado de paletas de colores aleatorias
+paletas_colores = [
+    # Paleta 1: Colores vibrantes modernos
+    ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'],
+    # Paleta 2: Tonos tierra naturales
+    ['#8B4513', '#CD853F', '#DEB887', '#F4A460', '#D2691E'],
+    # Paleta 3: Colores oceánicos
+    ['#006994', '#13A3C4', '#5FB3D4', '#B3E5FC', '#4FC3F7'],
+    # Paleta 4: Tonos pasteles suaves
+    ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF'],
+    # Paleta 5: Colores corporativos elegantes
+    ['#2C3E50', '#34495E', '#7F8C8D', '#95A5A6', '#BDC3C7'],
+    # Paleta 6: Tonos cálidos energéticos
+    ['#E74C3C', '#F39C12', '#F1C40F', '#E67E22', '#D35400'],
+    # Paleta 7: Colores fríos profesionales
+    ['#3498DB', '#2980B9', '#1ABC9C', '#16A085', '#27AE60'],
+    # Paleta 8: Tonos violetas y rosas
+    ['#9B59B6', '#8E44AD', '#E91E63', '#AD1457', '#C2185B'],
+    # Paleta 9: Colores retro vintage
+    ['#D4A574', '#E8B4A0', '#F2CC8F', '#81B29A', '#3D5A80'],
+    # Paleta 10: Tonos industriales
+    ['#455A64', '#607D8B', '#90A4AE', '#B0BEC5', '#CFD8DC'],
+    # Paleta 11: Colores tropicales
+    ['#FF5722', '#FF9800', '#FFC107', '#4CAF50', '#009688'],
+    # Paleta 12: Tonos minimalistas
+    ['#212121', '#424242', '#616161', '#757575', '#9E9E9E'],
+    # Paleta 13: Colores primavera
+    ['#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800'],
+    # Paleta 14: Tonos otoño
+    ['#795548', '#8D6E63', '#A1887F', '#BCAAA4', '#D7CCC8'],
+    # Paleta 15: Colores neón brillantes
+    ['#00BCD4', '#00E676', '#FFFF00', '#FF6D00', '#E91E63'],
+    # Paleta 16: Tonos mediterráneos
+    ['#1976D2', '#1565C0', '#0D47A1', '#42A5F5', '#90CAF9'],
+    # Paleta 17: Colores de gemas
+    ['#4A148C', '#6A1B9A', '#7B1FA2', '#8E24AA', '#9C27B0'],
+    # Paleta 18: Tonos metálicos
+    ['#37474F', '#455A64', '#546E7A', '#607D8B', '#78909C'],
+    # Paleta 19: Colores de bosque
+    ['#1B5E20', '#2E7D32', '#388E3C', '#43A047', '#4CAF50'],
+    # Paleta 20: Tonos sunset
+    ['#BF360C', '#D84315', '#E64A19', '#F4511E', '#FF5722'],
+    # Paleta 21: Colores candy
+    ['#E1BEE7', '#F8BBD9', '#F48FB1', '#F06292', '#EC407A'],
+    # Paleta 22: Tonos desierto
+    ['#6D4C41', '#795548', '#8D6E63', '#A1887F', '#BCAAA4'],
+    # Paleta 23: Colores aurora
+    ['#1A237E', '#283593', '#303F9F', '#3F51B5', '#5C6BC0'],
+    # Paleta 24: Tonos jade
+    ['#004D40', '#00695C', '#00796B', '#00897B', '#009688'],
+    # Paleta 25: Colores coral
+    ['#FF8A65', '#FFAB91', '#FFCCBC', '#D7CCC8', '#BCAAA4']
+]
+
+# Seleccionar una paleta aleatoria
+paleta_seleccionada = random.choice(paletas_colores)
+
+# Si necesitamos más colores que los disponibles en la paleta, mezclar con colores adicionales
+colores_extra = ['#DDA0DD', '#98D8C8', '#F7DC6F', '#FFE0B2', '#C8E6C9', '#DCEDC8', '#F3E5F5', '#E8F5E8']
+if len(materiales) > len(paleta_seleccionada):
+    colores_disponibles = paleta_seleccionada + random.sample(colores_extra, len(materiales) - len(paleta_seleccionada))
+else:
+    colores_disponibles = paleta_seleccionada
+
 colores_seleccionados = random.sample(colores_disponibles, len(materiales))
 
 # Crear gráfico circular
