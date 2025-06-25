@@ -6,10 +6,11 @@
 *Consultar ejemplos funcionales y definir estructura del ejercicio ICFES*
 
 - [ ] **🔍 1.1 Consultar Ejemplos Funcionales**
-  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos_Funcionales.md/` para patrones exitosos antes de cualquier generación/corrección
+  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para patrones exitosos antes de cualquier generación/corrección
   - Identificar configuraciones técnicas probadas
-  - Revisar sintaxis Python/matplotlib funcional
-  - Verificar estructuras de chunks exitosas
+  - **🎨 TikZ**: Consultar `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones TikZ validados
+  - **🐍 Python**: Consultar `Auxiliares/Python-Documentation/Python-ICFES-Guide.md` para patrones Python-Reticulate exitosos
+  - Verificar estructuras de chunks exitosas en archivos FUERA de Lab
   - **🌐 Complementar**: Investigar información teórica ICFES oficial si es necesario
 
 - [ ] **🎯 1.2 Identificar Competencia ICFES**
@@ -68,9 +69,19 @@
   - Establecer semilla aleatoria: `set.seed(sample(1:100000, 1))`
 
 - [ ] **🐍 2.3 Configuración Python-R**
-  - Configurar `use_python(Sys.which("python"), required = TRUE)`
-  - Establecer `knitr::knit_engines$set(python = ...)`
-  - Verificar configuración matplotlib según ejemplos funcionales
+  - **🐍 Consultar**: `Auxiliares/Python-Documentation/referencias/compatibilidad-python.md` para setup validado
+  - Configurar `use_python("/usr/bin/python3", required = TRUE)` o `use_python(Sys.which("python"), required = TRUE)`
+  - Establecer `knitr::knit_engines$set(python = ...)` según patrón exitoso
+  - Verificar configuración matplotlib: `matplotlib.rcParams['font.size'] = 9`
+  - **🐍 Usar templates**: `Auxiliares/Python-Documentation/templates-rexams/` para gráficos validados
+  - Validar transferencia R→Python: `variable_python = r.variable_r`
+
+- [ ] **🎨 2.4 Configuración TikZ (si aplica)**
+  - **🎨 Consultar**: `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para configuración validada
+  - Aplicar configuración LaTeX: `options(tikzLatex = "pdflatex")`
+  - Configurar bibliotecas TikZ validadas: básicas, calc, positioning, arrows
+  - **🎨 Usar templates**: `Auxiliares/TikZ-Documentation/templates-rexams/` para diagramas validados
+  - Verificar compatibilidad multi-formato según checklist de compatibilidad
 
 ---
 
@@ -118,13 +129,29 @@
   - Guardar con `plt.savefig()` en alta resolución
 
 - [ ] **📐 4.2 Diagramas TikZ (si aplica)**
-  - Usar `include_tikz()` con packages correctos
-  - Configurar width apropiado (ej: "8cm", "10cm")
-  - Establecer `markup = "markdown"`
-  - Incluir packages: `c("tikz", "colortbl", "xcolor")`
+  - **🎨 Consultar**: `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones exitosos validados
+  - **🎨 Usar templates**: `Auxiliares/TikZ-Documentation/templates-rexams/icfes-aligned/` para diagramas específicos
+  - **Patrones exitosos validados**:
+    - **Tablas**: `tabla-datos-template.tikz` (patrón más compatible)
+    - **Venn**: `diagrama-venn-template.tikz` (basado en DVenn_All_GenMus_01.Rmd)
+    - **Geometría**: Templates parametrizables con variables R
+  - Usar `include_tikz()` con packages validados: `c("tikz", "colortbl", "xcolor")`
+  - Configurar width apropiado según template: "6cm" para tablas, "5cm" para Venn
+  - Establecer `markup = "markdown"` según patrón exitoso
   
-- [ ] **📊 4.3 Gráficos ggplot2 (si aplica)**
-  - Implementar con `theme_minimal()`
+- [ ] **📊 4.3 Gráficos Python-matplotlib (recomendado)**
+  - **🐍 Consultar**: `Auxiliares/Python-Documentation/Python-ICFES-Guide.md` para patrones exitosos validados
+  - **🐍 Usar templates**: `Auxiliares/Python-Documentation/templates-rexams/icfes-aligned/` para gráficos específicos
+  - **Patrones exitosos validados**:
+    - **Barras**: `grafico-barras-template.py` (basado en I_1796473-Opc-A2v2.Rmd)
+    - **Circulares**: `grafico-circular-template.py` (basado en I_1796473-Opc-A2.Rmd)
+    - **Funciones**: `funciones-lineales-template.py` (basado en vuelo_acrobatico_A.Rmd)
+  - Usar transferencia R→Python validada: `variable_python = r.variable_r`
+  - Configurar chunks: `echo=FALSE, message=FALSE, results="hide"`
+  - **OBLIGATORIO**: Incluir `plt.show()` al final de cada chunk Python
+  
+- [ ] **📊 4.4 Gráficos ggplot2 (alternativo)**
+  - Implementar con `theme_minimal()` si no se usa Python
   - Usar colores aleatorios para diversidad
   - Configurar DPI 150+ para calidad
   - Incluir etiquetas claras y leyendas
@@ -180,14 +207,22 @@
     - Probar múltiples generaciones para verificar diversidad
 
 - [ ] **🔧 6.2 Corrección de Errores**
-  - **PRIMERO**: Revisar nuevamente `/Auxiliares/Ejemplos_Funcionales.md/`
+  - **PRIMERO**: Revisar nuevamente `/Auxiliares/Ejemplos-Funcionales-Rmd/`
   - Consultar `/Auxiliares/rules_full/errores_especificos/`
   - **🌐 Si es error conceptual**: Investigar información oficial ICFES actualizada
   - Aplicar correcciones basadas en patrones exitosos
-  - Verificar sintaxis Python/matplotlib con ejemplos
+  - **🐍 Errores Python**: Consultar `Auxiliares/Python-Documentation/referencias/compatibilidad-python.md` para soluciones
+  - **🎨 Errores TikZ**: Consultar `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para soluciones
   - **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 
-- [ ] **✅ 6.3 Compilación Final**
+- [ ] **🛠️ 6.3 Validación Específica TikZ/Python**
+  - **🎨 TikZ**: Ejecutar `source("Auxiliares/TikZ-Documentation/validar_tikz_compatibility.R")` si aplica
+  - **🐍 Python**: Usar herramientas de `Auxiliares/Python-Documentation/templates-rexams/multi-formato/python-rexams-system.R`
+  - Verificar compatibilidad multi-formato según checklists específicos
+  - Probar generación en PDF, HTML, y Moodle
+  - Validar que gráficos/diagramas se rendericen correctamente
+
+- [ ] **✅ 6.4 Compilación Final**
   - Verificar compilación HTML: `rmarkdown::render(archivo, 'html_document')`
   - Probar compilación PDF: `rmarkdown::render(archivo, 'pdf_document')`
   - Confirmar compilación Word: `rmarkdown::render(archivo, 'word_document')`
@@ -393,3 +428,89 @@ rmarkdown::render('archivo.Rmd', 'html_document')
 - Verificar que los distractores reflejen errores conceptuales reales de estudiantes
 - Asegurar que las justificaciones alternativas sean matemáticamente plausibles pero incorrectas
 - Probar múltiples generaciones para confirmar variedad en combinaciones de opciones
+
+---
+
+## 🌐 **BÚSQUEDA RECURSIVA DE RECURSOS TikZ Y PYTHON**
+
+### 🎯 **Enriquecimiento Continuo de Documentación**
+
+#### **🎨 BÚSQUEDA RECURSIVA TikZ**
+- [ ] **🔍 Identificar Necesidades TikZ Específicas**
+  - Analizar ejercicio actual para determinar tipo de diagrama requerido
+  - Consultar `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para gaps identificados
+  - Verificar si templates existentes cubren la necesidad
+  - **🌐 Buscar recursos web** si no existe template apropiado
+
+- [ ] **🌐 Fuentes Web TikZ Prioritarias**
+  - **TeXample.net**: http://www.texample.net/tikz/ (buscar por categoría matemática)
+  - **PGFPlots Gallery**: http://pgfplots.sourceforge.net/gallery.html (gráficos estadísticos)
+  - **GitHub**: Repositorios "tikz mathematics", "tikz education"
+  - **Overleaf**: Templates TikZ matemáticos y educativos
+
+- [ ] **🔧 Adaptación TikZ para R-exams**
+  - Simplificar código encontrado según `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md`
+  - Convertir `\pgfmathsetmacro` a variables R
+  - Usar colores estándar en lugar de personalizados
+  - Validar con `source("Auxiliares/TikZ-Documentation/validar_tikz_compatibility.R")`
+
+#### **🐍 BÚSQUEDA RECURSIVA PYTHON**
+- [ ] **🔍 Identificar Necesidades Python Específicas**
+  - Analizar ejercicio actual para determinar tipo de gráfico requerido
+  - Consultar `Auxiliares/Python-Documentation/Python-ICFES-Guide.md` para gaps identificados
+  - Verificar si templates existentes cubren la necesidad
+  - **🌐 Buscar recursos web** si no existe template apropiado
+
+- [ ] **🌐 Fuentes Web Python Prioritarias**
+  - **Matplotlib Gallery**: https://matplotlib.org/stable/gallery/ (ejemplos oficiales)
+  - **Python for Education**: Recursos educativos con matplotlib
+  - **GitHub**: Repositorios "matplotlib education", "python mathematics"
+  - **Jupyter Notebooks**: Ejemplos educativos de visualización
+
+- [ ] **🔧 Adaptación Python para R-exams**
+  - Simplificar código encontrado según `Auxiliares/Python-Documentation/referencias/compatibilidad-python.md`
+  - Usar solo matplotlib y numpy (bibliotecas validadas)
+  - Implementar transferencia R→Python: `variable_python = r.variable_r`
+  - Configurar chunks: `echo=FALSE, message=FALSE, results="hide"`
+  - **OBLIGATORIO**: Agregar `plt.show()` al final
+
+#### **📥 INTEGRACIÓN AL PROYECTO**
+- [ ] **📁 Organizar Nuevos Recursos**
+  - **TikZ**: Guardar en `Auxiliares/TikZ-Documentation/` según clasificación ICFES
+  - **Python**: Guardar en `Auxiliares/Python-Documentation/` según clasificación ICFES
+  - Documentar fuente original y adaptaciones realizadas
+  - Crear template reutilizable si el recurso es valioso
+
+- [ ] **✅ Validar Nuevos Recursos**
+  - Probar compatibilidad multi-formato (PDF, HTML, Moodle)
+  - Verificar que funciona con variables aleatorias
+  - Documentar en guías principales si es exitoso
+  - Agregar a templates disponibles para futuros ejercicios
+
+### 🎯 **Criterios de Selección para Búsqueda Recursiva**
+
+#### **✅ Recursos TikZ Prioritarios**
+- Diagramas geométricos 2D y 3D para pensamiento espacial
+- Tablas y esquemas para presentación de datos
+- Diagramas de Venn y conjuntos para pensamiento aleatorio
+- Construcciones geométricas para geometría métrica
+
+#### **✅ Recursos Python Prioritarios**
+- Gráficos estadísticos avanzados para pensamiento aleatorio
+- Funciones matemáticas para pensamiento variacional
+- Representaciones numéricas para pensamiento numérico
+- Visualizaciones geométricas 2D para pensamiento espacial
+
+#### **🔧 Criterios de Compatibilidad**
+- **TikZ**: Compatible con `include_tikz()` y bibliotecas básicas
+- **Python**: Compatible con matplotlib/numpy y transferencia R→Python
+- **R-exams**: Funciona en PDF, HTML, y Moodle sin errores
+- **ICFES**: Alineado con competencias y niveles de dificultad
+- **Escalabilidad**: Soporta múltiples variantes aleatorias
+
+### ⚡ **Implementación Inmediata**
+1. **Identificar necesidad específica** del ejercicio actual
+2. **Buscar recurso apropiado** en fuentes web prioritarias
+3. **Adaptar según guías de compatibilidad** específicas
+4. **Validar funcionamiento** en múltiples formatos
+5. **Documentar y compartir** si es exitoso para futuros ejercicios

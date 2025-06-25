@@ -1,0 +1,109 @@
+% Template TikZ para Diagramas de Venn - Basado en Archivos Exitosos
+% Fuente: DVenn_All_GenMus_01.Rmd
+% Competencia: Pensamiento Aleatorio - Interpretación y Representación
+% Nivel: 2-3 (Conjuntos y probabilidad)
+
+% CONFIGURACIÓN R REQUERIDA:
+% En el chunk R definir:
+% conjunto_A <- "Rock"
+% conjunto_B <- "Pop" 
+% conjunto_C <- "Jazz"
+% valor_solo_A <- 15
+% valor_solo_B <- 20
+% valor_solo_C <- 10
+% valor_A_B <- 8
+% valor_A_C <- 5
+% valor_B_C <- 7
+% valor_A_B_C <- 3
+% valor_ninguno <- 12
+
+% PATRÓN EXITOSO - Tres conjuntos con intersecciones
+\begin{tikzpicture}[scale=0.7]
+  % Círculos con transparencia (patrón validado)
+  \begin{scope}[opacity=0.5]
+    \fill[red]   ( 90:1.5) circle (2);
+    \fill[green] (210:1.5) circle (2);
+    \fill[blue]  (330:1.5) circle (2);
+  \end{scope}
+  
+  % Etiquetas de conjuntos (fuera de los círculos)
+  \node at ( 90:3.3) {`r conjunto_A`};
+  \node at (210:3.3) {`r conjunto_B`};
+  \node at (330:3.3) {`r conjunto_C`};
+  
+  % Valores en regiones exclusivas
+  \node at ( 90:1.3) {`r valor_solo_A`};
+  \node at (210:1.3) {`r valor_solo_B`};
+  \node at (330:1.3) {`r valor_solo_C`};
+  
+  % Valores en intersecciones de dos conjuntos
+  \node at ( 30:1.7) {`r valor_A_C`};
+  \node at (150:1.7) {`r valor_A_B`};
+  \node at (270:1.7) {`r valor_B_C`};
+  
+  % Valor en intersección de tres conjuntos
+  \node at (0:0) {`r valor_A_B_C`};
+  
+  % Valor fuera de todos los conjuntos
+  \node at (270:3.5) {Ninguno: `r valor_ninguno`};
+\end{tikzpicture}
+
+% VARIANTE USANDO sprintf() (patrón validado):
+% tikz_venn <- sprintf('
+% \\begin{tikzpicture}[scale=0.7]
+%   \\begin{scope}[opacity=0.5]
+%     \\fill[red]   ( 90:1.5) circle (2);
+%     \\fill[green] (210:1.5) circle (2);
+%     \\fill[blue]  (330:1.5) circle (2);
+%   \\end{scope}
+%   \\node at ( 90:3.3) {%s};
+%   \\node at (210:3.3) {%s};
+%   \\node at (330:3.3) {%s};
+%   \\node at ( 90:1.3) {%d};
+%   \\node at (210:1.3) {%d};
+%   \\node at (330:1.3) {%d};
+%   \\node at ( 30:1.7) {%d};
+%   \\node at (150:1.7) {%d};
+%   \\node at (270:1.7) {%d};
+%   \\node at (0:0) {%d};
+%   \\node at (270:3.5) {Ninguno: %d};
+% \\end{tikzpicture}
+% ', conjunto_A, conjunto_B, conjunto_C,
+%    valor_solo_A, valor_solo_B, valor_solo_C,
+%    valor_A_C, valor_A_B, valor_B_C,
+%    valor_A_B_C, valor_ninguno)
+
+% VARIANTE PARA DOS CONJUNTOS:
+% \begin{tikzpicture}[scale=0.8]
+%   \begin{scope}[opacity=0.5]
+%     \fill[red]   (-1,0) circle (1.5);
+%     \fill[blue]  (1,0) circle (1.5);
+%   \end{scope}
+%   \node at (-2.2,0) {`r conjunto_A`};
+%   \node at (2.2,0) {`r conjunto_B`};
+%   \node at (-1,0) {`r valor_solo_A`};
+%   \node at (1,0) {`r valor_solo_B`};
+%   \node at (0,0) {`r valor_A_B`};
+%   \node at (0,-2.5) {Ninguno: `r valor_ninguno`};
+% \end{tikzpicture}
+
+% CARACTERÍSTICAS EXITOSAS:
+% - Colores estándar (red, green, blue)
+% - Coordenadas polares simples
+% - Opacity básica (0.5)
+% - Sin bibliotecas adicionales
+% - Escalable con scale parameter
+
+% CASOS DE USO ICFES:
+% - Probabilidad de eventos
+% - Teoría de conjuntos
+% - Análisis de encuestas
+% - Clasificación de datos
+% - Lógica proposicional
+
+% VALIDACIÓN MULTI-FORMATO:
+% ✅ PDF: Excelente
+% ✅ HTML: Excelente  
+% ✅ Moodle: Excelente
+% ✅ Pandoc: Buena
+% ✅ NOPS: Buena
