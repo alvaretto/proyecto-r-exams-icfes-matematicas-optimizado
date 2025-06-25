@@ -228,7 +228,7 @@ for autotext in autotexts:
     
     # Calcular dimensiones del rectángulo para abarcar completamente el texto
     # Ajustar según el tamaño de fuente (12pt) y contenido del texto
-    ancho_rect = len(texto) * 0.045  # Ancho extra ampliado para máxima cobertura número + símbolo %
+    ancho_rect = len(texto) * 0.090  # Ancho duplicado para máxima cobertura número + símbolo %
     alto_rect = 0.12  # Más alto para mejor cobertura del texto
     
     # Posicionar el rectángulo exactamente detrás del texto (mismo centro)

@@ -506,16 +506,34 @@ wedges, texts, autotexts = plt.pie(
     textprops={'fontsize': 10, 'fontweight': 'bold', 'color': 'white'}
 )
 
-# Configuración estética de los textos de porcentaje con recuadros
+# Agregar rectángulos negros como fondo de las etiquetas de porcentaje (patrón mejorado)
+ax = plt.gca()
+for autotext in autotexts:
+    # Obtener posición del texto
+    x, y = autotext.get_position()
+    
+    # Obtener el texto para calcular el tamaño del rectángulo
+    texto = autotext.get_text()
+    
+    # Calcular dimensiones del rectángulo para abarcar completamente el texto
+    ancho_rect = len(texto) * 0.090  # Ancho duplicado para máxima cobertura
+    alto_rect = 0.12  # Alto optimizado para cobertura del texto
+    
+    # Posicionar el rectángulo exactamente detrás del texto (mismo centro)
+    rect_x = x - ancho_rect/2
+    rect_y = y - alto_rect/2
+    
+    # Agregar rectángulo negro como fondo
+    rect = plt.Rectangle((rect_x, rect_y), ancho_rect, alto_rect, 
+                        facecolor='black', alpha=0.8, zorder=1)
+    ax.add_patch(rect)
+
+# Configuración estética de los textos de porcentaje mejorada
 for autotext in autotexts:
     autotext.set_fontsize(9)  # Tamaño de fuente para porcentajes
     autotext.set_weight('bold')
-    # Crear un recuadro semitransparente para los porcentajes
-", if(estilo_grafico$estilo_porcentaje$color_fondo != "none") paste0("    bbox_props = {'boxstyle': '", estilo_grafico$estilo_porcentaje$estilo, "',
-                 'facecolor': '", estilo_grafico$estilo_porcentaje$color_fondo, "',
-                 'alpha': ", estilo_grafico$estilo_porcentaje$alpha, ",
-                 'edgecolor': 'none'}
-    autotext.set_bbox(bbox_props)"), "
+    autotext.set_color('white')  # Texto blanco sobre fondo negro
+    autotext.set_zorder(2)  # Asegurar que el texto esté encima del rectángulo
 
 # Eliminar los textos del pie (los reemplazaremos con etiquetas externas)
 for text in texts:
