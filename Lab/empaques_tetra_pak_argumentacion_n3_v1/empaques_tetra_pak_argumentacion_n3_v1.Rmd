@@ -60,7 +60,7 @@ knitr::knit_engines$set(python = function(options) {
 use_python(Sys.which("python"), required = TRUE)
 
 # Semilla aleatoria para diversidad de versiones
-set.seed(sample(1:100000, 1))
+#set.seed(sample(1:100000, 1))
 ```
 
 ```{r data_generation, echo=FALSE, results="hide"}
@@ -390,22 +390,22 @@ La persona afirma que al reducir las dimensiones del empaque a `r escala_reducci
 **¿Por qué es falsa la afirmación?**
 
 ```{r analisis_escalamiento, echo=FALSE, results='asis'}
-cat("**Principio fundamental:** Los porcentajes representan proporciones relativas, no cantidades absolutas.\n\n")
+cat("**Principio fundamental:** \nLos porcentajes representan proporciones relativas, no cantidades absolutas.\n\n")
 
-cat("**Escalamiento de dimensiones:**\n")
-cat("- Factor de reducción lineal: ", factor_lineal, "\n")
+cat("**Escalamiento de dimensiones:**\n\n")
+cat("- Factor de reducción lineal: ", factor_lineal, "\n\n")
 cat("- Factor de reducción volumétrica: ", factor_lineal, "³ = ", round(factor_volumen, 4), "\n\n")
 
-cat("**Composición del empaque original:**\n")
+cat("**Composición del empaque original:**\n\n")
 for(i in 1:length(materiales)) {
-  cat("- ", materiales[i], ": ", porcentajes[i], "%\n")
+  cat("- ", materiales[i], ": ", porcentajes[i], "%\n\n")
 }
 cat("\n")
 
-cat("**Composición del empaque reducido:**\n")
+cat("**Composición del empaque reducido:**\n\n")
 cat("Los porcentajes se mantienen **exactamente iguales** porque:\n\n")
-cat("1. **Proporcionalidad:** Todos los materiales se reducen en la misma proporción\n")
-cat("2. **Conservación de ratios:** La relación entre materiales no cambia\n")
+cat("1. **Proporcionalidad:** Todos los materiales se reducen en la misma proporción\n\n")
+cat("2. **Conservación de ratios:** La relación entre materiales no cambia\n\n")
 cat("3. **Escalamiento uniforme:** Las 6 capas mantienen sus proporciones relativas\n\n")
 ```
 
