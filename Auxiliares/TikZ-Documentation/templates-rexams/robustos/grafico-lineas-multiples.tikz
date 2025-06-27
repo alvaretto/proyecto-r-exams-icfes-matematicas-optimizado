@@ -1,0 +1,130 @@
+% =============================================================================
+% TEMPLATE TIKZ ROBUSTO: GRÁFICO DE LÍNEAS MÚLTIPLES
+% =============================================================================
+% Descripción: Template para gráficos de líneas con múltiples variables
+% Compatibilidad: PDF, HTML, Moodle (sin bibliotecas problemáticas)
+% Uso: Réplica pixel-perfect de gráficos matplotlib
+% Fecha: 2025-01-27
+% =============================================================================
+
+\begin{tikzpicture}[scale=0.8]
+  % Configuración de colores (usando colores básicos compatibles)
+  \definecolor{colorlinea1}{RGB}{31,119,180}    % Azul matplotlib
+  \definecolor{colorlinea2}{RGB}{255,127,14}    % Naranja matplotlib
+  \definecolor{colorgrid}{RGB}{176,176,176}     % Gris para grid
+  \definecolor{colortext}{RGB}{0,0,0}           % Negro para texto
+  
+  % Dimensiones del gráfico
+  \def\ancho{8}
+  \def\alto{6}
+  \def\margenx{1.2}
+  \def\margeny{1}
+  
+  % Coordenadas del área de ploteo
+  \coordinate (origen) at (\margenx,\margeny);
+  \coordinate (esquinasup) at (\margenx+\ancho,\margeny+\alto);
+  
+  % Marco del gráfico
+  \draw[thick] (origen) rectangle (esquinasup);
+  
+  % Grid (líneas de cuadrícula)
+  \foreach \x in {0,1,2,3,4} {
+    \draw[colorgrid, thin, dashed] 
+      (\margenx+\x*\ancho/4, \margeny) -- 
+      (\margenx+\x*\ancho/4, \margeny+\alto);
+  }
+  \foreach \y in {0,1,2,3,4,5} {
+    \draw[colorgrid, thin, dashed] 
+      (\margenx, \margeny+\y*\alto/5) -- 
+      (\margenx+\ancho, \margeny+\y*\alto/5);
+  }
+  
+  % Datos de ejemplo (serán reemplazados por variables R)
+  % Tiempo: 0, 2, 4, 6, 8 (normalizado a 0-4 en el gráfico)
+  % Variable 1 (combustible): valores decrecientes
+  % Variable 2 (distancia): valores crecientes
+  
+  % Coordenadas normalizadas para los puntos
+  \coordinate (p1a) at (\margenx+0*\ancho/4, \margeny+4*\alto/5);     % t=0, combustible alto
+  \coordinate (p2a) at (\margenx+1*\ancho/4, \margeny+3.2*\alto/5);   % t=2, combustible medio-alto
+  \coordinate (p3a) at (\margenx+2*\ancho/4, \margeny+2.4*\alto/5);   % t=4, combustible medio
+  \coordinate (p4a) at (\margenx+3*\ancho/4, \margeny+1.6*\alto/5);   % t=6, combustible medio-bajo
+  \coordinate (p5a) at (\margenx+4*\ancho/4, \margeny+0.8*\alto/5);   % t=8, combustible bajo
+  
+  \coordinate (p1b) at (\margenx+0*\ancho/4, \margeny+0.5*\alto/5);   % t=0, distancia baja
+  \coordinate (p2b) at (\margenx+1*\ancho/4, \margeny+1.5*\alto/5);   % t=2, distancia creciente
+  \coordinate (p3b) at (\margenx+2*\ancho/4, \margeny+2.5*\alto/5);   % t=4, distancia media
+  \coordinate (p4b) at (\margenx+3*\ancho/4, \margeny+3.5*\alto/5);   % t=6, distancia alta
+  \coordinate (p5b) at (\margenx+4*\ancho/4, \margeny+4.5*\alto/5);   % t=8, distancia muy alta
+  
+  % Línea 1 (combustible - decreciente)
+  \draw[colorlinea1, thick] (p1a) -- (p2a) -- (p3a) -- (p4a) -- (p5a);
+  
+  % Puntos de la línea 1
+  \foreach \punto in {p1a, p2a, p3a, p4a, p5a} {
+    \fill[colorlinea1] (\punto) circle (3pt);
+  }
+  
+  % Línea 2 (distancia - creciente)
+  \draw[colorlinea2, thick] (p1b) -- (p2b) -- (p3b) -- (p4b) -- (p5b);
+  
+  % Puntos de la línea 2
+  \foreach \punto in {p1b, p2b, p3b, p4b, p5b} {
+    \fill[colorlinea2] (\punto) circle (3pt);
+  }
+  
+  % Etiquetas de los ejes
+  \node[below] at (\margenx+\ancho/2, \margeny-0.3) {\textbf{Tiempo (horas)}};
+  \node[rotate=90, above] at (\margenx-0.5, \margeny+\alto/2) {\textbf{Valores}};
+  
+  % Marcas del eje X
+  \foreach \x/\label in {0/0, 1/2, 2/4, 3/6, 4/8} {
+    \draw (\margenx+\x*\ancho/4, \margeny) -- (\margenx+\x*\ancho/4, \margeny-0.1);
+    \node[below] at (\margenx+\x*\ancho/4, \margeny-0.15) {\label};
+  }
+  
+  % Marcas del eje Y (valores aproximados)
+  \foreach \y/\label in {0/0, 1/20, 2/40, 3/60, 4/80, 5/100} {
+    \draw (\margenx, \margeny+\y*\alto/5) -- (\margenx-0.1, \margeny+\y*\alto/5);
+    \node[left] at (\margenx-0.15, \margeny+\y*\alto/5) {\label};
+  }
+  
+  % Leyenda
+  \coordinate (leyenda) at (\margenx+\ancho-2.5, \margeny+\alto-0.8);
+  
+  % Fondo de la leyenda
+  \draw[fill=white, draw=black, thin] 
+    (leyenda) rectangle ++(2.3, 0.6);
+  
+  % Elementos de la leyenda
+  \draw[colorlinea1, thick] 
+    ([xshift=0.1cm, yshift=0.4cm]leyenda) -- ++(0.3, 0);
+  \fill[colorlinea1] 
+    ([xshift=0.25cm, yshift=0.4cm]leyenda) circle (2pt);
+  \node[right, font=\tiny] at 
+    ([xshift=0.4cm, yshift=0.4cm]leyenda) {Combustible disponible (litros)};
+  
+  \draw[colorlinea2, thick] 
+    ([xshift=0.1cm, yshift=0.15cm]leyenda) -- ++(0.3, 0);
+  \fill[colorlinea2] 
+    ([xshift=0.25cm, yshift=0.15cm]leyenda) circle (2pt);
+  \node[right, font=\tiny] at 
+    ([xshift=0.4cm, yshift=0.15cm]leyenda) {Distancia recorrida (kilómetros)};
+  
+\end{tikzpicture}
+
+% =============================================================================
+% NOTAS DE IMPLEMENTACIÓN
+% =============================================================================
+% 1. Este template usa solo características básicas de TikZ
+% 2. No requiere bibliotecas externas problemáticas
+% 3. Los colores están definidos con RGB para consistencia
+% 4. Las coordenadas son paramétricas para fácil modificación
+% 5. Compatible con PDF, HTML y Moodle
+% 
+% VARIABLES R PARA PERSONALIZACIÓN:
+% - Reemplazar coordenadas de puntos con datos reales
+% - Ajustar colores según necesidad
+% - Modificar etiquetas de ejes
+% - Personalizar leyenda
+% =============================================================================

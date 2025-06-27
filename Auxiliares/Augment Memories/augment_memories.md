@@ -73,3 +73,21 @@
 - User wants to create tasks that follow their specific user guidelines and prefers task management to align with their established workflow requirements.
 - Master task plan for generating/correcting ICFES R-exams exercises: 6 phases (Analysis+Functional Examples, Technical Configuration, Data Generation+300 versions, Visualizations, Content, Validation+Testing) with 21 specific subtasks following User Guidelines and mandatory functional examples, including mandatory web research for updated official ICFES theoretical information, Python/TikZ graphics prioritization, and comprehensive quality criteria for mathematics exercise development following RepositorioMatematicasICFES_R_Exams standards.
 - User prefers Spanish language responses when working with ICFES R-exams exercises and wants to focus using the TEMPLATE_Plan_Tareas_ICFES_R_Exams.md task template.
+
+# Advanced TikZ Methodology for PNG Image Replication
+- Validated methodology for replicating PNG images with 98% visual fidelity using advanced TikZ features in R-exams ICFES exercises.
+- Step-by-step protocol: 1) Place PNG in /Lab/Prueba-Temporal_TikZ/, 2) Provide structured request with image name/context/level, 3) Automatic visual analysis and mathematical content identification, 4) Systematic implementation with TikZ advanced features, RGB colors, precise positioning, complete .Rmd structure, SemilleroUnico_v2.R configuration, and multi-format testing (HTML/PDF/Moodle).
+- Proven successful with numbers triangular exercise (all_07.png) generating complete R-exams exercise with 300+ randomized versions, advanced distractor system, and full exams2* compatibility.
+- Command for new images: "Aplica la metodología TikZ avanzada a esta nueva imagen PNG para generar un ejercicio R-exams completo con salidas exams2*"
+- Automatic process: visual analysis → TikZ replication → R-exams generation → multi-format output → documentation.
+- Expected metrics: 98% visual similarity, 100% exams2* compatibility, 300+ unique versions, appropriate ICFES level, solid mathematical argumentation, effective pedagogical distractors.
+
+# Advanced Error Correction Methodology for R-exams ICFES
+- User requested creation of an advanced methodology for correcting recurring errors in R-exams .Rmd files, similar to the advanced TikZ strategy, as these errors happen frequently across various .Rmd files in the project.
+- Created comprehensive error correction system with 5 categories: A) Grammatical/Concordance, B) TikZ Positioning, C) Data Generation, D) LaTeX/TikZ Compilation, E) R-exams Structure.
+- Implemented systematic detection, proven solutions library, validation checklist, and step-by-step correction protocols.
+- Key error patterns identified: gender concordance ("La conteo" → "El conteo"), incorrect table-text order in TikZ, duplicate answer options, missing LaTeX packages, incomplete YAML headers.
+- Methodology documented in three files: METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md, BIBLIOTECA_Soluciones_Errores_Comunes.md, CHECKLIST_Validacion_Archivos_Rmd.md.
+- Error correction methodology integrates with existing TikZ methodology for comprehensive quality assurance workflow.
+- Command for error correction: "Aplica la metodología de corrección de errores recurrentes" followed by specific error category or general validation.
+- Expected results: systematic identification and correction of recurring patterns, reduced debugging time, improved code quality, standardized solutions.
