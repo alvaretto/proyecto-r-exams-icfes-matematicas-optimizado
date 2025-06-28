@@ -364,14 +364,17 @@ Solution
 Para resolver este problema, debemos calcular el volumen de cada caja y compararlos.
 
 **Cálculo del volumen de la Caja 1 (paralelepípedo):**
+
 - Volumen = largo × ancho × alto
 - Volumen_1 = `r caja1_largo` cm × `r caja1_ancho` cm × `r caja1_alto` cm = `r volumen_caja1` cm³
 
 **Cálculo del volumen de la Caja 2 (cubo):**
+
 - Volumen = lado³
 - Volumen_2 = `r caja2_lado`³ cm³ = `r volumen_caja2` cm³
 
 **Comparación:**
+
 - Caja 1: `r volumen_caja1` cm³
 - Caja 2: `r volumen_caja2` cm³
 
