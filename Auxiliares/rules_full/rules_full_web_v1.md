@@ -1,9 +1,23 @@
 # 🎯 PROMPT PARA GENERACIÓN DE EJERCICIOS ICFES MATEMÁTICAS EN R-EXAMS
 
-Eres un experto en creación de ejercicios matemáticos tipo ICFES usando R-exams. 
-Tu tarea es analizar una imagen de un escenario matemático y generar un archivo 
-.Rmd completo y avanzado que siga todas las mejores prácticas del proyecto 
+Eres un experto en creación de ejercicios matemáticos tipo ICFES usando R-exams.
+Tu tarea es analizar una imagen de un escenario matemático y generar un archivo
+.Rmd completo y avanzado que siga todas las mejores prácticas del proyecto
 RepositorioMatematicasICFES_R_Exams.
+
+## 🎨 **METODOLOGÍA TIKZ PRIORITARIA**
+
+**OBLIGATORIO**: Para cualquier gráfica (matemática o no matemática), **PRIORIZAR TikZ** sobre Python o ggplot2.
+
+### 📋 **PROTOCOLO DE PRIORIZACIÓN GRÁFICA**
+1. **🎨 PRIMERA OPCIÓN**: TikZ con `include_tikz()` - Máxima fidelidad visual
+2. **🐍 SEGUNDA OPCIÓN**: Python/matplotlib - Solo si TikZ no es viable
+3. **📊 TERCERA OPCIÓN**: ggplot2 - Última alternativa
+
+### 🔧 **CONSULTA OBLIGATORIA DE EJEMPLOS**
+- **ANTES** de generar cualquier código: Consultar `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **DURANTE** corrección de errores: Re-consultar ejemplos funcionales
+- **SIEMPRE**: Seguir patrones TikZ exitosos validados
 
 ## 📋 ESTRUCTURA OBLIGATORIA DEL ARCHIVO .RMD
 
@@ -118,10 +132,64 @@ test_that("Prueba de diversidad de versiones", {
 
 ### 6. CHUNKS DE GRÁFICOS Y VISUALIZACIONES
 
-#### Para gráficos con ggplot2:
+**🎨 PRIORIDAD 1: TIKZ (OBLIGATORIO PARA CUALQUIER GRÁFICA)**
+
+#### Para diagramas TikZ (PRIORIDAD MÁXIMA):
+```r
+```{r generar_tikz, echo=FALSE, results="asis"}
+# **OBLIGATORIO**: Consultar Auxiliares/Ejemplos-Funcionales-Rmd/ antes de implementar
+# Plantilla TikZ parametrizada con variables R
+tikz_diagram <- '
+\\begin{tikzpicture}[scale=1.2]
+  % [Código TikZ específico según el problema]
+  % Usar coordenadas exactas para fidelidad 98%+
+  % Implementar colores RGB precisos
+  % Posicionamiento matemático preciso
+\\end{tikzpicture}
+'
+
+# Renderizar con include_tikz siguiendo patrones exitosos
+include_tikz(tikz_diagram,
+             name = "diagrama_tikz",
+             markup = "markdown",
+             format = typ,
+             library = c("3d", "babel"),
+             packages = c("tikz", "xcolor", "pgfplots"),
+             width = "10cm")
+```
+
+**🐍 PRIORIDAD 2: PYTHON (Solo si TikZ no es viable)**
+
+#### Para gráficos con Python/matplotlib:
+```python
+```{python generar_graficos_python, echo=FALSE, results="hide"}
+# **SOLO usar si TikZ no es viable para el tipo de gráfica**
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Recibir datos desde R
+datos_r = r.datos_variable
+
+# Configuración de colores aleatorios
+colores_disponibles = ['blue', 'green', 'red', 'purple', 'orange', 'brown']
+color_principal = random.choice(colores_disponibles)
+
+# Crear gráfico
+fig, ax = plt.subplots(figsize=(8, 6))
+# [Implementar lógica específica del gráfico]
+
+plt.tight_layout()
+plt.savefig('grafico_python.png', dpi=150, bbox_inches='tight')
+plt.close()
+```
+
+**📊 PRIORIDAD 3: GGPLOT2 (Última alternativa)**
+
+#### Para gráficos con ggplot2 (solo si TikZ y Python no son viables):
 ```r
 ```{r generar_graficos_r, echo=FALSE, results="asis"}
-# Crear gráficos usando ggplot2
+# **ÚLTIMA ALTERNATIVA**: Solo usar si TikZ y Python no son viables
 grafico_principal <- ggplot(data = datos_grafico) +
   geom_[tipo_apropiado](...) +
   theme_minimal() +
@@ -228,11 +296,18 @@ exsection: [Sección temática]
 
 ## 🎯 CRITERIOS DE CALIDAD OBLIGATORIOS
 
+### 🎨 PRIORIZACIÓN GRÁFICA TIKZ:
+- **OBLIGATORIO**: TikZ como primera opción para cualquier gráfica
+- **Fidelidad visual**: 98%+ con imagen original usando TikZ
+- **Consulta previa**: Ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Configuración validada**: Usar patrones TikZ exitosos probados
+- **Alternativas**: Python solo si TikZ no es viable, ggplot2 como última opción
+
 ### ALEATORIZACIÓN AVANZADA:
 - Mínimo 300 versiones únicas verificadas con test
 - Parámetros numéricos variables con rangos realistas
 - Contextos alternativos (nombres, situaciones, objetos)
-- Colores aleatorios en gráficos
+- Colores aleatorios en gráficos TikZ/Python
 - Orden aleatorio de opciones
 
 ### ROBUSTEZ MATEMÁTICA:
@@ -302,7 +377,13 @@ exsection: [Sección temática]
 
 ## 🔧 CORRECCIÓN DE ERRORES OBLIGATORIA
 
+**🎨 PRIORIDAD TIKZ EN CORRECCIÓN DE ERRORES:**
+- **ANTES** de generar cualquier código: Consultar ejemplos TikZ funcionales
+- **DURANTE** corrección: Priorizar soluciones TikZ sobre Python
+- **SIEMPRE**: Aplicar metodología TikZ avanzada para gráficas
+
 **ANTES de generar cualquier código, DEBES consultar los ejemplos funcionales en:**
+- `/Auxiliares/Ejemplos-Funcionales-Rmd/` (**OBLIGATORIO para TikZ**)
 - `https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado/tree/experimentos-seguros/Auxiliares/Ejemplos_Funcionales.md`
 
 **ESTOS ARCHIVOS CONTIENEN:**
@@ -329,16 +410,47 @@ exsection: [Sección temática]
 ## 🎯 INSTRUCCIONES FINALES
 
 Analiza la imagen proporcionada y:
-1. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
-2. **PRIMERO:** Consulta los ejemplos funcionales en https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado/tree/experimentos-seguros/Auxiliares/Ejemplos-Funcionales-Rmd
-3. Identifica el concepto matemático principal
-4. Determina la competencia ICFES más apropiada
-5. Diseña un problema que evalúe esa competencia
-6. Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los ejemplos funcionales
-7. Asegúrate de que el ejercicio sea desafiante pero justo
-8. Incluye todas las validaciones y pruebas requeridas
-9. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
-10. Ante errors recurrentes **VERIFICA** consultando todos y cada uno de los 
-archivos de https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado/tree/experimentos-seguros/Auxiliares/Ejemplos-Funcionales-Rmd
+1. **🎨 PRIORIDAD TIKZ**: Aplica metodología TikZ avanzada para cualquier gráfica
+2. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
+3. **PRIMERO:** Consulta los ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/` para patrones TikZ exitosos
+4. **SEGUNDO:** Analiza imagen identificando elementos que requieren TikZ (figuras, gráficas, diagramas)
+5. Identifica el concepto matemático principal
+6. Determina la competencia ICFES más apropiada
+7. Diseña un problema que evalúe esa competencia **priorizando TikZ** para visualizaciones
+8. Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los ejemplos funcionales TikZ
+9. **IMPLEMENTA TikZ** como primera opción, Python solo si TikZ no es viable
+10. Asegúrate de que el ejercicio sea desafiante pero justo
+11. Incluye todas las validaciones y pruebas requeridas
+12. **VERIFICA** que el código siga los patrones TikZ de los ejemplos funcionales
+13. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 
 El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams.
+
+---
+
+## 📋 **TEMPLATE REORGANIZADO CON PRIORIDAD TIKZ**
+
+**Archivo de referencia**: `/Auxiliares/Augment Memories/TEMPLATE_Plan_Tareas_ICFES_R_Exams.md`
+
+### 🎯 **Nueva Estructura de 8 Fases (Reorganizada 2025-01-28)**
+
+1. **🎨 FASE 1**: Análisis de Imagen y Metodología TikZ Avanzada (**NUEVA**)
+2. **📋 FASE 2**: Planificación ICFES y Concepto Matemático
+3. **⚙️ FASE 3**: Configuración Técnica Base
+4. **🎲 FASE 4**: Generación de Datos Aleatorios
+5. **📈 FASE 5**: Visualizaciones y Gráficos (TikZ prioritario)
+6. **📝 FASE 6**: Contenido del Ejercicio
+7. **🔧 FASE 7**: Corrección de Errores Recurrentes
+8. **🔍 FASE 8**: Validación y Testing Final
+
+### 🎨 **Comando para Workflow Reorganizado**
+```
+"Aplica la metodología TikZ avanzada siguiendo el template reorganizado para generar un ejercicio R-exams completo"
+```
+
+### ✅ **Beneficios del Template Reorganizado**
+- **TikZ desde el inicio**: Análisis de imagen con enfoque TikZ en FASE 1
+- **Fidelidad visual 98%+**: Replicación precisa usando TikZ avanzado
+- **Flexibilidad de ubicación**: Imágenes en cualquier subdirectorio bajo `Lab/`
+- **Workflow optimizado**: Priorización clara TikZ → Python → ggplot2
+- **Calidad garantizada**: Basado en ejemplos funcionales validados
