@@ -91,3 +91,15 @@
 - Error correction methodology integrates with existing TikZ methodology for comprehensive quality assurance workflow.
 - Command for error correction: "Aplica la metodología de corrección de errores recurrentes" followed by specific error category or general validation.
 - Expected results: systematic identification and correction of recurring patterns, reduced debugging time, improved code quality, standardized solutions.
+
+# Template Reorganization: TikZ Priority Strategy (2025-01-28)
+- User requested reorganization of TEMPLATE_Plan_Tareas_ICFES_R_Exams.md to prioritize TikZ methodology at the beginning instead of at the end.
+- Successfully reorganized 8 phases with TikZ strategy moved to PHASE 1: "Image Analysis and Advanced TikZ Methodology" as the starting point.
+- Updated PHASE 1.1 to clarify that images can be placed anywhere under Lab/ directory, not necessarily in specific subdirectories like /Lab/Prueba-Temporal_TikZ/nueva_imagen.png.
+- Implemented TikZ prioritization: "In case of graphics (even non-mathematical ones), generate with TikZ code, prioritizing it over Python, applying the 'ADVANCED TIKZ METHODOLOGY' section."
+- Reorganized all phases: PHASE 1 (TikZ+Image Analysis), PHASE 2 (ICFES Planning), PHASE 3 (Technical Configuration), PHASE 4 (Data Generation), PHASE 5 (Visualizations with TikZ priority), PHASE 6 (Exercise Content), PHASE 7 (Error Correction), PHASE 8 (Final Validation).
+- Updated all task numbering throughout the document (2.1→3.1, 3.X→4.X, etc.) while preserving all existing content.
+- Moved "ADVANCED TIKZ METHODOLOGY" section from end of document to after the 8 main phases, eliminating duplicate content.
+- Template now starts with image analysis and TikZ methodology as the primary workflow, with Python as secondary alternative only when TikZ is not viable.
+- Command for reorganized workflow: "Aplica la metodología TikZ avanzada siguiendo el template reorganizado para generar un ejercicio R-exams completo."
+- Result: 663 lines optimized with TikZ-first approach while maintaining all original functionality and quality standards.

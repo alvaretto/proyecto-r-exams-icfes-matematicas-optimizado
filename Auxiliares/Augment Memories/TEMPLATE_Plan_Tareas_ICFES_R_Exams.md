@@ -2,31 +2,56 @@
 
 ## 📋 ESTRUCTURA COMPLETA DE TAREAS
 
-### 📋 **FASE 1: Análisis y Planificación Inicial**
-*Consultar ejemplos funcionales y definir estructura del ejercicio ICFES*
+### 🎨 **FASE 1: Análisis de Imagen y Metodología TikZ Avanzada**
+*Priorizar TikZ para cualquier gráfica, aplicando metodología avanzada desde el inicio*
 
-- [ ] **🔍 1.1 Consultar Ejemplos Funcionales**
-  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para patrones exitosos antes de cualquier generación/corrección
-  - Identificar configuraciones técnicas probadas
-  - **🎨 TikZ**: Consultar `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones TikZ validados
-  - **🐍 Python**: Consultar `Auxiliares/Python-Documentation/Python-ICFES-Guide.md` para patrones Python-Reticulate exitosos
+- [ ] **📁 1.1 Preparación del Archivo**
+  - Colocar nueva imagen en directorio de trabajo bajo `Lab/` (cualquier subdirectorio)
+  - **Ejemplo**: `/Lab/Prueba-Temporal_TikZ/nueva_imagen.png` o `/Lab/[proyecto]/imagen.png`
+  - Verificar formato PNG y calidad de imagen
+  - Crear directorio de trabajo específico si es necesario
+
+- [ ] **🔍 1.2 Análisis Visual Detallado**
+  - **OBLIGATORIO**: Analizar imagen compartida identificando:
+    - Elementos geométricos (figuras, medidas, ángulos)
+    - Elementos algebraicos (ecuaciones, gráficas, funciones)
+    - Elementos estadísticos (tablas, gráficos, datos)
+    - Colores específicos (extraer códigos RGB exactos)
+    - Posicionamiento y proporciones precisas
+    - Texto y etiquetas matemáticas
+
+- [ ] **🎨 1.3 Aplicar Metodología TikZ Avanzada**
+  - **PRIORIDAD MÁXIMA**: En caso de gráficas (matemáticas o no), generar con código TikZ
+  - **OBLIGATORIO**: Consultar `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones validados
+  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para configuraciones TikZ exitosas
+  - Replicar elementos visuales con fidelidad 98%+
+  - Implementar colores RGB exactos
+  - Posicionamiento preciso de componentes
+  - Sistema de coordenadas optimizado
+
+- [ ] **🔍 1.4 Consultar Ejemplos Funcionales**
+  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para patrones exitosos
+  - Identificar configuraciones técnicas probadas para TikZ
   - Verificar estructuras de chunks exitosas en archivos FUERA de Lab
-  - **🌐 Complementar**: Investigar información teórica ICFES oficial si es necesario
+  - **🐍 Alternativo**: Solo si TikZ no es viable, consultar `Auxiliares/Python-Documentation/Python-ICFES-Guide.md`
 
-- [ ] **🎯 1.2 Identificar Competencia ICFES**
+### 📋 **FASE 2: Planificación ICFES y Concepto Matemático**
+*Definir estructura del ejercicio ICFES basado en análisis visual*
+
+- [ ] **🎯 2.1 Identificar Competencia ICFES**
   - Determinar competencia: `interpretacion_representacion` | `formulacion_ejecucion` | `argumentacion`
   - Establecer nivel de dificultad: 1, 2, 3, o 4
   - Definir componente: `geometrico_metrico` | `numerico_variacional` | `aleatorio`
   - Seleccionar contexto: `familiar` | `laboral` | `comunitario` | `matematico`
   - **🌐 Investigar en web**: Buscar información oficial ICFES actualizada sobre competencias matemáticas
 
-- [ ] **📊 1.3 Definir Concepto Matemático**
-  - Establecer concepto principal: álgebra/geometría/estadística
+- [ ] **📊 2.2 Definir Concepto Matemático**
+  - Establecer concepto principal basado en análisis visual: álgebra/geometría/estadística
   - Determinar tipo de problema específico
   - Verificar alineación con competencia seleccionada
   - **🌐 Investigar en web**: Consultar documentación oficial sobre contenidos matemáticos ICFES actualizados
 
-- [ ] **🌐 1.4 Investigación Web Complementaria (si es necesario)**
+- [ ] **🌐 2.3 Investigación Web Complementaria (si es necesario)**
   - Buscar información oficial ICFES sobre competencia específica seleccionada
   - Consultar ejemplos oficiales de preguntas tipo
   - Verificar contextos y niveles de dificultad actualizados
@@ -35,10 +60,10 @@
 
 ---
 
-### ⚙️ **FASE 2: Configuración Técnica Base**
-*Implementar estructura técnica siguiendo ejemplos funcionales*
+### ⚙️ **FASE 3: Configuración Técnica Base**
+*Implementar estructura técnica siguiendo ejemplos funcionales con TikZ integrado*
 
-- [ ] **📄 2.1 Encabezado YAML Completo**
+- [ ] **📄 3.1 Encabezado YAML Completo con TikZ**
   ```yaml
   ---
   output:
@@ -61,14 +86,21 @@
   ---
   ```
 
-- [ ] **🔧 2.2 Chunk Setup Inicial**
+- [ ] **🔧 3.2 Chunk Setup Inicial con TikZ**
   - Configurar `Sys.setlocale()` y `options(OutDec = ".")`
-  - Establecer opciones LaTeX y TikZ
+  - **PRIORIDAD**: Establecer opciones LaTeX y TikZ desde el inicio
   - Cargar librerías esenciales: `exams`, `reticulate`, `digest`, `testthat`, `knitr`
-  - Configurar `knitr::opts_chunk$set()` con parámetros apropiados
+  - Configurar `knitr::opts_chunk$set()` con parámetros apropiados para TikZ
   - Establecer semilla aleatoria: `set.seed(sample(1:100000, 1))`
 
-- [ ] **🐍 2.3 Configuración Python-R**
+- [ ] **🎨 3.3 Configuración TikZ Prioritaria**
+  - **🎨 OBLIGATORIO**: Consultar `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para configuración validada
+  - Aplicar configuración LaTeX: `options(tikzLatex = "pdflatex")`
+  - Configurar bibliotecas TikZ validadas: básicas, calc, positioning, arrows
+  - **🎨 Usar templates**: `Auxiliares/TikZ-Documentation/templates-rexams/` para diagramas validados
+  - Verificar compatibilidad multi-formato según checklist de compatibilidad
+
+- [ ] **🐍 3.4 Configuración Python-R (Solo si TikZ no es viable)**
   - **🐍 Consultar**: `Auxiliares/Python-Documentation/referencias/compatibilidad-python.md` para setup validado
   - Configurar `use_python("/usr/bin/python3", required = TRUE)` o `use_python(Sys.which("python"), required = TRUE)`
   - Establecer `knitr::knit_engines$set(python = ...)` según patrón exitoso
@@ -76,26 +108,19 @@
   - **🐍 Usar templates**: `Auxiliares/Python-Documentation/templates-rexams/` para gráficos validados
   - Validar transferencia R→Python: `variable_python = r.variable_r`
 
-- [ ] **🎨 2.4 Configuración TikZ (si aplica)**
-  - **🎨 Consultar**: `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para configuración validada
-  - Aplicar configuración LaTeX: `options(tikzLatex = "pdflatex")`
-  - Configurar bibliotecas TikZ validadas: básicas, calc, positioning, arrows
-  - **🎨 Usar templates**: `Auxiliares/TikZ-Documentation/templates-rexams/` para diagramas validados
-  - Verificar compatibilidad multi-formato según checklist de compatibilidad
-
 ---
 
-### 🎲 **FASE 3: Generación de Datos Aleatorios**
+### 🎲 **FASE 4: Generación de Datos Aleatorios**
 *Crear función de generación con mínimo 300 versiones únicas*
 
-- [ ] **🔢 3.1 Función generar_datos()**
+- [ ] **🔢 4.1 Función generar_datos()**
   - Implementar aleatorización de contextos (mínimo 8-10 escenarios)
   - Generar parámetros numéricos variables con rangos realistas
   - Incluir aleatorización de nombres, colores, unidades
   - Asegurar coherencia matemática en todos los casos
   - Retornar lista estructurada con todos los parámetros
 
-- [ ] **✅ 3.2 Prueba de Diversidad**
+- [ ] **✅ 4.2 Prueba de Diversidad**
   ```r
   test_that("Prueba de diversidad de versiones", {
     versiones <- list()
@@ -111,7 +136,7 @@
   })
   ```
 
-- [ ] **🛡️ 3.3 Validaciones Matemáticas**
+- [ ] **🛡️ 4.3 Validaciones Matemáticas**
   - Validar rangos de valores realistas
   - Verificar coherencia entre parámetros relacionados
   - Implementar manejo de casos extremos
@@ -119,27 +144,30 @@
 
 ---
 
-### 📈 **FASE 4: Visualizaciones y Gráficos**
-*Crear gráficos usando Python/matplotlib, TikZ y ggplot2, según necesidad (Priorizar Python y TikZ)*
+### 📈 **FASE 5: Visualizaciones y Gráficos**
+*PRIORIZAR TikZ para cualquier gráfica, usar Python solo como alternativa*
 
-- [ ] **🐍 4.1 Gráficos Python/matplotlib**
-  - Usar `py_run_string()` con sintaxis corregida
-  - Configurar `matplotlib.rcParams` apropiadamente
-  - Implementar `plt.plot()` con sintaxis verificada en ejemplos
-  - Guardar con `plt.savefig()` en alta resolución
-
-- [ ] **📐 4.2 Diagramas TikZ (si aplica)**
-  - **🎨 Consultar**: `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones exitosos validados
+- [ ] **🎨 5.1 Diagramas TikZ (PRIORIDAD MÁXIMA)**
+  - **🎨 OBLIGATORIO**: Consultar `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones exitosos validados
   - **🎨 Usar templates**: `Auxiliares/TikZ-Documentation/templates-rexams/icfes-aligned/` para diagramas específicos
   - **Patrones exitosos validados**:
     - **Tablas**: `tabla-datos-template.tikz` (patrón más compatible)
     - **Venn**: `diagrama-venn-template.tikz` (basado en DVenn_All_GenMus_01.Rmd)
     - **Geometría**: Templates parametrizables con variables R
+    - **Funciones**: Gráficas matemáticas con coordenadas precisas
+    - **Estadística**: Histogramas, barras, circulares con TikZ
   - Usar `include_tikz()` con packages validados: `c("tikz", "colortbl", "xcolor")`
   - Configurar width apropiado según template: "6cm" para tablas, "5cm" para Venn
   - Establecer `markup = "markdown"` según patrón exitoso
-  
-- [ ] **📊 4.3 Gráficos Python-matplotlib (recomendado)**
+  - **Aplicar fidelidad 98%** con imagen original usando coordenadas exactas
+
+- [ ] **🐍 5.2 Gráficos Python/matplotlib (Solo si TikZ no es viable)**
+  - Usar `py_run_string()` con sintaxis corregida
+  - Configurar `matplotlib.rcParams` apropiadamente
+  - Implementar `plt.plot()` con sintaxis verificada en ejemplos
+  - Guardar con `plt.savefig()` en alta resolución
+
+- [ ] **📊 5.3 Gráficos Python-matplotlib (Alternativa secundaria)**
   - **🐍 Consultar**: `Auxiliares/Python-Documentation/Python-ICFES-Guide.md` para patrones exitosos validados
   - **🐍 Usar templates**: `Auxiliares/Python-Documentation/templates-rexams/icfes-aligned/` para gráficos específicos
   - **Patrones exitosos validados**:
@@ -149,19 +177,19 @@
   - Usar transferencia R→Python validada: `variable_python = r.variable_r`
   - Configurar chunks: `echo=FALSE, message=FALSE, results="hide"`
   - **OBLIGATORIO**: Incluir `plt.show()` al final de cada chunk Python
-  
-- [ ] **📊 4.4 Gráficos ggplot2 (alternativo)**
-  - Implementar con `theme_minimal()` si no se usa Python
+
+- [ ] **📊 5.4 Gráficos ggplot2 (Última alternativa)**
+  - Implementar con `theme_minimal()` solo si TikZ y Python no son viables
   - Usar colores aleatorios para diversidad
   - Configurar DPI 150+ para calidad
   - Incluir etiquetas claras y leyendas
 
 ---
 
-### 📝 **FASE 5: Contenido del Ejercicio**
+### 📝 **FASE 6: Contenido del Ejercicio**
 *Desarrollar Question, Solution y Meta-information*
 
-- [ ] **❓ 5.1 Sección Question**
+- [ ] **❓ 6.1 Sección Question**
   - Redactar contexto realista y relevante
   - Formular pregunta clara según competencia ICFES
   - **🎯 Crear 4 opciones con sistema avanzado de distractores:**
@@ -173,13 +201,13 @@
     - Asegurar distractores plausibles y educativos
   - Incluir gráficos/tablas si es necesario
 
-- [ ] **💡 5.2 Sección Solution**
+- [ ] **💡 6.2 Sección Solution**
   - Proporcionar explicación detallada del proceso
   - Incluir justificación matemática completa
   - Crear Answerlist con Verdadero/Falso para cada opción
   - Explicar por qué cada distractor es incorrecto
 
-- [ ] **📋 5.3 Meta-information**
+- [ ] **📋 6.3 Meta-information**
   ```
   Meta-information
   ================
@@ -192,10 +220,10 @@
 
 ---
 
-### 🔧 **FASE 6: Corrección de Errores Recurrentes**
+### 🔧 **FASE 7: Corrección de Errores Recurrentes**
 *Aplicar metodología avanzada de detección y corrección sistemática*
 
-- [ ] **🔍 6.1 Detección Automática de Errores**
+- [ ] **🔍 7.1 Detección Automática de Errores**
   - **OBLIGATORIO**: Consultar `/Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`
   - Ejecutar detección de 5 categorías de errores:
     * **A) Gramaticales/Concordancia**: Verificar "El conteo" vs "La cantidad" (no "La conteo")
@@ -205,7 +233,7 @@
     * **E) Estructura R-exams**: Revisar YAML, include_tikz, variables
   - Aplicar función `detectar_errores_comunes(archivo_rmd)`
 
-- [ ] **📚 6.2 Aplicar Soluciones Probadas**
+- [ ] **📚 7.2 Aplicar Soluciones Probadas**
   - **OBLIGATORIO**: Consultar `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
   - **OBLIGATORIO**: Re-consultar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
   - Implementar correcciones sistemáticas por categoría:
@@ -216,7 +244,7 @@
     * **E2**: Configurar include_tikz con parámetros completos
   - Aplicar soluciones validadas sin introducir nuevos errores
 
-- [ ] **✅ 6.3 Checklist de Validación Sistemática**
+- [ ] **✅ 7.3 Checklist de Validación Sistemática**
   - **OBLIGATORIO**: Ejecutar `/Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md`
   - **Pre-compilación**:
     * [ ] Verificar concordancia de género en variables dinámicas
@@ -229,7 +257,7 @@
     * [ ] Revisar gramática en resultado final
     * [ ] Validar cálculos matemáticos
 
-- [ ] **🔄 6.4 Corrección Iterativa**
+- [ ] **🔄 7.4 Corrección Iterativa**
   - Aplicar protocolo de corrección rápida (< 5 minutos) para errores comunes
   - Usar protocolo de corrección compleja (> 5 minutos) para errores múltiples
   - Documentar nuevos patrones de error encontrados
@@ -237,10 +265,10 @@
 
 ---
 
-### 🔍 **FASE 7: Validación y Testing Final**
+### 🔍 **FASE 8: Validación y Testing Final**
 *Verificar funcionamiento completo después de correcciones*
 
-- [ ] **🧪 7.1 Testing Automatizado Post-Corrección**
+- [ ] **🧪 8.1 Testing Automatizado Post-Corrección**
   - Ejecutar pruebas de diversidad de versiones
   - Verificar validaciones matemáticas
   - Comprobar coherencia de datos generados
@@ -251,8 +279,8 @@
     - Confirmar justificaciones alternativas apropiadas
     - Probar múltiples generaciones para verificar diversidad
 
-- [ ] **🔧 7.2 Validación de Correcciones Aplicadas**
-  - **VERIFICAR**: Que todas las correcciones de Fase 6 se mantienen
+- [ ] **🔧 8.2 Validación de Correcciones Aplicadas**
+  - **VERIFICAR**: Que todas las correcciones de Fase 7 se mantienen
   - Confirmar que no se introdujeron nuevos errores
   - **🌐 Si persisten errores**: Investigar información oficial ICFES actualizada
   - Re-aplicar correcciones basadas en patrones exitosos
@@ -260,19 +288,87 @@
   - **🎨 Errores TikZ**: Consultar `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para soluciones
   - **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 
-- [ ] **🛠️ 7.3 Validación Específica TikZ/Python**
+- [ ] **🛠️ 8.3 Validación Específica TikZ/Python**
   - **🎨 TikZ**: Ejecutar `source("Auxiliares/TikZ-Documentation/validar_tikz_compatibility.R")` si aplica
   - **🐍 Python**: Usar herramientas de `Auxiliares/Python-Documentation/templates-rexams/multi-formato/python-rexams-system.R`
   - Verificar compatibilidad multi-formato según checklists específicos
   - Probar generación en PDF, HTML, y Moodle
   - Validar que gráficos/diagramas se rendericen correctamente
 
-- [ ] **✅ 7.4 Compilación Final Validada**
+- [ ] **✅ 8.4 Compilación Final Validada**
   - Verificar compilación HTML: `rmarkdown::render(archivo, 'html_document')`
   - Probar compilación PDF: `rmarkdown::render(archivo, 'pdf_document')`
   - Confirmar compilación Word: `rmarkdown::render(archivo, 'word_document')`
   - Validar que todos los gráficos se generen correctamente
   - **CONFIRMAR**: Que todas las correcciones de errores recurrentes funcionan correctamente
+
+---
+
+## 🎯 **METODOLOGÍA TIKZ AVANZADA PARA NUEVAS IMÁGENES PNG**
+
+### 📋 **PROTOCOLO PASO A PASO PARA REPLICACIÓN DE IMÁGENES**
+
+#### **PASO 1: Preparación del Archivo**
+```bash
+# Colocar nueva imagen en directorio de trabajo bajo Lab/
+/Lab/[proyecto]/nueva_imagen.png
+# Ejemplo: /Lab/Prueba-Temporal_TikZ/nueva_imagen.png
+```
+
+#### **PASO 2: Análisis Visual Detallado**
+1. **Identificar elementos matemáticos** (figuras, ecuaciones, gráficas)
+2. **Extraer colores RGB** exactos de la imagen
+3. **Medir proporciones** y posicionamiento relativo
+4. **Catalogar texto** y etiquetas matemáticas
+
+#### **PASO 3: Consulta de Ejemplos Funcionales**
+1. **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+2. **Identificar patrones TikZ** similares exitosos
+3. **Extraer configuraciones** técnicas probadas
+4. **Planificación** de la estructura TikZ
+
+#### **PASO 4: Implementación Sistemática**
+
+##### **4.1 Generación del Código TikZ**
+- Aplicar metodología TikZ avanzada
+- RGB colors exactos
+- Posicionamiento preciso
+- Estilos reutilizables
+
+##### **4.2 Creación del .Rmd**
+- Estructura completa R-exams
+- Sistema de aleatorización
+- Generación de distractores
+- Meta-información ICFES
+
+##### **4.3 Configuración de Salidas**
+- Actualizar SemilleroUnico_v2.R
+- Configurar formatos exams2*
+- Verificar compatibilidad
+
+##### **4.4 Pruebas y Validación**
+- Generar HTML, PDF, Moodle
+- Verificar fidelidad visual
+- Comprobar funcionalidad
+
+### 🔧 **PLANTILLA DE ARCHIVOS GENERADOS**
+
+Para cada nueva imagen, se crearán:
+```
+📁 Lab/[proyecto]/
+├── 📄 [nombre_ejercicio]_v1.Rmd          # Ejercicio principal
+├── 📄 SemilleroUnico_v2.R                # Configuración actualizada
+├── 📁 salida/
+│   ├── 🌐 [nombre]_test.html             # Salida HTML
+│   ├── 📄 [nombre]_test.pdf              # Salida PDF
+│   └── 🎓 [nombre]_moodle.xml            # Salida Moodle
+└── 📄 REPORTE_[NOMBRE].md                # Documentación
+```
+
+### ⚡ **COMANDO RÁPIDO PARA EMPEZAR**
+
+Comando para nueva imagen:
+> **"Aplica la metodología TikZ avanzada a esta nueva imagen PNG para generar un ejercicio R-exams completo con salidas exams2*"**
 
 ---
 
@@ -561,196 +657,6 @@ rmarkdown::render('archivo.Rmd', 'html_document')
 4. **Validar funcionamiento** en múltiples formatos
 5. **Documentar y compartir** si es exitoso para futuros ejercicios
 
----
 
-## 🎯 **METODOLOGÍA TIKZ AVANZADA PARA NUEVAS IMÁGENES PNG**
 
-### 📋 **PROTOCOLO PASO A PASO PARA REPLICACIÓN DE IMÁGENES**
 
-#### **PASO 1: Preparación del Archivo**
-```bash
-# Colocar nueva imagen en directorio de trabajo
-/Lab/Prueba-Temporal_TikZ/nueva_imagen.png
-```
-
-#### **PASO 2: Solicitud Estructurada**
-Información requerida para nueva imagen:
-```
-🖼️ **IMAGEN**: [nombre_archivo.png]
-🎯 **OBJETIVO**: Replicar con TikZ avanzado + R-exams
-📚 **CONTEXTO**: [Matemáticas/Estadística/Geometría/etc.]
-📊 **NIVEL**: [ICFES Nivel 1/2/3]
-🔧 **SALIDAS**: exams2html, exams2pdf, exams2moodle
-```
-
-#### **PASO 3: Análisis Automático**
-Proceso automático de análisis:
-1. **Análisis visual** de la imagen PNG
-2. **Identificación** del contenido matemático
-3. **Clasificación** del tipo de ejercicio
-4. **Planificación** de la estructura TikZ
-
-#### **PASO 4: Implementación Sistemática**
-
-##### **4.1 Generación del Código TikZ**
-- Aplicar metodología TikZ avanzada
-- RGB colors exactos
-- Posicionamiento preciso
-- Estilos reutilizables
-
-##### **4.2 Creación del .Rmd**
-- Estructura completa R-exams
-- Sistema de aleatorización
-- Generación de distractores
-- Meta-información ICFES
-
-##### **4.3 Configuración de Salidas**
-- Actualizar SemilleroUnico_v2.R
-- Configurar formatos exams2*
-- Verificar compatibilidad
-
-##### **4.4 Pruebas y Validación**
-- Generar HTML, PDF, Moodle
-- Verificar fidelidad visual
-- Comprobar funcionalidad
-
-### 🔧 **PLANTILLA DE ARCHIVOS GENERADOS**
-
-Para cada nueva imagen, se crearán:
-```
-📁 Lab/Prueba-Temporal_TikZ/
-├── 📄 [nombre_ejercicio]_v1.Rmd          # Ejercicio principal
-├── 📄 SemilleroUnico_v2.R                # Configuración actualizada
-├── 📁 salida/
-│   ├── 🌐 [nombre]_test.html             # Salida HTML
-│   ├── 📄 [nombre]_test.pdf              # Salida PDF
-│   └── 🎓 [nombre]_moodle.xml            # Salida Moodle
-└── 📄 REPORTE_[NOMBRE].md                # Documentación
-```
-
-### ⚡ **COMANDO RÁPIDO PARA EMPEZAR**
-
-Comando para nueva imagen:
-> **"Aplica la metodología TikZ avanzada a esta nueva imagen PNG para generar un ejercicio R-exams completo con salidas exams2*"**
-
-### 🎯 **VENTAJAS DE ESTA METODOLOGÍA**
-
-#### ✅ **Eficiencia Comprobada**
-- Proceso optimizado basado en éxito previo
-- Reutilización de patrones funcionales
-- Resolución automática de problemas conocidos
-
-#### ✅ **Calidad Garantizada**
-- Fidelidad visual 98%
-- Compatibilidad total exams2*
-- Estándares ICFES cumplidos
-
-#### ✅ **Escalabilidad**
-- Aplicable a cualquier tipo de imagen matemática
-- Sistema de aleatorización robusto
-- Documentación automática
-
-### 🚀 **PROCESO AUTOMÁTICO**
-
-Al compartir nueva imagen PNG, se ejecuta automáticamente:
-1. 🔍 **Análisis** del contenido matemático
-2. 🎨 **Replicación** con TikZ avanzado
-3. 📝 **Generación** del ejercicio R-exams completo
-4. 🔧 **Producción** de todas las salidas exams2*
-5. 📊 **Documentación** del proceso y resultados
-
-### 📈 **MÉTRICAS DE ÉXITO ESPERADAS**
-
-#### **Fidelidad Visual**
-- **98% de similitud** con imagen original
-- **Replicación exacta** de elementos matemáticos
-- **Posicionamiento preciso** de componentes
-
-#### **Funcionalidad R-exams**
-- **100% compatible** con sistema exams2*
-- **300+ versiones** generables automáticamente
-- **Aleatorización completa** de contenido
-
-#### **Calidad Educativa**
-- **Nivel ICFES** apropiado
-- **Argumentación matemática** sólida
-- **Distractores pedagógicos** efectivos
-
-### 🎯 **ESTADO DE LA METODOLOGÍA**
-
-**✅ METODOLOGÍAS INTEGRADAS VALIDADAS Y OPERATIVAS**
-
-#### **🎨 Metodología TikZ Avanzada**
-- **Probada**: Exitosamente con números triangulares (all_07.png)
-- **Escalable**: Aplicable a cualquier imagen matemática
-- **Documentada**: Proceso completo registrado
-- **Optimizada**: Resolución automática de problemas comunes
-
-#### **🔧 Metodología Corrección de Errores Recurrentes**
-- **Validada**: Sistema de 5 categorías de errores identificadas
-- **Sistemática**: Detección automática + soluciones probadas
-- **Eficiente**: Corrección < 5 minutos para errores comunes
-- **Integrada**: Funciona en conjunto con metodología TikZ
-
-**Ambas metodologías están listas para uso inmediato en cualquier archivo .Rmd del proyecto ICFES.**
-
----
-
-## 🔗 **INTEGRACIÓN DE METODOLOGÍAS**
-
-### **Workflow Combinado Recomendado**
-
-#### **Para Nuevos Ejercicios con PNG:**
-1. **Aplicar Metodología TikZ** → Replicación visual 98% fidelidad
-2. **Aplicar Corrección de Errores** → Validación sistemática
-3. **Testing Final** → Verificación completa
-
-#### **Para Corrección de Ejercicios Existentes:**
-1. **Aplicar Corrección de Errores** → Eliminar errores recurrentes
-2. **Optimizar TikZ si aplica** → Mejorar visualizaciones
-3. **Validación Integrada** → Checklist completo
-
-#### **Comandos de Activación Integrados:**
-
-**🎨 Para PNG + Corrección:**
-> *"Aplica la metodología TikZ avanzada a esta imagen PNG y luego la metodología de corrección de errores recurrentes para generar un ejercicio R-exams completo"*
-
-**🔧 Para Corrección + Optimización:**
-> *"Aplica la metodología de corrección de errores recurrentes y luego optimiza con metodología TikZ avanzada"*
-
-**📋 Para Validación Completa:**
-> *"Ejecuta validación integrada usando ambas metodologías (TikZ + Corrección de Errores)"*
-
-### **📚 Archivos de Referencia Integrados**
-
-#### **Metodología TikZ:**
-- `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md`
-- `Auxiliares/Ejemplos-Funcionales-Rmd/` (OBLIGATORIO)
-
-#### **Metodología Corrección de Errores:**
-- `Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`
-- `Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
-- `Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md`
-
-#### **Documentación Integrada:**
-- `Auxiliares/rules_full/rules_full_v1.md` (Actualizado con ambas metodologías)
-- `Auxiliares/Augment Memories/augment_memories.md` (Registro de ambas metodologías)
-
-### **🎯 Métricas de Éxito Integradas**
-
-#### **✅ Calidad Visual (TikZ)**
-- 98% fidelidad visual con imagen original
-- Posicionamiento preciso de elementos
-- Colores RGB exactos
-
-#### **✅ Calidad Técnica (Corrección de Errores)**
-- 0 errores críticos de bloqueo
-- 100% opciones de respuesta únicas
-- Gramática y concordancia perfectas
-
-#### **✅ Calidad Funcional (Integrada)**
-- 100% compatibilidad exams2*
-- 300+ versiones generables
-- Compilación exitosa en todos los formatos
-
-**🚀 ESTADO: SISTEMA INTEGRADO LISTO PARA PRODUCCIÓN**
