@@ -175,7 +175,7 @@ if(n_versiones_unicas < 300) {
 # Función para generar TikZ 3D de las cajas con fidelidad 98%+
 generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) {
   tikz_code <- paste0(
-    "\\begin{tikzpicture}[scale=0.8]\n",
+    "\\begin{tikzpicture}[scale=1.0]\n",
     "% Definir colores RGB exactos\n",
     "\\definecolor{caja1_color}{RGB}{", color1, "}\n",
     "\\definecolor{caja2_color}{RGB}{", color2, "}\n",
@@ -195,7 +195,7 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
   tikz_code <- paste0(tikz_code,
     "% CAJA 1 - Paralelepípedo\n",
     "% Título Caja 1\n",
-    "\\node[font=\\huge\\bfseries] at (", largo1/2, ", ", alto1 + 2, ") {Caja 1};\n",
+    "\\node[font=\\huge\\bfseries] at (", largo1/2, ", ", alto1 + 4, ") {Caja 1};\n",
     "\n",
     "% Base frontal de Caja 1\n",
     "\\fill[caja1_color] (0,0) rectangle (", largo1, ",", alto1, ");\n",
@@ -229,8 +229,10 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
     "\\draw[linea_dim] (-0.8,", alto1, ") -- (-1.2,", alto1, ");\n",
     "\\node[dim_style, rotate=90] at (-1.8,", alto1/2, ") {", alto1, " cm};\n",
     "\n",
-    "\\draw[linea_dim] (", largo1 + ancho1/2 + 0.5, ",", ancho1/2, ") -- (", largo1 + ancho1/2 + 0.5, ",", alto1 + ancho1/2, ");\n",
-    "\\node[dim_style, rotate=90] at (", largo1 + ancho1/2 + 1, ",", (ancho1/2 + alto1 + ancho1/2)/2, ") {", ancho1, " cm};\n",
+    "\\draw[linea_dim] (", largo1, ",", alto1 + 0.5, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2 + 0.5, ");\n",
+    "\\draw[linea_dim] (", largo1, ",", alto1 + 0.3, ") -- (", largo1, ",", alto1 + 0.7, ");\n",
+    "\\draw[linea_dim] (", largo1 + ancho1/2, ",", alto1 + ancho1/2 + 0.3, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2 + 0.7, ");\n",
+    "\\node[dim_style, rotate=45] at (", largo1 + ancho1/4, ",", alto1 + ancho1/4 + 1, ") {", ancho1, " cm};\n",
     "\n"
   )
 
@@ -240,7 +242,7 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
   tikz_code <- paste0(tikz_code,
     "% CAJA 2 - Cubo\n",
     "% Título Caja 2\n",
-    "\\node[font=\\huge\\bfseries] at (", x_offset + lado2/2, ", ", lado2 + 2, ") {Caja 2};\n",
+    "\\node[font=\\huge\\bfseries] at (", x_offset + lado2/2, ", ", lado2 + 4, ") {Caja 2};\n",
     "\n",
     "% Base frontal de Caja 2\n",
     "\\fill[caja2_color] (", x_offset, ",0) rectangle (", x_offset + lado2, ",", lado2, ");\n",
@@ -274,8 +276,10 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
     "\\draw[linea_dim] (", x_offset - 0.8, ",", lado2, ") -- (", x_offset - 1.2, ",", lado2, ");\n",
     "\\node[dim_style, rotate=90] at (", x_offset - 1.8, ",", lado2/2, ") {", lado2, " cm};\n",
     "\n",
-    "\\draw[linea_dim] (", x_offset + lado2 + lado2/2 + 0.5, ",", lado2/2, ") -- (", x_offset + lado2 + lado2/2 + 0.5, ",", lado2 + lado2/2, ");\n",
-    "\\node[dim_style, rotate=90] at (", x_offset + lado2 + lado2/2 + 1, ",", (lado2/2 + lado2 + lado2/2)/2, ") {", lado2, " cm};\n",
+    "\\draw[linea_dim] (", x_offset + lado2, ",", lado2 + 0.5, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.5, ");\n",
+    "\\draw[linea_dim] (", x_offset + lado2, ",", lado2 + 0.3, ") -- (", x_offset + lado2, ",", lado2 + 0.7, ");\n",
+    "\\draw[linea_dim] (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.3, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.7, ");\n",
+    "\\node[dim_style, rotate=45] at (", x_offset + lado2 + lado2/4, ",", lado2 + lado2/4 + 1, ") {", lado2, " cm};\n",
     "\n",
     "\\end{tikzpicture}"
   )
