@@ -7,7 +7,7 @@ library(exams)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "poblaciones_paises_graficas_lineas_interpretacion_representacion_n2_v1.Rmd"
 copias <- 1
-numpreg <- 3
+numpreg <- 15
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
