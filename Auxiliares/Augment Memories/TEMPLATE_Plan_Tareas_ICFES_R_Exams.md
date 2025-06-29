@@ -2,8 +2,8 @@
 
 ## 📋 ESTRUCTURA COMPLETA DE TAREAS
 
-### 🎨 **FASE 1: Análisis de Imagen y Metodología TikZ Avanzada**
-*Priorizar TikZ para cualquier gráfica, aplicando metodología avanzada desde el inicio*
+### 🎨 **FASE 1: Análisis Automático de Imagen y Sistema Condicional TikZ**
+*Sistema inteligente de detección automática de contenido gráfico con flujos especializados*
 
 - [ ] **📁 1.1 Preparación del Archivo**
   - Colocar nueva imagen en directorio de trabajo bajo `Lab/` (cualquier subdirectorio)
@@ -11,27 +11,67 @@
   - Verificar formato PNG y calidad de imagen
   - Crear directorio de trabajo específico si es necesario
 
-- [ ] **🔍 1.2 Análisis Visual Detallado**
-  - **OBLIGATORIO**: Analizar imagen compartida identificando:
-    - Elementos geométricos (figuras, medidas, ángulos)
-    - Elementos algebraicos (ecuaciones, gráficas, funciones)
-    - Elementos estadísticos (tablas, gráficos, datos)
-    - Colores específicos (extraer códigos RGB exactos)
-    - Posicionamiento y proporciones precisas
-    - Texto y etiquetas matemáticas
+- [ ] **🤖 1.2 ANÁLISIS AUTOMÁTICO DE CONTENIDO GRÁFICO**
+  - **🔍 1.2.1 Detección Automática de Elementos Visuales**
+    - **PROCESO AUTOMÁTICO**: Analizar imagen PNG para detectar:
+      * **Gráficas**: Barras, líneas, circulares, histogramas, dispersión, boxplots
+      * **Tablas**: Numéricas, textuales, mixtas, con/sin encabezados
+      * **Diagramas**: Matemáticos, estadísticos, geométricos, probabilidad
+      * **Elementos Híbridos**: Gráfica + tabla en misma imagen
+      * **Contenido Simple**: Solo texto, formas básicas, elementos no gráficos
+    - **OUTPUT**: Clasificación binaria con justificación del análisis
 
-- [ ] **🎨 1.3 Aplicar Metodología TikZ Avanzada**
-  - **PRIORIDAD MÁXIMA**: En caso de gráficas (matemáticas o no), generar con código TikZ
-  - **OBLIGATORIO**: Consultar `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md` para patrones validados
-  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para configuraciones TikZ exitosas
-  - Replicar elementos visuales con fidelidad 98%+
-  - Implementar colores RGB exactos
-  - Posicionamiento preciso de componentes
-  - Sistema de coordenadas optimizado
+  - **⚡ 1.2.2 DECISIÓN DE FLUJO CONDICIONAL**
+    - **FLUJO A** (Sin gráficas/tablas detectadas):
+      * Ejecutar secuencia estándar FASES 1-8
+      * TikZ solo para elementos simples (texto, formas básicas)
+      * Continuar con metodología TikZ básica
+    - **FLUJO B** (Con gráficas/tablas detectadas):
+      * **ACTIVAR**: Agente-Graficador Especializado TikZ
+      * **OBJETIVO**: Replicación de alta fidelidad (98%+)
+      * **PROCESO**: Iterativo hasta validación usuario-sistema
 
-- [ ] **🔍 1.4 Consultar Ejemplos Funcionales**
+- [ ] **🎯 1.3 AGENTE-GRAFICADOR ESPECIALIZADO (Solo FLUJO B)**
+  - **🎨 1.3.1 Activación del Agente-Graficador**
+    - **FUNCIÓN EXCLUSIVA**: Replicación de alta fidelidad de elementos gráficos/tabulares
+    - **TECNOLOGÍA**: Código TikZ avanzado con características especializadas:
+      * Colores RGB exactos extraídos de imagen original
+      * Posicionamiento preciso mediante coordenadas calculadas
+      * Estilos reutilizables y escalables
+      * Configuración completa de paquetes LaTeX necesarios
+    - **BASE METODOLÓGICA**: Expandir "Metodología TikZ Avanzada" existente
+
+  - **🔄 1.3.2 Proceso Iterativo de Replicación**
+    - **OBJETIVO**: Alcanzar 98%+ fidelidad visual antes de continuar
+    - **PROCESO**:
+      1. Generar código TikZ inicial basado en tipo detectado
+      2. Renderizar y comparar con imagen original
+      3. Identificar discrepancias específicas
+      4. Ajustar parámetros (colores, coordenadas, proporciones)
+      5. Repetir hasta alcanzar criterios de fidelidad
+    - **MÉTRICAS DE FIDELIDAD**:
+      * Precisión Geométrica (25%): Proporciones, ángulos, escalas
+      * Fidelidad Cromática (25%): Colores RGB exactos, contrastes
+      * Posicionamiento (25%): Ubicación relativa de elementos
+      * Completitud (25%): Todos los elementos presentes
+
+  - **✅ 1.3.3 Validación Usuario-Sistema de Fidelidad**
+    - **COMPARACIÓN VISUAL**: Lado a lado (PNG original vs TikZ renderizado)
+    - **CHECKLIST FIDELIDAD**: Elementos críticos verificados
+    - **MÉTRICAS CUANTIFICABLES**: Coordenadas, colores, dimensiones
+    - **APROBACIÓN REQUERIDA**: Usuario confirma 98%+ fidelidad antes de continuar
+    - **CRITERIOS DE ACEPTACIÓN**: Todos los elementos principales replicados correctamente
+
+  - **🚀 1.3.4 Integración R-exams Validada**
+    - **CÓDIGO TIKZ DOCUMENTADO**: Listo para inserción en chunks específicos
+    - **COMPATIBILIDAD VERIFICADA**: include_tikz() y configuración YAML completa
+    - **VARIABLES R INTEGRADAS**: Parametrización para aleatorización
+    - **MULTI-FORMATO**: Funciona en exams2html, exams2pdf, exams2moodle
+
+- [ ] **🔍 1.4 Consultar Ejemplos Funcionales (Ambos Flujos)**
   - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para patrones exitosos
-  - Identificar configuraciones técnicas probadas para TikZ
+  - **FLUJO A**: Identificar configuraciones técnicas básicas para TikZ simple
+  - **FLUJO B**: Consultar templates avanzados para gráficas complejas
   - Verificar estructuras de chunks exitosas en archivos FUERA de Lab
   - **🐍 Alternativo**: Solo si TikZ no es viable, consultar `Auxiliares/Python-Documentation/Python-ICFES-Guide.md`
 
@@ -304,6 +344,187 @@
 
 ---
 
+## 🤖 **AGENTE-GRAFICADOR ESPECIALIZADO TikZ**
+*Sistema avanzado de replicación gráfica de alta fidelidad para contenido complejo*
+
+### 📋 **ESPECIFICACIONES TÉCNICAS DEL AGENTE-GRAFICADOR**
+
+#### **🎯 Función y Objetivo**
+- **Función Exclusiva**: Replicación de alta fidelidad (98%+) de elementos gráficos y tabulares complejos
+- **Activación**: Automática cuando se detecta contenido gráfico/tabular en FLUJO B
+- **Objetivo**: Generar código TikZ avanzado que replique visualmente la imagen original
+- **Integración**: Compatible con sistema R-exams y configuración YAML completa
+
+#### **🔧 Tecnologías y Algoritmos Especializados**
+
+##### **🎨 Extracción de Colores RGB Exactos**
+```r
+# Algoritmo de detección de colores dominantes
+extraer_colores_imagen <- function(ruta_imagen) {
+  # Implementar análisis de histograma de colores
+  # Extraer paleta RGB principal
+  # Convertir a códigos TikZ compatibles
+  colores_rgb <- c("#FF5733", "#33FF57", "#3357FF")  # Ejemplo
+  return(colores_rgb)
+}
+```
+
+##### **📐 Sistema de Medición Proporcional Automática**
+```r
+# Cálculo de coordenadas y proporciones precisas
+calcular_coordenadas_tikz <- function(elementos_detectados) {
+  # Analizar posicionamiento relativo
+  # Calcular escalas apropiadas
+  # Generar sistema de coordenadas TikZ
+  coordenadas <- list(x = c(0, 2, 4), y = c(0, 1.5, 3))
+  return(coordenadas)
+}
+```
+
+##### **🎯 Templates Especializados por Tipo de Gráfica**
+- **Gráficas de Barras**: Template con barras parametrizables y etiquetas
+- **Gráficas Circulares**: Template con sectores y leyendas automáticas
+- **Gráficas de Líneas**: Template con puntos, líneas y ejes
+- **Tablas Complejas**: Template con celdas, bordes y formato
+- **Histogramas**: Template con bins y distribuciones
+- **Diagramas de Dispersión**: Template con puntos y tendencias
+- **Boxplots**: Template con cuartiles y valores atípicos
+
+#### **⚙️ Configuración LaTeX Avanzada**
+```yaml
+# Paquetes LaTeX necesarios para Agente-Graficador
+tikz_packages_avanzados:
+  - tikz
+  - pgfplots
+  - xcolor
+  - colortbl
+  - amsmath
+  - array
+  - calc
+  - positioning
+  - decorations.markings
+```
+
+### 🔄 **PROTOCOLO DE REPLICACIÓN ITERATIVA**
+
+#### **Fase 1: Análisis y Detección**
+1. **Identificar tipo de gráfica** (barras, líneas, circular, tabla, etc.)
+2. **Extraer elementos clave** (ejes, etiquetas, datos, colores)
+3. **Seleccionar template apropiado** de biblioteca especializada
+4. **Calcular parámetros iniciales** (coordenadas, escalas, colores)
+
+#### **Fase 2: Generación Inicial**
+1. **Aplicar template seleccionado** con parámetros calculados
+2. **Generar código TikZ inicial** con variables R integradas
+3. **Renderizar primera versión** usando include_tikz()
+4. **Comparar con imagen original** visualmente
+
+#### **Fase 3: Refinamiento Iterativo**
+1. **Identificar discrepancias específicas**:
+   - Colores no exactos
+   - Proporciones incorrectas
+   - Elementos faltantes o mal posicionados
+   - Escalas inadecuadas
+2. **Ajustar parámetros sistemáticamente**
+3. **Re-renderizar y comparar**
+4. **Repetir hasta alcanzar 98%+ fidelidad**
+
+#### **Fase 4: Validación Final**
+1. **Presentar comparación lado a lado** (original vs replicado)
+2. **Aplicar checklist de fidelidad visual**
+3. **Solicitar aprobación usuario**
+4. **Documentar código final optimizado**
+
+### 📊 **SISTEMA DE MÉTRICAS DE FIDELIDAD VISUAL**
+
+#### **✅ Criterios Cuantificables (98%+ Requerido)**
+
+##### **🎯 Precisión Geométrica (25%)**
+- Proporciones entre elementos: ±2% tolerancia
+- Ángulos y orientaciones: ±1° tolerancia
+- Escalas relativas: ±3% tolerancia
+- **Métrica**: Comparación de ratios dimensionales
+
+##### **🌈 Fidelidad Cromática (25%)**
+- Colores RGB exactos: ±5 unidades por canal
+- Contrastes relativos: ±10% tolerancia
+- Saturación y brillo: ±8% tolerancia
+- **Métrica**: Distancia euclidiana en espacio RGB
+
+##### **📍 Posicionamiento (25%)**
+- Ubicación relativa de elementos: ±2% tolerancia
+- Alineación de componentes: ±1% tolerancia
+- Espaciado entre elementos: ±3% tolerancia
+- **Métrica**: Comparación de coordenadas normalizadas
+
+##### **✔️ Completitud (25%)**
+- Todos los elementos principales presentes: 100%
+- Etiquetas y texto replicados: 100%
+- Estructura general mantenida: 100%
+- **Métrica**: Checklist binario de elementos
+
+#### **🔍 Checklist de Validación Visual**
+- [ ] **Estructura General**: ¿Se mantiene la organización visual?
+- [ ] **Elementos Principales**: ¿Están todos los componentes clave?
+- [ ] **Colores**: ¿Son visualmente indistinguibles del original?
+- [ ] **Proporciones**: ¿Las relaciones dimensionales son correctas?
+- [ ] **Texto y Etiquetas**: ¿Son legibles y están bien posicionados?
+- [ ] **Calidad General**: ¿Un observador casual notaría diferencias?
+
+### 🎨 **BIBLIOTECA DE TEMPLATES ESPECIALIZADOS**
+
+#### **📊 Template: Gráfica de Barras**
+```latex
+% Template parametrizable para gráficas de barras
+\begin{tikzpicture}[scale=`r escala_grafica`]
+  \begin{axis}[
+    ybar,
+    bar width=`r ancho_barra`pt,
+    xlabel={`r etiqueta_x`},
+    ylabel={`r etiqueta_y`},
+    xticklabels={`r paste(etiquetas_x, collapse=",")`},
+    ymin=0, ymax=`r max_y`,
+    xtick=data,
+    nodes near coords,
+    every node near coord/.append style={font=\footnotesize}
+  ]
+  \addplot[fill=`r color_barras`] coordinates {
+    `r paste(sprintf("(%d,%g)", seq_along(valores_y), valores_y), collapse=" ")`
+  };
+  \end{axis}
+\end{tikzpicture}
+```
+
+#### **🥧 Template: Gráfica Circular**
+```latex
+% Template parametrizable para gráficas circulares
+\begin{tikzpicture}[scale=`r escala_circular`]
+  \pie[
+    color={`r paste(colores_sectores, collapse=",")`},
+    radius=`r radio_grafica`,
+    text=legend
+  ]{`r paste(sprintf("%g/%s", valores_porcentajes, etiquetas_sectores), collapse=",")`}
+\end{tikzpicture}
+```
+
+#### **📈 Template: Tabla de Datos**
+```latex
+% Template parametrizable para tablas complejas
+\begin{tikzpicture}
+\node[inner sep=0pt] {
+  \begin{tabular}{|`r paste(rep("c", ncol_tabla), collapse="|")`|}
+    \hline
+    `r paste(sprintf("\\textbf{%s}", nombres_columnas), collapse=" & ")` \\
+    \hline
+    `r paste(apply(datos_tabla, 1, function(x) paste(x, collapse=" & ")), collapse=" \\\\\n    \\hline\n    ")` \\
+    \hline
+  \end{tabular}
+};
+\end{tikzpicture}
+```
+
+---
+
 ## 🎯 **METODOLOGÍA TIKZ AVANZADA PARA NUEVAS IMÁGENES PNG**
 
 ### 📋 **PROTOCOLO PASO A PASO PARA REPLICACIÓN DE IMÁGENES**
@@ -508,30 +729,204 @@ test_that("Prueba del sistema avanzado de distractores", {
 
 ## 🔧 **COMANDOS DE USO RÁPIDO**
 
-### Para investigar información ICFES:
+### 🤖 **Para Sistema Condicional Automático:**
 ```
+# Activar análisis automático de imagen PNG
+"Aplica el sistema condicional automático a esta imagen PNG para detectar contenido gráfico y activar el flujo apropiado"
+
+# Activar Agente-Graficador Especializado (solo si se detecta contenido gráfico)
+"Activa el Agente-Graficador Especializado TikZ para replicar esta imagen con 98%+ fidelidad visual"
+
+# Validar fidelidad visual
+"Ejecuta la validación de fidelidad visual comparando el TikZ generado con la imagen original"
+```
+
+### 🎯 **Para Flujos Específicos:**
+```
+# FLUJO A (sin gráficas detectadas)
+"Ejecuta FLUJO A estándar para imagen sin contenido gráfico complejo"
+
+# FLUJO B (con gráficas detectadas)
+"Ejecuta FLUJO B con Agente-Graficador para imagen con contenido gráfico/tabular"
+```
+
+### 🎨 **Para Metodología TikZ Tradicional:**
+```
+# Comando original (ahora integrado en sistema condicional)
+"Aplica la metodología TikZ avanzada a esta nueva imagen PNG para generar un ejercicio R-exams completo con salidas exams2*"
+```
+
+### 📋 **Para Gestión de Tareas:**
+```
+# Investigar información ICFES
 brave_web_search_brave-search: "término específico ICFES matemáticas 2025"
 web-fetch: [URL oficial ICFES]
-```
 
-### Para crear tareas nuevas:
-```
+# Crear tareas nuevas
 add_tasks con esta estructura como base
-```
 
-### Para actualizar progreso:
-```
+# Actualizar progreso
 update_tasks con task_id y nuevo state
-```
 
-### Para compilar y probar:
-```
+# Compilar y probar
 rmarkdown::render('archivo.Rmd', 'html_document')
 ```
 
 ---
 
+## 🤖 **DOCUMENTACIÓN DEL SISTEMA CONDICIONAL AUTOMÁTICO**
+
+### 📊 **Diagrama de Flujo de Decisión**
+
+```
+📷 IMAGEN PNG PROPORCIONADA
+           ↓
+🤖 ANÁLISIS AUTOMÁTICO DE CONTENIDO
+           ↓
+    ¿Contiene gráficas/tablas?
+           ↓
+    ┌─────────────────┐
+    ↓                 ↓
+🔄 FLUJO A          🎯 FLUJO B
+(Sin gráficas)      (Con gráficas)
+    ↓                 ↓
+📋 Proceso          🤖 Agente-Graficador
+   Estándar            Especializado
+   (8 Fases)              ↓
+    ↓               🔄 Proceso Iterativo
+✅ Ejercicio           (hasta 98% fidelidad)
+   Completo              ↓
+                   ✅ Validación Usuario
+                         ↓
+                   📋 Continuar 8 Fases
+                         ↓
+                   ✅ Ejercicio Completo
+```
+
+### 🔍 **Criterios de Detección Automática**
+
+#### **✅ Contenido que ACTIVA FLUJO B (Agente-Graficador)**
+- **Gráficas Estadísticas**:
+  * Gráficas de barras (verticales/horizontales)
+  * Gráficas circulares (pie charts)
+  * Histogramas con bins definidos
+  * Gráficas de líneas con puntos de datos
+  * Diagramas de dispersión (scatter plots)
+  * Boxplots con cuartiles visibles
+
+- **Tablas de Datos**:
+  * Tablas con filas y columnas estructuradas
+  * Matrices numéricas organizadas
+  * Tablas de frecuencia con encabezados
+  * Tablas mixtas (texto + números)
+
+- **Diagramas Matemáticos**:
+  * Diagramas de Venn con conjuntos
+  * Árboles de probabilidad
+  * Figuras geométricas con medidas
+  * Planos cartesianos con funciones
+
+- **Elementos Híbridos**:
+  * Combinación gráfica + tabla
+  * Diagrama + datos numéricos
+  * Múltiples elementos gráficos
+
+#### **⭕ Contenido que MANTIENE FLUJO A (Proceso Estándar)**
+- **Texto Simple**: Solo enunciados matemáticos
+- **Ecuaciones Básicas**: Fórmulas sin representación gráfica
+- **Figuras Geométricas Simples**: Formas básicas sin datos complejos
+- **Problemas Verbales**: Contextos sin elementos visuales complejos
+
+### 🎯 **Especificaciones del Agente-Graficador por Tipo**
+
+#### **📊 Gráficas de Barras**
+- **Template**: `grafica-barras-avanzada.tikz`
+- **Parámetros Detectados**: Altura barras, colores, etiquetas ejes
+- **Fidelidad Objetivo**: 98%+ en proporciones y colores
+- **Tiempo Estimado**: 15-25 minutos proceso completo
+
+#### **🥧 Gráficas Circulares**
+- **Template**: `grafica-circular-avanzada.tikz`
+- **Parámetros Detectados**: Ángulos sectores, colores, leyendas
+- **Fidelidad Objetivo**: 98%+ en proporciones y distribución
+- **Tiempo Estimado**: 20-30 minutos proceso completo
+
+#### **📈 Tablas de Datos**
+- **Template**: `tabla-datos-avanzada.tikz`
+- **Parámetros Detectados**: Estructura, contenido, formato
+- **Fidelidad Objetivo**: 98%+ en organización y presentación
+- **Tiempo Estimado**: 10-20 minutos proceso completo
+
+### 🔄 **Protocolo de Validación Usuario-Sistema**
+
+#### **Fase 1: Presentación Comparativa**
+1. **Mostrar lado a lado**: Imagen original vs TikZ generado
+2. **Destacar elementos clave** replicados
+3. **Señalar diferencias** si las hay
+4. **Calcular métricas** de fidelidad automáticas
+
+#### **Fase 2: Checklist Interactivo**
+- [ ] **¿Los colores son visualmente idénticos?**
+- [ ] **¿Las proporciones se mantienen correctas?**
+- [ ] **¿Todos los elementos están presentes?**
+- [ ] **¿El posicionamiento es preciso?**
+- [ ] **¿La calidad general es aceptable?**
+
+#### **Fase 3: Decisión y Continuación**
+- **Si ≥98% fidelidad**: Aprobar y continuar con FASES 2-8
+- **Si <98% fidelidad**: Repetir proceso iterativo
+- **Si problemas técnicos**: Consultar ejemplos funcionales
+
+### 📋 **Ejemplos de Uso por Tipo de Imagen**
+
+#### **Ejemplo 1: Imagen con Gráfica de Barras**
+```
+INPUT: imagen_barras_ventas.png
+DETECCIÓN: Gráfica de barras verticales detectada
+FLUJO: B (Agente-Graficador)
+TEMPLATE: grafica-barras-avanzada.tikz
+PROCESO: Extracción colores → Cálculo proporciones → Generación TikZ
+VALIDACIÓN: 98.5% fidelidad alcanzada
+RESULTADO: Ejercicio R-exams con gráfica TikZ replicada
+```
+
+#### **Ejemplo 2: Imagen con Tabla de Datos**
+```
+INPUT: tabla_estadisticas.png
+DETECCIÓN: Tabla 4x5 con encabezados detectada
+FLUJO: B (Agente-Graficador)
+TEMPLATE: tabla-datos-avanzada.tikz
+PROCESO: Extracción estructura → Formateo → Generación TikZ
+VALIDACIÓN: 99.1% fidelidad alcanzada
+RESULTADO: Ejercicio R-exams con tabla TikZ replicada
+```
+
+#### **Ejemplo 3: Imagen Solo Texto**
+```
+INPUT: problema_verbal.png
+DETECCIÓN: Solo texto matemático, sin gráficas
+FLUJO: A (Proceso Estándar)
+PROCESO: FASES 1-8 estándar con TikZ básico
+RESULTADO: Ejercicio R-exams tradicional
+```
+
+---
+
 ## 📌 **NOTAS IMPORTANTES**
+
+### 🤖 **Sistema Condicional Automático:**
+- **NUEVO**: El sistema detecta automáticamente contenido gráfico y activa flujos especializados
+- **FLUJO A**: Para imágenes sin gráficas complejas (proceso estándar 8 fases)
+- **FLUJO B**: Para imágenes con gráficas/tablas (Agente-Graficador + 8 fases)
+- **VALIDACIÓN OBLIGATORIA**: 98%+ fidelidad visual antes de continuar con ejercicio completo
+- **COMPATIBILIDAD TOTAL**: Mantiene todas las funcionalidades existentes del TEMPLATE
+
+### 🎯 **Agente-Graficador Especializado:**
+- **ACTIVACIÓN**: Automática cuando se detecta contenido gráfico/tabular
+- **OBJETIVO**: Replicación de alta fidelidad (98%+) usando TikZ avanzado
+- **PROCESO**: Iterativo hasta alcanzar criterios de calidad visual
+- **INTEGRACIÓN**: Compatible con sistema R-exams y aleatorización 300+ versiones
+- **TEMPLATES**: Biblioteca especializada por tipo de gráfica (barras, circular, tabla, etc.)
 
 ### 🔍 **Investigación Obligatoria:**
 - **SIEMPRE** investigar información teórica ICFES en web cuando sea necesario

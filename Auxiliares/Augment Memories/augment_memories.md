@@ -103,3 +103,14 @@
 - Template now starts with image analysis and TikZ methodology as the primary workflow, with Python as secondary alternative only when TikZ is not viable.
 - Command for reorganized workflow: "Aplica la metodología TikZ avanzada siguiendo el template reorganizado para generar un ejercicio R-exams completo."
 - Result: 663 lines optimized with TikZ-first approach while maintaining all original functionality and quality standards.
+
+# Sistema Condicional Automático ICFES R-exams (2025-01-29)
+- User requested implementation of an automated conditional system in TEMPLATE_Plan_Tareas_ICFES_R_Exams.md that detects graphical content (charts, tables, diagrams) in PNG images and activates specialized TikZ replication workflows with 98%+ visual fidelity.
+- Successfully implemented complete conditional system with automatic content detection and specialized flows: FLUJO A (no graphics, standard process) and FLUJO B (with graphics, specialized Agente-Graficador TikZ).
+- Expanded PHASE 1 with automatic analysis subsections: 1.2.1 Automatic Visual Element Detection, 1.2.2 Conditional Flow Decision, 1.3.1-1.3.4 Specialized Agente-Graficador (FLUJO B only).
+- Created comprehensive "Agente-Graficador Especializado TikZ" section with technical specifications, iterative replication protocol (4 phases), visual fidelity metrics system (98%+ required), and specialized template library by graphic type.
+- Implemented visual fidelity validation system with quantifiable criteria: Geometric Precision (25%), Chromatic Fidelity (25%), Positioning (25%), Completeness (25%), with specific tolerances and user-system approval protocol.
+- Added complete conditional system documentation with decision flow diagram, automatic detection criteria, specialized templates (bars, circular, tables), validation protocol, and detailed usage examples.
+- Updated activation commands: "Aplica el sistema condicional automático a esta imagen PNG para detectar contenido gráfico y activar el flujo apropiado" for main system, plus specialized commands for Agente-Graficador and fidelity validation.
+- Template expanded from 663 to ~950 lines while preserving 100% compatibility with existing methodologies (TikZ Advanced, Error Correction), maintaining all 8 phases and 21 subtasks, and ensuring full exams2* format compatibility.
+- System ready for immediate use with automatic PNG analysis, conditional flow activation, iterative high-fidelity replication, and complete R-exams integration with 300+ randomized versions.

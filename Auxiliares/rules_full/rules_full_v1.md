@@ -7,11 +7,21 @@ RepositorioMatematicasICFES_R_Exams.
 
 ## 🔧 METODOLOGÍAS INTEGRADAS
 
+### METODOLOGÍA SISTEMA CONDICIONAL AUTOMÁTICO
+- **NUEVA**: Detección automática de contenido gráfico en imágenes PNG
+- Activación inteligente de flujos especializados:
+  * **FLUJO A** (sin gráficas): Proceso estándar 8 fases
+  * **FLUJO B** (con gráficas): Agente-Graficador Especializado TikZ
+- Validación de fidelidad visual 98%+ antes de continuar
+- Integración completa con metodologías TikZ y corrección de errores
+- Comando: "Aplica el sistema condicional automático a esta imagen PNG"
+
 ### METODOLOGÍA TIKZ AVANZADA
 - Consultar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 - Aplicar replicación PNG con 98% fidelidad visual
 - Usar características TikZ avanzadas con colores RGB precisos
 - Implementar posicionamiento sistemático de elementos
+- **INTEGRADA** en Agente-Graficador Especializado del sistema condicional
 
 ### METODOLOGÍA CORRECCIÓN DE ERRORES RECURRENTES
 - Aplicar detección automática de 5 categorías de errores:
@@ -347,19 +357,22 @@ exsection: [Sección temática]
 ## 🎯 INSTRUCCIONES FINALES
 
 Analiza la imagen proporcionada y:
-1. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
-2. **PRIMERO:** Consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/
-3. Identifica el concepto matemático principal
-4. Determina la competencia ICFES más apropiada
-5. Diseña un problema que evalúe esa competencia
-6. Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los ejemplos funcionales
-7. Asegúrate de que el ejercicio sea desafiante pero justo
-8. Incluye todas las validaciones y pruebas requeridas
-9. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
-10. Ante errors recurrentes **VERIFICA** consultando todos y cada uno de los
-archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/
+1. **NUEVO:** Aplica el sistema condicional automático para detectar contenido gráfico
+2. **FLUJO A o B:** Activa el flujo apropiado según detección automática
+3. **Si FLUJO B:** Usa Agente-Graficador Especializado para replicación 98%+ fidelidad
+4. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
+5. **PRIMERO:** Consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/
+6. Identifica el concepto matemático principal
+7. Determina la competencia ICFES más apropiada
+8. Diseña un problema que evalúe esa competencia
+9. Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura Y los ejemplos funcionales
+10. **Si FLUJO B:** Valida fidelidad visual antes de continuar con ejercicio completo
+11. Asegúrate de que el ejercicio sea desafiante pero justo
+12. Incluye todas las validaciones y pruebas requeridas
+13. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
+14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/
 
-El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams.
+El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams, con replicación gráfica de alta fidelidad cuando sea necesario.
 
 ---
 
@@ -464,6 +477,73 @@ Para nueva imagen PNG:
 - **Resolución automática**: Problemas comunes solucionados
 
 **La metodología está lista para aplicar inmediatamente a cualquier nueva imagen PNG matemática.**
+
+---
+
+## 🤖 SISTEMA CONDICIONAL AUTOMÁTICO PARA DETECCIÓN DE CONTENIDO GRÁFICO
+
+### 📋 PROTOCOLO DE ANÁLISIS AUTOMÁTICO
+
+#### **PASO 1: DETECCIÓN AUTOMÁTICA DE CONTENIDO**
+Al recibir una imagen PNG, el sistema analiza automáticamente:
+- **Gráficas**: Barras, líneas, circulares, histogramas, dispersión, boxplots
+- **Tablas**: Numéricas, textuales, mixtas, con/sin encabezados
+- **Diagramas**: Matemáticos, estadísticos, geométricos, probabilidad
+- **Elementos Híbridos**: Gráfica + tabla en misma imagen
+
+#### **PASO 2: DECISIÓN DE FLUJO CONDICIONAL**
+```
+📷 IMAGEN PNG → 🤖 ANÁLISIS → ¿Contiene gráficas/tablas?
+                                    ↓
+                    ┌─────────────────────────────────┐
+                    ↓                                 ↓
+            🔄 FLUJO A                        🎯 FLUJO B
+        (Sin gráficas complejas)          (Con gráficas/tablas)
+                    ↓                                 ↓
+        📋 Proceso Estándar              🤖 Agente-Graficador
+           (8 Fases)                        Especializado
+                    ↓                                 ↓
+        ✅ Ejercicio Completo            🔄 Replicación 98%+
+                                                     ↓
+                                        ✅ Validación Usuario
+                                                     ↓
+                                        📋 Continuar 8 Fases
+                                                     ↓
+                                        ✅ Ejercicio Completo
+```
+
+#### **PASO 3: AGENTE-GRAFICADOR ESPECIALIZADO (Solo FLUJO B)**
+- **Función**: Replicación de alta fidelidad (98%+) usando TikZ avanzado
+- **Proceso Iterativo**: Refinamiento hasta alcanzar criterios de calidad
+- **Templates Especializados**: Biblioteca por tipo (barras, circular, tabla)
+- **Validación Obligatoria**: Aprobación usuario antes de continuar
+
+#### **PASO 4: MÉTRICAS DE FIDELIDAD VISUAL**
+- **Precisión Geométrica** (25%): Proporciones, ángulos, escalas
+- **Fidelidad Cromática** (25%): Colores RGB exactos, contrastes
+- **Posicionamiento** (25%): Ubicación relativa de elementos
+- **Completitud** (25%): Todos los elementos presentes
+
+### ⚡ COMANDOS DE ACTIVACIÓN
+
+#### **Sistema Condicional Principal**
+> **"Aplica el sistema condicional automático a esta imagen PNG para detectar contenido gráfico y activar el flujo apropiado"**
+
+#### **Agente-Graficador Especializado**
+> **"Activa el Agente-Graficador Especializado TikZ para replicar esta imagen con 98%+ fidelidad visual"**
+
+#### **Validación de Fidelidad**
+> **"Ejecuta la validación de fidelidad visual comparando el TikZ generado con la imagen original"**
+
+### 🎯 INTEGRACIÓN CON METODOLOGÍAS EXISTENTES
+
+El sistema condicional automático **EXPANDE** las metodologías existentes:
+- **TikZ Avanzada**: Integrada en Agente-Graficador para replicación especializada
+- **Corrección de Errores**: Aplicada en ambos flujos (A y B) durante FASE 7
+- **Sistema de Distractores**: Mantenido intacto en FASE 6 para ambos flujos
+- **Aleatorización 300+**: Preservada completamente en ambos flujos
+
+**🔧 ESTADO: SISTEMA OPERATIVO Y LISTO PARA USO INMEDIATO**
 
 ---
 
