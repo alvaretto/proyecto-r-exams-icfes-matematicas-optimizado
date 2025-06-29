@@ -73,14 +73,20 @@ generar_datos <- function() {
   # Aleatorizar año de intersección (respuesta correcta)
   años_interseccion <- c(1986, 1998, 2004, 1992, 1995, 2001, 1989, 1996, 2002, 1988)
   año_interseccion <- sample(años_interseccion, 1)
-  
-  # Aleatorizar poblaciones base y tendencias
-  pob_inicial_pais2 <- sample(seq(20, 25, 0.5), 1) * 1000000
-  pob_inicial_pais5 <- sample(seq(28, 32, 0.5), 1) * 1000000
-  
-  # Tendencias de crecimiento (País 2 crece más rápido que País 5)
-  tasa_pais2 <- sample(seq(0.8, 1.2, 0.1), 1)  # Crecimiento más rápido
-  tasa_pais5 <- sample(seq(0.3, 0.6, 0.1), 1)  # Crecimiento más lento
+
+  # Aleatorizar qué dos países se intersectan (no siempre País 2 y País 5)
+  paises_disponibles <- 1:5
+  paises_interseccion <- sample(paises_disponibles, 2)
+  pais_a <- min(paises_interseccion)
+  pais_b <- max(paises_interseccion)
+
+  # Aleatorizar poblaciones base y tendencias para los países que se intersectan
+  pob_inicial_a <- sample(seq(20, 25, 0.5), 1) * 1000000
+  pob_inicial_b <- sample(seq(28, 32, 0.5), 1) * 1000000
+
+  # Tendencias de crecimiento (un país crece más rápido que el otro)
+  tasa_a <- sample(seq(0.8, 1.2, 0.1), 1)  # Crecimiento más rápido
+  tasa_b <- sample(seq(0.3, 0.6, 0.1), 1)  # Crecimiento más lento
   
   # Generar colores aleatorios para las líneas
   colores_disponibles <- c(
@@ -96,10 +102,12 @@ generar_datos <- function() {
   return(list(
     paises = paises_seleccionados,
     año_interseccion = año_interseccion,
-    pob_inicial_pais2 = pob_inicial_pais2,
-    pob_inicial_pais5 = pob_inicial_pais5,
-    tasa_pais2 = tasa_pais2,
-    tasa_pais5 = tasa_pais5,
+    pais_a = pais_a,
+    pais_b = pais_b,
+    pob_inicial_a = pob_inicial_a,
+    pob_inicial_b = pob_inicial_b,
+    tasa_a = tasa_a,
+    tasa_b = tasa_b,
     colores = colores_paises,
     estilos = estilos_seleccionados
   ))
@@ -111,10 +119,12 @@ datos <- generar_datos()
 # Extraer variables individuales
 paises <- datos$paises
 año_interseccion <- datos$año_interseccion
-pob_inicial_pais2 <- datos$pob_inicial_pais2
-pob_inicial_pais5 <- datos$pob_inicial_pais5
-tasa_pais2 <- datos$tasa_pais2
-tasa_pais5 <- datos$tasa_pais5
+pais_a <- datos$pais_a
+pais_b <- datos$pais_b
+pob_inicial_a <- datos$pob_inicial_a
+pob_inicial_b <- datos$pob_inicial_b
+tasa_a <- datos$tasa_a
+tasa_b <- datos$tasa_b
 colores_paises <- datos$colores
 estilos_linea <- datos$estilos
 ```
@@ -195,8 +205,8 @@ solucion[posicion_correcta] <- 1
 ```
 
 ```{r generar_tikz_grafica, echo=FALSE, results="hide"}
-# AGENTE-GRAFICADOR ESPECIALIZADO TIKZ - Replicación siguiendo ejemplos funcionales
-# Función para generar código TikZ compatible con R-exams
+# AGENTE-GRAFICADOR ESPECIALIZADO TIKZ - Replicación dinámica corregida
+# Función para generar código TikZ compatible con R-exams con intersección correcta
 
 generar_tikz_poblaciones <- function() {
   # Construir código TikZ paso a paso siguiendo patrón de ejemplos funcionales
@@ -226,56 +236,119 @@ generar_tikz_poblaciones <- function() {
     "% Configuración de la cuadrícula y ejes\n",
     "\\draw[step=1cm,gray!30,very thin] (0,0) grid (13,8);\n\n",
     "% Eje X (Años)\n",
-    "\\draw[thick,->] (0,0) -- (13.5,0) node[anchor=north west] {Año};\n",
+    "\\draw[thick,->] (0,0) -- (13.5,0) node[anchor=north west,font=\\scriptsize] {Año};\n",
     "\\foreach \\x/\\year in {0/1960,1/1965,2/1970,3/1975,4/1980,5/1985,6/1990,7/1995,8/2000,9/2005,10/2010,11/2013}\n",
     "  \\draw (\\x,0) -- (\\x,-0.1) node[anchor=north,font=\\scriptsize] {\\year};\n\n",
     "% Eje Y con etiqueta separada\n",
     "\\draw[thick,->] (0,0) -- (0,8.5);\n",
-    "% Etiqueta 'Población' con máxima separación de los datos numéricos\n",
-    "\\node[anchor=south,rotate=90] at (-1.8,4.25) {Población};\n",
+    "% Etiqueta 'Población' con tamaño consistente con datos\n",
+    "\\node[anchor=south,rotate=90,font=\\scriptsize] at (-1.8,4.25) {Población};\n",
     "% Datos numéricos del eje Y\n",
     "\\foreach \\y/\\pop in {1/15.000.000,2/20.000.000,3/25.000.000,4/30.000.000,5/35.000.000,6/40.000.000,7/45.000.000}\n",
     "  \\draw (0,\\y) -- (-0.1,\\y) node[anchor=east,font=\\tiny] {\\pop};\n\n"
   )
 
-  # Líneas de países con trayectorias corregidas para evitar solapamientos
+  # CORRECCIÓN: Generar líneas dinámicamente basadas en los datos aleatorios
+  # Calcular coordenadas para la intersección correcta
+
+  # Convertir año de intersección a coordenada X (1960=0, 1965=1, etc.)
+  x_interseccion <- (año_interseccion - 1960) / 5
+
+  # Altura de intersección (entre 2.5 y 4.5 para visibilidad)
+  y_interseccion <- sample(seq(2.5, 4.5, 0.1), 1)
+
+  # Generar trayectorias para todos los países
+  años_x <- seq(0, 11, 1)  # Coordenadas X de 0 a 11
+
+  # Función para generar trayectoria de país
+  generar_trayectoria <- function(pais_num, es_interseccion_a = FALSE, es_interseccion_b = FALSE) {
+    if (es_interseccion_a) {
+      # País A: crece más rápido, intersecta en el punto calculado
+      y_inicial <- y_interseccion - (x_interseccion * tasa_a * 0.3)
+      trayectoria <- sapply(años_x, function(x) {
+        y_inicial + (x * tasa_a * 0.3)
+      })
+    } else if (es_interseccion_b) {
+      # País B: crece más lento, intersecta en el punto calculado
+      y_inicial <- y_interseccion - (x_interseccion * tasa_b * 0.3)
+      trayectoria <- sapply(años_x, function(x) {
+        y_inicial + (x * tasa_b * 0.3)
+      })
+    } else {
+      # Otros países: trayectorias aleatorias que no interfieren
+      y_inicial <- sample(seq(0.8, 2.2, 0.2), 1)
+      tasa_aleatoria <- sample(seq(0.2, 0.8, 0.1), 1)
+      trayectoria <- sapply(años_x, function(x) {
+        y_inicial + (x * tasa_aleatoria)
+      })
+    }
+
+    # Asegurar que los valores estén en rango válido (0.5 a 6.5)
+    trayectoria <- pmax(0.5, pmin(6.5, trayectoria))
+    return(trayectoria)
+  }
+
+  # Generar trayectorias para cada país
+  trayectorias <- list()
+  for (i in 1:5) {
+    es_a <- (i == pais_a)
+    es_b <- (i == pais_b)
+    trayectorias[[i]] <- generar_trayectoria(i, es_a, es_b)
+  }
+
+  # Generar código TikZ para cada línea
+  for (i in 1:5) {
+    traj <- trayectorias[[i]]
+    puntos <- paste(sapply(1:length(años_x), function(j) {
+      paste0("(", años_x[j], ",", round(traj[j], 2), ")")
+    }), collapse = " -- ")
+
+    tikz_code <- paste0(tikz_code,
+      "% País ", i, "\n",
+      "\\draw[linea_pais", i, "] ", puntos, ";\n\n"
+    )
+  }
+
+  # Agregar marcadores para países 4 y 5
   tikz_code <- paste0(tikz_code,
-    "% País 1 (línea punteada cyan) - Trayectoria superior\n",
-    "\\draw[linea_pais1] (0,1.0) -- (1,1.4) -- (2,1.8) -- (3,2.3) -- (4,2.8) -- (5,3.3) -- (6,3.8) -- (7,4.3) -- (8,4.8) -- (9,5.2) -- (10,5.6) -- (11,5.8);\n\n",
-    "% País 2 (línea discontinua negra) - Intersecta con País 5\n",
-    "\\draw[linea_pais2] (0,0.6) -- (1,0.9) -- (2,1.3) -- (3,1.8) -- (4,2.4) -- (5,3.0) -- (6,3.6) -- (7,4.1) -- (8,4.5) -- (9,4.8) -- (10,5.0) -- (11,5.1);\n\n",
-    "% País 3 (línea continua marrón) - Trayectoria inferior\n",
-    "\\draw[linea_pais3] (0,0.8) -- (1,1.0) -- (2,1.2) -- (3,1.4) -- (4,1.6) -- (5,1.8) -- (6,2.0) -- (7,2.2) -- (8,2.4) -- (9,2.6) -- (10,2.8) -- (11,3.0);\n\n",
-    "% País 4 (línea continua azul con triángulos) - Trayectoria media-alta\n",
-    "\\draw[linea_pais4] (0,1.8) -- (1,2.0) -- (2,2.3) -- (3,2.6) -- (4,2.9) -- (5,3.2) -- (6,3.5) -- (7,3.8) -- (8,4.1) -- (9,4.4) -- (10,4.7) -- (11,4.9);\n\n"
+    "% Triángulos para País 4\n",
+    "\\foreach \\x/\\y in {"
   )
 
-  # País 5 y marcadores mejorados para evitar solapamientos
-  tikz_code <- paste0(tikz_code,
-    "% País 5 (línea continua naranja con círculos) - Intersecta con País 2\n",
-    "\\draw[linea_pais5] (0,2.0) -- (1,2.1) -- (2,2.3) -- (3,2.5) -- (4,2.8) -- (5,3.1) -- (6,3.4) -- (7,3.6) -- (8,3.8) -- (9,3.9) -- (10,4.0) -- (11,4.1);\n\n",
-    "% Triángulos para País 4 - Posicionados sobre la línea\n",
-    "\\foreach \\x/\\y in {0/1.8,1/2.0,2/2.3,3/2.6,4/2.9,5/3.2,6/3.5,7/3.8,8/4.1,9/4.4,10/4.7,11/4.9} {\n",
+  traj4 <- trayectorias[[4]]
+  triangulos <- paste(sapply(1:length(años_x), function(j) {
+    paste0(años_x[j], "/", round(traj4[j], 2))
+  }), collapse = ",")
+
+  tikz_code <- paste0(tikz_code, triangulos, "} {\n",
     "  \\draw[pais4,fill=white,line width=0.8pt] (\\x-0.06,\\y-0.06) -- (\\x+0.06,\\y-0.06) -- (\\x,\\y+0.08) -- cycle;\n",
-    "}\n\n",
-    "% Círculos para País 5 - Posicionados sobre la línea\n",
-    "\\foreach \\x/\\y in {0/2.0,1/2.1,2/2.3,3/2.5,4/2.8,5/3.1,6/3.4,7/3.6,8/3.8,9/3.9,10/4.0,11/4.1} {\n",
+    "}\n\n"
+  )
+
+  tikz_code <- paste0(tikz_code,
+    "% Círculos para País 5\n",
+    "\\foreach \\x/\\y in {"
+  )
+
+  traj5 <- trayectorias[[5]]
+  circulos <- paste(sapply(1:length(años_x), function(j) {
+    paste0(años_x[j], "/", round(traj5[j], 2))
+  }), collapse = ",")
+
+  tikz_code <- paste0(tikz_code, circulos, "} {\n",
     "  \\draw[pais5,fill=white,line width=0.8pt] (\\x,\\y) circle (0.06);\n",
     "}\n\n"
   )
 
-  # Punto de intersección aproximado (calculado dinámicamente)
+  # Leyenda con marco tenue y tamaño proporcional
   tikz_code <- paste0(tikz_code,
-    "% Punto de intersección aproximado\n",
-    "\\fill[red,opacity=0.8] (7.5,3.8) circle (0.08);\n",
-    "\\draw[red,line width=1pt] (7.5,3.8) circle (0.12);\n\n",
-    "% Leyenda mejorada\n",
-    "\\node[anchor=north west,fill=white,fill opacity=0.9,text opacity=1] at (9.2,7.8) {\\begin{tabular}{ll}\n",
-    "  \\textcolor{pais1}{\\textbf{......}} & País 1 \\\\\n",
-    "  \\textcolor{pais2}{\\textbf{- - -}} & País 2 \\\\\n",
-    "  \\textcolor{pais3}{\\textbf{\\rule{0.8cm}{1pt}}} & País 3 \\\\\n",
-    "  \\textcolor{pais4}{\\textbf{\\rule{0.8cm}{1pt}} $\\triangle$} & País 4 \\\\\n",
-    "  \\textcolor{pais5}{\\textbf{\\rule{0.8cm}{1pt}} $\\circ$} & País 5 \\\\\n",
+    "% Leyenda mejorada con tamaño proporcional\n",
+    "\\node[anchor=north west,fill=white,fill opacity=0.9,text opacity=1,draw=gray!30,line width=0.5pt,rounded corners=2pt,inner sep=3pt,font=\\scriptsize] at (10.0,7.8) {\\begin{tabular}{ll}\n",
+    "  \\textcolor{pais1}{\\textbf{......}} & ", paises[1], " \\\\\n",
+    "  \\textcolor{pais2}{\\textbf{- - -}} & ", paises[2], " \\\\\n",
+    "  \\textcolor{pais3}{\\textbf{\\rule{0.6cm}{0.8pt}}} & ", paises[3], " \\\\\n",
+    "  \\textcolor{pais4}{\\textbf{\\rule{0.6cm}{0.8pt}} $\\triangle$} & ", paises[4], " \\\\\n",
+    "  \\textcolor{pais5}{\\textbf{\\rule{0.6cm}{0.8pt}} $\\circ$} & ", paises[5], " \\\\\n",
     "\\end{tabular}};\n\n"
   )
 
@@ -306,9 +379,10 @@ include_tikz(tikz_final,
              width = "14cm")
 ```
 
+\
 Los datos representan la evolución demográfica de diferentes naciones a lo largo de más de cinco décadas, mostrando distintas tendencias de crecimiento poblacional.
 
-Aproximadamente, ¿en qué año las poblaciones del País 2 y del País 5 fueron iguales?
+Aproximadamente, ¿en qué año las poblaciones del País `r pais_a` y del País `r pais_b` fueron iguales?
 
 Answerlist
 ----------
@@ -320,27 +394,28 @@ Answerlist
 Solution
 ========
 
-Para resolver este problema, debemos identificar el punto donde las líneas del País 2 (línea discontinua negra) y del País 5 (línea continua naranja con círculos) se intersectan en la gráfica.
+Para resolver este problema, debemos identificar el punto donde las líneas del País `r pais_a` y del País `r pais_b` se intersectan en la gráfica.
 
 **Análisis visual de las tendencias:**
 
-- **País 2**: Inicia con una población menor pero presenta un crecimiento más acelerado
-- **País 5**: Comienza con una población mayor pero su crecimiento es más moderado
+- **País `r pais_a`**: Inicia con una población menor pero presenta un crecimiento más acelerado
+- **País `r pais_b`**: Comienza con una población mayor pero su crecimiento es más moderado
 
 **Identificación del punto de intersección:**
 
-Observando cuidadosamente la gráfica, podemos ver que las dos líneas se cruzan aproximadamente en el año **`r año_interseccion`**, donde ambas poblaciones alcanzan un valor similar de aproximadamente 35-37 millones de habitantes.
+Observando cuidadosamente la gráfica, podemos ver que las dos líneas se cruzan aproximadamente en el año **`r año_interseccion`**, donde ambas poblaciones alcanzan un valor similar.
 
 **Verificación:**
-- Antes de `r año_interseccion`: País 5 > País 2
-- Después de `r año_interseccion`: País 2 > País 5
+
+- Antes de `r año_interseccion`: País `r pais_b` > País `r pais_a`
+- Después de `r año_interseccion`: País `r pais_a` > País `r pais_b`
 
 Answerlist
 ----------
-* `r if(solucion[1] == 1) paste("**Verdadero**. El año", opciones_finales[1], "corresponde al punto de intersección visual entre las líneas del País 2 y País 5.") else paste("**Falso**. El año", opciones_finales[1], "no corresponde al punto de intersección de las líneas.")`
-* `r if(solucion[2] == 1) paste("**Verdadero**. El año", opciones_finales[2], "corresponde al punto de intersección visual entre las líneas del País 2 y País 5.") else paste("**Falso**. El año", opciones_finales[2], "no corresponde al punto de intersección de las líneas.")`
-* `r if(solucion[3] == 1) paste("**Verdadero**. El año", opciones_finales[3], "corresponde al punto de intersección visual entre las líneas del País 2 y País 5.") else paste("**Falso**. El año", opciones_finales[3], "no corresponde al punto de intersección de las líneas.")`
-* `r if(solucion[4] == 1) paste("**Verdadero**. El año", opciones_finales[4], "corresponde al punto de intersección visual entre las líneas del País 2 y País 5.") else paste("**Falso**. El año", opciones_finales[4], "no corresponde al punto de intersección de las líneas.")`
+* `r if(solucion[1] == 1) paste("**Verdadero**. El año", opciones_finales[1], "corresponde al punto de intersección visual entre las líneas del País", pais_a, "y País", pais_b, ".") else paste("**Falso**. El año", opciones_finales[1], "no corresponde al punto de intersección de las líneas.")`
+* `r if(solucion[2] == 1) paste("**Verdadero**. El año", opciones_finales[2], "corresponde al punto de intersección visual entre las líneas del País", pais_a, "y País", pais_b, ".") else paste("**Falso**. El año", opciones_finales[2], "no corresponde al punto de intersección de las líneas.")`
+* `r if(solucion[3] == 1) paste("**Verdadero**. El año", opciones_finales[3], "corresponde al punto de intersección visual entre las líneas del País", pais_a, "y País", pais_b, ".") else paste("**Falso**. El año", opciones_finales[3], "no corresponde al punto de intersección de las líneas.")`
+* `r if(solucion[4] == 1) paste("**Verdadero**. El año", opciones_finales[4], "corresponde al punto de intersección visual entre las líneas del País", pais_a, "y País", pais_b, ".") else paste("**Falso**. El año", opciones_finales[4], "no corresponde al punto de intersección de las líneas.")`
 
 Meta-information
 ================
