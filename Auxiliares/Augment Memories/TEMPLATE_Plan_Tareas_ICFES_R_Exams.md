@@ -1,3 +1,9 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
 # 🎯 PLAN MAESTRO: Generación/Corrección de Ejercicios ICFES R-exams
 
 ## 📋 ESTRUCTURA COMPLETA DE TAREAS
@@ -68,12 +74,45 @@
     - **VARIABLES R INTEGRADAS**: Parametrización para aleatorización
     - **MULTI-FORMATO**: Funciona en exams2html, exams2pdf, exams2moodle
 
-- [ ] **🔍 1.4 Consultar Ejemplos Funcionales (Ambos Flujos)**
-  - **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` para patrones exitosos
+- [ ] **🔍 1.4 Consultar Ejemplos Funcionales (Ambos Flujos) - PROTOCOLO ESTRICTO**
+  - **OBLIGATORIO ABSOLUTO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` ANTES de escribir cualquier código
   - **FLUJO A**: Identificar configuraciones técnicas básicas para TikZ simple
   - **FLUJO B**: Consultar templates avanzados para gráficas complejas
-  - Verificar estructuras de chunks exitosas en archivos FUERA de Lab
+  - **COPIAR PATRONES EXACTOS**: No improvisar, usar sintaxis idéntica a ejemplos probados
+  - **VERIFICAR ESTRUCTURAS**: Chunks, configuraciones LaTeX, interpolación de variables
   - **🐍 Alternativo**: Solo si TikZ no es viable, consultar `Auxiliares/Python-Documentation/Python-ICFES-Guide.md`
+
+- [ ] **⚡ 1.5 PROTOCOLO ANTI-ERRORES DE IMPLEMENTACIÓN**
+  - **🎯 1.5.1 Auto-Verificación Pre-Implementación**
+    - **CHECKLIST OBLIGATORIO ANTES DE ESCRIBIR CÓDIGO**:
+      * ✅ ¿Consulté TODOS los ejemplos funcionales relevantes?
+      * ✅ ¿Identifiqué el patrón exacto a seguir?
+      * ✅ ¿Entiendo la sintaxis TikZ/LaTeX del ejemplo?
+      * ✅ ¿Sé cómo interpolar variables R correctamente?
+      * ✅ ¿Tengo clara la estructura de chunks necesaria?
+    - **REGLA DE ORO**: "Si no está en ejemplos funcionales, no lo improvises"
+
+  - **🔍 1.5.2 Validación Paso a Paso Durante Implementación**
+    - **COMPILACIÓN INCREMENTAL**: Probar cada chunk antes de continuar
+    - **VERIFICACIÓN DE SINTAXIS**: Comparar cada línea con ejemplos funcionales
+    - **INTERPOLACIÓN SEGURA**: Verificar variables R en código TikZ/LaTeX
+    - **NO AVANZAR** hasta que sección actual funcione correctamente
+
+  - **⚠️ 1.5.3 Señales de Alerta Críticas**
+    - **PARAR INMEDIATAMENTE** si:
+      * Interpolando variables complejas en TikZ sin ejemplo
+      * Mezclando sintaxis R y LaTeX sin patrón probado
+      * Algo "parece que debería funcionar" sin verificación
+      * Improvisando configuraciones no vistas en ejemplos
+    - **ACCIÓN**: Volver a ejemplos funcionales y copiar patrón exacto
+
+  - **📋 1.5.4 Protocolo de Auto-Verificación Final**
+    - **ANTES DE ENTREGAR CUALQUIER .RMD**:
+      * □ ¿Sintaxis TikZ idéntica a ejemplos probados?
+      * □ ¿Variables R interpoladas correctamente?
+      * □ ¿No hay chunks extra o caracteres sobrantes?
+      * □ ¿Estructura completa verificada contra ejemplos?
+      * □ ¿Compilación exitosa sin errores?
 
 ### 📋 **FASE 2: Planificación ICFES y Concepto Matemático**
 *Definir estructura del ejercicio ICFES basado en análisis visual*
@@ -260,17 +299,27 @@
 
 ---
 
-### 🔧 **FASE 7: Corrección de Errores Recurrentes**
-*Aplicar metodología avanzada de detección y corrección sistemática*
+### 🔧 **FASE 7: Corrección de Errores Recurrentes y Validación Continua**
+*Aplicar metodología avanzada de detección y corrección sistemática integrada durante implementación*
 
-- [ ] **🔍 7.1 Detección Automática de Errores**
+- [ ] **⚡ 7.0 VALIDACIÓN CONTINUA DURANTE IMPLEMENTACIÓN (NUEVO)**
+  - **APLICAR DURANTE FASES 3-6**: No esperar hasta el final para corregir errores
+  - **VERIFICACIÓN CHUNK POR CHUNK**:
+    * Después de cada chunk: Compilar y verificar funcionamiento
+    * Comparar sintaxis con ejemplos funcionales inmediatamente
+    * Corregir errores de interpolación de variables al momento
+    * Validar estructura LaTeX/TikZ antes de continuar
+  - **PROTOCOLO DE PARADA**: Si algo no funciona, PARAR y consultar ejemplos funcionales
+  - **PREVENCIÓN > CORRECCIÓN**: Evitar errores en lugar de corregirlos después
+
+- [ ] **🔍 7.1 Detección Automática de Errores (Complementaria)**
   - **OBLIGATORIO**: Consultar `/Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`
   - Ejecutar detección de 5 categorías de errores:
     * **A) Gramaticales/Concordancia**: Verificar "El conteo" vs "La cantidad" (no "La conteo")
     * **B) Posicionamiento TikZ**: Confirmar orden texto → tabla → pregunta
     * **C) Generación de datos**: Validar opciones únicas, anti-duplicados
-    * **D) Compilación LaTeX**: Verificar paquetes, caracteres especiales
-    * **E) Estructura R-exams**: Revisar YAML, include_tikz, variables
+    * **D) Compilación LaTeX**: Verificar paquetes, caracteres especiales, interpolación variables
+    * **E) Estructura R-exams**: Revisar YAML, include_tikz, variables, chunks extra
   - Aplicar función `detectar_errores_comunes(archivo_rmd)`
 
 - [ ] **📚 7.2 Aplicar Soluciones Probadas**
@@ -1052,6 +1101,95 @@ RESULTADO: Ejercicio R-exams tradicional
 4. **Validar funcionamiento** en múltiples formatos
 5. **Documentar y compartir** si es exitoso para futuros ejercicios
 
+---
 
+## 📋 **ANEXO: PROTOCOLO ANTI-ERRORES DE IMPLEMENTACIÓN**
 
+### 🎯 **PROTOCOLO COMPLETO DE PREVENCIÓN DE ERRORES**
 
+#### **📚 FASE 0: CONSULTA OBLIGATORIA PRE-IMPLEMENTACIÓN**
+```
+ANTES DE ESCRIBIR UNA SOLA LÍNEA DE CÓDIGO:
+
+✅ PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+✅ PASO 2: Identificar ejemplo más similar al ejercicio objetivo
+✅ PASO 3: Estudiar estructura completa del ejemplo
+✅ PASO 4: Copiar configuración YAML exacta
+✅ PASO 5: Copiar estructura de chunks exacta
+✅ PASO 6: Identificar patrones de interpolación de variables
+✅ PASO 7: Entender configuración TikZ/LaTeX específica
+
+REGLA ABSOLUTA: "No improvises. Copia patrones probados."
+```
+
+#### **⚡ VALIDACIÓN CONTINUA DURANTE IMPLEMENTACIÓN**
+```
+DESPUÉS DE CADA CHUNK:
+
+□ ¿Compiló sin errores?
+□ ¿La sintaxis es idéntica al ejemplo funcional?
+□ ¿Las variables R se interpolan correctamente?
+□ ¿No hay caracteres extra o faltantes?
+
+SI ALGUNA RESPUESTA ES "NO": PARAR y consultar ejemplos funcionales
+```
+
+#### **🚨 SEÑALES DE ALERTA CRÍTICAS**
+```
+PARAR INMEDIATAMENTE SI:
+
+🔴 Estás interpolando variables complejas en TikZ sin ejemplo
+🔴 Estás mezclando sintaxis R y LaTeX sin patrón probado
+🔴 Algo "parece que debería funcionar" sin verificación
+🔴 Estás improvisando configuraciones no vistas en ejemplos
+🔴 Aparecen errores de compilación inesperados
+
+ACCIÓN: Volver a ejemplos funcionales y copiar patrón exacto
+```
+
+#### **📋 CHECKLIST FINAL OBLIGATORIO**
+```
+ANTES DE ENTREGAR CUALQUIER .RMD:
+
+□ ¿Consulté TODOS los ejemplos funcionales relevantes?
+□ ¿La sintaxis TikZ es idéntica a ejemplos probados?
+□ ¿Las variables R se interpolan correctamente?
+□ ¿No hay chunks extra o caracteres sobrantes?
+□ ¿La estructura completa sigue patrones probados?
+□ ¿Compilación exitosa sin errores?
+□ ¿Aplicé metodología de corrección de errores?
+□ ¿Verifiqué funcionamiento en múltiples formatos?
+
+SOLO ENTREGAR SI TODAS LAS RESPUESTAS SON "SÍ"
+```
+
+#### **🎯 ERRORES MÁS COMUNES A EVITAR**
+1. **Interpolación incorrecta**: `\\draw[', variable, ',thick]` → `\\draw[cyan,thick]`
+2. **Chunks extra**: Verificar que no sobren ``` al final
+3. **Sintaxis mixta**: No mezclar R y LaTeX sin patrón probado
+4. **Configuraciones inventadas**: Solo usar configuraciones de ejemplos funcionales
+5. **Variables no definidas**: Verificar que todas las variables existan
+
+#### **🔧 PROTOCOLO DE RECUPERACIÓN DE ERRORES**
+```
+SI ENCUENTRAS ERRORES:
+
+1. NO intentes "arreglar rápido"
+2. PARA la implementación
+3. CONSULTA ejemplos funcionales
+4. IDENTIFICA el patrón correcto
+5. COPIA la sintaxis exacta
+6. PRUEBA compilación
+7. CONTINÚA solo si funciona
+
+"Mejor perder 5 minutos consultando que 30 minutos debuggeando"
+```
+
+### 🎯 **IMPLEMENTACIÓN INMEDIATA DEL PROTOCOLO**
+
+**Este protocolo debe aplicarse OBLIGATORIAMENTE en todas las fases del template, especialmente:**
+- **FASE 1.4-1.5**: Consulta y validación pre-implementación
+- **FASES 3-6**: Validación continua durante implementación
+- **FASE 7**: Corrección sistemática final
+
+**El objetivo es PREVENIR errores, no corregirlos después.**
