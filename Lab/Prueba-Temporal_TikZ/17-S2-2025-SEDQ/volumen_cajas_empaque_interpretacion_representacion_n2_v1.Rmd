@@ -194,9 +194,6 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
   # CAJA 1 - Paralelepípedo (lado izquierdo)
   tikz_code <- paste0(tikz_code,
     "% CAJA 1 - Paralelepípedo\n",
-    "% Título Caja 1\n",
-    "\\node[font=\\huge\\bfseries] at (", largo1/2, ", ", alto1 + 4, ") {Caja 1};\n",
-    "\n",
     "% Base frontal de Caja 1\n",
     "\\fill[caja1_color] (0,0) rectangle (", largo1, ",", alto1, ");\n",
     "\\draw[caja_style] (0,0) rectangle (", largo1, ",", alto1, ");\n",
@@ -241,9 +238,6 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
 
   tikz_code <- paste0(tikz_code,
     "% CAJA 2 - Cubo\n",
-    "% Título Caja 2\n",
-    "\\node[font=\\huge\\bfseries] at (", x_offset + lado2/2, ", ", lado2 + 4, ") {Caja 2};\n",
-    "\n",
     "% Base frontal de Caja 2\n",
     "\\fill[caja2_color] (", x_offset, ",0) rectangle (", x_offset + lado2, ",", lado2, ");\n",
     "\\draw[caja_style] (", x_offset, ",0) rectangle (", x_offset + lado2, ",", lado2, ");\n",
@@ -280,6 +274,10 @@ generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) 
     "\\draw[linea_dim] (", x_offset + lado2, ",", lado2 + 0.3, ") -- (", x_offset + lado2, ",", lado2 + 0.7, ");\n",
     "\\draw[linea_dim] (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.3, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.7, ");\n",
     "\\node[dim_style, rotate=45] at (", x_offset + lado2 + lado2/4, ",", lado2 + lado2/4 + 1, ") {", lado2, " cm};\n",
+    "\n",
+    "% ETIQUETAS DE LAS CAJAS (al final para que aparezcan por encima)\n",
+    "\\node[font=\\Huge\\bfseries] at (", largo1/2, ", ", alto1 + 6, ") {Caja 1};\n",
+    "\\node[font=\\Huge\\bfseries] at (", x_offset + lado2/2, ", ", lado2 + 6, ") {Caja 2};\n",
     "\n",
     "\\end{tikzpicture}"
   )
