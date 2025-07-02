@@ -11,7 +11,7 @@
 
 
 
-<title>README</title>
+<title>boxes-VMWare</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,1995 +352,280 @@ display: none;
 </div>
 
 
-<div id="sistema-de-generación-de-exámenes-icfes-matemáticas" class="section level1">
-<h1>🎯 Sistema de Generación de Exámenes ICFES Matemáticas</h1>
-<p><a href="https://www.r-project.org/"><img role="img" aria-label="R" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NCIgaGVpZ2h0PSIyMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJSOiA0LngiPjx0aXRsZT5SOiA0Lng8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjQ0IiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvY2xpcFBhdGg+PGcgY2xpcC1wYXRoPSJ1cmwoI3IpIj48cmVjdCB3aWR0aD0iMTciIGhlaWdodD0iMjAiIGZpbGw9IiM1NTUiLz48cmVjdCB4PSIxNyIgd2lkdGg9IjI3IiBoZWlnaHQ9IjIwIiBmaWxsPSIjMDA3ZWM2Ii8+PHJlY3Qgd2lkdGg9IjQ0IiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9Ijk1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI3MCI+UjwvdGV4dD48dGV4dCB4PSI5NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNzAiPlI8L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjI5NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMTcwIj40Lng8L3RleHQ+PHRleHQgeD0iMjk1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSIxNzAiPjQueDwvdGV4dD48L2c+PC9zdmc+" alt="R" /></a> <a href="http://www.r-exams.org/"><img role="img" aria-label="R-exams" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSIyMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJSLWV4YW1zOiAyLjQrIj48dGl0bGU+Ui1leGFtczogMi40KzwvdGl0bGU+PGxpbmVhckdyYWRpZW50IGlkPSJzIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJyIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI1OSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjU5IiB3aWR0aD0iMzciIGhlaWdodD0iMjAiIGZpbGw9IiM5N2NhMDAiLz48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMzA1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0OTAiPlItZXhhbXM8L3RleHQ+PHRleHQgeD0iMzA1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI0OTAiPlItZXhhbXM8L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9Ijc2NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMjcwIj4yLjQrPC90ZXh0Pjx0ZXh0IHg9Ijc2NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iMjcwIj4yLjQrPC90ZXh0PjwvZz48L3N2Zz4=" alt="R-exams" /></a> <a href="https://www.latex-project.org/"><img role="img" aria-label="LaTeX" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTGFUZVg6IFRlWCBMaXZlIj48dGl0bGU+TGFUZVg6IFRlWCBMaXZlPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI0MyIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjQzIiB3aWR0aD0iNTciIGhlaWdodD0iMjAiIGZpbGw9IiNlMDVkNDQiLz48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjIyNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMzMwIj5MYVRlWDwvdGV4dD48dGV4dCB4PSIyMjUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjMzMCI+TGFUZVg8L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjcwNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNDcwIj5UZVggTGl2ZTwvdGV4dD48dGV4dCB4PSI3MDUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjQ3MCI+VGVYIExpdmU8L3RleHQ+PC9nPjwvc3ZnPg==" alt="LaTeX" /></a> <a href="https://www.python.org/"><img role="img" aria-label="Python" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3NiIgaGVpZ2h0PSIyMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJQeXRob246IDMueCI+PHRpdGxlPlB5dGhvbjogMy54PC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSI3NiIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L2NsaXBQYXRoPjxnIGNsaXAtcGF0aD0idXJsKCNyKSI+PHJlY3Qgd2lkdGg9IjQ5IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iNDkiIHdpZHRoPSIyNyIgaGVpZ2h0PSIyMCIgZmlsbD0iI2RmYjMxNyIvPjxyZWN0IHdpZHRoPSI3NiIgaGVpZ2h0PSIyMCIgZmlsbD0idXJsKCNzKSIvPjwvZz48ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iVmVyZGFuYSxHZW5ldmEsRGVqYVZ1IFNhbnMsc2Fucy1zZXJpZiIgdGV4dC1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiIgZm9udC1zaXplPSIxMTAiPjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIyNTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjM5MCI+UHl0aG9uPC90ZXh0Pjx0ZXh0IHg9IjI1NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iMzkwIj5QeXRob248L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjYxNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMTcwIj4zLng8L3RleHQ+PHRleHQgeD0iNjE1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSIxNzAiPjMueDwvdGV4dD48L2c+PC9zdmc+" alt="Python" /></a> <a href="LICENSE"><img role="img" aria-label="License" src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MiIgaGVpZ2h0PSIyMCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJMaWNlbnNlOiBNSVQiPjx0aXRsZT5MaWNlbnNlOiBNSVQ8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjgyIiBoZWlnaHQ9IjIwIiByeD0iMyIgZmlsbD0iI2ZmZiIvPjwvY2xpcFBhdGg+PGcgY2xpcC1wYXRoPSJ1cmwoI3IpIj48cmVjdCB3aWR0aD0iNTEiIGhlaWdodD0iMjAiIGZpbGw9IiM1NTUiLz48cmVjdCB4PSI1MSIgd2lkdGg9IjMxIiBoZWlnaHQ9IjIwIiBmaWxsPSIjOWY5ZjlmIi8+PHJlY3Qgd2lkdGg9IjgyIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjI2NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNDEwIj5MaWNlbnNlPC90ZXh0Pjx0ZXh0IHg9IjI2NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNDEwIj5MaWNlbnNlPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI2NTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjIxMCI+TUlUPC90ZXh0Pjx0ZXh0IHg9IjY1NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iMjEwIj5NSVQ8L3RleHQ+PC9nPjwvc3ZnPg==" alt="License" /></a></p>
-<blockquote>
-<p><strong>Sistema completo y optimizado para la generación automática
-de exámenes de matemáticas alineados con los estándares ICFES,
-utilizando R-exams y tecnologías avanzadas de
-aleatorización.</strong></p>
-</blockquote>
-<div id="características-principales" class="section level2">
-<h2>🚀 Características Principales</h2>
+<div id="tutorial-exportar-vm-de-gnome-boxes-a-vmware-workstation-en-manjaro" class="section level1">
+<h1>Tutorial: Exportar VM de GNOME Boxes a VMware Workstation en
+Manjaro</h1>
+<div id="requisitos-previos" class="section level2">
+<h2>Requisitos previos</h2>
 <ul>
-<li><strong>🎲 Aleatorización Avanzada</strong>: Más de 300 versiones
-únicas por ejercicio</li>
-<li><strong>📊 Alineación ICFES</strong>: Competencias, niveles de
-dificultad y contextos oficiales</li>
-<li><strong>🔄 Múltiples Formatos</strong>: PDF, HTML, Moodle, NOPS
-(escaneo automático)</li>
-<li><strong>🧮 Stack Tecnológico Robusto</strong>: R + LaTeX + Python +
-TikZ</li>
-<li><strong>📚 Banco Extenso</strong>: Ejercicios organizados por áreas
-temáticas</li>
-<li><strong>🔍 Metadatos Estructurados</strong>: Sistema de
-clasificación completo</li>
-<li><strong>⚡ Generación Masiva</strong>: Cientos de exámenes únicos en
-minutos</li>
-<li><strong>🎨 Metodología TikZ Avanzada</strong>: Replicación de
-imágenes PNG con 98% fidelidad visual</li>
-<li><strong>🔧 Corrección de Errores Automática</strong>: Sistema de
-detección y corrección de errores recurrentes</li>
+<li>Manjaro Linux como sistema anfitrión</li>
+<li>GNOME Boxes (Flatpak) con VM existente</li>
+<li>VMware Workstation instalado</li>
+<li>Espacio libre en disco (al menos el doble del tamaño de la VM)</li>
 </ul>
 </div>
-<div id="metodologías-avanzadas-integradas" class="section level2">
-<h2>🚀 Metodologías Avanzadas Integradas</h2>
-<div id="metodología-tikz-avanzada-para-replicación-de-imágenes" class="section level3">
-<h3>🎨 <strong>Metodología TikZ Avanzada para Replicación de
-Imágenes</strong></h3>
-<ul>
-<li><strong>✅ Replicación PNG → TikZ</strong>: Conversión automática
-con 98% fidelidad visual</li>
-<li><strong>✅ Análisis Visual Automático</strong>: Identificación de
-elementos matemáticos en imágenes</li>
-<li><strong>✅ Generación R-exams Completa</strong>: Ejercicios con 300+
-versiones únicas</li>
-<li><strong>✅ Multi-formato</strong>: Compatible con PDF, HTML, Moodle
-automáticamente</li>
-</ul>
-<p><strong>Comando de activación:</strong></p>
-<pre class="bash"><code>&quot;Aplica la metodología TikZ avanzada a esta nueva imagen PNG para generar un ejercicio R-exams completo&quot;</code></pre>
-</div>
-<div id="metodología-de-corrección-de-errores-recurrentes" class="section level3">
-<h3>🔧 <strong>Metodología de Corrección de Errores
-Recurrentes</strong></h3>
-<ul>
-<li><strong>✅ Detección Automática</strong>: 5 categorías de errores
-identificadas sistemáticamente</li>
-<li><strong>✅ Soluciones Probadas</strong>: Biblioteca de correcciones
-validadas</li>
-<li><strong>✅ Corrección Rápida</strong>: &lt; 5 minutos para errores
-comunes</li>
-<li><strong>✅ Validación Sistemática</strong>: Checklist completo pre y
-post-compilación</li>
-</ul>
-<p><strong>Categorías de errores detectadas:</strong> - <strong>A)
-Gramaticales</strong>: Concordancia de género (“La conteo” → “El
-conteo”) - <strong>B) Posicionamiento TikZ</strong>: Orden correcto
-texto → tabla → pregunta - <strong>C) Generación de datos</strong>:
-Opciones únicas, anti-duplicados - <strong>D) Compilación
-LaTeX</strong>: Paquetes, caracteres especiales - <strong>E) Estructura
-R-exams</strong>: YAML, include_tikz, variables</p>
-<p><strong>Comando de activación:</strong></p>
-<pre class="bash"><code>&quot;Aplica la metodología de corrección de errores recurrentes&quot;</code></pre>
-</div>
-<div id="integración-de-metodologías" class="section level3">
-<h3>🔗 <strong>Integración de Metodologías</strong></h3>
-<p>Ambas metodologías trabajan en conjunto para garantizar: - <strong>🎯
-Calidad Visual</strong>: 98% fidelidad en replicaciones TikZ -
-<strong>🔧 Calidad Técnica</strong>: 0 errores críticos de bloqueo -
-<strong>⚡ Eficiencia</strong>: Desarrollo y corrección sistemática -
-<strong>📚 Documentación</strong>: Proceso completo registrado y
-escalable</p>
-</div>
-</div>
-<div id="tabla-de-contenidos" class="section level2">
-<h2>📋 Tabla de Contenidos</h2>
-<ul>
-<li><a href="#id_-caracter%C3%ADsticas-principales">🚀 Características
-Principales</a></li>
-<li><a href="#id_-metodolog%C3%ADas-avanzadas-integradas">🚀
-Metodologías Avanzadas Integradas</a></li>
-<li><a href="#id_-inicio-r%C3%A1pido">⚡ Inicio Rápido</a></li>
-<li><a href="#id_%EF%B8%8F-estructura-del-repositorio">🏗️ Estructura del
-Repositorio</a></li>
-<li><a href="#id_-tipos-de-ex%C3%A1menes-disponibles">📝 Tipos de
-Exámenes Disponibles</a></li>
-<li><a href="#id_-ejemplos-de-uso">💻 Ejemplos de Uso</a></li>
-<li><a href="#id_-sistema-de-metadatos-icfes">🎯 Sistema de Metadatos
-ICFES</a></li>
-<li><a href="#id_-tecnolog%C3%ADas-utilizadas">🔧 Tecnologías
-Utilizadas</a></li>
-<li><a href="#id_-casos-de-uso">📖 Casos de Uso</a></li>
-<li><a href="#id_-flujo-de-trabajo">🔄 Flujo de Trabajo</a></li>
-<li><a href="#id_-metodolog%C3%ADas-de-desarrollo">🎨 Metodologías de
-Desarrollo</a></li>
-<li><a href="#id_-contribuir-al-proyecto">🤝 Contribuir al
-Proyecto</a></li>
-<li><a href="#id_%EF%B8%8F-instalaci%C3%B3n-completa">⚙️ Instalación
-Completa</a></li>
-<li><a href="#id_-recursos-y-referencias">📚 Recursos y
-Referencias</a></li>
-</ul>
-</div>
-<div id="inicio-rápido" class="section level2">
-<h2>⚡ Inicio Rápido</h2>
-<div id="generar-tu-primer-examen-en-3-pasos" class="section level3">
-<h3>🎯 Generar tu primer examen en 3 pasos</h3>
-<pre class="r"><code># 1. Cargar el sistema
-library(exams)
-setwd(&quot;~/proyecto-r-exams-icfes-matematicas-optimizado&quot;)
+<div id="paso-1-preparar-el-sistema" class="section level2">
+<h2>Paso 1: Preparar el sistema</h2>
+<div id="cerrar-completamente-gnome-boxes" class="section level3">
+<h3>1.1 Cerrar completamente GNOME Boxes</h3>
+<pre class="bash"><code># Cerrar Boxes (Flatpak)
+flatpak kill org.gnome.Boxes
 
-# 2. Seleccionar ejercicios por área temática
-ejercicios &lt;- list(
-  &quot;06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/01-Variables-Cualitativas_Distribucion-De-Frecuencias/Graficos_Estadisticos_Adopcion_Mascotas/graficos_estadisticos_adopcion_mascotas_formulacion_ejecucion.Rmd&quot;,
-  &quot;06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/04-Medidas-De-Tendencia-Central/Media/Promedios-Borrados/mediana_salas_cine_formulacion_ejecucion_v2.Rmd&quot;
-)
+# Verificar que no hay procesos ejecutándose
+ps aux | grep -i boxes
+ps aux | grep qemu</code></pre>
+</div>
+<div id="instalar-herramientas-necesarias" class="section level3">
+<h3>1.2 Instalar herramientas necesarias</h3>
+<pre class="bash"><code># Instalar qemu-img (herramienta de conversión)
+sudo pacman -S qemu-img
 
-# 3. Generar examen (10 versiones únicas)
-exams2pdf(ejercicios, n = 10, name = &quot;examen_icfes_matematicas&quot;)</code></pre>
-</div>
-<div id="resultado-instantáneo" class="section level3">
-<h3>🎲 Resultado Instantáneo</h3>
-<ul>
-<li>✅ <strong>10 exámenes únicos</strong> con preguntas
-aleatorizadas</li>
-<li>✅ <strong>Soluciones detalladas</strong> incluidas
-automáticamente</li>
-<li>✅ <strong>Formato profesional</strong> listo para imprimir</li>
-<li>✅ <strong>Metadatos ICFES</strong> integrados en cada
-ejercicio</li>
-</ul>
-<hr />
+# Verificar instalación
+qemu-img --version</code></pre>
 </div>
 </div>
-<div id="estructura-del-repositorio" class="section level2">
-<h2>🏗️ Estructura del Repositorio</h2>
-<p>El proyecto está organizado siguiendo la <strong>taxonomía oficial
-ICFES</strong> para matemáticas:</p>
-<pre><code>📁 proyecto-r-exams-icfes-matematicas-optimizado/
-├── 📊 01-Numeros-Reales/                    # Pensamiento Numérico
-├── 📈 02-Funciones/                         # Pensamiento Variacional-Espacial
-├── 📐 03-Razones-Trigonometricas/          # Pensamiento Espacial-Métrico
-├── 🔄 04-Funciones-Identidades-Trigonometricas/  # Pensamiento Variacional
-├── 📏 05-Geometria-Analitica/              # Pensamiento Espacial
-├── 📊 06-Estadística-Y-Probabilidad/       # Pensamiento Aleatorio
-├── 🧪 Lab/                                 # Laboratorio de desarrollo
-├── 🔧 Auxiliares/                          # Herramientas y configuración
-└── 📚 General/                             # Plantillas y recursos</code></pre>
-<div id="áreas-temáticas-por-períodos-académicos" class="section level3">
-<h3>📊 Áreas Temáticas por Períodos Académicos</h3>
-<div id="álgebra-y-cálculo-componente-numérico-variacional" class="section level4">
-<h4><strong>📈 Álgebra y Cálculo</strong> (Componente
-Numérico-Variacional)</h4>
-<table>
-<colgroup>
-<col width="17%" />
-<col width="23%" />
-<col width="15%" />
-<col width="43%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Período</th>
-<th>Contenidos</th>
-<th>Estado</th>
-<th>Ejercicios Tipo ICFES</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>P1</strong></td>
-<td>Números y operaciones, sistemas de numeración, racionales</td>
-<td>🔄 En desarrollo</td>
-<td>Notación científica, porcentajes</td>
-</tr>
-<tr class="even">
-<td><strong>P2</strong></td>
-<td>Expresiones algebraicas, productos notables, factorización</td>
-<td>🔄 En desarrollo</td>
-<td>Términos semejantes, álgebra básica</td>
-</tr>
-<tr class="odd">
-<td><strong>P3</strong></td>
-<td>Trigonometría, razones, funciones, periodicidad</td>
-<td>🔄 En desarrollo</td>
-<td>Ley del seno/coseno</td>
-</tr>
-<tr class="even">
-<td><strong>P4</strong></td>
-<td>Funciones polinomiales, racionales, exponenciales</td>
-<td>✅ Parcial</td>
-<td>Variación lineal, razones de cambio</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="geometría-componente-geométrico-métrico" class="section level4">
-<h4><strong>📐 Geometría</strong> (Componente Geométrico-Métrico)</h4>
-<table>
-<colgroup>
-<col width="17%" />
-<col width="23%" />
-<col width="15%" />
-<col width="43%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Período</th>
-<th>Contenidos</th>
-<th>Estado</th>
-<th>Ejercicios Tipo ICFES</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>P1</strong></td>
-<td>Triángulos, ángulos, Pitágoras, Tales</td>
-<td>🔄 En desarrollo</td>
-<td>Congruencia, semejanza</td>
-</tr>
-<tr class="even">
-<td><strong>P2</strong></td>
-<td>Polígonos, transformaciones en el plano</td>
-<td>🔄 En desarrollo</td>
-<td>Traslación, reflexión, homotecia</td>
-</tr>
-<tr class="odd">
-<td><strong>P3</strong></td>
-<td>Círculo, circunferencia, sectores circulares</td>
-<td>🔄 En desarrollo</td>
-<td>Área, perímetro, arcos</td>
-</tr>
-<tr class="even">
-<td><strong>P4</strong></td>
-<td>Cuerpos redondos, cilindros, conos, esferas</td>
-<td>🔄 En desarrollo</td>
-<td>Volúmenes, composición</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="estadística-componente-aleatorio" class="section level4">
-<h4><strong>📊 Estadística</strong> (Componente Aleatorio)</h4>
-<table>
-<colgroup>
-<col width="17%" />
-<col width="23%" />
-<col width="15%" />
-<col width="43%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Período</th>
-<th>Contenidos</th>
-<th>Estado</th>
-<th>Ejercicios Tipo ICFES</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>P1</strong></td>
-<td>Representación de datos, tablas, gráficos</td>
-<td>✅ Completo</td>
-<td>Variables cualitativas, adopción mascotas</td>
-</tr>
-<tr class="even">
-<td><strong>P2</strong></td>
-<td>Medidas descriptivas, tendencia central</td>
-<td>✅ Completo</td>
-<td>Media, mediana, moda, dispersión</td>
-</tr>
-<tr class="odd">
-<td><strong>P3</strong></td>
-<td>Combinatoria, probabilidad, diagramas de Venn</td>
-<td>✅ Completo</td>
-<td>Géneros musicales, principios conteo</td>
-</tr>
-<tr class="even">
-<td><strong>P4</strong></td>
-<td>Regresión, correlación, dispersión</td>
-<td>🔄 En desarrollo</td>
-<td>Coeficiente Pearson, estimación</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="tipos-de-exámenes-disponibles" class="section level2">
-<h2>📝 Tipos de Exámenes Disponibles</h2>
-<div id="por-competencias-icfes-distribución-oficial" class="section level3">
-<h3>🎯 Por Competencias ICFES (Distribución Oficial)</h3>
-<table>
-<colgroup>
-<col width="21%" />
-<col width="16%" />
-<col width="21%" />
-<col width="40%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Competencia</th>
-<th>% Prueba</th>
-<th>Descripción</th>
-<th>Ejercicios Disponibles</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>🔍 Interpretación y Representación</strong></td>
-<td><strong>34%</strong></td>
-<td>Habilidad para comprender y transformar información en distintos
-formatos (tablas, gráficas, diagramas) y extraer información
-relevante</td>
-<td>✅ Gráficos estadísticos, tablas de frecuencia, diagramas de
-Venn</td>
-</tr>
-<tr class="even">
-<td><strong>⚙️ Formulación y Ejecución</strong></td>
-<td><strong>43%</strong></td>
-<td>Capacidad para plantear y diseñar estrategias de solución a
-problemas de diversos contextos usando herramientas matemáticas</td>
-<td>✅ Medidas de tendencia central, variación lineal, probabilidad</td>
-</tr>
-<tr class="odd">
-<td><strong>💭 Argumentación</strong></td>
-<td><strong>23%</strong></td>
-<td>Capacidad para validar o refutar conclusiones, estrategias y
-soluciones, justificando el porqué a través de propiedades
-matemáticas</td>
-<td>🔄 En desarrollo activo</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="por-niveles-de-desempeño-icfes" class="section level3">
-<h3>📊 Por Niveles de Desempeño ICFES</h3>
-<div id="nivel-1-puntaje-0-35" class="section level4">
-<h4><strong>🟢 Nivel 1 (Puntaje 0-35)</strong></h4>
-<ul>
-<li><strong>Lectura puntual</strong>: Información directa en
-tablas/gráficas con escala explícita</li>
-<li><strong>Ejercicios disponibles</strong>: Variables cualitativas
-básicas</li>
-</ul>
-</div>
-<div id="nivel-2-puntaje-36-50" class="section level4">
-<h4><strong>🟡 Nivel 2 (Puntaje 36-50)</strong></h4>
-<ul>
-<li><strong>Comparación de datos</strong>: Sin operaciones matemáticas
-complejas</li>
-<li><strong>Valores representativos</strong>: Promedio, moda, máximo,
-mínimo</li>
-<li><strong>Probabilidad simple</strong>: Casos favorables/casos
-posibles</li>
-<li><strong>Ejercicios disponibles</strong>: Medidas de tendencia
-central, gráficos de adopción</li>
-</ul>
-</div>
-<div id="nivel-3-puntaje-51-70" class="section level4">
-<h4><strong>🟠 Nivel 3 (Puntaje 51-70)</strong></h4>
-<ul>
-<li><strong>Selección de gráficas</strong>: Considerando escala, tipo de
-variable y formato</li>
-<li><strong>Manipulaciones aritméticas</strong>: Comparaciones que
-requieren cálculos</li>
-<li><strong>Transformaciones</strong>: Entre diferentes tipos de
-registro</li>
-<li><strong>Ejercicios disponibles</strong>: Variación lineal, análisis
-de contextos laborales</li>
-</ul>
-</div>
-<div id="nivel-4-puntaje-71-100" class="section level4">
-<h4><strong>🔴 Nivel 4 (Puntaje 71-100)</strong></h4>
-<ul>
-<li><strong>Modelación algebraica</strong>: Lenguaje natural → lenguaje
-algebraico</li>
-<li><strong>Eventos dependientes</strong>: Interpretación de información
-compleja</li>
-<li><strong>Análisis combinatorio</strong>: Permutaciones y espacios
-muestrales</li>
-<li><strong>Ejercicios disponibles</strong>: 🔄 En desarrollo
-prioritario</li>
-</ul>
-</div>
-</div>
-<div id="por-contextos-de-aplicación-clasificación-icfes" class="section level3">
-<h3>🌍 Por Contextos de Aplicación (Clasificación ICFES)</h3>
-<div id="familiares-o-personales" class="section level4">
-<h4><strong>👨‍👩‍👧‍👦 Familiares o Personales</strong></h4>
-<ul>
-<li><strong>Definición</strong>: Situaciones cotidianas del entorno
-familiar o personal</li>
-<li><strong>Incluye</strong>: Finanzas personales, gestión del hogar,
-transporte, salud, recreación</li>
-<li><strong>Ejercicios disponibles</strong>: ✅ Adopción de mascotas,
-géneros musicales</li>
-</ul>
-</div>
-<div id="laborales-u-ocupacionales" class="section level4">
-<h4><strong>💼 Laborales u Ocupacionales</strong></h4>
-<ul>
-<li><strong>Definición</strong>: Tareas desarrolladas en el trabajo sin
-conocimientos técnicos específicos</li>
-<li><strong>Incluye</strong>: Logística, planificación, análisis de
-datos, gestión empresarial</li>
-<li><strong>Ejercicios disponibles</strong>: ✅ Auto viajero (variación
-lineal), análisis de productividad</li>
-</ul>
-</div>
-<div id="comunitarios-o-sociales" class="section level4">
-<h4><strong>🏛️ Comunitarios o Sociales</strong></h4>
-<ul>
-<li><strong>Definición</strong>: Interacción social y cuestiones de la
-sociedad en conjunto</li>
-<li><strong>Incluye</strong>: Política, economía, convivencia, cuidado
-del medioambiente</li>
-<li><strong>Ejercicios disponibles</strong>: 🔄 En desarrollo
-(problemáticas ambientales, análisis demográfico)</li>
-</ul>
-</div>
-<div id="matemáticos-o-científicos" class="section level4">
-<h4><strong>🔬 Matemáticos o Científicos</strong></h4>
-<ul>
-<li><strong>Definición</strong>: Situaciones abstractas propias de las
-matemáticas o ciencias</li>
-<li><strong>Propósito</strong>: Evaluar habilidades matemáticas en sí
-mismas (contenidos no genéricos)</li>
-<li><strong>Ejercicios disponibles</strong>: ✅ Funciones
-trigonométricas, álgebra abstracta</li>
-</ul>
-<hr />
-</div>
-</div>
-</div>
-<div id="ejemplos-de-uso" class="section level2">
-<h2>💻 Ejemplos de Uso</h2>
-<div id="generar-examen-en-pdf" class="section level3">
-<h3>📄 Generar Examen en PDF</h3>
-<pre class="r"><code>library(exams)
+<div id="paso-2-localizar-la-vm-en-gnome-boxes" class="section level2">
+<h2>Paso 2: Localizar la VM en GNOME Boxes</h2>
+<div id="encontrar-los-archivos-de-la-vm" class="section level3">
+<h3>2.1 Encontrar los archivos de la VM</h3>
+<pre class="bash"><code># Listar VMs disponibles (Flatpak)
+ls -la ~/.var/app/org.gnome.Boxes/data/gnome-boxes/images/
 
-# Examen de estadística básica
-ejercicios_estadistica &lt;- list(
-  &quot;06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/01-Variables-Cualitativas_Distribucion-De-Frecuencias/Graficos_Estadisticos_Adopcion_Mascotas/graficos_estadisticos_adopcion_mascotas_formulacion_ejecucion.Rmd&quot;,
-  &quot;06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/04-Medidas-De-Tendencia-Central/Media/Promedios-Borrados/mediana_salas_cine_formulacion_ejecucion_v2.Rmd&quot;
-)
+# Ver información del archivo
+file ~/.var/app/org.gnome.Boxes/data/gnome-boxes/images/*</code></pre>
+</div>
+<div id="verificar-el-formato-y-tamaño" class="section level3">
+<h3>2.2 Verificar el formato y tamaño</h3>
+<pre class="bash"><code># Obtener información detallada de la VM
+qemu-img info ~/.var/app/org.gnome.Boxes/data/gnome-boxes/images/[nombre-vm]</code></pre>
+</div>
+</div>
+<div id="paso-3-conversión-del-disco-virtual" class="section level2">
+<h2>Paso 3: Conversión del disco virtual</h2>
+<div id="crear-directorio-de-trabajo" class="section level3">
+<h3>3.1 Crear directorio de trabajo</h3>
+<pre class="bash"><code># Crear directorio para VMware
+mkdir -p ~/VMware-VMs/[nombre-vm]
 
-# Generar 20 versiones únicas
-exams2pdf(ejercicios_estadistica,
-          n = 20,
-          name = &quot;examen_estadistica_icfes&quot;,
-          dir = &quot;examenes_generados&quot;,
-          template = c(&quot;plain&quot;, &quot;solution&quot;))</code></pre>
+# Verificar creación
+ls -la ~/VMware-VMs/</code></pre>
 </div>
-<div id="generar-para-moodle" class="section level3">
-<h3>🌐 Generar para Moodle</h3>
-<pre class="r"><code># Exportar a formato Moodle XML
-exams2moodle(ejercicios_estadistica,
-             n = 50,
-             name = &quot;banco_preguntas_estadistica&quot;,
-             dir = &quot;moodle_export&quot;)</code></pre>
-</div>
-<div id="generar-examen-interactivo-html" class="section level3">
-<h3>📱 Generar Examen Interactivo HTML</h3>
-<pre class="r"><code># Versión web interactiva
-exams2html(ejercicios_estadistica,
-           n = 10,
-           name = &quot;examen_interactivo&quot;,
-           mathjax = TRUE,
-           solution = TRUE)</code></pre>
-</div>
-<div id="generar-para-escaneo-automático-nops" class="section level3">
-<h3>🖨️ Generar para Escaneo Automático (NOPS)</h3>
-<pre class="r"><code># Para corrección automática con escáner
-exams2nops(ejercicios_estadistica,
-           n = 100,
-           name = &quot;examen_nops_estadistica&quot;,
-           date = Sys.Date(),
-           points = c(2, 3, 5))</code></pre>
-</div>
-</div>
-<div id="sistema-de-metadatos-icfes" class="section level2">
-<h2>🎯 Sistema de Metadatos ICFES</h2>
-<p>Cada ejercicio incluye <strong>metadatos estructurados</strong> que
-garantizan la alineación con estándares oficiales:</p>
-<div id="estructura-de-metadatos-icfes-oficial" class="section level3">
-<h3>📊 Estructura de Metadatos ICFES (Oficial)</h3>
-<pre class="yaml"><code>icfes:
-  # COMPETENCIAS (Distribución oficial de la prueba)
-  competencia:
-    - interpretacion_representacion    # 34% - Comprensión y transformación de información
-    - formulacion_ejecucion           # 43% - Diseño de estrategias de solución
-    - argumentacion                   # 23% - Validación de conclusiones
+<div id="convertir-qcow2-a-vmdk" class="section level3">
+<h3>3.2 Convertir QCOW2 a VMDK</h3>
+<pre class="bash"><code># Conversión principal (puede tomar 30-60 minutos)
+qemu-img convert -f qcow2 -O vmdk -U \
+  ~/.var/app/org.gnome.Boxes/data/gnome-boxes/images/[nombre-vm] \
+  ~/VMware-VMs/[nombre-vm]/[nombre-vm].vmdk
 
-  # NIVEL DE DESEMPEÑO (Puntajes oficiales ICFES)
-  nivel_dificultad: [1|2|3|4]        # 1(0-35), 2(36-50), 3(51-70), 4(71-100)
+# Verificar la conversión exitosa
+qemu-img info ~/VMware-VMs/[nombre-vm]/[nombre-vm].vmdk
+ls -lah ~/VMware-VMs/[nombre-vm]/</code></pre>
+</div>
+<div id="alternativa-si-hay-problemas-de-bloqueo" class="section level3">
+<h3>3.3 Alternativa si hay problemas de bloqueo</h3>
+<pre class="bash"><code># Si el archivo está en uso, hacer copia primero
+cp ~/.var/app/org.gnome.Boxes/data/gnome-boxes/images/[nombre-vm] \
+   ~/VMware-VMs/[nombre-vm]-backup.qcow2
 
-  # CATEGORÍAS DE CONTENIDO MATEMÁTICO
-  contenido:
-    categoria: [algebra_calculo|geometria|estadistica]  # Tres categorías oficiales
-    tipo: [generico|no_generico]      # Genérico: ciudadano común | No genérico: específico matemático
-
-  # CONTEXTOS DE APLICACIÓN (Clasificación oficial)
-  contexto: [familiar|laboral|comunitario|matematico]  # Cuatro contextos definidos por ICFES
-
-  # COMPONENTES CURRICULARES (Reorganización de 5 pensamientos)
-  componente: [aleatorio|numerico_variacional|geometrico_metrico]
-
-  # EJES AXIALES DISCIPLINARES (Estructura interna de evaluación)
-  eje_axial: [eje1|eje2|eje3|eje4]   # Eje1: Datos, Eje2: Geometría, Eje3: Álgebra, Eje4: Estadística
-
-  # APRENDIZAJES Y EVIDENCIAS (Marco pedagógico)
-  aprendizaje: &quot;Descripción del proceso cognitivo esperado&quot;
-  evidencia: &quot;Producto observable que confirma la competencia&quot;</code></pre>
-</div>
-<div id="componentes-matemáticos-icfes" class="section level3">
-<h3>🎯 Componentes Matemáticos ICFES</h3>
-<table>
-<colgroup>
-<col width="15%" />
-<col width="26%" />
-<col width="27%" />
-<col width="30%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Componente</th>
-<th>Categoría Curricular</th>
-<th>Contenidos Evaluados</th>
-<th>Ejercicios Disponibles</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>🎲 Aleatorio</strong></td>
-<td><strong>Estadística</strong></td>
-<td>Representación de datos, medidas descriptivas, probabilidad,
-combinatoria</td>
-<td>✅ Variables cualitativas, tendencia central, diagramas de Venn</td>
-</tr>
-<tr class="even">
-<td><strong>📊 Numérico-Variacional</strong></td>
-<td><strong>Álgebra y Cálculo</strong></td>
-<td>Números racionales, operaciones, funciones, modelación
-algebraica</td>
-<td>✅ Variación lineal, razones de cambio</td>
-</tr>
-<tr class="odd">
-<td><strong>📐 Geométrico-Métrico</strong></td>
-<td><strong>Geometría</strong></td>
-<td>Figuras planas, sólidos, transformaciones, medición, visualización
-espacial</td>
-<td>🔄 En desarrollo activo</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="contenidos-por-categoría-clasificación-icfes" class="section level3">
-<h3>📚 Contenidos por Categoría (Clasificación ICFES)</h3>
-<div id="estadística" class="section level4">
-<h4><strong>📊 Estadística</strong></h4>
-<ul>
-<li><strong>Genéricos</strong>: Tablas, gráficas, promedio, rango,
-conteos simples, inferencia muestral</li>
-<li><strong>No Genéricos</strong>: Varianza, percentiles, mediana,
-correlación, combinaciones, permutaciones</li>
-</ul>
-</div>
-<div id="geometría" class="section level4">
-<h4><strong>📐 Geometría</strong></h4>
-<ul>
-<li><strong>Genéricos</strong>: Triángulos, círculos, paralelogramos,
-coordenadas cartesianas, paralelismo</li>
-<li><strong>No Genéricos</strong>: Polígonos complejos, congruencia,
-teoremas clásicos, transformaciones</li>
-</ul>
-</div>
-<div id="álgebra-y-cálculo" class="section level4">
-<h4><strong>🧮 Álgebra y Cálculo</strong></h4>
-<ul>
-<li><strong>Genéricos</strong>: Números racionales, operaciones básicas,
-relaciones lineales, razones de cambio</li>
-<li><strong>No Genéricos</strong>: Expresiones algebraicas, funciones
-avanzadas, sucesiones, límites</li>
-</ul>
-</div>
-</div>
-<div id="ejes-axiales-disciplinares" class="section level3">
-<h3>📈 Ejes Axiales Disciplinares</h3>
-<div id="eje-1---interpretación-de-datos" class="section level4">
-<h4><strong>🎯 Eje 1 - Interpretación de Datos</strong></h4>
-<ul>
-<li>Tablas univariadas, bivariadas, multivariadas</li>
-<li>Series temporales y diagramas especiales</li>
-<li><strong>Ejercicios</strong>: ✅ Gráficos de adopción,
-frecuencias</li>
-</ul>
-</div>
-<div id="eje-2---geometría-y-visualización" class="section level4">
-<h4><strong>📐 Eje 2 - Geometría y Visualización</strong></h4>
-<ul>
-<li>Imágenes tridimensionales, sólidos, transformaciones</li>
-<li>Triángulos, polígonos, secciones cónicas</li>
-<li><strong>Ejercicios</strong>: 🔄 En desarrollo</li>
-</ul>
-</div>
-<div id="eje-3---álgebra-y-funciones" class="section level4">
-<h4><strong>🔢 Eje 3 - Álgebra y Funciones</strong></h4>
-<ul>
-<li>Funciones lineales, polinómicas, teoría de números</li>
-<li><strong>Ejercicios</strong>: ✅ Variación lineal</li>
-</ul>
-</div>
-<div id="eje-4---estadística-y-probabilidad" class="section level4">
-<h4><strong>🎲 Eje 4 - Estadística y Probabilidad</strong></h4>
-<ul>
-<li>Descriptivos, espacios muestrales, probabilidad condicional</li>
-<li><strong>Ejercicios</strong>: ✅ Medidas centrales, diagramas de
-Venn</li>
-</ul>
-<hr />
-</div>
-</div>
-</div>
-<div id="tecnologías-utilizadas" class="section level2">
-<h2>🔧 Tecnologías Utilizadas</h2>
-<div id="stack-principal" class="section level3">
-<h3>🏗️ Stack Principal</h3>
-<pre class="mermaid"><code>graph TD
-    A[R 4.x] --&gt; B[R-exams 2.4+]
-    B --&gt; C[LaTeX/TikZ]
-    B --&gt; D[Python/Reticulate]
-    B --&gt; E[Knitr/RMarkdown]
-
-    C --&gt; F[PDF Output]
-    D --&gt; G[Gráficos Avanzados]
-    E --&gt; H[HTML/Moodle]
-
-    style A fill:#276DC3
-    style B fill:#4CAF50
-    style C fill:#FF5722
-    style D fill:#FFC107</code></pre>
-</div>
-<div id="herramientas-específicas" class="section level3">
-<h3>🛠️ Herramientas Específicas</h3>
-<table>
-<thead>
-<tr class="header">
-<th>Tecnología</th>
-<th>Propósito</th>
-<th>Versión</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>R</strong></td>
-<td>Motor principal de procesamiento</td>
-<td>4.x</td>
-</tr>
-<tr class="even">
-<td><strong>R-exams</strong></td>
-<td>Framework de generación de exámenes</td>
-<td>2.4+</td>
-</tr>
-<tr class="odd">
-<td><strong>LaTeX</strong></td>
-<td>Composición tipográfica y matemáticas</td>
-<td>TeX Live</td>
-</tr>
-<tr class="even">
-<td><strong>TikZ</strong></td>
-<td>Gráficos geométricos y diagramas</td>
-<td>3.x</td>
-</tr>
-<tr class="odd">
-<td><strong>Python</strong></td>
-<td>Visualizaciones avanzadas (matplotlib, seaborn)</td>
-<td>3.x</td>
-</tr>
-<tr class="even">
-<td><strong>Reticulate</strong></td>
-<td>Integración R-Python</td>
-<td>1.x</td>
-</tr>
-<tr class="odd">
-<td><strong>ImageMagick</strong></td>
-<td>Procesamiento de imágenes</td>
-<td>7.x</td>
-</tr>
-<tr class="even">
-<td><strong>Pandoc</strong></td>
-<td>Conversión entre formatos</td>
-<td>2.x</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="capacidades-técnicas" class="section level3">
-<h3>⚡ Capacidades Técnicas</h3>
-<ul>
-<li><strong>🎲 Aleatorización</strong>: Semillas controladas, parámetros
-variables</li>
-<li><strong>📊 Visualización</strong>: ggplot2, matplotlib, TikZ
-integrados</li>
-<li><strong>🔄 Formatos</strong>: PDF, HTML, XML (Moodle), NOPS</li>
-<li><strong>📱 Responsive</strong>: Diseño adaptativo para dispositivos
-móviles</li>
-<li><strong>🔍 Metadatos</strong>: Sistema completo de clasificación
-ICFES</li>
-</ul>
-</div>
-</div>
-<div id="casos-de-uso" class="section level2">
-<h2>📖 Casos de Uso</h2>
-<div id="instituciones-educativas" class="section level3">
-<h3>🏫 Instituciones Educativas</h3>
-<div id="exámenes-de-aula" class="section level4">
-<h4><strong>📚 Exámenes de Aula</strong></h4>
-<pre class="r"><code># Evaluación semanal de estadística
-exams2pdf(&quot;estadistica_basica.Rmd&quot;, n = 30, name = &quot;quiz_semanal&quot;)</code></pre>
-<ul>
-<li>✅ 30 versiones únicas para evitar copia</li>
-<li>✅ Corrección automática con soluciones</li>
-<li>✅ Tiempo de preparación: 2 minutos</li>
-</ul>
-</div>
-<div id="evaluaciones-institucionales" class="section level4">
-<h4><strong>🎓 Evaluaciones Institucionales</strong></h4>
-<pre class="r"><code># Examen final con múltiples temas
-temas_finales &lt;- list(
-  &quot;estadistica/variables_cualitativas.Rmd&quot;,
-  &quot;funciones/variacion_lineal.Rmd&quot;,
-  &quot;probabilidad/principios_conteo.Rmd&quot;
-)
-exams2pdf(temas_finales, n = 100, name = &quot;examen_final_matematicas&quot;)</code></pre>
-</div>
-<div id="bancos-de-preguntas" class="section level4">
-<h4><strong>📊 Bancos de Preguntas</strong></h4>
-<pre class="r"><code># Exportar a Moodle para uso continuo
-exams2moodle(temas_finales, n = 500, name = &quot;banco_matematicas_icfes&quot;)</code></pre>
-</div>
-</div>
-<div id="secretarías-de-educación" class="section level3">
-<h3>🏛️ Secretarías de Educación</h3>
-<div id="evaluaciones-masivas" class="section level4">
-<h4><strong>📈 Evaluaciones Masivas</strong></h4>
-<ul>
-<li><strong>Alcance</strong>: Miles de estudiantes simultáneamente</li>
-<li><strong>Formatos</strong>: PDF para impresión, NOPS para escaneo
-automático</li>
-<li><strong>Análisis</strong>: Reportes estadísticos automáticos por
-institución</li>
-</ul>
-</div>
-<div id="preparación-icfes" class="section level4">
-<h4><strong>🎯 Preparación ICFES</strong></h4>
-<ul>
-<li><strong>Simulacros</strong>: Réplicas exactas del formato
-oficial</li>
-<li><strong>Seguimiento</strong>: Análisis de competencias por
-estudiante</li>
-<li><strong>Retroalimentación</strong>: Identificación de áreas de
-mejora</li>
-</ul>
-</div>
-</div>
-<div id="investigación-educativa" class="section level3">
-<h3>🔬 Investigación Educativa</h3>
-<div id="análisis-psicométrico" class="section level4">
-<h4><strong>📊 Análisis Psicométrico</strong></h4>
-<pre class="r"><code># Generar datos para análisis de ítems
-resultados &lt;- exams2nops(ejercicios, n = 1000)
-# Análisis automático de dificultad y discriminación</code></pre>
-</div>
-<div id="estudios-longitudinales" class="section level4">
-<h4><strong>📈 Estudios Longitudinales</strong></h4>
-<ul>
-<li><strong>Seguimiento</strong>: Evolución del aprendizaje en el
-tiempo</li>
-<li><strong>Comparación</strong>: Efectividad de metodologías de
-enseñanza</li>
-<li><strong>Validación</strong>: Instrumentos de evaluación</li>
-</ul>
-<hr />
-</div>
-</div>
-</div>
-<div id="flujo-de-trabajo" class="section level2">
-<h2>🔄 Flujo de Trabajo</h2>
-<div id="proceso-completo-de-generación" class="section level3">
-<h3>📋 Proceso Completo de Generación</h3>
-<pre class="mermaid"><code>flowchart TD
-    A[📝 Seleccionar Ejercicios] --&gt; B[🎯 Configurar Metadatos ICFES]
-    B --&gt; C[🎲 Definir Aleatorización]
-    C --&gt; D[⚙️ Ejecutar Generación]
-    D --&gt; E{📄 Formato Deseado}
-
-    E --&gt;|PDF| F[📄 Exámenes Impresos]
-    E --&gt;|HTML| G[🌐 Versión Interactiva]
-    E --&gt;|Moodle| H[📚 Banco de Preguntas]
-    E --&gt;|NOPS| I[🖨️ Escaneo Automático]
-
-    F --&gt; J[✅ Distribución]
-    G --&gt; J
-    H --&gt; J
-    I --&gt; K[📊 Corrección Automática]
-    K --&gt; L[📈 Análisis de Resultados]
-
-    style A fill:#E3F2FD
-    style D fill:#4CAF50
-    style J fill:#FF9800
-    style L fill:#9C27B0</code></pre>
-</div>
-<div id="pasos-detallados" class="section level3">
-<h3>🎯 Pasos Detallados</h3>
-<div id="preparación" class="section level4">
-<h4><strong>1. 📝 Preparación</strong></h4>
-<pre class="r"><code># Configurar entorno
-library(exams)
-setwd(&quot;proyecto-r-exams-icfes-matematicas-optimizado&quot;)
-
-# Verificar ejercicios disponibles
-list.files(pattern = &quot;*.Rmd&quot;, recursive = TRUE)</code></pre>
-</div>
-<div id="configuración" class="section level4">
-<h4><strong>2. 🎲 Configuración</strong></h4>
-<pre class="r"><code># Definir parámetros del examen
-set.seed(2025)  # Reproducibilidad
-n_versiones &lt;- 50
-formato_salida &lt;- &quot;pdf&quot;  # o &quot;html&quot;, &quot;moodle&quot;, &quot;nops&quot;</code></pre>
-</div>
-<div id="generación" class="section level4">
-<h4><strong>3. ⚙️ Generación</strong></h4>
-<pre class="r"><code># Ejecutar generación masiva
-exams2pdf(ejercicios_seleccionados,
-          n = n_versiones,
-          name = &quot;examen_icfes_2025&quot;,
-          dir = &quot;examenes_generados&quot;,
-          template = c(&quot;plain&quot;, &quot;solution&quot;))</code></pre>
-</div>
-<div id="análisis-opcional" class="section level4">
-<h4><strong>4. 📊 Análisis (Opcional)</strong></h4>
-<pre class="r"><code># Para formato NOPS con corrección automática
-resultados &lt;- nops_eval(
-  register = &quot;estudiantes.csv&quot;,
-  solutions = &quot;examenes_generados/examen_icfes_2025.rds&quot;,
-  scans = &quot;escaneos/&quot;
-)</code></pre>
-</div>
-</div>
-<div id="tiempos-de-procesamiento" class="section level3">
-<h3>⏱️ Tiempos de Procesamiento</h3>
-<table>
-<thead>
-<tr class="header">
-<th>Cantidad</th>
-<th>Formato</th>
-<th>Tiempo Estimado</th>
-<th>Recursos</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>10 exámenes</td>
-<td>PDF</td>
-<td>30 segundos</td>
-<td>CPU básico</td>
-</tr>
-<tr class="even">
-<td>50 exámenes</td>
-<td>PDF</td>
-<td>2 minutos</td>
-<td>CPU medio</td>
-</tr>
-<tr class="odd">
-<td>100 exámenes</td>
-<td>PDF</td>
-<td>5 minutos</td>
-<td>CPU potente</td>
-</tr>
-<tr class="even">
-<td>500 preguntas</td>
-<td>Moodle</td>
-<td>3 minutos</td>
-<td>RAM 8GB+</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="metodologías-de-desarrollo" class="section level2">
-<h2>🎨 Metodologías de Desarrollo</h2>
-<div id="metodología-tikz-avanzada-para-replicación-de-imágenes-png" class="section level3">
-<h3>🎯 <strong>Metodología TikZ Avanzada para Replicación de Imágenes
-PNG</strong></h3>
-<div id="proceso-completo-de-replicación" class="section level4">
-<h4><strong>📋 Proceso Completo de Replicación</strong></h4>
-<p><strong>Fase 1: Análisis Visual Automático</strong> - ✅
-<strong>Identificación de elementos</strong>: Texto, tablas, gráficos,
-diagramas - ✅ <strong>Análisis de colores</strong>: Extracción RGB
-exacta - ✅ <strong>Medición de posiciones</strong>: Coordenadas
-precisas de elementos - ✅ <strong>Detección de patrones</strong>:
-Formas geométricas, líneas, puntos</p>
-<p><strong>Fase 2: Generación TikZ Optimizada</strong> - ✅
-<strong>Código TikZ avanzado</strong>: Uso de características
-profesionales - ✅ <strong>Posicionamiento preciso</strong>: Coordenadas
-calculadas automáticamente - ✅ <strong>Colores exactos</strong>:
-Replicación RGB fiel al original - ✅ <strong>Escalado
-apropiado</strong>: Dimensiones optimizadas para R-exams</p>
-<p><strong>Fase 3: Integración R-exams</strong> - ✅ <strong>Estructura
-completa</strong>: YAML headers, metadatos ICFES - ✅
-<strong>Aleatorización</strong>: 300+ versiones únicas garantizadas - ✅
-<strong>Validación</strong>: Compilación exitosa en todos los formatos -
-✅ <strong>Optimización</strong>: Rendimiento y compatibilidad</p>
-</div>
-<div id="métricas-de-calidad-tikz" class="section level4">
-<h4><strong>🎯 Métricas de Calidad TikZ</strong></h4>
-<ul>
-<li><strong>98% fidelidad visual</strong> con imagen original PNG</li>
-<li><strong>Posicionamiento exacto</strong> de todos los elementos</li>
-<li><strong>Colores RGB precisos</strong> sin desviaciones</li>
-<li><strong>Compatibilidad 100%</strong> con exams2pdf/html/moodle</li>
-</ul>
-</div>
-<div id="archivos-de-referencia-tikz" class="section level4">
-<h4><strong>📚 Archivos de Referencia TikZ</strong></h4>
-<ul>
-<li><code>Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md</code> -
-Guía completa</li>
-<li><code>Auxiliares/Ejemplos-Funcionales-Rmd/</code> - Ejemplos
-validados (OBLIGATORIO)</li>
-<li><code>Auxiliares/rules_full/rules_full_v1.md</code> - Metodología
-documentada</li>
-</ul>
-<hr />
-</div>
-</div>
-<div id="metodología-de-corrección-de-errores-recurrentes-1" class="section level3">
-<h3>🔧 <strong>Metodología de Corrección de Errores
-Recurrentes</strong></h3>
-<div id="sistema-de-5-categorías-de-errores" class="section level4">
-<h4><strong>📋 Sistema de 5 Categorías de Errores</strong></h4>
-<p><strong>Categoría A: Errores Gramaticales/Concordancia</strong> - ✅
-<strong>Detección</strong>: Concordancia de género automática - ✅
-<strong>Ejemplo</strong>: “La conteo” → “El conteo” - ✅
-<strong>Solución</strong>: Sistema de artículos dinámicos - ✅
-<strong>Tiempo</strong>: &lt; 2 minutos corrección</p>
-<p><strong>Categoría B: Errores de Posicionamiento TikZ</strong> - ✅
-<strong>Detección</strong>: Orden incorrecto de elementos - ✅
-<strong>Ejemplo</strong>: Tabla antes que texto explicativo - ✅
-<strong>Solución</strong>: Reordenamiento automático - ✅
-<strong>Tiempo</strong>: &lt; 3 minutos corrección</p>
-<p><strong>Categoría C: Errores de Generación de Datos</strong> - ✅
-<strong>Detección</strong>: Opciones duplicadas, valores idénticos - ✅
-<strong>Ejemplo</strong>: Dos opciones con mismo valor numérico - ✅
-<strong>Solución</strong>: Sistema anti-duplicados robusto - ✅
-<strong>Tiempo</strong>: &lt; 5 minutos corrección</p>
-<p><strong>Categoría D: Errores de Compilación LaTeX/TikZ</strong> - ✅
-<strong>Detección</strong>: Paquetes faltantes, caracteres especiales -
-✅ <strong>Ejemplo</strong>: Error “” no definido - ✅
-<strong>Solución</strong>: Configuración completa de paquetes - ✅
-<strong>Tiempo</strong>: &lt; 3 minutos corrección</p>
-<p><strong>Categoría E: Errores de Estructura R-exams</strong> - ✅
-<strong>Detección</strong>: YAML incompleto, include_tikz mal
-configurado - ✅ <strong>Ejemplo</strong>: Parámetros TikZ faltantes -
-✅ <strong>Solución</strong>: Plantillas validadas - ✅
-<strong>Tiempo</strong>: &lt; 2 minutos corrección</p>
-</div>
-<div id="proceso-de-corrección-rápida" class="section level4">
-<h4><strong>⚡ Proceso de Corrección Rápida</strong></h4>
-<p><strong>Protocolo &lt; 5 minutos (Errores Comunes)</strong> 1.
-<strong>Ejecutar detección automática</strong> por categorías A-E 2.
-<strong>Aplicar solución probada</strong> de biblioteca 3.
-<strong>Validar con checklist</strong> de 2 minutos 4. <strong>Compilar
-y verificar</strong> resultado final</p>
-<p><strong>Protocolo &gt; 5 minutos (Errores Complejos)</strong> 1.
-<strong>Consultar ejemplos funcionales</strong> (OBLIGATORIO) 2.
-<strong>Aplicar metodología sistemática</strong> por fases 3.
-<strong>Documentar nueva solución</strong> si es necesaria 4.
-<strong>Actualizar biblioteca</strong> de errores comunes</p>
-</div>
-<div id="archivos-de-referencia-corrección-de-errores" class="section level4">
-<h4><strong>📚 Archivos de Referencia Corrección de
-Errores</strong></h4>
-<ul>
-<li><code>Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md</code>
-- Metodología completa</li>
-<li><code>Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md</code> -
-Catálogo de soluciones</li>
-<li><code>Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md</code> -
-Validación sistemática</li>
-<li><code>Auxiliares/Ejemplos-Funcionales-Rmd/</code> - Patrones
-exitosos (OBLIGATORIO)</li>
-</ul>
-<hr />
-</div>
-</div>
-<div id="integración-de-metodologías-1" class="section level3">
-<h3>🔗 <strong>Integración de Metodologías</strong></h3>
-<div id="workflow-combinado-para-máxima-eficiencia" class="section level4">
-<h4><strong>🚀 Workflow Combinado para Máxima Eficiencia</strong></h4>
-<p><strong>Para Nuevos Ejercicios con PNG:</strong></p>
-<pre class="bash"><code>1. Metodología TikZ Avanzada → Replicación visual 98% fidelidad
-2. Metodología Corrección de Errores → Validación sistemática
-3. Testing Final Integrado → Verificación completa</code></pre>
-<p><strong>Para Corrección de Ejercicios Existentes:</strong></p>
-<pre class="bash"><code>1. Metodología Corrección de Errores → Eliminar errores recurrentes
-2. Optimización TikZ (si aplica) → Mejorar visualizaciones
-3. Validación Integrada → Checklist completo</code></pre>
-</div>
-<div id="comandos-de-activación-unificados" class="section level4">
-<h4><strong>🎯 Comandos de Activación Unificados</strong></h4>
-<p><strong>🎨 Para PNG + Corrección Completa:</strong> &gt; <em>“Aplica
-la metodología TikZ avanzada a esta imagen PNG y luego la metodología de
-corrección de errores recurrentes para generar un ejercicio R-exams
-completo”</em></p>
-<p><strong>🔧 Para Corrección + Optimización:</strong> &gt; <em>“Aplica
-la metodología de corrección de errores recurrentes y luego optimiza con
-metodología TikZ avanzada”</em></p>
-<p><strong>📋 Para Validación Completa:</strong> &gt; <em>“Ejecuta
-validación integrada usando ambas metodologías (TikZ + Corrección de
-Errores)”</em></p>
-</div>
-<div id="métricas-de-éxito-integradas" class="section level4">
-<h4><strong>📊 Métricas de Éxito Integradas</strong></h4>
-<table>
-<thead>
-<tr class="header">
-<th>Aspecto</th>
-<th>Metodología TikZ</th>
-<th>Corrección de Errores</th>
-<th>Integrada</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Calidad Visual</strong></td>
-<td>98% fidelidad PNG</td>
-<td>N/A</td>
-<td>98% fidelidad</td>
-</tr>
-<tr class="even">
-<td><strong>Errores Técnicos</strong></td>
-<td>N/A</td>
-<td>0 errores críticos</td>
-<td>0 errores críticos</td>
-</tr>
-<tr class="odd">
-<td><strong>Tiempo Desarrollo</strong></td>
-<td>15-20 min</td>
-<td>&lt; 5 min</td>
-<td>20-25 min</td>
-</tr>
-<tr class="even">
-<td><strong>Compatibilidad</strong></td>
-<td>Multi-formato</td>
-<td>100% R-exams</td>
-<td>100% completa</td>
-</tr>
-<tr class="odd">
-<td><strong>Escalabilidad</strong></td>
-<td>Cualquier PNG</td>
-<td>Cualquier .Rmd</td>
-<td>Universal</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="estado-del-sistema" class="section level4">
-<h4><strong>🎯 Estado del Sistema</strong></h4>
-<ul>
-<li><strong>✅ Metodología TikZ</strong>: Validada y operativa (98%
-fidelidad)</li>
-<li><strong>✅ Metodología Corrección</strong>: Validada y operativa (5
-categorías)</li>
-<li><strong>✅ Integración</strong>: Documentada y funcional</li>
-<li><strong>✅ Documentación</strong>: Completa en 6 archivos
-especializados</li>
-<li><strong>🚀 ESTADO</strong>: <strong>SISTEMA INTEGRADO LISTO PARA
-PRODUCCIÓN</strong></li>
-</ul>
-<hr />
-</div>
-</div>
-</div>
-<div id="contribuir-al-proyecto" class="section level2">
-<h2>🤝 Contribuir al Proyecto</h2>
-<div id="cómo-crear-nuevos-ejercicios" class="section level3">
-<h3>🎯 Cómo Crear Nuevos Ejercicios</h3>
-<div id="usar-la-plantilla-oficial" class="section level4">
-<h4><strong>1. 📋 Usar la Plantilla Oficial</strong></h4>
-<pre class="r"><code># Copiar plantilla base
-file.copy(&quot;General/Plantillas/plantilla_ejercicio_icfes.Rmd&quot;,
-          &quot;nueva_area/nuevo_ejercicio.Rmd&quot;)</code></pre>
-</div>
-<div id="estructura-obligatoria-actualizada-icfes-2024" class="section level4">
-<h4><strong>2. 📝 Estructura Obligatoria (Actualizada ICFES
-2024)</strong></h4>
-<pre class="yaml"><code>---
-# Metadatos ICFES OFICIALES (OBLIGATORIOS)
-icfes:
-  # Competencia según distribución oficial (34%, 43%, 23%)
-  competencia: formulacion_ejecucion
-
-  # Nivel según puntajes ICFES: 1(0-35), 2(36-50), 3(51-70), 4(71-100)
-  nivel_dificultad: 2
-
-  # Categoría y tipo de contenido matemático
-  contenido:
-    categoria: estadistica              # algebra_calculo | geometria | estadistica
-    tipo: generico                     # generico | no_generico
-
-  # Contexto de aplicación oficial ICFES
-  contexto: familiar                   # familiar | laboral | comunitario | matematico
-
-  # Componente curricular (reorganización de pensamientos)
-  componente: aleatorio               # aleatorio | numerico_variacional | geometrico_metrico
-
-  # Eje axial disciplinar específico
-  eje_axial: eje4                     # eje1: Datos | eje2: Geometría | eje3: Álgebra | eje4: Estadística
-
-  # Marco pedagógico (opcional pero recomendado)
-  aprendizaje: &quot;Comprende y transforma información cuantitativa en distintos formatos&quot;
-  evidencia: &quot;Transforma representación de información estadística&quot;
----</code></pre>
-</div>
-<div id="implementar-aleatorización" class="section level4">
-<h4><strong>3. 🎲 Implementar Aleatorización</strong></h4>
-<pre class="r"><code># Mínimo 300 versiones únicas
-set.seed(sample(1:10000, 1))
-parametros &lt;- sample(10:50, 1)
-contextos &lt;- sample(c(&quot;escuela&quot;, &quot;trabajo&quot;, &quot;hogar&quot;), 1)</code></pre>
-</div>
-<div id="validar-calidad" class="section level4">
-<h4><strong>4. ✅ Validar Calidad</strong></h4>
-<pre class="r"><code># Ejecutar pruebas automáticas
-source(&quot;Auxiliares/control-calidad-global.R&quot;)
-validar_ejercicio(&quot;ruta/al/nuevo_ejercicio.Rmd&quot;)</code></pre>
-</div>
-</div>
-<div id="estándares-de-calidad" class="section level3">
-<h3>📏 Estándares de Calidad</h3>
-<div id="aleatorización-avanzada" class="section level4">
-<h4><strong>🎯 Aleatorización Avanzada</strong></h4>
-<ul>
-<li>✅ <strong>Mínimo 300 versiones</strong> únicas verificadas</li>
-<li>✅ <strong>Parámetros numéricos</strong> con rangos realistas</li>
-<li>✅ <strong>Contextos alternativos</strong> (nombres,
-situaciones)</li>
-<li>✅ <strong>Orden aleatorio</strong> de opciones de respuesta</li>
-</ul>
-</div>
-<div id="robustez-matemática" class="section level4">
-<h4><strong>🔬 Robustez Matemática</strong></h4>
-<ul>
-<li>✅ <strong>Validaciones</strong> de coherencia matemática</li>
-<li>✅ <strong>Manejo de casos extremos</strong> y valores límite</li>
-<li>✅ <strong>Precisión numérica</strong> apropiada (decimales)</li>
-<li>✅ <strong>Unidades consistentes</strong> en todo el ejercicio</li>
-</ul>
-</div>
-<div id="calidad-gráfica" class="section level4">
-<h4><strong>🎨 Calidad Gráfica</strong></h4>
-<ul>
-<li>✅ <strong>Resolución mínima</strong> 150 DPI</li>
-<li>✅ <strong>Etiquetas claras</strong> y legibles</li>
-<li>✅ <strong>Colores contrastantes</strong> para accesibilidad</li>
-<li>✅ <strong>Escalas apropiadas</strong> y leyendas cuando sea
-necesario</li>
-</ul>
-</div>
-</div>
-<div id="proceso-de-contribución" class="section level3">
-<h3>🔄 Proceso de Contribución</h3>
-<pre class="mermaid"><code>flowchart LR
-    A[🍴 Fork] --&gt; B[🌿 Branch]
-    B --&gt; C[📝 Crear Ejercicio]
-    C --&gt; D[🧪 Probar Localmente]
-    D --&gt; E[✅ Validar Calidad]
-    E --&gt; F[📤 Pull Request]
-    F --&gt; G[👀 Revisión]
-    G --&gt; H[🎉 Merge]
-
-    style A fill:#E3F2FD
-    style D fill:#FFF3E0
-    style E fill:#E8F5E8
-    style H fill:#F3E5F5</code></pre>
-<div id="checklist-de-contribución" class="section level4">
-<h4><strong>📋 Checklist de Contribución</strong></h4>
-<ul class="task-list">
-<li><label><input type="checkbox"></input>Ejercicio sigue plantilla
-oficial</label></li>
-<li><label><input type="checkbox"></input>Metadatos ICFES completos y
-correctos</label></li>
-<li><label><input type="checkbox"></input>Aleatorización implementada (300+
-versiones)</label></li>
-<li><label><input type="checkbox"></input>Pruebas locales exitosas (PDF,
-HTML)</label></li>
-<li><label><input type="checkbox"></input>Documentación
-actualizada</label></li>
-<li><label><input type="checkbox"></input>Código comentado y
-limpio</label></li>
-</ul>
-</div>
-</div>
-<div id="convenciones-de-nomenclatura" class="section level3">
-<h3>🏷️ Convenciones de Nomenclatura</h3>
-<pre><code>[area]/[pensamiento]/[tema]/[subtema]/[nombre_descriptivo]_[competencia].Rmd
-
-Ejemplo:
-06-Estadística-Y-Probabilidad/
-  Pensamiento-Aleatorio/
-    04-Medidas-De-Tendencia-Central/
-      Media/
-        Promedios-Borrados/
-          mediana_salas_cine_formulacion_ejecucion_v2.Rmd</code></pre>
-</div>
-<div id="soporte-para-contribuidores" class="section level3">
-<h3>📞 Soporte para Contribuidores</h3>
-<div id="documentación-general" class="section level4">
-<h4><strong>📚 Documentación General</strong></h4>
-<ul>
-<li><strong>📚 Documentación</strong>:
-<code>Auxiliares/guia_implementacion_icfes.md</code></li>
-<li><strong>🔧 Herramientas</strong>: Scripts en
-<code>Auxiliares/</code> para validación</li>
-<li><strong>💬 Discusiones</strong>: Issues de GitHub para
-preguntas</li>
-<li><strong>📖 Ejemplos</strong>: Ejercicios existentes como
-referencia</li>
-</ul>
-</div>
-<div id="metodologías-avanzadas" class="section level4">
-<h4><strong>🎨 Metodologías Avanzadas</strong></h4>
-<ul>
-<li><strong>🎨 TikZ Avanzado</strong>:
-<code>Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md</code></li>
-<li><strong>🔧 Corrección de Errores</strong>:
-<code>Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md</code></li>
-<li><strong>📋 Biblioteca de Soluciones</strong>:
-<code>Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md</code></li>
-<li><strong>✅ Checklist de Validación</strong>:
-<code>Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md</code></li>
-<li><strong>📝 Template de Tareas</strong>:
-<code>Auxiliares/Augment Memories/TEMPLATE_Plan_Tareas_ICFES_R_Exams.md</code></li>
-<li><strong>📖 Reglas Completas</strong>:
-<code>Auxiliares/rules_full/rules_full_v1.md</code></li>
-</ul>
-</div>
-<div id="comandos-rápidos-para-contribuidores" class="section level4">
-<h4><strong>🚀 Comandos Rápidos para Contribuidores</strong></h4>
-<pre class="bash"><code># Para replicar nueva imagen PNG
-&quot;Aplica la metodología TikZ avanzada a esta nueva imagen PNG&quot;
-
-# Para corregir errores en .Rmd existente
-&quot;Aplica la metodología de corrección de errores recurrentes&quot;
-
-# Para desarrollo completo (PNG → R-exams)
-&quot;Aplica ambas metodologías integradas para generar ejercicio completo&quot;</code></pre>
-</div>
-</div>
-</div>
-<div id="instalación-completa" class="section level2">
-<h2>⚙️ Instalación Completa</h2>
-<div id="instalación-rápida-recomendada" class="section level3">
-<h3>🚀 Instalación Rápida (Recomendada)</h3>
-<div id="para-manjaroarch-linux" class="section level4">
-<h4><strong>Para Manjaro/Arch Linux</strong></h4>
-<pre class="bash"><code># 1. Clonar el repositorio
-git clone https://github.com/usuario/proyecto-r-exams-icfes-matematicas-optimizado.git
-cd proyecto-r-exams-icfes-matematicas-optimizado
-
-# 2. Ejecutar instalación automática
-chmod +x Auxiliares/install_r_exams_packages.R
-Rscript Auxiliares/install_r_exams_packages.R
-
-# 3. Verificar instalación
-Rscript Auxiliares/test_exams2pdf.R</code></pre>
-</div>
-<div id="para-ubuntudebian" class="section level4">
-<h4><strong>Para Ubuntu/Debian</strong></h4>
-<pre class="bash"><code># Instalar dependencias del sistema
-sudo apt update
-sudo apt install r-base r-base-dev texlive-full python3 python3-pip
-
-# Instalar paquetes R
-Rscript Auxiliares/install_r_packages.R</code></pre>
-</div>
-<div id="para-windows" class="section level4">
-<h4><strong>Para Windows</strong></h4>
-<pre class="powershell"><code># 1. Instalar R desde CRAN
-# 2. Instalar RStudio
-# 3. Ejecutar en R:
-source(&quot;Auxiliares/setup_project.R&quot;)</code></pre>
-</div>
-</div>
-<div id="requisitos-del-sistema" class="section level3">
-<h3>📋 Requisitos del Sistema</h3>
-<table>
-<thead>
-<tr class="header">
-<th>Componente</th>
-<th>Mínimo</th>
-<th>Recomendado</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>RAM</strong></td>
-<td>4GB</td>
-<td>8GB+</td>
-</tr>
-<tr class="even">
-<td><strong>CPU</strong></td>
-<td>2 núcleos</td>
-<td>4+ núcleos</td>
-</tr>
-<tr class="odd">
-<td><strong>Almacenamiento</strong></td>
-<td>10GB</td>
-<td>20GB+</td>
-</tr>
-<tr class="even">
-<td><strong>SO</strong></td>
-<td>Linux/Windows/macOS</td>
-<td>Linux (mejor rendimiento)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="dependencias-principales" class="section level3">
-<h3>🔧 Dependencias Principales</h3>
-<div id="r-packages" class="section level4">
-<h4><strong>R Packages</strong></h4>
-<pre class="r"><code># Instalación automática
-install.packages(c(
-  &quot;exams&quot;,      # Framework principal
-  &quot;tidyverse&quot;,  # Manipulación de datos
-  &quot;knitr&quot;,      # Documentos dinámicos
-  &quot;reticulate&quot;, # Integración Python
-  &quot;tinytex&quot;     # LaTeX ligero
-))</code></pre>
-</div>
-<div id="sistema" class="section level4">
-<h4><strong>Sistema</strong></h4>
-<ul>
-<li><strong>LaTeX</strong>: Para generación de PDFs matemáticos</li>
-<li><strong>Python</strong>: Para gráficos avanzados (opcional)</li>
-<li><strong>ImageMagick</strong>: Para procesamiento de imágenes</li>
-<li><strong>Pandoc</strong>: Para conversión de formatos</li>
-</ul>
-</div>
-</div>
-<div id="solución-rápida-de-problemas" class="section level3">
-<h3>🆘 Solución Rápida de Problemas</h3>
-<div id="error-paquete-exams-no-encontrado" class="section level4">
-<h4><strong>❌ Error: paquete ‘exams’ no encontrado</strong></h4>
-<pre class="r"><code>install.packages(&quot;exams&quot;, dependencies = TRUE)</code></pre>
-</div>
-<div id="error-latex-no-instalado" class="section level4">
-<h4><strong>❌ Error: LaTeX no instalado</strong></h4>
-<pre class="r"><code>tinytex::install_tinytex()</code></pre>
-</div>
-<div id="error-python-no-configurado" class="section level4">
-<h4><strong>❌ Error: Python no configurado</strong></h4>
-<pre class="r"><code>library(reticulate)
-use_python(&quot;/usr/bin/python3&quot;)</code></pre>
-</div>
-</div>
-<div id="instalación-detallada" class="section level3">
-<h3>📖 Instalación Detallada</h3>
-<p>Para una guía completa de instalación paso a paso, consulta: - 📄
-<strong>Manjaro/Arch</strong>: Ver sección completa al final de este
-README - 🌐 <strong>Otras distribuciones</strong>:
-<code>Auxiliares/Instalaciones/</code> - 💻
-<strong>Windows/macOS</strong>:
-<code>Auxiliares/quickstart.md</code></p>
-</div>
-</div>
-<div id="recursos-y-referencias" class="section level2">
-<h2>📚 Recursos y Referencias</h2>
-<div id="metodologías-avanzadas-del-proyecto" class="section level3">
-<h3>🎨 <strong>Metodologías Avanzadas del Proyecto</strong></h3>
-<div id="metodología-tikz-avanzada" class="section level4">
-<h4><strong>🎯 Metodología TikZ Avanzada</strong></h4>
-<ul>
-<li><strong>📋 Guía Principal</strong>:
-<code>Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md</code></li>
-<li><strong>📚 Ejemplos Funcionales</strong>:
-<code>Auxiliares/Ejemplos-Funcionales-Rmd/</code> (OBLIGATORIO)</li>
-<li><strong>🎯 Fidelidad Visual</strong>: 98% exactitud PNG → TikZ</li>
-<li><strong>⚡ Tiempo Desarrollo</strong>: 15-20 minutos por imagen</li>
-<li><strong>🔧 Compatibilidad</strong>: Multi-formato (PDF, HTML,
-Moodle)</li>
-</ul>
-</div>
-<div id="metodología-de-corrección-de-errores-recurrentes-2" class="section level4">
-<h4><strong>🔧 Metodología de Corrección de Errores
-Recurrentes</strong></h4>
-<ul>
-<li><strong>📋 Metodología Principal</strong>:
-<code>Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md</code></li>
-<li><strong>📚 Biblioteca de Soluciones</strong>:
-<code>Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md</code></li>
-<li><strong>✅ Checklist de Validación</strong>:
-<code>Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md</code></li>
-<li><strong>⚡ Tiempo Corrección</strong>: &lt; 5 minutos para errores
-comunes</li>
-<li><strong>🎯 Categorías</strong>: 5 tipos de errores identificados
-(A-E)</li>
-</ul>
-</div>
-<div id="documentación-integrada" class="section level4">
-<h4><strong>🔗 Documentación Integrada</strong></h4>
-<ul>
-<li><strong>📝 Template de Tareas</strong>:
-<code>Auxiliares/Augment Memories/TEMPLATE_Plan_Tareas_ICFES_R_Exams.md</code></li>
-<li><strong>📖 Reglas Completas</strong>:
-<code>Auxiliares/rules_full/rules_full_v1.md</code></li>
-<li><strong>🧠 Memoria del Sistema</strong>:
-<code>Auxiliares/Augment Memories/augment_memories.md</code></li>
-<li><strong>🚀 Estado</strong>: <strong>SISTEMA INTEGRADO LISTO PARA
-PRODUCCIÓN</strong></li>
-</ul>
-</div>
-<div id="casos-de-éxito-documentados" class="section level4">
-<h4><strong>🎯 Casos de Éxito Documentados</strong></h4>
-<ul>
-<li><strong>✅ Lab/17</strong>: Números triangulares (all_07.png) - 98%
-fidelidad TikZ</li>
-<li><strong>✅ Lab/02-Geometria</strong>: Replicación geométrica
-avanzada</li>
-<li><strong>✅ Lab/19</strong>: Optimización visual completa</li>
-<li><strong>✅ Corrección “La conteo”</strong>: Error gramatical
-sistemático resuelto</li>
-</ul>
-<hr />
-</div>
-</div>
-<div id="documentación-oficial" class="section level3">
-<h3>📖 Documentación Oficial</h3>
-<div id="tecnologías-principales" class="section level4">
-<h4><strong>🔧 Tecnologías Principales</strong></h4>
-<ul>
-<li><strong><a href="http://www.r-exams.org/">R-exams</a></strong> -
-Framework principal de generación</li>
-<li><strong><a href="https://www.r-project.org/">R Project</a></strong>
-- Lenguaje de programación R</li>
-<li><strong><a href="https://www.latex-project.org/">LaTeX
-Project</a></strong> - Sistema de composición tipográfica</li>
-<li><strong><a href="https://posit.co/">RStudio</a></strong> - IDE
-recomendado para desarrollo</li>
-</ul>
-</div>
-<div id="estándares-icfes-documentación-oficial-2024" class="section level4">
-<h4><strong>📊 Estándares ICFES (Documentación Oficial
-2024)</strong></h4>
-<ul>
-<li><strong><a href="https://www.icfes.gov.co/">Marco de Referencia
-ICFES</a></strong> - Estándares oficiales</li>
-<li><strong><a href="docus/BaseDeConocimiento/">Guía de Orientación
-Saber 11° Matemáticas 2024</a></strong> - Documentación actualizada</li>
-<li><strong><a href="docus/BaseDeConocimiento/Matriz%20de%20Referencia_Matem%C3%A1%C3%ADticas_359.pdf">Matriz
-de Referencia Matemáticas</a></strong> - Especificaciones técnicas</li>
-<li><strong><a href="docus/BaseDeConocimiento/EST%C3%81NDARES%20B%C3%81SICOS%20DE%20COMPETENCIAS%20EN%20MATEM%C3%81TICAS.pdf">Estándares
-Básicos de Competencias</a></strong> - Fundamentos curriculares</li>
-<li><strong><a href="docus/BaseDeConocimiento/DBA_Matematicas-min.pdf">DBA
-Matemáticas</a></strong> - Derechos Básicos de Aprendizaje</li>
-<li><strong><a href="docus/BaseDeConocimiento/Evaluar-para-avanzar-Qu%C3%A9-se-eval%C3%BAa.md">Evaluar
-para Avanzar</a></strong> - Qué se evalúa en Matemáticas 11°</li>
-</ul>
-</div>
-<div id="alineación-curricular-verificada" class="section level4">
-<h4><strong>🎯 Alineación Curricular Verificada</strong></h4>
-<p>Este proyecto está alineado con: - ✅ <strong>Marco de Referencia
-Saber 11° Matemáticas 2024</strong> - ✅ <strong>Estándares Básicos de
-Competencias en Matemáticas MEN</strong> - ✅ <strong>Derechos Básicos
-de Aprendizaje (DBA) Matemáticas</strong> - ✅ <strong>Lineamientos
-Curriculares de Matemáticas</strong> - ✅ <strong>Matriz de Referencia
-ICFES 359</strong></p>
-</div>
-</div>
-<div id="tutoriales-y-guías" class="section level3">
-<h3>🎓 Tutoriales y Guías</h3>
-<div id="inicio-rápido-1" class="section level4">
-<h4><strong>🚀 Inicio Rápido</strong></h4>
-<ul>
-<li><strong><a href="Auxiliares/quickstart.md">Quickstart
-Guide</a></strong> - Primeros pasos</li>
-<li><strong><a href="Auxiliares/Ejemplos-Funcionales-Rmd/">Ejemplos
-Funcionales</a></strong> - Casos prácticos</li>
-<li><strong><a href="General/Plantillas/">Plantillas</a></strong> -
-Modelos para nuevos ejercicios</li>
-</ul>
-</div>
-<div id="desarrollo-avanzado" class="section level4">
-<h4><strong>🔬 Desarrollo Avanzado</strong></h4>
-<ul>
-<li><strong><a href="https://rmarkdown.rstudio.com/">R
-Markdown</a></strong> - Documentos dinámicos</li>
-<li><strong><a href="https://tikz.dev/">TikZ Manual</a></strong> -
-Gráficos geométricos</li>
-<li><strong><a href="https://rstudio.github.io/reticulate/">Reticulate</a></strong> -
-Integración R-Python</li>
-</ul>
-</div>
-</div>
-<div id="comunidades-y-soporte" class="section level3">
-<h3>🌐 Comunidades y Soporte</h3>
-<div id="foros-especializados" class="section level4">
-<h4><strong>💬 Foros Especializados</strong></h4>
-<ul>
-<li><strong><a href="https://community.rstudio.com/">RStudio
-Community</a></strong> - Soporte R y RStudio</li>
-<li><strong><a href="https://stackoverflow.com/questions/tagged/r-exams">Stack
-Overflow</a></strong> - Preguntas técnicas</li>
-<li><strong><a href="http://www.r-exams.org/contact/">R-exams
-Forum</a></strong> - Soporte específico</li>
-</ul>
-</div>
-<div id="redes-sociales" class="section level4">
-<h4><strong>📱 Redes Sociales</strong></h4>
-<ul>
-<li><strong><a href="https://www.r-bloggers.com/">R-bloggers</a></strong> - Noticias y
-tutoriales</li>
-<li><strong><a href="https://twitter.com/hashtag/rstats">#rstats
-Twitter</a></strong> - Comunidad R</li>
-<li><strong><a href="https://www.linkedin.com/groups/77616/">LinkedIn R
-Users</a></strong> - Red profesional</li>
-</ul>
-</div>
-</div>
-<div id="herramientas-complementarias" class="section level3">
-<h3>📊 Herramientas Complementarias</h3>
-<div id="análisis-de-datos" class="section level4">
-<h4><strong>🔍 Análisis de Datos</strong></h4>
-<ul>
-<li><strong><a href="https://www.jamovi.org/">jamovi</a></strong> -
-Análisis estadístico visual</li>
-<li><strong><a href="https://jasp-stats.org/">JASP</a></strong> -
-Software estadístico gratuito</li>
-<li><strong><a href="https://www.rcommander.com/">R
-Commander</a></strong> - GUI para R</li>
-</ul>
-</div>
-<div id="editores-alternativos" class="section level4">
-<h4><strong>📝 Editores Alternativos</strong></h4>
-<ul>
-<li><strong><a href="https://code.visualstudio.com/">VS
-Code</a></strong> - Con extensión R</li>
-<li><strong><a href="https://ess.r-project.org/">Emacs ESS</a></strong>
-- Para usuarios avanzados</li>
-<li><strong><a href="https://github.com/jalvesaq/Nvim-R">Vim-R</a></strong> - Plugin
-para Vim/Neovim</li>
-</ul>
-</div>
-</div>
-<div id="casos-de-estudio" class="section level3">
-<h3>🎯 Casos de Estudio</h3>
-<div id="implementaciones-exitosas" class="section level4">
-<h4><strong>🏫 Implementaciones Exitosas</strong></h4>
-<ul>
-<li><strong>Universidad Nacional</strong> - Exámenes masivos de
-cálculo</li>
-<li><strong>Secretaría de Educación Bogotá</strong> - Simulacros
-ICFES</li>
-<li><strong>Colegio San Patricio</strong> - Evaluaciones semanales</li>
-</ul>
-</div>
-<div id="resultados-documentados" class="section level4">
-<h4><strong>📈 Resultados Documentados</strong></h4>
-<ul>
-<li><strong>Reducción 90%</strong> en tiempo de preparación de
-exámenes</li>
-<li><strong>Aumento 300%</strong> en variedad de versiones</li>
-<li><strong>Mejora 40%</strong> en análisis de resultados</li>
-</ul>
-</div>
-</div>
-<div id="enlaces-útiles" class="section level3">
-<h3>🔗 Enlaces Útiles</h3>
-<div id="repositorios-relacionados" class="section level4">
-<h4><strong>📦 Repositorios Relacionados</strong></h4>
-<ul>
-<li><strong><a href="https://github.com/r-exams/exams_templates">exams
-Templates</a></strong> - Plantillas adicionales</li>
-<li><strong><a href="https://github.com/icfes-data">ICFES
-Data</a></strong> - Datos históricos ICFES</li>
-<li><strong><a href="https://github.com/topics/math-education">Math
-Education</a></strong> - Proyectos similares</li>
-</ul>
-</div>
-<div id="bibliografía-académica" class="section level4">
-<h4><strong>📚 Bibliografía Académica</strong></h4>
-<ul>
-<li><strong>Zeileis et al. (2014)</strong> - “Automatic Generation of
-Exams in R”</li>
-<li><strong>Grün &amp; Zeileis (2009)</strong> - “Automatic Generation
-of Exams”</li>
-<li><strong>ICFES (2020)</strong> - “Marco de Referencia
-Matemáticas”</li>
-</ul>
-<hr />
-</div>
-</div>
-</div>
-<div id="soporte-y-contacto" class="section level2">
-<h2>📞 Soporte y Contacto</h2>
-<div id="obtener-ayuda" class="section level3">
-<h3>🆘 Obtener Ayuda</h3>
+# Convertir la copia
+qemu-img convert -f qcow2 -O vmdk \
+  ~/VMware-VMs/[nombre-vm]-backup.qcow2 \
+  ~/VMware-VMs/[nombre-vm]/[nombre-vm].vmdk</code></pre>
+</div>
+</div>
+<div id="paso-4-crear-vm-en-vmware-workstation" class="section level2">
+<h2>Paso 4: Crear VM en VMware Workstation</h2>
+<div id="configuración-inicial" class="section level3">
+<h3>4.1 Configuración inicial</h3>
 <ol style="list-style-type: decimal">
-<li><strong>📖 Consultar documentación</strong> en
-<code>Auxiliares/</code></li>
-<li><strong>🔍 Buscar en Issues</strong> de GitHub</li>
-<li><strong>💬 Crear nuevo Issue</strong> con detalles del problema</li>
-<li><strong>📧 Contactar mantenedores</strong> para casos
-especiales</li>
+<li><strong>Abrir VMware Workstation</strong></li>
+<li><strong>File → New Virtual Machine</strong></li>
+<li><strong>Seleccionar “Custom (advanced)”</strong></li>
+<li><strong>Hardware compatibility</strong>: Workstation 17.x</li>
+<li><strong>Guest operating system</strong>: Linux → Other Linux 5.x
+kernel 64-bit</li>
 </ol>
 </div>
-<div id="reportar-problemas" class="section level3">
-<h3>🐛 Reportar Problemas</h3>
-<pre class="markdown"><code>**Descripción del problema:**
-[Descripción clara y concisa]
-
-**Pasos para reproducir:**
-1. Ejecutar comando X
-2. Observar error Y
-
-**Entorno:**
-- SO: [Linux/Windows/macOS]
-- R versión: [4.x.x]
-- R-exams versión: [2.x.x]
-
-**Archivos adjuntos:**
-[Logs, capturas de pantalla, archivos .Rmd problemáticos]</code></pre>
-</div>
-<div id="contribuir" class="section level3">
-<h3>🤝 Contribuir</h3>
-<p>¡Las contribuciones son bienvenidas! Ver sección <a href="#id_-contribuir-al-proyecto">🤝 Contribuir al Proyecto</a> para
-detalles.</p>
-<hr />
-</div>
-</div>
-<div id="licencia" class="section level2">
-<h2>📄 Licencia</h2>
-<p>Este proyecto está licenciado bajo la <strong>Licencia MIT</strong> -
-ver el archivo <a href="LICENSE">LICENSE</a> para detalles.</p>
-</div>
-<div id="agradecimientos" class="section level2">
-<h2>🙏 Agradecimientos</h2>
+<div id="configuración-de-la-vm" class="section level3">
+<h3>4.2 Configuración de la VM</h3>
 <ul>
-<li><strong>Equipo R-exams</strong> por el framework excepcional</li>
-<li><strong>ICFES</strong> por los estándares educativos claros</li>
-<li><strong>Comunidad R</strong> por el soporte continuo</li>
-<li><strong>Contribuidores</strong> del proyecto por su dedicación</li>
+<li><strong>Virtual machine name</strong>: [nombre-descriptivo]</li>
+<li><strong>Location</strong>:
+<code>/home/[usuario]/VMware-VMs/[nombre-vm]/</code></li>
+<li><strong>Processors</strong>: 2-4 cores (según hardware
+disponible)</li>
+<li><strong>Memory</strong>: 4-8GB (recomendado mínimo 4GB)</li>
+<li><strong>Network connection</strong>: NAT (recomendado)</li>
+<li><strong>I/O controller</strong>: LSI Logic (recomendado)</li>
+<li><strong>Virtual disk type</strong>: SCSI (recomendado)</li>
 </ul>
-<div id="reconocimientos-especiales---metodologías-avanzadas" class="section level3">
-<h3>🎯 <strong>Reconocimientos Especiales - Metodologías
-Avanzadas</strong></h3>
+</div>
+<div id="configurar-disco-existente" class="section level3">
+<h3>4.3 Configurar disco existente</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Select a disk</strong>: “Use an existing virtual disk”</li>
+<li><strong>Browse</strong> → Navegar a
+<code>~/VMware-VMs/[nombre-vm]/[nombre-vm].vmdk</code></li>
+<li><strong>Keep existing format</strong> (recomendado)</li>
+</ol>
+</div>
+</div>
+<div id="paso-5-primer-arranque-y-configuración" class="section level2">
+<h2>Paso 5: Primer arranque y configuración</h2>
+<div id="arrancar-la-vm" class="section level3">
+<h3>5.1 Arrancar la VM</h3>
 <ul>
-<li><strong>🎨 Metodología TikZ Avanzada</strong>: Desarrollo de sistema
-de replicación PNG → TikZ con 98% fidelidad visual</li>
-<li><strong>🔧 Metodología de Corrección de Errores</strong>: Creación
-de sistema automático de detección y corrección de 5 categorías de
-errores recurrentes</li>
-<li><strong>📚 Documentación Integrada</strong>: 6 archivos
-especializados que documentan completamente ambas metodologías</li>
-<li><strong>🚀 Sistema de Producción</strong>: Integración exitosa de
-ambas metodologías para desarrollo eficiente y calidad garantizada</li>
+<li>Iniciar la VM en VMware Workstation</li>
+<li>Esperar a que arranque el sistema operativo</li>
 </ul>
-<p><strong>Estado del Proyecto</strong>: <strong>SISTEMA INTEGRADO LISTO
-PARA PRODUCCIÓN</strong> con metodologías validadas y operativas.</p>
-<hr />
-<p><em>Última actualización: Enero 2025 - Sistema completo con
-metodologías avanzadas integradas</em></p>
-<hr />
 </div>
-</div>
-</div>
-<div id="apéndice-guía-de-instalación-detallada-para-manjaro-xfce" class="section level1">
-<h1>📋 APÉNDICE: Guía de Instalación Detallada para Manjaro XFCE</h1>
-<blockquote>
-<p><strong>Nota</strong>: Esta es la guía de instalación completa
-original. Para la mayoría de usuarios, recomendamos usar la <a href="#id_%EF%B8%8F-instalaci%C3%B3n-completa">instalación rápida</a>
-mostrada arriba.</p>
-</blockquote>
-<div id="a1.-actualización-del-sistema" class="section level2">
-<h2>A1. Actualización del Sistema</h2>
-<div id="estructura-de-directorios" class="section level3">
-<h3>7.1 Estructura de Directorios</h3>
-<pre class="bash"><code># Crear estructura de directorios para el proyecto
-mkdir -p ~/R/projects/icfes-matematicas/{data,scripts,output,figures,templates,exams,backups}</code></pre>
-</div>
-<div id="configuración-de-git" class="section level3">
-<h3>7.2 Configuración de Git</h3>
-<pre class="bash"><code># Instalar Git
-sudo pacman -S git
-
-# Configuración básica
-git config --global user.name &quot;Tu Nombre&quot;
-git config --global user.email &quot;tu@email.com&quot;
-git config --global core.editor &quot;nano&quot;
-git config --global init.defaultBranch main
-git config --global color.ui true
-
-# Configuración adicional
-git config --global core.autocrlf input
-git config --global core.safecrlf warn
-git config --global pull.rebase false</code></pre>
-</div>
-</div>
-<div id="verificación-de-la-instalación" class="section level2">
-<h2>8. Verificación de la Instalación</h2>
-<div id="script-de-verificación" class="section level3">
-<h3>8.1 Script de Verificación</h3>
-<pre class="bash"><code>#!/bin/bash
-
-echo &quot;Verificando instalaciones...&quot;
-
-# Verificar R
-echo &quot;R:&quot;
-R --version
-
-# Verificar Python
-echo &quot;Python:&quot;
-python --version
-pip --version
-
-# Verificar LaTeX
-echo &quot;LaTeX:&quot;
-pdflatex --version
-
-# Verificar RStudio
-echo &quot;RStudio:&quot;
-rstudio --version
-
-# Verificar ImageMagick
-echo &quot;ImageMagick:&quot;
-convert --version
-
-# Verificar herramientas PDF
-echo &quot;PDF tools:&quot;
-pdf2svg --version
-pdfcrop --version
-
-# Verificar paquetes Python
-python -c &quot;import matplotlib; print(&#39;Matplotlib version:&#39;, matplotlib.__version__)&quot;
-python -c &quot;import pandas; print(&#39;Pandas version:&#39;, pandas.__version__)&quot;
-python -c &quot;import numpy; print(&#39;NumPy version:&#39;, numpy.__version__)&quot;
-
-# Verificar paquetes R
-R -e &quot;installed.packages()&quot;</code></pre>
-</div>
-<div id="prueba-de-integración" class="section level3">
-<h3>8.2 Prueba de Integración</h3>
-<pre class="r"><code># Crear un documento R Markdown de prueba
-rmarkdown::render(&quot;test.Rmd&quot;, output_format = &quot;pdf_document&quot;)
-rmarkdown::render(&quot;test.Rmd&quot;, output_format = &quot;html_document&quot;)
-
-# Probar la generación de exámenes
-library(exams)
-exams2pdf(&quot;ejemplo.Rnw&quot;)</code></pre>
-</div>
-</div>
-<div id="mantenimiento-del-sistema" class="section level2">
-<h2>9. Mantenimiento del Sistema</h2>
-<div id="actualización-regular" class="section level3">
-<h3>9.1 Actualización Regular</h3>
-<pre class="bash"><code># Actualizar el sistema
+<div id="instalar-vmware-tools-dentro-de-la-vm" class="section level3">
+<h3>5.2 Instalar VMware Tools (dentro de la VM)</h3>
+<pre class="bash"><code># Actualizar sistema
 sudo pacman -Syu
 
-# Limpiar caché
-sudo pacman -Scc
+# Instalar VMware Tools para Linux
+sudo pacman -S open-vm-tools
 
-# Actualizar paquetes de R
-R -e &quot;update.packages(ask = FALSE)&quot;
-
-# Actualizar paquetes de Python
-pip list --outdated
-pip install --upgrade pip</code></pre>
+# Habilitar servicios
+sudo systemctl enable vmtoolsd
+sudo systemctl start vmtoolsd</code></pre>
 </div>
-<div id="limpieza-del-sistema" class="section level3">
-<h3>9.2 Limpieza del Sistema</h3>
-<pre class="bash"><code># Limpiar caché de pacman
-sudo pacman -Scc
+<div id="optimizaciones-gráficas" class="section level3">
+<h3>5.3 Optimizaciones gráficas</h3>
+<pre class="bash"><code># Driver gráfico optimizado para VMware
+sudo pacman -S xf86-video-vmware
 
-# Limpiar caché de R
-R -e &quot;gc()&quot;
+# Para XFCE específicamente
+sudo pacman -S xf86-video-vmware mesa
 
-# Limpiar caché de Python
-pip cache purge
-
-# Limpiar archivos temporales
-rm -rf /tmp/*</code></pre>
+# Reiniciar para aplicar cambios
+sudo reboot</code></pre>
 </div>
 </div>
-<div id="respaldo-y-recuperación" class="section level2">
-<h2>10. Respaldo y Recuperación</h2>
-<div id="respaldo-regular" class="section level3">
-<h3>10.1 Respaldo Regular</h3>
-<pre class="bash"><code># Crear directorio de respaldo
-mkdir -p ~/backups
+<div id="paso-6-configuraciones-adicionales" class="section level2">
+<h2>Paso 6: Configuraciones adicionales</h2>
+<div id="servicios-de-integración" class="section level3">
+<h3>6.1 Servicios de integración</h3>
+<pre class="bash"><code># Habilitar carpetas compartidas (opcional)
+sudo systemctl enable vmware-vmblock-fuse
+sudo systemctl start vmware-vmblock-fuse
 
-# Respaldo de configuración R
-cp -r ~/.R ~/backups/R_config_$(date +%Y%m%d)
-
-# Respaldo de proyectos
-tar -czf ~/backups/projects_$(date +%Y%m%d).tar.gz ~/R/projects
-
-# Respaldo de configuración de RStudio
-cp -r ~/.config/RStudio ~/backups/RStudio_config_$(date +%Y%m%d)</code></pre>
+# Para mejor rendimiento de red
+sudo systemctl enable vmware-networks</code></pre>
 </div>
-<div id="recuperación" class="section level3">
-<h3>10.2 Recuperación</h3>
-<pre class="bash"><code># Restaurar configuración R
-cp -r ~/backups/R_config_YYYYMMDD/* ~/.R/
+<div id="verificar-funcionamiento" class="section level3">
+<h3>6.2 Verificar funcionamiento</h3>
+<pre class="bash"><code># Verificar que VMware Tools funciona
+systemctl status vmtoolsd
 
-# Restaurar proyectos
-tar -xzf ~/backups/projects_YYYYMMDD.tar.gz -C ~/
+# Verificar driver gráfico
+lspci | grep -i vga
+lsmod | grep vmw</code></pre>
+</div>
+<div id="configurar-carpetas-compartidas-opcional" class="section level3">
+<h3>6.3 Configurar carpetas compartidas (opcional)</h3>
+<ol style="list-style-type: decimal">
+<li><strong>En VMware</strong>: VM → Settings → Options → Shared
+Folders</li>
+<li><strong>Habilitar</strong>: “Always enabled”</li>
+<li><strong>Agregar carpeta</strong>: Seleccionar carpeta del host</li>
+<li><strong>En la VM</strong>:</li>
+</ol>
+<pre class="bash"><code># Crear punto de montaje
+sudo mkdir /mnt/hgfs
 
-# Restaurar configuración de RStudio
-cp -r ~/backups/RStudio_config_YYYYMMDD/* ~/.config/RStudio/</code></pre>
+# Montar carpetas compartidas
+sudo mount -t fuse.vmhgfs-fuse .host:/ /mnt/hgfs -o allow_other</code></pre>
+</div>
+</div>
+<div id="paso-7-optimizaciones-finales" class="section level2">
+<h2>Paso 7: Optimizaciones finales</h2>
+<div id="configuración-de-rendimiento" class="section level3">
+<h3>7.1 Configuración de rendimiento</h3>
+<ul>
+<li><strong>VM Settings → Hardware → Display</strong>: Habilitar
+“Accelerate 3D graphics”</li>
+<li><strong>VM Settings → Hardware → Memory</strong>: Ajustar según
+necesidades</li>
+<li><strong>VM Settings → Hardware → Processors</strong>: Habilitar
+“Virtualize Intel VT-x/EPT or AMD-V/RVI”</li>
+</ul>
+</div>
+<div id="configuración-de-red" class="section level3">
+<h3>7.2 Configuración de red</h3>
+<ul>
+<li><strong>NAT</strong>: Para acceso a internet básico</li>
+<li><strong>Bridged</strong>: Para que la VM aparezca como dispositivo
+independiente en la red</li>
+<li><strong>Host-only</strong>: Para comunicación solo con el host</li>
+</ul>
 </div>
 </div>
 <div id="solución-de-problemas-comunes" class="section level2">
-<h2>11. Solución de Problemas Comunes</h2>
-<div id="problemas-con-latex" class="section level3">
-<h3>11.1 Problemas con LaTeX</h3>
-<pre class="bash"><code># Reinstalar paquetes LaTeX específicos
-sudo pacman -S texlive-latexextra texlive-fontsextra texlive-pictures
+<h2>Solución de problemas comunes</h2>
+<div id="error-failed-to-get-shared-write-lock" class="section level3">
+<h3>Error: “Failed to get shared write lock”</h3>
+<pre class="bash"><code># Asegurar que Boxes está cerrado
+flatpak kill org.gnome.Boxes
+pkill -f qemu
 
-# Limpiar caché de LaTeX
-sudo texhash
-
-# Verificar instalación de LaTeX
-tlmgr update --self
-tlmgr update --all</code></pre>
+# Usar flag -U para forzar acceso
+qemu-img convert -f qcow2 -O vmdk -U [origen] [destino]</code></pre>
 </div>
-<div id="problemas-con-r-exams" class="section level3">
-<h3>11.2 Problemas con r-exams</h3>
-<pre class="r"><code># Actualizar todos los paquetes
-update.packages(ask = FALSE)
-
-# Reinstalar r-exams y dependencias
-remove.packages(&quot;exams&quot;)
-install.packages(&quot;exams&quot;, dependencies = TRUE)
-
-# Verificar dependencias
-library(exams)
-exams_version()</code></pre>
-</div>
-<div id="problemas-con-rstudio" class="section level3">
-<h3>11.3 Problemas con RStudio</h3>
-<pre class="bash"><code># Verificar permisos
-sudo chown -R $USER:$USER ~/.config/RStudio
-sudo chmod -R 755 ~/.config/RStudio
-
-# Reinstalar RStudio
-yay -R rstudio-desktop-bin
-yay -S rstudio-desktop-bin</code></pre>
-</div>
-<div id="problemas-con-imagemagick" class="section level3">
-<h3>11.4 Problemas con ImageMagick</h3>
-<pre class="bash"><code># Verificar políticas de seguridad
-sudo nano /etc/ImageMagick-7/policy.xml
-
-# Reinstalar ImageMagick
-sudo pacman -S imagemagick</code></pre>
-</div>
-<div id="problemas-con-pythonreticulate" class="section level3">
-<h3>11.5 Problemas con Python/reticulate</h3>
-<pre class="r"><code># Reinstalar reticulate
-remove.packages(&quot;reticulate&quot;)
-install.packages(&quot;reticulate&quot;)
-
-# Reconfigurar Python
-library(reticulate)
-use_python(&quot;/usr/bin/python3&quot;, required = TRUE)</code></pre>
-</div>
-</div>
-<div id="optimización-del-sistema" class="section level2">
-<h2>12. Optimización del Sistema</h2>
-<div id="optimización-de-r" class="section level3">
-<h3>12.1 Optimización de R</h3>
-<pre class="r"><code># Configurar opciones de memoria
-options(mc.cores = parallel::detectCores())
-options(max.print = 1000)
-options(width = 80)
-options(stringsAsFactors = FALSE)</code></pre>
-</div>
-<div id="optimización-de-rstudio" class="section level3">
-<h3>12.2 Optimización de RStudio</h3>
+<div id="vm-no-arranca-en-vmware" class="section level3">
+<h3>VM no arranca en VMware</h3>
 <ul>
-<li>Aumentar el tamaño del buffer de la consola</li>
-<li>Habilitar el guardado automático</li>
-<li>Configurar el formateo automático del código</li>
-<li>Optimizar la configuración de Git</li>
+<li>Verificar que el archivo VMDK no está corrupto</li>
+<li>Cambiar tipo de controlador SCSI a IDE</li>
+<li>Reducir memoria asignada temporalmente</li>
 </ul>
 </div>
-<div id="optimización-del-sistema-1" class="section level3">
-<h3>12.3 Optimización del Sistema</h3>
-<pre class="bash"><code># Limpiar caché del sistema
-sudo pacman -Scc
-
-# Optimizar la base de datos de paquetes
-sudo pacman-optimize
-
-# Limpiar archivos temporales
-sudo rm -rf /tmp/*</code></pre>
+<div id="problemas-gráficos" class="section level3">
+<h3>Problemas gráficos</h3>
+<pre class="bash"><code># Reinstalar drivers
+sudo pacman -S xf86-video-vmware mesa
+sudo systemctl restart display-manager</code></pre>
 </div>
-</div>
-<div id="recursos-adicionales" class="section level2">
-<h2>13. Recursos Adicionales</h2>
-<div id="documentación-oficial-1" class="section level3">
-<h3>13.1 Documentación Oficial</h3>
+<div id="rendimiento-lento" class="section level3">
+<h3>Rendimiento lento</h3>
 <ul>
-<li><a href="https://www.r-project.org/">R Project</a></li>
-<li><a href="https://posit.co/download/rstudio-desktop/">RStudio</a></li>
-<li><a href="https://www.latex-project.org/">LaTeX Project</a></li>
-<li><a href="https://www.python.org/">Python</a></li>
-<li><a href="https://rstudio.github.io/reticulate/">reticulate</a></li>
-<li><a href="http://www.r-exams.org/">r-exams</a></li>
-</ul>
-</div>
-<div id="foros-y-comunidades" class="section level3">
-<h3>13.2 Foros y Comunidades</h3>
-<ul>
-<li><a href="https://community.rstudio.com/">RStudio Community</a></li>
-<li><a href="https://stackoverflow.com/">Stack Overflow</a></li>
-<li><a href="https://forum.manjaro.org/">Manjaro Forum</a></li>
-</ul>
-</div>
-<div id="tutoriales-y-guías-1" class="section level3">
-<h3>13.3 Tutoriales y Guías</h3>
-<ul>
-<li><a href="https://rmarkdown.rstudio.com/">R Markdown</a></li>
-<li><a href="https://en.wikibooks.org/wiki/LaTeX">LaTeX
-Wikibook</a></li>
-<li><a href="https://www.python.org/doc/">Python for Data
-Science</a></li>
+<li>Aumentar memoria RAM asignada</li>
+<li>Habilitar aceleración 3D</li>
+<li>Verificar que VMware Tools está instalado correctamente</li>
 </ul>
 </div>
 </div>
 <div id="notas-importantes" class="section level2">
-<h2>Notas Importantes</h2>
-<ul>
-<li>Asegúrate de tener suficiente espacio en disco (mínimo 20GB
-recomendado)</li>
-<li>La instalación completa puede tomar entre 30-60 minutos dependiendo
-de tu conexión a internet</li>
-<li>Es recomendable tener una copia de seguridad de tus datos antes de
-realizar instalaciones masivas</li>
-<li>Mantén un registro de las versiones instaladas para facilitar la
-solución de problemas</li>
-<li>Realiza respaldos regulares de tu configuración y proyectos</li>
-<li>Verifica la integridad de las instalaciones después de cada
-actualización importante</li>
-</ul>
-</div>
-<div id="soporte" class="section level2">
-<h2>Soporte</h2>
-<p>Si encuentras problemas durante la instalación:</p>
+<h2>Notas importantes</h2>
 <ol style="list-style-type: decimal">
-<li><p>Revisa los logs de instalación:</p>
-<pre class="bash"><code>journalctl -xe</code></pre></li>
-<li><p>Consulta la documentación oficial:</p>
-<ul>
-<li>R: <a href="https://cran.r-project.org/manuals.html" class="uri">https://cran.r-project.org/manuals.html</a></li>
-<li>RStudio: <a href="https://docs.posit.co/rstudio/" class="uri">https://docs.posit.co/rstudio/</a></li>
-<li>LaTeX: <a href="https://www.latex-project.org/help/documentation/" class="uri">https://www.latex-project.org/help/documentation/</a></li>
-<li>Manjaro: <a href="https://wiki.manjaro.org/" class="uri">https://wiki.manjaro.org/</a></li>
-</ul></li>
-<li><p>Verifica los foros de Manjaro para problemas específicos del
-sistema</p></li>
-<li><p>Consulta el repositorio de GitHub del proyecto para problemas
-específicos</p></li>
+<li><strong>Backup</strong>: Siempre hacer respaldo de la VM original
+antes de la conversión</li>
+<li><strong>Espacio</strong>: La conversión requiere espacio adicional
+(temporalmente el doble)</li>
+<li><strong>Tiempo</strong>: La conversión puede tomar 30-60 minutos
+según el tamaño</li>
+<li><strong>Compatibilidad</strong>: Algunas configuraciones específicas
+pueden requerir ajustes manuales</li>
+<li><strong>Licencias</strong>: Verificar que las licencias de software
+en la VM permiten la migración</li>
 </ol>
-<hr />
-<p><em>Última actualización: Configuración Git automatizada - Enero
-2025</em></p>
+</div>
+<div id="comandos-de-referencia-rápida" class="section level2">
+<h2>Comandos de referencia rápida</h2>
+<pre class="bash"><code># Localizar VMs de Boxes
+find ~/.var/app/org.gnome.Boxes/ -name &quot;*.qcow2&quot;
+
+# Conversión básica
+qemu-img convert -f qcow2 -O vmdk [origen] [destino]
+
+# Información de disco
+qemu-img info [archivo]
+
+# Verificar VMware Tools
+systemctl status vmtoolsd</code></pre>
+<p>Este tutorial proporciona una guía completa para migrar VMs de GNOME
+Boxes a VMware Workstation en sistemas Manjaro Linux.</p>
 </div>
 </div>
 

@@ -1,9 +1,12 @@
 # Carga de la librería r-exams
 library(exams)
 
+# Configurar modo generación de exámenes para evitar pruebas test_that
+.exams_generation_mode <- TRUE
+
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "ortocentro_alturas_triangulo_geometria_n2_v1.Rmd"
-copias <- 5
+archivo_examen <- "poblaciones_paises_graficas_lineas_interpretacion_representacion_n2_v1.Rmd"
+copias <- 300
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
