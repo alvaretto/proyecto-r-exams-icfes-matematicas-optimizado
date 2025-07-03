@@ -1,0 +1,398 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+
+# Metadatos ICFES
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: laboral
+  eje_axial: eje2
+  componente: geometrico_metrico
+---
+
+```{r inicio, include=FALSE}
+# FASE 1: CONFIGURACIÓN TIKZ PRIORITARIA
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente para TikZ
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{amsmath}",
+  "\\usepackage{array}",
+  "\\usetikzlibrary{3d}"
+))
+
+# Librerías esenciales
+library(exams)
+library(knitr)
+library(digest)
+
+# Configuración global
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# FASE 4: GENERACIÓN DE DATOS ALEATORIOS
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Dimensiones base para las cajas (siguiendo imagen original)
+  # Caja 1: paralelepípedo rectangular
+  dimensiones_caja1 <- list(
+    largo = sample(25:35, 1),  # Dimensión principal (base 30cm)
+    ancho = sample(8:12, 1),   # Ancho (base 10cm)
+    alto = sample(8:12, 1)     # Alto (base 10cm)
+  )
+
+  # Caja 2: cubo con lado igual al ancho de caja 1 (para mantener relación)
+  lado_caja2 <- dimensiones_caja1$ancho
+
+  # Calcular volúmenes
+  volumen_caja1 <- dimensiones_caja1$largo * dimensiones_caja1$ancho * dimensiones_caja1$alto
+  volumen_caja2 <- lado_caja2^3
+
+  # Determinar relación correcta
+  relacion_volumen <- volumen_caja1 / volumen_caja2
+
+  if (relacion_volumen >= 1.8 && relacion_volumen <= 2.2) {
+    respuesta_correcta <- "A"
+    relacion_texto <- "la caja 1 ocupa el doble del volumen de la caja 2"
+  } else if (relacion_volumen > 2.2) {
+    respuesta_correcta <- "A"
+    relacion_texto <- "la caja 1 ocupa más del doble del volumen de la caja 2"
+  } else {
+    respuesta_correcta <- "B"
+    relacion_texto <- "la caja 2 ocupa más volumen que la caja 1"
+  }
+
+  # Contextos aleatorios
+  contextos <- c(
+    "empresa para empacar alimentos",
+    "fábrica de productos alimenticios",
+    "compañía de distribución de comida",
+    "negocio de empaque de productos",
+    "industria alimentaria",
+    "empresa de logística alimentaria"
+  )
+
+  contexto_seleccionado <- sample(contextos, 1)
+
+  # Colores aleatorios para TikZ
+  colores_caja1 <- c("200,200,200", "220,220,220", "180,180,180", "210,210,210")
+  colores_caja2 <- c("190,190,190", "170,170,170", "160,160,160", "185,185,185")
+
+  color_caja1 <- sample(colores_caja1, 1)
+  color_caja2 <- sample(colores_caja2, 1)
+
+  return(list(
+    caja1 = dimensiones_caja1,
+    caja2_lado = lado_caja2,
+    volumen1 = volumen_caja1,
+    volumen2 = volumen_caja2,
+    contexto = contexto_seleccionado,
+    respuesta_correcta = respuesta_correcta,
+    relacion = relacion_texto,
+    color_caja1 = color_caja1,
+    color_caja2 = color_caja2,
+    relacion_numerica = round(relacion_volumen, 2)
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+caja1_largo <- datos$caja1$largo
+caja1_ancho <- datos$caja1$ancho
+caja1_alto <- datos$caja1$alto
+caja2_lado <- datos$caja2_lado
+volumen_caja1 <- datos$volumen1
+volumen_caja2 <- datos$volumen2
+contexto_empresa <- datos$contexto
+respuesta_correcta <- datos$respuesta_correcta
+relacion_volumen <- datos$relacion
+color_caja1_rgb <- datos$color_caja1
+color_caja2_rgb <- datos$color_caja2
+relacion_numerica <- datos$relacion_numerica
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# FASE 4: PRUEBA OBLIGATORIA DE DIVERSIDAD DE VERSIONES
+versiones <- list()
+for(i in 1:1000) {
+  datos_test <- generar_datos()
+  versiones[[i]] <- digest::digest(datos_test)
+}
+
+n_versiones_unicas <- length(unique(versiones))
+if(n_versiones_unicas < 300) {
+  stop(paste("Solo se generaron", n_versiones_unicas,
+            "versiones únicas. Se requieren al menos 300."))
+} else {
+  cat("✅ Prueba de diversidad exitosa:", n_versiones_unicas, "versiones únicas generadas\n")
+}
+```
+
+```{r generar_tikz_cajas_3d, echo=FALSE, results="asis"}
+# FASE 5: VISUALIZACIONES CON TIKZ PRIORITARIO
+# Función para generar TikZ 3D de las cajas con fidelidad 98%+
+generar_tikz_cajas_3d <- function(largo1, ancho1, alto1, lado2, color1, color2) {
+  tikz_code <- paste0(
+    "\\begin{tikzpicture}[scale=1.0]\n",
+    "% Definir colores RGB exactos\n",
+    "\\definecolor{caja1_color}{RGB}{", color1, "}\n",
+    "\\definecolor{caja2_color}{RGB}{", color2, "}\n",
+    "\\definecolor{linea_caja}{RGB}{0,0,0}\n",
+    "\\definecolor{texto_dim}{RGB}{0,0,0}\n",
+    "\n",
+    "% Configuración de estilos avanzados\n",
+    "\\tikzset{\n",
+    "  caja_style/.style={line width=1pt, line cap=round, line join=round},\n",
+    "  dim_style/.style={font=\\Huge\\bfseries, text=texto_dim},\n",
+    "  linea_dim/.style={line width=0.5pt, dashed}\n",
+    "}\n",
+    "\n"
+  )
+
+  # CAJA 1 - Paralelepípedo (lado izquierdo)
+  tikz_code <- paste0(tikz_code,
+    "% CAJA 1 - Paralelepípedo\n",
+    "% Base frontal de Caja 1\n",
+    "\\fill[caja1_color] (0,0) rectangle (", largo1, ",", alto1, ");\n",
+    "\\draw[caja_style] (0,0) rectangle (", largo1, ",", alto1, ");\n",
+    "\n",
+    "% Cara superior de Caja 1 (perspectiva)\n",
+    "\\fill[caja1_color] (0,", alto1, ") -- (", ancho1/2, ",", alto1 + ancho1/2, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2, ") -- (", largo1, ",", alto1, ") -- cycle;\n",
+    "\\draw[caja_style] (0,", alto1, ") -- (", ancho1/2, ",", alto1 + ancho1/2, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2, ") -- (", largo1, ",", alto1, ") -- cycle;\n",
+    "\n",
+    "% Cara lateral derecha de Caja 1\n",
+    "\\fill[caja1_color] (", largo1, ",0) -- (", largo1 + ancho1/2, ",", ancho1/2, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2, ") -- (", largo1, ",", alto1, ") -- cycle;\n",
+    "\\draw[caja_style] (", largo1, ",0) -- (", largo1 + ancho1/2, ",", ancho1/2, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2, ") -- (", largo1, ",", alto1, ") -- cycle;\n",
+    "\n",
+    "% Aristas ocultas de Caja 1 (líneas punteadas)\n",
+    "\\draw[caja_style, dashed] (0,0) -- (", ancho1/2, ",", ancho1/2, ");\n",
+    "\\draw[caja_style, dashed] (", ancho1/2, ",", ancho1/2, ") -- (", ancho1/2, ",", alto1 + ancho1/2, ");\n",
+    "\\draw[caja_style, dashed] (", ancho1/2, ",", ancho1/2, ") -- (", largo1 + ancho1/2, ",", ancho1/2, ");\n",
+    "\n"
+  )
+
+  # Dimensiones de Caja 1
+  tikz_code <- paste0(tikz_code,
+    "% Dimensiones de Caja 1\n",
+    "\\draw[linea_dim] (0,-1) -- (", largo1, ",-1);\n",
+    "\\draw[linea_dim] (0,-0.8) -- (0,-1.2);\n",
+    "\\draw[linea_dim] (", largo1, ",-0.8) -- (", largo1, ",-1.2);\n",
+    "\\node[dim_style] at (", largo1/2, ",-1.5) {", largo1, " cm};\n",
+    "\n",
+    "\\draw[linea_dim] (-1,0) -- (-1,", alto1, ");\n",
+    "\\draw[linea_dim] (-0.8,0) -- (-1.2,0);\n",
+    "\\draw[linea_dim] (-0.8,", alto1, ") -- (-1.2,", alto1, ");\n",
+    "\\node[dim_style, rotate=90] at (-1.8,", alto1/2, ") {", alto1, " cm};\n",
+    "\n",
+    "\\draw[linea_dim] (", largo1, ",", alto1 + 0.5, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2 + 0.5, ");\n",
+    "\\draw[linea_dim] (", largo1, ",", alto1 + 0.3, ") -- (", largo1, ",", alto1 + 0.7, ");\n",
+    "\\draw[linea_dim] (", largo1 + ancho1/2, ",", alto1 + ancho1/2 + 0.3, ") -- (", largo1 + ancho1/2, ",", alto1 + ancho1/2 + 0.7, ");\n",
+    "\\node[dim_style, rotate=45] at (", largo1 + ancho1/4, ",", alto1 + ancho1/4 + 1, ") {", ancho1, " cm};\n",
+    "\n"
+  )
+
+  # CAJA 2 - Cubo (lado derecho)
+  x_offset <- largo1 + ancho1 + 8  # Separación entre cajas
+
+  tikz_code <- paste0(tikz_code,
+    "% CAJA 2 - Cubo\n",
+    "% Base frontal de Caja 2\n",
+    "\\fill[caja2_color] (", x_offset, ",0) rectangle (", x_offset + lado2, ",", lado2, ");\n",
+    "\\draw[caja_style] (", x_offset, ",0) rectangle (", x_offset + lado2, ",", lado2, ");\n",
+    "\n",
+    "% Cara superior de Caja 2 (perspectiva)\n",
+    "\\fill[caja2_color] (", x_offset, ",", lado2, ") -- (", x_offset + lado2/2, ",", lado2 + lado2/2, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2, ") -- (", x_offset + lado2, ",", lado2, ") -- cycle;\n",
+    "\\draw[caja_style] (", x_offset, ",", lado2, ") -- (", x_offset + lado2/2, ",", lado2 + lado2/2, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2, ") -- (", x_offset + lado2, ",", lado2, ") -- cycle;\n",
+    "\n",
+    "% Cara lateral derecha de Caja 2\n",
+    "\\fill[caja2_color] (", x_offset + lado2, ",0) -- (", x_offset + lado2 + lado2/2, ",", lado2/2, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2, ") -- (", x_offset + lado2, ",", lado2, ") -- cycle;\n",
+    "\\draw[caja_style] (", x_offset + lado2, ",0) -- (", x_offset + lado2 + lado2/2, ",", lado2/2, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2, ") -- (", x_offset + lado2, ",", lado2, ") -- cycle;\n",
+    "\n",
+    "% Aristas ocultas de Caja 2 (líneas punteadas)\n",
+    "\\draw[caja_style, dashed] (", x_offset, ",0) -- (", x_offset + lado2/2, ",", lado2/2, ");\n",
+    "\\draw[caja_style, dashed] (", x_offset + lado2/2, ",", lado2/2, ") -- (", x_offset + lado2/2, ",", lado2 + lado2/2, ");\n",
+    "\\draw[caja_style, dashed] (", x_offset + lado2/2, ",", lado2/2, ") -- (", x_offset + lado2 + lado2/2, ",", lado2/2, ");\n",
+    "\n"
+  )
+
+  # Dimensiones de Caja 2
+  tikz_code <- paste0(tikz_code,
+    "% Dimensiones de Caja 2\n",
+    "\\draw[linea_dim] (", x_offset, ",-1) -- (", x_offset + lado2, ",-1);\n",
+    "\\draw[linea_dim] (", x_offset, ",-0.8) -- (", x_offset, ",-1.2);\n",
+    "\\draw[linea_dim] (", x_offset + lado2, ",-0.8) -- (", x_offset + lado2, ",-1.2);\n",
+    "\\node[dim_style] at (", x_offset + lado2/2, ",-1.5) {", lado2, " cm};\n",
+    "\n",
+    "\\draw[linea_dim] (", x_offset - 1, ",0) -- (", x_offset - 1, ",", lado2, ");\n",
+    "\\draw[linea_dim] (", x_offset - 0.8, ",0) -- (", x_offset - 1.2, ",0);\n",
+    "\\draw[linea_dim] (", x_offset - 0.8, ",", lado2, ") -- (", x_offset - 1.2, ",", lado2, ");\n",
+    "\\node[dim_style, rotate=90] at (", x_offset - 1.8, ",", lado2/2, ") {", lado2, " cm};\n",
+    "\n",
+    "\\draw[linea_dim] (", x_offset + lado2, ",", lado2 + 0.5, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.5, ");\n",
+    "\\draw[linea_dim] (", x_offset + lado2, ",", lado2 + 0.3, ") -- (", x_offset + lado2, ",", lado2 + 0.7, ");\n",
+    "\\draw[linea_dim] (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.3, ") -- (", x_offset + lado2 + lado2/2, ",", lado2 + lado2/2 + 0.7, ");\n",
+    "\\node[dim_style, rotate=45] at (", x_offset + lado2 + lado2/4, ",", lado2 + lado2/4 + 1, ") {", lado2, " cm};\n",
+    "\n",
+    "% ETIQUETAS DE LAS CAJAS (al final para que aparezcan por encima)\n",
+    "\\node[font=\\Huge\\bfseries] at (", largo1/2, ", ", alto1 + 6, ") {Caja 1};\n",
+    "\\node[font=\\Huge\\bfseries] at (", x_offset + lado2/2, ", ", lado2 + 6, ") {Caja 2};\n",
+    "\n",
+    "\\end{tikzpicture}"
+  )
+
+  return(tikz_code)
+}
+
+# Generar el código TikZ final con los datos aleatorios
+tikz_final <- generar_tikz_cajas_3d(caja1_largo, caja1_ancho, caja1_alto, caja2_lado, color_caja1_rgb, color_caja2_rgb)
+```
+
+
+
+```{r generar_distractores, echo=FALSE, results="hide"}
+# FASE 6: SISTEMA AVANZADO DE DISTRACTORES
+generar_distractores_volumen <- function(vol1, vol2, respuesta_correcta) {
+  # Pool de distractores con diferentes tipos de errores
+  distractores_pool <- list(
+    list(valor = vol1 + vol2, justificacion = "porque es la suma de ambos volúmenes"),
+    list(valor = abs(vol1 - vol2), justificacion = "porque es la diferencia entre los volúmenes"),
+    list(valor = round(vol1 / 2), justificacion = "porque es la mitad del volumen de la caja 1"),
+    list(valor = vol2 * 2, justificacion = "porque es el doble del volumen de la caja 2"),
+    list(valor = round(sqrt(vol1 * vol2)), justificacion = "porque es la media geométrica de los volúmenes"),
+    list(valor = round((vol1 + vol2) / 2), justificacion = "porque es el promedio de ambos volúmenes"),
+    list(valor = round(vol1 * 0.75), justificacion = "porque representa el 75% del volumen mayor"),
+    list(valor = round(vol2 * 1.5), justificacion = "porque es 1.5 veces el volumen menor")
+  )
+
+  # Seleccionar 3 distractores diferentes del pool
+  distractores_seleccionados <- sample(distractores_pool, 3)
+
+  # Crear opciones con respuesta correcta
+  if (respuesta_correcta == "A") {
+    opciones <- list(
+      A = list(valor = vol1, justificacion = paste("porque el volumen de la caja 1 es", vol1, "cm³")),
+      B = distractores_seleccionados[[1]],
+      C = distractores_seleccionados[[2]],
+      D = distractores_seleccionados[[3]]
+    )
+  } else {
+    opciones <- list(
+      A = distractores_seleccionados[[1]],
+      B = list(valor = vol2, justificacion = paste("porque el volumen de la caja 2 es", vol2, "cm³")),
+      C = distractores_seleccionados[[2]],
+      D = distractores_seleccionados[[3]]
+    )
+  }
+
+  return(opciones)
+}
+
+# Generar opciones de respuesta
+opciones_respuesta <- generar_distractores_volumen(volumen_caja1, volumen_caja2, respuesta_correcta)
+```
+
+Question
+========
+
+Una `r contexto_empresa` necesita evaluar dos tipos de cajas para el empaque de sus productos alimenticios. En la siguiente imagen se muestran las dimensiones de ambas cajas:
+
+```{r mostrar_diagrama_cajas, echo=FALSE, results='asis'}
+# Renderizar el diagrama TikZ en la pregunta
+include_tikz(tikz_final,
+             name = "cajas_volumen_3d",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "xcolor", "amsmath", "array"),
+             width = "16cm")
+```
+
+- **Caja 1**: Paralelepípedo rectangular de `r caja1_largo` cm × `r caja1_ancho` cm × `r caja1_alto` cm
+- **Caja 2**: Cubo de `r caja2_lado` cm de lado
+
+¿Cuál es el volumen de la caja que ocupa mayor espacio?
+
+Answerlist
+----------
+- `r opciones_respuesta$A$valor` cm³ `r opciones_respuesta$A$justificacion`
+- `r opciones_respuesta$B$valor` cm³ `r opciones_respuesta$B$justificacion`
+- `r opciones_respuesta$C$valor` cm³ `r opciones_respuesta$C$justificacion`
+- `r opciones_respuesta$D$valor` cm³ `r opciones_respuesta$D$justificacion`
+
+Solution
+========
+
+Para resolver este problema, debemos calcular el volumen de cada caja y compararlos.
+
+**Cálculo del volumen de la Caja 1 (paralelepípedo):**
+
+- Volumen = largo × ancho × alto
+- Volumen_1 = `r caja1_largo` cm × `r caja1_ancho` cm × `r caja1_alto` cm = `r volumen_caja1` cm³
+
+**Cálculo del volumen de la Caja 2 (cubo):**
+
+- Volumen = lado³
+- Volumen_2 = `r caja2_lado`³ cm³ = `r volumen_caja2` cm³
+
+**Comparación:**
+
+- Caja 1: `r volumen_caja1` cm³
+- Caja 2: `r volumen_caja2` cm³
+
+Por lo tanto, `r relacion_volumen`. La respuesta correcta es **`r ifelse(volumen_caja1 > volumen_caja2, paste(volumen_caja1, "cm³"), paste(volumen_caja2, "cm³"))`**.
+
+Answerlist
+----------
+- `r ifelse(respuesta_correcta == "A", "Verdadero", "Falso")`: `r opciones_respuesta$A$justificacion`
+- `r ifelse(respuesta_correcta == "B", "Verdadero", "Falso")`: `r opciones_respuesta$B$justificacion`
+- `r ifelse(respuesta_correcta == "C", "Verdadero", "Falso")`: `r opciones_respuesta$C$justificacion`
+- `r ifelse(respuesta_correcta == "D", "Verdadero", "Falso")`: `r opciones_respuesta$D$justificacion`
+
+Meta-information
+================
+exname: Volumen de Cajas de Empaque
+extype: schoice
+exsolution: `r ifelse(respuesta_correcta == "A", "1000", ifelse(respuesta_correcta == "B", "0100", ifelse(respuesta_correcta == "C", "0010", "0001")))`
+exshuffle: TRUE
+exsection: Geometría/Volumen de Prismas

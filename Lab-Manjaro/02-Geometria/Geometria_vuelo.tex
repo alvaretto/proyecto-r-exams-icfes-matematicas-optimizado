@@ -1,0 +1,187 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{tikz}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+En una entrevista para una documental de televisi?n, una piloto de un
+helic?ptero de acrobacias comenta en detalle c?mo fue su presentaci?n:
+
+``Durante los primeros 25 segundos aument? la altura de manera constante
+y, luego, realic? una pirueta en la que descend? de manera constante
+durante 10 segundos. Despu?s del descenso, comenc? a girar en torno al
+eje del helic?ptero durante 25 segundos, manteniendo la misma altura.
+Para finalizar, aterric? reduciendo la altura de manera constante
+durante 20 segundos''.
+
+?Cu?l de las siguientes gr?ficas representa de forma CORRECTA la
+informaci?n dada por la piloto?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\item
+  \begin{figure}
+  \centering
+  \includegraphics{/tmp/RtmpmpGi9u/grafica_opcion_1.png}
+  \caption{Opci?n A}
+  \end{figure}
+\item
+  \begin{figure}
+  \centering
+  \includegraphics{/tmp/RtmpmpGi9u/grafica_opcion_2.png}
+  \caption{Opci?n B}
+  \end{figure}
+\item
+  \begin{figure}
+  \centering
+  \includegraphics{/tmp/RtmpmpGi9u/grafica_opcion_3.png}
+  \caption{Opci?n C}
+  \end{figure}
+\item
+  \begin{figure}
+  \centering
+  \includegraphics{/tmp/RtmpmpGi9u/grafica_opcion_4.png}
+  \caption{Opci?n D}
+  \end{figure}
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Debemos analizar las distintas partes del vuelo seg?n la descripci?n
+dada por la piloto:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Primera fase (0-25 segundos)}: Aumento constante de altura
+  (l?nea recta ascendente).
+\item
+  \textbf{Segunda fase (25-35 segundos)}: Pirueta con descenso constante
+  de altura (l?nea recta descendente).
+\item
+  \textbf{Tercera fase (35-50 segundos)}: Giro manteniendo la misma
+  altura (l?nea horizontal).
+\item
+  \textbf{Cuarta fase (50-95 segundos)}: Aterrizaje con descenso
+  constante (l?nea recta descendente).
+\end{enumerate}
+
+Analizando las opciones:
+
+\textbf{Opci?n A:} - Subida constante hasta 25 segundos  - Descenso
+constante por 10 segundos  - Mantiene altura constante durante el giro
+por 25 segundos  - Descenso constante final por 20 segundos 
+
+\textbf{Opci?n B:} - Subida constante hasta 25 segundos  - Ca?da brusca
+(casi vertical)  - Deber?a ser un descenso constante - Mantiene altura
+constante luego del descenso  - Descenso constante final 
+
+\textbf{Opci?n C:} - Subida constante hasta 25 segundos  - Sube y luego
+baja (formando un pico)  - Deber?a ser solo un descenso constante -
+Mantiene altura constante  - Descenso constante final 
+
+\textbf{Opci?n D:} - Subida constante hasta 25 segundos  - Baja y luego
+vuelve a subir  - Deber?a ser solo un descenso constante - Mantiene
+altura constante  - Descenso constante final 
+
+Por lo tanto, la gr?fica que representa correctamente toda la
+descripci?n del vuelo es la \textbf{Opci?n A}.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Este es incorrecto. Esta gr?fica no representa correctamente las fases
+  del vuelo, especialmente en la parte de la pirueta.
+\item
+  Este es correcto. Esta gr?fica muestra correctamente todas las fases
+  del vuelo con los tiempos adecuados.
+\item
+  Este es incorrecto. Esta gr?fica no representa correctamente la fase
+  de la pirueta, pues muestra un ascenso y luego un descenso, cuando
+  deber?a ser solo un descenso constante.
+\item
+  Este es incorrecto. Esta gr?fica no representa correctamente la fase
+  de la pirueta, pues muestra un descenso seguido de un ascenso, cuando
+  deber?a ser solo un descenso constante.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: Geometria\_Vuelo\_Acrobacias extype: schoice exsolution: 0100
+exshuffle: TRUE
+
+\end{document}

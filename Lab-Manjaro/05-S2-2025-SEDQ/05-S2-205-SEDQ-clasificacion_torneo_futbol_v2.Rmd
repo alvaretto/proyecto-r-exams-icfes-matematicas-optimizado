@@ -1,0 +1,398 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: no_generico
+  contexto: cotidiano
+  eje_axial: eje3
+  componente: aleatorio
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage[utf8]{inputenc}",
+  "\\usepackage[T1]{fontenc}",
+  "\\usepackage{amsmath,amssymb}",
+  "\\usepackage{colortbl}"
+))
+
+library(exams)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.width = 6,
+  fig.height = 5
+)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria para reproducibilidad
+set.seed(sample(1:10000, 1))
+
+# Aleatorizar deportes para el contexto del problema
+deportes <- c("fútbol", "baloncesto", "voleibol", "hockey", "balonmano", 
+              "rugby", "waterpolo", "béisbol", "futsal", "handball")
+deporte <- sample(deportes, 1)
+
+# Aleatorizar nombres de competiciones
+competiciones <- c("campeonato", "torneo", "liga", "copa", "certamen", 
+                   "competición", "mundial", "clasificatoria", "eliminatoria")
+competicion <- sample(competiciones, 1)
+
+# Aleatorizar fases de competición
+fases_inicial <- c("primera ronda", "fase inicial", "fase de grupos", 
+                  "etapa preliminar", "fase clasificatoria")
+fase_inicial <- sample(fases_inicial, 1)
+
+fases_siguiente <- c("siguiente ronda", "segunda fase", "siguiente etapa", 
+                     "fase final", "etapa eliminatoria", "siguiente instancia")
+fase_siguiente <- sample(fases_siguiente, 1)
+
+# Aleatorizar puntos necesarios (entre 15 y 30, números que sean alcanzables)
+puntos_necesarios <- sample(c(18:28), 1)
+
+# Aleatorizar cantidad de partidos (entre 6 y 15)
+partidos_por_equipo <- sample(6:15, 1)
+
+# Aleatorizar sistema de puntuación (manteniendo estructura realista)
+# Opciones para puntos por ganar (2 o 3 son los más comunes)
+puntos_victoria <- sample(c(2, 3), 1, prob = c(0.3, 0.7))  # 3 es más común
+
+# Puntos por empate (usualmente 1, pero podría ser otro valor)
+puntos_empate <- sample(c(1, 2), 1, prob = c(0.9, 0.1))  # 1 es mucho más común
+
+# Puntos por derrota (usualmente 0, pero podría ser otro valor)
+puntos_derrota <- sample(c(0, 1), 1, prob = c(0.95, 0.05))  # 0 es mucho más común
+
+# Verificar que las combinaciones sean realistas
+if (puntos_victoria <= puntos_empate) {
+  puntos_victoria <- puntos_empate + 1
+}
+if (puntos_empate <= puntos_derrota) {
+  puntos_empate <- puntos_derrota + 1
+}
+
+# Verificar que los puntos necesarios sean alcanzables y desafiantes
+max_puntos_posibles <- puntos_victoria * partidos_por_equipo
+min_puntos_posibles <- puntos_derrota * partidos_por_equipo
+
+# Ajustar los puntos necesarios si están fuera de rango
+if (puntos_necesarios > max_puntos_posibles * 0.9) {
+  puntos_necesarios <- round(max_puntos_posibles * 0.8)
+}
+if (puntos_necesarios < min_puntos_posibles + 1) {
+  puntos_necesarios <- min_puntos_posibles + round(partidos_por_equipo / 2)
+}
+
+# Cálculo para la respuesta correcta:
+# ¿Cuál es el mínimo de partidos que se deben ganar para clasificar?
+
+# Función para calcular combinaciones de victorias, empates y derrotas que suman un puntaje objetivo
+calcular_combinaciones <- function(total_partidos, puntos_objetivo, pts_victoria, pts_empate, pts_derrota) {
+  combinaciones <- list()
+  
+  for (victorias in 0:total_partidos) {
+    for (empates in 0:(total_partidos - victorias)) {
+      derrotas <- total_partidos - victorias - empates
+      puntos_totales <- victorias * pts_victoria + empates * pts_empate + derrotas * pts_derrota
+      
+      if (puntos_totales >= puntos_objetivo) {
+        combinaciones[[length(combinaciones) + 1]] <- list(
+          victorias = victorias,
+          empates = empates,
+          derrotas = derrotas,
+          puntos = puntos_totales
+        )
+      }
+    }
+  }
+  
+  return(combinaciones)
+}
+
+# Obtener todas las combinaciones que alcanzan o superan los puntos necesarios
+combinaciones_validas <- calcular_combinaciones(
+  partidos_por_equipo, 
+  puntos_necesarios, 
+  puntos_victoria, 
+  puntos_empate, 
+  puntos_derrota
+)
+
+# Ordenar combinaciones por número de victorias (ascendente)
+combinaciones_ordenadas <- combinaciones_validas[order(
+  sapply(combinaciones_validas, function(x) x$victorias),
+  sapply(combinaciones_validas, function(x) x$empates),
+  decreasing = FALSE
+)]
+
+# El mínimo de partidos a ganar será la primera combinación ordenada
+min_victorias <- if (length(combinaciones_ordenadas) > 0) {
+  combinaciones_ordenadas[[1]]$victorias
+} else {
+  NA  # Si no hay combinaciones válidas
+}
+
+min_empates <- if (length(combinaciones_ordenadas) > 0) {
+  combinaciones_ordenadas[[1]]$empates
+} else {
+  NA
+}
+
+min_derrotas <- if (length(combinaciones_ordenadas) > 0) {
+  combinaciones_ordenadas[[1]]$derrotas
+} else {
+  NA
+}
+
+# Verificar que la solución sea correcta y ajustar si no lo es
+if (is.na(min_victorias) || 
+    (min_victorias * puntos_victoria + min_empates * puntos_empate + 
+     min_derrotas * puntos_derrota) < puntos_necesarios) {
+  # Recalcular puntos necesarios para garantizar solución
+  puntos_necesarios <- (partidos_por_equipo %/% 2) * puntos_victoria + 
+                       (partidos_por_equipo %/% 4) * puntos_empate
+  
+  # Recalcular combinaciones
+  combinaciones_validas <- calcular_combinaciones(
+    partidos_por_equipo, 
+    puntos_necesarios, 
+    puntos_victoria, 
+    puntos_empate, 
+    puntos_derrota
+  )
+  
+  combinaciones_ordenadas <- combinaciones_validas[order(
+    sapply(combinaciones_validas, function(x) x$victorias),
+    sapply(combinaciones_validas, function(x) x$empates),
+    decreasing = FALSE
+  )]
+  
+  min_victorias <- combinaciones_ordenadas[[1]]$victorias
+  min_empates <- combinaciones_ordenadas[[1]]$empates
+  min_derrotas <- combinaciones_ordenadas[[1]]$derrotas
+}
+
+# Crear texto explicativo para la solución
+explicacion_victorias <- paste("Con", min_victorias, "victorias,", min_empates, 
+                              "empates y", min_derrotas, "derrotas, se obtienen", 
+                              min_victorias * puntos_victoria + min_empates * puntos_empate + min_derrotas * puntos_derrota,
+                              "puntos, lo que es suficiente para clasificar.")
+
+# Crear algunas explicaciones alternativas con otras combinaciones posibles
+explicaciones_alt <- c()
+if (length(combinaciones_ordenadas) > 1) {
+  # Tomar hasta 3 combinaciones adicionales para mostrar como ejemplos
+  for (i in 2:min(4, length(combinaciones_ordenadas))) {
+    comb <- combinaciones_ordenadas[[i]]
+    puntos_total <- comb$victorias * puntos_victoria + comb$empates * puntos_empate + comb$derrotas * puntos_derrota
+    explicaciones_alt <- c(explicaciones_alt, 
+                          paste("Otra posibilidad es:", comb$victorias, "victorias,", 
+                                comb$empates, "empates y", comb$derrotas, "derrotas, para un total de", 
+                                puntos_total, "puntos."))
+  }
+}
+
+# Generar opciones de respuesta y definir la correcta
+opciones <- c(
+  paste("¿Cuál es el mínimo de partidos que se deben ganar para clasificar?"),
+  paste("¿Cuántos partidos deben perder los contrincantes para que el equipo clasifique?"),
+  paste("¿Cuál es el total de partidos que se juega en todo el torneo?"),
+  paste("¿Cuántos equipos clasifican a la", fase_siguiente, "?")
+)
+
+# La primera opción es la correcta
+opcion_correcta <- 1
+
+# Vector de solución para r-exams
+solucion <- c(1, 0, 0, 0)
+
+# Colores para la tabla TikZ
+colores_disponibles <- c("red", "blue", "green", "orange", "purple", "teal", "brown", "gray")
+color_fondo_header <- sample(colores_disponibles, 1)
+intensidad_header <- sample(c(15, 20, 25, 30), 1)
+color_header <- paste0(color_fondo_header, "!", intensidad_header)
+
+color_fondo_filas <- sample(colores_disponibles[colores_disponibles != color_fondo_header], 1)
+intensidad_filas <- sample(c(10, 15, 20), 1)
+color_filas <- paste0(color_fondo_filas, "!", intensidad_filas)
+```
+
+```{r generar_tabla_tikz}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Función para generar el código TikZ de la tabla
+generar_tabla_puntuacion <- function(competicion, deporte, puntos_victoria, puntos_empate, puntos_derrota, color_header, color_filas) {
+  # Crear tabla con TikZ
+  tabla_code <- c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    "  \\begin{tabular}{|c|c|}",
+    "    \\hline",
+    paste0("    \\rowcolor{", color_header, "}"),
+    paste0("    \\multicolumn{2}{|c|}{\\textbf{Sistema de puntuación}} \\\\"),
+    "    \\hline",
+    paste0("    \\rowcolor{", color_filas, "}"),
+    paste0("    Partido ganado & ", puntos_victoria, " puntos \\\\"),
+    "    \\hline",
+    paste0("    Partido empatado & ", puntos_empate, " punto", if(puntos_empate != 1) "s" else "", " \\\\"),
+    "    \\hline",
+    paste0("    Partido perdido & ", puntos_derrota, " punto", if(puntos_derrota != 1) "s" else "", " \\\\"),
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+  
+  return(tabla_code)
+}
+
+# Generar código TikZ para la tabla
+tabla_puntuacion <- generar_tabla_puntuacion(competicion, deporte, puntos_victoria, puntos_empate, puntos_derrota, color_header, color_filas)
+
+# Función simplificada para mostrar combinaciones de resultados
+generar_tabla_ejemplos <- function(min_victorias, min_empates, min_derrotas, puntos_victoria, puntos_empate, puntos_derrota, color_header, color_filas) {
+  puntos_total <- min_victorias * puntos_victoria + min_empates * puntos_empate + min_derrotas * puntos_derrota
+  
+  # Crear tabla con TikZ
+  tabla_code <- c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    "  \\begin{tabular}{|c|c|c|c|}",
+    "    \\hline",
+    paste0("    \\rowcolor{", color_header, "}"),
+    "    \\textbf{Victorias} & \\textbf{Empates} & \\textbf{Derrotas} & \\textbf{Puntos} \\\\",
+    "    \\hline",
+    paste0("    \\rowcolor{", color_filas, "}"),
+    paste0("    ", min_victorias, " & ", min_empates, " & ", min_derrotas, " & ", puntos_total, " \\\\"),
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+  
+  return(tabla_code)
+}
+
+# Generar código TikZ para la tabla de ejemplo
+tabla_ejemplo <- generar_tabla_ejemplos(
+  min_victorias, 
+  min_empates, 
+  min_derrotas, 
+  puntos_victoria, 
+  puntos_empate, 
+  puntos_derrota, 
+  color_header, 
+  color_filas
+)
+```
+
+Question
+========
+
+En un `r competicion` de `r deporte`, un equipo está en `r fase_inicial` y necesita `r puntos_necesarios` puntos para clasificar a la `r fase_siguiente`. En la ronda actual cada equipo juega `r partidos_por_equipo` partidos. Los puntos se reparten de la siguiente manera:
+
+```{r tabla_puntuacion, echo=FALSE, results='asis', fig.align='center'}
+# Mostrar la tabla de puntuación usando TikZ
+include_tikz(tabla_puntuacion, 
+             name = "tabla_puntuacion", 
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "7cm")
+```
+
+¿Cuál de las siguientes preguntas se puede responder con la información dada?
+
+Answerlist
+----------
+- ¿Cuál es el mínimo de partidos que se deben ganar para clasificar?
+- ¿Cuántos partidos deben perder los contrincantes para que el equipo clasifique?
+- ¿Cuál es el total de partidos que se juega en todo el torneo?
+- ¿Cuántos equipos clasifican a la `r fase_siguiente`?
+
+Solution
+========
+
+La respuesta correcta es: 
+
+**¿Cuál es el mínimo de partidos que se deben ganar para clasificar?**
+
+Con la información dada, podemos calcular cuál es el mínimo de partidos que un equipo debe ganar para alcanzar los `r puntos_necesarios` puntos necesarios para clasificar.
+
+Para resolver este problema, debemos considerar todas las posibles combinaciones de victorias, empates y derrotas que sumen exactamente `r partidos_por_equipo` partidos, y que generen al menos `r puntos_necesarios` puntos.
+
+Según el sistema de puntuación:
+
+- Victoria = `r puntos_victoria` puntos
+- Empate = `r puntos_empate` punto`r if(puntos_empate > 1) "s" else ""`
+- Derrota = `r puntos_derrota` punto`r if(puntos_derrota > 1) "s" else ""`
+
+La combinación que requiere el mínimo número de victorias es:
+
+```{r tabla_ejemplo, echo=FALSE, results='asis', fig.align='center'}
+# Mostrar la tabla de ejemplo usando TikZ
+include_tikz(tabla_ejemplo, 
+             name = "tabla_ejemplo", 
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "8cm")
+```
+
+Con **`r min_victorias` victorias**, `r min_empates` empates y `r min_derrotas` derrotas, se obtiene un total de `r min_victorias * puntos_victoria + min_empates * puntos_empate + min_derrotas * puntos_derrota` puntos, que es igual o superior a los `r puntos_necesarios` puntos necesarios para clasificar.
+
+Comprobación matemática:
+
+- Total de partidos = `r min_victorias` + `r min_empates` + `r min_derrotas` = `r partidos_por_equipo`
+- Puntos obtenidos = `r min_victorias` × `r puntos_victoria` + `r min_empates` × `r puntos_empate` + `r min_derrotas` × `r puntos_derrota` = `r min_victorias * puntos_victoria + min_empates * puntos_empate + min_derrotas * puntos_derrota`
+
+`r paste0(explicaciones_alt, collapse=" ")`
+
+Con respecto a las otras opciones:
+
+B. No se puede determinar cuántos partidos deben perder los contrincantes, ya que no se proporciona información sobre los otros equipos ni cómo afectan sus resultados a la clasificación.
+
+C. No es posible calcular el total de partidos del torneo porque no sabemos cuántos equipos participan en total ni cómo está estructurado el torneo completo.
+
+D. No se proporciona información sobre la cantidad de equipos que clasifican a la siguiente ronda.
+
+Answerlist
+----------
+- Verdadero
+- Falso
+- Falso
+- Falso
+
+Meta-information
+================
+exname: clasificacion_torneo_futbol_v1
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+exsection: Análisis combinatorio|Álgebra|Sistemas de ecuaciones
