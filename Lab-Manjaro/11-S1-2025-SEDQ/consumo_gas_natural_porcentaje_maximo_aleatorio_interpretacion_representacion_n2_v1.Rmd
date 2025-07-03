@@ -1,0 +1,438 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "amsmath"]
+  word_document: default
+  html_document: default
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: no_generico
+  contexto: familiar
+  eje_axial: eje4
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(reticulate)
+library(knitr)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria para reproducibilidad
+#set.seed(sample(1:10000, 1))
+
+# Aleatorización de contexto y personajes (un nombre masculino y uno femenino)
+nombres_masculinos <- c("Pedro", "Carlos", "Miguel", "Antonio", "Diego", "Sebastián", "Andrés", "Luis", "José", "Francisco")
+nombres_femeninos <- c("María", "Ana", "Carmen", "Laura", "Sofía", "Valentina", "Isabella", "Camila", "Daniela", "Alejandra")
+
+# Seleccionar aleatoriamente un nombre masculino y uno femenino
+nombre_masculino <- sample(nombres_masculinos, 1)
+nombre_femenino <- sample(nombres_femeninos, 1)
+
+# Aleatorizar el orden (quién se menciona primero)
+if(sample(c(TRUE, FALSE), 1)) {
+  nombre1 <- nombre_masculino
+  nombre2 <- nombre_femenino
+} else {
+  nombre1 <- nombre_femenino
+  nombre2 <- nombre_masculino
+}
+
+# Aleatorización de contexto habitacional
+tipos_vivienda <- c("apartamento", "hogar", "aparta-estudio")
+tipo_vivienda <- sample(tipos_vivienda, 1)
+
+# Generar consumo máximo posible (variable clave del problema)
+consumos_maximos_posibles <- c(18, 20, 22, 25)
+consumo_maximo <- sample(consumos_maximos_posibles, 1)
+
+# Generar porcentajes objetivo que den resultados "limpios"
+porcentajes_objetivo <- c(60, 65, 70, 75, 80, 85, 90)
+porcentaje_junio <- sample(porcentajes_objetivo, 1)
+consumo_junio <- round((porcentaje_junio * consumo_maximo) / 100)
+
+# Aleatorizar meses involucrados en el problema
+meses_disponibles <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+
+# Seleccionar 7 meses consecutivos aleatoriamente
+inicio_mes <- sample(1:6, 1)  # Asegurar que quepan 7 meses
+meses_seleccionados <- meses_disponibles[inicio_mes:(inicio_mes + 6)]
+
+# Asignar roles: mes de la pregunta (posición aleatoria) y mes de la factura (último mes)
+posicion_pregunta <- sample(1:6, 1)  # No puede ser el último mes (reservado para factura)
+mes_pregunta <- meses_seleccionados[posicion_pregunta]
+mes_factura <- meses_seleccionados[7]  # Último mes para la factura
+
+# Crear vector de meses y consumos
+meses <- meses_seleccionados
+consumo_pregunta <- round((porcentaje_junio * consumo_maximo) / 100)
+
+# Generar consumos base realistas
+consumos_base <- numeric(7)
+for(i in 1:7) {
+  if(i == posicion_pregunta) {
+    consumos_base[i] <- consumo_pregunta  # Mes de la pregunta (valor clave)
+  } else {
+    consumos_base[i] <- sample(10:15, 1)  # Otros meses
+  }
+}
+
+# Asegurar que ningún consumo exceda el máximo menos 1
+for(i in 1:7) {
+  if(i != posicion_pregunta) {  # No modificar el mes de la pregunta
+    consumos_base[i] <- min(consumos_base[i], consumo_maximo - 1)
+  }
+}
+
+consumos <- consumos_base
+names(consumos) <- meses
+
+# Generar datos económicos coherentes con el consumo del mes de factura
+cargo_fijo <- sample(c(2500, 2700, 2800, 3000, 3200), 1)
+
+# Obtener el consumo del mes de factura de la gráfica
+consumo_factura <- consumos[which(names(consumos) == mes_factura)]
+
+# Calcular el costo variable basado en el consumo del mes de factura
+# Precio por metro cúbico entre $800 y $1200
+precio_por_m3 <- sample(seq(800, 1200, 50), 1)
+costo_variable <- consumo_factura * precio_por_m3
+
+# Calcular el total de la factura
+total_factura <- cargo_fijo + costo_variable
+
+# Calcular respuesta correcta
+porcentaje_correcto <- round((consumo_pregunta / consumo_maximo) * 100)
+
+# Generar distractores plausibles y matemáticamente coherentes
+distractores <- c()
+
+# Distractor 1: Error conceptual - usar el valor absoluto como porcentaje
+if(consumo_pregunta <= 100 && consumo_pregunta != porcentaje_correcto) {
+  distractores <- c(distractores, consumo_pregunta)
+}
+
+# Distractor 2: Error de cálculo - usar otro mes
+meses_alternativos <- which(names(consumos) != mes_pregunta)
+mes_alternativo <- sample(meses_alternativos, 1)
+porcentaje_alternativo <- round((consumos[mes_alternativo] / consumo_maximo) * 100)
+if(porcentaje_alternativo != porcentaje_correcto && !porcentaje_alternativo %in% distractores) {
+  distractores <- c(distractores, porcentaje_alternativo)
+}
+
+# Distractor 3: Error matemático común - denominador incorrecto
+denominador_error <- consumo_maximo - sample(2:5, 1)
+porcentaje_error <- round((consumo_pregunta / denominador_error) * 100)
+if(porcentaje_error <= 100 && porcentaje_error != porcentaje_correcto && !porcentaje_error %in% distractores) {
+  distractores <- c(distractores, porcentaje_error)
+}
+
+# Completar distractores con opciones plausibles si es necesario
+opciones_adicionales <- c(15, 25, 35, 45, 55, 65, 85, 95, 100)
+opciones_adicionales <- opciones_adicionales[opciones_adicionales != porcentaje_correcto]
+
+for(opcion in sample(opciones_adicionales)) {
+  if(length(distractores) >= 3) break
+  if(!opcion %in% distractores) {
+    distractores <- c(distractores, opcion)
+  }
+}
+
+# Asegurar exactamente 3 distractores
+distractores <- distractores[1:3]
+
+# Crear opciones finales
+opciones <- c(porcentaje_correcto, distractores)
+opciones_texto <- paste0(opciones, "%")
+
+# Vector de solución para r-exams
+solucion <- c(TRUE, FALSE, FALSE, FALSE)
+
+# Mezclar opciones aleatoriamente
+orden_aleatorio <- sample(1:4)
+opciones_mezcladas <- opciones_texto[orden_aleatorio]
+solucion_mezclada <- solucion[orden_aleatorio]
+
+# Detectar formato de salida para ajustes posteriores
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# PRUEBAS DE VALIDACIÓN MATEMÁTICA
+test_that("Validación de datos generados", {
+  expect_true(consumo_maximo %in% c(18, 20, 22, 25))
+  expect_true(consumo_pregunta > 0 && consumo_pregunta <= consumo_maximo)
+  expect_true(porcentaje_correcto >= 50 && porcentaje_correcto <= 100)
+  expect_true(all(consumos > 0 & consumos <= consumo_maximo))
+  expect_equal(length(opciones), 4)
+  expect_equal(length(unique(opciones)), 4)  # Todas las opciones deben ser diferentes
+  expect_true(nombre_masculino %in% nombres_masculinos)
+  expect_true(nombre_femenino %in% nombres_femeninos)
+  expect_true(nombre1 %in% c(nombre_masculino, nombre_femenino))
+  expect_true(nombre2 %in% c(nombre_masculino, nombre_femenino))
+  expect_true(nombre1 != nombre2)  # Los nombres deben ser diferentes
+  expect_true(mes_pregunta %in% meses)
+  expect_true(mes_factura %in% meses)
+  expect_true(mes_pregunta != mes_factura)  # Los meses deben ser diferentes
+})
+
+test_that("Validación de coherencia matemática", {
+  # Verificar que el cálculo del porcentaje es correcto
+  porcentaje_calculado <- round((consumo_pregunta / consumo_maximo) * 100)
+  expect_equal(porcentaje_correcto, porcentaje_calculado)
+
+  # Verificar que la respuesta correcta está en las opciones
+  expect_true(porcentaje_correcto %in% opciones)
+
+  # Verificar que los distractores son diferentes de la respuesta correcta
+  expect_true(all(distractores != porcentaje_correcto))
+})
+
+test_that("Validación de coherencia económica", {
+  # Verificar que la factura es coherente con el consumo del mes de factura
+  factura_calculada <- cargo_fijo + (consumo_factura * precio_por_m3)
+  expect_equal(total_factura, factura_calculada)
+
+  # Verificar que el precio por m³ está en el rango esperado
+  expect_true(precio_por_m3 >= 800 && precio_por_m3 <= 1200)
+
+  # Verificar que el cargo fijo es razonable
+  expect_true(cargo_fijo >= 2500 && cargo_fijo <= 3200)
+})
+```
+
+```{r generar_grafico_barras_python, message=FALSE, warning=FALSE}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Preparar datos para Python
+meses_python <- paste0("['", paste(meses, collapse="', '"), "']")
+consumos_python <- paste0("[", paste(consumos, collapse=", "), "]")
+
+# Código Python para generar el gráfico de barras
+codigo_python <- paste0("
+import matplotlib
+matplotlib.use('Agg')  # Usar backend no interactivo
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Datos del gráfico
+meses = ", meses_python, "
+consumos = ", consumos_python, "
+
+# Paletas de colores variadas
+paletas_colores = [
+    ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'],  # Colores suaves
+    ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6', '#1ABC9C', '#E67E22'],  # Colores vibrantes
+    ['#FF7675', '#74B9FF', '#00B894', '#FDCB6E', '#6C5CE7', '#A29BFE', '#FD79A8'],  # Colores modernos
+    ['#D63031', '#0984E3', '#00B894', '#E17055', '#A29BFE', '#FD79A8', '#FDCB6E'],  # Colores intensos
+    ['#FF9FF3', '#54A0FF', '#5F27CD', '#00D2D3', '#FF9F43', '#10AC84', '#EE5A24'],  # Colores dinámicos
+    ['#FF6348', '#2ED573', '#1E90FF', '#FFA502', '#FF6B81', '#7BED9F', '#70A1FF']   # Colores equilibrados
+]
+
+# Seleccionar paleta aleatoria
+paleta_seleccionada = random.choice(paletas_colores)
+
+# Asignar colores aleatorios a cada barra
+colores = []
+for i, mes in enumerate(meses):
+    if mes == '", mes_pregunta, "':
+        # Color más oscuro para el mes de la pregunta
+        colores.append('#2C3E50')  # Color oscuro universal para destacar
+    else:
+        colores.append(paleta_seleccionada[i % len(paleta_seleccionada)])
+
+# Crear figura
+plt.figure(figsize=(8, 5))
+
+# Crear gráfico de barras
+barras = plt.bar(meses, consumos, color=colores, edgecolor='black', linewidth=1, width=0.7)
+
+# Configuración del gráfico
+plt.xlabel('Mes', fontsize=11, fontweight='bold')
+plt.ylabel('Consumo en metros cúbicos', fontsize=11, fontweight='bold')
+plt.xticks(rotation=45, ha='right', fontsize=10)
+plt.yticks(fontsize=10)
+
+# Configurar límites del eje Y
+plt.ylim(0, max(consumos) + 1)
+
+# Añadir valores sobre las barras
+for i, (mes, consumo) in enumerate(zip(meses, consumos)):
+    plt.text(i, consumo + 0.1, str(consumo), ha='center', va='bottom', fontweight='bold', fontsize=9)
+
+# Configurar grilla
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+
+# Ajustar diseño
+plt.tight_layout()
+
+# Guardar en múltiples formatos para compatibilidad
+plt.savefig('grafico_consumo_gas.png', dpi=150, bbox_inches='tight', transparent=False)
+plt.savefig('grafico_consumo_gas.pdf', dpi=150, bbox_inches='tight', transparent=False)
+plt.close()
+")
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+
+# Validar que el gráfico se creó correctamente
+test_that("Validación del gráfico Python", {
+  expect_true(file.exists("grafico_consumo_gas.png"))
+  expect_equal(length(meses), 7)  # 7 meses
+  expect_equal(length(consumos), 7)  # 7 valores de consumo
+})
+```
+
+Question
+========
+
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r consumo_factura` metros cúbicos de gas natural y la factura fue de $`r format(total_factura, big.mark = ".", decimal.mark = ",")`, incluido el cargo fijo de $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+
+```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
+# Mostrar la imagen del gráfico generado con Python
+# Ajustar tamaño según el formato de salida
+if (es_moodle) {
+  cat("![](grafico_consumo_gas.png){width=70%}")
+} else {
+  cat("![](grafico_consumo_gas.png){width=80%}")
+}
+```
+
+Un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes. ¿A qué porcentaje del consumo máximo posible corresponde el consumo de `r tolower(mes_pregunta)`?
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+### Análisis del problema
+
+Este problema requiere **interpretación de gráficos de barras** y **cálculo de porcentajes**. Los pasos son:
+
+1. **Leer correctamente la gráfica** para identificar el consumo de junio
+2. **Identificar el consumo máximo posible** según el enunciado
+3. **Aplicar la fórmula de porcentaje** para encontrar la relación
+
+### Paso 1: Lectura de la gráfica
+
+Observando la gráfica de consumo histórico de `r nombre1` y `r nombre2`:
+
+```{r analisis_datos, echo=FALSE, results='asis'}
+cat("**Consumos mensuales registrados:**\n\n")
+for(i in 1:length(meses)) {
+  destacar <- if(meses[i] == mes_pregunta) " ← **MES DE LA PREGUNTA**" else if(meses[i] == mes_factura) " ← **MES DE LA FACTURA**" else ""
+  cat(paste0("- ", meses[i], ": ", consumos[i], " metros cúbicos", destacar, "\n"))
+}
+cat("\n")
+```
+
+**El consumo de `r tolower(mes_pregunta)` fue de `r consumo_pregunta` metros cúbicos.**
+
+### Paso 2: Datos del problema
+
+- **Consumo máximo posible:** `r consumo_maximo` metros cúbicos (dato del enunciado)
+- **Consumo real de `r tolower(mes_pregunta)`:** `r consumo_pregunta` metros cúbicos (dato de la gráfica)
+
+### Paso 3: Aplicación de la fórmula de porcentaje
+
+Para calcular qué porcentaje representa el consumo de junio respecto al máximo posible:
+
+$$\text{Porcentaje} = \frac{\text{Valor observado}}{\text{Valor máximo}} \times 100\%$$
+
+Sustituyendo los valores:
+
+$$\text{Porcentaje} = \frac{`r consumo_pregunta`}{`r consumo_maximo`} \times 100\% = `r porcentaje_correcto`\%$$
+
+### Verificación y análisis de distractores
+
+**Respuesta correcta:** `r porcentaje_correcto`%
+
+```{r analisis_distractores, echo=FALSE, results='asis'}
+cat("**Análisis de errores conceptuales comunes:**\n\n")
+
+# Identificar qué tipo de distractores se generaron
+for(i in 1:length(distractores)) {
+  distractor <- distractores[i]
+
+  if(distractor == consumo_pregunta && consumo_pregunta <= 100) {
+    cat(paste0("- **", distractor, "%**: Error conceptual - confundir el valor absoluto (", consumo_pregunta, " m³) con el porcentaje\n"))
+  } else if(distractor %in% round((consumos / consumo_maximo) * 100)) {
+    mes_error <- names(consumos)[which(round((consumos / consumo_maximo) * 100) == distractor)][1]
+    cat(paste0("- **", distractor, "%**: Error de lectura - usar el consumo de ", tolower(mes_error), " en lugar de ", tolower(mes_pregunta), "\n"))
+  } else {
+    cat(paste0("- **", distractor, "%**: Error de cálculo - aplicar incorrectamente la fórmula de porcentaje\n"))
+  }
+}
+```
+
+### Conclusión
+
+El consumo de `r tolower(mes_pregunta)` (`r consumo_pregunta` metros cúbicos) representa el **`r porcentaje_correcto`%** del consumo máximo posible (`r consumo_maximo` metros cúbicos).
+
+Esta respuesta es coherente porque:
+
+- Se basa en una lectura correcta de la gráfica
+- Aplica correctamente la fórmula de porcentaje
+- El resultado está dentro del rango esperado (0% a 100%)
+
+**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r format(total_factura, big.mark = ".", decimal.mark = ",")`) corresponde exactamente al consumo mostrado en la gráfica (`r consumo_factura` m³ × $`r format(precio_por_m3, big.mark = ".", decimal.mark = ",")` + $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` cargo fijo).
+
+```{r solucion, echo=FALSE, results="asis"}
+answerlist(ifelse(solucion_mezclada, "Correcto", "Incorrecto"), markup = "markdown")
+```
+
+Meta-information
+================
+exname: Consumo Gas Natural Porcentaje Máximo
+extype: schoice
+exsolution: `r paste(as.integer(solucion_mezclada), collapse="")`
+exshuffle: TRUE
+exsection: Estadística|Interpretación de gráficos|Porcentajes|Análisis de datos
+exextra[Type]: Cálculo
+exextra[Program]: R
+exextra[Language]: es
+exextra[Level]: 2
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio y sistemas de datos
+exextra[Contexto]: Familiar
+exextra[Dificultad]: Media

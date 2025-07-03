@@ -1,0 +1,204 @@
+---
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(digest)
+library(testthat)
+library(combinat) # Para la función choose
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+# No se necesitan configuraciones para TikZ o Python ya que no se usan en este ejercicio.
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:100000, 1)) # Mayor rango para más variantes
+
+# Aleatorizar número total de bolas (N)
+N <- sample(8:15, 1)
+
+# Aleatorizar número de bolas del primer color (N1)
+# Asegurar que haya al menos 2 bolas del primer color y al menos 2 del segundo
+N1 <- sample(3:(N-3), 1) # Asegura N1 >= 3 y N - N1 >= 3
+
+# Calcular número de bolas del segundo color (N2)
+N2 <- N - N1
+
+# Aleatorizar número de bolas a extraer (k)
+# Asegurar que k sea menor que N y al menos 2
+k <- sample(2:min(N-1, 6), 1) # k entre 2 y min(N-1, 6)
+
+# Aleatorizar condición de ganar (al menos m bolas del primer color)
+# Asegurar que m sea al menos 1 y menor o igual a k y N1
+m <- sample(1:min(k, N1), 1)
+
+# Aleatorizar colores
+colores_disponibles <- c("azul", "rojo", "verde", "amarillo", "blanco", "negro", "gris", "morado")
+color1 <- sample(colores_disponibles, 1)
+colores_disponibles <- colores_disponibles[colores_disponibles != color1]
+color2 <- sample(colores_disponibles, 1)
+
+# Aleatorizar términos contextuales
+terminos_bolas <- c("bolas", "esferas", "canicas", "balones pequeños")
+termino_bolas <- sample(terminos_bolas, 1)
+
+terminos_bolsa <- c("bolsa", "urna", "recipiente", "saco")
+termino_bolsa <- sample(terminos_bolsa, 1)
+
+terminos_concurso <- c("concurso", "juego", "experimento", "sorteo")
+termino_concurso <- sample(terminos_concurso, 1)
+
+terminos_sacar <- c("sacar", "extraer", "tomar", "seleccionar")
+termino_sacar <- sample(terminos_sacar, 1)
+
+terminos_intento <- c("intento", "oportunidad", "vez", "ronda")
+termino_intento <- sample(terminos_intento, 1)
+
+terminos_ganar <- c("ganar", "tener éxito", "acertar", "lograr el objetivo")
+termino_ganar <- sample(terminos_ganar, 1)
+
+terminos_probabilidad <- c("probabilidad", "posibilidad", "chance", "opción")
+termino_probabilidad <- sample(terminos_probabilidad, 1)
+
+terminos_casos_favorables <- c("casos favorables", "resultados deseados", "combinaciones exitosas", "situaciones a favor")
+termino_casos_favorables <- sample(terminos_casos_favorables, 1)
+
+terminos_casos_posibles <- c("casos posibles", "resultados totales", "combinaciones totales", "situaciones posibles")
+termino_casos_posibles <- sample(terminos_casos_posibles, 1)
+
+terminos_escoger <- c("escoger", "seleccionar", "elegir", "tomar")
+termino_escoger <- sample(terminos_escoger, 1)
+
+terminos_conjunto <- c("conjunto", "grupo", "total", "colección")
+termino_conjunto <- sample(terminos_conjunto, 1)
+
+# Calcular el número total de casos posibles (combinaciones de k de N)
+casos_posibles_valor <- choose(N, k)
+
+# Calcular el número de casos favorables (suma de combinaciones)
+# Esto no es estrictamente necesario para la pregunta, pero se incluye para completar el contexto
+casos_favorables_valor <- 0
+for (i in m:min(k, N1)) {
+  if (k - i <= N2) { # Asegurar que se pueden sacar k-i bolas del segundo color
+    casos_favorables_valor <- casos_favorables_valor + choose(N1, i) * choose(N2, k - i)
+  }
+}
+
+# Definir la opción correcta
+opcion_correcta_texto <- paste0(k, " ", termino_bolas, " en un ", termino_conjunto, " de ", N, " ", termino_bolas, ".")
+
+# Generar opciones incorrectas plausibles
+opciones_incorrectas_pool <- c(
+  paste0(N, " ", termino_bolas, " en un ", termino_conjunto, " de ", N, " ", termino_bolas, "."), # N de N
+  paste0(k, " ", termino_bolas, " en un ", termino_conjunto, " de ", k, " ", termino_bolas, "."), # k de k
+  paste0(N1, " ", termino_bolas, " en un ", termino_conjunto, " de ", N, " ", termino_bolas, "."), # N1 de N
+  paste0(k, " ", termino_bolas, " en un ", termino_conjunto, " de ", N1, " ", termino_bolas, "."), # k de N1
+  paste0(N2, " ", termino_bolas, " en un ", termino_conjunto, " de ", N, " ", termino_bolas, "."), # N2 de N
+  paste0(k, " ", termino_bolas, " en un ", termino_conjunto, " de ", N2, " ", termino_bolas, "."), # k de N2
+  paste0(m, " ", termino_bolas, " en un ", termino_conjunto, " de ", N, " ", termino_bolas, "."), # m de N
+  paste0(m, " ", termino_bolas, " en un ", termino_conjunto, " de ", k, " ", termino_bolas, ".")  # m de k
+)
+
+# Eliminar duplicados y la opción correcta del pool de incorrectas
+opciones_incorrectas_pool <- unique(opciones_incorrectas_pool)
+opciones_incorrectas_pool <- opciones_incorrectas_pool[opciones_incorrectas_pool != opcion_correcta_texto]
+
+# Seleccionar 3 opciones incorrectas al azar
+if (length(opciones_incorrectas_pool) < 3) {
+  # Si no hay suficientes distractores únicos, generar algunos genéricos
+  opciones_incorrectas_seleccionadas <- sample(opciones_incorrectas_pool, length(opciones_incorrectas_pool))
+  while (length(opciones_incorrectas_seleccionadas) < 3) {
+     opciones_incorrectas_seleccionadas <- c(opciones_incorrectas_seleccionadas, paste0(sample(1:N, 1), " ", termino_bolas, " en un ", termino_conjunto, " de ", sample(1:N, 1), " ", termino_bolas, "."))
+     opciones_incorrectas_seleccionadas <- unique(opciones_incorrectas_seleccionadas)
+     opciones_incorrectas_seleccionadas <- opciones_incorrectas_seleccionadas[opciones_incorrectas_seleccionadas != opcion_correcta_texto]
+  }
+  opciones_incorrectas_seleccionadas <- sample(opciones_incorrectas_seleccionadas, 3) # Asegurar exactamente 3
+} else {
+  opciones_incorrectas_seleccionadas <- sample(opciones_incorrectas_pool, 3)
+}
+
+
+# Combinar la opción correcta con las incorrectas y aleatorizar su orden
+opciones_todas <- c(opcion_correcta_texto, opciones_incorrectas_seleccionadas)
+orden_opciones <- sample(1:4)
+opciones_finales <- opciones_todas[orden_opciones]
+
+# Crear el vector de solución (1 para la correcta, 0 para las incorrectas)
+solucion <- as.integer(opciones_finales == opcion_correcta_texto)
+
+# Verificar que haya al menos 300 variantes (aproximación)
+# N (8 opciones) * N1 (aprox N/2 opciones) * k (aprox 5 opciones) * m (aprox k/2 opciones) * colores (aprox 8*7 opciones) * terminos (varias opciones)
+# 8 * 5 * 5 * 2 * 56 * ~10^5 >> 300. La aleatorización es suficiente.
+```
+
+```{r generar_elementos_visuales}
+# No se requieren tablas TikZ ni gráficas Python para este ejercicio según la imagen.
+# Este chunk se deja vacío o se elimina si no se añade ningún elemento visual.
+```
+
+Question
+========
+En una `r termino_bolsa` hay `r N` `r termino_bolas` de igual peso y tamaño, `r N1` `r color1` y `r N2` `r color2`. Un `r termino_concurso` consiste en `r termino_sacar`, en un solo `r termino_intento`, `r k` `r termino_bolas` de la `r termino_bolsa`. La persona `r termino_ganar` si al menos `r m` `r termino_bolas` son `r color1`. Así, la `r termino_probabilidad` de `r termino_ganar` se puede calcular como:
+
+$$ \text{`r termino_probabilidad`} = \frac{\text{Número de `r termino_casos_favorables`}}{\text{Número de `r termino_casos_posibles`}} $$
+
+El número de `r termino_casos_favorables` se obtiene a partir de la suma de:
+*   El número de formas de `r termino_escoger` `r m` `r termino_bolas` `r color1` entre las `r N1` `r color1` y `r k-m` `r termino_bolas` `r color2` entre las `r N2` `r color2`.
+*   ... (y así sucesivamente para m+1, m+2, ..., hasta min(k, N1) bolas `r color1`)
+
+Para conocer esta `r termino_probabilidad`, se debe calcular, también, el número de formas de `r termino_escoger`:
+
+Answerlist
+----------
+```{r options, echo=FALSE, results='asis'}
+# Mostrar las opciones de respuesta
+cat(paste0("- ", opciones_finales, collapse = "\n"))
+```
+
+Solution
+========
+La `r termino_probabilidad` de un evento se calcula como la división entre el número de `r termino_casos_favorables` y el número de `r termino_casos_posibles`.
+
+El número de `r termino_casos_posibles` corresponde a todas las posibles combinaciones de `r k` `r termino_bolas` que se pueden `r termino_sacar` de la `r termino_bolsa` que contiene un total de `r N` `r termino_bolas`.
+
+Por lo tanto, el número de `r termino_casos_posibles` se calcula como el número de formas de `r termino_escoger` `r k` `r termino_bolas` en un `r termino_conjunto` de `r N` `r termino_bolas`. Esto se representa matemáticamente como una combinación: $C(`r N`, `r k`) = \binom{`r N`}{`r k`}$.
+
+El valor del número de `r termino_casos_posibles` es: `r casos_posibles_valor`.
+
+La opción que describe correctamente el cálculo del número de `r termino_casos_posibles` es la que indica `r k` `r termino_bolas` en un `r termino_conjunto` de `r N` `r termino_bolas`.
+
+Answerlist
+----------
+```{r solutionlist, echo=FALSE, results='asis'}
+# Indicar la opción correcta
+cat(paste0("- ", ifelse(solucion == 1, "Verdadero", "Falso"), collapse = "\n"))
+```
+
+Meta-information
+================
+exname: `r paste0("probabilidad_", gsub(" ", "_", termino_sacar), "_", gsub(" ", "_", termino_bolas), "_combinaciones")`
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: TRUE
+exsection: Probabilidad/Combinaciones

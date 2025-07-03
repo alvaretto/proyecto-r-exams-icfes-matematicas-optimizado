@@ -1,0 +1,349 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{amsmath}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+# Sistema TikZ avanzado integrado
+# No necesitamos cargar archivo externo
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria para reproducibilidad
+set.seed(sample(1:10000, 1))
+
+# Aleatorizar contextos matemáticos para el problema
+contextos_matematicos <- c(
+  "sucesión de números triangulares",
+  "secuencia de figuras triangulares", 
+  "progresión de triángulos con puntos",
+  "serie de números triangulares",
+  "secuencia triangular de puntos"
+)
+contexto_seleccionado <- sample(contextos_matematicos, 1)
+
+# Aleatorizar términos para enriquecer el vocabulario
+terminos_figura <- c("figura", "forma", "configuración", "disposición", "arreglo")
+termino_figura <- sample(terminos_figura, 1)
+
+terminos_puntos <- c("puntos", "elementos", "círculos", "marcadores", "posiciones")
+termino_puntos <- sample(terminos_puntos, 1)
+
+# Términos con su género correspondiente
+terminos_cantidad_data <- data.frame(
+  termino = c("cantidad", "número", "total", "suma", "conteo"),
+  articulo = c("La", "El", "El", "La", "El"),
+  stringsAsFactors = FALSE
+)
+termino_seleccionado <- sample(1:nrow(terminos_cantidad_data), 1)
+termino_cantidad <- terminos_cantidad_data$termino[termino_seleccionado]
+articulo_cantidad <- terminos_cantidad_data$articulo[termino_seleccionado]
+
+# Generar datos de números triangulares con variaciones aleatorias
+posicion_pregunta <- sample(7:12, 1)  # Aleatorizar la posición preguntada
+respuesta_correcta <- posicion_pregunta * (posicion_pregunta + 1) / 2
+
+# Generar las primeras 4 posiciones (fijas para la visualización)
+posiciones_base <- 1:4
+numeros_triangulares_base <- posiciones_base * (posiciones_base + 1) / 2
+
+# Aleatorizar las áreas mostradas en la tabla (pueden ser iguales o proporcionales)
+factor_area <- sample(c(1, 2, 3, 5), 1)  # Factor de proporcionalidad
+areas_tabla <- numeros_triangulares_base * factor_area
+
+# Generar distractores para las opciones de respuesta
+distractores <- c()
+
+# Distractor 1: Fórmula incorrecta n²
+distractor_1 <- posicion_pregunta^2
+
+# Distractor 2: Fórmula incorrecta n(n-1)/2
+distractor_2 <- posicion_pregunta * (posicion_pregunta - 1) / 2
+
+# Distractor 3: Suma aritmética simple
+distractor_3 <- sum(1:posicion_pregunta)
+
+# Distractor 4: Valor aleatorio cercano
+distractor_4 <- respuesta_correcta + sample(c(-3, -2, -1, 1, 2, 3), 1)
+
+# Crear vector de todas las opciones
+todas_opciones <- c(respuesta_correcta, distractor_1, distractor_2, distractor_3, distractor_4)
+todas_opciones <- unique(todas_opciones)  # Eliminar duplicados
+
+# Seleccionar 4 opciones únicas
+if (length(todas_opciones) >= 4) {
+  opciones_finales <- sample(todas_opciones, 4)
+} else {
+  # Si no hay suficientes opciones únicas, generar más distractores
+  while (length(todas_opciones) < 4) {
+    nuevo_distractor <- respuesta_correcta + sample(-10:10, 1)
+    if (!nuevo_distractor %in% todas_opciones && nuevo_distractor > 0) {
+      todas_opciones <- c(todas_opciones, nuevo_distractor)
+    }
+  }
+  opciones_finales <- sample(todas_opciones, 4)
+}
+
+# Asegurar que la respuesta correcta esté incluida
+if (!respuesta_correcta %in% opciones_finales) {
+  opciones_finales[1] <- respuesta_correcta
+}
+
+# Ordenar opciones para presentación
+opciones_finales <- sort(opciones_finales)
+
+# Determinar cuál es la posición correcta
+posicion_correcta <- which(opciones_finales == respuesta_correcta)
+
+# Vector de solución para r-exams
+solucion <- integer(4)
+solucion[posicion_correcta] <- 1
+
+# Aleatorizar colores para el TikZ
+colores_puntos <- c("139,69,19", "0,0,139", "139,0,0", "0,100,0", "128,0,128")
+color_punto_seleccionado <- sample(colores_puntos, 1)
+
+# Datos para el sistema TikZ avanzado
+datos_tikz <- list(
+  posiciones = 1:4,
+  puntos = numeros_triangulares_base,
+  areas = areas_tabla,
+  pregunta_posicion = posicion_pregunta,
+  respuesta_puntos = respuesta_correcta,
+  color_punto = color_punto_seleccionado
+)
+```
+
+```{r generar_codigo_tikz_avanzado}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Sistema TikZ avanzado integrado - no necesitamos función externa
+
+# Función para generar TikZ específico con los datos aleatorios
+generar_tikz_numeros_triangulares <- function(datos, color_punto) {
+  tikz_code <- paste0(
+    "\\begin{tikzpicture}[scale=1.0]\n",
+    "% Definir colores RGB exactos\n",
+    "\\definecolor{punto_principal}{RGB}{", color_punto, "}\n",
+    "\\definecolor{linea_triangulo}{RGB}{0,0,0}\n",
+    "\\definecolor{texto_principal}{RGB}{0,0,0}\n",
+    "\n",
+    "% Configuración de estilos avanzados\n",
+    "\\tikzset{\n",
+    "  linea_triangulo/.style={line width=1pt, line cap=round, line join=round},\n",
+    "  punto_principal/.style={fill, circle},\n",
+    "  texto_principal/.style={font=\\normalsize}\n",
+    "}\n",
+    "\n",
+    "% Título del ejercicio\n",
+    "\\node[above, text width=15cm] at (8, 4.5) {\n",
+    "  \\textbf{En la siguiente figura se muestra, de acuerdo al número de ", termino_puntos, ", la ", contexto_seleccionado, ".}\n",
+    "};\n",
+    "\n"
+  )
+  
+  # Generar cada posición
+  for (i in 1:4) {
+    x_base <- (i - 1) * 4
+    num_puntos <- datos$puntos[i]
+    
+    if (i == 1) {
+      # Posición 1: 1 punto
+      tikz_code <- paste0(tikz_code,
+        "% Posición 1: 1 punto\n",
+        "\\fill[punto_principal] (", x_base + 1, ", 3) circle (0.1);\n",
+        "\\node[below] at (", x_base + 1, ", 2.5) {\\textbf{Posición 1}};\n\n"
+      )
+    } else if (i == 2) {
+      # Posición 2: 3 puntos
+      tikz_code <- paste0(tikz_code,
+        "% Posición 2: 3 puntos\n",
+        "\\fill[punto_principal] (", x_base + 1, ", 3.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.7, ", 3) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.3, ", 3) circle (0.1);\n",
+        "\\draw[linea_triangulo] (", x_base + 0.7, ", 3) -- (", x_base + 1.3, ", 3) -- (", x_base + 1, ", 3.5) -- cycle;\n",
+        "\\node[below] at (", x_base + 1, ", 2.5) {\\textbf{Posición 2}};\n\n"
+      )
+    } else if (i == 3) {
+      # Posición 3: 6 puntos
+      tikz_code <- paste0(tikz_code,
+        "% Posición 3: 6 puntos\n",
+        "\\fill[punto_principal] (", x_base + 1, ", 4) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.7, ", 3.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.3, ", 3.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.4, ", 3) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1, ", 3) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.6, ", 3) circle (0.1);\n",
+        "\\draw[linea_triangulo] (", x_base + 0.4, ", 3) -- (", x_base + 1.6, ", 3) -- (", x_base + 1, ", 4) -- cycle;\n",
+        "\\node[below] at (", x_base + 1, ", 2.5) {\\textbf{Posición 3}};\n\n"
+      )
+    } else if (i == 4) {
+      # Posición 4: 10 puntos
+      tikz_code <- paste0(tikz_code,
+        "% Posición 4: 10 puntos\n",
+        "\\fill[punto_principal] (", x_base + 1, ", 4.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.7, ", 4) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.3, ", 4) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.4, ", 3.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1, ", 3.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.6, ", 3.5) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.1, ", 3) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 0.7, ", 3) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.3, ", 3) circle (0.1);\n",
+        "\\fill[punto_principal] (", x_base + 1.9, ", 3) circle (0.1);\n",
+        "\\draw[linea_triangulo] (", x_base + 0.1, ", 3) -- (", x_base + 1.9, ", 3) -- (", x_base + 1, ", 4.5) -- cycle;\n",
+        "\\node[below] at (", x_base + 1, ", 2.5) {\\textbf{Posición 4}};\n\n"
+      )
+    }
+  }
+  
+  # Puntos de continuación
+  tikz_code <- paste0(tikz_code,
+    "% Puntos de continuación\n",
+    "\\fill[punto_principal] (16, 4) circle (0.08);\n",
+    "\\fill[punto_principal] (16.5, 4) circle (0.08);\n",
+    "\\fill[punto_principal] (17, 4) circle (0.08);\n\n"
+  )
+  
+  # Texto explicativo y tabla
+  tikz_code <- paste0(tikz_code,
+    "% Texto explicativo\n",
+    "\\node[anchor=north west, text width=12cm] at (0, 1.5) {\n",
+    "  \\textbf{La siguiente tabla muestra los primeros cuatro términos de la sucesión:}\n",
+    "};\n\n",
+    "% Tabla de datos\n",
+    "\\node[anchor=north west] at (0, 0.5) {\n",
+    "  \\begin{tabular}{|c|c|c|c|c|}\n",
+    "    \\hline\n",
+    "    \\textbf{Posición} & 1 & 2 & 3 & 4 \\\\\n",
+    "    \\hline\n",
+    "    \\textbf{Área (cm²)} & ", datos$areas[1], " & ", datos$areas[2], " & ", datos$areas[3], " & ", datos$areas[4], " \\\\\n",
+    "    \\hline\n",
+    "  \\end{tabular}\n",
+    "};\n\n",
+    "% Pregunta\n",
+    "\\node[anchor=north west, text width=12cm] at (0, -1.5) {\n",
+    "  \\textbf{", articulo_cantidad, " ", termino_cantidad, " de ", termino_puntos, " que tendría la ", termino_figura, " ", datos$pregunta_posicion, " es:}\n",
+    "};\n\n",
+    "\\end{tikzpicture}"
+  )
+  
+  return(tikz_code)
+}
+
+# Generar el código TikZ final
+tikz_final <- generar_tikz_numeros_triangulares(datos_tikz, color_punto_seleccionado)
+```
+
+Question
+========
+
+Basándose en el patrón observado en la `r contexto_seleccionado`, determine `r tolower(articulo_cantidad)` `r termino_cantidad` de `r termino_puntos` que tendría la `r termino_figura` `r posicion_pregunta`.
+
+```{r figura_triangular, echo=FALSE, results='asis'}
+include_tikz(tikz_final,
+             name = "numeros_triangulares",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl", "amsmath", "array"),
+             width = "14cm")
+```
+
+**Nota matemática:** 
+
+Los números triangulares siguen la fórmula $T_n = \frac{n(n+1)}{2}$, donde $n$ representa la posición en la secuencia.
+
+Answerlist
+----------
+* `r opciones_finales[1]`
+* `r opciones_finales[2]`
+* `r opciones_finales[3]`
+* `r opciones_finales[4]`
+
+Solution
+========
+
+Para resolver este problema, debemos identificar el patrón de los números triangulares y aplicar la fórmula correspondiente.
+
+**Análisis del patrón:**
+
+Los números triangulares representan la cantidad de puntos que se pueden acomodar en forma de triángulo equilátero. Observando las primeras posiciones:
+
+- Posición 1: $T_1 = 1$ punto
+- Posición 2: $T_2 = 3$ puntos
+- Posición 3: $T_3 = 6$ puntos
+- Posición 4: $T_4 = 10$ puntos
+
+**Fórmula de los números triangulares:**
+
+La fórmula general es: $T_n = \frac{n(n+1)}{2}$
+
+**Verificación con los datos conocidos:**
+
+- $T_1 = \frac{1 \times 2}{2} = 1$ (correcto)
+- $T_2 = \frac{2 \times 3}{2} = 3$ (correcto)
+- $T_3 = \frac{3 \times 4}{2} = 6$ (correcto)
+- $T_4 = \frac{4 \times 5}{2} = 10$ (correcto)
+
+**Cálculo para la posición `r posicion_pregunta`:**
+
+$T_{`r posicion_pregunta`} = \frac{`r posicion_pregunta` \times (`r posicion_pregunta` + 1)}{2} = \frac{`r posicion_pregunta` \times `r posicion_pregunta + 1`}{2} = \frac{`r posicion_pregunta * (posicion_pregunta + 1)`}{2} = `r respuesta_correcta`$
+
+Por lo tanto, la `r termino_figura` `r posicion_pregunta` tendría **`r respuesta_correcta`** `r termino_puntos`.
+
+**Análisis de distractores:**
+
+- Si usáramos $n^2$: $`r posicion_pregunta`^2 = `r posicion_pregunta^2`$ (incorrecto)
+- Si usáramos $\frac{n(n-1)}{2}$: $\frac{`r posicion_pregunta` \times `r posicion_pregunta - 1`}{2} = `r posicion_pregunta * (posicion_pregunta - 1) / 2`$ (incorrecto)
+
+Answerlist
+----------
+* `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: numeros_triangulares_sucesion_argumentacion_n2_v1
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Argumentación matemática
+exextra[Type]: Números triangulares
+exextra[Level]: Nivel 2
+exextra[Language]: es
+exextra[Course]: Matemáticas ICFES

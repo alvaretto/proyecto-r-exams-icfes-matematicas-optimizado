@@ -1,0 +1,388 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "geometry"]
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{amsmath}",
+  "\\usepackage{amssymb}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usetikzlibrary{calc}"
+))
+
+library(exams)
+library(digest)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria para reproducibilidad
+#set.seed(123)  # Semilla fija para debugging
+
+# Aleatorización del contexto geométrico
+terminos_triangulo <- c("triángulo", "polígono triangular", "figura triangular", "forma triangular")
+termino_triangulo <- sample(terminos_triangulo, 1)
+
+terminos_altura <- c("alturas", "altitudes", "perpendiculares", "líneas perpendiculares")
+termino_altura <- sample(terminos_altura, 1)
+
+terminos_punto <- c("punto", "lugar", "posición", "ubicación")
+termino_punto <- sample(terminos_punto, 1)
+
+terminos_geometrico <- c("geométrico", "espacial", "bidimensional", "plano")
+termino_geometrico <- sample(terminos_geometrico, 1)
+
+terminos_cruzan <- c("cruzan", "intersectan", "encuentran", "convergen")
+termino_cruzan <- sample(terminos_cruzan, 1)
+
+terminos_dibujado <- c("dibujado", "trazado", "construido", "representado")
+termino_dibujado <- sample(terminos_dibujado, 1)
+
+# Aleatorización de letras para los vértices del triángulo
+conjuntos_vertices <- list(
+  c("M", "O", "P"),  # Conjunto original
+  c("A", "B", "C"),
+  c("D", "E", "F"),
+  c("R", "S", "T"),
+  c("X", "Y", "Z"),
+  c("L", "N", "Q"),
+  c("U", "V", "W"),
+  c("G", "H", "I")
+)
+
+vertices_seleccionados <- sample(conjuntos_vertices, 1)[[1]]
+vertice1 <- vertices_seleccionados[1]  # Vértice izquierdo
+vertice2 <- vertices_seleccionados[2]  # Vértice superior
+vertice3 <- vertices_seleccionados[3]  # Vértice derecho
+
+# Aleatorización de la letra para el pie de altura
+letras_disponibles <- setdiff(LETTERS, vertices_seleccionados)
+pie_altura <- sample(letras_disponibles, 1)
+
+# Aleatorización de parámetros geométricos para el triángulo
+# Coordenadas del triángulo (manteniendo proporciones razonables)
+coord_base <- sample(c(4, 5, 6, 7, 8), 1)  # Ancho de la base
+altura_triangulo <- sample(c(3, 4, 5, 6), 1)  # Altura del triángulo
+
+# Posición del vértice superior (aleatorizada para diferentes tipos de triángulo)
+desplazamiento_x <- sample(c(-1, -0.5, 0, 0.5, 1), 1)
+
+# Coordenadas de los vértices
+x1 <- 0  # Vértice izquierdo
+y1 <- 0
+x2 <- coord_base/2 + desplazamiento_x  # Vértice superior
+y2 <- altura_triangulo
+x3 <- coord_base  # Vértice derecho
+y3 <- 0
+
+# Calcular coordenadas del pie de la altura desde el vértice superior
+# El pie está en la base, su coordenada x es la proyección del vértice superior
+x_pie <- x2
+y_pie <- 0
+
+# Calcular el ortocentro real (intersección de las alturas)
+# Altura desde vertice2 (x2,y2) perpendicular a la base (línea y=0)
+# Esta altura es la línea vertical x = x2
+
+# Altura desde vertice1 (x1,y1) = (0,0) perpendicular al lado vertice2-vertice3
+# Pendiente del lado vertice2-vertice3
+if (x3 != x2) {
+  m23 <- (y3 - y2) / (x3 - x2)
+  # Pendiente de la altura (perpendicular)
+  m_altura1 <- -1 / m23
+  # Ecuación de la altura desde vertice1: y - 0 = m_altura1 * (x - 0)
+  # y = m_altura1 * x
+
+  # Intersección de las dos alturas:
+  # x = x2 (altura vertical)
+  # y = m_altura1 * x2
+  ortocentro_x <- x2
+  ortocentro_y <- m_altura1 * x2
+} else {
+  # Caso especial: triángulo isósceles con vértice superior centrado
+  ortocentro_x <- x2
+  ortocentro_y <- 0  # El ortocentro está en la base
+}
+
+# Determinar el tipo de triángulo y la ubicación del ortocentro
+tipo_triangulo <- "acutángulo"  # Por defecto
+if (ortocentro_y < 0) {
+  tipo_triangulo <- "obtusángulo"
+} else if (abs(ortocentro_y) < 0.1) {
+  tipo_triangulo <- "rectángulo"
+}
+
+# Crear una etiqueta para el ortocentro
+ortocentro_label <- "H"
+
+# La respuesta correcta es la etiqueta del ortocentro
+respuesta_correcta <- ortocentro_label
+
+# Generar distractores plausibles diferentes entre sí y diferentes a la respuesta correcta
+# Conjunto de posibles distractores
+posibles_distractores <- c(vertice1, vertice2, vertice3, pie_altura)
+# Filtrar para eliminar la respuesta correcta
+posibles_distractores <- setdiff(posibles_distractores, respuesta_correcta)
+# Asegurar que tengamos al menos 3 distractores distintos
+if(length(unique(posibles_distractores)) < 3) {
+  # Si no hay suficientes distractores, añadir algunas letras más
+  mas_letras <- setdiff(LETTERS, c(posibles_distractores, respuesta_correcta))
+  posibles_distractores <- c(posibles_distractores, sample(mas_letras, 3 - length(unique(posibles_distractores))))
+}
+# Seleccionar 3 distractores únicos
+distractores <- sample(unique(posibles_distractores), 3)
+
+# Verificamos manualmente
+if(length(unique(distractores)) != 3) {
+  warning("Los distractores no son todos únicos")
+}
+
+if(respuesta_correcta %in% distractores) {
+  warning("La respuesta correcta está entre los distractores")
+}
+
+# Crear vector con todas las opciones y mezclarlas
+opciones <- c(respuesta_correcta, distractores[1], distractores[2], distractores[3])
+names(opciones) <- c("correcta", "distractor1", "distractor2", "distractor3")
+opciones_mezcladas <- sample(opciones)
+
+# Identificar la posición de la respuesta correcta
+indice_correcto <- which(opciones_mezcladas == respuesta_correcta)
+
+# Crear vector de solución para r-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+
+# Verificación manual de la solución
+if(sum(solucion) != 1) {
+  stop("La solución debe tener exactamente un 1 y el resto 0")
+}
+
+# Aleatorización de colores para el diagrama
+paletas_colores <- list(
+  c("#2E3440", "#3B4252", "#5E81AC", "#88C0D0"),  # Paleta nórdica
+  c("#1B1B2F", "#162447", "#1F4E79", "#0F3460"),  # Paleta azul oscuro
+  c("#2F1B69", "#44318D", "#A239CA", "#E261FF"),  # Paleta morado
+  c("#0E4B99", "#2E8B57", "#B22222", "#FF6347"),  # Paleta clásica
+  c("#556B2F", "#8B4513", "#A0522D", "#CD853F")   # Paleta tierra
+)
+colores_seleccionados <- sample(paletas_colores, 1)[[1]]
+
+# Aleatorización del grosor de líneas
+grosor_triangulo <- sample(c("thick", "very thick", "ultra thick"), 1)
+grosor_altura <- sample(c("thick", "very thick"), 1)
+
+# Aleatorización del estilo de las alturas
+estilos_altura <- c("dashed", "dotted", "dashdotted")
+estilo_altura_seleccionado <- sample(estilos_altura, 1)
+```
+
+```{r generar_diagrama_triangulo, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Calcular puntos para las alturas
+# Altura desde vertice1 perpendicular al lado vertice2-vertice3
+if (x3 != x2) {
+  # Proyección del punto vertice1 sobre la línea vertice2-vertice3
+  dx <- x3 - x2
+  dy <- y3 - y2
+  t <- ((x1 - x2) * dx + (y1 - y2) * dy) / (dx^2 + dy^2)
+  pie_altura1_x <- x2 + t * dx
+  pie_altura1_y <- y2 + t * dy
+} else {
+  pie_altura1_x <- x2
+  pie_altura1_y <- y1
+}
+
+# Altura desde vertice3 perpendicular al lado vertice1-vertice2
+if (x2 != x1) {
+  dx <- x2 - x1
+  dy <- y2 - y1
+  t <- ((x3 - x1) * dx + (y3 - y1) * dy) / (dx^2 + dy^2)
+  pie_altura3_x <- x1 + t * dx
+  pie_altura3_y <- y1 + t * dy
+} else {
+  pie_altura3_x <- x1
+  pie_altura3_y <- y3
+}
+
+# Generar código TikZ con ortocentro matemáticamente correcto
+tikz_code <- paste0("
+\\begin{tikzpicture}[scale=1.2]
+  % Definir coordenadas de los vértices
+  \\coordinate (", vertice1, ") at (", x1, ",", y1, ");
+  \\coordinate (", vertice2, ") at (", x2, ",", y2, ");
+  \\coordinate (", vertice3, ") at (", x3, ",", y3, ");
+  \\coordinate (", pie_altura, ") at (", x_pie, ",", y_pie, ");
+  \\coordinate (P1) at (", round(pie_altura1_x, 2), ",", round(pie_altura1_y, 2), ");
+  \\coordinate (P3) at (", round(pie_altura3_x, 2), ",", round(pie_altura3_y, 2), ");
+  \\coordinate (", ortocentro_label, ") at (", round(ortocentro_x, 2), ",", round(ortocentro_y, 2), ");
+
+  % Dibujar el triángulo principal
+  \\draw[thick, black]
+    (", vertice1, ") -- (", vertice2, ") -- (", vertice3, ") -- cycle;
+
+  % Dibujar las tres alturas
+  \\draw[thick, dashed, blue]
+    (", vertice2, ") -- (", pie_altura, ");
+
+  \\draw[thick, dashed, red]
+    (", vertice1, ") -- (P1);
+
+  \\draw[thick, dashed, green]
+    (", vertice3, ") -- (P3);
+
+  % Marcar el ortocentro con un punto destacado
+  \\fill[color=purple] (", ortocentro_label, ") circle (0.08);
+
+  % Marcar el ángulo recto en el pie de la altura principal
+  \\draw[thick] (", x_pie + 0.15, ",", y_pie, ") -- (", x_pie + 0.15, ",", y_pie + 0.15, ") -- (", x_pie, ",", y_pie + 0.15, ");
+
+  % Etiquetas de los vértices
+  \\node[font=\\Large\\bfseries] at (", x1 - 0.3, ",", y1 - 0.2, ") {", vertice1, "};
+  \\node[font=\\Large\\bfseries] at (", x2, ",", y2 + 0.3, ") {", vertice2, "};
+  \\node[font=\\Large\\bfseries] at (", x3 + 0.3, ",", y3 - 0.2, ") {", vertice3, "};
+  \\node[font=\\Large\\bfseries] at (", x_pie, ",", y_pie - 0.3, ") {", pie_altura, "};
+  \\node[font=\\Large\\bfseries, color=purple] at (", round(ortocentro_x + 0.3, 2), ",", round(ortocentro_y + 0.2, 2), ") {", ortocentro_label, "};
+\\end{tikzpicture}
+")
+
+# Para depuración, guardar el código TikZ en un archivo
+write(tikz_code, file = "triangulo_ortocentro.tikz")
+```
+
+Question
+========
+
+El ortocentro se define como el `r termino_punto` `r termino_geometrico` en el cual se `r termino_cruzan` las tres `r termino_altura` de un `r termino_triangulo`. En la figura, se le han `r termino_dibujado` las `r termino_altura` al `r termino_triangulo` `r paste(vertices_seleccionados, collapse="")` y se ha marcado su ortocentro.
+
+```{r mostrar_diagrama, echo=FALSE, results='asis', fig.align="center"}
+# Detectar formato de salida
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar el diagrama generado con TikZ
+if (knitr::is_latex_output() || !es_moodle) {
+  # Para PDF y formatos LaTeX
+  include_tikz(tikz_code, name = "triangulo_ortocentro",
+               markup = "markdown",
+               width = "12cm")
+} else {
+  # Fallback para otros formatos si hay problemas con TikZ
+  cat("*[Diagrama del triángulo ", paste(vertices_seleccionados, collapse=""),
+      " con las tres alturas trazadas desde cada vértice hacia el lado opuesto. ",
+      "Las alturas se intersectan en el ortocentro marcado como punto ",
+      ortocentro_label, "]*\n\n")
+  
+  # Alternativa: guardar la imagen y mostrarla como PNG
+  # exams::tex2image(tikz_code, name = "triangulo_ortocentro", 
+  #                dir = ".", format = "png", packages = c("tikz", "amsmath", "graphicx"))
+  # knitr::include_graphics("triangulo_ortocentro.png")
+}
+```
+
+¿En cuál `r termino_punto` se ubica el ortocentro del `r termino_triangulo`?
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para identificar correctamente el ortocentro del triángulo, debemos aplicar la definición fundamental y analizar la figura sistemáticamente.
+
+### Paso 1: Recordar la definición de ortocentro
+El **ortocentro** es el punto de intersección de las tres alturas de un triángulo. Una altura es la línea perpendicular que va desde un vértice hasta el lado opuesto (o su prolongación).
+
+### Paso 2: Identificar las alturas en la figura
+En el `r termino_triangulo` `r paste(vertices_seleccionados, collapse="")`, podemos observar:
+
+1. **Altura desde `r vertice2`**: La línea `r estilo_altura_seleccionado` que va desde el vértice `r vertice2` hasta el punto `r pie_altura` en la base `r vertice1``r vertice3`. Esta línea es perpendicular a la base, como se indica con el símbolo del ángulo recto.
+
+2. **Altura desde `r vertice1`**: La línea `r estilo_altura_seleccionado` que va desde el vértice `r vertice1` hacia el lado opuesto `r vertice2``r vertice3`.
+
+3. **Altura desde `r vertice3`**: La línea `r estilo_altura_seleccionado` que va desde el vértice `r vertice3` hacia el lado opuesto `r vertice1``r vertice2`.
+
+### Paso 3: Localizar el punto de convergencia
+Al observar cuidadosamente la figura, podemos ver que todas las `r termino_altura` se intersectan en un único punto. Este punto de convergencia es precisamente el **punto `r ortocentro_label`**, que está marcado con un círculo morado en el diagrama.
+
+### Paso 4: Verificar la respuesta
+Según la teoría geométrica:
+
+- En cualquier triángulo, las tres alturas (o sus prolongaciones) siempre se intersectan en un único punto
+- Este punto de intersección es el **ortocentro**
+- En la figura mostrada, este punto es claramente **`r ortocentro_label`**
+
+### Paso 5: Ubicación del ortocentro según el tipo de triángulo
+Es importante recordar que:
+
+- En un **triángulo acutángulo**: el ortocentro se encuentra **dentro** del triángulo
+- En un **triángulo rectángulo**: el ortocentro coincide con el **vértice del ángulo recto**
+- En un **triángulo obtusángulo**: el ortocentro se encuentra **fuera** del triángulo
+
+En este caso, el triángulo es `r tipo_triangulo` y el ortocentro se encuentra en la posición correspondiente.
+
+### Paso 6: Descartar distractores
+- **Punto `r distractores[1]`**: No es el punto donde convergen las alturas
+- **Punto `r distractores[2]`**: No es el punto donde convergen las alturas
+- **Punto `r distractores[3]`**: No es el punto donde convergen las alturas
+
+### Conclusión
+El ortocentro del `r termino_triangulo` `r paste(vertices_seleccionados, collapse="")` se ubica en el **punto `r ortocentro_label`**, ya que es el lugar `r termino_geometrico` donde se `r termino_cruzan` las tres `r termino_altura` del `r termino_triangulo`.
+
+**Concepto clave**: El ortocentro puede ubicarse dentro, sobre o fuera del triángulo dependiendo del tipo de triángulo (acutángulo, rectángulo u obtusángulo), pero siempre es el punto único donde convergen las tres alturas.
+
+Answerlist
+----------
+* `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: ortocentro_triangulo_alturas
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Geometría|Triángulos|Puntos notables|Ortocentro
+expoints: 1
+extol: 0
+exextra[Competencia]: Razonamiento
+exextra[Componente]: Espacial-métrico
+exextra[Afirmacion]: Utiliza sistemas de coordenadas para modelar situaciones geométricas
+exextra[Nivel]: 2
+exextra[Grado]: 9-11

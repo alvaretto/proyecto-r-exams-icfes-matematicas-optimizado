@@ -1,0 +1,753 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje4
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+library(stringr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+#set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos optimizada
+generar_datos <- function() {
+  # Contextos aleatorios ampliados para mayor diversidad
+  contextos <- list(
+    list(lugar = "centro comercial", tipo = "salas de cine", unidad = "asistentes"),
+    list(lugar = "complejo deportivo", tipo = "canchas de tenis", unidad = "jugadores"),
+    list(lugar = "centro cultural", tipo = "auditorios", unidad = "espectadores"),
+    list(lugar = "plaza de comidas", tipo = "restaurantes", unidad = "comensales"),
+    list(lugar = "centro de convenciones", tipo = "salones", unidad = "participantes"),
+    list(lugar = "parque temático", tipo = "atracciones", unidad = "visitantes"),
+    list(lugar = "hospital", tipo = "consultorios", unidad = "pacientes"),
+    list(lugar = "universidad", tipo = "aulas", unidad = "estudiantes"),
+    list(lugar = "biblioteca", tipo = "salas de estudio", unidad = "usuarios"),
+    list(lugar = "hotel", tipo = "habitaciones", unidad = "huéspedes")
+  )
+
+  contexto_sel <- sample(contextos, 1)[[1]]
+
+  # Aleatorizar número de datos entre 5 y 10 (balanceado pares/impares)
+  n_datos <- sample(5:10, 1)
+
+  # Generar mediana objetivo con rango ampliado para mayor diversidad
+  mediana_objetivo <- sample(250:600, 1)
+
+  # Factor de variabilidad para rangos (aumenta diversidad)
+  factor_variabilidad <- sample(c(100, 120, 150, 180, 200), 1)
+
+  if(n_datos %% 2 == 1) {
+    # CASO IMPAR: La mediana es el valor en posición (n+1)/2
+    pos_mediana <- (n_datos + 1) / 2
+
+    # Necesitamos (pos_mediana - 1) valores menores que mediana_objetivo
+    n_menores_necesarios <- pos_mediana - 1
+
+    # Generar valores menores que la mediana con rangos variables
+    # Usar factor de variabilidad para mayor diversidad
+    separacion_min <- sample(15:30, 1)  # Separación mínima variable
+    rango_menores <- (mediana_objetivo - factor_variabilidad):(mediana_objetivo - separacion_min)
+    valores_menores <- sample(rango_menores, n_menores_necesarios, replace = FALSE)
+
+    # Generar valores mayores que la mediana con rangos variables
+    n_mayores <- n_datos - pos_mediana
+    if(n_mayores > 0) {
+      separacion_max <- sample(15:30, 1)  # Separación máxima variable
+      rango_mayores <- (mediana_objetivo + separacion_max):(mediana_objetivo + factor_variabilidad)
+      valores_mayores <- sample(rango_mayores, n_mayores, replace = FALSE)
+    } else {
+      valores_mayores <- c()
+    }
+
+    # Los valores conocidos son: (n_menores_necesarios - 1) menores + mediana + n_mayores
+    # Uno de los valores menores será reemplazado por N
+    # Verificar que la mediana no esté repetida en otros valores
+    todos_valores_temp <- c(valores_menores[-1], valores_mayores)
+    if(mediana_objetivo %in% todos_valores_temp) {
+      # Si la mediana está repetida, ajustar uno de los valores
+      indice_repetido <- which(todos_valores_temp == mediana_objetivo)[1]
+      if(indice_repetido <= length(valores_menores[-1])) {
+        # Es un valor menor, ajustarlo
+        nuevo_valor <- mediana_objetivo - sample(1:10, 1)
+        valores_menores[length(valores_menores)] <- nuevo_valor
+        todos_valores_temp[indice_repetido] <- nuevo_valor
+      } else {
+        # Es un valor mayor, ajustarlo
+        nuevo_valor <- mediana_objetivo + sample(1:10, 1)
+        indice_en_mayores <- indice_repetido - length(valores_menores[-1])
+        valores_mayores[indice_en_mayores] <- nuevo_valor
+        todos_valores_temp[indice_repetido] <- nuevo_valor
+      }
+    }
+
+    valores_conocidos <- c(valores_menores[-1], valores_mayores, mediana_objetivo)
+
+    # Para maximizar N: debe ser el mayor valor menor que mediana_objetivo
+    val_menor_conocido <- valores_menores[1]  # El menor de todos
+    n_max <- mediana_objetivo - 1  # El mayor valor posible para N
+    n_min <- val_menor_conocido + 1  # Debe ser mayor que el menor valor conocido
+
+  } else {
+    # CASO PAR: La mediana es el promedio de los valores en posiciones n/2 y (n/2 + 1)
+    pos1 <- n_datos / 2
+    pos2 <- pos1 + 1
+
+    # Para que la mediana sea mediana_objetivo, necesitamos dos valores que promediados den mediana_objetivo
+    # Estrategia: generar un valor central conocido y calcular el otro (que será N)
+    # Si val1 + val2 = 2 * mediana_objetivo, entonces val2 = 2 * mediana_objetivo - val1
+
+    # Generar el primer valor central (será uno de los valores conocidos)
+    # No debe ser exactamente la mediana para evitar confusión
+    rango_central <- sample(c(-15:-5, 5:15), 1)  # Desplazamiento respecto a la mediana
+    val_central1 <- mediana_objetivo + rango_central
+    val_central2_objetivo <- 2 * mediana_objetivo - val_central1  # El otro central que será N
+
+    # Generar valores menores que pos1 con rangos variables
+    n_menores <- pos1 - 1
+    if(n_menores > 0) {
+      separacion_min_par <- sample(15:30, 1)
+      rango_menores <- (mediana_objetivo - factor_variabilidad):(mediana_objetivo - separacion_min_par)
+      valores_menores <- sample(rango_menores, n_menores, replace = FALSE)
+    } else {
+      valores_menores <- c()
+    }
+
+    # Generar valores mayores que pos2 con rangos variables
+    n_mayores <- n_datos - pos2
+    if(n_mayores > 0) {
+      separacion_max_par <- sample(15:30, 1)
+      rango_mayores <- (mediana_objetivo + separacion_max_par):(mediana_objetivo + factor_variabilidad)
+      valores_mayores <- sample(rango_mayores, n_mayores, replace = FALSE)
+    } else {
+      valores_mayores <- c()
+    }
+
+    # Verificar que val_central1 no esté repetido en otros valores
+    todos_valores_temp <- c(valores_menores, valores_mayores)
+    if(val_central1 %in% todos_valores_temp) {
+      # Si val_central1 está repetido, ajustar el valor repetido
+      indice_repetido <- which(todos_valores_temp == val_central1)[1]
+      if(indice_repetido <= length(valores_menores)) {
+        # Es un valor menor, ajustarlo
+        nuevo_valor <- val_central1 - sample(5:15, 1)
+        valores_menores[indice_repetido] <- nuevo_valor
+      } else {
+        # Es un valor mayor, ajustarlo
+        indice_en_mayores <- indice_repetido - length(valores_menores)
+        nuevo_valor <- val_central1 + sample(5:15, 1)
+        valores_mayores[indice_en_mayores] <- nuevo_valor
+      }
+    }
+
+    # Los valores conocidos incluyen uno de los centrales y los otros valores
+    # N será el otro valor central
+    valores_conocidos <- c(valores_menores, valores_mayores, val_central1)
+
+    # Para maximizar N: N debe ser val_central2_objetivo
+    n_max <- val_central2_objetivo
+    n_min <- val_central2_objetivo
+    pos_mediana <- paste0(pos1, " y ", pos2)  # Para mostrar en la explicación
+  }
+  
+  # Generar opciones de respuesta
+  respuesta_correcta <- n_max
+
+  # VERIFICACIÓN CRÍTICA: Asegurar que N no sea igual a ningún valor conocido
+  max_intentos_verificacion <- 50
+  intento_verificacion <- 0
+
+  while(respuesta_correcta %in% valores_conocidos && intento_verificacion < max_intentos_verificacion) {
+    if(n_datos %% 2 == 1) {
+      # Para números impares, decrementar N
+      respuesta_correcta <- respuesta_correcta - 1
+      n_max <- respuesta_correcta
+
+      # Si llegamos muy bajo, regenerar con más separación
+      if(respuesta_correcta <= min(valores_conocidos[valores_conocidos < mediana_objetivo])) {
+        # Ajustar uno de los valores conocidos para crear espacio
+        indice_conflicto <- which(valores_conocidos == (respuesta_correcta + 1))[1]
+        if(!is.na(indice_conflicto)) {
+          valores_conocidos[indice_conflicto] <- valores_conocidos[indice_conflicto] - sample(2:5, 1)
+        }
+        respuesta_correcta <- mediana_objetivo - 1
+        n_max <- respuesta_correcta
+      }
+    } else {
+      # Para números pares, ajustar ligeramente el cálculo
+      val_central1_original <- valores_conocidos[length(valores_conocidos)]
+      val_central1_nuevo <- val_central1_original + sample(c(-2:-1, 1:2), 1)
+
+      # Verificar que el nuevo val_central1 no esté en otros valores
+      if(!(val_central1_nuevo %in% valores_conocidos[-length(valores_conocidos)])) {
+        valores_conocidos[length(valores_conocidos)] <- val_central1_nuevo
+        respuesta_correcta <- 2 * mediana_objetivo - val_central1_nuevo
+        n_max <- respuesta_correcta
+      }
+    }
+
+    intento_verificacion <- intento_verificacion + 1
+  }
+
+  # Si después de todos los intentos aún hay conflicto, forzar una solución
+  if(respuesta_correcta %in% valores_conocidos) {
+    if(n_datos %% 2 == 1) {
+      respuesta_correcta <- mediana_objetivo - sample(2:5, 1)
+    } else {
+      respuesta_correcta <- mediana_objetivo + sample(1:3, 1)
+    }
+    n_max <- respuesta_correcta
+  }
+  
+  # Función mejorada para verificar que un distractor es único y no revela la solución
+  es_unico <- function(nuevo_distractor, lista_existentes, respuesta_correcta, valores_conocidos, mediana_objetivo) {
+    # Verificar que no sea idéntico a la respuesta correcta
+    if (nuevo_distractor == respuesta_correcta) {
+      return(FALSE)
+    }
+
+    # Verificar que no sea idéntico a ningún distractor existente
+    for (distractor_existente in lista_existentes) {
+      if (nuevo_distractor == distractor_existente) {
+        return(FALSE)
+      }
+    }
+
+    # NUEVA VALIDACIÓN: No debe ser igual a ningún valor conocido (evita revelar datos)
+    if (nuevo_distractor %in% valores_conocidos) {
+      return(FALSE)
+    }
+
+    # NUEVA VALIDACIÓN: No debe ser igual a la mediana objetivo (evita confusión)
+    if (nuevo_distractor == mediana_objetivo) {
+      return(FALSE)
+    }
+
+    # NUEVA VALIDACIÓN: Debe tener una diferencia mínima con la respuesta correcta
+    diferencia_minima <- max(5, abs(respuesta_correcta) * 0.05)  # 5% o mínimo 5
+    if (abs(nuevo_distractor - respuesta_correcta) < diferencia_minima) {
+      return(FALSE)
+    }
+
+    return(TRUE)
+  }
+
+  # Generar distractores únicos
+  distractores_validos <- c()
+  intentos_maximos <- 50
+
+  # Generar distractores con mayor diversidad y variabilidad
+  if(n_datos %% 2 == 1) {
+    # Para números impares, estrategias diversificadas
+    factor_dist <- sample(c(0.8, 0.9, 1.1, 1.2, 1.3), 1)
+    estrategias <- list(
+      function() respuesta_correcta + sample(1:20, 1),  # Ligeramente mayor (rango ampliado)
+      function() max(1, respuesta_correcta - sample(5:25, 1)),  # Menor (rango ampliado)
+      function() mediana_objetivo,  # Valor de la mediana (error común)
+      function() respuesta_correcta + sample(21:40, 1), # Mucho mayor
+      function() max(1, respuesta_correcta - sample(26:50, 1)), # Mucho menor
+      function() round(mediana_objetivo * factor_dist), # Factor variable
+      function() round(mediana_objetivo * (2 - factor_dist)), # Factor inverso
+      function() round(respuesta_correcta * sample(c(0.7, 0.8, 1.2, 1.3), 1)), # Múltiplos variables
+      function() respuesta_correcta + sample(c(-3:-1, 1:3), 1) * 10 # Saltos de 10
+    )
+  } else {
+    # Para números pares, estrategias más refinadas
+    factor_dist_par <- sample(c(0.85, 0.95, 1.05, 1.15), 1)
+    estrategias <- list(
+      function() respuesta_correcta + sample(1:12, 1),   # Ligeramente mayor (ampliado)
+      function() max(1, respuesta_correcta - sample(1:12, 1)),   # Ligeramente menor (ampliado)
+      function() mediana_objetivo,  # Valor de la mediana (error común)
+      function() respuesta_correcta + sample(13:25, 1),  # Mucho mayor
+      function() max(1, respuesta_correcta - sample(13:25, 1)), # Mucho menor
+      function() round(mediana_objetivo * factor_dist_par), # Factor variable
+      function() round(mediana_objetivo * (2 - factor_dist_par)), # Factor inverso
+      function() round(respuesta_correcta * sample(c(0.75, 0.85, 1.15, 1.25), 1)), # Múltiplos
+      function() respuesta_correcta + sample(c(-2, -1, 1, 2), 1) * sample(5:15, 1) # Saltos variables
+    )
+  }
+
+  # Generar exactamente 3 distractores únicos
+  for (i in 1:3) {
+    intentos <- 0
+    distractor_encontrado <- FALSE
+
+    while (!distractor_encontrado && intentos < intentos_maximos) {
+      # Probar estrategias en orden aleatorio
+      estrategia <- sample(estrategias, 1)[[1]]
+      nuevo_distractor <- estrategia()
+
+      # Asegurar que sea positivo
+      nuevo_distractor <- max(1, nuevo_distractor)
+
+      if (es_unico(nuevo_distractor, distractores_validos, respuesta_correcta, valores_conocidos, mediana_objetivo)) {
+        distractores_validos <- c(distractores_validos, nuevo_distractor)
+        distractor_encontrado <- TRUE
+      }
+
+      intentos <- intentos + 1
+    }
+
+    # Si no se encontró un distractor único, usar uno por defecto
+    if (!distractor_encontrado) {
+      distractor_default <- respuesta_correcta + i * 10 + sample(1:5, 1)
+      distractores_validos <- c(distractores_validos, max(1, distractor_default))
+    }
+  }
+
+  # Crear opciones y mezclar
+  opciones <- c(respuesta_correcta, distractores_validos)
+  opciones_mezcladas <- sample(opciones)
+
+  # Identificar posición correcta (asegurar que sea un solo valor)
+  pos_correcta <- which(opciones_mezcladas == respuesta_correcta)[1]
+  
+  return(list(
+    contexto = contexto_sel,
+    mediana_objetivo = mediana_objetivo,
+    valores_conocidos = valores_conocidos,
+    n_datos = n_datos,
+    pos_mediana = pos_mediana,
+    n_max = n_max,
+    n_min = n_min,
+    respuesta_correcta = respuesta_correcta,
+    opciones = opciones_mezcladas,
+    pos_correcta = pos_correcta,
+    distractores = distractores_validos
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+contexto <- datos$contexto
+mediana_objetivo <- datos$mediana_objetivo
+valores_conocidos <- datos$valores_conocidos
+n_datos <- datos$n_datos
+pos_mediana <- datos$pos_mediana
+respuesta_correcta <- datos$respuesta_correcta
+opciones <- datos$opciones
+pos_correcta <- datos$pos_correcta
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Suite completa de pruebas de calidad y diversidad (versión optimizada)
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:100) {  # Reducido para evitar timeout
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 50,  # Ajustado proporcionalmente
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas de 100. Se requieren al menos 50."))
+
+  # Objetivo: superar 80% de unicidad (más realista)
+  porcentaje_unicidad <- n_versiones_unicas / 100 * 100
+  expect_true(porcentaje_unicidad >= 80,
+              info = paste("Unicidad:", round(porcentaje_unicidad, 2),
+                          "%. Se espera al menos 80%."))
+})
+
+test_that("Prueba de balance pares/impares", {
+  distribuciones <- c()
+  for(i in 1:50) {  # Reducido para evitar timeout
+    datos_test <- generar_datos()
+    distribuciones <- c(distribuciones, datos_test$n_datos)
+  }
+
+  pares <- sum(distribuciones %in% c(6, 8, 10))
+  impares <- sum(distribuciones %in% c(5, 7, 9))
+  total <- pares + impares
+
+  porcentaje_pares <- pares / total * 100
+
+  # Verificar balance aproximado (30-70% es aceptable para muestra pequeña)
+  expect_true(porcentaje_pares >= 30 && porcentaje_pares <= 70,
+              info = paste("Balance pares/impares:", round(porcentaje_pares, 1),
+                          "% pares. Se espera entre 30-70%."))
+})
+
+test_that("Prueba de coherencia matemática", {
+  for(i in 1:10) {  # Reducido para evitar timeout
+    datos_test <- generar_datos()
+
+    # Verificar que la respuesta correcta sea un número positivo
+    expect_true(datos_test$respuesta_correcta > 0,
+                info = "La respuesta correcta debe ser positiva")
+
+    # Verificar que la mediana esté en rango válido
+    expect_true(datos_test$mediana_objetivo >= 250 && datos_test$mediana_objetivo <= 600,
+                info = "La mediana debe estar en el rango 250-600")
+
+    # Verificar que el número de datos esté en rango válido
+    expect_true(datos_test$n_datos >= 5 && datos_test$n_datos <= 10,
+                info = "El número de datos debe estar entre 5 y 10")
+
+    # Verificar que todas las opciones sean diferentes
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = "Las 4 opciones de respuesta deben ser diferentes")
+
+    # Verificar que la respuesta correcta esté en las opciones
+    expect_true(datos_test$respuesta_correcta %in% datos_test$opciones,
+                info = "La respuesta correcta debe estar en las opciones")
+  }
+})
+
+test_that("Prueba de diversidad de contextos", {
+  contextos_usados <- c()
+  for(i in 1:20) {  # Reducido para evitar timeout
+    datos_test <- generar_datos()
+    contextos_usados <- c(contextos_usados, datos_test$contexto$lugar)
+  }
+
+  contextos_unicos <- length(unique(contextos_usados))
+  expect_true(contextos_unicos >= 5,  # Ajustado para muestra pequeña
+              info = paste("Solo se usaron", contextos_unicos,
+                          "contextos únicos. Se esperan al menos 5."))
+})
+
+test_that("Prueba de calidad de distractores", {
+  for(i in 1:5) {  # Reducido para evitar timeout
+    datos_test <- generar_datos()
+
+    # Verificar que los distractores no revelen la solución
+    expect_false(datos_test$mediana_objetivo %in% datos_test$distractores,
+                info = "Los distractores no deben incluir la mediana objetivo")
+
+    # Verificar que los distractores no sean valores conocidos
+    for(distractor in datos_test$distractores) {
+      expect_false(distractor %in% datos_test$valores_conocidos,
+                  info = "Los distractores no deben ser valores conocidos")
+    }
+
+    # Verificar que los distractores estén en un rango razonable
+    expect_true(all(datos_test$distractores > 0),
+                info = "Todos los distractores deben ser positivos")
+
+    expect_true(all(datos_test$distractores < datos_test$mediana_objetivo * 3),
+                info = "Los distractores no deben ser excesivamente grandes")
+  }
+})
+```
+
+```{r generar_tabla_y_datos_grafico, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# Crear tabla con los valores conocidos
+# Generar letras para el número de datos correspondiente
+letras_disponibles <- LETTERS[1:26]
+salas <- letras_disponibles[1:n_datos]
+valores_tabla <- c(valores_conocidos, "N")
+
+# Mezclar COMPLETAMENTE el orden (incluyendo N) para no revelar el patrón
+todos_indices <- 1:n_datos
+indices_mezclados <- sample(todos_indices)
+salas_mezcladas <- salas[indices_mezclados]
+valores_mezclados <- valores_tabla[indices_mezclados]
+
+# Preparar datos para el gráfico (solo valores numéricos para visualización)
+valores_numericos <- valores_conocidos
+salas_numericas <- salas[1:length(valores_numericos)]
+
+# Crear la tabla usando TikZ para mejor control visual
+tabla_tikz <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|c|c|}",
+  "    \\hline",
+  paste0("    \\textbf{", stringr::str_to_title(contexto$tipo), "} & \\textbf{Punto medio} \\\\"),
+  "    \\hline"
+)
+
+for (i in 1:n_datos) {
+  tabla_tikz <- c(tabla_tikz, paste0("    ", salas_mezcladas[i], " & ", valores_mezclados[i], " \\\\"))
+  tabla_tikz <- c(tabla_tikz, "    \\hline")
+}
+
+tabla_tikz <- c(tabla_tikz,
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+```
+
+```{r generar_grafico_python, echo=FALSE, results="hide"}
+# Código Python para generar el gráfico usando py_run_string
+codigo_python <- paste0('
+import matplotlib
+matplotlib.use("Agg")  # Configuración obligatoria para evitar errores
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Recibir datos desde R
+valores_r = [', paste(valores_numericos, collapse=", "), ']
+salas_r = ["', paste(salas_numericas, collapse='", "'), '"]
+contexto_tipo = "', contexto$tipo, '"
+contexto_unidad = "', contexto$unidad, '"
+mediana_objetivo = ', mediana_objetivo, '
+
+# Configuración de colores aleatorios para mayor diversidad
+paletas_colores = [
+    ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"],
+    ["#2E86AB", "#A23B72", "#F18F01", "#C73E1D", "#592E83", "#1B998B", "#ED217C", "#F4B942", "#6A994E", "#A4161A"],
+    ["#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51", "#e63946", "#f77f00", "#fcbf49", "#003049", "#669bbc"],
+    ["#8ecae6", "#219ebc", "#023047", "#ffb3c6", "#fb8500", "#8b5cf6", "#06ffa5", "#ffd23f", "#ee6c4d", "#3a86ff"]
+]
+
+colores_seleccionados = random.choice(paletas_colores)[:len(valores_r)]
+
+# Crear figura con tamaño optimizado
+plt.figure(figsize=(10, 6))
+
+# Crear gráfico de barras con colores aleatorios
+barras = plt.bar(salas_r, valores_r, color=colores_seleccionados,
+                edgecolor="black", linewidth=1.2, width=0.6, alpha=0.8)
+
+# Configuración del gráfico
+plt.xlabel(f"{contexto_tipo.title()}", fontsize=12, fontweight="bold")
+plt.ylabel(f"Número de {contexto_unidad}", fontsize=12, fontweight="bold")
+plt.title(f"Distribución de {contexto_unidad} por {contexto_tipo}",
+          fontsize=14, fontweight="bold", pad=20)
+
+# Configurar ejes
+plt.xticks(fontsize=11)
+plt.yticks(fontsize=11)
+
+# Añadir línea horizontal para la mediana con color destacado
+plt.axhline(y=mediana_objetivo, color="red", linestyle="--", linewidth=2,
+           alpha=0.7, label=f"Mediana objetivo: {mediana_objetivo}")
+
+# Añadir valores sobre las barras
+for i, (sala, valor) in enumerate(zip(salas_r, valores_r)):
+    plt.text(i, valor + max(valores_r) * 0.01, str(valor),
+            ha="center", va="bottom", fontweight="bold", fontsize=10)
+
+# Configurar grilla sutil
+plt.grid(True, axis="y", linestyle=":", alpha=0.5)
+
+# Añadir leyenda
+plt.legend(loc="upper right", fontsize=10)
+
+# Ajustar límites del eje Y para mejor visualización
+plt.ylim(0, max(valores_r) * 1.15)
+
+# Ajustar diseño
+plt.tight_layout()
+
+# Guardar en múltiples formatos para compatibilidad
+plt.savefig("grafico_mediana_datos.png", dpi=150, bbox_inches="tight",
+           facecolor="white", edgecolor="none")
+plt.savefig("grafico_mediana_datos.pdf", dpi=150, bbox_inches="tight",
+           facecolor="white", edgecolor="none")
+plt.close()
+')
+
+# Ejecutar código Python para generar la figura
+py_run_string(codigo_python)
+```
+
+Question
+========
+
+Si la mediana de la asistencia a las `r n_datos` `r contexto$tipo` de un `r contexto$lugar` es `r mediana_objetivo` y no hay dos `r contexto$tipo` con el mismo número de `r contexto$unidad`, ¿cuál es el mayor valor posible para "N"?
+
+
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+# Usar TikZ siguiendo el patrón de los ejemplos funcionales
+include_tikz(tabla_tikz,
+             name = "tabla_datos",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "8cm")
+```
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+### Análisis del problema {#analisis-problema-`r sample(1:10000, 1)`}
+
+Para resolver este problema, necesitamos entender qué significa que la mediana sea `r mediana_objetivo` en un conjunto de `r n_datos` valores.
+
+**Datos conocidos:**
+
+- Tenemos `r n_datos` `r contexto$tipo`: `r paste(salas_mezcladas, collapse = ", ")`
+- Sus valores son: `r paste(valores_mezclados, collapse = ", ")`
+- La mediana del conjunto es `r mediana_objetivo`
+- No hay dos valores iguales
+
+### Concepto de mediana {#concepto-mediana-`r sample(1:10000, 1)`}
+
+```{r explicar_mediana, echo=FALSE, results='asis'}
+if(n_datos %% 2 == 1) {
+  # Número impar de datos
+  cat("La mediana de", n_datos, "valores ordenados de menor a mayor es el valor que ocupa la **posición central (posición", pos_mediana, ")**.\n\n")
+  cat("Para que la mediana sea", mediana_objetivo, ", cuando ordenemos los", n_datos, "valores de menor a mayor, el valor en la posición", pos_mediana, "debe ser exactamente", mediana_objetivo, ".")
+} else {
+  # Número par de datos
+  pos1 <- n_datos / 2
+  pos2 <- pos1 + 1
+  cat("La mediana de", n_datos, "valores ordenados de menor a mayor es el **promedio de los dos valores centrales (posiciones", pos1, "y", pos2, ")**.\n\n")
+  cat("Para que la mediana sea", mediana_objetivo, ", cuando ordenemos los", n_datos, "valores de menor a mayor, el promedio de los valores en las posiciones", pos1, "y", pos2, "debe ser exactamente", mediana_objetivo, ".")
+}
+```
+
+### Análisis de casos {#analisis-casos-`r sample(1:10000, 1)`}
+
+Los valores conocidos son: `r paste(valores_conocidos, collapse = ", ")`
+
+Analicemos dónde puede ubicarse N para que la mediana sea `r mediana_objetivo`:
+
+\
+
+```{r analisis_detallado, echo=FALSE, results='asis'}
+# Calcular valores para el análisis
+valores_ord <- sort(valores_conocidos)
+
+if(n_datos %% 2 == 1) {
+  # CASO IMPAR
+  val_menor <- min(valores_conocidos[valores_conocidos < mediana_objetivo])
+
+  cat("**Caso 1:** Si N es menor o igual a", val_menor, "(muy pequeño)\n")
+  cat("- El valor", mediana_objetivo, "no quedaría en posición", pos_mediana, "\n")
+  cat("- Mediana diferente de", mediana_objetivo, "\n\n")
+
+  cat("**Caso 2:** Si", val_menor, "< N <", mediana_objetivo, "\n")
+  cat("- El valor", mediana_objetivo, "queda en posición", pos_mediana, "\n")
+  cat("- Mediana =", mediana_objetivo, "(CORRECTO)\n\n")
+
+  cat("**Caso 3:** Si N =", mediana_objetivo, "\n")
+  cat("- No es válido porque no puede haber valores iguales\n\n")
+
+  cat("**Caso 4:** Si N >", mediana_objetivo, "\n")
+  cat("- El valor", mediana_objetivo, "no estaría en posición", pos_mediana, "\n")
+  cat("- Mediana diferente de", mediana_objetivo, "\n\n")
+
+} else {
+  # CASO PAR
+  pos1 <- n_datos / 2
+  pos2 <- pos1 + 1
+
+  # Obtener los valores centrales reales del problema
+  # En el caso par, uno de los valores centrales está en valores_conocidos
+  # y N será el otro valor central
+  val_central_conocido <- valores_conocidos[length(valores_conocidos)]  # El último valor agregado es uno de los centrales
+  val_central_necesario <- respuesta_correcta  # N es el otro valor central
+
+  cat("Para que la mediana sea", mediana_objetivo, ", necesitamos que el promedio de los valores en posiciones", pos1, "y", pos2, "sea", mediana_objetivo, ".\n\n")
+
+  cat("Sabemos que uno de los valores centrales es", val_central_conocido, ".\n")
+  cat("Por tanto, N debe ser", val_central_necesario, "para que (", val_central_conocido, "+", val_central_necesario, ")/2 =", mediana_objetivo, ".\n\n")
+
+  # Verificar la matemática
+  promedio_calculado <- (val_central_conocido + val_central_necesario) / 2
+  cat("Verificación: (", val_central_conocido, "+", val_central_necesario, ")/2 =", promedio_calculado, "\n\n")
+
+  cat("**Conclusión:** N debe ser exactamente", val_central_necesario, ".\n\n")
+}
+```
+
+### Conclusión {#conclusion-`r sample(1:10000, 1)`}
+
+```{r conclusion_detallada, echo=FALSE, results='asis'}
+if(n_datos %% 2 == 1) {
+  # CASO IMPAR
+  val_menor <- min(valores_conocidos[valores_conocidos < mediana_objetivo])
+  cat("Para que la mediana sea", mediana_objetivo, ", N debe cumplir:\n")
+  cat(val_menor, "< N <", mediana_objetivo, "\n\n")
+  cat("El **mayor valor posible** para N es **", respuesta_correcta, "** (justo menor que", mediana_objetivo, ").\n")
+} else {
+  # CASO PAR
+  cat("Para que la mediana sea", mediana_objetivo, ", N debe ser exactamente **", respuesta_correcta, "**.\n")
+}
+```
+
+Answerlist
+----------
+- `r if(pos_correcta == 1) "Verdadero" else "Falso"`
+- `r if(pos_correcta == 2) "Verdadero" else "Falso"`
+- `r if(pos_correcta == 3) "Verdadero" else "Falso"`
+- `r if(pos_correcta == 4) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: mediana_asistencia_salas_cine
+extype: schoice
+exsolution: `r paste(as.integer(c(pos_correcta == 1, pos_correcta == 2, pos_correcta == 3, pos_correcta == 4)), collapse="")`
+exshuffle: TRUE
+exsection: Estadística|Medidas de posición|Mediana|Interpretación
+exextra[Type]: Interpretación y representación
+exextra[Level]: 2
+exextra[Language]: es
+exextra[Course]: Matemáticas ICFES
