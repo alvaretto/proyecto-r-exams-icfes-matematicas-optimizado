@@ -122,6 +122,155 @@ git fetch origin && git reset --hard origin/experimentos-seguros && git clean -f
 
 ---
 
+## 🔧 DIAGNÓSTICO: "Los cambios no se reflejan en la nube"
+
+### 🚨 Problema Común:
+Ejecutas los comandos pero los cambios no aparecen en GitHub/GitLab.
+
+### � Lista de Verificación (ejecutar en orden):
+
+#### 1. **Verificar que el push fue exitoso:**
+```bash
+git push --force-with-lease origin experimentos-seguros
+# Debe mostrar algo como:
+# Enumerating objects: X, done.
+# Writing objects: 100% (X/X), done.
+# To https://github.com/usuario/repo.git
+#    abc1234..def5678  experimentos-seguros -> experimentos-seguros
+```
+
+#### 2. **Verificar la rama actual:**
+```bash
+git branch
+# El asterisco (*) debe estar en experimentos-seguros
+# Si no:
+git checkout experimentos-seguros
+```
+
+#### 3. **Verificar el estado del repositorio:**
+```bash
+git status
+# Debe mostrar: "Your branch is up to date with 'origin/experimentos-seguros'"
+# Si muestra cambios pendientes, hacer:
+git add . && git commit -m "Cambios pendientes" && git push --force-with-lease origin experimentos-seguros
+```
+
+#### 4. **Verificar la configuración del remoto:**
+```bash
+git remote -v
+# Debe mostrar las URLs correctas de tu repositorio
+# Si no es correcto:
+git remote set-url origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+```
+
+#### 5. **Verificar autenticación:**
+```bash
+git ls-remote origin
+# Si falla, hay problema de autenticación
+# Solución para token personal:
+git remote set-url origin https://TU_TOKEN@github.com/TU_USUARIO/TU_REPOSITORIO.git
+```
+
+#### 6. **Verificar que estás viendo la rama correcta en la web:**
+- Ve a tu repositorio en GitHub/GitLab
+- **IMPORTANTE**: Cambia a la rama `experimentos-seguros` en la interfaz web
+- Por defecto muestra `main`, no `experimentos-seguros`
+
+### 🎯 Script de Diagnóstico Completo:
+```bash
+#!/bin/bash
+echo "🔍 DIAGNÓSTICO COMPLETO DE SINCRONIZACIÓN"
+echo "========================================"
+
+echo "📍 1. Rama actual:"
+git branch --show-current
+
+echo ""
+echo "📊 2. Estado del repositorio:"
+git status --short
+
+echo ""
+echo "🌐 3. Configuración remota:"
+git remote -v
+
+echo ""
+echo "🔄 4. Últimos commits locales:"
+git log --oneline -5
+
+echo ""
+echo "📥 5. Últimos commits remotos:"
+git log --oneline origin/experimentos-seguros -5
+
+echo ""
+echo "⚖️ 6. Comparación local vs remoto:"
+git log --oneline HEAD..origin/experimentos-seguros
+if [ $? -eq 0 ] && [ -z "$(git log --oneline HEAD..origin/experimentos-seguros)" ]; then
+    echo "✅ Local está actualizado con remoto"
+else
+    echo "⚠️ Hay diferencias entre local y remoto"
+fi
+
+echo ""
+echo "🔗 7. Verificar conectividad:"
+if git ls-remote origin > /dev/null 2>&1; then
+    echo "✅ Conexión con repositorio remoto OK"
+else
+    echo "❌ Error de conexión con repositorio remoto"
+fi
+```
+
+### 🚀 Solución Paso a Paso:
+
+#### Si el problema persiste, ejecutar en orden:
+
+```bash
+# 1. Forzar fetch completo
+git fetch origin --prune
+
+# 2. Verificar diferencias
+git diff HEAD origin/experimentos-seguros
+
+# 3. Si hay diferencias, sincronizar forzosamente
+git checkout experimentos-seguros
+git reset --hard origin/experimentos-seguros
+git clean -fd
+
+# 4. Hacer tus cambios nuevamente
+# ... editar archivos ...
+
+# 5. Commit y push con verificación
+git add .
+git commit -m "Cambios verificados"
+echo "Haciendo push..."
+git push --force-with-lease origin experimentos-seguros
+
+# 6. Verificar que se subió
+git log --oneline -1
+git ls-remote origin experimentos-seguros
+```
+
+### 🎯 Causas Más Comunes:
+
+1. **Estás en la rama equivocada** → `git checkout experimentos-seguros`
+2. **Viendo la rama equivocada en la web** → Cambiar a `experimentos-seguros` en GitHub
+3. **Problema de autenticación** → Reconfigurar token/SSH
+4. **Push falló silenciosamente** → Verificar salida del comando
+5. **Cambios no agregados** → `git add .` antes del commit
+6. **Conflictos no resueltos** → Resolver conflictos manualmente
+
+### 💡 Comando de Emergencia (Reset Total):
+```bash
+# ⚠️ CUIDADO: Esto sobrescribe todo local con lo remoto
+git fetch origin
+git checkout experimentos-seguros
+git reset --hard origin/experimentos-seguros
+git clean -fd
+# Ahora hacer cambios y push nuevamente
+```
+
+
+---
+
 ## 📋 COMANDOS DE VERIFICACIÓN
 
 ### Ver estado de todas las ramas:
