@@ -544,6 +544,305 @@ seguro que <code>--force</code> simple</li>
 <h3><strong>4. Sincronizar con la nube:</strong></h3>
 <pre class="bash"><code>git reset --hard origin/experimentos-seguros
 git clean -fd</code></pre>
+<hr />
+</div>
+</div>
+<div id="optimizaciones-y-automatización" class="section level2">
+<h2>🚀 OPTIMIZACIONES Y AUTOMATIZACIÓN</h2>
+<div id="scripts-automatizados-disponibles" class="section level3">
+<h3>📦 Scripts Automatizados Disponibles</h3>
+<div id="git_commit_smart.sh---commit-inteligente" class="section level4">
+<h4>1. <a href="./Optimizacion_Flujo_Git/git_commit_smart.sh"><code>git_commit_smart.sh</code></a>
+- Commit Inteligente</h4>
+<pre class="bash"><code>./git_commit_smart.sh</code></pre>
+<p><strong>Características:</strong></p>
+<ul>
+<li>Commit semántico con tipos (feat, fix, docs, refactor, test,
+chore)</li>
+<li>Validación de archivos .Rmd y detección de archivos grandes</li>
+<li>Mensajes estructurados con alcance y descripción detallada</li>
+<li>Push automático opcional con <code>--force-with-lease</code></li>
+<li>Manejo inteligente de ramas</li>
+</ul>
+</div>
+<div id="sync_repo.sh---sincronización-completa" class="section level4">
+<h4>2. <a href="./Optimizacion_Flujo_Git/sync_repo.sh"><code>sync_repo.sh</code></a>
+- Sincronización Completa</h4>
+<pre class="bash"><code>./sync_repo.sh</code></pre>
+<p><strong>Características:</strong></p>
+<ul>
+<li>Fetch automático y verificación de cambios remotos</li>
+<li>Manejo inteligente de conflictos con stash temporal</li>
+<li>Integración con script de commit inteligente</li>
+<li>Push seguro con verificación de rama</li>
+<li>Resumen completo del estado final</li>
+</ul>
+</div>
+<div id="setup_git_lfs.sh---configuración-git-lfs" class="section level4">
+<h4>3. <a href="./Optimizacion_Flujo_Git/setup_git_lfs.sh"><code>setup_git_lfs.sh</code></a>
+- Configuración Git LFS</h4>
+<pre class="bash"><code>./setup_git_lfs.sh</code></pre>
+<p><strong>Características:</strong></p>
+<ul>
+<li>Instalación automática de Git LFS según el sistema operativo</li>
+<li>Configuración de tracking para archivos grandes (PDF, imágenes,
+datos R)</li>
+<li>Migración opcional de archivos existentes</li>
+<li>Soluciona advertencias de GitHub sobre archivos &gt;50MB</li>
+</ul>
+<hr />
+</div>
+</div>
+</div>
+<div id="flujo-de-trabajo-optimizado" class="section level2">
+<h2>🎯 FLUJO DE TRABAJO OPTIMIZADO</h2>
+<div id="workflow-diario-recomendado" class="section level3">
+<h3>Workflow Diario Recomendado:</h3>
+<div id="inicio-del-día" class="section level4">
+<h4>🌅 Inicio del día:</h4>
+<pre class="bash"><code>./sync_repo.sh  # Sincronización completa automática</code></pre>
+</div>
+<div id="durante-el-trabajo" class="section level4">
+<h4>💻 Durante el trabajo:</h4>
+<pre class="bash"><code># Hacer cambios en archivos...
+./git_commit_smart.sh  # Commit inteligente con push opcional</code></pre>
+</div>
+<div id="final-del-día" class="section level4">
+<h4>🌙 Final del día:</h4>
+<pre class="bash"><code>./sync_repo.sh  # Verificar sincronización final</code></pre>
+</div>
+</div>
+<div id="configuración-inicial-una-sola-vez" class="section level3">
+<h3>Configuración Inicial (una sola vez):</h3>
+<pre class="bash"><code># 1. Configurar Git LFS para archivos grandes
+./setup_git_lfs.sh
+
+# 2. Configurar aliases útiles
+git config --global alias.commit-smart &#39;!bash ./git_commit_smart.sh&#39;
+git config --global alias.sync-repo &#39;!bash ./sync_repo.sh&#39;
+git config --global alias.push-safe &#39;push --force-with-lease origin experimentos-seguros&#39;</code></pre>
+<hr />
+</div>
+</div>
+<div id="commits-semánticos" class="section level2">
+<h2>📊 COMMITS SEMÁNTICOS</h2>
+<div id="formato-estándar" class="section level3">
+<h3>Formato Estándar:</h3>
+<pre><code>&lt;tipo&gt;(&lt;alcance&gt;): &lt;descripción&gt;
+
+&lt;descripción detallada opcional&gt;
+- Detalle 1
+- Detalle 2</code></pre>
+</div>
+<div id="tipos-de-commit" class="section level3">
+<h3>Tipos de Commit:</h3>
+<ul>
+<li><strong>feat</strong>: Nueva funcionalidad (nuevos ejercicios,
+metodologías)</li>
+<li><strong>fix</strong>: Corrección de errores (TikZ, compilación,
+datos)</li>
+<li><strong>docs</strong>: Documentación (README, guías,
+metodologías)</li>
+<li><strong>refactor</strong>: Refactoring (optimización de código)</li>
+<li><strong>test</strong>: Pruebas (validación, testing)</li>
+<li><strong>chore</strong>: Mantenimiento (configuración, limpieza)</li>
+</ul>
+</div>
+<div id="alcances-recomendados" class="section level3">
+<h3>Alcances Recomendados:</h3>
+<ul>
+<li><strong>ejercicios</strong>: Nuevos ejercicios, modificaciones</li>
+<li><strong>tikz</strong>: Gráficos, visualizaciones</li>
+<li><strong>metodologia</strong>: Metodologías TikZ, corrección
+errores</li>
+<li><strong>docs</strong>: Documentación, guías</li>
+<li><strong>config</strong>: Configuración, scripts</li>
+<li><strong>general</strong>: Cambios múltiples</li>
+</ul>
+</div>
+<div id="ejemplos" class="section level3">
+<h3>Ejemplos:</h3>
+<pre class="bash"><code>feat(ejercicios): agregar nuevos ejercicios de estadística
+
+- Añadidos 5 ejercicios de variables cualitativas
+- Implementada aleatorización avanzada (300+ versiones)
+- Validación con metodología TikZ integrada
+
+fix(tikz): corregir posicionamiento de elementos
+
+- Solucionado orden incorrecto texto → tabla → pregunta
+- Aplicada metodología de corrección de errores categoría B
+- Tiempo de corrección: &lt; 3 minutos</code></pre>
+<hr />
+</div>
+</div>
+<div id="configuraciones-avanzadas" class="section level2">
+<h2>🔧 CONFIGURACIONES AVANZADAS</h2>
+<div id="git-lfs-para-archivos-grandes" class="section level3">
+<h3>Git LFS para Archivos Grandes:</h3>
+<pre class="bash"><code># Tipos de archivos configurados automáticamente:
+*.pdf *.png *.jpg *.jpeg *.gif *.bmp *.tiff *.svg
+*.rds *.RData *.rda
+*.zip *.tar.gz *.rar *.7z
+*.docx *.pptx *.xlsx
+*.mp4 *.avi *.mov
+*.log test_*.pdf *_output.html</code></pre>
+</div>
+<div id="aliases-útiles" class="section level3">
+<h3>Aliases Útiles:</h3>
+<pre class="bash"><code>git st          # git status
+git co          # git checkout
+git br          # git branch
+git ci          # git commit
+git unstage     # git reset HEAD --
+git last        # git log -1 HEAD
+git commit-smart # ./git_commit_smart.sh
+git sync-repo   # ./sync_repo.sh
+git push-safe   # git push --force-with-lease origin experimentos-seguros</code></pre>
+<hr />
+</div>
+</div>
+<div id="comandos-de-verificación-avanzados" class="section level2">
+<h2>📋 COMANDOS DE VERIFICACIÓN AVANZADOS</h2>
+<div id="estado-completo-del-repositorio" class="section level3">
+<h3>Estado Completo del Repositorio:</h3>
+<pre class="bash"><code># Información completa
+git fetch origin &amp;&amp; git status &amp;&amp; git log --oneline --graph --all | head -10
+
+# Archivos más modificados
+git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -10
+
+# Tamaño del repositorio
+du -sh .git/
+
+# Archivos en Git LFS
+git lfs ls-files | head -10</code></pre>
+</div>
+<div id="estadísticas-del-proyecto" class="section level3">
+<h3>Estadísticas del Proyecto:</h3>
+<pre class="bash"><code># Commits por tipo
+git log --oneline | grep -E &#39;^[a-f0-9]+ (feat|fix|docs|refactor|test|chore)&#39; | cut -d&#39; &#39; -f2 | cut -d&#39;(&#39; -f1 | sort | uniq -c
+
+# Actividad por fecha
+git log --pretty=format:&quot;%ad&quot; --date=short | sort | uniq -c | tail -10</code></pre>
+<hr />
+</div>
+</div>
+<div id="comandos-de-emergencia-actualizados" class="section level2">
+<h2>⚠️ COMANDOS DE EMERGENCIA ACTUALIZADOS</h2>
+<div id="reset-completo-con-limpieza" class="section level3">
+<h3>🚨 Reset Completo con Limpieza:</h3>
+<pre class="bash"><code># Para main
+git checkout main
+git fetch origin &amp;&amp; git reset --hard origin/main &amp;&amp; git clean -fd
+git lfs pull  # Descargar archivos LFS
+
+# Para experimentos-seguros
+git checkout experimentos-seguros
+git fetch origin &amp;&amp; git reset --hard origin/experimentos-seguros &amp;&amp; git clean -fd
+git lfs pull  # Descargar archivos LFS</code></pre>
+</div>
+<div id="reparar-repositorio-corrupto" class="section level3">
+<h3>🚨 Reparar Repositorio Corrupto:</h3>
+<pre class="bash"><code># Verificar integridad
+git fsck --full
+
+# Reparar referencias
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+
+# Reconfigurar Git LFS si es necesario
+git lfs install --force</code></pre>
+<hr />
+</div>
+</div>
+<div id="notas-importantes-actualizadas" class="section level2">
+<h2>💡 NOTAS IMPORTANTES ACTUALIZADAS</h2>
+<div id="archivos-grandes" class="section level3">
+<h3>Archivos Grandes:</h3>
+<ul>
+<li><strong>Git LFS configurado</strong>: Archivos &gt;50MB se manejan
+automáticamente</li>
+<li><strong>Sin advertencias de GitHub</strong>: Los archivos grandes no
+afectan el rendimiento</li>
+<li><strong>Descarga selectiva</strong>: Solo se descargan cuando se
+necesitan</li>
+</ul>
+</div>
+<div id="scripts-automatizados" class="section level3">
+<h3>Scripts Automatizados:</h3>
+<ul>
+<li><strong>Ubicación</strong>:
+<code>~/Proyectos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/Comandos Git/Optimizacion_Flujo_Git/</code></li>
+<li><strong>Permisos</strong>: Ejecutables
+(<code>chmod +x *.sh</code>)</li>
+<li><strong>Integración</strong>: Funcionan con aliases de Git</li>
+</ul>
+</div>
+<div id="seguridad" class="section level3">
+<h3>Seguridad:</h3>
+<ul>
+<li><strong><code>--force-with-lease</code></strong>: Siempre preferido
+sobre <code>--force</code></li>
+<li><strong>Verificación de rama</strong>: Los scripts verifican la rama
+activa</li>
+<li><strong>Backup automático</strong>: Stash temporal durante
+sincronización</li>
+</ul>
+</div>
+<div id="rendimiento" class="section level3">
+<h3>Rendimiento:</h3>
+<ul>
+<li><strong>Commits más pequeños</strong>: Fragmentación
+inteligente</li>
+<li><strong>Mensajes estructurados</strong>: Mejor trazabilidad</li>
+<li><strong>Sincronización eficiente</strong>: Menos conflictos</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="reglas-de-oro-actualizadas" class="section level2">
+<h2>🎯 REGLAS DE ORO ACTUALIZADAS</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Usar scripts automatizados</strong> para operaciones
+comunes</li>
+<li><strong>Commits semánticos</strong> con tipos y alcances claros</li>
+<li><strong>Git LFS</strong> para todos los archivos grandes</li>
+<li><strong><code>--force-with-lease</code></strong> siempre en lugar de
+<code>--force</code></li>
+<li><strong>Sincronización diaria</strong> con
+<code>./sync_repo.sh</code></li>
+<li><strong>Verificación de rama</strong> antes de operaciones
+críticas</li>
+<li><strong>Mensajes descriptivos</strong> con contexto del proyecto
+R-exams ICFES</li>
+</ol>
+<hr />
+</div>
+<div id="recursos-adicionales" class="section level2">
+<h2>📚 RECURSOS ADICIONALES</h2>
+<div id="documentación" class="section level3">
+<h3>Documentación:</h3>
+<ul>
+<li><a href="./Optimizacion_Flujo_Git/OPTIMIZACION_FLUJO_GIT.md">Optimización
+completa</a></li>
+<li><a href="https://git-lfs.github.io/">Git LFS Documentation</a></li>
+<li><a href="https://www.conventionalcommits.org/">Conventional
+Commits</a></li>
+</ul>
+</div>
+<div id="scripts-de-apoyo" class="section level3">
+<h3>Scripts de Apoyo:</h3>
+<ul>
+<li><a href="./Optimizacion_Flujo_Git/git_commit_smart.sh"><code>git_commit_smart.sh</code></a>
+- Commit inteligente</li>
+<li><a href="./Optimizacion_Flujo_Git/sync_repo.sh"><code>sync_repo.sh</code></a>
+- Sincronización completa<br />
+</li>
+<li><a href="./Optimizacion_Flujo_Git/setup_git_lfs.sh"><code>setup_git_lfs.sh</code></a>
+- Configuración Git LFS</li>
+</ul>
+<p><em>Flujo optimizado y automatizado - Enero 2025</em></p>
 </div>
 </div>
 </div>
