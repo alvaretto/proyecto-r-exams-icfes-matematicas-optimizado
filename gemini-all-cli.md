@@ -692,6 +692,29 @@ Tu instalación de Gemini CLI está lista para usar. Recuerda activar el entorno
 
 ---
 
+## 📖 Metodología de Creación de Ejercicios R-Exams
+
+Para asegurar la calidad y consistencia en la creación de ejercicios de R-Exams, es fundamental seguir la metodología definida en el proyecto. Esta se basa en un conjunto de reglas y ejemplos funcionales que garantizan la correcta estructuración y funcionamiento de los ejercicios.
+
+### 📜 Reglas y Protocolos
+
+El documento `rules_full_v1.md` contiene el conjunto completo de metodologías, protocolos y criterios de calidad que deben seguirse. Los puntos clave incluyen:
+
+- **Sistema Condicional Automático:** Detección de contenido gráfico en imágenes para activar flujos de trabajo específicos.
+- **Metodología TikZ Avanzada:** Para la replicación precisa de gráficos y diagramas.
+- **Protocolo Anti-Errores:** Consulta obligatoria de ejemplos funcionales para prevenir errores comunes de implementación.
+- **Estructura Obligatoria del Archivo .Rmd:** Definición precisa del encabezado YAML, metadatos ICFES, y la estructura de chunks.
+
+### 📂 Ejemplos Funcionales
+
+La consulta de ejemplos funcionales es un paso **obligatorio** antes de escribir cualquier código. Estos ejemplos proporcionan plantillas probadas y funcionales que deben ser la base para cualquier nuevo ejercicio.
+
+**Ruta de los Ejemplos:** `/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/Ejemplos-Funcionales-Rmd/`
+
+**Regla de Oro:** "Si no está en los ejemplos funcionales, no improvises."
+
+---
+
 ## 📋 Resumen de la Instalación Exitosa
 
 ### ✅ Lo que se instaló:
