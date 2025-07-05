@@ -160,7 +160,7 @@ sudo reboot
 
 ### **REQUISITOS:**
 
-- Contraseña sudo: `ManjaroPetit`
+- Contraseña sudo: ``
 - Conexión a internet (para actualizaciones)
 - 10-15 minutos de tiempo
 - Reinicio del sistema después
