@@ -1,0 +1,21 @@
+Esta imagen contiene múltiples gráficas matemáticas:
+
+1. Gráfica principal: Diagrama geométrico con puntos Q, T, K, P y segmento QT
+2. Opción A: Gráfica lineal horizontal (Distancia KP vs Ángulo α)
+3. Opción B: Gráfica de función exponencial decreciente con asíntota
+4. Opción C: Gráfica de función con discontinuidad y comportamiento complejo
+5. Opción D: Gráfica lineal horizontal constante
+
+Características técnicas detectadas:
+- Múltiples sistemas de coordenadas
+- Ejes etiquetados (Distancia KP, Ángulo α)
+- Funciones matemáticas complejas
+- Texto matemático con fórmulas
+- Líneas punteadas y continuas
+- Puntos específicos marcados
+
+Esta imagen es ideal para probar:
+- Detección automática de múltiples gráficas
+- Análisis de funciones matemáticas
+- Compatibilidad con Qtikz/Ktikz para gráficas complejas
+- Generación de código TikZ para múltiples elementos

@@ -1,0 +1,25 @@
+% Opción A - Gráfica Lineal Horizontal (Compatible Qtikz/Ktikz)
+% Basada en análisis de imagen con múltiples gráficas matemáticas
+\begin{tikzpicture}[scale=0.8]
+% Ejes principales
+\draw[->] (0,0) -- (4,0) node[below] {Ángulo $\alpha$};
+\draw[->] (0,0) -- (0,3) node[left] {Distancia $KP$};
+
+% Línea horizontal constante (característica principal de opción A)
+\draw[cyan, thick] (0.5,2) -- (3.5,2);
+
+% Etiquetas de ejes
+\node[below] at (0.5,-0.2) {0};
+\node[below] at (2,-0.2) {$\alpha$/2};
+\node[below] at (3.5,-0.2) {$\alpha$};
+\node[left] at (-0.2,1) {0};
+\node[left] at (-0.2,2) {$h$};
+\node[left] at (-0.2,2.5) {2$h$};
+
+% Punto específico marcado
+\fill[cyan] (2,2) circle (2pt);
+
+% Líneas de referencia punteadas
+\draw[gray, dashed] (2,0) -- (2,2);
+\draw[gray, dashed] (0,2) -- (3.5,2);
+\end{tikzpicture}

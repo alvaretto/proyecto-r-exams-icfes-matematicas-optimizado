@@ -1,0 +1,32 @@
+% Opción D - Gráfica Constante (Compatible Qtikz/Ktikz)
+% Basada en análisis de imagen con múltiples gráficas matemáticas
+\begin{tikzpicture}[scale=0.8]
+% Ejes principales
+\draw[->] (0,0) -- (4,0) node[below] {Ángulo $\alpha$};
+\draw[->] (0,0) -- (0,3) node[left] {Distancia $KP$};
+
+% Línea horizontal constante (valor constante de QP)
+\draw[cyan, thick] (0.5,1.5) -- (3.5,1.5);
+
+% Líneas punteadas de referencia
+\draw[gray, dashed] (0.5,0) -- (0.5,1.5);
+\draw[gray, dashed] (0,1.5) -- (3.5,1.5);
+
+% Etiquetas específicas
+\node[below] at (0.5,-0.2) {0};
+\node[below] at (3.5,-0.2) {$\alpha$};
+\node[left] at (-0.2,1.5) {$QP$};
+\node[left] at (-0.2,0.5) {0};
+
+% Puntos extremos marcados
+\fill[cyan] (0.5,1.5) circle (2pt);
+\fill[cyan] (3.5,1.5) circle (2pt);
+
+% Punto medio para énfasis
+\fill[cyan] (2,1.5) circle (2pt);
+
+% Indicación de constancia con pequeñas marcas
+\foreach \x in {1,1.5,2.5,3} {
+    \draw[cyan] (\x,1.4) -- (\x,1.6);
+}
+\end{tikzpicture}
