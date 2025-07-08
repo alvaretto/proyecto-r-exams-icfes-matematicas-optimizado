@@ -1,0 +1,29 @@
+% Opción B - Gráfica Exponencial Decreciente (Compatible Qtikz/Ktikz)
+% Basada en análisis de imagen con múltiples gráficas matemáticas
+\begin{tikzpicture}[scale=0.8]
+% Ejes principales
+\draw[->] (0,0) -- (4,0) node[below] {Ángulo $\alpha$};
+\draw[->] (0,0) -- (0,3) node[left] {Distancia $KP$};
+
+% Curva exponencial decreciente usando coordenadas calculadas
+% Simula la función sen(α) = h/KP donde KP decrece exponencialmente
+\draw[cyan, thick] (0.5,2.5) .. controls (1,2.2) and (2,1.8) .. (3.5,1.2);
+
+% Líneas punteadas de referencia
+\draw[gray, dashed] (0.5,0) -- (0.5,2.5);
+\draw[gray, dashed] (0,1.2) -- (3.5,1.2);
+\draw[gray, dashed] (0,2.5) -- (0.5,2.5);
+
+% Etiquetas específicas
+\node[below] at (0.5,-0.2) {0};
+\node[below] at (3.5,-0.2) {$\alpha$};
+\node[left] at (-0.2,2.5) {$QP$};
+\node[left] at (-0.2,1.2) {$h$};
+
+% Puntos importantes marcados
+\fill[cyan] (0.5,2.5) circle (2pt);
+\fill[cyan] (3.5,1.2) circle (2pt);
+
+% Asíntota horizontal sugerida
+\draw[gray, dotted] (3.5,1.2) -- (4.5,1.2);
+\end{tikzpicture}
