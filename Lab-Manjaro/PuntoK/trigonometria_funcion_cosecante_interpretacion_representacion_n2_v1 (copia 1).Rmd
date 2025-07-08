@@ -1,0 +1,431 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "pgfplots", "xcolor", "amsmath", "array", "inputenc", "fontenc"]
+    latex_engine: pdflatex
+  word_document: default
+  html_document: default
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: algebra_calculo
+    tipo: generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: numerico_variacional
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage[utf8]{inputenc}",  # Manejo de caracteres UTF-8
+  "\\usepackage[T1]{fontenc}",     # Codificación de fuentes moderna
+  "\\usepackage{pstricks}",        # PSTricks para gráficos
+  "\\usepackage{pst-plot}",        # PSTricks para funciones
+  "\\usepackage{pst-math}",        # PSTricks matemáticas
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{amsmath}",
+  "\\usepackage{array}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Función de generación de datos aleatorios
+generar_datos <- function() {
+  # Contexto geométrico fijo para coincidir con la imagen de referencia
+  contexto_seleccionado <- list(
+    punto_movil = "K",
+    punto_fijo1 = "Q",
+    punto_fijo2 = "T",
+    termino_distancia = "distancia",
+    termino_grafica = "gráfica"
+  )
+  
+  # Aleatorización de altura h
+  h <- sample(c(3, 4, 5, 6, 7, 8), 1)
+  
+  # Aleatorización de colores para las gráficas
+  colores_disponibles <- c("blue", "red", "green", "purple", "orange", "brown")
+  colores_graficas <- sample(colores_disponibles, 4, replace = FALSE)
+  
+  # Rango de ángulos (evitar 0° y 90° para evitar problemas matemáticos)
+  angulo_min <- sample(5:15, 1)
+  angulo_max <- sample(75:85, 1)
+  
+  # Aleatorizar qué opción (A, B, C, D) será la correcta
+  letras <- c("A", "B", "C", "D")
+  letra_correcta <- sample(letras, 1)
+  
+  # Crear mapeo de funciones a letras
+  funciones <- list(
+    correcta = "cosecante",    # KP = h/sen($\\alpha$) - función cosecante
+    constante = "constante",   # KP = h (línea horizontal)
+    lineal = "lineal",         # KP = función lineal decreciente
+    cuadratica = "cuadratica"  # KP = función cuadrática
+  )
+  
+  # Asignar funciones a letras aleatoriamente
+  funciones_mezcladas <- sample(names(funciones), 4)
+  mapeo_funciones <- setNames(funciones_mezcladas, letras)
+  
+  return(list(
+    punto_movil = contexto_seleccionado$punto_movil,
+    punto_fijo1 = contexto_seleccionado$punto_fijo1,
+    punto_fijo2 = contexto_seleccionado$punto_fijo2,
+    termino_distancia = contexto_seleccionado$termino_distancia,
+    termino_grafica = contexto_seleccionado$termino_grafica,
+    h = h,
+    colores_graficas = colores_graficas,
+    angulo_min = angulo_min,
+    angulo_max = angulo_max,
+    letra_correcta = letra_correcta,
+    mapeo_funciones = mapeo_funciones
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales
+punto_movil <- datos$punto_movil
+punto_fijo1 <- datos$punto_fijo1
+punto_fijo2 <- datos$punto_fijo2
+termino_distancia <- datos$termino_distancia
+termino_grafica <- datos$termino_grafica
+h <- datos$h
+colores_graficas <- datos$colores_graficas
+angulo_min <- datos$angulo_min
+angulo_max <- datos$angulo_max
+letra_correcta <- datos$letra_correcta
+mapeo_funciones <- datos$mapeo_funciones
+
+# Crear vector de solución
+solucion <- rep(0, 4)
+indice_correcto <- which(names(mapeo_funciones) == letra_correcta)
+solucion[indice_correcto] <- 1
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r generar_graficas_tikz_avanzado, echo=FALSE, results="hide"}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Sistema TikZ avanzado para gráficas de funciones trigonométricas
+# Función para generar código TikZ/pgfplots para cada tipo de función
+
+generar_tikz_funcion <- function(tipo_funcion, color, letra, h, angulo_min, angulo_max) {
+
+  # Configurar dominio y restricciones según el tipo de función
+  if (tipo_funcion == "correcta") {
+    # Función cosecante: KP = h/sen($\\alpha$) - usar deg(x) para grados en pgfplots
+    # Evitar ángulos muy cercanos a 0° y 90° para prevenir asíntotas problemáticas
+    domain_safe_min <- max(angulo_min, 10)  # Evitar ángulos muy pequeños
+    domain_safe_max <- min(angulo_max, 80)  # Evitar ángulos muy grandes
+    funcion_expr <- paste0(h, "/sin(deg(x))")  # Usar deg(x) para grados
+    y_max <- h * 4
+    domain_expr <- paste0("domain=", domain_safe_min, ":", domain_safe_max)
+    restrict_expr <- paste0("restrict y to domain=0:", y_max)  # Restaurar restricción con dominio seguro
+    titulo <- paste0("KP = ", h, "/sen($\\alpha$)")
+  } else if (tipo_funcion == "constante") {
+    # Función constante: KP = h
+    funcion_expr <- as.character(h)
+    y_max <- h * 2
+    domain_expr <- paste0("domain=", angulo_min, ":", angulo_max)
+    restrict_expr <- paste0("restrict y to domain=0:", y_max)
+    titulo <- paste0("Función constante: ", h)
+  } else if (tipo_funcion == "lineal") {
+    # Función lineal decreciente
+    pendiente <- -h / (angulo_max - angulo_min)
+    intercepto <- h * 2 - pendiente * angulo_min
+    funcion_expr <- paste0(intercepto, " + ", pendiente, "*x")
+    y_max <- h * 3
+    domain_expr <- paste0("domain=", angulo_min, ":", angulo_max)
+    restrict_expr <- paste0("restrict y to domain=0:", y_max)
+    titulo <- "Función lineal decreciente"
+  } else if (tipo_funcion == "cuadratica") {
+    # Función cuadrática con decaimiento exponencial simulado
+    # Aproximamos con una función cuadrática
+    a <- -h / ((angulo_max - angulo_min)^2)
+    b <- 2 * h / (angulo_max - angulo_min)
+    c <- h * 2
+    funcion_expr <- paste0(c, " + ", b, "*(x-", angulo_min, ") + ", a, "*(x-", angulo_min, ")^2")
+    y_max <- h * 3
+    domain_expr <- paste0("domain=", angulo_min, ":", angulo_max)
+    restrict_expr <- paste0("restrict y to domain=0:", y_max)
+    titulo <- "Función cuadrática"
+  }
+
+  # Generar código TikZ completo con pgfplots - versión corregida con deg(x)
+  if (restrict_expr == "") {
+    # Sin restricción
+    addplot_line <- paste0("\\addplot[", color, ", line width=1.5pt, ", domain_expr, "] {", funcion_expr, "};")
+  } else {
+    # Con restricción y to domain
+    addplot_line <- paste0("\\addplot[", color, ", line width=1.5pt, ", domain_expr, ", ", restrict_expr, "] {", funcion_expr, "};")
+  }
+
+  tikz_code <- paste0(
+    "\\begin{tikzpicture}[scale=0.8]\n",
+    "\\begin{axis}[\n",
+    "  width=8cm,\n",
+    "  height=6cm,\n",
+    "  xlabel={Ángulo $\\alpha$ (grados)},\n",
+    "  ylabel={", punto_movil, "P},\n",
+    "  title={Opción ", letra, "},\n",
+    "  grid=major,\n",
+    "  grid style={dashed,gray!30},\n",
+    "  xmin=", angulo_min, ",\n",
+    "  xmax=", angulo_max, ",\n",
+    "  ymin=0,\n",
+    "  ymax=", y_max, ",\n",
+    "  axis lines=left,\n",
+    "  tick align=outside,\n",
+    "  xlabel style={font=\\small},\n",
+    "  ylabel style={font=\\small},\n",
+    "  title style={font=\\small\\bfseries},\n",
+    "  samples=100,\n",
+    "  smooth,\n",
+    "  unbounded coords=jump\n",
+    "]\n",
+    addplot_line, "\n",
+    "\\end{axis}\n",
+    "\\end{tikzpicture}"
+  )
+
+  return(tikz_code)
+}
+
+# Generar códigos TikZ para las 4 opciones
+letras <- c("A", "B", "C", "D")
+tikz_graficas <- list()
+
+for (i in 1:4) {
+  letra <- letras[i]
+  tipo_funcion <- mapeo_funciones[[letra]]
+  color <- colores_graficas[i]
+
+  tikz_graficas[[letra]] <- generar_tikz_funcion(
+    tipo_funcion, color, letra, h, angulo_min, angulo_max
+  )
+}
+
+# Almacenar los códigos TikZ para uso posterior
+tikz_grafica_A <- tikz_graficas[["A"]]
+tikz_grafica_B <- tikz_graficas[["B"]]
+tikz_grafica_C <- tikz_graficas[["C"]]
+tikz_grafica_D <- tikz_graficas[["D"]]
+```
+
+Question
+========
+
+Un punto `r punto_movil` se mueve de un extremo a otro del segmento `r punto_fijo1``r punto_fijo2` que se muestra en la gráfica.
+
+```{r diagrama_geometrico, echo=FALSE, fig.width=6, fig.height=4, results="asis"}
+# Crear diagrama geométrico con TikZ - Segmento QT con punto K móvil
+cat("\\begin{center}\n")
+cat("\\begin{tikzpicture}[scale=1.2]\n")
+cat("% Segmento QT horizontal\n")
+cat("\\coordinate (Q) at (0,2);\n")
+cat("\\coordinate (T) at (6,2);\n")
+cat("\\coordinate (K) at (3.5,2);\n")
+cat("\\coordinate (P) at (3.5,0);\n")
+cat("\n")
+cat("% Dibujar el segmento QT\n")
+cat("\\draw[thick] (Q) -- (T);\n")
+cat("\n")
+cat("% Línea vertical desde K hasta P\n")
+cat("\\draw[dashed, blue] (K) -- (P);\n")
+cat("\\draw[blue] (3.3,0) -- (3.3,0.2) -- (3.7,0.2) -- (3.7,0);\n")
+cat("\n")
+cat("% Punto móvil K\n")
+cat("\\fill[red] (K) circle (3pt);\n")
+cat("\n")
+cat("% Punto P en la base\n")
+cat("\\fill[blue] (P) circle (2pt);\n")
+cat("\n")
+cat("% Línea de referencia para el ángulo\n")
+cat("\\draw[dotted] (K) -- (1.5,0);\n")
+cat("\n")
+cat("% Etiquetas\n")
+cat("\\node[above left] at (Q) {", punto_fijo1, "};\n")
+cat("\\node[above right] at (T) {", punto_fijo2, "};\n")
+cat("\\node[above] at (K) {", punto_movil, "};\n")
+cat("\\node[below] at (P) {P};\n")
+cat("\\node[right] at (3.5,1) {h};\n")
+cat("\n")
+cat("% Ángulo α\n")
+cat("\\draw[green!60!black] (1.8,0) arc (0:45:0.5);\n")
+cat("\\node[green!60!black] at (2.2,0.3) {$\\alpha$};\n")
+cat("\n")
+cat("\\node[right] at (6.5,1) {Gráfica};\n")
+cat("\n")
+cat("\\end{tikzpicture}\n")
+cat("\\end{center}\n")
+```
+
+El ángulo $\alpha$ y la medida h se relacionan mediante la razón trigonométrica sen($\alpha$) = $\frac{h}{KP}$, de donde se deduce la distancia entre K y P como KP = $\frac{h}{\text{sen}(\alpha)}$ o KP = h $\times$ csc($\alpha$).
+
+¿Cuál es la `r termino_grafica` que muestra las distancias KP, cada vez que K se mueve sobre el segmento `r punto_fijo1``r punto_fijo2`?
+
+```{r mostrar_opciones_tikz, echo=FALSE, results="asis"}
+# Mostrar las 4 opciones generadas con TikZ/pgfplots
+# SOLUCIÓN CRÍTICA BASADA EN REFERENCIAS WEB:
+# Stack Overflow (https://stackoverflow.com/questions/67845020/) confirma que
+# include_tikz() con pgfplots requiere packages = "pgfplots" como STRING ÚNICO
+# NO usar vectores c("tikz", "pgfplots", ...) - causa error de compilación LaTeX
+# El paquete tikz se incluye automáticamente, pgfplots es suficiente
+
+# Mostrar opción A
+include_tikz(tikz_grafica_A,
+             name = "grafica_opcion_A",
+             markup = "markdown",
+             format = typ,
+             packages = "pgfplots",
+             width = "8cm")
+
+cat("\\vspace{0.5cm}")
+
+# Mostrar opción B
+include_tikz(tikz_grafica_B,
+             name = "grafica_opcion_B",
+             markup = "markdown",
+             format = typ,
+             packages = "pgfplots",
+             width = "8cm")
+
+cat("\\vspace{0.5cm}")
+
+# Mostrar opción C
+include_tikz(tikz_grafica_C,
+             name = "grafica_opcion_C",
+             markup = "markdown",
+             format = typ,
+             packages = "pgfplots",
+             width = "8cm")
+
+cat("\\vspace{0.5cm}")
+
+# Mostrar opción D
+include_tikz(tikz_grafica_D,
+             name = "grafica_opcion_D",
+             markup = "markdown",
+             format = typ,
+             packages = "pgfplots",
+             width = "8cm")
+```
+
+Solution
+========
+
+Para resolver este problema, debemos analizar la función KP = h/sen($\alpha$).
+
+**Análisis matemático:**
+
+La función KP = h/sen($\alpha$) = h $\cdot$ csc($\alpha$) es la función cosecante multiplicada por la constante h.
+
+**Características de la función cosecante:**
+
+1. **Dominio:** $\alpha \in (0°, 90°)$ en este contexto geométrico
+2. **Comportamiento:**
+   - Cuando $\alpha \to 0°$: sen($\alpha$) $\to 0$, por lo tanto KP $\to \infty$
+   - Cuando $\alpha \to 90°$: sen($\alpha$) $\to 1$, por lo tanto KP $\to h$
+   - La función es estrictamente decreciente en el intervalo (0°, 90°)
+
+**Verificación con valores específicos:**
+
+- Para $\alpha$ = 30°: KP = h/sen(30°) = h/0.5 = 2h = `r 2*h`
+- Para $\alpha$ = 45°: KP = h/sen(45°) = h/($\sqrt{2}$/2) $\approx$ 1.41h $\approx$ `r round(1.41*h, 1)`
+- Para $\alpha$ = 60°: KP = h/sen(60°) = h/($\sqrt{3}$/2) $\approx$ 1.15h $\approx$ `r round(1.15*h, 1)`
+
+La `r termino_grafica` correcta debe mostrar:
+- Una curva que decrece de manera no lineal
+- Valores muy altos cuando $\alpha$ se acerca a 0°
+- Un valor mínimo de h cuando $\alpha$ se acerca a 90°
+- Forma característica de la función cosecante
+
+```{r identificar_respuesta, echo=FALSE, results="asis"}
+# Identificar cuál opción es la correcta
+cat("**Análisis de las opciones:**")
+cat("")
+
+for(letra in c("A", "B", "C", "D")) {
+  tipo <- mapeo_funciones[[letra]]
+  if(tipo == "correcta") {
+    cat("- **Opción", letra, ":** Muestra la función cosecante KP = h/sen($\\alpha$) - **CORRECTA**")
+  } else if(tipo == "constante") {
+    cat("- **Opción", letra, ":** Muestra una función constante - Incorrecta")
+  } else if(tipo == "lineal") {
+    cat("- **Opción", letra, ":** Muestra una función lineal - Incorrecta")
+  } else if(tipo == "cuadratica") {
+    cat("- **Opción", letra, ":** Muestra una función cuadrática - Incorrecta")
+  }
+  cat("")
+}
+
+cat("**Respuesta correcta:** Opción", letra_correcta)
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exname: trigonometria_funcion_cosecante_interpretacion_representacion_n2_v1
+exshuffle: TRUE
