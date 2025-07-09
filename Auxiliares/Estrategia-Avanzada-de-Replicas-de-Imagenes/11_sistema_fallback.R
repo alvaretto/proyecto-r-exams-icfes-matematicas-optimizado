@@ -3,33 +3,38 @@
 # Estrategia Robusta - Proyecto ICFES R-exams
 # ============================================================================
 
-# Cargar todos los módulos del sistema
-source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/modulo_analisis_automatico_exacto.R")
-source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/modulo_validacion_cuantitativa.R")
-source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/agente_graficador_exacto.R")
-source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/generador_tikz_qtikz_compatible.R")
-source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/validador_qtikz_compatible.R")
+# Cargar todos los módulos del sistema (con nombres actualizados)
+source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/07_modulo_analisis_automatico_exacto.R")
+source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/08_modulo_validacion_cuantitativa.R")
+source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/09_agente_graficador_exacto.R")
+source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/10_generador_tikz_qtikz_compatible.R")
+source("Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/11_validador_qtikz_compatible.R")
 
 #' FUNCIÓN PRINCIPAL: Sistema de Réplica Exacta Integrado
-#' 
+#'
 #' Esta función integra el sistema condicional automático existente con las
 #' mejoras para garantizar réplica exacta de imágenes matemáticas.
-#' 
+#' LECCIÓN APRENDIDA: Usar SIEMPRE este sistema en lugar de procesos manuales.
+#'
 #' @param imagen_path Ruta a la imagen PNG a replicar
 #' @param umbral_exactitud Umbral mínimo para considerar "exacto" (default: 0.99)
 #' @param generar_ejercicio_completo Si generar ejercicio R-exams completo (default: FALSE)
 #' @param configuracion_icfes Lista con configuración ICFES (competencia, nivel, etc.)
+#' @param validacion_humana Si incluir puntos de validación humana (default: TRUE)
 #' @return Lista con TikZ exacto y métricas de fidelidad
-sistema_replica_exacta <- function(imagen_path, 
+sistema_replica_exacta <- function(imagen_path,
                                   umbral_exactitud = 0.99,
                                   generar_ejercicio_completo = FALSE,
-                                  configuracion_icfes = NULL) {
+                                  configuracion_icfes = NULL,
+                                  validacion_humana = TRUE) {
   
   cat("🚀 SISTEMA DE RÉPLICA EXACTA DE IMÁGENES MATEMÁTICAS\n")
   cat("===================================================\n")
+  cat("💡 LECCIÓN APRENDIDA: Usar sistema automático en lugar de proceso manual\n")
   cat(sprintf("📁 Imagen: %s\n", basename(imagen_path)))
   cat(sprintf("🎯 Umbral exactitud: %.1f%%\n", umbral_exactitud * 100))
-  cat(sprintf("📝 Ejercicio completo: %s\n\n", if(generar_ejercicio_completo) "SÍ" else "NO"))
+  cat(sprintf("📝 Ejercicio completo: %s\n", if(generar_ejercicio_completo) "SÍ" else "NO"))
+  cat(sprintf("👤 Validación humana: %s\n\n", if(validacion_humana) "SÍ" else "NO"))
   
   # Verificar que la imagen existe
   if (!file.exists(imagen_path)) {
@@ -40,13 +45,13 @@ sistema_replica_exacta <- function(imagen_path,
   cat("🔍 ETAPA 1: Análisis automático y decisión de flujo\n")
   resultado_analisis <- analizar_y_decidir_flujo(imagen_path)
   
-  # ETAPA 2: APLICAR FLUJO APROPIADO CON MEJORAS
+  # ETAPA 2: APLICAR FLUJO APROPIADO CON MEJORAS Y VALIDACIÓN HUMANA
   if (resultado_analisis$flujo_recomendado == "FLUJO_B_EXACTO") {
     cat("🎯 ETAPA 2: Aplicando FLUJO B con Agente Graficador Exacto\n")
-    resultado_replicacion <- aplicar_flujo_b_exacto(imagen_path, umbral_exactitud)
+    resultado_replicacion <- aplicar_flujo_b_exacto(imagen_path, umbral_exactitud, validacion_humana)
   } else {
     cat("📋 ETAPA 2: Aplicando FLUJO A mejorado\n")
-    resultado_replicacion <- aplicar_flujo_a_mejorado(imagen_path, umbral_exactitud)
+    resultado_replicacion <- aplicar_flujo_a_mejorado(imagen_path, umbral_exactitud, validacion_humana)
   }
   
   # ETAPA 3: VALIDACIÓN FINAL INTEGRADA CON QTIKZ/KTIKZ
@@ -138,44 +143,90 @@ determinar_flujo_exacto <- function(caracteristicas) {
 }
 
 #' Aplicar FLUJO B con Agente Graficador Exacto
-aplicar_flujo_b_exacto <- function(imagen_path, umbral_exactitud) {
+#' MEJORA: Incluye puntos de validación humana para evitar iteraciones innecesarias
+aplicar_flujo_b_exacto <- function(imagen_path, umbral_exactitud, validacion_humana = TRUE) {
   
   cat("🎯 Activando Agente Graficador Exacto...\n")
-  
+
+  # MEJORA: Punto de validación humana temprana
+  if (validacion_humana) {
+    cat("👤 PUNTO DE VALIDACIÓN HUMANA: Revisando análisis inicial...\n")
+    cat("📋 ¿El análisis automático es correcto? (Presiona Enter para continuar o Ctrl+C para ajustar)\n")
+    readline()
+  }
+
   # Usar el agente graficador exacto desarrollado
   resultado_agente <- agente_graficador_exacto(
     imagen_original = imagen_path,
     umbral_exactitud = umbral_exactitud,
-    max_iteraciones = 10
+    max_iteraciones = 10,
+    validacion_humana = validacion_humana
   )
-  
-  # Verificar que se alcanzó la exactitud requerida
+
+  # MEJORA: Validación humana antes de refinamiento adicional
   if (!resultado_agente$exactitud_garantizada) {
-    cat("⚠️ Advertencia: No se alcanzó exactitud completa. Aplicando refinamiento adicional...\n")
-    resultado_agente <- aplicar_refinamiento_adicional(resultado_agente, imagen_path)
+    if (validacion_humana) {
+      cat("👤 PUNTO DE VALIDACIÓN HUMANA: ¿Aplicar refinamiento adicional? (s/n): ")
+      respuesta <- readline()
+      if (tolower(respuesta) == "s") {
+        cat("⚠️ Aplicando refinamiento adicional según indicación humana...\n")
+        resultado_agente <- aplicar_refinamiento_adicional(resultado_agente, imagen_path)
+      }
+    } else {
+      cat("⚠️ Advertencia: No se alcanzó exactitud completa. Aplicando refinamiento adicional...\n")
+      resultado_agente <- aplicar_refinamiento_adicional(resultado_agente, imagen_path)
+    }
   }
   
   return(resultado_agente)
 }
 
 #' Aplicar FLUJO A mejorado para contenido simple
-aplicar_flujo_a_mejorado <- function(imagen_path, umbral_exactitud) {
+#' MEJORA: Incluye validación humana para evitar errores de interpretación
+aplicar_flujo_a_mejorado <- function(imagen_path, umbral_exactitud, validacion_humana = TRUE) {
   
   cat("📋 Aplicando proceso estándar mejorado...\n")
-  
+
+  # MEJORA: Validación humana temprana para contenido simple
+  if (validacion_humana) {
+    cat("👤 VALIDACIÓN HUMANA: ¿Las características detectadas son correctas?\n")
+    cat("📋 Presiona Enter para continuar o Ctrl+C para revisar manualmente\n")
+    readline()
+  }
+
   # Análisis básico para contenido simple
   caracteristicas_basicas <- analizar_imagen_matematica_exacta(imagen_path)
-  
+
   # Generar TikZ usando templates básicos pero con precisión mejorada
   tikz_basico <- generar_tikz_basico_mejorado(caracteristicas_basicas)
-  
+
+  # MEJORA: Mostrar resultado intermedio para validación humana
+  if (validacion_humana) {
+    cat("👤 VALIDACIÓN INTERMEDIA: TikZ básico generado\n")
+    cat("📋 ¿Continuar con validación automática? (Enter) o ¿Ajustar manualmente? (m): ")
+    respuesta <- readline()
+    if (tolower(respuesta) == "m") {
+      cat("🔧 Modo manual activado - revisar código TikZ generado\n")
+    }
+  }
+
   # Validar y refinar si es necesario
   validacion <- validar_fidelidad_exacta(imagen_path, tikz_basico, umbral_exactitud)
-  
+
   if (validacion$fidelidad_total < umbral_exactitud) {
-    cat("🔄 Aplicando refinamiento básico...\n")
-    tikz_basico <- refinar_tikz_basico(tikz_basico, caracteristicas_basicas, validacion)
-    validacion <- validar_fidelidad_exacta(imagen_path, tikz_basico, umbral_exactitud)
+    if (validacion_humana) {
+      cat("👤 VALIDACIÓN: Fidelidad insuficiente. ¿Aplicar refinamiento? (s/n): ")
+      respuesta <- readline()
+      if (tolower(respuesta) == "s") {
+        cat("🔄 Aplicando refinamiento básico según indicación humana...\n")
+        tikz_basico <- refinar_tikz_basico(tikz_basico, caracteristicas_basicas, validacion)
+        validacion <- validar_fidelidad_exacta(imagen_path, tikz_basico, umbral_exactitud)
+      }
+    } else {
+      cat("🔄 Aplicando refinamiento básico...\n")
+      tikz_basico <- refinar_tikz_basico(tikz_basico, caracteristicas_basicas, validacion)
+      validacion <- validar_fidelidad_exacta(imagen_path, tikz_basico, umbral_exactitud)
+    }
   }
   
   return(list(

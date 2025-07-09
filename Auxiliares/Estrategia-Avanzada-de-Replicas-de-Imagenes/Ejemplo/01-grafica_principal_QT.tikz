@@ -1,0 +1,44 @@
+﻿% GRÁFICA PRINCIPAL DEL ENUNCIADO - Compatible Qtikz/Ktikz
+% Diagrama geométrico del segmento QT con punto K móvil
+% Réplica exacta de la imagen original
+
+\begin{tikzpicture}[scale=1.2]
+
+% Segmento horizontal QT (ampliado)
+\draw[thick] (0,0) -- (6,0);
+
+% Puntos principales (KT ampliado)
+\fill[black] (0,0) circle (2pt) node[above] {$Q$};
+\fill[black] (6,0) circle (2pt) node[above] {$T$};
+\fill[cyan] (3.5,0) circle (2pt) node[above] {$K$};
+
+% Punto P DEBAJO del segmento (en la misma vertical que T)
+\fill[black] (6,-1.0) circle (2pt) node[below] {$P$};
+
+% Línea punteada KP (de K hacia P abajo) - más gruesa y más larga
+\draw[very thick, dashed] (3.5,0) -- (6,-1.0);
+
+% Línea punteada vertical de P hacia ARRIBA hasta el segmento (hasta T)
+\draw[thick, dashed] (6,-1.0) -- (6,0);
+
+% Ángulo α en el punto K (ajustado para P en vertical de T)
+\draw[cyan, thick] (3.7,0) arc (0:-21.80:0.2);
+\node[black] at (4.1,-0.1) {$\alpha$};
+
+% Cuadrado azul en T (ángulo recto) - en la extrema derecha
+\fill[cyan] (5.8,-0.12) rectangle (6,0);
+\draw[cyan, thick] (5.8,-0.12) rectangle (6,0);
+
+% Medida h (altura vertical desde P hacia arriba) - más cerca de la línea punteada
+\node[right] at (6.05,-0.5) {$h$};
+
+% Etiqueta "Gráfica" (ajustada para segmento ampliado)
+\node[right] at (6.5,0) {\textbf{Gráfica}};
+
+% Pequeña marca donde la línea punteada toca QT (en T)
+\fill (6,0) circle (1pt);
+
+% Relación trigonométrica (opcional, comentada para simplicidad)
+% \node[above] at (2.5,1) {$\sin(\alpha) = \frac{h}{KP}$};
+
+\end{tikzpicture}

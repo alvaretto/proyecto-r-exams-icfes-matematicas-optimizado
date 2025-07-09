@@ -1,4 +1,4 @@
-% Diagrama Geométrico Principal (Compatible Qtikz/Ktikz)
+﻿% Diagrama Geométrico Principal (Compatible Qtikz/Ktikz)
 % Problema: Un punto K se mueve de un extremo a otro del segmento QT
 \begin{tikzpicture}[scale=1.2]
 % Segmento principal QT
@@ -40,8 +40,8 @@
 \node[above] at (3,3) {$\sin(\alpha) = \frac{h}{KP}$};
 
 % Indicación del movimiento de K
-\draw[blue, <->] (1,0.5) -- (5,0.5);
-\node[blue, above] at (3,0.7) {$K$ se mueve sobre $QT$};
+%\draw[blue, <->] (1,0.5) -- (5,0.5);
+%\node[blue, above] at (3,0.7) {$K$ se mueve sobre $QT$};
 
 % Marco del gráfico
 \node[above right] at (5.5,2.5) {\textbf{Gráfica}};
