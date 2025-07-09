@@ -1,0 +1,75 @@
+\documentclass[border=2mm]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+% COTANGENTE CALCULADA CON PYTHON - Coordenadas matemáticamente exactas
+% Función: cot(x) = 1/tan(x) = cos(x)/sin(x)
+% Porción específica con discontinuidades en π/2, π, 3π/2
+
+\begin{tikzpicture}[scale=1.0]
+\begin{axis}[
+    xlabel={Ángulo $\alpha$},
+    ylabel={Distancia PK},
+    xmin=0, xmax=4.5,
+    ymin=0, ymax=5,
+    axis lines=left,
+    xtick=\empty,
+    ytick=\empty,
+    clip=false
+]
+
+% Segmento 1: Cotangente desde 0.1 hasta π/2-0.1 (≈1.47)
+% Coordenadas calculadas: cot(x) = 1/tan(x)
+\addplot[cyan, very thick, smooth] coordinates {
+    (0.100,9.967) (0.150,6.617) (0.200,4.933) (0.250,3.916) (0.300,3.233)
+    (0.350,2.747) (0.400,2.365) (0.450,2.070) (0.500,1.830) (0.550,1.632)
+    (0.600,1.462) (0.650,1.315) (0.700,1.187) (0.750,1.073) (0.800,0.972)
+    (0.850,0.881) (0.900,0.794) (0.950,0.713) (1.000,0.642) (1.050,0.577)
+    (1.100,0.515) (1.150,0.456) (1.200,0.398) (1.250,0.342) (1.300,0.286)
+    (1.350,0.230) (1.400,0.173) (1.450,0.115) (1.470,0.087)
+};
+
+% Segmento 2: Cotangente desde π/2+0.1 (≈1.67) hasta π-0.1 (≈3.04)
+% Después de la discontinuidad, valores negativos
+\addplot[cyan, very thick, smooth] coordinates {
+    (1.671,-12.706) (1.700,-8.016) (1.750,-5.759) (1.800,-4.286) (1.850,-3.271)
+    (1.900,-2.504) (1.950,-1.881) (2.000,-1.373) (2.050,-0.949) (2.100,-0.593)
+    (2.150,-0.293) (2.200,-0.040) (2.250,0.173) (2.300,0.356) (2.350,0.515)
+    (2.400,0.656) (2.450,0.781) (2.500,0.894) (2.550,0.996) (2.600,1.091)
+    (2.650,1.178) (2.700,1.260) (2.750,1.337) (2.800,1.410) (2.850,1.480)
+    (2.900,1.548) (2.950,1.614) (3.000,1.679) (3.041,1.732)
+};
+
+% Segmento 3: Cotangente desde π+0.1 (≈3.24) hasta 4.4
+% Continúa el patrón después de la segunda discontinuidad
+\addplot[cyan, very thick, smooth] coordinates {
+    (3.242,12.706) (3.300,8.016) (3.350,5.759) (3.400,4.286) (3.450,3.271)
+    (3.500,2.504) (3.550,1.881) (3.600,1.373) (3.650,0.949) (3.700,0.593)
+    (3.750,0.293) (3.800,0.040) (3.850,-0.173) (3.900,-0.356) (3.950,-0.515)
+    (4.000,-0.656) (4.050,-0.781) (4.100,-0.894) (4.150,-0.996) (4.200,-1.091)
+    (4.250,-1.178) (4.300,-1.260) (4.350,-1.337) (4.400,-1.410)
+};
+
+% Líneas punteadas verticales (posiciones observadas en imagen original)
+\draw[dashed, black, thick] (axis cs:1.2,0) -- (axis cs:1.2,5) 
+    node[left, black, yshift=8pt] {\footnotesize $QP$};
+\draw[dashed, black, thick] (axis cs:2.8,0) -- (axis cs:2.8,5) 
+    node[left, black, yshift=8pt] {\footnotesize $I_1$};
+
+% Flecha vertical cyan (elemento distintivo de la imagen original)
+\draw[cyan, very thick, -stealth] (axis cs:0.25,4.2) -- (axis cs:0.25,4.8);
+
+% Punto destacado en la curva (observado en imagen)
+\addplot[cyan, mark=*, mark size=2pt, only marks] coordinates {(2.8,1.410)};
+
+% Asíntotas verticales sutiles en las discontinuidades
+\draw[gray!30, very thin] (axis cs:1.571,0) -- (axis cs:1.571,5);  % π/2
+\draw[gray!30, very thin] (axis cs:3.142,0) -- (axis cs:3.142,5);  % π
+
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
