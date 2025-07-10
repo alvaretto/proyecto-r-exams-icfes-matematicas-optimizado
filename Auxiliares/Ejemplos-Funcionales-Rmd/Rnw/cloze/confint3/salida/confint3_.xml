@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/confint3_/Exercise 1</text>
+</category>
+</question>
+
+
+<question type="cloze">
+<name>
+<text> Q1 : confint3 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Se sospecha que un proveedor sistemáticamente llena por debajo del nivel los bidones de detergente de 5 l.
+Se asume que los volúmenes de llenado siguen una distribución normal. Una pequeña muestra de <span class="math inline">\(11\)</span>
+bidones se mide con exactitud. Esto muestra que los bidones contienen en promedio
+<span class="math inline">\(4963.8\)</span> ml. La varianza muestral <span class="math inline">\(s^2_{n-1}\)</span> es igual a <span class="math inline">\(1479.2\)</span>.</p>
+<p>Determine un intervalo de confianza del <span class="math inline">\(99\%\)</span> para el contenido promedio de
+un bidón (en ml).</p>
+<p>¿Cuál es el límite inferior de confianza? {1:NUMERICAL:=4927.048:0.1~%50%4933.93:0.1#Aproximación normal en lugar de solución t exacta.}</p>
+<p>¿Cuál es el límite superior de confianza? {1:NUMERICAL:=5000.552:0.1~%50%4993.67:0.1#Aproximación normal en lugar de solución t exacta.}</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>El intervalo de confianza del <span class="math inline">\(99\%\)</span> para el contenido promedio <span class="math inline">\(\mu\)</span>
+en ml viene dado por:
+<span class="math display">\[\begin{aligned}
+&amp;   &amp; \left[\bar{y} \, - \, t_{n-1;0.995}\sqrt{\frac{s_{n-1}^2}{n}}, \;
+  \bar{y} \, + \, t_{n-1;0.995}\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+&amp; = &amp; \left[ 4963.8 \, - \, 3.1693\sqrt{\frac{1479.2}{11}}, \;
+             4963.8 \, + \, 3.1693\sqrt{\frac{1479.2}{11}}\right] \\
+&amp; = &amp; \left[4927.048, \, 5000.552\right].
+\end{aligned}\]</span></p>
+<ul>
+<li> El límite inferior de confianza es <span class="math inline">\(4927.048\)</span>. </li>
+<li> El límite superior de confianza es <span class="math inline">\(5000.552\)</span>. </li>
+</ul>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>2</defaultgrade>
+</question>
+
+</quiz>

@@ -1,0 +1,72 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable,eurosym}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+%% nuevos entornos
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\extol}[1]{\def\@extol{#1}}
+\newcommand{\exclozetype}[1]{\def\@exclozetype{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+
+%% párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\input{automaton-concordance}
+
+\begin{enumerate}
+
+
+
+\begin{question}
+
+Considere el siguiente autómata con estado inicial A y estado de aceptación A:
+
+\includegraphics[width=5cm]{automaton.png}
+
+¿Cuáles de las siguientes secuencias son aceptadas?
+
+\begin{answerlist}
+  \item 1011
+  \item 11110
+  \item 10110
+  \item 010110
+  \item 0101
+\end{answerlist}
+\end{question}
+
+
+\begin{solution}
+
+El autómata dado acepta cadenas de entrada que consisten en un número
+par de unos y un número
+par de ceros.
+
+\begin{answerlist}
+  \item No aceptada
+  \item No aceptada
+  \item No aceptada
+  \item No aceptada
+  \item Aceptada
+\end{answerlist}
+\end{solution}
+
+
+\exname{Autómata}
+\extype{mchoice}
+\exsolution{00001}
+
+\end{enumerate}
+\end{document}
