@@ -38,21 +38,21 @@
 }
 </style>
 <p>
-<p>¿Cuál es la derivada de <span class="math inline">\(f(x) = x^{4} e^{3.4x}\)</span>, evaluada en <span class="math inline">\(x = 0.88\)</span>?</p>
+<p>¿Cuál es la derivada de <span class="math inline">\(f(x) = x^{2} e^{2.1x}\)</span>, evaluada en <span class="math inline">\(x = 0.62\)</span>?</p>
 </p>]]></text>
 </questiontext>
 <generalfeedback format="html">
 <text><![CDATA[<p>
-<p>Usando la regla del producto para <span class="math inline">\(f(x) = g(x) \cdot h(x)\)</span>, donde <span class="math inline">\(g(x) := x^{4}\)</span> y <span class="math inline">\(h(x) := e^{3.4x}\)</span>, obtenemos
+<p>Usando la regla del producto para <span class="math inline">\(f(x) = g(x) \cdot h(x)\)</span>, donde <span class="math inline">\(g(x) := x^{2}\)</span> y <span class="math inline">\(h(x) := e^{2.1x}\)</span>, obtenemos
 <span class="math display">\[\begin{aligned}
 f&#39;(x) &amp; = &amp; [g(x) \cdot h(x)]&#39; = g&#39;(x) \cdot h(x) + g(x) \cdot h&#39;(x) \\
-      &amp; = &amp; 4 x^{4 - 1} \cdot e^{3.4x} + x^{4} \cdot e^{3.4x} \cdot 3.4 \\
-      &amp; = &amp; e^{3.4x} \cdot(4 x^3 + 3.4 x^{4}) \\
-      &amp; = &amp; e^{3.4x} \cdot x^3 \cdot (4 + 3.4x).
+      &amp; = &amp; 2 x^{2 - 1} \cdot e^{2.1x} + x^{2} \cdot e^{2.1x} \cdot 2.1 \\
+      &amp; = &amp; e^{2.1x} \cdot(2 x^1 + 2.1 x^{2}) \\
+      &amp; = &amp; e^{2.1x} \cdot x^1 \cdot (2 + 2.1x).
 \end{aligned}\]</span>
-Evaluada en <span class="math inline">\(x = 0.88\)</span>, la respuesta es
-<span class="math display">\[e^{3.4\cdot 0.88} \cdot 0.88^3 \cdot (4 + 3.4\cdot 0.88) = 94.942033.\]</span>
-Por lo tanto, redondeando a dos dígitos tenemos <span class="math inline">\(f&#39;(0.88) = 94.94\)</span>.</p>
+Evaluada en <span class="math inline">\(x = 0.62\)</span>, la respuesta es
+<span class="math display">\[e^{2.1\cdot 0.62} \cdot 0.62^1 \cdot (2 + 2.1\cdot 0.62) = 7.52697.\]</span>
+Por lo tanto, redondeando a dos dígitos tenemos <span class="math inline">\(f&#39;(0.62) = 7.53\)</span>.</p>
 </p>]]></text>
 </generalfeedback>
 <penalty>0</penalty>
@@ -62,7 +62,7 @@ Por lo tanto, redondeando a dos dígitos tenemos <span class="math inline">\(f&#
 <answernumbering>ABCD</answernumbering>
 <answer fraction="0" format="html">
 <text><![CDATA[<p>
-<span class="math inline">\(86.54\)</span>
+<span class="math inline">\(5.36\)</span>
 </p>]]></text>
 <feedback format="html">
 <text><![CDATA[<p>
@@ -72,7 +72,17 @@ Falso
 </answer>
 <answer fraction="0" format="html">
 <text><![CDATA[<p>
-<span class="math inline">\(54.31\)</span>
+<span class="math inline">\(4.34\)</span>
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Falso
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+<span class="math inline">\(4.56\)</span>
 </p>]]></text>
 <feedback format="html">
 <text><![CDATA[<p>
@@ -82,7 +92,7 @@ Falso
 </answer>
 <answer fraction="100" format="html">
 <text><![CDATA[<p>
-<span class="math inline">\(94.94\)</span>
+<span class="math inline">\(7.53\)</span>
 </p>]]></text>
 <feedback format="html">
 <text><![CDATA[<p>
@@ -92,17 +102,7 @@ Verdadero
 </answer>
 <answer fraction="0" format="html">
 <text><![CDATA[<p>
-<span class="math inline">\(54.09\)</span>
-</p>]]></text>
-<feedback format="html">
-<text><![CDATA[<p>
-Falso
-</p>]]></text>
-</feedback>
-</answer>
-<answer fraction="0" format="html">
-<text><![CDATA[<p>
-<span class="math inline">\(66.26\)</span>
+<span class="math inline">\(5.27\)</span>
 </p>]]></text>
 <feedback format="html">
 <text><![CDATA[<p>
