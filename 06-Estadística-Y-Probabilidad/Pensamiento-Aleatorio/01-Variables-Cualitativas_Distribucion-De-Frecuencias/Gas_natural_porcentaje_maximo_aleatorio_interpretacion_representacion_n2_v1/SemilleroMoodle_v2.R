@@ -2,8 +2,8 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "ortocentro_alturas_triangulo_geometria_n2_v1.Rmd"
-copias <- 5
+archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_v1.Rmd"
+copias <- 300
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
