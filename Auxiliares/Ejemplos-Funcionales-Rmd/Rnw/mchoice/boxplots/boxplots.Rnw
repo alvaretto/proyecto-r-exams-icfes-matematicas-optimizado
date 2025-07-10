@@ -1,17 +1,34 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
 <<echo=FALSE, results=hide>>=
+library(exams)
 ok <- FALSE
 while(!ok) {
-## convenience functions
+## funciones auxiliares
 SK <- function(x) diff(diff(fivenum(x)[2:4]))/diff(fivenum(x)[c(2, 4)])
 trob <- function(a, b)
   (median(a) - median(b))/sqrt(var(a)/length(a) + var(b)/length(b))
 
-## DATA GENERATION
-## dgp for one sample
+## GENERACIÓN DE DATOS
+## dgp para una muestra
 dgp <- function(location = 0, scale = 1, skewed = FALSE, outlier = NULL,
   n = 10, amount = 0.1)
 {
-  ## basic intervals from which equal amounts of observations are drawn
+  ## intervalos básicos de los cuales se extraen cantidades iguales de observaciones
   qq <- if (skewed) c(0, 2, 2.2, 6, 10) else c(0, 3, 5, 7, 10)
   sim <- function(x) {
     rval <- NULL
@@ -20,7 +37,7 @@ dgp <- function(location = 0, scale = 1, skewed = FALSE, outlier = NULL,
     rval <- rval/4
     rval
   }
-  ## draw under restrictions about IQR and SK
+  ## extraer bajo restricciones sobre IQR y SK
   rval <- sim(qq)
   if (skewed) {
     while(IQR(rval) > 1.15 | IQR(rval) < 0.85 | abs(SK(rval)) < 0.7) rval <- sim(qq)
@@ -28,19 +45,19 @@ dgp <- function(location = 0, scale = 1, skewed = FALSE, outlier = NULL,
     while(IQR(rval) > 1.15 | IQR(rval) < 0.85 |abs(SK(rval)) > 0.15) rval <- sim(qq)
   }
 
-  ## raw values (location = 0, scale = 1)
+  ## valores brutos (location = 0, scale = 1)
   rval <- rval - ifelse(skewed, 0.55, 1.25)
 
-  ## add outliers
+  ## añadir valores atípicos
   rval <- c(rval, outlier)
-  
-  ## scale and shift
+
+  ## escalar y desplazar
   rval <- rval * scale + location
 
   return(rval)
 }
 
-## generate random parameters for dgp()
+## generar parámetros aleatorios para dgp()
 scale <- sample(c(1, sample(c(1, 3), 1))) * runif(1, min = 0.5, max = 10) * sample(c(-1, 1), 1)
 location <- sample(c(0, sample(c(0, 2), 1))) * scale + runif(1, min = -50, max = 50)
 skewed <- if (runif(1) < 2/3) c(FALSE, FALSE) else sample(c(TRUE, sample(c(TRUE, FALSE), 1)))
@@ -62,7 +79,7 @@ if (runif(1) < 2/3) {
   }
 }
 
-## call dgp under certain constraints
+## llamar a dgp bajo ciertas restricciones
 A <- dgp(location = location[1], scale = scale[1], skewed = skewed[1], outlier = outlier[[1]],
   n = sample(8:12, 1))
 B <- dgp(location = location[2], scale = scale[2], skewed = skewed[2], outlier = outlier[[2]],
@@ -73,61 +90,61 @@ while((length(unique(location)) < 2 & abs(trob(A, B)) > 0.4) | (abs(SK(A)) > 0.1
   B <- dgp(location = location[2], scale = scale[2], skewed = skewed[2], outlier = outlier[[2]],
     n = sample(8:12, 1))
 }
-SK_A <- ifelse(abs(SK(A)) < 0.2, "symmetric", ifelse(SK(A) >= 0.2, "right-skewed", "left-skewed"))
-SK_B <- ifelse(abs(SK(B)) < 0.2, "symmetric", ifelse(SK(B) >= 0.2, "right-skewed", "left-skewed"))
+SK_A <- ifelse(abs(SK(A)) < 0.2, "simétrica", ifelse(SK(A) >= 0.2, "sesgada a la derecha", "sesgada a la izquierda"))
+SK_B <- ifelse(abs(SK(B)) < 0.2, "simétrica", ifelse(SK(B) >= 0.2, "sesgada a la derecha", "sesgada a la izquierda"))
 
-## QUESTION/ANSWER GENERATION
+## GENERACIÓN DE PREGUNTAS/RESPUESTAS
 questions <- character(5)
 solutions <- logical(5)
 explanations <- character(5)
 
-questions[1] <- "The location of both distributions is about the same."
+questions[1] <- "La ubicación de ambas distribuciones es aproximadamente la misma."
 solutions[1] <- abs(trob(A, B)) < 0.5
-explanations[1] <- if (solutions[1]) "Both distributions have a similar location." else
-  paste("Distribution ", c("A", "B")[(median(A) < median(B)) + 1],
-    " has on average higher values than distribution ", 
+explanations[1] <- if (solutions[1]) "Ambas distribuciones tienen una ubicación similar." else
+  paste("La distribución ", c("A", "B")[(median(A) < median(B)) + 1],
+    " tiene en promedio valores más altos que la distribución ",
     c("A", "B")[(median(A) >= median(B)) + 1], ".", sep = "")
 
-outlier <- length(c(boxplot.stats(A)$out, boxplot.stats(B)$out)) > 0 ## recompute to match the display for sure
-questions[2] <- "Both distributions contain no outliers."
+outlier <- length(c(boxplot.stats(A)$out, boxplot.stats(B)$out)) > 0 ## recalcular para que coincida con la visualización
+questions[2] <- "Ambas distribuciones no contienen valores atípicos."
 solutions[2] <- !outlier
 explanations[2] <- if (solutions[2])
-  "Both distributions have no observations which deviate more than 1.5 times the interquartile range from the box." else "There are observations which deviate more than 1.5 times the interquartile range from the box."
+  "Ambas distribuciones no tienen observaciones que se desvíen más de 1.5 veces el rango intercuartílico desde la caja." else "Hay observaciones que se desvían más de 1.5 veces el rango intercuartílico desde la caja."
 
-questions[3] <- "The spread in sample A is clearly bigger than in B."
+questions[3] <- "La dispersión en la muestra A es claramente mayor que en B."
 solutions[3] <- IQR(A)/IQR(B) > 1.5
-explanations[3] <- paste("The interquartile range in sample A is",
-  ifelse(solutions[3], "", "\\\\textit{not}"), "clearly bigger than in B.")
+explanations[3] <- paste("El rango intercuartílico en la muestra A es",
+  ifelse(solutions[3], "", "\\\\textit{no}"), "claramente mayor que en B.")
 
-questions[4] <- "The skewness of both samples is similar."
+questions[4] <- "La asimetría de ambas muestras es similar."
 solutions[4] <- SK_A == SK_B
-explanations[4] <- if (solutions[4]) paste("The skewness of both distributions is similar, both are",
-    ifelse(abs(SK(A)) < 0.2, "about symmetric.", ifelse(SK(A) >= 0.2, "right-skewed.", "left-skewed."))) else
-    paste("The skewness of both distributions is different. Sample A is",
-    ifelse(abs(SK(A)) < 0.2, "about symmetric.", ifelse(SK(A) >= 0.2, "right-skewed.", "left-skewed.")),
-    "Sample B is", ifelse(abs(SK(B)) < 0.2, "about symmetric.", ifelse(SK(B) >= 0.2, "right-skewed.", "left-skewed.")))
+explanations[4] <- if (solutions[4]) paste("La asimetría de ambas distribuciones es similar, ambas son",
+    ifelse(abs(SK(A)) < 0.2, "aproximadamente simétricas.", ifelse(SK(A) >= 0.2, "sesgadas a la derecha.", "sesgadas a la izquierda."))) else
+    paste("La asimetría de ambas distribuciones es diferente. La muestra A es",
+    ifelse(abs(SK(A)) < 0.2, "aproximadamente simétrica.", ifelse(SK(A) >= 0.2, "sesgada a la derecha.", "sesgada a la izquierda.")),
+    "La muestra B es", ifelse(abs(SK(B)) < 0.2, "aproximadamente simétrica.", ifelse(SK(B) >= 0.2, "sesgada a la derecha.", "sesgada a la izquierda.")))
 
 i <- sample(1:2, 1)
 j <- sample(1:3, 1)
-questions[5] <- paste("Distribution ", c("A", "B")[i], " is ", 
-                      c("about symmetric", "right-skewed", "left-skewed")[j], ".", sep = "")
+questions[5] <- paste("La distribución ", c("A", "B")[i], " es ",
+                      c("aproximadamente simétrica", "sesgada a la derecha", "sesgada a la izquierda")[j], ".", sep = "")
 SK_i <- SK(list(A, B)[[i]])
 solutions[5] <- switch(j, abs(SK_i) < 0.2,
                        SK_i >= 0.2,
                        SK_i <= -0.2)
-explanations[5] <- paste("Distribution ", c("A", "B")[i], " is ",
-                         ifelse(abs(SK_i) < 0.2, "about symmetric.", 
-                                ifelse(SK_i >= 0.2, "right-skewed.", "left-skewed.")))
+explanations[5] <- paste("La distribución ", c("A", "B")[i], " es ",
+                         ifelse(abs(SK_i) < 0.2, "aproximadamente simétrica.",
+                                ifelse(SK_i >= 0.2, "sesgada a la derecha.", "sesgada a la izquierda.")))
 
 ok <- any(solutions) && any(!solutions)
 }
 @
 
 \begin{question}
-In the following figure the distributions of a variable
-given by two samples (A and B) are represented by parallel boxplots.
-Which of the following statements are correct?  \emph{(Comment: The
-statements are either about correct or clearly wrong.)}
+En la siguiente figura se representan las distribuciones de una variable
+dada por dos muestras (A y B) mediante diagramas de caja paralelos.
+¿Cuáles de las siguientes afirmaciones son correctas? \emph{(Comentario: Las
+afirmaciones son correctas o claramente incorrectas.)}
 
 \setkeys{Gin}{width=0.7\textwidth}
 <<fig=TRUE, height=4, width=5, echo=FALSE, eps=FALSE, results=hide>>=
@@ -145,7 +162,7 @@ answerlist(questions)
 \begin{solution}
 <<echo=FALSE, results=tex>>=
 answerlist(
-  ifelse(solutions, "True", "False"),
+  ifelse(solutions, "Verdadero", "Falso"),
   explanations)
 @
 
@@ -154,4 +171,5 @@ answerlist(
 %% META-INFORMATION
 %% \extype{mchoice}
 %% \exsolution{\Sexpr{mchoice2string(solutions)}}
-%% \exname{Parallel boxplots}
+%% \exname{Diagramas de caja paralelos}
+\end{document}
