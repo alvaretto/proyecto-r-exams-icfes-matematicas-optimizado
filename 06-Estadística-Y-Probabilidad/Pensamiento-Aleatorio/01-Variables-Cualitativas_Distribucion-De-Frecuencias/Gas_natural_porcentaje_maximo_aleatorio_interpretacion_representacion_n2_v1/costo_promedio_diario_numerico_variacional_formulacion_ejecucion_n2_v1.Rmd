@@ -302,7 +302,7 @@ test_that("Validación del gráfico Python", {
 Question
 ========
 
-`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. Para saber cuál es el costo promedio del consumo diario, se resta del cobro total de ese mes el valor por servicio fijo, y luego se divide entre 30, que es el número de días que se utiliza para facturar un mes. En `r tolower(mes_pregunta)` el cobro total fue de $`r format(cobro_total, big.mark = ".", decimal.mark = ",")` y el valor por servicio fijo fue de $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")`. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. Para saber cuál es el costo promedio del consumo diario de gas natural, se resta del cobro total de ese mes el valor por servicio fijo, y luego se divide entre 30, que es el número de días que se utiliza para facturar un mes. En `r tolower(mes_pregunta)` el cobro total fue de $`r format(cobro_total, big.mark = ".", decimal.mark = ",")` y el valor por servicio fijo fue de $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")`. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico generado con Python
