@@ -2,7 +2,7 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_v1.Rmd"
+archivo_examen <- "consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion.Rnw"
 copias <- 1
 numpreg <- 3
 semilla <- sample(100:1e8, 1)
