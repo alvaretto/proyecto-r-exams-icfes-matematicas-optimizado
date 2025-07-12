@@ -1,9 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
-  word_document: default
----
 # 🎯 PLAN MAESTRO: Generación/Corrección de Ejercicios ICFES R-exams (.Rnw)
 
 ## 📋 ESTRUCTURA COMPLETA DE TAREAS
@@ -70,9 +64,9 @@ output:
 
   - **🚀 1.3.4 Integración R-exams Validada**
     - **CÓDIGO TIKZ DOCUMENTADO**: Listo para inserción en chunks específicos
-    - **COMPATIBILIDAD VERIFICADA**: include_tikz() y configuración YAML completa
+    - **COMPATIBILIDAD VERIFICADA**: include_tikz() y configuración LaTeX completa
     - **VARIABLES R INTEGRADAS**: Parametrización para aleatorización
-    - **MULTI-FORMATO**: Funciona en exams2html, exams2pdf, exams2moodle
+    - **MULTI-FORMATO**: Funciona en exams2html, exams2pdf, exams2moodle, exams2pandoc, exams2nops (schoice)
 
 - [ ] **🔍 1.4 Consultar Ejemplos Funcionales (Ambos Flujos) - PROTOCOLO ESTRICTO**
   - **OBLIGATORIO ABSOLUTO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/` ANTES de escribir cualquier código
@@ -142,35 +136,64 @@ output:
 ### ⚙️ **FASE 3: Configuración Técnica Base**
 *Implementar estructura técnica siguiendo ejemplos funcionales con TikZ integrado*
 
-- [ ] **📄 3.1 Encabezado YAML Completo con TikZ**
-  ```yaml
-  ---
-  output:
-    html_document: default
-    word_document: default
-    pdf_document:
-      keep_tex: true
-      extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
-  
-  # Metadatos ICFES
-  icfes:
-    competencia: [competencia_seleccionada]
-    nivel_dificultad: [1-4]
-    contenido:
-      categoria: [algebra_calculo|geometria|estadistica]
-      tipo: [generico|no_generico]
-    contexto: [familiar|laboral|comunitario|matematico]
-    eje_axial: [eje1|eje2|eje3|eje4]
-    componente: [geometrico_metrico|numerico_variacional|aleatorio]
-  ---
+- [ ] **📄 3.1 Estructura LaTeX Base para .Rnw**
+  ```latex
+  \documentclass[10pt,a4paper]{article}
+
+  %% paquetes básicos
+  \usepackage[utf8]{inputenc}
+  \usepackage[spanish]{babel}
+  \usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+  \usepackage{graphicx,float}
+  \usepackage{tikz,xcolor}
+  \usepackage{enumitem}
+
+  %% bibliotecas TikZ según necesidad
+  \usetikzlibrary{automata,positioning,calc,arrows}
+
+  %% entornos para exams
+  \newenvironment{question}{\item}{}
+  \newenvironment{solution}{\comment}{\endcomment}
+  \newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+  %% comandos para metadatos exams
+  \newcommand{\exname}[1]{\def\@exname{#1}}
+  \newcommand{\extype}[1]{\def\@extype{#1}}
+  \newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+  \newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+  \newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+  %% configuración párrafos
+  \setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+  \setlength{\parindent}{0em}
+
+  \begin{document}
+  \SweaveOpts{concordance=TRUE}
+
+  \begin{enumerate}
   ```
 
-- [ ] **🔧 3.2 Chunk Setup Inicial con TikZ**
-  - Configurar `Sys.setlocale()` y `options(OutDec = ".")`
-  - **PRIORIDAD**: Establecer opciones LaTeX y TikZ desde el inicio
-  - Cargar librerías esenciales: `exams`, `reticulate`, `digest`, `testthat`, `knitr`
-  - Configurar `knitr::opts_chunk$set()` con parámetros apropiados para TikZ
-  - Establecer semilla aleatoria: `set.seed(sample(1:100000, 1))`
+- [ ] **🔧 3.2 Chunk Setup Inicial con Sintaxis .Rnw**
+  ```latex
+  <<echo=FALSE, results=hide>>=
+  # Configuración inicial
+  Sys.setlocale("LC_ALL", "C")
+  options(OutDec = ".")
+
+  # Librerías esenciales
+  library(exams)
+  library(digest)
+  library(testthat)
+  library(knitr)
+
+  # Configuración TikZ si es necesario
+  typ <- match_exams_device()
+  if(match_exams_call() == "exams2nops") typ <- "tex"
+
+  # Semilla aleatoria
+  set.seed(sample(1:100000, 1))
+  @
+  ```
 
 - [ ] **🎨 3.3 Configuración TikZ Prioritaria**
   - **🎨 OBLIGATORIO**: Consultar `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para configuración validada
@@ -199,20 +222,23 @@ output:
   - Asegurar coherencia matemática en todos los casos
   - Retornar lista estructurada con todos los parámetros
 
-- [ ] **✅ 4.2 Prueba de Diversidad**
-  ```r
+- [ ] **✅ 4.2 Prueba de Diversidad con Sintaxis .Rnw**
+  ```latex
+  <<echo=FALSE, results=hide>>=
+  # Prueba de diversidad de versiones
   test_that("Prueba de diversidad de versiones", {
     versiones <- list()
     for(i in 1:1000) {
       datos_test <- generar_datos()
       versiones[[i]] <- digest::digest(datos_test)
     }
-    
+
     n_versiones_unicas <- length(unique(versiones))
     expect_true(n_versiones_unicas >= 300,
                 info = paste("Solo se generaron", n_versiones_unicas,
                             "versiones únicas. Se requieren al menos 300."))
   })
+  @
   ```
 
 - [ ] **🛡️ 4.3 Validaciones Matemáticas**
@@ -237,7 +263,7 @@ output:
     - **Estadística**: Histogramas, barras, circulares con TikZ
   - Usar `include_tikz()` con packages validados: `c("tikz", "colortbl", "xcolor")`
   - Configurar width apropiado según template: "6cm" para tablas, "5cm" para Venn
-  - Establecer `markup = "markdown"` según patrón exitoso
+  - Establecer `markup = "latex"` según patrón exitoso para .Rnw
   - **Aplicar fidelidad 98%** con imagen original usando coordenadas exactas
 
 - [ ] **🐍 5.2 Gráficos Python/matplotlib (Solo si TikZ no es viable)**
@@ -286,15 +312,17 @@ output:
   - Crear Answerlist con Verdadero/Falso para cada opción
   - Explicar por qué cada distractor es incorrecto
 
-- [ ] **📋 6.3 Meta-information**
-  ```
-  Meta-information
-  ================
-  exname: [nombre_descriptivo]
-  extype: schoice
-  exsolution: [patrón_respuesta]
-  exshuffle: TRUE
-  exsection: [sección_temática]
+- [ ] **📋 6.3 Meta-information con Sintaxis .Rnw**
+  ```latex
+  %% META-INFORMATION (al final del documento, antes de \end{enumerate})
+  \exname{[nombre_descriptivo]}
+  \extype{schoice}
+  \exsolution{\Sexpr{mchoice2string(solutions)}}
+  \exshuffle{TRUE}
+  \exsection{[seccion_tematica]}
+
+  \end{enumerate}
+  \end{document}
   ```
 
 ---
@@ -319,8 +347,8 @@ output:
     * **B) Posicionamiento TikZ**: Confirmar orden texto → tabla → pregunta
     * **C) Generación de datos**: Validar opciones únicas, anti-duplicados
     * **D) Compilación LaTeX**: Verificar paquetes, caracteres especiales, interpolación variables
-    * **E) Estructura R-exams**: Revisar YAML, include_tikz, variables, chunks extra
-  - Aplicar función `detectar_errores_comunes(archivo_rmd)`
+    * **E) Estructura R-exams**: Revisar estructura LaTeX, include_tikz, variables, chunks extra
+  - Aplicar función `detectar_errores_comunes(archivo_rnw)`
 
 - [ ] **📚 7.2 Aplicar Soluciones Probadas**
   - **OBLIGATORIO**: Consultar `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
@@ -385,9 +413,9 @@ output:
   - Validar que gráficos/diagramas se rendericen correctamente
 
 - [ ] **✅ 8.4 Compilación Final Validada**
-  - Verificar compilación HTML: `rmarkdown::render(archivo, 'html_document')`
-  - Probar compilación PDF: `rmarkdown::render(archivo, 'pdf_document')`
-  - Confirmar compilación Word: `rmarkdown::render(archivo, 'word_document')`
+  - Verificar compilación HTML: `exams2html(archivo.Rnw)`
+  - Probar compilación PDF: `exams2pdf(archivo.Rnw)`
+  - Confirmar compilación Moodle: `exams2moodle(archivo.Rnw)`
   - Validar que todos los gráficos se generen correctamente
   - **CONFIRMAR**: Que todas las correcciones de errores recurrentes funcionan correctamente
 
@@ -402,12 +430,13 @@ output:
 - **Función Exclusiva**: Replicación de alta fidelidad (98%+) de elementos gráficos y tabulares complejos
 - **Activación**: Automática cuando se detecta contenido gráfico/tabular en FLUJO B
 - **Objetivo**: Generar código TikZ avanzado que replique visualmente la imagen original
-- **Integración**: Compatible con sistema R-exams y configuración YAML completa
+- **Integración**: Compatible con sistema R-exams y configuración LaTeX completa
 
 #### **🔧 Tecnologías y Algoritmos Especializados**
 
 ##### **🎨 Extracción de Colores RGB Exactos**
-```r
+```latex
+<<echo=FALSE, results=hide>>=
 # Algoritmo de detección de colores dominantes
 extraer_colores_imagen <- function(ruta_imagen) {
   # Implementar análisis de histograma de colores
@@ -416,10 +445,12 @@ extraer_colores_imagen <- function(ruta_imagen) {
   colores_rgb <- c("#FF5733", "#33FF57", "#3357FF")  # Ejemplo
   return(colores_rgb)
 }
+@
 ```
 
 ##### **📐 Sistema de Medición Proporcional Automática**
-```r
+```latex
+<<echo=FALSE, results=hide>>=
 # Cálculo de coordenadas y proporciones precisas
 calcular_coordenadas_tikz <- function(elementos_detectados) {
   # Analizar posicionamiento relativo
@@ -428,6 +459,7 @@ calcular_coordenadas_tikz <- function(elementos_detectados) {
   coordenadas <- list(x = c(0, 2, 4), y = c(0, 1.5, 3))
   return(coordenadas)
 }
+@
 ```
 
 ##### **🎯 Templates Especializados por Tipo de Gráfica**
@@ -440,18 +472,17 @@ calcular_coordenadas_tikz <- function(elementos_detectados) {
 - **Boxplots**: Template con cuartiles y valores atípicos
 
 #### **⚙️ Configuración LaTeX Avanzada**
-```yaml
-# Paquetes LaTeX necesarios para Agente-Graficador
-tikz_packages_avanzados:
-  - tikz
-  - pgfplots
-  - xcolor
-  - colortbl
-  - amsmath
-  - array
-  - calc
-  - positioning
-  - decorations.markings
+```latex
+% Paquetes LaTeX necesarios para Agente-Graficador
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{array}
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{decorations.markings}
 ```
 
 ### 🔄 **PROTOCOLO DE REPLICACIÓN ITERATIVA**
@@ -711,7 +742,8 @@ Comando para nueva imagen:
 
 ### 📝 **Código Base para Distractores con Valores Duplicados:**
 
-```r
+```latex
+<<echo=FALSE, results=hide>>=
 # DECISIÓN ALEATORIA: ¿Permitir valores duplicados con justificaciones diferentes?
 # 30% de probabilidad de generar opciones con mismo valor pero diferentes justificaciones
 permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
@@ -749,11 +781,13 @@ if(permitir_valores_duplicados) {
 # VERIFICACIÓN FINAL: Asegurar 4 opciones textualmente únicas
 expect_equal(length(unique(todas_afirmaciones)), 4,
             info = "Las 4 opciones deben ser textualmente diferentes")
+@
 ```
 
 ### 🧪 **Pruebas Específicas para Distractores:**
 
-```r
+```latex
+<<echo=FALSE, results=hide>>=
 test_that("Prueba del sistema avanzado de distractores", {
   for(i in 1:50) {
     datos_test <- generar_datos()
@@ -772,6 +806,7 @@ test_that("Prueba del sistema avanzado de distractores", {
                info = "La respuesta correcta debe estar presente")
   }
 })
+@
 ```
 
 ---
@@ -820,6 +855,118 @@ update_tasks con task_id y nuevo state
 # Compilar y probar
 exams2html('archivo.Rnw')
 ```
+
+---
+
+## 📚 **EJEMPLO COMPLETO DE ESTRUCTURA .RNW**
+
+### 🎯 **Template Base para Nuevo Ejercicio .Rnw:**
+
+```latex
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ según necesidad
+\usetikzlibrary{automata,positioning,calc,arrows}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuración párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{enumerate}
+
+<<echo=FALSE, results=hide>>=
+# Configuración inicial
+library(exams)
+library(digest)
+library(testthat)
+
+# Configuración TikZ
+typ <- match_exams_device()
+if(match_exams_call() == "exams2nops") typ <- "tex"
+
+# Semilla aleatoria
+set.seed(sample(1:100000, 1))
+
+# Función generar_datos()
+generar_datos <- function() {
+  # Implementar aleatorización aquí
+  # Retornar lista con todos los parámetros
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+@
+
+\begin{question}
+
+[Texto del ejercicio con variables: \Sexpr{datos$variable}]
+
+<<echo=FALSE, results=tex>>=
+# Si se necesita TikZ:
+include_tikz(codigo_tikz, name = "diagrama", format = typ,
+  library = c("tikz", "positioning"),
+  width = "5cm")
+@
+
+<<echo=FALSE, results=tex>>=
+answerlist(datos$opciones)
+@
+
+\end{question}
+
+\begin{solution}
+
+[Explicación detallada de la solución]
+
+<<echo=FALSE, results=tex>>=
+answerlist(datos$explicaciones)
+@
+
+\end{solution}
+
+%% META-INFORMATION
+\exname{Nombre del Ejercicio}
+\extype{schoice}
+\exsolution{\Sexpr{mchoice2string(datos$solutions)}}
+\exshuffle{TRUE}
+\exsection{Seccion Tematica}
+
+\end{enumerate}
+\end{document}
+```
+
+### ✅ **Puntos Clave de la Estructura .Rnw:**
+
+1. **Documento LaTeX completo** con `\documentclass` y `\begin{document}`
+2. **Chunks con sintaxis Sweave**: `<<opciones>>=` código `@`
+3. **Meta-información con comandos LaTeX**: `\exname{}`, `\extype{}`, etc.
+4. **Variables interpoladas con `\Sexpr{}`** en el texto LaTeX
+5. **Configuración TikZ con `include_tikz()`** para gráficos
+6. **Estructura exams estándar**: question, solution, answerlist
+7. **Sin YAML headers** - todo es LaTeX puro
 
 ---
 
@@ -1114,7 +1261,7 @@ ANTES DE ESCRIBIR UNA SOLA LÍNEA DE CÓDIGO:
 ✅ PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
 ✅ PASO 2: Identificar ejemplo más similar al ejercicio objetivo
 ✅ PASO 3: Estudiar estructura completa del ejemplo
-✅ PASO 4: Copiar configuración YAML exacta
+✅ PASO 4: Copiar configuración LaTeX exacta
 ✅ PASO 5: Copiar estructura de chunks exacta
 ✅ PASO 6: Identificar patrones de interpolación de variables
 ✅ PASO 7: Entender configuración TikZ/LaTeX específica
