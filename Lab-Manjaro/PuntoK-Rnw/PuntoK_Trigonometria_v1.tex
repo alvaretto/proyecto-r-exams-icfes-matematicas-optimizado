@@ -1,0 +1,116 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable,eurosym}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows,calc,positioning}
+
+%% nuevos entornos
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\input{PuntoK_Trigonometria_v1-concordance}
+
+\begin{enumerate}
+
+
+\begin{question}
+
+Un punto K se mueve sobre un segmento QT. El <U+00E1>ngulo $\alpha$ y la medida $h$ se relacionan mediante la raz<U+00F3>n trigonom<U+00E9>trica $sin(alpha) = frac{h}{KP}$, de donde se deduce la distancia entre $S$ y $P$ como $SP = \frac{h}{\sin(\alpha)}$ o $SP = h \times \csc(\alpha)$.
+
+\includegraphics[width=8cm]{diagrama.png}
+<U+00BF>Cu<U+00E1>l es la gr<U+00E1>fica que muestra las distancias $SP$, cada vez que $S$ se mueve sobre el segmento $QT$?
+
+\begin{tabular}{cc}
+A. & B. \\
+
+\includegraphics[width=4cm]{grafica_A.png}
+&
+
+\includegraphics[width=4cm]{grafica_B.png}
+\\
+C. & D. \\
+
+\includegraphics[width=4cm]{grafica_C.png}
+&
+
+\includegraphics[width=4cm]{grafica_D.png}
+\end{tabular}
+
+\begin{answerlist}
+  \item A
+  \item B
+  \item C
+  \item D
+\end{answerlist}
+\end{question}
+
+\begin{solution}
+
+La relaci<U+00F3>n trigonom<U+00E9>trica dada es $sin(alpha) = frac{h}{KP}$, lo que implica que $SP = \frac{h}{\sin(\alpha)}$.
+
+\textbf{An<U+00E1>lisis matem<U+00E1>tico del comportamiento de la funci<U+00F3>n:}
+
+\begin{itemize}
+\item Cuando $\alpha$ se acerca a $0<U+00B0>$: $\sin(\alpha) \to 0$, por lo tanto $SP = \frac{h}{\sin(\alpha)} \to +\infty$ (la distancia tiende a infinito).
+
+\item Cuando $\alpha = 30<U+00B0>$: $\sin(30<U+00B0>) = 0.5$, por lo tanto $SP = \frac{h}{0.5} = 2h$.
+
+\item Cuando $\alpha = 90<U+00B0>$: $\sin(90<U+00B0>) = 1$, por lo tanto $SP = \frac{h}{1} = h$ (valor m<U+00ED>nimo posible).
+
+\item La funci<U+00F3>n $f(\alpha) = \frac{h}{\sin(\alpha)}$ es estrictamente \textbf{decreciente} en el intervalo $(0<U+00B0>, 90<U+00B0>)$ porque:
+  \begin{itemize}
+  \item $\sin(\alpha)$ es creciente en $(0<U+00B0>, 90<U+00B0>)$
+  \item $\frac{1}{\sin(\alpha)}$ es decreciente cuando $\sin(\alpha)$ es creciente
+  \item Por lo tanto, $h \cdot \frac{1}{\sin(\alpha)}$ es decreciente
+  \end{itemize}
+\end{itemize}
+
+\textbf{An<U+00E1>lisis de las opciones:}
+
+\begin{itemize}
+\item \textbf{Opci<U+00F3>n A}: Funci<U+00F3>n constante - \textbf{Incorrecta}. La distancia $SP$ no permanece constante cuando $\alpha$ var<U+00ED>a.
+
+\item \textbf{Opci<U+00F3>n B}: Funci<U+00F3>n decreciente - \textbf{Correcta}. Coincide con el an<U+00E1>lisis matem<U+00E1>tico de $\frac{h}{\sin(\alpha)}$.
+
+\item \textbf{Opci<U+00F3>n C}: Funci<U+00F3>n que crece y luego decrece - \textbf{Incorrecta}. No hay raz<U+00F3>n matem<U+00E1>tica para que la funci<U+00F3>n tenga un m<U+00E1>ximo local.
+
+\item \textbf{Opci<U+00F3>n D}: Funci<U+00F3>n constante - \textbf{Incorrecta}. Similar al error de la opci<U+00F3>n A.
+\end{itemize}
+
+La respuesta correcta es: \textbf{D}.
+
+\begin{answerlist}
+  \item Falso. Esta opci<U+00F3>n no representa correctamente el comportamiento de la funci<U+00F3>n KP = h/sin(<U+03B1>).
+  \item Falso. Una funci<U+00F3>n constante implicar<U+00ED>a que KP no depende de <U+03B1>, lo cual contradice la relaci<U+00F3>n trigonom<U+00E9>trica dada.
+  \item Falso. La funci<U+00F3>n h/sin(<U+03B1>) no tiene m<U+00E1>ximos locales en el intervalo (0<U+00B0>, 90<U+00B0>), es mon<U+00F3>tona decreciente.
+  \item Verdadero. La funci<U+00F3>n KP = h/sin(<U+03B1>) es estrictamente decreciente en (0<U+00B0>, 90<U+00B0>).
+\end{answerlist}
+\end{solution}
+
+% Meta-information ICFES
+\exname{Trigonometr<U+00ED>a - Interpretaci<U+00F3>n de Gr<U+00E1>ficas}
+\extype{schoice}
+\exsolution{0001}
+\exshuffle{TRUE}
+\exsection{Geometr<U+00ED>a - Trigonometr<U+00ED>a}
+
+% Metadatos ICFES adicionales (como comentarios)
+% Competencia: interpretacion_representacion
+% Nivel de dificultad: 3
+% Componente: geometrico_metrico
+% Contexto: matematico
+% Categor<U+00ED>a: geometria
+% Tipo: generico
+
+\end{enumerate}
+\end{document}
