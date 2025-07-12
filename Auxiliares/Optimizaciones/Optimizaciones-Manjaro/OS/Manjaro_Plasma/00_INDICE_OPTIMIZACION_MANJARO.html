@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Índice de Optimización Manjaro Plasma KDE</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .content {
+            padding: 30px;
+        }
+        .file-card {
+            background: #f8f9fa;
+            border-left: 5px solid #007bff;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .file-card.recommended {
+            border-left-color: #28a745;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+        .file-card.advanced {
+            border-left-color: #ffc107;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+        .file-card.manual {
+            border-left-color: #17a2b8;
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        }
+        .file-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .file-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .badge-read { background: #e3f2fd; color: #1976d2; }
+        .badge-execute { background: #e8f5e8; color: #2e7d32; }
+        .badge-manual { background: #fff3e0; color: #f57c00; }
+        .badge-advanced { background: #fce4ec; color: #c2185b; }
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .workflow {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .workflow h3 {
+            margin-top: 0;
+            font-size: 1.3em;
+        }
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .result-card {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .before {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+        .after {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+        }
+        .tips {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 ÍNDICE DE OPTIMIZACIÓN MANJARO PLASMA KDE</h1>
+            <p>Guía completa para optimizar tu sistema Manjaro con escritorio KDE Plasma</p>
+        </div>
+        
+        <div class="content">
+            <h2>🎯 ARCHIVOS Y ORDEN DE EJECUCIÓN</h2>
+            
+            <div class="file-card">
+                <div class="file-badge badge-read">🔍 LEER PRIMERO</div>
+                <div class="file-title">📖 01_GUIA_OPTIMIZACION_MANJARO.md</div>
+                <p><strong>Propósito:</strong> Guía completa con explicaciones detalladas para Plasma KDE</p>
+                <p><strong>Contenido:</strong> Teoría, comandos paso a paso, explicaciones técnicas específicas para KDE</p>
+                <p><strong>Tiempo:</strong> 10-15 minutos de lectura</p>
+            </div>
+
+            <div class="file-card">
+                <div class="file-badge badge-execute">⚡ EJECUTAR ANTES Y DESPUÉS</div>
+                <div class="file-title">📊 02_monitor_rendimiento.sh</div>
+                <p><strong>Propósito:</strong> Monitor en tiempo real del estado del sistema Plasma</p>
+                <p><strong>Contenido:</strong> Análisis de CPU, memoria, disco, servicios KDE, configuraciones</p>
+                <div class="code-block">./02_monitor_rendimiento.sh</div>
+            </div>
+
+            <div class="file-card manual">
+                <div class="file-badge badge-manual">🔧 OPCIÓN MANUAL</div>
+                <div class="file-title">📝 03_COMANDOS_OPTIMIZACION_INMEDIATA.md</div>
+                <p><strong>Propósito:</strong> Comandos individuales para ejecutar paso a paso en Plasma</p>
+                <p><strong>Contenido:</strong> Comandos separados por fases, explicaciones breves específicas para KDE</p>
+                <p><strong>Tiempo:</strong> 20-30 minutos (ejecutando manualmente)</p>
+            </div>
+
+            <div class="file-card recommended">
+                <div class="file-badge badge-execute">⭐ RECOMENDADO</div>
+                <div class="file-title">🚀 04_EJECUTAR_OPTIMIZACION_COMPLETA.sh</div>
+                <p><strong>Propósito:</strong> Script automático que ejecuta TODAS las optimizaciones para Plasma</p>
+                <p><strong>Contenido:</strong> Proceso completo automatizado con progreso visual y optimizaciones KDE</p>
+                <p><strong>Tiempo:</strong> 5-10 minutos (automático)</p>
+                <div class="code-block">./04_EJECUTAR_OPTIMIZACION_COMPLETA.sh</div>
+            </div>
+
+            <div class="file-card advanced">
+                <div class="file-badge badge-advanced">🎓 AVANZADO</div>
+                <div class="file-title">🔧 05_optimizacion_manjaro_avanzado.sh</div>
+                <p><strong>Propósito:</strong> Script con optimizaciones adicionales y experimentales para Plasma</p>
+                <p><strong>Contenido:</strong> Configuraciones más técnicas y específicas de KDE</p>
+                <p><strong>Tiempo:</strong> 10-15 minutos</p>
+                <p><strong>⚠️ Solo para usuarios experimentados</strong></p>
+            </div>
+
+            <div class="file-card recommended">
+                <div class="file-badge badge-execute">⭐ TERMINAL NATIVO</div>
+                <div class="file-title">🚀 06_EJECUTAR_EN_TERMINAL_PRINCIPAL.sh</div>
+                <p><strong>Propósito:</strong> Script optimizado para ejecutar en tu terminal principal de Manjaro Plasma</p>
+                <p><strong>Contenido:</strong> Todas las optimizaciones con permisos sudo completos y configuraciones KDE</p>
+                <div class="code-block">./06_EJECUTAR_EN_TERMINAL_PRINCIPAL.sh</div>
+            </div>
+
+            <div class="file-card">
+                <div class="file-badge badge-read">📰 INFORMACIÓN</div>
+                <div class="file-title">🆕 07_NOVEDADES_Y_ACTUALIZACIONES.md</div>
+                <p><strong>Propósito:</strong> Historial de versiones, novedades y actualizaciones</p>
+                <p><strong>Contenido:</strong> Cambios específicos para Plasma, diferencias con XFCE, resolución de problemas</p>
+            </div>
+
+            <h2>🚀 FLUJOS DE TRABAJO RECOMENDADOS</h2>
+
+            <div class="workflow">
+                <h3>⚡ RÁPIDO (5 minutos) - RECOMENDADO</h3>
+                <div class="code-block">
+# 1. Ver estado inicial<br>
+./02_monitor_rendimiento.sh<br><br>
+# 2. Ejecutar optimización en terminal principal<br>
+./06_EJECUTAR_EN_TERMINAL_PRINCIPAL.sh<br><br>
+# 3. Reiniciar sistema<br>
+sudo reboot<br><br>
+# 4. Verificar mejoras<br>
+./02_monitor_rendimiento.sh
+                </div>
+            </div>
+
+            <div class="workflow">
+                <h3>📚 COMPLETO (30 minutos)</h3>
+                <div class="code-block">
+# 1. Leer guía completa<br>
+cat 01_GUIA_OPTIMIZACION_MANJARO.md<br><br>
+# 2. Ver estado inicial<br>
+./02_monitor_rendimiento.sh<br><br>
+# 3. Ejecutar optimizaciones manualmente<br>
+# (Seguir comandos en 03_COMANDOS_OPTIMIZACION_INMEDIATA.md)<br><br>
+# 4. Reiniciar sistema<br>
+sudo reboot
+                </div>
+            </div>
+
+            <h2>📊 RESULTADOS ESPERADOS</h2>
+
+            <div class="results">
+                <div class="result-card before">
+                    <h3>🔴 ANTES DE OPTIMIZAR</h3>
+                    <ul style="text-align: left;">
+                        <li>Servicios: 35+ activos</li>
+                        <li>Memoria: ~2.5-3GB en reposo</li>
+                        <li>Baloo: Indexando sin límites</li>
+                        <li>Efectos: Todos activos</li>
+                        <li>Swappiness: 60</li>
+                        <li>CPU Governor: ondemand</li>
+                    </ul>
+                </div>
+                <div class="result-card after">
+                    <h3>🟢 DESPUÉS DE OPTIMIZAR</h3>
+                    <ul style="text-align: left;">
+                        <li>Servicios: ~20-25 activos</li>
+                        <li>Memoria: ~1.8-2.2GB en reposo</li>
+                        <li>Baloo: Solo documentos e imágenes</li>
+                        <li>Efectos: Optimizados</li>
+                        <li>Swappiness: 10</li>
+                        <li>CPU Governor: performance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tips">
+                <h3>💡 CONSEJOS IMPORTANTES</h3>
+                <ul>
+                    <li><span class="emoji">🔑</span>Configura tu contraseña sudo antes de ejecutar los scripts</li>
+                    <li><span class="emoji">🌐</span>Asegúrate de tener conexión a internet para actualizaciones</li>
+                    <li><span class="emoji">⏰</span>Reserva 10-15 minutos de tiempo</li>
+                    <li><span class="emoji">🔄</span>Reinicia el sistema después de optimizar</li>
+                    <li><span class="emoji">✅</span>Todos los scripts son seguros y reversibles</li>
+                    <li><span class="emoji">🎨</span>Los efectos se pueden reactivar desde Configuración del Sistema</li>
+                </ul>
+            </div>
+
+            <div class="tips" style="background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);">
+                <h3>🎨 ESPECÍFICO PARA PLASMA KDE</h3>
+                <ul>
+                    <li><span class="emoji">🔍</span>Configuración inteligente de Baloo (indexador)</li>
+                    <li><span class="emoji">⚡</span>Optimización de servicios KDE específicos</li>
+                    <li><span class="emoji">🖥️</span>Configuración del compositor KWin</li>
+                    <li><span class="emoji">✨</span>Optimización de efectos visuales</li>
+                    <li><span class="emoji">🎯</span>Variables Qt optimizadas para KDE</li>
+                </ul>
+            </div>
+
+            <h2>🎉 ¡COMIENZA AQUÍ!</h2>
+            
+            <div class="workflow">
+                <h3>👥 Para usuarios nuevos de Plasma:</h3>
+                <p>1. 📖 Lee <code>01_GUIA_OPTIMIZACION_MANJARO.md</code></p>
+                <p>2. 🚀 Ejecuta <code>./06_EJECUTAR_EN_TERMINAL_PRINCIPAL.sh</code></p>
+            </div>
+
+            <div class="workflow">
+                <h3>🎓 Para usuarios con experiencia en KDE:</h3>
+                <p>1. 📊 Ejecuta <code>./02_monitor_rendimiento.sh</code></p>
+                <p>2. 🚀 Ejecuta <code>./06_EJECUTAR_EN_TERMINAL_PRINCIPAL.sh</code></p>
+                <p>3. 🔄 Reinicia y disfruta</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <h3>💡 Tip Final</h3>
+                <p>Guarda este directorio como favorito para futuras optimizaciones y mantenimiento de tu Manjaro Plasma KDE.</p>
+                <p><strong>¡Disfruta de tu sistema optimizado! 🚀</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
