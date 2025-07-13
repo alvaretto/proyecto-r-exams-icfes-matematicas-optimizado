@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.7.9)  12 JUL 2025 16:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.7.9)  12 JUL 2025 19:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**trigonometria_punto_k_v1.tex
-(./trigonometria_punto_k_v1.tex
+**trigonometria_punto_k_v3.tex
+(./trigonometria_punto_k_v3.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/share/texmf-dist/tex/latex/base/article.cls
@@ -681,11 +681,11 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count330
 \l__pdf_internal_box=\box95
 )
-(./trigonometria_punto_k_v1.aux
+(./trigonometria_punto_k_v3.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 )
-\openout1 = `trigonometria_punto_k_v1.aux'.
+\openout1 = `trigonometria_punto_k_v3.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
 LaTeX Font Info:    ... okay on input line 32.
@@ -729,34 +729,34 @@ e
 Package pgfplots notification 'compat/show suggested version=true': document ha
 s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-(./trigonometria_punto_k_v1-concordance.tex)
-<grafica_A.png, id=5, 652.4375pt x 501.875pt>
-File: grafica_A.png Graphic file (type png)
-<use grafica_A.png>
-Package pdftex.def Info: grafica_A.png  used on input line 73.
-(pdftex.def)             Requested size: 113.81102pt x 87.54608pt.
-<grafica_B.png, id=7, 652.4375pt x 501.875pt>
-File: grafica_B.png Graphic file (type png)
-<use grafica_B.png>
-Package pdftex.def Info: grafica_B.png  used on input line 76.
-(pdftex.def)             Requested size: 113.81102pt x 87.54608pt.
-<grafica_C.png, id=8, 652.4375pt x 501.875pt>
-File: grafica_C.png Graphic file (type png)
-<use grafica_C.png>
-Package pdftex.def Info: grafica_C.png  used on input line 80.
-(pdftex.def)             Requested size: 113.81102pt x 87.54608pt.
-<grafica_D.png, id=9, 652.4375pt x 501.875pt>
-File: grafica_D.png Graphic file (type png)
-<use grafica_D.png>
-Package pdftex.def Info: grafica_D.png  used on input line 83.
-(pdftex.def)             Requested size: 113.81102pt x 87.54608pt.
+(./trigonometria_punto_k_v3-concordance.tex)
+<grafica_A_v3.png, id=5, 652.4375pt x 509.905pt>
+File: grafica_A_v3.png Graphic file (type png)
+<use grafica_A_v3.png>
+Package pdftex.def Info: grafica_A_v3.png  used on input line 48.
+(pdftex.def)             Requested size: 142.26378pt x 111.18353pt.
+<grafica_B_v3.png, id=7, 652.4375pt x 509.905pt>
+File: grafica_B_v3.png Graphic file (type png)
+<use grafica_B_v3.png>
+Package pdftex.def Info: grafica_B_v3.png  used on input line 50.
+(pdftex.def)             Requested size: 142.26378pt x 111.18353pt.
+<grafica_C_v3.png, id=8, 652.4375pt x 457.71pt>
+File: grafica_C_v3.png Graphic file (type png)
+<use grafica_C_v3.png>
+Package pdftex.def Info: grafica_C_v3.png  used on input line 52.
+(pdftex.def)             Requested size: 142.26378pt x 99.80255pt.
+<grafica_D_v3.png, id=9, 652.4375pt x 509.905pt>
+File: grafica_D_v3.png Graphic file (type png)
+<use grafica_D_v3.png>
+Package pdftex.def Info: grafica_D_v3.png  used on input line 54.
+(pdftex.def)             Requested size: 142.26378pt x 111.18353pt.
 
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf-dist/fonts
-/enc/dvips/cm-super/cm-super-t1.enc} <./grafica_A.png> <./grafica_B.png> <./gra
-fica_C.png> <./grafica_D.png>] (./trigonometria_punto_k_v1.aux
+/enc/dvips/cm-super/cm-super-t1.enc} <./grafica_A_v3.png> <./grafica_B_v3.png> 
+<./grafica_C_v3.png> <./grafica_D_v3.png>] (./trigonometria_punto_k_v3.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 )
@@ -766,19 +766,19 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 27075 strings out of 475109
- 685632 string characters out of 5765326
- 1181980 words of memory out of 5000000
- 49645 multiletter control sequences out of 15000+600000
+ 27008 strings out of 475109
+ 683821 string characters out of 5765326
+ 1177980 words of memory out of 5000000
+ 49578 multiletter control sequences out of 15000+600000
  560054 words of font info for 39 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 84i,10n,91p,741b,745s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,5n,91p,741b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
 10.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on trigonometria_punto_k_v1.pdf (1 page, 161765 bytes).
+Output written on trigonometria_punto_k_v3.pdf (1 page, 165560 bytes).
 PDF statistics:
  52 PDF objects out of 1000 (max. 8388607)
  27 compressed objects within 1 object stream

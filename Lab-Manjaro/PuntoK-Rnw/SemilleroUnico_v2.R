@@ -7,15 +7,15 @@ library(exams)
 library(knitr)
 library(tools)
 
-# Configurar directorio de trabajo
-setwd("Lab-Manjaro/PuntoK-Rnw/")
+# Configurar directorio de trabajo (ya estamos en el directorio correcto)
+# setwd("Lab-Manjaro/PuntoK-Rnw/")
 
 # Configuración global
 options(OutDec = ".")
 Sys.setlocale("LC_ALL", "C")
 
 # Archivo del ejercicio
-archivo_ejercicio <- "trigonometria_punto_k_v1.Rnw"
+archivo_ejercicio <- "trigonometria_punto_k_v3.Rnw"
 
 # Verificar que el archivo existe
 if(!file.exists(archivo_ejercicio)) {

@@ -1,0 +1,278 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{pgfplots}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ
+\usetikzlibrary{automata,positioning,calc,arrows}
+\pgfplotsset{compat=1.18}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuración párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{enumerate}
+
+<<echo=FALSE, results=hide>>=
+# Configuración inicial
+library(exams)
+
+# Configuración TikZ
+typ <- match_exams_device()
+if(match_exams_call() == "exams2nops") typ <- "tex"
+
+# Semilla aleatoria
+set.seed(sample(1:100000, 1))
+
+# Función generar_datos() simplificada
+generar_datos <- function() {
+  # Parámetros aleatorios
+  h_valor <- sample(c(2, 3, 4, 5), 1)
+  color_curva <- sample(c("blue", "red", "green", "purple"), 1)
+
+  # Contextos variables
+  punto_inicial <- sample(c("Q", "P", "R", "S"), 1)
+  punto_final <- sample(c("T", "U", "V", "W"), 1)
+  punto_movil <- sample(c("K", "M", "N", "L"), 1)
+  punto_fijo <- sample(c("P", "Q", "R", "S"), 1)
+
+  # Asegurar que los puntos sean diferentes
+  while(punto_inicial == punto_final || punto_inicial == punto_movil ||
+        punto_inicial == punto_fijo || punto_final == punto_movil ||
+        punto_final == punto_fijo || punto_movil == punto_fijo) {
+    punto_inicial <- sample(c("Q", "P", "R", "S"), 1)
+    punto_final <- sample(c("T", "U", "V", "W"), 1)
+    punto_movil <- sample(c("K", "M", "N", "L"), 1)
+    punto_fijo <- sample(c("P", "Q", "R", "S"), 1)
+  }
+
+  # Generar las 4 opciones gráficas
+  opciones_graficas <- list()
+
+  # Opción A: Línea horizontal constante
+  opciones_graficas$A <- crear_grafica_constante(h_valor, color_curva)
+
+  # Opción B: Cosecante decreciente (CORRECTA)
+  opciones_graficas$B <- crear_grafica_cosecante(h_valor, color_curva)
+
+  # Opción C: Hiperbólica
+  opciones_graficas$C <- crear_grafica_hiperbolica(h_valor, color_curva)
+
+  # Opción D: Línea horizontal constante (diferente altura)
+  opciones_graficas$D <- crear_grafica_constante(h_valor * 1.5, color_curva)
+
+  # Orden aleatorio de opciones
+  orden <- sample(c("A", "B", "C", "D"))
+  respuesta_correcta <- which(orden == "B")
+
+  # Soluciones (TRUE para la correcta)
+  solutions <- rep(FALSE, 4)
+  solutions[respuesta_correcta] <- TRUE
+
+  return(list(
+    h = h_valor,
+    color = color_curva,
+    punto_inicial = punto_inicial,
+    punto_final = punto_final,
+    punto_movil = punto_movil,
+    punto_fijo = punto_fijo,
+    graficas = opciones_graficas,
+    orden = orden,
+    solutions = solutions,
+    respuesta_correcta = respuesta_correcta
+  ))
+}
+
+# Funciones para crear gráficas TikZ simplificadas
+crear_grafica_constante <- function(altura, color) {
+  ymax <- max(altura * 2, 8)
+  paste0(
+    "\\begin{tikzpicture}\n",
+    "\\begin{axis}[\n",
+    "  width=4cm, height=3cm,\n",
+    "  xlabel={Angulo $\\alpha$},\n",
+    "  ylabel={Distancia $PK$},\n",
+    "  xmin=0, xmax=90,\n",
+    "  ymin=0, ymax=", round(ymax, 1), ",\n",
+    "  xtick={0,30,60,90},\n",
+    "  ytick={", round(altura, 1), "},\n",
+    "  grid=major,\n",
+    "  axis lines=left\n",
+    "]\n",
+    "\\addplot[", color, ", very thick, domain=0:90] {", round(altura, 2), "};\n",
+    "\\end{axis}\n",
+    "\\end{tikzpicture}"
+  )
+}
+
+crear_grafica_cosecante <- function(h, color) {
+  ymax <- h * 5
+  paste0(
+    "\\begin{tikzpicture}\n",
+    "\\begin{axis}[\n",
+    "  width=4cm, height=3cm,\n",
+    "  xlabel={Angulo $\\alpha$},\n",
+    "  ylabel={Distancia $PK$},\n",
+    "  xmin=10, xmax=90,\n",
+    "  ymin=", round(h * 0.9, 1), ", ymax=", round(ymax, 1), ",\n",
+    "  xtick={15,30,45,60,75,90},\n",
+    "  ytick={", round(h, 1), ",", round(h * 2, 1), ",", round(h * 3, 1), "},\n",
+    "  grid=major,\n",
+    "  axis lines=left\n",
+    "]\n",
+    "\\addplot[", color, ", very thick, domain=10:89, samples=200, smooth] {", round(h, 2), "/sin(x)};\n",
+    "\\end{axis}\n",
+    "\\end{tikzpicture}"
+  )
+}
+
+
+
+# Función hiperbólica que replica fielmente la imagen original de la opción C
+crear_grafica_hiperbolica <- function(h, color) {
+  # Parámetros ajustados para replicar exactamente la curva de la imagen
+  ymax <- h * 10
+  # Función hiperbólica del tipo y = a/(x + b) optimizada
+  factor_a <- h * 150  # Numerador para altura inicial alta
+  factor_b <- 5        # Desplazamiento para evitar división por cero
+
+  paste0(
+    "\\begin{tikzpicture}\n",
+    "\\begin{axis}[\n",
+    "  width=5cm, height=4cm,\n",
+    "  xlabel={Angulo $\\alpha$},\n",
+    "  ylabel={Distancia PK},\n",
+    "  xmin=5, xmax=90,\n",
+    "  ymin=0, ymax=", round(ymax, 1), ",\n",
+    "  xtick={15,30,45,60,75,90},\n",
+    "  ytick={0,", round(h, 1), ",", round(h * 3, 1), ",", round(h * 6, 1), "},\n",
+    "  grid=major,\n",
+    "  grid style={gray!30},\n",
+    "  axis lines=left,\n",
+    "  samples=300,\n",
+    "  smooth\n",
+    "]\n",
+    "% Curva hiperbólica pura y = a/(x + b) que se aproxima a cero\n",
+    "\\addplot[", color, ", very thick, domain=5:90, samples=300] {", round(factor_a, 1), "/(x + ", factor_b, ")};\n",
+    "\\end{axis}\n",
+    "\\end{tikzpicture}"
+  )
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+@
+
+\begin{question}
+
+Un punto \Sexpr{datos$punto_movil} se mueve de un extremo a otro del segmento \Sexpr{datos$punto_inicial}\Sexpr{datos$punto_final} que se muestra en la gráfica.
+
+% Diagrama geométrico simplificado
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+% Segmento horizontal QT
+\draw[thick] (0,0) -- (4,0);
+\node[below] at (0,0) {\Sexpr{datos$punto_inicial}};
+\node[below] at (4,0) {\Sexpr{datos$punto_final}};
+% Punto K móvil
+\fill[blue] (2,0) circle (2pt);
+\node[below] at (2,0) {\Sexpr{datos$punto_movil}};
+% Punto P fijo
+\fill[red] (2,1.5) circle (2pt);
+\node[above] at (2,1.5) {\Sexpr{datos$punto_fijo}};
+% Línea vertical h
+\draw[dashed, red] (2,0) -- (2,1.5);
+\node[right] at (2,0.75) {$h$};
+% Línea KP
+\draw[thick, blue] (2,0) -- (2,1.5);
+% Ángulo alpha
+\draw[thick] (1.5,0) arc (180:90:0.5);
+\node at (1.3,0.3) {$\alpha$};
+\end{tikzpicture}
+\end{center}
+
+El ángulo $\alpha$ y la medida $h$ se relacionan mediante la razón trigonométrica $\sen(\alpha) = \frac{h}{\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo}}$, de donde se deduce la distancia entre \Sexpr{datos$punto_movil} y \Sexpr{datos$punto_fijo} como $\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo} = \frac{h}{\sen(\alpha)}$ o $\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo} = h \times \csc(\alpha)$.
+
+¿Cuál es la gráfica que muestra las distancias $\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo}$, cada vez que \Sexpr{datos$punto_movil} se mueve sobre el segmento \Sexpr{datos$punto_inicial}\Sexpr{datos$punto_final}?
+
+\begin{answerlist}
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(datos$graficas$A, name = "grafica_A",
+  format = typ, width = "5cm", packages = c("tikz", "pgfplots"))
+@
+
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(datos$graficas$B, name = "grafica_B",
+  format = typ, width = "5cm", packages = c("tikz", "pgfplots"))
+@
+
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(datos$graficas$C, name = "grafica_C",
+  format = typ, width = "5cm", packages = c("tikz", "pgfplots"))
+@
+
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(datos$graficas$D, name = "grafica_D",
+  format = typ, width = "5cm", packages = c("tikz", "pgfplots"))
+@
+
+\end{answerlist}
+
+\end{question}
+
+\begin{solution}
+
+La relación matemática fundamental es $\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo} = h \times \csc(\alpha) = \frac{h}{\sen(\alpha)}$.
+
+Cuando \Sexpr{datos$punto_movil} se mueve sobre el segmento \Sexpr{datos$punto_inicial}\Sexpr{datos$punto_final}:
+
+\begin{itemize}
+\item Al inicio: $\alpha$ es muy pequeño, entonces $\sen(\alpha) \approx 0$, por lo que $\csc(\alpha) \to \infty$ y $\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo}$ es muy grande.
+
+\item Al final: $\alpha$ se acerca a 90 grados, entonces $\sen(\alpha) \to 1$, por lo que $\csc(\alpha) \to 1$ y $\Sexpr{datos$punto_movil}\Sexpr{datos$punto_fijo} = h$.
+\end{itemize}
+
+Por lo tanto, la gráfica debe mostrar una función cosecante decreciente que empieza con valores muy altos y se aproxima a $h$ cuando $\alpha$ se acerca a 90 grados.
+
+La respuesta correcta es la opción B.
+
+<<echo=FALSE, results=tex>>=
+answerlist(ifelse(datos$solutions, "Verdadero", "Falso"))
+@
+
+\end{solution}
+
+%% META-INFORMATION
+\exname{Trigonometria Punto Movil}
+\extype{schoice}
+\exsolution{\Sexpr{mchoice2string(datos$solutions)}}
+\exshuffle{TRUE}
+\exsection{Geometria Metrica}
+
+\end{enumerate}
+\end{document}

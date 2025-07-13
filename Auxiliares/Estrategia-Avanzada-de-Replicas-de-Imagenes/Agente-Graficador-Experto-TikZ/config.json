@@ -1,0 +1,44 @@
+{
+  "max_iteraciones": 5,
+  "umbral_similitud": 0.95,
+  "timeout_compilacion": 30,
+  "templates_dir": "templates",
+  "ejemplos_dir": "ejemplos",
+  "validacion_automatica": true,
+  "optimizacion_codigo": true,
+  "escala_default": 1.2,
+  "precision_coordenadas": 2,
+  "umbral_deteccion": 0.7,
+  "resolucion_analisis": [800, 600],
+  "colores_default": ["blue", "red", "green", "orange", "purple", "cyan", "magenta"],
+  "librerias_comunes": [
+    "calc",
+    "arrows.meta", 
+    "positioning",
+    "shapes.geometric",
+    "patterns"
+  ],
+  "configuracion_latex": {
+    "documentclass": "standalone",
+    "packages": ["tikz", "pgfplots"],
+    "pgfplots_compat": "1.18"
+  },
+  "metricas_calidad": {
+    "max_lineas_codigo": 100,
+    "min_comentarios": 3,
+    "max_comandos_draw": 20,
+    "densidad_comentarios_min": 0.1
+  },
+  "comparacion_visual": {
+    "peso_ssim": 0.5,
+    "peso_histograma": 0.3,
+    "peso_contornos": 0.2,
+    "densidad_conversion": 300,
+    "calidad_conversion": 90
+  },
+  "logging": {
+    "level": "INFO",
+    "formato": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "archivo_log": "logs/agente_tikz_{timestamp}.log"
+  }
+}

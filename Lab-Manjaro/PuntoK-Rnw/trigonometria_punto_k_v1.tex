@@ -2,7 +2,7 @@
 
 %% paquetes básicos
 \usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
+\usepackage[spanish,es-tabla]{babel}
 \usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
 \usepackage{graphicx,float}
 \usepackage{tikz,xcolor}
@@ -37,21 +37,21 @@
 
 \begin{question}
 
-Un punto I se mueve de un extremo a otro del segmento QO que se muestra en la gráfica.
+Un punto G se mueve de un extremo a otro del segmento SW que se muestra en la gráfica.
 
 % Diagrama geométrico simplificado
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
 % Segmento horizontal QT
 \draw[thick] (0,0) -- (4,0);
-\node[below] at (0,0) {Q};
-\node[below] at (4,0) {O};
+\node[below] at (0,0) {S};
+\node[below] at (4,0) {W};
 % Punto K móvil
 \fill[blue] (2,0) circle (2pt);
-\node[below] at (2,0) {I};
+\node[below] at (2,0) {G};
 % Punto P fijo
 \fill[red] (2,1.5) circle (2pt);
-\node[above] at (2,1.5) {X};
+\node[above] at (2,1.5) {V};
 % Línea vertical h
 \draw[dashed, red] (2,0) -- (2,1.5);
 \node[right] at (2,0.75) {$h$};
@@ -63,9 +63,9 @@ Un punto I se mueve de un extremo a otro del segmento QO que se muestra en la gr
 \end{tikzpicture}
 \end{center}
 
-El ángulo $\alpha$ y la medida $h$ se relacionan mediante la razón trigonométrica $\sen(\alpha) = \frac{h}{IX}$, de donde se deduce la distancia entre I y X como $IX = \frac{h}{\sen(\alpha)}$ o $IX = h \times \csc(\alpha)$.
+El ángulo $\alpha$ y la medida $h$ se relacionan mediante la razón trigonométrica $\sen(\alpha) = \frac{h}{GV}$, de donde se deduce la distancia entre G y V como $GV = \frac{h}{\sen(\alpha)}$ o $GV = h \times \csc(\alpha)$.
 
-¿Cuál es la gráfica que muestra las distancias $IX$, cada vez que I se mueve sobre el segmento QO?
+¿Cuál es la gráfica que muestra las distancias $GV$, cada vez que G se mueve sobre el segmento SW?
 
 \begin{tabular}{cc}
 A & B \\
@@ -93,18 +93,18 @@ C & D \\
 
 \begin{solution}
 
-La relación matemática fundamental es $IX = h \times \csc(\alpha) = \frac{h}{\sen(\alpha)}$.
+La relación matemática fundamental es $GV = h \times \csc(\alpha) = \frac{h}{\sen(\alpha)}$.
 
 \textbf{Análisis del comportamiento de la función:}
 
-Cuando I se mueve sobre el segmento QO:
+Cuando G se mueve sobre el segmento SW:
 
 \begin{itemize}
-\item \textbf{Al inicio} (cerca de Q): $\alpha$ es muy pequeño $\Rightarrow$ $\sen(\alpha) \approx 0$ $\Rightarrow$ $\csc(\alpha) \to \infty$ $\Rightarrow$ $IX$ muy grande
+\item \textbf{Al inicio} (cerca de S): $\alpha$ es muy pequeño $\Rightarrow$ $\sen(\alpha) \approx 0$ $\Rightarrow$ $\csc(\alpha) \to \infty$ $\Rightarrow$ $GV$ muy grande
 
-\item \textbf{En posiciones intermedias}: $\alpha$ aumenta gradualmente $\Rightarrow$ $\sen(\alpha)$ aumenta $\Rightarrow$ $\csc(\alpha)$ disminuye $\Rightarrow$ $IX$ disminuye
+\item \textbf{En posiciones intermedias}: $\alpha$ aumenta gradualmente $\Rightarrow$ $\sen(\alpha)$ aumenta $\Rightarrow$ $\csc(\alpha)$ disminuye $\Rightarrow$ $GV$ disminuye
 
-\item \textbf{Al final} (cerca de O): $\alpha$ se acerca a $90°$ $\Rightarrow$ $\sen(\alpha) \to 1$ $\Rightarrow$ $\csc(\alpha) \to 1$ $\Rightarrow$ $IX = h$
+\item \textbf{Al final} (cerca de W): $\alpha$ se acerca a $90^\circ$ $\Rightarrow$ $\sen(\alpha) \to 1$ $\Rightarrow$ $\csc(\alpha) \to 1$ $\Rightarrow$ $GV = h$
 \end{itemize}
 
 \textbf{Análisis de las opciones:}
@@ -112,11 +112,11 @@ Cuando I se mueve sobre el segmento QO:
 \begin{itemize}
 \item \textbf{Opción A}: Línea horizontal constante - \textbf{Incorrecta}. La distancia no permanece constante.
 \item \textbf{Opción B}: Función cosecante decreciente - \textbf{Correcta}. Muestra el comportamiento esperado de $\csc(\alpha)$.
-\item \textbf{Opción C}: Función que llega a cero - \textbf{Incorrecta}. La distancia nunca llega a cero, se aproxima a $h$.
+\item \textbf{Opción C}: Función hiperbólica - \textbf{Incorrecta}. Aunque una hipérbola del tipo $y = a/x$ también decrece y se aproxima a cero, no representa la relación trigonométrica específica $KP = h/\sen(\alpha) = h \times \csc(\alpha)$.
 \item \textbf{Opción D}: Línea horizontal en otro nivel - \textbf{Incorrecta}. Similar al error de la opción A.
 \end{itemize}
 
-Por lo tanto, la gráfica debe mostrar una función cosecante decreciente que empieza con valores muy altos y se aproxima a $h$ cuando $\alpha$ se acerca a $90°$.
+Por lo tanto, la gráfica debe mostrar una función cosecante decreciente que empieza con valores muy altos y se aproxima a $h$ cuando $\alpha$ se acerca a $90^\circ$.
 
 \textbf{La respuesta correcta es la opción B.}
 
