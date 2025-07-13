@@ -28,7 +28,7 @@ Este ejercicio evalúa la capacidad del estudiante para interpretar gráficas de
 - ✅ **4 gráficas TikZ** generadas automáticamente:
   - **A:** Línea horizontal constante
   - **B:** Función cosecante decreciente (CORRECTA)
-  - **C:** Función cosecante que llega a cero
+  - **C:** Función hiperbólica (distractor plausible)
   - **D:** Línea horizontal constante (diferente altura)
 
 #### **Sistema de Aleatorización Robusta**
@@ -57,7 +57,7 @@ Este ejercicio evalúa la capacidad del estudiante para interpretar gráficas de
 ### **Funciones TikZ Principales**
 1. `crear_grafica_constante()` - Líneas horizontales
 2. `crear_grafica_cosecante()` - Función cosecante correcta
-3. `crear_grafica_cosecante_cero()` - Distractor plausible
+3. `crear_grafica_hiperbolica()` - Función hiperbólica (distractor)
 4. `crear_grafica_exponencial()` - Distractor alternativo
 
 ### **Función de Aleatorización**
@@ -126,7 +126,7 @@ exams2moodle("trigonometria_punto_k_v1.Rnw", n = 10)
 
 ### **Errores Conceptuales Detectados**
 1. **Confusión constante vs variable:** Opciones A y D
-2. **Malinterpretación de límites:** Opción C (llega a cero)
+2. **Confusión entre tipos de funciones:** Opción C (hiperbólica vs trigonométrica)
 3. **Incomprensión de función cosecante:** Comportamiento asintótico
 4. **Errores de interpretación gráfica:** Escalas y proporciones
 

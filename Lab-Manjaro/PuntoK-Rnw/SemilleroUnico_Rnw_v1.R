@@ -5,9 +5,9 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "PuntoK_Trigonometria_v1.Rnw"
+archivo_examen <- "trigonometria_punto_k_v3.Rnw"
 copias <- 1
-numpreg <- 5
+numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -20,34 +20,34 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Generación de copias individuales para PDF, sólo 'copias', no importa 'numpreg'
 
-for(i in 1:copias) {
-  nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-  exams2pdf(archivo_examen,
-            n = 1,
-            name = nombre_archivo,
-            encoding = "UTF-8",
-            template = "solpcielo",
-            dir = dir_salida,
-            edir = dir_ejercicios,
-            verbose = TRUE)
-}
+# for(i in 1:copias) {
+#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
+#   exams2pdf(archivo_examen,
+#             n = 1,
+#             name = nombre_archivo,
+#             encoding = "UTF-8",
+#             template = "solpcielo",
+#             dir = dir_salida,
+#             edir = dir_ejercicios,
+#             verbose = TRUE)
+# }
 
 ################################################################################
 # Generación de copias individuales para Pandoc (docx), sólo 'copias',
 # no importa 'numpreg
 
-for(i in 1:copias) {
-  nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
-  exams2pandoc(archivo_examen,
-               n = 1,
-               name = nombre_archivo,
-               encoding = "UTF-8",
-               template = "plain.tex",
-               dir = dir_salida,
-               edir = dir_ejercicios,
-               format = "docx",
-               verbose = TRUE)
-}
+# for(i in 1:copias) {
+#   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
+#   exams2pandoc(archivo_examen,
+#                n = 1,
+#                name = nombre_archivo,
+#                encoding = "UTF-8",
+#                template = "plain.tex",
+#                dir = dir_salida,
+#                edir = dir_ejercicios,
+#                format = "docx",
+#                verbose = TRUE)
+# }
 
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
@@ -99,19 +99,19 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-set.seed(semilla)
-exams2moodle(archivo_examen,
-             n = copias,
-             svg = TRUE,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             dir = "salida",
-             edir = dir_ejercicios,  # Cambiado de "ejercicios" a dir_ejercicios
-             mchoice = list(shuffle = TRUE,
-                            answernumbering = "ABCD",
-                            eval = list(partial = TRUE,
-                                       rule = "none")),
-             verbose = TRUE)
+# set.seed(semilla)
+# exams2moodle(archivo_examen,
+#              n = copias,
+#              svg = TRUE,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              dir = "salida",
+#              edir = dir_ejercicios,  # Cambiado de "ejercicios" a dir_ejercicios
+#              mchoice = list(shuffle = TRUE,
+#                             answernumbering = "ABCD",
+#                             eval = list(partial = TRUE,
+#                                        rule = "none")),
+#              verbose = TRUE)
 
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
