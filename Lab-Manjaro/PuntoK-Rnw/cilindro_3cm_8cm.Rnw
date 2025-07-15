@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{geometry}
+\geometry{margin=2cm}
+
+\title{Ejercicio ICFES: Cilindro - Volumen y Área}
+\author{Generado con Agente TikZ + Augment}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+<<setup, include=FALSE>>=
+# Configuración del ejercicio
+radio_cilindro <- 3  # cm
+altura_cilindro <- 8  # cm
+escala_grafico <- 1.0
+
+# Cálculos matemáticos
+volumen <- pi * radio_cilindro^2 * altura_cilindro
+area_lateral <- 2 * pi * radio_cilindro * altura_cilindro
+area_total <- area_lateral + 2 * pi * radio_cilindro^2
+
+# Opciones de respuesta (para ejercicio tipo ICFES)
+opcion_a <- round(volumen, 1)
+opcion_b <- round(volumen * 1.5, 1)
+opcion_c <- round(area_total, 1)
+opcion_d <- round(volumen / 2, 1)
+@
+
+\section{Problema}
+
+Un cilindro tiene un radio de \Sexpr{radio_cilindro} cm y una altura de \Sexpr{altura_cilindro} cm, como se muestra en la figura.
+
+<<figura_cilindro, echo=FALSE, results='asis'>>=
+# Código TikZ optimizado basado en templates robustos del proyecto
+tikz_code <- paste0("
+\\begin{tikzpicture}[scale=", escala_grafico, ", thick, >=stealth]
+    
+    % Parámetros del cilindro (escalados para visualización)
+    \\def\\radiovis{1.5}  % Radio visual (3cm escalado)
+    \\def\\alturavis{4}   % Altura visual (8cm escalado)
+    \\def\\perspectiva{0.4}  % Factor de perspectiva para elipses
+    
+    % === BASE INFERIOR ===
+    % Elipse completa (visible)
+    \\draw[thick] (0,0) ellipse (\\radiovis and \\radiovis*\\perspectiva);
+    
+    % === PAREDES LATERALES ===
+    % Líneas laterales visibles
+    \\draw[thick] (\\radiovis,0) -- (\\radiovis,\\alturavis);
+    \\draw[thick] (-\\radiovis,0) -- (-\\radiovis,\\alturavis);
+    
+    % === BASE SUPERIOR ===
+    % Elipse superior (visible)
+    \\draw[thick] (0,\\alturavis) ellipse (\\radiovis and \\radiovis*\\perspectiva);
+    
+    % === LÍNEAS OCULTAS ===
+    % Parte trasera de la base inferior (punteada)
+    \\draw[thick, dashed] (-\\radiovis,0) arc (180:360:\\radiovis and \\radiovis*\\perspectiva);
+    
+    % === ETIQUETAS DE DIMENSIONES ===
+    % Flecha y etiqueta para el radio
+    \\draw[<->] (0,-0.8) -- (\\radiovis,-0.8);
+    \\node[below] at (\\radiovis/2,-0.8) {\\textbf{", radio_cilindro, " cm}};
+    
+    % Flecha y etiqueta para la altura
+    \\draw[<->] (\\radiovis+0.3,0) -- (\\radiovis+0.3,\\alturavis);
+    \\node[right] at (\\radiovis+0.5,\\alturavis/2) {\\textbf{", altura_cilindro, " cm}};
+    
+    % === ELEMENTOS ADICIONALES ===
+    % Punto central para claridad
+    \\fill (0,0) circle (0.05);
+    \\fill (0,\\alturavis) circle (0.05);
+    
+    % Línea central (eje del cilindro) - opcional
+    \\draw[thin, gray, dashed] (0,0) -- (0,\\alturavis);
+    
+\\end{tikzpicture}
+")
+
+# Usar el sistema de templates robusto del proyecto
+cat(tikz_code)
+@
+
+\section{Pregunta}
+
+¿Cuál es el volumen del cilindro mostrado en la figura?
+
+\textbf{Fórmula:} $V = \pi r^2 h$
+
+\begin{enumerate}
+    \item[A)] \Sexpr{opcion_a} cm³
+    \item[B)] \Sexpr{opcion_b} cm³  
+    \item[C)] \Sexpr{opcion_c} cm³
+    \item[D)] \Sexpr{opcion_d} cm³
+\end{enumerate}
+
+\section{Solución}
+
+<<solucion, echo=TRUE>>=
+# Aplicando la fórmula del volumen de un cilindro
+cat("Datos:")
+cat("\n- Radio (r) =", radio_cilindro, "cm")
+cat("\n- Altura (h) =", altura_cilindro, "cm")
+cat("\n")
+cat("\nFórmula: V = π × r² × h")
+cat("\nSustituyendo:")
+cat("\nV = π ×", radio_cilindro, "² ×", altura_cilindro)
+cat("\nV = π ×", radio_cilindro^2, "×", altura_cilindro)
+cat("\nV = π ×", radio_cilindro^2 * altura_cilindro)
+cat("\nV =", round(volumen, 2), "cm³")
+cat("\n")
+cat("\nRespuesta correcta: A)")
+@
+
+\section{Información Adicional}
+
+<<calculos_extra, echo=FALSE>>=
+cat("Cálculos adicionales:")
+cat("\n• Área lateral:", round(area_lateral, 2), "cm²")
+cat("\n• Área total:", round(area_total, 2), "cm²")
+cat("\n• Diámetro:", 2 * radio_cilindro, "cm")
+@
+
+\end{document}
