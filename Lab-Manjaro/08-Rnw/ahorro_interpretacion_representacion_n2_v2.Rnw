@@ -150,18 +150,25 @@ opciones_base[2] <- paste("No, porque la ayuda total", obtener_articulo(if(famil
                          "mientras que", obtener_articulo(genero_elegido), familiar_elegido, "es de \\$",
                          formatear_monetario(if(familiar_elegido == familiar1) total_opcion1 else total_opcion2), ".")
 
-opciones_base[3] <- paste("Si, porque con la ayuda", obtener_articulo(genero_elegido), familiar_elegido, "recibe el",
-                         if(familiar_elegido == familiar1) porcentaje_constante else round(sum(porcentajes_variables)/3, 1),
-                         "\\% del total ahorrado y con la ayuda", obtener_articulo(if(familiar_elegido == familiar1) genero2 else genero1),
-                         if(familiar_elegido == familiar1) familiar2 else familiar1, "recibe el",
-                         if(familiar_elegido == familiar1) round(sum(porcentajes_variables)/3, 1) else porcentaje_constante, "\\%.")
+opciones_base[3] <- if(eleccion_correcta) {
+  paste("Si, porque", obtener_articulo(genero_elegido), familiar_elegido, "tiene",
+        if(familiar_elegido == familiar1) "porcentajes constantes" else "un porcentaje alto en el ultimo mes",
+        "que compensa las diferencias de los otros meses.")
+} else {
+  paste("Si, porque", obtener_articulo(genero_elegido), familiar_elegido, "parece tener",
+        if(familiar_elegido == familiar1) "porcentajes mas estables" else "mejor porcentaje final",
+        "aunque en realidad no sea la mejor opcion.")
+}
 
-opciones_base[4] <- paste("No, porque con la ayuda", obtener_articulo(genero_elegido), familiar_elegido,
-                         "el porcentaje del primer mes es del",
-                         if(familiar_elegido == familiar1) porcentaje_constante else porcentajes_variables[1],
-                         "\\% y con la ayuda", obtener_articulo(if(familiar_elegido == familiar1) genero2 else genero1),
-                         if(familiar_elegido == familiar1) familiar2 else familiar1, "es del",
-                         if(familiar_elegido == familiar1) porcentajes_variables[1] else porcentaje_constante, "\\%.")
+opciones_base[4] <- if(eleccion_correcta) {
+  paste("No, porque", obtener_articulo(genero_elegido), familiar_elegido, "solo parece mejor",
+        if(familiar_elegido == familiar1) "por ser constante" else "por el ultimo mes",
+        "pero en realidad si es la mejor opcion.")
+} else {
+  paste("No, porque", obtener_articulo(genero_elegido), familiar_elegido, "no ofrece",
+        if(familiar_elegido == familiar1) "suficiente dinero total" else "consistencia en los porcentajes",
+        "comparado con la otra opcion.")
+}
 
 # Determinar cual opcion es correcta basada en si la eleccion fue correcta
 respuesta_correcta_pos <- if(eleccion_correcta) 1 else 2  # Si eligio bien -> "Si" (1), si eligio mal -> "No" (2)
@@ -196,10 +203,24 @@ if(eleccion_correcta) {
                                  obtener_articulo_det(genero_mejor), " ", familiar_mejor, " ofrece mas ayuda, por lo que la eleccion fue incorrecta.")
 }
 
-explicaciones_base[3] <- paste("Incorrecto. Aunque los porcentajes pueden parecer similares, lo importante son los totales absolutos: \\$",
-                               formatear_monetario(total_mejor), " vs \\$", formatear_monetario(total_peor), ".")
-explicaciones_base[4] <- paste("Incorrecto. Aunque algunos porcentajes individuales pueden variar, el total acumulado",
-                               obtener_articulo(genero_mejor), " ", familiar_mejor, " (\\$", formatear_monetario(total_mejor), ") es mayor.")
+explicaciones_base[3] <- if(eleccion_correcta) {
+  paste("Incorrecto. Aunque la justificacion puede parecer valida, la respuesta correcta es 'Si' porque",
+        obtener_articulo_det(genero_elegido), " ", familiar_elegido, " efectivamente ofrece mas dinero: \\$",
+        formatear_monetario(if(familiar_elegido == familiar_mejor) total_mejor else total_peor), ".")
+} else {
+  paste("Incorrecto. La eleccion de ", nombre, " fue incorrecta porque ", obtener_articulo_det(genero_mejor), " ", familiar_mejor,
+        " ofrece \\$", formatear_monetario(total_mejor), " mientras que ", obtener_articulo_det(genero_elegido), " ", familiar_elegido,
+        " solo ofrece \\$", formatear_monetario(total_peor), ".")
+}
+
+explicaciones_base[4] <- if(eleccion_correcta) {
+  paste("Incorrecto. La eleccion de ", nombre, " fue correcta porque ", obtener_articulo_det(genero_elegido), " ", familiar_elegido,
+        " ofrece \\$", formatear_monetario(if(familiar_elegido == familiar_mejor) total_mejor else total_peor),
+        " que es efectivamente la mayor cantidad.")
+} else {
+  paste("Incorrecto. Aunque la critica puede tener sentido, la respuesta correcta es 'No' porque la eleccion fue incorrecta:",
+        " \\$", formatear_monetario(total_mejor), " vs \\$", formatear_monetario(total_peor), ".")
+}
 
 # Aplicar el mismo orden aleatorio a las explicaciones
 explicaciones <- explicaciones_base[orden_aleatorio]
