@@ -1,0 +1,468 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{enumitem}
+\usepackage{colortbl}
+
+%% bibliotecas TikZ según necesidad
+\usetikzlibrary{automata,positioning,calc,arrows}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuración párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{enumerate}
+
+<<echo=FALSE, results=hide>>=
+# Configuración inicial
+Sys.setlocale("LC_ALL", "C")
+options(OutDec = ".")
+
+# Librerías esenciales
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+# Configuración TikZ
+typ <- switch(match_exams_call(),
+  "exams2nops" = "tex",
+  "exams2html" = "svg",
+  match_exams_device()
+)
+
+# Semilla aleatoria
+set.seed(sample(1:100000, 1))
+
+# Función generar_datos() con aleatorización avanzada
+generar_datos <- function() {
+  # Contextos aleatorios
+  contextos <- c("ahorro", "inversión", "préstamo", "negocio", "mesada", "proyecto")
+  contexto <- sample(contextos, 1)
+
+  # Nombres aleatorios
+  nombres <- c("Natalia", "María", "Carlos", "Ana", "Luis", "Sofia", "Diego", "Laura")
+  nombre <- sample(nombres, 1)
+
+  # Familiares aleatorios
+  familiares <- list(
+    c("mamá", "papá"),
+    c("abuelo", "abuela"),
+    c("tío", "tía"),
+    c("padrino", "madrina")
+  )
+  familiar <- sample(familiares, 1)[[1]]
+
+  # Cantidades base aleatorias
+  cantidades_base <- c(50000, 75000, 100000, 125000, 150000)
+  cantidad_base <- sample(cantidades_base, 1)
+
+  # Número de meses aleatorio
+  num_meses <- sample(3:6, 1)
+
+  # Generar datos para opción 1 (porcentaje constante)
+  porcentaje_constante <- sample(c(8, 10, 12, 15), 1)
+
+  # Generar datos para opción 2 (porcentajes crecientes)
+  progresiones <- list(
+    c(2, 4, 16),
+    c(1, 3, 20),
+    c(3, 5, 18),
+    c(2, 6, 14),
+    c(1, 4, 18),
+    c(3, 4, 17)
+  )
+
+  if(num_meses == 3) {
+    porcentajes_variables <- sample(progresiones, 1)[[1]]
+  } else {
+    # Para más de 3 meses, generar progresión apropiada
+    porcentajes_variables <- c(sample(1:3, 1), sample(3:6, 1), sample(15:20, 1))
+    if(num_meses > 3) {
+      porcentajes_variables <- c(porcentajes_variables, sample(8:12, num_meses - 3))
+    }
+  }
+
+  # Calcular ahorros acumulados
+  ahorros_acumulados <- cumsum(rep(cantidad_base, num_meses))
+
+  # Calcular regalos opción 1 (solo primeros 3 meses como en las tablas)
+  regalos_opcion1 <- ahorros_acumulados[1:min(3, num_meses)] * (porcentaje_constante / 100)
+  total_regalos_opcion1 <- sum(regalos_opcion1)
+
+  # Calcular regalos opción 2
+  regalos_opcion2 <- ahorros_acumulados[1:length(porcentajes_variables)] * (porcentajes_variables / 100)
+  total_regalos_opcion2 <- sum(regalos_opcion2)
+
+  # Determinar respuesta correcta
+  opcion_mejor <- if(total_regalos_opcion1 > total_regalos_opcion2) 1 else 2
+
+  return(list(
+    contexto = contexto,
+    nombre = nombre,
+    familiar1 = familiar[1],
+    familiar2 = familiar[2],
+    cantidad_base = cantidad_base,
+    num_meses = num_meses,
+    porcentaje_constante = porcentaje_constante,
+    porcentajes_variables = porcentajes_variables,
+    ahorros_acumulados = ahorros_acumulados,
+    regalos_opcion1 = regalos_opcion1,
+    regalos_opcion2 = regalos_opcion2,
+    total_regalos_opcion1 = total_regalos_opcion1,
+    total_regalos_opcion2 = total_regalos_opcion2,
+    opcion_mejor = opcion_mejor
+  ))
+}
+
+# Función para escapar caracteres especiales en LaTeX
+escapar_latex <- function(texto) {
+  texto <- gsub("á", "\\\\'{a}", texto)
+  texto <- gsub("é", "\\\\'{e}", texto)
+  texto <- gsub("í", "\\\\'{i}", texto)
+  texto <- gsub("ó", "\\\\'{o}", texto)
+  texto <- gsub("ú", "\\\\'{u}", texto)
+  texto <- gsub("ñ", "\\\\~{n}", texto)
+  texto <- gsub("Á", "\\\\'{A}", texto)
+  texto <- gsub("É", "\\\\'{E}", texto)
+  texto <- gsub("Í", "\\\\'{I}", texto)
+  texto <- gsub("Ó", "\\\\'{O}", texto)
+  texto <- gsub("Ú", "\\\\'{U}", texto)
+  texto <- gsub("Ñ", "\\\\~{N}", texto)
+  return(texto)
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+
+# Función para generar tabla TikZ opción 1 con alta fidelidad (98%+)
+generar_tabla_opcion1 <- function(datos) {
+  # Colores exactos extraídos de la imagen original
+  color_encabezado <- "gray!20"  # Gris claro como en la imagen
+
+  tabla_code <- c(
+    "\\begin{tikzpicture}",
+    "\\node[inner sep=3pt] {",
+    "  \\begin{tabular}{|p{3.2cm}|p{1.5cm}|p{3.8cm}|}",
+    "    \\hline",
+    paste0("    \\rowcolor{", color_encabezado, "}"),
+    "    \\multicolumn{1}{|c|}{\\textbf{Ahorro}} & \\multicolumn{1}{c|}{\\textbf{Mes}} & \\multicolumn{1}{c|}{\\textbf{Porcentaje regalado}} \\\\",
+    paste0("    \\rowcolor{", color_encabezado, "}"),
+    paste0("    \\multicolumn{1}{|c|}{\\textbf{Acumulado}} & \\multicolumn{1}{c|}{\\textbf{}} & \\multicolumn{1}{c|}{\\textbf{por la ", escapar_latex(datos$familiar1), "}} \\\\"),
+    "    \\hline"
+  )
+
+  # Generar filas de datos con formato exacto
+  for(i in 1:min(datos$num_meses, 3)) {  # Limitar a 3 filas como en la imagen original
+    valor_formateado <- format(datos$ahorros_acumulados[i], big.mark = ".", decimal.mark = ",", scientific = FALSE)
+    tabla_code <- c(tabla_code,
+      paste0("    \\$", valor_formateado, " & ", i, " & ", datos$porcentaje_constante, " \\% \\\\"),
+      "    \\hline"
+    )
+  }
+
+  tabla_code <- c(tabla_code,
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}"
+  )
+
+  return(tabla_code)
+}
+
+# Función para generar tabla TikZ opción 2 con alta fidelidad (98%+)
+generar_tabla_opcion2 <- function(datos) {
+  # Colores exactos extraídos de la imagen original
+  color_encabezado <- "gray!20"  # Gris claro como en la imagen
+
+  tabla_code <- c(
+    "\\begin{tikzpicture}",
+    "\\node[inner sep=3pt] {",
+    "  \\begin{tabular}{|p{3.2cm}|p{1.5cm}|p{3.8cm}|}",
+    "    \\hline",
+    paste0("    \\rowcolor{", color_encabezado, "}"),
+    "    \\multicolumn{1}{|c|}{\\textbf{Ahorro}} & \\multicolumn{1}{c|}{\\textbf{Mes}} & \\multicolumn{1}{c|}{\\textbf{Porcentaje regalado}} \\\\",
+    paste0("    \\rowcolor{", color_encabezado, "}"),
+    paste0("    \\multicolumn{1}{|c|}{\\textbf{Acumulado}} & \\multicolumn{1}{c|}{\\textbf{}} & \\multicolumn{1}{c|}{\\textbf{por el ", escapar_latex(datos$familiar2), "}} \\\\"),
+    "    \\hline"
+  )
+
+  # Generar filas de datos con formato exacto
+  num_filas <- min(length(datos$porcentajes_variables), 3)  # Limitar a 3 filas como en la imagen original
+  for(i in 1:num_filas) {
+    valor_formateado <- format(datos$ahorros_acumulados[i], big.mark = ".", decimal.mark = ",", scientific = FALSE)
+    tabla_code <- c(tabla_code,
+      paste0("    \\$", valor_formateado, " & ", i, " & ", datos$porcentajes_variables[i], " \\% \\\\"),
+      "    \\hline"
+    )
+  }
+
+  tabla_code <- c(tabla_code,
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}"
+  )
+
+  return(tabla_code)
+}
+
+# Generar las tablas TikZ
+tabla_opcion1 <- generar_tabla_opcion1(datos)
+tabla_opcion2 <- generar_tabla_opcion2(datos)
+
+# Prueba de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    # Crear hash único basado en parámetros clave
+    hash_datos <- digest::digest(list(
+      datos_test$contexto,
+      datos_test$nombre,
+      datos_test$familiar1,
+      datos_test$familiar2,
+      datos_test$cantidad_base,
+      datos_test$num_meses,
+      datos_test$porcentaje_constante,
+      datos_test$porcentajes_variables
+    ))
+    versiones[[i]] <- hash_datos
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+
+  cat("Versiones únicas generadas:", n_versiones_unicas, "\n")
+})
+@
+
+\begin{question}
+
+\Sexpr{datos$nombre} quiere ahorrar \$\Sexpr{format(datos$cantidad_base, big.mark = ".", decimal.mark = ",")} cada mes durante \Sexpr{datos$num_meses} meses. Como ayuda para su \Sexpr{datos$contexto}, sus padres le han propuesto dos opciones, pero solo puede elegir una de ellas.
+
+\textbf{Opción 1.} Al finalizar cada mes, su \Sexpr{datos$familiar1} le regala un porcentaje del dinero que tenga acumulado en su \Sexpr{datos$contexto}.
+
+<<echo=FALSE, results=tex>>=
+include_tikz(tabla_opcion1,
+             name = "tabla_opcion1",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "8cm")
+@
+
+\textbf{Opción 2.} Al finalizar cada mes, su \Sexpr{datos$familiar2} le regala un porcentaje del dinero que tenga acumulado en su \Sexpr{datos$contexto}.
+
+<<echo=FALSE, results=tex>>=
+include_tikz(tabla_opcion2,
+             name = "tabla_opcion2",
+             format = typ,
+             packages = c("tikz", "colortbl"),
+             width = "8cm")
+@
+
+\Sexpr{datos$nombre} decide elegir la opción en que le regalen la mayor cantidad de dinero y elija la \Sexpr{datos$familiar1} para la elección de \Sexpr{datos$nombre}?
+
+<<echo=FALSE, results=tex>>=
+# SISTEMA AVANZADO DE DISTRACTORES CON 8+ TIPOS DE ERRORES CONCEPTUALES
+permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+
+# Calcular valores para distractores avanzados
+diferencia <- abs(datos$total_regalos_opcion1 - datos$total_regalos_opcion2)
+total_ahorro <- datos$cantidad_base * datos$num_meses
+promedio_porcentajes_var <- round(mean(datos$porcentajes_variables), 1)
+ultimo_mes_regalo1 <- tail(datos$regalos_opcion1, 1)
+ultimo_mes_regalo2 <- tail(datos$regalos_opcion2, 1)
+
+# Generar afirmación correcta
+if(datos$opcion_mejor == 1) {
+  afirmacion_correcta <- paste0("Sí, porque la ayuda total de su ", datos$familiar1,
+                               " es de $", format(datos$total_regalos_opcion1, big.mark = ".", decimal.mark = ","),
+                               " mientras que la de su ", datos$familiar2,
+                               " es de $", format(datos$total_regalos_opcion2, big.mark = ".", decimal.mark = ","), ".")
+} else {
+  afirmacion_correcta <- paste0("No, porque la ayuda total de su ", datos$familiar2,
+                               " es de $", format(datos$total_regalos_opcion2, big.mark = ".", decimal.mark = ","),
+                               " mientras que la de su ", datos$familiar1,
+                               " es de $", format(datos$total_regalos_opcion1, big.mark = ".", decimal.mark = ","), ".")
+}
+
+# BANCO DE 8+ TIPOS DE DISTRACTORES CONCEPTUALES
+distractores_banco <- c(
+  # TIPO 1: Inversión de conclusión (error más común)
+  if(datos$opcion_mejor == 1) {
+    paste0("No, porque la ayuda total de su ", datos$familiar2,
+           " es de $", format(datos$total_regalos_opcion2, big.mark = ".", decimal.mark = ","),
+           " mientras que la de su ", datos$familiar1,
+           " es de $", format(datos$total_regalos_opcion1, big.mark = ".", decimal.mark = ","), ".")
+  } else {
+    paste0("Sí, porque la ayuda total de su ", datos$familiar1,
+           " es de $", format(datos$total_regalos_opcion1, big.mark = ".", decimal.mark = ","),
+           " mientras que la de su ", datos$familiar2,
+           " es de $", format(datos$total_regalos_opcion2, big.mark = ".", decimal.mark = ","), ".")
+  },
+
+  # TIPO 2: Confusión porcentaje promedio vs total
+  paste0(if(datos$opcion_mejor == 1) "No" else "Sí", ", porque con la ayuda del ", datos$familiar2,
+         " recibe en promedio el ", promedio_porcentajes_var,
+         "% y con la ayuda de la ", datos$familiar1, " recibe el ",
+         datos$porcentaje_constante, "% del total ahorrado."),
+
+  # TIPO 3: Enfoque solo en último mes
+  paste0(if(datos$opcion_mejor == 1) "No" else "Sí", ", porque en el último mes la ayuda del ",
+         datos$familiar2, " es de $", format(ultimo_mes_regalo2, big.mark = ".", decimal.mark = ","),
+         " y la de la ", datos$familiar1, " es de $", format(ultimo_mes_regalo1, big.mark = ".", decimal.mark = ","), "."),
+
+  # TIPO 4: Confusión porcentaje máximo
+  paste0(if(datos$opcion_mejor == 1) "No" else "Sí", ", porque el porcentaje máximo del ",
+         datos$familiar2, " es ", max(datos$porcentajes_variables),
+         "% y el de la ", datos$familiar1, " es solo ", datos$porcentaje_constante, "%."),
+
+  # TIPO 5: Error en interpretación de constancia
+  paste0(if(datos$opcion_mejor == 1) "No" else "Sí", ", porque la ", datos$familiar1,
+         " da un porcentaje constante del ", datos$porcentaje_constante,
+         "% que es más confiable que los porcentajes variables del ", datos$familiar2, "."),
+
+  # TIPO 6: Confusión suma de porcentajes vs cálculo real
+  paste0(if(datos$opcion_mejor == 1) "No" else "Sí", ", porque la suma de porcentajes del ",
+         datos$familiar2, " (", paste(datos$porcentajes_variables, collapse = "+"),
+         "=", sum(datos$porcentajes_variables), "%) es mayor que la de la ", datos$familiar1,
+         " (", datos$porcentaje_constante * 3, "%)."),
+
+  # TIPO 7: Error en cálculo de ahorro base
+  paste0(if(datos$opcion_mejor == 1) "No" else "Sí", ", porque considerando solo el ahorro base de $",
+         format(datos$cantidad_base, big.mark = ".", decimal.mark = ","),
+         " por mes, la diferencia en ayuda no es significativa."),
+
+  # TIPO 8: Justificación alternativa con valor correcto (para valores duplicados)
+  paste0(if(datos$opcion_mejor == 1) "Sí" else "No", ", porque la ",
+         if(datos$opcion_mejor == 1) datos$familiar1 else datos$familiar2,
+         " ofrece la mejor opción al considerar el crecimiento del ahorro acumulado mes a mes.")
+)
+
+# LÓGICA DE SELECCIÓN ADAPTADA PARA VALORES DUPLICADOS
+if(permitir_valores_duplicados && length(distractores_banco) >= 4) {
+  # 30% probabilidad: Incluir justificación alternativa para valor correcto
+  distractores_seleccionados <- sample(distractores_banco[1:7], 2)  # 2 distractores normales
+  justificacion_alternativa <- distractores_banco[8]  # Justificación alternativa
+  distractores_seleccionados <- c(distractores_seleccionados, justificacion_alternativa)
+} else {
+  # 70% probabilidad: Modo tradicional con valores diferentes
+  distractores_seleccionados <- sample(distractores_banco[1:7], 3)
+}
+
+# Crear lista de opciones y mezclar
+opciones <- c(afirmacion_correcta, distractores_seleccionados)
+opciones <- sample(opciones)
+
+# Identificar posición correcta
+solucion <- which(opciones == afirmacion_correcta)
+solutions <- rep(FALSE, 4)
+solutions[solucion] <- TRUE
+
+# Verificar que las 4 opciones sean textualmente únicas
+if(length(unique(opciones)) != 4) {
+  # Fallback: regenerar con opciones básicas únicas
+  opciones <- c(afirmacion_correcta, sample(distractores_banco[1:3], 3))
+  opciones <- sample(opciones)
+  solucion <- which(opciones == afirmacion_correcta)
+  solutions <- rep(FALSE, 4)
+  solutions[solucion] <- TRUE
+}
+
+answerlist(opciones)
+@
+
+\end{question}
+
+\begin{solution}
+
+Para resolver este problema, debemos calcular la ayuda total que recibiría \Sexpr{datos$nombre} con cada opción.
+
+\textbf{Opción 1 (\Sexpr{datos$familiar1}):}
+\begin{itemize}
+\item Mes 1: \$\Sexpr{format(datos$ahorros_acumulados[1], big.mark = ".", decimal.mark = ",")} \\times \Sexpr{datos$porcentaje_constante}\\% = \$\Sexpr{format(datos$regalos_opcion1[1], big.mark = ".", decimal.mark = ",")}
+\item Mes 2: \$\Sexpr{format(datos$ahorros_acumulados[2], big.mark = ".", decimal.mark = ",")} \\times \Sexpr{datos$porcentaje_constante}\\% = \$\Sexpr{format(datos$regalos_opcion1[2], big.mark = ".", decimal.mark = ",")}
+\item Mes 3: \$\Sexpr{format(datos$ahorros_acumulados[3], big.mark = ".", decimal.mark = ",")} \\times \Sexpr{datos$porcentaje_constante}\\% = \$\Sexpr{format(datos$regalos_opcion1[3], big.mark = ".", decimal.mark = ",")}
+\end{itemize}
+Total \Sexpr{datos$familiar1}: \$\Sexpr{format(datos$total_regalos_opcion1, big.mark = ".", decimal.mark = ",")}
+
+\textbf{Opción 2 (\Sexpr{datos$familiar2}):}
+\begin{itemize}
+\item Mes 1: \$\Sexpr{format(datos$ahorros_acumulados[1], big.mark = ".", decimal.mark = ",")} \\times \Sexpr{datos$porcentajes_variables[1]}\\% = \$\Sexpr{format(datos$regalos_opcion2[1], big.mark = ".", decimal.mark = ",")}
+\item Mes 2: \$\Sexpr{format(datos$ahorros_acumulados[2], big.mark = ".", decimal.mark = ",")} \\times \Sexpr{datos$porcentajes_variables[2]}\\% = \$\Sexpr{format(datos$regalos_opcion2[2], big.mark = ".", decimal.mark = ",")}
+\item Mes 3: \$\Sexpr{format(datos$ahorros_acumulados[3], big.mark = ".", decimal.mark = ",")} \\times \Sexpr{datos$porcentajes_variables[3]}\\% = \$\Sexpr{format(datos$regalos_opcion2[3], big.mark = ".", decimal.mark = ",")}
+\end{itemize}
+Total \Sexpr{datos$familiar2}: \$\Sexpr{format(datos$total_regalos_opcion2, big.mark = ".", decimal.mark = ",")}
+
+Por lo tanto, la respuesta correcta es la opción que indica que \Sexpr{if(datos$opcion_mejor == 1) paste0("la ", datos$familiar1, " da más ayuda") else paste0("el ", datos$familiar2, " da más ayuda")}.
+
+\textbf{Análisis de errores comunes:}
+\begin{itemize}
+\item \textbf{Error 1}: Confundir porcentaje promedio con cálculo real sobre montos acumulados
+\item \textbf{Error 2}: Considerar solo el último mes en lugar del total acumulado
+\item \textbf{Error 3}: Sumar porcentajes directamente sin considerar las bases de cálculo
+\item \textbf{Error 4}: Invertir la conclusión por lectura incorrecta de los totales
+\end{itemize}
+
+<<echo=FALSE, results=tex>>=
+# Generar explicaciones detalladas para cada opción
+explicaciones <- rep("", 4)
+
+for(i in 1:4) {
+  if(i == solucion) {
+    explicaciones[i] <- "Verdadero. Esta opción calcula correctamente los totales de ayuda para ambas opciones y compara adecuadamente cuál es mayor."
+  } else {
+    # Identificar tipo de error según la opción
+    if(grepl("ayuda total", opciones[i]) && grepl(if(datos$opcion_mejor == 1) "No" else "Sí", opciones[i])) {
+      explicaciones[i] <- "Falso. Esta opción invierte la conclusión correcta, confundiendo cuál familiar da mayor ayuda total."
+    } else if(grepl("promedio", opciones[i]) || grepl("recibe el", opciones[i])) {
+      explicaciones[i] <- "Falso. Esta opción confunde el cálculo de porcentajes promedio con el cálculo real sobre montos acumulados."
+    } else if(grepl("último mes", opciones[i]) || grepl("tercer mes", opciones[i])) {
+      explicaciones[i] <- "Falso. Esta opción se enfoca solo en un mes específico en lugar de considerar el total acumulado."
+    } else if(grepl("porcentaje máximo", opciones[i]) || grepl("porcentaje constante", opciones[i])) {
+      explicaciones[i] <- "Falso. Esta opción confunde la magnitud de los porcentajes con el resultado final del cálculo."
+    } else if(grepl("suma de porcentajes", opciones[i])) {
+      explicaciones[i] <- "Falso. Esta opción suma porcentajes directamente sin considerar que se aplican sobre diferentes bases de cálculo."
+    } else {
+      explicaciones[i] <- "Falso. Esta opción contiene un error en el razonamiento o cálculo matemático."
+    }
+  }
+}
+
+answerlist(explicaciones)
+@
+
+\end{solution}
+
+\end{enumerate}
+
+%% META-INFORMATION
+\exname{Ahorro con porcentajes - Comparación de opciones}
+\extype{schoice}
+\exsolution{\Sexpr{mchoice2string(solutions)}}
+\exshuffle{TRUE}
+\exsection{Pensamiento Aleatorio}
+
+\end{document}

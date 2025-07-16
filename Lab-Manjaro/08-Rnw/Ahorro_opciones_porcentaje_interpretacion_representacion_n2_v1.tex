@@ -1,0 +1,104 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{enumitem}
+\usepackage{colortbl}
+
+%% bibliotecas TikZ según necesidad
+\usetikzlibrary{automata,positioning,calc,arrows}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuración párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\input{Ahorro_opciones_porcentaje_interpretacion_representacion_n2_v1-concordance}
+
+\begin{enumerate}
+
+
+\begin{question}
+
+Ana quiere ahorrar \$150.000 cada mes durante 5 meses. Como ayuda para su proyecto, sus padres le han propuesto dos opciones, pero solo puede elegir una de ellas.
+
+\textbf{Opci<U+00F3>n 1.} Al finalizar cada mes, su t<U+00ED>o le regala un porcentaje del dinero que tenga acumulado en su proyecto.
+
+\includegraphics[width=8cm]{tabla_opcion1.png}
+\textbf{Opci<U+00F3>n 2.} Al finalizar cada mes, su t<U+00ED>a le regala un porcentaje del dinero que tenga acumulado en su proyecto.
+
+\includegraphics[width=8cm]{tabla_opcion2.png}
+Ana decide elegir la opci<U+00F3>n en que le regalen la mayor cantidad de dinero y elija la t<U+00ED>o para la elecci<U+00F3>n de Ana?
+
+\begin{answerlist}
+  \item S<U+00ED>, porque con la ayuda del t<U+00ED>a recibe en promedio el 9.6% y con la ayuda de la t<U+00ED>o recibe el 8% del total ahorrado.
+  \item No, porque la ayuda total de su t<U+00ED>a es de $252.000 mientras que la de su t<U+00ED>o es de $72.000.
+  \item S<U+00ED>, porque la t<U+00ED>o da un porcentaje constante del 8% que es m<U+00E1>s confiable que los porcentajes variables del t<U+00ED>a.
+  \item S<U+00ED>, porque la suma de porcentajes del t<U+00ED>a (3+4+19+10+12=48%) es mayor que la de la t<U+00ED>o (24%).
+\end{answerlist}
+\end{question}
+
+\begin{solution}
+
+Para resolver este problema, debemos calcular la ayuda total que recibir<U+00ED>a Ana con cada opci<U+00F3>n.
+
+\textbf{Opci<U+00F3>n 1 (t<U+00ED>o):}
+\begin{itemize}
+\item Mes 1: \$150.000 \\times 8\\% = \$12.000
+\item Mes 2: \$3e+05 \\times 8\\% = \$24.000
+\item Mes 3: \$450.000 \\times 8\\% = \$36.000
+\end{itemize}
+Total t<U+00ED>o: \$72.000
+
+\textbf{Opci<U+00F3>n 2 (t<U+00ED>a):}
+\begin{itemize}
+\item Mes 1: \$150.000 \\times 3\\% = \$4.500
+\item Mes 2: \$3e+05 \\times 4\\% = \$12.000
+\item Mes 3: \$450.000 \\times 19\\% = \$85.500
+\end{itemize}
+Total t<U+00ED>a: \$252.000
+
+Por lo tanto, la respuesta correcta es la opci<U+00F3>n que indica que el t<U+00ED>a da m<U+00E1>s ayuda.
+
+\textbf{An<U+00E1>lisis de errores comunes:}
+\begin{itemize}
+\item \textbf{Error 1}: Confundir porcentaje promedio con c<U+00E1>lculo real sobre montos acumulados
+\item \textbf{Error 2}: Considerar solo el <U+00FA>ltimo mes en lugar del total acumulado
+\item \textbf{Error 3}: Sumar porcentajes directamente sin considerar las bases de c<U+00E1>lculo
+\item \textbf{Error 4}: Invertir la conclusi<U+00F3>n por lectura incorrecta de los totales
+\end{itemize}
+
+\begin{answerlist}
+  \item Falso. Esta opci<U+00F3>n confunde el c<U+00E1>lculo de porcentajes promedio con el c<U+00E1>lculo real sobre montos acumulados.
+  \item Verdadero. Esta opci<U+00F3>n calcula correctamente los totales de ayuda para ambas opciones y compara adecuadamente cu<U+00E1>l es mayor.
+  \item Falso. Esta opci<U+00F3>n confunde la magnitud de los porcentajes con el resultado final del c<U+00E1>lculo.
+  \item Falso. Esta opci<U+00F3>n suma porcentajes directamente sin considerar que se aplican sobre diferentes bases de c<U+00E1>lculo.
+\end{answerlist}
+\end{solution}
+
+\end{enumerate}
+
+%% META-INFORMATION
+\exname{Ahorro con porcentajes - Comparaci<U+00F3>n de opciones}
+\extype{schoice}
+\exsolution{0100}
+\exshuffle{TRUE}
+\exsection{Pensamiento Aleatorio}
+
+\end{document}
