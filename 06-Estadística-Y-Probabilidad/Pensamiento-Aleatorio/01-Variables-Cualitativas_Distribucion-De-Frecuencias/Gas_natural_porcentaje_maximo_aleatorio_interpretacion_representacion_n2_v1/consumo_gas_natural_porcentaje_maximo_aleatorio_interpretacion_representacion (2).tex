@@ -1,0 +1,120 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\usepackage{Sweave}
+\begin{document}
+\input{consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion-concordance}
+
+
+
+\begin{question}
+
+Valentina y Francisco viven en un apartamento y comparten el pago de los gastos. En octubre consumieron 12 metros cúbicos de gas natural y la factura fue de \$14.000, incluido el cargo fijo de \$3.200 que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+
+\includegraphics[width=0.8\textwidth]{grafico_consumo_gas}
+Un hogar puede consumir máximo 25 metros cúbicos en un mes. ¿A qué porcentaje del consumo máximo posible corresponde el consumo de mayo?
+
+\begin{answerlist}
+  \item 19%
+  \item 83%
+  \item 56%
+  \item 76%
+\end{answerlist}\end{question}
+
+\begin{solution}
+
+\subsection*{Análisis del problema}
+
+Este problema requiere \textbf{interpretación de gráficos de barras} y \textbf{cálculo de porcentajes}. Los pasos son:
+
+\begin{enumerate}
+\item \textbf{Leer correctamente la gráfica} para identificar el consumo de mayo
+\item \textbf{Identificar el consumo máximo posible} según el enunciado
+\item \textbf{Aplicar la fórmula de porcentaje} para encontrar la relación
+\end{enumerate}
+
+\subsection*{Paso 1: Lectura de la gráfica}
+
+Observando la gráfica de consumo histórico de Valentina y Francisco:
+
+\textbf{Consumos mensuales registrados:}\begin{itemize}\item Abril: 14 metros cúbicos
+\item Mayo: 19 metros cúbicos $\leftarrow$ \textbf{MES DE LA PREGUNTA}
+\item Junio: 14 metros cúbicos
+\item Julio: 14 metros cúbicos
+\item Agosto: 15 metros cúbicos
+\item Septiembre: 14 metros cúbicos
+\item Octubre: 12 metros cúbicos $\leftarrow$ \textbf{MES DE LA FACTURA}\end{itemize}
+\textbf{El consumo de mayo fue de 19 metros cúbicos.}
+
+\subsection*{Paso 2: Datos del problema}
+
+\begin{itemize}
+\item \textbf{Consumo máximo posible:} 25 metros cúbicos (dato del enunciado)
+\item \textbf{Consumo real de mayo:} 19 metros cúbicos (dato de la gráfica)
+\end{itemize}
+
+\subsection*{Paso 3: Aplicación de la fórmula de porcentaje}
+
+Para calcular qué porcentaje representa el consumo de mayo respecto al máximo posible:
+
+$$\text{Porcentaje} = \frac{\text{Valor observado}}{\text{Valor máximo}} \times 100\%$$
+
+Sustituyendo los valores:
+
+$$\text{Porcentaje} = \frac{19}{25} \times 100\% = 76\%$$
+
+\subsection*{Verificación y análisis de distractores}
+
+\textbf{Respuesta correcta:} 76\%
+
+\textbf{Análisis de errores conceptuales comunes:}\begin{itemize}\item \textbf{19\%}: Error conceptual - confundir el valor absoluto (19 m³) con el porcentaje
+\item \textbf{56\%}: Error de lectura - usar el consumo de abril en lugar de mayo
+\item \textbf{83\%}: Error de cálculo - aplicar incorrectamente la fórmula de porcentaje\end{itemize}
+\subsection*{Conclusión}
+
+El consumo de mayo (19 metros cúbicos) representa el \textbf{76\%} del consumo máximo posible (25 metros cúbicos).
+
+Esta respuesta es coherente porque:
+
+\begin{itemize}
+\item Se basa en una lectura correcta de la gráfica
+\item Aplica correctamente la fórmula de porcentaje
+\item El resultado está dentro del rango esperado (0\% a 100\%)
+\end{itemize}
+
+\textbf{Verificación adicional}: La factura de octubre (\$14.000) corresponde exactamente al consumo mostrado en la gráfica (12 m³ $\times$ \$900 + \$3.200 cargo fijo).
+
+\begin{answerlist}
+  \item Incorrecto
+  \item Incorrecto
+  \item Incorrecto
+  \item Correcto
+\end{answerlist}\end{solution}
+
+%% META-INFORMATION
+%% \exname{Consumo Gas Natural Porcentaje Máximo}
+%% \extype{schoice}
+%% \exsolution{0001}
+%% \exshuffle{TRUE}
+%% \exsection{Estadística|Interpretación de gráficos|Porcentajes|Análisis de datos}
+%% \exextra[Type]{Cálculo}
+%% \exextra[Program]{R}
+%% \exextra[Language]{es}
+%% \exextra[Level]{2}
+%% \exextra[Competencia]{Interpretación y representación}
+%% \exextra[Componente]{Aleatorio y sistemas de datos}
+%% \exextra[Contexto]{Familiar}
+%% \exextra[Dificultad]{Media}
+
+\end{document}

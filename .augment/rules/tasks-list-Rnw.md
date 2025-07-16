@@ -1,3 +1,7 @@
+---
+type: "agent_requested"
+description: "tasks-list para la generación estructurada de archivos .Rnw"
+---
 # PLAN MAESTRO: Generacion/Correccion de Ejercicios ICFES R-exams (.Rnw)
 
 ## ESTRUCTURA COMPLETA DE TAREAS

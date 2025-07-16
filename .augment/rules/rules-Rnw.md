@@ -1,3 +1,7 @@
+---
+type: "agent_requested"
+description: "Reglas de generación/corrección/optimización de archivos .Rnw"
+---
 # PROMPT PARA GENERACION DE EJERCICIOS ICFES MATEMATICAS EN R-EXAMS
 
 Eres un experto en creacion de ejercicios matematicos tipo ICFES usando R-exams.
