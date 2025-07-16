@@ -40,19 +40,23 @@ formatear_monetario <- function(numero) {
 # Generar datos aleatorios
 ok <- FALSE
 while(!ok) {
-  # Datos basicos
-  nombres <- c("Ana", "Carlos", "Maria", "Diego", "Sofia", "Andres")
+  # Datos basicos - Expandidos para mas variedad
+  nombres <- c("Ana", "Carlos", "Maria", "Diego", "Sofia", "Andres",
+               "Lucia", "Miguel", "Carmen", "Pablo", "Elena", "Jorge")
 
   # Seleccionar aleatoriamente
   nombre <- sample(nombres, 1)
 
-  # Lista de familiares disponibles
+  # Lista de familiares disponibles - Expandida para mas variedad
   familiares <- list(
     list(nombre = "tio", genero = "masculino"),
     list(nombre = "tia", genero = "femenino"),
     list(nombre = "abuelo", genero = "masculino"),
     list(nombre = "abuela", genero = "femenino"),
-    list(nombre = "hermano", genero = "masculino")
+    list(nombre = "hermano", genero = "masculino"),
+    list(nombre = "hermana", genero = "femenino"),
+    list(nombre = "primo", genero = "masculino"),
+    list(nombre = "prima", genero = "femenino")
   )
 
   # Seleccionar aleatoriamente dos familiares diferentes
@@ -62,8 +66,8 @@ while(!ok) {
   genero1 <- familiares_seleccionados[[1]]$genero
   genero2 <- familiares_seleccionados[[2]]$genero
 
-  # Parametros del problema
-  ahorro_mensual <- sample(seq(125000, 200000, 25000), 1)
+  # Parametros del problema - Expandidos para mas variedad
+  ahorro_mensual <- sample(seq(100000, 250000, 25000), 1)  # Mas opciones: 7 valores
   meses <- 3  # Simplificar a 3 meses
 
   # Porcentajes balanceados para evitar sesgo
