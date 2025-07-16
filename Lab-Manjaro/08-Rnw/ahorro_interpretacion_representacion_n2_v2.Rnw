@@ -250,7 +250,7 @@ explicaciones <- explicaciones_base[orden_aleatorio]
 
 \bigskip
 
-\Sexpr{nombre} decide elegir la opcion en la que le regalen la mayor cantidad de dinero y elige la ayuda \Sexpr{obtener_articulo(genero_elegido)} \Sexpr{familiar_elegido}. ¿Es correcta la eleccion de \Sexpr{nombre}?
+\Sexpr{nombre} decide elegir la opcion en la que le regalen la mayor cantidad de dinero y elige la ayuda \Sexpr{obtener_articulo(genero_elegido)} \Sexpr{familiar_elegido}. ??Es correcta la eleccion de \Sexpr{nombre}?
 
 <<echo=FALSE, results=tex>>=
 answerlist(opciones)
