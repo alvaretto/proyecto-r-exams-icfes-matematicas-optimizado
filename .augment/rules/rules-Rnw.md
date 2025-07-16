@@ -1,5 +1,5 @@
 ---
-type: "agent_requested"
+type: "always_apply"
 description: "Reglas de generación/corrección/optimización de archivos .Rnw"
 ---
 # PROMPT PARA GENERACION DE EJERCICIOS ICFES MATEMATICAS EN R-EXAMS

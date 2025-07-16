@@ -6,7 +6,7 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "ahorro_interpretacion_representacion_n2_v2.Rnw"
-copias <- 600
+copias <- 5
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
