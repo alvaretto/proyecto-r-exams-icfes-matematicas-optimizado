@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ
+\usetikzlibrary{automata,positioning,calc,arrows}
+
+%% entornos para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\begin{document}
+\input{ahorro_interpretacion_representacion_n3_v1-concordance}
+
+
+\begin{question}
+
+Tres estudiantes implementaron diferentes estrategias de ahorro durante 6 meses. La siguiente tabla muestra el dinero ahorrado mensualmente por cada uno (en miles de pesos):
+
+\par\vspace{0.5cm}
+
+\begin{center}
+\textbf{Ahorro mensual por estudiante (miles de pesos)}
+\par\vspace{0.3cm}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Mes} & \textbf{Mónica} & \textbf{Xavier} & \textbf{Ofelia} \\
+\hline
+1 & 40 & 30 & 50 \\
+\hline
+2 & 45 & 55 & 65 \\
+\hline
+3 & 70 & 75 & 80 \\
+\hline
+4 & 65 & 85 & 95 \\
+\hline
+5 & 85 & 90 & 110 \\
+\hline
+6 & 100 & 95 & 125 \\
+\hline
+\end{tabular}
+\end{center}
+
+\par\vspace{0.5cm}
+
+Adicionalmente, se presenta la siguiente información calculada:
+
+\begin{itemize}
+\item Ahorro total de Mónica: 405 mil pesos
+\item Ahorro total de Xavier: 430 mil pesos
+\item Ahorro total de Ofelia: 525 mil pesos
+\item Tasa de crecimiento promedio mensual de Mónica: 30\%
+\item Tasa de crecimiento promedio mensual de Xavier: 43.3\%
+\item Tasa de crecimiento promedio mensual de Ofelia: 30\%
+\end{itemize}
+
+\par\vspace{0.5cm}
+
+Un director de banco necesita identificar cuál estudiante logró ahorrar la mayor cantidad total de dinero para otorgar un reconocimiento. Requiere una representación que muestre claramente los montos finales acumulados.
+
+\par\vspace{0.5cm}
+
+¿Cuál de las siguientes gráficas representa MEJOR los montos totales ahorrados por cada estudiante?
+
+\par\vspace{0.5cm}
+
+\textbf{A.}
+
+\includegraphics{ahorro_interpretacion_representacion_n3_v1-002}
+
+\textbf{porque muestra directamente los montos totales finales que cada estudiante logró acumular}
+
+\par\vspace{0.5cm}
+
+\textbf{B.}
+
+\includegraphics{ahorro_interpretacion_representacion_n3_v1-003}
+
+\textbf{porque solo compara dos puntos sin mostrar el total acumulado completo}
+
+\par\vspace{0.5cm}
+
+\textbf{C.}
+
+\includegraphics{ahorro_interpretacion_representacion_n3_v1-004}
+
+\textbf{porque permite visualizar las tendencias pero no los totales finales de forma clara}
+
+\par\vspace{0.5cm}
+
+\textbf{D.}
+
+\includegraphics{ahorro_interpretacion_representacion_n3_v1-005}
+
+\textbf{porque muestra porcentajes que no reflejan los montos reales acumulados}
+
+\end{question}
+
+\begin{solution}
+
+Para identificar quién ahorró la mayor cantidad total, es necesario comparar directamente los montos finales acumulados por cada estudiante. \par\vspace{0.5cm}Análisis de cada gráfica presentada:\begin{itemize}\item \textbf{Gráfica A (Totales Acumulados) - CORRECTA}: muestra claramente los montos totales finales que cada estudiante logró acumular  porque:
+  \begin{itemize}
+  \item Presenta de forma clara y directa los montos totales finales
+  \item Facilita la identificación inmediata del mayor ahorrador
+  \item No requiere cálculos adicionales para la comparación
+  \end{itemize}
+
+\item \textbf{Gráfica B (Inicial vs Final)}: facilita la comparación directa y simple entre el punto de partida y el resultado final , pero  solo muestra dos puntos sin revelar información sobre eficiencia relativa o evolución temporal .
+
+\item \textbf{Gráfica C (Evolución Mensual)}: permite visualizar las tendencias, fluctuaciones y patrones mes a mes , pero  requiere análisis adicional para comparaciones específicas ya que muestra mucha información temporal .
+
+\item \textbf{Gráfica D (Tasas de Crecimiento)}: normaliza las diferencias iniciales y permite comparar directamente la eficiencia relativa , pero  muestra porcentajes que pueden no reflejar los montos reales o patrones temporales .\end{itemize}
+\par\vspace{0.5cm}
+
+Basándose en las tasas de crecimiento calculadas:
+\begin{itemize}
+\item Mónica: 30\% mensual
+\item Xavier: 43.3\% mensual
+\item Ofelia: 30\% mensual
+\end{itemize}
+
+\par\vspace{0.5cm}
+
+Xavier tuvo la estrategia más eficiente en términos de crecimiento relativo.
+
+\begin{answerlist}
+  \item Verdadero
+  \item Falso
+  \item Falso
+  \item Falso
+\end{answerlist}
+\end{solution}
+
+%% META-INFORMATION
+%% \extype{schoice}
+%% \exsolution{1000}
+%% \exname{Ahorro Interpretacion Representacion N3 V1}
+
+\end{document}
