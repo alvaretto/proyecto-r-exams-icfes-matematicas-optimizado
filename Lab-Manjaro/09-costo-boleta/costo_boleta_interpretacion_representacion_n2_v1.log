@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.7.9)  17 JUL 2025 10:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.7.9)  17 JUL 2025 10:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**costo_boleta_orig_interpretacion_representacion_n2_v1.tex
-(./costo_boleta_orig_interpretacion_representacion_n2_v1.tex
+**costo_boleta_interpretacion_representacion_n2_v1.tex
+(./costo_boleta_interpretacion_representacion_n2_v1.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/share/texmf-dist/tex/latex/base/article.cls
@@ -208,11 +208,11 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count290
 \l__pdf_internal_box=\box56
 )
-(./costo_boleta_orig_interpretacion_representacion_n2_v1.aux
+(./costo_boleta_interpretacion_representacion_n2_v1.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 )
-\openout1 = `costo_boleta_orig_interpretacion_representacion_n2_v1.aux'.
+\openout1 = `costo_boleta_interpretacion_representacion_n2_v1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
@@ -283,65 +283,65 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-(./costo_boleta_orig_interpretacion_representacion_n2_v1-concordance.tex)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 35.
+(./costo_boleta_interpretacion_representacion_n2_v1-concordance.tex)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 34.
 
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 35.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 34.
 
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<costo_boleta_orig_interpretacion_representacion_n2_v1-002.pdf, id=2, 361.35pt 
-x 289.08pt>
-File: costo_boleta_orig_interpretacion_representacion_n2_v1-002.pdf Graphic fil
-e (type pdf)
-<use costo_boleta_orig_interpretacion_representacion_n2_v1-002.pdf>
-Package pdftex.def Info: costo_boleta_orig_interpretacion_representacion_n2_v1-
-002.pdf  used on input line 62.
+<costo_boleta_interpretacion_representacion_n2_v1-002.pdf, id=2, 361.35pt x 289
+.08pt>
+File: costo_boleta_interpretacion_representacion_n2_v1-002.pdf Graphic file (ty
+pe pdf)
+<use costo_boleta_interpretacion_representacion_n2_v1-002.pdf>
+Package pdftex.def Info: costo_boleta_interpretacion_representacion_n2_v1-002.p
+df  used on input line 67.
 (pdftex.def)             Requested size: 276.00105pt x 220.8014pt.
-<costo_boleta_orig_interpretacion_representacion_n2_v1-003.pdf, id=3, 361.35pt 
-x 289.08pt>
-File: costo_boleta_orig_interpretacion_representacion_n2_v1-003.pdf Graphic fil
-e (type pdf)
-<use costo_boleta_orig_interpretacion_representacion_n2_v1-003.pdf>
-Package pdftex.def Info: costo_boleta_orig_interpretacion_representacion_n2_v1-
-003.pdf  used on input line 65.
+<costo_boleta_interpretacion_representacion_n2_v1-003.pdf, id=3, 361.35pt x 289
+.08pt>
+File: costo_boleta_interpretacion_representacion_n2_v1-003.pdf Graphic file (ty
+pe pdf)
+<use costo_boleta_interpretacion_representacion_n2_v1-003.pdf>
+Package pdftex.def Info: costo_boleta_interpretacion_representacion_n2_v1-003.p
+df  used on input line 70.
 (pdftex.def)             Requested size: 276.00105pt x 220.8014pt.
 
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texmf-dist/fonts
-/enc/dvips/cm-super/cm-super-t1.enc} <./costo_boleta_orig_interpretacion_repres
-entacion_n2_v1-002.pdf>]
-<costo_boleta_orig_interpretacion_representacion_n2_v1-004.pdf, id=21, 361.35pt
- x 289.08pt>
-File: costo_boleta_orig_interpretacion_representacion_n2_v1-004.pdf Graphic fil
-e (type pdf)
-<use costo_boleta_orig_interpretacion_representacion_n2_v1-004.pdf>
-Package pdftex.def Info: costo_boleta_orig_interpretacion_representacion_n2_v1-
-004.pdf  used on input line 68.
+/enc/dvips/cm-super/cm-super-t1.enc} <./costo_boleta_interpretacion_representac
+ion_n2_v1-002.pdf>]
+<costo_boleta_interpretacion_representacion_n2_v1-004.pdf, id=22, 361.35pt x 28
+9.08pt>
+File: costo_boleta_interpretacion_representacion_n2_v1-004.pdf Graphic file (ty
+pe pdf)
+<use costo_boleta_interpretacion_representacion_n2_v1-004.pdf>
+Package pdftex.def Info: costo_boleta_interpretacion_representacion_n2_v1-004.p
+df  used on input line 73.
 (pdftex.def)             Requested size: 276.00105pt x 220.8014pt.
-<costo_boleta_orig_interpretacion_representacion_n2_v1-005.pdf, id=22, 361.35pt
- x 289.08pt>
-File: costo_boleta_orig_interpretacion_representacion_n2_v1-005.pdf Graphic fil
-e (type pdf)
-<use costo_boleta_orig_interpretacion_representacion_n2_v1-005.pdf>
-Package pdftex.def Info: costo_boleta_orig_interpretacion_representacion_n2_v1-
-005.pdf  used on input line 71.
+<costo_boleta_interpretacion_representacion_n2_v1-005.pdf, id=23, 361.35pt x 28
+9.08pt>
+File: costo_boleta_interpretacion_representacion_n2_v1-005.pdf Graphic file (ty
+pe pdf)
+<use costo_boleta_interpretacion_representacion_n2_v1-005.pdf>
+Package pdftex.def Info: costo_boleta_interpretacion_representacion_n2_v1-005.p
+df  used on input line 76.
 (pdftex.def)             Requested size: 276.00105pt x 220.8014pt.
 
 
-[2 <./costo_boleta_orig_interpretacion_representacion_n2_v1-003.pdf> <./costo_b
-oleta_orig_interpretacion_representacion_n2_v1-004.pdf>]
+[2 <./costo_boleta_interpretacion_representacion_n2_v1-003.pdf> <./costo_boleta
+_interpretacion_representacion_n2_v1-004.pdf>]
 
-[3 <./costo_boleta_orig_interpretacion_representacion_n2_v1-005.pdf>]
-(./costo_boleta_orig_interpretacion_representacion_n2_v1.aux
+[3 <./costo_boleta_interpretacion_representacion_n2_v1-005.pdf>]
+(./costo_boleta_interpretacion_representacion_n2_v1.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 )
@@ -352,19 +352,20 @@ L3 programming layer <2025-01-18>
  ) 
 Here is how much of TeX's memory you used:
  5811 strings out of 475109
- 93558 string characters out of 5765326
- 484621 words of memory out of 5000000
+ 93268 string characters out of 5765326
+ 485616 words of memory out of 5000000
  28738 multiletter control sequences out of 15000+600000
  562075 words of font info for 46 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 59i,6n,67p,279b,400s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/t
-exmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on costo_boleta_orig_interpretacion_representacion_n2_v1.pdf (3 
-pages, 56885 bytes).
+ 59i,6n,67p,383b,400s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/t
+exmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts
+/type1/public/cm-super/sfrm1000.pfb>
+Output written on costo_boleta_interpretacion_representacion_n2_v1.pdf (3 pages
+, 65668 bytes).
 PDF statistics:
- 58 PDF objects out of 1000 (max. 8388607)
- 39 compressed objects within 1 object stream
+ 63 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  25 words of extra memory for PDF output out of 10000 (max. 10000000)
 

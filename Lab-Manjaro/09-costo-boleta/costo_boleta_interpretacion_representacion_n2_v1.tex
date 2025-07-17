@@ -1,0 +1,107 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{verbatim}
+\usepackage{color}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+\usepackage{Sweave}
+\begin{document}
+\input{costo_boleta_interpretacion_representacion_n2_v1-concordance}
+
+\begin{enumerate}
+
+
+
+
+\begin{question}
+
+En un circo, el presupuesto total disponible para entretenimiento es de $80000$. Este presupuesto se distribuye entre el costo de boleta y el costo de dulces, de tal manera que cuando aumenta el gasto en uno, disminuye proporcionalmente el gasto en el otro.
+
+La siguiente tabla muestra la relacion entre estas dos variables:
+
+% Crear tabla de datos simple
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Costo de boleta (x)} & \textbf{Costo de dulces (y)} \\
+\hline
+0 & 80000 \\
+\hline
+8000 & 72000 \\
+\hline
+16000 & 64000 \\
+\hline
+24000 & 56000 \\
+\hline
+32000 & 48000 \\
+\hline
+40000 & 40000 \\
+\hline
+48000 & 32000 \\
+\hline
+56000 & 24000 \\
+\hline
+\end{tabular}
+\end{center}
+
+La grafica que representa esta funcion es:
+
+\begin{answerlist}
+\item
+\includegraphics{costo_boleta_interpretacion_representacion_n2_v1-002}
+
+\item
+\includegraphics{costo_boleta_interpretacion_representacion_n2_v1-003}
+
+\item
+\includegraphics{costo_boleta_interpretacion_representacion_n2_v1-004}
+
+\item
+\includegraphics{costo_boleta_interpretacion_representacion_n2_v1-005}
+\end{answerlist}
+
+\end{question}
+
+\begin{solution}
+
+Para resolver este problema, debemos analizar la relacion entre las dos variables presentadas en la tabla.
+
+Observando los datos:
+- Cuando el boleta cuesta $0$, el dulces cuesta $80000$
+- Cuando el boleta cuesta $56000$, el dulces cuesta $24000$
+
+Esto muestra una relacion lineal decreciente: a medida que aumenta el costo de boleta, disminuye el costo de dulces, manteniendo un presupuesto total constante de $80000$.
+
+\begin{answerlist}
+  \item Falso. La grafica A muestra una relacion constante, no la relacion inversa esperada entre los costos.
+  \item Verdadero. La grafica B representa correctamente la relacion lineal decreciente: a mayor costo de uno, menor costo del otro.
+  \item Falso. La grafica C muestra una funcion escalonada, no una relacion continua como la del presupuesto fijo.
+  \item Falso. La grafica D muestra puntos dispersos sin conexion, no una funcion matematica definida.
+\end{answerlist}
+\end{solution}
+
+%% META-INFORMATION
+\exname{Costo Boleta Interpretacion Representacion}
+\extype{schoice}
+\exsolution{0100}
+\exshuffle{TRUE}
+\exsection{Interpretacion y Representacion}
+
+\end{enumerate}
+\end{document}
