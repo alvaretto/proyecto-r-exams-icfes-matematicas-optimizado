@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "ahorro_interpretacion_representacion_n3_v1.Rnw"
+archivo_examen <- "ahorro_interpretacion_representacion_n2_v2.Rnw"
 copias <- 1
 numpreg <- 10
 semilla <- sample(100:1e8, 1)

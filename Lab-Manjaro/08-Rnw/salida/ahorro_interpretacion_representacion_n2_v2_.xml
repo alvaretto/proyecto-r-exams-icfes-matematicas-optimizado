@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+
+
+<question type="category">
+<category>
+<text>$course$/ahorro_interpretacion_representacion_n2_v2_/Exercise 1</text>
+</category>
+</question>
+
+
+<question type="multichoice">
+<name>
+<text> Q1 : ahorro_interpretacion_representacion_n2_v2 </text>
+</name>
+<questiontext format="html">
+<text><![CDATA[
+<style type="text/css" rel="stylesheet">
+/* tables with alternating shading */
+.table_shade {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:1px solid #FFFFFF;
+    background-color: #FFFFFF;
+}
+.table_shade th {
+    border:1px solid #FFFFFF;
+    background: #D5D5D5;
+}
+.table_shade td {
+    border:1px solid #FFFFFF;
+}
+.table_shade .odd {
+    background: #EEEEEE;
+}
+.table_shade .even {
+    background: #FBFBFB;
+}
+</style>
+<p>
+<p>Carmen quiere ahorrar $125.000 cada mes durante 3 meses. Como ayuda para su proyecto, sus padres le han propuesto dos opciones, pero solo puede elegir una de ellas.</p>
+<p><strong>Opcion 1 (primo):</strong> Al finalizar cada mes, su primo le regala un porcentaje del dinero que tenga acumulado.</p>
+<div class="center">
+<table class="table_shade">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Ahorro Acumulado</strong></th>
+<th style="text-align: center;"><strong>Mes</strong></th>
+<th style="text-align: center;"><strong>Porcentaje regalado</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">$125.000</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">13%</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">$250.000</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">13%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">$375.000</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">13%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Opcion 2 (abuelo):</strong> Al finalizar cada mes, su abuelo le regala un porcentaje del dinero que tenga acumulado.</p>
+<div class="center">
+<table class="table_shade">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Ahorro Acumulado</strong></th>
+<th style="text-align: center;"><strong>Mes</strong></th>
+<th style="text-align: center;"><strong>Porcentaje regalado</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">$125.000</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5%</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">$250.000</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">$375.000</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">15%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Carmen decide elegir la opcion en la que le regalen la mayor cantidad de dinero y elige la ayuda del primo. ??Es correcta la eleccion de Carmen?</p>
+</p>]]></text>
+</questiontext>
+<generalfeedback format="html">
+<text><![CDATA[<p>
+<p>Para resolver este problema, debemos calcular la ayuda total que recibiria Carmen con cada opcion.</p>
+<p><strong>Opcion 1 (primo):</strong></p>
+<p>Mes 1: $125.000 <span class="math inline">\(\times\)</span> 13% = $16.250</p>
+<p>Mes 2: $250.000 <span class="math inline">\(\times\)</span> 13% = $32.500</p>
+<p>Mes 3: $375.000 <span class="math inline">\(\times\)</span> 13% = $48.750</p>
+<p>Total primo: $97.500</p>
+<p><strong>Opcion 2 (abuelo):</strong></p>
+<p>Mes 1: $125.000 <span class="math inline">\(\times\)</span> 5% = $6.250</p>
+<p>Mes 2: $250.000 <span class="math inline">\(\times\)</span> 7% = $17.500</p>
+<p>Mes 3: $375.000 <span class="math inline">\(\times\)</span> 15% = $56.250</p>
+<p>Total abuelo: $80.000</p>
+<p>Por lo tanto, el primo ofrece mas ayuda ($97.500 vs $80.000), por lo que la eleccion de Carmen fue correcta.</p>
+</p>]]></text>
+</generalfeedback>
+<penalty>0</penalty>
+<defaultgrade>1</defaultgrade>
+<shuffleanswers>true</shuffleanswers>
+<single>true</single>
+<answernumbering>ABCD</answernumbering>
+<answer fraction="100" format="html">
+<text><![CDATA[<p>
+Si, porque la ayuda total del primo es de $ 97.500 mientras que del abuelo es de $ 80.000 .
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Correcto. Al calcular los totales: primo = $ 97.500 y abuelo = $ 80.000 . el primo ofrece mas ayuda, por lo que la eleccion fue correcta.
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+No, porque la ayuda total del abuelo es de $ 80.000 mientras que del primo es de $ 97.500 .
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Incorrecto. Al calcular los totales: primo = $ 97.500 y abuelo = $ 80.000 . el primo ofrece mas ayuda, por lo que la eleccion fue correcta.
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+No, porque del primo solo parece mejor por ser constante pero en realidad si es la mejor opcion.
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Incorrecto. La eleccion de Carmen fue correcta porque el primo ofrece $ 97.500 que es efectivamente la mayor cantidad.
+</p>]]></text>
+</feedback>
+</answer>
+<answer fraction="0" format="html">
+<text><![CDATA[<p>
+Si, porque del primo tiene porcentajes constantes que compensa las diferencias de los otros meses.
+</p>]]></text>
+<feedback format="html">
+<text><![CDATA[<p>
+Incorrecto. Aunque la justificacion puede parecer valida, la respuesta correcta es ’Si’ porque el primo efectivamente ofrece mas dinero: $ 97.500 .
+</p>]]></text>
+</feedback>
+</answer>
+</question>
+
+</quiz>
