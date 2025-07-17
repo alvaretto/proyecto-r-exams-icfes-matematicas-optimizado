@@ -1,28 +1,24 @@
-# --- Establecer el directorio de trabajo autom??ticamente ---
-# Esta l??nea asegura que el script se ejecuta desde la carpeta donde est?? guardado.
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
-# Cargar la librer??a exams
+# Carga de la librería r-exams
 library(exams)
 
-# Configurar modo generaci??n de ex??menes para evitar pruebas test_that
+# Configurar modo generación de exámenes para evitar pruebas test_that
 .exams_generation_mode <- TRUE
 
-# Definici??n del archivo de examen y configuraci??n inicial
-archivo_examen <- "costo_boleta_orig_interpretacion_representacion_n2_v1_FIXED.Rnw"
+# Definición del archivo de examen y configuración inicial
+archivo_examen <- "costo_boleta_interpretacion_representacion_n2_v1.Rnw"
 copias <- 1
-numpreg <- 1
+numpreg <- 10
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
 dir_ejercicios <- "."  # Cambiado de "ejercicios" a "." (directorio actual)
 
-# Nombre del archivo sin la extensi??n .Rnw
+# Nombre del archivo sin la extensión .Rnw
 nombre_sin_extension <- sub("\\.Rnw$", "", archivo_examen)
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 ################################################################################
-# Generaci??n de copias individuales para PDF, s??lo 'copias', no importa 'numpreg'
+# Generación de copias individuales para PDF, sólo 'copias', no importa 'numpreg'
 
 # for(i in 1:copias) {
 #   nombre_archivo <- sprintf("%s_copia%d_", nombre_sin_extension, i)
@@ -37,7 +33,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # }
 
 ################################################################################
-# Generaci??n de copias individuales para Pandoc (docx), s??lo 'copias',
+# Generación de copias individuales para Pandoc (docx), sólo 'copias',
 # no importa 'numpreg
 
 # for(i in 1:copias) {
@@ -54,7 +50,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # }
 
 ################################################################################
-# Creaci??n del examen en formato HTML, s??lo 'numpreg', 'copias' = 1
+# Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
 
 exams2html(rep(archivo_examen, numpreg),
            svg = FALSE,
@@ -63,7 +59,7 @@ exams2html(rep(archivo_examen, numpreg),
            name = paste0(nombre_sin_extension, "_semillero"))
 
 #################################################################################
-# Generaci??n de n copias en un solo archivo de salida para PDF
+# Generación de n copias en un solo archivo de salida para PDF
 
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
@@ -75,7 +71,7 @@ exams2pdf(rep(archivo_examen, numpreg),
           verbose = TRUE)
 
 ################################################################################
-# Generaci??n de n copias en un solo archivo .docx
+# Generación de n copias en un solo archivo .docx
 
 exams2pandoc(rep(archivo_examen, numpreg),
              n = copias,
@@ -100,25 +96,25 @@ exams2pandoc(rep(archivo_examen, numpreg),
              type = "docx")
 
 ################################################################################
-# Generaci??n para Moodle, solo configura manualmente 'copias'
+# Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-# set.seed(semilla)
-# exams2moodle(archivo_examen,
-#              n = copias,
-#              svg = TRUE,
-#              name = nombre_arch,
-#              encoding = "UTF-8",
-#              dir = "salida",
-#              edir = dir_ejercicios,  # Cambiado de "ejercicios" a dir_ejercicios
-#              mchoice = list(shuffle = TRUE,
-#                             answernumbering = "ABCD",
-#                             eval = list(partial = TRUE,
-#                                        rule = "none")),
-#              verbose = TRUE)
+set.seed(semilla)
+exams2moodle(archivo_examen,
+             n = copias,
+             svg = TRUE,
+             name = nombre_arch,
+             encoding = "UTF-8",
+             dir = "salida",
+             edir = dir_ejercicios,  # Cambiado de "ejercicios" a dir_ejercicios
+             mchoice = list(shuffle = TRUE,
+                            answernumbering = "ABCD",
+                            eval = list(partial = TRUE,
+                                       rule = "none")),
+             verbose = TRUE)
 
 ################################################################################
-# Generacion para NOPS (examenes escaneables)
+# Generación para NOPS (exámenes escaneables)
 
 set.seed(semilla)
 exams2nops(rep(archivo_examen, numpreg),
@@ -128,8 +124,8 @@ exams2nops(rep(archivo_examen, numpreg),
            dir = dir_salida,
            edir = dir_ejercicios,
            language = "es",
-           title = "Evaluacion de Matematicas",
-           institution = "I.E. Pedacito de Cielo",
+           title = "Evaluación de Matemáticas",
+           institution = "I. E. Pedacito de Cielo",
            logo = NULL,
            date = Sys.Date(),
            replacement = FALSE,
