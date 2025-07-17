@@ -1,0 +1,282 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes basicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ
+\usetikzlibrary{automata,positioning,calc,arrows}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuracion parrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{enumerate}
+
+<<echo=FALSE, results=hide>>=
+# Configuracion inicial
+Sys.setlocale("LC_ALL", "C")
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Librerias esenciales
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+# Configuracion TikZ
+typ <- match_exams_device()
+if(match_exams_call() == "exams2nops") typ <- "tex"
+
+# Semilla aleatoria
+set.seed(sample(1:100000, 1))
+
+# Funcion para formatear enteros sin notacion cientifica
+formatear_entero <- function(numero) {
+  formatC(as.numeric(numero), format = "d", big.mark = "")
+}
+
+# Funcion generar_datos() - FIEL AL ORIGINAL
+generar_datos <- function() {
+  # Datos exactos del original con variaciones minimas
+  contextos <- list(
+    list(lugar = "cine", producto1 = "boleta", producto2 = "palomitas"),
+    list(lugar = "teatro", producto1 = "entrada", producto2 = "bebida"),
+    list(lugar = "concierto", producto1 = "ticket", producto2 = "snack"),
+    list(lugar = "parque", producto1 = "acceso", producto2 = "refresco")
+  )
+
+  contexto <- sample(contextos, 1)[[1]]
+
+  # Datos EXACTOS del original (manteniendo fidelidad)
+  base_x <- c(0, 8, 16, 24, 32, 40, 48, 56)
+  base_y <- c(10000, 9000, 8000, 7000, 6000, 5000, 4000, 4000)
+
+  # Permitir variaciones minimas manteniendo patron
+  variacion <- sample(c(0, 1000, 2000), 1)
+  costos_producto1 <- base_x
+  costos_producto2 <- base_y + variacion
+
+  # Asegurar que el ultimo valor se mantenga igual al penultimo (patron original)
+  costos_producto2[8] <- costos_producto2[7]
+
+  # Variables para la tabla
+  var_x <- paste("Costo de", contexto$producto1, "(x)")
+  var_y <- paste("Costo de", contexto$producto2, "(y)")
+
+  # Vector de soluciones (TRUE para la opcion correcta - siempre B)
+  solutions <- c(FALSE, TRUE, FALSE, FALSE)
+
+  # Explicaciones para cada opcion
+  explicaciones <- c(
+    "Falso. La grafica A muestra una relacion constante, no la relacion decreciente mostrada en la tabla.",
+    "Verdadero. La grafica B representa correctamente la relacion lineal decreciente mostrada en los datos.",
+    "Falso. La grafica C muestra una funcion escalonada, no una relacion lineal continua.",
+    "Falso. La grafica D muestra puntos dispersos sin conexion, no una funcion definida."
+  )
+
+  return(list(
+    contexto = contexto,
+    costos_producto1 = costos_producto1,
+    costos_producto2 = costos_producto2,
+    var_x = var_x,
+    var_y = var_y,
+    solutions = solutions,
+    explicaciones = explicaciones
+  ))
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+
+# Funciones TikZ para las 4 graficas (REPLICACION EXACTA)
+tikz_grafica_A <- function() {
+  c("\\begin{tikzpicture}[scale=0.6]",
+    "  \\draw[->] (0,0) -- (7,0) node[right] {x};",
+    "  \\draw[->] (0,0) -- (0,6) node[above] {y};",
+    "  % Etiquetas de ejes",
+    "  \\foreach \\x in {0,8,16,24,32,40,48,56}",
+    "    \\draw (\\x/8,0) -- (\\x/8,-0.1) node[below] {\\x};",
+    "  \\foreach \\y in {1000,2000,3000,4000,5000,6000,7000,8000,9000,10000}",
+    "    \\draw (0,\\y/2000) -- (-0.1,\\y/2000) node[left] {\\y};",
+    "  % Linea horizontal constante",
+    "  \\draw[thick, cyan] (0,4.25) -- (7,4.25);",
+    "  % Puntos de datos",
+    "  \\foreach \\x/\\y in {0/5, 1/4.5, 2/4, 3/3.5, 4/3, 5/2.5, 6/2, 7/2}",
+    "    \\fill[cyan] (\\x,4.25) circle (2pt);",
+    "  \\node at (3.5,-0.8) {\\textbf{A.}};",
+    "\\end{tikzpicture}")
+}
+
+tikz_grafica_B <- function() {
+  c("\\begin{tikzpicture}[scale=0.6]",
+    "  \\draw[->] (0,0) -- (7,0) node[right] {x};",
+    "  \\draw[->] (0,0) -- (0,6) node[above] {y};",
+    "  % Etiquetas de ejes",
+    "  \\foreach \\x in {0,8,16,24,32,40,48,56}",
+    "    \\draw (\\x/8,0) -- (\\x/8,-0.1) node[below] {\\x};",
+    "  \\foreach \\y in {1000,2000,3000,4000,5000,6000,7000,8000,9000,10000}",
+    "    \\draw (0,\\y/2000) -- (-0.1,\\y/2000) node[left] {\\y};",
+    "  % Linea decreciente (CORRECTA)",
+    "  \\draw[thick, cyan] (0,5) -- (7,2);",
+    "  % Puntos de datos exactos",
+    "  \\fill[cyan] (0,5) circle (2pt);",
+    "  \\fill[cyan] (1,4.5) circle (2pt);",
+    "  \\fill[cyan] (2,4) circle (2pt);",
+    "  \\fill[cyan] (3,3.5) circle (2pt);",
+    "  \\fill[cyan] (4,3) circle (2pt);",
+    "  \\fill[cyan] (5,2.5) circle (2pt);",
+    "  \\fill[cyan] (6,2) circle (2pt);",
+    "  \\fill[cyan] (7,2) circle (2pt);",
+    "  \\node at (3.5,-0.8) {\\textbf{B.}};",
+    "\\end{tikzpicture}")
+}
+
+tikz_grafica_C <- function() {
+  c("\\begin{tikzpicture}[scale=0.6]",
+    "  \\draw[->] (0,0) -- (7,0) node[right] {x};",
+    "  \\draw[->] (0,0) -- (0,6) node[above] {y};",
+    "  % Etiquetas de ejes",
+    "  \\foreach \\x in {0,8,16,24,32,40,48,56}",
+    "    \\draw (\\x/8,0) -- (\\x/8,-0.1) node[below] {\\x};",
+    "  \\foreach \\y in {1000,2000,3000,4000,5000,6000,7000,8000,9000,10000}",
+    "    \\draw (0,\\y/2000) -- (-0.1,\\y/2000) node[left] {\\y};",
+    "  % Funcion escalonada",
+    "  \\draw[thick, cyan] (0,5) -- (2,5) -- (2,4.5) -- (4,4.5) -- (4,2.5) -- (7,2.5);",
+    "  % Puntos de datos",
+    "  \\fill[cyan] (0,5) circle (2pt);",
+    "  \\fill[cyan] (2,5) circle (2pt);",
+    "  \\fill[cyan] (2,4.5) circle (2pt);",
+    "  \\fill[cyan] (4,4.5) circle (2pt);",
+    "  \\fill[cyan] (4,2.5) circle (2pt);",
+    "  \\fill[cyan] (7,2.5) circle (2pt);",
+    "  \\node at (3.5,-0.8) {\\textbf{C.}};",
+    "\\end{tikzpicture}")
+}
+
+tikz_grafica_D <- function() {
+  c("\\begin{tikzpicture}[scale=0.6]",
+    "  \\draw[->] (0,0) -- (7,0) node[right] {x};",
+    "  \\draw[->] (0,0) -- (0,6) node[above] {y};",
+    "  % Etiquetas de ejes",
+    "  \\foreach \\x in {0,8,16,24,32,40,48,56}",
+    "    \\draw (\\x/8,0) -- (\\x/8,-0.1) node[below] {\\x};",
+    "  \\foreach \\y in {1000,2000,3000,4000,5000,6000,7000,8000,9000,10000}",
+    "    \\draw (0,\\y/2000) -- (-0.1,\\y/2000) node[left] {\\y};",
+    "  % Puntos dispersos sin conexion",
+    "  \\fill[cyan] (0.5,4.8) circle (2pt);",
+    "  \\fill[cyan] (1.8,2.2) circle (2pt);",
+    "  \\fill[cyan] (2.5,3.8) circle (2pt);",
+    "  \\fill[cyan] (3.2,4.2) circle (2pt);",
+    "  \\fill[cyan] (4.1,2.8) circle (2pt);",
+    "  \\fill[cyan] (5.3,3.5) circle (2pt);",
+    "  \\fill[cyan] (6.2,4.5) circle (2pt);",
+    "  \\fill[cyan] (6.8,2.1) circle (2pt);",
+    "  \\node at (3.5,-0.8) {\\textbf{D.}};",
+    "\\end{tikzpicture}")
+}
+
+# Bibliotecas TikZ necesarias
+tikz_libraries <- c("positioning")
+@
+
+\begin{question}
+
+El costo de la boleta en un cine depende de la edad de la persona, mientras que el costo de las palomitas se mantiene fijo. La siguiente tabla muestra la relacion entre estas dos variables:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{\Sexpr{datos$var_x}} & \textbf{\Sexpr{datos$var_y}} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[1])} & \Sexpr{formatear_entero(datos$costos_producto2[1])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[2])} & \Sexpr{formatear_entero(datos$costos_producto2[2])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[3])} & \Sexpr{formatear_entero(datos$costos_producto2[3])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[4])} & \Sexpr{formatear_entero(datos$costos_producto2[4])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[5])} & \Sexpr{formatear_entero(datos$costos_producto2[5])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[6])} & \Sexpr{formatear_entero(datos$costos_producto2[6])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[7])} & \Sexpr{formatear_entero(datos$costos_producto2[7])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[8])} & \Sexpr{formatear_entero(datos$costos_producto2[8])} \\
+\hline
+\end{tabular}
+\end{center}
+
+La grafica que representa esta funcion es:
+
+\begin{answerlist}
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(tikz_grafica_A(), name = "graficaA", format = typ, width = "6cm", library = tikz_libraries)
+@
+
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(tikz_grafica_B(), name = "graficaB", format = typ, width = "6cm", library = tikz_libraries)
+@
+
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(tikz_grafica_C(), name = "graficaC", format = typ, width = "6cm", library = tikz_libraries)
+@
+
+\item
+<<echo=FALSE, results=tex>>=
+include_tikz(tikz_grafica_D(), name = "graficaD", format = typ, width = "6cm", library = tikz_libraries)
+@
+\end{answerlist}
+
+\end{question}
+
+\begin{solution}
+
+Para resolver este problema, debemos analizar la relacion entre las dos variables presentadas en la tabla.
+
+Observando los datos:
+- Cuando el \Sexpr{datos$contexto$producto1} cuesta $\Sexpr{formatear_entero(datos$costos_producto1[1])}$, el \Sexpr{datos$contexto$producto2} cuesta $\Sexpr{formatear_entero(datos$costos_producto2[1])}$
+- Cuando el \Sexpr{datos$contexto$producto1} cuesta $\Sexpr{formatear_entero(datos$costos_producto1[length(datos$costos_producto1)])}$, el \Sexpr{datos$contexto$producto2} cuesta $\Sexpr{formatear_entero(datos$costos_producto2[length(datos$costos_producto2)])}$
+
+Esto muestra una relacion lineal decreciente entre las variables.
+
+<<echo=FALSE, results=tex>>=
+answerlist(datos$explicaciones)
+@
+
+\end{solution}
+
+%% META-INFORMATION
+\exname{Costo Boleta Original Interpretacion Representacion}
+\extype{schoice}
+\exsolution{\Sexpr{mchoice2string(datos$solutions)}}
+\exshuffle{TRUE}
+\exsection{Interpretacion y Representacion}
+
+\end{enumerate}
+\end{document}

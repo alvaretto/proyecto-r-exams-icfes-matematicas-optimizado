@@ -38,14 +38,14 @@ formatear_monetario <- function(numero) {
 }
 
 # Funciones para espaciado universal (LaTeX, HTML, XML)
-# NOTA: Funciones vacías para evitar problemas en XML
-# El espaciado se maneja directamente con saltos de línea en LaTeX
+# NOTA: Funciones vac??as para evitar problemas en XML
+# El espaciado se maneja directamente con saltos de l??nea en LaTeX
 espaciado_grande <- function() {
-  ""  # Función vacía - espaciado manejado en LaTeX
+  ""  # Funci??n vac??a - espaciado manejado en LaTeX
 }
 
 espaciado_medio <- function() {
-  ""  # Función vacía - espaciado manejado en LaTeX
+  ""  # Funci??n vac??a - espaciado manejado en LaTeX
 }
 
 # Generar datos aleatorios
@@ -282,7 +282,7 @@ explicaciones <- explicaciones_base[orden_aleatorio]
 
 \par\vspace{0.5cm}
 
-\Sexpr{nombre} decide elegir la opcion en la que le regalen la mayor cantidad de dinero y elige la ayuda \Sexpr{obtener_articulo(genero_elegido)} \Sexpr{familiar_elegido}. ¿Es correcta la eleccion de \Sexpr{nombre}?
+\Sexpr{nombre} decide elegir la opcion en la que le regalen la mayor cantidad de dinero y elige la ayuda \Sexpr{obtener_articulo(genero_elegido)} \Sexpr{familiar_elegido}. ??Es correcta la eleccion de \Sexpr{nombre}?
 
 <<echo=FALSE, results=tex>>=
 answerlist(opciones)
