@@ -440,6 +440,11 @@ automáticamente.</p>
 <td><strong>Sincronización manual y selección de maestros</strong></td>
 <td>✅ Creado</td>
 </tr>
+<tr class="even">
+<td><code>09-sync-relocate.sh</code></td>
+<td><strong>Detector de archivos reubicados</strong></td>
+<td>✅ Creado</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -513,6 +518,16 @@ Mantenimiento</h3>
 <li>Identificación automática del archivo más reciente</li>
 <li>Sincronización controlada antes del modo automático</li>
 <li>Previene pérdida de datos por archivos desactualizados</li>
+</ul>
+</div>
+<div id="sync-relocate.sh---detector-de-archivos-reubicados" class="section level3">
+<h3>9. <strong>09-sync-relocate.sh</strong> - Detector de Archivos
+Reubicados</h3>
+<ul>
+<li>Detecta archivos que han cambiado de ubicación</li>
+<li>Busca automáticamente nuevas ubicaciones por nombre</li>
+<li>Actualiza la base de datos con las nuevas rutas</li>
+<li>Mantiene la sincronización después de mover archivos</li>
 </ul>
 </div>
 </div>
@@ -706,6 +721,12 @@ sudo ./06-sync-service.sh follow     # Seguir logs en tiempo real</code></pre>
 ./07-sync-utils.sh cleanup           # Limpiar archivos temporales
 ./07-sync-utils.sh backup            # Crear backup del sistema</code></pre>
 </div>
+<div id="detector-de-archivos-reubicados" class="section level4">
+<h4>Detector de Archivos Reubicados</h4>
+<pre class="bash"><code>./09-sync-relocate.sh interactive    # Menú interactivo para reubicaciones
+./09-sync-relocate.sh detect         # Solo detectar archivos movidos
+./09-sync-relocate.sh update         # Detectar y actualizar automáticamente</code></pre>
+</div>
 </div>
 <div id="flujo-de-trabajo-típico" class="section level3">
 <h3>Flujo de Trabajo Típico</h3>
@@ -830,6 +851,75 @@ etc.)</li>
 <h3>Modo de Prueba (Dry Run)</h3>
 <pre class="bash"><code># Probar sincronización sin ejecutar
 ./03-sync-engine.sh --dry-run --sync-rename &quot;ruta/antigua&quot; &quot;ruta/nueva&quot;</code></pre>
+</div>
+</div>
+<div id="manejo-de-archivos-reubicados" class="section level2">
+<h2>📁 Manejo de Archivos Reubicados</h2>
+<div id="problema-archivos-movidos-de-ubicación" class="section level3">
+<h3>⚠️ <strong>Problema: Archivos Movidos de Ubicación</strong></h3>
+<p>Si mueves un archivo a otra carpeta, el sistema pierde la
+sincronización:</p>
+<pre class="bash"><code># Antes:
+Lab-Lubuntu/archivo.Rmd     ← En grupo de sincronización
+Lab-Manjaro/archivo.Rmd     ← En grupo de sincronización
+
+# Después de mover:
+mv Lab-Lubuntu/archivo.Rmd Nueva-Carpeta/archivo.Rmd
+
+# Resultado:
+Nueva-Carpeta/archivo.Rmd   ← YA NO sincroniza
+Lab-Manjaro/archivo.Rmd     ← Sigue sincronizando solo con otros</code></pre>
+</div>
+<div id="solución-script-de-reubicación" class="section level3">
+<h3>✅ <strong>Solución: Script de Reubicación</strong></h3>
+<div id="uso-interactivo-recomendado" class="section level4">
+<h4>Uso Interactivo (Recomendado)</h4>
+<pre class="bash"><code>./09-sync-relocate.sh interactive</code></pre>
+<p>El script: 1. <strong>Detecta archivos faltantes</strong> en la base
+de datos 2. <strong>Busca automáticamente</strong> archivos con el mismo
+nombre en nuevas ubicaciones 3. <strong>Muestra las reubicaciones
+detectadas</strong> para confirmación 4. <strong>Actualiza la base de
+datos</strong> con las nuevas rutas 5. <strong>Verifica la
+integridad</strong> después de la actualización</p>
+</div>
+<div id="comandos-específicos-1" class="section level4">
+<h4>Comandos Específicos</h4>
+<pre class="bash"><code># Solo detectar archivos movidos
+./09-sync-relocate.sh detect
+
+# Detectar y actualizar automáticamente
+./09-sync-relocate.sh update</code></pre>
+</div>
+</div>
+<div id="flujo-típico-después-de-mover-archivos" class="section level3">
+<h3>📋 <strong>Flujo Típico Después de Mover Archivos</strong></h3>
+<pre class="bash"><code># 1. Detectar qué archivos se movieron
+./09-sync-relocate.sh detect
+
+# 2. Actualizar base de datos interactivamente
+./09-sync-relocate.sh interactive
+
+# 3. Verificar que todo esté correcto
+./01-sync-detector.sh --validate
+
+# 4. Opcional: Re-escanear completamente
+./01-sync-detector.sh --rescan</code></pre>
+</div>
+<div id="alternativas-rápidas" class="section level3">
+<h3>🔄 <strong>Alternativas Rápidas</strong></h3>
+<div id="re-escaneo-completo-más-simple" class="section level4">
+<h4>Re-escaneo Completo (Más Simple)</h4>
+<pre class="bash"><code># Recrear toda la base de datos
+./01-sync-detector.sh --rescan</code></pre>
+</div>
+<div id="limpieza-y-reorganización" class="section level4">
+<h4>Limpieza y Reorganización</h4>
+<pre class="bash"><code># Limpiar grupos rotos
+./07-sync-utils.sh cleanup
+
+# Sincronización manual para reorganizar
+./08-sync-manual.sh interactive</code></pre>
+</div>
 </div>
 </div>
 <div id="resolución-de-problemas" class="section level2">
@@ -972,6 +1062,8 @@ detectados</label></li>
 manual inicial completada</strong></label></li>
 <li><label><input type="checkbox"></input>Verificado que archivos maestros son
 los correctos</label></li>
+<li><label><input type="checkbox"></input>Probado el detector de archivos
+reubicados</label></li>
 <li><label><input type="checkbox"></input>Monitor funcionando (servicio o
 background)</label></li>
 <li><label><input type="checkbox"></input>Logs generándose
