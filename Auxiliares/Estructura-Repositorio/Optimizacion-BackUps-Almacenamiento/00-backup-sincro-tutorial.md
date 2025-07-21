@@ -1,3 +1,8 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
 # Tutorial: Sistema de Sincronización Automática de Nombres de Archivos
 
 ## 📋 Descripción General
@@ -31,7 +36,6 @@ Si renombras `Lab-Lubuntu/01-ejercicio-matematicas.Rmd` a `Lab-Lubuntu/02-ejerci
 | `06-sync-service.sh` | Gestión como servicio systemd | ✅ Creado |
 | `07-sync-utils.sh` | Utilidades de mantenimiento | ✅ Creado |
 | `08-sync-manual.sh` | **Sincronización manual y selección de maestros** | ✅ Creado |
-| `09-sync-relocate.sh` | **Detector de archivos reubicados** | ✅ Creado |
 
 ## 🔧 Componentes del Sistema
 
@@ -76,12 +80,6 @@ Si renombras `Lab-Lubuntu/01-ejercicio-matematicas.Rmd` a `Lab-Lubuntu/02-ejerci
 - Identificación automática del archivo más reciente
 - Sincronización controlada antes del modo automático
 - Previene pérdida de datos por archivos desactualizados
-
-### 9. **09-sync-relocate.sh** - Detector de Archivos Reubicados
-- Detecta archivos que han cambiado de ubicación
-- Busca automáticamente nuevas ubicaciones por nombre
-- Actualiza la base de datos con las nuevas rutas
-- Mantiene la sincronización después de mover archivos
 
 ## ⚠️ **PROBLEMA CRÍTICO: Archivos Desactualizados**
 
@@ -278,13 +276,6 @@ sudo ./06-sync-service.sh follow     # Seguir logs en tiempo real
 ./07-sync-utils.sh backup            # Crear backup del sistema
 ```
 
-#### Detector de Archivos Reubicados
-```bash
-./09-sync-relocate.sh interactive    # Menú interactivo para reubicaciones
-./09-sync-relocate.sh detect         # Solo detectar archivos movidos
-./09-sync-relocate.sh update         # Detectar y actualizar automáticamente
-```
-
 ### Flujo de Trabajo Típico
 
 1. **Instalación inicial:**
@@ -378,81 +369,6 @@ sudo journalctl -u sync-monitor -f
 ```bash
 # Probar sincronización sin ejecutar
 ./03-sync-engine.sh --dry-run --sync-rename "ruta/antigua" "ruta/nueva"
-```
-
-## 📁 Manejo de Archivos Reubicados
-
-### ⚠️ **Problema: Archivos Movidos de Ubicación**
-
-Si mueves un archivo a otra carpeta, el sistema pierde la sincronización:
-
-```bash
-# Antes:
-Lab-Lubuntu/archivo.Rmd     ← En grupo de sincronización
-Lab-Manjaro/archivo.Rmd     ← En grupo de sincronización
-
-# Después de mover:
-mv Lab-Lubuntu/archivo.Rmd Nueva-Carpeta/archivo.Rmd
-
-# Resultado:
-Nueva-Carpeta/archivo.Rmd   ← YA NO sincroniza
-Lab-Manjaro/archivo.Rmd     ← Sigue sincronizando solo con otros
-```
-
-### ✅ **Solución: Script de Reubicación**
-
-#### Uso Interactivo (Recomendado)
-```bash
-./09-sync-relocate.sh interactive
-```
-
-El script:
-1. **Detecta archivos faltantes** en la base de datos
-2. **Busca automáticamente** archivos con el mismo nombre en nuevas ubicaciones
-3. **Muestra las reubicaciones detectadas** para confirmación
-4. **Actualiza la base de datos** con las nuevas rutas
-5. **Verifica la integridad** después de la actualización
-
-#### Comandos Específicos
-```bash
-# Solo detectar archivos movidos
-./09-sync-relocate.sh detect
-
-# Detectar y actualizar automáticamente
-./09-sync-relocate.sh update
-```
-
-### 📋 **Flujo Típico Después de Mover Archivos**
-
-```bash
-# 1. Detectar qué archivos se movieron
-./09-sync-relocate.sh detect
-
-# 2. Actualizar base de datos interactivamente
-./09-sync-relocate.sh interactive
-
-# 3. Verificar que todo esté correcto
-./01-sync-detector.sh --validate
-
-# 4. Opcional: Re-escanear completamente
-./01-sync-detector.sh --rescan
-```
-
-### 🔄 **Alternativas Rápidas**
-
-#### Re-escaneo Completo (Más Simple)
-```bash
-# Recrear toda la base de datos
-./01-sync-detector.sh --rescan
-```
-
-#### Limpieza y Reorganización
-```bash
-# Limpiar grupos rotos
-./07-sync-utils.sh cleanup
-
-# Sincronización manual para reorganizar
-./08-sync-manual.sh interactive
 ```
 
 ## 🔍 Resolución de Problemas
@@ -608,7 +524,6 @@ ADMIN_EMAIL="tu-email@ejemplo.com"
 - [ ] Base de datos creada con archivos detectados
 - [ ] **⚠️ CRÍTICO: Sincronización manual inicial completada**
 - [ ] Verificado que archivos maestros son los correctos
-- [ ] Probado el detector de archivos reubicados
 - [ ] Monitor funcionando (servicio o background)
 - [ ] Logs generándose correctamente
 - [ ] Prueba de sincronización automática exitosa
