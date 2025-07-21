@@ -1,0 +1,199 @@
+# ============================================================================
+# BASE DE DATOS DE SINCRONIZACIÓN DE ARCHIVOS
+# ============================================================================
+# Descripción: Base de datos que mantiene el registro de grupos de archivos
+#              que deben mantenerse sincronizados por nombre
+# Autor: Sistema de Sincronización Automática
+# Generada: [Se actualizará automáticamente al ejecutar 01-sync-detector.sh]
+# ============================================================================
+
+# FORMATO DE ENTRADA:
+# Cada grupo de sincronización tiene la siguiente estructura:
+#
+# # Grupo de sincronización N
+# GROUP_ID=N
+# FILENAME=nombre_del_archivo.ext
+# FILE_COUNT=número_de_archivos_en_el_grupo
+# CREATED=timestamp_de_creación
+# LAST_UPDATED=timestamp_de_última_actualización
+# STATUS=ACTIVE|INACTIVE|ERROR
+# FILE_1_PATH=/ruta/completa/al/archivo1
+# FILE_1_SIZE=tamaño_en_bytes
+# FILE_1_MODIFIED=timestamp_modificación
+# FILE_1_CHECKSUM=hash_opcional
+# FILE_2_PATH=/ruta/completa/al/archivo2
+# FILE_2_SIZE=tamaño_en_bytes
+# FILE_2_MODIFIED=timestamp_modificación
+# FILE_2_CHECKSUM=hash_opcional
+# ... (más archivos según FILE_COUNT)
+#
+# [línea vacía para separar grupos]
+
+# ============================================================================
+# INSTRUCCIONES DE USO
+# ============================================================================
+
+# 1. GENERACIÓN INICIAL:
+#    Ejecutar: ./01-sync-detector.sh
+#    Esto escaneará todo el proyecto y creará los grupos de sincronización
+
+# 2. ACTUALIZACIÓN:
+#    Ejecutar: ./01-sync-detector.sh --rescan
+#    Esto recreará completamente la base de datos
+
+# 3. VALIDACIÓN:
+#    Ejecutar: ./01-sync-detector.sh --validate
+#    Esto verificará que todos los archivos registrados existan
+
+# 4. ESTADÍSTICAS:
+#    Ejecutar: ./01-sync-detector.sh --status
+#    Esto mostrará información sobre los grupos registrados
+
+# ============================================================================
+# ESTADOS DE GRUPOS
+# ============================================================================
+
+# ACTIVE:   Grupo activo, todos los archivos existen y están sincronizados
+# INACTIVE: Grupo desactivado temporalmente
+# ERROR:    Grupo con problemas (archivos faltantes, conflictos, etc.)
+# PENDING:  Grupo pendiente de procesamiento
+# SYNCING:  Grupo en proceso de sincronización
+
+# ============================================================================
+# NOTAS IMPORTANTES
+# ============================================================================
+
+# - Este archivo es generado y mantenido automáticamente por el sistema
+# - NO editar manualmente a menos que sepas exactamente qué estás haciendo
+# - Hacer backup de este archivo antes de modificaciones importantes
+# - El sistema detecta automáticamente cambios en este archivo
+# - Los timestamps están en formato Unix (segundos desde epoch)
+
+# ============================================================================
+# EJEMPLO DE GRUPO DE SINCRONIZACIÓN
+# ============================================================================
+
+# Ejemplo: Archivos con el mismo nombre en diferentes laboratorios
+# 
+# # Grupo de sincronización 1
+# GROUP_ID=1
+# FILENAME=01-ejercicio-matematicas.Rmd
+# FILE_COUNT=3
+# CREATED=2025-01-21 10:30:00
+# LAST_UPDATED=2025-01-21 10:30:00
+# STATUS=ACTIVE
+# FILE_1_PATH=/home/proyectos/.../Lab-Lubuntu/01-ejercicio-matematicas.Rmd
+# FILE_1_SIZE=2048
+# FILE_1_MODIFIED=1642766400
+# FILE_2_PATH=/home/proyectos/.../Lab-Manjaro/01-ejercicio-matematicas.Rmd
+# FILE_2_SIZE=2048
+# FILE_2_MODIFIED=1642766400
+# FILE_3_PATH=/home/proyectos/.../Backup/01-ejercicio-matematicas.Rmd
+# FILE_3_SIZE=2048
+# FILE_3_MODIFIED=1642766400
+
+# ============================================================================
+# METADATOS DE LA BASE DE DATOS
+# ============================================================================
+
+# Versión del formato de base de datos
+DB_VERSION=1.0
+
+# Última actualización completa
+LAST_FULL_SCAN=
+
+# Número total de grupos
+TOTAL_GROUPS=0
+
+# Número total de archivos monitoreados
+TOTAL_FILES=0
+
+# Estadísticas de estado
+ACTIVE_GROUPS=0
+INACTIVE_GROUPS=0
+ERROR_GROUPS=0
+
+# ============================================================================
+# CONFIGURACIÓN DE MANTENIMIENTO
+# ============================================================================
+
+# Limpiar automáticamente grupos con archivos faltantes
+AUTO_CLEANUP=true
+
+# Días después de los cuales marcar grupos inactivos como obsoletos
+OBSOLETE_AFTER_DAYS=30
+
+# Crear backup de la base de datos antes de cambios importantes
+BACKUP_DB_BEFORE_CHANGES=true
+
+# ============================================================================
+# LOGS DE CAMBIOS
+# ============================================================================
+
+# El sistema mantiene un log de todos los cambios realizados:
+# - Creación de nuevos grupos
+# - Actualización de grupos existentes
+# - Eliminación de grupos obsoletos
+# - Cambios de estado
+# - Operaciones de sincronización
+
+# Ver logs en:
+# - sync-detector.log (detección y creación de grupos)
+# - sync-operations.log (operaciones de sincronización)
+# - sync-errors.log (errores y advertencias)
+
+# ============================================================================
+# RECUPERACIÓN Y BACKUP
+# ============================================================================
+
+# En caso de corrupción de la base de datos:
+# 1. Restaurar desde backup: cp backups/05-sync-database.txt.backup ./05-sync-database.txt
+# 2. O regenerar completamente: ./01-sync-detector.sh --rescan
+
+# Backups automáticos se crean en:
+# - backups/05-sync-database.txt.YYYYMMDD_HHMMSS
+# - Se mantienen los últimos 10 backups por defecto
+
+# ============================================================================
+# INTEGRACIÓN CON OTROS SISTEMAS
+# ============================================================================
+
+# Esta base de datos puede ser leída por:
+# - Scripts de monitoreo personalizados
+# - Sistemas de backup externos
+# - Herramientas de análisis de proyecto
+# - Sistemas de CI/CD
+
+# Formato compatible con:
+# - Bash (source del archivo)
+# - Python (parsing de key=value)
+# - Awk/sed para procesamiento de texto
+# - Herramientas de configuración estándar
+
+# ============================================================================
+# ADVERTENCIAS Y LIMITACIONES
+# ============================================================================
+
+# - Los nombres de archivo no deben contener caracteres especiales: = | # \n
+# - Las rutas no deben contener espacios al final o caracteres de control
+# - El sistema asume que los archivos con el mismo nombre deben sincronizarse
+# - No se detectan automáticamente archivos renombrados fuera del sistema
+# - La sincronización es unidireccional (del archivo que cambió a los demás)
+
+# ============================================================================
+# SOPORTE Y DOCUMENTACIÓN
+# ============================================================================
+
+# Para más información consultar:
+# - 00-backup-sincro-tutorial.md (tutorial completo)
+# - sync-*.log (archivos de log del sistema)
+# - 04-sync-config.conf (configuración del sistema)
+
+# Reportar problemas o sugerencias al administrador del sistema
+
+# ============================================================================
+# FIN DE PLANTILLA DE BASE DE DATOS
+# ============================================================================
+
+# Los datos reales se generarán automáticamente al ejecutar el detector
+# Esta plantilla se reemplazará con datos reales en la primera ejecución
