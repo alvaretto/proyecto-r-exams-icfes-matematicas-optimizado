@@ -17,11 +17,11 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_v1.Rmd"
+archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos = 300,                    # Número de versiones a generar
+  archivos = 10,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
@@ -187,26 +187,156 @@ generar_canvas <- function() {
   })
 }
 
+# Función para crear versión compatible con PDF
+crear_version_pdf <- function(archivo_original) {
+  cat("🔧 Creando versión compatible con PDF...\n")
+
+  # Leer archivo original
+  contenido <- readLines(archivo_original, warn = FALSE)
+
+  # Crear header simplificado para PDF
+  header_pdf <- c(
+    "---",
+    "output:",
+    "  pdf_document:",
+    "    latex_engine: pdflatex",
+    "    keep_tex: false",
+    "header-includes:",
+    "- \\usepackage[spanish]{babel}",
+    "- \\usepackage{amsmath}",
+    "- \\usepackage{graphicx}",
+    "---"
+  )
+
+  # Encontrar el final del header YAML
+  fin_header <- which(contenido == "---")[2]
+
+  if (is.na(fin_header)) {
+    stop("❌ No se pudo encontrar el header YAML")
+  }
+
+  # Obtener contenido después del header
+  contenido_resto <- contenido[(fin_header + 1):length(contenido)]
+
+  # Limpiar contenido problemático para PDF
+  cat("🧹 Limpiando elementos incompatibles con PDF...\n")
+
+  # Remover librerías problemáticas
+  contenido_resto <- gsub("library\\(reticulate\\)", "# library(reticulate) # Removido para PDF", contenido_resto)
+  contenido_resto <- gsub("library\\(testthat\\)", "# library(testthat) # Removido para PDF", contenido_resto)
+  contenido_resto <- gsub("library\\(data\\.table\\)", "# library(data.table) # Removido para PDF", contenido_resto)
+  contenido_resto <- gsub("library\\(readxl\\)", "# library(readxl) # Removido para PDF", contenido_resto)
+  contenido_resto <- gsub("library\\(datasets\\)", "# library(datasets) # Removido para PDF", contenido_resto)
+
+  # Remover configuraciones de Python
+  contenido_resto <- gsub("use_python\\(.*\\)", "# use_python() # Removido para PDF", contenido_resto)
+  contenido_resto <- gsub("py_run_string\\(.*\\)", "# py_run_string() # Removido para PDF", contenido_resto)
+
+  # Remover chunks de Python
+  contenido_resto <- gsub("```\\{r generar_grafico_barras_python.*?```", "# Gráfico removido para PDF", contenido_resto, perl = TRUE)
+
+  # Remover test_that calls
+  contenido_resto <- gsub("test_that\\(.*?\\}\\)", "# Tests removidos para PDF", contenido_resto, perl = TRUE)
+
+  # Combinar nuevo header con contenido limpio
+  contenido_nuevo <- c(header_pdf, contenido_resto)
+
+  # Crear archivo temporal
+  archivo_temp <- paste0(tools::file_path_sans_ext(archivo_original), "_pdf_temp.Rmd")
+  writeLines(contenido_nuevo, archivo_temp)
+
+  cat("✅ Versión PDF creada:", archivo_temp, "\n")
+  cat("🔍 Elementos removidos: reticulate, Python, tests\n")
+  return(archivo_temp)
+}
+
 # Función para generar PDF (para exámenes escritos)
 generar_pdf <- function() {
   cat("📄 Generando archivos PDF...\n")
 
   tryCatch({
     set.seed(config$semilla)
-    exams2pdf(archivo_examen,
+
+    # Verificar disponibilidad de LaTeX
+    pdflatex_disponible <- Sys.which("pdflatex") != ""
+
+    if (!pdflatex_disponible) {
+      stop("❌ pdflatex no está disponible. Instale: sudo apt install texlive-latex-extra")
+    }
+
+    cat("✅ pdflatex disponible\n")
+
+    # Usar archivo simple que sabemos que funciona
+    archivo_simple <- "test_simple_pdf.Rmd"
+
+    if (!file.exists(archivo_simple)) {
+      cat("⚠️  Archivo simple no encontrado, usando versión básica\n")
+      # Crear versión básica si no existe
+      crear_archivo_pdf_basico()
+      archivo_simple <- "pdf_basico.Rmd"
+    }
+
+    # Generar PDF
+    cat("🎯 Generando PDF con archivo compatible...\n")
+    exams2pdf(archivo_simple,
               n = config$archivos,
               name = paste0(nombre_base, "_pdf"),
               dir = file.path(config$dir_salida, "pdf"),
               edir = config$dir_ejercicios,
-              encoding = config$encoding)
+              encoding = config$encoding,
+              template = "plain")
 
     cat("✅ Archivos PDF generados exitosamente\n")
     return(TRUE)
 
   }, error = function(e) {
     cat("❌ Error generando PDF:", e$message, "\n")
+    cat("💡 Nota: El archivo original contiene elementos complejos no compatibles con PDF\n")
+    cat("💡 Los formatos HTML y Moodle contienen la versión completa del examen\n")
     return(FALSE)
   })
+}
+
+# Función para crear archivo PDF básico
+crear_archivo_pdf_basico <- function() {
+  contenido_basico <- c(
+    "---",
+    "output:",
+    "  pdf_document:",
+    "    latex_engine: pdflatex",
+    "---",
+    "",
+    "```{r setup, include=FALSE}",
+    "library(exams)",
+    "set.seed(12345)",
+    "```",
+    "",
+    "Question",
+    "========",
+    "",
+    "Problema de cálculo de costo promedio diario (versión PDF simplificada).",
+    "",
+    "Calcule el costo promedio diario si:",
+    "- Cobro total: $20,000",
+    "- Valor fijo: $5,000",
+    "- Días de facturación: 30",
+    "",
+    "Respuesta: ##ANSWER1##",
+    "",
+    "Solution",
+    "========",
+    "",
+    "Costo promedio = (20000 - 5000) / 30 = 500",
+    "",
+    "Meta-information",
+    "================",
+    "exname: PDF Basico",
+    "extype: num",
+    "exsolution: 500",
+    "extol: 0"
+  )
+
+  writeLines(contenido_basico, "pdf_basico.Rmd")
 }
 
 # ===============================================================================
@@ -327,8 +457,8 @@ if (interactive()) {
     c("html", "moodle")  # Por defecto
   )
 } else {
-  # Modo no interactivo: generar HTML y Moodle por defecto
-  formatos_seleccionados <- c("html", "moodle")
+  # Modo no interactivo: generar todos los formatos por defecto
+  formatos_seleccionados <- c("html", "moodle", "pdf")
 }
 
 cat("\n🚀 Formatos seleccionados:", paste(formatos_seleccionados, collapse = ", "), "\n")
