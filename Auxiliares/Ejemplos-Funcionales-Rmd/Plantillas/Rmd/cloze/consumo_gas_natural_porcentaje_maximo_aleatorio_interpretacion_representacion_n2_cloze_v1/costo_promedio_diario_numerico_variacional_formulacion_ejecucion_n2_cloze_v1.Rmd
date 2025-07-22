@@ -69,6 +69,20 @@ redondear_matematico <- function(x, digits = 0) {
   return(floor(x * factor + 0.5) / factor)
 }
 
+# Función de formato estándar para números (sin separador de miles, coma decimal)
+formato_estandar <- function(x, decimales = 0) {
+  # FORMATO ESTÁNDAR: Sin separador de miles, coma como separador decimal
+  # Ejemplos monetarios: 16850 (enteros), 16850,32 (con decimales)
+  # Ejemplos numéricos: 36,5000 (con decimales)
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    # Para decimales, usar coma como separador
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(gsub("\\.", ",", resultado))
+  }
+}
+
 # Establecer semilla aleatoria para reproducibilidad
 #set.seed(sample(1:10000, 1))
 
@@ -175,7 +189,7 @@ distractores <- distractores[1:3]
 
 # Crear opciones finales para schoice
 opciones_schoice <- c(respuesta_6, distractores)
-opciones_texto <- paste0("$", opciones_schoice)
+opciones_texto <- paste0("$", sapply(opciones_schoice, formato_estandar, decimales = 0))
 
 # Mezclar opciones aleatoriamente
 orden_aleatorio <- sample(1:4)
@@ -357,7 +371,7 @@ test_that("Validación del gráfico Python", {
 Question
 ========
 
-`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. Para saber cuál es el costo promedio del consumo diario de gas natural, se resta del cobro total de ese mes el valor por servicio fijo, y luego se divide entre 30, que es el número de días que se utiliza para facturar un mes. En `r tolower(mes_pregunta)` el cobro total fue de $`r format(cobro_total, big.mark = ".", decimal.mark = ",")` y el valor por servicio fijo fue de $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")`. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. Para saber cuál es el costo promedio del consumo diario de gas natural, se resta del cobro total de ese mes el valor por servicio fijo, y luego se divide entre 30, que es el número de días que se utiliza para facturar un mes. En `r tolower(mes_pregunta)` el cobro total fue de $`r formato_estandar(cobro_total, 0)` y el valor por servicio fijo fue de $`r formato_estandar(valor_fijo, 0)`. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico generado con Python
@@ -373,10 +387,12 @@ Para determinar el costo promedio diario del consumo de gas natural en `r tolowe
 
 **IMPORTANTE - Formato de números:**
 
-- **Valores monetarios**: Use coma (,) como separador decimal
-  - Ejemplo: $1234,56 (mil doscientos treinta y cuatro pesos con cincuenta y seis centavos)
-- **Respuestas numéricas**: Use punto (.) como separador decimal
-  - Ejemplo: 123.4567 (ciento veintitrés punto cuatro cinco seis siete)
+- **Valores monetarios**: Sin separador de miles, use coma para decimales
+  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
+  - Significado: dieciséis mil ochocientos cincuenta pesos con treinta y dos centavos
+- **Respuestas numéricas con decimales**: Sin separador de miles, use coma para decimales
+  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
+  - Significado: mil doscientos treinta y cuatro coma cinco seis siete ocho
 
 ### Paso 1: Identificación del cobro total
 Según el enunciado del problema, ¿cuál fue el cobro total en `r tolower(mes_pregunta)`?
@@ -399,11 +415,11 @@ Según el enunciado del problema, ¿cuántos días se utilizan para facturar un 
 **Respuesta:** ##ANSWER4## días
 
 ### Paso 5: Cálculo de la división
-Divida el costo variable entre el número de días de facturación (exprese su respuesta con 4 decimales usando punto como separador decimal):
+Divida el costo variable entre el número de días de facturación (exprese su respuesta con 4 decimales usando coma como separador decimal):
 
 $##ANSWER3## ÷ ##ANSWER4## = ##ANSWER5##
 
-**Ejemplo de formato esperado:** 123.4567 (sin comas, usando punto decimal)
+**Ejemplo de formato esperado:** 123,4567 (usando coma decimal)
 
 ### Paso 6: Resultado final redondeado
 Redondee el resultado anterior a pesos enteros:
@@ -433,31 +449,32 @@ Solution
 
 Este problema de **cálculo de costo promedio diario** requiere un análisis secuencial que demuestre el proceso de razonamiento matemático:
 
-**NOTA IMPORTANTE - Formato de separadores decimales:**
+**NOTA IMPORTANTE - Formato de números estandarizado:**
 
-- **En el enunciado y visualización**: Los valores monetarios se muestran con formato colombiano (punto para miles, coma para decimales)
-- **En las respuestas numéricas**: Use punto (.) como separador decimal según estándar matemático internacional
-- **Ejemplo**: Si el enunciado muestra $1.234,56, en cálculos use 1234.56
+- **Valores monetarios**: Sin separador de miles, use coma para decimales
+  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
+- **Respuestas numéricas con decimales**: Sin separador de miles, coma como separador decimal
+  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
 
 ### Paso 1: Identificación correcta del cobro total ✓
 
-**Respuesta correcta:** $`r respuesta_1`
+**Respuesta correcta:** $`r formato_estandar(respuesta_1, 0)`
 
-El enunciado establece claramente que "en `r tolower(mes_pregunta)` el cobro total fue de $`r format(cobro_total, big.mark = ".", decimal.mark = ",")`".
+El enunciado establece claramente que "en `r tolower(mes_pregunta)` el cobro total fue de $`r formato_estandar(cobro_total, 0)`".
 
 ### Paso 2: Identificación correcta del valor por servicio fijo ✓
 
-**Respuesta correcta:** $`r respuesta_2`
+**Respuesta correcta:** $`r formato_estandar(respuesta_2, 0)`
 
-El enunciado establece que "el valor por servicio fijo fue de $`r format(valor_fijo, big.mark = ".", decimal.mark = ",")`".
+El enunciado establece que "el valor por servicio fijo fue de $`r formato_estandar(valor_fijo, 0)`".
 
 ### Paso 3: Cálculo correcto del costo variable ✓
 
-**Respuesta correcta:** $`r respuesta_3`
+**Respuesta correcta:** $`r formato_estandar(respuesta_3, 0)`
 
 Para obtener el costo variable, se debe restar el valor por servicio fijo del cobro total:
 
-$$\text{Costo variable} = \$`r format(cobro_total, big.mark = ".", decimal.mark = ",")` - \$`r format(valor_fijo, big.mark = ".", decimal.mark = ",")` = \$`r format(costo_consumo_variable, big.mark = ".", decimal.mark = ",")`$$
+$$\text{Costo variable} = \$`r formato_estandar(cobro_total, 0)` - \$`r formato_estandar(valor_fijo, 0)` = \$`r formato_estandar(costo_consumo_variable, 0)`$$
 
 ### Paso 4: Identificación correcta de días de facturación ✓
 
@@ -467,15 +484,15 @@ El enunciado establece que "se divide entre 30, que es el número de días que s
 
 ### Paso 5: Cálculo preciso de la división ✓
 
-**Respuesta correcta:** `r respuesta_5`
+**Respuesta correcta:** `r formato_estandar(respuesta_5, 4)`
 
-$$\frac{\$`r format(costo_consumo_variable, big.mark = ".", decimal.mark = ",")`}{`r respuesta_4`} = `r respuesta_5`$$
+$$\frac{\$`r formato_estandar(costo_consumo_variable, 0)`}{`r respuesta_4`} = `r formato_estandar(respuesta_5, 4)`$$
 
 ### Paso 6: Redondeo correcto del resultado final ✓
 
-**Respuesta correcta:** $`r respuesta_6`
+**Respuesta correcta:** $`r formato_estandar(respuesta_6, 0)`
 
-El resultado de la división (`r respuesta_5`) se redondea a pesos enteros: $`r respuesta_6`.
+El resultado de la división (`r formato_estandar(respuesta_5, 4)`) se redondea a pesos enteros: $`r formato_estandar(respuesta_6, 0)`.
 
 ### Paso 7: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
 
@@ -497,7 +514,7 @@ for(i in 1:4) {
 
 ### Verificación del proceso de razonamiento híbrido completo
 
-**Resultado final:** $`r respuesta_6`
+**Resultado final:** $`r formato_estandar(respuesta_6, 0)`
 
 **El formato híbrido con puntuación dual (cloze + schoice) garantiza que los estudiantes:**
 
@@ -536,7 +553,7 @@ for(i in seq_along(distractores)) {
 
 ### Conclusión
 
-El costo promedio diario del consumo de `r tolower(mes_pregunta)` es de **$`r respuesta_6`**.
+El costo promedio diario del consumo de `r tolower(mes_pregunta)` es de **$`r formato_estandar(respuesta_6, 0)`**.
 
 Esta respuesta es coherente porque:
 
