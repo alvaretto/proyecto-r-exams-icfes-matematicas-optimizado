@@ -21,7 +21,7 @@ archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecuc
 
 # Configuración de generación
 config <- list(
-  archivos = 10,                    # Número de versiones a generar
+  archivos = 350,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
