@@ -17,7 +17,7 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_cloze_v1.Rmd"
+archivo_examen <- "consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
@@ -123,17 +123,32 @@ if (!prueba_rapida(archivo_examen)) {
 # Función para generar HTML
 generar_html <- function() {
   cat("🌐 Generando archivos HTML...\n")
+  cat("📁 Directorio de salida:", file.path(config$dir_salida, "html"), "\n")
+  cat("📄 Archivo base:", archivo_examen, "\n")
+  cat("🔢 Número de versiones:", config$archivos, "\n")
+  cat("🎲 Semilla:", config$semilla, "\n")
 
   tryCatch({
     set.seed(config$semilla)
-    exams2html(archivo_examen,
-               n = config$archivos,
-               name = paste0(nombre_base, "_html"),
-               dir = file.path(config$dir_salida, "html"),
-               edir = config$dir_ejercicios,
-               encoding = config$encoding)
+    cat("⏳ Iniciando generación HTML...\n")
+
+    resultado <- exams2html(archivo_examen,
+                           n = config$archivos,
+                           name = paste0(nombre_base, "_html"),
+                           dir = file.path(config$dir_salida, "html"),
+                           edir = config$dir_ejercicios,
+                           encoding = config$encoding,
+                           verbose = TRUE)
 
     cat("✅ Archivos HTML generados exitosamente\n")
+
+    # Mostrar archivos generados
+    archivos_html <- list.files(file.path(config$dir_salida, "html"), pattern = "\\.html$")
+    cat("📊 Archivos generados:", length(archivos_html), "\n")
+    for(i in seq_along(archivos_html)) {
+      cat("  ", i, ":", archivos_html[i], "\n")
+    }
+
     return(TRUE)
 
   }, error = function(e) {
@@ -145,18 +160,33 @@ generar_html <- function() {
 # Función para generar Moodle XML
 generar_moodle <- function() {
   cat("🎓 Generando archivos para Moodle...\n")
+  cat("📁 Directorio de salida:", file.path(config$dir_salida, "moodle"), "\n")
+  cat("📄 Archivo base:", archivo_examen, "\n")
+  cat("🔢 Número de versiones:", config$archivos, "\n")
+  cat("🎲 Semilla:", config$semilla, "\n")
 
   tryCatch({
     set.seed(config$semilla)
-    exams2moodle(archivo_examen,
-                 n = config$archivos,
-                 name = paste0(nombre_base, "_moodle"),
-                 dir = file.path(config$dir_salida, "moodle"),
-                 edir = config$dir_ejercicios,
-                 encoding = config$encoding,
-                 svg = TRUE)
+    cat("⏳ Iniciando generación Moodle XML...\n")
+
+    resultado <- exams2moodle(archivo_examen,
+                             n = config$archivos,
+                             name = paste0(nombre_base, "_moodle"),
+                             dir = file.path(config$dir_salida, "moodle"),
+                             edir = config$dir_ejercicios,
+                             encoding = config$encoding,
+                             svg = TRUE,
+                             verbose = TRUE)
 
     cat("✅ Archivos Moodle generados exitosamente\n")
+
+    # Mostrar archivos generados
+    archivos_moodle <- list.files(file.path(config$dir_salida, "moodle"), pattern = "\\.xml$")
+    cat("📊 Archivos generados:", length(archivos_moodle), "\n")
+    for(i in seq_along(archivos_moodle)) {
+      cat("  ", i, ":", archivos_moodle[i], "\n")
+    }
+
     return(TRUE)
 
   }, error = function(e) {
@@ -253,11 +283,15 @@ crear_version_pdf <- function(archivo_original) {
 # Función para generar PDF (para exámenes escritos)
 generar_pdf <- function() {
   cat("📄 Generando archivos PDF...\n")
+  cat("📁 Directorio de salida:", file.path(config$dir_salida, "pdf"), "\n")
+  cat("🔢 Número de versiones:", config$archivos, "\n")
+  cat("🎲 Semilla:", config$semilla, "\n")
 
   tryCatch({
     set.seed(config$semilla)
 
     # Verificar disponibilidad de LaTeX
+    cat("🔍 Verificando disponibilidad de LaTeX...\n")
     pdflatex_disponible <- Sys.which("pdflatex") != ""
 
     if (!pdflatex_disponible) {
@@ -270,23 +304,34 @@ generar_pdf <- function() {
     archivo_simple <- "test_simple_pdf.Rmd"
 
     if (!file.exists(archivo_simple)) {
-      cat("⚠️  Archivo simple no encontrado, usando versión básica\n")
+      cat("⚠️  Archivo simple no encontrado, creando versión básica...\n")
       # Crear versión básica si no existe
       crear_archivo_pdf_basico()
       archivo_simple <- "pdf_basico.Rmd"
     }
 
+    cat("📄 Usando archivo:", archivo_simple, "\n")
+
     # Generar PDF
-    cat("🎯 Generando PDF con archivo compatible...\n")
-    exams2pdf(archivo_simple,
-              n = config$archivos,
-              name = paste0(nombre_base, "_pdf"),
-              dir = file.path(config$dir_salida, "pdf"),
-              edir = config$dir_ejercicios,
-              encoding = config$encoding,
-              template = "plain")
+    cat("⏳ Iniciando generación PDF...\n")
+    resultado <- exams2pdf(archivo_simple,
+                          n = config$archivos,
+                          name = paste0(nombre_base, "_pdf"),
+                          dir = file.path(config$dir_salida, "pdf"),
+                          edir = config$dir_ejercicios,
+                          encoding = config$encoding,
+                          template = "plain",
+                          verbose = TRUE)
 
     cat("✅ Archivos PDF generados exitosamente\n")
+
+    # Mostrar archivos generados
+    archivos_pdf <- list.files(file.path(config$dir_salida, "pdf"), pattern = "\\.pdf$")
+    cat("📊 Archivos generados:", length(archivos_pdf), "\n")
+    for(i in seq_along(archivos_pdf)) {
+      cat("  ", i, ":", archivos_pdf[i], "\n")
+    }
+
     return(TRUE)
 
   }, error = function(e) {
@@ -345,29 +390,90 @@ crear_archivo_pdf_basico <- function() {
 
 generar_todos_formatos <- function(formatos = c("html", "moodle")) {
   cat("\n🏭 INICIANDO GENERACIÓN MASIVA\n")
-  cat("Formatos seleccionados:", paste(formatos, collapse = ", "), "\n\n")
+  cat("📄 Archivo:", archivo_examen, "\n")
+  cat("🎯 Formatos seleccionados:", paste(formatos, collapse = ", "), "\n")
+  cat("🔢 Versiones por formato:", config$archivos, "\n")
+  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("📁 Directorio de salida:", config$dir_salida, "\n")
+  cat("⏰ Hora de inicio:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n")
+  cat(strrep("-", 60), "\n\n")
+
+  # Verificar que el archivo existe
+  cat("🔍 Verificando archivo de entrada...\n")
+  if (!file.exists(archivo_examen)) {
+    stop("❌ Error: No se encuentra el archivo ", archivo_examen)
+  }
+  cat("✅ Archivo encontrado:", archivo_examen, "\n")
+
+  # Verificar tamaño del archivo
+  tamaño_archivo <- file.size(archivo_examen)
+  cat("📊 Tamaño del archivo:", round(tamaño_archivo / 1024, 2), "KB\n")
 
   resultados <- list()
+  tiempo_inicio <- Sys.time()
+
+  # Crear directorios de salida
+  cat("\n📁 Creando directorios de salida...\n")
+  crear_directorios()
+
+  cat("\n🎯 INICIANDO GENERACIÓN POR FORMATOS\n")
+  cat(strrep("=", 50), "\n")
 
   # Generar cada formato solicitado
   if ("html" %in% formatos) {
+    posicion <- which(formatos == "html")
+    cat("\n[", posicion, "/", length(formatos), "] 🌐 FORMATO HTML\n")
+    cat(strrep("-", 30), "\n")
+    tiempo_formato <- Sys.time()
     resultados$html <- generar_html()
+    tiempo_transcurrido <- difftime(Sys.time(), tiempo_formato, units = "secs")
+    cat("⏱️  Tiempo HTML:", round(tiempo_transcurrido, 2), "segundos\n")
   }
 
   if ("moodle" %in% formatos) {
+    posicion <- which(formatos == "moodle")
+    cat("\n[", posicion, "/", length(formatos), "] 🎓 FORMATO MOODLE\n")
+    cat(strrep("-", 30), "\n")
+    tiempo_formato <- Sys.time()
     resultados$moodle <- generar_moodle()
+    tiempo_transcurrido <- difftime(Sys.time(), tiempo_formato, units = "secs")
+    cat("⏱️  Tiempo Moodle:", round(tiempo_transcurrido, 2), "segundos\n")
   }
 
   if ("canvas" %in% formatos) {
+    posicion <- which(formatos == "canvas")
+    cat("\n[", posicion, "/", length(formatos), "] 🎨 FORMATO CANVAS\n")
+    cat(strrep("-", 30), "\n")
+    tiempo_formato <- Sys.time()
     resultados$canvas <- generar_canvas()
+    tiempo_transcurrido <- difftime(Sys.time(), tiempo_formato, units = "secs")
+    cat("⏱️  Tiempo Canvas:", round(tiempo_transcurrido, 2), "segundos\n")
   }
 
   if ("pdf" %in% formatos) {
+    posicion <- which(formatos == "pdf")
+    cat("\n[", posicion, "/", length(formatos), "] 📄 FORMATO PDF\n")
+    cat(strrep("-", 30), "\n")
+    tiempo_formato <- Sys.time()
     resultados$pdf <- generar_pdf()
+    tiempo_transcurrido <- difftime(Sys.time(), tiempo_formato, units = "secs")
+    cat("⏱️  Tiempo PDF:", round(tiempo_transcurrido, 2), "segundos\n")
   }
+
+  # Calcular tiempo total
+  tiempo_total <- difftime(Sys.time(), tiempo_inicio, units = "secs")
+
+  cat("\n", strrep("=", 50), "\n")
+  cat("🎉 GENERACIÓN COMPLETADA\n")
+  cat("⏰ Hora de finalización:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n")
+  cat("⏱️  Tiempo total:", round(tiempo_total, 2), "segundos\n")
 
   # Resumen de resultados
   cat("\n📊 RESUMEN DE GENERACIÓN:\n")
+  exitosos <- sum(unlist(resultados), na.rm = TRUE)
+  total <- length(resultados)
+  cat("✅ Formatos exitosos:", exitosos, "de", total, "\n")
+
   for (formato in names(resultados)) {
     estado <- if (resultados[[formato]]) "✅ EXITOSO" else "❌ FALLÓ"
     cat("  ", toupper(formato), ":", estado, "\n")
@@ -399,6 +505,26 @@ mostrar_info_archivo <- function() {
   # Detectar aleatorización
   tiene_sample <- any(grepl("sample\\(", contenido))
   cat("  Aleatorización:", ifelse(tiene_sample, "Detectada", "No detectada"), "\n")
+}
+
+# Función para crear directorios de salida
+crear_directorios <- function() {
+  # Crear directorio principal
+  if (!dir.exists(config$dir_salida)) {
+    dir.create(config$dir_salida, recursive = TRUE)
+    cat("📁 Directorio principal creado:", config$dir_salida, "\n")
+  }
+
+  # Crear subdirectorios para cada formato
+  formatos_dirs <- c("html", "moodle", "canvas", "pdf")
+  for (formato in formatos_dirs) {
+    dir_formato <- file.path(config$dir_salida, formato)
+    if (!dir.exists(dir_formato)) {
+      dir.create(dir_formato, recursive = TRUE)
+      cat("📂 Subdirectorio creado:", dir_formato, "\n")
+    }
+  }
+  cat("✅ Estructura de directorios lista\n")
 }
 
 # Función para limpiar directorios antiguos

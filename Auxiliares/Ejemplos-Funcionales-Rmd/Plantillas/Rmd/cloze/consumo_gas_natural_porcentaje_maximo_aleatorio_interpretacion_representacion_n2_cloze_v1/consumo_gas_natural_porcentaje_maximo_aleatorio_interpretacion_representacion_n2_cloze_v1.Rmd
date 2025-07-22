@@ -52,6 +52,30 @@ use_python(Sys.which("python"), required = TRUE)
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
+# Función de redondeo matemático correcto (hacia arriba para .5)
+redondear_matematico <- function(x, digits = 0) {
+  # CORRECCIÓN IMPORTANTE: R usa "redondeo bancario" donde .5 se redondea al número par más cercano
+  # Ejemplo problemático: round(36.5, 0) = 36 (incorrecto matemáticamente)
+  # Esta función implementa redondeo matemático estándar: .5 siempre hacia arriba
+  # Ejemplos corregidos: 36.5 -> 37, 38.5 -> 39, 40.5 -> 41
+  factor <- 10^digits
+  return(floor(x * factor + 0.5) / factor)
+}
+
+# Función de formato estándar para números (sin separador de miles, coma decimal)
+formato_estandar <- function(x, decimales = 0) {
+  # FORMATO ESTÁNDAR: Sin separador de miles, coma como separador decimal
+  # Ejemplos monetarios: 16850 (enteros), 16850,32 (con decimales)
+  # Ejemplos numéricos: 36,5000 (con decimales)
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    # Para decimales, usar coma como separador
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(gsub("\\.", ",", resultado))
+  }
+}
+
 # Establecer semilla aleatoria para reproducibilidad
 #set.seed(sample(1:10000, 1))
 
@@ -83,7 +107,7 @@ consumo_maximo <- sample(consumos_maximos_posibles, 1)
 # Generar porcentajes objetivo que den resultados "limpios"
 porcentajes_objetivo <- c(60, 65, 70, 75, 80, 85, 90)
 porcentaje_junio <- sample(porcentajes_objetivo, 1)
-consumo_junio <- round((porcentaje_junio * consumo_maximo) / 100)
+consumo_junio <- redondear_matematico((porcentaje_junio * consumo_maximo) / 100)
 
 # Aleatorizar meses involucrados en el problema
 meses_disponibles <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -100,7 +124,7 @@ mes_factura <- meses_seleccionados[7]  # Último mes para la factura
 
 # Crear vector de meses y consumos
 meses <- meses_seleccionados
-consumo_pregunta <- round((porcentaje_junio * consumo_maximo) / 100)
+consumo_pregunta <- redondear_matematico((porcentaje_junio * consumo_maximo) / 100)
 
 # Generar consumos base realistas
 consumos_base <- numeric(7)
@@ -137,14 +161,14 @@ costo_variable <- consumo_factura * precio_por_m3
 total_factura <- cargo_fijo + costo_variable
 
 # Calcular respuestas para formato cloze
-porcentaje_correcto <- round((consumo_pregunta / consumo_maximo) * 100)
+porcentaje_correcto <- redondear_matematico((consumo_pregunta / consumo_maximo) * 100)
 
 # Respuestas para cada paso del análisis secuencial
 respuesta_1 <- consumo_pregunta  # Lectura del gráfico
 respuesta_2 <- consumo_maximo    # Consumo máximo del enunciado
 respuesta_3a <- consumo_pregunta # Numerador de la fórmula
 respuesta_3b <- consumo_maximo   # Denominador de la fórmula
-respuesta_4 <- round(consumo_pregunta / consumo_maximo, 4)  # División con 4 decimales
+respuesta_4 <- redondear_matematico(consumo_pregunta / consumo_maximo, 4)  # División con 4 decimales
 respuesta_5 <- porcentaje_correcto  # Porcentaje final
 
 # Generar distractores para la pregunta schoice final
@@ -158,14 +182,14 @@ if(consumo_pregunta <= 100 && consumo_pregunta != porcentaje_correcto) {
 # Distractor 2: Error de cálculo - usar otro mes
 meses_alternativos <- which(names(consumos) != mes_pregunta)
 mes_alternativo <- sample(meses_alternativos, 1)
-porcentaje_alternativo <- round((consumos[mes_alternativo] / consumo_maximo) * 100)
+porcentaje_alternativo <- redondear_matematico((consumos[mes_alternativo] / consumo_maximo) * 100)
 if(porcentaje_alternativo != porcentaje_correcto && !porcentaje_alternativo %in% distractores) {
   distractores <- c(distractores, porcentaje_alternativo)
 }
 
 # Distractor 3: Error matemático común - denominador incorrecto
 denominador_error <- consumo_maximo - sample(2:5, 1)
-porcentaje_error <- round((consumo_pregunta / denominador_error) * 100)
+porcentaje_error <- redondear_matematico((consumo_pregunta / denominador_error) * 100)
 if(porcentaje_error <= 100 && porcentaje_error != porcentaje_correcto && !porcentaje_error %in% distractores) {
   distractores <- c(distractores, porcentaje_error)
 }
@@ -246,7 +270,7 @@ test_that("Validación de datos generados híbridos", {
 
 test_that("Validación de coherencia matemática híbrida", {
   # Verificar que el cálculo del porcentaje es correcto
-  porcentaje_calculado <- round((consumo_pregunta / consumo_maximo) * 100)
+  porcentaje_calculado <- redondear_matematico((consumo_pregunta / consumo_maximo) * 100)
   expect_equal(porcentaje_correcto, porcentaje_calculado)
 
   # Verificar coherencia entre respuestas cloze
@@ -254,7 +278,7 @@ test_that("Validación de coherencia matemática híbrida", {
   expect_equal(respuesta_2, consumo_maximo)    # Paso 2
   expect_equal(respuesta_3a, consumo_pregunta) # Paso 3a
   expect_equal(respuesta_3b, consumo_maximo)   # Paso 3b
-  expect_equal(respuesta_4, round(consumo_pregunta / consumo_maximo, 4))  # Paso 4
+  expect_equal(respuesta_4, redondear_matematico(consumo_pregunta / consumo_maximo, 4))  # Paso 4
   expect_equal(respuesta_5, porcentaje_correcto)  # Paso 5
 
   # Verificar coherencia de la parte schoice
@@ -368,7 +392,7 @@ test_that("Validación del gráfico Python", {
 Question
 ========
 
-`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r consumo_factura` metros cúbicos de gas natural y la factura fue de $`r format(total_factura, big.mark = ".", decimal.mark = ",")`, incluido el cargo fijo de $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r consumo_factura` metros cúbicos de gas natural y la factura fue de $`r formato_estandar(total_factura, 0)`, incluido el cargo fijo de $`r formato_estandar(cargo_fijo, 0)` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico generado con Python
@@ -381,6 +405,15 @@ if (es_moodle) {
 ```
 
 Un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes. Para determinar qué porcentaje del consumo máximo posible corresponde al consumo de `r tolower(mes_pregunta)`, resuelva paso a paso:
+
+**IMPORTANTE - Formato de números:**
+
+- **Valores monetarios**: Sin separador de miles, use coma para decimales
+  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
+  - Significado: dieciséis mil ochocientos cincuenta pesos con treinta y dos centavos
+- **Respuestas numéricas con decimales**: Sin separador de miles, use coma para decimales
+  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
+  - Significado: mil doscientos treinta y cuatro coma cinco seis siete ocho
 
 ### Paso 1: Lectura del gráfico
 Observe cuidadosamente la gráfica de barras. ¿Cuántos metros cúbicos de gas natural se consumieron en `r tolower(mes_pregunta)`?
@@ -398,9 +431,11 @@ Para calcular el porcentaje, complete la fórmula con los valores identificados:
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100%
 
 ### Paso 4: Cálculo de la división
-Calcule el resultado de la división anterior (exprese su respuesta con 4 decimales):
+Calcule el resultado de la división anterior (exprese su respuesta con 4 decimales usando coma como separador decimal):
 
 ##ANSWER3## ÷ ##ANSWER4## = ##ANSWER5##
+
+**Ejemplo de formato esperado:** 0,7500 (usando coma decimal)
 
 ### Paso 5: Resultado final
 Multiplique el resultado anterior por 100 para obtener el porcentaje final:
@@ -429,6 +464,14 @@ Solution
 ### Análisis paso a paso del problema
 
 Este problema de **interpretación de gráficos de barras** y **cálculo de porcentajes** requiere un análisis secuencial que demuestre el proceso de razonamiento matemático:
+
+**NOTA IMPORTANTE - Formato de números estandarizado:**
+
+- **Valores monetarios**: Sin separador de miles, use coma para decimales
+  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
+- **Respuestas numéricas con decimales**: Sin separador de miles, coma como separador decimal
+  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
+- **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
 ### Paso 1: Lectura correcta de la gráfica ✓
 
@@ -462,15 +505,15 @@ La fórmula de porcentaje requiere:
 
 ### Paso 4: Cálculo preciso de la división ✓
 
-**Respuesta correcta:** `r round(consumo_pregunta / consumo_maximo, 4)`
+**Respuesta correcta:** `r formato_estandar(respuesta_4, 4)`
 
-$$\frac{`r consumo_pregunta`}{`r consumo_maximo`} = `r round(consumo_pregunta / consumo_maximo, 4)`$$
+$$\frac{`r consumo_pregunta`}{`r consumo_maximo`} = `r formato_estandar(respuesta_4, 4)`$$
 
 ### Paso 5: Conversión a porcentaje ✓
 
-**Respuesta correcta:** `r porcentaje_correcto`%
+**Respuesta correcta:** `r formato_estandar(porcentaje_correcto, 0)`%
 
-$$`r round(consumo_pregunta / consumo_maximo, 4)` \times 100 = `r porcentaje_correcto`\%$$
+$$`r formato_estandar(respuesta_4, 4)` \times 100 = `r formato_estandar(porcentaje_correcto, 0)`\%$$
 
 ### Paso 6: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
 
@@ -519,7 +562,7 @@ Esta respuesta es coherente porque:
 - Aplica correctamente la fórmula de porcentaje
 - El resultado está dentro del rango esperado (0% a 100%)
 
-**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r format(total_factura, big.mark = ".", decimal.mark = ",")`) corresponde exactamente al consumo mostrado en la gráfica (`r consumo_factura` m³ × $`r format(precio_por_m3, big.mark = ".", decimal.mark = ",")` + $`r format(cargo_fijo, big.mark = ".", decimal.mark = ",")` cargo fijo).
+**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r formato_estandar(total_factura, 0)`) corresponde exactamente al consumo mostrado en la gráfica (`r consumo_factura` m³ × $`r formato_estandar(precio_por_m3, 0)` + $`r formato_estandar(cargo_fijo, 0)` cargo fijo).
 
 Meta-information
 ================
