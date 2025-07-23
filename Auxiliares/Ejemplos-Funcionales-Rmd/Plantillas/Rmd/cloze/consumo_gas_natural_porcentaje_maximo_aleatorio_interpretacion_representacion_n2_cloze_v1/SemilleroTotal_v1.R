@@ -7,6 +7,18 @@
 # Basado en: SemilleroCloze.R (mejoras de verbose e interactividad)
 # Autor: Transformación Pedagógica R-Exams
 # Fecha: 2025-01-22
+# Última corrección: 2025-01-23 - Corregida agrupación de archivos consolidados
+# Corrección backup: 2025-01-23 - Corregido sistema de backup para excluir backups previos
+#
+# CORRECCIONES Y MEJORAS IMPORTANTES:
+# - Corregida la lógica para generar archivos consolidados vs separados
+# - Archivos separados: exams2xxx(archivo, n = versiones)
+# - Archivo consolidado: exams2xxx(rep(archivo, versiones), n = 1)
+# - exams2moodle siempre genera consolidado (no necesita corrección)
+# - Agregada funcionalidad para limpiar archivos antiguos antes de generar nuevos
+# - Sistema de backup automático: crea respaldo antes de eliminar archivos
+# - Gestión de backups: muestra backups existentes con información detallada
+# - Los backups solo se eliminan manualmente para máxima seguridad
 # ===============================================================================
 
 # Cargar librerías necesarias
@@ -171,12 +183,13 @@ archivo_examen <- "consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacio
 
 # Configuración por defecto
 config <- list(
-  archivos = 5,                    # Número de versiones por formato
+  archivos = 5,                      # Número de versiones por formato
   semilla = sample(100:1e8, 1),      # Semilla aleatoria
   dir_salida = "salida_universal",   # Directorio de salida
   dir_ejercicios = ".",              # Directorio de ejercicios
   encoding = "UTF-8",                # Codificación
-  formatos = c("html", "moodle")     # Formatos por defecto
+  formatos = c("html", "moodle"),    # Formatos por defecto
+  archivos_separados = TRUE          # TRUE = archivos separados, FALSE = consolidado
 )
 
 # Configurar modo generación de exámenes
@@ -206,27 +219,54 @@ generar_html <- function() {
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "html"), "\n")
   cat("📄 Archivo base:", archivo_examen, "\n")
   cat("🔢 Número de versiones:", config$archivos, "\n")
+  cat("📁 Formato:", if(config$archivos_separados) "Archivos separados" else "Archivo consolidado", "\n")
   cat("🎲 Semilla:", config$semilla, "\n")
 
   tryCatch({
     set.seed(config$semilla)
     cat("⏳ Iniciando generación HTML...\n")
 
-    resultado <- exams2html(archivo_examen,
-                           n = config$archivos,
-                           name = paste0(nombre_base, "_html"),
-                           dir = file.path(config$dir_salida, "html"),
-                           edir = config$dir_ejercicios,
-                           encoding = config$encoding,
-                           verbose = TRUE)
+    if (config$archivos_separados) {
+      # Generar archivos separados (comportamiento original)
+      resultado <- exams2html(archivo_examen,
+                             n = config$archivos,
+                             name = paste0(nombre_base, "_html"),
+                             dir = file.path(config$dir_salida, "html"),
+                             edir = config$dir_ejercicios,
+                             encoding = config$encoding,
+                             verbose = TRUE)
+    } else {
+      # Generar archivo consolidado
+      cat("🔗 Generando archivo consolidado con", config$archivos, "versiones...\n")
+      resultado <- exams2html(rep(archivo_examen, config$archivos),
+                             n = 1,
+                             name = paste0(nombre_base, "_html_consolidado"),
+                             dir = file.path(config$dir_salida, "html"),
+                             edir = config$dir_ejercicios,
+                             encoding = config$encoding,
+                             verbose = TRUE,
+                             template = "plain",
+                             mathjax = TRUE)
+    }
 
     cat("✅ Archivos HTML generados exitosamente\n")
 
     # Mostrar archivos generados
     archivos_html <- list.files(file.path(config$dir_salida, "html"), pattern = "\\.html$")
     cat("📊 Archivos generados:", length(archivos_html), "\n")
-    for(i in seq_along(archivos_html)) {
-      cat("  ", i, ":", archivos_html[i], "\n")
+
+    if (config$archivos_separados) {
+      cat("📄 Tipo: Archivos individuales\n")
+      for(i in seq_along(archivos_html)) {
+        cat("  ", i, ":", archivos_html[i], "\n")
+      }
+    } else {
+      cat("📄 Tipo: Archivo consolidado\n")
+      for(archivo in archivos_html) {
+        tamaño <- file.size(file.path(config$dir_salida, "html", archivo))
+        cat("  📄", archivo, "- Tamaño:", round(tamaño/1024, 2), "KB\n")
+        cat("     Contiene:", config$archivos, "versiones del examen\n")
+      }
     }
 
     return(TRUE)
@@ -298,26 +338,51 @@ generar_pdf <- function() {
       cat("🔧 Aplicando configuración especial para Cloze...\n")
 
       # Para Cloze, usar configuración más robusta
-      resultado <- exams2pdf(archivo_examen,
-                            n = min(config$archivos, 10),  # Limitar para Cloze
-                            name = paste0(nombre_base, "_pdf_cloze"),
-                            dir = file.path(config$dir_salida, "pdf"),
-                            edir = config$dir_ejercicios,
-                            encoding = "UTF-8",
-                            template = "plain",
-                            verbose = TRUE,
-                            converter = "pandoc",
-                            base64 = FALSE)
+      if (config$archivos_separados) {
+        resultado <- exams2pdf(archivo_examen,
+                              n = min(config$archivos, 10),  # Limitar para Cloze
+                              name = paste0(nombre_base, "_pdf_cloze"),
+                              dir = file.path(config$dir_salida, "pdf"),
+                              edir = config$dir_ejercicios,
+                              encoding = "UTF-8",
+                              template = "plain",
+                              verbose = TRUE,
+                              converter = "pandoc",
+                              base64 = FALSE)
+      } else {
+        cat("🔗 Generando PDF consolidado para Cloze...\n")
+        resultado <- exams2pdf(rep(archivo_examen, min(config$archivos, 10)),
+                              n = 1,
+                              name = paste0(nombre_base, "_pdf_cloze_consolidado"),
+                              dir = file.path(config$dir_salida, "pdf"),
+                              edir = config$dir_ejercicios,
+                              encoding = "UTF-8",
+                              template = "exam",  # Template que soporta múltiples versiones
+                              verbose = TRUE,
+                              converter = "pandoc")
+      }
     } else {
       # Para otros tipos, configuración estándar
-      resultado <- exams2pdf(archivo_examen,
-                            n = config$archivos,
-                            name = paste0(nombre_base, "_pdf"),
-                            dir = file.path(config$dir_salida, "pdf"),
-                            edir = config$dir_ejercicios,
-                            encoding = config$encoding,
-                            template = "plain",
-                            verbose = TRUE)
+      if (config$archivos_separados) {
+        resultado <- exams2pdf(archivo_examen,
+                              n = config$archivos,
+                              name = paste0(nombre_base, "_pdf"),
+                              dir = file.path(config$dir_salida, "pdf"),
+                              edir = config$dir_ejercicios,
+                              encoding = config$encoding,
+                              template = "plain",
+                              verbose = TRUE)
+      } else {
+        cat("🔗 Generando PDF consolidado...\n")
+        resultado <- exams2pdf(rep(archivo_examen, config$archivos),
+                              n = 1,
+                              name = paste0(nombre_base, "_pdf_consolidado"),
+                              dir = file.path(config$dir_salida, "pdf"),
+                              edir = config$dir_ejercicios,
+                              encoding = config$encoding,
+                              template = "exam",  # Template para múltiples versiones
+                              verbose = TRUE)
+      }
     }
 
     cat("✅ Archivos PDF generados exitosamente\n")
@@ -372,15 +437,30 @@ generar_pandoc <- function() {
     set.seed(config$semilla)
     cat("⏳ Iniciando generación Pandoc (DOCX)...\n")
 
-    resultado <- exams2pandoc(archivo_examen,
-                             n = config$archivos,
-                             name = paste0(nombre_base, "_pandoc"),
-                             dir = file.path(config$dir_salida, "pandoc"),
-                             edir = config$dir_ejercicios,
-                             encoding = config$encoding,
-                             template = "plain.tex",
-                             type = "docx",
-                             verbose = TRUE)
+    if (config$archivos_separados) {
+      # Generar archivos separados
+      resultado <- exams2pandoc(archivo_examen,
+                               n = config$archivos,
+                               name = paste0(nombre_base, "_pandoc"),
+                               dir = file.path(config$dir_salida, "pandoc"),
+                               edir = config$dir_ejercicios,
+                               encoding = config$encoding,
+                               template = "plain.tex",
+                               type = "docx",
+                               verbose = TRUE)
+    } else {
+      # Generar archivo consolidado
+      cat("🔗 Generando archivo consolidado con", config$archivos, "versiones...\n")
+      resultado <- exams2pandoc(rep(archivo_examen, config$archivos),
+                               n = 1,
+                               name = paste0(nombre_base, "_pandoc_consolidado"),
+                               dir = file.path(config$dir_salida, "pandoc"),
+                               edir = config$dir_ejercicios,
+                               encoding = config$encoding,
+                               template = "plain.tex",
+                               type = "docx",
+                               verbose = TRUE)
+    }
 
     cat("✅ Archivos Pandoc generados exitosamente\n")
 
@@ -450,17 +530,35 @@ generar_nops <- function() {
     set.seed(config$semilla)
     cat("⏳ Iniciando generación NOPS...\n")
 
-    resultado <- exams2nops(archivo_examen,
-                           n = config$archivos,
-                           name = paste0(nombre_base, "_nops"),
-                           dir = file.path(config$dir_salida, "nops"),
-                           edir = config$dir_ejercicios,
-                           encoding = config$encoding,
-                           language = "es",
-                           title = "Evaluación de Matemáticas",
-                           institution = "I. E. Pedacito de Cielo",
-                           date = Sys.Date(),
-                           verbose = TRUE)
+    if (config$archivos_separados) {
+      # Generar archivos separados
+      resultado <- exams2nops(archivo_examen,
+                             n = config$archivos,
+                             name = paste0(nombre_base, "_nops"),
+                             dir = file.path(config$dir_salida, "nops"),
+                             edir = config$dir_ejercicios,
+                             encoding = config$encoding,
+                             language = "es",
+                             title = "Evaluación de Matemáticas",
+                             institution = "I. E. Pedacito de Cielo",
+                             date = Sys.Date(),
+                             verbose = TRUE)
+    } else {
+      # Generar archivo consolidado
+      cat("🔗 Generando archivo consolidado con", config$archivos, "versiones...\n")
+      cat("⚠️  NOTA: NOPS consolidado puede tener limitaciones de formato\n")
+      resultado <- exams2nops(rep(archivo_examen, config$archivos),
+                             n = 1,
+                             name = paste0(nombre_base, "_nops_consolidado"),
+                             dir = file.path(config$dir_salida, "nops"),
+                             edir = config$dir_ejercicios,
+                             encoding = config$encoding,
+                             language = "es",
+                             title = "Evaluación de Matemáticas",
+                             institution = "I. E. Pedacito de Cielo",
+                             date = Sys.Date(),
+                             verbose = TRUE)
+    }
 
     cat("✅ Archivos NOPS generados exitosamente\n")
 
@@ -511,6 +609,12 @@ generar_todos_formatos <- function(formatos = c("html", "moodle")) {
   # Crear directorios de salida
   cat("\n📁 Creando directorios de salida...\n")
   crear_directorios()
+
+  # Mostrar backups existentes si los hay
+  mostrar_backups_existentes()
+
+  # Preguntar sobre limpieza de archivos antiguos
+  limpiar_archivos_antiguos()
 
   cat("\n🎯 INICIANDO GENERACIÓN POR FORMATOS\n")
   cat(strrep("=", 50), "\n")
@@ -591,6 +695,213 @@ generar_todos_formatos <- function(formatos = c("html", "moodle")) {
 # ===============================================================================
 # FUNCIONES DE UTILIDAD
 # ===============================================================================
+
+# Función para crear backup de archivos antes de eliminar
+crear_backup_archivos <- function() {
+  # Crear nombre único para el backup basado en timestamp
+  timestamp <- format(Sys.time(), "%Y%m%d_%H%M%S")
+  dir_backup <- file.path(config$dir_salida, paste0("backup_", timestamp))
+
+  cat("💾 Creando backup de archivos antiguos...\n")
+  cat("📁 Directorio de backup:", dir_backup, "\n")
+
+  # Crear directorio de backup
+  if (!dir.exists(dir_backup)) {
+    dir.create(dir_backup, recursive = TRUE)
+  }
+
+  formatos_dirs <- c("html", "pdf", "pandoc", "moodle", "nops")
+  archivos_respaldados <- 0
+
+  # Copiar archivos por formato (excluyendo directorios de backup)
+  for (formato in formatos_dirs) {
+    dir_formato <- file.path(config$dir_salida, formato)
+    if (dir.exists(dir_formato)) {
+      # Obtener todos los archivos del directorio
+      todos_archivos <- list.files(dir_formato, full.names = TRUE)
+
+      # Filtrar para excluir directorios de backup
+      archivos <- todos_archivos[!grepl("backup_", basename(todos_archivos))]
+
+      # Solo procesar archivos, no directorios
+      if (length(archivos) > 0) {
+        archivos <- archivos[!file.info(archivos)$isdir]
+      }
+
+      if (length(archivos) > 0) {
+        # Crear subdirectorio en backup
+        dir_backup_formato <- file.path(dir_backup, formato)
+        dir.create(dir_backup_formato, recursive = TRUE)
+
+        # Copiar archivos
+        for (archivo in archivos) {
+          nombre_archivo <- basename(archivo)
+          destino <- file.path(dir_backup_formato, nombre_archivo)
+          file.copy(archivo, destino)
+          archivos_respaldados <- archivos_respaldados + 1
+        }
+        cat("  💾", toupper(formato), ":", length(archivos), "archivos respaldados\n")
+      }
+    }
+  }
+
+  # Crear archivo de información del backup
+  info_backup <- file.path(dir_backup, "backup_info.txt")
+  writeLines(c(
+    paste("Backup creado:", Sys.time()),
+    paste("Directorio original:", config$dir_salida),
+    paste("Archivos respaldados:", archivos_respaldados),
+    paste("Semilla original:", config$semilla),
+    paste("Archivo examen:", archivo_examen),
+    "",
+    "NOTA: Este backup se creó automáticamente antes de limpiar archivos antiguos.",
+    "Los backups deben eliminarse manualmente cuando ya no sean necesarios."
+  ), info_backup)
+
+  cat("✅ Backup completado:", archivos_respaldados, "archivos respaldados\n")
+  cat("📄 Información del backup guardada en: backup_info.txt\n")
+
+  return(dir_backup)
+}
+
+# Función para mostrar backups existentes
+mostrar_backups_existentes <- function() {
+  if (!dir.exists(config$dir_salida)) {
+    return()
+  }
+
+  # Buscar directorios de backup
+  todos_dirs <- list.dirs(config$dir_salida, full.names = FALSE, recursive = FALSE)
+  backups <- todos_dirs[grepl("^backup_", todos_dirs)]
+
+  if (length(backups) == 0) {
+    return()
+  }
+
+  cat("\n💾 BACKUPS EXISTENTES:\n")
+  cat("Se encontraron", length(backups), "backups en el directorio de salida:\n")
+
+  for (i in seq_along(backups)) {
+    backup_dir <- file.path(config$dir_salida, backups[i])
+    info_file <- file.path(backup_dir, "backup_info.txt")
+
+    cat("  ", i, ".", backups[i], "\n")
+
+    # Mostrar información del backup si existe
+    if (file.exists(info_file)) {
+      info_lines <- readLines(info_file, warn = FALSE)
+      fecha_line <- info_lines[grepl("Backup creado:", info_lines)]
+      archivos_line <- info_lines[grepl("Archivos respaldados:", info_lines)]
+
+      if (length(fecha_line) > 0) {
+        fecha <- sub("Backup creado: ", "", fecha_line[1])
+        cat("     📅 Fecha:", fecha, "\n")
+      }
+      if (length(archivos_line) > 0) {
+        archivos <- sub("Archivos respaldados: ", "", archivos_line[1])
+        cat("     📊 Archivos:", archivos, "\n")
+      }
+    }
+
+    # Mostrar tamaño del directorio
+    backup_size <- sum(file.size(list.files(backup_dir, recursive = TRUE, full.names = TRUE)), na.rm = TRUE)
+    cat("     💾 Tamaño:", round(backup_size / 1024 / 1024, 2), "MB\n")
+  }
+
+  cat("\n💡 NOTA: Los backups deben eliminarse manualmente desde el explorador de archivos\n")
+  cat("📁 Ubicación:", config$dir_salida, "\n")
+}
+
+# Función para limpiar archivos antiguos
+limpiar_archivos_antiguos <- function() {
+  if (!dir.exists(config$dir_salida)) {
+    return(FALSE)  # No hay nada que limpiar
+  }
+
+  # Verificar si hay archivos existentes (excluyendo backups)
+  formatos_dirs <- c("html", "pdf", "pandoc", "moodle", "nops")
+  archivos_existentes <- 0
+
+  for (formato in formatos_dirs) {
+    dir_formato <- file.path(config$dir_salida, formato)
+    if (dir.exists(dir_formato)) {
+      # Obtener todos los archivos del directorio
+      todos_archivos <- list.files(dir_formato, full.names = TRUE)
+
+      # Filtrar para excluir directorios de backup y solo contar archivos
+      archivos <- todos_archivos[!grepl("backup_", basename(todos_archivos))]
+      if (length(archivos) > 0) {
+        archivos <- archivos[!file.info(archivos)$isdir]
+      }
+
+      archivos_existentes <- archivos_existentes + length(archivos)
+    }
+  }
+
+  if (archivos_existentes == 0) {
+    cat("📁 No hay archivos antiguos para limpiar\n")
+    return(FALSE)
+  }
+
+  cat("\n🗑️  LIMPIEZA DE ARCHIVOS ANTIGUOS\n")
+  cat("Se encontraron", archivos_existentes, "archivos en el directorio de salida\n")
+  cat("📁 Directorio:", config$dir_salida, "\n")
+
+  # Mostrar archivos por formato (excluyendo backups)
+  for (formato in formatos_dirs) {
+    dir_formato <- file.path(config$dir_salida, formato)
+    if (dir.exists(dir_formato)) {
+      # Solo mostrar archivos que no sean directorios de backup
+      archivos <- list.files(dir_formato)
+      archivos <- archivos[!grepl("^backup_", archivos)]
+      if (length(archivos) > 0) {
+        cat("  📂", toupper(formato), ":", length(archivos), "archivos\n")
+      }
+    }
+  }
+
+  cat("\n💡 NOTA: Se creará un backup automático antes de eliminar los archivos\n")
+  cat("❓ ¿Desea eliminar todos los archivos antiguos antes de generar nuevos? (s/n): ")
+  respuesta <- tolower(readline())
+
+  if (respuesta %in% c("s", "si", "sí", "y", "yes")) {
+    # Crear backup antes de eliminar
+    dir_backup <- crear_backup_archivos()
+
+    cat("\n🗑️  Eliminando archivos antiguos...\n")
+
+    archivos_eliminados <- 0
+    for (formato in formatos_dirs) {
+      dir_formato <- file.path(config$dir_salida, formato)
+      if (dir.exists(dir_formato)) {
+        # Obtener todos los archivos del directorio
+        todos_archivos <- list.files(dir_formato, full.names = TRUE)
+
+        # Filtrar para excluir directorios de backup
+        archivos_a_eliminar <- todos_archivos[!grepl("backup_", basename(todos_archivos))]
+
+        if (length(archivos_a_eliminar) > 0) {
+          # Verificar que son archivos, no directorios
+          archivos_a_eliminar <- archivos_a_eliminar[!file.info(archivos_a_eliminar)$isdir]
+
+          if (length(archivos_a_eliminar) > 0) {
+            file.remove(archivos_a_eliminar)
+            archivos_eliminados <- archivos_eliminados + length(archivos_a_eliminar)
+            cat("  ✅", toupper(formato), ":", length(archivos_a_eliminar), "archivos eliminados\n")
+          }
+        }
+      }
+    }
+
+    cat("✅ Limpieza completada:", archivos_eliminados, "archivos eliminados\n")
+    cat("💾 Backup disponible en:", basename(dir_backup), "\n")
+    cat("⚠️  Los backups deben eliminarse manualmente cuando ya no sean necesarios\n")
+    return(TRUE)
+  } else {
+    cat("⚠️  Los archivos antiguos se mantendrán (pueden mezclarse con los nuevos)\n")
+    return(FALSE)
+  }
+}
 
 # Función para crear directorios de salida
 crear_directorios <- function() {
@@ -698,15 +1009,33 @@ confirmar_configuracion <- function(formatos) {
   cat("  Archivo:", archivo_examen, "\n")
   cat("  Formatos:", paste(formatos, collapse = ", "), "\n")
   cat("  Versiones:", config$archivos, "\n")
+  cat("  Formato salida:", if(config$archivos_separados)
+      paste(config$archivos, "archivos separados") else
+      paste("1 archivo con", config$archivos, "versiones"), "\n")
   cat("  Semilla:", config$semilla, "\n")
   cat("  Directorio:", config$dir_salida, "\n")
+
+  # Verificar si hay archivos existentes y mostrar advertencia
+  if (dir.exists(config$dir_salida)) {
+    formatos_dirs <- c("html", "pdf", "pandoc", "moodle", "nops")
+    archivos_existentes <- 0
+    for (formato in formatos_dirs) {
+      dir_formato <- file.path(config$dir_salida, formato)
+      if (dir.exists(dir_formato)) {
+        archivos_existentes <- archivos_existentes + length(list.files(dir_formato))
+      }
+    }
+    if (archivos_existentes > 0) {
+      cat("  ⚠️  Archivos existentes:", archivos_existentes, "archivos en directorio de salida\n")
+    }
+  }
 
   cat("\n❓ ¿Desea continuar? (s/n): ")
   respuesta <- tolower(readline())
   return(respuesta %in% c("s", "si", "sí", "y", "yes"))
 }
 
-# Función para configurar número de archivos
+# Función para configurar número de archivos y formato de salida
 configurar_archivos <- function() {
   cat("\n🔢 CONFIGURACIÓN DE VERSIONES:\n")
   cat("  Actual:", config$archivos, "versiones por formato\n")
@@ -720,9 +1049,46 @@ configurar_archivos <- function() {
     if (!is.na(nuevo_numero) && nuevo_numero > 0 && nuevo_numero <= 1000) {
       config$archivos <<- nuevo_numero
       cat("  ✅ Configurado a", nuevo_numero, "versiones\n")
+
+      # Nueva funcionalidad: Preguntar sobre formato de salida
+      configurar_formato_salida(nuevo_numero)
     } else {
       cat("  ❌ Número inválido. Manteniendo", config$archivos, "\n")
     }
+  } else {
+    # Si no cambia el número, también preguntar sobre formato
+    configurar_formato_salida(config$archivos)
+  }
+}
+
+# Función para configurar formato de salida (archivos separados vs consolidado)
+configurar_formato_salida <- function(num_versiones) {
+  if (num_versiones == 1) {
+    # Si solo es 1 versión, no tiene sentido preguntar
+    config$archivos_separados <<- TRUE
+    return()
+  }
+
+  cat("\n📁 FORMATO DE SALIDA:\n")
+  cat("  Con", num_versiones, "versiones, ¿cómo desea generar los archivos?\n")
+  cat("  1. Archivos separados -", num_versiones, "archivos independientes\n")
+  cat("  2. Archivo consolidado - 1 archivo con", num_versiones, "versiones\n")
+  cat("  \n💡 Recomendaciones:\n")
+  cat("    • Archivos separados: Ideal para distribución individual\n")
+  cat("    • Archivo consolidado: Ideal para impresión masiva o revisión\n")
+
+  cat("\n  Seleccione opción (1 o 2): ")
+  opcion <- readline()
+
+  if (opcion == "1") {
+    config$archivos_separados <<- TRUE
+    cat("  ✅ Configurado: ", num_versiones, " archivos separados\n")
+  } else if (opcion == "2") {
+    config$archivos_separados <<- FALSE
+    cat("  ✅ Configurado: 1 archivo con ", num_versiones, " versiones\n")
+  } else {
+    cat("  ⚠️  Opción inválida. Usando archivos separados por defecto\n")
+    config$archivos_separados <<- TRUE
   }
 }
 

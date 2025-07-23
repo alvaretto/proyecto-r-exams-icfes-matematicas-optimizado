@@ -57,7 +57,7 @@ use_python(Sys.which("python"), required = TRUE)
 ```
 
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
-options(OutDec = ".")  # Asegurar punto decimal en este chunk
+options(OutDec = ".")  # Punto decimal para R interno (coma en presentación)
 
 # Función de redondeo matemático correcto (hacia arriba para .5)
 redondear_matematico <- function(x, digits = 0) {
