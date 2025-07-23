@@ -17,7 +17,7 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd"
+archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_cloze_v12.Rmd"
 
 # Configuración de generación
 config <- list(

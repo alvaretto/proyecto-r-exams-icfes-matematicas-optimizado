@@ -50,7 +50,7 @@ use_python(Sys.which("python"), required = TRUE)
 ```
 
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
-options(OutDec = ".")  # Asegurar punto decimal en este chunk
+options(OutDec = ".")  # Punto decimal para R interno (coma en presentación)
 
 # Función de redondeo matemático correcto (hacia arriba para .5)
 redondear_matematico <- function(x, digits = 0) {
@@ -307,7 +307,7 @@ test_that("Validación de coherencia económica", {
 ```
 
 ```{r generar_grafico_barras_python, message=FALSE, warning=FALSE}
-options(OutDec = ".")  # Asegurar punto decimal en este chunk
+options(OutDec = ".")  # Punto decimal para R interno (coma en presentación)
 
 # Preparar datos para Python
 meses_python <- paste0("['", paste(meses, collapse="', '"), "']")
@@ -431,7 +431,7 @@ Para calcular el porcentaje, complete la fórmula con los valores identificados:
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100%
 
 ### Paso 4: Cálculo de la división
-Calcule el resultado de la división anterior (exprese su respuesta con 4 decimales usando coma como separador decimal):
+Calcule el resultado de la división anterior (exprese su respuesta con 4 decimales):
 
 ##ANSWER3## ÷ ##ANSWER4## = ##ANSWER5##
 
