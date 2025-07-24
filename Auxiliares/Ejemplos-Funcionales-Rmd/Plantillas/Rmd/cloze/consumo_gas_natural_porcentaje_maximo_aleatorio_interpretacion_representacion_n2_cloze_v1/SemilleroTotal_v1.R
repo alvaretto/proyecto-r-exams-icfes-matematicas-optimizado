@@ -179,11 +179,11 @@ mostrar_info_tipo_examen <- function(tipo_examen) {
 # ===============================================================================
 
 # Archivo de examen (se puede cambiar según necesidad)
-archivo_examen <- "consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd"
+archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_cloze_v1.Rmd"
 
 # Configuración por defecto
 config <- list(
-  archivos = 5,                      # Número de versiones por formato
+  archivos = 350,                      # Número de versiones por formato
   semilla = sample(100:1e8, 1),      # Semilla aleatoria
   dir_salida = "salida_universal",   # Directorio de salida
   dir_ejercicios = ".",              # Directorio de ejercicios

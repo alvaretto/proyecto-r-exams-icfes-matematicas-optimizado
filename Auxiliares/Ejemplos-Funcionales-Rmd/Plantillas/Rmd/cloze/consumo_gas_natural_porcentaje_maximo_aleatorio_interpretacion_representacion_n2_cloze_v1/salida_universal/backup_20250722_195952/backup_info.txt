@@ -1,8 +1,0 @@
-Backup creado: 2025-07-22 19:59:52.042055
-Directorio original: salida_universal
-Archivos respaldados: 2
-Semilla original: 12991465
-Archivo examen: consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd
-
-NOTA: Este backup se creó automáticamente antes de limpiar archivos antiguos.
-Los backups deben eliminarse manualmente cuando ya no sean necesarios.
