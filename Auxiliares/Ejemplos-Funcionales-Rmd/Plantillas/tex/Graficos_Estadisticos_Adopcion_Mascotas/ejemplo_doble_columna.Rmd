@@ -1,0 +1,113 @@
+Question
+========
+
+```{r setup, include=FALSE}
+# Configuración para doble columna legal
+knitr::opts_chunk$set(
+  fig.width = 3.4,           # Ancho optimizado para columnas
+  fig.height = 2.5,          # Altura recomendada
+  dpi = 300,                 # Alta resolución para impresión
+  out.width = "\\columnwidth", # Ajustar al ancho de columna
+  fig.align = "center",      # Centrar gráficos
+  echo = FALSE,              # No mostrar código R
+  warning = FALSE,           # No mostrar advertencias
+  message = FALSE            # No mostrar mensajes
+)
+
+# Configurar semilla para reproducibilidad
+set.seed(sample(1:1000, 1))
+```
+
+```{r datos}
+# Generar datos aleatorios para el ejemplo
+categorias <- c("Perros", "Gatos", "Aves", "Otros")
+valores <- sample(15:45, 4)
+nombres(valores) <- categorias
+
+# Crear un data frame para facilitar el manejo
+datos_adopcion <- data.frame(
+  Categoria = categorias,
+  Cantidad = valores,
+  Porcentaje = round(valores/sum(valores)*100, 1)
+)
+```
+
+En un centro de adopción de mascotas se registraron las siguientes adopciones durante el último mes:
+
+```{r tabla}
+# Mostrar tabla de datos
+knitr::kable(datos_adopcion, 
+             caption = "Adopciones por tipo de mascota",
+             col.names = c("Tipo", "Cantidad", "Porcentaje (%)"))
+```
+
+```{r grafico, fig.cap="Distribución de adopciones por tipo de mascota"}
+# Crear gráfico de barras optimizado para doble columna
+par(mar = c(4, 4, 2, 1))  # Márgenes ajustados
+barplot(datos_adopcion$Cantidad, 
+        names.arg = datos_adopcion$Categoria,
+        col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"),
+        main = "Adopciones por Tipo",
+        ylab = "Cantidad",
+        las = 2,  # Rotar etiquetas del eje x
+        cex.names = 0.8,  # Tamaño de texto más pequeño
+        cex.axis = 0.8,
+        cex.lab = 0.9)
+```
+
+Basándose en la información presentada, ¿cuál es el porcentaje aproximado de adopciones de perros respecto al total?
+
+Answerlist
+==========
+
+* `r datos_adopcion$Porcentaje[1]`%
+* `r datos_adopcion$Porcentaje[2]`%
+* `r datos_adopcion$Porcentaje[3]`%
+* `r datos_adopcion$Porcentaje[4]`%
+
+Solution
+========
+
+```{r solucion}
+# Calcular la respuesta correcta
+respuesta_correcta <- datos_adopcion$Porcentaje[datos_adopcion$Categoria == "Perros"]
+total_adopciones <- sum(datos_adopcion$Cantidad)
+perros_adoptados <- datos_adopcion$Cantidad[datos_adopcion$Categoria == "Perros"]
+```
+
+Para encontrar el porcentaje de adopciones de perros:
+
+**Datos:**
+- Total de adopciones: `r total_adopciones`
+- Perros adoptados: `r perros_adoptados`
+
+**Cálculo:**
+Porcentaje = (Perros adoptados ÷ Total de adopciones) × 100
+Porcentaje = (`r perros_adoptados` ÷ `r total_adopciones`) × 100 = `r respuesta_correcta`%
+
+```{r grafico_solucion, fig.cap="Visualización de la solución"}
+# Gráfico circular para mostrar la solución
+par(mar = c(1, 1, 2, 1))
+pie(datos_adopcion$Cantidad,
+    labels = paste(datos_adopcion$Categoria, "\n", datos_adopcion$Porcentaje, "%"),
+    col = c("#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"),
+    main = "Distribución Porcentual",
+    cex = 0.8)
+```
+
+La respuesta correcta es **`r respuesta_correcta`%**.
+
+Solutionlist
+============
+
+* Verdadero. Los perros representan el `r respuesta_correcta`% del total de adopciones.
+* Falso. Este porcentaje corresponde a `r datos_adopcion$Categoria[2]`.
+* Falso. Este porcentaje corresponde a `r datos_adopcion$Categoria[3]`.
+* Falso. Este porcentaje corresponde a `r datos_adopcion$Categoria[4]`.
+
+Meta-information
+================
+extype: schoice
+exsolution: 1000
+exname: adopcion_mascotas_doble_columna
+exshuffle: TRUE

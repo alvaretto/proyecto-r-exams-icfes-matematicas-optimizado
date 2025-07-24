@@ -62,17 +62,17 @@ redondear_matematico <- function(x, digits = 0) {
   return(floor(x * factor + 0.5) / factor)
 }
 
-# Función de formato estándar para números (sin separador de miles, coma decimal)
+# Función de formato estándar para números (sin separador de miles, punto decimal)
 formato_estandar <- function(x, decimales = 0) {
-  # FORMATO ESTÁNDAR: Sin separador de miles, coma como separador decimal
-  # Ejemplos monetarios: 16850 (enteros), 16850,32 (con decimales)
-  # Ejemplos numéricos: 36,5000 (con decimales)
+  # FORMATO ESTÁNDAR: Sin separador de miles, punto como separador decimal
+  # Ejemplos monetarios: 16850 (enteros), 16850.32 (con decimales)
+  # Ejemplos numéricos: 36.5000 (con decimales)
   if (decimales == 0) {
     return(as.character(as.integer(x)))
   } else {
-    # Para decimales, usar coma como separador
+    # Para decimales, usar punto como separador (formato estándar R)
     resultado <- sprintf(paste0("%.", decimales, "f"), x)
-    return(gsub("\\.", ",", resultado))
+    return(resultado)
   }
 }
 
@@ -392,7 +392,7 @@ test_that("Validación del gráfico Python", {
 Question
 ========
 
-`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r consumo_factura` metros cúbicos de gas natural y la factura fue de $`r formato_estandar(total_factura, 0)`, incluido el cargo fijo de $`r formato_estandar(cargo_fijo, 0)` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
+`r nombre1` y `r nombre2` viven en un `r tipo_vivienda` y comparten el pago de los gastos. En `r tolower(mes_factura)` consumieron `r formato_estandar(consumo_factura, 0)` metros cúbicos de gas natural y la factura fue de $`r formato_estandar(total_factura, 0)`, incluido el cargo fijo de $`r formato_estandar(cargo_fijo, 0)` que es el mismo todos los meses. La gráfica muestra el consumo histórico en metros cúbicos de ese servicio.
 
 ```{r mostrar_grafico, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico generado con Python
@@ -404,16 +404,16 @@ if (es_moodle) {
 }
 ```
 
-Un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes. Para determinar qué porcentaje del consumo máximo posible corresponde al consumo de `r tolower(mes_pregunta)`, resuelva paso a paso:
+Un hogar puede consumir máximo `r formato_estandar(consumo_maximo, 0)` metros cúbicos en un mes. Para determinar qué porcentaje del consumo máximo posible corresponde al consumo de `r tolower(mes_pregunta)`, resuelva paso a paso:
 
 **IMPORTANTE - Formato de números:**
 
-- **Valores monetarios**: Sin separador de miles, use coma para decimales
-  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: $16850.32 (no $16.850,32 ni $16850,32)
   - Significado: dieciséis mil ochocientos cincuenta pesos con treinta y dos centavos
-- **Respuestas numéricas con decimales**: Sin separador de miles, use coma para decimales
-  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
-  - Significado: mil doscientos treinta y cuatro coma cinco seis siete ocho
+- **Respuestas numéricas con decimales**: Sin separador de miles, use punto para decimales
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+  - Significado: mil doscientos treinta y cuatro punto cinco seis siete ocho
 
 ### Paso 1: Lectura del gráfico
 Observe cuidadosamente la gráfica de barras. ¿Cuántos metros cúbicos de gas natural se consumieron en `r tolower(mes_pregunta)`?
@@ -435,7 +435,7 @@ Calcule el resultado de la división anterior (exprese su respuesta con 4 decima
 
 ##ANSWER3## ÷ ##ANSWER4## = ##ANSWER5##
 
-**Ejemplo de formato esperado:** 0,7500 (usando coma decimal)
+**Ejemplo de formato esperado:** 0.7500 (usando punto decimal)
 
 ### Paso 5: Resultado final
 Multiplique el resultado anterior por 100 para obtener el porcentaje final:
@@ -467,10 +467,10 @@ Este problema de **interpretación de gráficos de barras** y **cálculo de porc
 
 **NOTA IMPORTANTE - Formato de números estandarizado:**
 
-- **Valores monetarios**: Sin separador de miles, use coma para decimales
-  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
-- **Respuestas numéricas con decimales**: Sin separador de miles, coma como separador decimal
-  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: $16850.32 (no $16.850,32 ni $16850,32)
+- **Respuestas numéricas con decimales**: Sin separador de miles, punto como separador decimal
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
 ### Paso 1: Lectura correcta de la gráfica ✓
@@ -484,30 +484,30 @@ for(i in 1:length(meses)) {
 cat("\n")
 ```
 
-**Respuesta correcta:** `r consumo_pregunta` metros cúbicos
+**Respuesta correcta:** `r formato_estandar(consumo_pregunta, 0)` metros cúbicos
 
-La lectura cuidadosa del gráfico de barras muestra que en `r tolower(mes_pregunta)` se consumieron exactamente `r consumo_pregunta` metros cúbicos de gas natural.
+La lectura cuidadosa del gráfico de barras muestra que en `r tolower(mes_pregunta)` se consumieron exactamente `r formato_estandar(consumo_pregunta, 0)` metros cúbicos de gas natural.
 
 ### Paso 2: Identificación del consumo máximo ✓
 
-**Respuesta correcta:** `r consumo_maximo` metros cúbicos
+**Respuesta correcta:** `r formato_estandar(consumo_maximo, 0)` metros cúbicos
 
-El enunciado establece claramente que "un hogar puede consumir máximo `r consumo_maximo` metros cúbicos en un mes".
+El enunciado establece claramente que "un hogar puede consumir máximo `r formato_estandar(consumo_maximo, 0)` metros cúbicos en un mes".
 
 ### Paso 3: Configuración correcta de la fórmula ✓
 
-**Respuestas correctas:** Numerador = `r consumo_pregunta`, Denominador = `r consumo_maximo`
+**Respuestas correctas:** Numerador = `r formato_estandar(consumo_pregunta, 0)`, Denominador = `r formato_estandar(consumo_maximo, 0)`
 
 La fórmula de porcentaje requiere:
 
-- **Numerador:** El valor observado (`r consumo_pregunta` metros cúbicos)
-- **Denominador:** El valor máximo posible (`r consumo_maximo` metros cúbicos)
+- **Numerador:** El valor observado (`r formato_estandar(consumo_pregunta, 0)` metros cúbicos)
+- **Denominador:** El valor máximo posible (`r formato_estandar(consumo_maximo, 0)` metros cúbicos)
 
 ### Paso 4: Cálculo preciso de la división ✓
 
 **Respuesta correcta:** `r formato_estandar(respuesta_4, 4)`
 
-$$\frac{`r consumo_pregunta`}{`r consumo_maximo`} = `r formato_estandar(respuesta_4, 4)`$$
+$$\frac{`r formato_estandar(consumo_pregunta, 0)`}{`r formato_estandar(consumo_maximo, 0)`} = `r formato_estandar(respuesta_4, 4)`$$
 
 ### Paso 5: Conversión a porcentaje ✓
 
@@ -554,7 +554,7 @@ for(i in 1:4) {
 
 ### Conclusión
 
-El consumo de `r tolower(mes_pregunta)` (`r consumo_pregunta` metros cúbicos) representa el **`r porcentaje_correcto`%** del consumo máximo posible (`r consumo_maximo` metros cúbicos).
+El consumo de `r tolower(mes_pregunta)` (`r formato_estandar(consumo_pregunta, 0)` metros cúbicos) representa el **`r formato_estandar(porcentaje_correcto, 0)`%** del consumo máximo posible (`r formato_estandar(consumo_maximo, 0)` metros cúbicos).
 
 Esta respuesta es coherente porque:
 
@@ -562,7 +562,7 @@ Esta respuesta es coherente porque:
 - Aplica correctamente la fórmula de porcentaje
 - El resultado está dentro del rango esperado (0% a 100%)
 
-**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r formato_estandar(total_factura, 0)`) corresponde exactamente al consumo mostrado en la gráfica (`r consumo_factura` m³ × $`r formato_estandar(precio_por_m3, 0)` + $`r formato_estandar(cargo_fijo, 0)` cargo fijo).
+**Verificación adicional**: La factura de `r tolower(mes_factura)` ($`r formato_estandar(total_factura, 0)`) corresponde exactamente al consumo mostrado en la gráfica (`r formato_estandar(consumo_factura, 0)` m³ × $`r formato_estandar(precio_por_m3, 0)` + $`r formato_estandar(cargo_fijo, 0)` cargo fijo).
 
 Meta-information
 ================

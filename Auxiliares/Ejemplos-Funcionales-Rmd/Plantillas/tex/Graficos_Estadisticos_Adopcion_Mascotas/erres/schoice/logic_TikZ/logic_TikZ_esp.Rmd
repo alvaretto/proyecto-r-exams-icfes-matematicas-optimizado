@@ -1,0 +1,102 @@
+```{r, echo = FALSE, results = "hide"}
+library(exams)
+# usa el mismo tipo de gráfico (pdf, svg, png) que la llamada actual de xweave()
+typ <- match_exams_device()
+
+# operadores lógicos
+ops <- list(
+  "or"   = function(a, b) a | b,
+  "and"  = function(a, b) a & b,
+  "xor"  = function(a, b) !(a & b) & (a | b),
+  "nand" = function(a, b) !(a & b),
+  "nor"  = function(a, b) !(a | b)
+)
+
+# compuerta tikz
+tikz_gate <- function(op) {
+  c("\\begin{tikzpicture}[thick]",
+    paste0("  \\node[left,draw, logic gate inputs=nn, ", op," gate US,fill=none,,scale=2.5] (G1) at (0,0) {};"),
+    "  \\draw (G1.output) --++ (0.5,0) node[right] (y) {$y$};",
+    "  \\draw (G1.input 1) --++ (-0.5,0) node[left] {$a$};",
+    "  \\draw (G1.input 2) --++ (-0.5,0) node[left] {$b$};",
+    "\\end{tikzpicture}")
+}
+
+tikz_gate_libraries <- c("arrows", "shapes.gates.logic.US", "calc")
+
+# tabla de verdad tikz
+tikz_truth_table <- function(op) {
+  a <- c(0, 0, 1, 1)
+  b <- c(0, 1, 0, 1)
+  if(is.character(op)) op <- ops[[op]]
+
+  c("\\node {",
+    "  \\begin{tabular}{ccc}\\toprule",
+    "    $a$ & $b$ & $y$\\\\",
+    "    \\midrule",
+    paste("   ", a, "&", b, "&", as.numeric(op(a, b)), "\\\\"),
+    "    \\bottomrule",
+    "  \\end{tabular}",
+    "};")
+}
+
+## operadores de ejemplo
+ops4 <- sample(names(ops), 4)
+ops3 <- sample(ops4, 3)
+ops1 <- sample(ops4, 1)
+sol <- ops3 == ops1
+sol <- c(sol, !any(sol))
+ans <- c("A", "B", "C", "Ninguna de estas")
+
+## generar todas las imágenes de compuertas
+img <- c(
+  include_tikz(tikz_gate(ops3[1]), name = "A", markup = "none", format = typ, library = tikz_gate_libraries),
+  include_tikz(tikz_gate(ops3[2]), name = "B", markup = "none", format = typ, library = tikz_gate_libraries),
+  include_tikz(tikz_gate(ops3[3]), name = "C", markup = "none", format = typ, library = tikz_gate_libraries)
+)
+```
+
+Question
+========
+
+Considera las siguientes compuertas que codifican operadores lógicos:
+
+|              A             |              B             |              C             |
+|:--------------------------:|:--------------------------:|:--------------------------:|
+| ![](`r img[1]`){width=3cm} | ![](`r img[2]`){width=3cm} | ![](`r img[3]`){width=3cm} |
+
+¿Cuál de estas compuertas pertenece a la siguiente tabla de verdad lógica?
+\
+```{r, echo = FALSE, results = "asis"}
+include_tikz(tikz_truth_table(ops1), name = "table", markup = "markdown",
+  format = typ, packages = "booktabs", width = "2cm")
+```
+
+```{r, echo = FALSE, results = "asis"}
+answerlist(ans, markup = "markdown")
+```
+
+
+Solution
+========
+
+La tabla de verdad codifica el operador lógico **`r ops1`**.
+
+Las compuertas mostradas codifican los siguientes operadores lógicos:
+A = **`r ops3[1]`**,
+B = **`r ops3[2]`**,
+C = **`r ops3[3]`**.
+
+Por tanto, la tabla de verdad corresponde a:
+`r ans[sol]`.
+
+```{r, echo = FALSE, results = "asis"}
+answerlist(ifelse(sol, "Verdadero", "Falso"), markup = "markdown")
+```
+
+
+Meta-information
+================
+exname: Operadores Lógicos
+extype: schoice
+exsolution: `r mchoice2string(sol)`

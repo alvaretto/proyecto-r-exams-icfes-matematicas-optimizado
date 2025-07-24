@@ -69,17 +69,17 @@ redondear_matematico <- function(x, digits = 0) {
   return(floor(x * factor + 0.5) / factor)
 }
 
-# Función de formato estándar para números (sin separador de miles, coma decimal)
+# Función de formato estándar para números (sin separador de miles, punto decimal)
 formato_estandar <- function(x, decimales = 0) {
-  # FORMATO ESTÁNDAR: Sin separador de miles, coma como separador decimal
-  # Ejemplos monetarios: 16850 (enteros), 16850,32 (con decimales)
-  # Ejemplos numéricos: 36,5000 (con decimales)
+  # FORMATO ESTÁNDAR: Sin separador de miles, punto como separador decimal
+  # Ejemplos monetarios: 16850 (enteros), 16850.32 (con decimales)
+  # Ejemplos numéricos: 36.5000 (con decimales)
   if (decimales == 0) {
     return(as.character(as.integer(x)))
   } else {
-    # Para decimales, usar coma como separador
+    # Para decimales, usar punto como separador (formato estándar R)
     resultado <- sprintf(paste0("%.", decimales, "f"), x)
-    return(gsub("\\.", ",", resultado))
+    return(resultado)
   }
 }
 
@@ -133,10 +133,10 @@ consumos <- consumos_base
 names(consumos) <- meses
 
 # Generar datos económicos para el cálculo del costo promedio diario
-# Generar cobro total del mes de la pregunta (entre $15,000 y $25,000)
+# Generar cobro total del mes de la pregunta (entre $15000 y $25000)
 cobro_total <- sample(15000:25000, 1)
 
-# Generar valor por servicio fijo (entre $3,000 y $8,000)
+# Generar valor por servicio fijo (entre $3000 y $8000)
 valor_fijo <- sample(3000:8000, 1)
 
 # Calcular costo promedio diario
@@ -387,12 +387,12 @@ Para determinar el costo promedio diario del consumo de gas natural en `r tolowe
 
 **IMPORTANTE - Formato de números:**
 
-- **Valores monetarios**: Sin separador de miles, use coma para decimales
-  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: $16850.32 (no $16.850,32 ni $16850,32)
   - Significado: dieciséis mil ochocientos cincuenta pesos con treinta y dos centavos
-- **Respuestas numéricas con decimales**: Sin separador de miles, use coma para decimales
-  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
-  - Significado: mil doscientos treinta y cuatro coma cinco seis siete ocho
+- **Respuestas numéricas con decimales**: Sin separador de miles, use punto para decimales
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+  - Significado: mil doscientos treinta y cuatro punto cinco seis siete ocho
 
 ### Paso 1: Identificación del cobro total
 Según el enunciado del problema, ¿cuál fue el cobro total en `r tolower(mes_pregunta)`?
@@ -415,14 +415,14 @@ Según el enunciado del problema, ¿cuántos días se utilizan para facturar un 
 **Respuesta:** ##ANSWER4## días
 
 ### Paso 5: Cálculo de la división
-Divida el costo variable entre el número de días de facturación (exprese su respuesta con 4 decimales usando coma como separador decimal):
+Divida el costo variable entre el número de días de facturación (exprese su respuesta con 4 decimales usando punto como separador decimal):
 
 $##ANSWER3## ÷ ##ANSWER4## = ##ANSWER5##
 
-**Ejemplo de formato esperado:** 123,4567 (usando coma decimal)
+**Ejemplo de formato esperado:** 123.4567 (usando punto decimal)
 
 ### Paso 6: Resultado final redondeado
-Redondee el resultado anterior a pesos enteros:
+Redondee el resultado anterior a números (pesos) enteros:
 
 ##ANSWER5## $\approx$ $##ANSWER6##
 
@@ -451,10 +451,11 @@ Este problema de **cálculo de costo promedio diario** requiere un análisis sec
 
 **NOTA IMPORTANTE - Formato de números estandarizado:**
 
-- **Valores monetarios**: Sin separador de miles, use coma para decimales
-  - Ejemplo: $16850,32 (no $16.850,32 ni $16850.32)
-- **Respuestas numéricas con decimales**: Sin separador de miles, coma como separador decimal
-  - Ejemplo: 1234,5678 (no 1.234,5678 ni 1234.5678)
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: $16850.32 (no $16.850,32 ni $16850,32)
+- **Respuestas numéricas con decimales**: Sin separador de miles, punto como separador decimal
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+- **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
 ### Paso 1: Identificación correcta del cobro total ✓
 

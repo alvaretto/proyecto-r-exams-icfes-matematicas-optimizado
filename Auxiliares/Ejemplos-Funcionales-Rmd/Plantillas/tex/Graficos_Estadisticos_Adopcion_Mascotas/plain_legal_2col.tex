@@ -1,0 +1,69 @@
+\documentclass[10pt]{article}
+
+% Configuración para tamaño legal y doble columna
+\usepackage[utf8]{inputenc}
+\usepackage[paperwidth=8.5in,paperheight=14in,top=2cm,bottom=2cm,left=1.5cm,right=1.5cm]{geometry}
+\usepackage{multicol}
+\usepackage{color}
+\usepackage{Sweave}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% Configuración de doble columna
+\setlength{\columnsep}{0.5cm}
+\setlength{\columnseprule}{0.4pt}
+
+% Configuración de párrafos para doble columna
+\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+% Configuración de gráficos para columnas
+\setkeys{Gin}{width=\columnwidth,keepaspectratio}
+
+% Configuración de fuentes más pequeñas para doble columna
+\usepackage[scaled=0.9]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% Configuración de listas más compactas
+\setlist[enumerate]{itemsep=0.3ex,parsep=0.2ex}
+\setlist[itemize]{itemsep=0.3ex,parsep=0.2ex}
+
+\begin{document}
+
+% Iniciar doble columna
+\begin{multicols}{2}
+
+%% Exam ##ID##
+%% ##Date##
+
+\begin{enumerate}[leftmargin=*]
+#-
+  \item
+#-
+  \textbf{##Questionheader##}\\
+#-
+  ##Question##
+#-
+  \begin{enumerate}[(a)]
+    \item ##Questionlist##
+  \end{enumerate}
+#-
+
+  \textbf{##Solutionheader##}\\
+#-
+  ##Solution##
+#-
+  \begin{enumerate}[(a)]
+    \item ##Solutionlist##
+  \end{enumerate}
+#-
+#-
+\end{enumerate}
+
+\end{multicols}
+
+\end{document}
