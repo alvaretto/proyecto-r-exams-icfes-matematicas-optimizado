@@ -1,0 +1,196 @@
+\documentclass[10pt]{article}
+
+%% packages básicos
+%% MÁRGENES MUY ESTRECHOS PARA MÁXIMO APROVECHAMIENTO - PANDOC OPTIMIZADO
+\usepackage[papersize={215.9mm,355.6mm},tmargin=8mm,bmargin=12mm,lmargin=5mm,rmargin=8mm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,amsthm}
+\usepackage{rawfonts}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{color,verbatim,Sweave,url,xargs,amsmath,multicol,pgfplots,graphicx,booktabs,longtable}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usepackage{tkz-euclide}
+\usetikzlibrary{babel}
+\usepackage[spanish]{babel}
+\usepackage{floatrow}
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usetikzlibrary{shapes,arrows, chains, matrix, calc, trees, positioning, fit}
+\pgfplotsset{compat=newest}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titling}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+
+% Configuración inicial de página
+\pagestyle{empty}
+
+\usepgfplotslibrary{patchplots}
+\pgfplotsset{compat=1.17}
+\floatsetup[figure]{capposition=top}
+
+% Configuración de dos columnas OPTIMIZADA
+\setlength{\columnseprule}{0.4pt}
+\setlength{\columnsep}{12pt}
+
+% Configuración de imágenes para dos columnas - APROVECHANDO ESPACIO EXTRA
+\setkeys{Gin}{width=0.9\columnwidth,keepaspectratio}
+
+% CONFIGURACIÓN SIMPLE: NO redefinir entornos, solo configurar parámetros básicos
+\renewcommand{\arraystretch}{0.8}
+\setlength{\tabcolsep}{2pt}
+
+% Comando simple para tablas que funcionen
+\newcommand{\tablasimple}[1]{%
+  \small
+  \setlength{\tabcolsep}{1pt}
+  \renewcommand{\arraystretch}{0.9}
+  #1
+}
+
+% Redefinir TODOS los entornos de tabla para forzar adaptación OPTIMIZADA
+\let\oldtabular\tabular
+\let\endoldtabular\endtabular
+\renewenvironment{tabular}[1]{%
+  \footnotesize
+  \setlength{\tabcolsep}{1pt}
+  \begin{adjustbox}{width=0.95\columnwidth,center}
+  \begin{oldtabular}{#1}
+}{%
+  \end{oldtabular}
+  \end{adjustbox}
+}
+
+\let\oldtable\table
+\let\endoldtable\endtable
+\renewenvironment{table}[1][htbp]{%
+  \begin{oldtable}[#1]
+  \centering
+  \footnotesize
+}{%
+  \end{oldtable}
+}
+
+\let\oldlongtable\longtable
+\let\endoldlongtable\endlongtable
+\renewenvironment{longtable}[1]{%
+  \footnotesize
+  \setlength{\tabcolsep}{1pt}
+  \begin{adjustbox}{width=0.95\columnwidth,center}
+  \begin{oldlongtable}{#1}
+}{%
+  \end{oldlongtable}
+  \end{adjustbox}
+}
+
+%% new environments
+\newenvironment{question}{\item \textbf{Escenario:}\newline}{}
+\newenvironment{solution}{\textbf{Retroalimentación:}\newline}{}
+
+%% paragraphs - ESPACIADO MUY COMPACTO
+\setlength{\parskip}{0.2ex plus0.05ex minus0.05ex}
+\setlength{\parindent}{0em}
+
+%% compatibility with pandoc
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+%% fonts: Helvetica
+\usepackage{helvet}
+\IfFileExists{sfmath.sty}{
+  \RequirePackage[helvet]{sfmath}
+}{}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\rmdefault}{phv}
+
+\newcommand{\extext}[1]{\textbf{\normalsize #1}}
+\newcommandx{\exmchoice}[9][2=-,3=-,4=-,5=-,6=-,7=-,8=-,9=-]{%
+                \mbox{(a) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#1}} \hspace*{2mm}}%
+  \if #2- \else \mbox{(b) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#2}} \hspace*{2mm}} \fi%
+  \if #3- \else \mbox{(c) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#3}} \hspace*{2mm}} \fi%
+  \if #4- \else \mbox{(d) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#4}} \hspace*{2mm}} \fi%
+  \if #5- \else \mbox{(e) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#5}} \hspace*{2mm}} \fi%
+  \if #6- \else \mbox{(f) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#6}} \hspace*{2mm}} \fi%
+  \if #7- \else \mbox{(g) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#7}} \hspace*{2mm}} \fi%
+  \if #8- \else \mbox{(h) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#8}} \hspace*{2mm}} \fi%
+  \if #9- \else \mbox{(i) \,\, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#9}} \hspace*{2mm}} \fi%
+}
+\newcommandx{\exclozechoice}[9][2=-,3=-,4=-,5=-,6=-,7=-,8=-,9=-]{\setcounter{enumiii}{1}%
+                \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#1}} \hspace*{2mm}\stepcounter{enumiii}}%
+  \if #2- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#2}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #3- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#3}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #4- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#4}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #5- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#5}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #6- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#6}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #7- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#7}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #8- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#8}} \hspace*{2mm}\stepcounter{enumiii}} \fi%
+  \if #9- \else \mbox{\roman{enumiii}. \, \framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#9}} \hspace*{2mm}} \fi%
+}
+\newcommand{\exnum}[9]{%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#1}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#2}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#3}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#4}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#5}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#6}}}%
+  \mbox{ \makebox[3mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-2mm} .}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#7}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#8}}}%
+  \mbox{\framebox[8mm]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#9}}}%
+}
+\newcommand{\exstring}[1]{%
+  \mbox{\framebox[0.8\columnwidth][l]{\rule[-1mm]{0mm}{5mm} \hspace*{-1.6mm} \extext{#1}} \hspace*{2mm}}%
+}
+
+%% new commands
+\makeatletter
+\newcommand{\ID}[1]{\def\@ID{#1}}
+\newcommand{\Date}[1]{\def\@Date{#1}}
+\ID{MicroSimulacro}
+\Date{YYYY-MM-DD}
+
+\newcommand{\myID}{\@ID}
+\newcommand{\myDate}{\@Date}
+\makeatother
+
+% Encabezado y pie de página optimizado
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small I. E. Pedacito de Cielo}
+\fancyhead[R]{\small Página \thepage}
+\fancyfoot[C]{\small Saber ICFES Matemáticas}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+% CONFIGURACIÓN ESPECÍFICA PARA PANDOC - DOS COLUMNAS
+\twocolumn
+
+\begin{enumerate}[label=\arabic*.]
+#-
+  \item
+#-
+  \textbf{Escenario}\\
+#-
+  ##Question##
+#-
+  \begin{enumerate}[label=(\alph*)]
+    \item ##Questionlist##
+  \end{enumerate}
+#-
+
+  \textbf{Retroalimentación}\\
+#-
+  ##Solution##
+#-
+  \begin{enumerate}[label=(\alph*)]
+    \item ##Solutionlist##
+  \end{enumerate}
+#-
+#-
+\end{enumerate}
+\end{document}

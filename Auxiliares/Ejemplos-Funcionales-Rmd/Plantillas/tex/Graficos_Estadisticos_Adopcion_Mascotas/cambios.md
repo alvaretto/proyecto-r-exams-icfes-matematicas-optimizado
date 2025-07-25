@@ -165,7 +165,8 @@ plt.ylabel("...", fontweight='bold', fontsize=10)
 
 ### 6.1 Archivos Principales
 - `I_1796473-Opc-A2_optimizado.Rmd` - Versión optimizada del ejercicio
-- `oficio_solpcielo_margenes_estrechos.tex` - Plantilla LaTeX optimizada
+- `oficio_solpcielo_margenes_estrechos.tex` - Plantilla LaTeX optimizada para PDF
+- `oficio_pcielo_pandoc_optimizado.tex` - Plantilla LaTeX optimizada para DOCX/Pandoc
 - `SemilleroUnico_Oficio_v1_modificado.R` - Script actualizado
 
 ### 6.2 Archivos de Prueba
@@ -211,6 +212,29 @@ exams2pdf(rep('I_1796473-Opc-A2_optimizado.Rmd', 5),
 
 ---
 
-**Fecha de optimización**: Julio 2024  
-**Versión final**: `I_1796473-Opc-A2_optimizado.Rmd`  
-**Plantilla final**: `oficio_solpcielo_margenes_estrechos.tex`
+## 🔧 9. SOLUCIÓN PARA PANDOC/DOCX
+
+### 9.1 Problema Identificado
+Los archivos pandoc no se visualizaban con doble columna debido a que la plantilla `oficio_pcielo_pandoc.tex` no tenía las optimizaciones aplicadas.
+
+### 9.2 Solución Implementada
+- **Creación de plantilla optimizada**: `oficio_pcielo_pandoc_optimizado.tex`
+- **Márgenes estrechos**: Aplicados los mismos márgenes que la versión PDF (5mm izquierdo)
+- **Configuración de dos columnas**: Optimizada con `\begin{multicols}{2}`
+- **Tamaños de imagen**: Ajustados a `width=3.8, height=3.2`
+- **Tablas adaptativas**: Configuradas para ajustarse al ancho de columna
+
+### 9.3 Configuración Final para DOCX
+```r
+exams2pandoc(rep('archivo.Rmd', 3),
+             template = 'oficio_pcielo_pandoc_optimizado.tex',
+             width = 3.8, height = 3.2,
+             type = 'docx')
+```
+
+---
+
+**Fecha de optimización**: Julio 2024
+**Versión final**: `I_1796473-Opc-A2_optimizado.Rmd`
+**Plantilla PDF**: `oficio_solpcielo_margenes_estrechos.tex`
+**Plantilla DOCX**: `oficio_pcielo_pandoc_optimizado.tex`

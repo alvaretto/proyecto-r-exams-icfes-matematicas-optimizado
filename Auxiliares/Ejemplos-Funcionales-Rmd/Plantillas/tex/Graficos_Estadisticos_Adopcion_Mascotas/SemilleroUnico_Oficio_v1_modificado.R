@@ -102,14 +102,14 @@ exams2pandoc(rep(archivo_examen, numpreg),
              n = copias,
              name = nombre_arch,
              encoding = "UTF-8",
-             template = "oficio_pcielo_pandoc.tex",
+             template = "oficio_pcielo_pandoc_optimizado.tex",
              header = list(Date = Sys.Date()),
              inputs = NULL,
              options = NULL,
              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
              resolution = 100,
-             width = 3.0,  # Más reducido para dos columnas
-             height = 3.0, # Más reducido para dos columnas
+             width = 3.8,  # Optimizado para columnas estrechas
+             height = 3.2, # Optimizado para columnas estrechas
              svg = TRUE,
              dir = dir_salida,
              edir = dir_ejercicios,
