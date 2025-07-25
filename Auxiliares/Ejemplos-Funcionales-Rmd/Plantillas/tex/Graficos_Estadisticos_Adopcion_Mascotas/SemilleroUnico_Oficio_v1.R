@@ -31,10 +31,10 @@ generar_versiones_duales <- function(archivo_examen, numpreg, copias, nombre_arc
   cat("🎓 Generando versión DOCENTE (con retroalimentación y claves)...\n")
   exams2pdf(rep(archivo_examen, numpreg),
             n = copias,
-            name = paste0(nombre_arch, "_DOCENTE_"),
+            name = paste0(nombre_arch, "_CON_CLAVES_DOCENTE_"),
             encoding = "UTF-8",
             template = "oficio_solpcielo_margenes_estrechos",  # CON soluciones y claves
-            dir = paste0(dir_salida, "_DOCENTE"),
+            dir = paste0(dir_salida, "_CON_CLAVES_DOCENTE"),
             edir = dir_ejercicios,
             verbose = FALSE)
 
@@ -42,16 +42,16 @@ generar_versiones_duales <- function(archivo_examen, numpreg, copias, nombre_arc
   cat("📚 Generando versión ESTUDIANTE (sin retroalimentación ni claves)...\n")
   exams2pdf(rep(archivo_examen, numpreg),
             n = copias,
-            name = paste0(nombre_arch, "_ESTUDIANTE_"),
+            name = paste0(nombre_arch, "_SIN_CLAVES_ESTUDIANTE_"),
             encoding = "UTF-8",
             template = "oficio_solpcielo_margenes_estrechos_SIN_SOLUCION",  # SIN soluciones ni claves
-            dir = paste0(dir_salida, "_ESTUDIANTE"),
+            dir = paste0(dir_salida, "_SIN_CLAVES_ESTUDIANTE"),
             edir = dir_ejercicios,
             verbose = FALSE)
 
   cat("\n✅ ¡Ambas versiones generadas exitosamente!\n")
-  cat("📁 Versión DOCENTE en:", paste0(dir_salida, "_DOCENTE"), "\n")
-  cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_ESTUDIANTE"), "\n")
+  cat("📁 Versión DOCENTE en:", paste0(dir_salida, "_CON_CLAVES_DOCENTE"), "\n")
+  cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_SIN_CLAVES_ESTUDIANTE"), "\n")
   cat("🎯 Listo para usar en clase!\n\n")
 }
 
@@ -103,10 +103,10 @@ exams2html(rep(archivo_examen, numpreg),
 cat("🎓 Generando versión DOCENTE (con retroalimentación y claves)...\n")
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
-          name = paste0(nombre_arch, "_DOCENTE_"),
+          name = paste0(nombre_arch, "_CON_CLAVES_DOCENTE_"),
           encoding = "UTF-8",
           template = "oficio_solpcielo_margenes_estrechos",  # CON soluciones y claves
-          dir = paste0(dir_salida, "_DOCENTE"),
+          dir = paste0(dir_salida, "_CON_CLAVES_DOCENTE"),
           edir = dir_ejercicios,
           verbose = TRUE)
 
@@ -114,16 +114,16 @@ exams2pdf(rep(archivo_examen, numpreg),
 cat("📚 Generando versión ESTUDIANTE (sin retroalimentación ni claves)...\n")
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
-          name = paste0(nombre_arch, "_ESTUDIANTE_"),
+          name = paste0(nombre_arch, "_SIN_CLAVES_ESTUDIANTE_"),
           encoding = "UTF-8",
           template = "oficio_solpcielo_margenes_estrechos_SIN_SOLUCION",  # SIN soluciones ni claves
-          dir = paste0(dir_salida, "_ESTUDIANTE"),
+          dir = paste0(dir_salida, "_SIN_CLAVES_ESTUDIANTE"),
           edir = dir_ejercicios,
           verbose = TRUE)
 
 cat("✅ Ambas versiones generadas exitosamente!\n")
-cat("📁 Versión DOCENTE en:", paste0(dir_salida, "_DOCENTE"), "\n")
-cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_ESTUDIANTE"), "\n")
+cat("📁 Versión DOCENTE en:", paste0(dir_salida, "_CON_CLAVES_DOCENTE"), "\n")
+cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_SIN_CLAVES_ESTUDIANTE"), "\n")
 
 #################################################################################
 # ALTERNATIVA SIMPLE: Usar la función auxiliar (descomenta para usar)
