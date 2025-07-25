@@ -21,11 +21,28 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 ```{r DefiniciónDeVariables, message=FALSE, warning=FALSE, results='asis'}
 
-# Vector de mascotas
-mascotas <- c('loro', 'perro', 'gato', 'gallina', 'hamster', 'cerdo', 'ternero', 'caballo', 'cabra')
+# SISTEMA DE CONCORDANCIA DE GÉNERO PARA MASCOTAS
+# Definir mascotas con su género gramatical
+mascotas_masculinas <- c('loro', 'perro', 'gato', 'hamster', 'cerdo', 'ternero', 'caballo',
+                        'conejo', 'pez', 'canario', 'hurón', 'ratón', 'camaleón', 'pato',
+                        'pavo', 'burro', 'ganso', 'cisne', 'lagarto', 'erizo')
 
-# Agregar 20 mascotas más
-mascotas <- c(mascotas, 'conejo', 'tortuga', 'pez', 'canario', 'hurón', 'iguana', 'serpiente', 'ratón', 'araña', 'camaleón', 'pato', 'pavo', 'oveja', 'vaca', 'burro', 'ganso', 'paloma', 'cisne', 'lagarto', 'erizo')
+mascotas_femeninas <- c('gallina', 'cabra', 'tortuga', 'iguana', 'serpiente', 'araña',
+                       'oveja', 'vaca', 'paloma')
+
+# Combinar todas las mascotas
+mascotas <- c(mascotas_masculinas, mascotas_femeninas)
+
+# Crear función para determinar el artículo correcto
+obtener_articulo <- function(animal) {
+  if (animal %in% mascotas_masculinas) {
+    return("un")
+  } else if (animal %in% mascotas_femeninas) {
+    return("una")
+  } else {
+    return("un(a)")  # Fallback por si acaso
+  }
+}
 
 # Shuffle the mascotas vector
 mascotas <- sample(mascotas)
@@ -137,7 +154,7 @@ image01 <-sprintf(image01, selmascota[1], porxentaje1, selmascota[2], porxentaje
 Question
 ========
 
-El líder de un programa de adopción de mascotas encuestó a `r enkuestados` personas para conocer qué animal les interesaría adoptar. Del total de encuestados, el `r vector_resultado[1]`% adoptaría un `r selmascota[1]`, el `r vector_resultado[2]`% adoptaría un(a) `r selmascota[2]` y el `r vector_resultado[3]`% adoptaría un(a) `r selmascota[3]`. 
+El líder de un programa de adopción de mascotas encuestó a `r enkuestados` personas para conocer qué animal les interesaría adoptar. Del total de encuestados, el `r vector_resultado[1]`% adoptaría `r obtener_articulo(selmascota[1])` `r selmascota[1]`, el `r vector_resultado[2]`% adoptaría `r obtener_articulo(selmascota[2])` `r selmascota[2]` y el `r vector_resultado[3]`% adoptaría `r obtener_articulo(selmascota[3])` `r selmascota[3]`.
 
 
 ¿Cuál de las siguientes representaciones muestra correctamente la información recolectada en la encuesta?

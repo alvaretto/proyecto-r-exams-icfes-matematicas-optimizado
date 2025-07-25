@@ -333,7 +333,7 @@ Mantener solo los archivos estrictamente necesarios para el funcionamiento del s
 - `oficio_solpcielo_margenes_estrechos_SIN_SOLUCION.tex` - Plantilla para ESTUDIANTES
 - `SemilleroUnico_Oficio_v1.R` - Script con versiones duales
 - `cambios.md` - Documentación completa
-- `salida_SIN_CLAVES_DOCENTE/` - Ejemplo PDF docente
+- `salida_CON_CLAVES_DOCENTE/` - Ejemplo PDF docente
 - `salida_SIN_CLAVES_ESTUDIANTE/` - Ejemplo PDF estudiante
 
 ### 11.3 Archivos Eliminados
@@ -342,6 +342,74 @@ Mantener solo los archivos estrictamente necesarios para el funcionamiento del s
 - ❌ **Archivos temporales** (.RData, .Rhistory, imágenes temporales)
 - ❌ **Carpetas de documentación** no esenciales
 
-### 11.4 Cambio de Nombre
+### 11.4 Cambios de Nombres
 - `SemilleroUnico_Oficio_v1_modificado.R` → `SemilleroUnico_Oficio_v1.R`
 - Simplificación del nombre del script principal
+
+---
+
+## 🔧 12. CORRECCIÓN DE NOMENCLATURA
+
+### 12.1 Problema Identificado
+La carpeta de la versión DOCENTE se llamaba incorrectamente `salida_SIN_CLAVES_DOCENTE` cuando en realidad **SÍ contiene las claves**.
+
+### 12.2 Corrección Implementada
+- **ANTES**: `salida_SIN_CLAVES_DOCENTE` (nombre confuso)
+- **AHORA**: `salida_CON_CLAVES_DOCENTE` (nombre correcto)
+
+### 12.3 Actualizaciones Realizadas
+- ✅ **Carpeta renombrada**: `salida_SIN_CLAVES_DOCENTE` → `salida_CON_CLAVES_DOCENTE`
+- ✅ **Script actualizado**: Nombres de archivos y directorios corregidos
+- ✅ **Función auxiliar**: Mensajes y rutas actualizadas
+- ✅ **Documentación**: Referencias corregidas
+
+### 12.4 Nomenclatura Final Clara
+- **`salida_CON_CLAVES_DOCENTE/`**: Para docentes (con retroalimentación Y claves)
+- **`salida_SIN_CLAVES_ESTUDIANTE/`**: Para estudiantes (sin retroalimentación NI claves)
+
+---
+
+## 📝 13. SISTEMA DE CONCORDANCIA DE GÉNERO
+
+### 13.1 Problema Identificado
+El texto generaba errores de concordancia como:
+- ❌ "adoptaría un paloma" (incorrecto)
+- ❌ "adoptaría un(a) canario" (ambiguo)
+- ❌ "adoptaría un(a) vaca" (incorrecto)
+
+### 13.2 Solución Implementada
+**Sistema inteligente de concordancia de género** que:
+- ✅ Clasifica automáticamente cada animal por género gramatical
+- ✅ Aplica el artículo correcto ("un" o "una")
+- ✅ Elimina la ambigüedad "un(a)"
+
+### 13.3 Implementación Técnica
+```r
+# Clasificación por género gramatical
+mascotas_masculinas <- c('loro', 'perro', 'gato', 'hamster', 'cerdo',
+                        'ternero', 'caballo', 'conejo', 'pez', 'canario',
+                        'hurón', 'ratón', 'camaleón', 'pato', 'pavo',
+                        'burro', 'ganso', 'cisne', 'lagarto', 'erizo')
+
+mascotas_femeninas <- c('gallina', 'cabra', 'tortuga', 'iguana',
+                       'serpiente', 'araña', 'oveja', 'vaca', 'paloma')
+
+# Función de concordancia automática
+obtener_articulo <- function(animal) {
+  if (animal %in% mascotas_masculinas) {
+    return("un")
+  } else if (animal %in% mascotas_femeninas) {
+    return("una")
+  }
+}
+```
+
+### 13.4 Resultado Final
+**ANTES**: "adoptaría un(a) paloma, un(a) canario, un(a) vaca"
+**AHORA**: "adoptaría una paloma, un canario, una vaca"
+
+### 13.5 Beneficios
+- ✅ **Corrección gramatical perfecta**
+- ✅ **Texto más profesional y natural**
+- ✅ **Sistema escalable** (fácil agregar nuevos animales)
+- ✅ **Automático** (no requiere intervención manual)
