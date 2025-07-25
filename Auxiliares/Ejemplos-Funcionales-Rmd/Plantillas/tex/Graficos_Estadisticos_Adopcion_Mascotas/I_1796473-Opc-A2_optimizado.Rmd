@@ -114,16 +114,16 @@ mashiormaskota
 
 ```{r GeneracionGraficosTikZ, results='asis', warning=FALSE, message=FALSE}
 
+# TABLA OPTIMIZADA PARA DOS COLUMNAS - MÁS PEQUEÑA
 image01 <- '
-\\begin{tikzpicture}
+\\begin{tikzpicture}[scale=0.8]
   \\node{
 \\begin{tabular}{|l|c|}
 \\hline
-\\textbf{Animal} & \\textbf{Porcentaje de personas } \\\\ 
-     & \\textbf{interesadas en adoptar} \\\\ \\hline
-     %s & %s \\\\ \\hline
-     %s & %s \\\\ \\hline
-     %s & %s \\\\ \\hline
+\\scriptsize\\textbf{Animal} & \\scriptsize\\textbf{Porcentaje} \\\\ \\hline
+\\scriptsize %s & \\scriptsize %s \\\\ \\hline
+\\scriptsize %s & \\scriptsize %s \\\\ \\hline
+\\scriptsize %s & \\scriptsize %s \\\\ \\hline
 \\end{tabular}
 };
 \\end{tikzpicture}
@@ -149,7 +149,7 @@ Answerlist
 <br/> 
 ```{r Tabla01, warning=FALSE,echo = FALSE, results = "asis"}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
-include_tikz(image01, name = "image01", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "8.5cm")
+include_tikz(image01, name = "image01", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "4cm")
 ```
 
 - 
@@ -175,8 +175,8 @@ cantidad = [porcentaje1py, porcentaje2py, porcentaje3py]
 # Definir colores en tonos de azul
 colores_azules = ['#00B3E6', '#0066CC', '#000099']  
 
-# Crear el gráfico de barras
-fig, ax = plt.subplots(figsize=(6, 5))
+# GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
+fig, ax = plt.subplots(figsize=(4.0, 3.2))
 
 # Ajustar el ancho de las barras aquí para controlar indirectamente el espacio entre ellas
 ancho_barras = 0.6  # Un valor más pequeño de lo normal
@@ -190,17 +190,21 @@ ax.spines['right'].set_visible(False)
 ax.spines['left'].set_linewidth(2)
 ax.spines['bottom'].set_linewidth(2)
 ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
-plt.xticks(fontweight='bold')
-plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold')
-plt.xlabel(" Animales", fontweight='bold')
-plt.ylabel("Cantidad de personas \ninteresadas en adoptar", fontweight='bold')
 
-#plt.tight_layout()
+# TEXTO MÁS GRANDE PARA GRÁFICOS - SIN ROTACIÓN
+plt.xticks(fontweight='bold', fontsize=9)
+plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold', fontsize=9)
+plt.xlabel("Animales", fontweight='bold', fontsize=10)
+plt.ylabel("% personas", fontweight='bold', fontsize=10)
+
+# AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y
+plt.tight_layout()
+plt.subplots_adjust(left=0.13, right=0.95, top=0.95, bottom=0.25)
 plt.show()
 ```
 
-- 
-<br/> 
+-
+<br/>
 ```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
 import matplotlib.pyplot as plt
 import numpy as np
@@ -228,8 +232,8 @@ cantidad = [padrino3py, padrino2py, padrino1py]
 # Definir colores en tonos de azul
 colores_azules = ['#00B3E6', '#0066CC', '#000099']  
 
-# Crear el gráfico de barras horizontales
-fig, ax = plt.subplots(figsize=(8, 6))
+# GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - ANCHO REDUCIDO
+fig, ax = plt.subplots(figsize=(3.8, 3.5))
 
 # Ajustar el alto de las barras aquí para controlar indirectamente el espacio entre ellas
 alto_barras = 0.6  # Un valor más pequeño de lo normal
@@ -246,7 +250,7 @@ for bar in bars:
     # Añadir texto debajo de la barra, a su extrema derecha
     # 'va' cambia a 'top' para alinear el texto en la parte superior del punto especificado,
     # efectivamente moviéndolo debajo de la barra.
-    ax.text(valor, posicion, f'{valor}', va='top', ha='right', color='black', fontweight='bold', fontsize=10)
+    ax.text(valor, posicion, f'{valor}', va='top', ha='right', color='black', fontweight='bold', fontsize=9)
 
 # Ajustes finales y mostrar el gráfico
 ax.spines['top'].set_visible(False)
@@ -254,17 +258,24 @@ ax.spines['right'].set_visible(False)
 ax.spines['left'].set_linewidth(2)
 ax.spines['bottom'].set_linewidth(2)
 ax.xaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
-plt.yticks(fontweight='bold')
-plt.xticks(np.arange(0, max(cantidad)+10, niveles), fontweight='bold')  # Ajuste en el rango para xticks basado en la máxima cantidad
-plt.ylabel("Animales", fontweight='bold')
-plt.xlabel("Porcentaje de personas \ninteresadas en adoptar", fontweight='bold')
 
-#plt.tight_layout()
+# TEXTO MÁS GRANDE PARA GRÁFICOS - NOMBRES ANIMALES VERTICALES
+plt.yticks(fontweight='bold', fontsize=9, rotation=90, va='center')
+# Reducir número de etiquetas en X para evitar solapamiento
+max_val = max(cantidad)
+step = max(10, int(max_val/4))  # Máximo 4-5 etiquetas
+plt.xticks(np.arange(0, max_val+step, step), fontweight='bold', fontsize=9)
+plt.ylabel("Animales", fontweight='bold', fontsize=10)
+plt.xlabel("% personas", fontweight='bold', fontsize=10)
+
+# AJUSTAR LAYOUT PARA MANTENER DENTRO DE COLUMNA
+plt.tight_layout()
+plt.subplots_adjust(left=0.12, right=0.90, top=0.95, bottom=0.15)
 plt.show()
 ```
 
-- 
-<br/> 
+-
+<br/>
 ```{python Torta, echo = FALSE, results = "hide"}
 # Re-importing necessary libraries after execution state reset
 from matplotlib import pyplot as plt
@@ -274,9 +285,9 @@ adoptantes2py = r.maskota2
 adoptantes3py = r.maskota3
 
 # Re-defining data for the pie chart
-labels = ['Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota1py),
-          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota2py),
-          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota3py)]
+labels = ['% {}'.format(mascota1py),
+          '% {}'.format(mascota2py),
+          '% {}'.format(mascota3py)]
 sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Actual values for calculations
 sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on the labels
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
@@ -285,13 +296,13 @@ explode = (0, 0, 0)  # No slice is exploded
 # Labels with the sizes values
 pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, sizes2)]
 
-# Plot
-fig, ax = plt.subplots(figsize=(6, 4), tight_layout=True)  # Ajustar el tamaño y el diseño de la figura.
-ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors, shadow=True, startangle=0)
-ax.axis('equal')  # La relación de aspecto igual garantiza que el gráfico circular se dibuje como un círculo.
+# GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
+fig, ax = plt.subplots(figsize=(4.0, 3.2), tight_layout=True)
+ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors, shadow=True, startangle=0, textprops={'fontsize': 8})
+ax.axis('equal')
 
-# Reducing left and top margins
-plt.subplots_adjust(left=0.1, top=0.9)
+# AJUSTAR MÁRGENES OPTIMIZADOS
+plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
 
 # Display the plot
 plt.show()
@@ -306,7 +317,7 @@ Esta tabla representa la información recolectada en la encuesta, mostrando el p
 
 ```{r, echo = FALSE, results = "asis"}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
-include_tikz(image01, name = "image01_solution", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "8.5cm")
+include_tikz(image01, name = "image01_solution", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "4cm")
 ```
 
 ```{r version diversity test, echo = FALSE, results = "hide"}
