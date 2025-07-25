@@ -167,7 +167,7 @@ plt.ylabel("...", fontweight='bold', fontsize=10)
 - `I_1796473-Opc-A2_optimizado.Rmd` - Versión optimizada del ejercicio
 - `oficio_solpcielo_margenes_estrechos.tex` - Plantilla LaTeX optimizada para PDF
 - `oficio_pcielo_pandoc_optimizado.tex` - Plantilla LaTeX optimizada para DOCX/Pandoc
-- `SemilleroUnico_Oficio_v1_modificado.R` - Script actualizado
+- `SemilleroUnico_Oficio_v1.R` - Script actualizado
 
 ### 6.2 Archivos de Prueba
 - Múltiples PDFs de prueba en diferentes carpetas de salida
@@ -314,4 +314,34 @@ set.seed(semilla)
 **Plantilla PDF DOCENTE**: `oficio_solpcielo_margenes_estrechos.tex`
 **Plantilla PDF ESTUDIANTE**: `oficio_solpcielo_margenes_estrechos_SIN_SOLUCION.tex`
 **Plantilla DOCX**: `oficio_pcielo_pandoc_optimizado.tex` (limitada)
-**Script final**: `SemilleroUnico_Oficio_v1_modificado.R` (con versiones duales corregidas)
+**Script final**: `SemilleroUnico_Oficio_v1.R` (con versiones duales corregidas)
+
+---
+
+## 🧹 11. LIMPIEZA FINAL DEL PROYECTO
+
+### 11.1 Objetivo
+Mantener solo los archivos estrictamente necesarios para el funcionamiento del sistema de exámenes con versiones duales.
+
+### 11.2 Archivos Conservados
+#### **📚 Ejercicios (.Rmd) - TODOS CONSERVADOS**
+- `I_1796473-Opc-A2_optimizado.Rmd` - **Ejercicio principal optimizado**
+- `I_1796473-Opc-A2.Rmd` + variantes (A2v2, B, B2, B2v2, C2, C2v2, D, D2, D2v2)
+
+#### **🎯 Sistema Final**
+- `oficio_solpcielo_margenes_estrechos.tex` - Plantilla para DOCENTES
+- `oficio_solpcielo_margenes_estrechos_SIN_SOLUCION.tex` - Plantilla para ESTUDIANTES
+- `SemilleroUnico_Oficio_v1.R` - Script con versiones duales
+- `cambios.md` - Documentación completa
+- `salida_SIN_CLAVES_DOCENTE/` - Ejemplo PDF docente
+- `salida_SIN_CLAVES_ESTUDIANTE/` - Ejemplo PDF estudiante
+
+### 11.3 Archivos Eliminados
+- ❌ **30+ carpetas temporales** de pruebas y experimentos
+- ❌ **15+ plantillas obsoletas** (.tex no utilizadas)
+- ❌ **Archivos temporales** (.RData, .Rhistory, imágenes temporales)
+- ❌ **Carpetas de documentación** no esenciales
+
+### 11.4 Cambio de Nombre
+- `SemilleroUnico_Oficio_v1_modificado.R` → `SemilleroUnico_Oficio_v1.R`
+- Simplificación del nombre del script principal
