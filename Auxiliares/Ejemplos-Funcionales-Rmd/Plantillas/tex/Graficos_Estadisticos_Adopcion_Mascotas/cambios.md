@@ -278,10 +278,40 @@ exams2pdf(rep(archivo_examen, numpreg),
 - Manejo de errores y confirmaciones
 - Usa plantillas diferentes automáticamente
 
+### 10.6 Corrección Crítica: Ocultación de Claves
+**Problema detectado**: La versión ESTUDIANTE mostraba las claves (X) en las respuestas correctas.
+
+**Solución implementada**:
+- Modificación en `oficio_solpcielo_margenes_estrechos_SIN_SOLUCION.tex`
+- Cambio: `\newcommand{\extext}[1]{}` (comando vacío)
+- Resultado: Casillas completamente vacías sin marcas
+
+### 10.7 Importancia de la Semilla Única
+**Aspecto fundamental**: Ambas versiones usan la **misma semilla** para garantizar:
+- ✅ **Preguntas idénticas**: Mismo contenido en ambas versiones
+- ✅ **Mismo orden**: Secuencia de preguntas consistente
+- ✅ **Mismos datos**: Valores en gráficos y tablas idénticos
+- ✅ **Mismas opciones**: Alternativas (a), (b), (c), (d) iguales
+- ✅ **Corrección fácil**: El docente puede usar su versión como clave
+
+**Implementación**:
+```r
+# UNA SOLA semilla para ambas versiones
+semilla <- sample(100:1e8, 1)
+set.seed(semilla)
+# Ambas generaciones usan la misma semilla
+```
+
+### 10.8 Resultado Final
+- **VERSIÓN DOCENTE**: Preguntas + Retroalimentación + Claves marcadas
+- **VERSIÓN ESTUDIANTE**: Preguntas + Casillas vacías (sin retroalimentación ni claves)
+- **CONSISTENCIA TOTAL**: Mismas preguntas garantizadas por semilla única
+
 ---
 
 **Fecha de optimización**: Julio 2024
 **Versión final**: `I_1796473-Opc-A2_optimizado.Rmd`
-**Plantilla PDF**: `oficio_solpcielo_margenes_estrechos.tex`
+**Plantilla PDF DOCENTE**: `oficio_solpcielo_margenes_estrechos.tex`
+**Plantilla PDF ESTUDIANTE**: `oficio_solpcielo_margenes_estrechos_SIN_SOLUCION.tex`
 **Plantilla DOCX**: `oficio_pcielo_pandoc_optimizado.tex` (limitada)
-**Script final**: `SemilleroUnico_Oficio_v1_modificado.R` (con versiones duales)
+**Script final**: `SemilleroUnico_Oficio_v1_modificado.R` (con versiones duales corregidas)
