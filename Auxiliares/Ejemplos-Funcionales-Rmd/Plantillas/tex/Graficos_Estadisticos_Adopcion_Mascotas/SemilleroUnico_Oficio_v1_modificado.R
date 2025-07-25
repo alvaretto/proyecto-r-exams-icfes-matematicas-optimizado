@@ -142,7 +142,7 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Generación para NOPS (exámenes escaneables) - FORMATO LEGAL
 # NOTA: NOPS usa plantillas internas, para formato legal usar exams2pdf con nops_oficio.tex
 
-set.seed(semilla)
+#set.seed(semilla)
 # Opción 1: NOPS estándar (no soporta formato legal directamente)
 # exams2nops(rep(archivo_examen, numpreg),
 #            n = copias,
@@ -164,13 +164,13 @@ set.seed(semilla)
 #            verbose = TRUE)
 
 # Opción 2: Simulación de NOPS con formato legal usando exams2pdf
-exams2pdf(rep(archivo_examen, numpreg),
-          n = copias,
-          name = paste0(nombre_sin_extension, "_nops_legal_"),
-          encoding = "UTF-8",
-          template = "nops_oficio",
-          dir = dir_salida,
-          edir = dir_ejercicios,
-          verbose = TRUE)
+# exams2pdf(rep(archivo_examen, numpreg),
+#           n = copias,
+#           name = paste0(nombre_sin_extension, "_nops_legal_"),
+#           encoding = "UTF-8",
+#           template = "nops_oficio",
+#           dir = dir_salida,
+#           edir = dir_ejercicios,
+#           verbose = TRUE)
 
 ################################################################################
