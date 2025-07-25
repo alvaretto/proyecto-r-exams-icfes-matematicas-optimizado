@@ -234,7 +234,54 @@ exams2pandoc(rep('archivo.Rmd', 3),
 
 ---
 
+---
+
+## 🎓 10. VERSIONES DUALES: DOCENTE vs ESTUDIANTE
+
+### 10.1 Problema Identificado
+Necesidad de generar dos versiones del mismo examen:
+- **Versión DOCENTE**: Con retroalimentación completa Y claves de respuestas
+- **Versión ESTUDIANTE**: Sin retroalimentación NI claves (solo preguntas)
+
+### 10.2 Solución Implementada
+- **Plantillas LaTeX diferentes**: Control total sobre contenido visible
+- **Generación automática**: Ambas versiones con una sola ejecución
+- **Misma semilla**: Garantiza preguntas idénticas en ambas versiones
+- **Directorios separados**: Organización clara de archivos
+
+### 10.3 Plantillas Creadas
+- **`oficio_solpcielo_margenes_estrechos.tex`**: Para DOCENTES (original)
+  - Incluye `\newenvironment{solution}{\textbf{Retroalimentación:}\newline}{}`
+  - Incluye `\newcommand{\extext}[1]{\textbf{\normalsize #1}}` (muestra claves)
+- **`oficio_solpcielo_margenes_estrechos_SIN_SOLUCION.tex`**: Para ESTUDIANTES
+  - Oculta `\newenvironment{solution}{\comment}{\endcomment}`
+  - Oculta `\newcommand{\extext}[1]{}` (sin claves)
+
+### 10.4 Configuración Final
+```r
+# Versión DOCENTE - Con retroalimentación Y claves
+exams2pdf(rep(archivo_examen, numpreg),
+          template = "oficio_solpcielo_margenes_estrechos",  # CON soluciones y claves
+          name = paste0(nombre_arch, "_DOCENTE_"),
+          dir = paste0(dir_salida, "_DOCENTE"))
+
+# Versión ESTUDIANTE - Sin retroalimentación NI claves
+exams2pdf(rep(archivo_examen, numpreg),
+          template = "oficio_solpcielo_margenes_estrechos_SIN_SOLUCION",  # SIN soluciones ni claves
+          name = paste0(nombre_arch, "_ESTUDIANTE_"),
+          dir = paste0(dir_salida, "_ESTUDIANTE"))
+```
+
+### 10.5 Función Auxiliar Creada
+- `generar_versiones_duales()`: Automatiza todo el proceso
+- Mensajes informativos durante la generación
+- Manejo de errores y confirmaciones
+- Usa plantillas diferentes automáticamente
+
+---
+
 **Fecha de optimización**: Julio 2024
 **Versión final**: `I_1796473-Opc-A2_optimizado.Rmd`
 **Plantilla PDF**: `oficio_solpcielo_margenes_estrechos.tex`
-**Plantilla DOCX**: `oficio_pcielo_pandoc_optimizado.tex`
+**Plantilla DOCX**: `oficio_pcielo_pandoc_optimizado.tex` (limitada)
+**Script final**: `SemilleroUnico_Oficio_v1_modificado.R` (con versiones duales)

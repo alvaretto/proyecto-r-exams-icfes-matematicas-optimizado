@@ -7,7 +7,7 @@ library(exams)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "I_1796473-Opc-A2_optimizado.Rmd"
 copias <- 1
-numpreg <- 3
+numpreg <- 15
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -17,6 +17,43 @@ dir_ejercicios <- "."
 # Nombre del archivo sin la extensión .Rmd
 nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)
 nombre_arch <- paste0(nombre_sin_extension, "_oficio_")
+
+#################################################################################
+# FUNCIÓN AUXILIAR: Generar versiones DOCENTE y ESTUDIANTE automáticamente
+generar_versiones_duales <- function(archivo_examen, numpreg, copias, nombre_arch,
+                                   dir_salida, dir_ejercicios = ".") {
+
+  cat("🚀 Iniciando generación de versiones duales...\n")
+  cat("📄 Archivo:", archivo_examen, "\n")
+  cat("🔢 Preguntas:", numpreg, "| Copias:", copias, "\n\n")
+
+  # Versión DOCENTE - Con retroalimentación Y claves
+  cat("🎓 Generando versión DOCENTE (con retroalimentación y claves)...\n")
+  exams2pdf(rep(archivo_examen, numpreg),
+            n = copias,
+            name = paste0(nombre_arch, "_DOCENTE_"),
+            encoding = "UTF-8",
+            template = "oficio_solpcielo_margenes_estrechos",  # CON soluciones y claves
+            dir = paste0(dir_salida, "_DOCENTE"),
+            edir = dir_ejercicios,
+            verbose = FALSE)
+
+  # Versión ESTUDIANTE - Sin retroalimentación NI claves
+  cat("📚 Generando versión ESTUDIANTE (sin retroalimentación ni claves)...\n")
+  exams2pdf(rep(archivo_examen, numpreg),
+            n = copias,
+            name = paste0(nombre_arch, "_ESTUDIANTE_"),
+            encoding = "UTF-8",
+            template = "oficio_solpcielo_margenes_estrechos_SIN_SOLUCION",  # SIN soluciones ni claves
+            dir = paste0(dir_salida, "_ESTUDIANTE"),
+            edir = dir_ejercicios,
+            verbose = FALSE)
+
+  cat("\n✅ ¡Ambas versiones generadas exitosamente!\n")
+  cat("📁 Versión DOCENTE en:", paste0(dir_salida, "_DOCENTE"), "\n")
+  cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_ESTUDIANTE"), "\n")
+  cat("🎯 Listo para usar en clase!\n\n")
+}
 
 ################################################################################
 # Generación de copias individuales para PDF, sólo 'copias', no importa 'numpreg'
@@ -60,16 +97,38 @@ exams2html(rep(archivo_examen, numpreg),
            name = paste0(nombre_sin_extension, "_semillero_oficio"))
 
 #################################################################################
-# Generación de n copias en un solo archivo de salida para PDF (FORMATO LEGAL)
+# GENERACIÓN DE DOS VERSIONES: DOCENTE (con soluciones) y ESTUDIANTE (sin soluciones)
 
+# Versión DOCENTE - Con retroalimentación Y claves
+cat("🎓 Generando versión DOCENTE (con retroalimentación y claves)...\n")
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
-          name = nombre_arch,
+          name = paste0(nombre_arch, "_DOCENTE_"),
           encoding = "UTF-8",
-          template = "oficio_solpcielo_margenes_estrechos",
-          dir = dir_salida,
+          template = "oficio_solpcielo_margenes_estrechos",  # CON soluciones y claves
+          dir = paste0(dir_salida, "_DOCENTE"),
           edir = dir_ejercicios,
           verbose = TRUE)
+
+# Versión ESTUDIANTE - Sin retroalimentación NI claves
+cat("📚 Generando versión ESTUDIANTE (sin retroalimentación ni claves)...\n")
+exams2pdf(rep(archivo_examen, numpreg),
+          n = copias,
+          name = paste0(nombre_arch, "_ESTUDIANTE_"),
+          encoding = "UTF-8",
+          template = "oficio_solpcielo_margenes_estrechos_SIN_SOLUCION",  # SIN soluciones ni claves
+          dir = paste0(dir_salida, "_ESTUDIANTE"),
+          edir = dir_ejercicios,
+          verbose = TRUE)
+
+cat("✅ Ambas versiones generadas exitosamente!\n")
+cat("📁 Versión DOCENTE en:", paste0(dir_salida, "_DOCENTE"), "\n")
+cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_ESTUDIANTE"), "\n")
+
+#################################################################################
+# ALTERNATIVA SIMPLE: Usar la función auxiliar (descomenta para usar)
+# generar_versiones_duales(archivo_examen, numpreg, copias, nombre_arch,
+#                          dir_salida, dir_ejercicios)
 
 #################################################################################
 # Generación alternativa para documentos con muchas tablas (FORMATO LEGAL)
