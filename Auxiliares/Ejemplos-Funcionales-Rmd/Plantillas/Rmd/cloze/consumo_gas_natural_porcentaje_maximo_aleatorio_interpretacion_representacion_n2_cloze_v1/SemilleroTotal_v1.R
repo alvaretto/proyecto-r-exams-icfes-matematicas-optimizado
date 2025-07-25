@@ -183,7 +183,7 @@ archivo_examen <- "costo_promedio_diario_numerico_variacional_formulacion_ejecuc
 
 # Configuración por defecto
 config <- list(
-  archivos = 350,                      # Número de versiones por formato
+  archivos = 3,                      # Número de versiones por formato
   semilla = sample(100:1e8, 1),      # Semilla aleatoria
   dir_salida = "salida_universal",   # Directorio de salida
   dir_ejercicios = ".",              # Directorio de ejercicios
