@@ -5,9 +5,9 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "I_1796473-Opc-A2_optimizado.Rmd"
+archivo_examen <- "I_1796473-Opc-B2_optimizado.Rmd"
 copias <- 1
-numpreg <- 15
+numpreg <- 5
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
@@ -157,27 +157,27 @@ cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_SIN_CLAVES_ESTUDIANTE")
 ################################################################################
 # Generación de n copias en un solo archivo .docx (FORMATO LEGAL - DOS COLUMNAS)
 
-exams2pandoc(rep(archivo_examen, numpreg),
-             n = copias,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             template = "oficio_pcielo_pandoc_optimizado.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
-             resolution = 100,
-             width = 3.8,  # Optimizado para columnas estrechas
-             height = 3.2, # Optimizado para columnas estrechas
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = TRUE, # Added verbose
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+# exams2pandoc(rep(archivo_examen, numpreg),
+#              n = copias,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              template = "oficio_pcielo_pandoc_optimizado.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
+#              resolution = 100,
+#              width = 3.8,  # Optimizado para columnas estrechas
+#              height = 3.2, # Optimizado para columnas estrechas
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = TRUE, # Added verbose
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'copias'
