@@ -328,12 +328,23 @@ plt.show()
 Solution
 ========
 
-\
-Esta tabla representa la información recolectada en la encuesta, mostrando el porcentaje de personas interesadas en adoptar cada tipo de mascota:
-\
+La representación que muestra correctamente la información recolectada en la encuesta es la **tabla**.
 
-```{r, echo = FALSE, results = "asis"}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+**Análisis de las representaciones:**
+
+- **Tabla**: **Correcta**. La tabla muestra correctamente los porcentajes de personas interesadas en adoptar cada animal, presentando la información de manera clara y precisa.
+
+- **Gráfico de barras verticales**: Incorrecto. Aunque el formato es válido, los valores mostrados corresponden a números absolutos de personas en lugar de los porcentajes solicitados en la pregunta.
+
+- **Gráfico de barras horizontales**: Incorrecto. Similar al gráfico de barras verticales, muestra números absolutos de personas en lugar de los porcentajes solicitados.
+
+- **Gráfico de torta**: Incorrecto. Muestra números absolutos de personas en lugar de los porcentajes solicitados.
+
+**Tabla correcta:**
+
+<br/>
+```{r Tabla02, warning=FALSE,echo = FALSE, results = "asis"}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 include_tikz(image01, name = "image01_solution", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "4cm")
 ```
 
