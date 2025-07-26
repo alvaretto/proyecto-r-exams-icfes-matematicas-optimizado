@@ -223,8 +223,8 @@ plt.show()
 ```
 
 - 
-<br/> 
-```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+<br/>
+```{python BarraHorizontalSol1, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -249,7 +249,7 @@ animales = [mascota3py, mascota2py, mascota1py]
 cantidad = [padrino3py, padrino2py, padrino1py]
 
 # Definir colores en tonos de azul
-colores_azules = ['#00B3E6', '#0066CC', '#000099']  
+colores_azules = ['#00B3E6', '#0066CC', '#000099']
 
 # GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - ANCHO REDUCIDO
 fig, ax = plt.subplots(figsize=(3.8, 3.5))
@@ -285,7 +285,7 @@ max_val = max(cantidad)
 step = max(10, int(max_val/4))  # Máximo 4-5 etiquetas
 plt.xticks(np.arange(0, max_val+step, step), fontweight='bold', fontsize=9)
 plt.ylabel("Animales", fontweight='bold', fontsize=10)
-plt.xlabel("% personas", fontweight='bold', fontsize=10)
+plt.xlabel("Cantidad de personas \ninteresadas en adoptar", fontweight='bold', fontsize=10)
 
 # AJUSTAR LAYOUT PARA MANTENER DENTRO DE COLUMNA
 plt.tight_layout()
