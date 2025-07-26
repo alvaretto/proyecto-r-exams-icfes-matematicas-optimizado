@@ -341,11 +341,11 @@ La representación que muestra correctamente la información recolectada en la e
 
 - **Tabla**: **Correcta**. La tabla muestra correctamente los porcentajes de personas interesadas en adoptar cada animal, presentando la información de manera clara y precisa.
 
-- **Gráfico de barras verticales**: Incorrecto. Aunque el formato es válido, los valores mostrados corresponden a números absolutos de personas en lugar de los porcentajes solicitados en la pregunta.
+- **Gráfico de barras verticales**: Incorrecto. Aunque el formato es válido, los valores mostrados corresponden a porcentajes de personas, mientras la leyenda del eje Y asegura que se trata de números absolutos de personas.
 
-- **Gráfico de barras horizontales**: Incorrecto. Similar al gráfico de barras verticales, muestra números absolutos de personas en lugar de los porcentajes solicitados.
+- **Gráfico de barras horizontales**: Incorrecto.  Muestra números absolutos de personas en lugar de los porcentajes solicitados.
 
-- **Gráfico de torta**: Incorrecto. Muestra números absolutos de personas en lugar de los porcentajes solicitados.
+- **Gráfico de torta**: Incorrecto. Los valores correspondientes a números absolutos de personas son correctos, pero las etiquetas de la gráfica alternan equivocadamente entre "número de personas" y "% de personas"
 
 **Tabla correcta:**
 
