@@ -331,19 +331,20 @@ Solution
 
 El gráfico que representa correctamente la información recolectada en la encuesta es el **gráfico de barras verticales**.
 
-**Análisis de las opciones:**
+**Análisis de las representaciones:**
 
-- **Opción A (Tabla)**: Incorrecta. La tabla presenta un error en los datos del segundo animal, mostrando un valor que no corresponde al porcentaje real de la encuesta.
+- **Tabla**: Incorrecta. La tabla presenta un error en los datos del segundo animal, mostrando un valor que no corresponde al número real de personas de la encuesta (tiene un error de +10 personas).
 
-- **Opción B (Gráfico de barras verticales)**: **Correcta**. Este gráfico muestra correctamente los porcentajes de personas interesadas en adoptar cada animal, con el eje horizontal representando los tipos de animales y el eje vertical mostrando los porcentajes correspondientes.
+- **Gráfico de barras verticales**: **Correcto**. Este gráfico muestra correctamente los porcentajes de personas interesadas en adoptar cada animal, con el eje horizontal representando los tipos de animales y el eje vertical mostrando los porcentajes correspondientes.
 
-- **Opción C (Gráfico de barras horizontales)**: Incorrecta. Aunque el formato es válido, los valores mostrados no corresponden a los porcentajes sino a números absolutos de personas.
+- **Gráfico de barras horizontales**: Incorrecto. Aunque el formato es válido, los valores mostrados corresponden a números absolutos de personas en lugar de los porcentajes solicitados en la pregunta.
 
-- **Opción D (Gráfico de torta)**: Incorrecta. Similar al gráfico de barras horizontales, muestra números absolutos de personas en lugar de los porcentajes solicitados.
+- **Gráfico de torta**: Incorrecto. Similar al gráfico de barras horizontales, muestra números absolutos de personas en lugar de los porcentajes solicitados.
 
 **Gráfico correcto:**
 
-```{python BarraVerticalSol, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+<br/> 
+```{python BarraVertical2, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -362,7 +363,7 @@ animales = [mascota1py, mascota2py, mascota3py]
 cantidad = [porcentaje1py, porcentaje2py, porcentaje3py]
 
 # Definir colores en tonos de azul
-colores_azules = ['#00B3E6', '#0066CC', '#000099']
+colores_azules = ['#00B3E6', '#0066CC', '#000099']  
 
 # GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
 fig, ax = plt.subplots(figsize=(4.0, 3.2))
