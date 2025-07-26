@@ -261,13 +261,12 @@ bars = ax.barh(animales, cantidad, color=colores_azules, height=alto_barras)
 for bar in bars:
     # Obtener la posición y el valor de la barra
     valor = bar.get_width()
-    # Posicionar el texto ligeramente debajo de la barra. Ajustar el '-0.05' según sea necesario.
-    posicion = bar.get_y() - 0.05
-    
-    # Añadir texto debajo de la barra, a su extrema derecha
-    # 'va' cambia a 'top' para alinear el texto en la parte superior del punto especificado,
-    # efectivamente moviéndolo debajo de la barra.
-    ax.text(valor, posicion, f'{valor}', va='top', ha='right', color='black', fontweight='bold', fontsize=9)
+    # Posicionar el texto ligeramente encima de la barra. Ajustar el '+0.05' según sea necesario.
+    posicion = bar.get_y() + bar.get_height() + 0.05
+
+    # Añadir texto encima de la barra, un poco más a la derecha del extremo de la barra
+    # Añadimos un pequeño offset horizontal para mover el texto hacia la derecha
+    ax.text(valor + 2, posicion, f'{valor}', va='bottom', ha='left', color='black', fontweight='bold', fontsize=9)
 
 # Ajustes finales y mostrar el gráfico
 ax.spines['top'].set_visible(False)
@@ -302,9 +301,9 @@ adoptantes2py = r.maskota2
 adoptantes3py = r.maskota3
 
 # Re-defining data for the pie chart
-labels = ['% {}'.format(mascota1py),
-          '% {}'.format(mascota2py),
-          '% {}'.format(mascota3py)]
+labels = ['% de Personas \ninteresadas en \nadoptar un \n{}'.format(mascota1py),
+          'Personas \ninteresadas en \nadoptar un \n{}'.format(mascota2py),
+          'Personas \ninteresadas en \nadoptar un \n{}'.format(mascota3py)]
 sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Actual values for calculations
 sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on the labels
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']

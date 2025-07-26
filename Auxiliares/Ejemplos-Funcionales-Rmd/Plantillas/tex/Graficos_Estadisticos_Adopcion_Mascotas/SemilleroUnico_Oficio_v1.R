@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "I_1796473-Opc-D2_optimizado.Rmd"
+archivo_examen <- "I_1796473-Opc-A2_optimizado.Rmd"
 copias <- 1
 numpreg <- 3
 semilla <- sample(100:1e8, 1)
@@ -21,7 +21,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_oficio_")
 #################################################################################
 # FUNCIÓN AUXILIAR: Generar versiones DOCENTE y ESTUDIANTE automáticamente
 generar_versiones_duales <- function(archivo_examen, numpreg, copias, nombre_arch,
-                                   dir_salida, dir_ejercicios = ".") {
+                                   dir_salida, semilla, dir_ejercicios = ".") {
 
   cat("🚀 Iniciando generación de versiones duales...\n")
   cat("📄 Archivo:", archivo_examen, "\n")
@@ -29,6 +29,7 @@ generar_versiones_duales <- function(archivo_examen, numpreg, copias, nombre_arc
 
   # Versión DOCENTE - Con retroalimentación Y claves
   cat("🎓 Generando versión DOCENTE (con retroalimentación y claves)...\n")
+  set.seed(semilla)  # Restablecer la misma semilla para consistencia
   exams2pdf(rep(archivo_examen, numpreg),
             n = copias,
             name = paste0(nombre_arch, "_CON_CLAVES_DOCENTE_"),
@@ -40,6 +41,7 @@ generar_versiones_duales <- function(archivo_examen, numpreg, copias, nombre_arc
 
   # Versión ESTUDIANTE - Sin retroalimentación NI claves
   cat("📚 Generando versión ESTUDIANTE (sin retroalimentación ni claves)...\n")
+  set.seed(semilla)  # Restablecer la misma semilla para consistencia
   exams2pdf(rep(archivo_examen, numpreg),
             n = copias,
             name = paste0(nombre_arch, "_SIN_CLAVES_ESTUDIANTE_"),
@@ -101,6 +103,7 @@ exams2html(rep(archivo_examen, numpreg),
 
 # Versión DOCENTE - Con retroalimentación Y claves
 cat("🎓 Generando versión DOCENTE (con retroalimentación y claves)...\n")
+set.seed(semilla)  # Restablecer la misma semilla para consistencia
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
           name = paste0(nombre_arch, "_CON_CLAVES_DOCENTE_"),
@@ -112,6 +115,7 @@ exams2pdf(rep(archivo_examen, numpreg),
 
 # Versión ESTUDIANTE - Sin retroalimentación NI claves
 cat("📚 Generando versión ESTUDIANTE (sin retroalimentación ni claves)...\n")
+set.seed(semilla)  # Restablecer la misma semilla para consistencia
 exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
           name = paste0(nombre_arch, "_SIN_CLAVES_ESTUDIANTE_"),
@@ -128,7 +132,7 @@ cat("📁 Versión ESTUDIANTE en:", paste0(dir_salida, "_SIN_CLAVES_ESTUDIANTE")
 #################################################################################
 # ALTERNATIVA SIMPLE: Usar la función auxiliar (descomenta para usar)
 # generar_versiones_duales(archivo_examen, numpreg, copias, nombre_arch,
-#                          dir_salida, dir_ejercicios)
+#                          dir_salida, semilla, dir_ejercicios)
 
 #################################################################################
 # Generación alternativa para documentos con muchas tablas (FORMATO LEGAL)
