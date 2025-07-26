@@ -7,7 +7,7 @@ library(exams)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "I_1796473-Opc-B2_optimizado.Rmd"
 copias <- 1
-numpreg <- 5
+numpreg <- 3
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
