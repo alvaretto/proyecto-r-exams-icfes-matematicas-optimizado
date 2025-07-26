@@ -305,9 +305,9 @@ adoptantes2py = r.maskota2
 adoptantes3py = r.maskota3
 
 # Re-defining data for the pie chart
-labels = ['% {}'.format(mascota1py),
-          '% {}'.format(mascota2py),
-          '% {}'.format(mascota3py)]
+labels = ['Personas \ninteresadas en \nadoptar un \n{}'.format(mascota1py),
+          '% de Personas \ninteresadas en \nadoptar un \n{}'.format(mascota2py),
+          'Personas \ninteresadas en \nadoptar un \n{}'.format(mascota3py)]
 sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Actual values for calculations
 sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on the labels
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
