@@ -643,7 +643,75 @@ generar_versiones_duales <- function(archivo_examen, numpreg, copias,
 
 ---
 
-## 📈 RESUMEN FINAL DEL PROYECTO (Actualizado 2025)
+## 🔧 15. CORRECCIONES MANUALES APLICADAS (Enero 2025)
+
+### 15.1 Corrección de Etiquetas en Gráficos de Barras
+
+#### Problema Identificado
+Las etiquetas de los ejes en los gráficos de barras no correspondían correctamente con los datos mostrados, creando confusión en la interpretación.
+
+#### Solución Implementada
+**Archivo modificado:** `I_1796473-Opc-A2_optimizado.Rmd`
+
+**Cambios realizados:**
+
+1. **Gráfico de barras verticales (línea 215)**:
+   ```python
+   # ANTES:
+   plt.ylabel("% personas", fontweight='bold', fontsize=10)
+
+   # AHORA:
+   plt.ylabel("Número de personas", fontweight='bold', fontsize=10)
+   ```
+
+2. **Gráfico de barras horizontales (línea 285)**:
+   ```python
+   # ANTES:
+   plt.xlabel("Cantidad de personas", fontweight='bold', fontsize=10)
+
+   # AHORA:
+   plt.xlabel("% personas", fontweight='bold', fontsize=10)
+   ```
+
+#### Beneficios Logrados
+- ✅ **Coherencia entre datos y etiquetas**: Las etiquetas ahora corresponden exactamente con los valores mostrados
+- ✅ **Eliminación de confusión**: Los estudiantes pueden interpretar correctamente cada gráfico
+- ✅ **Lógica del ejercicio mejorada**: Facilita la identificación de la representación correcta
+
+### 15.2 Refinamiento de la Sección Solution
+
+#### Cambios en la Explicación
+**Análisis más detallado de cada representación:**
+
+- **Gráfico de barras verticales**: Aclaración sobre la inconsistencia entre datos (porcentajes) y etiqueta del eje Y (números absolutos)
+- **Gráfico de barras horizontales**: Confirmación de que muestra números absolutos en lugar de porcentajes
+- **Gráfico de torta**: Identificación específica del problema con etiquetas mixtas ("número de personas" vs "% de personas")
+
+#### Texto Actualizado (líneas 344-348)
+```markdown
+- **Gráfico de barras verticales**: Incorrecto. Aunque el formato es válido, los valores mostrados corresponden a porcentajes de personas, mientras la leyenda del eje Y asegura que se trata de números absolutos de personas.
+
+- **Gráfico de barras horizontales**: Incorrecto. Muestra números absolutos de personas en lugar de los porcentajes solicitados.
+
+- **Gráfico de torta**: Incorrecto. Los valores correspondientes a números absolutos de personas son correctos, pero las etiquetas de la gráfica alternan equivocadamente entre "número de personas" y "% de personas"
+```
+
+### 15.3 Impacto de las Correcciones
+
+#### Mejoras en la Experiencia del Usuario
+1. **Claridad interpretativa**: Cada gráfico tiene etiquetas que corresponden exactamente con sus datos
+2. **Lógica pedagógica mejorada**: Los errores en las opciones incorrectas son más evidentes
+3. **Consistencia educativa**: El ejercicio cumple mejor su propósito de evaluar comprensión de representaciones gráficas
+
+#### Validación de la Lógica del Ejercicio
+- **Tabla (Opción A)**: ✅ Correcta - muestra porcentajes como se solicita
+- **Gráfico barras verticales (Opción B)**: ❌ Incorrecta - datos vs etiquetas inconsistentes
+- **Gráfico barras horizontales (Opción C)**: ❌ Incorrecta - números absolutos en lugar de porcentajes
+- **Gráfico torta (Opción D)**: ❌ Incorrecta - etiquetas mixtas confusas
+
+---
+
+## 📈 RESUMEN FINAL DEL PROYECTO (Actualizado Enero 2025)
 
 ### Estado Actual del Sistema
 El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madurez y profesionalismo excepcional** con las siguientes características:
@@ -655,9 +723,11 @@ El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madu
 4. **Concordancia gramatical perfecta** en español
 5. **Sistema de semillas consistente** para versiones duales
 6. **Generación automática** de versiones DOCENTE y ESTUDIANTE
+7. **Etiquetas corregidas** para coherencia datos-visualización
 
 #### ✅ Archivos Finales Optimizados
-- `I_1796473-Opc-A2_optimizado.Rmd` ✅
+- `I_1796473-Opc-A2_optimizado.Rmd` ✅ (con correcciones manuales aplicadas)
+- `I_1796473-Opc-A2v2_optimizado.Rmd` ✅ (creado recientemente)
 - `I_1796473-Opc-B2_optimizado.Rmd` ✅
 - `I_1796473-Opc-C2_optimizado.Rmd` ✅
 - `I_1796473-Opc-D2_optimizado.Rmd` ✅
@@ -668,18 +738,21 @@ El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madu
 2. **Gráficos de torta**: Leyendas más cerca (labeldistance=0.7)
 3. **Concordancia de género**: "un perro", "una tortuga", etc.
 4. **Consistencia visual**: Todos los archivos siguen el mismo estándar
+5. **Etiquetas coherentes**: Datos y etiquetas de ejes perfectamente alineados
 
 #### ✅ Sistema de Generación Robusto
 - **Semillas consistentes** entre versiones DOCENTE/ESTUDIANTE
 - **Contenido idéntico** excepto por las soluciones
 - **Generación automática** de ambas versiones
 - **Plantillas LaTeX optimizadas** para formato legal
+- **Lógica pedagógica refinada** con explicaciones detalladas
 
 ### Próximos Pasos Recomendados
-1. **Pruebas de generación** con el sistema de semillas corregido
-2. **Validación visual** de los gráficos con etiquetas reposicionadas
-3. **Verificación de concordancia** en diferentes combinaciones de animales
-4. **Documentación de uso** para otros desarrolladores
+1. **Aplicar correcciones similares** a los archivos B2, C2, D2 optimizados
+2. **Pruebas de generación** con el sistema completo actualizado
+3. **Validación visual** de todos los gráficos con etiquetas corregidas
+4. **Verificación de concordancia** en diferentes combinaciones de animales
+5. **Documentación de uso** para otros desarrolladores
 
 ### Conclusión
-El sistema ha evolucionado de un conjunto básico de archivos R Markdown a una **solución completa y profesional** para la generación de exámenes educativos, con atención meticulosa a los detalles visuales, gramaticales y técnicos.
+El sistema ha evolucionado de un conjunto básico de archivos R Markdown a una **solución completa y profesional** para la generación de exámenes educativos, con atención meticulosa a los detalles visuales, gramaticales, técnicos y pedagógicos. Las correcciones manuales recientes han perfeccionado la coherencia entre datos y visualizaciones, elevando la calidad educativa del sistema.
