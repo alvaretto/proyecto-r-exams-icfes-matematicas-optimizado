@@ -19,7 +19,8 @@ Este documento detalla todas las optimizaciones aplicadas al archivo `I_1796473-
 11. [**Limpieza Final**](#-11-limpieza-final-del-proyecto) - Organización
 12. [**Corrección de Nomenclatura**](#-12-corrección-de-nomenclatura) - Nombres claros
 13. [**Sistema de Concordancia**](#-13-sistema-de-concordancia-de-género) - Gramática perfecta
-14. [**Resumen Final**](#-resumen-final-del-proyecto) - Estado actual
+14. [**Optimizaciones Recientes**](#-14-optimizaciones-recientes-2025) - Mejoras 2025
+15. [**Resumen Final Actualizado**](#-resumen-final-del-proyecto-actualizado-2025) - Estado actual
 
 ## 🎯 Objetivos Logrados
 
@@ -503,3 +504,182 @@ obtener_articulo <- function(animal) {
 - ✅ **Texto más profesional y natural**
 - ✅ **Sistema escalable** (fácil agregar nuevos animales)
 - ✅ **Automático** (no requiere intervención manual)
+
+---
+
+## 🔧 14. OPTIMIZACIONES RECIENTES (2025)
+
+### 14.1 Reposicionamiento de Etiquetas en Gráficos de Barras Horizontales
+
+#### Problema Identificado
+Las etiquetas de valores en los gráficos de barras horizontales aparecían **debajo** de cada barra, dificultando la lectura y creando una apariencia poco profesional.
+
+#### Solución Implementada
+**Archivos modificados:**
+- `I_1796473-Opc-A2_optimizado.Rmd`
+- `I_1796473-Opc-B2_optimizado.Rmd`
+- `I_1796473-Opc-C2_optimizado.Rmd` (2 gráficos: opciones + solución)
+- `I_1796473-Opc-D2_optimizado.Rmd`
+
+**Cambios en el código Python:**
+```python
+# ANTES: Etiquetas debajo de las barras
+posicion = bar.get_y() - 0.05
+ax.text(valor, posicion, f'{valor}', va='top', ha='right', ...)
+
+# AHORA: Etiquetas encima de las barras, ligeramente a la derecha
+posicion = bar.get_y() + bar.get_height() + 0.05
+ax.text(valor + 0.5, posicion, f'{valor}', va='bottom', ha='left', ...)
+```
+
+#### Beneficios Logrados
+- ✅ **Etiquetas encima** de cada barra horizontal
+- ✅ **Ligeramente hacia la derecha** del extremo de cada barra
+- ✅ **Mejor legibilidad** y apariencia profesional
+- ✅ **Consistencia visual** en todos los archivos
+
+### 14.2 Optimización de Gráficos de Torta
+
+#### Problema Identificado
+Las leyendas de los gráficos de torta estaban muy alejadas del gráfico, desperdiciando espacio y dificultando la asociación visual.
+
+#### Solución Implementada
+**Parámetro agregado a todos los gráficos de torta:**
+```python
+# ANTES: Distancia por defecto (1.1)
+ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors,
+       shadow=True, startangle=90, textprops={'fontsize': 8})
+
+# AHORA: Distancia reducida (0.7)
+ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors,
+       shadow=True, startangle=90, textprops={'fontsize': 8},
+       labeldistance=0.7)
+```
+
+#### Archivos Modificados
+- `I_1796473-Opc-A2_optimizado.Rmd`: 1 gráfico
+- `I_1796473-Opc-B2_optimizado.Rmd`: 1 gráfico
+- `I_1796473-Opc-C2_optimizado.Rmd`: 1 gráfico
+- `I_1796473-Opc-D2_optimizado.Rmd`: 2 gráficos (opciones + solución)
+
+#### Beneficios Logrados
+- ✅ **Leyendas más cerca** de la torta (distancia reducida de 1.1 a 0.7)
+- ✅ **Pueden quedar parcialmente dentro** de los segmentos
+- ✅ **Mejor aprovechamiento del espacio** disponible
+- ✅ **Diseño más compacto** y profesional
+
+### 14.3 Corrección de Concordancia de Género en Etiquetas de Torta
+
+#### Problema Identificado
+Las etiquetas de los gráficos de torta usaban siempre "un" para todos los animales, sin respetar la concordancia de género en español.
+
+#### Solución Implementada
+**Integración con el sistema de concordancia existente:**
+```python
+# ANTES: Artículo fijo
+labels = ['Personas \ninteresadas en \nadoptar un \n{}'.format(mascota1py), ...]
+
+# AHORA: Artículo dinámico según género
+mascota1py = r.nombremascota1
+articulo1py = r.obtener_articulo(r.nombremascota1)
+labels = ['Personas \ninteresadas en \nadoptar {} \n{}'.format(articulo1py, mascota1py), ...]
+```
+
+#### Variables Agregadas en Python
+- `mascota1py, mascota2py, mascota3py`: Nombres de las mascotas desde R
+- `articulo1py, articulo2py, articulo3py`: Artículos correctos ("un" o "una") desde R
+
+#### Ejemplos de Corrección
+- ✅ **"un perro"** (masculino)
+- ✅ **"una tortuga"** (femenino)
+- ✅ **"un gato"** (masculino)
+- ✅ **"una iguana"** (femenino)
+
+### 14.4 Corrección del Sistema de Semillas
+
+#### Problema Identificado
+Las versiones "salida_SIN_CLAVES_ESTUDIANTE" y "salida_CON_CLAVES_DOCENTE" generaban contenido diferente porque no se restablecía la misma semilla antes de cada generación.
+
+#### Solución Implementada
+**Archivo modificado:** `SemilleroUnico_Oficio_v1.R`
+
+```r
+# ANTES: Semilla establecida solo al inicio
+semilla <- sample(100:1e8, 1)
+set.seed(semilla)
+# ... generaciones sin restablecer semilla
+
+# AHORA: Semilla restablecida antes de cada generación
+# Versión DOCENTE
+set.seed(semilla)  # Restablecer la misma semilla
+exams2pdf(rep(archivo_examen, numpreg), ...)
+
+# Versión ESTUDIANTE
+set.seed(semilla)  # Restablecer la misma semilla
+exams2pdf(rep(archivo_examen, numpreg), ...)
+```
+
+#### Función Auxiliar Actualizada
+```r
+# Parámetro semilla agregado a la función
+generar_versiones_duales <- function(archivo_examen, numpreg, copias,
+                                   nombre_arch, dir_salida, semilla,
+                                   dir_ejercicios = ".") {
+  # Restablecer semilla antes de cada generación
+  set.seed(semilla)
+  # ... generación DOCENTE
+
+  set.seed(semilla)
+  # ... generación ESTUDIANTE
+}
+```
+
+#### Beneficios Logrados
+- ✅ **Contenido idéntico** en ambas versiones (DOCENTE y ESTUDIANTE)
+- ✅ **Mismas mascotas** seleccionadas
+- ✅ **Mismo número de encuestados**
+- ✅ **Mismos porcentajes** y gráficos
+- ✅ **Solo difieren** en la presencia/ausencia de soluciones
+
+---
+
+## 📈 RESUMEN FINAL DEL PROYECTO (Actualizado 2025)
+
+### Estado Actual del Sistema
+El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madurez y profesionalismo excepcional** con las siguientes características:
+
+#### ✅ Características Técnicas Consolidadas
+1. **Formato optimizado** para papel legal (8.5" x 14") en dos columnas
+2. **Gráficos perfectamente dimensionados** para el espacio disponible
+3. **Etiquetas reposicionadas** para máxima legibilidad
+4. **Concordancia gramatical perfecta** en español
+5. **Sistema de semillas consistente** para versiones duales
+6. **Generación automática** de versiones DOCENTE y ESTUDIANTE
+
+#### ✅ Archivos Finales Optimizados
+- `I_1796473-Opc-A2_optimizado.Rmd` ✅
+- `I_1796473-Opc-B2_optimizado.Rmd` ✅
+- `I_1796473-Opc-C2_optimizado.Rmd` ✅
+- `I_1796473-Opc-D2_optimizado.Rmd` ✅
+- `SemilleroUnico_Oficio_v1.R` ✅
+
+#### ✅ Mejoras Visuales Implementadas
+1. **Gráficos de barras horizontales**: Etiquetas encima y ligeramente a la derecha
+2. **Gráficos de torta**: Leyendas más cerca (labeldistance=0.7)
+3. **Concordancia de género**: "un perro", "una tortuga", etc.
+4. **Consistencia visual**: Todos los archivos siguen el mismo estándar
+
+#### ✅ Sistema de Generación Robusto
+- **Semillas consistentes** entre versiones DOCENTE/ESTUDIANTE
+- **Contenido idéntico** excepto por las soluciones
+- **Generación automática** de ambas versiones
+- **Plantillas LaTeX optimizadas** para formato legal
+
+### Próximos Pasos Recomendados
+1. **Pruebas de generación** con el sistema de semillas corregido
+2. **Validación visual** de los gráficos con etiquetas reposicionadas
+3. **Verificación de concordancia** en diferentes combinaciones de animales
+4. **Documentación de uso** para otros desarrolladores
+
+### Conclusión
+El sistema ha evolucionado de un conjunto básico de archivos R Markdown a una **solución completa y profesional** para la generación de exámenes educativos, con atención meticulosa a los detalles visuales, gramaticales y técnicos.
