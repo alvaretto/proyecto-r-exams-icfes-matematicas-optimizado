@@ -302,10 +302,18 @@ adoptantes1py = r.maskota1 # De R a Python
 adoptantes2py = r.maskota2
 adoptantes3py = r.maskota3
 
+mascota1py = r.nombremascota1 # De R a Python
+mascota2py = r.nombremascota2
+mascota3py = r.nombremascota3
+
+articulo1py = r.obtener_articulo(r.nombremascota1) # De R a Python
+articulo2py = r.obtener_articulo(r.nombremascota2)
+articulo3py = r.obtener_articulo(r.nombremascota3)
+
 # Re-defining data for the pie chart
-labels = ['Personas \ninteresadas en \nadoptar un \n{}'.format(mascota1py),
-          '% de Personas \ninteresadas en \nadoptar un \n{}'.format(mascota2py),
-          'Personas \ninteresadas en \nadoptar un \n{}'.format(mascota3py)]
+labels = ['Personas \ninteresadas en \nadoptar {} \n{}'.format(articulo1py, mascota1py),
+          '% de Personas \ninteresadas en \nadoptar {} \n{}'.format(articulo2py, mascota2py),
+          'Personas \ninteresadas en \nadoptar {} \n{}'.format(articulo3py, mascota3py)]
 sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Actual values for calculations
 sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on the labels
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
@@ -316,7 +324,7 @@ pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, s
 
 # GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
 fig, ax = plt.subplots(figsize=(4.0, 3.2), tight_layout=True)
-ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors, shadow=True, startangle=0, textprops={'fontsize': 8})
+ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors, shadow=True, startangle=0, textprops={'fontsize': 8}, labeldistance=0.7)
 ax.axis('equal')
 
 # AJUSTAR MÁRGENES OPTIMIZADOS
