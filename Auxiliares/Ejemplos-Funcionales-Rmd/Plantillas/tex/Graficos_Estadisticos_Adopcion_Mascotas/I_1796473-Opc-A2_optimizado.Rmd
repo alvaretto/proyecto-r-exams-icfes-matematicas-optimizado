@@ -212,7 +212,7 @@ ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
 plt.xticks(fontweight='bold', fontsize=9)
 plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold', fontsize=9)
 plt.xlabel("Animales", fontweight='bold', fontsize=10)
-plt.ylabel("% personas", fontweight='bold', fontsize=10)
+plt.ylabel("Número de personas", fontweight='bold', fontsize=10)
 
 # AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y
 plt.tight_layout()
