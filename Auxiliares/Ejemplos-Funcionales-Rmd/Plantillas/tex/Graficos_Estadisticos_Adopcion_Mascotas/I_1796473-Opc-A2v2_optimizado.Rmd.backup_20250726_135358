@@ -4,28 +4,7 @@ output:
   html_document: default
   pdf_document: default
 ---
-
 ```{r inicio, include=FALSE}
-# ============================================================================
-# FUNCIÓN DE FORMATO INTELIGENTE DE DECIMALES
-# ============================================================================
-
-# Función para formatear números con decimales solo cuando son necesarios
-smart_format_decimal <- function(value, suffix = "") {
-    rounded <- round(value, 1)
-
-    # Si es prácticamente entero, mostrar sin decimales
-    if (abs(rounded - round(rounded)) < 0.001) {
-        return(paste0(round(rounded), suffix))
-    } else {
-        # Si tiene decimales significativos, mostrarlos
-        return(paste0(sprintf("%.1f", rounded), suffix))
-    }
-}
-
-# Ejemplos:
-# smart_format_decimal(25.0, "%") -> "25%"
-# smart_format_decimal(25.3, "%") -> "25.3%"
 library(exams)
 library(datasets)
 library(readxl)
@@ -162,9 +141,9 @@ image01 <- '
 
 demas <- sample
 
-maskota1_format <- smart_format_decimal(maskota1)
-maskota2_format <- smart_format_decimal(maskota2)
-maskota3_format <- smart_format_decimal(maskota3)
+maskota1_format <- sprintf("%.0f", maskota1)
+maskota2_format <- sprintf("%.0f", maskota2)
+maskota3_format <- sprintf("%.0f", maskota3)
 
 image01 <-sprintf(image01, selmascota[1], maskota1_format, selmascota[2], maskota2_format, selmascota[3], maskota3_format)
 ```
@@ -336,16 +315,8 @@ sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on t
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
 explode = (0, 0, 0)  # No slice is exploded
 
-# Función para formato inteligente de decimales en Python
-def smart_format_decimal(value):
-    rounded = round(value, 1)
-    if abs(rounded - round(rounded)) < 0.001:
-        return str(int(rounded))  # 25.0 -> "25"
-    else:
-        return f"{rounded:.1f}"   # 25.3 -> "25.3"
-
-# Labels with the sizes values usando formato inteligente
-pie_labels = ['{}: {}'.format(label, smart_format_decimal(size)) for label, size in zip(labels, sizes2)]
+# Labels with the sizes values
+pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, sizes2)]
 
 # GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
 fig, ax = plt.subplots(figsize=(4.0, 3.2), tight_layout=True)

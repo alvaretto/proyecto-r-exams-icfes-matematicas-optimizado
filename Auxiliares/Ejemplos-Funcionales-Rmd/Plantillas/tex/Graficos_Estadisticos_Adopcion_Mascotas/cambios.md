@@ -13,14 +13,13 @@ Este documento detalla todas las optimizaciones aplicadas al archivo `I_1796473-
 5. [**Pruebas de Formato**](#-5-pruebas-de-formato-y-ajustes) - Iteraciones de mejora
 6. [**Archivos Finales**](#-6-archivos-finales-optimizados) - Versión consolidada
 7. [**Comparación de Formatos**](#-7-comparación-pdf-vs-docx) - PDF vs DOCX
-8. [**Optimización Pandoc**](#-8-optimización-para-pandoc-docx) - Intentos DOCX
-9. [**Análisis de Limitaciones**](#-9-análisis-de-limitaciones-pandoc) - Conclusiones
-10. [**Versiones Duales**](#-10-versiones-duales-docente-vs-estudiante) - Sistema dual
-11. [**Limpieza Final**](#-11-limpieza-final-del-proyecto) - Organización
-12. [**Corrección de Nomenclatura**](#-12-corrección-de-nomenclatura) - Nombres claros
-13. [**Sistema de Concordancia**](#-13-sistema-de-concordancia-de-género) - Gramática perfecta
-14. [**Optimizaciones Recientes**](#-14-optimizaciones-recientes-2025) - Mejoras 2025
-15. [**Resumen Final Actualizado**](#-resumen-final-del-proyecto-actualizado-2025) - Estado actual
+8. [**Versiones Duales**](#-8-versiones-duales-docente-vs-estudiante) - Sistema dual
+9. [**Limpieza Final**](#-9-limpieza-final-del-proyecto) - Organización
+10. [**Corrección de Nomenclatura**](#-10-corrección-de-nomenclatura) - Nombres claros
+11. [**Sistema de Concordancia**](#-11-sistema-de-concordancia-de-género) - Gramática perfecta
+12. [**Optimizaciones Recientes**](#-12-optimizaciones-recientes-2025) - Mejoras 2025
+13. [**Correcciones Manuales**](#-13-correcciones-manuales-aplicadas-enero-2025) - Ajustes finales
+14. [**Resumen Final Actualizado**](#-resumen-final-del-proyecto-actualizado-enero-2025) - Estado actual
 
 ## 🎯 Objetivos Logrados
 
@@ -184,7 +183,6 @@ plt.ylabel("...", fontweight='bold', fontsize=10)
 ### 6.1 Archivos Principales
 - `I_1796473-Opc-A2_optimizado.Rmd` - Versión optimizada del ejercicio
 - `oficio_solpcielo_margenes_estrechos.tex` - Plantilla LaTeX optimizada para PDF
-- `oficio_pcielo_pandoc_optimizado.tex` - Plantilla LaTeX optimizada para DOCX/Pandoc
 - `SemilleroUnico_Oficio_v1.R` - Script actualizado
 
 ### 6.2 Archivos de Prueba
@@ -230,31 +228,7 @@ exams2pdf(rep('I_1796473-Opc-A2_optimizado.Rmd', 5),
 
 ---
 
-## 🔧 9. SOLUCIÓN PARA PANDOC/DOCX
-
-### 9.1 Problema Identificado
-Los archivos pandoc no se visualizaban con doble columna debido a que la plantilla `oficio_pcielo_pandoc.tex` no tenía las optimizaciones aplicadas.
-
-### 9.2 Solución Implementada
-- **Creación de plantilla optimizada**: `oficio_pcielo_pandoc_optimizado.tex`
-- **Márgenes estrechos**: Aplicados los mismos márgenes que la versión PDF (5mm izquierdo)
-- **Configuración de dos columnas**: Optimizada con `\begin{multicols}{2}`
-- **Tamaños de imagen**: Ajustados a `width=3.8, height=3.2`
-- **Tablas adaptativas**: Configuradas para ajustarse al ancho de columna
-
-### 9.3 Configuración Final para DOCX
-```r
-exams2pandoc(rep('archivo.Rmd', 3),
-             template = 'oficio_pcielo_pandoc_optimizado.tex',
-             width = 3.8, height = 3.2,
-             type = 'docx')
-```
-
----
-
----
-
-## 🎓 10. VERSIONES DUALES: DOCENTE vs ESTUDIANTE
+## 🎓 8. VERSIONES DUALES: DOCENTE vs ESTUDIANTE
 
 ### 10.1 Problema Identificado
 Necesidad de generar dos versiones del mismo examen:
@@ -397,10 +371,10 @@ source("SemilleroUnico_Oficio_v1.R")
 
 ### 💡 **Lecciones Aprendidas**
 1. **R-Exams + LaTeX + PDF = Combinación perfecta**
-2. **Pandoc + DOCX = Limitaciones significativas**
-3. **Plantillas separadas > Parámetros condicionales**
-4. **Concordancia automática > Texto ambiguo**
-5. **Nomenclatura clara > Nombres confusos**
+2. **Plantillas separadas > Parámetros condicionales**
+3. **Concordancia automática > Texto ambiguo**
+4. **Nomenclatura clara > Nombres confusos**
+5. **Etiquetas coherentes > Datos desalineados**
 
 ---
 
@@ -409,7 +383,7 @@ source("SemilleroUnico_Oficio_v1.R")
 
 ---
 
-## 🧹 11. LIMPIEZA FINAL DEL PROYECTO
+## 🧹 9. LIMPIEZA FINAL DEL PROYECTO
 
 ### 11.1 Objetivo
 Mantener solo los archivos estrictamente necesarios para el funcionamiento del sistema de exámenes con versiones duales.
@@ -439,7 +413,7 @@ Mantener solo los archivos estrictamente necesarios para el funcionamiento del s
 
 ---
 
-## 🔧 12. CORRECCIÓN DE NOMENCLATURA
+## 🔧 10. CORRECCIÓN DE NOMENCLATURA
 
 ### 12.1 Problema Identificado
 La carpeta de la versión DOCENTE se llamaba incorrectamente `salida_SIN_CLAVES_DOCENTE` cuando en realidad **SÍ contiene las claves**.
@@ -460,7 +434,7 @@ La carpeta de la versión DOCENTE se llamaba incorrectamente `salida_SIN_CLAVES_
 
 ---
 
-## 📝 13. SISTEMA DE CONCORDANCIA DE GÉNERO
+## 📝 11. SISTEMA DE CONCORDANCIA DE GÉNERO
 
 ### 13.1 Problema Identificado
 El texto generaba errores de concordancia como:
@@ -507,7 +481,7 @@ obtener_articulo <- function(animal) {
 
 ---
 
-## 🔧 14. OPTIMIZACIONES RECIENTES (2025)
+## 🔧 12. OPTIMIZACIONES RECIENTES (2025)
 
 ### 14.1 Reposicionamiento de Etiquetas en Gráficos de Barras Horizontales
 
@@ -643,9 +617,9 @@ generar_versiones_duales <- function(archivo_examen, numpreg, copias,
 
 ---
 
-## 🔧 15. CORRECCIONES MANUALES APLICADAS (Enero 2025)
+## 🔧 13. CORRECCIONES MANUALES APLICADAS (Enero 2025)
 
-### 15.1 Corrección de Etiquetas en Gráficos de Barras
+### 13.1 Corrección de Etiquetas en Gráficos de Barras
 
 #### Problema Identificado
 Las etiquetas de los ejes en los gráficos de barras no correspondían correctamente con los datos mostrados, creando confusión en la interpretación.
@@ -678,7 +652,7 @@ Las etiquetas de los ejes en los gráficos de barras no correspondían correctam
 - ✅ **Eliminación de confusión**: Los estudiantes pueden interpretar correctamente cada gráfico
 - ✅ **Lógica del ejercicio mejorada**: Facilita la identificación de la representación correcta
 
-### 15.2 Refinamiento de la Sección Solution
+### 13.2 Refinamiento de la Sección Solution
 
 #### Cambios en la Explicación
 **Análisis más detallado de cada representación:**
@@ -696,7 +670,7 @@ Las etiquetas de los ejes en los gráficos de barras no correspondían correctam
 - **Gráfico de torta**: Incorrecto. Los valores correspondientes a números absolutos de personas son correctos, pero las etiquetas de la gráfica alternan equivocadamente entre "número de personas" y "% de personas"
 ```
 
-### 15.3 Impacto de las Correcciones
+### 13.3 Impacto de las Correcciones
 
 #### Mejoras en la Experiencia del Usuario
 1. **Claridad interpretativa**: Cada gráfico tiene etiquetas que corresponden exactamente con sus datos
