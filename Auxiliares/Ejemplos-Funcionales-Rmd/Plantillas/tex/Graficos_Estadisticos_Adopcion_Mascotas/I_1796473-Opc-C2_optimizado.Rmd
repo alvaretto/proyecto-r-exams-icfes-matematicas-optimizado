@@ -146,9 +146,7 @@ image01 <- '
 \\end{tikzpicture}
 '
 
-demas <- sample
-
-image01 <-sprintf(image01, selmascota[1], porxentaje1, selmascota[2], porxentaje2, selmascota[3], porxentaje3)
+image01 <-sprintf(image01, selmascota[1], porxentaje1, selmascota[3], porxentaje2, selmascota[2], porxentaje3)
 ```
 
 
@@ -214,7 +212,7 @@ ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
 plt.xticks(fontweight='bold', fontsize=9)
 plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold', fontsize=9)
 plt.xlabel("Animales", fontweight='bold', fontsize=10)
-plt.ylabel("% personas", fontweight='bold', fontsize=10)
+plt.ylabel("Número de personas", fontweight='bold', fontsize=10)
 
 # AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y
 plt.tight_layout()
@@ -343,13 +341,14 @@ La gráfica que representa correctamente la información recolectada en la encue
 
 **Análisis de las representaciones:**
 
-- **Tabla**: Incorrecto. Aunque muestra los porcentajes correctos, la pregunta solicita específicamente una representación gráfica de la información.
+• **Tabla**: Incorrecto. Aunque presenta los porcentajes calculados correctamente, una tabla de datos no constituye una representación gráfica visual que permita interpretar y comparar eficientemente las preferencias de adopción. La pregunta solicita específicamente una "representación" que facilite el análisis visual de la información.
 
-- **Gráfico de barras verticales**: Incorrecto. Aunque el formato es válido, los valores mostrados corresponden a porcentajes en lugar de las cantidades absolutas de personas que se requieren para una representación completa.
+• **Gráfico de barras verticales**: Incorrecto. Presenta una inconsistencia crítica entre la etiqueta del eje Y que indica "% personas" y los valores numéricos mostrados en las barras, que corresponden a porcentajes sin el símbolo %. Esta discrepancia entre la escala declarada y los datos representados genera confusión en la interpretación de los resultados.
 
-- **Gráfico de barras horizontales**: **Correcto**. Este gráfico muestra correctamente las cantidades absolutas de personas interesadas en adoptar cada animal, proporcionando una representación visual clara y precisa de los datos recolectados en la encuesta.
+• **Gráfico de barras horizontales**: Correcto. Esta representación muestra de manera precisa y coherente las cantidades absolutas de personas interesadas en cada tipo de mascota. Los valores numéricos están claramente etiquetados sobre cada barra, el eje X indica correctamente "Cantidad de personas interesadas en adoptar", y permite una comparación visual directa entre las preferencias, facilitando la toma de decisiones basada en datos cuantitativos.
 
-- **Gráfico de torta**: Incorrecto. Aunque muestra las cantidades absolutas, el formato circular no es la representación más adecuada para este tipo de datos comparativos.
+• **Gráfico circular**: Incorrecto. Aunque los valores numéricos son correctos, presenta dos errores fundamentales: (1) inconsistencia en las etiquetas que mezclan "Personas interesadas" con "% de Personas interesadas", creando confusión conceptual entre valores absolutos y relativos; (2) el formato circular, aunque visualmente atractivo, dificulta la comparación precisa de magnitudes similares, especialmente cuando las diferencias entre categorías son pequeñas.
+
 
 **Gráfico correcto:**
 
@@ -451,6 +450,16 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+
+% Metadatos ICFES (como comentarios para referencia)
+% competencia: interpretacion_representacion
+% nivel_dificultad: 2
+% contenido:
+%   categoria: estadistica
+%   tipo: generico
+% contexto: familiar
+% componente: aleatorio
+% eje_axial: eje3
 
 exname: I_1796473/2023-Cuadernillo-Matematicas-11-2(single-choice)
 extype: schoice
