@@ -5,9 +5,9 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "I_1796473-Opc-C2_optimizado_decimales_corregidos_20250726_142234.Rmd"
+archivo_examen <- "I_1796473-Opc-C2_optimizado.Rmd"
 copias <- 1
-numpreg <- 1
+numpreg <- 5
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
