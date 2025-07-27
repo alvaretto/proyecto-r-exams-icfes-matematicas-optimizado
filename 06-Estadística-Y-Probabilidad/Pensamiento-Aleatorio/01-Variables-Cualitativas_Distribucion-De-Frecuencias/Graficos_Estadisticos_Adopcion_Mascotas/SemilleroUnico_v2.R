@@ -1,8 +1,11 @@
 # Carga de la librería r-exams
 library(exams)
 
+# Configurar modo generación de exámenes para evitar pruebas test_that
+.exams_generation_mode <- TRUE
+
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "juegos_deportivos_aleatorio_interpretacion_representacion_n2_opcA_v1.Rmd"
+archivo_examen <- "I_1796473-Opc-A2_optimizado.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
@@ -53,7 +56,8 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 exams2html(rep(archivo_examen, numpreg),
            svg = FALSE,
            verbose = TRUE,
-           template = "plain")
+           template = "plain",
+           name = paste0(nombre_sin_extension, "_semillero"))
 
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF

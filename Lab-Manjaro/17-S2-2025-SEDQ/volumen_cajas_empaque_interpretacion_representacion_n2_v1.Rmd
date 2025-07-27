@@ -1,4 +1,5 @@
 ---
+encoding: UTF-8
 output:
   pdf_document:
     latex_engine: xelatex
@@ -29,7 +30,7 @@ icfes:
   eje_axial: eje2
   componente: geometrico_metrico
 ---
-
+encoding: UTF-8
 ```{r inicio, include=FALSE}
 # FASE 1: CONFIGURACIÓN TIKZ PRIORITARIA
 # Configuración para todos los formatos de salida
@@ -355,6 +356,7 @@ include_tikz(tikz_final,
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r opciones_respuesta$A$valor` cm³ `r opciones_respuesta$A$justificacion`
 - `r opciones_respuesta$B$valor` cm³ `r opciones_respuesta$B$justificacion`
 - `r opciones_respuesta$C$valor` cm³ `r opciones_respuesta$C$justificacion`
@@ -384,6 +386,7 @@ Por lo tanto, `r relacion_volumen`. La respuesta correcta es **`r ifelse(volumen
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r ifelse(respuesta_correcta == "A", "Verdadero", "Falso")`: `r opciones_respuesta$A$justificacion`
 - `r ifelse(respuesta_correcta == "B", "Verdadero", "Falso")`: `r opciones_respuesta$B$justificacion`
 - `r ifelse(respuesta_correcta == "C", "Verdadero", "Falso")`: `r opciones_respuesta$C$justificacion`

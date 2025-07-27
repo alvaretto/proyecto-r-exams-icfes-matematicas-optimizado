@@ -1,4 +1,5 @@
 ---
+encoding: UTF-8
 output:
   html_document: default
   word_document: default
@@ -16,6 +17,7 @@ icfes:
   eje_axial: eje1
   componente: numerico_variacional
 ---
+encoding: UTF-8
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -60,6 +62,7 @@ knitr::knit_engines$set(python = function(options) {
 set.seed(sample(1:100000, 1))
 
 # --- Aleatorización de Parámetros ---
+encoding: UTF-8
 coeficientes_posibles <- c(10, 20, 25, 30, 40, 50, 60, 75, 80, 100, 120, 150, 200)
 coef_inicial <- sample(coeficientes_posibles, 1)
 
@@ -90,18 +93,22 @@ adjetivos_especie <- c("cierta", "una determinada", "una particular", "una nueva
 adjetivo_especie <- sample(adjetivos_especie, 1)
 
 # --- Aleatorización del tiempo para la pregunta ---
+encoding: UTF-8
 tiempo_evaluacion_posibles <- c(0.5, 1, 1.5, 2, 2.5, 3) # Valores de tiempo a evaluar
 tiempo_evaluacion <- sample(tiempo_evaluacion_posibles, 1)
 
 # --- Formulación de la función ---
+encoding: UTF-8
 funcion_texto <- glue::glue("{simbolo_cantidad}({simbolo_tiempo}) = {coef_inicial} \\cdot ({base_exponencial})^{{{factor_tiempo} \\cdot {simbolo_tiempo}}}")
 funcion_display <- glue::glue("{simbolo_cantidad}({simbolo_tiempo}) = {coef_inicial}({base_exponencial})^{{{factor_tiempo}{simbolo_tiempo}}}")
 
 # --- Cálculo de la Solución ---
+encoding: UTF-8
 respuesta_correcta <- coef_inicial * (base_exponencial)^(factor_tiempo * tiempo_evaluacion)
 respuesta_correcta <- round(respuesta_correcta) # Redondear a entero
 
 # --- Generación de Opciones de Respuesta ---
+encoding: UTF-8
 opciones <- numeric(4)
 opciones[1] <- respuesta_correcta
 
@@ -203,6 +210,7 @@ De acuerdo con la información anterior, la cantidad de `r organismo_plural` que
 
 Answerlist
 ----------
+encoding: UTF-8
 ```{r answerlist, echo=FALSE, results='asis'}
 cat(paste("- ", opciones_ordenadas, " ", organismo_plural, ".", sep = "", collapse = "\n"))
 ```
@@ -232,6 +240,7 @@ Así, la cantidad de `r organismo_plural` que había al(los) `r tiempo_evaluacio
 
 Answerlist
 ----------
+encoding: UTF-8
 ```{r solutionlist, echo=FALSE, results='asis'}
 cat(paste("- ", ifelse(solucion_logica, "Verdadero", "Falso"), sep = "", collapse = "\n"))
 ```

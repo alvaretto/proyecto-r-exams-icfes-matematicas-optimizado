@@ -1,4 +1,5 @@
 ---
+encoding: UTF-8
 output:
   html_document: default
   word_document: default
@@ -18,7 +19,7 @@ icfes:
   eje_axial: eje4
   componente: aleatorio
 ---
-
+encoding: UTF-8
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida - Formato español
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -341,7 +342,7 @@ for i in range(len(años)):
 encabezados = ['Año', 'Países', 'Deportes', 'Total de Atletas']
 
 # Configurar la figura
-fig, ax = plt.subplots(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(10,6))
 ax.axis('tight')
 ax.axis('off')
 
@@ -430,6 +431,7 @@ Del total de atletas participantes en `r año_calculo$año`, el `r porcentaje`% 
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r opciones[1]`
 - `r opciones[2]`
 - `r opciones[3]`
@@ -482,6 +484,7 @@ El procedimiento sugerido (multiplicar `r porcentaje_decimal` por el total de at
 
 Answerlist
 ----------
+encoding: UTF-8
 ```{r generar_answerlist, echo=FALSE, results='asis'}
 # Generar el answerlist basado en la posición correcta
 solucion <- rep("Falso", 4)

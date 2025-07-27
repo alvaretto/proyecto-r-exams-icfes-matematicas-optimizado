@@ -1,9 +1,11 @@
 ---
+encoding: UTF-8
 output:
   html_document: default
   word_document: default
   pdf_document: default
 ---
+encoding: UTF-8
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -134,7 +136,7 @@ opciones_barajadas <- opciones[indice_barajado]
 nuevo_indice_correcto <- which(indice_barajado == indice_correcto)
 
 # Vector de solución para r-exams (formato binario para schoice)
-solucion <- rep(0, 4)
+solucion <- rep(0,4)
 solucion[nuevo_indice_correcto] <- 1
 
 # Para personalizar el problema
@@ -193,7 +195,7 @@ generar_esquema_tikz <- function(ac_valor, radio_o, radio_p, bp_valor, pc_valor,
                                  color_lineas, color_puntos, color_texto, estilo_linea, x_valor) {
   
   # Calcular las coordenadas de los puntos
-  punto_a <- c(0, 0)
+  punto_a <- c(0,0)
   punto_c <- c(ac_valor, 0)
   punto_o <- c(ac_valor/2, 0)
   punto_b <- c(punto_o[[1]] + radio_o, 0)
@@ -248,7 +250,7 @@ options(OutDec = ".")  # Asegurar punto decimal en este chunk
 generar_diagrama_inicial_tikz <- function(ac_valor, bp_valor, radio_o, radio_p, color_lineas, color_puntos, color_texto, estilo_linea) {
   
   # Calcular las coordenadas de los puntos
-  punto_a <- c(0, 0)
+  punto_a <- c(0,0)
   punto_c <- c(ac_valor, 0)
   punto_o <- c(ac_valor/2, 0)  # O está en el medio de AC
   punto_b <- c(punto_o[[1]] + radio_o, 0)
@@ -292,7 +294,7 @@ matplotlib.rcParams['font.size'] = 12
 matplotlib.rcParams['text.usetex'] = False  # Desactivar LaTeX
 
 # Crear una figura
-fig, ax = plt.subplots(figsize=(6, 3))
+fig, ax = plt.subplots(figsize=(6,3))
 ax.axis('off')
 
 # Datos del problema
@@ -353,6 +355,7 @@ include_tikz(esquema_tikz,
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r opciones_barajadas[1]`
 - `r opciones_barajadas[2]`
 - `r opciones_barajadas[3]`
@@ -383,6 +386,7 @@ La respuesta correcta es `r radio_o_redondeado` `r if(mostrar_unidades) unidad_l
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r ifelse(solucion[1] == 1, "Verdadero", "Falso")`
 - `r ifelse(solucion[2] == 1, "Verdadero", "Falso")`
 - `r ifelse(solucion[3] == 1, "Verdadero", "Falso")`

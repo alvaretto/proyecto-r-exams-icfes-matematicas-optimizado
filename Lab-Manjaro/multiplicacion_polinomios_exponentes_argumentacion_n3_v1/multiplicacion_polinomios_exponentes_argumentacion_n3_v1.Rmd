@@ -1,4 +1,5 @@
 ---
+encoding: UTF-8
 output:
   pdf_document:
     keep_tex: true
@@ -16,7 +17,7 @@ icfes:
   eje_axial: eje2                   # Términos Semejantes, Factorización Básica
   componente: numerico_variacional  # Numérico-variacional
 ---
-
+encoding: UTF-8
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -185,7 +186,7 @@ generar_datos <- function() {
   posicion_correcta <- which(indices_mezclados == 1)
   
   # Crear vector de solución
-  solucion <- rep(0, 4)
+  solucion <- rep(0,4)
   solucion[posicion_correcta] <- 1
   
   # Seleccionar elementos aleatorios
@@ -255,6 +256,7 @@ Al multiplicar los polinomios $P_1(x) = `r polinomio1`$ y $P_2(x) = `r polinomio
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r opciones_mezcladas[1]`
 - `r opciones_mezcladas[2]`
 - `r opciones_mezcladas[3]`
@@ -320,6 +322,7 @@ En álgebra de polinomios, el grado del producto de dos polinomios siempre es la
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r if(solucion[1] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
 - `r if(solucion[2] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
 - `r if(solucion[3] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
