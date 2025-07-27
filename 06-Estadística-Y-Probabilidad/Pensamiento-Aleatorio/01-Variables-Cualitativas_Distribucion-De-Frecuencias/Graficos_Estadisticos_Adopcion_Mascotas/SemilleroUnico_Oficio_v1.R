@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-A.Rmd"
+archivo_examen <- "Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-C2v2.Rmd"
 copias <- 1
 numpreg <- 5
 semilla <- sample(100:1e8, 1)
