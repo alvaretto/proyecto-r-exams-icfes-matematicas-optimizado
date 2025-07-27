@@ -1,0 +1,222 @@
+{
+  "name": "🚨 Monitor de Errores de Compilación ICFES",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "schedule-monitor",
+      "name": "⏰ Cada 15 Minutos",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd '/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams' && python3 -c \"\nimport os\nimport glob\nimport json\nimport subprocess\nfrom datetime import datetime, timedelta\n\n# Configuración\nbase_path = 'Lab-Manjaro'\nmax_files_to_test = 5\ntime_limit = 30  # segundos por archivo\n\n# Buscar archivos .Rmd recientes (últimas 24 horas)\nrecent_files = []\ntime_threshold = datetime.now() - timedelta(hours=24)\n\nfor root, dirs, files in os.walk(base_path):\n    for file in files:\n        if file.endswith('.Rmd'):\n            file_path = os.path.join(root, file)\n            try:\n                mtime = datetime.fromtimestamp(os.path.getmtime(file_path))\n                if mtime > time_threshold:\n                    recent_files.append(file_path)\n            except:\n                continue\n\n# Limitar archivos a testear\nfiles_to_test = recent_files[:max_files_to_test]\n\nresults = {\n    'timestamp': datetime.now().isoformat(),\n    'files_tested': len(files_to_test),\n    'files_with_errors': 0,\n    'files_successful': 0,\n    'errors_found': [],\n    'status': 'monitoring'\n}\n\n# Testear cada archivo\nfor file_path in files_to_test:\n    try:\n        # Comando de prueba rápida\n        cmd = f'timeout {time_limit}s Rscript -e \\\"library(exams); exams2html(\\'{file_path}\\', n=1, dir=\\'test_monitor\\')\\\"'\n        \n        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=time_limit+5)\n        \n        if result.returncode != 0:\n            results['files_with_errors'] += 1\n            error_info = {\n                'file': os.path.basename(file_path),\n                'path': file_path,\n                'error': result.stderr[:200] if result.stderr else 'Error desconocido',\n                'return_code': result.returncode\n            }\n            results['errors_found'].append(error_info)\n        else:\n            results['files_successful'] += 1\n            \n    except subprocess.TimeoutExpired:\n        results['files_with_errors'] += 1\n        error_info = {\n            'file': os.path.basename(file_path),\n            'path': file_path,\n            'error': f'Timeout después de {time_limit} segundos',\n            'return_code': -1\n        }\n        results['errors_found'].append(error_info)\n    except Exception as e:\n        results['files_with_errors'] += 1\n        error_info = {\n            'file': os.path.basename(file_path),\n            'path': file_path,\n            'error': str(e)[:200],\n            'return_code': -2\n        }\n        results['errors_found'].append(error_info)\n\n# Determinar estado general\nif results['files_with_errors'] == 0:\n    results['status'] = 'healthy'\nelif results['files_with_errors'] < results['files_tested'] / 2:\n    results['status'] = 'warning'\nelse:\n    results['status'] = 'critical'\n\nprint(json.dumps(results, indent=2))\n\""
+      },
+      "id": "test-compilation",
+      "name": "🧪 Testear Compilación",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar resultados del monitoreo\nconst output = $input.first().json.stdout;\nlet results;\n\ntry {\n  results = JSON.parse(output);\n} catch (e) {\n  results = {\n    timestamp: new Date().toISOString(),\n    files_tested: 0,\n    files_with_errors: 1,\n    files_successful: 0,\n    errors_found: [{ error: 'Error parsing monitor output', details: output }],\n    status: 'critical'\n  };\n}\n\n// Calcular métricas adicionales\nconst error_rate = results.files_tested > 0 ? \n  (results.files_with_errors / results.files_tested * 100).toFixed(1) : 0;\n\nconst health_score = results.files_tested > 0 ? \n  (results.files_successful / results.files_tested * 100).toFixed(1) : 0;\n\nreturn {\n  json: {\n    ...results,\n    error_rate: parseFloat(error_rate),\n    health_score: parseFloat(health_score),\n    needs_attention: results.files_with_errors > 0,\n    severity: results.status === 'critical' ? 'high' : \n              results.status === 'warning' ? 'medium' : 'low'\n  }\n};"
+      },
+      "id": "process-results",
+      "name": "📊 Procesar Resultados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.files_with_errors }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-errors",
+      "name": "❓ ¿Errores Detectados?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log de errores críticos detectados\nconst data = $input.first().json;\n\nconsole.log('🚨 ERRORES DE COMPILACIÓN DETECTADOS:');\nconsole.log(`📊 Archivos testeados: ${data.files_tested}`);\nconsole.log(`❌ Archivos con errores: ${data.files_with_errors}`);\nconsole.log(`✅ Archivos exitosos: ${data.files_successful}`);\nconsole.log(`📈 Tasa de error: ${data.error_rate}%`);\nconsole.log(`🏥 Puntuación de salud: ${data.health_score}%`);\nconsole.log(`⚠️  Severidad: ${data.severity}`);\n\nif (data.errors_found && data.errors_found.length > 0) {\n  console.log('\\n📋 ERRORES ESPECÍFICOS:');\n  data.errors_found.forEach((error, index) => {\n    console.log(`${index + 1}. ${error.file}:`);\n    console.log(`   Error: ${error.error}`);\n    console.log(`   Ruta: ${error.path}`);\n  });\n}\n\nreturn {\n  json: {\n    alert_type: 'compilation_errors',\n    message: `🚨 ${data.files_with_errors} archivos con errores de compilación`,\n    summary: `${data.error_rate}% de tasa de error (${data.files_with_errors}/${data.files_tested})`,\n    severity: data.severity,\n    requires_action: true,\n    timestamp: data.timestamp,\n    details: data.errors_found\n  }\n};"
+      },
+      "id": "alert-errors",
+      "name": "🚨 Alertar Errores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log de sistema saludable\nconst data = $input.first().json;\n\nconsole.log('✅ SISTEMA SALUDABLE:');\nconsole.log(`📊 Archivos testeados: ${data.files_tested}`);\nconsole.log(`✅ Todos los archivos compilaron exitosamente`);\nconsole.log(`🏥 Puntuación de salud: ${data.health_score}%`);\nconsole.log(`⏰ Timestamp: ${data.timestamp}`);\n\nreturn {\n  json: {\n    alert_type: 'system_healthy',\n    message: '✅ Sistema funcionando correctamente',\n    summary: `${data.files_tested} archivos testeados sin errores`,\n    severity: 'low',\n    requires_action: false,\n    timestamp: data.timestamp,\n    health_score: data.health_score\n  }\n};"
+      },
+      "id": "log-healthy",
+      "name": "✅ Log Sistema OK",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.severity }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-critical",
+      "name": "❓ ¿Crítico?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "command": "cd '/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams' && python3 core/auto_corrector_icfes.py --scan-recent"
+      },
+      "id": "auto-fix",
+      "name": "🔧 Auto-corrección",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1560, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log de alerta crítica sin auto-corrección\nconst data = $input.first().json;\n\nconsole.log('🔥 ALERTA CRÍTICA - REQUIERE ATENCIÓN MANUAL:');\nconsole.log(`Mensaje: ${data.message}`);\nconsole.log(`Resumen: ${data.summary}`);\nconsole.log(`Severidad: ${data.severity}`);\nconsole.log('📧 Se recomienda revisión manual inmediata');\n\nreturn {\n  json: {\n    ...data,\n    action_taken: 'manual_review_required',\n    escalated: true\n  }\n};"
+      },
+      "id": "escalate-critical",
+      "name": "🔥 Escalar Crítico",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "⏰ Cada 15 Minutos": {
+      "main": [
+        [
+          {
+            "node": "🧪 Testear Compilación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧪 Testear Compilación": {
+      "main": [
+        [
+          {
+            "node": "📊 Procesar Resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Procesar Resultados": {
+      "main": [
+        [
+          {
+            "node": "❓ ¿Errores Detectados?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "❓ ¿Errores Detectados?": {
+      "main": [
+        [
+          {
+            "node": "🚨 Alertar Errores",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "✅ Log Sistema OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚨 Alertar Errores": {
+      "main": [
+        [
+          {
+            "node": "❓ ¿Crítico?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "❓ ¿Crítico?": {
+      "main": [
+        [
+          {
+            "node": "🔧 Auto-corrección",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🔥 Escalar Crítico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

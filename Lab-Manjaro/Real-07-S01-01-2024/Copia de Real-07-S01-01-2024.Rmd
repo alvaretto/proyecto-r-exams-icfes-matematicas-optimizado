@@ -1,9 +1,11 @@
 ---
+encoding: UTF-8
 output:
   html_document: default
   pdf_document: default
   word_document: default
 ---
+encoding: UTF-8
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -64,7 +66,7 @@ verbo_calculo <- sample(verbos_calculo, 1)
 # Se aleatoriza a pero manteniendo relación matemática correcta para números enteros
 lista_a <- c(3, 5, 6, 8, 9, 12, 15)
 lista_parejas <- list(
-  c(3, 4), c(5, 12), c(6, 8), c(8, 15), c(9, 12), c(12, 16), c(15, 20)
+  c(3,4), c(5,12), c(6,8), c(8,15), c(9,12), c(12,16), c(15,20)
 )
 indice <- sample(1:length(lista_a), 1)
 a <- lista_parejas[[indice]][1]
@@ -155,10 +157,10 @@ import matplotlib
 
 # Configuración general
 matplotlib.rcParams['font.size'] = 10
-plt.figure(figsize=(4, 4))
+plt.figure(figsize=(4,4))
 
 # Crear el cuadrado (marco) externo
-square = patches.Rectangle((0, 0), 10, 10, linewidth=1, edgecolor='black', facecolor='none')
+square = patches.Rectangle((0,0), 10, 10, linewidth=1, edgecolor='black', facecolor='none')
 plt.gca().add_patch(square)
 
 # Crear el rombo sombreado rotado dentro del cuadrado
@@ -201,10 +203,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Configuración general
-plt.figure(figsize=(6, 2))
+plt.figure(figsize=(6,2))
 
 # Crear el recuadro del diagrama
-# recuadro = patches.Rectangle((0, 0), 10, 4, linewidth=1, edgecolor='black', facecolor='none')
+# recuadro = patches.Rectangle((0,0), 10, 4, linewidth=1, edgecolor='black', facecolor='none')
 # plt.gca().add_patch(recuadro)
 
 # Línea divisoria entre pasos
@@ -252,6 +254,7 @@ Teniendo en cuenta la información anterior, ¿cuál es el área de la `r termin
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r opciones[1]` cm²
 - `r opciones[2]` cm²  
 - `r opciones[3]` cm²
@@ -284,6 +287,7 @@ Por lo tanto, el área de la `r termino_region` es `r area_correcta` cm².
 
 Answerlist
 ----------
+encoding: UTF-8
 - `r if(solucion[1] == 1) "Verdadero" else "Falso"`
 - `r if(solucion[2] == 1) "Verdadero" else "Falso"`
 - `r if(solucion[3] == 1) "Verdadero" else "Falso"`

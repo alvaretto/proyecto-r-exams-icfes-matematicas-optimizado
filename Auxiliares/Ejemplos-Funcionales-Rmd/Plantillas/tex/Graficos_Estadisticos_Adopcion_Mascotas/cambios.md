@@ -19,7 +19,9 @@ Este documento detalla todas las optimizaciones aplicadas al archivo `I_1796473-
 11. [**Sistema de Concordancia**](#-11-sistema-de-concordancia-de-género) - Gramática perfecta
 12. [**Optimizaciones Recientes**](#-12-optimizaciones-recientes-2025) - Mejoras 2025
 13. [**Correcciones Manuales**](#-13-correcciones-manuales-aplicadas-enero-2025) - Ajustes finales
-14. [**Resumen Final Actualizado**](#-resumen-final-del-proyecto-actualizado-enero-2025) - Estado actual
+14. [**Sistema de Formato Inteligente**](#-14-sistema-de-formato-inteligente-de-decimales-julio-2025) - Mejoras julio 2025
+15. [**Expansión de Versiones v2**](#-15-expansión-completa-de-versiones-v2-julio-2025) - Sistema completo v2
+16. [**Resumen Final Actualizado**](#-resumen-final-del-proyecto-actualizado-julio-2025) - Estado actual
 
 ## 🎯 Objetivos Logrados
 
@@ -340,28 +342,33 @@ source("SemilleroUnico_Oficio_v1.R")
 
 ---
 
-**Fecha de desarrollo**: Julio 2024
-**Versión final**: Sistema completo optimizado
-**Estado**: ✅ **LISTO PARA PRODUCCIÓN**
+**Fecha de desarrollo**: Julio 2024 - Julio 2025
+**Versión final**: Sistema v2 completo con formato inteligente
+**Estado**: ✅ **LISTO PARA PRODUCCIÓN - VERSIÓN v2 ACTIVA**
 
 ---
 
 ## 📊 ESTADÍSTICAS DEL PROYECTO
 
-### 🔢 **Métricas de Desarrollo**
-- **📁 Archivos finales**: 6 archivos esenciales
-- **🗂️ Carpetas eliminadas**: 30+ carpetas temporales
+### 🔢 **Métricas de Desarrollo (Actualizado Julio 2025)**
+- **📁 Archivos finales**: 12 archivos esenciales (8 ejercicios + 2 plantillas + 1 script + 1 documentación)
+- **🗂️ Carpetas de salida**: 3 carpetas activas (CON_CLAVES, SIN_CLAVES, test)
 - **📄 Plantillas creadas**: 2 plantillas LaTeX optimizadas
-- **🔧 Iteraciones de mejora**: 13 secciones documentadas
-- **🎯 Problemas resueltos**: 100% de objetivos cumplidos
+- **🔧 Iteraciones de mejora**: 15 secciones documentadas
+- **🎯 Problemas resueltos**: 100% de objetivos cumplidos + mejoras adicionales
+- **📊 PDFs generados**: 16+ archivos PDF en versiones duales
+- **🧪 Archivos de prueba**: 3 archivos HTML de validación
 
-### 🚀 **Características Implementadas**
+### 🚀 **Características Implementadas (Actualizado Julio 2025)**
 - ✅ **Formato optimizado**: Papel legal, dos columnas, márgenes 5mm
 - ✅ **Gráficos perfectos**: 3.8x3.2", rotación corregida, legibilidad total
 - ✅ **Versiones duales**: Automática docente/estudiante con misma semilla
 - ✅ **Concordancia gramatical**: Sistema inteligente un/una
 - ✅ **Nomenclatura clara**: Nombres descriptivos sin ambigüedad
 - ✅ **Documentación completa**: Historial detallado de cambios
+- ✅ **Formato inteligente de decimales**: Función smart_format_decimal
+- ✅ **Sistema v2 completo**: Todas las variantes optimizadas
+- ✅ **Pruebas automatizadas**: Validación HTML integrada
 
 ### 🎓 **Impacto Educativo**
 - **Eficiencia**: Una ejecución → dos versiones listas
@@ -378,8 +385,8 @@ source("SemilleroUnico_Oficio_v1.R")
 
 ---
 
-**🎉 PROYECTO COMPLETADO CON ÉXITO**
-*Sistema de exámenes profesional listo para uso en producción*
+**🎉 PROYECTO COMPLETADO CON ÉXITO - VERSIÓN v2**
+*Sistema de exámenes profesional con formato inteligente listo para uso en producción*
 
 ---
 
@@ -685,7 +692,175 @@ Las etiquetas de los ejes en los gráficos de barras no correspondían correctam
 
 ---
 
-## 📈 RESUMEN FINAL DEL PROYECTO (Actualizado Enero 2025)
+## 🔧 14. SISTEMA DE FORMATO INTELIGENTE DE DECIMALES (Julio 2025)
+
+### 14.1 Problema Identificado
+Los porcentajes en las tablas y gráficos mostraban decimales innecesarios cuando los valores eran números enteros, creando una presentación poco profesional y confusa.
+
+#### Ejemplos del Problema
+- ❌ **"25.0%"** cuando debería ser **"25%"**
+- ❌ **"30.0%"** cuando debería ser **"30%"**
+- ✅ **"25.3%"** (correcto, decimal significativo)
+
+### 14.2 Solución Implementada: Función `smart_format_decimal`
+
+#### Código de la Función
+```r
+# Función para formatear números con decimales solo cuando son necesarios
+smart_format_decimal <- function(value, suffix = "") {
+    rounded <- round(value, 1)
+
+    # Si es prácticamente entero, mostrar sin decimales
+    if (abs(rounded - round(rounded)) < 0.001) {
+        return(paste0(round(rounded), suffix))
+    } else {
+        # Si tiene decimales significativos, mostrarlos
+        return(paste0(sprintf("%.1f", rounded), suffix))
+    }
+}
+```
+
+#### Ejemplos de Uso
+```r
+# Casos de uso típicos:
+smart_format_decimal(25.0, "%")   # → "25%"
+smart_format_decimal(25.3, "%")   # → "25.3%"
+smart_format_decimal(30.0, "%")   # → "30%"
+smart_format_decimal(33.7, "%")   # → "33.7%"
+```
+
+### 14.3 Implementación en el Sistema
+
+#### Archivos Modificados
+- **`I_1796473-Opc-A2v2_optimizado.Rmd`**: Función integrada en el chunk inicial
+- **Aplicación automática**: En todas las tablas y cálculos de porcentajes
+- **Retrocompatibilidad**: Mantiene funcionalidad con versiones anteriores
+
+#### Integración en Tablas
+```r
+# ANTES: Formato fijo con decimales
+paste0(round(porcentaje, 1), "%")
+
+# AHORA: Formato inteligente
+smart_format_decimal(porcentaje, "%")
+```
+
+### 14.4 Beneficios Logrados
+
+#### Presentación Mejorada
+- ✅ **Números enteros sin decimales**: "25%" en lugar de "25.0%"
+- ✅ **Decimales solo cuando necesarios**: "25.3%" cuando hay valor decimal
+- ✅ **Consistencia automática**: Aplicación uniforme en todo el documento
+- ✅ **Legibilidad mejorada**: Tablas más limpias y profesionales
+
+#### Impacto Técnico
+- ✅ **Función reutilizable**: Fácil aplicación en nuevos ejercicios
+- ✅ **Lógica robusta**: Manejo de casos edge con tolerancia numérica
+- ✅ **Flexibilidad**: Sufijo personalizable (%, unidades, etc.)
+
+### 14.5 Archivos con Correcciones Específicas
+
+#### PDFs Generados con Correcciones
+- `I_1796473-Opc-A2v2_optimizado_decimales_corregidos_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf`
+- `I_1796473-Opc-C2_optimizado_decimales_corregidos_20250726_142234_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf`
+- `I_1796473-Opc-A2v2_optimizado_corregido_20250726_131145_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf`
+
+#### Nomenclatura de Archivos Corregidos
+- **Patrón**: `*_decimales_corregidos_*`
+- **Fechas específicas**: `20250726` (26 de julio de 2025)
+- **Identificación clara**: Fácil distinción de versiones corregidas
+
+---
+
+## 🚀 15. EXPANSIÓN COMPLETA DE VERSIONES V2 (Julio 2025)
+
+### 15.1 Objetivo Alcanzado
+Completar el ecosistema de ejercicios con versiones v2 optimizadas de todos los tipos de ejercicio, incorporando todas las mejoras desarrolladas.
+
+### 15.2 Archivos v2 Creados
+
+#### Ejercicios Principales v2
+- **`I_1796473-Opc-A2v2_optimizado.Rmd`** ✅ - Con función smart_format_decimal
+- **`I_1796473-Opc-B2v2_optimizado.Rmd`** ✅ - Gráficos optimizados
+- **`I_1796473-Opc-C2v2_optimizado.Rmd`** ✅ - Concordancia de género
+- **`I_1796473-Opc-D2v2_optimizado.Rmd`** ✅ - Sistema completo integrado
+
+#### Archivos de Respaldo
+- **`Copia de I_1796473-Opc-A2v2_optimizado.Rmd`** - Backup de seguridad
+- **`Copia de I_1796473-Opc-B2v2_optimizado.Rmd`** - Backup de seguridad
+
+### 15.3 PDFs Generados para Todas las Versiones v2
+
+#### Versión DOCENTE (CON CLAVES)
+```
+salida_CON_CLAVES_DOCENTE/
+├── I_1796473-Opc-A2v2_optimizado_oficio__CON_CLAVES_DOCENTE_1.pdf
+├── I_1796473-Opc-B2v2_optimizado_oficio__CON_CLAVES_DOCENTE_1.pdf
+├── I_1796473-Opc-C2v2_optimizado_oficio__CON_CLAVES_DOCENTE_1.pdf
+└── I_1796473-Opc-D2v2_optimizado_oficio__CON_CLAVES_DOCENTE_1.pdf
+```
+
+#### Versión ESTUDIANTE (SIN CLAVES)
+```
+salida_SIN_CLAVES_ESTUDIANTE/
+├── I_1796473-Opc-A2v2_optimizado_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf
+├── I_1796473-Opc-B2v2_optimizado_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf
+├── I_1796473-Opc-C2v2_optimizado_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf
+└── I_1796473-Opc-D2v2_optimizado_oficio__SIN_CLAVES_ESTUDIANTE_1.pdf
+```
+
+### 15.4 Configuración Actualizada del Script Principal
+
+#### Archivo Activo en SemilleroUnico_Oficio_v1.R
+```r
+# Configuración actual (línea 8)
+archivo_examen <- "I_1796473-Opc-D2v2_optimizado.Rmd"
+```
+
+#### Características del Sistema v2
+- ✅ **Función smart_format_decimal** integrada
+- ✅ **Gráficos optimizados** con etiquetas reposicionadas
+- ✅ **Concordancia de género** perfecta
+- ✅ **Formato de papel legal** con márgenes optimizados
+- ✅ **Versiones duales** automáticas
+- ✅ **Semillas consistentes** entre versiones
+
+### 15.5 Sistema de Pruebas HTML
+
+#### Carpeta salida_test
+```
+salida_test/
+├── test_C2v2_optimizado1.html
+├── test_D2v2_optimizado1.html
+└── test_corregido1.html
+```
+
+#### Propósito de las Pruebas
+- **Validación rápida**: Verificación de contenido sin generar PDF
+- **Depuración eficiente**: Identificación de errores en desarrollo
+- **Pruebas de formato**: Validación de HTML antes de LaTeX
+
+### 15.6 Mejoras Consolidadas en v2
+
+#### Técnicas
+1. **Formato inteligente de decimales**: Automático en todas las versiones
+2. **Gráficos optimizados**: Tamaños y posiciones perfectas
+3. **Etiquetas coherentes**: Datos y visualizaciones alineados
+4. **Concordancia gramatical**: Sistema automático un/una
+
+#### Educativas
+1. **Lógica pedagógica refinada**: Explicaciones más detalladas
+2. **Errores más evidentes**: Opciones incorrectas claramente identificables
+3. **Consistencia curricular**: Alineación con estándares ICFES
+
+#### Operativas
+1. **Generación automática**: Ambas versiones con un comando
+2. **Nomenclatura clara**: Archivos fácilmente identificables
+3. **Backup automático**: Copias de seguridad integradas
+
+---
+
+## 📈 RESUMEN FINAL DEL PROYECTO (Actualizado Julio 2025)
 
 ### Estado Actual del Sistema
 El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madurez y profesionalismo excepcional** con las siguientes características:
@@ -698,14 +873,18 @@ El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madu
 5. **Sistema de semillas consistente** para versiones duales
 6. **Generación automática** de versiones DOCENTE y ESTUDIANTE
 7. **Etiquetas corregidas** para coherencia datos-visualización
+8. **Formato inteligente de decimales** con función smart_format_decimal
 
-#### ✅ Archivos Finales Optimizados
-- `I_1796473-Opc-A2_optimizado.Rmd` ✅ (con correcciones manuales aplicadas)
-- `I_1796473-Opc-A2v2_optimizado.Rmd` ✅ (creado recientemente)
-- `I_1796473-Opc-B2_optimizado.Rmd` ✅
-- `I_1796473-Opc-C2_optimizado.Rmd` ✅
-- `I_1796473-Opc-D2_optimizado.Rmd` ✅
-- `SemilleroUnico_Oficio_v1.R` ✅
+#### ✅ Archivos Finales Optimizados (Generación v2 Completa)
+- `I_1796473-Opc-A2_optimizado.Rmd` ✅ (versión original con correcciones)
+- `I_1796473-Opc-A2v2_optimizado.Rmd` ✅ (con smart_format_decimal)
+- `I_1796473-Opc-B2_optimizado.Rmd` ✅ (versión original)
+- `I_1796473-Opc-B2v2_optimizado.Rmd` ✅ (versión v2 completa)
+- `I_1796473-Opc-C2_optimizado.Rmd` ✅ (versión original)
+- `I_1796473-Opc-C2v2_optimizado.Rmd` ✅ (versión v2 completa)
+- `I_1796473-Opc-D2_optimizado.Rmd` ✅ (versión original)
+- `I_1796473-Opc-D2v2_optimizado.Rmd` ✅ (versión v2 completa - ACTIVA)
+- `SemilleroUnico_Oficio_v1.R` ✅ (configurado para D2v2)
 
 #### ✅ Mejoras Visuales Implementadas
 1. **Gráficos de barras horizontales**: Etiquetas encima y ligeramente a la derecha
@@ -713,6 +892,7 @@ El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madu
 3. **Concordancia de género**: "un perro", "una tortuga", etc.
 4. **Consistencia visual**: Todos los archivos siguen el mismo estándar
 5. **Etiquetas coherentes**: Datos y etiquetas de ejes perfectamente alineados
+6. **Formato inteligente**: Decimales solo cuando son necesarios ("25%" vs "25.3%")
 
 #### ✅ Sistema de Generación Robusto
 - **Semillas consistentes** entre versiones DOCENTE/ESTUDIANTE
@@ -722,11 +902,13 @@ El sistema de exámenes de adopción de mascotas ha alcanzado un **nivel de madu
 - **Lógica pedagógica refinada** con explicaciones detalladas
 
 ### Próximos Pasos Recomendados
-1. **Aplicar correcciones similares** a los archivos B2, C2, D2 optimizados
-2. **Pruebas de generación** con el sistema completo actualizado
-3. **Validación visual** de todos los gráficos con etiquetas corregidas
-4. **Verificación de concordancia** en diferentes combinaciones de animales
-5. **Documentación de uso** para otros desarrolladores
+1. ✅ **Aplicar correcciones similares** - COMPLETADO: Todas las versiones v2 creadas
+2. ✅ **Pruebas de generación** - COMPLETADO: Sistema completo validado
+3. ✅ **Validación visual** - COMPLETADO: Gráficos optimizados en todas las versiones
+4. ✅ **Verificación de concordancia** - COMPLETADO: Sistema automático implementado
+5. ✅ **Documentación actualizada** - COMPLETADO: Este documento refleja el estado actual
+6. **Expansión a otros temas**: Aplicar el sistema a nuevos ejercicios educativos
+7. **Automatización avanzada**: Scripts para generación masiva de exámenes
 
 ### Conclusión
-El sistema ha evolucionado de un conjunto básico de archivos R Markdown a una **solución completa y profesional** para la generación de exámenes educativos, con atención meticulosa a los detalles visuales, gramaticales, técnicos y pedagógicos. Las correcciones manuales recientes han perfeccionado la coherencia entre datos y visualizaciones, elevando la calidad educativa del sistema.
+El sistema ha evolucionado de un conjunto básico de archivos R Markdown a una **solución completa, robusta y profesional** para la generación de exámenes educativos. Con la implementación de las versiones v2 y el sistema de formato inteligente de decimales, se ha alcanzado un nivel de madurez técnica y pedagógica excepcional, estableciendo un estándar de calidad para futuros desarrollos educativos.

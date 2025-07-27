@@ -1,0 +1,181 @@
+{
+  "name": "🎨 Replicador TikZ Automático PNG→TikZ",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tikz-replicator",
+        "options": {}
+      },
+      "id": "webhook-tikz",
+      "name": "📥 Webhook PNG Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validar entrada de imagen PNG\nconst input = $input.first().json;\n\nif (!input.image_url && !input.image_base64) {\n  throw new Error('Se requiere image_url o image_base64');\n}\n\nif (!input.description) {\n  input.description = 'Figura matemática para convertir a TikZ';\n}\n\nreturn {\n  json: {\n    image_url: input.image_url || null,\n    image_base64: input.image_base64 || null,\n    description: input.description,\n    output_format: input.output_format || 'tikz',\n    complexity: input.complexity || 'medium',\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "validate-input",
+      "name": "✅ Validar Entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd '/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams' && python3 -c \"\nimport base64\nimport requests\nimport json\nimport sys\nfrom datetime import datetime\n\n# Datos de entrada\ndata = {{ $json }}\n\n# Simular conversión PNG a TikZ (placeholder para IA real)\ndef convert_png_to_tikz(image_data, description):\n    # Aquí iría la integración con Claude/GPT-4V para análisis de imagen\n    # Por ahora, generamos código TikZ básico basado en la descripción\n    \n    tikz_templates = {\n        'circulo': '''\\\\begin{tikzpicture}\n\\\\draw[thick] (0,0) circle (2cm);\n\\\\end{tikzpicture}''',\n        'triangulo': '''\\\\begin{tikzpicture}\n\\\\draw[thick] (0,0) -- (3,0) -- (1.5,2.6) -- cycle;\n\\\\end{tikzpicture}''',\n        'cuadrado': '''\\\\begin{tikzpicture}\n\\\\draw[thick] (0,0) rectangle (3,3);\n\\\\end{tikzpicture}''',\n        'grafico': '''\\\\begin{tikzpicture}\n\\\\begin{axis}[xlabel=x, ylabel=y]\n\\\\addplot[blue,thick] {x^2};\n\\\\end{axis}\n\\\\end{tikzpicture}'''\n    }\n    \n    # Detectar tipo basado en descripción\n    desc_lower = description.lower()\n    if 'circulo' in desc_lower or 'circle' in desc_lower:\n        return tikz_templates['circulo']\n    elif 'triangulo' in desc_lower or 'triangle' in desc_lower:\n        return tikz_templates['triangulo']\n    elif 'cuadrado' in desc_lower or 'square' in desc_lower:\n        return tikz_templates['cuadrado']\n    elif 'grafico' in desc_lower or 'graph' in desc_lower:\n        return tikz_templates['grafico']\n    else:\n        return tikz_templates['circulo']  # Default\n\n# Procesar conversión\ntikz_code = convert_png_to_tikz(data.get('image_base64'), data.get('description', ''))\n\n# Resultado\nresult = {\n    'tikz_code': tikz_code,\n    'description': data.get('description'),\n    'timestamp': datetime.now().isoformat(),\n    'status': 'success',\n    'complexity': data.get('complexity', 'medium')\n}\n\nprint(json.dumps(result))\n\""
+      },
+      "id": "convert-tikz",
+      "name": "🎨 Convertir a TikZ",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar resultado de conversión TikZ\nconst output = $input.first().json.stdout;\nlet resultado;\n\ntry {\n  resultado = JSON.parse(output);\n} catch (e) {\n  resultado = {\n    tikz_code: 'Error en conversión',\n    status: 'error',\n    error: output\n  };\n}\n\n// Generar nombre de archivo único\nconst timestamp = new Date().toISOString().replace(/[:.]/g, '-');\nconst filename = `tikz_generated_${timestamp}.tex`;\n\nreturn {\n  json: {\n    tikz_code: resultado.tikz_code,\n    filename: filename,\n    description: resultado.description,\n    status: resultado.status,\n    timestamp: resultado.timestamp,\n    complexity: resultado.complexity,\n    ready_for_use: resultado.status === 'success'\n  }\n};"
+      },
+      "id": "process-tikz",
+      "name": "📄 Procesar TikZ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition1",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-success",
+      "name": "❓ ¿Conversión Exitosa?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "command": "cd '/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/TikZ_Generated' && mkdir -p . && echo '{{ $json.tikz_code }}' > '{{ $json.filename }}' && echo 'Archivo TikZ guardado: {{ $json.filename }}'"
+      },
+      "id": "save-tikz",
+      "name": "💾 Guardar TikZ",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log de error en conversión\nconst data = $input.first().json;\n\nconsole.log('❌ ERROR EN CONVERSIÓN TIKZ:');\nconsole.log(`Descripción: ${data.description}`);\nconsole.log(`Error: ${data.error || 'Conversión fallida'}`);\nconsole.log(`Timestamp: ${data.timestamp}`);\n\nreturn {\n  json: {\n    mensaje: '❌ Error en conversión TikZ',\n    descripcion: data.description,\n    error: data.error || 'Conversión fallida',\n    timestamp: data.timestamp,\n    requiere_revision: true\n  }\n};"
+      },
+      "id": "log-error",
+      "name": "❌ Log Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Respuesta final exitosa\nconst data = $input.first().json;\nconst saveResult = $input.first().json;\n\nreturn {\n  json: {\n    success: true,\n    message: '🎨 Conversión TikZ completada exitosamente',\n    tikz_code: data.tikz_code,\n    filename: data.filename,\n    description: data.description,\n    complexity: data.complexity,\n    timestamp: data.timestamp,\n    file_saved: true,\n    location: `/Auxiliares/TikZ_Generated/${data.filename}`\n  }\n};"
+      },
+      "id": "success-response",
+      "name": "✅ Respuesta Exitosa",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 200]
+    }
+  ],
+  "connections": {
+    "📥 Webhook PNG Input": {
+      "main": [
+        [
+          {
+            "node": "✅ Validar Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✅ Validar Entrada": {
+      "main": [
+        [
+          {
+            "node": "🎨 Convertir a TikZ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🎨 Convertir a TikZ": {
+      "main": [
+        [
+          {
+            "node": "📄 Procesar TikZ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📄 Procesar TikZ": {
+      "main": [
+        [
+          {
+            "node": "❓ ¿Conversión Exitosa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "❓ ¿Conversión Exitosa?": {
+      "main": [
+        [
+          {
+            "node": "💾 Guardar TikZ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "❌ Log Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Guardar TikZ": {
+      "main": [
+        [
+          {
+            "node": "✅ Respuesta Exitosa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
