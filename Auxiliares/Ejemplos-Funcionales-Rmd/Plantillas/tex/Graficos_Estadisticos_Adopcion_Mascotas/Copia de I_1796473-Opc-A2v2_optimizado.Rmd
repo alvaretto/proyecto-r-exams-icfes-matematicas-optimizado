@@ -333,17 +333,17 @@ plt.show()
 Solution
 ========
 
-La representación que **NO muestra correctamente** la información recolectada en la encuesta es la **tabla** (opción A).
+La representación que **NO muestra correctamente** la información recolectada en la encuesta es la **tabla**.
 
 **Análisis de las representaciones:**
 
-- **Tabla (Opción A)**: **Incorrecta**. La tabla muestra números absolutos de personas en lugar de los porcentajes solicitados en la pregunta. La pregunta especifica porcentajes (30%, 40%, 30%) pero la tabla presenta valores como números de personas.
+- **Tabla**: **Incorrecta**. La tabla muestra números absolutos de personas en lugar de los porcentajes solicitados en la pregunta. La pregunta especifica porcentajes (30%, 40%, 30%) pero la tabla presenta valores como números de personas.
 
-- **Gráfico de barras verticales (Opción B)**: **Correcto**. Muestra correctamente los porcentajes de personas interesadas en adoptar cada animal según la información de la encuesta.
+- **Gráfico de barras verticales**: **Correcto**. Muestra correctamente los porcentajes de personas interesadas en adoptar cada animal según la información de la encuesta.
 
-- **Gráfico de barras horizontales (Opción C)**: **Correcto**. Aunque muestra números absolutos, estos corresponden correctamente a los porcentajes mencionados en la encuesta.
+- **Gráfico de barras horizontales**: **Correcto**. Aunque muestra números absolutos, estos corresponden correctamente a los porcentajes mencionados en la encuesta.
 
-- **Gráfico de torta (Opción D)**: **Correcto**. Muestra correctamente la distribución proporcional de las personas interesadas en adoptar cada animal usando números absolutos que corresponden a los porcentajes.
+- **Gráfico de torta**: **Correcto**. Muestra correctamente la distribución proporcional de las personas interesadas en adoptar cada animal usando números absolutos que corresponden a los porcentajes.
 
 **Por lo tanto, la tabla es la única que NO muestra correctamente la información, mientras que las demás opciones SÍ la representan correctamente.**
 

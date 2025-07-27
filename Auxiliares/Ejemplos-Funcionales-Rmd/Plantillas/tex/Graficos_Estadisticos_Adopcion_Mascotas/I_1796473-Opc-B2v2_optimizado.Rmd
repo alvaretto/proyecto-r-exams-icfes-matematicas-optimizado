@@ -151,7 +151,8 @@ image01 <- '
   \\node{
 \\begin{tabular}{|l|c|}
 \\hline
-\\scriptsize\\textbf{Animal} & \\scriptsize\\textbf{Porcentaje} \\\\ \\hline
+\\scriptsize\\textbf{Animal} & \\scriptsize\\textbf{Cantidad de personas } \\\\ 
+     & \\scriptsize\\textbf{interesadas en adoptar} \\\\ \\hline
 \\scriptsize %s & \\scriptsize %s \\\\ \\hline
 \\scriptsize %s & \\scriptsize %s \\\\ \\hline
 \\scriptsize %s & \\scriptsize %s \\\\ \\hline
@@ -205,7 +206,7 @@ porcentaje3py = r.porxentaje3
 mashorpy = r.mashor
 
 # Datos
-animales = [mascota1py, mascota2py, mascota3py]
+animales = [mascota1py, mascota3py, mascota2py]
 cantidad = [porcentaje1py, porcentaje2py, porcentaje3py]
 
 # Definir colores en tonos de azul
@@ -231,16 +232,16 @@ ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
 plt.xticks(fontweight='bold', fontsize=9)
 plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold', fontsize=9)
 plt.xlabel("Animales", fontweight='bold', fontsize=10)
-plt.ylabel("% personas", fontweight='bold', fontsize=10)
+plt.ylabel("Porcentaje de personas \ninteresadas en adoptar", fontweight='bold', fontsize=10)
 
-# AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y
+# AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y - MARGEN IZQUIERDO MAYOR
 plt.tight_layout()
-plt.subplots_adjust(left=0.13, right=0.95, top=0.95, bottom=0.25)
+plt.subplots_adjust(left=0.18, right=0.95, top=0.95, bottom=0.25)
 plt.show()
 ```
 
--
-<br/>
+- 
+<br/> 
 ```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
 import matplotlib.pyplot as plt
 import numpy as np
@@ -301,7 +302,7 @@ max_val = max(cantidad)
 step = max(10, int(max_val/4))  # Máximo 4-5 etiquetas
 plt.xticks(np.arange(0, max_val+step, step), fontweight='bold', fontsize=9)
 plt.ylabel("Animales", fontweight='bold', fontsize=10)
-plt.xlabel("Cantidad de personas", fontweight='bold', fontsize=10)
+plt.xlabel("Cantidad de personas \ninteresadas en adoptar", fontweight='bold', fontsize=10)
 
 # AJUSTAR LAYOUT PARA MANTENER DENTRO DE COLUMNA
 plt.tight_layout()
@@ -309,8 +310,8 @@ plt.subplots_adjust(left=0.12, right=0.90, top=0.95, bottom=0.15)
 plt.show()
 ```
 
--
-<br/>
+- 
+<br/> 
 ```{python Torta, echo = FALSE, results = "hide"}
 # Re-importing necessary libraries after execution state reset
 from matplotlib import pyplot as plt
@@ -362,52 +363,70 @@ plt.show()
 Solution
 ========
 
-La representación que **NO muestra correctamente** la información recolectada en la encuesta es la **tabla**.
+La representación que **NO muestra correctamente** la información recolectada en la encuesta es el **gráfico de barras verticales**.
 
 **Análisis de las representaciones:**
 
-- **Tabla**: **Incorrecta**. La tabla muestra números absolutos de personas en lugar de los porcentajes solicitados en la pregunta. La pregunta especifica porcentajes (30%, 40%, 30%) pero la tabla presenta valores como números de personas.
+- **Tabla**: **Correcta**. Aunque muestra números absolutos de personas, estos corresponden correctamente a los porcentajes mencionados en la encuesta.
 
-- **Gráfico de barras verticales**: **Correcto**. Muestra correctamente los porcentajes de personas interesadas en adoptar cada animal según la información de la encuesta.
+- **Gráfico de barras verticales**: **Incorrecto**. Aunque la etiqueta del eje Y indica "Porcentaje de personas interesadas en adoptar", los datos o la correspondencia de animales no coinciden correctamente con la información de la encuesta.
 
-- **Gráfico de barras horizontales**: **Correcto**. Aunque muestra números absolutos, estos corresponden correctamente a los porcentajes mencionados en la encuesta.
+- **Gráfico de barras horizontales**: **Correcto**. Muestra números absolutos de personas que corresponden correctamente a los porcentajes de la encuesta.
 
-- **Gráfico de torta**: **Correcto**. Muestra correctamente la distribución proporcional de las personas interesadas en adoptar cada animal usando números absolutos que corresponden a los porcentajes.
+- **Gráfico de torta**: **Correcto**. Muestra correctamente la distribución proporcional usando números absolutos que corresponden a los porcentajes mencionados.
 
-**Por lo tanto, la tabla es la única que NO muestra correctamente la información, mientras que las demás opciones SÍ la representan correctamente.**
+**Por lo tanto, el gráfico de barras verticales es el único que NO muestra correctamente la información, mientras que las demás opciones SÍ la representan correctamente.**
 
 **La gráfica incorrecta es:**
 
-<br/>
-```{r Tabla02, warning=FALSE,echo = FALSE, results = "asis"}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-include_tikz(image01, name = "image01_solution", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "4cm")
-```
+<br/> 
+```{python BarraVerticalSolu, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+import matplotlib.pyplot as plt
+import numpy as np
 
-```{r version diversity test, echo = FALSE, results = "hide"}
-# Prueba de diversidad de versiones
-test_that("Prueba de diversidad de versiones", {
-  # Generar y almacenar 1000 versiones
-  versiones <- list()
-  for(i in 1:1000) {
-    # Generar las variables
-    selmascota <- sample(mascotas, 3)
-    enkuestados <- sample(numeros_sin_100, 1)
-    vector_resultado <- generar_vector_unico()
+mascota1py = r.nombremascota1 # De R a Python
+mascota2py = r.nombremascota2
+mascota3py = r.nombremascota3
 
-    # Combine the variables into a single string
-    version_string <- paste(enkuestados, paste(vector_resultado, collapse = "-"), paste(selmascota, collapse = "-"), collapse = "-")
+porcentaje1py = r.porxentaje1 # De R a Python
+porcentaje2py = r.porxentaje2
+porcentaje3py = r.porxentaje3
 
-    # Create a hash of the data
-    versiones[[i]] <- digest::digest(version_string)
-  }
+mashorpy = r.mashor
 
-  # Verificar al menos 300 versiones únicas
-  n_versiones_unicas <- length(unique(versiones))
-  expect_true(n_versiones_unicas >= 300,
-              info = paste("Solo se generaron", n_versiones_unicas,
-                          "versiones únicas. Se requieren al menos 300."))
-})
+# Datos
+animales = [mascota1py, mascota3py, mascota2py]
+cantidad = [porcentaje1py, porcentaje2py, porcentaje3py]
+
+# Definir colores en tonos de azul
+colores_azules = ['#00B3E6', '#0066CC', '#000099']  
+
+# GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
+fig, ax = plt.subplots(figsize=(4.0, 3.2))
+
+# Ajustar el ancho de las barras aquí para controlar indirectamente el espacio entre ellas
+ancho_barras = 0.6  # Un valor más pequeño de lo normal
+
+# Dibujar las barras con el ancho especificado
+bars = ax.bar(animales, cantidad, color=colores_azules, width=ancho_barras)
+
+# Resto del código de personalización
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['left'].set_linewidth(2)
+ax.spines['bottom'].set_linewidth(2)
+ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
+
+# TEXTO MÁS GRANDE PARA GRÁFICOS - SIN ROTACIÓN
+plt.xticks(fontweight='bold', fontsize=9)
+plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold', fontsize=9)
+plt.xlabel("Animales", fontweight='bold', fontsize=10)
+plt.ylabel("Porcentaje de personas \ninteresadas en adoptar", fontweight='bold', fontsize=10)
+
+# AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y - MARGEN IZQUIERDO MAYOR
+plt.tight_layout()
+plt.subplots_adjust(left=0.18, right=0.95, top=0.95, bottom=0.25)
+plt.show()
 ```
 
 Meta-information
@@ -415,5 +434,5 @@ Meta-information
 
 exname: I_1796473/2023-Cuadernillo-Matematicas-11-2(single-choice)
 extype: schoice
-exsolution: 1000
+exsolution: 0100
 exshuffle: TRUE
