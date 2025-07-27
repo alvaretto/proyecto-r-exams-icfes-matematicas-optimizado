@@ -214,7 +214,7 @@ ax.yaxis.grid(True, linestyle='--', linewidth=0.7, color='darkgray')
 plt.xticks(fontweight='bold', fontsize=9)
 plt.yticks(np.arange(0, mashorpy+1, 10), fontweight='bold', fontsize=9)
 plt.xlabel("Animales", fontweight='bold', fontsize=10)
-plt.ylabel("% personas", fontweight='bold', fontsize=10)
+plt.ylabel("Número de personas", fontweight='bold', fontsize=10)
 
 # AJUSTAR LAYOUT CON ESPACIO PARA ETIQUETA Y
 plt.tight_layout()
@@ -320,8 +320,14 @@ sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on t
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
 explode = (0, 0, 0)  # No slice is exploded
 
-# Labels with the sizes values
-pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, sizes2)]
+# Labels with the sizes values - mostrar 1 decimal si es diferente de cero
+def format_number(size):
+    if size % 1 == 0:  # Si es número entero
+        return str(int(size))
+    else:  # Si tiene decimales
+        return f"{size:.1f}"
+
+pie_labels = ['{}: {}'.format(label, format_number(size)) for label, size in zip(labels, sizes2)]
 
 # GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
 fig, ax = plt.subplots(figsize=(4.0, 3.2), tight_layout=True)
@@ -340,15 +346,19 @@ Solution
 
 La representación que muestra correctamente la información recolectada en la encuesta es el **gráfico de torta**.
 
-**Análisis de las representaciones:**
+**Análisis matemático de las representaciones:**
 
-- **Tabla**: Incorrecto. Aunque muestra información numérica, presenta números absolutos de personas en lugar de los porcentajes solicitados en la pregunta.
+- **Tabla**: Incorrecto. Presenta valores absolutos de personas interesadas, pero no permite visualizar fácilmente las proporciones relativas entre categorías. Además, los datos numéricos aislados dificultan la comprensión inmediata de qué animal tiene mayor preferencia y en qué magnitud.
 
-- **Gráfico de barras verticales**: Incorrecto. Muestra porcentajes pero no representa adecuadamente la relación proporcional entre las partes y el total.
+- **Gráfico de barras verticales**: Incorrecto. Aunque muestra los porcentajes correctos en valores numéricos, utiliza una escala lineal que no representa visualmente que estos porcentajes son partes complementarias de un todo (100%). Las barras independientes no evidencian que la suma de todas las categorías debe ser el total de encuestados.
 
-- **Gráfico de barras horizontales**: Incorrecto. Similar al gráfico de barras verticales, no muestra la relación proporcional correcta.
+- **Gráfico de barras horizontales**: Incorrecto. Muestra valores absolutos de personas en lugar de proporciones. Matemáticamente, no permite identificar directamente qué fracción del total representa cada categoría, requiriendo cálculos mentales adicionales para determinar los porcentajes relativos.
 
-- **Gráfico de torta**: **Correcto**. El gráfico de torta es la representación más adecuada para mostrar cómo se distribuyen los porcentajes de personas interesadas en adoptar cada animal, ya que permite visualizar claramente las proporciones de cada categoría respecto al total.
+- **Gráfico de torta**: **Correcto**. Representa matemáticamente de forma óptima datos de composición porcentual porque:
+  * Cada sector es proporcional al porcentaje que representa del total
+  * La suma visual de todos los sectores equivale al 100% de los encuestados
+  * Permite comparar inmediatamente las magnitudes relativas entre categorías
+  * Evidencia claramente que se trata de una distribución de frecuencias relativas donde cada parte es complementaria de las demás
 
 **Gráfico de torta correcto:**
 
@@ -378,8 +388,14 @@ sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on t
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
 explode = (0, 0, 0)  # No slice is exploded
 
-# Labels with the sizes values
-pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, sizes2)]
+# Labels with the sizes values - mostrar 1 decimal si es diferente de cero
+def format_number(size):
+    if size % 1 == 0:  # Si es número entero
+        return str(int(size))
+    else:  # Si tiene decimales
+        return f"{size:.1f}"
+
+pie_labels = ['{}: {}'.format(label, format_number(size)) for label, size in zip(labels, sizes2)]
 
 # GRÁFICO OPTIMIZADO PARA DOS COLUMNAS - TAMAÑO MEJORADO
 fig, ax = plt.subplots(figsize=(4.0, 3.2), tight_layout=True)
