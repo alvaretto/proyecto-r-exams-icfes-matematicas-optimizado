@@ -1,0 +1,109 @@
+# ========================================
+# PDF-Chat-Bot - Configuración de Qdrant
+# ========================================
+
+# Configuración del servidor Qdrant
+service:
+  host: 0.0.0.0
+  http_port: 6333
+  grpc_port: 6334
+
+# Configuración de almacenamiento
+storage:
+  # Directorio de datos
+  storage_path: ./qdrant_storage
+  
+  # Configuración de snapshots
+  snapshots_path: ./snapshots
+  
+  # Configuración de WAL (Write-Ahead Log)
+  wal:
+    wal_capacity_mb: 32
+    wal_segments_ahead: 0
+
+# Configuración de logging
+log_level: INFO
+
+# Configuración de telemetría (deshabilitada para privacidad)
+telemetry_disabled: true
+
+# Configuración de cluster (para uso futuro)
+cluster:
+  enabled: false
+
+# Configuración de TLS (deshabilitada para desarrollo local)
+tls:
+  enabled: false
+
+# Configuración de CORS para desarrollo
+cors:
+  allow_any_origin: true
+  allow_credentials: true
+
+# Configuración de límites
+limits:
+  # Límite de memoria para operaciones
+  max_request_size_mb: 32
+  
+  # Límite de tiempo para operaciones
+  max_timeout_sec: 60
+
+# Configuración de optimización
+optimizer:
+  # Configuración de indexación
+  default_segment_number: 0
+  
+  # Configuración de memoria
+  memmap_threshold_kb: 200000
+  
+  # Configuración de indexación HNSW
+  indexing_threshold_kb: 20000
+
+# Configuración específica para PDF-Chat-Bot
+collections:
+  documents:
+    # Configuración de vectores
+    vectors:
+      size: 1536  # Dimensiones de OpenAI text-embedding-3-small
+      distance: Cosine
+    
+    # Configuración de optimización
+    optimizer_config:
+      deleted_threshold: 0.2
+      vacuum_min_vector_number: 1000
+      default_segment_number: 0
+      max_segment_size_kb: 200000
+      memmap_threshold_kb: 200000
+      indexing_threshold_kb: 20000
+      flush_interval_sec: 5
+      max_optimization_threads: 1
+    
+    # Configuración de HNSW
+    hnsw_config:
+      m: 16
+      ef_construct: 100
+      full_scan_threshold: 10000
+      max_indexing_threads: 0
+      on_disk: false
+    
+    # Configuración de WAL
+    wal_config:
+      wal_capacity_mb: 32
+      wal_segments_ahead: 0
+    
+    # Configuración de cuantización (opcional, para reducir memoria)
+    quantization_config:
+      scalar:
+        type: int8
+        quantile: 0.99
+        always_ram: true
+
+# Configuración de métricas y monitoreo
+metrics:
+  enabled: true
+  
+# Configuración de API
+api:
+  # Configuración de rate limiting
+  enable_cors: true
+  max_request_size_mb: 32
