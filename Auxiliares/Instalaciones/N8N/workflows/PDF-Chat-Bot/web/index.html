@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF-Chat-Bot 🤖📄</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-robot"></i> PDF-Chat-Bot</h1>
+                <p>Análisis inteligente de documentos con IA</p>
+            </div>
+            <div class="header-actions">
+                <button id="clearChat" class="btn btn-secondary">
+                    <i class="fas fa-trash"></i> Limpiar Chat
+                </button>
+                <button id="showHistory" class="btn btn-secondary">
+                    <i class="fas fa-history"></i> Historial
+                </button>
+                <div class="status-indicator" id="statusIndicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Conectado</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+            <!-- Welcome Message -->
+            <div class="welcome-message" id="welcomeMessage">
+                <div class="welcome-content">
+                    <i class="fas fa-file-pdf welcome-icon"></i>
+                    <h2>¡Bienvenido al PDF-Chat-Bot!</h2>
+                    <p>Haz preguntas sobre tus documentos PDF. El sistema analizará el contenido y te proporcionará respuestas precisas basadas en la información disponible.</p>
+                    <div class="example-questions">
+                        <h3>Ejemplos de preguntas:</h3>
+                        <ul>
+                            <li>"¿Cuáles son los temas principales del documento?"</li>
+                            <li>"Explícame el concepto de [tema específico]"</li>
+                            <li>"¿Qué ejercicios se mencionan en el capítulo 3?"</li>
+                            <li>"Resume las conclusiones del documento"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Messages will be dynamically added here -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="typing-text">El asistente está escribiendo...</span>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <footer class="input-area">
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Escribe tu pregunta sobre los documentos..."
+                        rows="1"
+                        maxlength="2000"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button id="attachFile" class="btn-icon" title="Adjuntar archivo">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button id="sendMessage" class="btn-send" title="Enviar mensaje">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-info">
+                    <span class="char-count" id="charCount">0/2000</span>
+                    <span class="shortcuts">Presiona Ctrl+Enter para enviar</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-history"></i> Historial de Conversaciones</h2>
+                <button class="modal-close" id="closeHistory">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="history-search">
+                    <input type="text" id="historySearch" placeholder="Buscar en historial...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- History items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-upload"></i> Subir Documentos</h2>
+                <button class="modal-close" id="closeUpload">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p>Arrastra archivos aquí o haz clic para seleccionar</p>
+                    <p class="upload-info">Formatos soportados: PDF, JPG, PNG (máx. 50MB)</p>
+                    <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                </div>
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer">
+        <!-- Toast notifications will appear here -->
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Procesando tu pregunta...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

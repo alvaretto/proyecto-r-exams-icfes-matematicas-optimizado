@@ -1,0 +1,342 @@
+{
+  "name": "PDF-Chat-Bot API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "chatbot-webhook",
+      "name": "Chatbot Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "chatbot-webhook-id"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validar y procesar entrada del usuario\nconst input = $input.first().json;\n\n// Validaciones\nif (!input.question || input.question.trim().length === 0) {\n  return [{ json: { error: 'Question is required' } }];\n}\n\nif (input.question.length > 2000) {\n  return [{ json: { error: 'Question too long (max 2000 characters)' } }];\n}\n\n// Procesar entrada\nconst processedInput = {\n  question: input.question.trim(),\n  user_id: input.user_id || 'anonymous',\n  session_id: input.session_id || `session_${Date.now()}`,\n  conversation_id: input.conversation_id || null,\n  timestamp: new Date().toISOString(),\n  metadata: {\n    user_agent: input.user_agent || 'unknown',\n    ip_address: input.ip_address || 'unknown'\n  }\n};\n\nreturn [{ json: processedInput }];"
+      },
+      "id": "validate-input",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "embedding",
+        "model": "text-embedding-3-small",
+        "input": "={{$json.question}}"
+      },
+      "id": "generate-query-embedding",
+      "name": "Generate Query Embedding",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:6333/collections/documents/points/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"vector\": {{$json.data[0].embedding}},\n  \"limit\": 5,\n  \"with_payload\": true,\n  \"score_threshold\": 0.7\n}"
+      },
+      "id": "search-documents",
+      "name": "Search Documents",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Construir contexto para Claude\nconst searchResults = $input.first().json.result || [];\nconst userQuestion = $('Validate Input').first().json.question;\n\nif (searchResults.length === 0) {\n  return [{ json: {\n    prompt: `No se encontraron documentos relevantes para responder la pregunta: \"${userQuestion}\". Por favor, indica que no tienes información suficiente para responder esta pregunta específica.`,\n    context: [],\n    has_context: false\n  }}];\n}\n\n// Construir contexto de documentos\nconst contextText = searchResults.map((item, index) => \n  `DOCUMENTO ${index + 1}:\nArchivo: ${item.payload.filename}\nContenido: ${item.payload.text}\nRelevancia: ${item.score.toFixed(3)}\n`\n).join('\\n---\\n\\n');\n\n// Construir prompt optimizado para Claude\nconst prompt = `Eres un asistente especializado en análisis de documentos PDF. Tu tarea es responder preguntas basándote únicamente en el contexto proporcionado.\n\nCONTEXTO DE DOCUMENTOS:\n${contextText}\n\nPREGUNTA DEL USUARIO:\n${userQuestion}\n\nINSTRUCCIONES:\n1. Analiza cuidadosamente el contexto proporcionado\n2. Responde de manera precisa y detallada basándote ÚNICAMENTE en la información del contexto\n3. Cita las fuentes específicas cuando sea relevante (menciona el nombre del archivo)\n4. Si la información no está disponible en el contexto, indícalo claramente\n5. Para preguntas complejas, estructura tu respuesta en secciones\n6. Responde en español\n7. Sé conciso pero completo\n\nRESPUESTA:`;\n\nreturn [{ json: {\n  prompt: prompt,\n  context: searchResults,\n  has_context: true,\n  context_count: searchResults.length\n}}];"
+      },
+      "id": "build-context",
+      "name": "Build Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{$credentials.anthropicApi.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-3-sonnet-20240229\",\n  \"max_tokens\": 2000,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"{{$json.prompt}}\"\n    }\n  ]\n}"
+      },
+      "id": "call-claude",
+      "name": "Call Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar respuesta de Claude\nconst claudeResponse = $input.first().json;\nconst userInput = $('Validate Input').first().json;\nconst context = $('Build Context').first().json;\n\n// Extraer respuesta\nlet responseText = '';\nif (claudeResponse.content && claudeResponse.content[0] && claudeResponse.content[0].text) {\n  responseText = claudeResponse.content[0].text;\n} else {\n  responseText = 'Lo siento, no pude procesar tu pregunta en este momento.';\n}\n\n// Preparar datos para guardar en historial\nconst conversationData = {\n  user_message: {\n    conversation_id: userInput.conversation_id,\n    user_id: userInput.user_id,\n    session_id: userInput.session_id,\n    role: 'user',\n    content: userInput.question,\n    created_at: userInput.timestamp,\n    metadata: userInput.metadata\n  },\n  assistant_message: {\n    role: 'assistant',\n    content: responseText,\n    created_at: new Date().toISOString(),\n    tokens_used: claudeResponse.usage?.total_tokens || 0,\n    model_used: 'claude-3-sonnet',\n    metadata: {\n      context_documents: context.context?.length || 0,\n      has_context: context.has_context,\n      processing_time: Date.now() - new Date(userInput.timestamp).getTime()\n    }\n  },\n  referenced_documents: context.context?.map(doc => ({\n    filename: doc.payload.filename,\n    relevance_score: doc.score,\n    chunk_index: doc.payload.chunk_index\n  })) || []\n};\n\nreturn [{ json: conversationData }];"
+      },
+      "id": "process-response",
+      "name": "Process Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "conversations",
+        "columns": "user_id, session_id, title, created_at, status",
+        "values": "={{$json.user_message.user_id}}, ={{$json.user_message.session_id}}, ={{$json.user_message.content.substring(0, 100)}}, ={{$json.user_message.created_at}}, 'active'",
+        "options": {
+          "onConflict": "ignore"
+        }
+      },
+      "id": "save-conversation",
+      "name": "Save Conversation",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1780,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "messages",
+        "columns": "conversation_id, role, content, created_at, tokens_used, model_used, metadata",
+        "values": "(SELECT id FROM conversations WHERE user_id = '{{$json.user_message.user_id}}' AND session_id = '{{$json.user_message.session_id}}' ORDER BY created_at DESC LIMIT 1), '{{$json.user_message.role}}', '{{$json.user_message.content}}', '{{$json.user_message.created_at}}', 0, 'user', '{{JSON.stringify($json.user_message.metadata)}}'"
+      },
+      "id": "save-user-message",
+      "name": "Save User Message",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "messages",
+        "columns": "conversation_id, role, content, created_at, tokens_used, model_used, metadata",
+        "values": "(SELECT id FROM conversations WHERE user_id = '{{$json.user_message.user_id}}' AND session_id = '{{$json.user_message.session_id}}' ORDER BY created_at DESC LIMIT 1), '{{$json.assistant_message.role}}', '{{$json.assistant_message.content}}', '{{$json.assistant_message.created_at}}', {{$json.assistant_message.tokens_used}}, '{{$json.assistant_message.model_used}}', '{{JSON.stringify($json.assistant_message.metadata)}}'"
+      },
+      "id": "save-assistant-message",
+      "name": "Save Assistant Message",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        1780,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response\": \"{{$json.assistant_message.content}}\",\n  \"conversation_id\": \"{{$json.user_message.conversation_id}}\",\n  \"session_id\": \"{{$json.user_message.session_id}}\",\n  \"sources\": {{JSON.stringify($json.referenced_documents)}},\n  \"metadata\": {\n    \"tokens_used\": {{$json.assistant_message.tokens_used}},\n    \"processing_time_ms\": {{$json.assistant_message.metadata.processing_time}},\n    \"context_documents\": {{$json.assistant_message.metadata.context_documents}},\n    \"timestamp\": \"{{$json.assistant_message.created_at}}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "respond-to-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Chatbot Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Generate Query Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Query Embedding": {
+      "main": [
+        [
+          {
+            "node": "Search Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Documents": {
+      "main": [
+        [
+          {
+            "node": "Build Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Context": {
+      "main": [
+        [
+          {
+            "node": "Call Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Claude": {
+      "main": [
+        [
+          {
+            "node": "Process Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Response": {
+      "main": [
+        [
+          {
+            "node": "Save Conversation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save User Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Assistant Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Conversation": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save User Message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Assistant Message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "pdf-chatbot-api",
+      "name": "PDF-ChatBot-API"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

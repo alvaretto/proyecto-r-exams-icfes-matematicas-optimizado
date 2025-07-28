@@ -1,0 +1,400 @@
+{
+  "name": "PDF-Chat-Bot Main Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "value": 5
+            }
+          ]
+        }
+      },
+      "id": "file-monitor-trigger",
+      "name": "File Monitor Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "find \"/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/N8N/workflows/PDF-Chat-Bot/data/documents\" -type f \\( -name '*.pdf' -o -name '*.jpg' -o -name '*.png' -o -name '*.jpeg' \\) -newer /tmp/pdf_chatbot_last_check 2>/dev/null || true"
+      },
+      "id": "scan-files",
+      "name": "Scan Files",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.stdout}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "check-new-files",
+      "name": "Check New Files",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar lista de archivos nuevos\nconst stdout = $input.first().json.stdout;\nconst files = stdout.trim().split('\\n').filter(f => f.length > 0);\n\nconst results = [];\n\nfor (const filepath of files) {\n  if (filepath.trim()) {\n    const filename = filepath.split('/').pop();\n    const extension = filename.split('.').pop().toLowerCase();\n    \n    results.push({\n      filepath: filepath.trim(),\n      filename: filename,\n      extension: extension,\n      filesize: 0, // Se calculará después\n      detected_at: new Date().toISOString()\n    });\n  }\n}\n\nreturn results.map(file => ({ json: file }));"
+      },
+      "id": "process-file-list",
+      "name": "Process File List",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "readBinaryFile",
+        "filePath": "={{$json.filepath}}"
+      },
+      "id": "read-file",
+      "name": "Read File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.extension}}",
+              "value2": "pdf"
+            }
+          ]
+        }
+      },
+      "id": "check-file-type",
+      "name": "Check File Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "extractText",
+        "inputBinaryField": "data",
+        "outputFormat": "text"
+      },
+      "id": "extract-pdf-text",
+      "name": "Extract PDF Text",
+      "type": "n8n-nodes-base.pdfExtract",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{$credentials.ocrSpace.apiKey}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "language",
+              "value": "spa"
+            },
+            {
+              "name": "isOverlayRequired",
+              "value": "false"
+            }
+          ]
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "file"
+      },
+      "id": "ocr-image",
+      "name": "OCR Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Chunking del texto extraído\nconst input = $input.first().json;\nlet text = '';\n\n// Determinar el texto según el tipo de archivo\nif (input.extractedText) {\n  text = input.extractedText; // PDF\n} else if (input.ParsedResults && input.ParsedResults[0]) {\n  text = input.ParsedResults[0].ParsedText; // OCR\n} else {\n  return [{ json: { error: 'No text extracted' } }];\n}\n\nconst chunkSize = 1000;\nconst overlap = 200;\nconst chunks = [];\n\nfor (let i = 0; i < text.length; i += chunkSize - overlap) {\n  const chunk = text.slice(i, i + chunkSize);\n  \n  chunks.push({\n    text: chunk,\n    chunk_index: Math.floor(i / (chunkSize - overlap)),\n    source_file: input.filename || 'unknown',\n    source_path: input.filepath || 'unknown',\n    chunk_size: chunk.length,\n    created_at: new Date().toISOString(),\n    file_hash: require('crypto').createHash('md5').update(text).digest('hex')\n  });\n}\n\nreturn chunks.map(chunk => ({ json: chunk }));"
+      },
+      "id": "chunk-text",
+      "name": "Chunk Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "embedding",
+        "model": "text-embedding-3-small",
+        "input": "={{$json.text}}"
+      },
+      "id": "generate-embedding",
+      "name": "Generate Embedding",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.3,
+      "position": [
+        2000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://localhost:6333/collections/documents/points",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"points\": [\n    {\n      \"id\": \"{{$json.file_hash}}_{{$json.chunk_index}}\",\n      \"vector\": {{$json.data[0].embedding}},\n      \"payload\": {\n        \"text\": \"{{$json.text}}\",\n        \"filename\": \"{{$json.source_file}}\",\n        \"filepath\": \"{{$json.source_path}}\",\n        \"chunk_index\": {{$json.chunk_index}},\n        \"created_at\": \"{{$json.created_at}}\",\n        \"file_hash\": \"{{$json.file_hash}}\"\n      }\n    }\n  ]\n}"
+      },
+      "id": "store-in-qdrant",
+      "name": "Store in Qdrant",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        2220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "documents",
+        "columns": "filename, filepath, file_hash, file_size, file_type, status, chunk_count, created_at",
+        "values": "={{$json.source_file}}, ={{$json.source_path}}, ={{$json.file_hash}}, 0, ={{$json.source_file.split('.').pop()}}, 'completed', 1, NOW()"
+      },
+      "id": "save-to-database",
+      "name": "Save to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [
+        2440,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "command": "touch /tmp/pdf_chatbot_last_check"
+      },
+      "id": "update-timestamp",
+      "name": "Update Timestamp",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "File Monitor Trigger": {
+      "main": [
+        [
+          {
+            "node": "Scan Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scan Files": {
+      "main": [
+        [
+          {
+            "node": "Check New Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check New Files": {
+      "main": [
+        [
+          {
+            "node": "Process File List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process File List": {
+      "main": [
+        [
+          {
+            "node": "Read File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read File": {
+      "main": [
+        [
+          {
+            "node": "Check File Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check File Type": {
+      "main": [
+        [
+          {
+            "node": "Extract PDF Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OCR Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract PDF Text": {
+      "main": [
+        [
+          {
+            "node": "Chunk Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OCR Image": {
+      "main": [
+        [
+          {
+            "node": "Chunk Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chunk Text": {
+      "main": [
+        [
+          {
+            "node": "Generate Embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Embedding": {
+      "main": [
+        [
+          {
+            "node": "Store in Qdrant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Qdrant": {
+      "main": [
+        [
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Database": {
+      "main": [
+        [
+          {
+            "node": "Update Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "pdf-chatbot",
+      "name": "PDF-ChatBot"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
