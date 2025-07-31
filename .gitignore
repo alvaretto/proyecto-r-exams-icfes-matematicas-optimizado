@@ -18,6 +18,11 @@ github_config_privado.md
 .env.local
 config_personal.txt
 
+# N8N - Archivos sensibles
+**/.n8n/.n8n/
+**/database.sqlite
+**/n8nEventLog*.log
+
 # Tokens y claves
 *.key
 *.pem

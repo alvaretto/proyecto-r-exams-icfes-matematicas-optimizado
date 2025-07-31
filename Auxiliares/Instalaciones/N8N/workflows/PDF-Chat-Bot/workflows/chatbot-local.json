@@ -1,0 +1,195 @@
+{
+  "name": "PDF-Chat-Bot Local",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-chatbot",
+      "name": "Webhook Chatbot",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8080/embeddings",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"input\": \"{{$json.question}}\",\n  \"model\": \"all-MiniLM-L6-v2\"\n}"
+      },
+      "id": "generate-embeddings",
+      "name": "Generate Embeddings",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:11434/api/generate",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3:8b\",\n  \"prompt\": \"{{$json.prompt}}\",\n  \"stream\": false\n}"
+      },
+      "id": "call-ollama",
+      "name": "Call Ollama",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Procesar respuesta de Ollama\nconst ollamaResponse = $input.first().json;\nconst userInput = $('Validate Input').first().json;\nconst context = $('Build Context').first().json;\n\n// Extraer respuesta\nlet responseText = '';\nif (ollamaResponse.response) {\n  responseText = ollamaResponse.response;\n} else {\n  responseText = 'Lo siento, no pude procesar tu pregunta en este momento.';\n}\n\n// Preparar datos para guardar en historial\nconst conversationData = {\n  user_message: {\n    conversation_id: userInput.conversation_id,\n    user_id: userInput.user_id,\n    session_id: userInput.session_id,\n    role: 'user',\n    content: userInput.question,\n    created_at: userInput.timestamp,\n    metadata: userInput.metadata\n  },\n  assistant_message: {\n    role: 'assistant',\n    content: responseText,\n    created_at: new Date().toISOString(),\n    tokens_processed: ollamaResponse.prompt_eval_count || 0,\n    model_used: 'llama3:8b',\n    metadata: {\n      context_documents: context.context?.length || 0,\n      has_context: context.has_context,\n      processing_time: Date.now() - new Date(userInput.timestamp).getTime()\n    }\n  },\n  referenced_documents: context.context?.map(doc => ({\n    filename: doc.payload.filename,\n    relevance_score: doc.score,\n    chunk_index: doc.payload.chunk_index\n  })) || []\n};\n\nreturn [{ json: conversationData }];"
+      },
+      "id": "process-response",
+      "name": "Process Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "messages",
+        "columns": "conversation_id, role, content, created_at, tokens_processed, model_used, metadata",
+        "values": "(SELECT id FROM conversations WHERE user_id = '{{$json.user_message.user_id}}' AND session_id = '{{$json.user_message.session_id}}' ORDER BY created_at DESC LIMIT 1), '{{$json.user_message.role}}', '{{$json.user_message.content}}', '{{$json.user_message.created_at}}', 0, 'user', '{{JSON.stringify($json.user_message.metadata)}}'"
+      },
+      "id": "save-user-message",
+      "name": "Save User Message",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "messages",
+        "columns": "conversation_id, role, content, created_at, tokens_processed, model_used, metadata",
+        "values": "(SELECT id FROM conversations WHERE user_id = '{{$json.user_message.user_id}}' AND session_id = '{{$json.user_message.session_id}}' ORDER BY created_at DESC LIMIT 1), '{{$json.assistant_message.role}}', '{{$json.assistant_message.content}}', '{{$json.assistant_message.created_at}}', {{$json.assistant_message.tokens_processed}}, '{{$json.assistant_message.model_used}}', '{{JSON.stringify($json.assistant_message.metadata)}}'"
+      },
+      "id": "save-assistant-message",
+      "name": "Save Assistant Message",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response\": \"{{$json.assistant_message.content}}\",\n  \"conversation_id\": \"{{$json.user_message.conversation_id}}\",\n  \"session_id\": \"{{$json.user_message.session_id}}\",\n  \"sources\": {{JSON.stringify($json.referenced_documents)}},\n  \"metadata\": {\n    \"tokens_processed\": {{$json.assistant_message.tokens_processed}},\n    \"processing_time_ms\": {{$json.assistant_message.metadata.processing_time}},\n    \"context_documents\": {{$json.assistant_message.metadata.context_documents}},\n    \"timestamp\": \"{{$json.assistant_message.created_at}}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "respond-to-user",
+      "name": "Respond to User",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Chatbot": {
+      "main": [
+        [
+          {
+            "node": "Generate Embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Embeddings": {
+      "main": [
+        [
+          {
+            "node": "Call Ollama",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Ollama": {
+      "main": [
+        [
+          {
+            "node": "Process Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Response": {
+      "main": [
+        [
+          {
+            "node": "Save User Message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Assistant Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Assistant Message": {
+      "main": [
+        [
+          {
+            "node": "Respond to User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "local-instance"
+  },
+  "id": "pdf-chatbot-local",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "pdf-chatbot-local",
+      "name": "PDF-ChatBot-Local"
+    }
+  ]
+}
