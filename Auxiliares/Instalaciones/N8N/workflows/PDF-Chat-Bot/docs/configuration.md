@@ -37,36 +37,36 @@ MATEMATICAS_PATH="${DOCUMENTS_PATH}/matematicas"
 EXAMENES_PATH="${DOCUMENTS_PATH}/examenes"
 ```
 
-### APIs y Servicios Externos
+### Servicios Locales
 
-#### Anthropic API (Claude)
+#### Ollama (LLM Local)
 ```env
-ANTHROPIC_API_KEY=tu_clave_anthropic
-ANTHROPIC_MODEL=claude-3-sonnet-20240229  # o claude-3-haiku-20240307
-ANTHROPIC_MAX_TOKENS=2000                  # Máximo: 4096
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=llama3:8b              # o llama3:70b, codellama, etc.
+OLLAMA_MAX_TOKENS=2000              # Máximo según modelo
 ```
 
-**Modelos disponibles:**
-- `claude-3-sonnet-20240229`: Equilibrio entre velocidad y calidad
-- `claude-3-haiku-20240307`: Más rápido, menos costoso
-- `claude-3-opus-20240229`: Máxima calidad (más costoso)
+**Modelos recomendados:**
+- `llama3:8b`: Equilibrio entre velocidad y calidad
+- `llama3:70b`: Máxima calidad (requiere más RAM)
+- `codellama:7b`: Especializado en código
 
-#### OpenAI API (Embeddings)
+#### Sentence Transformers (Embeddings Locales)
 ```env
-OPENAI_API_KEY=tu_clave_openai
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small  # Recomendado
-OPENAI_EMBEDDING_DIMENSIONS=1536               # Dimensiones del vector
+EMBEDDINGS_MODEL=all-MiniLM-L6-v2   # Modelo local recomendado
+EMBEDDINGS_DIMENSIONS=384           # Dimensiones del vector
+EMBEDDINGS_DEVICE=cpu               # cpu o cuda
 ```
 
 **Modelos de embedding disponibles:**
-- `text-embedding-3-small`: Más económico, buena calidad
-- `text-embedding-3-large`: Mayor precisión, más costoso
-- `text-embedding-ada-002`: Modelo anterior (compatible)
+- `all-MiniLM-L6-v2`: Rápido, buena calidad
+- `all-mpnet-base-v2`: Mayor precisión
+- `paraphrase-multilingual-MiniLM-L12-v2`: Multiidioma
 
-#### OCR.space API
+#### Tesseract OCR (Local)
 ```env
-OCR_SPACE_API_KEY=tu_clave_ocr_space
-OCR_LANGUAGE=spa                    # Idioma: spa, eng, fra, etc.
+TESSERACT_PATH=/usr/bin/tesseract
+OCR_LANGUAGE=spa+eng                # Idiomas: spa, eng, fra, etc.
 ```
 
 ### Base de Datos PostgreSQL

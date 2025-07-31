@@ -1,6 +1,6 @@
 # PDF-Chat-Bot 🤖📄
 
-Sistema RAG (Retrieval Augmented Generation) para análisis inteligente de documentos PDF usando N8N, Claude API y búsqueda vectorial.
+Sistema RAG (Retrieval Augmented Generation) para análisis inteligente de documentos PDF usando N8N, modelos locales y búsqueda vectorial.
 
 ## 🏗️ Arquitectura del Sistema
 
@@ -40,7 +40,7 @@ PDF-Chat-Bot/
 - ✅ **Monitoreo automático** de carpetas y subcarpetas
 - ✅ **Procesamiento inteligente** de PDFs e imágenes con OCR
 - ✅ **Búsqueda semántica** con embeddings vectoriales
-- ✅ **Chatbot RAG** con Claude API para análisis complejo
+- ✅ **Chatbot RAG** con modelos locales para análisis complejo
 - ✅ **Historial completo** de conversaciones
 - ✅ **Interface web** responsive
 - ✅ **Base de datos** PostgreSQL para metadatos
@@ -55,10 +55,10 @@ PDF-Chat-Bot/
 - **Node.js** (v18+)
 - **Docker** (opcional, recomendado)
 
-### APIs Requeridas:
-- **Anthropic API** (Claude)
-- **OpenAI API** (Embeddings)
-- **OCR.space API** (OCR para imágenes)
+### Servicios Locales:
+- **Ollama** (LLM local)
+- **Sentence Transformers** (Embeddings locales)
+- **Tesseract OCR** (OCR para imágenes)
 
 ## 🔧 Instalación Rápida
 
@@ -95,7 +95,7 @@ psql -U postgres -d pdf_chatbot -f config/database.sql
 - **PDFs**: `.pdf`
 - **Imágenes**: `.jpg`, `.jpeg`, `.png`
 
-## 🔗 Endpoints API
+## 🔗 Endpoints Locales
 
 - **Chatbot**: `POST /webhook/chatbot`
 - **Upload**: `POST /webhook/upload`
@@ -112,7 +112,7 @@ Interface del chatbot disponible en:
 Ver documentación detallada en:
 - [Instalación](docs/installation.md)
 - [Configuración](docs/configuration.md)
-- [API](docs/api.md)
+- [Endpoints](docs/endpoints.md)
 
 ## 📈 Monitoreo
 
@@ -122,7 +122,7 @@ Ver documentación detallada en:
 
 ## 🔒 Seguridad
 
-- Variables de entorno para API keys
+- Variables de entorno para configuración local
 - Validación de tipos de archivo
 - Límites de tamaño de archivo
 - Sanitización de inputs
