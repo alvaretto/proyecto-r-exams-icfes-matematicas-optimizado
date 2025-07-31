@@ -1,0 +1,369 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+  word_document: default
+icfes:
+  competencia: formulacion_ejecucion
+  componente: numerico_variacional
+  afirmacion: Resuelve problemas que requieren el planteamiento y estructuración de soluciones ante contextos problémicos
+  evidencia: Utiliza operaciones básicas para resolver problemas de aplicación comercial
+  nivel: 2
+  tematica: Operaciones básicas y aplicaciones comerciales
+  contexto: laboral
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r generar_datos, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria única para cada generación
+set.seed(as.numeric(Sys.time()) + sample(1:10000, 1))
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Aleatorización del contexto comercial con concordancia de género
+contextos_data <- data.frame(
+  nombre = c("tienda", "empresa", "compañía", "organización", "corporación", "firma",
+             "negocio", "establecimiento", "comercio", "almacén", "local", "centro comercial"),
+  genero = c("f", "f", "f", "f", "f", "f",
+             "m", "m", "m", "m", "m", "m"),
+  articulo = c("una", "una", "una", "una", "una", "una",
+               "un", "un", "un", "un", "un", "un"),
+  stringsAsFactors = FALSE
+)
+contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
+contexto <- contexto_seleccionado$nombre
+articulo_contexto <- contexto_seleccionado$articulo
+
+# Aleatorización del tipo de comerciante con concordancia de género
+comerciantes_data <- data.frame(
+  nombre = c("comerciante", "vendedora", "empresaria", "propietaria", "gerente", "administradora",
+             "vendedor", "empresario", "propietario", "distribuidor", "mayorista", "minorista",
+             "comerciante", "gerente"),
+  genero = c("m", "f", "f", "f", "m", "f",
+             "m", "m", "m", "m", "m", "m",
+             "f", "f"),
+  articulo_el = c("el", "la", "la", "la", "el", "la",
+                  "el", "el", "el", "el", "el", "el",
+                  "la", "la"),
+  articulo_un = c("un", "una", "una", "una", "un", "una",
+                  "un", "un", "un", "un", "un", "un",
+                  "una", "una"),
+  stringsAsFactors = FALSE
+)
+comerciante_seleccionado <- comerciantes_data[sample(nrow(comerciantes_data), 1), ]
+comerciante <- comerciante_seleccionado$nombre
+articulo_el_comerciante <- comerciante_seleccionado$articulo_el
+articulo_un_comerciante <- comerciante_seleccionado$articulo_un
+
+# Aleatorización del producto con concordancia de género
+productos_data <- data.frame(
+  plural = c("pantalones", "camisas", "zapatos", "chaquetas", "vestidos", "blusas",
+             "faldas", "suéteres", "abrigos", "shorts", "jeans", "polos"),
+  singular = c("pantalón", "camisa", "zapato", "chaqueta", "vestido", "blusa",
+               "falda", "suéter", "abrigo", "short", "jean", "polo"),
+  genero = c("m", "f", "m", "f", "m", "f",
+             "f", "m", "m", "m", "m", "m"),
+  stringsAsFactors = FALSE
+)
+producto_seleccionado <- productos_data[sample(nrow(productos_data), 1), ]
+producto <- producto_seleccionado$plural
+producto_singular <- producto_seleccionado$singular
+
+# Aleatorización del precio de compra (en miles de pesos)
+# Rangos realistas para diferentes productos
+precios_compra_posibles <- c(50, 60, 70, 80, 90, 100, 120, 150, 180, 200, 250, 300)
+precio_compra <- sample(precios_compra_posibles, 1) * 1000
+
+# Aleatorización de términos para el enunciado
+terminos_desea <- c("desea", "quiere", "necesita", "busca", "pretende", "aspira a")
+termino_desea <- sample(terminos_desea, 1)
+
+terminos_conocer <- c("conocer", "determinar", "calcular", "establecer", "identificar", "obtener")
+termino_conocer <- sample(terminos_conocer, 1)
+
+terminos_obtiene <- c("obtiene", "consigue", "logra", "genera", "produce", "alcanza")
+termino_obtiene <- sample(terminos_obtiene, 1)
+
+# Términos de venta con concordancia de género
+terminos_venta_data <- data.frame(
+  termino = c("venta", "comercialización", "distribución", "expendio"),
+  genero = c("f", "f", "f", "m"),
+  articulo = c("la", "la", "la", "el"),
+  stringsAsFactors = FALSE
+)
+termino_venta_seleccionado <- terminos_venta_data[sample(nrow(terminos_venta_data), 1), ]
+termino_venta <- termino_venta_seleccionado$termino
+articulo_venta <- termino_venta_seleccionado$articulo
+
+terminos_compra <- c("compra", "adquiere", "consigue", "obtiene")
+termino_compra <- sample(terminos_compra, 1)
+
+terminos_procedimientos <- c("procedimientos", "métodos", "procesos", "estrategias", "técnicas")
+termino_procedimientos <- sample(terminos_procedimientos, 1)
+
+terminos_permite <- c("permite", "facilita", "posibilita", "ayuda a", "contribuye a")
+termino_permite <- sample(terminos_permite, 1)
+
+# Términos de monto con concordancia de género
+terminos_monto_data <- data.frame(
+  termino = c("monto", "valor", "cantidad", "suma", "total"),
+  genero = c("m", "m", "f", "f", "m"),
+  articulo = c("el", "el", "la", "la", "el"),
+  stringsAsFactors = FALSE
+)
+termino_monto_seleccionado <- terminos_monto_data[sample(nrow(terminos_monto_data), 1), ]
+termino_monto <- termino_monto_seleccionado$termino
+articulo_monto <- termino_monto_seleccionado$articulo
+
+# Generar opciones de respuesta con sistema avanzado de distractores
+# La respuesta correcta es la opción A del problema original
+
+# SISTEMA AVANZADO DE DISTRACTORES
+# 30% probabilidad de incluir valores duplicados con justificaciones diferentes
+permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+
+# Crear conjunto de 5 respuestas correctas diferentes
+respuestas_correctas <- c(
+  paste0("Restar $", formatear_entero(precio_compra),
+         " al precio de venta de cada ", producto_singular,
+         " y multiplicar dicho valor por el número de unidades vendidas."),
+
+  paste0("Calcular la diferencia entre el precio de venta y $", formatear_entero(precio_compra),
+         " por cada ", producto_singular,
+         ", y multiplicar este resultado por la cantidad de unidades vendidas."),
+
+  paste0("Al precio de venta unitario de cada ", producto_singular,
+         " restarle $", formatear_entero(precio_compra),
+         " y multiplicar la diferencia obtenida por el total de unidades vendidas."),
+
+  paste0("Determinar la ganancia por ", producto_singular,
+         " restando $", formatear_entero(precio_compra),
+         " del precio de venta, y multiplicar por el número de unidades comercializadas."),
+
+  paste0("Obtener la utilidad unitaria sustrayendo $", formatear_entero(precio_compra),
+         " del precio de venta de cada ", producto_singular,
+         ", luego multiplicar por la cantidad total vendida.")
+)
+
+# Seleccionar aleatoriamente una de las 5 respuestas correctas
+afirmacion_correcta <- sample(respuestas_correctas, 1)
+
+# Distractores con errores conceptuales comunes
+# Distractor B: Error de inversión de la resta (precio_compra - precio_venta)
+distractores_b <- c(
+  paste0("A $", formatear_entero(precio_compra),
+         " restarle el precio de venta de cada ", producto_singular,
+         " y multiplicar dicho valor por el número de unidades vendidas."),
+
+  paste0("Calcular la diferencia entre $", formatear_entero(precio_compra),
+         " y el precio de venta de cada ", producto_singular,
+         ", y multiplicar este resultado por la cantidad de unidades vendidas."),
+
+  paste0("Del costo de $", formatear_entero(precio_compra),
+         " sustraer el precio de venta de cada ", producto_singular,
+         " y multiplicar la diferencia por el total de unidades vendidas."),
+
+  paste0("Determinar cuánto excede $", formatear_entero(precio_compra),
+         " al precio de venta de cada ", producto_singular,
+         " y multiplicar por el número de unidades comercializadas."),
+
+  paste0("Obtener la diferencia restando el precio de venta de cada ", producto_singular,
+         " a $", formatear_entero(precio_compra),
+         ", luego multiplicar por la cantidad total vendida.")
+)
+
+# Seleccionar aleatoriamente una de las 5 variaciones del distractor B
+distractor_b <- sample(distractores_b, 1)
+
+distractor_c <- paste0("Restar el resultado de la multiplicación entre $", formatear_entero(precio_compra),
+                      " y el número de unidades vendidas, al precio de venta de cada ",
+                      producto_singular, ".")
+
+distractor_d <- paste0("Restar el resultado de la multiplicación entre el precio de venta de cada ",
+                      producto_singular,
+                      " y el número de unidades vendidas, a $", formatear_entero(precio_compra), ".")
+
+# Crear vector con todas las opciones
+opciones_originales <- c(afirmacion_correcta, distractor_b, distractor_c, distractor_d)
+names(opciones_originales) <- c("correcta", "distractor_b", "distractor_c", "distractor_d")
+
+# Aleatorizar manualmente las opciones
+indices_mezclados <- sample(1:4)
+opciones <- opciones_originales[indices_mezclados]
+
+# Encontrar la nueva posición de la respuesta correcta
+posicion_correcta <- which(indices_mezclados == 1)
+
+# Crear el vector de solución
+solucion <- rep(0, 4)
+solucion[posicion_correcta] <- 1
+
+# Pruebas de validación matemática
+test_that("Validaciones matemáticas del ejercicio", {
+  # Verificar que el precio de compra es positivo
+  expect_true(precio_compra > 0,
+              info = "El precio de compra debe ser positivo")
+
+  # Verificar que todas las opciones son diferentes
+  expect_equal(length(unique(opciones)), 4,
+               info = "Las 4 opciones deben ser textualmente diferentes")
+
+  # Verificar que la respuesta correcta está presente
+  expect_true(afirmacion_correcta %in% opciones,
+              info = "La respuesta correcta debe estar presente en las opciones")
+
+  # Verificar que el vector de solución es válido
+  expect_equal(sum(solucion), 1,
+              info = "Debe haber exactamente una respuesta correcta")
+  expect_equal(length(solucion), 4,
+              info = "El vector de solución debe tener 4 elementos")
+})
+
+# Prueba de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:100) {
+    set.seed(i)
+    # Simular generación de datos
+    contexto_test <- sample(contextos_data$nombre, 1)
+    comerciante_test <- sample(comerciantes_data$nombre, 1)
+    producto_test <- sample(productos_data$plural, 1)
+    precio_test <- sample(precios_compra_posibles, 1) * 1000
+
+    datos_test <- list(contexto = contexto_test, comerciante = comerciante_test,
+                      producto = producto_test, precio = precio_test)
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 30,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas de 100 intentos. Se requieren al menos 30."))
+})
+```
+
+Question
+========
+
+`r articulo_un_comerciante` `r comerciante` `r termino_desea` `r termino_conocer` el valor de las ganancias que `r termino_obtiene` por `r articulo_venta` `r termino_venta` de `r producto`.
+
+En este sentido, si `r articulo_el_comerciante` `r comerciante` `r termino_compra` cada `r producto_singular` a $`r formatear_entero(precio_compra)`, ¿cuál de los siguientes `r termino_procedimientos` le `r termino_permite` determinar `r articulo_monto` `r termino_monto` de sus ganancias?
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+Para resolver este problema, debemos entender el concepto de ganancia en el contexto comercial y identificar el procedimiento correcto para calcularla.
+
+### Concepto de ganancia
+
+La **ganancia** en una transacción comercial se define como:
+
+**Ganancia = Precio de venta - Precio de compra**
+
+### Análisis del problema
+
+Datos del problema:
+
+- Precio de compra por unidad: $`r formatear_entero(precio_compra)`
+- Se busca determinar el procedimiento para calcular las ganancias totales
+
+### Procedimiento correcto
+
+Para calcular las ganancias totales por la venta de `r producto`, debemos:
+
+1. **Calcular la ganancia por unidad**: Precio de venta - Precio de compra
+2. **Multiplicar por el número de unidades vendidas**: (Precio de venta - Precio de compra) × Número de unidades
+
+Esto es equivalente a:
+
+**(Precio de venta - $`r formatear_entero(precio_compra)`) × Número de unidades vendidas**
+
+### Análisis de las opciones
+
+**Opción correcta**: 
+
+"`r afirmacion_correcta`"
+
+- Esta opción representa correctamente la fórmula: (Precio de venta - Precio de compra) × Cantidad
+- Primero resta el costo al precio de venta para obtener la ganancia unitaria
+- Luego multiplica por las unidades vendidas para obtener la ganancia total
+
+**Análisis de distractores**:
+
+- Las demás opciones presentan errores en el orden de las operaciones o en la interpretación del concepto de ganancia
+- Algunos invierten la resta (precio de compra - precio de venta), lo que daría pérdidas en lugar de ganancias
+- Otros alteran el orden de las operaciones, llevando a cálculos incorrectos
+
+**Por lo tanto, la respuesta correcta es la que establece restar el precio de compra al precio de venta y multiplicar por las unidades vendidas.**
+
+Answerlist
+----------
+- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: ganancias_comerciales_formulacion_ejecucion
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: FALSE
+exsection: Aritmética|Operaciones básicas|Aplicaciones comerciales
