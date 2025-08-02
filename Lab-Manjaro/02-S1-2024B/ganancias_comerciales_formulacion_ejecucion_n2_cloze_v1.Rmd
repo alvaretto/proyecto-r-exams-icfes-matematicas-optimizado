@@ -1,0 +1,415 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "amsmath"]
+icfes:
+  competencia: formulacion_ejecucion
+  componente: numerico_variacional
+  afirmacion: Resuelve problemas que requieren el planteamiento y estructuración de soluciones ante contextos problémicos
+  evidencia: Utiliza operaciones básicas para resolver problemas de aplicación comercial
+  nivel: 2
+  tematica: Operaciones básicas y aplicaciones comerciales
+  contexto: laboral
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+library(exams)
+library(knitr)
+library(testthat)
+library(digest)
+
+typ <- match_exams_device()
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Función de formato estándar para números (sin separador de miles, punto decimal)
+formato_estandar <- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
+# Función de redondeo matemático correcto (hacia arriba para .5)
+redondear_matematico <- function(x, digits = 0) {
+  factor <- 10^digits
+  return(floor(x * factor + 0.5) / factor)
+}
+
+# Establecer semilla aleatoria para diversidad
+set.seed(as.numeric(Sys.time()) + sample(1:10000, 1))
+
+# Aleatorización de contexto comercial
+contextos_data <- data.frame(
+  nombre = c("tienda", "empresa", "negocio"),
+  genero = c("f", "f", "m"),
+  articulo = c("una", "una", "un"),
+  stringsAsFactors = FALSE
+)
+contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
+contexto <- contexto_seleccionado$nombre
+articulo_contexto <- contexto_seleccionado$articulo
+
+# Aleatorización del tipo de comerciante
+comerciantes_data <- data.frame(
+  nombre = c("vendedor", "empresario", "comerciante"),
+  genero = c("m", "m", "m"),
+  articulo_el = c("el", "el", "el"),
+  articulo_un = c("un", "un", "un"),
+  stringsAsFactors = FALSE
+)
+comerciante_seleccionado <- comerciantes_data[sample(nrow(comerciantes_data), 1), ]
+comerciante <- comerciante_seleccionado$nombre
+articulo_el_comerciante <- comerciante_seleccionado$articulo_el
+articulo_un_comerciante <- comerciante_seleccionado$articulo_un
+
+# Aleatorización del producto
+productos_data <- data.frame(
+  plural = c("pantalones", "camisas", "zapatos"),
+  singular = c("pantalón", "camisa", "zapato"),
+  genero = c("m", "f", "m"),
+  stringsAsFactors = FALSE
+)
+producto_seleccionado <- productos_data[sample(nrow(productos_data), 1), ]
+producto <- producto_seleccionado$plural
+producto_singular <- producto_seleccionado$singular
+genero_producto <- producto_seleccionado$genero
+
+# Aleatorización de nombres para el contexto
+nombres_masculinos <- c("Pedro", "Carlos", "Miguel", "Antonio", "Diego", "Sebastián")
+nombres_femeninos <- c("María", "Ana", "Carmen", "Laura", "Sofía", "Valentina")
+nombre_comerciante <- sample(c(nombres_masculinos, nombres_femeninos), 1)
+
+# Aleatorización matemáticamente relevante de precios
+tipo_ganancia <- sample(c("baja", "media", "alta"), 1)
+
+if (tipo_ganancia == "baja") {
+  precio_compra <- sample(c(80, 90, 100, 120), 1) * 1000
+  margen_ganancia <- sample(c(0.10, 0.15, 0.20), 1)  # 10-20% ganancia
+} else if (tipo_ganancia == "media") {
+  precio_compra <- sample(c(60, 70, 80, 100), 1) * 1000
+  margen_ganancia <- sample(c(0.25, 0.30, 0.35), 1)  # 25-35% ganancia
+} else {
+  precio_compra <- sample(c(50, 60, 70, 80), 1) * 1000
+  margen_ganancia <- sample(c(0.40, 0.50, 0.60), 1)  # 40-60% ganancia
+}
+
+# Calcular precio de venta basado en el margen
+precio_venta <- precio_compra * (1 + margen_ganancia)
+ganancia_unitaria <- precio_venta - precio_compra
+
+# Número de unidades vendidas (matemáticamente relevante)
+unidades_vendidas <- sample(c(5, 8, 10, 12, 15, 20, 25), 1)
+ganancia_total <- ganancia_unitaria * unidades_vendidas
+
+# Respuestas para el formato cloze
+respuesta_1 <- precio_compra      # Paso 1: Precio de compra
+respuesta_2 <- precio_venta       # Paso 2: Precio de venta
+respuesta_3 <- ganancia_unitaria  # Paso 3: Ganancia unitaria
+respuesta_4 <- unidades_vendidas  # Paso 4: Unidades vendidas
+respuesta_5 <- ganancia_total     # Paso 5: Ganancia total
+
+# Generar opciones para la pregunta schoice final (basadas en el ejercicio original)
+respuestas_correctas <- c(
+  paste0("Restar $", formatear_entero(precio_compra),
+         " al precio de venta de cada ", producto_singular,
+         " y multiplicar dicho valor por el número de unidades vendidas."),
+  
+  paste0("Calcular la diferencia entre el precio de venta y $", formatear_entero(precio_compra),
+         " por cada ", producto_singular,
+         ", y multiplicar este resultado por la cantidad de unidades vendidas."),
+  
+  paste0("Al precio de venta unitario de cada ", producto_singular,
+         " restarle $", formatear_entero(precio_compra),
+         " y multiplicar la diferencia obtenida por el total de unidades vendidas.")
+)
+
+afirmacion_correcta <- sample(respuestas_correctas, 1)
+
+# Distractores con errores conceptuales comunes
+distractores <- c(
+  paste0("A $", formatear_entero(precio_compra),
+         " restarle el precio de venta de cada ", producto_singular,
+         " y multiplicar dicho valor por el número de unidades vendidas."),
+  
+  paste0("Multiplicar el precio de venta de cada ", producto_singular,
+         " por el número de unidades vendidas y restar $", formatear_entero(precio_compra), "."),
+  
+  paste0("Multiplicar $", formatear_entero(precio_compra),
+         " por el número de unidades vendidas para obtener la ganancia total.")
+)
+
+# Crear opciones finales para schoice
+opciones_schoice <- c(afirmacion_correcta, distractores)
+
+# Mezclar opciones aleatoriamente
+orden_aleatorio <- sample(1:4)
+opciones_mezcladas <- opciones_schoice[orden_aleatorio]
+
+# Para schoice en cloze, necesitamos un vector lógico
+indice_respuesta_correcta <- which(orden_aleatorio == 1)
+solucion_schoice <- rep(FALSE, 4)
+solucion_schoice[indice_respuesta_correcta] <- TRUE
+
+# Vector de soluciones para formato cloze (5 numéricas + 1 schoice)
+solucion_cloze <- list(
+  respuesta_1,      # Paso 1: Precio de compra
+  respuesta_2,      # Paso 2: Precio de venta
+  respuesta_3,      # Paso 3: Ganancia unitaria
+  respuesta_4,      # Paso 4: Unidades vendidas
+  respuesta_5       # Paso 5: Ganancia total
+)
+
+# Tipos de respuesta: 5 numéricas + 1 schoice
+tipos_respuesta <- c("num", "num", "num", "num", "num", "schoice")
+
+# Tolerancias para respuestas numéricas
+tolerancias <- c(0, 0, 0, 0, 0, 0)
+
+# Detectar formato de salida para ajustes posteriores
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# PRUEBAS DE VALIDACIÓN MATEMÁTICA
+test_that("Validación de datos generados", {
+  expect_true(precio_compra > 0 && precio_venta > 0)
+  expect_true(precio_venta > precio_compra)
+  expect_equal(ganancia_unitaria, precio_venta - precio_compra)
+  expect_equal(ganancia_total, ganancia_unitaria * unidades_vendidas)
+  expect_equal(length(solucion_cloze), 5)
+  expect_equal(length(tipos_respuesta), 6)
+  expect_equal(length(tolerancias), 6)
+  expect_equal(length(opciones_schoice), 4)
+  expect_equal(length(unique(opciones_schoice)), 4)
+})
+
+test_that("Validación de coherencia matemática", {
+  expect_equal(respuesta_1, precio_compra)
+  expect_equal(respuesta_2, precio_venta)
+  expect_equal(respuesta_3, ganancia_unitaria)
+  expect_equal(respuesta_4, unidades_vendidas)
+  expect_equal(respuesta_5, ganancia_total)
+  expect_true(afirmacion_correcta %in% opciones_schoice)
+  expect_true(all(sapply(solucion_cloze, is.numeric)))
+  expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
+})
+```
+
+Question
+========
+
+`r nombre_comerciante` es `r articulo_un_comerciante` `r comerciante` que trabaja en `r articulo_contexto` `r contexto` de `r producto`. Para analizar sus ganancias, necesita calcular cuánto dinero obtiene por la venta de estos productos.
+
+`r nombre_comerciante` compra cada `r producto_singular` a un precio determinado y los vende con una ganancia. En una transacción reciente, vendió `r unidades_vendidas` `r producto` obteniendo una ganancia de $`r formatear_entero(ganancia_unitaria)` por cada unidad.
+
+**IMPORTANTE - Formato de números:**
+
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: $16850.32 (no $16.850,32 ni $16850,32)
+- **Respuestas numéricas**: Sin separador de miles, use punto para decimales
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+
+Para determinar el proceso completo de cálculo de ganancias, resuelva paso a paso:
+
+### Paso 1: Identificación del precio de compra
+Si `r nombre_comerciante` obtiene una ganancia de $`r formatear_entero(ganancia_unitaria)` por cada `r producto_singular` y los vende a $`r formatear_entero(precio_venta)` cada uno, ¿cuál es el precio de compra por unidad?
+
+**Respuesta:** $##ANSWER1##
+
+### Paso 2: Confirmación del precio de venta
+Según la información del problema, ¿cuál es el precio de venta por cada `r producto_singular`?
+
+**Respuesta:** $##ANSWER2##
+
+### Paso 3: Cálculo de la ganancia unitaria
+Complete la fórmula para verificar la ganancia por unidad:
+
+Ganancia unitaria = Precio de venta - Precio de compra
+Ganancia unitaria = $##ANSWER2## - $##ANSWER1## = $##ANSWER3##
+
+### Paso 4: Identificación de unidades vendidas
+Según el enunciado, ¿cuántas unidades de `r producto` vendió `r nombre_comerciante` en esta transacción?
+
+**Respuesta:** ##ANSWER4## unidades
+
+### Paso 5: Cálculo de la ganancia total
+Complete la fórmula para calcular la ganancia total:
+
+Ganancia total = Ganancia unitaria × Número de unidades vendidas
+Ganancia total = $##ANSWER3## × ##ANSWER4## = $##ANSWER5##
+
+### Paso 6: Confirmación del procedimiento (CON PUNTUACIÓN)
+Basándose en su análisis anterior, **seleccione el procedimiento correcto** que le permite a `r nombre_comerciante` determinar el monto de sus ganancias totales:
+
+##ANSWER6##
+
+**Conclusión:** La ganancia total obtenida por `r nombre_comerciante` en esta transacción es de $##ANSWER5##.
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+### Análisis paso a paso del problema de ganancias comerciales
+
+Este problema de **cálculo de ganancias comerciales** requiere un análisis secuencial que demuestre el proceso de razonamiento matemático aplicado a contextos comerciales reales:
+
+**NOTA IMPORTANTE - Formato de números estandarizado:**
+
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: $16850.32 (no $16.850,32 ni $16850,32)
+- **Respuestas numéricas**: Sin separador de miles, punto como separador decimal
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+- **Consistencia**: Mismo formato en enunciado, opciones y respuestas
+
+### Paso 1: Identificación correcta del precio de compra ✓
+
+**Respuesta correcta:** $`r formato_estandar(precio_compra, 0)`
+
+**Razonamiento:**
+Si el precio de venta es $`r formato_estandar(precio_venta, 0)` y la ganancia unitaria es $`r formato_estandar(ganancia_unitaria, 0)`, entonces:
+
+$$\text{Precio de compra} = \text{Precio de venta} - \text{Ganancia unitaria}$$
+$$\text{Precio de compra} = `r formato_estandar(precio_venta, 0)` - `r formato_estandar(ganancia_unitaria, 0)` = `r formato_estandar(precio_compra, 0)`$$
+
+### Paso 2: Confirmación del precio de venta ✓
+
+**Respuesta correcta:** $`r formato_estandar(precio_venta, 0)`
+
+Este valor se proporciona directamente en el enunciado del problema como dato conocido.
+
+### Paso 3: Verificación de la ganancia unitaria ✓
+
+**Respuesta correcta:** $`r formato_estandar(ganancia_unitaria, 0)`
+
+**Verificación del cálculo:**
+$$\text{Ganancia unitaria} = \text{Precio de venta} - \text{Precio de compra}$$
+$$\text{Ganancia unitaria} = `r formato_estandar(precio_venta, 0)` - `r formato_estandar(precio_compra, 0)` = `r formato_estandar(ganancia_unitaria, 0)`$$
+
+Este resultado coincide con la ganancia unitaria proporcionada en el enunciado, confirmando la coherencia de los datos.
+
+### Paso 4: Identificación de unidades vendidas ✓
+
+**Respuesta correcta:** `r formato_estandar(unidades_vendidas, 0)` unidades
+
+Este valor se proporciona directamente en el enunciado del problema.
+
+### Paso 5: Cálculo de la ganancia total ✓
+
+**Respuesta correcta:** $`r formato_estandar(ganancia_total, 0)`
+
+**Cálculo completo:**
+$$\text{Ganancia total} = \text{Ganancia unitaria} \times \text{Número de unidades vendidas}$$
+$$\text{Ganancia total} = `r formato_estandar(ganancia_unitaria, 0)` \times `r formato_estandar(unidades_vendidas, 0)` = `r formato_estandar(ganancia_total, 0)`$$
+
+### Paso 6: Confirmación del procedimiento correcto ✓ (CON PUNTUACIÓN)
+
+**Opciones presentadas:**
+
+```{r mostrar_opciones_solucion, echo=FALSE, results='asis'}
+for(i in 1:4) {
+  correcto <- if(i == indice_respuesta_correcta) " ← **RESPUESTA CORRECTA**" else ""
+  cat(paste0("- **", LETTERS[i], "**: ", opciones_mezcladas[i], correcto, "\n"))
+}
+```
+
+**Análisis de la respuesta correcta:**
+
+"`r afirmacion_correcta`"
+
+- Esta opción representa correctamente la fórmula: (Precio de venta - Precio de compra) × Cantidad
+- Primero resta el costo al precio de venta para obtener la ganancia unitaria
+- Luego multiplica por las unidades vendidas para obtener la ganancia total
+- Es el procedimiento matemáticamente correcto para calcular ganancias comerciales
+
+**Análisis de distractores:**
+
+- Las demás opciones presentan errores conceptuales comunes:
+  - Inversión del orden de la resta (precio de compra - precio de venta)
+  - Alteración del orden de las operaciones
+  - Confusión entre ganancia total y otros conceptos comerciales
+
+### Verificación del proceso de razonamiento completo
+
+**Datos del problema:**
+- Precio de compra: $`r formato_estandar(precio_compra, 0)`
+- Precio de venta: $`r formato_estandar(precio_venta, 0)`
+- Ganancia unitaria: $`r formato_estandar(ganancia_unitaria, 0)`
+- Unidades vendidas: `r formato_estandar(unidades_vendidas, 0)`
+- Ganancia total: $`r formato_estandar(ganancia_total, 0)`
+
+**El formato híbrido con puntuación dual (cloze + schoice) garantiza que los estudiantes:**
+
+**Parte Analítica (Pasos 1-5):**
+- **Identifiquen correctamente** todos los elementos del problema comercial
+- **Apliquen las fórmulas** de ganancia paso a paso
+- **Realicen cálculos** matemáticos precisos sin saltar etapas
+- **Comprendan la relación** entre precio de compra, venta y ganancia
+
+**Parte de Confirmación (Paso 6):**
+- **Demuestren coherencia** entre su análisis numérico y la comprensión conceptual
+- **Identifiquen el procedimiento correcto** entre múltiples opciones
+- **Consoliden su aprendizaje** mediante validación de resultados
+
+### Conclusión
+
+La ganancia total obtenida por `r nombre_comerciante` en esta transacción es de **$`r formato_estandar(ganancia_total, 0)`**.
+
+Esta respuesta es coherente porque:
+- Se basa en datos proporcionados en el enunciado
+- Aplica correctamente las fórmulas de ganancia comercial
+- Todos los cálculos intermedios son verificables
+- El procedimiento seleccionado es matemáticamente correcto
+
+**Verificación adicional**: El margen de ganancia aplicado es del `r formato_estandar(margen_ganancia * 100, 1)`%, lo cual es un margen comercial realista para el tipo de producto (`r producto`).
+
+Meta-information
+================
+exname: Ganancias Comerciales Formulación Ejecución - Análisis Secuencial
+extype: cloze
+exsolution: `r paste(c(solucion_cloze[1:5], mchoice2string(solucion_schoice)), collapse="|")`
+exclozetype: `r paste(tipos_respuesta, collapse="|")`
+extol: `r paste(tolerancias, collapse="|")`
+exsection: Aritmética|Operaciones básicas|Aplicaciones comerciales|Análisis de ganancias
+exextra[Type]: Cálculo
+exextra[Program]: R
+exextra[Language]: es
+exextra[Level]: 2
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico variacional
+exextra[Contexto]: Laboral
+exextra[Dificultad]: Media
