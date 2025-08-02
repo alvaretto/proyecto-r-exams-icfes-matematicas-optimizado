@@ -11,6 +11,21 @@ output:
 ### 🎨 **FASE 1: Análisis Automático de Imagen y Sistema Condicional TikZ**
 *Sistema inteligente de detección automática de contenido gráfico con flujos especializados*
 
+### 🧠 **FASE 0: Análisis de Patrones Pedagógicos (NUEVA)**
+*Identificación de patrones de sobre-ingeniería vs valor educativo real*
+
+- [ ] **🔍 0.1 Análisis Profundo de Patrones Existentes**
+  - Identificar aleatorización superficial vs diversidad matemáticamente relevante
+  - Detectar complejidad técnica innecesaria vs sofisticación que aporta valor
+  - Evaluar distractores débiles vs errores conceptuales reales
+  - Aplicar "malicia indígena" para detectar sobre-ingeniería
+
+- [ ] **⚖️ 0.2 Balanceo Técnico-Pedagógico**
+  - Principio: "Elegancia técnica donde aporta valor educativo real"
+  - Simplificar elementos que no mejoran la experiencia matemática
+  - Mantener sofisticación en aspectos educativamente relevantes
+  - Respetar enfoque original del problema
+
 - [ ] **📁 1.1 Preparación del Archivo**
   - Colocar nueva imagen en directorio de trabajo bajo `Lab/` (cualquier subdirectorio)
   - **Ejemplo**: `/Lab/Prueba-Temporal_TikZ/nueva_imagen.png` o `/Lab/[proyecto]/imagen.png`
@@ -189,15 +204,16 @@ output:
 
 ---
 
-### 🎲 **FASE 4: Generación de Datos Aleatorios**
-*Crear función de generación con mínimo 300 versiones únicas*
+### 🎲 **FASE 4: Generación de Datos Aleatorios Inteligente**
+*Crear función de generación con mínimo 300 versiones únicas - ENFOQUE OPTIMIZADO*
 
-- [ ] **🔢 4.1 Función generar_datos()**
-  - Implementar aleatorización de contextos (mínimo 8-10 escenarios)
-  - Generar parámetros numéricos variables con rangos realistas
-  - Incluir aleatorización de nombres, colores, unidades
-  - Asegurar coherencia matemática en todos los casos
-  - Retornar lista estructurada con todos los parámetros
+- [ ] **🔢 4.1 Función generar_datos() Optimizada**
+  - **PRIORIZAR**: Diversidad matemáticamente relevante sobre aleatorización superficial
+  - **EVITAR**: Exceso de contextos que no aportan valor educativo (máximo 3-5 opciones)
+  - **ENFOCAR**: Parámetros que cambien la experiencia matemática del estudiante
+  - **IMPLEMENTAR**: Diferentes tipos de problemas (ej: ganancia baja/media/alta)
+  - **MANTENER**: Coherencia matemática y realismo en todos los casos
+  - Retornar lista estructurada con parámetros educativamente relevantes
 
 - [ ] **✅ 4.2 Prueba de Diversidad**
   ```r
@@ -271,13 +287,14 @@ output:
 - [ ] **❓ 6.1 Sección Question**
   - Redactar contexto realista y relevante
   - Formular pregunta clara según competencia ICFES
-  - **🎯 Crear 4 opciones con sistema avanzado de distractores:**
-    - Generar 8+ tipos diferentes de distractores (confusión conceptual, errores de cálculo, posiciones incorrectas, etc.)
-    - **30% probabilidad**: Incluir valores duplicados con justificaciones diferentes (ej: "mediana es 30 porque promedio centrales" vs "mediana es 30 porque suma/división")
-    - **70% probabilidad**: Mantener todos los valores diferentes (modo tradicional)
-    - Selección estratégica: 1 distractor con valor duplicado + 2 con valores diferentes
+  - **🎯 Crear 4 opciones con distractores conceptuales optimizados:**
+    - **PRIORIZAR**: Errores conceptuales reales que cometen estudiantes
+    - **EVITAR**: Distractores artificiales o demasiado complejos
+    - **IMPLEMENTAR**: Máximo 3-5 tipos de distractores bien fundamentados
+    - **ENFOCAR**: Confusiones conceptuales específicas del tema matemático
+    - **MANTENER**: Simplicidad en la generación sin sobre-ingeniería
     - Verificar que las 4 opciones sean textualmente únicas
-    - Asegurar distractores plausibles y educativos
+    - Asegurar distractores pedagógicamente efectivos
   - Incluir gráficos/tablas si es necesario
 
 - [ ] **💡 6.2 Sección Solution**
@@ -644,10 +661,12 @@ Comando para nueva imagen:
 
 ## 🎯 **CRITERIOS DE CALIDAD OBLIGATORIOS**
 
-### ✅ **Aleatorización Avanzada:**
-- Mínimo 300 versiones únicas verificadas
-- Contextos, valores, colores, nombres variables
-- Orden aleatorio de opciones
+### ✅ **Aleatorización Inteligente:**
+- **Estándar del proyecto**: Mínimo 300 versiones únicas verificadas
+- **Diversidad matemáticamente relevante**: Enfocar en aspectos que cambien la experiencia matemática
+- **Evitar aleatorización superficial**: No diversificar elementos cosméticos sin valor educativo
+- **Distractores conceptuales**: Representar errores reales que cometen estudiantes
+- **Simplicidad técnica**: Mantener elegancia sin sobre-ingeniería
 
 ### ✅ **Robustez Matemática:**
 - Validaciones de coherencia
