@@ -33,6 +33,15 @@ RepositorioMatematicasICFES_R_Exams.
 - Consultar biblioteca de soluciones probadas
 - Ejecutar checklist de validación sistemática
 
+### METODOLOGÍA OPTIMIZACIÓN DE PATRONES PEDAGÓGICOS
+- **NUEVA**: Análisis profundo de patrones en ejercicios existentes
+- Identificación de "sobre-ingeniería" vs valor educativo real:
+  * Aleatorización superficial vs diversidad matemáticamente relevante
+  * Complejidad técnica vs simplicidad pedagógica efectiva
+  * Distractores débiles vs errores conceptuales reales
+- Aplicar principio: "Elegancia técnica donde aporta valor educativo"
+- Balancear sofisticación técnica con efectividad pedagógica
+
 ### METODOLOGÍA PROTOCOLO ANTI-ERRORES DE IMPLEMENTACIÓN
 - **NUEVA**: Prevención sistemática de errores durante implementación
 - **OBLIGATORIO**: Consultar ejemplos funcionales ANTES de escribir código
@@ -265,12 +274,13 @@ exsection: [Sección temática]
 
 ## 🎯 CRITERIOS DE CALIDAD OBLIGATORIOS
 
-### ALEATORIZACIÓN AVANZADA:
-- Mínimo 300 versiones únicas verificadas con test
-- Parámetros numéricos variables con rangos realistas
-- Contextos alternativos (nombres, situaciones, objetos)
-- Colores aleatorios en gráficos
-- Orden aleatorio de opciones
+### ALEATORIZACIÓN INTELIGENTE:
+- **Estándar del proyecto**: Mínimo 300 versiones únicas verificadas con test
+- **Diversidad matemáticamente relevante**: Enfocar en aspectos que cambien la experiencia matemática
+- **Evitar aleatorización superficial**: No diversificar elementos cosméticos sin valor educativo
+- **Parámetros numéricos estratégicos**: Rangos que generen diferentes tipos de problemas
+- **Contextos educativamente distintos**: Solo cuando aporten valor pedagógico real
+- **Distractores conceptuales**: Representar errores reales que cometen estudiantes
 
 ### ROBUSTEZ MATEMÁTICA:
 - Validaciones de coherencia matemática
@@ -332,10 +342,13 @@ exsection: [Sección temática]
 ## ⚠️ RESTRICCIONES CRÍTICAS
 
 1. **NUNCA** usar set.seed() fijo - debe ser aleatorio
-2. **SIEMPRE** incluir prueba de diversidad de versiones
+2. **SIEMPRE** incluir prueba de diversidad de versiones (300+ estándar)
 3. **OBLIGATORIO** metadatos ICFES completos
 4. **REQUERIDO** mínimo 4 opciones de respuesta
 5. **ESENCIAL** explicación detallada en Solution
+6. **EVITAR** sobre-ingeniería que no aporte valor pedagógico
+7. **PRIORIZAR** simplicidad técnica con efectividad educativa
+8. **RESPETAR** enfoque original del problema (no cambiar estructura fundamental)
 
 ## 🔧 CORRECCIÓN DE ERRORES OBLIGATORIA
 
