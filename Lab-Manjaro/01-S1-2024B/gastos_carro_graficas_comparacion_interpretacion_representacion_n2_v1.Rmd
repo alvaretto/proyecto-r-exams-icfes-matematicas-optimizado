@@ -173,7 +173,149 @@ porc_semanas <- round((datos$totales_semana / sum(datos$totales_semana)) * 100, 
 # Determinar cuál opción es la correcta (B - barras apiladas por semana)
 respuesta_correcta <- 2  # Opción B
 solucion <- c(0, 1, 0, 0)
+
+# Detectar formato de salida para gráficas
+typ <- match_exams_device()
+es_pdf <- (typ == "pdf")
+
+# Detectar formatos que requieren archivos PNG
+formatos_png <- c("pdf", "pandoc", "docx", "odt")
+usar_png <- (typ %in% formatos_png)
+
+# Detectar formatos HTML/Moodle que usan plt.show()
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_html_moodle <- (match_exams_call() %in% formatos_moodle) || (typ == "html")
 ```
+
+```{python generar_graficas_hibridas, echo=FALSE, results='hide'}
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+
+# Configurar matplotlib según el formato
+es_pdf_py = r.es_pdf
+if es_pdf_py:
+    plt.ioff()  # Modo no interactivo para PDF
+    plt.rcParams['font.size'] = 10
+else:
+    plt.ion()   # Modo interactivo para HTML
+
+# Obtener datos de R
+gastos_semanas = r.datos['gastos_semanas']
+totales_semana = r.datos['totales_semana']
+porc_gasolina = r.porc_gasolina
+porc_parqueadero = r.porc_parqueadero
+porc_peajes = r.porc_peajes
+porc_semanas = r.porc_semanas
+
+# Preparar datos
+categorias = ['Gasolina', 'Parqueadero', 'Peajes']
+semanas = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
+gasolina_por_semana = [gastos_semanas[i]['gasolina'] for i in range(4)]
+parqueadero_por_semana = [gastos_semanas[i]['parqueadero'] for i in range(4)]
+peajes_por_semana = [gastos_semanas[i]['peajes'] for i in range(4)]
+
+# Paletas de colores profesionales
+colores_categorias = ['#2E5984', '#5B9BD5', '#A5A5A5']
+colores_semanas = ['#1F4E79', '#2E75B6', '#5B9BD5', '#8DB4E2']
+
+# Generar archivos PNG para PDF, pandoc, docx, etc.
+usar_png_py = r.usar_png
+if usar_png_py:
+    # GRÁFICA A: Circular por categoría
+    fig_a, ax_a = plt.subplots(figsize=(7, 6))
+    porcentajes_cat = [porc_gasolina, porc_parqueadero, porc_peajes]
+    wedges, texts, autotexts = ax_a.pie(porcentajes_cat, labels=categorias, autopct='%1.1f%%',
+                                       colors=colores_categorias, startangle=90,
+                                       explode=(0.05, 0.05, 0.05), shadow=True,
+                                       textprops={'fontsize': 10, 'fontweight': 'bold'})
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(11)
+    ax_a.set_title('Gráfica circular por categoría', fontsize=12, fontweight='bold', pad=20)
+    plt.tight_layout()
+    plt.savefig('grafica_a.png', dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+    # GRÁFICA B: Barras apiladas por semana
+    fig_b, ax_b = plt.subplots(figsize=(9, 6))
+    x = np.arange(len(semanas))
+    width = 0.4
+    p1 = ax_b.bar(x, gasolina_por_semana, width, label='Gasolina', color=colores_categorias[0])
+    p2 = ax_b.bar(x, parqueadero_por_semana, width, bottom=gasolina_por_semana,
+                  label='Parqueadero', color=colores_categorias[1])
+    p3 = ax_b.bar(x, peajes_por_semana, width,
+                  bottom=np.array(gasolina_por_semana) + np.array(parqueadero_por_semana),
+                  label='Peajes', color=colores_categorias[2])
+    max_total = max(totales_semana)
+    for i, total in enumerate(totales_semana):
+        ax_b.text(i, total + max_total * 0.02, f'${total:,}', ha='center', va='bottom',
+                  fontweight='bold', fontsize=10, color='#333333')
+    ax_b.set_xlabel('Semanas', fontsize=11, fontweight='bold')
+    ax_b.set_ylabel('Gastos (pesos)', fontsize=11, fontweight='bold')
+    ax_b.set_title('Gráfica de barras apiladas por semana', fontsize=12, fontweight='bold', pad=20)
+    ax_b.set_xticks(x)
+    ax_b.set_xticklabels(semanas, fontsize=10)
+    ax_b.legend(loc='upper left', frameon=True, fancybox=True, shadow=True, fontsize=10)
+    ax_b.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
+    ax_b.tick_params(axis='y', labelsize=9)
+    ax_b.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+    ax_b.set_axisbelow(True)
+    ax_b.set_ylim(0, max_total * 1.15)
+    plt.tight_layout()
+    plt.savefig('grafica_b.png', dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+    # GRÁFICA C: Circular por semana
+    fig_c, ax_c = plt.subplots(figsize=(7, 6))
+    wedges, texts, autotexts = ax_c.pie(porc_semanas, labels=semanas, autopct='%1.1f%%',
+                                       colors=colores_semanas, startangle=90,
+                                       explode=(0.05, 0.05, 0.05, 0.05), shadow=True,
+                                       textprops={'fontsize': 10, 'fontweight': 'bold'})
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(11)
+    ax_c.set_title('Gráfica circular por semana', fontsize=12, fontweight='bold', pad=20)
+    plt.tight_layout()
+    plt.savefig('grafica_c.png', dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+    # GRÁFICA D: Barras agrupadas por categoría
+    fig_d, ax_d = plt.subplots(figsize=(10, 6))
+    x = np.arange(len(categorias))
+    width = 0.15
+    rects1 = ax_d.bar(x - 1.5*width, [gasolina_por_semana[0], parqueadero_por_semana[0], peajes_por_semana[0]],
+                      width, label='Semana 1', color=colores_semanas[0], edgecolor='white', linewidth=0.5)
+    rects2 = ax_d.bar(x - 0.5*width, [gasolina_por_semana[1], parqueadero_por_semana[1], peajes_por_semana[1]],
+                      width, label='Semana 2', color=colores_semanas[1], edgecolor='white', linewidth=0.5)
+    rects3 = ax_d.bar(x + 0.5*width, [gasolina_por_semana[2], parqueadero_por_semana[2], peajes_por_semana[2]],
+                      width, label='Semana 3', color=colores_semanas[2], edgecolor='white', linewidth=0.5)
+    rects4 = ax_d.bar(x + 1.5*width, [gasolina_por_semana[3], parqueadero_por_semana[3], peajes_por_semana[3]],
+                      width, label='Semana 4', color=colores_semanas[3], edgecolor='white', linewidth=0.5)
+    ax_d.set_xlabel('Categorías de Gasto', fontsize=11, fontweight='bold')
+    ax_d.set_ylabel('Gastos (pesos)', fontsize=11, fontweight='bold')
+    ax_d.set_title('Gráfica de barras agrupadas por categoría', fontsize=12, fontweight='bold', pad=20)
+    ax_d.set_xticks(x)
+    ax_d.set_xticklabels(categorias, fontsize=10)
+    ax_d.legend(loc='upper right', frameon=True, fancybox=True, shadow=True, fontsize=10)
+    ax_d.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
+    ax_d.tick_params(axis='y', labelsize=9)
+    ax_d.grid(True, alpha=0.3, linestyle='--', linewidth=0.5, axis='y')
+    ax_d.set_axisbelow(True)
+    max_value = max([max(gasolina_por_semana), max(parqueadero_por_semana), max(peajes_por_semana)])
+    ax_d.set_ylim(0, max_value * 1.1)
+    plt.tight_layout()
+    plt.savefig('grafica_d.png', dpi=150, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+    print("Gráficas PNG generadas para PDF/Pandoc/DOCX")
+else:
+    print("Modo HTML/Moodle - gráficas se mostrarán con plt.show()")
+```
+
+
 
 
 
@@ -220,196 +362,219 @@ Si la persona quiere realizar una comparación entre los gastos totales por sema
 Answerlist
 ----------
 
-- **Opción A:** Gráfica circular por categoría
+```{r opcion_a, echo=FALSE, results='asis'}
+if (usar_png) {
+  # Para PDF, pandoc, docx - usar PNG con justificación izquierda
+  if (es_html_moodle) {
+    cat("- **Gráfica circular por categoría:** ![Gráfica A](grafica_a.png)")
+  } else {
+    cat("- **Gráfica circular por categoría:** \\begin{flushleft}\\includegraphics[width=0.7\\textwidth]{grafica_a.png}\\end{flushleft}")
+  }
+} else {
+  # Para HTML - usar plt.show()
+  cat("- <br/>")
+}
+```
 
-```{python grafica_a, echo=FALSE, results='hide'}
+```{python grafica_a_show, echo=FALSE, results='hide'}
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Obtener datos de R
-porc_gasolina = r.porc_gasolina
-porc_parqueadero = r.porc_parqueadero
-porc_peajes = r.porc_peajes
+# Solo mostrar si no usa PNG (solo para HTML puro)
+usar_png_py = r.usar_png
+if not usar_png_py:
+    # Obtener datos de R
+    porc_gasolina = r.porc_gasolina
+    porc_parqueadero = r.porc_parqueadero
+    porc_peajes = r.porc_peajes
 
-# Gráfica circular por categoría - MEJORADA
-fig, ax = plt.subplots(figsize=(7, 6))
-porcentajes_cat = [porc_gasolina, porc_parqueadero, porc_peajes]
-categorias = ['Gasolina', 'Parqueadero', 'Peajes']
+    # Gráfica circular por categoría
+    fig, ax = plt.subplots(figsize=(7, 6))
+    porcentajes_cat = [porc_gasolina, porc_parqueadero, porc_peajes]
+    categorias = ['Gasolina', 'Parqueadero', 'Peajes']
+    colores_cat = ['#2E5984', '#5B9BD5', '#A5A5A5']
 
-# Paleta de colores profesional consistente
-colores_cat = ['#2E5984', '#5B9BD5', '#A5A5A5']  # Mismos colores que gráfica B
+    wedges, texts, autotexts = ax.pie(porcentajes_cat, labels=categorias, autopct='%1.1f%%',
+                                     colors=colores_cat, startangle=90,
+                                     explode=(0.05, 0.05, 0.05), shadow=True,
+                                     textprops={'fontsize': 10, 'fontweight': 'bold'})
 
-# Crear gráfica circular mejorada
-wedges, texts, autotexts = ax.pie(porcentajes_cat, labels=categorias, autopct='%1.1f%%',
-                                 colors=colores_cat, startangle=90,
-                                 explode=(0.05, 0.05, 0.05),  # Separar ligeramente los sectores
-                                 shadow=True,  # Agregar sombra
-                                 textprops={'fontsize': 10, 'fontweight': 'bold'})
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(11)
 
-# Mejorar formato de texto
-for autotext in autotexts:
-    autotext.set_color('white')
-    autotext.set_fontweight('bold')
-    autotext.set_fontsize(11)
-
-ax.set_title('Gráfica circular por categoría', fontsize=12, fontweight='bold', pad=20)
-plt.tight_layout()
-plt.show()
+    ax.set_title('Gráfica circular por categoría', fontsize=12, fontweight='bold', pad=20)
+    plt.tight_layout()
+    plt.show()
 ```
 
-- **Opción B:** Gráfica de barras apiladas por semana
+```{r opcion_b, echo=FALSE, results='asis'}
+if (usar_png) {
+  # Para PDF, pandoc, docx - usar PNG con justificación izquierda
+  if (es_html_moodle) {
+    cat("- **Gráfica de barras apiladas por semana:** ![Gráfica B](grafica_b.png)")
+  } else {
+    cat("- **Gráfica de barras apiladas por semana:** \\begin{flushleft}\\includegraphics[width=0.8\\textwidth]{grafica_b.png}\\end{flushleft}")
+  }
+} else {
+  # Para HTML - usar plt.show()
+  cat("- <br/>")
+}
+```
 
-```{python grafica_b, echo=FALSE, results='hide'}
+```{python grafica_b_show, echo=FALSE, results='hide'}
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Obtener datos de R
-gastos_semanas = r.datos['gastos_semanas']
-totales_semana = r.datos['totales_semana']
+# Solo mostrar si no usa PNG (solo para HTML puro)
+usar_png_py = r.usar_png
+if not usar_png_py:
+    # Obtener datos de R
+    gastos_semanas = r.datos['gastos_semanas']
+    totales_semana = r.datos['totales_semana']
 
-# Preparar datos
-semanas = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
-gasolina_por_semana = [gastos_semanas[i]['gasolina'] for i in range(4)]
-parqueadero_por_semana = [gastos_semanas[i]['parqueadero'] for i in range(4)]
-peajes_por_semana = [gastos_semanas[i]['peajes'] for i in range(4)]
+    # Preparar datos
+    semanas = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
+    gasolina_por_semana = [gastos_semanas[i]['gasolina'] for i in range(4)]
+    parqueadero_por_semana = [gastos_semanas[i]['parqueadero'] for i in range(4)]
+    peajes_por_semana = [gastos_semanas[i]['peajes'] for i in range(4)]
 
-# Gráfica de barras apiladas por semana - MEJORADA
-fig, ax = plt.subplots(figsize=(9, 6))
-x = np.arange(len(semanas))
-width = 0.4  # Barras más delgadas para mejor legibilidad
+    # Gráfica de barras apiladas por semana
+    fig, ax = plt.subplots(figsize=(9, 6))
+    x = np.arange(len(semanas))
+    width = 0.4
+    colores_profesionales = ['#2E5984', '#5B9BD5', '#A5A5A5']
 
-# Paleta de colores profesional
-colores_profesionales = ['#2E5984', '#5B9BD5', '#A5A5A5']  # Azul oscuro, azul claro, gris
+    p1 = ax.bar(x, gasolina_por_semana, width, label='Gasolina', color=colores_profesionales[0])
+    p2 = ax.bar(x, parqueadero_por_semana, width, bottom=gasolina_por_semana,
+                label='Parqueadero', color=colores_profesionales[1])
+    p3 = ax.bar(x, peajes_por_semana, width,
+                bottom=np.array(gasolina_por_semana) + np.array(parqueadero_por_semana),
+                label='Peajes', color=colores_profesionales[2])
 
-# Crear barras apiladas
-p1 = ax.bar(x, gasolina_por_semana, width, label='Gasolina', color=colores_profesionales[0])
-p2 = ax.bar(x, parqueadero_por_semana, width, bottom=gasolina_por_semana,
-            label='Parqueadero', color=colores_profesionales[1])
-p3 = ax.bar(x, peajes_por_semana, width,
-            bottom=np.array(gasolina_por_semana) + np.array(parqueadero_por_semana),
-            label='Peajes', color=colores_profesionales[2])
+    max_total = max(totales_semana)
+    for i, total in enumerate(totales_semana):
+        ax.text(i, total + max_total * 0.02, f'${total:,}', ha='center', va='bottom',
+                fontweight='bold', fontsize=10, color='#333333')
 
-# Agregar totales encima de cada barra con mejor espaciado
-max_total = max(totales_semana)
-for i, total in enumerate(totales_semana):
-    ax.text(i, total + max_total * 0.02, f'${total:,}', ha='center', va='bottom',
-            fontweight='bold', fontsize=10, color='#333333')
-
-# Mejorar formato y estilo
-ax.set_xlabel('Semanas', fontsize=11, fontweight='bold')
-ax.set_ylabel('Gastos (pesos)', fontsize=11, fontweight='bold')
-ax.set_title('Gráfica de barras apiladas por semana', fontsize=12, fontweight='bold', pad=20)
-ax.set_xticks(x)
-ax.set_xticklabels(semanas, fontsize=10)
-
-# Leyenda mejorada
-ax.legend(loc='upper left', frameon=True, fancybox=True, shadow=True, fontsize=10)
-
-# Formato del eje Y mejorado
-ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
-ax.tick_params(axis='y', labelsize=9)
-
-# Grilla sutil para mejor lectura
-ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
-ax.set_axisbelow(True)
-
-# Ajustar límites para mejor visualización
-ax.set_ylim(0, max_total * 1.15)
-
-plt.tight_layout()
-plt.show()
+    ax.set_xlabel('Semanas', fontsize=11, fontweight='bold')
+    ax.set_ylabel('Gastos (pesos)', fontsize=11, fontweight='bold')
+    ax.set_title('Gráfica de barras apiladas por semana', fontsize=12, fontweight='bold', pad=20)
+    ax.set_xticks(x)
+    ax.set_xticklabels(semanas, fontsize=10)
+    ax.legend(loc='upper left', frameon=True, fancybox=True, shadow=True, fontsize=10)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
+    ax.tick_params(axis='y', labelsize=9)
+    ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+    ax.set_axisbelow(True)
+    ax.set_ylim(0, max_total * 1.15)
+    plt.tight_layout()
+    plt.show()
 ```
 
-- **Opción C:** Gráfica circular por semana
+```{r opcion_c, echo=FALSE, results='asis'}
+if (usar_png) {
+  # Para PDF, pandoc, docx - usar PNG con justificación izquierda
+  if (es_html_moodle) {
+    cat("- **Gráfica circular por semana:** ![Gráfica C](grafica_c.png)")
+  } else {
+    cat("- **Gráfica circular por semana:** \\begin{flushleft}\\includegraphics[width=0.7\\textwidth]{grafica_c.png}\\end{flushleft}")
+  }
+} else {
+  # Para HTML - usar plt.show()
+  cat("- <br/>")
+}
+```
 
-```{python grafica_c, echo=FALSE, results='hide'}
+```{python grafica_c_show, echo=FALSE, results='hide'}
 import matplotlib.pyplot as plt
 
-# Obtener datos de R
-porc_semanas = r.porc_semanas
+# Solo mostrar si no usa PNG (solo para HTML puro)
+usar_png_py = r.usar_png
+if not usar_png_py:
+    # Obtener datos de R
+    porc_semanas = r.porc_semanas
 
-# Gráfica circular por semana - MEJORADA
-fig, ax = plt.subplots(figsize=(7, 6))
-semanas = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
+    # Gráfica circular por semana
+    fig, ax = plt.subplots(figsize=(7, 6))
+    semanas = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4']
+    colores_sem = ['#1F4E79', '#2E75B6', '#5B9BD5', '#8DB4E2']
 
-# Paleta de colores profesional para semanas (gradiente)
-colores_sem = ['#1F4E79', '#2E75B6', '#5B9BD5', '#8DB4E2']  # Gradiente azul profesional
+    wedges, texts, autotexts = ax.pie(porc_semanas, labels=semanas, autopct='%1.1f%%',
+                                     colors=colores_sem, startangle=90,
+                                     explode=(0.05, 0.05, 0.05, 0.05), shadow=True,
+                                     textprops={'fontsize': 10, 'fontweight': 'bold'})
 
-# Crear gráfica circular mejorada
-wedges, texts, autotexts = ax.pie(porc_semanas, labels=semanas, autopct='%1.1f%%',
-                                 colors=colores_sem, startangle=90,
-                                 explode=(0.05, 0.05, 0.05, 0.05),  # Separar ligeramente los sectores
-                                 shadow=True,  # Agregar sombra
-                                 textprops={'fontsize': 10, 'fontweight': 'bold'})
+    for autotext in autotexts:
+        autotext.set_color('white')
+        autotext.set_fontweight('bold')
+        autotext.set_fontsize(11)
 
-# Mejorar formato de texto
-for autotext in autotexts:
-    autotext.set_color('white')
-    autotext.set_fontweight('bold')
-    autotext.set_fontsize(11)
-
-ax.set_title('Gráfica circular por semana', fontsize=12, fontweight='bold', pad=20)
-plt.tight_layout()
-plt.show()
+    ax.set_title('Gráfica circular por semana', fontsize=12, fontweight='bold', pad=20)
+    plt.tight_layout()
+    plt.show()
 ```
 
-- **Opción D:** Gráfica de barras agrupadas por categoría
+```{r opcion_d, echo=FALSE, results='asis'}
+if (usar_png) {
+  # Para PDF, pandoc, docx - usar PNG con justificación izquierda
+  if (es_html_moodle) {
+    cat("- **Gráfica de barras agrupadas por categoría:** ![Gráfica D](grafica_d.png)")
+  } else {
+    cat("- **Gráfica de barras agrupadas por categoría:** \\begin{flushleft}\\includegraphics[width=0.9\\textwidth]{grafica_d.png}\\end{flushleft}")
+  }
+} else {
+  # Para HTML - usar plt.show()
+  cat("- <br/>")
+}
+```
 
-```{python grafica_d, echo=FALSE, results='hide'}
+```{python grafica_d_show, echo=FALSE, results='hide'}
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Obtener datos de R
-gastos_semanas = r.datos['gastos_semanas']
+# Solo mostrar si no usa PNG (solo para HTML puro)
+usar_png_py = r.usar_png
+if not usar_png_py:
+    # Obtener datos de R
+    gastos_semanas = r.datos['gastos_semanas']
 
-# Preparar datos
-categorias = ['Gasolina', 'Parqueadero', 'Peajes']
-gasolina_por_semana = [gastos_semanas[i]['gasolina'] for i in range(4)]
-parqueadero_por_semana = [gastos_semanas[i]['parqueadero'] for i in range(4)]
-peajes_por_semana = [gastos_semanas[i]['peajes'] for i in range(4)]
+    # Preparar datos
+    categorias = ['Gasolina', 'Parqueadero', 'Peajes']
+    gasolina_por_semana = [gastos_semanas[i]['gasolina'] for i in range(4)]
+    parqueadero_por_semana = [gastos_semanas[i]['parqueadero'] for i in range(4)]
+    peajes_por_semana = [gastos_semanas[i]['peajes'] for i in range(4)]
 
-# Gráfica de barras agrupadas por categoría - MEJORADA
-fig, ax = plt.subplots(figsize=(10, 6))
-x = np.arange(len(categorias))
-width = 0.15  # Barras más delgadas
+    # Gráfica de barras agrupadas por categoría
+    fig, ax = plt.subplots(figsize=(10, 6))
+    x = np.arange(len(categorias))
+    width = 0.15
+    colores_semanas = ['#1F4E79', '#2E75B6', '#5B9BD5', '#8DB4E2']
 
-# Paleta de colores profesional para semanas
-colores_semanas = ['#1F4E79', '#2E75B6', '#5B9BD5', '#8DB4E2']  # Gradiente azul profesional
+    rects1 = ax.bar(x - 1.5*width, [gasolina_por_semana[0], parqueadero_por_semana[0], peajes_por_semana[0]],
+                    width, label='Semana 1', color=colores_semanas[0], edgecolor='white', linewidth=0.5)
+    rects2 = ax.bar(x - 0.5*width, [gasolina_por_semana[1], parqueadero_por_semana[1], peajes_por_semana[1]],
+                    width, label='Semana 2', color=colores_semanas[1], edgecolor='white', linewidth=0.5)
+    rects3 = ax.bar(x + 0.5*width, [gasolina_por_semana[2], parqueadero_por_semana[2], peajes_por_semana[2]],
+                    width, label='Semana 3', color=colores_semanas[2], edgecolor='white', linewidth=0.5)
+    rects4 = ax.bar(x + 1.5*width, [gasolina_por_semana[3], parqueadero_por_semana[3], peajes_por_semana[3]],
+                    width, label='Semana 4', color=colores_semanas[3], edgecolor='white', linewidth=0.5)
 
-# Crear barras agrupadas con mejor espaciado
-rects1 = ax.bar(x - 1.5*width, [gasolina_por_semana[0], parqueadero_por_semana[0], peajes_por_semana[0]],
-                width, label='Semana 1', color=colores_semanas[0], edgecolor='white', linewidth=0.5)
-rects2 = ax.bar(x - 0.5*width, [gasolina_por_semana[1], parqueadero_por_semana[1], peajes_por_semana[1]],
-                width, label='Semana 2', color=colores_semanas[1], edgecolor='white', linewidth=0.5)
-rects3 = ax.bar(x + 0.5*width, [gasolina_por_semana[2], parqueadero_por_semana[2], peajes_por_semana[2]],
-                width, label='Semana 3', color=colores_semanas[2], edgecolor='white', linewidth=0.5)
-rects4 = ax.bar(x + 1.5*width, [gasolina_por_semana[3], parqueadero_por_semana[3], peajes_por_semana[3]],
-                width, label='Semana 4', color=colores_semanas[3], edgecolor='white', linewidth=0.5)
-
-# Mejorar formato y estilo
-ax.set_xlabel('Categorías de Gasto', fontsize=11, fontweight='bold')
-ax.set_ylabel('Gastos (pesos)', fontsize=11, fontweight='bold')
-ax.set_title('Gráfica de barras agrupadas por categoría', fontsize=12, fontweight='bold', pad=20)
-ax.set_xticks(x)
-ax.set_xticklabels(categorias, fontsize=10)
-
-# Leyenda mejorada
-ax.legend(loc='upper right', frameon=True, fancybox=True, shadow=True, fontsize=10)
-
-# Formato del eje Y mejorado
-ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
-ax.tick_params(axis='y', labelsize=9)
-
-# Grilla sutil para mejor lectura
-ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5, axis='y')
-ax.set_axisbelow(True)
-
-# Ajustar límites para mejor visualización
-max_value = max([max(gasolina_por_semana), max(parqueadero_por_semana), max(peajes_por_semana)])
-ax.set_ylim(0, max_value * 1.1)
-
-plt.tight_layout()
-plt.show()
+    ax.set_xlabel('Categorías de Gasto', fontsize=11, fontweight='bold')
+    ax.set_ylabel('Gastos (pesos)', fontsize=11, fontweight='bold')
+    ax.set_title('Gráfica de barras agrupadas por categoría', fontsize=12, fontweight='bold', pad=20)
+    ax.set_xticks(x)
+    ax.set_xticklabels(categorias, fontsize=10)
+    ax.legend(loc='upper right', frameon=True, fancybox=True, shadow=True, fontsize=10)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
+    ax.tick_params(axis='y', labelsize=9)
+    ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5, axis='y')
+    ax.set_axisbelow(True)
+    max_value = max([max(gasolina_por_semana), max(parqueadero_por_semana), max(peajes_por_semana)])
+    ax.set_ylim(0, max_value * 1.1)
+    plt.tight_layout()
+    plt.show()
 ```
 
 Solution
@@ -428,31 +593,31 @@ Primero, calculemos los gastos totales por semana:
 
 ### Análisis de cada opción
 
-**Opción A:** Gráfica circular por categoría
+**Gráfica circular por categoría:** 
 
 * Muestra la proporción de cada tipo de gasto en el total general
 * NO permite comparar gastos totales por semana
 
-**Opción B:** Gráfica de barras apiladas por semana
+**Gráfica de barras apiladas por semana:** 
 
 * Cada barra representa una semana
 * La altura total de cada barra muestra el gasto total de esa semana
 * Permite comparar directamente los gastos totales entre semanas
 * **Esta es la respuesta correcta**
 
-**Opción C:** Gráfica circular por semana
+**Gráfica circular por semana:** 
 
 * Muestra la proporción de gastos de cada semana respecto al total del mes
 * No muestra los valores absolutos de cada semana claramente
 
-**Opción D:** Gráfica de barras agrupadas por categoría
+**Gráfica de barras agrupadas por categoría:** 
 
 * Agrupa las barras por tipo de gasto (gasolina, parqueadero, peajes)
 * Dificulta la comparación de gastos totales por semana
 
 ### Conclusión
 
-La **Opción B** (gráfica de barras apiladas por semana) es la única que permite comparar directamente los gastos totales por semana, ya que la altura de cada barra representa el gasto total de cada semana.
+La **Opción "gráfica de barras apiladas por semana"** es la única que permite comparar directamente los gastos totales por semana, ya que la altura de cada barra representa el gasto total de cada semana.
 
 Answerlist
 ----------
