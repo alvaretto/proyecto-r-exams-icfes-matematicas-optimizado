@@ -1,0 +1,34 @@
+---
+output:
+  pdf_document:
+    latex_engine: pdflatex
+---
+
+```{r setup, include=FALSE}
+library(exams)
+set.seed(12345)
+```
+
+Question
+========
+
+Problema de cálculo de costo promedio diario (versión PDF simplificada).
+
+Calcule el costo promedio diario si:
+- Cobro total: $20,000
+- Valor fijo: $5,000
+- Días de facturación: 30
+
+Respuesta: ##ANSWER1##
+
+Solution
+========
+
+Costo promedio = (20000 - 5000) / 30 = 500
+
+Meta-information
+================
+exname: PDF Basico
+extype: num
+exsolution: 500
+extol: 0

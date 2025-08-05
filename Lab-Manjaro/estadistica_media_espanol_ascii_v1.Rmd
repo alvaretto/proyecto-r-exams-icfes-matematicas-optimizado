@@ -1,0 +1,98 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## GENERACION DE DATOS
+# Configuracion inicial
+Sys.setlocale("LC_ALL", "C")
+options(OutDec = ".")
+options(scipen = 999)
+
+# Generar numero de calificaciones (entre 4 y 6)
+num_calificaciones <- sample(4:6, 1)
+
+# Generar calificaciones realistas del sistema colombiano (entre 2.5 y 5.0)
+calificaciones <- round(runif(num_calificaciones, 2.5, 5.0), 1)
+
+# Calcular la media aritmetica correcta
+media_correcta <- round(mean(calificaciones), 1)
+suma_total <- sum(calificaciones)
+
+# Contextos colombianos variados (solo ASCII)
+estudiante <- sample(c("Ana Sofia", "Carlos Andres", "Maria Fernanda", "Luis Miguel", "Sofia Isabella", "Diego Alejandro"), 1)
+materia <- sample(c("Matematicas", "Ciencias Naturales", "Lengua Castellana", "Ciencias Sociales"), 1)
+periodo <- sample(c("primer bimestre", "segundo periodo", "tercer periodo", "cuarto periodo"), 1)
+actividad <- sample(c("examenes", "laboratorios", "ensayos", "evaluaciones"), 1)
+
+## GENERACION DE PREGUNTAS Y RESPUESTAS
+# Generar distractores pedagogicamente validos
+distractores <- c()
+
+# Distractor 1: Confundir con mediana
+mediana_val <- round(median(calificaciones), 1)
+if(mediana_val != media_correcta) {
+  distractores <- c(distractores, mediana_val)
+}
+
+# Distractor 2: Valor maximo (error conceptual comun)
+max_val <- max(calificaciones)
+if(max_val != media_correcta) {
+  distractores <- c(distractores, max_val)
+}
+
+# Distractor 3: Promedio de extremos (minimo y maximo)
+extremos_val <- round((min(calificaciones) + max(calificaciones)) / 2, 1)
+if(extremos_val != media_correcta) {
+  distractores <- c(distractores, extremos_val)
+}
+
+# Completar con valores aleatorios si es necesario
+while(length(distractores) < 4) {
+  nuevo_val <- round(runif(1, 2.0, 5.0), 1)
+  if(!(nuevo_val %in% c(distractores, media_correcta))) {
+    distractores <- c(distractores, nuevo_val)
+  }
+}
+
+## TRANSFORMAR A OPCION MULTIPLE
+questions <- c(media_correcta, distractores[1:4])
+solutions <- c(TRUE, rep(FALSE, 4))
+
+# Mezclar opciones aleatoriamente
+o <- sample(1:5)
+questions <- questions[o]
+solutions <- solutions[o]
+```
+
+Question
+========
+En el `r periodo` de `r materia`, `r estudiante` obtuvo las siguientes calificaciones en `r num_calificaciones` `r actividad`:
+
+`r paste(calificaciones, collapse = ", ")`
+
+¿Cual es la media aritmetica de estas calificaciones?
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(questions, markup = "markdown")
+```
+
+Solution
+========
+Para calcular la media aritmetica de las calificaciones de `r estudiante`, debemos seguir estos pasos:
+
+**Paso 1:** Sumar todas las calificaciones
+`r paste(calificaciones, collapse = " + ")` = `r suma_total`
+
+**Paso 2:** Dividir la suma por el numero total de calificaciones
+`r suma_total` / `r num_calificaciones` = `r media_correcta`
+
+**Respuesta:** La media aritmetica es `r media_correcta`
+
+**Explicacion:** La media aritmetica (o promedio) se calcula sumando todos los valores y dividiendo el resultado por la cantidad total de datos. En este caso, `r estudiante` tuvo `r num_calificaciones` calificaciones que suman `r suma_total`, por lo que su promedio es `r media_correcta`.
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solutions, "Correcto", "Incorrecto"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(solutions, single = TRUE)`
+exname: Media Aritmetica Calificaciones Escolares
