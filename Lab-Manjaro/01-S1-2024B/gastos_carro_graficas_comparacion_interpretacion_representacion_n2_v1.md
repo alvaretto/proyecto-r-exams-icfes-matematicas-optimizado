@@ -144,7 +144,23 @@ porc_semanas <- round((datos$totales_semana / sum(datos$totales_semana)) * 100, 
 # Determinar cuál opción es la correcta (B - barras apiladas por semana)
 respuesta_correcta <- 2  # Opción B
 solucion <- c(0, 1, 0, 0)
+
+# Detectar formato de salida para gráficas
+typ <- match_exams_device()
+es_pdf <- (typ == "pdf")
+
+# Detectar formatos que requieren archivos PNG
+formatos_png <- c("pdf", "pandoc", "docx", "odt")
+usar_png <- (typ %in% formatos_png)
+
+# Detectar formatos HTML/Moodle que usan plt.show()
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_html_moodle <- (match_exams_call() %in% formatos_moodle) || (typ == "html")
 ```
+
+
+
+
 
 
 
@@ -160,21 +176,25 @@ Si la persona quiere realizar una comparación entre los gastos totales por sema
 Answerlist
 ----------
 
-- **Opción A:** Gráfica circular por categoría
+- 
+<br/>
 
-\includegraphics[width=0.7\textwidth]{grafica_a.png}
+<img src="figure/grafica_a_show-1.png" width="672" />
 
-- **Opción B:** Gráfica de barras apiladas por semana
+-
+<br/>
 
-\includegraphics[width=0.8\textwidth]{grafica_b.png}
+<img src="figure/grafica_b_show-1.png" width="864" />
 
-- **Opción C:** Gráfica circular por semana
+-
+<br/>
 
-\includegraphics[width=0.7\textwidth]{grafica_c.png}
+<img src="figure/grafica_c_show-1.png" width="672" />
 
-- **Opción D:** Gráfica de barras agrupadas por categoría
+-
+<br/>
 
-\includegraphics[width=0.9\textwidth]{grafica_d.png}
+<img src="figure/grafica_d_show-1.png" width="960" />
 
 Solution
 ========
@@ -192,31 +212,31 @@ Primero, calculemos los gastos totales por semana:
 
 ### Análisis de cada opción
 
-**Opción A:** Gráfica circular por categoría
+**Gráfica circular por categoría:** 
 
 * Muestra la proporción de cada tipo de gasto en el total general
 * NO permite comparar gastos totales por semana
 
-**Opción B:** Gráfica de barras apiladas por semana
+**Gráfica de barras apiladas por semana:** 
 
 * Cada barra representa una semana
 * La altura total de cada barra muestra el gasto total de esa semana
 * Permite comparar directamente los gastos totales entre semanas
 * **Esta es la respuesta correcta**
 
-**Opción C:** Gráfica circular por semana
+**Gráfica circular por semana:** 
 
 * Muestra la proporción de gastos de cada semana respecto al total del mes
 * No muestra los valores absolutos de cada semana claramente
 
-**Opción D:** Gráfica de barras agrupadas por categoría
+**Gráfica de barras agrupadas por categoría:** 
 
 * Agrupa las barras por tipo de gasto (gasolina, parqueadero, peajes)
 * Dificulta la comparación de gastos totales por semana
 
 ### Conclusión
 
-La **Opción B** (gráfica de barras apiladas por semana) es la única que permite comparar directamente los gastos totales por semana, ya que la altura de cada barra representa el gasto total de cada semana.
+La **Opción "gráfica de barras apiladas por semana"** es la única que permite comparar directamente los gastos totales por semana, ya que la altura de cada barra representa el gasto total de cada semana.
 
 Answerlist
 ----------
