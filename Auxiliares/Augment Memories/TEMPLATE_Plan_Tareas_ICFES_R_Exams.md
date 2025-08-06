@@ -181,7 +181,11 @@ output:
   ```
 
 - [ ] **🔧 3.2 Chunk Setup Inicial con TikZ**
-  - Configurar `Sys.setlocale()` y `options(OutDec = ".")`
+  - **CONFIGURACIÓN NUMÉRICA CRÍTICA**:
+    * `Sys.setlocale(category = "LC_NUMERIC", locale = "C")`
+    * `options(OutDec = ".")`
+    * `options(scipen = 999)` - Eliminar notación científica
+    * `options(digits = 10)` - Precisión numérica apropiada
   - **PRIORIDAD**: Establecer opciones LaTeX y TikZ desde el inicio
   - Cargar librerías esenciales: `exams`, `reticulate`, `digest`, `testthat`, `knitr`
   - Configurar `knitr::opts_chunk$set()` con parámetros apropiados para TikZ
@@ -208,6 +212,13 @@ output:
 *Crear función de generación con mínimo 300 versiones únicas - ENFOQUE OPTIMIZADO*
 
 - [ ] **🔢 4.1 Función generar_datos() Optimizada**
+  - **CONFIGURACIÓN NUMÉRICA INICIAL**:
+    * `options(OutDec = ".")` - Punto como separador decimal
+    * `options(scipen = 999)` - Eliminar notación científica
+    * `options(digits = 10)` - Precisión apropiada
+  - **FUNCIONES DE FORMATO ESTÁNDAR**:
+    * `formatear_entero()` - Para valores monetarios sin separador de miles
+    * `formato_estandar()` - Para números con decimales controlados
   - **PRIORIZAR**: Diversidad matemáticamente relevante sobre aleatorización superficial
   - **EVITAR**: Exceso de contextos que no aportan valor educativo (máximo 3-5 opciones)
   - **ENFOCAR**: Parámetros que cambien la experiencia matemática del estudiante
@@ -308,11 +319,67 @@ output:
   Meta-information
   ================
   exname: [nombre_descriptivo]
-  extype: schoice
+  extype: schoice|cloze
   exsolution: [patrón_respuesta]
+  exclozetype: [Para cloze: schoice|num|string separados por |]
+  extol: [Para cloze: tolerancias separadas por |]
   exshuffle: TRUE
   exsection: [sección_temática]
   ```
+
+  **CONFIGURACIÓN CRÍTICA PARA TIPO CLOZE**:
+  - **Tolerancias numéricas**: ≥ 1 para valores monetarios grandes
+  - **Tolerancias schoice**: 0 (exactitud requerida)
+  - **Ejemplo**: `extol: 0|0|1|1|0|1|0` (schoice=0, numéricas=1)
+  - **Documentar**: Comentarios explicativos sobre tolerancias
+
+---
+
+### ⚙️ **FASE 6.5: Configuración de Tolerancias para Evaluación Automática (NUEVA)**
+*Configurar tolerancias apropiadas para respuestas tipo cloze y validar evaluación correcta*
+
+- [ ] **🎯 6.5.1 Identificación de Tipos de Respuesta**
+  - **Mapear estructura de respuestas**: schoice vs numéricas
+  - **Documentar posiciones**: Crear comentarios explicativos
+  - **Ejemplo**: `tipos_respuesta <- c("schoice", "schoice", "num", "num", "schoice", "num", "schoice")`
+
+- [ ] **⚙️ 6.5.2 Configuración de Tolerancias Apropiadas**
+  - **Para respuestas schoice**: Tolerancia 0 (exactitud requerida)
+  - **Para respuestas numéricas**:
+    * Valores monetarios grandes (>1000): tolerancia ≥ 1
+    * Valores decimales pequeños (<10): tolerancia 0.01-0.1
+    * Porcentajes: tolerancia 0.1-1 según precisión requerida
+  - **Ejemplo**: `tolerancias <- c(0, 0, 1, 1, 0, 1, 0)`
+
+- [ ] **📝 6.5.3 Documentación de Configuración**
+  - **Comentarios explicativos**:
+    ```r
+    # Tolerancias para respuestas numéricas (solo aplica a las numéricas)
+    # Estructura: schoice, schoice, num, num, schoice, num, schoice
+    # Para respuestas numéricas monetarias: tolerancia 1 (permite diferencias mínimas de redondeo)
+    # Para respuestas schoice: tolerancia 0 (exactitud requerida)
+    tolerancias <- c(0, 0, 1, 1, 0, 1, 0)
+    ```
+
+- [ ] **✅ 6.5.4 Validación de Tolerancias**
+  - **Test automático para verificar configuración**:
+    ```r
+    test_that("Validación de tolerancias configuradas correctamente", {
+      expect_equal(length(tolerancias), length(tipos_respuesta))
+      # Verificar que numéricas tienen tolerancia > 0
+      posiciones_numericas <- which(tipos_respuesta == "num")
+      expect_true(all(tolerancias[posiciones_numericas] > 0))
+      # Verificar que schoice tienen tolerancia 0
+      posiciones_schoice <- which(tipos_respuesta == "schoice")
+      expect_true(all(tolerancias[posiciones_schoice] == 0))
+    })
+    ```
+
+- [ ] **🔍 6.5.5 Prueba de Evaluación Automática**
+  - **Simular respuestas correctas**: Verificar que se evalúan como correctas
+  - **Probar variaciones dentro de tolerancia**: Confirmar aceptación
+  - **Validar respuestas fuera de tolerancia**: Confirmar rechazo
+  - **Documentar casos de prueba**: Para referencia futura
 
 ---
 
@@ -378,6 +445,11 @@ output:
   - Ejecutar pruebas de diversidad de versiones
   - Verificar validaciones matemáticas
   - Comprobar coherencia de datos generados
+  - **🎯 Validar configuración de tolerancias**:
+    - Confirmar que tolerancias están configuradas apropiadamente
+    - Probar evaluación automática con respuestas correctas
+    - Verificar que respuestas dentro de tolerancia se aceptan
+    - Validar que respuestas fuera de tolerancia se rechazan
   - **🎯 Validar sistema avanzado de distractores:**
     - Verificar que las 4 opciones sean textualmente únicas
     - Comprobar funcionamiento de valores duplicados (30% casos)
@@ -840,6 +912,21 @@ update_tasks con task_id y nuevo state
 rmarkdown::render('archivo.Rmd', 'html_document')
 ```
 
+### ⚙️ **Para Configuración de Tolerancias:**
+```
+# Verificar configuración de tolerancias
+"Revisa y corrige la configuración de tolerancias para evaluación automática en ejercicios tipo cloze"
+
+# Aplicar corrección estándar
+"Aplica tolerancia 0 para schoice y tolerancia ≥ 1 para respuestas numéricas con valores grandes"
+
+# Validar evaluación automática
+"Valida que las respuestas idénticas a la solución se evalúen correctamente como correctas"
+
+# Documentar configuración
+"Agrega comentarios explicativos sobre la configuración de tolerancias y su justificación"
+```
+
 ---
 
 ## 🤖 **DOCUMENTACIÓN DEL SISTEMA CONDICIONAL AUTOMÁTICO**
@@ -1007,6 +1094,15 @@ RESULTADO: Ejercicio R-exams tradicional
 - Seguir patrones técnicos probados en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
 - Aplicar configuraciones exitosas de chunks, librerías y sintaxis
 - **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+
+### ⚙️ **Configuración de Tolerancias (CRÍTICO):**
+- **PROBLEMA COMÚN**: Tolerancias en 0 para respuestas numéricas causan evaluación incorrecta
+- **SOLUCIÓN ESTÁNDAR**:
+  * Tolerancia 0 para respuestas schoice (exactitud requerida)
+  * Tolerancia ≥ 1 para respuestas numéricas con valores grandes (monetarios)
+  * Tolerancia 0.01-0.1 para respuestas numéricas con valores pequeños
+- **DOCUMENTAR SIEMPRE**: Comentarios explicativos sobre configuración de tolerancias
+- **VALIDAR**: Tests automáticos para verificar evaluación correcta
 
 ### ⚠️ **RESTRICCIÓN CRÍTICA - CARACTERES ESPECIALES:**
 - **NO USAR CARACTERES ESPECIALES UNICODE** en ninguna parte del código R-exams

@@ -257,7 +257,10 @@ solucion_cloze <- list(
 tipos_respuesta <- c("schoice", "schoice", "num", "num", "schoice", "num", "schoice")
 
 # Tolerancias para respuestas numéricas (solo aplica a las numéricas)
-tolerancias <- c(0, 0, 0, 0, 0, 0, 0)
+# Estructura: schoice, schoice, num, num, schoice, num, schoice
+# Para respuestas numéricas monetarias: tolerancia 1 (permite diferencias mínimas de redondeo)
+# Para respuestas schoice: tolerancia 0 (exactitud requerida)
+tolerancias <- c(0, 0, 1, 1, 0, 1, 0)
 
 # Detectar formato de salida para ajustes posteriores
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
@@ -285,6 +288,17 @@ test_that("Validación de coherencia matemática", {
   expect_true(indice_respuesta_correcta_1 >= 1 && indice_respuesta_correcta_1 <= 4)
   expect_true(indice_respuesta_correcta_4 >= 1 && indice_respuesta_correcta_4 <= 4)
   expect_true(indice_respuesta_correcta_6 >= 1 && indice_respuesta_correcta_6 <= 4)
+})
+
+test_that("Validación de tolerancias configuradas correctamente", {
+  expect_equal(length(tolerancias), 7)
+  expect_equal(tolerancias[1], 0)  # schoice - Planificación
+  expect_equal(tolerancias[2], 0)  # schoice - Identificación
+  expect_equal(tolerancias[3], 1)  # num - Precio de compra
+  expect_equal(tolerancias[4], 1)  # num - Ganancia unitaria
+  expect_equal(tolerancias[5], 0)  # schoice - Operación
+  expect_equal(tolerancias[6], 1)  # num - Ganancia total
+  expect_equal(tolerancias[7], 0)  # schoice - Verificación
 })
 
 test_that("Validación de opciones de entrenamiento cognitivo", {
@@ -384,6 +398,12 @@ Este problema **desarrolla competencias de procesamiento de información y plani
 - **Respuestas numéricas**: Sin separador de miles, punto como separador decimal
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
+
+**CORRECCIÓN APLICADA - Tolerancias de evaluación:**
+
+- **Respuestas tipo schoice**: Tolerancia 0 (exactitud requerida)
+- **Respuestas numéricas**: Tolerancia 1 (permite diferencias mínimas de redondeo)
+- **Justificación**: Los valores monetarios son enteros grandes, tolerancia 1 evita rechazos incorrectos por diferencias de formato manteniendo precisión matemática
 
 ### Paso 0: Planificación estratégica ✓ (DESARROLLO DE AUTONOMÍA COGNITIVA)
 
