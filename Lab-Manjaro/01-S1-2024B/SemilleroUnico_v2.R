@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_v1.Rmd"
+archivo_examen <- "gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opC_v1.Rmd"
 copias <- 1
 numpreg <- 1
 semilla <- sample(100:1e8, 1)
