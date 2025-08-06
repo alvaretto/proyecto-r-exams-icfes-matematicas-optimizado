@@ -216,6 +216,7 @@ colores_categorias = ['#2E5984', '#5B9BD5', '#A5A5A5']
 colores_semanas = ['#1F4E79', '#2E75B6', '#5B9BD5', '#8DB4E2']
 
 # GENERAR TODAS LAS GRÁFICAS COMO ARCHIVOS (patrón de ejemplos funcionales)
+
 # GRÁFICA A: Circular por categoría
 fig_a, ax_a = plt.subplots(figsize=(7, 6))
 porcentajes_cat = [porc_gasolina, porc_parqueadero, porc_peajes]
@@ -253,13 +254,9 @@ ax_b.set_title('Gráfica de barras apiladas por semana', fontsize=12, fontweight
 ax_b.set_xticks(x)
 ax_b.set_xticklabels(semanas, fontsize=10)
 
-# Posicionar leyenda de forma inteligente para evitar solapamientos
-# Calcular la posición más baja de las barras para colocar la leyenda
-min_total = min(totales_semana)
-if min_total > 70000:  # Si todas las barras son altas, leyenda abajo
-    ax_b.legend(loc='lower right', frameon=True, fancybox=True, shadow=True, fontsize=10)
-else:  # Si hay barras bajas, leyenda arriba a la derecha
-    ax_b.legend(loc='upper right', frameon=True, fancybox=True, shadow=True, fontsize=10)
+# Posicionar leyenda fuera del área de gráfica para evitar solapamientos
+ax_b.legend(bbox_to_anchor=(1.05, 1), loc='upper left', frameon=True,
+           fancybox=True, shadow=True, fontsize=10)
 ax_b.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x:,.0f}'))
 ax_b.tick_params(axis='y', labelsize=9)
 ax_b.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
