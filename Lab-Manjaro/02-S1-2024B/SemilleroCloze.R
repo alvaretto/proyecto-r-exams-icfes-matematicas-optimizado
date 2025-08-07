@@ -17,11 +17,11 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "ganancias_comerciales_formulacion_ejecucion_n2_v1.Rmd"
+archivo_examen <- "ganancias_comerciales_formulacion_ejecucion_n2_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos = 10,                    # Número de versiones a generar
+  archivos = 300,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
