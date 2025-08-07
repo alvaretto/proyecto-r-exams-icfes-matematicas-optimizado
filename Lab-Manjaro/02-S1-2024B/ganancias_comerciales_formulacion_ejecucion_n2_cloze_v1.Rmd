@@ -13,6 +13,11 @@ icfes:
   nivel: 2
   tematica: Operaciones básicas y aplicaciones comerciales
   contexto: laboral
+
+# CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA:
+# - Tipo: cloze (5 respuestas numéricas + 1 schoice)
+# - Tolerancias: 1 para numéricas (valores monetarios), 0 para schoice
+# - Formato: Sin separador de miles, punto decimal, sin notación científica
 ---
 
 ```{r setup, include=FALSE}
@@ -79,18 +84,16 @@ contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
 contexto <- contexto_seleccionado$nombre
 articulo_contexto <- contexto_seleccionado$articulo
 
-# Aleatorización del tipo de comerciante
+# Aleatorización del tipo de comerciante con concordancia de género
 comerciantes_data <- data.frame(
-  nombre = c("vendedor", "empresario", "comerciante"),
+  nombre_m = c("vendedor", "empresario", "comerciante"),
+  nombre_f = c("vendedora", "empresaria", "comerciante"),
   genero = c("m", "m", "m"),
   articulo_el = c("el", "el", "el"),
   articulo_un = c("un", "un", "un"),
   stringsAsFactors = FALSE
 )
 comerciante_seleccionado <- comerciantes_data[sample(nrow(comerciantes_data), 1), ]
-comerciante <- comerciante_seleccionado$nombre
-articulo_el_comerciante <- comerciante_seleccionado$articulo_el
-articulo_un_comerciante <- comerciante_seleccionado$articulo_un
 
 # Aleatorización del producto
 productos_data <- data.frame(
@@ -104,10 +107,23 @@ producto <- producto_seleccionado$plural
 producto_singular <- producto_seleccionado$singular
 genero_producto <- producto_seleccionado$genero
 
-# Aleatorización de nombres para el contexto
+# Aleatorización de nombres para el contexto con concordancia de género
 nombres_masculinos <- c("Pedro", "Carlos", "Miguel", "Antonio", "Diego", "Sebastián")
 nombres_femeninos <- c("María", "Ana", "Carmen", "Laura", "Sofía", "Valentina")
-nombre_comerciante <- sample(c(nombres_masculinos, nombres_femeninos), 1)
+
+# Seleccionar género y nombre correspondiente
+genero_comerciante <- sample(c("m", "f"), 1)
+if (genero_comerciante == "m") {
+  nombre_comerciante <- sample(nombres_masculinos, 1)
+  comerciante <- comerciante_seleccionado$nombre_m
+  articulo_el_comerciante <- "el"
+  articulo_un_comerciante <- "un"
+} else {
+  nombre_comerciante <- sample(nombres_femeninos, 1)
+  comerciante <- comerciante_seleccionado$nombre_f
+  articulo_el_comerciante <- "la"
+  articulo_un_comerciante <- "una"
+}
 
 # Aleatorización matemáticamente relevante de precios
 tipo_ganancia <- sample(c("baja", "media", "alta"), 1)
@@ -192,8 +208,11 @@ solucion_cloze <- list(
 # Tipos de respuesta: 5 numéricas + 1 schoice
 tipos_respuesta <- c("num", "num", "num", "num", "num", "schoice")
 
-# Tolerancias para respuestas numéricas
-tolerancias <- c(0, 0, 0, 0, 0, 0)
+# Tolerancias para respuestas numéricas (solo aplica a las numéricas)
+# Estructura: num, num, num, num, num, schoice
+# Para respuestas numéricas monetarias: tolerancia 1 (permite diferencias mínimas de redondeo)
+# Para respuestas schoice: tolerancia 0 (exactitud requerida)
+tolerancias <- c(1, 1, 1, 1, 1, 0)
 
 # Detectar formato de salida para ajustes posteriores
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
@@ -221,6 +240,40 @@ test_that("Validación de coherencia matemática", {
   expect_true(afirmacion_correcta %in% opciones_schoice)
   expect_true(all(sapply(solucion_cloze, is.numeric)))
   expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
+})
+
+test_that("Validación de tolerancias configuradas correctamente", {
+  expect_equal(length(tolerancias), 6)
+  expect_equal(tolerancias[1], 1)  # num - Precio de compra
+  expect_equal(tolerancias[2], 1)  # num - Precio de venta
+  expect_equal(tolerancias[3], 1)  # num - Ganancia unitaria
+  expect_equal(tolerancias[4], 1)  # num - Unidades vendidas
+  expect_equal(tolerancias[5], 1)  # num - Ganancia total
+  expect_equal(tolerancias[6], 0)  # schoice - Confirmación procedimiento
+
+  # Verificar que respuestas numéricas tienen tolerancia > 0
+  posiciones_numericas <- which(tipos_respuesta == "num")
+  expect_true(all(tolerancias[posiciones_numericas] > 0))
+
+  # Verificar que respuestas schoice tienen tolerancia 0
+  posiciones_schoice <- which(tipos_respuesta == "schoice")
+  expect_true(all(tolerancias[posiciones_schoice] == 0))
+})
+
+test_that("Validación de concordancia de género", {
+  # Verificar concordancia entre nombre y artículos
+  if (genero_comerciante == "m") {
+    expect_true(nombre_comerciante %in% nombres_masculinos)
+    expect_equal(articulo_el_comerciante, "el")
+    expect_equal(articulo_un_comerciante, "un")
+  } else {
+    expect_true(nombre_comerciante %in% nombres_femeninos)
+    expect_equal(articulo_el_comerciante, "la")
+    expect_equal(articulo_un_comerciante, "una")
+  }
+
+  # Verificar que el comerciante tiene la forma correcta según el género
+  expect_true(nchar(comerciante) > 0)
 })
 ```
 
@@ -283,6 +336,13 @@ Answerlist
 
 Solution
 ========
+
+**NOTA IMPORTANTE - Configuración de evaluación automática:**
+
+- **Tolerancias configuradas**: Tolerancia 1 para respuestas numéricas, tolerancia 0 para respuestas schoice
+- **Justificación**: Los valores monetarios son enteros grandes, tolerancia 1 evita rechazos incorrectos por diferencias mínimas de formato manteniendo precisión matemática
+- **Formato numérico**: Sin separador de miles, punto como separador decimal
+- **Concordancia de género**: Sistema automático que ajusta artículos y formas según el género del nombre seleccionado
 
 ### Análisis paso a paso del problema de ganancias comerciales
 
