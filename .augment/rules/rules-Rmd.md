@@ -1,6 +1,6 @@
 ---
 type: "agent_requested"
-description: "Reglas de generación/corrección/optimización de archivos .Rnw"
+description: "Example description"
 ---
 # 🎯 PROMPT PARA GENERACIÓN DE EJERCICIOS ICFES MATEMÁTICAS EN R-EXAMS
 
@@ -116,8 +116,14 @@ use_python("/usr/bin/python3", required = TRUE)
 # Configuración global
 typ <- match_exams_device()
 options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+
+# Configuración de locale para formato numérico consistente
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
 knitr::opts_chunk$set(
-  warning = FALSE, 
+  warning = FALSE,
   message = FALSE,
   fig.keep = 'all',
   dev = c("png", "pdf"),
@@ -133,6 +139,26 @@ set.seed(sample(1:100000, 1))
 ### 4. CHUNK DE GENERACIÓN DE DATOS
 ```r
 ```{r data_generation, echo=FALSE, results="hide"}
+# Configuración de formato numérico estándar
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Función de formato estándar para números (sin separador de miles, punto decimal)
+formato_estandar <- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
 # Función principal de generación de datos
 generar_datos <- function() {
   # IMPLEMENTAR LÓGICA ESPECÍFICA SEGÚN EL PROBLEMA
@@ -270,11 +296,19 @@ Answerlist
 Meta-information
 ================
 exname: [Nombre descriptivo del ejercicio]
-extype: schoice
+extype: schoice|cloze
 exsolution: [Patrón de respuesta, ej: 1000]
+exclozetype: [Para tipo cloze: schoice|num|string separados por |]
+extol: [Para tipo cloze: tolerancias separadas por |]
 exshuffle: TRUE
 exsection: [Sección temática]
 ```
+
+**CONFIGURACIÓN CRÍTICA PARA EJERCICIOS TIPO CLOZE:**
+- **Tolerancias numéricas**: Usar tolerancia ≥ 1 para valores monetarios grandes
+- **Tolerancias schoice**: Mantener en 0 (exactitud requerida)
+- **Formato de números**: Sin separador de miles, punto para decimales
+- **Ejemplo tolerancias**: `extol: 0|0|1|1|0|1|0` (schoice=0, numéricas=1)
 
 ## 🎯 CRITERIOS DE CALIDAD OBLIGATORIOS
 
@@ -291,6 +325,11 @@ exsection: [Sección temática]
 - Manejo de casos extremos
 - Precisión numérica apropiada
 - Unidades consistentes
+- **CONFIGURACIÓN DE TOLERANCIAS APROPIADAS**:
+  * Tolerancia 0 para respuestas schoice (exactitud requerida)
+  * Tolerancia ≥ 1 para respuestas numéricas con valores grandes
+  * Formato estándar: sin separador de miles, punto decimal
+  * Evitar notación científica: `options(scipen = 999)`
 
 ### CALIDAD GRÁFICA:
 - Resolución mínima 150 DPI
@@ -338,10 +377,23 @@ exsection: [Sección temática]
 - Diagramas matemáticos profesionales
 - Anotaciones y etiquetas
 
+### CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA:
+- **Identificar tipos de respuesta**: schoice vs numéricas
+- **Configurar tolerancias apropiadas**:
+  * schoice: tolerancia 0 (exactitud requerida)
+  * numéricas: tolerancia ≥ 1 para valores grandes (monetarios, enteros)
+  * numéricas: tolerancia 0.01-0.1 para valores decimales pequeños
+- **Documentar configuración**: Comentarios explicativos en código
+- **Validar funcionamiento**: Tests para verificar evaluación correcta
+
 ### TESTING AUTOMATIZADO:
 - Verificar diversidad de versiones
 - Validar coherencia matemática
 - Comprobar rangos de valores
+- **VALIDAR CONFIGURACIÓN DE TOLERANCIAS**:
+  * Test automático para verificar tolerancias apropiadas
+  * Validar que respuestas numéricas tengan tolerancia > 0
+  * Comprobar que respuestas schoice mantengan tolerancia 0
 
 ## ⚠️ RESTRICCIONES CRÍTICAS
 
@@ -353,6 +405,14 @@ exsection: [Sección temática]
 6. **EVITAR** sobre-ingeniería que no aporte valor pedagógico
 7. **PRIORIZAR** simplicidad técnica con efectividad educativa
 8. **RESPETAR** enfoque original del problema (no cambiar estructura fundamental)
+9. **CONFIGURAR TOLERANCIAS APROPIADAS**:
+   - Tolerancia 0 para respuestas schoice
+   - Tolerancia ≥ 1 para respuestas numéricas con valores grandes
+   - Documentar configuración de tolerancias en comentarios
+10. **FORMATO NUMÉRICO CONSISTENTE**:
+    - Eliminar notación científica: `options(scipen = 999)`
+    - Usar punto como separador decimal: `options(OutDec = ".")`
+    - Sin separador de miles en respuestas numéricas
 
 ## 🔧 CORRECCIÓN DE ERRORES OBLIGATORIA
 
