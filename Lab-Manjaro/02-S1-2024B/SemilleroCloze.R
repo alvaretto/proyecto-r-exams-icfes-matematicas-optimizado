@@ -21,7 +21,7 @@ archivo_examen <- "ganancias_comerciales_formulacion_ejecucion_n2_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos = 300,                    # Número de versiones a generar
+  archivos = 400,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
