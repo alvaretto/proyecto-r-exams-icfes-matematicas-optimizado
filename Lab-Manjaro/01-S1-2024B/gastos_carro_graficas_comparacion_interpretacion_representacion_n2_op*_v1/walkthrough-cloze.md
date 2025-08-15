@@ -36,6 +36,7 @@ install.packages(c("exams", "reticulate", "testthat", "stringr"))
 ```
 
 ### Conocimientos Básicos:
+
 - **R básico**: Variables, funciones, vectores
 - **R Markdown**: Chunks, metadatos YAML
 - **Python básico**: Matplotlib para gráficas
@@ -54,6 +55,7 @@ exclozetype: num|num|num|num|num|schoice
 ```
 
 **Explicación:**
+
 - `exname`: Nombre del ejercicio
 - `extype: cloze`: Formato con múltiples respuestas
 - `exsolution`: Respuestas correctas separadas por `|`
@@ -190,6 +192,7 @@ porcentaje_objetivo <- (75000 / 379000) * 100  # = 19.8%
 **Pregunta:** ¿Cuál gráfica es más adecuada para identificar la semana con menor porcentaje?
 
 **Opciones:**
+
 - A. Barras agrupadas por categoría
 - B. Barras apiladas por semana  
 - C. Circular por categoría
@@ -251,6 +254,7 @@ exams2pdf("gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op
 ```
 
 **Desglose:**
+
 1. `75000` → Paso 1: Menor gasto semanal
 2. `379000` → Paso 2: Total mensual  
 3. `75000` → Paso 3: Numerador
@@ -374,6 +378,7 @@ generar_evaluacion <- function(n_versiones = 10) {
 ## 📝 Notas Finales
 
 ### Características Destacadas:
+
 - ✅ **Aleatorización bidireccional**: Mayor/menor gasto
 - ✅ **Adaptación textual dinámica**: Todos los textos se ajustan
 - ✅ **Validaciones robustas**: Pruebas matemáticas automáticas
@@ -381,12 +386,14 @@ generar_evaluacion <- function(n_versiones = 10) {
 - ✅ **Compatibilidad completa**: HTML, PDF, Moodle, otros formatos
 
 ### Próximos Pasos:
+
 1. **Practicar**: Generar múltiples versiones
 2. **Personalizar**: Adaptar contextos a tu institución
 3. **Expandir**: Crear ejercicios similares con otros temas
 4. **Evaluar**: Usar en evaluaciones reales
 
 ### Recursos Adicionales:
+
 - [Documentación R-exams](http://www.r-exams.org/)
 - [Guía de reticulate](https://rstudio.github.io/reticulate/)
 - [Matplotlib documentation](https://matplotlib.org/stable/)
@@ -415,6 +422,7 @@ TOTALES:   75000    94000   105000   105000
 ```
 
 #### Proceso de Resolución:
+
 1. **Mayor gasto semanal**: Semana 3 y 4 (empate en $105000)
 2. **Gasto total**: $379000
 3. **Porcentaje**: (105000 ÷ 379000) × 100 = 27.7%
@@ -446,6 +454,7 @@ TOTALES:   68000    88000    93000    95000
 ```
 
 #### Proceso de Resolución:
+
 1. **Menor gasto semanal**: Semana 1 ($68000)
 2. **Gasto total**: $344000
 3. **Porcentaje**: (68000 ÷ 344000) × 100 = 19.8%
@@ -468,16 +477,19 @@ Paso 6: Circular por semana
 ### Para Estudiantes:
 
 #### **Nivel Básico:**
+
 1. **Lectura de tablas**: Identificar filas, columnas, valores
 2. **Sumas simples**: Calcular totales por semana
 3. **Comparación**: Identificar mayor/menor valor
 
 #### **Nivel Intermedio:**
+
 1. **Fórmulas de porcentaje**: (parte/total) × 100
 2. **Interpretación gráfica**: Relacionar datos con representaciones
 3. **Análisis comparativo**: Ventajas de cada tipo de gráfica
 
 #### **Nivel Avanzado:**
+
 1. **Selección de representaciones**: Cuándo usar cada tipo de gráfica
 2. **Justificación de respuestas**: Explicar por qué una opción es mejor
 3. **Pensamiento crítico**: Evaluar efectividad de visualizaciones
@@ -660,6 +672,7 @@ for(estudiante in 1:500) {
 ```
 
 **Resultados:**
+
 - ✅ **0% de copia**: Cada estudiante tuvo datos únicos
 - ✅ **Distribución equilibrada**: 48% mayor, 52% menor
 - ✅ **Tiempo promedio**: 12 minutos por ejercicio
@@ -684,6 +697,7 @@ exams2pdf("gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op
 ```
 
 **Impacto:**
+
 - ✅ **Mejora en puntajes**: +15% en competencia de interpretación
 - ✅ **Confianza estudiantil**: +22% se sienten más preparados
 - ✅ **Eficiencia docente**: -60% tiempo de preparación de evaluaciones
@@ -695,16 +709,19 @@ exams2pdf("gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op
 ### Funcionalidades Planificadas:
 
 1. **Aleatorización de Contextos Temáticos:**
+
    - Gastos familiares, empresariales, escolares
    - Ventas por regiones, productos, períodos
    - Rendimiento académico por materias, estudiantes
 
 2. **Niveles de Dificultad Adaptativos:**
+
    - Básico: Sumas simples, porcentajes enteros
    - Intermedio: Decimales, múltiples categorías
    - Avanzado: Análisis estadístico, tendencias
 
 3. **Integración con IA:**
+
    - Generación automática de contextos
    - Adaptación según rendimiento estudiantil
    - Retroalimentación personalizada
@@ -722,4 +739,3 @@ crear_ejercicio_similar <- function(tema, categorias, rangos) {
 
 ---
 
-**¡Este walkthrough te proporciona todo lo necesario para dominar y expandir este tipo de evaluaciones!** 🌟
