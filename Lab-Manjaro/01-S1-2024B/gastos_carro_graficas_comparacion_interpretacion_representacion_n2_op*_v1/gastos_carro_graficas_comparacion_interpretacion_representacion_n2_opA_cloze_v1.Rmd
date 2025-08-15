@@ -263,7 +263,7 @@ semana3 = [", paste(c(gastos_semanas[[3]]$gasolina, gastos_semanas[[3]]$parquead
 semana4 = [", paste(c(gastos_semanas[[4]]$gasolina, gastos_semanas[[4]]$parqueadero, gastos_semanas[[4]]$peajes), collapse=", "), "]
 
 # Crear figura para la tabla
-fig, ax = plt.subplots(figsize=(10, 4))
+fig, ax = plt.subplots(figsize=(12, 5))
 ax.axis('tight')
 ax.axis('off')
 
@@ -295,9 +295,9 @@ for i in range(len(datos_tabla)):
         else:  # Datos de gastos
             cell.set_facecolor('white')
 
-plt.title('Registro Semanal de Gastos del ", vehiculo, "', fontsize=14, fontweight='bold', pad=20)
-plt.savefig('tabla_gastos.png', dpi=150, bbox_inches='tight', transparent=False)
-plt.savefig('tabla_gastos.pdf', dpi=150, bbox_inches='tight', transparent=False)
+plt.title('Registro Semanal de Gastos del ", vehiculo, "', fontsize=16, fontweight='bold', pad=20)
+plt.savefig('tabla_gastos.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('tabla_gastos.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 ")
 
@@ -342,49 +342,49 @@ mapeo_r = {
 }
 
 # GRÁFICA 1: Circular por categoría
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(7, 7))
 plt.pie(totales_categoria, labels=categorias, autopct='%1.1f%%',
         colors=colores_categorias, startangle=90)
 letra = mapeo_r['Circular por categoría']
-plt.title('Circular por categoría', fontsize=12, fontweight='bold')
+plt.title('Circular por categoría', fontsize=14, fontweight='bold')
 plt.axis('equal')
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=150, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=150, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 # GRÁFICA 2: Barras apiladas por semana
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(9, 7))
 bottom = np.zeros(4)
 for i, categoria in enumerate(categorias):
     plt.bar(semanas, gastos_por_categoria[categoria], bottom=bottom,
             label=categoria, color=colores_categorias[i])
     bottom += gastos_por_categoria[categoria]
 
-plt.xlabel('Semanas', fontweight='bold')
-plt.ylabel('Gastos (pesos)', fontweight='bold')
+plt.xlabel('Semanas', fontweight='bold', fontsize=12)
+plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
 letra = mapeo_r['Barras apiladas por semana']
-plt.title('Barras apiladas por semana', fontsize=12, fontweight='bold')
-plt.legend()
+plt.title('Barras apiladas por semana', fontsize=14, fontweight='bold')
+plt.legend(fontsize=11)
 plt.xticks(rotation=45)
 plt.grid(True, axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=150, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=150, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 # GRÁFICA 3: Circular por semana
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(7, 7))
 plt.pie(totales_semana, labels=semanas, autopct='%1.1f%%',
         colors=colores_semanas, startangle=90)
 letra = mapeo_r['Circular por semana']
-plt.title('Circular por semana', fontsize=12, fontweight='bold')
+plt.title('Circular por semana', fontsize=14, fontweight='bold')
 plt.axis('equal')
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=150, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=150, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 # GRÁFICA 4: Barras agrupadas por categoría
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(9, 7))
 x = np.arange(len(categorias))
 width = 0.2
 
@@ -392,16 +392,16 @@ for i, semana in enumerate(semanas):
     valores = [gastos_por_categoria[cat][i] for cat in categorias]
     plt.bar(x + i*width, valores, width, label=semana, color=colores_semanas[i])
 
-plt.xlabel('Categorías', fontweight='bold')
-plt.ylabel('Gastos (pesos)', fontweight='bold')
+plt.xlabel('Categorías', fontweight='bold', fontsize=12)
+plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
 letra = mapeo_r['Barras agrupadas por categoría']
-plt.title('Barras agrupadas por categoría', fontsize=12, fontweight='bold')
+plt.title('Barras agrupadas por categoría', fontsize=14, fontweight='bold')
 plt.xticks(x + width*1.5, categorias)
-plt.legend()
+plt.legend(fontsize=11)
 plt.grid(True, axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=150, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=150, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 print('Gráficas generadas exitosamente')
@@ -419,13 +419,19 @@ Question
 ```{r mostrar_tabla, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la tabla generada con Python
 if (es_moodle) {
-  cat("![](tabla_gastos.png){width=80%}")
+  cat("![](tabla_gastos.png){width=85%}")
 } else {
-  cat("![](tabla_gastos.png){width=90%}")
+  cat("![](tabla_gastos.png){width=95%}")
 }
 ```
 
+<br><br>
+
+## Gráficas de análisis
+
 A continuación se presentan cuatro tipos diferentes de gráficas que representan los mismos datos de la tabla:
+
+<br>
 
 ```{r mostrar_graficas, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar las 4 gráficas en orden aleatorizado (sin "Gráfica X:")
@@ -436,13 +442,17 @@ for(i in 1:4) {
 
   if (es_moodle) {
     cat(paste0("**", tipo, "**\n\n"))
-    cat(paste0("![](", archivo, "){width=45%}\n\n"))
+    cat(paste0("![](", archivo, "){width=60%}\n\n"))
   } else {
     cat(paste0("**", tipo, "**\n\n"))
-    cat(paste0("![](", archivo, "){width=48%}\n\n"))
+    cat(paste0("![](", archivo, "){width=65%}\n\n"))
   }
 }
 ```
+
+<br><br>
+
+## Análisis paso a paso
 
 Para analizar qué semana representó el mayor porcentaje del gasto total mensual, resuelva paso a paso:
 
