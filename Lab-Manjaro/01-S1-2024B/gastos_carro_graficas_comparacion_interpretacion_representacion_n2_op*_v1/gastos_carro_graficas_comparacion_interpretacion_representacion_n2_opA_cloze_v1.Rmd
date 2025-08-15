@@ -167,6 +167,10 @@ mapeo_graficas <- data.frame(
   stringsAsFactors = FALSE
 )
 
+# Aleatorizar el orden de presentación de las gráficas
+orden_presentacion <- sample(1:4)
+mapeo_graficas_ordenado <- mapeo_graficas[orden_presentacion, ]
+
 # Generar opciones para la pregunta schoice final (solo el tipo, sin "Gráfica X:")
 opciones_graficas <- mapeo_graficas$tipo
 
@@ -232,6 +236,14 @@ test_that("Validación de aleatorización de gráficas", {
   expect_equal(length(opciones_graficas), 4)
   expect_equal(respuesta_correcta_schoice, "Circular por semana")  # Respuesta correcta es exactamente el tipo
   expect_true(all(opciones_graficas %in% nombres_graficas_base))  # Todas las opciones son tipos válidos
+})
+
+test_that("Validación de aleatorización de posiciones", {
+  expect_equal(length(orden_presentacion), 4)
+  expect_equal(length(unique(orden_presentacion)), 4)  # Todas las posiciones diferentes
+  expect_true(all(orden_presentacion %in% 1:4))  # Solo posiciones 1, 2, 3, 4
+  expect_equal(nrow(mapeo_graficas_ordenado), 4)
+  expect_true(all(mapeo_graficas_ordenado$tipo %in% nombres_graficas_base))  # Todos los tipos válidos
 })
 ```
 
@@ -416,10 +428,10 @@ if (es_moodle) {
 A continuación se presentan cuatro tipos diferentes de gráficas que representan los mismos datos de la tabla:
 
 ```{r mostrar_graficas, echo=FALSE, results='asis', fig.align="center"}
-# Mostrar las 4 gráficas solo con el tipo (sin "Gráfica X:")
+# Mostrar las 4 gráficas en orden aleatorizado (sin "Gráfica X:")
 for(i in 1:4) {
-  letra <- mapeo_graficas$letra[i]
-  tipo <- mapeo_graficas$tipo[i]
+  letra <- mapeo_graficas_ordenado$letra[i]
+  tipo <- mapeo_graficas_ordenado$tipo[i]
   archivo <- paste0("grafica_", tolower(letra), ".png")
 
   if (es_moodle) {

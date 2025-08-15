@@ -21,7 +21,7 @@ archivo_examen <- "gastos_carro_graficas_comparacion_interpretacion_representaci
 
 # Configuración de generación
 config <- list(
-  archivos =2,                    # Número de versiones a generar
+  archivos =3,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
