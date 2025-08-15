@@ -137,19 +137,32 @@ total_peajes <- sum(sapply(gastos_semanas, function(x) x$peajes))
 # Calcular gran total
 gran_total <- sum(totales_semana)
 
-# Identificar semana con mayor gasto
-semana_mayor_gasto <- which.max(totales_semana)
-valor_mayor_gasto <- max(totales_semana)
+# Aleatorizar si se pregunta por mayor o menor gasto
+tipo_pregunta <- sample(c("mayor", "menor"), 1)
 
-# Calcular porcentaje de la semana con mayor gasto
-porcentaje_mayor_gasto <- redondear_matematico((valor_mayor_gasto / gran_total) * 100, 1)
+if (tipo_pregunta == "mayor") {
+  # Identificar semana con mayor gasto
+  semana_objetivo <- which.max(totales_semana)
+  valor_objetivo <- max(totales_semana)
+  texto_pregunta <- "mayor"
+  texto_analisis <- "mayor porcentaje"
+} else {
+  # Identificar semana con menor gasto
+  semana_objetivo <- which.min(totales_semana)
+  valor_objetivo <- min(totales_semana)
+  texto_pregunta <- "menor"
+  texto_analisis <- "menor porcentaje"
+}
+
+# Calcular porcentaje de la semana objetivo
+porcentaje_objetivo <- redondear_matematico((valor_objetivo / gran_total) * 100, 1)
 
 # Respuestas para el formato cloze
-respuesta_1 <- valor_mayor_gasto          # Paso 1: Valor mayor gasto
+respuesta_1 <- valor_objetivo             # Paso 1: Valor del gasto objetivo (mayor o menor)
 respuesta_2 <- gran_total                 # Paso 2: Total general
-respuesta_3 <- valor_mayor_gasto          # Paso 3: Numerador de la fórmula
+respuesta_3 <- valor_objetivo             # Paso 3: Numerador de la fórmula
 respuesta_4 <- gran_total                 # Paso 4: Denominador de la fórmula
-respuesta_5 <- porcentaje_mayor_gasto     # Paso 5: Porcentaje final
+respuesta_5 <- porcentaje_objetivo        # Paso 5: Porcentaje final
 
 # Aleatorización de letras de gráficas y opciones
 letras_graficas <- sample(LETTERS[1:4])  # Aleatorizar A, B, C, D
@@ -214,15 +227,16 @@ test_that("Validación de datos generados", {
   expect_equal(length(tipos_respuesta), 6)
   expect_equal(length(tolerancias), 6)
   expect_equal(length(opciones_graficas), 4)
-  expect_true(semana_mayor_gasto >= 1 && semana_mayor_gasto <= 4)
+  expect_true(semana_objetivo >= 1 && semana_objetivo <= 4)
+  expect_true(tipo_pregunta %in% c("mayor", "menor"))
 })
 
 test_that("Validación de coherencia matemática", {
-  expect_equal(respuesta_1, valor_mayor_gasto)
+  expect_equal(respuesta_1, valor_objetivo)
   expect_equal(respuesta_2, gran_total)
-  expect_equal(respuesta_3, valor_mayor_gasto)
+  expect_equal(respuesta_3, valor_objetivo)
   expect_equal(respuesta_4, gran_total)
-  expect_equal(respuesta_5, porcentaje_mayor_gasto)
+  expect_equal(respuesta_5, porcentaje_objetivo)
   expect_true(respuesta_correcta_schoice %in% opciones_graficas)
   expect_true(all(sapply(solucion_cloze, is.numeric)))
   expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
@@ -454,7 +468,7 @@ for(i in 1:4) {
 
 ## Análisis paso a paso
 
-Para analizar qué semana representó el mayor porcentaje del gasto total mensual, resuelva paso a paso:
+Para analizar qué semana representó el `r texto_analisis` del gasto total mensual, resuelva paso a paso:
 
 **IMPORTANTE - Formato de números:**
 
@@ -463,8 +477,8 @@ Para analizar qué semana representó el mayor porcentaje del gasto total mensua
 - **Respuestas numéricas**: Sin separador de miles, use punto para decimales
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 
-### Paso 1: Identificación del mayor gasto semanal
-Observe la tabla y identifique cuál fue el mayor gasto semanal (total por semana).
+### Paso 1: Identificación del `r texto_pregunta` gasto semanal
+Observe la tabla y identifique cuál fue el `r texto_pregunta` gasto semanal (total por semana).
 
 **Respuesta:** $##ANSWER1##
 
@@ -481,7 +495,7 @@ Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100%
 ### Paso 4: Verificación de valores
 Confirme que los valores del numerador y denominador son correctos:
 
-- Numerador (mayor gasto semanal): $##ANSWER3##
+- Numerador (`r texto_pregunta` gasto semanal): $##ANSWER3##
 - Denominador (gasto total mensual): $##ANSWER4##
 
 ### Paso 5: Cálculo del porcentaje final
@@ -524,9 +538,9 @@ Este problema de **interpretación de tablas** y **cálculo de porcentajes** req
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
-### Paso 1: Identificación correcta del mayor gasto semanal ✓
+### Paso 1: Identificación correcta del `r texto_pregunta` gasto semanal ✓
 
-**Respuesta correcta:** $`r formato_estandar(valor_mayor_gasto, 0)`
+**Respuesta correcta:** $`r formato_estandar(valor_objetivo, 0)`
 
 **Análisis de gastos semanales:**
 
@@ -535,7 +549,7 @@ Este problema de **interpretación de tablas** y **cálculo de porcentajes** req
 - Semana 3: $`r formato_estandar(totales_semana[3], 0)`
 - Semana 4: $`r formato_estandar(totales_semana[4], 0)`
 
-La semana `r semana_mayor_gasto` tuvo el mayor gasto con $`r formato_estandar(valor_mayor_gasto, 0)`.
+La semana `r semana_objetivo` tuvo el `r texto_pregunta` gasto con $`r formato_estandar(valor_objetivo, 0)`.
 
 ### Paso 2: Identificación del gasto total mensual ✓
 
@@ -547,11 +561,11 @@ $$\text{Total mensual} = `r formato_estandar(totales_semana[1], 0)` + `r formato
 
 ### Paso 3: Configuración correcta de la fórmula ✓
 
-**Respuestas correctas:** Numerador = `r formato_estandar(valor_mayor_gasto, 0)`, Denominador = `r formato_estandar(gran_total, 0)`
+**Respuestas correctas:** Numerador = `r formato_estandar(valor_objetivo, 0)`, Denominador = `r formato_estandar(gran_total, 0)`
 
 La fórmula de porcentaje requiere:
 
-- **Numerador:** El valor observado (`r formato_estandar(valor_mayor_gasto, 0)` pesos)
+- **Numerador:** El valor observado (`r formato_estandar(valor_objetivo, 0)` pesos)
 - **Denominador:** El valor total (`r formato_estandar(gran_total, 0)` pesos)
 
 ### Paso 4: Verificación de valores ✓
@@ -563,9 +577,9 @@ Los valores son coherentes con los datos de la tabla y representan correctamente
 
 ### Paso 5: Cálculo del porcentaje final ✓
 
-**Respuesta correcta:** `r formato_estandar(porcentaje_mayor_gasto, 1)`%
+**Respuesta correcta:** `r formato_estandar(porcentaje_objetivo, 1)`%
 
-$$\text{Porcentaje} = \frac{`r formato_estandar(valor_mayor_gasto, 0)`}{`r formato_estandar(gran_total, 0)`} \times 100\% = `r formato_estandar(porcentaje_mayor_gasto, 1)`\%$$
+$$\text{Porcentaje} = \frac{`r formato_estandar(valor_objetivo, 0)`}{`r formato_estandar(gran_total, 0)`} \times 100\% = `r formato_estandar(porcentaje_objetivo, 1)`\%$$
 
 ### Paso 6: Confirmación del tipo de gráfica ✓ (CON PUNTUACIÓN)
 
@@ -582,9 +596,9 @@ for(i in 1:4) {
 
 "`r respuesta_correcta_schoice`"
 
-- Esta opción permite visualizar directamente qué semana representa el mayor porcentaje del total mensual
+- Esta opción permite visualizar directamente qué semana representa el `r texto_analisis` del total mensual
 - Muestra claramente las proporciones de cada semana respecto al total
-- Facilita la identificación inmediata de la semana con mayor participación porcentual
+- Facilita la identificación inmediata de la semana con `r texto_pregunta` participación porcentual
 - Es el tipo de gráfica más adecuado para comparar partes de un todo
 
 **Análisis de distractores:**
@@ -597,9 +611,9 @@ for(i in 1:4) {
 
 **Datos del problema:**
 
-- Mayor gasto semanal: $`r formato_estandar(valor_mayor_gasto, 0)` (Semana `r semana_mayor_gasto`)
+- `r stringr::str_to_title(texto_pregunta)` gasto semanal: $`r formato_estandar(valor_objetivo, 0)` (Semana `r semana_objetivo`)
 - Gasto total mensual: $`r formato_estandar(gran_total, 0)`
-- Porcentaje representado: `r formato_estandar(porcentaje_mayor_gasto, 1)`%
+- Porcentaje representado: `r formato_estandar(porcentaje_objetivo, 1)`%
 
 **El formato híbrido con puntuación dual (cloze + schoice) garantiza que los estudiantes:**
 
@@ -618,7 +632,7 @@ for(i in 1:4) {
 
 ### Conclusión
 
-La semana `r semana_mayor_gasto` representó el **`r formato_estandar(porcentaje_mayor_gasto, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
+La semana `r semana_objetivo` representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
 
 Esta respuesta es coherente porque:
 
