@@ -327,7 +327,7 @@ gastos_por_categoria = {
 
 # Totales por semana y por categoría
 totales_semana = [", paste(totales_semana, collapse=", "), "]
-totales_categoria = [", paste(c(total_gasolina, total_parqueadero, total_peajes), collapse=", "), "]
+totales_categoria = [", total_gasolina, ", ", total_parqueadero, ", ", total_peajes, "]
 
 # Paleta de colores consistente
 colores_categorias = ['#FF6B6B', '#4ECDC4', '#45B7D1']
