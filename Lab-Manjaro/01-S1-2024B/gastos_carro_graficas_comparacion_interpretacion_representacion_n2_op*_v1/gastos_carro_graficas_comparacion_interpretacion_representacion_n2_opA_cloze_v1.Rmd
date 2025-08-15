@@ -480,6 +480,7 @@ Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100%
 
 ### Paso 4: Verificación de valores
 Confirme que los valores del numerador y denominador son correctos:
+
 - Numerador (mayor gasto semanal): $##ANSWER3##
 - Denominador (gasto total mensual): $##ANSWER4##
 
