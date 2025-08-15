@@ -1,0 +1,377 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+Test passed Test passed
+
+\section{Question}\label{question}
+
+María lleva un registro detallado de los gastos relacionados con su
+vehículo. La tabla muestra los gastos semanales durante un mes completo,
+organizados por categorías.
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{tabla_gastos.png}
+
+Para analizar qué semana representó el mayor porcentaje del gasto total
+mensual, resuelva paso a paso:
+
+\textbf{IMPORTANTE - Formato de números:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Valores monetarios}: Sin separador de miles, use punto para
+  decimales
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ejemplo: \$16850.32 (no \$16.850,32 ni \$16850,32)
+  \end{itemize}
+\item
+  \textbf{Respuestas numéricas}: Sin separador de miles, use punto para
+  decimales
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Paso 1: Identificación del mayor gasto
+semanal}\label{paso-1-identificaciuxf3n-del-mayor-gasto-semanal}
+
+Observe la tabla y identifique cuál fue el mayor gasto semanal (total
+por semana).
+
+\textbf{Respuesta:} \$\#\#ANSWER1\#\#
+
+\subsubsection{Paso 2: Identificación del gasto total
+mensual}\label{paso-2-identificaciuxf3n-del-gasto-total-mensual}
+
+Según la tabla, ¿cuál es el gasto total del mes (suma de todas las
+semanas)?
+
+\textbf{Respuesta:} \$\#\#ANSWER2\#\#
+
+\subsubsection{Paso 3: Configuración de la fórmula de
+porcentaje}\label{paso-3-configuraciuxf3n-de-la-fuxf3rmula-de-porcentaje}
+
+Para calcular el porcentaje, complete la fórmula con los valores
+identificados:
+
+Porcentaje = ( \#\#ANSWER3\#\# ÷ \#\#ANSWER4\#\# ) × 100\%
+
+\subsubsection{Paso 4: Verificación de
+valores}\label{paso-4-verificaciuxf3n-de-valores}
+
+Confirme que los valores del numerador y denominador son correctos: -
+Numerador (mayor gasto semanal): \$\#\#ANSWER3\#\# - Denominador (gasto
+total mensual): \$\#\#ANSWER4\#\#
+
+\subsubsection{Paso 5: Cálculo del porcentaje
+final}\label{paso-5-cuxe1lculo-del-porcentaje-final}
+
+Complete el cálculo del porcentaje:
+
+Porcentaje = ( \#\#ANSWER3\#\# ÷ \#\#ANSWER4\#\# ) × 100\% =
+\#\#ANSWER5\#\#\%
+
+\subsubsection{Paso 6: Confirmación del tipo de gráfica (CON
+PUNTUACIÓN)}\label{paso-6-confirmaciuxf3n-del-tipo-de-gruxe1fica-con-puntuaciuxf3n}
+
+Basándose en su análisis anterior, \textbf{seleccione qué tipo de
+gráfica permite identificar más fácilmente qué semana representó el
+mayor porcentaje del gasto total mensual}:
+
+\#\#ANSWER6\#\#
+
+\textbf{Conclusión:} La semana con mayor gasto representó el
+\#\#ANSWER5\#\#\% del gasto total mensual.
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  Gráfica circular por semana
+\item
+  Gráfica circular por categoría
+\item
+  Gráfica de barras apiladas por semana
+\item
+  Gráfica de barras agrupadas por categoría
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+\textbf{NOTA IMPORTANTE - Configuración de evaluación automática:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Tolerancias configuradas}: Tolerancia 1 para respuestas
+  numéricas monetarias, tolerancia 0.1 para porcentajes, tolerancia 0
+  para respuestas schoice
+\item
+  \textbf{Justificación}: Los valores monetarios son enteros grandes,
+  tolerancia 1 evita rechazos incorrectos por diferencias mínimas de
+  formato manteniendo precisión matemática
+\item
+  \textbf{Formato numérico}: Sin separador de miles, punto como
+  separador decimal
+\end{itemize}
+
+\subsubsection{Análisis paso a paso del problema de gastos de
+vehículo}\label{anuxe1lisis-paso-a-paso-del-problema-de-gastos-de-vehuxedculo}
+
+Este problema de \textbf{interpretación de tablas} y \textbf{cálculo de
+porcentajes} requiere un análisis secuencial que demuestre el proceso de
+razonamiento matemático aplicado a contextos de gastos personales:
+
+\textbf{NOTA IMPORTANTE - Formato de números estandarizado:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Valores monetarios}: Sin separador de miles, use punto para
+  decimales
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ejemplo: \$16850.32 (no \$16.850,32 ni \$16850,32)
+  \end{itemize}
+\item
+  \textbf{Respuestas numéricas}: Sin separador de miles, punto como
+  separador decimal
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+  \end{itemize}
+\item
+  \textbf{Consistencia}: Mismo formato en enunciado, opciones y
+  respuestas
+\end{itemize}
+
+\subsubsection{Paso 1: Identificación correcta del mayor gasto semanal
+✓}\label{paso-1-identificaciuxf3n-correcta-del-mayor-gasto-semanal}
+
+\textbf{Respuesta correcta:} \$69448
+
+\textbf{Análisis de gastos semanales:} - Semana 1: \$69448 - Semana 2:
+\$57765 - Semana 3: \$61336 - Semana 4: \$68468
+
+La semana 1 tuvo el mayor gasto con \$69448.
+
+\subsubsection{Paso 2: Identificación del gasto total mensual
+✓}\label{paso-2-identificaciuxf3n-del-gasto-total-mensual-1}
+
+\textbf{Respuesta correcta:} \$257017
+
+El total mensual se calcula sumando todos los gastos semanales:
+\[\text{Total mensual} = 69448 + 57765 + 61336 + 68468 = 257017\]
+
+\subsubsection{Paso 3: Configuración correcta de la fórmula
+✓}\label{paso-3-configuraciuxf3n-correcta-de-la-fuxf3rmula}
+
+\textbf{Respuestas correctas:} Numerador = 69448, Denominador = 257017
+
+La fórmula de porcentaje requiere:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Numerador:} El valor observado (69448 pesos)
+\item
+  \textbf{Denominador:} El valor total (257017 pesos)
+\end{itemize}
+
+\subsubsection{Paso 4: Verificación de valores
+✓}\label{paso-4-verificaciuxf3n-de-valores-1}
+
+Los valores son coherentes con los datos de la tabla y representan
+correctamente: - El mayor gasto semanal individual - El gasto total
+mensual (suma de todas las semanas)
+
+\subsubsection{Paso 5: Cálculo del porcentaje final
+✓}\label{paso-5-cuxe1lculo-del-porcentaje-final-1}
+
+\textbf{Respuesta correcta:} 27.0\%
+
+\[\text{Porcentaje} = \frac{69448}{257017} \times 100\% = 27.0\%\]
+
+\subsubsection{Paso 6: Confirmación del tipo de gráfica ✓ (CON
+PUNTUACIÓN)}\label{paso-6-confirmaciuxf3n-del-tipo-de-gruxe1fica-con-puntuaciuxf3n-1}
+
+\textbf{Opciones presentadas:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{A}: Gráfica circular por semana ← \textbf{RESPUESTA CORRECTA}
+\item
+  \textbf{B}: Gráfica circular por categoría
+\item
+  \textbf{C}: Gráfica de barras apiladas por semana
+\item
+  \textbf{D}: Gráfica de barras agrupadas por categoría
+\end{itemize}
+
+\textbf{Análisis de la respuesta correcta:}
+
+``Gráfica circular por semana''
+
+\begin{itemize}
+\tightlist
+\item
+  Esta opción permite visualizar directamente qué semana representa el
+  mayor porcentaje del total mensual
+\item
+  Muestra claramente las proporciones de cada semana respecto al total
+\item
+  Facilita la identificación inmediata de la semana con mayor
+  participación porcentual
+\item
+  Es el tipo de gráfica más adecuado para comparar partes de un todo
+\end{itemize}
+
+\textbf{Análisis de distractores:}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Gráfica circular por categoría}: Muestra proporciones de
+  categorías, no de semanas
+\item
+  \textbf{Gráfica de barras apiladas por semana}: Muestra composición
+  pero no facilita comparación de totales
+\item
+  \textbf{Gráfica de barras agrupadas por categoría}: Agrupa por
+  categoría, no por semana
+\end{itemize}
+
+\subsubsection{Verificación del proceso de razonamiento
+completo}\label{verificaciuxf3n-del-proceso-de-razonamiento-completo}
+
+\textbf{Datos del problema:} - Mayor gasto semanal: \$69448 (Semana 1) -
+Gasto total mensual: \$257017 - Porcentaje representado: 27.0\%
+
+\textbf{El formato híbrido con puntuación dual (cloze + schoice)
+garantiza que los estudiantes:}
+
+\textbf{Parte Analítica (Pasos 1-5):} - \textbf{Lean cuidadosamente} la
+tabla para extraer datos precisos - \textbf{Identifiquen correctamente}
+el mayor valor semanal y el total mensual - \textbf{Configuren
+correctamente} la fórmula de porcentaje paso a paso - \textbf{Realicen
+cálculos} matemáticos sin saltar etapas del proceso
+
+\textbf{Parte de Confirmación (Paso 6):} - \textbf{Demuestren
+coherencia} entre su análisis numérico y la comprensión conceptual -
+\textbf{Identifiquen el tipo de gráfica} más apropiado para el análisis
+requerido - \textbf{Consoliden su aprendizaje} mediante validación de
+resultados
+
+\subsubsection{Conclusión}\label{conclusiuxf3n}
+
+La semana 1 representó el \textbf{27.0\%} del gasto total mensual de
+María en su vehículo.
+
+Esta respuesta es coherente porque: - Se basa en una lectura correcta de
+la tabla - Aplica correctamente la fórmula de porcentaje - El resultado
+está dentro del rango esperado (0\% a 100\%) - La gráfica seleccionada
+es la más apropiada para este tipo de análisis
+
+\textbf{Verificación adicional}: El total de gastos por categorías
+(Combustible: \$117986, Estacionamiento: \$83466, Peajes: \$55565) suma
+exactamente \$257017, confirmando la coherencia de los datos.
+
+\section{Meta-information}\label{meta-information}
+
+exname: Gastos Carro Gráficas Comparación - Análisis Secuencial Cloze
+extype: cloze exsolution:
+69448\textbar257017\textbar69448\textbar257017\textbar27\textbar1000
+exclozetype:
+num\textbar num\textbar num\textbar num\textbar num\textbar schoice
+extol: 1\textbar1\textbar1\textbar1\textbar0.1\textbar0 exsection:
+Estadística\textbar Interpretación de
+tablas\textbar Porcentajes\textbar Análisis de datos exextra{[}Type{]}:
+Cálculo exextra{[}Program{]}: R exextra{[}Language{]}: es
+exextra{[}Level{]}: 2 exextra{[}Competencia{]}: Interpretación y
+representación exextra{[}Componente{]}: Aleatorio y sistemas de datos
+exextra{[}Contexto{]}: Laboral exextra{[}Dificultad{]}: Media
+
+\end{document}
