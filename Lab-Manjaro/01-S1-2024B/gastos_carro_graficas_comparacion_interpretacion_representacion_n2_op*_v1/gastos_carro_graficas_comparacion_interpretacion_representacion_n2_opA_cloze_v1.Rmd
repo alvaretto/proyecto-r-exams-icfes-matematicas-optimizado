@@ -171,21 +171,21 @@ mapeo_graficas <- data.frame(
 orden_presentacion <- sample(1:4)
 mapeo_graficas_ordenado <- mapeo_graficas[orden_presentacion, ]
 
-# Generar opciones para la pregunta schoice final (solo el tipo, sin "Gráfica X:")
-opciones_graficas <- mapeo_graficas$tipo
+# Generar opciones para la pregunta schoice final usando el MISMO orden que las gráficas mostradas
+opciones_graficas <- mapeo_graficas_ordenado$tipo
 
-# La respuesta correcta es siempre la gráfica circular por semana (tipo 3)
-indice_tipo_correcto <- 3  # "Circular por semana"
-respuesta_correcta_schoice <- nombres_graficas_base[indice_tipo_correcto]
+# La respuesta correcta es siempre la gráfica circular por semana
+respuesta_correcta_schoice <- "Circular por semana"
 
-# Mezclar opciones aleatoriamente
-orden_aleatorio <- sample(1:4)
-opciones_mezcladas <- opciones_graficas[orden_aleatorio]
+# Encontrar en qué posición está la respuesta correcta en el orden mostrado
+indice_respuesta_correcta <- which(mapeo_graficas_ordenado$tipo == respuesta_correcta_schoice)
 
 # Para schoice en cloze, necesitamos un vector lógico
-indice_respuesta_correcta <- which(orden_aleatorio == indice_tipo_correcto)
 solucion_schoice <- rep(FALSE, 4)
 solucion_schoice[indice_respuesta_correcta] <- TRUE
+
+# Las opciones mezcladas son las mismas que el orden mostrado (sin aleatorización adicional)
+opciones_mezcladas <- opciones_graficas
 
 # Vector de soluciones para formato cloze (5 numéricas + 1 schoice)
 solucion_cloze <- list(
