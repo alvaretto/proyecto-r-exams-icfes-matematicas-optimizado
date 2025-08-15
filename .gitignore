@@ -29,3 +29,13 @@ config_personal.txt
 *.p12
 *token*
 *secret*
+
+# Archivos XML grandes (>50MB) - R-exams output
+**/salida/*.xml
+**/*_.xml
+*.xml
+
+# Archivos temporales de R-exams
+**/test_*.html
+**/version_*.html
+**/*_temp.*

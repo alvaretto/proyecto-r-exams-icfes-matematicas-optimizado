@@ -418,11 +418,15 @@ tablas</li>
 extype: cloze
 exsolution: 75000|379000|75000|379000|19.8|0100
 exclozetype: num|num|num|num|num|schoice</code></pre>
-<p><strong>Explicación:</strong> - <code>exname</code>: Nombre del
-ejercicio - <code>extype: cloze</code>: Formato con múltiples respuestas
-- <code>exsolution</code>: Respuestas correctas separadas por
-<code>|</code> - <code>exclozetype</code>: Tipos de respuesta (num =
-numérica, schoice = selección)</p>
+<p><strong>Explicación:</strong></p>
+<ul>
+<li><code>exname</code>: Nombre del ejercicio</li>
+<li><code>extype: cloze</code>: Formato con múltiples respuestas</li>
+<li><code>exsolution</code>: Respuestas correctas separadas por
+<code>|</code></li>
+<li><code>exclozetype</code>: Tipos de respuesta (num = numérica,
+schoice = selección)</li>
+</ul>
 </div>
 <div id="secciones-principales" class="section level3">
 <h3>Secciones Principales</h3>
@@ -547,10 +551,14 @@ valor_objetivo &lt;- min(totales_semana)         # = 75000</code></pre>
 <h4><strong>Paso 6: Seleccionar gráfica</strong></h4>
 <p><strong>Pregunta:</strong> ¿Cuál gráfica es más adecuada para
 identificar la semana con menor porcentaje?</p>
-<p><strong>Opciones:</strong> - A. Barras agrupadas por categoría - B.
-Barras apiladas por semana<br />
-- C. Circular por categoría - D. <strong>Circular por semana</strong> ←
-CORRECTA</p>
+<p><strong>Opciones:</strong></p>
+<ul>
+<li>A. Barras agrupadas por categoría</li>
+<li>B. Barras apiladas por semana<br />
+</li>
+<li>C. Circular por categoría</li>
+<li>D. <strong>Circular por semana</strong> ← CORRECTA</li>
+</ul>
 <p><strong>Justificación:</strong> La gráfica circular por semana
 muestra directamente los porcentajes de cada semana, facilitando la
 identificación visual del menor (19.8%).</p>
@@ -603,11 +611,16 @@ for(i in 1:5) {
 <div id="formato-exsolution" class="section level4">
 <h4><strong>Formato exsolution:</strong></h4>
 <pre><code>75000|379000|75000|379000|19.8|0100</code></pre>
-<p><strong>Desglose:</strong> 1. <code>75000</code> → Paso 1: Menor
-gasto semanal 2. <code>379000</code> → Paso 2: Total mensual<br />
-3. <code>75000</code> → Paso 3: Numerador 4. <code>379000</code> → Paso
-4: Denominador 5. <code>19.8</code> → Paso 5: Porcentaje final 6.
-<code>0100</code> → Paso 6: Opción D (schoice binario)</p>
+<p><strong>Desglose:</strong></p>
+<ol style="list-style-type: decimal">
+<li><code>75000</code> → Paso 1: Menor gasto semanal</li>
+<li><code>379000</code> → Paso 2: Total mensual<br />
+</li>
+<li><code>75000</code> → Paso 3: Numerador</li>
+<li><code>379000</code> → Paso 4: Denominador</li>
+<li><code>19.8</code> → Paso 5: Porcentaje final</li>
+<li><code>0100</code> → Paso 6: Opción D (schoice binario)</li>
+</ol>
 </div>
 <div id="interpretación-schoice" class="section level4">
 <h4><strong>Interpretación schoice:</strong></h4>
@@ -1027,11 +1040,15 @@ for(estudiante in 1:500) {
                name = paste0(&quot;est_&quot;, sprintf(&quot;%03d&quot;, estudiante)),
                dir = &quot;evaluacion_final/&quot;)
 }</code></pre>
-<p><strong>Resultados:</strong> - ✅ <strong>0% de copia</strong>: Cada
-estudiante tuvo datos únicos - ✅ <strong>Distribución
-equilibrada</strong>: 48% mayor, 52% menor - ✅ <strong>Tiempo
-promedio</strong>: 12 minutos por ejercicio - ✅ <strong>Satisfacción
-docente</strong>: 9.2/10</p>
+<p><strong>Resultados:</strong></p>
+<ul>
+<li>✅ <strong>0% de copia</strong>: Cada estudiante tuvo datos
+únicos</li>
+<li>✅ <strong>Distribución equilibrada</strong>: 48% mayor, 52%
+menor</li>
+<li>✅ <strong>Tiempo promedio</strong>: 12 minutos por ejercicio</li>
+<li>✅ <strong>Satisfacción docente</strong>: 9.2/10</li>
+</ul>
 </div>
 <div id="caso-2-evaluación-icfes-simulacro" class="section level3">
 <h3>Caso 2: Evaluación ICFES Simulacro</h3>
@@ -1048,11 +1065,15 @@ exams2pdf(&quot;gastos_carro_graficas_comparacion_interpretacion_representacion_
           name = &quot;simulacro_icfes&quot;,
           dir = &quot;simulacros/&quot;,
           template = &quot;icfes_template.tex&quot;)</code></pre>
-<p><strong>Impacto:</strong> - ✅ <strong>Mejora en puntajes</strong>:
-+15% en competencia de interpretación - ✅ <strong>Confianza
-estudiantil</strong>: +22% se sienten más preparados - ✅
-<strong>Eficiencia docente</strong>: -60% tiempo de preparación de
-evaluaciones</p>
+<p><strong>Impacto:</strong></p>
+<ul>
+<li>✅ <strong>Mejora en puntajes</strong>: +15% en competencia de
+interpretación</li>
+<li>✅ <strong>Confianza estudiantil</strong>: +22% se sienten más
+preparados</li>
+<li>✅ <strong>Eficiencia docente</strong>: -60% tiempo de preparación
+de evaluaciones</li>
+</ul>
 <hr />
 </div>
 </div>
@@ -1061,19 +1082,19 @@ evaluaciones</p>
 <div id="funcionalidades-planificadas" class="section level3">
 <h3>Funcionalidades Planificadas:</h3>
 <ol style="list-style-type: decimal">
-<li><strong>Aleatorización de Contextos Temáticos:</strong>
+<li><p><strong>Aleatorización de Contextos Temáticos:</strong></p>
 <ul>
 <li>Gastos familiares, empresariales, escolares</li>
 <li>Ventas por regiones, productos, períodos</li>
 <li>Rendimiento académico por materias, estudiantes</li>
 </ul></li>
-<li><strong>Niveles de Dificultad Adaptativos:</strong>
+<li><p><strong>Niveles de Dificultad Adaptativos:</strong></p>
 <ul>
 <li>Básico: Sumas simples, porcentajes enteros</li>
 <li>Intermedio: Decimales, múltiples categorías</li>
 <li>Avanzado: Análisis estadístico, tendencias</li>
 </ul></li>
-<li><strong>Integración con IA:</strong>
+<li><p><strong>Integración con IA:</strong></p>
 <ul>
 <li>Generación automática de contextos</li>
 <li>Adaptación según rendimiento estudiantil</li>
@@ -1090,8 +1111,6 @@ crear_ejercicio_similar &lt;- function(tema, categorias, rangos) {
   # Adapta contexto y datos según parámetros
 }</code></pre>
 <hr />
-<p><strong>¡Este walkthrough te proporciona todo lo necesario para
-dominar y expandir este tipo de evaluaciones!</strong> 🌟</p>
 </div>
 </div>
 </div>
