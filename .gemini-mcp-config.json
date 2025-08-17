@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "project": "RepositorioMatematicasICFES_R_Exams",
+  "gemini": {
+    "model": "gemini-2.5-pro",
+    "context_window": "1M_tokens",
+    "temperature": 0.1,
+    "max_tokens": 8192
+  },
+  "mcps": {
+    "auto_enable": true,
+    "servers": {
+      "context7": {
+        "enabled": true,
+        "auto_trigger": ["documentación", "librería", "API", "referencia"],
+        "description": "Documentación de librerías y APIs"
+      },
+      "playwright": {
+        "enabled": true,
+        "auto_trigger": ["web", "navegador", "scraping", "testing", "automatización"],
+        "description": "Automatización web y testing"
+      },
+      "memory": {
+        "enabled": true,
+        "auto_trigger": ["recordar", "memoria", "guardar", "persistir"],
+        "description": "Gestión de memoria persistente"
+      },
+      "brave-search": {
+        "enabled": true,
+        "auto_trigger": ["buscar", "investigar", "información", "actualizada"],
+        "description": "Búsqueda web privada"
+      },
+      "filesystem": {
+        "enabled": true,
+        "auto_trigger": ["archivo", "directorio", "leer", "escribir"],
+        "description": "Acceso a archivos locales"
+      }
+    }
+  },
+  "icfes_integration": {
+    "auto_context": [
+      "Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md",
+      "Auxiliares/rules_full/rules_full_v1.md"
+    ],
+    "priority_directories": [
+      "Auxiliares/Ejemplos-Funcionales-Rmd",
+      "Auxiliares/TikZ-Documentation",
+      "Lab-Manjaro"
+    ]
+  }
+}
