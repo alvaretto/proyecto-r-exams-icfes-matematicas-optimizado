@@ -1,0 +1,26 @@
+{
+  "project_name": "RepositorioMatematicasICFES_R_Exams",
+  "project_type": "r_exams_mathematics",
+  "context_optimization": {
+    "max_files": 100,
+    "priority_directories": [
+      "Auxiliares/Ejemplos-Funcionales-Rmd",
+      "Auxiliares/TikZ-Documentation", 
+      "Auxiliares/Python-Documentation",
+      "Auxiliares/Instalaciones/Ais/Gemini_CLI"
+    ],
+    "exclude_patterns": [
+      "*.html",
+      "*.pdf", 
+      "*.png",
+      "*.jpg",
+      ".git/*",
+      "node_modules/*",
+      "*.log"
+    ]
+  },
+  "default_context_files": [
+    "Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md",
+    "Auxiliares/rules_full/rules_full_v1.md"
+  ]
+}

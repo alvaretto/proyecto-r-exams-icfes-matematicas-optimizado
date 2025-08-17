@@ -1,0 +1,147 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🤖 Gemini: Analizar Archivo Actual",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Analiza este archivo y sugiere mejoras: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Analiza el archivo actual con Gemini CLI"
+        },
+        {
+            "label": "🤖 Gemini: Revisar Proyecto Completo",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "--all-files",
+                "-p",
+                "Revisa la estructura y código de este proyecto de matemáticas R-exams. Analiza la organización, calidad del código y sugiere mejoras."
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Revisión completa del proyecto con contexto de todos los archivos"
+        },
+        {
+            "label": "🤖 Gemini: Generar Documentación",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Genera documentación completa para este archivo: ${file}. Incluye descripción de funciones, parámetros y ejemplos de uso."
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Genera documentación automática para el archivo seleccionado"
+        },
+        {
+            "label": "🤖 Gemini: Optimizar Código R",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Optimiza este código R para mejor rendimiento y legibilidad, manteniendo la funcionalidad para ejercicios matemáticos: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Optimización específica para código R de ejercicios matemáticos"
+        },
+        {
+            "label": "🤖 Gemini: Crear Ejercicio Similar",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Basándote en este archivo de ejercicio R-exams, crea un ejercicio similar pero con diferentes parámetros y contexto: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Genera ejercicios similares con variaciones en parámetros"
+        },
+        {
+            "label": "🤖 Gemini: Modo Interactivo",
+            "type": "shell",
+            "command": "gemini",
+            "args": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia sesión interactiva con Gemini CLI"
+        },
+        {
+            "label": "🤖 Gemini: Análisis TikZ/LaTeX",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Analiza este código TikZ/LaTeX y sugiere mejoras para gráficas matemáticas más profesionales: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Análisis especializado para código TikZ y LaTeX"
+        },
+        {
+            "label": "🤖 Gemini: Verificar Instalación",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/test-gemini-cli.sh"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Ejecuta pruebas completas de verificación de Gemini CLI"
+        }
+    ]
+}

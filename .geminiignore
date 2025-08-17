@@ -1,0 +1,126 @@
+# Gemini CLI - Archivos a ignorar para optimizar contexto
+# Proyecto: RepositorioMatematicasICFES_R_Exams
+
+# Directorios de sistema y temporales
+.git/
+.vscode/settings.json
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+node_modules/
+__pycache__/
+.pytest_cache/
+*.tmp
+*.temp
+*.log
+
+# Archivos de salida generados
+*.html
+*.pdf
+*.docx
+*.xml
+salida/
+output/
+temp/
+temporal/
+
+# Archivos de imagen grandes (mantener solo ejemplos pequeños)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+# Excepciones para ejemplos importantes
+!Auxiliares/Ejemplos-Funcionales-Rmd/**/*.png
+!Auxiliares/TikZ-Documentation/**/*.png
+
+# Archivos de datos grandes
+*.csv
+*.xlsx
+*.xls
+*.rds
+*.RData
+datos/
+data/
+
+# Archivos de backup y versiones
+*~
+*.bak
+*.backup
+*.old
+*_backup.*
+*_old.*
+
+# Archivos específicos de R
+.Rproj
+*.Rproj
+packrat/
+renv/
+
+# Archivos de LaTeX temporales
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+
+# Archivos de Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.Python
+env/
+venv/
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Directorios de instalaciones (mantener solo configuración)
+Auxiliares/Instalaciones/*/
+!Auxiliares/Instalaciones/Ais/Gemini_CLI/
+
+# Archivos de documentación extensa (usar solo cuando sea necesario)
+# Mantener archivos clave para contexto
+!Auxiliares/rules_full/rules_full_v1.md
+!Auxiliares/Augment\ Memories/TEMPLATE_Plan_Tareas_ICFES_R_Exams.md
+!Auxiliares/Ejemplos-Funcionales-Rmd/
+!Auxiliares/TikZ-Documentation/
+!Auxiliares/Python-Documentation/
+
+# Archivos de configuración importantes (INCLUIR)
+!.geminiignore
+!README.md
+!*.md
+!*.Rmd
+!*.R
+!*.py
+!*.sh
+!*.json
+!*.yaml
+!*.yml
+
+# Directorios específicos del proyecto (INCLUIR)
+!Auxiliares/
+!Lab/
+!Ejercicios/
+!Templates/
+
+# Archivos de configuración Gemini CLI (INCLUIR SIEMPRE)
+!Auxiliares/Instalaciones/Ais/Gemini_CLI/rules-gemini.md
+!Auxiliares/Instalaciones/Ais/Gemini_CLI/task-list-gemini.md
+!Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md
+!Auxiliares/Instalaciones/Ais/Gemini_CLI/comandos-gemini-icfes.md
+!Auxiliares/Instalaciones/Ais/Gemini_CLI/TUTORIAL_USO_GEMINI.md
