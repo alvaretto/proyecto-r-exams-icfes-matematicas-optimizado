@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/context7-mcp/dist/index.js"],
+      "env": {
+        "UPSTASH_REDIS_REST_URL": "${UPSTASH_REDIS_REST_URL}",
+        "UPSTASH_REDIS_REST_TOKEN": "${UPSTASH_REDIS_REST_TOKEN}"
+      }
+    },
+    "playwright": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/playwright-mcp/dist/index.js"],
+      "env": {}
+    },
+    "memory": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/mcp-servers/src/memory/dist/index.js"],
+      "env": {}
+    },
+    "brave-search": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/brave-search-mcp/index.js"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      }
+    },
+    "filesystem": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/filesystem-servers/src/filesystem/dist/index.js"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams"
+      }
+    }
+  }
+}
