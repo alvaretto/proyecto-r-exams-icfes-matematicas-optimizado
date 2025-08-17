@@ -237,6 +237,124 @@
             },
             "problemMatcher": [],
             "detail": "Guía rápida sin dependencias de archivos"
+        },
+        {
+            "label": "🤖 Gemini: Analizar Archivo Actual",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Analiza este archivo y sugiere mejoras: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Revisar Proyecto Completo",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "--all-files",
+                "-p",
+                "Revisa la estructura y código de este proyecto de matemáticas R-exams. Analiza la organización, calidad del código y sugiere mejoras."
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Generar Documentación",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Genera documentación completa para este archivo: ${file}. Incluye descripción de funciones, parámetros y ejemplos de uso."
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Optimizar Código R",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Optimiza este código R para mejor rendimiento y legibilidad, manteniendo la funcionalidad para ejercicios matemáticos: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Crear Ejercicio Similar",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Basándote en este archivo de ejercicio R-exams, crea un ejercicio similar pero con diferentes parámetros y contexto: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Modo Interactivo",
+            "type": "shell",
+            "command": "gemini",
+            "args": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Verificar Instalación",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/test-gemini-cli.sh"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Ejecuta pruebas completas de verificación de Gemini CLI"
         }
     ],
     "inputs": [
