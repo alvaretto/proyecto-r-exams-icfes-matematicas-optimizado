@@ -228,7 +228,7 @@ for autotext in autotexts:
     autotext.set_color('white')
     autotext.set_fontweight('bold')
     autotext.set_fontsize(11)
-ax_a.set_title('Gráfica circular por categoría', fontsize=12, fontweight='bold', pad=20)
+ax_a.set_title(f'Gastos del {r.datos["contexto"]["vehiculo"]}', fontsize=12, fontweight='bold', pad=20)
 plt.tight_layout()
 plt.savefig('grafica_a.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
 plt.savefig('grafica_a.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')

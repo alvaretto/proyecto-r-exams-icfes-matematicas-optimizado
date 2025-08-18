@@ -1,10 +1,10 @@
 ---
 output:
+  html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "amsmath"]
-  word_document: default
-  html_document: default
 icfes:
   competencia: interpretacion_representacion
   componente: aleatorio
@@ -44,6 +44,11 @@ knitr::opts_chunk$set(
   dpi = 150,
   fig.pos = "H"
 )
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
 
 # Asegurar que Python esté correctamente configurado
 use_python(Sys.which("python"), required = TRUE)
@@ -162,10 +167,10 @@ respuesta_5 <- porcentaje_objetivo        # Paso 5: Porcentaje final
 # Aleatorización de letras de gráficas y opciones
 letras_graficas <- sample(LETTERS[1:4])  # Aleatorizar A, B, C, D
 nombres_graficas_base <- c(
-  "Circular por categoría",
-  "Barras apiladas por semana",
-  "Circular por semana",
-  "Barras agrupadas por categoría"
+  paste("Gastos del", vehiculo),
+  paste("Gastos del", vehiculo),
+  paste("Gastos del", vehiculo),
+  paste("Gastos del", vehiculo)
 )
 
 # Crear mapeo de letras a tipos de gráficas
@@ -182,11 +187,13 @@ mapeo_graficas_ordenado <- mapeo_graficas[orden_presentacion, ]
 # Generar opciones para la pregunta schoice final usando el MISMO orden que las gráficas mostradas
 opciones_graficas <- mapeo_graficas_ordenado$tipo
 
-# La respuesta correcta es siempre la gráfica circular por semana
-respuesta_correcta_schoice <- "Circular por semana"
+# La respuesta correcta es siempre la gráfica circular por semana (originalmente índice 3)
+respuesta_correcta_schoice <- paste("Gastos del", vehiculo)
 
 # Encontrar en qué posición está la respuesta correcta en el orden mostrado
-indice_respuesta_correcta <- which(mapeo_graficas_ordenado$tipo == respuesta_correcta_schoice)
+# Como la gráfica circular por semana era originalmente la tercera (índice 3), buscamos dónde quedó después del shuffle
+indice_original_correcto <- 3  # "Circular por semana" era el índice 3 en nombres_graficas_base original
+indice_respuesta_correcta <- which(orden_presentacion == indice_original_correcto)
 
 # Para schoice en cloze, necesitamos un vector lógico
 solucion_schoice <- rep(FALSE, 4)
@@ -197,12 +204,11 @@ opciones_mezcladas <- opciones_graficas
 
 # Vector de soluciones para formato cloze (5 numéricas + 1 schoice)
 solucion_cloze <- list(
-  respuesta_1,      # Paso 1: Valor del gasto objetivo (mayor o menor)
+  respuesta_1,      # Paso 1: Valor mayor gasto
   respuesta_2,      # Paso 2: Total general
   respuesta_3,      # Paso 3: Numerador
   respuesta_4,      # Paso 4: Denominador
-  respuesta_5,      # Paso 5: Porcentaje final
-  solucion_schoice  # Paso 6: Tipo de gráfica (schoice)
+  respuesta_5       # Paso 5: Porcentaje final
 )
 
 # Tipos de respuesta: 5 numéricas + 1 schoice
@@ -219,7 +225,7 @@ es_moodle <- (match_exams_call() %in% formatos_moodle)
 test_that("Validación de datos generados", {
   expect_true(all(totales_semana > 0))
   expect_equal(gran_total, sum(totales_semana))
-  expect_equal(length(solucion_cloze), 6)
+  expect_equal(length(solucion_cloze), 5)
   expect_equal(length(tipos_respuesta), 6)
   expect_equal(length(tolerancias), 6)
   expect_equal(length(opciones_graficas), 4)
@@ -234,8 +240,7 @@ test_that("Validación de coherencia matemática", {
   expect_equal(respuesta_4, gran_total)
   expect_equal(respuesta_5, porcentaje_objetivo)
   expect_true(respuesta_correcta_schoice %in% opciones_graficas)
-  expect_true(all(sapply(solucion_cloze[1:5], is.numeric)))  # Solo las primeras 5 son numéricas
-  expect_true(is.logical(solucion_cloze[[6]]))  # La sexta es lógica (schoice)
+  expect_true(all(sapply(solucion_cloze, is.numeric)))
   expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
 })
 
@@ -245,7 +250,7 @@ test_that("Validación de aleatorización de gráficas", {
   expect_true(all(letras_graficas %in% LETTERS[1:4]))  # Solo A, B, C, D
   expect_equal(nrow(mapeo_graficas), 4)
   expect_equal(length(opciones_graficas), 4)
-  expect_equal(respuesta_correcta_schoice, "Circular por semana")  # Respuesta correcta es exactamente el tipo
+  expect_equal(respuesta_correcta_schoice, paste("Gastos del", vehiculo))  # Respuesta correcta es exactamente el tipo
   expect_true(all(opciones_graficas %in% nombres_graficas_base))  # Todas las opciones son tipos válidos
 })
 
@@ -255,55 +260,6 @@ test_that("Validación de aleatorización de posiciones", {
   expect_true(all(orden_presentacion %in% 1:4))  # Solo posiciones 1, 2, 3, 4
   expect_equal(nrow(mapeo_graficas_ordenado), 4)
   expect_true(all(mapeo_graficas_ordenado$tipo %in% nombres_graficas_base))  # Todos los tipos válidos
-})
-
-test_that("Validación de coherencia pedagógica específica", {
-  # Verificar que la respuesta correcta sea inequívocamente única
-  expect_equal(respuesta_correcta_schoice, "Circular por semana")
-
-  # Verificar que solo hay una opción "Circular por semana" en las opciones
-  count_circular_semana <- sum(opciones_graficas == "Circular por semana")
-  expect_equal(count_circular_semana, 1)
-
-  # Verificar que la respuesta correcta está en las opciones mostradas
-  expect_true(respuesta_correcta_schoice %in% opciones_graficas)
-
-  # Verificar que el índice de respuesta correcta es válido
-  expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
-
-  # Verificar que solo una opción es TRUE en solucion_schoice
-  expect_equal(sum(solucion_schoice), 1)
-})
-
-test_that("Validación de diferenciación clara de distractores", {
-  # Verificar que cada tipo de gráfica es único
-  expect_equal(length(unique(opciones_graficas)), 4)
-
-  # Verificar que los distractores son específicamente diferentes
-  distractores_esperados <- c("Circular por categoría", "Barras apiladas por semana", "Barras agrupadas por categoría")
-  distractores_presentes <- opciones_graficas[opciones_graficas != "Circular por semana"]
-  expect_true(all(distractores_presentes %in% distractores_esperados))
-  expect_equal(length(distractores_presentes), 3)
-})
-
-test_that("Validación de coherencia matemática completa", {
-  # Verificar que la suma de gastos por categoría igual al gran total
-  suma_categorias <- total_gasolina + total_parqueadero + total_peajes
-  expect_equal(suma_categorias, gran_total)
-
-  # Verificar que el porcentaje está en rango válido
-  expect_true(porcentaje_objetivo >= 0 && porcentaje_objetivo <= 100)
-
-  # Verificar que el valor objetivo corresponde realmente al mayor/menor
-  if (tipo_pregunta == "mayor") {
-    expect_equal(valor_objetivo, max(totales_semana))
-  } else {
-    expect_equal(valor_objetivo, min(totales_semana))
-  }
-
-  # Verificar precisión del cálculo de porcentaje
-  porcentaje_calculado <- redondear_matematico((valor_objetivo / gran_total) * 100, 1)
-  expect_equal(porcentaje_objetivo, porcentaje_calculado)
 })
 ```
 
@@ -393,29 +349,20 @@ totales_categoria = [", total_gasolina, ", ", total_parqueadero, ", ", total_pea
 colores_categorias = ['#FF6B6B', '#4ECDC4', '#45B7D1']
 colores_semanas = ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12']
 
-# Mapeo dinámico de tipos a letras usando la aleatorización real de R
-mapeo_r = {")
-
-# Generar el mapeo dinámico basado en el orden aleatorizado real
-for(i in 1:4) {
-  tipo <- mapeo_graficas$tipo[i]
-  letra <- mapeo_graficas$letra[i]
-  codigo_python_graficas <- paste0(codigo_python_graficas, "
-    '", tipo, "': '", letra, "'")
-  if(i < 4) {
-    codigo_python_graficas <- paste0(codigo_python_graficas, ",")
-  }
+# Mapeo de tipos a letras aleatorizadas desde R
+mapeo_r = {
+    'grafica_1': '", mapeo_graficas$letra[1], "',
+    'grafica_2': '", mapeo_graficas$letra[2], "',
+    'grafica_3': '", mapeo_graficas$letra[3], "',
+    'grafica_4': '", mapeo_graficas$letra[4], "'
 }
 
-codigo_python_graficas <- paste0(codigo_python_graficas, "
-}
-
-# GRÁFICA 1: Circular por categoría (SIN porcentajes automáticos)
+# GRÁFICA 1: Circular por categoría
 plt.figure(figsize=(7, 7))
-plt.pie(totales_categoria, labels=categorias,
+plt.pie(totales_categoria, labels=categorias, autopct='%1.1f%%',
         colors=colores_categorias, startangle=90)
-letra = mapeo_r['Circular por categoría']
-plt.title('Circular por categoría', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_1']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
 plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
@@ -431,8 +378,8 @@ for i, categoria in enumerate(categorias):
 
 plt.xlabel('Semanas', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-letra = mapeo_r['Barras apiladas por semana']
-plt.title('Barras apiladas por semana', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_2']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.legend(fontsize=11)
 plt.xticks(rotation=45)
 plt.grid(True, axis='y', alpha=0.3)
@@ -441,14 +388,12 @@ plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transp
 plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
-# GRÁFICA 3: Circular por semana (CON porcentajes automáticos - ÚNICA RESPUESTA CORRECTA)
-plt.figure(figsize=(8, 8))
+# GRÁFICA 3: Circular por semana
+plt.figure(figsize=(7, 7))
 plt.pie(totales_semana, labels=semanas, autopct='%1.1f%%',
-        colors=colores_semanas, startangle=90,
-        textprops={'fontsize': 12, 'fontweight': 'bold'},
-        pctdistance=0.85, labeldistance=1.1)
-letra = mapeo_r['Circular por semana']
-plt.title('Circular por semana', fontsize=14, fontweight='bold')
+        colors=colores_semanas, startangle=90)
+letra = mapeo_r['grafica_3']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
 plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
@@ -465,8 +410,8 @@ for i, semana in enumerate(semanas):
 
 plt.xlabel('Categorías', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-letra = mapeo_r['Barras agrupadas por categoría']
-plt.title('Barras agrupadas por categoría', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_4']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.xticks(x + width*1.5, categorias)
 plt.legend(fontsize=11)
 plt.grid(True, axis='y', alpha=0.3)
@@ -505,20 +450,18 @@ A continuación se presentan cuatro tipos diferentes de gráficas que representa
 <br>
 
 ```{r mostrar_graficas, echo=FALSE, results='asis', fig.align="center"}
-# Mostrar las 4 gráficas en orden aleatorizado con mejor formato
+# Mostrar las 4 gráficas en orden aleatorizado (sin "Gráfica X:")
 for(i in 1:4) {
   letra <- mapeo_graficas_ordenado$letra[i]
   tipo <- mapeo_graficas_ordenado$tipo[i]
   archivo <- paste0("grafica_", tolower(letra), ".png")
 
   if (es_moodle) {
-    cat(paste0("### **", tipo, "**\n\n"))
-    cat(paste0("![](", archivo, "){width=70%}\n\n"))
-    cat("<br>\n\n")
+    cat(paste0("**", tipo, "**\n\n"))
+    cat(paste0("![](", archivo, "){width=60%}\n\n"))
   } else {
-    cat(paste0("### **", tipo, "**\n\n"))
-    cat(paste0("![](", archivo, "){width=75%}\n\n"))
-    cat("<br>\n\n")
+    cat(paste0("**", tipo, "**\n\n"))
+    cat(paste0("![](", archivo, "){width=65%}\n\n"))
   }
 }
 ```
@@ -562,12 +505,12 @@ Complete el cálculo del porcentaje:
 
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100% = ##ANSWER5##%
 
-### Paso 6: Identificación del tipo de gráfica más apropiada (CON PUNTUACIÓN)
-¿Cuál de las gráficas presentadas permite identificar DIRECTAMENTE el porcentaje que representa cada semana del total mensual?
+### Paso 6: Confirmación del tipo de gráfica (CON PUNTUACIÓN)
+Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué semana representó el mayor porcentaje del gasto total mensual**:
 
 ##ANSWER6##
 
-**Conclusión:** La semana con `r texto_pregunta` gasto representó el ##ANSWER5##% del gasto total mensual.
+**Conclusión:** La semana con mayor gasto representó el ##ANSWER5##% del gasto total mensual.
 
 Answerlist
 ----------
@@ -653,18 +596,18 @@ for(i in 1:4) {
 
 **Análisis de la respuesta correcta:**
 
-"`r respuesta_correcta_schoice`" - **ÚNICA RESPUESTA CORRECTA INEQUÍVOCA**
+"`r respuesta_correcta_schoice`"
 
-- **EXCLUSIVAMENTE muestra porcentajes automáticos**: Cada sector incluye automáticamente el porcentaje exacto (ej: `r formato_estandar(porcentaje_objetivo, 1)`%) sin necesidad de cálculos
-- **Visualización DIRECTA de proporciones**: Los porcentajes aparecen automáticamente en cada sector, eliminando cualquier interpretación subjetiva
-- **Comparación inmediata**: El tamaño visual + porcentaje numérico permiten identificación instantánea del `r texto_analisis`
-- **Diseño específico para análisis porcentual**: Es la ÚNICA representación que combina visualización proporcional con valores porcentuales exactos automáticos
+- Esta opción permite visualizar directamente qué semana representa el `r texto_analisis` del total mensual
+- Muestra claramente las proporciones de cada semana respecto al total
+- Facilita la identificación inmediata de la semana con `r texto_pregunta` participación porcentual
+- Es el tipo de gráfica más adecuado para comparar partes de un todo
 
-**Análisis detallado de distractores (por qué son INCORRECTOS):**
+**Análisis de distractores:**
 
-- **Gráfica circular por categoría**: ❌ **INCORRECTO** - Muestra proporciones de categorías (gasolina, parqueadero, peajes), NO de semanas. Imposible identificar qué semana tuvo `r texto_pregunta` gasto total.
-- **Gráfica de barras apiladas por semana**: ❌ **INCORRECTO** - Aunque muestra totales por semana, NO incluye porcentajes automáticos. Requiere cálculo manual adicional para obtener proporciones.
-- **Gráfica de barras agrupadas por categoría**: ❌ **INCORRECTO** - Agrupa por categoría, no por semana. No permite comparar totales semanales ni calcular proporciones por semana.
+- **Gráfica circular por categoría**: Muestra proporciones de categorías, no de semanas
+- **Gráfica de barras apiladas por semana**: Muestra composición pero no facilita comparación de totales
+- **Gráfica de barras agrupadas por categoría**: Agrupa por categoría, no por semana
 
 ### Verificación del proceso de razonamiento completo
 
@@ -673,16 +616,6 @@ for(i in 1:4) {
 - `r stringr::str_to_title(texto_pregunta)` gasto semanal: $`r formato_estandar(valor_objetivo, 0)` (Semana `r semana_objetivo`)
 - Gasto total mensual: $`r formato_estandar(gran_total, 0)`
 - Porcentaje representado: `r formato_estandar(porcentaje_objetivo, 1)`%
-- Tipo de análisis: Identificación del `r texto_pregunta` valor
-
-**Justificación pedagógica detallada de por qué "Circular por semana" es la ÚNICA respuesta correcta:**
-
-1. **Criterio de evaluación específico**: La pregunta solicita la gráfica que muestra "DIRECTAMENTE las proporciones porcentuales"
-2. **Diferenciación técnica**: Solo la gráfica circular muestra automáticamente los porcentajes (autopct='%1.1f%%' en el código Python)
-3. **Análisis comparativo de opciones**:
-   - **Barras apiladas por semana**: Muestra totales pero NO porcentajes automáticos
-   - **Circular por categoría**: Muestra porcentajes pero de categorías, NO de semanas
-   - **Barras agrupadas por categoría**: No muestra totales por semana
 
 **El formato híbrido con puntuación dual (cloze + schoice) garantiza que los estudiantes:**
 
@@ -696,8 +629,8 @@ for(i in 1:4) {
 **Parte de Confirmación (Paso 6):**
 
 - **Demuestren coherencia** entre su análisis numérico y la comprensión conceptual
-- **Identifiquen el tipo de gráfica** que muestra DIRECTAMENTE los porcentajes calculados
-- **Consoliden su aprendizaje** mediante validación de resultados con representación gráfica apropiada
+- **Identifiquen el tipo de gráfica** más apropiado para el análisis requerido
+- **Consoliden su aprendizaje** mediante validación de resultados
 
 ### Conclusión
 
@@ -714,9 +647,9 @@ Esta respuesta es coherente porque:
 
 Meta-information
 ================
-exname: Gastos Vehículo Gráficas Comparación - Análisis Secuencial Cloze
+exname: Gastos Carro Gráficas Comparación - Análisis Secuencial Cloze
 extype: cloze
-exsolution: `r paste(c(solucion_cloze[1:5], mchoice2string(solucion_cloze[[6]])), collapse="|")`
+exsolution: `r paste(c(solucion_cloze[1:5], mchoice2string(solucion_schoice)), collapse="|")`
 exclozetype: `r paste(tipos_respuesta, collapse="|")`
 extol: `r paste(tolerancias, collapse="|")`
 exsection: Estadística|Interpretación de tablas|Porcentajes|Análisis de datos

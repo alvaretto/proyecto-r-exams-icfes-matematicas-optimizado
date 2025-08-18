@@ -1,10 +1,10 @@
 ---
 output:
+  html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "amsmath"]
-  word_document: default
-  html_document: default
 icfes:
   competencia: interpretacion_representacion
   componente: aleatorio
@@ -140,28 +140,21 @@ gran_total <- sum(totales_semana)
 # Aleatorizar si se pregunta por mayor o menor gasto
 tipo_pregunta <- sample(c("mayor", "menor"), 1)
 
-# Crear vector de totales por categoría para análisis
-totales_categoria <- c(total_gasolina, total_parqueadero, total_peajes)
-nombres_categoria_analisis <- categorias
-
 if (tipo_pregunta == "mayor") {
-  # Identificar categoría con mayor gasto
-  categoria_objetivo_indice <- which.max(totales_categoria)
-  valor_objetivo <- max(totales_categoria)
+  # Identificar semana con mayor gasto
+  semana_objetivo <- which.max(totales_semana)
+  valor_objetivo <- max(totales_semana)
   texto_pregunta <- "mayor"
   texto_analisis <- "mayor porcentaje"
 } else {
-  # Identificar categoría con menor gasto
-  categoria_objetivo_indice <- which.min(totales_categoria)
-  valor_objetivo <- min(totales_categoria)
+  # Identificar semana con menor gasto
+  semana_objetivo <- which.min(totales_semana)
+  valor_objetivo <- min(totales_semana)
   texto_pregunta <- "menor"
   texto_analisis <- "menor porcentaje"
 }
 
-# Nombre de la categoría objetivo
-categoria_objetivo <- nombres_categoria_analisis[categoria_objetivo_indice]
-
-# Calcular porcentaje de la categoría objetivo
+# Calcular porcentaje de la semana objetivo
 porcentaje_objetivo <- redondear_matematico((valor_objetivo / gran_total) * 100, 1)
 
 # Respuestas para el formato cloze
@@ -194,8 +187,8 @@ mapeo_graficas_ordenado <- mapeo_graficas[orden_presentacion, ]
 # Generar opciones para la pregunta schoice final usando el MISMO orden que las gráficas mostradas
 opciones_graficas <- mapeo_graficas_ordenado$tipo
 
-# La respuesta correcta es siempre la gráfica circular por categoría
-respuesta_correcta_schoice <- "Circular por categoría"
+# La respuesta correcta es siempre la gráfica circular por semana
+respuesta_correcta_schoice <- "Circular por semana"
 
 # Encontrar en qué posición está la respuesta correcta en el orden mostrado
 indice_respuesta_correcta <- which(mapeo_graficas_ordenado$tipo == respuesta_correcta_schoice)
@@ -234,7 +227,7 @@ test_that("Validación de datos generados", {
   expect_equal(length(tipos_respuesta), 6)
   expect_equal(length(tolerancias), 6)
   expect_equal(length(opciones_graficas), 4)
-  expect_true(categoria_objetivo_indice >= 1 && categoria_objetivo_indice <= 3)
+  expect_true(semana_objetivo >= 1 && semana_objetivo <= 4)
   expect_true(tipo_pregunta %in% c("mayor", "menor"))
 })
 
@@ -249,21 +242,13 @@ test_that("Validación de coherencia matemática", {
   expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
 })
 
-test_that("Validación de análisis por categorías", {
-  expect_equal(length(totales_categoria), 3)
-  expect_equal(sum(totales_categoria), gran_total)
-  expect_true(categoria_objetivo %in% categorias)
-  expect_equal(valor_objetivo, totales_categoria[categoria_objetivo_indice])
-  expect_true(all(totales_categoria > 0))
-})
-
 test_that("Validación de aleatorización de gráficas", {
   expect_equal(length(letras_graficas), 4)
   expect_equal(length(unique(letras_graficas)), 4)  # Todas las letras diferentes
   expect_true(all(letras_graficas %in% LETTERS[1:4]))  # Solo A, B, C, D
   expect_equal(nrow(mapeo_graficas), 4)
   expect_equal(length(opciones_graficas), 4)
-  expect_equal(respuesta_correcta_schoice, "Circular por categoría")  # Respuesta correcta es exactamente el tipo
+  expect_equal(respuesta_correcta_schoice, "Circular por semana")  # Respuesta correcta es exactamente el tipo
   expect_true(all(opciones_graficas %in% nombres_graficas_base))  # Todas las opciones son tipos válidos
 })
 
@@ -483,7 +468,7 @@ for(i in 1:4) {
 
 ## Análisis paso a paso
 
-Para analizar qué categoría de gasto representó el `r texto_analisis` del gasto total mensual, resuelva paso a paso:
+Para analizar qué semana representó el `r texto_analisis` del gasto total mensual, resuelva paso a paso:
 
 **IMPORTANTE - Formato de números:**
 
@@ -492,8 +477,8 @@ Para analizar qué categoría de gasto representó el `r texto_analisis` del gas
 - **Respuestas numéricas**: Sin separador de miles, use punto para decimales
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 
-### Paso 1: Identificación del `r texto_pregunta` gasto por categoría
-Observe la tabla y identifique cuál fue el `r texto_pregunta` gasto por categoría (total por categoría).
+### Paso 1: Identificación del `r texto_pregunta` gasto semanal
+Observe la tabla y identifique cuál fue el `r texto_pregunta` gasto semanal (total por semana).
 
 **Respuesta:** $##ANSWER1##
 
@@ -510,7 +495,7 @@ Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100%
 ### Paso 4: Verificación de valores
 Confirme que los valores del numerador y denominador son correctos:
 
-- Numerador (`r texto_pregunta` gasto por categoría): $##ANSWER3##
+- Numerador (`r texto_pregunta` gasto semanal): $##ANSWER3##
 - Denominador (gasto total mensual): $##ANSWER4##
 
 ### Paso 5: Cálculo del porcentaje final
@@ -519,11 +504,11 @@ Complete el cálculo del porcentaje:
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100% = ##ANSWER5##%
 
 ### Paso 6: Confirmación del tipo de gráfica (CON PUNTUACIÓN)
-Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué categoría de gasto representa el mayor porcentaje del gasto total mensual**:
+Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué semana representó el mayor porcentaje del gasto total mensual**:
 
 ##ANSWER6##
 
-**Conclusión:** La categoría con `r texto_pregunta` gasto representó el ##ANSWER5##% del gasto total mensual, y la gráfica más apropiada para analizar la distribución por categorías es la circular por categoría.
+**Conclusión:** La semana con mayor gasto representó el ##ANSWER5##% del gasto total mensual.
 
 Answerlist
 ----------
@@ -553,17 +538,18 @@ Este problema de **interpretación de tablas** y **cálculo de porcentajes** req
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
-### Paso 1: Identificación correcta del `r texto_pregunta` gasto por categoría ✓
+### Paso 1: Identificación correcta del `r texto_pregunta` gasto semanal ✓
 
 **Respuesta correcta:** $`r formato_estandar(valor_objetivo, 0)`
 
-**Análisis de gastos por categoría:**
+**Análisis de gastos semanales:**
 
-- `r categorias[1]`: $`r formato_estandar(total_gasolina, 0)`
-- `r categorias[2]`: $`r formato_estandar(total_parqueadero, 0)`
-- `r categorias[3]`: $`r formato_estandar(total_peajes, 0)`
+- Semana 1: $`r formato_estandar(totales_semana[1], 0)`
+- Semana 2: $`r formato_estandar(totales_semana[2], 0)`
+- Semana 3: $`r formato_estandar(totales_semana[3], 0)`
+- Semana 4: $`r formato_estandar(totales_semana[4], 0)`
 
-La categoría "`r categoria_objetivo`" tuvo el `r texto_pregunta` gasto con $`r formato_estandar(valor_objetivo, 0)`.
+La semana `r semana_objetivo` tuvo el `r texto_pregunta` gasto con $`r formato_estandar(valor_objetivo, 0)`.
 
 ### Paso 2: Identificación del gasto total mensual ✓
 
@@ -586,8 +572,8 @@ La fórmula de porcentaje requiere:
 
 Los valores son coherentes con los datos de la tabla y representan correctamente:
 
-- El `r texto_pregunta` gasto por categoría individual
-- El gasto total mensual (suma de todas las categorías)
+- El mayor gasto semanal individual
+- El gasto total mensual (suma de todas las semanas)
 
 ### Paso 5: Cálculo del porcentaje final ✓
 
@@ -610,22 +596,22 @@ for(i in 1:4) {
 
 "`r respuesta_correcta_schoice`"
 
-- Esta opción permite visualizar directamente qué categoría de gasto representa el `r texto_analisis` del total mensual
-- Muestra claramente las proporciones de cada categoría respecto al total
-- Facilita la identificación inmediata de la categoría con `r texto_pregunta` participación porcentual
-- Es el tipo de gráfica más adecuado para comparar la distribución de gastos por categorías
+- Esta opción permite visualizar directamente qué semana representa el `r texto_analisis` del total mensual
+- Muestra claramente las proporciones de cada semana respecto al total
+- Facilita la identificación inmediata de la semana con `r texto_pregunta` participación porcentual
+- Es el tipo de gráfica más adecuado para comparar partes de un todo
 
 **Análisis de distractores:**
 
-- **Gráfica circular por semana**: Muestra proporciones de semanas, no de categorías
-- **Gráfica de barras apiladas por semana**: Muestra composición por semana pero no facilita comparación de categorías
-- **Gráfica de barras agrupadas por categoría**: Permite comparar categorías pero no muestra proporciones del total
+- **Gráfica circular por categoría**: Muestra proporciones de categorías, no de semanas
+- **Gráfica de barras apiladas por semana**: Muestra composición pero no facilita comparación de totales
+- **Gráfica de barras agrupadas por categoría**: Agrupa por categoría, no por semana
 
 ### Verificación del proceso de razonamiento completo
 
 **Datos del problema:**
 
-- `r stringr::str_to_title(texto_pregunta)` gasto por categoría: $`r formato_estandar(valor_objetivo, 0)` (`r categoria_objetivo`)
+- `r stringr::str_to_title(texto_pregunta)` gasto semanal: $`r formato_estandar(valor_objetivo, 0)` (Semana `r semana_objetivo`)
 - Gasto total mensual: $`r formato_estandar(gran_total, 0)`
 - Porcentaje representado: `r formato_estandar(porcentaje_objetivo, 1)`%
 
@@ -634,26 +620,26 @@ for(i in 1:4) {
 **Parte Analítica (Pasos 1-5):**
 
 - **Lean cuidadosamente** la tabla para extraer datos precisos
-- **Identifiquen correctamente** el `r texto_pregunta` valor por categoría y el total mensual
+- **Identifiquen correctamente** el mayor valor semanal y el total mensual
 - **Configuren correctamente** la fórmula de porcentaje paso a paso
 - **Realicen cálculos** matemáticos sin saltar etapas del proceso
 
 **Parte de Confirmación (Paso 6):**
 
 - **Demuestren coherencia** entre su análisis numérico y la comprensión conceptual
-- **Identifiquen el tipo de gráfica** más apropiado para analizar la distribución por categorías
+- **Identifiquen el tipo de gráfica** más apropiado para el análisis requerido
 - **Consoliden su aprendizaje** mediante validación de resultados
 
 ### Conclusión
 
-La categoría "`r categoria_objetivo`" representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
+La semana `r semana_objetivo` representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
 
 Esta respuesta es coherente porque:
 
 - Se basa en una lectura correcta de la tabla
 - Aplica correctamente la fórmula de porcentaje
 - El resultado está dentro del rango esperado (0% a 100%)
-- La gráfica seleccionada es la más apropiada para analizar la distribución por categorías
+- La gráfica seleccionada es la más apropiada para este tipo de análisis
 
 **Verificación adicional**: El total de gastos por categorías (`r categorias[1]`: $`r formato_estandar(total_gasolina, 0)`, `r categorias[2]`: $`r formato_estandar(total_parqueadero, 0)`, `r categorias[3]`: $`r formato_estandar(total_peajes, 0)`) suma exactamente $`r formato_estandar(gran_total, 0)`, confirmando la coherencia de los datos.
 
