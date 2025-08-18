@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Script de inicio de Gemini CLI con MCPs optimizado
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Obtener la ruta real del script (resolviendo enlaces simbólicos)
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 
 echo "🤖 GEMINI CLI + MCPs OPTIMIZADO - PROYECTO ICFES R-EXAMS"
@@ -59,9 +61,10 @@ echo ""
 export MCP_CONFIG_PATH="$PROJECT_DIR/.mcp-config.json"
 export GEMINI_MCP_CONFIG="$PROJECT_DIR/.gemini-mcp-config.json"
 
-# Iniciar Gemini CLI
+# Iniciar Gemini CLI con modelo forzado a 2.5 Pro
 if command -v gemini &> /dev/null; then
-    gemini
+    echo "🤖 Forzando uso de Gemini 2.5 Pro..."
+    gemini --model gemini-2.5-pro
 else
     echo "❌ Error: Gemini CLI no encontrado"
     echo "   Instala primero: bash install-gemini-cli.sh"
