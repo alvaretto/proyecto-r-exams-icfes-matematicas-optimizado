@@ -92,6 +92,17 @@ contexto_seleccionado <- sample(contextos_gastos, 1)[[1]]
 vehiculo <- contexto_seleccionado$vehiculo
 categorias <- contexto_seleccionado$categorias
 
+# Función para generar título con género correcto
+generar_titulo_gastos <- function(vehiculo) {
+  if (vehiculo == "motocicleta") {
+    return("Gastos de la motocicleta")
+  } else {
+    return(paste("Gastos del", vehiculo))
+  }
+}
+
+titulo_gastos <- generar_titulo_gastos(vehiculo)
+
 # Aleatorización de nombres para el contexto
 nombres_masculinos <- c("Pedro", "Carlos", "Miguel", "Antonio", "Diego", "Sebastián")
 nombres_femeninos <- c("María", "Ana", "Carmen", "Laura", "Sofía", "Valentina")
@@ -311,7 +322,7 @@ for i in range(len(datos_tabla)):
         else:  # Datos de gastos
             cell.set_facecolor('white')
 
-plt.title('Registro Semanal de Gastos del ", vehiculo, "', fontsize=16, fontweight='bold', pad=20)
+plt.title('Registro Semanal de ", titulo_gastos, "', fontsize=16, fontweight='bold', pad=20)
 plt.savefig('tabla_gastos.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig('tabla_gastos.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
@@ -356,7 +367,7 @@ colores_semanas = ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12']
 plt.figure(figsize=(7, 7))
 plt.pie(totales_categoria, labels=categorias, autopct='%1.1f%%',
         colors=colores_categorias, startangle=90)
-plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
+plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
 plt.savefig('grafica_circular_categoria.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig('grafica_circular_categoria.pdf', dpi=200, bbox_inches='tight', transparent=False)
@@ -372,7 +383,7 @@ for i, categoria in enumerate(categorias):
 
 plt.xlabel('Semanas', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
+plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
 plt.legend(fontsize=11)
 plt.xticks(rotation=45)
 plt.grid(True, axis='y', alpha=0.3)
@@ -385,7 +396,7 @@ plt.close()
 plt.figure(figsize=(7, 7))
 plt.pie(totales_semana, labels=semanas, autopct='%1.1f%%',
         colors=colores_semanas, startangle=90)
-plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
+plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
 plt.savefig('grafica_circular_semana.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig('grafica_circular_semana.pdf', dpi=200, bbox_inches='tight', transparent=False)
@@ -402,7 +413,7 @@ for i, semana in enumerate(semanas):
 
 plt.xlabel('Categorías', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
+plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
 plt.xticks(x + width*1.5, categorias)
 plt.legend(fontsize=11)
 plt.grid(True, axis='y', alpha=0.3)
