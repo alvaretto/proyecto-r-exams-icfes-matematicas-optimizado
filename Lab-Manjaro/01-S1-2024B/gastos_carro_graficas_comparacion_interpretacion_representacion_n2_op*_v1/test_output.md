@@ -1,10 +1,10 @@
 ---
 output:
+  html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "amsmath"]
-  word_document: default
-  html_document: default
 icfes:
   competencia: interpretacion_representacion
   componente: aleatorio
@@ -21,12 +21,10 @@ icfes:
 
 
 
-Test passed 🎉
-Test passed 🥇
-Test passed 😀
+Test passed 🥳
+Test passed 🎊
 Test passed 🎊
 Test passed 🥳
-Test passed 😀
 
 
 
@@ -38,7 +36,7 @@ Test passed 😀
 Question
 ========
 
-Valentina lleva un registro detallado de los gastos relacionados con su carro. La tabla muestra los gastos semanales durante un mes completo, organizados por categorías.
+María lleva un registro detallado de los gastos relacionados con su motocicleta. La tabla muestra los gastos semanales durante un mes completo, organizados por categorías.
 
 ![](tabla_gastos.png){width=95%}
 
@@ -50,27 +48,19 @@ A continuación se presentan cuatro tipos diferentes de gráficas que representa
 
 <br>
 
-**Barras agrupadas por categoría**
+![](grafica_circular_categoria.png){width=65%}
 
-![](grafica_b.png){width=65%}
+![](grafica_circular_semana.png){width=65%}
 
-**Circular por categoría**
+![](grafica_barras_apiladas.png){width=65%}
 
-![](grafica_c.png){width=65%}
-
-**Circular por semana**
-
-![](grafica_d.png){width=65%}
-
-**Barras apiladas por semana**
-
-![](grafica_a.png){width=65%}
+![](grafica_barras_agrupadas.png){width=65%}
 
 <br><br>
 
 ## Análisis paso a paso
 
-Para analizar qué semana representó el menor porcentaje del gasto total mensual, resuelva paso a paso:
+Para analizar qué categoría representó el mayor porcentaje del gasto total mensual, resuelva paso a paso:
 
 **IMPORTANTE - Formato de números:**
 
@@ -79,8 +69,8 @@ Para analizar qué semana representó el menor porcentaje del gasto total mensua
 - **Respuestas numéricas**: Sin separador de miles, use punto para decimales
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 
-### Paso 1: Identificación del menor gasto semanal
-Observe la tabla y identifique cuál fue el menor gasto semanal (total por semana).
+### Paso 1: Identificación del mayor gasto por categoría
+Observe la tabla y identifique cuál fue el mayor gasto por categoría (total por categoría).
 
 **Respuesta:** $##ANSWER1##
 
@@ -97,7 +87,7 @@ Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100%
 ### Paso 4: Verificación de valores
 Confirme que los valores del numerador y denominador son correctos:
 
-- Numerador (menor gasto semanal): $##ANSWER3##
+- Numerador (mayor gasto por categoría): $##ANSWER3##
 - Denominador (gasto total mensual): $##ANSWER4##
 
 ### Paso 5: Cálculo del porcentaje final
@@ -106,18 +96,18 @@ Complete el cálculo del porcentaje:
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100% = ##ANSWER5##%
 
 ### Paso 6: Confirmación del tipo de gráfica (CON PUNTUACIÓN)
-Basándose en su análisis anterior, **seleccione qué tipo de gráfica muestra DIRECTAMENTE las proporciones porcentuales de cada semana respecto al total mensual, facilitando la identificación inmediata de qué semana representó el menor porcentaje**:
+Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué categoría de gasto representa el mayor porcentaje del gasto total mensual**:
 
 ##ANSWER6##
 
-**Conclusión:** La semana con menor gasto representó el ##ANSWER5##% del gasto total mensual.
+**Conclusión:** La categoría con mayor gasto representó el ##ANSWER5##% del gasto total mensual.
 
 Answerlist
 ----------
-* Barras agrupadas por categoría
-* Circular por categoría
-* Circular por semana
-* Barras apiladas por semana
+* A
+* B
+* C
+* D
 
 Solution
 ========
@@ -140,35 +130,34 @@ Este problema de **interpretación de tablas** y **cálculo de porcentajes** req
   - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
-### Paso 1: Identificación correcta del menor gasto semanal ✓
+### Paso 1: Identificación correcta del mayor gasto por categoría ✓
 
-**Respuesta correcta:** $69367
+**Respuesta correcta:** $153102
 
-**Análisis de gastos semanales:**
+**Análisis de gastos por categoría:**
 
-- Semana 1: $88418
-- Semana 2: $75471
-- Semana 3: $69367
-- Semana 4: $71163
+- Gasolina: $153102
+- Parqueadero: $99447
+- Mantenimiento: $64330
 
-La semana 3 tuvo el menor gasto con $69367.
+La categoría Gasolina tuvo el mayor gasto con $153102.
 
 ### Paso 2: Identificación del gasto total mensual ✓
 
-**Respuesta correcta:** $304419
+**Respuesta correcta:** $316879
 
 El total mensual se calcula sumando todos los gastos semanales:
 
-$$\text{Total mensual} = 88418 + 75471 + 69367 + 71163 = 304419$$
+$$\text{Total mensual} = 82841 + 82111 + 81704 + 70223 = 316879$$
 
 ### Paso 3: Configuración correcta de la fórmula ✓
 
-**Respuestas correctas:** Numerador = 69367, Denominador = 304419
+**Respuestas correctas:** Numerador = 153102, Denominador = 316879
 
 La fórmula de porcentaje requiere:
 
-- **Numerador:** El valor observado (69367 pesos)
-- **Denominador:** El valor total (304419 pesos)
+- **Numerador:** El valor observado (153102 pesos)
+- **Denominador:** El valor total (316879 pesos)
 
 ### Paso 4: Verificación de valores ✓
 
@@ -179,51 +168,41 @@ Los valores son coherentes con los datos de la tabla y representan correctamente
 
 ### Paso 5: Cálculo del porcentaje final ✓
 
-**Respuesta correcta:** 22.8%
+**Respuesta correcta:** 48.3%
 
-$$\text{Porcentaje} = \frac{69367}{304419} \times 100\% = 22.8\%$$
+$$\text{Porcentaje} = \frac{153102}{316879} \times 100\% = 48.3\%$$
 
 ### Paso 6: Confirmación del tipo de gráfica ✓ (CON PUNTUACIÓN)
 
 **Opciones presentadas:**
 
-- **A**: Barras agrupadas por categoría
-- **B**: Circular por categoría
-- **C**: Circular por semana ← **RESPUESTA CORRECTA**
-- **D**: Barras apiladas por semana
+- **A**: A ← **RESPUESTA CORRECTA**
+- **B**: B
+- **C**: C
+- **D**: D
 
 **Análisis de la respuesta correcta:**
 
-"Circular por semana"
+"A"
 
-- **ÚNICA gráfica que muestra porcentajes automáticamente**: Cada sector muestra directamente el porcentaje que representa cada semana del total mensual
-- **Visualización inmediata de proporciones**: No requiere cálculos adicionales para identificar qué semana representa el menor porcentaje
-- **Comparación visual directa**: El tamaño de cada sector es proporcional al porcentaje, facilitando la identificación de extremos
-- **Diseño específico para análisis de partes del todo**: Es la representación gráfica estándar para mostrar cómo se distribuye un total entre sus componentes
+- Esta opción permite visualizar directamente qué categoría representa el mayor porcentaje del total mensual
+- Muestra claramente las proporciones de cada categoría de gasto respecto al total
+- Facilita la identificación inmediata de la categoría con mayor participación porcentual
+- Es el tipo de gráfica más adecuado para comparar partes de un todo
 
-**Análisis detallado de distractores:**
+**Análisis de distractores:**
 
-- **Gráfica circular por categoría**: Muestra proporciones de categorías (gasolina, parqueadero, peajes), NO de semanas. No permite identificar qué semana tuvo mayor/menor gasto total.
-- **Gráfica de barras apiladas por semana**: Aunque muestra totales por semana, NO muestra porcentajes automáticamente. Requiere cálculo mental para determinar proporciones respecto al total.
-- **Gráfica de barras agrupadas por categoría**: Agrupa por categoría, no por semana. No permite comparar totales semanales.
+- **Gráfica circular por semana**: Muestra proporciones de semanas, no de categorías
+- **Gráfica de barras apiladas por semana**: Muestra composición por semana pero no facilita comparación de categorías
+- **Gráfica de barras agrupadas por categoría**: Permite comparar categorías pero no muestra proporciones del total
 
 ### Verificación del proceso de razonamiento completo
 
 **Datos del problema:**
 
-- Menor gasto semanal: $69367 (Semana 3)
-- Gasto total mensual: $304419
-- Porcentaje representado: 22.8%
-- Tipo de análisis: Identificación del menor valor
-
-**Justificación pedagógica detallada de por qué "Circular por semana" es la ÚNICA respuesta correcta:**
-
-1. **Criterio de evaluación específico**: La pregunta solicita la gráfica que muestra "DIRECTAMENTE las proporciones porcentuales"
-2. **Diferenciación técnica**: Solo la gráfica circular muestra automáticamente los porcentajes (autopct='%1.1f%%' en el código Python)
-3. **Análisis comparativo de opciones**:
-   - **Barras apiladas por semana**: Muestra totales pero NO porcentajes automáticos
-   - **Circular por categoría**: Muestra porcentajes pero de categorías, NO de semanas
-   - **Barras agrupadas por categoría**: No muestra totales por semana
+- Mayor gasto por categoría: $153102 (Gasolina)
+- Gasto total mensual: $316879
+- Porcentaje representado: 48.3%
 
 **El formato híbrido con puntuación dual (cloze + schoice) garantiza que los estudiantes:**
 
@@ -237,12 +216,12 @@ $$\text{Porcentaje} = \frac{69367}{304419} \times 100\% = 22.8\%$$
 **Parte de Confirmación (Paso 6):**
 
 - **Demuestren coherencia** entre su análisis numérico y la comprensión conceptual
-- **Identifiquen el tipo de gráfica** que muestra DIRECTAMENTE los porcentajes calculados
-- **Consoliden su aprendizaje** mediante validación de resultados con representación gráfica apropiada
+- **Identifiquen el tipo de gráfica** más apropiado para el análisis requerido
+- **Consoliden su aprendizaje** mediante validación de resultados
 
 ### Conclusión
 
-La semana 3 representó el **22.8%** del gasto total mensual de Valentina en su carro.
+La categoría con mayor gasto representó el **48.3%** del gasto total mensual de María en su motocicleta.
 
 Esta respuesta es coherente porque:
 
@@ -251,13 +230,13 @@ Esta respuesta es coherente porque:
 - El resultado está dentro del rango esperado (0% a 100%)
 - La gráfica seleccionada es la más apropiada para este tipo de análisis
 
-**Verificación adicional**: El total de gastos por categorías (Gasolina: $138653, Parqueadero: $99960, Peajes: $65806) suma exactamente $304419, confirmando la coherencia de los datos.
+**Verificación adicional**: El total de gastos por categorías (Gasolina: $153102, Parqueadero: $99447, Mantenimiento: $64330) suma exactamente $316879, confirmando la coherencia de los datos.
 
 Meta-information
 ================
-exname: Gastos Vehículo Gráficas Comparación - Análisis Secuencial Cloze
+exname: Gastos Carro Gráficas Comparación - Análisis Secuencial Cloze
 extype: cloze
-exsolution: 69367|304419|69367|304419|22.8|0010
+exsolution: 153102|316879|153102|316879|48.3|1000
 exclozetype: num|num|num|num|num|schoice
 extol: 1|1|1|1|0.1|0
 exsection: Estadística|Interpretación de tablas|Porcentajes|Análisis de datos
