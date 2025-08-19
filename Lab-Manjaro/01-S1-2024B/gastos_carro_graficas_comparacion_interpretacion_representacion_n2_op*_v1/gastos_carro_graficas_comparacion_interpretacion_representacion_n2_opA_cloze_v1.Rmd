@@ -164,36 +164,37 @@ respuesta_3 <- valor_objetivo             # Paso 3: Numerador de la fórmula
 respuesta_4 <- gran_total                 # Paso 4: Denominador de la fórmula
 respuesta_5 <- porcentaje_objetivo        # Paso 5: Porcentaje final
 
-# Aleatorización de letras de gráficas y opciones
-letras_graficas <- sample(LETTERS[1:4])  # Aleatorizar A, B, C, D
-nombres_graficas_base <- c(
-  paste("Gastos del", vehiculo),
-  paste("Gastos del", vehiculo),
-  paste("Gastos del", vehiculo),
-  paste("Gastos del", vehiculo)
+# Definir los tipos de gráficas disponibles
+tipos_graficas <- c(
+  "circular_categoria",    # Gráfica circular por categoría
+  "barras_apiladas",      # Gráfica de barras apiladas por semana
+  "circular_semana",      # Gráfica circular por semana (CORRECTA)
+  "barras_agrupadas"      # Gráfica de barras agrupadas por categoría
 )
 
-# Crear mapeo de letras a tipos de gráficas
+# Aleatorizar el orden en que se muestran las gráficas en el enunciado
+orden_presentacion <- sample(1:4)
+tipos_en_orden_mostrado <- tipos_graficas[orden_presentacion]
+
+# Crear mapeo: cada letra A, B, C, D corresponde a una gráfica en el orden aleatorizado
 mapeo_graficas <- data.frame(
-  letra = letras_graficas,
-  tipo = nombres_graficas_base,
+  letra = LETTERS[1:4],  # A, B, C, D (fijo para Answerlist)
+  tipo_grafica = tipos_en_orden_mostrado,  # Tipos en orden aleatorio
+  posicion_mostrada = 1:4,  # Posición en el enunciado (1=primera, 2=segunda, etc.)
   stringsAsFactors = FALSE
 )
 
-# Aleatorizar el orden de presentación de las gráficas
-orden_presentacion <- sample(1:4)
-mapeo_graficas_ordenado <- mapeo_graficas[orden_presentacion, ]
+# Para mostrar las gráficas, usamos el orden aleatorizado
+mapeo_graficas_ordenado <- mapeo_graficas
 
-# Generar opciones para la pregunta schoice final usando el MISMO orden que las gráficas mostradas
-opciones_graficas <- mapeo_graficas_ordenado$tipo
+# Generar opciones para Answerlist (siempre A, B, C, D)
+opciones_graficas <- c("A", "B", "C", "D")
 
-# La respuesta correcta es siempre la gráfica circular por semana (originalmente índice 3)
-respuesta_correcta_schoice <- paste("Gastos del", vehiculo)
+# Encontrar qué letra corresponde a la gráfica circular por semana
+indice_respuesta_correcta <- which(mapeo_graficas$tipo_grafica == "circular_semana")
 
-# Encontrar en qué posición está la respuesta correcta en el orden mostrado
-# Como la gráfica circular por semana era originalmente la tercera (índice 3), buscamos dónde quedó después del shuffle
-indice_original_correcto <- 3  # "Circular por semana" era el índice 3 en nombres_graficas_base original
-indice_respuesta_correcta <- which(orden_presentacion == indice_original_correcto)
+# La respuesta correcta es la letra correspondiente
+respuesta_correcta_schoice <- LETTERS[indice_respuesta_correcta]
 
 # Para schoice en cloze, necesitamos un vector lógico
 solucion_schoice <- rep(FALSE, 4)
@@ -245,13 +246,12 @@ test_that("Validación de coherencia matemática", {
 })
 
 test_that("Validación de aleatorización de gráficas", {
-  expect_equal(length(letras_graficas), 4)
-  expect_equal(length(unique(letras_graficas)), 4)  # Todas las letras diferentes
-  expect_true(all(letras_graficas %in% LETTERS[1:4]))  # Solo A, B, C, D
   expect_equal(nrow(mapeo_graficas), 4)
   expect_equal(length(opciones_graficas), 4)
-  expect_equal(respuesta_correcta_schoice, paste("Gastos del", vehiculo))  # Respuesta correcta es exactamente el tipo
-  expect_true(all(opciones_graficas %in% nombres_graficas_base))  # Todas las opciones son tipos válidos
+  expect_true(respuesta_correcta_schoice %in% LETTERS[1:4])  # Respuesta correcta es una letra válida (A, B, C, o D)
+  expect_true(all(opciones_graficas %in% c("A", "B", "C", "D")))  # Todas las opciones son letras válidas
+  expect_true("circular_semana" %in% mapeo_graficas$tipo_grafica)  # La gráfica correcta está presente
+  expect_equal(length(unique(mapeo_graficas$tipo_grafica)), 4)  # Todos los tipos son diferentes
 })
 
 test_that("Validación de aleatorización de posiciones", {
@@ -259,7 +259,7 @@ test_that("Validación de aleatorización de posiciones", {
   expect_equal(length(unique(orden_presentacion)), 4)  # Todas las posiciones diferentes
   expect_true(all(orden_presentacion %in% 1:4))  # Solo posiciones 1, 2, 3, 4
   expect_equal(nrow(mapeo_graficas_ordenado), 4)
-  expect_true(all(mapeo_graficas_ordenado$tipo %in% nombres_graficas_base))  # Todos los tipos válidos
+  expect_true(all(mapeo_graficas_ordenado$letra %in% c("A", "B", "C", "D")))  # Todas las letras válidas
 })
 ```
 
@@ -350,22 +350,16 @@ colores_categorias = ['#FF6B6B', '#4ECDC4', '#45B7D1']
 colores_semanas = ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12']
 
 # Mapeo de tipos a letras aleatorizadas desde R
-mapeo_r = {
-    'grafica_1': '", mapeo_graficas$letra[1], "',
-    'grafica_2': '", mapeo_graficas$letra[2], "',
-    'grafica_3': '", mapeo_graficas$letra[3], "',
-    'grafica_4': '", mapeo_graficas$letra[4], "'
-}
+# No necesitamos mapeo complejo, solo generamos archivos con nombres fijos
 
 # GRÁFICA 1: Circular por categoría
 plt.figure(figsize=(7, 7))
 plt.pie(totales_categoria, labels=categorias, autopct='%1.1f%%',
         colors=colores_categorias, startangle=90)
-letra = mapeo_r['grafica_1']
 plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_circular_categoria.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_circular_categoria.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 # GRÁFICA 2: Barras apiladas por semana
@@ -378,25 +372,23 @@ for i, categoria in enumerate(categorias):
 
 plt.xlabel('Semanas', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-letra = mapeo_r['grafica_2']
 plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.legend(fontsize=11)
 plt.xticks(rotation=45)
 plt.grid(True, axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_barras_apiladas.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_barras_apiladas.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 # GRÁFICA 3: Circular por semana
 plt.figure(figsize=(7, 7))
 plt.pie(totales_semana, labels=semanas, autopct='%1.1f%%',
         colors=colores_semanas, startangle=90)
-letra = mapeo_r['grafica_3']
 plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_circular_semana.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_circular_semana.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 # GRÁFICA 4: Barras agrupadas por categoría
@@ -410,14 +402,13 @@ for i, semana in enumerate(semanas):
 
 plt.xlabel('Categorías', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-letra = mapeo_r['grafica_4']
 plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.xticks(x + width*1.5, categorias)
 plt.legend(fontsize=11)
 plt.grid(True, axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_barras_agrupadas.png', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_barras_agrupadas.pdf', dpi=200, bbox_inches='tight', transparent=False)
 plt.close()
 
 print('Gráficas generadas exitosamente')
@@ -450,17 +441,23 @@ A continuación se presentan cuatro tipos diferentes de gráficas que representa
 <br>
 
 ```{r mostrar_graficas, echo=FALSE, results='asis', fig.align="center"}
-# Mostrar las 4 gráficas en orden aleatorizado (sin "Gráfica X:")
+# Mostrar las 4 gráficas en orden aleatorizado (sin letras identificadoras)
 for(i in 1:4) {
+  tipo_grafica <- mapeo_graficas_ordenado$tipo_grafica[i]
   letra <- mapeo_graficas_ordenado$letra[i]
-  tipo <- mapeo_graficas_ordenado$tipo[i]
-  archivo <- paste0("grafica_", tolower(letra), ".png")
+
+  # Determinar el archivo según el tipo de gráfica
+  archivo_base <- switch(tipo_grafica,
+    "circular_categoria" = "grafica_circular_categoria",
+    "barras_apiladas" = "grafica_barras_apiladas",
+    "circular_semana" = "grafica_circular_semana",
+    "barras_agrupadas" = "grafica_barras_agrupadas"
+  )
+  archivo <- paste0(archivo_base, ".png")
 
   if (es_moodle) {
-    cat(paste0("**", tipo, "**\n\n"))
     cat(paste0("![](", archivo, "){width=60%}\n\n"))
   } else {
-    cat(paste0("**", tipo, "**\n\n"))
     cat(paste0("![](", archivo, "){width=65%}\n\n"))
   }
 }

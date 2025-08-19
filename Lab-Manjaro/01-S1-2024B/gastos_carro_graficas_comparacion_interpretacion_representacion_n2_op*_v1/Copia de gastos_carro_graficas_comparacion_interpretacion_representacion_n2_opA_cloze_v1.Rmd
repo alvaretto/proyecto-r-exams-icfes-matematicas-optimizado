@@ -167,10 +167,10 @@ respuesta_5 <- porcentaje_objetivo        # Paso 5: Porcentaje final
 # Aleatorización de letras de gráficas y opciones
 letras_graficas <- sample(LETTERS[1:4])  # Aleatorizar A, B, C, D
 nombres_graficas_base <- c(
-  "Circular por categoría",
-  "Barras apiladas por semana",
-  "Circular por semana",
-  "Barras agrupadas por categoría"
+  "A",
+  "B",
+  "C",
+  "D"
 )
 
 # Crear mapeo de letras a tipos de gráficas
@@ -187,11 +187,13 @@ mapeo_graficas_ordenado <- mapeo_graficas[orden_presentacion, ]
 # Generar opciones para la pregunta schoice final usando el MISMO orden que las gráficas mostradas
 opciones_graficas <- mapeo_graficas_ordenado$tipo
 
-# La respuesta correcta es siempre la gráfica circular por semana
-respuesta_correcta_schoice <- "Circular por semana"
+# La respuesta correcta es siempre la gráfica circular por semana (originalmente índice 3)
+# Como la gráfica circular por semana era originalmente la tercera (índice 3), buscamos dónde quedó después del shuffle
+indice_original_correcto <- 3  # "Circular por semana" era el índice 3 en nombres_graficas_base original
+indice_respuesta_correcta <- which(orden_presentacion == indice_original_correcto)
 
-# Encontrar en qué posición está la respuesta correcta en el orden mostrado
-indice_respuesta_correcta <- which(mapeo_graficas_ordenado$tipo == respuesta_correcta_schoice)
+# La respuesta correcta es la letra que corresponde a la posición donde quedó la gráfica circular por semana
+respuesta_correcta_schoice <- LETTERS[indice_respuesta_correcta]
 
 # Para schoice en cloze, necesitamos un vector lógico
 solucion_schoice <- rep(FALSE, 4)
@@ -248,7 +250,7 @@ test_that("Validación de aleatorización de gráficas", {
   expect_true(all(letras_graficas %in% LETTERS[1:4]))  # Solo A, B, C, D
   expect_equal(nrow(mapeo_graficas), 4)
   expect_equal(length(opciones_graficas), 4)
-  expect_equal(respuesta_correcta_schoice, "Circular por semana")  # Respuesta correcta es exactamente el tipo
+  expect_true(respuesta_correcta_schoice %in% LETTERS[1:4])  # Respuesta correcta es una letra válida (A, B, C, o D)
   expect_true(all(opciones_graficas %in% nombres_graficas_base))  # Todas las opciones son tipos válidos
 })
 
@@ -349,18 +351,18 @@ colores_semanas = ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12']
 
 # Mapeo de tipos a letras aleatorizadas desde R
 mapeo_r = {
-    'Circular por categoría': '", mapeo_graficas$letra[1], "',
-    'Barras apiladas por semana': '", mapeo_graficas$letra[2], "',
-    'Circular por semana': '", mapeo_graficas$letra[3], "',
-    'Barras agrupadas por categoría': '", mapeo_graficas$letra[4], "'
+    'grafica_1': '", mapeo_graficas$letra[1], "',
+    'grafica_2': '", mapeo_graficas$letra[2], "',
+    'grafica_3': '", mapeo_graficas$letra[3], "',
+    'grafica_4': '", mapeo_graficas$letra[4], "'
 }
 
 # GRÁFICA 1: Circular por categoría
 plt.figure(figsize=(7, 7))
 plt.pie(totales_categoria, labels=categorias, autopct='%1.1f%%',
         colors=colores_categorias, startangle=90)
-letra = mapeo_r['Circular por categoría']
-plt.title('Circular por categoría', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_1']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
 plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
@@ -376,8 +378,8 @@ for i, categoria in enumerate(categorias):
 
 plt.xlabel('Semanas', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-letra = mapeo_r['Barras apiladas por semana']
-plt.title('Barras apiladas por semana', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_2']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.legend(fontsize=11)
 plt.xticks(rotation=45)
 plt.grid(True, axis='y', alpha=0.3)
@@ -390,8 +392,8 @@ plt.close()
 plt.figure(figsize=(7, 7))
 plt.pie(totales_semana, labels=semanas, autopct='%1.1f%%',
         colors=colores_semanas, startangle=90)
-letra = mapeo_r['Circular por semana']
-plt.title('Circular por semana', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_3']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.axis('equal')
 plt.savefig(f'grafica_{letra.lower()}.png', dpi=200, bbox_inches='tight', transparent=False)
 plt.savefig(f'grafica_{letra.lower()}.pdf', dpi=200, bbox_inches='tight', transparent=False)
@@ -408,8 +410,8 @@ for i, semana in enumerate(semanas):
 
 plt.xlabel('Categorías', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-letra = mapeo_r['Barras agrupadas por categoría']
-plt.title('Barras agrupadas por categoría', fontsize=14, fontweight='bold')
+letra = mapeo_r['grafica_4']
+plt.title('Gastos del ", vehiculo, "', fontsize=14, fontweight='bold')
 plt.xticks(x + width*1.5, categorias)
 plt.legend(fontsize=11)
 plt.grid(True, axis='y', alpha=0.3)
@@ -455,10 +457,8 @@ for(i in 1:4) {
   archivo <- paste0("grafica_", tolower(letra), ".png")
 
   if (es_moodle) {
-    cat(paste0("**", tipo, "**\n\n"))
     cat(paste0("![](", archivo, "){width=60%}\n\n"))
   } else {
-    cat(paste0("**", tipo, "**\n\n"))
     cat(paste0("![](", archivo, "){width=65%}\n\n"))
   }
 }
