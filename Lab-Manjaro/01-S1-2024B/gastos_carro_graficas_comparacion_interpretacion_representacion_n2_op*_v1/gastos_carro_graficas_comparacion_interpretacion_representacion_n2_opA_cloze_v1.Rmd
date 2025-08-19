@@ -381,7 +381,6 @@ for i, categoria in enumerate(categorias):
             label=categoria, color=colores_categorias[i])
     bottom += gastos_por_categoria[categoria]
 
-plt.xlabel('Semanas', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
 plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
 plt.legend(fontsize=11)
@@ -411,7 +410,6 @@ for i, semana in enumerate(semanas):
     valores = [gastos_por_categoria[cat][i] for cat in categorias]
     plt.bar(x + i*width, valores, width, label=semana, color=colores_semanas[i])
 
-plt.xlabel('Categorías', fontweight='bold', fontsize=12)
 plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
 plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
 plt.xticks(x + width*1.5, categorias)
