@@ -68,12 +68,14 @@ Antes de empezar, ejecuta el script de verificación:
 ```
 
 **Debes ver estos resultados:**
+
 - ✅ Gemini CLI instalado
 - ✅ API Key configurada
 - ✅ Archivos de contexto creados
 - ✅ Configuración Pro activa (1M tokens)
 
 ### **Si hay problemas:**
+
 - Consulta el tutorial completo: `Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md`
 - Revisa la configuración: `~/.config/gemini/icfes-config.json`
 
@@ -143,6 +145,7 @@ gemini --help
    ```
 
 **Resultado esperado:**
+
 - Evaluación de sintaxis R-exams
 - Verificación de competencia ICFES
 - Análisis de nivel de dificultad
@@ -153,6 +156,7 @@ gemini --help
 **Objetivo:** Convertir una imagen matemática en código TikZ reutilizable.
 
 **Pasos:**
+
 1. Prepara tu imagen (PNG, JPG, SVG):
    ```bash
    # Verifica que la imagen esté en el proyecto
@@ -167,6 +171,7 @@ gemini --help
    ```
 
 **Resultado esperado:**
+
 - Código TikZ completo y compilable
 - Fidelidad visual del 98%
 - Elementos de texto en negrita cursiva
@@ -177,6 +182,7 @@ gemini --help
 **Objetivo:** Verificar que un ejercicio cumple con los estándares ICFES.
 
 **Pasos:**
+
 1. Carga el contexto de competencias ICFES:
    ```bash
    gemini --context-file "GEMINI.md" \
@@ -185,6 +191,7 @@ gemini --help
    ```
 
 **Resultado esperado:**
+
 - Verificación de competencia (interpretación/formulación/argumentación)
 - Validación de nivel (1-4)
 - Evaluación de contexto colombiano
@@ -195,6 +202,7 @@ gemini --help
 **Objetivo:** Mejorar la aleatorización y estructura de un ejercicio.
 
 **Pasos:**
+
 1. Analiza el ejercicio actual:
    ```bash
    gemini --context-file "ejercicio.Rmd" \
@@ -203,6 +211,7 @@ gemini --help
    ```
 
 **Resultado esperado:**
+
 - Código R optimizado
 - Mejor aleatorización de parámetros
 - Sugerencias de estructura
