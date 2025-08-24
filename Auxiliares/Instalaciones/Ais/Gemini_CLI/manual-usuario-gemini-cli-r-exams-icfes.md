@@ -10,13 +10,14 @@
 2. [**Requisitos Previos**](#-2-requisitos-previos) - Verificar configuración
 3. [**Comandos Básicos Esenciales**](#-3-comandos-básicos-esenciales) - Los 5 comandos más importantes
 4. [**Modo Avanzado con MCPs**](#-4-modo-avanzado-con-mcps) - Capacidades extendidas
-5. [**Casos de Uso Frecuentes**](#-5-casos-de-uso-frecuentes) - Ejemplos paso a paso
-6. [**Solución de Problemas**](#-6-solución-de-problemas-comunes) - Errores típicos y soluciones
-7. [**Referencias Rápidas**](#-7-referencias-rápidas) - Tabla de comandos y atajos
-8. [**Ejemplos Prácticos**](#-8-ejemplos-prácticos-paso-a-paso) - Casos completos
-9. [**Consejos Avanzados**](#-9-consejos-avanzados) - Optimización y productividad
-10. [**Checklist de Calidad**](#-10-checklist-de-calidad) - Verificación antes de usar
-11. [**Soporte y Recursos**](#-11-soporte-y-recursos) - Ayuda adicional
+5. [**Modo Experto con Extensión VSCode**](#-5-modo-experto-con-extensión-vscode) - Integración directa con IDE
+6. [**Casos de Uso Frecuentes**](#-6-casos-de-uso-frecuentes) - Ejemplos paso a paso
+7. [**Solución de Problemas**](#-7-solución-de-problemas-comunes) - Errores típicos y soluciones
+8. [**Referencias Rápidas**](#-8-referencias-rápidas) - Tabla de comandos y atajos
+9. [**Ejemplos Prácticos**](#-9-ejemplos-prácticos-paso-a-paso) - Casos completos
+10. [**Consejos Avanzados**](#-10-consejos-avanzados) - Optimización y productividad
+11. [**Checklist de Calidad**](#-11-checklist-de-calidad) - Verificación antes de usar
+12. [**Soporte y Recursos**](#-12-soporte-y-recursos) - Ayuda adicional
 
 **⏱️ Tiempo estimado de lectura:** 15-20 minutos | **🎯 Objetivo:** Uso productivo inmediato
 
@@ -260,6 +261,157 @@ gemini-icfes --mcps
 
 ---
 
+## 🎯 **5. MODO EXPERTO CON EXTENSIÓN VSCODE**
+
+### **¿Qué es la Extensión Gemini CLI Companion?**
+La extensión oficial `google.gemini-cli-vscode-ide-companion` proporciona integración directa entre Gemini CLI y VSCode Insiders, permitiendo que Gemini "vea" y "edite" archivos directamente en tu IDE. **Es el nivel más avanzado de integración para desarrollo de ejercicios R-exams ICFES.**
+
+### **🚀 Capacidades Exclusivas de la Extensión**
+
+#### **👁️ Visibilidad Completa del Proyecto**
+- **Acceso directo**: Gemini puede leer y editar archivos .Rmd, .Rnw, .tikz
+- **Comprensión contextual**: Entiende la estructura completa del proyecto
+- **Navegación inteligente**: Acceso automático a templates y ejemplos
+
+#### **🧠 Memoria Semántica Automática**
+- **Análisis del repositorio**: Comprende automáticamente metodologías y estructura
+- **Generación de contexto**: Crea documentación automática del proyecto
+- **Persistencia inteligente**: Memoria específica por tipo de ejercicio
+
+#### **💬 Gestión Avanzada de Conversaciones**
+- **Sesiones persistentes**: Guarda y recupera conversaciones sobre ejercicios específicos
+- **Continuidad de trabajo**: Retoma desarrollo donde lo dejaste
+- **Organización por proyecto**: Memoria separada para diferentes tipos de ejercicios
+
+### **⚡ Comandos Específicos de la Extensión**
+
+#### **Comando 1: Activación del Proyecto**
+```bash
+# Ejecutar en terminal integrado de VSCode Insiders
+/id install
+```
+**Resultado**: Gemini CLI obtiene acceso completo al proyecto actual
+
+#### **Comando 2: Inicialización Semántica**
+```bash
+# Construir memoria semántica automática del proyecto
+/init
+```
+**Resultado**: Gemini comprende automáticamente:
+- Estructura de ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Metodologías en `Auxiliares/METODOLOGIA_*.md`
+- Templates TikZ en `Auxiliares/TikZ-Documentation/`
+- Configuraciones en `.gemini/`
+
+#### **Comando 3: Gestión de Memoria Avanzada**
+```bash
+# Ver memorias disponibles del proyecto
+/memory show
+
+# Agregar contexto específico para R-exams ICFES
+/memory add "Configuración exitosa para ejercicios de álgebra con aleatorización sample()"
+
+# Actualizar memoria con cambios recientes
+/memory refresh
+```
+
+#### **Comando 4: Gestión de Conversaciones**
+```bash
+# Guardar conversación actual
+/chat save "desarrollo_ejercicio_geometria"
+
+# Listar conversaciones guardadas
+/chat list
+
+# Reanudar conversación específica
+/chat resume "desarrollo_ejercicio_geometria"
+
+# Eliminar conversación antigua
+/chat delete "sesion_antigua"
+```
+
+### **🔄 Workflow Completo con Extensión VSCode**
+
+#### **Desarrollo de Ejercicio Nuevo (Método Experto)**
+```
+1. ACTIVACIÓN → /id install (en terminal VSCode)
+2. INICIALIZACIÓN → /init (memoria semántica automática)
+3. MEMORIA ESPECÍFICA → /memory add "contexto del ejercicio"
+4. DESARROLLO → Edición directa en VSCode con asistencia Gemini
+5. PERSISTENCIA → /chat save "nombre_ejercicio"
+6. VALIDACIÓN → Testing integrado con feedback directo
+```
+
+#### **Continuación de Trabajo Previo**
+```
+1. RECUPERACIÓN → /chat resume "ejercicio_anterior"
+2. ACTUALIZACIÓN → /memory refresh
+3. DESARROLLO → Continuar donde se quedó
+4. NUEVA MEMORIA → /memory add "mejoras aplicadas"
+5. GUARDADO → /chat save "ejercicio_actualizado"
+```
+
+### **🎯 Casos de Uso Específicos para R-exams ICFES**
+
+#### **Desarrollo de Ejercicio de Álgebra**
+```bash
+# 1. Activar proyecto
+/id install
+
+# 2. Inicializar memoria
+/init
+
+# 3. Agregar contexto específico
+/memory add "Ejercicio álgebra: ecuaciones cuadráticas, competencia formulación-ejecución, nivel 2-3 ICFES"
+
+# 4. Desarrollo con asistencia directa
+# Gemini puede ahora editar directamente archivos .Rmd en VSCode
+
+# 5. Guardar sesión
+/chat save "algebra_ecuaciones_cuadraticas"
+```
+
+#### **Optimización de Gráfico TikZ**
+```bash
+# 1. Recuperar sesión de TikZ
+/chat resume "desarrollo_tikz_funciones"
+
+# 2. Agregar memoria de patrón exitoso
+/memory add "TikZ exitoso: scale=1.0, font=\\bfseries\\itshape, fidelidad 98% alcanzada"
+
+# 3. Aplicar optimizaciones directamente en archivo .tikz
+# Gemini edita el código TikZ en tiempo real
+
+# 4. Persistir mejoras
+/memory add "Patrón optimizado para funciones cuadráticas guardado"
+```
+
+### **✅ Verificar Extensión Disponible**
+```bash
+# Verificar que la extensión está instalada
+code-insiders --list-extensions | grep gemini
+
+# Resultado esperado:
+# google.gemini-cli-vscode-ide-companion
+```
+
+### **🔧 Configuración Recomendada**
+La extensión ya está configurada en nuestro proyecto. Configuración actual en `.vscode/settings.json`:
+```json
+{
+    "gemini.apiKey": "${env:GEMINI_API_KEY}",
+    "gemini.model": "gemini-2.5-pro",
+    "gemini.maxTokens": 1000000,
+    "gemini.projectContext": {
+        "name": "RepositorioMatematicasICFES_R_Exams",
+        "type": "educational",
+        "framework": "R-exams"
+    }
+}
+```
+
+---
+
 ## 📚 **5. CASOS DE USO FRECUENTES**
 
 ### **CASO 1: Analizar un Ejercicio R-exams Existente**
@@ -470,6 +622,16 @@ echo $UPSTASH_REDIS_REST_URL
 
 ### **Tabla de Comandos Esenciales**
 
+#### **🎯 COMANDOS EXTENSIÓN VSCODE (MODO EXPERTO)**
+| **Acción** | **Comando** |
+|------------|-------------|
+| **Activar proyecto** | `/id install` (en terminal VSCode) |
+| **Memoria semántica** | `/init` |
+| **Ver memoria** | `/memory show` |
+| **Agregar contexto** | `/memory add "contexto específico"` |
+| **Guardar conversación** | `/chat save "nombre_sesion"` |
+| **Reanudar conversación** | `/chat resume "nombre_sesion"` |
+
 #### **🚀 COMANDOS CON MCPs (RECOMENDADOS)**
 | **Acción** | **Comando** |
 |------------|-------------|
@@ -509,6 +671,14 @@ echo $UPSTASH_REDIS_REST_URL
 
 ### **Mejores Prácticas**
 
+#### **🎯 MODO EXPERTO CON EXTENSIÓN VSCODE (MÁXIMO NIVEL)**
+1. **Usa VSCode Insiders + Extensión**: Integración directa con archivos del proyecto
+2. **Activa el proyecto**: `/id install` para acceso completo al repositorio
+3. **Inicializa memoria semántica**: `/init` para comprensión automática del proyecto
+4. **Gestiona memoria granular**: `/memory add` para contextos específicos por ejercicio
+5. **Persiste sesiones**: `/chat save` para continuidad en desarrollo complejo
+6. **Combina con MCPs**: Usar extensión VSCode + MCPs para máxima potencia
+
 #### **🚀 CON MCPs (RECOMENDADO)**
 1. **Usa el modo MCPs por defecto**: `gemini-icfes --mcps` para máxima funcionalidad
 2. **Aprovecha la investigación automática**: "buscar información sobre..." para datos actualizados
@@ -521,7 +691,7 @@ echo $UPSTASH_REDIS_REST_URL
 2. **Usa ejemplos del proyecto**: Referencia ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
 3. **Verifica antes de implementar**: Siempre revisa el código generado antes de usarlo
 4. **Documenta tus workflows**: Guarda comandos útiles para reutilizar
-5. **Aprovecha la memoria persistente**: Con MCPs, el sistema recuerda mejores prácticas automáticamente
+5. **Aprovecha la memoria persistente**: Con MCPs y extensión VSCode, el sistema recuerda mejores prácticas automáticamente
 
 ### **Recursos Adicionales**
 
@@ -711,6 +881,7 @@ grep -E "^ex(name|type|solution|competencia|nivel):" ejercicio.Rmd
 **🚀 CAPACIDADES HABILITADAS:**
 - ✅ **Modo básico**: Análisis y generación con contexto local
 - ✅ **Modo avanzado con MCPs**: Investigación automática + documentación integrada + testing + memoria persistente
+- ✅ **Modo experto con extensión VSCode**: Integración directa con IDE + memoria semántica + gestión de conversaciones
 - ✅ **Workflows optimizados**: Para desarrollo eficiente de ejercicios ICFES
 
 **📈 PRÓXIMO NIVEL: Una vez domines estos comandos básicos, explora el tutorial completo para funcionalidades avanzadas y automatización de workflows.**
@@ -723,7 +894,7 @@ grep -E "^ex(name|type|solution|competencia|nivel):" ejercicio.Rmd
 ---
 
 *Manual creado por: Especialista en Integración IA Educativa*\
-*Versión: 1.1 - Incluye información completa sobre MCPs*\
+*Versión: 1.2 - Incluye información completa sobre MCPs + Extensión VSCode Companion*\
 *Fecha: Agosto 2025*\
 *Proyecto: RepositorioMatematicasICFES_R_Exams*\
-*Última actualización: Agosto 24, 2025 - Integración MCPs completada*
+*Última actualización: Agosto 24, 2025 - Integración completa VSCode Companion*

@@ -1,0 +1,428 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🎨 Agente TikZ: Analizar Imagen Matemática",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "🎨 AGENTE TIKZ - INSTRUCCIONES PARA AUGMENT:\n\n📸 PASO 1: Selecciona una imagen matemática en VSCode\n   - Abre cualquier imagen (.png, .jpg, etc.) en el editor\n   - Asegúrate de que la imagen esté activa en el editor\n\n🤖 PASO 2: Usa Augment IA para analizar:\n   1. Analiza la imagen matemática mostrada\n   2. Identifica elementos geométricos, funciones, gráficas o figuras\n   3. Genera código TikZ/pgfplots profesional para recrear la imagen\n   4. Usa templates de referencia del proyecto\n   5. Optimiza para ejercicios ICFES tipo R-exams\n\n💾 PASO 3: Guarda SIEMPRE los archivos en:\n   Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/\n\n💡 ¡AHORA USA AUGMENT PARA GENERAR EL CÓDIGO TIKZ!"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Analiza imagen matemática con Augment IA y genera código TikZ"
+        },
+        {
+            "label": "🔄 Agente TikZ: Revisión Recursiva 98% Fidelidad",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "🎯 AGENTE TIKZ ROBUSTO - REVISIÓN RECURSIVA HASTA 98% FIDELIDAD:\n\n📸 PASO 1: Selecciona una imagen matemática en VSCode\n   - Abre la imagen original (.png, .jpg, etc.) en el editor\n   - Asegúrate de que la imagen esté activa y visible\n\n🤖 PASO 2: Usa Augment IA como CEREBRO PRINCIPAL:\n   1. Analiza la imagen matemática con contexto completo\n   2. Genera código TikZ profesional inicial\n   3. Recibe métricas técnicas avanzadas (20+ algoritmos)\n   4. Toma decisiones inteligentes basadas en datos\n\n🔄 PASO 3: PROCESO RECURSIVO ROBUSTO:\n   - Sistema Python compila y analiza automáticamente\n   - Augment recibe dashboards completos de métricas\n   - Augment decide mejoras basadas en análisis profundo\n   - Base de datos registra todo para aprendizaje\n   - Proceso itera hasta alcanzar 98% garantizado\n\n💾 ARCHIVOS GENERADOS:\n   - Código TikZ final con 98% fidelidad\n   - Base de datos completa del proceso\n   - Reportes ejecutivos detallados\n   - Análisis histórico para futuras mejoras\n\n🎯 ¡SISTEMA ROBUSTO CON AUGMENT IA COMO DIRECTOR!"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Sistema robusto con Augment IA como cerebro principal"
+        },
+        {
+            "label": "🚀 Agente TikZ: Ejecutar Sistema Recursivo Robusto",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Agente-Graficador-TikZ/02-Codigo-Recursivo/agente_tikz_recursivo.py",
+                "${file}",
+                "Análisis con sistema robusto y Augment IA como cerebro principal",
+                "0.98",
+                "15"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Ejecutar sistema recursivo robusto completo con base de datos y análisis avanzado"
+        },
+        {
+            "label": "🔨 Agente TikZ: Compilar TikZ a PNG",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Agente-Graficador-TikZ/02-Codigo-Recursivo/compilador_simple.py",
+                "${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Compilar archivo TikZ seleccionado a PNG para revisión visual"
+        },
+        {
+            "label": "📦 Agente TikZ: Instalar Dependencias Globales",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Agente-Graficador-TikZ/02-Codigo-Recursivo/instalar_dependencias_globales.py"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Instalar todas las dependencias necesarias de manera global (sin entornos virtuales)"
+        },
+        {
+            "label": "🔍 Agente TikZ: Verificar Dependencias Globales",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "-c",
+                "import cv2, numpy, PIL, skimage, scipy, matplotlib; print('✅ Todas las dependencias globales disponibles')"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Verificar que todas las dependencias estén instaladas globalmente"
+        },
+        {
+            "label": "🎨 Agente TikZ: Análisis Personalizado",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "🎨 AGENTE TIKZ - ANÁLISIS PERSONALIZADO:\n\n📸 PASO 1: Selecciona una imagen matemática en VSCode\n🎯 CONTEXTO: ${input:promptPersonalizado}\n\n🤖 USA AUGMENT PARA:\n1. Analizar la imagen con el contexto específico proporcionado\n2. Generar código TikZ optimizado según el contexto\n3. Crear ejercicio .Rnw completo si es necesario\n\n💾 GUARDAR SIEMPRE EN:\n   Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/\n\n💡 ¡CONTINÚA CON AUGMENT IA!"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Análisis personalizado con Augment IA"
+        },
+        {
+            "label": "📋 Compilar TikZ con LaTeX",
+            "type": "shell",
+            "command": "pdflatex",
+            "args": [
+                "-interaction=nonstopmode",
+                "${file}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$latex"
+            ],
+            "detail": "Compila archivo TikZ/LaTeX seleccionado"
+        },
+        {
+            "label": "🎨 Abrir QTikz",
+            "type": "shell",
+            "command": "qtikz",
+            "args": [
+                "${file}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Abrir archivo TikZ en QTikz para visualización"
+        },
+        {
+            "label": "📁 Abrir Carpeta Templates TikZ",
+            "type": "shell",
+            "command": "code",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Abrir carpeta con templates TikZ de referencia"
+        },
+        {
+            "label": "🔍 Ver Laboratorio TikZ",
+            "type": "shell",
+            "command": "ls",
+            "args": [
+                "-la",
+                "."
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ"
+            },
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": [],
+            "detail": "Ver archivos en el laboratorio TikZ"
+        },
+        {
+            "label": "🚀 Agente TikZ: Inicio Rápido",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "🎨 AGENTE TIKZ - INICIO RÁPIDO:\n\n📋 INSTRUCCIONES PASO A PASO:\n\n1️⃣ SELECCIONA UNA IMAGEN:\n   - Abre cualquier imagen matemática (.png, .jpg, etc.) en VSCode\n   - Haz clic en la imagen para que esté activa en el editor\n\n2️⃣ USA AUGMENT IA:\n   - Activa Augment IA en VSCode\n   - Pídele que analice la imagen matemática\n   - Solicita código TikZ profesional para recrearla\n\n3️⃣ GUARDA EL RESULTADO:\n   - Crea archivos en: Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/\n   - Formato: nombre_agente.tikz y nombre_analisis.json\n\n💡 ¡ESTE TASK NO REQUIERE ARCHIVO SELECCIONADO!"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Guía rápida sin dependencias de archivos"
+        },
+        {
+            "label": "🤖 Gemini: Analizar Archivo Actual",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Analiza este archivo y sugiere mejoras: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Revisar Proyecto Completo",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "--all-files",
+                "-p",
+                "Revisa la estructura y código de este proyecto de matemáticas R-exams. Analiza la organización, calidad del código y sugiere mejoras."
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Generar Documentación",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Genera documentación completa para este archivo: ${file}. Incluye descripción de funciones, parámetros y ejemplos de uso."
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Optimizar Código R",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Optimiza este código R para mejor rendimiento y legibilidad, manteniendo la funcionalidad para ejercicios matemáticos: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Crear Ejercicio Similar",
+            "type": "shell",
+            "command": "gemini",
+            "args": [
+                "-p",
+                "Basándote en este archivo de ejercicio R-exams, crea un ejercicio similar pero con diferentes parámetros y contexto: ${file}"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Modo Interactivo",
+            "type": "shell",
+            "command": "gemini",
+            "args": [],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🤖 Gemini: Verificar Instalación",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/test-gemini-cli.sh"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Ejecuta pruebas completas de verificación de Gemini CLI"
+        },
+        {
+            "label": "🤖 Gemini CLI - Modo Básico",
+            "type": "shell",
+            "command": "gemini-icfes",
+            "args": ["--basic"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia Gemini CLI en modo básico (tutorial estándar)"
+        },
+        {
+            "label": "⚡ Gemini CLI - Modo Optimizado",
+            "type": "shell",
+            "command": "gemini-icfes",
+            "args": ["--optimized"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia Gemini CLI en modo optimizado con verificaciones avanzadas"
+        },
+        {
+            "label": "🚀 Gemini CLI - Modo MCPs",
+            "type": "shell",
+            "command": "gemini-icfes",
+            "args": ["--mcps"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia Gemini CLI en modo completo con MCPs (búsqueda web, memoria, etc.)"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "promptPersonalizado",
+            "description": "Contexto específico para análisis (ej: trigonometría, geometría, álgebra)",
+            "default": "Analiza esta imagen matemática para crear un ejercicio ICFES con código TikZ profesional",
+            "type": "promptString"
+        }
+    ]
+}
