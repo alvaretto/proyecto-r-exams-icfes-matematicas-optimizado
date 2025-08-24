@@ -1,23 +1,32 @@
-# 🤖 Gemini CLI + MCPs - Configuración Completa para Proyecto ICFES R-exams
+# 🤖 Gemini CLI - Configuración Completa para R-exams ICFES
 
 **Ubicación:** `Auxiliares/Instalaciones/Ais/Gemini_CLI/`
 **Sistema:** Manjaro Plasma + VSCode Insiders
-**Versión:** Gemini CLI v0.1.21 + 5 MCPs Integrados
-**Estado:** ✅ Instalado, Configurado, Optimizado y con MCPs
-**Contexto:** 49% reducción de archivos (13,398 → 6,774)
-**Warning Root:** ✅ Resuelto completamente
-**MCPs:** ✅ Context7, Playwright, Memory, Brave Search, Filesystem
+**Versión:** Gemini CLI v0.1.22 + Configuración Pro Completa
+**Estado:** ✅ CONFIGURACIÓN COMPLETA Y FUNCIONAL AL 100%
+**Contexto:** 1M tokens disponibles (Gemini 2.5 Pro)
+**Archivos:** Manual de usuario, tutorial técnico, scripts de verificación
+**Integración:** VSCode Insiders, Git optimizado para imágenes, workflows automatizados
 
 ---
 
-## 📁 Estructura de Archivos Optimizada
+## 📁 **ARCHIVOS DISPONIBLES**
 
-```
-Gemini_CLI/
-├── README.md                    # Este archivo (documentación principal)
-│
-├── 📚 DOCUMENTACIÓN PRINCIPAL
-├── GEMINI.md                   # Configuración principal de contexto
+### **📖 Documentación Principal**
+- **`manual-usuario-gemini-cli-r-exams-icfes.md`** - Manual de usuario completo (15-20 min)
+- **`gemini-cli-r-exams.md`** - Tutorial técnico completo de instalación
+- **`README.md`** - Este archivo (resumen de la carpeta)
+
+### **🔧 Scripts y Herramientas**
+- **`gemini-icfes-unified.sh`** - Script maestro unificado
+- **`comandos-ejemplo-gemini-cli.sh`** - Comandos listos para copiar y pegar
+
+### **📋 Configuraciones**
+- **`icfes-config.json`** - Configuración Pro de Gemini CLI
+- **`.gemini-mcp-config.json`** - Configuración MCPs
+
+### **📁 Archivos de Contexto del Proyecto** (en directorio raíz)
+- **`../../../GEMINI.md`** - Contexto completo del proyecto
 ├── TUTORIAL_USO_GEMINI.md      # Tutorial completo paso a paso
 ├── gemini-cli-setup.md         # Documentación técnica completa
 ├── comandos-gemini-icfes.md    # Guía de comandos especializados
