@@ -53,7 +53,7 @@ else
 fi
 
 echo -n "Script optimizado con MCPs: "
-if [ -f "$SCRIPT_DIR/gemini-mcps-optimizado.sh" ]; then
+if [ -f "$SCRIPT_DIR/gemini-icfes-mcps.sh" ]; then
     echo -e "${GREEN}✅ Encontrado${NC}"
 else
     echo -e "${RED}❌ No encontrado${NC}"
@@ -249,6 +249,74 @@ if [ -z "$BRAVE_API_KEY" ]; then
     echo "   2. Obtener API Key gratuita"
     echo "   3. Configurar: export BRAVE_API_KEY='key'"
 fi
+
+echo ""
+echo -e "${BLUE}🧪 TESTING DE MCPs ADICIONALES...${NC}"
+echo "-----------------------------------"
+
+# Test Thinking MCP
+echo -n "Thinking MCP: "
+if [ -f "$PROJECT_ROOT/.mcps/thinking-mcp/index.js" ]; then
+    if node -c "$PROJECT_ROOT/.mcps/thinking-mcp/index.js" 2>/dev/null; then
+        echo -e "${GREEN}✅ Funcional${NC}"
+        ((INSTALLED_MCPS++))
+    else
+        echo -e "${RED}❌ Error de sintaxis${NC}"
+    fi
+else
+    echo -e "${RED}❌ No instalado${NC}"
+fi
+
+# Test Playwright MCP (corregido)
+echo -n "Playwright MCP (corregido): "
+if [ -f "$PROJECT_ROOT/.mcps/playwright-mcp-fixed/index.js" ]; then
+    if node -c "$PROJECT_ROOT/.mcps/playwright-mcp-fixed/index.js" 2>/dev/null; then
+        echo -e "${GREEN}✅ Funcional${NC}"
+        ((INSTALLED_MCPS++))
+    else
+        echo -e "${RED}❌ Error de sintaxis${NC}"
+    fi
+else
+    echo -e "${RED}❌ No instalado${NC}"
+fi
+
+# Test LaTeX Validator MCP
+echo -n "LaTeX Validator MCP: "
+if [ -f "$PROJECT_ROOT/.mcps/latex-validator-mcp/index.js" ]; then
+    if node -c "$PROJECT_ROOT/.mcps/latex-validator-mcp/index.js" 2>/dev/null; then
+        echo -e "${GREEN}✅ Funcional${NC}"
+        ((INSTALLED_MCPS++))
+    else
+        echo -e "${RED}❌ Error de sintaxis${NC}"
+    fi
+else
+    echo -e "${RED}❌ No instalado${NC}"
+fi
+
+# Test Image Analysis MCP
+echo -n "Image Analysis MCP: "
+if [ -f "$PROJECT_ROOT/.mcps/image-analysis-mcp/index.js" ]; then
+    if node -c "$PROJECT_ROOT/.mcps/image-analysis-mcp/index.js" 2>/dev/null; then
+        echo -e "${GREEN}✅ Funcional${NC}"
+        ((INSTALLED_MCPS++))
+    else
+        echo -e "${RED}❌ Error de sintaxis${NC}"
+    fi
+else
+    echo -e "${RED}❌ No instalado${NC}"
+fi
+
+# Actualizar total de MCPs
+TOTAL_MCPS=$((TOTAL_MCPS + 4))
+
+echo ""
+echo -e "${BLUE}📊 RESUMEN DE MCPs ADICIONALES...${NC}"
+echo "-----------------------------------"
+echo -e "${CYAN}MCPs Adicionales Instalados:${NC}"
+echo "  • 🧠 Thinking MCP - Análisis estructurado"
+echo "  • 🎭 Playwright MCP (corregido) - Testing automático"
+echo "  • 📐 LaTeX Validator MCP - Validación de código"
+echo "  • 🖼️ Image Analysis MCP - Análisis de imágenes"
 
 echo ""
 echo -e "${BLUE}🚀 PRÓXIMOS PASOS...${NC}"

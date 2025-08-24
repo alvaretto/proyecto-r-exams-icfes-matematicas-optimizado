@@ -4,7 +4,37 @@
 
 Los MCPs (Model Context Protocols) extienden las capacidades de Gemini CLI permitiendo integración automática con herramientas externas. Esta configuración está optimizada específicamente para el proyecto ICFES R-exams.
 
-## 📦 MCPs INSTALADOS
+## 📦 MCPs INSTALADOS Y CONFIGURADOS
+
+### **🧠 Thinking MCP** ⭐ NUEVO
+- **Función**: Análisis y razonamiento estructurado paso a paso
+- **Activación automática**: "analizar", "razonamiento", "estructurado", "thinking"
+- **Uso**: Análisis completo de problemas complejos de optimización de ejercicios
+- **Herramientas**: `structured_thinking` - Análisis sistemático con contexto
+
+### **🎭 Playwright MCP (Corregido)** ⭐ ACTUALIZADO
+- **Función**: Testing automático de ejercicios web y capturas de pantalla
+- **Activación automática**: "testing", "web", "captura", "validación"
+- **Uso**: Testing de ejercicios R-exams compilados en HTML, validación visual
+- **Herramientas**:
+  - `test_web_exercise` - Testing automático de ejercicios HTML
+  - `screenshot_exercise` - Capturas de pantalla para validación visual
+
+### **📐 LaTeX Validator MCP** ⭐ NUEVO
+- **Función**: Validación de código LaTeX/TikZ para ejercicios R-exams
+- **Activación automática**: "latex", "tikz", "validar", "compilar"
+- **Uso**: Verificación de sintaxis LaTeX/TikZ, detección de errores comunes
+- **Herramientas**:
+  - `validate_latex` - Validación de sintaxis LaTeX/TikZ
+  - `compile_tikz` - Compilación de código TikZ
+
+### **🖼️ Image Analysis MCP** ⭐ NUEVO
+- **Función**: Análisis de imágenes matemáticas para replicación TikZ
+- **Activación automática**: "imagen", "análisis", "metadatos", "tikz"
+- **Uso**: Análisis de imágenes PNG para generar código TikZ con fidelidad 98%
+- **Herramientas**:
+  - `analyze_math_image` - Análisis de imágenes matemáticas
+  - `extract_image_metadata` - Extracción de metadatos técnicos
 
 ### **🔍 Brave Search MCP**
 - **Función**: Búsqueda web privada y actualizada
@@ -15,11 +45,6 @@ Los MCPs (Model Context Protocols) extienden las capacidades de Gemini CLI permi
 - **Función**: Documentación de librerías y APIs
 - **Activación automática**: "documentación", "librería", "API", "referencia"
 - **Uso**: Consulta de R-exams, TikZ, matplotlib, referencias técnicas
-
-### **🌐 Playwright MCP**
-- **Función**: Automatización web y testing
-- **Activación automática**: "web", "navegador", "scraping", "testing"
-- **Uso**: Testing de ejercicios compilados, scraping de recursos educativos
 
 ### **💾 Memory MCP**
 - **Función**: Gestión de memoria persistente
@@ -106,6 +131,38 @@ gemini-icfes-mcps
 "persistir las mejores prácticas identificadas"
 ```
 
+#### **🧠 Thinking - Análisis Estructurado** ⭐ NUEVO
+```
+# Activación automática con análisis
+"analizar el problema de optimización de ejercicios R-exams ICFES"
+"razonamiento estructurado para mejorar la aleatorización"
+"thinking sobre la metodología TikZ para fidelidad 98%"
+```
+
+#### **🎭 Playwright - Testing Automático** ⭐ ACTUALIZADO
+```
+# Activación automática con testing
+"testing automático del ejercicio compilado en HTML"
+"captura de pantalla del gráfico TikZ generado"
+"validación visual de la fidelidad del ejercicio"
+```
+
+#### **📐 LaTeX Validator - Validación de Código** ⭐ NUEVO
+```
+# Activación automática con validación
+"validar código LaTeX del ejercicio R-exams"
+"compilar código TikZ para verificar sintaxis"
+"verificar estructura de metadatos YAML"
+```
+
+#### **🖼️ Image Analysis - Análisis de Imágenes** ⭐ NUEVO
+```
+# Activación automática con imágenes
+"analizar imagen PNG para replicación TikZ"
+"extraer metadatos de imagen matemática"
+"análisis de geometría para código TikZ"
+```
+
 #### **📁 Filesystem - Acceso a Archivos**
 ```
 # Activación automática con archivos
@@ -162,6 +219,51 @@ gemini-icfes-mcps
 
 4. "recordar criterios de validación identificados"
    → Memory guarda estándares para uso consistente
+```
+
+### **Flujo 4: Desarrollo Completo con Análisis Estructurado** ⭐ NUEVO
+```
+1. "analizar el problema de crear ejercicio de geometría ICFES"
+   → Thinking MCP realiza análisis estructurado del problema
+
+2. "buscar información sobre competencias geométricas ICFES"
+   → Brave Search investiga estándares específicos
+
+3. "documentación de TikZ para figuras geométricas"
+   → Context7 proporciona referencias técnicas
+
+4. "leer archivo con ejemplo similar de geometría"
+   → Filesystem accede a templates funcionales
+
+5. "validar código LaTeX del ejercicio desarrollado"
+   → LaTeX Validator verifica sintaxis y estructura
+
+6. "testing automático del ejercicio compilado"
+   → Playwright valida funcionamiento web
+
+7. "recordar metodología exitosa aplicada"
+   → Memory persiste proceso para futuros ejercicios
+```
+
+### **Flujo 5: Replicación TikZ desde Imagen** ⭐ NUEVO
+```
+1. "analizar imagen PNG para identificar elementos matemáticos"
+   → Image Analysis extrae información técnica
+
+2. "thinking sobre estrategia de replicación TikZ"
+   → Thinking MCP estructura plan de desarrollo
+
+3. "documentación de TikZ para elementos identificados"
+   → Context7 proporciona sintaxis específica
+
+4. "validar código TikZ generado"
+   → LaTeX Validator verifica sintaxis
+
+5. "captura de pantalla del resultado compilado"
+   → Playwright genera imagen para comparación
+
+6. "recordar patrón exitoso de replicación"
+   → Memory guarda metodología para casos similares
 ```
 
 ## ⚙️ CONFIGURACIÓN AVANZADA

@@ -2,32 +2,38 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "🤖 Gemini CLI + MCPs",
+            "label": "Gemini: Análisis Estructurado",
             "type": "shell",
             "command": "bash",
-            "args": ["${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-mcps-optimizado.sh"],
+            "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-icfes-mcps.sh", "usar thinking para analizar el problema"],
             "group": "build",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
                 "panel": "new"
-            },
-            "problemMatcher": []
+            }
         },
         {
-            "label": "🔧 Configurar Variables MCP",
+            "label": "Gemini: Validar LaTeX/TikZ",
             "type": "shell",
-            "command": "source",
-            "args": ["${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/mcp-env-setup.sh"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "new"
-            },
-            "problemMatcher": []
+            "command": "bash",
+            "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-icfes-mcps.sh", "validar código latex del archivo actual"],
+            "group": "build"
+        },
+        {
+            "label": "Gemini: Testing Automático",
+            "type": "shell",
+            "command": "bash",
+            "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-icfes-mcps.sh", "testing automático del ejercicio"],
+            "group": "test"
+        },
+        {
+            "label": "Gemini: Analizar Imagen",
+            "type": "shell",
+            "command": "bash",
+            "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-icfes-mcps.sh", "analizar imagen para replicación tikz"],
+            "group": "build"
         }
     ]
 }

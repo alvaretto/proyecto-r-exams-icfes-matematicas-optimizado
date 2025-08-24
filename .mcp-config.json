@@ -8,9 +8,24 @@
         "UPSTASH_REDIS_REST_TOKEN": "${UPSTASH_REDIS_REST_TOKEN}"
       }
     },
-    "playwright": {
+    "playwright-fixed": {
       "command": "node",
-      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/playwright-mcp/dist/index.js"],
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/playwright-mcp-fixed/index.js"],
+      "env": {}
+    },
+    "thinking": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/thinking-mcp/index.js"],
+      "env": {}
+    },
+    "latex-validator": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/latex-validator-mcp/index.js"],
+      "env": {}
+    },
+    "image-analysis": {
+      "command": "node",
+      "args": ["/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/.mcps/image-analysis-mcp/index.js"],
       "env": {}
     },
     "memory": {
