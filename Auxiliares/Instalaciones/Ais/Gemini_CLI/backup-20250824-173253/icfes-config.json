@@ -1,0 +1,42 @@
+{
+  "project_name": "RepositorioMatematicasICFES_R_Exams",
+  "project_root": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams",
+  "rules_file": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/rules-gemini.md",
+  "tasks_file": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/task-list-gemini.md",
+  "context_file": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md",
+  "tutorial_file": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md",
+  "examples_path": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Ejemplos-Funcionales-Rmd",
+  "tikz_docs": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/TikZ-Documentation",
+  "python_docs": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Python-Documentation",
+  "default_model": "gemini-2.5-pro",
+  "context_window": "1M_tokens",
+  "max_tokens": 1000000,
+  "temperature": 0.1,
+  "version": "2.0",
+  "tutorial_compatible": true,
+  "tools_enabled": {
+    "web_search": true,
+    "file_operations": true,
+    "code_execution": true,
+    "image_analysis": true
+  },
+  "icfes_competencias": [
+    "interpretacion_representacion",
+    "formulacion_ejecucion", 
+    "argumentacion"
+  ],
+  "niveles_dificultad": [1, 2, 3, 4],
+  "formatos_salida": ["html", "pdf", "word", "moodle"],
+  "quality_standards": {
+    "tikz_fidelity": 0.98,
+    "unique_versions": 300,
+    "compilation_formats": ["pdf", "html", "moodle", "word"],
+    "response_time": "< 5 segundos"
+  },
+  "workflows": {
+    "analyze_exercise": "Analiza ejercicio R-exams",
+    "generate_tikz": "Genera código TikZ",
+    "validate_icfes": "Valida estándares ICFES",
+    "optimize_code": "Optimiza código R"
+  }
+}

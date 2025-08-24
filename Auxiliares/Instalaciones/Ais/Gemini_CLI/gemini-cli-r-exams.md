@@ -481,6 +481,86 @@ code-insiders --install-extension ms-vscode.vscode-json --force
 code-insiders --list-extensions | grep keybindings
 ```
 
+### **PASO 5: Configuración de Extensión Gemini CLI Companion** ✅ **COMPLETADO**
+
+La extensión `google.gemini-cli-vscode-ide-companion` ya está instalada y proporciona capacidades avanzadas de integración directa con el IDE.
+
+#### **Activación en el Proyecto**
+```bash
+# 1. Abrir VSCode Insiders en el proyecto
+code-insiders .
+
+# 2. Abrir terminal integrado (Ctrl+`)
+# 3. Activar Gemini CLI para este proyecto específico
+/id install
+
+# ✅ RESULTADO: Gemini CLI obtiene acceso completo al proyecto
+# - Puede leer archivos .Rmd, .Rnw, .tikz directamente
+# - Comprende estructura del proyecto automáticamente
+# - Acceso a templates y metodologías
+```
+
+#### **Inicialización Semántica del Proyecto**
+```bash
+# Construir memoria semántica automática
+/init
+
+# ✅ RESULTADO: Gemini comprende automáticamente:
+# - Estructura de ejercicios R-exams en Auxiliares/Ejemplos-Funcionales-Rmd/
+# - Metodologías en Auxiliares/METODOLOGIA_*.md
+# - Templates TikZ en Auxiliares/TikZ-Documentation/
+# - Configuraciones del proyecto en .gemini/
+# - Contexto completo del proyecto R-exams ICFES
+```
+
+#### **Configuración de Memoria Personalizada**
+```bash
+# Ver estado actual de la memoria
+/memory show
+
+# Agregar contexto específico para R-exams ICFES
+/memory add "Este proyecto desarrolla ejercicios matemáticos para ICFES usando R-exams con aleatorización de 300+ versiones, gráficos TikZ con fidelidad 98%, y validación automática de competencias ICFES"
+
+# Agregar contexto sobre metodologías
+/memory add "Metodologías principales: desarrollo iterativo, validación pedagógica, testing automático, y persistencia de mejores prácticas"
+
+# Agregar patrones TikZ exitosos
+/memory add "TikZ fidelidad 98%: usar scale=1.0, font=\\bfseries\\itshape, elementos en negrita cursiva"
+
+# Actualizar memoria con cambios recientes
+/memory refresh
+```
+
+#### **Gestión de Conversaciones del Proyecto**
+```bash
+# Guardar conversación sobre desarrollo de ejercicio específico
+/chat save "desarrollo_ejercicio_algebra_ecuaciones"
+
+# Guardar sesión de optimización TikZ
+/chat save "optimizacion_tikz_funciones_cuadraticas"
+
+# Listar conversaciones guardadas
+/chat list
+
+# Reanudar desarrollo donde se quedó
+/chat resume "desarrollo_ejercicio_algebra_ecuaciones"
+
+# Eliminar conversaciones antiguas
+/chat delete "sesion_experimental"
+```
+
+#### **Verificación de Funcionalidad de la Extensión**
+```bash
+# Verificar que la extensión está activa
+code-insiders --list-extensions | grep gemini-cli-vscode-ide-companion
+
+# ✅ RESULTADO ESPERADO:
+# google.gemini-cli-vscode-ide-companion
+
+# Verificar comandos disponibles en terminal VSCode
+# Los comandos /id, /init, /memory, /chat deben estar disponibles
+```
+
 ---
 
 ## 📝 **CONFIGURACIÓN ESPECÍFICA PARA R-EXAMS**

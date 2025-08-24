@@ -59,6 +59,11 @@ Este es un repositorio especializado en la creación de ejercicios matemáticos 
 - Augment AI: Desarrollo rápido en VSCode
 - Gemini CLI: Análisis profundo y generación avanzada
 - Gemini CLI + MCPs: Capacidades extendidas con investigación automática
+- **Gemini CLI Companion (VSCode)**: Integración directa con IDE
+  - Comando `/id install`: Activación de capacidades IDE
+  - Comando `/init`: Memoria semántica automática del proyecto
+  - Comandos `/memory`: Gestión granular de contexto
+  - Comandos `/chat`: Persistencia de conversaciones
 - Agente TikZ: Generación especializada de gráficos
 
 ## 🚀 **ESTRATEGIA MCPs (MODEL CONTEXT PROTOCOLS)**
@@ -371,6 +376,173 @@ gemini-icfes --mcps
 
 # Generación TikZ desde imagen
 "buscar ejemplos similares de gráficas TikZ, documentación TikZ para elementos específicos, leer archivo imagen_referencia.png, testing de compilación visual, recordar patrones exitosos"
+```
+
+## 🎯 **COMANDOS DE EXTENSIÓN VSCODE COMPANION**
+
+### **Comandos de Inicialización y Activación**
+
+#### **Activación del Proyecto**
+```bash
+# Ejecutar en terminal integrado de VSCode Insiders
+/id install
+```
+**Función**: Activa Gemini CLI para el proyecto actual, otorgando acceso completo a archivos y estructura.
+
+**Casos de uso ICFES**:
+- Acceso directo a ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Lectura automática de metodologías en `Auxiliares/METODOLOGIA_*.md`
+- Navegación inteligente por templates TikZ
+
+#### **Inicialización Semántica**
+```bash
+# Construir memoria semántica automática del proyecto
+/init
+```
+**Función**: Analiza automáticamente el repositorio y construye comprensión semántica completa.
+
+**Resultado para R-exams ICFES**:
+- Comprensión automática de estructura de ejercicios
+- Identificación de patrones en metodologías
+- Análisis de templates y ejemplos funcionales
+- Generación automática de contexto del proyecto
+
+### **Comandos de Gestión de Memoria Avanzada**
+
+#### **Visualización de Memoria**
+```bash
+# Ver memorias disponibles del proyecto
+/memory show
+```
+
+#### **Gestión de Contexto Específico**
+```bash
+# Agregar contexto específico para R-exams ICFES
+/memory add "Configuración exitosa para ejercicios de álgebra: aleatorización con sample(), 300+ versiones únicas"
+
+# Agregar patrón TikZ exitoso
+/memory add "TikZ fidelidad 98%: scale=1.0, font=\\bfseries\\itshape, elementos en negrita cursiva"
+
+# Agregar metodología ICFES
+/memory add "Competencia interpretación: usar contextos colombianos, distractores plausibles, nivel 1-2"
+
+# Actualizar memoria con cambios recientes
+/memory refresh
+```
+
+### **Comandos de Gestión de Conversaciones**
+
+#### **Persistencia de Sesiones de Desarrollo**
+```bash
+# Guardar conversación sobre ejercicio específico
+/chat save "desarrollo_ejercicio_geometria_triangulos"
+
+# Guardar sesión de optimización TikZ
+/chat save "optimizacion_tikz_funciones_cuadraticas"
+
+# Guardar análisis de competencias ICFES
+/chat save "analisis_competencias_argumentacion"
+```
+
+#### **Recuperación y Continuidad**
+```bash
+# Listar todas las conversaciones guardadas
+/chat list
+
+# Reanudar desarrollo de ejercicio específico
+/chat resume "desarrollo_ejercicio_geometria_triangulos"
+
+# Reanudar optimización TikZ
+/chat resume "optimizacion_tikz_funciones_cuadraticas"
+```
+
+#### **Gestión y Limpieza**
+```bash
+# Eliminar conversaciones antiguas
+/chat delete "sesion_experimental_antigua"
+
+# Eliminar múltiples conversaciones
+/chat delete "pruebas_*"
+```
+
+### **🔄 Workflows Integrados con Extensión VSCode**
+
+#### **Workflow 1: Desarrollo Completo de Ejercicio**
+```bash
+# 1. Activar proyecto
+/id install
+
+# 2. Inicializar memoria semántica
+/init
+
+# 3. Agregar contexto específico del ejercicio
+/memory add "Ejercicio álgebra: sistemas de ecuaciones lineales, competencia formulación-ejecución, nivel 3 ICFES, contexto colombiano"
+
+# 4. Desarrollo con edición directa en VSCode
+# (Gemini puede ahora editar archivos .Rmd directamente)
+
+# 5. Persistir sesión de desarrollo
+/chat save "algebra_sistemas_ecuaciones_lineales"
+
+# 6. Agregar patrón exitoso a memoria
+/memory add "Sistema 2x2 exitoso: aleatorización coeficientes [-5,5], determinante no nulo, solución única"
+```
+
+#### **Workflow 2: Optimización de Ejercicio Existente**
+```bash
+# 1. Recuperar sesión previa
+/chat resume "ejercicio_estadistica_medidas_tendencia"
+
+# 2. Actualizar memoria del proyecto
+/memory refresh
+
+# 3. Agregar mejoras identificadas
+/memory add "Optimización estadística: usar datos reales colombianos, aumentar tamaño muestra a 50-100"
+
+# 4. Aplicar optimizaciones con edición directa
+# (Gemini modifica el archivo .Rmd en tiempo real)
+
+# 5. Guardar versión optimizada
+/chat save "estadistica_medidas_tendencia_optimizado"
+```
+
+#### **Workflow 3: Desarrollo TikZ con Fidelidad 98%**
+```bash
+# 1. Activar proyecto y cargar memoria
+/id install
+/memory refresh
+
+# 2. Recuperar patrones TikZ exitosos
+/memory show | grep "TikZ"
+
+# 3. Desarrollar gráfico con asistencia directa
+# (Gemini edita código TikZ directamente en archivo .tikz)
+
+# 4. Validar fidelidad visual
+/memory add "TikZ validado: función cuadrática con vértice (-2,1), escala 1.0, fidelidad 98% confirmada"
+
+# 5. Persistir sesión TikZ
+/chat save "tikz_funcion_cuadratica_vertice"
+```
+
+### **🎯 Comandos Específicos para Competencias ICFES**
+
+#### **Competencia Interpretación y Representación**
+```bash
+/memory add "Interpretación exitosa: usar gráficos claros, preguntas sobre lectura de datos, contextos familiares"
+/chat save "competencia_interpretacion_patrones"
+```
+
+#### **Competencia Formulación y Ejecución**
+```bash
+/memory add "Formulación exitosa: problemas con múltiples pasos, algoritmos claros, verificación de resultados"
+/chat save "competencia_formulacion_algoritmos"
+```
+
+#### **Competencia Argumentación**
+```bash
+/memory add "Argumentación exitosa: justificación de procedimientos, validación de respuestas, razonamiento lógico"
+/chat save "competencia_argumentacion_justificacion"
 ```
 
 ## ⚠️ **CONSIDERACIONES IMPORTANTES**

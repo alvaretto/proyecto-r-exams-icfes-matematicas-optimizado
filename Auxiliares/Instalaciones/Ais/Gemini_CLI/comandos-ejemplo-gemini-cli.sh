@@ -210,6 +210,57 @@ echo "grep -c \"tikzpicture\" ejercicio.Rmd"
 echo ""
 
 # =============================================================================
+# COMANDOS DE EXTENSIÓN VSCODE COMPANION
+# =============================================================================
+
+echo "🎯 COMANDOS DE EXTENSIÓN VSCODE COMPANION:"
+echo "=========================================="
+echo ""
+
+echo "# IMPORTANTE: Estos comandos se ejecutan en el terminal integrado de VSCode Insiders"
+echo "# Primero abrir VSCode Insiders: code-insiders ."
+echo ""
+
+echo "# Activar Gemini CLI en el proyecto (ejecutar en terminal VSCode)"
+echo "/id install"
+echo ""
+
+echo "# Inicializar memoria semántica del proyecto"
+echo "/init"
+echo ""
+
+echo "# Gestión de memoria avanzada"
+echo "/memory show"
+echo "/memory add \"Configuración exitosa para ejercicios de álgebra\""
+echo "/memory add \"TikZ fidelidad 98%: scale=1.0, font=\\\\bfseries\\\\itshape\""
+echo "/memory add \"ICFES competencia interpretación: contextos colombianos, nivel 1-2\""
+echo "/memory refresh"
+echo ""
+
+echo "# Gestión de conversaciones"
+echo "/chat save \"desarrollo_ejercicio_geometria\""
+echo "/chat save \"optimizacion_tikz_funciones\""
+echo "/chat list"
+echo "/chat resume \"desarrollo_ejercicio_geometria\""
+echo "/chat delete \"sesion_antigua\""
+echo ""
+
+echo "# Comandos combinados para desarrollo R-exams"
+echo "/memory add \"Patrón exitoso: aleatorización con sample() para generar 300+ versiones únicas\""
+echo "/memory add \"Distractores efectivos: opciones plausibles pero incorrectas, evitar triviales\""
+echo "/memory add \"Contexto colombiano: usar nombres, lugares y situaciones familiares\""
+echo ""
+
+echo "# Workflow completo de desarrollo con extensión VSCode"
+echo "# 1. /id install"
+echo "# 2. /init"
+echo "# 3. /memory add \"contexto específico del ejercicio\""
+echo "# 4. Desarrollar ejercicio con asistencia directa en VSCode"
+echo "# 5. /chat save \"nombre_ejercicio\""
+echo "# 6. /memory add \"patrón exitoso identificado\""
+echo ""
+
+# =============================================================================
 # INFORMACIÓN FINAL
 # =============================================================================
 
@@ -224,8 +275,14 @@ echo "• Reglas específicas: .gemini/rules-gemini.md"
 echo "• Ejemplos funcionales: Auxiliares/Ejemplos-Funcionales-Rmd/"
 echo ""
 echo "🎯 Para usar estos comandos:"
-echo "1. Copia el comando que necesites"
-echo "2. Modifica las rutas según tu caso específico"
-echo "3. Ejecuta desde el directorio raíz del proyecto"
+echo "1. Comandos básicos: Copia y ejecuta desde terminal"
+echo "2. Comandos VSCode Companion: Ejecuta en terminal integrado de VSCode Insiders"
+echo "3. Modifica las rutas según tu caso específico"
+echo "4. Ejecuta desde el directorio raíz del proyecto"
+echo ""
+echo "🚀 MODOS DISPONIBLES:"
+echo "• Modo básico: gemini-icfes --basic"
+echo "• Modo con MCPs: gemini-icfes --mcps"
+echo "• Modo experto: VSCode Insiders + Extensión Companion"
 echo ""
 echo "¡Listo para crear ejercicios R-exams ICFES de alta calidad con Gemini CLI!"
