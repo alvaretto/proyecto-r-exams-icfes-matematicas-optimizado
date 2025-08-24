@@ -9,13 +9,14 @@
 1. [**Introducción Rápida**](#-1-introducción-rápida) - Qué es y por qué usarlo
 2. [**Requisitos Previos**](#-2-requisitos-previos) - Verificar configuración
 3. [**Comandos Básicos Esenciales**](#-3-comandos-básicos-esenciales) - Los 5 comandos más importantes
-4. [**Casos de Uso Frecuentes**](#-4-casos-de-uso-frecuentes) - Ejemplos paso a paso
-5. [**Solución de Problemas**](#-5-solución-de-problemas-comunes) - Errores típicos y soluciones
-6. [**Referencias Rápidas**](#-6-referencias-rápidas) - Tabla de comandos y atajos
-7. [**Ejemplos Prácticos**](#-7-ejemplos-prácticos-paso-a-paso) - Casos completos
-8. [**Consejos Avanzados**](#-8-consejos-avanzados) - Optimización y productividad
-9. [**Checklist de Calidad**](#-9-checklist-de-calidad) - Verificación antes de usar
-10. [**Soporte y Recursos**](#-10-soporte-y-recursos) - Ayuda adicional
+4. [**Modo Avanzado con MCPs**](#-4-modo-avanzado-con-mcps) - Capacidades extendidas
+5. [**Casos de Uso Frecuentes**](#-5-casos-de-uso-frecuentes) - Ejemplos paso a paso
+6. [**Solución de Problemas**](#-6-solución-de-problemas-comunes) - Errores típicos y soluciones
+7. [**Referencias Rápidas**](#-7-referencias-rápidas) - Tabla de comandos y atajos
+8. [**Ejemplos Prácticos**](#-8-ejemplos-prácticos-paso-a-paso) - Casos completos
+9. [**Consejos Avanzados**](#-9-consejos-avanzados) - Optimización y productividad
+10. [**Checklist de Calidad**](#-10-checklist-de-calidad) - Verificación antes de usar
+11. [**Soporte y Recursos**](#-11-soporte-y-recursos) - Ayuda adicional
 
 **⏱️ Tiempo estimado de lectura:** 15-20 minutos | **🎯 Objetivo:** Uso productivo inmediato
 
@@ -23,20 +24,33 @@
 
 ## ⚡ **INICIO RÁPIDO (2 MINUTOS)**
 
-**¿Tienes prisa? Estos 3 comandos te permiten empezar inmediatamente:**
+**¿Tienes prisa? Estos comandos te permiten empezar inmediatamente:**
 
+### **🚀 MODO RECOMENDADO (CON MCPs)**
 ```bash
 # 1. Verificar que todo funciona
 .gemini/scripts/verify_setup.sh
 
-# 2. Iniciar Gemini CLI
+# 2. Iniciar Gemini CLI con capacidades extendidas
+gemini-icfes --mcps
+
+# 3. Comando inteligente con investigación automática
+"buscar información sobre competencias matemáticas ICFES 2025"
+```
+
+### **📋 MODO BÁSICO (SIN MCPs)**
+```bash
+# 1. Verificar configuración
+.gemini/scripts/verify_setup.sh
+
+# 2. Iniciar modo básico
 gemini-icfes --basic
 
-# 3. Analizar un ejercicio (ejemplo)
+# 3. Analizar con contexto local
 gemini --context-file ".gemini/rules-gemini.md" "Explica las competencias ICFES matemáticas"
 ```
 
-**Si los comandos funcionan, ¡ya puedes usar Gemini CLI!** Continúa leyendo para casos de uso específicos.
+**Si los comandos funcionan, ¡ya puedes usar Gemini CLI!** Continúa leyendo para aprovechar todas las capacidades.
 
 ---
 
@@ -85,7 +99,10 @@ Antes de empezar, ejecuta el script de verificación:
 
 ### **Comando 1: Iniciar Gemini CLI**
 ```bash
-# Modo básico (recomendado para empezar)
+# Modo con MCPs (RECOMENDADO - capacidades extendidas)
+gemini-icfes --mcps
+
+# Modo básico (para empezar)
 gemini-icfes --basic
 
 # Modo optimizado (con verificaciones avanzadas)
@@ -125,57 +142,193 @@ gemini --help
 
 ---
 
-## 📚 **4. CASOS DE USO FRECUENTES**
+## 🚀 **4. MODO AVANZADO CON MCPs**
+
+### **¿Qué son los MCPs?**
+MCPs (Model Context Protocols) son extensiones que dotan a Gemini CLI de capacidades adicionales como investigación web, acceso a documentación técnica, gestión de memoria y automatización. **Son especialmente útiles para desarrollo de ejercicios R-exams ICFES.**
+
+### **🎯 5 MCPs Integrados**
+
+#### **🔍 Brave Search - Investigación Automática**
+- **Función**: Búsqueda web privada y actualizada
+- **Activación**: "buscar", "investigar", "información actualizada"
+- **Uso ICFES**: Estándares actualizados, metodologías oficiales MEN
+
+#### **📚 Context7 - Documentación Técnica**
+- **Función**: Acceso a documentación de librerías y APIs
+- **Activación**: "documentación", "librería", "API", "referencia"
+- **Uso ICFES**: R-exams, TikZ, matplotlib, referencias técnicas
+
+#### **🌐 Playwright - Testing Automático**
+- **Función**: Automatización web y testing de ejercicios
+- **Activación**: "testing", "compilar", "verificar funcionamiento"
+- **Uso ICFES**: Validar compilación HTML/PDF de ejercicios
+
+#### **💾 Memory - Gestión de Conocimiento**
+- **Función**: Memoria persistente de mejores prácticas
+- **Activación**: "recordar", "guardar", "persistir"
+- **Uso ICFES**: Patrones exitosos, configuraciones optimizadas
+
+#### **📁 Filesystem - Acceso a Archivos**
+- **Función**: Lectura/escritura directa de archivos del proyecto
+- **Activación**: "leer archivo", "escribir", "listar archivos"
+- **Uso ICFES**: Acceso a ejemplos funcionales, templates, ejercicios
+
+### **🔄 Comparación: Con vs Sin MCPs**
+
+| **Aspecto** | **Sin MCPs** | **Con MCPs** |
+|-------------|--------------|--------------|
+| **Investigación** | Manual en navegador | Automática integrada |
+| **Documentación** | Buscar referencias externas | Acceso directo integrado |
+| **Testing** | Manual en R/terminal | Automatizado en Gemini CLI |
+| **Memoria** | Notas externas | Persistencia automática |
+| **Archivos** | Copiar/pegar contenido | Acceso directo por nombre |
+| **Eficiencia** | Múltiples herramientas | Todo integrado |
+
+### **⚡ Comandos MCPs Esenciales**
+
+#### **Investigación ICFES**
+```bash
+# Iniciar con MCPs
+gemini-icfes --mcps
+
+# Comandos automáticos (dentro de Gemini CLI)
+"buscar información sobre competencias matemáticas ICFES 2025"
+"investigar metodologías de evaluación argumentación matemática"
+"información actualizada sobre estándares MEN matemáticas"
+```
+
+#### **Documentación Técnica**
+```bash
+# Acceso a referencias (activación automática)
+"documentación de R-exams para ejercicios matemáticos"
+"API de TikZ para gráficas geométricas"
+"referencia de matplotlib para gráficos estadísticos"
+```
+
+#### **Acceso a Archivos del Proyecto**
+```bash
+# Lectura directa de archivos
+"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+"listar archivos en Auxiliares/TikZ-Documentation/"
+"escribir ejercicio optimizado en Lab-Manjaro/01-S1-2024B/"
+```
+
+#### **Gestión de Conocimiento**
+```bash
+# Memoria persistente
+"recordar que este ejercicio evalúa competencia interpretación"
+"guardar la configuración de tolerancias para ejercicios numéricos"
+"persistir las mejores prácticas identificadas"
+```
+
+#### **Testing Automático**
+```bash
+# Validación de ejercicios
+"testing de compilación HTML del ejercicio optimizado"
+"verificar funcionamiento de ejercicio en formato PDF"
+"automatizar testing de múltiples versiones del ejercicio"
+```
+
+### **🎯 Flujo de Trabajo Típico con MCPs**
+
+```
+1. INVESTIGACIÓN → "buscar estándares ICFES actualizados"
+         ↓
+2. DOCUMENTACIÓN → "documentación de R-exams para álgebra"
+         ↓
+3. ACCESO ARCHIVOS → "leer archivo ejemplo_algebra.Rmd"
+         ↓
+4. DESARROLLO → Crear/optimizar ejercicio con contexto completo
+         ↓
+5. TESTING → "testing de compilación del ejercicio"
+         ↓
+6. MEMORIA → "recordar mejores prácticas aplicadas"
+```
+
+### **✅ Verificar MCPs Disponibles**
+```bash
+# Verificar que MCPs están configurados
+.gemini/scripts/verify_setup.sh
+
+# Testing específico de MCPs
+bash Auxiliares/Instalaciones/Ais/Gemini_CLI/test-mcps.sh
+
+# Iniciar con MCPs
+gemini-icfes --mcps
+```
+
+---
+
+## 📚 **5. CASOS DE USO FRECUENTES**
 
 ### **CASO 1: Analizar un Ejercicio R-exams Existente**
 
 **Objetivo:** Evaluar la calidad y alineación ICFES de un ejercicio.
 
-**Pasos:**
-1. Navega al directorio del ejercicio:
-   ```bash
-   cd Auxiliares/Ejemplos-Funcionales-Rmd/
-   ```
+#### **🚀 MÉTODO AVANZADO (CON MCPs) - RECOMENDADO**
+```bash
+# 1. Iniciar con MCPs
+gemini-icfes --mcps
 
-2. Ejecuta el análisis:
-   ```bash
-   gemini --context-file "ejercicio.Rmd" \
-          --context-file "../.gemini/rules-gemini.md" \
-          "Analiza este ejercicio R-exams: estructura técnica, competencia ICFES, nivel de dificultad y calidad de distractores"
-   ```
+# 2. Análisis integral con investigación automática (dentro de Gemini CLI)
+"buscar información sobre estándares ICFES actualizados para competencia interpretación"
+"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+"documentación de R-exams para validar sintaxis"
+"recordar mejores prácticas identificadas en análisis previos"
+```
+
+#### **📋 MÉTODO BÁSICO (SIN MCPs)**
+```bash
+# 1. Navegar al directorio
+cd Auxiliares/Ejemplos-Funcionales-Rmd/
+
+# 2. Análisis con contexto local
+gemini --context-file "ejercicio.Rmd" \
+       --context-file "../.gemini/rules-gemini.md" \
+       "Analiza este ejercicio R-exams: estructura técnica, competencia ICFES, nivel de dificultad y calidad de distractores"
+```
 
 **Resultado esperado:**
-
-- Evaluación de sintaxis R-exams
-- Verificación de competencia ICFES
-- Análisis de nivel de dificultad
-- Sugerencias de mejora
+- ✅ Evaluación de sintaxis R-exams
+- ✅ Verificación de competencia ICFES con estándares actualizados
+- ✅ Análisis de nivel de dificultad
+- ✅ Sugerencias de mejora basadas en mejores prácticas
+- ✅ **Con MCPs**: Investigación automática + memoria persistente
 
 ### **CASO 2: Generar Código TikZ desde Imagen**
 
 **Objetivo:** Convertir una imagen matemática en código TikZ reutilizable.
 
-**Pasos:**
+#### **🚀 MÉTODO AVANZADO (CON MCPs) - RECOMENDADO**
+```bash
+# 1. Iniciar con MCPs
+gemini-icfes --mcps
 
-1. Prepara tu imagen (PNG, JPG, SVG):
-   ```bash
-   # Verifica que la imagen esté en el proyecto
-   ls ruta/a/tu/imagen.png
-   ```
+# 2. Análisis integral con documentación automática (dentro de Gemini CLI)
+"documentación de TikZ para gráficas matemáticas"
+"leer archivo ruta/a/tu/imagen.png"
+"buscar ejemplos similares de gráficas TikZ en ICFES"
+"recordar patrones exitosos de replicación gráfica"
+```
 
-2. Genera el código TikZ:
-   ```bash
-   gemini --image "ruta/a/tu/imagen.png" \
-          --context-file ".gemini/rules-gemini.md" \
-          "Analiza esta imagen matemática y genera código TikZ equivalente con fidelidad 98%. Usa elementos en negrita cursiva y escala apropiada."
-   ```
+#### **📋 MÉTODO BÁSICO (SIN MCPs)**
+```bash
+# 1. Verificar imagen disponible
+ls ruta/a/tu/imagen.png
+
+# 2. Generar código TikZ
+gemini --image "ruta/a/tu/imagen.png" \
+       --context-file ".gemini/rules-gemini.md" \
+       "Analiza esta imagen matemática y genera código TikZ equivalente con fidelidad 98%. Usa elementos en negrita cursiva y escala apropiada."
+```
 
 **Resultado esperado:**
-
-- Código TikZ completo y compilable
-- Fidelidad visual del 98%
-- Elementos de texto en negrita cursiva
-- Comentarios explicativos
+- ✅ Código TikZ completo y compilable
+- ✅ Fidelidad visual del 98%
+- ✅ Elementos de texto en negrita cursiva
+- ✅ Comentarios explicativos
+- ✅ **Con MCPs**: Documentación TikZ integrada + ejemplos similares + memoria de patrones
 
 ### **CASO 3: Validar Estándares ICFES**
 
@@ -264,12 +417,70 @@ git ls-files '*.png' '*.jpg' | head -5
 .gemini/scripts/verify_gitignore_images.sh
 ```
 
+### **🚀 PROBLEMAS ESPECÍFICOS DE MCPs**
+
+#### **Error: "MCPs not available"**
+```bash
+# Verificar instalación de MCPs
+bash Auxiliares/Instalaciones/Ais/Gemini_CLI/test-mcps.sh
+
+# Reinstalar MCPs si es necesario
+bash Auxiliares/Instalaciones/Ais/Gemini_CLI/install-mcps.sh
+```
+
+#### **Brave Search no funciona**
+```bash
+# Verificar configuración
+cat .gemini-mcp-config.json | grep brave
+
+# Usar activación manual si es necesario
+"usar brave-search para buscar información ICFES"
+```
+
+#### **Filesystem MCP no accede a archivos**
+```bash
+# Verificar permisos de archivos
+ls -la Auxiliares/Ejemplos-Funcionales-Rmd/
+
+# Usar rutas completas
+"leer archivo ./Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+```
+
+#### **Memory MCP no persiste datos**
+```bash
+# Verificar directorio de memoria
+ls -la .mcps/memory-data/
+
+# Crear directorio si no existe
+mkdir -p .mcps/memory-data
+```
+
+#### **Context7 MCP falla**
+```bash
+# Verificar variables de entorno (opcional)
+echo $UPSTASH_REDIS_REST_URL
+
+# Usar sin configuración externa
+"documentación de R-exams básica"
+```
+
 ---
 
 ## 📋 **6. REFERENCIAS RÁPIDAS**
 
 ### **Tabla de Comandos Esenciales**
 
+#### **🚀 COMANDOS CON MCPs (RECOMENDADOS)**
+| **Acción** | **Comando** |
+|------------|-------------|
+| **Iniciar con MCPs** | `gemini-icfes --mcps` |
+| **Investigar ICFES** | `"buscar información sobre competencias matemáticas ICFES 2025"` |
+| **Acceder archivos** | `"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"` |
+| **Documentación técnica** | `"documentación de R-exams para ejercicios matemáticos"` |
+| **Testing automático** | `"testing de compilación HTML del ejercicio"` |
+| **Guardar conocimiento** | `"recordar mejores prácticas identificadas"` |
+
+#### **📋 COMANDOS BÁSICOS (SIN MCPs)**
 | **Acción** | **Comando** |
 |------------|-------------|
 | Iniciar modo básico | `gemini-icfes --basic` |
@@ -298,11 +509,19 @@ git ls-files '*.png' '*.jpg' | head -5
 
 ### **Mejores Prácticas**
 
-1. **Siempre usa contexto específico**: Carga `.gemini/rules-gemini.md` para análisis de R-exams
-2. **Sé específico en tus preguntas**: "Analiza competencia ICFES" vs "Analiza este ejercicio"
-3. **Usa ejemplos del proyecto**: Referencia ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
-4. **Verifica antes de implementar**: Siempre revisa el código generado antes de usarlo
-5. **Documenta tus workflows**: Guarda comandos útiles para reutilizar
+#### **🚀 CON MCPs (RECOMENDADO)**
+1. **Usa el modo MCPs por defecto**: `gemini-icfes --mcps` para máxima funcionalidad
+2. **Aprovecha la investigación automática**: "buscar información sobre..." para datos actualizados
+3. **Accede directamente a archivos**: "leer archivo..." en lugar de copiar/pegar contenido
+4. **Persiste conocimiento**: "recordar..." para guardar patrones exitosos
+5. **Combina MCPs en workflows**: Investigación → Documentación → Archivos → Testing → Memoria
+
+#### **📋 GENERALES (TODOS LOS MODOS)**
+1. **Sé específico en tus preguntas**: "Analiza competencia ICFES interpretación" vs "Analiza este ejercicio"
+2. **Usa ejemplos del proyecto**: Referencia ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+3. **Verifica antes de implementar**: Siempre revisa el código generado antes de usarlo
+4. **Documenta tus workflows**: Guarda comandos útiles para reutilizar
+5. **Aprovecha la memoria persistente**: Con MCPs, el sistema recuerda mejores prácticas automáticamente
 
 ### **Recursos Adicionales**
 
@@ -489,11 +708,22 @@ grep -E "^ex(name|type|solution|competencia|nivel):" ejercicio.Rmd
 
 **🎯 OBJETIVO ALCANZADO: Con este manual puedes usar Gemini CLI productivamente para crear ejercicios R-exams ICFES de alta calidad en 15-20 minutos.**
 
+**🚀 CAPACIDADES HABILITADAS:**
+- ✅ **Modo básico**: Análisis y generación con contexto local
+- ✅ **Modo avanzado con MCPs**: Investigación automática + documentación integrada + testing + memoria persistente
+- ✅ **Workflows optimizados**: Para desarrollo eficiente de ejercicios ICFES
+
 **📈 PRÓXIMO NIVEL: Una vez domines estos comandos básicos, explora el tutorial completo para funcionalidades avanzadas y automatización de workflows.**
+
+**🔗 RECURSOS ADICIONALES:**
+- **Guía completa de MCPs**: `Auxiliares/Instalaciones/Ais/Gemini_CLI/MCPs_GUIA_COMPLETA.md`
+- **Comandos de ejemplo**: `Auxiliares/Instalaciones/Ais/Gemini_CLI/comandos-ejemplo-gemini-cli.sh`
+- **Tutorial técnico**: `Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md`
 
 ---
 
 *Manual creado por: Especialista en Integración IA Educativa*\
-*Versión: 1.0 | Fecha: Agosto 2025*\
+*Versión: 1.1 - Incluye información completa sobre MCPs*\
+*Fecha: Agosto 2025*\
 *Proyecto: RepositorioMatematicasICFES_R_Exams*\
-*Última actualización: Agosto 24, 2025*
+*Última actualización: Agosto 24, 2025 - Integración MCPs completada*
