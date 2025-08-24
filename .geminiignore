@@ -35,6 +35,7 @@ temporal/
 # Excepciones para ejemplos importantes
 !Auxiliares/Ejemplos-Funcionales-Rmd/**/*.png
 !Auxiliares/TikZ-Documentation/**/*.png
+!Lab-Manjaro/**/*.png
 
 # Archivos de datos grandes
 *.csv

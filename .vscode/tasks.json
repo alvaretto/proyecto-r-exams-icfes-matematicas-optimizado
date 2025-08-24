@@ -355,6 +355,66 @@
             },
             "problemMatcher": [],
             "detail": "Ejecuta pruebas completas de verificación de Gemini CLI"
+        },
+        {
+            "label": "🤖 Gemini CLI - Modo Básico",
+            "type": "shell",
+            "command": "gemini-icfes",
+            "args": ["--basic"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia Gemini CLI en modo básico (tutorial estándar)"
+        },
+        {
+            "label": "⚡ Gemini CLI - Modo Optimizado",
+            "type": "shell",
+            "command": "gemini-icfes",
+            "args": ["--optimized"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia Gemini CLI en modo optimizado con verificaciones avanzadas"
+        },
+        {
+            "label": "🚀 Gemini CLI - Modo MCPs",
+            "type": "shell",
+            "command": "gemini-icfes",
+            "args": ["--mcps"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "new",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "detail": "Inicia Gemini CLI en modo completo con MCPs (búsqueda web, memoria, etc.)"
         }
     ],
     "inputs": [
