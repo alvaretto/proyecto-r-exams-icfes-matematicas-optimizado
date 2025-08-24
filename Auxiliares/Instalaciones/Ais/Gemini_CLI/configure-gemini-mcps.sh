@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Script de configuración de MCPs para gemini-icfes-optimizado
+# Script de configuración de MCPs para Gemini CLI
 # Ubicación: Auxiliares/Instalaciones/Ais/Gemini_CLI/
 # Autor: Configuración automatizada para proyecto ICFES R-exams
 # Fecha: $(date)
 
-echo "🔧 CONFIGURACIÓN DE MCPs PARA GEMINI-ICFES-OPTIMIZADO"
-echo "===================================================="
+echo "⚙️ CONFIGURACIÓN DE MCPs PARA GEMINI CLI"
+echo "========================================"
 echo ""
 
 # Colores para output
@@ -30,334 +30,230 @@ show_result() {
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 
-echo -e "${BLUE}📋 VERIFICANDO INSTALACIÓN DE MCPs...${NC}"
-echo "------------------------------------"
+echo -e "${BLUE}📋 VERIFICANDO PRERREQUISITOS...${NC}"
+echo "-----------------------------------"
 
-# Verificar que los MCPs están instalados
-echo -n "Verificando directorio MCPs: "
-if [ -d "$PROJECT_ROOT/.mcps" ]; then
-    echo -e "${GREEN}✅ Encontrado${NC}"
+# Verificar Gemini CLI
+echo -n "Verificando Gemini CLI: "
+if command -v gemini &> /dev/null; then
+    GEMINI_VERSION=$(gemini --version 2>/dev/null || echo "instalado")
+    echo -e "${GREEN}✅ $GEMINI_VERSION${NC}"
 else
-    echo -e "${RED}❌ No encontrado${NC}"
-    echo "Ejecuta primero: bash install-mcps.sh"
+    echo -e "${RED}❌ Gemini CLI no encontrado${NC}"
+    echo "Por favor, instala Gemini CLI primero"
     exit 1
 fi
 
+# Verificar configuración MCP
 echo -n "Verificando configuración MCP: "
 if [ -f "$PROJECT_ROOT/.mcp-config.json" ]; then
     echo -e "${GREEN}✅ Encontrada${NC}"
 else
     echo -e "${RED}❌ No encontrada${NC}"
-    echo "Ejecuta primero: bash install-mcps.sh"
+    echo "Ejecuta: bash install-mcps.sh"
     exit 1
 fi
 
 echo ""
-echo -e "${BLUE}⚙️ CREANDO CONFIGURACIÓN INTEGRADA...${NC}"
-echo "-------------------------------------"
+echo -e "${BLUE}⚙️ CONFIGURANDO INTEGRACIÓN CON GEMINI CLI...${NC}"
+echo "----------------------------------------------"
 
-# Crear configuración de Gemini CLI con MCPs
+# Crear configuración específica para Gemini CLI
 cat > "$PROJECT_ROOT/.gemini-mcp-config.json" << EOF
 {
-  "version": "1.0",
-  "project": "RepositorioMatematicasICFES_R_Exams",
-  "gemini": {
-    "model": "gemini-2.5-pro",
-    "context_window": "1M_tokens",
-    "temperature": 0.1,
-    "max_tokens": 8192
-  },
-  "mcps": {
-    "auto_enable": true,
-    "servers": {
-      "context7": {
-        "enabled": true,
-        "auto_trigger": ["documentación", "librería", "API", "referencia"],
-        "description": "Documentación de librerías y APIs"
-      },
-      "playwright": {
-        "enabled": true,
-        "auto_trigger": ["web", "navegador", "scraping", "testing", "automatización"],
-        "description": "Automatización web y testing"
-      },
-      "memory": {
-        "enabled": true,
-        "auto_trigger": ["recordar", "memoria", "guardar", "persistir"],
-        "description": "Gestión de memoria persistente"
-      },
-      "brave-search": {
-        "enabled": true,
-        "auto_trigger": ["buscar", "investigar", "información", "actualizada"],
-        "description": "Búsqueda web privada"
-      },
-      "filesystem": {
-        "enabled": true,
-        "auto_trigger": ["archivo", "directorio", "leer", "escribir"],
-        "description": "Acceso a archivos locales"
+  "mcpServers": {
+    "thinking": {
+      "command": "node",
+      "args": ["$PROJECT_ROOT/.mcps/thinking-mcp/index.js"],
+      "env": {}
+    },
+    "playwright-fixed": {
+      "command": "node", 
+      "args": ["$PROJECT_ROOT/.mcps/playwright-mcp-fixed/index.js"],
+      "env": {}
+    },
+    "latex-validator": {
+      "command": "node",
+      "args": ["$PROJECT_ROOT/.mcps/latex-validator-mcp/index.js"],
+      "env": {}
+    },
+    "image-analysis": {
+      "command": "node",
+      "args": ["$PROJECT_ROOT/.mcps/image-analysis-mcp/index.js"],
+      "env": {}
+    },
+    "context7": {
+      "command": "node",
+      "args": ["$PROJECT_ROOT/.mcps/context7-mcp/dist/index.js"],
+      "env": {
+        "UPSTASH_REDIS_REST_URL": "\${UPSTASH_REDIS_REST_URL}",
+        "UPSTASH_REDIS_REST_TOKEN": "\${UPSTASH_REDIS_REST_TOKEN}"
+      }
+    },
+    "brave-search": {
+      "command": "node",
+      "args": ["$PROJECT_ROOT/.mcps/brave-search-mcp/index.js"],
+      "env": {
+        "BRAVE_API_KEY": "\${BRAVE_API_KEY}"
+      }
+    },
+    "filesystem": {
+      "command": "node",
+      "args": ["$PROJECT_ROOT/.mcps/filesystem-servers/src/filesystem/dist/index.js"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "$PROJECT_ROOT"
       }
     }
-  },
-  "icfes_integration": {
-    "auto_context": [
-      "Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md",
-      "Auxiliares/rules_full/rules_full_v1.md"
-    ],
-    "priority_directories": [
-      "Auxiliares/Ejemplos-Funcionales-Rmd",
-      "Auxiliares/TikZ-Documentation",
-      "Lab-Manjaro"
-    ]
   }
 }
 EOF
 
-show_result $? "Configuración integrada creada"
+show_result $? "Configuración Gemini MCP creada"
 
-# Crear script de inicio con MCPs
-cat > "$SCRIPT_DIR/gemini-mcps-optimizado.sh" << 'EOF'
+# Crear script optimizado para usar con MCPs
+cat > "$SCRIPT_DIR/gemini-icfes-mcps.sh" << 'EOF'
 #!/bin/bash
 
-# Script de inicio de Gemini CLI con MCPs optimizado
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+# Script optimizado para usar Gemini CLI con MCPs en proyecto ICFES
+# Uso: bash gemini-icfes-mcps.sh [prompt]
 
-echo "🤖 GEMINI CLI + MCPs OPTIMIZADO - PROYECTO ICFES R-EXAMS"
-echo "========================================================"
-echo ""
+# Obtener directorio del script y proyecto
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
 
 # Verificar configuración
-if [[ ! -f "$PROJECT_DIR/.gemini-mcp-config.json" ]]; then
-    echo "❌ Error: Configuración MCP no encontrada"
-    echo "   Ejecuta: bash configure-gemini-mcps.sh"
+if [ ! -f "$PROJECT_ROOT/.gemini-mcp-config.json" ]; then
+    echo "❌ Configuración MCP no encontrada"
+    echo "Ejecuta: bash configure-gemini-mcps.sh"
     exit 1
 fi
-
-# Cargar variables de entorno para MCPs
-if [[ -f "$SCRIPT_DIR/mcp-env-setup.sh" ]]; then
-    source "$SCRIPT_DIR/mcp-env-setup.sh"
-fi
-
-echo "📁 Directorio del proyecto: $PROJECT_DIR"
-echo "🔧 MCPs habilitados:"
-echo "   • ✅ Context7 - Documentación de librerías"
-echo "   • ✅ Playwright - Automatización web"
-echo "   • ✅ Memory - Gestión de memoria persistente"
-echo "   • ✅ Brave Search - Búsqueda web privada"
-echo "   • ✅ Filesystem - Acceso a archivos locales"
-echo ""
-echo "🎯 Contexto optimizado con .geminiignore"
-echo "📋 Configuración ICFES cargada automáticamente"
-echo ""
 
 # Cambiar al directorio del proyecto
-cd "$PROJECT_DIR"
+cd "$PROJECT_ROOT"
 
-# Verificar que no estamos en root
-if [[ "$PWD" == "/" ]]; then
-    echo "⚠️  Error: No se puede ejecutar desde directorio raíz"
-    exit 1
+# Configurar variables de entorno si existen
+if [ -f "$SCRIPT_DIR/mcp-env-setup.sh" ]; then
+    source "$SCRIPT_DIR/mcp-env-setup.sh" 2>/dev/null
 fi
 
-echo "📍 Directorio actual: $(pwd)"
-echo "🚀 Iniciando Gemini CLI con MCPs integrados..."
-echo ""
-echo "💡 Comandos MCP disponibles:"
-echo "   • 'buscar información sobre [tema]' → Brave Search"
-echo "   • 'documentación de [librería]' → Context7"
-echo "   • 'automatizar navegación web' → Playwright"
-echo "   • 'recordar [información]' → Memory"
-echo "   • 'leer archivo [path]' → Filesystem"
-echo ""
-echo "📖 Para cargar contexto completo:"
-echo "   @Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md"
-echo ""
-
-# Configurar variables de entorno para MCPs
-export MCP_CONFIG_PATH="$PROJECT_DIR/.mcp-config.json"
-export GEMINI_MCP_CONFIG="$PROJECT_DIR/.gemini-mcp-config.json"
-
-# Iniciar Gemini CLI con configuración MCP
-if command -v gemini &> /dev/null; then
-    gemini --config "$GEMINI_MCP_CONFIG"
+# Ejecutar Gemini CLI con configuración MCP
+if [ $# -eq 0 ]; then
+    # Modo interactivo
+    echo "🚀 Iniciando Gemini CLI con MCPs para proyecto ICFES..."
+    echo "📋 MCPs disponibles: thinking, playwright-fixed, latex-validator, image-analysis"
+    echo "💡 Usa comandos como: 'analizar ejercicio', 'validar latex', 'testing web'"
+    echo ""
+    gemini --config-file .gemini-mcp-config.json
 else
-    echo "❌ Error: Gemini CLI no encontrado"
-    echo "   Instala primero: bash install-gemini-cli.sh"
-    exit 1
+    # Modo prompt directo
+    gemini --config-file .gemini-mcp-config.json -p "$*"
 fi
 EOF
 
-chmod +x "$SCRIPT_DIR/gemini-mcps-optimizado.sh"
-show_result $? "Script de inicio con MCPs creado"
+chmod +x "$SCRIPT_DIR/gemini-icfes-mcps.sh"
+show_result $? "Script optimizado creado"
 
-# Crear comandos automáticos para MCPs
-cat > "$SCRIPT_DIR/mcp-commands.md" << 'EOF'
-# 🤖 COMANDOS MCP AUTOMÁTICOS PARA GEMINI-ICFES-OPTIMIZADO
+# Crear alias para facilitar uso
+cat > "$SCRIPT_DIR/gemini-aliases.sh" << 'EOF'
+#!/bin/bash
 
-## 🔍 **Brave Search MCP**
-### Activación Automática:
-- "buscar información sobre [tema]"
-- "investigar [concepto] ICFES 2025"
-- "información actualizada sobre [competencia]"
+# Aliases para comandos Gemini CLI con MCPs
+# Uso: source gemini-aliases.sh
 
-### Ejemplos:
-```
-buscar información sobre competencias matemáticas ICFES 2025
-investigar metodologías de evaluación argumentación matemática
-información actualizada sobre estándares MEN matemáticas
-```
+# Obtener directorio del script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-## 📚 **Context7 MCP**
-### Activación Automática:
-- "documentación de [librería]"
-- "API de [herramienta]"
-- "referencia de [función]"
+# Alias principales
+alias gemini-icfes="bash $SCRIPT_DIR/gemini-icfes-mcps.sh"
+alias gemini-thinking="bash $SCRIPT_DIR/gemini-icfes-mcps.sh 'usar thinking para analizar'"
+alias gemini-validate="bash $SCRIPT_DIR/gemini-icfes-mcps.sh 'validar código latex'"
+alias gemini-test="bash $SCRIPT_DIR/gemini-icfes-mcps.sh 'testing automático'"
+alias gemini-image="bash $SCRIPT_DIR/gemini-icfes-mcps.sh 'analizar imagen'"
 
-### Ejemplos:
-```
-documentación de R-exams para ejercicios matemáticos
-API de TikZ para gráficas geométricas
-referencia de matplotlib para gráficos estadísticos
-```
-
-## 🌐 **Playwright MCP**
-### Activación Automática:
-- "automatizar navegación web"
-- "scraping de [sitio]"
-- "testing de [aplicación]"
-
-### Ejemplos:
-```
-automatizar navegación web para buscar ejemplos ICFES
-scraping de sitio MEN para obtener documentación oficial
-testing de compilación HTML de ejercicios R-exams
-```
-
-## 💾 **Memory MCP**
-### Activación Automática:
-- "recordar [información]"
-- "guardar [dato]"
-- "persistir [configuración]"
-
-### Ejemplos:
-```
-recordar que este ejercicio evalúa competencia interpretación
-guardar la configuración de tolerancias para ejercicios numéricos
-persistir las mejores prácticas identificadas en este proyecto
-```
-
-## 📁 **Filesystem MCP**
-### Activación Automática:
-- "leer archivo [path]"
-- "escribir en [directorio]"
-- "listar archivos en [ubicación]"
-
-### Ejemplos:
-```
-leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd
-escribir ejercicio en Lab-Manjaro/01-S1-2024B/
-listar archivos en Auxiliares/TikZ-Documentation/
-```
-
-## 🎯 **Comandos Combinados (Flujos Inteligentes)**
-
-### Crear Ejercicio desde Investigación:
-```
-1. "buscar información sobre competencia formulación ICFES 2025"
-2. "documentación de R-exams para ejercicios de álgebra"
-3. "leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/algebra_ejemplo.Rmd"
-4. "recordar las mejores prácticas identificadas"
-```
-
-### Optimizar Ejercicio Existente:
-```
-1. "leer archivo Lab-Manjaro/01-S1-2024B/ejercicio_actual.Rmd"
-2. "buscar información sobre errores comunes en ejercicios ICFES"
-3. "documentación de TikZ para mejorar gráficas"
-4. "recordar las optimizaciones aplicadas"
-```
-
-### Validar Estándares ICFES:
-```
-1. "buscar información actualizada sobre estándares ICFES 2025"
-2. "documentación oficial MEN competencias matemáticas"
-3. "recordar criterios de validación identificados"
-```
+echo "✅ Aliases de Gemini CLI configurados:"
+echo "   • gemini-icfes - Modo interactivo con MCPs"
+echo "   • gemini-thinking - Análisis estructurado"
+echo "   • gemini-validate - Validación LaTeX/TikZ"
+echo "   • gemini-test - Testing automático"
+echo "   • gemini-image - Análisis de imágenes"
 EOF
 
-show_result $? "Guía de comandos MCP creada"
+chmod +x "$SCRIPT_DIR/gemini-aliases.sh"
+show_result $? "Aliases creados"
 
-# Actualizar comando global
-echo -n "Actualizando comando global: "
-if [[ -f "$HOME/.local/bin/gemini-icfes-optimizado" ]]; then
-    ln -sf "$SCRIPT_DIR/gemini-mcps-optimizado.sh" "$HOME/.local/bin/gemini-icfes-mcps"
-    show_result $? "Comando gemini-icfes-mcps disponible"
-else
-    ln -sf "$SCRIPT_DIR/gemini-mcps-optimizado.sh" "$HOME/.local/bin/gemini-icfes-mcps"
-    show_result $? "Comando gemini-icfes-mcps creado"
-fi
+echo ""
+echo -e "${BLUE}🔧 CONFIGURANDO INTEGRACIÓN CON VSCODE...${NC}"
+echo "-------------------------------------------"
 
-# Crear archivo de configuración de VSCode para MCPs
-cat > "$SCRIPT_DIR/vscode-mcp-tasks.json" << 'EOF'
+# Actualizar configuración VSCode para MCPs
+if [ -f "$SCRIPT_DIR/vscode-mcp-tasks.json" ]; then
+    # Agregar tareas para nuevos MCPs
+    cat > "$SCRIPT_DIR/vscode-mcp-tasks-updated.json" << EOF
 {
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "🤖 Gemini CLI + MCPs",
+            "label": "Gemini: Análisis Estructurado",
             "type": "shell",
             "command": "bash",
-            "args": ["${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-mcps-optimizado.sh"],
+            "args": ["$SCRIPT_DIR/gemini-icfes-mcps.sh", "usar thinking para analizar el problema"],
             "group": "build",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
                 "panel": "new"
-            },
-            "problemMatcher": []
+            }
         },
         {
-            "label": "🔧 Configurar Variables MCP",
+            "label": "Gemini: Validar LaTeX/TikZ",
             "type": "shell",
-            "command": "source",
-            "args": ["${workspaceFolder}/Auxiliares/Instalaciones/Ais/Gemini_CLI/mcp-env-setup.sh"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "new"
-            },
-            "problemMatcher": []
+            "command": "bash",
+            "args": ["$SCRIPT_DIR/gemini-icfes-mcps.sh", "validar código latex del archivo actual"],
+            "group": "build"
+        },
+        {
+            "label": "Gemini: Testing Automático",
+            "type": "shell",
+            "command": "bash",
+            "args": ["$SCRIPT_DIR/gemini-icfes-mcps.sh", "testing automático del ejercicio"],
+            "group": "test"
+        },
+        {
+            "label": "Gemini: Analizar Imagen",
+            "type": "shell",
+            "command": "bash",
+            "args": ["$SCRIPT_DIR/gemini-icfes-mcps.sh", "analizar imagen para replicación tikz"],
+            "group": "build"
         }
     ]
 }
 EOF
-
-show_result $? "Tareas VSCode para MCPs creadas"
+    
+    mv "$SCRIPT_DIR/vscode-mcp-tasks-updated.json" "$SCRIPT_DIR/vscode-mcp-tasks.json"
+    show_result $? "Tareas VSCode actualizadas"
+else
+    show_result 1 "Archivo de tareas VSCode no encontrado"
+fi
 
 echo ""
-echo -e "${GREEN}✅ CONFIGURACIÓN DE MCPs COMPLETADA${NC}"
-echo "=================================="
-echo ""
-echo -e "${CYAN}🚀 Comando principal (con MCPs):${NC}"
-echo "  gemini-icfes-mcps"
+echo -e "${GREEN}✅ CONFIGURACIÓN COMPLETADA${NC}"
+echo "============================"
 echo ""
 echo -e "${CYAN}📋 Archivos creados:${NC}"
 echo "  • $PROJECT_ROOT/.gemini-mcp-config.json"
-echo "  • $SCRIPT_DIR/gemini-mcps-optimizado.sh"
-echo "  • $SCRIPT_DIR/mcp-commands.md"
-echo "  • $SCRIPT_DIR/vscode-mcp-tasks.json"
+echo "  • $SCRIPT_DIR/gemini-icfes-mcps.sh"
+echo "  • $SCRIPT_DIR/gemini-aliases.sh"
+echo "  • $SCRIPT_DIR/vscode-mcp-tasks.json (actualizado)"
 echo ""
-echo -e "${CYAN}🔧 MCPs configurados:${NC}"
-echo "  • ✅ Context7 - Activación automática con 'documentación'"
-echo "  • ✅ Playwright - Activación automática con 'web/automatizar'"
-echo "  • ✅ Memory - Activación automática con 'recordar/guardar'"
-echo "  • ✅ Brave Search - Activación automática con 'buscar/investigar'"
-echo "  • ✅ Filesystem - Activación automática con 'archivo/leer'"
+echo -e "${CYAN}🚀 Comandos disponibles:${NC}"
+echo "  • bash $SCRIPT_DIR/gemini-icfes-mcps.sh"
+echo "  • source $SCRIPT_DIR/gemini-aliases.sh"
+echo "  • gemini-icfes (después de cargar aliases)"
 echo ""
 echo -e "${YELLOW}⚠️  PRÓXIMOS PASOS:${NC}"
-echo "  1. Configurar APIs opcionales: source mcp-env-setup.sh"
-echo "  2. Probar funcionamiento: gemini-icfes-mcps"
-echo "  3. Revisar comandos: cat mcp-commands.md"
+echo "  1. Cargar aliases: source $SCRIPT_DIR/gemini-aliases.sh"
+echo "  2. Probar MCPs: bash $SCRIPT_DIR/test-mcps.sh"
+echo "  3. Usar Gemini: gemini-icfes"
 echo ""
-echo -e "${GREEN}🎉 ¡MCPs completamente integrados con gemini-icfes-optimizado!${NC}"
+echo -e "${GREEN}🎉 ¡MCPs configurados y listos para usar!${NC}"

@@ -352,491 +352,414 @@ display: none;
 </div>
 
 
-<div id="gemini-cli-mcps---configuración-completa-para-proyecto-icfes-r-exams" class="section level1">
-<h1>🤖 Gemini CLI + MCPs - Configuración Completa para Proyecto ICFES
-R-exams</h1>
-<p><strong>Ubicación:</strong>
-<code>Auxiliares/Instalaciones/Ais/Gemini_CLI/</code>
-<strong>Sistema:</strong> Manjaro Plasma + VSCode Insiders
-<strong>Versión:</strong> Gemini CLI v0.1.21 + 5 MCPs Integrados
-<strong>Estado:</strong> ✅ Instalado, Configurado, Optimizado y con
-MCPs <strong>Contexto:</strong> 49% reducción de archivos (13,398 →
-6,774) <strong>Warning Root:</strong> ✅ Resuelto completamente
-<strong>MCPs:</strong> ✅ Context7, Playwright, Memory, Brave Search,
-Filesystem</p>
+<div id="gemini-cli-con-mcps-para-desarrollo-r-exams-icfes" class="section level1">
+<h1>🤖 Gemini CLI con MCPs para Desarrollo R-exams ICFES</h1>
+<p><a href="https://github.com/google-gemini/gemini-cli"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNzAiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iR2VtaW5pIENMSTogMC4yLjAtcHJldmlldy4yIj48dGl0bGU+R2VtaW5pIENMSTogMC4yLjAtcHJldmlldy4yPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxNzAiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI3MSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjcxIiB3aWR0aD0iOTkiIGhlaWdodD0iMjAiIGZpbGw9IiMwMDdlYzYiLz48cmVjdCB3aWR0aD0iMTcwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjM2NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNjEwIj5HZW1pbmkgQ0xJPC90ZXh0Pjx0ZXh0IHg9IjM2NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNjEwIj5HZW1pbmkgQ0xJPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSIxMTk1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI4OTAiPjAuMi4wLXByZXZpZXcuMjwvdGV4dD48dGV4dCB4PSIxMTk1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI4OTAiPjAuMi4wLXByZXZpZXcuMjwvdGV4dD48L2c+PC9zdmc+" alt="Gemini CLI" /></a> <a href="."><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTgiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iTUNQczogOSBJbnN0YWxhZG9zIj48dGl0bGU+TUNQczogOSBJbnN0YWxhZG9zPC90aXRsZT48bGluZWFyR3JhZGllbnQgaWQ9InMiIHgyPSIwIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLW9wYWNpdHk9Ii4xIi8+PC9saW5lYXJHcmFkaWVudD48Y2xpcFBhdGggaWQ9InIiPjxyZWN0IHdpZHRoPSIxMTgiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSIzOSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjM5IiB3aWR0aD0iNzkiIGhlaWdodD0iMjAiIGZpbGw9IiM5N2NhMDAiLz48cmVjdCB3aWR0aD0iMTE4IiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjIwNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMjkwIj5NQ1BzPC90ZXh0Pjx0ZXh0IHg9IjIwNSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iMjkwIj5NQ1BzPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI3NzUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjY5MCI+OSBJbnN0YWxhZG9zPC90ZXh0Pjx0ZXh0IHg9Ijc3NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNjkwIj45IEluc3RhbGFkb3M8L3RleHQ+PC9nPjwvc3ZnPg==" alt="MCPs" /></a> <a href="."><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iRXN0YWRvOiBDb21wbGV0YW1lbnRlIEZ1bmNpb25hbCI+PHRpdGxlPkVzdGFkbzogQ29tcGxldGFtZW50ZSBGdW5jaW9uYWw8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L2NsaXBQYXRoPjxnIGNsaXAtcGF0aD0idXJsKCNyKSI+PHJlY3Qgd2lkdGg9IjQ3IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iNDciIHdpZHRoPSIxNTMiIGhlaWdodD0iMjAiIGZpbGw9IiM0YzEiLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwIiBmaWxsPSJ1cmwoI3MpIi8+PC9nPjxnIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLEdlbmV2YSxEZWphVnUgU2FucyxzYW5zLXNlcmlmIiB0ZXh0LXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIiBmb250LXNpemU9IjExMCI+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9IjI0NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMzcwIj5Fc3RhZG88L3RleHQ+PHRleHQgeD0iMjQ1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSIzNzAiPkVzdGFkbzwvdGV4dD48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMTIyNSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iMTQzMCI+Q29tcGxldGFtZW50ZSBGdW5jaW9uYWw8L3RleHQ+PHRleHQgeD0iMTIyNSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iMTQzMCI+Q29tcGxldGFtZW50ZSBGdW5jaW9uYWw8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Estado" /></a> <a href="https://www.r-exams.org/"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzIiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0iUi1leGFtczogQ29tcGF0aWJsZSI+PHRpdGxlPlItZXhhbXM6IENvbXBhdGlibGU8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjEzMiIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L2NsaXBQYXRoPjxnIGNsaXAtcGF0aD0idXJsKCNyKSI+PHJlY3Qgd2lkdGg9IjU5IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iNTkiIHdpZHRoPSI3MyIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZlN2QzNyIvPjxyZWN0IHdpZHRoPSIxMzIiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMzA1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0OTAiPlItZXhhbXM8L3RleHQ+PHRleHQgeD0iMzA1IiB5PSIxNDAiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiBmaWxsPSIjZmZmIiB0ZXh0TGVuZ3RoPSI0OTAiPlItZXhhbXM8L3RleHQ+PHRleHQgYXJpYS1oaWRkZW49InRydWUiIHg9Ijk0NSIgeT0iMTUwIiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgdGV4dExlbmd0aD0iNjMwIj5Db21wYXRpYmxlPC90ZXh0Pjx0ZXh0IHg9Ijk0NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNjMwIj5Db21wYXRpYmxlPC90ZXh0PjwvZz48L3N2Zz4=" alt="R-exams" /></a></p>
+<p><strong>Configuración completa de Gemini CLI 0.2.0-preview.2 con 9
+MCPs especializados para desarrollo optimizado de ejercicios matemáticos
+ICFES usando R-exams.</strong></p>
+<p>Sistema integrado que combina IA avanzada, análisis estructurado,
+validación automática y testing para crear ejercicios de máxima calidad
+con workflows automatizados.</p>
 <hr />
-<div id="estructura-de-archivos-optimizada" class="section level2">
-<h2>📁 Estructura de Archivos Optimizada</h2>
-<pre><code>Gemini_CLI/
-├── README.md                    # Este archivo (documentación principal)
-│
-├── 📚 DOCUMENTACIÓN PRINCIPAL
-├── GEMINI.md                   # Configuración principal de contexto
-├── TUTORIAL_USO_GEMINI.md      # Tutorial completo paso a paso
-├── gemini-cli-setup.md         # Documentación técnica completa
-├── comandos-gemini-icfes.md    # Guía de comandos especializados
-│
-├── 🤖 CONFIGURACIÓN GEMINI CLI
-├── rules-gemini.md             # Reglas específicas para Gemini CLI
-├── task-list-gemini.md         # Plan de tareas optimizado para Gemini
-├── configurar-gemini.sh        # Script de configuración especializada
-├── optimizar-contexto-gemini.sh # Script de optimización de contexto
-│
-├── 🔧 MCPs (MODEL CONTEXT PROTOCOLS)
-├── install-mcps.sh            # Instalación de MCPs
-├── configure-gemini-mcps.sh   # Configuración de MCPs con Gemini
-├── test-mcps.sh               # Testing de MCPs
-├── gemini-mcps-optimizado.sh  # Script principal con MCPs
-├── mcp-commands.md            # Guía de comandos MCP
-├── mcp-env-setup.sh           # Configuración de variables MCP
-├── MCPs_GUIA_COMPLETA.md      # Documentación completa de MCPs
-├── MCPs_INSTALACION_COMPLETADA.md # Resumen de instalación MCPs
-│
-├── 🛠️ INSTALACIÓN Y TESTING
-├── install-gemini-cli.sh      # Script de instalación automática
-├── test-gemini-cli.sh         # Script de verificación y testing
-├── gemini-tasks.json          # Tareas integradas para VSCode
-│
-└── 📋 DOCUMENTACIÓN DE ESTADO
-├── CONFIGURACION_COMPLETADA.md # Resumen ejecutivo de configuración
-└── SOLUCION_WARNING_ROOT.md   # Solución al warning de directorio raíz</code></pre>
+<div id="estado-actual" class="section level2">
+<h2>🎯 <strong>Estado Actual</strong></h2>
+<p>✅ <strong>Sistema Completamente Operativo</strong></p>
+<ul>
+<li><strong>Gemini CLI 0.2.0-preview.2</strong> con funcionalidades
+avanzadas</li>
+<li><strong>9 MCPs instalados y configurados</strong> (4 nuevos + 5
+existentes)</li>
+<li><strong>Integración completa con VSCode Insiders</strong></li>
+<li><strong>Scripts automatizados</strong> para todos los workflows</li>
+<li><strong>Documentación actualizada</strong> y funcional</li>
+</ul>
+</div>
+<div id="mcps-disponibles" class="section level2">
+<h2>📦 <strong>MCPs Disponibles</strong></h2>
+<div id="mcps-adicionales-especializados" class="section level3">
+<h3><strong>🆕 MCPs Adicionales Especializados</strong></h3>
+<div id="thinking-mcp" class="section level4">
+<h4><strong>🧠 Thinking MCP</strong></h4>
+<ul>
+<li><strong>Función</strong>: Análisis y razonamiento estructurado paso
+a paso</li>
+<li><strong>Comando</strong>: <code>gemini-thinking</code></li>
+<li><strong>Uso</strong>: Análisis completo de problemas de optimización
+de ejercicios</li>
+<li><strong>Herramientas</strong>: <code>structured_thinking</code> -
+Análisis sistemático con contexto</li>
+</ul>
+</div>
+<div id="playwright-mcp-corregido" class="section level4">
+<h4><strong>🎭 Playwright MCP (Corregido)</strong></h4>
+<ul>
+<li><strong>Función</strong>: Testing automático de ejercicios web y
+capturas de pantalla</li>
+<li><strong>Comando</strong>: <code>gemini-test</code></li>
+<li><strong>Uso</strong>: Testing de ejercicios R-exams compilados en
+HTML</li>
+<li><strong>Herramientas</strong>: <code>test_web_exercise</code>,
+<code>screenshot_exercise</code></li>
+</ul>
+</div>
+<div id="latex-validator-mcp" class="section level4">
+<h4><strong>📐 LaTeX Validator MCP</strong></h4>
+<ul>
+<li><strong>Función</strong>: Validación de código LaTeX/TikZ para
+ejercicios R-exams</li>
+<li><strong>Comando</strong>: <code>gemini-validate</code></li>
+<li><strong>Uso</strong>: Verificación de sintaxis LaTeX/TikZ, detección
+de errores</li>
+<li><strong>Herramientas</strong>: <code>validate_latex</code>,
+<code>compile_tikz</code></li>
+</ul>
+</div>
+<div id="image-analysis-mcp" class="section level4">
+<h4><strong>🖼️ Image Analysis MCP</strong></h4>
+<ul>
+<li><strong>Función</strong>: Análisis de imágenes matemáticas para
+replicación TikZ</li>
+<li><strong>Comando</strong>: <code>gemini-image</code></li>
+<li><strong>Uso</strong>: Análisis de imágenes PNG para generar código
+TikZ (fidelidad 98%)</li>
+<li><strong>Herramientas</strong>: <code>analyze_math_image</code>,
+<code>extract_image_metadata</code></li>
+</ul>
+</div>
+</div>
+<div id="mcps-base-mantenidos" class="section level3">
+<h3><strong>📚 MCPs Base Mantenidos</strong></h3>
+<ul>
+<li><strong>🔍 Brave Search MCP</strong> - Búsqueda web privada y
+actualizada</li>
+<li><strong>📚 Context7 MCP</strong> - Documentación de librerías y
+APIs</li>
+<li><strong>💾 Memory MCP</strong> - Gestión de memoria persistente</li>
+<li><strong>📁 Filesystem MCP</strong> - Acceso a archivos locales del
+proyecto</li>
+</ul>
 <hr />
 </div>
-<div id="inicio-rápido" class="section level2">
-<h2>🚀 Inicio Rápido</h2>
-<div id="comando-principal-con-mcps---recomendado" class="section level3">
-<h3>⚡ <strong>COMANDO PRINCIPAL (CON MCPs) - RECOMENDADO:</strong></h3>
-<pre class="bash"><code># Comando optimizado con MCPs integrados
-gemini-icfes-mcps
-
-# Cargar contexto completo del proyecto (dentro de Gemini CLI)
-@Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md
-
-# Comandos automáticos disponibles:
-&quot;buscar información sobre competencias matemáticas ICFES 2025&quot;
-&quot;documentación de R-exams para ejercicios matemáticos&quot;
-&quot;leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd&quot;
-&quot;recordar mejores prácticas identificadas&quot;
-&quot;testing de compilación HTML del ejercicio&quot;</code></pre>
 </div>
-<div id="instalación-completa-si-es-necesario" class="section level3">
-<h3>🔧 <strong>Instalación Completa (Si es necesario):</strong></h3>
-<pre class="bash"><code># 1. Instalar Gemini CLI base
-bash install-gemini-cli.sh
-
-# 2. Configurar para proyecto ICFES
-bash configurar-gemini.sh
-
-# 3. Optimizar contexto (evita warnings)
-bash optimizar-contexto-gemini.sh
-
-# 4. Instalar MCPs
+<div id="instalación-rápida" class="section level2">
+<h2>🚀 <strong>Instalación Rápida</strong></h2>
+<div id="instalación-completa-desde-cero" class="section level3">
+<h3><strong>Instalación Completa desde Cero</strong></h3>
+<pre class="bash"><code># 1. Instalar todos los MCPs
 bash install-mcps.sh
 
-# 5. Configurar MCPs con Gemini
+# 2. Configurar integración con Gemini CLI
 bash configure-gemini-mcps.sh
 
-# 6. Verificar funcionamiento completo
-bash test-mcps.sh</code></pre>
-</div>
-<div id="verificación-rápida" class="section level3">
-<h3>✅ <strong>Verificación Rápida:</strong></h3>
-<pre class="bash"><code># Verificar instalación base
-bash test-gemini-cli.sh
-
-# Verificar MCPs
+# 3. Verificar instalación
 bash test-mcps.sh
 
-# Verificar comando global
-which gemini-icfes-mcps</code></pre>
+# 4. Cargar aliases para uso rápido
+source gemini-aliases.sh</code></pre>
 </div>
-<div id="si-necesitas-reinstalar" class="section level3">
-<h3>🔧 <strong>Si necesitas reinstalar:</strong></h3>
-<pre class="bash"><code># Ejecutar instalador
-./install-gemini-cli.sh
-
-# Verificar instalación
-./test-gemini-cli.sh</code></pre>
-<hr />
-</div>
-</div>
-<div id="documentación-completa" class="section level2">
-<h2>📖 Documentación Completa</h2>
-<div id="guías-de-usuario" class="section level3">
-<h3>📋 <strong>Guías de Usuario</strong></h3>
-<ul>
-<li><strong><code>TUTORIAL_USO_GEMINI.md</code></strong> - Tutorial
-completo paso a paso</li>
-<li><strong><code>CONFIGURACION_COMPLETADA.md</code></strong> - Resumen
-ejecutivo de configuración</li>
-<li><strong><code>comandos-gemini-icfes.md</code></strong> - Guía de
-comandos especializados</li>
-<li><strong><code>SOLUCION_WARNING_ROOT.md</code></strong> - Solución al
-warning de directorio raíz</li>
-</ul>
-</div>
-<div id="archivos-de-configuración-gemini" class="section level3">
-<h3>🤖 <strong>Archivos de Configuración Gemini</strong></h3>
-<ul>
-<li><strong><code>rules-gemini.md</code></strong> - Reglas específicas
-para Gemini CLI</li>
-<li><strong><code>task-list-gemini.md</code></strong> - Plan de tareas
-optimizado para Gemini</li>
-<li><strong><code>GEMINI.md</code></strong> - Configuración principal de
-contexto</li>
-</ul>
-</div>
-<div id="scripts-de-instalación-y-configuración" class="section level3">
-<h3>🛠️ <strong>Scripts de Instalación y Configuración</strong></h3>
-<div id="install-gemini-cli.sh" class="section level4">
-<h4><code>install-gemini-cli.sh</code></h4>
-<ul>
-<li>Instalación automática completa</li>
-<li>Configuración de prerrequisitos</li>
-<li>Configuración de API Key</li>
-<li>Integración con VSCode</li>
-</ul>
-</div>
-<div id="configurar-gemini.sh" class="section level4">
-<h4><code>configurar-gemini.sh</code></h4>
-<ul>
-<li>Configuración especializada para proyecto ICFES</li>
-<li>Creación de archivos de contexto</li>
-<li>Configuración de comandos globales</li>
-</ul>
-</div>
-<div id="optimizar-contexto-gemini.sh" class="section level4">
-<h4><code>optimizar-contexto-gemini.sh</code></h4>
-<ul>
-<li>Optimización de contexto con .geminiignore</li>
-<li>Reducción 49% de archivos en contexto</li>
-<li>Solución al warning de directorio raíz</li>
-</ul>
-</div>
-<div id="test-gemini-cli.sh" class="section level4">
-<h4><code>test-gemini-cli.sh</code></h4>
-<ul>
-<li>Verificación de instalación</li>
-<li>Pruebas de funcionamiento</li>
-<li>Diagnóstico de problemas</li>
-<li>Reporte de estado</li>
-</ul>
-</div>
-<div id="gemini-tasks.json" class="section level4">
-<h4><code>gemini-tasks.json</code></h4>
-<ul>
-<li>Tareas predefinidas para VSCode</li>
-<li>Integración con flujo de trabajo</li>
-<li>Comandos especializados para R-exams</li>
-</ul>
-<hr />
-</div>
-</div>
-</div>
-<div id="comandos-principales" class="section level2">
-<h2>🚀 Comandos Principales</h2>
-<div id="comando-optimizado-recomendado" class="section level3">
-<h3><strong>Comando Optimizado (Recomendado)</strong></h3>
-<pre class="bash"><code># Inicio optimizado sin warnings
-gemini-icfes-optimizado
-
-# Cargar contexto completo dentro de Gemini CLI
-@Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md</code></pre>
-</div>
-<div id="comandos-especializados-en-gemini-cli" class="section level3">
-<h3><strong>Comandos Especializados en Gemini CLI</strong></h3>
-<pre><code># Crear ejercicio desde imagen
-&quot;Analiza esta imagen y aplica el sistema condicional automático&quot;
-
-# Optimizar ejercicio existente
-&quot;Analiza este ejercicio: @path/to/ejercicio.Rmd&quot;
-
-# Investigar información ICFES
-&quot;Busca información actualizada sobre competencia argumentación ICFES 2025&quot;
-
-# Validar calidad y estándares
-&quot;Valida que cumple estándares ICFES y genera 300+ versiones&quot;
-
-# Corregir errores automáticamente
-&quot;Identifica y corrige errores siguiendo la metodología del proyecto&quot;</code></pre>
-</div>
-</div>
-<div id="tareas-disponibles-en-vscode" class="section level2">
-<h2>🎯 Tareas Disponibles en VSCode</h2>
-<table>
-<colgroup>
-<col width="17%" />
-<col width="31%" />
-<col width="51%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Tarea</th>
-<th>Descripción</th>
-<th>Comando Equivalente</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>🤖 <strong>Analizar Archivo Actual</strong></td>
-<td>Analiza el archivo seleccionado</td>
-<td><code>&quot;Analiza este archivo: @archivo.Rmd&quot;</code></td>
-</tr>
-<tr class="even">
-<td>🤖 <strong>Revisar Proyecto Completo</strong></td>
-<td>Análisis completo del proyecto</td>
-<td><code>&quot;Revisa la estructura del proyecto&quot;</code></td>
-</tr>
-<tr class="odd">
-<td>🤖 <strong>Generar Documentación</strong></td>
-<td>Crea documentación automática</td>
-<td><code>&quot;Genera documentación para este código&quot;</code></td>
-</tr>
-<tr class="even">
-<td>🤖 <strong>Optimizar Código R</strong></td>
-<td>Optimiza código R específicamente</td>
-<td><code>&quot;Optimiza este código R manteniendo funcionalidad&quot;</code></td>
-</tr>
-<tr class="odd">
-<td>🤖 <strong>Crear Ejercicio Similar</strong></td>
-<td>Genera variaciones de ejercicios</td>
-<td><code>&quot;Crea un ejercicio similar con diferentes parámetros&quot;</code></td>
-</tr>
-<tr class="even">
-<td>🤖 <strong>Modo Interactivo Optimizado</strong></td>
-<td>Sesión con contexto ICFES</td>
-<td><code>gemini-icfes-optimizado</code></td>
-</tr>
-<tr class="odd">
-<td>🤖 <strong>Análisis TikZ/LaTeX</strong></td>
-<td>Especializado en gráficas</td>
-<td><code>&quot;Replica esta imagen con TikZ 98% fidelidad&quot;</code></td>
-</tr>
-<tr class="even">
-<td>🤖 <strong>Verificar Instalación</strong></td>
-<td>Ejecuta pruebas completas</td>
-<td><code>./test-gemini-cli.sh</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-</div>
-<div id="configuración" class="section level2">
-<h2>🔑 Configuración</h2>
-<div id="api-key" class="section level3">
-<h3><strong>API Key</strong></h3>
-<ul>
-<li><strong>Ubicación:</strong> Variables de entorno
-(<code>~/.bashrc</code>, <code>~/.zshrc</code>)</li>
-<li><strong>Formato:</strong>
-<code>export GEMINI_API_KEY=&quot;tu_api_key_aqui&quot;</code></li>
-<li><strong>Obtener:</strong> <a href="https://aistudio.google.com/app/apikey">Google AI Studio</a></li>
-</ul>
-</div>
-<div id="ejecutable" class="section level3">
-<h3><strong>Ejecutable</strong></h3>
-<ul>
-<li><strong>Ubicación:</strong>
-<code>/home/proyectos/.npm-global/bin/gemini</code></li>
-<li><strong>Acceso:</strong> Global (disponible en cualquier
-terminal)</li>
-</ul>
-<hr />
-</div>
-</div>
-<div id="integración-optimizada-con-mcps" class="section level2">
-<h2>🔧 Integración Optimizada con MCPs</h2>
-<div id="flujo-principal-con-mcps-recomendado" class="section level3">
-<h3><strong>🚀 Flujo Principal con MCPs (RECOMENDADO):</strong></h3>
-<pre class="bash"><code># 1. Iniciar con MCPs integrados
-gemini-icfes-mcps
-
-# 2. Cargar contexto completo (dentro de Gemini CLI)
-@Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md
-
-# 3. Comandos automáticos con MCPs:
-&quot;buscar información sobre competencias matemáticas ICFES 2025&quot;
-&quot;leer archivo Lab-Manjaro/01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd&quot;
-&quot;documentación de R-exams para ejercicios matemáticos&quot;
-&quot;recordar mejores prácticas identificadas&quot;</code></pre>
-</div>
-<div id="para-creación-desde-imágenes-con-mcps" class="section level3">
-<h3><strong>🎨 Para Creación desde Imágenes con MCPs:</strong></h3>
-<pre class="bash"><code># 1. Iniciar con MCPs
-gemini-icfes-mcps
-
-# 2. Cargar contexto
-@Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md
-
-# 3. Análisis inteligente con MCPs
-&quot;buscar ejemplos similares de ejercicios ICFES con gráficas&quot;
-&quot;leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/estadisticas_ejemplo.Rmd&quot;
-&quot;documentación de TikZ para replicar esta imagen&quot;
-&quot;recordar patrones exitosos de replicación gráfica&quot;</code></pre>
-</div>
-<div id="para-optimización-con-mcps" class="section level3">
-<h3><strong>🔧 Para Optimización con MCPs:</strong></h3>
-<pre class="bash"><code># 1. Análisis con MCPs
-gemini-icfes-mcps
-
-# 2. Comandos integrados:
-&quot;leer archivo ejercicio_actual.Rmd&quot;
-&quot;buscar información sobre errores comunes en ejercicios ICFES&quot;
-&quot;documentación de mejores prácticas R-exams&quot;
-&quot;testing de compilación HTML del ejercicio optimizado&quot;
-&quot;recordar optimizaciones aplicadas exitosamente&quot;
-
-# Comandos especializados dentro de Gemini CLI:
-&quot;Revisa la diversidad de versiones generadas&quot;
-&quot;Valida que cumple estándares ICFES oficiales&quot;
-&quot;Optimiza la función generar_datos() para 300+ versiones&quot;
-&quot;Mejora los distractores usando errores conceptuales reales&quot;</code></pre>
-<hr />
-</div>
-</div>
-<div id="solución-de-problemas" class="section level2">
-<h2>🆘 Solución de Problemas</h2>
-<div id="problema-warning-running-in-root-directory" class="section level3">
-<h3><strong>Problema: Warning “running in root directory”</strong></h3>
-<pre class="bash"><code># SOLUCIÓN: Usar comando optimizado
-gemini-icfes-optimizado
-
-# Si persiste, re-optimizar contexto
-bash optimizar-contexto-gemini.sh</code></pre>
-</div>
-<div id="problema-.geminiignore-no-encontrado" class="section level3">
-<h3><strong>Problema: .geminiignore no encontrado</strong></h3>
-<pre class="bash"><code># Ejecutar optimización de contexto
-bash optimizar-contexto-gemini.sh
-
-# Verificar que se creó
-ls -la .geminiignore</code></pre>
-</div>
-<div id="problema-contexto-lento-o-limitado" class="section level3">
-<h3><strong>Problema: Contexto lento o limitado</strong></h3>
-<pre class="bash"><code># Verificar optimización
-ls -la .geminiignore .gemini/
-
-# Re-optimizar si es necesario
-bash optimizar-contexto-gemini.sh</code></pre>
-</div>
-<div id="problema-configuración-no-cargada" class="section level3">
-<h3><strong>Problema: Configuración no cargada</strong></h3>
-<pre class="bash"><code># Cargar contexto manualmente en Gemini CLI
-@Auxiliares/Instalaciones/Ais/Gemini_CLI/GEMINI.md
-
-# Verificar archivos de configuración
-ls -la Auxiliares/Instalaciones/Ais/Gemini_CLI/</code></pre>
-</div>
-<div id="problema-comando-no-encontrado" class="section level3">
-<h3><strong>Problema: Comando no encontrado</strong></h3>
-<pre class="bash"><code># Verificar instalación
-which gemini
-which gemini-icfes-optimizado
-
-# Reinstalar si es necesario
-bash install-gemini-cli.sh
-bash configurar-gemini.sh</code></pre>
-</div>
-<div id="problema-api-key-no-funciona" class="section level3">
-<h3><strong>Problema: API Key no funciona</strong></h3>
-<pre class="bash"><code># Verificar variable de entorno
-echo $GEMINI_API_KEY
-
-# Recargar configuración
-source ~/.bashrc</code></pre>
-</div>
-<div id="problema-tareas-no-aparecen-en-vscode" class="section level3">
-<h3><strong>Problema: Tareas no aparecen en VSCode</strong></h3>
-<ol style="list-style-type: decimal">
-<li>Verificar que <code>.vscode/tasks.json</code> existe</li>
-<li>Recargar VSCode Insiders</li>
-<li>Verificar sintaxis JSON del archivo</li>
-</ol>
-<hr />
-</div>
-</div>
-<div id="estado-del-sistema-optimizado" class="section level2">
-<h2>📊 Estado del Sistema Optimizado</h2>
-<p><strong>Última verificación:</strong> Ejecutar
-<code>./test-gemini-cli.sh</code></p>
-<p><strong>Componentes Base:</strong> - ✅ Go 1.24.6 - ✅ Node.js
-v22.17.1 - ✅ npm 10.9.2 - ✅ Gemini CLI v0.1.21 - ✅ API Key
-configurada</p>
-<p><strong>Optimizaciones Implementadas:</strong> - ✅ Contexto
-optimizado (49% reducción) - ✅ Warning directorio raíz resuelto - ✅
-Comando global <code>gemini-icfes-optimizado</code> - ✅ Configuración
-especializada ICFES - ✅ <code>.geminiignore</code> configurado - ✅
-Scripts de optimización disponibles</p>
-<p><strong>Archivos de Configuración:</strong> - ✅
-<code>rules-gemini.md</code> - Reglas específicas - ✅
-<code>task-list-gemini.md</code> - Plan de tareas - ✅
-<code>GEMINI.md</code> - Contexto principal - ✅
-<code>TUTORIAL_USO_GEMINI.md</code> - Guía completa - ✅ VSCode Tasks
-actualizadas</p>
-<p><strong>MCPs Configurados:</strong> - ✅ <code>Context7</code> -
-Documentación de librerías - ✅ <code>Playwright</code> - Automatización
-web - ✅ <code>Memory</code> - Gestión de memoria persistente - ✅
-<code>Brave Search</code> - Búsqueda web privada - ✅
-<code>Filesystem</code> - Acceso a archivos locales</p>
-<hr />
-</div>
-<div id="mantenimiento-y-actualizaciones" class="section level2">
-<h2>🔄 Mantenimiento y Actualizaciones</h2>
-<div id="actualizar-gemini-cli" class="section level3">
-<h3><strong>Actualizar Gemini CLI:</strong></h3>
-<pre class="bash"><code>npm update -g @google/gemini-cli
-# Después de actualizar, re-configurar
-bash configurar-gemini.sh</code></pre>
-</div>
-<div id="verificar-funcionamiento-completo" class="section level3">
-<h3><strong>Verificar funcionamiento completo:</strong></h3>
-<pre class="bash"><code># Testing básico
-bash test-gemini-cli.sh
-
-# Testing MCPs
+<div id="verificación-de-estado" class="section level3">
+<h3><strong>Verificación de Estado</strong></h3>
+<pre class="bash"><code># Verificar MCPs instalados
 bash test-mcps.sh
 
-# Verificar comando principal
-gemini-icfes-mcps</code></pre>
-</div>
-<div id="re-optimizar-contexto-si-es-necesario" class="section level3">
-<h3><strong>Re-optimizar contexto (si es necesario):</strong></h3>
-<pre class="bash"><code>bash optimizar-contexto-gemini.sh</code></pre>
-</div>
-<div id="backup-de-configuración-completa" class="section level3">
-<h3><strong>Backup de configuración completa:</strong></h3>
-<pre class="bash"><code># Respaldar configuración completa
-tar -czf gemini-backup-$(date +%Y%m%d).tar.gz \
-  ~/.bashrc \
-  ~/.config/gemini/ \
-  .geminiignore \
-  .gemini/ \
-  Auxiliares/Instalaciones/Ais/Gemini_CLI/</code></pre>
+# Listar MCPs configurados en Gemini CLI
+gemini mcp list
+
+# Probar funcionalidad básica
+gemini-icfes</code></pre>
 <hr />
 </div>
 </div>
-<div id="próximos-pasos-recomendados" class="section level2">
-<h2>🎯 Próximos Pasos Recomendados</h2>
-<ol style="list-style-type: decimal">
-<li><strong>Usar comando principal con MCPs</strong>:
-<code>gemini-icfes-mcps</code></li>
-<li><strong>Revisar guía completa de MCPs</strong>:
-<code>MCPs_GUIA_COMPLETA.md</code></li>
-<li><strong>Experimentar con comandos automáticos</strong> de MCPs</li>
-<li><strong>Configurar APIs opcionales</strong> (Context7, Brave
-Search)</li>
-<li><strong>Documentar patrones exitosos</strong> con Memory MCP</li>
-</ol>
+<div id="comandos-de-uso" class="section level2">
+<h2>💻 <strong>Comandos de Uso</strong></h2>
+<div id="comandos-principales" class="section level3">
+<h3><strong>🎯 Comandos Principales</strong></h3>
+<pre class="bash"><code># Modo interactivo completo con todos los MCPs
+gemini-icfes
+
+# Análisis estructurado de problemas
+gemini-thinking &quot;analizar optimización de ejercicios R-exams ICFES&quot;
+
+# Validación de código LaTeX/TikZ
+gemini-validate &quot;validar código del ejercicio actual&quot;
+
+# Testing automático de ejercicios
+gemini-test &quot;testing del ejercicio compilado en HTML&quot;
+
+# Análisis de imágenes para replicación TikZ
+gemini-image &quot;analizar imagen PNG para código TikZ&quot;</code></pre>
+</div>
+<div id="scripts-directos" class="section level3">
+<h3><strong>🔧 Scripts Directos</strong></h3>
+<pre class="bash"><code># Script principal con MCPs
+bash gemini-icfes-mcps.sh
+
+# Cargar aliases (una vez por sesión)
+source gemini-aliases.sh
+
+# Testing completo del sistema
+bash test-mcps.sh
+
+# Configurar variables de entorno
+source mcp-env-setup.sh</code></pre>
 <hr />
-<p><strong>📞 Soporte Completo:</strong> - <strong>Técnico:</strong>
-<code>gemini-cli-setup.md</code> - <strong>Usuario:</strong>
-<code>TUTORIAL_USO_GEMINI.md</code> - <strong>MCPs:</strong>
-<code>MCPs_GUIA_COMPLETA.md</code> - <strong>Comandos MCP:</strong>
-<code>mcp-commands.md</code> - <strong>Problemas:</strong>
-<code>SOLUCION_WARNING_ROOT.md</code> - <strong>Configuración:</strong>
-<code>CONFIGURACION_COMPLETADA.md</code> +
-<code>MCPs_INSTALACION_COMPLETADA.md</code></p>
+</div>
+</div>
+<div id="archivos-del-directorio" class="section level2">
+<h2>📁 <strong>Archivos del Directorio</strong></h2>
+<div id="scripts-principales" class="section level3">
+<h3><strong>📄 Scripts Principales</strong></h3>
+<ul>
+<li><strong><code>install-mcps.sh</code></strong> - Instalación
+automatizada de todos los MCPs</li>
+<li><strong><code>configure-gemini-mcps.sh</code></strong> -
+Configuración de integración con Gemini CLI</li>
+<li><strong><code>test-mcps.sh</code></strong> - Testing y verificación
+de funcionalidad</li>
+<li><strong><code>gemini-icfes-mcps.sh</code></strong> - Script
+optimizado para usar MCPs</li>
+<li><strong><code>gemini-aliases.sh</code></strong> - Aliases para
+comandos rápidos</li>
+</ul>
+</div>
+<div id="configuración" class="section level3">
+<h3><strong>⚙️ Configuración</strong></h3>
+<ul>
+<li><strong><code>.mcp-config.json</code></strong> - Configuración base
+de MCPs (en raíz del proyecto)</li>
+<li><strong><code>.gemini-mcp-config.json</code></strong> -
+Configuración específica para Gemini CLI</li>
+<li><strong><code>vscode-mcp-tasks.json</code></strong> - Tareas
+integradas para VSCode Insiders</li>
+<li><strong><code>mcp-env-setup.sh</code></strong> - Configuración de
+variables de entorno</li>
+</ul>
+</div>
+<div id="documentación" class="section level3">
+<h3><strong>📚 Documentación</strong></h3>
+<ul>
+<li><strong><code>README.md</code></strong> - Este archivo (guía
+principal)</li>
+<li><strong><code>MCPs_GUIA_COMPLETA.md</code></strong> - Guía detallada
+de uso de MCPs</li>
+<li><strong><code>manual-usuario-gemini-cli-r-exams-icfes.md</code></strong>
+- Manual completo de usuario</li>
+<li><strong><code>gemini-cli-r-exams.md</code></strong> - Tutorial
+técnico de instalación</li>
+<li><strong><code>MCPs_INSTALACION_COMPLETADA_ADICIONALES.md</code></strong>
+- Registro de instalación</li>
+</ul>
+</div>
+<div id="archivos-de-estado" class="section level3">
+<h3><strong>🗂️ Archivos de Estado</strong></h3>
+<ul>
+<li><strong><code>LIMPIEZA_ARCHIVOS_OBSOLETOS_20250824.md</code></strong>
+- Registro de limpieza</li>
+<li><strong><code>backup-20250824-173253/</code></strong> - Backup de
+configuración anterior</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="workflows-integrados" class="section level2">
+<h2>🔄 <strong>Workflows Integrados</strong></h2>
+<div id="workflow-1-desarrollo-completo-de-ejercicio" class="section level3">
+<h3><strong>Workflow 1: Desarrollo Completo de Ejercicio</strong></h3>
+<pre class="bash"><code># 1. Análisis estructurado del problema
+gemini-thinking &quot;analizar ejercicio de geometría ICFES nivel 3&quot;
+
+# 2. Desarrollo con acceso a archivos y documentación
+gemini-icfes
+# En sesión interactiva: &quot;leer ejemplos similares y desarrollar ejercicio&quot;
+
+# 3. Validación de código generado
+gemini-validate &quot;validar código LaTeX y TikZ del ejercicio&quot;
+
+# 4. Testing del resultado
+gemini-test &quot;compilar y testing visual del ejercicio&quot;</code></pre>
+</div>
+<div id="workflow-2-replicación-tikz-desde-imagen" class="section level3">
+<h3><strong>Workflow 2: Replicación TikZ desde Imagen</strong></h3>
+<pre class="bash"><code># 1. Análisis de imagen matemática
+gemini-image &quot;analizar imagen PNG para identificar elementos&quot;
+
+# 2. Estrategia de replicación
+gemini-thinking &quot;estrategia para replicar imagen con TikZ fidelidad 98%&quot;
+
+# 3. Validación del código TikZ
+gemini-validate &quot;validar sintaxis del código TikZ generado&quot;
+
+# 4. Comparación visual
+gemini-test &quot;captura de pantalla para comparar con original&quot;</code></pre>
+</div>
+<div id="workflow-3-optimización-de-ejercicio-existente" class="section level3">
+<h3><strong>Workflow 3: Optimización de Ejercicio
+Existente</strong></h3>
+<pre class="bash"><code># 1. Análisis del ejercicio actual
+gemini-thinking &quot;analizar problemas en ejercicio existente&quot;
+
+# 2. Validación de código actual
+gemini-validate &quot;identificar errores en código LaTeX&quot;
+
+# 3. Testing del estado actual
+gemini-test &quot;verificar compilación y funcionamiento&quot;
+
+# 4. Desarrollo de mejoras
+gemini-icfes
+# En sesión: &quot;aplicar mejoras identificadas&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="integración-vscode-insiders" class="section level2">
+<h2>💻 <strong>Integración VSCode Insiders</strong></h2>
+<div id="tareas-disponibles" class="section level3">
+<h3><strong>🔧 Tareas Disponibles</strong></h3>
+<p>Presiona <code>Ctrl+Shift+P</code> → <code>Tasks: Run Task</code> →
+Seleccionar:</p>
+<ul>
+<li><strong>Gemini: Análisis Estructurado</strong> - Ejecuta thinking
+MCP</li>
+<li><strong>Gemini: Validar LaTeX/TikZ</strong> - Ejecuta validación de
+código</li>
+<li><strong>Gemini: Testing Automático</strong> - Ejecuta testing de
+ejercicios</li>
+<li><strong>Gemini: Analizar Imagen</strong> - Ejecuta análisis de
+imágenes</li>
+</ul>
+</div>
+<div id="configuración-automática" class="section level3">
+<h3><strong>⚙️ Configuración Automática</strong></h3>
+<pre class="bash"><code># Las tareas se configuran automáticamente al ejecutar:
+bash configure-gemini-mcps.sh</code></pre>
+</div>
+<div id="extensiones-recomendadas" class="section level3">
+<h3><strong>🔗 Extensiones Recomendadas</strong></h3>
+<ul>
+<li><strong>Gemini CLI Companion</strong> - Integración directa con
+Gemini CLI</li>
+<li><strong>LaTeX Workshop</strong> - Soporte para archivos
+LaTeX/TikZ</li>
+<li><strong>R Extension</strong> - Soporte para archivos R y
+R-exams</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="troubleshooting" class="section level2">
+<h2>🔧 <strong>Troubleshooting</strong></h2>
+<div id="problemas-comunes" class="section level3">
+<h3><strong>❌ Problemas Comunes</strong></h3>
+<div id="mcps-no-se-conectan" class="section level4">
+<h4><strong>MCPs no se conectan</strong></h4>
+<pre class="bash"><code># Verificar configuración
+gemini mcp list
+
+# Reconfigurar si es necesario
+bash configure-gemini-mcps.sh
+
+# Verificar permisos
+chmod +x *.sh</code></pre>
+</div>
+<div id="comandos-alias-no-funcionan" class="section level4">
+<h4><strong>Comandos alias no funcionan</strong></h4>
+<pre class="bash"><code># Cargar aliases nuevamente
+source gemini-aliases.sh
+
+# Verificar que el archivo existe
+ls -la gemini-aliases.sh
+
+# Ejecutar directamente si es necesario
+bash gemini-icfes-mcps.sh</code></pre>
+</div>
+<div id="errores-de-node.js" class="section level4">
+<h4><strong>Errores de Node.js</strong></h4>
+<pre class="bash"><code># Verificar versión de Node.js
+node --version  # Debe ser &gt;= 18
+
+# Reinstalar dependencias si es necesario
+cd ../../.mcps/thinking-mcp &amp;&amp; npm install</code></pre>
+</div>
+<div id="variables-de-entorno" class="section level4">
+<h4><strong>Variables de entorno</strong></h4>
+<pre class="bash"><code># Configurar variables básicas
+export GEMINI_API_KEY=&quot;tu_api_key&quot;
+
+# Cargar configuración completa
+source mcp-env-setup.sh
+
+# Verificar variables
+echo $GEMINI_API_KEY</code></pre>
+</div>
+</div>
+<div id="diagnóstico-completo" class="section level3">
+<h3><strong>🔍 Diagnóstico Completo</strong></h3>
+<pre class="bash"><code># Ejecutar testing completo
+bash test-mcps.sh
+
+# Verificar logs de Gemini CLI
+gemini --debug
+
+# Verificar estructura de archivos
+ls -la ../../../.mcps/</code></pre>
+<hr />
+</div>
+</div>
+<div id="referencias" class="section level2">
+<h2>📚 <strong>Referencias</strong></h2>
+<div id="documentación-técnica" class="section level3">
+<h3><strong>📖 Documentación Técnica</strong></h3>
+<ul>
+<li><strong><a href="manual-usuario-gemini-cli-r-exams-icfes.md">Manual
+de Usuario</a></strong> - Guía completa (15-20 min)</li>
+<li><strong><a href="gemini-cli-r-exams.md">Tutorial
+Técnico</a></strong> - Instalación y configuración detallada</li>
+<li><strong><a href="MCPs_GUIA_COMPLETA.md">Guía de MCPs</a></strong> -
+Uso avanzado de MCPs</li>
+</ul>
+</div>
+<div id="enlaces-externos" class="section level3">
+<h3><strong>🔗 Enlaces Externos</strong></h3>
+<ul>
+<li><strong><a href="https://github.com/google-gemini/gemini-cli">Gemini
+CLI GitHub</a></strong> - Repositorio oficial</li>
+<li><strong><a href="https://modelcontextprotocol.io/">Model Context
+Protocol</a></strong> - Especificación MCP</li>
+<li><strong><a href="https://www.r-exams.org/">R-exams</a></strong> -
+Documentación R-exams</li>
+</ul>
+</div>
+<div id="contexto-del-proyecto" class="section level3">
+<h3><strong>🎯 Contexto del Proyecto</strong></h3>
+<ul>
+<li><strong><a href="../../../../GEMINI.md">GEMINI.md</a></strong> -
+Contexto completo del proyecto</li>
+<li><strong><a href="../../../../README.md">README.md</a></strong> -
+Información general del proyecto</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="información-del-directorio" class="section level2">
+<h2>📊 <strong>Información del Directorio</strong></h2>
+<ul>
+<li><strong>Ubicación</strong>:
+<code>Auxiliares/Instalaciones/Ais/Gemini_CLI/</code></li>
+<li><strong>Propósito</strong>: Configuración de Gemini CLI con MCPs
+para desarrollo R-exams ICFES</li>
+<li><strong>Estado</strong>: ✅ Completamente funcional y
+actualizado</li>
+<li><strong>Última actualización</strong>: Agosto 2025</li>
+<li><strong>Versión Gemini CLI</strong>: 0.2.0-preview.2</li>
+<li><strong>MCPs instalados</strong>: 9 (4 nuevos + 5 existentes)</li>
+</ul>
+<p><strong>🎯 Objetivo</strong>: Proporcionar herramientas de IA
+avanzada para desarrollo eficiente de ejercicios matemáticos ICFES con
+máxima calidad y workflows automatizados.</p>
+<hr />
+<p><em>Para soporte técnico, revisar la sección Troubleshooting o
+consultar la documentación técnica en los archivos de
+referencia.</em></p>
 </div>
 </div>
 
