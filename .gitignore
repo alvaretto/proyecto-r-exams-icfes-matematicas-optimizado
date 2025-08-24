@@ -39,3 +39,195 @@ config_personal.txt
 **/test_*.html
 **/version_*.html
 **/*_temp.*
+
+# =============================================================================
+# CONFIGURACIÓN DE IMÁGENES PARA GEMINI CLI Y ANÁLISIS MATEMÁTICO
+# =============================================================================
+
+# INCLUIR EXPLÍCITAMENTE: Todos los archivos de imagen para análisis IA
+# Estas imágenes son esenciales para:
+# - Análisis con Gemini CLI
+# - Generación de código TikZ con fidelidad 98%
+# - Desarrollo de ejercicios R-exams
+# - Documentación matemática
+
+# Incluir todos los formatos de imagen comunes
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.svg
+!*.bmp
+!*.tiff
+!*.tif
+!*.webp
+!*.ico
+
+# Incluir imágenes en subdirectorios (recursivo)
+!**/*.png
+!**/*.jpg
+!**/*.jpeg
+!**/*.gif
+!**/*.svg
+!**/*.bmp
+!**/*.tiff
+!**/*.tif
+!**/*.webp
+!**/*.ico
+
+# EXCLUIR: Imágenes en directorios temporales y de salida
+# Estos directorios contienen archivos generados que no deben versionarse
+
+# Directorios de salida de R-exams
+**/salida/*.png
+**/salida/*.jpg
+**/salida/*.jpeg
+**/salida/*.gif
+**/salida/*.svg
+**/salida/*.bmp
+**/salida/*.tiff
+**/salida/*.tif
+**/salida/*.webp
+
+# Directorios de output/build
+**/output/*.png
+**/output/*.jpg
+**/output/*.jpeg
+**/output/*.gif
+**/output/*.svg
+**/output/*.bmp
+**/output/*.tiff
+**/output/*.tif
+**/output/*.webp
+
+**/build/*.png
+**/build/*.jpg
+**/build/*.jpeg
+**/build/*.gif
+**/build/*.svg
+**/build/*.bmp
+**/build/*.tiff
+**/build/*.tif
+**/build/*.webp
+
+# Directorios temporales
+**/temp/*.png
+**/temp/*.jpg
+**/temp/*.jpeg
+**/temp/*.gif
+**/temp/*.svg
+**/temp/*.bmp
+**/temp/*.tiff
+**/temp/*.tif
+**/temp/*.webp
+
+**/tmp/*.png
+**/tmp/*.jpg
+**/tmp/*.jpeg
+**/tmp/*.gif
+**/tmp/*.svg
+**/tmp/*.bmp
+**/tmp/*.tiff
+**/tmp/*.tif
+**/tmp/*.webp
+
+# Directorios de cache
+**/.cache/*.png
+**/.cache/*.jpg
+**/.cache/*.jpeg
+**/.cache/*.gif
+**/.cache/*.svg
+**/.cache/*.bmp
+**/.cache/*.tiff
+**/.cache/*.tif
+**/.cache/*.webp
+
+# Laboratorio del Agente TikZ (archivos temporales)
+**/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/temp/*.png
+**/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/temp/*.jpg
+**/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/temp/*.jpeg
+**/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/output/*.png
+**/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/output/*.jpg
+**/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/output/*.jpeg
+
+# INCLUIR EXPLÍCITAMENTE: Directorios importantes para análisis IA
+# Estos directorios contienen imágenes esenciales para el proyecto
+
+# Ejemplos funcionales (imágenes de referencia)
+!**/Auxiliares/Ejemplos-Funcionales-Rmd/**/*.png
+!**/Auxiliares/Ejemplos-Funcionales-Rmd/**/*.jpg
+!**/Auxiliares/Ejemplos-Funcionales-Rmd/**/*.jpeg
+!**/Auxiliares/Ejemplos-Funcionales-Rmd/**/*.svg
+
+# Documentación TikZ (ejemplos visuales)
+!**/Auxiliares/TikZ-Documentation/**/*.png
+!**/Auxiliares/TikZ-Documentation/**/*.jpg
+!**/Auxiliares/TikZ-Documentation/**/*.jpeg
+!**/Auxiliares/TikZ-Documentation/**/*.svg
+
+# Estrategia avanzada de réplicas (imágenes de referencia)
+!**/Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/**/*.png
+!**/Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/**/*.jpg
+!**/Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/**/*.jpeg
+!**/Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/**/*.svg
+
+# Agente Graficador TikZ (imágenes de entrada y referencia)
+!**/Auxiliares/Agente-Graficador-TikZ/**/*.png
+!**/Auxiliares/Agente-Graficador-TikZ/**/*.jpg
+!**/Auxiliares/Agente-Graficador-TikZ/**/*.jpeg
+!**/Auxiliares/Agente-Graficador-TikZ/**/*.svg
+# Pero excluir directorios temporales (ya definidos arriba)
+
+# Ejercicios y templates (imágenes matemáticas)
+!**/Ejercicios/**/*.png
+!**/Ejercicios/**/*.jpg
+!**/Ejercicios/**/*.jpeg
+!**/Ejercicios/**/*.svg
+
+!**/Templates/**/*.png
+!**/Templates/**/*.jpg
+!**/Templates/**/*.jpeg
+!**/Templates/**/*.svg
+
+# Laboratorio y desarrollo
+!**/Lab/**/*.png
+!**/Lab/**/*.jpg
+!**/Lab/**/*.jpeg
+!**/Lab/**/*.svg
+
+# CONTROL DE TAMAÑO: Excluir imágenes muy grandes (>10MB)
+# Nota: Git LFS sería recomendable para imágenes muy grandes
+# Por ahora, excluimos archivos que podrían ser problemáticos
+
+# Archivos de imagen con sufijos que indican gran tamaño
+**/*_large.*
+**/*_huge.*
+**/*_big.*
+**/*_hires.*
+**/*_4k.*
+**/*_8k.*
+
+# =============================================================================
+# NOTAS IMPORTANTES PARA GEMINI CLI
+# =============================================================================
+#
+# 1. Las imágenes incluidas pueden ser analizadas por Gemini CLI para:
+#    - Generación de código TikZ con fidelidad 98%
+#    - Análisis de gráficos matemáticos
+#    - Creación de ejercicios R-exams
+#    - Documentación visual
+#
+# 2. Directorios importantes para IA:
+#    - Auxiliares/Ejemplos-Funcionales-Rmd/
+#    - Auxiliares/TikZ-Documentation/
+#    - Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/
+#    - Auxiliares/Agente-Graficador-TikZ/
+#
+# 3. Para imágenes muy grandes (>10MB), considerar Git LFS:
+#    git lfs track "*.png"
+#    git lfs track "*.jpg"
+#
+# 4. Monitorear el tamaño del repositorio regularmente:
+#    git count-objects -vH
+#
+# =============================================================================

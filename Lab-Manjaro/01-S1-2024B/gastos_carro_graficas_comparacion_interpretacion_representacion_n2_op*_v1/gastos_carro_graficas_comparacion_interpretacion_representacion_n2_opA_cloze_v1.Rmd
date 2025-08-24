@@ -79,7 +79,18 @@ redondear_matematico <- function(x, digits = 0) {
 }
 
 # Establecer semilla aleatoria para diversidad
-set.seed(as.numeric(Sys.time()) + sample(1:10000, 1))
+# Usar múltiples fuentes de aleatoriedad para garantizar variación
+# Incluir un componente adicional basado en hash del tiempo actual
+tiempo_actual <- Sys.time()
+semilla_base <- as.numeric(tiempo_actual)
+semilla_micro <- as.numeric(format(tiempo_actual, "%OS6")) * 1000000
+semilla_proceso <- Sys.getpid()
+semilla_hash <- sum(utf8ToInt(as.character(tiempo_actual)))
+semilla_final <- (semilla_base + semilla_micro + semilla_proceso + semilla_hash + runif(1, 1, 10000)) %% .Machine$integer.max
+set.seed(semilla_final)
+
+# Forzar una nueva aleatorización adicional
+invisible(sample(1:1000, 1))
 
 # Aleatorización de contexto de gastos de vehículo
 contextos_gastos <- list(
@@ -295,8 +306,8 @@ semana2 = [", paste(c(gastos_semanas[[2]]$gasolina, gastos_semanas[[2]]$parquead
 semana3 = [", paste(c(gastos_semanas[[3]]$gasolina, gastos_semanas[[3]]$parqueadero, gastos_semanas[[3]]$peajes), collapse=", "), "]
 semana4 = [", paste(c(gastos_semanas[[4]]$gasolina, gastos_semanas[[4]]$parqueadero, gastos_semanas[[4]]$peajes), collapse=", "), "]
 
-# Crear figura para la tabla
-fig, ax = plt.subplots(figsize=(12, 5))
+# Crear figura para la tabla (tamaño optimizado para Moodle)
+fig, ax = plt.subplots(figsize=(10, 4))
 ax.axis('tight')
 ax.axis('off')
 
@@ -369,61 +380,68 @@ colores_semanas = ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12']
 # Mapeo de tipos a letras aleatorizadas desde R
 # No necesitamos mapeo complejo, solo generamos archivos con nombres fijos
 
-# GRÁFICA 1: Circular por categoría
-plt.figure(figsize=(7, 7))
+# GRÁFICA 1: Circular por categoría (optimizada para Moodle Windows)
+plt.figure(figsize=(5, 5))
 plt.pie(totales_categoria, labels=categorias, autopct='%1.1f%%',
-        colors=colores_categorias, startangle=90)
-plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
+        colors=colores_categorias, startangle=90, textprops={'fontsize': 10, 'fontweight': 'bold'})
+plt.title('", titulo_gastos, "', fontsize=12, fontweight='bold', pad=10)
 plt.axis('equal')
-plt.savefig('grafica_circular_categoria.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig('grafica_circular_categoria.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.tight_layout()
+plt.savefig('grafica_circular_categoria.png', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
+plt.savefig('grafica_circular_categoria.pdf', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
 plt.close()
 
-# GRÁFICA 2: Barras apiladas por semana
-plt.figure(figsize=(9, 7))
+# GRÁFICA 2: Barras apiladas por semana (optimizada para Moodle Windows)
+plt.figure(figsize=(7, 5))
 bottom = np.zeros(4)
 for i, categoria in enumerate(categorias):
     plt.bar(semanas, gastos_por_categoria[categoria], bottom=bottom,
-            label=categoria, color=colores_categorias[i])
+            label=categoria, color=colores_categorias[i], edgecolor='white', linewidth=1)
     bottom += gastos_por_categoria[categoria]
 
-plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
-plt.legend(fontsize=11)
-plt.xticks(rotation=45)
-plt.grid(True, axis='y', alpha=0.3)
+plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=10)
+plt.xlabel('Semanas', fontweight='bold', fontsize=10)
+plt.title('", titulo_gastos, "', fontsize=12, fontweight='bold', pad=10)
+plt.legend(fontsize=9, loc='upper right')
+plt.xticks(fontsize=9)
+plt.yticks(fontsize=9)
+plt.grid(True, axis='y', alpha=0.3, linestyle='--')
 plt.tight_layout()
-plt.savefig('grafica_barras_apiladas.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig('grafica_barras_apiladas.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_barras_apiladas.png', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
+plt.savefig('grafica_barras_apiladas.pdf', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
 plt.close()
 
-# GRÁFICA 3: Circular por semana
-plt.figure(figsize=(7, 7))
+# GRÁFICA 3: Circular por semana (optimizada para Moodle Windows)
+plt.figure(figsize=(5, 5))
 plt.pie(totales_semana, labels=semanas, autopct='%1.1f%%',
-        colors=colores_semanas, startangle=90)
-plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
+        colors=colores_semanas, startangle=90, textprops={'fontsize': 10, 'fontweight': 'bold'})
+plt.title('", titulo_gastos, "', fontsize=12, fontweight='bold', pad=10)
 plt.axis('equal')
-plt.savefig('grafica_circular_semana.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig('grafica_circular_semana.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.tight_layout()
+plt.savefig('grafica_circular_semana.png', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
+plt.savefig('grafica_circular_semana.pdf', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
 plt.close()
 
-# GRÁFICA 4: Barras agrupadas por categoría
-plt.figure(figsize=(9, 7))
+# GRÁFICA 4: Barras agrupadas por categoría (optimizada para Moodle Windows)
+plt.figure(figsize=(7, 5))
 x = np.arange(len(categorias))
 width = 0.2
 
 for i, semana in enumerate(semanas):
     valores = [gastos_por_categoria[cat][i] for cat in categorias]
-    plt.bar(x + i*width, valores, width, label=semana, color=colores_semanas[i])
+    plt.bar(x + i*width, valores, width, label=semana, color=colores_semanas[i],
+            edgecolor='white', linewidth=1)
 
-plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=12)
-plt.title('", titulo_gastos, "', fontsize=14, fontweight='bold')
-plt.xticks(x + width*1.5, categorias)
-plt.legend(fontsize=11)
-plt.grid(True, axis='y', alpha=0.3)
+plt.ylabel('Gastos (pesos)', fontweight='bold', fontsize=10)
+plt.xlabel('Categorías', fontweight='bold', fontsize=10)
+plt.title('", titulo_gastos, "', fontsize=12, fontweight='bold', pad=10)
+plt.xticks(x + width*1.5, categorias, fontsize=9)
+plt.yticks(fontsize=9)
+plt.legend(fontsize=9, loc='upper right')
+plt.grid(True, axis='y', alpha=0.3, linestyle='--')
 plt.tight_layout()
-plt.savefig('grafica_barras_agrupadas.png', dpi=200, bbox_inches='tight', transparent=False)
-plt.savefig('grafica_barras_agrupadas.pdf', dpi=200, bbox_inches='tight', transparent=False)
+plt.savefig('grafica_barras_agrupadas.png', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
+plt.savefig('grafica_barras_agrupadas.pdf', dpi=150, bbox_inches='tight', transparent=False, facecolor='white')
 plt.close()
 
 print('Gráficas generadas exitosamente')
@@ -440,8 +458,9 @@ Question
 
 ```{r mostrar_tabla, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la tabla generada con Python
+# Tamaño optimizado para Windows 10 en Moodle
 if (es_moodle) {
-  cat("![](tabla_gastos.png){width=85%}")
+  cat("![](tabla_gastos.png){width=300px max-width=100%}")
 } else {
   cat("![](tabla_gastos.png){width=95%}")
 }
@@ -471,7 +490,8 @@ for(i in 1:4) {
   archivo <- paste0(archivo_base, ".png")
 
   if (es_moodle) {
-    cat(paste0("![](", archivo, "){width=60%}\n\n"))
+    # Tamaño optimizado para Windows 10 en Moodle
+    cat(paste0("![](", archivo, "){width=250px max-width=100%}\n\n"))
   } else {
     cat(paste0("![](", archivo, "){width=65%}\n\n"))
   }
@@ -518,11 +538,11 @@ Complete el cálculo del porcentaje:
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100% = ##ANSWER5##%
 
 ### Paso 6: Confirmación del tipo de gráfica (CON PUNTUACIÓN)
-Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué categoría de gasto representa el mayor porcentaje del gasto total mensual**:
+Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite visualizar directamente las proporciones porcentuales de cada categoría de gasto respecto al total mensual**:
 
 ##ANSWER6##
 
-**Conclusión:** La categoría con mayor gasto representó el ##ANSWER5##% del gasto total mensual.
+**Conclusión:** La categoría con `r texto_pregunta` gasto representó el ##ANSWER5##% del gasto total mensual.
 
 Answerlist
 ----------
@@ -607,18 +627,18 @@ for(i in 1:4) {
 
 **Análisis de la respuesta correcta:**
 
-"`r respuesta_correcta_schoice`"
+"`r respuesta_correcta_schoice`: Gráfica circular por categoría"
 
-- Esta opción permite visualizar directamente qué categoría representa el mayor porcentaje del total mensual
-- Muestra claramente las proporciones de cada categoría de gasto respecto al total
-- Facilita la identificación inmediata de la categoría con mayor participación porcentual
-- Es el tipo de gráfica más adecuado para comparar partes de un todo
+- **ÚNICA opción que muestra proporciones porcentuales directamente**: Los porcentajes aparecen automáticamente en cada sector del círculo
+- **Visualización inmediata de partes del todo**: Cada categoría se representa como una porción del círculo completo (100%)
+- **Comparación visual intuitiva**: El tamaño de cada sector es proporcional al porcentaje que representa
+- **Respuesta directa a la pregunta**: Es la única que permite "visualizar directamente las proporciones porcentuales"
 
 **Análisis de distractores:**
 
-- **Gráfica circular por semana**: Muestra proporciones de semanas, no de categorías
-- **Gráfica de barras apiladas por semana**: Muestra composición por semana pero no facilita comparación de categorías
-- **Gráfica de barras agrupadas por categoría**: Permite comparar categorías pero no muestra proporciones del total
+- **Gráfica circular por semana**: Muestra proporciones de semanas, NO de categorías de gasto
+- **Gráfica de barras apiladas por semana**: Muestra composición por semana pero NO proporciones porcentuales del total
+- **Gráfica de barras agrupadas por categoría**: Permite comparar valores absolutos entre categorías pero NO muestra proporciones porcentuales respecto al total
 
 ### Verificación del proceso de razonamiento completo
 
@@ -645,7 +665,7 @@ for(i in 1:4) {
 
 ### Conclusión
 
-La categoría con mayor gasto representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
+La categoría con `r texto_pregunta` gasto representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
 
 Esta respuesta es coherente porque:
 

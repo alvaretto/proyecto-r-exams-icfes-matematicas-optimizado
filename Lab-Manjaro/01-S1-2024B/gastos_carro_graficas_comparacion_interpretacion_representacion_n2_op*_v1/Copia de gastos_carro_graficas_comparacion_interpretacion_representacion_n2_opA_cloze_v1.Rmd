@@ -518,11 +518,11 @@ Complete el cálculo del porcentaje:
 Porcentaje = ( ##ANSWER3## ÷ ##ANSWER4## ) × 100% = ##ANSWER5##%
 
 ### Paso 6: Confirmación del tipo de gráfica (CON PUNTUACIÓN)
-Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué categoría de gasto representa el mayor porcentaje del gasto total mensual**:
+Basándose en su análisis anterior, **seleccione qué tipo de gráfica permite identificar más fácilmente qué categoría de gasto representa el `r texto_analisis` del gasto total mensual**:
 
 ##ANSWER6##
 
-**Conclusión:** La categoría con mayor gasto representó el ##ANSWER5##% del gasto total mensual.
+**Conclusión:** La categoría con `r texto_pregunta` gasto representó el ##ANSWER5##% del gasto total mensual.
 
 Answerlist
 ----------
@@ -609,9 +609,9 @@ for(i in 1:4) {
 
 "`r respuesta_correcta_schoice`"
 
-- Esta opción permite visualizar directamente qué categoría representa el mayor porcentaje del total mensual
+- Esta opción permite visualizar directamente qué categoría representa el `r texto_analisis` del total mensual
 - Muestra claramente las proporciones de cada categoría de gasto respecto al total
-- Facilita la identificación inmediata de la categoría con mayor participación porcentual
+- Facilita la identificación inmediata de la categoría con `r texto_pregunta` participación porcentual
 - Es el tipo de gráfica más adecuado para comparar partes de un todo
 
 **Análisis de distractores:**
@@ -645,7 +645,7 @@ for(i in 1:4) {
 
 ### Conclusión
 
-La categoría con mayor gasto representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
+La categoría con `r texto_pregunta` gasto representó el **`r formato_estandar(porcentaje_objetivo, 1)`%** del gasto total mensual de `r nombre_propietario` en su `r vehiculo`.
 
 Esta respuesta es coherente porque:
 
