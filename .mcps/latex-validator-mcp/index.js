@@ -16,7 +16,7 @@ const server = new Server(
   }
 );
 
-server.setRequestHandler("tools/list", async () => {
+server.setRequestHandler({ method: "tools/list" }, async () => {
   return {
     tools: [
       {
@@ -47,7 +47,7 @@ server.setRequestHandler("tools/list", async () => {
   };
 });
 
-server.setRequestHandler("tools/call", async (request) => {
+server.setRequestHandler({ method: "tools/call" }, async (request) => {
   if (request.params.name === "validate_latex") {
     const { latex_code, type = "latex" } = request.params.arguments;
 

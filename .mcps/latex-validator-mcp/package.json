@@ -1,15 +1,18 @@
 {
   "name": "latex-validator-mcp",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "main": "index-fixed.js",
   "scripts": {
+    "start": "node index-fixed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["latex", "tikz", "mcp", "r-exams"],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "MCP server for LaTeX/TikZ validation and compilation",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.4"
+    "@modelcontextprotocol/sdk": "^1.17.4",
+    "zod": "^3.22.4"
   }
 }
