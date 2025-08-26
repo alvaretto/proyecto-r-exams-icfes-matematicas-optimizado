@@ -4,32 +4,34 @@
       "command": ".mcp-config.json",
       "args": []
     },
-    "thinking": {
-      "command": "",
+    "context7-test": {
+      "command": "node",
       "args": [
-        "node",
+        ".mcps/context7-mcp/dist/index.js"
+      ]
+    },
+    "latex-validator-fixed": {
+      "command": "node",
+      "args": [
+        ".mcps/latex-validator-mcp/index-fixed.js"
+      ]
+    },
+    "image-analysis-fixed": {
+      "command": "node",
+      "args": [
+        ".mcps/image-analysis-mcp/index-fixed.js"
+      ]
+    },
+    "thinking-fixed": {
+      "command": "node",
+      "args": [
         ".mcps/thinking-mcp/index.js"
       ]
     },
-    "playwright-fixed": {
-      "command": "",
+    "playwright-test": {
+      "command": "node",
       "args": [
-        "node",
         ".mcps/playwright-mcp-fixed/index.js"
-      ]
-    },
-    "latex-validator": {
-      "command": "",
-      "args": [
-        "node",
-        ".mcps/latex-validator-mcp/index.js"
-      ]
-    },
-    "image-analysis": {
-      "command": "",
-      "args": [
-        "node",
-        ".mcps/image-analysis-mcp/index.js"
       ]
     }
   }

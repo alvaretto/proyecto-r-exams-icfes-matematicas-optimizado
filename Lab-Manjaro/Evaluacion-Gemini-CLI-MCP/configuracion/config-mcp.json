@@ -1,0 +1,148 @@
+{
+  "name": "Gemini-CLI MCP Configuration for R-exams Analysis",
+  "version": "1.0.0",
+  "description": "Configuración MCP optimizada para análisis de archivos .Rmd con R-exams, Python chunks y código TikZ",
+  
+  "servers": {
+    "r-analysis": {
+      "command": "mcp-server-r",
+      "args": ["--workspace", "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams"],
+      "env": {
+        "R_HOME": "/usr/lib/R",
+        "R_LIBS_USER": "~/R/x86_64-pc-linux-gnu-library/4.3"
+      }
+    },
+    
+    "python-analysis": {
+      "command": "mcp-server-python",
+      "args": ["--enable-matplotlib", "--enable-numpy"],
+      "env": {
+        "PYTHONPATH": "/usr/lib/python3.11/site-packages"
+      }
+    },
+    
+    "latex-tikz": {
+      "command": "mcp-server-latex",
+      "args": ["--tikz-support", "--r-exams-mode"],
+      "env": {
+        "TEXMFHOME": "~/texmf"
+      }
+    },
+    
+    "file-system": {
+      "command": "mcp-server-filesystem",
+      "args": ["--read-write", "--workspace", "./Lab-Manjaro/Evaluacion-Gemini-CLI-MCP"]
+    }
+  },
+  
+  "tools": {
+    "r-exams-analyzer": {
+      "description": "Analiza archivos .Rmd con formato R-exams",
+      "parameters": {
+        "file_path": "string",
+        "analysis_type": ["syntax", "metadata", "chunks", "full"],
+        "output_format": ["json", "markdown", "text"]
+      }
+    },
+    
+    "python-chunk-optimizer": {
+      "description": "Optimiza chunks de Python con matplotlib/numpy",
+      "parameters": {
+        "chunk_content": "string",
+        "optimization_level": ["basic", "advanced", "performance"],
+        "reticulate_mode": "boolean"
+      }
+    },
+    
+    "tikz-generator": {
+      "description": "Genera código TikZ para gráficas matemáticas",
+      "parameters": {
+        "graph_type": ["table", "plot", "diagram", "chart"],
+        "data_source": "string",
+        "style": ["minimal", "professional", "academic"],
+        "r_exams_compatible": "boolean"
+      }
+    },
+    
+    "latex-validator": {
+      "description": "Valida y corrige sintaxis LaTeX/R Markdown",
+      "parameters": {
+        "content": "string",
+        "validation_level": ["syntax", "style", "compatibility"],
+        "target_format": ["pdf", "html", "moodle"]
+      }
+    }
+  },
+  
+  "prompts": {
+    "analyze-r-exams": {
+      "description": "Analizar archivo R-exams completo",
+      "template": "Analiza el siguiente archivo .Rmd de R-exams:\n\n{file_content}\n\nProporciona:\n1. Análisis de metadatos ICFES\n2. Revisión de chunks R/Python\n3. Validación de sintaxis LaTeX\n4. Sugerencias de mejora\n5. Detección de errores comunes"
+    },
+    
+    "optimize-python-chunk": {
+      "description": "Optimizar chunk de Python",
+      "template": "Optimiza el siguiente chunk de Python para uso con reticulate en R-exams:\n\n```python\n{chunk_content}\n```\n\nConsideraciones:\n- Compatibilidad con reticulate\n- Eficiencia de matplotlib\n- Manejo de errores\n- Generación de archivos PNG/PDF"
+    },
+    
+    "generate-tikz": {
+      "description": "Generar código TikZ",
+      "template": "Genera código TikZ para crear {graph_type} basado en:\n\nDatos: {data_description}\nEstilo: {style}\nCompatibilidad R-exams: {r_exams_mode}\n\nRequiere:\n- Sintaxis TikZ válida\n- Compatibilidad con pdflatex\n- Estilo profesional\n- Optimización para R-exams"
+    },
+    
+    "validate-latex": {
+      "description": "Validar LaTeX/R Markdown",
+      "template": "Valida y corrige el siguiente contenido LaTeX/R Markdown:\n\n{content}\n\nVerifica:\n- Sintaxis LaTeX correcta\n- Compatibilidad con R-exams\n- Caracteres especiales escapados\n- Formato de metadatos ICFES\n- Estructura de chunks"
+    }
+  },
+  
+  "settings": {
+    "max_tokens": 8192,
+    "temperature": 0.1,
+    "top_p": 0.9,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    
+    "r_exams_mode": {
+      "validate_metadata": true,
+      "check_icfes_format": true,
+      "verify_chunks": true,
+      "latex_compatibility": true
+    },
+    
+    "output_preferences": {
+      "code_highlighting": true,
+      "detailed_explanations": true,
+      "step_by_step": true,
+      "include_examples": true
+    },
+    
+    "file_handling": {
+      "auto_backup": true,
+      "preserve_formatting": true,
+      "track_changes": true
+    }
+  },
+  
+  "evaluation_criteria": {
+    "code_quality": {
+      "syntax_correctness": 0.3,
+      "efficiency": 0.2,
+      "readability": 0.2,
+      "compatibility": 0.3
+    },
+    
+    "r_exams_compliance": {
+      "metadata_format": 0.25,
+      "chunk_structure": 0.25,
+      "latex_syntax": 0.25,
+      "output_compatibility": 0.25
+    },
+    
+    "mathematical_accuracy": {
+      "formula_correctness": 0.4,
+      "visual_fidelity": 0.3,
+      "data_integrity": 0.3
+    }
+  }
+}

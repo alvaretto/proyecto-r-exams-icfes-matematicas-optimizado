@@ -1,89 +1,44 @@
 {
-    "gemini.apiKey": "${env:GEMINI_API_KEY}",
-    "gemini.model": "gemini-2.5-pro",
-    "gemini.maxTokens": 1000000,
-    "gemini.temperature": 0.1,
-    "gemini.projectContext": {
-        "name": "RepositorioMatematicasICFES_R_Exams",
-        "type": "educational",
-        "language": "R",
-        "framework": "R-exams",
-        "description": "Proyecto de ejercicios matemáticos ICFES con R-exams, TikZ y Python",
-        "competencias": ["interpretacion_representacion", "formulacion_ejecucion", "argumentacion"],
-        "niveles": [1, 2, 3, 4],
-        "formatos": ["html", "pdf", "word", "moodle"]
+  "mcp.servers": {
+    "context7": {
+      "command": "node",
+      "args": ["./.mcps/context7-mcp/dist/index.js"],
+      "env": {},
+      "description": "Context7 MCP Server for documentation",
+      "enabled": true
     },
-    "gemini.cli.enableAdvancedFeatures": true,
-    "gemini.cli.enableMemoryManagement": true,
-    "gemini.cli.enableConversationPersistence": true,
-    "gemini.cli.projectInitialization": true,
-    "gemini.cli.enableSemanticMemory": true,
-    "augment.enabled": true,
-    "augment.contextEngine.enabled": true,
-    "augment.codebase.indexing": true,
-    "r.lsp.enabled": false,
-    "r.lsp.promptToInstall": false,
-    "r.rterm.linux": "/usr/bin/R",
-    "r.rpath.linux": "/usr/bin/R",
-    "r.libPaths": ["~/R/library"],
-    "r.rterm.option": [
-        "--no-save",
-        "--no-restore",
-        "--quiet"
-    ],
-    "r.sessionWatcher": true,
-    "r.bracketedPaste": true,
-    "r.plot.useHttpgd": false,
-    "r.plot.useViewer": true,
-    "r.alwaysUseActiveTerminal": true,
-    "r.rtermSendDelay": 8,
-    "files.associations": {
-        "*.R": "r",
-        "*.r": "r",
-        "*.Rmd": "rmd",
-        "*.rmd": "rmd",
-        "*.tikz": "latex",
-        "*.rnw": "latex",
-        "*.cls": "latex",
-        "*.sty": "latex"
+    "latex-validator": {
+      "command": "node", 
+      "args": ["./.mcps/latex-validator-mcp/index-fixed.js"],
+      "env": {},
+      "description": "LaTeX/TikZ validator for R-exams",
+      "enabled": true
     },
-    "python.defaultInterpreterPath": "/usr/bin/python3",
-    "python.terminal.activateEnvironment": false,
-    "latex-workshop.latex.tools": [
-        {
-            "name": "latexmk",
-            "command": "latexmk",
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-pdf",
-                "-outdir=%OUTDIR%",
-                "%DOC%"
-            ]
-        }
-    ],
-    "latex-workshop.latex.recipes": [
-        {
-            "name": "latexmk 🔃",
-            "tools": ["latexmk"]
-        }
-    ],
-    "latex-workshop.view.pdf.viewer": "tab",
-    "latex-workshop.latex.autoClean.run": "onBuilt",
-    "editor.wordWrap": "on",
-    "editor.rulers": [80, 120],
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "[r]": {
-        "editor.defaultFormatter": "REditorSupport.r",
-        "editor.formatOnSave": false,
-        "editor.tabSize": 2
-    },
-    "[rmd]": {
-        "editor.defaultFormatter": "REditorSupport.r",
-        "editor.formatOnSave": false,
-        "editor.tabSize": 2,
-        "editor.wordWrap": "on"
+    "image-analysis": {
+      "command": "node",
+      "args": ["./.mcps/image-analysis-mcp/index-fixed.js"],
+      "env": {},
+      "description": "Image analysis for TikZ replication",
+      "enabled": true
     }
+  },
+  "files.associations": {
+    "*.Rmd": "rmd",
+    "*.Rnw": "rnoweb"
+  },
+  "r.rterm.linux": "/usr/bin/R",
+  "python.defaultInterpreterPath": "/usr/bin/python3",
+  "latex-workshop.latex.autoBuild.run": "never",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode", 
+        "-file-line-error",
+        "%DOC%"
+      ]
+    }
+  ]
 }
