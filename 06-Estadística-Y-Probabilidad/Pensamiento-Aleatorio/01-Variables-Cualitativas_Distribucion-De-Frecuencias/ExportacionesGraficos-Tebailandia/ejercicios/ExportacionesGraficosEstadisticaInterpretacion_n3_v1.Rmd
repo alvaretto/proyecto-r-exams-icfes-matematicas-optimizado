@@ -192,8 +192,11 @@ coloress = predefined_colors + [generate_light_hex_color() for _ in range(10)]
 # Seleccionar 8 colores de manera aleatoria de la lista combinada
 colors = random.sample(coloress, 8)
 
-# Despegar una porción del gráfico, en este caso 'Fruit juice'.
-explode = (0, 0, 0, 0, 0.1, 0, 0, 0)  # solo "explode" la porción 'Fruit juice'
+# Seleccionar aleatoriamente qué producto destacar y preguntar
+producto_index = random.randint(0, 7)  # Índice aleatorio del 0 al 7
+
+# Crear explode dinámico basado en el producto seleccionado
+explode = [0.1 if i == producto_index else 0 for i in range(8)]
 
 # Ajustar el ancho de la figura a 10 pulgadas
 fig1, ax1 = plt.subplots(figsize=(6, 5))
@@ -206,25 +209,28 @@ ax1.set_title(f'Distribución de exportaciones de\n Tebailandia en {year_aleator
 
 plt.show()
 
-# Calcular el valor de xol basado en el año aleatorio y el tamaño de la tajada seleccionada
-if year_aleatorio == selected_years[0]:
-    xol = round(exports[0] * (sizes[4] / 100), 2)
-elif year_aleatorio == selected_years[1]:
-    xol = round(exports[1] * (sizes[4] / 100), 2)
-elif year_aleatorio == selected_years[2]:
-    xol = round(exports[2] * (sizes[4] / 100), 2)
-elif year_aleatorio == selected_years[3]:
-    xol = round(exports[3] * (sizes[4] / 100), 2)
-elif year_aleatorio == selected_years[4]:
-    xol = round(exports[4] * (sizes[4] / 100), 2)
+# Calcular el valor de xol basado en el año aleatorio y el producto seleccionado
+# Validar que el año aleatorio esté en el rango de años disponibles
+year_index = -1
+for i, year in enumerate(selected_years):
+    if year_aleatorio == year:
+        year_index = i
+        break
 
-tajada = selectots[4]
+# Validación de seguridad
+if year_index == -1:
+    raise ValueError(f"Año aleatorio {year_aleatorio} no encontrado en selected_years")
+
+# Calcular xol usando el índice validado
+xol = round(exports[year_index] * (sizes[producto_index] / 100), 2)
+
+producto_seleccionado = selectots[producto_index]
 ```
 \
 
 ```{r DePython-a-R, message=FALSE, warning=FALSE, results='asis', include=FALSE}
 
-tahada <- py$tajada
+producto_seleccionado <- py$producto_seleccionado
 anio <- py$year_aleatorio
 xol <- py$xol
 
@@ -247,9 +253,24 @@ err3 <- xol * sample(err3_options, 1)
 err1 <- round(err1, 2)
 err2 <- round(err2, 2)
 err3 <- round(err3, 2)
+
+# Verificar que todas las opciones sean diferentes
+opciones <- c(xol, err1, err2, err3)
+if (length(unique(opciones)) != 4) {
+  warning("Algunas opciones de respuesta son idénticas. Ajustando...")
+  # Ajustar ligeramente las opciones duplicadas
+  for (i in 2:4) {
+    while (opciones[i] %in% opciones[1:(i-1)]) {
+      opciones[i] <- opciones[i] + 0.01
+    }
+  }
+  err1 <- opciones[2]
+  err2 <- opciones[3]
+  err3 <- opciones[4]
+}
 ```
 
-¿Cuál fue el valor de `r tahada` exportado desde Tebailandia en `r anio`?
+¿Cuál fue el valor de `r producto_seleccionado` exportado desde Tebailandia en `r anio`?
 \
 
 Answerlist
@@ -322,22 +343,22 @@ for (i in 1:8) {
 \
 **Paso 4: Identificación del producto específico**
 
-El producto por el cual se pregunta es **`r tahada`**, que representa el **`r py$sizes[5]`%** del total de exportaciones en `r anio`.
+El producto por el cual se pregunta es **`r producto_seleccionado`**, que representa el **`r py$sizes[py$producto_index + 1]`%** del total de exportaciones en `r anio`.
 
 \
 **Paso 5: Cálculo matemático**
 
-Para calcular el valor específico de `r tahada` exportado en `r anio`, aplicamos la siguiente fórmula:
+Para calcular el valor específico de `r producto_seleccionado` exportado en `r anio`, aplicamos la siguiente fórmula:
 
 **Valor del producto = Valor total × Porcentaje del producto**
 
 Sustituyendo los valores:
 
 ```{r calculo_detallado, echo=FALSE, results='asis'}
-cat("Valor de", tahada, "= ", valor_total, " millones de tebos × ",
-    py$sizes[5], "%\n")
-cat("Valor de", tahada, "= ", valor_total, " × ", py$sizes[5] / 100, "\n")
-cat("Valor de", tahada, "= ", valor_total * (py$sizes[5] / 100),
+cat("Valor de", producto_seleccionado, "= ", valor_total, " millones de tebos × ",
+    py$sizes[py$producto_index + 1], "%\n")
+cat("Valor de", producto_seleccionado, "= ", valor_total, " × ", py$sizes[py$producto_index + 1] / 100, "\n")
+cat("Valor de", producto_seleccionado, "= ", valor_total * (py$sizes[py$producto_index + 1] / 100),
     " millones de tebos\n")
 ```
 
@@ -349,8 +370,8 @@ El cálculo nos da: **`r xol` millones de tebos**
 **Verificación de coherencia:**
 
 - El resultado (`r xol` millones) es menor que el total (`r valor_total` millones), lo cual es lógico ya que representa solo una fracción del total.
-- El porcentaje de `r tahada` (`r py$sizes[5]`%) multiplicado por el total debe dar exactamente nuestro resultado.
-- Verificación: `r valor_total` × `r py$sizes[5]`% = `r valor_total` × `r py$sizes[5]/100` = `r xol` (correcto)
+- El porcentaje de `r producto_seleccionado` (`r py$sizes[py$producto_index + 1]`%) multiplicado por el total debe dar exactamente nuestro resultado.
+- Verificación: `r valor_total` × `r py$sizes[py$producto_index + 1]`% = `r valor_total` × `r py$sizes[py$producto_index + 1]/100` = `r xol` (correcto)
 
 \
 **Paso 7: Análisis de las opciones distractoras**
@@ -370,7 +391,7 @@ Estas opciones están diseñadas para capturar errores comunes como:
 \
 **Conclusión:**
 
-Por lo tanto, el valor de **`r tahada`** exportado desde Tebailandia en **`r anio`** fue de **`r xol` millones de tebos**.
+Por lo tanto, el valor de **`r producto_seleccionado`** exportado desde Tebailandia en **`r anio`** fue de **`r xol` millones de tebos**.
 
 Este problema evalúa competencias fundamentales en:
 

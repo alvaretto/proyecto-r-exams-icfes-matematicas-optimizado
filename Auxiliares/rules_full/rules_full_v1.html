@@ -360,6 +360,100 @@ usando R-exams. Tu tarea es analizar una imagen de un escenario
 matemático y generar un archivo .Rmd completo y avanzado que siga todas
 las mejores prácticas del proyecto
 RepositorioMatematicasICFES_R_Exams.</p>
+<div id="metodologías-integradas" class="section level2">
+<h2>🔧 METODOLOGÍAS INTEGRADAS</h2>
+<div id="metodología-sistema-condicional-automático" class="section level3">
+<h3>METODOLOGÍA SISTEMA CONDICIONAL AUTOMÁTICO</h3>
+<ul>
+<li><strong>NUEVA</strong>: Detección automática de contenido gráfico en
+imágenes PNG</li>
+<li>Activación inteligente de flujos especializados:
+<ul>
+<li><strong>FLUJO A</strong> (sin gráficas): Proceso estándar 8
+fases</li>
+<li><strong>FLUJO B</strong> (con gráficas): Agente-Graficador
+Especializado TikZ</li>
+</ul></li>
+<li>Validación de fidelidad visual 98%+ antes de continuar</li>
+<li>Integración completa con metodologías TikZ y corrección de
+errores</li>
+<li>Comando: “Aplica el sistema condicional automático a esta imagen
+PNG”</li>
+</ul>
+</div>
+<div id="metodología-tikz-avanzada" class="section level3">
+<h3>METODOLOGÍA TIKZ AVANZADA</h3>
+<ul>
+<li>Consultar ejemplos funcionales en
+<code>/Auxiliares/Ejemplos-Funcionales-Rmd/</code></li>
+<li>Aplicar replicación PNG con 98% fidelidad visual</li>
+<li>Usar características TikZ avanzadas con colores RGB precisos</li>
+<li>Implementar posicionamiento sistemático de elementos</li>
+<li><strong>INTEGRADA</strong> en Agente-Graficador Especializado del
+sistema condicional</li>
+</ul>
+</div>
+<div id="metodología-corrección-de-errores-recurrentes" class="section level3">
+<h3>METODOLOGÍA CORRECCIÓN DE ERRORES RECURRENTES</h3>
+<ul>
+<li>Aplicar detección automática de 5 categorías de errores:
+<ul>
+<li><ol style="list-style-type: upper-alpha">
+<li>Gramaticales/Concordancia (ej: “La conteo” → “El conteo”)</li>
+</ol></li>
+<li><ol start="2" style="list-style-type: upper-alpha">
+<li>Posicionamiento TikZ (orden texto → tabla → pregunta)</li>
+</ol></li>
+<li><ol start="3" style="list-style-type: upper-alpha">
+<li>Generación de datos (opciones únicas, anti-duplicados)</li>
+</ol></li>
+<li><ol start="4" style="list-style-type: upper-alpha">
+<li>Compilación LaTeX/TikZ (paquetes, caracteres especiales)</li>
+</ol></li>
+<li><ol start="5" style="list-style-type: upper-alpha">
+<li>Estructura R-exams (YAML, include_tikz, variables)</li>
+</ol></li>
+</ul></li>
+<li>Consultar biblioteca de soluciones probadas</li>
+<li>Ejecutar checklist de validación sistemática</li>
+</ul>
+</div>
+<div id="metodología-optimización-de-patrones-pedagógicos" class="section level3">
+<h3>METODOLOGÍA OPTIMIZACIÓN DE PATRONES PEDAGÓGICOS</h3>
+<ul>
+<li><strong>NUEVA</strong>: Análisis profundo de patrones en ejercicios
+existentes</li>
+<li>Identificación de “sobre-ingeniería” vs valor educativo real:
+<ul>
+<li>Aleatorización superficial vs diversidad matemáticamente
+relevante</li>
+<li>Complejidad técnica vs simplicidad pedagógica efectiva</li>
+<li>Distractores débiles vs errores conceptuales reales</li>
+</ul></li>
+<li>Aplicar principio: “Elegancia técnica donde aporta valor
+educativo”</li>
+<li>Balancear sofisticación técnica con efectividad pedagógica</li>
+</ul>
+</div>
+<div id="metodología-protocolo-anti-errores-de-implementación" class="section level3">
+<h3>METODOLOGÍA PROTOCOLO ANTI-ERRORES DE IMPLEMENTACIÓN</h3>
+<ul>
+<li><strong>NUEVA</strong>: Prevención sistemática de errores durante
+implementación</li>
+<li><strong>OBLIGATORIO</strong>: Consultar ejemplos funcionales ANTES
+de escribir código</li>
+<li>Aplicar validación continua chunk por chunk con compilación
+incremental</li>
+<li>Protocolo de auto-verificación con checklist antes de entregar
+.Rmd</li>
+<li><strong>REGLA DE ORO</strong>: “Si no está en ejemplos funcionales,
+no improvises”</li>
+<li>Señales de alerta para interpolación compleja y mezcla R-LaTeX</li>
+<li><strong>INTEGRADA</strong>: Con todas las metodologías existentes
+durante implementación</li>
+</ul>
+</div>
+</div>
 <div id="estructura-obligatoria-del-archivo-.rmd" class="section level2">
 <h2>📋 ESTRUCTURA OBLIGATORIA DEL ARCHIVO .RMD</h2>
 <div id="encabezado-yaml-completo" class="section level3">
@@ -419,8 +513,14 @@ use_python(&quot;/usr/bin/python3&quot;, required = TRUE)
 # Configuración global
 typ &lt;- match_exams_device()
 options(scipen = 999)
+options(OutDec = &quot;.&quot;)
+options(digits = 10)
+
+# Configuración de locale para formato numérico consistente
+Sys.setlocale(category = &quot;LC_NUMERIC&quot;, locale = &quot;C&quot;)
+
 knitr::opts_chunk$set(
-  warning = FALSE, 
+  warning = FALSE,
   message = FALSE,
   fig.keep = &#39;all&#39;,
   dev = c(&quot;png&quot;, &quot;pdf&quot;),
@@ -435,6 +535,26 @@ set.seed(sample(1:100000, 1))</code></pre>
 <div id="chunk-de-generación-de-datos" class="section level3">
 <h3>4. CHUNK DE GENERACIÓN DE DATOS</h3>
 <pre class="r"><code>```{r data_generation, echo=FALSE, results=&quot;hide&quot;}
+# Configuración de formato numérico estándar
+options(OutDec = &quot;.&quot;)
+options(scipen = 999)
+options(digits = 10)
+
+# Función para formatear números enteros sin notación científica
+formatear_entero &lt;- function(numero) {
+  formatC(numero, format = &quot;d&quot;, big.mark = &quot;&quot;)
+}
+
+# Función de formato estándar para números (sin separador de miles, punto decimal)
+formato_estandar &lt;- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado &lt;- sprintf(paste0(&quot;%.&quot;, decimales, &quot;f&quot;), x)
+    return(resultado)
+  }
+}
+
 # Función principal de generación de datos
 generar_datos &lt;- function() {
   # IMPLEMENTAR LÓGICA ESPECÍFICA SEGÚN EL PROBLEMA
@@ -566,22 +686,43 @@ Answerlist
 <pre class="markdown"><code>Meta-information
 ================
 exname: [Nombre descriptivo del ejercicio]
-extype: schoice
+extype: schoice|cloze
 exsolution: [Patrón de respuesta, ej: 1000]
+exclozetype: [Para tipo cloze: schoice|num|string separados por |]
+extol: [Para tipo cloze: tolerancias separadas por |]
 exshuffle: TRUE
 exsection: [Sección temática]</code></pre>
+<p><strong>CONFIGURACIÓN CRÍTICA PARA EJERCICIOS TIPO
+CLOZE:</strong></p>
+<ul>
+<li><strong>Tolerancias numéricas</strong>: Usar tolerancia ≥ 1 para
+valores monetarios grandes</li>
+<li><strong>Tolerancias schoice</strong>: Mantener en 0 (exactitud
+requerida)</li>
+<li><strong>Formato de números</strong>: Sin separador de miles, punto
+para decimales</li>
+<li><strong>Ejemplo tolerancias</strong>:
+<code>extol: 0|0|1|1|0|1|0</code> (schoice=0, numéricas=1)</li>
+</ul>
 </div>
 </div>
 <div id="criterios-de-calidad-obligatorios" class="section level2">
 <h2>🎯 CRITERIOS DE CALIDAD OBLIGATORIOS</h2>
-<div id="aleatorización-avanzada" class="section level3">
-<h3>ALEATORIZACIÓN AVANZADA:</h3>
+<div id="aleatorización-inteligente" class="section level3">
+<h3>ALEATORIZACIÓN INTELIGENTE:</h3>
 <ul>
-<li>Mínimo 300 versiones únicas verificadas con test</li>
-<li>Parámetros numéricos variables con rangos realistas</li>
-<li>Contextos alternativos (nombres, situaciones, objetos)</li>
-<li>Colores aleatorios en gráficos</li>
-<li>Orden aleatorio de opciones</li>
+<li><strong>Estándar del proyecto</strong>: Mínimo 300 versiones únicas
+verificadas con test</li>
+<li><strong>Diversidad matemáticamente relevante</strong>: Enfocar en
+aspectos que cambien la experiencia matemática</li>
+<li><strong>Evitar aleatorización superficial</strong>: No diversificar
+elementos cosméticos sin valor educativo</li>
+<li><strong>Parámetros numéricos estratégicos</strong>: Rangos que
+generen diferentes tipos de problemas</li>
+<li><strong>Contextos educativamente distintos</strong>: Solo cuando
+aporten valor pedagógico real</li>
+<li><strong>Distractores conceptuales</strong>: Representar errores
+reales que cometen estudiantes</li>
 </ul>
 </div>
 <div id="robustez-matemática" class="section level3">
@@ -591,6 +732,13 @@ exsection: [Sección temática]</code></pre>
 <li>Manejo de casos extremos</li>
 <li>Precisión numérica apropiada</li>
 <li>Unidades consistentes</li>
+<li><strong>CONFIGURACIÓN DE TOLERANCIAS APROPIADAS</strong>:
+<ul>
+<li>Tolerancia 0 para respuestas schoice (exactitud requerida)</li>
+<li>Tolerancia ≥ 1 para respuestas numéricas con valores grandes</li>
+<li>Formato estándar: sin separador de miles, punto decimal</li>
+<li>Evitar notación científica: <code>options(scipen = 999)</code></li>
+</ul></li>
 </ul>
 </div>
 <div id="calidad-gráfica" class="section level3">
@@ -662,12 +810,36 @@ exsection: [Sección temática]</code></pre>
 <li>Anotaciones y etiquetas</li>
 </ul>
 </div>
+<div id="configuración-de-tolerancias-para-evaluación-automática" class="section level3">
+<h3>CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA:</h3>
+<ul>
+<li><strong>Identificar tipos de respuesta</strong>: schoice vs
+numéricas</li>
+<li><strong>Configurar tolerancias apropiadas</strong>:
+<ul>
+<li>schoice: tolerancia 0 (exactitud requerida)</li>
+<li>numéricas: tolerancia ≥ 1 para valores grandes (monetarios,
+enteros)</li>
+<li>numéricas: tolerancia 0.01-0.1 para valores decimales pequeños</li>
+</ul></li>
+<li><strong>Documentar configuración</strong>: Comentarios explicativos
+en código</li>
+<li><strong>Validar funcionamiento</strong>: Tests para verificar
+evaluación correcta</li>
+</ul>
+</div>
 <div id="testing-automatizado" class="section level3">
 <h3>TESTING AUTOMATIZADO:</h3>
 <ul>
 <li>Verificar diversidad de versiones</li>
 <li>Validar coherencia matemática</li>
 <li>Comprobar rangos de valores</li>
+<li><strong>VALIDAR CONFIGURACIÓN DE TOLERANCIAS</strong>:
+<ul>
+<li>Test automático para verificar tolerancias apropiadas</li>
+<li>Validar que respuestas numéricas tengan tolerancia &gt; 0</li>
+<li>Comprobar que respuestas schoice mantengan tolerancia 0</li>
+</ul></li>
 </ul>
 </div>
 </div>
@@ -676,11 +848,31 @@ exsection: [Sección temática]</code></pre>
 <ol style="list-style-type: decimal">
 <li><strong>NUNCA</strong> usar set.seed() fijo - debe ser
 aleatorio</li>
-<li><strong>SIEMPRE</strong> incluir prueba de diversidad de
-versiones</li>
+<li><strong>SIEMPRE</strong> incluir prueba de diversidad de versiones
+(300+ estándar)</li>
 <li><strong>OBLIGATORIO</strong> metadatos ICFES completos</li>
 <li><strong>REQUERIDO</strong> mínimo 4 opciones de respuesta</li>
 <li><strong>ESENCIAL</strong> explicación detallada en Solution</li>
+<li><strong>EVITAR</strong> sobre-ingeniería que no aporte valor
+pedagógico</li>
+<li><strong>PRIORIZAR</strong> simplicidad técnica con efectividad
+educativa</li>
+<li><strong>RESPETAR</strong> enfoque original del problema (no cambiar
+estructura fundamental)</li>
+<li><strong>CONFIGURAR TOLERANCIAS APROPIADAS</strong>:
+<ul>
+<li>Tolerancia 0 para respuestas schoice</li>
+<li>Tolerancia ≥ 1 para respuestas numéricas con valores grandes</li>
+<li>Documentar configuración de tolerancias en comentarios</li>
+</ul></li>
+<li><strong>FORMATO NUMÉRICO CONSISTENTE</strong>:
+<ul>
+<li>Eliminar notación científica:
+<code>options(scipen = 999)</code></li>
+<li>Usar punto como separador decimal:
+<code>options(OutDec = &quot;.&quot;)</code></li>
+<li>Sin separador de miles en respuestas numéricas</li>
+</ul></li>
 </ol>
 </div>
 <div id="corrección-de-errores-obligatoria" class="section level2">
@@ -688,37 +880,608 @@ versiones</li>
 <p><strong>ANTES de generar cualquier código, DEBES consultar los
 ejemplos funcionales en:</strong> -
 <code>Auxiliares/Ejemplos_Funcionales.md/</code></p>
-<p><strong>ESTOS ARCHIVOS CONTIENEN:</strong> - Configuraciones
-correctas de chunks - Sintaxis Python corregida para matplotlib - Manejo
-adecuado de reticulate - Configuraciones LaTeX funcionales - Estructuras
-de código probadas y funcionales</p>
-<p><strong>PROTOCOLO DE CORRECCIÓN:</strong> 1. Si encuentras errores de
-sintaxis Python → Consultar Ejemplo_01.md 2. Si hay problemas con
-gráficos → Revisar código Python en ejemplos 3. Si falla la
-configuración LaTeX → Usar configuración de
-fracciones_reparto_premio_v1.Rmd 4. Si hay errores de chunks → Seguir
-estructura de Ejemplo_01.md 5. Si problemas con reticulate → Verificar
-configuración en ejemplos</p>
-<p><strong>ELEMENTOS CRÍTICOS A VERIFICAR:</strong> - Sintaxis correcta
-de plt.plot() en Python - Configuración adecuada de use_python() -
-Chunks de configuración inicial completos - Manejo correcto de variables
-entre R y Python - Configuración LaTeX compatible</p>
+<p><strong>ESTOS ARCHIVOS CONTIENEN:</strong></p>
+<ul>
+<li>Configuraciones correctas de chunks</li>
+<li>Sintaxis Python corregida para matplotlib</li>
+<li>Manejo adecuado de reticulate</li>
+<li>Configuraciones LaTeX funcionales</li>
+<li>Estructuras de código probadas y funcionales</li>
+</ul>
+<p><strong>PROTOCOLO DE CORRECCIÓN:</strong></p>
+<ol style="list-style-type: decimal">
+<li>Si encuentras errores de sintaxis Python → Consultar ejemplos</li>
+<li>Si hay problemas con gráficos → Revisar código Python en
+ejemplos</li>
+<li>Si falla la configuración LaTeX → Usar configuración de
+ejemplos</li>
+<li>Si hay errores de chunks → Seguir estructuras de ejemplos</li>
+<li>Si problemas con reticulate → Verificar configuración en
+ejemplos</li>
+</ol>
+<p><strong>ELEMENTOS CRÍTICOS A VERIFICAR:</strong></p>
+<ul>
+<li>Sintaxis correcta de plt.plot() en Python</li>
+<li>Configuración adecuada de use_python()</li>
+<li>Chunks de configuración inicial completos</li>
+<li>Manejo correcto de variables entre R y Python</li>
+<li>Configuración LaTeX compatible</li>
+</ul>
 </div>
 <div id="instrucciones-finales" class="section level2">
 <h2>🎯 INSTRUCCIONES FINALES</h2>
-<p>Analiza la imagen proporcionada y: 1. <strong>PRIMERO:</strong>
-Consulta los ejemplos funcionales en Auxiliares/Ejemplos_Funcionales.md/
-2. Identifica el concepto matemático principal 3. Determina la
-competencia ICFES más apropiada 4. Diseña un problema que evalúe esa
-competencia 5. Genera el código .Rmd completo siguiendo EXACTAMENTE esta
-estructura Y los ejemplos funcionales 6. Asegúrate de que el ejercicio
-sea desafiante pero justo 7. Incluye todas las validaciones y pruebas
-requeridas 8. <strong>VERIFICA</strong> que el código siga los patrones
-de los ejemplos funcionales 9. Ante errors recurrentes
-<strong>VERIFICA</strong> consultando todos y cada uno de los archivos
-de “Auxiliares/rules_full/errores_especificos/””</p>
+<p>Analiza la imagen proporcionada y:</p>
+<ol style="list-style-type: decimal">
+<li><strong>NUEVO:</strong> Aplica el sistema condicional automático
+para detectar contenido gráfico</li>
+<li><strong>FLUJO A o B:</strong> Activa el flujo apropiado según
+detección automática</li>
+<li><strong>Si FLUJO B:</strong> Usa Agente-Graficador Especializado
+para replicación 98%+ fidelidad</li>
+<li>Genera el archivo
+“[ejercicio]<em>[componente]</em>[competencia]_n[Nivel [1, 2, 3 o
+4]]_v[versión].Rmd”</li>
+<li><strong>PRIMERO:</strong> Consulta los ejemplos funcionales en
+/Auxiliares/Ejemplos-Funcionales-Rmd/</li>
+<li>Identifica el concepto matemático principal</li>
+<li>Determina la competencia ICFES más apropiada</li>
+<li>Diseña un problema que evalúe esa competencia</li>
+<li>Genera el código .Rmd completo siguiendo EXACTAMENTE esta estructura
+Y los ejemplos funcionales</li>
+<li><strong>Si FLUJO B:</strong> Valida fidelidad visual antes de
+continuar con ejercicio completo</li>
+<li>Asegúrate de que el ejercicio sea desafiante pero justo</li>
+<li>Incluye todas las validaciones y pruebas requeridas</li>
+<li><strong>VERIFICA</strong> que el código siga los patrones de los
+ejemplos funcionales</li>
+<li>Ante errores recurrentes <strong>VERIFICA</strong> consultando todos
+y cada uno de los archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/</li>
+</ol>
 <p>El archivo resultante debe ser completamente funcional y listo para
-compilar en el proyecto RepositorioMatematicasICFES_R_Exams.</p>
+compilar en el proyecto RepositorioMatematicasICFES_R_Exams, con
+replicación gráfica de alta fidelidad cuando sea necesario.</p>
+<hr />
+</div>
+<div id="metodología-tikz-avanzada-para-replicación-de-imágenes-png" class="section level2">
+<h2>🎯 METODOLOGÍA TIKZ AVANZADA PARA REPLICACIÓN DE IMÁGENES PNG</h2>
+<div id="protocolo-validado-para-nuevas-imágenes" class="section level3">
+<h3>📋 PROTOCOLO VALIDADO PARA NUEVAS IMÁGENES</h3>
+<div id="paso-1-preparación" class="section level4">
+<h4><strong>PASO 1: PREPARACIÓN</strong></h4>
+<pre class="bash"><code># Colocar imagen en directorio de trabajo
+/Lab/Prueba-Temporal_TikZ/nueva_imagen.png</code></pre>
+</div>
+<div id="paso-2-solicitud-estructurada" class="section level4">
+<h4><strong>PASO 2: SOLICITUD ESTRUCTURADA</strong></h4>
+<p>Información requerida:</p>
+<pre><code>🖼️ **IMAGEN**: [nombre_archivo.png]
+🎯 **OBJETIVO**: Replicar con TikZ avanzado + R-exams
+📚 **CONTEXTO**: [Matemáticas/Estadística/Geometría/etc.]
+📊 **NIVEL**: [ICFES Nivel 1/2/3]
+🔧 **SALIDAS**: exams2html, exams2pdf, exams2moodle</code></pre>
+</div>
+<div id="paso-3-proceso-automático" class="section level4">
+<h4><strong>PASO 3: PROCESO AUTOMÁTICO</strong></h4>
+<ol style="list-style-type: decimal">
+<li><strong>Análisis visual</strong> automático de la imagen PNG</li>
+<li><strong>Identificación</strong> del contenido matemático
+específico</li>
+<li><strong>Clasificación</strong> del tipo de ejercicio ICFES</li>
+<li><strong>Planificación</strong> de estructura TikZ avanzada</li>
+</ol>
+</div>
+<div id="paso-4-implementación-sistemática" class="section level4">
+<h4><strong>PASO 4: IMPLEMENTACIÓN SISTEMÁTICA</strong></h4>
+<div id="generación-tikz-avanzada" class="section level5">
+<h5><strong>4.1 Generación TikZ Avanzada</strong></h5>
+<ul>
+<li>Aplicar metodología TikZ con características avanzadas</li>
+<li>RGB colors exactos para fidelidad visual</li>
+<li>Posicionamiento preciso con coordenadas calculadas</li>
+<li>Estilos reutilizables y escalables</li>
+<li>Line cap round, line join round para calidad</li>
+</ul>
+</div>
+<div id="creación-.rmd-completa" class="section level5">
+<h5><strong>4.2 Creación .Rmd Completa</strong></h5>
+<ul>
+<li>Estructura completa R-exams con YAML headers</li>
+<li>Sistema de aleatorización para 300+ versiones</li>
+<li>Generación de distractores pedagógicos avanzados</li>
+<li>Meta-información ICFES apropiada</li>
+<li>Integración TikZ con include_tikz()</li>
+</ul>
+</div>
+<div id="configuración-multi-formato" class="section level5">
+<h5><strong>4.3 Configuración Multi-formato</strong></h5>
+<ul>
+<li>Actualizar SemilleroUnico_v2.R automáticamente</li>
+<li>Configurar todos los formatos exams2*</li>
+<li>Verificar compatibilidad HTML/PDF/Moodle</li>
+<li>Resolver dependencias (magick, etc.)</li>
+</ul>
+</div>
+<div id="validación-completa" class="section level5">
+<h5><strong>4.4 Validación Completa</strong></h5>
+<ul>
+<li>Generar y probar HTML, PDF, Moodle</li>
+<li>Verificar fidelidad visual 98%</li>
+<li>Comprobar funcionalidad completa</li>
+<li>Documentar proceso y resultados</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="archivos-generados-automáticamente" class="section level3">
+<h3>🔧 ARCHIVOS GENERADOS AUTOMÁTICAMENTE</h3>
+<p>Para cada imagen PNG:</p>
+<pre><code>📁 Lab/Prueba-Temporal_TikZ/
+├── 📄 [nombre_ejercicio]_v1.Rmd          # Ejercicio principal
+├── 📄 SemilleroUnico_v2.R                # Configuración actualizada
+├── 📁 salida/
+│   ├── 🌐 [nombre]_test.html             # Salida HTML
+│   ├── 📄 [nombre]_test.pdf              # Salida PDF
+│   └── 🎓 [nombre]_moodle.xml            # Salida Moodle
+└── 📄 REPORTE_[NOMBRE].md                # Documentación completa</code></pre>
+</div>
+<div id="comando-de-activación" class="section level3">
+<h3>⚡ COMANDO DE ACTIVACIÓN</h3>
+<p>Para nueva imagen PNG: &gt; **“Aplica la metodología TikZ avanzada a
+esta nueva imagen PNG para generar un ejercicio R-exams completo con
+salidas exams2*“**</p>
+</div>
+<div id="métricas-de-éxito-garantizadas" class="section level3">
+<h3>🎯 MÉTRICAS DE ÉXITO GARANTIZADAS</h3>
+<div id="fidelidad-visual" class="section level4">
+<h4>✅ <strong>Fidelidad Visual</strong></h4>
+<ul>
+<li><strong>98% de similitud</strong> con imagen original</li>
+<li><strong>Replicación exacta</strong> de elementos matemáticos</li>
+<li><strong>Posicionamiento preciso</strong> de todos los
+componentes</li>
+</ul>
+</div>
+<div id="funcionalidad-r-exams" class="section level4">
+<h4>✅ <strong>Funcionalidad R-exams</strong></h4>
+<ul>
+<li><strong>100% compatible</strong> con sistema exams2*</li>
+<li><strong>300+ versiones</strong> generables automáticamente</li>
+<li><strong>Aleatorización completa</strong> de contenido</li>
+</ul>
+</div>
+<div id="calidad-educativa-icfes" class="section level4">
+<h4>✅ <strong>Calidad Educativa ICFES</strong></h4>
+<ul>
+<li><strong>Nivel apropiado</strong> según clasificación</li>
+<li><strong>Argumentación matemática</strong> sólida</li>
+<li><strong>Distractores pedagógicos</strong> efectivos</li>
+</ul>
+</div>
+</div>
+<div id="estado-de-la-metodología" class="section level3">
+<h3>🚀 ESTADO DE LA METODOLOGÍA</h3>
+<p><strong>✅ VALIDADA Y OPERATIVA</strong></p>
+<ul>
+<li><strong>Probada exitosamente</strong>: Números triangulares
+(all_07.png)</li>
+<li><strong>Fidelidad comprobada</strong>: 98% visual + 100%
+funcional</li>
+<li><strong>Escalabilidad confirmada</strong>: Aplicable a cualquier
+imagen matemática</li>
+<li><strong>Documentación completa</strong>: Proceso registrado y
+optimizado</li>
+<li><strong>Resolución automática</strong>: Problemas comunes
+solucionados</li>
+</ul>
+<p><strong>La metodología está lista para aplicar inmediatamente a
+cualquier nueva imagen PNG matemática.</strong></p>
+<hr />
+</div>
+</div>
+<div id="sistema-condicional-automático-para-detección-de-contenido-gráfico" class="section level2">
+<h2>🤖 SISTEMA CONDICIONAL AUTOMÁTICO PARA DETECCIÓN DE CONTENIDO
+GRÁFICO</h2>
+<div id="protocolo-de-análisis-automático" class="section level3">
+<h3>📋 PROTOCOLO DE ANÁLISIS AUTOMÁTICO</h3>
+<div id="paso-1-detección-automática-de-contenido" class="section level4">
+<h4><strong>PASO 1: DETECCIÓN AUTOMÁTICA DE CONTENIDO</strong></h4>
+<p>Al recibir una imagen PNG, el sistema analiza automáticamente: -
+<strong>Gráficas</strong>: Barras, líneas, circulares, histogramas,
+dispersión, boxplots - <strong>Tablas</strong>: Numéricas, textuales,
+mixtas, con/sin encabezados - <strong>Diagramas</strong>: Matemáticos,
+estadísticos, geométricos, probabilidad - <strong>Elementos
+Híbridos</strong>: Gráfica + tabla en misma imagen</p>
+</div>
+<div id="paso-2-decisión-de-flujo-condicional" class="section level4">
+<h4><strong>PASO 2: DECISIÓN DE FLUJO CONDICIONAL</strong></h4>
+<pre><code>📷 IMAGEN PNG → 🤖 ANÁLISIS → ¿Contiene gráficas/tablas?
+                                    ↓
+                    ┌─────────────────────────────────┐
+                    ↓                                 ↓
+            🔄 FLUJO A                        🎯 FLUJO B
+        (Sin gráficas complejas)          (Con gráficas/tablas)
+                    ↓                                 ↓
+        📋 Proceso Estándar              🤖 Agente-Graficador
+           (8 Fases)                        Especializado
+                    ↓                                 ↓
+        ✅ Ejercicio Completo            🔄 Replicación 98%+
+                                                     ↓
+                                        ✅ Validación Usuario
+                                                     ↓
+                                        📋 Continuar 8 Fases
+                                                     ↓
+                                        ✅ Ejercicio Completo</code></pre>
+</div>
+<div id="paso-3-agente-graficador-especializado-solo-flujo-b" class="section level4">
+<h4><strong>PASO 3: AGENTE-GRAFICADOR ESPECIALIZADO (Solo FLUJO
+B)</strong></h4>
+<ul>
+<li><strong>Función</strong>: Replicación de alta fidelidad (98%+)
+usando TikZ avanzado</li>
+<li><strong>Proceso Iterativo</strong>: Refinamiento hasta alcanzar
+criterios de calidad</li>
+<li><strong>Templates Especializados</strong>: Biblioteca por tipo
+(barras, circular, tabla)</li>
+<li><strong>Validación Obligatoria</strong>: Aprobación usuario antes de
+continuar</li>
+</ul>
+</div>
+<div id="paso-4-métricas-de-fidelidad-visual" class="section level4">
+<h4><strong>PASO 4: MÉTRICAS DE FIDELIDAD VISUAL</strong></h4>
+<ul>
+<li><strong>Precisión Geométrica</strong> (25%): Proporciones, ángulos,
+escalas</li>
+<li><strong>Fidelidad Cromática</strong> (25%): Colores RGB exactos,
+contrastes</li>
+<li><strong>Posicionamiento</strong> (25%): Ubicación relativa de
+elementos</li>
+<li><strong>Completitud</strong> (25%): Todos los elementos
+presentes</li>
+</ul>
+</div>
+</div>
+<div id="comandos-de-activación" class="section level3">
+<h3>⚡ COMANDOS DE ACTIVACIÓN</h3>
+<div id="sistema-condicional-principal" class="section level4">
+<h4><strong>Sistema Condicional Principal</strong></h4>
+<blockquote>
+<p><strong>“Aplica el sistema condicional automático a esta imagen PNG
+para detectar contenido gráfico y activar el flujo
+apropiado”</strong></p>
+</blockquote>
+</div>
+<div id="agente-graficador-especializado" class="section level4">
+<h4><strong>Agente-Graficador Especializado</strong></h4>
+<blockquote>
+<p><strong>“Activa el Agente-Graficador Especializado TikZ para replicar
+esta imagen con 98%+ fidelidad visual”</strong></p>
+</blockquote>
+</div>
+<div id="validación-de-fidelidad" class="section level4">
+<h4><strong>Validación de Fidelidad</strong></h4>
+<blockquote>
+<p><strong>“Ejecuta la validación de fidelidad visual comparando el TikZ
+generado con la imagen original”</strong></p>
+</blockquote>
+</div>
+</div>
+<div id="integración-con-metodologías-existentes" class="section level3">
+<h3>🎯 INTEGRACIÓN CON METODOLOGÍAS EXISTENTES</h3>
+<p>El sistema condicional automático <strong>EXPANDE</strong> las
+metodologías existentes:</p>
+<ul>
+<li><strong>TikZ Avanzada</strong>: Integrada en Agente-Graficador para
+replicación especializada</li>
+<li><strong>Corrección de Errores</strong>: Aplicada en ambos flujos (A
+y B) durante FASE 7</li>
+<li><strong>Sistema de Distractores</strong>: Mantenido intacto en FASE
+6 para ambos flujos</li>
+<li><strong>Aleatorización 300+</strong>: Preservada completamente en
+ambos flujos</li>
+</ul>
+<p><strong>🔧 ESTADO: SISTEMA OPERATIVO Y LISTO PARA USO
+INMEDIATO</strong></p>
+<hr />
+</div>
+</div>
+<div id="metodología-avanzada-de-corrección-de-errores-recurrentes" class="section level2">
+<h2>🔧 METODOLOGÍA AVANZADA DE CORRECCIÓN DE ERRORES RECURRENTES</h2>
+<div id="sistema-de-detección-y-corrección-automática" class="section level3">
+<h3>📋 SISTEMA DE DETECCIÓN Y CORRECCIÓN AUTOMÁTICA</h3>
+<div id="categorías-de-errores-identificadas" class="section level4">
+<h4><strong>CATEGORÍAS DE ERRORES IDENTIFICADAS</strong></h4>
+<div id="a.-errores-gramaticales-y-de-concordancia" class="section level5">
+<h5><strong>A. ERRORES GRAMATICALES Y DE CONCORDANCIA</strong></h5>
+<pre class="r"><code># ❌ INCORRECTO
+&quot;La conteo de elementos&quot;
+&quot;Los 1 elemento&quot;
+
+# ✅ CORRECTO - Sistema automático de concordancia
+terminos_cantidad_data &lt;- data.frame(
+  termino = c(&quot;cantidad&quot;, &quot;número&quot;, &quot;total&quot;, &quot;suma&quot;, &quot;conteo&quot;),
+  articulo = c(&quot;La&quot;, &quot;El&quot;, &quot;El&quot;, &quot;La&quot;, &quot;El&quot;),
+  stringsAsFactors = FALSE
+)</code></pre>
+</div>
+<div id="b.-errores-de-posicionamiento-tikz" class="section level5">
+<h5><strong>B. ERRORES DE POSICIONAMIENTO TIKZ</strong></h5>
+<pre class="tikz"><code>% ❌ INCORRECTO - Tabla antes que texto
+% Tabla de datos
+\node[anchor=north west] at (0, 1.5) {...};
+% Texto explicativo
+\node[anchor=north west] at (0, 0) {...};
+
+% ✅ CORRECTO - Orden lógico
+% Texto explicativo PRIMERO
+\node[anchor=north west] at (0, 1.5) {...};
+% Tabla DESPUÉS
+\node[anchor=north west] at (0, 0.5) {...};</code></pre>
+</div>
+<div id="c.-errores-de-generación-de-datos" class="section level5">
+<h5><strong>C. ERRORES DE GENERACIÓN DE DATOS</strong></h5>
+<pre class="r"><code># ❌ INCORRECTO - Opciones duplicadas posibles
+opciones &lt;- sample(c(respuesta, dist1, dist2, dist3), 4)
+
+# ✅ CORRECTO - Sistema anti-duplicados
+generar_opciones_unicas &lt;- function(respuesta_correcta, num_opciones = 4) {
+  # Implementación robusta que garantiza unicidad
+}</code></pre>
+</div>
+<div id="d.-errores-de-compilación-latextikz" class="section level5">
+<h5><strong>D. ERRORES DE COMPILACIÓN LATEX/TIKZ</strong></h5>
+<pre class="r"><code># ❌ INCORRECTO - Paquetes insuficientes
+options(tikzLatexPackages = c(&quot;\\usepackage{tikz}&quot;))
+
+# ✅ CORRECTO - Configuración completa
+options(tikzLatexPackages = c(
+  &quot;\\usepackage{tikz}&quot;,
+  &quot;\\usepackage{colortbl}&quot;,
+  &quot;\\usepackage{amsmath}&quot;,
+  &quot;\\usepackage{array}&quot;,
+  &quot;\\usepackage{xcolor}&quot;
+))</code></pre>
+</div>
+<div id="e.-errores-de-estructura-r-exams" class="section level5">
+<h5><strong>E. ERRORES DE ESTRUCTURA R-EXAMS</strong></h5>
+<pre class="r"><code># ❌ INCORRECTO - include_tikz incompleto
+include_tikz(codigo, name = &quot;fig&quot;)
+
+# ✅ CORRECTO - Configuración completa
+include_tikz(tikz_final,
+             name = &quot;nombre_descriptivo&quot;,
+             markup = &quot;markdown&quot;,
+             format = typ,
+             packages = c(&quot;tikz&quot;, &quot;colortbl&quot;, &quot;amsmath&quot;, &quot;array&quot;),
+             width = &quot;14cm&quot;)</code></pre>
+</div>
+</div>
+</div>
+<div id="checklist-de-validación-rápida-2-minutos" class="section level3">
+<h3>🔍 CHECKLIST DE VALIDACIÓN RÁPIDA (2 MINUTOS)</h3>
+<div id="verificación-express" class="section level4">
+<h4><strong>✅ Verificación Express</strong></h4>
+<ul class="task-list">
+<li><label><input type="checkbox"></input><strong>Gramática</strong>: ¿“El
+conteo” o “La cantidad”? (no “La conteo”)</label></li>
+<li><label><input type="checkbox"></input><strong>Orden TikZ</strong>: ¿Texto
+→ Tabla → Pregunta?</label></li>
+<li><label><input type="checkbox"></input><strong>Opciones</strong>: ¿4
+valores diferentes?</label></li>
+<li><label><input type="checkbox"></input><strong>Compilación</strong>: ¿Sin
+errores LaTeX?</label></li>
+<li><label><input type="checkbox"></input><strong>Visual</strong>: ¿Tabla
+después del texto?</label></li>
+</ul>
+</div>
+<div id="errores-críticos-de-bloqueo" class="section level4">
+<h4><strong>🚨 Errores Críticos de Bloqueo</strong></h4>
+<ol style="list-style-type: decimal">
+<li><strong>Concordancia de género incorrecta</strong> (ej: “La
+conteo”)</li>
+<li><strong>Opciones de respuesta duplicadas</strong></li>
+<li><strong>Tabla aparece antes del texto explicativo</strong></li>
+<li><strong>Errores de compilación LaTeX/TikZ</strong></li>
+<li><strong>Variables no definidas en chunks</strong></li>
+</ol>
+</div>
+</div>
+<div id="comandos-de-activación-1" class="section level3">
+<h3>⚡ COMANDOS DE ACTIVACIÓN</h3>
+<div id="para-corrección-general" class="section level4">
+<h4><strong>Para Corrección General</strong></h4>
+<blockquote>
+<p><strong>“Aplica la metodología de corrección de errores
+recurrentes”</strong></p>
+</blockquote>
+</div>
+<div id="para-categoría-específica" class="section level4">
+<h4><strong>Para Categoría Específica</strong></h4>
+<blockquote>
+<p><strong>“Corrige errores de concordancia de género (Categoría
+A)”</strong> <strong>“Corrige posicionamiento TikZ (Categoría
+B)”</strong> <strong>“Valida opciones únicas (Categoría C)”</strong></p>
+</blockquote>
+</div>
+</div>
+<div id="archivos-de-referencia-obligatorios" class="section level3">
+<h3>📚 ARCHIVOS DE REFERENCIA OBLIGATORIOS</h3>
+<div id="documentación-metodológica" class="section level4">
+<h4><strong>Documentación Metodológica</strong></h4>
+<ul>
+<li><code>METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md</code></li>
+<li><code>BIBLIOTECA_Soluciones_Errores_Comunes.md</code></li>
+<li><code>CHECKLIST_Validacion_Archivos_Rmd.md</code></li>
+</ul>
+</div>
+<div id="ejemplos-funcionales" class="section level4">
+<h4><strong>Ejemplos Funcionales</strong></h4>
+<ul>
+<li><strong>SIEMPRE consultar</strong>:
+<code>/Auxiliares/Ejemplos-Funcionales-Rmd/</code></li>
+<li><strong>Antes de cualquier corrección</strong>: Revisar patrones
+probados</li>
+<li><strong>Durante corrección</strong>: Aplicar soluciones
+validadas</li>
+</ul>
+</div>
+</div>
+<div id="integración-con-metodología-tikz" class="section level3">
+<h3>🎯 INTEGRACIÓN CON METODOLOGÍA TIKZ</h3>
+<div id="workflow-combinado" class="section level4">
+<h4><strong>Workflow Combinado</strong></h4>
+<ol style="list-style-type: decimal">
+<li><strong>Consultar ejemplos funcionales</strong> (TikZ - Fase 1)</li>
+<li><strong>Aplicar detección de errores</strong> (Errores - Fase
+1)</li>
+<li><strong>Corregir sistemáticamente</strong> (Errores - Fase 4)</li>
+<li><strong>Validar con checklist TikZ</strong> (TikZ - Fase 6)</li>
+<li><strong>Documentar nuevos patrones</strong> (Ambas
+metodologías)</li>
+</ol>
+</div>
+<div id="casos-de-uso-integrados" class="section level4">
+<h4><strong>Casos de Uso Integrados</strong></h4>
+<ul>
+<li><strong>Replicación + Corrección</strong>: Aplicar ambas
+metodologías secuencialmente</li>
+<li><strong>Optimización existente</strong>: Priorizar corrección antes
+de mejoras TikZ</li>
+<li><strong>Desarrollo nuevo</strong>: Usar ambas desde el inicio</li>
+</ul>
+</div>
+</div>
+<div id="métricas-de-efectividad" class="section level3">
+<h3>📊 MÉTRICAS DE EFECTIVIDAD</h3>
+<div id="resultados-esperados" class="section level4">
+<h4><strong>✅ Resultados Esperados</strong></h4>
+<ul>
+<li><strong>Tiempo de corrección</strong>: &lt; 5 minutos para errores
+comunes</li>
+<li><strong>Tasa de reincidencia</strong>: &lt; 10% en errores ya
+corregidos</li>
+<li><strong>Detección automática</strong>: &gt; 90% de errores
+recurrentes</li>
+<li><strong>Calidad final</strong>: 100% archivos sin errores
+críticos</li>
+</ul>
+<p><strong>🔧 ESTADO: METODOLOGÍA VALIDADA Y OPERATIVA</strong></p>
+<hr />
+</div>
+</div>
+</div>
+<div id="protocolo-anti-errores-de-implementación-icfes-r-exams" class="section level2">
+<h2>📋 PROTOCOLO ANTI-ERRORES DE IMPLEMENTACIÓN ICFES R-EXAMS</h2>
+<div id="metodología-de-prevención-sistemática-de-errores" class="section level3">
+<h3>🎯 <strong>METODOLOGÍA DE PREVENCIÓN SISTEMÁTICA DE
+ERRORES</strong></h3>
+<div id="consulta-obligatoria-pre-implementación" class="section level4">
+<h4><strong>📚 CONSULTA OBLIGATORIA PRE-IMPLEMENTACIÓN</strong></h4>
+<pre><code>ANTES DE ESCRIBIR UNA SOLA LÍNEA DE CÓDIGO:
+
+✅ PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+✅ PASO 2: Identificar ejemplo más similar al ejercicio objetivo
+✅ PASO 3: Estudiar estructura completa del ejemplo
+✅ PASO 4: Copiar configuración YAML exacta
+✅ PASO 5: Copiar estructura de chunks exacta
+✅ PASO 6: Identificar patrones de interpolación de variables
+✅ PASO 7: Entender configuración TikZ/LaTeX específica
+
+REGLA ABSOLUTA: &quot;No improvises. Copia patrones probados.&quot;</code></pre>
+</div>
+<div id="validación-continua-durante-implementación" class="section level4">
+<h4><strong>⚡ VALIDACIÓN CONTINUA DURANTE IMPLEMENTACIÓN</strong></h4>
+<pre><code>DESPUÉS DE CADA CHUNK:
+
+□ ¿Compiló sin errores?
+□ ¿La sintaxis es idéntica al ejemplo funcional?
+□ ¿Las variables R se interpolan correctamente?
+□ ¿No hay caracteres extra o faltantes?
+
+SI ALGUNA RESPUESTA ES &quot;NO&quot;: PARAR y consultar ejemplos funcionales</code></pre>
+</div>
+<div id="señales-de-alerta-críticas" class="section level4">
+<h4><strong>🚨 SEÑALES DE ALERTA CRÍTICAS</strong></h4>
+<pre><code>PARAR INMEDIATAMENTE SI:
+
+🔴 Estás interpolando variables complejas en TikZ sin ejemplo
+🔴 Estás mezclando sintaxis R y LaTeX sin patrón probado
+🔴 Algo &quot;parece que debería funcionar&quot; sin verificación
+🔴 Estás improvisando configuraciones no vistas en ejemplos
+🔴 Aparecen errores de compilación inesperados
+
+ACCIÓN: Volver a ejemplos funcionales y copiar patrón exacto</code></pre>
+</div>
+<div id="checklist-final-obligatorio" class="section level4">
+<h4><strong>📋 CHECKLIST FINAL OBLIGATORIO</strong></h4>
+<pre><code>ANTES DE ENTREGAR CUALQUIER .RMD:
+
+□ ¿Consulté TODOS los ejemplos funcionales relevantes?
+□ ¿La sintaxis TikZ es idéntica a ejemplos probados?
+□ ¿Las variables R se interpolan correctamente?
+□ ¿No hay chunks extra o caracteres sobrantes?
+□ ¿La estructura completa sigue patrones probados?
+□ ¿Compilación exitosa sin errores?
+□ ¿Aplicé metodología de corrección de errores?
+□ ¿Verifiqué funcionamiento en múltiples formatos?
+
+SOLO ENTREGAR SI TODAS LAS RESPUESTAS SON &quot;SÍ&quot;</code></pre>
+</div>
+<div id="errores-más-comunes-identificados" class="section level4">
+<h4><strong>🎯 ERRORES MÁS COMUNES IDENTIFICADOS</strong></h4>
+<ol style="list-style-type: decimal">
+<li><strong>Interpolación incorrecta</strong>:
+<code>\\draw[&#39;, variable, &#39;,thick]</code> →
+<code>\\draw[cyan,thick]</code></li>
+<li><strong>Chunks extra</strong>: Verificar que no sobren ``` al
+final</li>
+<li><strong>Sintaxis mixta</strong>: No mezclar R y LaTeX sin patrón
+probado</li>
+<li><strong>Configuraciones inventadas</strong>: Solo usar
+configuraciones de ejemplos funcionales</li>
+<li><strong>Variables no definidas</strong>: Verificar que todas las
+variables existan</li>
+</ol>
+</div>
+<div id="comandos-de-activación-2" class="section level4">
+<h4><strong>⚡ COMANDOS DE ACTIVACIÓN</strong></h4>
+<blockquote>
+<p><strong>“Aplica el protocolo anti-errores de implementación”</strong>
+<strong>“Valida continuamente durante implementación siguiendo ejemplos
+funcionales”</strong></p>
+</blockquote>
+</div>
+</div>
+<div id="integración-con-metodologías-existentes-1" class="section level3">
+<h3>🎯 <strong>INTEGRACIÓN CON METODOLOGÍAS EXISTENTES</strong></h3>
+<p>El protocolo anti-errores se <strong>INTEGRA COMPLETAMENTE</strong>
+con:</p>
+<ul>
+<li><strong>Sistema Condicional Automático</strong>: Validación durante
+FLUJO A y B</li>
+<li><strong>Metodología TikZ Avanzada</strong>: Prevención de errores de
+interpolación</li>
+<li><strong>Corrección de Errores Recurrentes</strong>: Aplicación
+durante implementación (no solo al final)</li>
+</ul>
+</div>
+<div id="métricas-de-efectividad-esperadas" class="section level3">
+<h3>📊 <strong>MÉTRICAS DE EFECTIVIDAD ESPERADAS</strong></h3>
+<ul>
+<li><strong>Tiempo de corrección</strong>: &lt; 5 minutos para errores
+comunes</li>
+<li><strong>Tasa de reincidencia</strong>: &lt; 5% en errores ya
+identificados</li>
+<li><strong>Detección preventiva</strong>: &gt; 95% de errores antes de
+que ocurran</li>
+<li><strong>Calidad final</strong>: 100% archivos sin errores críticos
+de implementación</li>
+</ul>
+<p><strong>🔧 ESTADO: PROTOCOLO VALIDADO Y OPERATIVO</strong></p>
+<p><strong>Todas las metodologías (Sistema Condicional + TikZ +
+Corrección de Errores + Protocolo Anti-Errores) están integradas y
+listas para uso inmediato en cualquier archivo .Rmd del proyecto
+ICFES.</strong></p>
+</div>
 </div>
 </div>
 

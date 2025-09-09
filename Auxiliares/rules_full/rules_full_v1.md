@@ -301,6 +301,7 @@ exsection: [Sección temática]
 ```
 
 **CONFIGURACIÓN CRÍTICA PARA EJERCICIOS TIPO CLOZE:**
+
 - **Tolerancias numéricas**: Usar tolerancia ≥ 1 para valores monetarios grandes
 - **Tolerancias schoice**: Mantener en 0 (exactitud requerida)
 - **Formato de números**: Sin separador de miles, punto para decimales
@@ -309,6 +310,7 @@ exsection: [Sección temática]
 ## 🎯 CRITERIOS DE CALIDAD OBLIGATORIOS
 
 ### ALEATORIZACIÓN INTELIGENTE:
+
 - **Estándar del proyecto**: Mínimo 300 versiones únicas verificadas con test
 - **Diversidad matemáticamente relevante**: Enfocar en aspectos que cambien la experiencia matemática
 - **Evitar aleatorización superficial**: No diversificar elementos cosméticos sin valor educativo
@@ -416,6 +418,7 @@ exsection: [Sección temática]
 - `Auxiliares/Ejemplos_Funcionales.md/`
 
 **ESTOS ARCHIVOS CONTIENEN:**
+
 - Configuraciones correctas de chunks
 - Sintaxis Python corregida para matplotlib
 - Manejo adecuado de reticulate
@@ -423,6 +426,7 @@ exsection: [Sección temática]
 - Estructuras de código probadas y funcionales
 
 **PROTOCOLO DE CORRECCIÓN:**
+
 1. Si encuentras errores de sintaxis Python → Consultar ejemplos
 2. Si hay problemas con gráficos → Revisar código Python en ejemplos
 3. Si falla la configuración LaTeX → Usar configuración de ejemplos
@@ -430,6 +434,7 @@ exsection: [Sección temática]
 5. Si problemas con reticulate → Verificar configuración en ejemplos
 
 **ELEMENTOS CRÍTICOS A VERIFICAR:**
+
 - Sintaxis correcta de plt.plot() en Python
 - Configuración adecuada de use_python()
 - Chunks de configuración inicial completos
@@ -439,6 +444,7 @@ exsection: [Sección temática]
 ## 🎯 INSTRUCCIONES FINALES
 
 Analiza la imagen proporcionada y:
+
 1. **NUEVO:** Aplica el sistema condicional automático para detectar contenido gráfico
 2. **FLUJO A o B:** Activa el flujo apropiado según detección automática
 3. **Si FLUJO B:** Usa Agente-Graficador Especializado para replicación 98%+ fidelidad
@@ -620,6 +626,7 @@ Al recibir una imagen PNG, el sistema analiza automáticamente:
 ### 🎯 INTEGRACIÓN CON METODOLOGÍAS EXISTENTES
 
 El sistema condicional automático **EXPANDE** las metodologías existentes:
+
 - **TikZ Avanzada**: Integrada en Agente-Graficador para replicación especializada
 - **Corrección de Errores**: Aplicada en ambos flujos (A y B) durante FASE 7
 - **Sistema de Distractores**: Mantenido intacto en FASE 6 para ambos flujos
@@ -842,6 +849,7 @@ SOLO ENTREGAR SI TODAS LAS RESPUESTAS SON "SÍ"
 ### 🎯 **INTEGRACIÓN CON METODOLOGÍAS EXISTENTES**
 
 El protocolo anti-errores se **INTEGRA COMPLETAMENTE** con:
+
 - **Sistema Condicional Automático**: Validación durante FLUJO A y B
 - **Metodología TikZ Avanzada**: Prevención de errores de interpolación
 - **Corrección de Errores Recurrentes**: Aplicación durante implementación (no solo al final)
