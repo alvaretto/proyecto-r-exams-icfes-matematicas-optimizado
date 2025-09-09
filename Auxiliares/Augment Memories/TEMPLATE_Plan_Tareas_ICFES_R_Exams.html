@@ -362,7 +362,32 @@ R-exams</h1>
 Condicional TikZ</strong></h3>
 <p><em>Sistema inteligente de detección automática de contenido gráfico
 con flujos especializados</em></p>
+</div>
+<div id="fase-0-análisis-de-patrones-pedagógicos-nueva" class="section level3">
+<h3>🧠 <strong>FASE 0: Análisis de Patrones Pedagógicos
+(NUEVA)</strong></h3>
+<p><em>Identificación de patrones de sobre-ingeniería vs valor educativo
+real</em></p>
 <ul class="task-list">
+<li><label><input type="checkbox"></input><strong>🔍 0.1 Análisis Profundo de
+Patrones Existentes</strong></label>
+<ul>
+<li>Identificar aleatorización superficial vs diversidad matemáticamente
+relevante</li>
+<li>Detectar complejidad técnica innecesaria vs sofisticación que aporta
+valor</li>
+<li>Evaluar distractores débiles vs errores conceptuales reales</li>
+<li>Aplicar “malicia indígena” para detectar sobre-ingeniería</li>
+</ul></li>
+<li><label><input type="checkbox"></input><strong>⚖️ 0.2 Balanceo
+Técnico-Pedagógico</strong></label>
+<ul>
+<li>Principio: “Elegancia técnica donde aporta valor educativo
+real”</li>
+<li>Simplificar elementos que no mejoran la experiencia matemática</li>
+<li>Mantener sofisticación en aspectos educativamente relevantes</li>
+<li>Respetar enfoque original del problema</li>
+</ul></li>
 <li><label><input type="checkbox"></input><strong>📁 1.1 Preparación del
 Archivo</strong></label>
 <ul>
@@ -477,20 +502,74 @@ exams2moodle</li>
 </ul></li>
 </ul></li>
 <li><label><input type="checkbox"></input><strong>🔍 1.4 Consultar Ejemplos
-Funcionales (Ambos Flujos)</strong></label>
+Funcionales (Ambos Flujos) - PROTOCOLO ESTRICTO</strong></label>
 <ul>
-<li><strong>OBLIGATORIO</strong>: Revisar
-<code>/Auxiliares/Ejemplos-Funcionales-Rmd/</code> para patrones
-exitosos</li>
+<li><strong>OBLIGATORIO ABSOLUTO</strong>: Revisar
+<code>/Auxiliares/Ejemplos-Funcionales-Rmd/</code> ANTES de escribir
+cualquier código</li>
 <li><strong>FLUJO A</strong>: Identificar configuraciones técnicas
 básicas para TikZ simple</li>
 <li><strong>FLUJO B</strong>: Consultar templates avanzados para
 gráficas complejas</li>
-<li>Verificar estructuras de chunks exitosas en archivos FUERA de
-Lab</li>
+<li><strong>COPIAR PATRONES EXACTOS</strong>: No improvisar, usar
+sintaxis idéntica a ejemplos probados</li>
+<li><strong>VERIFICAR ESTRUCTURAS</strong>: Chunks, configuraciones
+LaTeX, interpolación de variables</li>
 <li><strong>🐍 Alternativo</strong>: Solo si TikZ no es viable,
 consultar
 <code>Auxiliares/Python-Documentation/Python-ICFES-Guide.md</code></li>
+</ul></li>
+<li><label><input type="checkbox"></input><strong>⚡ 1.5 PROTOCOLO
+ANTI-ERRORES DE IMPLEMENTACIÓN</strong></label>
+<ul>
+<li><strong>🎯 1.5.1 Auto-Verificación Pre-Implementación</strong>
+<ul>
+<li><strong>CHECKLIST OBLIGATORIO ANTES DE ESCRIBIR CÓDIGO</strong>:
+<ul>
+<li>✅ ¿Consulté TODOS los ejemplos funcionales relevantes?</li>
+<li>✅ ¿Identifiqué el patrón exacto a seguir?</li>
+<li>✅ ¿Entiendo la sintaxis TikZ/LaTeX del ejemplo?</li>
+<li>✅ ¿Sé cómo interpolar variables R correctamente?</li>
+<li>✅ ¿Tengo clara la estructura de chunks necesaria?</li>
+</ul></li>
+<li><strong>REGLA DE ORO</strong>: “Si no está en ejemplos funcionales,
+no lo improvises”</li>
+</ul></li>
+<li><strong>🔍 1.5.2 Validación Paso a Paso Durante
+Implementación</strong>
+<ul>
+<li><strong>COMPILACIÓN INCREMENTAL</strong>: Probar cada chunk antes de
+continuar</li>
+<li><strong>VERIFICACIÓN DE SINTAXIS</strong>: Comparar cada línea con
+ejemplos funcionales</li>
+<li><strong>INTERPOLACIÓN SEGURA</strong>: Verificar variables R en
+código TikZ/LaTeX</li>
+<li><strong>NO AVANZAR</strong> hasta que sección actual funcione
+correctamente</li>
+</ul></li>
+<li><strong>⚠️ 1.5.3 Señales de Alerta Críticas</strong>
+<ul>
+<li><strong>PARAR INMEDIATAMENTE</strong> si:
+<ul>
+<li>Interpolando variables complejas en TikZ sin ejemplo</li>
+<li>Mezclando sintaxis R y LaTeX sin patrón probado</li>
+<li>Algo “parece que debería funcionar” sin verificación</li>
+<li>Improvisando configuraciones no vistas en ejemplos</li>
+</ul></li>
+<li><strong>ACCIÓN</strong>: Volver a ejemplos funcionales y copiar
+patrón exacto</li>
+</ul></li>
+<li><strong>📋 1.5.4 Protocolo de Auto-Verificación Final</strong>
+<ul>
+<li><strong>ANTES DE ENTREGAR CUALQUIER .RMD</strong>:
+<ul>
+<li>□ ¿Sintaxis TikZ idéntica a ejemplos probados?</li>
+<li>□ ¿Variables R interpoladas correctamente?</li>
+<li>□ ¿No hay chunks extra o caracteres sobrantes?</li>
+<li>□ ¿Estructura completa verificada contra ejemplos?</li>
+<li>□ ¿Compilación exitosa sin errores?</li>
+</ul></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
@@ -565,8 +644,15 @@ icfes:
 <li><p><label><input type="checkbox"></input><strong>🔧 3.2 Chunk Setup
 Inicial con TikZ</strong></label></p>
 <ul>
-<li>Configurar <code>Sys.setlocale()</code> y
-<code>options(OutDec = &quot;.&quot;)</code></li>
+<li><strong>CONFIGURACIÓN NUMÉRICA CRÍTICA</strong>:
+<ul>
+<li><code>Sys.setlocale(category = &quot;LC_NUMERIC&quot;, locale = &quot;C&quot;)</code></li>
+<li><code>options(OutDec = &quot;.&quot;)</code></li>
+<li><code>options(scipen = 999)</code> - Eliminar notación
+científica</li>
+<li><code>options(digits = 10)</code> - Precisión numérica
+apropiada</li>
+</ul></li>
 <li><strong>PRIORIDAD</strong>: Establecer opciones LaTeX y TikZ desde
 el inicio</li>
 <li>Cargar librerías esenciales: <code>exams</code>,
@@ -615,20 +701,42 @@ gráficos validados</li>
 </ul>
 <hr />
 </div>
-<div id="fase-4-generación-de-datos-aleatorios" class="section level3">
-<h3>🎲 <strong>FASE 4: Generación de Datos Aleatorios</strong></h3>
-<p><em>Crear función de generación con mínimo 300 versiones
-únicas</em></p>
+<div id="fase-4-generación-de-datos-aleatorios-inteligente" class="section level3">
+<h3>🎲 <strong>FASE 4: Generación de Datos Aleatorios
+Inteligente</strong></h3>
+<p><em>Crear función de generación con mínimo 300 versiones únicas -
+ENFOQUE OPTIMIZADO</em></p>
 <ul class="task-list">
 <li><p><label><input type="checkbox"></input><strong>🔢 4.1 Función
-generar_datos()</strong></label></p>
+generar_datos() Optimizada</strong></label></p>
 <ul>
-<li>Implementar aleatorización de contextos (mínimo 8-10
-escenarios)</li>
-<li>Generar parámetros numéricos variables con rangos realistas</li>
-<li>Incluir aleatorización de nombres, colores, unidades</li>
-<li>Asegurar coherencia matemática en todos los casos</li>
-<li>Retornar lista estructurada con todos los parámetros</li>
+<li><strong>CONFIGURACIÓN NUMÉRICA INICIAL</strong>:
+<ul>
+<li><code>options(OutDec = &quot;.&quot;)</code> - Punto como separador
+decimal</li>
+<li><code>options(scipen = 999)</code> - Eliminar notación
+científica</li>
+<li><code>options(digits = 10)</code> - Precisión apropiada</li>
+</ul></li>
+<li><strong>FUNCIONES DE FORMATO ESTÁNDAR</strong>:
+<ul>
+<li><code>formatear_entero()</code> - Para valores monetarios sin
+separador de miles</li>
+<li><code>formato_estandar()</code> - Para números con decimales
+controlados</li>
+</ul></li>
+<li><strong>PRIORIZAR</strong>: Diversidad matemáticamente relevante
+sobre aleatorización superficial</li>
+<li><strong>EVITAR</strong>: Exceso de contextos que no aportan valor
+educativo (máximo 3-5 opciones)</li>
+<li><strong>ENFOCAR</strong>: Parámetros que cambien la experiencia
+matemática del estudiante</li>
+<li><strong>IMPLEMENTAR</strong>: Diferentes tipos de problemas (ej:
+ganancia baja/media/alta)</li>
+<li><strong>MANTENER</strong>: Coherencia matemática y realismo en todos
+los casos</li>
+<li>Retornar lista estructurada con parámetros educativamente
+relevantes</li>
 </ul></li>
 <li><p><label><input type="checkbox"></input><strong>✅ 4.2 Prueba de
 Diversidad</strong></label></p>
@@ -748,20 +856,21 @@ Question</strong></label></p>
 <ul>
 <li>Redactar contexto realista y relevante</li>
 <li>Formular pregunta clara según competencia ICFES</li>
-<li><strong>🎯 Crear 4 opciones con sistema avanzado de
-distractores:</strong>
+<li><strong>🎯 Crear 4 opciones con distractores conceptuales
+optimizados:</strong>
 <ul>
-<li>Generar 8+ tipos diferentes de distractores (confusión conceptual,
-errores de cálculo, posiciones incorrectas, etc.)</li>
-<li><strong>30% probabilidad</strong>: Incluir valores duplicados con
-justificaciones diferentes (ej: “mediana es 30 porque promedio
-centrales” vs “mediana es 30 porque suma/división”)</li>
-<li><strong>70% probabilidad</strong>: Mantener todos los valores
-diferentes (modo tradicional)</li>
-<li>Selección estratégica: 1 distractor con valor duplicado + 2 con
-valores diferentes</li>
+<li><strong>PRIORIZAR</strong>: Errores conceptuales reales que cometen
+estudiantes</li>
+<li><strong>EVITAR</strong>: Distractores artificiales o demasiado
+complejos</li>
+<li><strong>IMPLEMENTAR</strong>: Máximo 3-5 tipos de distractores bien
+fundamentados</li>
+<li><strong>ENFOCAR</strong>: Confusiones conceptuales específicas del
+tema matemático</li>
+<li><strong>MANTENER</strong>: Simplicidad en la generación sin
+sobre-ingeniería</li>
 <li>Verificar que las 4 opciones sean textualmente únicas</li>
-<li>Asegurar distractores plausibles y educativos</li>
+<li>Asegurar distractores pedagógicamente efectivos</li>
 </ul></li>
 <li>Incluir gráficos/tablas si es necesario</li>
 </ul></li>
@@ -778,20 +887,120 @@ Meta-information</strong></label></p>
 <pre><code>Meta-information
 ================
 exname: [nombre_descriptivo]
-extype: schoice
+extype: schoice|cloze
 exsolution: [patrón_respuesta]
+exclozetype: [Para cloze: schoice|num|string separados por |]
+extol: [Para cloze: tolerancias separadas por |]
 exshuffle: TRUE
-exsection: [sección_temática]</code></pre></li>
+exsection: [sección_temática]</code></pre>
+<p><strong>CONFIGURACIÓN CRÍTICA PARA TIPO CLOZE</strong>:</p>
+<ul>
+<li><strong>Tolerancias numéricas</strong>: ≥ 1 para valores monetarios
+grandes</li>
+<li><strong>Tolerancias schoice</strong>: 0 (exactitud requerida)</li>
+<li><strong>Ejemplo</strong>: <code>extol: 0|0|1|1|0|1|0</code>
+(schoice=0, numéricas=1)</li>
+<li><strong>Documentar</strong>: Comentarios explicativos sobre
+tolerancias</li>
+</ul></li>
 </ul>
 <hr />
 </div>
-<div id="fase-7-corrección-de-errores-recurrentes" class="section level3">
-<h3>🔧 <strong>FASE 7: Corrección de Errores Recurrentes</strong></h3>
-<p><em>Aplicar metodología avanzada de detección y corrección
-sistemática</em></p>
+<div id="fase-6.5-configuración-de-tolerancias-para-evaluación-automática-nueva" class="section level3">
+<h3>⚙️ <strong>FASE 6.5: Configuración de Tolerancias para Evaluación
+Automática (NUEVA)</strong></h3>
+<p><em>Configurar tolerancias apropiadas para respuestas tipo cloze y
+validar evaluación correcta</em></p>
 <ul class="task-list">
+<li><label><input type="checkbox"></input><strong>🎯 6.5.1 Identificación de
+Tipos de Respuesta</strong></label>
+<ul>
+<li><strong>Mapear estructura de respuestas</strong>: schoice vs
+numéricas</li>
+<li><strong>Documentar posiciones</strong>: Crear comentarios
+explicativos</li>
+<li><strong>Ejemplo</strong>:
+<code>tipos_respuesta &lt;- c(&quot;schoice&quot;, &quot;schoice&quot;, &quot;num&quot;, &quot;num&quot;, &quot;schoice&quot;, &quot;num&quot;, &quot;schoice&quot;)</code></li>
+</ul></li>
+<li><label><input type="checkbox"></input><strong>⚙️ 6.5.2 Configuración de
+Tolerancias Apropiadas</strong></label>
+<ul>
+<li><strong>Para respuestas schoice</strong>: Tolerancia 0 (exactitud
+requerida)</li>
+<li><strong>Para respuestas numéricas</strong>:
+<ul>
+<li>Valores monetarios grandes (&gt;1000): tolerancia ≥ 1</li>
+<li>Valores decimales pequeños (&lt;10): tolerancia 0.01-0.1</li>
+<li>Porcentajes: tolerancia 0.1-1 según precisión requerida</li>
+</ul></li>
+<li><strong>Ejemplo</strong>:
+<code>tolerancias &lt;- c(0, 0, 1, 1, 0, 1, 0)</code></li>
+</ul></li>
+<li><label><input type="checkbox"></input><strong>📝 6.5.3 Documentación de
+Configuración</strong></label>
+<ul>
+<li><p><strong>Comentarios explicativos</strong>:</p>
+<pre class="r"><code># Tolerancias para respuestas numéricas (solo aplica a las numéricas)
+# Estructura: schoice, schoice, num, num, schoice, num, schoice
+# Para respuestas numéricas monetarias: tolerancia 1 (permite diferencias mínimas de redondeo)
+# Para respuestas schoice: tolerancia 0 (exactitud requerida)
+tolerancias &lt;- c(0, 0, 1, 1, 0, 1, 0)</code></pre></li>
+</ul></li>
+<li><label><input type="checkbox"></input><strong>✅ 6.5.4 Validación de
+Tolerancias</strong></label>
+<ul>
+<li><p><strong>Test automático para verificar
+configuración</strong>:</p>
+<pre class="r"><code>test_that(&quot;Validación de tolerancias configuradas correctamente&quot;, {
+  expect_equal(length(tolerancias), length(tipos_respuesta))
+  # Verificar que numéricas tienen tolerancia &gt; 0
+  posiciones_numericas &lt;- which(tipos_respuesta == &quot;num&quot;)
+  expect_true(all(tolerancias[posiciones_numericas] &gt; 0))
+  # Verificar que schoice tienen tolerancia 0
+  posiciones_schoice &lt;- which(tipos_respuesta == &quot;schoice&quot;)
+  expect_true(all(tolerancias[posiciones_schoice] == 0))
+})</code></pre></li>
+</ul></li>
+<li><label><input type="checkbox"></input><strong>🔍 6.5.5 Prueba de
+Evaluación Automática</strong></label>
+<ul>
+<li><strong>Simular respuestas correctas</strong>: Verificar que se
+evalúan como correctas</li>
+<li><strong>Probar variaciones dentro de tolerancia</strong>: Confirmar
+aceptación</li>
+<li><strong>Validar respuestas fuera de tolerancia</strong>: Confirmar
+rechazo</li>
+<li><strong>Documentar casos de prueba</strong>: Para referencia
+futura</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="fase-7-corrección-de-errores-recurrentes-y-validación-continua" class="section level3">
+<h3>🔧 <strong>FASE 7: Corrección de Errores Recurrentes y Validación
+Continua</strong></h3>
+<p><em>Aplicar metodología avanzada de detección y corrección
+sistemática integrada durante implementación</em></p>
+<ul class="task-list">
+<li><label><input type="checkbox"></input><strong>⚡ 7.0 VALIDACIÓN CONTINUA
+DURANTE IMPLEMENTACIÓN (NUEVO)</strong></label>
+<ul>
+<li><strong>APLICAR DURANTE FASES 3-6</strong>: No esperar hasta el
+final para corregir errores</li>
+<li><strong>VERIFICACIÓN CHUNK POR CHUNK</strong>:
+<ul>
+<li>Después de cada chunk: Compilar y verificar funcionamiento</li>
+<li>Comparar sintaxis con ejemplos funcionales inmediatamente</li>
+<li>Corregir errores de interpolación de variables al momento</li>
+<li>Validar estructura LaTeX/TikZ antes de continuar</li>
+</ul></li>
+<li><strong>PROTOCOLO DE PARADA</strong>: Si algo no funciona, PARAR y
+consultar ejemplos funcionales</li>
+<li><strong>PREVENCIÓN &gt; CORRECCIÓN</strong>: Evitar errores en lugar
+de corregirlos después</li>
+</ul></li>
 <li><label><input type="checkbox"></input><strong>🔍 7.1 Detección Automática
-de Errores</strong></label>
+de Errores (Complementaria)</strong></label>
 <ul>
 <li><strong>OBLIGATORIO</strong>: Consultar
 <code>/Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md</code></li>
@@ -804,9 +1013,9 @@ tabla → pregunta</li>
 <li><strong>C) Generación de datos</strong>: Validar opciones únicas,
 anti-duplicados</li>
 <li><strong>D) Compilación LaTeX</strong>: Verificar paquetes,
-caracteres especiales</li>
+caracteres especiales, interpolación variables</li>
 <li><strong>E) Estructura R-exams</strong>: Revisar YAML, include_tikz,
-variables</li>
+variables, chunks extra</li>
 </ul></li>
 <li>Aplicar función
 <code>detectar_errores_comunes(archivo_rmd)</code></li>
@@ -884,6 +1093,13 @@ Post-Corrección</strong></label>
 <li>Ejecutar pruebas de diversidad de versiones</li>
 <li>Verificar validaciones matemáticas</li>
 <li>Comprobar coherencia de datos generados</li>
+<li><strong>🎯 Validar configuración de tolerancias</strong>:
+<ul>
+<li>Confirmar que tolerancias están configuradas apropiadamente</li>
+<li>Probar evaluación automática con respuestas correctas</li>
+<li>Verificar que respuestas dentro de tolerancia se aceptan</li>
+<li>Validar que respuestas fuera de tolerancia se rechazan</li>
+</ul></li>
 <li><strong>🎯 Validar sistema avanzado de distractores:</strong>
 <ul>
 <li>Verificar que las 4 opciones sean textualmente únicas</li>
@@ -1279,12 +1495,19 @@ completo con salidas exams2*“**</p>
 </div>
 <div id="criterios-de-calidad-obligatorios" class="section level2">
 <h2>🎯 <strong>CRITERIOS DE CALIDAD OBLIGATORIOS</strong></h2>
-<div id="aleatorización-avanzada" class="section level3">
-<h3>✅ <strong>Aleatorización Avanzada:</strong></h3>
+<div id="aleatorización-inteligente" class="section level3">
+<h3>✅ <strong>Aleatorización Inteligente:</strong></h3>
 <ul>
-<li>Mínimo 300 versiones únicas verificadas</li>
-<li>Contextos, valores, colores, nombres variables</li>
-<li>Orden aleatorio de opciones</li>
+<li><strong>Estándar del proyecto</strong>: Mínimo 300 versiones únicas
+verificadas</li>
+<li><strong>Diversidad matemáticamente relevante</strong>: Enfocar en
+aspectos que cambien la experiencia matemática</li>
+<li><strong>Evitar aleatorización superficial</strong>: No diversificar
+elementos cosméticos sin valor educativo</li>
+<li><strong>Distractores conceptuales</strong>: Representar errores
+reales que cometen estudiantes</li>
+<li><strong>Simplicidad técnica</strong>: Mantener elegancia sin
+sobre-ingeniería</li>
 </ul>
 </div>
 <div id="robustez-matemática" class="section level3">
@@ -1487,6 +1710,20 @@ update_tasks con task_id y nuevo state
 
 # Compilar y probar
 rmarkdown::render(&#39;archivo.Rmd&#39;, &#39;html_document&#39;)</code></pre>
+</div>
+<div id="para-configuración-de-tolerancias" class="section level3">
+<h3>⚙️ <strong>Para Configuración de Tolerancias:</strong></h3>
+<pre><code># Verificar configuración de tolerancias
+&quot;Revisa y corrige la configuración de tolerancias para evaluación automática en ejercicios tipo cloze&quot;
+
+# Aplicar corrección estándar
+&quot;Aplica tolerancia 0 para schoice y tolerancia ≥ 1 para respuestas numéricas con valores grandes&quot;
+
+# Validar evaluación automática
+&quot;Valida que las respuestas idénticas a la solución se evalúen correctamente como correctas&quot;
+
+# Documentar configuración
+&quot;Agrega comentarios explicativos sobre la configuración de tolerancias y su justificación&quot;</code></pre>
 <hr />
 </div>
 </div>
@@ -1741,6 +1978,25 @@ error relacionado con “pandocbounded” buscar soluciones en
 <code>/Auxiliares/Ejemplos-Funcionales-Rmd/</code></li>
 </ul>
 </div>
+<div id="configuración-de-tolerancias-crítico" class="section level3">
+<h3>⚙️ <strong>Configuración de Tolerancias (CRÍTICO):</strong></h3>
+<ul>
+<li><strong>PROBLEMA COMÚN</strong>: Tolerancias en 0 para respuestas
+numéricas causan evaluación incorrecta</li>
+<li><strong>SOLUCIÓN ESTÁNDAR</strong>:
+<ul>
+<li>Tolerancia 0 para respuestas schoice (exactitud requerida)</li>
+<li>Tolerancia ≥ 1 para respuestas numéricas con valores grandes
+(monetarios)</li>
+<li>Tolerancia 0.01-0.1 para respuestas numéricas con valores
+pequeños</li>
+</ul></li>
+<li><strong>DOCUMENTAR SIEMPRE</strong>: Comentarios explicativos sobre
+configuración de tolerancias</li>
+<li><strong>VALIDAR</strong>: Tests automáticos para verificar
+evaluación correcta</li>
+</ul>
+</div>
 <div id="restricción-crítica---caracteres-especiales" class="section level3">
 <h3>⚠️ <strong>RESTRICCIÓN CRÍTICA - CARACTERES
 ESPECIALES:</strong></h3>
@@ -1959,6 +2215,111 @@ específicas</li>
 <li><strong>Documentar y compartir</strong> si es exitoso para futuros
 ejercicios</li>
 </ol>
+<hr />
+</div>
+</div>
+<div id="anexo-protocolo-anti-errores-de-implementación" class="section level2">
+<h2>📋 <strong>ANEXO: PROTOCOLO ANTI-ERRORES DE
+IMPLEMENTACIÓN</strong></h2>
+<div id="protocolo-completo-de-prevención-de-errores" class="section level3">
+<h3>🎯 <strong>PROTOCOLO COMPLETO DE PREVENCIÓN DE ERRORES</strong></h3>
+<div id="fase-0-consulta-obligatoria-pre-implementación" class="section level4">
+<h4><strong>📚 FASE 0: CONSULTA OBLIGATORIA
+PRE-IMPLEMENTACIÓN</strong></h4>
+<pre><code>ANTES DE ESCRIBIR UNA SOLA LÍNEA DE CÓDIGO:
+
+✅ PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+✅ PASO 2: Identificar ejemplo más similar al ejercicio objetivo
+✅ PASO 3: Estudiar estructura completa del ejemplo
+✅ PASO 4: Copiar configuración YAML exacta
+✅ PASO 5: Copiar estructura de chunks exacta
+✅ PASO 6: Identificar patrones de interpolación de variables
+✅ PASO 7: Entender configuración TikZ/LaTeX específica
+
+REGLA ABSOLUTA: &quot;No improvises. Copia patrones probados.&quot;</code></pre>
+</div>
+<div id="validación-continua-durante-implementación" class="section level4">
+<h4><strong>⚡ VALIDACIÓN CONTINUA DURANTE IMPLEMENTACIÓN</strong></h4>
+<pre><code>DESPUÉS DE CADA CHUNK:
+
+□ ¿Compiló sin errores?
+□ ¿La sintaxis es idéntica al ejemplo funcional?
+□ ¿Las variables R se interpolan correctamente?
+□ ¿No hay caracteres extra o faltantes?
+
+SI ALGUNA RESPUESTA ES &quot;NO&quot;: PARAR y consultar ejemplos funcionales</code></pre>
+</div>
+<div id="señales-de-alerta-críticas" class="section level4">
+<h4><strong>🚨 SEÑALES DE ALERTA CRÍTICAS</strong></h4>
+<pre><code>PARAR INMEDIATAMENTE SI:
+
+🔴 Estás interpolando variables complejas en TikZ sin ejemplo
+🔴 Estás mezclando sintaxis R y LaTeX sin patrón probado
+🔴 Algo &quot;parece que debería funcionar&quot; sin verificación
+🔴 Estás improvisando configuraciones no vistas en ejemplos
+🔴 Aparecen errores de compilación inesperados
+
+ACCIÓN: Volver a ejemplos funcionales y copiar patrón exacto</code></pre>
+</div>
+<div id="checklist-final-obligatorio" class="section level4">
+<h4><strong>📋 CHECKLIST FINAL OBLIGATORIO</strong></h4>
+<pre><code>ANTES DE ENTREGAR CUALQUIER .RMD:
+
+□ ¿Consulté TODOS los ejemplos funcionales relevantes?
+□ ¿La sintaxis TikZ es idéntica a ejemplos probados?
+□ ¿Las variables R se interpolan correctamente?
+□ ¿No hay chunks extra o caracteres sobrantes?
+□ ¿La estructura completa sigue patrones probados?
+□ ¿Compilación exitosa sin errores?
+□ ¿Aplicé metodología de corrección de errores?
+□ ¿Verifiqué funcionamiento en múltiples formatos?
+
+SOLO ENTREGAR SI TODAS LAS RESPUESTAS SON &quot;SÍ&quot;</code></pre>
+</div>
+<div id="errores-más-comunes-a-evitar" class="section level4">
+<h4><strong>🎯 ERRORES MÁS COMUNES A EVITAR</strong></h4>
+<ol style="list-style-type: decimal">
+<li><strong>Interpolación incorrecta</strong>:
+<code>\\draw[&#39;, variable, &#39;,thick]</code> →
+<code>\\draw[cyan,thick]</code></li>
+<li><strong>Chunks extra</strong>: Verificar que no sobren ``` al
+final</li>
+<li><strong>Sintaxis mixta</strong>: No mezclar R y LaTeX sin patrón
+probado</li>
+<li><strong>Configuraciones inventadas</strong>: Solo usar
+configuraciones de ejemplos funcionales</li>
+<li><strong>Variables no definidas</strong>: Verificar que todas las
+variables existan</li>
+</ol>
+</div>
+<div id="protocolo-de-recuperación-de-errores" class="section level4">
+<h4><strong>🔧 PROTOCOLO DE RECUPERACIÓN DE ERRORES</strong></h4>
+<pre><code>SI ENCUENTRAS ERRORES:
+
+1. NO intentes &quot;arreglar rápido&quot;
+2. PARA la implementación
+3. CONSULTA ejemplos funcionales
+4. IDENTIFICA el patrón correcto
+5. COPIA la sintaxis exacta
+6. PRUEBA compilación
+7. CONTINÚA solo si funciona
+
+&quot;Mejor perder 5 minutos consultando que 30 minutos debuggeando&quot;</code></pre>
+</div>
+</div>
+<div id="implementación-inmediata-del-protocolo" class="section level3">
+<h3>🎯 <strong>IMPLEMENTACIÓN INMEDIATA DEL PROTOCOLO</strong></h3>
+<p><strong>Este protocolo debe aplicarse OBLIGATORIAMENTE en todas las
+fases del template, especialmente:</strong></p>
+<ul>
+<li><strong>FASE 1.4-1.5</strong>: Consulta y validación
+pre-implementación</li>
+<li><strong>FASES 3-6</strong>: Validación continua durante
+implementación</li>
+<li><strong>FASE 7</strong>: Corrección sistemática final</li>
+</ul>
+<p><strong>El objetivo es PREVENIR errores, no corregirlos
+después.</strong></p>
 </div>
 </div>
 </div>
