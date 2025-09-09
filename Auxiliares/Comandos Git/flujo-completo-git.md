@@ -41,9 +41,8 @@ git clean -fd
 ### 📤 Sincronizar LOCAL → NUBE (forzoso):
 ```bash
 git checkout experimentos-seguros
-# Hacer tus experimentos...
 git add .
-git commit -m "Experimentos arriesgados"
+git commit -m "[Commit muy detallado]"
 git push --force-with-lease origin experimentos-seguros
 ```
 **Resultado:** `origin/experimentos-seguros` queda IDÉNTICO a tu `experimentos-seguros` local

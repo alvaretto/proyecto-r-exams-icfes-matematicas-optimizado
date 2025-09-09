@@ -396,9 +396,8 @@ local queda IDÉNTICO a <code>origin/experimentos-seguros</code></p>
 <div id="sincronizar-local-nube-forzoso-1" class="section level3">
 <h3>📤 Sincronizar LOCAL → NUBE (forzoso):</h3>
 <pre class="bash"><code>git checkout experimentos-seguros
-# Hacer tus experimentos...
 git add .
-git commit -m &quot;Experimentos arriesgados&quot;
+git commit -m &quot;[Commit muy detallado]&quot;
 git push --force-with-lease origin experimentos-seguros</code></pre>
 <p><strong>Resultado:</strong> <code>origin/experimentos-seguros</code>
 queda IDÉNTICO a tu <code>experimentos-seguros</code> local</p>
@@ -468,6 +467,163 @@ git fetch origin &amp;&amp; git reset --hard origin/main &amp;&amp; git clean -f
 # Para experimentos
 git checkout experimentos-seguros
 git fetch origin &amp;&amp; git reset --hard origin/experimentos-seguros &amp;&amp; git clean -fd</code></pre>
+<hr />
+</div>
+</div>
+<div id="diagnóstico-los-cambios-no-se-reflejan-en-la-nube" class="section level2">
+<h2>🔧 DIAGNÓSTICO: “Los cambios no se reflejan en la nube”</h2>
+<div id="problema-común" class="section level3">
+<h3>🚨 Problema Común:</h3>
+<p>Ejecutas los comandos pero los cambios no aparecen en
+GitHub/GitLab.</p>
+</div>
+<div id="lista-de-verificación-ejecutar-en-orden" class="section level3">
+<h3>� Lista de Verificación (ejecutar en orden):</h3>
+<div id="verificar-que-el-push-fue-exitoso" class="section level4">
+<h4>1. <strong>Verificar que el push fue exitoso:</strong></h4>
+<pre class="bash"><code>git push --force-with-lease origin experimentos-seguros
+# Debe mostrar algo como:
+# Enumerating objects: X, done.
+# Writing objects: 100% (X/X), done.
+# To https://github.com/usuario/repo.git
+#    abc1234..def5678  experimentos-seguros -&gt; experimentos-seguros</code></pre>
+</div>
+<div id="verificar-la-rama-actual" class="section level4">
+<h4>2. <strong>Verificar la rama actual:</strong></h4>
+<pre class="bash"><code>git branch
+# El asterisco (*) debe estar en experimentos-seguros
+# Si no:
+git checkout experimentos-seguros</code></pre>
+</div>
+<div id="verificar-el-estado-del-repositorio" class="section level4">
+<h4>3. <strong>Verificar el estado del repositorio:</strong></h4>
+<pre class="bash"><code>git status
+# Debe mostrar: &quot;Your branch is up to date with &#39;origin/experimentos-seguros&#39;&quot;
+# Si muestra cambios pendientes, hacer:
+git add . &amp;&amp; git commit -m &quot;Cambios pendientes&quot; &amp;&amp; git push --force-with-lease origin experimentos-seguros</code></pre>
+</div>
+<div id="verificar-la-configuración-del-remoto" class="section level4">
+<h4>4. <strong>Verificar la configuración del remoto:</strong></h4>
+<pre class="bash"><code>git remote -v
+# Debe mostrar las URLs correctas de tu repositorio
+# Si no es correcto:
+git remote set-url origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git</code></pre>
+</div>
+<div id="verificar-autenticación" class="section level4">
+<h4>5. <strong>Verificar autenticación:</strong></h4>
+<pre class="bash"><code>git ls-remote origin
+# Si falla, hay problema de autenticación
+# Solución para token personal:
+git remote set-url origin https://TU_TOKEN@github.com/TU_USUARIO/TU_REPOSITORIO.git</code></pre>
+</div>
+<div id="verificar-que-estás-viendo-la-rama-correcta-en-la-web" class="section level4">
+<h4>6. <strong>Verificar que estás viendo la rama correcta en la
+web:</strong></h4>
+<ul>
+<li>Ve a tu repositorio en GitHub/GitLab</li>
+<li><strong>IMPORTANTE</strong>: Cambia a la rama
+<code>experimentos-seguros</code> en la interfaz web</li>
+<li>Por defecto muestra <code>main</code>, no
+<code>experimentos-seguros</code></li>
+</ul>
+</div>
+</div>
+<div id="script-de-diagnóstico-completo" class="section level3">
+<h3>🎯 Script de Diagnóstico Completo:</h3>
+<pre class="bash"><code>#!/bin/bash
+echo &quot;🔍 DIAGNÓSTICO COMPLETO DE SINCRONIZACIÓN&quot;
+echo &quot;========================================&quot;
+
+echo &quot;📍 1. Rama actual:&quot;
+git branch --show-current
+
+echo &quot;&quot;
+echo &quot;📊 2. Estado del repositorio:&quot;
+git status --short
+
+echo &quot;&quot;
+echo &quot;🌐 3. Configuración remota:&quot;
+git remote -v
+
+echo &quot;&quot;
+echo &quot;🔄 4. Últimos commits locales:&quot;
+git log --oneline -5
+
+echo &quot;&quot;
+echo &quot;📥 5. Últimos commits remotos:&quot;
+git log --oneline origin/experimentos-seguros -5
+
+echo &quot;&quot;
+echo &quot;⚖️ 6. Comparación local vs remoto:&quot;
+git log --oneline HEAD..origin/experimentos-seguros
+if [ $? -eq 0 ] &amp;&amp; [ -z &quot;$(git log --oneline HEAD..origin/experimentos-seguros)&quot; ]; then
+    echo &quot;✅ Local está actualizado con remoto&quot;
+else
+    echo &quot;⚠️ Hay diferencias entre local y remoto&quot;
+fi
+
+echo &quot;&quot;
+echo &quot;🔗 7. Verificar conectividad:&quot;
+if git ls-remote origin &gt; /dev/null 2&gt;&amp;1; then
+    echo &quot;✅ Conexión con repositorio remoto OK&quot;
+else
+    echo &quot;❌ Error de conexión con repositorio remoto&quot;
+fi</code></pre>
+</div>
+<div id="solución-paso-a-paso" class="section level3">
+<h3>🚀 Solución Paso a Paso:</h3>
+<div id="si-el-problema-persiste-ejecutar-en-orden" class="section level4">
+<h4>Si el problema persiste, ejecutar en orden:</h4>
+<pre class="bash"><code># 1. Forzar fetch completo
+git fetch origin --prune
+
+# 2. Verificar diferencias
+git diff HEAD origin/experimentos-seguros
+
+# 3. Si hay diferencias, sincronizar forzosamente
+git checkout experimentos-seguros
+git reset --hard origin/experimentos-seguros
+git clean -fd
+
+# 4. Hacer tus cambios nuevamente
+# ... editar archivos ...
+
+# 5. Commit y push con verificación
+git add .
+git commit -m &quot;Cambios verificados&quot;
+echo &quot;Haciendo push...&quot;
+git push --force-with-lease origin experimentos-seguros
+
+# 6. Verificar que se subió
+git log --oneline -1
+git ls-remote origin experimentos-seguros</code></pre>
+</div>
+</div>
+<div id="causas-más-comunes" class="section level3">
+<h3>🎯 Causas Más Comunes:</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Estás en la rama equivocada</strong> →
+<code>git checkout experimentos-seguros</code></li>
+<li><strong>Viendo la rama equivocada en la web</strong> → Cambiar a
+<code>experimentos-seguros</code> en GitHub</li>
+<li><strong>Problema de autenticación</strong> → Reconfigurar
+token/SSH</li>
+<li><strong>Push falló silenciosamente</strong> → Verificar salida del
+comando</li>
+<li><strong>Cambios no agregados</strong> → <code>git add .</code> antes
+del commit</li>
+<li><strong>Conflictos no resueltos</strong> → Resolver conflictos
+manualmente</li>
+</ol>
+</div>
+<div id="comando-de-emergencia-reset-total" class="section level3">
+<h3>💡 Comando de Emergencia (Reset Total):</h3>
+<pre class="bash"><code># ⚠️ CUIDADO: Esto sobrescribe todo local con lo remoto
+git fetch origin
+git checkout experimentos-seguros
+git reset --hard origin/experimentos-seguros
+git clean -fd
+# Ahora hacer cambios y push nuevamente</code></pre>
 <hr />
 </div>
 </div>
