@@ -56,7 +56,7 @@ knitr::opts_chunk$set(
 )
 
 # Establecer semilla aleatoria
-set.seed(sample(1:100000, 1))
+# set.seed(sample(1:100000, 1))
 ```
 
 ```{r generar_datos, message=FALSE, warning=FALSE, results='asis'}
@@ -84,7 +84,11 @@ generar_datos <- function() {
   
   # Aleatorización de días de la semana y ventas
   dias_semana <- c("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
-  ventas_por_dia <- sample(20:50, 7, replace = TRUE)
+
+  # Generar 7 valores únicos de ventas para asegurar que cada barra
+  # tenga altura diferente. Expandir el rango para tener suficientes
+  # valores únicos disponibles
+  ventas_por_dia <- sample(20:60, 7, replace = FALSE)  # Valores únicos
   names(ventas_por_dia) <- dias_semana
   
   # Identificar el día con mayor número de ventas
