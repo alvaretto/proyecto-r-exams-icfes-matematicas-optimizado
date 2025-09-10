@@ -1,0 +1,297 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usepackage{booktabs}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: matematico
+  eje_axial: eje3
+  componente: aleatorio
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(knitr)
+library(testthat)
+library(digest)
+
+# Configuración global crítica
+typ <- match_exams_device()
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+# Configuración knitr
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE, fig.keep = 'all',
+  dev = c("png", "pdf"), dpi = 150, echo = FALSE, results = "hide"
+)
+
+# Semilla aleatoria para diversidad
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Configuración numérica estándar
+options(OutDec = ".")
+options(scipen = 999)
+
+# Función para formatear números con coma decimal para la visualización
+formato_coma <- function(numero, decimales = 2) {
+  format(round(numero, decimales), nsmall = decimales, decimal.mark = ",")
+}
+
+# Función principal de generación de datos
+generar_datos <- function() {
+  # 1. Aleatorización de Parámetros Matemáticos
+  p_central <- sample(seq(0.40, 0.55, by = 0.01), 1)
+  p_lateral <- (1 - p_central) / 2
+
+  limite1 <- sample(3:6, 1)
+  ancho_central <- sample(2:6, 1)
+  limite2 <- limite1 + ancho_central
+  limite_sup <- 14
+  
+  if (limite2 >= limite_sup) {
+    limite2 <- limite_sup - 2
+  }
+
+  # 2. Creación de Intervalos (Formato LaTeX)
+  intervalo1_txt <- paste0("0 \\le x \\le ", limite1)
+  intervalo2_txt <- paste0(limite1, " < x \\le ", limite2)
+  intervalo3_txt <- paste0(limite2, " < x \\le ", limite_sup)
+
+  # 3. Generación de Opciones (DataFrames)
+  tabla_correcta <- data.frame(
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    Probabilidad = c(p_lateral, p_central, p_lateral),
+    stringsAsFactors = FALSE
+  )
+  tabla_distractor_A <- data.frame(
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    Probabilidad = c(p_lateral, p_lateral + p_central, 1),
+    stringsAsFactors = FALSE
+  )
+  tabla_distractor_B <- data.frame(
+    Intervalo = c(paste0("0 \\le x \\le ", limite1), paste0("0 \\le x \\le ", limite2), paste0("0 \\le x \\le ", limite_sup)),
+    Probabilidad = c(p_lateral, p_central, p_lateral),
+    stringsAsFactors = FALSE
+  )
+  tabla_distractor_D <- data.frame(
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    Probabilidad = c(p_central, p_lateral, p_lateral),
+    stringsAsFactors = FALSE
+  )
+  
+  # 4. Agrupar y Aleatorizar Opciones
+  lista_tablas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
+  orden <- sample(1:4)
+  opciones_mezcladas <- lista_tablas[orden]
+  posicion_correcta <- which(orden == 3)
+
+  return(list(
+    p_central = p_central,
+    p_lateral = p_lateral,
+    limite1 = limite1,
+    limite2 = limite2,
+    limite_sup = limite_sup,
+    opciones = opciones_mezcladas,
+    posicion_correcta = posicion_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Helper universal para crear tablas compatibles con todos los formatos exams2*
+crear_tabla_portable <- function(df, typ) {
+  df_formateada <- df
+  df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
+  df_formateada$Probabilidad <- formato_coma(df$Probabilidad)
+  
+  formato_salida <- switch(typ,
+    pdf = "latex",
+    html = "html",
+    "pipe"
+  )
+  
+  tabla_renderizada <- knitr::kable(
+    df_formateada,
+    format = formato_salida,
+    booktabs = (formato_salida == "latex"),
+    escape = FALSE,
+    align = 'c'
+  )
+  
+  return(paste(tabla_renderizada, collapse = "\n"))
+}
+
+# Crear opciones y soluciones portátiles
+opciones_portables <- lapply(datos$opciones, function(tabla) {
+  crear_tabla_portable(tabla, typ)
+})
+
+# **INICIO DE LA CORRECCIÓN**
+# Pre-generar el texto del ejemplo para evitar errores de renderizado
+datos$ejemplo_distractor_B <- paste0("$0 \\le x \\le ", datos$limite2, "$")
+# **FIN DE LA CORRECCIÓN**
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(list(
+      p_central = datos_test$p_central,
+      limite1 = datos_test$limite1,
+      limite2 = datos_test$limite2
+    ))
+  }
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                           "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r tikz_graph_generation, echo=FALSE, results="hide"}
+# Código TikZ dinámico para generar el gráfico principal
+codigo_tikz_grafico <- paste0("
+\\begin{tikzpicture}[scale=0.9, every node/.style={font=\\small}]
+  \\begin{axis}[
+    axis lines=left,
+    xmin=0, xmax=", datos$limite_sup, ",
+    ymin=0, ymax=0.5,
+    grid=major,
+    xtick={0,1,...,", datos$limite_sup, "},
+    ytick=\\empty,
+    width=12cm, height=5cm,
+    grid style={thin, loosely dotted, black!30}
+  ]
+  % Curva de distribución (aproximación visual a una normal)
+  \\addplot[domain=0:", datos$limite_sup, ", samples=101, smooth, thick, black]
+    {0.4 * exp(-(x-7)^2 / (2 * 2.5^2))};
+  % Límites de los intervalos
+  \\draw[thick, black!80] (axis cs:", datos$limite1, ",0) --
+    (axis cs:", datos$limite1, ", {0.4 * exp(-(", datos$limite1, "-7)^2 / (2 * 2.5^2))});
+  \\draw[thick, black!80] (axis cs:", datos$limite2, ",0) --
+    (axis cs:", datos$limite2, ", {0.4 * exp(-(", datos$limite2, "-7)^2 / (2 * 2.5^2))});
+  % Etiquetas de probabilidad
+  \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_coma(datos$p_lateral), "}};
+  \\node at (axis cs:", (datos$limite1 + datos$limite2) / 2, ", 0.35) {\\textbf{", formato_coma(datos$p_central), "}};
+  \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_coma(datos$p_lateral), "}};
+  \\end{axis}
+\\end{tikzpicture}
+")
+```
+
+Question
+========
+
+En la gráfica se muestra la probabilidad de que la variable aleatoria $x$ tome valores en cada uno de tres intervalos en que se ha dividido la curva.
+
+```{r question_graph, echo=FALSE, results='asis'}
+include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown", format = typ,
+             packages = c("tikz", "pgfplots"),
+             header = "\\pgfplotsset{compat=1.17}",
+             width = "12cm")
+```
+
+¿Cuál de las siguientes tablas representa la probabilidad de que la variable aleatoria $x$ tome los valores en el intervalo indicado?
+
+```{r answer_list, echo=FALSE, results='asis'}
+answerlist(opciones_portables, markup = "markdown", num = "A.")
+```
+
+# Solution
+
+Para encontrar la tabla correcta, debemos extraer la información directamente del gráfico y compararla con las opciones proporcionadas.
+
+**Paso 1: Analizar la información del gráfico.**
+
+El gráfico está dividido en tres intervalos con sus respectivas probabilidades:
+
+1.  El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La probabilidad en esta sección es **`r formato_coma(datos$p_lateral)`**.
+2.  El segundo intervalo (central) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección es **`r formato_coma(datos$p_central)`**.
+3.  El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección es **`r formato_coma(datos$p_lateral)`**.
+
+**Paso 2: Construir la tabla esperada.**
+
+Con la información anterior, la tabla correcta debe tener la siguiente estructura:
+
+```{r solution_table, echo=FALSE, results='asis'}
+tabla_esperada <- data.frame(
+  Intervalo = paste0("$", c(
+    paste0("0 \\le x \\le ", datos$limite1),
+    paste0(datos$limite1, " < x \\le ", datos$limite2),
+    paste0(datos$limite2, " < x \\le ", datos$limite_sup)
+  ), "$"),
+  Probabilidad = c(
+    formato_coma(datos$p_lateral),
+    formato_coma(datos$p_central),
+    formato_coma(datos$p_lateral)
+  ),
+  stringsAsFactors = FALSE
+)
+kable(tabla_esperada, align = 'c', booktabs = TRUE)
+```
+
+**Paso 3: Comparar con las opciones.**
+
+Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la tabla correcta. Las otras tablas presentan errores comunes:
+
+  * **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_coma(datos$p_lateral)`, `r formato_coma(datos$p_lateral + datos$p_central)`, 1,00), lo cual es una interpretación incorrecta del gráfico.
+  * **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos (ej: `r datos$ejemplo_distractor_B`), lo cual no corresponde a las secciones individuales mostradas.
+  * **Error de asignación:** Otra tabla intercambia los valores de probabilidad, asignando el valor central a los laterales y viceversa.
+
+Por lo tanto, la respuesta correcta es la que representa fielmente los tres intervalos y sus probabilidades tal como se muestran en el gráfico.
+
+```{r solution_list, echo=FALSE, results='asis'}
+# Generar una explicación para cada opción para una retroalimentación detallada
+soluciones_explicadas <- lapply(1:4, function(i) {
+  tabla_actual <- datos$opciones[[i]]
+  tabla_renderizada <- crear_tabla_portable(tabla_actual, typ)
+  
+  feedback <- if (i == datos$posicion_correcta) {
+    "**Correcto.** Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico."
+  } else {
+    "**Incorrecto.** Esta tabla no coincide con la información del gráfico. Revisa con atención los límites de los intervalos y los valores de probabilidad asignados a cada sección."
+  }
+  
+  paste(tabla_renderizada, "\n\n", feedback)
+})
+
+answerlist(soluciones_explicadas, markup = "markdown")
+```
+
+Meta-information
+================
+
+exname: probabilidad\_distribucion\_grafico\_tabla
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exshuffle: TRUE
+exsection: Estadística/Probabilidad/Interpretación de gráficos
