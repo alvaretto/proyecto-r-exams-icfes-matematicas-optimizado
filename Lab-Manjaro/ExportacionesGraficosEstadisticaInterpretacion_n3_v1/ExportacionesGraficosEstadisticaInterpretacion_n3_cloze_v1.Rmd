@@ -422,19 +422,19 @@ Observe el segundo gráfico. ¿Qué porcentaje del total de exportaciones corres
 ### Paso 3: Configuración de la fórmula
 Para calcular el valor de `r producto_seleccionado`, identifique los componentes de la fórmula:
 
-Valor de `r producto_seleccionado` = Valor total × (##ANSWER2##% ÷ 100)
+Valor de `r producto_seleccionado` = Valor total × (porcentaje del Paso 2 ÷ 100)
 
 Confirme el valor total a usar: ##ANSWER3## millones de tebos
 
 ### Paso 4: Configuración de la fórmula (denominador)
 Convierta el porcentaje a forma decimal (divida entre 100):
 
-##ANSWER2##% ÷ 100 = ##ANSWER4##
+Porcentaje del Paso 2 ÷ 100 = ##ANSWER4##
 
 ### Paso 5: Cálculo intermedio
 Complete la multiplicación:
 
-##ANSWER3## × ##ANSWER4## = ##ANSWER5##
+Valor del Paso 3 × ##ANSWER4## = ##ANSWER5##
 
 ### Paso 6: Resultado final
 Por lo tanto, el valor de `r producto_seleccionado` exportado en `r anio` es:
