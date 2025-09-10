@@ -1,10 +1,10 @@
 ---
 output:
+  html_document: default
   pdf_document:
     latex_engine: xelatex
     extra_dependencies: ["graphicx", "float", "amsmath"]
   word_document: default
-  html_document: default
 icfes:
   competencia: interpretacion_representacion
   componente: aleatorio
@@ -45,6 +45,19 @@ knitr::opts_chunk$set(
   fig.pos = "H"
 )
 
+# Configuración específica para exams2moodle
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+if (es_moodle) {
+  # Configuración optimizada para Moodle
+  knitr::opts_chunk$set(
+    dev = c("svg", "png"),  # SVG preferido para Moodle
+    fig.width = 8,
+    fig.height = 5
+  )
+}
+
 # Opciones de entornos Python
 python_paths <- c("/usr/bin/python3.11", "/usr/bin/python3.10", "/home/garuda/.virtualenvs/r-reticulate/bin/python", "/usr/bin/python3")
 
@@ -83,9 +96,15 @@ set.seed(as.numeric(Sys.time()) + sample(1:10000, 1))
 
 
 
-```{python GraficoBarras, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+```{python GraficoBarras, echo=FALSE, message=FALSE, comment='', warning=FALSE, results="hide"}
+import matplotlib
+matplotlib.use('Agg')  # Backend no interactivo para exams2moodle
 import matplotlib.pyplot as plt
 import random
+
+# Configuración para exams2moodle
+plt.ioff()  # Modo no interactivo
+plt.rcParams['font.size'] = 10
 
 # Datos de los años y valores de exportaciones
 # Crear lista de años desde 1950 hasta 2023
@@ -105,36 +124,40 @@ valorex = [round(x / 10, 1) for x in range(101, 911, 1)]
 
 exports = sorted(random.sample(valorex, 5))
 
-
-
-
 # Crear un gráfico de barras
-plt.figure(figsize=(8, 5))  # Tamaño similar al de la imagen original
-bars = plt.bar(selected_years, exports, color='#404040', zorder=2)  # Color gris para las barras y zorder = 2
+fig, ax = plt.subplots(figsize=(8, 5))  # Usar subplots para mejor control
+bars = ax.bar(selected_years, exports, color='#404040', zorder=2)  # Color gris para las barras y zorder = 2
 
 # Añadir los valores sobre cada barra
 for bar in bars:
     yval = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
+    ax.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
 
 # Títulos y etiquetas
-plt.title(f'Exportaciones anuales totales de Tebailandia\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
-plt.xlabel('Año')
-plt.ylabel('Exportaciones (en millones de tebos)')
+ax.set_title(f'Exportaciones anuales totales de Tebailandia\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
+ax.set_xlabel('Año')
+ax.set_ylabel('Exportaciones (en millones de tebos)')
 
 # Estilo
-plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)  # Añade una rejilla horizontal con estilo punteado y zorder = 0
-plt.xticks(rotation=45)  # Rota las etiquetas de los años para mejorar la legibilidad
+ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)  # Añade una rejilla horizontal con estilo punteado y zorder = 0
+ax.tick_params(axis='x', rotation=45)  # Rota las etiquetas de los años para mejorar la legibilidad
 plt.tight_layout()  # Ajusta automáticamente los parámetros para que la figura se ajuste a la ventana
 
-# Mostrar el gráfico
-plt.show()
+# Guardar para R/exams/Moodle
+plt.savefig("grafico_barras.png", dpi=150, bbox_inches="tight")
+plt.close(fig)  # Liberar memoria
 ```
 
-```{python GraficoTorta, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
+```{python GraficoTorta, echo=FALSE, message=FALSE, comment='', warning=FALSE, results="hide"}
+import matplotlib
+matplotlib.use('Agg')  # Backend no interactivo para exams2moodle
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+
+# Configuración para exams2moodle
+plt.ioff()  # Modo no interactivo
+plt.rcParams['font.size'] = 10
 
 # Datos para las porciones del gráfico circular.
 labels = [
@@ -181,29 +204,29 @@ selectots = random.sample(labels, 8)
 def generar_lista_suma_100():
     # Inicializar la lista de números con el mínimo valor de 5 para cada uno
     numeros = [5] * 8  # 8 números, cada uno inicializado a 5
-    
+
     # Tenemos 60 unidades restantes para distribuir (100 - 8*5)
     restantes = 60
-    
+
     while restantes > 0:
         # Distribuir los puntos restantes aleatoriamente entre los 8 números
         for i in range(8):
             # Decidir cuánto añadir a este número, sin exceder los 'restantes'
             adicion = random.randint(0, restantes)
-            
+
             # Añadir la adición al número actual
             numeros[i] += adicion
-            
+
             # Actualizar las unidades restantes
             restantes -= adicion
-            
+
             # Si ya no quedan unidades restantes, salir del bucle
             if restantes == 0:
                 break
 
     # Desordenar la lista de números para que no estén en el orden incremental
     random.shuffle(numeros)
-    
+
     return numeros
 
 # Generar y mostrar la lista
@@ -240,16 +263,19 @@ producto_index = random.randint(0, 7)  # Índice aleatorio del 0 al 7
 # Crear explode dinámico basado en el producto seleccionado
 explode = [0.1 if i == producto_index else 0 for i in range(8)]
 
-# Ajustar el ancho de la figura a 10 pulgadas
+# Crear gráfico circular con mejor control
 fig1, ax1 = plt.subplots(figsize=(6, 5))
 
-ax1.pie(sizes, explode=explode, labels=selectots, colors=colors, autopct='%1.0f%%', pctdistance=0.85, labeldistance=1.1, shadow=True, startangle=15)
+ax1.pie(sizes, explode=explode, labels=selectots, colors=colors, autopct='%1.0f%%',
+        pctdistance=0.85, labeldistance=1.1, shadow=True, startangle=15)
 
 ax1.axis('equal')
 
-ax1.set_title(f'Distribución de exportaciones de\n Tebailandia en {year_aleatorio}', pad=20)  # Aumenta el valor de 'pad' según necesites
+ax1.set_title(f'Distribución de exportaciones de\n Tebailandia en {year_aleatorio}', pad=20)
 
-plt.show()
+# Guardar para R/exams/Moodle
+plt.savefig("grafico_torta.png", dpi=150, bbox_inches="tight")
+plt.close(fig1)  # Liberar memoria
 
 # Calcular el valor de xol basado en el año aleatorio y el producto seleccionado
 # Validar que el año aleatorio esté en el rango de años disponibles
@@ -367,6 +393,10 @@ test_that("Validación de datos generados", {
 
 Question
 ========
+
+```{r, echo=FALSE, results='asis'}
+knitr::include_graphics(c("grafico_barras.png", "grafico_torta.png"))
+```
 
 La imagen muestra dos gráficos relacionados con las exportaciones de Tebailandia, un país que usa "tebos" como su moneda.
 

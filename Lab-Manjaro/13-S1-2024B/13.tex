@@ -1,0 +1,274 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usetikzlibrary{3d,babel}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+En la gráfica se muestra la probabilidad de que la variable aleatoria
+\(x\) tome valores en cada uno de tres intervalos en que se ha dividido
+la curva.
+
+\includegraphics[width=12cm,height=\textheight]{prob_dist_grafico.png}
+
+¿Cuál de las siguientes tablas representa la probabilidad de que la
+variable aleatoria \(x\) tome los valores en el intervalo indicado?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\item
+  \begin{longtable}[]{@{}cc@{}}
+  \toprule\noalign{}
+  Intervalo & Probabilidad \\
+  \midrule\noalign{}
+  \endhead
+  \bottomrule\noalign{}
+  \endlastfoot
+  \(0 \le x \le 5\) & 0,41 \\
+  \(5 < x \le 7\) & 0,30 \\
+  \(7 < x \le 14\) & 0,30 \\
+  \end{longtable}
+\item
+  \begin{longtable}[]{@{}cc@{}}
+  \toprule\noalign{}
+  Intervalo & Probabilidad \\
+  \midrule\noalign{}
+  \endhead
+  \bottomrule\noalign{}
+  \endlastfoot
+  \(0 \le x \le 5\) & 0,30 \\
+  \(5 < x \le 7\) & 0,71 \\
+  \(7 < x \le 14\) & 1,00 \\
+  \end{longtable}
+\item
+  \begin{longtable}[]{@{}cc@{}}
+  \toprule\noalign{}
+  Intervalo & Probabilidad \\
+  \midrule\noalign{}
+  \endhead
+  \bottomrule\noalign{}
+  \endlastfoot
+  \(0 \le x \le 5\) & 0,30 \\
+  \(5 < x \le 7\) & 0,41 \\
+  \(7 < x \le 14\) & 0,30 \\
+  \end{longtable}
+\item
+  \begin{longtable}[]{@{}cc@{}}
+  \toprule\noalign{}
+  Intervalo & Probabilidad \\
+  \midrule\noalign{}
+  \endhead
+  \bottomrule\noalign{}
+  \endlastfoot
+  \(0 \le x \le 5\) & 0,30 \\
+  \(0 \le x \le 7\) & 0,41 \\
+  \(0 \le x \le 14\) & 0,30 \\
+  \end{longtable}
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para encontrar la tabla correcta, debemos extraer la información
+directamente del gráfico y compararla con las opciones proporcionadas.
+
+\textbf{Paso 1: Analizar la información del gráfico.}
+
+El gráfico está dividido en tres intervalos con sus respectivas
+probabilidades:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  El primer intervalo va desde \(x=0\) hasta \(x=5\). La probabilidad en
+  esta sección es \textbf{0,30}.
+\item
+  El segundo intervalo (central) va desde \(x=5\) hasta \(x=7\). La
+  probabilidad en esta sección es \textbf{0,41}.
+\item
+  El tercer intervalo va desde \(x=7\) hasta \(x=14\). La probabilidad
+  en esta sección es \textbf{0,30}.
+\end{enumerate}
+
+\textbf{Paso 2: Construir la tabla esperada.}
+
+Con la información anterior, la tabla correcta debe tener la siguiente
+estructura:
+
+\begin{longtable}[]{@{}cc@{}}
+\toprule\noalign{}
+Intervalo & Probabilidad \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(0 \le x \le 5\) & 0,30 \\
+\(5 < x \le 7\) & 0,41 \\
+\(7 < x \le 14\) & 0,30 \\
+\end{longtable}
+
+\textbf{Paso 3: Comparar con las opciones.}
+
+Al revisar las tablas de las opciones, la única que coincide
+perfectamente con los datos extraídos del gráfico es la tabla correcta.
+Las otras tablas presentan errores comunes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Error de probabilidad acumulada:} Una de las tablas muestra
+  cómo la probabilidad se va sumando (0,30, 0,71, 1,00), lo cual es una
+  interpretación incorrecta del gráfico.
+\item
+  \textbf{Error de definición de intervalo:} Otra tabla usa intervalos
+  acumulativos (ej: \(0 \le x \le 7\)), lo cual no corresponde a las
+  secciones individuales mostradas.
+\item
+  \textbf{Error de asignación:} Otra tabla intercambia los valores de
+  probabilidad, asignando el valor central a los laterales y viceversa.
+\end{itemize}
+
+Por lo tanto, la respuesta correcta es la que representa fielmente los
+tres intervalos y sus probabilidades tal como se muestran en el gráfico.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\item
+  \begin{longtable}[]{@{}cc@{}}
+  \toprule\noalign{}
+  Intervalo & Probabilidad \\
+  \midrule\noalign{}
+  \endhead
+  \bottomrule\noalign{}
+  \endlastfoot
+  \(0 \le x \le 5\) & 0,41 \\
+  \(5 < x \le 7\) & 0,30 \\
+  \(7 < x \le 14\) & 0,30 \\
+  \end{longtable}
+\end{itemize}
+
+\textbf{Incorrecto.} Esta tabla no coincide con la información del
+gráfico. Revisa con atención los límites de los intervalos y los valores
+de probabilidad asignados a cada sección. * \textbar{} Intervalo
+\textbar{} Probabilidad \textbar{}
+\textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+\(0 \le x \le 5\) \textbar{} 0,30 \textbar{} \textbar{} \(5 < x \le 7\)
+\textbar{} 0,71 \textbar{} \textbar{} \(7 < x \le 14\) \textbar{} 1,00
+\textbar{}
+
+\textbf{Incorrecto.} Esta tabla no coincide con la información del
+gráfico. Revisa con atención los límites de los intervalos y los valores
+de probabilidad asignados a cada sección. * \textbar{} Intervalo
+\textbar{} Probabilidad \textbar{}
+\textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+\(0 \le x \le 5\) \textbar{} 0,30 \textbar{} \textbar{} \(5 < x \le 7\)
+\textbar{} 0,41 \textbar{} \textbar{} \(7 < x \le 14\) \textbar{} 0,30
+\textbar{}
+
+\textbf{Correcto.} Esta tabla representa exactamente los tres intervalos
+y sus probabilidades correspondientes como se muestra en el gráfico. *
+\textbar{} Intervalo \textbar{} Probabilidad \textbar{}
+\textbar:----------------:\textbar:------------:\textbar{} \textbar{}
+\(0 \le x \le 5\) \textbar{} 0,30 \textbar{} \textbar{}
+\(0 \le x \le 7\) \textbar{} 0,41 \textbar{} \textbar{}
+\(0 \le x \le 14\) \textbar{} 0,30 \textbar{}
+
+\textbf{Incorrecto.} Esta tabla no coincide con la información del
+gráfico. Revisa con atención los límites de los intervalos y los valores
+de probabilidad asignados a cada sección.
+
+\section{Meta-information}\label{meta-information}
+
+exname: probabilidad\_distribucion\_grafico\_tabla extype: schoice
+exsolution: 0010 exshuffle: TRUE exsection:
+Estadística/Probabilidad/Interpretación de gráficos
+
+\end{document}
