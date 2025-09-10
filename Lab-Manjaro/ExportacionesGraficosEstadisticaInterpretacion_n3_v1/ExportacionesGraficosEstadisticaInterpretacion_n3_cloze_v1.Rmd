@@ -434,7 +434,7 @@ Porcentaje del Paso 2 ÷ 100 = ##ANSWER4##
 ### Paso 5: Cálculo intermedio
 Complete la multiplicación:
 
-Valor del Paso 3 × ##ANSWER4## = ##ANSWER5##
+Valor del Paso 3 × valor decimal del Paso 4 = ##ANSWER5##
 
 ### Paso 6: Resultado final
 Por lo tanto, el valor de `r producto_seleccionado` exportado en `r anio` es:
