@@ -391,6 +391,15 @@ test_that("Validación de datos generados", {
 })
 ```
 
+<!--
+NOTA MANTENIMIENTO (R-exams cloze):
+- No repetir placeholders ##ANSWERk## en la sección "Question". Cada marcador debe aparecer UNA sola vez.
+- Duplicarlos crea múltiples campos de respuesta para la misma solución y puede romper exportadores (p. ej., QTI21)
+  y la calificación automática en LMS (Moodle/OpenOlat), generando falsos negativos.
+- Si hace falta referirse a un valor anterior (p. ej., Paso 4), usar texto descriptivo ("valor decimal del Paso 4")
+  en lugar de volver a insertar ##ANSWERk##.
+-->
+
 Question
 ========
 
