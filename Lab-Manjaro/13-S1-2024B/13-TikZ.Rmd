@@ -188,70 +188,141 @@ opciones_portables <- lapply(datos$opciones, function(tabla) {
 le_symbol <- if (identical(typ, "pandoc")) "≤" else "\\le"
 datos$ejemplo_distractor_B <- paste0("$0 ", le_symbol, " x ", le_symbol, " ", datos$limite2, "$")
 # **FIN DE LA CORRECCIÓN**
-```{python generar_tablas_png}
-# Generar 4 tablas como imágenes PNG (matplotlib) para Answerlist
-import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+```{r generar_tablas_tikz, echo=FALSE, results="hide"}
+# Función para generar tabla TikZ con formato vectorial
+generar_tabla_tikz <- function(intervalos, probabilidades) {
+  # Validar que los parámetros no estén vacíos
+  if (length(intervalos) == 0 || length(probabilidades) == 0) {
+    stop("Error: intervalos o probabilidades tienen longitud cero")
+  }
 
-# Leer parámetros desde R (reticulate)
-lim1 = int(r.datos["limite1"])
-lim2 = int(r.datos["limite2"])
-limsup = int(r.datos["limite_sup"])
-pl = float(r.datos["p_lateral"])
-pc = float(r.datos["p_central"])
+  if (length(intervalos) != 3 || length(probabilidades) != 3) {
+    stop("Error: se requieren exactamente 3 intervalos y 3 probabilidades")
+  }
 
-# Construir etiquetas de intervalos (texto plano con <= y <)
-int1 = f"0 <= x <= {lim1}"
-int2 = f"{lim1} < x <= {lim2}"
-int3 = f"{lim2} < x <= {limsup}"
-intB = [f"0 <= x <= {lim1}", f"0 <= x <= {lim2}", f"0 <= x <= {limsup}"]
+  # Validar que ningún elemento esté vacío
+  if (any(nchar(intervalos) == 0)) {
+    stop("Error: algún intervalo está vacío")
+  }
 
+  # Formatear probabilidades con coma decimal
+  probs_formateadas <- sapply(probabilidades, formato_coma)
 
-def save_table_png(filename, intervals, probs):
-    fig, ax = plt.subplots(figsize=(4.2, 2.2), dpi=200)
-    ax.axis('off')
-    cell_text = [
-        [intervals[0], f"{probs[0]:.2f}"],
-        [intervals[1], f"{probs[1]:.2f}"],
-        [intervals[2], f"{probs[2]:.2f}"],
-    ]
-    table = ax.table(cellText=cell_text,
-                     colLabels=["Intervalo", "Probabilidad"],
-                     loc='center', cellLoc='center')
-    table.auto_set_font_size(False)
-    table.set_fontsize(9)
-    table.scale(1.1, 1.2)
-    fig.tight_layout(pad=0.2)
-    fig.savefig(filename, transparent=True, bbox_inches='tight')
-    plt.close(fig)
+  # Crear código TikZ para la tabla
+  codigo_tikz <- paste0("
+\\begin{tikzpicture}[scale=1.0]
+  \\node[anchor=north west] at (0,0) {
+    \\begin{tabular}{|c|c|}
+      \\hline
+      \\textbf{Intervalo} & \\textbf{Probabilidad} \\\\
+      \\hline
+      $", intervalos[1], "$ & ", probs_formateadas[1], " \\\\
+      \\hline
+      $", intervalos[2], "$ & ", probs_formateadas[2], " \\\\
+      \\hline
+      $", intervalos[3], "$ & ", probs_formateadas[3], " \\\\
+      \\hline
+    \\end{tabular}
+  };
+\\end{tikzpicture}
+")
 
-# A (correcta)
-save_table_png("tabla_opcion_a.png", [int1, int2, int3], [pl, pc, pl])
-# B (acumulativa con 0 <= x <= ...)
-save_table_png("tabla_opcion_b.png", intB, [pl, pl + pc, 1.0])
-# C (definición alternativa: usa los mismos intervalos que A pero con permutación típica)
-save_table_png("tabla_opcion_c.png", [int1, int2, int3], [pc, pl, pl])
-# D (otro distractor simple)
-save_table_png("tabla_opcion_d.png", [int1, int2, int3], [pl, 1.0 - pl, pl])
+  return(codigo_tikz)
+}
 
-# Para pandoc/DOCX: copiar imágenes al directorio de salida si existe
-import os
-import shutil
-img_files = ["tabla_opcion_a.png", "tabla_opcion_b.png", "tabla_opcion_c.png", "tabla_opcion_d.png"]
+# Función auxiliar para símbolos matemáticos en TikZ
+format_le_tikz <- function() {
+  "\\le"  # TikZ siempre usa LaTeX nativo
+}
 
-# Copiar al directorio de salida si existe
-if os.path.exists("salida"):
-    for img in img_files:
-        if os.path.exists(img):
-            shutil.copy2(img, "salida/")
+# Validar que el objeto datos esté correctamente definido
+if (!exists("datos") || is.null(datos)) {
+  stop("Error: el objeto 'datos' no está definido")
+}
 
-# También copiar al directorio actual para asegurar que pandoc las encuentre
-for img in img_files:
-    if os.path.exists(img):
-        # Asegurar que las imágenes estén disponibles en el directorio de trabajo
-        pass  # Ya están en el directorio actual
+# Validar que las variables necesarias existan en datos
+variables_requeridas <- c("limite1", "limite2", "limite_sup", "p_lateral", "p_central")
+for (var in variables_requeridas) {
+  if (is.null(datos[[var]]) || length(datos[[var]]) == 0) {
+    stop(paste("Error: la variable", var, "no está definida o tiene longitud cero"))
+  }
+}
+
+# Preparar intervalos para cada opción
+int1 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite1)
+int2 <- paste0(datos$limite1, " < x ", format_le_tikz(), " ", datos$limite2)
+int3 <- paste0(datos$limite2, " < x ", format_le_tikz(), " ", datos$limite_sup)
+
+# Intervalos para opción B (acumulativos)
+intB1 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite1)
+intB2 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite2)
+intB3 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite_sup)
+
+# Generar códigos TikZ para cada tabla con validación adicional
+codigo_tabla_a <- generar_tabla_tikz(
+  c(int1, int2, int3),
+  c(datos$p_lateral, datos$p_central, datos$p_lateral)
+)
+
+codigo_tabla_b <- generar_tabla_tikz(
+  c(intB1, intB2, intB3),
+  c(datos$p_lateral, datos$p_lateral + datos$p_central, 1.0)
+)
+
+codigo_tabla_c <- generar_tabla_tikz(
+  c(int1, int2, int3),
+  c(datos$p_central, datos$p_lateral, datos$p_lateral)
+)
+
+codigo_tabla_d <- generar_tabla_tikz(
+  c(int1, int2, int3),
+  c(datos$p_lateral, 1.0 - datos$p_lateral, datos$p_lateral)
+)
 ```
 
+```{r generar_tablas_tikz_multi_formato, echo=FALSE, results="hide"}
+# Función para generar tabla en formato apropiado según el tipo de salida
+generar_tabla_multi_formato <- function(codigo_tikz, nombre_base) {
+  # Determinar formato según el tipo de salida
+  if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
+    # Para PDF/LaTeX: generar PDF vectorial
+    include_tikz(codigo_tikz,
+                 name = nombre_base,
+                 format = "pdf",
+                 packages = c("tikz", "array", "booktabs"),
+                 width = "8cm")
+  } else {
+    # Para HTML/pandoc/moodle: generar PNG para compatibilidad
+    include_tikz(codigo_tikz,
+                 name = nombre_base,
+                 format = "png",
+                 packages = c("tikz", "array", "booktabs"),
+                 width = "8cm")
+  }
+}
+
+# Generar todas las tablas en el formato apropiado
+generar_tabla_multi_formato(codigo_tabla_a, "tabla_opcion_a")
+generar_tabla_multi_formato(codigo_tabla_b, "tabla_opcion_b")
+generar_tabla_multi_formato(codigo_tabla_c, "tabla_opcion_c")
+generar_tabla_multi_formato(codigo_tabla_d, "tabla_opcion_d")
+```
+
+```{r copiar_archivos_salida, echo=FALSE, results="hide"}
+# Copiar archivos generados al directorio de salida para compatibilidad con todos los formatos
+if (dir.exists("salida")) {
+  # Copiar tanto PDF como PNG para máxima compatibilidad
+  archivos_tablas <- c("tabla_opcion_a.pdf", "tabla_opcion_b.pdf",
+                       "tabla_opcion_c.pdf", "tabla_opcion_d.pdf",
+                       "tabla_opcion_a.png", "tabla_opcion_b.png",
+                       "tabla_opcion_c.png", "tabla_opcion_d.png")
+
+  for (archivo in archivos_tablas) {
+    if (file.exists(archivo)) {
+      file.copy(archivo, file.path("salida", archivo), overwrite = TRUE)
+    }
+  }
+}
 ```
 
 ```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
@@ -330,16 +401,17 @@ include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown
 
 <!-- NOTA MANTENIMIENTO (R-exams): las opciones contienen tablas. Para evitar que el parser cuente filas internas como ítems de respuesta, colapsamos cada tabla a una sola línea y generamos manualmente 4 bullets. -->
 
-Answerlist
-----------
+```{r answerlist_tablas, echo=FALSE, results='asis'}
+# Determinar extensión de archivo según formato de salida
+extension <- if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) "pdf" else "png"
 
-- ![](tabla_opcion_a.png){width=70%}
-
-- ![](tabla_opcion_b.png){width=70%}
-
-- ![](tabla_opcion_c.png){width=70%}
-
-- ![](tabla_opcion_d.png){width=70%}
+cat("Answerlist\n")
+cat("----------\n\n")
+cat("- ![](tabla_opcion_a.", extension, "){width=70%}\n\n", sep="")
+cat("- ![](tabla_opcion_b.", extension, "){width=70%}\n\n", sep="")
+cat("- ![](tabla_opcion_c.", extension, "){width=70%}\n\n", sep="")
+cat("- ![](tabla_opcion_d.", extension, "){width=70%}\n\n", sep="")
+```
 
 Solution
 ========
