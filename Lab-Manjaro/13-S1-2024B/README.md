@@ -24,12 +24,28 @@ El ejercicio presenta una curva de distribución dividida en tres intervalos con
 - **Solución fija**: `exsolution: 1000` (opción A correcta antes del barajado)
 - **Diversidad**: >300 combinaciones únicas de parámetros
 
+## ✨ Mejoras Recientes Implementadas
+
+### **Reducción de Tamaño de Fuente en Tablas TikZ**
+- **Comando aplicado**: `\small` en función `generar_tabla_tikz`
+- **Beneficio**: Mejora significativa en la presentación visual de las tablas
+- **Legibilidad**: Mantenida completamente en todos los formatos de salida
+- **Compatibilidad**: Verificada en PDF vectorial, HTML, DOCX y Moodle
+- **Aplicación**: Todas las opciones de tabla (A, B, C, D) con tamaño reducido
+
+### **Renombrado según Normas ICFES**
+- **Nomenclatura aplicada**: `tema_subtema_tipo_competencia_componente_nivel_version.Rmd`
+- **Consistencia**: Alineado con estándares del proyecto RepositorioMatematicasICFES_R_Exams
+- **Mantenibilidad**: Nombres descriptivos y organizados jerárquicamente
+- **Identificación**: Contenido y competencia ICFES inmediatamente reconocibles
+
 ## Comparación de Versiones
 
 | Característica | PNG (v1) | TikZ (tikz_v1) |
 |---|---|---|
 | **Generación de tablas** | Python/matplotlib → PNG | TikZ/LaTeX → PDF/PNG |
 | **Calidad visual** | Rasterizada (fija) | Vectorial (escalable) |
+| **Tamaño de fuente** | Fijo en matplotlib | Optimizado con `\small` |
 | **Dependencias** | reticulate + matplotlib | TikZ nativo |
 | **Compatibilidad** | Todos los formatos | Todos los formatos |
 | **Mantenimiento** | Dos lenguajes (R+Python) | R puro |

@@ -4,6 +4,18 @@
 
 Esta guía te llevará paso a paso por el uso de ambas versiones del ejercicio: la versión PNG (`probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd`) y la versión TikZ vectorial (`probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_v1.Rmd`).
 
+## ✨ Mejoras Recientes
+
+### **Optimización Visual de Tablas TikZ**
+- **Tamaño de fuente reducido**: Aplicación del comando `\small` para mejor presentación
+- **Legibilidad preservada**: Mantiene claridad en todos los formatos de salida
+- **Compatibilidad completa**: Funciona en PDF vectorial, HTML, DOCX y Moodle
+
+### **Nomenclatura Estandarizada ICFES**
+- **Nombres descriptivos**: Archivos renombrados según normas del proyecto
+- **Organización mejorada**: Estructura jerárquica clara por tema, competencia y nivel
+- **Mantenibilidad**: Identificación inmediata del contenido y características
+
 ## Preparación del Entorno
 
 ### 1. Verificar Directorio de Trabajo
@@ -166,7 +178,8 @@ exams2pdf("probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_v
 **Observaciones esperadas:**
 
 - **PNG**: Tablas con resolución fija, pueden verse pixeladas al hacer zoom
-- **TikZ**: Tablas vectoriales, mantienen calidad a cualquier zoom
+- **TikZ**: Tablas vectoriales con fuente optimizada (`\small`), mantienen calidad a cualquier zoom
+- **Mejora visual**: Las tablas TikZ ahora tienen mejor proporción y presentación
 
 ### Paso 2: Comparar Tamaños de Archivo
 ```r
@@ -267,9 +280,14 @@ use_python("/usr/bin/python3")  # Ajustar ruta según sistema
 ### Personalizar Diseño de Tablas (Solo TikZ)
 ```r
 # Modificar función generar_tabla_tikz para cambiar:
+# - Tamaño de fuente: \small (actual), \footnotesize, \tiny, \normalsize
 # - Colores: \textcolor{blue}{...}
-# - Tamaños: scale=1.2
+# - Escala: scale=1.2
 # - Bordes: |c|c| → ||c||c||
+
+# Ejemplo de cambio de tamaño de fuente:
+# Línea 215: \small → \footnotesize (más pequeño)
+# Línea 215: \small → \normalsize (tamaño normal)
 ```
 
 ### Agregar Nuevos Formatos de Salida
