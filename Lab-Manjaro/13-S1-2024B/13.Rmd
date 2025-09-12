@@ -33,8 +33,6 @@ icfes:
 # Librerías esenciales
 library(exams)
 library(knitr)
-library(testthat)
-library(digest)
 
 # Configuración global crítica
 typ <- match_exams_device()
@@ -131,22 +129,27 @@ crear_tabla_portable <- function(df, typ) {
   df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
   df_formateada$Probabilidad <- formato_coma(df$Probabilidad)
 
-  formato_salida <- switch(typ,
-    pdf = "latex",
-    html = "html",
-    "pipe"
-  )
-  es_latex <- identical(formato_salida, "latex")
+  # Determinar tipo LaTeX y tratar pandoc explícitamente
+  es_latex <- isTRUE(typ %in% c("pdf", "nops", "tex"))
 
   if (!es_latex) {
-    # Construir tabla HTML con bordes visibles fieles al original
-    th <- function(x) sprintf('<th style="border:1px solid #000;padding:4px 8px;text-align:center;font-weight:bold;">%s</th>', x)
-    td <- function(x) sprintf('<td style="border:1px solid #000;padding:4px 8px;text-align:center;">%s</td>', x)
-    header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
-    rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
-    tabla_renderizada <- sprintf('<table class="ex-opcion" style="border-collapse:collapse;border:2px solid #000;margin:4px 0;">%s%s</table>', header, rows)
-    # Devolver una sola línea para evitar conteos erróneos del parser
-    return(paste(gsub("\n", " ", tabla_renderizada), collapse = " "))
+    if (identical(typ, "pandoc")) {
+      # Tabla Markdown (pipe) compatible con Pandoc/Docx; colapsada a una sola línea
+      hdr <- "| Intervalo | Probabilidad |"
+      sep <- "|:---------:|:------------:|"
+      rows <- paste(apply(df_formateada, 1, function(r) sprintf("| %s | %s |", r[["Intervalo"]], r[["Probabilidad"]] )), collapse = "\n")
+      tabla_md <- paste(c(hdr, sep, rows), collapse = "\n")
+      return(tabla_md)
+    } else {
+      # Construir tabla HTML con bordes visibles (HTML/Moodle/etc.)
+      th <- function(x) sprintf('<th style="border:1px solid #000;padding:4px 8px;text-align:center;font-weight:bold;">%s</th>', x)
+      td <- function(x) sprintf('<td style="border:1px solid #000;padding:4px 8px;text-align:center;">%s</td>', x)
+      header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
+      rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
+      tabla_renderizada <- sprintf('<table class="ex-opcion" style="border-collapse:collapse;border:2px solid #000;margin:4px 0;">%s%s</table>', header, rows)
+      # Devolver una sola línea para evitar conteos erróneos del parser
+      return(paste(gsub("\n", " ", tabla_renderizada), collapse = " "))
+    }
   }
 
   tabla_renderizada <- knitr::kable(
@@ -172,22 +175,28 @@ datos$ejemplo_distractor_B <- paste0("$0 \\le x \\le ", datos$limite2, "$")
 
 ```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
 # Este test es costoso. Ejecutarlo solo en desarrollo.
-# Actvalo con la variable de entorno: EXAMS_RUN_DIVERSITY=1
-test_that("Prueba de diversidad de versiones", {
-  versiones <- list()
-  for(i in 1:1000) {
-    datos_test <- generar_datos()
-    versiones[[i]] <- digest::digest(list(
-      p_central = datos_test$p_central,
-      limite1 = datos_test$limite1,
-      limite2 = datos_test$limite2
-    ))
-  }
-  n_versiones_unicas <- length(unique(versiones))
-  expect_true(n_versiones_unicas >= 300,
-              info = paste("Solo se generaron", n_versiones_unicas,
-                           "versiones únicas. Se requieren al menos 300."))
-})
+# Actívalo con la variable de entorno: EXAMS_RUN_DIVERSITY=1
+if (requireNamespace("testthat", quietly = TRUE) && requireNamespace("digest", quietly = TRUE)) {
+  testthat::test_that("Prueba de diversidad de versiones", {
+    versiones <- list()
+    for (i in 1:1000) {
+      datos_test <- generar_datos()
+      versiones[[i]] <- digest::digest(list(
+        p_central = datos_test$p_central,
+        limite1 = datos_test$limite1,
+        limite2 = datos_test$limite2
+      ))
+    }
+    n_versiones_unicas <- length(unique(versiones))
+    testthat::expect_true(
+      n_versiones_unicas >= 300,
+      info = paste(
+        "Solo se generaron", n_versiones_unicas,
+        "versiones únicas. Se requieren al menos 300."
+      )
+    )
+  })
+}
 ```
 
 ```{r tikz_graph_generation, echo=FALSE, results="hide"}
@@ -229,7 +238,8 @@ Question
 En la gráfica se muestra la probabilidad de que la variable aleatoria $x$ tome valores en cada uno de tres intervalos en que se ha dividido la curva.
 
 ```{r question_graph, echo=FALSE, results='asis'}
-include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown", format = typ,
+fmt_tikz <- if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "html" else typ
+include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown", format = fmt_tikz,
              packages = c("tikz", "pgfplots"),
              header = "\\pgfplotsset{compat=1.17}",
              width = "12cm")
@@ -240,7 +250,7 @@ include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown
 <!-- NOTA MANTENIMIENTO (R-exams): las opciones contienen tablas. Para evitar que el parser cuente filas internas como ítems de respuesta, colapsamos cada tabla a una sola línea y generamos manualmente 4 bullets. -->
 
 ```{r pdf_label_uppercase_on, echo=FALSE, results='asis'}
-if (identical(typ, "pdf")) {
+if (typ %in% c("pdf", "nops")) {
   # Forzar etiquetas A), B), C), D) en enumerate sin depender de enumitem
   cat("\\begingroup\\renewcommand{\\labelenumi}{\\Alph{enumi})}\n")
 }
@@ -249,8 +259,12 @@ if (identical(typ, "pdf")) {
 ```{r answer_list, echo=FALSE, results='asis'}
 # Forzamos exactamente 4 items de lista en Markdown para evitar conteos extra del parser
 ops <- opciones_portables
-# Una sola línea por opción en todos los formatos
-ops <- vapply(ops, function(z) paste(gsub("\n", " ", z), collapse = " "), "")
+# Colapsar a una sola línea salvo en 'pandoc' (donde se requieren tablas válidas)
+if (!identical(typ, "pandoc")) {
+  ops <- vapply(ops, function(z) paste(gsub("\n", " ", z), collapse = " "), "")
+} else {
+  ops <- vapply(ops, as.character, "")
+}
 cat(paste0("* A) ", ops[1], "\n",
            "* B) ", ops[2], "\n",
            "* C) ", ops[3], "\n",
@@ -258,7 +272,7 @@ cat(paste0("* A) ", ops[1], "\n",
 ```
 
 ```{r pdf_label_uppercase_off, echo=FALSE, results='asis'}
-if (identical(typ, "pdf")) {
+if (typ %in% c("pdf", "nops")) {
   cat("\\endgroup\n")
 }
 ```
@@ -294,7 +308,7 @@ tabla_esperada <- data.frame(
   ),
   stringsAsFactors = FALSE
 )
-kable(tabla_esperada, align = 'c', booktabs = TRUE)
+kable(tabla_esperada, align = 'c', booktabs = TRUE, escape = FALSE)
 ```
 
 **Paso 3: Comparar con las opciones.**
