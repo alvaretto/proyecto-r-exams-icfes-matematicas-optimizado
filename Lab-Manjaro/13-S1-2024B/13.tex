@@ -100,57 +100,31 @@ la curva.
 ¿Cuál de las siguientes tablas representa la probabilidad de que la
 variable aleatoria \(x\) tome los valores en el intervalo indicado?
 
-\subsection{Answerlist}\label{answerlist}
-
 \begin{itemize}
 \item
-  \begin{longtable}[]{@{}cc@{}}
-  \toprule\noalign{}
-  Intervalo & Probabilidad \\
-  \midrule\noalign{}
-  \endhead
-  \bottomrule\noalign{}
-  \endlastfoot
-  \(0 \le x \le 5\) & 0,41 \\
-  \(5 < x \le 7\) & 0,30 \\
-  \(7 < x \le 14\) & 0,30 \\
-  \end{longtable}
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(6 < x \le 12\) \textbar{} 0,46 \textbar{} \textbar{}
+  \(12 < x \le 14\) \textbar{} 0,27 \textbar{}
 \item
-  \begin{longtable}[]{@{}cc@{}}
-  \toprule\noalign{}
-  Intervalo & Probabilidad \\
-  \midrule\noalign{}
-  \endhead
-  \bottomrule\noalign{}
-  \endlastfoot
-  \(0 \le x \le 5\) & 0,30 \\
-  \(5 < x \le 7\) & 0,71 \\
-  \(7 < x \le 14\) & 1,00 \\
-  \end{longtable}
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(6 < x \le 12\) \textbar{} 0,73 \textbar{} \textbar{}
+  \(12 < x \le 14\) \textbar{} 1,00 \textbar{}
 \item
-  \begin{longtable}[]{@{}cc@{}}
-  \toprule\noalign{}
-  Intervalo & Probabilidad \\
-  \midrule\noalign{}
-  \endhead
-  \bottomrule\noalign{}
-  \endlastfoot
-  \(0 \le x \le 5\) & 0,30 \\
-  \(5 < x \le 7\) & 0,41 \\
-  \(7 < x \le 14\) & 0,30 \\
-  \end{longtable}
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:----------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(0 \le x \le 12\) \textbar{} 0,46 \textbar{} \textbar{}
+  \(0 \le x \le 14\) \textbar{} 0,27 \textbar{}
 \item
-  \begin{longtable}[]{@{}cc@{}}
-  \toprule\noalign{}
-  Intervalo & Probabilidad \\
-  \midrule\noalign{}
-  \endhead
-  \bottomrule\noalign{}
-  \endlastfoot
-  \(0 \le x \le 5\) & 0,30 \\
-  \(0 \le x \le 7\) & 0,41 \\
-  \(0 \le x \le 14\) & 0,30 \\
-  \end{longtable}
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,46 \textbar{} \textbar{}
+  \(6 < x \le 12\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(12 < x \le 14\) \textbar{} 0,27 \textbar{}
 \end{itemize}
 
 \section{Solution}\label{solution}
@@ -167,14 +141,14 @@ probabilidades:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  El primer intervalo va desde \(x=0\) hasta \(x=5\). La probabilidad en
-  esta sección es \textbf{0,30}.
+  El primer intervalo va desde \(x=0\) hasta \(x=6\). La probabilidad en
+  esta sección es \textbf{0,27}.
 \item
-  El segundo intervalo (central) va desde \(x=5\) hasta \(x=7\). La
-  probabilidad en esta sección es \textbf{0,41}.
+  El segundo intervalo (central) va desde \(x=6\) hasta \(x=12\). La
+  probabilidad en esta sección es \textbf{0,46}.
 \item
-  El tercer intervalo va desde \(x=7\) hasta \(x=14\). La probabilidad
-  en esta sección es \textbf{0,30}.
+  El tercer intervalo va desde \(x=12\) hasta \(x=14\). La probabilidad
+  en esta sección es \textbf{0,27}.
 \end{enumerate}
 
 \textbf{Paso 2: Construir la tabla esperada.}
@@ -189,9 +163,9 @@ Intervalo & Probabilidad \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\(0 \le x \le 5\) & 0,30 \\
-\(5 < x \le 7\) & 0,41 \\
-\(7 < x \le 14\) & 0,30 \\
+\(0 \le x \le 6\) & 0,27 \\
+\(6 < x \le 12\) & 0,46 \\
+\(12 < x \le 14\) & 0,27 \\
 \end{longtable}
 
 \textbf{Paso 3: Comparar con las opciones.}
@@ -204,11 +178,11 @@ Las otras tablas presentan errores comunes:
 \tightlist
 \item
   \textbf{Error de probabilidad acumulada:} Una de las tablas muestra
-  cómo la probabilidad se va sumando (0,30, 0,71, 1,00), lo cual es una
+  cómo la probabilidad se va sumando (0,27, 0,73, 1,00), lo cual es una
   interpretación incorrecta del gráfico.
 \item
   \textbf{Error de definición de intervalo:} Otra tabla usa intervalos
-  acumulativos (ej: \(0 \le x \le 7\)), lo cual no corresponde a las
+  acumulativos (ej: \(0 \le x \le 12\)), lo cual no corresponde a las
   secciones individuales mostradas.
 \item
   \textbf{Error de asignación:} Otra tabla intercambia los valores de
@@ -218,57 +192,48 @@ Las otras tablas presentan errores comunes:
 Por lo tanto, la respuesta correcta es la que representa fielmente los
 tres intervalos y sus probabilidades tal como se muestran en el gráfico.
 
-\subsection{Answerlist}\label{answerlist-1}
-
 \begin{itemize}
 \item
-  \begin{longtable}[]{@{}cc@{}}
-  \toprule\noalign{}
-  Intervalo & Probabilidad \\
-  \midrule\noalign{}
-  \endhead
-  \bottomrule\noalign{}
-  \endlastfoot
-  \(0 \le x \le 5\) & 0,41 \\
-  \(5 < x \le 7\) & 0,30 \\
-  \(7 < x \le 14\) & 0,30 \\
-  \end{longtable}
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(6 < x \le 12\) \textbar{} 0,46 \textbar{} \textbar{}
+  \(12 < x \le 14\) \textbar{} 0,27 \textbar{} \textbf{Correcto.} Esta
+  tabla representa exactamente los tres intervalos y sus probabilidades
+  correspondientes como se muestra en el gráfico.
+\item
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(6 < x \le 12\) \textbar{} 0,73 \textbar{} \textbar{}
+  \(12 < x \le 14\) \textbar{} 1,00 \textbar{} \textbf{Incorrecto.} Esta
+  tabla no coincide con la información del gráfico. Revisa con atención
+  los límites de los intervalos y los valores de probabilidad asignados
+  a cada sección.
+\item
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:----------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(0 \le x \le 12\) \textbar{} 0,46 \textbar{} \textbar{}
+  \(0 \le x \le 14\) \textbar{} 0,27 \textbar{} \textbf{Incorrecto.}
+  Esta tabla no coincide con la información del gráfico. Revisa con
+  atención los límites de los intervalos y los valores de probabilidad
+  asignados a cada sección.
+\item
+  ~~~Intervalo \textbar{} Probabilidad \textbar{}
+  \textbar:---------------:\textbar:------------:\textbar{} \textbar{}
+  \(0 \le x \le 6\) \textbar{} 0,46 \textbar{} \textbar{}
+  \(6 < x \le 12\) \textbar{} 0,27 \textbar{} \textbar{}
+  \(12 < x \le 14\) \textbar{} 0,27 \textbar{} \textbf{Incorrecto.} Esta
+  tabla no coincide con la información del gráfico. Revisa con atención
+  los límites de los intervalos y los valores de probabilidad asignados
+  a cada sección.
 \end{itemize}
-
-\textbf{Incorrecto.} Esta tabla no coincide con la información del
-gráfico. Revisa con atención los límites de los intervalos y los valores
-de probabilidad asignados a cada sección. * \textbar{} Intervalo
-\textbar{} Probabilidad \textbar{}
-\textbar:---------------:\textbar:------------:\textbar{} \textbar{}
-\(0 \le x \le 5\) \textbar{} 0,30 \textbar{} \textbar{} \(5 < x \le 7\)
-\textbar{} 0,71 \textbar{} \textbar{} \(7 < x \le 14\) \textbar{} 1,00
-\textbar{}
-
-\textbf{Incorrecto.} Esta tabla no coincide con la información del
-gráfico. Revisa con atención los límites de los intervalos y los valores
-de probabilidad asignados a cada sección. * \textbar{} Intervalo
-\textbar{} Probabilidad \textbar{}
-\textbar:---------------:\textbar:------------:\textbar{} \textbar{}
-\(0 \le x \le 5\) \textbar{} 0,30 \textbar{} \textbar{} \(5 < x \le 7\)
-\textbar{} 0,41 \textbar{} \textbar{} \(7 < x \le 14\) \textbar{} 0,30
-\textbar{}
-
-\textbf{Correcto.} Esta tabla representa exactamente los tres intervalos
-y sus probabilidades correspondientes como se muestra en el gráfico. *
-\textbar{} Intervalo \textbar{} Probabilidad \textbar{}
-\textbar:----------------:\textbar:------------:\textbar{} \textbar{}
-\(0 \le x \le 5\) \textbar{} 0,30 \textbar{} \textbar{}
-\(0 \le x \le 7\) \textbar{} 0,41 \textbar{} \textbar{}
-\(0 \le x \le 14\) \textbar{} 0,30 \textbar{}
-
-\textbf{Incorrecto.} Esta tabla no coincide con la información del
-gráfico. Revisa con atención los límites de los intervalos y los valores
-de probabilidad asignados a cada sección.
 
 \section{Meta-information}\label{meta-information}
 
 exname: probabilidad\_distribucion\_grafico\_tabla extype: schoice
-exsolution: 0010 exshuffle: TRUE exsection:
+exsolution: 1000 exshuffle: TRUE exsection:
 Estadística/Probabilidad/Interpretación de gráficos
 
 \end{document}
