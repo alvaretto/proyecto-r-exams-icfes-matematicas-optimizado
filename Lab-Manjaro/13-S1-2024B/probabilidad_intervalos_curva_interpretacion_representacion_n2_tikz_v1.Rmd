@@ -208,10 +208,11 @@ generar_tabla_tikz <- function(intervalos, probabilidades) {
   # Formatear probabilidades con coma decimal
   probs_formateadas <- sapply(probabilidades, formato_coma)
 
-  # Crear código TikZ para la tabla
+  # Crear código TikZ para la tabla con fuente reducida
   codigo_tikz <- paste0("
 \\begin{tikzpicture}[scale=1.0]
   \\node[anchor=north west] at (0,0) {
+    \\small
     \\begin{tabular}{|c|c|}
       \\hline
       \\textbf{Intervalo} & \\textbf{Probabilidad} \\\\

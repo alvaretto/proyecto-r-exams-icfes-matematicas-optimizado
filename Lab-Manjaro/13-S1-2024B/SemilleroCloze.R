@@ -17,7 +17,7 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd"
+archivo_examen <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"
 
 # Configuración de generación
 config <- list(
