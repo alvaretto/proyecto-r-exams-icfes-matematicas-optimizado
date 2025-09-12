@@ -32,7 +32,7 @@ options(tikzLatexPackages = c(
   "\\usepackage{array}"
 ))
 
-library(exams); library(knitr); library(testthat); library(digest)
+library(exams); library(knitr); library(testthat); library(digest); library(reticulate)
 typ <- match_exams_device()
 knitr::opts_chunk$set(warning=FALSE, message=FALSE, fig.keep='all', dev=c("png","pdf"), dpi=150)
 
@@ -62,6 +62,11 @@ fmt <- function(x) sprintf("%.2f", x)
 int1 <- paste0("$", a, " \\le x \\le ", b, "$")
 int2 <- paste0("$", b, " < x \\le ", c, "$")
 int3 <- paste0("$", c, " < x \\le ", d, "$")
+
+# Versiones de los intervalos para HTML plano (sin LaTeX) — útil en Moodle/HTML
+int1_txt <- paste0(a, " \u2264 x \u2264 ", b)
+int2_txt <- paste0(b, " < x \u2264 ", c)
+int3_txt <- paste0(c, " < x \u2264 ", d)
 
 # Tablas de opciones (cada opción es una lista con probabilidades numéricas)
 op_corr <- list(vals = c(p, q, p), etiqueta = "correcta")
@@ -97,6 +102,25 @@ md_table <- function(vals){
   paste(filas, collapse = "\n")
 }
 
+# Tablas HTML y LaTeX como strings (para control fino por formato de salida)
+html_table <- function(vals){
+  sprintf('<table><thead><tr><th>Intervalo</th><th>Probabilidad</th></tr></thead><tbody><tr><td>%s</td><td>%s</td></tr><tr><td>%s</td><td>%s</td></tr><tr><td>%s</td><td>%s</td></tr></tbody></table>',
+          int1_txt, fmt(vals[1]), int2_txt, fmt(vals[2]), int3_txt, fmt(vals[3]))
+}
+
+# latex_table <- function(vals){
+#   c("\\begin{tabular}{l c}",
+#     "\\hline",
+#     "Intervalo & Probabilidad \\\",
+#     "\\hline",
+#     sprintf("%s & %s \\\", int1, fmt(vals[1])),
+#     sprintf("%s & %s \\\", int2, fmt(vals[2])),
+#     sprintf("%s & %s \\\", int3, fmt(vals[3])),
+#     "\\hline",
+#     "\\end{tabular}")
+# }
+
+
 # Render de tablas a strings (para Answerlist)
 op_md <- lapply(opciones_mezcladas, function(o) md_table(o$vals))
 
@@ -120,6 +144,77 @@ test_that("Diversidad mínima (smoke)", {
   expect_true(length(unique(vers)) >= 6)
 })
 ```
+```{python tablas_python}
+# Generación de tablas como imágenes PNG usando matplotlib (reticulate)
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+# Acceder a variables de R con reticulate: r.<nombre>
+intervals = [r.int1_txt, r.int2_txt, r.int3_txt]
+
+# Helpers
+def save_table_png(filename, intervals, probs):
+    fig, ax = plt.subplots(figsize=(4.0, 2.2), dpi=200)
+    ax.axis('off')
+    cell_text = [
+        [intervals[0], f"{probs[0]:.2f}"],
+        [intervals[1], f"{probs[1]:.2f}"],
+        [intervals[2], f"{probs[2]:.2f}"],
+    ]
+    table = ax.table(cellText=cell_text,
+                     colLabels=["Intervalo", "Probabilidad"],
+                     loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1.1, 1.2)
+    fig.tight_layout(pad=0.2)
+    fig.savefig(filename, transparent=True, bbox_inches='tight')
+    plt.close(fig)
+
+# Opción A (correcta)
+save_table_png("tabla_opcion_a.png", intervals, [r.p, r.q, r.p])
+# Distractores
+save_table_png("tabla_opcion_b.png", intervals, [r.p, r.p + r.q, 1.0])
+save_table_png("tabla_opcion_c.png", intervals, [r.q, r.p, r.p])
+save_table_png("tabla_opcion_d.png", intervals, [r.p, 1.0 - r.p, r.p])
+```
+
+
+```{r tikz_bell, echo=FALSE, results='asis'}
+# Curva tipo campana con sombreado de intervalos (TikZ puro, compatible)
+mu <- (b + c)/2
+sigma <- max((c - b)/2, 0.8)
+
+f <- function(x) exp(-((x - mu)^2) / (2 * sigma^2))
+x_all <- seq(a, d, length.out = 120)
+y_all <- f(x_all)
+
+seg_left  <- x_all[x_all <= b];               y_left  <- f(seg_left)
+seg_mid   <- x_all[x_all >= b & x_all <= c];  y_mid   <- f(seg_mid)
+seg_right <- x_all[x_all >= c];               y_right <- f(seg_right)
+
+fmt_coords <- function(xs, ys) paste(sprintf("(%.3f,%.3f)", xs, ys), collapse = " ")
+curve_coords_all <- fmt_coords(x_all, y_all)
+coords_left  <- fmt_coords(seg_left,  y_left)
+coords_mid   <- fmt_coords(seg_mid,   y_mid)
+coords_right <- fmt_coords(seg_right, y_right)
+
+m1 <- (a + b)/2; m2 <- (b + c)/2; m3 <- (c + d)/2
+
+# Construir TikZ
+etik <- function(x) sprintf("%.2f", x)
+tikz_code <- sprintf("\n\\begin{tikzpicture}[x=0.5cm,y=2cm]\n  \\draw[thick, blue] plot[smooth] coordinates { %s };\n  \\fill[blue!20] (%.3f,0) -- plot[smooth] coordinates { %s } -- (%.3f,0) -- cycle;\n  \\fill[blue!40] (%.3f,0) -- plot[smooth] coordinates { %s } -- (%.3f,0) -- cycle;\n  \\fill[blue!20] (%.3f,0) -- plot[smooth] coordinates { %s } -- (%.3f,0) -- cycle;\n  \\node at (%.3f,-0.08) {\\small $\\boldsymbol{%s}$};\n  \\node at (%.3f,-0.08) {\\small $\\boldsymbol{%s}$};\n  \\node at (%.3f,-0.08) {\\small $\\boldsymbol{%s}$};\n\\end{tikzpicture}\n",
+  curve_coords_all,
+  a, coords_left,  b,
+  b, coords_mid,   c,
+  c, coords_right, d,
+  m1, etik(p), m2, etik(q), m3, etik(p)
+)
+
+include_tikz(tikz_code, name = "bell_intervals", format = typ, markup = "markdown", width = "8cm")
+```
+
 
 Question
 ========
@@ -133,13 +228,10 @@ Para este ejercicio, los intervalos considerados son: `r int1`, `r int2` y `r in
 Answerlist
 ----------
 
-```{r opciones, echo=FALSE, results='asis'}
-# Cada opción es una tabla Markdown embebida (formato robusto en exams)
-for(i in 1:4){
-  cat("-\n")
-  cat(op_md[[i]], "\n\n")
-}
-```
+- ![](tabla_opcion_a.png){width=70%}
+- ![](tabla_opcion_b.png){width=70%}
+- ![](tabla_opcion_c.png){width=70%}
+- ![](tabla_opcion_d.png){width=70%}
 
 Solution
 ========
@@ -158,16 +250,16 @@ Las demás opciones son errores típicos de interpretación:
 
 Answerlist
 ----------
-- `r if(solucion_vec[1]==1) "Verdadero" else "Falso"`
-- `r if(solucion_vec[2]==1) "Verdadero" else "Falso"`
-- `r if(solucion_vec[3]==1) "Verdadero" else "Falso"`
-- `r if(solucion_vec[4]==1) "Verdadero" else "Falso"`
+- Verdadero
+- Falso
+- Falso
+- Falso
 
 Meta-information
 ================
 exname: probabilidad_intervalos_curva
 extype: schoice
-exsolution: `r paste(solucion_vec, collapse="")`
+exsolution: 1000
 exshuffle: TRUE
 exsection: Probabilidad|Interpretación de representaciones|Áreas bajo la curva
 exextra[Type]: Interpretación y representación

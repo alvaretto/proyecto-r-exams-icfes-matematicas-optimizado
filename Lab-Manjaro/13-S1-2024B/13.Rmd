@@ -1,9 +1,9 @@
 ---
 output:
-  word_document: default
   html_document:
     df_print: paged
     mathjax: true
+  word_document: default
   pdf_document:
     latex_engine: xelatex
     keep_tex: true
@@ -33,6 +33,7 @@ icfes:
 # Librerías esenciales
 library(exams)
 library(knitr)
+library(reticulate)
 
 # Configuración global crítica
 typ <- match_exams_device()
@@ -76,10 +77,15 @@ generar_datos <- function() {
     limite2 <- limite_sup - 2
   }
 
-  # 2. Creación de Intervalos (Formato LaTeX)
-  intervalo1_txt <- paste0("0 \\le x \\le ", limite1)
-  intervalo2_txt <- paste0(limite1, " < x \\le ", limite2)
-  intervalo3_txt <- paste0(limite2, " < x \\le ", limite_sup)
+  # 2. Función auxiliar para símbolos matemáticos según formato
+  format_le <- function() {
+    if (identical(typ, "pandoc")) "≤" else "\\le"
+  }
+
+  # 3. Creación de Intervalos (Formato adaptativo)
+  intervalo1_txt <- paste0("0 ", format_le(), " x ", format_le(), " ", limite1)
+  intervalo2_txt <- paste0(limite1, " < x ", format_le(), " ", limite2)
+  intervalo3_txt <- paste0(limite2, " < x ", format_le(), " ", limite_sup)
 
   # 3. Generación de Opciones (DataFrames)
   tabla_correcta <- data.frame(
@@ -93,7 +99,9 @@ generar_datos <- function() {
     stringsAsFactors = FALSE
   )
   tabla_distractor_B <- data.frame(
-    Intervalo = c(paste0("0 \\le x \\le ", limite1), paste0("0 \\le x \\le ", limite2), paste0("0 \\le x \\le ", limite_sup)),
+    Intervalo = c(paste0("0 ", format_le(), " x ", format_le(), " ", limite1),
+                  paste0("0 ", format_le(), " x ", format_le(), " ", limite2),
+                  paste0("0 ", format_le(), " x ", format_le(), " ", limite_sup)),
     Probabilidad = c(p_lateral, p_central, p_lateral),
     stringsAsFactors = FALSE
   )
@@ -129,8 +137,16 @@ crear_tabla_portable <- function(df, typ) {
   df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
   df_formateada$Probabilidad <- formato_coma(df$Probabilidad)
 
-  # Determinar tipo LaTeX y tratar pandoc explícitamente
+  # Determinar tipo LaTeX y tratar pandoc/nops explícitamente
   es_latex <- isTRUE(typ %in% c("pdf", "nops", "tex"))
+
+  # Para NOPS evitamos tablas y devolvemos un resumen en texto plano
+  if (identical(typ, "nops")) {
+    # Usar texto ASCII simple para maximizar compatibilidad con NOPS (sin tablas ni $...$)
+    int_ascii <- gsub(" \\\\le ", " <= ", df$Intervalo)
+    rows_txt <- paste(sprintf("[%s: %s]", int_ascii, df_formateada$Probabilidad), collapse = " ")
+    return(rows_txt)
+  }
 
   if (!es_latex) {
     if (identical(typ, "pandoc")) {
@@ -169,8 +185,73 @@ opciones_portables <- lapply(datos$opciones, function(tabla) {
 
 # **INICIO DE LA CORRECCIÓN**
 # Pre-generar el texto del ejemplo para evitar errores de renderizado
-datos$ejemplo_distractor_B <- paste0("$0 \\le x \\le ", datos$limite2, "$")
+le_symbol <- if (identical(typ, "pandoc")) "≤" else "\\le"
+datos$ejemplo_distractor_B <- paste0("$0 ", le_symbol, " x ", le_symbol, " ", datos$limite2, "$")
 # **FIN DE LA CORRECCIÓN**
+```{python generar_tablas_png}
+# Generar 4 tablas como imágenes PNG (matplotlib) para Answerlist
+import matplotlib; matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+# Leer parámetros desde R (reticulate)
+lim1 = int(r.datos["limite1"])
+lim2 = int(r.datos["limite2"])
+limsup = int(r.datos["limite_sup"])
+pl = float(r.datos["p_lateral"])
+pc = float(r.datos["p_central"])
+
+# Construir etiquetas de intervalos (texto plano con <= y <)
+int1 = f"0 <= x <= {lim1}"
+int2 = f"{lim1} < x <= {lim2}"
+int3 = f"{lim2} < x <= {limsup}"
+intB = [f"0 <= x <= {lim1}", f"0 <= x <= {lim2}", f"0 <= x <= {limsup}"]
+
+
+def save_table_png(filename, intervals, probs):
+    fig, ax = plt.subplots(figsize=(4.2, 2.2), dpi=200)
+    ax.axis('off')
+    cell_text = [
+        [intervals[0], f"{probs[0]:.2f}"],
+        [intervals[1], f"{probs[1]:.2f}"],
+        [intervals[2], f"{probs[2]:.2f}"],
+    ]
+    table = ax.table(cellText=cell_text,
+                     colLabels=["Intervalo", "Probabilidad"],
+                     loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1.1, 1.2)
+    fig.tight_layout(pad=0.2)
+    fig.savefig(filename, transparent=True, bbox_inches='tight')
+    plt.close(fig)
+
+# A (correcta)
+save_table_png("tabla_opcion_a.png", [int1, int2, int3], [pl, pc, pl])
+# B (acumulativa con 0 <= x <= ...)
+save_table_png("tabla_opcion_b.png", intB, [pl, pl + pc, 1.0])
+# C (definición alternativa: usa los mismos intervalos que A pero con permutación típica)
+save_table_png("tabla_opcion_c.png", [int1, int2, int3], [pc, pl, pl])
+# D (otro distractor simple)
+save_table_png("tabla_opcion_d.png", [int1, int2, int3], [pl, 1.0 - pl, pl])
+
+# Para pandoc/DOCX: copiar imágenes al directorio de salida si existe
+import os
+import shutil
+img_files = ["tabla_opcion_a.png", "tabla_opcion_b.png", "tabla_opcion_c.png", "tabla_opcion_d.png"]
+
+# Copiar al directorio de salida si existe
+if os.path.exists("salida"):
+    for img in img_files:
+        if os.path.exists(img):
+            shutil.copy2(img, "salida/")
+
+# También copiar al directorio actual para asegurar que pandoc las encuentre
+for img in img_files:
+    if os.path.exists(img):
+        # Asegurar que las imágenes estén disponibles en el directorio de trabajo
+        pass  # Ya están en el directorio actual
+```
+
 ```
 
 ```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
@@ -249,33 +330,16 @@ include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown
 
 <!-- NOTA MANTENIMIENTO (R-exams): las opciones contienen tablas. Para evitar que el parser cuente filas internas como ítems de respuesta, colapsamos cada tabla a una sola línea y generamos manualmente 4 bullets. -->
 
-```{r pdf_label_uppercase_on, echo=FALSE, results='asis'}
-if (typ %in% c("pdf", "nops")) {
-  # Forzar etiquetas A), B), C), D) en enumerate sin depender de enumitem
-  cat("\\begingroup\\renewcommand{\\labelenumi}{\\Alph{enumi})}\n")
-}
-```
+Answerlist
+----------
 
-```{r answer_list, echo=FALSE, results='asis'}
-# Forzamos exactamente 4 items de lista en Markdown para evitar conteos extra del parser
-ops <- opciones_portables
-# Colapsar a una sola línea salvo en 'pandoc' (donde se requieren tablas válidas)
-if (!identical(typ, "pandoc")) {
-  ops <- vapply(ops, function(z) paste(gsub("\n", " ", z), collapse = " "), "")
-} else {
-  ops <- vapply(ops, as.character, "")
-}
-cat(paste0("* A) ", ops[1], "\n",
-           "* B) ", ops[2], "\n",
-           "* C) ", ops[3], "\n",
-           "* D) ", ops[4], "\n"))
-```
+- ![](tabla_opcion_a.png){width=70%}
 
-```{r pdf_label_uppercase_off, echo=FALSE, results='asis'}
-if (typ %in% c("pdf", "nops")) {
-  cat("\\endgroup\n")
-}
-```
+- ![](tabla_opcion_b.png){width=70%}
+
+- ![](tabla_opcion_c.png){width=70%}
+
+- ![](tabla_opcion_d.png){width=70%}
 
 Solution
 ========
@@ -295,20 +359,23 @@ El gráfico está dividido en tres intervalos con sus respectivas probabilidades
 Con la información anterior, la tabla correcta debe tener la siguiente estructura:
 
 ```{r solution_table, echo=FALSE, results='asis'}
+# Usar símbolo apropiado según formato
+le_sym <- if (identical(typ, "pandoc")) "≤" else "\\le"
+
 tabla_esperada <- data.frame(
-  Intervalo = paste0("$", c(
-    paste0("0 \\le x \\le ", datos$limite1),
-    paste0(datos$limite1, " < x \\le ", datos$limite2),
-    paste0(datos$limite2, " < x \\le ", datos$limite_sup)
-  ), "$"),
+  Intervalo = c(
+    paste0("0 ", le_sym, " x ", le_sym, " ", datos$limite1),
+    paste0(datos$limite1, " < x ", le_sym, " ", datos$limite2),
+    paste0(datos$limite2, " < x ", le_sym, " ", datos$limite_sup)
+  ),
   Probabilidad = c(
-    formato_coma(datos$p_lateral),
-    formato_coma(datos$p_central),
-    formato_coma(datos$p_lateral)
+    datos$p_lateral,
+    datos$p_central,
+    datos$p_lateral
   ),
   stringsAsFactors = FALSE
 )
-kable(tabla_esperada, align = 'c', booktabs = TRUE, escape = FALSE)
+cat(crear_tabla_portable(tabla_esperada, typ))
 ```
 
 **Paso 3: Comparar con las opciones.**
@@ -321,31 +388,18 @@ Al revisar las tablas de las opciones, la única que coincide perfectamente con 
 
 Por lo tanto, la respuesta correcta es la que representa fielmente los tres intervalos y sus probabilidades tal como se muestran en el gráfico.
 
-```{r solution_list, echo=FALSE, results='asis'}
-# Generar una explicación para cada opción para una retroalimentación detallada
-soluciones_explicadas <- vapply(1:4, function(i) {
-  tabla_actual <- datos$opciones[[i]]
-  tabla_renderizada <- crear_tabla_portable(tabla_actual, typ)
-  feedback <- if (i == datos$posicion_correcta) {
-    "**Correcto.** Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico."
-  } else {
-    "**Incorrecto.** Esta tabla no coincide con la información del gráfico. Revisa con atención los límites de los intervalos y los valores de probabilidad asignados a cada sección."
-  }
-  # Devolver una sola línea por ítem
-  gsub("\n", " ", paste(tabla_renderizada, "\n\n", feedback))
-}, "")
-
-cat(paste0("* A) ", soluciones_explicadas[1], "\n",
-           "* B) ", soluciones_explicadas[2], "\n",
-           "* C) ", soluciones_explicadas[3], "\n",
-           "* D) ", soluciones_explicadas[4], "\n"))
-```
+Answerlist
+----------
+- Correcto. Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.
+- Incorrecto. Usa intervalos acumulativos (0 $\le$ x $\le$ a, 0 $\le$ x $\le$ b, 0 $\le$ x $\le$ c) y una columna acumulada; no corresponde a las tres secciones individuales.
+- Incorrecto. Intercambia los valores asignando el central a los laterales.
+- Incorrecto. No coincide con la asignación de probabilidades del gráfico.
 
 Meta-information
 ================
 
 exname: probabilidad\_distribucion\_grafico\_tabla
 extype: schoice
-exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exsolution: 1000
 exshuffle: TRUE
 exsection: Estadística/Probabilidad/Interpretación de gráficos
