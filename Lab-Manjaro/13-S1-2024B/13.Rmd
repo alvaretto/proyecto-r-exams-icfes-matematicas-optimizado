@@ -1,12 +1,12 @@
 ---
 output:
-  pdf_document:
-    latex_engine: xelatex
-    keep_tex: true
+  word_document: default
   html_document:
     df_print: paged
     mathjax: true
-  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
 header-includes:
 - \usepackage[spanish]{babel}
 - \usepackage{amsmath}
@@ -73,7 +73,7 @@ generar_datos <- function() {
   ancho_central <- sample(2:6, 1)
   limite2 <- limite1 + ancho_central
   limite_sup <- 14
-  
+
   if (limite2 >= limite_sup) {
     limite2 <- limite_sup - 2
   }
@@ -104,7 +104,7 @@ generar_datos <- function() {
     Probabilidad = c(p_central, p_lateral, p_lateral),
     stringsAsFactors = FALSE
   )
-  
+
   # 4. Agrupar y Aleatorizar Opciones
   lista_tablas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
   orden <- sample(1:4)
@@ -130,21 +130,32 @@ crear_tabla_portable <- function(df, typ) {
   df_formateada <- df
   df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
   df_formateada$Probabilidad <- formato_coma(df$Probabilidad)
-  
+
   formato_salida <- switch(typ,
     pdf = "latex",
     html = "html",
     "pipe"
   )
-  
+  es_latex <- identical(formato_salida, "latex")
+
+  if (!es_latex) {
+    # Construir tabla HTML con bordes visibles fieles al original
+    th <- function(x) sprintf('<th style="border:1px solid #000;padding:4px 8px;text-align:center;font-weight:bold;">%s</th>', x)
+    td <- function(x) sprintf('<td style="border:1px solid #000;padding:4px 8px;text-align:center;">%s</td>', x)
+    header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
+    rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
+    tabla_renderizada <- sprintf('<table class="ex-opcion" style="border-collapse:collapse;border:2px solid #000;margin:4px 0;">%s%s</table>', header, rows)
+    # Devolver una sola línea para evitar conteos erróneos del parser
+    return(paste(gsub("\n", " ", tabla_renderizada), collapse = " "))
+  }
+
   tabla_renderizada <- knitr::kable(
     df_formateada,
-    format = formato_salida,
-    booktabs = (formato_salida == "latex"),
+    format = "latex",
+    booktabs = TRUE,
     escape = FALSE,
     align = 'c'
   )
-  
   return(paste(tabla_renderizada, collapse = "\n"))
 }
 
@@ -159,7 +170,9 @@ datos$ejemplo_distractor_B <- paste0("$0 \\le x \\le ", datos$limite2, "$")
 # **FIN DE LA CORRECCIÓN**
 ```
 
-```{r version_diversity_test, echo=FALSE, results="hide"}
+```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
+# Este test es costoso. Ejecutarlo solo en desarrollo.
+# Actvalo con la variable de entorno: EXAMS_RUN_DIVERSITY=1
 test_that("Prueba de diversidad de versiones", {
   versiones <- list()
   for(i in 1:1000) {
@@ -208,6 +221,8 @@ codigo_tikz_grafico <- paste0("
 ")
 ```
 
+<!-- NOTA MANTENIMIENTO (R-exams): usar encabezados estilo setext (línea con ===) para Question, Solution y Meta-information. Mezclar estilos puede gatillar el error del parser: if (substr(x[b + 1L], 1L, 1L) == "=") { ... condition has length > 1 }. -->
+
 Question
 ========
 
@@ -222,11 +237,34 @@ include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown
 
 ¿Cuál de las siguientes tablas representa la probabilidad de que la variable aleatoria $x$ tome los valores en el intervalo indicado?
 
-```{r answer_list, echo=FALSE, results='asis'}
-answerlist(opciones_portables, markup = "markdown", num = "A.")
+<!-- NOTA MANTENIMIENTO (R-exams): las opciones contienen tablas. Para evitar que el parser cuente filas internas como ítems de respuesta, colapsamos cada tabla a una sola línea y generamos manualmente 4 bullets. -->
+
+```{r pdf_label_uppercase_on, echo=FALSE, results='asis'}
+if (identical(typ, "pdf")) {
+  # Forzar etiquetas A), B), C), D) en enumerate sin depender de enumitem
+  cat("\\begingroup\\renewcommand{\\labelenumi}{\\Alph{enumi})}\n")
+}
 ```
 
-# Solution
+```{r answer_list, echo=FALSE, results='asis'}
+# Forzamos exactamente 4 items de lista en Markdown para evitar conteos extra del parser
+ops <- opciones_portables
+# Una sola línea por opción en todos los formatos
+ops <- vapply(ops, function(z) paste(gsub("\n", " ", z), collapse = " "), "")
+cat(paste0("* A) ", ops[1], "\n",
+           "* B) ", ops[2], "\n",
+           "* C) ", ops[3], "\n",
+           "* D) ", ops[4], "\n"))
+```
+
+```{r pdf_label_uppercase_off, echo=FALSE, results='asis'}
+if (identical(typ, "pdf")) {
+  cat("\\endgroup\n")
+}
+```
+
+Solution
+========
 
 Para encontrar la tabla correcta, debemos extraer la información directamente del gráfico y compararla con las opciones proporcionadas.
 
@@ -271,20 +309,22 @@ Por lo tanto, la respuesta correcta es la que representa fielmente los tres inte
 
 ```{r solution_list, echo=FALSE, results='asis'}
 # Generar una explicación para cada opción para una retroalimentación detallada
-soluciones_explicadas <- lapply(1:4, function(i) {
+soluciones_explicadas <- vapply(1:4, function(i) {
   tabla_actual <- datos$opciones[[i]]
   tabla_renderizada <- crear_tabla_portable(tabla_actual, typ)
-  
   feedback <- if (i == datos$posicion_correcta) {
     "**Correcto.** Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico."
   } else {
     "**Incorrecto.** Esta tabla no coincide con la información del gráfico. Revisa con atención los límites de los intervalos y los valores de probabilidad asignados a cada sección."
   }
-  
-  paste(tabla_renderizada, "\n\n", feedback)
-})
+  # Devolver una sola línea por ítem
+  gsub("\n", " ", paste(tabla_renderizada, "\n\n", feedback))
+}, "")
 
-answerlist(soluciones_explicadas, markup = "markdown")
+cat(paste0("* A) ", soluciones_explicadas[1], "\n",
+           "* B) ", soluciones_explicadas[2], "\n",
+           "* C) ", soluciones_explicadas[3], "\n",
+           "* D) ", soluciones_explicadas[4], "\n"))
 ```
 
 Meta-information
