@@ -17,11 +17,11 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd"
+archivo_examen <- "ExportacionesGraficosEstadisticaInterpretacion_n3_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos =10,                    # Número de versiones a generar
+  archivos =400,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
@@ -175,7 +175,7 @@ generar_moodle <- function() {
                              dir = file.path(config$dir_salida, "moodle"),
                              edir = config$dir_ejercicios,
                              encoding = config$encoding,
-                             svg = TRUE,
+                             svg = FALSE,
                              verbose = TRUE)
 
     cat("✅ Archivos Moodle generados exitosamente\n")

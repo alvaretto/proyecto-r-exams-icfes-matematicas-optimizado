@@ -3,10 +3,10 @@ output:
   html_document:
     df_print: paged
     mathjax: true
+  word_document: default
   pdf_document:
     latex_engine: xelatex
     keep_tex: true
-  word_document: default
 header-includes:
 - \usepackage[spanish]{babel}
 - \usepackage{amsmath}
@@ -16,7 +16,7 @@ header-includes:
 - \usepackage{adjustbox}
 - \usepackage{tikz}
 - \usepackage{pgfplots}
-- \pgfplotsset{compat=1.17}
+- \usepackage{booktabs}
 - \usetikzlibrary{3d,babel}
 icfes:
   competencia: interpretacion_representacion
@@ -33,8 +33,6 @@ icfes:
 # Librerías esenciales
 library(exams)
 library(knitr)
-library(testthat)
-library(digest)
 
 # Configuración global crítica
 typ <- match_exams_device()
@@ -65,18 +63,15 @@ formato_coma <- function(numero, decimales = 2) {
 
 # Función principal de generación de datos
 generar_datos <- function() {
-  # 1. Aleatorización de Parámetros Matemáticos (CORREGIDO)
-  # Se aumenta la precisión y el rango para mayor diversidad
+  # 1. Aleatorización de Parámetros Matemáticos
   p_central <- sample(seq(0.40, 0.55, by = 0.01), 1)
   p_lateral <- (1 - p_central) / 2
 
   limite1 <- sample(3:6, 1)
-  # Se amplía el rango del ancho para aumentar combinaciones
   ancho_central <- sample(2:6, 1)
   limite2 <- limite1 + ancho_central
   limite_sup <- 14
-  
-  # Asegurar que el segundo límite no sea demasiado grande
+
   if (limite2 >= limite_sup) {
     limite2 <- limite_sup - 2
   }
@@ -87,35 +82,32 @@ generar_datos <- function() {
   intervalo3_txt <- paste0(limite2, " < x \\le ", limite_sup)
 
   # 3. Generación de Opciones (DataFrames)
-  # Opción Correcta (C): Representación directa del gráfico
   tabla_correcta <- data.frame(
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
-    Probabilidad = c(p_lateral, p_central, p_lateral)
+    Probabilidad = c(p_lateral, p_central, p_lateral),
+    stringsAsFactors = FALSE
   )
-
-  # Distractor A: Probabilidades acumuladas
   tabla_distractor_A <- data.frame(
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
-    Probabilidad = c(p_lateral, p_lateral + p_central, 1)
+    Probabilidad = c(p_lateral, p_lateral + p_central, 1),
+    stringsAsFactors = FALSE
   )
-
-  # Distractor B: Intervalos acumulados, probabilidades incorrectas
   tabla_distractor_B <- data.frame(
     Intervalo = c(paste0("0 \\le x \\le ", limite1), paste0("0 \\le x \\le ", limite2), paste0("0 \\le x \\le ", limite_sup)),
-    Probabilidad = c(p_lateral, p_central, p_lateral)
+    Probabilidad = c(p_lateral, p_central, p_lateral),
+    stringsAsFactors = FALSE
   )
-
-  # Distractor D: Probabilidades intercambiadas
   tabla_distractor_D <- data.frame(
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
-    Probabilidad = c(p_central, p_lateral, p_lateral)
+    Probabilidad = c(p_central, p_lateral, p_lateral),
+    stringsAsFactors = FALSE
   )
-  
+
   # 4. Agrupar y Aleatorizar Opciones
   lista_tablas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
   orden <- sample(1:4)
   opciones_mezcladas <- lista_tablas[orden]
-  posicion_correcta <- which(orden == 3) # La tabla correcta es la tercera en la lista original
+  posicion_correcta <- which(orden == 3)
 
   return(list(
     p_central = p_central,
@@ -131,45 +123,88 @@ generar_datos <- function() {
 # Generar datos del ejercicio
 datos <- generar_datos()
 
-# Helper para crear tablas en Markdown para las opciones
-crear_tabla_markdown <- function(df) {
+# Helper universal para crear tablas compatibles con todos los formatos exams2*
+crear_tabla_portable <- function(df, typ) {
   df_formateada <- df
-  # Usar '$' para renderizar LaTeX en las opciones
   df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
   df_formateada$Probabilidad <- formato_coma(df$Probabilidad)
-  
-  # Construir la tabla Markdown manually para control total
-  header <- "| Intervalo | Probabilidad |"
-  separator <- "|:-----------:|:--------------:|"
-  rows <- apply(df_formateada, 1, function(row) {
-    paste("|", row[1], "|", row[2], "|")
-  })
-  
-  paste(c(header, separator, rows), collapse = "\n")
+
+  # Determinar tipo LaTeX y tratar pandoc/nops explícitamente
+  es_latex <- isTRUE(typ %in% c("pdf", "nops", "tex"))
+
+  # Para NOPS evitamos tablas y devolvemos un resumen en texto plano
+  if (identical(typ, "nops")) {
+    # Usar texto ASCII simple para maximizar compatibilidad con NOPS (sin tablas ni $...$)
+    int_ascii <- gsub(" \\\\le ", " <= ", df$Intervalo)
+    rows_txt <- paste(sprintf("[%s: %s]", int_ascii, df_formateada$Probabilidad), collapse = " ")
+    return(rows_txt)
+  }
+
+  if (!es_latex) {
+    if (identical(typ, "pandoc")) {
+      # Tabla Markdown (pipe) compatible con Pandoc/Docx; colapsada a una sola línea
+      hdr <- "| Intervalo | Probabilidad |"
+      sep <- "|:---------:|:------------:|"
+      rows <- paste(apply(df_formateada, 1, function(r) sprintf("| %s | %s |", r[["Intervalo"]], r[["Probabilidad"]] )), collapse = "\n")
+      tabla_md <- paste(c(hdr, sep, rows), collapse = "\n")
+      return(tabla_md)
+    } else {
+      # Construir tabla HTML con bordes visibles (HTML/Moodle/etc.)
+      th <- function(x) sprintf('<th style="border:1px solid #000;padding:4px 8px;text-align:center;font-weight:bold;">%s</th>', x)
+      td <- function(x) sprintf('<td style="border:1px solid #000;padding:4px 8px;text-align:center;">%s</td>', x)
+      header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
+      rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
+      tabla_renderizada <- sprintf('<table class="ex-opcion" style="border-collapse:collapse;border:2px solid #000;margin:4px 0;">%s%s</table>', header, rows)
+      # Devolver una sola línea para evitar conteos erróneos del parser
+      return(paste(gsub("\n", " ", tabla_renderizada), collapse = " "))
+    }
+  }
+
+  tabla_renderizada <- knitr::kable(
+    df_formateada,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    align = 'c'
+  )
+  return(paste(tabla_renderizada, collapse = "\n"))
 }
 
-opciones_markdown <- lapply(datos$opciones, crear_tabla_markdown)
+# Crear opciones y soluciones portátiles
+opciones_portables <- lapply(datos$opciones, function(tabla) {
+  crear_tabla_portable(tabla, typ)
+})
 
+# **INICIO DE LA CORRECCIÓN**
+# Pre-generar el texto del ejemplo para evitar errores de renderizado
+datos$ejemplo_distractor_B <- paste0("$0 \\le x \\le ", datos$limite2, "$")
+# **FIN DE LA CORRECCIÓN**
 ```
 
-```{r version_diversity_test, echo=FALSE, results="hide"}
-test_that("Prueba de diversidad de versiones", {
-  versiones <- list()
-  for(i in 1:1000) {
-    datos_test <- generar_datos()
-    # Se usa digest en los parámetros clave para definir una versión única
-    versiones[[i]] <- digest::digest(list(
-      p_central = datos_test$p_central,
-      limite1 = datos_test$limite1,
-      limite2 = datos_test$limite2
-    ))
-  }
-  
-  n_versiones_unicas <- length(unique(versiones))
-  expect_true(n_versiones_unicas >= 300,
-              info = paste("Solo se generaron", n_versiones_unicas,
-                           "versiones únicas. Se requieren al menos 300."))
-})
+```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
+# Este test es costoso. Ejecutarlo solo en desarrollo.
+# Actívalo con la variable de entorno: EXAMS_RUN_DIVERSITY=1
+if (requireNamespace("testthat", quietly = TRUE) && requireNamespace("digest", quietly = TRUE)) {
+  testthat::test_that("Prueba de diversidad de versiones", {
+    versiones <- list()
+    for (i in 1:1000) {
+      datos_test <- generar_datos()
+      versiones[[i]] <- digest::digest(list(
+        p_central = datos_test$p_central,
+        limite1 = datos_test$limite1,
+        limite2 = datos_test$limite2
+      ))
+    }
+    n_versiones_unicas <- length(unique(versiones))
+    testthat::expect_true(
+      n_versiones_unicas >= 300,
+      info = paste(
+        "Solo se generaron", n_versiones_unicas,
+        "versiones únicas. Se requieren al menos 300."
+      )
+    )
+  })
+}
 ```
 
 ```{r tikz_graph_generation, echo=FALSE, results="hide"}
@@ -186,26 +221,24 @@ codigo_tikz_grafico <- paste0("
     width=12cm, height=5cm,
     grid style={thin, loosely dotted, black!30}
   ]
-  
   % Curva de distribución (aproximación visual a una normal)
-  \\addplot[domain=0:", datos$limite_sup, ", samples=101, smooth, thick, black] 
+  \\addplot[domain=0:", datos$limite_sup, ", samples=101, smooth, thick, black]
     {0.4 * exp(-(x-7)^2 / (2 * 2.5^2))};
-  
   % Límites de los intervalos
-  \\draw[thick, black!80] (axis cs:", datos$limite1, ",0) -- 
+  \\draw[thick, black!80] (axis cs:", datos$limite1, ",0) --
     (axis cs:", datos$limite1, ", {0.4 * exp(-(", datos$limite1, "-7)^2 / (2 * 2.5^2))});
-  \\draw[thick, black!80] (axis cs:", datos$limite2, ",0) -- 
+  \\draw[thick, black!80] (axis cs:", datos$limite2, ",0) --
     (axis cs:", datos$limite2, ", {0.4 * exp(-(", datos$limite2, "-7)^2 / (2 * 2.5^2))});
-  
   % Etiquetas de probabilidad
   \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_coma(datos$p_lateral), "}};
   \\node at (axis cs:", (datos$limite1 + datos$limite2) / 2, ", 0.35) {\\textbf{", formato_coma(datos$p_central), "}};
   \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_coma(datos$p_lateral), "}};
-  
   \\end{axis}
 \\end{tikzpicture}
 ")
 ```
+
+<!-- NOTA MANTENIMIENTO (R-exams): usar encabezados estilo setext (línea con ===) para Question, Solution y Meta-information. Mezclar estilos puede gatillar el error del parser: if (substr(x[b + 1L], 1L, 1L) == "=") { ... condition has length > 1 }. -->
 
 Question
 ========
@@ -213,7 +246,8 @@ Question
 En la gráfica se muestra la probabilidad de que la variable aleatoria $x$ tome valores en cada uno de tres intervalos en que se ha dividido la curva.
 
 ```{r question_graph, echo=FALSE, results='asis'}
-include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown", format = typ,
+fmt_tikz <- if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "html" else typ
+include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown", format = fmt_tikz,
              packages = c("tikz", "pgfplots"),
              header = "\\pgfplotsset{compat=1.17}",
              width = "12cm")
@@ -221,8 +255,58 @@ include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown
 
 ¿Cuál de las siguientes tablas representa la probabilidad de que la variable aleatoria $x$ tome los valores en el intervalo indicado?
 
+<!-- NOTA MANTENIMIENTO (R-exams): las opciones contienen tablas. Para evitar que el parser cuente filas internas como ítems de respuesta, colapsamos cada tabla a una sola línea y generamos manualmente 4 bullets. -->
+
+```{r pdf_label_uppercase_on, echo=FALSE, results='asis'}
+if (typ %in% c("pdf", "nops")) {
+  # Forzar etiquetas A), B), C), D) en enumerate sin depender de enumitem
+  cat("\\begingroup\\renewcommand{\\labelenumi}{\\Alph{enumi})}\n")
+}
+```
+
 ```{r answer_list, echo=FALSE, results='asis'}
-answerlist(opciones_markdown, markup = "markdown")
+# Forzamos exactamente 4 items de lista en Markdown para evitar conteos extra del parser
+ops <- opciones_portables
+# Colapsar a una sola línea salvo en 'pandoc' (donde se requieren tablas válidas)
+if (!identical(typ, "pandoc")) {
+  ops <- vapply(ops, function(z) paste(gsub("\n", " ", z), collapse = " "), "")
+} else {
+  ops <- vapply(ops, as.character, "")
+}
+if (identical(typ, "pandoc")) {
+  indent <- function(s) paste0("    ", gsub("\n", "\n    ", s))
+  cat(paste0(
+    "* A)\n\n", indent(ops[1]), "\n\n",
+    "* B)\n\n", indent(ops[2]), "\n\n",
+    "* C)\n\n", indent(ops[3]), "\n\n",
+    "* D)\n\n", indent(ops[4]), "\n"
+  ))
+} else if (identical(typ, "nops")) {
+  # Para NOPS, bullets simples sin prefijos A)/B)/C)/D) y texto en una sola línea
+  cat(paste0("* ", ops[1], "\n",
+             "* ", ops[2], "\n",
+             "* ", ops[3], "\n",
+             "* ", ops[4], "\n"))
+} else {
+  if (typ %in% c("html", "moodle")) {
+    cat(paste0("* A) ", ops[1], "\n",
+               "* B) ", ops[2], "\n",
+               "* C) ", ops[3], "\n",
+               "* D) ", ops[4], "\n"))
+  } else {
+    # PDF u otros: sin prefijos manuales para evitar duplicado de etiquetas
+    cat(paste0("* ", ops[1], "\n",
+               "* ", ops[2], "\n",
+               "* ", ops[3], "\n",
+               "* ", ops[4], "\n"))
+  }
+}
+```
+
+```{r pdf_label_uppercase_off, echo=FALSE, results='asis'}
+if (typ %in% c("pdf", "nops")) {
+  cat("\\endgroup\n")
+}
 ```
 
 Solution
@@ -242,33 +326,65 @@ El gráfico está dividido en tres intervalos con sus respectivas probabilidades
 
 Con la información anterior, la tabla correcta debe tener la siguiente estructura:
 
-| Intervalo                                       | Probabilidad                 |
-|:------------------------------------------------|:----------------------------:|
-| $0 \\le x \\le `r datos$limite1`$                   | `r formato_coma(datos$p_lateral)`    |
-| $`r datos$limite1` \< x \\le `r datos$limite2`$   | `r formato_coma(datos$p_central)`    |
-| $`r datos$limite2` \< x \\le `r datos$limite_sup`$ | `r formato_coma(datos$p_lateral)`    |
+```{r solution_table, echo=FALSE, results='asis'}
+tabla_esperada <- data.frame(
+  Intervalo = c(
+    paste0("0 \\le x \\le ", datos$limite1),
+    paste0(datos$limite1, " < x \\le ", datos$limite2),
+    paste0(datos$limite2, " < x \\le ", datos$limite_sup)
+  ),
+  Probabilidad = c(
+    datos$p_lateral,
+    datos$p_central,
+    datos$p_lateral
+  ),
+  stringsAsFactors = FALSE
+)
+cat(crear_tabla_portable(tabla_esperada, typ))
+```
 
 **Paso 3: Comparar con las opciones.**
 
 Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la tabla correcta. Las otras tablas presentan errores comunes:
 
   * **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_coma(datos$p_lateral)`, `r formato_coma(datos$p_lateral + datos$p_central)`, 1,00), lo cual es una interpretación incorrecta del gráfico.
-  * **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos (ej: $0 \\le x \\le `r datos$limite2`$), lo cual no corresponde a las secciones individuales mostradas.
+  * **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos (ej: `r datos$ejemplo_distractor_B`), lo cual no corresponde a las secciones individuales mostradas.
   * **Error de asignación:** Otra tabla intercambia los valores de probabilidad, asignando el valor central a los laterales y viceversa.
 
 Por lo tanto, la respuesta correcta es la que representa fielmente los tres intervalos y sus probabilidades tal como se muestran en el gráfico.
 
 ```{r solution_list, echo=FALSE, results='asis'}
 # Generar una explicación para cada opción para una retroalimentación detallada
-soluciones_explicadas <- list()
-for(i in 1:4) {
-  if (i == datos$posicion_correcta) {
-    soluciones_explicadas[[i]] <- paste(opciones_markdown[[i]], "\n\n**Correcto.** Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.", sep="\n")
+soluciones_explicadas <- vapply(1:4, function(i) {
+  tabla_actual <- datos$opciones[[i]]
+  tabla_renderizada <- crear_tabla_portable(tabla_actual, typ)
+  feedback <- if (i == datos$posicion_correcta) {
+    "**Correcto.** Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico."
   } else {
-    soluciones_explicadas[[i]] <- paste(opciones_markdown[[i]], "\n\n**Incorrecto.** Esta tabla no coincide con la información del gráfico. Revisa con atención los límites de los intervalos y los valores de probabilidad asignados a cada sección.", sep="\n")
+    "**Incorrecto.** Esta tabla no coincide con la información del gráfico. Revisa con atención los límites de los intervalos y los valores de probabilidad asignados a cada sección."
   }
+  # Devolver una sola línea por ítem salvo en pandoc
+  if (!identical(typ, "pandoc")) {
+    gsub("\n", " ", paste(tabla_renderizada, "\n\n", feedback))
+  } else {
+    paste(tabla_renderizada, "\n\n", feedback)
+  }
+}, "")
+
+if (identical(typ, "pandoc")) {
+  indent <- function(s) paste0("    ", gsub("\n", "\n    ", s))
+  cat(paste0(
+    "* A)\n\n", indent(soluciones_explicadas[1]), "\n\n",
+    "* B)\n\n", indent(soluciones_explicadas[2]), "\n\n",
+    "* C)\n\n", indent(soluciones_explicadas[3]), "\n\n",
+    "* D)\n\n", indent(soluciones_explicadas[4]), "\n"
+  ))
+} else {
+  cat(paste0("* A) ", soluciones_explicadas[1], "\n",
+             "* B) ", soluciones_explicadas[2], "\n",
+             "* C) ", soluciones_explicadas[3], "\n",
+             "* D) ", soluciones_explicadas[4], "\n"))
 }
-answerlist(soluciones_explicadas, markup = "markdown")
 ```
 
 Meta-information
@@ -279,6 +395,3 @@ extype: schoice
 exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
 exshuffle: TRUE
 exsection: Estadística/Probabilidad/Interpretación de gráficos
-
-```
-```

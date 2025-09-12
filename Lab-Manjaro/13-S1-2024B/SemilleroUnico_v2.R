@@ -7,7 +7,7 @@ library(exams)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "13.Rmd"
 copias <- 1
-numpreg <- 10
+numpreg <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
