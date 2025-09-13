@@ -183,11 +183,33 @@ opciones_portables <- lapply(datos$opciones, function(tabla) {
   crear_tabla_portable(tabla, typ)
 })
 
-# **INICIO DE LA CORRECCIÓN**
-# Pre-generar el texto del ejemplo para evitar errores de renderizado
+# **INICIO DE LA CORRECCIÓN ROBUSTA**
+# Validaciones exhaustivas para prevenir errores de variable de longitud cero
+if (!exists("typ") || is.null(typ) || length(typ) == 0) {
+  typ <- "html"  # Valor por defecto seguro
+}
+
+# Validar que datos$limite2 existe y no está vacío
+if (!exists("datos") || is.null(datos$limite2) || length(datos$limite2) == 0 || is.na(datos$limite2)) {
+  stop("Error crítico: datos$limite2 no está definido o está vacío")
+}
+
+# Pre-generar el símbolo con validación robusta
 le_symbol <- if (identical(typ, "pandoc")) "≤" else "\\le"
+
+# Validar que le_symbol no esté vacío
+if (is.null(le_symbol) || length(le_symbol) == 0 || nchar(le_symbol) == 0) {
+  le_symbol <- "\\le"  # Valor por defecto seguro
+}
+
+# Pre-generar el texto del ejemplo con validaciones
 datos$ejemplo_distractor_B <- paste0("$0 ", le_symbol, " x ", le_symbol, " ", datos$limite2, "$")
-# **FIN DE LA CORRECCIÓN**
+
+# Validar que el resultado no esté vacío
+if (is.null(datos$ejemplo_distractor_B) || length(datos$ejemplo_distractor_B) == 0 || nchar(datos$ejemplo_distractor_B) == 0) {
+  stop("Error crítico: No se pudo generar datos$ejemplo_distractor_B")
+}
+# **FIN DE LA CORRECCIÓN ROBUSTA**
 ```{r generar_tablas_tikz, echo=FALSE, results="hide"}
 # Función para generar tabla TikZ con formato vectorial
 generar_tabla_tikz <- function(intervalos, probabilidades) {
@@ -208,20 +230,19 @@ generar_tabla_tikz <- function(intervalos, probabilidades) {
   # Formatear probabilidades con coma decimal
   probs_formateadas <- sapply(probabilidades, formato_coma)
 
-  # Crear código TikZ para la tabla con fuente reducida
+  # Crear código TikZ para la tabla con configuración EXTREMA (basada en Pedorros4.Rmd)
   codigo_tikz <- paste0("
-\\begin{tikzpicture}[scale=1.0]
-  \\node[anchor=north west] at (0,0) {
-    \\small
+\\begin{tikzpicture}[y=0.30pt, x=0.30pt, yscale=-0.3, xscale=0.3, inner sep=0pt, outer sep=0pt]
+  \\node[font=\\fontsize{4pt}{5pt}\\selectfont]{
     \\begin{tabular}{|c|c|}
       \\hline
-      \\textbf{Intervalo} & \\textbf{Probabilidad} \\\\
+      \\fontsize{4pt}{5pt}\\selectfont\\textbf{Intervalo} & \\fontsize{4pt}{5pt}\\selectfont\\textbf{Probabilidad} \\\\
       \\hline
-      $", intervalos[1], "$ & ", probs_formateadas[1], " \\\\
+      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[1], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[1], " \\\\
       \\hline
-      $", intervalos[2], "$ & ", probs_formateadas[2], " \\\\
+      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[2], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[2], " \\\\
       \\hline
-      $", intervalos[3], "$ & ", probs_formateadas[3], " \\\\
+      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[3], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[3], " \\\\
       \\hline
     \\end{tabular}
   };
@@ -291,14 +312,14 @@ generar_tabla_multi_formato <- function(codigo_tikz, nombre_base) {
                  name = nombre_base,
                  format = "pdf",
                  packages = c("tikz", "array", "booktabs"),
-                 width = "8cm")
+                 width = "3cm")
   } else {
     # Para HTML/pandoc/moodle: generar PNG para compatibilidad
     include_tikz(codigo_tikz,
                  name = nombre_base,
                  format = "png",
                  packages = c("tikz", "array", "booktabs"),
-                 width = "8cm")
+                 width = "3cm")
   }
 }
 
@@ -408,10 +429,10 @@ extension <- if (identical(typ, "pdf") || identical(typ, "nops") || identical(ty
 
 cat("Answerlist\n")
 cat("----------\n\n")
-cat("- ![](tabla_opcion_a.", extension, "){width=70%}\n\n", sep="")
-cat("- ![](tabla_opcion_b.", extension, "){width=70%}\n\n", sep="")
-cat("- ![](tabla_opcion_c.", extension, "){width=70%}\n\n", sep="")
-cat("- ![](tabla_opcion_d.", extension, "){width=70%}\n\n", sep="")
+cat("- ![](tabla_opcion_a.", extension, "){width=40%}\n\n", sep="")
+cat("- ![](tabla_opcion_b.", extension, "){width=40%}\n\n", sep="")
+cat("- ![](tabla_opcion_c.", extension, "){width=40%}\n\n", sep="")
+cat("- ![](tabla_opcion_d.", extension, "){width=40%}\n\n", sep="")
 ```
 
 Solution
@@ -432,23 +453,36 @@ El gráfico está dividido en tres intervalos con sus respectivas probabilidades
 Con la información anterior, la tabla correcta debe tener la siguiente estructura:
 
 ```{r solution_table, echo=FALSE, results='asis'}
-# Usar símbolo apropiado según formato
-le_sym <- if (identical(typ, "pandoc")) "≤" else "\\le"
+# Generar tabla de solución con la misma configuración TikZ que las opciones
+le_sym_tikz <- format_le_tikz()
 
-tabla_esperada <- data.frame(
-  Intervalo = c(
-    paste0("0 ", le_sym, " x ", le_sym, " ", datos$limite1),
-    paste0(datos$limite1, " < x ", le_sym, " ", datos$limite2),
-    paste0(datos$limite2, " < x ", le_sym, " ", datos$limite_sup)
-  ),
-  Probabilidad = c(
-    datos$p_lateral,
-    datos$p_central,
-    datos$p_lateral
-  ),
-  stringsAsFactors = FALSE
+# Intervalos para la tabla de solución (correcta)
+int_sol1 <- paste0("0 ", le_sym_tikz, " x ", le_sym_tikz, " ", datos$limite1)
+int_sol2 <- paste0(datos$limite1, " < x ", le_sym_tikz, " ", datos$limite2)
+int_sol3 <- paste0(datos$limite2, " < x ", le_sym_tikz, " ", datos$limite_sup)
+
+# Generar tabla de solución con la misma función que las opciones
+codigo_tabla_solucion <- generar_tabla_tikz(
+  c(int_sol1, int_sol2, int_sol3),
+  c(datos$p_lateral, datos$p_central, datos$p_lateral)
 )
-cat(crear_tabla_portable(tabla_esperada, typ))
+
+# Usar la misma función multi-formato que las opciones
+if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
+  # Para PDF/LaTeX: generar PDF vectorial
+  include_tikz(codigo_tabla_solucion,
+               name = "tabla_solucion",
+               format = "pdf",
+               packages = c("tikz"),
+               width = "3cm")
+} else {
+  # Para HTML/Moodle: generar PNG
+  include_tikz(codigo_tabla_solucion,
+               name = "tabla_solucion",
+               format = "png",
+               packages = c("tikz"),
+               width = "3cm")
+}
 ```
 
 **Paso 3: Comparar con las opciones.**
