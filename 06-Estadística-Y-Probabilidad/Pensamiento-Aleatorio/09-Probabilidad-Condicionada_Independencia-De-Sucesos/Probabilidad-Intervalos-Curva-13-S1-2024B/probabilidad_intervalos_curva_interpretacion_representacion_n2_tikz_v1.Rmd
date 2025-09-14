@@ -210,6 +210,8 @@ if (is.null(datos$ejemplo_distractor_B) || length(datos$ejemplo_distractor_B) ==
   stop("Error crítico: No se pudo generar datos$ejemplo_distractor_B")
 }
 # **FIN DE LA CORRECCIÓN ROBUSTA**
+```
+
 ```{r generar_tablas_tikz, echo=FALSE, results="hide"}
 # Función para generar tabla TikZ con formato vectorial
 generar_tabla_tikz <- function(intervalos, probabilidades) {
