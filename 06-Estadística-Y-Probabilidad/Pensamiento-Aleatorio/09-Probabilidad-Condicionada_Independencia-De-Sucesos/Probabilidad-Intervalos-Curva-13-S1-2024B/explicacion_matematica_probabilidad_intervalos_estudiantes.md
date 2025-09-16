@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 # Explicación Matemática: Probabilidad en Intervalos de Distribución
 
 ## 1. Introducción Conceptual
