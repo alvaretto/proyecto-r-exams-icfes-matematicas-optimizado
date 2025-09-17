@@ -20,7 +20,7 @@ header-includes:
 - \usetikzlibrary{3d,babel}
 icfes:
   competencia: interpretacion_representacion
-  nivel_dificultad: 2
+  nivel_dificultad: 3
   contenido:
     categoria: estadistica
     tipo: generico
@@ -28,10 +28,10 @@ icfes:
   eje_axial: eje3
   componente: aleatorio
 
-# CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA:
-# - Tipo: cloze (6 respuestas numéricas + 1 schoice)
-# - Tolerancias: 0.01 para probabilidades, 0 para límites enteros, 0 para schoice
-# - Formato: Punto decimal, sin notación científica
+# CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA (INCREMENTO DIFICULTAD):
+# - Tipo: cloze (8 respuestas numéricas + 1 schoice)
+# - Tolerancias: 0.005 para probabilidades (mayor precisión), 0 para límites enteros
+# - Formato: Punto decimal, 3 decimales para probabilidades, sin notación científica
 ---
 
 ```{r inicio, include=FALSE}
@@ -66,14 +66,14 @@ options(scipen = 999)
 
 # Función principal de generación de datos
 generar_datos <- function() {
-  # 1. Aleatorización de Parámetros Matemáticos
-  p_central <- sample(seq(0.40, 0.55, by = 0.01), 1)
+  # 1. Aleatorización de Parámetros Matemáticos (Incremento de dificultad)
+  p_central <- sample(seq(0.35, 0.65, by = 0.01), 1)
   p_lateral <- (1 - p_central) / 2
 
-  limite1 <- sample(3:6, 1)
-  ancho_central <- sample(2:6, 1)
+  limite1 <- sample(2:8, 1)
+  ancho_central <- sample(3:8, 1)
   limite2 <- limite1 + ancho_central
-  limite_sup <- 14
+  limite_sup <- sample(15:18, 1)
 
   if (limite2 >= limite_sup) {
     limite2 <- limite_sup - 2
@@ -151,14 +151,17 @@ formato_estandar <- function(x, decimales = 2) {
   }
 }
 
-# Configuración específica para formato cloze
-# Respuestas para cada paso del análisis secuencial
+# Configuración específica para formato cloze (Incremento de complejidad)
+# Respuestas para cada paso del análisis secuencial expandido
 respuesta_1 <- datos$p_lateral      # Paso 1: Probabilidad intervalo 1
 respuesta_2 <- datos$p_central      # Paso 2: Probabilidad intervalo 2
 respuesta_3 <- datos$p_lateral      # Paso 3: Probabilidad intervalo 3
 respuesta_4 <- datos$limite1        # Paso 4: Límite inferior intervalo 2
 respuesta_5 <- datos$limite2        # Paso 5: Límite superior intervalo 2
 respuesta_6 <- 1.00                 # Paso 6: Suma total de probabilidades
+respuesta_7 <- datos$p_lateral * 2  # Paso 7: Prob. fuera intervalo central
+# Paso 8: Intervalo con mayor probabilidad (1=primero, 2=central, 3=tercero)
+respuesta_8 <- if (datos$p_central > datos$p_lateral) 2 else 1
 
 # Para schoice en cloze, usar la posición correcta del archivo original
 solucion_schoice <- rep(FALSE, 4)
@@ -182,23 +185,25 @@ solucion_completa <- c(
   as.numeric(respuesta_4),      # Paso 4: Límite inferior intervalo 2
   as.numeric(respuesta_5),      # Paso 5: Límite superior intervalo 2
   as.numeric(respuesta_6),      # Paso 6: Suma total probabilidades
-  mchoice2string(solucion_schoice)  # Paso 7: Confirmación schoice (patrón 0/1)
+  as.numeric(respuesta_7),      # Paso 7: Prob. fuera intervalo central
+  as.numeric(respuesta_8),      # Paso 8: Intervalo con mayor probabilidad
+  mchoice2string(solucion_schoice)  # Paso 9: Confirmación schoice
 )
 
 
-# VERIFICACIÓN FINAL: Asegurar longitudes correctas
-if (length(solucion_completa) != 7) {
-  stop("Error: solucion_completa debe tener exactamente 7 elementos")
+# VERIFICACIÓN FINAL: Asegurar longitudes correctas (actualizado)
+if (length(solucion_completa) != 9) {
+  stop("Error: solucion_completa debe tener exactamente 9 elementos")
 }
 
-# Tipos de respuesta: 6 numéricas + 1 schoice
-tipos_respuesta <- c("num", "num", "num", "num", "num", "num", "schoice")
+# Tipos de respuesta: 8 numéricas + 1 schoice (incremento de complejidad)
+tipos_respuesta <- c("num", "num", "num", "num", "num", "num", "num", "num", "schoice")
 
-# Tolerancias para respuestas numéricas
-# Para probabilidades: tolerancia 0.01 (permite diferencias mínimas de redondeo)
+# Tolerancias para respuestas numéricas (mayor precisión requerida)
+# Para probabilidades: tolerancia 0.005 (mayor precisión)
 # Para límites enteros: tolerancia 0 (exactitud requerida)
 # Para schoice: tolerancia 0 (exactitud requerida)
-tolerancias <- c(0.01, 0.01, 0.01, 0, 0, 0.01, 0)
+tolerancias <- c(0.005, 0.005, 0.005, 0, 0, 0.005, 0.005, 0, 0)
 
 # Detectar formato de salida para ajustes posteriores (simplificado)
 # Eliminamos match_exams_call() que puede causar warnings
@@ -208,17 +213,17 @@ es_moodle <- FALSE  # Configuración por defecto, se ajusta automáticamente seg
 # Comentadas temporalmente para evitar errores durante el procesamiento
 # Las validaciones se pueden activar durante el desarrollo/testing
 
-# Validaciones básicas sin testthat
-if (length(solucion_completa) != 7) {
-  stop("Error: solucion_completa debe tener exactamente 7 elementos")
+# Validaciones básicas sin testthat (actualizado para 9 elementos)
+if (length(solucion_completa) != 9) {
+  stop("Error: solucion_completa debe tener exactamente 9 elementos")
 }
 
-if (length(tipos_respuesta) != 7) {
-  stop("Error: tipos_respuesta debe tener exactamente 7 elementos")
+if (length(tipos_respuesta) != 9) {
+  stop("Error: tipos_respuesta debe tener exactamente 9 elementos")
 }
 
-if (length(tolerancias) != 7) {
-  stop("Error: tolerancias debe tener exactamente 7 elementos")
+if (length(tolerancias) != 9) {
+  stop("Error: tolerancias debe tener exactamente 9 elementos")
 }
 
 # Verificar que las probabilidades suman 1
@@ -450,7 +455,11 @@ if (requireNamespace("testthat", quietly = TRUE) && requireNamespace("digest", q
 ```
 
 ```{r tikz_graph_generation, echo=FALSE, results="hide"}
-# Código TikZ dinámico para generar el gráfico principal
+# Código TikZ dinámico para generar el gráfico principal (mayor complejidad)
+# Centro de distribución variable para mayor realismo
+centro_distribucion <- (datos$limite1 + datos$limite2) / 2
+desviacion_std <- max(2.0, (datos$limite_sup - datos$limite1) / 6)
+
 codigo_tikz_grafico <- paste0("
 \\begin{tikzpicture}[scale=0.9, every node/.style={font=\\small}]
   \\begin{axis}[
@@ -463,18 +472,18 @@ codigo_tikz_grafico <- paste0("
     width=12cm, height=5cm,
     grid style={thin, loosely dotted, black!30}
   ]
-  % Curva de distribución (aproximación visual a una normal)
+  % Curva de distribución (aproximación visual a una normal con centro variable)
   \\addplot[domain=0:", datos$limite_sup, ", samples=101, smooth, thick, black]
-    {0.4 * exp(-(x-7)^2 / (2 * 2.5^2))};
+    {0.4 * exp(-(x-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))};
   % Límites de los intervalos
   \\draw[thick, black!80] (axis cs:", datos$limite1, ",0) --
-    (axis cs:", datos$limite1, ", {0.4 * exp(-(", datos$limite1, "-7)^2 / (2 * 2.5^2))});
+    (axis cs:", datos$limite1, ", {0.4 * exp(-(", datos$limite1, "-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))});
   \\draw[thick, black!80] (axis cs:", datos$limite2, ",0) --
-    (axis cs:", datos$limite2, ", {0.4 * exp(-(", datos$limite2, "-7)^2 / (2 * 2.5^2))});
-  % Etiquetas de probabilidad
-  \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral, 2), "}};
-  \\node at (axis cs:", (datos$limite1 + datos$limite2) / 2, ", 0.35) {\\textbf{", formato_estandar(datos$p_central, 2), "}};
-  \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral, 2), "}};
+    (axis cs:", datos$limite2, ", {0.4 * exp(-(", datos$limite2, "-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))});
+  % Etiquetas de probabilidad con formato mejorado (3 decimales)
+  \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral, 3), "}};
+  \\node at (axis cs:", (datos$limite1 + datos$limite2) / 2, ", 0.35) {\\textbf{", formato_estandar(datos$p_central, 3), "}};
+  \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral, 3), "}};
   \\end{axis}
 \\end{tikzpicture}
 ")
@@ -497,12 +506,13 @@ include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown
 
 Para analizar completamente la información de la gráfica y construir la tabla de probabilidades correspondiente, resuelva paso a paso:
 
-**IMPORTANTE - Formato de números:**
+**IMPORTANTE - Formato de números (Mayor precisión requerida):**
 
-- **Probabilidades**: Use punto para decimales, formato 0.XX
-  - Ejemplo: 0.25 (no 0,25 ni 25%)
+- **Probabilidades**: Use punto para decimales, formato 0.XXX (3 decimales)
+  - Ejemplo: 0.250 (no 0,25 ni 25% ni 0.25)
 - **Límites de intervalos**: Números enteros sin decimales
   - Ejemplo: 5 (no 5.0 ni 5,0)
+- **Análisis numérico**: Se requiere mayor precisión en los cálculos
 
 ### Paso 1: Lectura de probabilidades - Primer intervalo
 Observe cuidadosamente la gráfica. ¿Cuál es la probabilidad del primer intervalo (desde $x=0$ hasta $x=`r datos$limite1`$)?
@@ -533,6 +543,20 @@ Observe cuidadosamente la gráfica. ¿Cuál es la probabilidad del primer interv
 Para verificar que los datos son correctos, calcule la suma total de todas las probabilidades:
 
 ##ANSWER1## + ##ANSWER2## + ##ANSWER3## = ##ANSWER6##
+
+### Paso 7: Análisis complementario - Probabilidad fuera del intervalo central
+Calcule la probabilidad de que la variable aleatoria $x$ tome valores **fuera** del intervalo central (es decir, en los intervalos extremos):
+
+**Respuesta:** ##ANSWER7##
+
+### Paso 8: Análisis comparativo - Intervalo con mayor probabilidad
+Identifique cuál intervalo tiene la mayor probabilidad. Responda con el número correspondiente:
+
+- 1 = Primer intervalo (desde $x=0$ hasta $x=`r datos$limite1`$)
+- 2 = Segundo intervalo (desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$)
+- 3 = Tercer intervalo (desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$)
+
+**Respuesta:** ##ANSWER8##
 
 ## Tablas de probabilidades para análisis
 
@@ -581,12 +605,12 @@ include_tikz(codigo_tabla_d,
 
 <br><br>
 
-### Paso 7: Confirmación mediante selección múltiple (CON PUNTUACIÓN)
+### Paso 9: Confirmación mediante selección múltiple (CON PUNTUACIÓN)
 Ahora que ha completado el análisis paso a paso y ha observado las tablas anteriores, **confirme su respuesta seleccionando la tabla correcta**. Esta selección también será evaluada y contribuirá a su puntuación final.
 
 **Pregunta:** Basándose en su análisis anterior, ¿cuál de las siguientes tablas representa correctamente la probabilidad de que la variable aleatoria $x$ tome los valores en cada intervalo indicado?
 
-##ANSWER7##
+##ANSWER9##
 
 Answerlist
 ----------
@@ -595,7 +619,7 @@ Answerlist
 * Tabla C
 * Tabla D
 
-**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6##. Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál es la correcta.
+**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6##. La probabilidad fuera del intervalo central es ##ANSWER7##, y el intervalo con mayor probabilidad es el número ##ANSWER8##. Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál es la correcta.
 
 Solution
 ========
@@ -604,13 +628,14 @@ Solution
 
 Este problema de **interpretación de gráficos de distribución de probabilidad** requiere un análisis secuencial que demuestre el proceso de razonamiento matemático aplicado a la lectura de curvas de probabilidad:
 
-**NOTA IMPORTANTE - Formato de números estandarizado:**
+**NOTA IMPORTANTE - Formato de números estandarizado (Mayor precisión):**
 
-- **Probabilidades**: Use punto para decimales, formato 0.XX
-  - Ejemplo: 0.25 (no 0,25 ni 25%)
+- **Probabilidades**: Use punto para decimales, formato 0.XXX (3 decimales)
+  - Ejemplo: 0.250 (no 0,25 ni 25% ni 0.25)
 - **Límites de intervalos**: Números enteros sin decimales
   - Ejemplo: 5 (no 5.0 ni 5,0)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
+- **Precisión**: Se requiere mayor exactitud en los cálculos
 
 ### Paso 1: Lectura correcta de probabilidades - Primer intervalo ✓
 
@@ -644,14 +669,35 @@ El límite superior del segundo intervalo (intervalo central) es **`r datos$limi
 
 ### Paso 6: Verificación matemática correcta - Suma de probabilidades ✓
 
-**Respuesta correcta:** `r formato_estandar(1.00, 2)`
+**Respuesta correcta:** `r formato_estandar(1.00, 3)`
 
 **Verificación del cálculo:**
-$$`r formato_estandar(datos$p_lateral, 2)` + `r formato_estandar(datos$p_central, 2)` + `r formato_estandar(datos$p_lateral, 2)` = `r formato_estandar(1.00, 2)`$$
+$$`r formato_estandar(datos$p_lateral, 3)` + `r formato_estandar(datos$p_central, 3)` + `r formato_estandar(datos$p_lateral, 3)` = `r formato_estandar(1.00, 3)`$$
 
-Esta suma confirma que las probabilidades están correctamente leídas, ya que la suma total de todas las probabilidades en una distribución debe ser igual a 1.00.
+Esta suma confirma que las probabilidades están correctamente leídas, ya que la suma total de todas las probabilidades en una distribución debe ser igual a 1.000.
 
-### Paso 7: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
+### Paso 7: Análisis complementario correcto - Probabilidad fuera del intervalo central ✓
+
+**Respuesta correcta:** `r formato_estandar(datos$p_lateral * 2, 3)`
+
+**Explicación del cálculo:**
+La probabilidad de que $x$ tome valores fuera del intervalo central es la suma de las probabilidades de los intervalos extremos:
+$$P(\text{fuera del central}) = P(\text{primer intervalo}) + P(\text{tercer intervalo}) = `r formato_estandar(datos$p_lateral, 3)` + `r formato_estandar(datos$p_lateral, 3)` = `r formato_estandar(datos$p_lateral * 2, 3)`$$
+
+### Paso 8: Análisis comparativo correcto - Intervalo con mayor probabilidad ✓
+
+**Respuesta correcta:** `r if(datos$p_central > datos$p_lateral) 2 else 1`
+
+**Justificación:**
+```{r analisis_comparativo, echo=FALSE, results='asis'}
+if (datos$p_central > datos$p_lateral) {
+  cat("El intervalo central (intervalo 2) tiene la mayor probabilidad con ", formato_estandar(datos$p_central, 3), ", mientras que los intervalos extremos tienen ", formato_estandar(datos$p_lateral, 3), " cada uno.")
+} else {
+  cat("Los intervalos extremos (intervalos 1 y 3) tienen la mayor probabilidad con ", formato_estandar(datos$p_lateral, 3), " cada uno, mientras que el intervalo central tiene ", formato_estandar(datos$p_central, 3), ".")
+}
+```
+
+### Paso 9: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
 
 ```{r mostrar_tabla_solucion, echo=FALSE, results='asis'}
 # Generar tabla de solución con la misma configuración TikZ que las opciones
@@ -722,7 +768,7 @@ Al revisar las tablas de las opciones, la única que coincide perfectamente con 
 
 ### Conclusión
 
-La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral, 2)`**, **`r formato_estandar(datos$p_central, 2)`**, y **`r formato_estandar(datos$p_lateral, 2)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 2)`**.
+La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral, 3)`**, **`r formato_estandar(datos$p_central, 3)`**, y **`r formato_estandar(datos$p_lateral, 3)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 3)`**. La probabilidad fuera del intervalo central es **`r formato_estandar(datos$p_lateral * 2, 3)`**, y el intervalo con mayor probabilidad es el número **`r if(datos$p_central > datos$p_lateral) 2 else 1`**.
 
 Esta respuesta es coherente porque:
 
@@ -750,17 +796,17 @@ for (i in 1:4) {
 Meta-information
 ================
 
-exname: Probabilidad Intervalos Curva Interpretación Representación - Análisis Secuencial Cloze
+exname: Probabilidad Intervalos Curva Interpretación Representación - Análisis Secuencial Cloze Avanzado
 extype: cloze
 exsolution: `r paste(solucion_completa, collapse="|")`
 exclozetype: `r paste(tipos_respuesta, collapse="|")`
 extol: `r paste(tolerancias, collapse="|")`
-exsection: Estadística|Probabilidad|Interpretación de gráficos|Análisis de intervalos
+exsection: Estadística|Probabilidad|Interpretación de gráficos|Análisis de intervalos|Análisis complementario
 exextra[Type]: Cálculo
 exextra[Program]: R
 exextra[Language]: es
-exextra[Level]: 2
+exextra[Level]: 3
 exextra[Competencia]: Interpretación y representación
 exextra[Componente]: Aleatorio
 exextra[Contexto]: Matemático
-exextra[Dificultad]: Media
+exextra[Dificultad]: Media-Alta
