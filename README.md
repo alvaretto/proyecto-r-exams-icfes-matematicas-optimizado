@@ -29,6 +29,18 @@ Sistema completo para la creación, validación y optimización de ejercicios ma
 - Documentación completa y actualizada
 - Scripts de automatización optimizados
 
+### 🆕 **Últimas Mejoras (Septiembre 2025)**
+
+✅ **Ejercicio de Probabilidad e Intervalos - Incremento de Dificultad**
+- **Archivo**: `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd`
+- **Nivel**: 2 → **3** (Media → Media-Alta)
+- **Precisión**: 2 → **3 decimales** (0.XXX)
+- **Evaluación**: 7 → **9 elementos** (8 numéricas + 1 schoice)
+- **Análisis**: Añadidos pasos complementarios de probabilidad
+- **Gráficos**: Centro de distribución variable y desviación adaptativa
+- **Rangos**: Ampliados para mayor variabilidad (0.35-0.65, límites 2-8)
+- **Tolerancias**: Más estrictas (0.005) para mayor precisión
+
 ## 🛠️ **Tecnologías Utilizadas**
 
 ### **Core del Proyecto**
@@ -145,6 +157,30 @@ gemini --context-file "ejercicio.Rmd" --context-file ".gemini/rules-gemini.md"
 gemini --image "imagen.png" "Genera código TikZ con fidelidad 98%"
 ```
 
+## 📈 **Ejercicios Optimizados**
+
+### **Probabilidad e Intervalos - Nivel Avanzado**
+**Archivo**: `06-Estadística-Y-Probabilidad/.../probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd`
+
+**Características del Incremento de Dificultad:**
+- **🎯 Nivel de Dificultad**: 2 → 3 (Media → Media-Alta)
+- **🔢 Precisión Numérica**: Formato 0.XXX (3 decimales) con tolerancias 0.005
+- **📊 Rangos Ampliados**:
+  - Probabilidad central: 0.40-0.55 → **0.35-0.65**
+  - Límites iniciales: 3-6 → **2-8**
+  - Límite superior: 14 fijo → **15-18 variable**
+- **🧮 Análisis Complementarios**:
+  - **Paso 7**: Probabilidad fuera del intervalo central
+  - **Paso 8**: Identificación del intervalo con mayor probabilidad
+- **📈 Gráficos Dinámicos**: Centro de distribución variable y desviación adaptativa
+- **✅ Evaluación Expandida**: 7 → 9 elementos (8 numéricas + 1 schoice)
+
+**Beneficios Pedagógicos:**
+- Mayor desafío cognitivo manteniendo claridad
+- Análisis más profundo de distribuciones de probabilidad
+- Desarrollo de habilidades de precisión matemática
+- Preparación mejorada para competencias ICFES nivel superior
+
 ## 🎯 **Funcionalidades Avanzadas**
 
 ### **Comandos Gemini CLI Avanzados**
@@ -185,6 +221,10 @@ investigación → documentación → acceso a imagen → generación → testin
 - **[Tutorial Técnico](Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md)** - Instalación y configuración detallada
 - **[Guía de MCPs](Auxiliares/Instalaciones/Ais/Gemini_CLI/MCPs_GUIA_COMPLETA.md)** - Configuración de Model Context Protocols
 - **[README Gemini CLI](Auxiliares/Instalaciones/Ais/Gemini_CLI/README.md)** - Guía específica de MCPs y comandos especializados
+
+### **📈 Documentación de Ejercicios Optimizados**
+- **[Walkthrough Incremento Dificultad](06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/WALKTHROUGH_INCREMENTO_DIFICULTAD.md)** - Guía detallada de mejoras implementadas
+- **[Documentación Técnica](06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/TECHNICAL_DOCUMENTATION.md)** - Especificaciones técnicas para desarrolladores
 
 ### **Referencias Técnicas**
 - **[GEMINI.md](GEMINI.md)** - Contexto completo del proyecto
