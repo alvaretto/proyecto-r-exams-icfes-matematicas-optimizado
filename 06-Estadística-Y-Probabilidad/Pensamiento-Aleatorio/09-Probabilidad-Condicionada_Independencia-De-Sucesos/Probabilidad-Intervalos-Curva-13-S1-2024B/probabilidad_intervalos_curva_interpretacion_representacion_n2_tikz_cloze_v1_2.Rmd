@@ -113,20 +113,64 @@ generar_datos <- function() {
     stringsAsFactors = FALSE
   )
 
-  # 4. SISTEMA DE ALEATORIZACIÓN COMPLETA
-  # Crear todas las opciones únicas con distractores diferenciados
-  # A = distractor con probabilidades acumuladas incorrectas
-  # B = distractor con intervalos acumulativos incorrectos
-  # C = tabla correcta con probabilidades e intervalos correctos
-  # D = distractor con probabilidades intercambiadas
+  # 4. SISTEMA DE ALEATORIZACIÓN DE OPCIONES - ALGORITMO MEJORADO EQUILIBRADO
+  # Crear tabla alternativa con encabezados intercambiados para mayor diversidad
+  tabla_correcta_alt <- data.frame(
+    Probabilidad = c(p_lateral, p_central, p_lateral),
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    stringsAsFactors = FALSE
+  )
 
-  # ALEATORIZACIÓN: Mezclar posiciones para que cualquier letra pueda ser correcta
-  todas_las_tablas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
-  posiciones_aleatorias <- sample(1:4, 4, replace = FALSE)
-  lista_tablas_mezcladas <- todas_las_tablas[posiciones_aleatorias]
+  # Aleatorizar qué tabla correcta usar (normal o con encabezados intercambiados)
+  usar_encabezados_alt <- sample(c(TRUE, FALSE), 1)
+  tabla_correcta_final <- if (usar_encabezados_alt) tabla_correcta_alt else tabla_correcta
 
-  # Encontrar nueva posición de la tabla correcta (originalmente en posición 3)
-  posicion_correcta_aleatoria <- which(posiciones_aleatorias == 3)
+  # Verificar que todas las opciones sean visualmente diferentes
+  verificar_diferenciacion <- function(opciones) {
+    tablas_str <- lapply(opciones, function(tabla) {
+      paste(tabla$Intervalo, tabla$Probabilidad, collapse = "|")
+    })
+    return(length(unique(tablas_str)) == length(tablas_str))
+  }
+
+  # Crear las 4 opciones obligatorias con diferenciación garantizada
+  opciones_fijas <- list(
+    A = tabla_distractor_A,      # Probabilidades acumuladas incorrectas
+    B = tabla_distractor_B,      # Intervalos acumulativos incorrectos
+    C = tabla_correcta_final,    # Tabla correcta (puede tener encabezados intercambiados)
+    D = tabla_distractor_D       # Probabilidades intercambiadas
+  )
+
+  if (!verificar_diferenciacion(opciones_fijas)) {
+    stop("Error crítico: Las opciones generadas no son suficientemente diferentes")
+  }
+
+  # ALGORITMO DE ALEATORIZACIÓN MEJORADO - DISTRIBUCIÓN PERFECTAMENTE EQUILIBRADA
+  # Seleccionar posición correcta con distribución uniforme garantizada
+  posicion_correcta_aleatoria <- sample(1:4, 1)
+
+  # Crear array de distractores en orden fijo para eliminar sesgos
+  distractores <- list(opciones_fijas$A, opciones_fijas$B, opciones_fijas$D)
+
+  # Inicializar opciones finales con distractores
+  opciones_finales <- vector("list", 4)
+
+  # Colocar la opción correcta en la posición seleccionada
+  opciones_finales[[posicion_correcta_aleatoria]] <- opciones_fijas$C
+
+  # Llenar las posiciones restantes con distractores en orden secuencial
+  indice_distractor <- 1
+  for (i in 1:4) {
+    if (i != posicion_correcta_aleatoria) {
+      opciones_finales[[i]] <- distractores[[indice_distractor]]
+      indice_distractor <- indice_distractor + 1
+    }
+  }
+
+  # Verificación final de diferenciación
+  if (!verificar_diferenciacion(opciones_finales)) {
+    stop("Error crítico: Las opciones finales no son suficientemente diferentes")
+  }
 
   return(list(
     p_central = p_central,
@@ -134,18 +178,24 @@ generar_datos <- function() {
     limite1 = limite1,
     limite2 = limite2,
     limite_sup = limite_sup,
-    opciones = lista_tablas_mezcladas,
+    opciones = opciones_finales,
     posicion_correcta = posicion_correcta_aleatoria,
-    orden_original = posiciones_aleatorias  # Para debugging si es necesario
+    usar_encabezados_alt = usar_encabezados_alt,
+    opciones_fijas = opciones_fijas
   ))
 }
 
 # Generar datos del ejercicio
 datos <- generar_datos()
-# Validación de la posición correcta (1..4)
+# Validación de la posición correcta (1..4, restaurado para 4 opciones obligatorias)
 if (is.null(datos$posicion_correcta) || length(datos$posicion_correcta) != 1 ||
     is.na(datos$posicion_correcta) || datos$posicion_correcta < 1 || datos$posicion_correcta > 4) {
   stop("Error: datos$posicion_correcta inválida (debe estar entre 1 y 4)")
+}
+
+# Validación crítica: Verificar que se generaron exactamente 4 opciones
+if (length(datos$opciones) != 4) {
+  stop("Error crítico: Se deben generar exactamente 4 opciones (A, B, C, D)")
 }
 
 
