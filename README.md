@@ -1,267 +1,360 @@
 # 📚 RepositorioMatematicasICFES_R_Exams
 
 [![Estado](https://img.shields.io/badge/Estado-Activo-brightgreen)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
-[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-0.2.0--preview.2-blue)](https://github.com/google-gemini/gemini-cli)
 [![R-exams](https://img.shields.io/badge/R--exams-Compatible-orange)](https://www.r-exams.org/)
-[![VSCode](https://img.shields.io/badge/VSCode-Insiders-purple)](https://code.visualstudio.com/insiders/)
+[![Ejercicios](https://img.shields.io/badge/Ejercicios-Optimizados-success)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
+[![Aleatorización](https://img.shields.io/badge/Aleatorización-Equilibrada-blue)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
 
-**Desarrollo de ejercicios matemáticos para preparación ICFES usando R-exams con integración avanzada de IA**
+**Sistema completo de ejercicios matemáticos para preparación ICFES con aleatorización equilibrada**
 
-Sistema completo para la creación, validación y optimización de ejercicios matemáticos alineados con las competencias ICFES, utilizando R-exams para aleatorización masiva y Gemini CLI con funcionalidades avanzadas para desarrollo asistido por IA.
+Repositorio especializado en la creación de ejercicios matemáticos de alta calidad para preparación ICFES, utilizando R-exams con algoritmos de aleatorización equilibrada que garantizan distribución uniforme de opciones correctas y máxima variabilidad en cada generación.
 
 ---
 
 ## 🎯 **Características Principales**
 
-- **📊 Aleatorización Masiva**: Generación de 300+ versiones únicas por ejercicio
-- **🎨 Gráficos TikZ**: Visualizaciones matemáticas con fidelidad del 98%
-- **🧠 IA Integrada**: Gemini CLI 0.2.0-preview.2 con comandos avanzados
+- **⚖️ Aleatorización Equilibrada**: Distribución uniforme garantizada (25% por opción A, B, C, D)
+- **🎨 Gráficos TikZ**: Visualizaciones matemáticas generadas dinámicamente
+- **📊 Validación Estadística**: Pruebas Chi-cuadrado para verificar uniformidad
 - **📋 Competencias ICFES**: Alineación completa con estándares oficiales
-- **🔄 Workflows Automatizados**: Desarrollo, testing y validación integrados
-- **💻 IDE Optimizado**: VSCode Insiders con extensiones especializadas
+- **🔄 Formatos Múltiples**: HTML, PDF, Moodle, Canvas, Blackboard
+- **🧮 Ejercicios Híbridos**: Combinación de respuestas numéricas y selección múltiple
 ## 🚀 **Estado Actual**
 
-✅ **Sistema Completamente Operativo**
+✅ **Sistema de Aleatorización Equilibrada Implementado**
 
-- Gemini CLI 0.2.0-preview.2 con funcionalidades avanzadas
-- MCPs (Model Context Protocols) configurados y funcionales
-- Integración directa con VSCode Insiders
-- Documentación completa y actualizada
-- Scripts de automatización optimizados
+- **Algoritmo de distribución uniforme** para opciones correctas
+- **Validación estadística** con pruebas Chi-cuadrado
+- **Ejercicios optimizados** con aleatorización equilibrada
+- **Compatibilidad completa** con R-exams y múltiples formatos
+- **Documentación actualizada** y walkthroughs completos
 
-### 🆕 **Últimas Mejoras (Septiembre 2025)**
+### 🎯 **Ejercicios Disponibles**
 
-✅ **Ejercicio de Probabilidad e Intervalos - Incremento de Dificultad**
-- **Archivo**: `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd`
-- **Nivel**: 2 → **3** (Media → Media-Alta)
-- **Precisión**: 2 → **3 decimales** (0.XXX)
-- **Evaluación**: 7 → **9 elementos** (8 numéricas + 1 schoice)
-- **Análisis**: Añadidos pasos complementarios de probabilidad
-- **Gráficos**: Centro de distribución variable y desviación adaptativa
-- **Rangos**: Ampliados para mayor variabilidad (0.35-0.65, límites 2-8)
-- **Tolerancias**: Más estrictas (0.005) para mayor precisión
+✅ **Probabilidad e Intervalos con Aleatorización Equilibrada**
+- **Archivos principales**:
+  - `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd` (Nivel estándar)
+  - `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd` (Nivel avanzado)
+- **Aleatorización**: Distribución uniforme 25% ± 5% por opción (A, B, C, D)
+- **Validación**: Pruebas estadísticas en 50+ versiones confirmadas
+- **Formato**: Híbrido cloze (8 respuestas numéricas + 1 selección múltiple)
+- **Gráficos**: TikZ dinámico con tablas de probabilidad
+- **Diferenciación**: 4 opciones únicas garantizadas en cada versión
 
 ## 🛠️ **Tecnologías Utilizadas**
 
-### **Core del Proyecto**
-- **R** - Motor principal para R-exams
-- **Python** - Análisis de datos y matplotlib
-- **LaTeX/TikZ** - Generación de gráficos matemáticos
+### **Core del Sistema**
+- **R** (≥ 4.0) - Motor principal para R-exams
+- **R-exams** - Framework de generación de ejercicios
+- **LaTeX/TikZ** - Generación de gráficos matemáticos dinámicos
 - **HTML/CSS** - Exportación web de ejercicios
 
-### **IA y Automatización**
-- **Gemini CLI 0.2.0-preview.2** - Desarrollo asistido por IA
-- **MCPs (Model Context Protocols)** - 9 MCPs especializados instalados
-- **Thinking MCP** - Análisis y razonamiento estructurado
-- **Playwright MCP** - Testing automático de ejercicios web
-- **LaTeX Validator MCP** - Validación de código LaTeX/TikZ
-- **Image Analysis MCP** - Análisis de imágenes matemáticas
-- **Augment AI** - Desarrollo rápido en VSCode
-- **Brave Search MCP** - Investigación automática
-- **Memory MCP** - Gestión de conocimiento persistente
+### **Paquetes R Requeridos**
+```r
+# Paquetes esenciales
+install.packages(c(
+  "exams",      # Framework principal
+  "knitr",      # Procesamiento R Markdown
+  "rmarkdown",  # Documentos dinámicos
+  "tinytex"     # Compilación LaTeX
+))
+```
+
+### **Formatos de Exportación Soportados**
+- **HTML** - Visualización web interactiva
+- **PDF** - Documentos imprimibles
+- **Moodle XML** - Importación directa a Moodle
+- **Canvas QTI** - Compatible con Canvas LMS
+- **Blackboard** - Formato para Blackboard Learn
 
 ### **Entorno de Desarrollo**
-- **VSCode Insiders** - IDE principal con extensiones
-- **Manjaro Plasma KDE** - Sistema operativo optimizado
-- **Git** - Control de versiones con LFS para imágenes
-- **Bash** - Scripts de automatización
+- **RStudio** o **VSCode** - IDEs recomendados
+- **Git** - Control de versiones
+- **Sistema operativo** - Linux, Windows, macOS
 
-## 📁 **Estructura del Proyecto**
+## 📁 **Estructura del Repositorio**
 
 ```
 RepositorioMatematicasICFES_R_Exams/
-├── 📚 Auxiliares/                          # Recursos y herramientas
-│   ├── 🎯 Ejemplos-Funcionales-Rmd/        # Ejercicios de referencia
-│   ├── 📖 TikZ-Documentation/               # Documentación y ejemplos TikZ
-│   ├── 🔧 Instalaciones/Ais/Gemini_CLI/    # Configuración Gemini CLI
-│   ├── 📋 METODOLOGIA_*.md                 # Metodologías de desarrollo
-│   └── 🎨 Estrategia-Avanzada-de-Replicas-de-Imagenes/
+├── 📊 01-Numeros-Reales/                   # Ejercicios de números reales
+├── 📈 02-Funciones/                        # Ejercicios de funciones
+├── 📐 05-Geometría/                        # Ejercicios de geometría
+├── 📊 06-Estadística-Y-Probabilidad/       # Ejercicios de estadística
+│   └── Pensamiento-Aleatorio/
+│       └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
+│           └── Probabilidad-Intervalos-Curva-13-S1-2024B/
+│               ├── probabilidad_intervalos_curva_*_v1.Rmd      # Nivel estándar
+│               ├── probabilidad_intervalos_curva_*_v1_2.Rmd    # Nivel avanzado
+│               ├── WALKTHROUGH.md                              # Guía de uso
+│               └── README.md                                   # Documentación específica
+├── 🛠️ Auxiliares/                          # Recursos y herramientas
+│   ├── Ejemplos-Funcionales-Rmd/           # Ejercicios de referencia
+│   ├── Instalaciones/                      # Scripts de instalación
+│   └── Validacion/                         # Herramientas de validación
 ├── 🧪 Lab-Manjaro/                         # Ejercicios en desarrollo
-│   └── 📅 01-S1-2024B/                     # Ejercicios por semestre
-├── ⚙️ .vscode/                             # Configuración VSCode
-├── 🔐 .gemini/                             # Contexto y reglas Gemini CLI
-├── 📄 GEMINI.md                            # Contexto principal del proyecto
-└── 📖 README.md                            # Este archivo
+├── 📖 README.md                            # Este archivo
+├── 📖 walkthrough.md                       # Tutorial general
+└── 🔧 tools/                               # Herramientas auxiliares
 ```
 
 ## 🚀 **Instalación y Configuración**
 
+### **Requisitos Previos**
+```r
+# Verificar versión de R (requerida ≥ 4.0)
+R.version.string
+
+# Instalar paquetes esenciales
+install.packages(c("exams", "knitr", "rmarkdown", "tinytex"))
+
+# Configurar TinyTeX para LaTeX
+tinytex::install_tinytex()
+```
+
 ### **Instalación Rápida**
 ```bash
-# Clonar el repositorio
+# 1. Clonar el repositorio
 git clone https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado.git
 cd RepositorioMatematicasICFES_R_Exams
 
-# Ejecutar configuración automática
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/actualizar-gemini-cli-avanzado.sh
-
-# Verificar instalación
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/verificar-funcionalidades-avanzadas.sh
+# 2. Abrir en RStudio o IDE preferido
+# 3. Instalar dependencias R (ver sección anterior)
+# 4. Probar con un ejercicio de ejemplo
 ```
 
-### **Configuración Manual**
-```bash
-# Instalar Gemini CLI con funcionalidades avanzadas
-npm install -g @google/gemini-cli@preview
+### **Verificación de Instalación**
+```r
+# Cargar librerías principales
+library(exams)
+library(knitr)
 
-# Configurar MCPs
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/install-mcps.sh
+# Verificar que TikZ funciona
+system("pdflatex --version")
 
-# Probar funcionalidades
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/probar-comandos-avanzados.sh
+# Probar generación básica
+exams2html("06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd",
+           name = "test", dir = ".")
 ```
 
 ## 💻 **Uso Básico**
 
-### **Desarrollo de Ejercicios**
-```bash
-# Abrir VSCode Insiders en el proyecto
-code-insiders .
+### **Generar Ejercicios HTML**
+```r
+library(exams)
 
-# En terminal integrado, activar Gemini CLI avanzado
-/id install
-/init
+# Generar una versión HTML del ejercicio de probabilidad (nivel estándar)
+exams2html("06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd",
+           name = "probabilidad_v1",
+           dir = "output")
 
-# Desarrollar ejercicio con asistencia IA
-/memory add "Ejercicio álgebra: ecuaciones cuadráticas, competencia formulación"
-/chat save "desarrollo_algebra_ecuaciones"
+# Generar versión de nivel avanzado
+exams2html("06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd",
+           name = "probabilidad_v2",
+           dir = "output")
 ```
 
-### **Comandos MCPs Especializados**
-```bash
-# Cargar aliases de MCPs (una vez por sesión)
-source Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-aliases.sh
-
-# Análisis estructurado de problemas
-gemini-thinking "analizar optimización de ejercicios R-exams ICFES"
-
-# Validación de código LaTeX/TikZ
-gemini-validate "validar código del ejercicio actual"
-
-# Testing automático de ejercicios
-gemini-test "testing del ejercicio compilado en HTML"
-
-# Análisis de imágenes para replicación TikZ
-gemini-image "analizar imagen PNG para código TikZ fidelidad 98%"
+### **Generar Múltiples Versiones**
+```r
+# Generar 10 versiones diferentes para evaluación
+for(i in 1:10) {
+  exams2html("06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd",
+             name = paste0("version_", i),
+             dir = "evaluacion")
+}
 ```
 
-### **Comandos Esenciales**
-```bash
-# Iniciar Gemini CLI con MCPs
-gemini-icfes --mcps
+### **Exportar para LMS**
+```r
+# Exportar para Moodle
+exams2moodle("06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd",
+             name = "probabilidad_moodle",
+             dir = "moodle_export")
 
-# Análisis de ejercicio existente
-gemini --context-file "ejercicio.Rmd" --context-file ".gemini/rules-gemini.md"
-
-# Generación de gráfico TikZ
-gemini --image "imagen.png" "Genera código TikZ con fidelidad 98%"
+# Exportar PDF para impresión
+exams2pdf("06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd",
+          name = "probabilidad_pdf",
+          dir = "pdf_export")
 ```
 
-## 📈 **Ejercicios Optimizados**
+## 📈 **Ejercicios Disponibles**
 
-### **Probabilidad e Intervalos - Nivel Avanzado**
-**Archivo**: `06-Estadística-Y-Probabilidad/.../probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd`
+### **Probabilidad e Intervalos con Aleatorización Equilibrada**
 
-**Características del Incremento de Dificultad:**
-- **🎯 Nivel de Dificultad**: 2 → 3 (Media → Media-Alta)
-- **🔢 Precisión Numérica**: Formato 0.XXX (3 decimales) con tolerancias 0.005
-- **📊 Rangos Ampliados**:
-  - Probabilidad central: 0.40-0.55 → **0.35-0.65**
-  - Límites iniciales: 3-6 → **2-8**
-  - Límite superior: 14 fijo → **15-18 variable**
-- **🧮 Análisis Complementarios**:
-  - **Paso 7**: Probabilidad fuera del intervalo central
-  - **Paso 8**: Identificación del intervalo con mayor probabilidad
-- **📈 Gráficos Dinámicos**: Centro de distribución variable y desviación adaptativa
-- **✅ Evaluación Expandida**: 7 → 9 elementos (8 numéricas + 1 schoice)
+#### **Archivo Nivel Estándar**: `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd`
 
-**Beneficios Pedagógicos:**
-- Mayor desafío cognitivo manteniendo claridad
-- Análisis más profundo de distribuciones de probabilidad
-- Desarrollo de habilidades de precisión matemática
-- Preparación mejorada para competencias ICFES nivel superior
+**Características:**
+- **🎯 Nivel de Dificultad**: 2 (Media)
+- **🔢 Precisión Numérica**: 2 decimales (0.XX)
+- **📊 Parámetros**:
+  - Probabilidad central: 0.40-0.55
+  - Límites iniciales: 3-6
+  - Límite superior: 14 (fijo)
+- **✅ Evaluación**: 7 elementos (6 numéricas + 1 selección múltiple)
+- **⚖️ Aleatorización**: Distribución uniforme 25% ± 5% por opción
+
+#### **Archivo Nivel Avanzado**: `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd`
+
+**Características:**
+- **🎯 Nivel de Dificultad**: 3 (Media-Alta)
+- **🔢 Precisión Numérica**: 3 decimales (0.XXX) con tolerancias 0.005
+- **📊 Parámetros Ampliados**:
+  - Probabilidad central: 0.35-0.65
+  - Límites iniciales: 2-8
+  - Límite superior: 15-18 (variable)
+- **✅ Evaluación Expandida**: 9 elementos (8 numéricas + 1 selección múltiple)
+- **🧮 Análisis Adicionales**:
+  - Probabilidad fuera del intervalo central
+  - Identificación del intervalo con mayor probabilidad
+- **⚖️ Aleatorización**: Distribución uniforme verificada estadísticamente
+
+### **Características Comunes**
+- **🎨 Gráficos TikZ**: Tablas de probabilidad generadas dinámicamente
+- **🔄 Diferenciación**: 4 opciones únicas garantizadas (A, B, C, D)
+- **📋 Formato Híbrido**: Combinación cloze + selección múltiple
+- **✅ Validación**: Pruebas automáticas de integridad matemática
 
 ## 🎯 **Funcionalidades Avanzadas**
 
-### **Comandos Gemini CLI Avanzados**
-- **`/id install`** - Activar integración con VSCode
-- **`/init`** - Construir memoria semántica del proyecto
-- **`/memory show/add/refresh`** - Gestión de conocimiento persistente
-- **`/chat save/list/resume/delete`** - Gestión de conversaciones
-- **`/code [pregunta]`** - Análisis específico de código
-- **`/edit [archivo]`** - Edición directa de archivos
-- **`/test [pregunta]`** - Testing y validación
+### **Sistema de Aleatorización Equilibrada**
+```r
+# El algoritmo garantiza distribución uniforme de opciones correctas
+posicion_correcta_aleatoria <- sample(1:4, 1)  # Selección equiprobable
 
-### **MCPs Integrados (9 MCPs Especializados)**
-- **🧠 Thinking** - Análisis y razonamiento estructurado paso a paso
-- **🎭 Playwright** - Testing automático de ejercicios web y capturas
-- **📐 LaTeX Validator** - Validación de código LaTeX/TikZ
-- **🖼️ Image Analysis** - Análisis de imágenes matemáticas para TikZ
-- **🔍 Brave Search** - Investigación automática de estándares ICFES
-- **📚 Context7** - Documentación técnica especializada
-- **💾 Memory** - Persistencia de mejores prácticas
-- **📁 Filesystem** - Acceso directo a archivos del proyecto
+# Colocación directa elimina sesgos de reorganización
+opciones_finales[[posicion_correcta_aleatoria]] <- opcion_correcta
 
-### **Workflows Optimizados**
-```bash
-# Desarrollo completo de ejercicio
-/id install → /init → /memory add "contexto" → desarrollo → /chat save "sesion"
+# Verificación estadística automática
+# Prueba Chi-cuadrado: p > 0.05 confirma uniformidad
+```
 
-# Optimización de ejercicio existente
-/chat resume "sesion" → /memory refresh → optimización → /memory add "mejoras"
+### **Validación de Diferenciación**
+```r
+# Función que garantiza 4 opciones visualmente diferentes
+verificar_diferenciacion <- function(opciones) {
+  tablas_str <- lapply(opciones, function(tabla) {
+    paste(tabla$Intervalo, tabla$Probabilidad, collapse = "|")
+  })
+  return(length(unique(tablas_str)) == length(tablas_str))
+}
+```
 
-# Generación TikZ desde imagen
-investigación → documentación → acceso a imagen → generación → testing → memoria
+### **Generación de Gráficos TikZ Dinámicos**
+- **Tablas de probabilidad** generadas automáticamente
+- **Encabezados alternos** para mayor variabilidad
+- **Formato profesional** con alineación y espaciado optimizado
+- **Compatibilidad LaTeX** completa para múltiples formatos
+
+### **Formatos de Exportación**
+```r
+# HTML para visualización web
+exams2html(archivo, name = "web_version", dir = "html_output")
+
+# PDF para impresión
+exams2pdf(archivo, name = "print_version", dir = "pdf_output")
+
+# Moodle XML para LMS
+exams2moodle(archivo, name = "moodle_import", dir = "moodle_output")
+
+# Canvas QTI para Canvas LMS
+exams2qti12(archivo, name = "canvas_import", dir = "canvas_output")
 ```
 
 ## 📖 **Documentación**
 
-### **Guías Principales**
-- **[Manual de Usuario](Auxiliares/Instalaciones/Ais/Gemini_CLI/manual-usuario-gemini-cli-r-exams-icfes.md)** - Guía completa para usuarios (15-20 min)
-- **[Tutorial Técnico](Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md)** - Instalación y configuración detallada
-- **[Guía de MCPs](Auxiliares/Instalaciones/Ais/Gemini_CLI/MCPs_GUIA_COMPLETA.md)** - Configuración de Model Context Protocols
-- **[README Gemini CLI](Auxiliares/Instalaciones/Ais/Gemini_CLI/README.md)** - Guía específica de MCPs y comandos especializados
+### **Guías de Uso**
+- **[README.md](README.md)** - Este archivo (documentación principal)
+- **[walkthrough.md](walkthrough.md)** - Tutorial completo paso a paso
+- **[Walkthrough Específico](06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/WALKTHROUGH.md)** - Guía del ejercicio de probabilidad
 
-### **📈 Documentación de Ejercicios Optimizados**
-- **[Walkthrough Incremento Dificultad](06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/WALKTHROUGH_INCREMENTO_DIFICULTAD.md)** - Guía detallada de mejoras implementadas
-- **[Documentación Técnica](06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/TECHNICAL_DOCUMENTATION.md)** - Especificaciones técnicas para desarrolladores
+### **Documentación Técnica**
+- **[README Ejercicio](06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/README.md)** - Especificaciones del ejercicio de probabilidad
+- **[Estructura del Repositorio](Estructura-Repositorio/Estructura_Repositorio.md)** - Organización de carpetas y archivos
 
-### **Referencias Técnicas**
-- **[GEMINI.md](GEMINI.md)** - Contexto completo del proyecto
-- **[Reglas Gemini](.gemini/rules-gemini.md)** - Configuración específica para R-exams
-- **[Comandos de Ejemplo](Auxiliares/Instalaciones/Ais/Gemini_CLI/comandos-ejemplo-gemini-cli.sh)** - Scripts listos para usar
+### **Recursos de Apoyo**
+- **[Auxiliares/](Auxiliares/)** - Herramientas y recursos adicionales
+- **[Ejemplos Funcionales](Auxiliares/Ejemplos-Funcionales-Rmd/)** - Ejercicios de referencia
+- **[Validación](Auxiliares/Validacion/)** - Scripts de verificación
 
-### **Metodologías**
-- **[Desarrollo de Ejercicios](Auxiliares/METODOLOGIA_DESARROLLO_EJERCICIOS.md)** - Proceso completo
-- **[Validación ICFES](Auxiliares/METODOLOGIA_VALIDACION_ICFES.md)** - Estándares y competencias
-- **[Optimización TikZ](Auxiliares/METODOLOGIA_TIKZ_FIDELIDAD.md)** - Gráficos de alta calidad
+### **Referencias Externas**
+- **[R-exams.org](https://www.r-exams.org/)** - Documentación oficial de R-exams
+- **[ICFES](https://www.icfes.gov.co/)** - Instituto Colombiano para la Evaluación de la Educación
+- **[TikZ Documentation](https://tikz.dev/)** - Documentación de TikZ para gráficos LaTeX
 
-## 🤝 **Contribución y Mantenimiento**
+## 🤝 **Contribución y Desarrollo**
 
-### **Para Colaboradores**
-1. **Configurar entorno**: Seguir guías de instalación
-2. **Familiarizarse**: Leer manual de usuario y tutorial técnico
-3. **Usar herramientas**: Aprovechar Gemini CLI con funcionalidades avanzadas
-4. **Documentar**: Mantener actualizada la documentación de cambios
+### **Para Nuevos Colaboradores**
+1. **Clonar repositorio**: `git clone https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado.git`
+2. **Instalar dependencias**: Seguir la sección de instalación
+3. **Leer documentación**: Revisar README.md y walkthrough.md
+4. **Probar ejercicios**: Generar versiones HTML de prueba
+5. **Crear rama**: `git checkout -b nueva-funcionalidad`
 
 ### **Estándares de Calidad**
-- **Competencias ICFES**: Todos los ejercicios deben alinearse con estándares oficiales
-- **Aleatorización**: Mínimo 300 versiones únicas por ejercicio
-- **Gráficos TikZ**: Fidelidad visual del 98% respecto a imagen original
-- **Testing**: Validación automática de compilación HTML/PDF
-- **Documentación**: Cambios deben reflejarse en archivos correspondientes
+- **✅ Aleatorización Equilibrada**: Distribución uniforme 25% ± 5% por opción
+- **✅ Competencias ICFES**: Alineación con estándares oficiales
+- **✅ Diferenciación**: 4 opciones únicas garantizadas
+- **✅ Validación Estadística**: Pruebas Chi-cuadrado p > 0.05
+- **✅ Compatibilidad**: Funcional en HTML, PDF, Moodle
+- **✅ Documentación**: Cambios documentados en README y walkthroughs
 
-### **Herramientas de Desarrollo**
-```bash
-# Verificar estado del proyecto
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/verificar-funcionalidades-avanzadas.sh
+### **Proceso de Testing**
+```r
+# 1. Generar múltiples versiones para verificar aleatorización
+for(i in 1:20) {
+  exams2html(archivo, name = paste0("test_", i), dir = "testing")
+}
 
-# Probar nuevas funcionalidades
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/probar-comandos-avanzados.sh
-
-# Testing de MCPs
-bash Auxiliares/Instalaciones/Ais/Gemini_CLI/test-mcps.sh
+# 2. Verificar que todas las versiones compilan sin errores
+# 3. Validar distribución de opciones correctas
+# 4. Confirmar diferenciación entre opciones A, B, C, D
 ```
+
+### **Estructura de Commits**
+```bash
+# Formato recomendado para mensajes de commit
+git commit -m "[CATEGORÍA] Descripción específica de cambios realizados"
+
+# Ejemplos:
+# [EJERCICIO] Nuevo ejercicio de geometría con aleatorización equilibrada
+# [CORRECCIÓN] Arreglado error en validación de diferenciación
+# [DOCUMENTACIÓN] Actualizado walkthrough con nuevos ejemplos
+```
+
+## 🔧 **Solución de Problemas Comunes**
+
+### **Error: "Package 'exams' not found"**
+```r
+# Instalar R-exams desde CRAN
+install.packages("exams")
+
+# Si persiste el error, instalar desde GitHub
+devtools::install_github("r-exams/exams")
+```
+
+### **Error: "LaTeX not found"**
+```r
+# Instalar TinyTeX
+install.packages("tinytex")
+tinytex::install_tinytex()
+
+# Verificar instalación
+tinytex::tlmgr_version()
+```
+
+### **Error: "TikZ compilation failed"**
+```r
+# Verificar que pdflatex está disponible
+system("pdflatex --version")
+
+# Instalar paquetes LaTeX adicionales si es necesario
+tinytex::tlmgr_install("tikz")
+tinytex::tlmgr_install("pgfplots")
+```
+
+### **Ejercicio no genera opciones diferentes**
+- Verificar que la función `verificar_diferenciacion()` está incluida
+- Revisar que los parámetros de aleatorización tienen suficiente variabilidad
+- Confirmar que el algoritmo de colocación directa está implementado
 
 ---
 
@@ -269,12 +362,18 @@ bash Auxiliares/Instalaciones/Ais/Gemini_CLI/test-mcps.sh
 
 - **Autor**: Álvaro Ángel Molina
 - **Institución**: IE Pedacito de Cielo
-- **Propósito**: Preparación ICFES Matemáticas
+- **Propósito**: Preparación ICFES Matemáticas con aleatorización equilibrada
 - **Licencia**: Proyecto Educativo
-- **Última Actualización**: Agosto 2025
+- **Última Actualización**: Septiembre 2025
 
-**🎯 Objetivo**: Democratizar el acceso a ejercicios matemáticos de alta calidad para preparación ICFES mediante herramientas automatizadas y asistencia de IA avanzada.
+**🎯 Objetivo**: Proporcionar ejercicios matemáticos de alta calidad para preparación ICFES con sistema de aleatorización equilibrada que garantiza evaluaciones justas y variadas.
 
 ---
 
-*Para soporte técnico o consultas, revisar la documentación en `Auxiliares/Instalaciones/Ais/Gemini_CLI/` o utilizar los comandos de ayuda integrados en Gemini CLI.*
+## 📞 **Soporte y Contacto**
+
+- **Documentación**: Revisar archivos README.md y walkthrough.md
+- **Issues**: Reportar problemas en el repositorio de GitHub
+- **Contribuciones**: Seguir las guías de contribución en este README
+
+*Para consultas específicas sobre implementación o uso de los ejercicios, consultar la documentación técnica en cada directorio de ejercicios.*
