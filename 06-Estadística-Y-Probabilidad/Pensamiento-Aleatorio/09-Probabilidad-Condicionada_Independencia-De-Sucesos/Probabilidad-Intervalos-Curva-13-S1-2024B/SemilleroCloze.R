@@ -6,6 +6,13 @@
 #           el pensamiento analítico sobre la resolución mecánica
 # Autor: Transformación Pedagógica R-Exams
 # Fecha: 2025-01-21
+#
+# MODIFICACIÓN IMPORTANTE:
+# - La función exams2html() ahora genera UN SOLO archivo HTML consolidado
+#   que contiene todas las n preguntas en una sola página
+# - Se cambió de: exams2html(archivo, n = config$archivos)
+#   a: exams2html(rep(archivo, config$archivos))
+# - Esto evita crear n archivos HTML individuales
 # ===============================================================================
 
 # Cargar librerías necesarias
@@ -17,11 +24,11 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd"
+archivo_examen <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos =250,                    # Número de versiones a generar
+  archivos = 5,                    # Número de versiones a generar
   semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
@@ -120,33 +127,41 @@ if (!prueba_rapida(archivo_examen)) {
 # FUNCIONES DE GENERACIÓN POR FORMATO
 # ===============================================================================
 
-# Función para generar HTML
+# Función para generar HTML consolidado (un solo archivo con todas las preguntas)
 generar_html <- function() {
-  cat("🌐 Generando archivos HTML...\n")
+  cat("🌐 Generando archivo HTML consolidado...\n")
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "html"), "\n")
   cat("📄 Archivo base:", archivo_examen, "\n")
-  cat("🔢 Número de versiones:", config$archivos, "\n")
+  cat("🔢 Número de preguntas:", config$archivos, "\n")
   cat("🎲 Semilla:", config$semilla, "\n")
 
   tryCatch({
     set.seed(config$semilla)
-    cat("⏳ Iniciando generación HTML...\n")
+    cat("⏳ Iniciando generación HTML consolidado...\n")
 
-    resultado <- exams2html(archivo_examen,
-                           n = config$archivos,
-                           name = paste0(nombre_base, "_html"),
+    # CLAVE: Usar rep(archivo_examen, config$archivos) para generar
+    # un solo archivo HTML con múltiples preguntas en lugar de
+    # múltiples archivos HTML individuales
+    resultado <- exams2html(rep(archivo_examen, config$archivos),
+                           name = paste0(nombre_base, "_consolidado"),
                            dir = file.path(config$dir_salida, "html"),
                            edir = config$dir_ejercicios,
                            encoding = config$encoding,
+                           template = "plain",
+                           mathjax = TRUE,
+                           svg = FALSE,
                            verbose = TRUE)
 
-    cat("✅ Archivos HTML generados exitosamente\n")
+    cat("✅ Archivo HTML consolidado generado exitosamente\n")
 
-    # Mostrar archivos generados
+    # Mostrar archivo consolidado generado
     archivos_html <- list.files(file.path(config$dir_salida, "html"), pattern = "\\.html$")
     cat("📊 Archivos generados:", length(archivos_html), "\n")
     for(i in seq_along(archivos_html)) {
       cat("  ", i, ":", archivos_html[i], "\n")
+      # Mostrar tamaño del archivo
+      tamaño_kb <- round(file.size(file.path(config$dir_salida, "html", archivos_html[i])) / 1024, 2)
+      cat("     Tamaño:", tamaño_kb, "KB\n")
     }
 
     return(TRUE)

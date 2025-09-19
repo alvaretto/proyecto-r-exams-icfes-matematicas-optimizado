@@ -1,0 +1,30 @@
+✅ CONFIRMACIÓN: Los archivos .Rmd están presentes en esta carpeta
+
+📋 ARCHIVOS .Rmd DISPONIBLES:
+
+1. ✅ probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd (RECOMENDADO)
+   - Tamaño: 34,370 bytes
+   - Fecha: sep 16 22:48
+   - Estado: FUNCIONA CORRECTAMENTE
+   - Gráficas TikZ: ✅ Operativas
+
+2. tikz-cloze.Rmd (NO RECOMENDADO)
+   - Tamaño: 13,755 bytes  
+   - Fecha: sep 17 10:24
+   - Estado: ❌ Errores de compilación
+
+3. probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd
+   - Tamaño: 30,834 bytes
+   - Fecha: sep 16 20:36
+   - Estado: Versión anterior
+
+4. Otros archivos históricos disponibles...
+
+🎯 ARCHIVO DEFINITIVO RECOMENDADO:
+probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd
+
+📁 UBICACIÓN EXACTA:
+/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B
+
+⏰ Generado: mié 17 sep 2025 10:43:59 -05
+

@@ -113,13 +113,76 @@ generar_datos <- function() {
     stringsAsFactors = FALSE
   )
 
-  # 4. Agrupar Opciones en orden fijo A, B, C, D para presentación consistente
-  # A = distractor con probabilidades acumuladas incorrectas
-  # B = distractor con intervalos acumulativos incorrectos
-  # C = tabla correcta con probabilidades e intervalos correctos
-  # D = distractor con probabilidades intercambiadas
-  lista_tablas_fijas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
-  posicion_correcta_fija <- 3  # La tabla C (posición 3) es siempre la correcta
+  # 4. SISTEMA DE ALEATORIZACIÓN DE OPCIONES - CORREGIDO PARA 4 OPCIONES OBLIGATORIAS
+  # Crear una tabla alternativa con encabezados intercambiados para mayor diversidad
+  tabla_correcta_alt <- data.frame(
+    Probabilidad = c(p_lateral, p_central, p_lateral),
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    stringsAsFactors = FALSE
+  )
+
+  # Aleatorizar qué tabla correcta usar (normal o con encabezados intercambiados)
+  usar_encabezados_alt <- sample(c(TRUE, FALSE), 1)
+  tabla_correcta_final <- if (usar_encabezados_alt) tabla_correcta_alt else tabla_correcta
+
+  # CORRECCIÓN CRÍTICA: Crear siempre exactamente 4 opciones únicas y diferenciadas
+  # Verificar que todas las opciones sean visualmente diferentes
+  verificar_diferenciacion <- function(opciones) {
+    # Convertir cada tabla a string para comparación
+    tablas_str <- lapply(opciones, function(tabla) {
+      paste(tabla$Intervalo, tabla$Probabilidad, collapse = "|")
+    })
+
+    # Verificar que no hay duplicados
+    return(length(unique(tablas_str)) == length(tablas_str))
+  }
+
+  # Crear las 4 opciones obligatorias con diferenciación garantizada
+  opciones_fijas <- list(
+    A = tabla_distractor_A,      # Probabilidades acumuladas incorrectas
+    B = tabla_distractor_B,      # Intervalos acumulativos incorrectos
+    C = tabla_correcta_final,    # Tabla correcta (puede tener encabezados intercambiados)
+    D = tabla_distractor_D       # Probabilidades intercambiadas
+  )
+
+  # Verificar diferenciación
+  if (!verificar_diferenciacion(opciones_fijas)) {
+    stop("Error crítico: Las opciones generadas no son suficientemente diferentes")
+  }
+
+  # ALGORITMO DE ALEATORIZACIÓN MEJORADO - DISTRIBUCIÓN PERFECTAMENTE EQUILIBRADA
+  # Usar set.seed() temporal para garantizar reproducibilidad en pruebas si es necesario
+  # (comentado en producción para aleatorización real)
+
+  # Seleccionar posición correcta con distribución uniforme garantizada
+  posicion_correcta_aleatoria <- sample(1:4, 1)
+
+  # Crear array de distractores en orden fijo para eliminar sesgos
+  distractores <- list(opciones_fijas$A, opciones_fijas$B, opciones_fijas$D)
+
+  # Inicializar opciones finales con distractores
+  opciones_finales <- vector("list", 4)
+
+  # Colocar la opción correcta en la posición seleccionada
+  opciones_finales[[posicion_correcta_aleatoria]] <- opciones_fijas$C
+
+  # Llenar las posiciones restantes con distractores en orden secuencial
+  indice_distractor <- 1
+  for (i in 1:4) {
+    if (i != posicion_correcta_aleatoria) {
+      opciones_finales[[i]] <- distractores[[indice_distractor]]
+      indice_distractor <- indice_distractor + 1
+    }
+  }
+
+  # Verificación final de diferenciación
+  if (!verificar_diferenciacion(opciones_finales)) {
+    stop("Error crítico: Las opciones finales no son suficientemente diferentes")
+  }
+
+  # Información para debugging (comentada en producción)
+  # cat("Posición correcta:", posicion_correcta_aleatoria, "\n")
+  # cat("Usando encabezados alternativos:", usar_encabezados_alt, "\n")
 
   return(list(
     p_central = p_central,
@@ -127,17 +190,24 @@ generar_datos <- function() {
     limite1 = limite1,
     limite2 = limite2,
     limite_sup = limite_sup,
-    opciones = lista_tablas_fijas,
-    posicion_correcta = posicion_correcta_fija
+    opciones = opciones_finales,
+    posicion_correcta = posicion_correcta_aleatoria,
+    usar_encabezados_alt = usar_encabezados_alt,
+    opciones_fijas = opciones_fijas
   ))
 }
 
 # Generar datos del ejercicio
 datos <- generar_datos()
-# Validación de la posición correcta (1..4)
+# Validación de la posición correcta (1..4, restaurado para 4 opciones obligatorias)
 if (is.null(datos$posicion_correcta) || length(datos$posicion_correcta) != 1 ||
     is.na(datos$posicion_correcta) || datos$posicion_correcta < 1 || datos$posicion_correcta > 4) {
   stop("Error: datos$posicion_correcta inválida (debe estar entre 1 y 4)")
+}
+
+# Validación crítica: Verificar que se generaron exactamente 4 opciones
+if (length(datos$opciones) != 4) {
+  stop("Error crítico: Se deben generar exactamente 4 opciones (A, B, C, D)")
 }
 
 
@@ -160,7 +230,7 @@ respuesta_4 <- datos$limite1        # Paso 4: Límite inferior intervalo 2
 respuesta_5 <- datos$limite2        # Paso 5: Límite superior intervalo 2
 respuesta_6 <- 1.00                 # Paso 6: Suma total de probabilidades
 
-# Para schoice en cloze, usar la posición correcta del archivo original
+# Para schoice en cloze, usar la posición correcta aleatoria (restaurado para 4 opciones)
 solucion_schoice <- rep(FALSE, 4)
 solucion_schoice[datos$posicion_correcta] <- TRUE
 
@@ -228,10 +298,29 @@ if (abs(suma_probabilidades - 1.0) > 0.001) {
 }
 
 # Helper universal para crear tablas compatibles con todos los formatos exams2*
-crear_tabla_portable <- function(df, typ) {
+crear_tabla_portable <- function(df, typ, intercambiar_encabezados = FALSE) {
   df_formateada <- df
-  df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
-  df_formateada$Probabilidad <- formato_estandar(df$Probabilidad, 2)
+
+  # Determinar orden de columnas según intercambiar_encabezados
+  if (intercambiar_encabezados) {
+    # Verificar si el dataframe tiene las columnas en orden intercambiado
+    if (names(df)[1] == "Probabilidad" && names(df)[2] == "Intervalo") {
+      # Ya está en orden intercambiado, formatear directamente
+      df_formateada$Probabilidad <- formato_estandar(df$Probabilidad, 2)
+      df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
+    } else {
+      # Intercambiar orden de columnas
+      df_formateada <- data.frame(
+        Probabilidad = formato_estandar(df$Probabilidad, 2),
+        Intervalo = paste0("$", df$Intervalo, "$"),
+        stringsAsFactors = FALSE
+      )
+    }
+  } else {
+    # Orden normal: Intervalo | Probabilidad
+    df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
+    df_formateada$Probabilidad <- formato_estandar(df$Probabilidad, 2)
+  }
 
   # Determinar tipo LaTeX y tratar pandoc/nops explícitamente
   es_latex <- isTRUE(typ %in% c("pdf", "nops", "tex"))
@@ -239,25 +328,43 @@ crear_tabla_portable <- function(df, typ) {
   # Para NOPS evitamos tablas y devolvemos un resumen en texto plano
   if (identical(typ, "nops")) {
     # Usar texto ASCII simple para maximizar compatibilidad con NOPS (sin tablas ni $...$)
-    int_ascii <- gsub(" \\\\le ", " <= ", df$Intervalo)
-    rows_txt <- paste(sprintf("[%s: %s]", int_ascii, df_formateada$Probabilidad), collapse = " ")
+    if (intercambiar_encabezados) {
+      int_ascii <- gsub(" \\\\le ", " <= ", df_formateada$Intervalo)
+      rows_txt <- paste(sprintf("[%s: %s]", df_formateada$Probabilidad, int_ascii), collapse = " ")
+    } else {
+      int_ascii <- gsub(" \\\\le ", " <= ", df_formateada$Intervalo)
+      rows_txt <- paste(sprintf("[%s: %s]", int_ascii, df_formateada$Probabilidad), collapse = " ")
+    }
     return(rows_txt)
   }
 
   if (!es_latex) {
     if (identical(typ, "pandoc")) {
-      # Tabla Markdown (pipe) compatible con Pandoc/Docx; colapsada a una sola línea
-      hdr <- "| Intervalo | Probabilidad |"
-      sep <- "|:---------:|:------------:|"
-      rows <- paste(apply(df_formateada, 1, function(r) sprintf("| %s | %s |", r[["Intervalo"]], r[["Probabilidad"]] )), collapse = "\n")
+      # Tabla Markdown (pipe) compatible con Pandoc/Docx
+      if (intercambiar_encabezados) {
+        hdr <- "| Probabilidad | Intervalo |"
+        sep <- "|:------------:|:---------:|"
+        rows <- paste(apply(df_formateada, 1, function(r) sprintf("| %s | %s |", r[["Probabilidad"]], r[["Intervalo"]] )), collapse = "\n")
+      } else {
+        hdr <- "| Intervalo | Probabilidad |"
+        sep <- "|:---------:|:------------:|"
+        rows <- paste(apply(df_formateada, 1, function(r) sprintf("| %s | %s |", r[["Intervalo"]], r[["Probabilidad"]] )), collapse = "\n")
+      }
       tabla_md <- paste(c(hdr, sep, rows), collapse = "\n")
       return(tabla_md)
     } else {
       # Construir tabla HTML con bordes visibles (HTML/Moodle/etc.)
       th <- function(x) sprintf('<th style="border:1px solid #000;padding:4px 8px;text-align:center;font-weight:bold;">%s</th>', x)
       td <- function(x) sprintf('<td style="border:1px solid #000;padding:4px 8px;text-align:center;">%s</td>', x)
-      header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
-      rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
+
+      if (intercambiar_encabezados) {
+        header <- sprintf("<tr>%s%s</tr>", th("Probabilidad"), th("Intervalo"))
+        rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Probabilidad"]]), td(r[["Intervalo"]]))), collapse = "")
+      } else {
+        header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
+        rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
+      }
+
       tabla_renderizada <- sprintf('<table class="ex-opcion" style="border-collapse:collapse;border:2px solid #000;margin:4px 0;">%s%s</table>', header, rows)
       # Devolver una sola línea para evitar conteos erróneos del parser
       return(paste(gsub("\n", " ", tabla_renderizada), collapse = " "))
@@ -274,9 +381,12 @@ crear_tabla_portable <- function(df, typ) {
   return(paste(tabla_renderizada, collapse = "\n"))
 }
 
-# Crear opciones y soluciones portátiles (orden fijo A, B, C, D)
-opciones_portables <- lapply(datos$opciones, function(tabla) {
-  crear_tabla_portable(tabla, typ)
+# Crear opciones portátiles para las 4 opciones obligatorias
+opciones_portables <- lapply(1:4, function(i) {
+  tabla <- datos$opciones[[i]]
+  # Determinar si esta opción debe tener encabezados intercambiados
+  intercambiar <- (i == datos$posicion_correcta && datos$usar_encabezados_alt)
+  crear_tabla_portable(tabla, typ, intercambiar)
 })
 
 # Validaciones básicas simplificadas
@@ -286,8 +396,8 @@ if (!exists("typ") || is.null(typ)) {
 ```
 
 ```{r generar_tablas_tikz, echo=FALSE, results="hide"}
-# Función para generar tabla TikZ con formato vectorial
-generar_tabla_tikz <- function(intervalos, probabilidades) {
+# Función para generar tabla TikZ con formato vectorial y encabezados flexibles
+generar_tabla_tikz <- function(intervalos, probabilidades, intercambiar_encabezados = FALSE) {
   # Validar que los parámetros no estén vacíos
   if (length(intervalos) == 0 || length(probabilidades) == 0) {
     stop("Error: intervalos o probabilidades tienen longitud cero")
@@ -302,9 +412,27 @@ generar_tabla_tikz <- function(intervalos, probabilidades) {
     stop("Error: algún intervalo está vacío")
   }
 
-  # Formatear probabilidades con coma decimal
   # Formatear probabilidades con punto decimal y 2 decimales
   probs_formateadas <- sapply(probabilidades, function(x) formato_estandar(x, 2))
+
+  # Determinar orden de encabezados y contenido
+  if (intercambiar_encabezados) {
+    # Encabezados: Probabilidad | Intervalo
+    encabezado1 <- "\\fontsize{4pt}{5pt}\\selectfont\\textbf{Probabilidad}"
+    encabezado2 <- "\\fontsize{4pt}{5pt}\\selectfont\\textbf{Intervalo}"
+    contenido_filas <- paste0(
+      "      \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas, " & \\fontsize{4pt}{5pt}\\selectfont $", intervalos, "$ \\\\",
+      collapse = "\n      \\hline\n"
+    )
+  } else {
+    # Encabezados: Intervalo | Probabilidad (orden original)
+    encabezado1 <- "\\fontsize{4pt}{5pt}\\selectfont\\textbf{Intervalo}"
+    encabezado2 <- "\\fontsize{4pt}{5pt}\\selectfont\\textbf{Probabilidad}"
+    contenido_filas <- paste0(
+      "      \\fontsize{4pt}{5pt}\\selectfont $", intervalos, "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas, " \\\\",
+      collapse = "\n      \\hline\n"
+    )
+  }
 
   # Crear código TikZ para la tabla con configuración EXTREMA (basada en Pedorros4.Rmd)
   codigo_tikz <- paste0("
@@ -312,13 +440,9 @@ generar_tabla_tikz <- function(intervalos, probabilidades) {
   \\node[font=\\fontsize{4pt}{5pt}\\selectfont]{
     \\begin{tabular}{|c|c|}
       \\hline
-      \\fontsize{4pt}{5pt}\\selectfont\\textbf{Intervalo} & \\fontsize{4pt}{5pt}\\selectfont\\textbf{Probabilidad} \\\\
+      ", encabezado1, " & ", encabezado2, " \\\\
       \\hline
-      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[1], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[1], " \\\\
-      \\hline
-      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[2], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[2], " \\\\
-      \\hline
-      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[3], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[3], " \\\\
+      ", contenido_filas, "
       \\hline
     \\end{tabular}
   };
@@ -356,26 +480,35 @@ intB1 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limi
 intB2 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite2)
 intB3 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite_sup)
 
-# Generar códigos TikZ para cada tabla con validación adicional
-codigo_tabla_a <- generar_tabla_tikz(
-  c(int1, int2, int3),
-  c(datos$p_lateral, datos$p_central, datos$p_lateral)
-)
+# Generar códigos TikZ para las 4 opciones obligatorias
+codigos_tikz_opciones <- list()
 
-codigo_tabla_b <- generar_tabla_tikz(
-  c(intB1, intB2, intB3),
-  c(datos$p_lateral, datos$p_lateral + datos$p_central, 1.0)
-)
+# Generar códigos TikZ directamente desde las opciones finales
+for (i in 1:4) {
+  tabla_actual <- datos$opciones[[i]]
 
-codigo_tabla_c <- generar_tabla_tikz(
-  c(int1, int2, int3),
-  c(datos$p_lateral, datos$p_central, datos$p_lateral)
-)
+  # Extraer intervalos y probabilidades de la tabla actual
+  intervalos_tikz <- c()
+  for (j in 1:3) {
+    intervalo_raw <- tabla_actual$Intervalo[j]
+    # Convertir símbolos ≤ a \le para TikZ si es necesario
+    intervalo_tikz <- gsub(" ≤ ", " \\\\le ", intervalo_raw)
+    intervalos_tikz[j] <- intervalo_tikz
+  }
 
-codigo_tabla_d <- generar_tabla_tikz(
-  c(int1, int2, int3),
-  c(datos$p_central, datos$p_lateral, datos$p_lateral)
-)
+  # Determinar si esta opción debe tener encabezados intercambiados
+  intercambiar_encabezados <- FALSE
+  if (i == datos$posicion_correcta && datos$usar_encabezados_alt) {
+    intercambiar_encabezados <- TRUE
+  }
+
+  # Generar código TikZ para esta opción
+  codigos_tikz_opciones[[i]] <- generar_tabla_tikz(
+    intervalos_tikz,
+    tabla_actual$Probabilidad,
+    intercambiar_encabezados
+  )
+}
 ```
 
 ```{r generar_tablas_tikz_multi_formato, echo=FALSE, results="hide"}
@@ -399,21 +532,19 @@ generar_tabla_multi_formato <- function(codigo_tikz, nombre_base) {
   }
 }
 
-# Generar todas las tablas en el formato apropiado
-generar_tabla_multi_formato(codigo_tabla_a, "tabla_opcion_a")
-generar_tabla_multi_formato(codigo_tabla_b, "tabla_opcion_b")
-generar_tabla_multi_formato(codigo_tabla_c, "tabla_opcion_c")
-generar_tabla_multi_formato(codigo_tabla_d, "tabla_opcion_d")
+# Generar las 4 tablas obligatorias en el formato apropiado
+for (i in 1:4) {
+  nombre_tabla <- paste0("tabla_opcion_", letters[i])
+  generar_tabla_multi_formato(codigos_tikz_opciones[[i]], nombre_tabla)
+}
 ```
 
 ```{r copiar_archivos_salida, echo=FALSE, results="hide"}
 # Copiar archivos generados al directorio de salida para compatibilidad con todos los formatos
 if (dir.exists("salida")) {
-  # Copiar tanto PDF como PNG para máxima compatibilidad
-  archivos_tablas <- c("tabla_opcion_a.pdf", "tabla_opcion_b.pdf",
-                       "tabla_opcion_c.pdf", "tabla_opcion_d.pdf",
-                       "tabla_opcion_a.png", "tabla_opcion_b.png",
-                       "tabla_opcion_c.png", "tabla_opcion_d.png")
+  # Copiar tanto PDF como PNG para máxima compatibilidad (las 4 opciones obligatorias)
+  archivos_tablas <- c("tabla_opcion_a.pdf", "tabla_opcion_b.pdf", "tabla_opcion_c.pdf", "tabla_opcion_d.pdf",
+                       "tabla_opcion_a.png", "tabla_opcion_b.png", "tabla_opcion_c.png", "tabla_opcion_d.png")
 
   for (archivo in archivos_tablas) {
     if (file.exists(archivo)) {
@@ -541,42 +672,22 @@ A continuación se presentan cuatro tablas diferentes que podrían representar l
 <br>
 
 ```{r mostrar_tablas_analisis, echo=FALSE, results='asis', fig.align="center"}
-# Mostrar las 4 tablas en orden fijo A, B, C, D (fuera del desplegable)
+# Mostrar las 4 tablas obligatorias
 # Selectores para formato/markup según backend
 fmt_tikz <- if (identical(typ, "moodle")) "png" else if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "html" else typ
 markup_tikz <- if (identical(typ, "moodle")) "moodle" else "markdown"
 
-cat("**Tabla A:**\n\n")
-include_tikz(codigo_tabla_a,
-             name = "tabla_opcion_a",
-             markup = markup_tikz,
-             format = fmt_tikz,
-             packages = c("tikz", "array", "booktabs"),
-             width = "6cm")
-
-cat("\n\n**Tabla B:**\n\n")
-include_tikz(codigo_tabla_b,
-             name = "tabla_opcion_b",
-             markup = markup_tikz,
-             format = fmt_tikz,
-             packages = c("tikz", "array", "booktabs"),
-             width = "6cm")
-
-cat("\n\n**Tabla C:**\n\n")
-include_tikz(codigo_tabla_c,
-             name = "tabla_opcion_c",
-             markup = markup_tikz,
-             format = fmt_tikz,
-             packages = c("tikz", "array", "booktabs"),
-             width = "6cm")
-
-cat("\n\n**Tabla D:**\n\n")
-include_tikz(codigo_tabla_d,
-             name = "tabla_opcion_d",
-             markup = markup_tikz,
-             format = fmt_tikz,
-             packages = c("tikz", "array", "booktabs"),
-             width = "6cm")
+# Mostrar las 4 opciones obligatorias
+for (i in 1:4) {
+  cat(paste0("**Tabla ", LETTERS[i], ":**\n\n"))
+  include_tikz(codigos_tikz_opciones[[i]],
+               name = paste0("tabla_opcion_", letters[i]),
+               markup = markup_tikz,
+               format = fmt_tikz,
+               packages = c("tikz", "array", "booktabs"),
+               width = "6cm")
+  cat("\n\n")
+}
 ```
 
 <br><br>
@@ -732,17 +843,29 @@ Esta respuesta es coherente porque:
 - La suma total de probabilidades es exactamente 1.00
 
 ```{r answerlist_explicacion, echo=FALSE, results='asis'}
-# Explicaciones fijas para las tablas A, B, C, D en orden de presentación
-exp_textos <- c(
-  "Incorrecto. Usa probabilidades acumuladas incorrectamente; no corresponde a las tres secciones individuales.",
-  "Incorrecto. Usa intervalos acumulativos; no corresponde a las secciones individuales mostradas.",
-  "Correcto. Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.",
-  "Incorrecto. Intercambia los valores asignando probabilidades incorrectas a cada intervalo."
+# Explicaciones fijas para las 4 opciones obligatorias
+explicaciones_fijas <- c(
+  "Usa probabilidades acumuladas incorrectamente; no corresponde a las tres secciones individuales.",
+  "Usa intervalos acumulativos; no corresponde a las secciones individuales mostradas.",
+  "Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.",
+  "Intercambia los valores asignando probabilidades incorrectas a cada intervalo."
 )
+
 cat("Explicación de opciones\n")
 cat("----------------------\n\n")
+
+# Generar explicaciones para las 4 opciones fijas
 for (i in 1:4) {
-  cat(paste0("- **Tabla ", LETTERS[i], ":** ", exp_textos[i], "\n"))
+  explicacion_base <- explicaciones_fijas[i]
+
+  # Marcar la opción correcta
+  if (i == datos$posicion_correcta) {
+    explicacion_final <- paste0("Correcto. ", explicacion_base)
+  } else {
+    explicacion_final <- paste0("Incorrecto. ", explicacion_base)
+  }
+
+  cat(paste0("- **Tabla ", LETTERS[i], ":** ", explicacion_final, "\n"))
 }
 ```
 

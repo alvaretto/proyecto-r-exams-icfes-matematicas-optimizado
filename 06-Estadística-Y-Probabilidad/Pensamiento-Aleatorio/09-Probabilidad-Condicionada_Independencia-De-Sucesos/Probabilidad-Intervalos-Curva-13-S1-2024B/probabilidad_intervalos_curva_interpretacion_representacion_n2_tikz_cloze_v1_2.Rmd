@@ -113,13 +113,20 @@ generar_datos <- function() {
     stringsAsFactors = FALSE
   )
 
-  # 4. Agrupar Opciones en orden fijo A, B, C, D para presentación consistente
+  # 4. SISTEMA DE ALEATORIZACIÓN COMPLETA
+  # Crear todas las opciones únicas con distractores diferenciados
   # A = distractor con probabilidades acumuladas incorrectas
   # B = distractor con intervalos acumulativos incorrectos
   # C = tabla correcta con probabilidades e intervalos correctos
   # D = distractor con probabilidades intercambiadas
-  lista_tablas_fijas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
-  posicion_correcta_fija <- 3  # La tabla C (posición 3) es siempre la correcta
+
+  # ALEATORIZACIÓN: Mezclar posiciones para que cualquier letra pueda ser correcta
+  todas_las_tablas <- list(tabla_distractor_A, tabla_distractor_B, tabla_correcta, tabla_distractor_D)
+  posiciones_aleatorias <- sample(1:4, 4, replace = FALSE)
+  lista_tablas_mezcladas <- todas_las_tablas[posiciones_aleatorias]
+
+  # Encontrar nueva posición de la tabla correcta (originalmente en posición 3)
+  posicion_correcta_aleatoria <- which(posiciones_aleatorias == 3)
 
   return(list(
     p_central = p_central,
@@ -127,8 +134,9 @@ generar_datos <- function() {
     limite1 = limite1,
     limite2 = limite2,
     limite_sup = limite_sup,
-    opciones = lista_tablas_fijas,
-    posicion_correcta = posicion_correcta_fija
+    opciones = lista_tablas_mezcladas,
+    posicion_correcta = posicion_correcta_aleatoria,
+    orden_original = posiciones_aleatorias  # Para debugging si es necesario
   ))
 }
 
@@ -361,26 +369,31 @@ intB1 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limi
 intB2 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite2)
 intB3 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite_sup)
 
-# Generar códigos TikZ para cada tabla con validación adicional
-codigo_tabla_a <- generar_tabla_tikz(
-  c(int1, int2, int3),
-  c(datos$p_lateral, datos$p_central, datos$p_lateral)
-)
+# GENERAR CÓDIGOS TIKZ SEGÚN EL ORDEN ALEATORIZADO
+# Crear códigos TikZ dinámicamente basados en las opciones mezcladas
+opciones_tikz <- list()
 
-codigo_tabla_b <- generar_tabla_tikz(
-  c(intB1, intB2, intB3),
-  c(datos$p_lateral, datos$p_lateral + datos$p_central, 1.0)
-)
+for (i in 1:4) {
+  tabla_actual <- datos$opciones[[i]]
 
-codigo_tabla_c <- generar_tabla_tikz(
-  c(int1, int2, int3),
-  c(datos$p_lateral, datos$p_central, datos$p_lateral)
-)
+  # Extraer intervalos de la tabla actual y convertir a formato TikZ
+  intervalos_tikz <- c()
+  for (j in 1:3) {
+    intervalo_raw <- tabla_actual$Intervalo[j]
+    # Convertir símbolos ≤ a \le para TikZ
+    intervalo_tikz <- gsub(" ≤ ", " \\\\le ", intervalo_raw)
+    intervalos_tikz[j] <- intervalo_tikz
+  }
 
-codigo_tabla_d <- generar_tabla_tikz(
-  c(int1, int2, int3),
-  c(datos$p_central, datos$p_lateral, datos$p_lateral)
-)
+  # Generar código TikZ para esta opción
+  opciones_tikz[[i]] <- generar_tabla_tikz(intervalos_tikz, tabla_actual$Probabilidad)
+}
+
+# Asignar códigos según el orden aleatorio (A, B, C, D corresponden a posiciones 1, 2, 3, 4)
+codigo_tabla_a <- opciones_tikz[[1]]
+codigo_tabla_b <- opciones_tikz[[2]]
+codigo_tabla_c <- opciones_tikz[[3]]
+codigo_tabla_d <- opciones_tikz[[4]]
 ```
 
 ```{r generar_tablas_tikz_multi_formato, echo=FALSE, results="hide"}
@@ -736,7 +749,11 @@ if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
 
 **Análisis de las opciones presentadas:**
 
-Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la **Tabla C**. Las otras tablas presentan errores conceptuales comunes:
+```{r identificar_tabla_correcta, echo=FALSE, results='asis'}
+# Identificar cuál tabla (A, B, C, D) es la correcta según la aleatorización
+letra_correcta <- LETTERS[datos$posicion_correcta]
+cat("Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la **Tabla ", letra_correcta, "**. Las otras tablas presentan errores conceptuales comunes:\n\n")
+```
 
 * **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_estandar(datos$p_lateral, 2)`, `r formato_estandar(datos$p_lateral + datos$p_central, 2)`, 1.00), lo cual es una interpretación incorrecta del gráfico.
 * **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos, lo cual no corresponde a las secciones individuales mostradas.
@@ -778,17 +795,24 @@ Esta respuesta es coherente porque:
 - La suma total de probabilidades es exactamente 1.00
 
 ```{r answerlist_explicacion, echo=FALSE, results='asis'}
-# Explicaciones fijas para las tablas A, B, C, D en orden de presentación
-exp_textos <- c(
-  "Incorrecto. Usa probabilidades acumuladas incorrectamente; no corresponde a las tres secciones individuales.",
-  "Incorrecto. Usa intervalos acumulativos; no corresponde a las secciones individuales mostradas.",
-  "Correcto. Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.",
-  "Incorrecto. Intercambia los valores asignando probabilidades incorrectas a cada intervalo."
+# Explicaciones dinámicas según la aleatorización
+# Mapear cada tipo de tabla a su explicación
+explicaciones_por_tipo <- c(
+  "Incorrecto. Usa probabilidades acumuladas incorrectamente; no corresponde a las tres secciones individuales.",  # Distractor A
+  "Incorrecto. Usa intervalos acumulativos; no corresponde a las secciones individuales mostradas.",              # Distractor B
+  "Correcto. Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.", # Correcta
+  "Incorrecto. Intercambia los valores asignando probabilidades incorrectas a cada intervalo."                    # Distractor D
 )
+
 cat("Explicación de opciones\n")
 cat("----------------------\n\n")
+
+# Generar explicaciones según el orden aleatorizado
 for (i in 1:4) {
-  cat(paste0("- **Tabla ", LETTERS[i], ":** ", exp_textos[i], "\n"))
+  # datos$orden_original[i] indica qué tipo de tabla original está en la posición i
+  tipo_tabla_original <- datos$orden_original[i]
+  explicacion <- explicaciones_por_tipo[tipo_tabla_original]
+  cat(paste0("- **Tabla ", LETTERS[i], ":** ", explicacion, "\n"))
 }
 ```
 
