@@ -41,7 +41,12 @@ library(knitr)
 library(reticulate)
 
 # Configuración global crítica
-typ <- match_exams_device()
+# Corrección: Definir typ de forma segura
+typ <- tryCatch({
+  match_exams_device()
+}, error = function(e) {
+  "html"  # Valor por defecto si falla
+})
 options(scipen = 999)
 options(OutDec = ".")
 options(digits = 10)
@@ -67,8 +72,45 @@ options(scipen = 999)
 # Función principal de generación de datos
 generar_datos <- function() {
   # 1. Aleatorización de Parámetros Matemáticos (Incremento de dificultad)
+  # CORRECCIÓN: Generar probabilidades asimétricas para eliminar patrón predecible
+  # Método mejorado: generar probabilidades que NO sumen exactamente 1 en los extremos
+  # para que el Paso 7 no sea simplemente 1 - Paso 2
+
+  # Generar probabilidad central primero
   p_central <- sample(seq(0.35, 0.65, by = 0.01), 1)
-  p_lateral <- (1 - p_central) / 2
+
+  # Generar probabilidades laterales asimétricas con variación independiente
+  # Usar diferentes rangos para crear asimetría
+  p_lateral_1 <- sample(seq(0.10, 0.35, by = 0.01), 1)
+
+  # Calcular p_lateral_3 para que la suma sea 1, pero con límites
+  p_lateral_3_calculado <- 1 - p_central - p_lateral_1
+
+  # Verificar que p_lateral_3 esté en rango válido
+  if (p_lateral_3_calculado < 0.10 || p_lateral_3_calculado > 0.35) {
+    # Si está fuera de rango, regenerar con método alternativo
+    # Usar distribución que garantice asimetría
+    total_lateral <- 1 - p_central
+    factor_asimetria <- runif(1, 0.3, 0.7)  # Factor de asimetría
+    p_lateral_1 <- round(total_lateral * factor_asimetria, 3)
+    p_lateral_3 <- round(total_lateral * (1 - factor_asimetria), 3)
+  } else {
+    p_lateral_3 <- round(p_lateral_3_calculado, 3)
+  }
+
+  # Ajuste final para garantizar suma exacta de 1.000
+  suma_actual <- p_lateral_1 + p_central + p_lateral_3
+  if (abs(suma_actual - 1.000) > 0.001) {
+    # Ajustar la probabilidad que tenga más margen
+    diferencia <- 1.000 - suma_actual
+    if (abs(p_central - 0.5) < 0.1) {
+      # Si p_central está cerca del centro, ajustar p_lateral_3
+      p_lateral_3 <- round(p_lateral_3 + diferencia, 3)
+    } else {
+      # Si no, ajustar p_central
+      p_central <- round(p_central + diferencia, 3)
+    }
+  }
 
   limite1 <- sample(2:8, 1)
   ancho_central <- sample(3:8, 1)
@@ -92,31 +134,31 @@ generar_datos <- function() {
   # 3. Generación de Opciones (DataFrames)
   tabla_correcta <- data.frame(
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
-    Probabilidad = c(p_lateral, p_central, p_lateral),
+    Probabilidad = c(p_lateral_1, p_central, p_lateral_3),
     stringsAsFactors = FALSE
   )
   tabla_distractor_A <- data.frame(
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
-    Probabilidad = c(p_lateral, p_lateral + p_central, 1),
+    Probabilidad = c(p_lateral_1, p_lateral_1 + p_central, 1),
     stringsAsFactors = FALSE
   )
   tabla_distractor_B <- data.frame(
     Intervalo = c(paste0("0 ", format_le(), " x ", format_le(), " ", limite1),
                   paste0("0 ", format_le(), " x ", format_le(), " ", limite2),
                   paste0("0 ", format_le(), " x ", format_le(), " ", limite_sup)),
-    Probabilidad = c(p_lateral, p_central, p_lateral),
+    Probabilidad = c(p_lateral_1, p_central, p_lateral_3),
     stringsAsFactors = FALSE
   )
   tabla_distractor_D <- data.frame(
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
-    Probabilidad = c(p_central, p_lateral, p_lateral),
+    Probabilidad = c(p_central, p_lateral_1, p_lateral_3),
     stringsAsFactors = FALSE
   )
 
   # 4. SISTEMA DE ALEATORIZACIÓN DE OPCIONES - ALGORITMO MEJORADO EQUILIBRADO
   # Crear tabla alternativa con encabezados intercambiados para mayor diversidad
   tabla_correcta_alt <- data.frame(
-    Probabilidad = c(p_lateral, p_central, p_lateral),
+    Probabilidad = c(p_lateral_1, p_central, p_lateral_3),
     Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
     stringsAsFactors = FALSE
   )
@@ -174,7 +216,8 @@ generar_datos <- function() {
 
   return(list(
     p_central = p_central,
-    p_lateral = p_lateral,
+    p_lateral_1 = p_lateral_1,
+    p_lateral_3 = p_lateral_3,
     limite1 = limite1,
     limite2 = limite2,
     limite_sup = limite_sup,
@@ -211,15 +254,24 @@ formato_estandar <- function(x, decimales = 2) {
 
 # Configuración específica para formato cloze (Incremento de complejidad)
 # Respuestas para cada paso del análisis secuencial expandido
-respuesta_1 <- datos$p_lateral      # Paso 1: Probabilidad intervalo 1
+respuesta_1 <- datos$p_lateral_1    # Paso 1: Probabilidad intervalo 1
 respuesta_2 <- datos$p_central      # Paso 2: Probabilidad intervalo 2
-respuesta_3 <- datos$p_lateral      # Paso 3: Probabilidad intervalo 3
+respuesta_3 <- datos$p_lateral_3    # Paso 3: Probabilidad intervalo 3
 respuesta_4 <- datos$limite1        # Paso 4: Límite inferior intervalo 2
 respuesta_5 <- datos$limite2        # Paso 5: Límite superior intervalo 2
 respuesta_6 <- 1.00                 # Paso 6: Suma total de probabilidades
-respuesta_7 <- datos$p_lateral * 2  # Paso 7: Prob. fuera intervalo central
+# CORRECCIÓN PASO 7: Cambio de enfoque - ahora calcula diferencia entre extremos
+# Esto elimina completamente el patrón predecible Paso7 = 1 - Paso2
+respuesta_7 <- abs(datos$p_lateral_1 - datos$p_lateral_3)  # Diferencia entre extremos
 # Paso 8: Intervalo con mayor probabilidad (1=primero, 2=central, 3=tercero)
-respuesta_8 <- if (datos$p_central > datos$p_lateral) 2 else 1
+# Actualizado para comparar con ambas probabilidades laterales
+if (datos$p_central > datos$p_lateral_1 && datos$p_central > datos$p_lateral_3) {
+  respuesta_8 <- 2  # Intervalo central es el mayor
+} else if (datos$p_lateral_1 >= datos$p_lateral_3) {
+  respuesta_8 <- 1  # Primer intervalo es el mayor
+} else {
+  respuesta_8 <- 3  # Tercer intervalo es el mayor
+}
 
 # Para schoice en cloze, usar la posición correcta del archivo original
 solucion_schoice <- rep(FALSE, 4)
@@ -284,8 +336,8 @@ if (length(tolerancias) != 9) {
   stop("Error: tolerancias debe tener exactamente 9 elementos")
 }
 
-# Verificar que las probabilidades suman 1
-suma_probabilidades <- datos$p_central + 2 * datos$p_lateral
+# Verificar que las probabilidades suman 1 (CORREGIDO para nuevas variables)
+suma_probabilidades <- datos$p_central + datos$p_lateral_1 + datos$p_lateral_3
 if (abs(suma_probabilidades - 1.0) > 0.001) {
   stop("Error: Las probabilidades no suman 1.0")
 }
@@ -401,8 +453,8 @@ if (!exists("datos") || is.null(datos)) {
   stop("Error: el objeto 'datos' no está definido")
 }
 
-# Validar que las variables necesarias existan en datos
-variables_requeridas <- c("limite1", "limite2", "limite_sup", "p_lateral", "p_central")
+# Validar que las variables necesarias existan en datos (CORREGIDO)
+variables_requeridas <- c("limite1", "limite2", "limite_sup", "p_lateral_1", "p_lateral_3", "p_central")
 for (var in variables_requeridas) {
   if (is.null(datos[[var]]) || length(datos[[var]]) == 0) {
     stop(paste("Error: la variable", var, "no está definida o tiene longitud cero"))
@@ -544,9 +596,9 @@ codigo_tikz_grafico <- paste0("
   \\draw[thick, black!80] (axis cs:", datos$limite2, ",0) --
     (axis cs:", datos$limite2, ", {0.4 * exp(-(", datos$limite2, "-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))});
   % Etiquetas de probabilidad con formato mejorado (3 decimales)
-  \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral, 3), "}};
+  \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral_1, 3), "}};
   \\node at (axis cs:", (datos$limite1 + datos$limite2) / 2, ", 0.35) {\\textbf{", formato_estandar(datos$p_central, 3), "}};
-  \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral, 3), "}};
+  \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral_3, 3), "}};
   \\end{axis}
 \\end{tikzpicture}
 ")
@@ -607,8 +659,8 @@ Para verificar que los datos son correctos, calcule la suma total de todas las p
 
 ##ANSWER1## + ##ANSWER2## + ##ANSWER3## = ##ANSWER6##
 
-### Paso 7: Análisis complementario - Probabilidad fuera del intervalo central
-Calcule la probabilidad de que la variable aleatoria $x$ tome valores **fuera** del intervalo central (es decir, en los intervalos extremos):
+### Paso 7: Análisis comparativo - Diferencia entre probabilidades extremas
+Calcule la **diferencia absoluta** entre las probabilidades de los intervalos extremos (primer y tercer intervalo):
 
 **Respuesta:** ##ANSWER7##
 
@@ -702,9 +754,9 @@ Este problema de **interpretación de gráficos de distribución de probabilidad
 
 ### Paso 1: Lectura correcta de probabilidades - Primer intervalo ✓
 
-**Respuesta correcta:** `r formato_estandar(datos$p_lateral, 2)`
+**Respuesta correcta:** `r formato_estandar(datos$p_lateral_1, 2)`
 
-El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección es **`r formato_estandar(datos$p_lateral, 2)`**.
+El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección es **`r formato_estandar(datos$p_lateral_1, 2)`**.
 
 ### Paso 2: Lectura correcta de probabilidades - Segundo intervalo ✓
 
@@ -714,9 +766,9 @@ El segundo intervalo (central) va desde $x=`r datos$limite1`$ hasta $x=`r datos$
 
 ### Paso 3: Lectura correcta de probabilidades - Tercer intervalo ✓
 
-**Respuesta correcta:** `r formato_estandar(datos$p_lateral, 2)`
+**Respuesta correcta:** `r formato_estandar(datos$p_lateral_3, 2)`
 
-El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección es **`r formato_estandar(datos$p_lateral, 2)`**.
+El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección es **`r formato_estandar(datos$p_lateral_3, 2)`**.
 
 ### Paso 4: Identificación correcta de límites - Límite inferior ✓
 
@@ -735,28 +787,32 @@ El límite superior del segundo intervalo (intervalo central) es **`r datos$limi
 **Respuesta correcta:** `r formato_estandar(1.00, 3)`
 
 **Verificación del cálculo:**
-$$`r formato_estandar(datos$p_lateral, 3)` + `r formato_estandar(datos$p_central, 3)` + `r formato_estandar(datos$p_lateral, 3)` = `r formato_estandar(1.00, 3)`$$
+$$`r formato_estandar(datos$p_lateral_1, 3)` + `r formato_estandar(datos$p_central, 3)` + `r formato_estandar(datos$p_lateral_3, 3)` = `r formato_estandar(1.00, 3)`$$
 
 Esta suma confirma que las probabilidades están correctamente leídas, ya que la suma total de todas las probabilidades en una distribución debe ser igual a 1.000.
 
-### Paso 7: Análisis complementario correcto - Probabilidad fuera del intervalo central ✓
+### Paso 7: Análisis comparativo correcto - Diferencia entre probabilidades extremas ✓
 
-**Respuesta correcta:** `r formato_estandar(datos$p_lateral * 2, 3)`
+**Respuesta correcta:** `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`
 
 **Explicación del cálculo:**
-La probabilidad de que $x$ tome valores fuera del intervalo central es la suma de las probabilidades de los intervalos extremos:
-$$P(\text{fuera del central}) = P(\text{primer intervalo}) + P(\text{tercer intervalo}) = `r formato_estandar(datos$p_lateral, 3)` + `r formato_estandar(datos$p_lateral, 3)` = `r formato_estandar(datos$p_lateral * 2, 3)`$$
+La diferencia absoluta entre las probabilidades de los intervalos extremos permite evaluar la asimetría de la distribución:
+$$|\text{Diferencia}| = |P(\text{primer intervalo}) - P(\text{tercer intervalo})| = |`r formato_estandar(datos$p_lateral_1, 3)` - `r formato_estandar(datos$p_lateral_3, 3)`| = `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`$$
+
+Esta medida indica qué tan simétrica o asimétrica es la distribución en los extremos.
 
 ### Paso 8: Análisis comparativo correcto - Intervalo con mayor probabilidad ✓
 
-**Respuesta correcta:** `r if(datos$p_central > datos$p_lateral) 2 else 1`
+**Respuesta correcta:** `r respuesta_8`
 
 **Justificación:**
 ```{r analisis_comparativo, echo=FALSE, results='asis'}
-if (datos$p_central > datos$p_lateral) {
-  cat("El intervalo central (intervalo 2) tiene la mayor probabilidad con ", formato_estandar(datos$p_central, 3), ", mientras que los intervalos extremos tienen ", formato_estandar(datos$p_lateral, 3), " cada uno.")
+if (datos$p_central > datos$p_lateral_1 && datos$p_central > datos$p_lateral_3) {
+  cat("El intervalo central (intervalo 2) tiene la mayor probabilidad con ", formato_estandar(datos$p_central, 3), ", mientras que el primer intervalo tiene ", formato_estandar(datos$p_lateral_1, 3), " y el tercer intervalo tiene ", formato_estandar(datos$p_lateral_3, 3), ".")
+} else if (datos$p_lateral_1 >= datos$p_lateral_3 && datos$p_lateral_1 >= datos$p_central) {
+  cat("El primer intervalo (intervalo 1) tiene la mayor probabilidad con ", formato_estandar(datos$p_lateral_1, 3), ", mientras que el intervalo central tiene ", formato_estandar(datos$p_central, 3), " y el tercer intervalo tiene ", formato_estandar(datos$p_lateral_3, 3), ".")
 } else {
-  cat("Los intervalos extremos (intervalos 1 y 3) tienen la mayor probabilidad con ", formato_estandar(datos$p_lateral, 3), " cada uno, mientras que el intervalo central tiene ", formato_estandar(datos$p_central, 3), ".")
+  cat("El tercer intervalo (intervalo 3) tiene la mayor probabilidad con ", formato_estandar(datos$p_lateral_3, 3), ", mientras que el primer intervalo tiene ", formato_estandar(datos$p_lateral_1, 3), " y el intervalo central tiene ", formato_estandar(datos$p_central, 3), ".")
 }
 ```
 
@@ -774,7 +830,7 @@ int_sol3 <- paste0(datos$limite2, " < x ", le_sym_tikz, " ", datos$limite_sup)
 # Generar tabla de solución con la misma función que las opciones
 codigo_tabla_solucion <- generar_tabla_tikz(
   c(int_sol1, int_sol2, int_sol3),
-  c(datos$p_lateral, datos$p_central, datos$p_lateral)
+  c(datos$p_lateral_1, datos$p_central, datos$p_lateral_3)
 )
 
 cat("**Tabla correcta esperada:**\n\n")
@@ -805,7 +861,7 @@ letra_correcta <- LETTERS[datos$posicion_correcta]
 cat("Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la **Tabla ", letra_correcta, "**. Las otras tablas presentan errores conceptuales comunes:\n\n")
 ```
 
-* **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_estandar(datos$p_lateral, 2)`, `r formato_estandar(datos$p_lateral + datos$p_central, 2)`, 1.00), lo cual es una interpretación incorrecta del gráfico.
+* **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_estandar(datos$p_lateral_1, 2)`, `r formato_estandar(datos$p_lateral_1 + datos$p_central, 2)`, 1.00), lo cual es una interpretación incorrecta del gráfico.
 * **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos, lo cual no corresponde a las secciones individuales mostradas.
 * **Error de asignación:** Otra tabla intercambia los valores de probabilidad, asignando el valor central a los laterales y viceversa.
 
@@ -835,7 +891,7 @@ cat("Al revisar las tablas de las opciones, la única que coincide perfectamente
 
 ### Conclusión
 
-La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral, 3)`**, **`r formato_estandar(datos$p_central, 3)`**, y **`r formato_estandar(datos$p_lateral, 3)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 3)`**. La probabilidad fuera del intervalo central es **`r formato_estandar(datos$p_lateral * 2, 3)`**, y el intervalo con mayor probabilidad es el número **`r if(datos$p_central > datos$p_lateral) 2 else 1`**.
+La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral_1, 3)`**, **`r formato_estandar(datos$p_central, 3)`**, y **`r formato_estandar(datos$p_lateral_3, 3)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 3)`**. La diferencia absoluta entre las probabilidades extremas es **`r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`**, y el intervalo con mayor probabilidad es el número **`r respuesta_8`**.
 
 Esta respuesta es coherente porque:
 
