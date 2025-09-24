@@ -331,8 +331,10 @@ tikz_cuadrado_rotado <- '
   \\draw[red, thick, ->] (-0.15,0.5) -- (-0.05,0.5);
   \\node[red, font=\\bfseries] at (-0.25,0.5) {$x$};
 
-  % Etiqueta para hipotenusa "√2"
-  \\node[green!60!black, font=\\bfseries] at (0.35,0.65) {$\\sqrt{2}$};
+  % Línea de conexión desde etiqueta hacia hipotenusa
+  \\draw[green!60!black, thin, ->] (0.55,0.45) -- (0.45,0.55);
+  % Etiqueta para hipotenusa "√2" (separada de la línea)
+  \\node[green!60!black, font=\\bfseries] at (0.6,0.4) {$\\sqrt{2}$};
 
   % Etiqueta explicativa del triángulo
   \\node[black, font=\\footnotesize] at (0.3,0.3) {\\textbf{Triángulo}};
