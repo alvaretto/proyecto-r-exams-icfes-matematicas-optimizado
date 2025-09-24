@@ -18,7 +18,10 @@ options(tikzLatexPackages = c(
   "\\usepackage{colortbl}",
   "\\usepackage{amsmath}",
   "\\usepackage{array}",
-  "\\usepackage{xcolor}"
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usetikzlibrary{babel,calc,3d}"
 ))
 
 library(exams)
@@ -293,7 +296,7 @@ test_that("Prueba de diversidad de versiones", {
 })
 ```
 
-```{r generar_tikz, echo=FALSE, results="asis"}
+```{r generar_tikz, echo=FALSE, results="hide"}
 # AGENTE-GRAFICADOR ESPECIALIZADO TikZ - CÓDIGO BASADO EN REFERENCIA 01.tex
 # Implementación exacta del código TikZ funcional y probado
 # Coordenadas y elementos gráficos extraídos del archivo de referencia
@@ -322,21 +325,23 @@ tikz_cuadrado_rotado <- '
   \\node at (0.5,1.0) {$\\sqrt{2}$};
 \\end{tikzpicture}
 '
-
-# Renderizar con include_tikz siguiendo patrón de ejemplos funcionales
-include_tikz(tikz_cuadrado_rotado,
-             name = "cuadrado_rotado",
-             markup = "markdown",
-             format = typ,
-             library = c("babel", "calc"),
-             packages = c("tikz", "xcolor"),
-             width = "8cm")
 ```
 
 Question
 ========
 
 `r datos$contexto`.
+
+```{r mostrar_tikz, echo=FALSE, results="asis"}
+# Renderizar con include_tikz siguiendo patrón de ejemplos funcionales
+include_tikz(tikz_cuadrado_rotado,
+             name = "cuadrado_rotado",
+             markup = "markdown",
+             format = typ,
+             library = c("babel", "calc", "3d"),
+             packages = c("tikz", "xcolor"),
+             width = "8cm")
+```
 
 Para esto, efectúa correctamente el siguiente procedimiento:
 
