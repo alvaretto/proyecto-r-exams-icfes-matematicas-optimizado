@@ -635,33 +635,33 @@ Para analizar completamente la información de la gráfica y construir la tabla 
 - **Límites de intervalos**: Números enteros sin decimales
   - Ejemplo: 5 (no 5.0 ni 5,0)
 
-### Paso 1: Lectura de probabilidades - Primer intervalo
+### Paso 1: Lectura de probabilidades - Primer intervalo (extremo izquierdo)
 Observe cuidadosamente la gráfica. ¿Cuál es la probabilidad del primer intervalo (desde $x=0$ hasta $x=`r datos$limite1`$)?
 
 **Respuesta:** ##ANSWER1##
 
-### Paso 2: Lectura de probabilidades - Segundo intervalo (central)
+### Paso 2: Lectura de probabilidades - Segundo intervalo (región intermedia)
 ¿Cuál es la probabilidad del segundo intervalo (desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$)?
 
 **Respuesta:** ##ANSWER2##
 
-### Paso 3: Lectura de probabilidades - Tercer intervalo
+### Paso 3: Lectura de probabilidades - Tercer intervalo (extremo derecho)
 ¿Cuál es la probabilidad del tercer intervalo (desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$)?
 
 **Respuesta:** ##ANSWER3##
 
-### Paso 4: Identificación de límites - Límite inferior del intervalo central
-¿Cuál es el límite inferior del segundo intervalo (intervalo central)?
+### Paso 4: Identificación de límites - Límite inferior del segundo intervalo
+¿Cuál es el límite inferior del segundo intervalo (región intermedia)?
 
 **Respuesta:** ##ANSWER4##
 
-### Paso 5: Identificación de límites - Límite superior del intervalo central
-¿Cuál es el límite superior del segundo intervalo (intervalo central)?
+### Paso 5: Identificación de límites - Límite superior del segundo intervalo
+¿Cuál es el límite superior del segundo intervalo (región intermedia)?
 
 **Respuesta:** ##ANSWER5##
 
-### Paso 6: Verificación matemática - Suma de probabilidades
-Para verificar que los datos son correctos, calcule la suma total de todas las probabilidades:
+### Paso 6: Verificación matemática - Suma total de probabilidades
+Para verificar que los datos son correctos, calcule la suma total de todas las probabilidades. En una distribución de probabilidad válida, esta suma debe ser exactamente 1.00:
 
 ##ANSWER1## + ##ANSWER2## + ##ANSWER3## = ##ANSWER6##
 
@@ -695,7 +695,7 @@ for (i in 1:4) {
 ### Paso 7: Confirmación mediante selección múltiple (CON PUNTUACIÓN)
 Ahora que ha completado el análisis paso a paso y ha observado las tablas anteriores, **confirme su respuesta seleccionando la tabla correcta**. Esta selección también será evaluada y contribuirá a su puntuación final.
 
-**Pregunta:** Basándose en su análisis anterior, ¿cuál de las siguientes tablas representa correctamente la probabilidad de que la variable aleatoria $x$ tome los valores en cada intervalo indicado?
+**Pregunta específica:** Basándose en su análisis anterior, ¿cuál de las siguientes tablas representa correctamente la distribución de probabilidades para los tres intervalos disjuntos mostrados en el gráfico?
 
 ##ANSWER7##
 
@@ -706,7 +706,9 @@ Answerlist
 * Tabla C
 * Tabla D
 
-**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6##. Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál es la correcta.
+**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6## (que confirma que se trata de una distribución de probabilidad válida). 
+
+Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál representa correctamente la unión de estos tres intervalos específicos.
 
 Solution
 ========
@@ -723,44 +725,44 @@ Este problema de **interpretación de gráficos de distribución de probabilidad
   - Ejemplo: 5 (no 5.0 ni 5,0)
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 
-### Paso 1: Lectura correcta de probabilidades - Primer intervalo ✓
+### Paso 1: Lectura correcta de probabilidades - Primer intervalo (extremo izquierdo) ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$p_lateral, 2)`
 
-El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección es **`r formato_estandar(datos$p_lateral, 2)`**.
+El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección extrema izquierda es **`r formato_estandar(datos$p_lateral, 2)`**.
 
-### Paso 2: Lectura correcta de probabilidades - Segundo intervalo ✓
+### Paso 2: Lectura correcta de probabilidades - Segundo intervalo (región intermedia) ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$p_central, 2)`
 
-El segundo intervalo (central) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección central es **`r formato_estandar(datos$p_central, 2)`**.
+El segundo intervalo (región intermedia) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección intermedia es **`r formato_estandar(datos$p_central, 2)`**.
 
-### Paso 3: Lectura correcta de probabilidades - Tercer intervalo ✓
+### Paso 3: Lectura correcta de probabilidades - Tercer intervalo (extremo derecho) ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$p_lateral, 2)`
 
-El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección es **`r formato_estandar(datos$p_lateral, 2)`**.
+El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección extrema derecha es **`r formato_estandar(datos$p_lateral, 2)`**.
 
 ### Paso 4: Identificación correcta de límites - Límite inferior ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$limite1, 0)`
 
-El límite inferior del segundo intervalo (intervalo central) es **`r datos$limite1`**.
+El límite inferior del segundo intervalo (región intermedia) es **`r datos$limite1`**.
 
 ### Paso 5: Identificación correcta de límites - Límite superior ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$limite2, 0)`
 
-El límite superior del segundo intervalo (intervalo central) es **`r datos$limite2`**.
+El límite superior del segundo intervalo (región intermedia) es **`r datos$limite2`**.
 
-### Paso 6: Verificación matemática correcta - Suma de probabilidades ✓
+### Paso 6: Verificación matemática correcta - Suma total de probabilidades ✓
 
 **Respuesta correcta:** `r formato_estandar(1.00, 2)`
 
 **Verificación del cálculo:**
 $$`r formato_estandar(datos$p_lateral, 2)` + `r formato_estandar(datos$p_central, 2)` + `r formato_estandar(datos$p_lateral, 2)` = `r formato_estandar(1.00, 2)`$$
 
-Esta suma confirma que las probabilidades están correctamente leídas, ya que la suma total de todas las probabilidades en una distribución debe ser igual a 1.00.
+Esta suma confirma que las probabilidades están correctamente leídas, ya que **la suma total de todas las probabilidades en una distribución completa debe ser igual a 1.00**. Esto valida que hemos identificado correctamente la probabilidad de la unión de estos tres intervalos disjuntos que cubren todo el espacio muestral.
 
 ### Paso 7: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
 
@@ -801,11 +803,15 @@ if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
 
 **Análisis de las opciones presentadas:**
 
-Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la **Tabla C**. Las otras tablas presentan errores conceptuales comunes:
+```{r identificar_tabla_correcta_v1, echo=FALSE, results='asis'}
+# Identificar cuál tabla (A, B, C, D) es la correcta según la aleatorización
+letra_correcta <- LETTERS[datos$posicion_correcta]
+cat("Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la **Tabla ", letra_correcta, "**. Las otras tablas presentan errores conceptuales comunes:\n\n")
+```
 
-* **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_estandar(datos$p_lateral, 2)`, `r formato_estandar(datos$p_lateral + datos$p_central, 2)`, 1.00), lo cual es una interpretación incorrecta del gráfico.
-* **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos, lo cual no corresponde a las secciones individuales mostradas.
-* **Error de asignación:** Otra tabla intercambia los valores de probabilidad, asignando el valor central a los laterales y viceversa.
+* **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_estandar(datos$p_lateral, 2)`, `r formato_estandar(datos$p_lateral + datos$p_central, 2)`, 1.00), lo cual es una interpretación incorrecta del gráfico que confunde probabilidades individuales con probabilidades acumulativas.
+* **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos, lo cual no corresponde a las secciones individuales disjuntas mostradas en el gráfico.
+* **Error de asignación:** Otra tabla intercambia los valores de probabilidad, asignando incorrectamente las probabilidades a intervalos que no les corresponden según la distribución mostrada.
 
 **Importancia de este paso:**
 
@@ -838,9 +844,10 @@ La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_
 Esta respuesta es coherente porque:
 
 - Se basa en una lectura correcta de la gráfica de distribución
-- Aplica correctamente los conceptos de probabilidad e intervalos
+- Aplica correctamente los conceptos de probabilidad e intervalos disjuntos
 - Todos los cálculos intermedios son verificables matemáticamente
-- La suma total de probabilidades es exactamente 1.00
+- La suma total de probabilidades es exactamente 1.00, confirmando que se trata de una distribución de probabilidad válida
+- Distingue claramente entre la probabilidad de eventos específicos y la probabilidad total del espacio muestral completo
 
 ```{r answerlist_explicacion, echo=FALSE, results='asis'}
 # Explicaciones fijas para las 4 opciones obligatorias

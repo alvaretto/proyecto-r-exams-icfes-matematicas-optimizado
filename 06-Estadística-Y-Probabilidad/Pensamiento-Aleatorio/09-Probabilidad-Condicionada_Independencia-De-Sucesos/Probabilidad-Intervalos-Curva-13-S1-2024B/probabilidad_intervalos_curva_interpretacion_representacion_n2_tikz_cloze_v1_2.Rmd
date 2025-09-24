@@ -629,38 +629,38 @@ Para analizar completamente la información de la gráfica y construir la tabla 
   - Ejemplo: 5 (no 5.0 ni 5,0)
 - **Análisis numérico**: Se requiere mayor precisión en los cálculos
 
-### Paso 1: Lectura de probabilidades - Primer intervalo
+### Paso 1: Lectura de probabilidades - Primer intervalo (extremo izquierdo)
 Observe cuidadosamente la gráfica. ¿Cuál es la probabilidad del primer intervalo (desde $x=0$ hasta $x=`r datos$limite1`$)?
 
 **Respuesta:** ##ANSWER1##
 
-### Paso 2: Lectura de probabilidades - Segundo intervalo (central)
+### Paso 2: Lectura de probabilidades - Segundo intervalo (región intermedia)
 ¿Cuál es la probabilidad del segundo intervalo (desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$)?
 
 **Respuesta:** ##ANSWER2##
 
-### Paso 3: Lectura de probabilidades - Tercer intervalo
+### Paso 3: Lectura de probabilidades - Tercer intervalo (extremo derecho)
 ¿Cuál es la probabilidad del tercer intervalo (desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$)?
 
 **Respuesta:** ##ANSWER3##
 
-### Paso 4: Identificación de límites - Límite inferior del intervalo central
-¿Cuál es el límite inferior del segundo intervalo (intervalo central)?
+### Paso 4: Identificación de límites - Límite inferior del segundo intervalo
+¿Cuál es el límite inferior del segundo intervalo (región intermedia)?
 
 **Respuesta:** ##ANSWER4##
 
-### Paso 5: Identificación de límites - Límite superior del intervalo central
-¿Cuál es el límite superior del segundo intervalo (intervalo central)?
+### Paso 5: Identificación de límites - Límite superior del segundo intervalo
+¿Cuál es el límite superior del segundo intervalo (región intermedia)?
 
 **Respuesta:** ##ANSWER5##
 
-### Paso 6: Verificación matemática - Suma de probabilidades
-Para verificar que los datos son correctos, calcule la suma total de todas las probabilidades:
+### Paso 6: Verificación matemática - Suma total de probabilidades
+Para verificar que los datos son correctos, calcule la suma total de todas las probabilidades. En una distribución de probabilidad válida, esta suma debe ser exactamente 1.000:
 
 ##ANSWER1## + ##ANSWER2## + ##ANSWER3## = ##ANSWER6##
 
 ### Paso 7: Análisis comparativo - Diferencia entre probabilidades extremas
-Calcule la **diferencia absoluta** entre las probabilidades de los intervalos extremos (primer y tercer intervalo):
+Calcule la **diferencia absoluta** entre las probabilidades de los intervalos extremos (primer y tercer intervalo). Esta medida indica el grado de asimetría de la distribución:
 
 **Respuesta:** ##ANSWER7##
 
@@ -723,7 +723,7 @@ include_tikz(codigo_tabla_d,
 ### Paso 9: Confirmación mediante selección múltiple (CON PUNTUACIÓN)
 Ahora que ha completado el análisis paso a paso y ha observado las tablas anteriores, **confirme su respuesta seleccionando la tabla correcta**. Esta selección también será evaluada y contribuirá a su puntuación final.
 
-**Pregunta:** Basándose en su análisis anterior, ¿cuál de las siguientes tablas representa correctamente la probabilidad de que la variable aleatoria $x$ tome los valores en cada intervalo indicado?
+**Pregunta específica:** Basándose en su análisis anterior, ¿cuál de las siguientes tablas representa correctamente la distribución de probabilidades para los tres intervalos disjuntos mostrados en el gráfico?
 
 ##ANSWER9##
 
@@ -734,7 +734,11 @@ Answerlist
 * Tabla C
 * Tabla D
 
-**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6##. La probabilidad fuera del intervalo central es ##ANSWER7##, y el intervalo con mayor probabilidad es el número ##ANSWER8##. Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál es la correcta.
+**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6## (que confirma que se trata de una distribución de probabilidad válida). 
+
+La diferencia absoluta entre las probabilidades extremas es ##ANSWER7##, y el intervalo con mayor probabilidad es el número ##ANSWER8##.
+
+Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál representa correctamente la unión de estos tres intervalos específicos.
 
 Solution
 ========
@@ -752,50 +756,52 @@ Este problema de **interpretación de gráficos de distribución de probabilidad
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 - **Precisión**: Se requiere mayor exactitud en los cálculos
 
-### Paso 1: Lectura correcta de probabilidades - Primer intervalo ✓
+### Paso 1: Lectura correcta de probabilidades - Primer intervalo (extremo izquierdo) ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$p_lateral_1, 2)`
 
-El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección es **`r formato_estandar(datos$p_lateral_1, 2)`**.
+El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección extrema izquierda es **`r formato_estandar(datos$p_lateral_1, 2)`**.
 
-### Paso 2: Lectura correcta de probabilidades - Segundo intervalo ✓
+### Paso 2: Lectura correcta de probabilidades - Segundo intervalo (región intermedia) ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$p_central, 2)`
 
-El segundo intervalo (central) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección central es **`r formato_estandar(datos$p_central, 2)`**.
+El segundo intervalo (región intermedia) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección intermedia es **`r formato_estandar(datos$p_central, 2)`**.
 
-### Paso 3: Lectura correcta de probabilidades - Tercer intervalo ✓
+### Paso 3: Lectura correcta de probabilidades - Tercer intervalo (extremo derecho) ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$p_lateral_3, 2)`
 
-El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección es **`r formato_estandar(datos$p_lateral_3, 2)`**.
+El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección extrema derecha es **`r formato_estandar(datos$p_lateral_3, 2)`**.
 
 ### Paso 4: Identificación correcta de límites - Límite inferior ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$limite1, 0)`
 
-El límite inferior del segundo intervalo (intervalo central) es **`r datos$limite1`**.
+El límite inferior del segundo intervalo (región intermedia) es **`r datos$limite1`**.
 
 ### Paso 5: Identificación correcta de límites - Límite superior ✓
 
 **Respuesta correcta:** `r formato_estandar(datos$limite2, 0)`
 
-El límite superior del segundo intervalo (intervalo central) es **`r datos$limite2`**.
+El límite superior del segundo intervalo (región intermedia) es **`r datos$limite2`**.
 
-### Paso 6: Verificación matemática correcta - Suma de probabilidades ✓
+### Paso 6: Verificación matemática correcta - Suma total de probabilidades ✓
 
 **Respuesta correcta:** `r formato_estandar(1.00, 3)`
 
 **Verificación del cálculo:**
+
 $$`r formato_estandar(datos$p_lateral_1, 3)` + `r formato_estandar(datos$p_central, 3)` + `r formato_estandar(datos$p_lateral_3, 3)` = `r formato_estandar(1.00, 3)`$$
 
-Esta suma confirma que las probabilidades están correctamente leídas, ya que la suma total de todas las probabilidades en una distribución debe ser igual a 1.000.
+Esta suma confirma que las probabilidades están correctamente leídas, ya que **la suma total de todas las probabilidades en una distribución completa debe ser igual a 1.000**. Esto valida que hemos identificado correctamente la probabilidad de la unión de estos tres intervalos disjuntos que cubren todo el espacio muestral.
 
 ### Paso 7: Análisis comparativo correcto - Diferencia entre probabilidades extremas ✓
 
 **Respuesta correcta:** `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`
 
 **Explicación del cálculo:**
+
 La diferencia absoluta entre las probabilidades de los intervalos extremos permite evaluar la asimetría de la distribución:
 $$|\text{Diferencia}| = |P(\text{primer intervalo}) - P(\text{tercer intervalo})| = |`r formato_estandar(datos$p_lateral_1, 3)` - `r formato_estandar(datos$p_lateral_3, 3)`| = `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`$$
 
@@ -806,6 +812,7 @@ Esta medida indica qué tan simétrica o asimétrica es la distribución en los 
 **Respuesta correcta:** `r respuesta_8`
 
 **Justificación:**
+
 ```{r analisis_comparativo, echo=FALSE, results='asis'}
 if (datos$p_central > datos$p_lateral_1 && datos$p_central > datos$p_lateral_3) {
   cat("El intervalo central (intervalo 2) tiene la mayor probabilidad con ", formato_estandar(datos$p_central, 3), ", mientras que el primer intervalo tiene ", formato_estandar(datos$p_lateral_1, 3), " y el tercer intervalo tiene ", formato_estandar(datos$p_lateral_3, 3), ".")
@@ -891,14 +898,19 @@ cat("Al revisar las tablas de las opciones, la única que coincide perfectamente
 
 ### Conclusión
 
-La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral_1, 3)`**, **`r formato_estandar(datos$p_central, 3)`**, y **`r formato_estandar(datos$p_lateral_3, 3)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 3)`**. La diferencia absoluta entre las probabilidades extremas es **`r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`**, y el intervalo con mayor probabilidad es el número **`r respuesta_8`**.
+La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral_1, 3)`**, **`r formato_estandar(datos$p_central, 3)`**, y **`r formato_estandar(datos$p_lateral_3, 3)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 3)`**. 
+\
+
+La diferencia absoluta entre las probabilidades extremas es **`r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`**, y el intervalo con mayor probabilidad es el número **`r respuesta_8`**.
 
 Esta respuesta es coherente porque:
 
 - Se basa en una lectura correcta de la gráfica de distribución
-- Aplica correctamente los conceptos de probabilidad e intervalos
+- Aplica correctamente los conceptos de probabilidad e intervalos disjuntos
 - Todos los cálculos intermedios son verificables matemáticamente
-- La suma total de probabilidades es exactamente 1.00
+- La suma total de probabilidades es exactamente 1.00, confirmando que se trata de una distribución de probabilidad válida
+- Distingue claramente entre la probabilidad de eventos específicos y la probabilidad total del espacio muestral completo
+- Evita el error conceptual de confundir sumas parciales con "probabilidades totales"
 
 ```{r answerlist_explicacion, echo=FALSE, results='asis'}
 # Explicaciones dinámicas según la aleatorización
