@@ -59,11 +59,11 @@ generar_datos <- function() {
 
   # Aleatorizar contextos del problema para mayor diversidad
   contextos_problema <- c(
-    "Margarita debe calcular el área del cuadrado que se muestra en la figura",
-    "Carlos necesita determinar el área del cuadrado representado en el diagrama",
-    "Ana debe encontrar el área del cuadrado que aparece en la imagen",
-    "Luis requiere calcular el área del cuadrado mostrado en la figura",
-    "María debe hallar el área del cuadrado que se presenta en el gráfico"
+    "Margarita debe encontrar el valor del cateto x en el triángulo rectángulo que se muestra en la figura",
+    "Carlos necesita determinar el valor del cateto x del triángulo rectángulo representado en el diagrama",
+    "Ana debe calcular el valor del cateto x en el triángulo rectángulo que aparece en la imagen",
+    "Luis requiere hallar el valor del cateto x del triángulo rectángulo mostrado en la figura",
+    "María debe encontrar el valor del cateto x en el triángulo rectángulo que se presenta en el gráfico"
   )
   contexto_seleccionado <- sample(contextos_problema, 1)
 
@@ -189,22 +189,9 @@ generar_datos <- function() {
     justificacion = "error en potencias"
   )
 
-  # Seleccionar 3 distractores únicos aleatoriamente de un pool ampliado
-  tipos_distractor <- sample(1:10, 3, replace = FALSE)
 
-  # Seleccionar 3 distractores únicos
-  distractor_1 <- distractores_pool[[tipos_distractor[1]]]
-  distractor_2 <- distractores_pool[[tipos_distractor[2]]]
-  distractor_3 <- distractores_pool[[tipos_distractor[3]]]
   
-  # Crear opciones de respuesta únicas con validación
-  # CORRECCIÓN: Usar list() en lugar de c() para mantener estructura de listas
-  opciones <- list(
-    list(valor = lado_exterior, texto = lado_exterior_tex, correcta = TRUE, justificacion = "respuesta correcta"),
-    list(valor = distractor_1$valor, texto = distractor_1$texto, correcta = FALSE, justificacion = distractor_1$justificacion),
-    list(valor = distractor_2$valor, texto = distractor_2$texto, correcta = FALSE, justificacion = distractor_2$justificacion),
-    list(valor = distractor_3$valor, texto = distractor_3$texto, correcta = FALSE, justificacion = distractor_3$justificacion)
-  )
+
 
   # SISTEMA SIMPLIFICADO DE DISTRACTORES ÚNICOS
   # Pool amplio de distractores únicos garantizados
@@ -238,10 +225,16 @@ generar_datos <- function() {
     pool_distractores[[indices_unicos[3]]]
   )
 
-  # Agregar metadatos a distractores
-  for(i in 2:4) {
+  # Agregar metadatos educativos a distractores
+  justificaciones_educativas <- c(
+    "Error: confunde la diagonal con el cateto buscado",
+    "Error: usa el resultado final (2) como valor del cateto",
+    "Error: aplica incorrectamente el teorema de Pitágoras"
+  )
+
+  for (i in 2:4) {
     opciones[[i]]$correcta <- FALSE
-    opciones[[i]]$justificacion <- paste("error tipo", i-1)
+    opciones[[i]]$justificacion <- justificaciones_educativas[i - 1]
   }
 
   # Aleatorizar orden de opciones
@@ -399,7 +392,7 @@ Answerlist
 
 Meta-information
 ================
-exname: Area cuadrado rotado geometria
+exname: Cateto triangulo rectangulo teorema Pitagoras
 extype: schoice
 exsolution: `r solucion`
 exshuffle: TRUE
