@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "area_cuadrado_rotado_geometrico_metrico_formulacion_ejecucion_n2_v1.Rmd"
+archivo_examen <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_2.Rmd"
 copias <- 1
 numpreg <- 1
 semilla <- sample(100:1e8, 1)

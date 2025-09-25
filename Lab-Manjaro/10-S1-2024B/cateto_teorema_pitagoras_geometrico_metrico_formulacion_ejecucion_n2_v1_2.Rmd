@@ -196,24 +196,24 @@ generar_datos <- function() {
   
 
 
-  # SISTEMA SIMPLIFICADO DE DISTRACTORES ÚNICOS
-  # Pool amplio de distractores únicos garantizados
+  # SISTEMA MEJORADO DE DISTRACTORES ÚNICOS GARANTIZADOS
+  # Pool amplio de distractores matemáticamente plausibles
   pool_distractores <- list(
-    list(valor = sqrt(2), texto = "\\sqrt{2}"),
-    list(valor = 2, texto = "2"),
-    list(valor = sqrt(3), texto = "\\sqrt{3}"),
-    list(valor = 0.5, texto = "\\frac{1}{2}"),
-    list(valor = 1.5, texto = "\\frac{3}{2}"),
-    list(valor = sqrt(5), texto = "\\sqrt{5}"),
-    list(valor = 3, texto = "3"),
-    list(valor = 0.25, texto = "\\frac{1}{4}"),
-    list(valor = 2.5, texto = "\\frac{5}{2}"),
-    list(valor = sqrt(6), texto = "\\sqrt{6}"),
-    list(valor = 4, texto = "4"),
-    list(valor = 0.75, texto = "\\frac{3}{4}"),
-    list(valor = sqrt(7), texto = "\\sqrt{7}"),
-    list(valor = 1.25, texto = "\\frac{5}{4}"),
-    list(valor = sqrt(8), texto = "2\\sqrt{2}")
+    list(valor = sqrt(2), texto = "\\sqrt{2}", justificacion = "confunde diagonal con cateto"),
+    list(valor = 2, texto = "2", justificacion = "usa el resultado final como cateto"),
+    list(valor = sqrt(3), texto = "\\sqrt{3}", justificacion = "error en aplicación del teorema"),
+    list(valor = 0.5, texto = "\\frac{1}{2}", justificacion = "error de cálculo fraccionario"),
+    list(valor = 1.5, texto = "\\frac{3}{2}", justificacion = "error algebraico en despeje"),
+    list(valor = sqrt(5), texto = "\\sqrt{5}", justificacion = "confunde con otra raíz"),
+    list(valor = 3, texto = "3", justificacion = "suma incorrecta de términos"),
+    list(valor = 0.25, texto = "\\frac{1}{4}", justificacion = "división incorrecta"),
+    list(valor = 2.5, texto = "\\frac{5}{2}", justificacion = "multiplicación errónea"),
+    list(valor = sqrt(6), texto = "\\sqrt{6}", justificacion = "error en radicales"),
+    list(valor = 4, texto = "4", justificacion = "duplica el resultado"),
+    list(valor = 0.75, texto = "\\frac{3}{4}", justificacion = "fracción incorrecta"),
+    list(valor = sqrt(7), texto = "\\sqrt{7}", justificacion = "confunde radicales"),
+    list(valor = 1.25, texto = "\\frac{5}{4}", justificacion = "error en operaciones"),
+    list(valor = sqrt(8), texto = "2\\sqrt{2}", justificacion = "duplica la diagonal")
   )
 
   # Usar seed único para seleccionar distractores
@@ -227,6 +227,12 @@ generar_datos <- function() {
     pool_distractores[[indices_unicos[2]]],
     pool_distractores[[indices_unicos[3]]]
   )
+
+  # VERIFICACIÓN CRÍTICA: Garantizar que no hay opciones duplicadas
+  textos_opciones <- sapply(opciones, function(x) x$texto)
+  if (length(unique(textos_opciones)) != 4) {
+    stop("ERROR CRÍTICO: Se detectaron opciones de respuesta duplicadas")
+  }
 
   # Agregar metadatos educativos a distractores
   justificaciones_educativas <- c(
@@ -244,8 +250,16 @@ generar_datos <- function() {
   orden_opciones <- sample(1:4)
   opciones_ordenadas <- opciones[orden_opciones]
 
+  # VERIFICACIÓN CRÍTICA: Garantizar que hay exactamente una respuesta correcta
+  respuestas_correctas <- sapply(opciones_ordenadas, function(x) x$correcta)
+  num_correctas <- sum(respuestas_correctas)
+  if (num_correctas != 1) {
+    stop(paste("ERROR CRÍTICO: Se encontraron", num_correctas,
+               "respuestas correctas. Debe haber exactamente 1."))
+  }
+
   # Encontrar la posición de la respuesta correcta
-  posicion_correcta <- which(sapply(opciones_ordenadas, function(x) x$correcta))
+  posicion_correcta <- which(respuestas_correctas)
   solucion <- c("0", "0", "0", "0")
   solucion[posicion_correcta] <- "1"
 
@@ -297,48 +311,41 @@ test_that("Prueba de diversidad de versiones", {
 ```
 
 ```{r generar_tikz, echo=FALSE, results="hide"}
-# AGENTE-GRAFICADOR ESPECIALIZADO TikZ - CÓDIGO BASADO EN REFERENCIA 01.tex
-# Implementación exacta del código TikZ funcional y probado
-# Coordenadas y elementos gráficos extraídos del archivo de referencia
+# GRÁFICA TikZ REPLICANDO IMAGEN ORIGINAL DEL PROBLEMA
+# Representa fielmente: cuadrado exterior, cuadrado rotado y triángulo rectángulo
+# Mantiene coherencia con enunciado y claridad educativa
 tikz_cuadrado_rotado <- '
-\\begin{tikzpicture}[scale=2.5]
-  % Cuadrado exterior (línea delgada gris)
-  \\draw[gray!50, thin] (0,0) rectangle (2,2);
+\\begin{tikzpicture}[scale=3]
+  % Marco exterior negro grueso (como en la imagen original)
+  \\draw[black, very thick] (-0.2,-0.2) rectangle (2.2,2.2);
 
-  % TRIÁNGULO RECTÁNGULO DESTACADO CON RELLENO
-  % Relleno del triángulo para mayor claridad
-  \\fill[yellow!20] (0,0) -- (1,0) -- (0,1) -- cycle;
+  % Cuadrado exterior base (línea negra mediana)
+  \\draw[black, thick] (0,0) rectangle (2,2);
 
-  % Cateto horizontal de longitud 1 (azul)
-  \\draw[blue, very thick] (0,0) -- (1,0);
-  % Cateto vertical de longitud x (rojo)
-  \\draw[red, very thick] (0,0) -- (0,1);
-  % Hipotenusa (verde)
-  \\draw[green!60!black, very thick] (0,1) -- (1,0);
+  % CUADRADO ROTADO 45° (elemento principal de la imagen original)
+  % Coordenadas calculadas para rotación de 45° centrada
+  \\draw[black, very thick] (1,0) -- (2,1) -- (1,2) -- (0,1) -- cycle;
 
-  % Símbolo de ángulo recto (más visible)
-  \\draw[black, thick] (0.12,0) -- (0.12,0.12) -- (0,0.12);
+  % TRIÁNGULO RECTÁNGULO PRINCIPAL (esquina inferior izquierda)
+  % Cateto horizontal de longitud 1
+  \\draw[black, very thick] (0,0) -- (1,0);
+  % Cateto vertical de longitud x
+  \\draw[black, very thick] (0,0) -- (0,1);
+  % Hipotenusa √2
+  \\draw[black, very thick] (0,1) -- (1,0);
 
-  % Cuadrado interior rotado (línea muy delgada)
-  \\draw[gray!30, very thin] (1,0) -- (0,1) -- (1,2) -- (2,1) -- cycle;
+  % Símbolo de ángulo recto (como en imagen original)
+  \\draw[black, thick] (0.15,0) -- (0.15,0.15) -- (0,0.15);
 
-  % ETIQUETAS CON FLECHAS PARA MAYOR CLARIDAD
-  % Flecha y etiqueta para cateto horizontal "1"
-  \\draw[blue, thick, ->] (0.5,-0.15) -- (0.5,-0.05);
-  \\node[blue, font=\\bfseries] at (0.5,-0.25) {$1$};
+  % ETIQUETAS SIGUIENDO EL ESTILO DE LA IMAGEN ORIGINAL
+  % Etiqueta "x" en el cateto vertical (lado izquierdo)
+  \\node[black, font=\\Large\\bfseries] at (-0.3,0.5) {$x$};
 
-  % Flecha y etiqueta para cateto vertical "x"
-  \\draw[red, thick, ->] (-0.15,0.5) -- (-0.05,0.5);
-  \\node[red, font=\\bfseries] at (-0.25,0.5) {$x$};
+  % Etiqueta "1" en el cateto horizontal (parte inferior)
+  \\node[black, font=\\Large\\bfseries] at (0.5,-0.3) {$1$};
 
-  % Línea de conexión desde etiqueta hacia punto medio de hipotenusa
-  \\draw[green!60!black, thin, ->] (0.7,0.8) -- (0.5,0.5);
-  % Etiqueta para hipotenusa "√2" con fondo blanco para evitar solapamiento
-  \\node[green!60!black, font=\\bfseries, fill=white, inner sep=2pt] at (0.75,0.85) {$\\sqrt{2}$};
-
-  % Etiqueta explicativa del triángulo
-  \\node[black, font=\\footnotesize] at (0.3,0.3) {\\textbf{Triángulo}};
-  \\node[black, font=\\footnotesize] at (0.3,0.2) {\\textbf{rectángulo}};
+  % Etiqueta "√2" en el centro del cuadrado rotado
+  \\node[black, font=\\Large\\bfseries] at (1,1) {$\\sqrt{2}$};
 \\end{tikzpicture}
 '
 ```
@@ -380,6 +387,7 @@ Solution
 Para resolver este problema, debemos analizar la información geométrica y aplicar el teorema de Pitágoras correctamente.
 
 **Análisis de la figura:**
+
 - El cuadrado exterior tiene lado $x$ (que debemos encontrar)
 - El triángulo rectángulo tiene catetos de longitud $x$ y $1$
 - La hipotenusa del triángulo es $`r diagonal_interior_tex`$
@@ -390,7 +398,7 @@ Del **Paso 1**: $\sqrt{x^2 + 1^2} = `r diagonal_interior_tex`$
 
 Del **Paso 2**: $(`r diagonal_interior_tex`)^2 = 2$
 
-Desarrollando el **Paso 2**: $(\sqrt{2})^2 = 2$ ✓
+Verificamos el **Paso 2**: $(\sqrt{2})^2 = 2$ (correcto)
 
 Sustituyendo en la ecuación del **Paso 1**:
 $x^2 + 1^2 = 2$
@@ -402,7 +410,7 @@ Por lo tanto: $x^2 = 2 - 1 = 1$
 Entonces: $x = 1$
 
 **Verificación geométrica:**
-Si $x = 1$, entonces $\sqrt{1^2 + 1^2} = \sqrt{2}$, y $(\sqrt{2})^2 = 2$ ✓
+Si $x = 1$, entonces $\sqrt{1^2 + 1^2} = \sqrt{2}$, y $(\sqrt{2})^2 = 2$ (verificado)
 
 Answerlist
 ----------
