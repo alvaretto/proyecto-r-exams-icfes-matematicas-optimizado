@@ -75,52 +75,24 @@ generar_datos <- function() {
   )
   contexto_seleccionado <- sample(contextos_problema, 1)
 
-  # ALEATORIZACIÓN INTELIGENTE DE CATETOS MANTENIENDO FILOSOFÍA ICFES
-  # Usar ternas pitagóricas simples que permitan cálculos mentales sin calculadora
-  # Mantener la estructura del enunciado pero variar los valores numéricos
+  # ALEATORIZACIÓN CONSERVANDO ESTRUCTURA ORIGINAL EXACTA
+  # MANTENER SIEMPRE: x² + 1² = 2 (estructura del problema original)
+  # Solo variar el valor de x que satisface esta ecuación
+  # Esto significa que x siempre debe ser 1, pero podemos variar el contexto
 
-  # Ternas pitagóricas básicas y escaladas para cálculos simples ICFES
-  ternas_pitagoricas <- list(
-    # Ternas básicas clásicas
-    c(3, 4, 5),     # La más conocida
-    c(5, 12, 13),   # Segunda más conocida
-    c(8, 15, 17),   # Tercera clásica
-    c(7, 24, 25),   # Cuarta clásica
-    c(6, 8, 10),    # Múltiplo de (3,4,5)
-    c(9, 12, 15),   # Múltiplo de (3,4,5)
-    c(12, 16, 20),  # Múltiplo de (3,4,5)
+  # CORRECCIÓN CRÍTICA: Para mantener la estructura original exacta
+  # El problema establece que x² + 1² = 2, por lo tanto x = 1 SIEMPRE
+  # La aleatorización se hará en contextos y distractores, no en el valor de x
 
-    # Ternas con números más pequeños para facilitar cálculos
-    c(1, 1, sqrt(2)),  # Caso especial original
-    c(2, 2, sqrt(8)),  # Múltiplo del original
+  cateto_desconocido <- 1  # Valor matemáticamente correcto para x² + 1² = 2
+  cateto_conocido <- 1     # El otro cateto siempre es 1
+  hipotenusa <- sqrt(2)    # La hipotenusa siempre es √2
 
-    # Ternas con decimales simples
-    c(1.5, 2, 2.5),    # Múltiplo de (3,4,5) ÷ 2
-    c(2.5, 6, 6.5),    # Múltiplo de (5,12,13) ÷ 2
-    c(0.6, 0.8, 1),    # Múltiplo de (3,4,5) ÷ 5
-    c(1.2, 1.6, 2),    # Múltiplo de (3,4,5) ÷ 2.5
+  # Para mantener compatibilidad con el código
+  configuracion <- "estructura_original"
 
-    # Casos especiales con raíces simples
-    c(1, 2, sqrt(5)),  # Raíz de 5
-    c(2, 3, sqrt(13)), # Raíz de 13
-    c(1, 3, sqrt(10))  # Raíz de 10
-  )
-
-  # Seleccionar terna aleatoriamente
-  terna_seleccionada <- sample(ternas_pitagoricas, 1)[[1]]
-
-  # Decidir aleatoriamente cuál cateto es el conocido y cuál el desconocido
-  configuracion <- sample(c("a_conocido", "b_conocido"), 1)
-
-  if (configuracion == "a_conocido") {
-    cateto_conocido <- terna_seleccionada[1]
-    cateto_desconocido <- terna_seleccionada[2]
-    hipotenusa <- terna_seleccionada[3]
-  } else {
-    cateto_conocido <- terna_seleccionada[2]
-    cateto_desconocido <- terna_seleccionada[1]
-    hipotenusa <- terna_seleccionada[3]
-  }
+  # Aleatorizar tipo de representación matemática para diversidad
+  tipo_representacion <- sample(c("exacta", "decimal", "fraccionaria"), 1)
 
   # Aleatorizar factores de diversidad para generar 300+ versiones
   factor_diversidad <- sample(1:1000, 1)  # Factor ampliado
@@ -153,9 +125,6 @@ generar_datos <- function() {
     if (abs(x - sqrt(3)) < 0.001) return("\\sqrt{3}")
     if (abs(x - sqrt(5)) < 0.001) return("\\sqrt{5}")
     if (abs(x - sqrt(8)) < 0.001) return("2\\sqrt{2}")
-    if (abs(x - sqrt(10)) < 0.001) return("\\sqrt{10}")
-    if (abs(x - sqrt(13)) < 0.001) return("\\sqrt{13}")
-    if (abs(x - 2*sqrt(2)) < 0.001) return("2\\sqrt{2}")
 
     # Formato por defecto
     return(as.character(round(x, 2)))
@@ -169,91 +138,82 @@ generar_datos <- function() {
   # Usar seed_distractores para crear variaciones únicas
   set.seed(seed_distractores)
 
-  # GENERACIÓN DE DISTRACTORES DINÁMICOS BASADOS EN LA TERNA SELECCIONADA
-  # Adaptados a los valores específicos de cada ejercicio
+  # GENERACIÓN DE DISTRACTORES PARA EL PROBLEMA ORIGINAL (x=1)
+  # Basados en errores comunes específicos del problema x² + 1² = 2
+
+  # Pool de distractores pedagógicos específicos para x=1
   distractores_pool <- list()
 
-  # Tipo 1: Confundir hipotenusa con cateto desconocido
+  # Tipo 1: Error común - usar la hipotenusa (√2) como respuesta
   distractores_pool[[1]] <- list(
-    valor = hipotenusa,
-    texto = formato_numero(hipotenusa),
-    justificacion = "confunde hipotenusa con cateto"
+    valor = sqrt(2),
+    texto = "\\sqrt{2}",
+    justificacion = "confunde diagonal con cateto"
   )
 
-  # Tipo 2: Usar el cateto conocido como respuesta
+  # Tipo 2: Error - usar el resultado final (2) como respuesta
   distractores_pool[[2]] <- list(
-    valor = cateto_conocido,
-    texto = formato_numero(cateto_conocido),
-    justificacion = "confunde cateto conocido con desconocido"
+    valor = 2,
+    texto = "2",
+    justificacion = "confunde resultado final con cateto"
   )
 
-  # Tipo 3: Error aritmético - suma en lugar de restar
-  if (all(hipotenusa^2 + cateto_conocido^2 > 0)) {
-    valor_suma_error <- sqrt(hipotenusa^2 + cateto_conocido^2)
-    distractores_pool[[3]] <- list(
-      valor = valor_suma_error,
-      texto = formato_numero(valor_suma_error),
-      justificacion = "suma en lugar de restar"
-    )
-  }
+  # Tipo 3: Error - aplicar mal el teorema de Pitágoras
+  distractores_pool[[3]] <- list(
+    valor = sqrt(3),
+    texto = "\\sqrt{3}",
+    justificacion = "error en aplicación del teorema"
+  )
 
-  # Tipo 4: Error - olvidar aplicar raíz cuadrada
-  valor_sin_raiz <- hipotenusa^2 - cateto_conocido^2
-  if (all(valor_sin_raiz > 0)) {
-    distractores_pool[[4]] <- list(
-      valor = valor_sin_raiz,
-      texto = formato_numero(valor_sin_raiz),
-      justificacion = "olvida aplicar raíz cuadrada"
-    )
-  }
+  # Tipo 4: Error - usar fracciones comunes
+  distractores_pool[[4]] <- list(
+    valor = 0.5,
+    texto = "\\frac{1}{2}",
+    justificacion = "error de cálculo fraccionario"
+  )
 
-  # Tipo 5: Error - promedio aritmético
-  valor_promedio <- (hipotenusa + cateto_conocido) / 2
+  # Tipo 5: Error - usar 3/2
   distractores_pool[[5]] <- list(
-    valor = valor_promedio,
-    texto = formato_numero(valor_promedio),
-    justificacion = "calcula promedio incorrecto"
+    valor = 1.5,
+    texto = "\\frac{3}{2}",
+    justificacion = "error algebraico"
   )
 
-  # Tipo 6: Error - fracción del cateto conocido
-  valor_fraccion <- cateto_conocido * 0.75
+  # Tipo 6: Error - usar √5
   distractores_pool[[6]] <- list(
-    valor = valor_fraccion,
-    texto = formato_numero(valor_fraccion),
-    justificacion = "usa fracción del cateto conocido"
+    valor = sqrt(5),
+    texto = "\\sqrt{5}",
+    justificacion = "confunde con otra raíz"
   )
 
-  # Tipo 7: Error - doble del cateto conocido
-  valor_doble <- cateto_conocido * 2
+  # Tipo 7: Error - usar 3
   distractores_pool[[7]] <- list(
-    valor = valor_doble,
-    texto = formato_numero(valor_doble),
-    justificacion = "duplica el cateto conocido"
+    valor = 3,
+    texto = "3",
+    justificacion = "suma incorrecta de términos"
   )
 
-  # Tipo 8: Error - diferencia simple
-  valor_diferencia <- abs(hipotenusa - cateto_conocido)
+  # Tipo 8: Error - usar 1/4
   distractores_pool[[8]] <- list(
-    valor = valor_diferencia,
-    texto = formato_numero(valor_diferencia),
-    justificacion = "resta simple sin teorema"
+    valor = 0.25,
+    texto = "\\frac{1}{4}",
+    justificacion = "división incorrecta"
   )
 
-  # Tipo 9: Error - valor aleatorio basado en diversidad
-  valores_base <- c(0.5, 0.75, 1.25, 1.5, 1.75, 2.25, 2.5, 3.5, 4.5)
-  valor_diversidad <- sample(valores_base, 1)
+  # Tipo 9: Error - usar valor basado en factor de diversidad
+  valores_alternativos <- c(0.75, 1.25, 1.75, 2.25, 2.5, 0.6, 0.8, 1.2, 1.4, 1.6)
+  valor_diversidad <- sample(valores_alternativos, 1)
   distractores_pool[[9]] <- list(
     valor = valor_diversidad,
     texto = formato_numero(valor_diversidad),
     justificacion = "error de cálculo numérico"
   )
 
-  # Tipo 10: Error - mitad de la hipotenusa
-  valor_mitad <- hipotenusa / 2
+  # Tipo 10: Error - usar √6
   distractores_pool[[10]] <- list(
-    valor = valor_mitad,
-    texto = formato_numero(valor_mitad),
-    justificacion = "usa mitad de la hipotenusa"
+    valor = sqrt(6),
+    texto = "\\sqrt{6}",
+    justificacion = "error en radicales"
   )
 
 
@@ -336,17 +296,8 @@ generar_datos <- function() {
 
   # VERIFICACIÓN CRÍTICA: Garantizar que no hay opciones duplicadas
   textos_opciones <- sapply(opciones, function(x) x$texto)
-  valores_opciones <- sapply(opciones, function(x) x$valor)
-
-  # Verificar unicidad por valor numérico (más robusto)
-  if (length(unique(round(valores_opciones, 3))) != 4) {
-    # Regenerar opciones si hay duplicados
-    opciones <- list(
-      list(valor = cateto_desconocido, texto = cateto_desconocido_tex, correcta = TRUE, justificacion = "respuesta correcta"),
-      list(valor = cateto_conocido, texto = cateto_conocido_tex, correcta = FALSE, justificacion = "confunde catetos"),
-      list(valor = hipotenusa, texto = hipotenusa_tex, correcta = FALSE, justificacion = "confunde con hipotenusa"),
-      list(valor = cateto_desconocido * 2, texto = formato_numero(cateto_desconocido * 2), correcta = FALSE, justificacion = "error de cálculo")
-    )
+  if (length(unique(textos_opciones)) != 4) {
+    stop("ERROR CRÍTICO: Se detectaron opciones de respuesta duplicadas")
   }
 
   # Aleatorizar orden de opciones
@@ -368,6 +319,7 @@ generar_datos <- function() {
 
   list(
     contexto = contexto_seleccionado,
+    tipo_representacion = tipo_representacion,
     cateto_conocido = cateto_conocido,
     cateto_conocido_tex = cateto_conocido_tex,
     cateto_desconocido = cateto_desconocido,
@@ -446,25 +398,25 @@ tikz_cuadrado_rotado <- '
   \\draw[black, very thick] (1,0) -- (2,1) -- (1,2) -- (0,1) -- cycle;
 
   % TRIÁNGULO RECTÁNGULO PRINCIPAL (esquina inferior izquierda)
-  % Cateto horizontal (conocido)
+  % Cateto horizontal de longitud 1 (manteniendo proporción original)
   \\draw[black, very thick] (0,0) -- (1,0);
-  % Cateto vertical (desconocido x)
+  % Cateto vertical de longitud x
   \\draw[black, very thick] (0,0) -- (0,1);
-  % Hipotenusa
+  % Hipotenusa √2 (diagonal del cuadrado unitario)
   \\draw[black, very thick] (0,1) -- (1,0);
 
   % Símbolo de ángulo recto (como en imagen original)
   \\draw[black, thick] (0.15,0) -- (0.15,0.15) -- (0,0.15);
 
-  % ETIQUETAS DINÁMICAS BASADAS EN LA CONFIGURACIÓN
-  % Etiqueta "x" en el cateto desconocido (lado izquierdo)
+  % ETIQUETAS SIGUIENDO EL ESTILO DE LA IMAGEN ORIGINAL
+  % Etiqueta "x" en el cateto vertical (lado izquierdo)
   \\node[black, font=\\Large\\bfseries] at (-0.3,0.5) {$x$};
 
-  % Etiqueta del cateto conocido (parte inferior) - será reemplazada dinámicamente
-  \\node[black, font=\\Large\\bfseries] at (0.5,-0.3) {CATETO_CONOCIDO};
+  % Etiqueta "1" en el cateto horizontal (parte inferior)
+  \\node[black, font=\\Large\\bfseries] at (0.5,-0.3) {$1$};
 
-  % Etiqueta de la hipotenusa (centro del cuadrado rotado) - será reemplazada dinámicamente
-  \\node[black, font=\\Large\\bfseries] at (1,1) {HIPOTENUSA};
+  % Etiqueta "√2" en el centro del cuadrado rotado
+  \\node[black, font=\\Large\\bfseries] at (1,1) {$\\sqrt{2}$};
 \\end{tikzpicture}
 '
 ```
@@ -475,13 +427,8 @@ Question
 `r datos$contexto`.
 
 ```{r mostrar_tikz, echo=FALSE, results="asis"}
-# Hacer sustituciones dinámicas en el TikZ
-tikz_dinamico <- tikz_cuadrado_rotado
-tikz_dinamico <- gsub("CATETO_CONOCIDO", paste0("$", datos$cateto_conocido_tex, "$"), tikz_dinamico)
-tikz_dinamico <- gsub("HIPOTENUSA", paste0("$", datos$hipotenusa_tex, "$"), tikz_dinamico)
-
 # Renderizar con include_tikz siguiendo patrón de ejemplos funcionales
-include_tikz(tikz_dinamico,
+include_tikz(tikz_cuadrado_rotado,
              name = "cuadrado_rotado",
              markup = "markdown",
              format = typ,
@@ -492,9 +439,9 @@ include_tikz(tikz_dinamico,
 
 Para esto, efectúa correctamente el siguiente procedimiento:
 
-**Paso 1.** Calcula la hipotenusa $\sqrt{x^2 + `r datos$cateto_conocido_tex`^2}$ y obtiene $`r datos$hipotenusa_tex`$.
+**Paso 1.** Calcula la hipotenusa $\sqrt{x^2 + 1^2}$ y obtiene $\sqrt{2}$.
 
-**Paso 2.** El resultado del paso 1 lo eleva al cuadrado y obtiene como resultado el número `r datos$hipotenusa^2`.
+**Paso 2.** El resultado del paso 1 lo eleva al cuadrado y obtiene como resultado el número 2.
 
 ¿Cuál es el valor del cateto $x$?
 
@@ -512,44 +459,44 @@ Para resolver este problema, debemos analizar la información geométrica y apli
 
 **Análisis de la figura:**
 
-- El cuadrado exterior contiene el triángulo rectángulo
-- El triángulo rectángulo tiene catetos de longitud $x$ y $`r datos$cateto_conocido_tex`$
-- La hipotenusa del triángulo es $`r datos$hipotenusa_tex`$
+- El cuadrado exterior tiene lado que debemos encontrar
+- El triángulo rectángulo tiene catetos de longitud $x$ y $1$
+- La hipotenusa del triángulo es $\sqrt{2}$
 
 **Resolución paso a paso:**
 
-Del **Paso 1**: $\sqrt{x^2 + `r datos$cateto_conocido_tex`^2} = `r datos$hipotenusa_tex`$
+Del **Paso 1**: $\sqrt{x^2 + 1^2} = \sqrt{2}$
 
-Del **Paso 2**: $(`r datos$hipotenusa_tex`)^2 = `r datos$hipotenusa^2`$
+Del **Paso 2**: $(\sqrt{2})^2 = 2$
 
-Verificamos el **Paso 2**: $(`r datos$hipotenusa_tex`)^2 = `r datos$hipotenusa^2`$ (correcto)
+Verificamos el **Paso 2**: $(\sqrt{2})^2 = 2$ (correcto)
 
 Sustituyendo en la ecuación del **Paso 1**:
-$x^2 + `r datos$cateto_conocido_tex`^2 = `r datos$hipotenusa^2`$
+$x^2 + 1^2 = 2$
 
-Resolviendo: $x^2 + `r datos$cateto_conocido^2` = `r datos$hipotenusa^2`$
+Resolviendo: $x^2 + 1 = 2$
 
-Por lo tanto: $x^2 = `r datos$hipotenusa^2` - `r datos$cateto_conocido^2` = `r datos$cateto_desconocido^2`$
+Por lo tanto: $x^2 = 2 - 1 = 1$
 
 ```{r calculos_solucion, echo=FALSE, results="asis"}
 # Mostrar el cálculo específico para el valor de x generado
 x_cuadrado <- datos$cateto_desconocido^2
 cat("Para este ejercicio específico:\n\n")
-cat("$x^2 = ", datos$hipotenusa^2, " - ", datos$cateto_conocido^2, " = ", datos$cateto_desconocido^2, "$\n\n")
-cat("Entonces: $x = \\sqrt{", datos$cateto_desconocido^2, "} = ", datos$cateto_desconocido_tex, "$\n\n")
+cat("$x^2 = 2 - 1 = 1$\n\n")
+cat("Entonces: $x = \\sqrt{1} = 1$\n\n")
 ```
 
 **Verificación geométrica:**
-Si $x = `r datos$cateto_desconocido_tex`$, entonces $\sqrt{(`r datos$cateto_desconocido_tex`)^2 + (`r datos$cateto_conocido_tex`)^2} = \sqrt{`r datos$cateto_desconocido^2` + `r datos$cateto_conocido^2`} = \sqrt{`r datos$cateto_desconocido^2 + datos$cateto_conocido^2`} = `r datos$hipotenusa_tex`$
+Si $x = `r cateto_desconocido_tex`$, entonces $\sqrt{(`r cateto_desconocido_tex`)^2 + 1^2} = \sqrt{`r datos$cateto_desconocido^2` + 1} = \sqrt{`r datos$cateto_desconocido^2 + 1`} = `r if(datos$cateto_desconocido^2 + 1 == 2) "\\sqrt{2}" else as.character(round(sqrt(datos$cateto_desconocido^2 + 1), 3))`$
 
-Y $(`r datos$hipotenusa_tex`)^2 = `r datos$hipotenusa^2`$ (verificado)
+Y $(`r if(datos$cateto_desconocido^2 + 1 == 2) "\\sqrt{2}" else as.character(round(sqrt(datos$cateto_desconocido^2 + 1), 3))`)^2 = `r datos$cateto_desconocido^2 + 1`$ (verificado)
 
 Answerlist
 ----------
-* `r if(datos$opciones[[1]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[1]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[1]]$justificacion)`
-* `r if(datos$opciones[[2]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[2]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[2]]$justificacion)`
-* `r if(datos$opciones[[3]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[3]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[3]]$justificacion)`
-* `r if(datos$opciones[[4]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[4]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[4]]$justificacion)`
+* `r if(opciones[[1]]$correcta) "Verdadero" else "Falso"`. `r if(opciones[[1]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² + 1 = 2, por lo tanto x =", cateto_desconocido_tex) else paste("Error:", opciones[[1]]$justificacion)`
+* `r if(opciones[[2]]$correcta) "Verdadero" else "Falso"`. `r if(opciones[[2]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² + 1 = 2, por lo tanto x =", cateto_desconocido_tex) else paste("Error:", opciones[[2]]$justificacion)`
+* `r if(opciones[[3]]$correcta) "Verdadero" else "Falso"`. `r if(opciones[[3]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² + 1 = 2, por lo tanto x =", cateto_desconocido_tex) else paste("Error:", opciones[[3]]$justificacion)`
+* `r if(opciones[[4]]$correcta) "Verdadero" else "Falso"`. `r if(opciones[[4]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² + 1 = 2, por lo tanto x =", cateto_desconocido_tex) else paste("Error:", opciones[[4]]$justificacion)`
 
 Meta-information
 ================
