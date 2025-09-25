@@ -1,8 +1,8 @@
 ---
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -483,7 +483,7 @@ Por lo tanto: $x^2 = 2 - 1 = 1$
 x_cuadrado <- datos$cateto_desconocido^2
 cat("Para este ejercicio específico:\n\n")
 cat("$x^2 = 2 - 1 = 1$\n\n")
-cat("Entonces: $x = \\sqrt{1} = ", cateto_desconocido_tex, "$\n\n")
+cat("Entonces: $x = \\sqrt{1} = 1$\n\n")
 ```
 
 **Verificación geométrica:**
