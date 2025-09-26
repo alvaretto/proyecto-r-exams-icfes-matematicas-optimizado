@@ -161,10 +161,34 @@ generar_datos <- function() {
     return(as.character(round(x, 2)))
   }
 
+  # Función específica para TikZ que necesita escape adicional
+  formato_numero_tikz <- function(x) {
+    # Números enteros
+    if (abs(x - round(x)) < 0.001 && x <= 20) {
+      return(as.character(round(x)))
+    }
+
+    # Raíces comunes para TikZ - doble escape
+    if (abs(x - sqrt(2)) < 0.001) return("\\\\sqrt{2}")
+    if (abs(x - sqrt(3)) < 0.001) return("\\\\sqrt{3}")
+    if (abs(x - sqrt(5)) < 0.001) return("\\\\sqrt{5}")
+    if (abs(x - sqrt(8)) < 0.001) return("2\\\\sqrt{2}")
+    if (abs(x - sqrt(10)) < 0.001) return("\\\\sqrt{10}")
+    if (abs(x - sqrt(13)) < 0.001) return("\\\\sqrt{13}")
+    if (abs(x - 2*sqrt(2)) < 0.001) return("2\\\\sqrt{2}")
+
+    # Formato por defecto
+    return(as.character(round(x, 2)))
+  }
+
   # Formatear valores principales
   cateto_conocido_tex <- formato_numero(cateto_conocido)
   cateto_desconocido_tex <- formato_numero(cateto_desconocido)
   hipotenusa_tex <- formato_numero(hipotenusa)
+
+  # Formatear valores para TikZ (con escape adicional)
+  cateto_conocido_tikz <- formato_numero_tikz(cateto_conocido)
+  hipotenusa_tikz <- formato_numero_tikz(hipotenusa)
 
   # Usar seed_distractores para crear variaciones únicas
   set.seed(seed_distractores)
@@ -370,10 +394,12 @@ generar_datos <- function() {
     contexto = contexto_seleccionado,
     cateto_conocido = cateto_conocido,
     cateto_conocido_tex = cateto_conocido_tex,
+    cateto_conocido_tikz = cateto_conocido_tikz,
     cateto_desconocido = cateto_desconocido,
     cateto_desconocido_tex = cateto_desconocido_tex,
     hipotenusa = hipotenusa,
     hipotenusa_tex = hipotenusa_tex,
+    hipotenusa_tikz = hipotenusa_tikz,
     configuracion = configuracion,
     opciones = opciones_ordenadas,
     solucion = paste(solucion, collapse = ""),
@@ -475,10 +501,10 @@ Question
 `r datos$contexto`.
 
 ```{r mostrar_tikz, echo=FALSE, results="asis"}
-# Hacer sustituciones dinámicas en el TikZ
+# Hacer sustituciones dinámicas en el TikZ usando formato específico para TikZ
 tikz_dinamico <- tikz_cuadrado_rotado
-tikz_dinamico <- gsub("CATETO_CONOCIDO", paste0("$", datos$cateto_conocido_tex, "$"), tikz_dinamico)
-tikz_dinamico <- gsub("HIPOTENUSA", paste0("$", datos$hipotenusa_tex, "$"), tikz_dinamico)
+tikz_dinamico <- gsub("CATETO_CONOCIDO", paste0("$", datos$cateto_conocido_tikz, "$"), tikz_dinamico)
+tikz_dinamico <- gsub("HIPOTENUSA", paste0("$", datos$hipotenusa_tikz, "$"), tikz_dinamico)
 
 # Renderizar con include_tikz siguiendo patrón de ejemplos funcionales
 include_tikz(tikz_dinamico,
