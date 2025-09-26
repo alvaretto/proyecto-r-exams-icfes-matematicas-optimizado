@@ -7,7 +7,7 @@ library(exams)
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
 copias <- 1
-numpreg <- 1
+numpreg <- 10
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"

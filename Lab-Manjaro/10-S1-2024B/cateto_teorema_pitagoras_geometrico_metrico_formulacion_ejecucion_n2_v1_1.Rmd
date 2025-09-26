@@ -535,8 +535,8 @@ Por lo tanto: $x^2 = `r datos$hipotenusa^2` - `r datos$cateto_conocido^2` = `r d
 # Mostrar el cálculo específico para el valor de x generado
 x_cuadrado <- datos$cateto_desconocido^2
 cat("Para este ejercicio específico:\n\n")
-cat("$x^2 = ", datos$hipotenusa^2, " - ", datos$cateto_conocido^2, " = ", datos$cateto_desconocido^2, "$\n\n")
-cat("Entonces: $x = \\sqrt{", datos$cateto_desconocido^2, "} = ", datos$cateto_desconocido_tex, "$\n\n")
+cat("$$x^2 = ", datos$hipotenusa^2, " - ", datos$cateto_conocido^2, " = ", datos$cateto_desconocido^2, "$$\n\n")
+cat("Entonces: $$x = \\sqrt{", datos$cateto_desconocido^2, "} = ", datos$cateto_desconocido_tex, "$$\n\n")
 ```
 
 **Verificación geométrica:**
