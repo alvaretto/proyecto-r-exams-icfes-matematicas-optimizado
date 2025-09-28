@@ -250,6 +250,47 @@ texto <- escapar_latex("El 50% de los datos")  # "El 50\\% de los datos" ✅
 
 ---
 
+## CATEGORÍA D2: ERRORES DE WARNINGS EN EJERCICIOS CLOZE
+
+### D2.1: Warnings split.default en Ejercicios Cloze
+
+**PROBLEMA DETECTADO:**
+```r
+# INCORRECTO - Causa warnings en ejercicios Cloze
+# EN LA SECCIÓN SOLUTION
+answerlist(unlist(explicaciones_detalladas), markup = "markdown")
+```
+
+**SÍNTOMA:**
+```
+Warning in split.default(x$solutionlist, g) : largo de datos no es múltiplo de la variable de separación
+```
+
+**SOLUCIÓN PROBADA:**
+```r
+# CORRECTO - Sin warnings en ejercicios Cloze
+# EN LA SECCIÓN SOLUTION
+cat("### **📋 Explicaciones Detalladas por Paso**\n\n")
+
+for(i in 1:length(pasos)) {
+  paso <- datos$pasos[[i]]
+  cat(paste0("**Paso ", i, ":** "))
+
+  if(paso$tipo == "schoice") {
+    cat(paste("Respuesta correcta:", paso$opciones[paso$correcta], "\n\n"))
+  } else if(paso$tipo == "mchoice") {
+    opciones_correctas <- paso$opciones[paso$correctas]
+    cat(paste("Respuestas correctas:", paste(opciones_correctas, collapse = ", "), "\n\n"))
+  } else if(paso$tipo == "num") {
+    cat(paste("Respuesta numérica:", paso$respuesta, "\n\n"))
+  }
+}
+```
+
+**REGLA CLAVE:** En ejercicios Cloze, **NUNCA usar `answerlist()` en la sección Solution**. Solo usar `cat()` para explicaciones.
+
+---
+
 ## CATEGORÍA E: ERRORES DE ESTRUCTURA R-EXAMS
 
 ### E1: Headers YAML Incompletos
@@ -303,27 +344,37 @@ include_tikz(tikz_final,
 detectar_errores_comunes <- function(archivo_rmd) {
   contenido <- paste(readLines(archivo_rmd), collapse = "\n")
   errores <- list()
-  
+
   # A1: Concordancia de género
   if(grepl("La (conteo|número|total)", contenido)) {
     errores$A1 <- "Concordancia de género incorrecta detectada"
   }
-  
+
   # B2: Orden tabla-texto
   if(grepl("% Tabla de datos.*% Texto explicativo", contenido)) {
     errores$B2 <- "Orden incorrecto: tabla antes que texto"
   }
-  
+
   # C1: Posibles duplicados
   if(grepl("sample.*opciones.*4" , contenido) && !grepl("unique", contenido)) {
     errores$C1 <- "Posible generación de opciones duplicadas"
   }
-  
+
   # D2: Caracteres sin escapar
   if(grepl("[^\\\\][%$#&]", contenido)) {
     errores$D2 <- "Caracteres especiales sin escapar detectados"
   }
-  
+
+  # D2.1: answerlist() en Solution de ejercicios Cloze
+  if(grepl("extype.*cloze", contenido) && grepl("Solution.*answerlist\\(", contenido)) {
+    errores$D2_1 <- "ERROR: answerlist() detectado en sección Solution de ejercicio Cloze"
+  }
+
+  # D2.2: Uso de listas para meta-información Cloze
+  if(grepl("extype.*cloze", contenido) && grepl("soluciones.*<-.*list\\(\\)", contenido)) {
+    errores$D2_2 <- "ADVERTENCIA: Uso de list() para soluciones en ejercicio Cloze"
+  }
+
   return(errores)
 }
 ```
@@ -337,12 +388,15 @@ detectar_errores_comunes <- function(archivo_rmd) {
 - [ ] Verificar concordancia de género en variables dinámicas
 - [ ] Confirmar orden correcto en elementos TikZ
 - [ ] Validar unicidad en opciones de respuesta
+- [ ] **CLOZE:** Verificar que NO hay `answerlist()` en sección Solution
+- [ ] **CLOZE:** Confirmar uso de vectores (`c()`) no listas (`list()`)
 
 ### ✅ Después de Compilar
 - [ ] Verificar output visual (tabla después de texto)
 - [ ] Confirmar que todas las opciones son diferentes
 - [ ] Revisar gramática en el resultado final
 - [ ] Validar cálculos matemáticos
+- [ ] **CLOZE:** Confirmar ausencia de warnings split.default
 
 ---
 

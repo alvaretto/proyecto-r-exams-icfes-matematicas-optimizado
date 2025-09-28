@@ -148,14 +148,15 @@ generar_datos <- function() {
     if (abs(x - 3/4) < 0.001) return("\\frac{3}{4}")
     if (abs(x - 5/4) < 0.001) return("\\frac{5}{4}")
 
-    # Raíces comunes
+    # Raíces comunes (verificar orden de precedencia)
+    if (abs(x - 2*sqrt(2)) < 0.001) return("2\\sqrt{2}")  # sqrt(8) = 2*sqrt(2)
     if (abs(x - sqrt(2)) < 0.001) return("\\sqrt{2}")
     if (abs(x - sqrt(3)) < 0.001) return("\\sqrt{3}")
     if (abs(x - sqrt(5)) < 0.001) return("\\sqrt{5}")
-    if (abs(x - sqrt(8)) < 0.001) return("2\\sqrt{2}")
     if (abs(x - sqrt(10)) < 0.001) return("\\sqrt{10}")
     if (abs(x - sqrt(13)) < 0.001) return("\\sqrt{13}")
-    if (abs(x - 2*sqrt(2)) < 0.001) return("2\\sqrt{2}")
+    if (abs(x - 3*sqrt(2)) < 0.001) return("3\\sqrt{2}")
+    if (abs(x - sqrt(18)) < 0.001) return("3\\sqrt{2}")  # sqrt(18) = 3*sqrt(2)
 
     # Formato por defecto
     return(as.character(round(x, 2)))
@@ -168,14 +169,14 @@ generar_datos <- function() {
       return(as.character(round(x)))
     }
 
-    # Raíces comunes para TikZ - doble escape
+    # Raíces comunes para TikZ - doble escape (verificar orden de precedencia)
+    if (abs(x - 2 * sqrt(2)) < 0.001) return("2\\\\sqrt{2}")  # sqrt(8) = 2*sqrt(2)
     if (abs(x - sqrt(2)) < 0.001) return("\\\\sqrt{2}")
     if (abs(x - sqrt(3)) < 0.001) return("\\\\sqrt{3}")
     if (abs(x - sqrt(5)) < 0.001) return("\\\\sqrt{5}")
-    if (abs(x - sqrt(8)) < 0.001) return("2\\\\sqrt{2}")
     if (abs(x - sqrt(10)) < 0.001) return("\\\\sqrt{10}")
     if (abs(x - sqrt(13)) < 0.001) return("\\\\sqrt{13}")
-    if (abs(x - 2*sqrt(2)) < 0.001) return("2\\\\sqrt{2}")
+    if (abs(x - 3 * sqrt(2)) < 0.001) return("3\\\\sqrt{2}")  # sqrt(18) = 3*sqrt(2)
 
     # Formato por defecto
     return(as.character(round(x, 2)))
@@ -362,14 +363,21 @@ generar_datos <- function() {
   textos_opciones <- sapply(opciones, function(x) x$texto)
   valores_opciones <- sapply(opciones, function(x) x$valor)
 
-  # Verificar unicidad por valor numérico (más robusto)
-  if (length(unique(round(valores_opciones, 3))) != 4) {
-    # Regenerar opciones si hay duplicados
+  # Verificar unicidad por TEXTO (más crítico) y valor numérico
+  textos_unicos <- length(unique(textos_opciones))
+  valores_unicos <- length(unique(round(valores_opciones, 3)))
+
+  if (textos_unicos != 4 || valores_unicos != 4) {
+    cat("ADVERTENCIA: Opciones duplicadas detectadas!\n")
+    cat("Textos únicos:", textos_unicos, "- Valores únicos:", valores_unicos, "\n")
+    cat("Textos:", paste(textos_opciones, collapse = ", "), "\n")
+
+    # Regenerar opciones con valores garantizadamente diferentes
     opciones <- list(
       list(valor = cateto_desconocido, texto = cateto_desconocido_tex, correcta = TRUE, justificacion = "respuesta correcta"),
       list(valor = cateto_conocido, texto = cateto_conocido_tex, correcta = FALSE, justificacion = "confunde catetos"),
       list(valor = hipotenusa, texto = hipotenusa_tex, correcta = FALSE, justificacion = "confunde con hipotenusa"),
-      list(valor = cateto_desconocido * 2, texto = formato_numero(cateto_desconocido * 2), correcta = FALSE, justificacion = "error de cálculo")
+      list(valor = cateto_desconocido + 1, texto = formato_numero(cateto_desconocido + 1), correcta = FALSE, justificacion = "error aritmético")
     )
   }
 
@@ -489,8 +497,8 @@ tikz_cuadrado_rotado <- '
   % Etiqueta del cateto conocido (parte inferior) - será reemplazada dinámicamente
   \\node[black, font=\\Large\\bfseries] at (0.5,-0.3) {CATETO_CONOCIDO};
 
-  % Etiqueta de la hipotenusa (centro del cuadrado rotado) - será reemplazada dinámicamente
-  \\node[black, font=\\Large\\bfseries] at (1,1) {HIPOTENUSA};
+  % Etiqueta de la hipotenusa (cerca de la línea diagonal) - será reemplazada dinámicamente
+  \\node[black, font=\\Large\\bfseries] at (0.7,0.5) {HIPOTENUSA};
 \\end{tikzpicture}
 '
 ```

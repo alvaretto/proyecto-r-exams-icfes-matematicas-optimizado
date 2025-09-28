@@ -18,7 +18,16 @@
 
 ## 🔴 **CATEGORÍA A: ERRORES CRÍTICOS**
 
-### **A1. Diversidad de Versiones Insuficiente**
+### **A1. Opciones de Respuesta Duplicadas** ⚠️ **PUNTO DE DOLOR RECURRENTE**
+- **Archivo:** `ERROR_CRITICO_Opciones_Duplicadas_R_Exams.md`
+- **Síntoma:** Dos o más opciones idénticas en ejercicio de opción múltiple
+- **Causa:** Funciones `formato_numero()` con casos matemáticamente equivalentes
+- **Solución:** Eliminar duplicaciones (ej: sqrt(8) vs 2*sqrt(2)) + verificación robusta
+- **Tiempo resolución:** 30-60 minutos
+- **Impacto:** **CRÍTICO** - INVALIDA COMPLETAMENTE EL EJERCICIO
+- **Frecuencia:** **ALTA** - Verificar en TODOS los ejercicios nuevos
+
+### **A2. Diversidad de Versiones Insuficiente**
 - **Archivo:** `2025-01-27_error_diversidad_versiones_insuficiente.md`
 - **Síntoma:** Solo 120 versiones vs. 300+ requeridas
 - **Causa:** Parámetros de aleatorización limitados (5 valores únicos)
@@ -26,7 +35,7 @@
 - **Tiempo resolución:** 2-3 horas
 - **Impacto:** CRÍTICO - Incumple estándar ICFES
 
-### **A2. Operador $ Inválido para Vectores Atómicos**
+### **A3. Operador $ Inválido para Vectores Atómicos**
 - **Archivo:** `2025-01-27_error_operador_dollar_vectores_atomicos.md`
 - **Síntoma:** `Error en x$correcta: $ operator is invalid for atomic vectors`
 - **Causa:** Uso de `c()` en lugar de `list()` para estructura de opciones
@@ -52,6 +61,14 @@
 - **Solución:** `extol: 0|0|1|1|0|1|0` (schoice=0, numéricas≥1)
 - **Tiempo resolución:** 15 minutos
 - **Impacto:** MEDIO - Evaluación automática falla
+
+### **B3. Warnings en Ejercicios Cloze - split.default solutionlist**
+- **Archivo:** `2025-09-27_error_warnings_cloze_answerlist_solution.md`
+- **Síntoma:** `Warning in split.default(x$solutionlist, g) : largo de datos no es múltiplo de la variable de separación`
+- **Causa:** Uso incorrecto de `answerlist()` en sección Solution de ejercicios Cloze
+- **Solución:** Eliminar `answerlist()` de Solution, usar solo `cat()` para explicaciones
+- **Tiempo resolución:** 2-3 horas → 15-30 minutos con documentación
+- **Impacto:** MEDIO - Warnings molestos (funcionalidad preservada)
 
 ---
 
