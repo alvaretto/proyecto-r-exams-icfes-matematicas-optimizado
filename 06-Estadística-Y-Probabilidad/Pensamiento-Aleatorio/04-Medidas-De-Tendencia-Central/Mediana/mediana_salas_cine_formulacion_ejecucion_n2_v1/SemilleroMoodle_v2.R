@@ -5,8 +5,8 @@ library(exams)
 archivo_examen <- "ortocentro_alturas_triangulo_geometria_n2_v1.Rmd"
 copias <- 5
 numpreg <- 1
-semilla <- sample(100:1e8, 1)
-set.seed(semilla)
+semilla_base <- sample(100:1e8, 1)
+# NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
@@ -94,7 +94,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-set.seed(semilla)
+# NO establecer semilla fija - cada versión usará semilla diferente
 exams2moodle(archivo_examen,
              n = copias,
              svg = TRUE,

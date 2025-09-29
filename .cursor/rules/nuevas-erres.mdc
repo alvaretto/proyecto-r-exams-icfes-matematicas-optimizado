@@ -1,7 +1,5 @@
 ---
-description: 
-globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 # Instrucción para Análisis de Imagen Matemática y Generación de Código R-Exams
 

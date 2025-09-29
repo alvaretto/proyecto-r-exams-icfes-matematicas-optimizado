@@ -8,8 +8,8 @@ library(exams)
 archivo_examen <- "trigonometria_funcion_cosecante_interpretacion_representacion_n2_v1.Rmd"
 copias <- 1
 numpreg <- 3
-semilla <- sample(100:1e8, 1)
-set.seed(semilla)
+semilla_base <- sample(100:1e8, 1)
+# NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
@@ -118,7 +118,7 @@ exams2pandoc(rep(archivo_examen, numpreg),
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
 
-set.seed(semilla)
+# NO establecer semilla fija - cada versión usará semilla diferente
 exams2nops(rep(archivo_examen, numpreg),
            n = copias,
            name = paste0(nombre_sin_extension, "_nops_"),

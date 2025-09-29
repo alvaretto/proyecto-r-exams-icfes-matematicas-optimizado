@@ -73,7 +73,7 @@ formato_estandar <- function(x, decimales = 0) {
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
 # Establecer semilla aleatoria
-set.seed(sample(1:10000, 1))
+# set.seed(sample(1:10000, 1))
 
 # Función principal de generación de datos
 generar_datos_completos <- function() {
@@ -179,8 +179,12 @@ generar_datos_completos <- function() {
     "tres ángulos agudos",
     "dos hipotenusas y un cateto"
   )
-  opciones_paso1_mezcladas <- sample(opciones_paso1, 4)
-  indice_correcto_paso1 <- which(opciones_paso1_mezcladas == "dos catetos y una hipotenusa")
+  # Asegurar que la opción correcta esté incluida
+  opcion_correcta_paso1 <- "dos catetos y una hipotenusa"
+  opciones_incorrectas_paso1 <- opciones_paso1[opciones_paso1 != opcion_correcta_paso1]
+  opciones_seleccionadas_paso1 <- c(opcion_correcta_paso1, sample(opciones_incorrectas_paso1, 3))
+  opciones_paso1_mezcladas <- sample(opciones_seleccionadas_paso1, 4)
+  indice_correcto_paso1 <- which(opciones_paso1_mezcladas == opcion_correcta_paso1)[1]
   
   datos_pasos$paso1 <- list(
     pregunta = "¿Cuáles son los elementos principales de un triángulo rectángulo?",
@@ -200,14 +204,17 @@ generar_datos_completos <- function() {
     "Se puede usar para calcular áreas",
     "Solo funciona con números enteros"
   )
-  opciones_paso2_mezcladas <- sample(opciones_paso2, 4)
-  correctas_paso2 <- c(
-    opciones_paso2_mezcladas[1] == "Se aplica solo a triángulos rectángulos",
-    opciones_paso2_mezcladas[2] == "La hipotenusa es el lado más largo",
-    opciones_paso2_mezcladas[3] == "Se puede escribir como a² + b² = c²",
-    opciones_paso2_mezcladas[4] == "Se aplica a cualquier triángulo"
+  # Asegurar inclusión de al menos una opción correcta
+  correctas_texto_paso2 <- c(
+    "Se aplica solo a triángulos rectángulos",
+    "La hipotenusa es el lado más largo",
+    "Se puede escribir como a² + b² = c²"
   )
-  
+  incorrectas_texto_paso2 <- setdiff(opciones_paso2, correctas_texto_paso2)
+  seleccion_paso2 <- c(sample(correctas_texto_paso2, 2), sample(incorrectas_texto_paso2, 2))
+  opciones_paso2_mezcladas <- sample(seleccion_paso2, 4)
+  correctas_paso2 <- opciones_paso2_mezcladas %in% correctas_texto_paso2
+
   datos_pasos$paso2 <- list(
     pregunta = paste("¿Cuáles de las siguientes afirmaciones sobre el", termino_teorema, "son correctas?"),
     opciones = opciones_paso2_mezcladas,
@@ -226,9 +233,13 @@ generar_datos_completos <- function() {
     as.character(cateto_a * cateto_b),
     as.character(hipotenusa_c + 1)
   )
-  opciones_paso3_mezcladas <- sample(opciones_paso3, 4)
-  indice_correcto_paso3 <- which(opciones_paso3_mezcladas == as.character(hipotenusa_c))
-  
+  # Asegurar inclusión de la opción correcta (hipotenusa)
+  opcion_correcta_paso3 <- as.character(hipotenusa_c)
+  opciones_incorrectas_paso3 <- setdiff(opciones_paso3, opcion_correcta_paso3)
+  opciones_seleccionadas_paso3 <- c(opcion_correcta_paso3, sample(opciones_incorrectas_paso3, 3))
+  opciones_paso3_mezcladas <- sample(opciones_seleccionadas_paso3, 4)
+  indice_correcto_paso3 <- which(opciones_paso3_mezcladas == opcion_correcta_paso3)[1]
+
   datos_pasos$paso3 <- list(
     pregunta = paste("En el triángulo con lados", cateto_a, ",", cateto_b, "y", hipotenusa_c, ", ¿cuál es la", termino_hipotenusa, "?"),
     opciones = opciones_paso3_mezcladas,
@@ -271,9 +282,13 @@ generar_datos_completos <- function() {
     "Solo en triángulos equiláteros",
     "Solo si la hipotenusa es par"
   )
-  opciones_paso7_mezcladas <- sample(opciones_paso7, 4)
-  indice_correcto_paso7 <- which(opciones_paso7_mezcladas == "Sí")
-  
+  # Asegurar inclusión de la opción correcta ("Sí")
+  opcion_correcta_paso7 <- "Sí"
+  opciones_incorrectas_paso7 <- setdiff(opciones_paso7, opcion_correcta_paso7)
+  opciones_seleccionadas_paso7 <- c(opcion_correcta_paso7, sample(opciones_incorrectas_paso7, 3))
+  opciones_paso7_mezcladas <- sample(opciones_seleccionadas_paso7, 4)
+  indice_correcto_paso7 <- which(opciones_paso7_mezcladas == opcion_correcta_paso7)[1]
+
   datos_pasos$paso7 <- list(
     pregunta = paste("¿Es cierto que", cateto_a, "² +", cateto_b, "² =", hipotenusa_c, "²?"),
     opciones = opciones_paso7_mezcladas,
@@ -303,9 +318,13 @@ generar_datos_completos <- function() {
     paste("Calcular", hipotenusa_c, "-", cateto_conocido),
     paste("Calcular √(", hipotenusa_c, "×", cateto_conocido, ")")
   )
-  opciones_paso9_mezcladas <- sample(opciones_paso9, 4)
-  indice_correcto_paso9 <- which(opciones_paso9_mezcladas == paste("Calcular √(", hipotenusa_c, "² -", cateto_conocido, "²)"))
-  
+  # Asegurar inclusión de la opción correcta (raíz con resta de cuadrados)
+  opcion_correcta_paso9 <- paste("Calcular √(", hipotenusa_c, "² -", cateto_conocido, "²)")
+  opciones_incorrectas_paso9 <- setdiff(opciones_paso9, opcion_correcta_paso9)
+  opciones_seleccionadas_paso9 <- c(opcion_correcta_paso9, sample(opciones_incorrectas_paso9, 3))
+  opciones_paso9_mezcladas <- sample(opciones_seleccionadas_paso9, 4)
+  indice_correcto_paso9 <- which(opciones_paso9_mezcladas == opcion_correcta_paso9)[1]
+
   datos_pasos$paso9 <- list(
     pregunta = paste("Para verificar que", cateto_desconocido, "es correcto, ¿qué operación debemos realizar?"),
     opciones = opciones_paso9_mezcladas,
@@ -326,14 +345,19 @@ generar_datos_completos <- function() {
     "Calcular diagonales de cuadrados",
     "Determinar alturas de triángulos"
   )
-  opciones_paso10_mezcladas <- sample(opciones_paso10, 4)
-  correctas_paso10 <- c(
-    opciones_paso10_mezcladas[1] == "Calcular distancias directas",
-    opciones_paso10_mezcladas[2] == "Determinar ángulos rectos", 
-    opciones_paso10_mezcladas[3] == "Verificar medidas",
-    opciones_paso10_mezcladas[4] == "Calcular áreas de círculos"
+  # Asegurar inclusión de al menos una opción correcta
+  correctas_texto_paso10 <- c(
+    "Calcular distancias directas",
+    "Determinar ángulos rectos",
+    "Verificar medidas",
+    "Calcular diagonales de cuadrados",
+    "Determinar alturas de triángulos"
   )
-  
+  incorrectas_texto_paso10 <- setdiff(opciones_paso10, correctas_texto_paso10)
+  seleccion_paso10 <- c(sample(correctas_texto_paso10, 2), sample(incorrectas_texto_paso10, 2))
+  opciones_paso10_mezcladas <- sample(seleccion_paso10, 4)
+  correctas_paso10 <- opciones_paso10_mezcladas %in% correctas_texto_paso10
+
   datos_pasos$paso10 <- list(
     pregunta = paste("En el contexto de", contexto_seleccionado, ", ¿cuáles son aplicaciones válidas del", termino_teorema, "?"),
     opciones = opciones_paso10_mezcladas,
@@ -353,9 +377,13 @@ generar_datos_completos <- function() {
     "No consideró que es un triángulo rectángulo",
     "Usó la fórmula del teorema de Tales"
   )
-  opciones_paso11_mezcladas <- sample(opciones_paso11, 4)
-  indice_correcto_paso11 <- which(opciones_paso11_mezcladas == "Sumó los catetos en lugar de usar el teorema")
-  
+  # Asegurar inclusión de la opción correcta (error de suma de catetos)
+  opcion_correcta_paso11 <- "Sumó los catetos en lugar de usar el teorema"
+  opciones_incorrectas_paso11 <- setdiff(opciones_paso11, opcion_correcta_paso11)
+  opciones_seleccionadas_paso11 <- c(opcion_correcta_paso11, sample(opciones_incorrectas_paso11, 3))
+  opciones_paso11_mezcladas <- sample(opciones_seleccionadas_paso11, 4)
+  indice_correcto_paso11 <- which(opciones_paso11_mezcladas == opcion_correcta_paso11)[1]
+
   datos_pasos$paso11 <- list(
     pregunta = paste("Un estudiante calcula la", termino_hipotenusa, "como", cateto_a, "+", cateto_b, "=", error_comun, ". ¿Cuál es el error?"),
     opciones = opciones_paso11_mezcladas,
@@ -390,7 +418,7 @@ generar_datos_completos <- function() {
   ))
 }
 
-# Generar datos del ejercicio
+# Generar datos del ejercicio dinámicamente para cada versión
 datos <- generar_datos_completos()
 
 # Validaciones de coherencia matemática
@@ -429,16 +457,16 @@ for(i in 1:12) {
   paso <- datos$pasos[[i]]
 
   if(paso$tipo == "schoice") {
-    # Para schoice: crear vector de 0s con 1 en la posición correcta
-    solucion_vector <- rep(0, length(paso$opciones))
-    solucion_vector[paso$correcta] <- 1
-    soluciones_cloze[i] <- paste(solucion_vector, collapse = "")
+    # Para schoice: crear vector lógico y usar mchoice2string
+    solucion_logica <- rep(FALSE, length(paso$opciones))
+    solucion_logica[paso$correcta] <- TRUE
+    soluciones_cloze[i] <- mchoice2string(solucion_logica)
     tipos_cloze[i] <- "schoice"
     tolerancias_cloze[i] <- 0
 
   } else if(paso$tipo == "mchoice") {
-    # Para mchoice: usar vector lógico de respuestas correctas
-    soluciones_cloze[i] <- paste(as.integer(paso$correctas), collapse = "")
+    # Para mchoice: usar mchoice2string con vector lógico
+    soluciones_cloze[i] <- mchoice2string(paso$correctas)
     tipos_cloze[i] <- "mchoice"
     tolerancias_cloze[i] <- 0
 
@@ -712,3 +740,21 @@ exemail: alvaroangelm@iepedacitodecielo.edu.co
 exinstitution: ICFES
 exlanguage: es
 excomment: Ejercicio de entrenamiento completo del Teorema de Pitagoras con 12 pasos progresivos que incluyen comprension conceptual, aplicacion numerica, verificacion y transferencia de conocimiento. Optimizado para generar mas de 300 variantes unicas con aleatorizacion avanzada de contextos, terminos matematicos y opciones de respuesta.
+
+## METADATOS ICFES 2025 OBLIGATORIOS
+icfes:
+  competencia: formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: matematico
+  eje_axial: eje2
+  componente: geometrico_metrico
+  afirmacion: Utiliza representaciones geometricas y propiedades de figuras geometricas para resolver problemas de medicion
+  evidencia: Resuelve problemas que requieren el uso del teorema de Pitagoras
+  dificultad_estimada: media
+  tiempo_estimado_minutos: 15
+  requiere_calculadora: false
+  tipo_pregunta_icfes: cloze_entrenamiento
+  palabras_clave: [teorema_pitagoras, triangulo_rectangulo, catetos, hipotenusa, geometria_euclidiana]

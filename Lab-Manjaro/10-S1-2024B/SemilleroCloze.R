@@ -24,20 +24,20 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1_2.Rmd"
+archivo_examen <- "01-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos =250,                  # Número de versiones a generar
-  semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
+  archivos =400,                  # Número de versiones a generar
+  semilla_base = sample(100:1e8, 1), # Semilla base para generar semillas únicas
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
   encoding = "UTF-8"                # Codificación de caracteres
 )
 
-# Establecer semilla para reproducibilidad
-set.seed(config$semilla)
-cat("🎲 Semilla aleatoria establecida:", config$semilla, "\n")
+# NO establecer semilla fija aquí - cada función usará semillas diferentes
+cat("🎲 Semilla base establecida:", config$semilla_base, "\n")
+cat("🔄 Cada versión usará una semilla única derivada de la base\n")
 
 # Crear directorio de salida si no existe
 if (!dir.exists(config$dir_salida)) {
@@ -90,8 +90,9 @@ prueba_rapida <- function(archivo) {
   cat("🧪 Ejecutando prueba rápida...\n")
 
   tryCatch({
-    # Generar una versión de prueba
-    set.seed(config$semilla)
+    # Generar una versión de prueba con semilla única
+    semilla_prueba <- config$semilla_base + 1
+    set.seed(semilla_prueba)
     exams2html(archivo,
                n = 1,
                name = "prueba_hibrida",
@@ -133,10 +134,10 @@ generar_html <- function() {
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "html"), "\n")
   cat("📄 Archivo base:", archivo_examen, "\n")
   cat("🔢 Número de preguntas:", config$archivos, "\n")
-  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2html manejará las semillas internamente
     cat("⏳ Iniciando generación HTML consolidado...\n")
 
     # CLAVE: Usar rep(archivo_examen, config$archivos) para generar
@@ -178,10 +179,10 @@ generar_moodle <- function() {
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "moodle"), "\n")
   cat("📄 Archivo base:", archivo_examen, "\n")
   cat("🔢 Número de versiones:", config$archivos, "\n")
-  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2moodle manejará las semillas internamente
     cat("⏳ Iniciando generación Moodle XML...\n")
 
     resultado <- exams2moodle(archivo_examen,
@@ -215,7 +216,7 @@ generar_canvas <- function() {
   cat("🎨 Generando archivos para Canvas...\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2canvas manejará las semillas internamente
     exams2canvas(archivo_examen,
                  n = config$archivos,
                  name = paste0(nombre_base, "_canvas"),
@@ -300,10 +301,10 @@ generar_pdf <- function() {
   cat("📄 Generando archivos PDF...\n")
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "pdf"), "\n")
   cat("🔢 Número de versiones:", config$archivos, "\n")
-  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2pdf manejará las semillas internamente
 
     # Verificar disponibilidad de LaTeX
     cat("🔍 Verificando disponibilidad de LaTeX...\n")

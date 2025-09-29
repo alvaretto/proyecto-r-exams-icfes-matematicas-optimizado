@@ -6,8 +6,8 @@ library(exams)
 archivo_examen <- "turnos_trabajo_proporciones_pago_interpretacion_n2_v1.Rmd"
 copias <- 1
 numpreg <- 5
-semilla <- sample(100:1e8, 1)
-set.seed(semilla)
+semilla_base <- sample(100:1e8, 1)
+# NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
@@ -114,7 +114,7 @@ exams2pandoc(rep(archivo_examen, numpreg),
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
 
-set.seed(semilla)
+# NO usar set.seed aquí - exams2nops manejará las semillas internamente
 exams2nops(rep(archivo_examen, numpreg),
            n = copias,
            name = paste0(nombre_sin_extension, "_nops_"),

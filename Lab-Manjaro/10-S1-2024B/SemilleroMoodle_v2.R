@@ -5,11 +5,11 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_v1.Rmd"
-copias <- 5
+archivo_examen <- "00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd"
+copias <- 300
 numpreg <- 1
-semilla <- sample(100:1e8, 1)
-set.seed(semilla)
+semilla_base <- sample(100:1e8, 1)
+# NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
@@ -97,7 +97,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-set.seed(semilla)
+# NO usar set.seed aquí - exams2moodle manejará las semillas internamente
 exams2moodle(archivo_examen,
              n = copias,
              svg = TRUE,
