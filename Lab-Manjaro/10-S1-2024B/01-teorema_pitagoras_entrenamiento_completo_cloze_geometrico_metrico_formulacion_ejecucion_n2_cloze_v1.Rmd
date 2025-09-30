@@ -11,27 +11,21 @@ output:
 # Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
-
-# Configurar el motor LaTeX globalmente
-options(tikzLatex = "pdflatex")
-options(tikzXelatex = FALSE)
-options(tikzLatexPackages = c(
-  "\\usepackage{tikz}",
-  "\\usepackage{colortbl}",
-  "\\usepackage{graphicx}",
-  "\\usepackage{float}"
-))
+options(scipen = 999)
+options(digits = 10)
 
 library(exams)
+library(reticulate)
 library(digest)
 library(testthat)
 library(knitr)
 
 typ <- match_exams_device()
-options(scipen = 999)
+
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
+  echo = FALSE,
   fig.showtext = FALSE,
   fig.cap = "",
   fig.keep = 'all',
@@ -39,6 +33,14 @@ knitr::opts_chunk$set(
   dpi = 150,
   fig.pos = "H"
 )
+
+# Configuración para chunks de Python (patrón del ejercicio funcional)
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
 ```
 
 ```{r funciones_auxiliares, echo=FALSE, results="hide"}
@@ -215,22 +217,29 @@ generar_datos_completos <- function() {
   )
   
   # PASO 2: Reconocimiento del teorema (mchoice) - Aleatorización de opciones
-  opciones_paso2 <- c(
+  # Asegurar que siempre haya exactamente 3 correctas y 1 incorrecta
+  opciones_correctas_paso2 <- c(
     "Se aplica solo a triángulos rectángulos",
     "La hipotenusa es el lado más largo",
-    "Se puede escribir como a² + b² = c²",
+    "Se puede escribir como a² + b² = c²"
+  )
+  opciones_incorrectas_paso2 <- c(
     "Se aplica a cualquier triángulo",
     "Los catetos son siempre iguales",
     "La suma de los ángulos es 180°",
     "Se puede usar para calcular áreas",
     "Solo funciona con números enteros"
   )
-  opciones_paso2_mezcladas <- sample(opciones_paso2, 4)
+  
+  # Seleccionar las 3 correctas y 1 incorrecta
+  opciones_paso2_mezcladas <- sample(c(opciones_correctas_paso2, sample(opciones_incorrectas_paso2, 1)))
+  
+  # Crear vector de correctas
   correctas_paso2 <- c(
-    opciones_paso2_mezcladas[1] == "Se aplica solo a triángulos rectángulos",
-    opciones_paso2_mezcladas[2] == "La hipotenusa es el lado más largo",
-    opciones_paso2_mezcladas[3] == "Se puede escribir como a² + b² = c²",
-    opciones_paso2_mezcladas[4] == "Se aplica a cualquier triángulo"
+    opciones_paso2_mezcladas[1] %in% opciones_correctas_paso2,
+    opciones_paso2_mezcladas[2] %in% opciones_correctas_paso2,
+    opciones_paso2_mezcladas[3] %in% opciones_correctas_paso2,
+    opciones_paso2_mezcladas[4] %in% opciones_correctas_paso2
   )
   
   preguntas_paso2 <- c(
@@ -288,7 +297,7 @@ generar_datos_completos <- function() {
     pregunta = sample(preguntas_paso4, 1),
     respuesta = round(cateto_a^2, decimales_calculo * 2),
     tipo = "num",
-    tolerancia = 0.05
+    tolerancia = 0.5
   )
   
   # PASO 5: Cálculo de cuadrados (num)
@@ -303,7 +312,7 @@ generar_datos_completos <- function() {
     pregunta = sample(preguntas_paso5, 1),
     respuesta = round(cateto_b^2, decimales_calculo * 2),
     tipo = "num",
-    tolerancia = 0.05
+    tolerancia = 0.5
   )
   
   # PASO 6: Suma de cuadrados (num)
@@ -318,7 +327,7 @@ generar_datos_completos <- function() {
     pregunta = sample(preguntas_paso6, 1),
     respuesta = round(cateto_a^2 + cateto_b^2, decimales_calculo * 2),
     tipo = "num",
-    tolerancia = 0.05
+    tolerancia = 0.5
   )
   
   # PASO 7: Verificación del teorema (schoice) - Aleatorización de opciones
@@ -364,7 +373,7 @@ generar_datos_completos <- function() {
     pregunta = sample(preguntas_paso8, 1),
     respuesta = cateto_desconocido,
     tipo = "num",
-    tolerancia = 0.05
+    tolerancia = 0.5
   )
   
   # PASO 9: Verificación de cálculo (schoice) - Aleatorización de opciones
@@ -396,10 +405,13 @@ generar_datos_completos <- function() {
   )
   
   # PASO 10: Aplicación contextual (mchoice) - Aleatorización de opciones
-  opciones_paso10 <- c(
+  # Asegurar que siempre haya exactamente 3 correctas y 1 incorrecta
+  opciones_correctas_paso10 <- c(
     "Calcular distancias directas",
     "Determinar ángulos rectos",
-    "Verificar medidas",
+    "Verificar medidas"
+  )
+  opciones_incorrectas_paso10 <- c(
     "Calcular áreas de círculos",
     "Calcular perímetros de rectángulos",
     "Determinar volúmenes de cilindros",
@@ -408,12 +420,16 @@ generar_datos_completos <- function() {
     "Calcular diagonales de cuadrados",
     "Determinar alturas de triángulos"
   )
-  opciones_paso10_mezcladas <- sample(opciones_paso10, 4)
+  
+  # Seleccionar las 3 correctas y 1 incorrecta
+  opciones_paso10_mezcladas <- sample(c(opciones_correctas_paso10, sample(opciones_incorrectas_paso10, 1)))
+  
+  # Crear vector de correctas
   correctas_paso10 <- c(
-    opciones_paso10_mezcladas[1] == "Calcular distancias directas",
-    opciones_paso10_mezcladas[2] == "Determinar ángulos rectos", 
-    opciones_paso10_mezcladas[3] == "Verificar medidas",
-    opciones_paso10_mezcladas[4] == "Calcular áreas de círculos"
+    opciones_paso10_mezcladas[1] %in% opciones_correctas_paso10,
+    opciones_paso10_mezcladas[2] %in% opciones_correctas_paso10,
+    opciones_paso10_mezcladas[3] %in% opciones_correctas_paso10,
+    opciones_paso10_mezcladas[4] %in% opciones_correctas_paso10
   )
   
   preguntas_paso10 <- c(
@@ -476,7 +492,7 @@ generar_datos_completos <- function() {
     pregunta = sample(preguntas_paso12, 1),
     respuesta = nueva_hipotenusa,
     tipo = "num",
-    tolerancia = 0.05
+    tolerancia = 0.5
   )
   
   return(list(
@@ -495,6 +511,10 @@ generar_datos_completos <- function() {
 
 # Generar datos del ejercicio
 datos <- generar_datos_completos()
+
+# Detectar formato de salida para ajustes posteriores
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
 
 # Validaciones de coherencia matemática
 test_that("Validación del Teorema de Pitágoras", {
@@ -595,7 +615,7 @@ tryCatch({
   n_versiones_unicas <- length(unique(hashes_unicos))
 
   if(n_versiones_unicas >= 300) {
-    cat("✅ Prueba de diversidad EXITOSA:", n_versiones_unicas, "versiones únicas de 500 generadas\n")
+    cat("Prueba de diversidad EXITOSA:", n_versiones_unicas, "versiones únicas de 500 generadas\n")
   } else {
     warning(paste("Solo se generaron", n_versiones_unicas,
                   "versiones únicas de 500. Se requieren al menos 300."))
@@ -605,65 +625,84 @@ tryCatch({
 })
 ```
 
-```{r generar_tikz, echo=FALSE, results="hide"}
-# Gráfica TikZ del triángulo rectángulo optimizada
-tikz_triangulo_pedagogico <- '
-\\begin{tikzpicture}[scale=2.0]
-  % Triángulo rectángulo principal
+```{r generar_triangulo_tikz, echo=FALSE, results="hide"}
+# Generar triángulo rectángulo usando TikZ (compatible con todos los formatos)
+# Siguiendo el patrón del ejercicio funcional de probabilidad_intervalos_curva
+
+# Código TikZ dinámico para el triángulo rectángulo
+codigo_tikz_triangulo <- paste0("
+\\begin{tikzpicture}[scale=1.5]
+  % Coordenadas del triángulo rectángulo
   \\coordinate (A) at (0,0);
-  \\coordinate (B) at (3,0);
-  \\coordinate (C) at (0,2);
-  
-  % Dibujar el triángulo con estilo mejorado
+  \\coordinate (B) at (", datos$cateto_a / 10, ",0);
+  \\coordinate (C) at (0,", datos$cateto_b / 10, ");
+
+  % Dibujar el triángulo con relleno
   \\draw[black, very thick, fill=lightgray!20] (A) -- (B) -- (C) -- cycle;
-  
-  % Símbolo de ángulo recto mejorado
-  \\draw[black, thick] (0.2,0) -- (0.2,0.2) -- (0,0.2);
-  
-  % Etiquetas de los lados con mejor posicionamiento
-  \\node[black, font=\\large\\bfseries] at (1.5,-0.3) {CATETO_A};
-  \\node[black, font=\\large\\bfseries] at (-0.4,1) {CATETO_B};
-  \\node[black, font=\\large\\bfseries] at (1.6,1.1) {HIPOTENUSA_C};
-  
+
+  % Símbolo de ángulo recto
+  \\draw[black, thick] (0.15,0) -- (0.15,0.15) -- (0,0.15);
+
+  % Etiquetas de los lados (en negrita)
+  \\node[black, font=\\large\\bfseries] at (", datos$cateto_a / 20, ",-0.25) {", formato_estandar(datos$cateto_a, datos$decimales_calculo), "};
+  \\node[black, font=\\large\\bfseries] at (-0.3,", datos$cateto_b / 20, ") {", formato_estandar(datos$cateto_b, datos$decimales_calculo), "};
+  \\node[black, font=\\large\\bfseries] at (", datos$cateto_a / 20 + 0.3, ",", datos$cateto_b / 20 + 0.2, ") {", formato_estandar(datos$hipotenusa_c, datos$decimales_calculo), "};
+
   % Etiquetas de los vértices
-  \\node[black, font=\\large] at (-0.2,-0.2) {A};
-  \\node[black, font=\\large] at (3.2,-0.2) {B};
-  \\node[black, font=\\large] at (-0.2,2.2) {C};
-  
-  % Líneas de referencia para mejor comprensión
-  \\draw[gray, dashed, thin] (A) -- (B);
-  \\draw[gray, dashed, thin] (A) -- (C);
+  \\node[black, font=\\large] at (-0.15,-0.15) {A};
+  \\node[black, font=\\large] at (", datos$cateto_a / 10 + 0.15, ",-0.15) {B};
+  \\node[black, font=\\large] at (-0.15,", datos$cateto_b / 10 + 0.15, ") {C};
 \\end{tikzpicture}
-'
+")
+
+# Función para generar imagen en formato apropiado según el tipo de salida
+# Siguiendo patrón de probabilidad_intervalos_curva (líneas 514-540)
+generar_triangulo_multi_formato <- function(codigo_tikz, nombre_base) {
+  if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
+    # Para PDF/LaTeX: generar PDF vectorial
+    include_tikz(codigo_tikz,
+                 name = nombre_base,
+                 format = "pdf",
+                 packages = c("tikz"),
+                 width = "8cm")
+  } else {
+    # Para HTML/pandoc/moodle: generar PNG para compatibilidad
+    include_tikz(codigo_tikz,
+                 name = nombre_base,
+                 format = "png",
+                 packages = c("tikz"),
+                 width = "8cm")
+  }
+}
+
+# Generar el triángulo en el formato apropiado
+generar_triangulo_multi_formato(codigo_tikz_triangulo, "triangulo_pedagogico")
 ```
 
 Question
 ========
 
-## 🎯 **Entrenamiento Completo: `r datos$termino_teorema`**
+## Entrenamiento Completo: `r datos$termino_teorema`
 
 **Contexto:** En el ámbito de `r datos$contexto`, necesitas aplicar `r datos$articulo_teorema` `r datos$termino_teorema` de manera sistemática y comprensiva.
 
-```{r mostrar_tikz, echo=FALSE, results="asis"}
-# Hacer sustituciones dinámicas en el TikZ
-tikz_dinamico <- tikz_triangulo_pedagogico
-tikz_dinamico <- gsub("CATETO_A", formato_estandar(datos$cateto_a, datos$decimales_calculo), tikz_dinamico)
-tikz_dinamico <- gsub("CATETO_B", formato_estandar(datos$cateto_b, datos$decimales_calculo), tikz_dinamico)
-tikz_dinamico <- gsub("HIPOTENUSA_C", formato_estandar(datos$hipotenusa_c, datos$decimales_calculo), tikz_dinamico)
+```{r mostrar_triangulo, echo=FALSE, results="asis"}
+# Mostrar imagen usando include_tikz con formato condicional
+# Siguiendo patrón de probabilidad_intervalos_curva (líneas 621-627)
+fmt_tikz <- if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "html" else typ
+markup_tikz <- if (identical(typ, "moodle")) "moodle" else "markdown"
 
-# Renderizar con include_tikz optimizado
-include_tikz(tikz_dinamico,
+include_tikz(codigo_tikz_triangulo,
              name = "triangulo_pedagogico",
-             markup = "markdown",
-             format = typ,
-             library = c("babel", "calc"),
-             packages = c("tikz", "xcolor"),
+             markup = markup_tikz,
+             format = fmt_tikz,
+             packages = c("tikz"),
              width = "8cm")
 ```
 
 Completa los siguientes **12 pasos progresivos** para demostrar tu comprensión completa del Teorema de Pitágoras:
 
-### **📚 FASE I: Comprensión Conceptual**
+### **FASE I: Comprensión Conceptual**
 
 **Paso 1.** `r datos$pasos$paso1$pregunta`
 ##ANSWER1##
@@ -674,7 +713,7 @@ Completa los siguientes **12 pasos progresivos** para demostrar tu comprensión 
 **Paso 3.** `r datos$pasos$paso3$pregunta`
 ##ANSWER3##
 
-### **🔢 FASE II: Aplicación Numérica**
+### **FASE II: Aplicación Numérica**
 
 **Paso 4.** `r datos$pasos$paso4$pregunta`
 ##ANSWER4##
@@ -685,7 +724,7 @@ Completa los siguientes **12 pasos progresivos** para demostrar tu comprensión 
 **Paso 6.** `r datos$pasos$paso6$pregunta`
 ##ANSWER6##
 
-### **✅ FASE III: Verificación y Análisis**
+### **FASE III: Verificación y Análisis**
 
 **Paso 7.** `r datos$pasos$paso7$pregunta`
 ##ANSWER7##
@@ -696,7 +735,7 @@ Completa los siguientes **12 pasos progresivos** para demostrar tu comprensión 
 **Paso 9.** `r datos$pasos$paso9$pregunta`
 ##ANSWER9##
 
-### **🌍 FASE IV: Transferencia y Síntesis**
+### **FASE IV: Transferencia y Síntesis**
 
 **Paso 10.** `r datos$pasos$paso10$pregunta`
 ##ANSWER10##
@@ -709,41 +748,56 @@ Completa los siguientes **12 pasos progresivos** para demostrar tu comprensión 
 
 Answerlist
 ----------
-```{r generar_answerlist, echo=FALSE, results="asis"}
-# Generar Answerlist dinámicamente basado en las opciones aleatorizadas
-cat("* ", paste(datos$pasos$paso1$opciones, collapse = "\n* "), "\n")
-cat("* ", paste(datos$pasos$paso2$opciones, collapse = "\n* "), "\n")
-cat("* ", paste(datos$pasos$paso3$opciones, collapse = "\n* "), "\n")
-cat("\n") # Espacio para las preguntas numéricas
-cat("* ", paste(datos$pasos$paso7$opciones, collapse = "\n* "), "\n")
-cat("\n") # Espacio para las preguntas numéricas
-cat("* ", paste(datos$pasos$paso9$opciones, collapse = "\n* "), "\n")
-cat("* ", paste(datos$pasos$paso10$opciones, collapse = "\n* "), "\n")
-cat("* ", paste(datos$pasos$paso11$opciones, collapse = "\n* "), "\n")
-cat("\n") # Espacio para las preguntas numéricas
-```
+* `r datos$pasos$paso1$opciones[1]`
+* `r datos$pasos$paso1$opciones[2]`
+* `r datos$pasos$paso1$opciones[3]`
+* `r datos$pasos$paso1$opciones[4]`
+* `r datos$pasos$paso2$opciones[1]`
+* `r datos$pasos$paso2$opciones[2]`
+* `r datos$pasos$paso2$opciones[3]`
+* `r datos$pasos$paso2$opciones[4]`
+* `r datos$pasos$paso3$opciones[1]`
+* `r datos$pasos$paso3$opciones[2]`
+* `r datos$pasos$paso3$opciones[3]`
+* `r datos$pasos$paso3$opciones[4]`
+* `r datos$pasos$paso7$opciones[1]`
+* `r datos$pasos$paso7$opciones[2]`
+* `r datos$pasos$paso7$opciones[3]`
+* `r datos$pasos$paso7$opciones[4]`
+* `r datos$pasos$paso9$opciones[1]`
+* `r datos$pasos$paso9$opciones[2]`
+* `r datos$pasos$paso9$opciones[3]`
+* `r datos$pasos$paso9$opciones[4]`
+* `r datos$pasos$paso10$opciones[1]`
+* `r datos$pasos$paso10$opciones[2]`
+* `r datos$pasos$paso10$opciones[3]`
+* `r datos$pasos$paso10$opciones[4]`
+* `r datos$pasos$paso11$opciones[1]`
+* `r datos$pasos$paso11$opciones[2]`
+* `r datos$pasos$paso11$opciones[3]`
+* `r datos$pasos$paso11$opciones[4]`
 
 Solution
 ========
 
-## 🎯 **Solución Completa del Entrenamiento: `r datos$termino_teorema`**
+## Solución Completa del Entrenamiento: `r datos$termino_teorema`
 
 Este ejercicio pedagógico evalúa la comprensión integral de `r datos$articulo_teorema` `r datos$termino_teorema` a través de 12 pasos progresivos que abarcan desde conceptos básicos hasta aplicaciones avanzadas.
 
-### **📚 FASE I: Comprensión Conceptual**
+### **FASE I: Comprensión Conceptual**
 
 **Paso 1:** Los elementos principales de un triángulo rectángulo son **dos `r datos$termino_cateto`s y una `r datos$termino_hipotenusa`**. Los `r datos$termino_cateto`s son los lados que forman el ángulo recto, mientras que la `r datos$termino_hipotenusa` es el lado opuesto al ángulo recto y siempre es el más largo.
 
 **Paso 2:** Las afirmaciones correctas sobre `r datos$articulo_teorema` `r datos$termino_teorema` son:
 
-- ✅ Se aplica solo a triángulos rectángulos
-- ✅ La hipotenusa es el lado más largo
-- ✅ Se puede escribir como a² + b² = c²
-- ❌ NO se aplica a cualquier triángulo (solo a rectángulos)
+- Sí: Se aplica solo a triángulos rectángulos
+- Sí: La hipotenusa es el lado más largo
+- Sí: Se puede escribir como a² + b² = c²
+- NO: NO se aplica a cualquier triángulo (solo a rectángulos)
 
 **Paso 3:** En el triángulo con lados `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`, `r formato_estandar(datos$cateto_b, datos$decimales_calculo)` y `r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`, la hipotenusa es **`r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`** porque es el lado más largo.
 
-### **🔢 FASE II: Aplicación Numérica**
+### **FASE II: Aplicación Numérica**
 
 **Paso 4:** `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`² = **`r formato_estandar(datos$pasos$paso4$respuesta, datos$decimales_calculo * 2)`**
 
@@ -751,31 +805,31 @@ Este ejercicio pedagógico evalúa la comprensión integral de `r datos$articulo
 
 **Paso 6:** `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`² + `r formato_estandar(datos$cateto_b, datos$decimales_calculo)`² = `r formato_estandar(datos$cateto_a^2, datos$decimales_calculo * 2)` + `r formato_estandar(datos$cateto_b^2, datos$decimales_calculo * 2)` = **`r formato_estandar(datos$pasos$paso6$respuesta, datos$decimales_calculo * 2)`**
 
-### **✅ FASE III: Verificación y Análisis**
+### **FASE III: Verificación y Análisis**
 
-**Paso 7:** **Sí**, es cierto que `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`² + `r formato_estandar(datos$cateto_b, datos$decimales_calculo)`² ≈ `r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`². La pequeña diferencia se debe al redondeo de decimales, pero el teorema se cumple.
+**Paso 7:** **Sí**, es cierto que `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`² + `r formato_estandar(datos$cateto_b, datos$decimales_calculo)`² es aproximadamente igual a `r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`². La pequeña diferencia se debe al redondeo de decimales, pero el teorema se cumple.
 
 **Paso 8:** Si un cateto mide `r formato_estandar(datos$cateto_a, datos$decimales_calculo)` y la hipotenusa mide `r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`, el otro cateto mide **`r formato_estandar(datos$cateto_b, datos$decimales_calculo)`**.
-Cálculo: √(`r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`² - `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`²) = √(`r formato_estandar(datos$hipotenusa_c^2, datos$decimales_calculo*2)` - `r formato_estandar(datos$cateto_a^2, datos$decimales_calculo*2)`) = √`r formato_estandar(datos$hipotenusa_c^2 - datos$cateto_a^2, datos$decimales_calculo*2)` ≈ `r formato_estandar(datos$cateto_b, datos$decimales_calculo)`
+Cálculo: √(`r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`² - `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`²) = √(`r formato_estandar(datos$hipotenusa_c^2, datos$decimales_calculo*2)` - `r formato_estandar(datos$cateto_a^2, datos$decimales_calculo*2)`) = √`r formato_estandar(datos$hipotenusa_c^2 - datos$cateto_a^2, datos$decimales_calculo*2)` es aproximadamente `r formato_estandar(datos$cateto_b, datos$decimales_calculo)`
 
 **Paso 9:** Para verificar que `r formato_estandar(datos$cateto_b, datos$decimales_calculo)` es correcto, debemos **calcular √(`r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`² - `r formato_estandar(datos$cateto_a, datos$decimales_calculo)`²)**, que es la aplicación directa de `r datos$articulo_teorema` `r datos$termino_teorema` despejando un cateto.
 
-### **🌍 FASE IV: Transferencia y Síntesis**
+### **FASE IV: Transferencia y Síntesis**
 
 **Paso 10:** En el contexto de `r datos$contexto`, las aplicaciones válidas de `r datos$articulo_teorema` `r datos$termino_teorema` son:
 
-  - ✅ Calcular distancias directas
-  - ✅ Determinar ángulos rectos
-  - ✅ Verificar medidas
-  - ❌ NO calcular áreas de círculos (eso requiere π×r²)
+  - Sí: Calcular distancias directas
+  - Sí: Determinar ángulos rectos
+  - Sí: Verificar medidas
+  - NO: NO calcular áreas de círculos (eso requiere π×r²)
 
 **Paso 11:** El error del estudiante es que **sumó los catetos en lugar de usar `r datos$articulo_teorema` `r datos$termino_teorema`**. La suma `r formato_estandar(datos$cateto_a, datos$decimales_calculo)` + `r formato_estandar(datos$cateto_b, datos$decimales_calculo)` = `r formato_estandar(datos$cateto_a + datos$cateto_b, datos$decimales_calculo)` no da la hipotenusa correcta (`r formato_estandar(datos$hipotenusa_c, datos$decimales_calculo)`).
 
-**Paso 12:** Para el problema de transferencia con catetos `r datos$pasos$paso12$pregunta |> stringr::str_extract_all("(?<=\\bmiden ).*?(?= y)") |> unlist() |> head(1)` y `r datos$pasos$paso12$pregunta |> stringr::str_extract_all("(?<=y ).*?(?=,)") |> unlist() |> head(1)`, la hipotenusa es **`r formato_estandar(datos$pasos$paso12$respuesta, 1)`**.
+**Paso 12:** Para el problema de transferencia con catetos, la hipotenusa es **`r formato_estandar(datos$pasos$paso12$respuesta, 1)`**.
 
 ```{r solucion_detallada, echo=FALSE, results="asis"}
 # Generar explicaciones detalladas para cada paso
-cat("### **📋 Explicaciones Detalladas por Paso**\n\n")
+cat("### Explicaciones Detalladas por Paso\n\n")
 
 for(i in 1:12) {
   paso <- datos$pasos[[i]]
@@ -793,7 +847,7 @@ for(i in 1:12) {
 }
 ```
 
-### **🎓 Evaluación Pedagógica**
+### Evaluación Pedagógica
 
 Este ejercicio evalúa:
 

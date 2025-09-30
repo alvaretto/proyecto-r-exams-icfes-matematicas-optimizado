@@ -11,7 +11,7 @@
 
 
 
-<title>01-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.knit</title>
+<title>WALKTHROUGH</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,676 +352,126 @@ display: none;
 </div>
 
 
-<pre class="r"><code>options(OutDec = &quot;.&quot;)  # Asegurar punto decimal en este chunk
-
-# Establecer semilla aleatoria
-set.seed(sample(1:10000, 1))
-
-# Función principal de generación de datos
-generar_datos_completos &lt;- function() {
-  # Ternas pitagóricas expandidas para mayor diversidad
-  ternas_pedagogicas &lt;- list(
-    c(3, 4, 5),     # Terna básica más conocida
-    c(5, 12, 13),   # Segunda terna clásica
-    c(8, 15, 17),   # Tercera terna clásica
-    c(6, 8, 10),    # Múltiplo de (3,4,5)
-    c(9, 12, 15),   # Múltiplo de (3,4,5)
-    c(7, 24, 25),   # Cuarta terna clásica
-    c(10, 24, 26),  # Múltiplo de (5,12,13)
-    c(12, 16, 20),  # Múltiplo de (3,4,5)
-    c(15, 20, 25),  # Múltiplo de (3,4,5)
-    c(9, 40, 41),   # Quinta terna clásica
-    c(11, 60, 61),  # Sexta terna clásica
-    c(13, 84, 85),  # Séptima terna clásica
-    c(16, 30, 34),  # Múltiplo de (8,15,17)
-    c(20, 21, 29),  # Octava terna clásica
-    c(18, 24, 30),  # Múltiplo de (3,4,5)
-    c(21, 28, 35),  # Múltiplo de (3,4,5)
-    c(24, 32, 40),  # Múltiplo de (3,4,5)
-    c(27, 36, 45),  # Múltiplo de (3,4,5)
-    c(30, 40, 50),  # Múltiplo de (3,4,5)
-    c(33, 44, 55)   # Múltiplo de (3,4,5)
-  )
-  
-  # Seleccionar terna aleatoriamente
-  terna_seleccionada &lt;- sample(ternas_pedagogicas, 1)[[1]]
-  
-  # === INICIO DE LA MODIFICACIÓN PARA DECIMALES ===
-  
-  # 1. Generar un multiplicador decimal aleatorio
-  # Con 1 decimal, entre 1.1 y 5.9
-  decimales_multiplicador &lt;- 1
-  multiplicador &lt;- round(runif(1, 1.1, 5.9), decimales_multiplicador)
-  
-  # 2. Aplicar el multiplicador a la terna para obtener valores decimales
-  valores_decimales &lt;- terna_seleccionada * multiplicador
-  
-  # 3. Determinar el número de decimales para los cálculos
-  decimales_calculo &lt;- 1
-  
-  # Asignar valores manteniendo la relación pitagórica
-  valores_ordenados &lt;- sort(valores_decimales)
-  cateto_a &lt;- round(valores_ordenados[1], decimales_calculo)
-  cateto_b &lt;- round(valores_ordenados[2], decimales_calculo)
-  hipotenusa_c &lt;- round(valores_ordenados[3], decimales_calculo)
-  
-  # Verificar que la terna cumple el teorema de Pitágoras con una pequeña tolerancia
-  # Esto es CRUCIAL al trabajar con decimales por la precisión de punto flotante
-  if (abs((cateto_a^2 + cateto_b^2) - hipotenusa_c^2) &gt; 1e-9) {
-    # Si no cumple, usar la terna (3,4,5) con un multiplicador decimal como respaldo
-    multiplicador_respaldo &lt;- round(runif(1, 1.1, 2.5), 1)
-    cateto_a &lt;- 3 * multiplicador_respaldo
-    cateto_b &lt;- 4 * multiplicador_respaldo
-    hipotenusa_c &lt;- 5 * multiplicador_respaldo
-    decimales_calculo &lt;- 1
-  }
-  
-  # Validación final: asegurar que la terna es válida dentro de una tolerancia
-  stopifnot(abs((cateto_a^2 + cateto_b^2) - hipotenusa_c^2) &lt; 1e-9)
-  stopifnot(hipotenusa_c &gt; cateto_a &amp;&amp; hipotenusa_c &gt; cateto_b)
-  
-  # === FIN DE LA MODIFICACIÓN PARA DECIMALES ===
-  
-  # Contextos educativos variados con mayor diversidad
-  contextos_educativos &lt;- c(
-    &quot;construcción de una rampa de acceso&quot;,
-    &quot;diseño de una escalera&quot;,
-    &quot;cálculo de distancias en un plano cartesiano&quot;,
-    &quot;medición de la diagonal de un rectángulo&quot;,
-    &quot;navegación marítima entre dos puertos&quot;,
-    &quot;diseño de un tejado triangular&quot;,
-    &quot;cálculo de cables de tensión&quot;,
-    &quot;medición en topografía&quot;,
-    &quot;diseño de una piscina rectangular&quot;,
-    &quot;construcción de un puente&quot;,
-    &quot;cálculo de la altura de un edificio&quot;,
-    &quot;diseño de una cancha deportiva&quot;,
-    &quot;medición de terrenos agrícolas&quot;,
-    &quot;construcción de una torre de comunicación&quot;,
-    &quot;diseño de un parqueadero&quot;,
-    &quot;cálculo de distancias en arquitectura&quot;,
-    &quot;medición de superficies irregulares&quot;,
-    &quot;diseño de sistemas de riego&quot;,
-    &quot;construcción de vías de acceso&quot;,
-    &quot;cálculo de materiales de construcción&quot;
-  )
-  
-  contexto_seleccionado &lt;- sample(contextos_educativos, 1)
-  
-  # Aleatorización de términos matemáticos
-  terminos_cateto &lt;- c(&quot;cateto&quot;, &quot;lado&quot;, &quot;base&quot;, &quot;altura&quot;, &quot;ancho&quot;, &quot;largo&quot;)
-  terminos_hipotenusa &lt;- c(&quot;hipotenusa&quot;, &quot;diagonal&quot;, &quot;distancia&quot;, &quot;longitud total&quot;, &quot;medida principal&quot;)
-  terminos_teorema &lt;- c(&quot;Teorema de Pitágoras&quot;, &quot;fórmula pitagórica&quot;, &quot;ecuación pitagórica&quot;, &quot;principio pitagórico&quot;)
-  
-  termino_cateto &lt;- sample(terminos_cateto, 1)
-  termino_hipotenusa &lt;- sample(terminos_hipotenusa, 1)
-  termino_teorema &lt;- sample(terminos_teorema, 1)
-  
-  # Determinar el artículo correcto según el género del término
-  if (termino_teorema %in% c(&quot;fórmula pitagórica&quot;, &quot;ecuación pitagórica&quot;)) {
-    articulo_teorema &lt;- &quot;la&quot;
-  } else {
-    articulo_teorema &lt;- &quot;el&quot;
-  }
-  
-  # Generar datos para los 12 pasos progresivos
-  datos_pasos &lt;- list()
-  
-  # PASO 1: Identificación de elementos (schoice) - Aleatorización de opciones
-  respuesta_correcta_paso1 &lt;- &quot;dos catetos y una hipotenusa&quot;
-  distractores_paso1 &lt;- c(
-    &quot;tres catetos&quot;,
-    &quot;una hipotenusa y dos ángulos agudos&quot;,
-    &quot;tres hipotenusas&quot;,
-    &quot;dos lados iguales y una base&quot;,
-    &quot;un ángulo recto y dos lados&quot;,
-    &quot;tres ángulos agudos&quot;,
-    &quot;dos hipotenusas y un cateto&quot;
-  )
-  opciones_seleccionadas_paso1 &lt;- sample(distractores_paso1, 3)
-  opciones_paso1_mezcladas &lt;- sample(c(respuesta_correcta_paso1, opciones_seleccionadas_paso1))
-  indice_correcto_paso1 &lt;- which(opciones_paso1_mezcladas == respuesta_correcta_paso1)
-  
-  preguntas_paso1 &lt;- c(
-    &quot;¿Cuáles son los elementos principales de un triángulo rectángulo?&quot;,
-    &quot;Un triángulo rectángulo se compone fundamentalmente de:&quot;,
-    &quot;Selecciona los componentes que definen a un triángulo rectángulo.&quot;,
-    &quot;¿Qué partes clave conforman un triángulo rectángulo?&quot;
-  )
-  
-  datos_pasos$paso1 &lt;- list(
-    pregunta = sample(preguntas_paso1, 1),
-    opciones = opciones_paso1_mezcladas,
-    correcta = indice_correcto_paso1,
-    tipo = &quot;schoice&quot;
-  )
-  
-  # PASO 2: Reconocimiento del teorema (mchoice) - Aleatorización de opciones
-  # Asegurar que siempre haya exactamente 3 correctas y 1 incorrecta
-  opciones_correctas_paso2 &lt;- c(
-    &quot;Se aplica solo a triángulos rectángulos&quot;,
-    &quot;La hipotenusa es el lado más largo&quot;,
-    &quot;Se puede escribir como a² + b² = c²&quot;
-  )
-  opciones_incorrectas_paso2 &lt;- c(
-    &quot;Se aplica a cualquier triángulo&quot;,
-    &quot;Los catetos son siempre iguales&quot;,
-    &quot;La suma de los ángulos es 180°&quot;,
-    &quot;Se puede usar para calcular áreas&quot;,
-    &quot;Solo funciona con números enteros&quot;
-  )
-  
-  # Seleccionar las 3 correctas y 1 incorrecta
-  opciones_paso2_mezcladas &lt;- sample(c(opciones_correctas_paso2, sample(opciones_incorrectas_paso2, 1)))
-  
-  # Crear vector de correctas
-  correctas_paso2 &lt;- c(
-    opciones_paso2_mezcladas[1] %in% opciones_correctas_paso2,
-    opciones_paso2_mezcladas[2] %in% opciones_correctas_paso2,
-    opciones_paso2_mezcladas[3] %in% opciones_correctas_paso2,
-    opciones_paso2_mezcladas[4] %in% opciones_correctas_paso2
-  )
-  
-  preguntas_paso2 &lt;- c(
-    paste(&quot;¿Cuáles de las siguientes afirmaciones sobre el&quot;, termino_teorema, &quot;son correctas?&quot;),
-    paste(&quot;Respecto al&quot;, termino_teorema, &quot;, indica las proposiciones verdaderas:&quot;),
-    paste(&quot;Señala todas las afirmaciones válidas acerca del&quot;, termino_teorema, &quot;.&quot;),
-    paste(&quot;Elige las características que describen correctamente al&quot;, termino_teorema, &quot;.&quot;)
-  )
-  
-  datos_pasos$paso2 &lt;- list(
-    pregunta = sample(preguntas_paso2, 1),
-    opciones = opciones_paso2_mezcladas,
-    correctas = correctas_paso2,
-    tipo = &quot;mchoice&quot;
-  )
-  
-  # PASO 3: Identificación de la hipotenusa (schoice) - Aleatorización de opciones
-  respuesta_correcta_paso3 &lt;- formato_estandar(hipotenusa_c, decimales_calculo)
-  distractores_paso3 &lt;- c(
-    formato_estandar(cateto_a, decimales_calculo),
-    formato_estandar(cateto_b, decimales_calculo),
-    &quot;No se puede determinar&quot;,
-    formato_estandar(cateto_a + cateto_b, decimales_calculo),
-    formato_estandar(abs(cateto_a - cateto_b), decimales_calculo),
-    formato_estandar(cateto_a * cateto_b, decimales_calculo),
-    formato_estandar(hipotenusa_c + 1.1, decimales_calculo)
-  )
-  distractores_paso3 &lt;- unique(distractores_paso3[distractores_paso3 != respuesta_correcta_paso3])
-  opciones_seleccionadas_paso3 &lt;- sample(distractores_paso3, 3)
-  opciones_paso3_mezcladas &lt;- sample(c(respuesta_correcta_paso3, opciones_seleccionadas_paso3))
-  indice_correcto_paso3 &lt;- which(opciones_paso3_mezcladas == respuesta_correcta_paso3)
-  
-  preguntas_paso3 &lt;- c(
-    paste(&quot;En el triángulo con lados&quot;, cateto_a, &quot;,&quot;, cateto_b, &quot;y&quot;, hipotenusa_c, &quot;, ¿cuál es la&quot;, termino_hipotenusa, &quot;?&quot;),
-    paste(&quot;Para un triángulo de lados&quot;, cateto_a, &quot;,&quot;, cateto_b, &quot;y&quot;, hipotenusa_c, &quot;, identifica el valor de la&quot;, termino_hipotenusa, &quot;.&quot;),
-    paste(&quot;Considerando los lados&quot;, cateto_a, &quot;,&quot;, cateto_b, &quot;y&quot;, hipotenusa_c, &quot;, ¿qué número corresponde a la&quot;, termino_hipotenusa, &quot;?&quot;)
-  )
-  
-  datos_pasos$paso3 &lt;- list(
-    pregunta = sample(preguntas_paso3, 1),
-    opciones = opciones_paso3_mezcladas,
-    correcta = indice_correcto_paso3,
-    tipo = &quot;schoice&quot;
-  )
-  
-  # PASO 4: Cálculo de cuadrados (num)
-  preguntas_paso4 &lt;- c(
-    paste(&quot;Calcula&quot;, cateto_a, &quot;²:&quot;),
-    paste(&quot;Determina el valor de&quot;, cateto_a, &quot;elevado al cuadrado.&quot;),
-    paste(&quot;Encuentra el resultado de&quot;, cateto_a, &quot;².&quot;),
-    paste(&quot;¿Cuál es el cuadrado de&quot;, cateto_a, &quot;?&quot;)
-  )
-  
-  datos_pasos$paso4 &lt;- list(
-    pregunta = sample(preguntas_paso4, 1),
-    respuesta = round(cateto_a^2, decimales_calculo * 2),
-    tipo = &quot;num&quot;,
-    tolerancia = 0.5
-  )
-  
-  # PASO 5: Cálculo de cuadrados (num)
-  preguntas_paso5 &lt;- c(
-    paste(&quot;Calcula&quot;, cateto_b, &quot;²:&quot;),
-    paste(&quot;Determina el valor de&quot;, cateto_b, &quot;elevado al cuadrado.&quot;),
-    paste(&quot;Encuentra el resultado de&quot;, cateto_b, &quot;².&quot;),
-    paste(&quot;¿Cuál es el cuadrado de&quot;, cateto_b, &quot;?&quot;)
-  )
-  
-  datos_pasos$paso5 &lt;- list(
-    pregunta = sample(preguntas_paso5, 1),
-    respuesta = round(cateto_b^2, decimales_calculo * 2),
-    tipo = &quot;num&quot;,
-    tolerancia = 0.5
-  )
-  
-  # PASO 6: Suma de cuadrados (num)
-  preguntas_paso6 &lt;- c(
-    paste(&quot;Calcula&quot;, cateto_a, &quot;² +&quot;, cateto_b, &quot;²:&quot;),
-    paste(&quot;Suma los cuadrados de los catetos:&quot;, cateto_a, &quot;² +&quot;, cateto_b, &quot;².&quot;),
-    paste(&quot;¿Cuál es el resultado de la suma&quot;, cateto_a, &quot;² +&quot;, cateto_b, &quot;²?&quot;),
-    paste(&quot;Determina el valor total de&quot;, cateto_a, &quot;² más&quot;, cateto_b, &quot;².&quot;)
-  )
-  
-  datos_pasos$paso6 &lt;- list(
-    pregunta = sample(preguntas_paso6, 1),
-    respuesta = round(cateto_a^2 + cateto_b^2, decimales_calculo * 2),
-    tipo = &quot;num&quot;,
-    tolerancia = 0.5
-  )
-  
-  # PASO 7: Verificación del teorema (schoice) - Aleatorización de opciones
-  respuesta_correcta_paso7 &lt;- &quot;Sí&quot;
-  distractores_paso7 &lt;- c(
-    &quot;No&quot;,
-    &quot;No se puede determinar&quot;,
-    &quot;Depende del contexto&quot;,
-    &quot;Solo si los catetos son iguales&quot;,
-    &quot;Solo con números enteros&quot;,
-    &quot;Solo en triángulos equiláteros&quot;,
-    &quot;Solo si la hipotenusa es par&quot;
-  )
-  opciones_seleccionadas_paso7 &lt;- sample(distractores_paso7, 3)
-  opciones_paso7_mezcladas &lt;- sample(c(respuesta_correcta_paso7, opciones_seleccionadas_paso7))
-  indice_correcto_paso7 &lt;- which(opciones_paso7_mezcladas == respuesta_correcta_paso7)
-  
-  preguntas_paso7 &lt;- c(
-    paste(&quot;¿Es cierto que&quot;, cateto_a, &quot;² +&quot;, cateto_b, &quot;² =&quot;, hipotenusa_c, &quot;²?&quot;),
-    paste(&quot;Verifica si la igualdad&quot;, cateto_a, &quot;² +&quot;, cateto_b, &quot;² =&quot;, hipotenusa_c, &quot;² es correcta.&quot;),
-    &quot;¿Se cumple que la suma de los cuadrados de los catetos es igual al cuadrado de la hipotenusa en este caso?&quot;
-  )
-  
-  datos_pasos$paso7 &lt;- list(
-    pregunta = sample(preguntas_paso7, 1),
-    opciones = opciones_paso7_mezcladas,
-    correcta = indice_correcto_paso7,
-    tipo = &quot;schoice&quot;
-  )
-  
-  # PASO 8: Aplicación inversa - encontrar cateto (num)
-  # Crear un problema donde se conoce un cateto y la hipotenusa
-  cateto_conocido &lt;- cateto_a
-  cateto_desconocido &lt;- cateto_b
-  
-  preguntas_paso8 &lt;- c(
-    paste(&quot;Si un cateto mide&quot;, cateto_conocido, &quot;y la hipotenusa mide&quot;, hipotenusa_c, &quot;, ¿cuánto mide el otro cateto?&quot;),
-    paste(&quot;Dado un cateto de&quot;, cateto_conocido, &quot;y una hipotenusa de&quot;, hipotenusa_c, &quot;, calcula la longitud del cateto faltante.&quot;),
-    paste(&quot;En un triángulo rectángulo, la hipotenusa es&quot;, hipotenusa_c, &quot;y uno de los catetos es&quot;, cateto_conocido, &quot;. Halla el otro cateto.&quot;)
-  )
-  
-  datos_pasos$paso8 &lt;- list(
-    pregunta = sample(preguntas_paso8, 1),
-    respuesta = cateto_desconocido,
-    tipo = &quot;num&quot;,
-    tolerancia = 0.5
-  )
-  
-  # PASO 9: Verificación de cálculo (schoice) - Aleatorización de opciones
-  respuesta_correcta_paso9 &lt;- paste(&quot;Calcular √(&quot;, hipotenusa_c, &quot;² -&quot;, cateto_conocido, &quot;²)&quot;)
-  distractores_paso9 &lt;- c(
-    paste(&quot;Calcular&quot;, hipotenusa_c, &quot;+&quot;, cateto_conocido),
-    paste(&quot;Calcular&quot;, hipotenusa_c, &quot;×&quot;, cateto_conocido),
-    paste(&quot;Calcular&quot;, hipotenusa_c, &quot;÷&quot;, cateto_conocido),
-    paste(&quot;Calcular&quot;, hipotenusa_c, &quot;² +&quot;, cateto_conocido, &quot;²&quot;),
-    paste(&quot;Calcular √(&quot;, hipotenusa_c, &quot;² +&quot;, cateto_conocido, &quot;²)&quot;),
-    paste(&quot;Calcular&quot;, hipotenusa_c, &quot;-&quot;, cateto_conocido),
-    paste(&quot;Calcular √(&quot;, hipotenusa_c, &quot;×&quot;, cateto_conocido, &quot;)&quot;)
-  )
-  opciones_seleccionadas_paso9 &lt;- sample(distractores_paso9, 3)
-  opciones_paso9_mezcladas &lt;- sample(c(respuesta_correcta_paso9, opciones_seleccionadas_paso9))
-  indice_correcto_paso9 &lt;- which(opciones_paso9_mezcladas == respuesta_correcta_paso9)
-  
-  preguntas_paso9 &lt;- c(
-    paste(&quot;Para verificar que&quot;, cateto_desconocido, &quot;es correcto, ¿qué operación debemos realizar?&quot;),
-    paste(&quot;¿Cuál es el cálculo correcto para encontrar un cateto si la hipotenusa es&quot;, hipotenusa_c, &quot;y el otro cateto es&quot;, cateto_conocido, &quot;?&quot;),
-    &quot;Selecciona la fórmula que permite hallar el cateto faltante a partir de la hipotenusa y un cateto conocido.&quot;
-  )
-  
-  datos_pasos$paso9 &lt;- list(
-    pregunta = sample(preguntas_paso9, 1),
-    opciones = opciones_paso9_mezcladas,
-    correcta = indice_correcto_paso9,
-    tipo = &quot;schoice&quot;
-  )
-  
-  # PASO 10: Aplicación contextual (mchoice) - Aleatorización de opciones
-  # Asegurar que siempre haya exactamente 3 correctas y 1 incorrecta
-  opciones_correctas_paso10 &lt;- c(
-    &quot;Calcular distancias directas&quot;,
-    &quot;Determinar ángulos rectos&quot;,
-    &quot;Verificar medidas&quot;
-  )
-  opciones_incorrectas_paso10 &lt;- c(
-    &quot;Calcular áreas de círculos&quot;,
-    &quot;Calcular perímetros de rectángulos&quot;,
-    &quot;Determinar volúmenes de cilindros&quot;,
-    &quot;Calcular superficies de esferas&quot;,
-    &quot;Verificar proporciones&quot;,
-    &quot;Calcular diagonales de cuadrados&quot;,
-    &quot;Determinar alturas de triángulos&quot;
-  )
-  
-  # Seleccionar las 3 correctas y 1 incorrecta
-  opciones_paso10_mezcladas &lt;- sample(c(opciones_correctas_paso10, sample(opciones_incorrectas_paso10, 1)))
-  
-  # Crear vector de correctas
-  correctas_paso10 &lt;- c(
-    opciones_paso10_mezcladas[1] %in% opciones_correctas_paso10,
-    opciones_paso10_mezcladas[2] %in% opciones_correctas_paso10,
-    opciones_paso10_mezcladas[3] %in% opciones_correctas_paso10,
-    opciones_paso10_mezcladas[4] %in% opciones_correctas_paso10
-  )
-  
-  preguntas_paso10 &lt;- c(
-    paste(&quot;En el contexto de&quot;, contexto_seleccionado, &quot;, ¿cuáles son aplicaciones válidas del&quot;, termino_teorema, &quot;?&quot;),
-    paste(&quot;Considerando la situación sobre&quot;, contexto_seleccionado, &quot;, ¿para qué sirve aplicar el&quot;, termino_teorema, &quot;?&quot;),
-    paste(&quot;¿En cuál de estos escenarios es útil el&quot;, termino_teorema, &quot;dentro del problema de&quot;, contexto_seleccionado, &quot;?&quot;)
-  )
-  
-  datos_pasos$paso10 &lt;- list(
-    pregunta = sample(preguntas_paso10, 1),
-    opciones = opciones_paso10_mezcladas,
-    correctas = correctas_paso10,
-    tipo = &quot;mchoice&quot;
-  )
-  
-  # PASO 11: Análisis de error común (schoice) - Aleatorización de opciones
-  error_comun &lt;- cateto_a + cateto_b  # Error: suma en lugar de teorema
-  respuesta_correcta_paso11 &lt;- &quot;Sumó los catetos en lugar de usar el teorema&quot;
-  distractores_paso11 &lt;- c(
-    &quot;No calculó correctamente la suma&quot;,
-    &quot;Usó la fórmula incorrecta del área&quot;,
-    &quot;No hay error en el cálculo&quot;,
-    &quot;Confundió la hipotenusa con el perímetro&quot;,
-    &quot;Aplicó mal la fórmula de la raíz cuadrada&quot;,
-    &quot;No consideró que es un triángulo rectángulo&quot;,
-    &quot;Usó la fórmula del teorema de Tales&quot;
-  )
-  opciones_seleccionadas_paso11 &lt;- sample(distractores_paso11, 3)
-  opciones_paso11_mezcladas &lt;- sample(c(respuesta_correcta_paso11, opciones_seleccionadas_paso11))
-  indice_correcto_paso11 &lt;- which(opciones_paso11_mezcladas == respuesta_correcta_paso11)
-  
-  preguntas_paso11 &lt;- c(
-    paste(&quot;Un estudiante calcula la&quot;, termino_hipotenusa, &quot;como&quot;, cateto_a, &quot;+&quot;, cateto_b, &quot;=&quot;, error_comun, &quot;. ¿Cuál es el error?&quot;),
-    paste(&quot;Al intentar hallar la&quot;, termino_hipotenusa, &quot;, un alumno obtiene&quot;, error_comun, &quot;sumando&quot;, cateto_a, &quot;y&quot;, cateto_b, &quot;. ¿Qué hizo mal?&quot;),
-    paste(&quot;Si el resultado para la&quot;, termino_hipotenusa, &quot;fue&quot;, error_comun, &quot;basado en la operación&quot;, cateto_a, &quot;+&quot;, cateto_b, &quot;, identifica el error conceptual.&quot;)
-  )
-  
-  datos_pasos$paso11 &lt;- list(
-    pregunta = sample(preguntas_paso11, 1),
-    opciones = opciones_paso11_mezcladas,
-    correcta = indice_correcto_paso11,
-    tipo = &quot;schoice&quot;
-  )
-  
-  # PASO 12: Síntesis y transferencia (num)
-  # Problema de transferencia con nueva terna y multiplicador decimal
-  nueva_terna &lt;- sample(list(c(9, 12, 15), c(12, 16, 20), c(15, 20, 25)), 1)[[1]]
-  multiplicador_nuevo &lt;- round(runif(1, 1.1, 3.5), 1)
-  nuevo_cateto_a &lt;- round(nueva_terna[1] * multiplicador_nuevo, 1)
-  nuevo_cateto_b &lt;- round(nueva_terna[2] * multiplicador_nuevo, 1)
-  nueva_hipotenusa &lt;- round(nueva_terna[3] * multiplicador_nuevo, 1)
-  
-  preguntas_paso12 &lt;- c(
-    paste(&quot;Problema de transferencia: Si los catetos de un triángulo rectángulo miden&quot;, nuevo_cateto_a, &quot;y&quot;, nuevo_cateto_b, &quot;, ¿cuál es la longitud de la hipotenusa?&quot;),
-    paste(&quot;Aplica lo aprendido: un triángulo rectángulo tiene catetos de&quot;, nuevo_cateto_a, &quot;y&quot;, nuevo_cateto_b, &quot;. Calcula su hipotenusa.&quot;),
-    paste(&quot;Para finalizar, halla la hipotenusa de un triángulo cuyos catetos son&quot;, nuevo_cateto_a, &quot;y&quot;, nuevo_cateto_b, &quot;.&quot;)
-  )
-  
-  datos_pasos$paso12 &lt;- list(
-    pregunta = sample(preguntas_paso12, 1),
-    respuesta = nueva_hipotenusa,
-    tipo = &quot;num&quot;,
-    tolerancia = 0.5
-  )
-  
-  return(list(
-    cateto_a = cateto_a,
-    cateto_b = cateto_b,
-    hipotenusa_c = hipotenusa_c,
-    decimales_calculo = decimales_calculo, # &lt;-- AÑADIR ESTA LÍNEA
-    contexto = contexto_seleccionado,
-    termino_cateto = termino_cateto,
-    termino_hipotenusa = termino_hipotenusa,
-    termino_teorema = termino_teorema,
-    articulo_teorema = articulo_teorema,
-    pasos = datos_pasos
-  ))
-}
-
-# Generar datos del ejercicio
-datos &lt;- generar_datos_completos()
-
-# Detectar formato de salida para ajustes posteriores
-formatos_moodle &lt;- c(&quot;exams2moodle&quot;, &quot;exams2qti12&quot;, &quot;exams2qti21&quot;, &quot;exams2openolat&quot;)
-es_moodle &lt;- (match_exams_call() %in% formatos_moodle)
-
-# Validaciones de coherencia matemática
-test_that(&quot;Validación del Teorema de Pitágoras&quot;, {
-  # Verificar que la terna seleccionada cumple el teorema
-  # Aumentamos la tolerancia para cálculos con punto flotante
-  expect_true(abs(datos$cateto_a^2 + datos$cateto_b^2 - datos$hipotenusa_c^2) &lt; 1e-9)
-})</code></pre>
-<p>Test passed 🎉</p>
-<pre class="r"><code>test_that(&quot;Validación de valores positivos&quot;, {
-  expect_true(datos$cateto_a &gt; 0)
-  expect_true(datos$cateto_b &gt; 0)
-  expect_true(datos$hipotenusa_c &gt; 0)
-})</code></pre>
-<p>Test passed 🎉</p>
-<pre class="r"><code>test_that(&quot;Validación de la hipotenusa como lado más largo&quot;, {
-  expect_true(datos$hipotenusa_c &gt; datos$cateto_a)
-  expect_true(datos$hipotenusa_c &gt; datos$cateto_b)
-})</code></pre>
-<p>Test passed 🎉</p>
-<pre class="r"><code>test_that(&quot;Validación de respuestas numéricas&quot;, {
-  # Aumentamos la tolerancia para cálculos con punto flotante
-  expect_true(abs(datos$pasos$paso4$respuesta - datos$cateto_a^2) &lt; 0.1)
-  expect_true(abs(datos$pasos$paso5$respuesta - datos$cateto_b^2) &lt; 0.1)
-  expect_true(abs(datos$pasos$paso6$respuesta - (datos$cateto_a^2 + datos$cateto_b^2)) &lt; 0.1)
-})</code></pre>
-<p>Test passed 😀</p>
-<div id="question" class="section level1">
-<h1>Question</h1>
-<div id="entrenamiento-completo-fórmula-pitagórica" class="section level2">
-<h2>Entrenamiento Completo: fórmula pitagórica</h2>
-<p><strong>Contexto:</strong> En el ámbito de construcción de un puente,
-necesitas aplicar la fórmula pitagórica de manera sistemática y
-comprensiva.</p>
-<p><img role="img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAooAAAHDEAQAAABZUi99AAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRP//FKsxzQAAAAlwSFlzAAABXgAAAV4AKGte7AAAAAd0SU1FB+kJHgAAG8osa9sAAFvtSURBVHja7d13eBTlGsbh3256AiShJPTeewfpTToCAipgpAhS5IBKkSIovffee+8dEURABASxoCJFQGrovaXt+WMJ2QAJSQiZbPLc15Xr7M77zTfPTM7hvJndmQERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE7ZjI6QPznuwaK/QIFioPPAzB1ti7/4yM4MRIO+0NABqNTioiIiEiccCoD5YAlzeDefxC4HkImgOUxWCzWn2BfCNgE/7WH7oUh5RWjU4uIiIjIG5V0CPT7G66UDGsKLRYIagP3UsC9FhB4O3ztSR3Y4gv5DxidXkRERETeCMfeMHY9BHR/2gQuhxtVYF4OaP0t1EkOddaCX2mY9iFcqA6WUmEN484fwaub0XshIiIiIrHKtAjaJbM5g+gJi3tA+pIRr+O5Cgasso61WCC4Pgw5DQ63jd4bEREREYk1hdrBv12sDV9gX5jdDZKcfvV6rlVh9DAISmpd90oyyNTA6L0RERERkVhhqg0Tp4adTfyxO6SOxhXhaQvDybfD1m+X2ug9EhEREZFYkXstnB/29CPn96FhmejPMaFRWKO47jw4TzJ6r0REREReh6PRAeKHcjPA90/gS/h9K+z9CcgfvTmWNobAhtbXF03g5gMBRu+YiIiIiLyeVQOeng1cBhPzgUNfoxOJiIiISLzwz9OrnQPXwvvnjU4jIiIiEh+YjQ4QP+Q4Yv3PkL/g0kOj04iIiIjEB2oUyVgczNmsr0Pugf/HRicSERERiQ/UKOKezegEIiIiIvGRGkWCfI1OICIiIiLxknO2sPsfPnGCUjeMTiQiIiISH+iMIgH/wuX3ra/NUyBTDOdxbgpVbsD7da0/2fcZvWciIiIi8trWzX56VnEsjBsKDh7RnyP7IjheO+zs5IcTjd4rERERkdehM4oA7PGGkHnAZ1A+BXjtiv4cGQZBumrW17e84cQZo/dKRERERF5biUbg/4n1TGDAYah/D2gfvTm+cQk7m/jHWMioRlFERETE/jnMgJUrwhq9Qysgbc+or+8zEo53DVt/kjuYPzF6r0REREQkVpSZC1f6Whu9YDdY5g/Jo3CPRecjMLkOBLWzrvtgAZQ8avTeiIiIiEiscRoLX7WCoLHWhi/oM1gzGnKvBxevF8ebJ0H6+TDAER6FWNcJ6QmzJoHzt0bvjYiIiMjrMhkdIH5x6w3TFkPz3OCwzbrs6lDYWhT2T4NzFcFSADy+h+J3oI4/FFgVtv6RCfDOB3BRN/EWERERSWA8wL03jO4Nd2eHfefQsh2COsGTEvAkIwTUgJC/w+rB1eDbTZBT904UERERSdhcz0DNlLDtCFwNhMAUNk3j05+QX+D2X3B0EHyeH9LcNzq1iIiISGzSR8+RcskJhXdCnpWQ43dIOiSsdqoa/OMMvyyEGwWNTioiIiIS29QoRo0T0BYoabOsJ+BvdDARERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERETGSg9EBJKoye8L9GhDyGLhjdBoRERERiTfmBsHMppDltNFJRERERCReWeAPIWb4MxD88oDbTKMTiYiIiEi8sMAfLBbrz/1+MK04ZHIB01mjk4mIiIiIoWwbxdCff87B+5nB4aHR6URERETEMC9rFC0WeOAASyZA1sZgqml0ShERERGJcxE1iqE/vy6FpqPA7ZjRSUVEREQkToU1im4XLZaqFywWc9fnm8WHHWHeBfAZZXRaEREREYkzYY1iqnsWy60sFsuI4xZLxn9fOLvoB6dagN9qcGtjdGoREREReePCGkUfH4vl7l2L5dYGi+WndyyWWlUtFpdWzzeMd1fBnKmQbRSY9HG0iIiISML1YqMY+uM/z2IZ0t5iSV7NYuG9cA3jx3CsILzzFzilNnoPRERERORNGLzA37ukxZKq0IuNYujPkXctlncbvOxCl4DlsKwoZN4HLDd6V0RERMQ+mI0OIFFj3gYlukClfhGPyT4PJmWAkc0h83DbitN78J4zbPsLmt4Hj8VG74+IiIjEf45GB5AoKgbON8AlV+TDkgyGdkDxQjAyC2y/DkH3AEz7IRcw/SpUKwf9j8D5qmC5ZfSuiYiISPykM4oJVLHfYfF2GNwV0ua0rST1gdYnYFcwvJ8GXFoYnVVERETiJzWKCZiDL7S7DmvegfqVwSXc5SxZi8PsxTDtAOT9zuisIiIiEv+oUUzgzEMgbz+Y4gqDLoBvNzB9HVp1LwwtzLD+XahfHzycjM4rIiIi8YcaxUQi6XJo9xDWtYM6o20rpr8h+11Y4QYTy0Gm6kZnFRERkfhBjWIik88XZm6Eqb6Q3tu24rwUWt6EPWugeU5w+8forCIiImIsNYqJkEcxaH4SFv4A74wCl2GhFdNvkNEDpnaESYcg18dg+tjovCIiImIMNYp2wnILzk6G43ljb85iWWDGuzDUDF61bCtJu0DrD2FtI2hSARxGx3QbIiIiYr/UKNoJyyL4syQcGh+787qnhDbnYFd3eOdncD5lW81TBpa+B7O9IW8po4+BiIiIxC01ivYiGFgIjHoDcw+BbMVhyloYmQrSmcDUGgBPMLuCX2lYXRc+zAUeqYw+FCIiIhI31CjKM8l6Qav8sMoPquYG87ehFXMeyP0VzNoPo8tDxg+AY0bnFRERkTdLjaKE9xfkmwRLPWDKbEh917bo4g3tVsPestDqA3DsYnRcEREReXPUKMpLufhB079h3S6oPxJcw92KO2MnmFQYZr8Ded4B0yyj84qIiEjsMxkdQKJqgT/4+QL4+MCpU687X9Tdaw5L78OYEnDpLjDNtnrUC0ZmgOW1IGA78LvRR0pERERih84oyislXQyfrIdNTaDmR+DU1LZa4DbMSwLT3SBbL6OzioiISOxRo2gvCoBzJnBZaFyE7LlgnhuMegxZqtlWzPuhxXXYUhBanwf3bww+WiIiIhIL1CjaCdMOKPk/qHLB2Bzu2aBFLlg5AapeBdf0zxJOhpx5YOJkmDQAsi0Es5/Rx01ERERiTo2inTANBS9nSFHU6CRg7g0508OSSzAsBfhks626D4VWwbD1PfigOjjG4rNkREREJC6pUZQYc8sKrQrBjnvQMCk4DbCt5nCG2SlguT9k9392C28RERGxG2oU5bWYJkHmUzApLQwLgKwf2VZda8G7N2DtafioKHjE8gMIRURE5E1SoyixIukhaNsDFqeBGsnBPM62mv8tmNoeZuwD3xlGZxUREZGoUaMosSpfd1hZHsZkgSzhKm4O0GwMHOoIrb8Dd3ejs4qIiEjk1ChK7HIGFkLLdrB8GLxzC1ybP6umgwyBMGEKzBgLuYaCOZXRkUVEROTl1CjKG2E+Abk7wsxWMLAL+NwHToRWPdZA8z9hQwto9AhcLEbnFRERkRfpEX52wnR+gX/Z6n6+SZPBL2fi9hF+seHfJDA0D6w4/nwl0B/W/wpfJofT14G6RmcVERERK51RtBOWmnCwNeycZXSSmMl2HybUgPFbIVtX24pTamh0CL4bCC0mQpJzRmcVERERK51RtBsL/MHPF8DHx/7OKNr6bQGM2QObm0BgE9vK/SuwdiP0Lwqn14NlQEy3ISIiIq9PZxQlzhX+COatgmFAuqm2lSS+4NcGdmyE5gvAZb/RWUVERBIzNYpiCPNt+LgxbDgAjduDy3bbauavYRYwZwAU1CMARUREDKJGUQxjvgc5JsIEHxgRBOm+ANOx0KrLGWjqDutyQ5PFkDTL62xLREREok+NohguSTdoVQ7W7od3mtlWTKsgy2pY5AWTTZD5b6OzioiIJCZqFCXeyP0tzPwfzO4KGTPYVpxrw4d7YX9laNkZ3KcZnVVERCQxUKNoL9KDww/guMboIG+Wa2No8jUscYLGtcF1V2jFlBZS+8PEMTDdAvlWgclObxYkIiJiH9Qo2gnTJCiaBMrvNTpJ3Cj4G0wuCiM7QvJ6QJ7QShIH+LA9rPkEmn0JjkMAN6PzioiIJERqFO2E6Qfw/QnS1TQ6Sdxx6wEtDsKeg9DoOrg0tK3mvAGLrsOCEZD/oNFZRUREEiI1ihLvZTwFE+vCuJ6QsTmYxtpWP/CEtbuh9UeQpJ3RWUVERBISNYpiF5KMh+YfwypHqHUUnHxDK6azkL0TTE0K4+tBtrlgmmB0XhERkYRAjaLYj58g90SYPxKm3oS0nW2LzpOgdR3Y1RLa7ADHjUbHFRERsXdqFMXuuDhBkx6wMRs0Pgquf9pWMwATrsKi3pB/B5j2GZ1XRETEXqlRFLtk+hJytIIJY2D4E8j4BBgRWnXdD+//AcunQevD4DoLqGB0ZhEREXujRlHsWpLx0CoHbFgFdU+B0wLbat6VMOMQzHSGHMWMzioiImJv1Cjai2lw3x/uzjM6SPyUtR7MNcOEoZA9jW3FvBCaF4JvK0L72eDRxuisIiIi9kKNop0IqQk/n4Hv1eZEyGUENB0Bq6pBrT3g9uzuiqaCkKU+jPkLpv0PclcE8wmj84qIiMR3JqMDSFQt8Ac/XwAfHzh1yug88dvj1rBiHwzMBFcOPF89nRz6+8CSUhC0ICbzi4iIJAY6oygJkusc+MgdfsgJTc6A01XbatabMKsqrC0Gub4C01dG5xUREYmPHI0OIPLG/ArpgPE/QIVdMDEHnDgZWnSaDHWB7JdgzFZYVgfubTY6soiISHyiM4qS4CWpBC36w6L/oO4hcOxmW82dFibcgdlXIX1O4Duj84qIiMQXahQl0ch9HZbkgnHvQLZsthXXL6DJz3DACdo1Avf1RmcVERGJD9QoSqLz4U5YOQcazwS3JraVdH/CGH+Ydw3yDQBzY6OzioiIGEmNor1wB1MrMH1rdBD7Z+4K2YvAlLYw7BikWwSmj0Kr7m7Q5BSszwBNb4H7ZaPzioiIGEWNop0wdYaCK6H0fKOTJByud6HVT7DFGT4If1yHQraWMO88LH4Xsh8Cvjc6r4iISFxTo2gnTI8hwxDI1sLoJAlPlpowvgtMSwE5P7StOB6H+uNhZxFoUxySZTI6q4iISFxSoygCuA6CZmdg3kp4byS41A6tmEpARgcY9wBm3IPch8F0zei8IiIicUGNooiN/NdgxlwYMQoyuNhWPFLD+zfg2w7QIi+4FjI6q4iIyJumRlHkOeYD0HIHbK4KTceCa3PbasafYcaHsLAcFJlmdFYREZE3SY2iyEuYWkLmZTAmB4z1gUyfgfnZOUSnMdDIG9ZZoHkgeFYwOq+IiMiboEZRJBIeFaB5f1idCxrktq2YBkLG9jA3NUz9EbK2MzqriIhIbFOjKBIFOZvDzJyw8FfIHK5hdLoOTafDz0eh7WbwaGp0VhERkdiiRtFe7ITHb8Gj3UYHSbycukP9bLCsDjRzA7eHz0ptIMU+GLcR5hSBQg/A9JfReUVERF6XyegAEkXdF/h7bvDzdfgGHLvAqVNGB0rcHueGNcXh68dwpTNQ17Z6qi8M8YYlf8OTn4BjRucVERGJCTWKdmOBP/j5Avj4qFGML84Phf5DYP1+eFLm+eqKuTBkG/y+wuicIiIiMaGPnkVeQ4ZeMKEWTDkJWbaA6TvbapODsK4etJ8MSfWUbhERsTs6o2g3dEYxXqsFJ3PAwBOwtSw8GWlbDPCHFQVh8B9woh2EbDA6roiISFTojKJIbNgKOSbALA+YVhHSXbUtOqeGD6/CjkHQLjM4PjI6roiISFSoURSJRc6r4V0f2DoUmqUDt4W21XSTYNxCWLEECucD0y2j84qIiETG0egAIgmNKTdk7g+jHaH8Vhj1FfxbBGgE4HwTGgJ5g2C8K8zfCw9HAvo4WkRE4h2dURR5Qzz6QvNpsNYMDZpab80dJtcnMGk4zHaEXDeMzioiIvIyupjFTphKLfDP6evn67YdLiXTxSz2JsgL1lpg+HU4kSJcqQxceBdGHoY5d+H+VqOzioiIhNIZRTthegtyVIP8641OIjHheBsaXYfVj6D+DPDo/qz0E6TvBsNTwuz3If9JcHjf6LwiIiKgRlEkzpidIFMymFkBRo+F1OGe5uI6Cd5rARvrwUeNwHGC0XlFRETUKIrEMde00OwC/NgMmq0H54a21czHYFZX2PI15PUG02Sj84qISOKlRlHECO7gUxfGjISJKSFPuAtdzOfg7Zuw4T509ARP3Z1AREQMoUZRxEDuW6DpaFi4FhrlBueDttVsATC6D8zLC1kmgmmx0XlFRCRxUaMoEg/kfB/m/gwTpkOOt20rLmehwe/w41noOAY8dKGLiIjEGTWKIvHIB4Ng9WZoVgPc69tW0o6CUe1hcU0o1BfMuthFRETeODWK9uIcBI+AoPNGB5E3yZwEMj+GcR1gVEXI3BhM50Krrm2g/nlYdwJa+EPSI0bnFRGRhE2Nop0IqQk/H4cf7hudROKCaxX4sA1sNMOH4X/nfSHzMphxFRbfhJy/AAdjthUREZHI6cksdmOBP/j5Avj46MksiUlAX+uDoEf+Dce+C1dKAZdnwqBbsPgHuLPI6KwiIpKw6IyiSDznPBAaD4R5JeDDXeB65VnpBqR5F0bWgjn5ocAhMH9gdF4REUk41CiK2Ik8PWHSBBjjCxl72lbc08K7X8LmjNB6I7hONTqriIgkDGoUReyIeT58mB2+/R4+2gyuwbbVDD4wbQssfwglXIzOKiIi9k+Nooi9OQLpdsCI4jC5IGTrDOahoUWHClAvDaz9C1o3BO/mRscVERH7pUZRxE65u0GT/bByKDTOD6ZmgAuAqSmkywbTMsP0E5DjNvCZ0XlFRMT+qFEUsXPZg2H6F7D0S8iaw7biNAaa/Aw/d4OOGSBJGqOzioiIfVGjaC9uQMbCkD3I6CASHzn8ArWzwIqp0GI/eBSwrXrNhFE1YGEbKF4BzMmMzisiIvZBjaKdMA+Egq2h9E6jk0h8lrMQjLwNE2pA+opgqhBaccsHDQbA8uXwyRNwrwTUNDqviIjEb2oURRIY17LQpB9snw1NV4FrOdtq1tQw9TEsvA5FJhqdVURE4jc1iiIJVHofGFcdZpaHHN5gumxbbTgINhyDzofB08PorCIiEj+pURRJwFz3QP3fYGVDaJIP3I6GVkz1IX09GDUNpneCgoXAwc3ovCIiEr+oURRJ6JZD1nEwZSTMGAcZPrEtOs2E94fB1mXQcRA4lTE6roiIxB9qFEUSCecmUH8LbL8GLT4G96621bS5YbQfrDsKxaaDWbfSERERNYoiicpxSDcfhueECd0gVwjwa2jRKRXUvgvL3obOVSHJVeAjoyOLiIhx1CiKJELuHeA9D1jdFBodA+cSttXsWWB0LZhrgjxLjM4qIiLGUaNoJyxr4O+P4MhIo5NIQpJxJsx+ALMWQZ49thVzM2i8BXa1gm7ekLSg0VlFRCTumYwOIFG1wB/8fAF8fODUKaPzSEJiKQmXqkE/Z9i2Fu6dsa0++QS2usMAN/ijOQQXiOl2RETEvuiMoohg+hnSDYEpV2HscMjwJbA0tOoyAxqMg3UHoM0RcHUAUhqdWURE3jydUbQbOqMocefaRejvCMtOQ0AN20rIR/DDQ+hSAf7KCJaGRmcVEZE3R2cUReQFqdLByOswfT4U2GRbMS+AKqtg00T4LBi8vjc6q4iIvDlqFEXkpdzyQaNpsOAraDoI3DLaVjOdhKFOsKgj5LSAeazReUVEJPapURSRSGXbA9M7w8QLkKu9bcXlHahzDH7YAf87CB7BRmcVEZHYpUZRRKKkSR1Ydxha3AOPWraVNNVgxBVYuRiK9QTz70ZnFRGR2KFG0V7UBbd3waO20UEksTIthnTfw6j/wbilkMMRzM+eG+38PdS6BmunQdsz4LXF6LwiIvL61CjaCXN2qFoJGnYxOokkdi4T4H0zrAuBFuGuiOYLyHALJt2FJSMg92/AUaPziohIzKlRFJEYyXAbRu+FRYcgf7jntjj6Qa10sHcMfNYNvKYbnVVERGLG0egAImK/HAfAO0DuXTDFBZZNhIe9AFhkvSf3kItQJR18UwR+C4KQMkZnFhGRqNMZRRF5bTmdYMxgGLcIMl2xrbilg3rAhj/hk7LgajE6q4iIRJ0aRRGJFeZe8MEo2FkaPj4FbnNsq+lawVRvWLsOSnc3OquIiESNGkURiT1lwed3GFoVpteEXJ3AfOZZ9QbUyAzrVkH7pZDiS6PjiohI5NQoikiscz0KDZLAisvQbBU4fgikAjAVBt/TMCEXzGwC+c6DqaPReUVE5OXUKIrIG5NlLkz8CZb9CtlT2lacikDDYrCvMvzvc0hy3OisIiLyIjWKdsLyGM72heNTjU4iEj0O86H6flh9DdoOhiRtbKueJ2FEW1g+FUoPBXONmG5HRERinxpFO2GZBn/egUPrjE4iEjNZTsOQ32BKCchSGkwHQisuu6D2WFh2CDqVhaQZgHZG5xURETWKIhKHXGZDg6aw1QX8koDrettqptUwvi8snA3FHxudVURE1CiKiAHSboQxVWH+PMj9KZhT2FbfqQgbP4buZvDyMzqriEhipkZRRAzhfBJqucDKx9D0GCQpEloxOUPq8jD4DMz+Cor1AIcfjc4rIpIYqVEUEePMgExjYXwSmPkfZDxnW3TKCO/mhE2/QGd/cOpndFwRkcRGjaKIGM45COq8B9/XhzYrwaOKbTX1DhjpC1ssUMoVzFViuh0REYkeNYoiEj+MAJ/dMPguTC0K+fsDd0OLDuWg2gBYlg66fQOe3sD/jI4sIpLQqVG0F2agGFDB6CAib5ZbE2jQD1asg/engvNB22rmUzDUBea7Qb79QHaj84qIJGQmowNI1Jg/W+BfO6ufr1cu2O4Hp04ZnUgkbmzpBoOKwJ8dnq/cOAGjj8DkTnD3htE5RUQSIp1RFJF4rVYwrPkQmteGZL/YVlLkhG+2wtJ8UDIlODYwOquISEKjRlFE4jXTWEhtgXFTYOJoyHocTO+HVp3nQ+3dsLoqdGgPHvOBPEZnFhFJKNQoiohdcEkODafBjsfQajG4ZLGtpl8G436EzQegkD+YDsZ0OyIiEkaNoojYlZRZYHgTmFMAivSxrZgHQsUpsLko9LgGyXsanVVExN45Gh1ARCS6XOZDPSD/URjTFlZNggejQqvpdsCAqlDlLHT9FI4lg+ChcRTtY3D/FNzGg9MYMI0Ay3UIqA0P+8PjpMC+mE/veBDMz1+E2BoC/ozBZMfBuQ/Q4zX2tzUEBoHln1g/kiISL6hRFBG7laUATAQqFYIRI+FY99CK806oDuxwgJG9YfoiuP/hm03jcRzeXQ/NjkPekZC+PZhXQOBKuPAbHB4CKw7A5sXwKHP053fKCmNdwdMt/PI7B6GTR/TnS7UNBo4Cj4CY7/OdEBhaAy6qURRJoHR7HDuh2+OIRMyyG65uhxFFYekiuL/Tthp4Gfbsgj5H4PAsCL4T+wmK1oFxmaFUB3DOF/G4JwNgz+/Q7QT8EY2zgA6e8MkjmJIL+CN87cp2SF0j+pmzZoXDh8HbO+b77V8Aqn4NfzeJzaMpIvGHvqNoJyxV4MpMuLDA6CQi8Y+pIvgOhqFfwGRPyLMJzFdDq05poOpdWP0edPwHUsyO3a2nPA1LKkD5HyNvEgFc+sHb/8IKP8hwJOrbyPYhfDaGF5pEEZE3S42inbC8A4eOwg+LjU4iEn85/wcN58HqQPh4RrhSe0hXEsYEwJKckPco8G8sbPE6fLUScvUAfgtfu9ANvv/Y+p/h/GYdP+gzcG/96m049IBuByDnp0YdVxFJvPQdRRFJcNJXhZF7oHouGHQHfvcPrThmhOp74ae6MPgczDoGt17jvovpB0HjhuGX3eoG3bfAkl0QOA7cFsMH3WH4SPAeFTaucTeYtBoOvWIbb++CRiusrwN3gMMNML/Pa7uXFZbcAo/xURufcirU2gAOpcKW7cwOF798/SwiEl/pO4p2Y4E/+PkC+PjoO4oiUXW6M0w/CAuD4f4J28rjC7B7AnzdGA53hOBfoj/7e0Vhuc16lvkwzhm+LAqBucOWO/0Dw4/AZwFgahG2vE8HGDIt4vndssG24lBhmfX9lg+g4FlIfyBsTEy/oxgdSbfC+G+h5U4w/QGMhGPr4O1OcLHZm922iBhJHz2LSIKWdQIM/RImDINsu4Bn589c00ONEbB2BHTMBR4fA+mjN3ue/uHfBx6FtZ3CN4lgfb/pKgTWDL8877KI5zathA8+hrJrre+f3IZ+deFm+Tg+hH2h7Q/QPPvTJhG4nQO6HoKLD+M4i4jEMTWKIpLgmd+FxtXgO39ofxbcK9lW06yCCYth3RdQdlX0Zs64P/z7YGc4VevlY8+vgpCx4Zdl2R3x3Fl6wNdvg8MTCPkQppeEX/zi+NA1hkrFoe8xcH76HcmA5DDwGGwNBNrEcR4RiWNqFEUk0UhZBwaehzmtIF/H8N+2g6rZYd0c6BwMqSZFbcYLl+Bo0rCfP3KBf8GXj3X5G0zPfR/wYrWXj3VeDJ81gEzFre+PVoMx9eP+iHkVgv4Hwet62LJt42D+tBhPKSJ2RReziEii4jIHagP5vGDsE1icE57sB06ZnCHldBhdAN4uBf2Owe+jICSS2+mM/gim2LSblgtg+eolA7tCvp7g8Nx9C/5dCrykWSy/Fz5wsL4OyAUjk8N/B4hTpmD4+F+okCNs2Z1uMPhPuHEubrOIiFHUKIpIopSpMow+DPXc4MuDEHadi+NRqAuUvwQDf4IZM+DeJy+f5W4VuBuFrXl1h07JwbFL2LKA1rBrz4tjXX1gwGJI9XTiDTVh48m4P0JF50HXKcBh6/sQT5hSGo78GvdZRMQo+ujZTphzQdWl0PD6688lIlYO3aFqJ1hbET6tBkln2lY908KQgbDmIJT7DczfxGwryRrDN+2gTN3wyzd0gINjwi8zV4ePm0HxW9b3Ny7C1xPg7ta4PTKuhaGzG6RJEbbs9AqY9BMEXYvbLCJiJDWK9qIWuF0DjxjcwENEIpdhNHyzFmZkg5xFrBe/WDk3gmqzYMl1+OIr8AwAhkRx2iGQsj2MzQHt2oB5y9PlS+HMdOiZBe48973DDNPg8yzg7ADBb8PUZfBPvbg/ImX7Q73/gG+t74NPwvQ7cOl+3GcRESOpURQRAVwsUKc4bPwcWv4P3HLZVjNUhZEOsLgelPwoajMWWAxrPKGVO7janE08YYFWrvBvqvDjHf+FrnMhW2fr+z/+BxPXQ8jGuD8aHyUH755h7096wRrXuM8hIkZToygiYiNNAxhZCZaYId9PYK5oW60TCJtvQp+3wHvty2dwuQdtN8HGfVD+HphsLm75PjU0aQe7G724Xvn/oOlq6+v7jvBNN7i6N+6PQMbk0Cxj+GUbV8KZg3GfRUSM9poXs7hlBK9ZkNQPHDJblz2pDHerwi1HCK4c9bk8MoLnh5B0NpifzvW4CtypCrerQsgbeIqM60fg/SEkqQCOFcHyAzwyw52FcCc7WCrF/jZFJL5zugdVK0CuuTByIKw+Anc/A2AnpAS+yQGlR8Lg7+HwbgjqD8yD1Ptg6CZo0ho8HgKTrTM+OAfLz8BXueHybiDpi1utsw1S/mV9/eQqvJcRaru9OC79ImBk2PtkR2Ha03HLD8CuQjHfc9M38GF+66MOQ92/ASs2g2VLjKcVEbv1Go1ixXegjSMUewJZJoPr07+QbznCySuw90eY4gunr7x6rtq/Q8uZULA0ZD0FTsuty683g+MN4IemMGUcXPos9na9fAC0ngilnkCWj8D1ANAE/J3hmBus3wVzZ8Fd3VBWJDEaaX1My6gPoVZX6NECzs4PLTrOt14ZXWIdjK4H46pA/rwwqSSUyQN8EDbRtfrw9RmY/RUERHKDbXebpjBFcmgexe8DunWFdl2tr//OA7teY6e9V0D1hYDNGc/Df8DJDwA1iiKJUAwaRY9fYEIfaNYUXNMCFcLXvYOgJFCym/W7OQOTwLQF8PivF+fySQfj70CjQHBqAxQCbL64nXKJ9a/3spWhbX7oUQyW5oaAxcRYam/oVx7a/A1O2bH+ax/6/aGVkBrrT6XF0GECdNgOP/iC5TX+ShcRe+W0CGrug1IbYNg9WJgR7t8Krfo2gOGzoUktSD8d0nwYtqalEBw6Ae2Wwm9JgLeN3pdXy5wbSvay2Yef4fsscOermM8pIvYsmo2iaxP4xhlabgCz0ysGj4LkwKD14HYFhj5XTvI1DMsM768EU7FXzLULfIDxvcGlEsyI4e4mmwQDZ0JLV3AshLUxjYCpOeRqDrMuQqsDsCfKWxGRBKYseP8H/XdBxdsw3BF+8wLLdQDTx1ACoE/YCiEpYGd3aJMDzlUCvF+9kcdn4e6mV49LshHM08PeWzbCvadfzQkIfr0dLRUMbsXD3gdNh0PngJ/e9CEWkfgpmt/7q+oFaxdCUpsr+Czn4PZW+CUzOH8NJS+Aa2nA5pmpD3pDMSc4PiBs2futYE4NcH/fZq7lcP1PONIXPIKhdGVwfA/4ImzMhZpQITucmRz93W31J0x5B1z/fbrgCoRUh79/hbN3IelR6/3LPHoDf4attys11EwGAQbc9NbKFLzAv3x9P9+k6eDQWjh1yqgkInIpNQzeBqvKwKOX/rn962NoHARnXvXHeDWw7LO+zDsKMjx49dan3oMsNt9RvF0GPqhpff3PYPgvwPo6gxeU8Q+/7o2MsOcuBDx+ycQFYcEh8HMOW/RgNaQdCHd/N+xgi4ihonlGseV+SJo77H3IQ5h/FLplg5tPP1bJ8zuMewTVbdbzGAKds0KXVGE3a23zHbjPCRsT8B/MHA89DsPDQdZlRYfClENg+0DWdAHQ8i3oP9e6/ej4dLJNkwhcnQ69TsMch7BlGfvByHrQeA6YW1uXFWsB5bvCTt+4+sU8z+IQdk7Tx8eoFCICkNbfepVKya/hfy8dkb0/jDgNVytGPtP+/bDw6eu/u8HfUdj6vW7h3z/5Br6t8eK4t/6AZS7hl/08C2pdh5utXxyfrAjkPwrYfMLzZz41iSKJWzQaxXTdoVi28MvOfwTdLsBNm9smHCsEPVdCyQXgZXPWr0waSLkI/LNC1nchv1f4uY6WhD6p4WFg2LIjvaDvPFi9A5I+fR6q6Xuo2gZGtoX746OeP/09yOIeftnIijB/NfBH2LJzA6DvaSiwAvI8XZY0E+T/Hna++d+IiNiN2yUjqiQdGu56kAi5XISFUb2B9xuWJT2kWk+4RvHMMqNTiYixonEfxdTzwfPH8Mt2/BG+SQx1ugr8/k74ZekyQZJk1tcZhoPbv+Hr2w7CnT9enOuva3DyuYtXsuQEZxeixbkQmO6Evb99BXa0hOCXbPPfMnBqbth7U0dw0hV/IhLOr1H4RqH9SDERkswOv+zsdqNTiYixotEoehcEj+dOqZ0Y/fKxAa3h6t3wy1ItAfenzZdPb3D+PHz95JiXz/XgCdxsHn5Z2h7g9Fv0dvXecAjZEfbeZQS4WV4+1mEzONqcDgieAQ9WRm97IpKQPe4JZ/oanSI2Zb4LXhfDLztbKmZziUhCEY2Pnu8cgp9rQpJvwpYdjeCvTXN2cMkSftn1VPAon/X1jRA4uAhcfg2r/xPB/cUcx4Fzc6Ba2LLLXSCwGRCNv3avlYJfP4BqTazv3UZD28/g6D24ny/82HK1ofAtYLD1/e1D8HNg1LclIgndky1QoiOk6fDy+rnD8Oehl1UCmsLhz+H6EfjtR6Lth+NwdlrY+9sRXGR3qQ1saBh+2YnGEBDBH8iPusCGaeGXHc8eF8dSROKvaFz17FTb+jABU9qwZfeXw5N7L45NOwZ2XoPcNt+9OfoF1DwJlzaB8yxIkglMy8Pqdy9B4Es+3s3zLWw5CZk/DVt28F14+y+4dyJ6u1u3Gsz+AXyeNn1PvGF+Vxh3E26OAIdCUKYEfLMO8t22jgl5GxZkhraOEDQtetuLTQv8wc8XrBez6KpnkfjtXHuYcA6WjoZ74c7LBfwF+2pC1+/g6CgImh3TbYiIvGnROKMYuAVuRnHs+0Uh93NX+/1cGW48vQ1EQJuoz9WyHmR+Evbe8j7saQEPrwFto7e7W6rAFw9hVCpIfQ1cbsEngN/bcG0nOJWHNM81g0srQM+aEFQyetsSkcQs4zQYBZRvCMPWwF/vhlac80Hl87CtDox5H6Zchnv6DrSIxEvR+I5iVDW9Db2qhF92KwOMKQtPfo7eXB27QLu94ZedSQczFkBwNJtEgJDesDoVjL4HQf+FLXf7DjLWeK5J9IHdQ6FfD7iiJlFEYqT+Mdj0GD6tA0nDPcfKZzMMvgqbP4KyncGhXky3ISLypsRio+i2AT7xgLHLIJXN0wHuboev8sLfKaI+V7JM0GUnDK0PnjZN2vWe8NUfcGpNzDJ6vQODTfB1AXDMFL726D4E2z5+5SqU7wFze0PxtbF3nGLG9C+UGQbV/3v9uUQkDv0DKepC/x4wvQcUbAMOXUKLDt2g/BNYlQI+/x18BhkdV0TEViw1il7vwNcNYcJx8G0XtvxhVhj5M8wcEfW5Uu2EEZ/ByC8gWeWw5fc6Qr8DsLJK1Od63uCS8L8zkMTmK+bnx0Hf0vDRY+jQALaNhMCn92c0O0CF0TDDB7KXjZ1jFTOmiZDcHXz+MTKFiMSUcxGoWwFWPIJProcrfQSp+8EwEyzdC/n/AvxjthURkdj1uo3ibSjdDza3gC+ng0u6sNKl76DVJRhSCgILRyHK71BxBXyfHNrlCH/7m9O94b0FMO1zCOrz6rlepvZdaLUw/Ly760DpQTAoCFalgpkPoFYj6PMVPLb5kKhIJhhZCxyj+SQYEZHw0k6F4b6wfhAUDXc5ocNZqLIEDlyDPpsgRUqjs4qIvEaj6LETOnaGdeuhTFfgY+vy4Jawryo0uQArs1qfpfwqnsOh50hY1QnyXwLqWJcHvQ9bH0KTFrDtAVgaxCyr8//gvWLgVjVs2cMuMOx9uHQD+OXpwgAgG8wdCr942UyQDmrug1T64FdEXt83ULkzzP8duvhB0n3PKsnBoyL0rQ4rjkG5A+Awz+i4IpJ4RfNZz6G8t8Owz8FvHbiF3i/xFgRng+kHYUh6uOgehYmKQqoQmBwA9X8G5ytPl5+x3jJi5PcwNjdcO/96u+mSBvKWxfp41qcurIfj3V4+/vr/4JcmYPtps+sWKDgULr/uMRcRASBTZuj/KRRfCEMKwT+NwdIXwCUDVAHypYeRM2BWOrhTGNhsdGYRSVxicEYx6XJYNBjaZrBpEoGrOaB9B+jSLopNIpD2T1iREZosAOfjYcvP3oMW5aH39ddvEgEcR0KK556hENgFQnJGvM6DMy8uSxXNq7ZFRCJnzgv1h8KWNvBpNnAP97mF72MY9RGsHQUV9bB5EYlz0WwU3cvDCH+o1QxMNk85Pe0PrcbA3BQQtCtqc3l+CGP7QMUBgM2Ns/+uDn6/w7LCsbebwUfh/nPPhnZtD06VXz7ePARSHn1x+YPksZdJRCRMihbwzQVY1BsKtQeHcbbVyl/B2oXQvRH4rjc6q4gkHtH86LlyIfCrCSabM3GPS0OPXrDzbXCoBg55X76upQUEvgPksb5veBLeeQSmfmFjHvaAjg/g0D5wHAZENFdZCHQBJlnfu02AemPAe2rYmJA1sLUBXKgDAYfgdAooaHOxTebk8HYQ/HsBLOnDz5/jHpQrEn5ZSG/4Rd9RFJE3xrm99VmluTPAhPyw4CN4+BfwC6fAGxhyGqrUgm9+hsMTIXih0ZlFJGGLRqPoXAI6pgWP5z6uvTMAGpeB+oUiX/9mdhh8Dq4BLnvg077guir8mFuzrQ9b+fgVt4a42g76ecHDp42iZ2X4ei/krRk2JvAENPgRLgCPU8N356HuB+C4zFp3eAR9f4YHP8BSDwh8AOyH3ONg/EjI89yznQ+tBP9jgFPc/GqeswYelgXH7w3ZuojEofTnYehWqF0aelSGsLtiOfaAmkCZkzAkLUxtBneXGJ1XRBKuaDSKuVtBgQ9eXO5bHT4A+Dfy9S+mgAle1kaxWC/I1vjFMeluQPMoZDl9GgYXhyjfreYtWOoAn1YJf5IyzU2Y8Rn0qQKXa4Drdsh9FJINCL/6wz9gbBMI+Py1jvZrCPGAvd+CyQu8jAohInHGoRZUAtZPgml1YfZvcLdgaDVZMxjUFWpXhG/SwO75UbvDhIhI9ETjO4qZ9kHKcrGz2ZxfQpJo3IQ7NtwKht6rwH+fzcKa4HINcm6Aip9CqX7g+ReYeoUNCeoDyy7ARjeefdRtgGMQeBMCThuWQEQMkKYc9BkLc7whX14wP/uT3PEyVFgGi5JBr52Q/Biw2Oi8IpKwRKNRzNwY3P56/U2aakC2IHC6FPe7u3EgfPoAzpeO2vigd2HKAOheEh72i9o6IiKxy7kVVPeEdaegzWFwm2VbTfsPDBoGi0PgrR+NzioiCUs0Pnq+VBEWvMYD5G5lgHttgWbw78HXm+taJ3jyLfD0OdCPzsD64XDYZs7gY3Bxdfj1QkbBmsZwuBT87x+ovgRyHQGXTeHHXegJR2rCuO7wYx0I/DY2DraIyOvwvQ7D70P9dNA7CxytDSHP7g5bcwuU7gUTXGDCeLhhMTqviNg/0+tPYa8cc0DqtZC6FxR4+mVHywi4sgROV4KLFeF+MqNThlngD36+AD4+cOqU0XlExDAD4fIdGFMcljeG2+Fu3BV0EnbugSEdYX9xCPzJ6LgiYr8ScaNob9Qoikh4gZtg92no9gmc/hjYaFu9lh7GVYdRsyHAF+uVhCIi0fIaz3oWEREjOdWFap1hzyPoPB+ShLvTa6oLMHgO7P4Eyn8H5skx3Y6IJF5qFEVE7Fwyb+j7D8xfBSWGgqmUbbX0TFj2L/R/DClaAqOMzisi9kMfPdsJU5EF/tlz+fm6/g1X/PXRs4i83OW7MCI1rCgG9363rVhSwHdZoO9kOJwHQjyNzioi8Z/OKNoJU0XIVQYKjTQ6iYjEZ2mSwdiHMD8lFA33NHvTDah+GLb9BN/4gaf+3BSRV1KjKCKSAFWdDOt2wycBkDyHbcX7c+jlAOstULEuONU2OquIxF9qFEVEEiBTWvC6DUNuwrTJUGA2mLeFVh3XQMXssKwMdJsDyU8B7xqdWUTiHzWKIiIJmLM71CwNG3NDh6Hgctu2mroXDDoKm76F4jvBFGx0XhGJX9QoiogkAskLwMBcsKIGvOVmWzFXg7c6wrauMGA/pLpudFYRiT/UKIqIJBKOo6DydzD7EnSaBl4Zbasp+sKX82FNHihVFZzqGZ1XRIynRlFEJJFJ7wBDmsGUfVDgN9uK0wwodxU2vgM9ekLS20ZnFRFjqVEUEUmk6s6BLV7w2SNIVtq2kqozDPwUvtsOFduDg27SLZJIqVG0EyEp4McvYesGo5OISILxOXgmh769Yc5pKJYSHO6FFk2/QikzrPwDvjwIaToZHVdE4p6ezGI3FviDny+Aj4+ezCIisc8/FUxaBZPuQcgQ4M/QSvBHsG8RfO4Mv6WEkItGZxWRuKEziiIiAkDqazCoImycBMUn2FYcFkCFEPixLPRzgJQNjc4qInFDjaKIiIRTfhssHArdJ4Dnx7YVt53Qaw+s9YbK+8ExqdFZReTNUqMoIiIvSLca+vjB9J+g4Bwwdw+tOGeCcrNh2QPofgKS/wH0NjqviLwZahRFROSlzA5Q+yBsOAedPwGPgbZVn6owJDWsXQZVjhidVUTeDDWKIiISqeRfQN8LsHwiFPsEHPxtqxX+sDaLfZZDml+MzioisUuNooiIvJJTMahwCha7wqf5IGlLoDIAGyGZJ3xTARb+COV3guN7RucVkdihRtFe3IEMwyDbdqODiEhilnYQ9N8Dy09C3tO2FcfUULUzbF4GX3YBz7RGZxWR16dG0U6Yu0PB7VC6vdFJRCSxc8gA5bbCJn/o8QN4udlWk86A/t/DtsLwdmsw34vZVkQkPlCjaC/cwdQATFONDiIiYpXymvXc4QILFM4GDu1CKw5fQenNsKAwfB0CqTYB+4zOKyLRp0ZRRERizGkvVLoKq6pDuwLgnty2mvp/0C8ZLFkLZXMbnVVEok+NooiIvDaf4TC0DKzbD0W/AnO4Tz+qfQbbHGHoUkjZyOisIhJ1ahRFRCRWmLJD6ZWw4hp8ehJS1H1Wyg9JkkH3dbB8JVStB04PjM4rIq+mRlFERGJPZ/AZCd+MgrklIfdiMD27UbfDMqhigmVloE9b8MgN6BI9kXhMjaKIiMQ6p/tQ6TPYeRq+6AtJ19lWU/aErxfD9/ug0iAw7zI6r4i8nBpFERF5Y5J2gV4nYElHKOMGpma21ZLJYZkzDC0OqYYCs4zOKyLhqVG0EyF+8MsU2PO90UlERKLHOTVU/Afmb4IOJ8HrY9uqb1LoXhWWvQXlHoDjB0bnFZEwJqMDSFQt8Ac/XwAfHzh1yug8IiIxs6siDLoAh649X7ndAaa+BSMyw+2KRucUEZ1RFBGROFb5HKzrBp3+gBS/21a8pkKPFbDlClT1B6f9RmcVSezUKIqISNw6A0k7QP8ZMGs6FLWAw7Nrnx02wVtNYMlm6F0afHoB7V5jayLyGtQoioiIIZyGQNVhsPYH6PQEXMN9O9GnNfQ7CRuLQsncYPY1Oq9IYqRGUUREDOVdDL4ZB2uPQrlwH0Wbc0DJxrA9OQzdDL5LjM4qktioURQREcM5mKDsfpi9Ab64D8m72lY9P4LP88H6DlBuLTiXMjqvSGKhRlFEROKNNF3gmxCY5gWF7tlWnFyh1G1Ymxd6bYRkU2O2BRGJDjWK9uI78DkO6RYZHURE5M2r2Ra+zQk9FoJnUdtKypzwzTX4wQeqfgwOPxudVSQhU6NoJ8xToWgAlB9udBIRkTjgDu7HoWc/WFAdSv0Ijl8+q+aFIm6wfBz03QPpGxkdVyShUqNoLzKC4y5wHGV0EBGRuOP4O1TuDYtuwWcpwbkAoTfLqQUpksBXXrCsN5SuCQ7rjM4rktCoURQRkXjPtyL0awcbzkEpZ9uKw8dQtih83wn6j4ZUY4zOKpKQqFEUERG7UeY8LKwDffaDd7j/B3OrAz0WwMbaUP0ncOxtdFaRhECNooiI2JXUZaBHA5h5AYonA4dnz21xygylcsHilfDVJvAZASwzOq+IPVOjKCIidsd0EqongdUt4IvlkCS7bTXlGPj6d1izF94+Y3RWEXumRlFEROyW92DodRFWr4ZSbcCxkm21bB5Ytwb6WyDdVaOzitgjNYoiImLXHIPhrSywsD10WQlerYAGAAwH95+hT3VYUgGqrgOnBkbnFbEnahTthGUp/L0ZfjlodBIRkfgpdU7o6wPLS0D+Q7YVh+1Q4Ris6wF99oLnSaOzitgLk9EBJKoW+IOfL4CPD5w6ZXQeEZH46/YnMCMXTN4Nt36wrYTcht/ega86w/b+EPyn0VlF4jOdURQRkQTHawZ8Xg+W3IASGcDhTmjF7AVF98C8hjC4IqQeD1wwOq9IfKVGUUREEiSnnFB2HyxbC50agMcT26qPA3w5CZb2hYpmYBf6/0SRF+h/FCIikqClygkD18OmGlDibzDvta1WugNbl8LoFpBqvtFZReIbNYoiIpIoFGsEKybC50Mh1QrbitsX0GULrNkBNSeD8zqjs4rEF7qYxW7oYhYRkdgQ1AYO5IWeZ+HPDyCkpm31xn2Y0QKGA3c6AG8bnVfESDqjKCIiiYrjLCj3BWz7Ebo3h2Rf21ZTJIFeq2FnDqhWF8z+RucVMZIaRXsxCLzyQorRRgcREUkYkhyBHidhRW6oMApMX9lWiw2DZYVhzGfguwZYZXReESOoUbQT5u1QsgxUWWl0EhGRhMPJEcrUgbnu0OUepJhiW01xADo7wMo5UGUtOO0yOq9IXFOjaC+KgnNBcOlvdBARkYQn1YcwYCDMHw6lwj0V2rQIym+ENf4wuAR4LzE6q0hcUqMoIiLyVIVCsCEXfLECUvW1rXjugK4N4LujUHMQOFc1OqtIXFCjKCIiEmoRuP0HfWrA3NlQuhU4pg4tmr+DYkNgYRH45k9I6wN89RpbE4n31CiKiIg8x8kEFf6BFU2hS0dwDfftxJS14ctzsGEVvDUBzEWMzivypqhRFBERiYBXaej3BDa3gkrTbCtmZyhWHr7bCKMXQpqWRmcVeRPUKIqIiETC9CWU+ANmfQO9GkDKA7ZVjwrQaRNsWg5V0oFLFqPzisQmNYoiIiJR4HMCei2AGdugRC8wlQqtOH4JRR/CSifo1x6S/wiUNjqvSGxwNDqARI3lLpz5E9wCjU4iIpK4VfsCyoTAxLkwOT/c/jO0kvwM9Abq5oUewbDTFYIeG51X5HXoWc92Q896FhGJT4LOwAE3GDIDDgyFIKdnpT1w+ypM9YXpveC/fUZnFYkpffQsIiISA45ZoFxqmH8NerQHt03AfAAqgFdj6JEaln8EFYaDU3Wj84rEhM4o2g2dURQRic8O3IVvSsFPF5+vPM4F40vCmC5wtYTROUWiQ2cURUREYkHpZLDIC/oHQvL5thXX49B1AGwbBHV+BMfLRmcViSo1iiIiIrEk5X74rCrMNcNbfcGxaWjFMQsUWQcLWsOA0ZC2MnDM6Lwir6JGUUREJBaZNkHl+rD8FHS/Bkl+sq0mPw69RsLq01DzttFZRV5FjaKIiMgb4DUdvrwEG/dB2dbgGO7JLqW/gXUbYVgTyOhidFaRiOhiFntRb4G/WwE/X3MweMzVxSwiIvbkWmmYNR1mzIMbQYReHQ0EL4SDGWDQRdi5BAK2GJ1VxJbOKNoJ82ko0xtqHDY6iYiIRFeqA/BlR1g+Bgp+a1tx8IMylWBFFejnC14zjc4qYkuNor14G9zmgHsPo4OIiEhMmPdBSRNsGw8DykPyL22rSdJAnwDYOxnq3QeHtkbnFQE1iiIiInEqSS3oVABWnIQyPuDY51lpEeT/FeZ2hZH9IV1nMDkYnVcSNzWKIiIiccxxGJScB4vTwOfTwMvdtppiGnyeBpb2gLfdwTwH0AUvYgg1iiIiIgZJsRf6noH1X8BbRcB8y7ZaPh2suwFjj4OPv9FZJXFSoygiImKwIjlg+VvwZTFI7WpbcXOCTidgwx9Q719w6WR0Vklc1CiKiIgYrSF4DYPuo2BBDyieFhxuhhbNa6BUBZg/AAafgRRfgSmZ0ZElcVCjKCIiEk84VoPS3WDDKuhZCjzr21a950HXTbBjMFRPBQ7Jjc4rCZ8aRTth6Qg3i8K1VUYnERGRNy1Jfuj2L6y9CFU9wTTXtlo4BJY1hYmrIM1fwHdG55WES42inbDUh0PfwS7dR1FEJFFwuA3Fv4dZraC7G/gctK16DYT2u2G1I9TsAC45jM4rCZMe4Wc3FviDny+Aj48e4SciktjsSwcDN8BPlZ+v3M0Ic/LBwCpwU6cTJFbpjKKIiIgdKNsHNhyHngPAN69tJdk56PIQfvge6mUG5x+MzioJhxpFERERe9ARnJtBj3swfx6U3wuOB0KLpt1QYCvMWwVDOkOGTcB4oyOL/VOjKCIiYkcc+0KZ3LDkDnS9BW4fAE6h1eTF4IursCE7lC0A5g5G5xX7pkZRRETEDnlWgD5l4duRUK2JbcV0GQrngp13YOJ7kC6t0VnFfqlRFBERsWOFPWFGI/h6FfhmtK24NIB2zWGrP9QYCq4eRmcV+6NG0V54gdkM5p5GBxERkfgm5dvQtTrMbA9lW4D52bcTHS5CgWBY+h8MrAm+7wFfGp1X7IcaRTth2golA6DqY6OTiIhIfFWpE6xxgb7HwTunbcV7KnRbBTuuQu1O4FjD6KxiH9Qo2gnTckg5BXxrGZ1ERETiM7dR8JkvrPSBytnB6Wvbav6RsKw/DNsAWbManVXiPzWKIiIiCYzD51ByC8y5DH12QNJygPVBDcUh6Uz4PDOsqArVfgbnk0bnlfjL0egAIiIi8makuAxfAOV/gq9vwo/PKuZLUAzYOAMmn4dRruCvLzfJC3RGUUREJIErUQYW/wnDCkPKirYV10/gs1bw3U5osBecmsRwE5JAqVEUERFJBLwbQ4eSsCArVLgOTnVCKw5ZIX8ZmOMLQ9tChsdgcjY6r8QPahRFREQSCdMoKDceFjeDngUhaTvbqncO6Po2rAqAOiajs0r8oEZRREQkkfFcBd0uw7YzULElON62rZY8Bmu3wZiVkDmb0VnFWA5GB5CoMZ1s2C1t0UJJTP/ChSPQubPRiURExJ6Zallvv13jDCQ7A8d84UFZ4GfSgTkzlMoH5d6Gq53g7GMIPmN0Zol7OqNoJ0JywU9NYbu+ZiwiIrEoRUf4/HtY4Q9FfwJTktCK2QIllsNiTxhQAlLMABoYnVfilr6DYDcW+IOfL4CPD5w6ZXQeERFJaB5egTkpYfQuuPHu89Vjl6CPK2xYD8Gtjc4qcUNnFEVERAQAd1/okAbWHISKnuDkZFvNkxZmX4QJeyBjHTDpyS6JgBpFERERecbhKhTpA/MHQvezkDKdbdW7AHScC8s+gzopwPErIEmMNiR2QY2iiIiIvCB5S+iZFNbOhnKjwCFcw/hWNVhZFMY3gtSFjc4qb44aRREREYlQocew/Cz0OQNpP7GtuE6D9hbYchkaZQfXXEZnldinRlFEREQiVgWSDoHPk8AiH3jrL3B6dndFcxEocgpmLYER6cF3MZh0oUsCokZRREREXsnhOhTvAWsmQO9U4JXRtupVAv63A7ZfglqnwKGc0XkldqhRtBOm0VDkDJT71+gkIiKSmHmMhM9Pw8YFUGM8mHbbVgt2g2UDYYY/pAsCDhmdV16PGkU7YToP6TZCZt0/UUREDGY+BYWKwoxt0CcLpAmyrSatAK2+hnUdoF42cB1ldF6JOTWKIiIiEiPey6GHF8yzQPlJthXTh1B8Bixyg5GekKKL0VklZtQoioiIyGt56wBsHAn9mkHqv20ryVyh0yzYtwwa7gCX8kZnlehRoygiIiKvpxCYj8Jnc2HxIqiaA5x6PqsegFz+MCc3jHSDLA2BxUZHlqhRoygiIiKxwvEJlOgJ84dDz2uQdDzQKbTqlQ463YX1s6FKW3A8aHReeTU1iiIiIhKrklWD7mNhW3eoUd+2YtoPBbxh6xOYvA3S/2l0VomcGkURERF5IwpchxlDYYgbpOlqW3EOgo/zwvbcUPceuD4wOqu8nBpFe3EKgjZC4HGjg4iIiESd9zrodAVmp4XK1cDhamjFoTHkcYCFO2B4LkjnD2w2Oq+EZzI6gERR3QX+7rf9fM3DwTIVPp9lXBSfbtByiNEHRERE7M2jqzDjLIxtAzfPPl/9uyn0qgFbLkFQH6OzipUaRbuxwB/8fI1OAZA/P/z0k9EpRETEHoVUhN//B4NKwu5CEBD8rPQ3PKwBc1LChONw8pHRWQUcjQ4g0Wc2Q0qfuN/u/XvwUN8iERGR12DeDUWAmftgiReMWAd3GoPlCnnB/Tx0/ADKm6DPSdjZFh6PNTpzYqZG0Q55N4DvS8f9dkclh3ltjN57ERFJCJKXhU5noMxM+LoV7B4WWjEvg0LA6iQwLS8Mfxsuf2d03sRKjaIdcvgRMs6L++0m+8roPRcRkYSmaFtYkgmWt4WhveBa1tCKy3343ymoNR++2gPrgMAKRudNbHTVs4iIiBgq6X/wcW5YUgmqfQjO5UIr5uyQcy/M/AXGVIQs68BUwui8iYkaRRERETGcqS2U+hPmHYM+X0AyN9uq52fQKQRWpoR3khudNTFRoygiIiLxRrJd8Pll2PkYqn4ETjVtq8UKwbqdMNkEWSsZnTUxUKNoJ0xVIPcPUOQPo5OIiIi8YX6Q6w7MGQbf5IM0nwDW78knAQKh/YewajU0GQGu5Y2Om5CpUbQTpoKQ/Q/Id9noJCIiInHDOwl8mhxWVILSY8F8P7RiXgBFksO8f2HoA0jdBThndN6ESI2iiIiIxFvm/0GhurD+bRj2B6S8aFt1nwaf/QI/NIYme8DhH6PzJjRqFEVERCTec1sAbc/Chq1QzRWcxtlWc5WDWdNgmgNkyQ2mykbnTSjUKIqIiIhdcKgL+d+D2TegTy5Ind+2mmwvtMkOyztAw3Tg3AzQFdKvSY2iiIiI2BXvYPiiLKw+ABUvgUMN22qJzrC4J0w6Amm+NDqrvVOjKCIiInapwCFYPhT6j4T0P9pWXPNBm6ywPRA+6ASuutAlhtQoioiIiH0qBu6D4dNRsGQLVBwHzk1Di6bNkL8PTP8ZxjWFdL9al0l0qFEUERERu+YwCQr3hOW9oO8d8LphW012ENr9CN9Wh7qLwKGt0XntiRpFOxFihr19YMtto5OIiIjET+5XoPNZ+LYl1E0Jpgu21XxXYflqmJcdMmYDThid1x6oUbQXY+DOPbj5vtFBRERE4i/TAcizGKZ6woDSkKGwbdXtCTSvCOt/hUanwe2e0XnjOzWKIiIikuB4/gpd/oa5+6ByBqBZaMVUCgonhblpYWwBSFUAyGh03vhKjaKIiIgkWCWDYf1fMLAfpB1gW0laANqdgQNn4L304LLd6KzxkRpFERERSfA6LYZly6DmUHDObVvJeg9m7obxiyD7TUANow01iiIiIpLgOXSHwgdgdhboexm8fwaOhlaTOcInT2CDD9ScBS55jM4bX6hRFBERkUQjaW3och62tIA6NW0rpmWQJxDWA1PSQMbRRmeND9QoioiISKKT7yBM2wGj2kK6A7YV5+XQMhB2doB3W4DbGaOzGkmNor14DJnmQ86fjA4iIiKSMHimg09Gw9zDUCMvOFULrZj3QHY3mDMNRrtA5l5AoryVjhpFO2HuCQXuQMlE+V9TERGRN6f0R7AwDww8BCnS2lY8XaFDGtj6EN7tAI4/xnQb9kqNooiIiCR6rnOh/VHYeBFqDwLnobbV3J/D4l4weSHkumN01rikRlFEREQEMHtB/nsw7SwMbgMpa4PpXQAygWteaFMQViWBhvXA3dnovHFyTIwOICIiIhKfeI2Bdi6wNjVU/su2Yu4I+c2wtAiM2PT8LbwTIjWKIiIiIi9RaBws8YNJ08G3r23FpT90zAw/FoZmu8G5kNFZ3xQ1iiIiIiIRcO8MfulgWQuodQhcCoZWTDkgSz2YNhAmpoYc7cDUxui8sc3R6AASfQ89YeKyuN/ukbrABLie0Zjti4iIGOYSFCwApzrAyQ62haTfwSdAyc0wOD2sLgWWbkCCuOhFjaKd8bgE6X6HBRHUH74H5zdFvL7Dp5B+Irg+jnhMUEY46w/BEfy3w38LTGgEXk0jniN4Mpz/HzxxjXhM8ryQ6nDEdUsSuHgXHiSJeEySrZCuYiQHbCD4fwl3vCIe4lINMm8gUjduw/W0EddNjSHLT+B0KuIxT3bA2Xci306GQHAPjOSYFIITJyOfI/Uw8Owc+ZhTqyD4o4jrKVJByv8in+NcJnh0LeJ6slmQuiWYAiIec+MaXM8Ucd3lMaS/AI6RHPu7beDyPCCCr5U7BkKGT8F5XMRzPGwJF9NByNiX100hkOEuuEXy1fWAD+HcFAhOHfGYdH0gSZ+I6yEfwFlvCJwf8RjPztbfcWQuH4G75SKuuwVCxsDI57hRGa4fjLjudMr633lT44jH3N0El9+LuO7YFjJWBqcGEY95lBvO/QeYXl4334T0O8CtbsRzBM2Ec7sgcF3EY1Idtv6bFJGQ5HChGjyK5N9Xr6bgOzviumU4XD4I97ZFPMb9EmTwIlJX34FbOyKuO3WFrAMjn+NhWjh/O/IxWWaDcyT/zgeOhtN9I58jfV7wOBz5mOPukdd9toJ3xcjHnO5rzRMR72rg84p/58/fth6XiLg9hPQjwNwDcrV4sX7v48J1Li1dCcy4DiMrwqlXbNE+qFG0EyF14WgKSLkJyl6KeNxFv8gbRafrUDgZpPgt4jH3d8Ol8/AokjzZjkDuSP6H+/gS3NoPTyKZI+1PUDKSfQnygF0r4EEkc6T4HsrmiLhuKQQ/jYn8zzr3zVD2PJH6/Qpcj6RufghFG0OySPbnZhE4G/lmKFAFUs+N5Ji89epGMXsZyHkp8jH/NY+8UUxfFIq9Yo5bH8OjSBoWn6lQ5h8wt494zO+TIj+uSSpAicLg3iPiMacKwZX2EBJB3dUFimQAr0j251I68B8UcaPo8CsU8ADfSP7FvO0C/vMi/99N7nWQqVXE9YB74P8LRNbD+QyN/N8AgN134W4kdc9+UPbjyOf4NSDy343bZ/BWVXCIJMspM1yOZA7nxlDsJiSNZI7LC+FCJL9fp9JQYBr4RjLHw55wNUvkxzVzZigQyRxPZlv/KIns95s6NZSJZI7g3bB7OdzzjXiMl9erf78HBkXeKLq6vnqOi3/D+bSRjyk6Gzwj+Xf+3mk4HfkU5JkMGV6R5fgr5sg6GvLmiHzMJdfIf79pBkHpV+TYlhYeRlL3TAqlJoBzBPOcuQzWUhsLlCkBwwrBmm/h0c/YMdPrTyFxY8YtU8Omw9w3g6lWxKOC/OBxJH/hcx3c/gCH8REPCRkMj9qDJZLbirpUBye3iOuWh/CoGIRE0kg4TQOXrZHM0R4eB0NwJGcKHK6BW2TfCDkBj/dDkFfEQ8zlwT05kQrIDQHDIxnQAdwzgXl/JMd1Lzy8Gfl23KqBg0ckx+RzeFAp8jlcpoDTt5GPefArWM5FXHfyB5d2kc/xsC+EFI+47jgEXPsCkfz+Av6DgN8irpvLg+sqMH8S8ZjAOvBkObDz5XXTJ+C2yjpXRIImweN9wAcRDBhrncMhZcRzhJyCR+fBEkmH5poBHItGXLfkgIcWsERyZsRxALj+QqQen4egI5Ec17/AvXfkczwZD4GZI66bJoF7PTBFcvY6sAI86RrJHIXArSOYt0Q8JmgRPG4CRHQW7mdwGwIOlojnCFkJj1aCpXnEY5y3gvO0iOuW9PCoB4REcgbcyc36b2OEc4yBJ5UgKJI/TB2ag9t9IvXEHQKXRnJc14DH/MjnCFoEj5NGPsa9NZhvRHJc34WHLSKfw3UTOM6MfMz99ZHXXVzAqWbkYx60AMu7EdedmoLLw8jneJQEghdHXDcftv47YDr28nrQ3/A43B/yD3PD3H0wYjDcjOTPg/hNjaLd8NkFSS2vP4+IiIjEnevr4c74159HREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREREQSApPRAeyD9/fgsjTs/YPCcO9To1OJiIhIYmBaAd6FwHlU1MaHeMLN4RDk8LpbdjR61+M/7zowrSvk8w5btr0xfGF0MBEREUkUkm2ESY2h4L9RGx+yA+70g/1LYUFNOD4aAgcZvRcJVIVRcOtnsFjCfq5lB6erRicTERGRxCD5HDi4IXwvEtWfKyfhyx3gmDomW9YZxVd6rzd43Q+/LOVJqH8aVhkdTkRERBKdC83hev6I657pIeMUcNgPPtlhYHPwmAj9mkR3S2oUI+UxFN7ODzhZ35/KBNn/s75ukBw2jYHH+gxaRERE4tCkqrBgSsR1lzNQsgb06QwFz4DTQfjsCcx5H84uNzp9QpEc6uSAhw2tp26vF4X2M+HRLuv7M+UgS7Q7cxEREZHoef6j5/bbo7DSCSjwLdw8FrbeV7mAjtHZstnoXY+/nEzQ4EdwW2N9v+4hbPOE/zpY32feC1U+MjqliIiIyEvkhKM1YPXMsEXFyoH7O9GZRI1ihFJ4Q53B1tf328Ha3vBfVvjpYNiYBgfBKUZfDhURERF5837xDXvt+BuY10dnbTWKESrbEtKMt74+Nxz2pgdLcVhvAksy6/ICrSBnYaOTioiIiLxcihthr++/BYGForO2GsWXcnGCpjYHckM9uFvF+vpIPzjZzfo6Y3Go6R39+UVERETiQo0FYa/3N4Mn7aOzthrFl8q2Eoovsb6+2Qw2ZA2r+WeB3WOsr003oWFxo9OKiIiIhOdWATr5Q2l/6/vLzrCoRHRn0e1xXqpqGcjQ1vr61yD4O3tYLbALbLDA0zJF+kLuhfCPn9GpRUREJDHwaQ3ZC7+43LwLsgyC1L9B7bFQczA4ZYTzveGLjHDTyejkCcQOv7BLybv1f7HulgxuNbLWQypDHwcw1TQ6tYiIiCREr/Nkln0LoVxTo/cgASldEm6MsR7c20UgW8qXj5txPuyX8GPOF5/eIiIiIhIbXqdRvL8FVrwF+f+MyZb10XM4pveh6lTwGgBshh8OwaXSwPUXx64bAu9ngWTdodi7kGcj7Dd6B0RERCTBO9wbTi2KfEzyWpDnJGQ4BY0HQ+m+0Lod7PQDS7mobkmNYjjODeBdZzCPhaCt8HthyJoaLItfHPvgEty5B8kA16FQPzXsTwNcNnovREREJCGbXRmmDY18jOlLyOkP05yh0n3IsAYmFIPqmeCC0Ttgr4rfiNlpXYsFfikHPlHu0EVERESiJkaP8HsqUzf4q1LYut/kj86WdUbxGfNP0HQ1YZczR1Ouc1B8LWwpZvSeiMiblKI0lBwD9QZAwc3glQEC/4PjeeDbWrAtJfjnAct7r7+tbK2hUgUwL4v6Ohf7wrZ5EDIz6uuISMJ1bhasCYG8T99XmgjmkhDiEZW11Sg+4zsSKqR5+qYorCsBR90iX8etNbw3DDIuAY//oFYt2GL0jojIG2HqBcUrwYAxUHUvOG19Wrho/Y/CJ+G9D+GXLDAsD6z9HUKi9QSEFzXIBSP8wNwi6uvs+ht2/AYBRh8wEYkXLLfhWJew98lPQPLNL738QiJTbxY8aW09LXs5NxTv/ep1zN4wZmnY6dyz/4HnPaP3RERi3XZ4uwdcORe1r6LcyQhtD7/eJh2bwYys0f8azPd/gXO0b6orIvHZ63z0DNCyfti6v14Er8xRXVNPZnmm4VFwnm19fagRHI3CI25CbsE6m/e+KaHaX0bviYjEtqxjYMoU8Pku/PIH5+DsHrg9EkgftjzZfzA4CZQ/C3wRs226ARlNRu+5iNg7034ocSzs/bkQuL0wqmurUQQgcxaoYHMhyqZj8CRj1Nb9xTHsEnXX8VDnPjh7Gr1HIhJbzA+hfSXIfg9o/XShA3z3CN4vD3WPQr0fYdoSePB52Hqp1kDfzJBkUfS3CS82ig/rw8VTr/65vg8s7xt91EQkvijWBWqNffqmKuxaBZQ3OpWd8XOCx32efuwcApmnRn1dc2UY2QFCDlvXP/cL+OaN+voiEr9lywLHhoT/ePevVODz3BeSnRbC0MHhxwX+CxV/jdl2Mw2F+9vD5hq3y+gjISJGiclHz85AzV/h93Vh6535DTJHq0nUxSwAfLAdXCoBO2HnefD/J+rrhuyCjZ7QJgi8gAxjoXplWPi30XslIrEh+xzINjvsfeB2mOYJV3OFHxfoB2PrQ4d24DnduswxK9TZC7tjsN1se8Cjp/V1yHX4e2wMJhGRBKlbfvhwesR1hxKQcRsknwuuT+/A8PBf6BYE/7UG9hq9B3bE51d4XP3pX/8noOmV6M/hdgl+2xPWsS+/Ai5eRu+ZiMSGDubwZwlvD4dKf7x8rLMf/LAl/Pjd5cDLOfrb7Xg8bI5730G9LEYfCRExyus8wi8kJZyrBp38wTwxulvWGUXevQYu31pf3/oDvpsT/TkepYVvj0LonTBKT7OehfjrXaP3TkRel1PO8O+f+MOVZi8fG9wR/rsVfplPa0jxBG4fit52MxUH7lpf3/OAc8fB4xhUdIJMya3Lr2WEw4fhbEGjj5KIxDcPPeHP1bDbHZb4wG+pYzKLGkVmboY5T284ZikKgY1jNk/vRtB3zNM3+yDwgdF7JiJvgrMTpEzx8pq5M3gvD78seVnwLAXki/o2HPNCMdvHc02G97tDu8zg+SeYW1oXW/JDQBPYsgP6HYK/ehl9dETkTbh5BsqtAFN0LkLODiHdIPgjsAwyeg9ERBKoZt7hP8Z53B9a5Acavjg2aVk45xZ+/IPUUC6aDZzPAfhlU9gcwZ0hoHTkHy/9fQvqTDP6aImIiIgkIqVyws3nbrS9eQG4PP9s9/3QdOTLm7i3f4/eNvNshH+vv2SutRDyOYRUBsvPL9aPl4FcC7HeW0dERERE3izvs7DL/cWmbFodyP30CSg+XaFDdbj6T+w0ilX2wb0O4ee4exNmXIUOe6HNVZhXHu5Oe3FbCzODwyWjj5qIiIhIYrATWpyBwM3hG7Igb7hUFI51gzNr4eGBlzeJwdWgahQeCWrr3Z1wMy3cPGb9OZ8OWv4PnNuEjXFpAa2OwK0c4bf3KCdk1k3/RUREROJGUhOsrQ0Wc+TfEwz5BwK+C7/sxgMo2Tx628s4ACouCvspVQZc0r44zuUCzLv0Yg6/8UYfMREREZFEJO1MWFMSAodE0CRmhS3vwrL04Zef6wr5+725XI0nvphl9F2jj5aIJAx61rOISJRcagstU0HbErD9BJwJhGst4VI/+GU29A+GVt3gUfLw691xhntv8LGex0NeXJbqodFHS0RERCSRcv8D8raCEp2g8DpIPQFMR8DZFXb8EP7s3nYvcPd/c1lyBb14RnH+ZqOPkIgkDLrhtohItD0sCM8e5z4pbLljASi6EagYtuwvb3gYjScipEsB1VKDo813Ev+ZC/vSv3x87nnAx+GXXc5o9BESkYRBjaKISKSyNoBen0OyJ2HLNs2DRYBlSfixjY6C93PPgd48CagT9t5zBWQ+E37Mg6JwZiAE74GkOWA04GnzZJbtIVD/XwjKFn4917Tw7jheaBQPRfN2PCIiIiISAzm+hhO1w3+0e7QXpL0MpnrWMaZ8UDAVHJkaftw/AyH58PDz1d0J573D/2xoB15+1rprNTiR7bkrp5NDg+3g0CpsHrc00MYDbi0KP/bWZPCJ5u14RERERCQGXM7AqlQvfg/wwAToWgbe+RW+7gJ/Jnnu/on1YWAVcKgZfr73zr0418ENkHxO2Jix6V8cc/MOjCsOnXNZf1Zsh3v/Pnfl9VKY9D04JI/ePoqIiIhIDJWpCHd7vOS2OIUgpAtYer5Y+20BpOr74lxRaRSzHYE/O75ke9+CJcfTn5fcoufAx5D6c8DB6CMmIiIikkg4vgWd34FbETyi7/mfo35QrsrL54pKo2hKCrVmw381wdLv1dsLyQUHO0KJc0YfKREREZFEyKEotHCHk/9CUEmwnH+uYWsAAX7w7RQoPiLieRr9Bg/vhf/ZMx68n7v3oXk2FB0Ke1LDY1cI2fuSxwPOgnsDYVISyN4GEZFYZjI6gIiIfUnaFN5uAG/vgDTFIFluuDYNTqeDnRNhR0Dsbs/hCygyAKrvggLVwOkr6/K7ReDnANi2Cs5uMfqoiIiIiMgzDjPB423wvACul8HU7M1v07UbuF2z/jh1MPoIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIxBf/B6CFr9BEVkyGAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDI1LTA5LTMwVDAwOjAwOjI3KzAwOjAwTU5umAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyNS0wOS0zMFQwMDowMDoyNyswMDowMDwT1iQAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjUtMDktMzBUMDA6MDA6MjcrMDA6MDBrBvf7AAAAE3RFWHRwZGY6VmVyc2lvbgBQREYtMS43vTg77QAAAABJRU5ErkJggg==" style="width:70.0%" /></p>
-<p>Completa los siguientes <strong>12 pasos progresivos</strong> para
-demostrar tu comprensión completa del Teorema de Pitágoras:</p>
-<div id="fase-i-comprensión-conceptual" class="section level3">
-<h3><strong>FASE I: Comprensión Conceptual</strong></h3>
-<p><strong>Paso 1.</strong> Un triángulo rectángulo se compone
-fundamentalmente de: ##ANSWER1##</p>
-<p><strong>Paso 2.</strong> Señala todas las afirmaciones válidas acerca
-del fórmula pitagórica . ##ANSWER2##</p>
-<p><strong>Paso 3.</strong> Considerando los lados 9.5 , 22.8 y 24.7 ,
-¿qué número corresponde a la distancia ? ##ANSWER3##</p>
+<div id="walkthrough-resolución-del-ejercicio-del-teorema-de-pitágoras" class="section level1">
+<h1>🚶‍♂️ Walkthrough: Resolución del Ejercicio del Teorema de
+Pitágoras</h1>
+<div id="objetivo" class="section level2">
+<h2>🎯 <strong>Objetivo</strong></h2>
+<p>Este walkthrough te guiará a través del proceso de resolución del
+ejercicio de entrenamiento del Teorema de Pitágoras. Entenderás cómo se
+generan los datos, cómo interpretar el diagrama TikZ y qué pasos seguir
+para completar las tres partes del problema tipo <code>cloze</code>.</p>
+<hr />
 </div>
-<div id="fase-ii-aplicación-numérica" class="section level3">
-<h3><strong>FASE II: Aplicación Numérica</strong></h3>
-<p><strong>Paso 4.</strong> Determina el valor de 9.5 elevado al
-cuadrado. ##ANSWER4##</p>
-<p><strong>Paso 5.</strong> Calcula 22.8 ²: ##ANSWER5##</p>
-<p><strong>Paso 6.</strong> Determina el valor total de 9.5 ² más 22.8
-². ##ANSWER6##</p>
-</div>
-<div id="fase-iii-verificación-y-análisis" class="section level3">
-<h3><strong>FASE III: Verificación y Análisis</strong></h3>
-<p><strong>Paso 7.</strong> ¿Se cumple que la suma de los cuadrados de
-los catetos es igual al cuadrado de la hipotenusa en este caso?
-##ANSWER7##</p>
-<p><strong>Paso 8.</strong> En un triángulo rectángulo, la hipotenusa es
-24.7 y uno de los catetos es 9.5 . Halla el otro cateto. ##ANSWER8##</p>
-<p><strong>Paso 9.</strong> ¿Cuál es el cálculo correcto para encontrar
-un cateto si la hipotenusa es 24.7 y el otro cateto es 9.5 ?
-##ANSWER9##</p>
-</div>
-<div id="fase-iv-transferencia-y-síntesis" class="section level3">
-<h3><strong>FASE IV: Transferencia y Síntesis</strong></h3>
-<p><strong>Paso 10.</strong> En el contexto de construcción de un puente
-, ¿cuáles son aplicaciones válidas del fórmula pitagórica ?
-##ANSWER10##</p>
-<p><strong>Paso 11.</strong> Un estudiante calcula la distancia como 9.5
-+ 22.8 = 32.3 . ¿Cuál es el error? ##ANSWER11##</p>
-<p><strong>Paso 12.</strong> Problema de transferencia: Si los catetos
-de un triángulo rectángulo miden 31.2 y 41.6 , ¿cuál es la longitud de
-la hipotenusa? ##ANSWER12##</p>
-</div>
-</div>
-<div id="answerlist" class="section level2">
-<h2>Answerlist</h2>
+<div id="fase-1-generación-de-datos-aleatorios" class="section level2">
+<h2>🎲 <strong>Fase 1: Generación de Datos Aleatorios</strong></h2>
+<p>Cada vez que se compila el ejercicio, ocurren varios procesos de
+aleatorización en segundo plano para crear un problema único.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Selección de una Terna Pitagórica</strong>: El sistema elige
+una terna pitagórica primitiva (un conjunto de tres números enteros
+<code>a, b, c</code> tal que <code>a^2 + b^2 = c^2</code>, como
+<code>3, 4, 5</code>).</li>
+<li><strong>Escalamiento</strong>: La terna se multiplica por un factor
+aleatorio (por ejemplo, 2) para generar una nueva terna
+(<code>6, 8, 10</code>). Esto asegura una amplia variedad de
+problemas.</li>
+<li><strong>Asignación de la Incógnita</strong>: El sistema decide
+aleatoriamente qué lado será el desconocido. Hay tres posibilidades:
 <ul>
-<li>dos catetos y una hipotenusa</li>
-<li>tres catetos</li>
-<li>tres ángulos agudos</li>
-<li>una hipotenusa y dos ángulos agudos</li>
-<li>Se aplica a cualquier triángulo</li>
-<li>Se puede escribir como a² + b² = c²</li>
-<li>Se aplica solo a triángulos rectángulos</li>
-<li>La hipotenusa es el lado más largo</li>
-<li>24.7</li>
-<li>9.5</li>
-<li>32.3</li>
-<li>216.6</li>
-<li>Solo si la hipotenusa es par</li>
-<li>No se puede determinar</li>
-<li>Sí</li>
-<li>Solo si los catetos son iguales</li>
-<li>Calcular 24.7 ÷ 9.5</li>
-<li>Calcular √( 24.7 × 9.5 )</li>
-<li>Calcular √( 24.7 ² + 9.5 ²)</li>
-<li>Calcular √( 24.7 ² - 9.5 ²)</li>
-<li>Determinar ángulos rectos</li>
-<li>Verificar medidas</li>
-<li>Determinar volúmenes de cilindros</li>
-<li>Calcular distancias directas</li>
-<li>Confundió la hipotenusa con el perímetro</li>
-<li>Aplicó mal la fórmula de la raíz cuadrada</li>
-<li>No consideró que es un triángulo rectángulo</li>
-<li>Sumó los catetos en lugar de usar el teorema</li>
-</ul>
+<li><strong>Calcular la hipotenusa (c)</strong>: Se te darán los valores
+de los dos catetos (<code>a</code> y <code>b</code>).</li>
+<li><strong>Calcular el cateto a</strong>: Se te darán los valores del
+cateto <code>b</code> y la hipotenusa <code>c</code>.</li>
+<li><strong>Calcular el cateto b</strong>: Se te darán los valores del
+cateto <code>a</code> y la hipotenusa <code>c</code>.</li>
+</ul></li>
+<li><strong>Orientación del Triángulo</strong>: El diagrama del
+triángulo se rota y/o se invierte de forma aleatoria. Esto significa que
+la hipotenusa no siempre estará en la misma posición, obligándote a
+identificar los lados por su relación con el ángulo recto y no por su
+ubicación.</li>
+</ol>
+<hr />
 </div>
-</div>
-<div id="solution" class="section level1">
-<h1>Solution</h1>
-<div id="solución-completa-del-entrenamiento-fórmula-pitagórica" class="section level2">
-<h2>Solución Completa del Entrenamiento: fórmula pitagórica</h2>
-<p>Este ejercicio pedagógico evalúa la comprensión integral de la
-fórmula pitagórica a través de 12 pasos progresivos que abarcan desde
-conceptos básicos hasta aplicaciones avanzadas.</p>
-<div id="fase-i-comprensión-conceptual-1" class="section level3">
-<h3><strong>FASE I: Comprensión Conceptual</strong></h3>
-<p><strong>Paso 1:</strong> Los elementos principales de un triángulo
-rectángulo son <strong>dos alturas y una distancia</strong>. Los alturas
-son los lados que forman el ángulo recto, mientras que la distancia es
-el lado opuesto al ángulo recto y siempre es el más largo.</p>
-<p><strong>Paso 2:</strong> Las afirmaciones correctas sobre la fórmula
-pitagórica son:</p>
+<div id="fase-2-interpretación-del-diagrama-tikz" class="section level2">
+<h2>🎨 <strong>Fase 2: Interpretación del Diagrama TikZ</strong></h2>
+<p>El ejercicio te presentará un diagrama de un triángulo rectángulo.
+Debes observar lo siguiente:</p>
 <ul>
-<li>Sí: Se aplica solo a triángulos rectángulos</li>
-<li>Sí: La hipotenusa es el lado más largo</li>
-<li>Sí: Se puede escribir como a² + b² = c²</li>
-<li>NO: NO se aplica a cualquier triángulo (solo a rectángulos)</li>
+<li><strong>El Ángulo Recto</strong>: Identifica el símbolo del cuadrado
+(└) que marca el ángulo de 90°.</li>
+<li><strong>Los Catetos</strong>: Son los dos lados que forman el ángulo
+recto. En el diagrama, estarán etiquetados como <code>a</code> y
+<code>b</code>.</li>
+<li><strong>La Hipotenusa</strong>: Es el lado opuesto al ángulo recto.
+Siempre es el lado más largo y estará etiquetado como
+<code>c</code>.</li>
+<li><strong>La Incógnita</strong>: El lado que necesitas calcular estará
+marcado con una <strong>“x”</strong> en lugar de un valor numérico.</li>
 </ul>
-<p><strong>Paso 3:</strong> En el triángulo con lados 9.5, 22.8 y 24.7,
-la hipotenusa es <strong>24.7</strong> porque es el lado más largo.</p>
+<p><strong>Ejemplo de Interpretación:</strong> Imagina que el diagrama
+muestra: - Lado <code>a = 6</code> - Lado <code>b = x</code> - Lado
+<code>c = 10</code></p>
+<p>De esto, debes deducir que conoces un cateto (<code>a</code>) y la
+hipotenusa (<code>c</code>), y tu tarea es calcular el otro cateto
+(<code>b</code>).</p>
+<hr />
 </div>
-<div id="fase-ii-aplicación-numérica-1" class="section level3">
-<h3><strong>FASE II: Aplicación Numérica</strong></h3>
-<p><strong>Paso 4:</strong> 9.5² = <strong>90.25</strong></p>
-<p><strong>Paso 5:</strong> 22.8² = <strong>519.84</strong></p>
-<p><strong>Paso 6:</strong> 9.5² + 22.8² = 90.25 + 519.84 =
-<strong>610.09</strong></p>
+<div id="fase-3-proceso-de-resolución-ejemplo-práctico" class="section level2">
+<h2>✍️ <strong>Fase 3: Proceso de Resolución (Ejemplo
+Práctico)</strong></h2>
+<p>Siguiendo el ejemplo anterior (<code>a=6</code>, <code>c=10</code>,
+<code>b=x</code>), así es como resolverías las tres partes del ejercicio
+<code>cloze</code>.</p>
+<div id="parte-1-identificar-la-hipotenusa" class="section level3">
+<h3><strong>Parte 1: Identificar la Hipotenusa</strong></h3>
+<blockquote>
+<p><strong>Pregunta 1:</strong> “En el triángulo mostrado, el valor de
+la <strong>hipotenusa</strong> es:”</p>
+</blockquote>
+<p><strong>Solución</strong>: La hipotenusa es el lado <code>c</code>,
+opuesto al ángulo recto. Su valor es <strong>10</strong>. <em>Respuesta
+a introducir: <code>10</code></em></p>
 </div>
-<div id="fase-iii-verificación-y-análisis-1" class="section level3">
-<h3><strong>FASE III: Verificación y Análisis</strong></h3>
-<p><strong>Paso 7:</strong> <strong>Sí</strong>, es cierto que 9.5² +
-22.8² es aproximadamente igual a 24.7². La pequeña diferencia se debe al
-redondeo de decimales, pero el teorema se cumple.</p>
-<p><strong>Paso 8:</strong> Si un cateto mide 9.5 y la hipotenusa mide
-24.7, el otro cateto mide <strong>22.8</strong>. Cálculo: √(24.7² -
-9.5²) = √(610.09 - 90.25) = √519.84 es aproximadamente 22.8</p>
-<p><strong>Paso 9:</strong> Para verificar que 22.8 es correcto, debemos
-<strong>calcular √(24.7² - 9.5²)</strong>, que es la aplicación directa
-de la fórmula pitagórica despejando un cateto.</p>
+<div id="parte-2-identificar-el-cateto-conocido" class="section level3">
+<h3><strong>Parte 2: Identificar el Cateto Conocido</strong></h3>
+<blockquote>
+<p><strong>Pregunta 2:</strong> “Uno de los <strong>catetos</strong>
+tiene un valor de:”</p>
+</blockquote>
+<p><strong>Solución</strong>: Los catetos son <code>a</code> y
+<code>b</code>. El cateto conocido es <code>a</code>. Su valor es
+<strong>6</strong>. <em>Respuesta a introducir: <code>6</code></em></p>
 </div>
-<div id="fase-iv-transferencia-y-síntesis-1" class="section level3">
-<h3><strong>FASE IV: Transferencia y Síntesis</strong></h3>
-<p><strong>Paso 10:</strong> En el contexto de construcción de un
-puente, las aplicaciones válidas de la fórmula pitagórica son:</p>
-<ul>
-<li>Sí: Calcular distancias directas</li>
-<li>Sí: Determinar ángulos rectos</li>
-<li>Sí: Verificar medidas</li>
-<li>NO: NO calcular áreas de círculos (eso requiere π×r²)</li>
-</ul>
-<p><strong>Paso 11:</strong> El error del estudiante es que <strong>sumó
-los catetos en lugar de usar la fórmula pitagórica</strong>. La suma 9.5
-+ 22.8 = 32.3 no da la hipotenusa correcta (24.7).</p>
-<p><strong>Paso 12:</strong> Para el problema de transferencia con
-catetos, la hipotenusa es <strong>52.0</strong>.</p>
-</div>
-<div id="explicaciones-detalladas-por-paso" class="section level3">
-<h3>Explicaciones Detalladas por Paso</h3>
-<p><strong>Paso 1:</strong> Respuesta correcta: dos catetos y una
-hipotenusa</p>
-<p><strong>Paso 2:</strong> Respuestas correctas: Se puede escribir como
-a² + b² = c², Se aplica solo a triángulos rectángulos, La hipotenusa es
-el lado más largo</p>
-<p><strong>Paso 3:</strong> Respuesta correcta: 24.7</p>
-<p><strong>Paso 4:</strong> Respuesta numérica: 90.25</p>
-<p><strong>Paso 5:</strong> Respuesta numérica: 519.84</p>
-<p><strong>Paso 6:</strong> Respuesta numérica: 610.09</p>
-<p><strong>Paso 7:</strong> Respuesta correcta: Sí</p>
-<p><strong>Paso 8:</strong> Respuesta numérica: 22.80</p>
-<p><strong>Paso 9:</strong> Respuesta correcta: Calcular √( 24.7 ² - 9.5
-²)</p>
-<p><strong>Paso 10:</strong> Respuestas correctas: Determinar ángulos
-rectos, Verificar medidas, Calcular distancias directas</p>
-<p><strong>Paso 11:</strong> Respuesta correcta: Sumó los catetos en
-lugar de usar el teorema</p>
-<p><strong>Paso 12:</strong> Respuesta numérica: 52.00</p>
-</div>
-<div id="evaluación-pedagógica" class="section level3">
-<h3>Evaluación Pedagógica</h3>
-<p>Este ejercicio evalúa:</p>
-<ul>
-<li><strong>Comprensión conceptual</strong> (Pasos 1-3): Identificación
-de elementos y principios</li>
-<li><strong>Habilidades de cálculo</strong> (Pasos 4-6): Operaciones
-aritméticas básicas</li>
-<li><strong>Aplicación del teorema</strong> (Pasos 7-9): Uso directo e
-inverso de la fórmula</li>
-<li><strong>Transferencia de conocimiento</strong> (Pasos 10-12):
-Aplicación a nuevos contextos</li>
-</ul>
-<p>La progresión de dificultad asegura que los estudiantes desarrollen
-una comprensión profunda y duradera de la fórmula pitagórica,
-previniendo respuestas mecánicas y promoviendo el razonamiento
-matemático.</p>
+<div id="parte-3-calcular-el-lado-faltante" class="section level3">
+<h3><strong>Parte 3: Calcular el Lado Faltante</strong></h3>
+<blockquote>
+<p><strong>Pregunta 3:</strong> “Aplicando el Teorema de Pitágoras, el
+valor del lado faltante <strong>x</strong> es:”</p>
+</blockquote>
+<p><strong>Solución</strong>: 1. <strong>Fórmula base</strong>: <span class="math inline">\(a^2 + b^2 = c^2\)</span> 2. <strong>Necesitamos
+calcular un cateto (b)</strong>, así que despejamos la fórmula: <span class="math inline">\(b^2 = c^2 - a^2\)</span> 3. <strong>Sustituir
+valores</strong>: <span class="math inline">\(b^2 = 10^2 - 6^2\)</span>
+4. <strong>Calcular potencias</strong>: <span class="math inline">\(b^2
+= 100 - 36\)</span> 5. <strong>Restar</strong>: <span class="math inline">\(b^2 = 64\)</span> 6. <strong>Calcular la raíz
+cuadrada</strong>: <span class="math inline">\(b = \sqrt{64}\)</span> 7.
+<strong>Resultado</strong>: <span class="math inline">\(b =
+8\)</span></p>
+<p>El valor del lado faltante <code>x</code> es <strong>8</strong>.
+<em>Respuesta a introducir: <code>8</code></em></p>
+<hr />
 </div>
 </div>
+<div id="resumen-de-la-solución" class="section level2">
+<h2>✅ <strong>Resumen de la Solución</strong></h2>
+<p>Para este ejemplo, las respuestas que deberías introducir en los
+campos del ejercicio <code>cloze</code> son: 1. <code>10</code> 2.
+<code>6</code> 3. <code>8</code></p>
+<p>Recuerda que en cada nueva versión del ejercicio, los números, la
+incógnita y la orientación del triángulo cambiarán, pero el proceso de
+identificación y cálculo será siempre el mismo. ¡Mucha suerte!</p>
 </div>
-<div id="meta-information" class="section level1">
-<h1>Meta-information</h1>
-<p>exname:
-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2
-extype: cloze exsolution:
-1000|0111|1000|90.25|519.84|610.09|0010|22.8|0001|1101|0001|52
-exclozetype:
-schoice|mchoice|schoice|num|num|num|schoice|num|schoice|mchoice|schoice|num
-extol: 0|0|0|0.5|0.5|0.5|0|0.5|0|0|0|0.5 exshuffle: TRUE exsection:
-Geometria|Teorema de Pitagoras|Entrenamiento Completo exversion: 1
-exdate: 2025-09-29 exauthor: Sistema de Generacion ICFES exemail: <a href="mailto:alvaroangelm@iepedacitodecielo.edu.co" class="email">alvaroangelm@iepedacitodecielo.edu.co</a> exinstitution:
-ICFES exlanguage: es excomment: Ejercicio de entrenamiento completo del
-Teorema de Pitagoras con 12 pasos progresivos que incluyen comprension
-conceptual, aplicacion numerica, verificacion y transferencia de
-conocimiento. Optimizado para generar mas de 300 variantes unicas con
-aleatorizacion avanzada de contextos, terminos matematicos y opciones de
-respuesta.</p>
 </div>
 
 
