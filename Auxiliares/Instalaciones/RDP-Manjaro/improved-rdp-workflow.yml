@@ -1,0 +1,234 @@
+name: RDP-04
+on:
+  workflow_dispatch:
+jobs:
+  secure-rdp:
+    runs-on: windows-latest
+    timeout-minutes: 360
+    steps:
+    - name: Configure Core RDP Settings
+      run: |
+        Write-Host "🔧 Configuring core RDP settings..."
+        # Enable Remote Desktop and disable Network Level Authentication
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
+        
+        # Configure firewall
+        netsh advfirewall firewall delete rule name="RDP-Tailscale" 2>$null
+        netsh advfirewall firewall add rule name="RDP-Tailscale" dir=in action=allow protocol=TCP localport=3389
+        
+        # Restart RDP service
+        Restart-Service -Name TermService -Force
+        Write-Host "✅ Core RDP settings configured"
+
+    - name: Configure Windows Services for Auto-Recovery
+      run: |
+        Write-Host "🔧 Configuring Windows services for auto-recovery..."
+        
+        # Configure Terminal Services for automatic restart on failure
+        sc.exe failure "TermService" reset= 86400 actions= restart/5000/restart/10000/restart/30000
+        
+        # Configure Windows Firewall service
+        sc.exe failure "MpsSvc" reset= 86400 actions= restart/5000/restart/10000/restart/30000
+        
+        # Set RDP robustness settings
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "KeepAliveEnable" -Value 1 -Force
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "KeepAliveInterval" -Value 1 -Force
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "MaxConnectionTime" -Value 0 -Force
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "MaxDisconnectionTime" -Value 0 -Force
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "MaxIdleTime" -Value 0 -Force
+        
+        # Prevent system sleep
+        powercfg.exe /change standby-timeout-ac 0
+        powercfg.exe /change hibernate-timeout-ac 0
+        powercfg.exe /change monitor-timeout-ac 0
+        
+        Write-Host "✅ Windows services configured for auto-recovery"
+
+    - name: Create RDP User with Secure Password
+      run: |
+        Write-Host "👤 Creating RDP user with secure password..."
+        Add-Type -AssemblyName System.Security
+        $charSet = @{
+            Upper = [char[]](65..90)
+            Lower = [char[]](97..122)
+            Number = [char[]](48..57)
+            Special=([char[]](33..47)+[char[]](58..64)+[char[]](91..96) + [char[]](123..126))
+        }
+        $rawPassword = @()
+        $rawPassword += $charSet.Upper | Get-Random -Count 4
+        $rawPassword += $charSet.Lower | Get-Random -Count 4
+        $rawPassword += $charSet.Number | Get-Random -Count 4
+        $rawPassword += $charSet.Special | Get-Random -Count 4
+        $password = -join ($rawPassword | Sort-Object { Get-Random })
+        $securePass = ConvertTo-SecureString $password -AsPlainText -Force
+        
+        New-LocalUser -Name "RDP" -Password $securePass -AccountNeverExpires
+        Add-LocalGroupMember -Group "Administrators" -Member "RDP"
+        Add-LocalGroupMember -Group "Remote Desktop Users" -Member "RDP"
+        echo "RDP_CREDS=User: RDP | Password: $password" >> $env:GITHUB_ENV
+        
+        if (-not (Get-LocalUser -Name "RDP")) {
+            Write-Error "User creation failed"
+            exit 1
+        }
+        Write-Host "✅ RDP user created successfully"
+
+    - name: Install Tailscale
+      run: |
+        Write-Host "📥 Installing Tailscale..."
+        $tsUrl = "https://pkgs.tailscale.com/stable/tailscale-setup-1.82.0-amd64.msi"
+        $installerPath = "$env:TEMP\tailscale.msi"
+        
+        Invoke-WebRequest -Uri $tsUrl -OutFile $installerPath
+        Start-Process msiexec.exe -ArgumentList "/i", "`"$installerPath`"", "/quiet", "/norestart" -Wait
+        Remove-Item $installerPath -Force
+        
+        # Wait for installation to complete
+        Start-Sleep -Seconds 10
+        Write-Host "✅ Tailscale installed successfully"
+
+    - name: Establish Tailscale Connection
+      run: |
+        Write-Host "🌐 Establishing Tailscale connection..."
+        
+        # Connect to Tailscale
+        & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=gh-runner-$env:GITHUB_RUN_ID
+        
+        # Wait for IP assignment with better retry logic
+        $tsIP = $null
+        $retries = 0
+        $maxRetries = 15
+        
+        while (-not $tsIP -and $retries -lt $maxRetries) {
+            Start-Sleep -Seconds 5
+            $tsIP = & "$env:ProgramFiles\Tailscale\tailscale.exe" ip -4
+            $retries++
+            Write-Host "Attempt $retries/$maxRetries - IP: $tsIP"
+        }
+        
+        if (-not $tsIP) {
+            Write-Error "Tailscale IP not assigned after $maxRetries attempts. Exiting."
+            exit 1
+        }
+        
+        echo "TAILSCALE_IP=$tsIP" >> $env:GITHUB_ENV
+        Write-Host "✅ Tailscale connected with IP: $tsIP"
+
+    - name: Verify RDP Accessibility
+      run: |
+        Write-Host "🔍 Verifying RDP accessibility..."
+        Write-Host "Tailscale IP: $env:TAILSCALE_IP"
+        
+        # Test connectivity
+        $testResult = Test-NetConnection -ComputerName $env:TAILSCALE_IP -Port 3389
+        if (-not $testResult.TcpTestSucceeded) {
+            Write-Error "TCP connection to RDP port 3389 failed"
+            exit 1
+        }
+        
+        # Additional verification
+        $rdpService = Get-Service -Name "TermService"
+        if ($rdpService.Status -ne "Running") {
+            Write-Error "RDP service is not running"
+            exit 1
+        }
+        
+        Write-Host "✅ RDP accessibility verified successfully"
+
+    - name: Enhanced Connection Monitoring
+      run: |
+        Write-Host "`n=== RDP ACCESS INFORMATION ==="
+        Write-Host "🌐 Address: $env:TAILSCALE_IP"
+        Write-Host "👤 Username: RDP"
+        Write-Host "🔑 Password: $($env:RDP_CREDS -replace 'User: RDP \| Password: ', '')"
+        Write-Host "⏰ Session timeout: 6 hours maximum"
+        Write-Host "===============================`n"
+        
+        # Enhanced monitoring with health checks and auto-recovery
+        $checkInterval = 60
+        $lastHealthCheck = Get-Date
+        $consecutiveFailures = 0
+        $maxConsecutiveFailures = 3
+        
+        Write-Host "🚀 Starting enhanced monitoring with auto-recovery..."
+        Write-Host "Check interval: $checkInterval seconds"
+        Write-Host "Max failures before recovery: $maxConsecutiveFailures"
+        Write-Host ""
+        
+        while ($true) {
+            $currentTime = Get-Date
+            $timestamp = $currentTime.ToString('yyyy-MM-dd HH:mm:ss UTC')
+            
+            # Health checks every minute
+            if (($currentTime - $lastHealthCheck).TotalSeconds -ge $checkInterval) {
+                # Check Tailscale
+                $tailscaleOK = $false
+                try {
+                    $tsStatus = & "$env:ProgramFiles\Tailscale\tailscale.exe" status --json | ConvertFrom-Json
+                    $tailscaleOK = $tsStatus.BackendState -eq "Running"
+                } catch { }
+                
+                # Check RDP service
+                $rdpServiceOK = $false
+                try {
+                    $service = Get-Service -Name "TermService"
+                    $rdpServiceOK = $service.Status -eq "Running"
+                } catch { }
+                
+                # Check RDP port
+                $rdpPortOK = $false
+                try {
+                    $rdpPortOK = Test-NetConnection -ComputerName $env:TAILSCALE_IP -Port 3389 -InformationLevel Quiet
+                } catch { }
+                
+                # Report status
+                $tsStatus = if ($tailscaleOK) { "✅" } else { "❌" }
+                $rdpSvcStatus = if ($rdpServiceOK) { "✅" } else { "❌" }
+                $rdpPortStatus = if ($rdpPortOK) { "✅" } else { "❌" }
+                
+                Write-Host "[$timestamp] Health: Tailscale $tsStatus | RDP Service $rdpSvcStatus | RDP Port $rdpPortStatus"
+                
+                # Handle failures
+                if (-not $tailscaleOK -or -not $rdpServiceOK -or -not $rdpPortOK) {
+                    $consecutiveFailures++
+                    Write-Warning "⚠️  Health check failed ($consecutiveFailures/$maxConsecutiveFailures)"
+                    
+                    if ($consecutiveFailures -ge $maxConsecutiveFailures) {
+                        Write-Host "🚨 Attempting recovery..."
+                        
+                        if (-not $rdpServiceOK) {
+                            try {
+                                Restart-Service -Name "TermService" -Force
+                                Write-Host "✅ RDP service restarted"
+                            } catch {
+                                Write-Error "❌ Failed to restart RDP service"
+                            }
+                        }
+                        
+                        if (-not $tailscaleOK) {
+                            try {
+                                & "$env:ProgramFiles\Tailscale\tailscale.exe" up --authkey=${{ secrets.TAILSCALE_AUTH_KEY }} --hostname=gh-runner-$env:GITHUB_RUN_ID
+                                Write-Host "✅ Tailscale reconnected"
+                            } catch {
+                                Write-Error "❌ Failed to reconnect Tailscale"
+                            }
+                        }
+                        
+                        $consecutiveFailures = 0
+                    }
+                } else {
+                    $consecutiveFailures = 0
+                }
+                
+                $lastHealthCheck = $currentTime
+            }
+            
+            # Status message every 5 minutes
+            if ($currentTime.Minute % 5 -eq 0 -and $currentTime.Second -lt 10) {
+                Write-Host "[$timestamp] 💚 RDP Server Active - IP: $env:TAILSCALE_IP"
+            }
+            
+            Start-Sleep -Seconds 10
+        }

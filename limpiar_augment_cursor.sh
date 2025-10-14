@@ -112,3 +112,8 @@ echo ""
 echo "✨ Ahora puedes reinstalar Augment limpiamente"
 echo ""
 
+
+
+
+
+

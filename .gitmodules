@@ -1,0 +1,3 @@
+[submodule "Auxiliares/Instalaciones/GeminiBrowser/computer-use-preview"]
+	path = Auxiliares/Instalaciones/GeminiBrowser/computer-use-preview
+	url = https://github.com/google/computer-use-preview.git

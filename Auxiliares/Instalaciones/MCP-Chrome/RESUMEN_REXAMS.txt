@@ -1,0 +1,336 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║           🎓 CHROME DEVTOOLS MCP CONFIGURADO PARA R/EXAMS 🎓                ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📅 Fecha: 2025-10-02
+📦 Versión: chrome-devtools-mcp@latest (v0.6.0)
+🎯 Configurado específicamente para: Proyecto R/exams ICFES Matemáticas
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 📁 ARCHIVOS CREADOS (11 archivos, 95.8 KB)                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  DOCUMENTACIÓN GENERAL:
+  📄 README.md (7.4K)                    - Índice principal actualizado
+  📄 README_INSTALACION.md (6.6K)        - Guía completa de instalación
+  📄 EJEMPLOS_USO.md (8.3K)              - 25+ ejemplos generales
+  📄 COMANDOS_UTILES.md (7.2K)           - Referencia de comandos
+  📄 AGREGAR_MAS_SERVIDORES.md (7.7K)    - Expandir configuración MCP
+  📄 RESUMEN_INSTALACION.txt (8.2K)      - Resumen visual general
+
+  DOCUMENTACIÓN ESPECÍFICA R/EXAMS: ⭐
+  📄 USO_CON_REXAMS.md (9.0K)            - Guía completa para R/exams
+  📄 GUIA_RAPIDA_REXAMS.md (9.9K)        - Referencia rápida
+  📄 RESUMEN_REXAMS.txt (este archivo)   - Resumen visual R/exams
+
+  SCRIPTS:
+  🔧 test_mcp.sh (4.5K)                  - Verificar instalación
+  🔧 ayuda.sh (12K)                      - Menú interactivo de ayuda
+  🔧 verificar_examen.sh (15K) ⭐        - Generador de prompts para exámenes
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 CASOS DE USO PARA R/EXAMS                                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  1️⃣  Verificar renderizado de exámenes HTML
+      → Asegura que los exámenes se vean correctamente
+
+  2️⃣  Detectar errores de JavaScript
+      → Encuentra problemas en el código generado
+
+  3️⃣  Validar imágenes y recursos
+      → Verifica que todas las imágenes carguen
+
+  4️⃣  Analizar rendimiento
+      → Mide tiempos de carga y optimización
+
+  5️⃣  Verificar responsive design
+      → Comprueba vista en móvil, tablet, desktop
+
+  6️⃣  Validar fórmulas MathJax
+      → Asegura que las matemáticas se rendericen bien
+
+  7️⃣  Extraer metadatos ICFES
+      → Valida competencias, componentes, niveles
+
+  8️⃣  Comparar versiones de exámenes
+      → Detecta cambios visuales entre versiones
+
+  9️⃣  Generar screenshots para documentación
+      → Crea capturas automáticas de exámenes
+
+  🔟 Debugging de CSS y estilos
+      → Soluciona problemas de visualización
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 FLUJO DE TRABAJO COMPLETO                                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  PASO 1: Generar examen en R
+  ────────────────────────────────────────────────────────────────────────────
+  R> library(exams)
+  R> exams2html("mi_examen.Rmd", dir="out_html_cloze")
+
+  PASO 2: Ejecutar verificador
+  ────────────────────────────────────────────────────────────────────────────
+  $ cd Auxiliares/Instalaciones/MCP-Chrome
+  $ ./verificar_examen.sh
+
+  PASO 3: Seleccionar examen
+  ────────────────────────────────────────────────────────────────────────────
+  El script lista todos los exámenes HTML disponibles
+  Selecciona el número del examen que quieres verificar
+
+  PASO 4: Elegir tipo de verificación
+  ────────────────────────────────────────────────────────────────────────────
+  1) Verificación Básica      - Rápida, errores y screenshot
+  2) Análisis Completo        - Detallada, todo incluido
+  3) Verificación Responsive  - Múltiples dispositivos
+  4) Verificación MathJax     - Fórmulas matemáticas
+  5) Metadatos ICFES          - Competencias y niveles
+  6) TODOS los prompts        - Genera todos a la vez
+
+  PASO 5: Copiar prompt generado
+  ────────────────────────────────────────────────────────────────────────────
+  El script genera un prompt completo y optimizado
+  Copia el texto completo del prompt
+
+  PASO 6: Pegar en Copilot (VS Code Insiders)
+  ────────────────────────────────────────────────────────────────────────────
+  1. Abre VS Code Insiders
+  2. Presiona Ctrl+Shift+I (abre Copilot)
+  3. Pega el prompt
+  4. Presiona Enter
+
+  PASO 7: Revisar resultados
+  ────────────────────────────────────────────────────────────────────────────
+  Copilot te mostrará:
+  • Errores encontrados (si hay)
+  • Screenshots generados
+  • Reporte detallado
+  • Recomendaciones
+
+  PASO 8: Corregir problemas (si es necesario)
+  ────────────────────────────────────────────────────────────────────────────
+  1. Edita el archivo .Rmd original
+  2. Regenera el examen en R
+  3. Vuelve al PASO 2
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 💡 EJEMPLO PRÁCTICO COMPLETO                                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  Escenario: Acabas de crear un examen de geometría sobre triángulos
+
+  # 1. En R - Generar el examen
+  ──────────────────────────────────────────────────────────────────────────
+  library(exams)
+  exams2html("geometria_triangulos_n2_v1.Rmd", dir="out_html_cloze")
+
+  # 2. En terminal - Ir al directorio MCP
+  ──────────────────────────────────────────────────────────────────────────
+  cd Auxiliares/Instalaciones/MCP-Chrome
+
+  # 3. Ejecutar verificador
+  ──────────────────────────────────────────────────────────────────────────
+  ./verificar_examen.sh
+
+  # 4. Seleccionar el examen
+  ──────────────────────────────────────────────────────────────────────────
+  Exámenes encontrados:
+    1) out_html_cloze/geometria_triangulos_n2_v11.html
+    2) out_html_cloze/render11.html
+    ...
+  
+  Selecciona: 1
+
+  # 5. Elegir verificación
+  ──────────────────────────────────────────────────────────────────────────
+  Selecciona el tipo de verificación:
+    1) Verificación Básica
+    2) Análisis Completo  ← Elegir esta
+    ...
+  
+  Opción: 2
+
+  # 6. Copiar el prompt generado
+  ──────────────────────────────────────────────────────────────────────────
+  El script muestra:
+  
+  ═══════════════════════════════════════════════════════════════
+  PROMPT: Análisis Completo
+  ═══════════════════════════════════════════════════════════════
+  
+  Copia y pega esto en Copilot (VS Code Insiders):
+  
+  ───────────────────────────────────────────────────────────────
+  Realiza un análisis completo de file:///.../geometria_triangulos_n2_v11.html:
+  
+  1. ERRORES:
+     - Errores de JavaScript en consola
+     ...
+  ───────────────────────────────────────────────────────────────
+
+  # 7. En VS Code Insiders
+  ──────────────────────────────────────────────────────────────────────────
+  Ctrl+Shift+I → Pegar prompt → Enter
+
+  # 8. Revisar reporte de Copilot
+  ──────────────────────────────────────────────────────────────────────────
+  Copilot responde:
+  
+  "He analizado el examen. Encontré:
+   ✅ Sin errores de JavaScript
+   ✅ Todas las imágenes cargan correctamente
+   ⚠️  MathJax tardó 2.3 segundos en cargar
+   ✅ Tiempo de carga total: 1.8 segundos
+   
+   Screenshots generados:
+   - Página completa: [imagen]
+   - Primera pregunta: [imagen]
+   
+   Recomendación: El examen está listo para publicar."
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🔧 TIPOS DE VERIFICACIÓN DETALLADOS                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  1. VERIFICACIÓN BÁSICA (Opción 1)
+  ────────────────────────────────────────────────────────────────────────────
+  Cuándo usar: Después de generar cualquier examen
+  Tiempo: ~30 segundos
+  Verifica:
+    ✓ Errores de JavaScript
+    ✓ Imágenes rotas
+    ✓ Screenshot general
+  
+  2. ANÁLISIS COMPLETO (Opción 2) ⭐ RECOMENDADO
+  ────────────────────────────────────────────────────────────────────────────
+  Cuándo usar: Antes de publicar un examen
+  Tiempo: ~2 minutos
+  Verifica:
+    ✓ Errores y warnings
+    ✓ Todas las imágenes
+    ✓ MathJax completo
+    ✓ Rendimiento
+    ✓ Screenshots detallados
+  
+  3. VERIFICACIÓN RESPONSIVE (Opción 3)
+  ────────────────────────────────────────────────────────────────────────────
+  Cuándo usar: Exámenes que se verán en diferentes dispositivos
+  Tiempo: ~1 minuto
+  Verifica:
+    ✓ Vista móvil (375x667)
+    ✓ Vista tablet (768x1024)
+    ✓ Vista desktop (1920x1080)
+  
+  4. VERIFICACIÓN MATHJAX (Opción 4)
+  ────────────────────────────────────────────────────────────────────────────
+  Cuándo usar: Exámenes con muchas fórmulas
+  Tiempo: ~45 segundos
+  Verifica:
+    ✓ MathJax cargó
+    ✓ Sin errores de renderizado
+    ✓ Todas las fórmulas visibles
+  
+  5. METADATOS ICFES (Opción 5)
+  ────────────────────────────────────────────────────────────────────────────
+  Cuándo usar: Validar estructura ICFES
+  Tiempo: ~30 segundos
+  Verifica:
+    ✓ Metadatos presentes
+    ✓ Competencias asignadas
+    ✓ Distribución de niveles
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ⚠️  IMPORTANTE - LEER ANTES DE USAR                                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  ❗ Los prompts generados deben ejecutarse en COPILOT (VS Code Insiders)
+  ❗ NO funcionan con Augment Agent
+  ❗ Reinicia VS Code Insiders si es la primera vez que usas MCP
+  ❗ Espera unos segundos para que Chrome se abra automáticamente
+  ❗ Los archivos HTML deben existir antes de verificar
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🆘 SOLUCIÓN DE PROBLEMAS                                                     │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  PROBLEMA: "No se encontraron exámenes HTML"
+  ────────────────────────────────────────────────────────────────────────────
+  Solución:
+    1. Verifica que existan archivos: ls out_html_cloze/*.html
+    2. Genera un examen primero en R
+    3. Vuelve a ejecutar ./verificar_examen.sh
+
+  PROBLEMA: "Copilot no reconoce el servidor MCP"
+  ────────────────────────────────────────────────────────────────────────────
+  Solución:
+    1. Ejecuta: ./test_mcp.sh
+    2. Reinicia VS Code Insiders: killall code-insiders && code-insiders
+    3. Espera 10 segundos y vuelve a intentar
+
+  PROBLEMA: "Las imágenes no cargan"
+  ────────────────────────────────────────────────────────────────────────────
+  Solución:
+    1. Verifica rutas en el HTML
+    2. Usa rutas absolutas o relativas correctas
+    3. Ejecuta verificación de imágenes específica
+
+  PROBLEMA: "MathJax no renderiza"
+  ────────────────────────────────────────────────────────────────────────────
+  Solución:
+    1. Usa la opción 4 (Verificación MathJax)
+    2. Asegúrate de esperar 5 segundos
+    3. Verifica que MathJax esté incluido en el HTML
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 📚 DOCUMENTACIÓN Y AYUDA                                                     │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  Ver ayuda interactiva:
+    $ ./ayuda.sh
+
+  Verificar instalación:
+    $ ./test_mcp.sh
+
+  Generar prompts para exámenes:
+    $ ./verificar_examen.sh
+
+  Abrir documentación:
+    $ code-insiders USO_CON_REXAMS.md          # Guía completa
+    $ code-insiders GUIA_RAPIDA_REXAMS.md      # Referencia rápida
+    $ code-insiders README_INSTALACION.md      # Instalación
+    $ code-insiders EJEMPLOS_USO.md            # Ejemplos generales
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ 🎓 CHECKLIST DE CALIDAD PARA EXÁMENES                                       │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+  Antes de publicar un examen, verifica:
+
+  [ ] ✅ Sin errores de JavaScript
+  [ ] ✅ Todas las imágenes cargan correctamente
+  [ ] ✅ MathJax renderiza todas las fórmulas
+  [ ] ✅ Se ve bien en móvil (375x667)
+  [ ] ✅ Se ve bien en tablet (768x1024)
+  [ ] ✅ Se ve bien en desktop (1920x1080)
+  [ ] ✅ Metadatos ICFES correctos
+  [ ] ✅ Competencias asignadas
+  [ ] ✅ Nivel de dificultad apropiado
+  [ ] ✅ Tiempo de carga < 3 segundos
+
+  Comando rápido para verificar todo:
+    $ ./verificar_examen.sh
+    Opción: 6 (Generar TODOS los prompts)
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║        ¡Todo listo para verificar tus exámenes R/exams con Copilot! 🚀      ║
+║                                                                              ║
+║  Próximo paso: ./verificar_examen.sh                                        ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
