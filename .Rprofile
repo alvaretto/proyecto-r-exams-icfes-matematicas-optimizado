@@ -29,9 +29,25 @@ load_common_packages <- function() {
   }
 }
 
-# Configurar Python para reticulate
+# Configurar Python para reticulate - CONFIGURACIÓN ROBUSTA
+# CRÍTICO: Desactivar el uso automático de entornos virtuales con uv
+# Esto previene que reticulate 1.44.0+ cree entornos virtuales automáticamente
+Sys.setenv(RETICULATE_PYTHON = "/usr/bin/python3")
+Sys.setenv(RETICULATE_PYTHON_FALLBACK = "/usr/bin/python3")
+Sys.setenv(RETICULATE_USE_MANAGED_VENV = "no")
+
+# Cargar reticulate y forzar configuración
 if (require("reticulate", quietly = TRUE)) {
-  use_python("/usr/bin/python3", required = FALSE)
+  # Usar required = TRUE para forzar el uso de este Python
+  use_python("/usr/bin/python3", required = TRUE)
+
+  # Inicializar Python inmediatamente para evitar que reticulate use otro intérprete
+  tryCatch({
+    py_config()
+  }, error = function(e) {
+    # Si falla, intentar de nuevo
+    use_python("/usr/bin/python3", required = TRUE, force = TRUE)
+  })
 }
 
 # Mensaje de bienvenida

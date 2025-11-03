@@ -1,0 +1,4 @@
+R_LIBS_USER="~/R/library"
+RETICULATE_PYTHON="/usr/bin/python3"
+RETICULATE_PYTHON_FALLBACK="/usr/bin/python3"
+RETICULATE_USE_MANAGED_VENV="no"
