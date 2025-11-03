@@ -1,0 +1,67 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+```{r, echo = FALSE, results = "hide"}
+library(exams)
+library(knitr)
+
+# Usa el mismo tipo de gráfico (pdf, svg, png) que la llamada actual de xweave()
+typ <- match_exams_device()
+
+# Definir el valor del SMMLV
+SMMLV <- 1160000  # Valor del SMMLV para 2023
+
+# Función para generar datos del SFV
+generar_datos_sfv <- function() {
+  ingresos <- c(0, 1.5, 2, 2.25, 2.5, 2.75, 3, 3.5, 4)
+  valores_sfv <- c(22, 21.5, 21, 19, 17, 15, 13, 9, 4)
+  
+  datos <- data.frame(
+    Ingresos_desde = c(0, ingresos[-length(ingresos)]),
+    Ingresos_hasta = ingresos,
+    SFV = valores_sfv
+  )
+  
+  datos$Valor_desde <- round(datos$Ingresos_desde * SMMLV)
+  datos$Valor_hasta <- round(datos$Ingresos_hasta * SMMLV)
+  
+  return(datos)
+}
+
+# Generar datos
+datos <- generar_datos_sfv()
+
+# Función para crear la tabla TikZ
+tikz_tabla_iluminacion <- function(datos) {
+  c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    "  \\small",
+    "  \\begin{tabular}{|c|c|c|c|c|}",
+    "    \\hline",
+    "    \\multicolumn{2}{|c|}{\\textbf{Ingresos (SMMLV)}} & \\multicolumn{2}{c|}{\\textbf{Valor equivalente en \\$}} & \\textbf{Valor de SFV} \\\\",
+    "    \\textbf{Desde} & \\textbf{Hasta} & \\textbf{Desde} & \\textbf{Hasta} & \\textbf{en (SMMLV)} \\\\",
+    "    \\hline",
+    paste(datos$Ingresos_desde, "&", 
+          datos$Ingresos_hasta, "&",
+          format(datos$Valor_desde, big.mark = ".", decimal.mark = ","), "&",
+          format(datos$Valor_hasta, big.mark = ".", decimal.mark = ","), "&",
+          datos$SFV, "\\\\"),
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+}
+```
+
+
+```{r, echo = FALSE, results = "asis"}
+include_tikz(tikz_tabla_iluminacion(datos),
+             name = "tabla_iluminacion", 
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "adjustbox"),
+             width = "12cm")
+```
+

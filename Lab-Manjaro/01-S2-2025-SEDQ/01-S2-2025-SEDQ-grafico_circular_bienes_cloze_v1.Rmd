@@ -1,10 +1,10 @@
 ---
 output:
-  html_document: default
   word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
+  html_document: default
 ---
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida

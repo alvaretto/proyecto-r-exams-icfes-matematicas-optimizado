@@ -1,0 +1,291 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "colortbl", "booktabs", "array"]
+
+# Metadatos ICFES
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje3
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{booktabs}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Establecer semilla aleatoria
+set.seed(sample(1:100000, 1))
+```
+
+```{r generar_datos, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Función para generar datos aleatorios del problema
+generar_datos <- function() {
+  # Aleatorización de sabores de tortas (4 sabores diferentes)
+  sabores_disponibles <- list(
+    c("Nuez", "Almendra", "Chocolate", "Naranja"),
+    c("Vainilla", "Fresa", "Limón", "Coco"),
+    c("Manzana", "Durazno", "Mora", "Maracuyá"),
+    c("Café", "Caramelo", "Miel", "Canela"),
+    c("Piña", "Banano", "Uva", "Cereza")
+  )
+  sabores <- sample(sabores_disponibles, 1)[[1]]
+  
+  # Generar números de clientes que prefieren cada sabor (rango realista)
+  preferencias <- sample(120:200, 4, replace = TRUE)
+  names(preferencias) <- sabores
+  
+  # Ordenar para identificar los 2 más preferidos
+  preferencias_ordenadas <- sort(preferencias, decreasing = TRUE)
+  sabores_mas_preferidos <- names(preferencias_ordenadas)[1:2]
+  
+  # Aleatorización de días de la semana y ventas
+  dias_semana <- c("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
+  ventas_por_dia <- sample(20:50, 7, replace = TRUE)
+  names(ventas_por_dia) <- dias_semana
+  
+  # Identificar el día con mayor número de ventas
+  dia_mayor_ventas <- names(which.max(ventas_por_dia))
+  
+  # Crear opciones de respuesta
+  respuesta_correcta <- paste0("Se venderán el ", tolower(dia_mayor_ventas), 
+                              " y los sabores serán ", 
+                              tolower(sabores_mas_preferidos[1]), " y ", 
+                              tolower(sabores_mas_preferidos[2]), ".")
+  
+  # Generar distractores pedagógicamente efectivos
+  otros_dias <- dias_semana[dias_semana != dia_mayor_ventas]
+  dia_distractor1 <- sample(otros_dias, 1)
+  dia_distractor2 <- sample(otros_dias[otros_dias != dia_distractor1], 1)
+  
+  # Otros sabores para distractores
+  otros_sabores <- sabores[!sabores %in% sabores_mas_preferidos]
+  
+  distractores <- c(
+    paste0("Se venderán el ", tolower(dia_distractor1), 
+           " y los sabores serán ", tolower(sabores_mas_preferidos[1]), 
+           " y ", tolower(sabores_mas_preferidos[2]), "."),
+    paste0("Se venderán el ", tolower(dia_mayor_ventas), 
+           " y los sabores serán ", tolower(otros_sabores[1]), 
+           " y ", tolower(otros_sabores[2]), "."),
+    paste0("Se venderán el ", tolower(dia_distractor2), 
+           " y los sabores serán ", tolower(otros_sabores[1]), 
+           " y ", tolower(sabores_mas_preferidos[1]), ".")
+  )
+  
+  # Mezclar opciones
+  todas_opciones <- c(respuesta_correcta, distractores)
+  orden_opciones <- sample(1:4)
+  opciones_mezcladas <- todas_opciones[orden_opciones]
+  posicion_correcta <- which(orden_opciones == 1)
+  
+  return(list(
+    sabores = sabores,
+    preferencias = preferencias,
+    sabores_mas_preferidos = sabores_mas_preferidos,
+    dias_semana = dias_semana,
+    ventas_por_dia = ventas_por_dia,
+    dia_mayor_ventas = dia_mayor_ventas,
+    opciones = opciones_mezcladas,
+    respuesta_correcta = respuesta_correcta,
+    posicion_correcta = posicion_correcta
+  ))
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+```
+
+```{r prueba_diversidad, include=FALSE}
+# Prueba de diversidad de versiones (mínimo 300 versiones únicas)
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r crear_tabla_tikz, results='asis'}
+# Crear tabla de preferencias usando TikZ
+tabla_preferencias <- paste0("
+\\begin{tikzpicture}
+\\node[inner sep=0pt] {
+  \\begin{tabular}{|c|c|}
+    \\hline
+    \\textbf{Sabor} & \\textbf{Número de clientes que} \\\\
+    & \\textbf{prefieren el sabor} \\\\
+    \\hline
+    ", datos$sabores[1], " & ", datos$preferencias[datos$sabores[1]], " clientes \\\\
+    \\hline
+    ", datos$sabores[2], " & ", datos$preferencias[datos$sabores[2]], " clientes \\\\
+    \\hline
+    ", datos$sabores[3], " & ", datos$preferencias[datos$sabores[3]], " clientes \\\\
+    \\hline
+    ", datos$sabores[4], " & ", datos$preferencias[datos$sabores[4]], " clientes \\\\
+    \\hline
+  \\end{tabular}
+};
+\\end{tikzpicture}
+")
+
+# Crear gráfico de barras usando TikZ
+max_ventas <- max(datos$ventas_por_dia)
+escala_y <- 50 / max_ventas  # Escalar para que la barra más alta sea 50 unidades
+
+grafico_barras <- paste0("
+\\begin{tikzpicture}[scale=0.8]
+  \\draw[->] (0,0) -- (8,0) node[right] {Día};
+  \\draw[->] (0,0) -- (0,6) node[above] {Tortas vendidas};
+  
+  % Etiquetas del eje Y
+  \\foreach \\y in {0,10,20,30,40,50}
+    \\draw (-0.1,\\y/10) -- (0.1,\\y/10) node[left] {\\y};
+  
+  % Barras y etiquetas
+  \\draw[fill=lightgray] (0.5,0) rectangle (1,", datos$ventas_por_dia[1] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[1], "};
+  \\draw[fill=lightgray] (1.5,0) rectangle (2,", datos$ventas_por_dia[2] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[2], "};
+  \\draw[fill=lightgray] (2.5,0) rectangle (3,", datos$ventas_por_dia[3] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[3], "};
+  \\draw[fill=lightgray] (3.5,0) rectangle (4,", datos$ventas_por_dia[4] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[4], "};
+  \\draw[fill=lightgray] (4.5,0) rectangle (5,", datos$ventas_por_dia[5] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[5], "};
+  \\draw[fill=lightgray] (5.5,0) rectangle (6,", datos$ventas_por_dia[6] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[6], "};
+  \\draw[fill=lightgray] (6.5,0) rectangle (7,", datos$ventas_por_dia[7] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[7], "};
+  
+  % Etiquetas del eje X
+  \\node[below] at (0.75,-0.3) {Lun};
+  \\node[below] at (1.75,-0.3) {Mar};
+  \\node[below] at (2.75,-0.3) {Mié};
+  \\node[below] at (3.75,-0.3) {Jue};
+  \\node[below] at (4.75,-0.3) {Vie};
+  \\node[below] at (5.75,-0.3) {Sáb};
+  \\node[below] at (6.75,-0.3) {Dom};
+\\end{tikzpicture}
+")
+```
+
+Question
+========
+
+Una pastelería realizó una encuesta para conocer los sabores de tortas preferidos por sus clientes. La tabla muestra los resultados de la encuesta.
+
+```{r tabla_preferencias, echo=FALSE, results='asis'}
+include_tikz(tabla_preferencias, 
+             name = "tabla_preferencias",
+             markup = "markdown",
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "8cm")
+```
+
+Además, el gerente elaboró una gráfica que muestra el número de tortas vendidas cada día de la última semana.
+
+**Tortas vendidas durante la última semana**
+
+```{r grafico_ventas, echo=FALSE, results='asis'}
+include_tikz(grafico_barras, 
+             name = "grafico_ventas",
+             markup = "markdown",
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "10cm")
+```
+
+La pastelería planea realizar una promoción con tortas de los 2 sabores preferidos por los clientes, para venderlas el día de la semana con el mayor número de ventas. ¿Cuál día de la semana se venderán las tortas y de qué sabores serán?
+
+```{r opciones, echo=FALSE, results='asis'}
+answerlist(datos$opciones, markup = "markdown")
+```
+
+Solution
+========
+
+Para resolver este problema, necesitamos:
+
+1. **Identificar los 2 sabores más preferidos** según la tabla de encuesta
+2. **Identificar el día con mayor número de ventas** según el gráfico de barras
+
+**Análisis de la tabla de preferencias:**
+```{r analisis_tabla, echo=FALSE, results='asis'}
+preferencias_ordenadas <- sort(datos$preferencias, decreasing = TRUE)
+cat("- ", names(preferencias_ordenadas)[1], ": ", preferencias_ordenadas[1], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[2], ": ", preferencias_ordenadas[2], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[3], ": ", preferencias_ordenadas[3], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[4], ": ", preferencias_ordenadas[4], " clientes\n")
+```
+
+Los 2 sabores más preferidos son: **`r names(preferencias_ordenadas)[1]`** y **`r names(preferencias_ordenadas)[2]`**.
+
+**Análisis del gráfico de ventas:**
+```{r analisis_grafico, echo=FALSE, results='asis'}
+ventas_ordenadas <- sort(datos$ventas_por_dia, decreasing = TRUE)
+cat("El día con mayor número de ventas es: **", names(ventas_ordenadas)[1], "** con ", ventas_ordenadas[1], " tortas vendidas.\n")
+```
+
+**Respuesta:** Se venderán el `r tolower(datos$dia_mayor_ventas)` y los sabores serán `r tolower(datos$sabores_mas_preferidos[1])` y `r tolower(datos$sabores_mas_preferidos[2])`.
+
+```{r solucion_detallada, echo=FALSE, results='asis'}
+answerlist(
+  c(
+    ifelse(datos$posicion_correcta == 1, "Correcto. Identifica correctamente tanto el día con mayor número de ventas como los 2 sabores más preferidos.", "Incorrecto. No identifica correctamente la combinación de día y sabores."),
+    ifelse(datos$posicion_correcta == 2, "Correcto. Identifica correctamente tanto el día con mayor número de ventas como los 2 sabores más preferidos.", "Incorrecto. Error en la identificación del día o los sabores."),
+    ifelse(datos$posicion_correcta == 3, "Correcto. Identifica correctamente tanto el día con mayor número de ventas como los 2 sabores más preferidos.", "Incorrecto. Error en la identificación del día o los sabores."),
+    ifelse(datos$posicion_correcta == 4, "Correcto. Identifica correctamente tanto el día con mayor número de ventas como los 2 sabores más preferidos.", "Incorrecto. Error en la identificación del día o los sabores.")
+  ),
+  markup = "markdown"
+)
+```
+
+Meta-information
+================
+exname: pasteleria_sabores_ventas_estadistica
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exshuffle: TRUE
+exsection: Estadística/Interpretación de datos/Gráficos y tablas

@@ -1,0 +1,212 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: argumentacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: comunitario
+  eje_axial: eje3
+  componente: aleatorio
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(ggplot2)
+library(knitr)
+library(reticulate)
+library(testthat)
+library(data.table)
+library(readxl)
+library(datasets)
+library(digest)
+
+# Configurar Python si es necesario
+use_python("/usr/bin/python3", required = TRUE)
+
+# Configuración global
+typ <- match_exams_device()
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+
+# Configuración de locale para formato numérico consistente
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Configuración de formato numérico estándar
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Función de formato estándar para números
+formato_estandar <- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
+# Catálogo de elementos para generar contexto diverso
+departamentos <- c(
+  "Antioquia", "Cundinamarca", "Valle del Cauca", "Santander", "Atlántico",
+  "Bolívar", "Caldas", "Boyacá", "Nariño", "Huila", "Tolima", "Cesar",
+  "Meta", "Risaralda", "Quindío", "Magdalena", "Sucre", "Córdoba",
+  "Norte de Santander", "Cauca"
+)
+
+municipios_ejemplo <- c(
+  "Municipio A", "Municipio B", "Municipio C", "Municipio D",
+  "Municipio E", "Municipio F", "Municipio G", "Municipio H"
+)
+
+verbos_estimar <- c("estimar", "aproximar", "calcular", "determinar")
+acciones_encuesta <- c("realizará llamadas telefónicas", "aplicará encuestas telefónicas",
+                       "efectuará  llamadas", "hará  llamadas de sondeo")
+
+# Función principal de generación de datos
+generar_datos <- function() {
+  depto <- sample(departamentos, 1)
+  municipio <- sample(municipios_ejemplo, 1)
+  verbo <- sample(verbos_estimar, 1)
+  accion <- sample(acciones_encuesta, 1)
+  n_llamadas <- sample(c(600:1200, 1500, 1800, 2000), 1)
+
+  # Construcción de enunciado parametrizado
+  contexto <- paste0(
+    "Un candidato a la gobernación del departamento de ", depto,
+    " desea ", verbo, " el porcentaje de la población que votará por él. ",
+    "Para ello, contrata una firma encuestadora que ", accion,
+    ", en las que se pregunta por la preferencia de las personas a la hora de votar en las elecciones para gobernador. ",
+    "Para realizar la encuesta, la firma escoge aleatoriamente un municipio del departamento (", municipio,
+    ") y llama a ", formatear_entero(n_llamadas), " personas de este lugar."
+  )
+
+  # Opciones (una correcta y tres distractores plausibles y no repetidos)
+  opcion_a <- "Porque la única manera de obtener resultados precisos es encuestar a toda la población del departamento."
+  opcion_b <- "Porque la encuesta representará la opinión del departamento solo si el municipio escogido es el más grande."
+  opcion_c <- "Porque solo se están tomando en cuenta las opiniones de un único municipio del departamento (muestra no representativa)."
+  opcion_d <- "Porque la muestra es muy grande, lo cual permite grandes diferencias entre las respuestas de las personas."
+
+  opciones <- c(opcion_a, opcion_b, opcion_c, opcion_d)
+  correcta <- 3L  # La opción C es la correcta
+
+  # Validaciones mínimas
+  stopifnot(length(unique(opciones)) == 4)
+
+  list(
+    depto = depto,
+    municipio = municipio,
+    n_llamadas = n_llamadas,
+    contexto = contexto,
+    opciones = opciones,
+    indice_correcto = correcta,
+    exsolution = paste(as.integer(seq_along(opciones) == correcta), collapse = "")
+  )
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                           "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+Question
+========
+
+```{r, echo=FALSE, results='asis'}
+cat(datos$contexto)
+```
+
+¿Por qué el resultado de la encuesta puede diferir mucho de la realidad del departamento?
+
+Answerlist
+----------
+- `r datos$opciones[1]`
+- `r datos$opciones[2]`
+- `r datos$opciones[3]`
+- `r datos$opciones[4]`
+
+Solution
+========
+
+La estimación puede diferir porque la muestra seleccionada no es representativa del departamento: al encuestar únicamente a personas de un solo municipio, se introduce un sesgo de selección. Las preferencias de ese municipio pueden ser muy diferentes de las del resto del departamento.
+
+- A: Falso. No es necesario encuestar a toda la población; bastan muestras representativas y diseños probabilísticos adecuados (estratificación, conglomerados, etc.).
+- B: Falso. Que el municipio sea el más grande no garantiza representatividad; sigue faltando cubrir la variabilidad entre municipios.
+- C: Verdadero. Se toman opiniones solo de un municipio, lo que sesga la muestra y puede alejar el resultado de la realidad departamental.
+- D: Falso. Un tamaño de muestra mayor reduce la variabilidad muestral; no provoca diferencias más grandes por sí mismo.
+
+Answerlist
+----------
+- `r if(datos$indice_correcto == 1) "Verdadero" else "Falso"`
+- `r if(datos$indice_correcto == 2) "Verdadero" else "Falso"`
+- `r if(datos$indice_correcto == 3) "Verdadero" else "Falso"`
+- `r if(datos$indice_correcto == 4) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: `r paste0("muestreo_sesgo_municipio_", gsub(" ", "_", datos$depto))`
+extype: schoice
+exsolution: `r datos$exsolution`
+exshuffle: TRUE
+exsection: Estadística|Muestreo y sesgo|Interpretación y argumentación
+exextra[Type]: Argumentación
+exextra[Level]: 2
+exextra[Language]: es
+exextra[Course]: Matemáticas ICFES
+

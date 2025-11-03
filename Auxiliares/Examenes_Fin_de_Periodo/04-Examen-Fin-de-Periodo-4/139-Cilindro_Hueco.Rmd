@@ -1,0 +1,165 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{tikz}
+---
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Cargar librerías necesarias
+library(exams)
+library(knitr)
+
+# Establecer semilla para reproducibilidad
+set.seed(sample(1:1000, 1))
+
+# Generar datos para un problema de cilindro hueco
+# Nombres aleatorios
+nombres <- c("Camilo", "Ana", "Carlos", "Elena", "Julián", "Sofía", "Daniel", "Valentina", 
+             "Mateo", "Lucía", "Diego", "Isabella", "Nicolás", "Mariana", "Sebastián")
+nombre <- sample(nombres, 1)
+
+# Variables aleatorias para las dimensiones del cilindro
+grosor <- sample(seq(0.1, 1, by = 0.1), 1)  # Grosor en metros
+radio_interno <- sample(seq(0.5, 2, by = 0.1), 1)  # Radio interno en metros
+radio_externo <- radio_interno + grosor  # Radio externo en metros
+diametro_externo <- 2 * radio_externo  # Diámetro externo en metros
+altura <- sample(seq(2, 5, by = 0.5), 1)  # Altura en metros
+
+# Calcular el volumen del cilindro hueco
+volumen_total <- pi * radio_externo^2 * altura
+volumen_hueco <- pi * radio_interno^2 * altura
+volumen_cilindro_hueco <- volumen_total - volumen_hueco
+
+# Opciones de respuesta
+opciones <- c(
+  "Radio externo",
+  "Diámetro externo",
+  "Altura del cilindro",
+  "Perímetro del cilindro"
+)
+
+# La respuesta correcta es la altura del cilindro (opción 3)
+solucion <- 3
+
+# Mezclar las opciones
+indices_mezclados <- sample(1:4)
+opciones_mezcladas <- opciones[indices_mezclados]
+solucion_mezclada <- which(indices_mezclados == solucion)
+
+# Líquidos aleatorios
+liquidos <- c("agua", "aceite", "leche", "pintura", "combustible")
+liquido <- sample(liquidos, 1)
+
+# Adjetivos aleatorios para el cilindro
+adjetivos <- c("metálico", "de cerámica", "de concreto", "de vidrio", "de plástico")
+adjetivo <- sample(adjetivos, 1)
+
+# Contextos aleatorios
+contextos <- c(
+  paste("desea saber cuánto", liquido, "se necesita para llenar el cilindro interno"),
+  paste("quiere calcular la cantidad de", liquido, "que cabe en el cilindro interno"),
+  paste("necesita determinar el volumen de", liquido, "que puede contener el cilindro interno"),
+  paste("está diseñando un tanque y necesita saber cuánto", liquido, "almacenará el cilindro interno")
+)
+contexto <- sample(contextos, 1)
+```
+
+Question
+========
+
+```{r, echo=FALSE, results="hide"}
+# Crear la pregunta en formato HTML o Markdown
+pregunta <- paste(nombre, contexto, "pero solamente cuenta con las medidas de las dimensiones que muestra la figura.")
+```
+
+`r pregunta`
+
+```{r, echo=FALSE, include=FALSE}
+# Guardar la imagen como archivo para asegurar compatibilidad con exams2pdf y exams2pandoc
+figura_path <- paste0(tempdir(), "/cilindro_hueco.png")
+png(figura_path, width = 600, height = 500, res = 100)
+par(mar = c(2, 2, 2, 2))
+plot(NULL, xlim = c(-3, 3), ylim = c(-4, 4), asp = 1, 
+     xlab = "", ylab = "", axes = FALSE)
+
+# Dibujar el cilindro exterior
+rect(-2, -3, 2, 3, border = "black", lwd = 2)
+segments(-2, -3, -2, 3, lty = 2)
+segments(2, -3, 2, 3, lty = 2)
+symbols(0, 3, circles = 2, add = TRUE, inches = FALSE, lwd = 2)
+symbols(0, -3, circles = 2, add = TRUE, inches = FALSE, lwd = 2, lty = 2)
+
+# Dibujar el cilindro interior
+rect(-1, -3, 1, 3, border = "black", lwd = 2, lty = 1)
+segments(-1, -3, -1, 3, lty = 2)
+segments(1, -3, 1, 3, lty = 2)
+symbols(0, 3, circles = 1, add = TRUE, inches = FALSE, lwd = 2)
+symbols(0, -3, circles = 1, add = TRUE, inches = FALSE, lwd = 2, lty = 2)
+
+# Agregar etiquetas
+text(0, 3.5, "Diámetro externo", cex = 0.8)
+text(-1.5, 0, paste("Grosor =", grosor, "m"), cex = 0.8)
+text(0, 1.2, paste("Radio interno =", radio_interno, "m"), cex = 0.8)
+text(2.5, 0, "Altura", cex = 0.8)
+text(0, -3.5, "Radio externo", cex = 0.8)
+dev.off()
+```
+
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics(figura_path)
+```
+
+¿Qué medida le falta a `r nombre` para hallar la cantidad deseada?
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para resolver este problema, debemos analizar qué información necesitamos para calcular el volumen del cilindro interno, que determinará la cantidad de `r liquido` que puede contener.
+
+El volumen de un cilindro se calcula con la fórmula:
+$V = \pi \cdot r^2 \cdot h$
+
+Donde:
+- $r$ es el radio del cilindro
+- $h$ es la altura del cilindro
+
+En la figura se muestra:
+- Radio interno = `r radio_interno` m
+- Grosor = `r grosor` m (que determina el radio externo = `r radio_externo` m)
+
+Podemos calcular:
+- Radio externo = Radio interno + Grosor = `r radio_interno` + `r grosor` = `r radio_externo` m
+- Diámetro externo = 2 × Radio externo = 2 × `r radio_externo` = `r diametro_externo` m
+
+Para calcular el volumen del cilindro interno necesitamos:
+1. El radio interno (ya lo tenemos: `r radio_interno` m)
+2. La altura del cilindro (esta información falta)
+
+Por lo tanto, a `r nombre` le falta conocer la altura del cilindro para poder calcular la cantidad de `r liquido` que puede contener el cilindro interno.
+
+Answerlist
+----------
+* Este es `r ifelse(solucion_mezclada == 1, "correcto", "incorrecto")`. `r ifelse(solucion_mezclada == 1, paste("Para calcular el volumen del cilindro interno necesitamos conocer su", tolower(opciones_mezcladas[1])), paste("Conocer el", tolower(opciones_mezcladas[1]), "no es suficiente para calcular el volumen, ya tenemos esta información o no es necesaria"))`
+* Este es `r ifelse(solucion_mezclada == 2, "correcto", "incorrecto")`. `r ifelse(solucion_mezclada == 2, paste("Para calcular el volumen del cilindro interno necesitamos conocer su", tolower(opciones_mezcladas[2])), paste("Conocer el", tolower(opciones_mezcladas[2]), "no es suficiente para calcular el volumen, ya tenemos esta información o no es necesaria"))`
+* Este es `r ifelse(solucion_mezclada == 3, "correcto", "incorrecto")`. `r ifelse(solucion_mezclada == 3, paste("Para calcular el volumen del cilindro interno necesitamos conocer su", tolower(opciones_mezcladas[3])), paste("Conocer la", tolower(opciones_mezcladas[3]), "no es suficiente para calcular el volumen, ya tenemos esta información o no es necesaria"))`
+* Este es `r ifelse(solucion_mezclada == 4, "correcto", "incorrecto")`. `r ifelse(solucion_mezclada == 4, paste("Para calcular el volumen del cilindro interno necesitamos conocer su", tolower(opciones_mezcladas[4])), paste("Conocer el", tolower(opciones_mezcladas[4]), "no es suficiente para calcular el volumen, ya tenemos esta información o no es necesaria"))`
+
+Meta-information
+================
+exname: Cilindro_Hueco_Volumen
+extype: schoice
+exsolution: `r mchoice2string(1:4 == solucion_mezclada)`
+exshuffle: TRUE

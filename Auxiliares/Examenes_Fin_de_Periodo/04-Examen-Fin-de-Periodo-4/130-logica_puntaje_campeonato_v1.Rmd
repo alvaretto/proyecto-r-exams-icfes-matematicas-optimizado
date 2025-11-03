@@ -1,0 +1,280 @@
+---
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+icfes:
+  competencia:
+    - formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: numerico_variacional # Enfocado en el sistema de puntos y cálculos
+    subcategoria: logica_matematica # Implica deducción a partir de datos
+    tipo: no_generico
+  contexto: deportivo
+  eje_axial: pensamiento_matematico_resolucion_problemas # Eje general
+  componente: numerico_variacional # Componente específico
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente para TikZ
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}", # Para colores en tablas TikZ
+  "\\usepackage[utf8]{inputenc}",
+  "\\usepackage[T1]{fontenc}",
+  "\\usepackage{amsmath,amssymb}"
+))
+
+library(exams)
+library(reticulate) # Aunque no se use Python para gráficas aquí, se incluye por si acaso y por el ejemplo base
+library(glue)     # Para facilitar la creación de texto dinámico
+
+typ <- match_exams_device() # Detecta el formato de salida (html, pdf, etc.)
+options(scipen = 999) # Evitar notación científica
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE, # Manejo de texto en figuras
+  fig.cap = "",         # Sin capturas de figuras por defecto
+  fig.keep = 'all',     # Conservar todas las figuras generadas
+  dev = c("png", "pdf"),# Formatos de dispositivo para figuras
+  dpi = 150             # Resolución de figuras
+)
+
+# Configuración para chunks de Python (si se usaran)
+# knitr::knit_engines$set(python = function(options) {
+#   knitr::engine_output(options, options$code, '')
+# })
+# use_python(Sys.which("python"), required = FALSE) # No forzar Python si no es esencial
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+# Establecer semilla aleatoria para reproducibilidad controlada
+# set.seed(sample(1:10000, 1)) # Se puede activar para variabilidad total en cada compilación
+# O usar una semilla fija para depuración:
+# set.seed(123)
+
+# --- Parámetros Aleatorizados del Problema ---
+puntos_meta_clasificar <- sample(22:28, 1)
+partidos_por_ronda <- sample(9:12, 1)
+puntos_por_victoria <- 3
+puntos_por_empate <- 1
+puntos_por_derrota <- 0
+
+# --- Elementos de Contexto Aleatorizados (Nombres y Términos en Español) ---
+deporte <- "fútbol" # Mantenemos fútbol para consistencia con el sistema de puntos original
+nombres_campeonato_art <- sample(c("un", "el"), 1)
+nombres_campeonato_sust <- sample(c("campeonato", "torneo", "certamen", "campeonato liguero"), 1)
+nombre_campeonato_completo <- paste(nombres_campeonato_art, nombres_campeonato_sust, "de", deporte)
+
+nombres_equipo <- c("un equipo", "El equipo 'Los Cóndores'", "El club 'Deportivo Victoria'", "La escuadra 'Titanes FC'")
+nombre_equipo_seleccionado <- sample(nombres_equipo, 1)
+
+terminos_ronda_actual <- c("primera ronda", "fase de grupos", "ronda actual", "etapa clasificatoria inicial")
+termino_ronda_actual_sel <- sample(terminos_ronda_actual, 1)
+
+terminos_siguiente_ronda <- c("siguiente ronda", "próxima fase", "segunda etapa", "fase final")
+termino_siguiente_ronda_sel <- sample(terminos_siguiente_ronda, 1)
+
+terminos_clasificar <- c("clasificar", "avanzar", "pasar", "asegurar su cupo")
+termino_clasificar_sel <- sample(terminos_clasificar, 1)
+
+verbos_repartir <- c("reparten", "asignan", "otorgan", "distribuyen")
+verbo_repartir_sel <- sample(verbos_repartir, 1)
+
+textos_pregunta_contexto <- c(
+  "¿Cuál de las siguientes preguntas se puede responder con la información dada?",
+  "Considerando los datos proporcionados, ¿cuál de las siguientes interrogantes puede ser resuelta?",
+  "Con base en la información suministrada, ¿qué pregunta de las listadas abajo tiene una respuesta derivable?"
+)
+texto_pregunta_contexto_sel <- sample(textos_pregunta_contexto, 1)
+
+# --- Cálculo de la Respuesta Correcta (Mínimo de Victorias) ---
+min_victorias_necesarias <- -1
+for (v_actual in 0:partidos_por_ronda) {
+  puntos_con_victorias = v_actual * puntos_por_victoria
+  puntos_faltantes = puntos_meta_clasificar - puntos_con_victorias
+
+  empates_necesarios = 0
+  if (puntos_faltantes > 0) {
+    empates_necesarios = puntos_faltantes # Ya que cada empate da 1 punto
+  }
+
+  if ( (v_actual + empates_necesarios <= partidos_por_ronda) && ( (puntos_con_victorias + empates_necesarios * puntos_por_empate) >= puntos_meta_clasificar ) ) {
+    min_victorias_necesarias = v_actual
+    break
+  }
+}
+# Si min_victorias_necesarias sigue en -1, significa que no se puede clasificar (ej. puntos_meta muy altos)
+# Esto debería evitarse con rangos sensatos para puntos_meta_clasificar y partidos_por_ronda.
+# Por ejemplo, max puntos posibles = partidos_por_ronda * 3. puntos_meta_clasificar debe ser <= eso.
+# Aseguramos que puntos_meta_clasificar sea alcanzable:
+max_puntos_posibles_con_solo_victorias <- partidos_por_ronda * puntos_por_victoria
+max_puntos_posibles_con_solo_empates <- partidos_por_ronda * puntos_por_empate # menos relevante aquí
+# Si puntos_meta_clasificar es mayor que max_puntos_posibles_con_solo_victorias, algo está mal o es imposible.
+# La lógica de cálculo de min_victorias_necesarias ya lo maneja.
+
+# --- Definición de las Opciones de Respuesta (Una correcta, tres distractores) ---
+# Opción A (Correcta)
+opcion_A_texto <- glue("¿Cuál es el mínimo de partidos que se deben ganar para {termino_clasificar_sel}?")
+
+# Opción B (Distractor)
+distractor_B_textos <- c(
+  "¿Cuántos partidos deben perder los contrincantes para que {nombre_equipo_seleccionado} {termino_clasificar_sel}?",
+  "Para que el equipo avance, ¿cuántas derrotas deben sufrir sus rivales directos?",
+  "¿Es necesario que los oponentes pierdan una cantidad específica de juegos para la clasificación del equipo?"
+)
+opcion_B_texto_template <- sample(distractor_B_textos, 1)
+opcion_B_texto <- glue(opcion_B_texto_template)
+
+# Opción C (Distractor)
+distractor_C_textos <- c(
+  "¿Cuál es el total de partidos que se juega en todo {nombres_campeonato_art} {nombres_campeonato_sust}?",
+  "¿Cuántos encuentros se disputan en la totalidad del {nombres_campeonato_sust}?",
+  "Considerando todas las fases, ¿cuál es el número global de partidos del {nombres_campeonato_sust}?"
+)
+opcion_C_texto_template <- sample(distractor_C_textos, 1)
+opcion_C_texto <- glue(opcion_C_texto_template)
+
+# Opción D (Distractor)
+distractor_D_textos <- c(
+  "¿Cuántos equipos {termino_clasificar_sel}n a la {termino_siguiente_ronda_sel}?",
+  "¿Cuál es el número de plazas disponibles para la {termino_siguiente_ronda_sel}?",
+  "¿Se conoce la cantidad de equipos que avanzarán después de esta {termino_ronda_actual_sel}?"
+)
+opcion_D_texto_template <- sample(distractor_D_textos, 1)
+opcion_D_texto <- glue(opcion_D_texto_template)
+
+# --- Aleatorizar el orden de las opciones y determinar la solución ---
+opciones_lista <- c(opcion_A_texto, opcion_B_texto, opcion_C_texto, opcion_D_texto)
+# Guardamos el índice original de la respuesta correcta (A es el índice 1 antes de mezclar)
+indice_opcion_correcta_original <- 1
+
+# Mezclar opciones
+orden_aleatorio <- sample(1:4)
+opciones_mezcladas <- opciones_lista[orden_aleatorio]
+
+# Crear el vector de solución para exsolution (0010, 1000, etc.)
+solucion_vector <- rep(0, 4)
+# Encontrar la nueva posición de la opción correcta original
+nueva_posicion_correcta <- which(orden_aleatorio == indice_opcion_correcta_original)
+solucion_vector[nueva_posicion_correcta] <- 1
+solucion_formato_exams <- paste(solucion_vector, collapse="")
+
+# --- Variables para la explicación de la solución ---
+# Para la opción A, necesitamos los empates correspondientes a min_victorias_necesarias
+puntos_con_min_victorias = min_victorias_necesarias * puntos_por_victoria
+empates_con_min_victorias = 0
+if (puntos_meta_clasificar - puntos_con_min_victorias > 0) {
+  empates_con_min_victorias = puntos_meta_clasificar - puntos_con_min_victorias
+}
+partidos_usados_sol_A = min_victorias_necesarias + empates_con_min_victorias
+puntos_totales_sol_A = (min_victorias_necesarias * puntos_por_victoria) + (empates_con_min_victorias * puntos_por_empate)
+
+# Ya no necesitamos definir colores para la tabla TikZ
+# porque ahora usamos una tabla markdown simple
+```
+
+```{r generar_tabla_puntos_tikz, echo=FALSE, include=FALSE}
+# Este chunk se mantiene como referencia pero no se utiliza
+# En su lugar, usamos una tabla markdown simple en el chunk mostrar_tabla_puntos
+# para evitar problemas de compilación con TikZ
+
+# Definimos los datos de la tabla para usarlos en otros lugares si es necesario
+tabla_datos <- data.frame(
+  Resultado = c("Ganar", "Empatar", "Perder"),
+  Puntos = c(puntos_por_victoria, puntos_por_empate, puntos_por_derrota)
+)
+```
+
+Question
+========
+En `r nombre_campeonato_completo`, `r nombre_equipo_seleccionado` está en la `r termino_ronda_actual_sel` y necesita `r puntos_meta_clasificar` puntos para `r termino_clasificar_sel` a la `r termino_siguiente_ronda_sel`. En la `r termino_ronda_actual_sel`, cada equipo juega `r partidos_por_ronda` partidos. Los puntos se `r verbo_repartir_sel` de la siguiente manera: `r puntos_por_victoria` puntos por ganar, `r puntos_por_empate` punto por empatar y `r puntos_por_derrota` puntos por perder.
+
+```{r mostrar_tabla_puntos, echo=FALSE, results='asis'}
+# Para asegurar que la tabla se muestre correctamente en todos los formatos
+# Usamos un enfoque más directo para mostrar la tabla
+# En lugar de usar include_tikz, que puede tener problemas con ciertos paquetes LaTeX,
+# vamos a crear una tabla simple en formato markdown
+
+cat("| **Resultado del Partido** | **Puntos Obtenidos** |\n")
+cat("|:--------------------------|:--------------------:|\n")
+cat(paste0("| Ganar                     | ", puntos_por_victoria, " |\n"))
+cat(paste0("| Empatar                   | ", puntos_por_empate, " |\n"))
+cat(paste0("| Perder                    | ", puntos_por_derrota, " |\n"))
+```
+
+`r texto_pregunta_contexto_sel`
+
+Answerlist
+----------
+```{r DisplayAnswerlist, results='asis', echo=FALSE}
+# Imprimir la lista de respuestas (ya mezcladas)
+# Asegurarse de que cada opción esté en una nueva línea precedida por '-' o '*'
+for (i in 1:length(opciones_mezcladas)) {
+  cat(paste0("* ", opciones_mezcladas[i], "\n"))
+}
+```
+
+Solution
+========
+La pregunta que se puede responder con la información proporcionada es la que indaga sobre el mínimo de partidos que se deben ganar para `r termino_clasificar_sel`. Analicemos cada opción:
+
+**Opción Correcta:** 
+
+**`r opcion_A_texto`**
+
+Esta pregunta SÍ se puede responder. Se necesita determinar el menor número de victorias (V) tal que `r puntos_por_victoria`V + `r puntos_por_empate`E $\geq$ `r puntos_meta_clasificar`, con la restricción de que V + E $\leq$ `r partidos_por_ronda` (donde E es el número de empates).
+
+Con los datos del problema:
+
+*   Puntos necesarios para `r termino_clasificar_sel`: `r puntos_meta_clasificar`.
+*   Partidos totales en la ronda: `r partidos_por_ronda`.
+*   Puntos por victoria: `r puntos_por_victoria`.
+*   Puntos por empate: `r puntos_por_empate`.
+
+El cálculo muestra que el mínimo de victorias necesarias es **`r min_victorias_necesarias`**.
+
+Esto se logra, por ejemplo, con `r min_victorias_necesarias` victorias (`r min_victorias_necesarias * puntos_por_victoria` puntos) y `r empates_con_min_victorias` empates (`r empates_con_min_victorias * puntos_por_empate` puntos), sumando un total de `r puntos_totales_sol_A` puntos en `r partidos_usados_sol_A` partidos. Dado que `r partidos_usados_sol_A` es menor o igual que `r partidos_por_ronda`, este escenario es viable.
+
+**Otras Opciones (Distractores):**
+
+*   **`r opcion_B_texto`**
+
+    Esta pregunta NO se puede responder. La información dada detalla cómo `r nombre_equipo_seleccionado` obtiene sus puntos, pero no proporciona reglas o datos sobre cómo el rendimiento (derrotas) de los equipos contrincantes influye en su clasificación, más allá del resultado directo de los partidos jugados contra ellos.
+
+*   **`r opcion_C_texto`**
+
+    Esta pregunta NO se puede responder. Se conoce el número de partidos que juega cada equipo en la `r termino_ronda_actual_sel` (`r partidos_por_ronda` partidos), pero no se dispone de información sobre el número total de equipos en el `r nombres_campeonato_sust` ni sobre el número total de rondas o fases que componen todo el `r nombres_campeonato_sust`.
+
+*   **`r opcion_D_texto`**
+
+    Esta pregunta NO se puede responder. Aunque se sabe que `r nombre_equipo_seleccionado` necesita `r puntos_meta_clasificar` puntos para `r termino_clasificar_sel`, no se especifica cuántos equipos en total avanzarán a la `r termino_siguiente_ronda_sel` (por ejemplo, si es un número fijo de equipos, los mejores de cada grupo, etc.).
+
+Answerlist
+----------
+```{r DisplaySolutionList, results='asis', echo=FALSE}
+# Imprimir la lista de soluciones V/F correspondiente a las opciones mezcladas
+for (i in 1:4) {
+  if (solucion_vector[i] == 1) {
+    cat("* Verdadero\n")
+  } else {
+    cat("* Falso\n")
+  }
+}
+```
+
+Meta-information
+================
+exname: `r paste0("logica_puntaje_", gsub(" ", "_", tolower(deporte)), "_", puntos_meta_clasificar, "pts_", partidos_por_ronda, "p")`
+extype: schoice
+exsolution: `r solucion_formato_exams`
+exshuffle: TRUE # Las opciones de respuesta se mezclarán
+exsection: Lógica Matemática/Interpretación de Datos/Sistemas Numéricos/Fútbol

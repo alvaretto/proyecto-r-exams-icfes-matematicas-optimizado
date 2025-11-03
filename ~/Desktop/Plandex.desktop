@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Plandex
-Comment=Herramienta de planificación y organización basada en IA
-Exec=/home/proyectos/bin/plandex
-Icon=utilities-terminal
-Terminal=true
-Type=Application
-Categories=Development;Utility;
-StartupNotify=true

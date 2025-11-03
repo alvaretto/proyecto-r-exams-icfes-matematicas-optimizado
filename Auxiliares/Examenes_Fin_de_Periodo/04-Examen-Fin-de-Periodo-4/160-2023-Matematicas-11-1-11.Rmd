@@ -1,0 +1,186 @@
+---
+output:
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    pandoc_args:
+      - "-V"
+      - "documentclass=article"
+      - "-V"
+      - "classoption=fleqn"
+  html_document: default
+header-includes:
+  - |
+    ```{=latex}
+    \usepackage{amsmath}
+    \setlength{\mathindent}{0pt}
+    ```
+---
+
+# Pregunta 11
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+-------------------
+
+Para observar los efectos de un medicamento, este se inyecta en un animal y se registra el comportamiento de la temperatura (ºC) en función del tiempo (horas), como lo muestra la gráfica.
+
+```{r grafica, warning=FALSE, echo = FALSE, results = "hide", fig.width=5, fig.height=3.5, out.width="70%"}
+# Crear función para la curva sinusoidal
+t <- seq(0, 3, length.out = 1000)
+temp <- 36 + 2 * sin(2 * pi * t/3)
+
+# Crear dataframe
+datos <- data.frame(tiempo = t, temperatura = temp)
+
+# Crear la gráfica
+ggplot(datos, aes(x = tiempo, y = temperatura)) +
+  geom_line(color = "#00BCD4", size = 1) +
+  scale_x_continuous(breaks = seq(0, 3, 1)) +
+  scale_y_continuous(breaks = seq(34, 38, 1), limits = c(34, 38)) +
+  labs(x = "Tiempo en horas (t)",
+       y = "Temperatura (°C)") +
+  theme_minimal(base_size = 10) +
+  theme(
+    panel.grid.minor = element_line(color = "gray90", linetype = "dashed"),
+    panel.grid.major = element_line(color = "gray90", linetype = "dashed"),
+    axis.line = element_line(color = "black"),
+    axis.text = element_text(size = 8),
+    axis.title = element_text(size = 9),
+    plot.margin = margin(5, 5, 5, 5, "pt"),
+    panel.spacing = unit(2, "pt")
+  )
+```
+
+¿Cuál de las siguientes expresiones corresponde a la curva que describe la temperatura del animal en función
+del tiempo?
+\
+\
+
+**A.**  
+<div class="math-frame">
+\[ \boxed{F(t) = 2 \cos \left( \frac{2\pi}{3} t \right) + 36} \]
+</div>  
+
+**B.**  
+<div class="math-frame">
+\[ \boxed{F(t) = 3 \cos \left( \frac{2\pi}{3} t \right) + 38} \]
+</div>  
+
+**C.**  
+<div class="math-frame">
+\[ \boxed{F(t) = 2 \sin \left( \frac{2\pi}{3} t \right) + 36} \]
+</div>  
+
+**D.**  
+<div class="math-frame">
+\[ \boxed{F(t) = 3 \sin \left( \frac{2\pi}{3} t \right) + 38} \]
+</div>  
+
+-------------------
+
+### Análisis
+
+El código genera una curva de temperatura usando la función:  
+\[ \text{temp} = 36 + 2 \cdot \sin\left(\frac{2\pi}{3} t\right) \]  
+
+- **Amplitud**: \( 2 \, \text{ºC} \) (oscilación entre \( 36 \pm 2 \)).
+- **Periodo**: \( \frac{2\pi}{\frac{2\pi}{3}} = 3 \, \text{horas} \).
+- **Desplazamiento vertical**: \( +36 \, \text{ºC} \).
+- **Fase inicial**: \( \sin(0) = 0 \), por lo que en \( t = 0 \), \( \text{temp} = 36 \, \text{ºC} \).
+
+---
+
+## **Evaluación de las Opciones**
+
+### **Opción A**:  
+\[ F(t) = 2 \cos\left(\frac{2\pi}{3} t\right) + 36 \]  
+- **Problema**: Usa \( \cos \), pero en el código se usa \( \sin \).  
+- **En \( t = 0 \)**: \( \cos(0) = 1 \), entonces \( F(0) = 2 \cdot 1 + 36 = 38 \, \text{ºC} \), lo que **no coincide** con la gráfica (debe empezar en \( 36 \, \text{ºC} \)).  
+- **Incorrecta**.
+
+---
+
+### **Opción B**:  
+\[ F(t) = 3 \cos\left(\frac{2\pi}{3} t\right) + 38 \]  
+- **Amplitud errónea**: \( 3 \, \text{ºC} \) (debería ser \( 2 \, \text{ºC} \)).  
+- **Desplazamiento vertical incorrecto**: \( +38 \, \text{ºC} \) (debería ser \( +36 \, \text{ºC} \)).  
+- **Incorrecta**.
+
+---
+
+### **Opción C**:  
+\[ F(t) = 2 \sin\left(\frac{2\pi}{3} t\right) + 36 \]  
+- **Amplitud correcta**: \( 2 \, \text{ºC} \).  
+- **Periodo correcto**: \( 3 \, \text{horas} \).  
+- **Desplazamiento vertical correcto**: \( +36 \, \text{ºC} \).  
+- **En \( t = 0 \)**: \( \sin(0) = 0 \), entonces \( F(0) = 36 \, \text{ºC} \), coincidiendo con la gráfica.  
+- **Correcta**.
+
+---
+
+### **Opción D**:  
+\[ F(t) = 3 \sin\left(\frac{2\pi}{3} t\right) + 38 \]  
+- **Amplitud errónea**: \( 3 \, \text{ºC} \).  
+- **Desplazamiento vertical incorrecto**: \( +38 \, \text{ºC} \).  
+- **Incorrecta**.
+
+---
+
+## **Respuesta Correcta**
+**Opción C**:  
+\[ F(t) = 2 \sin\left(\frac{2\pi}{3} t\right) + 36 \]  
+
+- **Cumple** con amplitud, periodo, desplazamiento vertical y comportamiento inicial.
+
+------------------------
+
+### Análisis de la Pregunta 2023-Matematicas-11-1-11, según SABER 11 ICFES
+
+- Nivel de Desempeño: 4
+- Competencia: Interpretación y Representación
+  - Afirmación: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos
+  - Evidencia: Da cuenta de las características básicas de la información presentada en diferentes formatos como series, gráficas, tablas y esquemas
+- Componente: Numérico-Variacional
+- Estándar Asociado: Analizo las relaciones y propiedades entre las expresiones algebraicas y las gráficas de funciones polinómicas y racionales y de sus derivadas.
+- ¿Qué evalúa?: La capacidad de identificar la función trigonométrica que modela un fenómeno periódico presentado gráficamente, reconociendo sus parámetros (amplitud, periodo, desplazamiento vertical).
+
+- Respuesta Correcta: C, porque $F(t) = 2\sin(\frac{2\pi}{3}t) + 36$ coincide con:
+  - Amplitud de 2°C
+  - Periodo de 3 horas 
+  - Desplazamiento vertical de 36°C
+  - Comportamiento inicial en t=0 de 36°C
+
+- Distractores:
+  1. Opción A: $F(t) = 2\cos(\frac{2\pi}{3}t) + 36$
+     - El estudiante confunde seno con coseno
+     - No verifica que en t=0 la función debe valer 36°C
+     - No analiza que el coseno inicia en su valor máximo
+
+  2. Opción B: $F(t) = 3\cos(\frac{2\pi}{3}t) + 38$
+     - El estudiante:
+       - No identifica la amplitud correcta en la gráfica
+       - No reconoce el desplazamiento vertical adecuado
+       - Confunde seno con coseno
+       - No verifica valores iniciales
+
+  3. Opción D: $F(t) = 3\sin(\frac{2\pi}{3}t) + 38$
+     - El estudiante:
+       - Identifica correctamente el uso de seno
+       - Pero no determina la amplitud observando la gráfica
+       - No reconoce el desplazamiento vertical correcto
+       - No verifica valores extremos
+
+- Contenidos Matemáticos Curriculares:
+  - Álgebra y Cálculo
+  - Periodo 3
+    - Funciones trigonométricas
+      - Propiedades básicas, rango y periodicidad
+
+- No Genérico
+- Eje Axial Disciplinar: Funciones II (Comportamientos Funcionales)
+- Tarea: Identificar la función trigonométrica que modela un fenómeno periódico a partir de sus características gráficas.
+- Grado: 10° - 11°

@@ -10,6 +10,7 @@ Esta carpeta contiene la documentación completa de la solución al problema `Mo
 **Índice y guía de navegación**
 
 Contiene:
+
 - Descripción general de la solución
 - Índice de archivos con orden de lectura
 - Instrucciones de uso rápido
@@ -23,6 +24,7 @@ Contiene:
 **Resumen ejecutivo**
 
 Contiene:
+
 - Resumen del problema
 - Solución aplicada (formato conciso)
 - Validación exitosa
@@ -37,6 +39,7 @@ Contiene:
 **Documentación técnica completa**
 
 Contiene:
+
 - Diagnóstico detallado del problema
 - Causa raíz identificada (reticulate 1.44.0 nuevo comportamiento)
 - Solución implementada paso a paso
@@ -64,12 +67,14 @@ Script de R que ejecuta 8 tests para verificar que la solución está funcionand
 8. ✅ Mensaje de configuración correcto
 
 **Uso:**
+
 ```bash
 cd /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams
 Rscript SOLUCIONES-DOCUMENTADAS/Reticulate/04-verificar_solucion_matplotlib.R
 ```
 
 **Salida esperada:**
+
 ```
 Tests pasados: 8/8 (100%)
 ✓ ¡TODOS LOS TESTS PASARON!
@@ -85,11 +90,13 @@ ModuleNotFoundError: No module named 'matplotlib'
 ```
 
 **Causa raíz:**
+
 - Reticulate 1.44.0+ crea automáticamente entornos virtuales con `uv`
 - Estos entornos NO tienen matplotlib instalado
 - La configuración del proyecto NO se carga cuando se ejecuta desde subdirectorios
 
 **Solución aplicada:**
+
 ```bash
 # Archivo: ~/.Renviron
 RETICULATE_PYTHON="/usr/bin/python3"
@@ -134,17 +141,20 @@ Debe mostrar: `matplotlib disponible: TRUE`
 Si el problema reaparece:
 
 1. **Verificar variables de entorno:**
+
    ```bash
    Rscript -e "cat('RETICULATE_USE_MANAGED_VENV:', Sys.getenv('RETICULATE_USE_MANAGED_VENV'), '\n')"
    ```
    Debe mostrar: `RETICULATE_USE_MANAGED_VENV: no`
 
 2. **Eliminar caché de reticulate:**
+
    ```bash
    rm -rf ~/.cache/R/reticulate
    ```
 
 3. **Ejecutar script de verificación:**
+
    ```bash
    Rscript SOLUCIONES-DOCUMENTADAS/Reticulate/04-verificar_solucion_matplotlib.R
    ```
