@@ -44,7 +44,7 @@ tryCatch({
   use_python(Sys.which("python3"), required = TRUE) # Preferir python3 si está disponible
 }, error = function(e) {
   tryCatch({
-    use_python(Sys.which("python"), required = TRUE)
+    # use_python(Sys.which("python"), required = TRUE)
   }, error = function(e2) {
     stop("No se pudo encontrar una instalación de Python válida. Asegúrate de que Python y reticulate estén configurados.")
   })

@@ -1,10 +1,10 @@
 ---
 output:
+  html_document: default
   pdf_document:
     latex_engine: xelatex
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
-  html_document: default
   word_document: default
 icfes:
   competencia:
@@ -58,7 +58,7 @@ knitr::knit_engines$set(python = function(options) {
 })
 
 # Asegurar que Python esté correctamente configurado
-use_python(Sys.which("python"), required = TRUE)
+# use_python(Sys.which("python"), required = TRUE)
 
 # Semilla aleatoria para diversidad de versiones
 set.seed(sample(1:100000, 1))

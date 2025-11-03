@@ -46,7 +46,7 @@ knitr::knit_engines$set(python = function(options) {
 })
 
 # Asegurar que Python esté correctamente configurado
-use_python(Sys.which("python"), required = TRUE)
+# use_python(Sys.which("python"), required = TRUE)
 ```
 
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}

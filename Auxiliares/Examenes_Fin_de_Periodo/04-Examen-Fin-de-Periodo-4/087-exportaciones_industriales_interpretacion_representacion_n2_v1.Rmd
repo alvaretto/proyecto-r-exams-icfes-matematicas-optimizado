@@ -62,7 +62,7 @@ knitr::knit_engines$set(python = function(options) {
 })
 
 # Asegurar que Python esté correctamente configurado
-use_python(Sys.which("python"), required = TRUE)
+# use_python(Sys.which("python"), required = TRUE)
 
 # Semilla aleatoria para diversidad de versiones
 set.seed(sample(1:100000, 1))
@@ -435,7 +435,9 @@ Solution
 Para resolver este problema, debemos analizar qué representación gráfica muestra **toda la información** de la gráfica original de manera equivalente.
 
 ### Análisis de la gráfica original:
+
 La gráfica principal muestra:
+
 - **Datos de tres años**: 2008, 2009 y 2010
 - **Cinco destinos**: `r paste(paises_destino, collapse = ", ")`
 - **Valores específicos** para cada combinación año-destino
