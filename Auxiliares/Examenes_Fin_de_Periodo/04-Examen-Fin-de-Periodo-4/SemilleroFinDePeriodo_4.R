@@ -5,6 +5,8 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definiciónn del archivo de examen y configuración inicial
+#preg01 <- sample(c("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"))
+
 preg01 <- sample(c("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"))
 
 archivo_examen <- preg01
