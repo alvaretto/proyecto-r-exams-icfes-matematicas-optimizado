@@ -48,7 +48,8 @@ options(scipen = 999)
 options(digits = 10)
 
 # Establecer semilla aleatoria para reproducibilidad
-set.seed(sample(1:100000, 1))
+#set.seed(sample(1:100000, 1))
+#set.seed(101) # 10A
 
 # Función principal de generación de datos
 generar_datos <- function() {
