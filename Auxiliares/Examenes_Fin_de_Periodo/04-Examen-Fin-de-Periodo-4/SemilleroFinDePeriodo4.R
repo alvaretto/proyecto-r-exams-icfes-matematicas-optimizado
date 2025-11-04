@@ -9,7 +9,7 @@ options(encoding = "UTF-8")
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-preg01 <- c(preg01 <- c(
+preg01 <- c(
   "001-muestreo_sesgo_municipio_aleatorio_argumentacion_n2_v1.Rmd",
   "002-cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_2.Rmd",
   "003-cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd",
@@ -25,16 +25,22 @@ preg01 <- c(preg01 <- c(
   "014-parabrisas-2.Rmd",
   "015-volumen_cilindro_hueco_R_v1.Rmd",
   "017-porcentajes_ordenamiento_sabores_v1.Rmd"
-))
+)
 
-
-archivo_examen <- preg01
-archivo_examen <- sample(archivo_examen)
 
 copias <- 1
 numpreg_por_archivo <- 1
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
+
+# Mezclar el orden de las preguntas DESPUÉS de establecer la semilla
+archivo_examen <- preg01
+archivo_examen <- sample(archivo_examen)
+
+# IMPORTANTE: Guardar el estado del generador DESPUÉS de mezclar
+# Esto asegura que todas las versiones usen las mismas semillas para cada pregunta
+estado_rng_inicial <- .Random.seed
+
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
@@ -45,7 +51,9 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Generación de n copias en un solo archivo .docx
 
-set.seed(semilla)
+# Restaurar el estado guardado para esta generación
+.Random.seed <- estado_rng_inicial
+
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "Examen_Periodo4_pandoc_con_soluciones",
@@ -71,7 +79,9 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 ################################################################################
 # Generación de n copias, sin Solution, en un solo archivo .docx
 
-set.seed(semilla)
+# Restaurar el estado del generador de números aleatorios al estado inicial
+.Random.seed <- estado_rng_inicial
+
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "Examen_Periodo4_pandoc_sin_soluciones",
@@ -99,7 +109,9 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión con soluciones)
 
-set.seed(semilla)
+# Restaurar el estado del generador de números aleatorios al estado inicial
+.Random.seed <- estado_rng_inicial
+
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
           n = copias,
           name = "Examen_Periodo4_pdf_con_soluciones",
@@ -112,7 +124,9 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión de examen)
 
-set.seed(semilla)
+# Restaurar el estado del generador de números aleatorios al estado inicial
+.Random.seed <- estado_rng_inicial
+
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
           n = copias,
           name = "Examen_Periodo4_pdf_sin_soluciones",

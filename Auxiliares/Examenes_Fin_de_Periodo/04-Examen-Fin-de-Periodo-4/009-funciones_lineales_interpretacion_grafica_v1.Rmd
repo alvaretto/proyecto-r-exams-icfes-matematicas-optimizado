@@ -66,6 +66,16 @@ opciones <- c(round(altura_correcta),
               round(altura_correcta - 2),
               sample(c(altura_inicial, 0), 1))
 
+# Eliminar duplicados y asegurar 4 opciones únicas
+opciones <- unique(opciones)
+while(length(opciones) < 4) {
+  nueva_opcion <- round(altura_correcta + sample(c(-4, -3, 3, 4), 1))
+  if(!(nueva_opcion %in% opciones)) {
+    opciones <- c(opciones, nueva_opcion)
+  }
+}
+opciones <- opciones[1:4]
+
 # Aleatorizar orden usando sample() en lugar de shuffle
 opciones <- sample(opciones)
 
