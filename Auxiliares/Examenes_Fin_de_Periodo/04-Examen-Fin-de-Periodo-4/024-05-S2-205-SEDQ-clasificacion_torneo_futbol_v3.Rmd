@@ -614,19 +614,19 @@ Con **`r escenario_optimo$victorias` victorias**, `r escenario_optimo$empates` e
 
 ### Verificación de escenarios alternativos:
 
-1. **Escenario con mayor dependencia de victorias:**
+**Escenario con mayor dependencia de victorias:**
 
 ```{r tabla_escenario_alta_victoria, echo=FALSE, results='asis', fig.align='center'}
 # Mostrar la tabla con escenario de alta victoria
-include_tikz(tabla_escenario_alta_victoria, 
-             name = "tabla_escenario_alta_victoria", 
+include_tikz(tabla_escenario_alta_victoria,
+             name = "tabla_escenario_alta_victoria",
              markup = "markdown",
-             format = typ, 
+             format = typ,
              packages = c("tikz", "colortbl"),
              width = "12cm")
 ```
 
-2. **Escenario con mayor dependencia de bonificaciones:**
+**Escenario con mayor dependencia de bonificaciones:**
 
 ```{r tabla_escenario_alta_bonificacion, echo=FALSE, results='asis', fig.align='center'}
 # Mostrar la tabla con escenario de alta bonificación

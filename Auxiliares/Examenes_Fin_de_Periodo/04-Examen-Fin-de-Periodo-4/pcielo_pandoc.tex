@@ -1,0 +1,102 @@
+\documentclass[a4paper,12pt]{article}
+
+% Configuración de encoding UTF-8 DEFINITIVA
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage{geometry}
+\usepackage{color}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titling}
+
+% Configuración del idioma español
+\usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+
+% Configuración de página
+\geometry{
+  top=30mm,
+  bottom=30mm,
+  left=10mm,
+  right=10mm,
+}
+
+% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Examen de Fin de Período}
+\fancyhead[R]{Página \thepage}
+\fancyfoot[C]{\small I.E. Pedacito de Cielo}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Portada
+\pretitle{\begin{center}\LARGE\bfseries}
+\posttitle{\par\end{center}\vskip 1em}
+\preauthor{\begin{center}\large\scshape}
+\postauthor{\par\end{center}}
+\predate{\begin{center}\large\scshape}
+\postdate{\par\end{center}}
+
+\title{I. E. Pedacito de Cielo, La Tebaida, Quindío}
+\author{Simulacro Matemáticas Saber ICFES}
+\date{\today}
+
+% Configuración de enumeración para compatibilidad con pandoc
+\setlist[enumerate,1]{label=\arabic*., ref=\arabic*, start=1, resume}
+\setlist[enumerate,2]{label=(\alph*), ref=\alph*}
+
+% Nuevos entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\par\vspace{0.5em}\textbf{Solución:}\par}{}
+\newenvironment{answerlist}{\begin{enumerate}[label=(\alph*)]}{\end{enumerate}}
+
+% Compatibilidad con pandoc
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\setkeys{Gin}{keepaspectratio}
+
+% Párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+
+\maketitle
+
+\section*{Instrucciones}
+
+Lea cuidadosamente cada pregunta y seleccione la respuesta correcta.
+
+\vspace{1em}
+
+\begin{enumerate}[label=\arabic*.]
+#-
+  \item
+#-
+  \textbf{Escenario}\\
+#-
+  ##Question##
+#-
+  \begin{enumerate}[label=(\alph*)]
+    \item ##Questionlist##
+  \end{enumerate}
+#-
+
+  \textbf{Solución}\\
+#-
+  ##Solution##
+#-
+  \begin{enumerate}[label=(\alph*)]
+    \item ##Solutionlist##
+  \end{enumerate}
+#-
+#-
+\end{enumerate}
+
+\end{document}

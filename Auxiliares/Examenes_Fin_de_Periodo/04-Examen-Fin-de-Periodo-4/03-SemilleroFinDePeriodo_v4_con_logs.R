@@ -144,7 +144,7 @@ tryCatch({
                n = copias,
                name = paste0(nombre_sin_extension, "-docx"),
                encoding = "UTF-8",
-               template = "pcielo.tex",
+               template = "pcielo_pandoc.tex",
                header = list(Date = Sys.Date()),
                inputs = NULL,
                options = NULL,
