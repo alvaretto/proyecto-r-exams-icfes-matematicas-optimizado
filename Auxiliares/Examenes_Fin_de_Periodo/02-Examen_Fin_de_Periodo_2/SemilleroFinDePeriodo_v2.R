@@ -1,9 +1,9 @@
-# Carga de la librería r-exams
+# Carga de la librer??a r-exams
 library(exams)
 
 bezes <- 1
 
-# Definición del archivo de examen y configuración inicial
+# Definici??n del archivo de examen y configuraci??n inicial
 preg01 <- sample(c("2023-Matematicas-11-2-09-Opc-A.Rmd",
                    "2023-Matematicas-11-2-09-Opc-B.Rmd",
                    "2023-Matematicas-11-2-09-Op-C.Rmd",
@@ -30,17 +30,17 @@ set.seed(semilla)
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
-# Nombre del archivo sin la extensión .Rmd
-nombre_sin_extension <- "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2"  # Cambiado a un nombre genérico para el taller
+# Nombre del archivo sin la extensi??n .Rmd
+nombre_sin_extension <- "P3C-Matem??ticas_Evaluacion_Fin_de_Periodo_2"  # Cambiado a un nombre gen??rico para el taller
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 ################################################################################
-# Generación de n copias en un solo archivo .docx
+# Generaci??n de n copias en un solo archivo .docx
 
 set.seed(semilla)
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
-             name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2-docx",
+             name = "P3C-Matem??ticas_Evaluacion_Fin_de_Periodo_2-docx",
              encoding = "UTF-8",
              template = "pcielo.tex",
              header = list(Date = Sys.Date()),
@@ -61,12 +61,12 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              type = "docx")
 
 ################################################################################
-# Generación de n copias, sin Solution, en un solo archivo .docx
+# Generaci??n de n copias, sin Solution, en un solo archivo .docx
 
 set.seed(semilla)
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
-             name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
+             name = "P3C-Matem??ticas_Evaluacion_Fin_de_Periodo_2_sin_sol",
              encoding = "UTF-8",
              template = "pcielo_nosol.tex",
              solution = FALSE,  # Desactivar completamente las soluciones
@@ -89,12 +89,12 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 
 
 ################################################################################
-# Generación de n copias en un solo archivo de salida para PDF (versión con soluciones)
+# Generaci??n de n copias en un solo archivo de salida para PDF (versi??n con soluciones)
 
 set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
           n = copias,
-          name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2_sol",
+          name = "P3C-Matem??ticas_Evaluacion_Fin_de_Periodo_2_sol",
           encoding = "UTF-8",
           template = "solpcielo",
           dir = dir_salida,
@@ -102,12 +102,12 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cad
           verbose = TRUE)
 
 ################################################################################
-# Generación de n copias en un solo archivo de salida para PDF (versión de examen)
+# Generaci??n de n copias en un solo archivo de salida para PDF (versi??n de examen)
 
 set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),  # 3 preguntas de cada archivo
           n = copias,
-          name = "P3C-Matemáticas_Evaluacion_Fin_de_Periodo_2",  # Corregido: nombre como string
+          name = "P3C-Matem??ticas_Evaluacion_Fin_de_Periodo_2",  # Corregido: nombre como string
           encoding = "UTF-8",
           template = "exam",
           dir = dir_salida,

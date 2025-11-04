@@ -392,6 +392,20 @@ afirmacion_correcta <- "Los porcentajes se conservarían sin importar el tamaño
 
 # Crear las 4 opciones finales
 todas_opciones <- c(afirmacion_correcta, distractores_seleccionados)
+
+# Eliminar duplicados y asegurar exactamente 4 opciones únicas
+todas_opciones <- unique(todas_opciones)
+
+# Si hay menos de 4 opciones únicas, agregar distractores adicionales
+while(length(todas_opciones) < 4) {
+  distractor_adicional <- sample(afirmaciones_incorrectas[!afirmaciones_incorrectas %in% todas_opciones], 1)
+  todas_opciones <- c(todas_opciones, distractor_adicional)
+  todas_opciones <- unique(todas_opciones)
+}
+
+# Tomar solo las primeras 4 opciones si hay más
+todas_opciones <- todas_opciones[1:4]
+
 opciones_mezcladas <- sample(todas_opciones)
 
 # Identificar posición correcta
