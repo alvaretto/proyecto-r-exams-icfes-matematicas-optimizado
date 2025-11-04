@@ -1,8 +1,8 @@
 ---
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 ```{r setup, include=FALSE}
 # Configuración para todos los formatos de salida

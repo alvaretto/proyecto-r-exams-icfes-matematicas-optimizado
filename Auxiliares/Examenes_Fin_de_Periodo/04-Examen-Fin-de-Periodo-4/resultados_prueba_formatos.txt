@@ -1,0 +1,16 @@
+RESULTADOS DE PRUEBA DE FORMATOS
+================================
+
+Fecha: 2025-11-03 18:02:53.159851
+Ejercicio probado: 001-muestreo_sesgo_municipio_aleatorio_argumentacion_n2_v1.Rmd
+
+Éxitos: 6
+Fallos: 0
+
+Detalles:
+  docx_sol            : ÉXITO
+  docx_sin_sol        : ÉXITO
+  pdf_sol             : ÉXITO
+  pdf                 : ÉXITO
+  nops_sol            : ÉXITO
+  nops                : ÉXITO

@@ -53,7 +53,7 @@ En una entrevista para una cadena de televisión, un piloto de un avión de acro
 
 Answerlist
 ----------
--
+- Opción A
 <br/>
 ```{python GraficoA, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
 import matplotlib.pyplot as plt
@@ -105,7 +105,7 @@ plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
 plt.show()
 ```
 
--
+- Opción B
 <br/>
 ```{python GraficoB, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
 # Gráfico B (INCORRECTO - Con pico más alto en la pirueta)
@@ -155,7 +155,7 @@ plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
 plt.show()
 ```
 
--
+- Opción C
 <br/>
 ```{python GraficoC, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
 # Gráfico C (INCORRECTO - Falta la fase de elevación adicional)
@@ -205,7 +205,7 @@ plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
 plt.show()
 ```
 
--
+- Opción D
 <br/>
 ```{python GraficoD, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
 # Gráfico D (CORRECTO - Con la fase de elevación adicional)

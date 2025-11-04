@@ -163,14 +163,14 @@ El líder de un programa de adopción de mascotas encuestó a `r enkuestados` pe
 
 Answerlist
 ----------
-- 
+- Opción A
 <br/> 
 ```{r Tabla01, warning=FALSE,echo = FALSE, results = "asis"}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 include_tikz(image01, name = "image01", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "4cm")
 ```
 
-- 
+- Opción B
 <br/> 
 ```{python BarraVertical, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
 import matplotlib.pyplot as plt
@@ -221,7 +221,7 @@ plt.subplots_adjust(left=0.13, right=0.95, top=0.95, bottom=0.25)
 plt.show()
 ```
 
--
+- Opción C
 <br/>
 ```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide"}
 import matplotlib.pyplot as plt
@@ -292,7 +292,7 @@ plt.subplots_adjust(left=0.12, right=0.90, top=0.95, bottom=0.15)
 plt.show()
 ```
 
--
+- Opción D
 <br/>
 ```{python Torta, echo = FALSE, results = "hide"}
 # Re-importing necessary libraries after execution state reset

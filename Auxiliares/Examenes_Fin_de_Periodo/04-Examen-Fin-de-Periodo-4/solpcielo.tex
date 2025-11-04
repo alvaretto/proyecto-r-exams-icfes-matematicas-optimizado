@@ -1,5 +1,10 @@
 \documentclass[10pt,a4paper]{article}
 
+%% Configuración de encoding UTF-8 DEFINITIVA
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
 %% packages
 \usepackage[papersize={216mm,330mm},tmargin=15mm,bmargin=20mm,lmargin=10mm,rmargin=10mm]{geometry}
 \usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,amsthm}
@@ -12,7 +17,7 @@
 \usepackage{mathrsfs}
 \usepackage{tkz-euclide}
 \usetikzlibrary{babel}
-\usepackage[spanish]{babel}
+\usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
 \usepackage{floatrow}
 \usepackage{hyperref}
 \usepackage{ragged2e}
@@ -41,6 +46,7 @@
 
 %% compatibility with pandoc
 \providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}  % Define \pandocbounded to simply pass through its argument
 \setkeys{Gin}{keepaspectratio}
 
 %% fonts: Helvetica

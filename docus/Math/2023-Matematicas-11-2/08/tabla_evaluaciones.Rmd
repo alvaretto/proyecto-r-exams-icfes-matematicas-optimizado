@@ -1,4 +1,16 @@
+---
+encoding: UTF-8
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
 ```{r data generation, echo = FALSE, results = "hide"}
+# Configuración de encoding y locale
+Sys.setlocale("LC_ALL", "es_ES.UTF-8")
+options(encoding = "UTF-8")
+
 library(exams)
 library(tikzDevice)
 
