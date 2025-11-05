@@ -1,15 +1,26 @@
 # Carga de la librería r-exams
 library(exams)
 
+# Configurar modo generación de exámenes para evitar pruebas test_that
+.exams_generation_mode <- TRUE
+
 # Definiciónn del archivo de examen y configuración inicial
-preg01 <- sample(c("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"))
+#preg01 <- sample(c("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd",
+#                   "probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"))
+
+
+preg01 <- sample(c("ExportacionesGraficosEstadisticaInterpretacion_n3_v1Rmd"))
 
 archivo_examen <- preg01
 
 copias <- 1
 numpreg_por_archivo <- 1
-#semilla <- sample(100:1e8, 1)
-#set.seed(semilla)
+
+# SOLUCIÓN CRÍTICA: Establecer semilla global ÚNICA para todas las compilaciones
+# Esto garantiza que exams2pandoc y exams2pdf generen exactamente los mismos datos
+semilla <- 101  # Semilla fija para reproducibilidad entre versiones
+set.seed(semilla)
+
 dir_salida <- "salida"
 dir_ejercicios <- "."
 
@@ -20,7 +31,8 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Generación de n copias en un solo archivo .docx
 
-#set.seed(semilla)
+# Restablecer semilla antes de cada generación para consistencia
+set.seed(semilla)
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "Matematicas_Evaluacion_Fin_de_Periodo_4-docx",
@@ -46,7 +58,8 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 ################################################################################
 # Generación de n copias, sin Solution, en un solo archivo .docx
 
-#set.seed(semilla)
+# Restablecer semilla antes de cada generación para consistencia
+set.seed(semilla)
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
              name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",
@@ -74,7 +87,8 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión con soluciones)
 
-#set.seed(semilla)
+# Restablecer semilla antes de cada generación para consistencia
+set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
           n = copias,
           name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sol",
@@ -87,7 +101,8 @@ exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión de examen)
 
-#set.seed(semilla)
+# Restablecer semilla antes de cada generación para consistencia
+set.seed(semilla)
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
           n = copias,
           name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",  # Corregido: nombre como string

@@ -47,19 +47,22 @@ options(OutDec = ".")
 options(scipen = 999)
 options(digits = 10)
 
-# Establecer semilla aleatoria para reproducibilidad
-#set.seed(sample(1:100000, 1))
-#set.seed(101) # 10A
+# IMPORTANTE: NO establecer set.seed() aquí
+# La semilla se controla desde el script R principal (SemilleroFinDePeriodo_4.R)
+# Esto garantiza que todas las versiones (con/sin soluciones, PDF/DOCX)
+# generen exactamente los mismos datos aleatorios
 
 # Función principal de generación de datos
 generar_datos <- function() {
   # NUEVA IMPLEMENTACIÓN: Aleatorización de catetos manteniendo filosofía ICFES
   # Objetivo: Generar valores que produzcan cálculos simples sin calculadora
 
-  # Generar semilla única para esta ejecución
-  timestamp_seed <- as.numeric(Sys.time()) * 1000000
+  # SOLUCIÓN CRÍTICA: Eliminar generación de semilla basada en timestamp
+  # La semilla se controla desde el script R principal (SemilleroFinDePeriodo_4.R)
+  # Esto garantiza consistencia entre versiones con y sin soluciones
+
+  # Generar seed para distractores basado en valores aleatorios reproducibles
   base_seed <- sample(1:1000000, 1)
-  unique_seed <- (timestamp_seed + base_seed) %% 1000000
 
   # Aleatorizar contextos del problema para mayor diversidad
   contextos_problema <- c(
@@ -126,7 +129,7 @@ generar_datos <- function() {
   # Aleatorizar factores de diversidad para generar 300+ versiones
   factor_diversidad <- sample(1:1000, 1)  # Factor ampliado
   variacion_contexto <- sample(1:100, 1)  # Variación ampliada
-  seed_distractores <- unique_seed + factor_diversidad + variacion_contexto
+  seed_distractores <- base_seed + factor_diversidad + variacion_contexto
 
   # Función de formateo inteligente para diferentes tipos de números
   formato_numero <- function(x, tipo_rep = "exacta") {

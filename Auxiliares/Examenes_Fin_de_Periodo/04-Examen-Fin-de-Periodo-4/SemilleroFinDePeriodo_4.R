@@ -4,10 +4,13 @@ library(exams)
 # Configurar modo generación de exámenes para evitar pruebas test_that
 .exams_generation_mode <- TRUE
 
-# Definiciónn del archivo de examen y configuración inicial
-#preg01 <- sample(c("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"))
+#preg01 <- sample(c("03-ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"))
 
-preg01 <- sample(c("probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"))
+# Definiciónn del archivo de examen y configuración inicial
+preg01 <- sample(c("01-cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd",
+                   "02-probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd",
+                   "03-ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"))
+
 
 archivo_examen <- preg01
 

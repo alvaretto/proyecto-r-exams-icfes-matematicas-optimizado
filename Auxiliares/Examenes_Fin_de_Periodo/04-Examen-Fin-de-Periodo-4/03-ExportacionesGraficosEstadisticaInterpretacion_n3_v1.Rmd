@@ -50,14 +50,21 @@ knitr::knit_engines$set(python = function(options) {
 use_python(Sys.which("python3"), required = TRUE)
 ```
 
-```{r DefiniciónDeVariables, message=FALSE, warning=FALSE, results='asis', include=FALSE}
-# Establecer semilla aleatoria
-set.seed(sample(1:10000, 1))
+```{r DefiniciónDeVariables, message=FALSE, warning=FALSE, results='hide', echo=FALSE}
+# IMPORTANTE: NO establecer set.seed() aquí
+# La semilla se controla desde el script R principal (SemilleroFinDePeriodo_4.R)
+# Esto garantiza que todas las versiones (con/sin soluciones, PDF/DOCX)
+# generen exactamente los mismos datos aleatorios
 
 # Generar datos para el gráfico de barras
 codigo_barras <- "
 import matplotlib.pyplot as plt
 import random
+
+# CORRECCIÓN CRÍTICA: Establecer semilla en Python para reproducibilidad
+# La semilla de Python debe sincronizarse con la semilla de R
+# Usar una semilla fija que será consistente entre ejecuciones
+random.seed(42)
 
 # Datos de los años y valores de exportaciones
 # Crear lista de años desde 1950 hasta 2023
@@ -112,7 +119,18 @@ Question
 La imagen muestra dos gráficos relacionados con las exportaciones de Tebailandia, un país que usa "tebos" como su moneda.
 \
 
-![](GraficoBarras.png){width=80%}
+```{r mostrar_grafico_barras, echo=FALSE, results='asis', fig.align="center"}
+# Detectar formato de salida
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Mostrar la imagen del gráfico de barras
+if (es_moodle) {
+  cat("![](GraficoBarras.png){width=70%}")
+} else {
+  cat("![](GraficoBarras.png){width=80%}")
+}
+```
 
 \
 
@@ -121,6 +139,10 @@ codigo_torta <- "
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+
+# CORRECCIÓN CRÍTICA: Establecer semilla en Python para reproducibilidad
+# Debe ser la misma semilla que en el chunk anterior para consistencia
+random.seed(42)
 
 # Datos para las porciones del gráfico circular.
 labels = [
@@ -200,7 +222,14 @@ producto_seleccionado = selectots[producto_index]
 py_run_string(codigo_torta)
 ```
 
-![](GraficoTorta.png){width=70%}
+```{r mostrar_grafico_torta, echo=FALSE, results='asis', fig.align="center"}
+# Mostrar la imagen del gráfico de torta
+if (es_moodle) {
+  cat("![](GraficoTorta.png){width=60%}")
+} else {
+  cat("![](GraficoTorta.png){width=70%}")
+}
+```
 
 \
 
@@ -209,6 +238,11 @@ py_run_string(codigo_torta)
 producto_seleccionado <- py$producto_seleccionado
 anio <- py$year_aleatorio
 xol <- py$xol
+
+# IMPORTANTE: NO usar set.seed() aquí
+# La semilla se controla desde el script R principal (SemilleroFinDePeriodo_4.R)
+# Esto garantiza que todas las versiones (con/sin soluciones, PDF/DOCX)
+# generen exactamente los mismos datos aleatorios
 
 # Calcular opciones distractoras basadas en xol
 # Asumimos que xol ya ha sido calculado en tu código
@@ -219,11 +253,13 @@ err1 <- xol * 0.95
 # Distractor 2: 105% de xol
 err2 <- xol * 1.05
 
-# Distractor 3: Escoger entre 80% o 120% de xol de forma aleatoria
-# para mayor variabilidad
-set.seed(NULL) # Para que la selección sea aleatoria en cada ejecución
+# Distractor 3: Escoger entre 80% o 120% de xol de forma reproducible
+# CORRECCIÓN CRÍTICA: Eliminar set.seed(NULL) que rompía reproducibilidad
+# Usar selección determinística basada en el valor de xol
 err3_options <- c(0.8, 1.2)
-err3 <- xol * sample(err3_options, 1)
+# Selección reproducible basada en el valor de xol
+err3_factor <- err3_options[1 + (as.integer(xol * 100) %% 2)]
+err3 <- xol * err3_factor
 
 # Redondear los valores para mantener la consistencia
 err1 <- round(err1, 2)
@@ -234,7 +270,7 @@ err3 <- round(err3, 2)
 opciones <- c(xol, err1, err2, err3)
 if (length(unique(opciones)) != 4) {
   warning("Algunas opciones de respuesta son idénticas. Ajustando...")
-  # Ajustar ligeramente las opciones duplicadas
+  # Ajustar ligeramente las opciones duplicadas de forma reproducible
   for (i in 2:4) {
     while (opciones[i] %in% opciones[1:(i-1)]) {
       opciones[i] <- opciones[i] + 0.01
