@@ -7,12 +7,14 @@ library(exams)
 #preg01 <- sample(c("03-ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"))
 
 # Definiciónn del archivo de examen y configuración inicial
-preg01 <- "01-cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
-preg02 <- "02-probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"
-preg03 <- "03-ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
+preg01 <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
+preg02 <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"
+preg03 <- "ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
+preg04 <- "pasteleria_sabores_ventas_estadistica_interpretacion_representacion_n2_v1.Rmd"
 
 
-archivo_examen <- c(preg02)
+archivo_examen <- sample(c(preg01, preg02, preg03, preg04))
+#archivo_examen <- preg04
 
 copias <- 1
 numpreg_por_archivo <- 1
@@ -89,26 +91,26 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 # Generación de n copias en un solo archivo de salida para PDF (versión con soluciones)
 
 # Restablecer semilla antes de cada generación para consistencia
-set.seed(semilla)
-exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
-          n = copias,
-          name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sol",
-          encoding = "UTF-8",
-          template = "solpcielo",
-          dir = dir_salida,
-          edir = dir_ejercicios,
-          verbose = TRUE)
+# set.seed(semilla)
+# exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
+#           n = copias,
+#           name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sol",
+#           encoding = "UTF-8",
+#           template = "solpcielo",
+#           dir = dir_salida,
+#           edir = dir_ejercicios,
+#           verbose = TRUE)
 
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión de examen)
 
 # Restablecer semilla antes de cada generación para consistencia
-set.seed(semilla)
-exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
-          n = copias,
-          name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",  # Corregido: nombre como string
-          encoding = "UTF-8",
-          template = "exam",
-          dir = dir_salida,
-          edir = dir_ejercicios,
-          verbose = TRUE)
+# set.seed(semilla)
+# exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
+#           n = copias,
+#           name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",  # Corregido: nombre como string
+#           encoding = "UTF-8",
+#           template = "exam",
+#           dir = dir_salida,
+#           edir = dir_ejercicios,
+#           verbose = TRUE)
