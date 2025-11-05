@@ -1,0 +1,200 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usetikzlibrary{3d,babel}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+```
+
+\section{Question}\label{question}
+
+En la gráfica se muestra la probabilidad de que la variable aleatoria
+\(x\) tome valores en cada uno de tres intervalos en que se ha dividido
+la curva.
+
+\includegraphics[width=12cm,height=\textheight,keepaspectratio]{prob_dist_grafico.png}
+
+¿Cuál de las siguientes tablas representa la probabilidad de que la
+variable aleatoria \(x\) tome los valores en el intervalo indicado?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\item
+  \includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{tabla_opcion_a.png}
+\item
+  \includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{tabla_opcion_b.png}
+\item
+  \includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{tabla_opcion_c.png}
+\item
+  \includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{tabla_opcion_d.png}
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para encontrar la tabla correcta, debemos extraer la información
+directamente del gráfico y compararla con las opciones proporcionadas.
+
+\textbf{Paso 1: Analizar la información del gráfico.}
+
+El gráfico está dividido en tres intervalos con sus respectivas
+probabilidades:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  El primer intervalo va desde \(x=0\) hasta \(x=6\). La probabilidad en
+  esta sección es \textbf{0,25}.
+\item
+  El segundo intervalo (central) va desde \(x=6\) hasta \(x=9\). La
+  probabilidad en esta sección es \textbf{0,50}.
+\item
+  El tercer intervalo va desde \(x=9\) hasta \(x=14\). La probabilidad
+  en esta sección es \textbf{0,25}.
+\end{enumerate}
+
+\textbf{Paso 2: Construir la tabla esperada.}
+
+Con la información anterior, la tabla correcta debe tener la siguiente
+estructura:
+
+Intervalo
+
+Probabilidad
+
+\(0 \le x \le 6\)
+
+0,25
+
+\(6 < x \le 9\)
+
+0,50
+
+\(9 < x \le 14\)
+
+0,25
+
+\textbf{Paso 3: Comparar con las opciones.}
+
+Al revisar las tablas de las opciones, la única que coincide
+perfectamente con los datos extraídos del gráfico es la tabla correcta.
+Las otras tablas presentan errores comunes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Error de probabilidad acumulada:} Una de las tablas muestra
+  cómo la probabilidad se va sumando (0,25, 0,75, 1,00), lo cual es una
+  interpretación incorrecta del gráfico.
+\item
+  \textbf{Error de definición de intervalo:} Otra tabla usa intervalos
+  acumulativos (ej: \(0 \le x \le 9\)), lo cual no corresponde a las
+  secciones individuales mostradas.
+\item
+  \textbf{Error de asignación:} Otra tabla intercambia los valores de
+  probabilidad, asignando el valor central a los laterales y viceversa.
+\end{itemize}
+
+Por lo tanto, la respuesta correcta es la que representa fielmente los
+tres intervalos y sus probabilidades tal como se muestran en el gráfico.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Correcto. Esta tabla representa exactamente los tres intervalos y sus
+  probabilidades correspondientes como se muestra en el gráfico.
+\item
+  Incorrecto. Usa intervalos acumulativos (0 \(\le\) x \(\le\) a, 0
+  \(\le\) x \(\le\) b, 0 \(\le\) x \(\le\) c) y una columna acumulada;
+  no corresponde a las tres secciones individuales.
+\item
+  Incorrecto. Intercambia los valores asignando el central a los
+  laterales.
+\item
+  Incorrecto. No coincide con la asignación de probabilidades del
+  gráfico.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: probabilidad\_distribucion\_grafico\_tabla extype: schoice
+exsolution: 1000 exshuffle: TRUE exsection:
+Estadística/Probabilidad/Interpretación de gráficos
+
+\end{document}

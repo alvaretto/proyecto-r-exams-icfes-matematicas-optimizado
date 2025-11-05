@@ -1,0 +1,106 @@
+# ============================================================================
+# COMANDOS PARA TERMINAL - COPIAR Y PEGAR
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# PASO 1: LIMPIAR TODO EL CACHÉ (YA EJECUTADO)
+# ----------------------------------------------------------------------------
+
+cd "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B"
+
+./limpiar_cache.sh
+
+
+# ----------------------------------------------------------------------------
+# PASO 2: CERRAR RSTUDIO (si está abierto)
+# ----------------------------------------------------------------------------
+
+# Desde terminal, ejecutar:
+killall rstudio 2>/dev/null
+
+
+# ----------------------------------------------------------------------------
+# PASO 3: COMPILAR DIRECTAMENTE DESDE TERMINAL (SIN RSTUDIO)
+# ----------------------------------------------------------------------------
+
+# Opción A: Compilar a HTML
+Rscript -e "library(exams); exams2html('probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd', n=1, dir='salida_html', name='ejercicio')"
+
+# Opción B: Compilar a PDF
+Rscript -e "library(exams); exams2pdf('probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd', n=1, dir='salida_pdf', name='ejercicio')"
+
+# Opción C: Compilar a DOCX
+Rscript -e "library(exams); exams2pandoc('probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd', n=1, dir='salida_docx', name='ejercicio')"
+
+
+# ----------------------------------------------------------------------------
+# PASO 4: VERIFICAR QUE SE GENERARON LOS ARCHIVOS
+# ----------------------------------------------------------------------------
+
+# Ver archivos HTML generados
+ls -lh salida_html/
+
+# Ver archivos PDF generados
+ls -lh salida_pdf/
+
+# Ver archivos DOCX generados
+ls -lh salida_docx/
+
+# Ver imágenes PNG generadas
+ls -lh tabla_opcion_*.png
+
+
+# ----------------------------------------------------------------------------
+# PASO 5: ABRIR EL ARCHIVO GENERADO
+# ----------------------------------------------------------------------------
+
+# Abrir HTML en navegador
+xdg-open salida_html/ejercicio1.html
+
+# Abrir PDF
+xdg-open salida_pdf/ejercicio1.pdf
+
+# Abrir DOCX
+xdg-open salida_docx/ejercicio1.docx
+
+
+# ============================================================================
+# COMANDOS ADICIONALES DE LIMPIEZA (si necesitas limpiar manualmente)
+# ============================================================================
+
+# Limpiar caché de knitr en directorio actual
+rm -rf *_cache *_files
+
+# Limpiar archivos temporales de R
+rm -f .Rhistory .RData
+
+# Limpiar caché global de R
+rm -rf ~/.cache/R/*
+
+# Limpiar caché de RStudio
+rm -rf ~/.cache/rstudio/*
+rm -rf ~/.local/share/rstudio/sessions/*
+
+# Limpiar caché de reticulate
+rm -rf ~/.cache/reticulate/*
+
+# Limpiar carpetas de prueba
+rm -rf test_output test_verificacion compilacion_directa salida_manual
+
+
+# ============================================================================
+# SOLUCIÓN DEFINITIVA: COMPILAR SIN RSTUDIO
+# ============================================================================
+
+# Si RStudio sigue dando problemas, usa este comando único:
+
+cd "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B" && Rscript -e "library(exams); exams2html('probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd', n=1, dir='SALIDA_FINAL', name='ejercicio_final')" && ls -lh SALIDA_FINAL/ && xdg-open SALIDA_FINAL/ejercicio_final1.html
+
+
+# ============================================================================
+# VERIFICACIÓN: EL ARCHIVO FUNCIONA
+# ============================================================================
+
+# Este comando compila y muestra el resultado:
+Rscript -e "library(exams); resultado <- exams2html('probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd', n=1, dir='verificacion_final', name='test'); cat('\n✅ COMPILACIÓN EXITOSA\n'); list.files('verificacion_final')"
+

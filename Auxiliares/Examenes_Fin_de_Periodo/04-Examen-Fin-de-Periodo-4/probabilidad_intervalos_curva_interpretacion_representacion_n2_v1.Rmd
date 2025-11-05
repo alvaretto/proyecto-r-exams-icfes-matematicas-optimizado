@@ -1,12 +1,12 @@
 ---
 output:
-  html_document:
-    df_print: paged
-    mathjax: true
   word_document: default
   pdf_document:
     latex_engine: xelatex
     keep_tex: true
+  html_document:
+    df_print: paged
+    mathjax: true
 header-includes:
 - \usepackage[spanish]{babel}
 - \usepackage{amsmath}
@@ -188,21 +188,17 @@ opciones_portables <- lapply(datos$opciones, function(tabla) {
 le_symbol <- if (identical(typ, "pandoc")) "≤" else "\\le"
 datos$ejemplo_distractor_B <- paste0("$0 ", le_symbol, " x ", le_symbol, " ", datos$limite2, "$")
 # **FIN DE LA CORRECCIÓN**
-```
-
-```{python generar_tablas_png, echo=FALSE, results="hide"}
+```{python generar_tablas_png}
 # Generar 4 tablas como imágenes PNG (matplotlib) para Answerlist
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 # Leer parámetros desde R (reticulate)
-# CORRECCIÓN: r.datos ya es convertido a dict por reticulate, acceso directo
-datos_r = r.datos
-lim1 = int(datos_r['limite1'])
-lim2 = int(datos_r['limite2'])
-limsup = int(datos_r['limite_sup'])
-pl = float(datos_r['p_lateral'])
-pc = float(datos_r['p_central'])
+lim1 = int(r.datos["limite1"])
+lim2 = int(r.datos["limite2"])
+limsup = int(r.datos["limite_sup"])
+pl = float(r.datos["p_lateral"])
+pc = float(r.datos["p_central"])
 
 # Construir etiquetas de intervalos (texto plano con <= y <)
 int1 = f"0 <= x <= {lim1}"
@@ -254,6 +250,8 @@ for img in img_files:
     if os.path.exists(img):
         # Asegurar que las imágenes estén disponibles en el directorio de trabajo
         pass  # Ya están en el directorio actual
+```
+
 ```
 
 ```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
