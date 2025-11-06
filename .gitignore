@@ -8,6 +8,9 @@
 
 **/.claude/settings.local.json
 
+# MCP servers Python (repositorios clonados)
+.cursor/mcp-servers-python/
+
 # Archivos con datos sensibles de Git/GitHub
 *_PRIVADO.md
 *_privado.md

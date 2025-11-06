@@ -32,6 +32,29 @@
 - **Comando**: `npx -y @modelcontextprotocol/server-git`
 - **Repositorio**: `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams`
 
+### 7. ArXiv LaTeX MCP ✅ (Python)
+- **Propósito**: Obtener código LaTeX de papers de arXiv para contenido matemático
+- **Comando**: `uv --directory .cursor/mcp-servers-python/arxiv-latex-mcp run server/main.py`
+- **Uso**: Acceso a fuentes LaTeX de papers matemáticos para referencia y ejemplos
+- **Repositorio**: `takashiishida/arxiv-latex-mcp`
+- **Estado**: Instalado y configurado
+
+### 8. Typst MCP ✅ (Python)
+- **Propósito**: Conversión LaTeX/Typst, validación de sintaxis y generación de imágenes
+- **Comando**: `uv --directory .cursor/mcp-servers-python/typst-mcp run server.py`
+- **Uso**: Validación de código LaTeX/TikZ y conversión entre formatos
+- **Repositorio**: `johannesbrandenburger/typst-mcp`
+- **Dependencias**: Requiere Typst instalado (✅ instalado)
+- **Estado**: Instalado y configurado
+
+### 9. Python Executor MCP ✅ (Python + Deno)
+- **Propósito**: Ejecutar código Python en sandbox seguro usando Pyodide + Deno
+- **Comando**: `uvx mcp-run-python stdio`
+- **Uso**: Ejecución segura de código Python aislado del sistema operativo
+- **Repositorio**: `pydantic/mcp-run-python`
+- **Dependencias**: Requiere Deno instalado (✅ instalado)
+- **Estado**: Instalado y configurado
+
 
 
 ## Cómo Activar los MCPs en Cursor
@@ -54,65 +77,39 @@ Para habilitar GitHub MCP:
 **Estado**: No encontrado en repositorios oficiales MCP
 **Alternativa**: Memory MCP proporciona funcionalidad similar de gestión de contexto persistente
 
-### MCPs Adicionales Recomendados (Requieren Instalación Manual)
+## Herramientas Instaladas
 
-#### **Python-Based MCPs** (Requieren Python y pip)
+### uv (Gestor de paquetes Python moderno)
+- **Versión**: 0.9.7
+- **Ubicación**: `/home/bootcamp/.local/bin/uv`
+- **Propósito**: Gestión rápida de dependencias Python para MCPs
 
-1. **ArXiv LaTeX MCP** 🐍
-   - **Repositorio**: `takashiishida/arxiv-latex-mcp`
-   - **Propósito**: Obtener código LaTeX de papers de arXiv para contenido matemático
-   - **Instalación**: Requiere clonar repositorio de GitHub e instalar con Python
-   - **Uso**: Acceso a fuentes LaTeX de papers matemáticos para referencia
+### Deno (Runtime JavaScript/TypeScript)
+- **Versión**: 2.5.6
+- **Ubicación**: `/home/bootcamp/.deno/bin/deno`
+- **Propósito**: Requerido para Python Executor MCP (Pyodide sandbox)
 
-2. **Typst MCP** 🐍
-   - **Repositorio**: `johannesbrandenburger/typst-mcp`
-   - **Propósito**: Conversión LaTeX/Typst, validación de sintaxis
-   - **Instalación**: Requiere clonar repositorio de GitHub e instalar con Python
-   - **Uso**: Validación de código LaTeX/TikZ y conversión entre formatos
+### Typst (Sistema de composición tipográfica)
+- **Versión**: 0.13.1
+- **Ubicación**: `/usr/bin/typst`
+- **Propósito**: Requerido para Typst MCP (conversión LaTeX/Typst)
 
-3. **Image Analysis MCP** 🐍
-   - **Repositorio**: `champierre/image-mcp-server`
-   - **Propósito**: Análisis de imágenes usando GPT-4 Vision
-   - **Instalación**: Requiere clonar repositorio de GitHub e instalar con Python
-   - **Uso**: Procesamiento y análisis de imágenes matemáticas en ejercicios ICFES
-   - **Nota**: Requiere API key de OpenAI
+## MCPs Adicionales Disponibles (No Instalados)
 
-4. **Python Execution MCP** 🐍
-   - **Repositorio**: `pydantic/pydantic-ai/mcp-run-python`
-   - **Propósito**: Ejecutar código Python en sandbox seguro
-   - **Instalación**: Requiere instalación con pip
+### Image Analysis MCP 🐍
+- **Repositorio**: `champierre/image-mcp-server`
+- **Propósito**: Análisis de imágenes usando GPT-4 Vision
+- **Instalación**: Requiere clonar repositorio de GitHub e instalar con Python
+- **Uso**: Procesamiento y análisis de imágenes matemáticas en ejercicios ICFES
+- **Nota**: Requiere API key de OpenAI
 
-#### **Otros MCPs Disponibles**
-
+### Otros MCPs Disponibles
 - **FastMCP Framework**: Para construir MCPs personalizados en Python
 - **OpenStack MCP**: `openstack-kr/python-openstackmcp-server` - Gestión de infraestructura cloud
 
-### Nota sobre MCPs Python
-
-Los MCPs basados en Python no están disponibles como paquetes npm. Para instalarlos:
-
-1. Clonar el repositorio de GitHub
-2. Instalar dependencias con `pip install -r requirements.txt`
-3. Configurar en `.cursor/mcp.json` usando `python` como comando en lugar de `npx`
-
-**Ejemplo de configuración para MCP Python:**
-
-```json
-{
-  "mcpServers": {
-    "python-mcp-example": {
-      "type": "stdio",
-      "command": "python",
-      "args": ["/ruta/al/repositorio/server.py"],
-      "description": "Descripción del MCP"
-    }
-  }
-}
-```
-
 ## Verificación de Funcionamiento
 
-Ejecutar en terminal para verificar MCPs instalados:
+### MCPs npm (Node.js)
 
 ```bash
 # Verificar Sequential Thinking
@@ -123,6 +120,21 @@ timeout 3 npx -y @modelcontextprotocol/server-memory
 
 # Verificar Playwright
 timeout 3 npx -y @playwright/mcp@latest
+```
+
+### MCPs Python
+
+```bash
+# Verificar ArXiv LaTeX MCP
+cd .cursor/mcp-servers-python/arxiv-latex-mcp
+~/.local/bin/uv run server/main.py --help
+
+# Verificar Typst MCP
+cd .cursor/mcp-servers-python/typst-mcp
+~/.local/bin/uv run server.py --help
+
+# Verificar Python Executor MCP
+~/.local/bin/uvx mcp-run-python --help
 ```
 
 ## Ubicación de Archivos de Configuración
