@@ -2,20 +2,24 @@
 
 ## ✅ Estado de Instalación
 
-**Total MCPs Configurados: 9**
+**Total MCPs Activos: 5**
 
-### MCPs npm (Node.js) - 6 instalados
+### MCPs npm (Node.js) - 4 activos
 1. ✅ Sequential Thinking MCP
 2. ✅ Memory MCP
 3. ✅ Playwright MCP
 4. ✅ Filesystem MCP
-5. ⚠️ GitHub MCP (requiere token personal)
-6. ✅ Git MCP
 
-### MCPs Python - 3 instalados
-7. ✅ ArXiv LaTeX MCP
-8. ✅ Typst MCP
-9. ✅ Python Executor MCP
+### MCPs Python - 1 activo
+5. ✅ Python Executor MCP
+
+### MCPs Desactivados - 4 desactivados
+- ❌ ArXiv LaTeX MCP (configuración incompleta)
+- ❌ Typst MCP (requiere compilación Rust)
+- ❌ GitHub MCP (no existe en npm)
+- ❌ GitHub-Git MCP (no compatible stdio)
+
+**Nota**: Ver `.cursor/03-mcp-python-disabled-info.md` para detalles sobre MCPs desactivados
 
 ## 🔄 Activar MCPs en Cursor IDE
 
@@ -28,7 +32,7 @@
 ### Paso 2: Verificar MCPs Activos
 1. Abrir Cursor IDE
 2. Buscar el ícono de herramientas/hammer en la interfaz
-3. Verificar que aparezcan los 9 MCPs en la lista de "Available MCP tools"
+3. Verificar que aparezcan los 5 MCPs en la lista de "Available MCP tools"
 
 ## 🛠️ Herramientas Instaladas
 
@@ -49,16 +53,6 @@
 
 ## 📋 Uso de MCPs
 
-### ArXiv LaTeX MCP
-```
-Pregunta a Cursor: "Explica el primer teorema en el paper 2202.00395 de arXiv"
-```
-
-### Typst MCP
-```
-Pregunta a Cursor: "Convierte este código LaTeX a Typst: \frac{a}{b}"
-```
-
 ### Python Executor MCP
 ```
 Pregunta a Cursor: "Ejecuta este código Python en sandbox: import numpy as np; print(np.array([1,2,3]))"
@@ -74,20 +68,12 @@ Pregunta a Cursor: "Resuelve paso a paso este problema matemático: ..."
 Pregunta a Cursor: "Recuerda que estamos trabajando en ejercicios ICFES de estadística"
 ```
 
-## ⚙️ Configuración Opcional
+## ⚙️ Notas Importantes
 
-### GitHub MCP (Requiere Token)
-1. Ir a https://github.com/settings/tokens
-2. Generar token con permisos: `repo`, `read:org`
-3. Editar `.cursor/mcp.json`:
-   ```json
-   "github": {
-     "env": {
-       "GITHUB_PERSONAL_ACCESS_TOKEN": "tu_token_aquí"
-     }
-   }
-   ```
-4. Reiniciar Cursor IDE
+### Operaciones Git
+- Los MCPs Git no están disponibles actualmente
+- Usar comandos Git directamente desde terminal
+- Augment IA tiene acceso a Git integrado en VSCode
 
 ## 🔍 Verificación Manual
 
@@ -100,14 +86,6 @@ timeout 3 npx -y @playwright/mcp@latest
 
 ### Verificar MCPs Python
 ```bash
-# ArXiv LaTeX
-cd .cursor/mcp-servers-python/arxiv-latex-mcp
-~/.local/bin/uv run server/main.py --help
-
-# Typst
-cd .cursor/mcp-servers-python/typst-mcp
-~/.local/bin/uv run server.py --help
-
 # Python Executor
 ~/.local/bin/uvx mcp-run-python --help
 ```
@@ -119,9 +97,9 @@ Ver archivo: `.cursor/01-mcp-configuration-info.md`
 ## 🎯 Próximos Pasos
 
 1. ✅ Reiniciar Cursor IDE
-2. ✅ Verificar MCPs activos en la interfaz
+2. ✅ Verificar que los 5 MCPs activos aparezcan sin errores
 3. ✅ Probar cada MCP con preguntas de ejemplo
-4. ⚠️ (Opcional) Configurar GitHub MCP con token personal
+4. 📖 Consultar `.cursor/03-mcp-python-disabled-info.md` para información sobre MCPs desactivados
 
 ## 🆘 Solución de Problemas
 
