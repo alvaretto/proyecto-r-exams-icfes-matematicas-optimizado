@@ -6,15 +6,18 @@ library(exams)
 
 #preg01 <- sample(c("03-ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"))
 
-# Definiciónn del archivo de examen y configuración inicial
+# Definición del archivo de examen y configuración inicial
 preg01 <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
-preg02 <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"
 preg03 <- "ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
 preg04 <- "pasteleria_sabores_ventas_estadistica_interpretacion_representacion_n2_v1.Rmd"
 
-
-archivo_examen <- sample(c(preg01, preg02, preg03, preg04))
-#archivo_examen <- preg04
+# Duplicar cada pregunta múltiples veces para generar 20 preguntas en total
+# Orden: 6 repeticiones de preg01, 7 de preg03, 7 de preg04
+archivo_examen <- sample(c(
+  rep(preg01, 6),  # 6 repeticiones de pregunta 1
+  rep(preg03, 7),  # 7 repeticiones de pregunta 2
+  rep(preg04, 7)   # 7 repeticiones de pregunta 3
+))
 
 copias <- 1
 numpreg_por_archivo <- 1

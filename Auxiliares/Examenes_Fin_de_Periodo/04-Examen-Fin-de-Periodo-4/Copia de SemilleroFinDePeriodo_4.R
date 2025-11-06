@@ -8,14 +8,13 @@ library(exams)
 
 # Definiciónn del archivo de examen y configuración inicial
 preg01 <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
-preg02 <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"
 preg03 <- "ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
 preg04 <- "pasteleria_sabores_ventas_estadistica_interpretacion_representacion_n2_v1.Rmd"
-preg05a <- "accidentalidad-vial-genero-01.Rmd"
 
 
-#archivo_examen <- sample(c(preg01, preg02, preg03, preg04, preg05a))
-archivo_examen <- preg05a
+
+archivo_examen <- sample(c(preg01, preg03, preg04))
+#archivo_examen <- preg02
 
 copias <- 1
 numpreg_por_archivo <- 1

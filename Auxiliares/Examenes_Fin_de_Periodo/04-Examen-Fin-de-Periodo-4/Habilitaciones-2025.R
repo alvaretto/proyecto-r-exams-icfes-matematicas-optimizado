@@ -6,16 +6,17 @@ library(exams)
 
 #preg01 <- sample(c("03-ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"))
 
-# Definiciónn del archivo de examen y configuración inicial
+# Definición del archivo de examen y configuración inicial
 preg01 <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
-preg02 <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_v1.Rmd"
 preg03 <- "ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
 preg04 <- "pasteleria_sabores_ventas_estadistica_interpretacion_representacion_n2_v1.Rmd"
-preg05a <- "accidentalidad-vial-genero-01.Rmd"
 
-
-#archivo_examen <- sample(c(preg01, preg02, preg03, preg04, preg05a))
-archivo_examen <- preg05a
+# 20 preguntas
+archivo_examen <- sample(c(
+  preg01, preg01, preg01, preg01, preg01, preg01,          # 6 repeticiones de pregunta 1
+  preg03, preg03, preg03, preg03, preg03, preg03, preg03,  # 7 repeticiones de pregunta 2
+  preg04, preg04, preg04, preg04, preg04, preg04, preg04   # 7 repeticiones de pregunta 3
+))
 
 copias <- 1
 numpreg_por_archivo <- 1
@@ -39,7 +40,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 set.seed(semilla)
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
-             name = "Matematicas_Evaluacion_Fin_de_Periodo_4-docx",
+             name = "Matematicas_Habiliatciones-2025-docx",
              encoding = "UTF-8",
              template = "pcielo.tex",
              header = list(Date = Sys.Date()),
@@ -66,7 +67,7 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 set.seed(semilla)
 exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
-             name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",
+             name = "Matematicas_Habiliatciones-2025-docx_sin_sol",
              encoding = "UTF-8",
              template = "pcielo_nosol.tex",
              solution = FALSE,  # Desactivar completamente las soluciones
@@ -95,7 +96,7 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 # set.seed(semilla)
 # exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
 #           n = copias,
-#           name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sol",
+#           name = "Matematicas_Habiliatciones-2025-docx_sol",
 #           encoding = "UTF-8",
 #           template = "solpcielo",
 #           dir = dir_salida,
@@ -109,7 +110,7 @@ exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
 # set.seed(semilla)
 # exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
 #           n = copias,
-#           name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",  # Corregido: nombre como string
+#           name = "Matematicas_Habiliatciones-2025-docx_sin_sol",  # Corregido: nombre como string
 #           encoding = "UTF-8",
 #           template = "exam",
 #           dir = dir_salida,
