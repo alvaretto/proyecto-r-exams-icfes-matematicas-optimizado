@@ -1,5 +1,6 @@
 ---
 alwaysApply: true
+description: "Reglas generales integradas del sistema ICFES R-Exams 2025 - Filosofía, estructura y criterios de calidad"
 ---
 # 🎯 REGLAS GENERALES INTEGRADAS - SISTEMA ICFES R-EXAMS 2025
 
@@ -25,7 +26,7 @@ Sistema integrado para generar ejercicios matemáticos ICFES en formato R-exams 
 1. **Conversión a código .Rmd**: Exportable para RStudio
 2. **Asegurar compatibilidad** con archivos de dependencia:
    - `SemilleroCloze.R`
-   - `SemilleroMoodle_v2.R` 
+   - `SemilleroMoodle_v2.R`
    - `SemilleroUnico_v2.R`
    - `pcielo.tex`
    - `pcielo_nosol.tex`
@@ -71,7 +72,7 @@ El sistema debe identificar y manejar estas variantes:
 ### 📊 TECNOLOGÍAS Y HERRAMIENTAS
 - **Archivos principales**: Solo trabajar con archivos .Rmd
 - **Python**: Usar chunks de Python con reticulate y engine='python'
-- **Gráficos**: 
+- **Gráficos**:
     - Usar TikZ para diagramas, figuras geométricas, notaciones y fórmulas matemáticas
     - Integrar matplotlib y numpy en chunks Python
 - **Testing**: Documentar instrucciones desde RStudio en archivos README
@@ -194,7 +195,7 @@ icfes:
 Todas las metodologías están integradas y validadas:
 
 - Sistema Condicional Automático
-- Metodología TikZ Avanzada  
+- Metodología TikZ Avanzada
 - Corrección de Errores Recurrentes
 - Protocolo Anti-Errores de Implementación
 
@@ -623,4 +624,3 @@ El sistema consolidado incluye:
 - ✅ Documentación de referencia completa
 
 **El sistema está listo para generar ejercicios ICFES de máxima calidad siguiendo todos los estándares establecidos.**
-
