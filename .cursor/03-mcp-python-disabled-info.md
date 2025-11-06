@@ -19,18 +19,27 @@ Los siguientes MCPs Python han sido **temporalmente desactivados** debido a prob
 - **Estado**: Desactivado temporalmente
 - **Ubicación**: `.cursor/mcp-servers-python/typst-mcp`
 
-## MCPs Activos (7 MCPs)
+## MCPs Activos (6 MCPs)
 
-### MCPs npm (6 activos)
+### MCPs npm (5 activos)
 1. ✅ Sequential Thinking MCP
 2. ✅ Memory MCP
 3. ✅ Playwright MCP
 4. ✅ Filesystem MCP
-5. ⚠️ GitHub MCP (requiere token personal)
-6. ✅ Git MCP
+5. ✅ GitHub-Git MCP (29 operaciones Git + 11 workflows, requiere token para GitHub)
 
 ### MCPs Python (1 activo)
-7. ✅ Python Executor MCP
+6. ✅ Python Executor MCP
+
+## Cambios Recientes
+
+### Git MCP Reemplazado
+- **Problema**: `@modelcontextprotocol/server-git` no existe en npm
+- **Solución**: Reemplazado por `@0xshariq/github-mcp-server`
+- **Ventajas**:
+  - 29 operaciones Git locales
+  - 11 workflows combinados
+  - Integración GitHub opcional (con token)
 
 ## Solución para Reactivar MCPs Python
 
