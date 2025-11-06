@@ -39,28 +39,6 @@
       "args": ["-y", "@modelcontextprotocol/server-git", "--repository", "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"],
       "description": "Operaciones Git locales"
     },
-    "arxiv-latex": {
-      "type": "stdio",
-      "command": "/home/bootcamp/.local/bin/uv",
-      "args": [
-        "--directory",
-        "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.cursor/mcp-servers-python/arxiv-latex-mcp",
-        "run",
-        "server/main.py"
-      ],
-      "description": "Obtener código LaTeX de papers de arXiv para contenido matemático"
-    },
-    "typst": {
-      "type": "stdio",
-      "command": "/home/bootcamp/.local/bin/uv",
-      "args": [
-        "--directory",
-        "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.cursor/mcp-servers-python/typst-mcp",
-        "run",
-        "server.py"
-      ],
-      "description": "Conversión LaTeX/Typst, validación de sintaxis y generación de imágenes"
-    },
     "python-executor": {
       "type": "stdio",
       "command": "/home/bootcamp/.local/bin/uvx",
