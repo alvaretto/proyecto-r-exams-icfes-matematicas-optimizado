@@ -1,5 +1,11 @@
 ---
 alwaysApply: false
+description: "Instrucciones para análisis de imágenes matemáticas y generación de código R-Exams"
+globs:
+  - "**/*.Rmd"
+  - "**/*.png"
+  - "**/*.jpg"
+  - "**/*.jpeg"
 ---
 # Instrucción para Análisis de Imagen Matemática y Generación de Código R-Exams
 
