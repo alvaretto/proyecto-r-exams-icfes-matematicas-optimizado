@@ -1,0 +1,44 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "description": "Razonamiento paso a paso para problemas matemáticos complejos"
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "Persistencia de información entre sesiones"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "description": "Automatización de pruebas y validación de ejercicios generados"
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"],
+      "description": "Acceso al sistema de archivos del proyecto"
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      },
+      "description": "Integración con GitHub para gestión de repositorio"
+    },
+    "git": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git", "--repository", "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"],
+      "description": "Operaciones Git locales"
+    }
+  }
+}
+
