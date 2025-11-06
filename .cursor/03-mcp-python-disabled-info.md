@@ -19,27 +19,32 @@ Los siguientes MCPs Python han sido **temporalmente desactivados** debido a prob
 - **Estado**: Desactivado temporalmente
 - **Ubicación**: `.cursor/mcp-servers-python/typst-mcp`
 
-## MCPs Activos (6 MCPs)
+## MCPs Activos (5 MCPs)
 
-### MCPs npm (5 activos)
+### MCPs npm (4 activos)
 1. ✅ Sequential Thinking MCP
 2. ✅ Memory MCP
 3. ✅ Playwright MCP
 4. ✅ Filesystem MCP
-5. ✅ GitHub-Git MCP (29 operaciones Git + 11 workflows, requiere token para GitHub)
 
 ### MCPs Python (1 activo)
-6. ✅ Python Executor MCP
+5. ✅ Python Executor MCP
+
+## MCPs Desactivados Adicionales
+
+### GitHub-Git MCP ❌
+- **Problema**: `@0xshariq/github-mcp-server` no es compatible con protocolo stdio
+- **Detalles**: El paquete está diseñado como CLI global, no como servidor MCP stdio
+- **Estado**: Desactivado
+- **Alternativa**: Usar comandos Git directamente desde terminal o buscar servidor MCP Git compatible con stdio
 
 ## Cambios Recientes
 
-### Git MCP Reemplazado
-- **Problema**: `@modelcontextprotocol/server-git` no existe en npm
-- **Solución**: Reemplazado por `@0xshariq/github-mcp-server`
-- **Ventajas**:
-  - 29 operaciones Git locales
-  - 11 workflows combinados
-  - Integración GitHub opcional (con token)
+### Git MCP Removido
+- **Problema 1**: `@modelcontextprotocol/server-git` no existe en npm (404)
+- **Problema 2**: `@0xshariq/github-mcp-server` no es servidor stdio MCP
+- **Solución**: Desactivar MCPs Git hasta encontrar alternativa compatible
+- **Impacto**: Operaciones Git deben realizarse manualmente desde terminal
 
 ## Solución para Reactivar MCPs Python
 

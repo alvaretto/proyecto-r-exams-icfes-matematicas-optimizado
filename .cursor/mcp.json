@@ -24,16 +24,6 @@
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"],
       "description": "Acceso al sistema de archivos del proyecto"
     },
-    "github-git": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@0xshariq/github-mcp-server"],
-      "env": {
-        "GITHUB_TOKEN": "",
-        "REPO_PATH": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"
-      },
-      "description": "Operaciones Git locales y GitHub (29 operaciones Git + 11 workflows)"
-    },
     "python-executor": {
       "type": "stdio",
       "command": "/home/bootcamp/.local/bin/uvx",
