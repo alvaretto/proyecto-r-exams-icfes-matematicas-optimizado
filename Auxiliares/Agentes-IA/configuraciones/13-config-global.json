@@ -1,0 +1,168 @@
+{
+  "proyecto": {
+    "nombre": "RepositorioMatematicasICFES_R_Exams",
+    "version": "1.0.0",
+    "descripcion": "Sistema integral para generar ejercicios matemáticos ICFES usando R-exams",
+    "autor": "Sistema ICFES R-Exams",
+    "fecha_creacion": "2025-11-06"
+  },
+  
+  "rutas": {
+    "raiz": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
+    "ejemplos_funcionales": "Auxiliares/Ejemplos-Funcionales-Rmd",
+    "lab": "Lab-Manjaro",
+    "auxiliares": "Auxiliares",
+    "agentes": "Auxiliares/Agentes-IA",
+    "scripts": "Auxiliares/Agentes-IA/scripts",
+    "logs": "Auxiliares/Agentes-IA/logs",
+    "templates_tikz": "Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes",
+    "documentacion": "Auxiliares/Documentacion"
+  },
+  
+  "configuracion_r_exams": {
+    "versiones_minimas": 300,
+    "formatos_salida": ["html", "pdf", "moodle", "nops"],
+    "motor_latex": "pdflatex",
+    "python_path": "/usr/bin/python3",
+    "encoding": "UTF-8",
+    "dpi_graficos": 150,
+    "ancho_tikz_default": "12cm"
+  },
+  
+  "validaciones": {
+    "metadatos_icfes": true,
+    "diversidad_versiones": true,
+    "sintaxis_tikz": true,
+    "integracion_python": true,
+    "estructura_yaml": true,
+    "chunks_obligatorios": true,
+    "secciones_rexams": true,
+    "meta_informacion": true
+  },
+  
+  "metadatos_icfes": {
+    "competencias_validas": [
+      "interpretacion_representacion",
+      "formulacion_ejecucion",
+      "argumentacion"
+    ],
+    "niveles_dificultad": [1, 2, 3, 4],
+    "componentes_validos": [
+      "geometrico_metrico",
+      "numerico_variacional",
+      "aleatorio"
+    ],
+    "contextos_validos": [
+      "familiar",
+      "laboral",
+      "comunitario",
+      "matematico"
+    ],
+    "categorias_contenido": [
+      "algebra_calculo",
+      "geometria",
+      "estadistica"
+    ],
+    "tipos_contenido": [
+      "generico",
+      "no_generico"
+    ],
+    "ejes_axiales": ["eje1", "eje2", "eje3", "eje4"]
+  },
+  
+  "agentes": {
+    "generador_ejercicios": {
+      "activo": true,
+      "prioridad": 1,
+      "descripcion": "Genera ejercicios .Rmd completos a partir de imágenes",
+      "flujos": ["A", "B"],
+      "consulta_ejemplos": true
+    },
+    "validador_codigo": {
+      "activo": true,
+      "prioridad": 2,
+      "descripcion": "Valida y corrige archivos .Rmd existentes",
+      "validaciones_automaticas": true,
+      "correccion_automatica": false
+    },
+    "graficador_tikz": {
+      "activo": true,
+      "prioridad": 3,
+      "descripcion": "Genera código TikZ profesional desde imágenes",
+      "fidelidad_minima": 0.98,
+      "templates_disponibles": true
+    },
+    "gestor_metadatos": {
+      "activo": true,
+      "prioridad": 4,
+      "descripcion": "Gestiona y valida metadatos ICFES",
+      "clasificacion_automatica": true,
+      "validacion_coherencia": true
+    }
+  },
+  
+  "workflows": {
+    "generacion_completa": {
+      "activo": true,
+      "pasos": 8,
+      "tiempo_estimado_minutos": 15,
+      "validacion_intermedia": true
+    },
+    "correccion_optimizacion": {
+      "activo": true,
+      "pasos": 7,
+      "tiempo_estimado_minutos": 10,
+      "backup_automatico": true
+    },
+    "validacion_masiva": {
+      "activo": true,
+      "pasos": 4,
+      "procesamiento_paralelo": false,
+      "reporte_consolidado": true
+    }
+  },
+  
+  "sistema_condicional": {
+    "activo": true,
+    "deteccion_automatica": true,
+    "flujo_a_sin_graficas": true,
+    "flujo_b_con_graficas": true,
+    "umbral_deteccion_graficas": 0.3
+  },
+  
+  "logging": {
+    "activo": true,
+    "nivel": "INFO",
+    "formato": "[TIMESTAMP] [NIVEL] [AGENTE] ACCION - RESULTADO",
+    "archivo_log": "logs/actividad-{fecha}.log",
+    "rotacion_diaria": true,
+    "retencion_dias": 30
+  },
+  
+  "metricas": {
+    "recopilar": true,
+    "metricas_clave": [
+      "tiempo_generacion",
+      "tasa_exito_compilacion",
+      "diversidad_versiones",
+      "fidelidad_visual",
+      "completitud_metadatos"
+    ],
+    "reporte_semanal": true
+  },
+  
+  "optimizaciones": {
+    "cache_templates": true,
+    "compilacion_incremental": false,
+    "validacion_paralela": false,
+    "compresion_logs": true
+  },
+  
+  "integraciones": {
+    "augment_vscode": true,
+    "rstudio": true,
+    "git": true,
+    "github": true
+  }
+}
+

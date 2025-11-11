@@ -1,0 +1,56 @@
+{
+  "matriz_de_ref_soc": [
+    {
+      "Competencia": "Pensamiento social",
+      "Afirmación": "Comprende modelos conceptuales, sus características y contextos de aplicación.",
+      "Evidencia": [
+        "Identifica y usa conceptos sociales básicos (económicos, políticos, culturales y geográficos).",
+        "Conoce el modelo de Estado social de derecho y su aplicación en Colombia.",
+        "Conoce la organización del Estado: conoce las funciones y alcances de las ramas del poder y de los organismos de control.",
+        "Conoce los mecanismos que los ciudadanos tienen a su disposición para participar activamente en la democracia y para garantizar el respeto de sus derechos."
+      ]
+    },
+    {
+      "Competencia": "Pensamiento social",
+      "Afirmación": "Comprende dimensiones espaciales y temporales de eventos, problemáticas y prácticas sociales.",
+      "Evidencia": [
+        "Localiza en el tiempo y en el espacio eventos históricos y prácticas sociales.",
+        "Analiza dimensiones históricas de eventos y problemáticas.",
+        "Relaciona problemáticas o prácticas sociales con características del espacio geográfico."
+      ]
+    },
+    {
+      "Competencia": "Interpretación y análisis de perspectivas",
+      "Afirmación": "Contextualiza y evalúa usos de fuentes y argumentos.",
+      "Evidencia": [
+        "Inscribe una fuente primaria dada en un contexto económico, político o cultural.",
+        "Evalúa posibilidades y limitaciones del uso de una fuente para apoyar argumentos o explicaciones.",
+        "Revela prejuicios e intenciones en enunciados o argumentos."
+      ]
+    },
+    {
+      "Competencia": "Interpretación y análisis de perspectivas",
+      "Afirmación": "Comprende perspectivas de distintos actores y grupos sociales.",
+      "Evidencia": [
+        "Reconoce y compara perspectivas de actores y grupos sociales.",
+        "Reconoce que las cosmovisiones, ideologías y roles sociales, influyen en diferentes argumentos, posiciones y conductas.",
+        "Establece relaciones entre las perspectivas de los individuos en una situación conflictiva y las propuestas de solución."
+      ]
+    },
+    {
+      "Competencia": "Pensamiento reflexivo y sistémico",
+      "Afirmación": "Evalúa usos sociales de las ciencias sociales.",
+      "Evidencia": [
+        "Analiza modelos conceptuales y sus usos en decisiones sociales."
+      ]
+    },
+    {
+      "Competencia": "Pensamiento reflexivo y sistémico",
+      "Afirmación": "Comprende que los problemas y sus soluciones involucran distintas dimensiones y reconoce relaciones entre estas.",
+      "Evidencia": [
+        "Establece relaciones que hay entre dimensiones presentes en una situación problemática.",
+        "Analiza los efectos en distintas dimensiones que tendría una posible intervención."
+      ]
+    }
+  ]
+}

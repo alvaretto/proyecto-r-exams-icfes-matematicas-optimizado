@@ -1,0 +1,123 @@
+```{r data generation, echo = FALSE, results = "hide"}
+library(exams)
+library(tikzDevice)
+
+typ <- match_exams_device()
+
+# Lista de nombres aleatorios
+nombres_masculinos <- c("Miguel", "Daniel", "Alejandro", "Juan", "Pablo", "Diego", "Andrés", "Fernando", "Roberto", "Luis")
+nombres_femeninos <- c("María", "Ana", "Laura", "Sofía", "Carmen", "Isabel", "Patricia", "Valentina", "Julia", "Carolina")
+todos_nombres <- c(nombres_masculinos, nombres_femeninos)
+
+# Función para generar datos válidos
+generar_datos_validos <- function() {
+  repeat {
+    nota_primera <- sample(1:100, 1)
+    nota_segunda <- sample(1:100, 1)
+    nota_tercera <- sample(1:100, 1)
+    promedio_deseado <- sample(60:100, 1)
+    
+    # Calcular nota_cuarta
+    nota_cuarta <- 4 * promedio_deseado - (nota_primera + nota_segunda + nota_tercera)
+    
+    # Verificar si nota_cuarta está en el rango válido (1-100)
+    if(nota_cuarta >= 1 && nota_cuarta <= 100) {
+      return(list(
+        nota_primera = nota_primera,
+        nota_segunda = nota_segunda,
+        nota_tercera = nota_tercera,
+        nota_cuarta = nota_cuarta,
+        promedio_deseado = promedio_deseado
+      ))
+    }
+  }
+}
+
+# Generar datos válidos
+set.seed(sample(1:1000, 1))
+datos <- generar_datos_validos()
+nota_primera <- datos$nota_primera
+nota_segunda <- datos$nota_segunda
+nota_tercera <- datos$nota_tercera
+nota_cuarta <- datos$nota_cuarta
+promedio_deseado <- datos$promedio_deseado
+
+# Seleccionar un nombre aleatorio
+nombre_estudiante <- sample(todos_nombres, 1)
+
+# Crear dataframe con los datos
+datos_evaluaciones <- data.frame(
+  Evaluacion = c(1, 2, 3, 4),
+  Nota = c(nota_primera, nota_segunda, nota_tercera, "")
+)
+
+# Función para crear la tabla TikZ
+tikz_tabla_evaluaciones <- function(datos) {
+  c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    "  \\small",
+    "  \\begin{tabular}{|l|c|}",
+    "    \\hline",
+    "    \\textbf{Evaluación} & \\textbf{Nota} \\\\",
+    "    \\hline",
+    paste(datos$Evaluacion, "&",
+          ifelse(datos$Nota == "", "", datos$Nota), "\\\\",
+          collapse = " \\hline\n    "),
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+}
+```
+
+Question
+========
+`r nombre_estudiante` está asistiendo a una clase de inglés y debe presentar cuatro evaluaciones que tienen calificaciones desde 1 hasta 100. La siguiente tabla muestra la nota de las tres evaluaciones que `r nombre_estudiante` ha presentado hasta el momento:
+
+```{r, echo = FALSE, results = "asis"}
+include_tikz(tikz_tabla_evaluaciones(datos_evaluaciones),
+            name = "tabla_evaluaciones",
+            markup = "markdown",
+            format = typ,
+            packages = c("tikz", "adjustbox"),
+            width = "6cm")
+```
+
+Si `r nombre_estudiante` aspira a obtener una nota promedio de `r promedio_deseado`, ¿cuál debe ser su nota en la cuarta evaluación?
+
+Answerlist
+----------
+* `r nota_cuarta`
+* `r nota_cuarta + 5`
+* `r nota_cuarta - 5`
+* `r nota_cuarta + 10`
+* `r nota_cuarta - 10`
+
+Solution
+========
+La respuesta correcta es `r nota_cuarta`.
+
+Explicación paso a paso:
+
+1. Primero, sumamos las notas de las tres evaluaciones presentadas:
+   * Primera evaluación: `r nota_primera`
+   * Segunda evaluación: `r nota_segunda`
+   * Tercera evaluación: `r nota_tercera`
+   * Suma total: `r nota_primera + nota_segunda + nota_tercera`
+
+2. Como queremos un promedio de `r promedio_deseado` en las cuatro evaluaciones:
+   * Multiplicamos el promedio deseado por el número total de evaluaciones:
+   * `r promedio_deseado` × 4 = `r 4 * promedio_deseado`
+
+3. Para encontrar la nota necesaria en la cuarta evaluación:
+   * Restamos la suma de las tres primeras evaluaciones del total necesario:
+   * `r 4 * promedio_deseado` - `r nota_primera + nota_segunda + nota_tercera` = `r nota_cuarta`
+
+Por lo tanto, `r nombre_estudiante` necesita obtener una nota de `r nota_cuarta` en la cuarta evaluación para alcanzar un promedio de `r promedio_deseado`.
+
+Meta-information
+================
+exname: Promedio de Evaluaciones con Tabla
+extype: schoice
+exsolution: 10000
+exshuffle: 5

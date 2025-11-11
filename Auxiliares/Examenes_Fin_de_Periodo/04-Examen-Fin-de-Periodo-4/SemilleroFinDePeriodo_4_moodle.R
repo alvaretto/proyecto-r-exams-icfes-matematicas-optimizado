@@ -13,18 +13,14 @@ preg04 <- "pasteleria_sabores_ventas_estadistica_interpretacion_representacion_n
 
 # Duplicar cada pregunta múltiples veces para generar 20 preguntas en total
 # Orden: 6 repeticiones de preg01, 7 de preg03, 7 de preg04
-archivo_examen <- sample(c(
-  rep(preg01, 5),  # 6 repeticiones de pregunta 1
-  rep(preg03, 5),  # 7 repeticiones de pregunta 2
-  rep(preg04, 5)   # 7 repeticiones de pregunta 3
-))
+archivo_examen <- preg04
 
-copias <- 1
+copias <- 100
 numpreg_por_archivo <- 1
 
 # SOLUCIÓN CRÍTICA: Establecer semilla global ÚNICA para todas las compilaciones
 # Esto garantiza que exams2pandoc y exams2pdf generen exactamente los mismos datos
-semilla <- 101  # Semilla fija para reproducibilidad entre versiones
+semilla <- sample(100:1e8, 1) 
 set.seed(semilla)
 
 dir_salida <- "salida"
@@ -38,57 +34,74 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Generación de n copias en un solo archivo .docx
 
 # Restablecer semilla antes de cada generación para consistencia
-set.seed(semilla)
-exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
-             n = copias,
-             name = "Matematicas_Evaluacion_Fin_de_Periodo_4-docx",
-             encoding = "UTF-8",
-             template = "pcielo.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = FALSE,
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = TRUE, # Added verbose
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+# set.seed(semilla)
+# exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
+#              n = copias,
+#              name = "Matematicas_Evaluacion_Fin_de_Periodo_4-docx",
+#              encoding = "UTF-8",
+#              template = "pcielo.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = FALSE,
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = TRUE, # Added verbose
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
 
 ################################################################################
 # Generación de n copias, sin Solution, en un solo archivo .docx
 
 # Restablecer semilla antes de cada generación para consistencia
+# set.seed(semilla)
+# exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
+#              n = copias,
+#              name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",
+#              encoding = "UTF-8",
+#              template = "pcielo_nosol.tex",
+#              solution = FALSE,  # Desactivar completamente las soluciones
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = FALSE, # Consider removing or setting to FALSE if verbose is TRUE
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = TRUE, # Added verbose
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
+
+################################################################################
+# Generación para Moodle
+
+# Restablecer semilla antes de cada generación para consistencia
 set.seed(semilla)
-exams2pandoc(rep(archivo_examen, each = numpreg_por_archivo),
+exams2moodle(rep(archivo_examen, each = numpreg_por_archivo),
              n = copias,
-             name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",
-             encoding = "UTF-8",
-             template = "pcielo_nosol.tex",
-             solution = FALSE,  # Desactivar completamente las soluciones
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = FALSE, # Consider removing or setting to FALSE if verbose is TRUE
-             resolution = 100,
-             width = 4,
-             height = 4,
              svg = TRUE,
+             name = "Matematicas_Evaluacion_Fin_de_Periodo_4_moodle",
+             encoding = "UTF-8",
              dir = dir_salida,
              edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = TRUE, # Added verbose
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
-
+             mchoice = list(shuffle = TRUE,
+                            answernumbering = "ABCD",
+                            eval = list(partial = TRUE,
+                                        rule = "none")),
+             verbose = TRUE)
 
 ################################################################################
 # Generación de n copias en un solo archivo de salida para PDF (versión con soluciones)

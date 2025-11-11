@@ -1,0 +1,434 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+options(digits = 10)
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# No se necesitan configuraciones para TikZ o Python ya que no se usan en este ejercicio.
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria para mayor diversidad
+set.seed(sample(1:100000, 1))
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Función de formato estándar para números
+formato_estandar <- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
+# Aleatorizar número total de estudiantes (n_total)
+# Rango entre 4 y 15 para mantener problemas razonables
+n_total <- sample(4:15, 1)
+
+# Aleatorizar número de estudiantes a seleccionar (k)
+# k debe ser menor que n_total y entre 2 y 5 para mantener problemas solucionables
+k <- sample(2:min(5, n_total - 1), 1)
+
+# Calcular el número de combinaciones posibles
+num_combinaciones <- choose(n_total, k)
+
+# Aleatorizar términos contextuales para el docente
+terminos_docente <- c("docente", "profesor", "maestro", "instructor")
+termino_docente <- sample(terminos_docente, 1)
+
+# Aleatorizar términos para estudiantes
+terminos_estudiantes <- c("estudiantes", "alumnos", "participantes", "integrantes")
+termino_estudiantes <- sample(terminos_estudiantes, 1)
+
+# Aleatorizar términos para grupo
+terminos_grupo <- c("grupo", "equipo", "conjunto", "selección")
+termino_grupo <- sample(terminos_grupo, 1)
+
+# Aleatorizar contextos de actividad
+contextos_actividad <- c(
+  "actividad deportiva",
+  "taller especial",
+  "clase especial",
+  "proyecto académico",
+  "competencia académica",
+  "actividad extracurricular",
+  "taller de refuerzo",
+  "proyecto de investigación"
+)
+contexto_actividad <- sample(contextos_actividad, 1)
+
+# Aleatorizar verbos de selección
+verbos_seleccion <- c("escoger", "seleccionar", "elegir", "tomar")
+verbo_seleccion <- sample(verbos_seleccion, 1)
+
+# Aleatorizar términos para "al azar"
+terminos_azar <- c("al azar", "aleatoriamente", "de manera aleatoria", "de forma aleatoria")
+termino_azar <- sample(terminos_azar, 1)
+
+# Aleatorizar verbos para "preseleccionar" (participios pasados para usar con "ha")
+verbos_preseleccion <- c("preseleccionado", "seleccionado previamente", "seleccionado inicialmente", "elegido previamente")
+verbo_preseleccion <- sample(verbos_preseleccion, 1)
+
+# Aleatorizar términos para grupo preseleccionado (sustantivos)
+terminos_grupo_preseleccion <- c("grupo preseleccionado", "grupo inicial", "grupo preliminar", "grupo candidato")
+termino_grupo_preseleccion <- sample(terminos_grupo_preseleccion, 1)
+
+# Generar distractores basados en errores comunes
+# Distractor 1: n_total + k (sumar los números dados)
+distractor_1 <- n_total + k
+
+# Distractor 2: num_combinaciones (confundir el resultado con el total)
+distractor_2 <- num_combinaciones
+
+# Distractor 3: factorial(k) (confundir el denominador de la fórmula)
+distractor_3 <- factorial(k)
+
+# Distractor 4: Valores cercanos a n_total (±1, ±2)
+variaciones_cercanas <- c(n_total - 2, n_total - 1, n_total + 1, n_total + 2)
+# Filtrar valores válidos (positivos y diferentes de n_total)
+variaciones_cercanas <- variaciones_cercanas[variaciones_cercanas > 0 & variaciones_cercanas != n_total]
+distractor_4 <- if(length(variaciones_cercanas) > 0) {
+  sample(variaciones_cercanas, 1)
+} else {
+  n_total + sample(c(-3, 3), 1)
+}
+
+# Crear pool de distractores
+distractores_pool <- c(distractor_1, distractor_2, distractor_3, distractor_4)
+
+# Eliminar duplicados y asegurar que no coincidan con la respuesta correcta
+distractores_pool <- unique(distractores_pool)
+distractores_pool <- distractores_pool[distractores_pool != n_total]
+distractores_pool <- distractores_pool[distractores_pool > 0]
+
+# Si no hay suficientes distractores únicos, generar más
+while(length(distractores_pool) < 3) {
+  nuevo_distractor <- n_total + sample(c(-5:-3, 3:5), 1)
+  if(nuevo_distractor > 0 && !nuevo_distractor %in% distractores_pool && nuevo_distractor != n_total) {
+    distractores_pool <- c(distractores_pool, nuevo_distractor)
+  }
+}
+
+# Seleccionar exactamente 3 distractores
+distractores_seleccionados <- if(length(distractores_pool) >= 3) {
+  sample(distractores_pool, 3)
+} else {
+  c(distractores_pool, rep(n_total + 10, 3 - length(distractores_pool)))
+}
+
+# Crear vector de todas las opciones (correcta + distractores)
+todas_opciones <- c(n_total, distractores_seleccionados)
+
+# Eliminar duplicados finales y asegurar 4 opciones únicas
+todas_opciones <- unique(todas_opciones)
+if(length(todas_opciones) < 4) {
+  # Agregar opciones adicionales si es necesario
+  while(length(todas_opciones) < 4) {
+    opcion_extra <- sample(2:20, 1)
+    if(!opcion_extra %in% todas_opciones) {
+      todas_opciones <- c(todas_opciones, opcion_extra)
+    }
+  }
+}
+
+# Seleccionar exactamente 4 opciones asegurando que n_total esté incluida
+opciones_finales <- if(n_total %in% todas_opciones[1:4]) {
+  todas_opciones[1:4]
+} else {
+  c(n_total, sample(todas_opciones[todas_opciones != n_total], 3))
+}
+
+# Ordenar opciones numéricamente para presentación
+opciones_finales <- sort(opciones_finales)
+
+# Determinar la posición de la respuesta correcta
+posicion_correcta <- which(opciones_finales == n_total)
+
+# Crear vector de solución para r-exams (1 para correcta, 0 para incorrectas)
+solucion <- integer(4)
+solucion[posicion_correcta] <- 1
+
+# Calcular la ecuación simplificada para mostrar en la solución
+# C(n, k) = n!/(k!(n-k)!) = num_combinaciones
+# Para k=2: n(n-1)/2 = num_combinaciones
+# Para k=3: n(n-1)(n-2)/6 = num_combinaciones
+# Para k=4: n(n-1)(n-2)(n-3)/24 = num_combinaciones
+# Para k=5: n(n-1)(n-2)(n-3)(n-4)/120 = num_combinaciones
+
+# Calcular el producto para mostrar en la solución
+if(k == 2) {
+  producto_numerador <- n_total * (n_total - 1)
+  denominador_formula <- 2
+} else if(k == 3) {
+  producto_numerador <- n_total * (n_total - 1) * (n_total - 2)
+  denominador_formula <- 6
+} else if(k == 4) {
+  producto_numerador <- n_total * (n_total - 1) * (n_total - 2) * (n_total - 3)
+  denominador_formula <- 24
+} else { # k == 5
+  producto_numerador <- n_total * (n_total - 1) * (n_total - 2) * (n_total - 3) * (n_total - 4)
+  denominador_formula <- 120
+}
+
+# Generar expresión del producto para mostrar (con valores específicos para Paso 6)
+factores_producto <- c()
+for(i in 0:(k-1)) {
+  factores_producto <- c(factores_producto, paste0("(", n_total - i, ")"))
+}
+expresion_producto <- paste(factores_producto, collapse = " × ")
+
+# Generar expresión del producto para Paso 6 (sin paréntesis, para mejor visualización)
+# Usar \times de LaTeX en lugar del símbolo Unicode para mejor renderizado en PDF
+factores_producto_paso6 <- c()
+for(i in 0:(k-1)) {
+  factores_producto_paso6 <- c(factores_producto_paso6, formatear_entero(n_total - i))
+}
+expresion_producto_paso6 <- paste(factores_producto_paso6, collapse = " \\times ")
+
+# Generar expresión general simbólica para Paso 4 (sin valores específicos)
+# Usar \times de LaTeX para mejor renderizado en PDF
+factores_generales <- c()
+for(i in 0:(k-1)) {
+  if(i == 0) {
+    factores_generales <- c(factores_generales, "n")
+  } else {
+    factores_generales <- c(factores_generales, paste0("(n-", i, ")"))
+  }
+}
+expresion_general <- paste(factores_generales, collapse = " \\times ")
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+generar_datos <- function() {
+  # Simular la generación de datos
+  n_total_test <- sample(4:15, 1)
+  k_test <- sample(2:min(5, n_total_test - 1), 1)
+  num_combinaciones_test <- choose(n_total_test, k_test)
+  termino_docente_test <- sample(c("docente", "profesor", "maestro", "instructor"), 1)
+  termino_estudiantes_test <- sample(c("estudiantes", "alumnos", "participantes", "integrantes"), 1)
+  termino_grupo_test <- sample(c("grupo", "equipo", "conjunto", "selección"), 1)
+  contexto_actividad_test <- sample(c(
+    "actividad deportiva", "taller especial", "clase especial", "proyecto académico",
+    "competencia académica", "actividad extracurricular", "taller de refuerzo",
+    "proyecto de investigación"
+  ), 1)
+  verbo_seleccion_test <- sample(c("escoger", "seleccionar", "elegir", "tomar"), 1)
+  verbo_preseleccion_test <- sample(c("preseleccionado", "seleccionado previamente", "seleccionado inicialmente", "elegido previamente"), 1)
+  termino_grupo_preseleccion_test <- sample(c("grupo preseleccionado", "grupo inicial", "grupo preliminar", "grupo candidato"), 1)
+  
+  # Retornar lista con todos los parámetros
+  return(list(
+    n_total = n_total_test,
+    k = k_test,
+    num_combinaciones = num_combinaciones_test,
+    termino_docente = termino_docente_test,
+    termino_estudiantes = termino_estudiantes_test,
+    termino_grupo = termino_grupo_test,
+    contexto_actividad = contexto_actividad_test,
+    verbo_seleccion = verbo_seleccion_test,
+    verbo_preseleccion = verbo_preseleccion_test,
+    termino_grupo_preseleccion = termino_grupo_preseleccion_test
+  ))
+}
+
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+Question
+========
+
+Un `r termino_docente` ha `r verbo_preseleccion` algunos `r termino_estudiantes` para realizar una `r contexto_actividad`. Como todos cumplen los requisitos necesarios, el `r termino_docente` va a `r verbo_seleccion` `r termino_azar` un `r termino_grupo` de `r formatear_entero(k)` `r termino_estudiantes` y encuentra que puede hacer `r formatear_entero(num_combinaciones)` posibles selecciones.
+
+¿Cuántos `r termino_estudiantes` conforman el `r termino_grupo_preseleccion`?
+
+Answerlist
+----------
+* `r formatear_entero(opciones_finales[1])`
+* `r formatear_entero(opciones_finales[2])`
+* `r formatear_entero(opciones_finales[3])`
+* `r formatear_entero(opciones_finales[4])`
+
+Solution
+========
+
+Este problema requiere determinar el tamaño del conjunto original dado el número de combinaciones posibles al seleccionar un subconjunto de tamaño específico. Es un problema de **combinatoria inversa**, donde conocemos el resultado de la combinación y debemos encontrar el tamaño del conjunto original.
+
+**Paso 1: Identificar el concepto clave**
+
+El número de formas en que se puede elegir un subconjunto de $k$ elementos de un conjunto de $n$ elementos **sin importar el orden** se calcula mediante la fórmula de **combinaciones**:
+
+$$C(n, k) = \binom{n}{k} = \frac{n!}{k!(n-k)!}$$
+
+Donde:
+
+- $n!$ (factorial de $n$) = $n \times (n-1) \times (n-2) \times \ldots \times 2 \times 1$
+- $k!$ (factorial de $k$) = $k \times (k-1) \times (k-2) \times \ldots \times 2 \times 1$
+- $(n-k)!$ (factorial de $n-k$) = $(n-k) \times (n-k-1) \times \ldots \times 2 \times 1$
+
+**Paso 2: Identificar los datos del problema**
+
+En este caso, conocemos:
+
+- **Número de elementos a seleccionar**: `r formatear_entero(k)` `r termino_estudiantes` ($k = `r formatear_entero(k)`$)
+- **Número de combinaciones posibles**: `r formatear_entero(num_combinaciones)` posibles selecciones ($C(n, `r formatear_entero(k)`) = `r formatear_entero(num_combinaciones)`$)
+
+Necesitamos encontrar el valor de $n$ (número total de `r termino_estudiantes` en el `r termino_grupo_preseleccion`).
+
+**Paso 3: Plantear la ecuación**
+
+Aplicando la fórmula de combinaciones con los datos conocidos:
+
+$$C(n, `r formatear_entero(k)`) = \frac{n!}{`r formatear_entero(k)`!(n-`r formatear_entero(k)`)!} = `r formatear_entero(num_combinaciones)`$$
+
+**Paso 4: Simplificar la expresión factorial**
+
+Para resolver esta ecuación, simplificamos la expresión factorial. Recordemos que:
+
+$$n! = n \times (n-1) \times (n-2) \times \ldots \times (n-k+1) \times (n-k)!$$
+
+Por lo tanto, podemos simplificar la razón de factoriales:
+
+$$\frac{n!}{(n-`r formatear_entero(k)`)!} = n \times (n-1) \times (n-2) \times \ldots \times (n-`r formatear_entero(k)`+1)$$
+
+En nuestro caso, como $k = `r formatear_entero(k)`$, esto se simplifica a:
+
+$$\frac{n!}{(n-`r formatear_entero(k)`)!} = `r expresion_general`$$
+
+Sustituyendo esta simplificación en la fórmula de combinaciones:
+
+$$C(n, `r formatear_entero(k)`) = \frac{`r expresion_general`}{`r formatear_entero(k)`!} = `r formatear_entero(num_combinaciones)`$$
+
+Como `r formatear_entero(k)`! = `r formatear_entero(factorial(k))`, tenemos:
+
+$$\frac{`r expresion_general`}{`r formatear_entero(denominador_formula)`} = `r formatear_entero(num_combinaciones)`$$
+
+Esta es una ecuación que debemos resolver para encontrar el valor de $n$. **Nota importante**: En este paso aún no conocemos el valor de $n$, solo estamos simplificando la expresión algebraica. El valor numérico de $n$ lo encontraremos en el siguiente paso mediante prueba y error.
+
+**Paso 5: Despejar la ecuación**
+
+Multiplicando ambos lados de la ecuación por `r formatear_entero(denominador_formula)` para eliminar el denominador:
+
+$$`r expresion_general` = `r formatear_entero(num_combinaciones)` \times `r formatear_entero(denominador_formula)`$$
+
+$$`r expresion_general` = `r formatear_entero(producto_numerador)`$$
+
+Ahora tenemos una ecuación polinómica que debemos resolver. Para valores pequeños de $k$, podemos resolver esta ecuación probando valores enteros de $n$ que satisfagan la condición $n \geq k = `r formatear_entero(k)`$.
+
+**Paso 6: Resolver la ecuación (método de prueba y error)**
+
+Para encontrar el valor de $n$, probamos valores enteros positivos que satisfagan la ecuación. Comenzamos con valores razonables considerando que $n \geq k = `r formatear_entero(k)`$.
+
+**Probando con $n = `r formatear_entero(n_total)`$:**
+
+Calculamos el producto:
+
+$$`r expresion_producto_paso6` = `r formatear_entero(producto_numerador)`$$
+
+Verificamos la combinación:
+
+$$C(`r formatear_entero(n_total)`, `r formatear_entero(k)`) = \frac{`r formatear_entero(producto_numerador)`}{`r formatear_entero(denominador_formula)`} = \frac{`r formatear_entero(producto_numerador)`}{`r formatear_entero(denominador_formula)`} = `r formatear_entero(num_combinaciones)`$$
+
+¡Perfecto! Este valor satisface la ecuación $C(`r formatear_entero(n_total)`, `r formatear_entero(k)`) = `r formatear_entero(num_combinaciones)`$.
+
+**Paso 7: Verificación adicional**
+
+Podemos verificar que este es el único valor válido considerando que:
+
+- Si $n < `r formatear_entero(n_total)`$, el producto sería menor que `r formatear_entero(producto_numerador)`
+- Si $n > `r formatear_entero(n_total)`$, el producto sería mayor que `r formatear_entero(producto_numerador)`
+
+Por lo tanto, **el número total de `r termino_estudiantes` en el `r termino_grupo_preseleccion` es `r formatear_entero(n_total)`**.
+
+**Interpretación del resultado:**
+
+Esto significa que si un `r termino_docente` tiene `r formatear_entero(n_total)` `r termino_estudiantes` en el `r termino_grupo_preseleccion` y necesita `r verbo_seleccion` `r termino_azar` un `r termino_grupo` de `r formatear_entero(k)` de ellos, existen exactamente `r formatear_entero(num_combinaciones)` formas diferentes de hacer esta selección.
+
+**Análisis de distractores:**
+
+- **Opción `r if(distractor_1 %in% opciones_finales) paste0(LETTERS[which(opciones_finales == distractor_1)], ": ", formatear_entero(distractor_1)) else paste0(formatear_entero(distractor_1), " (no presente)")`**: El estudiante podría llegar a este resultado sumando el número de combinaciones posibles (`r formatear_entero(num_combinaciones)`) con el número de `r termino_estudiantes` a seleccionar (`r formatear_entero(k)`), reflejando una comprensión superficial del problema.
+
+- **Opción `r if(distractor_2 %in% opciones_finales) paste0(LETTERS[which(opciones_finales == distractor_2)], ": ", formatear_entero(distractor_2)) else paste0(formatear_entero(distractor_2), " (no presente)")`**: El estudiante podría seleccionar esta opción al confundir el número de combinaciones posibles con el tamaño del conjunto original, mostrando una interpretación literal del dato "`r formatear_entero(num_combinaciones)` posibles selecciones".
+
+- **Opción `r if(distractor_3 %in% opciones_finales) paste0(LETTERS[which(opciones_finales == distractor_3)], ": ", formatear_entero(distractor_3)) else paste0(formatear_entero(distractor_3), " (no presente)")`**: El estudiante podría obtener este resultado al confundir el denominador de la fórmula de combinaciones (`r formatear_entero(k)`! = `r formatear_entero(factorial(k))`) con el tamaño del conjunto, mostrando una comprensión parcial de la fórmula.
+
+- **Opción `r if(distractor_4 %in% opciones_finales) paste0(LETTERS[which(opciones_finales == distractor_4)], ": ", formatear_entero(distractor_4)) else paste0(formatear_entero(distractor_4), " (no presente)")`**: El estudiante podría llegar a este valor cercano al correcto por error de cálculo o por no verificar adecuadamente la solución en la ecuación.
+
+Answerlist
+----------
+* `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+* `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: combinaciones_inversa_seleccion_estudiantes_aleatorio_formulacion_ejecucion_n2_v1
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Combinatoria/Combinaciones
+exextra[Type]: Combinatoria inversa
+exextra[Level]: Nivel 2
+exextra[Language]: es
+exextra[Course]: Matemáticas ICFES
+exextra[Competence]: Formulación y Ejecución
+exextra[Component]: Pensamiento Aleatorio
+exextra[Context]: Familiar/Educativo
+exextra[AxialAxis]: Eje 4 (Conjuntos, Casillas y Combinaciones)
+

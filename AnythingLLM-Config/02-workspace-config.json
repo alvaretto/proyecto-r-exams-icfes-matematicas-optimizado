@@ -1,0 +1,201 @@
+{
+  "workspace": {
+    "name": "ICFES R-Exams",
+    "description": "Sistema integral para generar ejercicios matemáticos ICFES usando R-exams",
+    "slug": "icfes-r-exams",
+    "version": "1.0.0",
+    "created": "2025-11-06"
+  },
+  
+  "paths": {
+    "project_root": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
+    "examples": "Auxiliares/Ejemplos-Funcionales-Rmd",
+    "documentation": "Auxiliares",
+    "lab": "Lab-Manjaro",
+    "output": "salida",
+    "agents": "Auxiliares/Agentes-IA",
+    "scripts": "Auxiliares/Agentes-IA/scripts",
+    "templates_tikz": "Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes"
+  },
+  
+  "documents": {
+    "priority_high": [
+      ".augment/rules/reglas-generales.md",
+      ".augment/rules/siempre.md",
+      ".agent.md",
+      "Auxiliares/Agentes-IA/01-GUIA_COMPLETA_Agentes_Workflows_ICFES_R_Exams.md",
+      "AnythingLLM-Config/01-README_AnythingLLM_ICFES.md"
+    ],
+    "priority_medium": [
+      "Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md",
+      "Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md",
+      "Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md",
+      "Auxiliares/README_AGENTE_TIKZ.md",
+      "Auxiliares/plantilla_metadatos_icfes.md",
+      "Auxiliares/matriz_alineacion_icfes.md",
+      "Auxiliares/guia_implementacion_icfes.md"
+    ],
+    "examples": [
+      "Auxiliares/Ejemplos-Funcionales-Rmd/*.Rmd"
+    ],
+    "technical": [
+      "Auxiliares/Python-Documentation/*.md",
+      "Auxiliares/Documentacion/**/*.md"
+    ]
+  },
+  
+  "llm_config": {
+    "provider": "openai",
+    "model": "gpt-4-turbo-preview",
+    "temperature": 0.3,
+    "max_tokens": 4000,
+    "top_p": 0.95,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "fallback_models": [
+      "gpt-4",
+      "gpt-3.5-turbo-16k"
+    ]
+  },
+  
+  "embedding_config": {
+    "provider": "openai",
+    "model": "text-embedding-3-small",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "similarity_threshold": 0.7
+  },
+  
+  "agent_config": {
+    "mode": "chat",
+    "memory": true,
+    "memory_depth": 10,
+    "search_provider": "vector",
+    "top_k": 5,
+    "enable_web_search": false,
+    "enable_code_execution": false
+  },
+  
+  "agents": {
+    "generador_ejercicios": {
+      "name": "Generador ICFES",
+      "description": "Especialista en generar ejercicios .Rmd completos",
+      "system_prompt": "Eres un experto en generar ejercicios matemáticos ICFES usando R-exams. SIEMPRE consultas ejemplos funcionales antes de generar código. NUNCA usas set.seed() fijo. OBLIGATORIO incluir test de diversidad (300+ versiones).",
+      "temperature": 0.3,
+      "skills": [
+        "Análisis de imágenes matemáticas",
+        "Generación de código R-exams",
+        "Clasificación ICFES",
+        "Validación de estructura"
+      ]
+    },
+    "validador_codigo": {
+      "name": "Validador ICFES",
+      "description": "Especialista en validar y corregir archivos .Rmd",
+      "system_prompt": "Eres un experto en validar archivos R-exams. Identificas errores por categoría y consultas la biblioteca de soluciones para aplicar correcciones validadas.",
+      "temperature": 0.2,
+      "skills": [
+        "Validación de sintaxis",
+        "Corrección de errores",
+        "Verificación de metadatos ICFES",
+        "Testing de diversidad"
+      ]
+    },
+    "graficador_tikz": {
+      "name": "Graficador TikZ",
+      "description": "Experto en generar código TikZ profesional",
+      "system_prompt": "Eres un experto en TikZ. Generas código con 98%+ fidelidad visual. Consultas templates apropiados y validas compilación.",
+      "temperature": 0.3,
+      "skills": [
+        "Análisis de imágenes",
+        "Generación de código TikZ",
+        "Replicación visual precisa",
+        "Validación de sintaxis TikZ"
+      ]
+    },
+    "clasificador_icfes": {
+      "name": "Clasificador ICFES",
+      "description": "Especialista en clasificación de ejercicios ICFES",
+      "system_prompt": "Eres un experto en estándares ICFES. Clasificas ejercicios según competencia, nivel, componente y contexto. Generas metadatos completos y correctos.",
+      "temperature": 0.2,
+      "skills": [
+        "Análisis de contenido matemático",
+        "Clasificación de competencias",
+        "Asignación de niveles",
+        "Generación de metadatos"
+      ]
+    }
+  },
+  
+  "workflows": {
+    "generacion_completa": {
+      "name": "Generar Ejercicio Completo",
+      "description": "Workflow completo desde imagen hasta ejercicio validado",
+      "steps": [
+        "Análisis de imagen",
+        "Clasificación ICFES",
+        "Generación de código",
+        "Generación de gráficos (si aplica)",
+        "Validación",
+        "Compilación de prueba",
+        "Entrega"
+      ],
+      "estimated_time_minutes": 15
+    },
+    "validacion_correccion": {
+      "name": "Validar y Corregir",
+      "description": "Validación y corrección de ejercicio existente",
+      "steps": [
+        "Diagnóstico",
+        "Consulta de soluciones",
+        "Corrección",
+        "Re-validación",
+        "Compilación",
+        "Reporte"
+      ],
+      "estimated_time_minutes": 10
+    },
+    "optimizacion_diversidad": {
+      "name": "Optimizar Diversidad",
+      "description": "Optimización para 300+ versiones únicas",
+      "steps": [
+        "Análisis de generar_datos()",
+        "Ampliación de rangos",
+        "Nuevos contextos",
+        "Colores aleatorios",
+        "Test de diversidad",
+        "Validación"
+      ],
+      "estimated_time_minutes": 8
+    }
+  },
+  
+  "custom_commands": {
+    "/generar-ejercicio": {
+      "description": "Genera ejercicio completo desde imagen",
+      "syntax": "/generar-ejercicio [imagen] [competencia] [nivel]",
+      "workflow": "generacion_completa"
+    },
+    "/validar": {
+      "description": "Valida archivo .Rmd",
+      "syntax": "/validar [archivo.Rmd]",
+      "workflow": "validacion_correccion"
+    },
+    "/corregir": {
+      "description": "Corrige errores en archivo .Rmd",
+      "syntax": "/corregir [archivo.Rmd]",
+      "workflow": "validacion_correccion"
+    },
+    "/compilar": {
+      "description": "Compila ejercicio en formato específico",
+      "syntax": "/compilar [archivo.Rmd] [formato]",
+      "formats": ["html", "pdf", "moodle", "nops", "todos"]
+    },
+    "/optimizar-diversidad": {
+      "description": "Optimiza para 300+ versiones",
+      "syntax": "/optimizar-diversidad [archivo.Rmd]",
+      "workflow": "optimizacion_diversidad"
+    }
+  }
+}
+
