@@ -39,9 +39,20 @@
 \predate{\begin{center}\large\scshape}
 \postdate{\par\end{center}}
 
+% Comandos personalizados para ID y Date dinámicos
+\makeatletter
+\newcommand{\ID}[1]{\def\@ID{#1}}
+\newcommand{\Date}[1]{\def\@Date{#1}}
+\ID{101}  % Valor por defecto
+\Date{YYYY-MM-DD}  % Valor por defecto
+
+\newcommand{\myID}{\@ID}
+\newcommand{\myDate}{\@Date}
+\makeatother
+
 \title{I. E. Pedacito de Cielo, La Tebaida, Quindío}
-\author{Simulacro Matemáticas Saber ICFES}
-\date{Probabilidad y Estadística - Porcentajes}
+\author{Cuestionario de Habilitación. Miércoles 12 de noviembre de 2025}
+\date{Taller \myID}
 
 \begin{document}
 
