@@ -61,8 +61,9 @@ generar_datos <- function() {
   # La semilla se controla desde el script R principal (SemilleroFinDePeriodo_4.R)
   # Esto garantiza consistencia entre versiones con y sin soluciones
 
-  # Generar seed para distractores basado en valores aleatorios reproducibles
-  base_seed <- sample(1:1000000, 1)
+  # CORRECCIÓN CRÍTICA: Eliminar base_seed que ya no se usa
+  # Estas variables consumían números aleatorios innecesariamente
+  # causando que las preguntas fueran siempre las mismas
 
   # Aleatorizar contextos del problema para mayor diversidad
   contextos_problema <- c(
@@ -126,10 +127,11 @@ generar_datos <- function() {
     hipotenusa <- terna_seleccionada[3]
   }
 
-  # Aleatorizar factores de diversidad para generar 300+ versiones
-  factor_diversidad <- sample(1:1000, 1)  # Factor ampliado
-  variacion_contexto <- sample(1:100, 1)  # Variación ampliada
-  seed_distractores <- base_seed + factor_diversidad + variacion_contexto
+  # CORRECCIÓN CRÍTICA: Eliminar variables innecesarias que consumían
+  # números aleatorios sin propósito, causando que las preguntas
+  # fueran siempre las mismas
+  # Las variables base_seed, factor_diversidad, variacion_contexto y
+  # seed_distractores ya no se usan para nada (se eliminaron los set.seed())
 
   # Función de formateo inteligente para diferentes tipos de números
   formato_numero <- function(x, tipo_rep = "exacta") {
@@ -195,8 +197,9 @@ generar_datos <- function() {
   cateto_conocido_tikz <- formato_numero_tikz(cateto_conocido)
   hipotenusa_tikz <- formato_numero_tikz(hipotenusa)
 
-  # Usar seed_distractores para crear variaciones únicas
-  set.seed(seed_distractores)
+  # CORRECCIÓN CRÍTICA: NO usar set.seed() aquí para no romper la secuencia aleatoria global
+  # La variabilidad está garantizada por la semilla global del script principal
+  # set.seed(seed_distractores)  # ELIMINADO (variable ya no existe)
 
   # GENERACIÓN DE DISTRACTORES DINÁMICOS BASADOS EN LA TERNA SELECCIONADA
   # Adaptados a los valores específicos de cada ejercicio
@@ -326,7 +329,8 @@ generar_datos <- function() {
   }
 
   # Seleccionar 3 distractores únicos aleatoriamente
-  set.seed(seed_distractores)
+  # CORRECCIÓN CRÍTICA: NO usar set.seed() aquí para no romper la secuencia aleatoria global
+  # set.seed(seed_distractores)  # ELIMINADO
   indices_seleccionados <- sample(seq_along(distractores_validos),
                                   min(3, length(distractores_validos)),
                                   replace = FALSE)
@@ -419,9 +423,6 @@ generar_datos <- function() {
       num_contextos = length(contextos_problema),
       num_tipos_distractor = 10,
       num_representaciones = 3,
-      factor_diversidad = factor_diversidad,
-      variacion_contexto = variacion_contexto,
-      seed_usado = seed_distractores,
       combinaciones_posibles = length(contextos_problema) * 10 * 3 * 100 * 20
     )
   )

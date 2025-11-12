@@ -56,15 +56,20 @@ use_python(Sys.which("python3"), required = TRUE)
 # Esto garantiza que todas las versiones (con/sin soluciones, PDF/DOCX)
 # generen exactamente los mismos datos aleatorios
 
+# SOLUCIÓN CRÍTICA: Generar semilla única para Python desde R
+# Cada instancia del ejercicio debe tener una semilla diferente
+semilla_python <- sample(1:1000000, 1)
+
 # Generar datos para el gráfico de barras
-codigo_barras <- "
+codigo_barras <- paste0("
 import matplotlib.pyplot as plt
 import random
+import numpy as np
 
-# CORRECCIÓN CRÍTICA: Establecer semilla en Python para reproducibilidad
-# La semilla de Python debe sincronizarse con la semilla de R
-# Usar una semilla fija que será consistente entre ejecuciones
-random.seed(42)
+# CORRECCIÓN CRÍTICA: Usar semilla generada desde R
+# Esto garantiza que cada instancia tenga datos diferentes
+random.seed(", semilla_python, ")
+np.random.seed(", semilla_python, ")
 
 # Datos de los años y valores de exportaciones
 # Crear lista de años desde 1950 hasta 2023
@@ -94,7 +99,7 @@ for bar in bars:
     plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
 
 # Títulos y etiquetas
-plt.title(f'Exportaciones anuales totales de Tebailandia\\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
+plt.title(f'Exportaciones anuales totales de Tebailandia\\\\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
 plt.xlabel('Año')
 plt.ylabel('Exportaciones (en millones de tebos)')
 
@@ -107,7 +112,7 @@ plt.tight_layout()
 plt.savefig('GraficoBarras.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
 plt.savefig('GraficoBarras.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
 plt.close()
-"
+")
 
 py_run_string(codigo_barras)
 ```
@@ -135,14 +140,16 @@ if (es_moodle) {
 \
 
 ```{r generar_grafico_torta, echo=FALSE, results='hide'}
-codigo_torta <- "
+# Usar la misma semilla Python generada anteriormente para consistencia
+codigo_torta <- paste0("
 import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-# CORRECCIÓN CRÍTICA: Establecer semilla en Python para reproducibilidad
-# Debe ser la misma semilla que en el chunk anterior para consistencia
-random.seed(42)
+# CORRECCIÓN CRÍTICA: Usar la misma semilla que el gráfico de barras
+# para mantener consistencia entre ambos gráficos
+random.seed(", semilla_python, ")
+np.random.seed(", semilla_python, ")
 
 # Datos para las porciones del gráfico circular.
 labels = [
@@ -199,7 +206,7 @@ ax1.pie(sizes, explode=explode, labels=selectots, colors=colors,
         autopct='%1.0f%%', pctdistance=0.85, labeldistance=1.1,
         shadow=True, startangle=15)
 ax1.axis('equal')
-ax1.set_title(f'Distribución de exportaciones de\\\\n Tebailandia en {year_aleatorio}', pad=20)
+ax1.set_title(f'Distribución de exportaciones de\\\\\\\\n Tebailandia en {year_aleatorio}', pad=20)
 
 plt.savefig('GraficoTorta.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
 plt.savefig('GraficoTorta.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
@@ -217,7 +224,7 @@ if year_index == -1:
 
 xol = round(exports[year_index] * (sizes[producto_index] / 100), 2)
 producto_seleccionado = selectots[producto_index]
-"
+")
 
 py_run_string(codigo_torta)
 ```
