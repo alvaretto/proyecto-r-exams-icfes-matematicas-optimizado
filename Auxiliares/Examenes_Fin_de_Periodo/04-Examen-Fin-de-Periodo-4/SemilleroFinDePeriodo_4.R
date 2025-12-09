@@ -33,7 +33,7 @@ dir_salida <- "salida"
 dir_ejercicios <- "."
 
 # Nombre del archivo sin la extensión .Rmd
-nombre_sin_extension <- "Matematicas_Evaluacion_Fin_de_Periodo_4"
+nombre_sin_extension <- "Matematicas_Habilitaciones"
 nombre_arch <- paste0(nombre_sin_extension, "_")
 
 ################################################################################
@@ -116,7 +116,7 @@ if (length(archivos_rds) > 0) {
 # La semilla ya fue establecida en la línea 18 y debe continuar su secuencia
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
           n = copias,
-          name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sol",
+          name = "Matematicas_Habilitaciones_sol",
           encoding = "UTF-8",
           template = "solpcielo",
           header = list(ID = semilla, Date = Sys.Date()),
@@ -139,7 +139,7 @@ archivo_examen <- sample(c(
 
 exams2pdf(rep(archivo_examen, each = numpreg_por_archivo),
           n = copias,
-          name = "Matematicas_Evaluacion_Fin_de_Periodo_4_sin_sol",
+          name = "Matematicas_Habilitaciones",
           encoding = "UTF-8",
           template = "exam",
           header = list(ID = semilla, Date = Sys.Date()),
