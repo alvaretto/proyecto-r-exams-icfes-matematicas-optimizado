@@ -59,147 +59,148 @@ formatear_entero <- function(numero) {
   formatC(numero, format = "d", big.mark = "")
 }
 
-# Función para seleccionar aleatoriamente de un dataframe
-seleccionar_aleatorio <- function(df) {
-  df[sample(nrow(df), 1), ]
-}
-
-# Datos optimizados - Contextos comerciales
+# Aleatorización simplificada del contexto comercial
 contextos_data <- data.frame(
-  nombre = c("tienda", "empresa", "negocio", "local", "establecimiento"),
-  genero = c("f", "f", "m", "m", "m"),
-  articulo = c("una", "una", "un", "un", "un"),
+  nombre = c("tienda", "empresa", "negocio"),
+  genero = c("f", "f", "m"),
+  articulo = c("una", "una", "un"),
   stringsAsFactors = FALSE
 )
-
-# Datos optimizados - Tipos de comerciantes
-comerciantes_data <- data.frame(
-  nombre = c("vendedor", "empresario", "comerciante", "negociante", "minorista"),
-  genero = c("m", "m", "m", "m", "m"),
-  articulo_el = c("el", "el", "el", "el", "el"),
-  articulo_un = c("un", "un", "un", "un", "un"),
-  stringsAsFactors = FALSE
-)
-
-# Datos optimizados - Productos
-productos_data <- data.frame(
-  plural = c("pantalones", "camisas", "zapatos", "relojes", "libros"),
-  singular = c("pantalón", "camisa", "zapato", "reloj", "libro"),
-  genero = c("m", "f", "m", "m", "m"),
-  stringsAsFactors = FALSE
-)
-
-# Selección optimizada usando función
-contexto_seleccionado <- seleccionar_aleatorio(contextos_data)
+contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
 contexto <- contexto_seleccionado$nombre
 articulo_contexto <- contexto_seleccionado$articulo
 
-comerciante_seleccionado <- seleccionar_aleatorio(comerciantes_data)
+# Aleatorización simplificada del tipo de comerciante
+comerciantes_data <- data.frame(
+  nombre = c("vendedor", "empresario", "comerciante"),
+  genero = c("m", "m", "m"),
+  articulo_el = c("el", "el", "el"),
+  articulo_un = c("un", "un", "un"),
+  stringsAsFactors = FALSE
+)
+comerciante_seleccionado <- comerciantes_data[sample(nrow(comerciantes_data), 1), ]
 comerciante <- comerciante_seleccionado$nombre
 articulo_el_comerciante <- comerciante_seleccionado$articulo_el
 articulo_un_comerciante <- comerciante_seleccionado$articulo_un
 
-producto_seleccionado <- seleccionar_aleatorio(productos_data)
+# Aleatorización simplificada del producto
+productos_data <- data.frame(
+  plural = c("pantalones", "camisas", "zapatos"),
+  singular = c("pantalón", "camisa", "zapato"),
+  genero = c("m", "f", "m"),
+  stringsAsFactors = FALSE
+)
+producto_seleccionado <- productos_data[sample(nrow(productos_data), 1), ]
 producto <- producto_seleccionado$plural
 producto_singular <- producto_seleccionado$singular
 genero_producto <- producto_seleccionado$genero
 
-# Aleatorización matemáticamente relevante de precios - OPTIMIZADO
+# Aleatorización matemáticamente relevante de precios
+# Diferentes rangos de ganancia para crear diversidad real en el problema
 tipo_ganancia <- sample(c("baja", "media", "alta"), 1)
 
-# Configuración de precios por tipo de ganancia (más opciones para mayor diversidad)
-precios_config <- list(
-  baja = list(
-    precios_base = c(80, 90, 100, 120, 150),
-    margenes = c(0.10, 0.15, 0.20, 0.25)
-  ),
-  media = list(
-    precios_base = c(60, 70, 80, 100, 130),
-    margenes = c(0.25, 0.30, 0.35, 0.40)
-  ),
-  alta = list(
-    precios_base = c(50, 60, 70, 80, 90),
-    margenes = c(0.40, 0.50, 0.60, 0.70)
-  )
-)
-
-config <- precios_config[[tipo_ganancia]]
-precio_compra <- sample(config$precios_base, 1) * 1000
-margen_ganancia <- sample(config$margenes, 1)
+if (tipo_ganancia == "baja") {
+  precio_compra <- sample(c(80, 90, 100, 120), 1) * 1000
+  margen_ganancia <- sample(c(0.10, 0.15, 0.20), 1)  # 10-20% ganancia
+} else if (tipo_ganancia == "media") {
+  precio_compra <- sample(c(60, 70, 80, 100), 1) * 1000
+  margen_ganancia <- sample(c(0.25, 0.30, 0.35), 1)  # 25-35% ganancia
+} else {
+  precio_compra <- sample(c(50, 60, 70, 80), 1) * 1000
+  margen_ganancia <- sample(c(0.40, 0.50, 0.60), 1)  # 40-60% ganancia
+}
 
 # Calcular precio de venta basado en el margen
 precio_venta <- precio_compra * (1 + margen_ganancia)
 ganancia_unitaria <- precio_venta - precio_compra
 
-# Número de unidades vendidas (matemáticamente relevante) - más opciones
-unidades_vendidas <- sample(c(5, 8, 10, 12, 15, 20, 25, 30), 1)
+# Número de unidades vendidas (matemáticamente relevante)
+unidades_vendidas <- sample(c(5, 8, 10, 12, 15, 20, 25), 1)
 ganancia_total <- ganancia_unitaria * unidades_vendidas
 
-# Aleatorización optimizada de términos clave
-tipos_terminos <- list(
-  desea = c("desea", "quiere", "necesita", "pretende", "busca"),
-  conocer = c("conocer", "determinar", "calcular", "estimar", "evaluar"),
-  obtiene = c("obtiene", "consigue", "logra", "alcanza", "genera"),
-  compra = c("compra", "adquiere", "obtiene", "consigue", "recibe"),
-  procedimientos = c("procedimientos", "métodos", "procesos", "estrategias", "técnicas"),
-  permite = c("permite", "facilita", "posibilita", "ayuda", "asiste")
-)
+# Aleatorización simplificada de términos clave
+terminos_desea <- c("desea", "quiere", "necesita")
+termino_desea <- sample(terminos_desea, 1)
 
-termino_desea <- sample(tipos_terminos$desea, 1)
-termino_conocer <- sample(tipos_terminos$conocer, 1)
-termino_obtiene <- sample(tipos_terminos$obtiene, 1)
-termino_compra <- sample(tipos_terminos$compra, 1)
-termino_procedimientos <- sample(tipos_terminos$procedimientos, 1)
-termino_permite <- sample(tipos_terminos$permite, 1)
+terminos_conocer <- c("conocer", "determinar", "calcular")
+termino_conocer <- sample(terminos_conocer, 1)
 
-# Términos simplificados
+terminos_obtiene <- c("obtiene", "consigue", "logra")
+termino_obtiene <- sample(terminos_obtiene, 1)
+
+# Términos simplificados (usando solo masculino para simplificar)
 termino_venta <- "venta"
 articulo_venta <- "la"
+
+termino_compra <- sample(c("compra", "adquiere", "obtiene"), 1)
+
+termino_procedimientos <- sample(c("procedimientos", "métodos", "procesos"), 1)
+
+termino_permite <- sample(c("permite", "facilita", "posibilita"), 1)
+
+# Término de monto simplificado
 termino_monto <- "monto"
 articulo_monto <- "el"
 
-# Generar opciones de respuesta con sistema avanzado de distractores - OPTIMIZADO
+# Generar opciones de respuesta con sistema avanzado de distractores
 # La respuesta correcta es la opción A del problema original
 
-# SISTEMA AVANZADO DE DISTRACTORES OPTIMIZADO
+# SISTEMA AVANZADO DE DISTRACTORES
 # 30% probabilidad de incluir valores duplicados con justificaciones diferentes
 permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
 
-# Función para generar respuestas correctas de manera más eficiente
-generar_respuesta_correcta <- function() {
-  plantillas_correctas <- c(
-    "Restar PRECIO al precio de venta de cada PRODUCTO y multiplicar dicho valor por el número de unidades vendidas.",
-    "Calcular la diferencia entre el precio de venta y PRECIO por cada PRODUCTO, y multiplicar este resultado por la cantidad de unidades vendidas.",
-    "Al precio de venta unitario de cada PRODUCTO restarle PRECIO y multiplicar la diferencia obtenida por el total de unidades vendidas.",
-    "Determinar la ganancia por PRODUCTO restando PRECIO del precio de venta, y multiplicar por el número de unidades comercializadas.",
-    "Obtener la utilidad unitaria sustrayendo PRECIO del precio de venta de cada PRODUCTO, luego multiplicar por la cantidad total vendida."
-  )
-  
-  plantilla <- sample(plantillas_correctas, 1)
-  precio_formateado <- paste0("$", formatear_entero(precio_compra))
-  
-  gsub("PRECIO", precio_formateado, gsub("PRODUCTO", producto_singular, plantilla))
-}
+# Respuestas correctas enfocadas en el procedimiento (no en valores específicos)
+respuestas_correctas <- c(
+  paste0("Restar $", formatear_entero(precio_compra),
+         " al precio de venta de cada ", producto_singular,
+         " y multiplicar dicho valor por el número de unidades vendidas."),
 
-# Función para generar distractores tipo B (inversión de resta)
-generar_distractor_b <- function() {
-  plantillas_b <- c(
-    "A PRECIO restarle el precio de venta de cada PRODUCTO y multiplicar dicho valor por el número de unidades vendidas.",
-    "Calcular la diferencia entre PRECIO y el precio de venta de cada PRODUCTO, y multiplicar este resultado por la cantidad de unidades vendidas.",
-    "Del costo de PRECIO sustraer el precio de venta de cada PRODUCTO y multiplicar la diferencia por el total de unidades vendidas.",
-    "Determinar cuánto excede PRECIO al precio de venta de cada PRODUCTO y multiplicar por el número de unidades comercializadas.",
-    "Obtener la diferencia restando el precio de venta de cada PRODUCTO a PRECIO, luego multiplicar por la cantidad total vendida."
-  )
-  
-  plantilla <- sample(plantillas_b, 1)
-  precio_formateado <- paste0("$", formatear_entero(precio_compra))
-  
-  gsub("PRECIO", precio_formateado, gsub("PRODUCTO", producto_singular, plantilla))
-}
+  paste0("Calcular la diferencia entre el precio de venta y $", formatear_entero(precio_compra),
+         " por cada ", producto_singular,
+         ", y multiplicar este resultado por la cantidad de unidades vendidas."),
 
-# Generar respuestas usando funciones optimizadas
-afirmacion_correcta <- generar_respuesta_correcta()
-distractor_b <- generar_distractor_b()
+  paste0("Al precio de venta unitario de cada ", producto_singular,
+         " restarle $", formatear_entero(precio_compra),
+         " y multiplicar la diferencia obtenida por el total de unidades vendidas."),
+
+  paste0("Determinar la ganancia por ", producto_singular,
+         " restando $", formatear_entero(precio_compra),
+         " del precio de venta, y multiplicar por el número de unidades comercializadas."),
+
+  paste0("Obtener la utilidad unitaria sustrayendo $", formatear_entero(precio_compra),
+         " del precio de venta de cada ", producto_singular,
+         ", luego multiplicar por la cantidad total vendida.")
+)
+
+# Seleccionar aleatoriamente una de las 5 respuestas correctas
+afirmacion_correcta <- sample(respuestas_correctas, 1)
+
+# Distractores con errores conceptuales comunes
+# Distractor B: Error de inversión de la resta (precio_compra - precio_venta)
+distractores_b <- c(
+  paste0("A $", formatear_entero(precio_compra),
+         " restarle el precio de venta de cada ", producto_singular,
+         " y multiplicar dicho valor por el número de unidades vendidas."),
+
+  paste0("Calcular la diferencia entre $", formatear_entero(precio_compra),
+         " y el precio de venta de cada ", producto_singular,
+         ", y multiplicar este resultado por la cantidad de unidades vendidas."),
+
+  paste0("Del costo de $", formatear_entero(precio_compra),
+         " sustraer el precio de venta de cada ", producto_singular,
+         " y multiplicar la diferencia por el total de unidades vendidas."),
+
+  paste0("Determinar cuánto excede $", formatear_entero(precio_compra),
+         " al precio de venta de cada ", producto_singular,
+         " y multiplicar por el número de unidades comercializadas."),
+
+  paste0("Obtener la diferencia restando el precio de venta de cada ", producto_singular,
+         " a $", formatear_entero(precio_compra),
+         ", luego multiplicar por la cantidad total vendida.")
+)
+
+# Seleccionar aleatoriamente una de las 5 variaciones del distractor B
+distractor_b <- sample(distractores_b, 1)
 
 # Distractor C: Error de confundir ganancia total con ganancia unitaria
 distractor_c <- paste0("Multiplicar el precio de venta de cada ", producto_singular,
@@ -224,7 +225,7 @@ posicion_correcta <- which(indices_mezclados == 1)
 solucion <- rep(0, 4)
 solucion[posicion_correcta] <- 1
 
-# Pruebas de validación matemática - OPTIMIZADAS
+# Pruebas de validación matemática
 test_that("Validaciones matemáticas optimizadas", {
   # Verificar coherencia matemática
   expect_true(precio_compra > 0 && precio_venta > 0,
@@ -252,33 +253,40 @@ test_that("Validaciones matemáticas optimizadas", {
               info = "Debe haber exactamente una respuesta correcta")
 })
 
-# Prueba de diversidad de versiones optimizada (estándar del proyecto: 300+ versiones)
-test_that("Prueba de diversidad de versiones optimizada", {
-  # Función para generar versiones de prueba de manera eficiente
-  generar_version_prueba <- function(i) {
+# Prueba de diversidad de versiones (estándar del proyecto: 300+ versiones)
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
     set.seed(i)
-    
-    # Selección rápida de datos
+    # Simular generación matemáticamente relevante
     tipo_ganancia_test <- sample(c("baja", "media", "alta"), 1)
-    config_test <- precios_config[[tipo_ganancia_test]]
-    
-    datos_test <- list(
-      tipo_ganancia = tipo_ganancia_test,
-      contexto = sample(contextos_data$nombre, 1),
-      comerciante = sample(comerciantes_data$nombre, 1),
-      producto = sample(productos_data$plural, 1),
-      precio_compra = sample(config_test$precios_base, 1) * 1000,
-      margen = sample(config_test$margenes, 1),
-      unidades = sample(c(5, 8, 10, 12, 15, 20, 25, 30), 1)
-    )
-    
-    digest::digest(datos_test)
+    contexto_test <- sample(contextos_data$nombre, 1)
+    comerciante_test <- sample(comerciantes_data$nombre, 1)
+    producto_test <- sample(productos_data$plural, 1)
+    unidades_test <- sample(c(5, 8, 10, 12, 15, 20, 25), 1)
+
+    # Simular precios según tipo de ganancia
+    if (tipo_ganancia_test == "baja") {
+      precio_compra_test <- sample(c(80, 90, 100, 120), 1) * 1000
+      margen_test <- sample(c(0.10, 0.15, 0.20), 1)
+    } else if (tipo_ganancia_test == "media") {
+      precio_compra_test <- sample(c(60, 70, 80, 100), 1) * 1000
+      margen_test <- sample(c(0.25, 0.30, 0.35), 1)
+    } else {
+      precio_compra_test <- sample(c(50, 60, 70, 80), 1) * 1000
+      margen_test <- sample(c(0.40, 0.50, 0.60), 1)
+    }
+
+    precio_venta_test <- precio_compra_test * (1 + margen_test)
+
+    datos_test <- list(tipo_ganancia = tipo_ganancia_test, contexto = contexto_test,
+                      comerciante = comerciante_test, producto = producto_test,
+                      precio_compra = precio_compra_test, precio_venta = precio_venta_test,
+                      unidades = unidades_test, margen = margen_test)
+    versiones[[i]] <- digest::digest(datos_test)
   }
 
-  # Generar versiones usando lapply para mayor eficiencia
-  versiones <- lapply(1:1000, generar_version_prueba)
   n_versiones_unicas <- length(unique(versiones))
-  
   expect_true(n_versiones_unicas >= 300,
               info = paste("Solo se generaron", n_versiones_unicas,
                           "versiones únicas de 1000 intentos. Se requieren al menos 300."))
