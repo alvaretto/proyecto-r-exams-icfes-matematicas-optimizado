@@ -8,7 +8,7 @@ Agregar a los archivos generados por tí un prefijo secuencial ("01-...", "02-..
 Sin scripts de verificación
 Sin resúmenes ejecutivos
 Sin archivos con instrucciones de ejecución rápida
-Revisa constantemente ejemplos funcionales para posibles soluciones a errores en "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/Auxiliares/Ejemplos-Funcionales-Rmd"
+Revisa constantemente ejemplos funcionales para posibles soluciones a errores en "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/Ejemplos-Funcionales-Rmd"
 Busca constantemente documentación oficial y reciente (noviembre 2025)
 Garantiza siempre que los cambios no rompan el código/sistema
 uando el usuario escriba "Error persistente" significa que tus cambios no solucionaron el problema propuesto, por lo que revertirás al estado anterior a esos cambios

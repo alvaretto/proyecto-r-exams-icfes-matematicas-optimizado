@@ -113,7 +113,7 @@ El proyecto **RepositorioMatematicasICFES_R_Exams** fue desarrollado completamen
 
 **Componentes:**
 
-- ✅ Directorio `/Auxiliares/Ejemplos-Funcionales-Rmd/` con código validado
+- ✅ Directorio `/A-Produccion/Ejemplos-Funcionales-Rmd/` con código validado
 - ✅ Regla de oro: "Si no está en ejemplos funcionales, no improvises"
 - ✅ Validación continua chunk por chunk
 - ✅ Compilación incremental

@@ -506,7 +506,7 @@ code-insiders .
 /init
 
 # ✅ RESULTADO: Gemini comprende automáticamente:
-# - Estructura de ejercicios R-exams en Auxiliares/Ejemplos-Funcionales-Rmd/
+# - Estructura de ejercicios R-exams en A-Produccion/Ejemplos-Funcionales-Rmd/
 # - Metodologías en Auxiliares/METODOLOGIA_*.md
 # - Templates TikZ en Auxiliares/TikZ-Documentation/
 # - Configuraciones del proyecto en .gemini/
@@ -586,7 +586,7 @@ gemini:
   
 context:
   files:
-    - "Auxiliares/Ejemplos-Funcionales-Rmd/**/*.Rmd"
+    - "A-Produccion/Ejemplos-Funcionales-Rmd/**/*.Rmd"
     - "Auxiliares/TikZ-Documentation/**/*.md"
     - "Auxiliares/METODOLOGIA_*.md"
   
@@ -980,7 +980,7 @@ gemini_create_exercise() {
     # 1. Generación de contenido
     echo "💡 Generando contenido..."
     gemini --context-file ".gemini/math_config.yaml" \
-           --context-file "Auxiliares/Ejemplos-Funcionales-Rmd/" \
+           --context-file "A-Produccion/Ejemplos-Funcionales-Rmd/" \
            "Crea un ejercicio R-exams sobre $topic, competencia $competencia, nivel $nivel"
 
     # 2. Validación automática
@@ -1428,7 +1428,7 @@ monitor_gemini_usage() {
 1. **Metodologías Integradas**
    - TikZ Avanzada: `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md`
    - Corrección de Errores: `Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`
-   - Ejemplos Funcionales: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+   - Ejemplos Funcionales: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 2. **Configuraciones Existentes**
    - Gemini CLI Setup: `Auxiliares/Instalaciones/Ais/Gemini_CLI/`
@@ -1568,7 +1568,7 @@ Este es un repositorio especializado en la creación de ejercicios matemáticos 
 ## 📁 **ESTRUCTURA DEL PROYECTO**
 
 ### **Directorios Principales**
-- `Auxiliares/Ejemplos-Funcionales-Rmd/`: Ejercicios R-exams funcionales y probados
+- `A-Produccion/Ejemplos-Funcionales-Rmd/`: Ejercicios R-exams funcionales y probados
 - `Auxiliares/TikZ-Documentation/`: Documentación y ejemplos de TikZ
 - `Auxiliares/METODOLOGIA_*.md`: Metodologías y guías del proyecto
 - `Auxiliares/Instalaciones/Ais/`: Configuraciones de herramientas IA
@@ -1676,7 +1676,7 @@ Este es un repositorio especializado en la creación de ejercicios matemáticos 
 
 ### **Documentación Interna**
 - Metodologías en `Auxiliares/METODOLOGIA_*.md`
-- Ejemplos funcionales en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Ejemplos funcionales en `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Guías TikZ en `Auxiliares/TikZ-Documentation/`
 
 ### **Estándares Externos**
@@ -2160,7 +2160,7 @@ Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ/temp/
 # Incluir explícitamente archivos importantes
 !GEMINI.md
 !.gemini/
-!Auxiliares/Ejemplos-Funcionales-Rmd/
+!A-Produccion/Ejemplos-Funcionales-Rmd/
 !Auxiliares/METODOLOGIA_*.md
 !Auxiliares/TikZ-Documentation/*.md
 !*.Rmd
@@ -2618,7 +2618,7 @@ gemini --image "imagen.png" \
 - ✅ **Directorios temporales excluidos** para mantener rendimiento
 - ✅ **Formatos soportados**: PNG, JPG, JPEG, GIF, SVG, BMP, TIFF, WEBP
 - ✅ **Directorios clave optimizados** para Gemini CLI:
-  - `Auxiliares/Ejemplos-Funcionales-Rmd/`
+  - `A-Produccion/Ejemplos-Funcionales-Rmd/`
   - `Auxiliares/TikZ-Documentation/`
   - `Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/`
   - `Auxiliares/Agente-Graficador-TikZ/`

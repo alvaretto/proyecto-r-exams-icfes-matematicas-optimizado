@@ -629,7 +629,7 @@ Tu conocimiento incluye:
 
 REGLAS OBLIGATORIAS:
 
-- SIEMPRE consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/ antes de generar código
+- SIEMPRE consulta los ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/ antes de generar código
 - NUNCA improvises configuraciones técnicas
 - SIEMPRE incluye test de diversidad de versiones (300+ estándar)
 - OBLIGATORIO incluir metadatos ICFES completos
@@ -901,7 +901,7 @@ Agente: [Agent session completed]
 
 ### Archivos del Proyecto
 
-- **Ejemplos funcionales**:  `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**:  `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Biblioteca de soluciones**:  `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
 - **Guía de workflows**:  `AnythingLLM-Config/02-GUIA_Creacion_Workflows_AnythingLLM.md`
 - **README AnythingLLM**:  `AnythingLLM-Config/01-README_AnythingLLM_ICFES.md`

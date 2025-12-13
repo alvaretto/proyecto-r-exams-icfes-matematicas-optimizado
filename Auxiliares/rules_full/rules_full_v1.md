@@ -17,7 +17,7 @@ RepositorioMatematicasICFES_R_Exams.
 - Comando: "Aplica el sistema condicional automático a esta imagen PNG"
 
 ### METODOLOGÍA TIKZ AVANZADA
-- Consultar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Consultar ejemplos funcionales en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Aplicar replicación PNG con 98% fidelidad visual
 - Usar características TikZ avanzadas con colores RGB precisos
 - Implementar posicionamiento sistemático de elementos
@@ -449,7 +449,7 @@ Analiza la imagen proporcionada y:
 2. **FLUJO A o B:** Activa el flujo apropiado según detección automática
 3. **Si FLUJO B:** Usa Agente-Graficador Especializado para replicación 98%+ fidelidad
 4. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
-5. **PRIMERO:** Consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/
+5. **PRIMERO:** Consulta los ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/
 6. Identifica el concepto matemático principal
 7. Determina la competencia ICFES más apropiada
 8. Diseña un problema que evalúe esa competencia
@@ -458,7 +458,7 @@ Analiza la imagen proporcionada y:
 11. Asegúrate de que el ejercicio sea desafiante pero justo
 12. Incluye todas las validaciones y pruebas requeridas
 13. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
-14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/
+14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /A-Produccion/Ejemplos-Funcionales-Rmd/
 
 El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams, con replicación gráfica de alta fidelidad cuando sea necesario.
 
@@ -745,7 +745,7 @@ include_tikz(tikz_final,
 - `CHECKLIST_Validacion_Archivos_Rmd.md`
 
 #### **Ejemplos Funcionales**
-- **SIEMPRE consultar**: `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **SIEMPRE consultar**: `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Antes de cualquier corrección**: Revisar patrones probados
 - **Durante corrección**: Aplicar soluciones validadas
 
@@ -783,7 +783,7 @@ include_tikz(tikz_final,
 ```
 ANTES DE ESCRIBIR UNA SOLA LÍNEA DE CÓDIGO:
 
-✅ PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+✅ PASO 1: Abrir `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 ✅ PASO 2: Identificar ejemplo más similar al ejercicio objetivo
 ✅ PASO 3: Estudiar estructura completa del ejemplo
 ✅ PASO 4: Copiar configuración YAML exacta

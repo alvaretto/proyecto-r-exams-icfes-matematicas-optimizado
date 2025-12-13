@@ -29,7 +29,7 @@
     "rootPath": "/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams",
     "includePaths": [
       "Lab-Manjaro",
-      "Auxiliares/Ejemplos-Funcionales-Rmd",
+      "A-Produccion/Ejemplos-Funcionales-Rmd",
       "Auxiliares/TikZ-Documentation",
       "Auxiliares/Python-Documentation"
     ],

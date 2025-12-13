@@ -90,7 +90,7 @@ output:
     - **MULTI-FORMATO**: Funciona en exams2html, exams2pdf, exams2moodle
 
 - [ ] **🔍 1.4 Consultar Ejemplos Funcionales (Ambos Flujos) - PROTOCOLO ESTRICTO**
-  - **OBLIGATORIO ABSOLUTO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/` ANTES de escribir cualquier código
+  - **OBLIGATORIO ABSOLUTO**: Revisar `/A-Produccion/Ejemplos-Funcionales-Rmd/` ANTES de escribir cualquier código
   - **FLUJO A**: Identificar configuraciones técnicas básicas para TikZ simple
   - **FLUJO B**: Consultar templates avanzados para gráficas complejas
   - **COPIAR PATRONES EXACTOS**: No improvisar, usar sintaxis idéntica a ejemplos probados
@@ -408,7 +408,7 @@ output:
 
 - [ ] **📚 7.2 Aplicar Soluciones Probadas**
   - **OBLIGATORIO**: Consultar `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
-  - **OBLIGATORIO**: Re-consultar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+  - **OBLIGATORIO**: Re-consultar ejemplos funcionales en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
   - Implementar correcciones sistemáticas por categoría:
     * **A1**: Sistema automático de concordancia de género
     * **B2**: Reordenar elementos TikZ (texto primero, tabla después)
@@ -464,7 +464,7 @@ output:
   - Re-aplicar correcciones basadas en patrones exitosos
   - **🐍 Errores Python**: Consultar `Auxiliares/Python-Documentation/referencias/compatibilidad-python.md` para soluciones
   - **🎨 Errores TikZ**: Consultar `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para soluciones
-  - **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+  - **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 - [ ] **🛠️ 8.3 Validación Específica TikZ/Python**
   - **🎨 TikZ**: Ejecutar `source("Auxiliares/TikZ-Documentation/validar_tikz_compatibility.R")` si aplica
@@ -681,7 +681,7 @@ tikz_packages_avanzados:
 4. **Catalogar texto** y etiquetas matemáticas
 
 #### **PASO 3: Consulta de Ejemplos Funcionales**
-1. **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+1. **OBLIGATORIO**: Revisar `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 2. **Identificar patrones TikZ** similares exitosos
 3. **Extraer configuraciones** técnicas probadas
 4. **Planificación** de la estructura TikZ
@@ -1091,9 +1091,9 @@ RESULTADO: Ejercicio R-exams tradicional
 
 ### 🛠️ **Desarrollo Técnico:**
 - **SIEMPRE** consultar ejemplos funcionales ANTES de cualquier generación, corrección u optimización
-- Seguir patrones técnicos probados en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Seguir patrones técnicos probados en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Aplicar configuraciones exitosas de chunks, librerías y sintaxis
-- **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **⚠️ OBLIGATORIO - Error "\pandocbounded"**: Para corregir cualquier error relacionado con "pandocbounded" buscar soluciones en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 ### ⚙️ **Configuración de Tolerancias (CRÍTICO):**
 - **PROBLEMA COMÚN**: Tolerancias en 0 para respuestas numéricas causan evaluación incorrecta
@@ -1226,7 +1226,7 @@ RESULTADO: Ejercicio R-exams tradicional
 ```
 ANTES DE ESCRIBIR UNA SOLA LÍNEA DE CÓDIGO:
 
-✅ PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+✅ PASO 1: Abrir `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 ✅ PASO 2: Identificar ejemplo más similar al ejercicio objetivo
 ✅ PASO 3: Estudiar estructura completa del ejemplo
 ✅ PASO 4: Copiar configuración YAML exacta

@@ -4,7 +4,7 @@
   "context_optimization": {
     "max_files": 100,
     "priority_directories": [
-      "Auxiliares/Ejemplos-Funcionales-Rmd",
+      "A-Produccion/Ejemplos-Funcionales-Rmd",
       "Auxiliares/TikZ-Documentation", 
       "Auxiliares/Python-Documentation",
       "Auxiliares/Instalaciones/Ais/Gemini_CLI"

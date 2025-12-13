@@ -69,7 +69,7 @@
     - **MULTI-FORMATO**: Funciona en exams2html, exams2pdf, exams2moodle, exams2pandoc, exams2nops (schoice)
 
 - [ ] **1.4 Consultar Ejemplos Funcionales (Ambos Flujos) - PROTOCOLO ESTRICTO**
-  - **OBLIGATORIO ABSOLUTO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/` ANTES de escribir cualquier codigo
+  - **OBLIGATORIO ABSOLUTO**: Revisar `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/` ANTES de escribir cualquier codigo
   - **FLUJO A**: Identificar configuraciones tecnicas basicas para TikZ simple
   - **FLUJO B**: Consultar templates avanzados para graficas complejas
   - **COPIAR PATRONES EXACTOS**: No improvisar, usar sintaxis identica a ejemplos probados
@@ -352,7 +352,7 @@
 
 - [ ] **[LIBROS] 7.2 Aplicar Soluciones Probadas**
   - **OBLIGATORIO**: Consultar `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
-  - **OBLIGATORIO**: Re-consultar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+  - **OBLIGATORIO**: Re-consultar ejemplos funcionales en `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
   - Implementar correcciones sistematicas por categoria:
     * **A1**: Sistema automatico de concordancia de genero
     * **B2**: Reordenar elementos TikZ (texto primero, tabla despues)
@@ -403,7 +403,7 @@
   - Re-aplicar correcciones basadas en patrones exitosos
   - **[PYTHON] Errores Python**: Consultar `Auxiliares/Python-Documentation/referencias/compatibilidad-python.md` para soluciones
   - **[DISENO] Errores TikZ**: Consultar `Auxiliares/TikZ-Documentation/referencias/compatibilidad.md` para soluciones
-  - **OBLIGATORIO - Errores LaTeX**: Para corregir cualquier error relacionado con compilacion LaTeX buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+  - **OBLIGATORIO - Errores LaTeX**: Para corregir cualquier error relacionado con compilacion LaTeX buscar soluciones en `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 
 - [ ] **[TOOLS] 8.3 Validacion Especifica TikZ/Python**
   - **[DISENO] TikZ**: Ejecutar `source("Auxiliares/TikZ-Documentation/validar_tikz_compatibility.R")` si aplica
@@ -623,7 +623,7 @@ calcular_coordenadas_tikz <- function(elementos_detectados) {
 4. **Catalogar texto** y etiquetas matematicas
 
 #### **PASO 3: Consulta de Ejemplos Funcionales**
-1. **OBLIGATORIO**: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+1. **OBLIGATORIO**: Revisar `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 2. **Identificar patrones TikZ** similares exitosos
 3. **Extraer configuraciones** tecnicas probadas
 4. **Planificacion** de la estructura TikZ
@@ -1132,9 +1132,9 @@ RESULTADO: Ejercicio R-exams tradicional
 
 ### [TOOLS] **Desarrollo Tecnico:**
 - **SIEMPRE** consultar ejemplos funcionales ANTES de cualquier generacion, correccion u optimizacion
-- Seguir patrones tecnicos probados en `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+- Seguir patrones tecnicos probados en `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 - Aplicar configuraciones exitosas de chunks, librerias y sintaxis
-- **OBLIGATORIO - Errores LaTeX**: Para corregir cualquier error relacionado con compilacion LaTeX buscar soluciones en `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+- **OBLIGATORIO - Errores LaTeX**: Para corregir cualquier error relacionado con compilacion LaTeX buscar soluciones en `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 
 ### **RESTRICCION CRITICA - CARACTERES ESPECIALES:**
 - **NO USAR CARACTERES ESPECIALES UNICODE** en ninguna parte del codigo R-exams
@@ -1258,7 +1258,7 @@ RESULTADO: Ejercicio R-exams tradicional
 ```
 ANTES DE ESCRIBIR UNA SOLA LINEA DE CODIGO:
 
-[OK] PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+[OK] PASO 1: Abrir `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 [OK] PASO 2: Identificar ejemplo mas similar al ejercicio objetivo
 [OK] PASO 3: Estudiar estructura completa del ejemplo
 [OK] PASO 4: Copiar configuracion LaTeX exacta

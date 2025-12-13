@@ -106,7 +106,7 @@ Todo archivo generado por el sistema sigue una estructura estricta para garantiz
 ### **La Regla de Oro: Consultar Ejemplos Funcionales**
 El pilar de la robustez del sistema es el protocolo anti-errores. Si necesitas modificar el código generado o si encuentras un error de compilación, tu primer paso **siempre** debe ser consultar los archivos en:
 
-> `Auxiliares/Ejemplos-Funcionales-Rmd/`
+> `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 Este directorio es la "fuente de la verdad" y contiene patrones de código probados para:
 -   Configuraciones correctas de chunks.

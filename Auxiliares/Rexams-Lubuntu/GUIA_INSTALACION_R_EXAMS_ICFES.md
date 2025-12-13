@@ -108,7 +108,7 @@ Para corregir errores recurrentes en < 5 minutos:
 - **📋 README Principal**: `/home/rexams/Proyectos/proyecto-r-exams-icfes-matematicas-optimizado/README.md`
 - **🎨 Guía TikZ**: `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md`
 - **🔧 Corrección de Errores**: `Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`
-- **📚 Ejemplos Funcionales**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **📚 Ejemplos Funcionales**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 ## 🆘 Solución de Problemas
 

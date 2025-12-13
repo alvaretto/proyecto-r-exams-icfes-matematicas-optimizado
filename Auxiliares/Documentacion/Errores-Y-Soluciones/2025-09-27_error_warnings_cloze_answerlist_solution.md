@@ -35,7 +35,7 @@ Warning in split.default(x$solutionlist, g) : largo de datos no es múltiplo de 
 ### Metodología de Investigación
 1. **✅ Análisis comparativo** con ejercicio Cloze funcional de referencia
 2. **✅ Revisión de documentación oficial** R-exams.org
-3. **✅ Consulta de ejemplos funcionales** en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+3. **✅ Consulta de ejemplos funcionales** en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 4. **✅ Testing incremental** con versiones simplificadas
 
 ### Ejercicio de Referencia Funcional
@@ -228,7 +228,7 @@ detectar_error_cloze_answerlist <- function(archivo_rmd) {
 
 ### Ejemplos Funcionales
 - `probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_cloze_v1.Rmd` - Patrón de referencia
-- `Auxiliares/Ejemplos-Funcionales-Rmd/Plantillas/erres/cloze/` - Ejemplos adicionales
+- `A-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/erres/cloze/` - Ejemplos adicionales
 
 ### Archivos Corregidos
 - `00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_v1.Rmd` - Archivo principal corregido

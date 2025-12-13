@@ -108,7 +108,7 @@ plt.close()
 ### 📚 **Referencias y Ejemplos**
 
 #### **Basado en:**
-- Ejemplos funcionales de `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Ejemplos funcionales de `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Patrón de `estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd`
 - Mejores prácticas de R-exams con Python
 

@@ -373,7 +373,7 @@ Instructions: |
   Componente: ${componenteICFES}
 
   OBLIGATORIO:
-  1. Consultar ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/
+  1. Consultar ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/
   2. Incluir encabezado YAML completo
   3. Chunk de configuración inicial con locale
   4. Función generar_datos() para 300+ versiones
@@ -856,7 +856,7 @@ Result Variable: (dejar vacío)
 ### ✅ Integración con el Proyecto
 
 1. **Rutas absolutas**: Usa `/workspace/` como base
-2. **Consulta ejemplos**: Referencia `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+2. **Consulta ejemplos**: Referencia `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 3. **Mantén consistencia**: Con estructura de archivos del proyecto
 4. **Guarda logs**: Para debugging y mejora continua
 
@@ -937,7 +937,7 @@ Result Variable: (dejar vacío)
 
 ### Archivos del Proyecto
 
-- **Ejemplos funcionales**: `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**: `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Biblioteca de soluciones**: `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
 - **Checklist de validación**: `/Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md`
 - **Guía de agentes**: `/Auxiliares/Agentes-IA/01-GUIA_COMPLETA_Agentes_Workflows_ICFES_R_Exams.md`

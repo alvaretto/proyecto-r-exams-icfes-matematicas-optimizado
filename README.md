@@ -61,15 +61,107 @@ RepositorioMatematicasICFES_R_Exams/
 ├── 📂 01-Algebra-Y-Calculo/
 ├── 📂 05-Geometria/
 ├── 📂 06-Estadistica-Y-Probabilidad/
+├── 🏆 A-Produccion/                        # ⭐ Archivos listos para producción
+│   ├── 📂 Ejemplos-Funcionales-Rmd/       # (OBLIGATORIO) Base de código validado
+│   ├── 📂 01-Numeros-Reales/              # Ejercicios de producción por tema
+│   ├── 📂 02-Funciones/
+│   ├── 📂 05-Geometría/
+│   └── 📂 06-Estadística-Y-Probabilidad/
 ├── 🛠️ Auxiliares/
 │   ├── 📂 Agente-Graficador-TikZ/         # Laboratorio del agente TikZ
-│   ├── 📂 Ejemplos-Funcionales-Rmd/       # (OBLIGATORIO) Base de código validado
 │   ├── 📂 Estrategia-Avanzada-de-Replicas/ # Templates TikZ profesionales
 │   └── 📂 Python-Documentation/             # Guías para integración con Python
 ├── 🧪 Lab-Manjaro/                         # Ejercicios en desarrollo y pruebas
 ├── 📄 .gitignore
 ├── 📖 README.md                            # Este archivo
 └── 📖 walkthrough.md                       # Guía de uso detallada
+```
+
+---
+
+## 🏆 **Carpeta A-Produccion: Archivos Listos para Uso**
+
+### 📋 **Descripción**
+
+La carpeta **`A-Produccion/`** contiene archivos `.Rmd` y subproyectos funcionales que han sido validados y están **listos para producción**. Estos archivos representan el estándar de calidad del proyecto y pueden utilizarse directamente o con ajustes mínimos.
+
+### ✨ **Características de los Archivos en A-Produccion**
+
+- ✅ **Completamente funcionales**: Compilables sin errores en R-exams
+- ✅ **Validados**: Han pasado todas las pruebas de calidad y diversidad (300+ versiones)
+- ✅ **Documentados**: Incluyen comentarios y estructura clara
+- ✅ **Optimizados**: Siguen las mejores prácticas del proyecto
+- ✅ **Modelos de referencia**: Pueden usarse como plantillas para nuevos ejercicios
+
+### 📂 **Contenido de A-Produccion**
+
+```
+A-Produccion/
+├── 📂 Ejemplos-Funcionales-Rmd/       # ⭐ Base de código validado (CONSULTA OBLIGATORIA)
+│   ├── Plantillas/                    # Templates por tipo de ejercicio
+│   │   ├── Rmd/                       # Plantillas .Rmd (schoice, cloze, etc.)
+│   │   ├── Rnw/                       # Plantillas .Rnw
+│   │   └── TikZ-Documentation/        # Documentación y ejemplos TikZ
+│   └── [Ejercicios validados]         # Ejercicios funcionales de referencia
+├── 📂 01-Numeros-Reales/              # Ejercicios de producción por tema
+├── 📂 02-Funciones/
+├── 📂 05-Geometría/
+└── 📂 06-Estadística-Y-Probabilidad/
+```
+
+### 🎯 **Uso Recomendado**
+
+1. **Como referencia**: Consultar antes de crear nuevos ejercicios
+2. **Como plantilla**: Copiar y adaptar para nuevos problemas similares
+3. **Como validación**: Comparar tu código con estos ejemplos funcionales
+4. **Como aprendizaje**: Estudiar las mejores prácticas implementadas
+
+### ⚠️ **Importante**
+
+> **Regla de Oro**: "Si no está en los ejemplos funcionales, no improvises."
+>
+> Antes de escribir cualquier código nuevo, es **OBLIGATORIO** consultar los ejercicios en `/A-Produccion/Ejemplos-Funcionales-Rmd/` para seguir los patrones validados.
+
+---
+
+## 📦 **Cambio de Ubicación: Ejemplos-Funcionales-Rmd**
+
+### 🔄 **Reorganización del Repositorio**
+
+La carpeta **`Ejemplos-Funcionales-Rmd`** ha sido **reubicada** para mejorar la organización del proyecto y destacar su importancia como base de código de producción.
+
+### 📍 **Ubicaciones**
+
+| Aspecto | Detalle |
+|---------|---------|
+| **Ubicación Anterior** | `/Auxiliares/Ejemplos-Funcionales-Rmd/` |
+| **Ubicación Nueva** | `/A-Produccion/Ejemplos-Funcionales-Rmd/` |
+| **Fecha del Cambio** | Diciembre 2025 |
+| **Razón del Cambio** | Destacar archivos de producción y mejorar organización |
+
+### 🎯 **Propósito del Cambio**
+
+1. **Mayor visibilidad**: Los ejemplos funcionales ahora están en una carpeta de producción destacada
+2. **Mejor organización**: Separación clara entre archivos de producción y auxiliares
+3. **Facilitar acceso**: Ubicación más intuitiva para archivos de referencia obligatoria
+4. **Estandarización**: Agrupar todos los archivos listos para producción en un solo lugar
+
+### 📝 **Actualización de Referencias**
+
+Todas las referencias en el código, documentación y configuraciones han sido actualizadas para reflejar la nueva ubicación:
+
+- ✅ Archivos de configuración (`.json`, `.yaml`)
+- ✅ Documentación (`.md`)
+- ✅ Reglas de IA (`.cursor/rules/`, `.augment/rules/`)
+- ✅ Scripts y herramientas
+- ✅ README y guías de uso
+
+### 🔧 **Acción Requerida**
+
+Si tienes scripts o configuraciones personales que referencian la ubicación antigua, actualízalas a:
+
+```
+/A-Produccion/Ejemplos-Funcionales-Rmd/
 ```
 
 ---
@@ -113,7 +205,7 @@ El sistema se encargará de analizar la imagen, seleccionar el flujo correcto y 
 Cualquier contribución debe adherirse estrictamente a las metodologías y protocolos definidos en el proyecto.
 
 ### **Regla de Oro Anti-Errores**
-**"Si no está en los ejemplos funcionales, no improvises."** Antes de escribir cualquier código, es **obligatorio** consultar los ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`.
+**"Si no está en los ejemplos funcionales, no improvises."** Antes de escribir cualquier código, es **obligatorio** consultar los ejercicios en `/A-Produccion/Ejemplos-Funcionales-Rmd/`.
 
 ### **Criterios de Calidad**
 -   **Fidelidad Visual (98%+)**: Precisión geométrica, cromática, de posicionamiento y completitud.

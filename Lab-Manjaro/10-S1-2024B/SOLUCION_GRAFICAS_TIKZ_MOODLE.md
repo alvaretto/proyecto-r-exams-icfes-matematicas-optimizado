@@ -240,7 +240,7 @@ include_tikz(codigo_tikz_triangulo,
    ```
 
 3. **Consultar ejemplos funcionales ANTES de implementar:**
-   - `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+   - `/A-Produccion/Ejemplos-Funcionales-Rmd/`
    - `06-Estadística-Y-Probabilidad/.../Probabilidad-Intervalos-Curva-13-S1-2024B/`
 
 ---

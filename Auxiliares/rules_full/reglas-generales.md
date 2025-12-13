@@ -87,7 +87,7 @@ El sistema debe identificar y manejar estas variantes:
 - **Comando**: "Aplica el sistema condicional automático a esta imagen PNG"
 
 #### **METODOLOGÍA TIKZ AVANZADA**
-- **Consultar ejemplos funcionales** en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Consultar ejemplos funcionales** en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Replicación PNG** con 98% fidelidad visual
 - **Características TikZ avanzadas** con colores RGB precisos
 - **Posicionamiento sistemático** de elementos
@@ -110,7 +110,7 @@ El sistema debe identificar y manejar estas variantes:
 ## 📁 ESTRUCTURA DE ARCHIVOS Y UBICACIONES
 
 ### 🎯 DIRECTORIOS CLAVE
-- **Ejemplos funcionales**: `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**: `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Templates TikZ profesionales**: `/Auxiliares/Estrategia-Avanzada-de-Replicas-de-Imagenes/Ejemplo/`
 - **Agente TikZ**: `/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ`
 - **Documentación Python**: `/Auxiliares/Python-Documentation/Python-ICFES-Guide.md`
@@ -545,7 +545,7 @@ exsection: [Sección temática]
 ## 🔧 CORRECCIÓN DE ERRORES OBLIGATORIA
 
 **ANTES de generar cualquier código, DEBES consultar los ejemplos funcionales en:**
-- `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 **ESTOS ARCHIVOS CONTIENEN:**
 - Configuraciones correctas de chunks
@@ -576,7 +576,7 @@ Analiza la imagen proporcionada y:
 2. **FLUJO A o B:** Activa el flujo apropiado según detección automática
 3. **Si FLUJO B:** Usa Agente-Graficador Especializado para replicación 98%+ fidelidad
 4. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[versión].Rmd"
-5. **PRIMERO:** Consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/
+5. **PRIMERO:** Consulta los ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/
 6. Identifica el concepto matemático principal
 7. Determina la competencia ICFES más apropiada
 8. Diseña un problema que evalúe esa competencia
@@ -585,7 +585,7 @@ Analiza la imagen proporcionada y:
 11. Asegúrate de que el ejercicio sea desafiante pero justo
 12. Incluye todas las validaciones y pruebas requeridas
 13. **VERIFICA** que el código siga los patrones de los ejemplos funcionales
-14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/
+14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /A-Produccion/Ejemplos-Funcionales-Rmd/
 
 El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams, con replicación gráfica de alta fidelidad cuando sea necesario.
 
@@ -594,7 +594,7 @@ El archivo resultante debe ser completamente funcional y listo para compilar en 
 ## 📚 DOCUMENTACIÓN DE REFERENCIA
 
 ### 📁 ARCHIVOS CLAVE DE CONSULTA OBLIGATORIA
-- **Ejemplos funcionales**: `/Auxiliares/Ejemplos-Funcionales-Rmd/` (CONSULTA OBLIGATORIA)
+- **Ejemplos funcionales**: `/A-Produccion/Ejemplos-Funcionales-Rmd/` (CONSULTA OBLIGATORIA)
 - **Ejemplos funcionales Cloze**: `/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/Probabilidad-Intervalos-Curva-13-S1-2024B/` (CONSULTA OBLIGATORIA)
 - **Metodología TikZ**: `METODOLOGIA_TikZ_Avanzada.md`
 - **Corrección de errores**: `METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`

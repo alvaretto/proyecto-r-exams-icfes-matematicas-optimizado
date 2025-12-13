@@ -25,8 +25,8 @@ Undefined control sequence.
 ## 🎯 **SOLUCIÓN ENCONTRADA**
 
 ### **Fuentes de Referencia Utilizadas:**
-1. **`/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos/ahorro_interpretacion_representacion_n2_v2/`**
-2. **`/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos/boxplots/`**
+1. **`/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/preferidos/ahorro_interpretacion_representacion_n2_v2/`**
+2. **`/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/preferidos/boxplots/`**
 
 ### **Configuración Correcta Identificada:**
 
@@ -102,7 +102,7 @@ Sys.setlocale(category = "LC_NUMERIC", locale = "C")  % ✅ Específico
 ## 📚 **LECCIONES APRENDIDAS**
 
 ### **1. Importancia de Ejemplos Funcionales:**
-- Los ejemplos en `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos/` son la referencia definitiva
+- Los ejemplos en `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/preferidos/` son la referencia definitiva
 - Cada proyecto tiene configuraciones específicas que funcionan
 - No asumir configuraciones "estándar" sin verificar
 

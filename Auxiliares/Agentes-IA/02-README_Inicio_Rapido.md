@@ -163,7 +163,7 @@ log_actividad "INFO" "generador-ejercicios" "Generación de ejercicio" "ÉXITO"
 ## 🆘 SOPORTE
 
 - **Guía completa**: Ver archivo 01-GUIA_COMPLETA
-- **Ejemplos funcionales**: `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**: `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Biblioteca de soluciones**: `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
 - **Checklist de validación**: `/Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md`
 

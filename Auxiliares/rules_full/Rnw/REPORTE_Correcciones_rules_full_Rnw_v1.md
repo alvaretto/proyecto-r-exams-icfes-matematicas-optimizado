@@ -106,7 +106,7 @@ El archivo `rules_full_Rnw_v1.md` ahora contiene **exclusivamente sintaxis .Rnw*
 ## 🔗 **ARCHIVOS RELACIONADOS**
 
 - `TEMPLATE_Plan_Tareas_ICFES_R_Exams_Rnw.md` (corregido previamente)
-- `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos/` (referencia)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/preferidos/` (referencia)
 - Archivos de metodologías específicas (TikZ, corrección de errores)
 
 ---

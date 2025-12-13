@@ -24,7 +24,7 @@ alwaysApply: true
 
 ## 🔍 RESOLUCIÓN DE PROBLEMAS Y ERRORES
 - **Consulta obligatoria de ejemplos funcionales**: ANTES de generar código nuevo o solucionar errores, SIEMPRE debes:
-  1. Revisar los ejemplos funcionales ubicados en: `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/Auxiliares/Ejemplos-Funcionales-Rmd/`
+  1. Revisar los ejemplos funcionales ubicados en: `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/Ejemplos-Funcionales-Rmd/`
   2. Identificar patrones exitosos, configuraciones correctas, estructuras de código probadas y soluciones validadas
   3. Replicar las estructuras y patrones encontrados en los ejemplos, adaptándolos al caso específico
   4. NO improvisar soluciones si existe un ejemplo funcional similar
@@ -35,7 +35,7 @@ alwaysApply: true
   - Verifica la versión de las herramientas mencionadas en los ejemplos funcionales
 
 - **Jerarquía de fuentes de información**: 
-  1. **Primera prioridad**: Ejemplos funcionales del proyecto en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+  1. **Primera prioridad**: Ejemplos funcionales del proyecto en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
   2. **Segunda prioridad**: Documentación oficial actualizada (noviembre 2025+)
   3. **Tercera prioridad**: Conocimiento previo del modelo (usar con precaución, validar contra ejemplos)
 
@@ -49,7 +49,7 @@ alwaysApply: true
   1. **Revertir completamente**: Deshacer TODOS los cambios realizados en tu última intervención, restaurando archivos al estado inmediatamente anterior
   2. **Confirmar reversión**: Informar al usuario qué archivos fueron revertidos y a qué estado
   3. **Análisis alternativo**: Examinar el problema desde una perspectiva completamente diferente
-  4. **Consulta exhaustiva**: Revisar TODOS los archivos en `/Auxiliares/Ejemplos-Funcionales-Rmd/` buscando soluciones similares
+  4. **Consulta exhaustiva**: Revisar TODOS los archivos en `/A-Produccion/Ejemplos-Funcionales-Rmd/` buscando soluciones similares
   5. **Propuesta nueva**: Presentar una solución alternativa basada en ejemplos funcionales, explicando por qué esta aproximación es diferente
 
 ## 🛡️ INTEGRIDAD DEL SISTEMA

@@ -400,7 +400,7 @@ file.exists("test_plot.png")
 
 ```bash
 cd /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams
-cd Auxiliares/Ejemplos-Funcionales-Rmd
+cd A-Produccion/Ejemplos-Funcionales-Rmd
 ```
 
 En R:
@@ -424,7 +424,7 @@ exams2moodle("nombre_ejercicio.Rmd", n = 5)
 ### Documentación del Proyecto
 - `README.md` - Descripción general del proyecto
 - `Auxiliares/Instalaciones/Tutorial Actualizado R-exams Mayo 2025.md`
-- `Auxiliares/Ejemplos-Funcionales-Rmd/` - Ejemplos funcionales
+- `A-Produccion/Ejemplos-Funcionales-Rmd/` - Ejemplos funcionales
 
 ### Documentación Externa
 - [R-exams Official](http://www.r-exams.org/)
@@ -476,7 +476,7 @@ pip install --upgrade matplotlib numpy pandas
 Si todos los pasos se completaron exitosamente, tu entorno de desarrollo está listo para trabajar con el proyecto **RepositorioMatematicasICFES_R_Exams**.
 
 **Próximos pasos:**
-1. Explorar los ejemplos funcionales en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+1. Explorar los ejemplos funcionales en `A-Produccion/Ejemplos-Funcionales-Rmd/`
 2. Leer la documentación del proyecto
 3. Comenzar a crear ejercicios ICFES siguiendo la filosofía del proyecto
 

@@ -22,7 +22,7 @@ This project relies on a set of integrated, evolving methodologies. You must app
 ### 2. ADVANCED TIKZ METHODOLOGY
 - **Priority**: TikZ is the preferred method for all graphics, even non-mathematical ones. Python is a secondary alternative only when TikZ is not viable.
 - **Core Task**: Replicate PNG images with 98%+ visual fidelity using advanced TikZ features (e.g., precise RGB colors, calculated positioning, `line cap round`, `line join round`).
-- **Mandatory Reference**: **ALWAYS** consult functional examples in `/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/Auxiliares/Ejemplos-Funcionales-Rmd/` before writing any code. These contain proven solutions.
+- **Mandatory Reference**: **ALWAYS** consult functional examples in `/home/proyectos/Insync/alvaroangelm@iepedacitodecielo.edu.co/Google Drive/RepositorioMatematicasICFES_R_Exams/A-Produccion/Ejemplos-Funcionales-Rmd/` before writing any code. These contain proven solutions.
 - **Workflow Evolution**: The project's main task template was reorganized to prioritize this methodology. The workflow starts with image analysis and TikZ replication.
 - **Activation Command**: "Apply the advanced TikZ methodology to this new PNG image to generate a complete R-exams exercise."
 

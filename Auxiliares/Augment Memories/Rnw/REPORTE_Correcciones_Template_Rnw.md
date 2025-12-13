@@ -92,7 +92,7 @@ El archivo `TEMPLATE_Plan_Tareas_ICFES_R_Exams_Rnw.md` contenía sintaxis de .Rm
 - ✅ Estructura LaTeX completa y correcta
 - ✅ Chunks con formato .Rnw apropiado
 - ✅ Meta-información en formato LaTeX
-- ✅ Basado en ejemplos funcionales de `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos/`
+- ✅ Basado en ejemplos funcionales de `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/preferidos/`
 - ✅ Eliminadas todas las referencias a YAML
 - ✅ Corregidos comandos de compilación
 

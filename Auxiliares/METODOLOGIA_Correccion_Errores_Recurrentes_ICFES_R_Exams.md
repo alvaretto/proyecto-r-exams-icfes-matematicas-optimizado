@@ -227,4 +227,4 @@ Cada vez que se identifique un nuevo error recurrente:
 
 ---
 
-**Nota**: Esta metodología debe usarse en conjunto con la consulta obligatoria a ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/` antes de cualquier corrección.
+**Nota**: Esta metodología debe usarse en conjunto con la consulta obligatoria a ejemplos funcionales en `/A-Produccion/Ejemplos-Funcionales-Rmd/` antes de cualquier corrección.

@@ -205,10 +205,10 @@
 ### **11. Ejercicio Adopción Mascotas - Gráficos Estadísticos (4 versiones)**
 **Rutas:**
 
-- `Auxiliares/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-A2v2.Rmd`
-- `Auxiliares/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-B2v2.Rmd`
-- `Auxiliares/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-C2v2.Rmd`
-- `Auxiliares/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-D2v2.Rmd`
+- `A-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-A2v2.Rmd`
+- `A-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-B2v2.Rmd`
+- `A-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-C2v2.Rmd`
+- `A-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/tex/Graficos_Estadisticos_Adopcion_Mascotas/Adopcion_Mascotas_Aleatorio_Interpretacion_n3_v1-Opc-D2v2.Rmd`
 
 **Tipo de ejercicio:** `schoice` (4 opciones con gráficos diferentes)
 
@@ -228,7 +228,7 @@
 ---
 
 ### **12. Ejercicio Consumo Gas Natural - Tipo Cloze**
-**Ruta:** `Auxiliares/Ejemplos-Funcionales-Rmd/Plantillas/Rmd/cloze/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd`
+**Ruta:** `A-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Rmd/cloze/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd`
 
 **Tipo de ejercicio:** `cloze` (respuestas numéricas y schoice)
 
@@ -278,7 +278,7 @@
 
 - **Lab-Manjaro/**: 10 archivos
 - **06-Estadística-Y-Probabilidad/**: 3 archivos
-- **Auxiliares/Ejemplos-Funcionales-Rmd/**: 7 archivos
+- **A-Produccion/Ejemplos-Funcionales-Rmd/**: 7 archivos
 
 ### **Archivos Adicionales Identificados en Git (no documentados en detalle):**
 

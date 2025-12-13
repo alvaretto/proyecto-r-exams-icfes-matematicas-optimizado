@@ -89,7 +89,7 @@ Este documento proporciona instrucciones específicamente optimizadas para el mo
 1. **Protocolo de Consulta Estricto**
    ```
    ANTES de escribir cualquier código:
-   ✅ Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+   ✅ Revisar `/A-Produccion/Ejemplos-Funcionales-Rmd/`
    ✅ Identificar patrón más similar al ejercicio objetivo
    ✅ Copiar configuración YAML exacta
    ✅ Usar sintaxis TikZ/LaTeX idéntica
@@ -445,7 +445,7 @@ Todas las metodologías están integradas y optimizadas específicamente para la
 
 1. **Ejemplos Funcionales** (CONSULTA OBLIGATORIA)
    ```
-   Ubicación: /Auxiliares/Ejemplos-Funcionales-Rmd/
+   Ubicación: /A-Produccion/Ejemplos-Funcionales-Rmd/
    Propósito: Patrones probados y validados
    Uso: ANTES de escribir cualquier código
    ```

@@ -709,7 +709,7 @@ El documento `rules_full_v1.md` contiene el conjunto completo de metodologías, 
 
 La consulta de ejemplos funcionales es un paso **obligatorio** antes de escribir cualquier código. Estos ejemplos proporcionan plantillas probadas y funcionales que deben ser la base para cualquier nuevo ejercicio.
 
-**Ruta de los Ejemplos:** `/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/Ejemplos-Funcionales-Rmd/`
+**Ruta de los Ejemplos:** `/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 **Regla de Oro:** "Si no está en los ejemplos funcionales, no improvises."
 

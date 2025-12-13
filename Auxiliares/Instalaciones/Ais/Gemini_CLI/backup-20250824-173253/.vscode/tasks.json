@@ -187,7 +187,7 @@
             "type": "shell",
             "command": "code",
             "args": [
-                "${workspaceFolder}/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/preferidos"
+                "${workspaceFolder}/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/preferidos"
             ],
             "group": "build",
             "presentation": {

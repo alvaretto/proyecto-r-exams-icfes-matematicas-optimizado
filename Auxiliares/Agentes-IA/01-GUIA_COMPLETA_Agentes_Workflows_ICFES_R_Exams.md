@@ -61,7 +61,7 @@ Crear `Auxiliares/Agentes-IA/configuraciones/config-global.json`:
   "version": "1.0.0",
   "rutas": {
     "raiz": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
-    "ejemplos_funcionales": "Auxiliares/Ejemplos-Funcionales-Rmd",
+    "ejemplos_funcionales": "A-Produccion/Ejemplos-Funcionales-Rmd",
     "lab": "Lab-Manjaro",
     "auxiliares": "Auxiliares"
   },
@@ -119,7 +119,7 @@ Especialista en generar ejercicios matemáticos ICFES en formato R-exams (.Rmd)
 4. Clasificar nivel de dificultad (1-4)
 
 ### FASE 2: Consulta de Ejemplos
-1. OBLIGATORIO: Revisar `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+1. OBLIGATORIO: Revisar `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 2. Identificar patrón similar exitoso
 3. Extraer configuraciones técnicas validadas
 
@@ -214,7 +214,7 @@ Especialista en validación y corrección de archivos .Rmd para R-exams ICFES
 4. Confirmar funcionamiento completo
 
 ## Fuentes de Referencia
-- `/Auxiliares/Ejemplos-Funcionales-Rmd/` - Patrones correctos
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` - Patrones correctos
 - `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md` - Soluciones conocidas
 - `/Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md` - Lista de verificación
 ```
@@ -605,7 +605,7 @@ Usuario solicita corrección/optimización de archivo .Rmd existente
 **Agente**: Validador de Código
 **Acciones**:
 
-- [ ] Buscar en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- [ ] Buscar en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - [ ] Consultar `/Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
 - [ ] Identificar patrones correctos aplicables
 - [ ] Seleccionar soluciones validadas
@@ -798,7 +798,7 @@ Especialista en ejercicios de estadística descriptiva para ICFES
 
 2. **Consulta de ejemplos**:
 
-   - Buscar en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+   - Buscar en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
    - Filtrar por ejercicios de estadística
    - Identificar patrón más similar
 
@@ -1107,7 +1107,7 @@ En `.augment/rules/comandos-personalizados.md`:
 #### ✅ Hacer:
 
 - **Respetar estructura**: Seguir organización existente del proyecto
-- **Usar ejemplos funcionales**: Consultar `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Usar ejemplos funcionales**: Consultar `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Mantener consistencia**: Aplicar convenciones de nomenclatura
 - **Documentar cambios**: Registrar decisiones y modificaciones
 - **Validar continuamente**: Compilar y probar frecuentemente
@@ -1182,7 +1182,7 @@ cat > Auxiliares/Agentes-IA/configuraciones/config-global.json << 'EOF'
   "version": "1.0.0",
   "rutas": {
     "raiz": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
-    "ejemplos_funcionales": "Auxiliares/Ejemplos-Funcionales-Rmd",
+    "ejemplos_funcionales": "A-Produccion/Ejemplos-Funcionales-Rmd",
     "lab": "Lab-Manjaro",
     "auxiliares": "Auxiliares"
   },
@@ -1331,7 +1331,7 @@ export -f log_actividad
 
 ### Documentación del Proyecto
 - **Reglas generales**: `.augment/rules/reglas-generales.md`
-- **Ejemplos funcionales**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Biblioteca de soluciones**: `Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md`
 - **Checklist de validación**: `Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md`
 
@@ -1410,7 +1410,7 @@ Los **agentes de IA y workflows automatizados** son herramientas poderosas que p
 Para preguntas o problemas:
 
 1. Consultar esta guía completa
-2. Revisar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+2. Revisar ejemplos funcionales en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 3. Consultar biblioteca de soluciones
 4. Documentar nuevos casos en el proyecto
 

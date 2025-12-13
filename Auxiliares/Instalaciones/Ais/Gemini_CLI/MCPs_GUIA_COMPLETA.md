@@ -166,7 +166,7 @@ gemini-icfes-mcps
 #### **📁 Filesystem - Acceso a Archivos**
 ```
 # Activación automática con archivos
-"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+"leer archivo A-Produccion/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
 "escribir ejercicio en Lab-Manjaro/01-S1-2024B/"
 "listar archivos en Auxiliares/TikZ-Documentation/"
 ```
@@ -181,7 +181,7 @@ gemini-icfes-mcps
 2. "documentación de R-exams para ejercicios de álgebra"
    → Context7 proporciona referencias técnicas
 
-3. "leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/algebra_ejemplo.Rmd"
+3. "leer archivo A-Produccion/Ejemplos-Funcionales-Rmd/algebra_ejemplo.Rmd"
    → Filesystem accede a ejemplos funcionales
 
 4. "recordar las mejores prácticas identificadas"
@@ -288,7 +288,7 @@ Editar `.gemini-mcp-config.json`:
 {
   "icfes_integration": {
     "priority_directories": [
-      "Auxiliares/Ejemplos-Funcionales-Rmd",
+      "A-Produccion/Ejemplos-Funcionales-Rmd",
       "Auxiliares/TikZ-Documentation",
       "Lab-Manjaro/01-S1-2024B"
     ]

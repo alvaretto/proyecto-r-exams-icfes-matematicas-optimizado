@@ -210,7 +210,7 @@ gemini-icfes --mcps
 #### **Acceso a Archivos del Proyecto**
 ```bash
 # Lectura directa de archivos
-"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+"leer archivo A-Produccion/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
 "listar archivos en Auxiliares/TikZ-Documentation/"
 "escribir ejercicio optimizado en Lab-Manjaro/01-S1-2024B/"
 ```
@@ -298,7 +298,7 @@ La extensión oficial `google.gemini-cli-vscode-ide-companion` proporciona integ
 /init
 ```
 **Resultado**: Gemini comprende automáticamente:
-- Estructura de ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Estructura de ejercicios en `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Metodologías en `Auxiliares/METODOLOGIA_*.md`
 - Templates TikZ en `Auxiliares/TikZ-Documentation/`
 - Configuraciones en `.gemini/`
@@ -425,7 +425,7 @@ gemini-icfes --mcps
 
 # 2. Análisis integral con investigación automática (dentro de Gemini CLI)
 "buscar información sobre estándares ICFES actualizados para competencia interpretación"
-"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+"leer archivo A-Produccion/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
 "documentación de R-exams para validar sintaxis"
 "recordar mejores prácticas identificadas en análisis previos"
 ```
@@ -433,7 +433,7 @@ gemini-icfes --mcps
 #### **📋 MÉTODO BÁSICO (SIN MCPs)**
 ```bash
 # 1. Navegar al directorio
-cd Auxiliares/Ejemplos-Funcionales-Rmd/
+cd A-Produccion/Ejemplos-Funcionales-Rmd/
 
 # 2. Análisis con contexto local
 gemini --context-file "ejercicio.Rmd" \
@@ -592,10 +592,10 @@ cat .gemini-mcp-config.json | grep brave
 #### **Filesystem MCP no accede a archivos**
 ```bash
 # Verificar permisos de archivos
-ls -la Auxiliares/Ejemplos-Funcionales-Rmd/
+ls -la A-Produccion/Ejemplos-Funcionales-Rmd/
 
 # Usar rutas completas
-"leer archivo ./Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
+"leer archivo ./A-Produccion/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"
 ```
 
 #### **Memory MCP no persiste datos**
@@ -637,7 +637,7 @@ echo $UPSTASH_REDIS_REST_URL
 |------------|-------------|
 | **Iniciar con MCPs** | `gemini-icfes --mcps` |
 | **Investigar ICFES** | `"buscar información sobre competencias matemáticas ICFES 2025"` |
-| **Acceder archivos** | `"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"` |
+| **Acceder archivos** | `"leer archivo A-Produccion/Ejemplos-Funcionales-Rmd/ejercicio.Rmd"` |
 | **Documentación técnica** | `"documentación de R-exams para ejercicios matemáticos"` |
 | **Testing automático** | `"testing de compilación HTML del ejercicio"` |
 | **Guardar conocimiento** | `"recordar mejores prácticas identificadas"` |
@@ -688,7 +688,7 @@ echo $UPSTASH_REDIS_REST_URL
 
 #### **📋 GENERALES (TODOS LOS MODOS)**
 1. **Sé específico en tus preguntas**: "Analiza competencia ICFES interpretación" vs "Analiza este ejercicio"
-2. **Usa ejemplos del proyecto**: Referencia ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+2. **Usa ejemplos del proyecto**: Referencia ejercicios en `A-Produccion/Ejemplos-Funcionales-Rmd/`
 3. **Verifica antes de implementar**: Siempre revisa el código generado antes de usarlo
 4. **Documenta tus workflows**: Guarda comandos útiles para reutilizar
 5. **Aprovecha la memoria persistente**: Con MCPs y extensión VSCode, el sistema recuerda mejores prácticas automáticamente
@@ -696,7 +696,7 @@ echo $UPSTASH_REDIS_REST_URL
 ### **Recursos Adicionales**
 
 - **Tutorial completo**: `Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md`
-- **Ejemplos funcionales**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Documentación TikZ**: `Auxiliares/TikZ-Documentation/`
 - **Metodologías**: `Auxiliares/METODOLOGIA_*.md`
 
@@ -711,7 +711,7 @@ echo $UPSTASH_REDIS_REST_URL
 **Paso 1: Analizar imagen de referencia**
 ```bash
 # Si tienes una imagen de función cuadrática
-gemini --image "Auxiliares/Ejemplos-Funcionales-Rmd/funcion_cuadratica.png" \
+gemini --image "A-Produccion/Ejemplos-Funcionales-Rmd/funcion_cuadratica.png" \
        --context-file ".gemini/rules-gemini.md" \
        "Analiza esta función cuadrática y genera código TikZ equivalente"
 ```
@@ -858,7 +858,7 @@ grep -E "^ex(name|type|solution|competencia|nivel):" ejercicio.Rmd
 
 1. **Verificación automática**: `.gemini/scripts/verify_setup.sh`
 2. **Tutorial completo**: `Auxiliares/Instalaciones/Ais/Gemini_CLI/gemini-cli-r-exams.md`
-3. **Ejemplos funcionales**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+3. **Ejemplos funcionales**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 4. **Configuración**: `~/.config/gemini/icfes-config.json`
 
 ### **Recursos de Aprendizaje**

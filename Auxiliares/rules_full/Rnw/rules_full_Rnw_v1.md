@@ -17,7 +17,7 @@ RepositorioMatematicasICFES_R_Exams.
 - Comando: "Aplica el sistema condicional automatico a esta imagen PNG"
 
 ### METODOLOGIA TIKZ AVANZADA
-- Consultar ejemplos funcionales en `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+- Consultar ejemplos funcionales en `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 - Aplicar replicacion PNG con 98% fidelidad visual
 - Usar caracteristicas TikZ avanzadas con colores RGB precisos
 - Implementar posicionamiento sistematico de elementos
@@ -280,7 +280,7 @@ cat(tikz_code)
 ##  CORRECCION DE ERRORES OBLIGATORIA
 
 **ANTES de generar cualquier codigo, DEBES consultar los ejemplos funcionales en:**
-- `Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+- `A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 
 **ESTOS ARCHIVOS CONTIENEN:**
 - Configuraciones correctas de chunks Sweave
@@ -310,7 +310,7 @@ Analiza la imagen proporcionada y:
 2. **FLUJO A o B:** Activa el flujo apropiado segun deteccion automatica
 3. **Si FLUJO B:** Usa Agente-Graficador Especializado para replicacion 98%+ fidelidad
 4. Genera el archivo "[ejercicio]_[componente]_[competencia]_n[Nivel [1, 2, 3 o 4]]_v[version].Rnw"
-5. **PRIMERO:** Consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/
+5. **PRIMERO:** Consulta los ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/
 6. Identifica el concepto matematico principal
 7. Determina la competencia ICFES mas apropiada
 8. Disena un problema que evalue esa competencia
@@ -319,7 +319,7 @@ Analiza la imagen proporcionada y:
 11. Asegurate de que el ejercicio sea desafiante pero justo
 12. Incluye todas las validaciones y pruebas requeridas
 13. **VERIFICA** que el codigo siga los patrones de los ejemplos funcionales
-14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/
+14. Ante errores recurrentes **VERIFICA** consultando todos y cada uno de los archivos de /A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/
 
 El archivo resultante debe ser completamente funcional y listo para compilar en el proyecto RepositorioMatematicasICFES_R_Exams, con replicacion grafica de alta fidelidad cuando sea necesario.
 
@@ -613,7 +613,7 @@ include_tikz(tikz_final,
 - `CHECKLIST_Validacion_Archivos_Rnw.md`
 
 #### **Ejemplos Funcionales**
-- **SIEMPRE consultar**: `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+- **SIEMPRE consultar**: `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
 - **Antes de cualquier correccion**: Revisar patrones probados
 - **Durante correccion**: Aplicar soluciones validadas
 
@@ -651,7 +651,7 @@ include_tikz(tikz_final,
 ```
 ANTES DE ESCRIBIR UNA SOLA LINEA DE CODIGO:
 
- PASO 1: Abrir `/Auxiliares/Ejemplos-Funcionales-Rmd/Rnw/`
+ PASO 1: Abrir `/A-Produccion/Ejemplos-Funcionales-Rmd/Rnw/`
  PASO 2: Identificar ejemplo mas similar al ejercicio objetivo
  PASO 3: Estudiar estructura completa del ejemplo
  PASO 4: Copiar configuracion LaTeX exacta

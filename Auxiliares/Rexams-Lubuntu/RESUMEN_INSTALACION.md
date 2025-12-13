@@ -104,7 +104,7 @@ Este script:
 - **Tutorial Manjaro**: `Auxiliares/Instalaciones/Tutorial Actualizado R-exams Mayo 2025.md`
 - **Metodología TikZ**: `Auxiliares/TikZ-Documentation/TikZ-ICFES-Guide.md`
 - **Corrección de Errores**: `Auxiliares/METODOLOGIA_Correccion_Errores_Recurrentes_ICFES_R_Exams.md`
-- **Ejemplos Funcionales**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos Funcionales**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 ### 🎯 Casos de Éxito Documentados
 - ✅ **Lab/17**: Números triangulares (98% fidelidad TikZ)
@@ -148,7 +148,7 @@ exams2pdf(ejercicios, n = 5, name = "mi_primer_examen_icfes")
 1. **Revisar logs**: Las instalaciones muestran errores en las terminales
 2. **Ejecutar verificación**: `./check_current_installations.sh`
 3. **Consultar documentación**: `GUIA_INSTALACION_R_EXAMS_ICFES.md`
-4. **Revisar ejemplos**: En el directorio `Auxiliares/Ejemplos-Funcionales-Rmd/`
+4. **Revisar ejemplos**: En el directorio `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 ### Comandos Útiles
 ```bash

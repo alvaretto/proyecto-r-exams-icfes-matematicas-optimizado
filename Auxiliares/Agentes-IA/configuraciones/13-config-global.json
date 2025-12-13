@@ -9,7 +9,7 @@
   
   "rutas": {
     "raiz": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
-    "ejemplos_funcionales": "Auxiliares/Ejemplos-Funcionales-Rmd",
+    "ejemplos_funcionales": "A-Produccion/Ejemplos-Funcionales-Rmd",
     "lab": "Lab-Manjaro",
     "auxiliares": "Auxiliares",
     "agentes": "Auxiliares/Agentes-IA",

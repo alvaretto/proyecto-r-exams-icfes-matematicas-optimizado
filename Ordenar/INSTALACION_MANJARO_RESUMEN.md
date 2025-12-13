@@ -132,7 +132,7 @@ load_icfes_packages()
 library(exams)
 
 # Navegar a ejemplos
-setwd("Auxiliares/Ejemplos-Funcionales-Rmd")
+setwd("A-Produccion/Ejemplos-Funcionales-Rmd")
 
 # Listar archivos disponibles
 list.files(pattern = "\\.Rmd$")
@@ -171,7 +171,7 @@ El script de instalación configura automáticamente:
 ### En el Proyecto
 1. **Guía Completa:** `Auxiliares/Instalaciones/INSTRUCCIONES_INSTALACION_MANJARO.md`
 2. **Resumen Rápido:** `Auxiliares/Instalaciones/README_INSTALACION_MANJARO.md`
-3. **Ejemplos Funcionales:** `Auxiliares/Ejemplos-Funcionales-Rmd/`
+3. **Ejemplos Funcionales:** `A-Produccion/Ejemplos-Funcionales-Rmd/`
 4. **Reglas del Proyecto:** `.augment/rules/reglas-generales.md`
 
 ### Externa
@@ -358,7 +358,7 @@ sudo pacman -Sc
    ```
 
 5. **Explorar Ejemplos**
-   - Navegar a `Auxiliares/Ejemplos-Funcionales-Rmd/`
+   - Navegar a `A-Produccion/Ejemplos-Funcionales-Rmd/`
    - Abrir y compilar archivos .Rmd
 
 6. **Crear Ejercicios**
@@ -372,7 +372,7 @@ sudo pacman -Sc
 Para problemas específicos:
 
 1. **Consultar:** `Auxiliares/Instalaciones/INSTRUCCIONES_INSTALACION_MANJARO.md`
-2. **Revisar:** `Auxiliares/Ejemplos-Funcionales-Rmd/`
+2. **Revisar:** `A-Produccion/Ejemplos-Funcionales-Rmd/`
 3. **Ejecutar:** `./Auxiliares/Instalaciones/verify_installation.sh`
 4. **Verificar:** Logs en `/tmp/`
 

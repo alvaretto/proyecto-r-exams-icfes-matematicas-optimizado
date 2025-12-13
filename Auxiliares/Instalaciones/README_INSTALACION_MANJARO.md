@@ -150,7 +150,7 @@ load_icfes_packages()
 library(exams)
 
 # Navegar a ejemplos funcionales
-setwd("Auxiliares/Ejemplos-Funcionales-Rmd")
+setwd("A-Produccion/Ejemplos-Funcionales-Rmd")
 
 # Compilar a HTML
 exams2html("nombre_ejercicio.Rmd", n = 1)
@@ -216,7 +216,7 @@ En R:
 
 ### Dentro del Proyecto
 - `README.md` - Descripción general del proyecto
-- `Auxiliares/Ejemplos-Funcionales-Rmd/` - Ejemplos funcionales
+- `A-Produccion/Ejemplos-Funcionales-Rmd/` - Ejemplos funcionales
 - `Auxiliares/Python-Documentation/` - Documentación de Python
 - `.augment/rules/reglas-generales.md` - Reglas del proyecto
 
@@ -246,7 +246,7 @@ En R:
    ```
 
 4. **Explorar Ejemplos**
-   - Navegar a `Auxiliares/Ejemplos-Funcionales-Rmd/`
+   - Navegar a `A-Produccion/Ejemplos-Funcionales-Rmd/`
    - Abrir y compilar archivos .Rmd de ejemplo
 
 5. **Crear Nuevos Ejercicios**
@@ -336,7 +336,7 @@ sudo pacman -Sc
 Para problemas específicos:
 
 1. **Consultar documentación:** `INSTRUCCIONES_INSTALACION_MANJARO.md`
-2. **Revisar ejemplos:** `Auxiliares/Ejemplos-Funcionales-Rmd/`
+2. **Revisar ejemplos:** `A-Produccion/Ejemplos-Funcionales-Rmd/`
 3. **Verificar configuración:** `./verify_installation.sh`
 4. **Revisar logs:** Archivos de error en `/tmp/`
 

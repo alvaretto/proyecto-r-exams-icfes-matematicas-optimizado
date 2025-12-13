@@ -214,7 +214,7 @@ tryCatch({
 - `Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md` - Checklist de validación
 
 ### **Ejemplos Funcionales:**
-- `Auxiliares/Ejemplos-Funcionales-Rmd/` - Patrones correctos de implementación
+- `A-Produccion/Ejemplos-Funcionales-Rmd/` - Patrones correctos de implementación
 - `Lab-Manjaro/10-S1-2024B/area_cuadrado_rotado_*.Rmd` - Ejemplo corregido completo
 
 ### **Herramientas de Testing:**

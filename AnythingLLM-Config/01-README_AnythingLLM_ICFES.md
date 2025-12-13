@@ -97,7 +97,7 @@ Una vez instalado, accede a:
 └── Auxiliares/README_AGENTE_TIKZ.md
 
 📁 Ejemplos Funcionales
-├── Auxiliares/Ejemplos-Funcionales-Rmd/*.Rmd (todos)
+├── A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd (todos)
 
 📁 Metadatos ICFES
 ├── Auxiliares/plantilla_metadatos_icfes.md
@@ -200,7 +200,7 @@ Prompt del Sistema: |
   
   FUENTES DE REFERENCIA:
 
-  - /Auxiliares/Ejemplos-Funcionales-Rmd/
+  - /A-Produccion/Ejemplos-Funcionales-Rmd/
   - /Auxiliares/BIBLIOTECA_Soluciones_Errores_Comunes.md
   - /Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md
 
@@ -409,7 +409,7 @@ Crear archivo `AnythingLLM-Config/02-workspace-config.json`:
 
   "paths": {
     "project_root": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
-    "examples": "Auxiliares/Ejemplos-Funcionales-Rmd",
+    "examples": "A-Produccion/Ejemplos-Funcionales-Rmd",
     "documentation": "Auxiliares",
     "lab": "Lab-Manjaro",
     "output": "salida"
@@ -427,7 +427,7 @@ Crear archivo `AnythingLLM-Config/02-workspace-config.json`:
       "Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md"
     ],
     "examples": [
-      "Auxiliares/Ejemplos-Funcionales-Rmd/*.Rmd"
+      "A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd"
     ]
   },
 

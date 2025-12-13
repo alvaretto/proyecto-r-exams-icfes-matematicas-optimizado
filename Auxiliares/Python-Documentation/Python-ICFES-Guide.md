@@ -46,7 +46,7 @@
    - **Compatibilidad R-exams**: ✅ Excelente
 
 #### **📊 Análisis Estadístico Avanzado**
-**Ubicación**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+**Ubicación**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 
 4. **Gráficos de Líneas Múltiples** (`Ejemplo_01.Rmd`)
    - **Competencia ICFES**: Pensamiento Aleatorio

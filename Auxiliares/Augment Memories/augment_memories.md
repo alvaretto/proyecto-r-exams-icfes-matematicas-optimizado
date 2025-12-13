@@ -66,7 +66,7 @@
 - Sistema avanzado de distractores para R-exams ICFES: implementar 30% probabilidad de valores duplicados con justificaciones diferentes (ej: "mediana es 30 porque promedio centrales" vs "mediana es 30 porque suma/división"), usar 8+ tipos distractores, selección estratégica 1 duplicado + 2 diferentes, verificación textual única, justificaciones alternativas ampliadas para mayor diversidad pedagógica.
 
 # R-exams ICFES Exercise Development Workflow
-- For R-exams ICFES exercises: ALWAYS consult functional examples in '/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/Auxiliares/Ejemplos-Funcionales-Rmd/' before generating, correcting, or optimizing any .Rmd file - these examples contain proven solutions from countless error corrections and code optimizations.
+- For R-exams ICFES exercises: ALWAYS consult functional examples in '/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado/A-Produccion/Ejemplos-Funcionales-Rmd/' before generating, correcting, or optimizing any .Rmd file - these examples contain proven solutions from countless error corrections and code optimizations.
 - For R-exams ICFES exercises: during error correction (task 6.2), always re-consult the functional examples in addition to error-specific documentation to ensure corrections follow proven patterns.
 
 # Task Management and Preferences

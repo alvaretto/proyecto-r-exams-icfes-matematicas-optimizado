@@ -55,7 +55,7 @@
 - core/ (propósito no claro)
 - cr-01/ (propósito no claro) 
 - docus/ (duplica función de Auxiliares/Documentacion/)
-- ejemplos/ (duplica Auxiliares/Ejemplos-Funcionales-Rmd/)
+- ejemplos/ (duplica A-Produccion/Ejemplos-Funcionales-Rmd/)
 - Ordenar/ (trabajo en progreso sin estructura)
 - revisor-visual-ai/ (herramienta, debería estar en Auxiliares/herramientas/)
 - tests/ (debería estar mejor organizado)

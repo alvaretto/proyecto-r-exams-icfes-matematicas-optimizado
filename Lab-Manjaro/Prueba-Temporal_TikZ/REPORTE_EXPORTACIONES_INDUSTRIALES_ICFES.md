@@ -123,7 +123,7 @@ test_that("Prueba de diversidad de versiones", {
 - **Integración R-exams**: Completa y funcional
 
 ### 📚 **Consulta de Ejemplos Funcionales**
-- **Obligatoria**: Revisión de `/Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Obligatoria**: Revisión de `/A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Patrones aplicados**: Configuración Python, estructura chunks, interpolación variables
 - **Prevención de errores**: Siguiendo patrones probados
 

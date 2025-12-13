@@ -195,7 +195,7 @@ Los parámetros `memory`, `memory_depth`, `top_k` no son configurables directame
     ...
   ],
   "examples": [
-    "Auxiliares/Ejemplos-Funcionales-Rmd/*.Rmd"
+    "A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd"
   ]
 }
 ```
@@ -236,7 +236,7 @@ Workspace → Upload Documents
 
 **Ejemplos Funcionales** (subir carpeta completa):
 
-- Sube toda la carpeta `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Sube toda la carpeta `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - AnythingLLM procesará todos los archivos .Rmd automáticamente
 
 **Documentación Técnica** (opcional):
@@ -305,7 +305,7 @@ Tu conocimiento incluye:
 
 REGLAS OBLIGATORIAS:
 
-- SIEMPRE consulta los ejemplos funcionales en /Auxiliares/Ejemplos-Funcionales-Rmd/ antes de generar código
+- SIEMPRE consulta los ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/ antes de generar código
 - NUNCA improvises configuraciones técnicas
 - SIEMPRE incluye test de diversidad de versiones (300+ estándar)
 - OBLIGATORIO incluir metadatos ICFES completos

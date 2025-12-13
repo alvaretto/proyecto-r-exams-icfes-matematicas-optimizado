@@ -139,7 +139,7 @@ Auxiliares/TikZ-Documentation/templates-rexams/robustos/
 
 - **Repositorio**: `/home/pequeniomanjaro/Documentos/proyecto-r-exams-icfes-matematicas-optimizado`
 - **Templates TikZ**: `Auxiliares/TikZ-Documentation/templates-rexams/robustos/`
-- **Ejemplos Funcionales**: `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos Funcionales**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **Documentación R-exams**: Integración con `include_tikz()` y `match_exams_device()`
 
 ---

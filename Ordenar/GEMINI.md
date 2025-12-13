@@ -13,7 +13,7 @@ Este es un repositorio especializado en la creación de ejercicios matemáticos 
 ## 📁 **ESTRUCTURA DEL PROYECTO**
 
 ### **Directorios Principales**
-- `Auxiliares/Ejemplos-Funcionales-Rmd/`: Ejercicios R-exams funcionales y probados
+- `A-Produccion/Ejemplos-Funcionales-Rmd/`: Ejercicios R-exams funcionales y probados
 - `Auxiliares/TikZ-Documentation/`: Documentación y ejemplos de TikZ
 - `Auxiliares/METODOLOGIA_*.md`: Metodologías y guías del proyecto
 - `Auxiliares/Instalaciones/Ais/`: Configuraciones de herramientas IA
@@ -288,7 +288,7 @@ Los MCPs representan la base para la evolución del proyecto hacia un sistema de
 
 ### **Documentación Interna**
 - Metodologías en `Auxiliares/METODOLOGIA_*.md`
-- Ejemplos funcionales en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Ejemplos funcionales en `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Guías TikZ en `Auxiliares/TikZ-Documentation/`
 
 ### **Estándares Externos**
@@ -321,7 +321,7 @@ gemini-icfes --mcps
 ### **Comandos de Acceso a Archivos del Proyecto**
 ```bash
 # Acceso directo a ejemplos funcionales
-"leer archivo Auxiliares/Ejemplos-Funcionales-Rmd/algebra_basica.Rmd"
+"leer archivo A-Produccion/Ejemplos-Funcionales-Rmd/algebra_basica.Rmd"
 "listar archivos en Auxiliares/TikZ-Documentation/"
 "leer archivo Auxiliares/METODOLOGIA_DESARROLLO_EJERCICIOS.md"
 
@@ -390,7 +390,7 @@ gemini-icfes --mcps
 **Función**: Activa Gemini CLI para el proyecto actual, otorgando acceso completo a archivos y estructura.
 
 **Casos de uso ICFES**:
-- Acceso directo a ejercicios en `Auxiliares/Ejemplos-Funcionales-Rmd/`
+- Acceso directo a ejercicios en `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - Lectura automática de metodologías en `Auxiliares/METODOLOGIA_*.md`
 - Navegación inteligente por templates TikZ
 

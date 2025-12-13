@@ -40,7 +40,7 @@
 
 ### Todos los archivos .Rmd en:
 ```
-✅ Auxiliares/Ejemplos-Funcionales-Rmd/
+✅ A-Produccion/Ejemplos-Funcionales-Rmd/
    ├── Ejemplo_00_numeros_triangulares_sucesion_argumentacion_n2_v1.Rmd
    ├── estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2.Rmd
    ├── mediana_aleatorio_argumentacion_n2_v1.Rmd
@@ -205,7 +205,7 @@ cp "$PROYECTO_ROOT/Auxiliares/CHECKLIST_Validacion_Archivos_Rmd.md" "$DESTINO/pr
 cp "$PROYECTO_ROOT/Auxiliares/plantilla_metadatos_icfes.md" "$DESTINO/prioridad-media/"
 
 # Copiar ejemplos funcionales
-cp "$PROYECTO_ROOT/Auxiliares/Ejemplos-Funcionales-Rmd"/*.Rmd "$DESTINO/ejemplos/" 2>/dev/null || true
+cp "$PROYECTO_ROOT/A-Produccion/Ejemplos-Funcionales-Rmd"/*.Rmd "$DESTINO/ejemplos/" 2>/dev/null || true
 
 echo "✅ Documentos preparados en: $DESTINO"
 echo ""

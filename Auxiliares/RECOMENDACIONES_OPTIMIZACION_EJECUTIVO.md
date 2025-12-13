@@ -66,7 +66,7 @@ El repositorio ICFES R-Exams Matemáticas presenta una base sólida con metodolo
 - `core/` - Propósito no documentado
 - `cr-01/` - Propósito no documentado  
 - `docus/` - Duplica función de Auxiliares/Documentacion/
-- `ejemplos/` - Duplica Auxiliares/Ejemplos-Funcionales-Rmd/
+- `ejemplos/` - Duplica A-Produccion/Ejemplos-Funcionales-Rmd/
 - `Ordenar/` - Trabajo en progreso sin estructura
 - `revisor-visual-ai/` - Debería estar en Auxiliares/herramientas/
 
