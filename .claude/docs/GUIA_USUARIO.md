@@ -196,6 +196,9 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 # Ver ejercicios en producción
 ls A-Produccion/En-Produccion/**/*.Rmd
 
+# Ver ejercicios en pre-desarrollo (también funcionales)
+ls A-Produccion/En-PreDesarrollo/**/*.Rmd
+
 # Ver templates
 ls A-Produccion/Templates/*.Rmd
 

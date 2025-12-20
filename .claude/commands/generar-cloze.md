@@ -71,7 +71,8 @@ Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produ
 
 ## Regla de Oro
 **NUNCA improvises**. Consulta ejemplos funcionales en:
-`/A-Produccion/En-Produccion/`
+- `/A-Produccion/En-Produccion/`
+- `/A-Produccion/En-PreDesarrollo/`
 
 Para ejemplos CLOZE específicos también revisa:
 `/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/`

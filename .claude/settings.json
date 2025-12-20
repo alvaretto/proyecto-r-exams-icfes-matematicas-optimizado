@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '⚠️ REGLA DE ORO: Consulta /A-Produccion/En-Produccion/ antes de escribir código .Rmd'"
+            "command": "echo '⚠️ REGLA DE ORO: Consulta /A-Produccion/En-Produccion/ y /A-Produccion/En-PreDesarrollo/ antes de escribir código .Rmd'"
           }
         ]
       }

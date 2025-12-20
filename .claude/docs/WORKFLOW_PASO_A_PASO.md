@@ -719,6 +719,8 @@ Por favor, mejora la fidelidad visual del código TikZ.
 
 - **SCHOICE**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
 - **CLOZE**: `06-Estadística-Y-Probabilidad/.../Probabilidad-Intervalos-Curva-13-S1-2024B/`
+- **En Producción**: `A-Produccion/En-Produccion/`
+- **En Pre-Desarrollo** (también funcionales): `A-Produccion/En-PreDesarrollo/`
 
 ---
 

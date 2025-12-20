@@ -1,0 +1,292 @@
+---
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".") # Usar punto como separador decimal
+
+# Configurar el motor LaTeX globalmente si se usa TikZ directamente en R
+# options(tikzLatex = "pdflatex")
+# options(tikzXelatex = FALSE)
+# options(tikzLatexPackages = c(
+#   "\\usepackage{tikz}",
+#   "\\usetikzlibrary{shapes,arrows,positioning}",
+#   "\\usepackage{amsmath}" # Para usar \pi
+# ))
+
+library(exams)
+library(reticulate)
+library(glue) # Para formateo de strings más fácil
+library(stringr) # Para manipulación de strings
+
+# Determinar el tipo de dispositivo de salida
+typ <- match_exams_device() 
+options(scipen = 999) # Evitar notación científica
+
+# Opciones globales para chunks de knitr
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE, # Manejo de fuentes en gráficos
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = if (typ == "latex") c("png", "pdf") else "png", # Usar PDF para LaTeX, PNG para otros
+  dpi = if (typ == "latex") 300 else 150 # Mayor resolución para PDF
+)
+
+# Configuración para chunks de Python con reticulate
+# Asegurar que Python esté correctamente configurado
+tryCatch({
+  use_python(Sys.which("python3"), required = TRUE) # Preferir python3 si está disponible
+}, error = function(e) {
+  tryCatch({
+    use_python(Sys.which("python"), required = TRUE)
+  }, error = function(e2) {
+    stop("No se pudo encontrar una instalación de Python válida. Asegúrate de que Python y reticulate estén configurados.")
+  })
+})
+
+# Configurar el motor de Python para knitr
+knitr::knit_engines$set(python = reticulate::eng_python)
+
+# Verificar paquetes de Python necesarios
+py_pkgs <- c("matplotlib", "numpy")
+for (pkg in py_pkgs) {
+  if (!py_module_available(pkg)) {
+    warning(paste("El paquete de Python '", pkg, "' no está instalado. Se intentará instalar."))
+    tryCatch({
+      py_install(pkg)
+    }, error = function(e) {
+      stop(paste("No se pudo instalar el paquete de Python '", pkg, "'. Por favor, instálalo manualmente."))
+    })
+  }
+}
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE}
+options(OutDec = ".") # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria para reproducibilidad
+set.seed(sample(1:10000, 1))
+
+# --- Aleatorización de Parámetros ---
+
+# 1. Dimensiones del cilindro
+radio <- sample(2:10, 1) # Radio entero entre 2 y 10
+altura <- sample(5:20, 1) # Altura entera entre 5 y 20
+# Asegurar que altura sea significativamente diferente del radio
+while(abs(radio - altura) < 3) {
+  altura <- sample(5:20, 1)
+}
+
+# 2. Unidades de medida
+unidades_lista <- c("cm", "m", "mm", "pulgadas")
+unidad <- sample(unidades_lista, 1)
+unidad_tex <- ifelse(unidad == "pulgadas", "\\text{pulgadas}", paste0("\\text{", unidad, "}")) # Para LaTeX
+
+# 3. Objeto cilíndrico
+objetos_lista <- c("vaso", "tanque", "recipiente", "tubo", "envase")
+objeto <- sample(objetos_lista, 1)
+
+# 4. Contexto/Actor
+actores_lista <- c("Un estudiante", "Un ingeniero", "Un diseñador", "Un arquitecto", "Un técnico", "Una persona")
+actor <- sample(actores_lista, 1)
+
+# 5. Términos descriptivos
+termino_base <- sample(c("base circular", "base redonda", "tapa circular"), 1)
+termino_radio <- sample(c("radio", "radio de la base"), 1)
+termino_altura <- sample(c("altura", "longitud"), 1)
+termino_figura <- sample(c("la figura", "el diagrama", "el esquema", "la ilustración"), 1)
+termino_operacion <- sample(c("operación", "expresión", "fórmula", "cálculo"), 1)
+termino_resultado <- sample(c("resultado", "valor", "número"), 1)
+
+# --- Cálculos ---
+volumen <- pi * radio^2 * altura
+area_base <- pi * radio^2
+perimetro_base <- 2 * pi * radio
+area_lateral <- 2 * pi * radio * altura
+
+# 6. Formato del resultado mostrado en la operación
+decimales_mostrados <- sample(1:3, 1) # Número de decimales a mostrar
+resultado_mostrado <- format(round(volumen, decimales_mostrados), nsmall = decimales_mostrados)
+# Reemplazar punto por coma si se desea (estilo común en español)
+# resultado_mostrado_coma <- gsub("\\.", ",", resultado_mostrado) 
+# Mantener punto por consistencia con options(OutDec = ".")
+resultado_mostrado_str <- resultado_mostrado 
+
+# Crear la cadena de la operación como se muestra en la imagen
+# Usar glue para facilitar la inserción de variables
+operacion_str <- glue("\\pi \\times {radio}^2 \\times {altura} = {resultado_mostrado_str}")
+# La variable operacion_html se elimina ya que causaba problemas con LaTeX
+
+# --- Opciones de Respuesta y Solución ---
+
+# 7. Crear opciones de respuesta (una correcta, tres distractores)
+opcion_correcta_texto <- glue("Al volumen del {objeto}.")
+opcion_area_base_texto <- glue("Al área de la {termino_base} del {objeto}.")
+opcion_perimetro_base_texto <- glue("Al perímetro de la {termino_base} del {objeto}.")
+opcion_area_lateral_texto <- glue("Al área lateral del {objeto}.")
+
+# 8. Aleatorizar un distractor adicional (opcional, si se quiere variar más)
+#    Podría ser, por ejemplo, el área total (2*area_base + area_lateral)
+# area_total = 2 * area_base + area_lateral
+# opcion_area_total_texto = glue("Al área total del {objeto}.")
+
+# Crear lista de opciones
+opciones <- c(
+  opcion_correcta_texto,
+  opcion_area_base_texto,
+  opcion_perimetro_base_texto,
+  opcion_area_lateral_texto
+)
+
+# 9. Aleatorizar el orden de las opciones
+orden_opciones <- sample(1:length(opciones))
+opciones_aleatorias <- opciones[orden_opciones]
+
+# Crear el vector de solución para r-exams (1 para la correcta, 0 para las demás)
+solucion <- rep(0, length(opciones))
+solucion[which(orden_opciones == 1)] <- 1 # La opción correcta es la primera en la lista original
+solucion_vector <- paste(solucion, collapse = "")
+
+# --- Variables para la Solución Detallada ---
+# Formatear los valores calculados para mostrarlos en la solución
+volumen_fmt <- format(round(volumen, 2), nsmall = 2)
+area_base_fmt <- format(round(area_base, 2), nsmall = 2)
+perimetro_base_fmt <- format(round(perimetro_base, 2), nsmall = 2)
+area_lateral_fmt <- format(round(area_lateral, 2), nsmall = 2)
+
+# 10. Aleatorizar colores para el diagrama (si se genera)
+colores_base <- c("blue", "green", "red", "purple", "orange", "gray")
+color_cilindro <- sample(colores_base, 1)
+color_dimensiones <- sample(colores_base[colores_base != color_cilindro], 1)
+
+# --- Validación (simple) ---
+stopifnot(radio > 0, altura > 0) # Asegurar dimensiones positivas
+stopifnot(length(opciones) == 4) # Asegurar 4 opciones
+stopifnot(sum(solucion) == 1) # Asegurar una única respuesta correcta
+```
+
+```{python generar_diagrama_cilindro, echo=FALSE, results='hide'}
+# Acceder a las variables R directamente usando el objeto 'r' de reticulate
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Ellipse, Rectangle
+
+# Asignar variables R a variables Python para claridad
+r_val = r.radio
+h_val = r.altura
+unidad_str = r.unidad
+color_cil = r.color_cilindro
+color_dim = r.color_dimensiones
+# Crear figura y ejes
+fig, ax = plt.subplots(figsize=(4, 5)) # Ajustar tamaño según sea necesario
+
+# Parámetros del dibujo usando las variables Python
+ellipse_width = r_val * 2
+ellipse_height = r_val * 0.5 # Perspectiva
+y_base = 1
+y_top = y_base + h_val
+
+# Dibujar el cuerpo del cilindro (rectángulo)
+rect = Rectangle((0, y_base), ellipse_width, h_val, edgecolor=color_cil, facecolor=color_cil, alpha=0.1, linewidth=1.5)
+ax.add_patch(rect)
+
+# Dibujar las líneas laterales
+ax.plot([0, 0], [y_base, y_top], color=color_cil, linewidth=1.5)
+ax.plot([ellipse_width, ellipse_width], [y_base, y_top], color=color_cil, linewidth=1.5)
+
+# Dibujar las bases elípticas
+base = Ellipse((r_val, y_base), width=ellipse_width, height=ellipse_height, edgecolor=color_cil, facecolor='white', linewidth=1.5, linestyle='--')
+top = Ellipse((r_val, y_top), width=ellipse_width, height=ellipse_height, edgecolor=color_cil, facecolor='white', linewidth=1.5)
+ax.add_patch(base)
+ax.add_patch(top)
+
+# Añadir etiquetas de dimensiones
+# Radio
+ax.plot([r_val, ellipse_width], [y_top, y_top], color=color_dim, linestyle='-', linewidth=1)
+ax.text(r_val * 1.5, y_top + ellipse_height * 0.6, f'{r_val} {unidad_str}', color=color_dim, ha='center', va='bottom', fontsize=10)
+
+# Altura
+ax.plot([ellipse_width + r_val*0.2, ellipse_width + r_val*0.2], [y_base, y_top], color=color_dim, linestyle='-', linewidth=1)
+ax.text(ellipse_width + r_val*0.3, y_base + h_val/2, f'{h_val} {unidad_str}', color=color_dim, ha='left', va='center', fontsize=10)
+
+# Ajustar límites y aspecto
+ax.set_xlim(-r_val*0.5, ellipse_width + r_val*0.8)
+ax.set_ylim(0, y_top + ellipse_height * 1.5)
+ax.set_aspect('equal', adjustable='box')
+ax.axis('off') # Ocultar ejes
+
+# Guardar la figura
+plt.tight_layout()
+plt.savefig('cilindro_diagrama.png', dpi=150)
+plt.close(fig) # Cerrar la figura para liberar memoria
+```
+
+Question
+========
+`r actor` tiene un `r objeto` de forma cilíndrica. El `r objeto` tiene una `r termino_base` de `r termino_radio` `r radio` `r unidad` y una `r termino_altura` de `r altura` `r unidad`, como se muestra en `r termino_figura`.
+
+```{r diagrama, echo=FALSE, results='asis', fig.align='center'}
+# Incluir el diagrama generado por Python
+knitr::include_graphics("cilindro_diagrama.png", auto_pdf = TRUE)
+```
+
+A partir de la información anterior, `r actor` plantea la siguiente `r termino_operacion`:
+
+$$ `r operacion_str` $$
+
+¿A qué corresponde el `r termino_resultado` de la anterior `r termino_operacion`?
+
+Answerlist
+----------
+```{r answerlist, echo=FALSE, results='asis'}
+# Generar la lista de respuestas formateada para r-exams
+answerlist(opciones_aleatorias, markup = "markdown")
+```
+
+Solution
+========
+La `r termino_operacion` mostrada es $`r operacion_str`$.
+
+Analicemos las fórmulas para las diferentes propiedades de un cilindro con `r termino_radio` $r = `r radio`$ `r unidad` y `r termino_altura` $h = `r altura`$ `r unidad`:
+
+*   **Volumen (V):** Es el espacio que ocupa el `r objeto`. Se calcula como el área de la base multiplicada por la altura:
+    $V = \pi \times r^2 \times h = \pi \times (`r radio`)^2 \times `r altura` \approx `r volumen_fmt`$ (`r unidad`$^3$)
+*   **Área de la `r termino_base` (A_b):** Es el área de uno de los círculos que forman las bases:
+    $A_b = \pi \times r^2 = \pi \times (`r radio`)^2 \approx `r area_base_fmt`$ (`r unidad`$^2$)
+*   **Perímetro de la `r termino_base` (P_b):** Es la longitud de la circunferencia de la base:
+    $P_b = 2 \times \pi \times r = 2 \times \pi \times `r radio` \approx `r perimetro_base_fmt`$ (`r unidad`)
+*   **Área Lateral (A_l):** Es el área de la superficie curva del `r objeto`:
+    $A_l = 2 \times \pi \times r \times h = 2 \times \pi \times `r radio` \times `r altura` \approx `r area_lateral_fmt`$ (`r unidad`$^2$)
+
+La `r termino_operacion` mostrada ($`r operacion_str`$) sigue la estructura de la fórmula del **volumen** ($V = \pi \times r^2 \times h$).
+
+Por lo tanto, el `r termino_resultado` corresponde al volumen del `r objeto`.
+
+Answerlist
+----------
+```{r solutionlist, echo=FALSE, results='asis'}
+# Generar la lista de soluciones formateada para r-exams
+answerlist(ifelse(solucion == 1, "True", "False"), markup = "markdown")
+```
+
+Meta-information
+================
+exname: volumen_cilindro_interpretacion
+extype: schoice
+exsolution: `r solucion_vector`
+exshuffle: TRUE # Aleatorizar el orden de las opciones A, B, C, D
+exsection: Geometría/Volumen/Interpretación de fórmulas
+exextra[Type]: Calculation
+exextra[Level]: Medium
+exextra[Language]: Spanish
+exextra[Keywords]: cilindro, volumen, área, perímetro, fórmula, interpretación, geometría
+exextra[Radio]: `r radio`
+exextra[Altura]: `r altura`
+exextra[Unidad]: `r unidad`
+exextra[Objeto]: `r objeto`

@@ -22,7 +22,11 @@ Confirma que el ejercicio fue clasificado con `/analizar-icfes`.
 
 ### Paso 2: Consultar ejemplos funcionales
 ```bash
+# Ejemplos en producción
 ls /A-Produccion/En-Produccion/*.Rmd | head -5
+
+# Ejemplos en pre-desarrollo (también funcionales)
+ls /A-Produccion/En-PreDesarrollo/**/*.Rmd | head -5
 ```
 
 ### Paso 3: Estructura obligatoria del .Rmd
