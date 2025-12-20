@@ -2,13 +2,37 @@
 
 Esta carpeta contiene la documentación técnica del sistema de automatizaciones para la generación y corrección de ejercicios R/exams.
 
+---
+
+## 🚀 INICIO RÁPIDO
+
+**¿Buscas algo específico?**
+
+👉 **[INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md)** - Índice completo de toda la documentación
+
+**¿Primera vez usando el sistema?**
+
+1. **[WORKFLOW_PASO_A_PASO.md](WORKFLOW_PASO_A_PASO.md)** - Guía completa paso a paso
+2. **[GUIA_RAPIDA_VISUAL.md](GUIA_RAPIDA_VISUAL.md)** - Referencia visual rápida
+3. **[GUIA_USUARIO.md](GUIA_USUARIO.md)** - Referencia de comandos
+
+---
+
 ## Estructura
 
 ```
 .claude/
 ├── docs/                           # Documentación técnica
 │   ├── README.md                   # Este archivo
+│   ├── INDICE_DOCUMENTACION.md     # 🆕 Índice completo de documentación
+│   ├── WORKFLOW_PASO_A_PASO.md     # 🆕 Guía completa del workflow
+│   ├── GUIA_RAPIDA_VISUAL.md       # 🆕 Referencia visual rápida
+│   ├── GUIA_USUARIO.md             # Guía completa de usuario
 │   ├── TRES_NIVELES_VALIDACION.md  # Metodología de validación
+│   ├── COMANDOS_DEPRECADOS.md      # Registro de comandos deprecados
+│   ├── FASE5_CHECKLIST_PRE_ELIMINACION.md  # Checklist Fase 5
+│   ├── FASE5_PROCEDIMIENTO_ELIMINACION.md  # Procedimiento Fase 5
+│   ├── FASE5_RESUMEN_EJECUTIVO.md  # Resumen ejecutivo Fase 5
 │   ├── patrones-errores-conocidos.md   # Base de conocimiento de errores
 │   └── casos-resueltos/            # Historial de casos específicos
 │       └── 2025-12-19-cilindro-tikz.md
@@ -16,16 +40,27 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   ├── clasificador-icfes.md       # Análisis de ejercicios ICFES
 │   └── graficador-tikz.md          # Replicación visual TikZ
 ├── commands/                       # Comandos ejecutables
-│   ├── analizar-icfes.md
+│   ├── analizar-icfes.md           # ✅ Comando estándar de análisis
 │   ├── generar-schoice.md
 │   ├── generar-cloze.md
 │   ├── corregir-error-imagen.md
 │   └── promover-ejercicio.md
+├── scripts/                        # Scripts de automatización
+│   ├── README.md                   # Documentación de scripts
+│   ├── fase5_eliminar_comando_deprecado.sh  # Script de eliminación
+│   ├── fase5_tests_post_eliminacion.sh      # Tests post-eliminación
+│   └── fase5_rollback.sh           # Plan de rollback
+├── tests/                          # Tests de validación
+│   └── test_comandos_workflow.md   # Tests de workflow
+├── backups/                        # Backups de archivos
+├── logs/                           # Logs de ejecución
 └── skills/                         # Skills de automatización
     ├── corregir-error-imagen/      # Corrector de errores de imágenes
     ├── validar-diversidad/         # Validador de 300+ versiones
     └── validar-icfes/              # Validador de metadatos ICFES
 ```
+
+**Nota:** El comando `analizar-ejercicio.md` ha sido deprecado. Ver `COMANDOS_DEPRECADOS.md` para detalles.
 
 ## Filosofía del Sistema
 
