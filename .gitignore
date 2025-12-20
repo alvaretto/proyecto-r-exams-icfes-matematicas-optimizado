@@ -11,6 +11,27 @@
 # MCP servers Python (repositorios clonados)
 .cursor/mcp-servers-python/
 
+# =============================================================================
+# DIRECTORIOS DE HERRAMIENTAS Y CONFIGURACIÓN LOCAL
+# =============================================================================
+
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+# Editor/IDE configuration directories
+.cursor/
+.vscode/
+.agent/
+.augment/
+.roo/
+
+# MCP servers and related tools
+.mcps/
+
+# RStudio project files
+.Rproj.user/
+
 # Archivos con datos sensibles de Git/GitHub
 *_PRIVADO.md
 *_privado.md
