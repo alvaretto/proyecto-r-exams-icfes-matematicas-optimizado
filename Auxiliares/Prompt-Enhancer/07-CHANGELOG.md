@@ -74,8 +74,8 @@
 - ✅ Configuración automática de alias en `~/.bashrc`
 - ✅ Configuración automática de alias en `~/.zshrc`
 - ✅ Script de verificación: `verificar-alias.sh`
-- ✅ Documentación de configuración: `CONFIGURACION_ALIAS.md`
-- ✅ Changelog del proyecto: `CHANGELOG.md`
+- ✅ Documentación de configuración: `04-CONFIGURACION_ALIAS.md`
+- ✅ Changelog del proyecto: `07-CHANGELOG.md`
 
 #### Alias Configurados
 ```bash

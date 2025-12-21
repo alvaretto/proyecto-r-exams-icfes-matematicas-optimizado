@@ -63,12 +63,15 @@ pei
 ./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh "Tu prompt" -c
 ```
 
-## 📚 Documentación Completa
+## 📚 Documentación Completa (Orden de Lectura)
 
-1. **[CONFIGURACION_ALIAS.md](CONFIGURACION_ALIAS.md)** - ✅ Estado de configuración de alias
-2. **[01-README_PROMPT_ENHANCER.md](01-README_PROMPT_ENHANCER.md)** - Documentación completa
-3. **[02-EJEMPLOS_USO_PROMPT_ENHANCER.md](02-EJEMPLOS_USO_PROMPT_ENHANCER.md)** - Ejemplos prácticos
-4. **[03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md](03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md)** - Instalación y configuración avanzada
+1. **[01-README_PROMPT_ENHANCER.md](01-README_PROMPT_ENHANCER.md)** - Documentación completa
+2. **[02-EJEMPLOS_USO_PROMPT_ENHANCER.md](02-EJEMPLOS_USO_PROMPT_ENHANCER.md)** - Ejemplos prácticos
+3. **[03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md](03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md)** - Instalación y configuración avanzada
+4. **[04-CONFIGURACION_ALIAS.md](04-CONFIGURACION_ALIAS.md)** - ✅ Estado de configuración de alias
+5. **[05-GUIA_USO_PEI.md](05-GUIA_USO_PEI.md)** - Guía detallada del modo interactivo
+6. **[06-ANALISIS_MEJORAS_DETECCION_ERRORES.md](06-ANALISIS_MEJORAS_DETECCION_ERRORES.md)** - Análisis de mejoras y detección de errores
+7. **[07-CHANGELOG.md](07-CHANGELOG.md)** - Historial de cambios
 
 ## 🎯 Características Principales
 

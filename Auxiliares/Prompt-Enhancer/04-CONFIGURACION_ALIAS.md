@@ -133,7 +133,7 @@ Auxiliares/Prompt-Enhancer/
 ├── 01-README_PROMPT_ENHANCER.md
 ├── 02-EJEMPLOS_USO_PROMPT_ENHANCER.md
 ├── 03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md
-└── CONFIGURACION_ALIAS.md      # Este archivo
+└── 04-CONFIGURACION_ALIAS.md      # Este archivo
 ```
 
 ---

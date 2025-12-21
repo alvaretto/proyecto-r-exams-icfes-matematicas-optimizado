@@ -8,7 +8,7 @@ Los alias ya están configurados en tu sistema:
 - ✅ **~/.bashrc** (Bash)
 - ✅ **~/.zshrc** (Zsh)
 
-**Ver detalles completos**: [CONFIGURACION_ALIAS.md](CONFIGURACION_ALIAS.md)
+**Ver detalles completos**: [04-CONFIGURACION_ALIAS.md](04-CONFIGURACION_ALIAS.md)
 
 ---
 

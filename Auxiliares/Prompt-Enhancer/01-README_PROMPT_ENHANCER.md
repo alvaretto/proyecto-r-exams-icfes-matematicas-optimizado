@@ -23,7 +23,7 @@ Esta versión incluye una refactorización completa del código con:
 - ✅ **Soporte Wayland** para portapapeles (wl-copy)
 - ✅ **Mejor manejo de errores** y validaciones
 
-Ver detalles completos en: [CHANGELOG.md](CHANGELOG.md)
+Ver detalles completos en: [07-CHANGELOG.md](07-CHANGELOG.md)
 
 ## 🎯 Características Principales
 
@@ -53,7 +53,7 @@ Los alias ya están configurados en tu sistema:
 - ✅ **~/.bashrc** (Bash)
 - ✅ **~/.zshrc** (Zsh)
 
-**Ver detalles de configuración**: [CONFIGURACION_ALIAS.md](CONFIGURACION_ALIAS.md)
+**Ver detalles de configuración**: [04-CONFIGURACION_ALIAS.md](04-CONFIGURACION_ALIAS.md)
 
 ### Activar Alias en Terminal Actual
 
@@ -350,5 +350,5 @@ cd A-Produccion/En-Desarrollo/
 **Autor**: Sistema ICFES R-Exams
 **Licencia**: Uso interno del proyecto
 
-**Changelog**: Ver [CHANGELOG.md](CHANGELOG.md) para detalles completos de todas las versiones
+**Changelog**: Ver [07-CHANGELOG.md](07-CHANGELOG.md) para detalles completos de todas las versiones
 
