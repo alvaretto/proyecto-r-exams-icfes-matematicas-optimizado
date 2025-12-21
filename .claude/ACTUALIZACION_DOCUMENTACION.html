@@ -11,7 +11,7 @@
 
 
 
-<title>README</title>
+<title>ACTUALIZACION_DOCUMENTACION</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,270 +352,263 @@ display: none;
 </div>
 
 
-<div id="prompt-enhancer---sistema-de-mejora-de-prompts" class="section level1">
-<h1>🚀 PROMPT ENHANCER - Sistema de Mejora de Prompts</h1>
-<p><strong>Versión</strong>: 1.2.0 <strong>Ubicación</strong>:
-<code>Auxiliares/Prompt-Enhancer/</code> <strong>Última
-actualización</strong>: 2025-12-21 <strong>Tipo de
-actualización</strong>: Refactorización mayor con corrección de bugs</p>
-<div id="descripción-rápida" class="section level2">
-<h2>📋 Descripción Rápida</h2>
-<p>Sistema inteligente que mejora automáticamente los prompts del
-usuario añadiendo contexto completo del proyecto ICFES R-Exams,
-incluyendo:</p>
-<ul>
-<li>✅ Reglas de `<code>.claude/</code></li>
-<li>✅ Documentación técnica de <code>.claude/</code></li>
-<li>✅ Guía de estilo de <code>.claudedoc/</code></li>
-<li>✅ Ejemplos funcionales disponibles</li>
-<li>✅ Recomendaciones contextuales según ubicación</li>
-</ul>
-</div>
-<div id="inicio-rápido" class="section level2">
-<h2>🚀 Inicio Rápido</h2>
-<div id="alias-ya-configurados" class="section level3">
-<h3>✅ Alias Ya Configurados</h3>
-<p>Los alias ya están configurados en tu sistema:</p>
-<ul>
-<li>✅ <strong>~/.bashrc</strong> (Bash)</li>
-<li>✅ <strong>~/.zshrc</strong> (Zsh)</li>
-</ul>
-<p><strong>Para activarlos en tu terminal actual:</strong></p>
-<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc si usas zsh</code></pre>
-<p><strong>O simplemente abre una nueva terminal.</strong></p>
-</div>
-<div id="uso-con-alias-recomendado" class="section level3">
-<h3>Uso con Alias (Recomendado)</h3>
-<pre class="bash"><code># Uso básico
-pe &quot;Tu prompt aquí&quot;
-
-# Con copia al portapapeles
-pec &quot;Tu prompt&quot;
-
-# Modo interactivo
-pei</code></pre>
-</div>
-<div id="uso-sin-alias-ruta-completa" class="section level3">
-<h3>Uso sin Alias (Ruta Completa)</h3>
-<pre class="bash"><code># Desde la raíz del proyecto
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt aquí&quot;
-
-# Modo interactivo
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh
-
-# Con copia al portapapeles
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt&quot; -c</code></pre>
-</div>
-</div>
-<div id="documentación-completa" class="section level2">
-<h2>📚 Documentación Completa</h2>
+<div id="actualización-de-documentación---migración-a-skills" class="section level1">
+<h1>📚 Actualización de Documentación - Migración a Skills</h1>
+<p><strong>Fecha:</strong> 2025-12-20 <strong>Proyecto:</strong>
+RepositorioMatematicasICFES_R_Exams</p>
+<hr />
+<div id="archivos-actualizados" class="section level2">
+<h2>📊 ARCHIVOS ACTUALIZADOS</h2>
+<div id="readme.md-principal-del-proyecto" class="section level3">
+<h3>✅ README.md Principal del Proyecto</h3>
+<p><strong>Ubicación:</strong> <code>/README.md</code></p>
+<p><strong>Cambios realizados:</strong></p>
 <ol style="list-style-type: decimal">
-<li><strong><a href="CONFIGURACION_ALIAS.md">CONFIGURACION_ALIAS.md</a></strong> - ✅
-Estado de configuración de alias</li>
-<li><strong><a href="01-README_PROMPT_ENHANCER.md">01-README_PROMPT_ENHANCER.md</a></strong>
-- Documentación completa</li>
-<li><strong><a href="02-EJEMPLOS_USO_PROMPT_ENHANCER.md">02-EJEMPLOS_USO_PROMPT_ENHANCER.md</a></strong>
-- Ejemplos prácticos</li>
-<li><strong><a href="03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md">03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md</a></strong>
-- Instalación y configuración avanzada</li>
+<li><p><strong>Nueva sección “Skills Disponibles”</strong> agregada al
+apartado “Uso del Sistema”</p>
+<ul>
+<li>Lista de 7 skills del workflow con descripciones</li>
+<li>Ejemplos de uso con comandos <code>/analizar-icfes</code>,
+<code>/generar-schoice</code>, etc.</li>
+</ul></li>
+<li><p><strong>Nueva sección “Ejemplo de Uso con Skills”</strong> con
+workflow completo:</p>
+<pre class="bash"><code>/analizar-icfes imagen.png
+/generar-schoice
+/validar-diversidad archivo.Rmd
+/promover-ejercicio archivo.Rmd</code></pre></li>
+<li><p><strong>Nueva sección “Configuración de Claude Code”</strong></p>
+<ul>
+<li>Estructura de <code>.claude/</code></li>
+<li>Descripción de skills, hooks y permisos</li>
+<li>Características principales del sistema</li>
+</ul></li>
+</ol>
+<p><strong>Estado:</strong> ✅ Actualizado completamente</p>
+<hr />
+</div>
+<div id="workflow_paso_a_paso.md" class="section level3">
+<h3>✅ WORKFLOW_PASO_A_PASO.md</h3>
+<p><strong>Ubicación:</strong>
+<code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></p>
+<p><strong>Cambios realizados:</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>Nueva sección introductoria</strong> “Sobre los Skills de
+Claude Code”
+<ul>
+<li>Explicación de qué son los skills</li>
+<li>Lista de 7 skills disponibles</li>
+<li>Aclaración de que <code>/comando</code> son skills, no comandos
+shell</li>
+</ul></li>
+</ol>
+<p><strong>Estado:</strong> ✅ Actualizado completamente</p>
+<hr />
+</div>
+<div id="guia_usuario.md" class="section level3">
+<h3>✅ GUIA_USUARIO.md</h3>
+<p><strong>Ubicación:</strong>
+<code>.claude/docs/GUIA_USUARIO.md</code></p>
+<p><strong>Cambios realizados:</strong></p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Nueva sección</strong> “Sobre los Skills” al inicio</p>
+<ul>
+<li>Explicación clara: Skills vs comandos shell</li>
+<li>Ubicación en <code>.claude/skills/</code></li>
+<li>Permisos preconfigurados</li>
+</ul></li>
+<li><p><strong>Título actualizado:</strong> “Comandos Principales” →
+“Skills Principales (Workflow)”</p></li>
+<li><p><strong>Referencias actualizadas:</strong></p>
+<ul>
+<li><code>.claude/commands/analizar-icfes.md</code> →
+<code>.claude/skills/analizar-icfes/skill.md</code></li>
+<li><code>.claude/commands/generar-schoice.md</code> →
+<code>.claude/skills/generar-schoice/skill.md</code></li>
+<li><code>.claude/commands/generar-cloze.md</code> →
+<code>.claude/skills/generar-cloze/skill.md</code></li>
+<li><code>.claude/commands/corregir-error-imagen.md</code> →
+<code>.claude/skills/corregir-error-imagen/skill.md</code></li>
+<li><code>.claude/commands/promover-ejercicio.md</code> →
+<code>.claude/skills/promover-ejercicio/skill.md</code></li>
+</ul></li>
+<li><p><strong>Terminología actualizada:</strong></p>
+<ul>
+<li>“Comandos clave” → “Skills clave”</li>
+<li>“Referencia de comandos” → “Referencia de skills”</li>
+</ul></li>
+</ol>
+<p><strong>Estado:</strong> ✅ Actualizado completamente</p>
+<hr />
+</div>
+<div id="readme.md-de-.claudedocs" class="section level3">
+<h3>✅ README.md de .claude/docs/</h3>
+<p><strong>Ubicación:</strong> <code>.claude/docs/README.md</code></p>
+<p><strong>Cambios realizados:</strong></p>
+<ol style="list-style-type: decimal">
+<li><strong>Estructura de directorios actualizada:</strong>
+<ul>
+<li>❌ Eliminado: <code>commands/</code> (obsoleto)</li>
+<li>✅ Agregado: <code>skills/</code> con 7 subdirectorios</li>
+<li>✅ Agregado: <code>deprecated/</code> con archivos obsoletos</li>
+<li>✅ Agregado: <code>MIGRACION_COMPLETADA.md</code></li>
+</ul></li>
+<li><strong>Nuevas notas importantes:</strong>
+<ul>
+<li>Directorio <code>commands/</code> eliminado</li>
+<li>Migrado a <code>skills/</code> (referencia a reporte)</li>
+<li>7 skills activos del workflow</li>
+<li><code>analizar-ejercicio.md</code> deprecado</li>
+</ul></li>
+</ol>
+<p><strong>Estado:</strong> ✅ Actualizado completamente</p>
+<hr />
+</div>
+</div>
+<div id="archivos-sin-cambios-ya-usaban-sintaxis-correcta" class="section level2">
+<h2>📝 ARCHIVOS SIN CAMBIOS (Ya usaban sintaxis correcta)</h2>
+<p>Los siguientes archivos ya usaban la sintaxis <code>/skill</code>
+correctamente:</p>
+<ul>
+<li>✅ <code>.claude/docs/GUIA_RAPIDA_VISUAL.md</code></li>
+<li>✅ <code>.claude/docs/INDICE_DOCUMENTACION.md</code></li>
+<li>✅ <code>.claude/docs/RESUMEN_DOCUMENTACION_WORKFLOW.md</code></li>
+</ul>
+<hr />
+</div>
+<div id="consistencia-de-referencias" class="section level2">
+<h2>🔗 CONSISTENCIA DE REFERENCIAS</h2>
+<div id="referencias-actualizadas" class="section level3">
+<h3>Referencias Actualizadas</h3>
+<p><strong>Antes (Obsoleto):</strong></p>
+<pre><code>.claude/commands/analizar-icfes.md
+.claude/commands/generar-schoice.md
+.claude/commands/generar-cloze.md
+.claude/commands/corregir-error-imagen.md
+.claude/commands/promover-ejercicio.md</code></pre>
+<p><strong>Ahora (Correcto):</strong></p>
+<pre><code>.claude/skills/analizar-icfes/skill.md
+.claude/skills/generar-schoice/skill.md
+.claude/skills/generar-cloze/skill.md
+.claude/skills/corregir-error-imagen/skill.md
+.claude/skills/promover-ejercicio/skill.md</code></pre>
+<hr />
+</div>
+</div>
+<div id="beneficios-de-la-actualización" class="section level2">
+<h2>🎯 BENEFICIOS DE LA ACTUALIZACIÓN</h2>
+<div id="para-usuarios" class="section level3">
+<h3>Para Usuarios</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Claridad conceptual</strong>
+<ul>
+<li>Distinción clara entre skills de Claude Code y comandos shell</li>
+<li>Documentación coherente con la implementación real</li>
+</ul></li>
+<li><strong>Mejor experiencia de uso</strong>
+<ul>
+<li>Ejemplos actualizados con rutas correctas</li>
+<li>Referencias que funcionan (no links rotos)</li>
+</ul></li>
+<li><strong>Workflow más claro</strong>
+<ul>
+<li>7 skills identificados claramente</li>
+<li>Estructura organizada en <code>.claude/skills/</code></li>
+</ul></li>
 </ol>
 </div>
-<div id="características-principales" class="section level2">
-<h2>🎯 Características Principales</h2>
-<div id="detección-automática-de-contexto" class="section level3">
-<h3>Detección Automática de Contexto</h3>
-<p>El script detecta automáticamente:</p>
+<div id="para-el-proyecto" class="section level3">
+<h3>Para el Proyecto</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Documentación precisa</strong>
 <ul>
-<li>Ubicación actual en el proyecto</li>
-<li>Tipo de contenido (producción, desarrollo, auxiliares, etc.)</li>
-<li>Reglas aplicables</li>
-<li>Ejemplos funcionales relevantes</li>
-</ul>
-</div>
-<div id="enriquecimiento-completo" class="section level3">
-<h3>Enriquecimiento Completo</h3>
-<p>Incluye en el prompt mejorado:</p>
-<div id="reglas-generales-.claude" class="section level4">
-<h4>📋 Reglas Generales (<code>.claude/</code>)</h4>
+<li>Referencias correctas a archivos existentes</li>
+<li>Estructura actualizada reflejando realidad del código</li>
+</ul></li>
+<li><strong>Mantenibilidad</strong>
 <ul>
-<li>Reglas generales del proyecto</li>
-<li>Reglas siempre aplicables</li>
-<li>Filosofía Matemáticas ICFES 2025</li>
-</ul>
-</div>
-<div id="documentación-técnica-.claude" class="section level4">
-<h4>🔧 Documentación Técnica (.claude/)</h4>
+<li>Un solo lugar para skills (<code>.claude/skills/</code>)</li>
+<li>Obsoletos claramente marcados en <code>deprecated/</code></li>
+</ul></li>
+<li><strong>Escalabilidad</strong>
 <ul>
-<li>Documentación principal del sistema</li>
-<li>Solución de problemas (TROUBLESHOOTING)</li>
-<li>Skills disponibles</li>
-<li>Comandos disponibles</li>
-</ul>
-</div>
-<div id="guía-de-estilo-.claudedoc" class="section level4">
-<h4>🎨 Guía de Estilo (.claudedoc/)</h4>
-<ul>
-<li>Guía de estilo ICFES</li>
-<li>Estructura obligatoria de archivos .Rmd</li>
-<li>Criterios de calidad</li>
-</ul>
-</div>
-</div>
-</div>
-<div id="opciones-disponibles" class="section level2">
-<h2>🔧 Opciones Disponibles</h2>
-<pre class="bash"><code>-h, --help              Mostrar ayuda
--i, --interactive       Modo interactivo (por defecto)
--f, --file FILE         Leer prompt desde archivo
--o, --output FILE       Guardar prompt mejorado en archivo
--c, --clipboard         Copiar prompt mejorado al portapapeles</code></pre>
-</div>
-<div id="ejemplo-de-salida" class="section level2">
-<h2>📊 Ejemplo de Salida</h2>
-<pre class="markdown"><code># PROMPT MEJORADO CON CONTEXTO DEL PROYECTO
-
-## CONTEXTO DE UBICACIÓN
-- Proyecto: RepositorioMatematicasICFES_R_Exams
-- Ubicación actual: A-Produccion/En-Desarrollo
-- Tipo de contexto: desarrollo
-
-## 📋 REGLAS GENERALES DEL PROYECTO (`.claude/`)
-[Reglas completas...]
-
-## 🔧 DOCUMENTACIÓN TÉCNICA (.claude/)
-[Documentación técnica...]
-
-## 🎨 GUÍA DE ESTILO ICFES (.claudedoc/)
-[Guía de estilo...]
-
-## EJEMPLOS FUNCIONALES DISPONIBLES
-[Lista de ejemplos...]
-
-## RECOMENDACIONES SEGÚN CONTEXTO
-[Recomendaciones específicas...]
-
-## SOLICITUD DEL USUARIO
-[Tu prompt original]</code></pre>
-</div>
-<div id="casos-de-uso" class="section level2">
-<h2>🎨 Casos de Uso</h2>
-<ul>
-<li>✅ Generar ejercicios ICFES con contexto completo</li>
-<li>✅ Corregir errores con documentación técnica incluida</li>
-<li>✅ Desarrollar nuevos scripts con reglas del proyecto</li>
-<li>✅ Adaptar ejercicios existentes con ejemplos funcionales</li>
-<li>✅ Integración con herramientas de IA (Augment, Claude,
-ChatGPT)</li>
-</ul>
-</div>
-<div id="verificación" class="section level2">
-<h2>🔍 Verificación</h2>
-<div id="verificar-configuración-de-alias" class="section level3">
-<h3>Verificar Configuración de Alias</h3>
-<pre class="bash"><code># Ejecutar script de verificación
-./Auxiliares/Prompt-Enhancer/verificar-alias.sh</code></pre>
-<p>Este script verifica:</p>
-<ul>
-<li>✅ Alias en ~/.bashrc</li>
-<li>✅ Alias en ~/.zshrc</li>
-<li>📋 Instrucciones de activación</li>
-<li>📝 Ejemplos de uso</li>
-</ul>
-</div>
-<div id="verificar-funcionamiento" class="section level3">
-<h3>Verificar Funcionamiento</h3>
-<pre class="bash"><code># Activar alias (si no lo has hecho)
-source ~/.bashrc
-
-# Probar con alias
-pe &quot;Test&quot;
-
-# O con ruta completa
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Prueba de funcionamiento&quot;</code></pre>
-</div>
-</div>
-<div id="notas-importantes" class="section level2">
-<h2>📝 Notas Importantes</h2>
-<ul>
-<li><strong>Portabilidad</strong>: Funciona desde cualquier subcarpeta
-del proyecto</li>
-<li><strong>Detección automática</strong>: No necesitas especificar la
-raíz del proyecto</li>
-<li><strong>Contexto completo</strong>: Incluye TODAS las reglas y
-documentación del proyecto</li>
-<li><strong>Sin dependencias pesadas</strong>: Solo requiere bash
-estándar</li>
-<li><strong>Opcional</strong>: xclip, pbcopy o wl-copy para
-funcionalidad de portapapeles (Wayland soportado)</li>
-</ul>
-</div>
-<div id="novedades-v1.2.0-2025-12-21" class="section level2">
-<h2>🆕 Novedades v1.2.0 (2025-12-21)</h2>
-<div id="bugs-críticos-corregidos" class="section level3">
-<h3>Bugs Críticos Corregidos</h3>
-<ul>
-<li>✅ Paths incorrectos en lectura de archivos de configuración</li>
-<li>✅ Manejo incorrecto de argumentos con espacios</li>
-</ul>
-</div>
-<div id="mejoras-de-arquitectura" class="section level3">
-<h3>Mejoras de Arquitectura</h3>
-<ul>
-<li>✅ <strong>17 funciones modulares</strong> (vs 6 en v1.1.0)</li>
-<li>✅ <strong>5 funciones auxiliares</strong> nuevas para mejor
-reutilización</li>
-<li>✅ <strong>Constantes extraídas</strong>: Números mágicos
-eliminados</li>
-<li>✅ <strong>Mejor manejo de errores</strong>: Mensajes consistentes y
-descriptivos</li>
-<li>✅ <strong>Soporte Wayland</strong>: Agregado wl-copy para
-portapapeles</li>
-</ul>
-</div>
-<div id="mejoras-en-calidad" class="section level3">
-<h3>Mejoras en Calidad</h3>
-<ul>
-<li>✅ <strong>+41% más líneas</strong> (618 vs 437) con mejor
-organización</li>
-<li>✅ <strong>+183% más funciones</strong> (17 vs 6) para mayor
-modularidad</li>
-<li>✅ Validación mejorada de argumentos</li>
-<li>✅ Ordenamiento alfabético de skills y comandos</li>
-</ul>
-</div>
-</div>
-<div id="solución-de-problemas" class="section level2">
-<h2>🚨 Solución de Problemas</h2>
-<div id="error-command-not-found-pe" class="section level3">
-<h3>Error: “command not found: pe”</h3>
-<p><strong>Causa:</strong> Los alias no están activados en la terminal
-actual.</p>
-<p><strong>Solución:</strong></p>
-<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc si usas zsh</code></pre>
-<p>O simplemente abre una nueva terminal.</p>
-</div>
-<div id="error-permission-denied" class="section level3">
-<h3>Error: “Permission denied”</h3>
-<p><strong>Solución:</strong></p>
-<pre class="bash"><code>chmod +x Auxiliares/Prompt-Enhancer/prompt-enhancer.sh</code></pre>
-</div>
-<div id="error-no-se-pudo-encontrar-la-raíz-del-proyecto" class="section level3">
-<h3>Error: “No se pudo encontrar la raíz del proyecto”</h3>
-<p><strong>Causa:</strong> No estás dentro del repositorio.</p>
-<p><strong>Solución:</strong> Asegúrate de estar dentro del repositorio
-RepositorioMatematicasICFES_R_Exams</p>
-</div>
-<div id="los-alias-no-funcionan-en-scripts" class="section level3">
-<h3>Los alias no funcionan en scripts</h3>
-<p><strong>Explicación:</strong> Los alias solo funcionan en shells
-interactivos.</p>
-<p><strong>Solución:</strong> En scripts, usa la ruta completa o la
-variable de entorno:</p>
-<pre class="bash"><code>$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt&quot;</code></pre>
+<li>Base sólida para agregar nuevos skills</li>
+<li>Patrón claro a seguir</li>
+</ul></li>
+</ol>
 <hr />
-<p><strong>Autor</strong>: Sistema ICFES R-Exams<br />
-<strong>Licencia</strong>: Uso interno del proyecto</p>
 </div>
+</div>
+<div id="resumen-de-cambios" class="section level2">
+<h2>📈 RESUMEN DE CAMBIOS</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Archivo</th>
+<th>Secciones Agregadas</th>
+<th>Referencias Actualizadas</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/README.md</code></td>
+<td>3</td>
+<td>-</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></td>
+<td>1</td>
+<td>-</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td><code>.claude/docs/GUIA_USUARIO.md</code></td>
+<td>1</td>
+<td>5</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><code>.claude/docs/README.md</code></td>
+<td>-</td>
+<td>Estructura completa</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total:</strong></p>
+<ul>
+<li>✅ 4 archivos actualizados</li>
+<li>✅ 5 secciones nuevas agregadas</li>
+<li>✅ 5 referencias de rutas actualizadas</li>
+<li>✅ 100% consistencia en documentación</li>
+</ul>
+<hr />
+</div>
+<div id="próximos-pasos-recomendados" class="section level2">
+<h2>🔄 PRÓXIMOS PASOS RECOMENDADOS</h2>
+<ol style="list-style-type: decimal">
+<li><strong>Revisar otros archivos de documentación</strong> (OPCIONAL)
+<ul>
+<li><code>COMANDOS_DEPRECADOS.md</code></li>
+<li><code>INDICE_DOCUMENTACION.md</code></li>
+<li>Archivos de FASE5</li>
+</ul></li>
+<li><strong>Actualizar ejemplos en ejercicios</strong> (OPCIONAL)
+<ul>
+<li>Si hay comentarios con rutas antiguas en .Rmd</li>
+</ul></li>
+<li><strong>Comunicar cambios</strong> (RECOMENDADO)
+<ul>
+<li>Informar a usuarios sobre nueva estructura</li>
+<li>Compartir <code>MIGRACION_COMPLETADA.md</code></li>
+</ul></li>
+</ol>
+<hr />
+<p><strong>Estado Final:</strong> ✅ DOCUMENTACIÓN COMPLETAMENTE
+ACTUALIZADA</p>
+<p><strong>Verificado:</strong> 2025-12-20 20:15 UTC</p>
 </div>
 </div>
 

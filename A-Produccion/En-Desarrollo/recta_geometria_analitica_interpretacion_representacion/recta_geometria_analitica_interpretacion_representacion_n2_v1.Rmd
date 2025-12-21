@@ -1,0 +1,434 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "amsmath", "pgfplots"]
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: aplicado
+  eje_axial: eje2
+  componente: geometrico_metrico
+  pensamiento: variacional_espacial
+---
+
+```{r setup, include=FALSE}
+# ============================================================================
+# CHUNK DE CONFIGURACIÓN INICIAL (OBLIGATORIO)
+# ============================================================================
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "xelatex")
+options(tikzXelatex = TRUE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{pgfplots}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{amsmath}",
+  "\\usepackage[spanish]{babel}"
+))
+
+# Cargar librerías necesarias
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+# Configuración para r-exams
+typ <- match_exams_device()
+options(scipen = 999)  # OBLIGATORIO: evitar notación científica
+
+# Configuración de chunks
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# CRÍTICO: Semilla aleatoria (NUNCA usar set.seed() fijo)
+set.seed(sample(1:100000, 1))
+```
+
+```{r generar_datos, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Función para generar datos aleatorios del problema
+generar_datos <- function() {
+  # Generar pendiente aleatoria (entre -3 y 3, evitando 0)
+  pendientes_posibles <- c(-3, -2.5, -2, -1.5, -1, -0.5, 0.5, 1, 1.5, 2, 2.5, 3)
+  m <- sample(pendientes_posibles, 1)
+  
+  # Generar intercepto aleatorio (entre -4 y 4)
+  b <- sample(seq(-4, 4, by = 0.5), 1)
+  
+  # Asegurar que la recta sea visible en el rango [-5, 5] x [-5, 5]
+  # Calcular puntos de intersección con los bordes del gráfico
+  x_min <- -5
+  x_max <- 5
+  y_min <- -5
+  y_max <- 5
+  
+  # Encontrar dos puntos visibles en el gráfico
+  puntos_visibles <- list()
+  
+  # Punto 1: intersección con borde izquierdo o derecho
+  if (m != 0) {
+    y_en_x_min <- m * x_min + b
+    y_en_x_max <- m * x_max + b
+    
+    if (y_en_x_min >= y_min && y_en_x_min <= y_max) {
+      puntos_visibles[[1]] <- c(x_min, y_en_x_min)
+    } else if (y_en_x_max >= y_min && y_en_x_max <= y_max) {
+      puntos_visibles[[1]] <- c(x_max, y_en_x_max)
+    } else {
+      # Usar intersección con borde superior o inferior
+      x_en_y_min <- (y_min - b) / m
+      x_en_y_max <- (y_max - b) / m
+      if (x_en_y_min >= x_min && x_en_y_min <= x_max) {
+        puntos_visibles[[1]] <- c(x_en_y_min, y_min)
+      } else {
+        puntos_visibles[[1]] <- c(x_en_y_max, y_max)
+      }
+    }
+    
+    # Punto 2: otro punto visible
+    if (length(puntos_visibles) == 1) {
+      x_test <- sample(seq(x_min, x_max, by = 1), 1)
+      y_test <- m * x_test + b
+      if (y_test >= y_min && y_test <= y_max) {
+        puntos_visibles[[2]] <- c(x_test, y_test)
+      } else {
+        # Usar otro punto de borde
+        x_test2 <- sample(seq(x_min, x_max, by = 1), 1)
+        y_test2 <- m * x_test2 + b
+        if (y_test2 >= y_min && y_test2 <= y_max) {
+          puntos_visibles[[2]] <- c(x_test2, y_test2)
+        } else {
+          puntos_visibles[[2]] <- c(x_max, m * x_max + b)
+        }
+      }
+    }
+  } else {
+    # Recta horizontal
+    puntos_visibles[[1]] <- c(x_min, b)
+    puntos_visibles[[2]] <- c(x_max, b)
+  }
+  
+  # Formatear pendiente e intercepto para mostrar
+  m_formateado <- ifelse(m == as.integer(m), as.character(m), 
+                        ifelse(abs(m) == 0.5, ifelse(m < 0, "-\\frac{1}{2}", "\\frac{1}{2}"),
+                               ifelse(abs(m) == 1.5, ifelse(m < 0, "-\\frac{3}{2}", "\\frac{3}{2}"),
+                                      ifelse(abs(m) == 2.5, ifelse(m < 0, "-\\frac{5}{2}", "\\frac{5}{2}"),
+                                             sprintf("%.1f", m)))))
+  
+  b_formateado <- ifelse(b == as.integer(b), as.character(b), sprintf("%.1f", b))
+  
+  # Generar ecuación de la recta
+  if (b == 0) {
+    ecuacion <- paste0("y = ", m_formateado, "x")
+  } else if (b > 0) {
+    ecuacion <- paste0("y = ", m_formateado, "x + ", b_formateado)
+  } else {
+    # Usar abs() sobre el valor numérico, no sobre el string formateado
+    b_abs_formateado <- ifelse(abs(b) == as.integer(abs(b)), 
+                               as.character(abs(b)), 
+                               sprintf("%.1f", abs(b)))
+    ecuacion <- paste0("y = ", m_formateado, "x - ", b_abs_formateado)
+  }
+  
+  # Generar opciones de respuesta (distractores pedagógicamente efectivos)
+  # Opción correcta: la ecuación completa
+  opcion_correcta <- ecuacion
+  
+  # Distractor 1: Pendiente correcta pero intercepto incorrecto
+  b_distractor1 <- sample(c(b + 1, b - 1, b + 2, b - 2), 1)
+  b_dist1_formateado <- ifelse(b_distractor1 == as.integer(b_distractor1), 
+                               as.character(b_distractor1), 
+                               sprintf("%.1f", b_distractor1))
+  if (b_distractor1 == 0) {
+    distractor1 <- paste0("y = ", m_formateado, "x")
+  } else if (b_distractor1 > 0) {
+    distractor1 <- paste0("y = ", m_formateado, "x + ", b_dist1_formateado)
+  } else {
+    # Usar abs() sobre el valor numérico, no sobre el string formateado
+    b_dist1_abs_formateado <- ifelse(abs(b_distractor1) == as.integer(abs(b_distractor1)), 
+                                     as.character(abs(b_distractor1)), 
+                                     sprintf("%.1f", abs(b_distractor1)))
+    distractor1 <- paste0("y = ", m_formateado, "x - ", b_dist1_abs_formateado)
+  }
+  
+  # Distractor 2: Intercepto correcto pero pendiente incorrecta
+  m_distractor2 <- sample(pendientes_posibles[pendientes_posibles != m], 1)
+  m_dist2_formateado <- ifelse(m_distractor2 == as.integer(m_distractor2), 
+                               as.character(m_distractor2),
+                               ifelse(abs(m_distractor2) == 0.5, 
+                                      ifelse(m_distractor2 < 0, "-\\frac{1}{2}", "\\frac{1}{2}"),
+                                      ifelse(abs(m_distractor2) == 1.5, 
+                                             ifelse(m_distractor2 < 0, "-\\frac{3}{2}", "\\frac{3}{2}"),
+                                             ifelse(abs(m_distractor2) == 2.5, 
+                                                    ifelse(m_distractor2 < 0, "-\\frac{5}{2}", "\\frac{5}{2}"),
+                                                    sprintf("%.1f", m_distractor2)))))
+  if (b == 0) {
+    distractor2 <- paste0("y = ", m_dist2_formateado, "x")
+  } else if (b > 0) {
+    distractor2 <- paste0("y = ", m_dist2_formateado, "x + ", b_formateado)
+  } else {
+    # Usar abs() sobre el valor numérico, no sobre el string formateado
+    b_abs_formateado <- ifelse(abs(b) == as.integer(abs(b)), 
+                               as.character(abs(b)), 
+                               sprintf("%.1f", abs(b)))
+    distractor2 <- paste0("y = ", m_dist2_formateado, "x - ", b_abs_formateado)
+  }
+  
+  # Distractor 3: Ambos incorrectos pero con valores cercanos
+  m_distractor3 <- sample(pendientes_posibles[pendientes_posibles != m & pendientes_posibles != m_distractor2], 1)
+  b_distractor3 <- sample(c(b + 1, b - 1, b + 2, b - 2), 1)
+  m_dist3_formateado <- ifelse(m_distractor3 == as.integer(m_distractor3), 
+                               as.character(m_distractor3),
+                               ifelse(abs(m_distractor3) == 0.5, 
+                                      ifelse(m_distractor3 < 0, "-\\frac{1}{2}", "\\frac{1}{2}"),
+                                      ifelse(abs(m_distractor3) == 1.5, 
+                                             ifelse(m_distractor3 < 0, "-\\frac{3}{2}", "\\frac{3}{2}"),
+                                             ifelse(abs(m_distractor3) == 2.5, 
+                                                    ifelse(m_distractor3 < 0, "-\\frac{5}{2}", "\\frac{5}{2}"),
+                                                    sprintf("%.1f", m_distractor3)))))
+  b_dist3_formateado <- ifelse(b_distractor3 == as.integer(b_distractor3), 
+                               as.character(b_distractor3), 
+                               sprintf("%.1f", b_distractor3))
+  if (b_distractor3 == 0) {
+    distractor3 <- paste0("y = ", m_dist3_formateado, "x")
+  } else if (b_distractor3 > 0) {
+    distractor3 <- paste0("y = ", m_dist3_formateado, "x + ", b_dist3_formateado)
+  } else {
+    # Usar abs() sobre el valor numérico, no sobre el string formateado
+    b_dist3_abs_formateado <- ifelse(abs(b_distractor3) == as.integer(abs(b_distractor3)), 
+                                     as.character(abs(b_distractor3)), 
+                                     sprintf("%.1f", abs(b_distractor3)))
+    distractor3 <- paste0("y = ", m_dist3_formateado, "x - ", b_dist3_abs_formateado)
+  }
+  
+  # Mezclar opciones
+  todas_opciones <- c(opcion_correcta, distractor1, distractor2, distractor3)
+  orden_opciones <- sample(1:4)
+  opciones_mezcladas <- todas_opciones[orden_opciones]
+  posicion_correcta <- which(orden_opciones == 1)
+  
+  return(list(
+    m = m,
+    b = b,
+    m_formateado = m_formateado,
+    b_formateado = b_formateado,
+    ecuacion = ecuacion,
+    puntos_visibles = puntos_visibles,
+    opciones = opciones_mezcladas,
+    respuesta_correcta = opcion_correcta,
+    posicion_correcta = posicion_correcta
+  ))
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+```
+
+```{r prueba_diversidad, include=FALSE}
+# Prueba de diversidad de versiones (mínimo 300 versiones únicas)
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r crear_grafico_tikz, results='asis'}
+# Crear gráfico de la recta usando TikZ
+# Calcular puntos para dibujar la recta en el rango visible
+x_min <- -5
+x_max <- 5
+y_min <- -5
+y_max <- 5
+
+# Calcular puntos de intersección de la recta con los bordes del gráfico
+puntos_interseccion <- list()
+
+# Intersección con borde izquierdo (x = -5)
+y_izq <- datos$m * x_min + datos$b
+if (y_izq >= y_min && y_izq <= y_max) {
+  puntos_interseccion[[length(puntos_interseccion) + 1]] <- c(x_min, y_izq)
+}
+
+# Intersección con borde derecho (x = 5)
+y_der <- datos$m * x_max + datos$b
+if (y_der >= y_min && y_der <= y_max) {
+  puntos_interseccion[[length(puntos_interseccion) + 1]] <- c(x_max, y_der)
+}
+
+# Intersección con borde inferior (y = -5)
+if (datos$m != 0) {
+  x_inf <- (y_min - datos$b) / datos$m
+  if (x_inf >= x_min && x_inf <= x_max && !any(sapply(puntos_interseccion, function(p) abs(p[1] - x_inf) < 0.1))) {
+    puntos_interseccion[[length(puntos_interseccion) + 1]] <- c(x_inf, y_min)
+  }
+  
+  # Intersección con borde superior (y = 5)
+  x_sup <- (y_max - datos$b) / datos$m
+  if (x_sup >= x_min && x_sup <= x_max && !any(sapply(puntos_interseccion, function(p) abs(p[1] - x_sup) < 0.1))) {
+    puntos_interseccion[[length(puntos_interseccion) + 1]] <- c(x_sup, y_max)
+  }
+}
+
+# Asegurar que tenemos al menos 2 puntos
+if (length(puntos_interseccion) < 2) {
+  # Si solo tenemos un punto, usar puntos adicionales
+  x1 <- x_min
+  y1 <- datos$m * x1 + datos$b
+  x2 <- x_max
+  y2 <- datos$m * x2 + datos$b
+  puntos_interseccion <- list(c(x1, y1), c(x2, y2))
+}
+
+# Tomar los primeros 2 puntos para dibujar la recta
+p1 <- puntos_interseccion[[1]]
+p2 <- puntos_interseccion[[2]]
+
+# Construir código para marcar el intercepto si es visible
+codigo_intercepto <- ""
+if (datos$b >= y_min && datos$b <= y_max) {
+  codigo_intercepto <- paste0("  % Marcar el intercepto en y\n",
+                               "  \\draw[red, fill=red] (0, ", datos$b, ") circle (2pt);\n",
+                               "  \\node[right, red] at (0.3, ", datos$b, ") {$(0, ", datos$b_formateado, ")$};\n")
+}
+
+# Crear código TikZ para el gráfico
+grafico_recta <- paste0("
+\\begin{tikzpicture}[scale=0.8]
+  % Dibujar ejes
+  \\draw[->, thick] (-5.5, 0) -- (5.5, 0) node[right] {$x$};
+  \\draw[->, thick] (0, -5.5) -- (0, 5.5) node[above] {$y$};
+  
+  % Etiquetas en los ejes
+  \\foreach \\x in {-5, -4, -3, -2, -1, 1, 2, 3, 4, 5}
+    \\draw (\\x, 0.1) -- (\\x, -0.1) node[below] {\\x};
+  \\foreach \\y in {-5, -4, -3, -2, -1, 1, 2, 3, 4, 5}
+    \\draw (0.1, \\y) -- (-0.1, \\y) node[left] {\\y};
+  
+  % Origen
+  \\node[below left] at (0, 0) {0};
+  
+  % Dibujar la recta
+  \\draw[blue, very thick] (", p1[1], ", ", p1[2], ") -- (", p2[1], ", ", p2[2], ");
+  
+", codigo_intercepto, "
+  % Marcar puntos en la recta para facilitar la lectura
+  \\draw[blue, fill=blue] (", p1[1], ", ", p1[2], ") circle (2pt);
+  \\draw[blue, fill=blue] (", p2[1], ", ", p2[2], ") circle (2pt);
+\\end{tikzpicture}
+")
+```
+
+Question
+========
+
+En el siguiente gráfico se muestra una recta en el plano cartesiano:
+
+```{r grafico_recta, echo=FALSE, results='asis'}
+if (knitr::is_latex_output()) {
+  cat(grafico_recta)
+} else {
+  include_tikz(grafico_recta, 
+               name = "grafico_recta",
+               markup = "markdown",
+               packages = c("tikz", "pgfplots", "xcolor"),
+               width = "10cm")
+}
+```
+
+¿Cuál es la ecuación de la recta representada en el gráfico?
+
+```{r opciones, echo=FALSE, results='asis'}
+answerlist(datos$opciones, markup = "markdown")
+```
+
+Solution
+========
+
+Para determinar la ecuación de la recta, necesitamos identificar su pendiente ($m$) y su intercepto con el eje $y$ ($b$).
+
+La ecuación de una recta tiene la forma:
+$$y = mx + b$$
+
+donde:
+- $m$ es la pendiente de la recta
+- $b$ es el intercepto con el eje $y$ (el valor de $y$ cuando $x = 0$)
+
+**Análisis del gráfico:**
+
+1. **Intercepto con el eje $y$**: Observando el gráfico, la recta intersecta el eje $y$ en el punto $(0, `r datos$b_formateado`)$. Por lo tanto, $b = `r datos$b_formateado`$.
+
+2. **Pendiente**: La pendiente se puede calcular usando dos puntos de la recta. Observando el gráfico:
+   - La recta pasa por el punto $(0, `r datos$b_formateado`)$
+   - Para calcular la pendiente, podemos usar otro punto visible en la recta
+   
+   La pendiente es $m = `r datos$m_formateado`$.
+
+**Ecuación de la recta:**
+
+Sustituyendo los valores encontrados:
+$$y = `r datos$m_formateado`x + `r datos$b_formateado`$$
+
+Por lo tanto, la ecuación de la recta es: **$`r datos$ecuacion`$**
+
+```{r solucion_detallada, echo=FALSE, results='asis'}
+answerlist(
+  c(
+    ifelse(datos$posicion_correcta == 1, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. No corresponde a la ecuación de la recta mostrada en el gráfico."),
+    ifelse(datos$posicion_correcta == 2, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. Error en la identificación del intercepto o la pendiente."),
+    ifelse(datos$posicion_correcta == 3, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. Error en la identificación del intercepto o la pendiente."),
+    ifelse(datos$posicion_correcta == 4, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. Error en la identificación del intercepto o la pendiente.")
+  ),
+  markup = "markdown"
+)
+```
+
+Meta-information
+================
+exname: recta_geometria_analitica_interpretacion_representacion
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exshuffle: TRUE
+exsection: Geometría/Geometría Analítica/Ecuación de la recta
+

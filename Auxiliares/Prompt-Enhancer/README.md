@@ -1,14 +1,21 @@
+---
+output:
+  html_document: default
+  word_document: default
+---
 # 🚀 PROMPT ENHANCER - Sistema de Mejora de Prompts
 
-**Versión**: 1.0.0  
-**Ubicación**: `Auxiliares/Prompt-Enhancer/`  
-**Fecha**: 2025-12-20
+**Versión**: 1.2.0
+**Ubicación**: `Auxiliares/Prompt-Enhancer/`
+**Última actualización**: 2025-12-21
+**Tipo de actualización**: Refactorización mayor con corrección de bugs
 
 ## 📋 Descripción Rápida
 
-Sistema inteligente que mejora automáticamente los prompts del usuario añadiendo contexto completo del proyecto ICFES R-Exams, incluyendo:
+Sistema inteligente que mejora automáticamente los prompts del usuario añadiendo 
+contexto completo del proyecto ICFES R-Exams, incluyendo:
 
-- ✅ Reglas de `.augment/rules/`
+- ✅ Reglas de ``.claude/`
 - ✅ Documentación técnica de `.claude/`
 - ✅ Guía de estilo de `.claudedoc/`
 - ✅ Ejemplos funcionales disponibles
@@ -19,6 +26,7 @@ Sistema inteligente que mejora automáticamente los prompts del usuario añadien
 ### ✅ Alias Ya Configurados
 
 Los alias ya están configurados en tu sistema:
+
 - ✅ **~/.bashrc** (Bash)
 - ✅ **~/.zshrc** (Zsh)
 
@@ -67,6 +75,7 @@ pei
 ### Detección Automática de Contexto
 
 El script detecta automáticamente:
+
 - Ubicación actual en el proyecto
 - Tipo de contenido (producción, desarrollo, auxiliares, etc.)
 - Reglas aplicables
@@ -76,7 +85,7 @@ El script detecta automáticamente:
 
 Incluye en el prompt mejorado:
 
-#### 📋 Reglas Generales (.augment/rules/)
+#### 📋 Reglas Generales (`.claude/`)
 - Reglas generales del proyecto
 - Reglas siempre aplicables
 - Filosofía Matemáticas ICFES 2025
@@ -112,7 +121,7 @@ Incluye en el prompt mejorado:
 - Ubicación actual: A-Produccion/En-Desarrollo
 - Tipo de contexto: desarrollo
 
-## 📋 REGLAS GENERALES DEL PROYECTO (.augment/rules/)
+## 📋 REGLAS GENERALES DEL PROYECTO (`.claude/`)
 [Reglas completas...]
 
 ## 🔧 DOCUMENTACIÓN TÉCNICA (.claude/)
@@ -149,6 +158,7 @@ Incluye en el prompt mejorado:
 ```
 
 Este script verifica:
+
 - ✅ Alias en ~/.bashrc
 - ✅ Alias en ~/.zshrc
 - 📋 Instrucciones de activación
@@ -173,7 +183,26 @@ pe "Test"
 - **Detección automática**: No necesitas especificar la raíz del proyecto
 - **Contexto completo**: Incluye TODAS las reglas y documentación del proyecto
 - **Sin dependencias pesadas**: Solo requiere bash estándar
-- **Opcional**: xclip para funcionalidad de portapapeles
+- **Opcional**: xclip, pbcopy o wl-copy para funcionalidad de portapapeles (Wayland soportado)
+
+## 🆕 Novedades v1.2.0 (2025-12-21)
+
+### Bugs Críticos Corregidos
+- ✅ Paths incorrectos en lectura de archivos de configuración
+- ✅ Manejo incorrecto de argumentos con espacios
+
+### Mejoras de Arquitectura
+- ✅ **17 funciones modulares** (vs 6 en v1.1.0)
+- ✅ **5 funciones auxiliares** nuevas para mejor reutilización
+- ✅ **Constantes extraídas**: Números mágicos eliminados
+- ✅ **Mejor manejo de errores**: Mensajes consistentes y descriptivos
+- ✅ **Soporte Wayland**: Agregado wl-copy para portapapeles
+
+### Mejoras en Calidad
+- ✅ **+41% más líneas** (618 vs 437) con mejor organización
+- ✅ **+183% más funciones** (17 vs 6) para mayor modularidad
+- ✅ Validación mejorada de argumentos
+- ✅ Ordenamiento alfabético de skills y comandos
 
 ## 🚨 Solución de Problemas
 

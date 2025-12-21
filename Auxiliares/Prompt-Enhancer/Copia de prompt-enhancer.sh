@@ -292,92 +292,6 @@ read_project_rules() {
 }
 
 # ============================================================================
-# FUNCIÓN: Detectar patrones problemáticos comunes en .Rmd
-# ============================================================================
-detect_common_errors() {
-    local file_path="$1"
-    local errors=""
-    
-    [[ ! -f "$file_path" ]] && return 0
-    
-    # Error 1: abs() sobre variable formateada
-    if grep -nE "abs\([^)]*_formateado\)" "$file_path" 2>/dev/null | grep -vE "^\s*#|#.*abs"; then
-        errors+="⚠️  **Error detectado**: Uso de abs() sobre variable formateada\n"
-        errors+="   Patrón problemático: abs(variable_formateada)\n"
-        errors+="   Solución: Aplicar abs() sobre valor numérico, luego formatear\n"
-        errors+="   Documentación: .claude/docs/patrones-errores-conocidos.md#error-2\n\n"
-    fi
-    
-    # Error 2: round(), floor(), ceiling() sobre variable formateada
-    if grep -nE "(round|floor|ceiling)\([^)]*_formateado\)" "$file_path" 2>/dev/null | grep -vE "^\s*#"; then
-        errors+="⚠️  **Error detectado**: Función matemática sobre variable formateada\n"
-        errors+="   Patrón problemático: funcion_matematica(variable_formateada)\n"
-        errors+="   Solución: Aplicar función sobre valor numérico, luego formatear\n"
-        errors+="   Documentación: .claude/docs/patrones-errores-conocidos.md#error-2\n\n"
-    fi
-    
-    # Advertencia 3: include_tikz() en chunk de generación
-    if grep -n "include_tikz" "$file_path" 2>/dev/null | grep -E "generar|data_generation|generar_datos" | grep -vE "^\s*#"; then
-        errors+="⚠️  **Advertencia**: include_tikz() en chunk de generación\n"
-        errors+="   Puede causar errores 'File not found' en compilación PDF\n"
-        errors+="   Solución: Usar renderizado condicional con knitr::is_latex_output()\n"
-        errors+="   Documentación: .claude/docs/patrones-errores-conocidos.md#error-1\n\n"
-    fi
-    
-    if [[ -n "$errors" ]]; then
-        echo -e "## 🚨 ERRORES DETECTADOS EN ARCHIVO .RMD\n"
-        echo -e "$errors"
-    fi
-}
-
-# ============================================================================
-# FUNCIÓN: Leer resumen de errores conocidos
-# ============================================================================
-read_error_patterns() {
-    local project_root="$1"
-    local error_file="$project_root/.claude/docs/patrones-errores-conocidos.md"
-    
-    [[ ! -f "$error_file" ]] && return 0
-    
-    local output=""
-    output+="## 🚨 ERRORES CONOCIDOS Y SOLUCIONES\n\n"
-    output+="**Referencia completa:** .claude/docs/patrones-errores-conocidos.md\n\n"
-    
-    # Extraer resúmenes de errores (primeros 2 errores documentados)
-    local error_count=0
-    local in_error_section=false
-    local current_error=""
-    
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        # Detectar inicio de un error
-        if [[ "$line" =~ ^##[[:space:]]Error[[:space:]][0-9]+: ]]; then
-            error_count=$((error_count + 1))
-            if [[ $error_count -le 2 ]]; then
-                in_error_section=true
-                current_error=$(echo "$line" | sed 's/^## //')
-                output+="### $current_error\n"
-            else
-                in_error_section=false
-            fi
-        elif [[ $in_error_section == true ]] && [[ $error_count -le 2 ]]; then
-            # Capturar mensaje de error
-            if [[ "$line" =~ ^###[[:space:]]❌[[:space:]]Mensaje[[:space:]]de[[:space:]]Error ]]; then
-                output+="#### $(echo "$line" | sed 's/^### //')\n"
-            elif [[ "$line" =~ ^\`\`\` ]]; then
-                # Capturar bloque de código del mensaje de error
-                output+="$line\n"
-            elif [[ "$line" =~ ^###[[:space:]]✅[[:space:]]Solución ]]; then
-                # Detener en la sección de solución para mantener el resumen corto
-                break
-            fi
-        fi
-    done < "$error_file"
-    
-    output+="\n"
-    echo -e "$output"
-}
-
-# ============================================================================
 # FUNCIÓN: Encontrar ejemplos funcionales relevantes
 # ============================================================================
 find_relevant_examples() {
@@ -487,36 +401,6 @@ enhance_prompt() {
 
     # Añadir recomendaciones según el contexto
     enhanced_prompt+="$(generate_context_recommendations "$context_type")"
-
-    # Detectar errores si se menciona un archivo .Rmd
-    if echo "$user_prompt" | grep -qiE "\.Rmd|\.rmd|archivo.*rmd|error.*rmd|corregir.*rmd"; then
-        # Intentar extraer ruta del archivo del prompt o contexto
-        local rmd_file=""
-        
-        # Buscar en el prompt
-        rmd_file=$(echo "$user_prompt" | grep -oE "[^\s\"']+\.Rmd" | head -1)
-        
-        # Si no se encuentra, buscar en el directorio actual
-        if [[ -z "$rmd_file" ]]; then
-            rmd_file=$(find "$PWD" -maxdepth 2 -name "*.Rmd" -type f 2>/dev/null | head -1)
-        fi
-        
-        # Si se encuentra un archivo, detectar errores
-        if [[ -n "$rmd_file" && -f "$rmd_file" ]]; then
-            local detected_errors
-            detected_errors=$(detect_common_errors "$rmd_file")
-            if [[ -n "$detected_errors" ]]; then
-                enhanced_prompt+="$detected_errors\n"
-            fi
-        fi
-        
-        # Incluir resumen de errores conocidos
-        local error_patterns
-        error_patterns=$(read_error_patterns "$project_root")
-        if [[ -n "$error_patterns" ]]; then
-            enhanced_prompt+="$error_patterns"
-        fi
-    fi
 
     # Añadir el prompt original del usuario
     enhanced_prompt+="## 🎯 SOLICITUD DEL USUARIO\n"

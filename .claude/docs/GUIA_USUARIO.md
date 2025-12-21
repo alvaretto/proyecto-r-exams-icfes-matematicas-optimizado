@@ -4,6 +4,14 @@ Guía completa para usar el sistema de automatización Claude Code para generaci
 
 ---
 
+## 🤖 Sobre los Skills
+
+Este sistema utiliza **Skills de Claude Code** (no comandos shell). Los skills son comandos especializados que comienzan con `/` y ejecutan flujos de trabajo completos. Están configurados en `.claude/skills/` con permisos preconfigurados para ejecución sin confirmación.
+
+**Skills disponibles:** 7 (ver lista completa abajo)
+
+---
+
 ## 🚀 INICIO RÁPIDO
 
 **¿Primera vez usando el sistema?**
@@ -15,13 +23,13 @@ Guía completa para usar el sistema de automatización Claude Code para generaci
 2. **Referencia visual rápida**: `.claude/docs/GUIA_RAPIDA_VISUAL.md`
    - Diagramas visuales del workflow
    - Checklist rápido
-   - Comandos clave
+   - Skills clave
 
-3. **Esta guía**: Referencia de comandos y recursos
+3. **Esta guía**: Referencia de skills y recursos
 
 ---
 
-## 🎯 Comandos Principales
+## 🎯 Skills Principales (Workflow)
 
 ### 1. Análisis de Ejercicios ICFES
 
@@ -55,7 +63,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Siguiente paso:** Usar `/generar-schoice` o `/generar-cloze` según el tipo de ejercicio
 
-**Documentación completa:** `.claude/commands/analizar-icfes.md`
+**Documentación completa:** `.claude/skills/analizar-icfes/skill.md`
 
 ---
 
@@ -74,7 +82,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Salida:** Archivo `.Rmd` en `/A-Produccion/En-Desarrollo/`
 
-**Documentación completa:** `.claude/commands/generar-schoice.md`
+**Documentación completa:** `.claude/skills/generar-schoice/skill.md`
 
 #### `/generar-cloze`
 
@@ -89,7 +97,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Salida:** Archivo `.Rmd` en `/A-Produccion/En-Desarrollo/`
 
-**Documentación completa:** `.claude/commands/generar-cloze.md`
+**Documentación completa:** `.claude/skills/generar-cloze/skill.md`
 
 ---
 
@@ -113,7 +121,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 /corregir-error-imagen [archivo.Rmd]
 ```
 
-**Documentación completa:** `.claude/commands/corregir-error-imagen.md`
+**Documentación completa:** `.claude/skills/corregir-error-imagen/skill.md`
 
 ---
 
@@ -135,7 +143,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 /promover-ejercicio [nombre.Rmd]
 ```
 
-**Documentación completa:** `.claude/commands/promover-ejercicio.md`
+**Documentación completa:** `.claude/skills/promover-ejercicio/skill.md`
 
 ---
 

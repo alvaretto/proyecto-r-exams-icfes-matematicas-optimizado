@@ -51,5 +51,7 @@ Tras el análisis, determina:
 - **Flujo B**: Con gráficas TikZ → Activar AgenteTikZ
 
 ## Regla de Oro
-Consulta `/A-Produccion/En-Produccion/` para patrones similares.
+- Consulta recurrentemente `/A-Produccion/` para patrones similares.
+- Consulta recurrentemente `/A-Produccion/` para patrones similares, 
+cuando pretendas solucionar eventuales errores.
 

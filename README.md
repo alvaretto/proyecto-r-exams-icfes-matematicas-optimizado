@@ -186,9 +186,42 @@ use_python("/usr/bin/python3", required = TRUE) # Ajusta la ruta a tu ejecutable
 
 ### **Uso del Sistema**
 
-El sistema está diseñado para ser operado mediante comandos específicos que activan las metodologías integradas.
+El sistema está diseñado para ser operado mediante **Skills de Claude Code** que automatizan el workflow completo.
 
-**Comando principal:**
+#### **Skills Disponibles** (Workflow Automatizado)
+
+El proyecto incluye 7 skills configurados en `.claude/skills/` para automatizar cada fase del workflow:
+
+**Workflow Principal:**
+- `/analizar-icfes` - Análisis ICFES de imagen según 6 dimensiones (Fase 1)
+- `/generar-schoice` - Generar ejercicio de selección única (Fase 3)
+- `/generar-cloze` - Generar ejercicio de respuesta abierta (Fase 3)
+- `/promover-ejercicio` - Promoción a carpeta de producción (Fase 7)
+
+**Skills de Soporte:**
+- `/corregir-error-imagen` - Corrección automática de errores TikZ
+- `/validar-diversidad` - Validar 300+ versiones únicas
+- `/validar-icfes` - Validar metadatos y estructura R-exams
+
+#### **Ejemplo de Uso con Skills**
+
+```bash
+# 1. Analizar imagen de ejercicio ICFES
+/analizar-icfes imagen_ejercicio.png
+
+# 2. Generar ejercicio SCHOICE basado en el análisis
+/generar-schoice
+
+# 3. Validar diversidad de versiones
+/validar-diversidad archivo_generado.Rmd
+
+# 4. Promover a producción después de validar
+/promover-ejercicio archivo_generado.Rmd
+```
+
+#### **Comandos Tradicionales (Alternativos)**
+
+También puedes usar comandos en lenguaje natural:
 
 > "Aplica el sistema condicional automático a esta imagen PNG para detectar contenido gráfico y activar el flujo apropiado."
 
@@ -197,6 +230,36 @@ Para problemas que requieren replicación gráfica directa:
 > "Activa el Agente-Graficador Especializado TikZ para replicar esta imagen con 98%+ fidelidad visual."
 
 El sistema se encargará de analizar la imagen, seleccionar el flujo correcto y generar el archivo `.Rmd` correspondiente en el directorio de trabajo.
+
+---
+
+## 🤖 **Configuración de Claude Code**
+
+El proyecto incluye configuración completa en `.claude/` para automatizar el workflow:
+
+```
+.claude/
+├── settings.json          # Hooks y configuración global
+├── settings.local.json    # Permisos para skills
+├── skills/                # 7 skills del workflow automatizado
+│   ├── analizar-icfes/
+│   ├── generar-schoice/
+│   ├── generar-cloze/
+│   ├── promover-ejercicio/
+│   ├── corregir-error-imagen/
+│   ├── validar-diversidad/
+│   └── validar-icfes/
+└── docs/                  # Documentación del workflow
+    ├── WORKFLOW_PASO_A_PASO.md
+    ├── GUIA_USUARIO.md
+    └── [otros archivos]
+```
+
+**Características:**
+- ✅ Hooks configurados para recordatorios automáticos
+- ✅ Permisos preconfigurados para ejecución sin confirmación
+- ✅ Documentación completa del workflow paso a paso
+- ✅ Validación automática de estructura ICFES
 
 ---
 

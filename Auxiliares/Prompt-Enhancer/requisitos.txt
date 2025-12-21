@@ -1,0 +1,6 @@
+Genera un ejercicio de geometría analítica que incluya:
+
+- Ecuación de la recta
+- Pendiente e intercepto
+- Gráfico con TikZ
+- 4 opciones de respuesta tipo schoice

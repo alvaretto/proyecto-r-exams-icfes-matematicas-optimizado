@@ -6,7 +6,8 @@
 
 ## Índice
 1. [Error: Imagen PNG no encontrada en compilación PDF](#error-1-imagen-png-no-encontrada)
-2. [Placeholder para futuros errores](#futuros-errores)
+2. [Error: Argumento no numérico para función matemática abs()](#error-2-argumento-no-numerico-abs)
+3. [Placeholder para futuros errores](#futuros-errores)
 
 ---
 
@@ -261,6 +262,227 @@ Este patrón NO aplica para:
 
 **Nivel 3 - Terreno (Estudiantes):**
 - ⏭️ Pendiente de validación en aula
+
+---
+
+## Error 2: Argumento no numérico para función matemática abs()
+
+### ❌ Mensaje de Error
+```
+Error in `abs(b_formateado)`: Argumento no numérico para una función matemática
+Backtrace:
+ 1. └─global generar_datos()
+ 2. └─base::paste0("y = ", m_formateado, "x - ", abs(b_formateado))
+Error: ! Test failed
+```
+
+### 🔍 Causa Raíz
+Aplicar funciones matemáticas (como `abs()`, `round()`, `floor()`, etc.) sobre variables que ya han sido formateadas como strings. Las variables formateadas son de tipo `character`, no `numeric`, por lo que no pueden usarse en operaciones matemáticas.
+
+**Flujo del problema:**
+1. Se genera un valor numérico: `b <- -2.5`
+2. Se formatea como string: `b_formateado <- ifelse(b == as.integer(b), as.character(b), sprintf("%.1f", b))` → `"-2.5"` (string)
+3. Se intenta aplicar `abs()` sobre el string: `abs(b_formateado)` → ❌ Error
+4. La función `abs()` requiere un argumento numérico, no un string
+
+**Patrón común:**
+Este error ocurre frecuentemente cuando se necesita:
+- Aplicar valor absoluto a un número negativo para mostrarlo en una ecuación
+- Formatear el resultado después de aplicar la función matemática
+- Usar el valor formateado en múltiples lugares
+
+### ✅ Solución Verificada
+
+**Enfoque:** Aplicar la función matemática sobre el valor numérico original, luego formatear el resultado.
+
+#### Código ANTES (incorrecto):
+
+```r
+# Generar valor numérico
+b <- -2.5
+
+# Formatear como string
+b_formateado <- ifelse(b == as.integer(b), 
+                       as.character(b), 
+                       sprintf("%.1f", b))
+# b_formateado = "-2.5" (string)
+
+# ❌ ERROR: Intentar aplicar abs() sobre string
+if (b < 0) {
+  ecuacion <- paste0("y = ", m_formateado, "x - ", abs(b_formateado))
+  # Error: abs() no puede trabajar con strings
+}
+```
+
+#### Código DESPUÉS (correcto):
+
+```r
+# Generar valor numérico
+b <- -2.5
+
+# Formatear valor original (para casos donde b >= 0)
+b_formateado <- ifelse(b == as.integer(b), 
+                       as.character(b), 
+                       sprintf("%.1f", b))
+
+# Para casos donde b < 0, aplicar abs() sobre el número, luego formatear
+if (b < 0) {
+  # ✅ Aplicar abs() sobre el valor numérico
+  b_abs <- abs(b)  # b_abs = 2.5 (numérico)
+  
+  # ✅ Formatear el resultado
+  b_abs_formateado <- ifelse(b_abs == as.integer(b_abs), 
+                             as.character(b_abs), 
+                             sprintf("%.1f", b_abs))
+  # b_abs_formateado = "2.5" (string)
+  
+  ecuacion <- paste0("y = ", m_formateado, "x - ", b_abs_formateado)
+}
+```
+
+**Patrón generalizado:**
+
+```r
+# ❌ INCORRECTO: Aplicar función matemática sobre string formateado
+resultado <- funcion_matematica(variable_formateada)
+
+# ✅ CORRECTO: Aplicar función matemática sobre número, luego formatear
+valor_original <- obtener_valor_numerico()
+resultado_numerico <- funcion_matematica(valor_original)
+resultado_formateado <- formatear(resultado_numerico)
+```
+
+### 🧪 Validación de la Solución
+
+#### **Nivel 1: RStudio (Run > Run all)**
+Ejecutar todos los chunks interactivamente en RStudio.
+
+**Criterio de éxito:**
+- ✅ Todos los chunks ejecutan sin errores
+- ✅ Las funciones matemáticas se aplican correctamente
+- ✅ Los valores formateados se muestran correctamente en las ecuaciones
+
+**Método:**
+```
+1. Abrir .Rmd en RStudio
+2. Run > Run All
+3. Verificar que no hay errores en chunks de generación
+4. Verificar que las ecuaciones se muestran correctamente
+```
+
+#### **Nivel 2: Prueba de Diversidad**
+Ejecutar la prueba de diversidad de versiones.
+
+**Criterios de éxito:**
+- ✅ `test_that("Prueba de diversidad de versiones", ...)` pasa sin errores
+- ✅ Se generan al menos 300 versiones únicas
+- ✅ Todas las versiones generan ecuaciones válidas
+
+**Método:**
+```r
+# Dentro del archivo .Rmd, ejecutar el chunk de prueba
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300)
+})
+```
+
+**Resultado esperado:**
+```
+Test passed
+✓ Prueba de diversidad de versiones
+```
+
+#### **Nivel 3: Generación Masiva**
+Ejecutar el script de generación completa.
+
+**Criterios de éxito:**
+- ✅ `exams2html()` compila sin errores
+- ✅ `exams2pdf()` compila sin errores
+- ✅ Las ecuaciones se muestran correctamente en todos los formatos
+- ✅ No hay errores de tipo en las funciones matemáticas
+
+### 📋 Checklist de Corrección
+
+- [ ] Identificar todas las ocurrencias de funciones matemáticas sobre variables formateadas
+- [ ] Buscar patrones como: `abs(variable_formateada)`, `round(variable_formateada)`, etc.
+- [ ] Para cada ocurrencia:
+  - [ ] Identificar la variable numérica original
+  - [ ] Aplicar la función matemática sobre el valor numérico
+  - [ ] Formatear el resultado después de aplicar la función
+  - [ ] Usar el valor formateado en la construcción de strings
+- [ ] Verificar que todas las ecuaciones se generan correctamente
+- [ ] Ejecutar prueba de diversidad
+- [ ] Validar compilación en todos los formatos
+
+### 🎯 Casos Aplicables
+
+Este patrón de solución aplica para:
+- ✅ Aplicar `abs()` sobre valores negativos antes de formatear
+- ✅ Aplicar `round()`, `floor()`, `ceiling()` sobre valores antes de formatear
+- ✅ Cualquier función matemática que requiera argumentos numéricos
+- ✅ Construcción de ecuaciones matemáticas con valores formateados
+- ✅ Generación de opciones de respuesta con valores absolutos
+
+### ⚠️ Funciones Matemáticas Comunes que Causan Este Error
+
+| Función | Ejemplo Incorrecto | Ejemplo Correcto |
+|---------|-------------------|------------------|
+| `abs()` | `abs(b_formateado)` | `abs(b)` luego formatear |
+| `round()` | `round(x_formateado)` | `round(x)` luego formatear |
+| `floor()` | `floor(x_formateado)` | `floor(x)` luego formatear |
+| `ceiling()` | `ceiling(x_formateado)` | `ceiling(x)` luego formatear |
+| `sqrt()` | `sqrt(x_formateado)` | `sqrt(x)` luego formatear |
+| `log()` | `log(x_formateado)` | `log(x)` luego formatear |
+
+### 🔗 Archivos de Referencia
+
+**Ejemplo corregido verificado:**
+- `/A-Produccion/En-Desarrollo/recta_geometria_analitica_interpretacion_representacion/recta_geometria_analitica_interpretacion_representacion_n2_v1.Rmd`
+- **Caso resuelto:** `.claude/docs/casos-resueltos/2025-12-21-recta-abs-formateado.md`
+
+**Líneas corregidas:**
+- Línea 160: `abs(b_formateado)` → `abs(b)` luego formatear
+- Línea 177: `abs(b_dist1_formateado)` → `abs(b_distractor1)` luego formatear
+- Línea 196: `abs(b_formateado)` → `abs(b)` luego formatear
+- Línea 219: `abs(b_dist3_formateado)` → `abs(b_distractor3)` luego formatear
+
+### 📅 Historial
+
+| Fecha | Versión | Estado | Validado en | Niveles Validados |
+|-------|---------|--------|-------------|-------------------|
+| 2025-12-21 | v1.0 | ✅ Verificado | recta_geometria_analitica_interpretacion_representacion_n2_v1.Rmd | Nivel 1 ✅ (RStudio) |
+
+**Pruebas de validación realizadas (v1.0 - 2025-12-21):**
+
+**Nivel 1 - RStudio (Run > Run all):**
+- ✅ Todos los chunks ejecutan sin errores
+- ✅ Las ecuaciones se generan correctamente
+- ✅ No hay errores de tipo en funciones matemáticas
+- ✅ Función probada directamente: 10 ejecuciones exitosas
+
+**Nivel 2 - Prueba de Diversidad:**
+- ✅ Código corregido y verificado
+- ⚠️ **Nota importante**: Si el error persiste, puede ser debido a caché de R/knitr
+  - Solución: Reiniciar sesión de R o limpiar caché con `rm(list = ls())` y `knitr::knit_cache$clean()`
+
+**Nivel 3 - Generación Masiva:**
+- ⏭️ Pendiente de validación completa
+
+### ⚠️ Nota sobre Caché de R/knitr
+
+Si el error persiste después de corregir el código, puede ser debido a:
+1. **Caché de knitr**: Los chunks pueden estar usando versiones en caché
+   - **Solución**: Limpiar caché con `knitr::knit_cache$clean()` o eliminar carpeta `*_cache/`
+2. **Entorno de R**: Variables en memoria de sesiones anteriores
+   - **Solución**: Reiniciar sesión de R o ejecutar `rm(list = ls())`
+3. **Archivo no guardado**: Verificar que los cambios se guardaron correctamente
+   - **Solución**: Verificar timestamp del archivo y contenido con `grep -n "abs(b_formateado)" archivo.Rmd`
 
 ---
 

@@ -1,0 +1,174 @@
+# PROMPT MEJORADO CON CONTEXTO DEL PROYECTO
+
+## 📍 CONTEXTO DE UBICACIÓN
+- **Proyecto**: RepositorioMatematicasICFES_R_Exams
+- **Ubicación actual**: Auxiliares/Prompt-Enhancer
+- **Tipo de contexto**: auxiliares
+- **Descripción**: Herramientas, scripts y documentación auxiliar
+
+## 📋 REGLAS GENERALES DEL PROYECTO .claude## 🔧 DOCUMENTACIÓN TÉCNICA .claude/
+
+### Documentación Principal
+# Documentación Técnica - Sistema de Automatizaciones
+
+Esta carpeta contiene la documentación técnica del sistema de automatizaciones para la generación y corrección de ejercicios R/exams.
+
+---
+
+## 🚀 INICIO RÁPIDO
+
+**¿Buscas algo específico?**
+
+👉 **[INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md)** - Índice completo de toda la documentación
+
+**¿Primera vez usando el sistema?**
+
+1. **[WORKFLOW_PASO_A_PASO.md](WORKFLOW_PASO_A_PASO.md)** - Guía completa paso a paso
+2. **[GUIA_RAPIDA_VISUAL.md](GUIA_RAPIDA_VISUAL.md)** - Referencia visual rápida
+3. **[GUIA_USUARIO.md](GUIA_USUARIO.md)** - Referencia de comandos
+
+---
+
+## Estructura
+
+```
+.claude/
+├── docs/                           # Documentación técnica
+│   ├── README.md                   # Este archivo
+│   ├── INDICE_DOCUMENTACION.md     # 🆕 Índice completo de documentación
+│   ├── WORKFLOW_PASO_A_PASO.md     # 🆕 Guía completa del workflow
+│   ├── GUIA_RAPIDA_VISUAL.md       # 🆕 Referencia visual rápida
+│   ├── GUIA_USUARIO.md             # Guía completa de usuario
+│   ├── TRES_NIVELES_VALIDACION.md  # Metodología de validación
+│   ├── COMANDOS_DEPRECADOS.md      # Registro de comandos deprecados
+│   ├── FASE5_CHECKLIST_PRE_ELIMINACION.md  # Checklist Fase 5
+│   ├── FASE5_PROCEDIMIENTO_ELIMINACION.md  # Procedimiento Fase 5
+│   ├── FASE5_RESUMEN_EJECUTIVO.md  # Resumen ejecutivo Fase 5
+│   ├── patrones-errores-conocidos.md   # Base de conocimiento de errores
+│   └── casos-resueltos/            # Historial de casos específicos
+│       └── 2025-12-19-cilindro-tikz.md
+├── agents/                         # Agentes especializados
+│   ├── clasificador-icfes.md       # Análisis de ejercicios ICFES
+│   └── graficador-tikz.md          # Replicación visual TikZ
+├── skills/                         # 🆕 Skills de Claude Code (Workflow)
+│   ├── analizar-icfes/             # ✅ Análisis ICFES según 6 dimensiones
+│   │   └── skill.md
+│   ├── generar-schoice/            # Generador de ejercicios SCHOICE
+│   │   └── skill.md
+│   ├── generar-cloze/              # Generador de ejercicios CLOZE
+│   │   └── skill.md
+│   ├── promover-ejercicio/         # Promoción a producción
+│   │   └── skill.md
+
+### Solución de Problemas
+# Guía Rápida de Troubleshooting - R/exams
+
+> **Índice rápido de errores conocidos y soluciones verificadas**
+
+---
+
+## 📋 Errores Comunes
+
+### 1. ❌ File '*.png' not found
+
+**Error completo:**
+```
+Package pdftex.def Error: File 'imagen.png' not found: using draft setting.
+Error: LaTeX failed to compile archivo.tex
+```
+
+**Causa:** Uso de `include_tikz()` en chunk de generación
+
+**Solución rápida:**
+1. Mover `include_tikz()` fuera del chunk de generación
+2. Usar renderizado condicional con `knitr::is_latex_output()`
+3. Para LaTeX: `cat(tikz_code)` directamente
+4. Para HTML: mantener `include_tikz()`
+
+**Documentación completa:** `.claude/docs/patrones-errores-conocidos.md#error-1`
+
+**Skill automático:**
+```bash
+/corregir-error-imagen
+```
+
+### Skills Disponibles
+- /analizar-icfes
+- /corregir-error-imagen
+- /generar-cloze
+- /generar-schoice
+- /promover-ejercicio
+- /validar-diversidad
+- /validar-icfes### Comandos Disponibles
+- /analizar-icfes
+- /corregir-error-imagen
+- /generar-cloze
+- /generar-schoice
+- /promover-ejercicio## 🎨 GUÍA DE ESTILO ICFES .claudedoc/
+
+### Guía de Estilo ICFES
+# 📚 GUÍA DE ESTILO ICFES R-EXAMS 2025
+## Fuente de Verdad para Validación Automática
+
+> **Referencia Principal**: `Auxiliares/rules_full/reglas-generales.md`  
+> **Última Actualización**: 2025-01-XX  
+> **Propósito**: Indexar reglas críticas para validación automática de archivos .Rmd
+
+---
+
+## 🎯 ESTRUCTURA OBLIGATORIA DEL ARCHIVO .RMD
+
+### 1. ENCABEZADO YAML MÍNIMO REQUERIDO
+
+```yaml
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+---
+```
+
+**Campos Críticos:**
+
+- `latex_engine: xelatex` (OBLIGATORIO para TikZ)
+- `header-includes` debe contener paquetes TikZ y babel
+- `mathjax: true` para renderizado HTML correcto
+
+### 2. METADATOS ICFES OBLIGATORIOS
+
+```yaml
+icfes:
+  competencia: [interpretacion_representacion|formulacion_ejecucion|argumentacion]
+  nivel_dificultad: [1|2|3|4]
+  contenido:
+    categoria: [algebra_calculo|geometria|estadistica]## 📚 EJEMPLOS FUNCIONALES DISPONIBLES
+Ubicación: A-Produccion/
+## 💡 RECOMENDACIONES SEGÚN CONTEXTO
+- Mantener compatibilidad con scripts existentes
+- Documentar funcionalidad claramente
+- Probar en entorno real antes de integrar## 🎯 SOLICITUD DEL USUARIO
+Genera un ejercicio de geometría analítica que incluya:
+
+- Ecuación de la recta
+- Pendiente e intercepto
+- Gráfico con TikZ
+- 4 opciones de respuesta tipo schoice
+
+---
+**Nota**: Este prompt ha sido mejorado automáticamente con contexto del proyecto.
+Generado desde: Auxiliares/Prompt-Enhancer

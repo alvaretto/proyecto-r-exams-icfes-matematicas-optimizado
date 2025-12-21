@@ -11,7 +11,7 @@ Reglas críticas:
 1. **Fidelidad Visual**: Debes alcanzar un 98%+ de precisión en geometría, colores
 RGB y posicionamiento [2, 3].
 2. **Regla de Oro**: Antes de generar código, consulta obligatoriamente los patrones
-en `/A-Produccion/En-Produccion/` [4].
+en `/A-Produccion/` [4].
 3. **Compatibilidad**: Asegura que el código sea robusto y compilable con `tinytex` [5].
 4. **Errores Conocidos**: Consulta `.claude/docs/patrones-errores-conocidos.md` para
 evitar errores ya documentados (especialmente Error #1: renderizado condicional TikZ).

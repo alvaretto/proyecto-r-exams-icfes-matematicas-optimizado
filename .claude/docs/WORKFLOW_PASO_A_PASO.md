@@ -4,6 +4,21 @@
 
 ---
 
+## 🤖 Sobre los Skills de Claude Code
+
+Este workflow utiliza **Skills de Claude Code** configurados en `.claude/skills/` para automatizar cada fase del proceso. Los comandos que comienzan con `/` (ej: `/analizar-icfes`, `/generar-schoice`) son skills que ejecutan el flujo de trabajo completo.
+
+**Skills disponibles:**
+- `/analizar-icfes` - Análisis ICFES según 6 dimensiones
+- `/generar-schoice` - Generar ejercicio de selección única
+- `/generar-cloze` - Generar ejercicio de respuesta abierta
+- `/promover-ejercicio` - Promoción a carpeta de producción
+- `/corregir-error-imagen` - Corrección de errores TikZ
+- `/validar-diversidad` - Validar 300+ versiones
+- `/validar-icfes` - Validar metadatos
+
+---
+
 ## 📋 Índice
 
 1. [Paso 0: Preparar y Subir la Imagen](#paso-0-preparar-y-subir-la-imagen)

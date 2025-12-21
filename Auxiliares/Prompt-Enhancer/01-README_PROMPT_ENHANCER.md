@@ -1,10 +1,29 @@
 # 🚀 PROMPT ENHANCER - Sistema de Mejora de Prompts con Contexto del Proyecto
 
+**Versión**: 1.2.0
+**Última actualización**: 2025-12-21
+**Estado**: ✅ Estable y refactorizado
+
 ## 📋 Descripción
 
-**Prompt Enhancer** es un script bash inteligente que mejora automáticamente los prompts del usuario añadiendo contexto relevante del proyecto ICFES R-Exams. Funciona desde cualquier ubicación dentro del repositorio y proporciona información contextual específica según la carpeta desde donde se ejecuta.
+**Prompt Enhancer** es un script bash inteligente que mejora automáticamente los
+prompts del usuario añadiendo contexto relevante del proyecto ICFES R-Exams.
+Funciona desde cualquier ubicación dentro del repositorio y proporciona información
+contextual específica según la carpeta desde donde se ejecuta.
 
 **Ubicación**: `Auxiliares/Prompt-Enhancer/`
+
+## 🆕 Última Actualización - v1.2.0 (2025-12-21)
+
+### Refactorización Mayor
+Esta versión incluye una refactorización completa del código con:
+- ✅ **2 bugs críticos corregidos** (lectura de archivos y manejo de argumentos)
+- ✅ **17 funciones modulares** (vs 6 en v1.1.0)
+- ✅ **+41% más líneas de código** bien estructuradas (618 vs 437)
+- ✅ **Soporte Wayland** para portapapeles (wl-copy)
+- ✅ **Mejor manejo de errores** y validaciones
+
+Ver detalles completos en: [CHANGELOG.md](CHANGELOG.md)
 
 ## 🎯 Características Principales
 
@@ -14,7 +33,7 @@
 - **Raíz del proyecto**: Encuentra la raíz del proyecto desde cualquier subcarpeta
 
 ### ✅ Enriquecimiento Inteligente Completo
-- **Reglas del proyecto**: Incluye reglas de `.augment/rules/`
+- **Reglas del proyecto**: Incluye reglas de `.claude/`
 - **Documentación técnica**: Incluye documentación de `.claude/`
 - **Guía de estilo**: Incluye guía de estilo de `.claudedoc/`
 - **Ejemplos funcionales**: Lista ejemplos relevantes disponibles
@@ -194,12 +213,12 @@ El prompt mejorado incluye las siguientes secciones:
 - Tipo de contexto: [producción/desarrollo/etc]
 - Descripción: [descripción del contexto]
 
-## 📋 REGLAS GENERALES DEL PROYECTO (.augment/rules/)
+## 📋 REGLAS GENERALES DEL PROYECTO (`.claude/`)
 ### Reglas Generales
-[Extracto de reglas-generales.md]
+[`.claude/`]
 
 ### Reglas Siempre Aplicables
-[Reglas de siempre.md]
+[`.claude/`]
 
 ## 🔧 DOCUMENTACIÓN TÉCNICA (.claude/)
 ### Documentación Principal
@@ -231,16 +250,23 @@ El prompt mejorado incluye las siguientes secciones:
 ## 🛠️ Requisitos
 
 - **Bash**: 4.0 o superior
-- **Opcional**: `xclip` o `pbcopy` para funcionalidad de portapapeles
+- **Dependencias requeridas**: grep, sed, cat, find, head, sort (incluidas en sistemas Unix)
+- **Opcional**: `xclip`, `pbcopy`, o `wl-copy` para funcionalidad de portapapeles
 
-### Instalar xclip (Linux)
+### Instalar Herramientas de Portapapeles (Linux)
 
 ```bash
-# Manjaro/Arch
+# Manjaro/Arch (X11)
 sudo pacman -S xclip
 
-# Ubuntu/Debian
+# Manjaro/Arch (Wayland)
+sudo pacman -S wl-clipboard
+
+# Ubuntu/Debian (X11)
 sudo apt install xclip
+
+# Ubuntu/Debian (Wayland)
+sudo apt install wl-clipboard
 ```
 
 ## 🚀 Casos de Uso Avanzados
@@ -308,7 +334,7 @@ cd A-Produccion/En-Desarrollo/
 - **Reglas del proyecto**: `.augment/rules/reglas-generales.md`
 - **Documentación técnica**: `.claude/docs/README.md`
 - **Guía de estilo**: `.claudedoc/guia_estilo_icfes.md`
-- **Ejemplos funcionales**: `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/`
+- **Ejemplos funcionales**: `A-Produccion/`
 
 ## 🎯 Próximas Mejoras
 
@@ -319,8 +345,10 @@ cd A-Produccion/En-Desarrollo/
 
 ---
 
-**Versión**: 1.0.0  
-**Fecha**: 2025-12-20  
-**Autor**: Sistema ICFES R-Exams  
+**Versión**: 1.2.0
+**Fecha**: 2025-12-21
+**Autor**: Sistema ICFES R-Exams
 **Licencia**: Uso interno del proyecto
+
+**Changelog**: Ver [CHANGELOG.md](CHANGELOG.md) para detalles completos de todas las versiones
 

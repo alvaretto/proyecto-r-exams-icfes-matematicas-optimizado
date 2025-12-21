@@ -1,0 +1,17 @@
+Genera un ejercicio tipo ICFES de matemáticas con las siguientes características:
+
+TEMA: [Escribe aquí el tema específico]
+
+NIVEL: [1, 2, 3 o 4]
+
+COMPETENCIA:
+- [ ] Interpretación y representación
+- [ ] Formulación y ejecución
+- [ ] Argumentación
+
+REQUERIMIENTOS ESPECIALES:
+[Describe aquí cualquier requerimiento especial: gráficos TikZ, datos, contexto específico, etc.]
+
+FORMATO DESEADO:
+- [ ] SCHOICE (selección única)
+- [ ] CLOZE (pregunta compuesta)

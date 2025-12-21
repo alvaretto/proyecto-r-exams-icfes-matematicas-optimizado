@@ -39,12 +39,24 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 ├── agents/                         # Agentes especializados
 │   ├── clasificador-icfes.md       # Análisis de ejercicios ICFES
 │   └── graficador-tikz.md          # Replicación visual TikZ
-├── commands/                       # Comandos ejecutables
-│   ├── analizar-icfes.md           # ✅ Comando estándar de análisis
-│   ├── generar-schoice.md
-│   ├── generar-cloze.md
-│   ├── corregir-error-imagen.md
-│   └── promover-ejercicio.md
+├── skills/                         # 🆕 Skills de Claude Code (Workflow)
+│   ├── analizar-icfes/             # ✅ Análisis ICFES según 6 dimensiones
+│   │   └── skill.md
+│   ├── generar-schoice/            # Generador de ejercicios SCHOICE
+│   │   └── skill.md
+│   ├── generar-cloze/              # Generador de ejercicios CLOZE
+│   │   └── skill.md
+│   ├── promover-ejercicio/         # Promoción a producción
+│   │   └── skill.md
+│   ├── corregir-error-imagen/      # Corrector de errores TikZ
+│   │   └── skill.md
+│   ├── validar-diversidad/         # Validador de 300+ versiones
+│   │   └── skill.md
+│   └── validar-icfes/              # Validador de metadatos ICFES
+│       └── skill.md
+├── deprecated/                     # ⚠️ Archivos deprecados
+│   ├── analizar-ejercicio.md       # (Deprecado - Usar analizar-icfes)
+│   └── corregir-error-imagen.md    # (Duplicado - Movido a skills/)
 ├── scripts/                        # Scripts de automatización
 │   ├── README.md                   # Documentación de scripts
 │   ├── fase5_eliminar_comando_deprecado.sh  # Script de eliminación
@@ -54,13 +66,15 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   └── test_comandos_workflow.md   # Tests de workflow
 ├── backups/                        # Backups de archivos
 ├── logs/                           # Logs de ejecución
-└── skills/                         # Skills de automatización
-    ├── corregir-error-imagen/      # Corrector de errores de imágenes
-    ├── validar-diversidad/         # Validador de 300+ versiones
-    └── validar-icfes/              # Validador de metadatos ICFES
+├── settings.json                   # Hooks y configuración global
+├── settings.local.json             # Permisos para skills
+└── MIGRACION_COMPLETADA.md         # 🆕 Reporte de migración (2025-12-20)
 ```
 
-**Nota:** El comando `analizar-ejercicio.md` ha sido deprecado. Ver `COMANDOS_DEPRECADOS.md` para detalles.
+**Notas importantes:**
+- ✅ Directorio `commands/` eliminado - Migrado a `skills/` (ver `MIGRACION_COMPLETADA.md`)
+- ✅ 7 skills activos del workflow en `skills/`
+- ⚠️ `analizar-ejercicio.md` deprecado - Ver `COMANDOS_DEPRECADOS.md` para detalles
 
 ## Filosofía del Sistema
 

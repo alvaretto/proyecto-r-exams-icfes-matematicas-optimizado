@@ -1,5 +1,71 @@
 # 📋 CHANGELOG - PROMPT ENHANCER
 
+## [1.2.0] - 2025-12-21
+
+### 🔧 Refactorización Mayor del Código
+
+#### Bugs Críticos Corregidos
+- ✅ **Líneas 91 y 97**: Paths incorrectos en lectura de archivos de reglas
+  - Antes: `"$augment_rules_dir/.claude"` (incorrecto)
+  - Ahora: Rutas correctas a `reglas-generales.md` y `siempre.md`
+- ✅ **Línea 435**: Manejo incorrecto de argumentos con espacios
+  - Antes: `main $@` (sin comillas)
+  - Ahora: `main "$@"` (con comillas)
+
+#### Mejoras de Arquitectura
+- ✅ **Constantes extraídas** (líneas 27-37):
+  - `MAX_LINES_GENERAL_RULES=100`
+  - `MAX_LINES_MAIN_DOCS=50`
+  - `MAX_LINES_TROUBLESHOOTING=30`
+  - `MAX_LINES_STYLE_GUIDE=50`
+  - `MAX_EXAMPLES=10`
+  - Directorios centralizados: `CLAUDE_DIR`, `CLAUDEDOC_DIR`, `PRODUCTION_DIR`
+
+- ✅ **Funciones auxiliares nuevas** (líneas 43-78):
+  - `die()`: Manejo consistente de errores
+  - `warn()`: Advertencias estandarizadas
+  - `success()`: Mensajes de éxito
+  - `info()`: Mensajes informativos
+  - `read_file_limited()`: Función reutilizable para lectura de archivos con límite
+
+- ✅ **Función `read_project_rules()` refactorizada**:
+  - Dividida en 5 funciones especializadas:
+    - `read_claude_rules()` (líneas 139-167)
+    - `list_available_skills()` (líneas 172-192)
+    - `list_available_commands()` (líneas 197-217)
+    - `read_claude_documentation()` (líneas 222-254)
+    - `read_style_guide()` (líneas 259-277)
+  - `read_project_rules()` ahora solo agrega las partes (líneas 282-292)
+
+- ✅ **Nuevas funciones especializadas**:
+  - `generate_context_recommendations()` (líneas 326-366): Separada de `enhance_prompt()`
+  - `copy_to_clipboard()` (líneas 419-436): Manejo mejorado con soporte para `wl-copy` (Wayland)
+  - `process_arguments()` (líneas 495-539): Lógica de argumentos separada y mejorada
+  - `read_interactive_prompt()` (líneas 544-551): Modo interactivo separado
+
+#### Mejoras de Robustez
+- ✅ Validación de argumentos mejorada: Detecta opciones sin valor requerido
+- ✅ Manejo de errores consistente: Uso de `die()` con mensajes descriptivos
+- ✅ Mejor manejo de rutas: Comillas correctas para paths con espacios
+- ✅ Ordenamiento de resultados: Skills y comandos ordenados alfabéticamente con `sort`
+- ✅ Soporte para Wayland: Agregado `wl-copy` además de `xclip` y `pbcopy`
+
+#### Mejoras de Legibilidad
+- ✅ Código más modular: 17 funciones vs 6 originales
+- ✅ Nombres descriptivos: Variables y funciones con nombres claros
+- ✅ Comentarios actualizados: Fecha de modificación agregada
+- ✅ Estructura más clara: Separación lógica de responsabilidades
+
+#### Estadísticas
+- **Líneas de código**: 437 → 618 (+181 líneas, +41%)
+- **Funciones**: 6 → 17 (+183% de modularización)
+- **Bugs corregidos**: 2 críticos
+- **Constantes extraídas**: 5
+- **Funciones auxiliares**: 5 nuevas
+- **Mejora en mantenibilidad**: Significativa
+
+---
+
 ## [1.1.0] - 2025-12-20
 
 ### ✅ Configuración Automática de Alias
@@ -78,16 +144,19 @@ alias pei="$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh -i"
 - **Scripts ejecutables**: 2 (`prompt-enhancer.sh`, `verificar-alias.sh`)
 - **Documentación**: 5 archivos Markdown
 
-### Líneas de Código
-- **prompt-enhancer.sh**: ~455 líneas
+### Líneas de Código (Actualizado v1.2.0)
+- **prompt-enhancer.sh**: ~618 líneas (+41% vs v1.1.0)
 - **verificar-alias.sh**: ~140 líneas
-- **Total documentación**: ~1500+ líneas
+- **Total documentación**: ~1600+ líneas
 
 ### Funcionalidades
 - ✅ 5 modos de uso diferentes
 - ✅ 4 alias configurados
 - ✅ 3 fuentes de reglas integradas
 - ✅ Detección automática de 6+ tipos de contexto
+- ✅ 17 funciones modulares (v1.2.0)
+- ✅ 5 funciones auxiliares (v1.2.0)
+- ✅ Soporte Wayland clipboard (v1.2.0)
 
 ---
 
@@ -114,23 +183,28 @@ alias pei="$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh -i"
 ## 🔧 Mantenimiento
 
 ### Última Actualización
-- **Fecha**: 2025-12-20
-- **Versión**: 1.1.0
-- **Estado**: ✅ Estable y funcional
+- **Fecha**: 2025-12-21
+- **Versión**: 1.2.0
+- **Estado**: ✅ Estable y refactorizado
+- **Tipo de actualización**: Refactorización mayor con corrección de bugs críticos
 
 ### Compatibilidad
 - ✅ Bash 4.0+
 - ✅ Zsh 5.0+
 - ✅ Manjaro Plasma KDE
 - ✅ Linux en general
+- ✅ Soporte Wayland (nuevo en v1.2.0)
 
 ### Dependencias
-- **Requeridas**: bash, grep, sed, cat
-- **Opcionales**: xclip (para portapapeles)
+- **Requeridas**: bash, grep, sed, cat, find, head, sort
+- **Opcionales**: xclip, pbcopy, o wl-copy (para portapapeles)
 
 ---
 
 ## 📝 Notas de Versión
+
+### v1.2.0
+Esta versión representa una refactorización mayor del código base, mejorando significativamente la mantenibilidad, robustez y legibilidad del script. Se corrigieron 2 bugs críticos que afectaban la lectura de archivos de configuración y el manejo de argumentos. El código ahora es más modular (17 funciones vs 6), con mejor manejo de errores, validaciones mejoradas y soporte para Wayland. Todas las funcionalidades existentes se mantienen intactas mientras se mejora la calidad interna del código.
 
 ### v1.1.0
 Esta versión completa la configuración automática del sistema, haciendo que el Prompt Enhancer esté completamente listo para usar sin configuración manual adicional. Los alias están configurados en ambos shells (bash y zsh) y toda la documentación ha sido actualizada para reflejar este estado.
