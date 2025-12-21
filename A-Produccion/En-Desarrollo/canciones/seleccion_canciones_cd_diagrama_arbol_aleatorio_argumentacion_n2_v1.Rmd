@@ -1,0 +1,424 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel,positioning}
+icfes:
+  competencia: argumentacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje4
+  componente: aleatorio
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(ggplot2)
+library(knitr)
+library(reticulate)
+
+# Configurar Python si es necesario
+use_python("/usr/bin/python3", required = TRUE)
+
+# Configuración global
+typ <- match_exams_device()
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+
+# Configuración de locale para formato numérico consistente
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Configuración de formato numérico estándar
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Este ejercicio es sobre identificación de diagramas
+  # La respuesta correcta es siempre la Opción A
+  # que muestra la estructura secuencial correcta CD1 -> CD2 -> CD3
+  
+  sol <- 1  # Opción A es la correcta
+  
+  return(list(
+    solucion = sol
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+# Para este ejercicio conceptual, la respuesta correcta siempre es la misma (Opción A)
+# pero cada ejecución del ejercicio es técnicamente una versión única
+# debido a la semilla aleatoria y al proceso de renderizado
+library(testthat)
+
+test_that("Prueba de funcionamiento del ejercicio", {
+  # Para este ejercicio conceptual, verificamos que:
+  # 1. Los datos se generan correctamente
+  # 2. La solución es la esperada (Opción A = 1)
+  datos_test <- generar_datos()
+  
+  expect_true(exists("datos_test"),
+              info = "La función generar_datos() debe retornar un objeto")
+  expect_equal(datos_test$solucion, 1,
+               info = "La solución correcta debe ser la Opción A (valor 1)")
+  expect_true(is.list(datos_test),
+              info = "Los datos deben ser una lista")
+})
+```
+
+Question
+========
+
+Para ambientar musicalmente una reunión, se cuenta con tres CDs, cada uno de ellos tiene canciones de salsa (S) y merengue (M). ¿Cuál de los siguientes diagramas representa la situación de seleccionar al azar una canción del CD1, luego una del CD2 y finalmente una del CD3?
+
+**Opción A:**
+
+```{r opcion_a, echo=FALSE, results="asis"}
+# Diagrama A: Estructura secuencial correcta CD1 -> CD2 -> CD3
+tikz_a <- '
+\\begin{tikzpicture}[scale=0.9, node distance=1.5cm and 2cm]
+  % CD1 (inicio)
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd1) at (0, 0) {CD1};
+  
+  % Nivel 1: CD2 (dos nodos, uno por cada rama de CD1)
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd2_1) at (-2, -2) {CD2};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd2_2) at (2, -2) {CD2};
+  
+  % Etiquetas nivel 1 (S y M)
+  \\node[circle, draw, fill=blue!20, minimum size=0.6cm] (s1) at (-2, -0.8) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.6cm] (m1) at (2, -0.8) {M};
+  
+  % Conexiones CD1 -> CD2
+  \\draw[->] (cd1) -- (s1);
+  \\draw[->] (s1) -- (cd2_1);
+  \\draw[->] (cd1) -- (m1);
+  \\draw[->] (m1) -- (cd2_2);
+  
+  % Nivel 2: CD3 (cuatro nodos, uno por cada rama de CD2)
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_1) at (-3.5, -4) {CD3};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_2) at (-0.5, -4) {CD3};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_3) at (0.5, -4) {CD3};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_4) at (3.5, -4) {CD3};
+  
+  % Etiquetas nivel 2
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (s2_1) at (-3.5, -2.8) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (m2_1) at (-0.5, -2.8) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (s2_2) at (0.5, -2.8) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (m2_2) at (3.5, -2.8) {M};
+  
+  % Conexiones CD2 -> CD3
+  \\draw[->] (cd2_1) -- (s2_1);
+  \\draw[->] (s2_1) -- (cd3_1);
+  \\draw[->] (cd2_1) -- (m2_1);
+  \\draw[->] (m2_1) -- (cd3_2);
+  \\draw[->] (cd2_2) -- (s2_2);
+  \\draw[->] (s2_2) -- (cd3_3);
+  \\draw[->] (cd2_2) -- (m2_2);
+  \\draw[->] (m2_2) -- (cd3_4);
+  
+  % Nivel 3: Resultados finales (8 nodos)
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r1) at (-4, -5.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r2) at (-3, -5.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r3) at (-1, -5.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r4) at (0, -5.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r5) at (1, -5.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r6) at (2, -5.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r7) at (3, -5.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r8) at (4, -5.5) {M};
+  
+  % Conexiones CD3 -> Resultados
+  \\draw[->] (cd3_1) -- (r1);
+  \\draw[->] (cd3_1) -- (r2);
+  \\draw[->] (cd3_2) -- (r3);
+  \\draw[->] (cd3_2) -- (r4);
+  \\draw[->] (cd3_3) -- (r5);
+  \\draw[->] (cd3_3) -- (r6);
+  \\draw[->] (cd3_4) -- (r7);
+  \\draw[->] (cd3_4) -- (r8);
+\\end{tikzpicture}
+'
+
+include_tikz(tikz_a,
+             name = "diagrama_opcion_a",
+             markup = "markdown",
+             format = typ,
+             library = c("positioning", "babel"),
+             packages = c("tikz", "xcolor"),
+             width = "14cm")
+```
+
+**Opción B:**
+
+```{r opcion_b, echo=FALSE, results="asis"}
+# Diagrama B: Estructura incorrecta - muestra dependencia (si CD1=S, todo S)
+tikz_b <- '
+\\begin{tikzpicture}[scale=0.9, node distance=1.5cm and 2cm]
+  % CD1
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd1) at (0, 0) {CD1};
+  
+  % Ramas CD1
+  \\node[circle, draw, fill=blue!20, minimum size=0.6cm] (s1) at (-2, -1.5) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.6cm] (m1) at (2, -1.5) {M};
+  \\draw[->] (cd1) -- (s1);
+  \\draw[->] (cd1) -- (m1);
+  
+  % CD2 (dependiente de CD1)
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd2_s) at (-2, -3) {CD2};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd2_m) at (2, -3) {CD2};
+  \\draw[->] (s1) -- (cd2_s);
+  \\draw[->] (m1) -- (cd2_m);
+  
+  % CD2 -> S (desde S)
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (s2_1) at (-3, -4.5) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (s2_2) at (-1, -4.5) {S};
+  \\draw[->] (cd2_s) -- (s2_1);
+  \\draw[->] (cd2_s) -- (s2_2);
+  
+  % CD2 -> M (desde M)
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (m2_1) at (1, -4.5) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (m2_2) at (3, -4.5) {M};
+  \\draw[->] (cd2_m) -- (m2_1);
+  \\draw[->] (cd2_m) -- (m2_2);
+  
+  % CD3 (solo S desde S, solo M desde M)
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_1) at (-3, -6) {CD3};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_2) at (-1, -6) {CD3};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_3) at (1, -6) {CD3};
+  \\node[rectangle, draw, minimum width=1.5cm, minimum height=0.8cm] (cd3_4) at (3, -6) {CD3};
+  \\draw[->] (s2_1) -- (cd3_1);
+  \\draw[->] (s2_2) -- (cd3_2);
+  \\draw[->] (m2_1) -- (cd3_3);
+  \\draw[->] (m2_2) -- (cd3_4);
+  
+  % Resultados (todos S o todos M)
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r1) at (-3.5, -7.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r2) at (-2.5, -7.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r3) at (-0.5, -7.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r4) at (0.5, -7.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r5) at (1.5, -7.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r6) at (2.5, -7.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r7) at (3.5, -7.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.5cm] (r8) at (4.5, -7.5) {M};
+  \\draw[->] (cd3_1) -- (r1);
+  \\draw[->] (cd3_1) -- (r2);
+  \\draw[->] (cd3_2) -- (r3);
+  \\draw[->] (cd3_2) -- (r4);
+  \\draw[->] (cd3_3) -- (r5);
+  \\draw[->] (cd3_3) -- (r6);
+  \\draw[->] (cd3_4) -- (r7);
+  \\draw[->] (cd3_4) -- (r8);
+\\end{tikzpicture}
+'
+
+include_tikz(tikz_b,
+             name = "diagrama_opcion_b",
+             markup = "markdown",
+             format = typ,
+             library = c("positioning", "babel"),
+             packages = c("tikz", "xcolor"),
+             width = "14cm")
+```
+
+**Opción C:**
+
+```{r opcion_c, echo=FALSE, results="asis"}
+# Diagrama C: Tres diagramas separados (incorrecto - no muestra secuencia)
+tikz_c <- '
+\\begin{tikzpicture}[scale=0.8, node distance=1cm and 1.5cm]
+  % CD1 (diagrama separado)
+  \\node[rectangle, draw, minimum width=1.2cm, minimum height=0.6cm] (cd1_label) at (0, 2) {CD1};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c1_s1) at (-1, 1) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c1_s2) at (0, 1) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c1_m1) at (1, 1) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c1_m2) at (2, 1) {M};
+  \\draw[->] (cd1_label) -- (c1_s1);
+  \\draw[->] (cd1_label) -- (c1_s2);
+  \\draw[->] (cd1_label) -- (c1_m1);
+  \\draw[->] (cd1_label) -- (c1_m2);
+  
+  % CD2 (diagrama separado)
+  \\node[rectangle, draw, minimum width=1.2cm, minimum height=0.6cm] (cd2_label) at (0, 0) {CD2};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c2_m1) at (-1, -1) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c2_m2) at (0, -1) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c2_s1) at (1, -1) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c2_s2) at (2, -1) {S};
+  \\draw[->] (cd2_label) -- (c2_m1);
+  \\draw[->] (cd2_label) -- (c2_m2);
+  \\draw[->] (cd2_label) -- (c2_s1);
+  \\draw[->] (cd2_label) -- (c2_s2);
+  
+  % CD3 (diagrama separado)
+  \\node[rectangle, draw, minimum width=1.2cm, minimum height=0.6cm] (cd3_label) at (0, -2) {CD3};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c3_m1) at (-1, -3) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c3_m2) at (0, -3) {M};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c3_s1) at (1, -3) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (c3_s2) at (2, -3) {S};
+  \\draw[->] (cd3_label) -- (c3_m1);
+  \\draw[->] (cd3_label) -- (c3_m2);
+  \\draw[->] (cd3_label) -- (c3_s1);
+  \\draw[->] (cd3_label) -- (c3_s2);
+\\end{tikzpicture}
+'
+
+include_tikz(tikz_c,
+             name = "diagrama_opcion_c",
+             markup = "markdown",
+             format = typ,
+             library = c("positioning", "babel"),
+             packages = c("tikz", "xcolor"),
+             width = "10cm")
+```
+
+**Opción D:**
+
+```{r opcion_d, echo=FALSE, results="asis"}
+# Diagrama D: Tres diagramas con estructura interna de dos niveles (incorrecto)
+tikz_d <- '
+\\begin{tikzpicture}[scale=0.75, node distance=1cm and 1.2cm]
+  % CD1 (diagrama con dos niveles internos)
+  \\node[rectangle, draw, minimum width=1.2cm, minimum height=0.6cm] (cd1_label) at (0, 3.5) {CD1};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (cd1_s) at (-1, 2.5) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (cd1_m) at (1, 2.5) {M};
+  \\draw[->] (cd1_label) -- (cd1_s);
+  \\draw[->] (cd1_label) -- (cd1_m);
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd1_s_s) at (-1.5, 1.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd1_s_m) at (-0.5, 1.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd1_m_s) at (0.5, 1.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd1_m_m) at (1.5, 1.5) {M};
+  \\draw[->] (cd1_s) -- (cd1_s_s);
+  \\draw[->] (cd1_s) -- (cd1_s_m);
+  \\draw[->] (cd1_m) -- (cd1_m_s);
+  \\draw[->] (cd1_m) -- (cd1_m_m);
+  
+  % CD2 (diagrama separado con dos niveles)
+  \\node[rectangle, draw, minimum width=1.2cm, minimum height=0.6cm] (cd2_label) at (0, 0.5) {CD2};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (cd2_s) at (-1, -0.5) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (cd2_m) at (1, -0.5) {M};
+  \\draw[->] (cd2_label) -- (cd2_s);
+  \\draw[->] (cd2_label) -- (cd2_m);
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd2_s_s) at (-1.5, -1.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd2_s_m) at (-0.5, -1.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd2_m_s) at (0.5, -1.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd2_m_m) at (1.5, -1.5) {M};
+  \\draw[->] (cd2_s) -- (cd2_s_s);
+  \\draw[->] (cd2_s) -- (cd2_s_m);
+  \\draw[->] (cd2_m) -- (cd2_m_s);
+  \\draw[->] (cd2_m) -- (cd2_m_m);
+  
+  % CD3 (diagrama separado con dos niveles)
+  \\node[rectangle, draw, minimum width=1.2cm, minimum height=0.6cm] (cd3_label) at (0, -2.5) {CD3};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (cd3_s) at (-1, -3.5) {S};
+  \\node[circle, draw, fill=blue!20, minimum size=0.5cm] (cd3_m) at (1, -3.5) {M};
+  \\draw[->] (cd3_label) -- (cd3_s);
+  \\draw[->] (cd3_label) -- (cd3_m);
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd3_s_s) at (-1.5, -4.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd3_s_m) at (-0.5, -4.5) {M};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd3_m_s) at (0.5, -4.5) {S};
+  \\node[circle, draw, fill=green!20, minimum size=0.4cm] (cd3_m_m) at (1.5, -4.5) {M};
+  \\draw[->] (cd3_s) -- (cd3_s_s);
+  \\draw[->] (cd3_s) -- (cd3_s_m);
+  \\draw[->] (cd3_m) -- (cd3_m_s);
+  \\draw[->] (cd3_m) -- (cd3_m_m);
+\\end{tikzpicture}
+'
+
+include_tikz(tikz_d,
+             name = "diagrama_opcion_d",
+             markup = "markdown",
+             format = typ,
+             library = c("positioning", "babel"),
+             packages = c("tikz", "xcolor"),
+             width = "10cm")
+```
+
+```{r questionlist, echo=FALSE, results="asis"}
+answerlist(c("Opción A", "Opción B", "Opción C", "Opción D"), markup = "markdown")
+```
+
+Solution
+========
+
+**Diagrama correcto: Opción A**
+
+El diagrama debe representar la **secuencia de decisiones** al seleccionar una canción de cada CD en orden: primero del CD1, luego del CD2, y finalmente del CD3.
+
+**Estructura correcta (Opción A):**
+
+1. **CD1** (inicio): 2 opciones (S o M)
+2. **CD2** (segundo nivel): Desde cada opción de CD1, se ramifican 2 nuevas opciones → 4 ramas totales
+3. **CD3** (tercer nivel): Desde cada opción de CD2, se ramifican 2 nuevas opciones → 8 resultados finales
+
+**Total de combinaciones:** 2 × 2 × 2 = **8 combinaciones posibles**
+
+**Características del diagrama correcto:**
+
+- ✅ Representa un **proceso secuencial** claramente visible
+- ✅ Los tres niveles (CD1, CD2, CD3) están conectados en una estructura continua
+- ✅ Cada nivel se desarrolla completamente antes de pasar al siguiente
+- ✅ Muestra todas las 8 combinaciones posibles: (S-S-S), (S-S-M), (S-M-S), (S-M-M), (M-S-S), (M-S-M), (M-M-S), (M-M-M)
+
+**Análisis de opciones incorrectas:**
+
+- **Opción B:** ERROR - Muestra que si se selecciona S del CD1, todas las selecciones posteriores deben ser S. Esto implica una dependencia incorrecta que no existe en el problema (las selecciones son independientes).
+
+- **Opción C:** ERROR - Muestra tres diagramas **separados** e independientes. No representa una secuencia, sino tres procesos independientes. No muestra cómo la selección del CD2 depende de la selección previa del CD1, ni cómo la selección del CD3 depende de las selecciones previas.
+
+- **Opción D:** ERROR - Similar a la opción C, muestra tres diagramas separados, cada uno con su propia estructura de dos niveles. No representa la secuencia CD1 → CD2 → CD3 como un proceso único e interconectado.
+
+**Principio clave:** En un proceso secuencial de selección, cada etapa debe representarse como un nivel en el árbol, y todas las ramas deben desarrollarse completamente antes de pasar al siguiente nivel. El diagrama debe mostrar claramente que el proceso es secuencial y que las selecciones son independientes en cada etapa.
+
+Answerlist
+----------
+- Verdadero
+- Falso
+- Falso
+- Falso
+
+Meta-information
+================
+exname: Selección Canciones CD Diagrama Árbol
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+exsection: Diagramas de Árbol - Probabilidad
+

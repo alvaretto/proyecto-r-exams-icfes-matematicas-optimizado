@@ -1,11 +1,11 @@
 ---
 output:
-  pdf_document:
-    latex_engine: xelatex
-    keep_tex: true
   html_document:
     df_print: paged
     mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
   word_document: default
 header-includes:
 - \usepackage[spanish]{babel}
@@ -344,6 +344,7 @@ La probabilidad condicional se define como:
 $$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
 
 En nuestro caso:
+
 - **A** = Segunda extracción es `r datos$color1$nombre`
 - **B** = Primera extracción es `r datos$color1$nombre`
 - **P(A ∩ B)** = Probabilidad de que ambas extracciones sean `r datos$color1$nombre`
@@ -360,6 +361,7 @@ $$P(\text{Primera = `r datos$color1$nombre`}) = \frac{`r datos$bolas_color1`}{`r
 **Probabilidad condicional (P(A|B)):**
 
 Si en la primera extracción se obtuvo una bola `r datos$color1$nombre`, quedan:
+
 - `r datos$bolas_color1 - 1` bolas `r datos$color1$nombre`
 - `r datos$bolas_color2` bolas `r datos$color2$nombre`
 - Total: `r datos$total_bolas - 1` bolas
@@ -371,6 +373,7 @@ $$P(\text{Segunda = `r datos$color1$nombre`} | \text{Primera = `r datos$color1$n
 ### Paso 4: Verificación con el diagrama de árbol
 
 En el diagrama de árbol, podemos observar que:
+
 - Del nodo "Primera: `r datos$color1$nombre`" salen dos ramas
 - La rama hacia "Segunda: `r datos$color1$nombre`" tiene probabilidad `r sprintf("%.3f", datos$p_segundo_color1_dado_color1)`
 - Esta probabilidad coincide con nuestro cálculo: `r sprintf("%.4f", datos$p_condicional)`

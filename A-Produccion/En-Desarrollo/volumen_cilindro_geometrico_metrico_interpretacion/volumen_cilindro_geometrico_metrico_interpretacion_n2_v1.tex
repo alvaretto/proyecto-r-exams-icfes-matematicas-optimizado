@@ -74,15 +74,15 @@
 
 \section{Question}\label{question}
 
-Un arquitecto tiene un cilindro de forma cilíndrica. El cilindro tiene
-una base circular de radio 2 cm y una altura de 10 cm, como se muestra
-en la figura.
+Un profesor tiene una lata de forma cilíndrica. La lata tiene una base
+circular de radio 5 cm y una altura de 9 cm, como se muestra en la
+figura.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 % Definir parámetros del cilindro
-\def\radio{0.6}
-\def\altura{3}
+\def\radio{1.5}
+\def\altura{2.7}
 \def\profundidad{0.35}
 
 % Elipse superior (tapa visible)
@@ -96,18 +96,18 @@ en la figura.
 \draw[thick, brown!70!black] (\radio, 0) -- (\radio, \altura);
 
 % Etiqueta del radio - elevada para evitar solapamiento con la tapa
-\draw[<->, red] (0, \altura + 0.5) -- (\radio, \altura + 0.5) node[midway, above, font=\small, transform shape=false] {2 cm};
+\draw[<->, red] (0, \altura + 0.5) -- (\radio, \altura + 0.5) node[midway, above, font=\small, transform shape=false] {5 cm};
 
 % Etiqueta de la altura
-\draw[<->, blue] (\radio + 0.6, 0) -- (\radio + 0.6, \altura) node[midway, right, font=\small, transform shape=false] {10 cm};
+\draw[<->, blue] (\radio + 0.6, 0) -- (\radio + 0.6, \altura) node[midway, right, font=\small, transform shape=false] {9 cm};
 
 \end{tikzpicture}
 \end{center}
 
-A partir de la información anterior, el arquitecto plantea la siguiente
+A partir de la información anterior, el profesor plantea la siguiente
 operación:
 
-\[\pi \times 2^2 \times 10 = 125.66\]
+\[\pi \times 5^2 \times 9 = 706.86\]
 
 \textbf{¿A qué corresponde el resultado de la anterior operación?}
 
@@ -116,13 +116,13 @@ operación:
 \begin{itemize}
 \tightlist
 \item
-  Al perímetro de la tapa del cilindro.
+  Al área de la tapa de la lata.
 \item
-  Al área de la tapa del cilindro.
+  Al área lateral de la lata.
 \item
-  Al volumen del cilindro.
+  Al perímetro de la tapa de la lata.
 \item
-  Al área lateral del cilindro.
+  Al volumen de la lata.
 \end{itemize}
 
 \section{Solution}\label{solution}
@@ -135,16 +135,16 @@ operación}\label{anuxe1lisis-de-la-operaciuxf3n}
 
 La operación planteada es:
 
-\[\pi \times 2^2 \times 10 = 125.66\]
+\[\pi \times 5^2 \times 9 = 706.86\]
 
 Donde:
 
 \begin{itemize}
 \tightlist
 \item
-  \(r = 2\) cm (radio de la base circular)
+  \(r = 5\) cm (radio de la base circular)
 \item
-  \(h = 10\) cm (altura del cilindro)
+  \(h = 9\) cm (altura del cilindro)
 \end{itemize}
 
 \subsubsection{Fórmulas relevantes del
@@ -169,7 +169,7 @@ fórmulas:
 \subsubsection{Comparación con la operación
 dada}\label{comparaciuxf3n-con-la-operaciuxf3n-dada}
 
-La expresión \(\pi \times 2^2 \times 10\) tiene la estructura:
+La expresión \(\pi \times 5^2 \times 9\) tiene la estructura:
 
 \[\pi \times r^2 \times h\]
 
@@ -177,7 +177,7 @@ Comparando con las fórmulas anteriores, observamos que \textbf{esta
 expresión corresponde exactamente a la fórmula del volumen del
 cilindro}:
 
-\[V = \pi r^2 h = \pi \times 2^2 \times 10 = 125.66 \text{ cm}^3\]
+\[V = \pi r^2 h = \pi \times 5^2 \times 9 = 706.86 \text{ cm}^3\]
 
 \subsubsection{Verificación de otras
 opciones}\label{verificaciuxf3n-de-otras-opciones}
@@ -185,21 +185,21 @@ opciones}\label{verificaciuxf3n-de-otras-opciones}
 Verifiquemos por qué las otras opciones son incorrectas:
 
 \textbf{Área de la tapa:}
-\[A_{tapa} = \pi r^2 = \pi \times  2 ^2 =  12.57  \text{ cm}^2\] Esta
+\[A_{tapa} = \pi r^2 = \pi \times  5 ^2 =  78.54  \text{ cm}^2\] Esta
 fórmula NO incluye la altura.
 
 \textbf{Perímetro de la tapa:}
-\[P_{tapa} = 2\pi r = 2 \times \pi \times  2  =  12.57  \text{ cm}\]
+\[P_{tapa} = 2\pi r = 2 \times \pi \times  5  =  31.42  \text{ cm}\]
 Esta fórmula NO incluye \(r^2\) ni la altura.
 
 \textbf{Área lateral:}
-\[A_{lateral} = 2\pi r h = 2 \times \pi \times  2  \times  10  =  125.66  \text{ cm}^2\]
+\[A_{lateral} = 2\pi r h = 2 \times \pi \times  5  \times  9  =  282.74  \text{ cm}^2\]
 Esta fórmula NO incluye \(r^2\) (solo \(r\)).
 
 \subsubsection{Conclusión}\label{conclusiuxf3n}
 
-La operación \(\pi \times 2^2 \times 10 = 125.66\) corresponde al
-\textbf{volumen del cilindro}, medido en centímetros cúbicos (cm³).
+La operación \(\pi \times 5^2 \times 9 = 706.86\) corresponde al
+\textbf{volumen de la lata}, medido en centímetros cúbicos (cm³).
 
 La estructura \(\pi r^2 h\) es característica de la fórmula del volumen
 de un cilindro, donde:
@@ -217,22 +217,22 @@ de un cilindro, donde:
 \begin{itemize}
 \tightlist
 \item
-  Falso. El perímetro de la tapa sería \(2\pi r\) (no incluye \(r^2\) ni
-  altura).
-\item
   Falso. El área de la tapa sería \(\pi r^2\) (sin la altura).
-\item
-  Verdadero. La fórmula \(\pi r^2 h\) corresponde al volumen del
-  cilindro.
 \item
   Falso. El área lateral sería \(2\pi r h\) (con \(r\) en lugar de
   \(r^2\)).
+\item
+  Falso. El perímetro de la tapa sería \(2\pi r\) (no incluye \(r^2\) ni
+  altura).
+\item
+  Verdadero. La fórmula \(\pi r^2 h\) corresponde al volumen del
+  cilindro.
 \end{itemize}
 
 \section{Meta-information}\label{meta-information}
 
 exname: volumen\_cilindro\_interpretacion\_formula extype: schoice
-exsolution: 0010 exshuffle: TRUE exsection:
+exsolution: 0001 exshuffle: TRUE exsection:
 Geometría\textbar Cilindro\textbar Volumen\textbar Interpretación
 exextra{[}Type{]}: Interpretación y representación exextra{[}Level{]}: 2
 exextra{[}Language{]}: es exextra{[}Course{]}: Matemáticas ICFES
