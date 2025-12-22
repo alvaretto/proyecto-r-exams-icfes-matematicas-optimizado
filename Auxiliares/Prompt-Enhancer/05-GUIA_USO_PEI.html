@@ -11,7 +11,7 @@
 
 
 
-<title>README</title>
+<title>05-GUIA_USO_PEI</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,281 +352,459 @@ display: none;
 </div>
 
 
-<div id="prompt-enhancer---optimizador-de-prompts-para-ia-genérica" class="section level1">
-<h1>🚀 PROMPT ENHANCER - Optimizador de Prompts para IA Genérica</h1>
-<p><strong>Versión</strong>: 2.0.0 <strong>Ubicación</strong>:
-<code>Auxiliares/Prompt-Enhancer/</code> <strong>Última
-actualización</strong>: 2025-12-21 <strong>Tipo de
-actualización</strong>: Optimización para IA genérica</p>
-<div id="descripción-rápida" class="section level2">
-<h2>📋 Descripción Rápida</h2>
-<p>Sistema inteligente que mejora automáticamente los prompts del
-usuario añadiendo contexto del proyecto ICFES R-Exams. Genera outputs en
-formato markdown estándar compatibles con <strong>cualquier IA</strong>
-(ChatGPT, Claude, Gemini, Copilot, etc.).</p>
-<ul>
-<li>✅ <strong>SIEMPRE genera archivo</strong>
-<code>prompt_mejorado_YYYYMMDD_HHMMSS.txt</code></li>
-<li>✅ Workflow documentado de <code>.claude/docs/</code></li>
-<li>✅ Skills y comandos de <code>.claude/</code></li>
-<li>✅ Hooks de automatización disponibles</li>
-<li>✅ Ejemplos funcionales y recomendaciones contextuales</li>
-</ul>
+<div id="guía-detallada-uso-de-pei-modo-interactivo" class="section level1">
+<h1>📖 Guía Detallada: Uso de <code>pei</code> (Modo Interactivo)</h1>
+<p><strong>Alias</strong>: <code>pei</code> =
+<code>prompt-enhancer.sh -i</code> (modo interactivo)<br />
+<strong>Versión</strong>: 1.2.0+<br />
+<strong>Última actualización</strong>: 2025-12-21</p>
+<hr />
+<div id="qué-es-pei" class="section level2">
+<h2>🎯 ¿Qué es <code>pei</code>?</h2>
+<p><code>pei</code> es el alias para el <strong>modo
+interactivo</strong> del Prompt Enhancer. Permite ingresar prompts de
+múltiples líneas de forma cómoda, ideal para prompts largos o
+complejos.</p>
+<hr />
 </div>
-<div id="inicio-rápido" class="section level2">
-<h2>🚀 Inicio Rápido</h2>
-<div id="alias-ya-configurados" class="section level3">
-<h3>✅ Alias Ya Configurados</h3>
-<p>Los alias ya están configurados en tu sistema:</p>
-<ul>
-<li>✅ <strong>~/.bashrc</strong> (Bash)</li>
-<li>✅ <strong>~/.zshrc</strong> (Zsh)</li>
-</ul>
-<p><strong>Para activarlos en tu terminal actual:</strong></p>
-<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc si usas zsh</code></pre>
-<p><strong>O simplemente abre una nueva terminal.</strong></p>
-</div>
-<div id="uso-con-alias-recomendado" class="section level3">
-<h3>Uso con Alias (Recomendado)</h3>
-<pre class="bash"><code># Uso básico
-pe &quot;Tu prompt aquí&quot;
-
-# Con copia al portapapeles
-pec &quot;Tu prompt&quot;
-
-# Modo interactivo
-pei</code></pre>
-</div>
-<div id="uso-sin-alias-ruta-completa" class="section level3">
-<h3>Uso sin Alias (Ruta Completa)</h3>
-<pre class="bash"><code># Desde la raíz del proyecto
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt aquí&quot;
-
-# Modo interactivo
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh
-
-# Con copia al portapapeles
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt&quot; -c</code></pre>
-</div>
-</div>
-<div id="documentación-completa-orden-de-lectura" class="section level2">
-<h2>📚 Documentación Completa (Orden de Lectura)</h2>
-<ol style="list-style-type: decimal">
-<li><strong><a href="01-README_PROMPT_ENHANCER.md">01-README_PROMPT_ENHANCER.md</a></strong>
-- Documentación completa</li>
-<li><strong><a href="02-EJEMPLOS_USO_PROMPT_ENHANCER.md">02-EJEMPLOS_USO_PROMPT_ENHANCER.md</a></strong>
-- Ejemplos prácticos</li>
-<li><strong><a href="03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md">03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md</a></strong>
-- Instalación y configuración avanzada</li>
-<li><strong><a href="04-CONFIGURACION_ALIAS.md">04-CONFIGURACION_ALIAS.md</a></strong>
-- ✅ Estado de configuración de alias</li>
-<li><strong><a href="05-GUIA_USO_PEI.md">05-GUIA_USO_PEI.md</a></strong>
-- Guía detallada del modo interactivo</li>
-<li><strong><a href="06-ANALISIS_MEJORAS_DETECCION_ERRORES.md">06-ANALISIS_MEJORAS_DETECCION_ERRORES.md</a></strong>
-- Análisis de mejoras y detección de errores</li>
-<li><strong><a href="07-CHANGELOG.md">07-CHANGELOG.md</a></strong> -
-Historial de cambios</li>
-</ol>
-</div>
-<div id="características-principales" class="section level2">
-<h2>🎯 Características Principales</h2>
-<div id="detección-automática-de-contexto" class="section level3">
-<h3>Detección Automática de Contexto</h3>
-<p>El script detecta automáticamente:</p>
-<ul>
-<li>Ubicación actual en el proyecto</li>
-<li>Tipo de contenido (producción, desarrollo, auxiliares, etc.)</li>
-<li>Reglas aplicables</li>
-<li>Ejemplos funcionales relevantes</li>
-</ul>
-</div>
-<div id="enriquecimiento-desde-.claude" class="section level3">
-<h3>Enriquecimiento desde <code>.claude/</code></h3>
-<p>El archivo generado incluye:</p>
-<div id="workflow-del-proyecto-priorizado" class="section level4">
-<h4>🔄 Workflow del Proyecto (Priorizado)</h4>
-<ul>
-<li>Contenido de <code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></li>
-<li>Pasos detallados del flujo de trabajo</li>
-</ul>
-</div>
-<div id="herramientas-disponibles" class="section level4">
-<h4>🔧 Herramientas Disponibles</h4>
-<ul>
-<li>Skills de <code>.claude/skills/</code></li>
-<li>Comandos de <code>.claude/commands/</code></li>
-<li>Hooks de <code>.claude/hooks/</code></li>
-</ul>
-</div>
-<div id="recursos-adicionales" class="section level4">
-<h4>📚 Recursos Adicionales</h4>
-<ul>
-<li>Patrones de errores conocidos (si aplica)</li>
-<li>Ejemplos funcionales de <code>A-Produccion/</code></li>
-<li>Instrucciones específicas para la IA</li>
-</ul>
-</div>
-</div>
-</div>
-<div id="opciones-disponibles" class="section level2">
-<h2>🔧 Opciones Disponibles</h2>
-<pre class="bash"><code>-h, --help              Mostrar ayuda
--i, --interactive       Modo interactivo (por defecto)
--f, --file FILE         Leer prompt desde archivo
--o, --output FILE       Guardar prompt mejorado en archivo
--c, --clipboard         Copiar prompt mejorado al portapapeles</code></pre>
-</div>
-<div id="ejemplo-de-salida-archivo-.txt-generado" class="section level2">
-<h2>📊 Ejemplo de Salida (archivo .txt generado)</h2>
-<pre class="markdown"><code># PROMPT MEJORADO - PROYECTO ICFES R-EXAMS
-
-## 📍 CONTEXTO DEL PROYECTO
-- Proyecto: Sistema de generación de ejercicios matemáticos ICFES
-- Ubicación actual: A-Produccion/En-Desarrollo
-- Tipo de contexto: desarrollo
-
-## 🔄 WORKFLOW DEL PROYECTO
-[Contenido de WORKFLOW_PASO_A_PASO.md...]
-
-## 🔧 HERRAMIENTAS Y RECURSOS DISPONIBLES
-### Skills Disponibles
-[Lista de skills...]
-
-### Comandos Disponibles
-[Lista de comandos...]
-
-### Hooks de Automatización
-[Lista de hooks...]
-
-## 📚 EJEMPLOS FUNCIONALES DISPONIBLES
-[Lista de ejemplos...]
-
-## 💡 RECOMENDACIONES SEGÚN CONTEXTO
-[Recomendaciones específicas...]
-
----
-
-## 🎯 SOLICITUD DEL USUARIO
-&gt; [Tu prompt original]
-
-## 📋 INSTRUCCIONES PARA LA IA
-1. Priorizar uso de skills y comandos de .claude/
-2. Consultar ejemplos funcionales antes de generar código
-3. Validar compatibilidad con sistema exams2*</code></pre>
-</div>
-<div id="casos-de-uso" class="section level2">
-<h2>🎨 Casos de Uso</h2>
-<ul>
-<li>✅ Generar ejercicios ICFES con cualquier IA</li>
-<li>✅ Corregir errores con skills y hooks disponibles</li>
-<li>✅ Desarrollar siguiendo workflow documentado</li>
-<li>✅ Adaptar ejercicios usando ejemplos funcionales</li>
-<li>✅ Compatible con ChatGPT, Claude, Gemini, Copilot, etc.</li>
-</ul>
-</div>
-<div id="verificación" class="section level2">
-<h2>🔍 Verificación</h2>
-<div id="verificar-configuración-de-alias" class="section level3">
-<h3>Verificar Configuración de Alias</h3>
-<pre class="bash"><code># Ejecutar script de verificación
-./Auxiliares/Prompt-Enhancer/verificar-alias.sh</code></pre>
-<p>Este script verifica:</p>
-<ul>
-<li>✅ Alias en ~/.bashrc</li>
-<li>✅ Alias en ~/.zshrc</li>
-<li>📋 Instrucciones de activación</li>
-<li>📝 Ejemplos de uso</li>
-</ul>
-</div>
-<div id="verificar-funcionamiento" class="section level3">
-<h3>Verificar Funcionamiento</h3>
-<pre class="bash"><code># Activar alias (si no lo has hecho)
+<div id="activación" class="section level2">
+<h2>🚀 Activación</h2>
+<div id="paso-1-activar-alias-si-no-está-activo" class="section level3">
+<h3>Paso 1: Activar alias (si no está activo)</h3>
+<pre class="bash"><code># Para Bash
 source ~/.bashrc
 
-# Probar con alias
-pe &quot;Test&quot;
+# Para Zsh
+source ~/.zshrc</code></pre>
+<p>O simplemente abre una nueva terminal.</p>
+</div>
+<div id="paso-2-verificar-que-funciona" class="section level3">
+<h3>Paso 2: Verificar que funciona</h3>
+<pre class="bash"><code>pei</code></pre>
+<p>Deberías ver:</p>
+<pre><code>🔍 Buscando raíz del proyecto...
+✓ Raíz del proyecto encontrada: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams
 
-# O con ruta completa
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Prueba de funcionamiento&quot;</code></pre>
+╔════════════════════════════════════════════════════════════════╗
+║         MODO INTERACTIVO - PROMPT ENHANCER                     ║
+╚════════════════════════════════════════════════════════════════╝
+
+Ingresa tu prompt (presiona Ctrl+D cuando termines):</code></pre>
+<hr />
 </div>
 </div>
-<div id="notas-importantes" class="section level2">
-<h2>📝 Notas Importantes</h2>
+<div id="uso-básico" class="section level2">
+<h2>📝 Uso Básico</h2>
+<div id="ejemplo-1-prompt-simple" class="section level3">
+<h3>Ejemplo 1: Prompt Simple</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Interacción:</strong></p>
+<pre><code>Ingresa tu prompt (presiona Ctrl+D cuando termines):
+Genera un ejercicio de geometría nivel 2
+[Presiona Ctrl+D]</code></pre>
+<p><strong>Resultado</strong>: Prompt mejorado mostrado en pantalla</p>
+<hr />
+</div>
+<div id="ejemplo-2-prompt-multilínea" class="section level3">
+<h3>Ejemplo 2: Prompt Multilínea</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Interacción:</strong></p>
+<pre><code>Ingresa tu prompt (presiona Ctrl+D cuando termines):
+Necesito crear un ejercicio tipo Cloze que combine:
+
+- Estadística descriptiva (media, mediana, moda)
+- Gráfico de barras con Python/matplotlib
+- Nivel 2, competencia interpretación y representación
+- Contexto: ventas de una tienda
+[Presiona Ctrl+D]</code></pre>
+<p><strong>Ventaja</strong>: Puedes escribir múltiples líneas sin
+problemas</p>
+<hr />
+</div>
+<div id="ejemplo-3-prompt-con-archivo-.rmd" class="section level3">
+<h3>Ejemplo 3: Prompt con Archivo .Rmd</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Interacción:</strong></p>
+<pre><code>Ingresa tu prompt (presiona Ctrl+D cuando termines):
+Tengo un error en recta_geometria_analitica_interpretacion_representacion_n2_v1.Rmd
+
+El error es:
+Error in abs(b_formateado): Argumento no numérico para una función matemática
+
+¿Cómo lo corrijo?
+[Presiona Ctrl+D]</code></pre>
+<p><strong>Resultado</strong>:</p>
 <ul>
-<li><strong>Archivo siempre generado</strong>: SIEMPRE crea
-<code>prompt_mejorado_YYYYMMDD_HHMMSS.txt</code></li>
-<li><strong>Portabilidad</strong>: Funciona desde cualquier subcarpeta
-del proyecto</li>
-<li><strong>Compatibilidad IA</strong>: El archivo es compatible con
-cualquier IA</li>
-<li><strong>Enfoque en .claude/</strong>: Solo incluye información de
-<code>.claude/</code></li>
-<li><strong>Sin dependencias pesadas</strong>: Solo requiere bash
-estándar</li>
-<li><strong>Opcional</strong>: xclip, pbcopy o wl-copy para
-portapapeles</li>
+<li>Prompt mejorado con contexto</li>
+<li><strong>NUEVO</strong>: Detección automática de errores en el
+archivo .Rmd</li>
+<li><strong>NUEVO</strong>: Resumen de errores conocidos y
+soluciones</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="características-del-modo-interactivo" class="section level2">
+<h2>🎨 Características del Modo Interactivo</h2>
+<div id="ventajas" class="section level3">
+<h3>✅ Ventajas</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Múltiples líneas</strong>: Escribe prompts largos
+cómodamente</li>
+<li><strong>Sin comillas</strong>: No necesitas escapar comillas
+especiales</li>
+<li><strong>Edición fácil</strong>: Puedes usar las flechas para
+editar</li>
+<li><strong>Historial</strong>: Usa las flechas arriba/abajo para
+navegar historial</li>
+<li><strong>Detección automática</strong>: Detecta archivos .Rmd y
+errores automáticamente</li>
+</ol>
+</div>
+<div id="lo-que-incluye-automáticamente" class="section level3">
+<h3>📋 Lo que incluye automáticamente</h3>
+<p>El prompt mejorado incluye:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Contexto de ubicación</strong>
+<ul>
+<li>Proyecto actual</li>
+<li>Ubicación en el repositorio</li>
+<li>Tipo de contexto (producción, desarrollo, etc.)</li>
+</ul></li>
+<li><strong>Reglas del proyecto</strong>
+<ul>
+<li>Reglas generales de <code>.claude/</code></li>
+<li>Documentación técnica</li>
+<li>Guía de estilo ICFES</li>
+</ul></li>
+<li><strong>Ejemplos funcionales</strong>
+<ul>
+<li>Archivos .Rmd de ejemplo relevantes</li>
+<li>Templates disponibles</li>
+</ul></li>
+<li><strong>Recomendaciones contextuales</strong>
+<ul>
+<li>Según tu ubicación actual</li>
+<li>Mejores prácticas aplicables</li>
+</ul></li>
+<li><strong>🆕 Detección de errores</strong> (si mencionas archivos
+.Rmd)
+<ul>
+<li>Análisis automático del archivo</li>
+<li>Advertencias sobre patrones problemáticos</li>
+<li>Referencias a documentación de errores conocidos</li>
+</ul></li>
+<li><strong>🆕 Resumen de errores conocidos</strong> (si mencionas
+archivos .Rmd)
+<ul>
+<li>Errores documentados y sus soluciones</li>
+<li>Referencias a casos resueltos</li>
+</ul></li>
+</ol>
+<hr />
+</div>
+</div>
+<div id="casos-de-uso-prácticos" class="section level2">
+<h2>💡 Casos de Uso Prácticos</h2>
+<div id="caso-1-generar-ejercicio-completo" class="section level3">
+<h3>Caso 1: Generar Ejercicio Completo</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Prompt:</strong></p>
+<pre><code>Crea un ejercicio de geometría analítica que incluya:
+
+- Ecuación de la recta
+- Pendiente e intercepto
+- Gráfico con TikZ
+- 4 opciones de respuesta tipo schoice
+- Nivel 2, competencia interpretación y representación
+- Contexto: movimiento de un objeto</code></pre>
+<p><strong>Resultado</strong>: Prompt mejorado con: - Reglas de estilo
+ICFES - Ejemplos de ejercicios similares - Metodología TikZ - Templates
+disponibles</p>
+<hr />
+</div>
+<div id="caso-2-corregir-error-específico" class="section level3">
+<h3>Caso 2: Corregir Error Específico</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Prompt:</strong></p>
+<pre><code>Error en volumen_cilindro_geometrico_metrico_interpretacion_n2_v1.Rmd:
+
+Package pdftex.def Error: File &#39;cilindro_vaso.png&#39; not found
+
+¿Cómo lo corrijo?</code></pre>
+<p><strong>Resultado</strong>: Prompt mejorado con:</p>
+<ul>
+<li><strong>Detección automática</strong>: Analiza el archivo y detecta
+el problema</li>
+<li><strong>Solución documentada</strong>: Referencia a Error 1
+(patrones-errores-conocidos.md)</li>
+<li><strong>Código de ejemplo</strong>: Solución verificada con código
+antes/después</li>
+<li><strong>Checklist de corrección</strong>: Pasos específicos a
+seguir</li>
+</ul>
+<hr />
+</div>
+<div id="caso-3-adaptar-ejercicio-existente" class="section level3">
+<h3>Caso 3: Adaptar Ejercicio Existente</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Prompt:</strong></p>
+<pre><code>Adapta el ejercicio de probabilidad condicional para:
+
+- Cambiar el contexto (de canciones a deportes)
+- Aumentar la dificultad a nivel 3
+- Mantener el diagrama de árbol TikZ
+- Archivo: seleccion_canciones_cd_diagrama_arbol_n2_v1.Rmd</code></pre>
+<p><strong>Resultado</strong>: Prompt mejorado con:</p>
+<ul>
+<li>Ejemplo del archivo mencionado</li>
+<li>Reglas de adaptación</li>
+<li>Metodología de diagramas TikZ</li>
+<li>Criterios de nivel 3</li>
+</ul>
+<hr />
+</div>
+<div id="caso-4-crear-script-o-herramienta" class="section level3">
+<h3>Caso 4: Crear Script o Herramienta</h3>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Prompt:</strong></p>
+<pre><code>Necesito un script que:
+
+- Valide metadatos ICFES en archivos .Rmd
+- Verifique que todos los campos obligatorios estén presentes
+- Genere un reporte de errores
+- Sea compatible con el sistema existente</code></pre>
+<p><strong>Resultado</strong>: Prompt mejorado con:</p>
+<ul>
+<li>Documentación técnica del sistema</li>
+<li>Ejemplos de scripts existentes</li>
+<li>Reglas de compatibilidad</li>
+<li>Mejores prácticas</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="opciones-combinadas" class="section level2">
+<h2>🔧 Opciones Combinadas</h2>
+<div id="pei-con-guardado-en-archivo" class="section level3">
+<h3><code>pei</code> con Guardado en Archivo</h3>
+<p>Aunque <code>pei</code> es interactivo, puedes redirigir la
+salida:</p>
+<pre class="bash"><code>pei &gt; prompt_mejorado.txt</code></pre>
+<p><strong>Interacción:</strong></p>
+<pre><code>Ingresa tu prompt (presiona Ctrl+D cuando termines):
+Tu prompt aquí
+[Presiona Ctrl+D]</code></pre>
+<p><strong>Resultado</strong>: Prompt mejorado guardado en
+<code>prompt_mejorado.txt</code></p>
+<hr />
+</div>
+<div id="pei-con-copia-al-portapapeles-manual" class="section level3">
+<h3><code>pei</code> con Copia al Portapapeles (Manual)</h3>
+<pre class="bash"><code>pei | xclip -selection clipboard  # Linux X11
+pei | wl-copy                       # Linux Wayland
+pei | pbcopy                        # macOS</code></pre>
+<p>O usa <code>pec</code> para modo directo con copia automática.</p>
+<hr />
+</div>
+</div>
+<div id="nuevas-funcionalidades-v1.2.0" class="section level2">
+<h2>🆕 Nuevas Funcionalidades (v1.2.0+)</h2>
+<div id="detección-automática-de-errores" class="section level3">
+<h3>Detección Automática de Errores</h3>
+<p>Cuando mencionas un archivo .Rmd, el script ahora:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Busca el archivo</strong> en el prompt o directorio
+actual</p></li>
+<li><p><strong>Analiza el código</strong> buscando patrones
+problemáticos:</p>
+<ul>
+<li><code>abs()</code> sobre variables formateadas</li>
+<li><code>round()</code>, <code>floor()</code>, <code>ceiling()</code>
+sobre variables formateadas</li>
+<li><code>include_tikz()</code> en chunks de generación</li>
+</ul></li>
+<li><p><strong>Muestra advertencias</strong> específicas con referencias
+a documentación</p></li>
+<li><p><strong>Incluye resumen</strong> de errores conocidos y
+soluciones</p></li>
+</ol>
+<p><strong>Ejemplo:</strong></p>
+<pre class="bash"><code>pei</code></pre>
+<p><strong>Prompt:</strong></p>
+<pre><code>Error en mi_archivo.Rmd con abs(b_formateado)</code></pre>
+<p><strong>Resultado incluye:</strong></p>
+<pre><code>## 🚨 ERRORES DETECTADOS EN ARCHIVO .RMD
+
+⚠️  **Error detectado**: Uso de abs() sobre variable formateada
+   Patrón problemático: abs(variable_formateada)
+   Solución: Aplicar abs() sobre valor numérico, luego formatear
+   Documentación: .claude/docs/patrones-errores-conocidos.md#error-2
+
+## 🚨 ERRORES CONOCIDOS Y SOLUCIONES
+
+**Referencia completa:** .claude/docs/patrones-errores-conocidos.md
+
+### Error 1: Imagen PNG no encontrada en compilación PDF
+### Error 2: Argumento no numérico para función matemática abs()</code></pre>
+<hr />
+</div>
+</div>
+<div id="comparación-de-modos" class="section level2">
+<h2>📊 Comparación de Modos</h2>
+<table style="width:100%;">
+<colgroup>
+<col width="44%" />
+<col width="16%" />
+<col width="19%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Característica</th>
+<th><code>pe</code></th>
+<th><code>pec</code></th>
+<th><code>pei</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Modo</td>
+<td>Directo</td>
+<td>Directo + Portapapeles</td>
+<td>Interactivo</td>
+</tr>
+<tr class="even">
+<td>Múltiples líneas</td>
+<td>❌ (requiere comillas)</td>
+<td>❌ (requiere comillas)</td>
+<td>✅ Fácil</td>
+</tr>
+<tr class="odd">
+<td>Edición</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Historial</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Copia automática</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr class="even">
+<td>Detección errores</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Ideal para</td>
+<td>Prompts cortos</td>
+<td>Prompts cortos + copia</td>
+<td>Prompts largos</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="mejores-prácticas" class="section level2">
+<h2>🎯 Mejores Prácticas</h2>
+<div id="usa-pei-cuando" class="section level3">
+<h3>✅ Usa <code>pei</code> cuando:</h3>
+<ul>
+<li>El prompt tiene múltiples líneas</li>
+<li>Necesitas describir un problema complejo</li>
+<li>Quieres incluir código o ejemplos en el prompt</li>
+<li>El prompt es muy largo (&gt; 100 caracteres)</li>
+<li>Necesitas editar el prompt antes de enviarlo</li>
 </ul>
 </div>
-<div id="novedades-v2.0.0-2025-12-21" class="section level2">
-<h2>🆕 Novedades v2.0.0 (2025-12-21)</h2>
-<div id="cambio-mayor-de-enfoque" class="section level3">
-<h3>Cambio Mayor de Enfoque</h3>
+<div id="no-uses-pei-cuando" class="section level3">
+<h3>❌ No uses <code>pei</code> cuando:</h3>
 <ul>
-<li>✅ <strong>Enfoque exclusivo en <code>.claude/</code></strong> -
-Eliminadas referencias a <code>.augment/</code> y
-<code>.claudedoc/</code></li>
-<li>✅ <strong>Generación automática de archivo .txt</strong> - SIEMPRE
-genera archivo</li>
-<li>✅ <strong>Formato markdown estándar</strong> - Compatible con
-cualquier IA</li>
-<li>✅ <strong>Prioriza workflow documentado</strong> - Incluye
-WORKFLOW_PASO_A_PASO.md</li>
-<li>✅ <strong>Incluye hooks</strong> - Lista hooks de
-automatización</li>
+<li>El prompt es muy corto (&lt; 20 caracteres)</li>
+<li>Necesitas copiar automáticamente al portapapeles (usa
+<code>pec</code>)</li>
+<li>Estás en un script automatizado (usa ruta completa)</li>
 </ul>
-</div>
-<div id="nueva-estructura-del-prompt" class="section level3">
-<h3>Nueva Estructura del Prompt</h3>
-<ul>
-<li>✅ Sección de workflow priorizada</li>
-<li>✅ Skills, comandos y hooks listados</li>
-<li>✅ Solicitud del usuario destacada</li>
-<li>✅ Instrucciones específicas para la IA (nueva sección)</li>
-</ul>
+<hr />
 </div>
 </div>
 <div id="solución-de-problemas" class="section level2">
-<h2>🚨 Solución de Problemas</h2>
-<div id="error-command-not-found-pe" class="section level3">
-<h3>Error: “command not found: pe”</h3>
-<p><strong>Causa:</strong> Los alias no están activados en la terminal
-actual.</p>
+<h2>🔍 Solución de Problemas</h2>
+<div id="problema-command-not-found-pei" class="section level3">
+<h3>Problema: “command not found: pei”</h3>
 <p><strong>Solución:</strong></p>
-<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc si usas zsh</code></pre>
-<p>O simplemente abre una nueva terminal.</p>
+<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc</code></pre>
 </div>
-<div id="error-permission-denied" class="section level3">
-<h3>Error: “Permission denied”</h3>
-<p><strong>Solución:</strong></p>
-<pre class="bash"><code>chmod +x Auxiliares/Prompt-Enhancer/prompt-enhancer.sh</code></pre>
+<div id="problema-ctrld-no-funciona" class="section level3">
+<h3>Problema: Ctrl+D no funciona</h3>
+<p><strong>Explicación</strong>: Ctrl+D envía EOF (End of File) al
+script. Si no funciona:</p>
+<ul>
+<li>Asegúrate de estar en una terminal real (no un editor)</li>
+<li>Presiona Enter antes de Ctrl+D</li>
+<li>O usa Ctrl+C para cancelar</li>
+</ul>
 </div>
-<div id="error-no-se-pudo-encontrar-la-raíz-del-proyecto" class="section level3">
-<h3>Error: “No se pudo encontrar la raíz del proyecto”</h3>
-<p><strong>Causa:</strong> No estás dentro del repositorio.</p>
-<p><strong>Solución:</strong> Asegúrate de estar dentro del repositorio
-RepositorioMatematicasICFES_R_Exams</p>
+<div id="problema-no-detecta-archivos-.rmd" class="section level3">
+<h3>Problema: No detecta archivos .Rmd</h3>
+<p><strong>Solución</strong>:</p>
+<ul>
+<li>Menciona explícitamente el archivo en el prompt:
+<code>&quot;error en archivo.Rmd&quot;</code></li>
+<li>O coloca el archivo .Rmd en el directorio actual</li>
+</ul>
 </div>
-<div id="los-alias-no-funcionan-en-scripts" class="section level3">
-<h3>Los alias no funcionan en scripts</h3>
-<p><strong>Explicación:</strong> Los alias solo funcionan en shells
-interactivos.</p>
-<p><strong>Solución:</strong> En scripts, usa la ruta completa o la
-variable de entorno:</p>
-<pre class="bash"><code>$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt&quot;</code></pre>
+<div id="problema-el-prompt-mejorado-es-muy-largo" class="section level3">
+<h3>Problema: El prompt mejorado es muy largo</h3>
+<p><strong>Explicación</strong>: Es normal, incluye todo el contexto del
+proyecto.</p>
+<p><strong>Solución</strong>:</p>
+<ul>
+<li>Redirige a archivo: <code>pei &gt; prompt.txt</code></li>
+<li>O usa <code>pec</code> para copiar y pegar solo lo necesario</li>
+</ul>
 <hr />
-<p><strong>Autor</strong>: Sistema ICFES R-Exams<br />
-<strong>Licencia</strong>: Uso interno del proyecto</p>
 </div>
+</div>
+<div id="referencias" class="section level2">
+<h2>📚 Referencias</h2>
+<ul>
+<li><strong>Documentación principal</strong>:
+<code>README.md</code></li>
+<li><strong>Ejemplos de uso</strong>:
+<code>02-EJEMPLOS_USO_PROMPT_ENHANCER.md</code></li>
+<li><strong>Configuración de alias</strong>:
+<code>04-CONFIGURACION_ALIAS.md</code></li>
+<li><strong>Análisis de mejoras</strong>:
+<code>06-ANALISIS_MEJORAS_DETECCION_ERRORES.md</code></li>
+</ul>
+<hr />
+</div>
+<div id="resumen-rápido" class="section level2">
+<h2>✅ Resumen Rápido</h2>
+<pre class="bash"><code># Activar alias
+source ~/.bashrc  # o source ~/.zshrc
+
+# Usar modo interactivo
+pei
+
+# Escribir prompt (múltiples líneas OK)
+# Presionar Ctrl+D cuando termines
+
+# Resultado: Prompt mejorado con todo el contexto</code></pre>
+<hr />
+<p><strong>Versión</strong>: 1.2.0+<br />
+<strong>Última actualización</strong>: 2025-12-21<br />
+<strong>Autor</strong>: Sistema ICFES R-Exams</p>
 </div>
 </div>
 

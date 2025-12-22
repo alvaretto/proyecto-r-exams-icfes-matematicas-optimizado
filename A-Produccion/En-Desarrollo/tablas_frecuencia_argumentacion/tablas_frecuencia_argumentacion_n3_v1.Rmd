@@ -1,0 +1,730 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "booktabs", "array"]
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - argumentacion
+  nivel_dificultad: 3
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: comunitario
+  eje_axial: eje3
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{booktabs}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+# Cargar stringr de forma opcional (no crítico para este ejercicio)
+tryCatch({
+  library(stringr)
+}, error = function(e) {
+  # Si stringr no está disponible, continuar sin él
+  # No se usa explícitamente en este código
+})
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos para competencia ARGUMENTACIÓN
+# Enfocada en tablas de frecuencia y distribución
+generar_datos <- function() {
+  # Contextos aleatorios ampliados para tablas de frecuencia
+  contextos <- list(
+    list(
+      lugar = "centro educativo",
+      tipo_estudio = "encuesta",
+      variable = "preferencia de asignatura",
+      categorias = c("Matemáticas", "Ciencias", "Lengua", "Historia", "Arte"),
+      unidad = "estudiantes"
+    ),
+    list(
+      lugar = "hospital",
+      tipo_estudio = "registro",
+      variable = "tipo de consulta",
+      categorias = c("General", "Pediatría", "Cardiología", "Traumatología", "Dermatología"),
+      unidad = "pacientes"
+    ),
+    list(
+      lugar = "empresa tecnológica",
+      tipo_estudio = "análisis",
+      variable = "departamento",
+      categorias = c("Desarrollo", "Marketing", "Ventas", "Recursos Humanos", "Finanzas"),
+      unidad = "empleados"
+    ),
+    list(
+      lugar = "centro comercial",
+      tipo_estudio = "estudio",
+      variable = "tipo de tienda",
+      categorias = c("Ropa", "Electrónica", "Alimentación", "Juguetes", "Deportes"),
+      unidad = "tiendas"
+    ),
+    list(
+      lugar = "universidad",
+      tipo_estudio = "investigación",
+      variable = "facultad",
+      categorias = c("Ingeniería", "Medicina", "Derecho", "Arquitectura", "Economía"),
+      unidad = "estudiantes"
+    ),
+    list(
+      lugar = "municipio",
+      tipo_estudio = "censo",
+      variable = "zona",
+      categorias = c("Norte", "Sur", "Este", "Oeste", "Centro"),
+      unidad = "hogares"
+    ),
+    list(
+      lugar = "biblioteca",
+      tipo_estudio = "registro",
+      variable = "género literario",
+      categorias = c("Ficción", "No ficción", "Científico", "Histórico", "Biográfico"),
+      unidad = "libros"
+    ),
+    list(
+      lugar = "parque",
+      tipo_estudio = "observación",
+      variable = "especie de árbol",
+      categorias = c("Roble", "Pino", "Eucalipto", "Cedro", "Fresno"),
+      unidad = "árboles"
+    ),
+    list(
+      lugar = "restaurante",
+      tipo_estudio = "encuesta",
+      variable = "tipo de plato",
+      categorias = c("Entrada", "Principal", "Postre", "Bebida", "Especial"),
+      unidad = "pedidos"
+    ),
+    list(
+      lugar = "gimnasio",
+      tipo_estudio = "registro",
+      variable = "tipo de actividad",
+      categorias = c("Cardio", "Pesas", "Yoga", "Pilates", "Natación"),
+      unidad = "asistentes"
+    )
+  )
+
+  contexto_sel <- sample(contextos, 1)[[1]]
+  
+  # Número de categorías (4-6 para nivel 3, pero no más que las disponibles)
+  n_categorias_disponibles <- length(contexto_sel$categorias)
+  
+  # Calcular el rango válido: entre 4 y el mínimo de (6, disponibles)
+  max_posible <- min(6, n_categorias_disponibles)
+  min_posible <- min(4, n_categorias_disponibles)
+  
+  # Asegurar que min <= max
+  if(min_posible > max_posible) {
+    min_posible <- max_posible
+  }
+  
+  # Muestrear el número de categorías del rango válido
+  if(min_posible <= max_posible && max_posible >= min_posible) {
+    rango_valido <- seq(min_posible, max_posible, by = 1)
+    if(length(rango_valido) >= 1) {
+      n_categorias <- sample(rango_valido, size = 1)
+    } else {
+      n_categorias <- n_categorias_disponibles
+    }
+  } else {
+    n_categorias <- n_categorias_disponibles
+  }
+  
+  # Verificación final crítica: n_categorias nunca debe exceder las disponibles
+  n_categorias <- min(n_categorias, n_categorias_disponibles)
+  n_categorias <- max(1, n_categorias)  # Asegurar al menos 1
+  
+  # Seleccionar categorías (verificación final justo antes de sample)
+  # Esto garantiza que nunca se intente tomar más categorías de las disponibles
+  n_categorias_para_sample <- min(n_categorias, length(contexto_sel$categorias))
+  n_categorias_para_sample <- max(1, n_categorias_para_sample)
+  categorias_sel <- sample(contexto_sel$categorias, size = n_categorias_para_sample)
+  n_categorias <- length(categorias_sel)  # Actualizar n_categorias al número real seleccionado
+  
+  # Generar frecuencias absolutas realistas (entre 20-200)
+  frecuencias_abs <- sample(20:200, n_categorias, replace = TRUE)
+  
+  # Calcular total
+  total <- sum(frecuencias_abs)
+  
+  # Calcular frecuencias relativas
+  frecuencias_rel <- round(frecuencias_abs / total, 3)
+  
+  # Calcular porcentajes
+  porcentajes <- round(frecuencias_rel * 100, 1)
+  
+  # Verificar que los porcentajes sumen aproximadamente 100%
+  suma_porcentajes <- sum(porcentajes)
+  if(abs(suma_porcentajes - 100) > 0.5) {
+    # Ajustar el último porcentaje para que sume exactamente 100%
+    diferencia <- 100 - suma_porcentajes
+    porcentajes[n_categorias] <- porcentajes[n_categorias] + diferencia
+    porcentajes[n_categorias] <- round(porcentajes[n_categorias], 1)
+  }
+  
+  # Seleccionar una categoría aleatoria para la pregunta (nivel 3: más complejo)
+  categoria_pregunta <- sample(1:n_categorias, 1)
+  frecuencia_abs_pregunta <- frecuencias_abs[categoria_pregunta]
+  frecuencia_rel_pregunta <- frecuencias_rel[categoria_pregunta]
+  porcentaje_pregunta <- porcentajes[categoria_pregunta]
+  
+  # Generar afirmaciones para evaluar (COMPETENCIA ARGUMENTACIÓN)
+  
+  # Afirmación CORRECTA (siempre una)
+  afirmacion_correcta <- paste0(
+    "El ", porcentaje_pregunta, "% de ", contexto_sel$unidad, 
+    " corresponde a la categoría '", categorias_sel[categoria_pregunta], 
+    "' porque la frecuencia relativa (", frecuencia_rel_pregunta, 
+    ") multiplicada por 100 da como resultado ", porcentaje_pregunta, "%"
+  )
+  
+  # SISTEMA AMPLIADO DE DISTRACTORES (8+ opciones para nivel 3)
+  afirmaciones_incorrectas <- c()
+  
+  # DECISIÓN ALEATORIA: ¿Permitir valores duplicados con justificaciones diferentes?
+  permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+  
+  # DISTRACTOR 1: Confundir frecuencia absoluta con porcentaje
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(
+      "El ", frecuencia_abs_pregunta, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque ese es el valor que aparece en la tabla de frecuencias absolutas"
+    )
+  )
+  
+  # DISTRACTOR 2: No convertir frecuencia relativa a porcentaje (dejar decimal)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(
+      "El ", frecuencia_rel_pregunta, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque ese es el valor de la frecuencia relativa"
+    )
+  )
+  
+  # DISTRACTOR 3: Calcular porcentaje sobre categoría incorrecta
+  categorias_disponibles <- setdiff(1:n_categorias, categoria_pregunta)
+  if(length(categorias_disponibles) > 0) {
+    categoria_incorrecta <- sample(categorias_disponibles, 1)
+  } else {
+    categoria_incorrecta <- 1  # Fallback si solo hay una categoría
+  }
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(
+      "El ", porcentajes[categoria_incorrecta], "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque es el porcentaje más alto de la tabla"
+    )
+  )
+  
+  # DISTRACTOR 4: Calcular porcentaje complementario (100% - correcto)
+  porcentaje_complementario <- round(100 - porcentaje_pregunta, 1)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(
+      "El ", porcentaje_complementario, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque es el porcentaje restante después de considerar las otras categorías"
+    )
+  )
+  
+  # DISTRACTOR 5: Confundir con frecuencia acumulada
+  if(categoria_pregunta > 1) {
+    freq_acum <- sum(porcentajes[1:categoria_pregunta])
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0(
+        "El ", round(freq_acum, 1), "% de ", contexto_sel$unidad,
+        " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+        "' porque es la frecuencia acumulada hasta esa categoría"
+      )
+    )
+  }
+  
+  # DISTRACTOR 6: Error en redondeo o cálculo (usar frecuencia absoluta/total sin multiplicar por 100)
+  porcentaje_incorrecto <- round((frecuencia_abs_pregunta / total) * 10, 1)  # Error común: multiplicar por 10 en vez de 100
+  if(porcentaje_incorrecto != porcentaje_pregunta) {
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0(
+        "El ", porcentaje_incorrecto, "% de ", contexto_sel$unidad,
+        " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+        "' porque se calcula dividiendo la frecuencia absoluta entre el total"
+      )
+    )
+  }
+  
+  # DISTRACTOR 7: Interpretación incorrecta del contexto (usar total en vez de porcentaje)
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+    paste0(
+      "El ", total, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque ese es el total de ", contexto_sel$unidad, " en el estudio"
+    )
+  )
+  
+  # DISTRACTOR 8: Justificaciones alternativas para valores correctos pero con razonamiento erróneo
+  justificaciones_incorrectas_correcto <- c(
+    paste0(
+      "El ", porcentaje_pregunta, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque es el valor que aparece en la columna de porcentajes de la tabla"
+    ),
+    paste0(
+      "El ", porcentaje_pregunta, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque se obtiene al dividir ", frecuencia_abs_pregunta, " entre ", total
+    ),
+    paste0(
+      "El ", porcentaje_pregunta, "% de ", contexto_sel$unidad,
+      " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+      "' porque representa la proporción de esa categoría respecto al total"
+    )
+  )
+  afirmaciones_incorrectas <- c(afirmaciones_incorrectas, justificaciones_incorrectas_correcto)
+  
+  # DISTRACTOR 9: Usar frecuencia absoluta de otra categoría como porcentaje
+  categorias_disponibles_otra <- setdiff(1:n_categorias, categoria_pregunta)
+  if(length(categorias_disponibles_otra) > 0) {
+    otra_categoria <- sample(categorias_disponibles_otra, 1)
+  } else {
+    otra_categoria <- 1  # Fallback si solo hay una categoría
+  }
+  if(frecuencias_abs[otra_categoria] != porcentaje_pregunta) {
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0(
+        "El ", frecuencias_abs[otra_categoria], "% de ", contexto_sel$unidad,
+        " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+        "' porque es la frecuencia absoluta de la categoría más representativa"
+      )
+    )
+  }
+  
+  # DISTRACTOR 10: Error conceptual: porcentaje como frecuencia absoluta / 100
+  porcentaje_error <- round(frecuencia_abs_pregunta / 100, 1)
+  if(porcentaje_error != porcentaje_pregunta && porcentaje_error > 0 && porcentaje_error < 100) {
+    afirmaciones_incorrectas <- c(afirmaciones_incorrectas,
+      paste0(
+        "El ", porcentaje_error, "% de ", contexto_sel$unidad,
+        " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+        "' porque se calcula dividiendo la frecuencia absoluta entre 100"
+      )
+    )
+  }
+  
+  # Eliminar duplicados y valores NA
+  afirmaciones_incorrectas <- unique(afirmaciones_incorrectas[!is.na(afirmaciones_incorrectas)])
+  
+  # SISTEMA ROBUSTO PARA GARANTIZAR 4 OPCIONES DIFERENTES
+  max_intentos <- 50
+  intento <- 1
+  
+  while(length(afirmaciones_incorrectas) < 10 && intento <= max_intentos) {
+    # Generar distractores adicionales
+    justificaciones_adicionales <- c(
+      "porque es el valor que mejor representa la distribución",
+      "porque se obtiene al calcular el promedio de las frecuencias",
+      "porque es el resultado de aplicar la fórmula de porcentaje correctamente",
+      "porque representa la proporción correcta según los datos",
+      "porque es el valor que aparece en la tabla de frecuencias relativas multiplicado por 10"
+    )
+    
+    valores_adicionales <- sample(1:100, 3)
+    for(i in 1:length(valores_adicionales)) {
+      nueva_afirmacion <- paste0(
+        "El ", valores_adicionales[i], "% de ", contexto_sel$unidad,
+        " corresponde a la categoría '", categorias_sel[categoria_pregunta], "' ",
+        sample(justificaciones_adicionales, 1)
+      )
+      if(!nueva_afirmacion %in% afirmaciones_incorrectas &&
+         nueva_afirmacion != afirmacion_correcta) {
+        afirmaciones_incorrectas <- c(afirmaciones_incorrectas, nueva_afirmacion)
+      }
+    }
+    
+    afirmaciones_incorrectas <- unique(afirmaciones_incorrectas)
+    intento <- intento + 1
+  }
+  
+  # Paso 2: Seleccionar 3 distractores
+  afirmaciones_incorrectas_sel <- c()
+  intentos_seleccion <- 0
+  max_intentos_seleccion <- 100
+  
+  if(permitir_valores_duplicados) {
+    # MODO: Permitir valores duplicados con justificaciones diferentes
+    extraer_valor <- function(afirmacion) {
+      patron <- "El ([0-9.]+)%"
+      match <- regmatches(afirmacion, regexpr(patron, afirmacion))
+      if(length(match) > 0) {
+        return(as.numeric(gsub("El |%", "", match)))
+      }
+      return(NA)
+    }
+    
+    valor_correcto <- extraer_valor(afirmacion_correcta)
+    
+    afirmaciones_mismo_valor <- c()
+    afirmaciones_otros_valores <- c()
+    
+    for(afirmacion in afirmaciones_incorrectas) {
+      if(!is.na(extraer_valor(afirmacion)) && extraer_valor(afirmacion) == valor_correcto) {
+        afirmaciones_mismo_valor <- c(afirmaciones_mismo_valor, afirmacion)
+      } else {
+        afirmaciones_otros_valores <- c(afirmaciones_otros_valores, afirmacion)
+      }
+    }
+    
+    if(length(afirmaciones_mismo_valor) > 0) {
+      afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel,
+                                       sample(afirmaciones_mismo_valor, 1))
+    }
+    
+    while(length(afirmaciones_incorrectas_sel) < 3 && length(afirmaciones_otros_valores) > 0) {
+      candidato <- sample(afirmaciones_otros_valores, 1)
+      if(!candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+      afirmaciones_otros_valores <- setdiff(afirmaciones_otros_valores, candidato)
+    }
+    
+    while(length(afirmaciones_incorrectas_sel) < 3 && length(afirmaciones_incorrectas) > 0) {
+      candidato <- sample(afirmaciones_incorrectas, 1)
+      if(candidato != afirmacion_correcta && !candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+    }
+    
+  } else {
+    # MODO TRADICIONAL: Todas las afirmaciones deben ser completamente diferentes
+    while(length(afirmaciones_incorrectas_sel) < 3 && intentos_seleccion < max_intentos_seleccion) {
+      candidato <- sample(afirmaciones_incorrectas, 1)
+      
+      if(candidato != afirmacion_correcta &&
+         !candidato %in% afirmaciones_incorrectas_sel) {
+        afirmaciones_incorrectas_sel <- c(afirmaciones_incorrectas_sel, candidato)
+      }
+      
+      intentos_seleccion <- intentos_seleccion + 1
+    }
+  }
+  
+  # Paso 3: Crear las 4 opciones finales
+  todas_afirmaciones <- c(afirmacion_correcta, afirmaciones_incorrectas_sel)
+  
+  # Verificación adaptada
+  if(permitir_valores_duplicados) {
+    if(length(unique(todas_afirmaciones)) != 4) {
+      todas_afirmaciones <- c(
+        afirmacion_correcta,
+        paste0(
+          "El ", frecuencia_abs_pregunta, "% de ", contexto_sel$unidad,
+          " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+          "' porque ese es el valor de la frecuencia absoluta"
+        ),
+        paste0(
+          "El ", frecuencia_rel_pregunta, "% de ", contexto_sel$unidad,
+          " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+          "' porque ese es el valor de la frecuencia relativa"
+        ),
+        paste0(
+          "El ", porcentaje_pregunta, "% de ", contexto_sel$unidad,
+          " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+          "' porque es el valor que aparece en la tabla"
+        )
+      )
+    }
+  } else {
+    if(length(unique(todas_afirmaciones)) != 4) {
+      todas_afirmaciones <- c(
+        afirmacion_correcta,
+        paste0(
+          "El ", frecuencia_abs_pregunta, "% de ", contexto_sel$unidad,
+          " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+          "' porque ese es el valor de la frecuencia absoluta"
+        ),
+        paste0(
+          "El ", frecuencia_rel_pregunta, "% de ", contexto_sel$unidad,
+          " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+          "' porque ese es el valor de la frecuencia relativa"
+        ),
+        paste0(
+          "El ", round(100 - porcentaje_pregunta, 1), "% de ", contexto_sel$unidad,
+          " corresponde a la categoría '", categorias_sel[categoria_pregunta],
+          "' porque es el porcentaje complementario"
+        )
+      )
+    }
+  }
+  
+  # Mezclar las opciones
+  opciones_mezcladas <- sample(todas_afirmaciones)
+  
+  # Identificar posición correcta
+  pos_correcta <- which(opciones_mezcladas == afirmacion_correcta)
+  
+  return(list(
+    contexto = contexto_sel,
+    categorias = categorias_sel,
+    frecuencias_abs = frecuencias_abs,
+    frecuencias_rel = frecuencias_rel,
+    porcentajes = porcentajes,
+    total = total,
+    categoria_pregunta = categoria_pregunta,
+    frecuencia_abs_pregunta = frecuencia_abs_pregunta,
+    frecuencia_rel_pregunta = frecuencia_rel_pregunta,
+    porcentaje_pregunta = porcentaje_pregunta,
+    afirmacion_correcta = afirmacion_correcta,
+    opciones = opciones_mezcladas,
+    pos_correcta = pos_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+contexto <- datos$contexto
+categorias <- datos$categorias
+frecuencias_abs <- datos$frecuencias_abs
+frecuencias_rel <- datos$frecuencias_rel
+porcentajes <- datos$porcentajes
+total <- datos$total
+categoria_pregunta <- datos$categoria_pregunta
+frecuencia_abs_pregunta <- datos$frecuencia_abs_pregunta
+frecuencia_rel_pregunta <- datos$frecuencia_rel_pregunta
+porcentaje_pregunta <- datos$porcentaje_pregunta
+afirmacion_correcta <- datos$afirmacion_correcta
+opciones <- datos$opciones
+pos_correcta <- datos$pos_correcta
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba de diversidad de versiones para competencia ARGUMENTACIÓN
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:300) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+
+test_that("Prueba de coherencia matemática", {
+  for(i in 1:20) {
+    datos_test <- generar_datos()
+    
+    # Verificar que las frecuencias relativas sumen aproximadamente 1
+    suma_rel <- sum(datos_test$frecuencias_rel)
+    expect_true(abs(suma_rel - 1) < 0.01,
+                info = paste("Las frecuencias relativas deben sumar 1. Suma:", suma_rel))
+    
+    # Verificar que los porcentajes sumen aproximadamente 100%
+    suma_porc <- sum(datos_test$porcentajes)
+    expect_true(abs(suma_porc - 100) < 1,
+                info = paste("Los porcentajes deben sumar 100%. Suma:", suma_porc))
+    
+    # Verificar que porcentaje = frecuencia_relativa * 100
+    porcentaje_calculado <- round(datos_test$frecuencia_rel_pregunta * 100, 1)
+    expect_true(abs(porcentaje_calculado - datos_test$porcentaje_pregunta) < 0.5,
+                info = "El porcentaje debe ser igual a la frecuencia relativa multiplicada por 100")
+    
+    # VERIFICACIÓN CRÍTICA: Las 4 opciones deben ser textualmente diferentes
+    expect_equal(length(unique(datos_test$opciones)), 4,
+                info = paste("Las 4 opciones de respuesta deben ser textualmente diferentes. Opciones generadas:",
+                           paste(datos_test$opciones, collapse = " | ")))
+    
+    # Verificar que la respuesta correcta esté presente
+    expect_true(datos_test$afirmacion_correcta %in% datos_test$opciones,
+               info = "La afirmación correcta debe estar entre las opciones")
+    
+    # Verificar que la posición correcta sea válida
+    expect_true(datos_test$pos_correcta >= 1 && datos_test$pos_correcta <= 4,
+               info = "La posición correcta debe estar entre 1 y 4")
+    
+    # Verificar que no haya opciones vacías o NA
+    expect_true(all(!is.na(datos_test$opciones) & nchar(datos_test$opciones) > 0),
+               info = "Todas las opciones deben tener contenido válido")
+  }
+})
+```
+
+```{r generar_tabla_frecuencia, echo=FALSE, results='asis'}
+options(OutDec = ".")
+
+# Crear tabla de frecuencia usando TikZ
+tabla_tikz <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|l|c|c|c|}",
+  "    \\hline",
+  "    \\rowcolor{blue!20}",
+  "    \\textbf{Categoría} & \\textbf{Frecuencia Absoluta} & \\textbf{Frecuencia Relativa} & \\textbf{Porcentaje} \\\\",
+  "    \\hline"
+)
+
+for (i in 1:length(categorias)) {
+  tabla_tikz <- c(tabla_tikz,
+    paste0("    ", categorias[i], " & ", frecuencias_abs[i], " & ", 
+            sprintf("%.3f", frecuencias_rel[i]), " & ", porcentajes[i], "\\% \\\\"),
+    "    \\hline"
+  )
+}
+
+tabla_tikz <- c(tabla_tikz,
+  paste0("    \\textbf{Total} & \\textbf{", total, "} & \\textbf{1.000} & \\textbf{100.0\\%} \\\\"),
+  "    \\hline",
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+```
+
+Question
+========
+
+Un investigador realizó un `r contexto$tipo_estudio` en un `r contexto$lugar` para analizar la variable **`r contexto$variable`**. Los resultados se presentan en la siguiente tabla de distribución de frecuencias:
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+include_tikz(tabla_tikz,
+             name = "tabla_frecuencia",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "12cm")
+```
+
+Cuatro analistas han propuesto diferentes afirmaciones sobre la interpretación de los datos de la categoría **`r categorias[categoria_pregunta]`**.
+
+**¿Cuál de las siguientes afirmaciones es CORRECTA y está BIEN JUSTIFICADA matemáticamente?**
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+Para resolver este problema de **argumentación matemática**, debemos evaluar cada afirmación y determinar cuál está correctamente justificada según las propiedades de las tablas de frecuencia.
+
+**Análisis de la categoría '`r categorias[categoria_pregunta]`':**
+
+- **Frecuencia absoluta:** `r frecuencia_abs_pregunta` `r contexto$unidad`
+- **Frecuencia relativa:** `r sprintf("%.3f", frecuencia_rel_pregunta)`
+- **Porcentaje:** `r porcentaje_pregunta`%
+
+**Cálculo del porcentaje:**
+
+El porcentaje se calcula multiplicando la frecuencia relativa por 100:
+
+$$
+\text{Porcentaje} = \text{Frecuencia relativa} \times 100 = `r sprintf("%.3f", frecuencia_rel_pregunta)` \times 100 = `r porcentaje_pregunta`\%
+$$
+
+Alternativamente, se puede calcular directamente:
+
+$$
+\text{Porcentaje} = \frac{\text{Frecuencia absoluta}}{\text{Total}} \times 100 = \frac{`r frecuencia_abs_pregunta`}{`r total`} \times 100 = `r porcentaje_pregunta`\%
+$$
+
+**Evaluación de las afirmaciones:**
+
+La afirmación correcta es: **"`r afirmacion_correcta`"**
+
+**¿Por qué es correcta?**
+
+- Identifica correctamente el porcentaje (`r porcentaje_pregunta`%)
+- Explica adecuadamente la relación entre frecuencia relativa y porcentaje
+- La justificación matemática es precisa: frecuencia relativa × 100 = porcentaje
+- Utiliza los valores correctos de la tabla
+
+**¿Por qué las otras afirmaciones son incorrectas?**
+
+- **Confunden frecuencia absoluta con porcentaje:** La frecuencia absoluta (`r frecuencia_abs_pregunta`) no es un porcentaje, es el número de casos.
+- **No convierten frecuencia relativa a porcentaje:** La frecuencia relativa (`r sprintf("%.3f", frecuencia_rel_pregunta)`) es un decimal entre 0 y 1, no un porcentaje.
+- **Usan valores de otras categorías:** Algunas afirmaciones utilizan porcentajes o frecuencias de categorías diferentes.
+- **Aplican fórmulas incorrectas:** Dividen por 100 en vez de multiplicar, o usan el total como porcentaje.
+- **Justificaciones incorrectas:** Aunque pueden mencionar el valor correcto, la explicación matemática es errónea.
+
+**Conceptos clave:**
+
+- **Frecuencia absoluta:** Número de casos en cada categoría
+- **Frecuencia relativa:** Proporción de casos (valor entre 0 y 1)
+- **Porcentaje:** Frecuencia relativa multiplicada por 100 (valor entre 0% y 100%)
+- **Relación:** Porcentaje = Frecuencia relativa × 100
+
+Answerlist
+----------
+```{r respuestas, echo=FALSE, results='asis'}
+for(i in 1:4) {
+  if(i == pos_correcta) {
+    cat("- Verdadero\n")
+  } else {
+    cat("- Falso\n")
+  }
+}
+```
+
+Meta-information
+================
+exname: tablas_frecuencia_argumentacion_estadistica
+extype: schoice
+exsolution: `r paste(as.integer(1:4 == pos_correcta), collapse="")`
+exshuffle: TRUE
+exsection: Estadística/Tablas de frecuencia/Argumentación
+

@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # ============================================================================
-# PROMPT ENHANCER - Sistema de Mejora de Prompts con Contexto del Proyecto
+# PROMPT ENHANCER - Sistema de Mejora de Prompts para IA Genérica
 # ============================================================================
 # Descripción: Mejora prompts del usuario añadiendo contexto del proyecto
-#              ICFES R-Exams desde cualquier ubicación en el repositorio
+#              ICFES R-Exams desde cualquier ubicación en el repositorio.
+#              Genera outputs optimizados para cualquier IA.
 # Autor: Sistema ICFES R-Exams
 # Fecha: 2025-12-20
-# Última modificación: 2025-12-21 (Refactorización)
+# Última modificación: 2025-12-21 (Optimizado para IA genérica)
 # ============================================================================
 
 set -euo pipefail
@@ -25,15 +26,14 @@ readonly CYAN='\033[0;36m'
 readonly NC='\033[0m' # No Color
 
 # Límites de lectura de archivos
-readonly MAX_LINES_GENERAL_RULES=100
+readonly MAX_LINES_WORKFLOW=80
 readonly MAX_LINES_MAIN_DOCS=50
-readonly MAX_LINES_TROUBLESHOOTING=30
-readonly MAX_LINES_STYLE_GUIDE=50
+readonly MAX_LINES_TROUBLESHOOTING=40
+readonly MAX_LINES_ERROR_PATTERNS=60
 readonly MAX_EXAMPLES=10
 
-# Directorios y archivos del proyecto
+# Directorios del proyecto (solo .claude/)
 readonly CLAUDE_DIR=".claude"
-readonly CLAUDEDOC_DIR=".claudedoc"
 readonly PRODUCTION_DIR="A-Produccion"
 
 # ============================================================================
@@ -84,10 +84,9 @@ find_project_root() {
     local current_dir="$PWD"
 
     while [[ "$current_dir" != "/" ]]; do
-        # Buscar marcadores de raíz del proyecto
+        # Buscar marcadores de raíz del proyecto (solo .claude/)
         if [[ -d "$current_dir/.git" ]] || \
            [[ -d "$current_dir/$CLAUDE_DIR" ]] || \
-           [[ -d "$current_dir/.augment" ]] || \
            [[ -f "$current_dir/README.md" && -d "$current_dir/$PRODUCTION_DIR" ]]; then
             echo "$current_dir"
             return 0
@@ -134,36 +133,50 @@ get_current_context() {
 }
 
 # ============================================================================
-# FUNCIÓN: Leer reglas de .claude/
+# FUNCIÓN: Leer workflow paso a paso (prioridad)
 # ============================================================================
-read_claude_rules() {
+read_workflow_documentation() {
     local project_root="$1"
-    local rules_content=""
-    local augment_rules_dir="$project_root/$CLAUDE_DIR"
+    local workflow_content=""
+    local claude_dir="$project_root/$CLAUDE_DIR"
 
-    [[ ! -d "$augment_rules_dir" ]] && return 0
+    [[ ! -d "$claude_dir" ]] && return 0
 
-    rules_content+="## 📋 REGLAS GENERALES DEL PROYECTO $CLAUDE_DIR\n\n"
-
-    # Leer reglas generales
-    local general_rules_file="$augment_rules_dir/reglas-generales.md"
-    if [[ -f "$general_rules_file" ]]; then
-        rules_content+="### Reglas Generales\n"
-        if content=$(read_file_limited "$general_rules_file" "$MAX_LINES_GENERAL_RULES"); then
-            rules_content+="$content\n\n"
+    # Priorizar WORKFLOW_PASO_A_PASO.md
+    local workflow_file="$claude_dir/docs/WORKFLOW_PASO_A_PASO.md"
+    if [[ -f "$workflow_file" ]]; then
+        workflow_content+="## 🔄 WORKFLOW DEL PROYECTO\n\n"
+        if content=$(read_file_limited "$workflow_file" "$MAX_LINES_WORKFLOW"); then
+            workflow_content+="$content\n\n"
         fi
     fi
 
-    # Leer reglas siempre
-    local always_rules_file="$augment_rules_dir/siempre.md"
-    if [[ -f "$always_rules_file" ]]; then
-        rules_content+="### Reglas Siempre Aplicables\n"
-        if content=$(read_file_limited "$always_rules_file"); then
-            rules_content+="$content\n\n"
+    echo -e "$workflow_content"
+}
+
+# ============================================================================
+# FUNCIÓN: Leer hooks disponibles
+# ============================================================================
+list_available_hooks() {
+    local claude_dir="$1"
+    local hooks_dir="$claude_dir/hooks"
+    local output=""
+
+    [[ ! -d "$hooks_dir" ]] && return 0
+
+    output+="### Hooks de Automatización\n"
+
+    local hooks
+    if hooks=$(find "$hooks_dir" -name "*.md" ! -name "README.md" -exec basename {} .md \; 2>/dev/null | sort); then
+        if [[ -n "$hooks" ]]; then
+            while IFS= read -r hook; do
+                output+="- $hook\n"
+            done <<< "$hooks"
+            output+="\n"
         fi
     fi
 
-    echo -e "$rules_content"
+    echo -e "$output"
 }
 
 # ============================================================================
@@ -217,7 +230,7 @@ list_available_commands() {
 }
 
 # ============================================================================
-# FUNCIÓN: Leer documentación de .claude/
+# FUNCIÓN: Leer documentación técnica de .claude/
 # ============================================================================
 read_claude_documentation() {
     local project_root="$1"
@@ -226,9 +239,9 @@ read_claude_documentation() {
 
     [[ ! -d "$claude_dir" ]] && return 0
 
-    docs_content+="## 🔧 DOCUMENTACIÓN TÉCNICA $CLAUDE_DIR/\n\n"
+    docs_content+="## 🔧 HERRAMIENTAS Y RECURSOS DISPONIBLES\n\n"
 
-    # Leer README principal de .claude
+    # Leer README principal de .claude/docs
     local readme_file="$claude_dir/docs/README.md"
     if [[ -f "$readme_file" ]]; then
         docs_content+="### Documentación Principal\n"
@@ -237,58 +250,32 @@ read_claude_documentation() {
         fi
     fi
 
-    # Leer TROUBLESHOOTING
-    local troubleshooting_file="$claude_dir/TROUBLESHOOTING.md"
-    if [[ -f "$troubleshooting_file" ]]; then
-        docs_content+="### Solución de Problemas\n"
-        if content=$(read_file_limited "$troubleshooting_file" "$MAX_LINES_TROUBLESHOOTING"); then
-            docs_content+="$content\n\n"
-        fi
-    fi
-
-    # Listar skills y comandos disponibles
+    # Listar skills disponibles
     docs_content+="$(list_available_skills "$claude_dir")"
+
+    # Listar comandos disponibles
     docs_content+="$(list_available_commands "$claude_dir")"
+
+    # Listar hooks disponibles
+    docs_content+="$(list_available_hooks "$claude_dir")"
 
     echo -e "$docs_content"
 }
 
 # ============================================================================
-# FUNCIÓN: Leer guía de estilo de .claudedoc/
+# FUNCIÓN: Leer contenido del proyecto (función principal de agregación)
 # ============================================================================
-read_style_guide() {
+read_project_context() {
     local project_root="$1"
-    local style_content=""
-    local claudedoc_dir="$project_root/$CLAUDEDOC_DIR"
+    local context_content=""
 
-    [[ ! -d "$claudedoc_dir" ]] && return 0
+    # Priorizar workflow paso a paso
+    context_content+="$(read_workflow_documentation "$project_root")"
 
-    style_content+="## 🎨 GUÍA DE ESTILO ICFES $CLAUDEDOC_DIR/\n\n"
+    # Agregar documentación técnica
+    context_content+="$(read_claude_documentation "$project_root")"
 
-    local style_guide_file="$claudedoc_dir/guia_estilo_icfes.md"
-    if [[ -f "$style_guide_file" ]]; then
-        style_content+="### Guía de Estilo ICFES\n"
-        if content=$(read_file_limited "$style_guide_file" "$MAX_LINES_STYLE_GUIDE"); then
-            style_content+="$content\n\n"
-        fi
-    fi
-
-    echo -e "$style_content"
-}
-
-# ============================================================================
-# FUNCIÓN: Leer reglas del proyecto (función principal de agregación)
-# ============================================================================
-read_project_rules() {
-    local project_root="$1"
-    local rules_content=""
-
-    # Agregar todas las reglas y documentación
-    rules_content+="$(read_claude_rules "$project_root")"
-    rules_content+="$(read_claude_documentation "$project_root")"
-    rules_content+="$(read_style_guide "$project_root")"
-
-    echo -e "$rules_content"
+    echo -e "$context_content"
 }
 
 # ============================================================================
@@ -465,43 +452,44 @@ enhance_prompt() {
     local context_type context_desc relative_path
     IFS='|' read -r context_type context_desc relative_path <<< "$context_info"
 
-    # Construir prompt mejorado
+    # Construir prompt mejorado con formato markdown estándar para IA genérica
     local enhanced_prompt=""
 
-    enhanced_prompt+="# PROMPT MEJORADO CON CONTEXTO DEL PROYECTO\n\n"
-    enhanced_prompt+="## 📍 CONTEXTO DE UBICACIÓN\n"
-    enhanced_prompt+="- **Proyecto**: RepositorioMatematicasICFES_R_Exams\n"
-    enhanced_prompt+="- **Ubicación actual**: $relative_path\n"
-    enhanced_prompt+="- **Tipo de contexto**: $context_type\n"
-    enhanced_prompt+="- **Descripción**: $context_desc\n\n"
+    enhanced_prompt+="# PROMPT MEJORADO - PROYECTO ICFES R-EXAMS\n\n"
 
-    # Añadir reglas del proyecto
-    local rules
-    rules=$(read_project_rules "$project_root")
-    [[ -n "$rules" ]] && enhanced_prompt+="$rules"
+    # Sección 1: Contexto del proyecto
+    enhanced_prompt+="## 📍 CONTEXTO DEL PROYECTO\n\n"
+    enhanced_prompt+="**Proyecto:** Sistema de generación de ejercicios matemáticos ICFES usando R/exams\n"
+    enhanced_prompt+="**Ubicación actual:** \`$relative_path\`\n"
+    enhanced_prompt+="**Tipo de contexto:** $context_type\n"
+    if [[ -n "$context_desc" ]]; then
+        enhanced_prompt+="**Descripción:** $context_desc\n"
+    fi
+    enhanced_prompt+="\n"
 
-    # Añadir ejemplos relevantes
-    local examples
-    examples=$(find_relevant_examples "$project_root" "$context_type")
-    [[ -n "$examples" ]] && enhanced_prompt+="$examples\n"
+    # Sección 2: Workflow y documentación
+    local context
+    context=$(read_project_context "$project_root")
+    [[ -n "$context" ]] && enhanced_prompt+="$context"
 
-    # Añadir recomendaciones según el contexto
-    enhanced_prompt+="$(generate_context_recommendations "$context_type")"
+    # Sección 3: Patrones de errores conocidos (solo si el prompt menciona errores)
+    if echo "$user_prompt" | grep -qiE "error|problema|falla|corregir|fix|debug"; then
+        local error_patterns
+        error_patterns=$(read_error_patterns "$project_root")
+        if [[ -n "$error_patterns" ]]; then
+            enhanced_prompt+="$error_patterns\n"
+        fi
+    fi
 
     # Detectar errores si se menciona un archivo .Rmd
     if echo "$user_prompt" | grep -qiE "\.Rmd|\.rmd|archivo.*rmd|error.*rmd|corregir.*rmd"; then
-        # Intentar extraer ruta del archivo del prompt o contexto
         local rmd_file=""
-        
-        # Buscar en el prompt
         rmd_file=$(echo "$user_prompt" | grep -oE "[^\s\"']+\.Rmd" | head -1)
-        
-        # Si no se encuentra, buscar en el directorio actual
+
         if [[ -z "$rmd_file" ]]; then
             rmd_file=$(find "$PWD" -maxdepth 2 -name "*.Rmd" -type f 2>/dev/null | head -1)
         fi
-        
-        # Si se encuentra un archivo, detectar errores
+
         if [[ -n "$rmd_file" && -f "$rmd_file" ]]; then
             local detected_errors
             detected_errors=$(detect_common_errors "$rmd_file")
@@ -509,22 +497,32 @@ enhance_prompt() {
                 enhanced_prompt+="$detected_errors\n"
             fi
         fi
-        
-        # Incluir resumen de errores conocidos
-        local error_patterns
-        error_patterns=$(read_error_patterns "$project_root")
-        if [[ -n "$error_patterns" ]]; then
-            enhanced_prompt+="$error_patterns"
-        fi
     fi
 
-    # Añadir el prompt original del usuario
-    enhanced_prompt+="## 🎯 SOLICITUD DEL USUARIO\n"
-    enhanced_prompt+="$user_prompt\n\n"
+    # Sección 4: Ejemplos funcionales
+    local examples
+    examples=$(find_relevant_examples "$project_root" "$context_type")
+    [[ -n "$examples" ]] && enhanced_prompt+="$examples\n"
+
+    # Sección 5: Recomendaciones según contexto
+    enhanced_prompt+="$(generate_context_recommendations "$context_type")"
+
+    # Sección 6: Solicitud del usuario (destacada)
+    enhanced_prompt+="---\n\n"
+    enhanced_prompt+="## 🎯 SOLICITUD DEL USUARIO\n\n"
+    enhanced_prompt+="> $user_prompt\n\n"
+
+    # Sección 7: Instrucciones para la IA
+    enhanced_prompt+="## 📋 INSTRUCCIONES PARA LA IA\n\n"
+    enhanced_prompt+="1. **Priorizar** el uso de skills y comandos disponibles en \`.claude/\`\n"
+    enhanced_prompt+="2. **Consultar** ejemplos funcionales antes de generar código nuevo\n"
+    enhanced_prompt+="3. **Validar** compatibilidad con sistema exams2* (html, pdf, docx, nops)\n"
+    enhanced_prompt+="4. **Seguir** el workflow documentado paso a paso\n"
+    enhanced_prompt+="5. **Documentar** errores nuevos si se resuelven\n\n"
 
     enhanced_prompt+="---\n"
-    enhanced_prompt+="**Nota**: Este prompt ha sido mejorado automáticamente con contexto del proyecto.\n"
-    enhanced_prompt+="Generado desde: $relative_path\n"
+    enhanced_prompt+="*Prompt mejorado automáticamente desde: \`$relative_path\`*\n"
+    enhanced_prompt+="*Generado: $(date '+%Y-%m-%d %H:%M:%S')*\n"
 
     echo -e "$enhanced_prompt"
 }
@@ -557,50 +555,58 @@ copy_to_clipboard() {
 show_help() {
     cat << EOF
 ${CYAN}╔════════════════════════════════════════════════════════════════╗
-║         PROMPT ENHANCER - Sistema ICFES R-Exams                ║
+║    PROMPT ENHANCER - Optimizador para IA Genérica              ║
+║    Proyecto ICFES R-Exams                                      ║
 ╚════════════════════════════════════════════════════════════════╝${NC}
 
 ${GREEN}DESCRIPCIÓN:${NC}
   Mejora prompts del usuario añadiendo contexto del proyecto ICFES R-Exams.
-  Funciona desde cualquier ubicación dentro del repositorio.
+  Genera outputs optimizados en formato markdown estándar para cualquier IA.
+  SIEMPRE genera un archivo .txt automáticamente.
 
 ${GREEN}USO:${NC}
   $0 [OPCIONES] [PROMPT]
+
+  Aliases disponibles: pe, pec, pei, prompt-enhancer
 
 ${GREEN}OPCIONES:${NC}
   -h, --help              Mostrar esta ayuda
   -i, --interactive       Modo interactivo (por defecto)
   -f, --file FILE         Leer prompt desde archivo
-  -o, --output FILE       Guardar prompt mejorado en archivo
-  -c, --clipboard         Copiar prompt mejorado al portapapeles
+  -o, --output FILE       Guardar copia adicional en archivo específico
+  -c, --clipboard         Copiar también al portapapeles
+
+${GREEN}SALIDA AUTOMÁTICA:${NC}
+  Siempre genera: prompt_mejorado_YYYYMMDD_HHMMSS.txt
+  Ubicación: Directorio actual de trabajo
 
 ${GREEN}EJEMPLOS:${NC}
-  # Modo interactivo (por defecto)
-  $0
+  # Modo interactivo (genera archivo automáticamente)
+  pe
 
   # Prompt directo
-  $0 "Genera un ejercicio de geometría nivel 2"
+  pe "Genera un ejercicio de geometría nivel 2"
 
-  # Desde archivo
-  $0 -f mi_prompt.txt -o prompt_mejorado.txt
+  # Con copia al portapapeles
+  pe "Corrige errores TikZ" -c
 
-  # Copiar al portapapeles
-  $0 "Corrige errores TikZ" -c
+  # Con archivo adicional
+  pe -f mi_prompt.txt -o copia_adicional.txt
 
-${GREEN}CONTEXTO DETECTADO:${NC}
-  El script detecta automáticamente:
-  - Ubicación actual en el proyecto
-  - Tipo de contenido (producción, desarrollo, auxiliares, etc.)
-  - Reglas aplicables del proyecto
+${GREEN}CONTEXTO INCLUIDO:${NC}
+  El prompt mejorado incluye automáticamente:
+  - Workflow paso a paso desde .claude/docs/
+  - Skills y comandos disponibles desde .claude/
+  - Hooks de automatización
+  - Patrones de errores conocidos (si aplica)
   - Ejemplos funcionales relevantes
+  - Instrucciones específicas para la IA
 
-${GREEN}SALIDA:${NC}
-  Prompt mejorado con:
-  - Contexto de ubicación
-  - Reglas del proyecto
-  - Ejemplos funcionales
-  - Recomendaciones específicas
-  - Solicitud original del usuario
+${GREEN}COMPATIBILIDAD:${NC}
+  El archivo generado es compatible con cualquier IA:
+  - ChatGPT, Claude, Gemini, Copilot, etc.
+  - Formato markdown estándar
+  - Sin dependencias de herramientas específicas
 
 EOF
 }
@@ -709,14 +715,22 @@ main() {
 
     echo -e "$enhanced"
 
-    # Guardar en archivo si se especificó
+    # SIEMPRE generar archivo .txt automáticamente
+    local timestamp
+    timestamp=$(date '+%Y%m%d_%H%M%S')
+    local auto_output_file="prompt_mejorado_${timestamp}.txt"
+
+    echo -e "$enhanced" > "$auto_output_file" || warn "No se pudo escribir archivo automático: $auto_output_file"
+    echo ""
+    success "📄 Archivo generado automáticamente: $auto_output_file"
+
+    # Guardar en archivo adicional si se especificó con -o
     if [[ -n "$output_file" ]]; then
         echo -e "$enhanced" > "$output_file" || die "No se pudo escribir en el archivo: $output_file"
-        echo ""
-        success "Prompt mejorado guardado en: $output_file"
+        success "📄 Archivo adicional guardado en: $output_file"
     fi
 
-    # Copiar al portapapeles si se solicitó
+    # Copiar al portapapeles (adicional, no reemplazo)
     if [[ "$use_clipboard" == true ]]; then
         echo ""
         copy_to_clipboard "$enhanced"
@@ -724,6 +738,7 @@ main() {
 
     echo -e "\n${CYAN}═══════════════════════════════════════════════════════════════${NC}"
     success "Proceso completado exitosamente"
+    info "📁 Archivo listo para usar con cualquier IA: $auto_output_file"
     echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}\n"
 }
 

@@ -3,23 +3,24 @@ output:
   html_document: default
   word_document: default
 ---
-# 🚀 PROMPT ENHANCER - Sistema de Mejora de Prompts
+# 🚀 PROMPT ENHANCER - Optimizador de Prompts para IA Genérica
 
-**Versión**: 1.2.0
+**Versión**: 2.0.0
 **Ubicación**: `Auxiliares/Prompt-Enhancer/`
 **Última actualización**: 2025-12-21
-**Tipo de actualización**: Refactorización mayor con corrección de bugs
+**Tipo de actualización**: Optimización para IA genérica
 
 ## 📋 Descripción Rápida
 
-Sistema inteligente que mejora automáticamente los prompts del usuario añadiendo 
-contexto completo del proyecto ICFES R-Exams, incluyendo:
+Sistema inteligente que mejora automáticamente los prompts del usuario añadiendo
+contexto del proyecto ICFES R-Exams. Genera outputs en formato markdown estándar
+compatibles con **cualquier IA** (ChatGPT, Claude, Gemini, Copilot, etc.).
 
-- ✅ Reglas de ``.claude/`
-- ✅ Documentación técnica de `.claude/`
-- ✅ Guía de estilo de `.claudedoc/`
-- ✅ Ejemplos funcionales disponibles
-- ✅ Recomendaciones contextuales según ubicación
+- ✅ **SIEMPRE genera archivo** `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
+- ✅ Workflow documentado de `.claude/docs/`
+- ✅ Skills y comandos de `.claude/`
+- ✅ Hooks de automatización disponibles
+- ✅ Ejemplos funcionales y recomendaciones contextuales
 
 ## 🚀 Inicio Rápido
 
@@ -84,25 +85,23 @@ El script detecta automáticamente:
 - Reglas aplicables
 - Ejemplos funcionales relevantes
 
-### Enriquecimiento Completo
+### Enriquecimiento desde `.claude/`
 
-Incluye en el prompt mejorado:
+El archivo generado incluye:
 
-#### 📋 Reglas Generales (`.claude/`)
-- Reglas generales del proyecto
-- Reglas siempre aplicables
-- Filosofía Matemáticas ICFES 2025
+#### 🔄 Workflow del Proyecto (Priorizado)
+- Contenido de `.claude/docs/WORKFLOW_PASO_A_PASO.md`
+- Pasos detallados del flujo de trabajo
 
-#### 🔧 Documentación Técnica (.claude/)
-- Documentación principal del sistema
-- Solución de problemas (TROUBLESHOOTING)
-- Skills disponibles
-- Comandos disponibles
+#### 🔧 Herramientas Disponibles
+- Skills de `.claude/skills/`
+- Comandos de `.claude/commands/`
+- Hooks de `.claude/hooks/`
 
-#### 🎨 Guía de Estilo (.claudedoc/)
-- Guía de estilo ICFES
-- Estructura obligatoria de archivos .Rmd
-- Criterios de calidad
+#### 📚 Recursos Adicionales
+- Patrones de errores conocidos (si aplica)
+- Ejemplos funcionales de `A-Produccion/`
+- Instrucciones específicas para la IA
 
 ## 🔧 Opciones Disponibles
 
@@ -114,42 +113,53 @@ Incluye en el prompt mejorado:
 -c, --clipboard         Copiar prompt mejorado al portapapeles
 ```
 
-## 📊 Ejemplo de Salida
+## 📊 Ejemplo de Salida (archivo .txt generado)
 
 ```markdown
-# PROMPT MEJORADO CON CONTEXTO DEL PROYECTO
+# PROMPT MEJORADO - PROYECTO ICFES R-EXAMS
 
-## CONTEXTO DE UBICACIÓN
-- Proyecto: RepositorioMatematicasICFES_R_Exams
+## 📍 CONTEXTO DEL PROYECTO
+- Proyecto: Sistema de generación de ejercicios matemáticos ICFES
 - Ubicación actual: A-Produccion/En-Desarrollo
 - Tipo de contexto: desarrollo
 
-## 📋 REGLAS GENERALES DEL PROYECTO (`.claude/`)
-[Reglas completas...]
+## 🔄 WORKFLOW DEL PROYECTO
+[Contenido de WORKFLOW_PASO_A_PASO.md...]
 
-## 🔧 DOCUMENTACIÓN TÉCNICA (.claude/)
-[Documentación técnica...]
+## 🔧 HERRAMIENTAS Y RECURSOS DISPONIBLES
+### Skills Disponibles
+[Lista de skills...]
 
-## 🎨 GUÍA DE ESTILO ICFES (.claudedoc/)
-[Guía de estilo...]
+### Comandos Disponibles
+[Lista de comandos...]
 
-## EJEMPLOS FUNCIONALES DISPONIBLES
+### Hooks de Automatización
+[Lista de hooks...]
+
+## 📚 EJEMPLOS FUNCIONALES DISPONIBLES
 [Lista de ejemplos...]
 
-## RECOMENDACIONES SEGÚN CONTEXTO
+## 💡 RECOMENDACIONES SEGÚN CONTEXTO
 [Recomendaciones específicas...]
 
-## SOLICITUD DEL USUARIO
-[Tu prompt original]
+---
+
+## 🎯 SOLICITUD DEL USUARIO
+> [Tu prompt original]
+
+## 📋 INSTRUCCIONES PARA LA IA
+1. Priorizar uso de skills y comandos de .claude/
+2. Consultar ejemplos funcionales antes de generar código
+3. Validar compatibilidad con sistema exams2*
 ```
 
 ## 🎨 Casos de Uso
 
-- ✅ Generar ejercicios ICFES con contexto completo
-- ✅ Corregir errores con documentación técnica incluida
-- ✅ Desarrollar nuevos scripts con reglas del proyecto
-- ✅ Adaptar ejercicios existentes con ejemplos funcionales
-- ✅ Integración con herramientas de IA (Augment, Claude, ChatGPT)
+- ✅ Generar ejercicios ICFES con cualquier IA
+- ✅ Corregir errores con skills y hooks disponibles
+- ✅ Desarrollar siguiendo workflow documentado
+- ✅ Adaptar ejercicios usando ejemplos funcionales
+- ✅ Compatible con ChatGPT, Claude, Gemini, Copilot, etc.
 
 ## 🔍 Verificación
 
@@ -182,30 +192,27 @@ pe "Test"
 
 ## 📝 Notas Importantes
 
+- **Archivo siempre generado**: SIEMPRE crea `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
 - **Portabilidad**: Funciona desde cualquier subcarpeta del proyecto
-- **Detección automática**: No necesitas especificar la raíz del proyecto
-- **Contexto completo**: Incluye TODAS las reglas y documentación del proyecto
+- **Compatibilidad IA**: El archivo es compatible con cualquier IA
+- **Enfoque en .claude/**: Solo incluye información de `.claude/`
 - **Sin dependencias pesadas**: Solo requiere bash estándar
-- **Opcional**: xclip, pbcopy o wl-copy para funcionalidad de portapapeles (Wayland soportado)
+- **Opcional**: xclip, pbcopy o wl-copy para portapapeles
 
-## 🆕 Novedades v1.2.0 (2025-12-21)
+## 🆕 Novedades v2.0.0 (2025-12-21)
 
-### Bugs Críticos Corregidos
-- ✅ Paths incorrectos en lectura de archivos de configuración
-- ✅ Manejo incorrecto de argumentos con espacios
+### Cambio Mayor de Enfoque
+- ✅ **Enfoque exclusivo en `.claude/`** - Eliminadas referencias a `.augment/` y `.claudedoc/`
+- ✅ **Generación automática de archivo .txt** - SIEMPRE genera archivo
+- ✅ **Formato markdown estándar** - Compatible con cualquier IA
+- ✅ **Prioriza workflow documentado** - Incluye WORKFLOW_PASO_A_PASO.md
+- ✅ **Incluye hooks** - Lista hooks de automatización
 
-### Mejoras de Arquitectura
-- ✅ **17 funciones modulares** (vs 6 en v1.1.0)
-- ✅ **5 funciones auxiliares** nuevas para mejor reutilización
-- ✅ **Constantes extraídas**: Números mágicos eliminados
-- ✅ **Mejor manejo de errores**: Mensajes consistentes y descriptivos
-- ✅ **Soporte Wayland**: Agregado wl-copy para portapapeles
-
-### Mejoras en Calidad
-- ✅ **+41% más líneas** (618 vs 437) con mejor organización
-- ✅ **+183% más funciones** (17 vs 6) para mayor modularidad
-- ✅ Validación mejorada de argumentos
-- ✅ Ordenamiento alfabético de skills y comandos
+### Nueva Estructura del Prompt
+- ✅ Sección de workflow priorizada
+- ✅ Skills, comandos y hooks listados
+- ✅ Solicitud del usuario destacada
+- ✅ Instrucciones específicas para la IA (nueva sección)
 
 ## 🚨 Solución de Problemas
 

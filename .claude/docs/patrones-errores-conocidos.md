@@ -7,7 +7,8 @@
 ## Índice
 1. [Error: Imagen PNG no encontrada en compilación PDF](#error-1-imagen-png-no-encontrada)
 2. [Error: Argumento no numérico para función matemática abs()](#error-2-argumento-no-numerico-abs)
-3. [Placeholder para futuros errores](#futuros-errores)
+3. [Error: Imágenes Python/matplotlib no visibles en exams2pdf](#error-3-imagenes-python-no-visibles-pdf)
+4. [Placeholder para futuros errores](#futuros-errores)
 
 ---
 
@@ -483,6 +484,235 @@ Si el error persiste después de corregir el código, puede ser debido a:
    - **Solución**: Reiniciar sesión de R o ejecutar `rm(list = ls())`
 3. **Archivo no guardado**: Verificar que los cambios se guardaron correctamente
    - **Solución**: Verificar timestamp del archivo y contenido con `grep -n "abs(b_formateado)" archivo.Rmd`
+
+---
+
+## Error 3: Imágenes Python/matplotlib no visibles en exams2pdf
+
+### ❌ Mensaje de Error
+```
+# No hay mensaje de error explícito, pero la imagen no aparece en el PDF generado
+# El PDF se compila correctamente pero la gráfica está ausente
+```
+
+**Síntoma:**
+- El PDF se genera sin errores de compilación
+- La imagen generada por Python existe en el directorio
+- La imagen NO se visualiza en el PDF final
+- El texto del ejercicio aparece correctamente
+
+### 🔍 Causa Raíz
+El uso de `knitr::include_graphics()` para mostrar imágenes generadas por Python/matplotlib no funciona correctamente con `exams2pdf()` debido a problemas de rutas y contexto de compilación.
+
+**Flujo del problema:**
+1. Python genera la imagen: `plt.savefig('recta_python.png')` → se guarda en directorio actual
+2. Se intenta mostrar con: `knitr::include_graphics("recta_python.png")`
+3. Durante `exams2pdf()`, knitr busca la imagen en rutas relativas/absolutas que no coinciden
+4. La imagen no se encuentra en el contexto de compilación → No aparece en PDF
+
+**Patrón común:**
+Este error ocurre cuando:
+- Se generan gráficos con Python/matplotlib usando `py_run_string()`
+- Se guarda la imagen con `plt.savefig('nombre.png')`
+- Se intenta incluir con `knitr::include_graphics()` en un chunk R
+
+### ✅ Solución Verificada
+
+**Enfoque:** Usar sintaxis markdown simple con `cat()` en lugar de `knitr::include_graphics()`, siguiendo el patrón de archivos funcionales en producción.
+
+#### Código ANTES (incorrecto):
+
+```r
+```{r generar_grafico_python, echo=FALSE, results="hide"}
+codigo_python <- paste0("
+import matplotlib.pyplot as plt
+# ... código de generación ...
+plt.savefig('recta_python.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+py_run_string(codigo_python)
+```
+
+```{r mostrar_grafico, echo=FALSE, fig.align='center', out.width='50%'}
+# ❌ PROBLEMA: knitr::include_graphics() no funciona con exams2pdf
+if (file.exists("recta_python.png")) {
+  knitr::include_graphics("recta_python.png")
+} else {
+  warning("El archivo no se encontró")
+}
+```
+```
+
+#### Código DESPUÉS (correcto):
+
+```r
+```{r generar_grafico_python, echo=FALSE, results="hide"}
+# ✅ Guardar imagen en directorio actual (patrón de archivos funcionales)
+codigo_python <- paste0("
+import matplotlib
+matplotlib.use('Agg')  # Backend sin interfaz gráfica
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Obtener parámetros desde R
+m_py = ", datos$m, "
+b_py = ", datos$b, "
+
+# ... código de generación del gráfico ...
+
+# Guardar en el directorio actual (compatible con todos los formatos)
+plt.savefig('recta_python.png', dpi=150, bbox_inches='tight', transparent=True)
+plt.close()
+")
+
+# Ejecutar el código Python
+py_run_string(codigo_python)
+```
+
+```{r mostrar_grafico, echo=FALSE, results='asis', fig.align='center'}
+# ✅ SOLUCIÓN: Usar markdown simple con cat() (patrón de archivos funcionales)
+# Detectar si se está generando para Moodle
+es_moodle <- (match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat"))
+
+# Ajustar tamaño según formato de salida
+if(es_moodle) {
+  cat("![](recta_python.png){width=30%}\n\n")  # Más pequeño para Moodle
+} else {
+  cat("![](recta_python.png){width=50%}\n\n")  # Tamaño estándar para PDF/Word
+}
+```
+```
+
+**Diferencias clave:**
+1. ✅ **Guardar imagen simple**: `plt.savefig('recta_python.png')` sin rutas absolutas
+2. ✅ **Chunk de visualización**: `results='asis'` (no `fig.align` ni `out.width`)
+3. ✅ **Sintaxis markdown**: `cat("![](recta_python.png){width=50%}\n\n")` en lugar de `knitr::include_graphics()`
+4. ✅ **Renderizado condicional**: Ajustar tamaño según formato (Moodle vs PDF/Word)
+
+### 🧪 Validación de la Solución
+
+#### **Nivel 1: RStudio (Run > Run all)**
+Ejecutar todos los chunks interactivamente en RStudio.
+
+**Criterio de éxito:**
+- ✅ Todos los chunks ejecutan sin errores
+- ✅ La imagen se genera correctamente
+- ✅ La imagen se visualiza en el output (HTML/PDF/Word según YAML)
+
+**Método:**
+```
+1. Abrir .Rmd en RStudio
+2. Run > Run All
+3. Verificar que la imagen aparece en el output
+```
+
+#### **Nivel 2: Generación Masiva (exams2pdf)**
+Ejecutar `exams2pdf()` para verificar que la imagen aparece en el PDF.
+
+**Criterios de éxito:**
+- ✅ `exams2pdf()` compila sin errores
+- ✅ El PDF contiene la imagen (verificable con `pdfimages -list archivo.pdf`)
+- ✅ La imagen se visualiza correctamente en el PDF
+
+**Método:**
+```r
+library(exams)
+set.seed(123)
+exams2pdf('archivo.Rmd', n=1, dir='test_pdf', template='plain')
+```
+
+**Verificación:**
+```bash
+# Verificar que el PDF contiene imágenes
+pdfimages -list test_pdf/plain1.pdf
+
+# Resultado esperado:
+# page   num  type   width height color comp bpc  enc interp  object ID
+#    1     0 image     487   734  rgb     3   8  image  no         1  0
+```
+
+#### **Nivel 3: Todos los Formatos**
+Validar que funciona en todos los formatos de salida.
+
+**Criterios de éxito:**
+- ✅ `exams2html()` muestra la imagen correctamente
+- ✅ `exams2pdf()` muestra la imagen correctamente
+- ✅ `exams2pandoc()` (DOCX) muestra la imagen correctamente
+- ✅ `exams2moodle()` muestra la imagen correctamente
+
+### 📋 Checklist de Corrección
+
+- [ ] Identificar chunks que generan imágenes con Python/matplotlib
+- [ ] Verificar que `plt.savefig()` guarda en directorio actual (sin rutas absolutas)
+- [ ] Reemplazar `knitr::include_graphics()` por sintaxis markdown con `cat()`
+- [ ] Cambiar chunk de visualización a `results='asis'`
+- [ ] Agregar renderizado condicional para diferentes formatos (Moodle vs PDF/Word)
+- [ ] Verificar compilación a PDF con `exams2pdf()`
+- [ ] Verificar que la imagen aparece en el PDF (usar `pdfimages -list`)
+- [ ] Confirmar visualización correcta en todos los formatos
+
+### 🎯 Casos Aplicables
+
+Este patrón de solución aplica para:
+- ✅ Gráficos generados con Python/matplotlib (`py_run_string()`)
+- ✅ Imágenes guardadas con `plt.savefig()`
+- ✅ Cualquier visualización generada con Python en R/exams
+- ✅ Gráficos de rectas, funciones, diagramas, etc. generados con matplotlib
+
+### ⚠️ Casos NO Aplicables
+
+Este patrón NO aplica para:
+- ❌ Imágenes TikZ (usar solución del Error 1)
+- ❌ Imágenes externas ya existentes (PNG/JPG)
+- ❌ Gráficos generados con ggplot2 o base R (usar sistema de figuras de knitr)
+
+### 🔗 Archivos de Referencia
+
+**Ejemplos funcionales verificados en producción:**
+- `/A-Produccion/En-Produccion/06-Estadística-Y-Probabilidad/.../accidentalidad-vial-genero-01.Rmd`
+- `/A-Produccion/En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion/volumen_cilindro_geometrico_metrico_interpretacion_python_n2_v1.Rmd`
+
+**Ejemplo corregido verificado:**
+- `/A-Produccion/En-Desarrollo/recta_geometria_analitica_interpretacion_representacion_python/recta_geometria_analitica_python_interpretacion_representacion_n2_v1.Rmd`
+
+**Patrón de referencia:**
+Los archivos funcionales en producción usan consistentemente:
+```r
+cat("![](nombre_imagen.png){width=50%}\n\n")
+```
+en lugar de `knitr::include_graphics()`.
+
+### 📅 Historial
+
+| Fecha | Versión | Estado | Validado en | Niveles Validados |
+|-------|---------|--------|-------------|-------------------|
+| 2025-12-21 | v1.0 | ✅ Verificado | recta_geometria_analitica_python_interpretacion_representacion_n2_v1.Rmd | Nivel 2 ✅ (exams2pdf) |
+
+**Pruebas de validación realizadas (v1.0 - 2025-12-21):**
+
+**Nivel 1 - RStudio (Run > Run all):**
+- ⏭️ Pendiente de validación por usuario
+
+**Nivel 2 - Generación Masiva (exams2pdf):**
+- ✅ `exams2pdf()`: Exitoso
+  - PDF generado: 85KB
+  - Imágenes incluidas: 2 objetos de imagen detectados con `pdfimages -list`
+  - Tamaño de imagen: 487x734 píxeles, RGB
+  - Sin errores de compilación
+  - Imagen visible en el PDF
+- ✅ Solución confirmada y reproducible
+- ✅ Patrón basado en archivos funcionales en producción
+
+**Nivel 3 - Todos los Formatos:**
+- ⏭️ Pendiente de validación completa
+
+### 💡 Notas Importantes
+
+1. **Patrón de archivos funcionales**: Esta solución se basa en el análisis de archivos `.Rmd` funcionales en producción que usan Python/matplotlib. Todos usan el patrón `cat("![](imagen.png)")` en lugar de `knitr::include_graphics()`.
+
+2. **Compatibilidad con exams2pdf**: El problema específico es con `exams2pdf()`. Para otros formatos (HTML, Word), ambos métodos pueden funcionar, pero el patrón markdown simple es más consistente.
+
+3. **Renderizado condicional**: Es recomendable ajustar el tamaño de la imagen según el formato de salida (más pequeño para Moodle, estándar para PDF/Word).
 
 ---
 

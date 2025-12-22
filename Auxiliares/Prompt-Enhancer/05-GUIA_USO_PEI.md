@@ -8,7 +8,9 @@
 
 ## 🎯 ¿Qué es `pei`?
 
-`pei` es el alias para el **modo interactivo** del Prompt Enhancer. Permite ingresar prompts de múltiples líneas de forma cómoda, ideal para prompts largos o complejos.
+`pei` es el alias para el **modo interactivo** del Prompt Enhancer. 
+Permite ingresar prompts de múltiples líneas de forma cómoda, ideal para prompts 
+largos o complejos.
 
 ---
 
@@ -106,6 +108,7 @@ Error in abs(b_formateado): Argumento no numérico para una función matemática
 ```
 
 **Resultado**: 
+
 - Prompt mejorado con contexto
 - **NUEVO**: Detección automática de errores en el archivo .Rmd
 - **NUEVO**: Resumen de errores conocidos y soluciones
@@ -199,6 +202,7 @@ Package pdftex.def Error: File 'cilindro_vaso.png' not found
 ```
 
 **Resultado**: Prompt mejorado con:
+
 - **Detección automática**: Analiza el archivo y detecta el problema
 - **Solución documentada**: Referencia a Error 1 (patrones-errores-conocidos.md)
 - **Código de ejemplo**: Solución verificada con código antes/después
@@ -223,6 +227,7 @@ Adapta el ejercicio de probabilidad condicional para:
 ```
 
 **Resultado**: Prompt mejorado con:
+
 - Ejemplo del archivo mencionado
 - Reglas de adaptación
 - Metodología de diagramas TikZ
@@ -247,6 +252,7 @@ Necesito un script que:
 ```
 
 **Resultado**: Prompt mejorado con:
+
 - Documentación técnica del sistema
 - Ejemplos de scripts existentes
 - Reglas de compatibilidad
@@ -295,6 +301,7 @@ Cuando mencionas un archivo .Rmd, el script ahora:
 
 1. **Busca el archivo** en el prompt o directorio actual
 2. **Analiza el código** buscando patrones problemáticos:
+
    - `abs()` sobre variables formateadas
    - `round()`, `floor()`, `ceiling()` sobre variables formateadas
    - `include_tikz()` en chunks de generación
@@ -374,6 +381,7 @@ source ~/.bashrc  # o source ~/.zshrc
 ### Problema: Ctrl+D no funciona
 
 **Explicación**: Ctrl+D envía EOF (End of File) al script. Si no funciona:
+
 - Asegúrate de estar en una terminal real (no un editor)
 - Presiona Enter antes de Ctrl+D
 - O usa Ctrl+C para cancelar
@@ -381,6 +389,7 @@ source ~/.bashrc  # o source ~/.zshrc
 ### Problema: No detecta archivos .Rmd
 
 **Solución**: 
+
 - Menciona explícitamente el archivo en el prompt: `"error en archivo.Rmd"`
 - O coloca el archivo .Rmd en el directorio actual
 
@@ -389,6 +398,7 @@ source ~/.bashrc  # o source ~/.zshrc
 **Explicación**: Es normal, incluye todo el contexto del proyecto.
 
 **Solución**: 
+
 - Redirige a archivo: `pei > prompt.txt`
 - O usa `pec` para copiar y pegar solo lo necesario
 

@@ -74,6 +74,43 @@ icfes:
 
 ---
 
+### 4. 🖼️ Errores de Gráficos (Ciclo de Validación Visual)
+
+**Categorías de errores gráficos:**
+
+| Código | Error | Síntoma | Solución |
+|--------|-------|---------|----------|
+| ERR_G1 | No visualizadas | Imagen ausente en PDF | `/corregir-graficos` |
+| ERR_G2 | Solapadas | Elementos superpuestos | Ajustar márgenes/posición |
+| ERR_G3 | Renderizado incorrecto | Distorsión visible | Revisar código TikZ/Python |
+| ERR_G4 | Tamaño inadecuado | Muy grande/pequeño | Ajustar scale/width |
+
+**Workflow de corrección:**
+```
+1. /validar-renderizado
+2. Si hay errores gráficos → /diagnosticar-errores
+3. Aplicar corrección según tipo → /corregir-graficos
+4. Re-ejecutar /validar-renderizado
+5. Repetir hasta éxito en 4 formatos
+```
+
+---
+
+### 5. 🔗 Errores de Coherencia
+
+| Código | Error | Ejemplo |
+|--------|-------|---------|
+| ERR_C1 | Coherencia matemática | Fórmula incorrecta |
+| ERR_C2 | Coherencia imagen-texto | Descripción ≠ gráfico |
+| ERR_C3 | Coherencia de código | `abs(variable_formateada)` |
+
+**Validar con:**
+```bash
+/validar-coherencia
+```
+
+---
+
 ## 🚀 Workflows de Corrección
 
 ### Workflow 1: Error de Compilación PDF
@@ -108,12 +145,22 @@ icfes:
 - **Resumen TikZ:** `.claude/docs/RESUMEN_CORRECCION_TIKZ.md`
 
 ### Skills Disponibles
+
+**Generación:**
 - `/analizar-icfes` - Analizar ejercicio ICFES
 - `/generar-schoice` - Generar SCHOICE
 - `/generar-cloze` - Generar CLOZE
-- `/corregir-error-imagen` - Corregir errores TikZ
-- `/validar-diversidad-300` - Validar aleatorización
 - `/promover-ejercicio` - Promover a producción
+
+**Validación:**
+- `/validar-renderizado` - Ciclo completo exams2* (html, pdf, docx, nops)
+- `/validar-diversidad` - Validar 300+ versiones únicas
+- `/validar-coherencia` - Verificar coherencia matemática/imagen/código
+
+**Diagnóstico y Corrección:**
+- `/diagnosticar-errores` - Clasificar errores (Gráficos/Texto/Estructura/Coherencia)
+- `/corregir-error-imagen` - Corregir errores TikZ (renderizado condicional)
+- `/corregir-graficos` - Solucionar problemas de visualización
 
 ### Ejemplos Funcionales
 ```bash

@@ -1,0 +1,314 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{arrows.meta,babel}
+---
+
+<!--
+# Metadatos ICFES
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  componente: geometrico_metrico
+  pensamiento: variacional
+  contenido: algebra
+  eje: aplicado
+  requiere_tikz: TRUE
+  flujo: B
+-->
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(knitr)
+library(digest)
+
+# Configuración global crítica
+typ <- match_exams_device()
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+# Configuración knitr
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE, fig.keep = 'all',
+  dev = c("png", "pdf"), dpi = 150, echo = FALSE, results = "hide"
+)
+
+# Semilla aleatoria para diversidad
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation}
+# Función para generar datos aleatorios del problema
+generar_datos <- function() {
+
+  # Parámetros base de la función parabólica
+  # f(x) = a*x² + b*x + c
+  # Queremos raíces en 0 y en un punto final (4-8 años)
+
+  # Años de duración del proyecto (entre 4 y 8)
+  anios_final <- sample(c(4, 5, 6, 7, 8), 1)
+
+  # Coeficiente a (negativo para parábola invertida)
+  # Lo calculamos para que tenga raíces en 0 y anios_final
+  # f(x) = -k*x*(x - anios_final) para algún k > 0
+  k <- sample(c(0.5, 1, 1.5, 2), 1)
+
+  # Coeficientes de la ecuación
+  a_real <- -k
+  b_real <- k * anios_final
+  c_real <- 0
+
+  # Punto medio (vértice)
+  x_vertice <- anios_final / 2
+  y_vertice <- a_real * x_vertice^2 + b_real * x_vertice
+
+  # Redondear valores para facilitar visualización
+  y_vertice <- round(y_vertice, 1)
+
+  # Generar puntos para la gráfica
+  n_puntos <- anios_final + 1
+  x_vals <- 0:anios_final
+  y_vals <- sapply(x_vals, function(x) a_real * x^2 + b_real * x)
+  y_vals <- round(y_vals, 1)
+
+  # Generar opciones de ecuaciones (4 opciones)
+  # Opción correcta: y = -k*x² + k*anios_final*x
+
+  # Simplificar la ecuación correcta
+  if (k == 1) {
+    ecuacion_correcta <- paste0("$y = -x^2 + ", b_real, "x$")
+  } else {
+    ecuacion_correcta <- paste0("$y = ", a_real, "x^2 + ", b_real, "x$")
+  }
+
+  # Opciones incorrectas (variaciones comunes de error)
+  # Error 1: Signo invertido en a
+  if (k == 1) {
+    opcion_2 <- paste0("$y = x^2 - ", b_real, "x$")
+  } else {
+    opcion_2 <- paste0("$y = ", -a_real, "x^2 - ", b_real, "x$")
+  }
+
+  # Error 2: Coeficiente b incorrecto
+  b_error <- b_real + sample(c(-2, -1, 1, 2), 1)
+  if (k == 1) {
+    opcion_3 <- paste0("$y = -x^2 + ", b_error, "x$")
+  } else {
+    opcion_3 <- paste0("$y = ", a_real, "x^2 + ", b_error, "x$")
+  }
+
+  # Error 3: Término constante incorrecto
+  c_error <- sample(c(-3, -2, -1, 1, 2, 3), 1)
+  if (k == 1) {
+    opcion_4 <- paste0("$y = -x^2 + ", b_real, "x + ", c_error, "$")
+  } else {
+    opcion_4 <- paste0("$y = ", a_real, "x^2 + ", b_real, "x + ", c_error, "$")
+  }
+
+  # Crear lista de opciones y aleatorizar
+  opciones <- c(ecuacion_correcta, opcion_2, opcion_3, opcion_4)
+  orden <- sample(1:4)
+  opciones_ordenadas <- opciones[orden]
+
+  # Determinar cuál es la correcta después del shuffle
+  solucion <- which(orden == 1)
+  solucion_binaria <- rep(0, 4)
+  solucion_binaria[solucion] <- 1
+
+  # Crear código TikZ para la gráfica
+  codigo_tikz <- paste0(
+    "\\begin{tikzpicture}[scale=0.85]\n",
+    "  \n",
+    "  % ESTILOS\n",
+    "  \\tikzset{\n",
+    "    grid/.style={gray!25, very thin},\n",
+    "    axis/.style={->, >=stealth, thick, black},\n",
+    "    parabola/.style={very thick, cyan!65!blue, smooth},\n",
+    "    dot/.style={circle, fill=cyan!65!blue, inner sep=2.5pt}\n",
+    "  }\n",
+    "  \n",
+    "  % CUADRÍCULA\n",
+    "  \\draw[grid, step=1] (0,0) grid (", anios_final + 1, ",", ceiling(max(y_vals)) + 1, ");\n",
+    "  \n",
+    "  % EJES\n",
+    "  \\draw[axis] (-0.5,0) -- (", anios_final + 1.3, ",0);\n",
+    "  \\draw[axis] (0,-0.5) -- (0,", ceiling(max(y_vals)) + 1.3, ");\n",
+    "  \n",
+    "  % ETIQUETAS\n",
+    "  \\node[below, font=\\small] at (", (anios_final + 1) / 2, ",-0.8) {Años después del lanzamiento};\n",
+    "  \\node[above, rotate=90, font=\\small] at (-0.8,", (ceiling(max(y_vals)) + 1) / 2, ") {Millones de usuarios};\n",
+    "  \n",
+    "  % NUMERACIÓN\n",
+    "  \\foreach \\x in {0,1,...,", anios_final + 1, "}\n",
+    "    \\draw[thick] (\\x,0.12) -- (\\x,-0.12) node[below, font=\\scriptsize] {\\x};\n",
+    "  \n",
+    "  \\foreach \\y in {0,2,...,", ceiling(max(y_vals)) + 1, "}\n",
+    "    \\draw[thick] (0.12,\\y) -- (-0.12,\\y) node[left, font=\\scriptsize] {\\y};\n",
+    "  \n",
+    "  % PARÁBOLA\n",
+    "  \\draw[parabola] plot[domain=0:", anios_final, ", samples=70, smooth] \n",
+    "    (\\x, {", a_real, "*\\x*\\x + ", b_real, "*\\x});\n",
+    "  \n",
+    "  % PUNTOS\n"
+  )
+
+  # Agregar puntos marcados
+  for (i in 1:length(x_vals)) {
+    codigo_tikz <- paste0(codigo_tikz,
+                         "  \\fill[dot] (", x_vals[i], ",", y_vals[i], ") circle (2.5pt);\n")
+  }
+
+  # Cerrar TikZ
+  codigo_tikz <- paste0(codigo_tikz, "  \n\\end{tikzpicture}")
+
+  # Retornar todos los datos generados
+  list(
+    anios_final = anios_final,
+    k = k,
+    a_real = a_real,
+    b_real = b_real,
+    x_vertice = x_vertice,
+    y_vertice = y_vertice,
+    x_vals = x_vals,
+    y_vals = y_vals,
+    opciones = opciones_ordenadas,
+    solucion = solucion,
+    solucion_binaria = solucion_binaria,
+    codigo_tikz = codigo_tikz
+  )
+}
+
+# Generar los datos para este ejercicio
+datos <- generar_datos()
+```
+
+```{r version_diversity_test, include=FALSE}
+# Test de diversidad: generar 300 versiones y verificar unicidad
+set.seed(NULL)  # Asegurar aleatoriedad real
+
+versiones_hash <- character(300)
+for (i in 1:300) {
+  datos_test <- generar_datos()
+  # Crear hash único basado en parámetros clave
+  hash_data <- paste(
+    datos_test$anios_final,
+    datos_test$k,
+    datos_test$solucion,
+    paste(datos_test$opciones, collapse = "|"),
+    sep = "_"
+  )
+  versiones_hash[i] <- digest(hash_data, algo = "md5")
+}
+
+# Calcular unicidad
+versiones_unicas <- length(unique(versiones_hash))
+porcentaje_unicidad <- (versiones_unicas / 300) * 100
+
+# Verificar que haya al menos 280 versiones únicas (>93%)
+if (versiones_unicas < 280) {
+  warning(paste0("ADVERTENCIA: Solo ", versiones_unicas, " versiones únicas de 300 (",
+                 round(porcentaje_unicidad, 1), "%). Se esperaban al menos 280."))
+}
+
+# Mostrar resultado en comentario HTML (visible en source, no en PDF)
+cat(paste0("<!-- Diversidad: ", versiones_unicas, "/300 versiones únicas (",
+           round(porcentaje_unicidad, 1), "%) -->"))
+```
+
+
+Question
+========
+
+Una empresa desarrolla un juego para computador. La gráfica muestra la proyección que hizo la empresa acerca de la cantidad de usuarios que tendrá el juego luego de su lanzamiento.
+
+```{r grafica_tikz, echo=FALSE, results='asis'}
+# Determinar formato de salida según el tipo
+fmt_tikz <- if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "png" else typ
+
+# Generar gráfica TikZ usando include_tikz()
+include_tikz(datos$codigo_tikz,
+             name = "grafica_usuarios",
+             markup = "markdown",
+             format = fmt_tikz,
+             packages = c("tikz"),
+             width = "12cm")
+```
+
+\vspace{0.5cm}
+
+¿Qué ecuación corresponde con la gráfica que relaciona el tiempo $x$ desde el lanzamiento del juego con la cantidad $y$ de usuarios que tiene?
+
+```{r questionlist, echo=FALSE, results='asis'}
+answerlist(datos$opciones, markup = "markdown")
+```
+
+
+Solution
+========
+
+Para encontrar la ecuación correcta, debemos analizar las características de la parábola mostrada en la gráfica:
+
+**1. Identificar puntos clave:**
+
+- La gráfica pasa por el origen: $(0, 0)$
+- La gráfica tiene una raíz (cruza el eje $x$) en $x = `r datos$anios_final`$
+- El punto máximo (vértice) está aproximadamente en $x = `r datos$x_vertice`$, $y = `r datos$y_vertice`$
+
+**2. Analizar la forma:**
+
+- La parábola abre hacia abajo (concavidad negativa), lo que indica que el coeficiente de $x^2$ debe ser **negativo**
+- Tiene forma $y = ax^2 + bx + c$ con $a < 0$
+
+**3. Determinar los coeficientes:**
+
+Como la parábola pasa por $(0, 0)$, sabemos que $c = 0$.
+
+Como tiene raíces en $x = 0$ y $x = `r datos$anios_final`$, podemos factorizar:
+$$y = -k \cdot x(x - `r datos$anios_final`)$$
+
+Expandiendo:
+$$y = -k \cdot x^2 + `r datos$b_real` \cdot k \cdot x$$
+
+Con $k = `r datos$k`$:
+$$y = `r datos$a_real` x^2 + `r datos$b_real` x$$
+
+**4. Verificación:**
+
+- En $x = 0$: $y = 0$ (Correcto)
+- En $x = `r datos$anios_final`$: $y = `r datos$a_real` \cdot `r datos$anios_final`^2 + `r datos$b_real` \cdot `r datos$anios_final` = 0$ (Correcto)
+- Vértice en $x = -\frac{b}{2a} = -\frac{`r datos$b_real`}{2 \cdot (`r datos$a_real`)} = `r datos$x_vertice`$ (Correcto)
+
+**Respuesta correcta:** `r datos$opciones[datos$solucion]`
+
+```{r solutionlist, echo=FALSE, results='asis'}
+answerlist(
+  ifelse(datos$solucion_binaria == 1, "Verdadero. Esta es la ecuación correcta.", "Falso. Esta ecuación no representa correctamente la parábola mostrada."),
+  markup = "markdown"
+)
+```
+
+
+Meta-information
+================
+extype: schoice
+exsolution: `r paste(datos$solucion_binaria, collapse = "")`
+exname: proyeccion_usuarios_parabola
+exshuffle: FALSE

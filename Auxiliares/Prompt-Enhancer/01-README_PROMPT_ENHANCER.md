@@ -1,55 +1,64 @@
-# 🚀 PROMPT ENHANCER - Sistema de Mejora de Prompts con Contexto del Proyecto
+# 🚀 PROMPT ENHANCER - Optimizador de Prompts para IA Genérica
 
-**Versión**: 1.2.0
+**Versión**: 2.0.0
 **Última actualización**: 2025-12-21
-**Estado**: ✅ Estable y refactorizado
+**Estado**: ✅ Estable - Optimizado para IA genérica
 
 ## 📋 Descripción
 
 **Prompt Enhancer** es un script bash inteligente que mejora automáticamente los
-prompts del usuario añadiendo contexto relevante del proyecto ICFES R-Exams.
-Funciona desde cualquier ubicación dentro del repositorio y proporciona información
-contextual específica según la carpeta desde donde se ejecuta.
+prompts del usuario añadiendo contexto del proyecto ICFES R-Exams. Genera outputs
+optimizados en formato markdown estándar compatibles con **cualquier IA** (ChatGPT,
+Claude, Gemini, Copilot, etc.).
 
 **Ubicación**: `Auxiliares/Prompt-Enhancer/`
 
-## 🆕 Última Actualización - v1.2.0 (2025-12-21)
+## 🆕 Última Actualización - v2.0.0 (2025-12-21)
 
-### Refactorización Mayor
-Esta versión incluye una refactorización completa del código con:
-- ✅ **2 bugs críticos corregidos** (lectura de archivos y manejo de argumentos)
-- ✅ **17 funciones modulares** (vs 6 en v1.1.0)
-- ✅ **+41% más líneas de código** bien estructuradas (618 vs 437)
-- ✅ **Soporte Wayland** para portapapeles (wl-copy)
-- ✅ **Mejor manejo de errores** y validaciones
+### Optimización para IA Genérica
+Esta versión representa un cambio mayor en el enfoque del script:
+
+- ✅ **Enfoque exclusivo en `.claude/`** - Eliminadas referencias a `.augment/` y `.claudedoc/`
+- ✅ **Generación automática de archivo .txt** - SIEMPRE genera `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
+- ✅ **Formato markdown estándar** - Compatible con cualquier IA
+- ✅ **Prioriza workflow documentado** - Incluye `.claude/docs/WORKFLOW_PASO_A_PASO.md`
+- ✅ **Incluye hooks de automatización** - Lista hooks disponibles de `.claude/hooks/`
+- ✅ **Instrucciones específicas para IA** - Sección de guía para la IA incluida
 
 Ver detalles completos en: [07-CHANGELOG.md](07-CHANGELOG.md)
 
 ## 🎯 Características Principales
+
+### ✅ Generación Automática de Archivo
+- **SIEMPRE genera archivo .txt** - `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
+- **Ubicación**: Directorio actual de trabajo
+- **Formato**: Markdown estándar optimizado para IA
 
 ### ✅ Detección Automática de Contexto
 - **Ubicación actual**: Detecta automáticamente desde qué carpeta se está ejecutando
 - **Tipo de contenido**: Identifica si estás en producción, desarrollo, auxiliares, etc.
 - **Raíz del proyecto**: Encuentra la raíz del proyecto desde cualquier subcarpeta
 
-### ✅ Enriquecimiento Inteligente Completo
-- **Reglas del proyecto**: Incluye reglas de `.claude/`
-- **Documentación técnica**: Incluye documentación de `.claude/`
-- **Guía de estilo**: Incluye guía de estilo de `.claudedoc/`
-- **Ejemplos funcionales**: Lista ejemplos relevantes disponibles
-- **Recomendaciones contextuales**: Sugerencias específicas según la ubicación
+### ✅ Enriquecimiento desde `.claude/`
+- **Workflow paso a paso**: Prioriza `.claude/docs/WORKFLOW_PASO_A_PASO.md`
+- **Skills disponibles**: Lista skills de `.claude/skills/`
+- **Comandos disponibles**: Lista comandos de `.claude/commands/`
+- **Hooks de automatización**: Lista hooks de `.claude/hooks/`
+- **Patrones de error**: Incluye errores conocidos cuando es relevante
+- **Ejemplos funcionales**: Lista ejemplos disponibles de `A-Produccion/`
 
 ### ✅ Múltiples Modos de Uso
 - **Modo interactivo**: Ingresa tu prompt directamente
 - **Desde archivo**: Lee prompts desde archivos de texto
-- **Salida a archivo**: Guarda el prompt mejorado
-- **Portapapeles**: Copia automáticamente el resultado
+- **Salida adicional**: Guarda copia adicional en archivo específico
+- **Portapapeles**: Copia también al portapapeles (adicional, no reemplazo)
 
 ## 🔧 Instalación y Configuración
 
 ### ✅ Estado Actual: CONFIGURADO
 
 Los alias ya están configurados en tu sistema:
+
 - ✅ **~/.bashrc** (Bash)
 - ✅ **~/.zshrc** (Zsh)
 
@@ -147,46 +156,39 @@ cd A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/
 pe "Necesito crear un ejercicio similar a este"
 ```
 
-**Resultado**: El prompt mejorado incluirá:
+**Resultado**:
 
-- Contexto de que estás en producción
-- Reglas de `.augment/rules/`, `.claude/` y `.claudedoc/`
-- Lista de ejemplos funcionales cercanos
-- Recomendaciones para validación
+- Genera archivo `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
+- Incluye workflow de `.claude/docs/`
+- Skills y comandos disponibles
+- Ejemplos funcionales cercanos
+- Instrucciones específicas para la IA
 
 ### Ejemplo 2: Desde Carpeta de Desarrollo
 
 ```bash
 cd A-Produccion/En-Desarrollo/
-../../Auxiliares/Prompt-Enhancer/prompt-enhancer.sh "Ayúdame a implementar un gráfico TikZ"
-
-# O con alias
 pe "Ayúdame a implementar un gráfico TikZ"
 ```
 
-**Resultado**: El prompt mejorado incluirá:
+**Resultado**:
 
+- Genera archivo automáticamente
 - Contexto de desarrollo activo
-- Reglas de metodología TikZ de `.augment/` y `.claude/`
-- Referencias a templates
-- Recomendaciones de documentación
+- Skills de corrección de gráficos
+- Patrones de error TikZ conocidos
 
-### Ejemplo 3: Desde Auxiliares
+### Ejemplo 3: Con copia al portapapeles
 
 ```bash
-cd Auxiliares/Scripts/
-../Prompt-Enhancer/prompt-enhancer.sh "Crea un script de validación"
-
-# O con alias
-pe "Crea un script de validación"
+pe "Crea un script de validación" -c
 ```
 
-**Resultado**: El prompt mejorado incluirá:
+**Resultado**:
 
-- Contexto de herramientas auxiliares
-- Reglas de compatibilidad con scripts existentes
-- Documentación técnica de `.claude/`
-- Recomendaciones de testing
+- Genera archivo automáticamente
+- ADEMÁS copia al portapapeles
+- Listo para pegar en cualquier IA
 
 ## 🔍 Contextos Detectados
 
@@ -202,30 +204,22 @@ El script identifica automáticamente estos contextos:
 
 ## 📊 Estructura del Prompt Mejorado
 
-El prompt mejorado incluye las siguientes secciones:
+El archivo `.txt` generado incluye las siguientes secciones:
 
 ```markdown
-# PROMPT MEJORADO CON CONTEXTO DEL PROYECTO
+# PROMPT MEJORADO - PROYECTO ICFES R-EXAMS
 
-## CONTEXTO DE UBICACIÓN
-- Proyecto: RepositorioMatematicasICFES_R_Exams
+## 📍 CONTEXTO DEL PROYECTO
+- Proyecto: Sistema de generación de ejercicios matemáticos ICFES
 - Ubicación actual: [ruta relativa]
 - Tipo de contexto: [producción/desarrollo/etc]
-- Descripción: [descripción del contexto]
 
-## 📋 REGLAS GENERALES DEL PROYECTO (`.claude/`)
-### Reglas Generales
-[`.claude/`]
+## 🔄 WORKFLOW DEL PROYECTO
+[Extracto de .claude/docs/WORKFLOW_PASO_A_PASO.md]
 
-### Reglas Siempre Aplicables
-[`.claude/`]
-
-## 🔧 DOCUMENTACIÓN TÉCNICA (.claude/)
+## 🔧 HERRAMIENTAS Y RECURSOS DISPONIBLES
 ### Documentación Principal
 [Extracto de .claude/docs/README.md]
-
-### Solución de Problemas
-[Extracto de .claude/TROUBLESHOOTING.md]
 
 ### Skills Disponibles
 [Lista de skills en .claude/skills/]
@@ -233,18 +227,29 @@ El prompt mejorado incluye las siguientes secciones:
 ### Comandos Disponibles
 [Lista de comandos en .claude/commands/]
 
-## 🎨 GUÍA DE ESTILO ICFES (.claudedoc/)
-### Guía de Estilo ICFES
-[Extracto de guia_estilo_icfes.md]
+### Hooks de Automatización
+[Lista de hooks en .claude/hooks/]
 
-## EJEMPLOS FUNCIONALES DISPONIBLES
+## 🚨 ERRORES CONOCIDOS Y SOLUCIONES
+[Si el prompt menciona errores - patrones conocidos]
+
+## 📚 EJEMPLOS FUNCIONALES DISPONIBLES
 [Lista de archivos .Rmd de ejemplo]
 
-## RECOMENDACIONES SEGÚN CONTEXTO
+## 💡 RECOMENDACIONES SEGÚN CONTEXTO
 [Recomendaciones específicas según ubicación]
 
-## SOLICITUD DEL USUARIO
-[Tu prompt original]
+---
+
+## 🎯 SOLICITUD DEL USUARIO
+> [Tu prompt original]
+
+## 📋 INSTRUCCIONES PARA LA IA
+1. Priorizar uso de skills y comandos de .claude/
+2. Consultar ejemplos funcionales antes de generar código
+3. Validar compatibilidad con sistema exams2*
+4. Seguir workflow documentado paso a paso
+5. Documentar errores nuevos si se resuelven
 ```
 
 ## 🛠️ Requisitos
@@ -307,10 +312,11 @@ cd A-Produccion/En-Desarrollo/
 
 ## 📝 Notas Importantes
 
-1. **Portabilidad**: El script funciona desde cualquier subcarpeta del proyecto
-2. **Detección automática**: No necesitas especificar la raíz del proyecto
-3. **Contexto dinámico**: Las recomendaciones cambian según tu ubicación
+1. **Archivo siempre generado**: SIEMPRE se crea `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
+2. **Portabilidad**: El script funciona desde cualquier subcarpeta del proyecto
+3. **Compatibilidad IA**: El archivo es compatible con cualquier IA (ChatGPT, Claude, Gemini, etc.)
 4. **Sin dependencias pesadas**: Solo requiere bash estándar
+5. **Enfoque en .claude/**: Solo incluye información de `.claude/` (workflow, skills, comandos, hooks)
 
 ## 🔧 Solución de Problemas
 
@@ -322,30 +328,31 @@ cd A-Produccion/En-Desarrollo/
 
 ### Advertencia: "xclip o pbcopy no están instalados"
 
-**Causa**: Falta la herramienta de portapapeles
+**Causa**: Falta la herramienta de portapapeles (solo afecta opción `-c`)
 
-**Solución**: Instala xclip (Linux) o usa macOS que incluye pbcopy
+**Solución**: Instala xclip (Linux) o wl-copy (Wayland). El archivo .txt se genera igualmente.
 
 ## 📚 Recursos Relacionados
 
-- **Documentación completa**: `Auxiliares/Prompt-Enhancer/01-README_PROMPT_ENHANCER.md`
-- **Ejemplos de uso**: `Auxiliares/Prompt-Enhancer/02-EJEMPLOS_USO_PROMPT_ENHANCER.md`
-- **Instalación y configuración**: `Auxiliares/Prompt-Enhancer/03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md`
-- **Reglas del proyecto**: `.augment/rules/reglas-generales.md`
-- **Documentación técnica**: `.claude/docs/README.md`
-- **Guía de estilo**: `.claudedoc/guia_estilo_icfes.md`
+- **Workflow del proyecto**: `.claude/docs/WORKFLOW_PASO_A_PASO.md`
+- **Skills disponibles**: `.claude/skills/`
+- **Comandos disponibles**: `.claude/commands/`
+- **Hooks de automatización**: `.claude/hooks/`
+- **Patrones de errores**: `.claude/docs/patrones-errores-conocidos.md`
 - **Ejemplos funcionales**: `A-Produccion/`
 
-## 🎯 Próximas Mejoras
+## 🎯 Mejoras Implementadas en v2.0.0
 
-- [ ] Integración directa con APIs de IA
-- [ ] Detección de tipo de ejercicio (schoice, cloze)
-- [ ] Sugerencias de metadatos ICFES
-- [ ] Análisis de archivos .Rmd existentes en la ubicación actual
+- ✅ Generación automática de archivo .txt
+- ✅ Formato markdown estándar para IA genérica
+- ✅ Enfoque exclusivo en `.claude/`
+- ✅ Priorización del workflow documentado
+- ✅ Inclusión de hooks de automatización
+- ✅ Sección de instrucciones para la IA
 
 ---
 
-**Versión**: 1.2.0
+**Versión**: 2.0.0
 **Fecha**: 2025-12-21
 **Autor**: Sistema ICFES R-Exams
 **Licencia**: Uso interno del proyecto

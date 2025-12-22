@@ -1,68 +1,84 @@
 # 📋 CHANGELOG - PROMPT ENHANCER
 
+## [2.0.0] - 2025-12-21
+
+### 🚀 Optimización para IA Genérica
+
+#### Cambio Mayor de Enfoque
+Esta versión representa un cambio fundamental en el enfoque del script, optimizándolo
+para generar prompts compatibles con **cualquier IA** (ChatGPT, Claude, Gemini, Copilot, etc.).
+
+#### Cambios Principales
+- ✅ **Enfoque exclusivo en `.claude/`** - Eliminadas todas las referencias a `.augment/` y `.claudedoc/`
+- ✅ **Generación automática de archivo .txt** - SIEMPRE genera `prompt_mejorado_YYYYMMDD_HHMMSS.txt`
+- ✅ **Priorización del workflow** - Incluye contenido de `.claude/docs/WORKFLOW_PASO_A_PASO.md`
+- ✅ **Hooks de automatización** - Nueva función para listar hooks de `.claude/hooks/`
+- ✅ **Instrucciones para IA** - Sección específica guiando a la IA sobre cómo proceder
+
+#### Nuevas Funciones
+- ✅ `read_workflow_documentation()` - Lee y prioriza el workflow paso a paso
+- ✅ `list_available_hooks()` - Lista hooks de automatización disponibles
+- ✅ `read_project_context()` - Reemplaza y mejora `read_project_rules()`
+
+#### Funciones Modificadas
+- ✅ `enhance_prompt()` - Nueva estructura del prompt mejorado:
+  1. Contexto del proyecto
+  2. Workflow del proyecto (priorizado)
+  3. Herramientas disponibles (skills, comandos, hooks)
+  4. Patrones de error (si aplica)
+  5. Ejemplos funcionales
+  6. Solicitud del usuario (destacada)
+  7. Instrucciones específicas para la IA (nueva)
+- ✅ `main()` - Siempre genera archivo .txt además de otras opciones
+- ✅ `show_help()` - Documentación actualizada
+
+#### Estructura del Prompt Mejorado
+```markdown
+# PROMPT MEJORADO - PROYECTO ICFES R-EXAMS
+## 📍 CONTEXTO DEL PROYECTO
+## 🔄 WORKFLOW DEL PROYECTO  (nuevo - priorizado)
+## 🔧 HERRAMIENTAS Y RECURSOS DISPONIBLES
+   - Skills, Comandos, Hooks (nuevo)
+## 🚨 ERRORES CONOCIDOS (si aplica)
+## 📚 EJEMPLOS FUNCIONALES
+## 💡 RECOMENDACIONES
+---
+## 🎯 SOLICITUD DEL USUARIO (destacada)
+## 📋 INSTRUCCIONES PARA LA IA (nuevo)
+```
+
+#### Eliminaciones
+- ❌ Referencias a `.augment/rules/`
+- ❌ Referencias a `.claudedoc/`
+- ❌ Función `read_style_guide()` (no relevante para IA genérica)
+- ❌ Función `read_project_rules()` (reemplazada por `read_project_context()`)
+
+#### Estadísticas
+- **Líneas de código**: 618 → 749 (+21%)
+- **Enfoque**: De proyecto-específico a IA-genérica
+- **Fuentes de datos**: 3 → 1 (solo `.claude/`)
+- **Archivo de salida**: Opcional → SIEMPRE generado
+
+---
+
 ## [1.2.0] - 2025-12-21
 
 ### 🔧 Refactorización Mayor del Código
 
 #### Bugs Críticos Corregidos
 - ✅ **Líneas 91 y 97**: Paths incorrectos en lectura de archivos de reglas
-  - Antes: `"$augment_rules_dir/.claude"` (incorrecto)
-  - Ahora: Rutas correctas a `reglas-generales.md` y `siempre.md`
 - ✅ **Línea 435**: Manejo incorrecto de argumentos con espacios
-  - Antes: `main $@` (sin comillas)
-  - Ahora: `main "$@"` (con comillas)
 
 #### Mejoras de Arquitectura
-- ✅ **Constantes extraídas** (líneas 27-37):
-  - `MAX_LINES_GENERAL_RULES=100`
-  - `MAX_LINES_MAIN_DOCS=50`
-  - `MAX_LINES_TROUBLESHOOTING=30`
-  - `MAX_LINES_STYLE_GUIDE=50`
-  - `MAX_EXAMPLES=10`
-  - Directorios centralizados: `CLAUDE_DIR`, `CLAUDEDOC_DIR`, `PRODUCTION_DIR`
-
-- ✅ **Funciones auxiliares nuevas** (líneas 43-78):
-  - `die()`: Manejo consistente de errores
-  - `warn()`: Advertencias estandarizadas
-  - `success()`: Mensajes de éxito
-  - `info()`: Mensajes informativos
-  - `read_file_limited()`: Función reutilizable para lectura de archivos con límite
-
-- ✅ **Función `read_project_rules()` refactorizada**:
-  - Dividida en 5 funciones especializadas:
-    - `read_claude_rules()` (líneas 139-167)
-    - `list_available_skills()` (líneas 172-192)
-    - `list_available_commands()` (líneas 197-217)
-    - `read_claude_documentation()` (líneas 222-254)
-    - `read_style_guide()` (líneas 259-277)
-  - `read_project_rules()` ahora solo agrega las partes (líneas 282-292)
-
-- ✅ **Nuevas funciones especializadas**:
-  - `generate_context_recommendations()` (líneas 326-366): Separada de `enhance_prompt()`
-  - `copy_to_clipboard()` (líneas 419-436): Manejo mejorado con soporte para `wl-copy` (Wayland)
-  - `process_arguments()` (líneas 495-539): Lógica de argumentos separada y mejorada
-  - `read_interactive_prompt()` (líneas 544-551): Modo interactivo separado
-
-#### Mejoras de Robustez
-- ✅ Validación de argumentos mejorada: Detecta opciones sin valor requerido
-- ✅ Manejo de errores consistente: Uso de `die()` con mensajes descriptivos
-- ✅ Mejor manejo de rutas: Comillas correctas para paths con espacios
-- ✅ Ordenamiento de resultados: Skills y comandos ordenados alfabéticamente con `sort`
-- ✅ Soporte para Wayland: Agregado `wl-copy` además de `xclip` y `pbcopy`
-
-#### Mejoras de Legibilidad
-- ✅ Código más modular: 17 funciones vs 6 originales
-- ✅ Nombres descriptivos: Variables y funciones con nombres claros
-- ✅ Comentarios actualizados: Fecha de modificación agregada
-- ✅ Estructura más clara: Separación lógica de responsabilidades
+- ✅ **Constantes extraídas** para configuración centralizada
+- ✅ **Funciones auxiliares nuevas**: `die()`, `warn()`, `success()`, `info()`, `read_file_limited()`
+- ✅ **Función `read_project_rules()` refactorizada** en 5 funciones especializadas
+- ✅ **Nuevas funciones especializadas** para mejor separación de responsabilidades
 
 #### Estadísticas
-- **Líneas de código**: 437 → 618 (+181 líneas, +41%)
-- **Funciones**: 6 → 17 (+183% de modularización)
+- **Líneas de código**: 437 → 618 (+41%)
+- **Funciones**: 6 → 17 (+183%)
 - **Bugs corregidos**: 2 críticos
-- **Constantes extraídas**: 5
-- **Funciones auxiliares**: 5 nuevas
-- **Mejora en mantenibilidad**: Significativa
 
 ---
 
@@ -144,35 +160,32 @@ alias pei="$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh -i"
 - **Scripts ejecutables**: 2 (`prompt-enhancer.sh`, `verificar-alias.sh`)
 - **Documentación**: 5 archivos Markdown
 
-### Líneas de Código (Actualizado v1.2.0)
-- **prompt-enhancer.sh**: ~618 líneas (+41% vs v1.1.0)
+### Líneas de Código (Actualizado v2.0.0)
+- **prompt-enhancer.sh**: ~749 líneas (+21% vs v1.2.0)
 - **verificar-alias.sh**: ~140 líneas
 - **Total documentación**: ~1600+ líneas
 
 ### Funcionalidades
-- ✅ 5 modos de uso diferentes
+- ✅ Generación automática de archivo .txt (v2.0.0)
+- ✅ Compatibilidad con IA genérica (v2.0.0)
+- ✅ Inclusión de workflow documentado (v2.0.0)
+- ✅ Listado de hooks de automatización (v2.0.0)
 - ✅ 4 alias configurados
-- ✅ 3 fuentes de reglas integradas
+- ✅ Enfoque exclusivo en `.claude/` (v2.0.0)
 - ✅ Detección automática de 6+ tipos de contexto
-- ✅ 17 funciones modulares (v1.2.0)
-- ✅ 5 funciones auxiliares (v1.2.0)
-- ✅ Soporte Wayland clipboard (v1.2.0)
+- ✅ Soporte Wayland clipboard
 
 ---
 
 ## 🎯 Próximas Mejoras Planificadas
 
-### Versión 1.2.0 (Futuro)
-- [ ] Integración directa con APIs de IA
+### Versión 2.1.0 (Futuro)
 - [ ] Detección automática de tipo de ejercicio (schoice, cloze)
 - [ ] Sugerencias automáticas de metadatos ICFES
 - [ ] Análisis de archivos .Rmd existentes en la ubicación actual
-- [ ] Caché de reglas para mejorar rendimiento
 - [ ] Modo verbose para debugging
-- [ ] Configuración personalizable por usuario
 
-### Versión 1.3.0 (Futuro)
-- [ ] Integración con sistema de templates
+### Versión 2.2.0 (Futuro)
 - [ ] Generación automática de estructura de ejercicios
 - [ ] Validación de prompts antes de enviar
 - [ ] Historial de prompts generados
@@ -184,16 +197,17 @@ alias pei="$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh -i"
 
 ### Última Actualización
 - **Fecha**: 2025-12-21
-- **Versión**: 1.2.0
-- **Estado**: ✅ Estable y refactorizado
-- **Tipo de actualización**: Refactorización mayor con corrección de bugs críticos
+- **Versión**: 2.0.0
+- **Estado**: ✅ Estable - Optimizado para IA genérica
+- **Tipo de actualización**: Cambio mayor de enfoque
 
 ### Compatibilidad
 - ✅ Bash 4.0+
 - ✅ Zsh 5.0+
 - ✅ Manjaro Plasma KDE
 - ✅ Linux en general
-- ✅ Soporte Wayland (nuevo en v1.2.0)
+- ✅ Soporte Wayland
+- ✅ Cualquier IA (ChatGPT, Claude, Gemini, Copilot, etc.)
 
 ### Dependencias
 - **Requeridas**: bash, grep, sed, cat, find, head, sort
@@ -203,17 +217,20 @@ alias pei="$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh -i"
 
 ## 📝 Notas de Versión
 
+### v2.0.0
+Esta versión representa un cambio fundamental de enfoque: el script ahora genera outputs optimizados para **cualquier IA** (ChatGPT, Claude, Gemini, Copilot, etc.) en lugar de estar limitado a herramientas específicas. Se eliminaron todas las referencias a `.augment/` y `.claudedoc/`, enfocándose exclusivamente en el contenido de `.claude/`. El archivo `.txt` ahora se genera SIEMPRE automáticamente, y se incluye una nueva sección de "Instrucciones para la IA" para guiar el procesamiento del prompt.
+
 ### v1.2.0
-Esta versión representa una refactorización mayor del código base, mejorando significativamente la mantenibilidad, robustez y legibilidad del script. Se corrigieron 2 bugs críticos que afectaban la lectura de archivos de configuración y el manejo de argumentos. El código ahora es más modular (17 funciones vs 6), con mejor manejo de errores, validaciones mejoradas y soporte para Wayland. Todas las funcionalidades existentes se mantienen intactas mientras se mejora la calidad interna del código.
+Refactorización mayor del código base con corrección de 2 bugs críticos. Mejoras en modularidad (17 funciones vs 6), manejo de errores y soporte Wayland.
 
 ### v1.1.0
-Esta versión completa la configuración automática del sistema, haciendo que el Prompt Enhancer esté completamente listo para usar sin configuración manual adicional. Los alias están configurados en ambos shells (bash y zsh) y toda la documentación ha sido actualizada para reflejar este estado.
+Configuración automática de alias en bash y zsh. Sistema listo para usar sin configuración manual.
 
 ### v1.0.0
-Primera versión funcional del sistema con todas las características principales implementadas y probadas.
+Primera versión funcional con todas las características principales implementadas.
 
 ---
 
-**Mantenido por**: Sistema ICFES R-Exams  
+**Mantenido por**: Sistema ICFES R-Exams
 **Licencia**: Uso interno del proyecto
 

@@ -1,0 +1,402 @@
+---
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "amsmath", "pgfplots"]
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: aplicado
+  eje_axial: eje2
+  componente: geometrico_metrico
+  pensamiento: variacional_espacial
+---
+
+```{r setup, include=FALSE}
+# ============================================================================
+# CHUNK DE CONFIGURACIÓN INICIAL (OBLIGATORIO)
+# ============================================================================
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "xelatex")
+options(tikzXelatex = TRUE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{pgfplots}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{amsmath}",
+  "\\usepackage[spanish]{babel}"
+))
+
+# Cargar librerías necesarias
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+library(reticulate)
+
+# Configurar Python explícitamente
+use_python(Sys.which("python3"), required = TRUE)
+
+# Configuración para r-exams
+typ <- match_exams_device()
+options(scipen = 999)  # OBLIGATORIO: evitar notación científica
+
+# Configuración de chunks
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.width = 5,
+  fig.height = 5,
+  out.width = "50%",
+  fig.pos = "H"
+)
+
+# CRÍTICO: Semilla aleatoria (NUNCA usar set.seed() fijo)
+set.seed(sample(1:100000, 1))
+```
+
+```{r generar_datos, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Función para generar datos aleatorios del problema
+generar_datos <- function() {
+  # Generar pendiente aleatoria (entre -3 y 3, evitando 0)
+  pendientes_posibles <- c(-3, -2.5, -2, -1.5, -1, -0.5, 0.5, 1, 1.5, 2, 2.5, 3)
+  m <- sample(pendientes_posibles, 1)
+  
+  # Generar intercepto aleatorio (entre -4 y 4)
+  b <- sample(seq(-4, 4, by = 0.5), 1)
+  
+  # Formatear pendiente e intercepto para mostrar
+  m_formateado <- ifelse(m == as.integer(m), as.character(m), 
+                        ifelse(abs(m) == 0.5, ifelse(m < 0, "-\\frac{1}{2}", "\\frac{1}{2}"),
+                               ifelse(abs(m) == 1.5, ifelse(m < 0, "-\\frac{3}{2}", "\\frac{3}{2}"),
+                                      ifelse(abs(m) == 2.5, ifelse(m < 0, "-\\frac{5}{2}", "\\frac{5}{2}"),
+                                             sprintf("%.1f", m)))))
+  
+  b_formateado <- ifelse(b == as.integer(b), as.character(b), sprintf("%.1f", b))
+  
+  # Generar ecuación de la recta (enviuelta en modo matemático para LaTeX)
+  if (b == 0) {
+    ecuacion <- paste0("$y = ", m_formateado, "x$")
+  } else if (b > 0) {
+    ecuacion <- paste0("$y = ", m_formateado, "x + ", b_formateado, "$")
+  } else {
+    # Usar abs() sobre el valor numérico, no sobre el string formateado
+    b_abs_formateado <- ifelse(abs(b) == as.integer(abs(b)), 
+                               as.character(abs(b)), 
+                               sprintf("%.1f", abs(b)))
+    ecuacion <- paste0("$y = ", m_formateado, "x - ", b_abs_formateado, "$")
+  }
+  
+  # Generar opciones de respuesta (distractores pedagógicamente efectivos)
+  # Opción correcta: la ecuación completa
+  opcion_correcta <- ecuacion
+  
+  # Distractor 1: Pendiente correcta pero intercepto incorrecto
+  b_distractor1 <- sample(c(b + 1, b - 1, b + 2, b - 2), 1)
+  b_dist1_formateado <- ifelse(b_distractor1 == as.integer(b_distractor1), 
+                               as.character(b_distractor1), 
+                               sprintf("%.1f", b_distractor1))
+  if (b_distractor1 == 0) {
+    distractor1 <- paste0("$y = ", m_formateado, "x$")
+  } else if (b_distractor1 > 0) {
+    distractor1 <- paste0("$y = ", m_formateado, "x + ", b_dist1_formateado, "$")
+  } else {
+    b_dist1_abs_formateado <- ifelse(abs(b_distractor1) == as.integer(abs(b_distractor1)), 
+                                     as.character(abs(b_distractor1)), 
+                                     sprintf("%.1f", abs(b_distractor1)))
+    distractor1 <- paste0("$y = ", m_formateado, "x - ", b_dist1_abs_formateado, "$")
+  }
+  
+  # Distractor 2: Intercepto correcto pero pendiente incorrecta
+  m_distractor2 <- sample(pendientes_posibles[pendientes_posibles != m], 1)
+  m_dist2_formateado <- ifelse(m_distractor2 == as.integer(m_distractor2), 
+                               as.character(m_distractor2),
+                               ifelse(abs(m_distractor2) == 0.5, 
+                                      ifelse(m_distractor2 < 0, "-\\frac{1}{2}", "\\frac{1}{2}"),
+                                      ifelse(abs(m_distractor2) == 1.5, 
+                                             ifelse(m_distractor2 < 0, "-\\frac{3}{2}", "\\frac{3}{2}"),
+                                             ifelse(abs(m_distractor2) == 2.5, 
+                                                    ifelse(m_distractor2 < 0, "-\\frac{5}{2}", "\\frac{5}{2}"),
+                                                    sprintf("%.1f", m_distractor2)))))
+  if (b == 0) {
+    distractor2 <- paste0("$y = ", m_dist2_formateado, "x$")
+  } else if (b > 0) {
+    distractor2 <- paste0("$y = ", m_dist2_formateado, "x + ", b_formateado, "$")
+  } else {
+    b_abs_formateado <- ifelse(abs(b) == as.integer(abs(b)), 
+                               as.character(abs(b)), 
+                               sprintf("%.1f", abs(b)))
+    distractor2 <- paste0("$y = ", m_dist2_formateado, "x - ", b_abs_formateado, "$")
+  }
+  
+  # Distractor 3: Ambos incorrectos pero con valores cercanos
+  m_distractor3 <- sample(pendientes_posibles[pendientes_posibles != m & pendientes_posibles != m_distractor2], 1)
+  b_distractor3 <- sample(c(b + 1, b - 1, b + 2, b - 2), 1)
+  m_dist3_formateado <- ifelse(m_distractor3 == as.integer(m_distractor3), 
+                               as.character(m_distractor3),
+                               ifelse(abs(m_distractor3) == 0.5, 
+                                      ifelse(m_distractor3 < 0, "-\\frac{1}{2}", "\\frac{1}{2}"),
+                                      ifelse(abs(m_distractor3) == 1.5, 
+                                             ifelse(m_distractor3 < 0, "-\\frac{3}{2}", "\\frac{3}{2}"),
+                                             ifelse(abs(m_distractor3) == 2.5, 
+                                                    ifelse(m_distractor3 < 0, "-\\frac{5}{2}", "\\frac{5}{2}"),
+                                                    sprintf("%.1f", m_distractor3)))))
+  b_dist3_formateado <- ifelse(b_distractor3 == as.integer(b_distractor3), 
+                               as.character(b_distractor3), 
+                               sprintf("%.1f", b_distractor3))
+  if (b_distractor3 == 0) {
+    distractor3 <- paste0("$y = ", m_dist3_formateado, "x$")
+  } else if (b_distractor3 > 0) {
+    distractor3 <- paste0("$y = ", m_dist3_formateado, "x + ", b_dist3_formateado, "$")
+  } else {
+    b_dist3_abs_formateado <- ifelse(abs(b_distractor3) == as.integer(abs(b_distractor3)), 
+                                     as.character(abs(b_distractor3)), 
+                                     sprintf("%.1f", abs(b_distractor3)))
+    distractor3 <- paste0("$y = ", m_dist3_formateado, "x - ", b_dist3_abs_formateado, "$")
+  }
+  
+  # Mezclar opciones
+  todas_opciones <- c(opcion_correcta, distractor1, distractor2, distractor3)
+  orden_opciones <- sample(1:4)
+  opciones_mezcladas <- todas_opciones[orden_opciones]
+  posicion_correcta <- which(orden_opciones == 1)
+  
+  return(list(
+    m = m,
+    b = b,
+    m_formateado = m_formateado,
+    b_formateado = b_formateado,
+    ecuacion = ecuacion,
+    opciones = opciones_mezcladas,
+    respuesta_correcta = opcion_correcta,
+    posicion_correcta = posicion_correcta
+  ))
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+```
+
+```{r prueba_diversidad, include=FALSE}
+# Prueba de diversidad de versiones (mínimo 300 versiones únicas)
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r generar_grafico_python, echo=FALSE, results="hide"}
+# ============================================================================
+# GENERACIÓN DEL GRÁFICO DE LA RECTA CON PYTHON/MATPLOTLIB
+# ============================================================================
+# Patrón basado en archivos funcionales en producción
+
+codigo_python <- paste0("
+import matplotlib
+matplotlib.use('Agg')  # Backend sin interfaz gráfica
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Obtener parámetros desde R
+m_py = ", datos$m, "
+b_py = ", datos$b, "
+
+# Configuración de la figura
+fig, ax = plt.subplots(figsize=(5, 5))
+
+# Rango de valores para x
+x_min = -5
+x_max = 5
+x = np.linspace(x_min, x_max, 1000)
+
+# Calcular valores de y
+y = m_py * x + b_py
+
+# Ajustar límites del gráfico
+y_min_calc = min(y)
+y_max_calc = max(y)
+
+# Asegurar que los ejes sean visibles y haya espacio adecuado alrededor de la recta
+# Mantener un rango visible de al menos -6 a 6, pero ajustar si la recta requiere más espacio
+y_min = min(y_min_calc - 0.5, -6)
+y_max = max(y_max_calc + 0.5, 6)
+
+# Dibujar ejes
+ax.axhline(y=0, color='k', linewidth=0.8)
+ax.axvline(x=0, color='k', linewidth=0.8)
+
+# Dibujar la recta
+ax.plot(x, y, 'b-', linewidth=2.5, label='Recta')
+
+# Marcar el intercepto si es visible en el rango
+if b_py >= y_min and b_py <= y_max:
+    ax.plot(0, b_py, 'ro', markersize=8, label='Intercepto')
+    # Formatear el intercepto correctamente (entero o decimal)
+    if b_py == int(b_py):
+        b_label = str(int(b_py))
+    else:
+        b_label = f'{b_py:.1f}'
+    ax.annotate(f'$(0, {b_label})$',
+                xy=(0, b_py), xytext=(0.3, b_py),
+                fontsize=9, color='red', fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor='red', alpha=0.8))
+
+# Configurar límites y etiquetas
+ax.set_xlim(x_min, x_max)
+ax.set_ylim(y_min, y_max)
+ax.set_xlabel('$x$', fontsize=12, fontweight='bold')
+ax.set_ylabel('$y$', fontsize=12, fontweight='bold')
+ax.set_title('Gráfico de la recta', fontsize=13, fontweight='bold', pad=10)
+
+# Añadir cuadrícula
+ax.grid(True, linestyle='--', alpha=0.3, linewidth=0.5)
+
+# Añadir marcas en los ejes
+ax.set_xticks(range(x_min, x_max + 1))
+ax.set_yticks(range(int(y_min), int(y_max) + 1))
+
+# Configurar aspecto igual para mejor visualización
+ax.set_aspect('equal', adjustable='box')
+
+# Ajustar diseño y guardar
+plt.tight_layout()
+# Guardar en el directorio actual (patrón de archivos funcionales en producción)
+plt.savefig('recta_python.png', dpi=150, bbox_inches='tight', transparent=True)
+plt.close()
+")
+
+# Ejecutar el código Python
+py_run_string(codigo_python)
+```
+
+Question
+========
+
+En el siguiente gráfico se muestra una recta en el plano cartesiano:
+
+```{r mostrar_grafico, echo=FALSE, results='asis', fig.align='center'}
+# ============================================================================
+# MOSTRAR IMAGEN GENERADA CON PYTHON
+# ============================================================================
+# La imagen recta_python.png fue generada en el chunk anterior con matplotlib
+# Patrón basado en archivos funcionales en producción: usar markdown simple
+
+# Detectar si se está generando para Moodle
+es_moodle <- (match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat"))
+
+# Ajustar tamaño según formato de salida (patrón del archivo de referencia)
+if(es_moodle) {
+  cat("![](recta_python.png){width=30%}\n\n")  # Más pequeño para Moodle
+} else {
+  cat("![](recta_python.png){width=50%}\n\n")  # Tamaño estándar para PDF/Word
+}
+```
+
+¿Cuál es la ecuación de la recta representada en el gráfico?
+
+```{r opciones, echo=FALSE, results='asis'}
+answerlist(datos$opciones, markup = "markdown")
+```
+
+Solution
+========
+
+```{r construir_ecuacion_solucion, include=FALSE}
+# Construir ecuación para la sección de solución (sin delimitadores $)
+if (datos$b == 0) {
+  ecuacion_solucion <- paste0("y = ", datos$m_formateado, "x")
+} else if (datos$b > 0) {
+  ecuacion_solucion <- paste0("y = ", datos$m_formateado, "x + ", datos$b_formateado)
+} else {
+  b_abs_formateado <- ifelse(abs(datos$b) == as.integer(abs(datos$b)), 
+                             as.character(abs(datos$b)), 
+                             sprintf("%.1f", abs(datos$b)))
+  ecuacion_solucion <- paste0("y = ", datos$m_formateado, "x - ", b_abs_formateado)
+}
+```
+
+Para determinar la ecuación de la recta, necesitamos identificar su pendiente ($m$) y su intercepto con el eje $y$ ($b$).
+
+La ecuación de una recta tiene la forma:
+$$y = mx + b$$
+
+donde:
+- $m$ es la pendiente de la recta
+- $b$ es el intercepto con el eje $y$ (el valor de $y$ cuando $x = 0$)
+
+**Análisis del gráfico:**
+
+1. **Intercepto con el eje $y$**: Observando el gráfico, la recta intersecta el eje $y$ en el punto $(0, `r datos$b_formateado`)$. Por lo tanto, $b = `r datos$b_formateado`$.
+
+2. **Pendiente**: La pendiente se puede calcular usando dos puntos de la recta. Observando el gráfico:
+   - La recta pasa por el punto $(0, `r datos$b_formateado`)$
+   - Para calcular la pendiente, podemos usar otro punto visible en la recta
+   
+   La pendiente es $m = `r datos$m_formateado`$.
+
+**Ecuación de la recta:**
+
+Sustituyendo los valores encontrados:
+$$`r ecuacion_solucion`$$
+
+Por lo tanto, la ecuación de la recta es: **$`r ecuacion_solucion`$**
+
+```{r solucion_detallada, echo=FALSE, results='asis'}
+answerlist(
+  c(
+    ifelse(datos$posicion_correcta == 1, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. No corresponde a la ecuación de la recta mostrada en el gráfico."),
+    ifelse(datos$posicion_correcta == 2, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. Error en la identificación del intercepto o la pendiente."),
+    ifelse(datos$posicion_correcta == 3, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. Error en la identificación del intercepto o la pendiente."),
+    ifelse(datos$posicion_correcta == 4, "Correcto. Identifica correctamente la ecuación de la recta analizando la pendiente y el intercepto en el gráfico.", "Incorrecto. Error en la identificación del intercepto o la pendiente.")
+  ),
+  markup = "markdown"
+)
+```
+
+Meta-information
+================
+exname: recta_geometria_analitica_python_interpretacion_representacion
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exshuffle: TRUE
+exsection: Geometría/Geometría Analítica/Ecuación de la recta
+

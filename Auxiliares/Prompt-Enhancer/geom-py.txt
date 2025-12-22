@@ -163,10 +163,9 @@ Ubicación: A-Produccion/
 - Documentar funcionalidad claramente
 - Probar en entorno real antes de integrar## 🎯 SOLICITUD DEL USUARIO
 Genera un ejercicio de geometría analítica que incluya:
-
 - Ecuación de la recta
 - Pendiente e intercepto
-- Gráfico con TikZ
+- Gráfico con Python (Reticulate)
 - 4 opciones de respuesta tipo schoice
 
 ---

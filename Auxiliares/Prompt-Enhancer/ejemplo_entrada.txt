@@ -1,5 +1,4 @@
 Genera un ejercicio de geometría analítica que incluya:
-
 - Ecuación de la recta
 - Pendiente e intercepto
 - Gráfico con Python (Reticulate)

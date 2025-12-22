@@ -78,12 +78,116 @@ graph TD
 
     G --> H[OUTPUT: Archivo .Rmd<br/>con Metadatos Completos]
 
+    H --> I[RENDERIZADO exams2*]
+    I --> I1[exams2html]
+    I --> I2[exams2pdf]
+    I --> I3[exams2docx]
+    I --> I4[exams2nops]
+
+    I1 --> J[INSPECCIÓN VISUAL<br/>de Outputs exams2*]
+    I2 --> J
+    I3 --> J
+    I4 --> J
+
+    J --> J1[Verificar HTML]
+    J --> J2[Verificar PDF]
+    J --> J3[Verificar DOCX]
+    J --> J4[Verificar NOPS]
+
+    J1 --> K{¿Errores<br/>encontrados?}
+    J2 --> K
+    J3 --> K
+    J4 --> K
+
+    K -->|Sí| K1{Tipo de<br/>Error}
+
+    K1 -->|Gráficos| ERR_G[ERRORES DE GRÁFICOS]
+    ERR_G --> ERR_G1[Gráficas no<br/>visualizadas]
+    ERR_G --> ERR_G2[Gráficas<br/>solapadas]
+    ERR_G --> ERR_G3[Renderizado<br/>incorrecto]
+    ERR_G --> ERR_G4[Tamaño inadecuado<br/>vs escenario]
+
+    ERR_G1 --> L1[Verificar include_tikz<br/>y rutas de imagen]
+    ERR_G2 --> L2[Ajustar posicionamiento<br/>y márgenes]
+    ERR_G3 --> L3[Revisar código TikZ<br/>o Python/R]
+    ERR_G4 --> L4[Ajustar scale, width<br/>height en chunk]
+
+    L1 --> L[Corregir errores<br/>en .Rmd]
+    L2 --> L
+    L3 --> L
+    L4 --> L
+
+    K1 -->|Texto/Formato| ERR_T[ERRORES DE TEXTO]
+    ERR_T --> ERR_T1[LaTeX no compila]
+    ERR_T --> ERR_T2[Encoding incorrecto]
+    ERR_T --> ERR_T3[Metadatos faltantes]
+
+    ERR_T1 --> L
+    ERR_T2 --> L
+    ERR_T3 --> L
+
+    K1 -->|Estructura| ERR_S[ERRORES ESTRUCTURA]
+    ERR_S --> ERR_S1[Opciones incorrectas]
+    ERR_S --> ERR_S2[Solución no coincide]
+
+    ERR_S1 --> L
+    ERR_S2 --> L
+
+    K1 -->|Coherencia| ERR_C[ERRORES DE COHERENCIA]
+    ERR_C --> ERR_C1[Coherencia<br/>matemática]
+    ERR_C --> ERR_C2[Coherencia<br/>imagen-texto]
+    ERR_C --> ERR_C3[Coherencia<br/>de código]
+
+    ERR_C1 --> L5[Revisar fórmulas,<br/>cálculos y resultados]
+    ERR_C2 --> L6[Alinear descripción<br/>con gráfico generado]
+    ERR_C3 --> L7[Sincronizar variables<br/>R/Python/TikZ]
+
+    L5 --> L
+    L6 --> L
+    L7 --> L
+
+    L --> I
+
+    K -->|No| M[VALIDACIÓN EXITOSA<br/>Continuar Workflow]
+
+    M --> N[PROMOCIÓN A<br/>PRODUCCIÓN]
+
     style A fill:#e1f5ff
     style B fill:#fff4e6
     style D fill:#e8f5e9
     style D1 fill:#fff9c4
     style G fill:#f3e5f5
     style H fill:#ffebee
+    style I fill:#e3f2fd
+    style J fill:#fff3e0
+    style K fill:#fce4ec
+    style K1 fill:#fce4ec
+    style L fill:#ffcdd2
+    style M fill:#c8e6c9
+    style N fill:#a5d6a7
 
     style D1a fill:#c8e6c9
     style D1b fill:#c8e6c9
+
+    style ERR_G fill:#ffab91
+    style ERR_G1 fill:#ffccbc
+    style ERR_G2 fill:#ffccbc
+    style ERR_G3 fill:#ffccbc
+    style ERR_G4 fill:#ffccbc
+
+    style L1 fill:#ffe0b2
+    style L2 fill:#ffe0b2
+    style L3 fill:#ffe0b2
+    style L4 fill:#ffe0b2
+
+    style ERR_T fill:#ce93d8
+    style ERR_S fill:#90caf9
+
+    style ERR_C fill:#80deea
+    style ERR_C1 fill:#b2ebf2
+    style ERR_C2 fill:#b2ebf2
+    style ERR_C3 fill:#b2ebf2
+
+    style L5 fill:#e0f7fa
+    style L6 fill:#e0f7fa
+    style L7 fill:#e0f7fa

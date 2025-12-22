@@ -1,0 +1,89 @@
+graph TD
+    A[ENTRADA: Imagen ICFES Matemáticas] --> B[ANÁLISIS DE CARACTERÍSTICAS]
+
+    B --> C1[Nivel de Dificultad]
+    C1 --> C1a[Nivel 1: 0-35 pts]
+    C1 --> C1b[Nivel 2: 36-50 pts]
+    C1 --> C1c[Nivel 3: 51-70 pts]
+    C1 --> C1d[Nivel 4: 71-100 pts]
+
+    B --> C2[Competencia]
+    C2 --> C2a[Interpretación y<br/>Representación 34%]
+    C2 --> C2b[Formulación y<br/>Ejecución 43%]
+    C2 --> C2c[Argumentación 23%]
+
+    B --> C3[Componente]
+    C3 --> C3a[Numérico-Variacional]
+    C3 --> C3b[Geométrico-Métrico]
+    C3 --> C3c[Aleatorio]
+
+    B --> C4[Tipo de Pensamiento]
+    C4 --> C4a[Pensamiento Numérico]
+    C4 --> C4b[Pensamiento Espacial]
+    C4 --> C4c[Pensamiento Métrico]
+    C4 --> C4d[Pensamiento Variacional]
+    C4 --> C4e[Pensamiento Aleatorio]
+
+    B --> C5[Contenido Curricular]
+    C5 --> C5a[Álgebra y Cálculo]
+    C5a --> C5a1[Contenidos Genéricos]
+    C5a --> C5a2[Contenidos No Genéricos]
+    C5 --> C5b[Geometría]
+    C5b --> C5b1[Contenidos Genéricos]
+    C5b --> C5b2[Contenidos No Genéricos]
+    C5 --> C5c[Estadística]
+
+    B --> C6[Eje Axial Disciplinar]
+    C6 --> C6a[Puramente Matemático]
+    C6 --> C6b[Aplicado/Contextualizado]
+
+    B --> D[FORMATO R/EXAMS]
+
+    D --> D1{Tipo de Ejercicio}
+    D1 --> D1a[SCHOICE<br/>Selección Única]
+    D1 --> D1b[CLOZE<br/>Pregunta Compuesta]
+
+    D1a --> E1[Análisis Visual Enunciado]
+    D1b --> E2[Análisis Visual Enunciado]
+
+    E1 --> E1a[Con Gráficos<br/>Matemáticos]
+    E1 --> E1b[Con Gráficos<br/>No Matemáticos]
+    E1 --> E1c[Sin Gráficos]
+
+    E2 --> E2a[Con Gráficos<br/>Matemáticos]
+    E2 --> E2b[Con Gráficos<br/>No Matemáticos]
+    E2 --> E2c[Sin Gráficos]
+
+    E1a --> F1[Análisis Opciones]
+    E1b --> F1
+    E1c --> F1
+    E2a --> F2[Análisis Opciones]
+    E2b --> F2
+    E2c --> F2
+
+    F1 --> F1a[Opciones<br/>Textuales/Numéricas]
+    F1 --> F1b[Opciones con<br/>Gráficos]
+    F1 --> F1c[Opciones Mixtas]
+
+    F2 --> F2a[Opciones<br/>Textuales/Numéricas]
+    F2 --> F2b[Opciones con<br/>Gráficos]
+    F2 --> F2c[Opciones Mixtas]
+
+    F1a --> G[PLANTILLA FINAL .Rmd]
+    F1b --> G
+    F1c --> G
+    F2a --> G
+    F2b --> G
+    F2c --> G
+
+    G --> H[OUTPUT: Archivo .Rmd<br/>con Metadatos Completos]
+
+    style A fill:#e1f5ff
+    style B fill:#fff4e6
+    style D fill:#e8f5e9
+    style D1 fill:#fff9c4
+    style G fill:#f3e5f5
+    style H fill:#ffebee
+
+    style D1a fill:#c8e6c9
+    style D1b fill:#c8e6c9

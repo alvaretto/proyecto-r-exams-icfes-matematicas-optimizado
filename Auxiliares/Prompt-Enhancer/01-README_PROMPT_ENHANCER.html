@@ -11,7 +11,7 @@
 
 
 
-<title>README</title>
+<title>01-README_PROMPT_ENHANCER</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -354,155 +354,314 @@ display: none;
 
 <div id="prompt-enhancer---optimizador-de-prompts-para-ia-genérica" class="section level1">
 <h1>🚀 PROMPT ENHANCER - Optimizador de Prompts para IA Genérica</h1>
-<p><strong>Versión</strong>: 2.0.0 <strong>Ubicación</strong>:
-<code>Auxiliares/Prompt-Enhancer/</code> <strong>Última
-actualización</strong>: 2025-12-21 <strong>Tipo de
-actualización</strong>: Optimización para IA genérica</p>
-<div id="descripción-rápida" class="section level2">
-<h2>📋 Descripción Rápida</h2>
-<p>Sistema inteligente que mejora automáticamente los prompts del
-usuario añadiendo contexto del proyecto ICFES R-Exams. Genera outputs en
-formato markdown estándar compatibles con <strong>cualquier IA</strong>
-(ChatGPT, Claude, Gemini, Copilot, etc.).</p>
+<p><strong>Versión</strong>: 2.0.0 <strong>Última
+actualización</strong>: 2025-12-21 <strong>Estado</strong>: ✅ Estable -
+Optimizado para IA genérica</p>
+<div id="descripción" class="section level2">
+<h2>📋 Descripción</h2>
+<p><strong>Prompt Enhancer</strong> es un script bash inteligente que
+mejora automáticamente los prompts del usuario añadiendo contexto del
+proyecto ICFES R-Exams. Genera outputs optimizados en formato markdown
+estándar compatibles con <strong>cualquier IA</strong> (ChatGPT, Claude,
+Gemini, Copilot, etc.).</p>
+<p><strong>Ubicación</strong>:
+<code>Auxiliares/Prompt-Enhancer/</code></p>
+</div>
+<div id="última-actualización---v2.0.0-2025-12-21" class="section level2">
+<h2>🆕 Última Actualización - v2.0.0 (2025-12-21)</h2>
+<div id="optimización-para-ia-genérica" class="section level3">
+<h3>Optimización para IA Genérica</h3>
+<p>Esta versión representa un cambio mayor en el enfoque del script:</p>
 <ul>
-<li>✅ <strong>SIEMPRE genera archivo</strong>
+<li>✅ <strong>Enfoque exclusivo en <code>.claude/</code></strong> -
+Eliminadas referencias a <code>.augment/</code> y
+<code>.claudedoc/</code></li>
+<li>✅ <strong>Generación automática de archivo .txt</strong> - SIEMPRE
+genera <code>prompt_mejorado_YYYYMMDD_HHMMSS.txt</code></li>
+<li>✅ <strong>Formato markdown estándar</strong> - Compatible con
+cualquier IA</li>
+<li>✅ <strong>Prioriza workflow documentado</strong> - Incluye
+<code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></li>
+<li>✅ <strong>Incluye hooks de automatización</strong> - Lista hooks
+disponibles de <code>.claude/hooks/</code></li>
+<li>✅ <strong>Instrucciones específicas para IA</strong> - Sección de
+guía para la IA incluida</li>
+</ul>
+<p>Ver detalles completos en: <a href="07-CHANGELOG.md">07-CHANGELOG.md</a></p>
+</div>
+</div>
+<div id="características-principales" class="section level2">
+<h2>🎯 Características Principales</h2>
+<div id="generación-automática-de-archivo" class="section level3">
+<h3>✅ Generación Automática de Archivo</h3>
+<ul>
+<li><strong>SIEMPRE genera archivo .txt</strong> -
 <code>prompt_mejorado_YYYYMMDD_HHMMSS.txt</code></li>
-<li>✅ Workflow documentado de <code>.claude/docs/</code></li>
-<li>✅ Skills y comandos de <code>.claude/</code></li>
-<li>✅ Hooks de automatización disponibles</li>
-<li>✅ Ejemplos funcionales y recomendaciones contextuales</li>
+<li><strong>Ubicación</strong>: Directorio actual de trabajo</li>
+<li><strong>Formato</strong>: Markdown estándar optimizado para IA</li>
 </ul>
 </div>
-<div id="inicio-rápido" class="section level2">
-<h2>🚀 Inicio Rápido</h2>
-<div id="alias-ya-configurados" class="section level3">
-<h3>✅ Alias Ya Configurados</h3>
+<div id="detección-automática-de-contexto" class="section level3">
+<h3>✅ Detección Automática de Contexto</h3>
+<ul>
+<li><strong>Ubicación actual</strong>: Detecta automáticamente desde qué
+carpeta se está ejecutando</li>
+<li><strong>Tipo de contenido</strong>: Identifica si estás en
+producción, desarrollo, auxiliares, etc.</li>
+<li><strong>Raíz del proyecto</strong>: Encuentra la raíz del proyecto
+desde cualquier subcarpeta</li>
+</ul>
+</div>
+<div id="enriquecimiento-desde-.claude" class="section level3">
+<h3>✅ Enriquecimiento desde <code>.claude/</code></h3>
+<ul>
+<li><strong>Workflow paso a paso</strong>: Prioriza
+<code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></li>
+<li><strong>Skills disponibles</strong>: Lista skills de
+<code>.claude/skills/</code></li>
+<li><strong>Comandos disponibles</strong>: Lista comandos de
+<code>.claude/commands/</code></li>
+<li><strong>Hooks de automatización</strong>: Lista hooks de
+<code>.claude/hooks/</code></li>
+<li><strong>Patrones de error</strong>: Incluye errores conocidos cuando
+es relevante</li>
+<li><strong>Ejemplos funcionales</strong>: Lista ejemplos disponibles de
+<code>A-Produccion/</code></li>
+</ul>
+</div>
+<div id="múltiples-modos-de-uso" class="section level3">
+<h3>✅ Múltiples Modos de Uso</h3>
+<ul>
+<li><strong>Modo interactivo</strong>: Ingresa tu prompt
+directamente</li>
+<li><strong>Desde archivo</strong>: Lee prompts desde archivos de
+texto</li>
+<li><strong>Salida adicional</strong>: Guarda copia adicional en archivo
+específico</li>
+<li><strong>Portapapeles</strong>: Copia también al portapapeles
+(adicional, no reemplazo)</li>
+</ul>
+</div>
+</div>
+<div id="instalación-y-configuración" class="section level2">
+<h2>🔧 Instalación y Configuración</h2>
+<div id="estado-actual-configurado" class="section level3">
+<h3>✅ Estado Actual: CONFIGURADO</h3>
 <p>Los alias ya están configurados en tu sistema:</p>
 <ul>
 <li>✅ <strong>~/.bashrc</strong> (Bash)</li>
 <li>✅ <strong>~/.zshrc</strong> (Zsh)</li>
 </ul>
-<p><strong>Para activarlos en tu terminal actual:</strong></p>
-<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc si usas zsh</code></pre>
-<p><strong>O simplemente abre una nueva terminal.</strong></p>
+<p><strong>Ver detalles de configuración</strong>: <a href="04-CONFIGURACION_ALIAS.md">04-CONFIGURACION_ALIAS.md</a></p>
 </div>
-<div id="uso-con-alias-recomendado" class="section level3">
-<h3>Uso con Alias (Recomendado)</h3>
-<pre class="bash"><code># Uso básico
-pe &quot;Tu prompt aquí&quot;
+<div id="activar-alias-en-terminal-actual" class="section level3">
+<h3>Activar Alias en Terminal Actual</h3>
+<pre class="bash"><code># Para Bash
+source ~/.bashrc
 
-# Con copia al portapapeles
-pec &quot;Tu prompt&quot;
+# Para Zsh
+source ~/.zshrc</code></pre>
+<p>O simplemente <strong>abre una nueva terminal</strong>.</p>
+</div>
+<div id="verificar-configuración" class="section level3">
+<h3>Verificar Configuración</h3>
+<pre class="bash"><code># Ejecutar script de verificación
+./Auxiliares/Prompt-Enhancer/verificar-alias.sh</code></pre>
+</div>
+<div id="alias-disponibles" class="section level3">
+<h3>Alias Disponibles</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Alias</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pe</code></td>
+<td>Versión corta (recomendado)</td>
+</tr>
+<tr class="even">
+<td><code>pec</code></td>
+<td>Con copia al portapapeles</td>
+</tr>
+<tr class="odd">
+<td><code>pei</code></td>
+<td>Modo interactivo</td>
+</tr>
+<tr class="even">
+<td><code>prompt-enhancer</code></td>
+<td>Comando completo</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="uso" class="section level2">
+<h2>📖 Uso</h2>
+<div id="modo-interactivo-recomendado" class="section level3">
+<h3>Modo Interactivo (Recomendado)</h3>
+<pre class="bash"><code># Con alias (recomendado)
+pei
 
-# Modo interactivo
-pei</code></pre>
+# O con ruta completa
+./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh</code></pre>
+<p>Luego ingresa tu prompt y presiona <code>Ctrl+D</code> cuando
+termines.</p>
 </div>
-<div id="uso-sin-alias-ruta-completa" class="section level3">
-<h3>Uso sin Alias (Ruta Completa)</h3>
-<pre class="bash"><code># Desde la raíz del proyecto
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt aquí&quot;
+<div id="prompt-directo" class="section level3">
+<h3>Prompt Directo</h3>
+<pre class="bash"><code># Con alias (recomendado)
+pe &quot;Genera un ejercicio de geometría nivel 2 sobre áreas&quot;
 
-# Modo interactivo
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh
+# O con ruta completa
+./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Genera un ejercicio de geometría nivel 2 sobre áreas&quot;</code></pre>
+</div>
+<div id="desde-archivo" class="section level3">
+<h3>Desde Archivo</h3>
+<pre class="bash"><code># Con alias (recomendado)
+pe -f mi_prompt.txt -o prompt_mejorado.txt
 
-# Con copia al portapapeles
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt&quot; -c</code></pre>
+# O con ruta completa
+./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh -f mi_prompt.txt -o prompt_mejorado.txt</code></pre>
+</div>
+<div id="copiar-al-portapapeles" class="section level3">
+<h3>Copiar al Portapapeles</h3>
+<pre class="bash"><code>./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Corrige errores TikZ en este ejercicio&quot; -c
+
+# O con alias
+pec &quot;Corrige errores TikZ en este ejercicio&quot;</code></pre>
+</div>
+<div id="ver-ayuda" class="section level3">
+<h3>Ver Ayuda</h3>
+<pre class="bash"><code>./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh --help
+
+# O con alias
+pe --help</code></pre>
 </div>
 </div>
-<div id="documentación-completa-orden-de-lectura" class="section level2">
-<h2>📚 Documentación Completa (Orden de Lectura)</h2>
-<ol style="list-style-type: decimal">
-<li><strong><a href="01-README_PROMPT_ENHANCER.md">01-README_PROMPT_ENHANCER.md</a></strong>
-- Documentación completa</li>
-<li><strong><a href="02-EJEMPLOS_USO_PROMPT_ENHANCER.md">02-EJEMPLOS_USO_PROMPT_ENHANCER.md</a></strong>
-- Ejemplos prácticos</li>
-<li><strong><a href="03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md">03-INSTALACION_CONFIGURACION_PROMPT_ENHANCER.md</a></strong>
-- Instalación y configuración avanzada</li>
-<li><strong><a href="04-CONFIGURACION_ALIAS.md">04-CONFIGURACION_ALIAS.md</a></strong>
-- ✅ Estado de configuración de alias</li>
-<li><strong><a href="05-GUIA_USO_PEI.md">05-GUIA_USO_PEI.md</a></strong>
-- Guía detallada del modo interactivo</li>
-<li><strong><a href="06-ANALISIS_MEJORAS_DETECCION_ERRORES.md">06-ANALISIS_MEJORAS_DETECCION_ERRORES.md</a></strong>
-- Análisis de mejoras y detección de errores</li>
-<li><strong><a href="07-CHANGELOG.md">07-CHANGELOG.md</a></strong> -
-Historial de cambios</li>
-</ol>
-</div>
-<div id="características-principales" class="section level2">
-<h2>🎯 Características Principales</h2>
-<div id="detección-automática-de-contexto" class="section level3">
-<h3>Detección Automática de Contexto</h3>
-<p>El script detecta automáticamente:</p>
+<div id="ejemplos-de-uso" class="section level2">
+<h2>🎨 Ejemplos de Uso</h2>
+<div id="ejemplo-1-desde-carpeta-de-producción" class="section level3">
+<h3>Ejemplo 1: Desde Carpeta de Producción</h3>
+<pre class="bash"><code>cd A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/
+../../../Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Necesito crear un ejercicio similar a este&quot;
+
+# O con alias desde cualquier ubicación
+pe &quot;Necesito crear un ejercicio similar a este&quot;</code></pre>
+<p><strong>Resultado</strong>:</p>
 <ul>
-<li>Ubicación actual en el proyecto</li>
-<li>Tipo de contenido (producción, desarrollo, auxiliares, etc.)</li>
-<li>Reglas aplicables</li>
-<li>Ejemplos funcionales relevantes</li>
-</ul>
-</div>
-<div id="enriquecimiento-desde-.claude" class="section level3">
-<h3>Enriquecimiento desde <code>.claude/</code></h3>
-<p>El archivo generado incluye:</p>
-<div id="workflow-del-proyecto-priorizado" class="section level4">
-<h4>🔄 Workflow del Proyecto (Priorizado)</h4>
-<ul>
-<li>Contenido de <code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></li>
-<li>Pasos detallados del flujo de trabajo</li>
-</ul>
-</div>
-<div id="herramientas-disponibles" class="section level4">
-<h4>🔧 Herramientas Disponibles</h4>
-<ul>
-<li>Skills de <code>.claude/skills/</code></li>
-<li>Comandos de <code>.claude/commands/</code></li>
-<li>Hooks de <code>.claude/hooks/</code></li>
-</ul>
-</div>
-<div id="recursos-adicionales" class="section level4">
-<h4>📚 Recursos Adicionales</h4>
-<ul>
-<li>Patrones de errores conocidos (si aplica)</li>
-<li>Ejemplos funcionales de <code>A-Produccion/</code></li>
+<li>Genera archivo <code>prompt_mejorado_YYYYMMDD_HHMMSS.txt</code></li>
+<li>Incluye workflow de <code>.claude/docs/</code></li>
+<li>Skills y comandos disponibles</li>
+<li>Ejemplos funcionales cercanos</li>
 <li>Instrucciones específicas para la IA</li>
 </ul>
 </div>
+<div id="ejemplo-2-desde-carpeta-de-desarrollo" class="section level3">
+<h3>Ejemplo 2: Desde Carpeta de Desarrollo</h3>
+<pre class="bash"><code>cd A-Produccion/En-Desarrollo/
+pe &quot;Ayúdame a implementar un gráfico TikZ&quot;</code></pre>
+<p><strong>Resultado</strong>:</p>
+<ul>
+<li>Genera archivo automáticamente</li>
+<li>Contexto de desarrollo activo</li>
+<li>Skills de corrección de gráficos</li>
+<li>Patrones de error TikZ conocidos</li>
+</ul>
+</div>
+<div id="ejemplo-3-con-copia-al-portapapeles" class="section level3">
+<h3>Ejemplo 3: Con copia al portapapeles</h3>
+<pre class="bash"><code>pe &quot;Crea un script de validación&quot; -c</code></pre>
+<p><strong>Resultado</strong>:</p>
+<ul>
+<li>Genera archivo automáticamente</li>
+<li>ADEMÁS copia al portapapeles</li>
+<li>Listo para pegar en cualquier IA</li>
+</ul>
 </div>
 </div>
-<div id="opciones-disponibles" class="section level2">
-<h2>🔧 Opciones Disponibles</h2>
-<pre class="bash"><code>-h, --help              Mostrar ayuda
--i, --interactive       Modo interactivo (por defecto)
--f, --file FILE         Leer prompt desde archivo
--o, --output FILE       Guardar prompt mejorado en archivo
--c, --clipboard         Copiar prompt mejorado al portapapeles</code></pre>
+<div id="contextos-detectados" class="section level2">
+<h2>🔍 Contextos Detectados</h2>
+<p>El script identifica automáticamente estos contextos:</p>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="20%" />
+<col width="56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ubicación</th>
+<th>Contexto</th>
+<th>Recomendaciones Incluidas</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>A-Produccion/En-Produccion/</code></td>
+<td>Producción</td>
+<td>Consultar ejemplos funcionales, mantener compatibilidad</td>
+</tr>
+<tr class="even">
+<td><code>A-Produccion/En-PreDesarrollo/</code></td>
+<td>Pre-desarrollo</td>
+<td>Validar diversidad 300+, preparar promoción</td>
+</tr>
+<tr class="odd">
+<td><code>A-Produccion/En-Desarrollo/</code></td>
+<td>Desarrollo</td>
+<td>Seguir templates, documentar cambios</td>
+</tr>
+<tr class="even">
+<td><code>Auxiliares/</code></td>
+<td>Auxiliares</td>
+<td>Mantener compatibilidad, probar en entorno real</td>
+</tr>
+<tr class="odd">
+<td><code>A-Produccion/Templates/</code></td>
+<td>Templates</td>
+<td>Estructura estándar, compatibilidad multi-formato</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="ejemplo-de-salida-archivo-.txt-generado" class="section level2">
-<h2>📊 Ejemplo de Salida (archivo .txt generado)</h2>
+<div id="estructura-del-prompt-mejorado" class="section level2">
+<h2>📊 Estructura del Prompt Mejorado</h2>
+<p>El archivo <code>.txt</code> generado incluye las siguientes
+secciones:</p>
 <pre class="markdown"><code># PROMPT MEJORADO - PROYECTO ICFES R-EXAMS
 
 ## 📍 CONTEXTO DEL PROYECTO
 - Proyecto: Sistema de generación de ejercicios matemáticos ICFES
-- Ubicación actual: A-Produccion/En-Desarrollo
-- Tipo de contexto: desarrollo
+- Ubicación actual: [ruta relativa]
+- Tipo de contexto: [producción/desarrollo/etc]
 
 ## 🔄 WORKFLOW DEL PROYECTO
-[Contenido de WORKFLOW_PASO_A_PASO.md...]
+[Extracto de .claude/docs/WORKFLOW_PASO_A_PASO.md]
 
 ## 🔧 HERRAMIENTAS Y RECURSOS DISPONIBLES
+### Documentación Principal
+[Extracto de .claude/docs/README.md]
+
 ### Skills Disponibles
-[Lista de skills...]
+[Lista de skills en .claude/skills/]
 
 ### Comandos Disponibles
-[Lista de comandos...]
+[Lista de comandos en .claude/commands/]
 
 ### Hooks de Automatización
-[Lista de hooks...]
+[Lista de hooks en .claude/hooks/]
+
+## 🚨 ERRORES CONOCIDOS Y SOLUCIONES
+[Si el prompt menciona errores - patrones conocidos]
 
 ## 📚 EJEMPLOS FUNCIONALES DISPONIBLES
-[Lista de ejemplos...]
+[Lista de archivos .Rmd de ejemplo]
 
 ## 💡 RECOMENDACIONES SEGÚN CONTEXTO
-[Recomendaciones específicas...]
+[Recomendaciones específicas según ubicación]
 
 ---
 
@@ -512,121 +671,130 @@ Historial de cambios</li>
 ## 📋 INSTRUCCIONES PARA LA IA
 1. Priorizar uso de skills y comandos de .claude/
 2. Consultar ejemplos funcionales antes de generar código
-3. Validar compatibilidad con sistema exams2*</code></pre>
+3. Validar compatibilidad con sistema exams2*
+4. Seguir workflow documentado paso a paso
+5. Documentar errores nuevos si se resuelven</code></pre>
 </div>
-<div id="casos-de-uso" class="section level2">
-<h2>🎨 Casos de Uso</h2>
+<div id="requisitos" class="section level2">
+<h2>🛠️ Requisitos</h2>
 <ul>
-<li>✅ Generar ejercicios ICFES con cualquier IA</li>
-<li>✅ Corregir errores con skills y hooks disponibles</li>
-<li>✅ Desarrollar siguiendo workflow documentado</li>
-<li>✅ Adaptar ejercicios usando ejemplos funcionales</li>
-<li>✅ Compatible con ChatGPT, Claude, Gemini, Copilot, etc.</li>
+<li><strong>Bash</strong>: 4.0 o superior</li>
+<li><strong>Dependencias requeridas</strong>: grep, sed, cat, find,
+head, sort (incluidas en sistemas Unix)</li>
+<li><strong>Opcional</strong>: <code>xclip</code>, <code>pbcopy</code>,
+o <code>wl-copy</code> para funcionalidad de portapapeles</li>
 </ul>
-</div>
-<div id="verificación" class="section level2">
-<h2>🔍 Verificación</h2>
-<div id="verificar-configuración-de-alias" class="section level3">
-<h3>Verificar Configuración de Alias</h3>
-<pre class="bash"><code># Ejecutar script de verificación
-./Auxiliares/Prompt-Enhancer/verificar-alias.sh</code></pre>
-<p>Este script verifica:</p>
-<ul>
-<li>✅ Alias en ~/.bashrc</li>
-<li>✅ Alias en ~/.zshrc</li>
-<li>📋 Instrucciones de activación</li>
-<li>📝 Ejemplos de uso</li>
-</ul>
-</div>
-<div id="verificar-funcionamiento" class="section level3">
-<h3>Verificar Funcionamiento</h3>
-<pre class="bash"><code># Activar alias (si no lo has hecho)
-source ~/.bashrc
+<div id="instalar-herramientas-de-portapapeles-linux" class="section level3">
+<h3>Instalar Herramientas de Portapapeles (Linux)</h3>
+<pre class="bash"><code># Manjaro/Arch (X11)
+sudo pacman -S xclip
 
-# Probar con alias
-pe &quot;Test&quot;
+# Manjaro/Arch (Wayland)
+sudo pacman -S wl-clipboard
 
-# O con ruta completa
-./Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Prueba de funcionamiento&quot;</code></pre>
+# Ubuntu/Debian (X11)
+sudo apt install xclip
+
+# Ubuntu/Debian (Wayland)
+sudo apt install wl-clipboard</code></pre>
+</div>
+</div>
+<div id="casos-de-uso-avanzados" class="section level2">
+<h2>🚀 Casos de Uso Avanzados</h2>
+<div id="integración-con-ia" class="section level3">
+<h3>Integración con IA</h3>
+<p>Puedes usar el prompt mejorado directamente con herramientas de
+IA:</p>
+<pre class="bash"><code># Generar prompt y copiarlo
+./prompt-enhancer.sh &quot;Genera ejercicio de estadística&quot; -c
+
+# Luego pegar en tu herramienta de IA favorita (Augment, Claude, etc.)</code></pre>
+</div>
+<div id="automatización-con-scripts" class="section level3">
+<h3>Automatización con Scripts</h3>
+<pre class="bash"><code># Crear múltiples prompts mejorados
+for prompt in &quot;Ejercicio 1&quot; &quot;Ejercicio 2&quot; &quot;Ejercicio 3&quot;; do
+    ./prompt-enhancer.sh &quot;$prompt&quot; -o &quot;prompt_${prompt// /_}.txt&quot;
+done</code></pre>
+</div>
+<div id="pipeline-de-desarrollo" class="section level3">
+<h3>Pipeline de Desarrollo</h3>
+<pre class="bash"><code># 1. Crear prompt mejorado
+./prompt-enhancer.sh -f requisitos.txt -o prompt_mejorado.txt
+
+# 2. Usar con IA para generar código
+# [Proceso manual o automatizado]
+
+# 3. Validar resultado
+cd A-Produccion/En-Desarrollo/
+# [Proceso de validación]</code></pre>
 </div>
 </div>
 <div id="notas-importantes" class="section level2">
 <h2>📝 Notas Importantes</h2>
-<ul>
-<li><strong>Archivo siempre generado</strong>: SIEMPRE crea
+<ol style="list-style-type: decimal">
+<li><strong>Archivo siempre generado</strong>: SIEMPRE se crea
 <code>prompt_mejorado_YYYYMMDD_HHMMSS.txt</code></li>
-<li><strong>Portabilidad</strong>: Funciona desde cualquier subcarpeta
-del proyecto</li>
+<li><strong>Portabilidad</strong>: El script funciona desde cualquier
+subcarpeta del proyecto</li>
 <li><strong>Compatibilidad IA</strong>: El archivo es compatible con
-cualquier IA</li>
-<li><strong>Enfoque en .claude/</strong>: Solo incluye información de
-<code>.claude/</code></li>
+cualquier IA (ChatGPT, Claude, Gemini, etc.)</li>
 <li><strong>Sin dependencias pesadas</strong>: Solo requiere bash
 estándar</li>
-<li><strong>Opcional</strong>: xclip, pbcopy o wl-copy para
-portapapeles</li>
-</ul>
-</div>
-<div id="novedades-v2.0.0-2025-12-21" class="section level2">
-<h2>🆕 Novedades v2.0.0 (2025-12-21)</h2>
-<div id="cambio-mayor-de-enfoque" class="section level3">
-<h3>Cambio Mayor de Enfoque</h3>
-<ul>
-<li>✅ <strong>Enfoque exclusivo en <code>.claude/</code></strong> -
-Eliminadas referencias a <code>.augment/</code> y
-<code>.claudedoc/</code></li>
-<li>✅ <strong>Generación automática de archivo .txt</strong> - SIEMPRE
-genera archivo</li>
-<li>✅ <strong>Formato markdown estándar</strong> - Compatible con
-cualquier IA</li>
-<li>✅ <strong>Prioriza workflow documentado</strong> - Incluye
-WORKFLOW_PASO_A_PASO.md</li>
-<li>✅ <strong>Incluye hooks</strong> - Lista hooks de
-automatización</li>
-</ul>
-</div>
-<div id="nueva-estructura-del-prompt" class="section level3">
-<h3>Nueva Estructura del Prompt</h3>
-<ul>
-<li>✅ Sección de workflow priorizada</li>
-<li>✅ Skills, comandos y hooks listados</li>
-<li>✅ Solicitud del usuario destacada</li>
-<li>✅ Instrucciones específicas para la IA (nueva sección)</li>
-</ul>
-</div>
+<li><strong>Enfoque en .claude/</strong>: Solo incluye información de
+<code>.claude/</code> (workflow, skills, comandos, hooks)</li>
+</ol>
 </div>
 <div id="solución-de-problemas" class="section level2">
-<h2>🚨 Solución de Problemas</h2>
-<div id="error-command-not-found-pe" class="section level3">
-<h3>Error: “command not found: pe”</h3>
-<p><strong>Causa:</strong> Los alias no están activados en la terminal
-actual.</p>
-<p><strong>Solución:</strong></p>
-<pre class="bash"><code>source ~/.bashrc  # o source ~/.zshrc si usas zsh</code></pre>
-<p>O simplemente abre una nueva terminal.</p>
-</div>
-<div id="error-permission-denied" class="section level3">
-<h3>Error: “Permission denied”</h3>
-<p><strong>Solución:</strong></p>
-<pre class="bash"><code>chmod +x Auxiliares/Prompt-Enhancer/prompt-enhancer.sh</code></pre>
-</div>
+<h2>🔧 Solución de Problemas</h2>
 <div id="error-no-se-pudo-encontrar-la-raíz-del-proyecto" class="section level3">
 <h3>Error: “No se pudo encontrar la raíz del proyecto”</h3>
-<p><strong>Causa:</strong> No estás dentro del repositorio.</p>
-<p><strong>Solución:</strong> Asegúrate de estar dentro del repositorio
+<p><strong>Causa</strong>: No estás dentro del repositorio
 RepositorioMatematicasICFES_R_Exams</p>
+<p><strong>Solución</strong>: Navega a cualquier carpeta dentro del
+proyecto</p>
 </div>
-<div id="los-alias-no-funcionan-en-scripts" class="section level3">
-<h3>Los alias no funcionan en scripts</h3>
-<p><strong>Explicación:</strong> Los alias solo funcionan en shells
-interactivos.</p>
-<p><strong>Solución:</strong> En scripts, usa la ruta completa o la
-variable de entorno:</p>
-<pre class="bash"><code>$ICFES_PROJECT_ROOT/Auxiliares/Prompt-Enhancer/prompt-enhancer.sh &quot;Tu prompt&quot;</code></pre>
+<div id="advertencia-xclip-o-pbcopy-no-están-instalados" class="section level3">
+<h3>Advertencia: “xclip o pbcopy no están instalados”</h3>
+<p><strong>Causa</strong>: Falta la herramienta de portapapeles (solo
+afecta opción <code>-c</code>)</p>
+<p><strong>Solución</strong>: Instala xclip (Linux) o wl-copy (Wayland).
+El archivo .txt se genera igualmente.</p>
+</div>
+</div>
+<div id="recursos-relacionados" class="section level2">
+<h2>📚 Recursos Relacionados</h2>
+<ul>
+<li><strong>Workflow del proyecto</strong>:
+<code>.claude/docs/WORKFLOW_PASO_A_PASO.md</code></li>
+<li><strong>Skills disponibles</strong>:
+<code>.claude/skills/</code></li>
+<li><strong>Comandos disponibles</strong>:
+<code>.claude/commands/</code></li>
+<li><strong>Hooks de automatización</strong>:
+<code>.claude/hooks/</code></li>
+<li><strong>Patrones de errores</strong>:
+<code>.claude/docs/patrones-errores-conocidos.md</code></li>
+<li><strong>Ejemplos funcionales</strong>:
+<code>A-Produccion/</code></li>
+</ul>
+</div>
+<div id="mejoras-implementadas-en-v2.0.0" class="section level2">
+<h2>🎯 Mejoras Implementadas en v2.0.0</h2>
+<ul>
+<li>✅ Generación automática de archivo .txt</li>
+<li>✅ Formato markdown estándar para IA genérica</li>
+<li>✅ Enfoque exclusivo en <code>.claude/</code></li>
+<li>✅ Priorización del workflow documentado</li>
+<li>✅ Inclusión de hooks de automatización</li>
+<li>✅ Sección de instrucciones para la IA</li>
+</ul>
 <hr />
-<p><strong>Autor</strong>: Sistema ICFES R-Exams<br />
-<strong>Licencia</strong>: Uso interno del proyecto</p>
-</div>
+<p><strong>Versión</strong>: 2.0.0 <strong>Fecha</strong>: 2025-12-21
+<strong>Autor</strong>: Sistema ICFES R-Exams <strong>Licencia</strong>:
+Uso interno del proyecto</p>
+<p><strong>Changelog</strong>: Ver <a href="07-CHANGELOG.md">07-CHANGELOG.md</a> para detalles completos de
+todas las versiones</p>
 </div>
 </div>
 
