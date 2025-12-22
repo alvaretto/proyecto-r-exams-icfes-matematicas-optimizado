@@ -1,12 +1,30 @@
 ---
 name: validar-renderizado
-description: Ejecuta ciclo completo de renderizado exams2* (html, pdf, docx, nops) y valida outputs visuales.
+description: Ejecuta 🔄 FASE 1 del Ciclo de Validación Automática - Renderizado completo exams2*.
 ---
 
-# Skill: Validador de Renderizado exams2*
+# Skill: 🔄 FASE 1 - Renderizado Inicial
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este skill ejecuta la **FASE 1: RENDERIZADO INICIAL** del ciclo obligatorio:
+
+```
+🔄 FASE 1: RENDERIZADO INICIAL ← ESTE SKILL
+    │
+    ▼
+🔍 FASE 2: Validación Visual y Funcional
+    │
+    ▼
+⚡ FASE 3: Decisión y Acción
+    ├── 📚 SUBFASE 3A: Corrección basada en ejemplos
+    ├── 🔄 SUBFASE 3B: Revalidación (volver aquí)
+    └── 📊 SUBFASE 3C: Documentar solución
+```
 
 ## Propósito
-Ejecutar el ciclo completo de renderizado en todos los formatos de R/exams y validar que los outputs se generan correctamente antes de continuar con el workflow.
+Ejecutar el renderizado completo en todos los formatos de R/exams y capturar
+TODOS los errores y advertencias antes de continuar con FASE 2.
 
 ## Formatos a Validar
 
@@ -26,7 +44,7 @@ set.seed(sample(1:100000, 1))
 archivo_rmd <- "nombre_ejercicio.Rmd"
 ```
 
-### Paso 2: Ejecutar renderizado secuencial
+### Paso 2: Ejecutar renderizado secuencial con captura de errores
 ```r
 # HTML
 resultado_html <- tryCatch(
@@ -53,8 +71,12 @@ resultado_nops <- tryCatch(
 )
 ```
 
-### Paso 3: Generar reporte de validación
+### Paso 3: Generar reporte de FASE 1
 ```
+═══════════════════════════════════════════════════════════
+🔄 FASE 1: RENDERIZADO INICIAL - REPORTE
+═══════════════════════════════════════════════════════════
+
 Formato    | Resultado | Archivo Generado
 -----------|-----------|------------------
 HTML       | ✅/❌     | ruta/archivo.html
@@ -63,52 +85,53 @@ DOCX       | ✅/❌     | ruta/archivo.docx
 NOPS       | ✅/❌     | ruta/archivo_nops.pdf
 
 Tasa de éxito: X de 4 formatos (XX%)
+
+Errores capturados: [Lista de errores]
+Advertencias: [Lista de advertencias]
+
+→ SIGUIENTE: FASE 2 - Validación Visual y Funcional
+═══════════════════════════════════════════════════════════
 ```
 
-## Criterios de Éxito
-
-- ✅ **100%**: Todos los formatos compilan sin errores
-- ⚠️ **75%+**: Al menos 3 formatos funcionan
-- ❌ **<75%**: Requiere corrección inmediata
-
-## Flujo de Decisión
+## Flujo de Decisión Post-FASE 1
 
 ```
-Renderizado exitoso (100%)
-    → Continuar a Inspección Visual
-    
-Renderizado parcial (75%+)
-    → Diagnosticar errores en formatos fallidos
-    → Aplicar correcciones
-    → Re-ejecutar validación
-    
-Renderizado fallido (<75%)
-    → Activar skill diagnosticar-errores
-    → Clasificar tipo de error
-    → Aplicar corrección específica
-    → Re-ejecutar ciclo completo
+Renderizado 100% exitoso
+    → Continuar a FASE 2: Validación Visual y Funcional
+
+Renderizado con errores (cualquier %)
+    → Continuar a FASE 2 con errores registrados
+    → Errores se procesarán en FASE 3
 ```
 
-## Integración con Otros Skills
+## ⛔ CONDICIONES CRÍTICAS
 
-- **diagnosticar-errores**: Se activa automáticamente si hay errores
-- **corregir-graficos**: Se activa si errores son de tipo gráfico
-- **validar-coherencia**: Se ejecuta después de validación exitosa
+1. ✓ SIEMPRE ejecutar los 4 formatos
+2. ✓ SIEMPRE capturar y registrar errores
+3. ✓ SIEMPRE continuar a FASE 2 (incluso con errores)
+4. ❌ NUNCA omitir formatos de renderizado
+
+## Integración con Ciclo Completo
+
+- **Este skill** → Ejecuta FASE 1
+- **validar-coherencia** → Ejecuta FASE 2
+- **diagnosticar-errores** → Inicia FASE 3 si hay errores
+- **SUBFASE 3B** → Vuelve a ejecutar este skill
 
 ## Referencias
 
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 - `.claude/docs/patrones-errores-conocidos.md`
 - `.claude/docs/TRES_NIVELES_VALIDACION.md`
-- `.claude/Mermaid_Chart.txt` (diagrama de flujo)
 
 ## Ejecución
 
 Cuando el usuario invoca `/validar-renderizado`:
 
 1. Identificar archivo .Rmd objetivo
-2. Ejecutar renderizado en los 4 formatos
-3. Capturar errores y mensajes
-4. Generar reporte de validación
-5. Si hay errores → activar diagnóstico
-6. Si éxito total → confirmar y sugerir inspección visual
+2. Ejecutar renderizado en los 4 formatos (FASE 1)
+3. Capturar TODOS los errores y mensajes
+4. Generar reporte de FASE 1
+5. Continuar automáticamente a FASE 2 (validar-coherencia)
 

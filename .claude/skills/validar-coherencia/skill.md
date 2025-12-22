@@ -1,14 +1,32 @@
 ---
 name: validar-coherencia
-description: Verificar coherencia matemática, imagen-texto, y código R/Python/TikZ en ejercicios .Rmd.
+description: Ejecuta 🔍 FASE 2 del Ciclo de Validación Automática - Validación Visual y Funcional.
 ---
 
-# Skill: Validador de Coherencia
+# Skill: 🔍 FASE 2 - Validación Visual y Funcional
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este skill ejecuta la **FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL** del ciclo obligatorio:
+
+```
+🔄 FASE 1: Renderizado Inicial
+    │
+    ▼
+🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL ← ESTE SKILL
+    │
+    ▼
+⚡ FASE 3: Decisión y Acción
+    ├── 📚 SUBFASE 3A: Corrección basada en ejemplos
+    ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+    └── 📊 SUBFASE 3C: Documentar solución
+```
 
 ## Propósito
-Detectar y corregir incoherencias entre los diferentes componentes de un ejercicio R/exams: matemáticas, visualización y código.
+Verificar coherencia en TODOS los aspectos del ejercicio antes de tomar decisiones
+en FASE 3.
 
-## Tipos de Coherencia
+## Tipos de Coherencia a Verificar
 
 ### 1. Coherencia Matemática (ERR_C1)
 
@@ -162,14 +180,51 @@ Si hay errores → Sugerir correcciones
 ╚════════════════════════════════════════╝
 ```
 
-## Integración
+## Flujo de Decisión Post-FASE 2
 
-- **Se ejecuta**: Después de validar-renderizado exitoso
-- **Activado por**: diagnosticar-errores cuando categoría = COHERENCIA
-- **Siguiente paso**: Corrección manual o automática según tipo
+```
+Coherencia 100% + Renderizado 100%
+    → FASE 3: ❌ SIN ERRORES → Aprobar para producción
+
+Cualquier error detectado
+    → FASE 3: ✓ CON ERRORES → Ejecutar subfases:
+        ├── 📚 SUBFASE 3A: Consultar ejemplos funcionales
+        ├── 🔄 SUBFASE 3B: Volver a FASE 1
+        └── 📊 SUBFASE 3C: Documentar solución
+```
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ SIEMPRE verificar los 4 tipos de coherencia
+2. ✓ SIEMPRE registrar errores con clasificación ERR_XX
+3. ✓ SIEMPRE continuar a FASE 3 (decisión)
+4. ❌ NUNCA omitir verificaciones
+5. ❌ NUNCA terminar con errores sin resolver
+
+## Integración con Ciclo Completo
+
+- **validar-renderizado** → Ejecuta FASE 1 (antes de este skill)
+- **Este skill** → Ejecuta FASE 2
+- **diagnosticar-errores** → Inicia FASE 3 si hay errores
+- **SUBFASE 3B** → Vuelve a FASE 1 (validar-renderizado)
 
 ## Referencias
 
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 - `.claude/docs/patrones-errores-conocidos.md` (Error 2)
 - `.augment/rules/reglas-generales.md` (criterios ICFES)
+
+## Ejecución
+
+Cuando el usuario invoca `/validar-coherencia`:
+
+1. Cargar archivo .Rmd objetivo
+2. Parsear chunks R, Python, TikZ
+3. Verificar coherencia matemática
+4. Verificar coherencia imagen-texto
+5. Verificar coherencia de código
+6. Consolidar resultados de renderizado (FASE 1)
+7. Generar reporte de FASE 2
+8. Continuar automáticamente a FASE 3 (decisión)
 

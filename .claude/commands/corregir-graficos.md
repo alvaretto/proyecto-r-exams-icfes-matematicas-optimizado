@@ -1,8 +1,36 @@
 ---
-description: Corrige errores específicos de visualización gráfica en archivos .Rmd.
+description: Ejecuta 📚 SUBFASE 3A para errores gráficos - Corrección basada en ejemplos funcionales.
 ---
 
-# Corrector de Errores Gráficos
+# 📚 SUBFASE 3A: Corrección de Errores Gráficos
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este comando ejecuta la **SUBFASE 3A: CORRECCIÓN BASADA EN EJEMPLOS** para errores gráficos:
+
+```
+⚡ FASE 3: Decisión y Acción
+    │
+    └── ✓ CON ERRORES GRÁFICOS:
+            │
+            ├── 📚 SUBFASE 3A: Corrección basada en ejemplos ← ESTE COMANDO
+            │       ↓
+            ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+            │
+            └── 📊 SUBFASE 3C: Documentar solución
+```
+
+## ⚠️ PASO OBLIGATORIO: Consultar Ejemplos Funcionales
+
+**ANTES de aplicar cualquier corrección:**
+
+```bash
+# Consultar ejemplos funcionales
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones de include_tikz
+grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
 
 Soluciones para los 4 tipos de errores gráficos del ciclo de validación.
 
@@ -118,15 +146,34 @@ fig, ax = plt.subplots(figsize=(5, 4))  # Dimensiones específicas
 | ERR_G3 | Distorsión | Verificar paquetes TikZ |
 | ERR_G4 | Tamaño malo | `scale=`, `width=`, `figsize=` |
 
-## Después de Corregir
+## 🔄 SUBFASE 3B: Revalidación Obligatoria
 
-1. Ejecutar `/validar-renderizado`
-2. Verificar visualmente los 4 formatos
-3. Si persiste error → revisar diagnóstico
-4. Si éxito → continuar workflow
+**DESPUÉS de aplicar correcciones:**
+
+```
+⚠️ OBLIGATORIO: Volver automáticamente a FASE 1
+→ Ejecutar /validar-renderizado
+→ Ejecutar /validar-coherencia
+→ Verificar que error gráfico está resuelto
+→ REPETIR si persisten errores
+```
+
+## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
+
+**Solo después de revalidación exitosa:**
+- Documentar en `.claude/docs/patrones-errores-conocidos.md`
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NO terminar** con errores gráficos sin resolver
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir
+3. ✓ **SIEMPRE** ejecutar SUBFASE 3B después de correcciones
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
 
 ## Referencias
 
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 - `.claude/docs/patrones-errores-conocidos.md`
 - `.claude/skills/corregir-graficos/skill.md`
 - `.claude/skills/corregir-error-imagen/skill.md`

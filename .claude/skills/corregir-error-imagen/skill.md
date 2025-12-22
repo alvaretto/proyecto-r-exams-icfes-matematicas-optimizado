@@ -1,12 +1,44 @@
 ---
 name: corregir-error-imagen
-description: Corrige errores de imágenes faltantes reemplazando \includegraphics por código TikZ inline.
+description: Ejecuta 📚 SUBFASE 3A para ERR_G1 - Corrección de imágenes faltantes basada en ejemplos.
 ---
 
-# Skill: Corrector de Errores de Imágenes en R/exams
+# Skill: 📚 SUBFASE 3A - Corrección de Imágenes Faltantes (ERR_G1)
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este skill ejecuta la **SUBFASE 3A: CORRECCIÓN BASADA EN EJEMPLOS** para ERR_G1:
+
+```
+⚡ FASE 3: Decisión y Acción
+    │
+    └── ✓ CON ERROR ERR_G1 (File not found):
+            │
+            ├── 📚 SUBFASE 3A: Corrección basada en ejemplos ← ESTE SKILL
+            │       ↓
+            ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+            │
+            └── 📊 SUBFASE 3C: Documentar solución
+```
 
 ## Propósito
-Identifica y corrige automáticamente errores de compilación LaTeX causados por archivos de imagen no encontrados (típicamente `File 'nombre.png' not found`).
+Corrige automáticamente errores de compilación LaTeX causados por archivos de imagen
+no encontrados (`File 'nombre.png' not found`), basándose en ejemplos funcionales.
+
+## ⚠️ PASO OBLIGATORIO: Consultar Ejemplos Funcionales
+
+**ANTES de aplicar cualquier corrección:**
+
+```bash
+# Consultar ejemplos funcionales con renderizado condicional
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones de is_latex_output
+grep -l "is_latex_output" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+
+# Buscar patrones de include_tikz
+grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
 
 ## Contexto del Error
 
@@ -105,18 +137,49 @@ if (es_latex) {
 - Diagramas de Venn
 - Espacios muestrales
 
+## 🔄 SUBFASE 3B: Revalidación Obligatoria
+
+**DESPUÉS de aplicar correcciones:**
+
+```
+⚠️ OBLIGATORIO: Volver automáticamente a FASE 1
+→ Ejecutar validar-renderizado (exams2html, pdf, docx, nops)
+→ Ejecutar validar-coherencia
+→ Verificar que ERR_G1 está resuelto
+→ REPETIR si persisten errores
+```
+
+## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
+
+**Solo después de revalidación exitosa:**
+
+1. Documentar error y solución en `.claude/docs/patrones-errores-conocidos.md`
+2. Incluir ejemplo funcional utilizado
+3. Registrar código antes/después
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NO terminar** con ERR_G1 sin resolver
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir
+3. ✓ **SIEMPRE** ejecutar SUBFASE 3B después de correcciones
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+
 ## Referencias
 
-Ver documentación completa en:
-- `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/docs/patrones-errores-conocidos.md`
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `.claude/docs/patrones-errores-conocidos.md` (Error 1)
 
 ## Ejecución del skill
 
 Cuando el usuario invoca `/corregir-error-imagen` o cuando detectas el error automáticamente:
 
-1. Leer el archivo .Rmd problemático
-2. Identificar chunks con `include_tikz()`
-3. Aplicar el patrón de corrección
-4. Guardar el archivo corregido
-5. Ejecutar prueba de compilación
-6. Informar resultados al usuario
+1. 📚 Consultar ejemplos funcionales PRIMERO
+2. Leer el archivo .Rmd problemático
+3. Identificar chunks con `include_tikz()`
+4. Extraer patrón de solución de ejemplo funcional
+5. Aplicar el patrón de corrección (renderizado condicional)
+6. Guardar el archivo corregido
+7. 🔄 Ejecutar SUBFASE 3B: Volver a FASE 1 (revalidación)
+8. Si éxito → SUBFASE 3C: Documentar solución
+9. Si falla → Repetir con solución alternativa

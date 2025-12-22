@@ -1,14 +1,38 @@
 ---
-description: Mueve un ejercicio testeado desde En-Desarrollo a Nuevos-Ejercicios.
+description: Mueve un ejercicio validado desde En-Desarrollo a Nuevos-Ejercicios después de completar el Ciclo de Validación.
 ---
 
-# Promover Ejercicio Testeado
+# Promover Ejercicio Validado
 
-Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/Nuevos-Ejercicios/` 
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este skill se ejecuta **SOLO** después de completar exitosamente el ciclo completo:
+
+```
+🔄 FASE 1: Renderizado Inicial ✅
+    │
+    ▼
+🔍 FASE 2: Validación Visual y Funcional ✅
+    │
+    ▼
+⚡ FASE 3: Decisión y Acción
+    │
+    └── ❌ SIN ERRORES → PROMOVER EJERCICIO ← ESTE SKILL
+```
+
+Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/Nuevos-Ejercicios/`
 después de validar que cumple todos los criterios de calidad.
 
 ## Parámetros de entrada
 - **$ARGUMENTS**: Nombre del archivo .Rmd a promover
+
+## ⛔ PRERREQUISITO OBLIGATORIO
+
+**El ejercicio DEBE haber pasado el Ciclo de Validación Automática completo:**
+
+1. ✅ FASE 1: Renderizado exitoso en 4 formatos (HTML, PDF, DOCX, NOPS)
+2. ✅ FASE 2: Coherencia matemática, imagen-texto, código verificada
+3. ✅ FASE 3: Sin errores pendientes
 
 ## Criterios de validación previos
 
@@ -70,6 +94,20 @@ Agregar entrada en `/A-Produccion/Nuevos-Ejercicios/README.md` con:
 /promover-ejercicio probabilidad_aleatorio_interpretacion_n2_v1.Rmd
 ```
 
+## ⛔ CONDICIONES CRÍTICAS (NO NEGOCIABLES)
+
+1. ❌ **NUNCA promover** un ejercicio con errores pendientes
+2. ❌ **NUNCA promover** sin completar el Ciclo de Validación
+3. ✓ **SIEMPRE** verificar los 4 criterios de calidad
+4. ✓ **SIEMPRE** confirmar renderizado exitoso en 4 formatos
+5. ✓ El ejercicio debe haber pasado FASE 1, FASE 2 y FASE 3 sin errores
+
 ## Regla de Oro
-**NUNCA promuevas** un ejercicio sin validar los 4 criterios anteriores.
+**NUNCA promuevas** un ejercicio sin completar el Ciclo de Validación Automática.
+
+## Referencias
+
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
+- `.claude/docs/TRES_NIVELES_VALIDACION.md`
 

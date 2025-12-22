@@ -1,12 +1,33 @@
 ---
 name: diagnosticar-errores
-description: Clasifica automáticamente errores post-renderizado en 4 categorías - Gráficos, Texto, Estructura, Coherencia.
+description: Ejecuta ⚡ FASE 3 del Ciclo de Validación Automática - Decisión y Acción con subfases.
 ---
 
-# Skill: Diagnosticador de Errores Post-Renderizado
+# Skill: ⚡ FASE 3 - Decisión y Acción
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este skill ejecuta la **FASE 3: DECISIÓN Y ACCIÓN** del ciclo obligatorio:
+
+```
+🔄 FASE 1: Renderizado Inicial
+    │
+    ▼
+🔍 FASE 2: Validación Visual y Funcional
+    │
+    ▼
+⚡ FASE 3: DECISIÓN Y ACCIÓN ← ESTE SKILL
+    │
+    ├── ❌ SIN ERRORES → Aprobar para producción
+    │
+    └── ✓ CON ERRORES:
+            ├── 📚 SUBFASE 3A: Corrección basada en ejemplos
+            ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+            └── 📊 SUBFASE 3C: Documentar solución
+```
 
 ## Propósito
-Analizar errores de compilación/renderizado y clasificarlos en una de las 4 categorías definidas para aplicar la solución correcta.
+Analizar errores detectados en FASE 2, clasificarlos, y ejecutar las subfases de corrección.
 
 ## Categorías de Errores
 
@@ -114,14 +135,75 @@ Activar skill de corrección apropiado
 ╚════════════════════════════════════════╝
 ```
 
-## Integración
+## 📚 SUBFASE 3A: Corrección Basada en Ejemplos
 
-- **Entrada**: Mensaje de error de validar-renderizado
-- **Salida**: Diagnóstico clasificado + skill recomendado
-- **Siguiente paso**: Activar skill de corrección específico
+**OBLIGATORIO: Consultar ejemplos funcionales ANTES de cualquier corrección**
+
+```bash
+# Consultar ejemplos funcionales
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones similares al error
+grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l "py_run_string" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
+
+**Proceso:**
+1. Identificar ejemplo funcional similar
+2. Extraer patrón de solución
+3. Aplicar corrección basada en ejemplo
+4. Continuar a SUBFASE 3B
+
+## 🔄 SUBFASE 3B: Revalidación Obligatoria
+
+**OBLIGATORIO: Volver automáticamente a FASE 1**
+
+```
+⚠️ DESPUÉS DE APLICAR CORRECCIONES:
+→ Ejecutar validar-renderizado (FASE 1)
+→ Ejecutar validar-coherencia (FASE 2)
+→ Volver a FASE 3 para verificar
+→ REPETIR hasta resolver TODOS los errores
+```
+
+## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
+
+**Solo después de revalidación exitosa:**
+
+1. Documentar error y solución en `.claude/docs/patrones-errores-conocidos.md`
+2. Incluir ejemplo funcional utilizado
+3. Registrar código antes/después
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NO terminar** el ciclo con errores sin resolver
+2. ❌ **NUNCA** proceder con errores pendientes
+3. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir
+4. ✓ **SIEMPRE** ejecutar SUBFASE 3B después de correcciones
+5. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+
+## Integración con Ciclo Completo
+
+- **validar-renderizado** → Ejecuta FASE 1
+- **validar-coherencia** → Ejecuta FASE 2
+- **Este skill** → Ejecuta FASE 3 y subfases
+- **SUBFASE 3B** → Vuelve a FASE 1 (ciclo obligatorio)
 
 ## Referencias
 
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 - `.claude/docs/patrones-errores-conocidos.md`
-- `.claude/Mermaid_Chart.txt` (categorías de errores)
+
+## Ejecución
+
+Cuando el usuario invoca `/diagnosticar-errores`:
+
+1. Recibir errores de FASE 2
+2. Clasificar errores (ERR_G, ERR_T, ERR_S, ERR_C)
+3. Ejecutar SUBFASE 3A: Consultar ejemplos funcionales
+4. Aplicar correcciones basadas en ejemplos
+5. Ejecutar SUBFASE 3B: Volver a FASE 1 (revalidación)
+6. Si éxito → SUBFASE 3C: Documentar solución
+7. Si falla → Repetir desde SUBFASE 3A con solución alternativa
 

@@ -1,10 +1,26 @@
 ---
-description: Mueve un ejercicio testeado desde En-Desarrollo a Nuevos-Ejercicios.
+description: Mueve un ejercicio validado desde En-Desarrollo a Nuevos-Ejercicios después de completar el Ciclo de Validación.
 ---
 
-# Promover Ejercicio Testeado
+# Promover Ejercicio Validado
 
-Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/Nuevos-Ejercicios/` 
+## ⚡ PRERREQUISITO: Ciclo de Validación Completado
+
+Este comando se ejecuta **SOLO** después de completar exitosamente el ciclo completo:
+
+```
+🔄 FASE 1: Renderizado Inicial ✅
+    │
+    ▼
+🔍 FASE 2: Validación Visual y Funcional ✅
+    │
+    ▼
+⚡ FASE 3: Decisión y Acción
+    │
+    └── ❌ SIN ERRORES → PROMOVER EJERCICIO ← ESTE COMANDO
+```
+
+Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/Nuevos-Ejercicios/`
 después de validar que cumple todos los criterios de calidad.
 
 ## Parámetros de entrada
@@ -70,6 +86,18 @@ Agregar entrada en `/A-Produccion/Nuevos-Ejercicios/README.md` con:
 /promover-ejercicio probabilidad_aleatorio_interpretacion_n2_v1.Rmd
 ```
 
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NUNCA promover** un ejercicio con errores pendientes
+2. ❌ **NUNCA promover** sin completar el Ciclo de Validación
+3. ✓ **SIEMPRE** verificar los 4 criterios de calidad
+4. ✓ **SIEMPRE** confirmar renderizado exitoso en 4 formatos
+
 ## Regla de Oro
-**NUNCA promuevas** un ejercicio sin validar los 4 criterios anteriores.
+**NUNCA promuevas** un ejercicio sin completar el Ciclo de Validación Automática.
+
+## Referencias
+
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 

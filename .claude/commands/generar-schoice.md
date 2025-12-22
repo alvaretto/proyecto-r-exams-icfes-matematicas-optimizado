@@ -1,11 +1,26 @@
 ---
-description: Genera ejercicio R-exams tipo SCHOICE (selección única) a partir del análisis ICFES.
+description: Genera ejercicio R-exams tipo SCHOICE (selección única) - Después requiere Ciclo de Validación.
 ---
 
 # Generador SCHOICE
 
-Genera un archivo .Rmd de tipo **schoice** (selección única) siguiendo la estructura 
+Genera un archivo .Rmd de tipo **schoice** (selección única) siguiendo la estructura
 del proyecto.
+
+## ⚡ IMPORTANTE: Después de generar, ejecutar Ciclo de Validación
+
+```
+Generación del archivo .Rmd
+    │
+    ▼
+🔄 FASE 1: /validar-renderizado
+    │
+    ▼
+🔍 FASE 2: /validar-coherencia
+    │
+    ▼
+⚡ FASE 3: /diagnosticar-errores (si hay errores)
+```
 
 ## Parámetros de entrada
 - **$ARGUMENTS**: Ruta de imagen o descripción del ejercicio
@@ -63,6 +78,18 @@ Ejecutar skill `validar-diversidad-300` para confirmar aleatorización.
 ### Paso 7: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
+2. ✓ **SIEMPRE** ejecutar Ciclo de Validación después de generar
+3. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+4. ❌ **NUNCA** promover sin completar validación
+
 ## Regla de Oro
-**NUNCA improvises**. Consulta `/A-Produccion/En-Produccion/` antes de escribir.
+**NUNCA improvises**. Consulta `/A-Produccion/Ejemplos-Funcionales-Rmd/` antes de escribir.
+
+## Referencias
+
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 

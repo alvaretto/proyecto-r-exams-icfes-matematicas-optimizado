@@ -1,8 +1,29 @@
 ---
-description: Analiza y clasifica errores de compilación/renderizado en 4 categorías.
+description: Ejecuta ⚡ FASE 3 del Ciclo de Validación Automática - Decisión y Acción con subfases.
 ---
 
-# Diagnosticador de Errores
+# ⚡ FASE 3: Decisión y Acción
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este comando ejecuta la **FASE 3: DECISIÓN Y ACCIÓN** del ciclo obligatorio:
+
+```
+🔄 FASE 1: Renderizado Inicial
+    │
+    ▼
+🔍 FASE 2: Validación Visual y Funcional
+    │
+    ▼
+⚡ FASE 3: DECISIÓN Y ACCIÓN ← ESTE COMANDO
+    │
+    ├── ❌ SIN ERRORES → Aprobar para producción
+    │
+    └── ✓ CON ERRORES:
+            ├── 📚 SUBFASE 3A: Corrección basada en ejemplos
+            ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+            └── 📊 SUBFASE 3C: Documentar solución
+```
 
 Clasifica errores post-renderizado para aplicar la corrección adecuada.
 
@@ -82,29 +103,68 @@ grep -i "error" log_compilacion.txt
 # → Corrección manual según patrón
 ```
 
+## 📚 SUBFASE 3A: Corrección Basada en Ejemplos
+
+**OBLIGATORIO: Consultar ejemplos funcionales ANTES de cualquier corrección**
+
+```bash
+# Consultar ejemplos funcionales
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones similares al error
+grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
+
+## 🔄 SUBFASE 3B: Revalidación Obligatoria
+
+**DESPUÉS de aplicar correcciones:**
+
+```
+⚠️ OBLIGATORIO: Volver automáticamente a FASE 1
+→ Ejecutar /validar-renderizado
+→ Ejecutar /validar-coherencia
+→ REPETIR hasta resolver TODOS los errores
+```
+
+## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
+
+**Solo después de revalidación exitosa:**
+- Documentar en `.claude/docs/patrones-errores-conocidos.md`
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NO terminar** el ciclo con errores sin resolver
+2. ❌ **NUNCA** proceder con errores pendientes
+3. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir
+4. ✓ **SIEMPRE** ejecutar SUBFASE 3B después de correcciones
+5. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+
 ## Documentación de Referencia
 
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 - `.claude/docs/patrones-errores-conocidos.md`
-- `.claude/Mermaid_Chart.txt` (diagrama de flujo)
 - `.claude/skills/diagnosticar-errores/skill.md`
 
 ## Ejemplo de Diagnóstico
 
 ```
-╔════════════════════════════════════════╗
-║     DIAGNÓSTICO                        ║
-╠════════════════════════════════════════╣
-║ Error: File 'cilindro.png' not found   ║
-║                                        ║
-║ Categoría: GRÁFICOS                    ║
-║ Código: ERR_G1                         ║
-║ Descripción: Gráfica no visualizada    ║
-║                                        ║
-║ Causa probable:                        ║
-║ include_tikz() en chunk de generación  ║
-║                                        ║
-║ Solución: Usar renderizado condicional ║
-║ Comando: /corregir-graficos            ║
-╚════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════╗
+║     DIAGNÓSTICO - FASE 3                                   ║
+╠════════════════════════════════════════════════════════════╣
+║ Error: File 'cilindro.png' not found                       ║
+║                                                            ║
+║ Categoría: GRÁFICOS                                        ║
+║ Código: ERR_G1                                             ║
+║ Descripción: Gráfica no visualizada                        ║
+║                                                            ║
+║ 📚 SUBFASE 3A: Consultar ejemplos funcionales              ║
+║ Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/              ║
+║                                                            ║
+║ Solución: Usar renderizado condicional                     ║
+║ Comando: /corregir-graficos                                ║
+║                                                            ║
+║ 🔄 SIGUIENTE: SUBFASE 3B - Volver a FASE 1                 ║
+╚════════════════════════════════════════════════════════════╝
 ```
 

@@ -1,10 +1,62 @@
 # Los Tres Niveles de Validación - Sistema R/exams
 
-> **Filosofía:** Todo ejercicio debe pasar por tres niveles de validación antes de considerarse completamente verificado.
+> **Filosofía:** Todo ejercicio debe pasar por tres niveles de validación antes de considerarse completamente verificado. Adicionalmente, cada renderizado activa automáticamente el **Ciclo de Validación y Corrección Automática** definido en el Mermaid Chart.
 
 ---
 
-## 🎯 Visión General
+## ⚡ CICLO DE VALIDACIÓN Y CORRECCIÓN AUTOMÁTICA (OBLIGATORIO)
+
+**Este ciclo se ejecuta AUTOMÁTICAMENTE cada vez que se renderiza un archivo .Rmd**
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                 CICLO OBLIGATORIO DE VALIDACIÓN Y CORRECCIÓN                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🔄 FASE 1: RENDERIZADO INICIAL
+    │
+    ├── Ejecutar exams2html(), exams2pdf(), exams2docx(), exams2nops()
+    ├── Capturar y registrar errores/advertencias
+    │
+    ▼
+🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
+    │
+    ├── ✓ Coherencia Matemática (fórmulas, cálculos, respuesta correcta)
+    ├── ✓ Coherencia Imagen-Texto (descripción vs gráfico, valores sincronizados)
+    ├── ✓ Coherencia de Código (R ↔ Python ↔ TikZ)
+    ├── ✓ Renderizado correcto en 4 formatos
+    │
+    ▼
+⚡ FASE 3: DECISIÓN Y ACCIÓN
+    │
+    ├── ❌ SIN ERRORES → Documentar éxito → VALIDACIÓN EXITOSA
+    │
+    └── ✓ CON ERRORES:
+            │
+            ├── 📚 SUBFASE 3A: Consultar /A-Produccion/Ejemplos-Funcionales-Rmd/
+            │       → Identificar patrones de solución
+            │       → Aplicar correcciones basadas en ejemplos validados
+            │
+            ├── 🔄 SUBFASE 3B: VOLVER AUTOMÁTICAMENTE A FASE 1
+            │       → Ciclo de revalidación obligatoria
+            │       → Repetir hasta resolución completa
+            │
+            └── 📊 SUBFASE 3C: Gestión de Resultados (si éxito)
+                    → Documentar error y solución en:
+                      .claude/docs/patrones-errores-conocidos.md
+```
+
+### ⛔ CONDICIONES CRÍTICAS DEL CICLO
+
+1. ❌ **NO terminar** el ciclo con errores sin resolver
+2. ❌ **NUNCA** proceder con errores pendientes
+3. ✓ **Documentar** SOLO después de confirmar que la solución funciona
+4. ✓ **Ejemplos funcionales** = Fuente de verdad absoluta
+5. ✓ El ciclo **se repite** hasta resolución completa
+
+---
+
+## 🎯 Visión General - Tres Niveles
 
 El sistema de validación refleja el flujo de trabajo real desde el desarrollo hasta el aula:
 
@@ -20,6 +72,10 @@ El sistema de validación refleja el flujo de trabajo real desde el desarrollo h
 └─────────────┘          └─────────────┘          └─────────────┘
    Desarrollo             Generación Masiva         Producción
   Interactivo              Automática              Validación Real
+      ↑                         ↑
+      │                         │
+      └─── CICLO AUTOMÁTICO ────┘
+           (3 Fases + 3 Subfases)
 ```
 
 ---
@@ -249,11 +305,11 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 
 ---
 
-## 🔄 Flujo Completo de Validación
+## 🔄 Flujo Completo de Validación (Integrado con Ciclo Automático)
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│                    PROCESO COMPLETO                        │
+│              PROCESO COMPLETO CON CICLO AUTOMÁTICO         │
 └────────────────────────────────────────────────────────────┘
 
 1. DESARROLLO
@@ -263,10 +319,39 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
    │   └── ❌ Falla → Corregir y repetir
    └── Desarrollo completo
 
-2. PRE-PRODUCCIÓN
-   ├── NIVEL 2: SemilleroUnico_v2.R / test_todos_formatos.R
-   │   ├── ✅ 100% éxito → Promocionar
-   │   └── ❌ < 100% → Corregir y repetir
+2. PRE-PRODUCCIÓN (🔄 CICLO AUTOMÁTICO OBLIGATORIO)
+   │
+   ├── ═══════════════════════════════════════════════════════
+   │   🔄 FASE 1: RENDERIZADO INICIAL
+   │   ├── exams2html(), exams2pdf(), exams2docx(), exams2nops()
+   │   └── Capturar errores/advertencias
+   │
+   ├── ═══════════════════════════════════════════════════════
+   │   🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
+   │   ├── ✓ Coherencia Matemática
+   │   ├── ✓ Coherencia Imagen-Texto
+   │   ├── ✓ Coherencia de Código
+   │   └── ✓ Renderizado 4 formatos
+   │
+   ├── ═══════════════════════════════════════════════════════
+   │   ⚡ FASE 3: DECISIÓN Y ACCIÓN
+   │   │
+   │   ├── ❌ SIN ERRORES → Continuar
+   │   │
+   │   └── ✓ CON ERRORES:
+   │       │
+   │       ├── 📚 SUBFASE 3A: Consultar ejemplos funcionales
+   │       │   Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/
+   │       │
+   │       ├── 🔄 SUBFASE 3B: VOLVER A FASE 1 (Revalidación)
+   │       │   ⚠️ NO TERMINAR hasta resolver todos los errores
+   │       │
+   │       └── 📊 SUBFASE 3C: Documentar solución exitosa
+   │           Ruta: .claude/docs/patrones-errores-conocidos.md
+   │
+   ├── ═══════════════════════════════════════════════════════
+   │
+   ├── NIVEL 2: ✅ 100% éxito confirmado → Promocionar
    ├── /promover-ejercicio
    └── Ejercicio en producción
 
@@ -279,9 +364,9 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
    └── Feedback al sistema
 
 4. MEJORA CONTINUA
-   ├── Documentar lecciones aprendidas
-   ├── Actualizar knowledge base
-   └── Mejorar proceso de validación
+   ├── Documentar lecciones aprendidas en patrones-errores-conocidos.md
+   ├── Actualizar ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/
+   └── Mejorar proceso de validación (fuente de verdad)
 ```
 
 ---

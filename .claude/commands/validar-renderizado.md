@@ -1,8 +1,22 @@
 ---
-description: Ejecuta ciclo completo de renderizado exams2* y valida todos los formatos de salida.
+description: Ejecuta 🔄 FASE 1 del Ciclo de Validación Automática - Renderizado completo exams2*.
 ---
 
-# Validador de Renderizado exams2*
+# 🔄 FASE 1: Renderizado Inicial
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este comando ejecuta la **FASE 1: RENDERIZADO INICIAL** del ciclo obligatorio:
+
+```
+🔄 FASE 1: RENDERIZADO INICIAL ← ESTE COMANDO
+    │
+    ▼
+🔍 FASE 2: Validación Visual y Funcional
+    │
+    ▼
+⚡ FASE 3: Decisión y Acción
+```
 
 Ejecuta renderizado en 4 formatos y reporta resultados.
 
@@ -105,10 +119,24 @@ cat("NOPS:", resultados$nops, "\n")
 → Ver: .claude/docs/patrones-errores-conocidos.md
 ```
 
-## Siguiente Paso
+## Siguiente Paso (OBLIGATORIO)
 
-Después de validación exitosa:
-1. Inspección visual de outputs
-2. Verificar gráficos correctos
-3. Ejecutar `/validar-coherencia`
+Después de FASE 1, continuar automáticamente a:
+
+```
+→ FASE 2: Ejecutar `/validar-coherencia`
+→ FASE 3: Si hay errores → `/diagnosticar-errores`
+```
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ SIEMPRE ejecutar los 4 formatos
+2. ✓ SIEMPRE capturar y registrar errores
+3. ✓ SIEMPRE continuar a FASE 2 (incluso con errores)
+4. ❌ NUNCA omitir formatos de renderizado
+
+## Referencias
+
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 

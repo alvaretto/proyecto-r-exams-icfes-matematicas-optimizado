@@ -1,12 +1,40 @@
 ---
-description: Corrige errores de imágenes faltantes reemplazando \includegraphics por código TikZ.
+description: Ejecuta 📚 SUBFASE 3A para ERR_G1 - Corrección de imágenes faltantes basada en ejemplos.
 ---
 
-# Corrector de Errores de Imágenes Faltantes
+# 📚 SUBFASE 3A: Corrección de Imágenes Faltantes (ERR_G1)
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este comando ejecuta la **SUBFASE 3A: CORRECCIÓN BASADA EN EJEMPLOS** para ERR_G1:
+
+```
+⚡ FASE 3: Decisión y Acción
+    │
+    └── ✓ CON ERROR ERR_G1 (File not found):
+            │
+            ├── 📚 SUBFASE 3A: Corrección basada en ejemplos ← ESTE COMANDO
+            │       ↓
+            ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+            │
+            └── 📊 SUBFASE 3C: Documentar solución
+```
 
 Detecta y corrige errores del tipo:
 ```
 ! Package pdftex.def Error: File 'imagen.png' not found
+```
+
+## ⚠️ PASO OBLIGATORIO: Consultar Ejemplos Funcionales
+
+**ANTES de aplicar cualquier corrección:**
+
+```bash
+# Consultar ejemplos funcionales
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones de renderizado condicional
+grep -l "is_latex_output" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
 ## Diagnóstico
@@ -82,9 +110,39 @@ Estructura típica de cilindro:
 \end{tikzpicture}
 ```
 
+## 🔄 SUBFASE 3B: Revalidación Obligatoria
+
+**DESPUÉS de aplicar correcciones:**
+
+```
+⚠️ OBLIGATORIO: Volver automáticamente a FASE 1
+→ Ejecutar /validar-renderizado
+→ Ejecutar /validar-coherencia
+→ Verificar que ERR_G1 está resuelto
+→ REPETIR si persisten errores
+```
+
+## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
+
+**Solo después de revalidación exitosa:**
+- Documentar en `.claude/docs/patrones-errores-conocidos.md`
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NO terminar** con ERR_G1 sin resolver
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir
+3. ✓ **SIEMPRE** ejecutar SUBFASE 3B después de correcciones
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+
 ## Regla de Oro
 
 **SIEMPRE** generar figuras geométricas con TikZ, **NUNCA** con `\includegraphics`.
 
-Consultar `/A-Produccion/En-Produccion/` antes de escribir código TikZ.
+Consultar `/A-Produccion/Ejemplos-Funcionales-Rmd/` antes de escribir código TikZ.
+
+## Referencias
+
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `.claude/docs/patrones-errores-conocidos.md`
 

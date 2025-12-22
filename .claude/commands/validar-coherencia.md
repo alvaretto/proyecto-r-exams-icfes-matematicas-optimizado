@@ -1,8 +1,22 @@
 ---
-description: Verifica coherencia matemática, imagen-texto y código R/Python/TikZ.
+description: Ejecuta 🔍 FASE 2 del Ciclo de Validación Automática - Validación Visual y Funcional.
 ---
 
-# Validador de Coherencia
+# 🔍 FASE 2: Validación Visual y Funcional
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este comando ejecuta la **FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL** del ciclo obligatorio:
+
+```
+🔄 FASE 1: Renderizado Inicial
+    │
+    ▼
+🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL ← ESTE COMANDO
+    │
+    ▼
+⚡ FASE 3: Decisión y Acción
+```
 
 Detecta incoherencias entre componentes del ejercicio .Rmd.
 
@@ -112,14 +126,30 @@ valor = r.variable_r  # Usar valor desde R
 ╚════════════════════════════════════════╝
 ```
 
-## Después de Validar
+## Siguiente Paso (OBLIGATORIO)
 
-1. Si hay errores → Aplicar correcciones
-2. Re-ejecutar `/validar-renderizado`
-3. Si todo OK → Continuar a producción
+Después de FASE 2, continuar automáticamente a FASE 3:
+
+```
+❌ SIN ERRORES → Aprobar para producción
+✓ CON ERRORES → Ejecutar `/diagnosticar-errores`
+    ├── 📚 SUBFASE 3A: Consultar ejemplos funcionales
+    ├── 🔄 SUBFASE 3B: Volver a FASE 1 (revalidación)
+    └── 📊 SUBFASE 3C: Documentar solución
+```
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ SIEMPRE verificar los 4 tipos de coherencia
+2. ✓ SIEMPRE registrar errores con clasificación ERR_XX
+3. ✓ SIEMPRE continuar a FASE 3 (decisión)
+4. ❌ NUNCA omitir verificaciones
+5. ❌ NUNCA terminar con errores sin resolver
 
 ## Referencias
 
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 - `.claude/docs/patrones-errores-conocidos.md#error-2`
 - `.claude/skills/validar-coherencia/skill.md`
 

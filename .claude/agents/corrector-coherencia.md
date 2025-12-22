@@ -97,7 +97,34 @@ grep -n "\\\\def\\\\" archivo.Rmd
 grep -n "^exsolution:" archivo.Rmd
 ```
 
-## Reglas Críticas
+## ⚡ Integración con Ciclo de Validación Automática
+
+Este agente se activa durante **FASE 2: Validación Visual y Funcional**
+del Ciclo de Validación Automática.
+
+```
+🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
+    ├── ✓ Coherencia Matemática ← VERIFICAR
+    ├── ✓ Coherencia Imagen-Texto ← VERIFICAR
+    ├── ✓ Coherencia de Código ← VERIFICAR
+    └── ✓ Renderizado 4 formatos
+```
+
+### Cuando se Detectan Errores de Coherencia
+
+Se activa **SUBFASE 3A: Corrección Basada en Ejemplos**:
+
+```bash
+# OBLIGATORIO: Consultar ejemplos funcionales
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones similares
+grep -l "generar_datos" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
+
+**Después de corregir** → Ejecutar **SUBFASE 3B: Revalidación Obligatoria**
+
+## ⛔ Reglas Críticas (NO NEGOCIABLES)
 
 1. **Orden de operaciones**: SIEMPRE aplicar funciones matemáticas sobre
    valores numéricos ANTES de formatear.
@@ -105,29 +132,44 @@ grep -n "^exsolution:" archivo.Rmd
 2. **Sincronización**: Variables en TikZ y Python DEBEN derivarse de variables R
    usando paste0() o r.variable.
 
-3. **Documentación**: Si se corrige un error de coherencia nuevo, documentarlo
-   en `.claude/docs/patrones-errores-conocidos.md`.
+3. **Consultar ejemplos**: SIEMPRE consultar `/A-Produccion/Ejemplos-Funcionales-Rmd/`
+   antes de aplicar cualquier corrección.
+
+4. **Ciclo obligatorio**: Después de corregir → VOLVER A FASE 1 (Revalidación)
+
+5. **Documentación**: Si se corrige un error de coherencia nuevo, documentarlo
+   en `.claude/docs/patrones-errores-conocidos.md` SOLO después de confirmar éxito.
+
+6. **NO terminar** con errores sin resolver
 
 ## Formato de Reporte
 
 ```
-╔════════════════════════════════════════╗
-║     REPORTE DE COHERENCIA              ║
-╠════════════════════════════════════════╣
-║ Coherencia Matemática:    ✅/⚠️/❌     ║
-║ Coherencia Imagen-Texto:  ✅/⚠️/❌     ║
-║ Coherencia de Código:     ✅/⚠️/❌     ║
-╠════════════════════════════════════════╣
-║ Errores encontrados: [N]               ║
-║ [Lista de errores con líneas]          ║
-║                                        ║
-║ Correcciones aplicadas: [N]            ║
-║ Estado final: [OK/REQUIERE REVISIÓN]   ║
-╚════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════╗
+║     REPORTE DE COHERENCIA - FASE 2                         ║
+╠════════════════════════════════════════════════════════════╣
+║ Coherencia Matemática:    ✅/⚠️/❌                          ║
+║ Coherencia Imagen-Texto:  ✅/⚠️/❌                          ║
+║ Coherencia de Código:     ✅/⚠️/❌                          ║
+╠════════════════════════════════════════════════════════════╣
+║ Errores encontrados: [N]                                   ║
+║ [Lista de errores con líneas]                              ║
+║                                                            ║
+║ 📚 Ejemplo funcional consultado:                           ║
+║ /A-Produccion/Ejemplos-Funcionales-Rmd/[archivo]           ║
+║                                                            ║
+║ Correcciones aplicadas: [N]                                ║
+║                                                            ║
+║ 🔄 SIGUIENTE PASO:                                         ║
+║ [Si hay errores: SUBFASE 3B - Volver a FASE 1]             ║
+║ [Si éxito: Continuar workflow]                             ║
+╚════════════════════════════════════════════════════════════╝
 ```
 
 ## Referencias
 
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 - `.claude/docs/patrones-errores-conocidos.md#error-2`
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 - `.claude/skills/validar-coherencia/skill.md`
 

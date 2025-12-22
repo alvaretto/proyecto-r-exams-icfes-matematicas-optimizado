@@ -1,12 +1,44 @@
 ---
 name: corregir-graficos
-description: Soluciona errores específicos de visualización gráfica (no visualizadas, solapadas, renderizado incorrecto, tamaño inadecuado).
+description: Ejecuta 📚 SUBFASE 3A para errores gráficos - Corrección basada en ejemplos funcionales.
 ---
 
-# Skill: Corrector de Errores Gráficos
+# Skill: 📚 SUBFASE 3A - Corrección de Errores Gráficos
+
+## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+
+Este skill ejecuta la **SUBFASE 3A: CORRECCIÓN BASADA EN EJEMPLOS** para errores gráficos:
+
+```
+⚡ FASE 3: Decisión y Acción
+    │
+    └── ✓ CON ERRORES GRÁFICOS:
+            │
+            ├── 📚 SUBFASE 3A: Corrección basada en ejemplos ← ESTE SKILL
+            │       ↓
+            ├── 🔄 SUBFASE 3B: Revalidación (volver a FASE 1)
+            │
+            └── 📊 SUBFASE 3C: Documentar solución
+```
 
 ## Propósito
-Aplicar correcciones específicas para los 4 tipos de errores gráficos identificados en el ciclo de validación visual.
+Aplicar correcciones específicas para errores gráficos (ERR_G1-G4) basándose
+OBLIGATORIAMENTE en ejemplos funcionales.
+
+## ⚠️ PASO OBLIGATORIO: Consultar Ejemplos Funcionales
+
+**ANTES de aplicar cualquier corrección:**
+
+```bash
+# Consultar ejemplos funcionales con TikZ
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+
+# Buscar patrones de include_tikz
+grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+
+# Buscar patrones de renderizado condicional
+grep -l "is_latex_output" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
 
 ## Tipos de Errores y Soluciones
 
@@ -139,23 +171,52 @@ Re-ejecutar validar-renderizado
 └──────────────────────┘
 ```
 
-## Checklist de Corrección
+## Checklist de Corrección (SUBFASE 3A)
 
+- [ ] 📚 Consultar ejemplos funcionales PRIMERO
 - [ ] Identificar código de error (ERR_G1-G4)
 - [ ] Localizar línea/chunk problemático
-- [ ] Aplicar solución del patrón correspondiente
+- [ ] Extraer patrón de solución de ejemplo funcional
+- [ ] Aplicar corrección basada en ejemplo
 - [ ] Verificar sintaxis del código modificado
-- [ ] Ejecutar renderizado de prueba
-- [ ] Confirmar visualización correcta
-- [ ] Documentar corrección aplicada
 
-## Integración
+## 🔄 SUBFASE 3B: Revalidación Obligatoria
 
-- **Activado por**: diagnosticar-errores cuando categoría = GRÁFICOS
-- **Siguiente paso**: validar-renderizado (ciclo hasta éxito)
+**DESPUÉS de aplicar correcciones:**
+
+```
+⚠️ OBLIGATORIO: Volver automáticamente a FASE 1
+→ Ejecutar validar-renderizado
+→ Ejecutar validar-coherencia
+→ Verificar que error gráfico está resuelto
+→ REPETIR si persisten errores
+```
+
+## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
+
+**Solo después de revalidación exitosa:**
+
+1. Documentar error y solución en `.claude/docs/patrones-errores-conocidos.md`
+2. Incluir ejemplo funcional utilizado
+3. Registrar código antes/después
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ❌ **NO terminar** con errores gráficos sin resolver
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir
+3. ✓ **SIEMPRE** ejecutar SUBFASE 3B después de correcciones
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+
+## Integración con Ciclo Completo
+
+- **diagnosticar-errores** → Activa este skill para ERR_G
+- **Este skill** → Ejecuta SUBFASE 3A para gráficos
+- **SUBFASE 3B** → Vuelve a FASE 1 (validar-renderizado)
 
 ## Referencias
 
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 - `.claude/docs/patrones-errores-conocidos.md` (Error 1, 3)
 - `.claude/skills/corregir-error-imagen/skill.md`
 - `.claude/agents/graficador-tikz.md`

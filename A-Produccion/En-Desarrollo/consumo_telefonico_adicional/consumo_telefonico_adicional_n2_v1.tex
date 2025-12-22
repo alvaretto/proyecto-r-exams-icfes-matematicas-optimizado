@@ -1,0 +1,428 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)}
+
+\CommentTok{\# Establecer semilla aleatoria}
+\FunctionTok{set.seed}\NormalTok{(}\FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10000}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\CommentTok{\# Aleatorización del contexto}
+\NormalTok{familias }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Ramírez"}\NormalTok{, }\StringTok{"González"}\NormalTok{, }\StringTok{"Martínez"}\NormalTok{, }\StringTok{"García"}\NormalTok{, }\StringTok{"López"}\NormalTok{, }\StringTok{"Rodríguez"}\NormalTok{,}
+              \StringTok{"Hernández"}\NormalTok{, }\StringTok{"Pérez"}\NormalTok{, }\StringTok{"Sánchez"}\NormalTok{, }\StringTok{"Torres"}\NormalTok{)}
+\NormalTok{familia }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(familias, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Plan actual de minutos (aleatorizar entre 200{-}300)}
+\NormalTok{plan\_minutos }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{200}\NormalTok{, }\DecValTok{220}\NormalTok{, }\DecValTok{250}\NormalTok{, }\DecValTok{280}\NormalTok{, }\DecValTok{300}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Generar datos de consumo para 7 meses}
+\NormalTok{meses\_nombres }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Jul."}\NormalTok{, }\StringTok{"Ago."}\NormalTok{, }\StringTok{"Sep."}\NormalTok{, }\StringTok{"Oct."}\NormalTok{, }\StringTok{"Nov."}\NormalTok{, }\StringTok{"Dic."}\NormalTok{, }\StringTok{"Ene."}\NormalTok{)}
+
+\CommentTok{\# Generar consumo aleatorio asegurando que enero tenga consumo adicional}
+\NormalTok{consumo\_base }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(plan\_minutos }\SpecialCharTok{*} \FunctionTok{runif}\NormalTok{(}\DecValTok{7}\NormalTok{, }\FloatTok{0.6}\NormalTok{, }\FloatTok{1.5}\NormalTok{))}
+\CommentTok{\# Asegurar que al menos uno supere el plan (enero)}
+\NormalTok{consumo\_base[}\DecValTok{7}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ plan\_minutos }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\DecValTok{80}\SpecialCharTok{:}\DecValTok{150}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{consumo\_meses }\OtherTok{\textless{}{-}}\NormalTok{ consumo\_base}
+
+\CommentTok{\# Calcular el consumo adicional de enero}
+\NormalTok{consumo\_enero }\OtherTok{\textless{}{-}}\NormalTok{ consumo\_meses[}\DecValTok{7}\NormalTok{]}
+\NormalTok{tiempo\_adicional\_minutos }\OtherTok{\textless{}{-}}\NormalTok{ consumo\_enero }\SpecialCharTok{{-}}\NormalTok{ plan\_minutos}
+
+\CommentTok{\# Convertir a horas y minutos}
+\NormalTok{horas\_adicional }\OtherTok{\textless{}{-}} \FunctionTok{floor}\NormalTok{(tiempo\_adicional\_minutos }\SpecialCharTok{/} \DecValTok{60}\NormalTok{)}
+\NormalTok{minutos\_adicional }\OtherTok{\textless{}{-}}\NormalTok{ tiempo\_adicional\_minutos }\SpecialCharTok{\%\%} \DecValTok{60}
+
+\CommentTok{\# Datos de la tabla del estado de cuenta}
+\CommentTok{\# Aleatorizar valores}
+\NormalTok{saldo\_anterior }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{45000}\NormalTok{, }\DecValTok{48000}\NormalTok{, }\DecValTok{49610}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{gracias\_pago }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{48000}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{49610}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{47500}\NormalTok{), }\DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \SpecialCharTok{{-}}\DecValTok{1}
+\NormalTok{cargos\_mes }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{34000}\NormalTok{, }\FloatTok{35416.83}\NormalTok{, }\DecValTok{36000}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{iva }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(cargos\_mes }\SpecialCharTok{*} \FloatTok{0.19}\NormalTok{)}
+\NormalTok{subtotal }\OtherTok{\textless{}{-}}\NormalTok{ cargos\_mes }\SpecialCharTok{+}\NormalTok{ iva}
+\NormalTok{credito\_ajuste }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{5.53}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{6}\NormalTok{), }\DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \SpecialCharTok{{-}}\DecValTok{1}
+\NormalTok{total\_pagar }\OtherTok{\textless{}{-}}\NormalTok{ subtotal }\SpecialCharTok{{-}}\NormalTok{ credito\_ajuste}
+
+\CommentTok{\# Cargos del mes detallados}
+\NormalTok{plan\_local }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{19000}\NormalTok{, }\FloatTok{20086.21}\NormalTok{, }\DecValTok{21000}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{consumo\_adicional\_costo }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{13000}\NormalTok{, }\FloatTok{14065.92}\NormalTok{, }\DecValTok{15000}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{llamada\_espera }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1200}\NormalTok{, }\FloatTok{1264.70}\NormalTok{, }\DecValTok{1300}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{total\_cargos\_mes }\OtherTok{\textless{}{-}}\NormalTok{ cargos\_mes}
+
+\CommentTok{\# Generar opciones de respuesta}
+\CommentTok{\# Opción correcta}
+\NormalTok{opcion\_correcta }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(horas\_adicional, }\StringTok{" hora"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(horas\_adicional }\SpecialCharTok{\textgreater{}} \DecValTok{1}\NormalTok{, }\StringTok{"s"}\NormalTok{, }\StringTok{""}\NormalTok{),}
+                          \StringTok{" y "}\NormalTok{, minutos\_adicional, }\StringTok{" minutos."}\NormalTok{)}
+
+\CommentTok{\# Generar distractores}
+\NormalTok{distractor1\_min }\OtherTok{\textless{}{-}}\NormalTok{ tiempo\_adicional\_minutos }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\DecValTok{30}\SpecialCharTok{:}\DecValTok{50}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{dist1\_h }\OtherTok{\textless{}{-}} \FunctionTok{floor}\NormalTok{(distractor1\_min }\SpecialCharTok{/} \DecValTok{60}\NormalTok{)}
+\NormalTok{dist1\_m }\OtherTok{\textless{}{-}}\NormalTok{ distractor1\_min }\SpecialCharTok{\%\%} \DecValTok{60}
+\NormalTok{distractor1 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(dist1\_h, }\StringTok{" hora"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(dist1\_h }\SpecialCharTok{\textgreater{}} \DecValTok{1}\NormalTok{, }\StringTok{"s"}\NormalTok{, }\StringTok{""}\NormalTok{),}
+                      \StringTok{" y "}\NormalTok{, dist1\_m, }\StringTok{" minutos."}\NormalTok{)}
+
+\NormalTok{distractor2\_min }\OtherTok{\textless{}{-}}\NormalTok{ tiempo\_adicional\_minutos }\SpecialCharTok{{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{20}\SpecialCharTok{:}\DecValTok{40}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{dist2\_h }\OtherTok{\textless{}{-}} \FunctionTok{floor}\NormalTok{(distractor2\_min }\SpecialCharTok{/} \DecValTok{60}\NormalTok{)}
+\NormalTok{dist2\_m }\OtherTok{\textless{}{-}}\NormalTok{ distractor2\_min }\SpecialCharTok{\%\%} \DecValTok{60}
+\NormalTok{distractor2 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(dist2\_h, }\StringTok{" hora"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(dist2\_h }\SpecialCharTok{\textgreater{}} \DecValTok{1}\NormalTok{, }\StringTok{"s"}\NormalTok{, }\StringTok{""}\NormalTok{),}
+                      \StringTok{" y "}\NormalTok{, dist2\_m, }\StringTok{" minutos."}\NormalTok{)}
+
+\NormalTok{distractor3\_min }\OtherTok{\textless{}{-}}\NormalTok{ tiempo\_adicional\_minutos }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\DecValTok{200}\SpecialCharTok{:}\DecValTok{250}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{dist3\_h }\OtherTok{\textless{}{-}} \FunctionTok{floor}\NormalTok{(distractor3\_min }\SpecialCharTok{/} \DecValTok{60}\NormalTok{)}
+\NormalTok{dist3\_m }\OtherTok{\textless{}{-}}\NormalTok{ distractor3\_min }\SpecialCharTok{\%\%} \DecValTok{60}
+\NormalTok{distractor3 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(dist3\_h, }\StringTok{" hora"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(dist3\_h }\SpecialCharTok{\textgreater{}} \DecValTok{1}\NormalTok{, }\StringTok{"s"}\NormalTok{, }\StringTok{""}\NormalTok{),}
+                      \StringTok{" y "}\NormalTok{, dist3\_m, }\StringTok{" minutos."}\NormalTok{)}
+
+\CommentTok{\# Crear lista de opciones y mezclar}
+\NormalTok{opciones }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(opcion\_correcta, distractor1, distractor2, distractor3)}
+\NormalTok{opciones\_mezcladas }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(opciones)}
+
+\CommentTok{\# Identificar posición correcta}
+\NormalTok{indice\_correcto }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(opciones\_mezcladas }\SpecialCharTok{==}\NormalTok{ opcion\_correcta)}
+
+\CommentTok{\# Vector de solución}
+\NormalTok{solucion }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{solucion[indice\_correcto] }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# Tests de validación}
+\FunctionTok{test\_that}\NormalTok{(}\StringTok{"El consumo de enero supera el plan"}\NormalTok{, \{}
+  \FunctionTok{expect\_true}\NormalTok{(consumo\_enero }\SpecialCharTok{\textgreater{}}\NormalTok{ plan\_minutos)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Test passed
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{test\_that}\NormalTok{(}\StringTok{"El cálculo de tiempo adicional es correcto"}\NormalTok{, \{}
+  \FunctionTok{expect\_equal}\NormalTok{(tiempo\_adicional\_minutos, consumo\_enero }\SpecialCharTok{{-}}\NormalTok{ plan\_minutos)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Test passed
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{test\_that}\NormalTok{(}\StringTok{"La conversión a horas y minutos es correcta"}\NormalTok{, \{}
+  \FunctionTok{expect\_equal}\NormalTok{(horas\_adicional }\SpecialCharTok{*} \DecValTok{60} \SpecialCharTok{+}\NormalTok{ minutos\_adicional, tiempo\_adicional\_minutos)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Test passed
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)}
+
+\CommentTok{\# Código Python para generar el gráfico de barras}
+\NormalTok{codigo\_python }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"}
+\StringTok{import matplotlib}
+\StringTok{matplotlib.use(\textquotesingle{}Agg\textquotesingle{})}
+\StringTok{import matplotlib.pyplot as plt}
+\StringTok{import numpy as np}
+
+\StringTok{\# Configuración}
+\StringTok{plt.style.use(\textquotesingle{}default\textquotesingle{})}
+\StringTok{plt.rcParams[\textquotesingle{}font.size\textquotesingle{}] = 10}
+\StringTok{plt.rcParams[\textquotesingle{}axes.linewidth\textquotesingle{}] = 1.2}
+
+\StringTok{\# Datos}
+\StringTok{meses = \%s}
+\StringTok{consumo = \%s}
+\StringTok{plan\_actual = \%d}
+
+\StringTok{\# Crear figura}
+\StringTok{fig, ax = plt.subplots(figsize=(6, 4))}
+
+\StringTok{\# Colores para las barras}
+\StringTok{colores = [\textquotesingle{}\#4682B4\textquotesingle{}] * len(meses)}
+\StringTok{colores[{-}1] = \textquotesingle{}\#E74C3C\textquotesingle{}  \# Enero en rojo por ser el mes con consumo adicional}
+
+\StringTok{\# Crear gráfico de barras}
+\StringTok{barras = ax.bar(meses, consumo, color=colores, edgecolor=\textquotesingle{}black\textquotesingle{}, linewidth=0.8)}
+
+\StringTok{\# Añadir valores sobre las barras}
+\StringTok{for i, (barra, valor) in enumerate(zip(barras, consumo)):}
+\StringTok{    altura = barra.get\_height()}
+\StringTok{    ax.text(barra.get\_x() + barra.get\_width()/2., altura,}
+\StringTok{            f\textquotesingle{}\{int(valor)\}\textquotesingle{},}
+\StringTok{            ha=\textquotesingle{}center\textquotesingle{}, va=\textquotesingle{}bottom\textquotesingle{}, fontweight=\textquotesingle{}bold\textquotesingle{}, fontsize=9)}
+
+\StringTok{\# Línea del plan actual}
+\StringTok{ax.axhline(y=plan\_actual, color=\textquotesingle{}green\textquotesingle{}, linestyle=\textquotesingle{}{-}{-}\textquotesingle{}, linewidth=2,}
+\StringTok{           label=f\textquotesingle{}Su plan local actual es de \{plan\_actual\} minutos\textquotesingle{})}
+
+\StringTok{\# Configuración del gráfico}
+\StringTok{ax.set\_xlabel(\textquotesingle{}Últimos consumos de voz\textquotesingle{}, fontweight=\textquotesingle{}bold\textquotesingle{})}
+\StringTok{ax.set\_ylabel(\textquotesingle{}Minutos consumidos\textquotesingle{}, fontweight=\textquotesingle{}bold\textquotesingle{})}
+\StringTok{ax.set\_title(\textquotesingle{}Diagrama de barras de los últimos}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{nconsumos de voz\textquotesingle{}, fontsize=11, fontweight=\textquotesingle{}bold\textquotesingle{})}
+\StringTok{ax.legend(loc=\textquotesingle{}upper left\textquotesingle{}, fontsize=8)}
+\StringTok{ax.grid(axis=\textquotesingle{}y\textquotesingle{}, alpha=0.3, linestyle=\textquotesingle{}{-}{-}\textquotesingle{})}
+\StringTok{ax.set\_ylim(0, max(consumo) * 1.15)}
+
+\StringTok{plt.tight\_layout()}
+
+\StringTok{\# Guardar}
+\StringTok{plt.savefig(\textquotesingle{}grafico\_consumo.png\textquotesingle{}, dpi=150, bbox\_inches=\textquotesingle{}tight\textquotesingle{}, facecolor=\textquotesingle{}white\textquotesingle{})}
+\StringTok{plt.savefig(\textquotesingle{}grafico\_consumo.pdf\textquotesingle{}, dpi=150, bbox\_inches=\textquotesingle{}tight\textquotesingle{}, facecolor=\textquotesingle{}white\textquotesingle{})}
+\StringTok{plt.close()}
+\StringTok{"}\NormalTok{,}
+\FunctionTok{paste0}\NormalTok{(}\StringTok{"[\textquotesingle{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(meses\_nombres, }\AttributeTok{collapse=}\StringTok{"\textquotesingle{}, \textquotesingle{}"}\NormalTok{), }\StringTok{"\textquotesingle{}]"}\NormalTok{),}
+\FunctionTok{paste0}\NormalTok{(}\StringTok{"["}\NormalTok{, }\FunctionTok{paste}\NormalTok{(consumo\_meses, }\AttributeTok{collapse=}\StringTok{", "}\NormalTok{), }\StringTok{"]"}\NormalTok{),}
+\NormalTok{plan\_minutos)}
+
+\CommentTok{\# Ejecutar Python}
+\FunctionTok{py\_run\_string}\NormalTok{(codigo\_python)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)}
+
+\CommentTok{\# Función para formatear números con separador de miles}
+\NormalTok{format\_currency }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+  \FunctionTok{format}\NormalTok{(x, }\AttributeTok{big.mark =} \StringTok{","}\NormalTok{, }\AttributeTok{decimal.mark =} \StringTok{"."}\NormalTok{, }\AttributeTok{nsmall =} \DecValTok{2}\NormalTok{, }\AttributeTok{scientific =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Crear tabla con TikZ para el estado de cuenta}
+\NormalTok{tabla\_estado }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{begin\{tikzpicture\}"}\NormalTok{,}
+  \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{node[inner sep=0pt] \{"}\NormalTok{,}
+  \StringTok{"  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{begin\{tabular\}\{|p\{4.5cm\}|r|\}"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{rowcolor\{cyan!15\}"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{multicolumn\{2\}\{|c|\}\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{Estado de cuenta mes de enero\}\} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Saldo anterior \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(saldo\_anterior), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Gracias por su pago \& {-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(gracias\_pago), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{rowcolor\{orange!20\}"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{Saldo\} \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$0\} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Cargos del mes \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(cargos\_mes), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    IVA \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(iva), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{rowcolor\{orange!20\}"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{Subtotal\} \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(subtotal), }\StringTok{"\} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Crédito por ajuste a la decena \& {-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(credito\_ajuste), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{rowcolor\{orange!30\}"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{Total a pagar\} \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(total\_pagar), }\StringTok{"\} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{rowcolor\{cyan!15\}"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{multicolumn\{2\}\{|c|\}\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{Cargos del mes\}\} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Plan local \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(plan\_local), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Consumo adicional \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(consumo\_adicional\_costo), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    Llamada en espera \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(llamada\_espera), }\StringTok{" }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{rowcolor\{orange!20\}"}\NormalTok{,}
+  \FunctionTok{paste0}\NormalTok{(}\StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{Total cargos del mes\} \& }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{textbf\{}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{$"}\NormalTok{, }\FunctionTok{format\_currency}\NormalTok{(total\_cargos\_mes), }\StringTok{"\} }\SpecialCharTok{\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}}\StringTok{"}\NormalTok{),}
+  \StringTok{"    }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hline"}\NormalTok{,}
+  \StringTok{"  }\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{end\{tabular\}"}\NormalTok{,}
+  \StringTok{"\};"}\NormalTok{,}
+  \StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{end\{tikzpicture\}"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Question}\label{question}
+
+La gráfica y la tabla muestran parte de la información que recibe la
+familia Pérez en su factura telefónica del mes de enero.
+
+\includegraphics[width=0.65\linewidth,height=\textheight,keepaspectratio]{grafico_consumo.png}
+
+\includegraphics[width=10cm,height=\textheight,keepaspectratio]{tabla_estado_cuenta.png}
+
+El tiempo adicional consumido por la familia Pérez en enero fue:
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  2 horas y 17 minutos.
+\item
+  6 horas y 3 minutos.
+\item
+  1 hora y 55 minutos.
+\item
+  2 horas y 57 minutos.
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Identificar el plan actual}: Según la gráfica, el plan local
+  actual es de \textbf{250 minutos}.
+\item
+  \textbf{Identificar el consumo de enero}: En el gráfico de barras, el
+  consumo de enero (la última barra) es de \textbf{387 minutos}.
+\item
+  \textbf{Calcular el tiempo adicional}:
+  \[\text{Tiempo adicional} = \text{Consumo enero} - \text{Plan actual}\]
+  \[\text{Tiempo adicional} = 387 - 250 = 137 \text{ minutos}\]
+\item
+  \textbf{Convertir a horas y minutos}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Horas: \(\lfloor 137 \div 60 \rfloor = 2\) hora(s)
+  \item
+    Minutos restantes: \(137 \mod 60 = 17\) minutos
+  \end{itemize}
+\end{enumerate}
+
+\textbf{Respuesta correcta}: 2 horas y 17 minutos.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Verdadero
+\item
+  Falso
+\item
+  Falso
+\item
+  Falso
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: consumo\_telefonico\_adicional extype: schoice exsolution: 1000
+exshuffle: TRUE exsection: Estadística/Interpretación de Gráficos/Nivel
+2 extags: ICFES, Interpretación, Numérico-Variacional, Estadística,
+Aplicado exdificultad: 2 excompetencia: Interpretación y Representación
+excomponente: Numérico-Variacional expensamiento: Pensamiento Numérico
+excontenido: Estadística (Genérico) exeje: Aplicado/Contextualizado
+
+\end{document}

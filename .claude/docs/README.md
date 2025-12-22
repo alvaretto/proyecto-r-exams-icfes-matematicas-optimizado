@@ -78,6 +78,31 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 
 ## Filosofía del Sistema
 
+### ⚡ Ciclo de Validación y Corrección Automática (OBLIGATORIO)
+
+**Cada vez que se renderiza un archivo .Rmd, se ejecuta automáticamente:**
+
+```
+🔄 FASE 1: RENDERIZADO INICIAL
+    └── Ejecutar exams2html, exams2pdf, exams2docx, exams2nops
+    └── Capturar errores/advertencias
+
+🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
+    └── Coherencia Matemática, Imagen-Texto, Código, 4 formatos
+
+⚡ FASE 3: DECISIÓN Y ACCIÓN
+    ├── ❌ SIN ERRORES → Continuar workflow
+    └── ✓ CON ERRORES:
+        ├── 📚 SUBFASE 3A: Consultar /A-Produccion/Ejemplos-Funcionales-Rmd/
+        ├── 🔄 SUBFASE 3B: VOLVER A FASE 1 (ciclo obligatorio)
+        └── 📊 SUBFASE 3C: Documentar en patrones-errores-conocidos.md
+```
+
+**Condiciones Críticas:**
+- ❌ NO terminar con errores sin resolver
+- ✓ Ejemplos funcionales = Fuente de verdad absoluta
+- ✓ Documentar SOLO después de confirmar solución
+
 ### Principio de Documentación Verificada
 
 **Solo se documenta lo que está 100% verificado y funcionando.**
@@ -102,6 +127,7 @@ Este principio fundamental asegura que:
 - ✅ Pruebas de validación exitosas (PDF + HTML)
 - ✅ Referencias a archivos .Rmd en producción
 - ✅ Historial con resultados específicos
+- ✅ Patrón utilizado de ejemplos funcionales (SUBFASE 3C)
 
 ## Documentos Principales
 
@@ -193,38 +219,56 @@ Los skills son procedimientos automatizados que Claude puede ejecutar para tarea
 
 **Documentación completa:** `.claude/skills/validar-icfes/skill.md`
 
-## Flujo de Trabajo: Error → Solución → Documentación
+## Flujo de Trabajo: Ciclo de Validación y Corrección Automática
 
-### Paso 1: Identificación del Error
-```
-Usuario reporta: "Error: File 'imagen.png' not found"
-```
-
-### Paso 2: Investigación y Desarrollo
-- Analizar la causa raíz
-- Desarrollar solución candidata
-- Probar en archivo real
-
-### Paso 3: Validación
+### 🔄 FASE 1: Renderizado Inicial (OBLIGATORIO)
 ```r
-# Probar PDF
-exams2pdf("archivo.Rmd", n = 1)
-
-# Probar HTML
+# Ejecutar renderizado completo
 exams2html("archivo.Rmd", n = 1)
+exams2pdf("archivo.Rmd", n = 1)
+exams2pandoc("archivo.Rmd", n = 1, type = "docx")
+exams2nops("archivo.Rmd", n = 1)
+# Capturar y registrar errores/advertencias
 ```
 
-### Paso 4: Documentación (Solo si paso 3 es exitoso)
-1. Agregar patrón a `patrones-errores-conocidos.md`
+### 🔍 FASE 2: Validación Visual y Funcional
+1. **Coherencia Matemática**: Fórmulas, cálculos, respuesta correcta
+2. **Coherencia Imagen-Texto**: Descripción vs gráfico, valores sincronizados
+3. **Coherencia de Código**: R ↔ Python ↔ TikZ sincronizado
+4. **Renderizado 4 formatos**: HTML, PDF, DOCX, NOPS correctos
+
+### ⚡ FASE 3: Decisión y Acción
+
+**SI NO hay errores** → Continuar workflow normal
+
+**SI hay errores** → Ejecutar subfases:
+
+#### 📚 SUBFASE 3A: Corrección Basada en Ejemplos
+```bash
+# SIEMPRE consultar ejemplos funcionales ANTES de corregir
+ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+# Identificar patrones de solución en archivos similares
+# Aplicar correcciones basadas en ejemplos validados
+```
+
+#### 🔄 SUBFASE 3B: Ciclo de Revalidación (OBLIGATORIO)
+```
+⚠️ VOLVER AUTOMÁTICAMENTE A FASE 1
+→ Repetir renderizado completo
+→ NO TERMINAR hasta resolver TODOS los errores
+```
+
+#### 📊 SUBFASE 3C: Gestión de Resultados (Solo si éxito)
+1. Documentar error y solución en `patrones-errores-conocidos.md`
 2. Incluir código completo (antes/después)
-3. Documentar resultados de validación
+3. Documentar ejemplo funcional utilizado
 4. Referenciar archivo .Rmd verificado
 
-### Paso 5: Automatización
-1. Crear skill en `.claude/skills/[nombre-skill]/`
-2. Documentar algoritmo de corrección
-3. Agregar casos de uso
-4. Linkear con patrón documentado
+### ⛔ CONDICIONES CRÍTICAS
+- ❌ NO terminar con errores sin resolver
+- ❌ NUNCA proceder con errores pendientes
+- ✓ Documentar SOLO después de confirmar solución
+- ✓ Ejemplos funcionales = Fuente de verdad absoluta
 
 ## Criterios de Calidad
 

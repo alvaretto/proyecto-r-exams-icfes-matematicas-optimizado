@@ -50,8 +50,30 @@ Tras el análisis, determina:
 - **Flujo A**: Sin gráficas complejas → Proceso estándar
 - **Flujo B**: Con gráficas TikZ → Activar AgenteTikZ
 
-## Regla de Oro
-- Consulta recurrentemente `/A-Produccion/` para patrones similares.
-- Consulta recurrentemente `/A-Produccion/` para patrones similares, 
-cuando pretendas solucionar eventuales errores.
+## ⚡ Integración con Ciclo de Validación Automática
+
+Después de la generación del archivo .Rmd, se activa OBLIGATORIAMENTE el
+**Ciclo de Validación y Corrección Automática** (ver Mermaid_Chart.txt):
+
+```
+🔄 FASE 1: Renderizado Inicial (exams2html, pdf, docx, nops)
+🔍 FASE 2: Validación Visual y Funcional
+⚡ FASE 3: Decisión y Acción
+    ├── 📚 SUBFASE 3A: Corrección basada en ejemplos
+    ├── 🔄 SUBFASE 3B: Revalidación obligatoria
+    └── 📊 SUBFASE 3C: Documentar solución
+```
+
+## ⛔ Reglas de Oro (NO NEGOCIABLES)
+
+1. **SIEMPRE** consultar `/A-Produccion/Ejemplos-Funcionales-Rmd/` para patrones similares
+2. **SIEMPRE** consultar ejemplos funcionales cuando se detecten errores
+3. **NUNCA** terminar con errores sin resolver
+4. **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+5. El ciclo de validación se repite hasta resolución completa
+
+## Referencias
+
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 

@@ -1,11 +1,26 @@
 ---
-description: Genera ejercicio R-exams tipo CLOZE (pregunta compuesta) a partir del análisis ICFES.
+description: Genera ejercicio R-exams tipo CLOZE (pregunta compuesta) - Después requiere Ciclo de Validación.
 ---
 
 # Generador CLOZE
 
-Genera un archivo .Rmd de tipo **cloze** (pregunta compuesta con múltiples gaps) 
+Genera un archivo .Rmd de tipo **cloze** (pregunta compuesta con múltiples gaps)
 siguiendo la estructura del proyecto.
+
+## ⚡ IMPORTANTE: Después de generar, ejecutar Ciclo de Validación
+
+```
+Generación del archivo .Rmd
+    │
+    ▼
+🔄 FASE 1: /validar-renderizado
+    │
+    ▼
+🔍 FASE 2: /validar-coherencia
+    │
+    ▼
+⚡ FASE 3: /diagnosticar-errores (si hay errores)
+```
 
 ## Parámetros de entrada
 - **$ARGUMENTS**: Ruta de imagen o descripción del ejercicio
@@ -69,11 +84,23 @@ Ejecutar skill `validar-diversidad-300` y `validar-metadatos-icfes`.
 ### Paso 8: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
+2. ✓ **SIEMPRE** ejecutar Ciclo de Validación después de generar
+3. ✓ **SIEMPRE** configurar tolerancias apropiadas (0 para schoice, ≥1 para numéricos grandes)
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+5. ❌ **NUNCA** promover sin completar validación
+
 ## Regla de Oro
 **NUNCA improvises**. Consulta ejemplos funcionales en:
-- `/A-Produccion/En-Produccion/`
-- `/A-Produccion/En-PreDesarrollo/`
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 
 Para ejemplos CLOZE específicos también revisa:
 `/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/`
+
+## Referencias
+
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 
