@@ -148,8 +148,9 @@ library(exams2forms)
 
 # Generar archivos HTML standalone con exams2webquiz
 # Esta función genera automáticamente los archivos CSS y JS necesarios
-exams2webquiz(rep(archivo_examen, numpreg),  # Repetir el ejercicio 'numpreg' veces
-              n = copias,
+# Configuración: 1 pregunta por página, múltiples versiones
+exams2webquiz(archivo_examen,  # Una pregunta por archivo HTML
+              n = copias * numpreg,  # Total de versiones = copias × preguntas
               dir = dir_salida,
               name = paste0(nombre_sin_extension, "_interactivo"),
               edir = dir_ejercicios,
@@ -158,7 +159,7 @@ exams2webquiz(rep(archivo_examen, numpreg),  # Repetir el ejercicio 'numpreg' ve
               solution = TRUE,        # Mostrar botón de solución
               shuffle = TRUE,         # Mezclar opciones de respuesta
               mathjax = TRUE,         # Habilitar MathJax para fórmulas
-              browse = FALSE)         # No abrir navegador automáticamente
+              browse = TRUE)          # Abrir navegador automáticamente
 
 # # Opción 2: Generar archivos HTML en subdirectorio para embeber
 # # Útil para integrar en documentos Rmd/Quarto o sitios web
