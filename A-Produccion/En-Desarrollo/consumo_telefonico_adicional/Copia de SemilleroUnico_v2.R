@@ -6,8 +6,8 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "consumo_telefonico_adicional_n2_v1.Rmd"
-copias <- 1  # Número de versiones a generar
-numpreg <- 2
+copias <- 1
+numpreg <- 3
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
@@ -53,11 +53,11 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 ################################################################################
 # Creación del examen en formato HTML, sólo 'numpreg', 'copias' = 1
 
-# exams2html(rep(archivo_examen, numpreg),
-#            svg = FALSE,
-#            verbose = TRUE,
-#            template = "plain",
-#            name = paste0(nombre_sin_extension, "_semillero"))
+exams2html(rep(archivo_examen, numpreg),
+           svg = FALSE,
+           verbose = TRUE,
+           template = "plain",
+           name = paste0(nombre_sin_extension, "_semillero"))
 
 #################################################################################
 # Generación de n copias en un solo archivo de salida para PDF
@@ -138,48 +138,5 @@ exams2nops(rep(archivo_examen, numpreg),
            points = NULL,                       # Puntos por pregunta automático
            showpoints = FALSE,                  # No mostrar puntos en el examen
            verbose = TRUE)
-
-################################################################################
-# Generación para exams2forms (formularios HTML interactivos)
-# NOTA: Requiere instalar el paquete exams2forms (ejecutar solo una vez)
-# install.packages("exams2forms")
-
-library(exams2forms)
-
-# Generar archivos HTML standalone con exams2webquiz
-# Esta función genera automáticamente los archivos CSS y JS necesarios
-exams2webquiz(rep(archivo_examen, numpreg),  # Repetir el ejercicio 'numpreg' veces
-              n = copias,
-              dir = dir_salida,
-              name = paste0(nombre_sin_extension, "_interactivo"),
-              edir = dir_ejercicios,
-              encoding = "UTF-8",
-              title = "Evaluación Interactiva de Matemáticas ICFES",
-              solution = TRUE,        # Mostrar botón de solución
-              shuffle = TRUE,         # Mezclar opciones de respuesta
-              mathjax = TRUE,         # Habilitar MathJax para fórmulas
-              browse = FALSE)         # No abrir navegador automáticamente
-
-# # Opción 2: Generar archivos HTML en subdirectorio para embeber
-# # Útil para integrar en documentos Rmd/Quarto o sitios web
-# dir_forms_embed <- file.path(dir_salida, "forms_embed")
-# dir.create(dir_forms_embed, recursive = TRUE, showWarnings = FALSE)
-#
-# exams2forms(archivo_examen,
-#             n = 3,  # Generar 3 variaciones
-#             dir = dir_forms_embed,
-#             edir = dir_ejercicios,
-#             encoding = "UTF-8",
-#             title = "Ejercicio Interactivo",
-#             verbose = TRUE,
-#             solution = TRUE,
-#             shuffle = TRUE,
-#             mathjax = TRUE)
-#
-# # Copiar archivos CSS y JS al subdirectorio
-# file.copy(system.file("webex.css", package = "exams2forms"),
-#           file.path(dir_forms_embed, "webex.css"), overwrite = TRUE)
-# file.copy(system.file("webex.js", package = "exams2forms"),
-#           file.path(dir_forms_embed, "webex.js"), overwrite = TRUE)
 
 ################################################################################
