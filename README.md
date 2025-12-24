@@ -193,12 +193,14 @@ El sistema está diseñado para ser operado mediante **Skills de Claude Code** q
 El proyecto incluye 7 skills configurados en `.claude/skills/` para automatizar cada fase del workflow:
 
 **Workflow Principal:**
+
 - `/analizar-icfes` - Análisis ICFES de imagen según 6 dimensiones (Fase 1)
 - `/generar-schoice` - Generar ejercicio de selección única (Fase 3)
 - `/generar-cloze` - Generar ejercicio de respuesta abierta (Fase 3)
 - `/promover-ejercicio` - Promoción a carpeta de producción (Fase 7)
 
 **Skills de Soporte:**
+
 - `/corregir-error-imagen` - Corrección automática de errores TikZ
 - `/validar-diversidad` - Validar 300+ versiones únicas
 - `/validar-icfes` - Validar metadatos y estructura R-exams
@@ -256,6 +258,7 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 ```
 
 **Características:**
+
 - ✅ Hooks configurados para recordatorios automáticos
 - ✅ Permisos preconfigurados para ejecución sin confirmación
 - ✅ Documentación completa del workflow paso a paso

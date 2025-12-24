@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # 📱 TEMPLATE DE PUBLICACIÓN LINKEDIN - DICIEMBRE 2025
 
 ## 🎯 ESTRATEGIA BASADA EN MEJORES PRÁCTICAS 2025
@@ -125,6 +130,7 @@ Así es como se aprende de verdad.
 🚀 OPEN SOURCE: Sistema de Evaluación Matemática con R/exams
 
 Stack tecnológico:
+
 → R/exams (generación dinámica)
 → Python + matplotlib (gráficos)
 → TikZ + LaTeX (diagramas profesionales)
@@ -160,6 +166,7 @@ Primer demo público disponible:
 "Consumo Telefónico Adicional" - Interpretación de gráficos + cálculos
 
 Incluye:
+
 ✅ 5 demos HTML interactivos
 ✅ PDF con 10 versiones
 ✅ Código fuente .Rmd completo
@@ -176,11 +183,11 @@ Enlaces en el primer comentario 👇
 
 ### Opción 1: Carrusel de Imágenes (RECOMENDADO)
 
-**Slide 1**: Captura del demo interactivo mostrando el gráfico de barras
-**Slide 2**: Captura mostrando la tabla de estado de cuenta
-**Slide 3**: Captura del botón de verificación con feedback "Correcto"
-**Slide 4**: Captura de la solución completa explicada
-**Slide 5**: Captura del código .Rmd (primeras líneas)
+**Slide 1**: Captura del demo interactivo mostrando el gráfico de barras\
+**Slide 2**: Captura mostrando la tabla de estado de cuenta\
+**Slide 3**: Captura del botón de verificación con feedback "Correcto"\
+**Slide 4**: Captura de la solución completa explicada\
+**Slide 5**: Captura del código .Rmd (primeras líneas)\
 **Slide 6**: Infografía con estadísticas (300+ versiones, 5 formatos, etc.)
 
 ### Opción 2: Video Corto (60-90 segundos)
@@ -600,7 +607,7 @@ P.D. Compartiré un nuevo ejercicio cada semana.
 
 ---
 
-**FECHA DE CREACIÓN**: Diciembre 2025
-**BASADO EN**: Mejores prácticas LinkedIn 2025
+**FECHA DE CREACIÓN**: Diciembre 2025\
+**BASADO EN**: Mejores prácticas LinkedIn 2025\
 **PRÓXIMA ACTUALIZACIÓN**: Después de analizar métricas de primera publicación
 

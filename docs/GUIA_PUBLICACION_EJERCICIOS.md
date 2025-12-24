@@ -35,6 +35,7 @@ source("SemilleroUnico_v2.R")
 ```
 
 **Este script genera automáticamente**:
+
 - ✅ PDF con 10 versiones combinadas → `docs/recursos/muestra_10_versiones_[ejercicio]1.pdf`
 - ✅ Archivos DOCX
 - ✅ Archivos NOPS (escaneables)
@@ -214,6 +215,7 @@ git checkout main
 1. **Esperar 1-2 minutos** para que GitHub Actions compile el sitio
 2. **Visitar**: https://alvaretto.github.io/proyecto-r-exams-icfes-matematicas-optimizado/
 3. **Verificar**:
+
    - ✅ Los demos HTML se cargan correctamente
    - ✅ Los enlaces de descarga funcionan
    - ✅ El PDF se visualiza correctamente
