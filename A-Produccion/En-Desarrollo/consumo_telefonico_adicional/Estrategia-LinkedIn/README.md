@@ -30,20 +30,36 @@ Estrategia-LinkedIn/
 
 ## 🎯 INICIO RÁPIDO
 
-### Paso 1: Generar Recursos (PDF + HTML + Moodle) - 5 minutos
+### Paso 1: Generar Recursos Automáticamente - 3 minutos
 
 ```r
-# Abrir RStudio y ejecutar:
+# Abrir RStudio y ejecutar desde el directorio del ejercicio:
+setwd("A-Produccion/En-Desarrollo/consumo_telefonico_adicional")
+source("SemilleroUnico_v2.R")
+```
+
+**Resultado AUTOMÁTICO**:
+
+- ✅ PDF con 10 versiones combinadas → `docs/recursos/muestra_10_versiones_consumo_telefonico1.pdf`
+- ✅ Archivos DOCX, NOPS, HTML interactivo → `salida/`
+- ✅ 20 páginas (10 versiones × 2 páginas cada una)
+
+**NUEVO**: `SemilleroUnico_v2.R` ahora genera automáticamente el PDF con 10 versiones para GitHub Pages.
+
+---
+
+### Paso 1b (Opcional): Generar Demos HTML Adicionales
+
+Si necesitas demos HTML individuales para LinkedIn:
+
+```r
 source("A-Produccion/En-Desarrollo/consumo_telefonico_adicional/Estrategia-LinkedIn/scripts/generar_recursos_linkedin.R")
 ```
 
 **Resultado**:
 
 - ✅ 5 demos HTML interactivos
-- ✅ PDF con 10 versiones
 - ✅ Archivo Moodle XML
-
-**Nota**: Este script usa `SemilleroUnico_v2.R` y `SemilleroMoodle_v2.R` que ya funcionan en el proyecto.
 
 ---
 

@@ -1,5 +1,156 @@
 # 📝 CHANGELOG - Actualizaciones y Correcciones
 
+## 🔄 Versión 2.1 - Diciembre 24, 2025
+
+### 🎯 RESUMEN DE CAMBIOS
+
+**AUTOMATIZACIÓN COMPLETA**: `SemilleroUnico_v2.R` ahora genera automáticamente el PDF con 10 versiones combinadas para GitHub Pages.
+
+---
+
+## ✅ CORRECCIONES IMPLEMENTADAS
+
+### 1. **Automatización de Generación de PDF con 10 Versiones**
+
+**Problema anterior**:
+
+- Se requería ejecutar script separado `generar_pdf_10_versiones.R`
+- `exams2pdf()` generaba 10 archivos PDF individuales
+- Era necesario combinarlos manualmente con `pdfunite`
+- Proceso propenso a errores y olvidos
+
+**Solución implementada**:
+
+- ✅ `SemilleroUnico_v2.R` ahora incluye sección de generación automática
+- ✅ Genera 10 PDFs individuales y los combina automáticamente
+- ✅ Guarda directamente en `docs/recursos/muestra_10_versiones_[ejercicio]1.pdf`
+- ✅ Elimina archivos temporales automáticamente
+- ✅ Verifica número de páginas del PDF final (debe ser 20 páginas)
+
+**Código agregado a `SemilleroUnico_v2.R`** (líneas 186-254):
+
+```r
+# Generación de PDF con 10 versiones para GitHub Pages
+dir_github_pages <- "../../../docs/recursos"
+
+# Generar 10 PDFs individuales
+exams2pdf(archivo_examen, n = 10, ...)
+
+# Combinar con pdfunite
+system("pdfunite ...")
+
+# Eliminar archivos temporales
+file.remove(archivos_pdf)
+```
+
+---
+
+### 2. **Corrección de Problemas con Git LFS**
+
+**Problema anterior**:
+
+- PDFs en `docs/recursos/` se enviaban a Git LFS
+- Git LFS tiene límite de 1 GB de ancho de banda mensual
+- Archivos no se mostraban correctamente en GitHub Pages
+- Error: "This repository is over its data quota"
+
+**Solución implementada**:
+
+- ✅ Actualizado `.gitattributes` con excepción para `docs/recursos/*.pdf`
+- ✅ PDFs en `docs/recursos/` ahora se almacenan normalmente en Git
+- ✅ PDFs en otras ubicaciones siguen usando LFS (para archivos grandes)
+- ✅ Archivos XML en `docs/recursos/` excluidos de `.gitignore`
+
+**Cambios en `.gitattributes`**:
+
+```
+# Excepción: PDFs en docs/recursos/ NO van a LFS (para GitHub Pages)
+docs/recursos/*.pdf !filter !diff !merge
+```
+
+**Cambios en `.gitignore`**:
+
+```
+# Excepción: permitir XMLs en docs/recursos/ para GitHub Pages
+!docs/recursos/*.xml
+```
+
+---
+
+### 3. **Actualización de Documentación**
+
+**Archivos modificados**:
+
+- ✅ `docs/GUIA_PUBLICACION_EJERCICIOS.md` - Flujo actualizado con automatización
+- ✅ Checklist actualizado para reflejar nuevo proceso
+- ✅ Instrucciones simplificadas (menos pasos manuales)
+
+**Cambios principales**:
+
+- Paso 2 ahora es simplemente: `source("SemilleroUnico_v2.R")`
+- PDF con 10 versiones se genera automáticamente
+- Solo se requiere copiar archivo .Rmd fuente manualmente
+- Proceso más robusto y menos propenso a errores
+
+---
+
+## 🆕 FLUJO DE TRABAJO ACTUALIZADO
+
+### **Antes (Versión 2.0)**:
+
+1. Ejecutar `SemilleroUnico_v2.R`
+2. Ejecutar `generar_pdf_10_versiones.R` (script separado)
+3. Combinar PDFs manualmente con `pdfunite`
+4. Copiar archivos a `docs/`
+5. Commit y push
+
+### **Ahora (Versión 2.1)**:
+
+1. Ejecutar `SemilleroUnico_v2.R` ✅ **TODO AUTOMÁTICO**
+2. Copiar archivo .Rmd fuente a `docs/recursos/`
+3. Actualizar `docs/index.html`
+4. Commit y push
+
+**Reducción**: De 5 pasos a 4 pasos, con generación de PDF completamente automatizada.
+
+---
+
+## 📋 ARCHIVOS MODIFICADOS
+
+1. **`SemilleroUnico_v2.R`**
+   - Agregada sección de generación automática de PDF (68 líneas)
+   - Ubicación: líneas 186-254
+
+2. **`.gitattributes`**
+   - Excepción para PDFs en `docs/recursos/`
+
+3. **`.gitignore`**
+   - Excepción para XMLs en `docs/recursos/`
+
+4. **`docs/GUIA_PUBLICACION_EJERCICIOS.md`**
+   - Actualizado Paso 2 con automatización
+   - Actualizado checklist
+   - Simplificadas instrucciones
+
+---
+
+## 🔧 VERIFICACIÓN
+
+### **Verificar PDF local**:
+
+```bash
+pdfinfo docs/recursos/muestra_10_versiones_consumo_telefonico1.pdf | grep Pages
+# Debe mostrar: Pages: 20
+```
+
+### **Verificar en GitHub Pages**:
+
+URL: https://alvaretto.github.io/proyecto-r-exams-icfes-matematicas-optimizado/recursos/muestra_10_versiones_consumo_telefonico1.pdf
+
+**Debe mostrar**: 10 versiones completas (20 páginas)
+
+---
+
 ## 🔄 Versión 2.0 - Diciembre 24, 2025
 
 ### 🎯 RESUMEN DE CAMBIOS

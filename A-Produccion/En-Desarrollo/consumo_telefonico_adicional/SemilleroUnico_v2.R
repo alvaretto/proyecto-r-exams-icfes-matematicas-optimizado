@@ -159,7 +159,7 @@ exams2webquiz(archivo_examen,  # Una pregunta por archivo HTML
               solution = TRUE,        # Mostrar botón de solución
               shuffle = TRUE,         # Mezclar opciones de respuesta
               mathjax = TRUE,         # Habilitar MathJax para fórmulas
-              browse = TRUE)          # Abrir navegador automáticamente
+              browse = FALSE)         # No abrir navegador (para ejecución en terminal)
 
 # # Opción 2: Generar archivos HTML en subdirectorio para embeber
 # # Útil para integrar en documentos Rmd/Quarto o sitios web
@@ -197,6 +197,15 @@ dir_github_pages <- "../../../docs/recursos"
 if (!dir.exists(dir_github_pages)) {
   dir.create(dir_github_pages, recursive = TRUE)
   cat("✓ Directorio creado:", dir_github_pages, "\n\n")
+}
+
+# Eliminar PDFs antiguos para evitar conflictos
+archivos_viejos <- list.files(dir_github_pages,
+                              pattern = "muestra_10_versiones_consumo_telefonico.*\\.pdf$",
+                              full.names = TRUE)
+if (length(archivos_viejos) > 0) {
+  file.remove(archivos_viejos)
+  cat("✓ Eliminados", length(archivos_viejos), "PDFs antiguos\n\n")
 }
 
 cat("Generando 10 versiones individuales en PDF...\n")
