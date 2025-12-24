@@ -25,10 +25,26 @@ Esta guía explica el flujo completo para publicar un nuevo ejercicio matemátic
 
 ### **PASO 2: Compilar el Ejercicio en RStudio**
 
-#### **2.1 Generar Versiones HTML Individuales (Demos)**
+#### **2.1 Ejecutar SemilleroUnico_v2.R (Recomendado)**
+
+El script `SemilleroUnico_v2.R` genera **automáticamente** todos los formatos necesarios:
 
 ```r
-# En RStudio, ejecutar:
+# En RStudio, desde el directorio del ejercicio:
+source("SemilleroUnico_v2.R")
+```
+
+**Este script genera automáticamente**:
+- ✅ PDF con 10 versiones combinadas → `docs/recursos/muestra_10_versiones_[ejercicio]1.pdf`
+- ✅ Archivos DOCX
+- ✅ Archivos NOPS (escaneables)
+- ✅ HTML interactivo con exams2webquiz
+
+#### **2.2 Generar Versiones HTML Individuales (Demos) - Manual**
+
+Si necesitas demos HTML adicionales:
+
+```r
 library(exams)
 
 # Generar 5 versiones HTML para demos
@@ -36,30 +52,18 @@ exams2html(
   "consumo_telefonico_adicional_n2_v1.Rmd",
   n = 5,
   name = "demo_consumo_telefonico",
-  dir = "output_html",
+  dir = "../../../docs/demos",
   encoding = "UTF-8",
   solution = TRUE,
   mathjax = TRUE
 )
 ```
 
-**Resultado**: Se crean archivos `demo_consumo_telefonico_v1.html`, `v2.html`, etc.
+**Resultado**: Se crean archivos `demo_consumo_telefonico1.html`, `demo_consumo_telefonico2.html`, etc.
 
-#### **2.2 Generar PDF con Múltiples Versiones**
+#### **2.3 Generar Archivo Moodle XML - Manual**
 
-```r
-# Generar PDF con 10 versiones
-exams2pdf(
-  "consumo_telefonico_adicional_n2_v1.Rmd",
-  n = 10,
-  name = "muestra_10_versiones_consumo_telefonico",
-  dir = "output_pdf",
-  encoding = "UTF-8",
-  solution = TRUE
-)
-```
-
-#### **2.3 Generar Archivo Moodle XML**
+Si necesitas archivo Moodle:
 
 ```r
 # Generar archivo para importar a Moodle
@@ -67,48 +71,49 @@ exams2moodle(
   "consumo_telefonico_adicional_n2_v1.Rmd",
   n = 50,
   name = "consumo_telefonico_moodle",
-  dir = "output_moodle",
+  dir = "../../../docs/recursos",
   encoding = "UTF-8"
 )
 ```
 
 ---
 
-### **PASO 3: Organizar Archivos en la Carpeta `docs/`**
+### **PASO 3: Verificar Archivos Generados**
 
 #### **3.1 Estructura de carpetas**
 
+Si ejecutaste `SemilleroUnico_v2.R`, los archivos ya están en su ubicación correcta:
+
 ```
 docs/
-├── demos/                          # Versiones HTML individuales
-│   ├── demo_[ejercicio]_v1.html
-│   ├── demo_[ejercicio]_v2.html
+├── demos/                          # Versiones HTML individuales (manual)
+│   ├── demo_[ejercicio]1.html
+│   ├── demo_[ejercicio]2.html
 │   └── ...
-├── recursos/                       # Archivos descargables
-│   ├── [ejercicio].Rmd            # Código fuente
-│   ├── [ejercicio]_moodle.xml     # Archivo Moodle
-│   └── muestra_10_versiones_[ejercicio].pdf
+├── recursos/                       # Archivos descargables (automático)
+│   ├── [ejercicio].Rmd            # Código fuente (copiar manualmente)
+│   ├── [ejercicio]_moodle.xml     # Archivo Moodle (si se generó)
+│   └── muestra_10_versiones_[ejercicio]1.pdf  # ✅ GENERADO AUTOMÁTICAMENTE
 └── index.html                      # Página principal
 ```
 
-#### **3.2 Copiar archivos generados**
+#### **3.2 Copiar archivos faltantes (si es necesario)**
 
 ```bash
 # Desde el directorio del proyecto
 cd A-Produccion/En-Desarrollo/[nombre_ejercicio]/
 
-# Copiar demos HTML
-cp output_html/demo_*.html ../../../docs/demos/
-
-# Copiar PDF
-cp output_pdf/muestra_10_versiones_*.pdf ../../../docs/recursos/
-
-# Copiar XML de Moodle
-cp output_moodle/*_moodle.xml ../../../docs/recursos/
-
-# Copiar archivo .Rmd fuente
+# Copiar archivo .Rmd fuente a docs/recursos/
 cp [nombre_ejercicio]_n*_v1.Rmd ../../../docs/recursos/
+
+# Si generaste demos HTML manualmente:
+cp demo_*.html ../../../docs/demos/
+
+# Si generaste Moodle XML manualmente:
+cp *_moodle.xml ../../../docs/recursos/
 ```
+
+**NOTA**: El PDF con 10 versiones **YA está en `docs/recursos/`** gracias a `SemilleroUnico_v2.R`
 
 ---
 
@@ -220,12 +225,13 @@ git checkout main
 ## 🎯 Checklist Rápido
 
 - [ ] Ejercicio .Rmd creado y probado en RStudio
-- [ ] Generadas 5 versiones HTML (demos)
-- [ ] Generado PDF con 10 versiones
-- [ ] Generado archivo Moodle XML
-- [ ] Archivos copiados a `docs/demos/` y `docs/recursos/`
+- [ ] **Ejecutado `SemilleroUnico_v2.R`** (genera PDF automáticamente)
+- [ ] Verificado que PDF con 10 versiones está en `docs/recursos/`
+- [ ] Generadas 5 versiones HTML (demos) - opcional
+- [ ] Generado archivo Moodle XML - opcional
+- [ ] Copiado archivo .Rmd fuente a `docs/recursos/`
 - [ ] `docs/index.html` actualizado con nueva sección
-- [ ] Commit y push realizados
+- [ ] Commit y push realizados a rama `gh-pages`
 - [ ] Sitio verificado en GitHub Pages
 
 ---

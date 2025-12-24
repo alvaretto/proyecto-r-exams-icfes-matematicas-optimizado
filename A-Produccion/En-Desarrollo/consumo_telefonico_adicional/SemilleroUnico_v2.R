@@ -184,3 +184,71 @@ exams2webquiz(archivo_examen,  # Una pregunta por archivo HTML
 #           file.path(dir_forms_embed, "webex.js"), overwrite = TRUE)
 
 ################################################################################
+# Generación de PDF con 10 versiones para GitHub Pages
+# Este PDF se publica en docs/recursos/ para demostración pública
+
+cat("\n================================================================================\n")
+cat("GENERANDO PDF CON 10 VERSIONES PARA GITHUB PAGES\n")
+cat("================================================================================\n\n")
+
+dir_github_pages <- "../../../docs/recursos"
+
+# Crear directorio si no existe
+if (!dir.exists(dir_github_pages)) {
+  dir.create(dir_github_pages, recursive = TRUE)
+  cat("✓ Directorio creado:", dir_github_pages, "\n\n")
+}
+
+cat("Generando 10 versiones individuales en PDF...\n")
+
+# Generar 10 PDFs individuales
+exams2pdf(
+  archivo_examen,
+  n = 10,
+  name = "muestra_10_versiones_consumo_telefonico",
+  dir = dir_github_pages,
+  edir = dir_ejercicios,
+  encoding = "UTF-8",
+  template = "plain.tex",
+  solution = TRUE,
+  verbose = FALSE
+)
+
+cat("✓ 10 PDFs individuales generados\n\n")
+
+# Combinar todos los PDFs en uno solo
+cat("Combinando PDFs en un solo archivo...\n")
+
+archivos_pdf <- list.files(dir_github_pages,
+                           pattern = "muestra_10_versiones_consumo_telefonico\\d+\\.pdf$",
+                           full.names = TRUE)
+archivos_pdf <- sort(archivos_pdf)
+
+if (length(archivos_pdf) == 10) {
+  # Usar pdfunite para combinar
+  archivo_final <- file.path(dir_github_pages, "muestra_10_versiones_consumo_telefonico1.pdf")
+
+  comando <- paste("pdfunite",
+                   paste(archivos_pdf, collapse = " "),
+                   archivo_final)
+
+  system(comando)
+
+  # Eliminar archivos individuales
+  file.remove(archivos_pdf)
+
+  cat("✅ PDF combinado exitosamente!\n")
+  cat("📁 Ubicación:", archivo_final, "\n")
+
+  # Verificar número de páginas
+  info_cmd <- paste("pdfinfo", shQuote(archivo_final), "| grep Pages")
+  cat("\n")
+  system(info_cmd)
+  cat("\n")
+} else {
+  cat("⚠️ Advertencia: Se esperaban 10 PDFs pero se encontraron", length(archivos_pdf), "\n")
+}
+
+cat("================================================================================\n\n")
+
+################################################################################
