@@ -1,16 +1,124 @@
-# 🔧 Scripts de Automatización - Fase 5
+# 🔧 Scripts de Automatización
 
-Scripts para la eliminación controlada del comando deprecado `/analizar-ejercicio`.
+Scripts para automatización y gestión del sistema ICFES R-Exams.
 
 ---
 
 ## 📁 Contenido
 
-### Scripts Principales
+### Scripts de Gestión del Repositorio TikZ
+
+1. **`gestionar_repo_tikz.sh`** - Gestión del repositorio centralizado de gráficas TikZ
+
+### Scripts de Fase 5 (Eliminación de Comandos Deprecados)
 
 1. **`fase5_eliminar_comando_deprecado.sh`** - Script principal de eliminación
 2. **`fase5_tests_post_eliminacion.sh`** - Tests de validación post-eliminación
 3. **`fase5_rollback.sh`** - Plan de rollback en caso de problemas
+
+---
+
+## 🚀 Scripts de Gestión del Repositorio TikZ
+
+### `gestionar_repo_tikz.sh`
+
+**Propósito:** Gestionar el repositorio centralizado de gráficas TikZ reutilizables.
+
+**Ubicación del repositorio:** `Repositorio-Graficas-TikZ/`
+
+**Uso:**
+```bash
+bash .claude/scripts/gestionar_repo_tikz.sh [comando] [argumentos]
+```
+
+**Comandos disponibles:**
+
+#### 1. Listar gráficas por categoría
+```bash
+bash .claude/scripts/gestionar_repo_tikz.sh listar [categoria]
+```
+
+**Ejemplos:**
+```bash
+# Listar todas las gráficas
+bash .claude/scripts/gestionar_repo_tikz.sh listar
+
+# Listar gráficas de geometría
+bash .claude/scripts/gestionar_repo_tikz.sh listar geometria
+
+# Listar gráficas de estadística
+bash .claude/scripts/gestionar_repo_tikz.sh listar estadistica
+```
+
+**Output esperado:**
+```
+Categoría: estadistica
+  Subcategoría: puntos
+    - graficas_puntos_multiple_01.tikz
+      Descripción: Gráfica de puntos múltiples
+      Tags: puntos, estadistica, scatter
+      Parámetros: x_values, y_values, color
+```
+
+#### 2. Buscar por texto
+```bash
+bash .claude/scripts/gestionar_repo_tikz.sh buscar "texto"
+```
+
+**Ejemplos:**
+```bash
+# Buscar gráficas relacionadas con cilindros
+bash .claude/scripts/gestionar_repo_tikz.sh buscar "cilindro volumen"
+
+# Buscar por componente ICFES
+bash .claude/scripts/gestionar_repo_tikz.sh buscar "geometrico_metrico"
+```
+
+#### 3. Validar integridad
+```bash
+bash .claude/scripts/gestionar_repo_tikz.sh validar
+```
+
+**Qué valida:**
+- ✅ Todos los archivos `.tikz` tienen metadata `.json` correspondiente
+- ✅ Todos los archivos `.json` tienen preview `.png` correspondiente
+- ✅ Metadata JSON válida y completa
+- ✅ Índice centralizado actualizado
+- ✅ Estructura de directorios correcta
+
+**Output esperado:**
+```
+✅ Validación completada:
+   - Archivos TikZ: 15
+   - Metadata JSON: 15/15 ✓
+   - Previews PNG: 15/15 ✓
+   - Índice actualizado: ✓
+   - Estructura correcta: ✓
+```
+
+#### 4. Regenerar índice
+```bash
+bash .claude/scripts/gestionar_repo_tikz.sh reindexar
+```
+
+**Qué hace:**
+- Escanea todos los directorios del repositorio
+- Genera `indice.json` actualizado con todas las gráficas
+- Actualiza contadores por categoría/subcategoría
+- Actualiza fecha de última modificación
+
+**Cuándo usar:**
+- Después de agregar gráficas manualmente
+- Si el índice parece desactualizado
+- Después de mover o reorganizar gráficas
+
+**Integración con workflow:**
+- El hook `post-grafica-generada` actualiza el índice automáticamente
+- Este comando es útil para mantenimiento manual o corrección
+
+---
+
+## 🚀 Scripts de Fase 5
 
 ---
 
@@ -248,14 +356,44 @@ find .claude/backups/ -name "*.backup" -o -name "manual_backup_*.md"
 
 ---
 
+## 🔗 Integración con Arquitectura Modular
+
+Los scripts están integrados con la arquitectura modular del sistema:
+
+```
+Repositorio TikZ
+  ├── Hook: post-grafica-generada
+  │   └── Guarda automáticamente nuevas gráficas
+  │
+  └── Script: gestionar_repo_tikz.sh
+      ├── Listar gráficas disponibles
+      ├── Buscar por criterios
+      ├── Validar integridad
+      └── Regenerar índice
+```
+
+**Diagrama completo:** Ver [`.claude/Mermaid_Chart.txt`](../Mermaid_Chart.txt)
+
 ## 📚 Documentación Relacionada
 
+### Repositorio TikZ
+- **Documentación del repositorio**: `Repositorio-Graficas-TikZ/README.md`
+- **Hook de guardado automático**: `.claude/hooks/post-grafica-generada.md`
+- **Agente TikZ**: `.claude/agents/graficador-tikz.md`
+
+### Fase 5
 - **Procedimiento completo**: `.claude/docs/FASE5_PROCEDIMIENTO_ELIMINACION.md`
 - **Checklist pre-eliminación**: `.claude/docs/FASE5_CHECKLIST_PRE_ELIMINACION.md`
 - **Comandos deprecados**: `.claude/docs/COMANDOS_DEPRECADOS.md`
 - **Changelog**: `.claude/CHANGELOG.md`
 
+### Documentación General
+- **Documentación técnica**: `.claude/docs/README.md`
+- **Sistema de hooks**: `.claude/hooks/README.md`
+- **Diagrama de flujo**: `.claude/Mermaid_Chart.txt`
+
 ---
 
-**Última actualización:** 2025-12-20
+**Última actualización:** 2025-12-21
+**Versión:** 2.0 (Arquitectura Modular)
 

@@ -18,15 +18,53 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 
 ---
 
+## Arquitectura del Sistema
+
+El sistema está organizado en una **arquitectura modular** con componentes especializados:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              ARQUITECTURA MODULAR                      │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  🤖 Agentes Especializados                             │
+│     ├── ClasificadorICFES (6 dimensiones)             │
+│     └── AgenteTikZ (Replicación visual 98%+)           │
+│           ↓                                            │
+│  🎯 Sistema de Skills                                  │
+│     ├── /analizar-icfes                                │
+│     ├── /generar-schoice, /generar-cloze              │
+│     ├── /generar-grafica-nueva                        │
+│     ├── /validar-diversidad-300                        │
+│     ├── /corregir-error-imagen                         │
+│     └── /promover-ejercicio                            │
+│           ↓                                            │
+│  🔌 Sistema de Hooks                                   │
+│     ├── pre-edit-rmd-validation                        │
+│     ├── post-exams2-validation                         │
+│     ├── post-grafica-generada                          │
+│     └── post-error-diagnostic                          │
+│           ↓                                            │
+│  📦 Repositorio TikZ                                   │
+│     └── Gráficas reutilizables parametrizables         │
+│           ↓                                            │
+│  📚 Documentación                                      │
+│     └── Fuentes de verdad (ejemplos funcionales)       │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Diagrama completo:** Ver [`.claude/Mermaid_Chart.txt`](../Mermaid_Chart.txt)
+
 ## Estructura
 
 ```
 .claude/
 ├── docs/                           # Documentación técnica
 │   ├── README.md                   # Este archivo
-│   ├── INDICE_DOCUMENTACION.md     # 🆕 Índice completo de documentación
-│   ├── WORKFLOW_PASO_A_PASO.md     # 🆕 Guía completa del workflow
-│   ├── GUIA_RAPIDA_VISUAL.md       # 🆕 Referencia visual rápida
+│   ├── INDICE_DOCUMENTACION.md     # Índice completo de documentación
+│   ├── WORKFLOW_PASO_A_PASO.md     # Guía completa del workflow
+│   ├── GUIA_RAPIDA_VISUAL.md       # Referencia visual rápida
 │   ├── GUIA_USUARIO.md             # Guía completa de usuario
 │   ├── TRES_NIVELES_VALIDACION.md  # Metodología de validación
 │   ├── COMANDOS_DEPRECADOS.md      # Registro de comandos deprecados
@@ -35,30 +73,43 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   ├── FASE5_RESUMEN_EJECUTIVO.md  # Resumen ejecutivo Fase 5
 │   ├── patrones-errores-conocidos.md   # Base de conocimiento de errores
 │   └── casos-resueltos/            # Historial de casos específicos
-│       └── 2025-12-19-cilindro-tikz.md
-├── agents/                         # Agentes especializados
-│   ├── clasificador-icfes.md       # Análisis de ejercicios ICFES
-│   └── graficador-tikz.md          # Replicación visual TikZ
-├── skills/                         # 🆕 Skills de Claude Code (Workflow)
-│   ├── analizar-icfes/             # ✅ Análisis ICFES según 6 dimensiones
-│   │   └── skill.md
+│       ├── 2025-12-19-cilindro-tikz.md
+│       ├── 2025-12-21-recta-abs-formateado.md
+│       └── 2025-01-XX-recta-abs-formateado.md
+├── agents/                         # 🤖 Agentes especializados
+│   ├── clasificador-icfes.md       # Análisis según 6 dimensiones ICFES
+│   ├── graficador-tikz.md          # Replicación visual TikZ 98%+
+│   ├── validador-visual.md         # Validación visual sistemática
+│   ├── corrector-coherencia.md    # Corrección de coherencia
+│   └── diagnosticador-errores.md   # Diagnóstico automático de errores
+├── skills/                         # 🎯 Sistema de Skills (Workflow)
+│   ├── analizar-icfes/             # Análisis ICFES según 6 dimensiones
 │   ├── generar-schoice/            # Generador de ejercicios SCHOICE
-│   │   └── skill.md
 │   ├── generar-cloze/              # Generador de ejercicios CLOZE
-│   │   └── skill.md
+│   ├── generar-grafica-nueva/      # Generador de gráficas TikZ nuevas
+│   ├── consultar-grafica-tikz/     # Consulta al repositorio TikZ
 │   ├── promover-ejercicio/         # Promoción a producción
-│   │   └── skill.md
 │   ├── corregir-error-imagen/      # Corrector de errores TikZ
-│   │   └── skill.md
+│   ├── corregir-graficos/          # Corrector de gráficos
 │   ├── validar-diversidad/         # Validador de 300+ versiones
-│   │   └── skill.md
-│   └── validar-icfes/              # Validador de metadatos ICFES
-│       └── skill.md
+│   ├── validar-icfes/              # Validador de metadatos ICFES
+│   ├── validar-coherencia/         # Validador de coherencia
+│   ├── validar-renderizado/         # Validador de renderizado
+│   └── diagnosticar-errores/       # Diagnóstico de errores
+├── hooks/                          # 🔌 Sistema de Hooks
+│   ├── README.md                   # Documentación de hooks
+│   ├── pre-edit-rmd-validation.md  # Validación antes de editar .Rmd
+│   ├── post-exams2-validation.md   # Validación después de exams2*
+│   ├── post-grafica-generada.md    # Hook después de generar gráfica
+│   └── post-error-diagnostic.md    # Hook después de diagnosticar error
+├── commands/                       # Comandos (legacy - ver skills/)
+│   └── [archivos de referencia]
 ├── deprecated/                     # ⚠️ Archivos deprecados
 │   ├── analizar-ejercicio.md       # (Deprecado - Usar analizar-icfes)
 │   └── corregir-error-imagen.md    # (Duplicado - Movido a skills/)
 ├── scripts/                        # Scripts de automatización
 │   ├── README.md                   # Documentación de scripts
+│   ├── gestionar_repo_tikz.sh      # Gestión del repositorio TikZ
 │   ├── fase5_eliminar_comando_deprecado.sh  # Script de eliminación
 │   ├── fase5_tests_post_eliminacion.sh      # Tests post-eliminación
 │   └── fase5_rollback.sh           # Plan de rollback
@@ -66,14 +117,17 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   └── test_comandos_workflow.md   # Tests de workflow
 ├── backups/                        # Backups de archivos
 ├── logs/                           # Logs de ejecución
+├── Mermaid_Chart.txt               # 🆕 Diagrama de flujo completo actualizado
 ├── settings.json                   # Hooks y configuración global
 ├── settings.local.json             # Permisos para skills
-└── MIGRACION_COMPLETADA.md         # 🆕 Reporte de migración (2025-12-20)
+└── MIGRACION_COMPLETADA.md         # Reporte de migración (2025-12-20)
 ```
 
 **Notas importantes:**
-- ✅ Directorio `commands/` eliminado - Migrado a `skills/` (ver `MIGRACION_COMPLETADA.md`)
-- ✅ 7 skills activos del workflow en `skills/`
+- ✅ Arquitectura modular con agentes, skills, hooks y repositorio TikZ
+- ✅ 10+ skills activos del workflow en `skills/`
+- ✅ 4 hooks implementados para validación automática
+- ✅ Repositorio TikZ centralizado para reutilización de gráficas
 - ⚠️ `analizar-ejercicio.md` deprecado - Ver `COMANDOS_DEPRECADOS.md` para detalles
 
 ## Filosofía del Sistema
@@ -181,57 +235,99 @@ Este principio fundamental asegura que:
 4. Documentar con código completo
 5. Agregar resultados de validación
 
-## Skills de Automatización
+## Componentes de la Arquitectura
+
+### 🤖 Agentes Especializados
+
+Agentes con responsabilidades específicas en el workflow:
+
+#### ClasificadorICFES
+- **Función:** Análisis de ejercicios según 6 dimensiones ICFES
+- **Ubicación:** `.claude/agents/clasificador-icfes.md`
+- **Uso:** Activado automáticamente por skill `/analizar-icfes`
+
+#### AgenteTikZ (Graficador-Experto)
+- **Función:** Replicación visual TikZ con 98%+ de fidelidad
+- **Ubicación:** `.claude/agents/graficador-tikz.md`
+- **Uso:** Activado cuando se requiere nueva gráfica TikZ
+- **Integración:** Guarda automáticamente en Repositorio TikZ
+
+### 🎯 Sistema de Skills
 
 Los skills son procedimientos automatizados que Claude puede ejecutar para tareas específicas.
 
-### Skill: corregir-error-imagen
+#### Skills Principales del Workflow
 
-**Función:** Corrige errores de compilación LaTeX causados por `include_tikz()`.
+| Skill | Función | Documentación |
+|-------|---------|---------------|
+| `/analizar-icfes` | Análisis según 6 dimensiones ICFES | `.claude/skills/analizar-icfes/skill.md` |
+| `/generar-schoice` | Generar ejercicio tipo SCHOICE | `.claude/skills/generar-schoice/skill.md` |
+| `/generar-cloze` | Generar ejercicio tipo CLOZE | `.claude/skills/generar-cloze/skill.md` |
+| `/generar-grafica-nueva` | Generar nueva gráfica TikZ | `.claude/skills/generar-grafica-nueva/skill.md` |
+| `/consultar-grafica-tikz` | Consultar repositorio TikZ | `.claude/skills/consultar-grafica-tikz/skill.md` |
+| `/validar-diversidad-300` | Validar 300+ versiones únicas | `.claude/skills/validar-diversidad/skill.md` |
+| `/corregir-error-imagen` | Corregir errores TikZ | `.claude/skills/corregir-error-imagen/skill.md` |
+| `/promover-ejercicio` | Promover a producción | `.claude/skills/promover-ejercicio/skill.md` |
 
-**Cuándo usar:**
-```bash
-/corregir-error-imagen
-```
+#### Skills de Validación
 
-**Qué hace:**
-1. Identifica chunks con `include_tikz()`
-2. Aplica patrón de renderizado condicional
-3. Prueba compilación PDF y HTML
-4. Valida resultados
+| Skill | Función | Documentación |
+|-------|---------|---------------|
+| `/validar-icfes` | Validar metadatos ICFES | `.claude/skills/validar-icfes/skill.md` |
+| `/validar-coherencia` | Validar coherencia matemática | `.claude/skills/validar-coherencia/skill.md` |
+| `/validar-renderizado` | Validar renderizado 4 formatos | `.claude/skills/validar-renderizado/skill.md` |
+| `/diagnosticar-errores` | Diagnosticar errores automáticamente | `.claude/skills/diagnosticar-errores/skill.md` |
 
-**Documentación completa:** `.claude/skills/corregir-error-imagen/skill.md`
+### 🔌 Sistema de Hooks
 
-### Skill: validar-diversidad-300
+Hooks que se activan automáticamente durante el workflow:
 
-**Función:** Valida que un ejercicio genere 250+ versiones únicas de 300.
+| Hook | Evento | Función | Documentación |
+|------|--------|---------|---------------|
+| `pre-edit-rmd-validation` | Antes de editar .Rmd | Validar código antes de insertar | `.claude/hooks/pre-edit-rmd-validation.md` |
+| `post-exams2-validation` | Después de exams2* | Capturar errores de renderizado | `.claude/hooks/post-exams2-validation.md` |
+| `post-grafica-generada` | Después de generar gráfica | Guardar en repositorio TikZ | `.claude/hooks/post-grafica-generada.md` |
+| `post-error-diagnostic` | Después de diagnosticar error | Activar corrección automática | `.claude/hooks/post-error-diagnostic.md` |
 
-**Cuándo usar:**
-```bash
-/validar-diversidad-300
-```
+**Documentación completa:** `.claude/hooks/README.md`
 
-**Documentación completa:** `.claude/skills/validar-diversidad/skill.md`
+### 📦 Repositorio TikZ Centralizado
 
-### Skill: validar-icfes
+Repositorio de gráficas TikZ validadas y reutilizables:
 
-**Función:** Verifica que los metadatos ICFES estén completos y correctos.
+- **Ubicación:** `Repositorio-Graficas-TikZ/`
+- **Estructura:** Por categoría/subcategoría con metadata JSON
+- **Gestión:** Script `gestionar_repo_tikz.sh`
+- **Integración:** Consulta automática durante generación de ejercicios
 
-**Documentación completa:** `.claude/skills/validar-icfes/skill.md`
+**Documentación:** `Repositorio-Graficas-TikZ/README.md`
 
 ## Flujo de Trabajo: Ciclo de Validación y Corrección Automática
 
+**Diagrama completo:** Ver [`.claude/Mermaid_Chart.txt`](../Mermaid_Chart.txt)
+
 ### 🔄 FASE 1: Renderizado Inicial (OBLIGATORIO)
+
+**Hook activado:** `post-exams2-validation`
+
 ```r
 # Ejecutar renderizado completo
 exams2html("archivo.Rmd", n = 1)
 exams2pdf("archivo.Rmd", n = 1)
 exams2pandoc("archivo.Rmd", n = 1, type = "docx")
 exams2nops("archivo.Rmd", n = 1)
-# Capturar y registrar errores/advertencias
+# Hook captura automáticamente errores/advertencias
 ```
 
+**Qué hace el hook:**
+- Captura resultados de cada función exams2*
+- Registra errores y advertencias en log
+- Activa diagnóstico automático si hay errores
+
 ### 🔍 FASE 2: Validación Visual y Funcional
+
+Validación sistemática de 4 tipos de coherencia:
+
 1. **Coherencia Matemática**: Fórmulas, cálculos, respuesta correcta
 2. **Coherencia Imagen-Texto**: Descripción vs gráfico, valores sincronizados
 3. **Coherencia de Código**: R ↔ Python ↔ TikZ sincronizado
@@ -239,30 +335,49 @@ exams2nops("archivo.Rmd", n = 1)
 
 ### ⚡ FASE 3: Decisión y Acción
 
-**SI NO hay errores** → Continuar workflow normal
+**SI NO hay errores** → Continuar workflow normal → Promoción a producción
 
 **SI hay errores** → Ejecutar subfases:
 
 #### 📚 SUBFASE 3A: Corrección Basada en Ejemplos
+
+**Hook activado:** `post-error-diagnostic`
+
 ```bash
-# SIEMPRE consultar ejemplos funcionales ANTES de corregir
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+# Hook activa automáticamente consulta a fuentes de verdad:
+# 1. A-Produccion/Ejemplos-Funcionales-Rmd/
+# 2. Repositorio-Graficas-TikZ/
+# 3. .claude/docs/patrones-errores-conocidos.md
+
 # Identificar patrones de solución en archivos similares
 # Aplicar correcciones basadas en ejemplos validados
 ```
 
+**Qué hace el hook:**
+- Clasifica el tipo de error
+- Consulta automáticamente ejemplos funcionales
+- Sugiere correcciones basadas en patrones conocidos
+
 #### 🔄 SUBFASE 3B: Ciclo de Revalidación (OBLIGATORIO)
+
 ```
 ⚠️ VOLVER AUTOMÁTICAMENTE A FASE 1
 → Repetir renderizado completo
 → NO TERMINAR hasta resolver TODOS los errores
 ```
 
+**Ciclo se repite hasta:** Todos los errores resueltos
+
 #### 📊 SUBFASE 3C: Gestión de Resultados (Solo si éxito)
-1. Documentar error y solución en `patrones-errores-conocidos.md`
-2. Incluir código completo (antes/después)
-3. Documentar ejemplo funcional utilizado
-4. Referenciar archivo .Rmd verificado
+
+**Actualización de múltiples fuentes de verdad:**
+
+1. **Documentar error y solución** en `patrones-errores-conocidos.md`
+2. **Actualizar ejemplos funcionales** si se crea nuevo patrón
+3. **Actualizar repositorio TikZ** si se genera nueva gráfica
+4. Incluir código completo (antes/después)
+5. Documentar ejemplo funcional utilizado
+6. Referenciar archivo .Rmd verificado
 
 ### ⛔ CONDICIONES CRÍTICAS
 - ❌ NO terminar con errores sin resolver
@@ -364,6 +479,28 @@ Para preguntas sobre la documentación:
 
 ---
 
-**Última actualización:** 2025-12-19
-**Versión del sistema:** 1.0
-**Estado:** ✅ Operacional
+## Integración con Repositorio TikZ
+
+El sistema consulta automáticamente el **Repositorio TikZ** cuando se detectan gráficas matemáticas:
+
+1. **Consulta automática** durante generación de ejercicios
+2. **Decisión:** ¿Gráfica existe? → Reutilizar / Generar nueva
+3. **Si existe:** Cargar código TikZ parametrizable del repositorio
+4. **Si no existe:** Activar AgenteTikZ → Generar nueva → Guardar en repositorio
+5. **Hook `post-grafica-generada`:** Guarda automáticamente nuevas gráficas
+
+**Script de gestión:** `.claude/scripts/gestionar_repo_tikz.sh`
+
+## Referencias Cruzadas
+
+- **Diagrama de flujo completo:** [`.claude/Mermaid_Chart.txt`](../Mermaid_Chart.txt)
+- **Guía de usuario:** [GUIA_USUARIO.md](GUIA_USUARIO.md)
+- **Workflow paso a paso:** [WORKFLOW_PASO_A_PASO.md](WORKFLOW_PASO_A_PASO.md)
+- **Sistema de hooks:** [`.claude/hooks/README.md`](../hooks/README.md)
+- **Scripts de automatización:** [`.claude/scripts/README.md`](../scripts/README.md)
+
+---
+
+**Última actualización:** 2025-12-21
+**Versión del sistema:** 2.0 (Arquitectura Modular)
+**Estado:** ✅ Operacional con arquitectura modular completa
