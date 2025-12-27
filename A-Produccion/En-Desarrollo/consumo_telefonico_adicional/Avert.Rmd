@@ -1,0 +1,175 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "booktabs"]
+  word_document: default
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje3
+  componente: numerico_variacional
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale("LC_NUMERIC", "C")
+options(OutDec = ".", scipen = 999)
+
+library(exams)
+library(ggplot2)
+library(dplyr)
+library(tibble)
+library(testthat)
+library(knitr)
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.pos = "H",
+  dpi = 150
+)
+
+id_item <- sample.int(1e9, 1)
+set.seed(id_item)
+```
+
+```{r helpers, include=FALSE}
+minutos_a_horas_minutos <- function(minutos) {
+  h <- minutos %/% 60
+  m <- minutos %% 60
+  paste0(h, " hora", ifelse(h != 1, "s", ""), " y ", m, " minutos.")
+}
+
+es_moodle <- function() {
+  match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21")
+}
+```
+
+```{r datos, include=FALSE}
+familia <- sample(
+  c("Ramírez", "González", "Martínez", "García",
+    "López", "Rodríguez", "Hernández", "Pérez"), 1
+)
+
+plan_minutos <- sample(c(200, 220, 250, 280, 300), 1)
+
+meses <- c("Jul.", "Ago.", "Sep.", "Oct.", "Nov.", "Dic.", "Ene.")
+
+consumos <- tibble(
+  mes = meses,
+  minutos = round(plan_minutos * runif(length(meses), 0.6, 1.4))
+)
+
+consumos$minutos[7] <- plan_minutos + sample(60:180, 1)
+
+consumo_enero <- consumos |> filter(mes == "Ene.") |> pull(minutos)
+tiempo_adicional <- consumo_enero - plan_minutos
+```
+
+```{r opciones, include=FALSE}
+correcta <- minutos_a_horas_minutos(tiempo_adicional)
+
+otro_mes <- consumos |> filter(mes != "Ene.") |> slice_sample(n = 1) |> pull(minutos)
+
+d1 <- minutos_a_horas_minutos(abs(otro_mes - plan_minutos))
+d2 <- minutos_a_horas_minutos(consumo_enero)
+d3 <- {
+  h <- tiempo_adicional %/% 100
+  m <- tiempo_adicional %% 100
+  paste0(h, " horas y ", m, " minutos.")
+}
+
+opciones <- unique(c(correcta, d1, d2, d3))
+opciones <- sample(opciones, 4)
+
+solucion <- as.integer(opciones == correcta)
+
+if (sum(solucion) != 1) stop("Error en generación de opciones")
+```
+
+```{r tests, include=FALSE}
+test_that("Enero supera el plan", {
+  expect_gt(consumo_enero, plan_minutos)
+})
+
+test_that("Una única respuesta correcta", {
+  expect_equal(sum(solucion), 1)
+})
+```
+
+```{r grafico, fig.align='center'}
+ggplot(consumos, aes(mes, minutos, fill = mes == "Ene.")) +
+  geom_col(color = "black") +
+  geom_hline(yintercept = plan_minutos, linetype = "dashed") +
+  scale_fill_manual(values = c("#4682B4", "#E74C3C"), guide = "none") +
+  labs(
+    title = "Diagrama de barras de los últimos consumos de voz",
+    x = "Últimos consumos de voz",
+    y = "Minutos consumidos"
+  ) +
+  theme_minimal(base_size = 11)
+```
+
+```{r tabla, results='asis'}
+tabla_estado <- tibble(
+  Concepto = c(
+    "Saldo anterior", "Gracias por su pago", "Saldo",
+    "Cargos del mes", "IVA", "Subtotal",
+    "Crédito por ajuste a la decena", "Total a pagar"
+  ),
+  Valor = c(49610, -49610, 0, 35416.83, 6378.70, 41795.53, -5.53, 41790.00)
+)
+
+if (es_moodle()) {
+  knitr::kable(tabla_estado, format = "html", align = c("l", "r"))
+} else {
+  knitr::kable(tabla_estado, format = "latex", booktabs = TRUE,
+               align = c("l", "r"))
+}
+```
+
+Question
+========
+
+La gráfica y la tabla muestran parte de la información que recibe la familia **`r familia`** en su factura telefónica del mes de enero.
+
+El tiempo adicional consumido por la familia fue:
+
+Answerlist
+----------
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
+
+Solution
+========
+
+El plan contratado es de **`r plan_minutos` minutos** y el consumo en enero fue **`r consumo_enero` minutos**.
+
+\[
+\text{Tiempo adicional} = `r consumo_enero` - `r plan_minutos` = `r tiempo_adicional`\, \text{minutos}
+\]
+
+Esto equivale a:
+
+**`r correcta`**
+
+Meta-information
+================
+
+exname: consumo_familiar_icfes_n2
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: TRUE
+exsection: Estadística / Interpretación de gráficos
+excompetencia: Interpretación y representación
+excomponente: Numérico-Variacional
+exdificultad: 2
+extags: ICFES, Saber11, Consumo, Gráficos

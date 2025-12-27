@@ -1,0 +1,160 @@
+\documentclass[border=2mm]{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+\begin{tikzpicture}
+
+\begin{axis}[
+    width=14cm,
+    height=9cm,
+    xlabel={Año},
+    ylabel={Población},
+    xmin=1958, xmax=2016,
+    ymin=14000000, ymax=48000000,
+    xtick={1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2013},
+    xticklabels={1960,1965,1970,1975,1980,1985,1990,1995,2000,2005,2010,2013},
+    ytick={15000000,20000000,25000000,30000000,35000000,40000000,45000000},
+    yticklabels={15.000.000,20.000.000,25.000.000,30.000.000,35.000.000,40.000.000,45.000.000},
+    grid=both,
+    grid style={line width=0.3pt, draw=gray!30},
+    major grid style={line width=0.5pt, draw=gray!50},
+    legend pos=outer north east,
+    legend style={
+        draw=none,
+        fill=white,
+        font=\small
+    },
+    axis lines=box,
+    tick label style={font=\footnotesize},
+    label style={font=\normalsize},
+    scaled y ticks=false,
+    x tick label style={rotate=45, anchor=east},
+]
+
+% País 1 - Línea punteada cian, crecimiento muy pronunciado
+% Inicia ~20M, termina ~42M con crecimiento acelerado
+\addplot[
+    color=cyan,
+    dotted,
+    line width=1.2pt,
+    mark=none,
+] coordinates {
+    (1960, 20000000)
+    (1965, 23000000)
+    (1970, 26000000)
+    (1975, 29500000)
+    (1980, 33000000)
+    (1985, 36000000)
+    (1990, 38500000)
+    (1995, 40500000)
+    (2000, 42000000)
+    (2005, 43500000)
+    (2010, 45000000)
+    (2013, 47000000)
+};
+\addlegendentry{País 1}
+
+% País 2 - Línea discontinua negra
+% Inicia ~20M, termina ~38M, cruza País 5 en ~1986 (~30.5M)
+\addplot[
+    color=black,
+    dashed,
+    line width=1.2pt,
+    mark=none,
+] coordinates {
+    (1960, 20000000)
+    (1965, 22000000)
+    (1970, 24000000)
+    (1975, 26000000)
+    (1980, 28500000)
+    (1985, 30000000)
+    (1990, 32500000)
+    (1995, 34500000)
+    (2000, 36000000)
+    (2005, 37000000)
+    (2010, 38000000)
+    (2013, 38500000)
+};
+\addlegendentry{País 2}
+
+% País 3 - Línea sólida marrón/naranja oscuro
+% Inicia ~15M, termina ~38M, cruza País 2 cerca de 2005
+\addplot[
+    color=brown,
+    solid,
+    line width=1.2pt,
+    mark=none,
+] coordinates {
+    (1960, 15000000)
+    (1965, 17000000)
+    (1970, 19500000)
+    (1975, 22500000)
+    (1980, 26000000)
+    (1985, 29000000)
+    (1990, 32000000)
+    (1995, 34500000)
+    (2000, 36500000)
+    (2005, 37500000)
+    (2010, 38000000)
+    (2013, 38500000)
+};
+\addlegendentry{País 3}
+
+% País 4 - Línea sólida cian con marcadores triangulares
+% Inicia ~31M, termina ~42M, siempre por encima de País 5
+\addplot[
+    color=cyan,
+    solid,
+    line width=1.2pt,
+    mark=triangle*,
+    mark size=2.5pt,
+    mark options={fill=cyan},
+] coordinates {
+    (1960, 31000000)
+    (1965, 31500000)
+    (1970, 32500000)
+    (1975, 34000000)
+    (1980, 36000000)
+    (1985, 37500000)
+    (1990, 39000000)
+    (1995, 40000000)
+    (2000, 40500000)
+    (2005, 41500000)
+    (2010, 42000000)
+    (2013, 42500000)
+};
+\addlegendentry{País 4}
+
+% País 5 - Línea sólida naranja con marcadores circulares
+% Casi horizontal 30M de 1960-1980, luego sube
+% Cruza País 2 en ~1986 (~30.5M)
+\addplot[
+    color=orange,
+    solid,
+    line width=1.2pt,
+    mark=*,
+    mark size=2pt,
+    mark options={fill=orange},
+] coordinates {
+    (1960, 30000000)
+    (1965, 30000000)
+    (1970, 30000000)
+    (1975, 30000000)
+    (1980, 30000000)
+    (1985, 30500000)
+    (1990, 33000000)
+    (1995, 35000000)
+    (2000, 36500000)
+    (2005, 37500000)
+    (2010, 38000000)
+    (2013, 38500000)
+};
+\addlegendentry{País 5}
+
+\end{axis}
+
+\end{tikzpicture}
+\end{document}

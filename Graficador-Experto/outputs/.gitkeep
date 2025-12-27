@@ -1,0 +1,12 @@
+# Este directorio contiene los archivos generados por el workflow
+
+## Archivos generados:
+- output_tikz.tex: Código TikZ final
+- output_python.py: Código Python final
+- output_r.R: Código R final
+- reporte_matematico.md: Reporte consolidado del proceso
+- original.png: Imagen original compartida por el usuario
+- tikz_render.png: Renderizado del código TikZ
+- python_render.png: Renderizado del código Python
+- r_render.png: Renderizado del código R
+

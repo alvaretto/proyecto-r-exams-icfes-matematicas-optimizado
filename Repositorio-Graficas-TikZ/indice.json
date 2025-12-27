@@ -1,0 +1,101 @@
+{
+  "version": "1.0",
+  "fecha_actualizacion": "2025-12-25",
+  "total_graficas": 1,
+  "categorias": {
+    "geometria": {
+      "total": 0,
+      "subcategorias": {
+        "cilindros": [],
+        "rectas": [],
+        "parabolas": []
+      }
+    },
+    "estadistica": {
+      "total": 1,
+      "subcategorias": {
+        "barras": [],
+        "puntos": [
+          "graficas_puntos_multiple_01"
+        ],
+        "histogramas": []
+      }
+    },
+    "probabilidad": {
+      "total": 0,
+      "subcategorias": {
+        "arboles_decision": [],
+        "diagramas_venn": []
+      }
+    }
+  },
+  "graficas": [
+    {
+      "id": "graficas_puntos_multiple_01",
+      "categoria": "estadistica",
+      "subcategoria": "puntos",
+      "descripcion": "Cuatro gráficas de puntos (scatter plots) mostrando diferentes patrones: cuadrático ascendente, parábola invertida (U invertida), lineal descendente, y parábola que abre hacia arriba (U). Incluye ejes, grid, etiquetas y puntos en color violeta.",
+      "tags": [
+        "graficas",
+        "puntos",
+        "scatter",
+        "patrones",
+        "cuadratico",
+        "parabola",
+        "lineal",
+        "estadistica",
+        "multiple"
+      ],
+      "parametros": [
+        {
+          "nombre": "datos_grafica_a",
+          "tipo": "coordenadas",
+          "descripcion": "Coordenadas de puntos para gráfica A (patrón cuadrático ascendente)",
+          "formato": "coordenadas TikZ"
+        },
+        {
+          "nombre": "datos_grafica_b",
+          "tipo": "coordenadas",
+          "descripcion": "Coordenadas de puntos para gráfica B (parábola invertida)",
+          "formato": "coordenadas TikZ"
+        },
+        {
+          "nombre": "datos_grafica_c",
+          "tipo": "coordenadas",
+          "descripcion": "Coordenadas de puntos para gráfica C (patrón lineal descendente)",
+          "formato": "coordenadas TikZ"
+        },
+        {
+          "nombre": "datos_grafica_d",
+          "tipo": "coordenadas",
+          "descripcion": "Coordenadas de puntos para gráfica D (parábola que abre hacia arriba)",
+          "formato": "coordenadas TikZ"
+        },
+        {
+          "nombre": "xlabel",
+          "tipo": "string",
+          "descripcion": "Etiqueta del eje X",
+          "valor_default": "Días transcurridos después de iniciada la migración"
+        },
+        {
+          "nombre": "ylabel",
+          "tipo": "string",
+          "descripcion": "Etiqueta del eje Y",
+          "valor_default": "Pesca (Toneladas)"
+        },
+        {
+          "nombre": "color_puntos",
+          "tipo": "color",
+          "descripcion": "Color RGB de los puntos",
+          "valor_default": "139,71,137"
+        }
+      ],
+      "componente_icfes": "aleatorio",
+      "fecha_creacion": "2025-12-25",
+      "validado": true,
+      "origen": "graficador-experto",
+      "ruta_origen": "Graficador-Experto/outputs/output_tikz.tex",
+      "notas": "Este archivo contiene cuatro gráficas de puntos en un solo documento. Para usar en ejercicios, puede ser necesario separar en gráficas individuales o parametrizar los datos de cada gráfica."
+    }
+  ]
+}

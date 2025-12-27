@@ -99,6 +99,27 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Documentación completa:** `.claude/skills/generar-cloze/skill.md`
 
+#### `/generar-grafica-nueva` ⭐ NUEVO
+
+**Propósito:** Generar nueva gráfica TikZ usando el workflow completo del Graficador-Experto y guardarla en el repositorio centralizado
+
+**Uso:**
+```bash
+/generar-grafica-nueva [ruta/a/imagen.png]
+```
+
+**Proceso:**
+1. Analiza imagen con Claude Vision
+2. Genera código TikZ iterativo (máximo 5 iteraciones)
+3. Valida similitud visual (objetivo: >95%)
+4. Parametrizar código con placeholders
+5. Guarda en `Repositorio-Graficas-TikZ/` con metadata completa
+6. Actualiza índice del repositorio
+
+**Salida:** Gráfica TikZ guardada en repositorio, lista para reutilización
+
+**Documentación completa:** `.claude/commands/generar-grafica-nueva.md`
+
 ---
 
 ### 3. Validación y Corrección
@@ -144,6 +165,57 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 ```
 
 **Documentación completa:** `.claude/skills/promover-ejercicio/skill.md`
+
+---
+
+## 📦 Repositorio Centralizado de Gráficas TikZ
+
+### Ubicación
+
+```
+Repositorio-Graficas-TikZ/
+```
+
+### Propósito
+
+Repositorio de código TikZ validado y reutilizable para ejercicios R-Exams. Las gráficas se consultan automáticamente durante la generación de ejercicios.
+
+### Estructura
+
+- **Categorías**: geometria, estadistica, probabilidad
+- **Subcategorías**: cilindros, barras, puntos, arboles_decision, etc.
+- **Archivos por gráfica**:
+  - `[nombre].tikz` - Código TikZ con placeholders parametrizables
+  - `[nombre].json` - Metadata con información completa
+  - `[nombre].png` - Preview visual
+
+### Gestión del Repositorio
+
+**Script de gestión**:
+```bash
+# Listar gráficas por categoría
+.claude/scripts/gestionar_repo_tikz.sh listar [categoria]
+
+# Buscar por texto
+.claude/scripts/gestionar_repo_tikz.sh buscar "cilindro volumen"
+
+# Validar integridad
+.claude/scripts/gestionar_repo_tikz.sh validar
+
+# Regenerar índice
+.claude/scripts/gestionar_repo_tikz.sh reindexar
+```
+
+### Integración Automática
+
+Cuando `/generar-schoice` o `/generar-cloze` detectan necesidad de gráficas:
+
+1. Consultan automáticamente el repositorio
+2. Listan opciones disponibles
+3. Permiten seleccionar existente o generar nueva
+4. Integran código TikZ parametrizable en el ejercicio
+
+**Documentación completa**: `Repositorio-Graficas-TikZ/README.md`
 
 ---
 

@@ -1,15 +1,24 @@
 ---
 output:
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "booktabs", "array"]
-  word_document: default
   html_document: default
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje2
+  componente: numerico_variacional
 ---
 ```{r setup, include=FALSE}
-# Configuración para todos los formatos de salida
-Sys.setlocale(category = "LC_NUMERIC", locale = "C")
-options(OutDec = ".")
+# Configuración numérica estándar
+Sys.setlocale("LC_NUMERIC", "C")
+options(OutDec = ".", scipen = 999)
 
 # Configurar el motor LaTeX globalmente
 options(tikzLatex = "pdflatex")
@@ -23,15 +32,29 @@ options(tikzLatexPackages = c(
   "\\usepackage{array}"
 ))
 
+# Librerías esenciales
 library(exams)
 library(reticulate)
-library(digest)
+library(ggplot2)
+library(dplyr)
+library(tibble)
 library(testthat)
 library(knitr)
 
+# Configurar Python
+use_python("/usr/bin/python3", required = TRUE)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Tipo de dispositivo
 typ <- match_exams_device()
-options(scipen = 999)
+
+# Configuración de chunks
 knitr::opts_chunk$set(
+  echo = FALSE,
   warning = FALSE,
   message = FALSE,
   fig.showtext = FALSE,
@@ -42,26 +65,38 @@ knitr::opts_chunk$set(
   fig.pos = "H"
 )
 
-# Configuración para chunks de Python
-knitr::knit_engines$set(python = function(options) {
-  knitr::engine_output(options, options$code, '')
-})
+# Semilla con trazabilidad (PATRÓN AVERT 1)
+id_item <- sample.int(1e9, 1)
+set.seed(id_item)
+```
 
-# Asegurar que Python esté correctamente configurado
-# Usar python3 por defecto del sistema
-if (Sys.getenv("RETICULATE_PYTHON") != "") {
-  use_python(Sys.getenv("RETICULATE_PYTHON"))
-} else {
-  use_python(Sys.which("python3"), required = TRUE)
+```{r helpers, include=FALSE}
+# Funciones auxiliares (PATRÓN AVERT 2)
+
+# Función de conversión de minutos a horas:minutos
+minutos_a_horas_minutos <- function(minutos) {
+  h <- minutos %/% 60
+  m <- minutos %% 60
+  paste0(h, " hora", ifelse(h != 1, "s", ""), " y ", m, " minutos.")
+}
+
+# Función de detección de formato Moodle
+es_moodle <- function() {
+  match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+}
+
+# Función de detección de formato PDF
+es_pdf <- function() {
+  match_exams_call() %in% c("exams2pdf", "exams2nops")
+}
+
+# Función para formatear números con separador de miles
+format_currency <- function(x) {
+  format(x, big.mark = ",", decimal.mark = ".", nsmall = 2, scientific = FALSE)
 }
 ```
 
-```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
-options(OutDec = ".")
-
-# Establecer semilla aleatoria
-set.seed(sample(1:10000, 1))
-
+```{r datos, include=FALSE}
 # Aleatorización del contexto
 familias <- c("Ramírez", "González", "Martínez", "García", "López", "Rodríguez",
               "Hernández", "Pérez", "Sánchez", "Torres")
@@ -84,10 +119,6 @@ consumo_meses <- consumo_base
 consumo_enero <- consumo_meses[7]
 tiempo_adicional_minutos <- consumo_enero - plan_minutos
 
-# Convertir a horas y minutos
-horas_adicional <- floor(tiempo_adicional_minutos / 60)
-minutos_adicional <- tiempo_adicional_minutos %% 60
-
 # Datos de la tabla del estado de cuenta
 # Aleatorizar valores
 saldo_anterior <- sample(c(45000, 48000, 49610), 1)
@@ -103,59 +134,59 @@ plan_local <- sample(c(19000, 20086.21, 21000), 1)
 consumo_adicional_costo <- sample(c(13000, 14065.92, 15000), 1)
 llamada_espera <- sample(c(1200, 1264.70, 1300), 1)
 total_cargos_mes <- cargos_mes
+```
 
-# Generar opciones de respuesta
-# Opción correcta
-opcion_correcta <- paste0(horas_adicional, " hora", ifelse(horas_adicional > 1, "s", ""),
-                          " y ", minutos_adicional, " minutos.")
+```{r opciones, include=FALSE}
+# Generar respuesta correcta usando función helper (PATRÓN AVERT 7)
+correcta <- minutos_a_horas_minutos(tiempo_adicional_minutos)
 
 # Generar distractores
-distractor1_min <- tiempo_adicional_minutos + sample(30:50, 1)
-dist1_h <- floor(distractor1_min / 60)
-dist1_m <- distractor1_min %% 60
-distractor1 <- paste0(dist1_h, " hora", ifelse(dist1_h > 1, "s", ""),
-                      " y ", dist1_m, " minutos.")
+d1 <- minutos_a_horas_minutos(tiempo_adicional_minutos + sample(30:50, 1))
+d2 <- minutos_a_horas_minutos(tiempo_adicional_minutos - sample(20:40, 1))
+d3 <- minutos_a_horas_minutos(tiempo_adicional_minutos + sample(200:250, 1))
 
-distractor2_min <- tiempo_adicional_minutos - sample(20:40, 1)
-dist2_h <- floor(distractor2_min / 60)
-dist2_m <- distractor2_min %% 60
-distractor2 <- paste0(dist2_h, " hora", ifelse(dist2_h > 1, "s", ""),
-                      " y ", dist2_m, " minutos.")
+# Eliminar duplicados (PATRÓN AVERT 7)
+opciones <- unique(c(correcta, d1, d2, d3))
 
-distractor3_min <- tiempo_adicional_minutos + sample(200:250, 1)
-dist3_h <- floor(distractor3_min / 60)
-dist3_m <- distractor3_min %% 60
-distractor3 <- paste0(dist3_h, " hora", ifelse(dist3_h > 1, "s", ""),
-                      " y ", dist3_m, " minutos.")
+# VALIDACIÓN CRÍTICA: Asegurar 4 opciones únicas (PATRÓN AVERT 3)
+if (length(opciones) < 4) {
+  stop("ERROR: Se generaron opciones duplicadas. Revisar lógica de distractores.")
+}
 
-# Crear lista de opciones y mezclar
-opciones <- c(opcion_correcta, distractor1, distractor2, distractor3)
-opciones_mezcladas <- sample(opciones)
+# Aleatorizar
+opciones <- sample(opciones, 4)
+solucion <- as.integer(opciones == correcta)
 
-# Identificar posición correcta
-indice_correcto <- which(opciones_mezcladas == opcion_correcta)
+# VALIDACIÓN CRÍTICA: Exactamente una respuesta correcta (PATRÓN AVERT 3)
+if (sum(solucion) != 1) {
+  stop("ERROR: Debe haber exactamente una respuesta correcta")
+}
+```
 
-# Vector de solución
-solucion <- rep(0, 4)
-solucion[indice_correcto] <- 1
+```{r tests, include=FALSE}
+# Tests con testthat (PATRÓN AVERT 4)
+test_that("Validaciones básicas", {
+  # Una única respuesta correcta
+  expect_equal(sum(solucion), 1)
 
-# Tests de validación
-test_that("El consumo de enero supera el plan", {
-  expect_true(consumo_enero > plan_minutos)
+  # 4 opciones únicas
+  expect_equal(length(opciones), 4)
+  expect_equal(length(unique(opciones)), 4)
 })
 
-test_that("El cálculo de tiempo adicional es correcto", {
+test_that("Validaciones específicas del problema", {
+  # El consumo de enero supera el plan
+  expect_gt(consumo_enero, plan_minutos)
+
+  # El cálculo de tiempo adicional es correcto
   expect_equal(tiempo_adicional_minutos, consumo_enero - plan_minutos)
-})
 
-test_that("La conversión a horas y minutos es correcta", {
-  expect_equal(horas_adicional * 60 + minutos_adicional, tiempo_adicional_minutos)
+  # Tiempo adicional es positivo
+  expect_gt(tiempo_adicional_minutos, 0)
 })
 ```
 
-```{r generar_grafico_barras, message=FALSE, warning=FALSE}
-options(OutDec = ".")
-
+```{r generar_grafico_barras, include=FALSE}
 # Código Python para generar el gráfico de barras
 codigo_python <- sprintf("
 import matplotlib
@@ -217,14 +248,7 @@ plan_minutos)
 py_run_string(codigo_python)
 ```
 
-```{r generar_tabla_estado_cuenta, message=FALSE, warning=FALSE}
-options(OutDec = ".")
-
-# Función para formatear números con separador de miles
-format_currency <- function(x) {
-  format(x, big.mark = ",", decimal.mark = ".", nsmall = 2, scientific = FALSE)
-}
-
+```{r generar_tabla_estado_cuenta, include=FALSE}
 # Crear tabla con TikZ para el estado de cuenta
 tabla_estado <- c(
   "\\begin{tikzpicture}",
@@ -282,10 +306,8 @@ cat("![](grafico_consumo.png){width=65%}\n\n")
 ```
 
 ```{r mostrar_tabla, echo=FALSE, results='asis'}
-# Detectar formato de salida
-es_moodle <- (match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat"))
-
-if (es_moodle) {
+# Detectar formato de salida usando función helper (PATRÓN AVERT 2)
+if (es_moodle()) {
   # Para Moodle, usar tabla HTML
   cat("<div style='text-align: center;'>")
   cat("<table border='1' style='border-collapse: collapse; margin: 0 auto; width: 70%;'>")
@@ -321,10 +343,10 @@ El tiempo adicional consumido por la familia `r familia` en enero fue:
 
 Answerlist
 ----------
-- `r opciones_mezcladas[1]`
-- `r opciones_mezcladas[2]`
-- `r opciones_mezcladas[3]`
-- `r opciones_mezcladas[4]`
+- `r opciones[1]`
+- `r opciones[2]`
+- `r opciones[3]`
+- `r opciones[4]`
 
 Solution
 ========
@@ -340,10 +362,10 @@ Para resolver este problema, debemos:
    $$\text{Tiempo adicional} = `r consumo_enero` - `r plan_minutos` = `r tiempo_adicional_minutos` \text{ minutos}$$
 
 4. **Convertir a horas y minutos**:
-   - Horas: $\lfloor `r tiempo_adicional_minutos` \div 60 \rfloor = `r horas_adicional`$ hora(s)
-   - Minutos restantes: $`r tiempo_adicional_minutos` \mod 60 = `r minutos_adicional`$ minutos
+   - Horas: $\lfloor `r tiempo_adicional_minutos` \div 60 \rfloor = `r tiempo_adicional_minutos %/% 60`$ hora(s)
+   - Minutos restantes: $`r tiempo_adicional_minutos` \mod 60 = `r tiempo_adicional_minutos %% 60`$ minutos
 
-**Respuesta correcta**: `r opcion_correcta`
+**Respuesta correcta**: `r correcta`
 
 Answerlist
 ----------

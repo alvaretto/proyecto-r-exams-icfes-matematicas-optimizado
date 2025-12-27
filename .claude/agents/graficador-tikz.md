@@ -70,9 +70,88 @@ if (es_latex) {
 }
 ```
 
+## 📦 Guardado en Repositorio Centralizado
+
+Después de generar código TikZ validado (98%+ fidelidad), **OBLIGATORIAMENTE**:
+
+1. **Guardar en Repositorio-Graficas-TikZ/**:
+   - Código `.tikz` con placeholders parametrizables
+   - Metadata `.json` con información completa
+   - Preview `.png` de la gráfica renderizada
+
+2. **Generar Metadata JSON**:
+   ```json
+   {
+     "id": "[nombre_unico]",
+     "categoria": "[geometria|estadistica|probabilidad]",
+     "subcategoria": "[cilindros|barras|arboles_decision|...]",
+     "descripcion": "Descripción clara de la gráfica",
+     "tags": ["tag1", "tag2", "tag3"],
+     "parametros": ["param1", "param2"],
+     "componente_icfes": "[geometrico_metrico|aleatorio|...]",
+     "fecha_creacion": "[YYYY-MM-DD]",
+     "validado": true,
+     "origen": "graficador-experto"
+   }
+   ```
+
+3. **Actualizar índice centralizado**:
+   - Agregar entrada en `Repositorio-Graficas-TikZ/indice.json`
+   - Incrementar contadores de categoría/subcategoría
+   - Actualizar fecha de actualización
+
+4. **Crear Preview PNG**:
+   - Renderizar TikZ a PNG usando pdflatex + convert
+   - Guardar como `[nombre].png` en mismo directorio
+   - Usar para visualización en consultas futuras
+
+### Ubicación del Repositorio
+
+```
+Repositorio-Graficas-TikZ/
+├── [categoria]/
+│   └── [subcategoria]/
+│       ├── [nombre].tikz
+│       ├── [nombre].json
+│       └── [nombre].png
+```
+
+### Proceso de Guardado
+
+```bash
+# 1. Determinar categoría y subcategoría según análisis
+# 2. Generar nombre único: [tipo]_[variante]_[numero].tikz
+# 3. Guardar código TikZ con placeholders
+# 4. Generar metadata JSON
+# 5. Renderizar preview PNG
+# 6. Actualizar indice.json
+```
+
+### Placeholders Parametrizables
+
+El código TikZ debe usar placeholders para valores dinámicos:
+
+```latex
+\def\radioValor{%%RADIO%%}
+\def\alturaValor{%%ALTURA%%}
+\def\colorFondo{%%COLOR_FONDO%%}
+```
+
+Estos serán reemplazados por las skills de generación de ejercicios.
+
+### Integración con Hook
+
+El hook `post-grafica-generada` detecta guardados en `Graficador-Experto/outputs/` y puede:
+
+- Copiar automáticamente al repositorio
+- Solicitar categoría/tags si no están en metadata
+- Regenerar índice si es necesario
+
 ## Referencias
 
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD #1)
+- `Repositorio-Graficas-TikZ/` (FUENTE DE VERDAD #2 - Gráficas TikZ reutilizables)
 - `.claude/docs/patrones-errores-conocidos.md#error-1`
 - `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 - `/Auxiliares/Agente-Graficador-TikZ/Laboratorio_Agente_TikZ`
+- `.claude/skills/consultar-grafica-tikz/skill.md` - Consultar repositorio

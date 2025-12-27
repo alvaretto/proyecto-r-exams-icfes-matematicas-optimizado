@@ -12,6 +12,7 @@ Este workflow utiliza **Skills de Claude Code** configurados en `.claude/skills/
 - `/analizar-icfes` - Análisis ICFES según 6 dimensiones
 - `/generar-schoice` - Generar ejercicio de selección única
 - `/generar-cloze` - Generar ejercicio de respuesta abierta
+- `/generar-grafica-nueva` - Generar nueva gráfica TikZ y guardarla en repositorio
 - `/promover-ejercicio` - Promoción a carpeta de producción
 - `/corregir-error-imagen` - Corrección de errores TikZ
 - `/validar-diversidad` - Validar 300+ versiones
@@ -242,22 +243,71 @@ Por favor, completa el análisis con las 6 dimensiones ICFES
 El comando de generación:
 
 1. **Consulta ejemplos funcionales** en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
-2. **Genera código .Rmd completo** con:
+2. **Si detecta necesidad de gráficas TikZ**:
+   - Consulta automáticamente `Repositorio-Graficas-TikZ/` para gráficas reutilizables
+   - Lista opciones disponibles según categoría, tags y componente ICFES
+   - Permite seleccionar gráfica existente o generar nueva con `/generar-grafica-nueva`
+   - Integra código TikZ parametrizable en el ejercicio
+3. **Genera código .Rmd completo** con:
 
    - Encabezado YAML con paquetes LaTeX
    - Chunk de configuración inicial
    - Chunk de generación de datos (aleatorización)
+   - **Si hay gráfica TikZ**: Función `generar_tikz_[tipo]()` parametrizable
    - Chunk de prueba de diversidad (300+ versiones)
    - Chunks de gráficos (TikZ, Python, R según necesidad)
+   - **Si hay gráfica TikZ**: Chunk de renderizado condicional (LaTeX/HTML)
    - Sección Question con enunciado
    - Sección Solution con explicación detallada
    - Meta-information con metadatos ICFES
-3. **Aplica metodologías**:
+4. **Aplica metodologías**:
 
    - Sistema Condicional Automático
    - Metodología TikZ Avanzada (si Flujo B)
+   - Integración con Repositorio TikZ para reutilización
    - Corrección de Errores Recurrentes
    - Protocolo Anti-Errores
+
+### 3.3.1 Integración con Repositorio TikZ (NUEVO)
+
+Cuando el ejercicio requiere gráficas TikZ:
+
+**Proceso automático**:
+
+1. El sistema detecta necesidad de gráficas según análisis ICFES
+2. Consulta `Repositorio-Graficas-TikZ/` buscando por:
+   - Categoría (geometria, estadistica, probabilidad)
+   - Subcategoría (cilindros, barras, arboles_decision, etc.)
+   - Tags relevantes
+   - Componente ICFES
+
+3. **Si encuentra gráficas disponibles**:
+   ```
+   Consultando repositorio...
+   Encontradas 3 opciones:
+   1. cilindro_basico_01.tikz - Cilindro simple con radio/altura
+   2. cilindro_liquido_02.tikz - Cilindro con nivel de líquido
+   3. cilindro_seccion_03.tikz - Cilindro con corte transversal
+   
+   ¿Usar alguna existente? [1/2/3/N para nueva]
+   ```
+
+4. **Si selecciona existente**:
+   - Carga código TikZ del repositorio
+   - Extrae parámetros de metadata JSON
+   - Genera función `generar_tikz_[tipo]()` parametrizable
+   - Integra en chunk `data_generation` con valores aleatorios
+
+5. **Si no existe o prefiere nueva**:
+   - Sugiere usar `/generar-grafica-nueva`
+   - Genera nueva gráfica con workflow completo del Graficador-Experto
+   - Guarda automáticamente en repositorio para uso futuro
+
+**Beneficios**:
+- ✅ Reutilización de gráficas validadas
+- ✅ Consistencia visual entre ejercicios
+- ✅ Eficiencia (no regenerar desde cero)
+- ✅ Calidad garantizada (solo código validado en repositorio)
 
 ### 3.4 Ubicación del Archivo Generado
 
