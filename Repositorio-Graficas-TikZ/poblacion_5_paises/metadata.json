@@ -1,0 +1,20 @@
+{
+  "nombre": "grafico_poblacion_5_paises",
+  "descripcion": "Grafico de lineas mostrando evolucion de poblacion de 5 paises (1960-2013)",
+  "tipo": "lineas_temporales",
+  "fecha_creacion": "2025-12-27",
+  "fidelidad": "100%",
+  "iteraciones": 4,
+  "caracteristicas": [
+    "5 series de datos",
+    "Eje X: años en multiplos de 5 (inclinados 45 grados)",
+    "Eje Y: poblacion con formato 15.000.000",
+    "Estilos: punteada, discontinua, solida, triangulos, circulos",
+    "Colores: celeste, negro, siena, naranja"
+  ],
+  "uso_recomendado": "Ejercicios ICFES de interpretacion de graficos estadisticos",
+  "archivos": {
+    "codigo": "grafico_poblacion_5_paises.tex",
+    "preview": "preview.png"
+  }
+}

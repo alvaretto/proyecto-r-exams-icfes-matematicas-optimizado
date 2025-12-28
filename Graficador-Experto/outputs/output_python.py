@@ -1,71 +1,65 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Gráfica de Poblaciones de 5 Países (1960-2013)
-Ejercicio ICFES - Generado con matplotlib
+Gráfico de Poblaciones de 5 Países (1960-2013)
+Generado por Graficador-Experto - Compatible con R-Markdown via reticulate
 """
 
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import numpy as np
 
-# Datos de población por país
-años = [1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2013]
+# Datos
+años = np.array([1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2013])
 
-# País 1 - Crecimiento muy pronunciado (línea punteada cian)
-pais1 = [20e6, 23e6, 26e6, 29.5e6, 33e6, 36e6, 38.5e6, 40.5e6, 42e6, 43.5e6, 45e6, 47e6]
-
-# País 2 - Crecimiento moderado (línea discontinua negra)
-# Cruza con País 5 en ~1986
-pais2 = [20e6, 22e6, 24e6, 26e6, 28.5e6, 30e6, 32.5e6, 34.5e6, 36e6, 37e6, 38e6, 38.5e6]
-
-# País 3 - Crecimiento desde abajo (línea sólida marrón)
-pais3 = [15e6, 17e6, 19.5e6, 22.5e6, 26e6, 29e6, 32e6, 34.5e6, 36.5e6, 37.5e6, 38e6, 38.5e6]
-
-# País 4 - Empieza alto, crecimiento moderado (línea sólida cian con triángulos)
-pais4 = [31e6, 31.5e6, 32.5e6, 34e6, 36e6, 37.5e6, 39e6, 40e6, 40.5e6, 41.5e6, 42e6, 42.5e6]
-
-# País 5 - Horizontal hasta 1980, luego crece (línea sólida naranja con círculos)
-# Cruza con País 2 en ~1986
-pais5 = [30e6, 30e6, 30e6, 30e6, 30e6, 30.5e6, 33e6, 35e6, 36.5e6, 37.5e6, 38e6, 38.5e6]
+# Población de cada país (valores del gráfico original)
+pais1 = np.array([30, 31.5, 33, 34.5, 36, 37.5, 38.5, 39.5, 40.5, 41.5, 42, 42.5]) * 1e6
+pais2 = np.array([22, 23.5, 25, 27, 29, 30.5, 32, 34, 35.5, 36.5, 37.5, 38]) * 1e6
+pais3 = np.array([30, 30.5, 31, 31.5, 32, 33, 34, 35, 36, 37, 37.5, 38]) * 1e6
+pais4 = np.array([30.5, 32, 33.5, 35, 37, 38.5, 40, 42, 44, 45.5, 46.5, 47]) * 1e6
+pais5 = np.array([30, 29.5, 29, 28.5, 29, 30, 31.5, 33, 35, 36.5, 37.5, 38]) * 1e6
 
 # Crear figura
-fig, ax = plt.subplots(figsize=(12, 8))
+fig, ax = plt.subplots(figsize=(10, 7))
 
-# Graficar cada país con su estilo específico
-ax.plot(años, pais1, 'c:', linewidth=1.5, label='País 1')  # Punteada cian
-ax.plot(años, pais2, 'k--', linewidth=1.5, label='País 2')  # Discontinua negra
-ax.plot(años, pais3, '-', color='brown', linewidth=1.5, label='País 3')  # Sólida marrón
-ax.plot(años, pais4, 'c-', marker='^', markersize=6, linewidth=1.5, label='País 4')  # Cian con triángulos
-ax.plot(años, pais5, '-', color='orange', marker='o', markersize=5, linewidth=1.5, label='País 5')  # Naranja con círculos
+# Graficar cada país con su estilo exacto del original
+ax.plot(años, pais1, color='#00CED1', linestyle=':', linewidth=2, label='País 1')  # Celeste punteada
+ax.plot(años, pais2, color='black', linestyle='--', linewidth=2, label='País 2')  # Negra discontinua
+ax.plot(años, pais3, color='#CD853F', linestyle='-', linewidth=2, label='País 3')  # Marrón/Siena sólida
+ax.plot(años, pais4, color='#00CED1', linestyle='-', linewidth=2, 
+        marker='^', markersize=8, markerfacecolor='#00CED1', label='País 4')  # Celeste con triángulos
+ax.plot(años, pais5, color='#FF8C00', linestyle='-', linewidth=2, 
+        marker='o', markersize=6, markerfacecolor='#FF8C00', label='País 5')  # Naranja con círculos
 
 # Configurar ejes
-ax.set_xlabel('Año', fontsize=12)
-ax.set_ylabel('Población', fontsize=12)
-ax.set_xlim(1958, 2016)
-ax.set_ylim(14e6, 48e6)
+ax.set_xlabel('Año', fontsize=12, fontweight='bold')
+ax.set_ylabel('Población', fontsize=12, fontweight='bold')
+ax.set_xlim(1960, 2013)
+ax.set_ylim(15e6, 48e6)
 
-# Configurar ticks del eje X
-ax.set_xticks(años)
-ax.set_xticklabels(años, rotation=45, ha='right', fontsize=9)
+# Formato del eje Y
+def formato_poblacion(x, pos):
+    return f'{int(x/1e6)}.000.000'
 
-# Configurar ticks del eje Y con formato de punto como separador de miles
-yticks = [15e6, 20e6, 25e6, 30e6, 35e6, 40e6, 45e6]
-ax.set_yticks(yticks)
-ax.set_yticklabels([f'{int(y/1e6):,}'.replace(',', '.') + '.000.000' for y in yticks], fontsize=9)
+ax.yaxis.set_major_formatter(plt.FuncFormatter(formato_poblacion))
+ax.set_yticks([15e6, 20e6, 25e6, 30e6, 35e6, 40e6, 45e6])
+ax.set_xticks([1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2013])
 
-# Grilla - visible pero suave como en la imagen original
-ax.grid(True, which='major', linestyle='-', linewidth=0.6, color='silver', alpha=0.9)
+# Inclinar etiquetas del eje X
+plt.xticks(rotation=45, ha='right')
+
+# Cuadrícula
+ax.grid(True, linestyle='-', alpha=0.4, color='gray')
 ax.set_axisbelow(True)
 
 # Leyenda
-ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1), frameon=False, fontsize=10)
+ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1), fontsize=10, frameon=True)
 
 # Ajustar layout
 plt.tight_layout()
 
-# Guardar figura
-plt.savefig('output_python.png', dpi=300, bbox_inches='tight', facecolor='white')
-plt.savefig('output_python.pdf', bbox_inches='tight', facecolor='white')
+# Guardar
+plt.savefig('renders/render_python.png', dpi=300, bbox_inches='tight', 
+            facecolor='white', edgecolor='none')
+plt.close()
 
-print("Gráfica guardada en: output_python.png y output_python.pdf")
-plt.show()
+print("Gráfico guardado en: renders/render_python.png")

@@ -1,0 +1,78 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "WebFetchTool(domain:docs.anthropic.com)",
+      "mcp__context7__get-library-docs",
+      "mcp__context7__resolve-library-id",
+      "Bash(Rscript:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(R:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Skill(analizar-icfes)",
+      "Skill(generar-schoice)",
+      "Skill(generar-cloze)",
+      "Skill(promover-ejercicio)",
+      "Skill(corregir-error-imagen)",
+      "Skill(validar-diversidad)",
+      "Skill(validar-icfes)",
+      "Bash(pdfinfo:*)",
+      "Bash(xargs:*)",
+      "Bash(pdftotext:*)",
+      "Bash(unzip:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(git checkout:*)",
+      "Bash(git fetch:*)",
+      "Bash(git push:*)",
+      "Bash(wc:*)",
+      "Bash(tree:*)",
+      "Bash(du:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git config:*)",
+      "Bash(git rm:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(ssh-add:*)",
+      "Bash(ssh:*)",
+      "Bash(git worktree:*)",
+      "Bash(BROWSER=true Rscript:*)",
+      "Bash(chmod:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(for i in 1 2 3)",
+      "Bash(do Rscript -e \"rmarkdown::render\\(''seleccion_canciones_cd_tikz_n2_v1.Rmd'', output_format=''html_document'', output_file=''version_$i.html''\\)\")",
+      "Bash(done)",
+      "Bash(if [[ -f \"requisitos.txt\" ]])",
+      "Bash(then)",
+      "Bash(else)",
+      "Bash(echo:*)",
+      "Bash(fi)",
+      "Bash(pei)",
+      "Skill(validar-coherencia)",
+      "Skill(validar-renderizado)",
+      "Bash(if [ -f /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/Nuevos-Ejercicios/README.md ])",
+      "Bash(python3:*)",
+      "mcp__MiniMax__understand_image"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": false,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '📋 LOCAL: Verificando patrones en A-Produccion/En-Produccion/'"
+          }
+        ]
+      }
+    ]
+  }
+}

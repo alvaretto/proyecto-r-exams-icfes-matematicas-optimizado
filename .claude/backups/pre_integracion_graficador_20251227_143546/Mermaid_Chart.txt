@@ -67,46 +67,11 @@ graph TD
 
     CONSULTA_REPO -->|Existe| REUTILIZAR[Cargar código TikZ<br/>parametrizable]
     CONSULTA_REPO -->|No existe| AGENTE_TIKZ[🎨 AgenteTikZ<br/>Graficador-Experto]
-
-    %% ============================================
-    %% INTEGRACIÓN GRAFICADOR-EXPERTO (CÓDIGO TRIPLE)
-    %% ============================================
-    AGENTE_TIKZ --> HOOK_IMAGEN[🔌 Hook: post-imagen-matematica-detectada]
-    HOOK_IMAGEN --> SKILL_TRIPLE[🎯 Skill: /generar-codigo-triple]
-
-    SKILL_TRIPLE --> GEN_TRIPLE[📊 GENERACIÓN TRIPLE]
-
-    subgraph GRAFICADOR_EXPERTO[🎨 Módulo Graficador-Experto]
-        GEN_TRIPLE --> CODE_TIKZ[TikZ/LaTeX<br/>Diagramas precisos]
-        GEN_TRIPLE --> CODE_PYTHON[Python matplotlib<br/>Via Reticulate]
-        GEN_TRIPLE --> CODE_R[R ggplot2<br/>Nativo R-exams]
-
-        CODE_TIKZ --> VAL_TIKZ[Compilar y<br/>Validar TikZ]
-        CODE_PYTHON --> VAL_PYTHON[Ejecutar y<br/>Validar Python]
-        CODE_R --> VAL_R[Ejecutar y<br/>Validar R]
-
-        VAL_TIKZ --> COMPARE_VISION[🔍 Comparar con<br/>Claude Vision]
-        VAL_PYTHON --> COMPARE_VISION
-        VAL_R --> COMPARE_VISION
-
-        COMPARE_VISION --> CHECK_FIDELITY{Fidelidad<br/>≥98%?}
-        CHECK_FIDELITY -->|No| ITERATE[Iterar<br/>máx 5 veces]
-        ITERATE --> GEN_TRIPLE
-        CHECK_FIDELITY -->|Sí| PRESENT_USER[Presentar opciones<br/>al usuario]
-    end
-
-    PRESENT_USER --> USER_SELECT{Usuario<br/>selecciona código}
-    USER_SELECT -->|TikZ| SELECT_TIKZ[Usar TikZ]
-    USER_SELECT -->|Python| SELECT_PYTHON[Usar Python]
-    USER_SELECT -->|R| SELECT_R[Usar R]
-
-    SELECT_TIKZ --> GUARDAR_REPO[Guardar en<br/>Repositorio-Graficas-TikZ/]
-    SELECT_PYTHON --> INTEGRAR_RMD[Integrar en .Rmd]
-    SELECT_R --> INTEGRAR_RMD
-
+    
+    AGENTE_TIKZ --> SKILL_NUEVA[🎯 Skill: /generar-grafica-nueva]
+    SKILL_NUEVA --> GUARDAR_REPO[Guardar en<br/>Repositorio-Graficas-TikZ/]
     GUARDAR_REPO --> HOOK_GRAFICA[🔌 Hook: post-grafica-generada]
-    HOOK_GRAFICA --> INTEGRAR_RMD
-    INTEGRAR_RMD --> REUTILIZAR
+    HOOK_GRAFICA --> REUTILIZAR
 
     REUTILIZAR --> F1[Análisis Opciones]
     E1b --> F1
@@ -505,34 +470,3 @@ graph TD
     style CHECK_VALIDATIONS fill:#fff9c4,stroke:#f9a825,stroke-width:2px
     style CHECK_VALIDATIONS2 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
     style ACTUALIZAR_EJEMPLOS fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
-
-    %% ============================================
-    %% ESTILOS GRAFICADOR-EXPERTO (CÓDIGO TRIPLE)
-    %% ============================================
-    style GRAFICADOR_EXPERTO fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
-    style HOOK_IMAGEN fill:#f57c00,color:#fff,stroke:#e65100,stroke-width:2px
-    style SKILL_TRIPLE fill:#1e88e5,color:#fff,stroke:#0d47a1,stroke-width:2px
-    style GEN_TRIPLE fill:#4caf50,color:#fff,stroke:#2e7d32,stroke-width:2px
-
-    %% Estilos Código Triple
-    style CODE_TIKZ fill:#9c27b0,color:#fff,stroke:#6a1b9a,stroke-width:2px
-    style CODE_PYTHON fill:#ff9800,color:#fff,stroke:#e65100,stroke-width:2px
-    style CODE_R fill:#2196f3,color:#fff,stroke:#1565c0,stroke-width:2px
-
-    %% Estilos Validación Triple
-    style VAL_TIKZ fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
-    style VAL_PYTHON fill:#ffcc80,stroke:#ef6c00,stroke-width:2px
-    style VAL_R fill:#90caf9,stroke:#1976d2,stroke-width:2px
-
-    %% Estilos Comparación y Selección
-    style COMPARE_VISION fill:#00bcd4,color:#fff,stroke:#00838f,stroke-width:2px
-    style CHECK_FIDELITY fill:#fff9c4,stroke:#f9a825,stroke-width:2px
-    style ITERATE fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
-    style PRESENT_USER fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
-    style USER_SELECT fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
-
-    %% Estilos Selección de Código
-    style SELECT_TIKZ fill:#9c27b0,color:#fff,stroke:#6a1b9a,stroke-width:2px
-    style SELECT_PYTHON fill:#ff9800,color:#fff,stroke:#e65100,stroke-width:2px
-    style SELECT_R fill:#2196f3,color:#fff,stroke:#1565c0,stroke-width:2px
-    style INTEGRAR_RMD fill:#4caf50,color:#fff,stroke:#2e7d32,stroke-width:2px
