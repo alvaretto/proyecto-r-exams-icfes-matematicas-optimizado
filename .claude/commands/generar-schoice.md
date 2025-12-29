@@ -63,6 +63,28 @@ series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v1.Rmd
 
 ## Flujo de generación
 
+### Paso 0: ⚠️ SELECCIÓN OBLIGATORIA DE VERSIÓN GRÁFICA
+
+**Si el ejercicio incluye gráficos generados con el workflow del graficador:**
+
+1. Verificar que existan las tres versiones (TikZ, Python, R)
+2. **OBLIGATORIO: Preguntar al usuario cuál versión usar:**
+
+```
+Se han generado tres versiones del gráfico:
+
+| Versión | Similitud | Integración R-exams |
+|---------|-----------|---------------------|
+| TikZ    | [X]%      | Imagen externa (.png/.pdf) |
+| Python  | [Y]%      | Via reticulate |
+| R       | [Z]%      | Nativo (RECOMENDADO) |
+
+¿Cuál versión deseas usar para este ejercicio .Rmd?
+```
+
+3. **NO continuar hasta recibir respuesta del usuario**
+4. Usar la versión seleccionada en el código del .Rmd
+
 ### Paso 1: Verificar clasificación
 Confirma que el ejercicio fue clasificado con `/analizar-icfes`.
 

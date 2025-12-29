@@ -150,7 +150,32 @@ R:       [80] → [92] ✅
 [Resumen de cambios en cada iteración - ya documentado incrementalmente en el reporte]
 ```
 
-5. **Confirma exportación completa**
+5. **⚠️ PREGUNTA OBLIGATORIA: Selección de versión para R-exams**
+
+**ANTES de generar el archivo .Rmd, SIEMPRE preguntar al usuario:**
+
+```
+Se han generado tres versiones del gráfico:
+
+| Versión | Similitud | Ventajas |
+|---------|-----------|----------|
+| TikZ    | [X]%      | Vectorial, precisión máxima, ideal para PDF |
+| Python  | [Y]%      | Integrable con reticulate, flexible |
+| R       | [Z]%      | Nativo R-exams, más fácil de mantener |
+
+¿Cuál versión deseas usar para el archivo .Rmd de R-exams?
+
+1. TikZ (standalone, incluido como imagen)
+2. Python (via reticulate)
+3. R/ggplot2 (nativo, RECOMENDADO)
+```
+
+**CRÍTICO:**
+- NO generar el .Rmd automáticamente
+- ESPERAR la respuesta del usuario
+- Usar la versión seleccionada para `/generar-schoice` o `/generar-cloze`
+
+6. **Confirma exportación completa**
 
 ## Opciones
 

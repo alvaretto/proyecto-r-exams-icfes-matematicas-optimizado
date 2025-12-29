@@ -36,6 +36,19 @@ Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/Nuevos-
 
 ## Flujo de generación
 
+### Paso 0: ⚠️ SELECCIÓN OBLIGATORIA DE VERSIÓN GRÁFICA
+
+**Si el ejercicio incluye gráficos del workflow graficador:**
+
+```
+¿Cuál versión usar para el .Rmd?
+1. TikZ (imagen externa)
+2. Python (reticulate)
+3. R/ggplot2 (RECOMENDADO - nativo)
+```
+
+**NO continuar sin respuesta del usuario.**
+
 ### Paso 1: Verificar clasificación
 Confirma que el ejercicio fue clasificado con `/analizar-icfes`.
 
