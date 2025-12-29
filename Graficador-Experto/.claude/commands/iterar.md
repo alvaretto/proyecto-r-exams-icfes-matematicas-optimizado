@@ -8,19 +8,28 @@ Refina el código del lenguaje actual basándose en la comparación visual.
 
 ## Proceso
 
-1. **Revisa** el último reporte de comparación
+1. **Actualizar Estado del Workflow**:
+   - Leer `outputs/workflow_state.json`
+   - Identificar lenguaje activo según `fase_actual` o parámetro proporcionado
+   - Incrementar `[lenguaje].iteracion_actual`
+   - Registrar timestamp de iteración
+   - Actualizar `timestamp_ultima_actualizacion`
+   - Guardar estado
 
-2. **Prioriza** las correcciones por impacto visual:
-   - Alto: Valores incorrectos, elementos faltantes
-   - Medio: Colores, posiciones, proporciones
-   - Bajo: Estilos menores, ajustes estéticos
+2. **Revisa** el último reporte de comparación y métricas cuantitativas
 
-3. **Aplica correcciones** de forma sistemática:
+3. **Prioriza** las correcciones por impacto visual y puntuación:
+   - Alto: Valores incorrectos, elementos faltantes (afectan categorías de 20 puntos)
+   - Medio: Colores, posiciones, proporciones (afectan categorías de 15-20 puntos)
+   - Bajo: Estilos menores, ajustes estéticos (afectan categorías de 10-15 puntos)
+
+4. **Aplica correcciones** de forma sistemática:
    - Mantén las partes que ya funcionan correctamente
    - Ajusta solo lo necesario para corregir diferencias
-   - Usa valores precisos basados en el análisis visual
+   - Usa valores precisos basados en el análisis visual y análisis_inicial.json
+   - Si hay lecciones aprendidas disponibles, aplica estrategias exitosas
 
-4. **Documenta cambios**:
+5. **Documenta cambios** en `outputs/reporte_matematico.md`:
 
 ```markdown
 ## Iteración [N] - [Lenguaje]
@@ -34,11 +43,16 @@ Refina el código del lenguaje actual basándose en la comparación visual.
 ### Código actualizado
 
 [Código completo]
+
+### Similitud anterior vs esperada
+
+- Anterior: [X] puntos
+- Esperada tras correcciones: [Y] puntos
 ```
 
-5. **Re-renderiza y compara**:
+6. **Re-renderiza y compara**:
    - Ejecuta el código actualizado
-   - Compara nuevamente con `/comparar`
+   - Compara nuevamente con `/comparar` (actualizará estado automáticamente)
    - Continúa iterando si es necesario
 
 ## Uso
@@ -54,5 +68,7 @@ Refina el código del lenguaje actual basándose en la comparación visual.
 
 ## Referencias
 
-- `skills/refinar-codigo.md` - Skill de refinamiento iterativo
+- `skills/refinar-codigo/skill.md` - Skill de refinamiento iterativo
+- `skills/gestionar-estado/skill.md` - Skill de gestión de estado del workflow
+- `.claude/schemas/workflow_state.schema.json` - Esquema del estado del workflow
 

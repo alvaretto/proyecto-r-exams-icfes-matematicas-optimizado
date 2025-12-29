@@ -207,12 +207,26 @@ Para cada diferencia:
 ## Formato de Reporte Estándar
 
 ```markdown
-## Comparación Visual - [TikZ/Python/R]
+## Comparación Visual - [TikZ/Python/R] - Iteración [N]
 
-### Resumen Ejecutivo
-**Estado General**: ✅ Excelente / ⚠️ Necesita ajustes / ❌ Requiere corrección mayor
+### Puntuación Cuantitativa
 
-**Similitud Visual Estimada**: [85]%
+**Similitud Total: [X]/100 puntos**
+
+| Categoría | Puntuación | Criterio Aplicado |
+|-----------|------------|-------------------|
+| Colores | [X]/20 | [criterio] |
+| Posiciones | [X]/20 | [criterio] |
+| Valores | [X]/20 | [criterio] |
+| Proporciones | [X]/15 | [criterio] |
+| Estilos | [X]/15 | [criterio] |
+| Elementos | [X]/10 | [criterio] |
+
+### Recomendación
+
+[✅ Validar / ⚠️ Considerar validar o iterar / ⚠️ Iterar / ❌ Iterar o regenerar]
+
+[Justificación basada en puntuación y detalles]
 
 **Iteración**: [N]
 
@@ -390,35 +404,208 @@ Para cada diferencia:
 
 ---
 
+### Historial de Similitud
+
+[Mostrar array similitud_historico como progreso]
+
+**Progreso de Similitud**:
+- Iteración 1: 75 puntos
+- Iteración 2: 82 puntos
+- Iteración 3: 89 puntos
+- **Tendencia**: Mejora constante (+7 puntos por iteración promedio)
+
 ### Evaluación Final
 
-**Similitud Visual**: 85% → Esperada tras correcciones: 98%
+**Puntuación Actual**: 89/100 puntos
 
-**Recomendación**: 
+**Puntuación Esperada tras correcciones**: 96-98 puntos
 
-- Aplicar correcciones de alta prioridad
-- Re-renderizar y comparar nuevamente
-- Si similitud > 95%, considerar validar
-- Si similitud < 95%, iterar con correcciones medias/bajas
+**Recomendación**: ⚠️ **Considerar validar o iterar**
+
+**Justificación**: 
+- Puntuación de 89 puntos indica buena similitud
+- Las diferencias identificadas son menores (colores similares, proporciones ligeramente diferentes)
+- Con las correcciones de alta prioridad, se espera alcanzar 95+ puntos
+- El usuario puede decidir validar ahora o iterar una vez más para perfeccionar
+
+**Próximos Pasos Sugeridos**:
+
+1. Si **Validar**: Continuar al siguiente lenguaje (Python/R)
+2. Si **Iterar**: Aplicar correcciones de alta prioridad y re-comparar
+3. Si **Regenerar**: Regenerar desde cero con análisis más detallado
 
 **¿Deseas aplicar estas correcciones automáticamente?** [Sí/No]
 ```
 
-## Métricas de Similitud
+## Sistema de Métricas Cuantitativas
 
-### Cuantitativa (Estimada)
+### Sistema de Puntuación (0-100 puntos)
 
-- **90-100%**: Excelente, diferencias mínimas o imperceptibles
-- **75-89%**: Buena, algunas diferencias visibles pero aceptables
-- **50-74%**: Regular, diferencias significativas que requieren atención
-- **< 50%**: Pobre, requiere revisión mayor
+El sistema de puntuación sigue el esquema `.claude/schemas/metricas_similitud.schema.json` y evalúa 6 categorías:
 
-### Cualitativa
+#### 1. Colores (0-20 puntos)
 
-- **Precisión matemática**: Valores, coordenadas, escalas
-- **Fidelidad visual**: Colores, proporciones, estilos
-- **Completitud**: Todos los elementos presentes
-- **Calidad**: Resolución, legibilidad, profesionalismo
+**Criterios de evaluación**:
+
+- **20 puntos**: Todos los colores coinciden exactamente (diferencia RGB < 1%)
+- **15 puntos**: Colores similares (diferencia RGB 1-10%)
+- **10 puntos**: Algunos colores incorrectos (1-2 colores con diferencia > 10%)
+- **5 puntos**: Colores muy diferentes (3+ colores incorrectos o diferencias > 20%)
+- **0 puntos**: Colores completamente incorrectos o paleta completamente diferente
+
+**Cálculo**:
+1. Extraer todos los colores de ambas imágenes
+2. Comparar cada color usando distancia RGB: `sqrt((R1-R2)² + (G1-G2)² + (B1-B2)²)`
+3. Clasificar según porcentaje de colores que coinciden
+4. Asignar puntuación según criterio aplicado
+
+#### 2. Posiciones y Coordenadas (0-20 puntos)
+
+**Criterios de evaluación**:
+
+- **20 puntos**: Todas las coordenadas exactas (diferencia < 1% del rango)
+- **15 puntos**: Diferencias menores al 5% del rango
+- **10 puntos**: Diferencias entre 5-10% del rango
+- **5 puntos**: Diferencias entre 10-20% del rango
+- **0 puntos**: Diferencias mayores al 20% del rango
+
+**Cálculo**:
+1. Identificar todos los puntos/coordenadas en ambas imágenes
+2. Calcular diferencia porcentual: `|valor_generado - valor_original| / rango_total * 100`
+3. Promediar diferencias de todos los puntos
+4. Asignar puntuación según criterio aplicado
+
+#### 3. Valores Numéricos (0-20 puntos)
+
+**Criterios de evaluación**:
+
+- **20 puntos**: Todos los valores correctos (etiquetas, escalas, anotaciones)
+- **15 puntos**: 1-2 valores incorrectos (no críticos)
+- **10 puntos**: 3-4 valores incorrectos
+- **5 puntos**: 5+ valores incorrectos
+- **0 puntos**: Valores críticos incorrectos (ejes, puntos clave)
+
+**Cálculo**:
+1. Extraer todos los valores numéricos visibles (etiquetas, escalas, anotaciones)
+2. Comparar valor por valor
+3. Contar valores incorrectos
+4. Identificar si hay valores críticos incorrectos
+5. Asignar puntuación según criterio aplicado
+
+#### 4. Proporciones y Escalas (0-15 puntos)
+
+**Criterios de evaluación**:
+
+- **15 puntos**: Proporciones perfectas (aspect ratio y escalas idénticas)
+- **10 puntos**: Diferencias menores (< 5% en aspect ratio)
+- **5 puntos**: Diferencias moderadas (5-15% en aspect ratio o escalas)
+- **0 puntos**: Proporciones incorrectas (> 15% diferencia o distorsión visible)
+
+**Cálculo**:
+1. Calcular aspect ratio de ambas imágenes
+2. Comparar escalas de ejes
+3. Verificar proporciones entre elementos
+4. Asignar puntuación según criterio aplicado
+
+#### 5. Estilos (0-15 puntos)
+
+**Criterios de evaluación**:
+
+- **15 puntos**: Todos los estilos coinciden (grosor, tipo de línea, fuente, marcadores)
+- **10 puntos**: Estilos similares (diferencias menores)
+- **5 puntos**: Algunos estilos incorrectos (1-2 estilos diferentes)
+- **0 puntos**: Estilos muy diferentes (3+ estilos incorrectos o completamente diferentes)
+
+**Cálculo**:
+1. Comparar grosor de líneas
+2. Comparar tipos de línea (sólida, punteada, etc.)
+3. Comparar tamaños de fuente
+4. Comparar marcadores y símbolos
+5. Asignar puntuación según criterio aplicado
+
+#### 6. Elementos (0-10 puntos)
+
+**Criterios de evaluación**:
+
+- **10 puntos**: Todos los elementos presentes (ninguno faltante ni extra)
+- **7 puntos**: 1 elemento faltante o extra
+- **4 puntos**: 2-3 elementos faltantes o extra
+- **0 puntos**: 4+ elementos faltantes o extra
+
+**Cálculo**:
+1. Inventariar todos los elementos en imagen original
+2. Inventariar todos los elementos en imagen generada
+3. Identificar elementos faltantes
+4. Identificar elementos extra
+5. Asignar puntuación según criterio aplicado
+
+### Puntuación Total y Recomendación
+
+**Puntuación Total**: Suma de todas las categorías (0-100 puntos)
+
+**Recomendación basada en puntuación**:
+
+- **95-100 puntos**: ✅ **Validar** - Excelente similitud, listo para validar
+- **85-94 puntos**: ⚠️ **Considerar validar o iterar** - Bueno, mejoras menores posibles
+- **70-84 puntos**: ⚠️ **Iterar** - Regular, necesita refinamiento
+- **< 70 puntos**: ❌ **Iterar o regenerar** - Pobre, requiere correcciones mayores
+
+### Formato de Métricas en Reporte
+
+```json
+{
+  "timestamp": "2025-12-29T11:45:00Z",
+  "lenguaje": "tikz",
+  "iteracion": 3,
+  "puntuacion_total": 89,
+  "categorias": {
+    "colores": {
+      "puntuacion": 18,
+      "criterio_aplicado": "colores_similares",
+      "detalles": "Todos los colores coinciden excepto un tono de azul ligeramente más oscuro"
+    },
+    "posiciones": {
+      "puntuacion": 17,
+      "criterio_aplicado": "diferencias_menores_5pct",
+      "detalles": "Coordenadas correctas con diferencias menores al 3%"
+    },
+    "valores": {
+      "puntuacion": 20,
+      "criterio_aplicado": "todos_correctos",
+      "detalles": "Todos los valores numéricos coinciden exactamente"
+    },
+    "proporciones": {
+      "puntuacion": 12,
+      "criterio_aplicado": "diferencias_menores",
+      "detalles": "Aspect ratio ligeramente diferente (4:3 vs 4.1:3)"
+    },
+    "estilos": {
+      "puntuacion": 13,
+      "criterio_aplicado": "estilos_similares",
+      "detalles": "Grosor de línea ligeramente más delgado"
+    },
+    "elementos": {
+      "puntuacion": 9,
+      "criterio_aplicado": "1_faltante_extra",
+      "detalles": "Falta una anotación menor en el vértice",
+      "elementos_faltantes": ["Anotación vértice"],
+      "elementos_extra": []
+    }
+  },
+  "recomendacion": "considerar_validar",
+  "justificacion": "Puntuación de 89 puntos indica buena similitud. Las diferencias son menores y pueden ser aceptables o refinadas en una iteración adicional."
+}
+```
+
+### Integración con Estado del Workflow
+
+Después de calcular las métricas:
+
+1. Guardar métricas en formato JSON (opcional, para historial detallado)
+2. Actualizar `outputs/workflow_state.json`:
+   - `[lenguaje].similitud_actual` = `puntuacion_total`
+   - Añadir `puntuacion_total` a `[lenguaje].similitud_historico`
+3. Actualizar `timestamp_ultima_actualizacion`
 
 ## Casos Especiales
 
@@ -448,7 +635,14 @@ Para cada diferencia:
 4. **Contextualizar**: Explicar el impacto de cada diferencia
 5. **Ser sistemático**: Seguir el proceso completo para no omitir nada
 
+## Referencias
+
+- `.claude/schemas/metricas_similitud.schema.json` - Esquema del sistema de puntuación
+- `skills/gestionar-estado/skill.md` - Skill de gestión de estado del workflow
+- `outputs/workflow_state.json` - Archivo de estado persistente
+
 ## Activación
+
 Esta skill se activa:
 
 - Después de cada generación de código (automático)
@@ -456,5 +650,9 @@ Esta skill se activa:
 - Cuando el usuario solicita validación
 
 ## Salida
-Reporte estructurado en markdown con análisis detallado y correcciones específicas.
+
+1. **Reporte estructurado en markdown** con análisis detallado y correcciones específicas
+2. **Métricas cuantitativas** en formato JSON según esquema
+3. **Actualización de estado** en `workflow_state.json` con similitud actual e historial
+4. **Actualización de documentación** en `reporte_matematico.md` con sección de iteración
 

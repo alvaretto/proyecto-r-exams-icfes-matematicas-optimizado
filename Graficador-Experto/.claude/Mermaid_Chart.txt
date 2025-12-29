@@ -1,5 +1,5 @@
 graph TD
-    A[📸 ENTRADA: Imagen Matemática] --> B[🔍 ANÁLISIS VISUAL MATEMÁTICO]
+    A[📸 ENTRADA: Imagen Matemática] --> B[🔍 ANÁLISIS VISUAL MATEMÁTICO v2.0]
     
     B --> C1[Clasificación de Contenido]
     C1 --> C1a[Geometría]
@@ -26,15 +26,24 @@ graph TD
     
     C4 --> D[📋 REPORTE ESTRUCTURADO]
     
-    D --> E{Seleccionar Lenguaje}
+    D --> D1[💾 NUEVO: Guardar Análisis Estructurado]
+    D1 --> D1a[analisis_inicial.json]
+    D1 --> D1b[workflow_state.json]
+    D1 --> D1c[reporte_matematico.md - Análisis Inicial]
+    
+    D1 --> E{Seleccionar Lenguaje}
     
     E -->|TikZ| F1[🎨 GENERACIÓN TIKZ]
-    E -->|Python| F2[🐍 GENERACIÓN PYTHON]
-    E -->|R| F3[📊 GENERACIÓN R]
+    E -->|Python + Lecciones TikZ| F2[🐍 GENERACIÓN PYTHON]
+    E -->|R + Lecciones TikZ/Python| F3[📊 GENERACIÓN R]
     
-    F1 --> G1[Código TikZ/LaTeX]
-    F2 --> G2[Código Python/Matplotlib]
-    F3 --> G3[Código R/ggplot2]
+    F1 --> F1x[💾 NUEVO: Actualizar Estado tikz.iteracion=1]
+    F2 --> F2x[💾 NUEVO: Actualizar Estado python.iteracion=1]
+    F3 --> F3x[💾 NUEVO: Actualizar Estado r.iteracion=1]
+    
+    F1x --> G1[Código TikZ/LaTeX]
+    F2x --> G2[Código Python/Matplotlib]
+    F3x --> G3[Código R/ggplot2]
     
     G1 --> H1[Compilar LaTeX]
     G2 --> H2[Ejecutar Python]
@@ -44,73 +53,110 @@ graph TD
     H2 --> I2[Imagen PNG]
     H3 --> I3[Imagen PNG]
     
-    I1 --> J[🔍 COMPARACIÓN VISUAL]
+    I1 --> J[🔍 COMPARACIÓN VISUAL + MÉTRICAS CUANTITATIVAS]
     I2 --> J
     I3 --> J
     
-    J --> K[Análisis de Diferencias]
-    K --> K1[Colores]
-    K --> K2[Posiciones]
-    K --> K3[Valores Numéricos]
-    K --> K4[Proporciones]
-    K --> K5[Estilos]
-    K --> K6[Elementos]
+    J --> K[Análisis de Diferencias con Puntuación]
+    K --> K1[Colores 0-20 pts]
+    K --> K2[Posiciones 0-20 pts]
+    K --> K3[Valores Numéricos 0-20 pts]
+    K --> K4[Proporciones 0-15 pts]
+    K --> K5[Estilos 0-15 pts]
+    K --> K6[Elementos 0-10 pts]
     
-    K1 --> L[📊 REPORTE DE COMPARACIÓN]
+    K1 --> L[📊 REPORTE DE COMPARACIÓN + PUNTUACIÓN TOTAL]
     K2 --> L
     K3 --> L
     K4 --> L
     K5 --> L
     K6 --> L
     
-    L --> M{Similitud Visual}
+    L --> L1[💾 NUEVO: Actualizar workflow_state.json]
+    L1 --> L1a[Registrar similitud_actual]
+    L1 --> L1b[Añadir a similitud_historico]
+    L1 --> L1c[Actualizar reporte_matematico.md]
     
-    M -->|≥ 95%| N[✅ VALIDACIÓN EXITOSA]
-    M -->|< 95%| O[🔄 ITERACIÓN NECESARIA]
+    L1 --> M{Puntuación de Similitud}
     
-    O --> P[Identificar Correcciones]
-    P --> P1[Alta Prioridad]
-    P --> P2[Media Prioridad]
-    P --> P3[Baja Prioridad]
+    M -->|≥ 95 puntos| N[✅ VALIDACIÓN EXITOSA]
+    M -->|< 95 puntos| O[🔄 ITERACIÓN NECESARIA]
+    
+    N --> N1[💾 NUEVO: Marcar lenguaje.estado = validado]
+    N1 --> N2[💾 NUEVO: Capturar lecciones_aprendidas.json]
+    N2 --> S[Validar Siguiente Lenguaje]
+    
+    O --> P[Identificar Correcciones por Puntuación]
+    P --> P1[Alta Prioridad < 70 pts]
+    P --> P2[Media Prioridad 70-84 pts]
+    P --> P3[Baja Prioridad 85-94 pts]
     
     P1 --> Q[⚙️ REFINAMIENTO DE CÓDIGO]
     P2 --> Q
     P3 --> Q
     
-    Q --> R{Aplicar Correcciones}
+    Q --> Q1[💾 NUEVO: Incrementar lenguaje.iteracion_actual]
+    Q1 --> R{Aplicar Correcciones}
     
     R -->|TikZ| F1
     R -->|Python| F2
     R -->|R| F3
     
-    N --> S[Validar Siguiente Lenguaje]
-    
     S --> T{¿Todos Validados?}
     
     T -->|NO| E
-    T -->|SÍ| U[📦 EXPORTACIÓN FINAL]
+    T -->|SÍ| U[📦 EXPORTACIÓN FINAL v2.0]
     
-    U --> V[Generar Archivos]
+    U --> U1[💾 NUEVO: Leer workflow_state.json para estadísticas]
+    U1 --> V[Generar Archivos]
+    
     V --> V1[output_tikz.tex]
     V --> V2[output_python.py]
     V --> V3[output_r.R]
-    V --> V4[comparison_report.md]
+    V --> V4[reporte_matematico.md con estadísticas]
     V --> V5[images/]
+    V --> V6[💾 NUEVO: workflow_state.json]
+    V --> V7[💾 NUEVO: analisis_inicial.json]
+    V --> V8[💾 NUEVO: lecciones_aprendidas.json]
     
-    V1 --> W[✅ PROYECTO COMPLETO]
+    V1 --> W[✅ PROYECTO COMPLETO v2.0]
     V2 --> W
     V3 --> W
     V4 --> W
     V5 --> W
+    V6 --> W
+    V7 --> W
+    V8 --> W
+    
+    subgraph ESTADO_PERSISTENTE[💾 NUEVO: ESTADO PERSISTENTE v2.0]
+        D1a
+        D1b
+        D1c
+        F1x
+        F2x
+        F3x
+        L1
+        L1a
+        L1b
+        L1c
+        N1
+        N2
+        Q1
+        U1
+        V6
+        V7
+        V8
+    end
     
     subgraph CICLO_ITERATIVO[🔄 CICLO DE REFINAMIENTO]
         O
         P
         Q
+        Q1
         R
     end
     
-    subgraph VALIDACION_MULTI_LENGUAJE[🎯 VALIDACIÓN MULTI-LENGUAJE]
+    subgraph VALIDACION_MULTI_LENGUAJE[🎯 VALIDACIÓN MULTI-LENGUAJE + TRANSFERENCIA]
         F1
         F2
         F3
@@ -125,28 +171,52 @@ graph TD
         I3
     end
     
+    subgraph COMANDOS_NUEVOS[✨ NUEVOS COMANDOS v2.0]
+        ESTADO[/estado: Visualizar Progreso/]
+        AUTOITERAR[/auto-iterar: Iteración Automática/]
+    end
+    
     style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style B fill:#fff4e6,stroke:#e65100,stroke-width:2px
+    style B fill:#fff4e6,stroke:#e65100,stroke-width:3px
     style D fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style D1 fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     style E fill:#fff9c4,stroke:#f57f17,stroke-width:3px
     
     style F1 fill:#ffebee,stroke:#c62828,stroke-width:2px
     style F2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
     style F3 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     
+    style F1x fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style F2x fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style F3x fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    
     style J fill:#7b1fa2,color:#fff,stroke:#4a148c,stroke-width:3px
     style L fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
+    style L1 fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
     style M fill:#fce4ec,stroke:#c2185b,stroke-width:3px
     
     style N fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
+    style N1 fill:#81c784,stroke:#2e7d32,stroke-width:2px
+    style N2 fill:#81c784,stroke:#2e7d32,stroke-width:2px
     style O fill:#ff7043,color:#fff,stroke:#d84315,stroke-width:2px
     
     style Q fill:#ffab91,stroke:#e64a19,stroke-width:2px
+    style Q1 fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
     style R fill:#ffe0b2,stroke:#f57c00,stroke-width:2px
     
-    style U fill:#388e3c,color:#fff,stroke:#1b5e20,stroke-width:2px
+    style U fill:#388e3c,color:#fff,stroke:#1b5e20,stroke-width:3px
+    style U1 fill:#81c784,stroke:#2e7d32,stroke-width:2px
     style W fill:#2e7d32,color:#fff,stroke:#1b5e20,stroke-width:3px
     
+    style V6 fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style V7 fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    style V8 fill:#a5d6a7,stroke:#2e7d32,stroke-width:2px
+    
+    style ESTADO fill:#81c784,stroke:#2e7d32,stroke-width:2px
+    style AUTOITERAR fill:#81c784,stroke:#2e7d32,stroke-width:2px
+    
+    style ESTADO_PERSISTENTE fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
     style CICLO_ITERATIVO fill:#fff3e0,stroke:#e65100,stroke-width:3px
     style VALIDACION_MULTI_LENGUAJE fill:#e8eaf6,stroke:#3f51b5,stroke-width:3px
+    style COMANDOS_NUEVOS fill:#c8e6c9,stroke:#1b5e20,stroke-width:3px
 

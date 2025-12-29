@@ -8,9 +8,14 @@ Exporta todos los resultados del workflow.
 
 ## Proceso
 
-1. **Verifica** que los tres códigos estén validados
+1. **Leer Estado del Workflow**:
+   - Cargar `outputs/workflow_state.json`
+   - Verificar progreso de cada lenguaje
+   - Calcular estadísticas: iteraciones totales, similitudes finales, tiempos transcurridos
 
-2. **Guarda archivos finales**:
+2. **Verifica** que los tres códigos estén validados (o al menos generados)
+
+3. **Guarda archivos finales**:
    - `outputs/output_tikz.tex` - Código TikZ final
    - `outputs/output_python.py` - Código Python final
    - `outputs/output_r.R` - Código R final
@@ -18,17 +23,22 @@ Exporta todos los resultados del workflow.
    - `outputs/tikz_render.png` - Renderizado TikZ
    - `outputs/python_render.png` - Renderizado Python
    - `outputs/r_render.png` - Renderizado R
+   - `outputs/workflow_state.json` - Estado final del workflow
+   - `outputs/analisis_inicial.json` - Análisis estructurado inicial
 
-3. **Genera reporte consolidado** (`outputs/reporte_matematico.md`):
+4. **Genera reporte consolidado** (`outputs/reporte_matematico.md`) con información del estado:
 
 ```markdown
 # Reporte de Conversión Matemática ICFES
 
 ## Resumen Ejecutivo
 
-- **Fecha**: [fecha]
-- **Tipo de contenido**: [tipo]
-- **Iteraciones totales**: TikZ: [N], Python: [N], R: [N]
+- **Fecha inicio**: [timestamp_inicio del workflow_state.json]
+- **Fecha finalización**: [timestamp_ultima_actualizacion]
+- **Duración total**: [calcular diferencia]
+- **Tipo de contenido**: [tipo del analisis_inicial.json]
+- **Iteraciones totales**: TikZ: [tikz.iteracion_actual], Python: [python.iteracion_actual], R: [r.iteracion_actual]
+- **Similitudes finales**: TikZ: [tikz.similitud_actual]%, Python: [python.similitud_actual]%, R: [r.similitud_actual]%
 - **Estado final**: ✅ Completado
 
 ## Análisis Inicial
@@ -39,8 +49,10 @@ Exporta todos los resultados del workflow.
 
 ### TikZ (LaTeX)
 
-**Iteraciones**: [N]
-**Similitud visual**: [%]
+**Iteraciones**: [tikz.iteracion_actual]
+**Similitud visual final**: [tikz.similitud_actual]%
+**Historial de similitud**: [tikz.similitud_historico como gráfico de progreso]
+**Tiempo de desarrollo**: [calcular desde tikz.timestamp_inicio hasta tikz.timestamp_validacion]
 **Ventajas**:
 
 - Salida vectorial de máxima calidad
@@ -58,8 +70,10 @@ Exporta todos los resultados del workflow.
 
 ### Python (matplotlib/numpy)
 
-**Iteraciones**: [N]
-**Similitud visual**: [%]
+**Iteraciones**: [python.iteracion_actual]
+**Similitud visual final**: [python.similitud_actual]%
+**Historial de similitud**: [python.similitud_historico como gráfico de progreso]
+**Tiempo de desarrollo**: [calcular desde python.timestamp_inicio hasta python.timestamp_validacion]
 **Ventajas**:
 
 - Ecosistema científico completo
@@ -77,8 +91,10 @@ Exporta todos los resultados del workflow.
 
 ### R (ggplot2)
 
-**Iteraciones**: [N]
-**Similitud visual**: [%]
+**Iteraciones**: [r.iteracion_actual]
+**Similitud visual final**: [r.similitud_actual]%
+**Historial de similitud**: [r.similitud_historico como gráfico de progreso]
+**Tiempo de desarrollo**: [calcular desde r.timestamp_inicio hasta r.timestamp_validacion]
 **Ventajas**:
 
 - Gramática de gráficos intuitiva
@@ -113,16 +129,38 @@ Exporta todos los resultados del workflow.
 
 [Decisiones de implementación, desafíos encontrados, soluciones aplicadas]
 
-## Historial de Iteraciones
+## Gráficos de Progreso
 
-[Resumen de cambios en cada iteración]
+### Evolución de Similitud por Lenguaje
+
+```
+TikZ:    [75] → [82] → [89] → [96] ✅
+Python:  [78] → [88] → [94] ✅
+R:       [80] → [92] ✅
 ```
 
-4. **Confirma exportación completa**
+### Estadísticas de Iteración
+
+- **Promedio de iteraciones por lenguaje**: [calcular promedio]
+- **Mejora promedio por iteración**: [calcular mejora promedio]
+- **Tiempo promedio por iteración**: [calcular tiempo promedio]
+
+## Historial de Iteraciones
+
+[Resumen de cambios en cada iteración - ya documentado incrementalmente en el reporte]
+```
+
+5. **Confirma exportación completa**
 
 ## Opciones
 
 - `--solo-codigo`: Solo genera archivos de código, sin reporte
 - `--solo-reporte`: Solo genera reporte, sin archivos individuales
 - `--formato html|md`: Formato del reporte (default: md)
+
+## Referencias
+
+- `skills/gestionar-estado/skill.md` - Skill de gestión de estado del workflow
+- `.claude/schemas/workflow_state.schema.json` - Esquema del estado del workflow
+- `.claude/schemas/analisis_inicial.schema.json` - Esquema del análisis estructurado
 

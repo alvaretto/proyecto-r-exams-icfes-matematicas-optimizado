@@ -11,8 +11,12 @@ Este proyecto implementa un workflow avanzado que utiliza visión por computador
 - **Análisis Visual Inteligente**: Identifica automáticamente el tipo de contenido matemático (Geometría, Estadística, Cálculo, Trigonometría)
 - **Generación Multi-Lenguaje**: Produce código en TikZ, Python y R
 - **Validación Visual Iterativa**: Compara las imágenes generadas con el original usando Claude Vision
+- **Métricas Cuantitativas**: Sistema objetivo de puntuación (0-100 puntos) por categorías [NUEVO]
+- **Estado Persistente**: Tracking completo del progreso del workflow con recuperación ante interrupciones [NUEVO]
+- **Transferencia de Conocimiento**: Aprendizaje entre lenguajes (TikZ → Python → R) [NUEVO]
 - **Refinamiento Automático**: Ajusta el código basándose en diferencias identificadas
-- **Reportes Detallados**: Genera documentación completa del proceso y resultados
+- **Iteración Automática**: Opción de iterar automáticamente hasta umbral de similitud [NUEVO]
+- **Reportes Detallados**: Genera documentación completa del proceso y resultados con estadísticas
 
 ## 📁 Estructura del Proyecto
 
@@ -26,20 +30,32 @@ Graficador-Experto/
 │   │   ├── generar-r.md
 │   │   ├── comparar.md
 │   │   ├── iterar.md
-│   │   └── exportar.md
+│   │   ├── exportar.md
+│   │   ├── estado.md          # [NUEVO] Visualización de progreso
+│   │   └── auto-iterar.md     # [NUEVO] Iteración automática
 │   ├── skills/                # Skills especializadas
 │   │   ├── analizar-imagen-matematica/
 │   │   ├── generar-tikz/
 │   │   ├── generar-python/
 │   │   ├── generar-r/
 │   │   ├── comparar-visual/
-│   │   └── refinar-codigo/
+│   │   ├── refinar-codigo/
+│   │   ├── gestionar-estado/      # [NUEVO] Gestión de estado
+│   │   └── transferir-conocimiento/ # [NUEVO] Transferencia de conocimiento
+│   ├── schemas/                # [NUEVO] Esquemas JSON
+│   │   ├── workflow_state.schema.json
+│   │   ├── analisis_inicial.schema.json
+│   │   ├── metricas_similitud.schema.json
+│   │   └── lecciones_aprendidas.schema.json
 │   └── README.md              # Documentación de configuración
 ├── outputs/                   # Archivos generados
+│   ├── workflow_state.json    # [NUEVO] Estado persistente del workflow
+│   ├── analisis_inicial.json  # [NUEVO] Análisis estructurado inicial
+│   ├── lecciones_aprendidas.json # [NUEVO] Lecciones capturadas
 │   ├── output_tikz.tex        # Código TikZ final
 │   ├── output_python.py       # Código Python final
 │   ├── output_r.R             # Código R final
-│   ├── reporte_matematico.md  # Reporte consolidado
+│   ├── reporte_matematico.md  # Reporte consolidado (incremental)
 │   └── renders/               # Imágenes renderizadas
 └── README.md                  # Este archivo
 ```
@@ -61,17 +77,23 @@ Este comando:
 1. Analiza la imagen con Claude Vision
 2. Identifica el tipo de contenido matemático
 3. Extrae elementos visuales y matemáticos
-4. Inicia automáticamente la generación en los tres lenguajes
+4. Guarda análisis estructurado en `outputs/analisis_inicial.json` [NUEVO]
+5. Inicializa estado del workflow en `outputs/workflow_state.json` [NUEVO]
+6. Crea reporte inicial en `outputs/reporte_matematico.md` [NUEVO]
+7. Inicia automáticamente la generación en los tres lenguajes
 
 ### 3. Validación y Refinamiento
 
 El sistema:
 
-- Genera código en cada lenguaje
+- Genera código en cada lenguaje (reutilizando análisis inicial) [NUEVO]
+- Actualiza estado del workflow automáticamente [NUEVO]
 - Lo renderiza/ejecuta automáticamente
-- Compara con el original
-- Te presenta el resultado para validación
-- Refina si solicitas mejoras
+- Compara con el original usando métricas cuantitativas (0-100 puntos) [NUEVO]
+- Calcula puntuación por categorías (colores, posiciones, valores, etc.) [NUEVO]
+- Actualiza similitud en estado persistente [NUEVO]
+- Te presenta el resultado con recomendación objetiva (validar/iterar/regenerar) [NUEVO]
+- Refina si solicitas mejoras o usa `/auto-iterar` para iteración automática [NUEVO]
 
 ### 4. Exportar Resultados
 
@@ -186,14 +208,18 @@ Genera código R (ggplot2).
 - `--formato png|svg|pdf`: Especifica formato de salida
 
 ### `/comparar`
-Compara la imagen generada con la original usando Claude Vision.
+Compara la imagen generada con la original usando Claude Vision y calcula métricas cuantitativas.
 
 **Uso**:
 ```
 /comparar [lenguaje]
 ```
 
-Genera reporte detallado de diferencias con sugerencias de corrección.
+**Características**:
+- Calcula puntuación cuantitativa (0-100 puntos) por categorías [NUEVO]
+- Actualiza estado del workflow con similitud actual e historial [NUEVO]
+- Genera recomendación objetiva basada en puntuación [NUEVO]
+- Reporte detallado de diferencias con sugerencias de corrección
 
 ### `/iterar`
 Refina el código del lenguaje actual basándose en la última comparación.
@@ -204,13 +230,43 @@ Refina el código del lenguaje actual basándose en la última comparación.
 ```
 
 ### `/exportar`
-Genera archivos finales y reporte consolidado.
+Genera archivos finales y reporte consolidado con estadísticas del workflow.
 
 **Opciones**:
 
 - `--solo-codigo`: Solo archivos de código
 - `--solo-reporte`: Solo reporte
 - `--formato html|md`: Formato del reporte
+
+### `/estado` [NUEVO]
+Visualiza el estado actual del workflow: progreso por lenguaje, tiempos transcurridos, próximos pasos sugeridos y archivos generados.
+
+**Ejemplo**:
+```
+/estado
+```
+
+Muestra progreso visual con emojis (🟢 Validado, 🟡 En iteración, ⚪ Pendiente) y estadísticas.
+
+### `/auto-iterar` [NUEVO]
+Itera automáticamente un lenguaje hasta alcanzar un umbral de similitud o máximo de iteraciones.
+
+**Uso**:
+```
+/auto-iterar [lenguaje] [umbral] [max_iteraciones]
+```
+
+**Parámetros**:
+- `lenguaje`: tikz|python|r (requerido)
+- `umbral`: Puntuación mínima para validar (default: 95)
+- `max_iteraciones`: Máximo de iteraciones permitidas (default: 10)
+
+**Ejemplo**:
+```
+/auto-iterar tikz 95 10
+```
+
+Ejecuta iteraciones automáticas hasta alcanzar 95% de similitud o máximo 10 iteraciones.
 
 ## 🔄 Workflow Visual
 
@@ -335,8 +391,15 @@ Claude: Analizando imagen...
         Generando código TikZ...
         [Genera, compila y compara]
         
-        Similitud visual: 92%
-        Diferencias menores en colores de ejes.
+        Puntuación cuantitativa: 92/100 puntos
+        - Colores: 18/20 (colores similares)
+        - Posiciones: 20/20 (todas exactas)
+        - Valores: 20/20 (todos correctos)
+        - Proporciones: 14/15 (diferencias menores)
+        - Estilos: 15/15 (todos coinciden)
+        - Elementos: 5/10 (falta 1 anotación menor)
+        
+        Recomendación: ⚠️ Considerar validar o iterar
         ¿Deseas refinar o continuar a Python?
 ```
 
@@ -379,29 +442,49 @@ Usuario: /iterar tikz "Corregir color del título a azul y aumentar grosor"
 
 Claude: Aplicando correcciones...
         [Refina código, recompila y compara]
-        Similitud mejorada: 92% → 98%
+        Puntuación mejorada: 92 → 98 puntos
+        Recomendación: ✅ Validar - Excelente similitud alcanzada
         ¿Validar y continuar?
 ```
 
 ## 📈 Métricas de Calidad
 
-El sistema evalúa:
+El sistema evalúa usando métricas cuantitativas objetivas (0-100 puntos):
 
-- **Precisión Matemática**: Valores, coordenadas, escalas correctas
-- **Fidelidad Visual**: Colores, proporciones, estilos coincidentes
-- **Completitud**: Todos los elementos presentes
-- **Similitud Visual**: Porcentaje estimado (objetivo: >95%)
+### Sistema de Puntuación por Categorías
+
+- **Colores (0-20 puntos)**: Coincidencia exacta de paleta de colores
+- **Posiciones y Coordenadas (0-20 puntos)**: Precisión de ubicación de elementos
+- **Valores Numéricos (0-20 puntos)**: Correctitud de etiquetas, escalas y anotaciones
+- **Proporciones y Escalas (0-15 puntos)**: Aspect ratio y escalas correctas
+- **Estilos (0-15 puntos)**: Grosor de líneas, tipos de línea, fuentes, marcadores
+- **Elementos (0-10 puntos)**: Completitud (todos presentes, ninguno extra)
+
+### Recomendaciones Basadas en Puntuación
+
+- **95-100 puntos**: ✅ Validar - Excelente similitud
+- **85-94 puntos**: ⚠️ Considerar validar o iterar - Bueno, mejoras menores posibles
+- **70-84 puntos**: ⚠️ Iterar - Regular, necesita refinamiento
+- **< 70 puntos**: ❌ Iterar o regenerar - Pobre, requiere correcciones mayores
+
+### Tracking de Progreso
+
+- Historial de similitudes por iteración
+- Gráficos de progreso por lenguaje
+- Estadísticas de mejora promedio
 
 ## 🛠️ Skills Especializadas
 
-El sistema incluye 6 skills principales:
+El sistema incluye 8 skills principales:
 
 1. **Análisis Visual Matemático**: Identifica y extrae información de imágenes
 2. **Generación TikZ**: Crea código LaTeX/TikZ preciso
-3. **Generación Python**: Produce código matplotlib/numpy profesional
-4. **Generación R**: Genera código ggplot2 eficiente
-5. **Comparación Visual Inteligente**: Analiza diferencias con Claude Vision
+3. **Generación Python**: Produce código matplotlib/numpy profesional (aplica lecciones de TikZ)
+4. **Generación R**: Genera código ggplot2 eficiente (aplica lecciones de TikZ y Python)
+5. **Comparación Visual Inteligente**: Analiza diferencias con Claude Vision y calcula métricas cuantitativas
 6. **Refinamiento Iterativo**: Mejora código basándose en comparaciones
+7. **Gestión de Estado** [NUEVO]: Maneja estado persistente del workflow con tracking completo
+8. **Transferencia de Conocimiento** [NUEVO]: Captura y aplica lecciones aprendidas entre lenguajes
 
 ## 🔧 Configuración Avanzada
 
@@ -441,7 +524,17 @@ Para problemas o sugerencias sobre el workflow, consulta la documentación de ca
 
 ---
 
-**Versión**: 1.0  
+**Versión**: 2.0 (Optimizada)  
 **Última actualización**: Diciembre 2025  
 **Mantenedor**: Equipo ICFES Matemáticas
+
+### Novedades en Versión 2.0
+
+- ✅ Sistema de estado persistente con tracking completo
+- ✅ Métricas cuantitativas objetivas (0-100 puntos)
+- ✅ Análisis inicial estructurado y reutilizable
+- ✅ Documentación incremental automática
+- ✅ Comando `/estado` para visualización de progreso
+- ✅ Comando `/auto-iterar` para iteración automática
+- ✅ Transferencia de conocimiento entre lenguajes
 
