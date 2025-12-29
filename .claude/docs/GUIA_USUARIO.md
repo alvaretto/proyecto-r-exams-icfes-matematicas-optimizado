@@ -152,16 +152,22 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 ### Workflow Estándar: Nuevo Ejercicio
 
 ```
+
 1. /analizar-icfes [imagen.png]
    ↓
+
 2. /generar-schoice (o /generar-cloze)
    ↓
+
 3. Revisar archivo .Rmd generado
    ↓
+
 4. /validar-diversidad-300 [archivo.Rmd]
    ↓
+
 5. Compilar PDF y HTML en RStudio
    ↓
+
 6. Si todo OK → /promover-ejercicio [archivo.Rmd]
 ```
 

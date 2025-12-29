@@ -86,6 +86,7 @@ El sistema de validación refleja el flujo de trabajo real desde el desarrollo h
 Validar que el ejercicio funciona interactivamente durante el desarrollo.
 
 ### 📝 Método
+
 1. Abrir el archivo `.Rmd` en RStudio
 2. Ejecutar: **Run > Run All**
 3. Verificar el output generado
@@ -115,6 +116,7 @@ library(tikzDevice)
 ```
 
 ### 🔍 Qué Detecta Este Nivel
+
 - Errores de sintaxis R
 - Variables no definidas
 - Problemas con librerías
@@ -122,6 +124,7 @@ library(tikzDevice)
 - Errores básicos de TikZ
 
 ### 🚫 Qué NO Detecta
+
 - Problemas con exams2pdf(), exams2nops(), etc.
 - Errores en templates específicos
 - Problemas de aleatorización
@@ -165,26 +168,31 @@ Tasa de éxito: 4 de 4 formatos (100%)
 ### 🛠️ Funciones Validadas
 
 #### `exams2html()`
+
 - Genera vista previa HTML
 - Usa `include_tikz()` para generar PNG
 - Template: "plain"
 
 #### `exams2pdf()`
+
 - Genera PDF imprimible
 - Usa código TikZ directo (con `knitr::is_latex_output()`)
 - Template: "solpcielo"
 
 #### `exams2pandoc()`
+
 - Genera archivo DOCX (Word)
 - Convierte contenido a formato Office
 - Template: "pcielo.tex"
 
 #### `exams2nops()`
+
 - Genera exámenes escaneables
 - Formato específico para lectura óptica
 - Configuración: español, institución, fecha
 
 ### 🔍 Qué Detecta Este Nivel
+
 - Errores de compilación LaTeX
 - Problemas con templates específicos
 - Incompatibilidades entre formatos
@@ -213,6 +221,7 @@ list.files(system.file("tex", package = "exams"))
 ```
 
 ### 🚫 Qué NO Detecta
+
 - Errores de comprensión del enunciado
 - Ambigüedades en el lenguaje
 - Contextos inapropiados para el nivel
@@ -227,6 +236,7 @@ list.files(system.file("tex", package = "exams"))
 Validar que el ejercicio funciona en condiciones reales con estudiantes.
 
 ### 📝 Método
+
 1. Aplicar ejercicio en el aula
 2. Observar proceso de resolución
 3. Recopilar feedback de estudiantes
@@ -244,6 +254,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 | **Lenguaje** | Vocabulario apropiado para la edad |
 
 ### 🔍 Qué Detecta Este Nivel
+
 - Ambigüedades en el enunciado
 - Contextos confusos o inapropiados
 - Errores matemáticos no detectados en tests
@@ -286,6 +297,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
    - Actualizar guías de diseño
 
 ### 🚫 Qué NO Detecta
+
 - Problemas técnicos de compilación (ya detectados en Nivel 2)
 - Errores de sintaxis R (ya detectados en Nivel 1)
 
@@ -374,12 +386,14 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 ## 🎯 Mejores Prácticas
 
 ### Durante Desarrollo (Nivel 1)
+
 1. ✅ Ejecutar Run > Run all frecuentemente
 2. ✅ Probar diferentes valores aleatorios manualmente
 3. ✅ Verificar que gráficos se visualizan
 4. ✅ Revisar solución matemática cuidadosamente
 
 ### Antes de Promoción (Nivel 2)
+
 1. ✅ Ejecutar `test_todos_formatos.R` SIEMPRE
 2. ✅ Revisar TODOS los formatos generados
 3. ✅ Verificar diversidad con `/validar-diversidad-300`
@@ -387,6 +401,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 5. ✅ Tasa de éxito debe ser 100% (4 de 4 formatos)
 
 ### Durante Producción (Nivel 3)
+
 1. ✅ Aplicar primero con grupo pequeño (piloto)
 2. ✅ Observar proceso de resolución
 3. ✅ Recopilar feedback sistemáticamente

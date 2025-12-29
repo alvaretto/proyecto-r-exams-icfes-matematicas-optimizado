@@ -9,6 +9,7 @@ description: Hook que activa diagnóstico automático cuando hay errores de comp
 
 ## Trigger
 Se activa automáticamente cuando se detecta un error de:
+
 - Compilación LaTeX
 - Renderizado TikZ
 - Ejecución Python

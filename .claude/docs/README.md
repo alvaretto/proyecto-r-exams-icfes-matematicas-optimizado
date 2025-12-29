@@ -72,6 +72,7 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 ```
 
 **Notas importantes:**
+
 - ✅ Directorio `commands/` eliminado - Migrado a `skills/` (ver `MIGRACION_COMPLETADA.md`)
 - ✅ 7 skills activos del workflow en `skills/`
 - ⚠️ `analizar-ejercicio.md` deprecado - Ver `COMANDOS_DEPRECADOS.md` para detalles
@@ -99,6 +100,7 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 ```
 
 **Condiciones Críticas:**
+
 - ❌ NO terminar con errores sin resolver
 - ✓ Ejemplos funcionales = Fuente de verdad absoluta
 - ✓ Documentar SOLO después de confirmar solución
@@ -108,6 +110,7 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 **Solo se documenta lo que está 100% verificado y funcionando.**
 
 Este principio fundamental asegura que:
+
 - ✅ Todas las soluciones documentadas han sido probadas
 - ✅ Cada patrón incluye código de ejemplo funcional
 - ✅ Los resultados son reproducibles
@@ -136,11 +139,13 @@ Este principio fundamental asegura que:
 **Propósito:** Guía completa del sistema de validación en tres niveles.
 
 **Los tres niveles:**
+
 1. **Nivel 1 - RStudio:** Run > Run all (validación interactiva)
 2. **Nivel 2 - Generación Masiva:** SemilleroUnico_v2.R (todos los formatos)
 3. **Nivel 3 - Terreno:** Validación con estudiantes en el aula
 
 **Contenido:**
+
 - Descripción detallada de cada nivel
 - Criterios de éxito específicos
 - Qué detecta y qué no detecta cada nivel
@@ -175,6 +180,7 @@ Este principio fundamental asegura que:
 ```
 
 **Proceso de agregado:**
+
 1. Identificar el error recurrente
 2. Desarrollar y probar la solución
 3. Validar en archivo .Rmd real (PDF + HTML)
@@ -195,6 +201,7 @@ Los skills son procedimientos automatizados que Claude puede ejecutar para tarea
 ```
 
 **Qué hace:**
+
 1. Identifica chunks con `include_tikz()`
 2. Aplica patrón de renderizado condicional
 3. Prueba compilación PDF y HTML
@@ -232,6 +239,7 @@ exams2nops("archivo.Rmd", n = 1)
 ```
 
 ### 🔍 FASE 2: Validación Visual y Funcional
+
 1. **Coherencia Matemática**: Fórmulas, cálculos, respuesta correcta
 2. **Coherencia Imagen-Texto**: Descripción vs gráfico, valores sincronizados
 3. **Coherencia de Código**: R ↔ Python ↔ TikZ sincronizado
@@ -259,12 +267,14 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 ```
 
 #### 📊 SUBFASE 3C: Gestión de Resultados (Solo si éxito)
+
 1. Documentar error y solución en `patrones-errores-conocidos.md`
 2. Incluir código completo (antes/después)
 3. Documentar ejemplo funcional utilizado
 4. Referenciar archivo .Rmd verificado
 
 ### ⛔ CONDICIONES CRÍTICAS
+
 - ❌ NO terminar con errores sin resolver
 - ❌ NUNCA proceder con errores pendientes
 - ✓ Documentar SOLO después de confirmar solución
@@ -275,6 +285,7 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 ### Para Documentación de Errores
 
 **Mínimo requerido:**
+
 - [ ] Error reproducible con mensaje exacto
 - [ ] Causa raíz identificada y explicada
 - [ ] Solución con código completo (antes/después)
@@ -286,6 +297,7 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 ### Para Skills de Automatización
 
 **Mínimo requerido:**
+
 - [ ] Descripción clara de la función
 - [ ] Algoritmo paso a paso documentado
 - [ ] Casos de uso específicos
@@ -298,6 +310,7 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 ### Actualización de Patrones Existentes
 
 Si un patrón documentado necesita actualización:
+
 1. ✅ Probar nueva solución completamente
 2. ✅ Validar en múltiples archivos .Rmd
 3. ✅ Actualizar sección de código
@@ -307,6 +320,7 @@ Si un patrón documentado necesita actualización:
 ### Obsolescencia de Patrones
 
 Si un patrón ya no es relevante:
+
 1. No eliminar (preservar historial)
 2. Agregar nota al inicio: `⚠️ OBSOLETO - Ver [nuevo_patron]`
 3. Explicar por qué quedó obsoleto
@@ -358,6 +372,7 @@ Para agregar nueva documentación:
 ## Contacto y Soporte
 
 Para preguntas sobre la documentación:
+
 - Ver primero `patrones-errores-conocidos.md`
 - Revisar skills existentes en `.claude/skills/`
 - Consultar archivos .Rmd de referencia en `/A-Produccion/`

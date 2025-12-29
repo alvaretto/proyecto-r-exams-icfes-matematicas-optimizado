@@ -1,0 +1,152 @@
+graph TD
+    A[📸 ENTRADA: Imagen Matemática] --> B[🔍 ANÁLISIS VISUAL MATEMÁTICO]
+    
+    B --> C1[Clasificación de Contenido]
+    C1 --> C1a[Geometría]
+    C1 --> C1b[Estadística]
+    C1 --> C1c[Cálculo]
+    C1 --> C1d[Trigonometría]
+    C1 --> C1e[Álgebra]
+    
+    B --> C2[Extracción de Elementos]
+    C2 --> C2a[Ejes Coordenados]
+    C2 --> C2b[Gráficas y Curvas]
+    C2 --> C2c[Figuras Geométricas]
+    C2 --> C2d[Anotaciones y Etiquetas]
+    
+    B --> C3[Análisis de Estilos]
+    C3 --> C3a[Colores RGB/Hex]
+    C3 --> C3b[Estilos de Línea]
+    C3 --> C3c[Tipografía]
+    
+    B --> C4[Evaluación de Complejidad]
+    C4 --> C4a[Nivel Bajo]
+    C4 --> C4b[Nivel Medio]
+    C4 --> C4c[Nivel Alto]
+    
+    C4 --> D[📋 REPORTE ESTRUCTURADO]
+    
+    D --> E{Seleccionar Lenguaje}
+    
+    E -->|TikZ| F1[🎨 GENERACIÓN TIKZ]
+    E -->|Python| F2[🐍 GENERACIÓN PYTHON]
+    E -->|R| F3[📊 GENERACIÓN R]
+    
+    F1 --> G1[Código TikZ/LaTeX]
+    F2 --> G2[Código Python/Matplotlib]
+    F3 --> G3[Código R/ggplot2]
+    
+    G1 --> H1[Compilar LaTeX]
+    G2 --> H2[Ejecutar Python]
+    G3 --> H3[Ejecutar R]
+    
+    H1 --> I1[Imagen PNG/PDF]
+    H2 --> I2[Imagen PNG]
+    H3 --> I3[Imagen PNG]
+    
+    I1 --> J[🔍 COMPARACIÓN VISUAL]
+    I2 --> J
+    I3 --> J
+    
+    J --> K[Análisis de Diferencias]
+    K --> K1[Colores]
+    K --> K2[Posiciones]
+    K --> K3[Valores Numéricos]
+    K --> K4[Proporciones]
+    K --> K5[Estilos]
+    K --> K6[Elementos]
+    
+    K1 --> L[📊 REPORTE DE COMPARACIÓN]
+    K2 --> L
+    K3 --> L
+    K4 --> L
+    K5 --> L
+    K6 --> L
+    
+    L --> M{Similitud Visual}
+    
+    M -->|≥ 95%| N[✅ VALIDACIÓN EXITOSA]
+    M -->|< 95%| O[🔄 ITERACIÓN NECESARIA]
+    
+    O --> P[Identificar Correcciones]
+    P --> P1[Alta Prioridad]
+    P --> P2[Media Prioridad]
+    P --> P3[Baja Prioridad]
+    
+    P1 --> Q[⚙️ REFINAMIENTO DE CÓDIGO]
+    P2 --> Q
+    P3 --> Q
+    
+    Q --> R{Aplicar Correcciones}
+    
+    R -->|TikZ| F1
+    R -->|Python| F2
+    R -->|R| F3
+    
+    N --> S[Validar Siguiente Lenguaje]
+    
+    S --> T{¿Todos Validados?}
+    
+    T -->|NO| E
+    T -->|SÍ| U[📦 EXPORTACIÓN FINAL]
+    
+    U --> V[Generar Archivos]
+    V --> V1[output_tikz.tex]
+    V --> V2[output_python.py]
+    V --> V3[output_r.R]
+    V --> V4[comparison_report.md]
+    V --> V5[images/]
+    
+    V1 --> W[✅ PROYECTO COMPLETO]
+    V2 --> W
+    V3 --> W
+    V4 --> W
+    V5 --> W
+    
+    subgraph CICLO_ITERATIVO[🔄 CICLO DE REFINAMIENTO]
+        O
+        P
+        Q
+        R
+    end
+    
+    subgraph VALIDACION_MULTI_LENGUAJE[🎯 VALIDACIÓN MULTI-LENGUAJE]
+        F1
+        F2
+        F3
+        G1
+        G2
+        G3
+        H1
+        H2
+        H3
+        I1
+        I2
+        I3
+    end
+    
+    style A fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    style B fill:#fff4e6,stroke:#e65100,stroke-width:2px
+    style D fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style E fill:#fff9c4,stroke:#f57f17,stroke-width:3px
+    
+    style F1 fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style F2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style F3 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    
+    style J fill:#7b1fa2,color:#fff,stroke:#4a148c,stroke-width:3px
+    style L fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
+    style M fill:#fce4ec,stroke:#c2185b,stroke-width:3px
+    
+    style N fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
+    style O fill:#ff7043,color:#fff,stroke:#d84315,stroke-width:2px
+    
+    style Q fill:#ffab91,stroke:#e64a19,stroke-width:2px
+    style R fill:#ffe0b2,stroke:#f57c00,stroke-width:2px
+    
+    style U fill:#388e3c,color:#fff,stroke:#1b5e20,stroke-width:2px
+    style W fill:#2e7d32,color:#fff,stroke:#1b5e20,stroke-width:3px
+    
+    style CICLO_ITERATIVO fill:#fff3e0,stroke:#e65100,stroke-width:3px
+    style VALIDACION_MULTI_LENGUAJE fill:#e8eaf6,stroke:#3f51b5,stroke-width:3px
+

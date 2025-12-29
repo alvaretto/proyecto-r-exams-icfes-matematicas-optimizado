@@ -11,6 +11,7 @@ matemáticas, visualización y código.
 ## Tipos de Coherencia a Verificar
 
 ### 1. Coherencia Matemática (ERR_C1)
+
 - Fórmulas correctas para el problema
 - Cálculos intermedios válidos
 - Resultado final correcto
@@ -18,12 +19,14 @@ matemáticas, visualización y código.
 - exsolution coincide con respuesta correcta
 
 ### 2. Coherencia Imagen-Texto (ERR_C2)
+
 - Valores en texto = valores en gráfico
 - Descripción textual coincide con visualización
 - Etiquetas del gráfico correctas y legibles
 - Escala apropiada para los datos
 
 ### 3. Coherencia de Código (ERR_C3)
+
 - Variables R sincronizadas con TikZ
 - Variables R sincronizadas con Python
 - No hay funciones matemáticas sobre strings

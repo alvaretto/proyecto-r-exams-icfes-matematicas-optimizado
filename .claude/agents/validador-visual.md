@@ -11,6 +11,7 @@ cada vez que se renderiza un archivo .Rmd, siguiendo las 3 fases y 3 subfases de
 ## ⚡ CICLO OBLIGATORIO DE VALIDACIÓN (3 FASES + 3 SUBFASES)
 
 ### 🔄 FASE 1: RENDERIZADO INICIAL (OBLIGATORIO)
+
 1. Ejecutar renderizado completo en 4 formatos:
    - `exams2html()` - HTML
    - `exams2pdf()` - PDF
@@ -45,6 +46,7 @@ Inspección sistemática de coherencia en TODOS los aspectos:
 ### ⚡ FASE 3: DECISIÓN Y ACCIÓN
 
 **❌ SI NO hay errores:**
+
 - Proceder directamente a documentación y flujo normal
 - Marcar VALIDACIÓN EXITOSA
 
@@ -61,6 +63,7 @@ Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/
 ```
 
 **Clasificación de errores para corrección:**
+
 - ERR_G (Gráficos): Verificar include_tikz, rutas, posicionamiento
 - ERR_T (Texto/Formato): LaTeX, encoding, metadatos
 - ERR_S (Estructura): Opciones, solución
@@ -80,6 +83,7 @@ Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/
   .claude/docs/patrones-errores-conocidos.md
 
 Registrar:
+
 - Error encontrado
 - Solución aplicada
 - Ejemplo funcional utilizado

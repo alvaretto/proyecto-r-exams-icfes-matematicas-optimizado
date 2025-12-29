@@ -8,6 +8,7 @@ Genera un archivo .Rmd de tipo **schoice** (selección única) siguiendo la estr
 del proyecto.
 
 ## Parámetros de entrada
+
 - **$ARGUMENTS**: Ruta de imagen o descripción del ejercicio
 
 ## Ruta de generación

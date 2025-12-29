@@ -205,6 +205,7 @@ Claude: Detecta contexto → Busca skill relevante → Ejecuta
 4. ✅ Mejor **experiencia de usuario** para todos los niveles
 
 **Referencia oficial:**
+
 - Commands: https://code.claude.com/docs/en/slash-commands.md
 - Skills: https://code.claude.com/docs/en/skills.md
 

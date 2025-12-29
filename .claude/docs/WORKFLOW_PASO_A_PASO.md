@@ -9,6 +9,7 @@
 Este workflow utiliza **Skills de Claude Code** configurados en `.claude/skills/` para automatizar cada fase del proceso. Los comandos que comienzan con `/` (ej: `/analizar-icfes`, `/generar-schoice`) son skills que ejecutan el flujo de trabajo completo.
 
 **Skills disponibles:**
+
 - `/analizar-icfes` - Análisis ICFES según 6 dimensiones
 - `/generar-schoice` - Generar ejercicio de selección única
 - `/generar-cloze` - Generar ejercicio de respuesta abierta
@@ -160,11 +161,13 @@ ANÁLISIS VISUAL
 ═══════════════════════════════════════════════════════════
 
 🎨 **Contenido Gráfico Detectado**: SÍ
+
    - Tipo: Diagrama geométrico (triángulo con medidas)
    - Complejidad: Media
    - Requiere TikZ: SÍ
 
 📝 **Tipo de Ejercicio Recomendado**: SCHOICE
+
    - Razón: 4 opciones de respuesta únicas
    - Formato: Selección única
 
@@ -190,6 +193,7 @@ PRÓXIMO PASO
 ✅ Ejecutar: /generar-schoice
 
 Este comando generará el archivo .Rmd completo con:
+
 - Código TikZ para el diagrama
 - Aleatorización de parámetros
 - 4 opciones de respuesta con distractores
@@ -444,6 +448,7 @@ VALIDACIÓN DE DIVERSIDAD - 300+ VERSIONES
    # Después
    a <- sample(1:50, 1)
    ```
+
 4. Volver a ejecutar `/validar-diversidad-300`
 
 ### 5.4 Tiempo Estimado
@@ -569,6 +574,7 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 10 "LaTeX"
    ```
    A-Produccion/Nuevos-Ejercicios/[archivo].Rmd
    ```
+
 3. **Actualiza registro** de ejercicios en producción
 4. **Genera reporte** de promoción
 
@@ -833,6 +839,7 @@ Por favor, mejora la fidelidad visual del código TikZ.
 
 **Método 1: Secuencial**
 ```
+
 1. Subir imagen 1 → /analizar-icfes → /generar-schoice
 2. Subir imagen 2 → /analizar-icfes → /generar-schoice
 3. Subir imagen 3 → /analizar-icfes → /generar-schoice
@@ -842,6 +849,7 @@ N. Validar todos → Compilar todos → Promover todos
 
 **Método 2: Por Lotes**
 ```
+
 1. Subir todas las imágenes
 2. Analizar todas con /analizar-icfes
 3. Generar todos los .Rmd

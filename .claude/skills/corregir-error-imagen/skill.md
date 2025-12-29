@@ -123,16 +123,19 @@ if (es_latex) {
 ## Casos de uso
 
 ### Caso 1: Diagramas geométricos
+
 - Cilindros, conos, prismas, pirámides
 - Polígonos, triángulos, circunferencias
 - Gráficas de funciones
 
 ### Caso 2: Gráficos estadísticos
+
 - Histogramas, diagramas de barras
 - Gráficos de dispersión
 - Curvas de distribución
 
 ### Caso 3: Diagramas de probabilidad
+
 - Árboles de probabilidad
 - Diagramas de Venn
 - Espacios muestrales

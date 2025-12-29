@@ -51,6 +51,7 @@ knitr::opts_chunk$set(
 ```
 
 **Referencias:**
+
 - `Lab-Manjaro/36/volumen_cilindro_hueco_py_v1.Rmd:50-53`
 - `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd`
 
@@ -90,6 +91,7 @@ py_run_string(codigo_python)
 ```
 
 **Ventajas:**
+
 - ✅ Control total sobre rutas de archivos
 - ✅ Interpolación directa de variables R
 - ✅ Compatible con R/exams workflow
@@ -394,6 +396,7 @@ plt.savefig('imagen.png', bbox_inches='tight')
 ## Cambios Recientes
 
 ### 2025-12-20
+
 - ✅ Validado patrón de cilindro con dimensiones optimizadas
 - ✅ Implementado sistema de detección de formato
 - ✅ Documentadas mejores prácticas de márgenes dinámicos

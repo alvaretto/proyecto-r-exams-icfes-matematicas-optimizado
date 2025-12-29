@@ -19,6 +19,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 **Ubicación:** `.claude/docs/WORKFLOW_PASO_A_PASO.md`
 
 **Contenido:**
+
 - ✅ **Paso 0**: Preparar y subir imagen en Claude Code
 - ✅ **Paso 1**: Analizar imagen con `/analizar-icfes`
 - ✅ **Paso 2**: Interpretar análisis (6 dimensiones + Flujo A/B)
@@ -29,6 +30,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 - ✅ **Paso 7**: Promover a producción
 
 **Características:**
+
 - Ejemplos prácticos de cada paso
 - Salidas esperadas con formato
 - Tiempos estimados por paso
@@ -48,6 +50,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 **Ubicación:** `.claude/docs/GUIA_RAPIDA_VISUAL.md`
 
 **Contenido:**
+
 - ✅ Diagramas visuales ASCII del workflow completo
 - ✅ Paso a paso visual con ejemplos
 - ✅ Tiempos estimados Flujo A vs Flujo B
@@ -57,6 +60,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 - ✅ Comandos clave con cuándo usarlos
 
 **Características:**
+
 - Formato visual fácil de seguir
 - Referencia rápida durante el trabajo
 - Comparación de tiempos entre flujos
@@ -71,6 +75,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 **Ubicación:** `.claude/docs/INDICE_DOCUMENTACION.md`
 
 **Contenido:**
+
 - ✅ Índice completo de toda la documentación
 - ✅ Organización por categoría
 - ✅ Organización por objetivo
@@ -80,6 +85,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 - ✅ Estadísticas de documentación
 
 **Características:**
+
 - Navegación fácil de toda la documentación
 - Rutas de aprendizaje personalizadas
 - Búsqueda por tema, objetivo o nivel
@@ -210,12 +216,14 @@ Ir a documento específico
 ### Actualización de Documentación
 
 **Cuándo actualizar:**
+
 - Cambios en el workflow
 - Nuevos comandos agregados
 - Nuevos casos especiales identificados
 - Feedback de usuarios
 
 **Qué actualizar:**
+
 1. WORKFLOW_PASO_A_PASO.md - Si cambia el proceso
 2. GUIA_RAPIDA_VISUAL.md - Si cambian comandos clave
 3. INDICE_DOCUMENTACION.md - Si se agregan nuevos documentos

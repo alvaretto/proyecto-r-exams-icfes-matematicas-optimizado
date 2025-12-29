@@ -108,6 +108,7 @@ Analizar mensaje de error
 └─────────────────────────────────────┘
     ↓
 Generar diagnóstico:
+
   - Categoría del error
   - Código específico
   - Solución recomendada
@@ -149,6 +150,7 @@ grep -l "py_run_string" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
 **Proceso:**
+
 1. Identificar ejemplo funcional similar
 2. Extraer patrón de solución
 3. Aplicar corrección basada en ejemplo

@@ -97,6 +97,7 @@ grep -n "usetikzlibrary" archivo.Rmd
 **Solución - Paquetes necesarios**:
 ```yaml
 header-includes:
+
 - \usepackage{tikz}
 - \usepackage{pgfplots}
 - \usetikzlibrary{3d,babel}
@@ -161,6 +162,7 @@ fig, ax = plt.subplots(figsize=(5, 4))  # Dimensiones específicas
 ## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
 
 **Solo después de revalidación exitosa:**
+
 - Documentar en `.claude/docs/patrones-errores-conocidos.md`
 
 ## ⛔ CONDICIONES CRÍTICAS

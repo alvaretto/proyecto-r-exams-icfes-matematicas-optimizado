@@ -23,6 +23,7 @@ Generación del archivo .Rmd
 ```
 
 ## Parámetros de entrada
+
 - **$ARGUMENTS**: Ruta de imagen o descripción del ejercicio
 
 ## Ruta de generación

@@ -24,6 +24,7 @@ Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/Nuev
 después de validar que cumple todos los criterios de calidad.
 
 ## Parámetros de entrada
+
 - **$ARGUMENTS**: Nombre del archivo .Rmd a promover
 
 ## Criterios de validación previos
@@ -45,12 +46,14 @@ Rscript -e 'library(exams); exams2html("[nombre].Rmd", n=3)'
 ✅ Debe compilar sin errores en HTML, PDF y Moodle
 
 ### 3. Metadatos ICFES completos
+
 - ✅ Competencia definida
 - ✅ Nivel de dificultad (1-4)
 - ✅ Componente especificado
 - ✅ Tipo de ejercicio (schoice/cloze)
 
 ### 4. Calidad del contenido
+
 - ✅ Distractores pedagógicos efectivos
 - ✅ Explicación detallada en Solution
 - ✅ Formato numérico correcto (sin notación científica)
@@ -75,6 +78,7 @@ ls -la /A-Produccion/Nuevos-Ejercicios/[nombre].Rmd
 
 ### Paso 4: Actualizar registro (opcional)
 Agregar entrada en `/A-Produccion/Nuevos-Ejercicios/README.md` con:
+
 - Nombre del ejercicio
 - Fecha de promoción
 - Competencia y nivel

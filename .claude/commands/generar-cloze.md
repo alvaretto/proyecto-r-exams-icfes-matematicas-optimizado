@@ -23,6 +23,7 @@ Generación del archivo .Rmd
 ```
 
 ## Parámetros de entrada
+
 - **$ARGUMENTS**: Ruta de imagen o descripción del ejercicio
 
 ## Ruta de generación
@@ -60,6 +61,7 @@ ls /06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condici
    - `exsolution: 1000|42.5|texto`
 
 ### Paso 4: Configuración de tolerancias
+
 - **schoice**: tolerancia = 0 (exactitud requerida)
 - **num con valores grandes**: tolerancia ≥ 1
 - **num con decimales pequeños**: tolerancia 0.01-0.1
@@ -94,6 +96,7 @@ Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produ
 
 ## Regla de Oro
 **NUNCA improvises**. Consulta ejemplos funcionales en:
+
 - `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 
 Para ejemplos CLOZE específicos también revisa:

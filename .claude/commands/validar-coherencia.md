@@ -23,16 +23,19 @@ Detecta incoherencias entre componentes del ejercicio .Rmd.
 ## Tipos de Coherencia
 
 ### 1. Matemática (ERR_C1)
+
 - Fórmulas correctas
 - Cálculos válidos
 - Respuesta correcta
 
 ### 2. Imagen-Texto (ERR_C2)
+
 - Descripción = gráfico
 - Valores sincronizados
 - Etiquetas correctas
 
 ### 3. Código (ERR_C3)
+
 - R → Python sincronizado
 - R → TikZ sincronizado
 - Tipos de datos correctos
@@ -93,6 +96,7 @@ valor = r.variable_r  # Usar valor desde R
 ## Checklist de Coherencia
 
 ### Matemática:
+
 - [ ] Fórmula aplicada correctamente
 - [ ] Cálculos intermedios verificados
 - [ ] Respuesta correcta calculada
@@ -100,12 +104,14 @@ valor = r.variable_r  # Usar valor desde R
 - [ ] exsolution coincide con respuesta correcta
 
 ### Imagen-Texto:
+
 - [ ] Dimensiones en texto = dimensiones en gráfico
 - [ ] Colores descritos = colores mostrados
 - [ ] Etiquetas legibles y correctas
 - [ ] Escala apropiada
 
 ### Código:
+
 - [ ] No hay funciones matemáticas sobre strings
 - [ ] Variables R sincronizadas con TikZ
 - [ ] Variables R sincronizadas con Python

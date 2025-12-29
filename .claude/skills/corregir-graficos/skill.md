@@ -99,6 +99,7 @@ cat("\n\n")  # Doble salto después
 **Síntoma**: Gráfico visible pero distorsionado, colores incorrectos, formas deformadas
 
 **Diagnóstico**:
+
 1. Verificar sintaxis TikZ
 2. Revisar librerías cargadas
 3. Comprobar coordenadas y escalas

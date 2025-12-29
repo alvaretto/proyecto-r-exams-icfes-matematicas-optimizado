@@ -15,6 +15,7 @@ Este documento mantiene un historial de comandos deprecados, sus razones de depr
 ### Criterios para Deprecación
 
 Un comando se depreca cuando:
+
 - ✅ Existe redundancia funcional con otro comando
 - ✅ El comando alternativo es superior en funcionalidad
 - ✅ No hay uso documentado en el workflow oficial
@@ -63,6 +64,7 @@ Un comando se depreca cuando:
 
 **Salida anterior (incompleta):**
 ```
+
 1. Nivel de Dificultad (1-4)
 2. Competencia (Interpretación, Formulación, Argumentación)
 3. Componente y Pensamiento (Numérico, Espacial, Aleatorio, etc.)
@@ -75,6 +77,7 @@ Un comando se depreca cuando:
 
 **Salida nueva (completa):**
 ```
+
 1. Nivel de Dificultad: (1-4)
 2. Competencia: (Interpretación, Formulación, Argumentación)
 3. Componente: (Numérico, Geométrico, Aleatorio)

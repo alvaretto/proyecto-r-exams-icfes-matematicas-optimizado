@@ -28,11 +28,13 @@ bash .claude/scripts/fase5_eliminar_comando_deprecado.sh
 ```
 
 **Prerequisitos:**
+
 - ✅ Fecha actual ≥ 2025-03-20
 - ✅ Checklist pre-eliminación completado
 - ✅ Backup manual creado
 
 **Acciones que realiza:**
+
 1. Verifica fecha de ejecución
 2. Verifica que no hay referencias activas
 3. Crea backup automático
@@ -41,6 +43,7 @@ bash .claude/scripts/fase5_eliminar_comando_deprecado.sh
 6. Genera log de ejecución
 
 **Output:**
+
 - Backup: `.claude/backups/fase5_[FECHA]/analizar-ejercicio.md.backup`
 - Log: `.claude/logs/fase5_eliminacion_[FECHA].log`
 
@@ -56,6 +59,7 @@ bash .claude/scripts/fase5_tests_post_eliminacion.sh
 ```
 
 **Tests ejecutados:**
+
 1. ✅ Archivo deprecado eliminado
 2. ✅ Comando estándar `/analizar-icfes` existe
 3. ✅ Workflow usa `/analizar-icfes`
@@ -84,18 +88,21 @@ bash .claude/scripts/fase5_rollback.sh
 ```
 
 **Cuándo usar:**
+
 - ❌ Tests post-eliminación fallan
 - ❌ Se descubren referencias rotas
 - ❌ Workflow deja de funcionar
 - ❌ Se reportan errores críticos
 
 **Acciones que realiza:**
+
 1. Busca el backup más reciente
 2. Restaura el archivo eliminado
 3. Ejecuta tests de validación
 4. Genera log de rollback
 
 **Output:**
+
 - Archivo restaurado: `.claude/commands/analizar-ejercicio.md`
 - Log: `.claude/logs/fase5_rollback_[FECHA].log`
 
@@ -106,32 +113,44 @@ bash .claude/scripts/fase5_rollback.sh
 ### Ejecución Normal (Sin Problemas)
 
 ```
+
 1. Completar checklist pre-eliminación
    ↓
+
 2. Crear backup manual
    ↓
+
 3. Ejecutar: fase5_eliminar_comando_deprecado.sh
    ↓
+
 4. Verificar: Tests 6/6 pasados
    ↓
+
 5. Actualizar documentación
    ↓
+
 6. ✅ Fase 5 completada
 ```
 
 ### Ejecución con Rollback (Si Hay Problemas)
 
 ```
+
 1. Ejecutar: fase5_eliminar_comando_deprecado.sh
    ↓
+
 2. Tests fallan ❌
    ↓
+
 3. Ejecutar: fase5_rollback.sh
    ↓
+
 4. Verificar: Archivo restaurado
    ↓
+
 5. Investigar causa del problema
    ↓
+
 6. Reprogramar eliminación
 ```
 

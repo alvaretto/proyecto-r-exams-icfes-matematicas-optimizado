@@ -70,6 +70,7 @@ if (es_latex) {
 ### Validación Completa en TRES NIVELES
 
 #### **Nivel 1: RStudio (Run > Run all)**
+
 - ⏭️ Pendiente de validación por usuario
 - Método: Abrir .Rmd en RStudio → Run > Run All
 
@@ -98,17 +99,20 @@ Tasa de éxito: 4 de 4 formatos (100%)
 ```
 
 **Funciones probadas:**
+
 - ✅ `exams2html()`: Sin errores
 - ✅ `exams2pdf()`: Sin errores (template solpcielo)
 - ✅ `exams2pandoc()`: Sin errores (DOCX con pcielo.tex)
 - ✅ `exams2nops()`: Sin errores (exámenes escaneables)
 
 #### **Nivel 3: Terreno (Estudiantes)**
+
 - ⏭️ Pendiente de validación en aula
 - Criterios: Claridad del enunciado, corrección matemática, distractores plausibles
 
 ### Estado Final
 **✅ VALIDACIÓN NIVELES 1 y 2 EXITOSA**
+
 - Compilación en todos los formatos: ✅ Sin errores
 - Diagramas visibles en todos los formatos: ✅
 - Ejercicio listo para producción: ✅
@@ -130,6 +134,7 @@ Tasa de éxito: 4 de 4 formatos (100%)
 ```
 
 **Qué hace:**
+
 1. Detecta errores de "File not found" en compilación
 2. Identifica chunks con `include_tikz()`
 3. Aplica patrón de renderizado condicional
@@ -141,6 +146,7 @@ Tasa de éxito: 4 de 4 formatos (100%)
 **Ubicación:** `.claude/docs/patrones-errores-conocidos.md`
 
 **Contenido:**
+
 - ✅ Mensaje de error exacto
 - ✅ Causa raíz explicada
 - ✅ Código antes/después completo
@@ -153,6 +159,7 @@ Tasa de éxito: 4 de 4 formatos (100%)
 **Ubicación:** `.claude/docs/README.md`
 
 **Incluye:**
+
 - Filosofía del sistema de documentación
 - Estructura de carpetas
 - Proceso de Error → Solución → Documentación
@@ -164,9 +171,11 @@ Tasa de éxito: 4 de 4 formatos (100%)
 ## Archivos Creados/Modificados
 
 ### Modificados
+
 1. `volumen_cilindro_geometrico_metrico_interpretacion_n2_v1.Rmd` - ✅ Corregido
 
 ### Creados
+
 1. `.claude/skills/corregir-error-imagen/skill.md` - Skill de automatización
 2. `.claude/docs/patrones-errores-conocidos.md` - Base de conocimiento
 3. `.claude/docs/README.md` - Documentación del sistema
@@ -180,6 +189,7 @@ Tasa de éxito: 4 de 4 formatos (100%)
 Este patrón de corrección aplica a **todos** los casos de:
 
 ### ✅ Casos Aplicables
+
 - Diagramas geométricos con TikZ (cilindros, prismas, conos, polígonos)
 - Gráficos estadísticos generados con TikZ
 - Diagramas de árbol de probabilidad
@@ -187,6 +197,7 @@ Este patrón de corrección aplica a **todos** los casos de:
 - Cualquier visualización TikZ en R/exams
 
 ### ❌ Casos NO Aplicables
+
 - Imágenes PNG/JPG externas
 - Gráficos ggplot2 o base R
 - Diagramas Python/matplotlib
@@ -196,20 +207,24 @@ Este patrón de corrección aplica a **todos** los casos de:
 ## Instrucciones para Futuros Errores
 
 ### 1. Identificar el error
+
 - Recopilar mensaje de error completo
 - Identificar archivo .Rmd afectado
 
 ### 2. Buscar en documentación
+
 - Revisar `.claude/docs/patrones-errores-conocidos.md`
 - Buscar mensaje de error similar
 
 ### 3. Si el error es nuevo
+
 - NO documentar hasta tener solución verificada
 - Desarrollar y probar solución
 - Validar con `exams2pdf()` y `exams2html()`
 - Solo entonces documentar en `patrones-errores-conocidos.md`
 
 ### 4. Si el error ya está documentado
+
 - Aplicar solución documentada
 - Validar que funciona
 - Si falla, investigar variante del problema
@@ -219,11 +234,13 @@ Este patrón de corrección aplica a **todos** los casos de:
 ## Próximos Pasos Recomendados
 
 ### Para el ejercicio de cilindro
+
 1. ✅ Ejercicio corregido y validado
 2. ⏭️ Listo para promover con `/promover-ejercicio`
 3. ⏭️ Mover a `/A-Produccion/Nuevos-Ejercicios/`
 
 ### Para el sistema de automatización
+
 1. ✅ Skill `corregir-error-imagen` creado
 2. ✅ Documentación completa
 3. ⏭️ Probar en futuros casos similares
@@ -261,6 +278,7 @@ El ejercicio `volumen_cilindro_geometrico_metrico_interpretacion_n2_v1.Rmd` est�
 ---
 
 **Documentos relacionados:**
+
 - Patrón de error: `.claude/docs/patrones-errores-conocidos.md#error-1`
 - Skill de corrección: `.claude/skills/corregir-error-imagen/skill.md`
 - Sistema general: `.claude/docs/README.md`

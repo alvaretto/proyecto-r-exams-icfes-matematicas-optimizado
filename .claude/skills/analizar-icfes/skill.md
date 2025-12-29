@@ -2,6 +2,7 @@
 description: Analiza la imagen según las 6 ramas del Mermaid Chart (Fase 1).
 ---
 Analiza la imagen proporcionada siguiendo estas dimensiones del workflow:
+
 1. **Nivel de Dificultad**: (1-4).
 2. **Competencia**: (Interpretación, Formulación, Argumentación).
 3. **Componente**: (Numérico, Geométrico, Aleatorio).

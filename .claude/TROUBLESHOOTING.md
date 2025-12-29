@@ -17,6 +17,7 @@ Error: LaTeX failed to compile archivo.tex
 **Causa:** Uso de `include_tikz()` en chunk de generación
 
 **Solución rápida:**
+
 1. Mover `include_tikz()` fuera del chunk de generación
 2. Usar renderizado condicional con `knitr::is_latex_output()`
 3. Para LaTeX: `cat(tikz_code)` directamente
@@ -39,6 +40,7 @@ Solo se generaron X versiones únicas. Se requieren al menos 250.
 ```
 
 **Solución:**
+
 - Aumentar rango de valores aleatorios
 - Agregar más vocabulario aleatorio
 - Verificar que no haya `set.seed()` fijos
@@ -87,6 +89,7 @@ icfes:
 
 **Workflow de corrección:**
 ```
+
 1. /validar-renderizado
 2. Si hay errores gráficos → /diagnosticar-errores
 3. Aplicar corrección según tipo → /corregir-graficos
@@ -116,6 +119,7 @@ icfes:
 ### Workflow 1: Error de Compilación PDF
 
 ```
+
 1. Copiar mensaje de error completo
 2. Buscar en .claude/docs/patrones-errores-conocidos.md
 3. Si existe patrón → Aplicar solución documentada
@@ -127,6 +131,7 @@ icfes:
 ### Workflow 2: Nuevo Ejercicio
 
 ```
+
 1. /analizar-icfes [imagen]
 2. /generar-schoice
 3. Revisar .Rmd generado
@@ -140,6 +145,7 @@ icfes:
 ## 📚 Recursos
 
 ### Documentación Principal
+
 - **Patrones de error:** `.claude/docs/patrones-errores-conocidos.md`
 - **Sistema general:** `.claude/docs/README.md`
 - **Resumen TikZ:** `.claude/docs/RESUMEN_CORRECCION_TIKZ.md`
@@ -147,17 +153,20 @@ icfes:
 ### Skills Disponibles
 
 **Generación:**
+
 - `/analizar-icfes` - Analizar ejercicio ICFES
 - `/generar-schoice` - Generar SCHOICE
 - `/generar-cloze` - Generar CLOZE
 - `/promover-ejercicio` - Promover a producción
 
 **Validación:**
+
 - `/validar-renderizado` - Ciclo completo exams2* (html, pdf, docx, nops)
 - `/validar-diversidad` - Validar 300+ versiones únicas
 - `/validar-coherencia` - Verificar coherencia matemática/imagen/código
 
 **Diagnóstico y Corrección:**
+
 - `/diagnosticar-errores` - Clasificar errores (Gráficos/Texto/Estructura/Coherencia)
 - `/corregir-error-imagen` - Corregir errores TikZ (renderizado condicional)
 - `/corregir-graficos` - Solucionar problemas de visualización
@@ -179,18 +188,22 @@ ls A-Produccion/Templates/*.Rmd
 ## 🔍 Diagnóstico Rápido
 
 ### Pregunta 1: ¿El error es de compilación?
+
 - **Sí** → Revisar `.claude/docs/patrones-errores-conocidos.md`
 - **No** → Continuar
 
 ### Pregunta 2: ¿Es un error de imagen PNG no encontrada?
+
 - **Sí** → Usar `/corregir-error-imagen`
 - **No** → Continuar
 
 ### Pregunta 3: ¿Es un error de diversidad?
+
 - **Sí** → Aumentar aleatorización, probar `/validar-diversidad-300`
 - **No** → Continuar
 
 ### Pregunta 4: ¿Es un error nuevo?
+
 - **Sí** → Investigar, NO documentar hasta verificar solución
 - **No** → Consultar documentación
 
@@ -201,11 +214,13 @@ ls A-Produccion/Templates/*.Rmd
 Antes de usar `/promover-ejercicio`, validar en **TRES NIVELES**:
 
 ### **Nivel 1: RStudio (Run > Run all)**
+
 - [ ] Todos los chunks ejecutan sin errores
 - [ ] El output configurado en YAML se genera correctamente
 - [ ] Los gráficos TikZ se visualizan
 
 ### **Nivel 2: Generación Masiva (SemilleroUnico_v2.R)**
+
 - [ ] `exams2html()` exitoso
 - [ ] `exams2pdf()` exitoso
 - [ ] `exams2pandoc()` (DOCX) exitoso
@@ -214,12 +229,14 @@ Antes de usar `/promover-ejercicio`, validar en **TRES NIVELES**:
 - [ ] Diagramas/gráficos visibles en TODOS los formatos
 
 ### **Validación Adicional**
+
 - [ ] Diversidad ≥ 250/300 versiones únicas
 - [ ] Metadatos ICFES completos
 - [ ] Solución matemática correcta
 - [ ] Sin errores en tests unitarios
 
 ### **Nivel 3: Terreno (Estudiantes)**
+
 - [ ] Enunciado claro y sin ambigüedades
 - [ ] Contexto apropiado para el nivel
 - [ ] Distractores plausibles

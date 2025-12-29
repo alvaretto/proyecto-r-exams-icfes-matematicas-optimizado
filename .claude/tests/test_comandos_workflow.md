@@ -38,6 +38,7 @@ grep -E "(Nivel|Competencia|Componente|Pensamiento|Contenido|Eje)" .claude/comma
 ### Resultado Esperado
 
 ```
+
 1. **Nivel de Dificultad**: (1-4).
 2. **Competencia**: (Interpretación, Formulación, Argumentación).
 3. **Componente**: (Numérico, Geométrico, Aleatorio).

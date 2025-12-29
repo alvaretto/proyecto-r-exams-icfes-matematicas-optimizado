@@ -60,6 +60,7 @@ include_tikz(tikz_code,
 ### Paso 5: Para cilindros específicamente
 
 Consultar ejemplos en:
+
 - `/A-Produccion/En-Produccion/05-Geometría/`
 - Buscar patrones de cilindros 3D con TikZ
 

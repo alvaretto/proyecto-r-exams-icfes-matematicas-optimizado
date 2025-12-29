@@ -9,6 +9,7 @@ description: Hook que se activa después de ejecutar funciones exams2* para vali
 
 ## Trigger
 Se activa automáticamente después de detectar ejecución de:
+
 - `exams2html()`
 - `exams2pdf()`
 - `exams2pandoc()`
@@ -24,6 +25,7 @@ Acción:
   ✅ Confirmar éxito al usuario
   📋 Sugerir inspección visual
   🔍 Recordar verificar:
+
      - Gráficos visibles
      - Tamaños apropiados
      - Sin solapamiento

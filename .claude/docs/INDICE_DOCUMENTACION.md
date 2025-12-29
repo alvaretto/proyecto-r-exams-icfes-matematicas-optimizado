@@ -189,40 +189,54 @@
 ### Ruta 1: Usuario Nuevo (Tiempo: 2-3 horas)
 
 ```
+
 1. Leer WORKFLOW_PASO_A_PASO.md (40 min)
    ↓
+
 2. Practicar con primera imagen (60 min)
    ↓
+
 3. Consultar GUIA_RAPIDA_VISUAL.md (10 min)
    ↓
+
 4. Generar segundo ejercicio (40 min)
    ↓
+
 5. Leer GUIA_USUARIO.md (30 min)
 ```
 
 ### Ruta 2: Resolución de Problemas (Tiempo: 30-60 min)
 
 ```
+
 1. Identificar error
    ↓
+
 2. Buscar en patrones-errores-conocidos.md (10 min)
    ↓
+
 3. Si no está → TROUBLESHOOTING.md (15 min)
    ↓
+
 4. Si no está → casos-resueltos/ (15 min)
    ↓
+
 5. Si no está → Solicitar ayuda a Claude Code
 ```
 
 ### Ruta 3: Optimización (Tiempo: 1-2 horas)
 
 ```
+
 1. Leer TRES_NIVELES_VALIDACION.md (20 min)
    ↓
+
 2. Revisar ejemplos funcionales (30 min)
    ↓
+
 3. Estudiar casos-resueltos/ (30 min)
    ↓
+
 4. Experimentar con optimizaciones (40 min)
 ```
 

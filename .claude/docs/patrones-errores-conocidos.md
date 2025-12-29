@@ -5,6 +5,7 @@
 ---
 
 ## Índice
+
 1. [Error: Imagen PNG no encontrada en compilación PDF](#error-1-imagen-png-no-encontrada)
 2. [Error: Argumento no numérico para función matemática abs()](#error-2-argumento-no-numerico-abs)
 3. [Error: Imágenes Python/matplotlib no visibles en exams2pdf](#error-3-imagenes-python-no-visibles-pdf)
@@ -25,6 +26,7 @@ See https://yihui.org/tinytex/r/#debugging for debugging tips.
 El uso de `include_tikz()` dentro de chunks de generación de datos crea archivos PNG/PDF en directorios temporales que no son accesibles cuando `exams2pdf()` ejecuta la compilación LaTeX final.
 
 **Flujo del problema:**
+
 1. `include_tikz()` genera `imagen.png` en `/tmp/RtmpXXXX/...`
 2. El chunk retorna referencia markdown: `![](imagen.png)`
 3. Durante `exams2pdf()`, LaTeX busca `imagen.png` en el directorio de trabajo actual
@@ -125,12 +127,14 @@ La validación debe hacerse en **TRES NIVELES** según el flujo de trabajo real:
 Ejecutar todos los chunks interactivamente en RStudio.
 
 **Criterio de éxito:**
+
 - ✅ Todos los chunks ejecutan sin errores
 - ✅ El output configurado en YAML se genera correctamente
 - ✅ Los gráficos TikZ se visualizan
 
 **Método:**
 ```
+
 1. Abrir .Rmd en RStudio
 2. Run > Run All
 3. Verificar output (HTML/PDF/Word según YAML)
@@ -140,6 +144,7 @@ Ejecutar todos los chunks interactivamente en RStudio.
 Ejecutar el script de generación completa desde la misma carpeta del .Rmd.
 
 **Criterios de éxito:**
+
 - ✅ `exams2html()` compila sin errores
 - ✅ `exams2pdf()` compila sin errores
 - ✅ `exams2pandoc()` genera DOCX sin errores
@@ -173,6 +178,7 @@ Tasa de éxito: 4 de 4 formatos (100%)
 Validación en el aula con estudiantes reales.
 
 **Criterios de validación:**
+
 - ✅ Enunciado claro y sin ambigüedades
 - ✅ Solución matemática correcta
 - ✅ Distractores plausibles pero incorrectos
@@ -197,6 +203,7 @@ Validación en el aula con estudiantes reales.
 ### 🎯 Casos Aplicables
 
 Este patrón de solución aplica para:
+
 - ✅ Diagramas geométricos con TikZ (cilindros, prismas, polígonos)
 - ✅ Gráficos estadísticos generados con TikZ
 - ✅ Diagramas de árbol de probabilidad
@@ -205,6 +212,7 @@ Este patrón de solución aplica para:
 ### ⚠️ Casos NO Aplicables
 
 Este patrón NO aplica para:
+
 - ❌ Imágenes externas (PNG/JPG ya existentes)
 - ❌ Gráficos generados con ggplot2 o base R
 - ❌ Diagramas generados con Python/matplotlib
@@ -212,9 +220,11 @@ Este patrón NO aplica para:
 ### 🔗 Archivos de Referencia
 
 **Ejemplo corregido verificado:**
+
 - `/A-Produccion/En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion_n2_v1.Rmd`
 
 **Skill asociado:**
+
 - `.claude/skills/corregir-error-imagen/skill.md`
 
 ### 📅 Historial
@@ -227,9 +237,11 @@ Este patrón NO aplica para:
 **Pruebas de validación realizadas (v1.1 - 2025-12-19 22:36):**
 
 **Nivel 1 - RStudio (Run > Run all):**
+
 - ⏭️ Pendiente de validación por usuario
 
 **Nivel 2 - Generación Masiva (validar_sin_gui.R):**
+
 - ✅ exams2html: Exitoso
   - HTML generado sin errores
   - include_tikz() funcionó correctamente para formato HTML
@@ -262,6 +274,7 @@ Este patrón NO aplica para:
 - ⚠️ Advertencias menores: Labels LaTeX duplicados (no afectan funcionalidad)
 
 **Nivel 3 - Terreno (Estudiantes):**
+
 - ⏭️ Pendiente de validación en aula
 
 ---
@@ -272,6 +285,7 @@ Este patrón NO aplica para:
 ```
 Error in `abs(b_formateado)`: Argumento no numérico para una función matemática
 Backtrace:
+
  1. └─global generar_datos()
  2. └─base::paste0("y = ", m_formateado, "x - ", abs(b_formateado))
 Error: ! Test failed
@@ -281,6 +295,7 @@ Error: ! Test failed
 Aplicar funciones matemáticas (como `abs()`, `round()`, `floor()`, etc.) sobre variables que ya han sido formateadas como strings. Las variables formateadas son de tipo `character`, no `numeric`, por lo que no pueden usarse en operaciones matemáticas.
 
 **Flujo del problema:**
+
 1. Se genera un valor numérico: `b <- -2.5`
 2. Se formatea como string: `b_formateado <- ifelse(b == as.integer(b), as.character(b), sprintf("%.1f", b))` → `"-2.5"` (string)
 3. Se intenta aplicar `abs()` sobre el string: `abs(b_formateado)` → ❌ Error
@@ -288,6 +303,7 @@ Aplicar funciones matemáticas (como `abs()`, `round()`, `floor()`, etc.) sobre 
 
 **Patrón común:**
 Este error ocurre frecuentemente cuando se necesita:
+
 - Aplicar valor absoluto a un número negativo para mostrarlo en una ecuación
 - Formatear el resultado después de aplicar la función matemática
 - Usar el valor formateado en múltiples lugares
@@ -359,12 +375,14 @@ resultado_formateado <- formatear(resultado_numerico)
 Ejecutar todos los chunks interactivamente en RStudio.
 
 **Criterio de éxito:**
+
 - ✅ Todos los chunks ejecutan sin errores
 - ✅ Las funciones matemáticas se aplican correctamente
 - ✅ Los valores formateados se muestran correctamente en las ecuaciones
 
 **Método:**
 ```
+
 1. Abrir .Rmd en RStudio
 2. Run > Run All
 3. Verificar que no hay errores en chunks de generación
@@ -375,6 +393,7 @@ Ejecutar todos los chunks interactivamente en RStudio.
 Ejecutar la prueba de diversidad de versiones.
 
 **Criterios de éxito:**
+
 - ✅ `test_that("Prueba de diversidad de versiones", ...)` pasa sin errores
 - ✅ Se generan al menos 300 versiones únicas
 - ✅ Todas las versiones generan ecuaciones válidas
@@ -403,6 +422,7 @@ Test passed
 Ejecutar el script de generación completa.
 
 **Criterios de éxito:**
+
 - ✅ `exams2html()` compila sin errores
 - ✅ `exams2pdf()` compila sin errores
 - ✅ Las ecuaciones se muestran correctamente en todos los formatos
@@ -424,6 +444,7 @@ Ejecutar el script de generación completa.
 ### 🎯 Casos Aplicables
 
 Este patrón de solución aplica para:
+
 - ✅ Aplicar `abs()` sobre valores negativos antes de formatear
 - ✅ Aplicar `round()`, `floor()`, `ceiling()` sobre valores antes de formatear
 - ✅ Cualquier función matemática que requiera argumentos numéricos
@@ -444,10 +465,12 @@ Este patrón de solución aplica para:
 ### 🔗 Archivos de Referencia
 
 **Ejemplo corregido verificado:**
+
 - `/A-Produccion/En-Desarrollo/recta_geometria_analitica_interpretacion_representacion/recta_geometria_analitica_interpretacion_representacion_n2_v1.Rmd`
 - **Caso resuelto:** `.claude/docs/casos-resueltos/2025-12-21-recta-abs-formateado.md`
 
 **Líneas corregidas:**
+
 - Línea 160: `abs(b_formateado)` → `abs(b)` luego formatear
 - Línea 177: `abs(b_dist1_formateado)` → `abs(b_distractor1)` luego formatear
 - Línea 196: `abs(b_formateado)` → `abs(b)` luego formatear
@@ -462,22 +485,26 @@ Este patrón de solución aplica para:
 **Pruebas de validación realizadas (v1.0 - 2025-12-21):**
 
 **Nivel 1 - RStudio (Run > Run all):**
+
 - ✅ Todos los chunks ejecutan sin errores
 - ✅ Las ecuaciones se generan correctamente
 - ✅ No hay errores de tipo en funciones matemáticas
 - ✅ Función probada directamente: 10 ejecuciones exitosas
 
 **Nivel 2 - Prueba de Diversidad:**
+
 - ✅ Código corregido y verificado
 - ⚠️ **Nota importante**: Si el error persiste, puede ser debido a caché de R/knitr
   - Solución: Reiniciar sesión de R o limpiar caché con `rm(list = ls())` y `knitr::knit_cache$clean()`
 
 **Nivel 3 - Generación Masiva:**
+
 - ⏭️ Pendiente de validación completa
 
 ### ⚠️ Nota sobre Caché de R/knitr
 
 Si el error persiste después de corregir el código, puede ser debido a:
+
 1. **Caché de knitr**: Los chunks pueden estar usando versiones en caché
    - **Solución**: Limpiar caché con `knitr::knit_cache$clean()` o eliminar carpeta `*_cache/`
 2. **Entorno de R**: Variables en memoria de sesiones anteriores
@@ -496,6 +523,7 @@ Si el error persiste después de corregir el código, puede ser debido a:
 ```
 
 **Síntoma:**
+
 - El PDF se genera sin errores de compilación
 - La imagen generada por Python existe en el directorio
 - La imagen NO se visualiza en el PDF final
@@ -505,6 +533,7 @@ Si el error persiste después de corregir el código, puede ser debido a:
 El uso de `knitr::include_graphics()` para mostrar imágenes generadas por Python/matplotlib no funciona correctamente con `exams2pdf()` debido a problemas de rutas y contexto de compilación.
 
 **Flujo del problema:**
+
 1. Python genera la imagen: `plt.savefig('recta_python.png')` → se guarda en directorio actual
 2. Se intenta mostrar con: `knitr::include_graphics("recta_python.png")`
 3. Durante `exams2pdf()`, knitr busca la imagen en rutas relativas/absolutas que no coinciden
@@ -512,6 +541,7 @@ El uso de `knitr::include_graphics()` para mostrar imágenes generadas por Pytho
 
 **Patrón común:**
 Este error ocurre cuando:
+
 - Se generan gráficos con Python/matplotlib usando `py_run_string()`
 - Se guarda la imagen con `plt.savefig('nombre.png')`
 - Se intenta incluir con `knitr::include_graphics()` en un chunk R
@@ -584,6 +614,7 @@ if(es_moodle) {
 ```
 
 **Diferencias clave:**
+
 1. ✅ **Guardar imagen simple**: `plt.savefig('recta_python.png')` sin rutas absolutas
 2. ✅ **Chunk de visualización**: `results='asis'` (no `fig.align` ni `out.width`)
 3. ✅ **Sintaxis markdown**: `cat("![](recta_python.png){width=50%}\n\n")` en lugar de `knitr::include_graphics()`
@@ -595,12 +626,14 @@ if(es_moodle) {
 Ejecutar todos los chunks interactivamente en RStudio.
 
 **Criterio de éxito:**
+
 - ✅ Todos los chunks ejecutan sin errores
 - ✅ La imagen se genera correctamente
 - ✅ La imagen se visualiza en el output (HTML/PDF/Word según YAML)
 
 **Método:**
 ```
+
 1. Abrir .Rmd en RStudio
 2. Run > Run All
 3. Verificar que la imagen aparece en el output
@@ -610,6 +643,7 @@ Ejecutar todos los chunks interactivamente en RStudio.
 Ejecutar `exams2pdf()` para verificar que la imagen aparece en el PDF.
 
 **Criterios de éxito:**
+
 - ✅ `exams2pdf()` compila sin errores
 - ✅ El PDF contiene la imagen (verificable con `pdfimages -list archivo.pdf`)
 - ✅ La imagen se visualiza correctamente en el PDF
@@ -635,6 +669,7 @@ pdfimages -list test_pdf/plain1.pdf
 Validar que funciona en todos los formatos de salida.
 
 **Criterios de éxito:**
+
 - ✅ `exams2html()` muestra la imagen correctamente
 - ✅ `exams2pdf()` muestra la imagen correctamente
 - ✅ `exams2pandoc()` (DOCX) muestra la imagen correctamente
@@ -654,6 +689,7 @@ Validar que funciona en todos los formatos de salida.
 ### 🎯 Casos Aplicables
 
 Este patrón de solución aplica para:
+
 - ✅ Gráficos generados con Python/matplotlib (`py_run_string()`)
 - ✅ Imágenes guardadas con `plt.savefig()`
 - ✅ Cualquier visualización generada con Python en R/exams
@@ -662,6 +698,7 @@ Este patrón de solución aplica para:
 ### ⚠️ Casos NO Aplicables
 
 Este patrón NO aplica para:
+
 - ❌ Imágenes TikZ (usar solución del Error 1)
 - ❌ Imágenes externas ya existentes (PNG/JPG)
 - ❌ Gráficos generados con ggplot2 o base R (usar sistema de figuras de knitr)
@@ -669,10 +706,12 @@ Este patrón NO aplica para:
 ### 🔗 Archivos de Referencia
 
 **Ejemplos funcionales verificados en producción:**
+
 - `/A-Produccion/En-Produccion/06-Estadística-Y-Probabilidad/.../accidentalidad-vial-genero-01.Rmd`
 - `/A-Produccion/En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion/volumen_cilindro_geometrico_metrico_interpretacion_python_n2_v1.Rmd`
 
 **Ejemplo corregido verificado:**
+
 - `/A-Produccion/En-Desarrollo/recta_geometria_analitica_interpretacion_representacion_python/recta_geometria_analitica_python_interpretacion_representacion_n2_v1.Rmd`
 
 **Patrón de referencia:**
@@ -691,9 +730,11 @@ en lugar de `knitr::include_graphics()`.
 **Pruebas de validación realizadas (v1.0 - 2025-12-21):**
 
 **Nivel 1 - RStudio (Run > Run all):**
+
 - ⏭️ Pendiente de validación por usuario
 
 **Nivel 2 - Generación Masiva (exams2pdf):**
+
 - ✅ `exams2pdf()`: Exitoso
   - PDF generado: 85KB
   - Imágenes incluidas: 2 objetos de imagen detectados con `pdfimages -list`
@@ -704,6 +745,7 @@ en lugar de `knitr::include_graphics()`.
 - ✅ Patrón basado en archivos funcionales en producción
 
 **Nivel 3 - Todos los Formatos:**
+
 - ⏭️ Pendiente de validación completa
 
 ### 💡 Notas Importantes
@@ -761,6 +803,7 @@ Para agregar un nuevo patrón de error a este documento:
 6. ✅ Documentar criterios de validación específicos
 
 **No documentar:**
+
 - ❌ Errores sin solución confirmada
 - ❌ Soluciones no probadas
 - ❌ Casos específicos sin patrón generalizable

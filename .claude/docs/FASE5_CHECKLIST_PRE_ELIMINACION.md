@@ -94,6 +94,7 @@ cat .claude/CHANGELOG.md | grep "analizar-ejercicio"
 ```
 
 **Resultado:**
+
 - [ ] Documentación completa y correcta
 
 ---
@@ -117,6 +118,7 @@ rmdir .claude/backups/test_$(date +%Y%m%d)
 ```
 
 **Resultado:**
+
 - [ ] Backup funcional
 
 ---
@@ -137,6 +139,7 @@ ls -la .claude/scripts/fase5_tests_post_eliminacion.sh
 ```
 
 **Resultado:**
+
 - [ ] Tests preparados y funcionales
 
 ---
@@ -155,6 +158,7 @@ cp .claude/backups/fase5_[FECHA]/analizar-ejercicio.md.backup \
 ```
 
 **Resultado:**
+
 - [ ] Plan de rollback verificado
 
 ---
@@ -166,6 +170,7 @@ cp .claude/backups/fase5_[FECHA]/analizar-ejercicio.md.backup \
 - [ ] **Soporte preparado para consultas**
 
 **Canales de comunicación:**
+
 - [ ] Documentación interna actualizada
 - [ ] Guía de usuario actualizada
 - [ ] Changelog actualizado
@@ -236,6 +241,7 @@ bash .claude/scripts/fase5_eliminar_comando_deprecado.sh
 5. ❌ Hay uso reciente del comando (últimos 30 días)
 
 **En caso de cancelación:**
+
 - Documentar razón en CHANGELOG.md
 - Reprogramar eliminación
 - Notificar a usuarios (si aplica)
@@ -251,6 +257,7 @@ bash .claude/scripts/fase5_eliminar_comando_deprecado.sh
 **Duración total:** [Minutos]
 
 **Resultado:**
+
 - [ ] ✅ Eliminación exitosa
 - [ ] ❌ Eliminación cancelada (razón: _____________)
 - [ ] ⚠️ Eliminación con advertencias (detalles: _____________)

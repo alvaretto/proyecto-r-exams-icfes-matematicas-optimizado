@@ -30,21 +30,25 @@ Clasifica errores post-renderizado para aplicar la corrección adecuada.
 ## Categorías de Errores
 
 ### 1. GRÁFICOS (naranja)
+
 - ERR_G1: Gráficas no visualizadas
 - ERR_G2: Gráficas solapadas
 - ERR_G3: Renderizado incorrecto
 - ERR_G4: Tamaño inadecuado
 
 ### 2. TEXTO (púrpura)
+
 - ERR_T1: LaTeX no compila
 - ERR_T2: Encoding incorrecto
 - ERR_T3: Metadatos faltantes
 
 ### 3. ESTRUCTURA (azul)
+
 - ERR_S1: Opciones incorrectas
 - ERR_S2: Solución no coincide
 
 ### 4. COHERENCIA (cyan)
+
 - ERR_C1: Coherencia matemática
 - ERR_C2: Coherencia imagen-texto
 - ERR_C3: Coherencia de código
@@ -79,6 +83,7 @@ grep -i "error" log_compilacion.txt
 ## Flujo de Diagnóstico
 
 ```
+
 1. Capturar mensaje de error o síntoma visual
 2. Identificar patrón en tablas anteriores
 3. Clasificar en categoría correspondiente
@@ -129,6 +134,7 @@ grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ## 📊 SUBFASE 3C: Documentar Solución (Solo si éxito)
 
 **Solo después de revalidación exitosa:**
+
 - Documentar en `.claude/docs/patrones-errores-conocidos.md`
 
 ## ⛔ CONDICIONES CRÍTICAS

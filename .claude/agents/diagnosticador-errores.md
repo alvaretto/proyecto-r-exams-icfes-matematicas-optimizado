@@ -76,6 +76,7 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 20 "ERR_XX"
 ```
 
 ### Paso 4: Aplicar Correcciones Basadas en Ejemplos
+
 - **NUNCA** inventar soluciones
 - **SIEMPRE** basarse en código funcional de ejemplos
 - **Copiar** estructuras que funcionan

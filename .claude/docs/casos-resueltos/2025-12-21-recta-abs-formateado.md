@@ -12,6 +12,7 @@
 ```
 Error in `abs(b_formateado)`: Argumento no numérico para una función matemática
 Backtrace:
+
  1. └─global generar_datos()
  2. └─base::paste0("y = ", m_formateado, "x - ", abs(b_formateado))
 Error: ! Test failed
@@ -25,6 +26,7 @@ Run `rlang::last_trace()` to see where the error occurred.
 Aplicación de la función matemática `abs()` sobre una variable que ya había sido formateada como string. Las funciones matemáticas requieren argumentos numéricos, no strings.
 
 **Flujo del problema:**
+
 1. Se genera valor numérico: `b <- -2.5`
 2. Se formatea como string: `b_formateado <- "-2.5"` (tipo character)
 3. Se intenta aplicar `abs()` sobre el string: `abs(b_formateado)` → ❌ Error
@@ -126,12 +128,14 @@ if (b_distractor3 < 0) {
 
 **Método:**
 ```
+
 1. Abrir .Rmd en RStudio
 2. Run > Run All
 3. Verificar que no hay errores
 ```
 
 **Resultados:**
+
 - ✅ Todos los chunks ejecutan sin errores
 - ✅ Las ecuaciones se generan correctamente
 - ✅ No hay errores de tipo en funciones matemáticas
@@ -139,6 +143,7 @@ if (b_distractor3 < 0) {
 
 ### Estado Final
 **✅ VALIDACIÓN NIVEL 1 EXITOSA**
+
 - Ejecución de chunks: ✅ Sin errores
 - Generación de ecuaciones: ✅ Correcta
 - Prueba de diversidad: ✅ Código corregido y verificado
@@ -174,6 +179,7 @@ Si el error persiste después de aplicar las correcciones, puede ser debido a:
      ```
 
 **Verificación realizada (2025-12-21):**
+
 - ✅ 0 ocurrencias de `abs(b_formateado)` en el archivo
 - ✅ Todas las correcciones aplicadas correctamente
 - ✅ Función probada directamente: funciona sin errores
@@ -185,6 +191,7 @@ Si el error persiste después de aplicar las correcciones, puede ser debido a:
 Este patrón de corrección aplica a **todos** los casos de:
 
 ### ✅ Casos Aplicables
+
 - Aplicar `abs()` sobre valores negativos antes de formatear
 - Aplicar `round()`, `floor()`, `ceiling()` sobre valores antes de formatear
 - Cualquier función matemática que requiera argumentos numéricos
@@ -192,6 +199,7 @@ Este patrón de corrección aplica a **todos** los casos de:
 - Generación de opciones de respuesta con valores absolutos
 
 ### ❌ Casos NO Aplicables
+
 - Funciones que aceptan strings (como `paste()`, `paste0()`)
 - Operaciones de concatenación de strings
 - Formateo directo sin funciones matemáticas intermedias
@@ -213,9 +221,11 @@ resultado_formateado <- formatear(resultado_numerico)
 ## Archivos Creados/Modificados
 
 ### Modificados
+
 1. `recta_geometria_analitica_interpretacion_representacion_n2_v1.Rmd` - ✅ Corregido (4 ocurrencias)
 
 ### Creados
+
 1. `.claude/docs/patrones-errores-conocidos.md` - ✅ Error documentado (Error 2)
 2. `.claude/docs/casos-resueltos/2025-01-XX-recta-abs-formateado.md` - ✅ Este archivo
 
@@ -249,6 +259,7 @@ El ejercicio `recta_geometria_analitica_interpretacion_representacion_n2_v1.Rmd`
 ---
 
 **Documentos relacionados:**
+
 - Patrón de error: `.claude/docs/patrones-errores-conocidos.md#error-2-argumento-no-numerico-abs`
 - Análisis de mejoras: `Auxiliares/Prompt-Enhancer/ANALISIS_MEJORAS_DETECCION_ERRORES.md`
 - Sistema general: `.claude/docs/README.md`

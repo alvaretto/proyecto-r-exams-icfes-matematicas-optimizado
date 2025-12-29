@@ -84,6 +84,7 @@ bash .claude/scripts/fase5_eliminar_comando_deprecado.sh
 ```
 
 **El script realizará:**
+
 1. Verificación de fecha
 2. Verificación de referencias activas
 3. Creación de backup automático
@@ -224,17 +225,20 @@ nano .claude/CHANGELOG.md
 #### `/analizar-ejercicio`
 
 **Razón de eliminación:**
+
 - Período de gracia cumplido (90 días desde deprecación)
 - Sin uso documentado durante el período de gracia
 - Migración exitosa a `/analizar-icfes` completada
 
 **Detalles:**
+
 - Fecha de deprecación: 2025-12-20
 - Fecha de eliminación: 2025-03-20
 - Backup creado: `.claude/backups/fase5_2025-03-20/`
 - Tests post-eliminación: 6/6 pasados
 
 **Impacto:**
+
 - ✅ Sin impacto en workflow (ya usa `/analizar-icfes`)
 - ✅ Sin referencias rotas en documentación
 - ✅ Sistema funcionando correctamente
@@ -242,6 +246,7 @@ nano .claude/CHANGELOG.md
 ### 📚 Documentación
 
 #### Archivos Actualizados
+
 - ✅ `.claude/docs/COMANDOS_DEPRECADOS.md` - Movido a Historial
 - ✅ `.claude/CHANGELOG.md` - Este archivo
 ```
@@ -260,6 +265,7 @@ bash .claude/scripts/fase5_rollback.sh
 ```
 
 Este script:
+
 1. Busca el backup más reciente
 2. Restaura el archivo eliminado
 3. Ejecuta tests de validación
@@ -279,6 +285,7 @@ ls -la .claude/commands/analizar-ejercicio.md
 ### Condiciones para Rollback
 
 Ejecutar rollback si:
+
 - ❌ Tests post-eliminación fallan
 - ❌ Se descubren referencias rotas
 - ❌ Workflow deja de funcionar

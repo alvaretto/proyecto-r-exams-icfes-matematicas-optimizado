@@ -31,6 +31,7 @@ en FASE 3.
 ### 1. Coherencia Matemática (ERR_C1)
 
 **Verificar**:
+
 - Fórmulas aplicadas correctamente
 - Cálculos intermedios válidos
 - Resultado final correcto
@@ -61,6 +62,7 @@ area <- pi * radio^2  # ✅ Correcto
 ### 2. Coherencia Imagen-Texto (ERR_C2)
 
 **Verificar**:
+
 - Descripción textual coincide con el gráfico
 - Valores etiquetados en imagen = valores en texto
 - Colores/formas mencionados = colores/formas mostrados
@@ -89,6 +91,7 @@ tikz_code <- paste0("\\def\\radio{", radio, "}")  # ✅ Sincronizado
 ### 3. Coherencia de Código (ERR_C3)
 
 **Verificar**:
+
 - Variables R sincronizadas con Python
 - Variables R sincronizadas con TikZ
 - Formato de números consistente
