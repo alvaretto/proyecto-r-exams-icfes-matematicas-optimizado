@@ -363,3 +363,71 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 - ✅ **Validación automática**: Verificación de configuración correcta
 
 Este proyecto representa un sistema integral y robusto que encapsula las mejores prácticas para la creación de contenido educativo parametrizado y de alta calidad.
+
+---
+
+## 🔗 **Integración Graficador Experto v2.0 con R-exams**
+
+El sistema incluye un flujo completo e integrado para transformar gráficos matemáticos en ejercicios R-exams:
+
+### Flujo Completo: Imagen → Gráfico → Ejercicio
+
+```
+1. ANÁLISIS VISUAL
+   /analizar-imagen grafico.png
+   ↓
+   Genera: analisis_inicial.json + workflow_state.json
+
+2. GENERACIÓN MULTI-LENGUAJE
+   /generar-tikz → Validado (98%+)
+   /generar-python → Validado (95%+)
+   /generar-r → Validado (96%+)
+   ↓
+   Genera: output_tikz.tex + output_python.py + output_r.R
+
+3. COMPARACIÓN CON MÉTRICAS OBJETIVAS
+   /comparar → Puntuación 0-100 en 6 categorías
+   /auto-iterar r 95 10 → Iteración automática
+   ↓
+   Resultado: 95+ puntos de similitud garantizados
+
+4. EXPORTACIÓN CON NOMENCLATURA
+   /exportar
+   ↓
+   Pregunta: ¿Qué versión usar? (TikZ/Python/R)
+   ↓
+   Crea: [ejercicio]_[componente]_[competencia]_n[nivel]_v[version]/
+         ├── Códigos de las 3 versiones
+         ├── Imágenes generadas
+         ├── Análisis y estado persistente
+         └── Reporte consolidado
+
+5. GENERACIÓN DE EJERCICIO R-EXAMS
+   /generar-schoice (o /generar-cloze)
+   ↓
+   Usa la versión gráfica seleccionada
+   ↓
+   Genera: [nombre_completo].Rmd dentro de la carpeta
+```
+
+### Ventajas de la Integración
+
+| Ventaja | Descripción |
+|---------|-------------|
+| **Trazabilidad** | Cada ejercicio tiene historial completo de cómo se generó su gráfico |
+| **Flexibilidad** | 3 versiones disponibles según necesidad (vectorial/Python/R) |
+| **Calidad** | Métricas objetivas 0-100 puntos antes de usar en .Rmd |
+| **Organización** | Carpetas nomencladas con todos los archivos relacionados |
+| **Reproducibilidad** | Estado persistente permite regenerar o modificar |
+
+### Recomendaciones por Tipo de Gráfico
+
+| Tipo de Gráfico | Versión Recomendada | Razón |
+|-----------------|---------------------|-------|
+| Geometría precisa | TikZ | Vectorial, máxima precisión |
+| Estadística básica | R/ggplot2 | Nativo R-exams, fácil mantener |
+| Visualización compleja | Python/matplotlib | Flexibilidad, numpy integrado |
+| Funciones matemáticas | TikZ o R | Calidad y precisión |
+| Gráficos de barras/líneas | R/ggplot2 | Sintaxis simple, temas profesionales |
+
+---

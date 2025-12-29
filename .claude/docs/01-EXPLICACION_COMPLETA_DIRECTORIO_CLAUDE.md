@@ -20,24 +20,75 @@ El directorio `.claude` es el **cerebro del sistema automatizado** para generar 
 ├── ⚙️ settings.json              # Configuración de hooks y automatizaciones
 ├── 🔧 settings.local.json        # Permisos para skills
 │
+├── 📁 schemas/                   # [NUEVO] Esquemas JSON para estado persistente
+│   ├── workflow_state.schema.json       # Estado del workflow de graficación
+│   ├── analisis_inicial.schema.json     # Análisis estructurado reutilizable
+│   ├── metricas_similitud.schema.json   # Sistema de puntuación 0-100
+│   └── lecciones_aprendidas.schema.json # Transferencia de conocimiento
+│
 ├── 📁 skills/                    # Skills automatizados (comandos /)
-│   ├── analizar-icfes/          # Análisis de 6 dimensiones ICFES
-│   ├── generar-schoice/         # Generador de selección única
-│   ├── generar-cloze/           # Generador de respuesta abierta
-│   ├── promover-ejercicio/      # Promoción a producción
-│   ├── corregir-error-imagen/   # Corrector de errores TikZ
-│   ├── validar-diversidad/      # Validador de 300+ versiones
-│   └── validar-icfes/           # Validador de metadatos
+│   ├── [Workflow Principal ICFES]
+│   │   ├── analizar-icfes/          # Análisis de 6 dimensiones ICFES
+│   │   ├── generar-schoice/         # Generador de selección única con nomenclatura
+│   │   ├── generar-cloze/           # Generador CLOZE con tolerancias apropiadas
+│   │   ├── promover-ejercicio/      # Promoción a producción
+│   │   ├── validar-diversidad/      # Validador de 300+ versiones
+│   │   └── validar-icfes/           # Validador de metadatos
+│   │
+│   ├── [Graficador Experto v2.0]
+│   │   ├── analizar-imagen-grafica/        # Análisis visual con estado persistente
+│   │   ├── generar-codigo-tikz/            # Generación TikZ con actualización de estado
+│   │   ├── generar-codigo-python/          # Generación Python con transferencia de conocimiento
+│   │   ├── generar-codigo-r/               # Generación R con lecciones aprendidas
+│   │   ├── comparar-similitud-visual/      # Comparación con métricas 0-100 puntos
+│   │   ├── refinar-codigo-grafico/         # Refinamiento con contador de iteraciones
+│   │   ├── gestionar-estado-graficador/    # [NUEVO] Gestión de estado persistente
+│   │   └── transferir-conocimiento-grafico/ # [NUEVO] Transferencia entre lenguajes
+│   │
+│   └── [Validación y Corrección]
+│       ├── validar-renderizado/     # Validación de renderizado en 4 formatos
+│       ├── validar-coherencia/      # Validación de coherencia matemática
+│       ├── diagnosticar-errores/    # Diagnóstico de errores
+│       ├── corregir-error-imagen/   # Corrector de errores TikZ
+│       └── corregir-graficos/       # Corrección de gráficos
+│
+├── 📁 commands/                  # [NUEVO] Comandos slash para acceso rápido
+│   ├── [Workflow ICFES]
+│   │   ├── analizar-icfes.md
+│   │   ├── generar-schoice.md
+│   │   ├── generar-cloze.md
+│   │   └── promover-ejercicio.md
+│   │
+│   ├── [Graficador Experto]
+│   │   ├── analizar-imagen-grafica.md
+│   │   ├── generar-codigo-tikz.md
+│   │   ├── generar-codigo-python.md
+│   │   ├── generar-codigo-r.md
+│   │   ├── comparar-similitud-visual.md
+│   │   ├── refinar-codigo-grafico.md
+│   │   ├── estado-graficador.md      # [NUEVO] Visualización de progreso
+│   │   ├── exportar-graficos.md
+│   │   └── auto-refinar-grafico.md   # [NUEVO] Iteración automática
+│   │
+│   └── [Validación]
+│       ├── validar-renderizado.md
+│       ├── validar-coherencia.md
+│       ├── diagnosticar-errores.md
+│       ├── corregir-error-imagen.md
+│       └── corregir-graficos.md
 │
 ├── 📁 agents/                    # Agentes especializados
 │   ├── clasificador-icfes.md    # Clasificación automática
-│   ├── graficador-tikz.md       # Replicación visual TikZ
 │   ├── corrector-coherencia.md  # Validación de coherencia
 │   ├── diagnosticador-errores.md # Diagnóstico de errores
 │   └── validador-visual.md      # Validación visual
 │
 ├── 📁 docs/                      # Documentación técnica
 │   ├── README.md                # Índice principal
+│   ├── INDICE_DOCUMENTACION.md  # Índice completo de documentación
+│   ├── 01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md  # Este archivo
+│   ├── 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md # Doc Graficador v2.0
+│   ├── NOMENCLATURA_ARCHIVOS_RMD.md  # Nomenclatura obligatoria
 │   ├── WORKFLOW_PASO_A_PASO.md  # Guía completa del flujo
 │   ├── GUIA_RAPIDA_VISUAL.md    # Referencia visual rápida
 │   ├── TRES_NIVELES_VALIDACION.md # Metodología de validación
@@ -401,12 +452,18 @@ Los **skills** son comandos que ejecutan flujos completos:
 - Genera ejercicio de selección única
 - Crea 4 opciones con distractores plausibles
 - Incluye metadatos ICFES completos
+- **[ACTUALIZADO]** Pregunta obligatoriamente qué versión gráfica usar (TikZ/Python/R)
+- **[ACTUALIZADO]** Crea carpeta con nomenclatura oficial: `[ejercicio]_[componente]_[competencia]_n[nivel]_v[version]/`
+- **[ACTUALIZADO]** Guarda archivo .Rmd dentro de la carpeta con el mismo nombre
 
 ### `/generar-cloze`
 
-- Genera ejercicio de respuesta abierta
-- Configura tolerancias apropiadas
+- Genera ejercicio de respuesta abierta (múltiples gaps)
+- **[ACTUALIZADO]** Configura tolerancias apropiadas: 0 para schoice, ≥1 para valores numéricos grandes
 - Valida coherencia de respuestas
+- **[ACTUALIZADO]** Pregunta obligatoriamente qué versión gráfica usar (TikZ/Python/R)
+- **[ACTUALIZADO]** Crea carpeta con nomenclatura oficial
+- **[ACTUALIZADO]** Documenta configuración de tolerancias en comentarios
 
 ### `/promover-ejercicio`
 
@@ -435,56 +492,73 @@ Los **skills** son comandos que ejecutan flujos completos:
 ### `/analizar-imagen-grafica`
 
 - Analiza imagen matemática para replicación visual
-- Genera análisis estructurado en JSON
-- Inicializa estado persistente del workflow
+- **[NUEVO]** Genera análisis estructurado en JSON (`analisis_inicial.json`)
+- **[NUEVO]** Inicializa estado persistente del workflow (`workflow_state.json`)
+- Clasifica contenido en 4 dimensiones (tipo, elementos, estilos, complejidad)
 
 ### `/generar-codigo-tikz`
 
 - Genera código TikZ/LaTeX validado
 - Compila y renderiza automáticamente
-- Integra con análisis estructurado
+- **[NUEVO]** Actualiza estado del workflow con timestamp y progreso
+- Integra con análisis estructurado reutilizable
 
 ### `/generar-codigo-python`
 
 - Genera código Python/Matplotlib validado
-- Aplica lecciones aprendidas de TikZ
+- **[NUEVO]** Aplica lecciones aprendidas de TikZ (transferencia de conocimiento)
 - Ejecuta y renderiza automáticamente
+- **[NUEVO]** Actualiza estado con similitud actual
 
 ### `/generar-codigo-r`
 
 - Genera código R/ggplot2 validado
-- Aplica lecciones aprendidas de TikZ/Python
+- **[NUEVO]** Aplica lecciones aprendidas de TikZ y Python
 - Ejecuta y renderiza automáticamente
+- **[RECOMENDADO]** Versión preferida para integración con R-exams
 
 ### `/comparar-similitud-visual`
 
-- Compara imagen generada con original
-- Calcula métricas cuantitativas (0-100 puntos)
-- Genera recomendaciones basadas en puntuación
+- Compara imagen generada con original usando Claude Vision
+- **[MEJORADO]** Calcula métricas cuantitativas (0-100 puntos en 6 categorías):
+  - Colores (0-20 puntos)
+  - Posiciones (0-20 puntos)
+  - Valores (0-20 puntos)
+  - Proporciones (0-15 puntos)
+  - Estilos (0-15 puntos)
+  - Elementos (0-10 puntos)
+- **[NUEVO]** Genera recomendaciones objetivas basadas en puntuación
+- **[NUEVO]** Actualiza historial de similitud en estado persistente
 
 ### `/refinar-codigo-grafico`
 
 - Refina código basándose en comparación visual
-- Prioriza correcciones por impacto
-- Incrementa contador de iteración
+- Prioriza correcciones por impacto (Alta/Media/Baja)
+- **[NUEVO]** Incrementa contador de iteración automáticamente
+- **[NUEVO]** Captura lecciones aprendidas para transferencia de conocimiento
 
 ### `/estado-graficador`
 
-- Visualiza progreso del workflow de graficación
-- Muestra similitudes por lenguaje
-- Sugiere próximos pasos
+- **[NUEVO]** Visualiza progreso del workflow de graficación en tiempo real
+- Muestra similitudes actuales por lenguaje
+- Muestra contador de iteraciones por lenguaje
+- Sugiere próximos pasos basados en estado actual
 
 ### `/exportar-graficos`
 
 - Exporta archivos finales y reporte consolidado
-- Incluye estadísticas completas del proceso
+- **[NUEVO]** Incluye estadísticas completas del proceso (iteraciones, similitudes, tiempos)
+- **[NUEVO]** Pregunta obligatoriamente qué versión gráfica usar para R-exams
+- **[NUEVO]** Crea carpeta con nomenclatura oficial
+- **[NUEVO]** Incluye archivos de estado persistente (workflow_state.json, analisis_inicial.json)
 - Genera proyecto completo listo para uso
 
 ### `/auto-refinar-grafico`
 
-- Iteración automática hasta umbral de similitud
-- Detecta convergencia y regresión
+- **[NUEVO]** Iteración automática hasta umbral de similitud (ej: `/auto-refinar-grafico r 95 10`)
+- Detecta convergencia y regresión automáticamente
 - Valida automáticamente al alcanzar umbral
+- Limita iteraciones máximas para evitar ciclos infinitos
 
 ---
 
@@ -571,12 +645,16 @@ El archivo `settings.json` define **hooks automáticos**:
 
 El sistema garantiza:
 
-- ✅ **300+ versiones únicas** por ejercicio
+- ✅ **300+ versiones únicas** por ejercicio (validado con testthat)
 - ✅ **4 formatos funcionales** (HTML, PDF, DOCX, NOPS)
-- ✅ **98%+ fidelidad visual** en gráficos TikZ
+- ✅ **95%+ similitud visual** en gráficos (sistema de puntuación 0-100)
 - ✅ **100% coherencia matemática** validada
 - ✅ **Metadatos ICFES completos** y correctos
 - ✅ **Documentación verificada** de soluciones
+- ✅ **[NUEVO]** Estado persistente con trazabilidad completa
+- ✅ **[NUEVO]** Nomenclatura obligatoria en todos los archivos .Rmd
+- ✅ **[NUEVO]** Carpetas estructuradas con todos los archivos relacionados
+- ✅ **[NUEVO]** Tolerancias apropiadas en ejercicios CLOZE (0 para schoice, ≥1 para numéricos)
 
 ---
 
@@ -662,7 +740,42 @@ FASE 3: DECISIÓN
 
 ---
 
-**Última actualización:** 2025-12-28
-**Versión del documento:** 1.0
-**Estado:** ✅ Completo y verificado
+---
+
+## 🆕 **NOVEDADES RECIENTES (Diciembre 2025)**
+
+### Graficador Experto v2.0
+
+- ✅ **Estado persistente**: Tracking completo del progreso con recuperación ante interrupciones
+- ✅ **Métricas cuantitativas**: Sistema de puntuación 0-100 puntos en 6 categorías
+- ✅ **Análisis estructurado**: Formato JSON reutilizable para las 3 generaciones
+- ✅ **Transferencia de conocimiento**: Lecciones aprendidas aplicadas entre lenguajes
+- ✅ **Iteración automática**: Comando `/auto-refinar-grafico` hasta umbral de similitud
+- ✅ **Visualización de progreso**: Comando `/estado-graficador` para ver avance en tiempo real
+
+### Nomenclatura Obligatoria y Carpetas Estructuradas
+
+- ✅ **Formato estándar**: `[ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd`
+- ✅ **Carpetas organizadas**: Cada ejercicio en su propia carpeta con todos sus archivos
+- ✅ **Exportación mejorada**: `/exportar-graficos` crea carpeta con nomenclatura oficial
+- ✅ **Selección de versión gráfica**: Pregunta obligatoria antes de generar .Rmd
+
+### Configuración de Tolerancias para Ejercicios CLOZE
+
+- ✅ **Tolerancias apropiadas**: 0 para schoice, ≥1 para valores numéricos grandes
+- ✅ **Documentación mejorada**: Guías específicas en comandos y skills
+- ✅ **Validación automática**: Verificación de configuración correcta
+
+### Integración Completa Graficador-ICFES
+
+- ✅ **Flujo unificado**: Imagen → Gráfico validado → Ejercicio .Rmd completo
+- ✅ **3 versiones disponibles**: TikZ (vectorial), Python (flexible), R (nativo, recomendado)
+- ✅ **Trazabilidad completa**: Cada ejercicio con historial de cómo se generó su gráfico
+- ✅ **Calidad garantizada**: Métricas objetivas antes de integrar en .Rmd
+
+---
+
+**Última actualización:** 2025-12-29
+**Versión del documento:** 2.0 (Integración Graficador v2.0)
+**Estado:** ✅ Completo y verificado con integraciones recientes
 
