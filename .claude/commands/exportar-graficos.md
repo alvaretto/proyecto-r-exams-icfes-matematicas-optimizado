@@ -175,7 +175,46 @@ Se han generado tres versiones del gráfico:
 - ESPERAR la respuesta del usuario
 - Usar la versión seleccionada para `/generar-schoice` o `/generar-cloze`
 
-6. **Confirma exportación completa**
+6. **Crear CARPETA con nomenclatura oficial**
+
+Después de que el usuario seleccione la versión:
+
+```bash
+# 1. Construir nombre según nomenclatura:
+NOMBRE="[ejercicio]_[componente]_[competencia]_n[nivel]_v[version]"
+
+# 2. Crear carpeta:
+mkdir -p outputs/$NOMBRE
+
+# 3. Mover todos los archivos a la carpeta:
+mv outputs/output_tikz.tex outputs/$NOMBRE/
+mv outputs/output_python.py outputs/$NOMBRE/
+mv outputs/output_r.R outputs/$NOMBRE/
+mv outputs/tikz_final.png outputs/$NOMBRE/
+mv outputs/python_final.png outputs/$NOMBRE/
+mv outputs/r_final.png outputs/$NOMBRE/
+mv outputs/analisis_inicial.json outputs/$NOMBRE/
+mv outputs/workflow_state.json outputs/$NOMBRE/
+mv outputs/reporte_matematico.md outputs/$NOMBRE/
+cp outputs/original.png outputs/$NOMBRE/  # Si existe
+```
+
+**Estructura final:**
+```
+outputs/[nombre_ejercicio]/
+├── [nombre_ejercicio].Rmd
+├── output_tikz.tex
+├── output_python.py
+├── output_r.R
+├── tikz_final.png
+├── python_final.png
+├── r_final.png
+├── analisis_inicial.json
+├── workflow_state.json
+└── reporte_matematico.md
+```
+
+7. **Confirma exportación completa**
 
 ## Opciones
 

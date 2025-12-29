@@ -113,13 +113,49 @@ Antes de guardar cualquier archivo .Rmd, verificar:
 6. ✅ `exname` coincide exactamente con el nombre del archivo
 7. ✅ Metadatos ICFES coinciden con los componentes del nombre
 
-## Ubicación de Archivos
+## Estructura de Carpetas OBLIGATORIA
 
-| Estado | Carpeta |
-|--------|---------|
-| En desarrollo | `/A-Produccion/En-Desarrollo/` |
-| Nuevos (validados) | `/A-Produccion/Nuevos-Ejercicios/` |
-| En producción | `/A-Produccion/En-Produccion/[categoria]/` |
+### Carpeta del Ejercicio
+
+**Todo ejercicio .Rmd DEBE estar en su propia carpeta con el mismo nombre:**
+
+```
+outputs/[nombre_ejercicio]/
+├── [nombre_ejercicio].Rmd          # Archivo principal
+├── original.png                     # Imagen original (si aplica)
+├── output_tikz.tex                  # Código TikZ
+├── output_python.py                 # Código Python
+├── output_r.R                       # Código R
+├── tikz_final.png                   # Renderizado TikZ
+├── python_final.png                 # Renderizado Python
+├── r_final.png                      # Renderizado R
+├── analisis_inicial.json            # Análisis estructurado
+└── workflow_state.json              # Estado del workflow
+```
+
+### Ejemplo Completo
+
+```
+outputs/series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v1/
+├── series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v1.Rmd
+├── original.png
+├── output_tikz.tex
+├── output_python.py
+├── output_r.R
+├── tikz_final.png
+├── python_final.png
+├── r_final.png
+├── analisis_inicial.json
+└── workflow_state.json
+```
+
+### Ubicación según Estado
+
+| Estado | Carpeta Base |
+|--------|--------------|
+| En desarrollo | `/A-Produccion/En-Desarrollo/[nombre_ejercicio]/` |
+| Nuevos (validados) | `/A-Produccion/Nuevos-Ejercicios/[nombre_ejercicio]/` |
+| En producción | `/A-Produccion/En-Produccion/[categoria]/[nombre_ejercicio]/` |
 
 ## Errores Comunes a Evitar
 

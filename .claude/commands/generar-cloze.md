@@ -125,9 +125,9 @@ ls /06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condici
 #   componente: [geometrico_metrico|numerico_variacional|aleatorio]
 ```
 
-### Paso 6: Guardar con NOMENCLATURA OBLIGATORIA
+### Paso 6: Crear CARPETA y Guardar con NOMENCLATURA OBLIGATORIA
 
-**CRÍTICO:** Aplicar nomenclatura oficial ANTES de guardar.
+**CRÍTICO:** Crear carpeta Y aplicar nomenclatura oficial ANTES de guardar.
 
 ```bash
 # 1. Determinar componentes del nombre:
@@ -138,18 +138,43 @@ ls /06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condici
 #    - version: v1 (primera versión)
 
 # 2. Construir nombre completo:
-#    [ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd
+NOMBRE="[ejercicio]_[componente]_[competencia]_n[nivel]_v[version]"
 
-# 3. Guardar en /A-Produccion/En-Desarrollo/
+# 3. CREAR CARPETA con el mismo nombre:
+mkdir -p outputs/$NOMBRE
+
+# 4. Mover/copiar archivos relacionados a la carpeta:
+mv outputs/output_tikz.tex outputs/$NOMBRE/
+mv outputs/output_python.py outputs/$NOMBRE/
+mv outputs/output_r.R outputs/$NOMBRE/
+mv outputs/tikz_final.png outputs/$NOMBRE/
+mv outputs/python_final.png outputs/$NOMBRE/
+mv outputs/r_final.png outputs/$NOMBRE/
+mv outputs/analisis_inicial.json outputs/$NOMBRE/
+mv outputs/workflow_state.json outputs/$NOMBRE/
+cp outputs/original.png outputs/$NOMBRE/  # Si existe
+
+# 5. Guardar el .Rmd DENTRO de la carpeta:
+# outputs/$NOMBRE/$NOMBRE.Rmd
 ```
 
-**Ejemplo:**
-```bash
-# Para un ejercicio CLOZE de probabilidad condicional:
-probabilidad_condicional_dados_aleatorio_formulacion_ejecucion_n3_v1.Rmd
+**Ejemplo estructura final:**
+```
+outputs/probabilidad_condicional_dados_aleatorio_formulacion_ejecucion_n3_v1/
+├── probabilidad_condicional_dados_aleatorio_formulacion_ejecucion_n3_v1.Rmd
+├── output_tikz.tex
+├── output_python.py
+├── output_r.R
+├── tikz_final.png
+├── python_final.png
+├── r_final.png
+├── analisis_inicial.json
+└── workflow_state.json
 ```
 
-**IMPORTANTE:** El campo `exname` DEBE coincidir exactamente con el nombre del archivo (sin .Rmd)
+**IMPORTANTE:**
+- El campo `exname` DEBE coincidir con el nombre del archivo (sin .Rmd)
+- La carpeta DEBE tener el mismo nombre que el archivo .Rmd (sin extensión)
 
 ### Paso 7: Validación
 Ejecutar skill `validar-diversidad-300` y `validar-metadatos-icfes`.

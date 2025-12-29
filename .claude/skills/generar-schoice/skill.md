@@ -83,16 +83,27 @@ Incluir en comentarios YAML:
 #   componente: [geometrico_metrico|numerico_variacional|aleatorio]
 ```
 
-### Paso 5: Guardar con NOMENCLATURA OBLIGATORIA
+### Paso 5: Crear CARPETA y Guardar con NOMENCLATURA OBLIGATORIA
 
-**CRÍTICO:** Aplicar nomenclatura oficial. Ver `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
+**CRÍTICO:** Crear carpeta Y aplicar nomenclatura oficial.
 
 ```bash
-# Formato: [ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd
-# Guardar en /A-Produccion/En-Desarrollo/
+# 1. Nombre: [ejercicio]_[componente]_[competencia]_n[nivel]_v[version]
+# 2. Crear carpeta: mkdir -p outputs/$NOMBRE
+# 3. Mover archivos relacionados a la carpeta
+# 4. Guardar .Rmd DENTRO de la carpeta
 ```
 
-**El campo `exname` DEBE coincidir con el nombre del archivo (sin .Rmd)**
+**Estructura obligatoria:**
+```
+outputs/[nombre]/
+├── [nombre].Rmd
+├── output_tikz.tex, output_python.py, output_r.R
+├── tikz_final.png, python_final.png, r_final.png
+└── analisis_inicial.json, workflow_state.json
+```
+
+Ver `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 
 ### Paso 6: Validación
 Ejecutar skill `validar-diversidad-300` para confirmar aleatorización.
