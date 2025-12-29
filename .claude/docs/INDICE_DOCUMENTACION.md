@@ -35,7 +35,7 @@
 |-----------|-------------|-------------|
 | **[WORKFLOW_PASO_A_PASO.md](WORKFLOW_PASO_A_PASO.md)** | Workflow completo detallado | Primera vez o como referencia completa |
 | **[GUIA_RAPIDA_VISUAL.md](GUIA_RAPIDA_VISUAL.md)** | Referencia visual rápida | Recordatorio rápido del proceso |
-| **[TROUBLESHOOTING.md](../TROUBLESHOOTING.md)** | Solución de problemas | Cuando encuentres errores |
+| **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** | Solución de problemas | Cuando encuentres errores |
 
 ### 📚 Guías de Usuario
 
@@ -56,7 +56,7 @@
 | Documento | Descripción | Cuándo Usar |
 |-----------|-------------|-------------|
 | **[COMANDOS_DEPRECADOS.md](COMANDOS_DEPRECADOS.md)** | Registro de comandos deprecados | Verificar comandos obsoletos |
-| **[CHANGELOG.md](../CHANGELOG.md)** | Historial de cambios | Ver evolución del sistema |
+| **[CHANGELOG.md](CHANGELOG.md)** | Historial de cambios | Ver evolución del sistema |
 
 ### 🔄 Fase 5 - Eliminación de Comandos
 
@@ -80,7 +80,7 @@
 
 1. **Leer**: [WORKFLOW_PASO_A_PASO.md](WORKFLOW_PASO_A_PASO.md)
 2. **Consultar**: [GUIA_RAPIDA_VISUAL.md](GUIA_RAPIDA_VISUAL.md) (mientras trabajas)
-3. **Si hay problemas**: [TROUBLESHOOTING.md](../TROUBLESHOOTING.md)
+3. **Si hay problemas**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 
 ### Quiero entender los comandos disponibles
 
@@ -90,7 +90,7 @@
 ### Tengo un error de compilación
 
 1. **Buscar**: [patrones-errores-conocidos.md](patrones-errores-conocidos.md)
-2. **Consultar**: [TROUBLESHOOTING.md](../TROUBLESHOOTING.md)
+2. **Consultar**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
 3. **Revisar**: [casos-resueltos/](casos-resueltos/)
 
 ### Quiero validar la calidad de mi ejercicio
@@ -101,7 +101,7 @@
 
 ### Quiero saber qué ha cambiado en el sistema
 
-1. **Leer**: [CHANGELOG.md](../CHANGELOG.md)
+1. **Leer**: [CHANGELOG.md](CHANGELOG.md)
 2. **Verificar**: [COMANDOS_DEPRECADOS.md](COMANDOS_DEPRECADOS.md)
 
 ---
@@ -140,8 +140,9 @@
 │   └── fase5_rollback.sh                   # Rollback
 ├── tests/                                   # 🧪 Tests de validación
 │   └── test_comandos_workflow.md           # Tests de workflow
-├── TROUBLESHOOTING.md                       # 🆘 Solución de problemas
-└── CHANGELOG.md                             # 📝 Historial de cambios
+├── docs/
+│   ├── TROUBLESHOOTING.md                   # 🆘 Solución de problemas
+│   └── CHANGELOG.md                         # 📝 Historial de cambios
 ```
 
 ---

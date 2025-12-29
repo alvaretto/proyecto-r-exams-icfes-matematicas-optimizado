@@ -148,7 +148,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
    - Agregada sección "Inicio Rápido"
    - Referencias a workflow paso a paso
 
-3. **`.claude/CHANGELOG.md`**
+3. **`.claude/docs/CHANGELOG.md`**
    - Entrada completa para 2025-12-20
    - Documentación de nuevas guías
    - Métricas y beneficios

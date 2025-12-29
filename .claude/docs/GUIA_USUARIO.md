@@ -171,7 +171,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 6. Si todo OK → /promover-ejercicio [archivo.Rmd]
 ```
 
-**Documentación completa:** `.claude/TROUBLESHOOTING.md`
+**Documentación completa:** `.claude/docs/TROUBLESHOOTING.md`
 
 ---
 
@@ -197,7 +197,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 - **Tres niveles de validación:** `.claude/docs/TRES_NIVELES_VALIDACION.md`
 - **Patrones de errores conocidos:** `.claude/docs/patrones-errores-conocidos.md`
 - **Comandos deprecados:** `.claude/docs/COMANDOS_DEPRECADOS.md`
-- **Changelog:** `.claude/CHANGELOG.md`
+- **Changelog:** `.claude/docs/CHANGELOG.md`
 
 ### Agentes Especializados
 
@@ -254,7 +254,7 @@ ls A-Produccion/Ejemplos-Funcionales-Rmd/
 
 Para más ayuda, consultar:
 
-- **Troubleshooting completo:** `.claude/TROUBLESHOOTING.md`
+- **Troubleshooting completo:** `.claude/docs/TROUBLESHOOTING.md`
 - **Tests de validación:** `.claude/tests/test_comandos_workflow.md`
 
 ---

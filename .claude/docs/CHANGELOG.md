@@ -58,7 +58,7 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 - ✅ `.claude/docs/COMANDOS_DEPRECADOS.md` - Registro de comandos deprecados
 - ✅ `.claude/tests/test_comandos_workflow.md` - Suite de tests de validación
-- ✅ `.claude/CHANGELOG.md` - Este archivo
+- ✅ `.claude/docs/CHANGELOG.md` - Este archivo
 
 #### Archivos Actualizados
 

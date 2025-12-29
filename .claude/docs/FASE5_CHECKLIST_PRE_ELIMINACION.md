@@ -59,7 +59,7 @@ grep -r "analizar-ejercicio" .claude/ --include="*.md" | \
 **Comando de verificación:**
 ```bash
 # Verificar workflow
-grep "analizar-ejercicio" .claude/TROUBLESHOOTING.md
+grep "analizar-ejercicio" .claude/docs/TROUBLESHOOTING.md
 
 # Verificar comandos
 grep "analizar-ejercicio" .claude/commands/generar-*.md
@@ -90,7 +90,7 @@ grep "analizar-ejercicio" .claude/agents/*.md
 cat .claude/docs/COMANDOS_DEPRECADOS.md | grep "analizar-ejercicio"
 
 # Verificar que changelog documenta deprecación
-cat .claude/CHANGELOG.md | grep "analizar-ejercicio"
+cat .claude/docs/CHANGELOG.md | grep "analizar-ejercicio"
 ```
 
 **Resultado:**

@@ -90,7 +90,7 @@ bash .claude/scripts/fase5_tests_post_eliminacion.sh
 nano .claude/docs/COMANDOS_DEPRECADOS.md
 
 # Actualizar CHANGELOG.md (agregar entrada de eliminación)
-nano .claude/CHANGELOG.md
+nano .claude/docs/CHANGELOG.md
 ```
 
 ---
@@ -183,7 +183,7 @@ bash .claude/scripts/fase5_rollback.sh
 
 - **Guía de usuario**: `.claude/docs/GUIA_USUARIO.md`
 - **Comandos deprecados**: `.claude/docs/COMANDOS_DEPRECADOS.md`
-- **Changelog**: `.claude/CHANGELOG.md`
+- **Changelog**: `.claude/docs/CHANGELOG.md`
 
 ---
 

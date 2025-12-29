@@ -103,7 +103,7 @@ grep -r "analizar-ejercicio" .claude/ --include="*.md" | grep -v "DEPRECADO"
 grep -r "analizar-icfes" .claude/ --include="*.md"
 
 # 3. Verificar workflow oficial
-grep "analizar" .claude/TROUBLESHOOTING.md
+grep "analizar" .claude/docs/TROUBLESHOOTING.md
 
 # 4. Verificar comandos dependientes
 grep "analizar" .claude/commands/generar-schoice.md
@@ -113,7 +113,7 @@ grep "analizar" .claude/commands/generar-cloze.md
 ### Criterios de Éxito
 
 - ✅ Referencias a `/analizar-ejercicio` solo en documentación de deprecación
-- ✅ Referencias a `/analizar-icfes` en workflow oficial (TROUBLESHOOTING.md)
+- ✅ Referencias a `/analizar-icfes` en workflow oficial (docs/TROUBLESHOOTING.md)
 - ✅ Referencias a `/analizar-icfes` en generar-schoice.md
 - ✅ Referencias a `/analizar-icfes` en generar-cloze.md
 - ✅ NO hay referencias a `/analizar-ejercicio` en workflow activo
@@ -122,7 +122,7 @@ grep "analizar" .claude/commands/generar-cloze.md
 
 ```
 # Referencias a /analizar-icfes encontradas en:
-.claude/TROUBLESHOOTING.md:1. /analizar-icfes [imagen]
+.claude/docs/TROUBLESHOOTING.md:1. /analizar-icfes [imagen]
 .claude/commands/generar-schoice.md:Confirma que el ejercicio fue clasificado con `/analizar-icfes`.
 .claude/commands/generar-cloze.md:Confirma que el ejercicio fue clasificado con `/analizar-icfes`.
 ```

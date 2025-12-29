@@ -41,6 +41,10 @@ El directorio `.claude` es el **cerebro del sistema automatizado** para generar 
 │   ├── WORKFLOW_PASO_A_PASO.md  # Guía completa del flujo
 │   ├── GUIA_RAPIDA_VISUAL.md    # Referencia visual rápida
 │   ├── TRES_NIVELES_VALIDACION.md # Metodología de validación
+│   ├── TROUBLESHOOTING.md       # Solución de problemas
+│   ├── CHANGELOG.md             # Historial de cambios
+│   ├── COMMANDS_VS_SKILLS.md    # Filosofía commands vs skills
+│   ├── ACTUALIZACION_DOCUMENTACION.md # Actualización de documentación
 │   ├── patrones-errores-conocidos.md # Base de conocimiento
 │   └── casos-resueltos/         # Historial de casos
 │

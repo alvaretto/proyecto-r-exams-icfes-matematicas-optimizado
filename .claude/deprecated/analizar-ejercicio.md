@@ -41,7 +41,7 @@ Este comando ha sido **deprecado** en favor de `/analizar-icfes`.
 
 - **Comando recomendado**: `.claude/commands/analizar-icfes.md`
 - **Registro de deprecación**: `.claude/docs/COMANDOS_DEPRECADOS.md`
-- **Workflow oficial**: `.claude/TROUBLESHOOTING.md`
+- **Workflow oficial**: `.claude/docs/TROUBLESHOOTING.md`
 
 ## 🔄 Migración
 

@@ -29,6 +29,10 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   ├── GUIA_RAPIDA_VISUAL.md       # 🆕 Referencia visual rápida
 │   ├── GUIA_USUARIO.md             # Guía completa de usuario
 │   ├── TRES_NIVELES_VALIDACION.md  # Metodología de validación
+│   ├── TROUBLESHOOTING.md          # Solución de problemas
+│   ├── CHANGELOG.md                # Historial de cambios
+│   ├── COMMANDS_VS_SKILLS.md       # Filosofía commands vs skills
+│   ├── ACTUALIZACION_DOCUMENTACION.md # Actualización de documentación
 │   ├── COMANDOS_DEPRECADOS.md      # Registro de comandos deprecados
 │   ├── FASE5_CHECKLIST_PRE_ELIMINACION.md  # Checklist Fase 5
 │   ├── FASE5_PROCEDIMIENTO_ELIMINACION.md  # Procedimiento Fase 5

@@ -326,7 +326,7 @@ Para más detalles, consultar:
 
 - **Guía paso a paso completa**: `.claude/docs/WORKFLOW_PASO_A_PASO.md`
 - **Guía de usuario**: `.claude/docs/GUIA_USUARIO.md`
-- **Troubleshooting**: `.claude/TROUBLESHOOTING.md`
+- **Troubleshooting**: `.claude/docs/TROUBLESHOOTING.md`
 
 ---
 

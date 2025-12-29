@@ -52,7 +52,7 @@ Un comando se depreca cuando:
 1. **Análisis Incompleto**: Solo cubre 3 de las 6 dimensiones obligatorias del Mermaid Chart
 2. **Dimensiones Combinadas**: Mezcla "Componente" (C3) y "Pensamiento" (C4) en una sola dimensión
 3. **Metadatos Incompletos**: Los archivos .Rmd generados carecen de información de dimensiones C5 y C6
-4. **Sin Uso Documentado**: No hay referencias en el workflow oficial (`.claude/TROUBLESHOOTING.md`)
+4. **Sin Uso Documentado**: No hay referencias en el workflow oficial (`.claude/docs/TROUBLESHOOTING.md`)
 5. **Incompatibilidad con Agente**: El agente `ClasificadorICFES` está diseñado para 6 dimensiones
 
 #### Migración
@@ -98,7 +98,7 @@ Un comando se depreca cuando:
 - **Comando deprecado**: `.claude/commands/analizar-ejercicio.md`
 - **Comando recomendado**: `.claude/commands/analizar-icfes.md`
 - **Agente relacionado**: `.claude/agents/clasificador-icfes.md`
-- **Workflow oficial**: `.claude/TROUBLESHOOTING.md`
+- **Workflow oficial**: `.claude/docs/TROUBLESHOOTING.md`
 - **Mermaid Chart**: `.claude/Mermaid_Chart.txt`
 
 ---

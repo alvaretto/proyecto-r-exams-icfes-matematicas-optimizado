@@ -731,7 +731,7 @@ Por favor, mejora la fidelidad visual del código TikZ.
 ### Guías y Metodologías
 
 - **Guía de usuario**: `.claude/docs/GUIA_USUARIO.md`
-- **Troubleshooting**: `.claude/TROUBLESHOOTING.md`
+- **Troubleshooting**: `.claude/docs/TROUBLESHOOTING.md`
 - **Patrones de errores**: `.claude/docs/patrones-errores-conocidos.md`
 - **Metodología TikZ**: Documentada en reglas generales
 - **Python ICFES**: `Auxiliares/Python-Documentation/Python-ICFES-Guide.md`
@@ -815,7 +815,7 @@ Por favor, mejora la fidelidad visual del código TikZ.
 1. **Consultar documentación**:
 
    - `.claude/docs/GUIA_USUARIO.md`
-   - `.claude/TROUBLESHOOTING.md`
+   - `.claude/docs/TROUBLESHOOTING.md`
    - `.claude/docs/patrones-errores-conocidos.md`
 
 2. **Revisar ejemplos funcionales**:

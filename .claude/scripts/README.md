@@ -272,7 +272,7 @@ find .claude/backups/ -name "*.backup" -o -name "manual_backup_*.md"
 - **Procedimiento completo**: `.claude/docs/FASE5_PROCEDIMIENTO_ELIMINACION.md`
 - **Checklist pre-eliminación**: `.claude/docs/FASE5_CHECKLIST_PRE_ELIMINACION.md`
 - **Comandos deprecados**: `.claude/docs/COMANDOS_DEPRECADOS.md`
-- **Changelog**: `.claude/CHANGELOG.md`
+- **Changelog**: `.claude/docs/CHANGELOG.md`
 
 ---
 

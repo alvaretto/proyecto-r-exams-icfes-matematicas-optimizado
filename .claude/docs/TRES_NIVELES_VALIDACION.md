@@ -444,7 +444,7 @@ NIVEL 3: TERRENO (post-producción)
 
 - **Patrón de Error TikZ:** `.claude/docs/patrones-errores-conocidos.md#error-1`
 - **Skill Corrección:** `.claude/skills/corregir-error-imagen/skill.md`
-- **Troubleshooting:** `.claude/TROUBLESHOOTING.md`
+- **Troubleshooting:** `.claude/docs/TROUBLESHOOTING.md`
 - **Resumen TikZ:** `.claude/docs/RESUMEN_CORRECCION_TIKZ.md`
 
 ---

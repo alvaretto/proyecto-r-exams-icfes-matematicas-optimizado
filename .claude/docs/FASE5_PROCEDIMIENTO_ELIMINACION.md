@@ -38,7 +38,7 @@ Eliminar definitivamente el comando `/analizar-ejercicio` del sistema después d
 
 - [ ] `.claude/docs/FASE5_CHECKLIST_PRE_ELIMINACION.md` - Completar checklist
 - [ ] `.claude/docs/COMANDOS_DEPRECADOS.md` - Verificar documentación
-- [ ] `.claude/CHANGELOG.md` - Verificar entrada de deprecación
+- [ ] `.claude/docs/CHANGELOG.md` - Verificar entrada de deprecación
 
 ---
 
@@ -213,7 +213,7 @@ nano .claude/docs/COMANDOS_DEPRECADOS.md
 
 ```bash
 # Editar archivo
-nano .claude/CHANGELOG.md
+nano .claude/docs/CHANGELOG.md
 ```
 
 **Agregar nueva entrada:**
@@ -248,7 +248,7 @@ nano .claude/CHANGELOG.md
 #### Archivos Actualizados
 
 - ✅ `.claude/docs/COMANDOS_DEPRECADOS.md` - Movido a Historial
-- ✅ `.claude/CHANGELOG.md` - Este archivo
+- ✅ `.claude/docs/CHANGELOG.md` - Este archivo
 ```
 
 ---
