@@ -51,12 +51,16 @@
 | **[TRES_NIVELES_VALIDACION.md](TRES_NIVELES_VALIDACION.md)** | Metodología de validación | Validar calidad de ejercicios |
 | **[patrones-errores-conocidos.md](patrones-errores-conocidos.md)** | Base de errores conocidos | Buscar soluciones a errores |
 
-### 🗂️ Gestión de Comandos
+### 🗂️ Gestión del Sistema
 
 | Documento | Descripción | Cuándo Usar |
 |-----------|-------------|-------------|
 | **[COMANDOS_DEPRECADOS.md](COMANDOS_DEPRECADOS.md)** | Registro de comandos deprecados | Verificar comandos obsoletos |
 | **[CHANGELOG.md](CHANGELOG.md)** | Historial de cambios | Ver evolución del sistema |
+| **[COMMANDS_VS_SKILLS.md](COMMANDS_VS_SKILLS.md)** | Filosofía commands vs skills | Entender arquitectura del sistema |
+| **[ACTUALIZACION_DOCUMENTACION.md](ACTUALIZACION_DOCUMENTACION.md)** | Guía de actualización | Actualizar documentación |
+| **[01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md](01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md)** | Explicación completa del sistema | Entender estructura completa |
+| **[01-OPTIMIZACION_DIRECTORIO_CLAUDE.md](01-OPTIMIZACION_DIRECTORIO_CLAUDE.md)** | Optimización reciente (2025-12-28) | Ver cambios de optimización |
 
 ### 🔄 Fase 5 - Eliminación de Comandos
 
@@ -117,19 +121,36 @@
 │   ├── GUIA_USUARIO.md                     # 📖 Guía de usuario
 │   ├── README.md                           # Estructura del sistema
 │   ├── TRES_NIVELES_VALIDACION.md          # Metodología de validación
+│   ├── TROUBLESHOOTING.md                  # 🆘 Solución de problemas
+│   ├── CHANGELOG.md                        # 📝 Historial de cambios
 │   ├── COMANDOS_DEPRECADOS.md              # Comandos obsoletos
+│   ├── COMMANDS_VS_SKILLS.md               # Filosofía commands vs skills
+│   ├── ACTUALIZACION_DOCUMENTACION.md      # Guía de actualización
 │   ├── patrones-errores-conocidos.md       # Base de errores
 │   ├── FASE5_RESUMEN_EJECUTIVO.md          # Resumen Fase 5
 │   ├── FASE5_PROCEDIMIENTO_ELIMINACION.md  # Procedimiento Fase 5
 │   ├── FASE5_CHECKLIST_PRE_ELIMINACION.md  # Checklist Fase 5
-│   └── casos-resueltos/                    # Casos específicos
-│       └── 2025-12-19-cilindro-tikz.md
-├── commands/                                # 🎯 Comandos ejecutables
-│   ├── analizar-icfes.md                   # Análisis de imagen
-│   ├── generar-schoice.md                  # Generar SCHOICE
-│   ├── generar-cloze.md                    # Generar CLOZE
-│   ├── corregir-error-imagen.md            # Corrección de errores
-│   └── promover-ejercicio.md               # Promoción a producción
+│   ├── RESUMEN_DOCUMENTACION_WORKFLOW.md   # Resumen del workflow
+│   ├── 01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md  # Explicación completa
+│   ├── 01-OPTIMIZACION_DIRECTORIO_CLAUDE.md          # Optimización reciente
+│   ├── casos-resueltos/                    # Casos específicos
+│   │   ├── 2025-12-19-cilindro-tikz.md
+│   │   ├── 2025-12-21-recta-abs-formateado.md
+│   │   └── 2025-01-XX-recta-abs-formateado.md
+│   └── html-backups/                       # Backups HTML de documentación
+│       └── html-20251228/                  # Backup 2025-12-28
+├── skills/                                  # 🎯 Skills de Claude Code
+│   ├── analizar-icfes/                     # Análisis ICFES 6 dimensiones
+│   ├── generar-schoice/                    # Generar SCHOICE
+│   ├── generar-cloze/                      # Generar CLOZE
+│   ├── corregir-error-imagen/              # Corrección de errores
+│   ├── corregir-graficos/                  # Corrección de gráficos
+│   ├── diagnosticar-errores/               # Diagnóstico de errores
+│   ├── promover-ejercicio/                 # Promoción a producción
+│   ├── validar-coherencia/                 # Validación de coherencia
+│   ├── validar-diversidad/                 # Validación de 300+ versiones
+│   ├── validar-icfes/                      # Validación de metadatos
+│   └── validar-renderizado/                # Validación de renderizado
 ├── agents/                                  # 🤖 Agentes especializados
 │   ├── clasificador-icfes.md               # Clasificador ICFES
 │   └── graficador-tikz.md                  # Graficador TikZ
@@ -140,9 +161,17 @@
 │   └── fase5_rollback.sh                   # Rollback
 ├── tests/                                   # 🧪 Tests de validación
 │   └── test_comandos_workflow.md           # Tests de workflow
-├── docs/
-│   ├── TROUBLESHOOTING.md                   # 🆘 Solución de problemas
-│   └── CHANGELOG.md                         # 📝 Historial de cambios
+├── deprecated/                              # ⚠️ Archivos deprecados
+│   └── analizar-ejercicio.md               # (Deprecado - Usar analizar-icfes)
+├── backups/                                 # 💾 Backups de archivos
+│   ├── .gitkeep
+│   └── README.md
+├── logs/                                    # 📋 Logs de ejecución
+│   ├── .gitkeep
+│   └── README.md
+├── settings.json                            # ⚙️ Configuración global
+├── settings.local.json                      # ⚙️ Permisos locales
+└── Mermaid_Chart.txt                        # 📊 Diagrama de arquitectura
 ```
 
 ---
@@ -174,14 +203,14 @@
 
 | Métrica | Valor |
 |---------|-------|
-| **Total de documentos** | 20+ |
-| **Guías de usuario** | 4 |
+| **Total de documentos** | 22+ |
+| **Guías de usuario** | 5 |
 | **Procedimientos técnicos** | 6 |
-| **Comandos documentados** | 6 |
+| **Skills documentados** | 11 |
 | **Agentes documentados** | 2 |
 | **Scripts documentados** | 4 |
-| **Casos resueltos** | 1+ |
-| **Líneas totales de documentación** | ~5,000+ |
+| **Casos resueltos** | 3 |
+| **Líneas totales de documentación** | ~6,000+ |
 
 ---
 
@@ -258,11 +287,10 @@
 
 Este índice se actualiza con cada nueva documentación agregada al sistema.
 
-**Última actualización:** 2025-12-20  
-**Versión:** 1.0  
+**Última actualización:** 2025-12-28  
+**Versión:** 1.1  
 **Documentos indexados:** 20+
 
 ---
 
 **Nota:** Todos los enlaces son relativos a la ubicación de este archivo (`.claude/docs/`).
-

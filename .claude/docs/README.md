@@ -22,11 +22,11 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 
 ```
 .claude/
-├── docs/                           # Documentación técnica
+├── docs/                           # 📚 Documentación técnica
 │   ├── README.md                   # Este archivo
-│   ├── INDICE_DOCUMENTACION.md     # 🆕 Índice completo de documentación
-│   ├── WORKFLOW_PASO_A_PASO.md     # 🆕 Guía completa del workflow
-│   ├── GUIA_RAPIDA_VISUAL.md       # 🆕 Referencia visual rápida
+│   ├── INDICE_DOCUMENTACION.md     # Índice completo de documentación
+│   ├── WORKFLOW_PASO_A_PASO.md     # Guía completa del workflow
+│   ├── GUIA_RAPIDA_VISUAL.md       # Referencia visual rápida
 │   ├── GUIA_USUARIO.md             # Guía completa de usuario
 │   ├── TRES_NIVELES_VALIDACION.md  # Metodología de validación
 │   ├── TROUBLESHOOTING.md          # Solución de problemas
@@ -37,48 +37,56 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   ├── FASE5_CHECKLIST_PRE_ELIMINACION.md  # Checklist Fase 5
 │   ├── FASE5_PROCEDIMIENTO_ELIMINACION.md  # Procedimiento Fase 5
 │   ├── FASE5_RESUMEN_EJECUTIVO.md  # Resumen ejecutivo Fase 5
+│   ├── RESUMEN_DOCUMENTACION_WORKFLOW.md   # Resumen del workflow
+│   ├── 01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md  # Explicación completa
+│   ├── 01-OPTIMIZACION_DIRECTORIO_CLAUDE.md          # Optimización 2025-12-28
 │   ├── patrones-errores-conocidos.md   # Base de conocimiento de errores
-│   └── casos-resueltos/            # Historial de casos específicos
-│       └── 2025-12-19-cilindro-tikz.md
-├── agents/                         # Agentes especializados
+│   ├── casos-resueltos/            # Historial de casos específicos
+│   │   ├── 2025-12-19-cilindro-tikz.md
+│   │   ├── 2025-12-21-recta-abs-formateado.md
+│   │   └── 2025-01-XX-recta-abs-formateado.md
+│   └── html-backups/               # Backups HTML de documentación
+│       └── html-20251228/          # Backup 2025-12-28
+├── agents/                         # 🤖 Agentes especializados
 │   ├── clasificador-icfes.md       # Análisis de ejercicios ICFES
 │   └── graficador-tikz.md          # Replicación visual TikZ
-├── skills/                         # 🆕 Skills de Claude Code (Workflow)
-│   ├── analizar-icfes/             # ✅ Análisis ICFES según 6 dimensiones
-│   │   └── skill.md
+├── skills/                         # 🎯 Skills de Claude Code (Workflow)
+│   ├── analizar-icfes/             # Análisis ICFES según 6 dimensiones
 │   ├── generar-schoice/            # Generador de ejercicios SCHOICE
-│   │   └── skill.md
 │   ├── generar-cloze/              # Generador de ejercicios CLOZE
-│   │   └── skill.md
 │   ├── promover-ejercicio/         # Promoción a producción
-│   │   └── skill.md
 │   ├── corregir-error-imagen/      # Corrector de errores TikZ
-│   │   └── skill.md
+│   ├── corregir-graficos/          # Corrector de gráficos
+│   ├── diagnosticar-errores/       # Diagnóstico de errores
+│   ├── validar-coherencia/         # Validación de coherencia
 │   ├── validar-diversidad/         # Validador de 300+ versiones
-│   │   └── skill.md
-│   └── validar-icfes/              # Validador de metadatos ICFES
-│       └── skill.md
+│   ├── validar-icfes/              # Validador de metadatos ICFES
+│   └── validar-renderizado/        # Validación de renderizado
 ├── deprecated/                     # ⚠️ Archivos deprecados
-│   ├── analizar-ejercicio.md       # (Deprecado - Usar analizar-icfes)
-│   └── corregir-error-imagen.md    # (Duplicado - Movido a skills/)
-├── scripts/                        # Scripts de automatización
+│   └── analizar-ejercicio.md       # (Deprecado - Usar analizar-icfes)
+├── scripts/                        # 🔧 Scripts de automatización
 │   ├── README.md                   # Documentación de scripts
 │   ├── fase5_eliminar_comando_deprecado.sh  # Script de eliminación
 │   ├── fase5_tests_post_eliminacion.sh      # Tests post-eliminación
 │   └── fase5_rollback.sh           # Plan de rollback
-├── tests/                          # Tests de validación
+├── tests/                          # 🧪 Tests de validación
 │   └── test_comandos_workflow.md   # Tests de workflow
-├── backups/                        # Backups de archivos
-├── logs/                           # Logs de ejecución
-├── settings.json                   # Hooks y configuración global
-├── settings.local.json             # Permisos para skills
-└── MIGRACION_COMPLETADA.md         # 🆕 Reporte de migración (2025-12-20)
+├── backups/                        # 💾 Backups de archivos
+│   ├── .gitkeep
+│   └── README.md
+├── logs/                           # 📋 Logs de ejecución
+│   ├── .gitkeep
+│   └── README.md
+├── settings.json                   # ⚙️ Hooks y configuración global
+├── settings.local.json             # ⚙️ Permisos para skills
+└── Mermaid_Chart.txt               # 📊 Diagrama de arquitectura
 ```
 
 **Notas importantes:**
 
-- ✅ Directorio `commands/` eliminado - Migrado a `skills/` (ver `MIGRACION_COMPLETADA.md`)
-- ✅ 7 skills activos del workflow en `skills/`
+- ✅ Optimización 2025-12-28: Documentación consolidada en `docs/`
+- ✅ 11 skills activos del workflow en `skills/`
+- ✅ Backups HTML preservados con fecha en `html-backups/`
 - ⚠️ `analizar-ejercicio.md` deprecado - Ver `COMANDOS_DEPRECADOS.md` para detalles
 
 ## Filosofía del Sistema
@@ -383,6 +391,6 @@ Para preguntas sobre la documentación:
 
 ---
 
-**Última actualización:** 2025-12-19
-**Versión del sistema:** 1.0
+**Última actualización:** 2025-12-28
+**Versión del sistema:** 1.1
 **Estado:** ✅ Operacional

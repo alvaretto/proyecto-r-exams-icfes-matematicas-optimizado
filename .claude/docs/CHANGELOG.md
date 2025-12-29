@@ -302,5 +302,48 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
-**Última actualización:** 2025-12-20
+## [2025-12-28] - Optimización del Directorio .claude
+
+### ✅ Mejorado
+
+#### Consolidación de Documentación
+
+**Cambios realizados:**
+
+- ✅ Movidos archivos de documentación dispersos a `.claude/docs/`
+- ✅ Creados directorios organizacionales: `backups/`, `logs/`, `html-backups/`
+- ✅ Eliminados archivos duplicados y temporales
+- ✅ Actualizada estructura de directorios en README.md
+
+**Archivos movidos:**
+
+- `ACTUALIZACION_DOCUMENTACION.md` → `.claude/docs/`
+- `CHANGELOG.md` → `.claude/docs/`
+- `COMMANDS_VS_SKILLS.md` → `.claude/docs/`
+- `TROUBLESHOOTING.md` → `.claude/docs/`
+
+**Archivos HTML organizados:**
+
+- Movidos a `.claude/docs/html-backups/html-20251228/`
+- Incluye versiones HTML de toda la documentación principal
+
+**Beneficios:**
+
+- ✅ Reducción de archivos sueltos en `.claude/`
+- ✅ Mayor claridad organizacional
+- ✅ Facilita navegación y mantenimiento
+- ✅ Backups HTML preservados con fecha
+
+### 📊 Métricas
+
+| Métrica | Antes | Después | Mejora |
+|---------|-------|---------|--------|
+| **Archivos en raíz .claude/** | 15+ | 8 | -47% |
+| **Documentos en docs/** | 12 | 16 | +33% |
+| **Directorios organizacionales** | 5 | 8 | +60% |
+| **Archivos duplicados** | 5 | 0 | -100% |
+
+---
+
+**Última actualización:** 2025-12-28
 

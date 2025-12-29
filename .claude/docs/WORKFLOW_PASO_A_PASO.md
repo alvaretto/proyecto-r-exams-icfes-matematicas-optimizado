@@ -719,14 +719,14 @@ Por favor, mejora la fidelidad visual del código TikZ.
 
 ## 📚 DOCUMENTACIÓN DE REFERENCIA
 
-### Comandos Principales
+### Skills Principales
 
-- `/analizar-icfes` - `.claude/commands/analizar-icfes.md`
-- `/generar-schoice` - `.claude/commands/generar-schoice.md`
-- `/generar-cloze` - `.claude/commands/generar-cloze.md`
-- `/validar-diversidad-300` - `.claude/skills/validar-diversidad/`
-- `/corregir-error-imagen` - `.claude/commands/corregir-error-imagen.md`
-- `/promover-ejercicio` - `.claude/commands/promover-ejercicio.md`
+- `/analizar-icfes` - `.claude/skills/analizar-icfes/skill.md`
+- `/generar-schoice` - `.claude/skills/generar-schoice/skill.md`
+- `/generar-cloze` - `.claude/skills/generar-cloze/skill.md`
+- `/validar-diversidad-300` - `.claude/skills/validar-diversidad/skill.md`
+- `/corregir-error-imagen` - `.claude/skills/corregir-error-imagen/skill.md`
+- `/promover-ejercicio` - `.claude/skills/promover-ejercicio/skill.md`
 
 ### Guías y Metodologías
 

@@ -95,8 +95,8 @@ Un comando se depreca cuando:
 
 #### Referencias
 
-- **Comando deprecado**: `.claude/commands/analizar-ejercicio.md`
-- **Comando recomendado**: `.claude/commands/analizar-icfes.md`
+- **Comando deprecado**: `.claude/deprecated/analizar-ejercicio.md`
+- **Comando recomendado**: `.claude/skills/analizar-icfes/skill.md`
 - **Agente relacionado**: `.claude/agents/clasificador-icfes.md`
 - **Workflow oficial**: `.claude/docs/TROUBLESHOOTING.md`
 - **Mermaid Chart**: `.claude/Mermaid_Chart.txt`
@@ -123,5 +123,6 @@ Un comando se depreca cuando:
 
 ---
 
-**Última actualización:** 2025-12-20
+**Última actualización:** 2025-12-28
+**Versión:** 1.1
 

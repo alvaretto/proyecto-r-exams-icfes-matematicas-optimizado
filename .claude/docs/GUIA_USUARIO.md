@@ -259,5 +259,6 @@ Para más ayuda, consultar:
 
 ---
 
-**Última actualización:** 2025-12-20
+**Última actualización:** 2025-12-28
+**Versión:** 1.1
 
