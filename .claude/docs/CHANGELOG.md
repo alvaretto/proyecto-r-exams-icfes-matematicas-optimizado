@@ -7,6 +7,93 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2025-12-29] - Integración Graficador-Experto
+
+### ✅ Agregado
+
+#### Integración Completa del Graficador-Experto
+
+**Componentes integrados:**
+
+- ✅ **9 comandos nuevos** con prefijo `grafico-`:
+  - `/grafico-analizar-imagen` - Análisis visual de imágenes matemáticas
+  - `/grafico-generar-tikz` - Generación de código TikZ/LaTeX
+  - `/grafico-generar-python` - Generación de código Python/Matplotlib
+  - `/grafico-generar-r` - Generación de código R/ggplot2
+  - `/grafico-comparar` - Comparación visual con métricas cuantitativas
+  - `/grafico-iterar` - Refinamiento iterativo de código
+  - `/grafico-exportar` - Exportación de proyecto completo
+  - `/grafico-estado` - Visualización de progreso del workflow
+  - `/grafico-auto-iterar` - Iteración automática hasta umbral
+
+- ✅ **8 skills nuevas** con prefijo `grafico-`:
+  - `grafico-analizar-imagen-matematica` - Análisis visual detallado
+  - `grafico-generar-tikz` - Generación TikZ/LaTeX
+  - `grafico-generar-python` - Generación Python/Matplotlib
+  - `grafico-generar-r` - Generación R/ggplot2
+  - `grafico-comparar-visual` - Comparación visual inteligente
+  - `grafico-refinar-codigo` - Refinamiento iterativo
+  - `grafico-gestionar-estado` - Gestión de estado persistente
+  - `grafico-transferir-conocimiento` - Transferencia entre lenguajes
+
+- ✅ **4 schemas JSON** en nuevo directorio `.claude/schemas/`:
+  - `workflow_state.schema.json` - Estado persistente del workflow
+  - `analisis_inicial.schema.json` - Análisis estructurado reutilizable
+  - `metricas_similitud.schema.json` - Sistema de puntuación 0-100
+  - `lecciones_aprendidas.schema.json` - Transferencia de conocimiento
+
+- ✅ **Documentación completa**:
+  - `INTEGRACION_GRAFICADOR_EXPERTO.md` - Guía completa de integración
+  - `01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md` - Funcionamiento detallado
+  - `GRAFICADOR_EXPERTO_README.md` - README original
+  - `Mermaid_Chart_Graficador_Experto.txt` - Diagrama de flujo
+
+**Características principales:**
+
+- ✅ **Sistema de estado persistente**: Tracking completo del progreso del workflow
+- ✅ **Métricas cuantitativas**: Sistema objetivo de puntuación (0-100 puntos)
+- ✅ **Transferencia de conocimiento**: Aprendizaje entre lenguajes (TikZ → Python → R)
+- ✅ **Iteración automática**: Refinamiento hasta alcanzar umbral de similitud
+- ✅ **Compatibilidad bidireccional**: Integración con workflow principal sin conflictos
+
+**Permisos agregados:**
+
+- ✅ Permisos de Skills del Graficador-Experto en `settings.local.json`
+- ✅ Permisos Bash adicionales: `pdflatex`, `magick`, `python`, `sync`
+
+**Documentación actualizada:**
+
+- ✅ `INDICE_DOCUMENTACION.md` - Nueva sección "Graficador-Experto"
+- ✅ `CHANGELOG.md` - Esta entrada
+- ✅ Estructura de archivos actualizada en índice
+
+### 📊 Métricas
+
+| Métrica | Valor |
+|---------|-------|
+| **Comandos agregados** | 9 |
+| **Skills agregadas** | 8 |
+| **Schemas agregados** | 4 |
+| **Documentos agregados** | 4 |
+| **Total de comandos** | 18 (9 principales + 9 grafico-*) |
+| **Total de skills** | 19 (11 principales + 8 grafico-*) |
+
+### 🎯 Beneficios
+
+- ✅ **Capacidades de análisis visual**: Análisis estructurado de imágenes matemáticas
+- ✅ **Generación multi-lenguaje**: Código TikZ, Python y R desde una imagen
+- ✅ **Validación visual**: Métricas cuantitativas de similitud (0-100 puntos)
+- ✅ **Workflow integrado**: Uso combinado con comandos principales del workflow
+- ✅ **Sin conflictos**: Prefijo `grafico-` evita conflictos con comandos existentes
+
+### 📚 Referencias
+
+- **Guía de integración**: `.claude/docs/INTEGRACION_GRAFICADOR_EXPERTO.md`
+- **Documentación completa**: `.claude/docs/01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md`
+- **README original**: `.claude/docs/GRAFICADOR_EXPERTO_README.md`
+
+---
+
 ## [2025-12-20] - Consolidación de Comandos de Análisis
 
 ### 🔴 Deprecado

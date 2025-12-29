@@ -1,0 +1,166 @@
+---
+description: Genera archivos finales y reporte consolidado del proceso completo.
+---
+
+# Exportar Resultados
+
+Exporta todos los resultados del workflow.
+
+## Proceso
+
+1. **Leer Estado del Workflow**:
+   - Cargar `outputs/workflow_state.json`
+   - Verificar progreso de cada lenguaje
+   - Calcular estadísticas: iteraciones totales, similitudes finales, tiempos transcurridos
+
+2. **Verifica** que los tres códigos estén validados (o al menos generados)
+
+3. **Guarda archivos finales**:
+   - `outputs/output_tikz.tex` - Código TikZ final
+   - `outputs/output_python.py` - Código Python final
+   - `outputs/output_r.R` - Código R final
+   - `outputs/original.png` - Imagen original
+   - `outputs/tikz_render.png` - Renderizado TikZ
+   - `outputs/python_render.png` - Renderizado Python
+   - `outputs/r_render.png` - Renderizado R
+   - `outputs/workflow_state.json` - Estado final del workflow
+   - `outputs/analisis_inicial.json` - Análisis estructurado inicial
+
+4. **Genera reporte consolidado** (`outputs/reporte_matematico.md`) con información del estado:
+
+```markdown
+# Reporte de Conversión Matemática ICFES
+
+## Resumen Ejecutivo
+
+- **Fecha inicio**: [timestamp_inicio del workflow_state.json]
+- **Fecha finalización**: [timestamp_ultima_actualizacion]
+- **Duración total**: [calcular diferencia]
+- **Tipo de contenido**: [tipo del analisis_inicial.json]
+- **Iteraciones totales**: TikZ: [tikz.iteracion_actual], Python: [python.iteracion_actual], R: [r.iteracion_actual]
+- **Similitudes finales**: TikZ: [tikz.similitud_actual]%, Python: [python.similitud_actual]%, R: [r.similitud_actual]%
+- **Estado final**: ✅ Completado
+
+## Análisis Inicial
+
+[Resumen del análisis de la imagen original]
+
+## Implementaciones
+
+### TikZ (LaTeX)
+
+**Iteraciones**: [tikz.iteracion_actual]
+**Similitud visual final**: [tikz.similitud_actual]%
+**Historial de similitud**: [tikz.similitud_historico como gráfico de progreso]
+**Tiempo de desarrollo**: [calcular desde tikz.timestamp_inicio hasta tikz.timestamp_validacion]
+**Ventajas**:
+
+- Salida vectorial de máxima calidad
+- Precisión matemática perfecta
+- Ideal para publicaciones académicas
+
+**Desventajas**:
+
+- Requiere compilación LaTeX
+- Curva de aprendizaje pronunciada
+
+**Código final**: Ver `output_tikz.tex`
+
+![TikZ Output](tikz_render.png)
+
+### Python (matplotlib/numpy)
+
+**Iteraciones**: [python.iteracion_actual]
+**Similitud visual final**: [python.similitud_actual]%
+**Historial de similitud**: [python.similitud_historico como gráfico de progreso]
+**Tiempo de desarrollo**: [calcular desde python.timestamp_inicio hasta python.timestamp_validacion]
+**Ventajas**:
+
+- Ecosistema científico completo
+- Fácil integración con cálculos
+- Gran flexibilidad
+
+**Desventajas**:
+
+- Calidad de salida inferior a TikZ
+- Configuración de estilos puede ser compleja
+
+**Código final**: Ver `output_python.py`
+
+![Python Output](python_render.png)
+
+### R (ggplot2)
+
+**Iteraciones**: [r.iteracion_actual]
+**Similitud visual final**: [r.similitud_actual]%
+**Historial de similitud**: [r.similitud_historico como gráfico de progreso]
+**Tiempo de desarrollo**: [calcular desde r.timestamp_inicio hasta r.timestamp_validacion]
+**Ventajas**:
+
+- Gramática de gráficos intuitiva
+- Excelente para visualización estadística
+- Código conciso y legible
+
+**Desventajas**:
+
+- Menos flexible para gráficos complejos
+- Rendimiento con datasets grandes
+
+**Código final**: Ver `output_r.R`
+
+![R Output](r_render.png)
+
+## Comparación Visual
+
+| Aspecto | TikZ | Python | R |
+|---------|------|--------|---|
+| Precisión | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| Colores | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Escalas | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| Anotaciones | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+
+## Recomendaciones
+
+- **Para publicaciones académicas**: Usar versión TikZ
+- **Para análisis interactivo**: Usar versión Python
+- **Para reportes estadísticos**: Usar versión R
+
+## Notas Técnicas
+
+[Decisiones de implementación, desafíos encontrados, soluciones aplicadas]
+
+## Gráficos de Progreso
+
+### Evolución de Similitud por Lenguaje
+
+```
+TikZ:    [75] → [82] → [89] → [96] ✅
+Python:  [78] → [88] → [94] ✅
+R:       [80] → [92] ✅
+```
+
+### Estadísticas de Iteración
+
+- **Promedio de iteraciones por lenguaje**: [calcular promedio]
+- **Mejora promedio por iteración**: [calcular mejora promedio]
+- **Tiempo promedio por iteración**: [calcular tiempo promedio]
+
+## Historial de Iteraciones
+
+[Resumen de cambios en cada iteración - ya documentado incrementalmente en el reporte]
+```
+
+5. **Confirma exportación completa**
+
+## Opciones
+
+- `--solo-codigo`: Solo genera archivos de código, sin reporte
+- `--solo-reporte`: Solo genera reporte, sin archivos individuales
+- `--formato html|md`: Formato del reporte (default: md)
+
+## Referencias
+
+- `skills/gestionar-estado/skill.md` - Skill de gestión de estado del workflow
+- `.claude/schemas/workflow_state.schema.json` - Esquema del estado del workflow
+- `.claude/schemas/analisis_inicial.schema.json` - Esquema del análisis estructurado
+

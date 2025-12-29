@@ -51,6 +51,16 @@
 | **[TRES_NIVELES_VALIDACION.md](TRES_NIVELES_VALIDACION.md)** | Metodología de validación | Validar calidad de ejercicios |
 | **[patrones-errores-conocidos.md](patrones-errores-conocidos.md)** | Base de errores conocidos | Buscar soluciones a errores |
 
+### 🎨 Graficador-Experto (Integrado)
+
+| Documento | Descripción | Cuándo Usar |
+|-----------|-------------|-------------|
+| **[INTEGRACION_GRAFICADOR_EXPERTO.md](INTEGRACION_GRAFICADOR_EXPERTO.md)** | Guía completa de integración | Usar comandos grafico-* para análisis y generación de gráficos |
+| **[01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md](01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md)** | Funcionamiento detallado del Graficador-Experto | Entender sistema completo de replicación visual |
+| **[GRAFICADOR_EXPERTO_README.md](GRAFICADOR_EXPERTO_README.md)** | README original del Graficador-Experto | Referencia rápida de comandos y skills |
+
+**Comandos disponibles**: `/grafico-analizar-imagen`, `/grafico-generar-tikz`, `/grafico-generar-python`, `/grafico-generar-r`, `/grafico-comparar`, `/grafico-iterar`, `/grafico-exportar`, `/grafico-estado`, `/grafico-auto-iterar`
+
 ### 🗂️ Gestión del Sistema
 
 | Documento | Descripción | Cuándo Usar |
@@ -108,6 +118,14 @@
 1. **Leer**: [CHANGELOG.md](CHANGELOG.md)
 2. **Verificar**: [COMANDOS_DEPRECADOS.md](COMANDOS_DEPRECADOS.md)
 
+### Quiero generar gráficos complejos para ejercicios
+
+1. **Leer**: [INTEGRACION_GRAFICADOR_EXPERTO.md](INTEGRACION_GRAFICADOR_EXPERTO.md)
+2. **Ejecutar**: `/grafico-analizar-imagen` con tu imagen matemática
+3. **Generar código**: `/grafico-generar-tikz` o `/grafico-generar-python` o `/grafico-generar-r`
+4. **Validar similitud**: `/grafico-comparar` y `/grafico-auto-iterar` si es necesario
+5. **Integrar en ejercicio**: Usar código generado en `/generar-schoice` o `/generar-cloze`
+
 ---
 
 ## 📁 ESTRUCTURA DE ARCHIVOS
@@ -133,6 +151,9 @@
 │   ├── RESUMEN_DOCUMENTACION_WORKFLOW.md   # Resumen del workflow
 │   ├── 01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md  # Explicación completa
 │   ├── 01-OPTIMIZACION_DIRECTORIO_CLAUDE.md          # Optimización reciente
+│   ├── INTEGRACION_GRAFICADOR_EXPERTO.md             # 🎨 Integración Graficador-Experto
+│   ├── 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md  # 🎨 Graficador-Experto completo
+│   ├── GRAFICADOR_EXPERTO_README.md                  # 🎨 README Graficador-Experto
 │   ├── casos-resueltos/                    # Casos específicos
 │   │   ├── 2025-12-19-cilindro-tikz.md
 │   │   ├── 2025-12-21-recta-abs-formateado.md
@@ -151,6 +172,19 @@
 │   ├── validar-diversidad/                 # Validación de 300+ versiones
 │   ├── validar-icfes/                      # Validación de metadatos
 │   └── validar-renderizado/                # Validación de renderizado
+│   ├── grafico-analizar-imagen-matematica/ # 🎨 Análisis visual matemático
+│   ├── grafico-generar-tikz/              # 🎨 Generación TikZ/LaTeX
+│   ├── grafico-generar-python/            # 🎨 Generación Python/Matplotlib
+│   ├── grafico-generar-r/                 # 🎨 Generación R/ggplot2
+│   ├── grafico-comparar-visual/           # 🎨 Comparación visual inteligente
+│   ├── grafico-refinar-codigo/            # 🎨 Refinamiento iterativo
+│   ├── grafico-gestionar-estado/         # 🎨 Gestión de estado persistente
+│   └── grafico-transferir-conocimiento/   # 🎨 Transferencia entre lenguajes
+├── schemas/                                 # 📋 Schemas JSON (Graficador-Experto)
+│   ├── workflow_state.schema.json          # Estado persistente del workflow
+│   ├── analisis_inicial.schema.json        # Análisis estructurado reutilizable
+│   ├── metricas_similitud.schema.json      # Sistema de puntuación 0-100
+│   └── lecciones_aprendidas.schema.json    # Transferencia de conocimiento
 ├── agents/                                  # 🤖 Agentes especializados
 │   ├── clasificador-icfes.md               # Clasificador ICFES
 │   └── graficador-tikz.md                  # Graficador TikZ
@@ -171,7 +205,8 @@
 │   └── README.md
 ├── settings.json                            # ⚙️ Configuración global
 ├── settings.local.json                      # ⚙️ Permisos locales
-└── Mermaid_Chart.txt                        # 📊 Diagrama de arquitectura
+├── Mermaid_Chart.txt                        # 📊 Diagrama de arquitectura
+└── Mermaid_Chart_Graficador_Experto.txt    # 📊 Diagrama Graficador-Experto
 ```
 
 ---
@@ -184,6 +219,7 @@
 |------|----------------------|
 | **Workflow completo** | WORKFLOW_PASO_A_PASO.md, GUIA_RAPIDA_VISUAL.md |
 | **Comandos** | GUIA_USUARIO.md, commands/*.md |
+| **Graficador-Experto** | INTEGRACION_GRAFICADOR_EXPERTO.md, 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md |
 | **Errores** | TROUBLESHOOTING.md, patrones-errores-conocidos.md |
 | **Validación** | TRES_NIVELES_VALIDACION.md |
 | **Fase 5** | FASE5_*.md |
@@ -203,14 +239,15 @@
 
 | Métrica | Valor |
 |---------|-------|
-| **Total de documentos** | 22+ |
+| **Total de documentos** | 25+ |
 | **Guías de usuario** | 5 |
 | **Procedimientos técnicos** | 6 |
-| **Skills documentados** | 11 |
+| **Graficador-Experto** | 3 documentos |
+| **Skills documentados** | 19 (11 principales + 8 grafico-*) |
 | **Agentes documentados** | 2 |
 | **Scripts documentados** | 4 |
 | **Casos resueltos** | 3 |
-| **Líneas totales de documentación** | ~6,000+ |
+| **Líneas totales de documentación** | ~8,000+ |
 
 ---
 
@@ -287,9 +324,9 @@
 
 Este índice se actualiza con cada nueva documentación agregada al sistema.
 
-**Última actualización:** 2025-12-28  
-**Versión:** 1.1  
-**Documentos indexados:** 20+
+**Última actualización:** 2025-12-29  
+**Versión:** 1.2  
+**Documentos indexados:** 25+
 
 ---
 
