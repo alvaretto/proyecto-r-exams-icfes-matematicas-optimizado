@@ -701,19 +701,33 @@ DECISIÓN: ¿Similitud ≥ 95%?
 
 - **Skills:** `.claude/skills/`
 - **Comandos:** `.claude/commands/`
+- **Schemas:** `.claude/schemas/` (esquemas JSON para estado persistente)
 - **Salidas:** `outputs/` (generado automáticamente)
 
 ### Comandos principales:
 
-1. `/analizar-imagen` - Iniciar workflow
-2. `/generar-tikz` - Generar TikZ
-3. `/generar-python` - Generar Python
-4. `/generar-r` - Generar R
-5. `/comparar` - Comparar con métricas cuantitativas
-6. `/iterar` - Refinar código e incrementar contador
-7. `/exportar` - Exportar proyecto con estadísticas
-8. `/estado` - **[NUEVO]** Visualizar progreso del workflow
-9. `/auto-iterar` - **[NUEVO]** Iteración automática hasta umbral
+1. `/analizar-imagen` - Iniciar workflow con análisis estructurado y estado persistente
+2. `/generar-tikz` - Generar TikZ/LaTeX con actualización de estado
+3. `/generar-python` - Generar Python/Matplotlib con transferencia de conocimiento desde TikZ
+4. `/generar-r` - Generar R/ggplot2 con lecciones aprendidas de TikZ y Python
+5. `/comparar` - Comparar con métricas cuantitativas (0-100 puntos en 6 categorías)
+6. `/iterar` - Refinar código, incrementar contador y capturar lecciones aprendidas
+7. `/exportar` - Exportar proyecto completo con estadísticas, carpeta nomenclada y selección de versión
+8. `/estado` - **[NUEVO]** Visualizar progreso del workflow en tiempo real
+9. `/auto-iterar` - **[NUEVO]** Iteración automática hasta umbral de similitud (ej: `/auto-iterar r 95 10`)
+
+### Integración con R-exams:
+
+Después de usar `/exportar`, el sistema:
+
+1. **Pregunta obligatoriamente** qué versión gráfica usar (TikZ/Python/R)
+2. **Crea carpeta** con nomenclatura oficial: `[ejercicio]_[componente]_[competencia]_n[nivel]_v[version]/`
+3. **Organiza archivos** dentro de la carpeta:
+   - Archivo `.Rmd` con el nombre de la carpeta
+   - Códigos de las 3 versiones (TikZ, Python, R)
+   - Imágenes generadas
+   - Archivos de estado y análisis
+4. **Listo para** usar con `/generar-schoice` o `/generar-cloze`
 
 ---
 
@@ -775,7 +789,74 @@ El **Graficador Experto** es un sistema de replicación visual automatizado que:
 
 ---
 
-**Última actualización:** 2025-12-28
-**Versión del documento:** 2.0 (Optimizada)
-**Estado:** ✅ Completo y verificado con optimizaciones
+---
+
+## 🔗 **INTEGRACIÓN CON SISTEMA ICFES R-EXAMS**
+
+### Flujo Completo: Imagen → Gráfico → Ejercicio .Rmd
+
+```
+1. ANÁLISIS VISUAL
+   /analizar-imagen grafico.png
+   ↓
+   outputs/analisis_inicial.json
+   outputs/workflow_state.json
+
+2. GENERACIÓN MULTI-LENGUAJE
+   /generar-tikz → TikZ validado (98%+)
+   /generar-python → Python validado (95%+)
+   /generar-r → R validado (96%+)
+   ↓
+   outputs/output_tikz.tex
+   outputs/output_python.py
+   outputs/output_r.R
+
+3. EXPORTACIÓN CON NOMENCLATURA
+   /exportar
+   ↓
+   ⚠️ PREGUNTA: ¿Qué versión usar? (TikZ/Python/R)
+   ↓
+   outputs/[ejercicio]_[componente]_[competencia]_n[nivel]_v[version]/
+   ├── [nombre_completo].Rmd (generado después)
+   ├── output_tikz.tex
+   ├── output_python.py
+   ├── output_r.R
+   ├── tikz_final.png
+   ├── python_final.png
+   ├── r_final.png
+   ├── analisis_inicial.json
+   ├── workflow_state.json
+   └── reporte_matematico.md
+
+4. GENERACIÓN DE EJERCICIO R-EXAMS
+   /generar-schoice  (o /generar-cloze)
+   ↓
+   Usa la versión gráfica seleccionada
+   ↓
+   outputs/[nombre_completo]/[nombre_completo].Rmd
+```
+
+### Ventajas de la Integración
+
+1. **Trazabilidad completa**: Cada ejercicio tiene historial de cómo se generó su gráfico
+2. **Flexibilidad**: 3 versiones disponibles según necesidad (vectorial/Python/R)
+3. **Calidad garantizada**: Métricas objetivas 0-100 puntos antes de usar
+4. **Organización**: Carpetas nomencladas con todos los archivos relacionados
+5. **Reproducibilidad**: Estado persistente permite regenerar o modificar
+
+### Recomendaciones por Tipo de Gráfico
+
+| Tipo de Gráfico | Versión Recomendada | Razón |
+|-----------------|---------------------|-------|
+| Geometría precisa | TikZ | Vectorial, máxima precisión |
+| Estadística básica | R/ggplot2 | Nativo R-exams, fácil mantener |
+| Visualización compleja | Python/matplotlib | Flexibilidad, numpy integrado |
+| Funciones matemáticas | TikZ o R | Calidad y precisión |
+| Gráficos de barras/líneas | R/ggplot2 | Sintaxis simple, temas profesionales |
+
+---
+
+**Última actualización:** 2025-12-29
+**Versión del documento:** 2.1 (Integración R-exams)
+**Estado:** ✅ Completo y verificado con optimizaciones e integración ICFES
 

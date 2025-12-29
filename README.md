@@ -190,13 +190,13 @@ El sistema está diseñado para ser operado mediante **Skills de Claude Code** q
 
 #### **Skills Disponibles** (Workflow Automatizado)
 
-El proyecto incluye 7 skills configurados en `.claude/skills/` para automatizar cada fase del workflow:
+El proyecto incluye skills configurados en `.claude/skills/` para automatizar cada fase del workflow:
 
 **Workflow Principal:**
 
 - `/analizar-icfes` - Análisis ICFES de imagen según 6 dimensiones (Fase 1)
-- `/generar-schoice` - Generar ejercicio de selección única (Fase 3)
-- `/generar-cloze` - Generar ejercicio de respuesta abierta (Fase 3)
+- `/generar-schoice` - Generar ejercicio de selección única con nomenclatura obligatoria y carpeta estructurada
+- `/generar-cloze` - Generar ejercicio tipo CLOZE con configuración de tolerancias apropiadas
 - `/promover-ejercicio` - Promoción a carpeta de producción (Fase 7)
 
 **Skills de Soporte:**
@@ -205,19 +205,37 @@ El proyecto incluye 7 skills configurados en `.claude/skills/` para automatizar 
 - `/validar-diversidad` - Validar 300+ versiones únicas
 - `/validar-icfes` - Validar metadatos y estructura R-exams
 
+**Skills del Graficador Experto v2.0:**
+
+- `/analizar-imagen` - Análisis visual detallado con estado persistente
+- `/generar-tikz` - Generación TikZ/LaTeX con métricas cuantitativas
+- `/generar-python` - Generación Python/Matplotlib con transferencia de conocimiento
+- `/generar-r` - Generación R/ggplot2 con lecciones aprendidas
+- `/comparar` - Comparación visual con puntuación 0-100 puntos
+- `/iterar` - Refinamiento iterativo con contador de iteraciones
+- `/exportar` - Exportación completa con estadísticas y carpeta nomenclada
+- `/estado` - Visualización de progreso del workflow en tiempo real
+- `/auto-iterar` - Iteración automática hasta umbral de similitud
+
 #### **Ejemplo de Uso con Skills**
 
 ```bash
 # 1. Analizar imagen de ejercicio ICFES
 /analizar-icfes imagen_ejercicio.png
 
-# 2. Generar ejercicio SCHOICE basado en el análisis
+# 2. Si tiene gráficos complejos, usar Graficador Experto
+/analizar-imagen grafico_matematico.png
+/generar-r  # Genera código R (recomendado para R-exams)
+/comparar   # Obtiene puntuación 0-100
+/auto-iterar r 95 10  # Itera hasta 95+ puntos (máx 10 iteraciones)
+
+# 3. Generar ejercicio SCHOICE (pregunta al usuario qué versión gráfica usar)
 /generar-schoice
 
-# 3. Validar diversidad de versiones
+# 4. Validar diversidad de versiones
 /validar-diversidad archivo_generado.Rmd
 
-# 4. Promover a producción después de validar
+# 5. Promover a producción después de validar
 /promover-ejercicio archivo_generado.Rmd
 ```
 
@@ -243,17 +261,45 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 .claude/
 ├── settings.json          # Hooks y configuración global
 ├── settings.local.json    # Permisos para skills
-├── skills/                # 7 skills del workflow automatizado
+├── schemas/               # Esquemas JSON para estado persistente
+│   ├── workflow_state.schema.json
+│   ├── analisis_inicial.schema.json
+│   ├── metricas_similitud.schema.json
+│   └── lecciones_aprendidas.schema.json
+├── skills/                # Skills del workflow automatizado
 │   ├── analizar-icfes/
 │   ├── generar-schoice/
 │   ├── generar-cloze/
 │   ├── promover-ejercicio/
 │   ├── corregir-error-imagen/
 │   ├── validar-diversidad/
-│   └── validar-icfes/
+│   ├── validar-icfes/
+│   └── [Graficador Experto v2.0]
+│       ├── analizar-imagen-matematica/
+│       ├── generar-tikz/
+│       ├── generar-python/
+│       ├── generar-r/
+│       ├── comparar-visual/
+│       ├── refinar-codigo/
+│       ├── gestionar-estado/
+│       └── transferir-conocimiento/
+├── commands/              # Comandos slash para acceso rápido
+│   ├── analizar-imagen.md
+│   ├── generar-tikz.md
+│   ├── generar-python.md
+│   ├── generar-r.md
+│   ├── comparar.md
+│   ├── iterar.md
+│   ├── exportar.md
+│   ├── estado.md
+│   ├── auto-iterar.md
+│   ├── generar-schoice.md
+│   └── generar-cloze.md
 └── docs/                  # Documentación del workflow
+    ├── 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md
+    ├── NOMENCLATURA_ARCHIVOS_RMD.md
+    ├── INDICE_DOCUMENTACION.md
     ├── WORKFLOW_PASO_A_PASO.md
-    ├── GUIA_USUARIO.md
     └── [otros archivos]
 ```
 
@@ -263,6 +309,10 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 - ✅ Permisos preconfigurados para ejecución sin confirmación
 - ✅ Documentación completa del workflow paso a paso
 - ✅ Validación automática de estructura ICFES
+- ✅ **Graficador Experto v2.0** con estado persistente y métricas cuantitativas
+- ✅ Sistema de puntuación 0-100 puntos para comparación visual
+- ✅ Transferencia de conocimiento entre lenguajes (TikZ → Python → R)
+- ✅ Nomenclatura obligatoria con carpetas estructuradas
 
 ---
 
@@ -286,6 +336,30 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 -   **Institución**: IE Pedacito de Cielo
 -   **Propósito**: Generación de ejercicios matemáticos de alta calidad para la preparación de la prueba ICFES Saber 11°.
 -   **Licencia**: Proyecto Educativo
--   **Última Actualización**: Septiembre 2025
+-   **Última Actualización**: Diciembre 2025
+
+## 🆕 **Novedades Recientes**
+
+### Graficador Experto v2.0 (Diciembre 2025)
+
+- ✅ **Estado persistente**: Tracking completo del progreso con recuperación ante interrupciones
+- ✅ **Métricas cuantitativas**: Sistema de puntuación 0-100 puntos en 6 categorías
+- ✅ **Análisis estructurado**: Formato JSON reutilizable para las 3 generaciones
+- ✅ **Transferencia de conocimiento**: Lecciones aprendidas aplicadas entre lenguajes
+- ✅ **Iteración automática**: Comando `/auto-iterar` hasta umbral de similitud
+- ✅ **Visualización de progreso**: Comando `/estado` para ver avance en tiempo real
+
+### Nomenclatura Obligatoria y Carpetas Estructuradas
+
+- ✅ **Formato estándar**: `[ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd`
+- ✅ **Carpetas organizadas**: Cada ejercicio en su propia carpeta con todos sus archivos
+- ✅ **Exportación mejorada**: `/exportar` crea carpeta con nomenclatura oficial
+- ✅ **Selección de versión gráfica**: Pregunta obligatoria antes de generar .Rmd
+
+### Configuración de Tolerancias para Ejercicios CLOZE
+
+- ✅ **Tolerancias apropiadas**: 0 para schoice, ≥1 para valores numéricos grandes
+- ✅ **Documentación mejorada**: Guías específicas en comandos y skills
+- ✅ **Validación automática**: Verificación de configuración correcta
 
 Este proyecto representa un sistema integral y robusto que encapsula las mejores prácticas para la creación de contenido educativo parametrizado y de alta calidad.
