@@ -1,5 +1,120 @@
 graph TD
-    A[ENTRADA: Imagen ICFES Matemáticas] --> B[ANÁLISIS DE CARACTERÍSTICAS]
+    A[ENTRADA: Imagen ICFES Matemáticas] --> ANALISIS_VISUAL[🔍 ANÁLISIS VISUAL INICIAL]
+
+    %% ============================================
+    %% ANÁLISIS VISUAL INICIAL - DETECCIÓN DE GRÁFICOS
+    %% ============================================
+    ANALISIS_VISUAL --> ENUNCIADO[Análisis Visual Enunciado]
+    
+    ENUNCIADO --> ENUNCIADO_GRAF_MAT[Con Gráficos<br/>Matemáticos]
+    ENUNCIADO --> ENUNCIADO_GRAF_NO_MAT[Con Gráficos<br/>No Matemáticos]
+    ENUNCIADO --> ENUNCIADO_SIN_GRAF[Sin Gráficos]
+    
+    ENUNCIADO_GRAF_MAT --> OPCIONES[Análisis Opciones de Respuesta]
+    ENUNCIADO_GRAF_NO_MAT --> OPCIONES
+    ENUNCIADO_SIN_GRAF --> OPCIONES
+    
+    OPCIONES --> OPCIONES_TEXTO[Opciones<br/>Textuales/Numéricas]
+    OPCIONES --> OPCIONES_GRAF[Opciones con<br/>Gráficos]
+    OPCIONES --> OPCIONES_MIXTAS[Opciones Mixtas]
+    
+    %% ============================================
+    %% DECISIÓN: ¿ACTIVAR GRAFICADOR-EXPERTO?
+    %% ============================================
+    ENUNCIADO_GRAF_MAT --> DETECTAR{¿Aplicar<br/>Graficador-Experto?}
+    ENUNCIADO_GRAF_NO_MAT --> DETECTAR
+    OPCIONES_GRAF -->|SÍ| DETECTAR
+    OPCIONES_MIXTAS -->|SÍ| DETECTAR
+    
+    ENUNCIADO_SIN_GRAF -->|NO| CONTINUAR_SIN_GRAF[Continuar sin<br/>Graficador-Experto]
+    OPCIONES_TEXTO -->|NO| CONTINUAR_SIN_GRAF
+    
+    %% ============================================
+    %% FLUJO GRAFICADOR-EXPERTO INTEGRADO
+    %% ============================================
+    DETECTAR -->|SÍ| GRAF_ANALISIS[🔍 ANÁLISIS VISUAL MATEMÁTICO<br/>/analizar-imagen-grafica]
+    
+    GRAF_ANALISIS --> GRAF_CLASIF[Clasificación de Contenido]
+    GRAF_CLASIF --> GRAF_CLASIF1[Geometría]
+    GRAF_CLASIF --> GRAF_CLASIF2[Estadística]
+    GRAF_CLASIF --> GRAF_CLASIF3[Cálculo]
+    GRAF_CLASIF --> GRAF_CLASIF4[Trigonometría]
+    GRAF_CLASIF --> GRAF_CLASIF5[Álgebra]
+    
+    GRAF_ANALISIS --> GRAF_ELEM[Extracción de Elementos]
+    GRAF_ELEM --> GRAF_ELEM1[Ejes Coordenados]
+    GRAF_ELEM --> GRAF_ELEM2[Gráficas y Curvas]
+    GRAF_ELEM --> GRAF_ELEM3[Figuras Geométricas]
+    GRAF_ELEM --> GRAF_ELEM4[Anotaciones y Etiquetas]
+    
+    GRAF_ANALISIS --> GRAF_ESTILOS[Análisis de Estilos]
+    GRAF_ESTILOS --> GRAF_ESTILOS1[Colores RGB/Hex]
+    GRAF_ESTILOS --> GRAF_ESTILOS2[Estilos de Línea]
+    GRAF_ESTILOS --> GRAF_ESTILOS3[Tipografía]
+    
+    GRAF_ANALISIS --> GRAF_COMPLEJ[Evaluación de Complejidad]
+    GRAF_COMPLEJ --> GRAF_COMPLEJ1[Nivel Bajo]
+    GRAF_COMPLEJ --> GRAF_COMPLEJ2[Nivel Medio]
+    GRAF_COMPLEJ --> GRAF_COMPLEJ3[Nivel Alto]
+    
+    GRAF_COMPLEJ --> GRAF_REPORTE[📋 REPORTE ESTRUCTURADO]
+    GRAF_REPORTE --> GRAF_GUARDAR[💾 Guardar Análisis]
+    GRAF_GUARDAR --> GRAF_JSON1[analisis_inicial.json]
+    GRAF_GUARDAR --> GRAF_JSON2[workflow_state.json]
+    GRAF_GUARDAR --> GRAF_MD[reporte_matematico.md]
+    
+    GRAF_GUARDAR --> GRAF_LENGUAJE{Seleccionar Lenguaje}
+    
+    GRAF_LENGUAJE -->|TikZ| GRAF_TIKZ[🎨 GENERACIÓN TIKZ<br/>/generar-codigo-tikz]
+    GRAF_LENGUAJE -->|Python| GRAF_PYTHON[🐍 GENERACIÓN PYTHON<br/>/generar-codigo-python]
+    GRAF_LENGUAJE -->|R| GRAF_R[📊 GENERACIÓN R<br/>/generar-codigo-r]
+    
+    GRAF_TIKZ --> GRAF_TIKZ_CODE[Código TikZ/LaTeX]
+    GRAF_PYTHON --> GRAF_PYTHON_CODE[Código Python/Matplotlib]
+    GRAF_R --> GRAF_R_CODE[Código R/ggplot2]
+    
+    GRAF_TIKZ_CODE --> GRAF_TIKZ_COMP[Compilar LaTeX]
+    GRAF_PYTHON_CODE --> GRAF_PYTHON_EXEC[Ejecutar Python]
+    GRAF_R_CODE --> GRAF_R_EXEC[Ejecutar R]
+    
+    GRAF_TIKZ_COMP --> GRAF_TIKZ_IMG[Imagen PNG/PDF]
+    GRAF_PYTHON_EXEC --> GRAF_PYTHON_IMG[Imagen PNG]
+    GRAF_R_EXEC --> GRAF_R_IMG[Imagen PNG]
+    
+    GRAF_TIKZ_IMG --> GRAF_COMPARAR[🔍 COMPARACIÓN VISUAL<br/>+ MÉTRICAS 0-100<br/>/comparar-similitud-visual]
+    GRAF_PYTHON_IMG --> GRAF_COMPARAR
+    GRAF_R_IMG --> GRAF_COMPARAR
+    
+    GRAF_COMPARAR --> GRAF_METRICAS[Análisis con Puntuación]
+    GRAF_METRICAS --> GRAF_M1[Colores 0-20 pts]
+    GRAF_METRICAS --> GRAF_M2[Posiciones 0-20 pts]
+    GRAF_METRICAS --> GRAF_M3[Valores 0-20 pts]
+    GRAF_METRICAS --> GRAF_M4[Proporciones 0-15 pts]
+    GRAF_METRICAS --> GRAF_M5[Estilos 0-15 pts]
+    GRAF_METRICAS --> GRAF_M6[Elementos 0-10 pts]
+    
+    GRAF_M1 --> GRAF_PUNTUACION[📊 PUNTUACIÓN TOTAL]
+    GRAF_M2 --> GRAF_PUNTUACION
+    GRAF_M3 --> GRAF_PUNTUACION
+    GRAF_M4 --> GRAF_PUNTUACION
+    GRAF_M5 --> GRAF_PUNTUACION
+    GRAF_M6 --> GRAF_PUNTUACION
+    
+    GRAF_PUNTUACION --> GRAF_DECISION{Similitud<br/>≥ 95?}
+    
+    GRAF_DECISION -->|SÍ| GRAF_VALIDADO[✅ CÓDIGO VALIDADO]
+    GRAF_DECISION -->|NO| GRAF_ITERAR[🔄 REFINAR CÓDIGO<br/>/refinar-codigo-grafico]
+    
+    GRAF_ITERAR --> GRAF_CORREGIR[Aplicar Correcciones]
+    GRAF_CORREGIR --> GRAF_LENGUAJE
+    
+    GRAF_VALIDADO --> GRAF_INTEGRAR[💾 Código Gráfico<br/>Validado Listo]
+    
+    %% ============================================
+    %% CONTINUACIÓN: ANÁLISIS ICFES (6 DIMENSIONES)
+    %% ============================================
+    CONTINUAR_SIN_GRAF --> B[ANÁLISIS ICFES<br/>6 Dimensiones]
+    GRAF_INTEGRAR --> B
 
     B --> C1[Nivel de Dificultad]
     C1 --> C1a[Nivel 1: 0-35 pts]
@@ -43,40 +158,10 @@ graph TD
     D1 --> D1a[SCHOICE<br/>Selección Única]
     D1 --> D1b[CLOZE<br/>Pregunta Compuesta]
 
-    D1a --> E1[Análisis Visual Enunciado]
-    D1b --> E2[Análisis Visual Enunciado]
-
-    E1 --> E1a[Con Gráficos<br/>Matemáticos]
-    E1 --> E1b[Con Gráficos<br/>No Matemáticos]
-    E1 --> E1c[Sin Gráficos]
-
-    E2 --> E2a[Con Gráficos<br/>Matemáticos]
-    E2 --> E2b[Con Gráficos<br/>No Matemáticos]
-    E2 --> E2c[Sin Gráficos]
-
-    E1a --> F1[Análisis Opciones]
-    E1b --> F1
-    E1c --> F1
-    E2a --> F2[Análisis Opciones]
-    E2b --> F2
-    E2c --> F2
-
-    F1 --> F1a[Opciones<br/>Textuales/Numéricas]
-    F1 --> F1b[Opciones con<br/>Gráficos]
-    F1 --> F1c[Opciones Mixtas]
-
-    F2 --> F2a[Opciones<br/>Textuales/Numéricas]
-    F2 --> F2b[Opciones con<br/>Gráficos]
-    F2 --> F2c[Opciones Mixtas]
-
-    F1a --> G[PLANTILLA FINAL .Rmd]
-    F1b --> G
-    F1c --> G
-    F2a --> G
-    F2b --> G
-    F2c --> G
-
-    G --> H[OUTPUT: Archivo .Rmd<br/>con Metadatos Completos]
+    D1a --> G[PLANTILLA FINAL .Rmd]
+    D1b --> G
+    
+    G --> H[OUTPUT: Archivo .Rmd<br/>con Metadatos Completos<br/>+ Código Gráfico Integrado<br/>si aplica]
 
     %% ============================================
     %% FASE 1: RENDERIZADO INICIAL OBLIGATORIO
@@ -111,6 +196,11 @@ graph TD
     VAL_IMG --> VAL_IMG2[Valores sincronizados]
     VAL_IMG --> VAL_IMG3[Etiquetas correctas]
 
+    VAL_ALL --> VAL_SEM[✓ Coherencia Semántica<br/>Gramática]
+    VAL_SEM --> VAL_SEM1[Gramática correcta]
+    VAL_SEM --> VAL_SEM2[Concordancia adecuada]
+    VAL_SEM --> VAL_SEM3[Ortografía verificada]
+
     VAL_ALL --> VAL_COD[✓ Coherencia de Código]
     VAL_COD --> VAL_COD1[R ↔ Python sincronizado]
     VAL_COD --> VAL_COD2[R ↔ TikZ sincronizado]
@@ -128,6 +218,9 @@ graph TD
     VAL_IMG1 --> CONSOLIDAR
     VAL_IMG2 --> CONSOLIDAR
     VAL_IMG3 --> CONSOLIDAR
+    VAL_SEM1 --> CONSOLIDAR
+    VAL_SEM2 --> CONSOLIDAR
+    VAL_SEM3 --> CONSOLIDAR
     VAL_COD1 --> CONSOLIDAR
     VAL_COD2 --> CONSOLIDAR
     VAL_COD3 --> CONSOLIDAR
@@ -240,24 +333,36 @@ graph TD
     DOC_CONTENT --> M
 
     %% ============================================
-    %% CONDICIONES CRÍTICAS - BLOQUEO
-    %% ============================================
-    subgraph CONDICIONES_CRITICAS[⛔ CONDICIONES CRÍTICAS DEL CICLO]
-        CRIT1[❌ NO terminar con errores sin resolver]
-        CRIT2[❌ NUNCA proceder con errores pendientes]
-        CRIT3[✓ Documentar SOLO después de solución confirmada]
-        CRIT4[✓ Ejemplos funcionales = Fuente de verdad]
-    end
-
-    %% ============================================
     %% ESTILOS - FASES PRINCIPALES
     %% ============================================
     style A fill:#e1f5ff
+    style ANALISIS_VISUAL fill:#fff4e6,stroke:#e65100,stroke-width:3px
     style B fill:#fff4e6
     style D fill:#e8f5e9
     style D1 fill:#fff9c4
     style G fill:#f3e5f5
     style H fill:#ffebee
+
+    %% Estilos Análisis Visual Inicial
+    style ENUNCIADO fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style OPCIONES fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style DETECTAR fill:#fff9c4,stroke:#f57f17,stroke-width:3px
+    style CONTINUAR_SIN_GRAF fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    
+    %% Estilos Flujo Graficador-Experto
+    style GRAF_ANALISIS fill:#fff4e6,stroke:#e65100,stroke-width:3px
+    style GRAF_REPORTE fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style GRAF_GUARDAR fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style GRAF_LENGUAJE fill:#fff9c4,stroke:#f57f17,stroke-width:3px
+    style GRAF_TIKZ fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style GRAF_PYTHON fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style GRAF_R fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style GRAF_COMPARAR fill:#7b1fa2,color:#fff,stroke:#4a148c,stroke-width:3px
+    style GRAF_PUNTUACION fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
+    style GRAF_DECISION fill:#fce4ec,stroke:#c2185b,stroke-width:3px
+    style GRAF_VALIDADO fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
+    style GRAF_ITERAR fill:#ff7043,color:#fff,stroke:#d84315,stroke-width:2px
+    style GRAF_INTEGRAR fill:#81c784,stroke:#2e7d32,stroke-width:2px
 
     %% Estilos Fase 1
     style FASE1 fill:#1e88e5,color:#fff,stroke:#0d47a1,stroke-width:3px
@@ -269,6 +374,7 @@ graph TD
     style VAL_ALL fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px
     style VAL_MAT fill:#f3e5f5
     style VAL_IMG fill:#f3e5f5
+    style VAL_SEM fill:#f3e5f5
     style VAL_COD fill:#f3e5f5
     style VAL_OUT fill:#f3e5f5
     style CONSOLIDAR fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
@@ -300,45 +406,3 @@ graph TD
     style DOC_OK fill:#66bb6a,color:#fff,stroke:#2e7d32,stroke-width:2px
     style M fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
     style N fill:#2e7d32,color:#fff,stroke:#1b5e20,stroke-width:3px
-
-    %% Estilos Tipos de Ejercicio
-    style D1a fill:#c8e6c9
-    style D1b fill:#c8e6c9
-
-    %% Estilos Errores Gráficos
-    style ERR_G fill:#ffab91,stroke:#e64a19,stroke-width:2px
-    style ERR_G1 fill:#ffccbc
-    style ERR_G2 fill:#ffccbc
-    style ERR_G3 fill:#ffccbc
-    style ERR_G4 fill:#ffccbc
-
-    %% Estilos Correcciones Gráficos
-    style L1 fill:#ffe0b2
-    style L2 fill:#ffe0b2
-    style L3 fill:#ffe0b2
-    style L4 fill:#ffe0b2
-
-    %% Estilos Errores Texto y Estructura
-    style ERR_T fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
-    style ERR_S fill:#90caf9,stroke:#1976d2,stroke-width:2px
-
-    %% Estilos Errores Coherencia
-    style ERR_C fill:#80deea,stroke:#00838f,stroke-width:2px
-    style ERR_C1 fill:#b2ebf2
-    style ERR_C2 fill:#b2ebf2
-    style ERR_C3 fill:#b2ebf2
-
-    %% Estilos Correcciones Coherencia
-    style L5 fill:#e0f7fa
-    style L6 fill:#e0f7fa
-    style L7 fill:#e0f7fa
-
-    %% Estilo Corrección Central
-    style L fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px
-
-    %% Estilos Condiciones Críticas
-    style CONDICIONES_CRITICAS fill:#fff3e0,stroke:#e65100,stroke-width:3px
-    style CRIT1 fill:#ffccbc
-    style CRIT2 fill:#ffccbc
-    style CRIT3 fill:#c8e6c9
-    style CRIT4 fill:#c8e6c9

@@ -31,6 +31,36 @@ Generación del archivo .Rmd
 
 Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⚠️ NOMENCLATURA OBLIGATORIA
+
+**Todo archivo .Rmd DEBE seguir este formato:**
+
+```
+[ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd
+```
+
+### Componentes:
+
+| Parte | Valores Permitidos |
+|-------|-------------------|
+| `[ejercicio]` | Nombre descriptivo en snake_case (ej: `series_temporales_poblacion`) |
+| `[componente]` | `geometrico_metrico` \| `numerico_variacional` \| `aleatorio` |
+| `[competencia]` | `interpretacion_representacion` \| `formulacion_ejecucion` \| `argumentacion` |
+| `n[nivel]` | `n1` \| `n2` \| `n3` \| `n4` |
+| `v[version]` | `v1`, `v2`, `v3`... |
+
+### Ejemplo correcto:
+```
+series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v1.Rmd
+```
+
+### ❌ NUNCA usar nombres como:
+- `poblacion_paises.Rmd` (incompleto)
+- `ejercicio1.Rmd` (no descriptivo)
+- `mi_ejercicio_v1.Rmd` (falta componente, competencia, nivel)
+
+**Documentación completa:** `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
+
 ## Flujo de generación
 
 ### Paso 1: Verificar clasificación
@@ -67,11 +97,31 @@ Incluir en comentarios YAML:
 #   componente: [geometrico_metrico|numerico_variacional|aleatorio]
 ```
 
-### Paso 5: Guardar en carpeta de desarrollo
+### Paso 5: Guardar con NOMENCLATURA OBLIGATORIA
+
+**CRÍTICO:** Aplicar nomenclatura oficial ANTES de guardar.
+
 ```bash
-# Guardar en /A-Produccion/En-Desarrollo/
-# Nombre: [ejercicio]_[componente]_[competencia]_n[nivel]_v1.Rmd
+# 1. Determinar componentes del nombre:
+#    - ejercicio: descripción snake_case del contenido
+#    - componente: geometrico_metrico | numerico_variacional | aleatorio
+#    - competencia: interpretacion_representacion | formulacion_ejecucion | argumentacion
+#    - nivel: n1 | n2 | n3 | n4
+#    - version: v1 (primera versión)
+
+# 2. Construir nombre completo:
+#    [ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd
+
+# 3. Guardar en /A-Produccion/En-Desarrollo/
 ```
+
+**Ejemplo:**
+```bash
+# Para un ejercicio de series temporales de población:
+series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v1.Rmd
+```
+
+**IMPORTANTE:** El campo `exname` DEBE coincidir exactamente con el nombre del archivo (sin .Rmd)
 
 ### Paso 6: Validación
 Ejecutar skill `validar-diversidad-300` para confirmar aleatorización.

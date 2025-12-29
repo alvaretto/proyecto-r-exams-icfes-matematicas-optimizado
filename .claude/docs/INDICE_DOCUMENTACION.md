@@ -53,13 +53,17 @@
 
 ### 🎨 Graficador-Experto (Integrado)
 
+El Graficador-Experto está completamente integrado en el workflow principal. Se activa automáticamente cuando se detectan gráficos matemáticos en la imagen ICFES.
+
 | Documento | Descripción | Cuándo Usar |
 |-----------|-------------|-------------|
-| **[INTEGRACION_GRAFICADOR_EXPERTO.md](INTEGRACION_GRAFICADOR_EXPERTO.md)** | Guía completa de integración | Usar comandos grafico-* para análisis y generación de gráficos |
+| **[01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md](01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md)** | Incluye sección "Detección Automática de Gráficos" | Entender flujo integrado completo |
 | **[01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md](01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md)** | Funcionamiento detallado del Graficador-Experto | Entender sistema completo de replicación visual |
 | **[GRAFICADOR_EXPERTO_README.md](GRAFICADOR_EXPERTO_README.md)** | README original del Graficador-Experto | Referencia rápida de comandos y skills |
 
-**Comandos disponibles**: `/grafico-analizar-imagen`, `/grafico-generar-tikz`, `/grafico-generar-python`, `/grafico-generar-r`, `/grafico-comparar`, `/grafico-iterar`, `/grafico-exportar`, `/grafico-estado`, `/grafico-auto-iterar`
+**Comandos disponibles**: `/analizar-imagen-grafica`, `/generar-codigo-tikz`, `/generar-codigo-python`, `/generar-codigo-r`, `/comparar-similitud-visual`, `/refinar-codigo-grafico`, `/exportar-graficos`, `/estado-graficador`, `/auto-refinar-grafico`
+
+**Nota**: Los comandos anteriores con prefijo `grafico-*` han sido renombrados a nombres más descriptivos. El sistema detecta automáticamente gráficos y activa este flujo cuando es necesario.
 
 ### 🗂️ Gestión del Sistema
 
@@ -120,11 +124,12 @@
 
 ### Quiero generar gráficos complejos para ejercicios
 
-1. **Leer**: [INTEGRACION_GRAFICADOR_EXPERTO.md](INTEGRACION_GRAFICADOR_EXPERTO.md)
-2. **Ejecutar**: `/grafico-analizar-imagen` con tu imagen matemática
-3. **Generar código**: `/grafico-generar-tikz` o `/grafico-generar-python` o `/grafico-generar-r`
-4. **Validar similitud**: `/grafico-comparar` y `/grafico-auto-iterar` si es necesario
-5. **Integrar en ejercicio**: Usar código generado en `/generar-schoice` o `/generar-cloze`
+1. **Leer**: Sección "Detección Automática de Gráficos" en [01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md](01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md)
+2. **El sistema detecta automáticamente** gráficos en la imagen ICFES
+3. **Si hay gráficos**: Se ejecuta automáticamente `/analizar-imagen-grafica`
+4. **Generar código**: `/generar-codigo-tikz` o `/generar-codigo-python` o `/generar-codigo-r`
+5. **Validar similitud**: `/comparar-similitud-visual` y `/auto-refinar-grafico` si es necesario
+6. **Integración automática**: El código validado se integra automáticamente en la generación del ejercicio `.Rmd`
 
 ---
 
@@ -151,9 +156,8 @@
 │   ├── RESUMEN_DOCUMENTACION_WORKFLOW.md   # Resumen del workflow
 │   ├── 01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md  # Explicación completa
 │   ├── 01-OPTIMIZACION_DIRECTORIO_CLAUDE.md          # Optimización reciente
-│   ├── INTEGRACION_GRAFICADOR_EXPERTO.md             # 🎨 Integración Graficador-Experto
-│   ├── 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md  # 🎨 Graficador-Experto completo
-│   ├── GRAFICADOR_EXPERTO_README.md                  # 🎨 README Graficador-Experto
+│   ├── 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md  # 🎨 Graficador-Experto completo (referencia)
+│   ├── GRAFICADOR_EXPERTO_README.md                  # 🎨 README Graficador-Experto (referencia)
 │   ├── casos-resueltos/                    # Casos específicos
 │   │   ├── 2025-12-19-cilindro-tikz.md
 │   │   ├── 2025-12-21-recta-abs-formateado.md
@@ -172,22 +176,23 @@
 │   ├── validar-diversidad/                 # Validación de 300+ versiones
 │   ├── validar-icfes/                      # Validación de metadatos
 │   └── validar-renderizado/                # Validación de renderizado
-│   ├── grafico-analizar-imagen-matematica/ # 🎨 Análisis visual matemático
-│   ├── grafico-generar-tikz/              # 🎨 Generación TikZ/LaTeX
-│   ├── grafico-generar-python/            # 🎨 Generación Python/Matplotlib
-│   ├── grafico-generar-r/                 # 🎨 Generación R/ggplot2
-│   ├── grafico-comparar-visual/           # 🎨 Comparación visual inteligente
-│   ├── grafico-refinar-codigo/            # 🎨 Refinamiento iterativo
-│   ├── grafico-gestionar-estado/         # 🎨 Gestión de estado persistente
-│   └── grafico-transferir-conocimiento/   # 🎨 Transferencia entre lenguajes
+│   ├── analizar-imagen-grafica/           # 🎨 Análisis visual matemático
+│   ├── generar-codigo-tikz/              # 🎨 Generación TikZ/LaTeX
+│   ├── generar-codigo-python/            # 🎨 Generación Python/Matplotlib
+│   ├── generar-codigo-r/                 # 🎨 Generación R/ggplot2
+│   ├── comparar-similitud-visual/         # 🎨 Comparación visual inteligente
+│   ├── refinar-codigo-grafico/           # 🎨 Refinamiento iterativo
+│   ├── gestionar-estado-graficador/      # 🎨 Gestión de estado persistente
+│   └── transferir-conocimiento-grafico/   # 🎨 Transferencia entre lenguajes
 ├── schemas/                                 # 📋 Schemas JSON (Graficador-Experto)
 │   ├── workflow_state.schema.json          # Estado persistente del workflow
 │   ├── analisis_inicial.schema.json        # Análisis estructurado reutilizable
 │   ├── metricas_similitud.schema.json      # Sistema de puntuación 0-100
 │   └── lecciones_aprendidas.schema.json    # Transferencia de conocimiento
 ├── agents/                                  # 🤖 Agentes especializados
-│   ├── clasificador-icfes.md               # Clasificador ICFES
-│   └── graficador-tikz.md                  # Graficador TikZ
+│   └── clasificador-icfes.md               # Clasificador ICFES
+│   └── deprecated/                         # ⚠️ Agentes deprecados
+│       └── graficador-tikz.md              # (Deprecado - Reemplazado por Graficador-Experto integrado)
 ├── scripts/                                 # 🔧 Scripts de automatización
 │   ├── README.md                           # Documentación de scripts
 │   ├── fase5_eliminar_comando_deprecado.sh # Script de eliminación

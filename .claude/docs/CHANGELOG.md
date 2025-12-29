@@ -7,7 +7,73 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
-## [2025-12-29] - Integración Graficador-Experto
+## [2025-12-29] - Fusión Completa: Workflow Principal + Graficador-Experto
+
+### 🔄 Cambiado
+
+#### Renombrado de Comandos y Skills
+
+**Comandos renombrados** (de `grafico-*` a nombres descriptivos):
+- `/grafico-analizar-imagen` → `/analizar-imagen-grafica`
+- `/grafico-generar-tikz` → `/generar-codigo-tikz`
+- `/grafico-generar-python` → `/generar-codigo-python`
+- `/grafico-generar-r` → `/generar-codigo-r`
+- `/grafico-comparar` → `/comparar-similitud-visual`
+- `/grafico-iterar` → `/refinar-codigo-grafico`
+- `/grafico-estado` → `/estado-graficador`
+- `/grafico-exportar` → `/exportar-graficos`
+- `/grafico-auto-iterar` → `/auto-refinar-grafico`
+
+**Skills renombradas** (de `grafico-*` a nombres descriptivos):
+- `grafico-analizar-imagen-matematica` → `analizar-imagen-grafica`
+- `grafico-generar-tikz` → `generar-codigo-tikz`
+- `grafico-generar-python` → `generar-codigo-python`
+- `grafico-generar-r` → `generar-codigo-r`
+- `grafico-comparar-visual` → `comparar-similitud-visual`
+- `grafico-refinar-codigo` → `refinar-codigo-grafico`
+- `grafico-gestionar-estado` → `gestionar-estado-graficador`
+- `grafico-transferir-conocimiento` → `transferir-conocimiento-grafico`
+
+### ✅ Agregado
+
+#### Detección Automática de Gráficos
+
+- **Detección automática**: El sistema detecta automáticamente si la imagen ICFES contiene gráficos matemáticos
+- **Activación automática**: Cuando se detectan gráficos, se ejecuta automáticamente el flujo del Graficador-Experto
+- **Integración transparente**: El código gráfico validado se integra automáticamente en la generación del ejercicio `.Rmd`
+
+#### Diagrama Mermaid Unificado
+
+- **Fusión completa**: Creación de diagrama Mermaid único que integra ambos workflows
+- **Flujo integrado**: El diagrama muestra el flujo completo desde entrada hasta producción, incluyendo el subflujo del Graficador-Experto cuando hay gráficos
+- **Deprecación**: `Mermaid_Chart_Graficador_Experto.txt` movido a `deprecated/`
+
+### 🗑️ Deprecado
+
+- **Agente `graficador-tikz.md`**: Movido a `deprecated/` - Reemplazado completamente por el flujo integrado del Graficador-Experto
+- **Diagrama separado**: `Mermaid_Chart_Graficador_Experto.txt` movido a `deprecated/` - Reemplazado por diagrama unificado
+
+### 📝 Actualizado
+
+- **Documentación principal**: `01-EXPLICACION_COMPLETA_DIRECTORIO_CLAUDE.md` actualizado con sección "Detección Automática de Gráficos"
+- **Índice de documentación**: `INDICE_DOCUMENTACION.md` actualizado con nuevos nombres de comandos y estructura integrada
+- **Permisos**: `settings.local.json` creado con permisos para todos los skills integrados
+
+### 🎯 Resultado
+
+**Workflow completamente unificado** donde:
+1. El usuario sube una imagen ICFES
+2. El sistema analiza automáticamente si contiene gráficos
+3. Si hay gráficos: ejecuta el flujo de replicación visual con métricas 0-100
+4. El código validado se integra en la generación del ejercicio `.Rmd`
+5. El ciclo de validación 3 fases verifica todo el ejercicio
+6. Promoción a producción cuando todo está correcto
+
+**Sin sistemas paralelos** - un solo flujo unificado.
+
+---
+
+## [2025-12-29] - Integración Graficador-Experto (Inicial)
 
 ### ✅ Agregado
 

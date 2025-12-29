@@ -62,9 +62,67 @@ El directorio `.claude` es el **cerebro del sistema automatizado** para generar 
 
 El diagrama `Mermaid_Chart.txt` define un **sistema de 3 fases obligatorias** con ciclo de retroalimentación automático:
 
-### 📥 **ENTRADA: Análisis de Imagen ICFES**
+### 📥 **ENTRADA: Imagen con Escenario Matemático ICFES**
 
-Cuando se proporciona una imagen de ejercicio matemático, el sistema analiza **6 dimensiones**:
+Cuando el usuario comparte una imagen con escenario matemático ICFES, el sistema ejecuta el siguiente flujo:
+
+### 🔍 **PASO 1: ANÁLISIS VISUAL INICIAL - DETECCIÓN DE GRÁFICOS**
+
+**Antes** de realizar el análisis ICFES, el sistema analiza visualmente la imagen para detectar si contiene gráficos matemáticos:
+
+#### **Análisis Visual del Enunciado:**
+
+- **Con gráficos matemáticos** (TikZ, funciones, figuras geométricas)
+  - ✅ **Aplica**: `/analizar-imagen-grafica` y el resto del flujo del Graficador-Experto
+  
+- **Con gráficos no matemáticos** (imágenes, fotografías)
+  - ✅ **Aplica**: `/analizar-imagen-grafica` y el resto del flujo del Graficador-Experto
+  
+- **Sin gráficos matemáticos**
+  - ❌ **No aplica**: `/analizar-imagen-grafica` - Continúa directamente al análisis ICFES
+
+#### **Análisis de Opciones de Respuesta:**
+
+- **Opciones textuales/numéricas**
+  - ❌ **No aplica**: `/analizar-imagen-grafica` - Continúa directamente al análisis ICFES
+  
+- **Opciones con gráficos**
+  - ✅ **Aplica**: `/analizar-imagen-grafica` y el resto del flujo del Graficador-Experto
+  
+- **Opciones mixtas** (texto + gráficos)
+  - ✅ **Aplica**: `/analizar-imagen-grafica` y el resto del flujo del Graficador-Experto
+
+#### **Flujo del Graficador-Experto (si se detectan gráficos):**
+
+Si el sistema detecta gráficos (en enunciado u opciones), se ejecuta automáticamente:
+
+1. **Análisis Visual Matemático** (`/analizar-imagen-grafica`):
+   - Clasificación de contenido (Geometría, Estadística, Cálculo, etc.)
+   - Extracción de elementos visuales (ejes, gráficas, figuras, anotaciones)
+   - Análisis de estilos (colores RGB/Hex, estilos de línea, tipografía)
+   - Evaluación de complejidad (Baja, Media, Alta)
+   - Guardado de análisis estructurado (`analisis_inicial.json`, `workflow_state.json`)
+
+2. **Generación Multi-Lenguaje**:
+   - TikZ/LaTeX (`/generar-codigo-tikz`)
+   - Python/Matplotlib (`/generar-codigo-python`)
+   - R/ggplot2 (`/generar-codigo-r`)
+
+3. **Comparación Visual con Métricas** (`/comparar-similitud-visual`):
+   - Sistema de puntuación 0-100 puntos (Colores, Posiciones, Valores, Proporciones, Estilos, Elementos)
+   - Recomendaciones basadas en puntuación
+
+4. **Refinamiento Iterativo** (si similitud < 95 puntos):
+   - `/refinar-codigo-grafico` hasta alcanzar ≥ 95 puntos
+   - `/auto-refinar-grafico` disponible para iteración automática
+
+5. **Código Validado Listo**: Una vez validado (≥ 95 puntos), el código gráfico queda listo para integrarse en el ejercicio `.Rmd`
+
+---
+
+### 📊 **PASO 2: ANÁLISIS ICFES (6 DIMENSIONES)**
+
+**Después** de completar el análisis visual y el flujo del Graficador-Experto (si aplicó), el sistema analiza **6 dimensiones** ICFES:
 
 #### 1️⃣ **Nivel de Dificultad**
 
@@ -106,7 +164,7 @@ Cuando se proporciona una imagen de ejercicio matemático, el sistema analiza **
 
 ---
 
-### 📝 **CLASIFICACIÓN DE TIPO DE EJERCICIO**
+### 📝 **PASO 3: CLASIFICACIÓN DE TIPO DE EJERCICIO**
 
 El sistema determina automáticamente:
 
@@ -115,17 +173,23 @@ El sistema determina automáticamente:
 - **SCHOICE**: Selección única (4 opciones)
 - **CLOZE**: Pregunta compuesta (múltiples respuestas)
 
-**Análisis visual del enunciado:**
+---
 
-- Con gráficos matemáticos (TikZ, pgfplots)
-- Con gráficos no matemáticos (imágenes)
-- Sin gráficos
+### 🎨 **COMANDOS DEL GRAFICADOR-EXPERTO DISPONIBLES**
 
-**Análisis de opciones:**
+Los siguientes comandos están disponibles para el flujo de replicación visual de gráficos matemáticos:
 
-- Opciones textuales/numéricas
-- Opciones con gráficos
-- Opciones mixtas
+- `/analizar-imagen-grafica` - Análisis visual matemático completo
+- `/generar-codigo-tikz` - Genera código TikZ/LaTeX validado
+- `/generar-codigo-python` - Genera código Python/Matplotlib validado
+- `/generar-codigo-r` - Genera código R/ggplot2 validado
+- `/comparar-similitud-visual` - Compara con métricas 0-100 puntos
+- `/refinar-codigo-grafico` - Refina código iterativamente
+- `/estado-graficador` - Visualiza progreso del workflow
+- `/exportar-graficos` - Exporta archivos finales
+- `/auto-refinar-grafico` - Iteración automática hasta umbral
+
+**Nota**: Estos comandos se ejecutan automáticamente cuando se detectan gráficos en el análisis visual inicial. Ver sección "PASO 1: ANÁLISIS VISUAL INICIAL" para más detalles.
 
 ---
 
@@ -156,7 +220,7 @@ exams2nops("archivo.Rmd", n = 1)   # Formato escaneable
 
 ## 🔍 **FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL SISTEMÁTICA**
 
-**Objetivo:** Inspección exhaustiva de coherencia en 4 dimensiones.
+**Objetivo:** Inspección exhaustiva de coherencia en **5 dimensiones**.
 
 ### 1️⃣ **Coherencia Matemática**
 
@@ -172,19 +236,26 @@ exams2nops("archivo.Rmd", n = 1)   # Formato escaneable
 - ✓ Etiquetas correctas en gráficos
 - ✓ Unidades consistentes
 
-### 3️⃣ **Coherencia de Código**
+### 3️⃣ **Coherencia Semántica (Gramática)**
+
+- ✓ Gramática correcta
+- ✓ Concordancia adecuada
+- ✓ Ortografía verificada
+- ✓ Redacción clara y precisa
+
+### 4️⃣ **Coherencia de Código**
 
 - ✓ Variables R ↔ Python sincronizadas
 - ✓ Variables R ↔ TikZ sincronizadas
 - ✓ Variables Python ↔ TikZ sincronizadas
 - ✓ Datos compartidos correctamente
 
-### 4️⃣ **Renderizado en 4 Formatos**
+### 5️⃣ **Renderizado en 4 Formatos**
 
-- ✓ HTML correcto y funcional
-- ✓ PDF correcto y funcional
-- ✓ DOCX correcto y funcional
-- ✓ NOPS correcto y funcional
+- ✓ HTML correcto y funcional (`exams2html`)
+- ✓ PDF correcto y funcional (`exams2pdf`)
+- ✓ DOCX correcto y funcional (`exams2docx`)
+- ✓ NOPS correcto y funcional (`exams2nops`)
 
 **Resultado:** Consolidación de todos los resultados de validación.
 
@@ -361,6 +432,60 @@ Los **skills** son comandos que ejecutan flujos completos:
 - Valida formato YAML
 - Confirma competencias válidas
 
+### `/analizar-imagen-grafica`
+
+- Analiza imagen matemática para replicación visual
+- Genera análisis estructurado en JSON
+- Inicializa estado persistente del workflow
+
+### `/generar-codigo-tikz`
+
+- Genera código TikZ/LaTeX validado
+- Compila y renderiza automáticamente
+- Integra con análisis estructurado
+
+### `/generar-codigo-python`
+
+- Genera código Python/Matplotlib validado
+- Aplica lecciones aprendidas de TikZ
+- Ejecuta y renderiza automáticamente
+
+### `/generar-codigo-r`
+
+- Genera código R/ggplot2 validado
+- Aplica lecciones aprendidas de TikZ/Python
+- Ejecuta y renderiza automáticamente
+
+### `/comparar-similitud-visual`
+
+- Compara imagen generada con original
+- Calcula métricas cuantitativas (0-100 puntos)
+- Genera recomendaciones basadas en puntuación
+
+### `/refinar-codigo-grafico`
+
+- Refina código basándose en comparación visual
+- Prioriza correcciones por impacto
+- Incrementa contador de iteración
+
+### `/estado-graficador`
+
+- Visualiza progreso del workflow de graficación
+- Muestra similitudes por lenguaje
+- Sugiere próximos pasos
+
+### `/exportar-graficos`
+
+- Exporta archivos finales y reporte consolidado
+- Incluye estadísticas completas del proceso
+- Genera proyecto completo listo para uso
+
+### `/auto-refinar-grafico`
+
+- Iteración automática hasta umbral de similitud
+- Detecta convergencia y regresión
+- Valida automáticamente al alcanzar umbral
+
 ---
 
 ## 🎯 **AGENTES ESPECIALIZADOS**
@@ -373,11 +498,7 @@ Los **agents** son módulos de IA especializados:
 - Clasifica ejercicios automáticamente
 - Asigna metadatos correctos
 
-### `graficador-tikz.md`
-
-- Replica imágenes con TikZ
-- Fidelidad visual 98%+
-- Genera código LaTeX optimizado
+**Nota**: El agente `graficador-tikz.md` ha sido deprecado y reemplazado por el flujo integrado del Graficador-Experto. Ver sección "Detección Automática de Gráficos" para más información.
 
 ### `corrector-coherencia.md`
 

@@ -16,6 +16,24 @@ siguiendo la estructura del proyecto.
 
 Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⚠️ NOMENCLATURA OBLIGATORIA
+
+**Todo archivo .Rmd DEBE seguir este formato:**
+
+```
+[ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd
+```
+
+| Parte | Valores |
+|-------|---------|
+| `[componente]` | `geometrico_metrico` \| `numerico_variacional` \| `aleatorio` |
+| `[competencia]` | `interpretacion_representacion` \| `formulacion_ejecucion` \| `argumentacion` |
+| `n[nivel]` | `n1` \| `n2` \| `n3` \| `n4` |
+
+**Ejemplo:** `probabilidad_condicional_dados_aleatorio_formulacion_ejecucion_n3_v1.Rmd`
+
+**Documentación:** `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
+
 ## Flujo de generación
 
 ### Paso 1: Verificar clasificación
@@ -59,11 +77,16 @@ ls /06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condici
 #   componente: [geometrico_metrico|numerico_variacional|aleatorio]
 ```
 
-### Paso 6: Guardar en carpeta de desarrollo
+### Paso 6: Guardar con NOMENCLATURA OBLIGATORIA
+
+**CRÍTICO:** Aplicar nomenclatura oficial. Ver `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
+
 ```bash
+# Formato: [ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd
 # Guardar en /A-Produccion/En-Desarrollo/
-# Nombre: [ejercicio]_[componente]_[competencia]_n[nivel]_v1.Rmd
 ```
+
+**El campo `exname` DEBE coincidir con el nombre del archivo (sin .Rmd)**
 
 ### Paso 7: Validación
 Ejecutar skill `validar-diversidad-300` y `validar-metadatos-icfes`.
