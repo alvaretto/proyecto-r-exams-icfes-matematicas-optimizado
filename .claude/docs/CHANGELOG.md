@@ -67,7 +67,7 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 #### Archivos Verificados (sin cambios necesarios)
 
-- ✅ `.claude/TROUBLESHOOTING.md` - Ya usa `/analizar-icfes` correctamente
+- ✅ `.claude/docs/TROUBLESHOOTING.md` - Ya usa `/analizar-icfes` correctamente
 - ✅ `.claude/commands/generar-schoice.md` - Ya referencia `/analizar-icfes`
 - ✅ `.claude/commands/generar-cloze.md` - Ya referencia `/analizar-icfes`
 
