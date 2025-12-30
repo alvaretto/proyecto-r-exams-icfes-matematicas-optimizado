@@ -5,9 +5,9 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "consumo_telefonico_adicional_n2_v1.Rmd"
+archivo_examen <- "dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1.Rmd"
 copias <- 1  # Número de versiones a generar
-numpreg <- 20
+numpreg <- 10
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"

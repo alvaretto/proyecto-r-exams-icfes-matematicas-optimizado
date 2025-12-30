@@ -1,10 +1,10 @@
 ---
 output:
-  html_document: default
   word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
+  html_document: default
 icfes:
   competencia: interpretacion_representacion
   nivel_dificultad: 2
@@ -106,14 +106,36 @@ v0 <- datos$v0
 
 ```{r version_diversity_test, echo=FALSE, results="hide"}
 # Prueba obligatoria de diversidad de versiones
-test_that("Prueba de diversidad de versiones", {
+# Incluye variacion de datos + variacion textual
+
+# Variantes disponibles para el test
+test_vars_lineal <- c("lineal", "proporcional", "de tipo lineal", "directamente proporcional")
+test_vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "parabolico")
+test_vars_disperso <- c("mas disperso", "con mayor variabilidad", "mas variable", "con mayor dispersion")
+test_vars_angulo <- c("el angulo", "el angulo de lanzamiento", "la inclinacion inicial", "el angulo inicial")
+test_vars_alcance <- c("el alcance", "el alcance horizontal", "la distancia recorrida", "el alcance del proyectil")
+
+test_that("Prueba de diversidad de versiones (datos + texto)", {
   versiones <- list()
   for(i in 1:500) {
     datos_test <- generar_datos()
+
+    # Seleccionar variantes textuales aleatorias
+    texto_test <- list(
+      lineal = sample(test_vars_lineal, 1),
+      no_lineal = sample(test_vars_no_lineal, 1),
+      disperso = sample(test_vars_disperso, 1),
+      angulo = sample(test_vars_angulo, 1),
+      alcance = sample(test_vars_alcance, 1)
+    )
+
     versiones[[i]] <- digest::digest(list(
+      # Variacion de datos
       n = datos_test$n_lanzamientos,
       v0 = datos_test$v0,
-      ruido = datos_test$ruido_base
+      ruido = datos_test$ruido_base,
+      # Variacion textual
+      texto = texto_test
     ))
   }
 
@@ -122,6 +144,11 @@ test_that("Prueba de diversidad de versiones", {
               info = paste("Solo se generaron", n_versiones_unicas,
                           "versiones unicas. Se requieren al menos 300."))
 })
+
+# Combinaciones totales teoricas:
+# Datos: 16 (v0) * 21 (n_lanz) * 6 (ruido) = 2,016
+# Texto: 4 * 4 * 4 * 4 * 4 = 1,024
+# Total: 2,016 * 1,024 = 2,064,384 versiones posibles
 ```
 
 ```{r generar_tikz_scatter, echo=FALSE, results="hide"}
@@ -169,21 +196,76 @@ tikz_final <- generar_tikz_dispersion(angulos, alcances)
 ```
 
 ```{r generar_opciones, echo=FALSE, results="hide"}
-# Sistema de opciones de respuesta
-# Respuesta correcta: D - no lineal y mas disperso cuanto mayor sea el alcance
+# Sistema de opciones de respuesta con VARIACION ALEATORIA
+# Respuesta correcta: no lineal + disperso con alcance
 
-opciones <- c(
-  "lineal y mas disperso cuanto mayor sea el angulo.",
-  "lineal y mas disperso cuanto mayor sea el alcance.",
-  "no lineal y mas disperso cuanto mayor sea el angulo.",
-  "no lineal y mas disperso cuanto mayor sea el alcance."
+# Variantes para "lineal"
+vars_lineal <- c(
+
+  "lineal",
+  "proporcional",
+  "de tipo lineal",
+  "directamente proporcional"
 )
 
-# Posicion de la respuesta correcta (D = 4)
+# Variantes para "no lineal"
+vars_no_lineal <- c(
+  "no lineal",
+  "no proporcional",
+  "de tipo no lineal",
+  "parabolico"
+)
+
+# Variantes para "mas disperso"
+vars_disperso <- c(
+  "mas disperso",
+  "con mayor variabilidad",
+  "mas variable",
+  "con mayor dispersion"
+)
+
+# Variantes para "angulo"
+vars_angulo <- c(
+  "el angulo",
+  "el angulo de lanzamiento",
+  "la inclinacion inicial",
+  "el angulo inicial"
+)
+
+# Variantes para "alcance"
+vars_alcance <- c(
+  "el alcance",
+  "el alcance horizontal",
+  "la distancia recorrida",
+  "el alcance del proyectil"
+)
+
+# Seleccionar variantes aleatorias
+sel_lineal <- sample(vars_lineal, 1)
+sel_no_lineal <- sample(vars_no_lineal, 1)
+sel_disperso <- sample(vars_disperso, 1)
+sel_angulo <- sample(vars_angulo, 1)
+sel_alcance <- sample(vars_alcance, 1)
+
+# Construir opciones dinamicas
+opciones <- c(
+  paste0(sel_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_angulo, "."),
+  paste0(sel_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_alcance, "."),
+  paste0(sel_no_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_angulo, "."),
+  paste0(sel_no_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_alcance, ".")
+)
+
+# Posicion de la respuesta correcta (siempre la 4ta antes de shuffle)
 posicion_correcta <- 4
 
 # Vector de solucion para r-exams (1 en posicion correcta)
 solucion <- c(0, 0, 0, 1)
+
+# Calcular combinaciones textuales posibles
+n_combinaciones_texto <- length(vars_lineal) * length(vars_no_lineal) *
+                         length(vars_disperso) * length(vars_angulo) *
+                         length(vars_alcance)
+# 4 * 4 * 4 * 4 * 4 = 1024 combinaciones textuales
 ```
 
 Question
@@ -214,13 +296,13 @@ Solution
 
 Para analizar el comportamiento del alcance respecto al angulo, debemos observar dos aspectos clave en la grafica de dispersion:
 
-**1. Tipo de relacion (lineal vs no lineal):**
+**1. Tipo de relacion (`r sel_lineal` vs `r sel_no_lineal`):**
 
 La relacion entre el angulo y el alcance sigue la ecuacion del movimiento de proyectiles:
 
 $$R = \frac{v_0^2 \sin(2\theta)}{g}$$
 
-Esta es una funcion senoidal, por lo tanto **no lineal**. En la grafica se observa claramente una forma parabolica con un maximo aproximadamente en $\theta \approx 0.78$ radianes ($\approx 45°$).
+Esta es una funcion senoidal, por lo tanto **`r sel_no_lineal`**. En la grafica se observa claramente una forma parabolica con un maximo aproximadamente en $\theta \approx 0.78$ radianes ($\approx 45°$).
 
 **2. Patron de dispersion:**
 
@@ -229,18 +311,18 @@ Observando la grafica:
 - En los extremos (angulos cercanos a 0 y 1.5 radianes): los puntos estan mas concentrados
 - En la zona central (alcances mayores, alrededor de 10-13 m): los puntos muestran mayor variabilidad
 
-Esto indica que **la dispersion es proporcional al alcance**, no al angulo. Fisicamente, esto tiene sentido porque los errores experimentales se amplifican en trayectorias mas largas.
+Esto indica que **la dispersion es proporcional a `r sel_alcance`**, no a `r sel_angulo`. Fisicamente, esto tiene sentido porque los errores experimentales se amplifican en trayectorias mas largas.
 
 **Conclusion:**
 
-El comportamiento es **no lineal** (forma parabolica) y **mas disperso cuanto mayor sea el alcance** (mayor variabilidad en valores altos de alcance).
+El comportamiento es **`r sel_no_lineal`** (forma parabolica) y **`r sel_disperso` cuanto mayor sea `r sel_alcance`** (mayor variabilidad en valores altos de alcance).
 
 Answerlist
 ----------
-* **Falso**. La relacion no es lineal (es parabolica/senoidal) y la dispersion no depende del angulo sino del alcance.
-* **Falso**. Aunque la dispersion si aumenta con el alcance, la relacion NO es lineal.
-* **Falso**. Si bien la relacion es no lineal, la dispersion NO aumenta con el angulo sino con el alcance.
-* **Verdadero**. La relacion es no lineal (forma parabolica) y la dispersion aumenta proporcionalmente al alcance.
+* **Falso**. La relacion no es `r sel_lineal` (es `r sel_no_lineal`) y la dispersion no depende de `r sel_angulo` sino de `r sel_alcance`.
+* **Falso**. Aunque la dispersion si aumenta con `r sel_alcance`, la relacion NO es `r sel_lineal`.
+* **Falso**. Si bien la relacion es `r sel_no_lineal`, la dispersion NO aumenta con `r sel_angulo` sino con `r sel_alcance`.
+* **Verdadero**. La relacion es `r sel_no_lineal` (forma parabolica) y la dispersion aumenta proporcionalmente a `r sel_alcance`.
 
 Meta-information
 ================

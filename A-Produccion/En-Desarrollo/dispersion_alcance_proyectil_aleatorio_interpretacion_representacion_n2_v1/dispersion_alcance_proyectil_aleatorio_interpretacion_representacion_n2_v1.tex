@@ -1,0 +1,162 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+Un experimento consiste en medir el alcance horizontal de un proyectil
+en funcion del angulo con el que se lanza (respecto a la horizontal). En
+la grafica se registran los resultados de 110 lanzamientos realizados
+con la misma velocidad inicial.
+
+\includegraphics[width=12cm,height=\textheight,keepaspectratio]{dispersion_proyectil.png}
+
+El comportamiento del alcance respecto al angulo es
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  lineal y mas disperso cuanto mayor sea el angulo.
+\item
+  lineal y mas disperso cuanto mayor sea el alcance.
+\item
+  no lineal y mas disperso cuanto mayor sea el angulo.
+\item
+  no lineal y mas disperso cuanto mayor sea el alcance.
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para analizar el comportamiento del alcance respecto al angulo, debemos
+observar dos aspectos clave en la grafica de dispersion:
+
+\textbf{1. Tipo de relacion (lineal vs no lineal):}
+
+La relacion entre el angulo y el alcance sigue la ecuacion del
+movimiento de proyectiles:
+
+\[R = \frac{v_0^2 \sin(2\theta)}{g}\]
+
+Esta es una funcion senoidal, por lo tanto \textbf{no lineal}. En la
+grafica se observa claramente una forma parabolica con un maximo
+aproximadamente en \(\theta \approx 0.78\) radianes (\(\approx 45°\)).
+
+\textbf{2. Patron de dispersion:}
+
+Observando la grafica:
+
+\begin{itemize}
+\tightlist
+\item
+  En los extremos (angulos cercanos a 0 y 1.5 radianes): los puntos
+  estan mas concentrados
+\item
+  En la zona central (alcances mayores, alrededor de 10-13 m): los
+  puntos muestran mayor variabilidad
+\end{itemize}
+
+Esto indica que \textbf{la dispersion es proporcional al alcance}, no al
+angulo. Fisicamente, esto tiene sentido porque los errores
+experimentales se amplifican en trayectorias mas largas.
+
+\textbf{Conclusion:}
+
+El comportamiento es \textbf{no lineal} (forma parabolica) y \textbf{mas
+disperso cuanto mayor sea el alcance} (mayor variabilidad en valores
+altos de alcance).
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Falso}. La relacion no es lineal (es parabolica/senoidal) y la
+  dispersion no depende del angulo sino del alcance.
+\item
+  \textbf{Falso}. Aunque la dispersion si aumenta con el alcance, la
+  relacion NO es lineal.
+\item
+  \textbf{Falso}. Si bien la relacion es no lineal, la dispersion NO
+  aumenta con el angulo sino con el alcance.
+\item
+  \textbf{Verdadero}. La relacion es no lineal (forma parabolica) y la
+  dispersion aumenta proporcionalmente al alcance.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname:
+dispersion\_alcance\_proyectil\_aleatorio\_interpretacion\_representacion\_n2\_v1
+extype: schoice exsolution: 0001 exshuffle: TRUE exsection:
+Estadistica/Graficas de Dispersion
+
+\end{document}
