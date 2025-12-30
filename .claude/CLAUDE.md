@@ -22,32 +22,37 @@ Generar ejercicios matemáticos de selección múltiple (SCHOICE) y compuestos (
 @.claude/rules/codigo-rmd.md
 @.claude/rules/documentacion-verificada.md
 
-## 🛠️ Skills Disponibles
+## 🛠️ Comandos Manuales y Skills Automáticos
 
-### Workflow Principal
-- `/analizar-icfes` - Analizar ejercicio según 6 dimensiones ICFES
+### Commands Manuales (Invocación Explícita)
+
+**Workflow Principal:**
+- `/analizar-icfes` - Iniciar análisis ICFES manual
 - `/generar-schoice` - Generar ejercicio de selección única
 - `/generar-cloze` - Generar ejercicio compuesto
+- `/promover-ejercicio` - Promover ejercicio validado a producción
 
-### Validación
-- `/validar-renderizado` - Ejecutar FASE 1 del ciclo
-- `/validar-coherencia` - Ejecutar FASE 2 del ciclo
-- `/diagnosticar-errores` - Ejecutar FASE 3 del ciclo
+**Graficador Experto:**
+- `/auto-refinar-grafico` - Iteración automática hasta umbral
+- `/estado-graficador` - Consultar estado del workflow gráfico
+- `/exportar-graficos` - Exportar resultados finales
 
-### Corrección
-- `/corregir-graficos` - Corregir errores gráficos (SUBFASE 3A)
-- `/corregir-error-imagen` - Corregir errores TikZ/include_tikz()
+### Skills Automáticos (Claude los usa según contexto)
 
-### Producción
-- `/promover-ejercicio` - Mover ejercicio validado a producción
+**Validación (se ejecutan automáticamente):**
+- Validar renderizado (FASE 1)
+- Validar coherencia (FASE 2)
+- Diagnosticar errores (FASE 3)
 
-### Graficador Experto
-- `/analizar-imagen-grafica` - Analizar imagen matemática para replicación
-- `/generar-codigo-tikz` - Generar código TikZ
-- `/generar-codigo-python` - Generar código Python/matplotlib
-- `/generar-codigo-r` - Generar código R/ggplot2
-- `/comparar-similitud-visual` - Comparar imagen generada vs original
-- `/refinar-codigo-grafico` - Refinar código según feedback visual
+**Corrección (se ejecutan automáticamente en errores):**
+- Corregir gráficos (SUBFASE 3A)
+- Corregir errores de imagen TikZ
+
+**Graficador (se ejecutan según análisis):**
+- Analizar imagen matemática
+- Generar código TikZ/Python/R
+- Comparar similitud visual
+- Refinar código iterativamente
 
 ## 📁 Estructura del Repositorio
 
