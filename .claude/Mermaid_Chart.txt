@@ -1,5 +1,12 @@
 graph TD
+    REGLAS[📋 REGLAS MODULARES OBLIGATORIAS<br/>.claude/rules/<br/>• ciclo-validacion.md<br/>• codigo-rmd.md<br/>• documentacion-verificada.md]
+
     A[ENTRADA: Imagen ICFES Matemáticas] --> ANALISIS_VISUAL[🔍 ANÁLISIS VISUAL INICIAL]
+
+    REGLAS -.Gobierna todo el flujo.-> A
+    REGLAS -.Gobierna todo el flujo.-> FASE1
+    REGLAS -.Gobierna todo el flujo.-> FASE2
+    REGLAS -.Gobierna todo el flujo.-> FASE3
 
     %% ============================================
     %% ANÁLISIS VISUAL INICIAL - DETECCIÓN DE GRÁFICOS
@@ -406,3 +413,6 @@ graph TD
     style DOC_OK fill:#66bb6a,color:#fff,stroke:#2e7d32,stroke-width:2px
     style M fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
     style N fill:#2e7d32,color:#fff,stroke:#1b5e20,stroke-width:3px
+
+    %% Estilos Reglas Modulares
+    style REGLAS fill:#ffd54f,stroke:#f57f17,stroke-width:3px,stroke-dasharray: 5 5

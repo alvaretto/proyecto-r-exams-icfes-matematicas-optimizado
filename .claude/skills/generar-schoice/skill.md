@@ -111,6 +111,58 @@ Ejecutar skill `validar-diversidad-300` para confirmar aleatorización.
 ### Paso 7: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⚠️ ERRORES COMUNES DE COMPILACIÓN
+
+### Inclusión de gráficos (PATRÓN OBLIGATORIO)
+
+```r
+# En chunk data generation:
+p <- ggplot(...) + ...
+ggsave("grafico.png", plot = p, width = 8, height = 5, dpi = 150)
+include_supplement("grafico.png")
+```
+
+```markdown
+# En sección Question:
+![](grafico.png)
+```
+
+**NUNCA** usar `{r grafico}` con `print(p)` - R-exams no lo captura.
+
+### Formato de números (locale español)
+
+```r
+# ✅ SIEMPRE especificar ambos separadores
+format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+```
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir errores
+3. ✓ **SIEMPRE** verificar VISUALMENTE cada gráfico después de renderizar
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+5. ❌ **NUNCA** asumir que lógica matemática correcta = visualización correcta
+
+## ⚠️ COHERENCIA MATEMÁTICA EN GRÁFICOS
+
+### Gráficos con cruces de líneas
+
+**PROBLEMA COMÚN**: Factores de escala o ajustes rompen el cruce visual calculado.
+
+**SOLUCIÓN** (ver `poblaciones_paises_graficas_lineas_*.Rmd`):
+
+1. Definir PRIMERO el punto de intersección (x, y)
+2. Generar trayectorias que PASEN por ese punto
+3. NO aplicar factores diferenciales después del cálculo
+
+### Verificación visual OBLIGATORIA
+
+Después de CADA renderización:
+1. Abrir PDF/DOCX generado
+2. Verificar cruce visual
+3. Si hay error → consultar ejemplo funcional → corregir
+
 ## Regla de Oro
-**NUNCA improvises**. Consulta `/A-Produccion/En-Produccion/` antes de escribir.
+**NUNCA improvises**. Consulta `/A-Produccion/En-Produccion/` antes de escribir o corregir.
 

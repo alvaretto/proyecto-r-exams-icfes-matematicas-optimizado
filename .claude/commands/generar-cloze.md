@@ -182,13 +182,73 @@ Ejecutar skill `validar-diversidad-300` y `validar-metadatos-icfes`.
 ### Paso 8: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⚠️ ERRORES COMUNES DE COMPILACIÓN LATEX
+
+### Error: Gráfico no se muestra en PDF/DOCX
+
+**Causa**: R-exams no captura correctamente el output de chunks `{r grafico, ...}` con `print(p)`.
+
+**Solución OBLIGATORIA**: Usar el patrón estándar de R-exams para figuras:
+
+```r
+# En el chunk data generation:
+# 1. Crear el gráfico con ggplot2
+p <- ggplot(...) + ...
+
+# 2. Guardar como archivo PNG
+ggsave("grafico.png", plot = p, width = 8, height = 5, dpi = 150)
+
+# 3. Registrar como suplemento de R-exams
+include_supplement("grafico.png")
+```
+
+```markdown
+# En la sección Question:
+# 4. Incluir con sintaxis Markdown
+![](grafico.png)
+```
+
+**NUNCA** usar chunks separados `{r grafico, ...}` con `print(p)` - R-exams no los captura.
+
+### Error: `\pandocbounded` undefined
+
+**Causa**: Pandoc versiones recientes generan `\pandocbounded{}` cuando no se especifica tamaño de imagen.
+
+**Solución**: Si usas chunks de figura (no recomendado), incluir `out.width`:
+
+```r
+# Solo si NO usas el patrón ggsave + include_supplement
+```{r grafico, echo = FALSE, fig.height = 5, fig.width = 8, out.width = "90%"}
+```
+
+### Error: `big.mark` y `decimal.mark` ambiguos
+
+**Causa**: Formato de números sin especificar ambos separadores.
+
+**Solución**: Siempre especificar ambos para locale español:
+
+```r
+# ❌ INCORRECTO
+format(x, big.mark = ".", scientific = FALSE)
+
+# ✅ CORRECTO
+format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+```
+
+### Error: Unicode character not set up
+
+**Causa**: Caracteres Unicode (emojis, símbolos especiales) en texto LaTeX.
+
+**Solución**: Evitar emojis y usar solo ASCII en texto del ejercicio.
+
 ## ⛔ CONDICIONES CRÍTICAS
 
 1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
 2. ✓ **SIEMPRE** ejecutar Ciclo de Validación después de generar
 3. ✓ **SIEMPRE** configurar tolerancias apropiadas (0 para schoice, ≥1 para numéricos grandes)
-4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
-5. ❌ **NUNCA** promover sin completar validación
+4. ✓ **SIEMPRE** incluir `out.width = "90%"` en chunks con gráficos
+5. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+6. ❌ **NUNCA** promover sin completar validación
 
 ## Regla de Oro
 **NUNCA improvises**. Consulta ejemplos funcionales en:

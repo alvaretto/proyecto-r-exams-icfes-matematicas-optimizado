@@ -176,15 +176,147 @@ Ejecutar skill `validar-diversidad-300` para confirmar aleatorización.
 ### Paso 7: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⚠️ ERRORES COMUNES DE COMPILACIÓN LATEX
+
+### Error: Gráfico no se muestra en PDF/DOCX
+
+**Causa**: R-exams no captura correctamente el output de chunks `{r grafico, ...}` con `print(p)`.
+
+**Solución OBLIGATORIA**: Usar el patrón estándar de R-exams para figuras:
+
+```r
+# En el chunk data generation:
+# 1. Crear el gráfico con ggplot2
+p <- ggplot(...) + ...
+
+# 2. Guardar como archivo PNG
+ggsave("grafico.png", plot = p, width = 8, height = 5, dpi = 150)
+
+# 3. Registrar como suplemento de R-exams
+include_supplement("grafico.png")
+```
+
+```markdown
+# En la sección Question:
+# 4. Incluir con sintaxis Markdown
+![](grafico.png)
+```
+
+**NUNCA** usar chunks separados `{r grafico, ...}` con `print(p)` - R-exams no los captura.
+
+### Error: `\pandocbounded` undefined
+
+**Causa**: Pandoc genera `\pandocbounded{}` cuando las imágenes no tienen tamaño especificado.
+
+**Solución**: Los ejemplos funcionales en producción usan YAML header con configuración correcta:
+
+```yaml
+# ✓ CORRECTO - Seguir patrón de ejemplos funcionales
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float"]
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  componente: aleatorio
+---
+```
+
+**Y en el chunk de gráfico**, usar `include_supplement()` + `![](imagen.png)`:
+
+```r
+ggsave("grafico.png", plot = p, width = 8, height = 5, dpi = 150)
+include_supplement("grafico.png")
+```
+
+```markdown
+![](grafico.png)
+```
+
+### Error: `\pandocbounded` undefined (sin YAML header)
+
+**Causa**: Pandoc versiones recientes generan `\pandocbounded{}` cuando no se especifica tamaño de imagen.
+
+**Solución**: Si usas chunks de figura (no recomendado), incluir `out.width`:
+
+```r
+# Solo si NO usas el patrón ggsave + include_supplement
+```{r grafico, echo = FALSE, fig.height = 5, fig.width = 8, out.width = "90%"}
+```
+
+### Error: `big.mark` y `decimal.mark` ambiguos
+
+**Causa**: Formato de números sin especificar ambos separadores.
+
+**Solución**: Siempre especificar ambos para locale español:
+
+```r
+# ❌ INCORRECTO
+format(x, big.mark = ".", scientific = FALSE)
+
+# ✅ CORRECTO
+format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+```
+
+### Error: Unicode character not set up
+
+**Causa**: Caracteres Unicode (emojis, símbolos especiales) en texto LaTeX.
+
+**Solución**: Evitar emojis y usar solo ASCII en texto del ejercicio.
+
 ## ⛔ CONDICIONES CRÍTICAS
 
 1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
-2. ✓ **SIEMPRE** ejecutar Ciclo de Validación después de generar
-3. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
-4. ❌ **NUNCA** promover sin completar validación
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir errores
+3. ✓ **SIEMPRE** ejecutar Ciclo de Validación después de generar
+4. ✓ **SIEMPRE** verificar VISUALMENTE cada gráfico después de renderizar
+5. ✓ **SIEMPRE** incluir `out.width = "90%"` en chunks con gráficos
+6. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+7. ❌ **NUNCA** promover sin completar validación
+8. ❌ **NUNCA** asumir que lógica matemática correcta = visualización correcta
+
+## ⚠️ COHERENCIA MATEMÁTICA EN GRÁFICOS
+
+### Gráficos con cruces de líneas (intersecciones)
+
+**PROBLEMA COMÚN**: El código calcula correctamente el punto de intersección, pero factores de escala o ajustes adicionales rompen el cruce visual.
+
+**SOLUCIÓN OBLIGATORIA** (ver ejemplo funcional `poblaciones_paises_graficas_lineas_*.Rmd`):
+
+```r
+# 1. DEFINIR PRIMERO el punto de intersección (x, y)
+x_interseccion <- (año_interseccion - 1960) / 5
+y_interseccion <- sample(seq(2.5, 4.5, 0.1), 1)
+
+# 2. GENERAR trayectorias que PASEN por ese punto
+# País A: llega al punto desde abajo
+y_inicial_a <- y_interseccion - (x_interseccion * tasa_a)
+trayectoria_a <- y_inicial_a + (x * tasa_a)
+
+# País B: llega al punto desde arriba
+y_inicial_b <- y_interseccion - (x_interseccion * tasa_b)
+trayectoria_b <- y_inicial_b + (x * tasa_b)
+
+# 3. NO aplicar factores diferenciales después del cálculo
+# ❌ INCORRECTO: pais_a * factor_escala * ajuste_extra
+# ✓ CORRECTO: Ambos países usan los mismos factores
+```
+
+### Verificación visual OBLIGATORIA
+
+Después de CADA renderización:
+
+1. Abrir el PDF/DOCX generado
+2. Verificar que el cruce ocurre en el año indicado
+3. Verificar que las líneas son distinguibles
+4. Si hay error visual → consultar ejemplo funcional → corregir
 
 ## Regla de Oro
-**NUNCA improvises**. Consulta `/A-Produccion/Ejemplos-Funcionales-Rmd/` antes de escribir.
+**NUNCA improvises**. Consulta `/A-Produccion/En-Produccion/` antes de escribir o corregir.
 
 ## Referencias
 

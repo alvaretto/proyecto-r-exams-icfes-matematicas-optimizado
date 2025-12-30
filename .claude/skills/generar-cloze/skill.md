@@ -118,12 +118,45 @@ Ejecutar skill `validar-diversidad-300` y `validar-metadatos-icfes`.
 ### Paso 8: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
 
+## ⚠️ ERRORES COMUNES DE COMPILACIÓN
+
+### Inclusión de gráficos (PATRÓN OBLIGATORIO)
+
+```r
+# En chunk data generation:
+p <- ggplot(...) + ...
+ggsave("grafico.png", plot = p, width = 8, height = 5, dpi = 150)
+include_supplement("grafico.png")
+```
+
+```markdown
+# En sección Question:
+![](grafico.png)
+```
+
+**NUNCA** usar `{r grafico}` con `print(p)` - R-exams no lo captura.
+
+### Formato de números (locale español)
+
+```r
+# ✅ SIEMPRE especificar ambos separadores
+format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+```
+
+## ⛔ CONDICIONES CRÍTICAS
+
+1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
+2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir errores
+3. ✓ **SIEMPRE** verificar VISUALMENTE cada gráfico después de renderizar
+4. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+5. ❌ **NUNCA** asumir que lógica matemática correcta = visualización correcta
+
 ## Regla de Oro
 **NUNCA improvises**. Consulta ejemplos funcionales en:
 
 - `/A-Produccion/En-Produccion/`
 - `/A-Produccion/En-PreDesarrollo/`
 
-Para ejemplos CLOZE específicos también revisa:
+Para ejemplos CLOZE específicos:
 `/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condicionada_Independencia-De-Sucesos/`
 

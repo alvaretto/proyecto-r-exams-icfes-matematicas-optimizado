@@ -93,7 +93,7 @@ p <- ggplot() +
   ) +
   scale_y_continuous(
     breaks = c(15e6, 20e6, 25e6, 30e6, 35e6, 40e6, 45e6),
-    labels = function(x) format(x, big.mark = ".", scientific = FALSE),
+    labels = function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE),
     limits = c(15e6, 47e6)
   ) +
 

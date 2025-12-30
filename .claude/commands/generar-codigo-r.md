@@ -46,6 +46,68 @@ ggsave("output_r.png", p, width = 9, height = 6, dpi = 150)
 - **Código autocontenido**: Todo debe funcionar con source() o copy-paste
 - **Guardar como objeto ggplot**: Para flexibilidad en el .Rmd
 
+### 1.1 Formato de Números (Locale Español)
+
+**IMPORTANTE:** Para evitar el warning `'big.mark' y 'decimal.mark' son ambos '.'`:
+
+```r
+# ❌ INCORRECTO - genera warning
+labels = function(x) format(x, big.mark = ".", scientific = FALSE)
+
+# ✅ CORRECTO - formato español (. para miles, , para decimales)
+labels = function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+```
+
+**Uso en scale_y_continuous:**
+```r
+scale_y_continuous(
+  breaks = seq(15e6, 45e6, by = 5e6),
+  labels = function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+)
+```
+
+### 1.2 Inclusión de Gráficos en R-exams (PATRÓN OBLIGATORIO)
+
+**CRÍTICO:** R-exams NO captura correctamente chunks `{r grafico}` con `print(p)`.
+
+**Usar SIEMPRE este patrón:**
+
+```r
+# En el chunk data generation:
+
+# 1. Crear el gráfico
+p <- ggplot(...) + ...
+
+# 2. Guardar como archivo PNG
+ggsave("grafico.png", plot = p, width = 8, height = 5, dpi = 150)
+
+# 3. Registrar como suplemento de R-exams
+include_supplement("grafico.png")
+```
+
+```markdown
+# En la sección Question del .Rmd:
+
+La siguiente gráfica muestra...
+
+![](grafico.png)
+
+Según la gráfica...
+```
+
+**¿Por qué este patrón?**
+- `ggsave()`: Guarda el gráfico como archivo independiente
+- `include_supplement()`: Registra el archivo para que R-exams lo incluya en el examen
+- `![](grafico.png)`: Sintaxis Markdown estándar para incluir imágenes
+
+**❌ NUNCA usar:**
+```r
+# Esto NO funciona en R-exams:
+```{r grafico, echo = FALSE}
+print(p)
+```
+```
+
 ### 2. Estructura Nativa para R-exams
 
 ```r

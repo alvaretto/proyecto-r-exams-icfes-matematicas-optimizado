@@ -259,6 +259,11 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ```
 .claude/
+├── CLAUDE.md              # Memory file principal del proyecto (v2.1)
+├── rules/                 # Reglas modulares (según doc oficial nov 2025)
+│   ├── ciclo-validacion.md           # Ciclo de Validación Automática (OBLIGATORIO)
+│   ├── codigo-rmd.md                 # Reglas para código R/Markdown
+│   └── documentacion-verificada.md   # Principio de Documentación Verificada
 ├── settings.json          # Hooks y configuración global
 ├── settings.local.json    # Permisos para skills
 ├── schemas/               # Esquemas JSON para estado persistente
