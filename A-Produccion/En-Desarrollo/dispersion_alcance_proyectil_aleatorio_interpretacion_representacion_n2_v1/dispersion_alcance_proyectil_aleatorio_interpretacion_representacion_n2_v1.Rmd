@@ -247,5 +247,5 @@ Meta-information
 exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1
 extype: schoice
 exsolution: `r paste(solucion, collapse="")`
-exshuffle: FALSE
+exshuffle: TRUE
 exsection: Estadistica/Graficas de Dispersion
