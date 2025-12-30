@@ -1,6 +1,27 @@
-# Configuración de Claude Code - Graficador Experto ICFES
+# Configuracion de Claude Code - Graficador Experto ICFES
 
-Este directorio contiene toda la configuración de Claude Code para el proyecto Graficador Experto.
+Este directorio contiene toda la configuracion de Claude Code para el proyecto Graficador Experto.
+
+## ⛔ REGLAS CRITICAS v2.2
+
+### Flujo B OBLIGATORIO si hay graficos
+Si el ejercicio tiene graficos, el Graficador Experto es **OBLIGATORIO**. Ver `.claude/rules/flujo-b-obligatorio.md`
+
+### Proceso SECUENCIAL (NO simultaneo)
+```
+1. TikZ → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+2. Python → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+3. R → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+4. Usuario selecciona version final
+```
+Ver `.claude/rules/graficador-secuencial.md`
+
+### 5 Coherencias a Verificar antes de aprobar
+1. **Semantica** - Gramatica correcta
+2. **Visual-Texto** - Grafico coincide con enunciado
+3. **Matematica** - Formulas correctas
+4. **Codigo** - Dinamico, compatible R-exams
+5. **General** - Legible, estilo ICFES
 
 ## Estructura
 
@@ -122,19 +143,44 @@ Estructura para documentar éxitos y problemas por lenguaje para transferencia d
 4. Consulta `/estado` para ver progreso en tiempo real
 5. Exporta con `/exportar` para reporte completo con estadísticas
 
-## Workflow Visual
+## Workflow Visual (SECUENCIAL OBLIGATORIO)
 
 ```
 /analizar-imagen
     ↓
-/generar-tikz → /comparar → /iterar (hasta validar)
+┌─────────────────────────────────────────────────────────┐
+│ PASO 1: TikZ (dinamico desde R)                         │
+│ /auto-refinar-grafico tikz 95                           │
+│    ↓                                                    │
+│ Iterar hasta >=95% similitud                            │
+│    ↓                                                    │
+│ Verificar 5 Coherencias                                 │
+│    ↓                                                    │
+│ ¿Usuario aprueba? → SI → Continuar                      │
+│                   → NO → Volver a iterar                │
+└─────────────────────────────────────────────────────────┘
     ↓
-/generar-python → /comparar → /iterar (hasta validar)
+┌─────────────────────────────────────────────────────────┐
+│ PASO 2: Python (reticulate)                             │
+│ /auto-refinar-grafico python 95                         │
+│ [Mismo proceso que TikZ]                                │
+└─────────────────────────────────────────────────────────┘
     ↓
-/generar-r → /comparar → /iterar (hasta validar)
+┌─────────────────────────────────────────────────────────┐
+│ PASO 3: R (ggplot2 nativo)                              │
+│ /auto-refinar-grafico r 95                              │
+│ [Mismo proceso que TikZ]                                │
+└─────────────────────────────────────────────────────────┘
     ↓
-/exportar
+┌─────────────────────────────────────────────────────────┐
+│ PASO 4: Usuario selecciona version final                │
+│ (TikZ, Python o R)                                      │
+└─────────────────────────────────────────────────────────┘
+    ↓
+/generar-schoice o /generar-cloze
 ```
+
+⚠️ **PROHIBIDO**: Generar TikZ, Python y R simultaneamente
 
 ## Archivos Generados en `outputs/`
 

@@ -89,21 +89,47 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 - ✅ Backups HTML preservados con fecha en `html-backups/`
 - ⚠️ `analizar-ejercicio.md` deprecado - Ver `COMANDOS_DEPRECADOS.md` para detalles
 
-## Filosofía del Sistema
+## Filosofia del Sistema
 
-### ⚡ Ciclo de Validación y Corrección Automática (OBLIGATORIO)
+### ⛔ REGLAS CRITICAS v2.2 (OBLIGATORIAS)
 
-**Cada vez que se renderiza un archivo .Rmd, se ejecuta automáticamente:**
+#### Flujo B OBLIGATORIO si hay graficos
+**Archivo**: `.claude/rules/flujo-b-obligatorio.md`
+
+Si se detectan graficos en el ejercicio (enunciado u opciones), el Flujo B (Graficador Experto) es **OBLIGATORIO**. NO hay excepciones.
+
+#### Proceso SECUENCIAL del Graficador
+**Archivo**: `.claude/rules/graficador-secuencial.md`
+
+Las versiones se generan UNA A LA VEZ, no simultaneamente:
+```
+1. TikZ → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+2. Python → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+3. R → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+4. Usuario selecciona version final
+```
+
+#### 5 Coherencias a Verificar
+Antes de aprobar cada version:
+1. **Coherencia Semantica** - Gramatica correcta
+2. **Coherencia Visual-Texto** - Grafico coincide con enunciado
+3. **Coherencia Matematica** - Formulas y proporciones correctas
+4. **Coherencia de Codigo** - Dinamico, compatible con R-exams
+5. **Coherencia General** - Legible, estilo ICFES
+
+### ⚡ Ciclo de Validacion y Correccion Automatica (OBLIGATORIO)
+
+**Cada vez que se renderiza un archivo .Rmd, se ejecuta automaticamente:**
 
 ```
 🔄 FASE 1: RENDERIZADO INICIAL
     └── Ejecutar exams2html, exams2pdf, exams2docx, exams2nops
     └── Capturar errores/advertencias
 
-🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
-    └── Coherencia Matemática, Imagen-Texto, Código, 4 formatos
+🔍 FASE 2: VALIDACION VISUAL Y FUNCIONAL
+    └── Coherencia Matematica, Imagen-Texto, Codigo, 4 formatos
 
-⚡ FASE 3: DECISIÓN Y ACCIÓN
+⚡ FASE 3: DECISION Y ACCION
     ├── ❌ SIN ERRORES → Continuar workflow
     └── ✓ CON ERRORES:
         ├── 📚 SUBFASE 3A: Consultar /A-Produccion/Ejemplos-Funcionales-Rmd/
@@ -111,11 +137,12 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
         └── 📊 SUBFASE 3C: Documentar en patrones-errores-conocidos.md
 ```
 
-**Condiciones Críticas:**
+**Condiciones Criticas:**
 
 - ❌ NO terminar con errores sin resolver
+- ❌ NO generar .Rmd con graficos sin completar Flujo B
 - ✓ Ejemplos funcionales = Fuente de verdad absoluta
-- ✓ Documentar SOLO después de confirmar solución
+- ✓ Documentar SOLO despues de confirmar solucion
 
 ### Principio de Documentación Verificada
 
@@ -391,6 +418,12 @@ Para preguntas sobre la documentación:
 
 ---
 
-**Última actualización:** 2025-12-28
-**Versión del sistema:** 1.1
+**Ultima actualizacion:** 2025-12-30
+**Version del sistema:** 2.2 (Flujo B obligatorio + Secuencial)
 **Estado:** ✅ Operacional
+
+### Cambios v2.2
+- Flujo B (Graficador Experto) ahora es OBLIGATORIO cuando hay graficos
+- Proceso SECUENCIAL: TikZ → Python → R (no simultaneo)
+- 5 coherencias a verificar antes de aprobacion de cada version
+- Bloqueo de generacion .Rmd si Flujo B incompleto

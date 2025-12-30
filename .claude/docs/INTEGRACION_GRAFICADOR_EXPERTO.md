@@ -1,5 +1,28 @@
 # 🎨 Integración Graficador-Experto en Workflow Principal
 
+## ⛔ REGLAS CRITICAS v2.2
+
+### Flujo B OBLIGATORIO si hay gráficos
+Si el ejercicio tiene gráficos, el Graficador Experto es **OBLIGATORIO**. Ver `.claude/rules/flujo-b-obligatorio.md`
+
+### Proceso SECUENCIAL (NO simultáneo)
+```
+1. TikZ → Iterar >=95% + 5 Coherencias + Aprobación Usuario
+2. Python → Iterar >=95% + 5 Coherencias + Aprobación Usuario
+3. R → Iterar >=95% + 5 Coherencias + Aprobación Usuario
+4. Usuario selecciona versión final
+```
+Ver `.claude/rules/graficador-secuencial.md`
+
+### 5 Coherencias a Verificar antes de aprobar
+1. **Semántica** - Gramática correcta
+2. **Visual-Texto** - Gráfico coincide con enunciado
+3. **Matemática** - Fórmulas correctas
+4. **Código** - Dinámico, compatible R-exams
+5. **General** - Legible, estilo ICFES
+
+---
+
 ## Resumen
 
 El workflow principal ahora incluye todas las capacidades del Graficador-Experto para análisis de imágenes matemáticas y generación de código gráfico (TikZ, Python, R). Todos los componentes del Graficador-Experto están disponibles con el prefijo `grafico-` para evitar conflictos con el workflow principal.
@@ -153,32 +176,48 @@ Itera automáticamente un lenguaje hasta alcanzar umbral de similitud o máximo 
    /validar-renderizado
    ```
 
-### Caso de Uso 3: Generar Múltiples Versiones de Gráfico
+### Caso de Uso 3: Generar Múltiples Versiones de Gráfico (PROCESO SECUENCIAL)
+
+⚠️ **PROHIBIDO**: Generar TikZ, Python y R simultáneamente
 
 1. **Analizar imagen base**:
    ```
    /grafico-analizar-imagen
    ```
 
-2. **Generar TikZ con alta similitud**:
+2. **PASO 1: TikZ (PRIMERO - OBLIGATORIO)**:
    ```
-   /grafico-generar-tikz
-   /grafico-auto-iterar tikz 95 10
+   /auto-refinar-grafico tikz 95
+   ```
+   - Iterar hasta >=95% similitud
+   - Verificar 5 coherencias (semántica, visual-texto, matemática, código, general)
+   - **Esperar aprobación del usuario antes de continuar**
+
+3. **PASO 2: Python (DESPUÉS de TikZ aprobado)**:
+   ```
+   /auto-refinar-grafico python 95
+   ```
+   - Iterar hasta >=95% similitud
+   - Verificar 5 coherencias
+   - **Esperar aprobación del usuario antes de continuar**
+
+4. **PASO 3: R (DESPUÉS de Python aprobado)**:
+   ```
+   /auto-refinar-grafico r 95
+   ```
+   - Iterar hasta >=95% similitud
+   - Verificar 5 coherencias
+   - **Esperar aprobación del usuario antes de continuar**
+
+5. **PASO 4: Usuario selecciona versión final**:
+   ```
+   ¿Cuál versión deseas usar?
+   - TikZ (dinámico desde R)
+   - Python (reticulate)
+   - R (nativo - RECOMENDADO)
    ```
 
-3. **Generar Python con transferencia de conocimiento**:
-   ```
-   /grafico-generar-python
-   /grafico-auto-iterar python 95 10
-   ```
-
-4. **Generar R con transferencia de conocimiento**:
-   ```
-   /grafico-generar-r
-   /grafico-auto-iterar r 95 10
-   ```
-
-5. **Exportar proyecto completo**:
+6. **Exportar proyecto completo**:
    ```
    /grafico-exportar
    ```
@@ -294,18 +333,57 @@ Cuando el ejercicio no requiere gráficos complejos, usa el workflow principal e
 4. `/validar-coherencia`
 5. `/promover-ejercicio`
 
-### Flujo B: Con Gráficos Complejos
+### Flujo B: Con Gráficos Complejos (OBLIGATORIO si hay gráficos)
 
-Cuando el ejercicio requiere gráficos complejos, integra el Graficador-Experto:
+⚠️ **Este flujo es OBLIGATORIO** cuando se detectan gráficos en el enunciado y/o las opciones de respuesta.
 
-1. `/grafico-analizar-imagen` - Analizar gráfico
-2. `/grafico-generar-tikz` - Generar código TikZ
-3. `/grafico-auto-iterar tikz 95 10` - Validar similitud
-4. `/analizar-icfes` - Analizar ejercicio completo
-5. `/generar-schoice` - Generar ejercicio con código TikZ integrado
-6. `/validar-renderizado` - Validar renderizado completo
-7. `/validar-coherencia` - Validar coherencia matemática
-8. `/promover-ejercicio` - Promover a producción
+```
+┌─────────────────────────────────────────────────────────┐
+│ PASO 1: TikZ (dinámico desde R)                         │
+│ /auto-refinar-grafico tikz 95                           │
+│    ↓                                                    │
+│ Iterar hasta >=95% similitud                            │
+│    ↓                                                    │
+│ Verificar 5 Coherencias                                 │
+│    ↓                                                    │
+│ ¿Usuario aprueba? → SI → Continuar                      │
+│                   → NO → Volver a iterar                │
+└─────────────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────────────┐
+│ PASO 2: Python (reticulate)                             │
+│ /auto-refinar-grafico python 95                         │
+│ [Mismo proceso que TikZ]                                │
+└─────────────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────────────┐
+│ PASO 3: R (ggplot2 nativo)                              │
+│ /auto-refinar-grafico r 95                              │
+│ [Mismo proceso que TikZ]                                │
+└─────────────────────────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────────────────────────┐
+│ PASO 4: Usuario selecciona versión final                │
+│ (TikZ, Python o R)                                      │
+└─────────────────────────────────────────────────────────┘
+    ↓
+/generar-schoice o /generar-cloze
+```
+
+**Proceso completo**:
+
+1. `/analizar-icfes` - Detectar si requiere Flujo B
+2. `/grafico-analizar-imagen` - Analizar gráfico
+3. **TikZ**: `/auto-refinar-grafico tikz 95` → 5 coherencias → aprobación usuario
+4. **Python**: `/auto-refinar-grafico python 95` → 5 coherencias → aprobación usuario
+5. **R**: `/auto-refinar-grafico r 95` → 5 coherencias → aprobación usuario
+6. Usuario selecciona versión final
+7. `/generar-schoice` - Generar ejercicio con código seleccionado
+8. `/validar-renderizado` - Validar renderizado completo
+9. `/validar-coherencia` - Validar coherencia matemática
+10. `/promover-ejercicio` - Promover a producción
+
+⚠️ **BLOQUEO**: No se puede ejecutar `/generar-schoice` o `/generar-cloze` si Flujo B está incompleto.
 
 ---
 
@@ -369,7 +447,13 @@ Estos permisos están configurados en `settings.local.json`.
 
 ---
 
-**Última actualización**: 2025-12-29  
-**Versión**: 1.0  
+**Última actualización**: 2025-12-30
+**Versión**: 2.2
 **Estado**: Integración completa operacional
+
+## Cambios v2.2
+- Flujo B (Graficador Experto) ahora es OBLIGATORIO cuando hay gráficos
+- Proceso SECUENCIAL: TikZ → Python → R (no simultáneo)
+- 5 coherencias a verificar antes de aprobación
+- Bloqueo de generación .Rmd si Flujo B incompleto
 

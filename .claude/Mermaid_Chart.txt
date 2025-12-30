@@ -1,12 +1,15 @@
 graph TD
-    REGLAS[📋 REGLAS MODULARES OBLIGATORIAS<br/>.claude/rules/<br/>• ciclo-validacion.md<br/>• codigo-rmd.md<br/>• documentacion-verificada.md]
+    REGLAS[📋 REGLAS MODULARES OBLIGATORIAS<br/>.claude/rules/<br/>• flujo-b-obligatorio.md<br/>• graficador-secuencial.md<br/>• ciclo-validacion.md<br/>• codigo-rmd.md<br/>• documentacion-verificada.md]
 
-    A[ENTRADA: Imagen ICFES Matemáticas] --> ANALISIS_VISUAL[🔍 ANÁLISIS VISUAL INICIAL]
+    REGLAS_NUEVAS[⛔ REGLAS CRITICAS v2.2<br/>• Flujo B OBLIGATORIO si hay graficos<br/>• Proceso SECUENCIAL: TikZ→Python→R<br/>• 5 Coherencias antes de aprobar<br/>• Bloqueo sin completar Flujo B]
+
+    A[ENTRADA: Imagen ICFES Matematicas] --> ANALISIS_VISUAL[🔍 ANALISIS VISUAL INICIAL]
 
     REGLAS -.Gobierna todo el flujo.-> A
     REGLAS -.Gobierna todo el flujo.-> FASE1
     REGLAS -.Gobierna todo el flujo.-> FASE2
     REGLAS -.Gobierna todo el flujo.-> FASE3
+    REGLAS_NUEVAS -.OBLIGATORIO.-> DETECTAR
 
     %% ============================================
     %% ANÁLISIS VISUAL INICIAL - DETECCIÓN DE GRÁFICOS
@@ -70,52 +73,44 @@ graph TD
     GRAF_GUARDAR --> GRAF_JSON2[workflow_state.json]
     GRAF_GUARDAR --> GRAF_MD[reporte_matematico.md]
     
-    GRAF_GUARDAR --> GRAF_LENGUAJE{Seleccionar Lenguaje}
-    
-    GRAF_LENGUAJE -->|TikZ| GRAF_TIKZ[🎨 GENERACIÓN TIKZ<br/>/generar-codigo-tikz]
-    GRAF_LENGUAJE -->|Python| GRAF_PYTHON[🐍 GENERACIÓN PYTHON<br/>/generar-codigo-python]
-    GRAF_LENGUAJE -->|R| GRAF_R[📊 GENERACIÓN R<br/>/generar-codigo-r]
-    
-    GRAF_TIKZ --> GRAF_TIKZ_CODE[Código TikZ/LaTeX]
-    GRAF_PYTHON --> GRAF_PYTHON_CODE[Código Python/Matplotlib]
-    GRAF_R --> GRAF_R_CODE[Código R/ggplot2]
-    
-    GRAF_TIKZ_CODE --> GRAF_TIKZ_COMP[Compilar LaTeX]
-    GRAF_PYTHON_CODE --> GRAF_PYTHON_EXEC[Ejecutar Python]
-    GRAF_R_CODE --> GRAF_R_EXEC[Ejecutar R]
-    
-    GRAF_TIKZ_COMP --> GRAF_TIKZ_IMG[Imagen PNG/PDF]
-    GRAF_PYTHON_EXEC --> GRAF_PYTHON_IMG[Imagen PNG]
-    GRAF_R_EXEC --> GRAF_R_IMG[Imagen PNG]
-    
-    GRAF_TIKZ_IMG --> GRAF_COMPARAR[🔍 COMPARACIÓN VISUAL<br/>+ MÉTRICAS 0-100<br/>/comparar-similitud-visual]
-    GRAF_PYTHON_IMG --> GRAF_COMPARAR
-    GRAF_R_IMG --> GRAF_COMPARAR
-    
-    GRAF_COMPARAR --> GRAF_METRICAS[Análisis con Puntuación]
-    GRAF_METRICAS --> GRAF_M1[Colores 0-20 pts]
-    GRAF_METRICAS --> GRAF_M2[Posiciones 0-20 pts]
-    GRAF_METRICAS --> GRAF_M3[Valores 0-20 pts]
-    GRAF_METRICAS --> GRAF_M4[Proporciones 0-15 pts]
-    GRAF_METRICAS --> GRAF_M5[Estilos 0-15 pts]
-    GRAF_METRICAS --> GRAF_M6[Elementos 0-10 pts]
-    
-    GRAF_M1 --> GRAF_PUNTUACION[📊 PUNTUACIÓN TOTAL]
-    GRAF_M2 --> GRAF_PUNTUACION
-    GRAF_M3 --> GRAF_PUNTUACION
-    GRAF_M4 --> GRAF_PUNTUACION
-    GRAF_M5 --> GRAF_PUNTUACION
-    GRAF_M6 --> GRAF_PUNTUACION
-    
-    GRAF_PUNTUACION --> GRAF_DECISION{Similitud<br/>≥ 95?}
-    
-    GRAF_DECISION -->|SÍ| GRAF_VALIDADO[✅ CÓDIGO VALIDADO]
-    GRAF_DECISION -->|NO| GRAF_ITERAR[🔄 REFINAR CÓDIGO<br/>/refinar-codigo-grafico]
-    
-    GRAF_ITERAR --> GRAF_CORREGIR[Aplicar Correcciones]
-    GRAF_CORREGIR --> GRAF_LENGUAJE
-    
-    GRAF_VALIDADO --> GRAF_INTEGRAR[💾 Código Gráfico<br/>Validado Listo]
+    %% ============================================
+    %% FLUJO SECUENCIAL OBLIGATORIO: TikZ → Python → R
+    %% ============================================
+    GRAF_GUARDAR --> GRAF_SEC_INICIO[⚠️ INICIO PROCESO SECUENCIAL<br/>Ver: graficador-secuencial.md]
+
+    %% PASO 1: TikZ (PRIMERO - OBLIGATORIO)
+    GRAF_SEC_INICIO --> GRAF_TIKZ[🎨 1. TIKZ DINAMICO DESDE R<br/>/auto-refinar-grafico tikz]
+    GRAF_TIKZ --> GRAF_TIKZ_ITER[Iterar hasta >=95%]
+    GRAF_TIKZ_ITER --> GRAF_TIKZ_COH[Verificar 5 Coherencias:<br/>Semantica, Visual-Texto,<br/>Matematica, Codigo, General]
+    GRAF_TIKZ_COH --> GRAF_TIKZ_USER{Usuario<br/>Aprueba TikZ?}
+    GRAF_TIKZ_USER -->|NO| GRAF_TIKZ_ITER
+    GRAF_TIKZ_USER -->|SI| GRAF_TIKZ_OK[✅ TikZ APROBADO]
+
+    %% PASO 2: Python (DESPUES de TikZ aprobado)
+    GRAF_TIKZ_OK --> GRAF_PYTHON[🐍 2. PYTHON RETICULATE<br/>/auto-refinar-grafico python]
+    GRAF_PYTHON --> GRAF_PYTHON_ITER[Iterar hasta >=95%]
+    GRAF_PYTHON_ITER --> GRAF_PYTHON_COH[Verificar 5 Coherencias]
+    GRAF_PYTHON_COH --> GRAF_PYTHON_USER{Usuario<br/>Aprueba Python?}
+    GRAF_PYTHON_USER -->|NO| GRAF_PYTHON_ITER
+    GRAF_PYTHON_USER -->|SI| GRAF_PYTHON_OK[✅ Python APROBADO]
+
+    %% PASO 3: R (DESPUES de Python aprobado)
+    GRAF_PYTHON_OK --> GRAF_R[📊 3. R GGPLOT2 NATIVO<br/>/auto-refinar-grafico r]
+    GRAF_R --> GRAF_R_ITER[Iterar hasta >=95%]
+    GRAF_R_ITER --> GRAF_R_COH[Verificar 5 Coherencias]
+    GRAF_R_COH --> GRAF_R_USER{Usuario<br/>Aprueba R?}
+    GRAF_R_USER -->|NO| GRAF_R_ITER
+    GRAF_R_USER -->|SI| GRAF_R_OK[✅ R APROBADO]
+
+    %% PASO 4: Seleccion final del usuario
+    GRAF_R_OK --> GRAF_SELECCION{Usuario Selecciona<br/>Version Final}
+    GRAF_SELECCION -->|TikZ| GRAF_FINAL_TIKZ[Usar TikZ dinamico]
+    GRAF_SELECCION -->|Python| GRAF_FINAL_PY[Usar Python reticulate]
+    GRAF_SELECCION -->|R| GRAF_FINAL_R[Usar R ggplot2]
+
+    GRAF_FINAL_TIKZ --> GRAF_INTEGRAR[💾 Codigo Grafico<br/>Validado y Seleccionado]
+    GRAF_FINAL_PY --> GRAF_INTEGRAR
+    GRAF_FINAL_R --> GRAF_INTEGRAR
     
     %% ============================================
     %% CONTINUACIÓN: ANÁLISIS ICFES (6 DIMENSIONES)
@@ -356,20 +351,42 @@ graph TD
     style DETECTAR fill:#fff9c4,stroke:#f57f17,stroke-width:3px
     style CONTINUAR_SIN_GRAF fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
     
-    %% Estilos Flujo Graficador-Experto
+    %% Estilos Flujo Graficador-Experto SECUENCIAL
     style GRAF_ANALISIS fill:#fff4e6,stroke:#e65100,stroke-width:3px
     style GRAF_REPORTE fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     style GRAF_GUARDAR fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
-    style GRAF_LENGUAJE fill:#fff9c4,stroke:#f57f17,stroke-width:3px
-    style GRAF_TIKZ fill:#ffebee,stroke:#c62828,stroke-width:2px
-    style GRAF_PYTHON fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style GRAF_R fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    style GRAF_COMPARAR fill:#7b1fa2,color:#fff,stroke:#4a148c,stroke-width:3px
-    style GRAF_PUNTUACION fill:#ce93d8,stroke:#7b1fa2,stroke-width:2px
-    style GRAF_DECISION fill:#fce4ec,stroke:#c2185b,stroke-width:3px
-    style GRAF_VALIDADO fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
-    style GRAF_ITERAR fill:#ff7043,color:#fff,stroke:#d84315,stroke-width:2px
+    style GRAF_SEC_INICIO fill:#ff5722,color:#fff,stroke:#d84315,stroke-width:3px
+
+    %% TikZ (Paso 1)
+    style GRAF_TIKZ fill:#ffebee,stroke:#c62828,stroke-width:3px
+    style GRAF_TIKZ_ITER fill:#ffcdd2,stroke:#e53935,stroke-width:2px
+    style GRAF_TIKZ_COH fill:#ef9a9a,stroke:#e53935,stroke-width:2px
+    style GRAF_TIKZ_USER fill:#fce4ec,stroke:#c2185b,stroke-width:3px
+    style GRAF_TIKZ_OK fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
+
+    %% Python (Paso 2)
+    style GRAF_PYTHON fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px
+    style GRAF_PYTHON_ITER fill:#c8e6c9,stroke:#43a047,stroke-width:2px
+    style GRAF_PYTHON_COH fill:#a5d6a7,stroke:#43a047,stroke-width:2px
+    style GRAF_PYTHON_USER fill:#dcedc8,stroke:#7cb342,stroke-width:3px
+    style GRAF_PYTHON_OK fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
+
+    %% R (Paso 3)
+    style GRAF_R fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
+    style GRAF_R_ITER fill:#bbdefb,stroke:#1976d2,stroke-width:2px
+    style GRAF_R_COH fill:#90caf9,stroke:#1976d2,stroke-width:2px
+    style GRAF_R_USER fill:#e1f5fe,stroke:#0288d1,stroke-width:3px
+    style GRAF_R_OK fill:#43a047,color:#fff,stroke:#1b5e20,stroke-width:3px
+
+    %% Seleccion final
+    style GRAF_SELECCION fill:#ffc107,stroke:#ff8f00,stroke-width:3px
+    style GRAF_FINAL_TIKZ fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style GRAF_FINAL_PY fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style GRAF_FINAL_R fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     style GRAF_INTEGRAR fill:#81c784,stroke:#2e7d32,stroke-width:2px
+
+    %% Reglas nuevas
+    style REGLAS_NUEVAS fill:#f44336,color:#fff,stroke:#b71c1c,stroke-width:3px,stroke-dasharray: 5 5
 
     %% Estilos Fase 1
     style FASE1 fill:#1e88e5,color:#fff,stroke:#0d47a1,stroke-width:3px

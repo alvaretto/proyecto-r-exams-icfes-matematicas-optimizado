@@ -1,12 +1,28 @@
 ---
-description: Itera automáticamente un lenguaje hasta alcanzar un umbral de similitud o máximo de iteraciones. (project)
+description: Itera automaticamente un lenguaje hasta alcanzar un umbral de similitud o maximo de iteraciones. (project)
 ---
 
-# Auto-Refinar Gráfico
+# Auto-Refinar Grafico
 
-**PROCESO AUTOMÁTICO CON CONFIRMACIÓN** - Iterar automáticamente PERO preguntar al usuario cuando se alcance el umbral.
+**REGLA CRITICA**: Ver @.claude/rules/graficador-secuencial.md
 
-Ejecuta iteraciones automáticas de refinamiento hasta alcanzar un umbral de similitud especificado o un máximo de iteraciones. Cuando se alcanza el umbral, **SIEMPRE** se debe preguntar al usuario si está satisfecho con los resultados antes de validar.
+**PROCESO SECUENCIAL OBLIGATORIO** - Los lenguajes se procesan UNO A LA VEZ, no simultaneamente.
+
+## ⚠️ ORDEN SECUENCIAL OBLIGATORIO
+
+```
+1. TikZ (dinamico desde R) → >=95% + coherencias + aprobacion usuario
+2. Python (reticulate) → >=95% + coherencias + aprobacion usuario
+3. R (ggplot2 nativo) → >=95% + coherencias + aprobacion usuario
+4. Usuario selecciona version final
+```
+
+**PROHIBIDO**: Generar o iterar multiples lenguajes simultaneamente.
+
+Ejecuta iteraciones automaticas de refinamiento hasta alcanzar un umbral de similitud especificado o un maximo de iteraciones. Cuando se alcanza el umbral, **SIEMPRE** se debe:
+1. Verificar las 5 coherencias (semantica, visual-texto, matematica, codigo, general)
+2. Preguntar al usuario si esta satisfecho
+3. SOLO continuar al siguiente lenguaje cuando usuario apruebe
 
 ## Uso
 
@@ -111,35 +127,84 @@ El sistema continuará automáticamente hasta alcanzar el umbral o máximo de it
 - No revertir cambios ya aplicados
 - Permitir continuar con `/auto-refinar-grafico` desde donde quedó
 
-## Confirmación Obligatoria al Alcanzar Umbral
+## Confirmacion Obligatoria al Alcanzar Umbral
 
 **IMPORTANTE**: Cuando se alcanza el umbral de similitud (default 95%), **SIEMPRE** se debe:
 
-1. **Mostrar resultado al usuario**:
-   - Mostrar imagen generada
-   - Mostrar puntuación de similitud alcanzada
-   - Mostrar comparación lado a lado si es posible
+### 1. Verificar las 5 Coherencias (OBLIGATORIO)
 
-2. **Preguntar explícitamente**:
-   ```
-   Se ha alcanzado [X]% de similitud para [Lenguaje].
+Antes de mostrar al usuario, verificar:
 
-   ¿Está satisfecho con el resultado?
-   - Sí, validar y continuar con siguiente lenguaje
-   - No, necesito ajustes específicos: [describir]
-   - Continuar iterando automáticamente
-   ```
+```markdown
+## Verificacion de Coherencias - [Lenguaje] v[N]
 
-3. **Esperar respuesta del usuario**:
-   - NO validar automáticamente
-   - NO continuar con siguiente lenguaje sin confirmación
-   - Aplicar correcciones si el usuario las solicita
+### 1. Coherencia Semantica (Gramatica)
+- [ ] Etiquetas de ejes sin errores ortograficos
+- [ ] Leyendas correctamente escritas
+- [ ] Titulo (si existe) gramaticalmente correcto
+- [ ] Numeros con formato apropiado
 
-4. **Validar solo con confirmación**:
-   - `[lenguaje].estado` = "validado" **solo después de confirmación**
-   - `[lenguaje].timestamp_validacion` = timestamp actual
-   - `fase_actual` = "[lenguaje]_validado"
-   - Actualizar `timestamp_ultima_actualizacion`
+### 2. Coherencia Visual con Texto
+- [ ] Grafico coincide con descripcion del enunciado
+- [ ] Valores visuales coinciden con valores mencionados
+- [ ] Colores/estilos coherentes con la descripcion
+
+### 3. Coherencia Matematica
+- [ ] Formulas/ecuaciones correctas si aplica
+- [ ] Proporciones geometricas correctas
+- [ ] Relaciones matematicas preservadas
+
+### 4. Coherencia de Codigo
+- [ ] Codigo genera grafico dinamicamente (no hardcoded)
+- [ ] Variables se interpolan correctamente
+- [ ] Compatible con R-exams
+
+### 5. Coherencia General
+- [ ] Grafico legible (tamano de fuente adecuado)
+- [ ] Estilo visual apropiado para ICFES
+- [ ] Calidad de imagen suficiente
+```
+
+### 2. Mostrar resultado al usuario:
+- Mostrar imagen generada
+- Mostrar puntuacion de similitud alcanzada
+- Mostrar resultado de verificacion de coherencias
+- Mostrar comparacion lado a lado si es posible
+
+### 3. Preguntar explicitamente:
+```
+Se ha alcanzado [X]% de similitud para [Lenguaje].
+
+Verificacion de Coherencias:
+- Semantica: OK/Pendiente
+- Visual-Texto: OK/Pendiente
+- Matematica: OK/Pendiente
+- Codigo: OK/Pendiente
+- General: OK/Pendiente
+
+¿Esta satisfecho con el resultado?
+- Si, aprobar y continuar con siguiente lenguaje
+- No, necesito ajustes especificos: [describir]
+- Continuar iterando automaticamente
+```
+
+### 4. Esperar respuesta del usuario:
+- NO validar automaticamente
+- NO continuar con siguiente lenguaje sin confirmacion
+- Aplicar correcciones si el usuario las solicita
+
+### 5. Validar solo con confirmacion:
+- `[lenguaje].estado` = "validado" **solo despues de confirmacion**
+- `[lenguaje].coherencias_verificadas` = true
+- `[lenguaje].usuario_aprobo` = true
+- `[lenguaje].timestamp_validacion` = timestamp actual
+- Actualizar `timestamp_ultima_actualizacion`
+
+### 6. Continuar al siguiente lenguaje (SECUENCIAL):
+- Solo despues de aprobacion del lenguaje actual
+- tikz.aprobado → iniciar python
+- python.aprobado → iniciar r
+- r.aprobado → preguntar seleccion final
 
 ## Límites y Protecciones
 

@@ -1,6 +1,30 @@
 # 🎯 Workflow Paso a Paso: De Imagen a Ejercicio R-Exams
 
-**Guía completa para generar ejercicios ICFES R-Exams desde una imagen**
+**Guia completa para generar ejercicios ICFES R-Exams desde una imagen**
+
+---
+
+## ⛔ REGLAS CRITICAS v2.2 (LEER PRIMERO)
+
+### Flujo B OBLIGATORIO si hay graficos
+Si el ejercicio tiene graficos en enunciado u opciones, el Flujo B (Graficador Experto) es **OBLIGATORIO**. Ver `.claude/rules/flujo-b-obligatorio.md`
+
+### Proceso SECUENCIAL del Graficador
+Las versiones se generan UNA A LA VEZ:
+```
+1. TikZ → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+2. Python → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+3. R → Iterar >=95% + 5 Coherencias + Aprobacion Usuario
+4. Usuario selecciona version final
+```
+Ver `.claude/rules/graficador-secuencial.md`
+
+### 5 Coherencias a Verificar
+1. **Semantica** - Gramatica correcta
+2. **Visual-Texto** - Grafico coincide con enunciado
+3. **Matematica** - Formulas correctas
+4. **Codigo** - Dinamico, compatible R-exams
+5. **General** - Legible, estilo ICFES
 
 ---
 
@@ -10,11 +34,12 @@ Este workflow utiliza **Skills de Claude Code** configurados en `.claude/skills/
 
 **Skills disponibles:**
 
-- `/analizar-icfes` - Análisis ICFES según 6 dimensiones
-- `/generar-schoice` - Generar ejercicio de selección única
+- `/analizar-icfes` - Analisis ICFES segun 6 dimensiones
+- `/generar-schoice` - Generar ejercicio de seleccion unica
 - `/generar-cloze` - Generar ejercicio de respuesta abierta
-- `/promover-ejercicio` - Promoción a carpeta de producción
-- `/corregir-error-imagen` - Corrección de errores TikZ
+- `/auto-refinar-grafico` - Graficador secuencial (tikz/python/r)
+- `/promover-ejercicio` - Promocion a carpeta de produccion
+- `/corregir-error-imagen` - Correccion de errores TikZ
 - `/validar-diversidad` - Validar 300+ versiones
 - `/validar-icfes` - Validar metadatos
 
@@ -175,16 +200,29 @@ ANÁLISIS VISUAL
 DECISIÓN DE FLUJO
 ═══════════════════════════════════════════════════════════
 
-🔀 **Flujo Seleccionado**: FLUJO B (Con Gráficas TikZ)
+🔀 **Flujo Seleccionado**: FLUJO B (Con Graficador Experto) - OBLIGATORIO
 
-**Razón**: La imagen contiene un diagrama geométrico que debe ser
-replicado con código TikZ para garantizar:
+**Razon**: La imagen contiene un diagrama geometrico que debe ser
+replicado con codigo TikZ/Python/R. El proceso es SECUENCIAL:
 
-- ✅ Aleatorización de parámetros
-- ✅ Generación de 300+ versiones únicas
-- ✅ Calidad profesional en PDF y HTML
+**PASO 1**: TikZ (dinamico desde R)
+- Iterar hasta >=95% similitud
+- Verificar 5 coherencias
+- Esperar aprobacion del usuario
 
-**Agente Activado**: Agente-Graficador Especializado TikZ
+**PASO 2**: Python (reticulate)
+- Iterar hasta >=95% similitud
+- Verificar 5 coherencias
+- Esperar aprobacion del usuario
+
+**PASO 3**: R (ggplot2 nativo)
+- Iterar hasta >=95% similitud
+- Verificar 5 coherencias
+- Esperar aprobacion del usuario
+
+**PASO 4**: Usuario selecciona version final
+
+⚠️ NO se puede generar .Rmd hasta completar Flujo B
 
 ═══════════════════════════════════════════════════════════
 PRÓXIMO PASO
@@ -940,7 +978,13 @@ N. Validar todos → Compilar todos → Promover todos
 
 ---
 
-**Última actualización:** 2025-12-20
-**Versión:** 1.0
+**Ultima actualizacion:** 2025-12-30
+**Version:** 2.2 (Flujo B obligatorio + Secuencial)
 **Autor:** Sistema Claude Code ICFES R-Exams
+
+### Cambios v2.2
+- Flujo B (Graficador Experto) ahora es OBLIGATORIO cuando hay graficos
+- Proceso SECUENCIAL: TikZ → Python → R (no simultaneo)
+- 5 coherencias a verificar antes de aprobacion de cada version
+- Bloqueo de generacion .Rmd si Flujo B incompleto
 

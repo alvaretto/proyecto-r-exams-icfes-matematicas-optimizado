@@ -240,33 +240,62 @@ Ver taxonomía completa en: @DIMENSIONES.md (sección Contenido)
 
 Ver plantilla completa en: @PLANTILLA_ANALISIS.md
 
-### PASO 3: Decisión de Flujo de Trabajo
+### PASO 3: Decision de Flujo de Trabajo (OBLIGATORIO Y BLOQUEANTE)
 
-**Criterio crítico: ¿Requiere Graficador Experto?**
+**REGLA CRITICA**: Ver @.claude/rules/flujo-b-obligatorio.md
 
-**ACTIVAR Graficador Experto (Flujo B) SI:**
-- ✓ Hay gráficos matemáticos complejos en la imagen
-- ✓ Requiere generar diagramas geométricos precisos
-- ✓ Necesita gráficos estadísticos personalizados
-- ✓ Debe replicar figuras con medidas exactas
+Este paso es **OBLIGATORIO** y **BLOQUEANTE**. NO se puede continuar sin declarar explicitamente la decision de flujo.
 
-**NO activar (Flujo A estándar) SI:**
-- ✗ Solo texto sin gráficos
-- ✗ Gráficos simples (se pueden describir)
-- ✗ Imágenes decorativas no matemáticas
+**Criterio critico: ¿Requiere Graficador Experto?**
 
-**Output de decisión:**
+**ACTIVAR Graficador Experto (Flujo B) SI cualquiera aplica:**
+- ✓ Hay graficos matematicos en la imagen (barras, lineas, dispersion, etc.)
+- ✓ Hay diagramas geometricos (triangulos, circulos, figuras)
+- ✓ Hay plano cartesiano con funciones o puntos
+- ✓ Hay tablas con datos que requieren visualizacion
+- ✓ Las opciones de respuesta incluyen graficos
+- ✓ El enunciado menciona "segun la grafica", "observa el diagrama", etc.
+
+**NO activar (Flujo A estandar) SOLO SI:**
+- ✗ Solo texto puro sin NINGUN elemento visual
+- ✗ Imagenes puramente decorativas (no matematicas)
+
+**⚠️ SI HAY DUDA: USAR FLUJO B**
+
+**Output de decision OBLIGATORIO:**
 ```markdown
-## Decisión de Flujo
+## Decision de Flujo (OBLIGATORIO)
 
-**Flujo seleccionado**: [A: Estándar | B: Con Graficador]
+### Deteccion de Graficos
+- **Graficos en enunciado**: [SI/NO - descripcion]
+- **Graficos en opciones**: [SI/NO - descripcion]
+- **Elementos visuales matematicos**: [lista]
 
-**Razón**: [justificación de la decisión]
+### Decision Final
+**Flujo seleccionado**: [A: Estandar | B: Con Graficador]
 
-**Siguiente paso**:
-- Flujo A → Ir a /generar-schoice o /generar-cloze
-- Flujo B → Activar Graficador Experto primero
+**Justificacion**: [razon detallada]
+
+**Registro**:
+```json
+{
+  "requiere_flujo_b": true/false,
+  "graficos_detectados": ["lista de graficos"],
+  "decision_justificada": "razon"
+}
 ```
+
+### Siguiente Paso OBLIGATORIO
+- **Flujo A** → Ir a /generar-schoice o /generar-cloze
+- **Flujo B** → Ejecutar Graficador Experto SECUENCIALMENTE:
+  1. TikZ → iterar hasta >=95% + coherencias + aprobacion usuario
+  2. Python → iterar hasta >=95% + coherencias + aprobacion usuario
+  3. R → iterar hasta >=95% + coherencias + aprobacion usuario
+  4. Usuario selecciona version final
+  5. SOLO ENTONCES → /generar-schoice o /generar-cloze
+```
+
+**⛔ BLOQUEO**: Si se detectan graficos y se intenta generar .Rmd sin completar Flujo B, el sistema BLOQUEARA la generacion. Ver @.claude/rules/flujo-b-obligatorio.md
 
 ### PASO 4: Generar Metadatos R/exams
 
@@ -428,30 +457,45 @@ Después de usar este skill, debes tener:
 [Comando específico a ejecutar]
 ```
 
-## 🚀 Integración con Otros Skills
+## 🚀 Integracion con Otros Skills
 
 Este skill es el **entry point** que activa otros skills:
 
 ```
 analizar-icfes
     ↓
-    ├─→ [Flujo A] generar-schoice / generar-cloze
+    ├─→ [Flujo A: SIN graficos]
+    │       ↓
+    │   generar-schoice / generar-cloze
     │       ↓
     │   validar-renderizado → validar-coherencia
     │       ↓
     │   promover-ejercicio
     │
-    └─→ [Flujo B] analizar-imagen-grafica (Graficador)
+    └─→ [Flujo B: CON graficos] ⚠️ OBLIGATORIO si hay graficos
             ↓
-        generar-codigo-r/python/tikz
+        1. TikZ (dinamico desde R)
+            ↓ iterar >=95% + coherencias + aprobacion
+        2. Python (reticulate)
+            ↓ iterar >=95% + coherencias + aprobacion
+        3. R (ggplot2 nativo)
+            ↓ iterar >=95% + coherencias + aprobacion
+        4. Usuario selecciona version
             ↓
-        comparar-similitud-visual
+        generar-schoice / generar-cloze
             ↓
-        [volver a Flujo A]
+        validar-renderizado → validar-coherencia
+            ↓
+        promover-ejercicio
 ```
+
+## ⛔ Reglas Obligatorias Relacionadas
+
+- @.claude/rules/flujo-b-obligatorio.md - Flujo B es OBLIGATORIO si hay graficos
+- @.claude/rules/graficador-secuencial.md - Proceso TikZ→Python→R SECUENCIAL
 
 ---
 
-**Última actualización**: 2025-12-30
-**Versión**: 2.0 (Progressive Disclosure)
-**Basado en**: Documentación oficial ICFES 2025 + Claude Code best practices
+**Ultima actualizacion**: 2025-12-30
+**Version**: 2.1 (Flujo B obligatorio + Secuencial)
+**Basado en**: Documentacion oficial ICFES 2025 + Claude Code best practices

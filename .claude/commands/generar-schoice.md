@@ -1,13 +1,56 @@
 ---
-description: Genera ejercicio R-exams tipo SCHOICE (selección única) - Después requiere Ciclo de Validación.
+description: Genera ejercicio R-exams tipo SCHOICE (seleccion unica) - Despues requiere Ciclo de Validacion.
 ---
 
 # Generador SCHOICE
 
-Genera un archivo .Rmd de tipo **schoice** (selección única) siguiendo la estructura
+**REGLAS CRITICAS**:
+- @.claude/rules/flujo-b-obligatorio.md
+- @.claude/rules/graficador-secuencial.md
+
+Genera un archivo .Rmd de tipo **schoice** (seleccion unica) siguiendo la estructura
 del proyecto.
 
-## ⚡ IMPORTANTE: Después de generar, ejecutar Ciclo de Validación
+## ⛔ BLOQUEO: Verificacion de Flujo B (OBLIGATORIO)
+
+**ANTES de generar cualquier .Rmd, verificar:**
+
+```
+SI ejercicio tiene graficos detectados en /analizar-icfes:
+    VERIFICAR que Flujo B fue completado:
+    - workflow_state.json existe
+    - tikz.usuario_aprobo == true
+    - python.usuario_aprobo == true
+    - r.usuario_aprobo == true
+    - version_seleccionada != null
+
+    SI Flujo B NO completado:
+        BLOQUEAR generacion
+        MOSTRAR mensaje de error
+        REDIRIGIR a /auto-refinar-grafico tikz
+```
+
+### Mensaje de Bloqueo
+
+```markdown
+## ⛔ BLOQUEO: Flujo B Incompleto
+
+Se detectaron graficos en este ejercicio pero el Flujo B (Graficador Experto)
+no ha sido completado.
+
+**Estado actual**:
+- TikZ: [pendiente|en_iteracion|aprobado]
+- Python: [pendiente|en_iteracion|aprobado]
+- R: [pendiente|en_iteracion|aprobado]
+- Version seleccionada: [ninguna]
+
+**Accion requerida**:
+Ejecutar `/auto-refinar-grafico tikz` para iniciar el proceso secuencial.
+
+**NO SE PUEDE CONTINUAR SIN COMPLETAR FLUJO B**
+```
+
+## ⚡ IMPORTANTE: Despues de generar, ejecutar Ciclo de Validacion
 
 ```
 Generación del archivo .Rmd
