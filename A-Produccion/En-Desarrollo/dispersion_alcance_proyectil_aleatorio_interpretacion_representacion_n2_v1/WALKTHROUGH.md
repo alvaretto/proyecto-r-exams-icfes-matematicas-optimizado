@@ -1,26 +1,26 @@
-# Walkthrough: Ejercicio Dispersion y Alcance de Proyectil
+# Walkthrough: Ejercicio Dispersión y Alcance de Proyectil
 
-Guia detallada del codigo R/Markdown para el ejercicio ICFES.
+Guía detallada del código R/Markdown para el ejercicio ICFES.
 
 ---
 
 ## Estructura del Archivo .Rmd
 
 ```
-1. YAML Header (Lineas 1-17)
-2. Chunk: setup (Lineas 19-51)
-3. Chunk: data_generation (Lineas 53-105)
-4. Chunk: version_diversity_test (Lineas 107-152)
-5. Chunk: generar_tikz_scatter (Lineas 154-196)
-6. Chunk: generar_opciones (Lineas 198-269)
-7. Question (Lineas 271-292)
-8. Solution (Lineas 294-325)
-9. Meta-information (Lineas 327-333)
+1. YAML Header (Líneas 1-17)
+2. Chunk: setup (Líneas 19-51)
+3. Chunk: data_generation (Líneas 53-105)
+4. Chunk: version_diversity_test (Líneas 107-152)
+5. Chunk: generar_tikz_scatter (Líneas 154-196)
+6. Chunk: generar_opciones (Líneas 198-269)
+7. Question (Líneas 271-292)
+8. Solution (Líneas 294-325)
+9. Meta-information (Líneas 327-333)
 ```
 
 ---
 
-## 1. YAML Header (Configuracion)
+## 1. YAML Header (Configuración)
 
 ```yaml
 ---
@@ -42,11 +42,11 @@ icfes:
 ---
 ```
 
-### Explicacion:
+### Explicación:
 - **output**: Define formatos de salida (HTML, PDF, DOCX)
-- **keep_tex: true**: Conserva archivo .tex intermedio (util para debug)
-- **extra_dependencies**: Paquetes LaTeX adicionales para graficos
-- **icfes**: Metadatos personalizados para clasificacion ICFES
+- **keep_tex: true**: Conserva archivo .tex intermedio (útil para debug)
+- **extra_dependencies**: Paquetes LaTeX adicionales para gráficos
+- **icfes**: Metadatos personalizados para clasificación ICFES
 
 ---
 
@@ -54,14 +54,14 @@ icfes:
 
 ```r
 ```{r setup, include=FALSE}
-# Configuracion para todos los formatos de salida
+# Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 ```
 
-### Proposito:
+### Propósito:
 - **include=FALSE**: No muestra este chunk en el output
-- **Sys.setlocale**: Asegura formato numerico consistente (punto decimal)
+- **Sys.setlocale**: Asegura formato numérico consistente (punto decimal)
 - **OutDec = "."**: Fuerza punto como separador decimal
 
 ```r
@@ -76,10 +76,10 @@ options(tikzLatexPackages = c(
 ))
 ```
 
-### Proposito:
+### Propósito:
 - Configura TikZ para usar pdflatex (no XeLaTeX)
 - Carga paquetes necesarios: tikz, pgfplots, amsmath
-- **pgfplotsset{compat=1.18}**: Usa version moderna de pgfplots
+- **pgfplotsset{compat=1.18}**: Usa versión moderna de pgfplots
 
 ```r
 library(exams)
@@ -90,8 +90,8 @@ library(knitr)
 typ <- match_exams_device()
 ```
 
-### Proposito:
-- **exams**: Framework principal para generar examenes
+### Propósito:
+- **exams**: Framework principal para generar exámenes
 - **digest**: Genera hashes para verificar unicidad de versiones
 - **testthat**: Framework de testing para validar diversidad
 - **match_exams_device()**: Detecta formato de salida (html/pdf/etc)
@@ -100,9 +100,9 @@ typ <- match_exams_device()
 set.seed(sample(1:100000, 1))
 ```
 
-### Proposito:
+### Propósito:
 - Establece semilla aleatoria DIFERENTE en cada renderizado
-- Garantiza que cada version sea unica
+- Garantiza que cada versión sea única
 
 ---
 
@@ -115,18 +115,18 @@ generar_datos <- function() {
   # Velocidad inicial aleatoria
   v0 <- sample(seq(10.5, 12.0, 0.1), 1)
 
-  # Numero de lanzamientos aleatorio
+  # Número de lanzamientos aleatorio
   n_lanzamientos <- sample(90:110, 1)
 ```
 
 ### Variables Aleatorias:
-| Variable | Rango | Proposito |
+| Variable | Rango | Propósito |
 |----------|-------|-----------|
-| `v0` | 10.5-12.0 | Afecta alcance maximo |
-| `n_lanzamientos` | 90-110 | Cantidad de puntos en grafica |
+| `v0` | 10.5-12.0 | Afecta alcance máximo |
+| `n_lanzamientos` | 90-110 | Cantidad de puntos en gráfica |
 
 ```r
-  # Generar angulos con distribucion por zonas
+  # Generar ángulos con distribución por zonas
   angulos <- c(
     runif(round(n_lanzamientos * 0.15), 0.05, 0.25),  # 15% zona baja
     runif(round(n_lanzamientos * 0.25), 0.25, 0.55),  # 25% zona media-baja
@@ -136,7 +136,7 @@ generar_datos <- function() {
   )
 ```
 
-### Distribucion de Angulos:
+### Distribución de Ángulos:
 ```
      |
  30% |        ****
@@ -144,23 +144,23 @@ generar_datos <- function() {
  20% |            ***
  15% | **
  10% |               **
-     +-------------------> Angulo (rad)
+     +-------------------> Ángulo (rad)
        0.1  0.4  0.8  1.2  1.5
 ```
 
-Mayor concentracion en zona central (0.55-1.0 rad) donde el alcance es maximo.
+Mayor concentración en zona central (0.55-1.0 rad) donde el alcance es máximo.
 
 ```r
-  # Calcular alcance teorico
+  # Calcular alcance teórico
   alcance_teorico <- (v0^2 * sin(2 * angulos)) / g
 ```
 
-### Formula Fisica:
+### Fórmula Física:
 ```
 R = v0^2 * sin(2*theta) / g
 ```
-- Alcance maximo cuando theta = 45 grados (pi/4 rad)
-- Forma parabolica/senoidal
+- Alcance máximo cuando theta = 45 grados (pi/4 rad)
+- Forma parabólica/senoidal
 
 ```r
   # Agregar ruido proporcional al alcance
@@ -172,13 +172,13 @@ R = v0^2 * sin(2*theta) / g
 ### Modelo de Ruido:
 - **ruido_base**: Factor aleatorio (0.35-0.45)
 - **ruido_factor**: Proporcional a sqrt(alcance)
-- Resultado: Mayor dispersion en alcances altos (centro de la parabola)
+- Resultado: Mayor dispersión en alcances altos (centro de la parábola)
 
 ```
-Dispersion:  BAJA  |  ALTA  |  BAJA
+Dispersión:  BAJA  |  ALTA  |  BAJA
              ______|________|______
-Alcance:     bajo  | maximo | bajo
-Angulo:      0     |  0.78  | 1.57
+Alcance:     bajo  | máximo | bajo
+Ángulo:      0     |  0.78  | 1.57
 ```
 
 ---
@@ -209,13 +209,13 @@ test_that("Prueba de diversidad de versiones (datos + texto)", {
 })
 ```
 
-### Proposito:
+### Propósito:
 - Genera 500 versiones de prueba
-- Crea hash unico por combinacion (datos + texto)
+- Crea hash único por combinación (datos + texto)
 - Verifica que al menos 300 sean diferentes
-- Si falla, el ejercicio no pasa validacion
+- Si falla, el ejercicio no pasa validación
 
-### Combinaciones Teoricas:
+### Combinaciones Teóricas:
 ```
 Datos:  16 (v0) * 21 (n_lanz) * 6 (ruido) = 2,016
 Texto:  4^5 = 1,024
@@ -247,7 +247,7 @@ generar_tikz_dispersion <- function(angulos, alcances) {
     "\\begin{axis}[\n",
     "    width=12cm,\n",
     "    height=8cm,\n",
-    "    xlabel={Angulo (en radianes)},\n",
+    "    xlabel={Ángulo (en radianes)},\n",
     "    ylabel={Alcance horizontal (m)},\n",
     ...
 ```
@@ -258,7 +258,7 @@ generar_tikz_dispersion <- function(angulos, alcances) {
 \begin{axis}[
     width=12cm,
     height=8cm,
-    xlabel={Angulo (en radianes)},
+    xlabel={Ángulo (en radianes)},
     ylabel={Alcance horizontal (m)},
     xmin=0, xmax=1.7,
     ymin=0, ymax=15,
@@ -290,7 +290,7 @@ Alcance (m)
      6 |  * * *       * * *
      4 | * *             * *
      2 |*                   *
-     0 +-----------------------> Angulo (rad)
+     0 +-----------------------> Ángulo (rad)
        0   0.4   0.8   1.2   1.6
 ```
 
@@ -299,16 +299,16 @@ Alcance (m)
 ## 6. Chunk: generar_opciones
 
 ```r
-# Variantes para cada termino
+# Variantes para cada término
 vars_lineal <- c("lineal", "proporcional", "de tipo lineal", "directamente proporcional")
-vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "parabolico")
-vars_disperso <- c("mas disperso", "con mayor variabilidad", "mas variable", "con mayor dispersion")
-vars_angulo <- c("el angulo", "el angulo de lanzamiento", "la inclinacion inicial", "el angulo inicial")
+vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "parabólico")
+vars_disperso <- c("más disperso", "con mayor variabilidad", "más variable", "con mayor dispersión")
+vars_angulo <- c("el ángulo", "el ángulo de lanzamiento", "la inclinación inicial", "el ángulo inicial")
 vars_alcance <- c("el alcance", "el alcance horizontal", "la distancia recorrida", "el alcance del proyectil")
 ```
 
-### Sistema de Variacion:
-Cada termino tiene 4 sinonimos que se seleccionan aleatoriamente.
+### Sistema de Variación:
+Cada término tiene 4 sinónimos que se seleccionan aleatoriamente.
 
 ```r
 # Seleccionar variantes aleatorias
@@ -320,7 +320,7 @@ sel_alcance <- sample(vars_alcance, 1)
 ```
 
 ```r
-# Construir opciones dinamicas
+# Construir opciones dinámicas
 opciones <- c(
   paste0(sel_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_angulo, "."),
   paste0(sel_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_alcance, "."),
@@ -331,29 +331,29 @@ opciones <- c(
 
 ### Estructura de Opciones:
 
-| Opcion | Relacion | Dispersion | Correcta |
+| Opción | Relación | Dispersión | Correcta |
 |--------|----------|------------|----------|
-| A | lineal | angulo | NO |
+| A | lineal | ángulo | NO |
 | B | lineal | alcance | NO |
-| C | no lineal | angulo | NO |
-| D | no lineal | alcance | SI |
+| C | no lineal | ángulo | NO |
+| D | no lineal | alcance | SÍ |
 
-### Ejemplo de Variacion:
+### Ejemplo de Variación:
 
-**Version 1:**
+**Versión 1:**
 ```
-A. lineal y mas disperso cuanto mayor sea el angulo.
-B. lineal y mas disperso cuanto mayor sea el alcance.
-C. no lineal y mas disperso cuanto mayor sea el angulo.
-D. no lineal y mas disperso cuanto mayor sea el alcance.
+A. lineal y más disperso cuanto mayor sea el ángulo.
+B. lineal y más disperso cuanto mayor sea el alcance.
+C. no lineal y más disperso cuanto mayor sea el ángulo.
+D. no lineal y más disperso cuanto mayor sea el alcance.
 ```
 
-**Version 2:**
+**Versión 2:**
 ```
-A. proporcional y con mayor variabilidad cuanto mayor sea la inclinacion inicial.
+A. proporcional y con mayor variabilidad cuanto mayor sea la inclinación inicial.
 B. proporcional y con mayor variabilidad cuanto mayor sea la distancia recorrida.
-C. parabolico y con mayor variabilidad cuanto mayor sea la inclinacion inicial.
-D. parabolico y con mayor variabilidad cuanto mayor sea la distancia recorrida.
+C. parabólico y con mayor variabilidad cuanto mayor sea la inclinación inicial.
+D. parabólico y con mayor variabilidad cuanto mayor sea la distancia recorrida.
 ```
 
 ---
@@ -365,13 +365,13 @@ Question
 ========
 
 Un experimento consiste en medir el alcance horizontal de un proyectil
-en funcion del angulo con el que se lanza (respecto a la horizontal).
-En la grafica se registran los resultados de `r n_lanzamientos`
+en función del ángulo con el que se lanza (respecto a la horizontal).
+En la gráfica se registran los resultados de `r n_lanzamientos`
 lanzamientos realizados con la misma velocidad inicial.
 
-[GRAFICA TikZ]
+[GRÁFICA TikZ]
 
-El comportamiento del alcance respecto al angulo es
+El comportamiento del alcance respecto al ángulo es
 
 Answerlist
 ----------
@@ -381,42 +381,42 @@ Answerlist
 * `r opciones[4]`
 ```
 
-### Elementos Dinamicos:
-- **n_lanzamientos**: Numero aleatorio (90-110)
-- **Grafica**: Generada con datos aleatorios
-- **Opciones**: Texto con variacion aleatoria
+### Elementos Dinámicos:
+- **n_lanzamientos**: Número aleatorio (90-110)
+- **Gráfica**: Generada con datos aleatorios
+- **Opciones**: Texto con variación aleatoria
 
 ---
 
-## 8. Solution (Retroalimentacion)
+## 8. Solution (Retroalimentación)
 
 ```markdown
 Solution
 ========
 
-**1. Tipo de relacion (`r sel_lineal` vs `r sel_no_lineal`):**
+**1. Tipo de relación (`r sel_lineal` vs `r sel_no_lineal`):**
 
-La relacion sigue la ecuacion: R = v0^2 * sin(2*theta) / g
+La relación sigue la ecuación: R = v0^2 * sin(2*theta) / g
 
-Esta es una funcion senoidal, por lo tanto **`r sel_no_lineal`**.
+Esta es una función senoidal, por lo tanto **`r sel_no_lineal`**.
 
-**2. Patron de dispersion:**
+**2. Patrón de dispersión:**
 
-- Extremos: puntos mas concentrados
+- Extremos: puntos más concentrados
 - Centro: mayor variabilidad
 
-La dispersion es proporcional a `r sel_alcance`, no a `r sel_angulo`.
+La dispersión es proporcional a `r sel_alcance`, no a `r sel_angulo`.
 
 Answerlist
 ----------
-* **Falso**. La relacion no es `r sel_lineal`...
-* **Falso**. Aunque la dispersion si aumenta con `r sel_alcance`...
-* **Falso**. Si bien la relacion es `r sel_no_lineal`...
-* **Verdadero**. La relacion es `r sel_no_lineal`...
+* **Falso**. La relación no es `r sel_lineal`...
+* **Falso**. Aunque la dispersión sí aumenta con `r sel_alcance`...
+* **Falso**. Si bien la relación es `r sel_no_lineal`...
+* **Verdadero**. La relación es `r sel_no_lineal`...
 ```
 
 ### Coherencia:
-La solucion usa las MISMAS variables seleccionadas que las opciones, garantizando coherencia textual.
+La solución usa las MISMAS variables seleccionadas que las opciones, garantizando coherencia textual.
 
 ---
 
@@ -429,29 +429,29 @@ exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_
 extype: schoice
 exsolution: `r paste(solucion, collapse="")`
 exshuffle: TRUE
-exsection: Estadistica/Graficas de Dispersion
+exsection: Estadística/Gráficas de Dispersión
 ```
 
 ### Campos:
-| Campo | Valor | Descripcion |
+| Campo | Valor | Descripción |
 |-------|-------|-------------|
-| exname | (nombre) | Identificador unico |
-| extype | schoice | Seleccion unica |
-| exsolution | 0001 | Posicion de respuesta correcta (D) |
+| exname | (nombre) | Identificador único |
+| extype | schoice | Selección única |
+| exsolution | 0001 | Posición de respuesta correcta (D) |
 | exshuffle | TRUE | Mezclar opciones aleatoriamente |
-| exsection | (seccion) | Categoria para organizacion |
+| exsection | (sección) | Categoría para organización |
 
 ### exshuffle: TRUE
-**CRITICO**: Garantiza que R-exams mezcle las opciones en cada version, evitando que "D siempre sea correcta".
+**CRÍTICO**: Garantiza que R-exams mezcle las opciones en cada versión, evitando que "D siempre sea correcta".
 
 ---
 
-## Diagrama de Flujo del Codigo
+## Diagrama de Flujo del Código
 
 ```
 +-------------------+
 |   YAML Header     |
-| (configuracion)   |
+| (configuración)   |
 +--------+----------+
          |
          v
@@ -459,7 +459,7 @@ exsection: Estadistica/Graficas de Dispersion
 |   setup chunk     |
 | - locale          |
 | - TikZ config     |
-| - librerias       |
+| - librerías       |
 | - semilla random  |
 +--------+----------+
          |
@@ -468,7 +468,7 @@ exsection: Estadistica/Graficas de Dispersion
 | data_generation   |
 | - v0 aleatorio    |
 | - n_lanzamientos  |
-| - angulos         |
+| - ángulos         |
 | - alcances        |
 | - ruido           |
 +--------+----------+
@@ -484,7 +484,7 @@ exsection: Estadistica/Graficas de Dispersion
 +-------------------+
 | generar_tikz      |
 | - coordenadas     |
-| - codigo pgfplots |
+| - código pgfplots |
 +--------+----------+
          |
          v
@@ -502,14 +502,14 @@ exsection: Estadistica/Graficas de Dispersion
 +-------------------+
 |    Question       |
 | - enunciado       |
-| - grafica TikZ    |
+| - gráfica TikZ    |
 | - answerlist      |
 +--------+----------+
          |
          v
 +-------------------+
 |    Solution       |
-| - explicacion     |
+| - explicación     |
 | - feedback        |
 +--------+----------+
          |
@@ -527,7 +527,7 @@ exsection: Estadistica/Graficas de Dispersion
 ## Comandos de Renderizado
 
 ```r
-# Una version HTML
+# Una versión HTML
 exams2html("*_opc_D.Rmd", n = 1)
 
 # 10 versiones PDF
@@ -536,7 +536,7 @@ exams2pdf("*_opc_D.Rmd", n = 10)
 # 100 versiones Moodle
 exams2moodle("*_opc_D.Rmd", n = 100, name = "banco_dispersion")
 
-# 30 examenes NOPS (impresos)
+# 30 exámenes NOPS (impresos)
 exams2nops("*_opc_D.Rmd", n = 30, institution = "ICFES")
 ```
 
@@ -546,7 +546,7 @@ exams2nops("*_opc_D.Rmd", n = 30, institution = "ICFES")
 
 ### Error: "TikZ compilation failed"
 ```r
-# Verificar instalacion de pdflatex
+# Verificar instalación de pdflatex
 Sys.which("pdflatex")
 
 # Verificar paquetes LaTeX
@@ -555,17 +555,17 @@ system("kpsewhich pgfplots.sty")
 
 ### Error: "Less than 300 unique versions"
 - Aumentar rangos de variables aleatorias
-- Agregar mas variantes textuales
+- Agregar más variantes textuales
 - Verificar que set.seed() use semilla aleatoria
 
 ### Error: "exshuffle not working"
-- Verificar que `exshuffle: TRUE` este en Meta-information
+- Verificar que `exshuffle: TRUE` esté en Meta-information
 - No usar `exshuffle: FALSE`
 
 ---
 
 ## Autor
 
-Documentacion generada con Claude Code (Graficador Experto ICFES)
+Documentación generada con Claude Code (Graficador Experto ICFES)
 
 Fecha: 2025-12-30
