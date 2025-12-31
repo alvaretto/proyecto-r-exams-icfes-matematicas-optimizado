@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd"
+archivo_examen <- "dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_B.Rmd"
 copias <- 1  # Número de versiones a generar
 numpreg <- 10
 semilla_base <- sample(100:1e8, 1)
@@ -103,18 +103,18 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # no importa 'numpreg'
 
 # set.seed(semilla)
-# exams2moodle(archivo_examen,
-#              n = copias,
-#              svg = TRUE,
-#              name = nombre_arch,
-#              encoding = "UTF-8",
-#              dir = "salida",
-#              edir = "ejercicios",
-#              mchoice = list(shuffle = TRUE,
-#                             answernumbering = "ABCD",
-#                             eval = list(partial = TRUE,
-#                                         rule = "none")),
-#              verbose = TRUE)
+exams2moodle(archivo_examen,
+             n = copias,
+             svg = TRUE,
+             name = nombre_arch,
+             encoding = "UTF-8",
+             dir = "salida",
+             edir = dir_ejercicios,
+             mchoice = list(shuffle = TRUE,
+                            answernumbering = "ABCD",
+                            eval = list(partial = TRUE,
+                                        rule = "none")),
+             verbose = TRUE)
 
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
