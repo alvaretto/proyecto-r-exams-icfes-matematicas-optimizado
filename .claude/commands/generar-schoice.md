@@ -50,19 +50,74 @@ Ejecutar `/auto-refinar-grafico tikz` para iniciar el proceso secuencial.
 **NO SE PUEDE CONTINUAR SIN COMPLETAR FLUJO B**
 ```
 
-## ⚡ IMPORTANTE: Despues de generar, ejecutar Ciclo de Validacion
+## ⚡ IMPORTANTE: Despues de generar, ejecutar Ciclo de Validacion Visual Iterativa
+
+**Ver regla completa**: @.claude/rules/ciclo-validacion.md
 
 ```
 Generación del archivo .Rmd
     │
     ▼
-🔄 FASE 1: /validar-renderizado
+🔄 FASE 1: Renderizar (HTML, PDF, DOCX)
     │
     ▼
-🔍 FASE 2: /validar-coherencia
+🔍 FASE 2: VALIDACIÓN VISUAL ITERATIVA (OBLIGATORIA)
+    │
+    ├── 2.1: Convertir PDF → PNG con magick
+    ├── 2.2: MOSTRAR imagen al usuario (Read tool)
+    ├── 2.3: Verificar 5 coherencias VISUALMENTE
+    ├── 2.4: Documentar hallazgos con checklist
+    └── 2.5: Comparar con imagen original (si aplica)
     │
     ▼
-⚡ FASE 3: /diagnosticar-errores (si hay errores)
+⚡ FASE 3: DECISIÓN
+    │
+    ├── SI problemas → Corregir → VOLVER A FASE 1
+    │
+    └── SI OK → Solicitar aprobación usuario → FIN
+```
+
+### ⚠️ PROHIBIDO (Antipatrones)
+
+```markdown
+# ❌ INCORRECTO - Validación "ciega"
+"Los 3 formatos se generaron correctamente. Ejercicio completado."
+# ← NO se mostró ninguna imagen, NO se verificaron coherencias
+
+# ❌ INCORRECTO - Asumir éxito
+"El PDF se generó sin errores."
+# ← Solo verificó que no hubo error de compilación, no el contenido
+
+# ❌ INCORRECTO - Saltarse comparación
+"El gráfico se generó."
+# ← Sin comparar con imagen original cuando aplica
+```
+
+### ✅ PATRÓN CORRECTO
+
+```markdown
+## Ciclo de Validación - Iteración 1
+
+### FASE 1: Renderizado
+- HTML: ✅ plain1.html (XXkb)
+- PDF: ✅ plain1.pdf (XXkb)
+- DOCX: ✅ pandoc1.docx (XXkb)
+
+### FASE 2: Inspección Visual
+
+[Imagen preview.png mostrada con Read tool]
+
+#### Coherencias verificadas:
+- [x] Semántica: Texto legible, tildes correctas
+- [x] Visual-Texto: Gráfico coincide con enunciado
+- [x] Matemática: Fórmulas correctas
+- [x] Código: Elementos dinámicos funcionando
+- [x] General: Legible, estilo ICFES
+
+### FASE 3: Decisión
+✅ Todas las coherencias OK
+
+**¿Aprueba este ejercicio?**
 ```
 
 ## Parámetros de entrada
@@ -313,14 +368,22 @@ format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)
 
 ## ⛔ CONDICIONES CRÍTICAS
 
+### OBLIGATORIO:
 1. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de escribir código
 2. ✓ **SIEMPRE** consultar ejemplos funcionales ANTES de corregir errores
-3. ✓ **SIEMPRE** ejecutar Ciclo de Validación después de generar
-4. ✓ **SIEMPRE** verificar VISUALMENTE cada gráfico después de renderizar
-5. ✓ **SIEMPRE** incluir `out.width = "90%"` en chunks con gráficos
-6. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
-7. ❌ **NUNCA** promover sin completar validación
-8. ❌ **NUNCA** asumir que lógica matemática correcta = visualización correcta
+3. ✓ **SIEMPRE** ejecutar Ciclo de Validación Visual Iterativa después de generar
+4. ✓ **SIEMPRE** MOSTRAR preview.png al usuario con Read tool
+5. ✓ **SIEMPRE** documentar las 5 coherencias con checklist explícito
+6. ✓ **SIEMPRE** solicitar aprobación del usuario antes de marcar como completado
+7. ✓ **SIEMPRE** comparar con imagen original cuando aplique
+8. ✓ **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
+
+### PROHIBIDO:
+9. ❌ **NUNCA** promover sin completar validación visual
+10. ❌ **NUNCA** asumir que lógica matemática correcta = visualización correcta
+11. ❌ **NUNCA** marcar como "completado" sin inspección visual REAL
+12. ❌ **NUNCA** decir "El PDF se generó correctamente" sin mostrar imagen
+13. ❌ **NUNCA** asumir éxito solo porque no hubo errores de compilación
 
 ## ⚠️ COHERENCIA MATEMÁTICA EN GRÁFICOS
 

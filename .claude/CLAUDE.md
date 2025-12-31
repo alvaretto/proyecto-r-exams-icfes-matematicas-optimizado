@@ -38,6 +38,22 @@ Generar ejercicios matematicos de seleccion multiple (SCHOICE) y compuestos (CLO
 4. **Coherencia de Código** - Dinámico, compatible con R-exams
 5. **Coherencia General** - Legible, estilo ICFES
 
+### Validación Visual Iterativa (OBLIGATORIO)
+@.claude/rules/ciclo-validacion.md
+
+**Principio**: NUNCA marcar como "completado" sin inspección visual REAL.
+- Convertir PDF → PNG con `magick`
+- MOSTRAR imagen al usuario con `Read` tool
+- Verificar las 5 coherencias VISUALMENTE (no solo que el archivo existe)
+- Documentar hallazgos con checklist
+- Solicitar aprobación del usuario antes de finalizar
+- Si hay problemas → Corregir → Volver a renderizar → Repetir inspección
+
+**PROHIBIDO:**
+- ❌ "El PDF se generó correctamente" sin mostrar imagen
+- ❌ Asumir éxito solo porque no hubo errores de compilación
+- ❌ Saltarse comparación visual con imagen original
+
 ### Ortografía Española (OBLIGATORIO)
 @.claude/rules/ortografia-espanol.md
 
@@ -142,9 +158,16 @@ Ver especificaciones completas en @.claude/rules/codigo-rmd.md
 
 ---
 
-**Ultima actualizacion**: 2025-12-30
-**Version**: 2.2 (Flujo B obligatorio + Secuencial)
+**Ultima actualizacion**: 2025-12-31
+**Version**: 2.3 (Validación Visual Iterativa Obligatoria)
 **Basado en**: Documentacion oficial Claude Code (nov 2025)
+
+## Cambios v2.3
+- **NUEVO**: Validación Visual Iterativa OBLIGATORIA después de renderizado
+- NUNCA marcar como "completado" sin inspección visual REAL
+- Mostrar preview.png al usuario antes de aprobar
+- Documentar 5 coherencias con checklist explícito
+- Comparar con imagen original cuando aplique
 
 ## Cambios v2.2
 - Flujo B (Graficador Experto) ahora es OBLIGATORIO cuando hay graficos

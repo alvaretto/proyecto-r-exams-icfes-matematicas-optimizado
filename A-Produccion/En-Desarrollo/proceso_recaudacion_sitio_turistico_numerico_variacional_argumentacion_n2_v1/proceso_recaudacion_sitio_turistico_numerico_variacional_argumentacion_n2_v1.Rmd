@@ -1,0 +1,339 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float"]
+icfes:
+  competencia: argumentacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: numerico_variacional
+    tipo: generico
+  contexto: laboral
+  eje_axial: aplicado_contextualizado
+  componente: numerico_variacional
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(ggplot2)
+library(grid)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = "",
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Aleatorizar precios de entrada
+  precios_reserva <- c(18.5, 20, 22.5, 25, 27.5, 30)
+  precios_sin_reserva <- c(12, 14, 15, 17, 18, 20)
+
+  precio_reserva <- sample(precios_reserva, 1)
+  precio_sin_reserva <- sample(precios_sin_reserva, 1)
+
+  # Asegurar que precio con reserva > precio sin reserva
+  while (precio_reserva <= precio_sin_reserva) {
+    precio_reserva <- sample(precios_reserva, 1)
+  }
+
+  # Aleatorizar contexto del sitio turístico
+  sitios <- c("parque natural", "museo interactivo", "zoológico",
+              "acuario", "jardín botánico", "reserva ecológica")
+  sitio <- sample(sitios, 1)
+
+  # Aleatorizar período de tiempo
+  periodos <- c("semana", "mes", "quincena")
+  periodo <- sample(periodos, 1)
+
+  return(list(
+    precio_reserva = precio_reserva,
+    precio_sin_reserva = precio_sin_reserva,
+    sitio = sitio,
+    periodo = periodo
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales
+precio_reserva <- datos$precio_reserva
+precio_sin_reserva <- datos$precio_sin_reserva
+sitio <- datos$sitio
+periodo <- datos$periodo
+
+# Formatear precios para mostrar
+formato_precio <- function(x) {
+  if (x %% 1 == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    return(gsub("\\.", ",", as.character(x)))
+  }
+}
+
+precio_reserva_fmt <- formato_precio(precio_reserva)
+precio_sin_reserva_fmt <- formato_precio(precio_sin_reserva)
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba de diversidad de versiones
+n_combinaciones <- length(c(18.5, 20, 22.5, 25, 27.5, 30)) *
+                   length(c(12, 14, 15, 17, 18, 20)) *
+                   length(c("parque natural", "museo interactivo", "zoológico",
+                           "acuario", "jardín botánico", "reserva ecológica")) *
+                   length(c("semana", "mes", "quincena"))
+# Combinaciones posibles: 6 * 6 * 6 * 3 = 648 > 300
+```
+
+```{r generar_distractores, echo=FALSE, results="hide"}
+# Sistema de distractores para la pregunta
+# La respuesta correcta es la opción C (ganancia total - no se puede calcular)
+
+# Opciones de respuesta (aleatorizar orden)
+opciones_texto <- c(
+  paste0("¿En cuál de los dos casos se recogió más dinero durante la ", periodo, "?"),
+  paste0("¿Cuál fue el total de dinero recogido por ambos casos durante la ", periodo, "?"),
+  paste0("¿Cuál fue la ganancia total del ", sitio, " durante la ", periodo, "?"),
+  paste0("¿En cuál día de la ", periodo, " se recogió más dinero?")
+)
+
+# Identificar cuál es la respuesta correcta (índice 3 - ganancia total)
+# y cuál es el distractor D (índice 4 - día específico)
+# Ambos no se pueden resolver, pero la C es la respuesta oficial del ICFES
+
+# Mezclar opciones manteniendo registro de la correcta
+indices_originales <- 1:4
+set.seed(sample(1:1000, 1))
+indices_mezclados <- sample(indices_originales)
+opciones_mezcladas <- opciones_texto[indices_mezclados]
+
+# Encontrar posición de la respuesta correcta (original índice 3)
+posicion_correcta <- which(indices_mezclados == 3)
+
+# Vector de solución para R-exams
+solucion <- rep(0, 4)
+solucion[posicion_correcta] <- 1
+```
+
+```{r generar_grafico, echo=FALSE, results="hide"}
+# Función para generar el diagrama de flujo usando ggplot2
+generar_diagrama_flujo <- function(precio_reserva, precio_sin_reserva) {
+
+  # Formatear precios con coma decimal (español)
+  if (precio_reserva %% 1 == 0) {
+    precio_reserva_fmt <- as.character(as.integer(precio_reserva))
+  } else {
+    precio_reserva_fmt <- gsub("\\.", ",", as.character(precio_reserva))
+  }
+  if (precio_sin_reserva %% 1 == 0) {
+    precio_sin_reserva_fmt <- as.character(as.integer(precio_sin_reserva))
+  } else {
+    precio_sin_reserva_fmt <- gsub("\\.", ",", as.character(precio_sin_reserva))
+  }
+
+  # Colores
+  color_caja <- "#EDF7FA"
+  color_borde <- "#4A90A4"
+  color_circulo <- "#E67E22"
+  color_flecha <- "#4A90A4"
+
+  # Crear plot base
+  p <- ggplot() +
+    xlim(0, 11) +
+    ylim(0, 3.5) +
+    coord_fixed(ratio = 1) +
+    theme_void() +
+    theme(plot.margin = margin(10, 10, 10, 10))
+
+  # Posiciones Y
+  y_sup <- 2.6
+  y_inf <- 1.1
+  y_medio <- (y_sup + y_inf) / 2 + 0.15
+
+  # Dimensiones
+  ancho_caja1 <- 2.0
+  alto_caja <- 0.7
+  ancho_caja2 <- 2.3
+  ancho_caja3 <- 1.2
+
+  # === CAJAS ===
+  # Caja 1 superior
+  x1 <- 0.8
+  p <- p + annotate("rect", xmin = x1, xmax = x1 + ancho_caja1,
+                    ymin = y_sup - alto_caja/2, ymax = y_sup + alto_caja/2,
+                    fill = color_caja, color = color_borde, linewidth = 0.8)
+  p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_sup,
+                    label = paste0("Sumar la cantidad de\npersonas que entraron con\nreserva durante la ", periodo, "."),
+                    size = 3.2, lineheight = 0.9)
+
+  # Caja 1 inferior
+  p <- p + annotate("rect", xmin = x1, xmax = x1 + ancho_caja1,
+                    ymin = y_inf - alto_caja/2, ymax = y_inf + alto_caja/2,
+                    fill = color_caja, color = color_borde, linewidth = 0.8)
+  p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_inf,
+                    label = paste0("Sumar la cantidad de\npersonas que entraron sin\nreserva durante la ", periodo, "."),
+                    size = 3.2, lineheight = 0.9)
+
+  # Caja 2 superior
+  x2 <- 3.5
+  p <- p + annotate("rect", xmin = x2, xmax = x2 + ancho_caja2,
+                    ymin = y_sup - alto_caja/2, ymax = y_sup + alto_caja/2,
+                    fill = color_caja, color = color_borde, linewidth = 0.8)
+  p <- p + annotate("text", x = x2 + ancho_caja2/2, y = y_sup,
+                    label = paste0("Multiplicar la cantidad\nobtenida en el paso    por\n", precio_reserva_fmt, "."),
+                    size = 3.2, lineheight = 0.9)
+
+  # Caja 2 inferior
+  p <- p + annotate("rect", xmin = x2, xmax = x2 + ancho_caja2,
+                    ymin = y_inf - alto_caja/2, ymax = y_inf + alto_caja/2,
+                    fill = color_caja, color = color_borde, linewidth = 0.8)
+  p <- p + annotate("text", x = x2 + ancho_caja2/2, y = y_inf,
+                    label = paste0("Multiplicar la cantidad\nobtenida en el paso    por\n", precio_sin_reserva_fmt, "."),
+                    size = 3.2, lineheight = 0.9)
+
+  # Caja 3 (resultado)
+  x3 <- 7.8
+  p <- p + annotate("rect", xmin = x3, xmax = x3 + ancho_caja3,
+                    ymin = y_medio - alto_caja/2, ymax = y_medio + alto_caja/2,
+                    fill = color_caja, color = color_borde, linewidth = 0.8)
+  p <- p + annotate("text", x = x3 + ancho_caja3/2, y = y_medio,
+                    label = "Comparar los\nresultados",
+                    size = 3.2, lineheight = 0.9)
+
+  # === CÍRCULOS GRANDES (pasos) ===
+  # Círculo 1 superior
+  p <- p + annotate("point", x = 0.45, y = y_sup, size = 10, color = color_circulo)
+  p <- p + annotate("text", x = 0.45, y = y_sup, label = "1", color = "white", fontface = "bold", size = 4.5)
+
+  # Círculo 1 inferior
+  p <- p + annotate("point", x = 0.45, y = y_inf, size = 10, color = color_circulo)
+  p <- p + annotate("text", x = 0.45, y = y_inf, label = "1", color = "white", fontface = "bold", size = 4.5)
+
+  # Círculo 2 superior
+  p <- p + annotate("point", x = 3.15, y = y_sup, size = 10, color = color_circulo)
+  p <- p + annotate("text", x = 3.15, y = y_sup, label = "2", color = "white", fontface = "bold", size = 4.5)
+
+  # Círculo 2 inferior
+  p <- p + annotate("point", x = 3.15, y = y_inf, size = 10, color = color_circulo)
+  p <- p + annotate("text", x = 3.15, y = y_inf, label = "2", color = "white", fontface = "bold", size = 4.5)
+
+  # Círculo 3
+  p <- p + annotate("point", x = 7.45, y = y_medio - 0.2, size = 10, color = color_circulo)
+  p <- p + annotate("text", x = 7.45, y = y_medio - 0.2, label = "3", color = "white", fontface = "bold", size = 4.5)
+
+  # === CÍRCULOS PEQUEÑOS (dentro de cajas 2) ===
+  p <- p + annotate("point", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, size = 5, color = color_circulo)
+  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, label = "1", color = "white", fontface = "bold", size = 2.5)
+
+  p <- p + annotate("point", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, size = 5, color = color_circulo)
+  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, label = "1", color = "white", fontface = "bold", size = 2.5)
+
+  # === FLECHAS ===
+  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 2.97, y = y_sup, yend = y_sup,
+                    arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
+                    color = color_flecha, linewidth = 0.6)
+
+  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 2.97, y = y_inf, yend = y_inf,
+                    arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
+                    color = color_flecha, linewidth = 0.6)
+
+  # Líneas convergentes
+  x_conv <- 6.8
+  p <- p + annotate("segment", x = x2 + ancho_caja2, xend = x_conv, y = y_sup, yend = y_sup,
+                    color = color_flecha, linewidth = 0.6)
+  p <- p + annotate("segment", x = x_conv, xend = x_conv, y = y_sup, yend = y_medio,
+                    color = color_flecha, linewidth = 0.6)
+
+  p <- p + annotate("segment", x = x2 + ancho_caja2, xend = x_conv, y = y_inf, yend = y_inf,
+                    color = color_flecha, linewidth = 0.6)
+  p <- p + annotate("segment", x = x_conv, xend = x_conv, y = y_inf, yend = y_medio,
+                    color = color_flecha, linewidth = 0.6)
+
+  p <- p + annotate("segment", x = x_conv, xend = x3, y = y_medio, yend = y_medio,
+                    arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
+                    color = color_flecha, linewidth = 0.6)
+
+  return(p)
+}
+
+# Generar el gráfico
+p <- generar_diagrama_flujo(precio_reserva, precio_sin_reserva)
+
+# Guardar como PNG usando patrón de ejemplos funcionales
+# Dimensiones aumentadas para mejor legibilidad en PDF
+ggsave("diagrama_flujo.png", plot = p, width = 14, height = 5, dpi = 300, bg = "white")
+
+# Registrar como suplemento de R-exams
+include_supplement("diagrama_flujo.png")
+```
+
+Question
+========
+
+Un `r sitio` ofrece dos tipos de entrada: con reserva anticipada a $`r precio_reserva_fmt` cada una, y sin reserva a $`r precio_sin_reserva_fmt` cada una. El administrador diseñó el siguiente proceso para analizar la recaudación:
+
+![](diagrama_flujo.png){width=100%}
+
+¿Cuál de las siguientes preguntas **NO** se puede resolver únicamente con la información obtenida mediante este proceso?
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para resolver este problema, debemos analizar qué información proporciona el proceso descrito:
+
+**Información que SÍ se puede obtener del proceso:**
+
+1. **Recaudación por tipo de entrada**: El proceso calcula cuánto dinero se recogió de personas con reserva (cantidad × $`r precio_reserva_fmt`) y sin reserva (cantidad × $`r precio_sin_reserva_fmt`).
+
+2. **Comparación entre casos**: El paso 3 permite comparar los resultados, determinando cuál tipo de entrada generó más ingresos.
+
+3. **Total recaudado**: Sumando ambos resultados se obtiene el total de dinero recogido.
+
+**Información que NO se puede obtener:**
+
+- **Ganancia total**: La ganancia requiere conocer los costos operativos del `r sitio` (personal, mantenimiento, servicios, etc.), información que no está incluida en el proceso.
+
+- **Día específico**: El proceso trabaja con totales de la `r periodo`, no con datos diarios.
+
+**Respuesta correcta**: La pregunta sobre la **ganancia total** no se puede resolver porque el proceso solo calcula recaudación (ingresos), no ganancia (ingresos - costos).
+
+Answerlist
+----------
+* `r if(solucion[1] == 1) "**Verdadero**. Esta pregunta sobre la ganancia NO se puede resolver porque el proceso solo calcula recaudación, no ganancia (que requiere conocer los costos)." else "**Falso**. Esta pregunta SÍ se puede resolver con la información del proceso."`
+* `r if(solucion[2] == 1) "**Verdadero**. Esta pregunta sobre la ganancia NO se puede resolver porque el proceso solo calcula recaudación, no ganancia (que requiere conocer los costos)." else "**Falso**. Esta pregunta SÍ se puede resolver con la información del proceso."`
+* `r if(solucion[3] == 1) "**Verdadero**. Esta pregunta sobre la ganancia NO se puede resolver porque el proceso solo calcula recaudación, no ganancia (que requiere conocer los costos)." else "**Falso**. Esta pregunta SÍ se puede resolver con la información del proceso."`
+* `r if(solucion[4] == 1) "**Verdadero**. Esta pregunta sobre la ganancia NO se puede resolver porque el proceso solo calcula recaudación, no ganancia (que requiere conocer los costos)." else "**Falso**. Esta pregunta SÍ se puede resolver con la información del proceso."`
+
+Meta-information
+================
+exname: proceso_recaudacion_sitio_turistico_numerico_variacional_argumentacion_n2_v1
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: TRUE
+exsection: Numerico-Variacional/Argumentacion
