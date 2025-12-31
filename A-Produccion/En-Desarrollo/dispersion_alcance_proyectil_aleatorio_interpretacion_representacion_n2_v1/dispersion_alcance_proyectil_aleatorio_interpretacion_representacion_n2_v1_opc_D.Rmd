@@ -110,9 +110,9 @@ v0 <- datos$v0
 
 # Variantes disponibles para el test
 test_vars_lineal <- c("lineal", "proporcional", "de tipo lineal", "directamente proporcional")
-test_vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "parabolico")
-test_vars_disperso <- c("mas disperso", "con mayor variabilidad", "mas variable", "con mayor dispersion")
-test_vars_angulo <- c("el angulo", "el angulo de lanzamiento", "la inclinacion inicial", "el angulo inicial")
+test_vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "parabólico")
+test_vars_disperso <- c("más disperso", "con mayor variabilidad", "más variable", "con mayor dispersión")
+test_vars_angulo <- c("el ángulo", "el ángulo de lanzamiento", "la inclinación inicial", "el ángulo inicial")
 test_vars_alcance <- c("el alcance", "el alcance horizontal", "la distancia recorrida", "el alcance del proyectil")
 
 test_that("Prueba de diversidad de versiones (datos + texto)", {
@@ -163,7 +163,7 @@ generar_tikz_dispersion <- function(angulos, alcances) {
     "\\begin{axis}[\n",
     "    width=12cm,\n",
     "    height=8cm,\n",
-    "    xlabel={Angulo (en radianes)},\n",
+    "    xlabel={Ángulo (en radianes)},\n",
     "    ylabel={Alcance horizontal (m)},\n",
     "    xmin=0, xmax=1.7,\n",
     "    ymin=0, ymax=15,\n",
@@ -213,23 +213,23 @@ vars_no_lineal <- c(
   "no lineal",
   "no proporcional",
   "de tipo no lineal",
-  "parabolico"
+  "parabólico"
 )
 
-# Variantes para "mas disperso"
+# Variantes para "más disperso"
 vars_disperso <- c(
-  "mas disperso",
+  "más disperso",
   "con mayor variabilidad",
-  "mas variable",
-  "con mayor dispersion"
+  "más variable",
+  "con mayor dispersión"
 )
 
-# Variantes para "angulo"
+# Variantes para "ángulo"
 vars_angulo <- c(
-  "el angulo",
-  "el angulo de lanzamiento",
-  "la inclinacion inicial",
-  "el angulo inicial"
+  "el ángulo",
+  "el ángulo de lanzamiento",
+  "la inclinación inicial",
+  "el ángulo inicial"
 )
 
 # Variantes para "alcance"
@@ -296,9 +296,9 @@ Solution
 
 Para analizar el comportamiento del alcance respecto al ángulo, debemos observar dos aspectos clave en la gráfica de dispersión:
 
-**1. Tipo de relacion (`r sel_lineal` vs `r sel_no_lineal`):**
+**1. Tipo de relación (`r sel_lineal` vs `r sel_no_lineal`):**
 
-La relacion entre el ángulo y el alcance sigue la ecuación del movimiento de proyectiles:
+La relación entre el ángulo y el alcance sigue la ecuación del movimiento de proyectiles:
 
 $$R = \frac{v_0^2 \sin(2\theta)}{g}$$
 

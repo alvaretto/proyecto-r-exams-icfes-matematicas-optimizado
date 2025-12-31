@@ -106,10 +106,10 @@ k_resorte <- datos$k
 
 # Variantes disponibles para el test - CONTEXTO: Resorte (Ley de Hooke)
 test_vars_lineal <- c("lineal", "proporcional", "de tipo lineal", "directamente proporcional")
-test_vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "cuadratico")
-test_vars_disperso <- c("mas disperso", "con mayor variabilidad", "mas variable", "con mayor dispersion")
+test_vars_no_lineal <- c("no lineal", "no proporcional", "de tipo no lineal", "cuadrático")
+test_vars_disperso <- c("más disperso", "con mayor variabilidad", "más variable", "con mayor dispersión")
 test_vars_fuerza <- c("la fuerza", "la fuerza aplicada", "la carga", "la fuerza ejercida")
-test_vars_elongacion <- c("la elongacion", "el estiramiento", "la deformacion", "la elongacion del resorte")
+test_vars_elongacion <- c("la elongación", "el estiramiento", "la deformación", "la elongación del resorte")
 
 test_that("Prueba de diversidad de versiones (datos + texto)", {
   versiones <- list()
@@ -161,7 +161,7 @@ generar_tikz_dispersion <- function(fuerzas, elongaciones) {
     "    width=12cm,\n",
     "    height=8cm,\n",
     "    xlabel={Fuerza aplicada (N)},\n",
-    "    ylabel={Elongacion (cm)},\n",
+    "    ylabel={Elongación (cm)},\n",
     "    xmin=0, xmax=13,\n",
     "    ymin=0, ymax=16,\n",
     "    xtick={0,2,4,6,8,10,12},\n",
@@ -209,15 +209,15 @@ vars_no_lineal <- c(
   "no lineal",
   "no proporcional",
   "de tipo no lineal",
-  "cuadratico"
+  "cuadrático"
 )
 
-# Variantes para "mas disperso"
+# Variantes para "más disperso"
 vars_disperso <- c(
-  "mas disperso",
+  "más disperso",
   "con mayor variabilidad",
-  "mas variable",
-  "con mayor dispersion"
+  "más variable",
+  "con mayor dispersión"
 )
 
 # Variantes para "fuerza"
@@ -228,12 +228,12 @@ vars_fuerza <- c(
   "la fuerza ejercida"
 )
 
-# Variantes para "elongacion"
+# Variantes para "elongación"
 vars_elongacion <- c(
-  "la elongacion",
+  "la elongación",
   "el estiramiento",
-  "la deformacion",
-  "la elongacion del resorte"
+  "la deformación",
+  "la elongación del resorte"
 )
 
 # Seleccionar variantes aleatorias
