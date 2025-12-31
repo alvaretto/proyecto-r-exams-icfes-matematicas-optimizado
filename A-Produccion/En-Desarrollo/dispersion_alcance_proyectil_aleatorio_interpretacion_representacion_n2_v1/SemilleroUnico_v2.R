@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1.Rmd"
+archivo_examen <- "dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd"
 copias <- 1  # Número de versiones a generar
 numpreg <- 10
 semilla_base <- sample(100:1e8, 1)

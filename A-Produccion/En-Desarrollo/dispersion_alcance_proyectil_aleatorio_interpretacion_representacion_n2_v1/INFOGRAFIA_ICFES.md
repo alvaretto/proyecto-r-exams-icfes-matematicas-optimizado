@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
   word_document: default
 ---
 # Ejercicio ICFES: Dispersion y Alcance de Proyectil
@@ -74,6 +74,7 @@ El estudiante debe:
 ### Definicion ICFES
 
 El componente Aleatorio corresponde a las categorias conceptuales relacionadas con:
+
 - Representacion e interpretacion de datos
 - Medidas de tendencia central y dispersion
 - Nociones de probabilidad
@@ -102,14 +103,17 @@ El ejercicio evalua especificamente:
 Segun la clasificacion ICFES de contenidos:
 
 **Contenidos No Genericos de Estadistica utilizados:**
+
 - Varianza (dispersion de datos)
 - Correlacion (relacion entre variables)
 - Interpretacion de graficas de dispersion
 
 **Formula Fisica Subyacente:**
+
 $$R = \frac{v_0^2 \sin(2\theta)}{g}$$
 
 Esta funcion senoidal produce:
+
 - Relacion **no lineal** entre angulo y alcance
 - Alcance **maximo** en θ ≈ 45° (0.78 rad)
 - **Dispersion proporcional al alcance** (heterocedasticidad)
@@ -275,10 +279,12 @@ TOTAL: 2,064,384 versiones
 Este ejercicio se alinea con los siguientes estandares:
 
 **Pensamiento Aleatorio y Sistemas de Datos:**
+
 - Interpreto y comparo resultados de estudios con informacion estadistica proveniente de medios de comunicacion.
 - Reconozco tendencias que se presentan en conjuntos de variables relacionadas.
 
 **Pensamiento Variacional y Sistemas Algebraicos:**
+
 - Identifico y utilizo diferentes maneras de definir y medir la pendiente de una curva que representa en el plano cartesiano situaciones de variacion.
 
 ### Derechos Basicos de Aprendizaje (DBA)
@@ -295,6 +301,7 @@ Este ejercicio se alinea con los siguientes estandares:
 1. **Antes del ejercicio**: Revisar conceptos de graficas de dispersion y tipos de relaciones (lineal vs no lineal)
 
 2. **Durante el ejercicio**: Guiar al estudiante a observar:
+
    - La forma general de la nube de puntos
    - Donde hay mayor y menor concentracion de puntos
    - La relacion entre la posicion vertical y la dispersion

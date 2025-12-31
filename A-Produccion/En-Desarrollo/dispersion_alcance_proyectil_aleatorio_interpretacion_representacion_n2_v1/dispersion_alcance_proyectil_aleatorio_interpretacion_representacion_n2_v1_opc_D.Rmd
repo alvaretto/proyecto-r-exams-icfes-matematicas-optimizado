@@ -1,10 +1,10 @@
 ---
 output:
-  word_document: default
+  html_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
-  html_document: default
+  word_document: default
 icfes:
   competencia: interpretacion_representacion
   nivel_dificultad: 2
@@ -201,6 +201,7 @@ tikz_final <- generar_tikz_dispersion(angulos, alcances)
 
 # Variantes para "lineal"
 vars_lineal <- c(
+
   "lineal",
   "proporcional",
   "de tipo lineal",
@@ -325,7 +326,7 @@ Answerlist
 
 Meta-information
 ================
-exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_interactivo_opc_D
+exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1
 extype: schoice
 exsolution: `r paste(solucion, collapse="")`
 exshuffle: TRUE
