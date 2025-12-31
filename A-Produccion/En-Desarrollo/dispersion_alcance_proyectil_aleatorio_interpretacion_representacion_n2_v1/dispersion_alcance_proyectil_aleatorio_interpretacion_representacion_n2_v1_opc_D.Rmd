@@ -196,7 +196,7 @@ tikz_final <- generar_tikz_dispersion(angulos, alcances)
 ```
 
 ```{r generar_opciones, echo=FALSE, results="hide"}
-# Sistema de opciones de respuesta con VARIACION ALEATORIA
+# Sistema de opciones de respuesta con VARIACIÓN ALEATORIA
 # Respuesta correcta: no lineal + disperso con alcance
 
 # Variantes para "lineal"

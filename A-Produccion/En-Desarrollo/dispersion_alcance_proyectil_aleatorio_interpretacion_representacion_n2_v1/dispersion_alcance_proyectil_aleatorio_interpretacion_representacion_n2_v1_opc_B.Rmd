@@ -71,7 +71,7 @@ generar_datos <- function() {
   # Calcular elongación teórica: x = F/k (Ley de Hooke - LINEAL)
   elongacion_teorica <- fuerzas / k
 
-  # Agregar ruido proporcional a la ELONGACION (mayor dispersión en elongaciones mayores)
+  # Agregar ruido proporcional a la ELONGACIÓN (mayor dispersión en elongaciones mayores)
   ruido_base <- sample(seq(0.15, 0.25, 0.02), 1)
   ruido_factor <- ruido_base * sqrt(elongacion_teorica)  # Dispersión crece con elongación
   ruido <- rnorm(length(fuerzas), 0, ruido_factor)
@@ -193,7 +193,7 @@ tikz_final <- generar_tikz_dispersion(fuerzas, elongaciones)
 ```
 
 ```{r generar_opciones, echo=FALSE, results="hide"}
-# Sistema de opciones de respuesta con VARIACION ALEATORIA
+# Sistema de opciones de respuesta con VARIACIÓN ALEATORIA
 # CONTEXTO: Ley de Hooke - Respuesta correcta: lineal + disperso con elongación (opcion B)
 
 # Variantes para "lineal"

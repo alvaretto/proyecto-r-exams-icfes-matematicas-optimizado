@@ -75,7 +75,7 @@ generar_datos <- function() {
   # Calcular alcance teórico: R = v0^2 * sin(2*theta) / g
   alcance_teorico <- (v0^2 * sin(2 * angulos)) / g
 
-  # Agregar ruido proporcional al ANGULO (mayor dispersión en ángulos mayores)
+  # Agregar ruido proporcional al ÁNGULO (mayor dispersión en ángulos mayores)
   ruido_base <- sample(seq(0.35, 0.45, 0.02), 1)
   ruido_factor <- ruido_base * angulos * 2.5  # Dispersión crece con el ángulo
   ruido <- rnorm(length(angulos), 0, ruido_factor)
@@ -196,7 +196,7 @@ tikz_final <- generar_tikz_dispersion(angulos, alcances)
 ```
 
 ```{r generar_opciones, echo=FALSE, results="hide"}
-# Sistema de opciones de respuesta con VARIACION ALEATORIA
+# Sistema de opciones de respuesta con VARIACIÓN ALEATORIA
 # Respuesta correcta: no lineal + disperso con alcance
 
 # Variantes para "lineal"

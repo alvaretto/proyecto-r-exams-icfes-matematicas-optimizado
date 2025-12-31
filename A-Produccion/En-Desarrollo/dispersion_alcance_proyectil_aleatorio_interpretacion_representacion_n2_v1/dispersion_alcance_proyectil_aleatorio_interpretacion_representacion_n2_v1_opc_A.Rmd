@@ -193,7 +193,7 @@ tikz_final <- generar_tikz_dispersion(fuerzas, elongaciones)
 ```
 
 ```{r generar_opciones, echo=FALSE, results="hide"}
-# Sistema de opciones de respuesta con VARIACION ALEATORIA
+# Sistema de opciones de respuesta con VARIACIÓN ALEATORIA
 # CONTEXTO: Ley de Hooke - Respuesta correcta: lineal + disperso con fuerza (opcion A)
 
 # Variantes para "lineal"
