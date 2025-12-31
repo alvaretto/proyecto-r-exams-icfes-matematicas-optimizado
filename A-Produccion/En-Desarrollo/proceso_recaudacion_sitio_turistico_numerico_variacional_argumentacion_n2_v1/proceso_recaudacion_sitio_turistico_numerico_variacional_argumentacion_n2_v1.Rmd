@@ -1,10 +1,10 @@
 ---
 output:
-  html_document: default
-  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
+  word_document: default
+  html_document: default
 icfes:
   competencia: argumentacion
   nivel_dificultad: 2
@@ -213,10 +213,10 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
   color_circulo <- "#E67E22"
   color_flecha <- "#4A90A4"
 
-  # Crear plot base
+  # Crear plot base (dimensiones aumentadas)
   p <- ggplot() +
-    xlim(0, 11) +
-    ylim(0, 3.5) +
+    xlim(0, 12) +
+    ylim(0, 4) +
     coord_fixed(ratio = 1) +
     theme_void() +
     theme(plot.margin = margin(10, 10, 10, 10))
@@ -226,11 +226,11 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
   y_inf <- 1.1
   y_medio <- (y_sup + y_inf) / 2 + 0.15
 
-  # Dimensiones
-  ancho_caja1 <- 2.0
-  alto_caja <- 0.7
-  ancho_caja2 <- 2.3
-  ancho_caja3 <- 1.2
+  # Dimensiones (aumentadas para mejor legibilidad)
+  ancho_caja1 <- 2.5
+  alto_caja <- 0.9
+  ancho_caja2 <- 2.8
+  ancho_caja3 <- 1.5
 
   # === CAJAS ===
   # Caja 1 superior
@@ -240,7 +240,7 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_sup,
                     label = "Sumar la cantidad de\npersonas que entraron con\nreserva durante la semana.",
-                    size = 3.2, lineheight = 0.9)
+                    size = 4, lineheight = 0.9)
 
   # Caja 1 inferior
   p <- p + annotate("rect", xmin = x1, xmax = x1 + ancho_caja1,
@@ -248,16 +248,16 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_inf,
                     label = "Sumar la cantidad de\npersonas que entraron sin\nreserva durante la semana.",
-                    size = 3.2, lineheight = 0.9)
+                    size = 4, lineheight = 0.9)
 
   # Caja 2 superior
-  x2 <- 3.5
+  x2 <- 4.0
   p <- p + annotate("rect", xmin = x2, xmax = x2 + ancho_caja2,
                     ymin = y_sup - alto_caja/2, ymax = y_sup + alto_caja/2,
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x2 + ancho_caja2/2, y = y_sup,
                     label = paste0("Multiplicar la cantidad\nobtenida en el paso    por\n", precio_reserva_fmt, "."),
-                    size = 3.2, lineheight = 0.9)
+                    size = 4, lineheight = 0.9)
 
   # Caja 2 inferior
   p <- p + annotate("rect", xmin = x2, xmax = x2 + ancho_caja2,
@@ -265,56 +265,56 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x2 + ancho_caja2/2, y = y_inf,
                     label = paste0("Multiplicar la cantidad\nobtenida en el paso    por\n", precio_sin_reserva_fmt, "."),
-                    size = 3.2, lineheight = 0.9)
+                    size = 4, lineheight = 0.9)
 
   # Caja 3 (resultado)
-  x3 <- 7.8
+  x3 <- 8.5
   p <- p + annotate("rect", xmin = x3, xmax = x3 + ancho_caja3,
                     ymin = y_medio - alto_caja/2, ymax = y_medio + alto_caja/2,
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x3 + ancho_caja3/2, y = y_medio,
                     label = "Comparar los\nresultados",
-                    size = 3.2, lineheight = 0.9)
+                    size = 4, lineheight = 0.9)
 
   # === CÍRCULOS GRANDES (pasos) ===
   # Círculo 1 superior
-  p <- p + annotate("point", x = 0.45, y = y_sup, size = 10, color = color_circulo)
-  p <- p + annotate("text", x = 0.45, y = y_sup, label = "1", color = "white", fontface = "bold", size = 4.5)
+  p <- p + annotate("point", x = 0.45, y = y_sup, size = 12, color = color_circulo)
+  p <- p + annotate("text", x = 0.45, y = y_sup, label = "1", color = "white", fontface = "bold", size = 5.5)
 
   # Círculo 1 inferior
-  p <- p + annotate("point", x = 0.45, y = y_inf, size = 10, color = color_circulo)
-  p <- p + annotate("text", x = 0.45, y = y_inf, label = "1", color = "white", fontface = "bold", size = 4.5)
+  p <- p + annotate("point", x = 0.45, y = y_inf, size = 12, color = color_circulo)
+  p <- p + annotate("text", x = 0.45, y = y_inf, label = "1", color = "white", fontface = "bold", size = 5.5)
 
   # Círculo 2 superior
-  p <- p + annotate("point", x = 3.15, y = y_sup, size = 10, color = color_circulo)
-  p <- p + annotate("text", x = 3.15, y = y_sup, label = "2", color = "white", fontface = "bold", size = 4.5)
+  p <- p + annotate("point", x = 3.65, y = y_sup, size = 12, color = color_circulo)
+  p <- p + annotate("text", x = 3.65, y = y_sup, label = "2", color = "white", fontface = "bold", size = 5.5)
 
   # Círculo 2 inferior
-  p <- p + annotate("point", x = 3.15, y = y_inf, size = 10, color = color_circulo)
-  p <- p + annotate("text", x = 3.15, y = y_inf, label = "2", color = "white", fontface = "bold", size = 4.5)
+  p <- p + annotate("point", x = 3.65, y = y_inf, size = 12, color = color_circulo)
+  p <- p + annotate("text", x = 3.65, y = y_inf, label = "2", color = "white", fontface = "bold", size = 5.5)
 
   # Círculo 3
-  p <- p + annotate("point", x = 7.45, y = y_medio - 0.2, size = 10, color = color_circulo)
-  p <- p + annotate("text", x = 7.45, y = y_medio - 0.2, label = "3", color = "white", fontface = "bold", size = 4.5)
+  p <- p + annotate("point", x = 8.15, y = y_medio - 0.2, size = 12, color = color_circulo)
+  p <- p + annotate("text", x = 8.15, y = y_medio - 0.2, label = "3", color = "white", fontface = "bold", size = 5.5)
 
   # === CÍRCULOS PEQUEÑOS (dentro de cajas 2) ===
   p <- p + annotate("point", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, size = 5, color = color_circulo)
-  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, label = "1", color = "white", fontface = "bold", size = 2.5)
+  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, label = "1", color = "white", fontface = "bold", size = 3.5)
 
   p <- p + annotate("point", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, size = 5, color = color_circulo)
-  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, label = "1", color = "white", fontface = "bold", size = 2.5)
+  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, label = "1", color = "white", fontface = "bold", size = 3.5)
 
   # === FLECHAS ===
-  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 2.97, y = y_sup, yend = y_sup,
+  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 3.47, y = y_sup, yend = y_sup,
                     arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
                     color = color_flecha, linewidth = 0.6)
 
-  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 2.97, y = y_inf, yend = y_inf,
+  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 3.47, y = y_inf, yend = y_inf,
                     arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
                     color = color_flecha, linewidth = 0.6)
 
   # Líneas convergentes
-  x_conv <- 6.8
+  x_conv <- 7.6
   p <- p + annotate("segment", x = x2 + ancho_caja2, xend = x_conv, y = y_sup, yend = y_sup,
                     color = color_flecha, linewidth = 0.6)
   p <- p + annotate("segment", x = x_conv, xend = x_conv, y = y_sup, yend = y_medio,
@@ -337,7 +337,7 @@ p <- generar_diagrama_flujo(precio_con_reserva, precio_base)
 
 # Guardar como PNG usando patrón de ejemplos funcionales
 # Dimensiones aumentadas para mejor legibilidad en PDF
-ggsave("diagrama_flujo.png", plot = p, width = 14, height = 5, dpi = 300, bg = "white")
+ggsave("diagrama_flujo.png", plot = p, width = 16, height = 6, dpi = 300, bg = "white")
 
 # Registrar como suplemento de R-exams
 include_supplement("diagrama_flujo.png")
