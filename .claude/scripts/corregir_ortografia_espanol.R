@@ -190,6 +190,32 @@ palabras_excluir_en_codigo <- c(
   "grafica", "grafico", "calculo", "codigo", "metodo"
 )
 
+# Campos de metadatos R-exams que DEBEN permanecer ASCII
+# Estos campos usan identificadores que no deben tener tildes
+campos_rexams_ascii <- c(
+
+  "exname",        # Nombre del ejercicio (identificador)
+  "exsection",    # Sección/categoría (ruta con /)
+  "extype",       # Tipo: schoice, mchoice, cloze, num, string
+  "exsolution",   # Solución (código binario o valor)
+  "exshuffle",    # TRUE/FALSE
+  "extol",        # Tolerancia numérica
+  "exextra"       # Metadatos extra (cualquier exextra[...])
+)
+
+# Función para verificar si una línea es metadato R-exams que debe ser ASCII
+es_metadato_rexams_ascii <- function(linea) {
+  # Verificar si la línea comienza con algún campo R-exams
+
+  for (campo in campos_rexams_ascii) {
+    # Patrón para campo exacto o con corchetes (exextra[Type])
+    if (grepl(paste0("^", campo, "(\\[.*\\])?\\s*:"), linea, ignore.case = TRUE)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
 # Función para verificar si una línea es código R (no texto/comentario)
 es_codigo_r <- function(linea) {
   # Detectar asignaciones de variables (var <- valor, var = valor)
@@ -336,17 +362,22 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
 
         # FILTROS: No corregir en ciertos contextos
 
-        # 1. No corregir nombres de variables R ni código inline
+        # 1. No corregir metadatos R-exams (DEBEN ser ASCII)
+        if (es_metadato_rexams_ascii(linea)) {
+          next
+        }
+
+        # 2. No corregir nombres de variables R ni código inline
         if (es_nombre_variable(linea, palabra_mal)) {
           next
         }
 
-        # 2. No corregir palabras excluidas en contexto de código R
+        # 3. No corregir palabras excluidas en contexto de código R
         if (es_palabra_excluida_en_codigo(linea, palabra_mal)) {
           next
         }
 
-        # 3. No corregir en metadatos YAML (excepto en valores de texto)
+        # 5. No corregir en metadatos YAML genéricos (excepto en valores de texto)
         if (grepl("^\\s*\\w+:", linea) && !grepl(':\\s*["\']', linea)) {
           # Es una clave YAML sin comillas, puede ser identificador
           if (grepl(paste0(":\\s*", palabra_mal, "\\s*$"), linea)) {
@@ -354,7 +385,7 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
           }
         }
 
-        # 4. Sí corregir: comentarios, strings, y secciones Markdown
+        # 6. Sí corregir: comentarios, strings, y secciones Markdown
         debe_corregir <- FALSE
 
         if (es_comentario(linea)) {

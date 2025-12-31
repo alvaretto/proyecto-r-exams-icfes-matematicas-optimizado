@@ -63,6 +63,13 @@ Generar ejercicios matematicos de seleccion multiple (SCHOICE) y compuestos (CLO
 - Validación automática: `Rscript .claude/scripts/corregir_ortografia_espanol.R archivo.Rmd`
 - Hook pre-commit: Detecta errores antes de cada commit
 
+**Excepciones (ASCII obligatorio)**:
+- Metadatos R-exams: `exname`, `exsection`, `extype`, `exsolution`, `exextra[...]`
+- Variables R: nombres de variables deben ser ASCII
+- El script de ortografía excluye automáticamente estos casos
+
+**PROHIBIDO**: `git commit --no-verify` para evadir el hook de ortografía
+
 ## 📚 Documentacion y Reglas
 
 ### Workflows y Guias
@@ -159,8 +166,14 @@ Ver especificaciones completas en @.claude/rules/codigo-rmd.md
 ---
 
 **Ultima actualizacion**: 2025-12-31
-**Version**: 2.3 (Validación Visual Iterativa Obligatoria)
+**Version**: 2.4 (Ortografía Robusta + Metadatos ASCII)
 **Basado en**: Documentacion oficial Claude Code (nov 2025)
+
+## Cambios v2.4
+- **Script ortografía mejorado**: Excluye automáticamente metadatos R-exams
+- Campos ASCII obligatorios: `exname`, `exsection`, `extype`, `exsolution`, `exextra[...]`
+- **PROHIBIDO**: `git commit --no-verify` para evadir validaciones
+- Documentación actualizada con política de excepciones
 
 ## Cambios v2.3
 - **NUEVO**: Validación Visual Iterativa OBLIGATORIA después de renderizado
