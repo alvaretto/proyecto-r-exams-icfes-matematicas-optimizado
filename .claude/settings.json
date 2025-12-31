@@ -2,26 +2,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "echo '⚠️ REGLA DE ORO: Consulta /A-Produccion/En-Produccion/ antes de escribir código .Rmd'"
-          },
-          {
-            "type": "command",
-            "command": "echo '📝 ORTOGRAFÍA: Usa SIEMPRE tildes correctas (más, ángulo, función, gráfica, dispersión)'"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '✅ Comando ejecutado. Verifica errores de compilación.'"
+            "command": "echo '🔤 TILDES: más ángulo función gráfica dispersión solución ecuación número cálculo según información relación variación descripción'"
           }
         ]
       }
