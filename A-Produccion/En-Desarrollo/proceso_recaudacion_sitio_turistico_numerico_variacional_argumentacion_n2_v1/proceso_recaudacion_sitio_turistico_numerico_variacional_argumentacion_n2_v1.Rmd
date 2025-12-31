@@ -43,32 +43,89 @@ set.seed(sample(1:100000, 1))
 ```{r data_generation, echo=FALSE, results="hide"}
 # Función principal de generación de datos
 generar_datos <- function() {
-  # Aleatorizar precios de entrada
-  precios_reserva <- c(18.5, 20, 22.5, 25, 27.5, 30)
-  precios_sin_reserva <- c(12, 14, 15, 17, 18, 20)
+  # Aleatorizar contexto del sitio turístico con ubicación
+  # articulo: "el" o "la" según género del sustantivo
+  sitios_info <- list(
+    list(sitio = "torre de Pisa", ubicacion = "Toscana", pais = "Italia", articulo = "la"),
+    list(sitio = "Coliseo Romano", ubicacion = "Roma", pais = "Italia", articulo = "el"),
+    list(sitio = "museo del Louvre", ubicacion = "París", pais = "Francia", articulo = "el"),
+    list(sitio = "parque Güell", ubicacion = "Barcelona", pais = "España", articulo = "el"),
+    list(sitio = "Big Ben", ubicacion = "Londres", pais = "Reino Unido", articulo = "el"),
+    list(sitio = "torre Eiffel", ubicacion = "París", pais = "Francia", articulo = "la")
+  )
 
-  precio_reserva <- sample(precios_reserva, 1)
-  precio_sin_reserva <- sample(precios_sin_reserva, 1)
+  sitio_seleccionado <- sample(sitios_info, 1)[[1]]
 
-  # Asegurar que precio con reserva > precio sin reserva
-  while (precio_reserva <= precio_sin_reserva) {
-    precio_reserva <- sample(precios_reserva, 1)
-  }
+  # Aleatorizar precios (precio base + extra por reserva)
+  precios_base <- c(15, 16, 17, 18, 19, 20)
+  extras_reserva <- c(4.5, 5, 5.5, 6, 6.5, 7)
 
-  # Aleatorizar contexto del sitio turístico
-  sitios <- c("parque natural", "museo interactivo", "zoológico",
-              "acuario", "jardín botánico", "reserva ecológica")
-  sitio <- sample(sitios, 1)
+  precio_base <- sample(precios_base, 1)
+  extra_reserva <- sample(extras_reserva, 1)
+  precio_con_reserva <- precio_base + extra_reserva
 
-  # Aleatorizar período de tiempo
-  periodos <- c("semana", "mes", "quincena")
-  periodo <- sample(periodos, 1)
+  # Generar datos de la tabla (7 días x 2 tipos de entrada)
+  # Valores realistas para un sitio turístico
+  rangos_sin_reserva <- list(
+    lunes = c(250, 400),
+    martes = c(250, 400),
+    miercoles = c(400, 600),
+    jueves = c(500, 800),
+    viernes = c(250, 500),
+    sabado = c(250, 400),
+    domingo = c(500, 800)
+  )
+
+  rangos_con_reserva <- list(
+    lunes = c(500, 800),
+    martes = c(600, 900),
+    miercoles = c(150, 300),
+    jueves = c(400, 700),
+    viernes = c(400, 600),
+    sabado = c(400, 600),
+    domingo = c(500, 700)
+  )
+
+  # Generar valores aleatorios redondeados a centenas
+  redondear_centena <- function(x) round(x / 100) * 100
+
+  sin_reserva <- sapply(rangos_sin_reserva, function(r) {
+    redondear_centena(runif(1, r[1], r[2]))
+  })
+
+  con_reserva <- sapply(rangos_con_reserva, function(r) {
+    redondear_centena(runif(1, r[1], r[2]))
+  })
+
+  # Crear data frame para la tabla
+  dias <- c("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
+
+  tabla_datos <- data.frame(
+    Tipo = c("Sin reserva", "Con reserva"),
+    Lunes = c(sin_reserva[1], con_reserva[1]),
+    Martes = c(sin_reserva[2], con_reserva[2]),
+    Miercoles = c(sin_reserva[3], con_reserva[3]),
+    Jueves = c(sin_reserva[4], con_reserva[4]),
+    Viernes = c(sin_reserva[5], con_reserva[5]),
+    Sabado = c(sin_reserva[6], con_reserva[6]),
+    Domingo = c(sin_reserva[7], con_reserva[7])
+  )
+
+  # Renombrar columnas con tildes para mostrar
+  names(tabla_datos) <- c("Tipo de entrada", "Lunes", "Martes", "Miércoles",
+                          "Jueves", "Viernes", "Sábado", "Domingo")
 
   return(list(
-    precio_reserva = precio_reserva,
-    precio_sin_reserva = precio_sin_reserva,
-    sitio = sitio,
-    periodo = periodo
+    sitio = sitio_seleccionado$sitio,
+    ubicacion = sitio_seleccionado$ubicacion,
+    pais = sitio_seleccionado$pais,
+    articulo = sitio_seleccionado$articulo,
+    precio_base = precio_base,
+    extra_reserva = extra_reserva,
+    precio_con_reserva = precio_con_reserva,
+    tabla_datos = tabla_datos,
+    sin_reserva = sin_reserva,
+    con_reserva = con_reserva
   ))
 }
 
@@ -76,12 +133,16 @@ generar_datos <- function() {
 datos <- generar_datos()
 
 # Extraer variables individuales
-precio_reserva <- datos$precio_reserva
-precio_sin_reserva <- datos$precio_sin_reserva
 sitio <- datos$sitio
-periodo <- datos$periodo
+ubicacion <- datos$ubicacion
+pais <- datos$pais
+articulo <- datos$articulo
+precio_base <- datos$precio_base
+extra_reserva <- datos$extra_reserva
+precio_con_reserva <- datos$precio_con_reserva
+tabla_datos <- datos$tabla_datos
 
-# Formatear precios para mostrar
+# Formatear precios para mostrar (con coma decimal español)
 formato_precio <- function(x) {
   if (x %% 1 == 0) {
     return(as.character(as.integer(x)))
@@ -90,18 +151,15 @@ formato_precio <- function(x) {
   }
 }
 
-precio_reserva_fmt <- formato_precio(precio_reserva)
-precio_sin_reserva_fmt <- formato_precio(precio_sin_reserva)
+precio_base_fmt <- formato_precio(precio_base)
+extra_reserva_fmt <- formato_precio(extra_reserva)
+precio_con_reserva_fmt <- formato_precio(precio_con_reserva)
 ```
 
 ```{r version_diversity_test, echo=FALSE, results="hide"}
 # Prueba de diversidad de versiones
-n_combinaciones <- length(c(18.5, 20, 22.5, 25, 27.5, 30)) *
-                   length(c(12, 14, 15, 17, 18, 20)) *
-                   length(c("parque natural", "museo interactivo", "zoológico",
-                           "acuario", "jardín botánico", "reserva ecológica")) *
-                   length(c("semana", "mes", "quincena"))
-# Combinaciones posibles: 6 * 6 * 6 * 3 = 648 > 300
+# 6 sitios * 6 precios_base * 6 extras * variaciones tabla = miles de combinaciones
+n_combinaciones <- 6 * 6 * 6 * 100  # > 21600 combinaciones posibles
 ```
 
 ```{r generar_distractores, echo=FALSE, results="hide"}
@@ -110,15 +168,14 @@ n_combinaciones <- length(c(18.5, 20, 22.5, 25, 27.5, 30)) *
 
 # Opciones de respuesta (aleatorizar orden)
 opciones_texto <- c(
-  paste0("¿En cuál de los dos casos se recogió más dinero durante la ", periodo, "?"),
-  paste0("¿Cuál fue el total de dinero recogido por ambos casos durante la ", periodo, "?"),
-  paste0("¿Cuál fue la ganancia total del ", sitio, " durante la ", periodo, "?"),
-  paste0("¿En cuál día de la ", periodo, " se recogió más dinero?")
+  "¿En cuál de los dos casos se recogió más dinero durante la semana?",
+  "¿Cuál fue el total de dinero recogido por ambos casos durante la semana?",
+  paste0("¿Cuál fue la ganancia total ", ifelse(articulo == "el", "del", "de la"), " ", sitio, " durante la semana?"),
+  "¿En cuál día de la semana se recogió más dinero?"
 )
 
 # Identificar cuál es la respuesta correcta (índice 3 - ganancia total)
-# y cuál es el distractor D (índice 4 - día específico)
-# Ambos no se pueden resolver, pero la C es la respuesta oficial del ICFES
+# Ambos no se pueden resolver con el proceso, pero la C es la respuesta oficial del ICFES
 
 # Mezclar opciones manteniendo registro de la correcta
 indices_originales <- 1:4
@@ -136,18 +193,18 @@ solucion[posicion_correcta] <- 1
 
 ```{r generar_grafico, echo=FALSE, results="hide"}
 # Función para generar el diagrama de flujo usando ggplot2
-generar_diagrama_flujo <- function(precio_reserva, precio_sin_reserva) {
+generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
 
   # Formatear precios con coma decimal (español)
-  if (precio_reserva %% 1 == 0) {
-    precio_reserva_fmt <- as.character(as.integer(precio_reserva))
+  if (precio_con_reserva %% 1 == 0) {
+    precio_reserva_fmt <- as.character(as.integer(precio_con_reserva))
   } else {
-    precio_reserva_fmt <- gsub("\\.", ",", as.character(precio_reserva))
+    precio_reserva_fmt <- gsub("\\.", ",", as.character(precio_con_reserva))
   }
-  if (precio_sin_reserva %% 1 == 0) {
-    precio_sin_reserva_fmt <- as.character(as.integer(precio_sin_reserva))
+  if (precio_base %% 1 == 0) {
+    precio_sin_reserva_fmt <- as.character(as.integer(precio_base))
   } else {
-    precio_sin_reserva_fmt <- gsub("\\.", ",", as.character(precio_sin_reserva))
+    precio_sin_reserva_fmt <- gsub("\\.", ",", as.character(precio_base))
   }
 
   # Colores
@@ -182,7 +239,7 @@ generar_diagrama_flujo <- function(precio_reserva, precio_sin_reserva) {
                     ymin = y_sup - alto_caja/2, ymax = y_sup + alto_caja/2,
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_sup,
-                    label = paste0("Sumar la cantidad de\npersonas que entraron con\nreserva durante la ", periodo, "."),
+                    label = "Sumar la cantidad de\npersonas que entraron con\nreserva durante la semana.",
                     size = 3.2, lineheight = 0.9)
 
   # Caja 1 inferior
@@ -190,7 +247,7 @@ generar_diagrama_flujo <- function(precio_reserva, precio_sin_reserva) {
                     ymin = y_inf - alto_caja/2, ymax = y_inf + alto_caja/2,
                     fill = color_caja, color = color_borde, linewidth = 0.8)
   p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_inf,
-                    label = paste0("Sumar la cantidad de\npersonas que entraron sin\nreserva durante la ", periodo, "."),
+                    label = "Sumar la cantidad de\npersonas que entraron sin\nreserva durante la semana.",
                     size = 3.2, lineheight = 0.9)
 
   # Caja 2 superior
@@ -276,7 +333,7 @@ generar_diagrama_flujo <- function(precio_reserva, precio_sin_reserva) {
 }
 
 # Generar el gráfico
-p <- generar_diagrama_flujo(precio_reserva, precio_sin_reserva)
+p <- generar_diagrama_flujo(precio_con_reserva, precio_base)
 
 # Guardar como PNG usando patrón de ejemplos funcionales
 # Dimensiones aumentadas para mejor legibilidad en PDF
@@ -289,7 +346,16 @@ include_supplement("diagrama_flujo.png")
 Question
 ========
 
-Un `r sitio` ofrece dos tipos de entrada: con reserva anticipada a $`r precio_reserva_fmt` cada una, y sin reserva a $`r precio_sin_reserva_fmt` cada una. El administrador diseñó el siguiente proceso para analizar la recaudación:
+`r ifelse(articulo == "el", "El", "La")` `r sitio` en `r ubicacion` es uno de los sitios turísticos más representativos de `r pais`. En la tabla se relaciona la cantidad de personas que ingresó cada día durante una semana, según el tipo de entrada que pagó.
+
+Se pagan `r precio_base_fmt` euros de entrada y `r extra_reserva_fmt` más si se realiza reserva.
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+kable(tabla_datos, format = "markdown", align = c("l", rep("c", 7)),
+      caption = "Cantidad de personas que ingresaron")
+```
+
+El administrador diseñó el siguiente proceso para analizar la recaudación:
 
 ![](diagrama_flujo.png){width=100%}
 
@@ -309,7 +375,7 @@ Para resolver este problema, debemos analizar qué información proporciona el p
 
 **Información que SÍ se puede obtener del proceso:**
 
-1. **Recaudación por tipo de entrada**: El proceso calcula cuánto dinero se recogió de personas con reserva (cantidad × $`r precio_reserva_fmt`) y sin reserva (cantidad × $`r precio_sin_reserva_fmt`).
+1. **Recaudación por tipo de entrada**: El proceso calcula cuánto dinero se recogió de personas con reserva (cantidad × `r precio_con_reserva_fmt` euros) y sin reserva (cantidad × `r precio_base_fmt` euros).
 
 2. **Comparación entre casos**: El paso 3 permite comparar los resultados, determinando cuál tipo de entrada generó más ingresos.
 
@@ -317,9 +383,9 @@ Para resolver este problema, debemos analizar qué información proporciona el p
 
 **Información que NO se puede obtener:**
 
-- **Ganancia total**: La ganancia requiere conocer los costos operativos del `r sitio` (personal, mantenimiento, servicios, etc.), información que no está incluida en el proceso.
+- **Ganancia total**: La ganancia requiere conocer los costos operativos `r ifelse(articulo == "el", "del", "de la")` `r sitio` (personal, mantenimiento, servicios, etc.), información que no está incluida en el proceso.
 
-- **Día específico**: El proceso trabaja con totales de la `r periodo`, no con datos diarios.
+- **Día específico**: El proceso trabaja con totales de la semana, no con datos diarios.
 
 **Respuesta correcta**: La pregunta sobre la **ganancia total** no se puede resolver porque el proceso solo calcula recaudación (ingresos), no ganancia (ingresos - costos).
 
