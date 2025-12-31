@@ -1,10 +1,10 @@
 ---
 output:
+  word_document: default
+  html_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
-  word_document: default
-  html_document: default
 icfes:
   competencia: argumentacion
   nivel_dificultad: 2
@@ -44,14 +44,31 @@ set.seed(sample(1:100000, 1))
 # Función principal de generación de datos
 generar_datos <- function() {
   # Aleatorizar contexto del sitio turístico con ubicación
+
   # articulo: "el" o "la" según género del sustantivo
+  # moneda: moneda local del país
+  # simbolo: símbolo de la moneda (para formateo)
   sitios_info <- list(
-    list(sitio = "torre de Pisa", ubicacion = "Toscana", pais = "Italia", articulo = "la"),
-    list(sitio = "Coliseo Romano", ubicacion = "Roma", pais = "Italia", articulo = "el"),
-    list(sitio = "museo del Louvre", ubicacion = "París", pais = "Francia", articulo = "el"),
-    list(sitio = "parque Güell", ubicacion = "Barcelona", pais = "España", articulo = "el"),
-    list(sitio = "Big Ben", ubicacion = "Londres", pais = "Reino Unido", articulo = "el"),
-    list(sitio = "torre Eiffel", ubicacion = "París", pais = "Francia", articulo = "la")
+    # === COLOMBIA ===
+    list(sitio = "Valle de Cocora", ubicacion = "Salento, Quindío", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Parque del Café", ubicacion = "Montenegro, Quindío", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "pueblo de Filandia", ubicacion = "Quindío", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Santuario de Las Lajas", ubicacion = "Ipiales, Nariño", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Ciudad Amurallada", ubicacion = "Cartagena, Bolívar", pais = "Colombia", articulo = "la", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Parque Tayrona", ubicacion = "Santa Marta, Magdalena", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Caño Cristales", ubicacion = "La Macarena, Meta", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Museo del Oro", ubicacion = "Bogotá", pais = "Colombia", articulo = "el", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Catedral de Sal", ubicacion = "Zipaquirá, Cundinamarca", pais = "Colombia", articulo = "la", moneda = "pesos", simbolo = "$"),
+    list(sitio = "Piedra del Peñol", ubicacion = "Guatapé, Antioquia", pais = "Colombia", articulo = "la", moneda = "pesos", simbolo = "$"),
+    # === OTROS PAÍSES LATINOAMERICANOS ===
+    list(sitio = "Machu Picchu", ubicacion = "Cusco", pais = "Perú", articulo = "el", moneda = "soles", simbolo = "S/"),
+    list(sitio = "ruinas de Chichén Itzá", ubicacion = "Yucatán", pais = "México", articulo = "las", moneda = "pesos mexicanos", simbolo = "$"),
+    list(sitio = "Cristo Redentor", ubicacion = "Río de Janeiro", pais = "Brasil", articulo = "el", moneda = "reales", simbolo = "R$"),
+    list(sitio = "Cataratas del Iguazú", ubicacion = "Misiones", pais = "Argentina", articulo = "las", moneda = "pesos argentinos", simbolo = "$"),
+    list(sitio = "Salar de Uyuni", ubicacion = "Potosí", pais = "Bolivia", articulo = "el", moneda = "bolivianos", simbolo = "Bs"),
+    list(sitio = "Torres del Paine", ubicacion = "Magallanes", pais = "Chile", articulo = "las", moneda = "pesos chilenos", simbolo = "$"),
+    list(sitio = "Galápagos", ubicacion = "Islas Galápagos", pais = "Ecuador", articulo = "las", moneda = "dólares", simbolo = "$"),
+    list(sitio = "Tikal", ubicacion = "Petén", pais = "Guatemala", articulo = "el", moneda = "quetzales", simbolo = "Q")
   )
 
   sitio_seleccionado <- sample(sitios_info, 1)[[1]]
@@ -120,6 +137,8 @@ generar_datos <- function() {
     ubicacion = sitio_seleccionado$ubicacion,
     pais = sitio_seleccionado$pais,
     articulo = sitio_seleccionado$articulo,
+    moneda = sitio_seleccionado$moneda,
+    simbolo = sitio_seleccionado$simbolo,
     precio_base = precio_base,
     extra_reserva = extra_reserva,
     precio_con_reserva = precio_con_reserva,
@@ -137,6 +156,8 @@ sitio <- datos$sitio
 ubicacion <- datos$ubicacion
 pais <- datos$pais
 articulo <- datos$articulo
+moneda <- datos$moneda
+simbolo <- datos$simbolo
 precio_base <- datos$precio_base
 extra_reserva <- datos$extra_reserva
 precio_con_reserva <- datos$precio_con_reserva
@@ -158,8 +179,8 @@ precio_con_reserva_fmt <- formato_precio(precio_con_reserva)
 
 ```{r version_diversity_test, echo=FALSE, results="hide"}
 # Prueba de diversidad de versiones
-# 6 sitios * 6 precios_base * 6 extras * variaciones tabla = miles de combinaciones
-n_combinaciones <- 6 * 6 * 6 * 100  # > 21600 combinaciones posibles
+# 18 sitios (10 Colombia + 8 Latinoamérica) * 6 precios_base * 6 extras * variaciones tabla
+n_combinaciones <- 18 * 6 * 6 * 100  # > 64800 combinaciones posibles
 ```
 
 ```{r generar_distractores, echo=FALSE, results="hide"}
@@ -193,18 +214,18 @@ solucion[posicion_correcta] <- 1
 
 ```{r generar_grafico, echo=FALSE, results="hide"}
 # Función para generar el diagrama de flujo usando ggplot2
-generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
+generar_diagrama_flujo <- function(precio_con_reserva, precio_base, simbolo_moneda = "$") {
 
-  # Formatear precios con coma decimal (español)
+  # Formatear precios con coma decimal (español) y símbolo de moneda
   if (precio_con_reserva %% 1 == 0) {
-    precio_reserva_fmt <- as.character(as.integer(precio_con_reserva))
+    precio_reserva_fmt <- paste0(simbolo_moneda, as.character(as.integer(precio_con_reserva)))
   } else {
-    precio_reserva_fmt <- gsub("\\.", ",", as.character(precio_con_reserva))
+    precio_reserva_fmt <- paste0(simbolo_moneda, gsub("\\.", ",", as.character(precio_con_reserva)))
   }
   if (precio_base %% 1 == 0) {
-    precio_sin_reserva_fmt <- as.character(as.integer(precio_base))
+    precio_sin_reserva_fmt <- paste0(simbolo_moneda, as.character(as.integer(precio_base)))
   } else {
-    precio_sin_reserva_fmt <- gsub("\\.", ",", as.character(precio_base))
+    precio_sin_reserva_fmt <- paste0(simbolo_moneda, gsub("\\.", ",", as.character(precio_base)))
   }
 
   # Colores
@@ -213,108 +234,103 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
   color_circulo <- "#E67E22"
   color_flecha <- "#4A90A4"
 
-  # Crear plot base (dimensiones aumentadas)
+  # Crear plot base CON coord_fixed para proporciones correctas
   p <- ggplot() +
-    xlim(0, 12) +
-    ylim(0, 4) +
+    xlim(0, 22) +
+    ylim(0, 6) +
     coord_fixed(ratio = 1) +
     theme_void() +
     theme(plot.margin = margin(10, 10, 10, 10))
 
   # Posiciones Y
-  y_sup <- 2.6
-  y_inf <- 1.1
-  y_medio <- (y_sup + y_inf) / 2 + 0.15
+  y_sup <- 4.2
+  y_inf <- 1.8
+  y_medio <- (y_sup + y_inf) / 2
 
-  # Dimensiones (aumentadas para mejor legibilidad)
-  ancho_caja1 <- 2.5
-  alto_caja <- 0.9
-  ancho_caja2 <- 2.8
-  ancho_caja3 <- 1.5
+  # Dimensiones de cajas
+  ancho_caja1 <- 4.2
+  alto_caja <- 1.5
+  ancho_caja2 <- 4.8
+  ancho_caja3 <- 2.5
 
   # === CAJAS ===
-  # Caja 1 superior
-  x1 <- 0.8
+  # Caja 1 superior (empieza después del círculo 1)
+  x1 <- 1.8
   p <- p + annotate("rect", xmin = x1, xmax = x1 + ancho_caja1,
                     ymin = y_sup - alto_caja/2, ymax = y_sup + alto_caja/2,
-                    fill = color_caja, color = color_borde, linewidth = 0.8)
+                    fill = color_caja, color = color_borde, linewidth = 1.0)
   p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_sup,
                     label = "Sumar la cantidad de\npersonas que entraron con\nreserva durante la semana.",
-                    size = 4, lineheight = 0.9)
+                    size = 4.5, lineheight = 0.85)
 
   # Caja 1 inferior
   p <- p + annotate("rect", xmin = x1, xmax = x1 + ancho_caja1,
                     ymin = y_inf - alto_caja/2, ymax = y_inf + alto_caja/2,
-                    fill = color_caja, color = color_borde, linewidth = 0.8)
+                    fill = color_caja, color = color_borde, linewidth = 1.0)
   p <- p + annotate("text", x = x1 + ancho_caja1/2, y = y_inf,
                     label = "Sumar la cantidad de\npersonas que entraron sin\nreserva durante la semana.",
-                    size = 4, lineheight = 0.9)
+                    size = 4.5, lineheight = 0.85)
 
-  # Caja 2 superior
-  x2 <- 4.0
+  # Caja 2 superior (después del círculo 2)
+  x2 <- 8.0
   p <- p + annotate("rect", xmin = x2, xmax = x2 + ancho_caja2,
                     ymin = y_sup - alto_caja/2, ymax = y_sup + alto_caja/2,
-                    fill = color_caja, color = color_borde, linewidth = 0.8)
+                    fill = color_caja, color = color_borde, linewidth = 1.0)
   p <- p + annotate("text", x = x2 + ancho_caja2/2, y = y_sup,
-                    label = paste0("Multiplicar la cantidad\nobtenida en el paso    por\n", precio_reserva_fmt, "."),
-                    size = 4, lineheight = 0.9)
+                    label = paste0("Multiplicar la cantidad\nobtenida en el paso 1 por\n", precio_reserva_fmt, "."),
+                    size = 4.5, lineheight = 0.85)
 
   # Caja 2 inferior
   p <- p + annotate("rect", xmin = x2, xmax = x2 + ancho_caja2,
                     ymin = y_inf - alto_caja/2, ymax = y_inf + alto_caja/2,
-                    fill = color_caja, color = color_borde, linewidth = 0.8)
+                    fill = color_caja, color = color_borde, linewidth = 1.0)
   p <- p + annotate("text", x = x2 + ancho_caja2/2, y = y_inf,
-                    label = paste0("Multiplicar la cantidad\nobtenida en el paso    por\n", precio_sin_reserva_fmt, "."),
-                    size = 4, lineheight = 0.9)
+                    label = paste0("Multiplicar la cantidad\nobtenida en el paso 1 por\n", precio_sin_reserva_fmt, "."),
+                    size = 4.5, lineheight = 0.85)
 
   # Caja 3 (resultado)
-  x3 <- 8.5
+  x3 <- 16.5
   p <- p + annotate("rect", xmin = x3, xmax = x3 + ancho_caja3,
                     ymin = y_medio - alto_caja/2, ymax = y_medio + alto_caja/2,
-                    fill = color_caja, color = color_borde, linewidth = 0.8)
+                    fill = color_caja, color = color_borde, linewidth = 1.0)
   p <- p + annotate("text", x = x3 + ancho_caja3/2, y = y_medio,
                     label = "Comparar los\nresultados",
-                    size = 4, lineheight = 0.9)
+                    size = 4.5, lineheight = 0.85)
 
-  # === CÍRCULOS GRANDES (pasos) ===
-  # Círculo 1 superior
-  p <- p + annotate("point", x = 0.45, y = y_sup, size = 12, color = color_circulo)
-  p <- p + annotate("text", x = 0.45, y = y_sup, label = "1", color = "white", fontface = "bold", size = 5.5)
+  # === CÍRCULOS GRANDES (pasos) - posiciones calculadas ===
+  # Círculo 1: antes de caja 1 (x1=1.8)
+  circ1_x <- 0.8
+  p <- p + annotate("point", x = circ1_x, y = y_sup, size = 14, color = color_circulo)
+  p <- p + annotate("text", x = circ1_x, y = y_sup, label = "1", color = "white", fontface = "bold", size = 6)
 
-  # Círculo 1 inferior
-  p <- p + annotate("point", x = 0.45, y = y_inf, size = 12, color = color_circulo)
-  p <- p + annotate("text", x = 0.45, y = y_inf, label = "1", color = "white", fontface = "bold", size = 5.5)
+  p <- p + annotate("point", x = circ1_x, y = y_inf, size = 14, color = color_circulo)
+  p <- p + annotate("text", x = circ1_x, y = y_inf, label = "1", color = "white", fontface = "bold", size = 6)
 
-  # Círculo 2 superior
-  p <- p + annotate("point", x = 3.65, y = y_sup, size = 12, color = color_circulo)
-  p <- p + annotate("text", x = 3.65, y = y_sup, label = "2", color = "white", fontface = "bold", size = 5.5)
+  # Círculo 2: entre caja 1 (termina x1+4.2=6.0) y caja 2 (empieza x2=8.0)
+  circ2_x <- 7.0
+  p <- p + annotate("point", x = circ2_x, y = y_sup, size = 14, color = color_circulo)
+  p <- p + annotate("text", x = circ2_x, y = y_sup, label = "2", color = "white", fontface = "bold", size = 6)
 
-  # Círculo 2 inferior
-  p <- p + annotate("point", x = 3.65, y = y_inf, size = 12, color = color_circulo)
-  p <- p + annotate("text", x = 3.65, y = y_inf, label = "2", color = "white", fontface = "bold", size = 5.5)
+  p <- p + annotate("point", x = circ2_x, y = y_inf, size = 14, color = color_circulo)
+  p <- p + annotate("text", x = circ2_x, y = y_inf, label = "2", color = "white", fontface = "bold", size = 6)
 
-  # Círculo 3
-  p <- p + annotate("point", x = 8.15, y = y_medio - 0.2, size = 12, color = color_circulo)
-  p <- p + annotate("text", x = 8.15, y = y_medio - 0.2, label = "3", color = "white", fontface = "bold", size = 5.5)
-
-  # === CÍRCULOS PEQUEÑOS (dentro de cajas 2) ===
-  p <- p + annotate("point", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, size = 5, color = color_circulo)
-  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_sup - 0.02, label = "1", color = "white", fontface = "bold", size = 3.5)
-
-  p <- p + annotate("point", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, size = 5, color = color_circulo)
-  p <- p + annotate("text", x = x2 + ancho_caja2/2 + 0.38, y = y_inf - 0.02, label = "1", color = "white", fontface = "bold", size = 3.5)
+  # Círculo 3: entre caja 2 (termina x2+4.8=12.8) y caja 3 (empieza x3=16.5)
+  circ3_x <- 15.4
+  p <- p + annotate("point", x = circ3_x, y = y_medio, size = 14, color = color_circulo)
+  p <- p + annotate("text", x = circ3_x, y = y_medio, label = "3", color = "white", fontface = "bold", size = 6)
 
   # === FLECHAS ===
-  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 3.47, y = y_sup, yend = y_sup,
+  # Caja 1 → Círculo 2
+  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = circ2_x - 0.4, y = y_sup, yend = y_sup,
                     arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
-                    color = color_flecha, linewidth = 0.6)
+                    color = color_flecha, linewidth = 0.7)
 
-  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = 3.47, y = y_inf, yend = y_inf,
+  p <- p + annotate("segment", x = x1 + ancho_caja1, xend = circ2_x - 0.4, y = y_inf, yend = y_inf,
                     arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
-                    color = color_flecha, linewidth = 0.6)
+                    color = color_flecha, linewidth = 0.7)
 
-  # Líneas convergentes
-  x_conv <- 7.6
+  # Líneas convergentes desde caja 2 hacia caja 3
+  x_conv <- 14.5
   p <- p + annotate("segment", x = x2 + ancho_caja2, xend = x_conv, y = y_sup, yend = y_sup,
                     color = color_flecha, linewidth = 0.6)
   p <- p + annotate("segment", x = x_conv, xend = x_conv, y = y_sup, yend = y_medio,
@@ -325,19 +341,19 @@ generar_diagrama_flujo <- function(precio_con_reserva, precio_base) {
   p <- p + annotate("segment", x = x_conv, xend = x_conv, y = y_inf, yend = y_medio,
                     color = color_flecha, linewidth = 0.6)
 
-  p <- p + annotate("segment", x = x_conv, xend = x3, y = y_medio, yend = y_medio,
-                    arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
+  # Flecha hacia círculo 3
+  p <- p + annotate("segment", x = x_conv, xend = circ3_x - 0.4, y = y_medio, yend = y_medio,
+                    arrow = arrow(length = unit(0.12, "cm"), type = "closed"),
                     color = color_flecha, linewidth = 0.6)
 
   return(p)
 }
 
 # Generar el gráfico
-p <- generar_diagrama_flujo(precio_con_reserva, precio_base)
+p <- generar_diagrama_flujo(precio_con_reserva, precio_base, simbolo)
 
-# Guardar como PNG usando patrón de ejemplos funcionales
-# Dimensiones aumentadas para mejor legibilidad en PDF
-ggsave("diagrama_flujo.png", plot = p, width = 16, height = 6, dpi = 300, bg = "white")
+# Guardar como PNG - dimensiones proporcionales al canvas (22x6)
+ggsave("diagrama_flujo.png", plot = p, width = 14, height = 4, dpi = 300, bg = "white")
 
 # Registrar como suplemento de R-exams
 include_supplement("diagrama_flujo.png")
@@ -346,9 +362,9 @@ include_supplement("diagrama_flujo.png")
 Question
 ========
 
-`r ifelse(articulo == "el", "El", "La")` `r sitio` en `r ubicacion` es uno de los sitios turísticos más representativos de `r pais`. En la tabla se relaciona la cantidad de personas que ingresó cada día durante una semana, según el tipo de entrada que pagó.
+`r ifelse(articulo == "el", "El", ifelse(articulo == "la", "La", "Las"))` `r sitio` en `r ubicacion` es uno de los sitios turísticos más representativos de `r pais`. En la tabla se relaciona la cantidad de personas que ingresó cada día durante una semana, según el tipo de entrada que pagó.
 
-Se pagan `r precio_base_fmt` euros de entrada y `r extra_reserva_fmt` más si se realiza reserva.
+Se pagan `r precio_base_fmt` `r moneda` de entrada y `r extra_reserva_fmt` más si se realiza reserva.
 
 ```{r mostrar_tabla, echo=FALSE, results='asis'}
 kable(tabla_datos, format = "markdown", align = c("l", rep("c", 7)),
@@ -375,7 +391,7 @@ Para resolver este problema, debemos analizar qué información proporciona el p
 
 **Información que SÍ se puede obtener del proceso:**
 
-1. **Recaudación por tipo de entrada**: El proceso calcula cuánto dinero se recogió de personas con reserva (cantidad × `r precio_con_reserva_fmt` euros) y sin reserva (cantidad × `r precio_base_fmt` euros).
+1. **Recaudación por tipo de entrada**: El proceso calcula cuánto dinero se recogió de personas con reserva (cantidad × `r precio_con_reserva_fmt` `r moneda`) y sin reserva (cantidad × `r precio_base_fmt` `r moneda`).
 
 2. **Comparación entre casos**: El paso 3 permite comparar los resultados, determinando cuál tipo de entrada generó más ingresos.
 
