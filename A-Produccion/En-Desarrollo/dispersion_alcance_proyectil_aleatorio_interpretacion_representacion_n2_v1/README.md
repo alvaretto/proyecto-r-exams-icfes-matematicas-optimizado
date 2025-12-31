@@ -1,127 +1,65 @@
-# Ejercicio: Dispersión y Alcance de Proyectil
+# Ejercicio: Dispersión y Tipo de Relación en Gráficas
 
-## Identificación
+## Descripción General
 
-| Campo | Valor |
-|-------|-------|
-| **Nombre** | `dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1` |
-| **Tipo** | SCHOICE (selección única) |
-| **Nivel** | 2 (Intermedio) |
-| **Competencia** | Interpretación y Representación |
-| **Componente** | Aleatorio |
-| **Contexto** | Científico |
-| **Eje Axial** | Aplicado |
+Este conjunto de 4 archivos .Rmd genera ejercicios ICFES que evalúan la capacidad del estudiante para:
 
-## Descripción
+1. Identificar el **tipo de relación** entre dos variables (lineal vs no lineal)
+2. Reconocer el **patrón de dispersión** en una gráfica de puntos
 
-Ejercicio de estadística que presenta una gráfica de dispersión del alcance horizontal de un proyectil en función del ángulo de lanzamiento. El estudiante debe:
+## Archivos y Variantes
 
-1. Identificar el tipo de relación (lineal vs no lineal)
-2. Analizar el patrón de dispersión de los datos
-3. Relacionar la variabilidad con la variable correcta (ángulo vs alcance)
+| Archivo | Respuesta | Contexto Físico | Tipo Relación | Dispersión ↑ con |
+|---------|-----------|-----------------|---------------|------------------|
+| `*_opc_A.Rmd` | **A** | Ley de Hooke (resorte) | Lineal | Fuerza |
+| `*_opc_B.Rmd` | **B** | Ley de Hooke (resorte) | Lineal | Elongación |
+| `*_opc_C.Rmd` | **C** | Movimiento proyectil | No lineal | Ángulo |
+| `*_opc_D.Rmd` | **D** | Movimiento proyectil | No lineal | Alcance |
 
-## Contenido Matemático
-
-### Ecuación del Proyectil
-
-$$R = \frac{v_0^2 \cdot \sin(2\theta)}{g}$$
-
-Donde:
-
-- $R$ = Alcance horizontal (m)
-- $v_0$ = Velocidad inicial (m/s)
-- $\theta$ = Ángulo de lanzamiento (radianes)
-- $g$ = Aceleración gravitacional ($9.8 \, \text{m/s}^2$)
-
-### Respuesta Correcta
-El comportamiento es **no lineal** (parabólico/senoidal) y la dispersión aumenta con el **alcance**, no con el ángulo.
-
-## Variabilidad del Ejercicio
-
-### Variables Aleatorias (Datos)
-
-| Variable | Rango | Valores |
-|----------|-------|---------|
-| `v0` | 10.5 - 12.0 m/s | 16 |
-| `n_lanzamientos` | 90 - 110 | 21 |
-| `ruido_base` | 0.35 - 0.45 | 6 |
-| `angulos` | Distribución por zonas | Continuo |
-
-### Variables Aleatorias (Texto)
-
-| Variable | Variantes |
-|----------|-----------|
-| `vars_lineal` | lineal, proporcional, de tipo lineal, directamente proporcional |
-| `vars_no_lineal` | no lineal, no proporcional, de tipo no lineal, parabólico |
-| `vars_disperso` | más disperso, con mayor variabilidad, más variable, con mayor dispersión |
-| `vars_angulo` | el ángulo, el ángulo de lanzamiento, la inclinación inicial, el ángulo inicial |
-| `vars_alcance` | el alcance, el alcance horizontal, la distancia recorrida, el alcance del proyectil |
-
-### Combinaciones Totales
+## Estructura de Opciones (Común a todos)
 
 ```
-Datos:  16 * 21 * 6 = 2,016 combinaciones
-Texto:  4 * 4 * 4 * 4 * 4 = 1,024 combinaciones
------------------------------------------
-TOTAL:  2,016 * 1,024 = 2,064,384 versiones únicas
+A. [lineal]     + [disperso con variable independiente]
+B. [lineal]     + [disperso con variable dependiente]
+C. [no lineal]  + [disperso con variable independiente]
+D. [no lineal]  + [disperso con variable dependiente]
 ```
 
-## Archivos
+## Modelos Matemáticos
 
-| Archivo | Descripción |
-|---------|-------------|
-| `*_opc_D.Rmd` | Ejercicio principal con variación textual |
-| `*_opc_C.Rmd` | Versión anterior (sin variación textual) |
-| `README.md` | Este archivo |
-| `WALKTHROUGH.md` | Guía detallada del código |
-| `salida/` | Outputs de renderizado |
-| `outputs/` | Archivos temporales |
+### Archivos A y B: Ley de Hooke (Lineal)
 
-## Uso
+$$x = \frac{F}{k}$$
 
-### Renderizar en R-exams
+| Variable | Descripción | Unidad |
+|----------|-------------|--------|
+| x | Elongación del resorte | cm |
+| F | Fuerza aplicada | N |
+| k | Constante del resorte | N/cm |
 
-```r
-library(exams)
+**Gráfica**: Recta ascendente.
 
-# HTML (1 versión)
-exams2html("dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd", n = 1)
+### Archivos C y D: Movimiento de Proyectil (No Lineal)
 
-# PDF (5 versiones)
-exams2pdf("dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd", n = 5)
+$$R = \frac{v_0^2 \sin(2\theta)}{g}$$
 
-# DOCX
-exams2pandoc("dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd", n = 1, type = "docx")
+| Variable | Descripción | Unidad |
+|----------|-------------|--------|
+| R | Alcance horizontal | m |
+| v₀ | Velocidad inicial | m/s |
+| θ | Ángulo de lanzamiento | rad |
+| g | Gravedad | 9.8 m/s² |
 
-# NOPS (examen impreso)
-exams2nops("dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd", n = 30)
+**Gráfica**: Parábola con máximo en θ ≈ 0.78 rad (45°).
 
-# Moodle (banco de preguntas)
-exams2moodle("dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_D.Rmd", n = 100)
-```
+## Modelos de Dispersión (Heterocedasticidad)
 
-### Validación de Diversidad
-
-El ejercicio incluye un test automático que verifica >= 300 versiones únicas en 500 iteraciones.
-
-## Formatos Validados
-
-| Formato | Estado |
-|---------|--------|
-| HTML | OK |
-| PDF | OK |
-| DOCX | OK |
-| NOPS | OK |
-
-## Metadatos R-exams
-
-```yaml
-exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1
-extype: schoice
-exsolution: 0001
-exshuffle: TRUE
-exsection: Estadística/Gráficas de Dispersión
-```
+| Archivo | Fórmula del Ruido | Patrón Visual |
+|---------|-------------------|---------------|
+| opc_A | `σ ∝ F` | Mayor dispersión a la derecha |
+| opc_B | `σ ∝ √x` | Mayor dispersión arriba |
+| opc_C | `σ ∝ θ` | Mayor dispersión a la derecha |
+| opc_D | `σ ∝ √R` | Mayor dispersión en el centro |
 
 ## Clasificación ICFES
 
@@ -129,16 +67,77 @@ exsection: Estadística/Gráficas de Dispersión
 |-----------|-------|
 | Competencia | Interpretación y Representación |
 | Componente | Aleatorio |
-| Nivel | 2 |
+| Nivel de Dificultad | 2 (Intermedio) |
 | Contexto | Científico |
 | Contenido | Estadística (No Genérico) |
 | Eje Axial | Aplicado |
 
-## Autor
+## Variabilidad
 
-Generado con Claude Code (Graficador Experto ICFES)
+### Por Datos
 
-## Versión
+| Archivo | Variables | Combinaciones |
+|---------|-----------|---------------|
+| A, B | k (9) × n (21) × ruido (5) | ~945 |
+| C, D | v₀ (16) × n (21) × ruido (6) | ~2,016 |
 
-- **v1**: Versión inicial con opciones estáticas
-- **v1_opc_D**: Versión con variación textual en opciones (actual)
+### Por Texto
+
+Todas las opciones tienen variantes sinónimas:
+
+- "lineal" → proporcional, de tipo lineal, directamente proporcional
+- "no lineal" → no proporcional, parabólico, cuadrático
+- "más disperso" → con mayor variabilidad, más variable
+
+**Total por archivo**: >1,000,000 versiones únicas.
+
+## Uso
+
+### Renderizar
+
+```r
+library(exams)
+
+# Elegir archivo según respuesta correcta deseada
+exams2html("*_opc_D.Rmd", n = 1)  # Respuesta D
+exams2pdf("*_opc_A.Rmd", n = 5)   # Respuesta A
+```
+
+### Generar examen con mezcla de variantes
+
+```r
+# Usar diferentes variantes para mayor diversidad
+archivos <- c("*_opc_A.Rmd", "*_opc_B.Rmd", "*_opc_C.Rmd", "*_opc_D.Rmd")
+exams2pdf(sample(archivos, 1), n = 30)
+```
+
+## Formatos Validados
+
+| Formato | opc_A | opc_B | opc_C | opc_D |
+|---------|-------|-------|-------|-------|
+| HTML | ✓ | ✓ | ✓ | ✓ |
+| PDF | ✓ | ✓ | ✓ | ✓ |
+| DOCX | ✓ | ✓ | ✓ | ✓ |
+| NOPS | ✓ | ✓ | ✓ | ✓ |
+
+## Archivos Relacionados
+
+| Archivo | Descripción |
+|---------|-------------|
+| `WALKTHROUGH.md` | Guía paso a paso del código |
+| `INFOGRAFIA_ICFES.md` | Alineación con marco ICFES |
+| `salida/` | Outputs de renderizado |
+
+## Selección del Archivo Apropiado
+
+| Objetivo | Archivo Recomendado |
+|----------|---------------------|
+| Ejercicio estándar ICFES | `*_opc_D.Rmd` |
+| Diversificar contexto físico | `*_opc_A.Rmd` o `*_opc_B.Rmd` |
+| Evaluar relación no lineal + dispersión con X | `*_opc_C.Rmd` |
+| Banco de preguntas variado | Rotar entre los 4 |
+
+---
+
+**Última actualización**: 2025-12-30
+**Versión**: 2.0 (Consolidado para 4 variantes)

@@ -271,7 +271,7 @@ n_combinaciones_texto <- length(vars_lineal) * length(vars_no_lineal) *
 Question
 ========
 
-Un experimento consiste en medir el alcance horizontal de un proyectil en funcion del angulo con el que se lanza (respecto a la horizontal). En la grafica se registran los resultados de `r n_lanzamientos` lanzamientos realizados con la misma velocidad inicial.
+Un experimento consiste en medir el alcance horizontal de un proyectil en función del ángulo con el que se lanza (respecto a la horizontal). En la gráfica se registran los resultados de `r n_lanzamientos` lanzamientos realizados con la misma velocidad inicial.
 
 ```{r grafica_dispersion, echo=FALSE, results='asis'}
 include_tikz(tikz_final,
@@ -282,7 +282,7 @@ include_tikz(tikz_final,
              width = "12cm")
 ```
 
-El comportamiento del alcance respecto al angulo es
+El comportamiento del alcance respecto al ángulo es
 
 Answerlist
 ----------
@@ -294,35 +294,35 @@ Answerlist
 Solution
 ========
 
-Para analizar el comportamiento del alcance respecto al angulo, debemos observar dos aspectos clave en la grafica de dispersion:
+Para analizar el comportamiento del alcance respecto al ángulo, debemos observar dos aspectos clave en la gráfica de dispersión:
 
 **1. Tipo de relacion (`r sel_lineal` vs `r sel_no_lineal`):**
 
-La relacion entre el angulo y el alcance sigue la ecuacion del movimiento de proyectiles:
+La relacion entre el ángulo y el alcance sigue la ecuación del movimiento de proyectiles:
 
 $$R = \frac{v_0^2 \sin(2\theta)}{g}$$
 
-Esta es una funcion senoidal, por lo tanto **`r sel_no_lineal`**. En la grafica se observa claramente una forma parabolica con un maximo aproximadamente en $\theta \approx 0.78$ radianes ($\approx 45°$).
+Esta es una función senoidal, por lo tanto **`r sel_no_lineal`**. En la gráfica se observa claramente una forma parabólica con un máximo aproximadamente en $\theta \approx 0.78$ radianes ($\approx 45°$).
 
-**2. Patron de dispersion:**
+**2. Patrón de dispersion:**
 
-Observando la grafica:
+Observando la gráfica:
 
-- En los extremos (angulos cercanos a 0 y 1.5 radianes): los puntos estan mas concentrados
+- En los extremos (ángulos cercanos a 0 y 1.5 radianes): los puntos están más concentrados
 - En la zona central (alcances mayores, alrededor de 10-13 m): los puntos muestran mayor variabilidad
 
-Esto indica que **la dispersion es proporcional a `r sel_alcance`**, no a `r sel_angulo`. Fisicamente, esto tiene sentido porque los errores experimentales se amplifican en trayectorias mas largas.
+Esto indica que **la dispersión es proporcional a `r sel_alcance`**, no a `r sel_angulo`. Físicamente, esto tiene sentido porque los errores experimentales se amplifican en trayectorias más largas.
 
-**Conclusion:**
+**Conclusión:**
 
-El comportamiento es **`r sel_no_lineal`** (forma parabolica) y **`r sel_disperso` cuanto mayor sea `r sel_alcance`** (mayor variabilidad en valores altos de alcance).
+El comportamiento es **`r sel_no_lineal`** (forma parabólica) y **`r sel_disperso` cuanto mayor sea `r sel_alcance`** (mayor variabilidad en valores altos de alcance).
 
 Answerlist
 ----------
-* **Falso**. La relacion no es `r sel_lineal` (es `r sel_no_lineal`) y la dispersion no depende de `r sel_angulo` sino de `r sel_alcance`.
-* **Falso**. Aunque la dispersion si aumenta con `r sel_alcance`, la relacion NO es `r sel_lineal`.
-* **Falso**. Si bien la relacion es `r sel_no_lineal`, la dispersion NO aumenta con `r sel_angulo` sino con `r sel_alcance`.
-* **Verdadero**. La relacion es `r sel_no_lineal` (forma parabolica) y la dispersion aumenta proporcionalmente a `r sel_alcance`.
+* **Falso**. La relación no es `r sel_lineal` (es `r sel_no_lineal`) y la dispersión no depende de `r sel_angulo` sino de `r sel_alcance`.
+* **Falso**. Aunque la dispersión si aumenta con `r sel_alcance`, la relación NO es `r sel_lineal`.
+* **Falso**. Si bien la relación es `r sel_no_lineal`, la dispersión NO aumenta con `r sel_angulo` sino con `r sel_alcance`.
+* **Verdadero**. La relación es `r sel_no_lineal` (forma parabolica) y la dispersión aumenta proporcionalmente a `r sel_alcance`.
 
 Meta-information
 ================

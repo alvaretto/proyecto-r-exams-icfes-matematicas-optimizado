@@ -1,334 +1,331 @@
----
-output:
-  html_document: default
-  pdf_document: default
-  word_document: default
----
-# Ejercicio ICFES: Dispersion y Alcance de Proyectil
+# Ejercicio ICFES: Dispersión y Tipo de Relación en Gráficas
 
-## Ficha Tecnica del Ejercicio
+## Ficha Técnica del Ejercicio
 
 | Atributo | Valor |
 |----------|-------|
-| **Nombre** | dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1 |
-| **Tipo** | SCHOICE (Seleccion Unica) |
+| **Conjunto** | 4 variantes (opc_A, opc_B, opc_C, opc_D) |
+| **Tipo** | SCHOICE (Selección Única) |
 | **Nivel de Dificultad** | 2 (Puntaje 36-50) |
-| **Competencia** | Interpretacion y Representacion |
+| **Competencia** | Interpretación y Representación |
 | **Componente** | Aleatorio |
-| **Contexto** | Matematico/Cientifico |
-| **Contenido** | Estadistica - No Generico |
+| **Contexto** | Matemático/Científico |
+| **Contenido** | Estadística - No Genérico |
 | **Eje Axial** | Aplicado |
 
 ---
 
-## Nivel de Desempeno Evaluado
+## Las 4 Variantes del Ejercicio
 
-### Nivel 2 (Puntaje 36 a 50)
+| Archivo | Contexto | Relación | Dispersión ↑ con | Respuesta |
+|---------|----------|----------|------------------|-----------|
+| `*_opc_A.Rmd` | Resorte (Hooke) | Lineal | Fuerza (X) | **A** |
+| `*_opc_B.Rmd` | Resorte (Hooke) | Lineal | Elongación (Y) | **B** |
+| `*_opc_C.Rmd` | Proyectil | No lineal | Ángulo (X) | **C** |
+| `*_opc_D.Rmd` | Proyectil | No lineal | Alcance (Y) | **D** |
 
-Este ejercicio evalua las siguientes habilidades del Nivel 2:
+### Matriz de Respuestas
 
-> - **Compara datos de dos variables presentadas en una misma grafica** sin necesidad de hacer operaciones matematicas.
-> - **Identifica valores o puntos representativos** en diferentes tipos de registro a partir del significado que tienen en la situacion.
-> - **Toma decisiones sobre la veracidad o falsedad de una afirmacion** cuando esta se puede explicar verbalizando la lectura directa que se hace de la informacion.
-
-### Alineacion con el Ejercicio
-
-| Habilidad Nivel 2 | Como se Evalua en el Ejercicio |
-|-------------------|-------------------------------|
-| Comparar datos de dos variables | El estudiante debe analizar la relacion entre angulo (eje X) y alcance (eje Y) en la grafica de dispersion |
-| Identificar valores representativos | Debe identificar donde ocurre el alcance maximo (~0.78 rad) y los patrones de dispersion |
-| Decidir veracidad/falsedad | Debe seleccionar la opcion que describe correctamente el comportamiento observado |
+```
+              │ Dispersión ↑ con    │ Dispersión ↑ con
+              │ Variable X          │ Variable Y
+──────────────┼─────────────────────┼─────────────────────
+   LINEAL     │   A (correcta)      │   B (correcta)
+──────────────┼─────────────────────┼─────────────────────
+ NO LINEAL    │   C (correcta)      │   D (correcta)
+```
 
 ---
 
-## Competencia: Interpretacion y Representacion
+## Nivel de Desempeño Evaluado
 
-### Definicion ICFES
+### Nivel 2 (Puntaje 36 a 50)
 
-> Esta competencia se relaciona con la habilidad para **comprender y transformar la informacion presentada en formatos distintos** como tablas, graficas, conjuntos de datos, diagramas, esquemas, etcetera; asi como la capacidad de utilizar estas representaciones para **extraer informacion relevante** que permita, entre otras cosas, establecer relaciones matematicas e **identificar tendencias y patrones**.
+Este ejercicio evalúa las siguientes habilidades del Nivel 2:
 
-### Aplicacion en el Ejercicio
+> - **Compara datos de dos variables presentadas en una misma gráfica** sin necesidad de hacer operaciones matemáticas.
+> - **Identifica valores o puntos representativos** en diferentes tipos de registro a partir del significado que tienen en la situación.
+> - **Toma decisiones sobre la veracidad o falsedad de una afirmación** cuando esta se puede explicar verbalizando la lectura directa que se hace de la información.
+
+### Alineación con el Ejercicio
+
+| Habilidad Nivel 2 | Cómo se Evalúa |
+|-------------------|----------------|
+| Comparar datos de dos variables | Analizar relación entre ejes X y Y en la gráfica de dispersión |
+| Identificar valores representativos | Identificar patrones de dispersión y puntos de máximo/tendencia |
+| Decidir veracidad/falsedad | Seleccionar la opción que describe correctamente el comportamiento |
+
+---
+
+## Competencia: Interpretación y Representación
+
+### Definición ICFES
+
+> Esta competencia se relaciona con la habilidad para **comprender y transformar la información presentada en formatos distintos** como tablas, gráficas, conjuntos de datos, diagramas, esquemas, etcétera; así como la capacidad de utilizar estas representaciones para **extraer información relevante** que permita, entre otras cosas, establecer relaciones matemáticas e **identificar tendencias y patrones**.
+
+### Aplicación en el Ejercicio
 
 El estudiante debe:
 
-1. **Comprender** una grafica de dispersion (scatter plot)
-2. **Extraer informacion** sobre el tipo de relacion (lineal vs no lineal)
-3. **Identificar patrones** de dispersion (mayor variabilidad en alcances altos)
-4. **Establecer relaciones** entre las variables angulo y alcance
-
-### Aprendizaje Evaluado
-
-> Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos.
+1. **Comprender** una gráfica de dispersión (scatter plot)
+2. **Extraer información** sobre el tipo de relación (lineal vs no lineal)
+3. **Identificar patrones** de dispersión (dónde hay mayor variabilidad)
+4. **Establecer relaciones** entre las variables
 
 ### Evidencias Evaluadas
 
-| Evidencia | Aplicacion en el Ejercicio |
-|-----------|---------------------------|
-| **Evidencia 1**: Da cuenta de las caracteristicas basicas de la informacion presentada en diferentes formatos como series, graficas, tablas y esquemas. | El estudiante identifica que la grafica muestra una relacion no lineal (parabolica) entre angulo y alcance |
-| **Evidencia 2**: Transforma la representacion de una o mas piezas de informacion. | El estudiante traduce el patron visual de dispersion a una descripcion verbal correcta |
+| Evidencia | Aplicación |
+|-----------|------------|
+| Da cuenta de las características básicas de la información presentada | Identifica si la relación es lineal o no lineal |
+| Transforma la representación de una o más piezas de información | Traduce el patrón visual de dispersión a una descripción verbal |
 
 ---
 
 ## Componente: Aleatorio
 
-### Definicion ICFES
+### Definición ICFES
 
-El componente Aleatorio corresponde a las categorias conceptuales relacionadas con:
+El componente Aleatorio corresponde a las categorías conceptuales relacionadas con:
 
-- Representacion e interpretacion de datos
-- Medidas de tendencia central y dispersion
+- Representación e interpretación de datos
+- Medidas de tendencia central y dispersión
 - Nociones de probabilidad
-- Analisis de graficas estadisticas
+- Análisis de gráficas estadísticas
 
-### Aplicacion en el Ejercicio
+### Aplicación en el Ejercicio
 
-El ejercicio evalua especificamente:
-
-- **Graficas de dispersion**: Interpretacion de scatter plots
-- **Dispersion de datos**: Identificar donde hay mayor/menor variabilidad
-- **Patrones estadisticos**: Reconocer que la dispersion aumenta con el alcance
+- **Gráficas de dispersión**: Interpretación de scatter plots
+- **Dispersión de datos**: Identificar donde hay mayor/menor variabilidad
+- **Heterocedasticidad**: Varianza no constante a lo largo de los datos
 
 ---
 
-## Contenido Matematico: Estadistica (No Generico)
+## Contenido Matemático por Variante
 
-### Clasificacion
+### Variantes A y B: Ley de Hooke (Lineal)
 
-| Categoria | Subcategoria | Justificacion |
-|-----------|--------------|---------------|
-| Estadistica | No Generico | Requiere analizar dispersion heteroscedastica (varianza no constante) |
+$$x = \frac{F}{k}$$
 
-### Contenidos Especificos Evaluados
+| Variable | Significado |
+|----------|-------------|
+| x | Elongación del resorte (cm) |
+| F | Fuerza aplicada (N) |
+| k | Constante del resorte (N/cm) |
 
-Segun la clasificacion ICFES de contenidos:
+**Características:**
 
-**Contenidos No Genericos de Estadistica utilizados:**
+- Relación **lineal** (proporcionalidad directa)
+- Gráfica: **recta** ascendente
+- Contexto: Experimento de física con resorte
 
-- Varianza (dispersion de datos)
-- Correlacion (relacion entre variables)
-- Interpretacion de graficas de dispersion
-
-**Formula Fisica Subyacente:**
+### Variantes C y D: Movimiento de Proyectil (No Lineal)
 
 $$R = \frac{v_0^2 \sin(2\theta)}{g}$$
 
-Esta funcion senoidal produce:
+| Variable | Significado |
+|----------|-------------|
+| R | Alcance horizontal (m) |
+| v₀ | Velocidad inicial (m/s) |
+| θ | Ángulo de lanzamiento (rad) |
+| g | Gravedad (9.8 m/s²) |
 
-- Relacion **no lineal** entre angulo y alcance
-- Alcance **maximo** en θ ≈ 45° (0.78 rad)
-- **Dispersion proporcional al alcance** (heterocedasticidad)
+**Características:**
 
----
-
-## Situacion o Contexto: Matematico/Cientifico
-
-### Definicion ICFES
-
-> **Matematicos o cientificos**: Involucran lo relacionado con situaciones abstractas propias de las matematicas o de las ciencias que no estan inmersas en un contexto de la vida cotidiana. Estos escenarios se usan en la evaluacion para dar cuenta de las habilidades relacionadas con el uso de las matematicas en si mismas, por tanto se relacionan con los **contenidos no genericos**.
-
-### Justificacion del Contexto
-
-| Criterio | Aplicacion |
-|----------|------------|
-| Situacion cientifica | Experimento de fisica (lanzamiento de proyectil) |
-| Abstraccion matematica | Funcion senoidal R = v₀²sin(2θ)/g |
-| Contenido no generico | Analisis de dispersion heteroscedastica |
-| Relacion con la ciencia | Cinematica del proyectil |
-
----
-
-## Eje Axial Disciplinar
-
-### Ubicacion en los Ejes
-
-Este ejercicio corresponde al **Eje 4 - Descriptivos**:
-
-> **Tendencia Central, Dispersion, Posicion, Asimetria, Curtosis, Diagramas de Cajas, Diagramas de Alambres**
-
-### Especificamente:
-
-- **Dispersion**: El estudiante debe identificar que la variabilidad de los datos aumenta con el alcance
-- **Graficas estadisticas**: Interpretacion de diagrama de dispersion (scatter plot)
-- **Correlacion**: Reconocer la relacion no lineal entre las variables
+- Relación **no lineal** (función senoidal)
+- Gráfica: **parábola** con máximo en θ ≈ 0.78 rad (45°)
+- Contexto: Experimento de cinemática
 
 ---
 
 ## Estructura de la Pregunta
 
-### Enunciado
+### Enunciado (varía según contexto)
 
-> Un experimento consiste en medir el alcance horizontal de un proyectil en funcion del angulo con el que se lanza (respecto a la horizontal). En la grafica se registran los resultados de [N] lanzamientos realizados con la misma velocidad inicial.
->
-> [GRAFICA DE DISPERSION]
->
-> El comportamiento del alcance respecto al angulo es...
+**Variantes A/B (Resorte):**
+> Un experimento consiste en medir la elongación de un resorte en función de la fuerza aplicada. En la gráfica se registran los resultados de [N] mediciones realizadas con el mismo resorte.
 
-### Opciones de Respuesta
+**Variantes C/D (Proyectil):**
+> Un experimento consiste en medir el alcance horizontal de un proyectil en función del ángulo con el que se lanza. En la gráfica se registran los resultados de [N] lanzamientos realizados con la misma velocidad inicial.
 
-| Opcion | Relacion | Dispersion | Correcta |
-|--------|----------|------------|----------|
-| A | Lineal | Aumenta con angulo | NO |
-| B | Lineal | Aumenta con alcance | NO |
-| C | No lineal | Aumenta con angulo | NO |
-| D | No lineal | Aumenta con alcance | **SI** |
+### Opciones de Respuesta (común a todos)
 
-### Analisis de Distractores
-
-| Distractor | Error Conceptual que Evalua |
-|------------|---------------------------|
-| Opcion A | Confunde relacion parabolica con lineal + confunde variable de dispersion |
-| Opcion B | Confunde relacion parabolica con lineal (error parcial) |
-| Opcion C | Identifica correctamente la no linealidad pero confunde variable de dispersion |
+| Opción | Estructura |
+|--------|------------|
+| A | [lineal] + [dispersión con variable independiente] |
+| B | [lineal] + [dispersión con variable dependiente] |
+| C | [no lineal] + [dispersión con variable independiente] |
+| D | [no lineal] + [dispersión con variable dependiente] |
 
 ---
 
-## Grafica del Ejercicio
+## Gráficas de los Ejercicios
+
+### opc_A: Lineal + Dispersión crece con X
 
 ```
-Alcance horizontal (m)
+Elongación (cm)
+    14 |                    * *     disperso →
+    12 |                  * * *
+    10 |               * * *
+     8 |            * * *
+     6 |         * * *
+     4 |      * *
+     2 |   * *                      ← concentrado
+     0 +-------------------------> Fuerza (N)
+       0    2    4    6    8   10   12
+```
+
+### opc_B: Lineal + Dispersión crece con Y
+
+```
+Elongación (cm)
+    14 |                    *   *   disperso ↑
+    12 |                  * * *
+    10 |               * * *
+     8 |            * *
+     6 |         * *
+     4 |      **
+     2 |   **                       concentrado ↓
+     0 +-------------------------> Fuerza (N)
+```
+
+### opc_C: No lineal + Dispersión crece con X
+
+```
+Alcance (m)
     14 |
-    12 |        ◆ ◆ ◆       <- Mayor dispersion
-    10 |      ◆ ◆ ◆ ◆ ◆        (alcances altos)
-     8 |    ◆ ◆ ◆ ◆ ◆ ◆ ◆
-     6 |  ◆ ◆ ◆       ◆ ◆ ◆
-     4 | ◆ ◆             ◆ ◆  <- Menor dispersion
-     2 |◆                   ◆    (alcances bajos)
-     0 +-----------------------> Angulo (radianes)
+    12 |        * * *
+    10 |      * * * * *      *  *   disperso →
+     8 |    * * * * * * *   *  *  *
+     6 |  * * *       * * * *
+     4 | * *             * * *
+     2 |*                    *  *   ← concentrado
+     0 +-------------------------> Ángulo (rad)
        0   0.4   0.8   1.2   1.6
-              ↑
-         Alcance maximo
-         (~45° = 0.78 rad)
 ```
 
-### Observaciones Clave para el Estudiante
+### opc_D: No lineal + Dispersión crece con Y
 
-1. **Forma parabolica**: Los puntos siguen una curva, no una linea recta
-2. **Maximo en el centro**: El alcance maximo ocurre alrededor de 0.78 radianes
-3. **Dispersion variable**: Los puntos estan mas dispersos en la zona central (alcances altos) que en los extremos (alcances bajos)
-
----
-
-## Respuesta Correcta y Justificacion
-
-### Respuesta: Opcion D
-
-> El comportamiento es **no lineal** y **mas disperso cuanto mayor sea el alcance**.
-
-### Justificacion Matematica
-
-**1. Tipo de relacion:**
-
-La ecuacion del alcance de un proyectil es:
-$$R = \frac{v_0^2 \sin(2\theta)}{g}$$
-
-Esta es una funcion **senoidal** (no lineal). La grafica muestra claramente una forma **parabolica** con maximo en θ ≈ 0.78 rad.
-
-**2. Patron de dispersion:**
-
-- En los **extremos** (angulos cercanos a 0 y 1.5 rad): Los alcances son pequenos y los puntos estan **mas concentrados**
-- En el **centro** (angulos cercanos a 0.78 rad): Los alcances son maximos y los puntos muestran **mayor variabilidad**
-
-**3. Explicacion fisica:**
-
-Los errores experimentales se amplifican en trayectorias mas largas. Por eso la dispersion es proporcional al **alcance**, no al angulo.
+```
+Alcance (m)
+    14 |
+    12 |        * * *        disperso (Y alto) ↑
+    10 |      * * * * *
+     8 |    * * * * * * *
+     6 |  * *         * *
+     4 | *               *   concentrado (Y bajo) ↓
+     2 |*                 *
+     0 +-------------------------> Ángulo (rad)
+       0   0.4   0.8   1.2   1.6
+```
 
 ---
 
-## Relacion con Porcentaje de Preguntas ICFES
+## Análisis de Distractores
 
-### Distribucion por Competencia
+### Para variantes A/B (Lineal)
+
+| Opción | Si A es correcta | Si B es correcta |
+|--------|------------------|------------------|
+| A | ✓ Correcta | ✗ Error en variable de dispersión |
+| B | ✗ Error en variable de dispersión | ✓ Correcta |
+| C | ✗ Error en tipo de relación | ✗ Error en tipo + dispersión |
+| D | ✗ Error en tipo + dispersión | ✗ Error en tipo de relación |
+
+### Para variantes C/D (No lineal)
+
+| Opción | Si C es correcta | Si D es correcta |
+|--------|------------------|------------------|
+| A | ✗ Error en tipo + dispersión | ✗ Error en tipo de relación |
+| B | ✗ Error en tipo de relación | ✗ Error en tipo + dispersión |
+| C | ✓ Correcta | ✗ Error en variable de dispersión |
+| D | ✗ Error en variable de dispersión | ✓ Correcta |
+
+---
+
+## Relación con Porcentaje de Preguntas ICFES
+
+### Distribución por Competencia
 
 | Competencia | Porcentaje | Este Ejercicio |
 |-------------|------------|----------------|
-| Interpretacion y Representacion | 34% | **✓** |
-| Formulacion y Ejecucion | 43% | |
-| Argumentacion | 23% | |
+| Interpretación y Representación | 34% | **✓** |
+| Formulación y Ejecución | 43% | |
+| Argumentación | 23% | |
 
-Este ejercicio contribuye al **34%** de preguntas de Interpretacion y Representacion.
+Este ejercicio contribuye al **34%** de preguntas de Interpretación y Representación.
 
 ---
 
 ## Variabilidad del Ejercicio
 
-### Parametros Aleatorios
+### Parámetros Aleatorios por Variante
 
-Para garantizar que cada estudiante reciba una version unica:
+| Variante | Parámetros | Combinaciones Datos |
+|----------|------------|---------------------|
+| A, B | k (9) × n (21) × ruido (5) | ~945 |
+| C, D | v₀ (16) × n (21) × ruido (6) | ~2,016 |
 
-| Parametro | Rango | Versiones |
-|-----------|-------|-----------|
-| Velocidad inicial (v₀) | 10.5 - 12.0 m/s | 16 |
-| Numero de lanzamientos | 90 - 110 | 21 |
-| Factor de ruido | 0.35 - 0.45 | 6 |
-| Variantes textuales | 4 opciones × 5 terminos | 1,024 |
+### Variantes Textuales (común)
 
-### Total de Versiones Unicas
+| Término | Opciones |
+|---------|----------|
+| Lineal | lineal, proporcional, de tipo lineal, directamente proporcional |
+| No lineal | no lineal, no proporcional, parabólico, cuadrático |
+| Disperso | más disperso, con mayor variabilidad, más variable |
 
-```
-Datos: 16 × 21 × 6 = 2,016
-Texto: 4^5 = 1,024
-─────────────────────────────
-TOTAL: 2,064,384 versiones
-```
+**Combinaciones textuales**: 4⁵ = 1,024
 
----
+### Total de Versiones Únicas
 
-## Referencias Curriculares
-
-### Estandares Basicos de Competencias
-
-Este ejercicio se alinea con los siguientes estandares:
-
-**Pensamiento Aleatorio y Sistemas de Datos:**
-
-- Interpreto y comparo resultados de estudios con informacion estadistica proveniente de medios de comunicacion.
-- Reconozco tendencias que se presentan en conjuntos de variables relacionadas.
-
-**Pensamiento Variacional y Sistemas Algebraicos:**
-
-- Identifico y utilizo diferentes maneras de definir y medir la pendiente de una curva que representa en el plano cartesiano situaciones de variacion.
-
-### Derechos Basicos de Aprendizaje (DBA)
-
-**Grado 10:**
-- Plantea y resuelve situaciones problematicas del contexto real y/o matematico que implican la exploracion de posibles asociaciones o correlaciones entre las variables estudiadas.
+| Variante | Cálculo | Total |
+|----------|---------|-------|
+| A, B | 945 × 1,024 | ~968,000 |
+| C, D | 2,016 × 1,024 | ~2,064,000 |
 
 ---
 
-## Recomendaciones Pedagogicas
+## Recomendaciones Pedagógicas
 
 ### Para el Docente
 
-1. **Antes del ejercicio**: Revisar conceptos de graficas de dispersion y tipos de relaciones (lineal vs no lineal)
+1. **Antes del ejercicio**: Revisar conceptos de:
 
-2. **Durante el ejercicio**: Guiar al estudiante a observar:
+   - Gráficas de dispersión
+   - Relaciones lineales vs no lineales
+   - Heterocedasticidad (dispersión variable)
 
-   - La forma general de la nube de puntos
-   - Donde hay mayor y menor concentracion de puntos
-   - La relacion entre la posicion vertical y la dispersion
+2. **Durante el ejercicio**: Guiar al estudiante a:
 
-3. **Despues del ejercicio**: Discutir por que la dispersion aumenta con el alcance (amplificacion de errores en trayectorias largas)
+   - Observar la forma general (¿recta o curva?)
+   - Identificar patrones de dispersión
+   - Relacionar dispersión con la variable correcta
+
+3. **Después del ejercicio**: Discutir por qué la dispersión puede variar
 
 ### Para el Estudiante
 
-1. **Paso 1**: Observar la forma general de la grafica (¿es lineal o curva?)
-2. **Paso 2**: Identificar donde esta el maximo (centro de la parabola)
-3. **Paso 3**: Comparar la dispersion en diferentes zonas (¿donde hay mas variabilidad?)
-4. **Paso 4**: Relacionar la dispersion con la variable correcta (alcance, no angulo)
+1. **Paso 1**: Observar forma general (lineal = recta, no lineal = curva)
+2. **Paso 2**: Identificar dónde hay más "nube" de puntos
+3. **Paso 3**: Determinar si la dispersión aumenta con X o con Y
+4. **Paso 4**: Seleccionar la combinación correcta
 
 ---
 
 ## Metadatos R-exams
 
 ```yaml
-exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1
+# Varía según archivo:
+exname: [nombre_descriptivo]
 extype: schoice
-exsolution: 0001
+exsolution: [1000|0100|0010|0001]  # Según variante
 exshuffle: TRUE
-exsection: Estadistica/Graficas de Dispersion
+exsection: Estadística/Gráficas de Dispersión
 ```
 
 ---
 
-**Documento generado para el proyecto ICFES R-exams**
+**Última actualización**: 2025-12-30
+**Versión**: 2.0 (Consolidado para 4 variantes)
 
-*Alineado con: Marco de Referencia ICFES Matematicas Saber 11*
+*Alineado con: Marco de Referencia ICFES Matemáticas Saber 11*
