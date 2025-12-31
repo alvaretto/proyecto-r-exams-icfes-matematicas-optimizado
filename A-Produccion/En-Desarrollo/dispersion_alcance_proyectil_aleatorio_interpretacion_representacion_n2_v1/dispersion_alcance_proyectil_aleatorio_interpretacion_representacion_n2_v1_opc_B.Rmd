@@ -17,7 +17,7 @@ icfes:
 ---
 
 ```{r setup, include=FALSE}
-# Configuracion para todos los formatos de salida
+# Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 
@@ -51,16 +51,16 @@ set.seed(sample(1:100000, 1))
 ```
 
 ```{r data_generation, echo=FALSE, results="hide"}
-# Funcion principal de generacion de datos
-# CONTEXTO: Ley de Hooke - Elongacion de resorte vs Fuerza aplicada
+# Función principal de generacion de datos
+# CONTEXTO: Ley de Hooke - Elongación de resorte vs Fuerza aplicada
 generar_datos <- function() {
   # Constante del resorte aleatoria (N/cm)
   k <- sample(seq(0.8, 1.2, 0.05), 1)
 
-  # Numero de mediciones aleatorio
+  # Número de mediciones aleatorio
   n_mediciones <- sample(90:110, 1)
 
-  # Generar fuerzas aplicadas (en Newtons) - distribucion uniforme
+  # Generar fuerzas aplicadas (en Newtons) - distribución uniforme
   fuerzas <- c(
     runif(round(n_mediciones * 0.20), 0.5, 3),
     runif(round(n_mediciones * 0.25), 3, 6),
@@ -68,10 +68,10 @@ generar_datos <- function() {
     runif(round(n_mediciones * 0.25), 9, 12)
   )
 
-  # Calcular elongacion teorica: x = F/k (Ley de Hooke - LINEAL)
+  # Calcular elongación teórica: x = F/k (Ley de Hooke - LINEAL)
   elongacion_teorica <- fuerzas / k
 
-  # Agregar ruido proporcional a la ELONGACION (mayor dispersion en elongaciones mayores)
+  # Agregar ruido proporcional a la ELONGACION (mayor dispersión en elongaciones mayores)
   ruido_base <- sample(seq(0.15, 0.25, 0.02), 1)
   ruido_factor <- ruido_base * sqrt(elongacion_teorica)  # Dispersión crece con elongación
   ruido <- rnorm(length(fuerzas), 0, ruido_factor)
@@ -79,7 +79,7 @@ generar_datos <- function() {
   elongacion_observada <- elongacion_teorica + ruido
   elongacion_observada <- pmax(0.3, elongacion_observada)
 
-  # Calcular elongacion maxima para referencia
+  # Calcular elongación máxima para referencia
   elongacion_max <- max(elongacion_observada)
 
   return(list(
@@ -102,7 +102,7 @@ k_resorte <- datos$k
 
 ```{r version_diversity_test, echo=FALSE, results="hide"}
 # Prueba obligatoria de diversidad de versiones
-# Incluye variacion de datos + variacion textual
+# Incluye variación de datos + variación textual
 
 # Variantes disponibles para el test - CONTEXTO: Resorte (Ley de Hooke)
 test_vars_lineal <- c("lineal", "proporcional", "de tipo lineal", "directamente proporcional")
@@ -126,11 +126,11 @@ test_that("Prueba de diversidad de versiones (datos + texto)", {
     )
 
     versiones[[i]] <- digest::digest(list(
-      # Variacion de datos
+      # Variación de datos
       n = datos_test$n_mediciones,
       k = datos_test$k,
       ruido = datos_test$ruido_base,
-      # Variacion textual
+      # Variación textual
       texto = texto_test
     ))
   }
@@ -148,8 +148,8 @@ test_that("Prueba de diversidad de versiones (datos + texto)", {
 ```
 
 ```{r generar_tikz_scatter, echo=FALSE, results="hide"}
-# Funcion para generar codigo TikZ dinamico con scatter plot
-# CONTEXTO: Ley de Hooke - Fuerza vs Elongacion
+# Función para generar código TikZ dinámico con scatter plot
+# CONTEXTO: Ley de Hooke - Fuerza vs Elongación
 generar_tikz_dispersion <- function(fuerzas, elongaciones) {
   # Generar coordenadas TikZ
   coords <- paste0("    (", sprintf("%.2f", fuerzas), ", ", sprintf("%.1f", elongaciones), ")")
@@ -188,13 +188,13 @@ generar_tikz_dispersion <- function(fuerzas, elongaciones) {
   return(tikz_code)
 }
 
-# Generar el codigo TikZ final
+# Generar el código TikZ final
 tikz_final <- generar_tikz_dispersion(fuerzas, elongaciones)
 ```
 
 ```{r generar_opciones, echo=FALSE, results="hide"}
 # Sistema de opciones de respuesta con VARIACION ALEATORIA
-# CONTEXTO: Ley de Hooke - Respuesta correcta: lineal + disperso con elongacion (opcion B)
+# CONTEXTO: Ley de Hooke - Respuesta correcta: lineal + disperso con elongación (opcion B)
 
 # Variantes para "lineal"
 vars_lineal <- c(
@@ -251,10 +251,10 @@ opciones <- c(
   paste0(sel_no_lineal, " y ", sel_disperso, " cuanto mayor sea ", sel_elongacion, ".")
 )
 
-# Posicion de la respuesta correcta: opcion B (lineal + disperso con elongacion)
+# Posicion de la respuesta correcta: opcion B (lineal + disperso con elongación)
 posicion_correcta <- 2
 
-# Vector de solucion para r-exams (1 en posicion correcta)
+# Vector de solución para r-exams (1 en posicion correcta)
 solucion <- c(0, 1, 0, 0)
 
 # Calcular combinaciones textuales posibles
@@ -326,4 +326,4 @@ exname: elongacion_resorte_ley_hooke_interpretacion_representacion_n2_v1
 extype: schoice
 exsolution: `r paste(solucion, collapse="")`
 exshuffle: TRUE
-exsection: Estadistica/Graficas de Dispersion
+exsection: Estadística/Gráficas de Dispersión

@@ -32,11 +32,20 @@ Generar ejercicios matematicos de seleccion multiple (SCHOICE) y compuestos (CLO
 ```
 
 ### 5 Coherencias a Verificar
-1. **Coherencia Semantica** - Gramatica correcta
-2. **Coherencia Visual-Texto** - Grafico coincide con enunciado
-3. **Coherencia Matematica** - Formulas y proporciones correctas
-4. **Coherencia de Codigo** - Dinamico, compatible con R-exams
+1. **Coherencia Semántica** - Gramática correcta, **TILDES OBLIGATORIAS**
+2. **Coherencia Visual-Texto** - Gráfico coincide con enunciado
+3. **Coherencia Matemática** - Fórmulas y proporciones correctas
+4. **Coherencia de Código** - Dinámico, compatible con R-exams
 5. **Coherencia General** - Legible, estilo ICFES
+
+### Ortografía Española (OBLIGATORIO)
+@.claude/rules/ortografia-espanol.md
+
+**Principio**: TODO texto en español DEBE incluir tildes correctas.
+- Palabras como: más, ángulo, dispersión, función, gráfica, etc.
+- Aplica a: comentarios, strings, secciones Question/Solution
+- Validación automática: `Rscript .claude/scripts/corregir_ortografia_espanol.R archivo.Rmd`
+- Hook pre-commit: Detecta errores antes de cada commit
 
 ## 📚 Documentacion y Reglas
 

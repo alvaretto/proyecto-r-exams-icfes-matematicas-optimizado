@@ -6,7 +6,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '⚠️ REGLA DE ORO: Consulta /A-Produccion/En-Produccion/ y /A-Produccion/En-PreDesarrollo/ antes de escribir código .Rmd'"
+            "command": "echo '⚠️ REGLA DE ORO: Consulta /A-Produccion/En-Produccion/ antes de escribir código .Rmd'"
+          },
+          {
+            "type": "command",
+            "command": "echo '📝 ORTOGRAFÍA: Usa SIEMPRE tildes correctas (más, ángulo, función, gráfica, dispersión)'"
           }
         ]
       }

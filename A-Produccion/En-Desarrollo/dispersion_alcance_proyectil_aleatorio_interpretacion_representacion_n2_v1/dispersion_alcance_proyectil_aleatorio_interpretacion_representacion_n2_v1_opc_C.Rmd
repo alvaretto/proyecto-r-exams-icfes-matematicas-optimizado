@@ -17,7 +17,7 @@ icfes:
 ---
 
 ```{r setup, include=FALSE}
-# Configuracion para todos los formatos de salida
+# Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 
@@ -51,19 +51,19 @@ set.seed(sample(1:100000, 1))
 ```
 
 ```{r data_generation, echo=FALSE, results="hide"}
-# Funcion principal de generacion de datos
+# Función principal de generacion de datos
 generar_datos <- function() {
-  # Parametros fisicos con variacion aleatoria
+  # Parametros fisicos con variación aleatoria
   g <- 9.8  # Gravedad (constante)
 
-  # Velocidad inicial aleatoria (afecta el alcance maximo)
+  # Velocidad inicial aleatoria (afecta el alcance máximo)
   v0 <- sample(seq(10.5, 12.0, 0.1), 1)
 
-  # Numero de lanzamientos aleatorio
+  # Número de lanzamientos aleatorio
   n_lanzamientos <- sample(90:110, 1)
 
-  # Generar angulos con distribucion similar a imagen original
-  # Mas concentracion en zona central (0.4-1.1)
+  # Generar ángulos con distribución similar a imagen original
+  # Más concentracion en zona central (0.4-1.1)
   angulos <- c(
     runif(round(n_lanzamientos * 0.15), 0.05, 0.25),
     runif(round(n_lanzamientos * 0.25), 0.25, 0.55),
@@ -72,10 +72,10 @@ generar_datos <- function() {
     runif(round(n_lanzamientos * 0.10), 1.35, 1.55)
   )
 
-  # Calcular alcance teorico: R = v0^2 * sin(2*theta) / g
+  # Calcular alcance teórico: R = v0^2 * sin(2*theta) / g
   alcance_teorico <- (v0^2 * sin(2 * angulos)) / g
 
-  # Agregar ruido proporcional al ANGULO (mayor dispersion en angulos mayores)
+  # Agregar ruido proporcional al ANGULO (mayor dispersión en ángulos mayores)
   ruido_base <- sample(seq(0.35, 0.45, 0.02), 1)
   ruido_factor <- ruido_base * angulos * 2.5  # Dispersión crece con el ángulo
   ruido <- rnorm(length(angulos), 0, ruido_factor)
@@ -83,7 +83,7 @@ generar_datos <- function() {
   alcance_observado <- alcance_teorico + ruido
   alcance_observado <- pmax(0.3, pmin(13.8, alcance_observado))
 
-  # Calcular alcance maximo para referencia
+  # Calcular alcance máximo para referencia
   alcance_max <- max(alcance_observado)
 
   return(list(
@@ -106,7 +106,7 @@ v0 <- datos$v0
 
 ```{r version_diversity_test, echo=FALSE, results="hide"}
 # Prueba obligatoria de diversidad de versiones
-# Incluye variacion de datos + variacion textual
+# Incluye variación de datos + variación textual
 
 # Variantes disponibles para el test
 test_vars_lineal <- c("lineal", "proporcional", "de tipo lineal", "directamente proporcional")
@@ -130,11 +130,11 @@ test_that("Prueba de diversidad de versiones (datos + texto)", {
     )
 
     versiones[[i]] <- digest::digest(list(
-      # Variacion de datos
+      # Variación de datos
       n = datos_test$n_lanzamientos,
       v0 = datos_test$v0,
       ruido = datos_test$ruido_base,
-      # Variacion textual
+      # Variación textual
       texto = texto_test
     ))
   }
@@ -152,7 +152,7 @@ test_that("Prueba de diversidad de versiones (datos + texto)", {
 ```
 
 ```{r generar_tikz_scatter, echo=FALSE, results="hide"}
-# Funcion para generar codigo TikZ dinamico con scatter plot
+# Función para generar código TikZ dinámico con scatter plot
 generar_tikz_dispersion <- function(angulos, alcances) {
   # Generar coordenadas TikZ
   coords <- paste0("    (", sprintf("%.3f", angulos), ", ", sprintf("%.1f", alcances), ")")
@@ -191,7 +191,7 @@ generar_tikz_dispersion <- function(angulos, alcances) {
   return(tikz_code)
 }
 
-# Generar el codigo TikZ final
+# Generar el código TikZ final
 tikz_final <- generar_tikz_dispersion(angulos, alcances)
 ```
 
@@ -258,7 +258,7 @@ opciones <- c(
 # Posicion de la respuesta correcta (siempre la 3ra antes de shuffle)
 posicion_correcta <- 3
 
-# Vector de solucion para r-exams (1 en posicion correcta)
+# Vector de solución para r-exams (1 en posicion correcta)
 solucion <- c(0, 0, 1, 0)
 
 # Calcular combinaciones textuales posibles
@@ -330,4 +330,4 @@ exname: dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_
 extype: schoice
 exsolution: `r paste(solucion, collapse="")`
 exshuffle: TRUE
-exsection: Estadistica/Graficas de Dispersion
+exsection: Estadística/Gráficas de Dispersión
