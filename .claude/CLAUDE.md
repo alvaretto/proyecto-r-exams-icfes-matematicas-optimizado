@@ -49,10 +49,17 @@ Generar ejercicios matematicos de seleccion multiple (SCHOICE) y compuestos (CLO
 - Solicitar aprobación del usuario antes de finalizar
 - Si hay problemas → Corregir → Volver a renderizar → Repetir inspección
 
+**⚠️ REGLA CRÍTICA: REPETIR CICLO DESPUÉS DE CADA CAMBIO**
+- Cada vez que se aplica CUALQUIER corrección → VOLVER A RENDERIZAR
+- Cada vez que se modifica código → MOSTRAR NUEVO PREVIEW
+- Cada vez que el usuario solicita ajustes → VERIFICAR RESULTADO VISUAL
+- NUNCA asumir que un cambio produjo el resultado esperado sin verificación
+
 **PROHIBIDO:**
 - ❌ "El PDF se generó correctamente" sin mostrar imagen
 - ❌ Asumir éxito solo porque no hubo errores de compilación
 - ❌ Saltarse comparación visual con imagen original
+- ❌ Aplicar cambios sin volver a mostrar el resultado al usuario
 
 ### Ortografía Española (OBLIGATORIO)
 @.claude/rules/ortografia-espanol.md
@@ -166,8 +173,14 @@ Ver especificaciones completas en @.claude/rules/codigo-rmd.md
 ---
 
 **Ultima actualizacion**: 2025-12-31
-**Version**: 2.4 (Ortografía Robusta + Metadatos ASCII)
+**Version**: 2.5 (Ciclo Obligatorio Post-Cambios)
 **Basado en**: Documentacion oficial Claude Code (nov 2025)
+
+## Cambios v2.5
+- **NUEVO**: Regla crítica: REPETIR CICLO DESPUÉS DE CADA CAMBIO
+- Cada corrección/ajuste → Volver a renderizar → Mostrar preview → Verificar coherencias
+- PROHIBIDO aplicar cambios sin volver a mostrar resultado visual al usuario
+- Documentación actualizada: CLAUDE.md y ciclo-validacion.md
 
 ## Cambios v2.4
 - **Script ortografía mejorado**: Excluye automáticamente metadatos R-exams

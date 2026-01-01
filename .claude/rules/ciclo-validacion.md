@@ -2,6 +2,23 @@
 
 ## OBLIGATORIO para todo archivo .Rmd
 
+**⚠️ REGLA CRÍTICA: REPETIR CICLO DESPUÉS DE CADA CAMBIO**
+
+Cada vez que se aplica CUALQUIER corrección o cambio al código:
+1. **SIEMPRE** volver a renderizar
+2. **SIEMPRE** mostrar preview visual al usuario
+3. **SIEMPRE** verificar las 5 coherencias
+4. **NUNCA** asumir que un cambio de código produjo el resultado esperado sin verificación visual
+
+**Esto aplica a:**
+- Cambios de posicionamiento (coordenadas, tamaños)
+- Cambios de texto o etiquetas
+- Cambios de formato o estilo
+- Correcciones de cualquier tipo
+- Ajustes solicitados por el usuario
+
+---
+
 Cada vez que se renderiza un archivo .Rmd, se ejecuta automáticamente:
 
 ### 🔄 FASE 1: RENDERIZADO INICIAL

@@ -1,0 +1,45 @@
+{
+  "ejercicio": "proceso_recaudacion_sitio_turistico",
+  "fase_actual": "completado",
+  "version_seleccionada": "r",
+  "version_seleccionada_archivo": "output_r_v1.R",
+  "analisis_completado": true,
+  "requiere_flujo_b": true,
+  "tikz": {
+    "estado": "aprobado",
+    "version_actual": 7,
+    "similitud_actual": 92,
+    "coherencias_verificadas": true,
+    "usuario_aprobo": true,
+    "timestamp_aprobacion": "2025-12-31T12:30:00Z",
+    "archivos": {
+      "codigo_final": "output_tikz_v7.tex",
+      "imagen": "output_tikz_v7.png"
+    }
+  },
+  "python": {
+    "estado": "aprobado",
+    "version_actual": 5,
+    "similitud_actual": 92,
+    "coherencias_verificadas": true,
+    "usuario_aprobo": true,
+    "timestamp_aprobacion": "2025-12-31T11:15:00Z",
+    "archivos": {
+      "codigo_final": "output_python_v5.py",
+      "imagen": "python_output_v5.png"
+    }
+  },
+  "r": {
+    "estado": "aprobado",
+    "version_actual": 1,
+    "similitud_actual": 92,
+    "coherencias_verificadas": true,
+    "usuario_aprobo": true,
+    "timestamp_aprobacion": "2025-12-31T11:25:00Z",
+    "archivos": {
+      "codigo_final": "output_r_v1.R",
+      "imagen": "r_output_v1.png"
+    }
+  },
+  "timestamp_ultima_actualizacion": "2025-12-31T12:30:00Z"
+}

@@ -81,12 +81,12 @@
 
 \section{Question}\label{question}
 
-El parque Güell en Barcelona es uno de los sitios turísticos más
-representativos de España. En la tabla se relaciona la cantidad de
+Las ruinas de Chichén Itzá en Yucatán es uno de los sitios turísticos
+más representativos de México. En la tabla se relaciona la cantidad de
 personas que ingresó cada día durante una semana, según el tipo de
 entrada que pagó.
 
-Se pagan 16 euros de entrada y 7 más si se realiza reserva.
+Se pagan 18 pesos mexicanos de entrada y 7 más si se realiza reserva.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.2105}}
@@ -140,8 +140,8 @@ Domingo
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Sin reserva & 400 & 400 & 500 & 600 & 500 & 300 & 700 \\
-Con reserva & 600 & 800 & 200 & 600 & 600 & 600 & 600 \\
+Sin reserva & 400 & 400 & 500 & 600 & 500 & 300 & 800 \\
+Con reserva & 700 & 900 & 300 & 700 & 400 & 600 & 600 \\
 \end{longtable}
 
 El administrador diseñó el siguiente proceso para analizar la
@@ -157,14 +157,15 @@ recaudación:
 \begin{itemize}
 \tightlist
 \item
-  ¿En cuál de los dos casos se recogió más dinero durante la semana?
-\item
-  ¿En cuál día de la semana se recogió más dinero?
+  ¿Cuál fue la ganancia total de la ruinas de Chichén Itzá durante la
+  semana?
 \item
   ¿Cuál fue el total de dinero recogido por ambos casos durante la
   semana?
 \item
-  ¿Cuál fue la ganancia total del parque Güell durante la semana?
+  ¿En cuál de los dos casos se recogió más dinero durante la semana?
+\item
+  ¿En cuál día de la semana se recogió más dinero?
 \end{itemize}
 
 \section{Solution}\label{solution}
@@ -178,8 +179,8 @@ proporciona el proceso descrito:
 \def\labelenumi{\arabic{enumi}.}
 \item
   \textbf{Recaudación por tipo de entrada}: El proceso calcula cuánto
-  dinero se recogió de personas con reserva (cantidad × 23 euros) y sin
-  reserva (cantidad × 16 euros).
+  dinero se recogió de personas con reserva (cantidad × 25 pesos
+  mexicanos) y sin reserva (cantidad × 18 pesos mexicanos).
 \item
   \textbf{Comparación entre casos}: El paso 3 permite comparar los
   resultados, determinando cuál tipo de entrada generó más ingresos.
@@ -193,8 +194,8 @@ proporciona el proceso descrito:
 \begin{itemize}
 \item
   \textbf{Ganancia total}: La ganancia requiere conocer los costos
-  operativos del parque Güell (personal, mantenimiento, servicios,
-  etc.), información que no está incluida en el proceso.
+  operativos de la ruinas de Chichén Itzá (personal, mantenimiento,
+  servicios, etc.), información que no está incluida en el proceso.
 \item
   \textbf{Día específico}: El proceso trabaja con totales de la semana,
   no con datos diarios.
@@ -209,25 +210,25 @@ total} no se puede resolver porque el proceso solo calcula recaudación
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
-  del proceso.
-\item
-  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
-  del proceso.
-\item
-  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
-  del proceso.
-\item
   \textbf{Verdadero}. Esta pregunta sobre la ganancia NO se puede
   resolver porque el proceso solo calcula recaudación, no ganancia (que
   requiere conocer los costos).
+\item
+  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
+  del proceso.
+\item
+  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
+  del proceso.
+\item
+  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
+  del proceso.
 \end{itemize}
 
 \section{Meta-information}\label{meta-information}
 
 exname:
 proceso\_recaudacion\_sitio\_turistico\_numerico\_variacional\_argumentacion\_n2\_v1
-extype: schoice exsolution: 0001 exshuffle: TRUE exsection:
+extype: schoice exsolution: 1000 exshuffle: TRUE exsection:
 Numerico-Variacional/Argumentacion
 
 \end{document}
