@@ -172,8 +172,8 @@ Ver especificaciones completas en @.claude/rules/codigo-rmd.md
 
 ---
 
-**Ultima actualizacion**: 2025-12-31
-**Version**: 2.5 (Ciclo Obligatorio Post-Cambios)
+**Ultima actualizacion**: 2026-01-01
+**Version**: 2.5.1 (Sincronización Documentación)
 **Basado en**: Documentacion oficial Claude Code (nov 2025)
 
 ## Cambios v2.5

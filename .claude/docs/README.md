@@ -91,7 +91,7 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 
 ## Filosofia del Sistema
 
-### ⛔ REGLAS CRITICAS v2.2 (OBLIGATORIAS)
+### ⛔ REGLAS CRITICAS v2.5 (OBLIGATORIAS)
 
 #### Flujo B OBLIGATORIO si hay graficos
 **Archivo**: `.claude/rules/flujo-b-obligatorio.md`
@@ -111,11 +111,26 @@ Las versiones se generan UNA A LA VEZ, no simultaneamente:
 
 #### 5 Coherencias a Verificar
 Antes de aprobar cada version:
-1. **Coherencia Semantica** - Gramatica correcta
+1. **Coherencia Semantica** - Gramatica correcta, **TILDES OBLIGATORIAS**
 2. **Coherencia Visual-Texto** - Grafico coincide con enunciado
 3. **Coherencia Matematica** - Formulas y proporciones correctas
 4. **Coherencia de Codigo** - Dinamico, compatible con R-exams
 5. **Coherencia General** - Legible, estilo ICFES
+
+#### Validación Visual Iterativa (OBLIGATORIO)
+**Archivo**: `.claude/rules/ciclo-validacion.md`
+
+**Principio**: NUNCA marcar como "completado" sin inspección visual REAL.
+- Convertir PDF → PNG con `magick`
+- MOSTRAR imagen al usuario con `Read` tool
+- Verificar las 5 coherencias VISUALMENTE
+- Documentar hallazgos con checklist
+- Solicitar aprobación del usuario antes de finalizar
+
+**⚠️ REGLA CRÍTICA v2.5: REPETIR CICLO DESPUÉS DE CADA CAMBIO**
+- Cada vez que se aplica CUALQUIER corrección → VOLVER A RENDERIZAR
+- Cada vez que se modifica código → MOSTRAR NUEVO PREVIEW
+- NUNCA asumir que un cambio produjo el resultado esperado sin verificación
 
 ### ⚡ Ciclo de Validacion y Correccion Automatica (OBLIGATORIO)
 
@@ -418,9 +433,29 @@ Para preguntas sobre la documentación:
 
 ---
 
-**Ultima actualizacion:** 2025-12-30
-**Version del sistema:** 2.2 (Flujo B obligatorio + Secuencial)
+**Ultima actualizacion:** 2026-01-01
+**Version del sistema:** 2.5.1 (Sincronización Documentación)
 **Estado:** ✅ Operacional
+
+### Cambios v2.5.1
+- Sincronización de documentación entre CLAUDE.md, Mermaid_Chart.txt y docs/README.md
+- Fecha actualizada a 2026-01-01
+
+### Cambios v2.5
+- **NUEVO**: Regla crítica: REPETIR CICLO DESPUÉS DE CADA CAMBIO
+- Cada corrección/ajuste → Volver a renderizar → Mostrar preview → Verificar coherencias
+- PROHIBIDO aplicar cambios sin volver a mostrar resultado visual al usuario
+- Validación Visual Iterativa OBLIGATORIA con inspección REAL
+
+### Cambios v2.4
+- Script ortografía mejorado: Excluye automáticamente metadatos R-exams
+- Campos ASCII obligatorios en metadatos
+- PROHIBIDO: `git commit --no-verify`
+
+### Cambios v2.3
+- Validación Visual Iterativa OBLIGATORIA después de renderizado
+- Mostrar preview.png al usuario antes de aprobar
+- Documentar 5 coherencias con checklist explícito
 
 ### Cambios v2.2
 - Flujo B (Graficador Experto) ahora es OBLIGATORIO cuando hay graficos

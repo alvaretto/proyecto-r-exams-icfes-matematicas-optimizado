@@ -1,7 +1,7 @@
 graph TD
     REGLAS[📋 REGLAS MODULARES OBLIGATORIAS<br/>.claude/rules/<br/>• flujo-b-obligatorio.md<br/>• graficador-secuencial.md<br/>• ciclo-validacion.md<br/>• codigo-rmd.md<br/>• documentacion-verificada.md]
 
-    REGLAS_NUEVAS[⛔ REGLAS CRITICAS v2.2<br/>• Flujo B OBLIGATORIO si hay graficos<br/>• Proceso SECUENCIAL: TikZ→Python→R<br/>• 5 Coherencias antes de aprobar<br/>• Bloqueo sin completar Flujo B]
+    REGLAS_NUEVAS[⛔ REGLAS CRITICAS v2.5<br/>• Flujo B OBLIGATORIO si hay graficos<br/>• Proceso SECUENCIAL: TikZ→Python→R<br/>• 5 Coherencias antes de aprobar<br/>• Bloqueo sin completar Flujo B<br/>• REPETIR CICLO después de cada cambio<br/>• Validación Visual Iterativa OBLIGATORIA]
 
     A[ENTRADA: Imagen ICFES Matematicas] --> ANALISIS_VISUAL[🔍 ANALISIS VISUAL INICIAL]
 
