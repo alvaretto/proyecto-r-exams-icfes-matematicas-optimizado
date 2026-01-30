@@ -1,0 +1,9 @@
+=== REPORTE DE COHERENCIA FASE 2 ===
+Archivo: consumo_telefonico_adicional_n2_v1.Rmd 
+Fecha: 2025-12-22 14:58:07.56029 
+
+Errores: 0 
+Advertencias: 0 
+
+
+Resultado: APROBADO 

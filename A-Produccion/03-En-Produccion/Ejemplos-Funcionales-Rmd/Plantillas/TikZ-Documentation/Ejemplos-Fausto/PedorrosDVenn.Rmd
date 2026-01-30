@@ -1,0 +1,146 @@
+```{r datos1, echo = FALSE, results = "hide"}
+## Este ejercicio aplica para PDF y Moodle
+options(tinytex.verbose = TRUE)
+options(scipen=999) ## Evita la escritura en notación científica
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(fig.cap="")
+library(exams)
+library(tikzDevice)
+typ <- match_exams_device()
+
+dh_ca <- sample(1:20,1)
+ca_r <- sample(1:20,1)
+dh_r <- sample(1:20,1)
+dh_ca_r <- sample(1:20,1)
+solodh <- sample(1:20,1)
+soloca <- sample(1:20,1)
+solor <- sample(1:20,1)
+todosdh <- (dh_ca+dh_ca_r+dh_r+solodh)
+todosca <- (dh_ca+dh_ca_r+ca_r+soloca)
+todosr <- (dh_r+dh_ca_r+ca_r+solor)
+univ <- (solodh+dh_ca+soloca+dh_r+dh_ca_r+ca_r+solor)
+
+todosdh2 <- (dh_ca+dh_ca_r+dh_r+todosdh)
+todosca2 <- (dh_ca+dh_ca_r+ca_r+todosca)
+todosr2 <- (dh_r+dh_ca_r+ca_r+todosr)
+
+todosdh3 <- (dh_ca+dh_ca_r+dh_r+solor)
+todosr3 <- (dh_r+dh_ca_r+ca_r+solodh)
+todosca3 <- (dh_ca+dh_ca_r+ca_r+soloca)
+
+todosdh4 <- (dh_ca+dh_ca+dh_r+todosdh)
+todosca4 <- (dh_ca+dh_ca+ca_r+todosca)
+todosr4 <- (dh_r+dh_ca+ca_r+todosr)
+
+solodh<-todosdh-dh_ca-dh_ca_r-dh_r
+soloca<-todosca-dh_ca-dh_ca_r-ca_r
+solor<-todosr-dh_r-dh_ca_r-ca_r
+solodhx<-solodh+1
+
+
+
+grafika01 <- '
+\\begin{tikzpicture}
+       \\node{
+             \\begin{venndiagram3sets}[labelOnlyA={%s},labelOnlyB={%s},labelOnlyC={%s},labelOnlyAB={%s},labelOnlyAC={%s},labelOnlyBC={%s},labelABC={%s},labelNotABC={}]
+             \\end{venndiagram3sets}
+             };
+\\end{tikzpicture}
+'
+grafika01 <- sprintf(grafika01, solodh,soloca,solor, dh_ca, dh_r, ca_r, dh_ca_r)
+
+grafika02<-'
+\\begin{tikzpicture}
+       \\node{
+             \\begin{venndiagram3sets}[labelOnlyA={%s},labelOnlyB={%s},labelOnlyC={%s},labelOnlyAB={%s},labelOnlyAC={%s},labelOnlyBC={%s},labelABC={%s},labelNotABC={}]
+             \\end{venndiagram3sets}
+             };
+\\end{tikzpicture}
+'
+grafika02 <- sprintf(grafika02, todosdh,todosca,todosr, dh_ca, dh_r, ca_r, dh_ca_r)
+
+
+grafika03<-'
+\\begin{tikzpicture}
+       \\node{
+             \\begin{venndiagram3sets}[labelOnlyA={%s},labelOnlyB={%s},labelOnlyC={%s},labelOnlyAB={%s},labelOnlyAC={%s},labelOnlyBC={%s},labelABC={%s},labelNotABC={}]
+             \\end{venndiagram3sets}
+             };
+\\end{tikzpicture}
+'
+grafika03 <- sprintf(grafika03, todosdh,todosca,todosr, dh_ca, dh_r, ca_r, univ)
+
+grafika04 <- '
+\\begin{tikzpicture}
+       \\node{
+             \\begin{venndiagram3sets}[labelOnlyA={%s},labelOnlyB={%s},labelOnlyC={%s},labelOnlyAB={%s},labelOnlyAC={%s},labelOnlyBC={%s},labelABC={%s},labelNotABC={}]
+             \\end{venndiagram3sets}
+             };
+\\end{tikzpicture}
+'
+grafika04 <- sprintf(grafika04, solodh,soloca,solor, dh_ca, dh_r, ca_r, univ)
+
+grafika05<-'
+\\begin{tikzpicture}
+       \\node{
+             \\begin{venndiagram3sets}[labelOnlyA={%s},labelOnlyB={%s},labelOnlyC={%s},labelOnlyAB={%s},labelOnlyAC={%s},labelOnlyBC={%s},labelABC={%s},labelNotABC={}]
+	           \\setpostvennhook
+	            {
+	          	\\draw[<-] (labelA) -- ++(155:3cm) node[above] {Automóviles con dirección hidráulica};
+		          \\draw[<-] (labelB) -- ++(95:2cm) node[above] {Automóviles con cambios automáticos};
+		          \\draw[<-] (labelC) -- ++(-90:1.8cm) node[below] {Automóviles con radio};
+		          \\draw[<-] (labelABC) -- ++(180:3cm) node[left,text width=4cm,align=flush left]
+		          {%s automóviles con dirección hidráulica, cambios automáticos y radio};
+		          }
+             \\end{venndiagram3sets}
+             };
+\\end{tikzpicture}
+'
+grafika05 <- sprintf(grafika05, solodh,soloca,solor, dh_ca, dh_r, ca_r, dh_ca_r, dh_ca_r)
+
+para02<-c(grafika02,grafika03)
+```
+
+Question
+========
+Una agencia automotriz vendió `r univ` automóviles en un mes; `r todosdh` de ellos tenían dirección hidráulica (A); `r todosca` eran de cambios automáticos (B); y `r todosr` tenían radio (C); `r dh_ca_r` tenían dirección hidráulica, cambios automáticos y radio; `r dh_ca` tenían dirección hidráulica y cambios automáticos, pero no tenían radio; `r ca_r` tenían cambios automáticos y radio, pero no tenían dirección hidráulica y, `r dh_r` tenían dirección hidráulica y radio, pero no tenían cambios automáticos.
+La gráfica que representa la información de la venta en la agencia es
+
+Answerlist
+----------
+* 
+```{r grafica01, warning=FALSE,echo = FALSE, results = "asis"}
+include_tikz(grafika01, name = "grafiko1", markup = "markdown",format = typ,packages = c("venndiagram"), width = "6cm")
+```
+* 
+```{r grafica02, warning=FALSE,echo = FALSE, results = "asis"}
+include_tikz(grafika02, name = "grafiko2", markup = "markdown",format = typ,packages = c("venndiagram"),width = "6cm")
+```
+* 
+```{r grafica03, warning=FALSE,echo = FALSE, results = "asis"}
+include_tikz(grafika03, name = "grafiko3", markup = "markdown",format = typ,packages = c("venndiagram"),width = "6cm")
+```
+* 
+```{r grafica04, warning=FALSE,echo = FALSE, results = "asis"}
+include_tikz(grafika04, name = "grafiko4", markup = "markdown",format = typ,packages = c("venndiagram"),width = "6cm")
+```
+
+Solution
+========
+```{r grafica05, warning=FALSE,echo = FALSE, results = "asis"}
+include_tikz(grafika05, name = "grafiko5", markup = "markdown",format = typ,packages = c("venndiagram"),width = "9cm")
+```
+
+Answerlist
+----------
+* True
+* False
+* False
+* False
+
+Meta-information
+================
+exname:DVenn01PDF(single-choice)
+extype:schoice
+exsolution: 1000
+exshuffle: TRUE

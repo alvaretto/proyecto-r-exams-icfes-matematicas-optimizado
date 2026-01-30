@@ -1,0 +1,319 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+    extra_dependencies: ["amsmath", "amssymb", "unicode-math"]
+  word_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "xelatex")
+options(tikzXelatex = TRUE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{amsmath}",
+  "\\usepackage{amssymb}",
+  "\\usepackage{unicode-math}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python"), required = TRUE)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorizar nombres para el contexto del problema
+nombres <- c("Juan", "María", "Carlos", "Ana", "Pedro", "Sofía", "Luis", "Valentina",
+             "Miguel", "Camila", "Diego", "Lucía", "Andrés", "Isabella", "Gabriel",
+             "Daniela", "Alejandro", "Valeria", "Mateo", "Mariana")
+nombre_estudiante <- sample(nombres, 1)
+
+# Aleatorizar objetos cilíndricos
+objetos_cilindricos <- c("vaso", "recipiente", "envase", "contenedor", "frasco", "tarro", "cilindro", "bote")
+objeto_cilindrico <- sample(objetos_cilindricos, 1)
+
+# Aleatorizar adjetivos para el objeto
+adjetivos_objeto <- c("", "de vidrio", "de plástico", "de metal", "de cerámica", "transparente", "de laboratorio")
+adjetivo_objeto <- sample(adjetivos_objeto, 1)
+
+# Aleatorizar contextos para el problema
+contextos <- c(
+  "para un experimento de ciencias",
+  "para un proyecto de matemáticas",
+  "para una clase de geometría",
+  "para calcular su capacidad",
+  "para un trabajo escolar",
+  "para resolver un problema",
+  "para una demostración en clase",
+  "para una tarea de física"
+)
+contexto <- sample(contextos, 1)
+
+# Aleatorizar dimensiones del cilindro (manteniendo proporciones razonables)
+# Radio entre 2 y 5 cm
+radio <- sample(2:5, 1)
+# Altura entre 2 y 3 veces el radio
+factor_altura <- runif(1, 2, 3)
+altura <- round(radio * factor_altura)
+
+# Calcular resultados matemáticos
+pi_valor <- pi  # Usar el valor de pi de R
+volumen <- pi_valor * radio^2 * altura
+area_base <- pi_valor * radio^2
+perimetro_base <- 2 * pi_valor * radio
+area_lateral <- 2 * pi_valor * radio * altura
+area_total <- 2 * area_base + area_lateral
+
+# Redondear a 2 decimales para mostrar
+volumen_redondeado <- round(volumen, 2)
+area_base_redondeado <- round(area_base, 2)
+perimetro_base_redondeado <- round(perimetro_base, 2)
+area_lateral_redondeado <- round(area_lateral, 2)
+
+# Aleatorizar términos para las partes del cilindro
+terminos_base <- c("base", "tapa", "círculo de la base", "superficie circular")
+termino_base <- sample(terminos_base, 1)
+
+terminos_lateral <- c("superficie lateral", "área lateral", "cara lateral", "pared")
+termino_lateral <- sample(terminos_lateral, 1)
+
+# Aleatorizar la respuesta correcta (en este caso siempre es el volumen, pero podríamos cambiar)
+opciones <- c("volumen", "area_base", "perimetro_base", "area_lateral")
+opcion_correcta <- "volumen"
+indice_correcto <- match(opcion_correcta, opciones)
+
+# Vector de solución para r-exams
+solucion <- integer(4)
+solucion[indice_correcto] <- 1
+
+# Verificar que los cálculos sean correctos
+expect_equal(volumen, pi_valor * radio^2 * altura)
+expect_equal(area_base, pi_valor * radio^2)
+expect_equal(perimetro_base, 2 * pi_valor * radio)
+expect_equal(area_lateral, 2 * pi_valor * radio * altura)
+
+# Aleatorizar colores para la visualización
+colores_disponibles <- c("blue", "red", "green", "purple", "orange", "brown", "teal", "navy", "maroon", "olive")
+color_cilindro <- sample(colores_disponibles, 1)
+colores_disponibles <- colores_disponibles[colores_disponibles != color_cilindro]
+color_base <- sample(colores_disponibles, 1)
+colores_disponibles <- colores_disponibles[colores_disponibles != color_base]
+color_texto <- sample(colores_disponibles, 1)
+
+# Aleatorizar estilos de línea
+estilos_linea <- c("solid", "dashed", "dotted", "dashdot")
+estilo_linea <- sample(estilos_linea, 1)
+
+# Aleatorizar transparencia
+transparencia <- runif(1, 0.3, 0.7)
+
+# Aleatorizar la operación mostrada (siempre el volumen, pero con formato variable)
+formatos_operacion <- c(
+  paste0("$\\\\pi \\\\times ", radio, "^2 \\\\times ", altura, " = ", volumen_redondeado, "$"),
+  paste0("$\\\\pi \\\\times (", radio, ")^2 \\\\times ", altura, " = ", volumen_redondeado, "$"),
+  paste0("$\\\\pi \\\\times ", radio, "^2 \\\\times ", altura, " = ", volumen_redondeado, "$"),
+  paste0("$", radio, "^2 \\\\times \\\\pi \\\\times ", altura, " = ", volumen_redondeado, "$")
+)
+operacion_mostrada <- sample(formatos_operacion, 1)
+
+# Aleatorizar verbos para la pregunta
+verbos_pregunta <- c("corresponde", "representa", "equivale", "es igual", "hace referencia")
+verbo_pregunta <- sample(verbos_pregunta, 1)
+
+# Aleatorizar términos para las opciones de respuesta
+terminos_volumen <- c("volumen", "contenido", "espacio interior")
+termino_volumen <- sample(terminos_volumen, 1)
+
+terminos_area_base <- c("área de la base", "área del círculo de la base", "área de la tapa")
+termino_area_base <- sample(terminos_area_base, 1)
+
+terminos_perimetro <- c("perímetro de la base", "contorno de la base", "borde circular")
+termino_perimetro <- sample(terminos_perimetro, 1)
+
+terminos_area_lateral <- c("área lateral", "la superficie lateral", "área de la pared", "la superficie envolvente")
+termino_area_lateral <- sample(terminos_area_lateral, 1)
+```
+
+```{r generar_visualizacion_python, message=FALSE, warning=FALSE}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Código Python para generar la visualización del cilindro
+codigo_python_cilindro <- paste0("
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.patches as patches
+
+# Parámetros del cilindro
+radio = ", radio, "
+altura = ", altura, "
+color_cilindro = '", color_cilindro, "'
+color_base = '", color_base, "'
+color_texto = '", color_texto, "'
+estilo_linea = '", estilo_linea, "'
+transparencia = ", transparencia, "
+
+# Crear figura 3D
+fig = plt.figure(figsize=(8, 6))
+ax = fig.add_subplot(111, projection='3d')
+
+# Generar puntos para el cilindro
+theta = np.linspace(0, 2*np.pi, 100)
+z = np.linspace(0, altura, 100)
+theta_grid, z_grid = np.meshgrid(theta, z)
+x = radio * np.cos(theta_grid)
+y = radio * np.sin(theta_grid)
+
+# Dibujar el cilindro con transparencia
+ax.plot_surface(x, y, z_grid, alpha=transparencia, color=color_cilindro)
+
+# Dibujar círculos en la base y tapa
+theta = np.linspace(0, 2*np.pi, 100)
+x_circle = radio * np.cos(theta)
+y_circle = radio * np.sin(theta)
+z_bottom = np.zeros_like(theta)
+z_top = np.ones_like(theta) * altura
+
+ax.plot(x_circle, y_circle, z_bottom, color=color_base, linestyle=estilo_linea, linewidth=2)
+ax.plot(x_circle, y_circle, z_top, color=color_base, linestyle=estilo_linea, linewidth=2)
+
+# Dibujar líneas verticales para mostrar la altura
+for angle in [0, np.pi/2, np.pi, 3*np.pi/2]:
+    x_line = radio * np.cos(angle)
+    y_line = radio * np.sin(angle)
+    ax.plot([x_line, x_line], [y_line, y_line], [0, altura], color=color_base, linestyle=estilo_linea, linewidth=1.5)
+
+# Añadir etiquetas de dimensiones
+ax.text(0, -radio-0.5, altura/2, f'{altura} cm', color=color_texto, fontsize=12, ha='center', va='center')
+ax.text(0, 0, -1, f'Radio: {radio} cm', color=color_texto, fontsize=12, ha='center', va='center')
+
+# Configurar vista y límites
+ax.set_box_aspect([1, 1, altura/radio])  # Mantener proporciones
+ax.set_xlim(-radio*1.5, radio*1.5)
+ax.set_ylim(-radio*1.5, radio*1.5)
+ax.set_zlim(-2, altura+2)
+
+# Eliminar ejes y etiquetas
+ax.set_axis_off()
+
+# Ajustar ángulo de vista
+ax.view_init(elev=20, azim=30)
+
+# Guardar la figura
+plt.tight_layout()
+plt.savefig('cilindro_3d.png', dpi=150, bbox_inches='tight')
+plt.close()
+
+# Crear una segunda figura para mostrar la operación
+fig, ax = plt.subplots(figsize=(8, 2))
+ax.text(0.5, 0.5, r'$\\pi \\times ", radio, "^2 \\times ", altura, " = ", volumen_redondeado, "$',
+        fontsize=16, ha='center', va='center')
+ax.axis('off')
+plt.tight_layout()
+plt.savefig('operacion.png', dpi=150, bbox_inches='tight')
+plt.close()
+")
+
+# Ejecutar el código Python para generar las visualizaciones
+py_run_string(codigo_python_cilindro)
+```
+
+Question
+========
+
+Un estudiante tiene un `r objeto_cilindrico` `r adjetivo_objeto` de forma cilíndrica `r contexto`. El `r objeto_cilindrico` tiene una base circular de radio `r radio` cm y una altura de `r altura` cm, como se muestra en la figura.
+
+```{r mostrar_cilindro, echo=FALSE, results='asis', fig.align='center'}
+# Incluir la imagen del cilindro
+cat("![](cilindro_3d.png)")
+```
+
+A partir de la información anterior, el estudiante plantea la siguiente operación:
+
+```{r mostrar_operacion, echo=FALSE, results='asis', fig.align='center'}
+# Incluir la imagen de la operación
+cat("![](operacion.png)")
+```
+
+¿A qué `r verbo_pregunta` el resultado de la anterior operación?
+
+Answerlist
+----------
+- Al `r termino_volumen` del `r objeto_cilindrico`.
+- Al `r termino_area_base` del `r objeto_cilindrico`.
+- Al `r termino_perimetro` del `r objeto_cilindrico`.
+- Al `r termino_area_lateral` del `r objeto_cilindrico`.
+
+Solution
+========
+
+La respuesta correcta es: Al `r termino_volumen` del `r objeto_cilindrico`.
+
+Para resolver este problema, debemos identificar qué fórmula corresponde a la operación planteada:
+
+$\pi \times `r radio`^2 \times `r altura` = `r volumen_redondeado`$
+
+Esta operación corresponde a la fórmula del volumen de un cilindro:
+$V = \pi \times r^2 \times h$
+
+Donde:
+- r = radio de la base = `r radio` cm
+- h = altura del cilindro = `r altura` cm
+
+Sustituyendo los valores:
+$V = \pi \times (`r radio`)^2 \times `r altura` = \pi \times `r radio*radio` \times `r altura` = `r volumen_redondeado` \text{ cm}^3$
+
+Las otras opciones corresponden a:
+
+- Área de la base (o tapa): $A = \pi \times r^2 = \pi \times (`r radio`)^2 = `r area_base_redondeado` \text{ cm}^2$
+- Perímetro de la base: $P = 2\pi \times r = 2\pi \times `r radio` = `r perimetro_base_redondeado` \text{ cm}$
+- Área lateral: $AL = 2\pi \times r \times h = 2\pi \times `r radio` \times `r altura` = `r area_lateral_redondeado` \text{ cm}^2$
+
+Por lo tanto, la operación $\pi \times `r radio`^2 \times `r altura` = `r volumen_redondeado`$ corresponde al volumen del cilindro.
+
+Answerlist
+----------
+- Verdadero
+- Falso
+- Falso
+- Falso
+
+Meta-information
+================
+exname: volumen_cilindro
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+exsection: Geometría espacial

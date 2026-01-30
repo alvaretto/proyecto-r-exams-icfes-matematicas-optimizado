@@ -1,0 +1,51 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\usepackage{Sweave}
+\begin{document}
+\input{boxplots-concordance}
+
+
+\begin{question}
+En la siguiente figura se representan las distribuciones de una variable
+dada por dos muestras (A y B) mediante diagramas de caja paralelos.
+¿Cuáles de las siguientes afirmaciones son correctas? \emph{(Comentario: Las
+afirmaciones son correctas o claramente incorrectas.)}
+
+\setkeys{Gin}{width=0.7\textwidth}
+\includegraphics{boxplots-002}
+
+\begin{answerlist}
+  \item La ubicación de ambas distribuciones es aproximadamente la misma.
+  \item Ambas distribuciones no contienen valores atípicos.
+  \item La dispersión en la muestra A es claramente mayor que en B.
+  \item La asimetría de ambas muestras es similar.
+  \item La distribución A es sesgada a la izquierda.
+\end{answerlist}
+\end{question}
+
+\begin{solution}
+\begin{answerlist}
+  \item Falso. La distribución B tiene en promedio valores más altos que la distribución A.
+  \item Verdadero. Ambas distribuciones no tienen observaciones que se desvíen más de 1.5 veces el rango intercuartílico desde la caja.
+  \item Verdadero. El rango intercuartílico en la muestra A es  claramente mayor que en B.
+  \item Verdadero. La asimetría de ambas distribuciones es similar, ambas son aproximadamente simétricas.
+  \item Falso. La distribución  A  es  aproximadamente simétrica.
+\end{answerlist}
+\end{solution}
+
+%% META-INFORMATION
+%% \extype{mchoice}
+%% \exsolution{01110}
+%% \exname{Diagramas de caja paralelos}
+\end{document}

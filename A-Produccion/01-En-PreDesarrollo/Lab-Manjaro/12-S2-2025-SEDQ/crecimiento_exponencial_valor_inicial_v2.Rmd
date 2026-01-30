@@ -1,0 +1,256 @@
+---
+encoding: UTF-8
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: algebra_calculo
+    tipo: generico
+  contexto: cientifico
+  eje_axial: eje1
+  componente: numerico_variacional
+---
+encoding: UTF-8
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage[utf8]{inputenc}", # Manejo de caracteres UTF-8
+  "\\usepackage[T1]{fontenc}",    # Codificación de fuentes moderna
+  "\\usepackage[spanish]{babel}", # Soporte para español, incluyendo guionización si está disponible
+  "\\usepackage{amsmath,amssymb}" # Paquetes matemáticos estándar
+))
+
+library(exams)
+library(reticulate) 
+library(digest)
+library(glue)
+
+typ <- match_exams_device()
+options(scipen = 999) # Evitar notación científica
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+# Configuración para chunks de Python (si se usaran)
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+# Establecer semilla aleatoria para reproducibilidad
+set.seed(sample(1:100000, 1))
+
+# --- Aleatorización de Parámetros ---
+encoding: UTF-8
+coeficientes_posibles <- c(10, 20, 25, 30, 40, 50, 60, 75, 80, 100, 120, 150, 200)
+coef_inicial <- sample(coeficientes_posibles, 1)
+
+bases_posibles <- c(1.5, 2, 2.2, 2.5, 3)
+base_exponencial <- sample(bases_posibles, 1)
+
+factores_tiempo_posibles <- c(0.2, 0.25, 0.4, 0.5, 0.75, 0.8, 1, 1.2, 1.5)
+factor_tiempo <- sample(factores_tiempo_posibles, 1)
+
+organismos_plural <- c("ranas", "peces", "insectos", "aves", "conejos", "bacterias", "algas", "hongos", "plantas", "virus")
+idx_organismo <- sample(1:length(organismos_plural), 1)
+organismo_plural <- organismos_plural[idx_organismo]
+
+unidades_tiempo_plural <- c("semanas", "días", "meses", "horas", "años", "minutos")
+idx_unidad <- sample(1:length(unidades_tiempo_plural), 1)
+unidad_tiempo_plural <- unidades_tiempo_plural[idx_unidad]
+
+verbos_accion <- c("se reproduce", "crece", "aumenta su población", "se multiplica", "evoluciona su cantidad")
+verbo_accion <- sample(verbos_accion, 1)
+
+contextos_estudio <- c("un estudio científico", "una observación de campo", "un experimento de laboratorio", "un análisis poblacional", "un monitoreo ecológico")
+contexto_estudio <- sample(contextos_estudio, 1)
+
+simbolo_cantidad <- sample(c("r", "P", "N", "Q", "C"), 1)
+simbolo_tiempo <- sample(c("t", "x", "k"), 1)
+
+adjetivos_especie <- c("cierta", "una determinada", "una particular", "una nueva", "una exótica")
+adjetivo_especie <- sample(adjetivos_especie, 1)
+
+# --- Aleatorización del tiempo para la pregunta ---
+encoding: UTF-8
+tiempo_evaluacion_posibles <- c(0.5, 1, 1.5, 2, 2.5, 3) # Valores de tiempo a evaluar
+tiempo_evaluacion <- sample(tiempo_evaluacion_posibles, 1)
+
+# --- Formulación de la función ---
+encoding: UTF-8
+funcion_texto <- glue::glue("{simbolo_cantidad}({simbolo_tiempo}) = {coef_inicial} \\cdot ({base_exponencial})^{{{factor_tiempo} \\cdot {simbolo_tiempo}}}")
+funcion_display <- glue::glue("{simbolo_cantidad}({simbolo_tiempo}) = {coef_inicial}({base_exponencial})^{{{factor_tiempo}{simbolo_tiempo}}}")
+
+# --- Cálculo de la Solución ---
+encoding: UTF-8
+respuesta_correcta <- coef_inicial * (base_exponencial)^(factor_tiempo * tiempo_evaluacion)
+respuesta_correcta <- round(respuesta_correcta) # Redondear a entero
+
+# --- Generación de Opciones de Respuesta ---
+encoding: UTF-8
+opciones <- numeric(4)
+opciones[1] <- respuesta_correcta
+
+distractores_candidatos <- c(
+  round(coef_inicial * base_exponencial), round(coef_inicial / 2), round(coef_inicial * 1.5),
+  round(coef_inicial * 0.75), round(coef_inicial + base_exponencial), round(abs(coef_inicial - base_exponencial)),
+  round(coef_inicial + factor_tiempo * 10), as.integer(base_exponencial), as.integer(factor_tiempo),
+  sample(c(2,5,10,15,20), 1) * sample(c(1,2),1),
+  round(coef_inicial * (base_exponencial)^(factor_tiempo * (tiempo_evaluacion + 1))), #Distractores relacionados
+  round(coef_inicial * (base_exponencial)^(factor_tiempo * (tiempo_evaluacion - 0.5))),
+  round(coef_inicial * (base_exponencial)^(factor_tiempo) * tiempo_evaluacion),
+  round(base_exponencial * tiempo_evaluacion), # Distractor simple
+  round(coef_inicial + base_exponencial + tiempo_evaluacion) # Distractor simple
+)
+
+distractores_candidatos <- round(distractores_candidatos)
+distractores_candidatos <- unique(distractores_candidatos)
+distractores_candidatos <- distractores_candidatos[!is.na(distractores_candidatos)]
+distractores_candidatos <- distractores_candidatos[distractores_candidatos > 0]
+distractores_candidatos <- distractores_candidatos[distractores_candidatos != respuesta_correcta]
+
+if (length(distractores_candidatos) >= 3) {
+  opciones[2:4] <- sample(distractores_candidatos, 3)
+} else {
+  # Fallback para asegurar 3 distractores únicos y positivos
+  fill_idx <- 2
+  while(fill_idx <= 4) {
+    new_distractor <- round(runif(1, min(respuesta_correcta/2, 1), max(respuesta_correcta*1.5, 10))) # Rango más flexible
+    if (!(new_distractor %in% opciones[1:(fill_idx-1)]) && new_distractor > 0) {
+      opciones[fill_idx] <- new_distractor
+      fill_idx <- fill_idx + 1
+    }
+  }
+}
+
+opciones_ordenadas <- round(opciones) # Asegurar enteros al final
+
+# Asegurar que la respuesta correcta esté en las opciones finales si el fallback la excluyó
+if (!respuesta_correcta %in% opciones_ordenadas) {
+  replace_idx <- sample(1:4, 1) # Remplazar una opción aleatoria
+  opciones_ordenadas[replace_idx] <- respuesta_correcta
+  opciones_ordenadas <- unique(opciones_ordenadas) # Quitar duplicados si se creó uno
+  
+  # Rellenar si hay menos de 4 post-unicidad
+   while(length(opciones_ordenadas) < 4) {
+    new_distractor <- round(runif(1, min(respuesta_correcta/2, 1), max(respuesta_correcta*1.8, 15)))
+     if (!(new_distractor %in% opciones_ordenadas) && new_distractor > 0) {
+         opciones_ordenadas <- c(opciones_ordenadas, new_distractor)
+     }
+   }
+   opciones_ordenadas <- opciones_ordenadas[1:4] # Tomar los primeros 4 después del relleno
+}
+
+# Redondear al final y asegurar positividad y unicidad de 4 elementos
+opciones_ordenadas <- unique(round(opciones_ordenadas))
+opciones_ordenadas <- opciones_ordenadas[opciones_ordenadas > 0] # Eliminar <= 0
+
+# Último recurso para asegurar 4 opciones únicas y positivas
+iter_final <- 1
+while(length(opciones_ordenadas) < 4 && iter_final < 20) {
+   new_val <- round(max(opciones_ordenadas, respuesta_correcta, 1) + iter_final * sample(1:5, 1))
+   if(!(new_val %in% opciones_ordenadas) && new_val > 0){
+       opciones_ordenadas <- c(opciones_ordenadas, new_val)
+   }
+   iter_final <- iter_final + 1
+}
+opciones_ordenadas <- opciones_ordenadas[1:4] # Tomar los primeros 4 si se generaron suficientes
+
+# Asegurar que la respuesta correcta está en lista final procesada
+if (!respuesta_correcta %in% opciones_ordenadas) {
+    opciones_ordenadas[sample(1:4,1)] <- respuesta_correcta
+    opciones_ordenadas <- unique(opciones_ordenadas)
+    # Rellenar si se perdió una opción por unicidad
+     while(length(opciones_ordenadas) < 4) {
+        new_distractor <- round(max(opciones_ordenadas, respuesta_correcta, 1) + sample(1:10,1))
+         if (!(new_distractor %in% opciones_ordenadas) && new_distractor > 0) {
+             opciones_ordenadas <- c(opciones_ordenadas, new_distractor)
+         }
+       }
+    opciones_ordenadas <- opciones_ordenadas[1:4]
+}
+
+
+solucion_logica <- (opciones_ordenadas == respuesta_correcta)
+
+if(any(is.na(opciones_ordenadas))) { stop("CRÍTICO: 'opciones_ordenadas' contiene NAs.") }
+if(length(unique(opciones_ordenadas)) < 4) { stop("CRÍTICO: 'opciones_ordenadas' no tiene 4 opciones únicas después de todos los intentos.") }
+if(sum(solucion_logica) != 1) {
+    stop(paste0("CRÍTICO: 'solucion_logica' no tiene un TRUE. Sol: ", paste(solucion_logica, collapse=","),
+                ". Opt: ", paste(opciones_ordenadas, collapse=","), ". RC: ", respuesta_correcta))
+}
+```
+
+Question
+========
+`r adjetivo_especie` especie de `r organismo_plural` `r verbo_accion` según la función $`r funcion_texto`$, donde $`r simbolo_tiempo`$ se mide en `r unidad_tiempo_plural` y $`r simbolo_cantidad`$ es la cantidad de `r organismo_plural`.
+
+De acuerdo con la información anterior, la cantidad de `r organismo_plural` que había a los(as) `r tiempo_evaluacion` `r unidad_tiempo_plural` de iniciado(a) `r contexto_estudio`, es:
+
+Answerlist
+----------
+encoding: UTF-8
+```{r answerlist, echo=FALSE, results='asis'}
+cat(paste("- ", opciones_ordenadas, " ", organismo_plural, ".", sep = "", collapse = "\n"))
+```
+
+Solution
+========
+Para determinar la cantidad de `r organismo_plural` que había al(los) `r tiempo_evaluacion` `r unidad_tiempo_plural` de iniciado `r contexto_estudio`, necesitamos evaluar la función de población $`r funcion_display`$ en el momento $`r simbolo_tiempo`=`r tiempo_evaluacion`$.
+
+La función dada es:
+$`r simbolo_cantidad`(`r simbolo_tiempo`) = `r coef_inicial`(`r base_exponencial`)^{`r factor_tiempo``r simbolo_tiempo`}$
+
+Sustituimos $`r simbolo_tiempo` = `r tiempo_evaluacion`$ en la función:
+$`r simbolo_cantidad`(`r tiempo_evaluacion`) = `r coef_inicial`(`r base_exponencial`)^{`r factor_tiempo` \cdot `r tiempo_evaluacion`}$.
+
+Primero calculamos el exponente: `r factor_tiempo` $\cdot$ `r tiempo_evaluacion` = `r factor_tiempo * tiempo_evaluacion`.
+
+Luego, calculamos la base elevada al exponente: (`r base_exponencial`)$^{`r factor_tiempo * tiempo_evaluacion`}$ $\approx$ `r round(base_exponencial^(factor_tiempo * tiempo_evaluacion), 2)`.
+
+Finalmente, multiplicamos por el coeficiente inicial: `r coef_inicial` $\cdot$ `r round(base_exponencial^(factor_tiempo * tiempo_evaluacion), 2)` $\approx$ `r round(coef_inicial * base_exponencial^(factor_tiempo * tiempo_evaluacion), 2)`.
+
+$`r simbolo_cantidad`(`r tiempo_evaluacion`) \approx `r round(coef_inicial * base_exponencial^(factor_tiempo * tiempo_evaluacion), 2)`$
+
+Redondeando al número entero más cercano, obtenemos:
+$`r simbolo_cantidad`(`r tiempo_evaluacion`) \approx `r respuesta_correcta`$
+
+Así, la cantidad de `r organismo_plural` que había al(los) `r tiempo_evaluacion` `r unidad_tiempo_plural` de iniciado el `r contexto_estudio` es aproximadamente `r respuesta_correcta`.
+
+Answerlist
+----------
+encoding: UTF-8
+```{r solutionlist, echo=FALSE, results='asis'}
+cat(paste("- ", ifelse(solucion_logica, "Verdadero", "Falso"), sep = "", collapse = "\n"))
+```
+
+Meta-information
+================
+exname: crecimiento_exponencial_valor_tiempo
+extype: schoice
+exsolution: `r paste(as.integer(solucion_logica), collapse = "")`
+exshuffle: TRUE
+exsection: Álgebra y Cálculo/Funciones Exponenciales/Modelado de Poblaciones
+extol: 0.01
+expoints: 1

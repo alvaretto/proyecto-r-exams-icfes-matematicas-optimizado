@@ -1,0 +1,14 @@
+---
+title: "Evaluación Interactiva de Matemáticas ICFES"
+output: exams2forms::webquiz
+---
+
+```{r exams2forms-setup, include = FALSE}
+## package and exercises
+library("exams2forms")
+exm <- "migracion_atun_OPTIMIZADO_anti_patron.Rmd"
+```
+
+```{r exams2forms-include, echo = FALSE, message = FALSE, results="asis"}
+exams2forms(exm,  n = 4, nsamp = NULL, edir = "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/En-Desarrollo/migracion_atun_representacion_grafica_n2_v1", encoding = "UTF-8", solution = TRUE, shuffle = TRUE, mathjax = TRUE)
+```

@@ -1,0 +1,167 @@
+---
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+```{r data generation, echo = FALSE, results = "hide"}
+# Generación de datos aleatorios
+library(exams)
+
+# Generación de nombres aleatorios para modelos
+modelos <- c("X", "Y", "Z")
+modelos <- sample(c("Modelo A", "Modelo B", "Modelo C", "Modelo D", "Modelo E", 
+                    "Modelo F", "Modelo G", "Modelo H", "Modelo J", "Modelo K", 
+                    "Modelo L", "Modelo M", "Modelo N", "Modelo P", "Modelo Q", 
+                    "Modelo R", "Modelo S", "Modelo T", "Modelo U", "Modelo V", 
+                    "Modelo W"), 3)
+
+# Número aleatorio de pruebas entre 5 y 8
+num_pruebas <- sample(5:8, 1)
+
+# Generación de datos base para cada modelo
+# Aseguramos que las medianas tengan la relación deseada
+base_valores <- sample(500:800, 3 * num_pruebas, replace = TRUE)
+matriz_datos <- matrix(base_valores, nrow = 3, ncol = num_pruebas)
+
+# Ajustamos los valores para que el modelo Z tenga la mediana mayor que X e Y
+mediana_deseada_x <- median(sort(matriz_datos[1,]))
+mediana_deseada_y <- median(sort(matriz_datos[2,]))
+
+# Aseguramos que Y tenga una mediana diferente a X (puede ser mayor o menor)
+while (mediana_deseada_y == mediana_deseada_x) {
+  matriz_datos[2,] <- matriz_datos[2,] + sample(-5:5, num_pruebas, replace = TRUE)
+  mediana_deseada_y <- median(sort(matriz_datos[2,]))
+}
+
+# Aseguramos que Z tenga una mediana mayor que X e Y, pero con diferencia sutil
+# Primero ordenamos los valores de Z para trabajar con ellos de manera más controlada
+matriz_datos[3,] <- sort(matriz_datos[3,])
+
+# Calculamos el máximo de las medianas de X e Y
+max_mediana_xy <- max(mediana_deseada_x, mediana_deseada_y)
+
+# Ajustamos solo el valor central (mediana) y los valores mayores para garantizar
+# que la mediana sea mayor, pero manteniendo algunos valores similares a X e Y
+# para que sea un distractor más desafiante
+posicion_mediana <- ceiling(num_pruebas/2)
+matriz_datos[3, posicion_mediana] <- max_mediana_xy + sample(5:15, 1)  # Ajuste sutil para la mediana
+# Ajustamos los valores mayores que la mediana
+if (posicion_mediana < num_pruebas) {
+  matriz_datos[3, (posicion_mediana+1):num_pruebas] <- matriz_datos[3, (posicion_mediana+1):num_pruebas] + sample(10:20, num_pruebas - posicion_mediana, replace = TRUE)
+}
+
+# Desordenamos los valores para que no sea obvio cuál es la mediana
+matriz_datos[3,] <- sample(matriz_datos[3,])
+
+# Verificamos que Z tenga una mediana mayor que X e Y
+mediana_deseada_z <- median(sort(matriz_datos[3,]))
+while (mediana_deseada_z <= max_mediana_xy) {
+  # Si aún no es mayor, hacemos un ajuste mínimo
+  matriz_datos[3,] <- matriz_datos[3,] + 5
+  mediana_deseada_z <- median(sort(matriz_datos[3,]))
+}
+
+# Garantizamos que haya dos valores iguales en dos modelos diferentes
+# Seleccionamos aleatoriamente dos modelos diferentes
+modelos_para_igualar <- sample(1:3, 2)
+# Seleccionamos aleatoriamente una posición para hacer que los valores sean iguales
+posicion_igual <- sample(1:num_pruebas, 1)
+# Guardamos las medianas originales
+med_original_1 <- median(matriz_datos[modelos_para_igualar[1],])
+med_original_2 <- median(matriz_datos[modelos_para_igualar[2],])
+# Establecemos el mismo valor para ambos modelos en esa posición
+# Usamos el valor del primer modelo seleccionado
+valor_comun <- matriz_datos[modelos_para_igualar[1], posicion_igual]
+matriz_datos[modelos_para_igualar[2], posicion_igual] <- valor_comun
+
+# Verificamos que las medianas sigan manteniendo la relación deseada (Z > X, Z > Y)
+mediana_deseada_x <- median(sort(matriz_datos[1,]))
+mediana_deseada_y <- median(sort(matriz_datos[2,]))
+mediana_deseada_z <- median(sort(matriz_datos[3,]))
+
+# Si las medianas cambiaron y ya no cumplen la condición, ajustamos
+if (mediana_deseada_z <= max(mediana_deseada_x, mediana_deseada_y)) {
+  # Ajustamos la mediana de Z para que vuelva a ser mayor
+  matriz_datos[3,] <- matriz_datos[3,] + (max(mediana_deseada_x, mediana_deseada_y) - mediana_deseada_z + sample(5:10, 1))
+}
+
+# Creamos la tabla de datos
+tabla <- data.frame(
+  Prueba = paste("Prueba", 1:num_pruebas),
+  Modelo1 = matriz_datos[1,],
+  Modelo2 = matriz_datos[2,],
+  Modelo3 = matriz_datos[3,]
+)
+
+# Calculamos las medianas para verificación
+med1 <- median(matriz_datos[1,])
+med2 <- median(matriz_datos[2,])
+med3 <- median(matriz_datos[3,])
+
+# Generamos nombres aleatorios para el contexto
+marcas <- c("SmartCell", "TechLife", "PowerMobile", "CellTech", "MobilPro")
+marca_seleccionada <- sample(marcas, 1)
+pruebas <- c("rendimiento", "uso intensivo", "resistencia", "durabilidad", "eficiencia")
+prueba_seleccionada <- sample(pruebas, 1)
+```
+
+Question
+========
+La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante `r num_pruebas` pruebas diferentes:
+
+```{r, echo = FALSE, results = "asis"}
+# Crear un vector de índices aleatorios para reordenar los modelos
+indices_aleatorios <- sample(1:3)
+
+# Crear un vector con los nombres de modelos reordenados
+modelos_aleatorios <- modelos[indices_aleatorios]
+
+# Crear una nueva tabla con las columnas reordenadas para mantener la correspondencia
+# La primera columna (Prueba) siempre se mantiene en su posición
+tabla_reordenada <- tabla[, c(1, indices_aleatorios + 1)]
+
+# Generar la tabla con los nombres de columnas aleatorizados
+# pero manteniendo la correspondencia con los datos
+knitr::kable(tabla_reordenada, col.names = c("", modelos_aleatorios))
+
+# Guardar la correspondencia entre los índices originales y los aleatorios
+# para usarla en el resto del documento
+indice_x <- which(indices_aleatorios == 1)
+indice_y <- which(indices_aleatorios == 2)
+indice_z <- which(indices_aleatorios == 3)
+```
+
+Al comparar la mediana de las duraciones de la batería de los tres modelos, ¿cuál de las siguientes afirmaciones es correcta?
+
+Answerlist
+----------
+* El `r modelos_aleatorios[indice_z]` tiene una mediana igual a la del `r modelos_aleatorios[indice_y]` y menor que la del `r modelos_aleatorios[indice_x]`.
+* El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`.
+* El `r modelos_aleatorios[indice_z]` tiene una mediana igual a la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`.
+* El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`.
+
+Solution
+========
+La respuesta correcta es: El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`.
+
+Para resolver este problema, debemos:
+
+1. Ordenar los datos de cada modelo y encontrar su mediana:
+
+* `r modelos_aleatorios[indice_x]`: `r sort(matriz_datos[1,])` → Mediana = `r med1`
+* `r modelos_aleatorios[indice_y]`: `r sort(matriz_datos[2,])` → Mediana = `r med2`
+* `r modelos_aleatorios[indice_z]`: `r sort(matriz_datos[3,])` → Mediana = `r med3`
+
+2. Comparar las medianas:
+* Mediana de `r modelos_aleatorios[indice_z]` (`r med3`) > Mediana de `r modelos_aleatorios[indice_x]` (`r med1`)
+* Mediana de `r modelos_aleatorios[indice_z]` (`r med3`) > Mediana de `r modelos_aleatorios[indice_y]` (`r med2`)
+
+Por lo tanto, el `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`.
+
+Meta-information
+============
+exname: medianas-celulares
+extype: schoice
+exsolution: 0100
+exshuffle: TRUE

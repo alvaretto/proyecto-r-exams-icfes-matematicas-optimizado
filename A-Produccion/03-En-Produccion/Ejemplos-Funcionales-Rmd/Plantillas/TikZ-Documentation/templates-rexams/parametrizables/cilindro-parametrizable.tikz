@@ -1,0 +1,69 @@
+% Template TikZ Parametrizable para Cilindro - Compatible R-exams
+% Basado en: Lab/36/Auxiliares/TikZ/Cilindro-Hueco.tikz
+% Adaptado para compatibilidad multi-formato
+
+\begin{tikzpicture}[
+  line cap=round,
+  line join=round,
+  >=stealth,
+  thick,
+  scale=`r escala_tikz`
+]
+
+% Variables parametrizables desde R
+% En el chunk R definir:
+% altura_cilindro <- sample(2:5, 1)
+% radio_interno <- sample(0.8:1.5, 1) 
+% grosor_pared <- sample(0.3:0.8, 1)
+% escala_tikz <- 1.0
+
+% Coordenadas calculadas
+\coordinate (centroinferior) at (0,0);
+\coordinate (centrosuperior) at (0,`r altura_cilindro`);
+
+% Puntos clave - usando variables R
+\coordinate (R0b) at (`r radio_interno + grosor_pared`, 0);
+\coordinate (-R0b) at (`r -(radio_interno + grosor_pared)`, 0);
+\coordinate (r0b) at (`r radio_interno`, 0);
+\coordinate (-r0b) at (`r -radio_interno`, 0);
+
+\coordinate (R0t) at (`r radio_interno + grosor_pared`, `r altura_cilindro`);
+\coordinate (-R0t) at (`r -(radio_interno + grosor_pared)`, `r altura_cilindro`);
+\coordinate (r0t) at (`r radio_interno`, `r altura_cilindro`);
+\coordinate (-r0t) at (`r -radio_interno`, `r altura_cilindro`);
+
+% Perspectiva elíptica (valores fijos para compatibilidad)
+\pgfmathsetmacro{\vradioexternobot}{0.4}
+\pgfmathsetmacro{\vradiointernobot}{0.25}
+\pgfmathsetmacro{\vradioexternotop}{0.5}
+\pgfmathsetmacro{\vradiointernotop}{0.35}
+
+% Partes ocultas (líneas punteadas)
+\draw[dashed, gray] (R0b) arc (0:180:{`r radio_interno + grosor_pared`} and {\vradioexternobot});
+\draw[dashed, gray] (r0b) arc (0:180:{`r radio_interno`} and {\vradiointernobot});
+\draw[dashed, gray] (-r0b) -- (-r0t);
+\draw[dashed, gray] (r0b) -- (r0t);
+
+% Partes visibles
+\draw[blue!80, thick] (-R0b) -- (-R0t);
+\draw[blue!80, thick] (R0b) -- (R0t);
+\draw[blue!80, thick] (R0b) arc (0:-180:{`r radio_interno + grosor_pared`} and {\vradioexternobot});
+\draw[blue!80, thick] (r0b) arc (0:-180:{`r radio_interno`} and {\vradiointernobot});
+\draw[blue!80, thick] (centrosuperior) ellipse ({`r radio_interno + grosor_pared`} and {\vradioexternotop});
+\draw[blue!80, thick] (centrosuperior) ellipse ({`r radio_interno`} and {\vradiointernotop});
+
+% Puntos centrales
+\fill[blue!80] (centroinferior) circle (1pt);
+\fill[blue!80] (centrosuperior) circle (1pt);
+
+% Etiquetas y medidas
+\draw[|<->|, black] (`r radio_interno + grosor_pared + 0.3`, 0) -- (`r radio_interno + grosor_pared + 0.3`, `r altura_cilindro`);
+\node[right] at (`r radio_interno + grosor_pared + 0.4`, `r altura_cilindro/2`) {\small `r altura_cilindro` m};
+
+\draw[<->, red!70] (centrosuperior) -- (r0t);
+\node[above right, red!70] at (`r radio_interno/2`, `r altura_cilindro + 0.2`) {\small r = `r radio_interno` m};
+
+\draw[|<->|, green!70] (-r0t) -- (-R0t);
+\node[above left, green!70] at (`r -(radio_interno + grosor_pared/2)`, `r altura_cilindro + 0.3`) {\small `r grosor_pared` m};
+
+\end{tikzpicture}

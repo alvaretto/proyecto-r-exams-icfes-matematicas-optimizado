@@ -1,0 +1,319 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r inicio, include=FALSE}
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = ""
+)
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+# Definición de variables para el problema
+# Para este problema, podemos variar los tiempos de las diferentes fases
+# del vuelo
+
+# Vector con posibles valores para los tiempos (en segundos)
+# Tiempo de aumento de altura (25-35 seg)
+tiempos_aumento <- sample(seq(25, 35, by = 5), 1)
+tiempos_pirueta <- sample(seq(3, 7, by = 1), 1)    # Tiempo de pirueta (3-7 seg)
+tiempos_elevacion <- 5                             # Tiempo de elevación adicional
+tiempos_giro <- sample(seq(15, 25, by = 5), 1)     # Tiempo de giro (15-25 seg)
+# Tiempo de aterrizaje (20-30 seg)
+tiempos_aterrizaje <- sample(seq(20, 30, by = 5), 1)
+
+# Alturas máximas posibles (en metros)
+altura_maxima <- sample(seq(100, 200, by = 20), 1)
+
+# Definir variables para mostrar en el texto del problema
+tiempo_total <- tiempos_aumento + tiempos_pirueta + tiempos_elevacion +
+  tiempos_giro + tiempos_aterrizaje
+```
+
+Question
+========
+
+En una entrevista para una cadena de televisión, un piloto de un avión de acrobacias comenta en detalle cómo fue su presentación:
+
+"Durante los primeros `r tiempos_aumento` segundos aumenté la altura de manera constante y luego, realicé una pirueta en la que descendí de manera constante durante `r tiempos_pirueta` segundos. Después del descenso, necesité recuperar la altitud para la siguiente maniobra, así que elevé nuevamente el avión durante `r tiempos_elevacion` segundos hasta alcanzar la altura máxima inicial. Una vez recuperada la altura, comencé a girar en torno al eje del avión durante `r tiempos_giro` segundos, manteniendo la misma altura. Para finalizar, aterricé reduciendo la altura de manera constante durante `r tiempos_aterrizaje` segundos".
+
+¿Cuál de las siguientes gráficas representa de forma CORRECTA la información dada por el piloto?
+
+Answerlist
+----------
+- Opción A
+<br/>
+```{python GraficoA, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Configuración para eliminar etiquetas
+plt.rcParams['figure.figsize'] = (8, 5)
+plt.rcParams['figure.titlesize'] = 0
+
+# Obtener variables de R
+tiempo_aumento = r.tiempos_aumento
+tiempo_pirueta = r.tiempos_pirueta
+tiempo_elevacion = r.tiempos_elevacion
+tiempo_giro = r.tiempos_giro
+tiempo_aterrizaje = r.tiempos_aterrizaje
+altura_max = r.altura_maxima
+
+# Definir puntos clave para el gráfico A (INCORRECTO - Tiempo en mantener altura después de la pirueta es mayor al indicado)
+# Fase 1: Aumento constante de altura
+x1 = np.array([0, tiempo_aumento])
+y1 = np.array([0, altura_max])
+
+# Fase 2: Mantener altura en vez de hacer pirueta (incorrecto)
+x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro])
+y2 = np.array([altura_max, altura_max])
+
+# Fase 3: Aterrizaje (descenso constante)
+x3 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje])
+y3 = np.array([altura_max, 0])
+
+# Crear figura
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# Graficar cada segmento
+ax.plot(x1, y1, 'b-', linewidth=2)
+ax.plot(x2, y2, 'b-', linewidth=2)
+ax.plot(x3, y3, 'b-', linewidth=2)
+
+# Configuración del gráfico
+ax.set_xlabel('Segundos', fontweight='bold')
+ax.set_ylabel('Altura (m)', fontweight='bold')
+ax.grid(True, linestyle='--', alpha=0.7)
+ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5)
+ax.set_ylim(0, altura_max * 1.1)
+
+# Mostrar gráfico
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.show()
+```
+
+- Opción B
+<br/>
+```{python GraficoB, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
+# Gráfico B (INCORRECTO - Con pico más alto en la pirueta)
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Configuración para eliminar etiquetas
+plt.rcParams['figure.figsize'] = (8, 5)
+plt.rcParams['figure.titlesize'] = 0
+
+# Definir puntos clave para el gráfico B
+# Fase 1: Aumento constante de altura
+x1 = np.array([0, tiempo_aumento])
+y1 = np.array([0, altura_max])
+
+# Fase 2: Pirueta (con pico incorrecto)
+x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta/2, tiempo_aumento + tiempo_pirueta])
+y2 = np.array([altura_max, altura_max*1.5, altura_max/2])  # Pico más alto (incorrecto)
+
+# Fase 3: Giro a altura constante (sin fase de elevación adicional)
+x3 = np.array([tiempo_aumento + tiempo_pirueta, tiempo_aumento + tiempo_pirueta + tiempo_giro])
+y3 = np.array([altura_max/2, altura_max/2])
+
+# Fase 4: Aterrizaje (descenso constante)
+x4 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_giro + tiempo_aterrizaje])
+y4 = np.array([altura_max/2, 0])
+
+# Crear figura
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# Graficar cada segmento
+ax.plot(x1, y1, 'r-', linewidth=2)
+ax.plot(x2, y2, 'r-', linewidth=2)
+ax.plot(x3, y3, 'r-', linewidth=2)
+ax.plot(x4, y4, 'r-', linewidth=2)
+
+# Configuración del gráfico
+ax.set_xlabel('Segundos', fontweight='bold')
+ax.set_ylabel('Altura (m)', fontweight='bold')
+ax.grid(True, linestyle='--', alpha=0.7)
+ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5)
+ax.set_ylim(0, altura_max * 1.8)
+
+# Mostrar gráfico
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.show()
+```
+
+- Opción C
+<br/>
+```{python GraficoC, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
+# Gráfico C (INCORRECTO - Falta la fase de elevación adicional)
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Configuración para eliminar etiquetas
+plt.rcParams['figure.figsize'] = (8, 5)
+plt.rcParams['figure.titlesize'] = 0
+
+# Definir puntos clave para el gráfico C
+# Fase 1: Aumento constante de altura
+x1 = np.array([0, tiempo_aumento])
+y1 = np.array([0, altura_max])
+
+# Fase 2: Pirueta (descenso constante)
+x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta])
+y2 = np.array([altura_max, altura_max/2])  # Descenso a mitad de altura
+
+# Fase 3: Giro a altura constante (falta la fase de elevación)
+x3 = np.array([tiempo_aumento + tiempo_pirueta, tiempo_aumento + tiempo_pirueta + tiempo_giro])
+y3 = np.array([altura_max/2, altura_max/2])
+
+# Fase 4: Aterrizaje (descenso constante)
+x4 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_giro + tiempo_aterrizaje])
+y4 = np.array([altura_max/2, 0])
+
+# Crear figura
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# Graficar cada segmento
+ax.plot(x1, y1, 'g-', linewidth=2)
+ax.plot(x2, y2, 'g-', linewidth=2)
+ax.plot(x3, y3, 'g-', linewidth=2)
+ax.plot(x4, y4, 'g-', linewidth=2)
+
+# Configuración del gráfico
+ax.set_xlabel('Segundos', fontweight='bold')
+ax.set_ylabel('Altura (m)', fontweight='bold')
+ax.grid(True, linestyle='--', alpha=0.7)
+ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5)
+ax.set_ylim(0, altura_max * 1.1)
+
+# Mostrar gráfico
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.show()
+```
+
+- Opción D
+<br/>
+```{python GraficoD, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", fig.cap=""}
+# Gráfico D (CORRECTO - Con la fase de elevación adicional)
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Configuración para eliminar etiquetas
+plt.rcParams['figure.figsize'] = (8, 5)
+plt.rcParams['figure.titlesize'] = 0
+
+# Definir puntos clave para el gráfico D
+# Fase 1: Aumento constante de altura
+x1 = np.array([0, tiempo_aumento])
+y1 = np.array([0, altura_max])
+
+# Fase 2: Pirueta (descenso constante)
+x2 = np.array([tiempo_aumento, tiempo_aumento + tiempo_pirueta])
+y2 = np.array([altura_max, altura_max/3])
+
+# Fase 3: Elevación adicional (correcto según el enunciado modificado)
+x_elevacion = np.array([tiempo_aumento + tiempo_pirueta, tiempo_aumento + tiempo_pirueta + tiempo_elevacion])
+y_elevacion = np.array([altura_max/3, altura_max])
+
+# Fase 4: Giro a altura constante
+x3 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro])
+y3 = np.array([altura_max, altura_max])
+
+# Fase 5: Aterrizaje (descenso constante)
+x4 = np.array([tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje])
+y4 = np.array([altura_max, 0])
+
+# Crear figura
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# Graficar cada segmento
+ax.plot(x1, y1, 'r-', linewidth=2)
+ax.plot(x2, y2, 'r-', linewidth=2)
+ax.plot(x_elevacion, y_elevacion, 'r-', linewidth=2)
+ax.plot(x3, y3, 'r-', linewidth=2)
+ax.plot(x4, y4, 'r-', linewidth=2)
+
+# Configuración del gráfico
+ax.set_xlabel('Segundos', fontweight='bold')
+ax.set_ylabel('Altura (m)', fontweight='bold')
+ax.grid(True, linestyle='--', alpha=0.7)
+ax.set_xlim(0, tiempo_aumento + tiempo_pirueta + tiempo_elevacion + tiempo_giro + tiempo_aterrizaje + 5)
+ax.set_ylim(0, altura_max * 1.1)
+
+# Mostrar gráfico
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.show()
+```
+
+Solution
+========
+
+La gráfica correcta es la que representa adecuadamente las cinco fases del vuelo acrobático descritas por el piloto:
+
+1. Durante los primeros `r tiempos_aumento` segundos: aumento constante de altura (línea ascendente).
+2. Pirueta con descenso constante durante `r tiempos_pirueta` segundos (línea descendente).
+3. Recuperación de altitud durante `r tiempos_elevacion` segundos hasta alcanzar la altura máxima inicial (línea ascendente).
+4. Giro alrededor del eje del avión durante `r tiempos_giro` segundos manteniendo la misma altura (línea horizontal).
+5. Aterrizaje con reducción constante de altura durante `r tiempos_aterrizaje` segundos (línea descendente final).
+
+Esta gráfica es la opción D, que tiene color rojo y muestra exactamente las cinco fases descritas, incluyendo la fase de recuperación de altitud que el piloto mencionó entre la pirueta y el giro.
+
+Las demás opciones contienen elementos incorrectos:
+
+- Una gráfica no muestra la pirueta con descenso constante ni la fase de recuperación de altitud, sino que mantiene la altura constante después del ascenso inicial.
+- Otra gráfica muestra un pico hacia arriba durante la pirueta misma, pero no incluye la fase de recuperación de altitud después de la pirueta que el piloto describió.
+- Otra gráfica muestra la pirueta con descenso constante pero omite la fase de recuperación de altitud, manteniendo el avión a media altura durante el giro cuando debería estar a la altura máxima.
+
+```{r version diversity test, echo = FALSE, results = "hide"}
+# Prueba de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  # Generar y almacenar 1000 versiones
+  versiones <- list()
+  for (i in 1:1000) {
+    # Generar las variables
+    tiempo_aumento_test <- sample(seq(25, 35, by = 5), 1)
+    tiempo_pirueta_test <- sample(seq(3, 7, by = 1), 1)
+    tiempo_giro_test <- sample(seq(15, 25, by = 5), 1)
+    tiempo_aterrizaje_test <- sample(seq(20, 30, by = 5), 1)
+    altura_maxima_test <- sample(seq(100, 200, by = 20), 1)
+
+    # Combine the variables into a single string
+    version_string <- paste(tiempo_aumento_test, tiempo_pirueta_test,
+                            tiempo_giro_test, tiempo_aterrizaje_test,
+                            altura_maxima_test, collapse = "-")
+
+    # Create a hash of the data
+    versiones[[i]] <- digest::digest(version_string)
+  }
+
+  # Verificar al menos 100 versiones únicas
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 100,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                           "versiones únicas. Se requieren al menos 100."))
+})
+```
+
+Meta-information
+================
+
+exname: vuelo_acrobatico(single-choice)
+extype: schoice
+exsolution: 0001
+exshuffle: TRUE
+exsection: Interpretación de gráficas

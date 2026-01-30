@@ -1,0 +1,319 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{tikz}
+---
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Cargar librerías necesarias
+library(exams)
+library(knitr)
+
+# Establecer semilla para reproducibilidad
+set.seed(sample(1:1000, 1))
+
+# Nombres para medios de comunicación
+medios <- c("canal", "programa", "revista", "podcast", "documental", "emisora", "noticiero")
+medio <- sample(medios, 1)
+
+# Contextos de aviación
+contextos <- c(
+  "deportivo", "acrobático", "de exhibición", "de competición", "profesional", 
+  "de espectáculos aéreos", "de acrobacias"
+)
+contexto_aviacion <- sample(contextos, 1)
+
+# Nombres para deportes aéreos
+deportes <- c(
+  "avión", "planeador", "aeronave", "avioneta", "biplano", "helicóptero", "dron"
+)
+deporte <- sample(deportes, 1)
+
+# Nombres de personas
+nombres <- c(
+  "Camila", "Sebastián", "Valeria", "Alejandro", "Natalia", "Andrés", "Lucía", 
+  "Martín", "Sofía", "Mateo", "Isabella", "Santiago", "Valentina", "Daniel", "Mariana"
+)
+nombre <- sample(nombres, 1)
+
+# Tiempos aleatorios (segundos)
+t_subida <- sample(seq(20, 40, by = 5), 1)  # Tiempo de subida (entre 20 y 40)
+t_meseta <- sample(seq(10, 20, by = 5), 1)  # Tiempo de meseta durante la pirueta (entre 10 y 20)
+t_pirueta <- sample(seq(5, 10, by = 1), 1)  # Tiempo de descenso durante la pirueta (entre 5 y 10)
+t_giro <- sample(seq(15, 25, by = 5), 1)    # Tiempo de giro (entre 15 y 25)
+t_aterrizaje <- sample(seq(20, 30, by = 5), 1)  # Tiempo de aterrizaje (entre 20 y 30)
+
+# Variaciones aleatorias para las alturas (en porcentaje de la altura máxima)
+alt_max <- sample(seq(80, 100, by = 5), 1)  # Altura máxima (entre 80% y 100%)
+alt_meseta <- sample(seq(40, 70, by = 5), 1)  # Altura durante la meseta (entre 40% y 70%)
+
+# Cálculo de tiempos acumulados
+t2 <- t_subida
+t3 <- t2 + t_pirueta
+t4 <- t3 + t_meseta
+t5 <- t4 + t_giro
+t6 <- t5 + t_aterrizaje
+
+# Generar gráficas aleatorias
+graf_correcta <- sample(1:4, 1)  # Determinar cuál es la gráfica correcta (1=A, 2=B, 3=C, 4=D)
+
+# Colores para las gráficas
+colores <- c("blue", "red", "darkgreen", "purple")
+color_correcto <- sample(colores, 1)
+
+# Generar opciones de respuesta
+opciones <- LETTERS[1:4]
+
+# Parámetros para variar los estilos de las gráficas
+estilos_lineas <- c(1, 2, 3, 4)  # Diferentes estilos de línea
+grosores_lineas <- c(2, 2.5, 3, 3.5)  # Diferentes grosores de línea
+
+# Aleatorizar los estilos para cada versión
+estilo_linea <- sample(estilos_lineas, 1)
+grosor_linea <- sample(grosores_lineas, 1)
+```
+
+Question
+========
+
+```{r, echo=FALSE, results="hide"}
+# Crear la pregunta
+pregunta <- paste0(
+  "En una entrevista para ", ifelse(medio == "emisora" | medio == "canal", "un", "una"), " ", 
+  medio, " de televisión, ", ifelse(nombre == "Sofía" | nombre == "Lucía" | nombre == "Valentina" | nombre == "Isabella" | nombre == "Mariana" | nombre == "Natalia" | nombre == "Camila" | nombre == "Valeria", "una piloto", "un piloto"), 
+  " de un ", deporte, " ", contexto_aviacion, " comenta en detalle cómo fue su presentación:
+  
+\"Durante los primeros ", t_subida, " segundos aumentó la altura de manera constante y, luego, realizó una pirueta en la que descendió de manera constante durante ", t_pirueta, " segundos. Después del descenso, comenzó a girar en torno al eje del ", deporte, " durante ", t_giro, " segundos, manteniendo la misma altura. Para finalizar, aterrizó reduciendo la altura de manera constante durante ", t_aterrizaje, " segundos\".")
+```
+
+`r pregunta`
+
+¿Cuál de las siguientes gráficas representa de forma CORRECTA la información dada por `r ifelse(nombre == "Sofía" | nombre == "Lucía" | nombre == "Valentina" | nombre == "Isabella" | nombre == "Mariana" | nombre == "Natalia" | nombre == "Camila" | nombre == "Valeria", "la piloto", "el piloto")`?
+
+```{r crear_grafica_opcion, echo=FALSE, results="hide"}
+# Crear las cuatro gráficas
+# Función para crear los diferentes gráficos
+crear_grafico <- function(opcion, color) {
+  # Configuración del gráfico
+  par(mar = c(4, 4, 1, 1))
+  
+  # Configuración del eje x para todos los gráficos
+  x_max <- t6 + 10
+  
+  # Establecer escalas y configuración básica de gráficos
+  plot(NULL, xlim = c(0, x_max), ylim = c(0, 120), # Aumentar ylim para acomodar picos más altos 
+       xlab = "Segundos", ylab = "Altura (m)", 
+       xaxt = "n", yaxt = "n",
+       type = "n", bty = "l")
+  
+  # Agregar cuadrícula
+  grid(nx = 10, ny = 12, col = "pink", lty = "dotted", lwd = 0.5)
+  
+  # Añadir ejes con marcas
+  axis(1, at = seq(0, x_max, by = 10), cex.axis = 0.8)
+  axis(2, at = seq(0, 120, by = 20), cex.axis = 0.8, las = 1)
+  
+  # Generar datos según la opción
+  x <- c()
+  y <- c()
+  
+  if (opcion == 1) {  # Gráfica correcta
+    # Subida constante
+    x1 <- seq(0, t_subida, length.out = 50)
+    y1 <- (alt_max/t_subida) * x1
+    
+    # Pirueta (descenso)
+    x2 <- seq(t_subida, t_subida + t_pirueta, length.out = 20)
+    y2 <- alt_max - ((alt_max - alt_meseta) / t_pirueta) * (x2 - t_subida)
+    
+    # Meseta durante giro
+    x3 <- seq(t_subida + t_pirueta, t_subida + t_pirueta + t_giro, length.out = 20)
+    y3 <- rep(alt_meseta, length(x3))
+    
+    # Aterrizaje (descenso final)
+    x4 <- seq(t_subida + t_pirueta + t_giro, t6, length.out = 50)
+    y4 <- alt_meseta - (alt_meseta / t_aterrizaje) * (x4 - (t_subida + t_pirueta + t_giro))
+    
+    x <- c(x1, x2, x3, x4)
+    y <- c(y1, y2, y3, y4)
+  }
+  else if (opcion == 2) {  # Gráfica incorrecta - Subida y caída brusca
+    # Generar valores aleatorios para esta opción
+    caida_piso <- sample(10:25, 1)  # Punto bajo aleatorio después de la caída
+    
+    # Subida constante
+    x1 <- seq(0, t_subida, length.out = 50)
+    y1 <- (alt_max/t_subida) * x1
+    
+    # Caída brusca
+    x2 <- c(t_subida, t_subida + sample(1:3, 1))  # Tiempo de caída aleatorio entre 1-3 segundos
+    y2 <- c(alt_max, caida_piso)
+    
+    # Meseta
+    x3 <- seq(x2[2], t4, length.out = 20)
+    y3 <- rep(alt_meseta, length(x3))
+    
+    # Giro (sin cambio de altura)
+    x4 <- seq(t4, t5, length.out = 20)
+    y4 <- rep(alt_meseta, length(x4))
+    
+    # Aterrizaje
+    x5 <- seq(t5, t6, length.out = 50)
+    y5 <- alt_meseta - (alt_meseta / t_aterrizaje) * (x5 - t5)
+    
+    x <- c(x1, x2, x3, x4, x5)
+    y <- c(y1, y2, y3, y4, y5)
+  }
+  else if (opcion == 3) {  # Gráfica incorrecta - Pico alto
+    # Generar valores aleatorios para esta opción
+    alt_inicial <- sample(seq(70, alt_max-10, by = 5), 1)  # Altura inicial
+    alt_pico <- sample(seq(alt_max+5, alt_max+20, by = 5), 1)  # Altura del pico, siempre mayor que el máximo normal
+    alt_despues_pico <- sample(seq(30, alt_meseta-10, by = 5), 1)  # Altura después del pico
+    
+    # Subida constante
+    x1 <- seq(0, t_subida, length.out = 50)
+    y1 <- (alt_inicial/t_subida) * x1
+    
+    # Pico alto
+    x2 <- c(t_subida, t_subida + t_pirueta/2, t_subida + t_pirueta)
+    y2 <- c(alt_inicial, alt_pico, alt_despues_pico)
+    
+    # Meseta
+    x3 <- seq(t_subida + t_pirueta, t4, length.out = 20)
+    y3 <- rep(alt_despues_pico, length(x3))
+    
+    # Giro plano
+    x4 <- seq(t4, t5, length.out = 20)
+    y4 <- rep(alt_despues_pico, length(x4))
+    
+    # Aterrizaje
+    x5 <- seq(t5, t6, length.out = 50)
+    y5 <- alt_despues_pico - (alt_despues_pico / t_aterrizaje) * (x5 - t5)
+    
+    x <- c(x1, x2, x3, x4, x5)
+    y <- c(y1, y2, y3, y4, y5)
+  }
+  else if (opcion == 4) {  # Gráfica incorrecta - Pirueta con subida
+    # Generar valores aleatorios para esta opción
+    alt_inicial <- sample(seq(75, alt_max, by = 5), 1)  # Altura inicial
+    alt_media <- sample(seq(30, alt_meseta-5, by = 5), 1)  # Punto bajo en medio de la pirueta
+    alt_despues_pirueta <- sample(seq(alt_inicial-5, alt_inicial+5, by = 5), 1)  # Altura después de la pirueta (similar a la inicial)
+    
+    # Subida constante
+    x1 <- seq(0, t_subida, length.out = 50)
+    y1 <- (alt_inicial/t_subida) * x1
+    
+    # Pirueta con descenso y luego subida
+    x2 <- c(t_subida, t_subida + t_pirueta/2, t_subida + t_pirueta)
+    y2 <- c(alt_inicial, alt_media, alt_despues_pirueta)
+    
+    # Meseta
+    x3 <- seq(t_subida + t_pirueta, t4, length.out = 20)
+    y3 <- rep(alt_despues_pirueta, length(x3))
+    
+    # Giro plano
+    x4 <- seq(t4, t5, length.out = 20)
+    y4 <- rep(alt_despues_pirueta, length(x4))
+    
+    # Aterrizaje
+    x5 <- seq(t5, t6, length.out = 50)
+    y5 <- alt_despues_pirueta - (alt_despues_pirueta / t_aterrizaje) * (x5 - t5)
+    
+    x <- c(x1, x2, x3, x4, x5)
+    y <- c(y1, y2, y3, y4, y5)
+  }
+  
+  # Dibujar la línea con estilo aleatorizado
+  lines(x, y, col = color, lwd = grosor_linea, lty = estilo_linea)
+}
+
+# Guardar cada gráfica en un archivo
+figuras_path <- list()
+
+# Aleatorizar los colores para cada versión
+colores_mezclados <- sample(colores, 4)
+
+# En lugar de guardar archivos en tempdir(), usamos include_graphics directamente
+# R exams manejará las gráficas incluidas en bloques de código correctamente
+# Generamos las gráficas inline como parte del proceso de knitting
+for (i in 1:4) {
+  # Preparar los nombres para knitr
+  figuras_path[[i]] <- paste0("grafica_", i)
+}
+```
+
+Answerlist
+----------
+* ```{r, echo=FALSE, fig.width=6, fig.height=4}
+crear_grafico(1, colores_mezclados[1])
+```
+
+* ```{r, echo=FALSE, fig.width=6, fig.height=4}
+crear_grafico(2, colores_mezclados[2])
+```
+
+* ```{r, echo=FALSE, fig.width=6, fig.height=4}
+crear_grafico(3, colores_mezclados[3])
+```
+
+* ```{r, echo=FALSE, fig.width=6, fig.height=4}
+crear_grafico(4, colores_mezclados[4])
+```
+
+Solution
+========
+
+Debemos analizar las distintas partes del vuelo según la descripción dada por `r ifelse(nombre == "Sofía" | nombre == "Lucía" | nombre == "Valentina" | nombre == "Isabella" | nombre == "Mariana" | nombre == "Natalia" | nombre == "Camila" | nombre == "Valeria", "la piloto", "el piloto")`:
+
+1. **Primera fase (0-`r t_subida` segundos)**: Aumento constante de altura (línea recta ascendente).
+2. **Segunda fase (`r t_subida`-`r t3` segundos)**: Pirueta con descenso constante de altura (línea recta descendente).
+3. **Tercera fase (`r t3`-`r t4` segundos)**: Giro manteniendo la misma altura (línea horizontal).
+4. **Cuarta fase (`r t4`-`r t6` segundos)**: Aterrizaje con descenso constante (línea recta descendente).
+
+Analizando las opciones:
+
+**Opción A:**
+- Subida constante hasta `r t_subida` segundos
+- Descenso constante por `r t_pirueta` segundos
+- Mantiene altura constante durante el giro por `r t_giro` segundos
+- Descenso constante final por `r t_aterrizaje` segundos
+
+**Opción B:**
+- Subida constante hasta `r t_subida` segundos
+- Caída brusca (casi vertical) - Debería ser un descenso constante
+- Mantiene altura constante luego del descenso
+- Descenso constante final
+
+**Opción C:**
+- Subida constante hasta `r t_subida` segundos
+- Sube y luego baja (formando un pico) - Debería ser solo un descenso constante
+- Mantiene altura constante
+- Descenso constante final
+
+**Opción D:**
+- Subida constante hasta `r t_subida` segundos
+- Baja y luego vuelve a subir - Debería ser solo un descenso constante
+- Mantiene altura constante
+- Descenso constante final
+
+Por lo tanto, la gráfica que representa correctamente toda la descripción del vuelo es la **Opción A**.
+
+Answerlist
+----------
+* Este es `r ifelse(graf_correcta == 1, "correcto", "incorrecto")`. `r ifelse(graf_correcta == 1, "Esta gráfica muestra correctamente todas las fases del vuelo con los tiempos adecuados.", "Esta gráfica no representa correctamente las fases del vuelo, especialmente en la parte de la pirueta.")`
+* Este es `r ifelse(graf_correcta == 2, "correcto", "incorrecto")`. `r ifelse(graf_correcta == 2, "Esta gráfica muestra correctamente todas las fases del vuelo con los tiempos adecuados.", "Esta gráfica no representa correctamente la fase de la pirueta, pues muestra una caída brusca en lugar de un descenso constante.")`
+* Este es `r ifelse(graf_correcta == 3, "correcto", "incorrecto")`. `r ifelse(graf_correcta == 3, "Esta gráfica muestra correctamente todas las fases del vuelo con los tiempos adecuados.", "Esta gráfica no representa correctamente la fase de la pirueta, pues muestra un ascenso y luego un descenso, cuando debería ser solo un descenso constante.")`
+* Este es `r ifelse(graf_correcta == 4, "correcto", "incorrecto")`. `r ifelse(graf_correcta == 4, "Esta gráfica muestra correctamente todas las fases del vuelo con los tiempos adecuados.", "Esta gráfica no representa correctamente la fase de la pirueta, pues muestra un descenso seguido de un ascenso, cuando debería ser solo un descenso constante.")`
+
+Meta-information
+================
+exname: Geometria_Vuelo_Acrobacias
+extype: schoice
+exsolution: `r mchoice2string(1:4 == graf_correcta)`
+exshuffle: TRUE

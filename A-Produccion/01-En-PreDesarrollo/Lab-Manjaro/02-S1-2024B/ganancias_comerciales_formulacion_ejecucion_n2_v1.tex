@@ -1,0 +1,495 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Configuración simplificada}
+\FunctionTok{options}\NormalTok{(}\AttributeTok{scipen =} \DecValTok{999}\NormalTok{, }\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)}
+
+\CommentTok{\# Semilla aleatoria para diversidad}
+\FunctionTok{set.seed}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{Sys.time}\NormalTok{()) }\SpecialCharTok{+} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10000}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+
+\CommentTok{\# Función para formatear números enteros sin notación científica}
+\NormalTok{formatear\_entero }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(numero) \{}
+  \FunctionTok{formatC}\NormalTok{(numero, }\AttributeTok{format =} \StringTok{"d"}\NormalTok{, }\AttributeTok{big.mark =} \StringTok{""}\NormalTok{)}
+\NormalTok{\}}
+
+\CommentTok{\# Función para seleccionar aleatoriamente de un dataframe}
+\NormalTok{seleccionar\_aleatorio }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df) \{}
+\NormalTok{  df[}\FunctionTok{sample}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df), }\DecValTok{1}\NormalTok{), ]}
+\NormalTok{\}}
+
+\CommentTok{\# Datos optimizados {-} Contextos comerciales}
+\NormalTok{contextos\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{nombre =} \FunctionTok{c}\NormalTok{(}\StringTok{"tienda"}\NormalTok{, }\StringTok{"empresa"}\NormalTok{, }\StringTok{"negocio"}\NormalTok{, }\StringTok{"local"}\NormalTok{, }\StringTok{"establecimiento"}\NormalTok{),}
+  \AttributeTok{genero =} \FunctionTok{c}\NormalTok{(}\StringTok{"f"}\NormalTok{, }\StringTok{"f"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{),}
+  \AttributeTok{articulo =} \FunctionTok{c}\NormalTok{(}\StringTok{"una"}\NormalTok{, }\StringTok{"una"}\NormalTok{, }\StringTok{"un"}\NormalTok{, }\StringTok{"un"}\NormalTok{, }\StringTok{"un"}\NormalTok{),}
+  \AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}
+\NormalTok{)}
+
+\CommentTok{\# Datos optimizados {-} Tipos de comerciantes}
+\NormalTok{comerciantes\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{nombre =} \FunctionTok{c}\NormalTok{(}\StringTok{"vendedor"}\NormalTok{, }\StringTok{"empresario"}\NormalTok{, }\StringTok{"comerciante"}\NormalTok{, }\StringTok{"negociante"}\NormalTok{, }\StringTok{"minorista"}\NormalTok{),}
+  \AttributeTok{genero =} \FunctionTok{c}\NormalTok{(}\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{),}
+  \AttributeTok{articulo\_el =} \FunctionTok{c}\NormalTok{(}\StringTok{"el"}\NormalTok{, }\StringTok{"el"}\NormalTok{, }\StringTok{"el"}\NormalTok{, }\StringTok{"el"}\NormalTok{, }\StringTok{"el"}\NormalTok{),}
+  \AttributeTok{articulo\_un =} \FunctionTok{c}\NormalTok{(}\StringTok{"un"}\NormalTok{, }\StringTok{"un"}\NormalTok{, }\StringTok{"un"}\NormalTok{, }\StringTok{"un"}\NormalTok{, }\StringTok{"un"}\NormalTok{),}
+  \AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}
+\NormalTok{)}
+
+\CommentTok{\# Datos optimizados {-} Productos}
+\NormalTok{productos\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{plural =} \FunctionTok{c}\NormalTok{(}\StringTok{"pantalones"}\NormalTok{, }\StringTok{"camisas"}\NormalTok{, }\StringTok{"zapatos"}\NormalTok{, }\StringTok{"relojes"}\NormalTok{, }\StringTok{"libros"}\NormalTok{),}
+  \AttributeTok{singular =} \FunctionTok{c}\NormalTok{(}\StringTok{"pantalón"}\NormalTok{, }\StringTok{"camisa"}\NormalTok{, }\StringTok{"zapato"}\NormalTok{, }\StringTok{"reloj"}\NormalTok{, }\StringTok{"libro"}\NormalTok{),}
+  \AttributeTok{genero =} \FunctionTok{c}\NormalTok{(}\StringTok{"m"}\NormalTok{, }\StringTok{"f"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{, }\StringTok{"m"}\NormalTok{),}
+  \AttributeTok{stringsAsFactors =} \ConstantTok{FALSE}
+\NormalTok{)}
+
+\CommentTok{\# Selección optimizada usando función}
+\NormalTok{contexto\_seleccionado }\OtherTok{\textless{}{-}} \FunctionTok{seleccionar\_aleatorio}\NormalTok{(contextos\_data)}
+\NormalTok{contexto }\OtherTok{\textless{}{-}}\NormalTok{ contexto\_seleccionado}\SpecialCharTok{$}\NormalTok{nombre}
+\NormalTok{articulo\_contexto }\OtherTok{\textless{}{-}}\NormalTok{ contexto\_seleccionado}\SpecialCharTok{$}\NormalTok{articulo}
+
+\NormalTok{comerciante\_seleccionado }\OtherTok{\textless{}{-}} \FunctionTok{seleccionar\_aleatorio}\NormalTok{(comerciantes\_data)}
+\NormalTok{comerciante }\OtherTok{\textless{}{-}}\NormalTok{ comerciante\_seleccionado}\SpecialCharTok{$}\NormalTok{nombre}
+\NormalTok{articulo\_el\_comerciante }\OtherTok{\textless{}{-}}\NormalTok{ comerciante\_seleccionado}\SpecialCharTok{$}\NormalTok{articulo\_el}
+\NormalTok{articulo\_un\_comerciante }\OtherTok{\textless{}{-}}\NormalTok{ comerciante\_seleccionado}\SpecialCharTok{$}\NormalTok{articulo\_un}
+
+\NormalTok{producto\_seleccionado }\OtherTok{\textless{}{-}} \FunctionTok{seleccionar\_aleatorio}\NormalTok{(productos\_data)}
+\NormalTok{producto }\OtherTok{\textless{}{-}}\NormalTok{ producto\_seleccionado}\SpecialCharTok{$}\NormalTok{plural}
+\NormalTok{producto\_singular }\OtherTok{\textless{}{-}}\NormalTok{ producto\_seleccionado}\SpecialCharTok{$}\NormalTok{singular}
+\NormalTok{genero\_producto }\OtherTok{\textless{}{-}}\NormalTok{ producto\_seleccionado}\SpecialCharTok{$}\NormalTok{genero}
+
+\CommentTok{\# Aleatorización matemáticamente relevante de precios {-} OPTIMIZADO}
+\NormalTok{tipo\_ganancia }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"baja"}\NormalTok{, }\StringTok{"media"}\NormalTok{, }\StringTok{"alta"}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Configuración de precios por tipo de ganancia (más opciones para mayor diversidad)}
+\NormalTok{precios\_config }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{baja =} \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{precios\_base =} \FunctionTok{c}\NormalTok{(}\DecValTok{80}\NormalTok{, }\DecValTok{90}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{120}\NormalTok{, }\DecValTok{150}\NormalTok{),}
+    \AttributeTok{margenes =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.10}\NormalTok{, }\FloatTok{0.15}\NormalTok{, }\FloatTok{0.20}\NormalTok{, }\FloatTok{0.25}\NormalTok{)}
+\NormalTok{  ),}
+  \AttributeTok{media =} \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{precios\_base =} \FunctionTok{c}\NormalTok{(}\DecValTok{60}\NormalTok{, }\DecValTok{70}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{130}\NormalTok{),}
+    \AttributeTok{margenes =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.30}\NormalTok{, }\FloatTok{0.35}\NormalTok{, }\FloatTok{0.40}\NormalTok{)}
+\NormalTok{  ),}
+  \AttributeTok{alta =} \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{precios\_base =} \FunctionTok{c}\NormalTok{(}\DecValTok{50}\NormalTok{, }\DecValTok{60}\NormalTok{, }\DecValTok{70}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{90}\NormalTok{),}
+    \AttributeTok{margenes =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.40}\NormalTok{, }\FloatTok{0.50}\NormalTok{, }\FloatTok{0.60}\NormalTok{, }\FloatTok{0.70}\NormalTok{)}
+\NormalTok{  )}
+\NormalTok{)}
+
+\NormalTok{config }\OtherTok{\textless{}{-}}\NormalTok{ precios\_config[[tipo\_ganancia]]}
+\NormalTok{precio\_compra }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(config}\SpecialCharTok{$}\NormalTok{precios\_base, }\DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{1000}
+\NormalTok{margen\_ganancia }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(config}\SpecialCharTok{$}\NormalTok{margenes, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Calcular precio de venta basado en el margen}
+\NormalTok{precio\_venta }\OtherTok{\textless{}{-}}\NormalTok{ precio\_compra }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ margen\_ganancia)}
+\NormalTok{ganancia\_unitaria }\OtherTok{\textless{}{-}}\NormalTok{ precio\_venta }\SpecialCharTok{{-}}\NormalTok{ precio\_compra}
+
+\CommentTok{\# Número de unidades vendidas (matemáticamente relevante) {-} más opciones}
+\NormalTok{unidades\_vendidas }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{ganancia\_total }\OtherTok{\textless{}{-}}\NormalTok{ ganancia\_unitaria }\SpecialCharTok{*}\NormalTok{ unidades\_vendidas}
+
+\CommentTok{\# Aleatorización optimizada de términos clave}
+\NormalTok{tipos\_terminos }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{desea =} \FunctionTok{c}\NormalTok{(}\StringTok{"desea"}\NormalTok{, }\StringTok{"quiere"}\NormalTok{, }\StringTok{"necesita"}\NormalTok{, }\StringTok{"pretende"}\NormalTok{, }\StringTok{"busca"}\NormalTok{),}
+  \AttributeTok{conocer =} \FunctionTok{c}\NormalTok{(}\StringTok{"conocer"}\NormalTok{, }\StringTok{"determinar"}\NormalTok{, }\StringTok{"calcular"}\NormalTok{, }\StringTok{"estimar"}\NormalTok{, }\StringTok{"evaluar"}\NormalTok{),}
+  \AttributeTok{obtiene =} \FunctionTok{c}\NormalTok{(}\StringTok{"obtiene"}\NormalTok{, }\StringTok{"consigue"}\NormalTok{, }\StringTok{"logra"}\NormalTok{, }\StringTok{"alcanza"}\NormalTok{, }\StringTok{"genera"}\NormalTok{),}
+  \AttributeTok{compra =} \FunctionTok{c}\NormalTok{(}\StringTok{"compra"}\NormalTok{, }\StringTok{"adquiere"}\NormalTok{, }\StringTok{"obtiene"}\NormalTok{, }\StringTok{"consigue"}\NormalTok{, }\StringTok{"recibe"}\NormalTok{),}
+  \AttributeTok{procedimientos =} \FunctionTok{c}\NormalTok{(}\StringTok{"procedimientos"}\NormalTok{, }\StringTok{"métodos"}\NormalTok{, }\StringTok{"procesos"}\NormalTok{, }\StringTok{"estrategias"}\NormalTok{, }\StringTok{"técnicas"}\NormalTok{),}
+  \AttributeTok{permite =} \FunctionTok{c}\NormalTok{(}\StringTok{"permite"}\NormalTok{, }\StringTok{"facilita"}\NormalTok{, }\StringTok{"posibilita"}\NormalTok{, }\StringTok{"ayuda"}\NormalTok{, }\StringTok{"asiste"}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{termino\_desea }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_terminos}\SpecialCharTok{$}\NormalTok{desea, }\DecValTok{1}\NormalTok{)}
+\NormalTok{termino\_conocer }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_terminos}\SpecialCharTok{$}\NormalTok{conocer, }\DecValTok{1}\NormalTok{)}
+\NormalTok{termino\_obtiene }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_terminos}\SpecialCharTok{$}\NormalTok{obtiene, }\DecValTok{1}\NormalTok{)}
+\NormalTok{termino\_compra }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_terminos}\SpecialCharTok{$}\NormalTok{compra, }\DecValTok{1}\NormalTok{)}
+\NormalTok{termino\_procedimientos }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_terminos}\SpecialCharTok{$}\NormalTok{procedimientos, }\DecValTok{1}\NormalTok{)}
+\NormalTok{termino\_permite }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(tipos\_terminos}\SpecialCharTok{$}\NormalTok{permite, }\DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Términos simplificados}
+\NormalTok{termino\_venta }\OtherTok{\textless{}{-}} \StringTok{"venta"}
+\NormalTok{articulo\_venta }\OtherTok{\textless{}{-}} \StringTok{"la"}
+\NormalTok{termino\_monto }\OtherTok{\textless{}{-}} \StringTok{"monto"}
+\NormalTok{articulo\_monto }\OtherTok{\textless{}{-}} \StringTok{"el"}
+
+\CommentTok{\# Generar opciones de respuesta con sistema avanzado de distractores {-} OPTIMIZADO}
+\CommentTok{\# La respuesta correcta es la opción A del problema original}
+
+\CommentTok{\# SISTEMA AVANZADO DE DISTRACTORES OPTIMIZADO}
+\CommentTok{\# 30\% probabilidad de incluir valores duplicados con justificaciones diferentes}
+\NormalTok{permitir\_valores\_duplicados }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\ConstantTok{TRUE}\NormalTok{, }\ConstantTok{FALSE}\NormalTok{), }\DecValTok{1}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.3}\NormalTok{, }\FloatTok{0.7}\NormalTok{))}
+
+\CommentTok{\# Función para generar respuestas correctas de manera más eficiente}
+\NormalTok{generar\_respuesta\_correcta }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+\NormalTok{  plantillas\_correctas }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"Restar PRECIO al precio de venta de cada PRODUCTO y multiplicar dicho valor por el número de unidades vendidas."}\NormalTok{,}
+    \StringTok{"Calcular la diferencia entre el precio de venta y PRECIO por cada PRODUCTO, y multiplicar este resultado por la cantidad de unidades vendidas."}\NormalTok{,}
+    \StringTok{"Al precio de venta unitario de cada PRODUCTO restarle PRECIO y multiplicar la diferencia obtenida por el total de unidades vendidas."}\NormalTok{,}
+    \StringTok{"Determinar la ganancia por PRODUCTO restando PRECIO del precio de venta, y multiplicar por el número de unidades comercializadas."}\NormalTok{,}
+    \StringTok{"Obtener la utilidad unitaria sustrayendo PRECIO del precio de venta de cada PRODUCTO, luego multiplicar por la cantidad total vendida."}
+\NormalTok{  )}
+  
+\NormalTok{  plantilla }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(plantillas\_correctas, }\DecValTok{1}\NormalTok{)}
+\NormalTok{  precio\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"$"}\NormalTok{, }\FunctionTok{formatear\_entero}\NormalTok{(precio\_compra))}
+  
+  \FunctionTok{gsub}\NormalTok{(}\StringTok{"PRECIO"}\NormalTok{, precio\_formateado, }\FunctionTok{gsub}\NormalTok{(}\StringTok{"PRODUCTO"}\NormalTok{, producto\_singular, plantilla))}
+\NormalTok{\}}
+
+\CommentTok{\# Función para generar distractores tipo B (inversión de resta)}
+\NormalTok{generar\_distractor\_b }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+\NormalTok{  plantillas\_b }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"A PRECIO restarle el precio de venta de cada PRODUCTO y multiplicar dicho valor por el número de unidades vendidas."}\NormalTok{,}
+    \StringTok{"Calcular la diferencia entre PRECIO y el precio de venta de cada PRODUCTO, y multiplicar este resultado por la cantidad de unidades vendidas."}\NormalTok{,}
+    \StringTok{"Del costo de PRECIO sustraer el precio de venta de cada PRODUCTO y multiplicar la diferencia por el total de unidades vendidas."}\NormalTok{,}
+    \StringTok{"Determinar cuánto excede PRECIO al precio de venta de cada PRODUCTO y multiplicar por el número de unidades comercializadas."}\NormalTok{,}
+    \StringTok{"Obtener la diferencia restando el precio de venta de cada PRODUCTO a PRECIO, luego multiplicar por la cantidad total vendida."}
+\NormalTok{  )}
+  
+\NormalTok{  plantilla }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(plantillas\_b, }\DecValTok{1}\NormalTok{)}
+\NormalTok{  precio\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"$"}\NormalTok{, }\FunctionTok{formatear\_entero}\NormalTok{(precio\_compra))}
+  
+  \FunctionTok{gsub}\NormalTok{(}\StringTok{"PRECIO"}\NormalTok{, precio\_formateado, }\FunctionTok{gsub}\NormalTok{(}\StringTok{"PRODUCTO"}\NormalTok{, producto\_singular, plantilla))}
+\NormalTok{\}}
+
+\CommentTok{\# Generar respuestas usando funciones optimizadas}
+\NormalTok{afirmacion\_correcta }\OtherTok{\textless{}{-}} \FunctionTok{generar\_respuesta\_correcta}\NormalTok{()}
+\NormalTok{distractor\_b }\OtherTok{\textless{}{-}} \FunctionTok{generar\_distractor\_b}\NormalTok{()}
+
+\CommentTok{\# Distractor C: Error de confundir ganancia total con ganancia unitaria}
+\NormalTok{distractor\_c }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Multiplicar el precio de venta de cada "}\NormalTok{, producto\_singular,}
+                      \StringTok{" por el número de unidades vendidas y restar $"}\NormalTok{, }\FunctionTok{formatear\_entero}\NormalTok{(precio\_compra), }\StringTok{"."}\NormalTok{)}
+
+\CommentTok{\# Distractor D: Error de usar solo el precio de compra como ganancia}
+\NormalTok{distractor\_d }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"Multiplicar $"}\NormalTok{, }\FunctionTok{formatear\_entero}\NormalTok{(precio\_compra),}
+                      \StringTok{" por el número de unidades vendidas para obtener la ganancia total."}\NormalTok{)}
+
+\CommentTok{\# Crear vector con todas las opciones}
+\NormalTok{opciones\_originales }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(afirmacion\_correcta, distractor\_b, distractor\_c, distractor\_d)}
+\FunctionTok{names}\NormalTok{(opciones\_originales) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"correcta"}\NormalTok{, }\StringTok{"distractor\_b"}\NormalTok{, }\StringTok{"distractor\_c"}\NormalTok{, }\StringTok{"distractor\_d"}\NormalTok{)}
+
+\CommentTok{\# Aleatorizar manualmente las opciones}
+\NormalTok{indices\_mezclados }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
+\NormalTok{opciones }\OtherTok{\textless{}{-}}\NormalTok{ opciones\_originales[indices\_mezclados]}
+
+\CommentTok{\# Encontrar la nueva posición de la respuesta correcta}
+\NormalTok{posicion\_correcta }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(indices\_mezclados }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+
+\CommentTok{\# Crear el vector de solución}
+\NormalTok{solucion }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{solucion[posicion\_correcta] }\OtherTok{\textless{}{-}} \DecValTok{1}
+
+\CommentTok{\# Pruebas de validación matemática {-} OPTIMIZADAS}
+\FunctionTok{test\_that}\NormalTok{(}\StringTok{"Validaciones matemáticas optimizadas"}\NormalTok{, \{}
+  \CommentTok{\# Verificar coherencia matemática}
+  \FunctionTok{expect\_true}\NormalTok{(precio\_compra }\SpecialCharTok{\textgreater{}} \DecValTok{0} \SpecialCharTok{\&\&}\NormalTok{ precio\_venta }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{,}
+              \AttributeTok{info =} \StringTok{"Los precios deben ser positivos"}\NormalTok{)}
+
+  \FunctionTok{expect\_true}\NormalTok{(precio\_venta }\SpecialCharTok{\textgreater{}}\NormalTok{ precio\_compra,}
+              \AttributeTok{info =} \StringTok{"El precio de venta debe ser mayor al de compra para tener ganancia"}\NormalTok{)}
+
+  \FunctionTok{expect\_equal}\NormalTok{(ganancia\_unitaria, precio\_venta }\SpecialCharTok{{-}}\NormalTok{ precio\_compra,}
+              \AttributeTok{info =} \StringTok{"La ganancia unitaria debe calcularse correctamente"}\NormalTok{)}
+
+  \FunctionTok{expect\_equal}\NormalTok{(ganancia\_total, ganancia\_unitaria }\SpecialCharTok{*}\NormalTok{ unidades\_vendidas,}
+              \AttributeTok{info =} \StringTok{"La ganancia total debe calcularse correctamente"}\NormalTok{)}
+
+  \CommentTok{\# Verificar diversidad de opciones}
+  \FunctionTok{expect\_equal}\NormalTok{(}\FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(opciones)), }\DecValTok{4}\NormalTok{,}
+               \AttributeTok{info =} \StringTok{"Las 4 opciones deben ser textualmente diferentes"}\NormalTok{)}
+
+  \CommentTok{\# Verificar respuesta correcta}
+  \FunctionTok{expect\_true}\NormalTok{(afirmacion\_correcta }\SpecialCharTok{\%in\%}\NormalTok{ opciones,}
+              \AttributeTok{info =} \StringTok{"La respuesta correcta debe estar presente"}\NormalTok{)}
+
+  \CommentTok{\# Verificar vector de solución}
+  \FunctionTok{expect\_equal}\NormalTok{(}\FunctionTok{sum}\NormalTok{(solucion), }\DecValTok{1}\NormalTok{,}
+              \AttributeTok{info =} \StringTok{"Debe haber exactamente una respuesta correcta"}\NormalTok{)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Test passed
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Prueba de diversidad de versiones optimizada (estándar del proyecto: 300+ versiones)}
+\FunctionTok{test\_that}\NormalTok{(}\StringTok{"Prueba de diversidad de versiones optimizada"}\NormalTok{, \{}
+  \CommentTok{\# Función para generar versiones de prueba de manera eficiente}
+\NormalTok{  generar\_version\_prueba }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(i) \{}
+    \FunctionTok{set.seed}\NormalTok{(i)}
+    
+    \CommentTok{\# Selección rápida de datos}
+\NormalTok{    tipo\_ganancia\_test }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"baja"}\NormalTok{, }\StringTok{"media"}\NormalTok{, }\StringTok{"alta"}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{    config\_test }\OtherTok{\textless{}{-}}\NormalTok{ precios\_config[[tipo\_ganancia\_test]]}
+    
+\NormalTok{    datos\_test }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+      \AttributeTok{tipo\_ganancia =}\NormalTok{ tipo\_ganancia\_test,}
+      \AttributeTok{contexto =} \FunctionTok{sample}\NormalTok{(contextos\_data}\SpecialCharTok{$}\NormalTok{nombre, }\DecValTok{1}\NormalTok{),}
+      \AttributeTok{comerciante =} \FunctionTok{sample}\NormalTok{(comerciantes\_data}\SpecialCharTok{$}\NormalTok{nombre, }\DecValTok{1}\NormalTok{),}
+      \AttributeTok{producto =} \FunctionTok{sample}\NormalTok{(productos\_data}\SpecialCharTok{$}\NormalTok{plural, }\DecValTok{1}\NormalTok{),}
+      \AttributeTok{precio\_compra =} \FunctionTok{sample}\NormalTok{(config\_test}\SpecialCharTok{$}\NormalTok{precios\_base, }\DecValTok{1}\NormalTok{) }\SpecialCharTok{*} \DecValTok{1000}\NormalTok{,}
+      \AttributeTok{margen =} \FunctionTok{sample}\NormalTok{(config\_test}\SpecialCharTok{$}\NormalTok{margenes, }\DecValTok{1}\NormalTok{),}
+      \AttributeTok{unidades =} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{    )}
+    
+\NormalTok{    digest}\SpecialCharTok{::}\FunctionTok{digest}\NormalTok{(datos\_test)}
+\NormalTok{  \}}
+
+  \CommentTok{\# Generar versiones usando lapply para mayor eficiencia}
+\NormalTok{  versiones }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{1000}\NormalTok{, generar\_version\_prueba)}
+\NormalTok{  n\_versiones\_unicas }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{unique}\NormalTok{(versiones))}
+  
+  \FunctionTok{expect\_true}\NormalTok{(n\_versiones\_unicas }\SpecialCharTok{\textgreater{}=} \DecValTok{300}\NormalTok{,}
+              \AttributeTok{info =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Solo se generaron"}\NormalTok{, n\_versiones\_unicas,}
+                          \StringTok{"versiones únicas de 1000 intentos. Se requieren al menos 300."}\NormalTok{))}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Test passed
+
+\section{Question}\label{question}
+
+Un minorista necesita calcular el valor de las ganancias que obtiene por
+la venta de camisas.
+
+En este sentido, si el minorista obtiene cada camisa a \$50000, ¿cuál de
+los siguientes estrategias le ayuda determinar el monto de sus
+ganancias?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  Obtener la diferencia restando el precio de venta de cada camisa a
+  \$50000, luego multiplicar por la cantidad total vendida.
+\item
+  Calcular la diferencia entre el precio de venta y \$50000 por cada
+  camisa, y multiplicar este resultado por la cantidad de unidades
+  vendidas.
+\item
+  Multiplicar \$50000 por el número de unidades vendidas para obtener la
+  ganancia total.
+\item
+  Multiplicar el precio de venta de cada camisa por el número de
+  unidades vendidas y restar \$50000.
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos entender el concepto de ganancia en
+el contexto comercial y identificar el procedimiento correcto para
+calcularla.
+
+\subsubsection{Concepto de ganancia}\label{concepto-de-ganancia}
+
+La \textbf{ganancia} en una transacción comercial se define como:
+
+\textbf{Ganancia = Precio de venta - Precio de compra}
+
+\subsubsection{Análisis del problema}\label{anuxe1lisis-del-problema}
+
+Datos del problema:
+
+\begin{itemize}
+\tightlist
+\item
+  Precio de compra por unidad: \$50000
+\item
+  Se busca determinar el procedimiento para calcular las ganancias
+  totales
+\end{itemize}
+
+\subsubsection{Procedimiento correcto}\label{procedimiento-correcto}
+
+Para calcular las ganancias totales por la venta de camisas, debemos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Calcular la ganancia por unidad}: Precio de venta - Precio de
+  compra
+\item
+  \textbf{Multiplicar por el número de unidades vendidas}: (Precio de
+  venta - Precio de compra) × Número de unidades
+\end{enumerate}
+
+Esto es equivalente a:
+
+\textbf{(Precio de venta - \$50000) × Número de unidades vendidas}
+
+\subsubsection{Análisis de las
+opciones}\label{anuxe1lisis-de-las-opciones}
+
+\textbf{Opción correcta}:
+
+``Calcular la diferencia entre el precio de venta y \$50000 por cada
+camisa, y multiplicar este resultado por la cantidad de unidades
+vendidas.''
+
+\begin{itemize}
+\tightlist
+\item
+  Esta opción representa correctamente la fórmula: (Precio de venta -
+  Precio de compra) × Cantidad
+\item
+  Primero resta el costo al precio de venta para obtener la ganancia
+  unitaria
+\item
+  Luego multiplica por las unidades vendidas para obtener la ganancia
+  total
+\end{itemize}
+
+\textbf{Análisis de distractores}:
+
+\begin{itemize}
+\tightlist
+\item
+  Las demás opciones presentan errores en el orden de las operaciones o
+  en la interpretación del concepto de ganancia
+\item
+  Algunos invierten la resta (precio de compra - precio de venta), lo
+  que daría pérdidas en lugar de ganancias
+\item
+  Otros alteran el orden de las operaciones, llevando a cálculos
+  incorrectos
+\end{itemize}
+
+\textbf{Por lo tanto, la respuesta correcta es la que establece restar
+el precio de compra al precio de venta y multiplicar por las unidades
+vendidas.}
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso
+\item
+  Verdadero
+\item
+  Falso
+\item
+  Falso
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: ganancias\_comerciales\_formulacion\_ejecucion extype: schoice
+exsolution: 0100 exshuffle: FALSE exsection:
+Aritmética\textbar Operaciones básicas\textbar Aplicaciones comerciales
+
+\end{document}

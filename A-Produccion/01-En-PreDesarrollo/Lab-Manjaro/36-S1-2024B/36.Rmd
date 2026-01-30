@@ -1,0 +1,187 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usepackage{booktabs}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: algebra
+    tipo: funciones
+  contexto: matematico
+  eje_axial: eje3
+  componente: numerico_variacional
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(knitr)
+library(reticulate)
+library(testthat)
+library(digest)
+
+# Configuración global crítica
+typ <- match_exams_device()
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+# Configuración knitr
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE, fig.keep = 'all',
+  dev = c("png", "pdf"), dpi = 150, echo = FALSE, results = "hide"
+)
+
+# Semilla aleatoria para diversidad
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Configuración numérica estándar
+options(OutDec = ".")
+options(scipen = 999)
+
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Aleatorización de parámetros clave
+  dosis_constante <- sample(c(15, 20, 25, 30), 1)
+  peso_limite <- sample(c(7, 8, 9, 10), 1)
+  
+  # Aleatorización de contexto para mayor diversidad
+  animal_singular <- sample(c("perro", "gato", "conejo", "hámster"), 1)
+  animal_plural <- switch(animal_singular,
+                          "perro" = "perros",
+                          "gato" = "gatos",
+                          "conejo" = "conejos",
+                          "hámster" = "hámsteres")
+  contexto_jornada <- sample(c("vacunación", "desparasitación", "suplementación vitamínica"), 1)
+
+  # Aleatorización de los otros casos de la función para que no sean siempre los mismos
+  param_func2_add <- sample(15:25, 1)
+  param_func3_mult <- sample(2:4, 1)
+  peso_limite_superior <- peso_limite + sample(20:40, 1)
+
+  # Generación de opciones de respuesta
+  # Opción correcta
+  opcion_correcta <- paste0("La cantidad de ", animal_plural, " que pesan ", peso_limite, " kilogramos o menos.")
+
+  # Distractores pedagógicos
+  distractor_1 <- paste0("La cantidad de ", animal_plural, " que pesan exactamente ", peso_limite, " kilogramos.") # Error: ignora a los que pesan menos
+  distractor_2 <- paste0("La cantidad de ", animal_plural, " que pesan menos de ", peso_limite, " kilogramos.") # Error: ignora a los que pesan exactamente el límite
+  distractor_3 <- paste0("La cantidad de ", animal_plural, " que pesan ", peso_limite, " kilogramos o más.") # Error: contradice la premisa del problema
+
+  # Agrupar y mezclar opciones
+  opciones <- c(opcion_correcta, distractor_1, distractor_2, distractor_3)
+  orden <- sample(1:4)
+  opciones_mezcladas <- opciones[orden]
+  posicion_correcta <- which(orden == 1)
+  
+  return(list(
+    dosis_constante = dosis_constante,
+    peso_limite = peso_limite,
+    animal_singular = animal_singular,
+    animal_plural = animal_plural,
+    contexto_jornada = contexto_jornada,
+    param_func2_add = param_func2_add,
+    param_func3_mult = param_func3_mult,
+    peso_limite_superior = peso_limite_superior,
+    opciones = opciones_mezcladas,
+    posicion_correcta = posicion_correcta
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
+if (requireNamespace("testthat", quietly = TRUE) && requireNamespace("digest", quietly = TRUE)) {
+  test_that("Prueba de diversidad de versiones", {
+    versiones <- list()
+    for (i in 1:1000) {
+      datos_test <- generar_datos()
+      versiones[[i]] <- digest::digest(datos_test)
+    }
+    n_versiones_unicas <- length(unique(versiones))
+    testthat::expect_true(
+      n_versiones_unicas >= 300,
+      info = paste("Solo se generaron", n_versiones_unicas, "versiones únicas. Se requieren al menos 300.")
+    )
+  })
+}
+```
+
+Question
+========
+
+La industria farmacéutica veterinaria determina que la cantidad de medicamento adecuada que se le puede suministrar a un `r datos$animal_singular` se define por medio de la siguiente función:
+
+$$f(p) = \begin{cases}
+`r datos$dosis_constante` & \text{si } p \leq `r datos$peso_limite` \\
+p + `r datos$param_func2_add` & \text{si } `r datos$peso_limite` < p < `r datos$peso_limite_superior` \\
+`r datos$param_func3_mult`p & \text{si } p \geq `r datos$peso_limite_superior`
+\end{cases}$$
+
+Donde $f(p)$ es la cantidad del medicamento en miligramos que debe suministrársele al `r datos$animal_singular`, y $p$ es el peso del `r datos$animal_singular` en kilogramos.
+
+Si en una jornada de `r datos$contexto_jornada`, ningún `r datos$animal_singular` supera los `r datos$peso_limite` kilogramos de peso, ¿qué información se requiere para determinar la cantidad de medicamento total que se les suministró a los `r datos$animal_plural` en la jornada de `r datos$contexto_jornada`?
+
+Answerlist
+----------
+
+  - `r datos$opciones[1]`
+  - `r datos$opciones[2]`
+  - `r datos$opciones[3]`
+  - `r datos$opciones[4]`
+
+Solution
+========
+
+Para resolver este problema, debemos seguir un razonamiento lógico basado en la información proporcionada:
+
+1.  **Analizar la condición clave:** El enunciado especifica que "ningún `r datos$animal_singular` supera los `r datos$peso_limite` kilogramos de peso". Matemáticamente, esto significa que para cada `r datos$animal_singular` atendido en la jornada, su peso $p$ cumple la condición $p \leq `r datos$peso_limite`$.
+
+2.  **Relacionar la condición con la función:** Debemos observar qué nos dice la función a trozos para los valores de $p$ que cumplen $p \leq `r datos$peso_limite`$. Al mirar la primera línea de la función, vemos que:
+
+    Si $p \leq `r datos$peso_limite`$, entonces $f(p) = `r datos$dosis_constante`$.
+
+3.  **Interpretar el resultado:** Esto significa que a cada `r datos$animal_singular` en la jornada, sin importar su peso exacto (siempre y cuando sea menor o igual a `r datos$peso_limite` kg), se le debe suministrar una dosis constante y fija de **`r datos$dosis_constante` miligramos**.
+
+4.  **Calcular la cantidad total de medicamento:** Para encontrar la cantidad total de medicamento suministrado, necesitamos multiplicar la dosis individual (que es la misma para todos) por el número total de `r datos$animal_plural` que recibieron esa dosis.
+
+5.  **Determinar la información necesaria:** El grupo de `r datos$animal_plural` que recibió la dosis son todos aquellos cuyo peso es menor o igual a `r datos$peso_limite` kg. Por lo tanto, la información indispensable es **la cantidad total de `r datos$animal_plural` que pesan `r datos$peso_limite` kilogramos o menos**.
+
+Answerlist
+----------
+
+  - Esta es la información correcta. Dado que cada `r datos$animal_singular` con $p \leq `r datos$peso_limite`$ recibe una dosis fija de `r datos$dosis_constante` mg, el total de medicamento es (`r datos$dosis_constante` mg) × (número total de `r datos$animal_plural` que pesan `r datos$peso_limite` kg o menos).
+  - La opción que sugiere contar solo los `r datos$animal_plural` que pesan **exactamente** `r datos$peso_limite` kg es incompleta, porque excluye a los que pesan menos de `r datos$peso_limite` kg, quienes también recibieron la misma dosis.
+  - La opción que sugiere contar solo los `r datos$animal_plural` que pesan **menos de** `r datos$peso_limite` kg también es incompleta, porque excluye a los que pesan exactamente `r datos$peso_limite` kg.
+  - La opción que describe un grupo de `r datos$animal_plural` que pesan `r datos$peso_limite` kg **o más** contradice la premisa del problema, pues se estableció que ninguno superaba ese peso.
+
+Meta-information
+================
+
+exname: funcion_a_trozos_medicamento_veterinario
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exshuffle: TRUE
+exsection: Álgebra/Funciones/Funciones a trozos

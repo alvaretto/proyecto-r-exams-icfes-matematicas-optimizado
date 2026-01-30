@@ -1,0 +1,368 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "booktabs", "array"]
+  word_document: default
+  html_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{booktabs}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+# Usar python3 por defecto del sistema
+if (Sys.getenv("RETICULATE_PYTHON") != "") {
+  use_python(Sys.getenv("RETICULATE_PYTHON"))
+} else {
+  use_python(Sys.which("python3"), required = TRUE)
+}
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Aleatorización del contexto
+familias <- c("Ramírez", "González", "Martínez", "García", "López", "Rodríguez",
+              "Hernández", "Pérez", "Sánchez", "Torres")
+familia <- sample(familias, 1)
+
+# Plan actual de minutos (aleatorizar entre 200-300)
+plan_minutos <- sample(c(200, 220, 250, 280, 300), 1)
+
+# Generar datos de consumo para 7 meses
+meses_nombres <- c("Jul.", "Ago.", "Sep.", "Oct.", "Nov.", "Dic.", "Ene.")
+
+# Generar consumo aleatorio asegurando que enero tenga consumo adicional
+consumo_base <- round(plan_minutos * runif(7, 0.6, 1.5))
+# Asegurar que al menos uno supere el plan (enero)
+consumo_base[7] <- plan_minutos + sample(80:150, 1)
+
+consumo_meses <- consumo_base
+
+# Calcular el consumo adicional de enero
+consumo_enero <- consumo_meses[7]
+tiempo_adicional_minutos <- consumo_enero - plan_minutos
+
+# Convertir a horas y minutos
+horas_adicional <- floor(tiempo_adicional_minutos / 60)
+minutos_adicional <- tiempo_adicional_minutos %% 60
+
+# Datos de la tabla del estado de cuenta
+# Aleatorizar valores
+saldo_anterior <- sample(c(45000, 48000, 49610), 1)
+gracias_pago <- sample(c(-48000, -49610, -47500), 1) * -1
+cargos_mes <- sample(c(34000, 35416.83, 36000), 1)
+iva <- round(cargos_mes * 0.19)
+subtotal <- cargos_mes + iva
+credito_ajuste <- sample(c(-5, -5.53, -6), 1) * -1
+total_pagar <- subtotal - credito_ajuste
+
+# Cargos del mes detallados
+plan_local <- sample(c(19000, 20086.21, 21000), 1)
+consumo_adicional_costo <- sample(c(13000, 14065.92, 15000), 1)
+llamada_espera <- sample(c(1200, 1264.70, 1300), 1)
+total_cargos_mes <- cargos_mes
+
+# Generar opciones de respuesta
+# Opción correcta
+opcion_correcta <- paste0(horas_adicional, " hora", ifelse(horas_adicional > 1, "s", ""),
+                          " y ", minutos_adicional, " minutos.")
+
+# Generar distractores
+distractor1_min <- tiempo_adicional_minutos + sample(30:50, 1)
+dist1_h <- floor(distractor1_min / 60)
+dist1_m <- distractor1_min %% 60
+distractor1 <- paste0(dist1_h, " hora", ifelse(dist1_h > 1, "s", ""),
+                      " y ", dist1_m, " minutos.")
+
+distractor2_min <- tiempo_adicional_minutos - sample(20:40, 1)
+dist2_h <- floor(distractor2_min / 60)
+dist2_m <- distractor2_min %% 60
+distractor2 <- paste0(dist2_h, " hora", ifelse(dist2_h > 1, "s", ""),
+                      " y ", dist2_m, " minutos.")
+
+distractor3_min <- tiempo_adicional_minutos + sample(200:250, 1)
+dist3_h <- floor(distractor3_min / 60)
+dist3_m <- distractor3_min %% 60
+distractor3 <- paste0(dist3_h, " hora", ifelse(dist3_h > 1, "s", ""),
+                      " y ", dist3_m, " minutos.")
+
+# Crear lista de opciones y mezclar
+opciones <- c(opcion_correcta, distractor1, distractor2, distractor3)
+opciones_mezcladas <- sample(opciones)
+
+# Identificar posición correcta
+indice_correcto <- which(opciones_mezcladas == opcion_correcta)
+
+# Vector de solución
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+
+# Tests de validación
+test_that("El consumo de enero supera el plan", {
+  expect_true(consumo_enero > plan_minutos)
+})
+
+test_that("El cálculo de tiempo adicional es correcto", {
+  expect_equal(tiempo_adicional_minutos, consumo_enero - plan_minutos)
+})
+
+test_that("La conversión a horas y minutos es correcta", {
+  expect_equal(horas_adicional * 60 + minutos_adicional, tiempo_adicional_minutos)
+})
+```
+
+```{r generar_grafico_barras, message=FALSE, warning=FALSE}
+options(OutDec = ".")
+
+# Código Python para generar el gráfico de barras
+codigo_python <- sprintf("
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Configuración
+plt.style.use('default')
+plt.rcParams['font.size'] = 10
+plt.rcParams['axes.linewidth'] = 1.2
+
+# Datos
+meses = %s
+consumo = %s
+plan_actual = %d
+
+# Crear figura
+fig, ax = plt.subplots(figsize=(6, 4))
+
+# Colores para las barras
+colores = ['#4682B4'] * len(meses)
+colores[-1] = '#E74C3C'  # Enero en rojo por ser el mes con consumo adicional
+
+# Crear gráfico de barras
+barras = ax.bar(meses, consumo, color=colores, edgecolor='black', linewidth=0.8)
+
+# Añadir valores sobre las barras
+for i, (barra, valor) in enumerate(zip(barras, consumo)):
+    altura = barra.get_height()
+    ax.text(barra.get_x() + barra.get_width()/2., altura,
+            f'{int(valor)}',
+            ha='center', va='bottom', fontweight='bold', fontsize=9)
+
+# Línea del plan actual
+ax.axhline(y=plan_actual, color='green', linestyle='--', linewidth=2,
+           label=f'Su plan local actual es de {plan_actual} minutos')
+
+# Configuración del gráfico
+ax.set_xlabel('Últimos consumos de voz', fontweight='bold')
+ax.set_ylabel('Minutos consumidos', fontweight='bold')
+ax.set_title('Diagrama de barras de los últimos\\nconsumos de voz', fontsize=11, fontweight='bold')
+ax.legend(loc='upper left', fontsize=8)
+ax.grid(axis='y', alpha=0.3, linestyle='--')
+ax.set_ylim(0, max(consumo) * 1.15)
+
+plt.tight_layout()
+
+# Guardar
+plt.savefig('grafico_consumo.png', dpi=150, bbox_inches='tight', facecolor='white')
+plt.savefig('grafico_consumo.pdf', dpi=150, bbox_inches='tight', facecolor='white')
+plt.close()
+",
+paste0("['", paste(meses_nombres, collapse="', '"), "']"),
+paste0("[", paste(consumo_meses, collapse=", "), "]"),
+plan_minutos)
+
+# Ejecutar Python
+py_run_string(codigo_python)
+```
+
+```{r generar_tabla_estado_cuenta, message=FALSE, warning=FALSE}
+options(OutDec = ".")
+
+# Función para formatear números con separador de miles
+format_currency <- function(x) {
+  format(x, big.mark = ",", decimal.mark = ".", nsmall = 2, scientific = FALSE)
+}
+
+# Crear tabla con TikZ para el estado de cuenta
+tabla_estado <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  "  \\begin{tabular}{|p{4.5cm}|r|}",
+  "    \\hline",
+  "    \\rowcolor{cyan!15}",
+  "    \\multicolumn{2}{|c|}{\\textbf{Estado de cuenta mes de enero}} \\\\",
+  "    \\hline",
+  paste0("    Saldo anterior & \\$", format_currency(saldo_anterior), " \\\\"),
+  "    \\hline",
+  paste0("    Gracias por su pago & -\\$", format_currency(gracias_pago), " \\\\"),
+  "    \\hline",
+  "    \\rowcolor{orange!20}",
+  "    \\textbf{Saldo} & \\textbf{\\$0} \\\\",
+  "    \\hline",
+  paste0("    Cargos del mes & \\$", format_currency(cargos_mes), " \\\\"),
+  "    \\hline",
+  paste0("    IVA & \\$", format_currency(iva), " \\\\"),
+  "    \\hline",
+  "    \\rowcolor{orange!20}",
+  paste0("    \\textbf{Subtotal} & \\textbf{\\$", format_currency(subtotal), "} \\\\"),
+  "    \\hline",
+  paste0("    Crédito por ajuste a la decena & -\\$", format_currency(credito_ajuste), " \\\\"),
+  "    \\hline",
+  "    \\rowcolor{orange!30}",
+  paste0("    \\textbf{Total a pagar} & \\textbf{\\$", format_currency(total_pagar), "} \\\\"),
+  "    \\hline",
+  "    \\hline",
+  "    \\rowcolor{cyan!15}",
+  "    \\multicolumn{2}{|c|}{\\textbf{Cargos del mes}} \\\\",
+  "    \\hline",
+  paste0("    Plan local & \\$", format_currency(plan_local), " \\\\"),
+  "    \\hline",
+  paste0("    Consumo adicional & \\$", format_currency(consumo_adicional_costo), " \\\\"),
+  "    \\hline",
+  paste0("    Llamada en espera & \\$", format_currency(llamada_espera), " \\\\"),
+  "    \\hline",
+  "    \\rowcolor{orange!20}",
+  paste0("    \\textbf{Total cargos del mes} & \\textbf{\\$", format_currency(total_cargos_mes), "} \\\\"),
+  "    \\hline",
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+```
+
+Question
+========
+
+La gráfica y la tabla muestran parte de la información que recibe la familia `r familia` en su factura telefónica del mes de enero.
+
+```{r mostrar_grafico, echo=FALSE, results='asis', fig.align='center'}
+cat("![](grafico_consumo.png){width=65%}\n\n")
+```
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+# Detectar formato de salida
+es_moodle <- (match_exams_call() %in% c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat"))
+
+if (es_moodle) {
+  # Para Moodle, usar tabla HTML
+  cat("<div style='text-align: center;'>")
+  cat("<table border='1' style='border-collapse: collapse; margin: 0 auto; width: 70%;'>")
+  cat("<tr><th colspan='2' style='padding: 8px; text-align: center; background-color: #e0f7fa;'>")
+  cat("Estado de cuenta mes de enero</th></tr>")
+  cat("<tr><td style='padding: 6px;'>Saldo anterior</td><td style='padding: 6px; text-align: right;'>$", format_currency(saldo_anterior), "</td></tr>")
+  cat("<tr><td style='padding: 6px;'>Gracias por su pago</td><td style='padding: 6px; text-align: right;'>-$", format_currency(gracias_pago), "</td></tr>")
+  cat("<tr style='background-color: #ffe0b2;'><td style='padding: 6px;'><strong>Saldo</strong></td><td style='padding: 6px; text-align: right;'><strong>$0</strong></td></tr>")
+  cat("<tr><td style='padding: 6px;'>Cargos del mes</td><td style='padding: 6px; text-align: right;'>$", format_currency(cargos_mes), "</td></tr>")
+  cat("<tr><td style='padding: 6px;'>IVA</td><td style='padding: 6px; text-align: right;'>$", format_currency(iva), "</td></tr>")
+  cat("<tr style='background-color: #ffe0b2;'><td style='padding: 6px;'><strong>Subtotal</strong></td><td style='padding: 6px; text-align: right;'><strong>$", format_currency(subtotal), "</strong></td></tr>")
+  cat("<tr><td style='padding: 6px;'>Crédito por ajuste a la decena</td><td style='padding: 6px; text-align: right;'>-$", format_currency(credito_ajuste), "</td></tr>")
+  cat("<tr style='background-color: #ffcc80;'><td style='padding: 6px;'><strong>Total a pagar</strong></td><td style='padding: 6px; text-align: right;'><strong>$", format_currency(total_pagar), "</strong></td></tr>")
+  cat("<tr><th colspan='2' style='padding: 8px; text-align: center; background-color: #e0f7fa;'>Cargos del mes</th></tr>")
+  cat("<tr><td style='padding: 6px;'>Plan local</td><td style='padding: 6px; text-align: right;'>$", format_currency(plan_local), "</td></tr>")
+  cat("<tr><td style='padding: 6px;'>Consumo adicional</td><td style='padding: 6px; text-align: right;'>$", format_currency(consumo_adicional_costo), "</td></tr>")
+  cat("<tr><td style='padding: 6px;'>Llamada en espera</td><td style='padding: 6px; text-align: right;'>$", format_currency(llamada_espera), "</td></tr>")
+  cat("<tr style='background-color: #ffe0b2;'><td style='padding: 6px;'><strong>Total cargos del mes</strong></td><td style='padding: 6px; text-align: right;'><strong>$", format_currency(total_cargos_mes), "</strong></td></tr>")
+  cat("</table>")
+  cat("</div>")
+} else {
+  # Para PDF/Word, usar TikZ
+  include_tikz(tabla_estado,
+               name = "tabla_estado_cuenta",
+               markup = "markdown",
+               format = typ,
+               packages = c("tikz", "colortbl"),
+               width = "10cm")
+}
+```
+
+El tiempo adicional consumido por la familia `r familia` en enero fue:
+
+Answerlist
+----------
+- `r opciones_mezcladas[1]`
+- `r opciones_mezcladas[2]`
+- `r opciones_mezcladas[3]`
+- `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para resolver este problema, debemos:
+
+1. **Identificar el plan actual**: Según la gráfica, el plan local actual es de **`r plan_minutos` minutos**.
+
+2. **Identificar el consumo de enero**: En el gráfico de barras, el consumo de enero (la última barra) es de **`r consumo_enero` minutos**.
+
+3. **Calcular el tiempo adicional**:
+   $$\text{Tiempo adicional} = \text{Consumo enero} - \text{Plan actual}$$
+   $$\text{Tiempo adicional} = `r consumo_enero` - `r plan_minutos` = `r tiempo_adicional_minutos` \text{ minutos}$$
+
+4. **Convertir a horas y minutos**:
+   - Horas: $\lfloor `r tiempo_adicional_minutos` \div 60 \rfloor = `r horas_adicional`$ hora(s)
+   - Minutos restantes: $`r tiempo_adicional_minutos` \mod 60 = `r minutos_adicional`$ minutos
+
+**Respuesta correcta**: `r opcion_correcta`
+
+Answerlist
+----------
+- `r if(solucion[1] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[2] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[3] == 1) "Verdadero" else "Falso"`
+- `r if(solucion[4] == 1) "Verdadero" else "Falso"`
+
+Meta-information
+================
+exname: consumo_telefonico_adicional
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Estadística/Interpretación de Gráficos/Nivel 2
+extags: ICFES, Interpretación, Numérico-Variacional, Estadística, Aplicado
+exdificultad: 2
+excompetencia: Interpretación y Representación
+excomponente: Numérico-Variacional
+expensamiento: Pensamiento Numérico
+excontenido: Estadística (Genérico)
+exeje: Aplicado/Contextualizado

@@ -1,0 +1,82 @@
+```{r data generation, echo = FALSE, results = "hide"}
+library(exams)
+
+# Generación de datos aleatorios
+x_values <- -2:2
+f_values <- sample(-4:4, 5, replace = TRUE)
+g_values <- sample(-4:4, 5, replace = TRUE)
+
+data <- data.frame(x = x_values, f = f_values, g = g_values)
+
+# Crear tablas para la pregunta
+tabla1 <- data.frame(x = data$x, "f(x)" = data$f)
+tabla2 <- data.frame(x = data$x, "g(x)" = data$g)
+
+# Determinar si es posible calcular h(-2)
+es_posible <- -2 %in% data$x
+
+# Crear las opciones de respuesta
+opciones <- c(
+  "No, porque se desconoce la fórmula utilizada para calcular los valores de f(x).",
+  "Sí, porque se conocen los valores de f(x) y g(x) para los mismos valores de x.",
+  "No, porque falta información sobre la función g(x) para completar el procedimiento.",
+  "Sí, porque ese valor de x aparece en ambas columnas de las tablas de f(x) y g(x)."
+)
+
+# Determinar la respuesta correcta
+solucion <- if(es_posible) which(opciones == "Sí, porque se conocen los valores de f(x) y g(x) para los mismos valores de x.") else which(opciones == "No, porque falta información sobre la función g(x) para completar el procedimiento.")
+```
+
+Question
+========
+
+Las tablas 1 y 2 muestran algunos valores de las funciones f(x) y g(x) respectivamente.
+
+Tabla 1:
+
+```{r, echo = FALSE, results = "asis"}
+knitr::kable(tabla1, format = "markdown")
+```
+
+Tabla 2:
+
+```{r, echo = FALSE, results = "asis"}
+knitr::kable(tabla2, format = "markdown")
+```
+
+Con estas funciones se puede crear una nueva función: h(x) = g(f(x)). Para calcular los valores de esta función, a partir de la información de las tablas 1 y 2, se debe efectuar este procedimiento:
+
+Paso 1. Escoger el valor de x con el que se va a calcular h(x).
+Paso 2. Ubicar el valor escogido en el paso 1, en la columna de x de la tabla 1 y tomar el valor de f(x) que se encuentra frente a este.
+Paso 3. Ubicar el valor hallado en el paso 2, en la columna de x de la tabla 2, y tomar el valor de g(x) que se encuentra frente a este.
+Paso 4. El valor encontrado en el paso 3 corresponde a h(x).
+
+Con base en lo anterior, ¿es posible hallar el valor de h(-2)?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+
+La respuesta correcta es: `r opciones[solucion]`
+
+Explanation
+===========
+
+`r if(es_posible) {
+  "Sí es posible calcular h(-2) porque se conocen los valores de f(x) y g(x) para x = -2 en ambas tablas, lo que permite completar el procedimiento para calcular h(-2) = g(f(-2))."
+} else {
+  "No es posible calcular h(-2) porque no se proporciona el valor de g(x) para el resultado de f(-2), lo que impide completar el cálculo de h(-2) = g(f(-2))."
+}`
+
+Meta-information
+================
+exname: Función compuesta
+extype: schoice
+exsolution: `r mchoice2string(solucion == 1:4)`
+exshuffle: TRUE

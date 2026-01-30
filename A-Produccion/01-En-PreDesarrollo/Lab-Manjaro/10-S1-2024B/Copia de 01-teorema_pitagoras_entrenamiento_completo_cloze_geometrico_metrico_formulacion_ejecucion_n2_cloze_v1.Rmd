@@ -1,0 +1,798 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float"]
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+```
+
+```{r funciones_auxiliares, echo=FALSE, results="hide"}
+# Función para convertir respuestas múltiples a formato string
+mchoice2string <- function(x) {
+  if (is.factor(x)) x <- as.character(x)
+  if (is.character(x) && length(x) == 1) return(x)
+  if (is.logical(x)) {
+    return(paste(as.integer(x), collapse = ""))
+  } else {
+    return(as.character(x))
+  }
+}
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Función de formato estándar para números
+formato_estandar <- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Función principal de generación de datos
+generar_datos_completos <- function() {
+  # Ternas pitagóricas expandidas para mayor diversidad
+  ternas_pedagogicas <- list(
+    c(3, 4, 5),     # Terna básica más conocida
+    c(5, 12, 13),   # Segunda terna clásica
+    c(8, 15, 17),   # Tercera terna clásica
+    c(6, 8, 10),    # Múltiplo de (3,4,5)
+    c(9, 12, 15),   # Múltiplo de (3,4,5)
+    c(7, 24, 25),   # Cuarta terna clásica
+    c(10, 24, 26),  # Múltiplo de (5,12,13)
+    c(12, 16, 20),  # Múltiplo de (3,4,5)
+    c(15, 20, 25),  # Múltiplo de (3,4,5)
+    c(9, 40, 41),   # Quinta terna clásica
+    c(11, 60, 61),  # Sexta terna clásica
+    c(13, 84, 85),  # Séptima terna clásica
+    c(16, 30, 34),  # Múltiplo de (8,15,17)
+    c(20, 21, 29),  # Octava terna clásica
+    c(18, 24, 30),  # Múltiplo de (3,4,5)
+    c(21, 28, 35),  # Múltiplo de (3,4,5)
+    c(24, 32, 40),  # Múltiplo de (3,4,5)
+    c(27, 36, 45),  # Múltiplo de (3,4,5)
+    c(30, 40, 50),  # Múltiplo de (3,4,5)
+    c(33, 44, 55)   # Múltiplo de (3,4,5)
+  )
+  
+  # Seleccionar terna aleatoriamente
+  terna_seleccionada <- sample(ternas_pedagogicas, 1)[[1]]
+  
+  # Asignar valores manteniendo la relación pitagórica
+  # La hipotenusa siempre debe ser el valor más grande
+  valores_ordenados <- sort(terna_seleccionada)
+  cateto_a <- valores_ordenados[1]
+  cateto_b <- valores_ordenados[2] 
+  hipotenusa_c <- valores_ordenados[3]
+  
+  # Verificar que la terna cumple el teorema de Pitágoras
+  if (cateto_a^2 + cateto_b^2 != hipotenusa_c^2) {
+    # Si no cumple, usar la terna (3,4,5) como respaldo
+    cateto_a <- 3
+    cateto_b <- 4
+    hipotenusa_c <- 5
+  }
+  
+  # Validación final: asegurar que la terna es válida
+  stopifnot(cateto_a^2 + cateto_b^2 == hipotenusa_c^2)
+  stopifnot(hipotenusa_c > cateto_a && hipotenusa_c > cateto_b)
+  
+  # Contextos educativos variados con mayor diversidad
+  contextos_educativos <- c(
+    "construcción de una rampa de acceso",
+    "diseño de una escalera",
+    "cálculo de distancias en un plano cartesiano",
+    "medición de la diagonal de un rectángulo",
+    "navegación marítima entre dos puertos",
+    "diseño de un tejado triangular",
+    "cálculo de cables de tensión",
+    "medición en topografía",
+    "diseño de una piscina rectangular",
+    "construcción de un puente",
+    "cálculo de la altura de un edificio",
+    "diseño de una cancha deportiva",
+    "medición de terrenos agrícolas",
+    "construcción de una torre de comunicación",
+    "diseño de un parqueadero",
+    "cálculo de distancias en arquitectura",
+    "medición de superficies irregulares",
+    "diseño de sistemas de riego",
+    "construcción de vías de acceso",
+    "cálculo de materiales de construcción"
+  )
+  
+  contexto_seleccionado <- sample(contextos_educativos, 1)
+  
+  # Aleatorización de términos matemáticos
+  terminos_cateto <- c("cateto", "lado", "base", "altura", "ancho", "largo")
+  terminos_hipotenusa <- c("hipotenusa", "diagonal", "distancia", "longitud total", "medida principal")
+  terminos_teorema <- c("Teorema de Pitágoras", "fórmula pitagórica", "ecuación pitagórica", "principio pitagórico")
+  
+  termino_cateto <- sample(terminos_cateto, 1)
+  termino_hipotenusa <- sample(terminos_hipotenusa, 1)
+  termino_teorema <- sample(terminos_teorema, 1)
+  
+  # Determinar el artículo correcto según el género del término
+  if (termino_teorema %in% c("fórmula pitagórica", "ecuación pitagórica")) {
+    articulo_teorema <- "la"
+  } else {
+    articulo_teorema <- "el"
+  }
+  
+  # Generar datos para los 12 pasos progresivos
+  datos_pasos <- list()
+  
+  # PASO 1: Identificación de elementos (schoice) - Aleatorización de opciones
+  respuesta_correcta_paso1 <- "dos catetos y una hipotenusa"
+  distractores_paso1 <- c(
+    "tres catetos",
+    "una hipotenusa y dos ángulos agudos",
+    "tres hipotenusas",
+    "dos lados iguales y una base",
+    "un ángulo recto y dos lados",
+    "tres ángulos agudos",
+    "dos hipotenusas y un cateto"
+  )
+  opciones_seleccionadas_paso1 <- sample(distractores_paso1, 3)
+  opciones_paso1_mezcladas <- sample(c(respuesta_correcta_paso1, opciones_seleccionadas_paso1))
+  indice_correcto_paso1 <- which(opciones_paso1_mezcladas == respuesta_correcta_paso1)
+  
+  preguntas_paso1 <- c(
+    "¿Cuáles son los elementos principales de un triángulo rectángulo?",
+    "Un triángulo rectángulo se compone fundamentalmente de:",
+    "Selecciona los componentes que definen a un triángulo rectángulo.",
+    "¿Qué partes clave conforman un triángulo rectángulo?"
+  )
+  
+  datos_pasos$paso1 <- list(
+    pregunta = sample(preguntas_paso1, 1),
+    opciones = opciones_paso1_mezcladas,
+    correcta = indice_correcto_paso1,
+    tipo = "schoice"
+  )
+  
+  # PASO 2: Reconocimiento del teorema (mchoice) - Aleatorización de opciones
+  opciones_paso2 <- c(
+    "Se aplica solo a triángulos rectángulos",
+    "La hipotenusa es el lado más largo",
+    "Se puede escribir como a² + b² = c²",
+    "Se aplica a cualquier triángulo",
+    "Los catetos son siempre iguales",
+    "La suma de los ángulos es 180°",
+    "Se puede usar para calcular áreas",
+    "Solo funciona con números enteros"
+  )
+  opciones_paso2_mezcladas <- sample(opciones_paso2, 4)
+  correctas_paso2 <- c(
+    opciones_paso2_mezcladas[1] == "Se aplica solo a triángulos rectángulos",
+    opciones_paso2_mezcladas[2] == "La hipotenusa es el lado más largo",
+    opciones_paso2_mezcladas[3] == "Se puede escribir como a² + b² = c²",
+    opciones_paso2_mezcladas[4] == "Se aplica a cualquier triángulo"
+  )
+  
+  preguntas_paso2 <- c(
+    paste("¿Cuáles de las siguientes afirmaciones sobre el", termino_teorema, "son correctas?"),
+    paste("Respecto al", termino_teorema, ", indica las proposiciones verdaderas:"),
+    paste("Señala todas las afirmaciones válidas acerca del", termino_teorema, "."),
+    paste("Elige las características que describen correctamente al", termino_teorema, ".")
+  )
+  
+  datos_pasos$paso2 <- list(
+    pregunta = sample(preguntas_paso2, 1),
+    opciones = opciones_paso2_mezcladas,
+    correctas = correctas_paso2,
+    tipo = "mchoice"
+  )
+  
+  # PASO 3: Identificación de la hipotenusa (schoice) - Aleatorización de opciones
+  respuesta_correcta_paso3 <- as.character(hipotenusa_c)
+  distractores_paso3 <- c(
+    as.character(cateto_a),
+    as.character(cateto_b),
+    "No se puede determinar",
+    as.character(cateto_a + cateto_b),
+    as.character(abs(cateto_a - cateto_b)),
+    as.character(cateto_a * cateto_b),
+    as.character(hipotenusa_c + 1)
+  )
+  distractores_paso3 <- unique(distractores_paso3[distractores_paso3 != respuesta_correcta_paso3])
+  opciones_seleccionadas_paso3 <- sample(distractores_paso3, 3)
+  opciones_paso3_mezcladas <- sample(c(respuesta_correcta_paso3, opciones_seleccionadas_paso3))
+  indice_correcto_paso3 <- which(opciones_paso3_mezcladas == respuesta_correcta_paso3)
+  
+  preguntas_paso3 <- c(
+    paste("En el triángulo con lados", cateto_a, ",", cateto_b, "y", hipotenusa_c, ", ¿cuál es la", termino_hipotenusa, "?"),
+    paste("Para un triángulo de lados", cateto_a, ",", cateto_b, "y", hipotenusa_c, ", identifica el valor de la", termino_hipotenusa, "."),
+    paste("Considerando los lados", cateto_a, ",", cateto_b, "y", hipotenusa_c, ", ¿qué número corresponde a la", termino_hipotenusa, "?")
+  )
+  
+  datos_pasos$paso3 <- list(
+    pregunta = sample(preguntas_paso3, 1),
+    opciones = opciones_paso3_mezcladas,
+    correcta = indice_correcto_paso3,
+    tipo = "schoice"
+  )
+  
+  # PASO 4: Cálculo de cuadrados (num)
+  preguntas_paso4 <- c(
+    paste("Calcula", cateto_a, "²:"),
+    paste("Determina el valor de", cateto_a, "elevado al cuadrado."),
+    paste("Encuentra el resultado de", cateto_a, "²."),
+    paste("¿Cuál es el cuadrado de", cateto_a, "?")
+  )
+  
+  datos_pasos$paso4 <- list(
+    pregunta = sample(preguntas_paso4, 1),
+    respuesta = cateto_a^2,
+    tipo = "num",
+    tolerancia = 0
+  )
+  
+  # PASO 5: Cálculo de cuadrados (num)
+  preguntas_paso5 <- c(
+    paste("Calcula", cateto_b, "²:"),
+    paste("Determina el valor de", cateto_b, "elevado al cuadrado."),
+    paste("Encuentra el resultado de", cateto_b, "²."),
+    paste("¿Cuál es el cuadrado de", cateto_b, "?")
+  )
+  
+  datos_pasos$paso5 <- list(
+    pregunta = sample(preguntas_paso5, 1),
+    respuesta = cateto_b^2,
+    tipo = "num",
+    tolerancia = 0
+  )
+  
+  # PASO 6: Suma de cuadrados (num)
+  preguntas_paso6 <- c(
+    paste("Calcula", cateto_a, "² +", cateto_b, "²:"),
+    paste("Suma los cuadrados de los catetos:", cateto_a, "² +", cateto_b, "²."),
+    paste("¿Cuál es el resultado de la suma", cateto_a, "² +", cateto_b, "²?"),
+    paste("Determina el valor total de", cateto_a, "² más", cateto_b, "².")
+  )
+  
+  datos_pasos$paso6 <- list(
+    pregunta = sample(preguntas_paso6, 1),
+    respuesta = cateto_a^2 + cateto_b^2,
+    tipo = "num",
+    tolerancia = 0
+  )
+  
+  # PASO 7: Verificación del teorema (schoice) - Aleatorización de opciones
+  respuesta_correcta_paso7 <- "Sí"
+  distractores_paso7 <- c(
+    "No",
+    "No se puede determinar",
+    "Depende del contexto",
+    "Solo si los catetos son iguales",
+    "Solo con números enteros",
+    "Solo en triángulos equiláteros",
+    "Solo si la hipotenusa es par"
+  )
+  opciones_seleccionadas_paso7 <- sample(distractores_paso7, 3)
+  opciones_paso7_mezcladas <- sample(c(respuesta_correcta_paso7, opciones_seleccionadas_paso7))
+  indice_correcto_paso7 <- which(opciones_paso7_mezcladas == respuesta_correcta_paso7)
+  
+  preguntas_paso7 <- c(
+    paste("¿Es cierto que", cateto_a, "² +", cateto_b, "² =", hipotenusa_c, "²?"),
+    paste("Verifica si la igualdad", cateto_a, "² +", cateto_b, "² =", hipotenusa_c, "² es correcta."),
+    "¿Se cumple que la suma de los cuadrados de los catetos es igual al cuadrado de la hipotenusa en este caso?"
+  )
+  
+  datos_pasos$paso7 <- list(
+    pregunta = sample(preguntas_paso7, 1),
+    opciones = opciones_paso7_mezcladas,
+    correcta = indice_correcto_paso7,
+    tipo = "schoice"
+  )
+  
+  # PASO 8: Aplicación inversa - encontrar cateto (num)
+  # Crear un problema donde se conoce un cateto y la hipotenusa
+  cateto_conocido <- cateto_a
+  cateto_desconocido <- cateto_b
+  
+  preguntas_paso8 <- c(
+    paste("Si un cateto mide", cateto_conocido, "y la hipotenusa mide", hipotenusa_c, ", ¿cuánto mide el otro cateto?"),
+    paste("Dado un cateto de", cateto_conocido, "y una hipotenusa de", hipotenusa_c, ", calcula la longitud del cateto faltante."),
+    paste("En un triángulo rectángulo, la hipotenusa es", hipotenusa_c, "y uno de los catetos es", cateto_conocido, ". Halla el otro cateto.")
+  )
+  
+  datos_pasos$paso8 <- list(
+    pregunta = sample(preguntas_paso8, 1),
+    respuesta = cateto_desconocido,
+    tipo = "num",
+    tolerancia = 0.01
+  )
+  
+  # PASO 9: Verificación de cálculo (schoice) - Aleatorización de opciones
+  respuesta_correcta_paso9 <- paste("Calcular √(", hipotenusa_c, "² -", cateto_conocido, "²)")
+  distractores_paso9 <- c(
+    paste("Calcular", hipotenusa_c, "+", cateto_conocido),
+    paste("Calcular", hipotenusa_c, "×", cateto_conocido),
+    paste("Calcular", hipotenusa_c, "÷", cateto_conocido),
+    paste("Calcular", hipotenusa_c, "² +", cateto_conocido, "²"),
+    paste("Calcular √(", hipotenusa_c, "² +", cateto_conocido, "²)"),
+    paste("Calcular", hipotenusa_c, "-", cateto_conocido),
+    paste("Calcular √(", hipotenusa_c, "×", cateto_conocido, ")")
+  )
+  opciones_seleccionadas_paso9 <- sample(distractores_paso9, 3)
+  opciones_paso9_mezcladas <- sample(c(respuesta_correcta_paso9, opciones_seleccionadas_paso9))
+  indice_correcto_paso9 <- which(opciones_paso9_mezcladas == respuesta_correcta_paso9)
+  
+  preguntas_paso9 <- c(
+    paste("Para verificar que", cateto_desconocido, "es correcto, ¿qué operación debemos realizar?"),
+    paste("¿Cuál es el cálculo correcto para encontrar un cateto si la hipotenusa es", hipotenusa_c, "y el otro cateto es", cateto_conocido, "?"),
+    "Selecciona la fórmula que permite hallar el cateto faltante a partir de la hipotenusa y un cateto conocido."
+  )
+  
+  datos_pasos$paso9 <- list(
+    pregunta = sample(preguntas_paso9, 1),
+    opciones = opciones_paso9_mezcladas,
+    correcta = indice_correcto_paso9,
+    tipo = "schoice"
+  )
+  
+  # PASO 10: Aplicación contextual (mchoice) - Aleatorización de opciones
+  opciones_paso10 <- c(
+    "Calcular distancias directas",
+    "Determinar ángulos rectos",
+    "Verificar medidas",
+    "Calcular áreas de círculos",
+    "Calcular perímetros de rectángulos",
+    "Determinar volúmenes de cilindros",
+    "Calcular superficies de esferas",
+    "Verificar proporciones",
+    "Calcular diagonales de cuadrados",
+    "Determinar alturas de triángulos"
+  )
+  opciones_paso10_mezcladas <- sample(opciones_paso10, 4)
+  correctas_paso10 <- c(
+    opciones_paso10_mezcladas[1] == "Calcular distancias directas",
+    opciones_paso10_mezcladas[2] == "Determinar ángulos rectos", 
+    opciones_paso10_mezcladas[3] == "Verificar medidas",
+    opciones_paso10_mezcladas[4] == "Calcular áreas de círculos"
+  )
+  
+  preguntas_paso10 <- c(
+    paste("En el contexto de", contexto_seleccionado, ", ¿cuáles son aplicaciones válidas del", termino_teorema, "?"),
+    paste("Considerando la situación sobre", contexto_seleccionado, ", ¿para qué sirve aplicar el", termino_teorema, "?"),
+    paste("¿En cuál de estos escenarios es útil el", termino_teorema, "dentro del problema de", contexto_seleccionado, "?")
+  )
+  
+  datos_pasos$paso10 <- list(
+    pregunta = sample(preguntas_paso10, 1),
+    opciones = opciones_paso10_mezcladas,
+    correctas = correctas_paso10,
+    tipo = "mchoice"
+  )
+  
+  # PASO 11: Análisis de error común (schoice) - Aleatorización de opciones
+  error_comun <- cateto_a + cateto_b  # Error: suma en lugar de teorema
+  respuesta_correcta_paso11 <- "Sumó los catetos en lugar de usar el teorema"
+  distractores_paso11 <- c(
+    "No calculó correctamente la suma",
+    "Usó la fórmula incorrecta del área",
+    "No hay error en el cálculo",
+    "Confundió la hipotenusa con el perímetro",
+    "Aplicó mal la fórmula de la raíz cuadrada",
+    "No consideró que es un triángulo rectángulo",
+    "Usó la fórmula del teorema de Tales"
+  )
+  opciones_seleccionadas_paso11 <- sample(distractores_paso11, 3)
+  opciones_paso11_mezcladas <- sample(c(respuesta_correcta_paso11, opciones_seleccionadas_paso11))
+  indice_correcto_paso11 <- which(opciones_paso11_mezcladas == respuesta_correcta_paso11)
+  
+  preguntas_paso11 <- c(
+    paste("Un estudiante calcula la", termino_hipotenusa, "como", cateto_a, "+", cateto_b, "=", error_comun, ". ¿Cuál es el error?"),
+    paste("Al intentar hallar la", termino_hipotenusa, ", un alumno obtiene", error_comun, "sumando", cateto_a, "y", cateto_b, ". ¿Qué hizo mal?"),
+    paste("Si el resultado para la", termino_hipotenusa, "fue", error_comun, "basado en la operación", cateto_a, "+", cateto_b, ", identifica el error conceptual.")
+  )
+  
+  datos_pasos$paso11 <- list(
+    pregunta = sample(preguntas_paso11, 1),
+    opciones = opciones_paso11_mezcladas,
+    correcta = indice_correcto_paso11,
+    tipo = "schoice"
+  )
+  
+  # PASO 12: Síntesis y transferencia (num)
+  # Problema de transferencia con nueva terna
+  nueva_terna <- sample(list(c(9, 12, 15), c(12, 16, 20), c(15, 20, 25)), 1)[[1]]
+  nuevo_cateto_a <- nueva_terna[1]
+  nuevo_cateto_b <- nueva_terna[2]
+  nueva_hipotenusa <- nueva_terna[3]
+  
+  preguntas_paso12 <- c(
+    paste("Problema de transferencia: Si los catetos de un triángulo rectángulo miden", nuevo_cateto_a, "y", nuevo_cateto_b, ", ¿cuál es la longitud de la hipotenusa?"),
+    paste("Aplica lo aprendido: un triángulo rectángulo tiene catetos de", nuevo_cateto_a, "y", nuevo_cateto_b, ". Calcula su hipotenusa."),
+    paste("Para finalizar, halla la hipotenusa de un triángulo cuyos catetos son", nuevo_cateto_a, "y", nuevo_cateto_b, ".")
+  )
+  
+  datos_pasos$paso12 <- list(
+    pregunta = sample(preguntas_paso12, 1),
+    respuesta = nueva_hipotenusa,
+    tipo = "num",
+    tolerancia = 0.01
+  )
+  
+  return(list(
+    cateto_a = cateto_a,
+    cateto_b = cateto_b,
+    hipotenusa_c = hipotenusa_c,
+    contexto = contexto_seleccionado,
+    termino_cateto = termino_cateto,
+    termino_hipotenusa = termino_hipotenusa,
+    termino_teorema = termino_teorema,
+    articulo_teorema = articulo_teorema,
+    pasos = datos_pasos
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos_completos()
+
+# Validaciones de coherencia matemática
+test_that("Validación del Teorema de Pitágoras", {
+  # Verificar que la terna seleccionada cumple el teorema
+  expect_equal(datos$cateto_a^2 + datos$cateto_b^2, datos$hipotenusa_c^2)
+})
+
+test_that("Validación de valores positivos", {
+  expect_true(datos$cateto_a > 0)
+  expect_true(datos$cateto_b > 0)
+  expect_true(datos$hipotenusa_c > 0)
+})
+
+test_that("Validación de la hipotenusa como lado más largo", {
+  expect_true(datos$hipotenusa_c > datos$cateto_a)
+  expect_true(datos$hipotenusa_c > datos$cateto_b)
+})
+
+test_that("Validación de respuestas numéricas", {
+  expect_equal(datos$pasos$paso4$respuesta, datos$cateto_a^2)
+  expect_equal(datos$pasos$paso5$respuesta, datos$cateto_b^2)
+  expect_equal(datos$pasos$paso6$respuesta, datos$cateto_a^2 + datos$cateto_b^2)
+})
+```
+
+```{r preparar_soluciones, echo=FALSE, results="hide"}
+# Preparar soluciones y tipos para formato Cloze usando VECTORES (no listas)
+# Siguiendo el patrón del ejercicio funcional de probabilidad
+
+soluciones_cloze <- c()
+tipos_cloze <- c()
+tolerancias_cloze <- c()
+
+for(i in 1:12) {
+  paso <- datos$pasos[[i]]
+
+  if(paso$tipo == "schoice") {
+    # Para schoice: crear vector de 0s con 1 en la posición correcta
+    solucion_vector <- rep(0, length(paso$opciones))
+    solucion_vector[paso$correcta] <- 1
+    soluciones_cloze[i] <- paste(solucion_vector, collapse = "")
+    tipos_cloze[i] <- "schoice"
+    tolerancias_cloze[i] <- 0
+
+  } else if(paso$tipo == "mchoice") {
+    # Para mchoice: usar vector lógico de respuestas correctas
+    soluciones_cloze[i] <- paste(as.integer(paso$correctas), collapse = "")
+    tipos_cloze[i] <- "mchoice"
+    tolerancias_cloze[i] <- 0
+
+  } else if(paso$tipo == "num") {
+    # Para num: usar valor numérico
+    soluciones_cloze[i] <- as.character(paso$respuesta)
+    tipos_cloze[i] <- "num"
+    tolerancias_cloze[i] <- paso$tolerancia
+  }
+}
+
+# Convertir a strings para meta-información usando vectores
+solucion_final <- paste(soluciones_cloze, collapse = "|")
+tipos_final <- paste(tipos_cloze, collapse = "|")
+tolerancias_final <- paste(tolerancias_cloze, collapse = "|")
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones mejorada
+tryCatch({
+  versiones <- list()
+  hashes_unicos <- c()
+  
+  # Generar 500 versiones para asegurar al menos 300 únicas
+  for(i in 1:500) {
+    # Cambiar semilla para cada iteración
+    set.seed(sample(1:100000, 1))
+    datos_test <- generar_datos_completos()
+    
+    # Crear hash más específico que incluya todos los elementos aleatorizados
+    hash_elementos <- paste(
+      datos_test$cateto_a,
+      datos_test$cateto_b, 
+      datos_test$hipotenusa_c,
+      datos_test$contexto,
+      datos_test$termino_cateto,
+      datos_test$termino_hipotenusa,
+      datos_test$termino_teorema,
+      paste(datos_test$pasos$paso1$opciones, collapse = "|"),
+      paste(datos_test$pasos$paso2$opciones, collapse = "|"),
+      paste(datos_test$pasos$paso3$opciones, collapse = "|"),
+      sep = "||"
+    )
+    
+    hash_final <- digest::digest(hash_elementos)
+    hashes_unicos <- c(hashes_unicos, hash_final)
+  }
+
+  n_versiones_unicas <- length(unique(hashes_unicos))
+
+  if(n_versiones_unicas >= 300) {
+    cat("✅ Prueba de diversidad EXITOSA:", n_versiones_unicas, "versiones únicas de 500 generadas\n")
+  } else {
+    warning(paste("Solo se generaron", n_versiones_unicas,
+                  "versiones únicas de 500. Se requieren al menos 300."))
+  }
+}, error = function(e) {
+  warning("Error en prueba de diversidad:", e$message)
+})
+```
+
+```{r generar_tikz, echo=FALSE, results="hide"}
+# Gráfica TikZ del triángulo rectángulo optimizada
+tikz_triangulo_pedagogico <- '
+\\begin{tikzpicture}[scale=2.0]
+  % Triángulo rectángulo principal
+  \\coordinate (A) at (0,0);
+  \\coordinate (B) at (3,0);
+  \\coordinate (C) at (0,2);
+  
+  % Dibujar el triángulo con estilo mejorado
+  \\draw[black, very thick, fill=lightgray!20] (A) -- (B) -- (C) -- cycle;
+  
+  % Símbolo de ángulo recto mejorado
+  \\draw[black, thick] (0.2,0) -- (0.2,0.2) -- (0,0.2);
+  
+  % Etiquetas de los lados con mejor posicionamiento
+  \\node[black, font=\\large\\bfseries] at (1.5,-0.3) {CATETO_A};
+  \\node[black, font=\\large\\bfseries] at (-0.4,1) {CATETO_B};
+  \\node[black, font=\\large\\bfseries] at (1.6,1.1) {HIPOTENUSA_C};
+  
+  % Etiquetas de los vértices
+  \\node[black, font=\\large] at (-0.2,-0.2) {A};
+  \\node[black, font=\\large] at (3.2,-0.2) {B};
+  \\node[black, font=\\large] at (-0.2,2.2) {C};
+  
+  % Líneas de referencia para mejor comprensión
+  \\draw[gray, dashed, thin] (A) -- (B);
+  \\draw[gray, dashed, thin] (A) -- (C);
+\\end{tikzpicture}
+'
+```
+
+Question
+========
+
+## 🎯 **Entrenamiento Completo: `r datos$termino_teorema`**
+
+**Contexto:** En el ámbito de `r datos$contexto`, necesitas aplicar `r datos$articulo_teorema` `r datos$termino_teorema` de manera sistemática y comprensiva.
+
+```{r mostrar_tikz, echo=FALSE, results="asis"}
+# Hacer sustituciones dinámicas en el TikZ
+tikz_dinamico <- tikz_triangulo_pedagogico
+tikz_dinamico <- gsub("CATETO_A", paste0("$", datos$cateto_a, "$"), tikz_dinamico)
+tikz_dinamico <- gsub("CATETO_B", paste0("$", datos$cateto_b, "$"), tikz_dinamico)
+tikz_dinamico <- gsub("HIPOTENUSA_C", paste0("$", datos$hipotenusa_c, "$"), tikz_dinamico)
+
+# Renderizar con include_tikz optimizado
+include_tikz(tikz_dinamico,
+             name = "triangulo_pedagogico",
+             markup = "markdown",
+             format = typ,
+             library = c("babel", "calc"),
+             packages = c("tikz", "xcolor"),
+             width = "8cm")
+```
+
+Completa los siguientes **12 pasos progresivos** para demostrar tu comprensión completa del Teorema de Pitágoras:
+
+### **📚 FASE I: Comprensión Conceptual**
+
+**Paso 1.** `r datos$pasos$paso1$pregunta`
+##ANSWER1##
+
+**Paso 2.** `r datos$pasos$paso2$pregunta`
+##ANSWER2##
+
+**Paso 3.** `r datos$pasos$paso3$pregunta`
+##ANSWER3##
+
+### **🔢 FASE II: Aplicación Numérica**
+
+**Paso 4.** `r datos$pasos$paso4$pregunta`
+##ANSWER4##
+
+**Paso 5.** `r datos$pasos$paso5$pregunta`
+##ANSWER5##
+
+**Paso 6.** `r datos$pasos$paso6$pregunta`
+##ANSWER6##
+
+### **✅ FASE III: Verificación y Análisis**
+
+**Paso 7.** `r datos$pasos$paso7$pregunta`
+##ANSWER7##
+
+**Paso 8.** `r datos$pasos$paso8$pregunta`
+##ANSWER8##
+
+**Paso 9.** `r datos$pasos$paso9$pregunta`
+##ANSWER9##
+
+### **🌍 FASE IV: Transferencia y Síntesis**
+
+**Paso 10.** `r datos$pasos$paso10$pregunta`
+##ANSWER10##
+
+**Paso 11.** `r datos$pasos$paso11$pregunta`
+##ANSWER11##
+
+**Paso 12.** `r datos$pasos$paso12$pregunta`
+##ANSWER12##
+
+Answerlist
+----------
+```{r generar_answerlist, echo=FALSE, results="asis"}
+# Generar Answerlist dinámicamente basado en las opciones aleatorizadas
+cat("* ", paste(datos$pasos$paso1$opciones, collapse = "\n* "), "\n")
+cat("* ", paste(datos$pasos$paso2$opciones, collapse = "\n* "), "\n")
+cat("* ", paste(datos$pasos$paso3$opciones, collapse = "\n* "), "\n")
+cat("* ", paste(datos$pasos$paso7$opciones, collapse = "\n* "), "\n")
+cat("* ", paste(datos$pasos$paso9$opciones, collapse = "\n* "), "\n")
+cat("* ", paste(datos$pasos$paso10$opciones, collapse = "\n* "), "\n")
+cat("* ", paste(datos$pasos$paso11$opciones, collapse = "\n* "), "\n")
+```
+
+Solution
+========
+
+## 🎯 **Solución Completa del Entrenamiento: `r datos$termino_teorema`**
+
+Este ejercicio pedagógico evalúa la comprensión integral de `r datos$articulo_teorema` `r datos$termino_teorema` a través de 12 pasos progresivos que abarcan desde conceptos básicos hasta aplicaciones avanzadas.
+
+### **📚 FASE I: Comprensión Conceptual**
+
+**Paso 1:** Los elementos principales de un triángulo rectángulo son **dos `r datos$termino_cateto`s y una `r datos$termino_hipotenusa`**. Los `r datos$termino_cateto`s son los lados que forman el ángulo recto, mientras que la `r datos$termino_hipotenusa` es el lado opuesto al ángulo recto y siempre es el más largo.
+
+**Paso 2:** Las afirmaciones correctas sobre `r datos$articulo_teorema` `r datos$termino_teorema` son:
+
+- ✅ Se aplica solo a triángulos rectángulos
+- ✅ La hipotenusa es el lado más largo
+- ✅ Se puede escribir como a² + b² = c²
+- ❌ NO se aplica a cualquier triángulo (solo a rectángulos)
+
+**Paso 3:** En el triángulo con lados `r datos$cateto_a`, `r datos$cateto_b` y `r datos$hipotenusa_c`, la hipotenusa es **`r datos$hipotenusa_c`** porque es el lado más largo.
+
+### **🔢 FASE II: Aplicación Numérica**
+
+**Paso 4:** `r datos$cateto_a`² = **`r datos$cateto_a^2`**
+
+**Paso 5:** `r datos$cateto_b`² = **`r datos$cateto_b^2`**
+
+**Paso 6:** `r datos$cateto_a`² + `r datos$cateto_b`² = `r datos$cateto_a^2` + `r datos$cateto_b^2` = **`r datos$cateto_a^2 + datos$cateto_b^2`**
+
+### **✅ FASE III: Verificación y Análisis**
+
+**Paso 7:** **Sí**, es cierto que `r datos$cateto_a`² + `r datos$cateto_b`² = `r datos$hipotenusa_c`² porque `r datos$cateto_a^2 + datos$cateto_b^2` = `r datos$hipotenusa_c^2`.
+
+**Paso 8:** Si un cateto mide `r datos$cateto_a` y la hipotenusa mide `r datos$hipotenusa_c`, el otro cateto mide **`r datos$cateto_b`**.
+Cálculo: √(`r datos$hipotenusa_c`² - `r datos$cateto_a`²) = √(`r datos$hipotenusa_c^2` - `r datos$cateto_a^2`) = √`r datos$hipotenusa_c^2 - datos$cateto_a^2` = `r datos$cateto_b`
+
+**Paso 9:** Para verificar que `r datos$cateto_b` es correcto, debemos **calcular √(`r datos$hipotenusa_c`² - `r datos$cateto_a`²)**, que es la aplicación directa de `r datos$articulo_teorema` `r datos$termino_teorema` despejando un cateto.
+
+### **🌍 FASE IV: Transferencia y Síntesis**
+
+**Paso 10:** En el contexto de `r datos$contexto`, las aplicaciones válidas de `r datos$articulo_teorema` `r datos$termino_teorema` son:
+
+- ✅ Calcular distancias directas
+- ✅ Determinar ángulos rectos
+- ✅ Verificar medidas
+- ❌ NO calcular áreas de círculos (eso requiere π×r²)
+
+**Paso 11:** El error del estudiante es que **sumó los catetos en lugar de usar `r datos$articulo_teorema` `r datos$termino_teorema`**. La suma `r datos$cateto_a` + `r datos$cateto_b` = `r datos$cateto_a + datos$cateto_b` no da la hipotenusa correcta (`r datos$hipotenusa_c`).
+
+**Paso 12:** Para el problema de transferencia con catetos `r datos$pasos$paso12$respuesta - 3` y `r datos$pasos$paso12$respuesta - 1`, la hipotenusa es **`r datos$pasos$paso12$respuesta`**.
+
+```{r solucion_detallada, echo=FALSE, results="asis"}
+# Generar explicaciones detalladas para cada paso
+cat("### **📋 Explicaciones Detalladas por Paso**\n\n")
+
+for(i in 1:12) {
+  paso <- datos$pasos[[i]]
+
+  cat(paste0("**Paso ", i, ":** "))
+
+  if(paso$tipo == "schoice") {
+    cat(paste("Respuesta correcta:", paso$opciones[paso$correcta], "\n\n"))
+  } else if(paso$tipo == "mchoice") {
+    opciones_correctas <- paso$opciones[paso$correctas]
+    cat(paste("Respuestas correctas:", paste(opciones_correctas, collapse = ", "), "\n\n"))
+  } else if(paso$tipo == "num") {
+    cat(paste("Respuesta numérica:", paso$respuesta, "\n\n"))
+  }
+}
+```
+
+### **🎓 Evaluación Pedagógica**
+
+Este ejercicio evalúa:
+
+- **Comprensión conceptual** (Pasos 1-3): Identificación de elementos y principios
+- **Habilidades de cálculo** (Pasos 4-6): Operaciones aritméticas básicas
+- **Aplicación del teorema** (Pasos 7-9): Uso directo e inverso de la fórmula
+- **Transferencia de conocimiento** (Pasos 10-12): Aplicación a nuevos contextos
+
+La progresión de dificultad asegura que los estudiantes desarrollen una comprensión profunda y duradera de `r datos$articulo_teorema` `r datos$termino_teorema`, previniendo respuestas mecánicas y promoviendo el razonamiento matemático.
+
+Meta-information
+================
+exname: teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2
+extype: cloze
+exsolution: `r solucion_final`
+exclozetype: `r tipos_final`
+extol: `r tolerancias_final`
+exshuffle: TRUE
+exsection: Geometria|Teorema de Pitagoras|Entrenamiento Completo
+exversion: 1
+exdate: `r Sys.Date()`
+exauthor: Sistema de Generacion ICFES
+exemail: alvaroangelm@iepedacitodecielo.edu.co
+exinstitution: ICFES
+exlanguage: es
+excomment: Ejercicio de entrenamiento completo del Teorema de Pitagoras con 12 pasos progresivos que incluyen comprension conceptual, aplicacion numerica, verificacion y transferencia de conocimiento. Optimizado para generar mas de 300 variantes unicas con aleatorizacion avanzada de contextos, terminos matematicos y opciones de respuesta.

@@ -1,0 +1,406 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usetikzlibrary{3d,babel,positioning}
+icfes:
+  competencia: argumentacion
+  nivel_dificultad: 3
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: matematico
+  eje_axial: eje4
+  componente: aleatorio
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(ggplot2)
+library(knitr)
+library(reticulate)
+library(testthat)
+library(data.table)
+library(digest)
+
+# Configurar Python si es necesario
+use_python("/usr/bin/python3", required = TRUE)
+
+# Configuración global
+typ <- match_exams_device()
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+
+# Configuración de locale para formato numérico consistente
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  echo = FALSE,
+  results = "hide"
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Configuración de formato numérico estándar
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Función para formatear números enteros sin notación científica
+formatear_entero <- function(numero) {
+  formatC(numero, format = "d", big.mark = "")
+}
+
+# Función de formato estándar para números
+formato_estandar <- function(x, decimales = 0) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Aleatorización de colores
+  colores_disponibles <- list(
+    list(nombre = "rojas", tikz = "red", hex = "#DC143C"),
+    list(nombre = "azules", tikz = "blue", hex = "#1E90FF"),
+    list(nombre = "verdes", tikz = "green!70!black", hex = "#228B22"),
+    list(nombre = "amarillas", tikz = "yellow!70!black", hex = "#FFD700"),
+    list(nombre = "negras", tikz = "black", hex = "#000000"),
+    list(nombre = "blancas", tikz = "white", hex = "#FFFFFF")
+  )
+  
+  # Seleccionar dos colores diferentes
+  indices_colores <- sample(1:length(colores_disponibles), 2, replace = FALSE)
+  color1 <- colores_disponibles[[indices_colores[1]]]
+  color2 <- colores_disponibles[[indices_colores[2]]]
+  
+  # Números de bolas: total entre 12 y 50 (rango amplio para diversidad)
+  total_bolas <- sample(12:50, 1)
+  
+  # Generar distribución de bolas directamente (más control)
+  # Asegurar que ambos colores tienen al menos 2 bolas
+  # color1 tendrá entre max(2, total*0.2) y min(total-2, total*0.8)
+  min_color1 <- max(2, floor(total_bolas * 0.2))
+  max_color1 <- min(total_bolas - 2, floor(total_bolas * 0.8))
+  
+  # Si el rango es válido, seleccionar aleatoriamente
+  if (min_color1 <= max_color1) {
+    bolas_color1 <- sample(min_color1:max_color1, 1)
+  } else {
+    # Caso límite: distribución 50-50
+    bolas_color1 <- floor(total_bolas / 2)
+  }
+  
+  bolas_color2 <- total_bolas - bolas_color1
+  
+  # Validación final
+  if (bolas_color1 < 2) bolas_color1 <- 2
+  if (bolas_color2 < 2) bolas_color2 <- 2
+  total_bolas <- bolas_color1 + bolas_color2
+  
+  # Calcular probabilidades para el diagrama de árbol
+  
+  # Primera extracción: probabilidad de color1
+  p_primer_color1 <- bolas_color1 / total_bolas
+  
+  # Segunda extracción (sin reemplazo) - condicional a primera extracción
+  # Si primera fue color1:
+  p_segundo_color1_dado_color1 <- (bolas_color1 - 1) / (total_bolas - 1)
+  p_segundo_color2_dado_color1 <- bolas_color2 / (total_bolas - 1)
+  
+  # Si primera fue color2:
+  p_segundo_color1_dado_color2 <- bolas_color1 / (total_bolas - 1)
+  p_segundo_color2_dado_color2 <- (bolas_color2 - 1) / (total_bolas - 1)
+  
+  # Probabilidad conjunta: segunda color1 dado que primera fue color1
+  # P(segunda=color1 | primera=color1) = p_segundo_color1_dado_color1
+  p_condicional <- p_segundo_color1_dado_color1
+  
+  # Calcular probabilidad conjunta para verificar
+  p_conjunta <- p_primer_color1 * p_segundo_color1_dado_color1
+  
+  # Generar distractores
+  # Distractor 1: Probabilidad marginal de primera extracción
+  distractor1 <- p_primer_color1
+  
+  # Distractor 2: Probabilidad conjunta (sin dividir)
+  distractor2 <- p_conjunta
+  
+  # Distractor 3: Probabilidad condicional invertida
+  distractor3 <- p_segundo_color1_dado_color2
+  
+  # Asegurar que todos los distractores son diferentes de la respuesta correcta
+  opciones <- c(p_condicional, distractor1, distractor2, distractor3)
+  opciones <- round(opciones, 4)
+  
+  # Si hay duplicados, ajustar con valores alternativos
+  intentos <- 0
+  while (length(unique(opciones)) < 4 && intentos < 10) {
+    intentos <- intentos + 1
+    if (any(abs(opciones[1] - opciones[-1]) < 0.0001)) {
+      # Ajustar distractores que son iguales a la respuesta correcta
+      if (abs(distractor1 - p_condicional) < 0.0001) {
+        distractor1 <- p_primer_color1 + (1 - p_primer_color1) * 0.3
+      }
+      if (abs(distractor2 - p_condicional) < 0.0001) {
+        distractor2 <- p_conjunta * 2
+      }
+      if (abs(distractor3 - p_condicional) < 0.0001) {
+        distractor3 <- 1 - p_condicional
+      }
+    }
+    opciones <- c(p_condicional, distractor1, distractor2, distractor3)
+    opciones <- round(opciones, 4)
+  }
+  
+  # Si aún hay duplicados después de 10 intentos, usar valores forzados
+  if (length(unique(opciones)) < 4) {
+    opciones <- c(p_condicional, 
+                  p_primer_color1, 
+                  p_conjunta, 
+                  max(0, min(1, p_condicional + 0.1)))
+    opciones <- round(opciones, 4)
+  }
+  
+  # Ordenar opciones y encontrar posición de respuesta correcta
+  opciones_ordenadas <- sort(opciones)
+  posicion_correcta <- which(opciones_ordenadas == round(p_condicional, 4))
+  
+  # Crear patrón de respuesta (1=correcta, 0=incorrecta)
+  patron_respuesta <- rep("0", 4)
+  patron_respuesta[posicion_correcta] <- "1"
+  
+  return(list(
+    total_bolas = total_bolas,
+    bolas_color1 = bolas_color1,
+    bolas_color2 = bolas_color2,
+    color1 = color1,
+    color2 = color2,
+    p_primer_color1 = p_primer_color1,
+    p_condicional = p_condicional,
+    p_segundo_color1_dado_color1 = p_segundo_color1_dado_color1,
+    p_segundo_color2_dado_color1 = p_segundo_color2_dado_color1,
+    p_segundo_color1_dado_color2 = p_segundo_color1_dado_color2,
+    p_segundo_color2_dado_color2 = p_segundo_color2_dado_color2,
+    p_conjunta = p_conjunta,
+    opciones_ordenadas = opciones_ordenadas,
+    patron_respuesta = paste(patron_respuesta, collapse = "")
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    # Generar datos (cada llamada usa el siguiente estado del generador aleatorio)
+    datos_test <- generar_datos()
+    # Crear hash único basado en características clave de la versión
+    versiones[[i]] <- digest::digest(list(
+      total_bolas = datos_test$total_bolas,
+      bolas_color1 = datos_test$bolas_color1,
+      bolas_color2 = datos_test$bolas_color2,
+      color1 = datos_test$color1$nombre,
+      color2 = datos_test$color2$nombre,
+      p_condicional = round(datos_test$p_condicional, 5)
+    ))
+  }
+  
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+```{r generar_diagrama_arbol, echo=FALSE, results="asis"}
+# Función para generar código TikZ del diagrama de árbol
+generar_arbol_tikz <- function(datos) {
+  # Usar identificadores simples para los nodos (color1 y color2)
+  color1_nom <- datos$color1$nombre
+  color2_nom <- datos$color2$nombre
+  
+  # Construir código TikZ usando paste0 para evitar problemas con sprintf y %
+  # Pre-formatear números usando format() en lugar de sprintf() para mayor seguridad
+  p1 <- format(round(datos$p_primer_color1, 3), nsmall = 3)
+  p2 <- format(round(1 - datos$p_primer_color1, 3), nsmall = 3)
+  p3 <- format(round(datos$p_segundo_color1_dado_color1, 3), nsmall = 3)
+  p4 <- format(round(datos$p_segundo_color2_dado_color1, 3), nsmall = 3)
+  p5 <- format(round(datos$p_segundo_color1_dado_color2, 3), nsmall = 3)
+  p6 <- format(round(datos$p_segundo_color2_dado_color2, 3), nsmall = 3)
+  
+  # Construir código TikZ con mejor espaciado para evitar solapamientos
+  # Usar coordenadas más explícitas y mayor separación
+  tikz_code <- paste0(
+    '\\begin{tikzpicture}[scale=1.0, node distance=2.5cm and 5cm, every node/.style={align=center, text width=2cm}]', '\n',
+    '  % Nodo raíz', '\n',
+    '  \\node[circle, draw, fill=gray!20] (raiz) at (0, 0) {Inicio};', '\n',
+    '  ', '\n',
+    '  % Primer nivel: Primera extracción con mayor separación horizontal', '\n',
+    '  \\node[rectangle, draw, minimum width=2cm, minimum height=1cm] (primera_c1) at (-3, -2.5) {Primera\\\\', color1_nom, '};', '\n',
+    '  \\node[rectangle, draw, minimum width=2cm, minimum height=1cm] (primera_c2) at (3, -2.5) {Primera\\\\', color2_nom, '};', '\n',
+    '  ', '\n',
+    '  % Aristas del primer nivel', '\n',
+    '  \\draw[->, thick] (raiz) -- node[left, font=\\small, midway] {', p1, '} (primera_c1);', '\n',
+    '  \\draw[->, thick] (raiz) -- node[right, font=\\small, midway] {', p2, '} (primera_c2);', '\n',
+    '  ', '\n',
+    '  % Segundo nivel: Segunda extracción (condicional) con mayor separación', '\n',
+    '  % Nodos debajo de primera_c1 (izquierda)', '\n',
+    '  \\node[rectangle, draw, minimum width=2cm, minimum height=1cm] (segunda_c1_c1) at (-5, -5) {Segunda\\\\', color1_nom, '};', '\n',
+    '  \\node[rectangle, draw, minimum width=2cm, minimum height=1cm] (segunda_c2_c1) at (-1, -5) {Segunda\\\\', color2_nom, '};', '\n',
+    '  ', '\n',
+    '  % Nodos debajo de primera_c2 (derecha)', '\n',
+    '  \\node[rectangle, draw, minimum width=2cm, minimum height=1cm] (segunda_c1_c2) at (1, -5) {Segunda\\\\', color1_nom, '};', '\n',
+    '  \\node[rectangle, draw, minimum width=2cm, minimum height=1cm] (segunda_c2_c2) at (5, -5) {Segunda\\\\', color2_nom, '};', '\n',
+    '  ', '\n',
+    '  % Aristas del segundo nivel (probabilidades condicionales)', '\n',
+    '  \\draw[->, thick] (primera_c1) -- node[left, font=\\small, midway] {', p3, '} (segunda_c1_c1);', '\n',
+    '  \\draw[->, thick] (primera_c1) -- node[right, font=\\small, midway] {', p4, '} (segunda_c2_c1);', '\n',
+    '  ', '\n',
+    '  \\draw[->, thick] (primera_c2) -- node[left, font=\\small, midway] {', p5, '} (segunda_c1_c2);', '\n',
+    '  \\draw[->, thick] (primera_c2) -- node[right, font=\\small, midway] {', p6, '} (segunda_c2_c2);', '\n',
+    '\\end{tikzpicture}', '\n'
+  )
+  
+  return(tikz_code)
+}
+
+# Generar código TikZ del diagrama
+diagrama_tikz <- generar_arbol_tikz(datos)
+
+# Renderizar con include_tikz
+include_tikz(diagrama_tikz,
+             name = "diagrama_arbol_probabilidad",
+             markup = "markdown",
+             format = typ,
+             library = c("positioning", "babel"),
+             packages = c("tikz", "xcolor"),
+             width = "16cm")
+```
+
+Question
+========
+
+Una urna contiene `r datos$total_bolas` bolas: `r datos$bolas_color1` bolas `r datos$color1$nombre` y `r datos$bolas_color2` bolas `r datos$color2$nombre`. Se realizan dos extracciones **sin reemplazo**.
+
+El diagrama de árbol mostrado representa todas las posibles combinaciones de extracciones y sus probabilidades asociadas.
+
+Según el diagrama de árbol, ¿cuál es la probabilidad de que en la segunda extracción se obtenga una bola `r datos$color1$nombre`, **dado que** en la primera extracción se obtuvo una bola `r datos$color1$nombre`?
+
+Answerlist
+----------
+- `r sprintf("%.4f", datos$opciones_ordenadas[1])`
+- `r sprintf("%.4f", datos$opciones_ordenadas[2])`
+- `r sprintf("%.4f", datos$opciones_ordenadas[3])`
+- `r sprintf("%.4f", datos$opciones_ordenadas[4])`
+
+Solution
+========
+
+Para resolver este problema de **probabilidad condicional**, necesitamos aplicar correctamente la definición de probabilidad condicional y analizar el diagrama de árbol.
+
+### Paso 1: Identificar el tipo de problema
+
+Este es un problema de **probabilidad condicional** donde buscamos:
+
+$$P(\text{Segunda extracción = `r datos$color1$nombre`} | \text{Primera extracción = `r datos$color1$nombre`})$$
+
+### Paso 2: Aplicar la definición de probabilidad condicional
+
+La probabilidad condicional se define como:
+
+$$P(A|B) = \frac{P(A \cap B)}{P(B)}$$
+
+En nuestro caso:
+
+- **A** = Segunda extracción es `r datos$color1$nombre`
+- **B** = Primera extracción es `r datos$color1$nombre`
+- **P(A ∩ B)** = Probabilidad de que ambas extracciones sean `r datos$color1$nombre`
+- **P(B)** = Probabilidad de que la primera extracción sea `r datos$color1$nombre`
+
+### Paso 3: Calcular probabilidades necesarias
+
+**Probabilidad de la primera extracción (P(B)):**
+
+Como hay `r datos$bolas_color1` bolas `r datos$color1$nombre` de un total de `r datos$total_bolas` bolas:
+
+$$P(\text{Primera = `r datos$color1$nombre`}) = \frac{`r datos$bolas_color1`}{`r datos$total_bolas`} = `r sprintf("%.4f", datos$p_primer_color1)`$$
+
+**Probabilidad condicional (P(A|B)):**
+
+Si en la primera extracción se obtuvo una bola `r datos$color1$nombre`, quedan:
+
+- `r datos$bolas_color1 - 1` bolas `r datos$color1$nombre`
+- `r datos$bolas_color2` bolas `r datos$color2$nombre`
+- Total: `r datos$total_bolas - 1` bolas
+
+Por lo tanto:
+
+$$P(\text{Segunda = `r datos$color1$nombre`} | \text{Primera = `r datos$color1$nombre`}) = \frac{`r datos$bolas_color1 - 1`}{`r datos$total_bolas - 1`} = `r sprintf("%.4f", datos$p_condicional)`$$
+
+### Paso 4: Verificación con el diagrama de árbol
+
+En el diagrama de árbol, podemos observar que:
+
+- Del nodo "Primera: `r datos$color1$nombre`" salen dos ramas
+- La rama hacia "Segunda: `r datos$color1$nombre`" tiene probabilidad `r sprintf("%.3f", datos$p_segundo_color1_dado_color1)`
+- Esta probabilidad coincide con nuestro cálculo: `r sprintf("%.4f", datos$p_condicional)`
+
+### Paso 5: Análisis de distractores
+
+**Respuesta correcta:** `r sprintf("%.4f", datos$p_condicional)`
+
+**Análisis de errores conceptuales comunes (distractores):**
+
+1. **`r sprintf("%.4f", datos$opciones_ordenadas[which(datos$opciones_ordenadas != datos$p_condicional)[1]])`**: Error de **confundir probabilidad condicional con probabilidad marginal** - usar la probabilidad de la primera extracción en lugar de la condicional
+
+2. **`r sprintf("%.4f", datos$opciones_ordenadas[which(datos$opciones_ordenadas != datos$p_condicional)[2]])`**: Error de **confundir probabilidad condicional con probabilidad conjunta** - calcular P(A ∩ B) sin dividir por P(B)
+
+3. **`r sprintf("%.4f", datos$opciones_ordenadas[which(datos$opciones_ordenadas != datos$p_condicional)[3]])`**: Error de **invertir la condición** - calcular P(segunda=`r datos$color1$nombre` | primera=`r datos$color2$nombre`) en lugar de la condición correcta
+
+Answerlist
+----------
+- `r ifelse(datos$patron_respuesta[1] == "1", "Verdadero", "Falso")`
+- `r ifelse(datos$patron_respuesta[2] == "1", "Verdadero", "Falso")`
+- `r ifelse(datos$patron_respuesta[3] == "1", "Verdadero", "Falso")`
+- `r ifelse(datos$patron_respuesta[4] == "1", "Verdadero", "Falso")`
+
+Meta-information
+================
+exname: Probabilidad Condicional Diagrama Árbol
+extype: schoice
+exsolution: `r datos$patron_respuesta`
+exshuffle: TRUE
+exsection: Probabilidad Condicional

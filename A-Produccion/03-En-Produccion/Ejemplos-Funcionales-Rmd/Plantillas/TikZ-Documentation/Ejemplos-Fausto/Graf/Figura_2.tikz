@@ -1,0 +1,10 @@
+﻿\usetikzlibrary{calc}
+\begin{tikzpicture}[x={(-10:5mm)}, y={5mm}, z={(45:5mm)}, >=latex]
+    \draw[dashed] (0, 0, 0) node (O) {} -- (0, 0, 4)  -- (4, 0, 4);
+    \draw[dashed] (0, 0, 4) -- (2, {sqrt(52.25)}, 2) node (B) {};
+    \draw (0, 0, 0) -- (4, 0, 0) node (A) {} -- (4, 0, 4);
+    \fill[red, opacity=.5, draw=black] (0, 0, 0) -- (4, 0, 0) -- (2, {sqrt(52.25)}, 2) -- cycle;
+    \fill[red!15, opacity=.5, draw=black] (4, 0, 0) -- (4, 0, 4) -- (2, {sqrt(52.25)}, 2) -- cycle;
+    \draw[<->] (2, 0, 0) -- (B) node[midway, left] {7,5 cm};
+    \draw[<->] ($(O) + (0, 0, -.25)$) -- ($(A) + (0, 0, -.25)$) node[midway, below] {4 cm};
+\end{tikzpicture}

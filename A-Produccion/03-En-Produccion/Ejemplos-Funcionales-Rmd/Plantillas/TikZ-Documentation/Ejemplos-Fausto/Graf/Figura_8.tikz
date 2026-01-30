@@ -1,0 +1,7 @@
+﻿\begin{tikzpicture}[>=latex]
+    \fill[white] (-2,0) arc(180:360:2cm and 0.5cm) -- (2, 3) arc(0:-180:2cm and .5cm) -- cycle;
+    \draw (-2,0) arc(180:360:2cm and .5cm) -- (2, 3) arc(0:-180:2cm and .5cm) -- cycle;
+    \fill[inner color=white, outer color=cyan, draw=black] (2, 3) arc(0:360:2cm and .5cm);
+    \draw[<->] (2.25, 0) -- (2.25, 3) node[midway, right] {10 cm};
+    \draw[<->] (-2, 3) -- (2, 3) node[midway, above] {20 cm};
+\end{tikzpicture}

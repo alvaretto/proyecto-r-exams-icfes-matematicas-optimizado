@@ -1,0 +1,115 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{pgfplots}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ
+\usetikzlibrary{automata,positioning,calc,arrows}
+\pgfplotsset{compat=1.18}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuración párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\input{trigonometria_punto_k_v2-concordance}
+
+\begin{enumerate}
+
+
+\begin{question}
+
+Un punto M se mueve de un extremo a otro del segmento PW que se muestra en la gráfica.
+
+% Diagrama geométrico simplificado
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+% Segmento horizontal QT
+\draw[thick] (0,0) -- (4,0);
+\node[below] at (0,0) {P};
+\node[below] at (4,0) {W};
+% Punto K móvil
+\fill[blue] (2,0) circle (2pt);
+\node[below] at (2,0) {M};
+% Punto P fijo
+\fill[red] (2,1.5) circle (2pt);
+\node[above] at (2,1.5) {Q};
+% Línea vertical h
+\draw[dashed, red] (2,0) -- (2,1.5);
+\node[right] at (2,0.75) {$h$};
+% Línea KP
+\draw[thick, blue] (2,0) -- (2,1.5);
+% Ángulo alpha
+\draw[thick] (1.5,0) arc (180:90:0.5);
+\node at (1.3,0.3) {$\alpha$};
+\end{tikzpicture}
+\end{center}
+
+El ángulo $\alpha$ y la medida $h$ se relacionan mediante la razón trigonométrica $\sen(\alpha) = \frac{h}{MQ}$, de donde se deduce la distancia entre M y Q como $MQ = \frac{h}{\sen(\alpha)}$ o $MQ = h \times \csc(\alpha)$.
+
+¿Cuál es la gráfica que muestra las distancias $MQ$, cada vez que M se mueve sobre el segmento PW?
+
+\begin{answerlist}
+\item
+\includegraphics[width=5cm]{grafica_A.png}
+\item
+\includegraphics[width=5cm]{grafica_B.png}
+\item
+\includegraphics[width=5cm]{grafica_C.png}
+\item
+\includegraphics[width=5cm]{grafica_D.png}
+\end{answerlist}
+
+\end{question}
+
+\begin{solution}
+
+La relación matemática fundamental es $MQ = h \times \csc(\alpha) = \frac{h}{\sen(\alpha)}$.
+
+Cuando M se mueve sobre el segmento PW:
+
+\begin{itemize}
+\item Al inicio: $\alpha$ es muy pequeño, entonces $\sen(\alpha) \approx 0$, por lo que $\csc(\alpha) \to \infty$ y $MQ$ es muy grande.
+
+\item Al final: $\alpha$ se acerca a 90 grados, entonces $\sen(\alpha) \to 1$, por lo que $\csc(\alpha) \to 1$ y $MQ = h$.
+\end{itemize}
+
+Por lo tanto, la gráfica debe mostrar una función cosecante decreciente que empieza con valores muy altos y se aproxima a $h$ cuando $\alpha$ se acerca a 90 grados.
+
+La respuesta correcta es la opción B.
+
+\begin{answerlist}
+  \item Falso
+  \item Verdadero
+  \item Falso
+  \item Falso
+\end{answerlist}
+\end{solution}
+
+%% META-INFORMATION
+\exname{Trigonometria Punto Movil}
+\extype{schoice}
+\exsolution{0100}
+\exshuffle{TRUE}
+\exsection{Geometria Metrica}
+
+\end{enumerate}
+\end{document}

@@ -1,0 +1,34 @@
+Question
+========
+
+```{r data generation, echo = FALSE, results = "hide"}
+# Generar datos simples
+opciones <- c("75%", "80%", "85%", "90%")
+respuesta_correcta <- 2  # La segunda opción (80%) es correcta
+```
+
+Este es un test simple de schoice en cloze.
+
+Pregunta numérica: ¿Cuánto es 2 + 2? ##ANSWER1##
+
+Pregunta de selección: ¿Cuál es el resultado correcto?
+##ANSWER2##
+* 75%
+* 80%
+* 85%
+* 90%
+
+Solution
+========
+
+La respuesta numérica es 4.
+La respuesta de selección es 80%.
+
+Meta-information
+================
+exname: Test Simple Schoice
+extype: cloze
+exsolution: 4|0100
+exclozetype: num|schoice
+extol: 0|0
+exschoice: 75%|80%|85%|90%

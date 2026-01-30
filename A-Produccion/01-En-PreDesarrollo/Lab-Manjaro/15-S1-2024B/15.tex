@@ -1,0 +1,186 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{3d,babel}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+En una comunidad se realizó un estudio sobre el número de hijos por
+familia. Los resultados obtenidos se presentan en la siguiente tabla:
+
+\includegraphics[width=12cm,height=\textheight,keepaspectratio]{tabla_frecuencias.png}
+
+Con base en la información de la tabla, ¿cuál de las siguientes
+afirmaciones sobre la frecuencia relativa de las familias con 3 hijos es
+correcta?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  El 72.1\% de las familias tienen 3 hijos
+\item
+  El 27.9\% de las familias tienen 3 hijos
+\item
+  El 24.3\% de las familias tienen 3 hijos
+\item
+  El 73.0\% de las familias tienen 3 hijos
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para interpretar correctamente la frecuencia relativa, debemos recordar
+que:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Frecuencia relativa} = Frecuencia absoluta / Total de datos
+\item
+  La frecuencia relativa representa la proporción de datos en cada
+  categoría
+\item
+  Para expresarla como porcentaje, multiplicamos por 100
+\end{enumerate}
+
+\textbf{Análisis de la tabla:}
+
+\begin{itemize}
+\tightlist
+\item
+  Total de familias encuestadas: 111
+\item
+  Familias con 3 hijos: 31
+\item
+  Frecuencia relativa: 0.279
+\end{itemize}
+
+\textbf{Cálculo del porcentaje:}
+
+\[\text{Porcentaje} = \text{Frecuencia relativa} \times 100 = 0.279 \times 100 = 28\%\]
+
+Por lo tanto, la interpretación correcta es: \textbf{El 27.9\% de las
+familias tienen 3 hijos}
+
+\textbf{Análisis de los distractores comunes:}
+
+\begin{itemize}
+\tightlist
+\item
+  Confundir frecuencia absoluta con porcentaje (usar directamente el
+  número de familias como porcentaje)
+\item
+  No convertir la frecuencia relativa a porcentaje (dejar el valor
+  decimal)
+\item
+  Calcular el porcentaje sobre una categoría diferente
+\item
+  Calcular el porcentaje complementario (100\% - porcentaje correcto)
+\end{itemize}
+
+Es fundamental distinguir entre: - \textbf{Frecuencia absoluta}:
+cantidad de casos - \textbf{Frecuencia relativa}: proporción respecto al
+total (valor entre 0 y 1) - \textbf{Porcentaje}: frecuencia relativa ×
+100
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Falso. Esta no es la interpretación correcta de los datos.
+\item
+  Verdadero. Esta es la interpretación correcta de la frecuencia
+  relativa convertida a porcentaje.
+\item
+  Falso. Esta no es la interpretación correcta de los datos.
+\item
+  Falso. Esta no es la interpretación correcta de los datos.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: Interpretación de frecuencia relativa en tabla de distribución
+extype: schoice exsolution: 0100 exshuffle: TRUE exsection:
+Estadística/Tablas de frecuencia/Interpretación
+exextra{[}icfes\_competencia{]}: interpretacion\_representacion
+exextra{[}icfes\_componente{]}: aleatorio exextra{[}icfes\_nivel{]}: 2
+exextra{[}icfes\_contexto{]}: comunitario
+
+\end{document}

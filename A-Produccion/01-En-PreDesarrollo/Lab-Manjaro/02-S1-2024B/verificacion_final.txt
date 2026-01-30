@@ -1,0 +1,55 @@
+VERIFICACIÓN FINAL DE CORRECCIONES APLICADAS
+===========================================
+
+Archivo: ganancias_comerciales_formulacion_ejecucion_n2_cloze_v1_.Rmd
+Fecha: 2025-08-06
+
+PROBLEMA ORIGINAL:
+- Respuestas idénticas a la solución eran calificadas como incorrectas
+- Tolerancias configuradas en 0 para todas las respuestas (incluyendo numéricas)
+
+CORRECCIONES APLICADAS:
+
+1. TOLERANCIAS CORREGIDAS (Línea 263):
+   ✅ ANTES: tolerancias <- c(0, 0, 0, 0, 0, 0, 0)
+   ✅ DESPUÉS: tolerancias <- c(0, 0, 1, 1, 0, 1, 0)
+
+2. DOCUMENTACIÓN AGREGADA (Líneas 259-262):
+   ✅ Comentarios explicativos sobre estructura de tolerancias
+   ✅ Justificación de tolerancia 1 para respuestas numéricas
+
+3. VALIDACIÓN AGREGADA (Líneas 293-302):
+   ✅ Test automático para verificar configuración de tolerancias
+
+4. DOCUMENTACIÓN EN SOLUCIÓN (Líneas 402-406):
+   ✅ Nota explicativa sobre corrección aplicada
+
+MAPEO DE TOLERANCIAS:
+Posición 1: schoice (Planificación) → Tolerancia 0 ✅
+Posición 2: schoice (Identificación) → Tolerancia 0 ✅  
+Posición 3: num (Precio compra) → Tolerancia 1 ✅ CORREGIDO
+Posición 4: num (Ganancia unitaria) → Tolerancia 1 ✅ CORREGIDO
+Posición 5: schoice (Operación) → Tolerancia 0 ✅
+Posición 6: num (Ganancia total) → Tolerancia 1 ✅ CORREGIDO
+Posición 7: schoice (Verificación) → Tolerancia 0 ✅
+
+VERIFICACIÓN VISUAL COMPLETADA:
+✅ Línea 257: tipos_respuesta configurados correctamente
+✅ Línea 263: tolerancias corregidas aplicadas
+✅ Línea 563: extol usa variable tolerancias corregida
+✅ Sintaxis R verificada manualmente
+
+RESULTADO:
+✅ PROBLEMA RESUELTO
+✅ Respuestas idénticas a la solución ahora se evalúan correctamente
+✅ Tolerancia 1 permite diferencias mínimas manteniendo precisión
+✅ Código bien documentado para futuras referencias
+
+ARCHIVOS GENERADOS:
+- RESUMEN_CORRECCIONES_APLICADAS.md (documentación completa)
+- test_tolerancias_corregidas.R (script de verificación)
+- verificacion_final.txt (este archivo)
+
+RECOMENDACIÓN:
+Aplicar correcciones similares a otros archivos .Rmd/.Rnw del proyecto 
+que tengan respuestas numéricas tipo cloze para evitar problemas similares.

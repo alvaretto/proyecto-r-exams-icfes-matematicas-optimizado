@@ -1,0 +1,337 @@
+---
+encoding: UTF-8
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "amsmath"]
+  html_document: default
+  word_document: default
+icfes:
+  competencia: 
+    - argumentacion  # Valida procedimientos y estrategias matemáticas
+  nivel_dificultad: 3                # Nivel avanzado
+  contenido:
+    categoria: algebra_calculo       # Álgebra y Cálculo
+    tipo: no_generico               # Específico de álgebra
+  contexto: matematico              # Contexto matemático puro
+  eje_axial: eje2                   # Términos Semejantes, Factorización Básica
+  componente: numerico_variacional  # Numérico-variacional
+---
+encoding: UTF-8
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{amsmath}"
+))
+
+library(exams)
+library(reticulate)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+
+# Semilla aleatoria para diversidad de versiones
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Función principal de generación de datos
+generar_datos <- function() {
+  # Nombres de estudiantes aleatorios
+  nombres_estudiantes <- c("Ana", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", 
+                          "Helena", "Ignacio", "Julia", "Kevin", "Laura", "Miguel",
+                          "Natalia", "Oscar", "Patricia", "Ricardo", "Sofia", "Tomás")
+  
+  # Contextos de afirmación
+  contextos_afirmacion <- c(
+    "afirma que", "sostiene que", "argumenta que", "declara que", 
+    "asegura que", "establece que", "propone que", "indica que"
+  )
+  
+  # Variaciones de la pregunta
+  variaciones_pregunta <- c(
+    "¿Cuál de las siguientes opciones justifica correctamente la afirmación?",
+    "¿Qué justificación matemática respalda esta afirmación?",
+    "¿Cuál es la razón matemática que valida esta conclusión?",
+    "¿Qué principio matemático fundamenta esta afirmación?"
+  )
+  
+  # Generar exponentes aleatorios para los polinomios (entre 2 y 5)
+  exp1 <- sample(2:5, 1)
+  exp2 <- sample(2:5, 1)
+  exp_resultado <- exp1 + exp2
+  
+  # Generar coeficientes aleatorios para hacer los polinomios más diversos
+  coef1_principal <- sample(c(1, 2, 3), 1)
+  coef1_lineal <- sample(-5:5, 1)
+  coef1_constante <- sample(-10:10, 1)
+  
+  coef2_principal <- sample(c(1, 2, 3), 1)
+  coef2_lineal <- sample(-5:5, 1)
+  coef2_constante <- sample(-10:10, 1)
+  
+  # Construir los polinomios
+  # Polinomio 1
+  if (coef1_principal == 1) {
+    termino1_principal <- paste0("x^", exp1)
+  } else {
+    termino1_principal <- paste0(coef1_principal, "x^", exp1)
+  }
+  
+  if (coef1_lineal == 0) {
+    termino1_lineal <- ""
+  } else if (coef1_lineal == 1) {
+    termino1_lineal <- " + x"
+  } else if (coef1_lineal == -1) {
+    termino1_lineal <- " - x"
+  } else if (coef1_lineal > 0) {
+    termino1_lineal <- paste0(" + ", coef1_lineal, "x")
+  } else {
+    termino1_lineal <- paste0(" - ", abs(coef1_lineal), "x")
+  }
+  
+  if (coef1_constante == 0) {
+    termino1_constante <- ""
+  } else if (coef1_constante > 0) {
+    termino1_constante <- paste0(" + ", coef1_constante)
+  } else {
+    termino1_constante <- paste0(" - ", abs(coef1_constante))
+  }
+  
+  polinomio1 <- paste0(termino1_principal, termino1_lineal, termino1_constante)
+  
+  # Polinomio 2
+  if (coef2_principal == 1) {
+    termino2_principal <- paste0("x^", exp2)
+  } else {
+    termino2_principal <- paste0(coef2_principal, "x^", exp2)
+  }
+  
+  if (coef2_lineal == 0) {
+    termino2_lineal <- ""
+  } else if (coef2_lineal == 1) {
+    termino2_lineal <- " + x"
+  } else if (coef2_lineal == -1) {
+    termino2_lineal <- " - x"
+  } else if (coef2_lineal > 0) {
+    termino2_lineal <- paste0(" + ", coef2_lineal, "x")
+  } else {
+    termino2_lineal <- paste0(" - ", abs(coef2_lineal), "x")
+  }
+  
+  if (coef2_constante == 0) {
+    termino2_constante <- ""
+  } else if (coef2_constante > 0) {
+    termino2_constante <- paste0(" + ", coef2_constante)
+  } else {
+    termino2_constante <- paste0(" - ", abs(coef2_constante))
+  }
+  
+  polinomio2 <- paste0(termino2_principal, termino2_lineal, termino2_constante)
+  
+  # Generar distractores matemáticamente plausibles
+  distractores <- list()
+  
+  # Opción correcta: suma de exponentes
+  opcion_correcta <- paste0("Porque el exponente ", exp_resultado, 
+                           " corresponde a la suma de los máximos exponentes en cada polinomio.")
+  
+  # Distractor 1: multiplicación de exponentes
+  distractor1 <- paste0("Porque el exponente ", exp_resultado, 
+                       " corresponde al producto de los máximos exponentes en cada polinomio.")
+  
+  # Distractor 2: relacionado con número de términos
+  num_terminos_total <- 6  # Máximo posible en la multiplicación
+  distractor2 <- paste0("Porque el exponente ", exp_resultado, 
+                       " corresponde al número total de términos que resultan de la multiplicación.")
+  
+  # Distractor 3: elevar al cuadrado
+  if (exp1 == exp2) {
+    distractor3 <- paste0("Porque el exponente ", exp_resultado, 
+                         " resulta de elevar al cuadrado el exponente máximo común.")
+  } else {
+    distractor3 <- paste0("Porque el exponente ", exp_resultado, 
+                         " resulta de elevar al cuadrado el exponente mayor.")
+  }
+  
+  # Crear lista de opciones
+  opciones <- c(opcion_correcta, distractor1, distractor2, distractor3)
+  
+  # Mezclar opciones y determinar la posición correcta
+  indices_mezclados <- sample(1:4)
+  opciones_mezcladas <- opciones[indices_mezclados]
+  posicion_correcta <- which(indices_mezclados == 1)
+  
+  # Crear vector de solución
+  solucion <- rep(0,4)
+  solucion[posicion_correcta] <- 1
+  
+  # Seleccionar elementos aleatorios
+  nombre_estudiante <- sample(nombres_estudiantes, 1)
+  contexto_afirmacion <- sample(contextos_afirmacion, 1)
+  variacion_pregunta <- sample(variaciones_pregunta, 1)
+  
+  return(list(
+    nombre_estudiante = nombre_estudiante,
+    contexto_afirmacion = contexto_afirmacion,
+    variacion_pregunta = variacion_pregunta,
+    exp1 = exp1,
+    exp2 = exp2,
+    exp_resultado = exp_resultado,
+    polinomio1 = polinomio1,
+    polinomio2 = polinomio2,
+    opciones_mezcladas = opciones_mezcladas,
+    solucion = solucion,
+    posicion_correcta = posicion_correcta,
+    opcion_correcta = opcion_correcta,
+    coef1_principal = coef1_principal,
+    coef2_principal = coef2_principal
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables individuales para facilitar uso
+nombre_estudiante <- datos$nombre_estudiante
+contexto_afirmacion <- datos$contexto_afirmacion
+variacion_pregunta <- datos$variacion_pregunta
+exp1 <- datos$exp1
+exp2 <- datos$exp2
+exp_resultado <- datos$exp_resultado
+polinomio1 <- datos$polinomio1
+polinomio2 <- datos$polinomio2
+opciones_mezcladas <- datos$opciones_mezcladas
+solucion <- datos$solucion
+posicion_correcta <- datos$posicion_correcta
+opcion_correcta <- datos$opcion_correcta
+coef1_principal <- datos$coef1_principal
+coef2_principal <- datos$coef2_principal
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+# Prueba obligatoria de diversidad de versiones
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for(i in 1:1000) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+  }
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 300, 
+              info = paste("Solo se generaron", n_versiones_unicas, 
+                          "versiones únicas. Se requieren al menos 300."))
+})
+```
+
+Question
+========
+
+Al multiplicar los polinomios $P_1(x) = `r polinomio1`$ y $P_2(x) = `r polinomio2`$, `r nombre_estudiante` `r contexto_afirmacion` el máximo exponente en el producto será `r exp_resultado`, sin necesidad de realizar la multiplicación completa.
+
+`r variacion_pregunta`
+
+Answerlist
+----------
+encoding: UTF-8
+- `r opciones_mezcladas[1]`
+- `r opciones_mezcladas[2]`
+- `r opciones_mezcladas[3]`
+- `r opciones_mezcladas[4]`
+
+Solution
+========
+
+Para determinar el máximo exponente en el producto de dos polinomios, debemos aplicar las propiedades fundamentales de los exponentes en álgebra.
+
+### Análisis del problema
+
+Tenemos dos polinomios:
+
+- $P_1(x) = `r polinomio1`$
+- $P_2(x) = `r polinomio2`$
+
+### Principio matemático fundamental
+
+Cuando multiplicamos dos términos con la misma base, los exponentes se **suman**:
+
+$$x^a \cdot x^b = x^{a+b}$$
+
+### Paso a paso
+
+1) **Identificar los máximos exponentes en cada polinomio:**
+
+   - Máximo exponente en $P_1(x)$: `r exp1`
+   - Máximo exponente en $P_2(x)$: `r exp2`
+
+2) **Aplicar la regla de multiplicación de exponentes:**
+
+   Al multiplicar los polinomios, el término con el mayor exponente resultará de multiplicar los términos de mayor grado de cada polinomio:
+   
+   
+   $$(`r if(coef1_principal == 1) "" else coef1_principal`x^{`r exp1`}) \cdot (`r if(coef2_principal == 1) "" else coef2_principal`x^{`r exp2`}) = `r coef1_principal * coef2_principal`x^{`r exp1` + `r exp2`} = `r coef1_principal * coef2_principal`x^{`r exp_resultado`}$$
+
+3) **Conclusión:**
+
+   El máximo exponente en el producto será: `r exp1` + `r exp2` = `r exp_resultado`
+
+### Verificación de la respuesta correcta
+
+La opción correcta es: "`r opcion_correcta`"
+
+Esta es correcta porque:
+
+- Aplica correctamente la regla fundamental: $x^a \cdot x^b = x^{a+b}$
+- Reconoce que el máximo exponente resulta de la **suma** de los exponentes máximos
+- No confunde suma con multiplicación de exponentes
+
+### ¿Por qué las otras opciones son incorrectas?
+
+Las opciones incorrectas representan errores conceptuales comunes:
+
+- **Error de multiplicación de exponentes**: Confundir la regla $x^a \cdot x^b = x^{a+b}$ con $x^a \cdot x^b = x^{a \cdot b}$
+- **Error de conteo de términos**: Relacionar incorrectamente el número de términos con el exponente máximo
+- **Error de potenciación**: Confundir las operaciones de suma y potenciación de exponentes
+
+### Principio general
+
+En álgebra de polinomios, el grado del producto de dos polinomios siempre es la **suma** de los grados de los polinomios factores, siempre que los coeficientes principales no sean cero.
+
+Answerlist
+----------
+encoding: UTF-8
+- `r if(solucion[1] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
+- `r if(solucion[2] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
+- `r if(solucion[3] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
+- `r if(solucion[4] == 1) "Verdadero: Esta opción aplica correctamente la regla de suma de exponentes." else "Falso: Esta opción contiene un error conceptual en las propiedades de los exponentes."`
+
+Meta-information
+================
+exname: multiplicacion_polinomios_exponentes_argumentacion
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+exsection: Álgebra|Polinomios|Propiedades de exponentes

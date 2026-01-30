@@ -1,0 +1,58 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{enumitem}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\usepackage{Sweave}
+\begin{document}
+\input{confint3-concordance}
+
+
+
+\begin{question}
+Se sospecha que un proveedor sistemáticamente llena por debajo del nivel los bidones de detergente de 5~l.
+Se asume que los volúmenes de llenado siguen una distribución normal. Una pequeña muestra de $15$
+bidones se mide con exactitud. Esto muestra que los bidones contienen en promedio
+$4998.4$~ml. La varianza muestral $s^2_{n-1}$ es igual a $1596.2$.
+
+Determine un intervalo de confianza del $95\%$ para el contenido promedio de
+un bidón (en ml).
+
+\begin{answerlist}
+\item ¿Cuál es el límite inferior de confianza?
+\item ¿Cuál es el límite superior de confianza?
+\end{answerlist}
+\end{question}
+
+
+\begin{solution}
+El intervalo de confianza del $95\%$ para el contenido promedio $\mu$
+en ml viene dado por:
+\begin{eqnarray*}
+&   & \left[\bar{y} \, - \, t_{n-1;0.975}\sqrt{\frac{s_{n-1}^2}{n}}, \;
+  \bar{y} \, + \, t_{n-1;0.975}\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+& = & \left[ 4998.4 \, - \, 2.1448\sqrt{\frac{1596.2}{15}}, \;
+             4998.4 \, + \, 2.1448\sqrt{\frac{1596.2}{15}}\right] \\
+& = & \left[4976.275, \, 5020.525\right].
+\end{eqnarray*}
+
+\begin{answerlist}
+\item El límite inferior de confianza es $4976.275$.
+\item El límite superior de confianza es $5020.525$.
+\end{answerlist}
+\end{solution}
+
+
+%% META-INFORMATION
+%% \extype{cloze}
+%% \exclozetype{verbatim|verbatim}
+%% \exsolution{:NUMERICAL:=4976.275:0.1~%50%4978.181:0.1#Aproximación normal en lugar de solución t exacta.|:NUMERICAL:=5020.525:0.1~%50%5018.619:0.1#Aproximación normal en lugar de solución t exacta.}
+%% \exname{Intervalo de confianza}
+%% \extol{0.01}
+\end{document}

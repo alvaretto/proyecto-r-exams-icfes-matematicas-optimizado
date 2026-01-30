@@ -1,0 +1,615 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+    extra_dependencies: ["graphicx", "float", "amsmath"]
+  word_document: default
+icfes:
+  competencia: interpretacion_representacion
+  componente: aleatorio
+  afirmacion: Interpreta información presentada en gráficos estadísticos para resolver problemas
+  evidencia: Combina información de múltiples representaciones gráficas para realizar cálculos
+  nivel: 3
+  tematica: Interpretación de gráficos estadísticos y cálculo de porcentajes
+  contexto: social_economico
+# CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA:
+# - Tipo: cloze (6 respuestas numéricas + 1 schoice)
+# - Tolerancias: 0.01 para numéricas (valores decimales), 0 para schoice
+# - Formato: Sin separador de miles, punto decimal, sin notación científica
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+library(exams)
+library(reticulate)
+library(dplyr)
+library(knitr)
+library(testthat)
+
+typ <- match_exams_device()
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración específica para exams2moodle
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+if (es_moodle) {
+  # Configuración optimizada para Moodle
+  knitr::opts_chunk$set(
+    dev = c("svg", "png"),  # SVG preferido para Moodle
+    fig.width = 8,
+    fig.height = 5
+  )
+}
+
+# Opciones de entornos Python
+python_paths <- c("/usr/bin/python3.11", "/usr/bin/python3.10", "/home/garuda/.virtualenvs/r-reticulate/bin/python", "/usr/bin/python3")
+
+# Intenta establecer el entorno Python utilizando la primera ruta válida
+for (path in python_paths) {
+  use_python(path, required = FALSE)
+  if (py_config()$python_version != "") {
+    cat("Usando Python en:", path, "\n")
+    break
+  }
+}
+```
+
+```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis', include=FALSE}
+options(OutDec = ".")
+
+# Función de formato estándar para números (sin separador de miles, punto decimal)
+formato_estandar <- function(x, decimales = 2) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
+# Función de redondeo matemático correcto (hacia arriba para .5)
+redondear_matematico <- function(x, digits = 2) {
+  factor <- 10^digits
+  return(floor(x * factor + 0.5) / factor)
+}
+
+# Establecer semilla aleatoria para diversidad
+set.seed(as.numeric(Sys.time()) + sample(1:10000, 1))
+```
+
+
+
+```{python GraficoBarras, echo=FALSE, message=FALSE, comment='', warning=FALSE, results="hide"}
+import matplotlib
+matplotlib.use('Agg')  # Backend no interactivo para exams2moodle
+import matplotlib.pyplot as plt
+import random
+
+# Configuración para exams2moodle
+plt.ioff()  # Modo no interactivo
+plt.rcParams['font.size'] = 10
+
+# Datos de los años y valores de exportaciones
+# Crear lista de años desde 1950 hasta 2023
+year = list(range(1950, 2024))
+
+# Generar un índice inicial aleatorio en la lista year
+start_index = random.randint(0, len(year) - 5)
+
+# Seleccionar 5 valores de la lista year, comenzando desde el índice inicial y respetando la secuencia de menor a mayor en incrementos de a 1
+selected_years = [year[i] for i in range(start_index, start_index + 5)]
+
+valor_aleatorio = [selected_years[0], selected_years[1], selected_years[2], selected_years[3], selected_years[4]]
+
+year_aleatorio = random.choice(valor_aleatorio)
+
+valorex = [round(x / 10, 1) for x in range(101, 911, 1)]
+
+exports = sorted(random.sample(valorex, 5))
+
+# Crear un gráfico de barras
+fig, ax = plt.subplots(figsize=(8, 5))  # Usar subplots para mejor control
+bars = ax.bar(selected_years, exports, color='#404040', zorder=2)  # Color gris para las barras y zorder = 2
+
+# Añadir los valores sobre cada barra
+for bar in bars:
+    yval = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
+
+# Títulos y etiquetas
+ax.set_title(f'Exportaciones anuales totales de Tebailandia\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
+ax.set_xlabel('Año')
+ax.set_ylabel('Exportaciones (en millones de tebos)')
+
+# Estilo
+ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)  # Añade una rejilla horizontal con estilo punteado y zorder = 0
+ax.tick_params(axis='x', rotation=45)  # Rota las etiquetas de los años para mejorar la legibilidad
+plt.tight_layout()  # Ajusta automáticamente los parámetros para que la figura se ajuste a la ventana
+
+# Guardar para R/exams/Moodle
+plt.savefig("grafico_barras.png", dpi=150, bbox_inches="tight")
+plt.close(fig)  # Liberar memoria
+```
+
+```{python GraficoTorta, echo=FALSE, message=FALSE, comment='', warning=FALSE, results="hide"}
+import matplotlib
+matplotlib.use('Agg')  # Backend no interactivo para exams2moodle
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Configuración para exams2moodle
+plt.ioff()  # Modo no interactivo
+plt.rcParams['font.size'] = 10
+
+# Datos para las porciones del gráfico circular.
+labels = [
+    "maíz",
+    "trigo",
+    "arroz",
+    "soja",
+    "cebada",
+    "sorgo",
+    "leche",
+    "azúcar",
+    "carne de res",
+    "cerdo",
+    "aves de corral",
+    "seda",
+    "oro",
+    "platino",
+    "pescado",
+    "plátanos",
+    "manzanas",
+    "naranjas",
+    "uvas",
+    "limones",
+    "piñas",
+    "mangos",
+    "aguacates",
+    "tomates",
+    "papas",
+    "cebollas",
+    "ajo",
+    "zanahorias",
+    "pepinos",
+    "pimientos",
+    "aceitunas",
+    "café",
+    "té",
+    "tabaco",  # producto añadido
+    "lana",    # producto añadido
+    "celulares"  # producto añadido
+]
+
+selectots = random.sample(labels, 8)
+
+def generar_lista_suma_100():
+    # Inicializar la lista de números con el mínimo valor de 5 para cada uno
+    numeros = [5] * 8  # 8 números, cada uno inicializado a 5
+
+    # Tenemos 60 unidades restantes para distribuir (100 - 8*5)
+    restantes = 60
+
+    while restantes > 0:
+        # Distribuir los puntos restantes aleatoriamente entre los 8 números
+        for i in range(8):
+            # Decidir cuánto añadir a este número, sin exceder los 'restantes'
+            adicion = random.randint(0, restantes)
+
+            # Añadir la adición al número actual
+            numeros[i] += adicion
+
+            # Actualizar las unidades restantes
+            restantes -= adicion
+
+            # Si ya no quedan unidades restantes, salir del bucle
+            if restantes == 0:
+                break
+
+    # Desordenar la lista de números para que no estén en el orden incremental
+    random.shuffle(numeros)
+
+    return numeros
+
+# Generar y mostrar la lista
+sizes = generar_lista_suma_100()
+
+# Configurar los colores para cada porción.
+# Función para generar colores claros y vibrantes (evitando colores muy oscuros)
+def generate_light_hex_color():
+    # Generar valores RGB entre 80 y 255 para evitar colores muy oscuros
+    r = random.randint(80, 255)
+    g = random.randint(80, 255)
+    b = random.randint(80, 255)
+    return "#{:02x}{:02x}{:02x}".format(r, g, b)
+
+# Paleta de colores predefinidos claros y atractivos
+predefined_colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+    '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2',
+    '#A3E4D7', '#F9E79F', '#D5A6BD', '#AED6F1', '#A9DFBF',
+    '#FAD7A0', '#D2B4DE', '#AED6F1', '#A9CCE3', '#F7DC6F',
+    '#85C1E9', '#D5DBDB', '#F8D7DA', '#D1ECF1', '#D4EDDA'
+]
+
+# Combinar colores predefinidos con algunos generados aleatoriamente
+coloress = predefined_colors + [generate_light_hex_color() for _ in range(10)]
+
+# Seleccionar 8 colores de manera aleatoria de la lista combinada
+colors = random.sample(coloress, 8)
+
+# Seleccionar aleatoriamente qué producto destacar y preguntar
+producto_index = random.randint(0, 7)  # Índice aleatorio del 0 al 7
+
+# Crear explode dinámico basado en el producto seleccionado
+explode = [0.1 if i == producto_index else 0 for i in range(8)]
+
+# Crear gráfico circular con mejor control
+fig1, ax1 = plt.subplots(figsize=(6, 5))
+
+ax1.pie(sizes, explode=explode, labels=selectots, colors=colors, autopct='%1.0f%%',
+        pctdistance=0.85, labeldistance=1.1, shadow=True, startangle=15)
+
+ax1.axis('equal')
+
+ax1.set_title(f'Distribución de exportaciones de\n Tebailandia en {year_aleatorio}', pad=20)
+
+# Guardar para R/exams/Moodle
+plt.savefig("grafico_torta.png", dpi=150, bbox_inches="tight")
+plt.close(fig1)  # Liberar memoria
+
+# Calcular el valor de xol basado en el año aleatorio y el producto seleccionado
+# Validar que el año aleatorio esté en el rango de años disponibles
+year_index = -1
+for i, year in enumerate(selected_years):
+    if year_aleatorio == year:
+        year_index = i
+        break
+
+# Validación de seguridad
+if year_index == -1:
+    raise ValueError(f"Año aleatorio {year_aleatorio} no encontrado en selected_years")
+
+# Calcular xol usando el índice validado
+xol = round(exports[year_index] * (sizes[producto_index] / 100), 2)
+
+producto_seleccionado = selectots[producto_index]
+```
+
+```{r DePython-a-R, message=FALSE, warning=FALSE, results='asis', include=FALSE}
+# Transferir variables de Python a R
+producto_seleccionado <- py$producto_seleccionado
+anio <- py$year_aleatorio
+
+# Validación de seguridad para year_index
+if (py$year_index == -1) {
+  stop("Error: Año aleatorio no encontrado en la lista de años seleccionados")
+}
+
+valor_total <- py$exports[py$year_index + 1]  # +1 porque Python usa índices base 0
+porcentaje_producto <- py$sizes[py$producto_index + 1]
+valor_final <- py$xol
+
+# Calcular respuestas para el formato cloze con formato estándar
+respuesta_1 <- as.numeric(formato_estandar(valor_total, 1))                    # Paso 1: Valor total del año
+respuesta_2 <- as.numeric(formato_estandar(porcentaje_producto, 0))           # Paso 2: Porcentaje del producto
+respuesta_3 <- as.numeric(formato_estandar(valor_total, 1))                   # Paso 3: Numerador de la fórmula
+respuesta_4 <- as.numeric(formato_estandar(redondear_matematico(porcentaje_producto / 100, 4), 4))  # Paso 4: Porcentaje en decimal
+respuesta_5 <- as.numeric(formato_estandar(redondear_matematico(valor_total * (porcentaje_producto / 100), 2), 2))  # Paso 5: Cálculo intermedio
+respuesta_6 <- as.numeric(formato_estandar(valor_final, 2))                   # Paso 6: Resultado final
+
+# Generar opciones para la pregunta schoice final
+respuestas_correctas <- c(
+  paste0("Multiplicar el valor total de exportaciones de ", anio, " por el porcentaje de ", producto_seleccionado, " expresado en forma decimal."),
+  paste0("Calcular el ", porcentaje_producto, "% del valor total de exportaciones de Tebailandia en ", anio, "."),
+  paste0("Aplicar la fórmula: Valor del producto = Valor total × (", porcentaje_producto, " ÷ 100).")
+)
+
+afirmacion_correcta <- sample(respuestas_correctas, 1)
+
+# Distractores con errores conceptuales comunes
+distractores <- c(
+  paste0("Sumar el valor total de exportaciones de ", anio, " con el porcentaje de ", producto_seleccionado, "."),
+  paste0("Dividir el porcentaje de ", producto_seleccionado, " entre el valor total de exportaciones de ", anio, "."),
+  paste0("Multiplicar el porcentaje de ", producto_seleccionado, " por 100 y dividir entre el valor total de exportaciones.")
+)
+
+# Crear opciones finales para schoice
+opciones_schoice <- c(afirmacion_correcta, distractores)
+
+# Mezclar opciones aleatoriamente
+orden_aleatorio <- sample(1:4)
+opciones_mezcladas <- opciones_schoice[orden_aleatorio]
+
+# Para schoice en cloze, necesitamos un vector lógico
+indice_respuesta_correcta <- which(orden_aleatorio == 1)
+solucion_schoice <- rep(FALSE, 4)
+solucion_schoice[indice_respuesta_correcta] <- TRUE
+
+# Vector de soluciones para formato cloze (6 numéricas + 1 schoice)
+solucion_cloze <- list(
+  respuesta_1,      # Paso 1: Valor total del año
+  respuesta_2,      # Paso 2: Porcentaje del producto
+  respuesta_3,      # Paso 3: Numerador de la fórmula
+  respuesta_4,      # Paso 4: Porcentaje en decimal
+  respuesta_5,      # Paso 5: Cálculo intermedio
+  respuesta_6       # Paso 6: Resultado final
+)
+
+# Tipos de respuesta: 6 numéricas + 1 schoice
+tipos_respuesta <- c("num", "num", "num", "num", "num", "num", "schoice")
+
+# Tolerancias para respuestas numéricas
+tolerancias <- c(0.01, 0.01, 0.01, 0.0001, 0.01, 0.01, 0)
+
+# Detectar formato de salida para ajustes posteriores
+formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
+es_moodle <- (match_exams_call() %in% formatos_moodle)
+
+# Definir función mchoice2string si no existe
+if (!exists("mchoice2string")) {
+  mchoice2string <- function(x) {
+    if (is.logical(x)) {
+      return(paste(as.integer(x), collapse = ""))
+    } else {
+      return(as.character(x))
+    }
+  }
+}
+
+# PRUEBAS DE VALIDACIÓN MATEMÁTICA
+test_that("Validación de datos generados", {
+  expect_true(valor_total > 0 && porcentaje_producto > 0)
+  expect_true(porcentaje_producto <= 100)
+  expect_equal(respuesta_5, valor_total * respuesta_4, tolerance = 0.01)
+  expect_equal(length(solucion_cloze), 6)
+  expect_equal(length(tipos_respuesta), 7)
+  expect_equal(length(tolerancias), 7)
+  # Validar que solo hay una respuesta correcta en schoice
+  expect_equal(sum(solucion_schoice), 1)
+  expect_true(is.logical(solucion_schoice))
+  expect_equal(length(solucion_schoice), 4)
+})
+```
+
+<!--
+NOTA MANTENIMIENTO (R-exams cloze):
+- No repetir placeholders ##ANSWERk## en la sección "Question". Cada marcador debe aparecer UNA sola vez.
+- Duplicarlos crea múltiples campos de respuesta para la misma solución y puede romper exportadores (p. ej., QTI21)
+  y la calificación automática en LMS (Moodle/OpenOlat), generando falsos negativos.
+- Si hace falta referirse a un valor anterior (p. ej., Paso 4), usar texto descriptivo ("valor decimal del Paso 4")
+  en lugar de volver a insertar ##ANSWERk##.
+-->
+
+Question
+========
+
+```{r, echo=FALSE, results='asis'}
+knitr::include_graphics(c("grafico_barras.png", "grafico_torta.png"))
+```
+
+La imagen muestra dos gráficos relacionados con las exportaciones de Tebailandia, un país que usa "tebos" como su moneda.
+
+Para determinar el valor específico de `r producto_seleccionado` exportado desde Tebailandia en `r anio`, resuelva paso a paso combinando información de ambos gráficos:
+
+**IMPORTANTE - Formato de números:**
+
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: 16850.32 (no 16.850,32 ni 16850,32)
+- **Respuestas numéricas**: Sin separador de miles, use punto para decimales
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+
+### Paso 1: Lectura del gráfico de barras
+Observe el primer gráfico. ¿Cuál fue el valor total de exportaciones de Tebailandia en `r anio`?
+
+**Respuesta:** ##ANSWER1## millones de tebos
+
+### Paso 2: Lectura del gráfico circular
+Observe el segundo gráfico. ¿Qué porcentaje del total de exportaciones corresponde a `r producto_seleccionado` en `r anio`?
+
+**Respuesta:** ##ANSWER2##%
+
+### Paso 3: Configuración de la fórmula
+Para calcular el valor de `r producto_seleccionado`, identifique los componentes de la fórmula:
+
+Valor de `r producto_seleccionado` = Valor total × (porcentaje del Paso 2 ÷ 100)
+
+Confirme el valor total a usar: ##ANSWER3## millones de tebos
+
+### Paso 4: Configuración de la fórmula (denominador)
+Convierta el porcentaje a forma decimal (divida entre 100):
+
+Porcentaje del Paso 2 ÷ 100 = ##ANSWER4##
+
+### Paso 5: Cálculo intermedio
+Complete la multiplicación:
+
+Valor del Paso 3 × valor decimal del Paso 4 = ##ANSWER5##
+
+### Paso 6: Resultado final
+Por lo tanto, el valor de `r producto_seleccionado` exportado en `r anio` es:
+
+**Respuesta:** ##ANSWER6## millones de tebos
+
+### Paso 7: Confirmación del procedimiento (CON PUNTUACIÓN)
+Seleccione el procedimiento correcto para determinar el valor de un producto específico a partir de gráficos estadísticos:
+
+##ANSWER7##
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+
+Solution
+========
+
+### Análisis paso a paso del problema de interpretación de gráficos estadísticos
+
+Este problema de **interpretación de gráficos estadísticos** requiere un análisis secuencial que demuestre el proceso de razonamiento matemático aplicado a contextos económicos reales:
+
+**NOTA IMPORTANTE - Formato de números estandarizado:**
+
+- **Valores monetarios**: Sin separador de miles, use punto para decimales
+  - Ejemplo: 16850.32 (no 16.850,32 ni 16850,32)
+- **Respuestas numéricas**: Sin separador de miles, punto como separador decimal
+  - Ejemplo: 1234.5678 (no 1.234,5678 ni 1234,5678)
+- **Consistencia**: Mismo formato en enunciado, opciones y respuestas
+
+### Paso 1: Lectura correcta del gráfico de barras ✓
+
+**Respuesta correcta:** `r formato_estandar(valor_total, 1)` millones de tebos
+
+**Razonamiento:**
+La lectura cuidadosa del gráfico de barras muestra que en `r anio` las exportaciones totales de Tebailandia fueron exactamente `r formato_estandar(valor_total, 1)` millones de tebos.
+
+```{r mostrar_datos_barras_solucion, echo=FALSE, results='asis'}
+cat("**Exportaciones anuales registradas:**\n\n")
+for(i in 1:5) {
+  destacar <- if(py$selected_years[i] == anio) " ← **AÑO DE LA PREGUNTA**" else ""
+  cat(paste0("- Año ", py$selected_years[i], ": ", py$exports[i], " millones de tebos", destacar, "\n"))
+}
+cat("\n")
+```
+
+### Paso 2: Lectura correcta del gráfico circular ✓
+
+**Respuesta correcta:** `r formato_estandar(porcentaje_producto, 0)`%
+
+**Razonamiento:**
+El gráfico circular muestra que `r producto_seleccionado` representa exactamente el `r formato_estandar(porcentaje_producto, 0)`% del total de exportaciones en `r anio`.
+
+```{r mostrar_distribucion_solucion, echo=FALSE, results='asis'}
+cat("**Distribución porcentual de productos:**\n\n")
+for(i in 1:8) {
+  destacar <- if(py$selectots[i] == producto_seleccionado) " ← **PRODUCTO DE LA PREGUNTA**" else ""
+  cat(paste0("- ", py$selectots[i], ": ", py$sizes[i], "%", destacar, "\n"))
+}
+cat("\n")
+```
+
+### Paso 3: Configuración correcta de la fórmula (numerador) ✓
+
+**Respuesta correcta:** `r formato_estandar(valor_total, 1)`
+
+**Razonamiento:**
+Para calcular el valor de `r producto_seleccionado`, necesitamos usar el valor total de exportaciones identificado en el Paso 1 como numerador de la fórmula.
+
+### Paso 4: Configuración correcta de la fórmula (denominador) ✓
+
+**Respuesta correcta:** `r formato_estandar(respuesta_4, 4)`
+
+**Razonamiento:**
+Para convertir el porcentaje a forma decimal, dividimos entre 100:
+`r formato_estandar(porcentaje_producto, 0)`% ÷ 100 = `r formato_estandar(respuesta_4, 4)`
+
+### Paso 5: Cálculo intermedio correcto ✓
+
+**Respuesta correcta:** `r formato_estandar(respuesta_5, 2)`
+
+**Cálculo completo:**
+`r formato_estandar(valor_total, 1)` × `r formato_estandar(respuesta_4, 4)` = `r formato_estandar(respuesta_5, 2)`
+
+### Paso 6: Resultado final correcto ✓
+
+**Respuesta correcta:** `r formato_estandar(valor_final, 2)` millones de tebos
+
+**Verificación del resultado:**
+
+- El resultado (`r formato_estandar(valor_final, 2)` millones) es menor que el total (`r formato_estandar(valor_total, 1)` millones), lo cual es lógico ya que representa solo una fracción del total.
+- El cálculo es coherente con la fórmula: Valor total × Porcentaje en decimal = Resultado final
+
+### Paso 7: Confirmación del procedimiento correcto ✓ (CON PUNTUACIÓN)
+
+**Opciones presentadas:**
+
+```{r mostrar_opciones_solucion_cloze, echo=FALSE, results='asis'}
+for(i in 1:4) {
+  correcto <- if(i == indice_respuesta_correcta) " ← **RESPUESTA CORRECTA**" else ""
+  cat(paste0("- **", LETTERS[i], "**: ", opciones_mezcladas[i], correcto, "\n"))
+}
+```
+
+**Análisis de la respuesta correcta:**
+
+"`r afirmacion_correcta`"
+
+- Esta opción representa correctamente el procedimiento matemático
+- Identifica la necesidad de multiplicar el valor total por el porcentaje en forma decimal
+- Es el método matemáticamente correcto para calcular valores específicos a partir de gráficos estadísticos
+
+### Verificación del proceso de razonamiento completo
+
+**Datos del problema:**
+
+- Valor total de exportaciones en `r anio`: `r formato_estandar(valor_total, 1)` millones de tebos
+- Porcentaje de `r producto_seleccionado`: `r formato_estandar(porcentaje_producto, 0)`%
+- Porcentaje en decimal: `r formato_estandar(respuesta_4, 4)`
+- Valor final de `r producto_seleccionado`: `r formato_estandar(valor_final, 2)` millones de tebos
+
+**El formato cloze con confirmación garantiza que los estudiantes:**
+
+**Parte Analítica (Pasos 1-6):**
+
+- **Lean correctamente** ambos tipos de gráficos estadísticos
+- **Identifiquen valores específicos** de gráficos de barras y circulares
+- **Apliquen fórmulas** de porcentajes paso a paso
+- **Realicen cálculos** matemáticos precisos sin saltar etapas
+
+**Parte de Confirmación (Paso 7):**
+
+- **Demuestren coherencia** entre su análisis numérico y la comprensión conceptual
+- **Identifiquen el procedimiento correcto** entre múltiples opciones
+- **Consoliden su aprendizaje** mediante validación de resultados
+
+### Conclusión
+
+El valor de `r producto_seleccionado` exportado desde Tebailandia en `r anio` es de **`r formato_estandar(valor_final, 2)` millones de tebos**.
+
+Esta respuesta es coherente porque:
+
+- Se basa en datos extraídos correctamente de ambos gráficos
+- Aplica correctamente las fórmulas de porcentajes
+- Todos los cálculos intermedios son verificables
+- El procedimiento seleccionado es matemáticamente correcto
+
+
+Meta-information
+================
+
+exname: ExportacionesGraficos-Estadistica-Interpretacion-Cloze-n3-v1
+extype: cloze
+exsolution: `r paste(c(solucion_cloze[1:6], mchoice2string(solucion_schoice)), collapse="|")`
+exclozetype: `r paste(tipos_respuesta, collapse="|")`
+extol: `r paste(tolerancias, collapse="|")`
+exsection: Estadística|Gráficos|Interpretación|Porcentajes|Análisis de datos
+exextra[Type]: Interpretación
+exextra[Program]: R+Python
+exextra[Language]: es
+exextra[Level]: 3
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Pensamiento aleatorio
+exextra[Contexto]: Social-económico
+exextra[Dificultad]: Alta

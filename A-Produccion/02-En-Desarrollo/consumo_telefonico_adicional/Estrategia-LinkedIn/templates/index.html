@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Demos interactivos de ejercicios matemáticos ICFES generados con R/exams - 300+ versiones únicas por ejercicio">
+    <meta name="keywords" content="ICFES, Matemáticas, R/exams, Educación, Ejercicios Dinámicos, Python, TikZ">
+    <meta name="author" content="Proyecto ICFES R-Exams 2025">
+    
+    <!-- Open Graph para LinkedIn -->
+    <meta property="og:title" content="Demos Interactivos - Matemáticas ICFES R/exams">
+    <meta property="og:description" content="Explora ejercicios matemáticos dinámicos con 300+ versiones únicas. Sistema R/exams + Python + TikZ">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://alvaretto.github.io/proyecto-r-exams-icfes-matematicas-optimizado/">
+    <meta property="og:image" content="https://alvaretto.github.io/proyecto-r-exams-icfes-matematicas-optimizado/assets/img/preview.png">
+    
+    <title>Demos Interactivos - Matemáticas ICFES R/exams</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .intro {
+            background: linear-gradient(135deg, #ecf0f1 0%, #e8eef1 100%);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .intro p {
+            margin-bottom: 15px;
+        }
+        
+        .intro ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .intro li {
+            margin: 8px 0;
+        }
+        
+        .section-title {
+            color: #34495e;
+            margin: 30px 0 15px 0;
+            font-size: 1.5em;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .demo-link {
+            display: block;
+            padding: 20px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .demo-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.5);
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+        }
+        
+        .resource-list {
+            list-style: none;
+        }
+        
+        .resource-list li {
+            margin: 10px 0;
+        }
+        
+        .resource-list a {
+            display: inline-block;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .resource-list a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.5);
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
+        }
+        
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Demos Interactivos</h1>
+        <p class="subtitle">Ejercicios Matemáticos ICFES con R/exams</p>
+        
+        <div class="intro">
+            <p><strong>¿Qué hace especial a este sistema?</strong></p>
+            <ul>
+                <li>✅ <strong>300+ versiones únicas</strong> del mismo ejercicio generadas automáticamente</li>
+                <li>✅ <strong>Verificación automática</strong> de respuestas con feedback inmediato</li>
+                <li>✅ <strong>Explicaciones detalladas</strong> paso a paso para cada solución</li>
+                <li>✅ <strong>Gráficos dinámicos</strong> generados con Python y matplotlib</li>
+                <li>✅ <strong>Compatible con Moodle</strong> y otros sistemas de gestión de aprendizaje</li>
+                <li>✅ <strong>100% código abierto</strong> disponible en GitHub</li>
+            </ul>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-number">300+</span>
+                <span class="stat-label">Versiones Únicas</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Formatos de Salida</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Código Abierto</span>
+            </div>
+        </div>
+        
+        <h2 class="section-title">📊 Demos Interactivos <span class="badge">NUEVO</span></h2>
+        <p style="margin-bottom: 15px;">Explora 5 versiones diferentes del ejercicio <strong>"Consumo Telefónico Adicional"</strong> - Nivel ICFES 2:</p>
+        
+        <div class="demo-grid">
+            <a href="demos/demo_consumo_telefonico_v1.html" class="demo-link">
+                📊 Demo Versión 1
+            </a>
+            <a href="demos/demo_consumo_telefonico_v2.html" class="demo-link">
+                📊 Demo Versión 2
+            </a>
+            <a href="demos/demo_consumo_telefonico_v3.html" class="demo-link">
+                📊 Demo Versión 3
+            </a>
+            <a href="demos/demo_consumo_telefonico_v4.html" class="demo-link">
+                📊 Demo Versión 4
+            </a>
+            <a href="demos/demo_consumo_telefonico_v5.html" class="demo-link">
+                📊 Demo Versión 5
+            </a>
+        </div>
+        
+        <h2 class="section-title">📥 Recursos Descargables</h2>
+        <ul class="resource-list">
+            <li>
+                <a href="recursos/muestra_10_versiones_consumo_telefonico1.pdf" target="_blank">
+                    📄 PDF con 10 Versiones del Ejercicio
+                </a>
+            </li>
+            <li>
+                <a href="recursos/consumo_telefonico_moodle.xml" download>
+                    🎓 Archivo Moodle XML (Importar a LMS)
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado/blob/main/A-Produccion/En-Desarrollo/consumo_telefonico_adicional/consumo_telefonico_adicional_n2_v1.Rmd" target="_blank">
+                    💻 Código Fuente (.Rmd) en GitHub
+                </a>
+            </li>
+        </ul>
+        
+        <div class="footer">
+            <p><strong>Proyecto ICFES R-Exams 2025</strong></p>
+            <p>Tecnología: R/exams + exams2forms + Python + matplotlib + TikZ + LaTeX</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado" target="_blank">
+                    🔗 Ver Repositorio Completo en GitHub
+                </a>
+            </p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                © 2025 - Sistema de Evaluación Matemática Dinámica
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+

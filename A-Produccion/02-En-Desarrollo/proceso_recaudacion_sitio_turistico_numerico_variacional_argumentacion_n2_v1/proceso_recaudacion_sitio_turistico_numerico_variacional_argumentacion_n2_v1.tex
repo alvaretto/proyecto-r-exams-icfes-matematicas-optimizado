@@ -1,0 +1,234 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+Las ruinas de Chichén Itzá en Yucatán es uno de los sitios turísticos
+más representativos de México. En la tabla se relaciona la cantidad de
+personas que ingresó cada día durante una semana, según el tipo de
+entrada que pagó.
+
+Se pagan 18 pesos mexicanos de entrada y 7 más si se realiza reserva.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.2105}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.0921}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1053}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1447}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1053}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1184}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1053}}
+  >{\centering\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1184}}@{}}
+\caption{Cantidad de personas que ingresaron}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Tipo de entrada
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Lunes
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Martes
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Miércoles
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Jueves
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Viernes
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Sábado
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Domingo
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Tipo de entrada
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Lunes
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Martes
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Miércoles
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Jueves
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Viernes
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Sábado
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Domingo
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Sin reserva & 400 & 400 & 500 & 600 & 500 & 300 & 800 \\
+Con reserva & 700 & 900 & 300 & 700 & 400 & 600 & 600 \\
+\end{longtable}
+
+El administrador diseñó el siguiente proceso para analizar la
+recaudación:
+
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{diagrama_flujo.png}
+
+¿Cuál de las siguientes preguntas \textbf{NO} se puede resolver
+únicamente con la información obtenida mediante este proceso?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  ¿Cuál fue la ganancia total de la ruinas de Chichén Itzá durante la
+  semana?
+\item
+  ¿Cuál fue el total de dinero recogido por ambos casos durante la
+  semana?
+\item
+  ¿En cuál de los dos casos se recogió más dinero durante la semana?
+\item
+  ¿En cuál día de la semana se recogió más dinero?
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos analizar qué información
+proporciona el proceso descrito:
+
+\textbf{Información que SÍ se puede obtener del proceso:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Recaudación por tipo de entrada}: El proceso calcula cuánto
+  dinero se recogió de personas con reserva (cantidad × 25 pesos
+  mexicanos) y sin reserva (cantidad × 18 pesos mexicanos).
+\item
+  \textbf{Comparación entre casos}: El paso 3 permite comparar los
+  resultados, determinando cuál tipo de entrada generó más ingresos.
+\item
+  \textbf{Total recaudado}: Sumando ambos resultados se obtiene el total
+  de dinero recogido.
+\end{enumerate}
+
+\textbf{Información que NO se puede obtener:}
+
+\begin{itemize}
+\item
+  \textbf{Ganancia total}: La ganancia requiere conocer los costos
+  operativos de la ruinas de Chichén Itzá (personal, mantenimiento,
+  servicios, etc.), información que no está incluida en el proceso.
+\item
+  \textbf{Día específico}: El proceso trabaja con totales de la semana,
+  no con datos diarios.
+\end{itemize}
+
+\textbf{Respuesta correcta}: La pregunta sobre la \textbf{ganancia
+total} no se puede resolver porque el proceso solo calcula recaudación
+(ingresos), no ganancia (ingresos - costos).
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Verdadero}. Esta pregunta sobre la ganancia NO se puede
+  resolver porque el proceso solo calcula recaudación, no ganancia (que
+  requiere conocer los costos).
+\item
+  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
+  del proceso.
+\item
+  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
+  del proceso.
+\item
+  \textbf{Falso}. Esta pregunta SÍ se puede resolver con la información
+  del proceso.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname:
+proceso\_recaudacion\_sitio\_turistico\_numerico\_variacional\_argumentacion\_n2\_v1
+extype: schoice exsolution: 1000 exshuffle: TRUE exsection:
+Numerico-Variacional/Argumentacion
+
+\end{document}

@@ -1,0 +1,152 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+La gráfica y la tabla muestran parte de la información que recibe la
+familia López en su factura telefónica del mes de enero.
+
+\includegraphics[width=0.65\linewidth,height=\textheight,keepaspectratio]{grafico_consumo.png}
+
+\includegraphics[width=10cm,height=\textheight,keepaspectratio]{tabla_estado_cuenta.png}
+
+El tiempo adicional consumido por la familia López en enero fue:
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  2 horas y 29 minutos.
+\item
+  6 horas y 13 minutos.
+\item
+  3 horas y 2 minutos.
+\item
+  2 horas y 8 minutos.
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para resolver este problema, debemos:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Identificar el plan actual}: Según la gráfica, el plan local
+  actual es de \textbf{200 minutos}.
+\item
+  \textbf{Identificar el consumo de enero}: En el gráfico de barras, el
+  consumo de enero (la última barra) es de \textbf{349 minutos}.
+\item
+  \textbf{Calcular el tiempo adicional}:
+  \[\text{Tiempo adicional} = \text{Consumo enero} - \text{Plan actual}\]
+  \[\text{Tiempo adicional} = 349 - 200 = 149 \text{ minutos}\]
+\item
+  \textbf{Convertir a horas y minutos}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Horas: \(\lfloor 149 \div 60 \rfloor = 2\) hora(s)
+  \item
+    Minutos restantes: \(149 \mod 60 = 29\) minutos
+  \end{itemize}
+\end{enumerate}
+
+\textbf{Respuesta correcta}: 2 horas y 29 minutos.
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Verdadero
+\item
+  Falso
+\item
+  Falso
+\item
+  Falso
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname: consumo\_telefonico\_adicional extype: schoice exsolution: 1000
+exshuffle: TRUE exsection: Estadística/Interpretación de Gráficos/Nivel
+2 extags: ICFES, Interpretación, Numérico-Variacional, Estadística,
+Aplicado exdificultad: 2 excompetencia: Interpretación y Representación
+excomponente: Numérico-Variacional expensamiento: Pensamiento Numérico
+excontenido: Estadística (Genérico) exeje: Aplicado/Contextualizado
+
+\end{document}

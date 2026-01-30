@@ -1,0 +1,139 @@
+\documentclass[10pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{pgfplots}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ
+\usetikzlibrary{automata,positioning,calc,arrows}
+\pgfplotsset{compat=1.18}
+
+%% entornos para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para metadatos exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+%% configuración párrafos
+\setlength{\parskip}{0.7ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+\begin{document}
+\input{trigonometria_punto_k_v1-concordance}
+
+\begin{enumerate}
+
+
+\begin{question}
+
+Un punto G se mueve de un extremo a otro del segmento SW que se muestra en la gráfica.
+
+% Diagrama geométrico simplificado
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+% Segmento horizontal QT
+\draw[thick] (0,0) -- (4,0);
+\node[below] at (0,0) {S};
+\node[below] at (4,0) {W};
+% Punto K móvil
+\fill[blue] (2,0) circle (2pt);
+\node[below] at (2,0) {G};
+% Punto P fijo
+\fill[red] (2,1.5) circle (2pt);
+\node[above] at (2,1.5) {V};
+% Línea vertical h
+\draw[dashed, red] (2,0) -- (2,1.5);
+\node[right] at (2,0.75) {$h$};
+% Línea KP
+\draw[thick, blue] (2,0) -- (2,1.5);
+% Ángulo alpha
+\draw[thick] (1.5,0) arc (180:90:0.5);
+\node at (1.3,0.3) {$\alpha$};
+\end{tikzpicture}
+\end{center}
+
+El ángulo $\alpha$ y la medida $h$ se relacionan mediante la razón trigonométrica $\sen(\alpha) = \frac{h}{GV}$, de donde se deduce la distancia entre G y V como $GV = \frac{h}{\sen(\alpha)}$ o $GV = h \times \csc(\alpha)$.
+
+¿Cuál es la gráfica que muestra las distancias $GV$, cada vez que G se mueve sobre el segmento SW?
+
+\begin{tabular}{cc}
+A & B \\
+
+\includegraphics[width=4cm]{grafica_A.png}
+&
+
+\includegraphics[width=4cm]{grafica_B.png}
+\\
+C & D \\
+
+\includegraphics[width=4cm]{grafica_C.png}
+&
+
+\includegraphics[width=4cm]{grafica_D.png}
+\end{tabular}
+
+\begin{answerlist}
+  \item A
+  \item B
+  \item C
+  \item D
+\end{answerlist}
+\end{question}
+
+\begin{solution}
+
+La relación matemática fundamental es $GV = h \times \csc(\alpha) = \frac{h}{\sen(\alpha)}$.
+
+\textbf{Análisis del comportamiento de la función:}
+
+Cuando G se mueve sobre el segmento SW:
+
+\begin{itemize}
+\item \textbf{Al inicio} (cerca de S): $\alpha$ es muy pequeño $\Rightarrow$ $\sen(\alpha) \approx 0$ $\Rightarrow$ $\csc(\alpha) \to \infty$ $\Rightarrow$ $GV$ muy grande
+
+\item \textbf{En posiciones intermedias}: $\alpha$ aumenta gradualmente $\Rightarrow$ $\sen(\alpha)$ aumenta $\Rightarrow$ $\csc(\alpha)$ disminuye $\Rightarrow$ $GV$ disminuye
+
+\item \textbf{Al final} (cerca de W): $\alpha$ se acerca a $90^\circ$ $\Rightarrow$ $\sen(\alpha) \to 1$ $\Rightarrow$ $\csc(\alpha) \to 1$ $\Rightarrow$ $GV = h$
+\end{itemize}
+
+\textbf{Análisis de las opciones:}
+
+\begin{itemize}
+\item \textbf{Opción A}: Línea horizontal constante - \textbf{Incorrecta}. La distancia no permanece constante.
+\item \textbf{Opción B}: Función cosecante decreciente - \textbf{Correcta}. Muestra el comportamiento esperado de $\csc(\alpha)$.
+\item \textbf{Opción C}: Función hiperbólica - \textbf{Incorrecta}. Aunque una hipérbola del tipo $y = a/x$ también decrece y se aproxima a cero, no representa la relación trigonométrica específica $KP = h/\sen(\alpha) = h \times \csc(\alpha)$.
+\item \textbf{Opción D}: Línea horizontal en otro nivel - \textbf{Incorrecta}. Similar al error de la opción A.
+\end{itemize}
+
+Por lo tanto, la gráfica debe mostrar una función cosecante decreciente que empieza con valores muy altos y se aproxima a $h$ cuando $\alpha$ se acerca a $90^\circ$.
+
+\textbf{La respuesta correcta es la opción B.}
+
+\begin{answerlist}
+  \item Verdadero
+  \item Falso
+  \item Falso
+  \item Falso
+\end{answerlist}
+\end{solution}
+
+%% META-INFORMATION
+\exname{Trigonometría Punto Móvil}
+\extype{schoice}
+\exsolution{1000}
+\exshuffle{TRUE}
+\exsection{Geometría Métrica}
+
+\end{enumerate}
+\end{document}

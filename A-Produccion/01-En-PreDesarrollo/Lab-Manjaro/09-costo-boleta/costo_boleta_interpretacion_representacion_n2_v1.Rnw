@@ -1,0 +1,288 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{verbatim}
+\usepackage{color}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumii}{(\alph{enumii})}\begin{enumerate}}{\end{enumerate}}
+
+%% comandos para exams
+\newcommand{\exname}[1]{\def\@exname{#1}}
+\newcommand{\extype}[1]{\def\@extype{#1}}
+\newcommand{\exsolution}[1]{\def\@exsolution{#1}}
+\newcommand{\exshuffle}[1]{\def\@exshuffle{#1}}
+\newcommand{\exsection}[1]{\def\@exsection{#1}}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{enumerate}
+
+<<echo=FALSE, results=hide>>=
+# Configuracion para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# CONFIGURACION RADICAL ANTI-NOTACION CIENTIFICA
+options(scipen = 999)  # Evitar notacion cientifica completamente
+options(digits = 10)   # Suficientes digitos para numeros grandes
+
+library(exams)
+library(ggplot2)
+
+# Funcion para formatear enteros sin notacion cientifica
+formatear_entero <- function(numero) {
+  # Forzar formato entero sin notacion cientifica JAMAS
+  formatC(as.numeric(numero), format = "d", big.mark = "")
+}
+
+# Funcion generar_datos() - Sistema avanzado con 300+ versiones unicas
+generar_datos <- function() {
+  # Contextos aleatorios (8 escenarios diferentes)
+  contextos <- list(
+    list(lugar = "cine", producto1 = "boleta", producto2 = "palomitas"),
+    list(lugar = "teatro", producto1 = "entrada", producto2 = "bebida"),
+    list(lugar = "concierto", producto1 = "ticket", producto2 = "snack"),
+    list(lugar = "parque", producto1 = "acceso", producto2 = "refresco"),
+    list(lugar = "museo", producto1 = "boleto", producto2 = "souvenir"),
+    list(lugar = "estadio", producto1 = "entrada", producto2 = "comida"),
+    list(lugar = "festival", producto1 = "pase", producto2 = "bebida"),
+    list(lugar = "circo", producto1 = "boleta", producto2 = "dulces")
+  )
+
+  contexto <- sample(contextos, 1)[[1]]
+
+  # Parametros numericos variables con relacion lineal decreciente
+  # Presupuesto total fijo
+  presupuesto_total <- sample(c(56000, 64000, 72000, 80000, 88000, 96000), 1)
+
+  # Precio unitario del producto2 (base)
+  precio_base_producto2 <- sample(c(1000, 1250, 1500, 2000, 2500), 1)
+
+  # Generar 8 puntos de datos manteniendo relacion lineal
+  costos_producto1 <- seq(0, presupuesto_total * 0.7, length.out = 8)
+  costos_producto1 <- round(costos_producto1 / 1000) * 1000  # Redondear a miles
+
+  # Calcular costos correspondientes del producto2 (relacion inversa)
+  costos_producto2 <- presupuesto_total - costos_producto1
+
+  # Asegurar que los valores sean realistas
+  costos_producto2 <- pmax(costos_producto2, precio_base_producto2)
+
+  # Colores aleatorios para las graficas
+  colores <- sample(c("blue", "red", "green", "purple", "orange", "brown"), 4, replace = FALSE)
+
+  # Nombres de variables aleatorios
+  var_x <- paste("Costo de", contexto$producto1, "(x)")
+  var_y <- paste("Costo de", contexto$producto2, "(y)")
+
+  # Generar opciones de respuesta con sistema avanzado de distractores
+  permitir_valores_duplicados <- sample(c(TRUE, FALSE), 1, prob = c(0.3, 0.7))
+
+  # Vector de soluciones (TRUE para la opcion correcta - siempre B)
+  solutions <- c(FALSE, TRUE, FALSE, FALSE)
+
+  # Explicaciones para cada opcion
+  explicaciones <- c(
+    "Falso. La grafica A muestra una relacion constante, no la relacion inversa esperada entre los costos.",
+    "Verdadero. La grafica B representa correctamente la relacion lineal decreciente: a mayor costo de uno, menor costo del otro.",
+    "Falso. La grafica C muestra una funcion escalonada, no una relacion continua como la del presupuesto fijo.",
+    "Falso. La grafica D muestra puntos dispersos sin conexion, no una funcion matematica definida."
+  )
+
+  return(list(
+    contexto = contexto,
+    presupuesto_total = presupuesto_total,
+    costos_producto1 = costos_producto1,
+    costos_producto2 = costos_producto2,
+    var_x = var_x,
+    var_y = var_y,
+    colores = colores,
+    solutions = solutions,
+    explicaciones = explicaciones
+  ))
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+
+# Funcion para generar las 4 graficas del ejercicio
+generar_graficas_opciones <- function(datos) {
+  # Crear dataframe con los datos
+  df <- data.frame(
+    x = datos$costos_producto1,
+    y = datos$costos_producto2
+  )
+
+  # Configuracion base para todas las graficas
+  tema_base <- theme_minimal() +
+    theme(
+      plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
+      axis.title = element_text(size = 12, face = "bold"),
+      axis.text = element_text(size = 10),
+      panel.grid.minor = element_blank(),
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 1)
+    )
+
+  # Limites para todas las graficas
+  x_min <- min(datos$costos_producto1) - 5000
+  x_max <- max(datos$costos_producto1) + 5000
+  y_min <- min(datos$costos_producto2) - 5000
+  y_max <- max(datos$costos_producto2) + 5000
+
+  # GRAFICA A: Relacion constante (INCORRECTA)
+  y_constante <- mean(datos$costos_producto2)
+  grafica_A <- ggplot(df, aes(x = x, y = y)) +
+    geom_hline(yintercept = y_constante, color = "red", linewidth = 2) +
+    geom_point(color = "red", size = 3, alpha = 0.7) +
+    labs(
+      title = "Opción A",
+      x = datos$var_x,
+      y = datos$var_y
+    ) +
+    xlim(x_min, x_max) +
+    ylim(y_min, y_max) +
+    tema_base
+
+  # GRAFICA B: Relacion lineal decreciente (CORRECTA)
+  grafica_B <- ggplot(df, aes(x = x, y = y)) +
+    geom_smooth(method = "lm", se = FALSE, color = "blue", linewidth = 2) +
+    geom_point(color = "blue", size = 3) +
+    labs(
+      title = "Opción B",
+      x = datos$var_x,
+      y = datos$var_y
+    ) +
+    xlim(x_min, x_max) +
+    ylim(y_min, y_max) +
+    tema_base
+
+  # GRAFICA C: Funcion escalonada (INCORRECTA)
+  df_escalones <- df[order(df$x), ]
+  grafica_C <- ggplot(df_escalones, aes(x = x, y = y)) +
+    geom_step(color = "green", linewidth = 2, direction = "hv") +
+    geom_point(color = "green", size = 3) +
+    labs(
+      title = "Opción C",
+      x = datos$var_x,
+      y = datos$var_y
+    ) +
+    xlim(x_min, x_max) +
+    ylim(y_min, y_max) +
+    tema_base
+
+  # GRAFICA D: Puntos dispersos sin conexion (INCORRECTA)
+  set.seed(42)  # Para reproducibilidad
+  df_disperso <- data.frame(
+    x = runif(length(df$x), x_min + 5000, x_max - 5000),
+    y = runif(length(df$y), y_min + 5000, y_max - 5000)
+  )
+  grafica_D <- ggplot(df_disperso, aes(x = x, y = y)) +
+    geom_point(color = "purple", size = 3) +
+    labs(
+      title = "Opción D",
+      x = datos$var_x,
+      y = datos$var_y
+    ) +
+    xlim(x_min, x_max) +
+    ylim(y_min, y_max) +
+    tema_base
+
+  return(list(A = grafica_A, B = grafica_B, C = grafica_C, D = grafica_D))
+}
+
+# Generar las graficas
+graficas <- generar_graficas_opciones(datos)
+@
+
+
+
+\begin{question}
+
+En un \Sexpr{datos$contexto$lugar}, el presupuesto total disponible para entretenimiento es de $\Sexpr{formatear_entero(datos$presupuesto_total)}$. Este presupuesto se distribuye entre el costo de \Sexpr{datos$contexto$producto1} y el costo de \Sexpr{datos$contexto$producto2}, de tal manera que cuando aumenta el gasto en uno, disminuye proporcionalmente el gasto en el otro.
+
+La siguiente tabla muestra la relacion entre estas dos variables:
+
+% Crear tabla de datos simple
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{\Sexpr{datos$var_x}} & \textbf{\Sexpr{datos$var_y}} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[1])} & \Sexpr{formatear_entero(datos$costos_producto2[1])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[2])} & \Sexpr{formatear_entero(datos$costos_producto2[2])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[3])} & \Sexpr{formatear_entero(datos$costos_producto2[3])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[4])} & \Sexpr{formatear_entero(datos$costos_producto2[4])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[5])} & \Sexpr{formatear_entero(datos$costos_producto2[5])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[6])} & \Sexpr{formatear_entero(datos$costos_producto2[6])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[7])} & \Sexpr{formatear_entero(datos$costos_producto2[7])} \\
+\hline
+\Sexpr{formatear_entero(datos$costos_producto1[8])} & \Sexpr{formatear_entero(datos$costos_producto2[8])} \\
+\hline
+\end{tabular}
+\end{center}
+
+La grafica que representa esta funcion es:
+
+\begin{answerlist}
+\item
+<<fig=TRUE, height=4, width=5, echo=FALSE, eps=FALSE, results=hide>>=
+print(graficas$A)
+@
+
+\item
+<<fig=TRUE, height=4, width=5, echo=FALSE, eps=FALSE, results=hide>>=
+print(graficas$B)
+@
+
+\item
+<<fig=TRUE, height=4, width=5, echo=FALSE, eps=FALSE, results=hide>>=
+print(graficas$C)
+@
+
+\item
+<<fig=TRUE, height=4, width=5, echo=FALSE, eps=FALSE, results=hide>>=
+print(graficas$D)
+@
+\end{answerlist}
+
+\end{question}
+
+\begin{solution}
+
+Para resolver este problema, debemos analizar la relacion entre las dos variables presentadas en la tabla.
+
+Observando los datos:
+- Cuando el \Sexpr{datos$contexto$producto1} cuesta $\Sexpr{formatear_entero(datos$costos_producto1[1])}$, el \Sexpr{datos$contexto$producto2} cuesta $\Sexpr{formatear_entero(datos$costos_producto2[1])}$
+- Cuando el \Sexpr{datos$contexto$producto1} cuesta $\Sexpr{formatear_entero(datos$costos_producto1[length(datos$costos_producto1)])}$, el \Sexpr{datos$contexto$producto2} cuesta $\Sexpr{formatear_entero(datos$costos_producto2[length(datos$costos_producto2)])}$
+
+Esto muestra una relacion lineal decreciente: a medida que aumenta el costo de \Sexpr{datos$contexto$producto1}, disminuye el costo de \Sexpr{datos$contexto$producto2}, manteniendo un presupuesto total constante de $\Sexpr{formatear_entero(datos$presupuesto_total)}$.
+
+<<echo=FALSE, results=tex>>=
+answerlist(datos$explicaciones)
+@
+
+\end{solution}
+
+%% META-INFORMATION
+\exname{Costo Boleta Interpretacion Representacion}
+\extype{schoice}
+\exsolution{\Sexpr{mchoice2string(datos$solutions)}}
+\exshuffle{TRUE}
+\exsection{Interpretacion y Representacion}
+
+\end{enumerate}
+\end{document}

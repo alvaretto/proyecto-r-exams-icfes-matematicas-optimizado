@@ -1,0 +1,463 @@
+\documentclass[12pt,a4paper]{article}
+
+%% paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{a4wide,color,verbatim,Sweave,url,xargs,amsmath,booktabs,longtable}
+\usepackage{graphicx,float}
+\usepackage{tikz,xcolor}
+\usepackage{enumitem}
+
+%% bibliotecas TikZ
+\usetikzlibrary{automata,positioning,calc,arrows}
+
+%% entornos para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<echo=FALSE, results=hide>>=
+# Configuracion para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# CONFIGURACION RADICAL ANTI-NOTACION CIENTIFICA
+options(scipen = 999)  # Evitar notacion cientifica completamente
+options(digits = 10)   # Suficientes digitos para numeros grandes
+
+# Librerias esenciales
+library(exams)
+
+# Funcion para formatear numeros enteros
+formatear_entero <- function(x) {
+  formatC(as.integer(round(x)), format='d', big.mark='')
+}
+
+# Semilla aleatoria para reproducibilidad
+#set.seed(sample(1:100000, 1))
+
+# Generación de datos para nivel 3 - Análisis de estrategias de ahorro
+# Tres estudiantes con diferentes patrones de ahorro durante 6 meses
+
+# Lista amplia de nombres para selección aleatoria
+nombres_disponibles <- c(
+  "Ana", "Bruno", "Carla", "Diego", "Elena", "Felipe", "Gabriela", "Hugo",
+  "Isabel", "Javier", "Karen", "Luis", "María", "Nicolás", "Olivia", "Pablo",
+  "Quintero", "Rosa", "Sebastián", "Teresa", "Ulises", "Valentina", "William",
+  "Ximena", "Yolanda", "Zacarías", "Adriana", "Bernardo", "Camila", "Daniel",
+  "Esperanza", "Fernando", "Gloria", "Héctor", "Inés", "Joaquín", "Karina",
+  "Leonardo", "Mónica", "Néstor", "Ofelia", "Pedro", "Quetzal", "Ricardo",
+  "Sofía", "Tomás", "Úrsula", "Vicente", "Wendy", "Xavier", "Yazmín", "Zulema"
+)
+
+# Seleccionar aleatoriamente 3 nombres diferentes
+estudiantes <- sample(nombres_disponibles, 3)
+
+# Generar datos base para cada estudiante (en miles de pesos)
+# Patrón 1: Crecimiento constante
+patron1 <- c(50, 65, 80, 95, 110, 125)
+
+# Patrón 2: Crecimiento acelerado inicial, luego estable
+patron2 <- c(30, 55, 75, 85, 90, 95)
+
+# Patrón 3: Crecimiento irregular pero con tendencia positiva
+patron3 <- c(40, 45, 70, 65, 85, 100)
+
+# Asignar patrones aleatoriamente a los estudiantes
+patrones <- list(patron1, patron2, patron3)
+patrones_aleatorios <- sample(patrones, 3)
+
+# Asignar datos a cada estudiante
+estudiante1_base <- patrones_aleatorios[[1]]
+estudiante2_base <- patrones_aleatorios[[2]]
+estudiante3_base <- patrones_aleatorios[[3]]
+
+# Crear matriz de datos dinámica
+datos_ahorro <- data.frame(
+  Mes = 1:6,
+  Estudiante1 = estudiante1_base,
+  Estudiante2 = estudiante2_base,
+  Estudiante3 = estudiante3_base
+)
+# Renombrar las columnas con los nombres reales
+names(datos_ahorro)[2:4] <- estudiantes
+
+# Calcular totales y estadísticas para análisis nivel 3
+total_estudiante1 <- sum(estudiante1_base)
+total_estudiante2 <- sum(estudiante2_base)
+total_estudiante3 <- sum(estudiante3_base)
+
+# Calcular tasas de crecimiento promedio mensual
+tasa_estudiante1 <- ((estudiante1_base[6] - estudiante1_base[1]) / estudiante1_base[1]) / 5 * 100
+tasa_estudiante2 <- ((estudiante2_base[6] - estudiante2_base[1]) / estudiante2_base[1]) / 5 * 100
+tasa_estudiante3 <- ((estudiante3_base[6] - estudiante3_base[1]) / estudiante3_base[1]) / 5 * 100
+
+# Calcular eficiencia relativa (ahorro final / ahorro inicial)
+eficiencia_estudiante1 <- estudiante1_base[6] / estudiante1_base[1]
+eficiencia_estudiante2 <- estudiante2_base[6] / estudiante2_base[1]
+eficiencia_estudiante3 <- estudiante3_base[6] / estudiante3_base[1]
+
+# Determinar cuál estudiante tiene mejor eficiencia relativa
+mejor_eficiencia <- which.max(c(eficiencia_estudiante1, eficiencia_estudiante2, eficiencia_estudiante3))
+estudiante_mejor <- estudiantes[mejor_eficiencia]
+
+# SISTEMA DE MÚLTIPLES ESCENARIOS CON ALEATORIZACIÓN
+
+# Crear datos para las gráficas de opciones de respuesta
+# Opción A: Totales acumulados
+totales <- c(total_estudiante1, total_estudiante2, total_estudiante3)
+names(totales) <- estudiantes
+
+# Opción B: Evolución mensual (datos ya en datos_ahorro)
+
+# Opción C: Tasas de crecimiento porcentual
+tasas <- c(tasa_estudiante1, tasa_estudiante2, tasa_estudiante3)
+names(tasas) <- estudiantes
+
+# Opción D: Comparación inicial vs final
+inicial_final <- data.frame(
+  Estudiante = rep(estudiantes, 2),
+  Periodo = rep(c("Inicial", "Final"), each = 3),
+  Monto = c(estudiante1_base[1], estudiante2_base[1], estudiante3_base[1],
+            estudiante1_base[6], estudiante2_base[6], estudiante3_base[6])
+)
+
+# DEFINIR MÚLTIPLES ESCENARIOS POSIBLES
+escenarios <- list(
+  # Escenario 1: Análisis de eficiencia relativa (Opción C correcta)
+  list(
+    contexto = "Un analista financiero necesita determinar cuál estudiante tuvo la estrategia de ahorro más eficiente en términos de crecimiento relativo. Para esto, debe seleccionar la representación gráfica más adecuada que permita comparar la eficiencia relativa de las tres estrategias.",
+    pregunta = "¿Cuál de las siguientes gráficas representa MEJOR la eficiencia relativa de las estrategias de ahorro?",
+    correcta = 3,
+    argumentos = c(
+      "porque muestra claramente los montos totales que cada estudiante logró ahorrar",
+      "porque permite visualizar las tendencias y patrones de ahorro a lo largo del tiempo",
+      "porque normaliza las diferencias iniciales y permite comparar directamente la eficiencia relativa",
+      "porque facilita la comparación directa entre el punto de partida y el resultado final"
+    )
+  ),
+
+  # Escenario 2: Comparación de montos totales (Opción A correcta)
+  list(
+    contexto = "Un director de banco necesita identificar cuál estudiante logró ahorrar la mayor cantidad total de dinero para otorgar un reconocimiento. Requiere una representación que muestre claramente los montos finales acumulados.",
+    pregunta = "¿Cuál de las siguientes gráficas representa MEJOR los montos totales ahorrados por cada estudiante?",
+    correcta = 1,
+    argumentos = c(
+      "porque muestra directamente los montos totales finales que cada estudiante logró acumular",
+      "porque permite visualizar las tendencias pero no los totales finales de forma clara",
+      "porque muestra porcentajes que no reflejan los montos reales acumulados",
+      "porque solo compara dos puntos sin mostrar el total acumulado completo"
+    )
+  ),
+
+  # Escenario 3: Análisis de tendencias temporales (Opción B correcta)
+  list(
+    contexto = "Un consejero estudiantil quiere analizar los patrones de comportamiento de ahorro para identificar momentos de mayor o menor disciplina financiera. Necesita ver la evolución temporal detallada.",
+    pregunta = "¿Cuál de las siguientes gráficas representa MEJOR la evolución temporal y patrones de ahorro?",
+    correcta = 2,
+    argumentos = c(
+      "porque muestra solo el resultado final sin revelar los patrones temporales",
+      "porque permite visualizar claramente las tendencias, fluctuaciones y patrones mes a mes",
+      "porque muestra porcentajes que no reflejan los patrones de ahorro reales",
+      "porque solo muestra dos puntos sin revelar la evolución temporal completa"
+    )
+  ),
+
+  # Escenario 4: Comparación simple inicial vs final (Opción D correcta)
+  list(
+    contexto = "Un padre de familia quiere hacer una comparación rápida y sencilla entre lo que ahorraron sus hijos al inicio versus al final, sin complicaciones adicionales. Busca simplicidad en la comparación.",
+    pregunta = "¿Cuál de las siguientes gráficas representa MEJOR una comparación simple entre el inicio y el final?",
+    correcta = 4,
+    argumentos = c(
+      "porque muestra totales pero no permite comparar claramente inicio versus final",
+      "porque muestra demasiada información temporal que complica la comparación simple",
+      "porque muestra porcentajes complejos en lugar de una comparación directa",
+      "porque permite comparar directamente y de forma simple el punto inicial versus el final"
+    )
+  )
+)
+
+# SELECCIONAR ESCENARIO ALEATORIO
+escenario_elegido <- sample(1:length(escenarios), 1)
+escenario_actual <- escenarios[[escenario_elegido]]
+
+# ALEATORIZAR ORDEN DE LAS OPCIONES
+orden_opciones <- sample(1:4)
+respuesta_correcta_original <- escenario_actual$correcta
+respuesta_correcta_nueva <- which(orden_opciones == respuesta_correcta_original)
+
+# CREAR VECTORES ALEATORIZADOS
+opciones_aleatorizadas <- escenario_actual$argumentos[orden_opciones]
+soluciones <- rep(FALSE, 4)
+soluciones[respuesta_correcta_nueva] <- TRUE
+
+# VARIABLES PARA USO EN EL DOCUMENTO
+contexto_elegido <- escenario_actual$contexto
+pregunta_elegida <- escenario_actual$pregunta
+opciones <- opciones_aleatorizadas
+
+# FUNCIÓN PARA GENERAR GRÁFICAS EN ORDEN ALEATORIZADO
+generar_grafica <- function(tipo_grafica) {
+  if(tipo_grafica == 1) {
+    # Gráfica A: Totales acumulados
+    par(mar = c(4, 4, 2, 1))
+    barplot(totales,
+            main = "Totales Acumulados por Estudiante",
+            ylab = "Miles de pesos",
+            xlab = "Estudiantes",
+            col = c("lightblue", "lightgreen", "lightcoral"),
+            ylim = c(0, max(totales) * 1.1))
+    text(x = 1:3, y = totales + max(totales)*0.05, labels = totales, cex = 0.8)
+  } else if(tipo_grafica == 2) {
+    # Gráfica B: Evolución mensual
+    par(mar = c(4, 4, 2, 1))
+    plot(1:6, estudiante1_base, type = "l", col = "blue", lwd = 2,
+         main = "Evolución Mensual del Ahorro",
+         xlab = "Mes", ylab = "Miles de pesos",
+         ylim = c(min(c(estudiante1_base, estudiante2_base, estudiante3_base)) * 0.9,
+                  max(c(estudiante1_base, estudiante2_base, estudiante3_base)) * 1.1))
+    lines(1:6, estudiante2_base, col = "green", lwd = 2)
+    lines(1:6, estudiante3_base, col = "red", lwd = 2)
+    legend("topleft", legend = estudiantes,
+           col = c("blue", "green", "red"), lwd = 2, cex = 0.8)
+  } else if(tipo_grafica == 3) {
+    # Gráfica C: Tasas de crecimiento
+    par(mar = c(4, 4, 2, 1))
+    barplot(tasas,
+            main = "Tasas de Crecimiento Promedio Mensual",
+            ylab = "Porcentaje (%)",
+            xlab = "Estudiantes",
+            col = c("lightblue", "lightgreen", "lightcoral"),
+            ylim = c(0, max(tasas) * 1.2))
+    text(x = 1:3, y = tasas + max(tasas)*0.05,
+         labels = paste0(round(tasas, 1), "%"), cex = 0.8)
+  } else if(tipo_grafica == 4) {
+    # Gráfica D: Inicial vs final
+    par(mar = c(4, 4, 2, 1))
+    inicial <- c(estudiante1_base[1], estudiante2_base[1], estudiante3_base[1])
+    final <- c(estudiante1_base[6], estudiante2_base[6], estudiante3_base[6])
+    datos_comparacion <- rbind(inicial, final)
+    colnames(datos_comparacion) <- estudiantes
+
+    barplot(datos_comparacion,
+            main = "Comparación Inicial vs Final",
+            ylab = "Miles de pesos",
+            xlab = "Estudiantes",
+            col = c("lightgray", "darkgray"),
+            beside = TRUE,
+            legend.text = c("Inicial", "Final"),
+            args.legend = list(x = "topleft", cex = 0.8))
+  }
+}
+
+# Crear datos con error deliberado para una de las representaciones
+# (caracteristica nivel 3: detectar inconsistencias)
+datos_con_error <- datos_ahorro
+datos_con_error[[estudiantes[2]]][4] <- 95  # Error: deberia ser el valor original del estudiante 2
+@
+
+\begin{question}
+
+Tres estudiantes implementaron diferentes estrategias de ahorro durante 6 meses. La siguiente tabla muestra el dinero ahorrado mensualmente por cada uno (en miles de pesos):
+
+\par\vspace{0.5cm}
+
+\begin{center}
+\textbf{Ahorro mensual por estudiante (miles de pesos)}
+\par\vspace{0.3cm}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Mes} & \textbf{\Sexpr{estudiantes[1]}} & \textbf{\Sexpr{estudiantes[2]}} & \textbf{\Sexpr{estudiantes[3]}} \\
+\hline
+1 & \Sexpr{estudiante1_base[1]} & \Sexpr{estudiante2_base[1]} & \Sexpr{estudiante3_base[1]} \\
+\hline
+2 & \Sexpr{estudiante1_base[2]} & \Sexpr{estudiante2_base[2]} & \Sexpr{estudiante3_base[2]} \\
+\hline
+3 & \Sexpr{estudiante1_base[3]} & \Sexpr{estudiante2_base[3]} & \Sexpr{estudiante3_base[3]} \\
+\hline
+4 & \Sexpr{estudiante1_base[4]} & \Sexpr{estudiante2_base[4]} & \Sexpr{estudiante3_base[4]} \\
+\hline
+5 & \Sexpr{estudiante1_base[5]} & \Sexpr{estudiante2_base[5]} & \Sexpr{estudiante3_base[5]} \\
+\hline
+6 & \Sexpr{estudiante1_base[6]} & \Sexpr{estudiante2_base[6]} & \Sexpr{estudiante3_base[6]} \\
+\hline
+\end{tabular}
+\end{center}
+
+\par\vspace{0.5cm}
+
+Adicionalmente, se presenta la siguiente información calculada:
+
+\begin{itemize}
+\item Ahorro total de \Sexpr{estudiantes[1]}: \Sexpr{formatear_entero(total_estudiante1)} mil pesos
+\item Ahorro total de \Sexpr{estudiantes[2]}: \Sexpr{formatear_entero(total_estudiante2)} mil pesos
+\item Ahorro total de \Sexpr{estudiantes[3]}: \Sexpr{formatear_entero(total_estudiante3)} mil pesos
+\item Tasa de crecimiento promedio mensual de \Sexpr{estudiantes[1]}: \Sexpr{round(tasa_estudiante1, 1)}\%
+\item Tasa de crecimiento promedio mensual de \Sexpr{estudiantes[2]}: \Sexpr{round(tasa_estudiante2, 1)}\%
+\item Tasa de crecimiento promedio mensual de \Sexpr{estudiantes[3]}: \Sexpr{round(tasa_estudiante3, 1)}\%
+\end{itemize}
+
+\par\vspace{0.5cm}
+
+\Sexpr{contexto_elegido}
+
+\par\vspace{0.5cm}
+
+\Sexpr{pregunta_elegida}
+
+\par\vspace{0.5cm}
+
+\textbf{A.}
+
+<<fig=TRUE, height=3, width=4, echo=FALSE, eps=FALSE, results=hide>>=
+generar_grafica(orden_opciones[1])
+@
+
+\textbf{\Sexpr{opciones[1]}}
+
+\par\vspace{0.5cm}
+
+\textbf{B.}
+
+<<fig=TRUE, height=3, width=4, echo=FALSE, eps=FALSE, results=hide>>=
+generar_grafica(orden_opciones[2])
+@
+
+\textbf{\Sexpr{opciones[2]}}
+
+\par\vspace{0.5cm}
+
+\textbf{C.}
+
+<<fig=TRUE, height=3, width=4, echo=FALSE, eps=FALSE, results=hide>>=
+generar_grafica(orden_opciones[3])
+@
+
+\textbf{\Sexpr{opciones[3]}}
+
+\par\vspace{0.5cm}
+
+\textbf{D.}
+
+<<fig=TRUE, height=3, width=4, echo=FALSE, eps=FALSE, results=hide>>=
+generar_grafica(orden_opciones[4])
+@
+
+\textbf{\Sexpr{opciones[4]}}
+
+\end{question}
+
+\begin{solution}
+
+<<echo=FALSE, results=tex>>=
+# SOLUCIÓN DINÁMICA SEGÚN EL ESCENARIO ELEGIDO
+
+# Explicaciones base para cada tipo de gráfica
+explicaciones_graficas <- list(
+  "1" = list(
+    nombre = "Totales Acumulados",
+    ventaja = "muestra claramente los montos totales finales que cada estudiante logró acumular",
+    limitacion = "no permite evaluar eficiencia relativa porque no considera las diferencias en los puntos de partida"
+  ),
+  "2" = list(
+    nombre = "Evolución Mensual",
+    ventaja = "permite visualizar las tendencias, fluctuaciones y patrones mes a mes",
+    limitacion = "requiere análisis adicional para comparaciones específicas ya que muestra mucha información temporal"
+  ),
+  "3" = list(
+    nombre = "Tasas de Crecimiento",
+    ventaja = "normaliza las diferencias iniciales y permite comparar directamente la eficiencia relativa",
+    limitacion = "muestra porcentajes que pueden no reflejar los montos reales o patrones temporales"
+  ),
+  "4" = list(
+    nombre = "Inicial vs Final",
+    ventaja = "facilita la comparación directa y simple entre el punto de partida y el resultado final",
+    limitacion = "solo muestra dos puntos sin revelar información sobre eficiencia relativa o evolución temporal"
+  )
+)
+
+# Generar explicación según el escenario
+if(escenario_elegido == 1) {
+  intro <- "Para analizar la eficiencia relativa de las estrategias de ahorro, es necesario considerar no solo los montos totales, sino cómo cada estudiante logró hacer crecer su ahorro en relación con su punto de partida."
+} else if(escenario_elegido == 2) {
+  intro <- "Para identificar quién ahorró la mayor cantidad total, es necesario comparar directamente los montos finales acumulados por cada estudiante."
+} else if(escenario_elegido == 3) {
+  intro <- "Para analizar patrones de comportamiento de ahorro, es necesario examinar la evolución temporal detallada y las fluctuaciones mes a mes."
+} else {
+  intro <- "Para hacer una comparación simple entre el inicio y el final, es necesario una representación que muestre claramente estos dos puntos sin complicaciones adicionales."
+}
+
+cat(intro, "\n\n")
+cat("\\par\\vspace{0.5cm}\n\n")
+cat("Análisis de cada gráfica presentada:\n\n")
+cat("\\begin{itemize}\n")
+
+# Generar análisis para cada opción en el orden aleatorizado
+for(i in 1:4) {
+  tipo_grafica <- orden_opciones[i]
+  explicacion <- explicaciones_graficas[[as.character(tipo_grafica)]]
+
+  # Determinar si es la correcta
+  es_correcta <- (i == respuesta_correcta_nueva)
+
+  cat("\\item \\textbf{Gráfica ", LETTERS[i], " (", explicacion$nombre, ")",
+      if(es_correcta) " - CORRECTA" else "", "}: ", sep="")
+
+  if(es_correcta) {
+    cat(explicacion$ventaja, " porque:\n")
+    cat("  \\begin{itemize}\n")
+    if(tipo_grafica == 1) {
+      cat("  \\item Presenta de forma clara y directa los montos totales finales\n")
+      cat("  \\item Facilita la identificación inmediata del mayor ahorrador\n")
+      cat("  \\item No requiere cálculos adicionales para la comparación\n")
+    } else if(tipo_grafica == 2) {
+      cat("  \\item Muestra la evolución completa mes a mes\n")
+      cat("  \\item Permite identificar patrones, tendencias y fluctuaciones\n")
+      cat("  \\item Revela momentos de mayor o menor disciplina financiera\n")
+    } else if(tipo_grafica == 3) {
+      cat("  \\item Normaliza las diferencias en los montos iniciales\n")
+      cat("  \\item Permite comparar directamente la eficiencia relativa\n")
+      cat("  \\item Muestra qué tan efectiva fue cada estrategia proporcionalmente\n")
+    } else {
+      cat("  \\item Presenta una comparación directa y simple\n")
+      cat("  \\item No incluye información innecesaria que complique la comparación\n")
+      cat("  \\item Facilita una evaluación rápida del progreso\n")
+    }
+    cat("  \\end{itemize}\n")
+  } else {
+    cat(explicacion$ventaja, ", pero ", explicacion$limitacion, ".\n")
+  }
+  cat("\n")
+}
+
+cat("\\end{itemize}\n")
+@
+
+\par\vspace{0.5cm}
+
+Basándose en las tasas de crecimiento calculadas:
+\begin{itemize}
+\item \Sexpr{estudiantes[1]}: \Sexpr{round(tasa_estudiante1, 1)}\% mensual
+\item \Sexpr{estudiantes[2]}: \Sexpr{round(tasa_estudiante2, 1)}\% mensual
+\item \Sexpr{estudiantes[3]}: \Sexpr{round(tasa_estudiante3, 1)}\% mensual
+\end{itemize}
+
+\par\vspace{0.5cm}
+
+\Sexpr{estudiante_mejor} tuvo la estrategia más eficiente en términos de crecimiento relativo.
+
+<<echo=FALSE, results=tex>>=
+answerlist(ifelse(soluciones, "Verdadero", "Falso"))
+@
+
+\end{solution}
+
+%% META-INFORMATION
+%% \extype{schoice}
+%% \exsolution{\Sexpr{mchoice2string(soluciones)}}
+%% \exname{Ahorro Interpretacion Representacion N3 V1}
+
+\end{document}

@@ -1,0 +1,343 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{3d,babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{OutDec =} \StringTok{"."}\NormalTok{)  }\CommentTok{\# Asegurar punto decimal en este chunk}
+
+\CommentTok{\# Función para generar datos aleatorios del problema}
+\NormalTok{generar\_datos }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+  \CommentTok{\# Generar pendiente aleatoria (entre {-}3 y 3, evitando 0)}
+\NormalTok{  pendientes\_posibles }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{2.5}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{1.5}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{1.5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{  m }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(pendientes\_posibles, }\DecValTok{1}\NormalTok{)}
+  
+  \CommentTok{\# Generar intercepto aleatorio (entre {-}4 y 4)}
+\NormalTok{  b }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.5}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+  
+  \CommentTok{\# Formatear pendiente e intercepto para mostrar}
+\NormalTok{  m\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(m), }\FunctionTok{as.character}\NormalTok{(m), }
+                        \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m) }\SpecialCharTok{==} \FloatTok{0.5}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{),}
+                               \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m) }\SpecialCharTok{==} \FloatTok{1.5}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{2\}"}\NormalTok{),}
+                                      \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m) }\SpecialCharTok{==} \FloatTok{2.5}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(m }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{5\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{5\}\{2\}"}\NormalTok{),}
+                                             \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, m)))))}
+  
+\NormalTok{  b\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(b }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(b), }\FunctionTok{as.character}\NormalTok{(b), }\FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, b))}
+  
+  \CommentTok{\# Generar ecuación de la recta}
+  \ControlFlowTok{if}\NormalTok{ (b }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    ecuacion }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_formateado, }\StringTok{"x"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (b }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    ecuacion }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_formateado, }\StringTok{"x + "}\NormalTok{, b\_formateado)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \CommentTok{\# Usar abs() sobre el valor numérico, no sobre el string formateado}
+\NormalTok{    b\_abs\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b) }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b)), }
+                               \FunctionTok{as.character}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b)), }
+                               \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, }\FunctionTok{abs}\NormalTok{(b)))}
+\NormalTok{    ecuacion }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_formateado, }\StringTok{"x {-} "}\NormalTok{, b\_abs\_formateado)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Generar opciones de respuesta (distractores pedagógicamente efectivos)}
+  \CommentTok{\# Opción correcta: la ecuación completa}
+\NormalTok{  opcion\_correcta }\OtherTok{\textless{}{-}}\NormalTok{ ecuacion}
+  
+  \CommentTok{\# Distractor 1: Pendiente correcta pero intercepto incorrecto}
+\NormalTok{  b\_distractor1 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(b }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, b }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{, b }\SpecialCharTok{+} \DecValTok{2}\NormalTok{, b }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{  b\_dist1\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(b\_distractor1 }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(b\_distractor1), }
+                               \FunctionTok{as.character}\NormalTok{(b\_distractor1), }
+                               \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, b\_distractor1))}
+  \ControlFlowTok{if}\NormalTok{ (b\_distractor1 }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    distractor1 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_formateado, }\StringTok{"x"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (b\_distractor1 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    distractor1 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_formateado, }\StringTok{"x + "}\NormalTok{, b\_dist1\_formateado)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    b\_dist1\_abs\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b\_distractor1) }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b\_distractor1)), }
+                                     \FunctionTok{as.character}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b\_distractor1)), }
+                                     \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, }\FunctionTok{abs}\NormalTok{(b\_distractor1)))}
+\NormalTok{    distractor1 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_formateado, }\StringTok{"x {-} "}\NormalTok{, b\_dist1\_abs\_formateado)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Distractor 2: Intercepto correcto pero pendiente incorrecta}
+\NormalTok{  m\_distractor2 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(pendientes\_posibles[pendientes\_posibles }\SpecialCharTok{!=}\NormalTok{ m], }\DecValTok{1}\NormalTok{)}
+\NormalTok{  m\_dist2\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(m\_distractor2 }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(m\_distractor2), }
+                               \FunctionTok{as.character}\NormalTok{(m\_distractor2),}
+                               \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m\_distractor2) }\SpecialCharTok{==} \FloatTok{0.5}\NormalTok{, }
+                                      \FunctionTok{ifelse}\NormalTok{(m\_distractor2 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{),}
+                                      \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m\_distractor2) }\SpecialCharTok{==} \FloatTok{1.5}\NormalTok{, }
+                                             \FunctionTok{ifelse}\NormalTok{(m\_distractor2 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{2\}"}\NormalTok{),}
+                                             \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m\_distractor2) }\SpecialCharTok{==} \FloatTok{2.5}\NormalTok{, }
+                                                    \FunctionTok{ifelse}\NormalTok{(m\_distractor2 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{5\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{5\}\{2\}"}\NormalTok{),}
+                                                    \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, m\_distractor2)))))}
+  \ControlFlowTok{if}\NormalTok{ (b }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    distractor2 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_dist2\_formateado, }\StringTok{"x"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (b }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    distractor2 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_dist2\_formateado, }\StringTok{"x + "}\NormalTok{, b\_formateado)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    b\_abs\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b) }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b)), }
+                               \FunctionTok{as.character}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b)), }
+                               \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, }\FunctionTok{abs}\NormalTok{(b)))}
+\NormalTok{    distractor2 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_dist2\_formateado, }\StringTok{"x {-} "}\NormalTok{, b\_abs\_formateado)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Distractor 3: Ambos incorrectos pero con valores cercanos}
+\NormalTok{  m\_distractor3 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(pendientes\_posibles[pendientes\_posibles }\SpecialCharTok{!=}\NormalTok{ m }\SpecialCharTok{\&}\NormalTok{ pendientes\_posibles }\SpecialCharTok{!=}\NormalTok{ m\_distractor2], }\DecValTok{1}\NormalTok{)}
+\NormalTok{  b\_distractor3 }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\FunctionTok{c}\NormalTok{(b }\SpecialCharTok{+} \DecValTok{1}\NormalTok{, b }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{, b }\SpecialCharTok{+} \DecValTok{2}\NormalTok{, b }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{  m\_dist3\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(m\_distractor3 }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(m\_distractor3), }
+                               \FunctionTok{as.character}\NormalTok{(m\_distractor3),}
+                               \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m\_distractor3) }\SpecialCharTok{==} \FloatTok{0.5}\NormalTok{, }
+                                      \FunctionTok{ifelse}\NormalTok{(m\_distractor3 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{1\}\{2\}"}\NormalTok{),}
+                                      \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m\_distractor3) }\SpecialCharTok{==} \FloatTok{1.5}\NormalTok{, }
+                                             \FunctionTok{ifelse}\NormalTok{(m\_distractor3 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{3\}\{2\}"}\NormalTok{),}
+                                             \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(m\_distractor3) }\SpecialCharTok{==} \FloatTok{2.5}\NormalTok{, }
+                                                    \FunctionTok{ifelse}\NormalTok{(m\_distractor3 }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{, }\StringTok{"{-}}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{5\}\{2\}"}\NormalTok{, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{frac\{5\}\{2\}"}\NormalTok{),}
+                                                    \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, m\_distractor3)))))}
+\NormalTok{  b\_dist3\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(b\_distractor3 }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(b\_distractor3), }
+                               \FunctionTok{as.character}\NormalTok{(b\_distractor3), }
+                               \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, b\_distractor3))}
+  \ControlFlowTok{if}\NormalTok{ (b\_distractor3 }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    distractor3 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_dist3\_formateado, }\StringTok{"x"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (b\_distractor3 }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    distractor3 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_dist3\_formateado, }\StringTok{"x + "}\NormalTok{, b\_dist3\_formateado)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    b\_dist3\_abs\_formateado }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b\_distractor3) }\SpecialCharTok{==} \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b\_distractor3)), }
+                                     \FunctionTok{as.character}\NormalTok{(}\FunctionTok{abs}\NormalTok{(b\_distractor3)), }
+                                     \FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%.1f"}\NormalTok{, }\FunctionTok{abs}\NormalTok{(b\_distractor3)))}
+\NormalTok{    distractor3 }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, m\_dist3\_formateado, }\StringTok{"x {-} "}\NormalTok{, b\_dist3\_abs\_formateado)}
+\NormalTok{  \}}
+  
+  \CommentTok{\# Mezclar opciones}
+\NormalTok{  todas\_opciones }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(opcion\_correcta, distractor1, distractor2, distractor3)}
+\NormalTok{  orden\_opciones }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
+\NormalTok{  opciones\_mezcladas }\OtherTok{\textless{}{-}}\NormalTok{ todas\_opciones[orden\_opciones]}
+\NormalTok{  posicion\_correcta }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(orden\_opciones }\SpecialCharTok{==} \DecValTok{1}\NormalTok{)}
+  
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}
+    \AttributeTok{m =}\NormalTok{ m,}
+    \AttributeTok{b =}\NormalTok{ b,}
+    \AttributeTok{m\_formateado =}\NormalTok{ m\_formateado,}
+    \AttributeTok{b\_formateado =}\NormalTok{ b\_formateado,}
+    \AttributeTok{ecuacion =}\NormalTok{ ecuacion,}
+    \AttributeTok{opciones =}\NormalTok{ opciones\_mezcladas,}
+    \AttributeTok{respuesta\_correcta =}\NormalTok{ opcion\_correcta,}
+    \AttributeTok{posicion\_correcta =}\NormalTok{ posicion\_correcta}
+\NormalTok{  ))}
+\NormalTok{\}}
+
+\CommentTok{\# Generar datos para este ejercicio}
+\NormalTok{datos }\OtherTok{\textless{}{-}} \FunctionTok{generar\_datos}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Question}\label{question}
+
+En el siguiente gráfico se muestra una recta en el plano cartesiano:
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.5\linewidth]{recta_python} 
+
+}
+
+\end{figure}
+
+¿Cuál es la ecuación de la recta representada en el gráfico?
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  y = -1x - 3
+\item
+  y = -\frac{1}{2}x - 4
+\item
+  y = -\frac{3}{2}x - 5
+\item
+  y = -\frac{3}{2}x - 4
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+Para determinar la ecuación de la recta, necesitamos identificar su
+pendiente (\(m\)) y su intercepto con el eje \(y\) (\(b\)).
+
+La ecuación de una recta tiene la forma: \[y = mx + b\]
+
+donde: - \(m\) es la pendiente de la recta - \(b\) es el intercepto con
+el eje \(y\) (el valor de \(y\) cuando \(x = 0\))
+
+\textbf{Análisis del gráfico:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Intercepto con el eje \(y\)}: Observando el gráfico, la recta
+  intersecta el eje \(y\) en el punto \((0, -4)\). Por lo tanto,
+  \(b = -4\).
+\item
+  \textbf{Pendiente}: La pendiente se puede calcular usando dos puntos
+  de la recta. Observando el gráfico:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    La recta pasa por el punto \((0, -4)\)
+  \item
+    Para calcular la pendiente, podemos usar otro punto visible en la
+    recta
+  \end{itemize}
+
+  La pendiente es \(m = -\frac{3}{2}\).
+\end{enumerate}
+
+\textbf{Ecuación de la recta:}
+
+Sustituyendo los valores encontrados: \[y = y = -\frac{3}{2}x - 4\]
+
+Por lo tanto, la ecuación de la recta es:
+\textbf{\(y = -\frac{3}{2}x - 4\)}
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Incorrecto. No corresponde a la ecuación de la recta mostrada en el
+  gráfico.
+\item
+  Incorrecto. Error en la identificación del intercepto o la pendiente.
+\item
+  Incorrecto. Error en la identificación del intercepto o la pendiente.
+\item
+  Correcto. Identifica correctamente la ecuación de la recta analizando
+  la pendiente y el intercepto en el gráfico.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname:
+recta\_geometria\_analitica\_python\_interpretacion\_representacion
+extype: schoice exsolution: 0001 exshuffle: TRUE exsection:
+Geometría/Geometría Analítica/Ecuación de la recta
+
+\end{document}

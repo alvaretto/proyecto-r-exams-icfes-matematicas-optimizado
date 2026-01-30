@@ -1,0 +1,118 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+  word_document: default
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{tikz}
+---
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Cargar librerías necesarias
+library(exams)
+library(knitr)
+
+# Establecer semilla para reproducibilidad
+set.seed(sample(1:1000, 1))
+
+# Generar datos para un problema de triángulos semejantes
+# Triángulo original
+base_original <- sample(6:12, 1)
+altura_original <- sample(4:10, 1)
+# Factor de escala
+factor <- sample(c(1.5, 2, 2.5, 3), 1)
+
+# Triángulo semejante
+base_semejante <- base_original * factor
+altura_semejante <- altura_original * factor
+
+# Cálculos para las áreas
+area_original <- (base_original * altura_original) / 2
+area_semejante <- (base_semejante * altura_semejante) / 2
+# La relación entre las áreas es el cuadrado del factor de escala
+relacion_areas <- factor^2
+
+# Generar opciones de respuesta
+respuesta_correcta <- relacion_areas
+distractores <- c(
+  factor, # Distractor común: confundir la relación de áreas con la de lados
+  factor^1.5, # Otro distractor: usar potencia incorrecta
+  factor+1 # Otro distractor: sumar en lugar de elevar al cuadrado
+)
+
+# Formatear opciones para mostrar como fracciones o decimales según convenga
+opciones_texto <- c()
+for (op in c(respuesta_correcta, distractores)) {
+  if (op %% 1 == 0) {
+    # Es un número entero
+    opciones_texto <- c(opciones_texto, as.character(op))
+  } else if (op == 1.5) {
+    opciones_texto <- c(opciones_texto, "\\frac{3}{2}")
+  } else if (op == 2.5) {
+    opciones_texto <- c(opciones_texto, "\\frac{5}{2}")
+  } else if (op == 6.25) {
+    opciones_texto <- c(opciones_texto, "\\frac{25}{4}")
+  } else if (op == 4.5) {
+    opciones_texto <- c(opciones_texto, "\\frac{9}{2}")
+  } else {
+    opciones_texto <- c(opciones_texto, as.character(round(op, 2)))
+  }
+}
+
+# Mezclar opciones
+opciones <- opciones_texto
+indices_mezclados <- sample(1:4)
+opciones <- opciones[indices_mezclados]
+solucion <- which(indices_mezclados == 1)
+```
+
+Question
+========
+
+El triángulo ABC tiene una base de `r base_original` cm y una altura de `r altura_original` cm. Se construye un triángulo semejante DEF cuyos lados miden `r factor` veces los lados correspondientes del triángulo ABC.
+
+¿Cuál es la relación entre el área del triángulo DEF y el área del triángulo ABC?
+
+Answerlist
+----------
+* $`r opciones[1]`$
+* $`r opciones[2]`$
+* $`r opciones[3]`$
+* $`r opciones[4]`$
+
+Solution
+========
+
+Para resolver este problema, debemos recordar la relación entre las áreas de figuras semejantes:
+
+Cuando dos figuras son semejantes con un factor de escala $k$ en sus lados, la relación entre sus áreas es $k^2$.
+
+En este caso:
+- El triángulo DEF tiene lados que miden `r factor` veces los lados del triángulo ABC.
+- Por lo tanto, la relación entre las áreas es $(`r factor`)^2 = `r factor^2`$.
+
+Podemos verificar calculando las áreas:
+- Área del triángulo ABC = $\frac{1}{2} \times `r base_original` \times `r altura_original` = `r area_original` \text{ cm}^2$
+- Área del triángulo DEF = $\frac{1}{2} \times `r base_semejante` \times `r altura_semejante` = `r area_semejante` \text{ cm}^2$
+
+La relación entre ambas áreas es:
+$\frac{\text{Área de DEF}}{\text{Área de ABC}} = \frac{`r area_semejante`}{`r area_original`} = `r relacion_areas`$
+
+Por lo tanto, la respuesta correcta es $`r opciones_texto[1]`$.
+
+Answerlist
+----------
+* Este es `r ifelse(solucion == 1, "correcto", "incorrecto")`. $`r opciones[1]`$ `r ifelse(solucion == 1, "es la relación correcta entre las áreas", "no es la relación correcta")`
+* Este es `r ifelse(solucion == 2, "correcto", "incorrecto")`. $`r opciones[2]`$ `r ifelse(solucion == 2, "es la relación correcta entre las áreas", "no es la relación correcta")`
+* Este es `r ifelse(solucion == 3, "correcto", "incorrecto")`. $`r opciones[3]`$ `r ifelse(solucion == 3, "es la relación correcta entre las áreas", "no es la relación correcta")`
+* Este es `r ifelse(solucion == 4, "correcto", "incorrecto")`. $`r opciones[4]`$ `r ifelse(solucion == 4, "es la relación correcta entre las áreas", "no es la relación correcta")`
+
+Meta-information
+================
+exname: Semejanza_Triangulos_Areas
+extype: schoice
+exsolution: `r mchoice2string(1:4 == solucion)`
+exshuffle: TRUE

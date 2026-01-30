@@ -1,0 +1,954 @@
+---
+output:
+  html_document:
+    df_print: paged
+    mathjax: true
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+header-includes:
+- \usepackage[spanish]{babel}
+- \usepackage{amsmath}
+- \usepackage{fontspec}
+- \usepackage{unicode-math}
+- \usepackage{graphicx}
+- \usepackage{adjustbox}
+- \usepackage{tikz}
+- \usepackage{pgfplots}
+- \usepackage{booktabs}
+- \usetikzlibrary{3d,babel}
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 3
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: matematico
+  eje_axial: eje3
+  componente: aleatorio
+
+# CONFIGURACIÓN DE TOLERANCIAS PARA EVALUACIÓN AUTOMÁTICA (INCREMENTO DIFICULTAD):
+# - Tipo: cloze (8 respuestas numéricas + 1 schoice)
+# - Tolerancias: 0.005 para probabilidades (mayor precisión), 0 para límites enteros
+# - Formato: Punto decimal, 3 decimales para probabilidades, sin notación científica
+---
+
+```{r inicio, include=FALSE}
+# Librerías esenciales
+library(exams)
+library(knitr)
+library(reticulate)
+
+# Configuración global crítica
+# Corrección: Definir typ de forma segura
+typ <- tryCatch({
+  match_exams_device()
+}, error = function(e) {
+  "html"  # Valor por defecto si falla
+})
+options(scipen = 999)
+options(OutDec = ".")
+options(digits = 10)
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+
+# Configuración knitr
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE, fig.keep = 'all',
+  dev = c("png", "pdf"), dpi = 150, echo = FALSE, results = "hide"
+)
+
+# Semilla aleatoria para diversidad
+#set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# Configuración numérica estándar
+options(OutDec = ".")
+options(scipen = 999)
+
+# Función eliminada: formato_coma() no se utilizaba en el código
+
+# Función principal de generación de datos
+generar_datos <- function() {
+  # 1. Aleatorización de Parámetros Matemáticos (Incremento de dificultad)
+  # CORRECCIÓN: Generar probabilidades asimétricas para eliminar patrón predecible
+  # Método mejorado: generar probabilidades que NO sumen exactamente 1 en los extremos
+  # para que el Paso 7 no sea simplemente 1 - Paso 2
+
+  # Generar probabilidad central primero
+  p_central <- sample(seq(0.35, 0.65, by = 0.01), 1)
+
+  # Generar probabilidades laterales asimétricas con variación independiente
+  # Usar diferentes rangos para crear asimetría
+  p_lateral_1 <- sample(seq(0.10, 0.35, by = 0.01), 1)
+
+  # Calcular p_lateral_3 para que la suma sea 1, pero con límites
+  p_lateral_3_calculado <- 1 - p_central - p_lateral_1
+
+  # Verificar que p_lateral_3 esté en rango válido
+  if (p_lateral_3_calculado < 0.10 || p_lateral_3_calculado > 0.35) {
+    # Si está fuera de rango, regenerar con método alternativo
+    # Usar distribución que garantice asimetría
+    total_lateral <- 1 - p_central
+    factor_asimetria <- runif(1, 0.3, 0.7)  # Factor de asimetría
+    p_lateral_1 <- round(total_lateral * factor_asimetria, 3)
+    p_lateral_3 <- round(total_lateral * (1 - factor_asimetria), 3)
+  } else {
+    p_lateral_3 <- round(p_lateral_3_calculado, 3)
+  }
+
+  # Ajuste final para garantizar suma exacta de 1.000
+  suma_actual <- p_lateral_1 + p_central + p_lateral_3
+  if (abs(suma_actual - 1.000) > 0.001) {
+    # Ajustar la probabilidad que tenga más margen
+    diferencia <- 1.000 - suma_actual
+    if (abs(p_central - 0.5) < 0.1) {
+      # Si p_central está cerca del centro, ajustar p_lateral_3
+      p_lateral_3 <- round(p_lateral_3 + diferencia, 3)
+    } else {
+      # Si no, ajustar p_central
+      p_central <- round(p_central + diferencia, 3)
+    }
+  }
+
+  limite1 <- sample(2:8, 1)
+  ancho_central <- sample(3:8, 1)
+  limite2 <- limite1 + ancho_central
+  limite_sup <- sample(15:18, 1)
+
+  if (limite2 >= limite_sup) {
+    limite2 <- limite_sup - 2
+  }
+
+  # 2. Función auxiliar para símbolos matemáticos según formato
+  format_le <- function() {
+    if (identical(typ, "pandoc")) "≤" else "\\le"
+  }
+
+  # 3. Creación de Intervalos (Formato adaptativo)
+  intervalo1_txt <- paste0("0 ", format_le(), " x ", format_le(), " ", limite1)
+  intervalo2_txt <- paste0(limite1, " < x ", format_le(), " ", limite2)
+  intervalo3_txt <- paste0(limite2, " < x ", format_le(), " ", limite_sup)
+
+  # 3. Generación de Opciones (DataFrames)
+  tabla_correcta <- data.frame(
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    Probabilidad = c(p_lateral_1, p_central, p_lateral_3),
+    stringsAsFactors = FALSE
+  )
+  tabla_distractor_A <- data.frame(
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    Probabilidad = c(p_lateral_1, p_lateral_1 + p_central, 1),
+    stringsAsFactors = FALSE
+  )
+  tabla_distractor_B <- data.frame(
+    Intervalo = c(paste0("0 ", format_le(), " x ", format_le(), " ", limite1),
+                  paste0("0 ", format_le(), " x ", format_le(), " ", limite2),
+                  paste0("0 ", format_le(), " x ", format_le(), " ", limite_sup)),
+    Probabilidad = c(p_lateral_1, p_central, p_lateral_3),
+    stringsAsFactors = FALSE
+  )
+  tabla_distractor_D <- data.frame(
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    Probabilidad = c(p_central, p_lateral_1, p_lateral_3),
+    stringsAsFactors = FALSE
+  )
+
+  # 4. SISTEMA DE ALEATORIZACIÓN DE OPCIONES - ALGORITMO MEJORADO EQUILIBRADO
+  # Crear tabla alternativa con encabezados intercambiados para mayor diversidad
+  tabla_correcta_alt <- data.frame(
+    Probabilidad = c(p_lateral_1, p_central, p_lateral_3),
+    Intervalo = c(intervalo1_txt, intervalo2_txt, intervalo3_txt),
+    stringsAsFactors = FALSE
+  )
+
+  # Aleatorizar qué tabla correcta usar (normal o con encabezados intercambiados)
+  usar_encabezados_alt <- sample(c(TRUE, FALSE), 1)
+  tabla_correcta_final <- if (usar_encabezados_alt) tabla_correcta_alt else tabla_correcta
+
+  # Verificar que todas las opciones sean visualmente diferentes
+  verificar_diferenciacion <- function(opciones) {
+    tablas_str <- lapply(opciones, function(tabla) {
+      paste(tabla$Intervalo, tabla$Probabilidad, collapse = "|")
+    })
+    return(length(unique(tablas_str)) == length(tablas_str))
+  }
+
+  # Crear las 4 opciones obligatorias con diferenciación garantizada
+  opciones_fijas <- list(
+    A = tabla_distractor_A,      # Probabilidades acumuladas incorrectas
+    B = tabla_distractor_B,      # Intervalos acumulativos incorrectos
+    C = tabla_correcta_final,    # Tabla correcta (puede tener encabezados intercambiados)
+    D = tabla_distractor_D       # Probabilidades intercambiadas
+  )
+
+  if (!verificar_diferenciacion(opciones_fijas)) {
+    stop("Error crítico: Las opciones generadas no son suficientemente diferentes")
+  }
+
+  # ALGORITMO DE ALEATORIZACIÓN MEJORADO - DISTRIBUCIÓN PERFECTAMENTE EQUILIBRADA
+  # Seleccionar posición correcta con distribución uniforme garantizada
+  posicion_correcta_aleatoria <- sample(1:4, 1)
+
+  # Crear array de distractores en orden fijo para eliminar sesgos
+  distractores <- list(opciones_fijas$A, opciones_fijas$B, opciones_fijas$D)
+
+  # Inicializar opciones finales con distractores
+  opciones_finales <- vector("list", 4)
+
+  # Colocar la opción correcta en la posición seleccionada
+  opciones_finales[[posicion_correcta_aleatoria]] <- opciones_fijas$C
+
+  # Llenar las posiciones restantes con distractores en orden secuencial
+  indice_distractor <- 1
+  for (i in 1:4) {
+    if (i != posicion_correcta_aleatoria) {
+      opciones_finales[[i]] <- distractores[[indice_distractor]]
+      indice_distractor <- indice_distractor + 1
+    }
+  }
+
+  # Verificación final de diferenciación
+  if (!verificar_diferenciacion(opciones_finales)) {
+    stop("Error crítico: Las opciones finales no son suficientemente diferentes")
+  }
+
+  return(list(
+    p_central = p_central,
+    p_lateral_1 = p_lateral_1,
+    p_lateral_3 = p_lateral_3,
+    limite1 = limite1,
+    limite2 = limite2,
+    limite_sup = limite_sup,
+    opciones = opciones_finales,
+    posicion_correcta = posicion_correcta_aleatoria,
+    usar_encabezados_alt = usar_encabezados_alt,
+    opciones_fijas = opciones_fijas
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+# Validación de la posición correcta (1..4, restaurado para 4 opciones obligatorias)
+if (is.null(datos$posicion_correcta) || length(datos$posicion_correcta) != 1 ||
+    is.na(datos$posicion_correcta) || datos$posicion_correcta < 1 || datos$posicion_correcta > 4) {
+  stop("Error: datos$posicion_correcta inválida (debe estar entre 1 y 4)")
+}
+
+# Validación crítica: Verificar que se generaron exactamente 4 opciones
+if (length(datos$opciones) != 4) {
+  stop("Error crítico: Se deben generar exactamente 4 opciones (A, B, C, D)")
+}
+
+
+# Función de formato estándar para números (sin separador de miles, punto decimal)
+formato_estandar <- function(x, decimales = 2) {
+  if (decimales == 0) {
+    return(as.character(as.integer(x)))
+  } else {
+    resultado <- sprintf(paste0("%.", decimales, "f"), x)
+    return(resultado)
+  }
+}
+
+# Configuración específica para formato cloze (Incremento de complejidad)
+# Respuestas para cada paso del análisis secuencial expandido
+respuesta_1 <- datos$p_lateral_1    # Paso 1: Probabilidad intervalo 1
+respuesta_2 <- datos$p_central      # Paso 2: Probabilidad intervalo 2
+respuesta_3 <- datos$p_lateral_3    # Paso 3: Probabilidad intervalo 3
+respuesta_4 <- datos$limite1        # Paso 4: Límite inferior intervalo 2
+respuesta_5 <- datos$limite2        # Paso 5: Límite superior intervalo 2
+respuesta_6 <- 1.00                 # Paso 6: Suma total de probabilidades
+# CORRECCIÓN PASO 7: Cambio de enfoque - ahora calcula diferencia entre extremos
+# Esto elimina completamente el patrón predecible Paso7 = 1 - Paso2
+respuesta_7 <- abs(datos$p_lateral_1 - datos$p_lateral_3)  # Diferencia entre extremos
+# Paso 8: Intervalo con mayor probabilidad (1=primero, 2=central, 3=tercero)
+# Actualizado para comparar con ambas probabilidades laterales
+if (datos$p_central > datos$p_lateral_1 && datos$p_central > datos$p_lateral_3) {
+  respuesta_8 <- 2  # Intervalo central es el mayor
+} else if (datos$p_lateral_1 >= datos$p_lateral_3) {
+  respuesta_8 <- 1  # Primer intervalo es el mayor
+} else {
+  respuesta_8 <- 3  # Tercer intervalo es el mayor
+}
+
+# Para schoice en cloze, usar la posición correcta del archivo original
+solucion_schoice <- rep(FALSE, 4)
+solucion_schoice[datos$posicion_correcta] <- TRUE
+
+# VERIFICACIÓN EXPLÍCITA: Asegurar que solucion_schoice sea exactamente correcto
+if (length(solucion_schoice) != 4) {
+  stop("Error: solucion_schoice debe tener exactamente 4 elementos")
+}
+if (sum(solucion_schoice) != 1) {
+  stop("Error: solucion_schoice debe tener exactamente un elemento TRUE")
+}
+
+# Vector de soluciones completo para formato cloze híbrido
+# Para schoice en cloze, R-exams estándar usa mchoice2string() que genera patrón 0/1
+# Ejemplo: c(FALSE, FALSE, TRUE, FALSE) -> "0010"
+solucion_completa <- c(
+  as.numeric(respuesta_1),      # Paso 1: Probabilidad intervalo 1
+  as.numeric(respuesta_2),      # Paso 2: Probabilidad intervalo 2
+  as.numeric(respuesta_3),      # Paso 3: Probabilidad intervalo 3
+  as.numeric(respuesta_4),      # Paso 4: Límite inferior intervalo 2
+  as.numeric(respuesta_5),      # Paso 5: Límite superior intervalo 2
+  as.numeric(respuesta_6),      # Paso 6: Suma total probabilidades
+  as.numeric(respuesta_7),      # Paso 7: Prob. fuera intervalo central
+  as.numeric(respuesta_8),      # Paso 8: Intervalo con mayor probabilidad
+  mchoice2string(solucion_schoice)  # Paso 9: Confirmación schoice
+)
+
+
+# VERIFICACIÓN FINAL: Asegurar longitudes correctas (actualizado)
+if (length(solucion_completa) != 9) {
+  stop("Error: solucion_completa debe tener exactamente 9 elementos")
+}
+
+# Tipos de respuesta: 8 numéricas + 1 schoice (incremento de complejidad)
+tipos_respuesta <- c("num", "num", "num", "num", "num", "num", "num", "num", "schoice")
+
+# Tolerancias para respuestas numéricas (mayor precisión requerida)
+# Para probabilidades: tolerancia 0.005 (mayor precisión)
+# Para límites enteros: tolerancia 0 (exactitud requerida)
+# Para schoice: tolerancia 0 (exactitud requerida)
+tolerancias <- c(0.005, 0.005, 0.005, 0, 0, 0.005, 0.005, 0, 0)
+
+# Detectar formato de salida para ajustes posteriores (simplificado)
+# Eliminamos match_exams_call() que puede causar warnings
+es_moodle <- FALSE  # Configuración por defecto, se ajusta automáticamente según el formato
+
+# PRUEBAS DE VALIDACIÓN MATEMÁTICA PARA FORMATO CLOZE
+# Comentadas temporalmente para evitar errores durante el procesamiento
+# Las validaciones se pueden activar durante el desarrollo/testing
+
+# Validaciones básicas sin testthat (actualizado para 9 elementos)
+if (length(solucion_completa) != 9) {
+  stop("Error: solucion_completa debe tener exactamente 9 elementos")
+}
+
+if (length(tipos_respuesta) != 9) {
+  stop("Error: tipos_respuesta debe tener exactamente 9 elementos")
+}
+
+if (length(tolerancias) != 9) {
+  stop("Error: tolerancias debe tener exactamente 9 elementos")
+}
+
+# Verificar que las probabilidades suman 1 (CORREGIDO para nuevas variables)
+suma_probabilidades <- datos$p_central + datos$p_lateral_1 + datos$p_lateral_3
+if (abs(suma_probabilidades - 1.0) > 0.001) {
+  stop("Error: Las probabilidades no suman 1.0")
+}
+
+# Helper universal para crear tablas compatibles con todos los formatos exams2*
+crear_tabla_portable <- function(df, typ) {
+  df_formateada <- df
+  df_formateada$Intervalo <- paste0("$", df$Intervalo, "$")
+  df_formateada$Probabilidad <- formato_estandar(df$Probabilidad, 2)
+
+  # Determinar tipo LaTeX y tratar pandoc/nops explícitamente
+  es_latex <- isTRUE(typ %in% c("pdf", "nops", "tex"))
+
+  # Para NOPS evitamos tablas y devolvemos un resumen en texto plano
+  if (identical(typ, "nops")) {
+    # Usar texto ASCII simple para maximizar compatibilidad con NOPS (sin tablas ni $...$)
+    int_ascii <- gsub(" \\\\le ", " <= ", df$Intervalo)
+    rows_txt <- paste(sprintf("[%s: %s]", int_ascii, df_formateada$Probabilidad), collapse = " ")
+    return(rows_txt)
+  }
+
+  if (!es_latex) {
+    if (identical(typ, "pandoc")) {
+      # Tabla Markdown (pipe) compatible con Pandoc/Docx; colapsada a una sola línea
+      hdr <- "| Intervalo | Probabilidad |"
+      sep <- "|:---------:|:------------:|"
+      rows <- paste(apply(df_formateada, 1, function(r) sprintf("| %s | %s |", r[["Intervalo"]], r[["Probabilidad"]] )), collapse = "\n")
+      tabla_md <- paste(c(hdr, sep, rows), collapse = "\n")
+      return(tabla_md)
+    } else {
+      # Construir tabla HTML con bordes visibles (HTML/Moodle/etc.)
+      th <- function(x) sprintf('<th style="border:1px solid #000;padding:4px 8px;text-align:center;font-weight:bold;">%s</th>', x)
+      td <- function(x) sprintf('<td style="border:1px solid #000;padding:4px 8px;text-align:center;">%s</td>', x)
+      header <- sprintf("<tr>%s%s</tr>", th("Intervalo"), th("Probabilidad"))
+      rows <- paste(apply(df_formateada, 1, function(r) sprintf('<tr>%s%s</tr>', td(r[["Intervalo"]]), td(r[["Probabilidad"]]))), collapse = "")
+      tabla_renderizada <- sprintf('<table class="ex-opcion" style="border-collapse:collapse;border:2px solid #000;margin:4px 0;">%s%s</table>', header, rows)
+      # Devolver una sola línea para evitar conteos erróneos del parser
+      return(paste(gsub("\n", " ", tabla_renderizada), collapse = " "))
+    }
+  }
+
+  tabla_renderizada <- knitr::kable(
+    df_formateada,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    align = 'c'
+  )
+  return(paste(tabla_renderizada, collapse = "\n"))
+}
+
+# Crear opciones y soluciones portátiles (orden fijo A, B, C, D)
+opciones_portables <- lapply(datos$opciones, function(tabla) {
+  crear_tabla_portable(tabla, typ)
+})
+
+# Validaciones básicas simplificadas
+if (!exists("typ") || is.null(typ)) {
+  typ <- "html"
+}
+```
+
+```{r generar_tablas_tikz, echo=FALSE, results="hide"}
+# Función para generar tabla TikZ con formato vectorial
+generar_tabla_tikz <- function(intervalos, probabilidades) {
+  # Validar que los parámetros no estén vacíos
+  if (length(intervalos) == 0 || length(probabilidades) == 0) {
+    stop("Error: intervalos o probabilidades tienen longitud cero")
+  }
+
+  if (length(intervalos) != 3 || length(probabilidades) != 3) {
+    stop("Error: se requieren exactamente 3 intervalos y 3 probabilidades")
+  }
+
+  # Validar que ningún elemento esté vacío
+  if (any(nchar(intervalos) == 0)) {
+    stop("Error: algún intervalo está vacío")
+  }
+
+  # Formatear probabilidades con coma decimal
+  # Formatear probabilidades con punto decimal y 2 decimales
+  probs_formateadas <- sapply(probabilidades, function(x) formato_estandar(x, 2))
+
+  # Crear código TikZ para la tabla con configuración EXTREMA (basada en Pedorros4.Rmd)
+  codigo_tikz <- paste0("
+\\begin{tikzpicture}[y=0.30pt, x=0.30pt, yscale=-0.3, xscale=0.3, inner sep=0pt, outer sep=0pt]
+  \\node[font=\\fontsize{4pt}{5pt}\\selectfont]{
+    \\begin{tabular}{|c|c|}
+      \\hline
+      \\fontsize{4pt}{5pt}\\selectfont\\textbf{Intervalo} & \\fontsize{4pt}{5pt}\\selectfont\\textbf{Probabilidad} \\\\
+      \\hline
+      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[1], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[1], " \\\\
+      \\hline
+      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[2], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[2], " \\\\
+      \\hline
+      \\fontsize{4pt}{5pt}\\selectfont $", intervalos[3], "$ & \\fontsize{4pt}{5pt}\\selectfont ", probs_formateadas[3], " \\\\
+      \\hline
+    \\end{tabular}
+  };
+\\end{tikzpicture}
+")
+
+  return(codigo_tikz)
+}
+
+# Función auxiliar para símbolos matemáticos en TikZ
+format_le_tikz <- function() {
+  "\\le"  # TikZ siempre usa LaTeX nativo
+}
+
+# Validar que el objeto datos esté correctamente definido
+if (!exists("datos") || is.null(datos)) {
+  stop("Error: el objeto 'datos' no está definido")
+}
+
+# Validar que las variables necesarias existan en datos (CORREGIDO)
+variables_requeridas <- c("limite1", "limite2", "limite_sup", "p_lateral_1", "p_lateral_3", "p_central")
+for (var in variables_requeridas) {
+  if (is.null(datos[[var]]) || length(datos[[var]]) == 0) {
+    stop(paste("Error: la variable", var, "no está definida o tiene longitud cero"))
+  }
+}
+
+# Preparar intervalos para cada opción
+int1 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite1)
+int2 <- paste0(datos$limite1, " < x ", format_le_tikz(), " ", datos$limite2)
+int3 <- paste0(datos$limite2, " < x ", format_le_tikz(), " ", datos$limite_sup)
+
+# Intervalos para opción B (acumulativos)
+intB1 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite1)
+intB2 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite2)
+intB3 <- paste0("0 ", format_le_tikz(), " x ", format_le_tikz(), " ", datos$limite_sup)
+
+# GENERAR CÓDIGOS TIKZ SEGÚN EL ORDEN ALEATORIZADO
+# Crear códigos TikZ dinámicamente basados en las opciones mezcladas
+opciones_tikz <- list()
+
+for (i in 1:4) {
+  tabla_actual <- datos$opciones[[i]]
+
+  # Extraer intervalos de la tabla actual y convertir a formato TikZ
+  intervalos_tikz <- c()
+  for (j in 1:3) {
+    intervalo_raw <- tabla_actual$Intervalo[j]
+    # Convertir símbolos ≤ a \le para TikZ
+    intervalo_tikz <- gsub(" ≤ ", " \\\\le ", intervalo_raw)
+    intervalos_tikz[j] <- intervalo_tikz
+  }
+
+  # Generar código TikZ para esta opción
+  opciones_tikz[[i]] <- generar_tabla_tikz(intervalos_tikz, tabla_actual$Probabilidad)
+}
+
+# Asignar códigos según el orden aleatorio (A, B, C, D corresponden a posiciones 1, 2, 3, 4)
+codigo_tabla_a <- opciones_tikz[[1]]
+codigo_tabla_b <- opciones_tikz[[2]]
+codigo_tabla_c <- opciones_tikz[[3]]
+codigo_tabla_d <- opciones_tikz[[4]]
+```
+
+```{r generar_tablas_tikz_multi_formato, echo=FALSE, results="hide"}
+# Función para generar tabla en formato apropiado según el tipo de salida
+generar_tabla_multi_formato <- function(codigo_tikz, nombre_base) {
+  # Determinar formato según el tipo de salida
+  if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
+    # Para PDF/LaTeX: generar PDF vectorial
+    include_tikz(codigo_tikz,
+                 name = nombre_base,
+                 format = "pdf",
+                 packages = c("tikz", "array", "booktabs"),
+                 width = "3cm")
+  } else {
+    # Para HTML/pandoc/moodle: generar PNG para compatibilidad
+    include_tikz(codigo_tikz,
+                 name = nombre_base,
+                 format = "png",
+                 packages = c("tikz", "array", "booktabs"),
+                 width = "3cm")
+  }
+}
+
+# Generar todas las tablas en el formato apropiado
+generar_tabla_multi_formato(codigo_tabla_a, "tabla_opcion_a")
+generar_tabla_multi_formato(codigo_tabla_b, "tabla_opcion_b")
+generar_tabla_multi_formato(codigo_tabla_c, "tabla_opcion_c")
+generar_tabla_multi_formato(codigo_tabla_d, "tabla_opcion_d")
+```
+
+```{r copiar_archivos_salida, echo=FALSE, results="hide"}
+# Copiar archivos generados al directorio de salida para compatibilidad con todos los formatos
+if (dir.exists("salida")) {
+  # Copiar tanto PDF como PNG para máxima compatibilidad
+  archivos_tablas <- c("tabla_opcion_a.pdf", "tabla_opcion_b.pdf",
+                       "tabla_opcion_c.pdf", "tabla_opcion_d.pdf",
+                       "tabla_opcion_a.png", "tabla_opcion_b.png",
+                       "tabla_opcion_c.png", "tabla_opcion_d.png")
+
+  for (archivo in archivos_tablas) {
+    if (file.exists(archivo)) {
+      file.copy(archivo, file.path("salida", archivo), overwrite = TRUE)
+    }
+  }
+}
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide", eval=Sys.getenv("EXAMS_RUN_DIVERSITY","0")=="1"}
+# Este test es costoso. Ejecutarlo solo en desarrollo.
+# Actívalo con la variable de entorno: EXAMS_RUN_DIVERSITY=1
+if (requireNamespace("testthat", quietly = TRUE) && requireNamespace("digest", quietly = TRUE)) {
+  testthat::test_that("Prueba de diversidad de versiones", {
+    versiones <- list()
+    for (i in 1:1000) {
+      datos_test <- generar_datos()
+      versiones[[i]] <- digest::digest(list(
+        p_central = datos_test$p_central,
+        limite1 = datos_test$limite1,
+        limite2 = datos_test$limite2
+      ))
+    }
+    n_versiones_unicas <- length(unique(versiones))
+    testthat::expect_true(
+      n_versiones_unicas >= 300,
+      info = paste(
+        "Solo se generaron", n_versiones_unicas,
+        "versiones únicas. Se requieren al menos 300."
+      )
+    )
+  })
+}
+```
+
+```{r tikz_graph_generation, echo=FALSE, results="hide"}
+# Código TikZ dinámico para generar el gráfico principal (mayor complejidad)
+# Centro de distribución variable para mayor realismo
+centro_distribucion <- (datos$limite1 + datos$limite2) / 2
+desviacion_std <- max(2.0, (datos$limite_sup - datos$limite1) / 6)
+
+codigo_tikz_grafico <- paste0("
+\\begin{tikzpicture}[scale=0.9, every node/.style={font=\\small}]
+  \\begin{axis}[
+    axis lines=left,
+    xmin=0, xmax=", datos$limite_sup, ",
+    ymin=0, ymax=0.5,
+    grid=major,
+    xtick={0,1,...,", datos$limite_sup, "},
+    ytick=\\empty,
+    width=12cm, height=5cm,
+    grid style={thin, loosely dotted, black!30}
+  ]
+  % Curva de distribución (aproximación visual a una normal con centro variable)
+  \\addplot[domain=0:", datos$limite_sup, ", samples=101, smooth, thick, black]
+    {0.4 * exp(-(x-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))};
+  % Límites de los intervalos
+  \\draw[thick, black!80] (axis cs:", datos$limite1, ",0) --
+    (axis cs:", datos$limite1, ", {0.4 * exp(-(", datos$limite1, "-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))});
+  \\draw[thick, black!80] (axis cs:", datos$limite2, ",0) --
+    (axis cs:", datos$limite2, ", {0.4 * exp(-(", datos$limite2, "-", centro_distribucion, ")^2 / (2 * ", desviacion_std, "^2))});
+  % Etiquetas de probabilidad con formato mejorado (3 decimales)
+  \\node at (axis cs:", (datos$limite1 / 2), ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral_1, 3), "}};
+  \\node at (axis cs:", (datos$limite1 + datos$limite2) / 2, ", 0.35) {\\textbf{", formato_estandar(datos$p_central, 3), "}};
+  \\node at (axis cs:", (datos$limite2 + datos$limite_sup) / 2, ", 0.2) {\\textbf{", formato_estandar(datos$p_lateral_3, 3), "}};
+  \\end{axis}
+\\end{tikzpicture}
+")
+```
+
+<!-- NOTA MANTENIMIENTO (R-exams): usar encabezados estilo setext (línea con ===) para Question, Solution y Meta-information. Mezclar estilos puede gatillar el error del parser: if (substr(x[b + 1L], 1L, 1L) == "=") { ... condition has length > 1 }. -->
+
+Question
+========
+
+En la gráfica se muestra la probabilidad de que la variable aleatoria $x$ tome valores en cada uno de tres intervalos en que se ha dividido la curva.
+
+```{r question_graph, echo=FALSE, results='asis'}
+fmt_tikz <- if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "html" else typ
+include_tikz(codigo_tikz_grafico, name = "prob_dist_grafico", markup = "markdown", format = fmt_tikz,
+             packages = c("tikz", "pgfplots"),
+             header = "\\pgfplotsset{compat=1.17}",
+             width = "12cm")
+```
+
+Para analizar completamente la información de la gráfica y construir la tabla de probabilidades correspondiente, resuelva paso a paso:
+
+**IMPORTANTE - Formato de números (Mayor precisión requerida):**
+
+- **Probabilidades**: Use punto para decimales, formato 0.XXX (3 decimales)
+  - Ejemplo: 0.250 (no 0,25 ni 25% ni 0.25)
+- **Límites de intervalos**: Números enteros sin decimales
+  - Ejemplo: 5 (no 5.0 ni 5,0)
+- **Análisis numérico**: Se requiere mayor precisión en los cálculos
+
+### Paso 1: Lectura de probabilidades - Primer intervalo (extremo izquierdo)
+Observe cuidadosamente la gráfica. ¿Cuál es la probabilidad del primer intervalo (desde $x=0$ hasta $x=`r datos$limite1`$)?
+
+**Respuesta:** ##ANSWER1##
+
+### Paso 2: Lectura de probabilidades - Segundo intervalo (región intermedia)
+¿Cuál es la probabilidad del segundo intervalo (desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$)?
+
+**Respuesta:** ##ANSWER2##
+
+### Paso 3: Lectura de probabilidades - Tercer intervalo (extremo derecho)
+¿Cuál es la probabilidad del tercer intervalo (desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$)?
+
+**Respuesta:** ##ANSWER3##
+
+### Paso 4: Identificación de límites - Límite inferior del segundo intervalo
+¿Cuál es el límite inferior del segundo intervalo (región intermedia)?
+
+**Respuesta:** ##ANSWER4##
+
+### Paso 5: Identificación de límites - Límite superior del segundo intervalo
+¿Cuál es el límite superior del segundo intervalo (región intermedia)?
+
+**Respuesta:** ##ANSWER5##
+
+### Paso 6: Verificación matemática - Suma total de probabilidades
+Para verificar que los datos son correctos, calcule la suma total de todas las probabilidades. En una distribución de probabilidad válida, esta suma debe ser exactamente 1.000:
+
+##ANSWER1## + ##ANSWER2## + ##ANSWER3## = ##ANSWER6##
+
+### Paso 7: Análisis comparativo - Diferencia entre probabilidades extremas
+Calcule la **diferencia absoluta** entre las probabilidades de los intervalos extremos (primer y tercer intervalo). Esta medida indica el grado de asimetría de la distribución:
+
+**Respuesta:** ##ANSWER7##
+
+### Paso 8: Análisis comparativo - Intervalo con mayor probabilidad
+Identifique cuál intervalo tiene la mayor probabilidad. Responda con el número correspondiente:
+
+- 1 = Primer intervalo (desde $x=0$ hasta $x=`r datos$limite1`$)
+- 2 = Segundo intervalo (desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$)
+- 3 = Tercer intervalo (desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$)
+
+**Respuesta:** ##ANSWER8##
+
+## Tablas de probabilidades para análisis
+
+A continuación se presentan cuatro tablas diferentes que podrían representar las probabilidades de los intervalos. Analice cada una cuidadosamente:
+
+<br>
+
+```{r mostrar_tablas_analisis, echo=FALSE, results='asis', fig.align="center"}
+# Mostrar las 4 tablas en orden fijo A, B, C, D (fuera del desplegable)
+# Selectores para formato/markup según backend
+fmt_tikz <- if (identical(typ, "moodle")) "png" else if (identical(typ, "nops")) "pdf" else if (identical(typ, "pandoc")) "html" else typ
+markup_tikz <- if (identical(typ, "moodle")) "moodle" else "markdown"
+
+cat("**Tabla A:**\n\n")
+include_tikz(codigo_tabla_a,
+             name = "tabla_opcion_a",
+             markup = markup_tikz,
+             format = fmt_tikz,
+             packages = c("tikz", "array", "booktabs"),
+             width = "6cm")
+
+cat("\n\n**Tabla B:**\n\n")
+include_tikz(codigo_tabla_b,
+             name = "tabla_opcion_b",
+             markup = markup_tikz,
+             format = fmt_tikz,
+             packages = c("tikz", "array", "booktabs"),
+             width = "6cm")
+
+cat("\n\n**Tabla C:**\n\n")
+include_tikz(codigo_tabla_c,
+             name = "tabla_opcion_c",
+             markup = markup_tikz,
+             format = fmt_tikz,
+             packages = c("tikz", "array", "booktabs"),
+             width = "6cm")
+
+cat("\n\n**Tabla D:**\n\n")
+include_tikz(codigo_tabla_d,
+             name = "tabla_opcion_d",
+             markup = markup_tikz,
+             format = fmt_tikz,
+             packages = c("tikz", "array", "booktabs"),
+             width = "6cm")
+```
+
+<br><br>
+
+### Paso 9: Confirmación mediante selección múltiple (CON PUNTUACIÓN)
+Ahora que ha completado el análisis paso a paso y ha observado las tablas anteriores, **confirme su respuesta seleccionando la tabla correcta**. Esta selección también será evaluada y contribuirá a su puntuación final.
+
+**Pregunta específica:** Basándose en su análisis anterior, ¿cuál de las siguientes tablas representa correctamente la distribución de probabilidades para los tres intervalos disjuntos mostrados en el gráfico?
+
+##ANSWER9##
+
+Answerlist
+----------
+* Tabla A
+* Tabla B
+* Tabla C
+* Tabla D
+
+**Conclusión:** La tabla correcta debe mostrar las probabilidades ##ANSWER1##, ##ANSWER2##, y ##ANSWER3## para los intervalos correspondientes, con una suma total de ##ANSWER6## (que confirma que se trata de una distribución de probabilidad válida). 
+
+La diferencia absoluta entre las probabilidades extremas es ##ANSWER7##, y el intervalo con mayor probabilidad es el número ##ANSWER8##.
+
+Compare sus respuestas con las tablas mostradas anteriormente para identificar cuál representa correctamente la unión de estos tres intervalos específicos.
+
+Solution
+========
+
+### Análisis paso a paso del problema de probabilidad e intervalos
+
+Este problema de **interpretación de gráficos de distribución de probabilidad** requiere un análisis secuencial que demuestre el proceso de razonamiento matemático aplicado a la lectura de curvas de probabilidad:
+
+**NOTA IMPORTANTE - Formato de números estandarizado (Mayor precisión):**
+
+- **Probabilidades**: Use punto para decimales, formato 0.XXX (3 decimales)
+  - Ejemplo: 0.250 (no 0,25 ni 25% ni 0.25)
+- **Límites de intervalos**: Números enteros sin decimales
+  - Ejemplo: 5 (no 5.0 ni 5,0)
+- **Consistencia**: Mismo formato en enunciado, opciones y respuestas
+- **Precisión**: Se requiere mayor exactitud en los cálculos
+
+### Paso 1: Lectura correcta de probabilidades - Primer intervalo (extremo izquierdo) ✓
+
+**Respuesta correcta:** `r formato_estandar(datos$p_lateral_1, 2)`
+
+El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección extrema izquierda es **`r formato_estandar(datos$p_lateral_1, 2)`**.
+
+### Paso 2: Lectura correcta de probabilidades - Segundo intervalo (región intermedia) ✓
+
+**Respuesta correcta:** `r formato_estandar(datos$p_central, 2)`
+
+El segundo intervalo (región intermedia) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección intermedia es **`r formato_estandar(datos$p_central, 2)`**.
+
+### Paso 3: Lectura correcta de probabilidades - Tercer intervalo (extremo derecho) ✓
+
+**Respuesta correcta:** `r formato_estandar(datos$p_lateral_3, 2)`
+
+El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección extrema derecha es **`r formato_estandar(datos$p_lateral_3, 2)`**.
+
+### Paso 4: Identificación correcta de límites - Límite inferior ✓
+
+**Respuesta correcta:** `r formato_estandar(datos$limite1, 0)`
+
+El límite inferior del segundo intervalo (región intermedia) es **`r datos$limite1`**.
+
+### Paso 5: Identificación correcta de límites - Límite superior ✓
+
+**Respuesta correcta:** `r formato_estandar(datos$limite2, 0)`
+
+El límite superior del segundo intervalo (región intermedia) es **`r datos$limite2`**.
+
+### Paso 6: Verificación matemática correcta - Suma total de probabilidades ✓
+
+**Respuesta correcta:** `r formato_estandar(1.00, 3)`
+
+**Verificación del cálculo:**
+
+$$`r formato_estandar(datos$p_lateral_1, 3)` + `r formato_estandar(datos$p_central, 3)` + `r formato_estandar(datos$p_lateral_3, 3)` = `r formato_estandar(1.00, 3)`$$
+
+Esta suma confirma que las probabilidades están correctamente leídas, ya que **la suma total de todas las probabilidades en una distribución completa debe ser igual a 1.000**. Esto valida que hemos identificado correctamente la probabilidad de la unión de estos tres intervalos disjuntos que cubren todo el espacio muestral.
+
+### Paso 7: Análisis comparativo correcto - Diferencia entre probabilidades extremas ✓
+
+**Respuesta correcta:** `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`
+
+**Explicación del cálculo:**
+
+La diferencia absoluta entre las probabilidades de los intervalos extremos permite evaluar la asimetría de la distribución:
+$$|\text{Diferencia}| = |P(\text{primer intervalo}) - P(\text{tercer intervalo})| = |`r formato_estandar(datos$p_lateral_1, 3)` - `r formato_estandar(datos$p_lateral_3, 3)`| = `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`$$
+
+Esta medida indica qué tan simétrica o asimétrica es la distribución en los extremos.
+
+### Paso 8: Análisis comparativo correcto - Intervalo con mayor probabilidad ✓
+
+**Respuesta correcta:** `r respuesta_8`
+
+**Justificación:**
+
+```{r analisis_comparativo, echo=FALSE, results='asis'}
+if (datos$p_central > datos$p_lateral_1 && datos$p_central > datos$p_lateral_3) {
+  cat("El intervalo central (intervalo 2) tiene la mayor probabilidad con ", formato_estandar(datos$p_central, 3), ", mientras que el primer intervalo tiene ", formato_estandar(datos$p_lateral_1, 3), " y el tercer intervalo tiene ", formato_estandar(datos$p_lateral_3, 3), ".")
+} else if (datos$p_lateral_1 >= datos$p_lateral_3 && datos$p_lateral_1 >= datos$p_central) {
+  cat("El primer intervalo (intervalo 1) tiene la mayor probabilidad con ", formato_estandar(datos$p_lateral_1, 3), ", mientras que el intervalo central tiene ", formato_estandar(datos$p_central, 3), " y el tercer intervalo tiene ", formato_estandar(datos$p_lateral_3, 3), ".")
+} else {
+  cat("El tercer intervalo (intervalo 3) tiene la mayor probabilidad con ", formato_estandar(datos$p_lateral_3, 3), ", mientras que el primer intervalo tiene ", formato_estandar(datos$p_lateral_1, 3), " y el intervalo central tiene ", formato_estandar(datos$p_central, 3), ".")
+}
+```
+
+### Paso 9: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
+
+```{r mostrar_tabla_solucion, echo=FALSE, results='asis'}
+# Generar tabla de solución con la misma configuración TikZ que las opciones
+le_sym_tikz <- format_le_tikz()
+
+# Intervalos para la tabla de solución (correcta)
+int_sol1 <- paste0("0 ", le_sym_tikz, " x ", le_sym_tikz, " ", datos$limite1)
+int_sol2 <- paste0(datos$limite1, " < x ", le_sym_tikz, " ", datos$limite2)
+int_sol3 <- paste0(datos$limite2, " < x ", le_sym_tikz, " ", datos$limite_sup)
+
+# Generar tabla de solución con la misma función que las opciones
+codigo_tabla_solucion <- generar_tabla_tikz(
+  c(int_sol1, int_sol2, int_sol3),
+  c(datos$p_lateral_1, datos$p_central, datos$p_lateral_3)
+)
+
+cat("**Tabla correcta esperada:**\n\n")
+
+# Usar la misma función multi-formato que las opciones
+if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
+  # Para PDF/LaTeX: generar PDF vectorial
+  include_tikz(codigo_tabla_solucion,
+               name = "tabla_solucion",
+               format = "pdf",
+               packages = c("tikz"),
+               width = "3cm")
+} else {
+  # Para HTML/Moodle: generar PNG
+  include_tikz(codigo_tabla_solucion,
+               name = "tabla_solucion",
+               format = "png",
+               packages = c("tikz"),
+               width = "3cm")
+}
+```
+
+**Análisis de las opciones presentadas:**
+
+```{r identificar_tabla_correcta, echo=FALSE, results='asis'}
+# Identificar cuál tabla (A, B, C, D) es la correcta según la aleatorización
+letra_correcta <- LETTERS[datos$posicion_correcta]
+cat("Al revisar las tablas de las opciones, la única que coincide perfectamente con los datos extraídos del gráfico es la **Tabla ", letra_correcta, "**. Las otras tablas presentan errores conceptuales comunes:\n\n")
+```
+
+* **Error de probabilidad acumulada:** Una de las tablas muestra cómo la probabilidad se va sumando (`r formato_estandar(datos$p_lateral_1, 2)`, `r formato_estandar(datos$p_lateral_1 + datos$p_central, 2)`, 1.00), lo cual es una interpretación incorrecta del gráfico.
+* **Error de definición de intervalo:** Otra tabla usa intervalos acumulativos, lo cual no corresponde a las secciones individuales mostradas.
+* **Error de asignación:** Otra tabla intercambia los valores de probabilidad, asignando el valor central a los laterales y viceversa.
+
+**Importancia de este paso:**
+
+- **Contribuye a la puntuación final** (no es solo verificación)
+- **Confirma** la comprensión del proceso analítico completo
+- **Identifica** posibles errores en el razonamiento matemático
+- **Refuerza** el aprendizaje mediante comparación con distractores educativos
+
+### Verificación del proceso de razonamiento híbrido completo
+
+**El formato híbrido con puntuación dual (cloze + schoice) garantiza que los estudiantes:**
+
+**Parte Analítica (Pasos 1-6):**
+
+- **Lean cuidadosamente** el gráfico para extraer probabilidades precisas
+- **Identifiquen explícitamente** los límites de cada intervalo
+- **Verifiquen matemáticamente** que la suma de probabilidades es 1.00
+- **Realicen análisis** paso a paso sin saltar etapas del proceso
+
+**Parte de Confirmación (Paso 7):**
+
+- **Demuestren coherencia** entre su análisis numérico y la comprensión conceptual
+- **Apliquen pensamiento crítico** al comparar con distractores
+- **Consoliden su aprendizaje** mediante validación de resultados
+
+### Conclusión
+
+La tabla correcta debe mostrar las probabilidades **`r formato_estandar(datos$p_lateral_1, 3)`**, **`r formato_estandar(datos$p_central, 3)`**, y **`r formato_estandar(datos$p_lateral_3, 3)`** para los intervalos correspondientes, con una suma total de **`r formato_estandar(1.00, 3)`**. 
+\
+
+La diferencia absoluta entre las probabilidades extremas es **`r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`**, y el intervalo con mayor probabilidad es el número **`r respuesta_8`**.
+
+Esta respuesta es coherente porque:
+
+- Se basa en una lectura correcta de la gráfica de distribución
+- Aplica correctamente los conceptos de probabilidad e intervalos disjuntos
+- Todos los cálculos intermedios son verificables matemáticamente
+- La suma total de probabilidades es exactamente 1.00, confirmando que se trata de una distribución de probabilidad válida
+- Distingue claramente entre la probabilidad de eventos específicos y la probabilidad total del espacio muestral completo
+- Evita el error conceptual de confundir sumas parciales con "probabilidades totales"
+
+```{r answerlist_explicacion, echo=FALSE, results='asis'}
+# Explicaciones dinámicas según la aleatorización
+# Mapear cada tipo de tabla a su explicación
+explicaciones_por_tipo <- c(
+  "Incorrecto. Usa probabilidades acumuladas incorrectamente; no corresponde a las tres secciones individuales.",  # Distractor A
+  "Incorrecto. Usa intervalos acumulativos; no corresponde a las secciones individuales mostradas.",              # Distractor B
+  "Correcto. Esta tabla representa exactamente los tres intervalos y sus probabilidades correspondientes como se muestra en el gráfico.", # Correcta
+  "Incorrecto. Intercambia los valores asignando probabilidades incorrectas a cada intervalo."                    # Distractor D
+)
+
+cat("Explicación de opciones\n")
+cat("----------------------\n\n")
+
+# Generar explicaciones según el orden aleatorizado
+for (i in 1:4) {
+  # datos$orden_original[i] indica qué tipo de tabla original está en la posición i
+  tipo_tabla_original <- datos$orden_original[i]
+  explicacion <- explicaciones_por_tipo[tipo_tabla_original]
+  cat(paste0("- **Tabla ", LETTERS[i], ":** ", explicacion, "\n"))
+}
+```
+
+
+Meta-information
+================
+
+exname: Probabilidad Intervalos Curva Interpretación Representación - Análisis Secuencial Cloze Avanzado
+extype: cloze
+exsolution: `r paste(solucion_completa, collapse="|")`
+exclozetype: `r paste(tipos_respuesta, collapse="|")`
+extol: `r paste(tolerancias, collapse="|")`
+exsection: Estadística|Probabilidad|Interpretación de gráficos|Análisis de intervalos|Análisis complementario
+exextra[Type]: Cálculo
+exextra[Program]: R
+exextra[Language]: es
+exextra[Level]: 3
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Contexto]: Matemático
+exextra[Dificultad]: Media-Alta

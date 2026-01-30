@@ -1,0 +1,333 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{enumitem}
+
+% Definir los entornos necesarios para exams
+\newenvironment{question}{}{}
+\newenvironment{solution}{}{}
+\newenvironment{answerlist}{\begin{enumerate}}{\end{enumerate}}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<echo=FALSE, results=hide>>=
+# Configuracion para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# CONFIGURACION RADICAL ANTI-NOTACION CIENTIFICA
+options(scipen = 999)  # Evitar notacion cientifica completamente
+options(digits = 10)   # Suficientes digitos para numeros grandes
+
+library(exams)
+
+# Funcion para formatear enteros sin notacion cientifica
+formatear_entero <- function(numero) {
+  # Forzar formato entero sin notacion cientifica JAMAS
+  formatC(as.numeric(numero), format = "d", big.mark = "")
+}
+
+# Funcion para formatear numeros monetarios
+formatear_monetario <- function(numero) {
+  # Formatear con separador de miles punto y sin notacion cientifica
+  formatC(as.numeric(numero), format = "d", big.mark = ".", decimal.mark = ",")
+}
+
+# Funciones para espaciado universal (LaTeX, HTML, XML)
+# NOTA: Funciones vac??as para evitar problemas en XML
+# El espaciado se maneja directamente con saltos de l??nea en LaTeX
+espaciado_grande <- function() {
+  ""  # Funci??n vac??a - espaciado manejado en LaTeX
+}
+
+espaciado_medio <- function() {
+  ""  # Funci??n vac??a - espaciado manejado en LaTeX
+}
+
+# Generar datos aleatorios
+ok <- FALSE
+while(!ok) {
+  # Datos basicos - Expandidos para mas variedad
+  nombres <- c("Ana", "Carlos", "Maria", "Diego", "Sofia", "Andres",
+               "Lucia", "Miguel", "Carmen", "Pablo", "Elena", "Jorge")
+
+  # Seleccionar aleatoriamente
+  nombre <- sample(nombres, 1)
+
+  # Lista de familiares disponibles - Expandida para mas variedad
+  familiares <- list(
+    list(nombre = "tio", genero = "masculino"),
+    list(nombre = "tia", genero = "femenino"),
+    list(nombre = "abuelo", genero = "masculino"),
+    list(nombre = "abuela", genero = "femenino"),
+    list(nombre = "hermano", genero = "masculino"),
+    list(nombre = "hermana", genero = "femenino"),
+    list(nombre = "primo", genero = "masculino"),
+    list(nombre = "prima", genero = "femenino")
+  )
+
+  # Seleccionar aleatoriamente dos familiares diferentes
+  familiares_seleccionados <- sample(familiares, 2)
+  familiar1 <- familiares_seleccionados[[1]]$nombre
+  familiar2 <- familiares_seleccionados[[2]]$nombre
+  genero1 <- familiares_seleccionados[[1]]$genero
+  genero2 <- familiares_seleccionados[[2]]$genero
+
+  # Parametros del problema - Expandidos para mas variedad
+  ahorro_mensual <- sample(seq(100000, 250000, 25000), 1)  # Mas opciones: 7 valores
+  meses <- 3  # Simplificar a 3 meses
+
+  # Porcentajes balanceados para evitar sesgo
+  # Aleatorizar cual opcion sera mejor
+  opcion_favorecida <- sample(1:2, 1)
+
+  if(opcion_favorecida == 1) {
+    # Favorecer opcion 1 (porcentaje constante alto)
+    porcentaje_constante <- sample(12:16, 1)
+    porcentajes_variables <- c(
+      sample(2:6, 1),    # Mes 1: bajo
+      sample(4:8, 1),    # Mes 2: medio
+      sample(8:15, 1)    # Mes 3: moderado (no muy alto)
+    )
+  } else {
+    # Favorecer opcion 2 (porcentajes variables con pico alto)
+    porcentaje_constante <- sample(8:12, 1)
+    porcentajes_variables <- c(
+      sample(1:4, 1),    # Mes 1: bajo
+      sample(3:6, 1),    # Mes 2: medio
+      sample(16:24, 1)   # Mes 3: alto
+    )
+  }
+
+  # Calcular ahorros acumulados
+  ahorros_acumulados <- ahorro_mensual * (1:meses)
+
+  # Calcular regalos para cada opcion
+  regalos_opcion1 <- ahorros_acumulados * porcentaje_constante / 100
+  regalos_opcion2 <- ahorros_acumulados * porcentajes_variables / 100
+
+  # Totales
+  total_opcion1 <- sum(regalos_opcion1)
+  total_opcion2 <- sum(regalos_opcion2)
+
+  # Verificar que hay diferencia significativa
+  diferencia <- abs(total_opcion1 - total_opcion2)
+  if(diferencia > 10000) {
+    ok <- TRUE
+  }
+}
+
+# Determinar cual opcion es mejor
+opcion_mejor <- ifelse(total_opcion1 > total_opcion2, 1, 2)
+
+# Funcion para obtener articulo correcto
+obtener_articulo <- function(genero) {
+  if(genero == "masculino") return("del") else return("de la")
+}
+
+# Funcion para obtener articulo determinado
+obtener_articulo_det <- function(genero) {
+  if(genero == "masculino") return("el") else return("la")
+}
+
+# Determinar cual familiar da mas dinero (respuesta correcta)
+familiar_mejor <- if(total_opcion1 > total_opcion2) familiar1 else familiar2
+genero_mejor <- if(total_opcion1 > total_opcion2) genero1 else genero2
+total_mejor <- max(total_opcion1, total_opcion2)
+familiar_peor <- if(total_opcion1 > total_opcion2) familiar2 else familiar1
+genero_peor <- if(total_opcion1 > total_opcion2) genero2 else genero1
+total_peor <- min(total_opcion1, total_opcion2)
+
+# Aleatorizar quien eligio el personaje (puede elegir correcta o incorrectamente)
+eleccion_correcta <- sample(c(TRUE, FALSE), 1)
+familiar_elegido <- if(eleccion_correcta) familiar_mejor else familiar_peor
+genero_elegido <- if(eleccion_correcta) genero_mejor else genero_peor
+
+# Crear las 4 opciones base
+opciones_base <- character(4)
+opciones_base[1] <- paste("Si, porque la ayuda total", obtener_articulo(genero_elegido), familiar_elegido, "es de \\$",
+                         formatear_monetario(if(familiar_elegido == familiar1) total_opcion1 else total_opcion2),
+                         "mientras que", obtener_articulo(if(familiar_elegido == familiar1) genero2 else genero1),
+                         if(familiar_elegido == familiar1) familiar2 else familiar1, "es de \\$",
+                         formatear_monetario(if(familiar_elegido == familiar1) total_opcion2 else total_opcion1), ".")
+
+opciones_base[2] <- paste("No, porque la ayuda total", obtener_articulo(if(familiar_elegido == familiar1) genero2 else genero1),
+                         if(familiar_elegido == familiar1) familiar2 else familiar1, "es de \\$",
+                         formatear_monetario(if(familiar_elegido == familiar1) total_opcion2 else total_opcion1),
+                         "mientras que", obtener_articulo(genero_elegido), familiar_elegido, "es de \\$",
+                         formatear_monetario(if(familiar_elegido == familiar1) total_opcion1 else total_opcion2), ".")
+
+opciones_base[3] <- if(eleccion_correcta) {
+  paste("Si, porque", obtener_articulo(genero_elegido), familiar_elegido, "tiene",
+        if(familiar_elegido == familiar1) "porcentajes constantes" else "un porcentaje alto en el ultimo mes",
+        "que compensa las diferencias de los otros meses.")
+} else {
+  paste("Si, porque", obtener_articulo(genero_elegido), familiar_elegido, "parece tener",
+        if(familiar_elegido == familiar1) "porcentajes mas estables" else "mejor porcentaje final",
+        "aunque en realidad no sea la mejor opcion.")
+}
+
+opciones_base[4] <- if(eleccion_correcta) {
+  paste("No, porque", obtener_articulo(genero_elegido), familiar_elegido, "solo parece mejor",
+        if(familiar_elegido == familiar1) "por ser constante" else "por el ultimo mes",
+        "pero en realidad si es la mejor opcion.")
+} else {
+  paste("No, porque", obtener_articulo(genero_elegido), familiar_elegido, "no ofrece",
+        if(familiar_elegido == familiar1) "suficiente dinero total" else "consistencia en los porcentajes",
+        "comparado con la otra opcion.")
+}
+
+# Determinar cual opcion es correcta basada en si la eleccion fue correcta
+respuesta_correcta_pos <- if(eleccion_correcta) 1 else 2  # Si eligio bien -> "Si" (1), si eligio mal -> "No" (2)
+
+# Aleatorizar el orden de las opciones
+orden_aleatorio <- sample(1:4)
+opciones <- opciones_base[orden_aleatorio]
+
+# Ajustar la posicion de la respuesta correcta segun el nuevo orden
+posicion_correcta <- which(orden_aleatorio == respuesta_correcta_pos)
+solucion <- rep(FALSE, 4)
+solucion[posicion_correcta] <- TRUE
+
+# Crear explicaciones detalladas en el mismo orden aleatorizado
+explicaciones_base <- character(4)
+
+if(eleccion_correcta) {
+  # El personaje eligio correctamente
+  explicaciones_base[1] <- paste("Correcto. Al calcular los totales: ", familiar_mejor, " = \\$", formatear_monetario(total_mejor),
+                                 " y ", familiar_peor, " = \\$", formatear_monetario(total_peor), ". ",
+                                 obtener_articulo_det(genero_mejor), " ", familiar_mejor, " ofrece mas ayuda, por lo que la eleccion fue correcta.")
+  explicaciones_base[2] <- paste("Incorrecto. Al calcular los totales: ", familiar_mejor, " = \\$", formatear_monetario(total_mejor),
+                                 " y ", familiar_peor, " = \\$", formatear_monetario(total_peor), ". ",
+                                 obtener_articulo_det(genero_mejor), " ", familiar_mejor, " ofrece mas ayuda, por lo que la eleccion fue correcta.")
+} else {
+  # El personaje eligio incorrectamente
+  explicaciones_base[1] <- paste("Incorrecto. Al calcular los totales: ", familiar_mejor, " = \\$", formatear_monetario(total_mejor),
+                                 " y ", familiar_peor, " = \\$", formatear_monetario(total_peor), ". ",
+                                 obtener_articulo_det(genero_mejor), " ", familiar_mejor, " ofrece mas ayuda, por lo que la eleccion fue incorrecta.")
+  explicaciones_base[2] <- paste("Correcto. Al calcular los totales: ", familiar_mejor, " = \\$", formatear_monetario(total_mejor),
+                                 " y ", familiar_peor, " = \\$", formatear_monetario(total_peor), ". ",
+                                 obtener_articulo_det(genero_mejor), " ", familiar_mejor, " ofrece mas ayuda, por lo que la eleccion fue incorrecta.")
+}
+
+explicaciones_base[3] <- if(eleccion_correcta) {
+  paste("Incorrecto. Aunque la justificacion puede parecer valida, la respuesta correcta es 'Si' porque",
+        obtener_articulo_det(genero_elegido), " ", familiar_elegido, " efectivamente ofrece mas dinero: \\$",
+        formatear_monetario(if(familiar_elegido == familiar_mejor) total_mejor else total_peor), ".")
+} else {
+  paste("Incorrecto. La eleccion de ", nombre, " fue incorrecta porque ", obtener_articulo_det(genero_mejor), " ", familiar_mejor,
+        " ofrece \\$", formatear_monetario(total_mejor), " mientras que ", obtener_articulo_det(genero_elegido), " ", familiar_elegido,
+        " solo ofrece \\$", formatear_monetario(total_peor), ".")
+}
+
+explicaciones_base[4] <- if(eleccion_correcta) {
+  paste("Incorrecto. La eleccion de ", nombre, " fue correcta porque ", obtener_articulo_det(genero_elegido), " ", familiar_elegido,
+        " ofrece \\$", formatear_monetario(if(familiar_elegido == familiar_mejor) total_mejor else total_peor),
+        " que es efectivamente la mayor cantidad.")
+} else {
+  paste("Incorrecto. Aunque la critica puede tener sentido, la respuesta correcta es 'No' porque la eleccion fue incorrecta:",
+        " \\$", formatear_monetario(total_mejor), " vs \\$", formatear_monetario(total_peor), ".")
+}
+
+# Aplicar el mismo orden aleatorio a las explicaciones
+explicaciones <- explicaciones_base[orden_aleatorio]
+@
+
+\begin{question}
+\Sexpr{nombre} quiere ahorrar \$\Sexpr{formatear_monetario(ahorro_mensual)} cada mes durante \Sexpr{meses} meses. Como ayuda para su proyecto, sus padres le han propuesto dos opciones, pero solo puede elegir una de ellas.
+
+\par\vspace{0.5cm}
+
+\textbf{Opcion 1 (\Sexpr{familiar1}):} Al finalizar cada mes, su \Sexpr{familiar1} le regala un porcentaje del dinero que tenga acumulado.
+
+\par\vspace{0.3cm}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Ahorro Acumulado} & \textbf{Mes} & \textbf{Porcentaje regalado} \\
+\hline
+\$\Sexpr{formatear_monetario(ahorros_acumulados[1])} & 1 & \Sexpr{porcentaje_constante}\% \\
+\hline
+\$\Sexpr{formatear_monetario(ahorros_acumulados[2])} & 2 & \Sexpr{porcentaje_constante}\% \\
+\hline
+\$\Sexpr{formatear_monetario(ahorros_acumulados[3])} & 3 & \Sexpr{porcentaje_constante}\% \\
+\hline
+\end{tabular}
+\end{center}
+
+\par\vspace{0.5cm}
+
+\textbf{Opcion 2 (\Sexpr{familiar2}):} Al finalizar cada mes, su \Sexpr{familiar2} le regala un porcentaje del dinero que tenga acumulado.
+
+\par\vspace{0.3cm}
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Ahorro Acumulado} & \textbf{Mes} & \textbf{Porcentaje regalado} \\
+\hline
+\$\Sexpr{formatear_monetario(ahorros_acumulados[1])} & 1 & \Sexpr{porcentajes_variables[1]}\% \\
+\hline
+\$\Sexpr{formatear_monetario(ahorros_acumulados[2])} & 2 & \Sexpr{porcentajes_variables[2]}\% \\
+\hline
+\$\Sexpr{formatear_monetario(ahorros_acumulados[3])} & 3 & \Sexpr{porcentajes_variables[3]}\% \\
+\hline
+\end{tabular}
+\end{center}
+
+\par\vspace{0.5cm}
+
+\Sexpr{nombre} decide elegir la opcion en la que le regalen la mayor cantidad de dinero y elige la ayuda \Sexpr{obtener_articulo(genero_elegido)} \Sexpr{familiar_elegido}. ??Es correcta la eleccion de \Sexpr{nombre}?
+
+<<echo=FALSE, results=tex>>=
+answerlist(opciones)
+@
+\end{question}
+
+\begin{solution}
+Para resolver este problema, debemos calcular la ayuda total que recibiria \Sexpr{nombre} con cada opcion.
+
+\Sexpr{espaciado_grande()}
+
+\textbf{Opcion 1 (\Sexpr{familiar1}):}
+
+Mes 1: \$\Sexpr{formatear_monetario(ahorros_acumulados[1])} $\times$ \Sexpr{porcentaje_constante}\% = \$\Sexpr{formatear_monetario(regalos_opcion1[1])}
+
+Mes 2: \$\Sexpr{formatear_monetario(ahorros_acumulados[2])} $\times$ \Sexpr{porcentaje_constante}\% = \$\Sexpr{formatear_monetario(regalos_opcion1[2])}
+
+Mes 3: \$\Sexpr{formatear_monetario(ahorros_acumulados[3])} $\times$ \Sexpr{porcentaje_constante}\% = \$\Sexpr{formatear_monetario(regalos_opcion1[3])}
+
+Total \Sexpr{familiar1}: \$\Sexpr{formatear_monetario(total_opcion1)}
+
+\Sexpr{espaciado_grande()}
+
+\textbf{Opcion 2 (\Sexpr{familiar2}):}
+
+Mes 1: \$\Sexpr{formatear_monetario(ahorros_acumulados[1])} $\times$ \Sexpr{porcentajes_variables[1]}\% = \$\Sexpr{formatear_monetario(regalos_opcion2[1])}
+
+Mes 2: \$\Sexpr{formatear_monetario(ahorros_acumulados[2])} $\times$ \Sexpr{porcentajes_variables[2]}\% = \$\Sexpr{formatear_monetario(regalos_opcion2[2])}
+
+Mes 3: \$\Sexpr{formatear_monetario(ahorros_acumulados[3])} $\times$ \Sexpr{porcentajes_variables[3]}\% = \$\Sexpr{formatear_monetario(regalos_opcion2[3])}
+
+Total \Sexpr{familiar2}: \$\Sexpr{formatear_monetario(total_opcion2)}
+
+\Sexpr{espaciado_grande()}
+
+Por lo tanto, \Sexpr{obtener_articulo_det(genero_mejor)} \Sexpr{familiar_mejor} ofrece mas ayuda (\$\Sexpr{formatear_monetario(total_mejor)} vs \$\Sexpr{formatear_monetario(total_peor)}), por lo que la eleccion de \Sexpr{nombre} fue \Sexpr{if(eleccion_correcta) "correcta" else "incorrecta"}.
+
+<<echo=FALSE, results=tex>>=
+answerlist(explicaciones)
+@
+\end{solution}
+
+%% META-INFORMATION
+%% \extype{schoice}
+%% \exsolution{\Sexpr{mchoice2string(solucion)}}
+%% \exname{Ahorro con porcentajes}
+
+\end{document}

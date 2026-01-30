@@ -1,0 +1,502 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor", "colortbl", "booktabs", "array"]
+
+# Metadatos ICFES
+icfes:
+  competencia: interpretacion_representacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: familiar
+  eje_axial: eje3
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+options(digits = 10)
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{booktabs}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Establecer semilla aleatoria
+set.seed(sample(1:100000, 1))
+```
+
+```{r generar_datos, message=FALSE, warning=FALSE, results='asis'}
+options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Función para generar datos aleatorios del problema
+generar_datos <- function() {
+  # Aleatorización de sabores de tortas (4 sabores diferentes)
+  sabores_disponibles <- list(
+    c("Nuez", "Almendra", "Chocolate", "Naranja"),
+    c("Vainilla", "Fresa", "Limón", "Coco"),
+    c("Manzana", "Durazno", "Mora", "Maracuyá"),
+    c("Café", "Caramelo", "Miel", "Canela"),
+    c("Piña", "Banano", "Uva", "Cereza")
+  )
+  sabores <- sample(sabores_disponibles, 1)[[1]]
+  
+  # Generar números de clientes que prefieren cada sabor (rango realista)
+  preferencias <- sample(120:200, 4, replace = TRUE)
+  names(preferencias) <- sabores
+  
+  # Ordenar para identificar los 2 más preferidos
+  preferencias_ordenadas <- sort(preferencias, decreasing = TRUE)
+  sabores_mas_preferidos <- names(preferencias_ordenadas)[1:2]
+  
+  # Aleatorización de días de la semana y ventas
+  dias_semana <- c("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
+  ventas_por_dia <- sample(20:50, 7, replace = TRUE)
+  names(ventas_por_dia) <- dias_semana
+  
+  # Identificar el día con mayor número de ventas
+  dia_mayor_ventas <- names(which.max(ventas_por_dia))
+  
+  # ===== ESTRATEGIA AVANZADA DE GENERACIÓN DE OPCIONES =====
+
+  # 1. POOL DE OPCIONES CORRECTAS (3 formulaciones diferentes)
+  pool_correctas <- c(
+    paste0("Se venderán el ", tolower(dia_mayor_ventas),
+           " y los sabores serán ", tolower(sabores_mas_preferidos[1]),
+           " y ", tolower(sabores_mas_preferidos[2]), "."),
+    paste0("La promoción será el ", tolower(dia_mayor_ventas),
+           " con tortas de ", tolower(sabores_mas_preferidos[1]),
+           " y ", tolower(sabores_mas_preferidos[2]), "."),
+    paste0("El día ", tolower(dia_mayor_ventas),
+           " se ofrecerán sabores ", tolower(sabores_mas_preferidos[1]),
+           " y ", tolower(sabores_mas_preferidos[2]), ".")
+  )
+
+  # Seleccionar aleatoriamente 1 opción correcta del pool
+  respuesta_correcta <- sample(pool_correctas, 1)
+
+  # 2. POOL DE DISTRACTORES PEDAGÓGICOS (6 distractores específicos)
+  otros_dias <- dias_semana[dias_semana != dia_mayor_ventas]
+  otros_sabores <- sabores[!sabores %in% sabores_mas_preferidos]
+
+  # Distractores tipo 1: Día correcto, sabores incorrectos (2 opciones)
+  distractores_tipo1 <- c(
+    paste0("Se venderán el ", tolower(dia_mayor_ventas),
+           " y los sabores serán ", tolower(otros_sabores[1]),
+           " y ", tolower(otros_sabores[2]), "."),
+    paste0("La promoción será el ", tolower(dia_mayor_ventas),
+           " con tortas de ", tolower(otros_sabores[2]),
+           " y ", tolower(sabores_mas_preferidos[2]), ".")
+  )
+
+  # Distractores tipo 2: Sabores correctos, día incorrecto (2 opciones)
+  dias_distractores <- sample(otros_dias, 2)
+  distractores_tipo2 <- c(
+    paste0("Se venderán el ", tolower(dias_distractores[1]),
+           " y los sabores serán ", tolower(sabores_mas_preferidos[1]),
+           " y ", tolower(sabores_mas_preferidos[2]), "."),
+    paste0("El día ", tolower(dias_distractores[2]),
+           " se ofrecerán sabores ", tolower(sabores_mas_preferidos[1]),
+           " y ", tolower(sabores_mas_preferidos[2]), ".")
+  )
+
+  # Distractores tipo 3: Ambos elementos incorrectos pero plausibles (2 opciones)
+  dias_distractores_extra <- sample(otros_dias[!otros_dias %in% dias_distractores], 2)
+  distractores_tipo3 <- c(
+    paste0("Se venderán el ", tolower(dias_distractores_extra[1]),
+           " y los sabores serán ", tolower(otros_sabores[1]),
+           " y ", tolower(sabores_mas_preferidos[1]), "."),
+    paste0("La promoción será el ", tolower(dias_distractores_extra[2]),
+           " con tortas de ", tolower(otros_sabores[2]),
+           " y ", tolower(otros_sabores[1]), ".")
+  )
+
+  # Pool completo de distractores
+  pool_distractores <- c(distractores_tipo1, distractores_tipo2, distractores_tipo3)
+
+  # 3. VALIDACIÓN DE UNICIDAD Y SELECCIÓN
+  # Función para calcular similitud textual
+  calcular_similitud <- function(texto1, texto2) {
+    palabras1 <- strsplit(tolower(texto1), "\\W+")[[1]]
+    palabras2 <- strsplit(tolower(texto2), "\\W+")[[1]]
+    interseccion <- length(intersect(palabras1, palabras2))
+    union <- length(union(palabras1, palabras2))
+    return(interseccion / union)
+  }
+
+  # Seleccionar 3 distractores únicos
+  distractores_seleccionados <- c()
+  tipos_seleccionados <- c()  # Para trazabilidad
+  intentos <- 0
+  max_intentos <- 50  # Reducido para eficiencia
+
+  while(length(distractores_seleccionados) < 3 && intentos < max_intentos) {
+    intentos <- intentos + 1
+
+    # Seleccionar un distractor aleatorio
+    candidato_idx <- sample(1:length(pool_distractores), 1)
+    candidato <- pool_distractores[candidato_idx]
+
+    # Determinar tipo de distractor para trazabilidad
+    if(candidato_idx <= 2) {
+      tipo_candidato <- "dia_correcto_sabores_incorrectos"
+    } else if(candidato_idx <= 4) {
+      tipo_candidato <- "sabores_correctos_dia_incorrecto"
+    } else {
+      tipo_candidato <- "ambos_incorrectos_plausibles"
+    }
+
+    # Verificar unicidad con respuesta correcta
+    similitud_correcta <- calcular_similitud(candidato, respuesta_correcta)
+
+    # Verificar unicidad con distractores ya seleccionados
+    es_unico <- TRUE
+    if(length(distractores_seleccionados) > 0) {
+      for(distractor_existente in distractores_seleccionados) {
+        similitud_distractor <- calcular_similitud(candidato, distractor_existente)
+        if(similitud_distractor > 0.4) {  # Umbral más realista del 60% de diferencia
+          es_unico <- FALSE
+          break
+        }
+      }
+    }
+
+    # Agregar si es único y suficientemente diferente
+    if(es_unico && similitud_correcta < 0.4) {
+      distractores_seleccionados <- c(distractores_seleccionados, candidato)
+      tipos_seleccionados <- c(tipos_seleccionados, tipo_candidato)
+
+      # Remover del pool para evitar reselección
+      pool_distractores <- pool_distractores[-candidato_idx]
+    }
+  }
+
+  # Si no se pudieron generar 3 distractores únicos, usar los primeros 3 del pool
+  if(length(distractores_seleccionados) < 3) {
+    distractores_seleccionados <- pool_distractores[1:3]
+    tipos_seleccionados <- c("dia_correcto_sabores_incorrectos",
+                           "sabores_correctos_dia_incorrecto",
+                           "ambos_incorrectos_plausibles")
+  }
+
+  # 4. ALEATORIZACIÓN Y POSICIONAMIENTO
+  todas_opciones <- c(respuesta_correcta, distractores_seleccionados)
+  orden_opciones <- sample(1:4)
+  opciones_mezcladas <- todas_opciones[orden_opciones]
+  posicion_correcta <- which(orden_opciones == 1)
+
+  # 5. DOCUMENTACIÓN Y TRAZABILIDAD
+  # Crear mapeo de tipos de distractores para cada posición
+  tipos_opciones <- c("respuesta_correcta", tipos_seleccionados)
+  tipos_mezclados <- tipos_opciones[orden_opciones]
+  
+  return(list(
+    sabores = sabores,
+    preferencias = preferencias,
+    sabores_mas_preferidos = sabores_mas_preferidos,
+    dias_semana = dias_semana,
+    ventas_por_dia = ventas_por_dia,
+    dia_mayor_ventas = dia_mayor_ventas,
+    opciones = opciones_mezcladas,
+    respuesta_correcta = respuesta_correcta,
+    posicion_correcta = posicion_correcta,
+    # Información de trazabilidad para debugging y análisis pedagógico
+    tipos_opciones = tipos_mezclados,
+    pool_correcta_usada = which(pool_correctas == respuesta_correcta),
+    distractores_tipos = tipos_seleccionados,
+    validacion_unicidad = list(
+      intentos_realizados = intentos,
+      distractores_generados = length(distractores_seleccionados)
+    )
+  ))
+}
+
+# Generar datos para este ejercicio
+datos <- generar_datos()
+```
+
+```{r prueba_diversidad, include=FALSE}
+# Prueba de diversidad de versiones y validación de estrategia avanzada
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  pools_correctas_usadas <- c()
+  tipos_distractores_generados <- list()
+
+  # Prueba con muestra más pequeña para eficiencia
+  n_pruebas <- 100
+
+  for(i in 1:n_pruebas) {
+    datos_test <- generar_datos()
+    versiones[[i]] <- digest::digest(datos_test)
+
+    # Recopilar estadísticas de la estrategia avanzada
+    pools_correctas_usadas <- c(pools_correctas_usadas, datos_test$pool_correcta_usada)
+    tipos_distractores_generados[[i]] <- datos_test$distractores_tipos
+  }
+
+  # Test 1: Diversidad básica de versiones
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= n_pruebas * 0.8,  # Al menos 80% únicas
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas de", n_pruebas, "pruebas."))
+
+  # Test 2: Distribución de pools de respuestas correctas
+  distribucion_pools <- table(pools_correctas_usadas)
+  expect_true(length(distribucion_pools) >= 2,  # Al menos 2 pools diferentes usados
+              info = paste("Insuficiente diversidad en pools correctas:",
+                          paste(names(distribucion_pools), collapse = ", ")))
+
+  # Test 3: Diversidad en tipos de distractores
+  tipos_unicos <- unique(unlist(tipos_distractores_generados))
+  expect_true(length(tipos_unicos) >= 3,
+              info = paste("Insuficiente diversidad en tipos de distractores:",
+                          paste(tipos_unicos, collapse = ", ")))
+
+  # Test 4: Validación básica de unicidad (muestra pequeña)
+  # Probar solo unas pocas versiones para validar que las opciones son diferentes
+  opciones_problematicas <- 0
+  for(i in 1:min(10, n_pruebas)) {
+    datos_test <- generar_datos()
+    opciones <- datos_test$opciones
+
+    # Verificar que las 4 opciones no sean idénticas
+    opciones_unicas <- length(unique(opciones))
+    if(opciones_unicas < 4) {
+      opciones_problematicas <- opciones_problematicas + 1
+    }
+  }
+
+  expect_true(opciones_problematicas <= 2,  # Máximo 2 versiones problemáticas de 10
+              info = paste("Demasiadas versiones con opciones duplicadas:", opciones_problematicas))
+
+  # Test 5: Validación de estructura básica
+  datos_muestra <- generar_datos()
+  expect_true(length(datos_muestra$opciones) == 4,
+              info = "Las opciones generadas no tienen exactamente 4 elementos")
+
+  expect_true(datos_muestra$posicion_correcta >= 1 && datos_muestra$posicion_correcta <= 4,
+              info = paste("Posición correcta fuera de rango:", datos_muestra$posicion_correcta))
+
+  expect_true(length(datos_muestra$tipos_opciones) == 4,
+              info = "Los tipos de opciones no tienen exactamente 4 elementos")
+})
+```
+
+```{r crear_tabla_tikz, results='asis'}
+# Crear tabla de preferencias usando TikZ
+tabla_preferencias <- paste0("
+\\begin{tikzpicture}
+\\node[inner sep=0pt] {
+  \\begin{tabular}{|c|c|}
+    \\hline
+    \\textbf{Sabor} & \\textbf{Número de clientes que} \\\\
+    & \\textbf{prefieren el sabor} \\\\
+    \\hline
+    ", datos$sabores[1], " & ", datos$preferencias[datos$sabores[1]], " clientes \\\\
+    \\hline
+    ", datos$sabores[2], " & ", datos$preferencias[datos$sabores[2]], " clientes \\\\
+    \\hline
+    ", datos$sabores[3], " & ", datos$preferencias[datos$sabores[3]], " clientes \\\\
+    \\hline
+    ", datos$sabores[4], " & ", datos$preferencias[datos$sabores[4]], " clientes \\\\
+    \\hline
+  \\end{tabular}
+};
+\\end{tikzpicture}
+")
+
+# Crear gráfico de barras usando TikZ
+max_ventas <- max(datos$ventas_por_dia)
+escala_y <- 50 / max_ventas  # Escalar para que la barra más alta sea 50 unidades
+
+grafico_barras <- paste0("
+\\begin{tikzpicture}[scale=0.8]
+  \\draw[->] (0,0) -- (8,0) node[right] {Día};
+  \\draw[->] (0,0) -- (0,6) node[above] {Tortas vendidas};
+  
+  % Etiquetas del eje Y
+  \\foreach \\y in {0,10,20,30,40,50}
+    \\draw (-0.1,\\y/10) -- (0.1,\\y/10) node[left] {\\y};
+  
+  % Barras y etiquetas
+  \\draw[fill=lightgray] (0.5,0) rectangle (1,", datos$ventas_por_dia[1] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[1], "};
+  \\draw[fill=lightgray] (1.5,0) rectangle (2,", datos$ventas_por_dia[2] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[2], "};
+  \\draw[fill=lightgray] (2.5,0) rectangle (3,", datos$ventas_por_dia[3] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[3], "};
+  \\draw[fill=lightgray] (3.5,0) rectangle (4,", datos$ventas_por_dia[4] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[4], "};
+  \\draw[fill=lightgray] (4.5,0) rectangle (5,", datos$ventas_por_dia[5] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[5], "};
+  \\draw[fill=lightgray] (5.5,0) rectangle (6,", datos$ventas_por_dia[6] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[6], "};
+  \\draw[fill=lightgray] (6.5,0) rectangle (7,", datos$ventas_por_dia[7] * escala_y / 10, ") node[above] {", datos$ventas_por_dia[7], "};
+  
+  % Etiquetas del eje X
+  \\node[below] at (0.75,-0.3) {Lun};
+  \\node[below] at (1.75,-0.3) {Mar};
+  \\node[below] at (2.75,-0.3) {Mié};
+  \\node[below] at (3.75,-0.3) {Jue};
+  \\node[below] at (4.75,-0.3) {Vie};
+  \\node[below] at (5.75,-0.3) {Sáb};
+  \\node[below] at (6.75,-0.3) {Dom};
+\\end{tikzpicture}
+")
+```
+
+Question
+========
+
+Una pastelería realizó una encuesta para conocer los sabores de tortas preferidos por sus clientes. La tabla muestra los resultados de la encuesta.
+
+```{r tabla_preferencias, echo=FALSE, results='asis'}
+include_tikz(tabla_preferencias, 
+             name = "tabla_preferencias",
+             markup = "markdown",
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "8cm")
+```
+
+Además, el gerente elaboró una gráfica que muestra el número de tortas vendidas cada día de la última semana.
+
+**Tortas vendidas durante la última semana**
+
+```{r grafico_ventas, echo=FALSE, results='asis'}
+include_tikz(grafico_barras, 
+             name = "grafico_ventas",
+             markup = "markdown",
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "10cm")
+```
+
+La pastelería planea realizar una promoción con tortas de los 2 sabores preferidos por los clientes, para venderlas el día de la semana con el mayor número de ventas. ¿Cuál día de la semana se venderán las tortas y de qué sabores serán?
+
+```{r opciones, echo=FALSE, results='asis'}
+answerlist(datos$opciones, markup = "markdown")
+```
+
+Solution
+========
+
+Para resolver este problema, necesitamos:
+
+1. **Identificar los 2 sabores más preferidos** según la tabla de encuesta
+2. **Identificar el día con mayor número de ventas** según el gráfico de barras
+
+**Análisis de la tabla de preferencias:**
+
+```{r analisis_tabla, echo=FALSE, results='asis'}
+preferencias_ordenadas <- sort(datos$preferencias, decreasing = TRUE)
+cat("- ", names(preferencias_ordenadas)[1], ": ", preferencias_ordenadas[1], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[2], ": ", preferencias_ordenadas[2], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[3], ": ", preferencias_ordenadas[3], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[4], ": ", preferencias_ordenadas[4], " clientes\n")
+```
+
+Los 2 sabores más preferidos son: **`r names(preferencias_ordenadas)[1]`** y **`r names(preferencias_ordenadas)[2]`**.
+
+**Análisis del gráfico de ventas:**
+
+```{r analisis_grafico, echo=FALSE, results='asis'}
+ventas_ordenadas <- sort(datos$ventas_por_dia, decreasing = TRUE)
+cat("El día con mayor número de ventas es: **", names(ventas_ordenadas)[1], "** con ", ventas_ordenadas[1], " tortas vendidas.\n")
+```
+
+**Respuesta:** Se venderán el `r tolower(datos$dia_mayor_ventas)` y los sabores serán `r tolower(datos$sabores_mas_preferidos[1])` y `r tolower(datos$sabores_mas_preferidos[2])`.
+
+```{r solucion_detallada, echo=FALSE, results='asis'}
+# Generar explicaciones específicas basadas en tipos de distractores
+explicaciones <- character(4)
+
+for(i in 1:4) {
+  if(i == datos$posicion_correcta) {
+    explicaciones[i] <- "**Correcto.** Identifica correctamente tanto el día con mayor número de ventas como los 2 sabores más preferidos según los datos presentados."
+  } else {
+    tipo_distractor <- datos$tipos_opciones[i]
+
+    if(tipo_distractor == "dia_correcto_sabores_incorrectos") {
+      explicaciones[i] <- "**Incorrecto.** Identifica correctamente el día con mayor número de ventas, pero no selecciona los 2 sabores más preferidos según la tabla de encuesta."
+    } else if(tipo_distractor == "sabores_correctos_dia_incorrecto") {
+      explicaciones[i] <- "**Incorrecto.** Identifica correctamente los 2 sabores más preferidos, pero no selecciona el día con mayor número de ventas según el gráfico."
+    } else if(tipo_distractor == "ambos_incorrectos_plausibles") {
+      explicaciones[i] <- "**Incorrecto.** No identifica correctamente ni el día con mayor número de ventas ni los 2 sabores más preferidos. Revisa cuidadosamente ambos datos."
+    } else {
+      explicaciones[i] <- "**Incorrecto.** Error en la interpretación de los datos presentados en la tabla y/o el gráfico."
+    }
+  }
+}
+
+answerlist(explicaciones, markup = "markdown")
+```
+
+```{r debugging_info, include=FALSE}
+# ===== INFORMACIÓN DE DEBUGGING Y TRAZABILIDAD =====
+# Esta sección proporciona información detallada sobre la generación de opciones
+# para análisis pedagógico y debugging del ejercicio
+
+cat("=== TRAZABILIDAD DE GENERACIÓN DE OPCIONES ===\n")
+cat("Pool de respuesta correcta utilizada:", datos$pool_correcta_usada, "\n")
+cat("Respuesta correcta seleccionada:", datos$respuesta_correcta, "\n")
+cat("Posición de respuesta correcta:", datos$posicion_correcta, "\n")
+cat("\n=== TIPOS DE DISTRACTORES GENERADOS ===\n")
+for(i in 1:4) {
+  if(i != datos$posicion_correcta) {
+    cat("Opción", LETTERS[i], "- Tipo:", datos$tipos_opciones[i], "\n")
+    cat("  Texto:", datos$opciones[i], "\n")
+  }
+}
+cat("\n=== VALIDACIÓN DE UNICIDAD ===\n")
+cat("Intentos realizados:", datos$validacion_unicidad$intentos_realizados, "\n")
+cat("Distractores únicos generados:", datos$validacion_unicidad$distractores_generados, "\n")
+
+# Verificación adicional de diversidad
+cat("\n=== VERIFICACIÓN DE DIVERSIDAD ===\n")
+for(i in 1:3) {
+  for(j in (i+1):4) {
+    similitud <- length(intersect(
+      strsplit(tolower(datos$opciones[i]), "\\W+")[[1]],
+      strsplit(tolower(datos$opciones[j]), "\\W+")[[1]]
+    )) / length(union(
+      strsplit(tolower(datos$opciones[i]), "\\W+")[[1]],
+      strsplit(tolower(datos$opciones[j]), "\\W+")[[1]]
+    ))
+    cat("Similitud entre opción", LETTERS[i], "y", LETTERS[j], ":", round(similitud, 3), "\n")
+  }
+}
+```
+
+Meta-information
+================
+exname: pasteleria_sabores_ventas_estadistica
+extype: schoice
+exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
+exshuffle: TRUE
+exsection: Estadística/Interpretación de datos/Gráficos y tablas

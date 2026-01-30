@@ -1,0 +1,386 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{booktabs}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(reticulate)
+library(dplyr)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Configuración para chunks de Python
+knitr::knit_engines$set(python = function(options) {
+  knitr::engine_output(options, options$code, '')
+})
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python3"), required = TRUE)
+```
+
+```{r DefiniciónDeVariables, message=FALSE, warning=FALSE, results='asis', include=FALSE}
+# Establecer semilla aleatoria
+set.seed(sample(1:10000, 1))
+
+# Generar datos para el gráfico de barras
+codigo_barras <- "
+import matplotlib.pyplot as plt
+import random
+
+# Datos de los años y valores de exportaciones
+# Crear lista de años desde 1950 hasta 2023
+year = list(range(1950, 2024))
+
+# Generar un índice inicial aleatorio en la lista year
+start_index = random.randint(0, len(year) - 5)
+
+# Seleccionar 5 valores de la lista year, comenzando desde el índice inicial y respetando la secuencia de menor a mayor en incrementos de a 1
+selected_years = [year[i] for i in range(start_index, start_index + 5)]
+
+valor_aleatorio = [selected_years[0], selected_years[1], selected_years[2], selected_years[3], selected_years[4]]
+
+year_aleatorio = random.choice(valor_aleatorio)
+
+valorex = [round(x / 10, 1) for x in range(101, 911, 1)]
+
+exports = sorted(random.sample(valorex, 5))
+
+# Crear un gráfico de barras
+plt.figure(figsize=(8, 5))
+bars = plt.bar(selected_years, exports, color='#404040', zorder=2)
+
+# Añadir los valores sobre cada barra
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
+
+# Títulos y etiquetas
+plt.title(f'Exportaciones anuales totales de Tebailandia\\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
+plt.xlabel('Año')
+plt.ylabel('Exportaciones (en millones de tebos)')
+
+# Estilo
+plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Guardar el gráfico
+plt.savefig('GraficoBarras.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoBarras.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.close()
+"
+
+py_run_string(codigo_barras)
+```
+
+Question
+========
+
+\
+La imagen muestra dos gráficos relacionados con las exportaciones de Tebailandia, un país que usa "tebos" como su moneda.
+\
+
+![](GraficoBarras.png){width=80%}
+
+\
+
+```{r generar_grafico_torta, echo=FALSE, results='hide'}
+codigo_torta <- "
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Datos para las porciones del gráfico circular.
+labels = [
+    'maíz', 'trigo', 'arroz', 'soja', 'cebada', 'sorgo', 'leche', 'azúcar',
+    'carne de res', 'cerdo', 'aves de corral', 'seda', 'oro', 'platino',
+    'pescado', 'plátanos', 'manzanas', 'naranjas', 'uvas', 'limones',
+    'piñas', 'mangos', 'aguacates', 'tomates', 'papas', 'cebollas',
+    'ajo', 'zanahorias', 'pepinos', 'pimientos', 'aceitunas', 'café',
+    'té', 'tabaco', 'lana', 'celulares'
+]
+
+selectots = random.sample(labels, 8)
+
+def generar_lista_suma_100():
+    numeros = [5] * 8
+    restantes = 60
+
+    while restantes > 0:
+        for i in range(8):
+            adicion = random.randint(0, restantes)
+            numeros[i] += adicion
+            restantes -= adicion
+            if restantes == 0:
+                break
+
+    random.shuffle(numeros)
+    return numeros
+
+sizes = generar_lista_suma_100()
+
+def generate_light_hex_color():
+    r = random.randint(80, 255)
+    g = random.randint(80, 255)
+    b = random.randint(80, 255)
+    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
+
+predefined_colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+    '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2',
+    '#A3E4D7', '#F9E79F', '#D5A6BD', '#AED6F1', '#A9DFBF',
+    '#FAD7A0', '#D2B4DE', '#AED6F1', '#A9CCE3', '#F7DC6F',
+    '#85C1E9', '#D5DBDB', '#F8D7DA', '#D1ECF1', '#D4EDDA'
+]
+
+coloress = predefined_colors + [generate_light_hex_color() for _ in range(10)]
+colors = random.sample(coloress, 8)
+
+producto_index = random.randint(0, 7)
+explode = [0.1 if i == producto_index else 0 for i in range(8)]
+
+fig1, ax1 = plt.subplots(figsize=(6, 5))
+ax1.pie(sizes, explode=explode, labels=selectots, colors=colors,
+        autopct='%1.0f%%', pctdistance=0.85, labeldistance=1.1,
+        shadow=True, startangle=15)
+ax1.axis('equal')
+ax1.set_title(f'Distribución de exportaciones de\\\\n Tebailandia en {year_aleatorio}', pad=20)
+
+plt.savefig('GraficoTorta.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoTorta.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.close()
+
+# Calcular xol
+year_index = -1
+for i, year in enumerate(selected_years):
+    if year_aleatorio == year:
+        year_index = i
+        break
+
+if year_index == -1:
+    raise ValueError(f'Año aleatorio {year_aleatorio} no encontrado en selected_years')
+
+xol = round(exports[year_index] * (sizes[producto_index] / 100), 2)
+producto_seleccionado = selectots[producto_index]
+"
+
+py_run_string(codigo_torta)
+```
+
+![](GraficoTorta.png){width=70%}
+
+\
+
+```{r DePython-a-R, message=FALSE, warning=FALSE, results='asis', include=FALSE}
+
+producto_seleccionado <- py$producto_seleccionado
+anio <- py$year_aleatorio
+xol <- py$xol
+
+# Calcular opciones distractoras basadas en xol
+# Asumimos que xol ya ha sido calculado en tu código
+
+# Distractor 1: 95% de xol
+err1 <- xol * 0.95
+
+# Distractor 2: 105% de xol
+err2 <- xol * 1.05
+
+# Distractor 3: Escoger entre 80% o 120% de xol de forma aleatoria
+# para mayor variabilidad
+set.seed(NULL) # Para que la selección sea aleatoria en cada ejecución
+err3_options <- c(0.8, 1.2)
+err3 <- xol * sample(err3_options, 1)
+
+# Redondear los valores para mantener la consistencia
+err1 <- round(err1, 2)
+err2 <- round(err2, 2)
+err3 <- round(err3, 2)
+
+# Verificar que todas las opciones sean diferentes
+opciones <- c(xol, err1, err2, err3)
+if (length(unique(opciones)) != 4) {
+  warning("Algunas opciones de respuesta son idénticas. Ajustando...")
+  # Ajustar ligeramente las opciones duplicadas
+  for (i in 2:4) {
+    while (opciones[i] %in% opciones[1:(i-1)]) {
+      opciones[i] <- opciones[i] + 0.01
+    }
+  }
+  err1 <- opciones[2]
+  err2 <- opciones[3]
+  err3 <- opciones[4]
+}
+```
+
+¿Cuál fue el valor de `r producto_seleccionado` exportado desde Tebailandia en `r anio`?
+\
+
+Answerlist
+----------
+
+- `r xol` millones de tebos.
+
+- `r err1` millones de tebos.
+
+- `r err2` millones de tebos.
+
+- `r err3` millones de tebos.
+
+
+Solution
+========
+\
+
+**Análisis detallado del problema:**
+
+Para resolver este problema de interpretación de gráficos estadísticos, necesitamos combinar información de dos representaciones gráficas diferentes: un gráfico de barras y un gráfico circular (torta).
+
+\
+**Paso 1: Identificación de los datos en el gráfico de barras**
+
+El primer gráfico muestra las exportaciones anuales totales de Tebailandia en millones de tebos para el período `r py$selected_years[1]`-`r py$selected_years[5]`. Los valores específicos para cada año son:
+
+```{r mostrar_datos_barras, echo=FALSE, results='asis'}
+cat("- Año", py$selected_years[1], ":", py$exports[1], "millones de tebos\n")
+cat("- Año", py$selected_years[2], ":", py$exports[2], "millones de tebos\n")
+cat("- Año", py$selected_years[3], ":", py$exports[3], "millones de tebos\n")
+cat("- Año", py$selected_years[4], ":", py$exports[4], "millones de tebos\n")
+cat("- Año", py$selected_years[5], ":", py$exports[5], "millones de tebos\n")
+```
+
+\
+**Paso 2: Identificación del año específico y valor total**
+
+Para el año `r anio`, el valor total de exportaciones fue de:
+
+```{r calcular_valor_total, echo=FALSE, results='asis'}
+# Encontrar el valor correspondiente al año aleatorio
+if (anio == py$selected_years[1]) {
+  valor_total <- py$exports[1]
+} else if (anio == py$selected_years[2]) {
+  valor_total <- py$exports[2]
+} else if (anio == py$selected_years[3]) {
+  valor_total <- py$exports[3]
+} else if (anio == py$selected_years[4]) {
+  valor_total <- py$exports[4]
+} else if (anio == py$selected_years[5]) {
+  valor_total <- py$exports[5]
+}
+
+cat("**Valor total de exportaciones en", anio, ":", valor_total,
+    "millones de tebos**\n")
+```
+
+\
+**Paso 3: Análisis del gráfico circular (distribución porcentual)**
+
+El segundo gráfico muestra la distribución porcentual de las exportaciones de Tebailandia en `r anio`. Los productos y sus respectivos porcentajes son:
+
+```{r mostrar_distribucion, echo=FALSE, results='asis'}
+for (i in 1:8) {
+  cat("- ", py$selectots[i], ": ", py$sizes[i], "%\n", sep = "")
+}
+```
+
+\
+**Paso 4: Identificación del producto específico**
+
+El producto por el cual se pregunta es **`r producto_seleccionado`**, que representa el **`r py$sizes[py$producto_index + 1]`%** del total de exportaciones en `r anio`.
+
+\
+**Paso 5: Cálculo matemático**
+
+Para calcular el valor específico de `r producto_seleccionado` exportado en `r anio`, aplicamos la siguiente fórmula:
+
+**Valor del producto = Valor total × Porcentaje del producto**
+
+Sustituyendo los valores:
+
+```{r calculo_detallado, echo=FALSE, results='asis'}
+cat("Valor de", producto_seleccionado, "= ", valor_total, " millones de tebos × ",
+    py$sizes[py$producto_index + 1], "%\n")
+cat("Valor de", producto_seleccionado, "= ", valor_total, " × ", py$sizes[py$producto_index + 1] / 100, "\n")
+cat("Valor de", producto_seleccionado, "= ", valor_total * (py$sizes[py$producto_index + 1] / 100),
+    " millones de tebos\n")
+```
+
+\
+**Paso 6: Verificación del resultado**
+
+El cálculo nos da: **`r xol` millones de tebos**
+
+**Verificación de coherencia:**
+
+- El resultado (`r xol` millones) es menor que el total (`r valor_total` millones), lo cual es lógico ya que representa solo una fracción del total.
+- El porcentaje de `r producto_seleccionado` (`r py$sizes[py$producto_index + 1]`%) multiplicado por el total debe dar exactamente nuestro resultado.
+- Verificación: `r valor_total` × `r py$sizes[py$producto_index + 1]`% = `r valor_total` × `r py$sizes[py$producto_index + 1]/100` = `r xol` (correcto)
+
+\
+**Paso 7: Análisis de las opciones distractoras**
+
+Las otras opciones presentadas son:
+
+- `r err1` millones de tebos (aproximadamente 95% del valor correcto)
+- `r err2` millones de tebos (aproximadamente 105% del valor correcto)
+- `r err3` millones de tebos (aproximadamente `r ifelse(err3 < xol, "80%", "120%")` del valor correcto)
+
+Estas opciones están diseñadas para capturar errores comunes como:
+
+- Errores de cálculo por redondeo prematuro
+- Confusión en la aplicación de porcentajes
+- Lectura incorrecta de los gráficos
+
+\
+**Conclusión:**
+
+Por lo tanto, el valor de **`r producto_seleccionado`** exportado desde Tebailandia en **`r anio`** fue de **`r xol` millones de tebos**.
+
+Este problema evalúa competencias fundamentales en:
+
+1. **Lectura e interpretación de gráficos estadísticos** (barras y circulares)
+2. **Aplicación de porcentajes** en contextos reales
+3. **Cálculos matemáticos** con números decimales
+4. **Análisis crítico** de la información presentada en múltiples formatos
+
+
+Meta-information
+================
+
+exname: Problemattic-PISA-Exportaciones-01(single-choice)
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
