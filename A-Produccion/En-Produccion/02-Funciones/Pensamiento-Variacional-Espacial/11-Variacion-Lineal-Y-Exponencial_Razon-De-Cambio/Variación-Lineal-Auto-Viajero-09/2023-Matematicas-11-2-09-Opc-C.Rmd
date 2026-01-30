@@ -78,7 +78,14 @@ Explicación detallada:
 
 Meta-information
 ============
-exname: Rapidez Media
+exname: Rapidez Media - Error en Unidades
 extype: schoice
 exsolution: 0010
 exshuffle: TRUE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Numerico-Variacional
+exextra[Afirmacion]: Validar procedimientos y estrategias matematicas utilizadas para dar solucion a problemas
+exextra[Evidencia]: Identifica errores en procedimientos o en la solucion de un problema
+exextra[Nivel]: 2

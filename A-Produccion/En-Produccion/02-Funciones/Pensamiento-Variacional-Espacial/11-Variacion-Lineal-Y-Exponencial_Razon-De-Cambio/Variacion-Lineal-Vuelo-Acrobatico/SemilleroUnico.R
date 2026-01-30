@@ -2,13 +2,13 @@
 library(exams)
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "vuelo_acrobatico_mejorado_D.Rmd"
+archivo_examen <- "vuelo_acrobatico_mejorado_B.Rmd"
 copias <- 1
 numpreg <- 2
 semilla <- sample(100:1e8, 1)
 set.seed(semilla)
 dir_salida <- "salida"
-dir_ejercicios <- "ejercicios"
+dir_ejercicios <- "."
 
 # Nombre del archivo sin la extensión .Rmd
 nombre_sin_extension <- sub("\\.Rmd$", "", archivo_examen)

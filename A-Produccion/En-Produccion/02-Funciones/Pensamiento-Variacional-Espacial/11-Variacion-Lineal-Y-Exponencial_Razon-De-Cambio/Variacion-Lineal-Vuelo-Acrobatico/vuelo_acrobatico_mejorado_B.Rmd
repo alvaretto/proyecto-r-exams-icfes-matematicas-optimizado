@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 ```{r inicio, include=FALSE}
 library(exams)
 library(reticulate)
