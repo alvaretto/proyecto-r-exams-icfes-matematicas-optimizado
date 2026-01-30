@@ -1,22 +1,10 @@
 ---
 output:
-  html_document: default
   word_document: default
+  html_document: default
   pdf_document: default
 ---
 ```{r inicio, include=FALSE}
-# Configuración para todos los formatos de salida (patrón de Ejemplo_01.Rmd)
-Sys.setlocale(category = "LC_NUMERIC", locale = "C")
-options(OutDec = ".")
-
-# Configurar el motor LaTeX globalmente
-options(tikzLatex = "pdflatex")
-options(tikzXelatex = FALSE)
-options(tikzLatexPackages = c(
-  "\\usepackage{tikz}",
-  "\\usepackage{colortbl}"
-))
-
 library(exams)
 library(reticulate)
 library(digest)
@@ -29,33 +17,31 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.showtext = FALSE,
   fig.cap = "",
-  fig.keep = 'all',
-  dev = c("png", "pdf"),
-  dpi = 150
+  fig.keep = 'all',  # Importante: mantener todas las figuras
+  out.width = "100%"  # Controlar el ancho de salida
 )
 
-# Configuración para chunks de Python (patrón Ejemplo_01.Rmd)
+# Configuración específica para chunks de Python
 knitr::knit_engines$set(python = function(options) {
   knitr::engine_output(options, options$code, '')
 })
 
-# Asegurar que Python esté correctamente configurado (usar Sys.which como Ejemplo_01.Rmd)
+# Asegurarse que Python esté correctamente configurado
 use_python(Sys.which("python"), required = TRUE)
 ```
 
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
-options(OutDec = ".")  # Asegurar punto decimal
-
 # Definición de variables para el problema
 # Vector con posibles valores para los tiempos (en segundos)
 # Tiempo de aumento de altura (25-35 seg)
-tiempos_aumento <- as.integer(sample(seq(25, 35, by = 5), 1))
-tiempos_pirueta <- as.integer(sample(seq(3, 7, by = 1), 1))
-tiempos_giro <- as.integer(sample(seq(15, 25, by = 5), 1))
-tiempos_aterrizaje <- as.integer(sample(seq(20, 30, by = 5), 1))
+tiempos_aumento <- sample(seq(25, 35, by = 5), 1)
+tiempos_pirueta <- sample(seq(3, 7, by = 1), 1)    # Tiempo de pirueta (3-7 seg)
+tiempos_giro <- sample(seq(15, 25, by = 5), 1)     # Tiempo de giro (15-25 seg)
+# Tiempo de aterrizaje (20-30 seg)
+tiempos_aterrizaje <- sample(seq(20, 30, by = 5), 1)
 
 # Alturas máximas posibles (en metros)
-altura_maxima <- as.integer(sample(seq(100, 200, by = 20), 1))
+altura_maxima <- sample(seq(100, 200, by = 20), 1)
 
 # Definir variables para mostrar en el texto del problema
 tiempo_total <- tiempos_aumento + tiempos_pirueta + tiempos_giro + tiempos_aterrizaje
@@ -85,26 +71,15 @@ solucion[indice_correcto] <- 1
 # Crear una variable para almacenar los chunks de Python
 py_chunks <- character(4)
 
-# Configuración general para las gráficas CON variables de R interpoladas
-# Patrón correcto: definir variables Python al inicio del código
-py_config <- paste0("
-import matplotlib
-matplotlib.use('Agg')
+# Configuración general para las gráficas
+py_config <- "
 import matplotlib.pyplot as plt
 import numpy as np
 
 # Configuración para eliminar etiquetas
 plt.rcParams['figure.figsize'] = (8, 5)
 plt.rcParams['figure.titlesize'] = 0
-
-# Variables pasadas desde R (valores escalares)
-t_aumento = ", tiempos_aumento, "
-t_pirueta = ", tiempos_pirueta, "
-t_giro = ", tiempos_giro, "
-t_aterrizaje = ", tiempos_aterrizaje, "
-h_max = ", altura_maxima, "
-t_total = ", tiempo_total, "
-")
+"
 
 # Colores para las gráficas correctas
 colores_correctas <- c("'blue'", "'darkgreen'", "'purple'")
@@ -116,28 +91,28 @@ grosores_linea <- c(2, 2.5, 3)
 # Generar el código Python para cada gráfica
 for (i in 1:4) {
   tipo_grafica <- orden_graficas[i]
-
+  
   # Gráficas correctas (11, 12, 13)
   if (tipo_grafica > 10) {
     num_correcta <- tipo_grafica - 10
-
+    
     py_chunks[i] <- paste0(py_config, "
-# Definir puntos clave para la gráfica correcta
+# Definir puntos clave para la gráfica correcta ", num_correcta, "
 # Fase 1: Aumento constante de altura
-x1 = np.array([0, t_aumento])
-y1 = np.array([0, h_max])
+x1 = np.array([0, ", tiempos_aumento, "])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Pirueta (con pico correcto)
-x2 = np.array([t_aumento, t_aumento + t_pirueta/2, t_aumento + t_pirueta])
-y2 = np.array([h_max, h_max*1.5, h_max/2])
+x2 = np.array([", tiempos_aumento, ", ", tiempos_aumento + tiempos_pirueta/2, ", ", tiempos_aumento + tiempos_pirueta, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima*1.5, ", ", altura_maxima/2, "])  # Pico más alto
 
 # Fase 3: Giro a altura constante
-x3 = np.array([t_aumento + t_pirueta, t_aumento + t_pirueta + t_giro])
-y3 = np.array([h_max/2, h_max/2])
+x3 = np.array([", tiempos_aumento + tiempos_pirueta, ", ", tiempos_aumento + tiempos_pirueta + tiempos_giro, "])
+y3 = np.array([", altura_maxima/2, ", ", altura_maxima/2, "])
 
 # Fase 4: Aterrizaje (descenso constante)
-x4 = np.array([t_aumento + t_pirueta + t_giro, t_total])
-y4 = np.array([h_max/2, 0])
+x4 = np.array([", tiempos_aumento + tiempos_pirueta + tiempos_giro, ", ", tiempo_total, "])
+y4 = np.array([", altura_maxima/2, ", 0])
 
 # Crear figura
 fig = plt.figure()
@@ -158,12 +133,12 @@ ax.plot(x4, y4, color=color, linestyle=estilo, linewidth=grosor)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_total + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempo_total + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
   } 
@@ -174,16 +149,16 @@ plt.close()
       py_chunks[i] <- paste0(py_config, "
 # Gráfica incorrecta 1: Mantener altura en vez de hacer pirueta
 # Fase 1: Aumento constante de altura
-x1 = np.array([0, t_aumento])
-y1 = np.array([0, h_max])
+x1 = np.array([0, ", tiempos_aumento, "])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Mantener altura en vez de hacer pirueta (incorrecto)
-x2 = np.array([t_aumento, t_aumento + t_pirueta + t_giro])
-y2 = np.array([h_max, h_max])
+x2 = np.array([", tiempos_aumento, ", ", tiempos_aumento + tiempos_pirueta + tiempos_giro, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima, "])
 
 # Fase 3: Aterrizaje (descenso constante)
-x3 = np.array([t_aumento + t_pirueta + t_giro, t_total])
-y3 = np.array([h_max, 0])
+x3 = np.array([", tiempos_aumento + tiempos_pirueta + tiempos_giro, ", ", tiempo_total, "])
+y3 = np.array([", altura_maxima, ", 0])
 
 # Crear figura
 fig = plt.figure()
@@ -198,12 +173,12 @@ ax.plot(x3, y3, 'b-', linewidth=2)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_total + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempo_total + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
     } 
@@ -212,20 +187,20 @@ plt.close()
       py_chunks[i] <- paste0(py_config, "
 # Gráfica incorrecta 2: Solo muestra descenso en la pirueta sin el pico
 # Fase 1: Aumento constante de altura
-x1 = np.array([0, t_aumento])
-y1 = np.array([0, h_max])
+x1 = np.array([0, ", tiempos_aumento, "])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Pirueta (solo descenso constante, incorrecto)
-x2 = np.array([t_aumento, t_aumento + t_pirueta])
-y2 = np.array([h_max, h_max/2])
+x2 = np.array([", tiempos_aumento, ", ", tiempos_aumento + tiempos_pirueta, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima/2, "])  # Solo descenso sin pico
 
 # Fase 3: Giro a altura constante
-x3 = np.array([t_aumento + t_pirueta, t_aumento + t_pirueta + t_giro])
-y3 = np.array([h_max/2, h_max/2])
+x3 = np.array([", tiempos_aumento + tiempos_pirueta, ", ", tiempos_aumento + tiempos_pirueta + tiempos_giro, "])
+y3 = np.array([", altura_maxima/2, ", ", altura_maxima/2, "])
 
 # Fase 4: Aterrizaje (descenso constante)
-x4 = np.array([t_aumento + t_pirueta + t_giro, t_total])
-y4 = np.array([h_max/2, 0])
+x4 = np.array([", tiempos_aumento + tiempos_pirueta + tiempos_giro, ", ", tiempo_total, "])
+y4 = np.array([", altura_maxima/2, ", 0])
 
 # Crear figura
 fig = plt.figure()
@@ -241,12 +216,12 @@ ax.plot(x4, y4, 'g-', linewidth=2)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_total + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempo_total + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
     }
@@ -255,24 +230,24 @@ plt.close()
       py_chunks[i] <- paste0(py_config, "
 # Gráfica incorrecta 3: Con una fase de vuelo adicional
 # Fase 1: Aumento constante de altura
-x1 = np.array([0, t_aumento])
-y1 = np.array([0, h_max])
+x1 = np.array([0, ", tiempos_aumento, "])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Pirueta (descenso constante)
-x2 = np.array([t_aumento, t_aumento + t_pirueta])
-y2 = np.array([h_max, h_max/3])
+x2 = np.array([", tiempos_aumento, ", ", tiempos_aumento + tiempos_pirueta, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima/3, "])
 
 # Fase EXTRA: Elevación adicional (incorrecto)
-x_extra = np.array([t_aumento + t_pirueta, t_aumento + t_pirueta + 5])
-y_extra = np.array([h_max/3, h_max])
+x_extra = np.array([", tiempos_aumento + tiempos_pirueta, ", ", tiempos_aumento + tiempos_pirueta + 5, "])
+y_extra = np.array([", altura_maxima/3, ", ", altura_maxima, "])
 
 # Fase 3: Giro a altura constante
-x3 = np.array([t_aumento + t_pirueta + 5, t_aumento + t_pirueta + 5 + t_giro])
-y3 = np.array([h_max, h_max])
+x3 = np.array([", tiempos_aumento + tiempos_pirueta + 5, ", ", tiempos_aumento + tiempos_pirueta + 5 + tiempos_giro, "])
+y3 = np.array([", altura_maxima, ", ", altura_maxima, "])
 
 # Fase 4: Aterrizaje (descenso constante)
-x4 = np.array([t_aumento + t_pirueta + 5 + t_giro, t_aumento + t_pirueta + 5 + t_giro + t_aterrizaje])
-y4 = np.array([h_max, 0])
+x4 = np.array([", tiempos_aumento + tiempos_pirueta + 5 + tiempos_giro, ", ", tiempos_aumento + tiempos_pirueta + 5 + tiempos_giro + tiempos_aterrizaje, "])
+y4 = np.array([", altura_maxima, ", 0])
 
 # Crear figura
 fig = plt.figure()
@@ -289,12 +264,12 @@ ax.plot(x4, y4, color='red', linestyle='-', linewidth=2)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_aumento + t_pirueta + 5 + t_giro + t_aterrizaje + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempos_aumento + tiempos_pirueta + 5 + tiempos_giro + tiempos_aterrizaje + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
     }
@@ -303,27 +278,27 @@ plt.close()
       py_chunks[i] <- paste0(py_config, "
 # Gráfica incorrecta 4: Pirueta con pico pero sin descenso
 # Fase 1: Aumento constante de altura
-x1 = np.array([0, t_aumento])
-y1 = np.array([0, h_max])
+x1 = np.array([0, ", tiempos_aumento, "])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Pirueta (con pico pero sin descenso, incorrecto)
-x2 = np.array([t_aumento, t_aumento + t_pirueta/2, t_aumento + t_pirueta])
-y2 = np.array([h_max, h_max*1.5, h_max])
+x2 = np.array([", tiempos_aumento, ", ", tiempos_aumento + tiempos_pirueta/2, ", ", tiempos_aumento + tiempos_pirueta, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima*1.5, ", ", altura_maxima, "])  # Pico pero vuelve a altura inicial
 
 # Fase 3: Giro a altura constante
-x3 = np.array([t_aumento + t_pirueta, t_aumento + t_pirueta + t_giro])
-y3 = np.array([h_max, h_max])
+x3 = np.array([", tiempos_aumento + tiempos_pirueta, ", ", tiempos_aumento + tiempos_pirueta + tiempos_giro, "])
+y3 = np.array([", altura_maxima, ", ", altura_maxima, "])
 
 # Fase 4: Aterrizaje (descenso constante)
-x4 = np.array([t_aumento + t_pirueta + t_giro, t_total])
-y4 = np.array([h_max, 0])
+x4 = np.array([", tiempos_aumento + tiempos_pirueta + tiempos_giro, ", ", tiempo_total, "])
+y4 = np.array([", altura_maxima, ", 0])
 
 # Crear figura
 fig = plt.figure()
 ax = fig.add_subplot(111)
 
 # Graficar cada segmento
-ax.plot(x1, y1, 'C1', linewidth=2)
+ax.plot(x1, y1, 'C1', linewidth=2)  # C1 es un color predefinido en matplotlib
 ax.plot(x2, y2, 'C1', linewidth=2)
 ax.plot(x3, y3, 'C1', linewidth=2)
 ax.plot(x4, y4, 'C1', linewidth=2)
@@ -332,12 +307,12 @@ ax.plot(x4, y4, 'C1', linewidth=2)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_total + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempo_total + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
     }
@@ -346,23 +321,23 @@ plt.close()
       py_chunks[i] <- paste0(py_config, "
 # Gráfica incorrecta 5: Oscilaciones durante el giro
 # Fase 1: Aumento constante de altura
-x1 = np.array([0, t_aumento])
-y1 = np.array([0, h_max])
+x1 = np.array([0, ", tiempos_aumento, "])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Pirueta (con pico correcto)
-x2 = np.array([t_aumento, t_aumento + t_pirueta/2, t_aumento + t_pirueta])
-y2 = np.array([h_max, h_max*1.5, h_max/2])
+x2 = np.array([", tiempos_aumento, ", ", tiempos_aumento + tiempos_pirueta/2, ", ", tiempos_aumento + tiempos_pirueta, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima*1.5, ", ", altura_maxima/2, "])  # Pico más alto
 
 # Fase 3: Giro con oscilaciones (incorrecto)
-t = np.linspace(t_aumento + t_pirueta, t_aumento + t_pirueta + t_giro, 100)
-oscilacion = (h_max/2) * 0.2 * np.sin(10 * (t - (t_aumento + t_pirueta)))
-altura_base = np.ones_like(t) * (h_max/2)
+t = np.linspace(", tiempos_aumento + tiempos_pirueta, ", ", tiempos_aumento + tiempos_pirueta + tiempos_giro, ", 100)
+oscilacion = ", altura_maxima/2, " * 0.2 * np.sin(10 * (t - (", tiempos_aumento + tiempos_pirueta, ")))
+altura_base = np.ones_like(t) * ", altura_maxima/2, "
 x3 = t
 y3 = altura_base + oscilacion
 
 # Fase 4: Aterrizaje (descenso constante)
-x4 = np.array([t_aumento + t_pirueta + t_giro, t_total])
-y4 = np.array([h_max/2, 0])
+x4 = np.array([", tiempos_aumento + tiempos_pirueta + tiempos_giro, ", ", tiempo_total, "])
+y4 = np.array([", altura_maxima/2, ", 0])
 
 # Crear figura
 fig = plt.figure()
@@ -378,12 +353,12 @@ ax.plot(x4, y4, color='purple', linestyle='-', linewidth=2)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_total + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempo_total + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
     }
@@ -391,27 +366,24 @@ plt.close()
       # Gráfica incorrecta 6: Tiempos incorrectos en las fases
       py_chunks[i] <- paste0(py_config, "
 # Gráfica incorrecta 6: Tiempos incorrectos en las fases
-# Calcular tiempos incorrectos dentro de Python
-tiempo_incorrecto1 = t_aumento / 2
-pirueta_doble = t_pirueta * 2
-fin_fase2 = tiempo_incorrecto1 + pirueta_doble
-fin_fase3 = fin_fase2 + t_giro + (t_aumento - tiempo_incorrecto1)
+# Tiempo incorrecto para la primera fase (más corto)
+tiempo_incorrecto1 = ", tiempos_aumento/2, "
 
 # Fase 1: Aumento constante de altura (tiempo incorrecto)
 x1 = np.array([0, tiempo_incorrecto1])
-y1 = np.array([0, h_max])
+y1 = np.array([0, ", altura_maxima, "])
 
 # Fase 2: Pirueta (con pico correcto pero tiempo incorrecto)
-x2 = np.array([tiempo_incorrecto1, tiempo_incorrecto1 + t_pirueta, fin_fase2])
-y2 = np.array([h_max, h_max*1.5, h_max/2])
+x2 = np.array([tiempo_incorrecto1, tiempo_incorrecto1 + ", tiempos_pirueta*2, "/2, tiempo_incorrecto1 + ", tiempos_pirueta*2, "])
+y2 = np.array([", altura_maxima, ", ", altura_maxima*1.5, ", ", altura_maxima/2, "])  # Pico más alto
 
 # Fase 3: Giro a altura constante (tiempo más largo para compensar)
-x3 = np.array([fin_fase2, fin_fase3])
-y3 = np.array([h_max/2, h_max/2])
+x3 = np.array([tiempo_incorrecto1 + ", tiempos_pirueta*2, ", tiempo_incorrecto1 + ", tiempos_pirueta*2, " + ", tiempos_giro, " + (", tiempos_aumento, " - tiempo_incorrecto1)])
+y3 = np.array([", altura_maxima/2, ", ", altura_maxima/2, "])
 
 # Fase 4: Aterrizaje (descenso constante)
-x4 = np.array([fin_fase3, t_total])
-y4 = np.array([h_max/2, 0])
+x4 = np.array([tiempo_incorrecto1 + ", tiempos_pirueta*2, " + ", tiempos_giro, " + (", tiempos_aumento, " - tiempo_incorrecto1), ", tiempo_total, "])
+y4 = np.array([", altura_maxima/2, ", 0])
 
 # Crear figura
 fig = plt.figure()
@@ -427,34 +399,21 @@ ax.plot(x4, y4, color='brown', linestyle='-', linewidth=2)
 ax.set_xlabel('Segundos', fontweight='bold')
 ax.set_ylabel('Altura (m)', fontweight='bold')
 ax.grid(True, linestyle='--', alpha=0.7)
-ax.set_xlim(0, t_total + 5)
-ax.set_ylim(0, h_max * 1.8)
+ax.set_xlim(0, ", tiempo_total + 5, ")
+ax.set_ylim(0, ", altura_maxima * 1.8, ")
 
 # Mostrar gráfico
-plt.tight_layout(pad=1.0)
-plt.savefig('grafica_", i, ".png', dpi=100, bbox_inches='tight')
+plt.subplots_adjust(top=1, bottom=0.1, left=0.1, right=0.9)
+plt.savefig('grafica_", i, ".png', dpi=100)
 plt.close()
 ")
     }
   }
 }
 
-# Ejecutar cada gráfica y VALIDAR que se generó el PNG
+# Ejecutar todos los chunks de Python para generar las gráficas
 for (i in 1:4) {
-  png_file <- paste0("grafica_", i, ".png")
-
-  # Eliminar archivo anterior si existe
-  if (file.exists(png_file)) file.remove(png_file)
-
-  # Ejecutar código Python
   py_run_string(py_chunks[i])
-
-  # Validar que el PNG se generó
-  if (!file.exists(png_file)) {
-    stop(paste0("ERROR CRÍTICO: No se generó ", png_file,
-                "\nTipo gráfica: ", orden_graficas[i],
-                "\nCódigo Python (primeros 500 chars):\n", substr(py_chunks[i], 1, 500)))
-  }
 }
 ```
 
@@ -470,15 +429,10 @@ En una entrevista para una cadena de televisión, un piloto de un avión de acro
 Answerlist
 ----------
 ```{r Answerlist, results='asis', echo=FALSE}
-# Siguiendo patrón de Ejemplo_01.Rmd funcional
-cat("-\n")
-cat("![](grafica_1.png)\n\n")
-cat("-\n")
-cat("![](grafica_2.png)\n\n")
-cat("-\n")
-cat("![](grafica_3.png)\n\n")
-cat("-\n")
-cat("![](grafica_4.png)\n\n")
+for (i in 1:4) {
+  cat("-\n<br/>\n")
+  cat(paste0("![Gráfica ", i, "](grafica_", i, ".png)\n\n"))
+}
 ```
 
 Solution

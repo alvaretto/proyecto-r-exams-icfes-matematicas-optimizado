@@ -1,8 +1,0 @@
-﻿\usetikzlibrary{3d}
-
-\begin{tikzpicture}[x={5mm}, y={5mm}, z={(20:5mm)}, green!75!gray, line width=1.025pt]
-    \draw[dashed] (3, 6, 2) -- (0, 0, 2) -- (6, 0, 2);
-    \draw[dashed] (0, 0, 0) -- (0, 0, 2);
-    \draw (0, 0, 0) -- (6, 0, 0) -- (3, 6, 0) -- cycle;
-    \draw (6, 0, 0) -- (6, 0, 2) -- (3, 6, 2) -- (3, 6, 0);
-\end{tikzpicture}

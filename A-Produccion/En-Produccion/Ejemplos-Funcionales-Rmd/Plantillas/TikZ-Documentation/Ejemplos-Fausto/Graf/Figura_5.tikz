@@ -1,8 +1,0 @@
-\begin{tikzpicture}
-    \draw[dashed] (2, 0) arc(0:180:2cm and .5cm);
-    \draw (0, 5) -- (0, 0) -- (2, 0);
-    \draw[<->] (-2.15, 5) -- (-2.15, 0) node[midway, left] {$h$};
-    \draw[<->] (0, -.15) -- (2, -.15) node[midway, below] {$r$};
-    \draw[<->] (.1, 5) -- (2.1, 0) node[midway, right] {$g$};
-    \fill[top color=white, bottom color=cyan, opacity=.35, draw=black] (-2, 0) arc(180:360:2cm and .5cm) -- (0, 5) -- cycle;
-\end{tikzpicture}

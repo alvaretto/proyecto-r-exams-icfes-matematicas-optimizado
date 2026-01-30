@@ -1,12 +1,10 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
+%
 \documentclass[
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -37,6 +35,8 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \makeatletter
 \newsavebox\pandoc@box
@@ -55,6 +55,7 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{booktabs}
@@ -72,19 +73,18 @@
 
 \begin{document}
 
+\includegraphics[width=14cm,height=\textheight,keepaspectratio]{grafica_poblaciones_paises.png}
+
 \section{Question}\label{question}
 
 La gráfica muestra información de las poblaciones de 5 países desde 1960
 hasta 2013.
 
-\includegraphics[width=14cm,height=\textheight,keepaspectratio]{grafica_poblaciones_paises.png}
-
-\hfill\break
 Los datos representan la evolución demográfica de diferentes naciones a
 lo largo de más de cinco décadas, mostrando distintas tendencias de
 crecimiento poblacional.
 
-Aproximadamente, ¿en qué año las poblaciones del País 4 y del País 5
+Aproximadamente, ¿en qué año las poblaciones del País 2 y del País 5
 fueron iguales?
 
 \subsection{Answerlist}\label{answerlist}
@@ -92,26 +92,47 @@ fueron iguales?
 \begin{itemize}
 \tightlist
 \item
-  2004
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{1988}
+  \tightlist
+  \item
+  \end{enumerate}
 \item
-  2010
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{1959}
+  \tightlist
+  \item
+  \end{enumerate}
 \item
-  2013
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{1989}
+  \tightlist
+  \item
+  \end{enumerate}
 \item
-  2014
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \setcounter{enumi}{1994}
+  \tightlist
+  \item
+  \end{enumerate}
 \end{itemize}
 
 \section{Solution}\label{solution}
 
 Para resolver este problema, debemos identificar el punto donde las
-líneas del País 4 y del País 5 se intersectan en la gráfica.
+líneas del País 2 (línea discontinua negra) y del País 5 (línea continua
+naranja con círculos) se intersectan en la gráfica.
 
 \textbf{Análisis visual de las tendencias:}
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{País 4}: Inicia con una población menor pero presenta un
+  \textbf{País 2}: Inicia con una población menor pero presenta un
   crecimiento más acelerado
 \item
   \textbf{País 5}: Comienza con una población mayor pero su crecimiento
@@ -121,35 +142,26 @@ líneas del País 4 y del País 5 se intersectan en la gráfica.
 \textbf{Identificación del punto de intersección:}
 
 Observando cuidadosamente la gráfica, podemos ver que las dos líneas se
-cruzan aproximadamente en el año \textbf{2004}, donde ambas poblaciones
-alcanzan un valor similar.
+cruzan aproximadamente en el año \textbf{1989}, donde ambas poblaciones
+alcanzan un valor similar de aproximadamente 35-37 millones de
+habitantes.
 
-\textbf{Verificación:}
-
-\begin{itemize}
-\tightlist
-\item
-  Antes de 2004: País 5 \textgreater{} País 4
-\item
-  Después de 2004: País 4 \textgreater{} País 5
-\end{itemize}
+\textbf{Verificación:} - Antes de 1989: País 5 \textgreater{} País 2 -
+Después de 1989: País 2 \textgreater{} País 5
 
 \subsection{Answerlist}\label{answerlist-1}
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Verdadero}. El año 2004 corresponde al punto de intersección
-  visual entre las líneas del País 4 y País 5 .
+  \textbf{Verdadero}. El año 1989 corresponde al punto de intersección
+  visual entre las líneas del País 2 y País 5.
 \item
-  \textbf{Falso}. El año 2010 no corresponde al punto de intersección de
-  las líneas.
+  \textbf{Falso}. 1960 - inicio del período analizado.
 \item
-  \textbf{Falso}. El año 2013 no corresponde al punto de intersección de
-  las líneas.
+  \textbf{Falso}. 1990 - década de referencia común.
 \item
-  \textbf{Falso}. El año 2014 no corresponde al punto de intersección de
-  las líneas.
+  \textbf{Falso}. 1995 - confusión con otro cruce.
 \end{itemize}
 
 \section{Meta-information}\label{meta-information}

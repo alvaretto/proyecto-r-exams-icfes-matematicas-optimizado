@@ -1,9 +1,0 @@
-﻿\usetikzlibrary{3d}
-
-\begin{tikzpicture}[x={5mm}, y={5mm}, z={(20:5mm)}, green!75!gray, line width=1.025pt]
-    \draw[dashed] (0, 0, 0) coordinate (O) -- (0, 0, 2) coordinate (A) -- (6, 0, 2) coordinate (B);
-    \draw[dashed] (A) -- (0, 8, 2) coordinate (C);
-    \draw (O) -- (6, 0, 0) coordinate (D) -- (6, 8, 0) coordinate (E) -- (0, 8, 0) coordinate (F) -- cycle;
-    \draw (D) -- (B) -- (6, 8, 2) coordinate (G) -- (E);
-    \draw (F) -- (C) -- (G);
-\end{tikzpicture}
