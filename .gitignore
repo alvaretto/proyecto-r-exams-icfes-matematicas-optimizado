@@ -258,3 +258,4 @@ config_personal.txt
 #    git count-objects -vH
 #
 # =============================================================================
+firebase-debug.log
