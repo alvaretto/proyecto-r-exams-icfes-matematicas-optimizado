@@ -259,3 +259,26 @@ config_personal.txt
 #
 # =============================================================================
 firebase-debug.log
+
+# =============================================================================
+# ARCHIVOS GENERADOS Y BINARIOS (añadido 2026-02-03)
+# =============================================================================
+
+# HTML generados desde Markdown (se regeneran fácilmente)
+*.html
+!docs/**/*.html
+
+# Binarios de herramientas IA/CLI (nunca en Git)
+acli
+augment-cli
+
+# Backups de configuración Claude
+.claude-backup*/
+.claude-backup-*/
+
+# Archivos zip de configuración
+.claude.zip
+.claudedoc.zip
+
+# Archivos docx vacíos/placeholder
+avances-*.docx
