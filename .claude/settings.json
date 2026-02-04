@@ -6,19 +6,49 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '🔤 TILDES: más ángulo función gráfica dispersión solución ecuación número cálculo según información relación variación descripción'"
+            "command": "echo '🔤 TILDES: más ángulo función gráfica dispersión solución ecuación número cálculo según información relación variación descripción'",
+            "statusMessage": "Recordatorio de tildes"
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-edit-testing.sh \"$ARGS_FILE\"",
+            "timeout": 60,
+            "statusMessage": "Verificando tests antes de editar..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-bash-testing.sh \"$BASH_COMMAND\"",
+            "timeout": 120,
+            "statusMessage": "Validando comando bash..."
           }
         ]
       }
     ],
     "PostToolUse": [
       {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-edit-testing.sh \"$ARGS_FILE\"",
+            "timeout": 60,
+            "statusMessage": "Validando cambios..."
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-exams2-validation.sh",
-            "timeout": 120
+            "timeout": 120,
+            "statusMessage": "Validando matemática + preview visual..."
           }
         ]
       }

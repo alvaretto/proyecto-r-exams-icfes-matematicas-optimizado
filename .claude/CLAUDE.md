@@ -149,14 +149,48 @@ outputs/                         # Archivos temporales de renderizado
 └── hooks/                       # Hooks de validación
 ```
 
-## ⚙️ Hooks Configurados
+## ⚙️ Hooks Configurados (Sistema Automático de Testing)
 
 Ver configuración completa en @.claude/settings.json
+
+### 🛡️ Sistema de Testing Automático PERMANENTE
+
+**TODOS los cambios son validados automáticamente.** Sistema con tolerancia cero a regresiones.
+
+#### PreToolUse - Edit/Write
+- **Hook:** `.claude/hooks/pre-edit-testing.sh`
+- **Cuándo:** Antes de editar componentes críticos
+- **Acción:** Ejecuta tests relevantes, BLOQUEA si fallan
+- **Componentes críticos:** `.claude/scripts/*`, `.claude/hooks/*`, `.claude/rules/*`, `tests/*`
+
+#### PostToolUse - Edit/Write
+- **Hook:** `.claude/hooks/post-edit-testing.sh`
+- **Cuándo:** Después de cualquier Edit/Write
+- **Acción:** Valida que el cambio no rompió tests
+- **Archivos monitoreados:** Scripts R, .Rmd, tests, configuración Claude
+
+#### PreToolUse - Bash (git commit/push)
+- **Hook:** `.claude/hooks/pre-bash-testing.sh`
+- **Cuándo:** Antes de commit o push
+- **Acción:**
+  - **Commit:** Ejecuta suite completa, RECHAZA si falla
+  - **Push:** Valida suite + verifica sin cambios pendientes
+- **⚠️ PROHIBIDO:** `git commit --no-verify`
+
+#### PostToolUse - Bash (exams2*)
+- **Hook:** `.claude/hooks/post-exams2-validation.sh`
+- **Cuándo:** Después de `exams2pdf()`, `exams2html()`, etc.
+- **Acción FASE 2A:** Validación matemática automática
+- **Acción FASE 2B:** Preview PNG automático
+- **Claude DEBE:** Leer PNG + Verificar 5 coherencias + Solicitar aprobación
 
 ### Pre-Edit/Write: Regla de Oro
 @.claude/rules/codigo-rmd.md
 
-### Post-Bash: Validación exams2*
+### Testing Obligatorio y Automático
+@.claude/rules/testing-obligatorio.md
+
+### Post-Bash: Validación exams2* (FASE 2A + 2B)
 @.claude/rules/ciclo-validacion.md
 
 ## 🔗 Referencias Rápidas
@@ -175,6 +209,19 @@ Ver especificaciones completas en @.claude/rules/codigo-rmd.md
 **Ultima actualizacion**: 2026-01-01
 **Version**: 2.5.1 (Sincronización Documentación)
 **Basado en**: Documentacion oficial Claude Code (nov 2025)
+
+## Cambios v2.7
+- **NUEVO**: Sistema de Testing Automático PERMANENTE
+- **Hooks configurados** para validación automática en Edit/Write/Bash
+- **4 hooks activos**:
+  - `pre-edit-testing.sh` - Valida antes de editar componentes críticos
+  - `post-edit-testing.sh` - Valida después de cambios
+  - `pre-bash-testing.sh` - Bloquea commit/push sin tests pasando
+  - `post-exams2-validation.sh` - Validación matemática + preview automáticos
+- **Regla obligatoria**: `.claude/rules/testing-obligatorio.md`
+- **Documentación flujo**: `.claude/docs/FLUJO_AUTOMATICO_TESTING.md`
+- **Garantía**: IMPOSIBLE romper el sistema, validación automática en TODOS los cambios
+- **PROHIBIDO**: `git commit --no-verify` (evasión de protecciones)
 
 ## Cambios v2.6
 - **NUEVO**: Ecosistema de Testing Agresivo implementado
