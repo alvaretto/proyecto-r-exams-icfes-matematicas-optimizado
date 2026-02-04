@@ -98,6 +98,51 @@ exextra[Componente]: [clasificación]
 ```yaml
 extype: cloze
 exclozetype: num|schoice|mchoice|string
+```
+
+---
+
+#### `/validar-pedagogico` 🆕
+**Propósito**: Análisis pedagógico avanzado basado en evidencias científicas y taxonomías cognitivas modernas
+
+**Uso**:
+```bash
+/validar-pedagogico [ruta-al-ejercicio.Rmd]
+```
+
+**Requisitos previos**:
+- Archivo .Rmd generado y renderizado
+- (Opcional) Ciclo de Validación completado
+
+**Qué hace**:
+1. **Módulo 1**: Análisis cognitivo multinivel (Bloom, SOLO, Webb DOK)
+2. **Módulo 2**: Validación ICFES (6 dimensiones obligatorias)
+3. **Módulo 3**: Análisis avanzado de distractores (6 tipologías)
+4. **Módulo 4**: Optimización pedagógica (7 principios científicos)
+5. **Módulo 5**: Meta-evaluación (puntuación 0-100)
+
+**Output**: Reporte completo con:
+- Clasificación taxonómica triple
+- Validación Marco Conceptual ICFES 2026
+- Evaluación de distractores por tipología de error
+- Aplicación de principios de aprendizaje
+- Puntuación compuesta con desglose
+- Recomendaciones específicas de mejora
+
+**Modelo**: Claude Opus 4.5 (máxima capacidad cognitiva)
+
+**Documentos consultados automáticamente**:
+- `errores-conceptuales-matematicas.md`
+- `principios-aprendizaje-evidencias.md`
+- `taxonomias-cognitivas-integradas.md`
+- `marco-conceptual-icfes-2026.md`
+- `diseno-distractores-tipologia.md`
+
+**Diferencia con `/analizar-icfes`**:
+- `/analizar-icfes`: Clasificación inicial ANTES de crear .Rmd (input: imagen)
+- `/validar-pedagogico`: Análisis pedagógico profundo DESPUÉS de crear .Rmd (input: archivo completo)
+
+---
 exsolution: [valores separados por |]
 extol: [tolerancias numéricas]
 exname: nombre_ejercicio

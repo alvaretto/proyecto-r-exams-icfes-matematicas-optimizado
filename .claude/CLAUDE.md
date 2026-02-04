@@ -26,6 +26,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
+- `/validar-pedagogico` 🆕 - Análisis pedagógico avanzado basado en evidencias
 - `/auto-refinar-grafico [tikz|python|r]`
 - `/estado-graficador`, `/exportar-graficos`, `/promover-ejercicio`
 
