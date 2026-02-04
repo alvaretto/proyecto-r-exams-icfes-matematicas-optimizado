@@ -458,6 +458,71 @@ Score = 0.25·RC + 0.20·AC + 0.20·CD + 0.20·OP + 0.15·IN
 
 ---
 
+### MÓDULO 6: Análisis Psicométrico TRI (OPCIONAL - Requiere Datos de Pilotaje)
+
+Este módulo se activa SOLO si hay datos de respuestas de estudiantes disponibles (n ≥ 200).
+
+#### 6.1 Estimación de Parámetros
+
+**Base de conocimiento**: @.claude/docs/teoria-respuesta-item.md
+
+**Modelos TRI**:
+- **1PL (Rasch)**: Solo dificultad (b)
+- **2PL**: Dificultad (b) + Discriminación (a) [RECOMENDADO]
+- **3PL**: b + a + Pseudo-azar (c)
+
+**Parámetros objetivo**:
+
+| Nivel ICFES | Dificultad (b) | Discriminación (a) | Azar (c) |
+|-------------|----------------|-------------------|----------|
+| **N1** | -2.0 a -1.0 | ≥ 1.0 | 0.15-0.30 |
+| **N2** | -1.0 a 0.0 | ≥ 1.2 | 0.15-0.30 |
+| **N3** | 0.0 a 1.0 | ≥ 1.5 | 0.15-0.30 |
+| **N4** | 1.0 a 2.0 | ≥ 1.5 | 0.15-0.30 |
+
+#### 6.2 Diagnóstico de Problemas TRI
+
+**Señales de alerta**:
+- a < 0: Ítem inverso (CRÍTICO - eliminar)
+- a < 0.5: Discriminación muy baja (revisar)
+- |b| > 3.0: Dificultad extrema (poco útil)
+- c > 0.35: Pistas inadvertidas (revisar)
+
+#### 6.3 Validación de Ajuste
+
+**Indicadores**:
+- INFIT/OUTFIT: Rango aceptable [0.7, 1.3]
+- Chi²: p > 0.05 (buen ajuste)
+- Residuos: Diferencias predicción vs observación
+
+#### 6.4 Output TRI (Si Datos Disponibles)
+
+```markdown
+## Módulo 6: Análisis Psicométrico TRI
+
+### Parámetros Estimados (Modelo 2PL, n=567)
+- Dificultad (b): 0.45 [Objetivo N2: -1.0 a 0.0] ⚠️
+- Discriminación (a): 1.32 [Objetivo: ≥1.2] ✓
+- Información máxima: I(θ=0.45) = 0.44
+
+### Ajuste del Modelo
+- INFIT: 0.98 [0.7-1.3] ✓
+- OUTFIT: 1.05 [0.7-1.3] ✓
+- Chi²: p = 0.23 ✓
+
+### Evaluación
+✓ Discriminación excelente
+⚠️ Dificultad más alta que objetivo (considerar facilitar)
+✓ Ajuste satisfactorio
+
+### Curva Característica del Ítem (CCI)
+[Gráfico generado si datos disponibles]
+```
+
+**Nota**: Si no hay datos de pilotaje, este módulo se omite del análisis.
+
+---
+
 ## 📋 Proceso de Análisis Completo
 
 ### FASE 1: Input y Comprensión
@@ -615,11 +680,12 @@ El agente se activa automáticamente cuando detecta:
 Este agente consulta documentación especializada:
 
 ### Documentos de Referencia
-- @.claude/docs/marco-conceptual-icfes-2026.md
+- @.claude/docs/marco-conceptual-icfes-2026.md (7 dimensiones: incluye "Tarea")
 - @.claude/docs/taxonomias-cognitivas-integradas.md
 - @.claude/docs/errores-conceptuales-matematicas.md
 - @.claude/docs/principios-aprendizaje-evidencias.md
 - @.claude/docs/diseno-distractores-tipologia.md
+- @.claude/docs/teoria-respuesta-item.md (TRI - Módulo 6 opcional)
 
 ### Integración con Sistema Existente
 - Complementa (no reemplaza) a ClasificadorICFES
@@ -660,8 +726,12 @@ Ver ejemplo completo en: @.claude/docs/ejemplo-analisis-pedagogico-completo.md
 
 ---
 
-**Versión**: 1.0.0
+**Versión**: 1.1.0
 **Fecha**: 2026-02-04
 **Modelo**: claude-opus-4-5 (máxima capacidad cognitiva)
-**Actualización**: Marco Conceptual ICFES 2026 + Literatura científica reciente
+**Actualización**: Marco Conceptual ICFES 2026 (7 dimensiones) + TRI + Literatura científica reciente
+**Cambios v1.1**:
+- Dimensión "Tarea" agregada (7ª dimensión ICFES)
+- Módulo 6 TRI opcional para análisis psicométrico post-pilotaje
+- Documento teoria-respuesta-item.md integrado
 **Autor**: Sistema automatizado con base en mejores prácticas internacionales

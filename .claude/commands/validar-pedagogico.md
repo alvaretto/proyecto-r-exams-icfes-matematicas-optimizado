@@ -15,7 +15,7 @@ Evaluar y optimizar la calidad pedagógica de ejercicios ICFES mediante:
 - Optimización con 7 principios de aprendizaje basados en evidencias
 - Puntuación cuantitativa 0-100
 
-## 📊 Los 5 Módulos de Análisis
+## 📊 Los 6 Módulos de Análisis (Módulo 6 opcional)
 
 ### Módulo 1: Análisis Cognitivo Multinivel
 Clasifica el ejercicio usando 3 taxonomías:
@@ -24,12 +24,13 @@ Clasifica el ejercicio usando 3 taxonomías:
 - **Webb's DOK**: 4 niveles de profundidad (Recall → Extended Thinking)
 
 ### Módulo 2: Validación Conceptual ICFES
-Verifica las 6 dimensiones obligatorias:
+Verifica las 7 dimensiones obligatorias:
 - Competencia (Interpretación, Formulación, Argumentación)
 - Componente (Numérico, Espacial-Métrico, Aleatorio, Variacional)
 - Afirmación (específica del componente)
 - Evidencia (acción observable)
 - Nivel (1-4)
+- Tarea (descripción en una oración de la labor matemática específica)
 - Tipo (SCHOICE, CLOZE)
 
 ### Módulo 3: Análisis Avanzado de Distractores
@@ -110,6 +111,7 @@ El agente realizará:
 | Afirmación | [...] | ✓/✗ | [...] |
 | Evidencia | [...] | ✓/✗ | [...] |
 | Nivel | [...] | ✓/✗ | [...] |
+| Tarea | [...] | ✓/✗ | [...] |
 | Tipo | [...] | ✓/✗ | [...] |
 
 ## 3. ANÁLISIS DE DISTRACTORES
@@ -144,7 +146,17 @@ Principios aplicados:
 
 Calificación: [A+/A/B/C/D/F]
 
-## 6. RECOMENDACIONES
+## 6. ANÁLISIS TRI (OPCIONAL - Si hay datos de pilotaje)
+
+| Parámetro | Valor Estimado | Objetivo | Estado |
+|-----------|----------------|----------|--------|
+| Dificultad (b) | [X] | [Rango según nivel] | ✓/✗ |
+| Discriminación (a) | [X] | ≥ 1.0 | ✓/✗ |
+| Pseudo-azar (c) | [X] | 0.15-0.30 | ✓/✗ |
+
+**Curva Característica del Ítem (CCI)**: [Descripción o gráfico]
+
+## 7. RECOMENDACIONES
 
 ### Fortalezas
 - [...]
@@ -219,7 +231,12 @@ El agente consulta automáticamente:
 
 ---
 
-**Versión**: 1.0.0
+**Versión**: 1.1.0
 **Fecha**: 2026-02-04
 **Agente**: PedagogoICFES
 **Modelo**: Claude Opus 4.5
+
+**Cambios v1.1**:
+- Dimensión "Tarea" agregada (7ª dimensión ICFES)
+- Módulo 6 TRI opcional para análisis psicométrico post-pilotaje
+- Integración con teoria-respuesta-item.md

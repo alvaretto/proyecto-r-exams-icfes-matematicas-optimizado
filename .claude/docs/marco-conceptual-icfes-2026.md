@@ -6,9 +6,9 @@ Documentación oficial del Marco Conceptual ICFES para evaluación de matemátic
 
 ---
 
-## 📋 Estructura del Marco Conceptual (6 Dimensiones Obligatorias)
+## 📋 Estructura del Marco Conceptual (7 Dimensiones Obligatorias)
 
-Todo ejercicio ICFES DEBE especificar las 6 dimensiones:
+Todo ejercicio ICFES DEBE especificar las 7 dimensiones:
 
 ```yaml
 exextra[Competencia]: [Interpretación|Formulación|Argumentación]
@@ -16,6 +16,7 @@ exextra[Componente]: [Aleatorio|Cambio|Datos|Espacial|Medida]
 exextra[Afirmacion]: [Descripción específica según componente]
 exextra[Evidencia]: [Acción observable del estudiante]
 exextra[Nivel]: [1|2|3|4]
+exextra[Tarea]: [Descripción en una única oración de la labor matemática específica]
 exextra[Type]: [SCHOICE|CLOZE]
 ```
 
@@ -422,7 +423,135 @@ El estudiante [VERBO DE ACCIÓN] [OBJETO MATEMÁTICO] [CONTEXTO/CONDICIÓN]
 
 ---
 
-## 5️⃣ DIMENSIÓN 5: Niveles de Desempeño
+## 5️⃣ DIMENSIÓN 5: Tarea
+
+### Definición Oficial
+
+> **Tarea es la descripción en UNA ÚNICA ORACIÓN de la labor matemática específica
+> que debe realizar el estudiante para llegar a la respuesta correcta.**
+
+**Importante**:
+- NO listar pasos o procedimientos
+- NO describir el algoritmo completo
+- SÍ capturar la esencia de la acción matemática
+- SÍ ser específico pero conciso
+
+### Características de una Buena Tarea
+
+1. **Concisa**: Una sola oración
+2. **Específica**: Describe LA labor central, no generalidades
+3. **Matemática**: Usa vocabulario matemático preciso
+4. **Observable**: Describe acción cognitiva concreta
+5. **Evita listado**: No usa "primero..., luego..., finalmente..."
+
+### Formato Estándar
+
+```
+[VERBO MATEMÁTICO] + [OBJETO MATEMÁTICO] + [CONDICIÓN/CONTEXTO]
+```
+
+### Ejemplos por Componente
+
+#### Componente Numérico-Variacional
+
+**Ejemplo 1**:
+- **Pregunta**: Si 3/5 de un número es 60, ¿cuál es el número?
+- **Tarea**: Determinar el número completo aplicando operación inversa a fracción dada
+- ❌ MAL: "Dividir 60 entre 3, luego multiplicar por 5"
+- ✓ BIEN: (ya escrito arriba)
+
+**Ejemplo 2**:
+- **Pregunta**: Simplifica (x² - 9)/(x - 3)
+- **Tarea**: Factorizar numerador y simplificar expresión racional cancelando factor común
+- ❌ MAL: "Factorizar x² - 9 como (x+3)(x-3), cancelar (x-3), obtener (x+3)"
+
+#### Componente Espacial-Métrico
+
+**Ejemplo 1**:
+- **Pregunta**: Calcular volumen de cilindro radio 3, altura 10
+- **Tarea**: Aplicar fórmula de volumen de cilindro sustituyendo valores dados
+- ❌ MAL: "Elevar radio al cuadrado, multiplicar por π, multiplicar por altura"
+
+**Ejemplo 2**:
+- **Pregunta**: ¿Cuántos ejes de simetría tiene un pentágono regular?
+- **Tarea**: Identificar número de ejes de simetría analizando propiedades de polígono regular
+- ❌ MAL: "Contar líneas que dividen figura en mitades iguales"
+
+#### Componente Aleatorio (Estadística/Probabilidad)
+
+**Ejemplo 1**:
+- **Pregunta**: Mediana del conjunto {10, 12, 15, 18, 20}
+- **Tarea**: Identificar valor central del conjunto ordenado de datos
+- ❌ MAL: "Ordenar datos, contar cuántos hay, tomar el del medio"
+
+**Ejemplo 2**:
+- **Pregunta**: Probabilidad de obtener suma 7 con dos dados
+- **Tarea**: Determinar razón entre casos favorables y espacio muestral en experimento aleatorio
+- ❌ MAL: "Contar pares que suman 7 (1-6, 2-5, 3-4, 4-3, 5-2, 6-1) y dividir entre 36"
+
+#### Componente Variacional (Cambio/Funciones)
+
+**Ejemplo 1**:
+- **Pregunta**: Pendiente de recta que pasa por (2,5) y (6,13)
+- **Tarea**: Calcular razón de cambio vertical respecto al horizontal entre dos puntos
+- ❌ MAL: "Restar coordenadas y, restar coordenadas x, dividir primer resultado entre segundo"
+
+**Ejemplo 2**:
+- **Pregunta**: Si 4 obreros tardan 12 días, ¿cuántos días tardan 6 obreros?
+- **Tarea**: Aplicar proporcionalidad inversa entre número de trabajadores y tiempo requerido
+- ❌ MAL: "Multiplicar 4×12, dividir entre 6"
+
+### Verbos Matemáticos Recomendados
+
+| Categoría | Verbos |
+|-----------|--------|
+| **Cálculo/Aplicación** | Calcular, determinar, encontrar, hallar, obtener |
+| **Análisis** | Analizar, comparar, evaluar, examinar |
+| **Identificación** | Identificar, reconocer, distinguir, clasificar |
+| **Procedimientos** | Aplicar, ejecutar, resolver, simplificar, factorizar |
+| **Razonamiento** | Deducir, inferir, concluir, justificar |
+| **Transformación** | Convertir, transformar, traducir, representar |
+
+### Integración con Otras Dimensiones
+
+**Tarea complementa Evidencia**:
+
+- **Evidencia**: Acción observable general (ej: "Calcula el volumen de cilindros")
+- **Tarea**: Acción específica de ESTE ejercicio (ej: "Aplicar fórmula de volumen considerando 60% de llenado y conversión a litros")
+
+**Ejemplo completo**:
+```yaml
+exextra[Competencia]: Formulación y Ejecución
+exextra[Componente]: Espacial-Métrico
+exextra[Afirmacion]: Resuelve problemas que requieren conceptos de volumen
+exextra[Evidencia]: Calcula volumen de cilindros en contextos aplicados
+exextra[Nivel]: 2
+exextra[Tarea]: Calcular volumen de cilindro considerando porcentaje de llenado y convertir unidades
+exextra[Type]: CLOZE
+```
+
+### Diferencia Tarea vs Evidencia
+
+| Aspecto | Evidencia | Tarea |
+|---------|-----------|-------|
+| **Alcance** | General (aplicable a múltiples ejercicios) | Específico (este ejercicio concreto) |
+| **Nivel** | Marco de referencia | Acción particular |
+| **Ejemplo** | "Resuelve ecuaciones lineales" | "Despejar variable aplicando operaciones inversas con coeficiente fraccionario" |
+| **Permanencia** | Estable en banco de ítems | Única por ejercicio |
+
+### Checklist para Redactar Tarea
+
+- [ ] ¿Es una sola oración?
+- [ ] ¿Describe LA labor central (no pasos)?
+- [ ] ¿Usa vocabulario matemático preciso?
+- [ ] ¿Es específica al ejercicio concreto?
+- [ ] ¿Evita generalidades? ("resolver problema" es muy general)
+- [ ] ¿Captura la esencia de la acción matemática?
+- [ ] ¿Es observable cognitivamente?
+
+---
+
+## 6️⃣ DIMENSIÓN 6: Niveles de Desempeño
 
 ### Definición Oficial
 
@@ -554,7 +683,7 @@ c) ¿Es justo este sistema? Argumenta.
 
 ---
 
-## 6️⃣ DIMENSIÓN 6: Tipo de Ejercicio
+## 7️⃣ DIMENSIÓN 7: Tipo de Ejercicio
 
 ### Tipos ICFES Estándar
 
@@ -703,6 +832,9 @@ exextra[Nivel]: 2
 # Justificación: Requiere múltiples pasos (volumen → porcentaje → conversión)
 #                pero con algoritmos conocidos. Contexto estructurado.
 #                No es N1 (muy directo) ni N3 (no requiere estrategia no rutinaria)
+
+exextra[Tarea]: Calcular volumen de cilindro aplicando porcentaje de llenado y convertir de metros cúbicos a litros
+# Descripción concisa en una oración de LA labor matemática específica
 
 exextra[Type]: SCHOICE
 # 4 opciones, selección única
