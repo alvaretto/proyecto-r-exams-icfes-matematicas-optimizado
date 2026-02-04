@@ -19,6 +19,61 @@ Cada vez que se aplica CUALQUIER corrección o cambio al código:
 
 ---
 
+## FASE 2A: VALIDACIÓN MATEMÁTICA AUTOMÁTICA (Hook PostToolUse)
+
+**ACTIVACIÓN AUTOMÁTICA**: Después de cada `exams2*()` exitoso, el hook
+`PostToolUse` en `settings.json` ejecuta automáticamente:
+
+```
+settings.json → PostToolUse(Bash) → post-exams2-validation.sh
+  → validar_coherencia_matematica.R → APROBADO / ERRORES
+```
+
+**Qué valida automáticamente (SCHOICE y CLOZE):**
+- Chunks R ejecutan sin errores en entorno aislado
+- Metadatos completos (exname, extype, exsolution, ICFES 6 dimensiones)
+- exshuffle = TRUE
+- SCHOICE: exsolution binario, exactamente 1 correcta, longitud = opciones
+- CLOZE: exclozetype/exsolution/extol consistentes, tipos válidos
+- Variables numéricas sin NA/NaN/Inf
+- Coherencia matemática entre variables (distancia = rapidez * tiempo, etc.)
+- Sin funciones matemáticas sobre strings (ERR_C3)
+
+**Si FASE 2A reporta ERRORES**: Claude DEBE corregir antes de continuar.
+**Si FASE 2A reporta APROBADO**: Continuar con FASE 2B (inspección visual).
+
+---
+
+## FASE 2B: PREVIEW VISUAL AUTOMÁTICO (Hook PostToolUse)
+
+**ACTIVACIÓN AUTOMÁTICA**: El mismo hook `post-exams2-validation.sh` que ejecuta
+FASE 2A también genera automáticamente el preview visual:
+
+```
+post-exams2-validation.sh (después de FASE 2A APROBADO)
+  → Busca PDF en output_pdf/, output/, dir=, cwd
+  → magick -density 150 [pdf] -quality 90 preview_[nombre].png
+  → Reporta rutas de PNGs generados
+  → Emite instrucción OBLIGATORIA para Claude
+```
+
+**Qué hace automáticamente:**
+- Localiza el PDF generado por exams2pdf()
+- Convierte PDF → PNG con magick (150 DPI, calidad 90)
+- Soporta múltiples páginas (genera preview_nombre-0.png, -1.png, etc.)
+- Reporta las rutas completas de los PNGs generados
+
+**Después de FASE 2B, Claude DEBE obligatoriamente:**
+1. Ejecutar `Read()` sobre cada PNG reportado por el hook
+2. Verificar las 5 coherencias VISUALMENTE
+3. Documentar hallazgos con checklist
+4. Solicitar aprobación del usuario
+
+**Si no se encontró PDF**: El hook emite aviso para que Claude ejecute `exams2pdf()`.
+Al ejecutar `exams2pdf()`, el hook se reactiva y genera el preview automáticamente.
+
+---
+
 Cada vez que se renderiza un archivo .Rmd, se ejecuta automáticamente:
 
 ### 🔄 FASE 1: RENDERIZADO INICIAL
@@ -30,17 +85,19 @@ exams2nops("archivo.Rmd", n = 1)
 ```
 Capturar y registrar todos los errores/advertencias.
 
-### 🔍 FASE 2: VALIDACIÓN VISUAL ITERATIVA (OBLIGATORIA)
+### 🔍 FASE 2: VALIDACIÓN AUTOMÁTICA + VISUAL ITERATIVA (OBLIGATORIA)
 
-**⚠️ CRÍTICO: Esta fase requiere INSPECCIÓN VISUAL REAL, no solo verificar que el archivo existe.**
+**⚠️ CRÍTICO: FASE 2A (matemática) y FASE 2B (preview PNG) son AUTOMÁTICAS vía hook.**
+**Claude DEBE completar la inspección visual leyendo los PNGs generados.**
 
-#### PASO 2.1: Convertir PDF a imagen y MOSTRAR al usuario
-```bash
-# OBLIGATORIO: Convertir PDF a PNG para inspección visual
-magick -density 150 output_pdf/plain1.pdf -quality 90 preview.png
+#### PASO 2.1: Preview generado automáticamente por el hook
+```
+El hook post-exams2-validation.sh ya convirtió PDF → PNG automáticamente.
+Claude DEBE leer los PNGs reportados en la salida del hook:
 
-# OBLIGATORIO: Leer la imagen con Read tool para ver el resultado
-# Read("preview.png")
+Read("preview_[nombre]-0.png")  # Página 1
+Read("preview_[nombre]-1.png")  # Página 2 (si existe)
+...
 ```
 
 #### PASO 2.2: Verificar las 5 coherencias VISUALMENTE
@@ -134,11 +191,13 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 │  ITERACIÓN N                                            │
 ├─────────────────────────────────────────────────────────┤
 │  1. FASE 1: Renderizar (HTML, PDF, DOCX)               │
-│  2. FASE 2: Convertir PDF → PNG                         │
-│  3. FASE 2: MOSTRAR imagen al usuario (Read tool)       │
-│  4. FASE 2: Verificar 5 coherencias VISUALMENTE         │
-│  5. FASE 2: Documentar hallazgos                        │
-│  6. FASE 3: ¿Problemas detectados?                      │
+│  2. FASE 2A: [AUTOMÁTICO] Validación matemática (.R)   │
+│     └── Si ERRORES → Corregir → VOLVER A ITERACIÓN N+1 │
+│  3. FASE 2B: [AUTOMÁTICO] PDF → PNG (magick)           │
+│  4. Claude: Read() cada PNG generado                    │
+│  5. Claude: Verificar 5 coherencias VISUALMENTE         │
+│  6. Claude: Documentar hallazgos con checklist          │
+│  7. FASE 3: ¿Problemas detectados?                      │
 │     │                                                   │
 │     ├── SÍ → Corregir → VOLVER A ITERACIÓN N+1         │
 │     │                                                   │
@@ -206,6 +265,7 @@ Diferencias: Ninguna significativa / [Lista de diferencias]
 
 ---
 
-**Versión**: 2.0 (Validación Visual Iterativa Obligatoria)
-**Fecha**: 2025-12-31
-**Cambio crítico**: FASE 2 ahora requiere inspección visual REAL con imagen mostrada
+**Versión**: 3.0 (Validación Matemática + Visual Automáticas)
+**Fecha**: 2026-02-03
+**Cambio v3.0**: FASE 2A (matemática) y FASE 2B (preview visual) son AUTOMÁTICAS vía hook PostToolUse
+**Cambio v2.0**: FASE 2 requiere inspección visual REAL con imagen mostrada

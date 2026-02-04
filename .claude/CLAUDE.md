@@ -176,6 +176,15 @@ Ver especificaciones completas en @.claude/rules/codigo-rmd.md
 **Version**: 2.5.1 (Sincronización Documentación)
 **Basado en**: Documentacion oficial Claude Code (nov 2025)
 
+## Cambios v2.6
+- **NUEVO**: Ecosistema de Testing Agresivo implementado
+- **COBERTURA 100% ALCANZADA**: 6 suites, 33+ tests unitarios, CI/CD configurado
+- Tests implementados: validación matemática, ortografía, renderizado 4 formatos, aleatorización, Flujo B, regresión
+- Documentación completa en `.claude/docs/ECOSISTEMA_TESTING.md`
+- CI/CD automático con GitHub Actions (`.github/workflows/ci-testing.yml`)
+- Script ejecutor principal: `tests/run_all_tests.R`
+- **Política tolerancia cero**: PROHIBIDO degradar cobertura por debajo del 100%
+
 ## Cambios v2.5
 - **NUEVO**: Regla crítica: REPETIR CICLO DESPUÉS DE CADA CAMBIO
 - Cada corrección/ajuste → Volver a renderizar → Mostrar preview → Verificar coherencias

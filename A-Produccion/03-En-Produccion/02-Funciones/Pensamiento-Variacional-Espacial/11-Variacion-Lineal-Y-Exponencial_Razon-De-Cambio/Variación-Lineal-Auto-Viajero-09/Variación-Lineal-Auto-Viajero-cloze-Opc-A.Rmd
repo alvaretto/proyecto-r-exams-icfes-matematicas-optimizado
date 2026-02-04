@@ -1,0 +1,289 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r data_generation, echo = FALSE, results = "hide"}
+library(exams)
+library(testthat)
+
+# ===================================================================
+# GENERACIÓN DE DATOS ALEATORIOS
+# Misma lógica que el SCHOICE original (2023-Matematicas-11-2-09-Opc-A.Rmd)
+# ===================================================================
+
+# Tiempo de viaje
+duracion <- sample(2:4, 1)
+
+# Rapidez constante del auto (km/h)
+rapidez <- as.integer(sample(30:100, 1))
+
+# Distancia recorrida (múltiplo exacto del tiempo)
+distancia <- as.integer(rapidez * duracion)
+
+# Posiciones del auto
+pos_inicial <- sample(10:50, 1)
+pos_final <- as.integer(pos_inicial + distancia)
+
+# Horas del recorrido
+hora_inicial <- sample(6:10, 1)
+hora_final <- as.integer(hora_inicial + duracion)
+
+# Formato de horas para mostrar
+hora_inicial_str <- sprintf("%02d:00", hora_inicial)
+hora_final_str <- sprintf("%02d:00", hora_final)
+
+# Tiempo transcurrido
+tiempo <- as.integer(duracion)
+
+# Distractor: valor que modifica la posición final en el Paso 1
+# Este valor hace que el procedimiento use un dato INCORRECTO
+distractor4 <- sample(setdiff(-10:10, 0), 1)
+
+# ===================================================================
+# CÁLCULOS PARA EL CLOZE (análisis secuencial paso a paso)
+# ===================================================================
+
+# Paso 1: Posición final real (dato del enunciado)
+respuesta_1 <- as.integer(pos_final)
+
+# Paso 2: Posición inicial (dato del enunciado)
+respuesta_2 <- as.integer(pos_inicial)
+
+# Paso 3: Distancia correcta = pos_final - pos_inicial
+distancia_correcta <- as.integer(pos_final - pos_inicial)
+respuesta_3 <- distancia_correcta
+
+# Paso 4: Valor erróneo usado en el Paso 1 del procedimiento
+valor_erroneo_paso1 <- as.integer(pos_final - distractor4)
+respuesta_4 <- valor_erroneo_paso1
+
+# Paso 5: Resultado real que daría el Paso 1 del procedimiento
+distancia_paso1 <- as.integer(valor_erroneo_paso1 - pos_inicial)
+respuesta_5 <- distancia_paso1
+
+# Paso 6: Tiempo transcurrido (verificación del Paso 2 - correcto)
+respuesta_6 <- as.integer(hora_final - hora_inicial)
+
+# ===================================================================
+# OPCIONES SCHOICE PARA CONFIRMACIÓN (Paso 7)
+# ===================================================================
+
+# Opciones de respuesta para la pregunta de confirmación
+opciones_texto <- c(
+  paste0("En el Paso 1, porque se utiliza ", valor_erroneo_paso1,
+         " km en lugar de ", pos_final, " km como posición final"),
+  paste0("En el Paso 2, porque el tiempo transcurrido es ",
+         hora_inicial, " h - ", hora_final, " h = -", tiempo, " h"),
+  paste0("En el Paso 3, porque el cociente es incorrecto"),
+  paste0("En el Paso 1, porque la distancia recorrida es ",
+         pos_inicial, " - ", pos_final, " km = ", pos_inicial - pos_final, " km")
+)
+
+# Mezclar opciones aleatoriamente
+orden_aleatorio <- sample(1:4)
+opciones_mezcladas <- opciones_texto[orden_aleatorio]
+
+# La respuesta correcta es la opción 1 (error en el Paso 1 por valor incorrecto)
+indice_respuesta_correcta <- which(orden_aleatorio == 1)
+solucion_schoice <- rep(FALSE, 4)
+solucion_schoice[indice_respuesta_correcta] <- TRUE
+
+# ===================================================================
+# VECTORES DE SOLUCIÓN PARA FORMATO CLOZE
+# ===================================================================
+
+# Soluciones numéricas (6 respuestas)
+solucion_cloze <- c(
+  respuesta_1,  # Paso 1: Posición final real
+  respuesta_2,  # Paso 2: Posición inicial
+  respuesta_3,  # Paso 3: Distancia correcta
+  respuesta_4,  # Paso 4: Valor erróneo del procedimiento
+  respuesta_5,  # Paso 5: Resultado real del Paso 1 erróneo
+  respuesta_6   # Paso 6: Tiempo transcurrido
+)
+
+# Tipos de respuesta: 6 numéricas + 1 schoice
+tipos_respuesta <- c("num", "num", "num", "num", "num", "num", "schoice")
+
+# Tolerancias (todas 0 porque son enteros)
+tolerancias <- c(0, 0, 0, 0, 0, 0, 0)
+
+# ===================================================================
+# VALIDACIONES TESTTHAT
+# ===================================================================
+
+test_that("Validación de datos generados", {
+  expect_true(duracion >= 2 && duracion <= 4)
+  expect_true(rapidez >= 30 && rapidez <= 100)
+  expect_true(pos_inicial >= 10 && pos_inicial <= 50)
+  expect_true(hora_inicial >= 6 && hora_inicial <= 10)
+  expect_true(distractor4 != 0)
+  expect_true(distractor4 >= -10 && distractor4 <= 10)
+  expect_equal(distancia, rapidez * duracion)
+  expect_equal(pos_final, pos_inicial + distancia)
+  expect_equal(hora_final, hora_inicial + duracion)
+})
+
+test_that("Validación de coherencia matemática CLOZE", {
+  # Verificar respuestas paso a paso
+
+  expect_equal(respuesta_1, pos_final)
+  expect_equal(respuesta_2, pos_inicial)
+  expect_equal(respuesta_3, pos_final - pos_inicial)
+  expect_equal(respuesta_3, distancia)
+  expect_equal(respuesta_4, pos_final - distractor4)
+  expect_true(respuesta_4 != pos_final)  # El valor erróneo es diferente al real
+  expect_equal(respuesta_5, (pos_final - distractor4) - pos_inicial)
+  expect_true(respuesta_5 != respuesta_3)  # El resultado erróneo difiere del correcto
+  expect_equal(respuesta_6, hora_final - hora_inicial)
+  expect_equal(respuesta_6, duracion)
+})
+
+test_that("Validación de la parte schoice", {
+  expect_equal(length(opciones_mezcladas), 4)
+  expect_equal(length(solucion_schoice), 4)
+  expect_equal(sum(solucion_schoice), 1)  # Exactamente una respuesta correcta
+  expect_true(indice_respuesta_correcta >= 1 && indice_respuesta_correcta <= 4)
+})
+
+test_that("Validación de vectores de solución CLOZE", {
+  expect_equal(length(solucion_cloze), 6)
+  expect_equal(length(tipos_respuesta), 7)
+  expect_equal(length(tolerancias), 7)
+  expect_true(all(sapply(solucion_cloze, is.numeric)))
+})
+```
+
+Question
+========
+
+Se sabe que un auto viaja con rapidez constante. A las `r hora_inicial_str`, ya se ha alejado `r pos_inicial` km del pueblo donde inició su recorrido, y a las `r hora_final_str`, se encuentra a `r pos_final` km de dicho pueblo. Para calcular la rapidez media en km/h de este recorrido, se realizaron los siguientes pasos:
+
+**Paso 1.** Se calcula cuánta distancia se recorrió: `r valor_erroneo_paso1` km - `r pos_inicial` km = `r distancia` km
+
+**Paso 2.** Se calcula el tiempo que transcurrió: `r hora_final` h - `r hora_inicial` h = `r tiempo` h
+
+**Paso 3.** Se halla el cociente entre los valores obtenidos: `r distancia` km / `r tiempo` h = `r rapidez` km/h
+
+Para determinar si hay un error en el procedimiento anterior, verifique paso a paso:
+
+### Paso 1: Identificación de la posición final
+
+Según el enunciado, ¿a cuántos km del pueblo se encuentra el auto a las `r hora_final_str`?
+
+**Respuesta:** ##ANSWER1## km
+
+### Paso 2: Identificación de la posición inicial
+
+Según el enunciado, ¿a cuántos km del pueblo se encontraba el auto a las `r hora_inicial_str`?
+
+**Respuesta:** ##ANSWER2## km
+
+### Paso 3: Cálculo de la distancia correcta
+
+Calcule la distancia recorrida usando los datos reales del enunciado:
+
+##ANSWER1## km - ##ANSWER2## km = ##ANSWER3## km
+
+### Paso 4: Verificación del Paso 1 del procedimiento
+
+Observe el Paso 1 del procedimiento presentado. ¿Qué valor se utilizó como posición final?
+
+**Respuesta:** ##ANSWER4## km
+
+### Paso 5: Resultado real del Paso 1 del procedimiento
+
+Si se calcula la resta con el valor utilizado en el procedimiento:
+
+##ANSWER4## km - ##ANSWER2## km = ##ANSWER5## km
+
+### Paso 6: Verificación del Paso 2 del procedimiento
+
+Verifique el cálculo del tiempo transcurrido:
+
+`r hora_final` h - `r hora_inicial` h = ##ANSWER6## h
+
+### Paso 7: Conclusión - Selección múltiple
+
+Basándose en su análisis anterior, **¿en qué paso se cometió el error y por qué?**
+
+##ANSWER7##
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+### Análisis paso a paso del procedimiento
+
+Este ejercicio requiere verificar un procedimiento de cálculo de rapidez media para identificar en qué paso se cometió un error.
+
+### Paso 1: Posición final real
+
+La posición final del auto según el enunciado es **`r pos_final` km**.
+
+### Paso 2: Posición inicial
+
+La posición inicial del auto según el enunciado es **`r pos_inicial` km**.
+
+### Paso 3: Distancia correcta
+
+$$\text{Distancia} = `r pos_final` \text{ km} - `r pos_inicial` \text{ km} = `r distancia_correcta` \text{ km}$$
+
+### Paso 4: Error detectado en el Paso 1
+
+El procedimiento usa **`r valor_erroneo_paso1` km** como posición final, pero el enunciado establece que la posición final es **`r pos_final` km**. La diferencia es de `r abs(distractor4)` km.
+
+### Paso 5: Verificación aritmética
+
+Con el valor erróneo:
+
+$$`r valor_erroneo_paso1` \text{ km} - `r pos_inicial` \text{ km} = `r distancia_paso1` \text{ km}$$
+
+Pero el procedimiento muestra `r distancia` km como resultado, lo cual es inconsistente con la resta presentada.
+
+### Paso 6: Verificación del Paso 2
+
+$$`r hora_final` \text{ h} - `r hora_inicial` \text{ h} = `r tiempo` \text{ h}$$
+
+El Paso 2 del procedimiento es **correcto**.
+
+### Conclusión
+
+El error está en el **Paso 1**: se utilizó `r valor_erroneo_paso1` km en lugar de `r pos_final` km como posición final del auto. Esto genera una inconsistencia porque la resta `r valor_erroneo_paso1` - `r pos_inicial` = `r distancia_paso1`, no `r distancia` como indica el procedimiento.
+
+Answerlist
+----------
+* La posición final del auto según el enunciado es `r pos_final` km.
+* La posición inicial del auto según el enunciado es `r pos_inicial` km.
+* La distancia correcta es `r pos_final` km - `r pos_inicial` km = `r distancia_correcta` km.
+* El valor erróneo utilizado en el procedimiento es `r valor_erroneo_paso1` km en lugar de `r pos_final` km.
+* Con el valor erróneo: `r valor_erroneo_paso1` km - `r pos_inicial` km = `r distancia_paso1` km, diferente a los `r distancia` km indicados.
+* El tiempo transcurrido es `r hora_final` h - `r hora_inicial` h = `r tiempo` h. El Paso 2 es correcto.
+* `r if(orden_aleatorio[1] == 1) "Correcto." else "Incorrecto."` `r if(orden_aleatorio[1] == 1) paste0("El error está en el Paso 1 porque se usa ", valor_erroneo_paso1, " km en vez de ", pos_final, " km.") else ""`
+* `r if(orden_aleatorio[2] == 1) "Correcto." else "Incorrecto."` `r if(orden_aleatorio[2] == 1) paste0("El error está en el Paso 1 porque se usa ", valor_erroneo_paso1, " km en vez de ", pos_final, " km.") else ""`
+* `r if(orden_aleatorio[3] == 1) "Correcto." else "Incorrecto."` `r if(orden_aleatorio[3] == 1) paste0("El error está en el Paso 1 porque se usa ", valor_erroneo_paso1, " km en vez de ", pos_final, " km.") else ""`
+* `r if(orden_aleatorio[4] == 1) "Correcto." else "Incorrecto."` `r if(orden_aleatorio[4] == 1) paste0("El error está en el Paso 1 porque se usa ", valor_erroneo_paso1, " km en vez de ", pos_final, " km.") else ""`
+
+Meta-information
+================
+exname: Rapidez Media Auto Viajero - Analisis Secuencial Cloze Opc-A
+extype: cloze
+exclozetype: `r paste(tipos_respuesta, collapse="|")`
+exsolution: `r paste(c(solucion_cloze[1:6], mchoice2string(solucion_schoice)), collapse="|")`
+extol: `r paste(tolerancias, collapse="|")`
+exshuffle: TRUE
+exextra[Type]: CLOZE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Numerico-Variacional
+exextra[Afirmacion]: Validar procedimientos y estrategias matematicas utilizadas para dar solucion a problemas
+exextra[Evidencia]: Identifica errores en procedimientos o en la solucion de un problema
+exextra[Nivel]: 2

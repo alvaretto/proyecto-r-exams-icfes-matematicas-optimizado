@@ -5,9 +5,9 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "consumo_telefonico_adicional_n2_v1.Rmd"
-copias <- 1  # Número de versiones a generar
-numpreg <- 2
+archivo_examen <- "Variación-Lineal-Auto-Viajero-cloze-Opc-C.Rmd"
+copias <- 250  # Número de versiones a generar
+numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
@@ -63,81 +63,81 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Generación de n copias en un solo archivo de salida para PDF
 
 # NO establecer semilla fija - cada versión usará semilla diferente
-exams2pdf(rep(archivo_examen, numpreg),
-          n = copias,
-          name = nombre_arch,
-          encoding = "UTF-8",
-          template = "solpcielo",
-          dir = dir_salida,
-          edir = dir_ejercicios,
-          verbose = TRUE)
+# exams2pdf(rep(archivo_examen, numpreg),
+#           n = copias,
+#           name = nombre_arch,
+#           encoding = "UTF-8",
+#           template = "solpcielo",
+#           dir = dir_salida,
+#           edir = dir_ejercicios,
+#           verbose = TRUE)
 
 ################################################################################
 # Generación de n copias en un solo archivo .docx
 
 # NO establecer semilla fija - cada versión usará semilla diferente
-exams2pandoc(rep(archivo_examen, numpreg),
-             n = copias,
-             name = nombre_arch,
-             encoding = "UTF-8",
-             template = "pcielo.tex",
-             header = list(Date = Sys.Date()),
-             inputs = NULL,
-             options = NULL,
-             quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
-             resolution = 100,
-             width = 4,
-             height = 4,
-             svg = TRUE,
-             dir = dir_salida,
-             edir = dir_ejercicios,
-             tdir = NULL,
-             sdir = NULL,
-             verbose = TRUE, # Added verbose
-             points = NULL,
-             exshuffle = NULL,
-             type = "docx")
+# exams2pandoc(rep(archivo_examen, numpreg),
+#              n = copias,
+#              name = nombre_arch,
+#              encoding = "UTF-8",
+#              template = "pcielo.tex",
+#              header = list(Date = Sys.Date()),
+#              inputs = NULL,
+#              options = NULL,
+#              quiet = TRUE, # Consider removing or setting to FALSE if verbose is TRUE
+#              resolution = 100,
+#              width = 4,
+#              height = 4,
+#              svg = TRUE,
+#              dir = dir_salida,
+#              edir = dir_ejercicios,
+#              tdir = NULL,
+#              sdir = NULL,
+#              verbose = TRUE, # Added verbose
+#              points = NULL,
+#              exshuffle = NULL,
+#              type = "docx")
 
 ################################################################################
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
 # set.seed(semilla)
-# exams2moodle(archivo_examen,
-#              n = copias,
-#              svg = TRUE,
-#              name = nombre_arch,
-#              encoding = "UTF-8",
-#              dir = "salida",
-#              edir = "ejercicios",
-#              mchoice = list(shuffle = TRUE,
-#                             answernumbering = "ABCD",
-#                             eval = list(partial = TRUE,
-#                                         rule = "none")),
-#              verbose = TRUE)
+exams2moodle(archivo_examen,
+             n = copias,
+             svg = TRUE,
+             name = nombre_arch,
+             encoding = "UTF-8",
+             dir = "salida",
+             edir = dir_ejercicios,
+             mchoice = list(shuffle = TRUE,
+                            answernumbering = "ABCD",
+                            eval = list(partial = TRUE,
+                                        rule = "none")),
+             verbose = TRUE)
 
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
 
 # NO establecer semilla fija - cada versión usará semilla diferente
-exams2nops(rep(archivo_examen, numpreg),
-           n = copias,
-           name = paste0(nombre_sin_extension, "_nops_"),
-           encoding = "UTF-8",
-           dir = dir_salida,
-           edir = dir_ejercicios,
-           language = "es",                      # Idioma español
-           title = "Evaluación de Matemáticas",  # Título del examen
-           institution = "I. E. Pedacito de Cielo", # Nombre de la institución
-           logo = NULL,                         # Sin logo (opcional)
-           date = Sys.Date(),                   # Fecha actual
-           replacement = FALSE,                 # Sin preguntas de reemplazo
-           blank = 0,                           # Sin páginas adicionales
-           duplex = TRUE,                       # Impresión a doble cara
-           pages = NULL,                        # Número de páginas automático
-           points = NULL,                       # Puntos por pregunta automático
-           showpoints = FALSE,                  # No mostrar puntos en el examen
-           verbose = TRUE)
+# exams2nops(rep(archivo_examen, numpreg),
+#            n = copias,
+#            name = paste0(nombre_sin_extension, "_nops_"),
+#            encoding = "UTF-8",
+#            dir = dir_salida,
+#            edir = dir_ejercicios,
+#            language = "es",                      # Idioma español
+#            title = "Evaluación de Matemáticas",  # Título del examen
+#            institution = "I. E. Pedacito de Cielo", # Nombre de la institución
+#            logo = NULL,                         # Sin logo (opcional)
+#            date = Sys.Date(),                   # Fecha actual
+#            replacement = FALSE,                 # Sin preguntas de reemplazo
+#            blank = 0,                           # Sin páginas adicionales
+#            duplex = TRUE,                       # Impresión a doble cara
+#            pages = NULL,                        # Número de páginas automático
+#            points = NULL,                       # Puntos por pregunta automático
+#            showpoints = FALSE,                  # No mostrar puntos en el examen
+#            verbose = TRUE)
 
 ################################################################################
 # Generación para exams2forms (formularios HTML interactivos)
@@ -149,17 +149,22 @@ library(exams2forms)
 # Generar archivos HTML standalone con exams2webquiz
 # Esta función genera automáticamente los archivos CSS y JS necesarios
 # Configuración: 1 pregunta por página, múltiples versiones
-exams2webquiz(archivo_examen,  # Una pregunta por archivo HTML
-              n = copias * numpreg,  # Total de versiones = copias × preguntas
-              dir = dir_salida,
-              name = paste0(nombre_sin_extension, "_interactivo"),
-              edir = dir_ejercicios,
-              encoding = "UTF-8",
-              title = "Evaluación Interactiva de Matemáticas ICFES",
-              solution = TRUE,        # Mostrar botón de solución
-              shuffle = TRUE,         # Mezclar opciones de respuesta
-              mathjax = TRUE,         # Habilitar MathJax para fórmulas
-              browse = TRUE)          # Abrir navegador automáticamente
+
+################################################################################
+
+# exams2webquiz(archivo_examen,  # Una pregunta por archivo HTML
+#               n = copias * numpreg,  # Total de versiones = copias × preguntas
+#               dir = dir_salida,
+#               name = paste0(nombre_sin_extension, "_interactivo"),
+#               edir = dir_ejercicios,
+#               encoding = "UTF-8",
+#               title = "Evaluación Interactiva de Matemáticas ICFES",
+#               solution = TRUE,        # Mostrar botón de solución
+#               shuffle = TRUE,         # Mezclar opciones de respuesta
+#               mathjax = TRUE,         # Habilitar MathJax para fórmulas
+#               browse = TRUE)          # Abrir navegador automáticamente
+
+################################################################################
 
 # # Opción 2: Generar archivos HTML en subdirectorio para embeber
 # # Útil para integrar en documentos Rmd/Quarto o sitios web
