@@ -1,258 +1,135 @@
-# Sistema de Generacion Automatizada de Ejercicios ICFES R/exams
+# Sistema de Generación Automatizada de Ejercicios ICFES R/exams
 
-Este proyecto automatiza la creacion y validacion de ejercicios tipo ICFES usando R/exams.
+## 🎯 Índice Principal
 
-## 🎯 Proposito del Proyecto
+Este archivo funciona como **índice central** del sistema. Para información detallada, consulte los módulos especializados:
 
-Generar ejercicios matematicos de seleccion multiple (SCHOICE) y compuestos (CLOZE) que:
-- Cumplan los 6 estandares ICFES (competencias, componentes, afirmaciones, etc.)
-- Se rendericen correctamente en 4 formatos: HTML, PDF, DOCX, NOPS
-- Generen 250+ versiones unicas aleatorias
-- Incluyan graficos dinamicos (TikZ, Python/matplotlib, R/ggplot2)
+### 📋 Información General
+- **Propósito**: Automatizar creación y validación de ejercicios ICFES tipo SCHOICE/CLOZE
+- **Tecnologías**: R/exams, TikZ, Python/matplotlib, R/ggplot2
+- **Formatos soportados**: HTML, PDF, DOCX, NOPS
+- **Versiones por ejercicio**: 250+ únicas aleatorias
 
-## ⛔ REGLAS CRITICAS (OBLIGATORIAS)
+### ⛔ Reglas Críticas (OBLIGATORIAS)
+@.claude/docs/REGLAS_CRITICAS.md
 
-### Flujo B (Graficador Experto) - OBLIGATORIO si hay graficos
-@.claude/rules/flujo-b-obligatorio.md
+**Resumen de reglas fundamentales:**
+1. **Flujo B obligatorio** cuando hay gráficos → @.claude/rules/flujo-b-obligatorio.md
+2. **Proceso secuencial** TikZ→Python→R → @.claude/rules/graficador-secuencial.md
+3. **5 Coherencias** a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General)
+4. **Validación visual iterativa** OBLIGATORIA → @.claude/rules/ciclo-validacion.md
+5. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
+6. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
 
-**Principio**: Si se detectan graficos en el ejercicio, el Flujo B es OBLIGATORIO.
-- Deteccion automatica de graficos en enunciado y opciones
-- Bloqueo de generacion de .Rmd sin completar Flujo B
-- NO hay excepciones
+### 🛠️ Comandos y Skills
+@.claude/docs/COMANDOS_Y_SKILLS.md
 
-### Proceso Secuencial del Graficador
-@.claude/rules/graficador-secuencial.md
+**Comandos principales:**
+- `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
+- `/auto-refinar-grafico [tikz|python|r]`
+- `/estado-graficador`, `/exportar-graficos`, `/promover-ejercicio`
 
-**Principio**: Las versiones TikZ, Python, R se generan SECUENCIALMENTE, no simultaneamente.
-```
-1. TikZ → iterar >=95% + coherencias + aprobacion usuario
-2. Python → iterar >=95% + coherencias + aprobacion usuario
-3. R → iterar >=95% + coherencias + aprobacion usuario
-4. Usuario selecciona version final
-```
+### 🔧 Sistema de Hooks y Testing
+@.claude/docs/HOOKS_Y_TESTING.md
 
-### 5 Coherencias a Verificar
-1. **Coherencia Semántica** - Gramática correcta, **TILDES OBLIGATORIAS**
-2. **Coherencia Visual-Texto** - Gráfico coincide con enunciado
-3. **Coherencia Matemática** - Fórmulas y proporciones correctas
-4. **Coherencia de Código** - Dinámico, compatible con R-exams
-5. **Coherencia General** - Legible, estilo ICFES
+**Sistema automático permanente:**
+- 4 hooks activos (PreToolUse/PostToolUse para Edit/Write/Bash)
+- 100% cobertura de tests (6 suites, 33+ tests)
+- CI/CD con GitHub Actions
+- Tolerancia cero a regresiones
 
-### Validación Visual Iterativa (OBLIGATORIO)
-@.claude/rules/ciclo-validacion.md
+### 📁 Estructura del Repositorio
+@.claude/docs/ESTRUCTURA_REPOSITORIO.md
 
-**Principio**: NUNCA marcar como "completado" sin inspección visual REAL.
-- Convertir PDF → PNG con `magick`
-- MOSTRAR imagen al usuario con `Read` tool
-- Verificar las 5 coherencias VISUALMENTE (no solo que el archivo existe)
-- Documentar hallazgos con checklist
-- Solicitar aprobación del usuario antes de finalizar
-- Si hay problemas → Corregir → Volver a renderizar → Repetir inspección
-
-**⚠️ REGLA CRÍTICA: REPETIR CICLO DESPUÉS DE CADA CAMBIO**
-- Cada vez que se aplica CUALQUIER corrección → VOLVER A RENDERIZAR
-- Cada vez que se modifica código → MOSTRAR NUEVO PREVIEW
-- Cada vez que el usuario solicita ajustes → VERIFICAR RESULTADO VISUAL
-- NUNCA asumir que un cambio produjo el resultado esperado sin verificación
-
-**PROHIBIDO:**
-- ❌ "El PDF se generó correctamente" sin mostrar imagen
-- ❌ Asumir éxito solo porque no hubo errores de compilación
-- ❌ Saltarse comparación visual con imagen original
-- ❌ Aplicar cambios sin volver a mostrar el resultado al usuario
-
-### Ortografía Española (OBLIGATORIO)
-@.claude/rules/ortografia-espanol.md
-
-**Principio**: TODO texto en español DEBE incluir tildes correctas.
-- Palabras como: más, ángulo, dispersión, función, gráfica, etc.
-- Aplica a: comentarios, strings, secciones Question/Solution
-- Validación automática: `Rscript .claude/scripts/corregir_ortografia_espanol.R archivo.Rmd`
-- Hook pre-commit: Detecta errores antes de cada commit
-
-**Excepciones (ASCII obligatorio)**:
-- Metadatos R-exams: `exname`, `exsection`, `extype`, `exsolution`, `exextra[...]`
-- Variables R: nombres de variables deben ser ASCII
-- El script de ortografía excluye automáticamente estos casos
-
-**PROHIBIDO**: `git commit --no-verify` para evadir el hook de ortografía
-
-## 📚 Documentacion y Reglas
-
-### Workflows y Guias
-@.claude/docs/WORKFLOW_PASO_A_PASO.md
-@.claude/docs/TROUBLESHOOTING.md
-@.claude/docs/TRES_NIVELES_VALIDACION.md
-
-### Reglas Modulares (OBLIGATORIAS)
-@.claude/rules/flujo-b-obligatorio.md
-@.claude/rules/graficador-secuencial.md
-@.claude/rules/ciclo-validacion.md
-@.claude/rules/codigo-rmd.md
-@.claude/rules/documentacion-verificada.md
-
-## 🛠️ Comandos Manuales y Skills Automáticos
-
-### Commands Manuales (Invocación Explícita)
-
-**Workflow Principal:**
-- `/analizar-icfes` - Iniciar análisis ICFES manual
-- `/generar-schoice` - Generar ejercicio de selección única
-- `/generar-cloze` - Generar ejercicio compuesto
-- `/promover-ejercicio` - Promover ejercicio validado a producción
-
-**Graficador Experto (Flujo B - SECUENCIAL):**
-- `/auto-refinar-grafico tikz` - Iniciar con TikZ (primero)
-- `/auto-refinar-grafico python` - Continuar con Python (despues de TikZ aprobado)
-- `/auto-refinar-grafico r` - Finalizar con R (despues de Python aprobado)
-- `/estado-graficador` - Consultar estado del workflow grafico
-- `/exportar-graficos` - Exportar resultados finales
-
-### Skills Automaticos (Claude los usa segun contexto)
-
-**Validacion (se ejecutan automaticamente):**
-- Validar renderizado (FASE 1)
-- Validar coherencia (FASE 2)
-- Diagnosticar errores (FASE 3)
-
-**Correccion (se ejecutan automaticamente en errores):**
-- Corregir graficos (SUBFASE 3A)
-- Corregir errores de imagen TikZ
-
-**Graficador (se ejecutan SECUENCIALMENTE - ver reglas):**
-- Analizar imagen matematica → Detectar si requiere Flujo B
-- Generar codigo TikZ → Iterar → Coherencias → Aprobacion
-- Generar codigo Python → Iterar → Coherencias → Aprobacion
-- Generar codigo R → Iterar → Coherencias → Aprobacion
-- Usuario selecciona version final
-
-## 📁 Estructura del Repositorio
-
+**Directorios principales:**
 ```
 A-Produccion/
-├── Nuevos-Ejercicios/           # Ejercicios validados listos
-├── En-Desarrollo/               # Ejercicios en creación/validación
-└── Ejemplos-Funcionales-Rmd/    # FUENTE DE VERDAD para SUBFASE 3A
-
-outputs/                         # Archivos temporales de renderizado
-├── output_tikz.tex
-├── output_python.py
-└── output_r.R
+├── Nuevos-Ejercicios/           # Validados
+├── En-Desarrollo/               # En proceso
+└── Ejemplos-Funcionales-Rmd/    # FUENTE DE VERDAD
 
 .claude/
-├── CLAUDE.md                    # Este archivo (memory principal)
-├── rules/                       # Reglas modulares (OBLIGATORIAS)
-├── skills/                      # Agent Skills (invocación automática)
-├── commands/                    # Slash Commands (invocación manual)
-├── agents/                      # Agentes especializados
-├── docs/                        # Documentación técnica
-└── hooks/                       # Hooks de validación
+├── rules/                       # Reglas obligatorias
+├── docs/                        # Documentación modular
+├── hooks/                       # Hooks de validación
+├── scripts/                     # Scripts de validación
+├── skills/                      # Agent Skills
+└── commands/                    # Slash Commands
 ```
 
-## ⚙️ Hooks Configurados (Sistema Automático de Testing)
+### 📚 Documentación Técnica Detallada
 
-Ver configuración completa en @.claude/settings.json
+#### Workflows y Validación
+- @.claude/docs/WORKFLOW_PASO_A_PASO.md
+- @.claude/docs/TRES_NIVELES_VALIDACION.md
+- @.claude/docs/FLUJO_AUTOMATICO_TESTING.md
+- @.claude/docs/TROUBLESHOOTING.md
 
-### 🛡️ Sistema de Testing Automático PERMANENTE
+#### Testing y Calidad
+- @.claude/docs/ECOSISTEMA_TESTING.md
+- @.claude/rules/testing-obligatorio.md
+- @.claude/rules/documentacion-verificada.md
 
-**TODOS los cambios son validados automáticamente.** Sistema con tolerancia cero a regresiones.
+#### Código y Desarrollo
+- @.claude/rules/codigo-rmd.md
+- @.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md
+- @.claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md
+- @.claude/docs/patrones-errores-conocidos.md
 
-#### PreToolUse - Edit/Write
-- **Hook:** `.claude/hooks/pre-edit-testing.sh`
-- **Cuándo:** Antes de editar componentes críticos
-- **Acción:** Ejecuta tests relevantes, BLOQUEA si fallan
-- **Componentes críticos:** `.claude/scripts/*`, `.claude/hooks/*`, `.claude/rules/*`, `tests/*`
+#### Casos Resueltos
+- @.claude/docs/casos-resueltos/
 
-#### PostToolUse - Edit/Write
-- **Hook:** `.claude/hooks/post-edit-testing.sh`
-- **Cuándo:** Después de cualquier Edit/Write
-- **Acción:** Valida que el cambio no rompió tests
-- **Archivos monitoreados:** Scripts R, .Rmd, tests, configuración Claude
+### 🔗 Referencias Rápidas
 
-#### PreToolUse - Bash (git commit/push)
-- **Hook:** `.claude/hooks/pre-bash-testing.sh`
-- **Cuándo:** Antes de commit o push
-- **Acción:**
-  - **Commit:** Ejecuta suite completa, RECHAZA si falla
-  - **Push:** Valida suite + verifica sin cambios pendientes
-- **⚠️ PROHIBIDO:** `git commit --no-verify`
+| Necesito... | Ver documento |
+|-------------|---------------|
+| Iniciar desarrollo de ejercicio | @.claude/docs/WORKFLOW_PASO_A_PASO.md |
+| Resolver error conocido | @.claude/docs/patrones-errores-conocidos.md |
+| Entender hooks de testing | @.claude/docs/HOOKS_Y_TESTING.md |
+| Configurar gráficos | @.claude/docs/REGLAS_CRITICAS.md + Flujo B |
+| Ver comandos disponibles | @.claude/docs/COMANDOS_Y_SKILLS.md |
+| Validar ortografía | @.claude/rules/ortografia-espanol.md |
+| Ejecutar tests | `tests/run_all_tests.R` |
 
-#### PostToolUse - Bash (exams2*)
-- **Hook:** `.claude/hooks/post-exams2-validation.sh`
-- **Cuándo:** Después de `exams2pdf()`, `exams2html()`, etc.
-- **Acción FASE 2A:** Validación matemática automática
-- **Acción FASE 2B:** Preview PNG automático
-- **Claude DEBE:** Leer PNG + Verificar 5 coherencias + Solicitar aprobación
+### ⚙️ Configuración del Sistema
 
-### Pre-Edit/Write: Regla de Oro
-@.claude/rules/codigo-rmd.md
-
-### Testing Obligatorio y Automático
-@.claude/rules/testing-obligatorio.md
-
-### Post-Bash: Validación exams2* (FASE 2A + 2B)
-@.claude/rules/ciclo-validacion.md
-
-## 🔗 Referencias Rápidas
-
-- **Errores conocidos**: @.claude/docs/patrones-errores-conocidos.md
-- **Casos resueltos**: @.claude/docs/casos-resueltos/
-- **Nomenclatura**: @.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md
-- **Python/reticulate**: @.claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md
-
-## 📊 Metadatos y Reglas de Código
-
-Ver especificaciones completas en @.claude/rules/codigo-rmd.md
+- **Settings Claude**: @.claude/settings.json
+- **CI/CD**: @.github/workflows/ci-testing.yml
+- **Tests**: `tests/testthat/` (6 suites)
+- **Hooks**: `.claude/hooks/` (4 scripts activos)
 
 ---
 
-**Ultima actualizacion**: 2026-01-01
-**Version**: 2.5.1 (Sincronización Documentación)
-**Basado en**: Documentacion oficial Claude Code (nov 2025)
+## 📌 Metainformación
 
-## Cambios v2.7
-- **NUEVO**: Sistema de Testing Automático PERMANENTE
-- **Hooks configurados** para validación automática en Edit/Write/Bash
-- **4 hooks activos**:
-  - `pre-edit-testing.sh` - Valida antes de editar componentes críticos
-  - `post-edit-testing.sh` - Valida después de cambios
-  - `pre-bash-testing.sh` - Bloquea commit/push sin tests pasando
-  - `post-exams2-validation.sh` - Validación matemática + preview automáticos
-- **Regla obligatoria**: `.claude/rules/testing-obligatorio.md`
-- **Documentación flujo**: `.claude/docs/FLUJO_AUTOMATICO_TESTING.md`
-- **Garantía**: IMPOSIBLE romper el sistema, validación automática en TODOS los cambios
-- **PROHIBIDO**: `git commit --no-verify` (evasión de protecciones)
+**Versión**: 3.0.0 (Modularización Completa)
+**Fecha**: 2026-02-04
+**Basado en**: Documentación oficial Claude Code (nov 2025)
 
-## Cambios v2.6
-- **NUEVO**: Ecosistema de Testing Agresivo implementado
-- **COBERTURA 100% ALCANZADA**: 6 suites, 33+ tests unitarios, CI/CD configurado
-- Tests implementados: validación matemática, ortografía, renderizado 4 formatos, aleatorización, Flujo B, regresión
-- Documentación completa en `.claude/docs/ECOSISTEMA_TESTING.md`
-- CI/CD automático con GitHub Actions (`.github/workflows/ci-testing.yml`)
-- Script ejecutor principal: `tests/run_all_tests.R`
-- **Política tolerancia cero**: PROHIBIDO degradar cobertura por debajo del 100%
+### Cambios v3.0 (2026-02-04)
+- **MODULARIZACIÓN COMPLETA**: CLAUDE.md ahora es índice central
+- **Nuevos módulos**:
+  - `REGLAS_CRITICAS.md` - Consolidación de reglas obligatorias
+  - `COMANDOS_Y_SKILLS.md` - Referencia completa de comandos
+  - `HOOKS_Y_TESTING.md` - Sistema automático de validación
+  - `ESTRUCTURA_REPOSITORIO.md` - Organización del proyecto
+- **Mejora de navegación**: Enlaces directos a cada módulo
+- **Tabla de referencias rápidas**: Acceso inmediato por necesidad
 
-## Cambios v2.5
-- **NUEVO**: Regla crítica: REPETIR CICLO DESPUÉS DE CADA CAMBIO
-- Cada corrección/ajuste → Volver a renderizar → Mostrar preview → Verificar coherencias
-- PROHIBIDO aplicar cambios sin volver a mostrar resultado visual al usuario
-- Documentación actualizada: CLAUDE.md y ciclo-validacion.md
+### Cambios v2.7 (2026-02-03)
+- Sistema de Testing Automático PERMANENTE
+- 4 hooks activos configurados
+- Garantía: IMPOSIBLE romper el sistema
+- PROHIBIDO: `git commit --no-verify`
 
-## Cambios v2.4
-- **Script ortografía mejorado**: Excluye automáticamente metadatos R-exams
-- Campos ASCII obligatorios: `exname`, `exsection`, `extype`, `exsolution`, `exextra[...]`
-- **PROHIBIDO**: `git commit --no-verify` para evadir validaciones
-- Documentación actualizada con política de excepciones
+### Cambios v2.6 (2026-02-03)
+- Ecosistema de Testing Agresivo implementado
+- COBERTURA 100% ALCANZADA: 6 suites, 33+ tests unitarios
+- CI/CD automático con GitHub Actions
 
-## Cambios v2.3
-- **NUEVO**: Validación Visual Iterativa OBLIGATORIA después de renderizado
-- NUNCA marcar como "completado" sin inspección visual REAL
-- Mostrar preview.png al usuario antes de aprobar
-- Documentar 5 coherencias con checklist explícito
-- Comparar con imagen original cuando aplique
+### Historial Completo
+Ver @.claude/docs/CHANGELOG.md para historial detallado de cambios v2.2-v2.5
 
-## Cambios v2.2
-- Flujo B (Graficador Experto) ahora es OBLIGATORIO cuando hay graficos
-- Proceso SECUENCIAL: TikZ → Python → R (no simultaneo)
-- 5 coherencias a verificar antes de aprobacion
-- Bloqueo de generacion .Rmd si Flujo B incompleto
+---
+
+**Principio Fundamental**: Este sistema garantiza calidad mediante validación automática permanente. NO hay forma de evadir las protecciones de testing. Toda modificación es validada antes y después de su aplicación.
