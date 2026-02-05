@@ -1,0 +1,481 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "graphicx"
+      - "float"
+      - "amsmath"
+icfes:
+  competencia: formulacion_ejecucion
+  nivel_dificultad: 2
+  contenido:
+    categoria: geometria
+    tipo: generico
+  contexto: laboral
+  eje_axial: eje2
+  componente: geometrico_metrico
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+generar_datos <- function() {
+
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS (8 contextos)
+  # ============================================================
+  contextos <- list(
+    list(
+      lugar = "Una empresa que fabrica dados",
+      objeto = "dado",
+      objeto_plural = "dados",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "caja",
+      contenedor_plural = "cajas",
+      genero_cont = "f",
+      razon = "la producción del próximo mes requiere empacar más dados por caja"
+    ),
+    list(
+      lugar = "Una fábrica de hielo",
+      objeto = "cubo de hielo",
+      objeto_plural = "cubos de hielo",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "contenedor",
+      contenedor_plural = "contenedores",
+      genero_cont = "m",
+      razon = "los restaurantes solicitan contenedores con mayor capacidad"
+    ),
+    list(
+      lugar = "Un taller de juguetes didácticos",
+      objeto = "bloque de madera",
+      objeto_plural = "bloques de madera",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "caja de almacenamiento",
+      contenedor_plural = "cajas de almacenamiento",
+      genero_cont = "f",
+      razon = "el nuevo diseño del juego requiere más bloques por caja"
+    ),
+    list(
+      lugar = "Una fábrica de dulces",
+      objeto = "caramelo cúbico",
+      objeto_plural = "caramelos cúbicos",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "recipiente",
+      contenedor_plural = "recipientes",
+      genero_cont = "m",
+      razon = "la presentación especial necesita más caramelos por recipiente"
+    ),
+    list(
+      lugar = "Un negocio de jabones artesanales",
+      objeto = "jabón cúbico",
+      objeto_plural = "jabones cúbicos",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "caja de empaque",
+      contenedor_plural = "cajas de empaque",
+      genero_cont = "f",
+      razon = "el nuevo catálogo ofrece cajas con mayor cantidad de jabones"
+    ),
+    list(
+      lugar = "Un proveedor de materiales didácticos",
+      objeto = "imán cúbico",
+      objeto_plural = "imanes cúbicos",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "caja organizadora",
+      contenedor_plural = "cajas organizadoras",
+      genero_cont = "f",
+      razon = "los kits escolares ahora incluyen más imanes por caja"
+    ),
+    list(
+      lugar = "Una empresa de productos alimenticios",
+      objeto = "cubo de azúcar",
+      objeto_plural = "cubos de azúcar",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "dispensador",
+      contenedor_plural = "dispensadores",
+      genero_cont = "m",
+      razon = "el nuevo formato de dispensador debe contener más cubos"
+    ),
+    list(
+      lugar = "Una chocolatería",
+      objeto = "chocolate cúbico",
+      objeto_plural = "chocolates cúbicos",
+      medida_obj = "1 cm x 1 cm x 1 cm",
+      contenedor = "caja de regalo",
+      contenedor_plural = "cajas de regalo",
+      genero_cont = "f",
+      razon = "la edición especial lleva más chocolates por caja"
+    )
+  )
+
+  # ============================================================
+  # POOL DE PARES NUMERICOS (cubos perfectos)
+  # Solo pares con raíces separadas por >= 2
+  # ============================================================
+  cubos_perfectos <- c(8, 27, 64, 125, 216, 343, 512, 729, 1000)
+  raices <- c(2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+  pares_validos <- list()
+  for (i in 1:(length(cubos_perfectos) - 1)) {
+    for (j in (i + 1):length(cubos_perfectos)) {
+      if (raices[j] - raices[i] >= 2) {
+        pares_validos[[length(pares_validos) + 1]] <- list(
+          V_ant = cubos_perfectos[i],
+          V_nue = cubos_perfectos[j],
+          raiz_ant = raices[i],
+          raiz_nue = raices[j]
+        )
+      }
+    }
+  }
+
+  # Seleccionar contexto y par al azar
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  par <- pares_validos[[sample(length(pares_validos), 1)]]
+
+  # Precomputar concordancia de género
+  ctx$art_pl <- ifelse(ctx$genero_cont == "f", "las", "los")
+  ctx$adj_nuevos <- ifelse(ctx$genero_cont == "f", "nuevas", "nuevos")
+
+  V_ant <- par$V_ant
+  V_nue <- par$V_nue
+  raiz_ant <- par$raiz_ant
+  raiz_nue <- par$raiz_nue
+
+  # ============================================================
+  # PARTE 1 (schoice): Lado del nuevo contenedor
+  # Distractores diagnósticos
+  # ============================================================
+  correcto <- raiz_nue
+  d1 <- raiz_ant       # dato equivocado
+  d2 <- raiz_nue + 1   # tanteo por exceso
+  d3 <- raiz_nue - 1   # tanteo por defecto
+
+  opciones_vals <- c(correcto, d1, d2, d3)
+  stopifnot(length(unique(opciones_vals)) == 4)
+
+  opciones_texto <- paste0(opciones_vals, " cm")
+  orden_p1 <- sample(1:4)
+  opciones_p1 <- opciones_texto[orden_p1]
+  valores_p1 <- opciones_vals[orden_p1]
+  sol_p1 <- as.integer(valores_p1 == correcto)
+
+  # ============================================================
+  # PARTE 2 (num): Diferencia de objetos
+  # ============================================================
+  resp2 <- V_nue - V_ant
+
+  # ============================================================
+  # PARTE 3 (mchoice): Propiedades del cubo - 4 afirmaciones
+  # Pool de 6 afirmaciones verdaderas y 6 falsas (genéricas)
+  # Se seleccionan 2 verdaderas y 2 falsas al azar
+  # ============================================================
+  pool_verdaderas <- list(
+    "Todas las aristas de un cubo tienen la misma longitud.",
+    "El volumen de un cubo se calcula elevando la longitud de su arista al cubo.",
+    "Un cubo tiene 6 caras, todas cuadradas e iguales.",
+    "Un cubo tiene 12 aristas.",
+    "La diagonal de una cara del cubo mide $L\\sqrt{2}$, donde $L$ es la arista.",
+    "Un cubo tiene 8 vértices."
+  )
+
+  pool_falsas <- list(
+    "El volumen de un cubo se calcula elevando la longitud de su arista al cuadrado.",
+    "Un cubo tiene 8 caras.",
+    "Si se duplica la arista de un cubo, su volumen se duplica.",
+    "La raíz cuadrada del volumen da la longitud de la arista del cubo.",
+    "Un cubo tiene 10 aristas.",
+    "Todas las diagonales de un cubo tienen la misma longitud que sus aristas."
+  )
+
+  idx_v <- sample(length(pool_verdaderas), 2)
+  idx_f <- sample(length(pool_falsas), 2)
+
+  afirmaciones_v <- pool_verdaderas[idx_v]
+  afirmaciones_f <- pool_falsas[idx_f]
+
+  # Combinar y aleatorizar
+  afirmaciones_p3 <- c(afirmaciones_v, afirmaciones_f)
+  es_verdadera_p3 <- c(TRUE, TRUE, FALSE, FALSE)
+  orden_p3 <- sample(1:4)
+  afirmaciones_p3 <- afirmaciones_p3[orden_p3]
+  es_verdadera_p3 <- es_verdadera_p3[orden_p3]
+
+  sol_p3 <- as.integer(es_verdadera_p3)
+
+  # ============================================================
+  # PARTE 4 (schoice como V/F): Enunciado aleatorio
+  # Pool de enunciados sobre relaciones cúbicas
+  # ============================================================
+  pool_vf <- list(
+    list(
+      enunciado = "Si un cubo tiene volumen 64 cm$^3$, entonces su arista mide 4 cm.",
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = "Si un cubo tiene volumen 125 cm$^3$, entonces su arista mide 25 cm.",
+      es_verdadero = FALSE
+    ),
+    list(
+      enunciado = "$\\sqrt[3]{27} = 3$",
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = "$\\sqrt[3]{216} = 36$",
+      es_verdadero = FALSE
+    ),
+    list(
+      enunciado = "Si la arista de un cubo se triplica, su volumen se multiplica por 27.",
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = "Si la arista de un cubo se duplica, su volumen se multiplica por 4.",
+      es_verdadero = FALSE
+    ),
+    list(
+      enunciado = "$7^3 = 343$",
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = "$6^3 = 196$",
+      es_verdadero = FALSE
+    )
+  )
+
+  # Seleccionar un enunciado al azar
+  sel_vf <- pool_vf[[sample(length(pool_vf), 1)]]
+  enunciado_vf <- sel_vf$enunciado
+
+  # schoice: Verdadero/Falso (2 opciones)
+  if (sel_vf$es_verdadero) {
+    sol_p4 <- c(1L, 0L)  # Verdadero es correcto
+  } else {
+    sol_p4 <- c(0L, 1L)  # Falso es correcto
+  }
+
+  return(list(
+    ctx = ctx,
+    V_ant = V_ant,
+    V_nue = V_nue,
+    raiz_ant = raiz_ant,
+    raiz_nue = raiz_nue,
+    # Parte 1
+    correcto = correcto,
+    opciones_p1 = opciones_p1,
+    valores_p1 = valores_p1,
+    sol_p1 = sol_p1,
+    # Parte 2
+    resp2 = resp2,
+    # Parte 3
+    afirmaciones_p3 = afirmaciones_p3,
+    sol_p3 = sol_p3,
+    # Parte 4
+    enunciado_vf = enunciado_vf,
+    es_verdadero_vf = sel_vf$es_verdadero,
+    sol_p4 = sol_p4
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+ctx <- datos$ctx
+V_ant <- datos$V_ant
+V_nue <- datos$V_nue
+raiz_ant <- datos$raiz_ant
+raiz_nue <- datos$raiz_nue
+correcto <- datos$correcto
+opciones_p1 <- datos$opciones_p1
+sol_p1 <- datos$sol_p1
+resp2 <- datos$resp2
+afirmaciones_p3 <- datos$afirmaciones_p3
+sol_p3 <- datos$sol_p3
+enunciado_vf <- datos$enunciado_vf
+es_verdadero_vf <- datos$es_verdadero_vf
+sol_p4 <- datos$sol_p4
+
+# Construir strings de solución
+sol_p1_str <- paste(sol_p1, collapse = "")
+sol_p3_str <- paste(sol_p3, collapse = "")
+sol_p4_str <- paste(sol_p4, collapse = "")
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for (i in 1:1000) {
+    datos_test <- generar_datos()
+    hash_datos <- digest::digest(list(
+      contexto = datos_test$ctx$lugar,
+      V_ant = datos_test$V_ant,
+      V_nue = datos_test$V_nue,
+      correcto = datos_test$correcto,
+      resp2 = datos_test$resp2,
+      afirmaciones = sapply(datos_test$afirmaciones_p3, function(x) x),
+      enunciado_vf = datos_test$enunciado_vf
+    ))
+    versiones[[i]] <- hash_datos
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 200,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 200."))
+})
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+test_that("Parte 1: correcto es raíz cúbica de V_nue", {
+  expect_equal(correcto^3, V_nue)
+})
+
+test_that("Parte 1: exactamente una opción correcta", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+})
+
+test_that("Parte 2: resp2 es diferencia V_nue - V_ant", {
+  expect_equal(resp2, V_nue - V_ant)
+  expect_true(resp2 > 0)
+})
+
+test_that("Parte 3: mchoice tiene 4 afirmaciones", {
+  expect_equal(length(afirmaciones_p3), 4)
+  expect_equal(length(sol_p3), 4)
+  expect_equal(sum(sol_p3), 2)  # 2 verdaderas, 2 falsas
+})
+
+test_that("Parte 4: V/F tiene exactamente 2 opciones", {
+  expect_equal(length(sol_p4), 2)
+  expect_equal(sum(sol_p4), 1)  # exactamente una correcta
+})
+
+test_that("Concordancia gramatical presente", {
+  expect_false(is.null(ctx$contenedor_plural))
+  expect_false(is.null(ctx$genero_cont))
+  expect_false(is.null(ctx$art_pl))
+  expect_false(is.null(ctx$adj_nuevos))
+})
+```
+
+Question
+========
+
+`r ctx$lugar` ha solicitado que, para cumplir con un nuevo pedido, se empaquen más `r ctx$objeto_plural` en cada `r ctx$contenedor`, lo que implica ampliar el tamaño de `r ctx$art_pl` `r ctx$contenedor_plural`. Actualmente solo se están empacando `r V_ant` `r ctx$objeto_plural` con dimensiones de `r ctx$medida_obj` por `r ctx$contenedor`, ya que `r ctx$razon`.
+
+`r ifelse(ctx$genero_cont == "f", "La nueva", "El nuevo")` `r ctx$contenedor` debe tener forma de cubo y debe poder contener `r V_nue` `r ctx$objeto_plural` con las mismas dimensiones.
+
+**Parte 1.** ¿Cuánto debe medir cada lado `r ifelse(ctx$genero_cont == "f", "de la nueva", "del nuevo")` `r ctx$contenedor`?
+
+##ANSWER1##
+
+**Parte 2.** ¿Cuántos `r ctx$objeto_plural` más caben en `r ifelse(ctx$genero_cont == "f", "la nueva", "el nuevo")` `r ctx$contenedor` comparado con `r ifelse(ctx$genero_cont == "f", "la", "el")` actual?
+
+##ANSWER2##
+
+**Parte 3.** De las siguientes afirmaciones sobre propiedades de los cubos, seleccione todas las que sean correctas.
+
+##ANSWER3##
+
+**Parte 4.** Determine si la siguiente afirmación es verdadera o falsa: `r enunciado_vf`
+
+##ANSWER4##
+
+Answerlist
+----------
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+* `r afirmaciones_p3[[1]]`
+* `r afirmaciones_p3[[2]]`
+* `r afirmaciones_p3[[3]]`
+* `r afirmaciones_p3[[4]]`
+* Verdadero
+* Falso
+
+Solution
+========
+
+### Parte 1: Lado `r ifelse(ctx$genero_cont == "f", "de la nueva", "del nuevo")` `r ctx$contenedor`
+
+Se requiere `r ifelse(ctx$genero_cont == "f", "una", "un")` `r ctx$contenedor` `r ifelse(ctx$genero_cont == "f", "cúbica", "cúbico")` con capacidad para `r V_nue` `r ctx$objeto_plural` de 1 cm$^3$ cada uno.
+
+$$L^3 = `r V_nue` \implies L = \sqrt[3]{`r V_nue`} = `r correcto` \text{ cm}$$
+
+Verificación: $`r correcto`^3 = `r correcto` \times `r correcto` \times `r correcto` = `r correcto^3` \checkmark$
+
+### Parte 2: Diferencia de `r ctx$objeto_plural`
+
+$$`r V_nue` - `r V_ant` = `r resp2` \text{ `r ctx$objeto_plural` más}$$
+
+### Parte 3: Propiedades de los cubos
+
+```{r sol_mchoice, echo=FALSE, results='asis'}
+for (k in 1:4) {
+  estado <- ifelse(sol_p3[k] == 1, "VERDADERA", "FALSA")
+  cat(paste0("- ", afirmaciones_p3[[k]], " **[", estado, "]**\n\n"))
+}
+```
+
+### Parte 4: Verdadero o Falso
+
+`r enunciado_vf` $\to$ **`r ifelse(es_verdadero_vf, "Verdadero", "Falso")`**
+
+Answerlist
+----------
+* `r if(sol_p1[1] == 1) "Correcto." else "Incorrecto."`
+* `r if(sol_p1[2] == 1) "Correcto." else "Incorrecto."`
+* `r if(sol_p1[3] == 1) "Correcto." else "Incorrecto."`
+* `r if(sol_p1[4] == 1) "Correcto." else "Incorrecto."`
+* La diferencia es $`r resp2`$ `r ctx$objeto_plural`.
+* `r if(sol_p3[1] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[2] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[3] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[4] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p4[1] == 1) "Correcto. La afirmación es verdadera." else "Incorrecto."`
+* `r if(sol_p4[2] == 1) "Correcto. La afirmación es falsa." else "Incorrecto."`
+
+Meta-information
+================
+exname: raiz_cubica_empaquetamiento_geometrico_metrico_formulacion_ejecucion_n2_v1_cloze
+extype: cloze
+exclozetype: schoice|num|mchoice|schoice
+exsolution: `r sol_p1_str`|`r resp2`|`r sol_p3_str`|`r sol_p4_str`
+exshuffle: TRUE
+extol: 0|0.01|0|0
+exsection: Geometrico-Metrico/Formulacion-Ejecucion
+exextra[Type]: CLOZE
+exextra[Competencia]: Formulacion y Ejecucion
+exextra[Componente]: Geometrico-Metrico
+exextra[Afirmacion]: Resolver problemas que involucran relaciones entre magnitudes lineales y volumetricas
+exextra[Evidencia]: Usa relaciones y propiedades geometricas (V = L^3) para resolver problemas de medicion
+exextra[Nivel]: 2

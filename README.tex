@@ -1,0 +1,1172 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{📚 RepositorioMatematicasICFES\_R\_Exams (Filosofía
+2025)}\label{repositoriomatematicasicfes_r_exams-filosofuxeda-2025}
+
+\href{https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado}{\pandocbounded{\includegraphics[keepaspectratio]{https://img.shields.io/badge/Estado-Activo-brightgreen}}}
+\href{https://www.r-exams.org/}{\pandocbounded{\includegraphics[keepaspectratio]{https://img.shields.io/badge/R--exams-Compatible-orange}}}
+\href{https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado}{\pandocbounded{\includegraphics[keepaspectratio]{https://img.shields.io/badge/Calidad-ICFES_2025-success}}}
+\href{https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado}{\pandocbounded{\includegraphics[keepaspectratio]{https://img.shields.io/badge/Metodología-Sistema_Condicional-blue}}}
+
+\textbf{Sistema integrado para la generación de ejercicios matemáticos
+tipo ICFES en formato R-exams a partir de imágenes, siguiendo la
+filosofía ``Matemáticas ICFES 2025''.}
+
+Este repositorio implementa un flujo de trabajo completo y automatizado
+que transforma imágenes de problemas matemáticos en ejercicios
+\texttt{.Rmd} interactivos, parametrizados y de alta calidad, listos
+para ser compilados con R-exams.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🎯 \textbf{Filosofía del
+Sistema}}{🎯 Filosofía del Sistema}}\label{filosofuxeda-del-sistema}
+
+El proyecto se basa en un flujo de trabajo de 3 fases diseñado para
+maximizar la calidad y la eficiencia:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{📥 Fase 1: Entrada de Datos y Análisis Automático}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Recepción de una imagen (\texttt{.png}) con un problema matemático.
+  \item
+    \textbf{Sistema Condicional Automático}: Detección inteligente de
+    contenido gráfico para activar el flujo de trabajo adecuado.
+  \item
+    Protocolo de conversión para imágenes que no siguen el formato ICFES
+    estándar.
+  \end{itemize}
+\item
+  \textbf{⚙️ Fase 2: Procesamiento y Generación}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{Flujo A (Sin Gráficas)}: Proceso estándar de 8 fases para la
+    generación del \texttt{.Rmd}.
+  \item
+    \textbf{Flujo B (Con Gráficas)}: Activación del
+    \textbf{Agente-Graficador Especializado TikZ} para replicar la
+    imagen con una fidelidad visual superior al 98\%.
+  \item
+    Generación de código \texttt{.Rmd} completo, siguiendo una
+    estructura obligatoria y validada.
+  \end{itemize}
+\item
+  \textbf{🔄 Fase 3: Iteración y Mejora Continua}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Captura de retroalimentación para la corrección de errores.
+  \item
+    Implementación de mejoras basadas en patrones identificados para
+    optimizar la generación de código.
+  \end{itemize}
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{✨ \textbf{Características
+Principales}}{✨ Características Principales}}\label{caracteruxedsticas-principales}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{🤖 Sistema Condicional Automático}: Activa flujos de trabajo
+  especializados según el contenido de la imagen.
+\item
+  \textbf{🎨 Agente-Graficador TikZ}: Replica imágenes con una fidelidad
+  visual del 98\%+, manejando colores RGB precisos, posicionamiento
+  sistemático y características avanzadas.
+\item
+  \textbf{🧩 Soporte Híbrido}: Genera ejercicios que integran R, Python
+  (vía \texttt{reticulate}), y LaTeX/TikZ para visualizaciones
+  complejas.
+\item
+  \textbf{✅ Calidad ICFES Garantizada}: Cumple con metadatos
+  obligatorios, sistema avanzado de distractores y criterios de calidad
+  rigurosos.
+\item
+  \textbf{🔧 Protocolo Anti-Errores}: Utiliza una base de ``ejemplos
+  funcionales'' para prevenir errores de implementación, asegurando que
+  todo el código generado sea robusto y compilable.
+\item
+  \textbf{✔️ Pruebas de Diversidad}: Generación mínima de 300 versiones
+  únicas por ejercicio, verificada con \texttt{testthat}.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🛠️ \textbf{Tecnologías
+Utilizadas}}{🛠️ Tecnologías Utilizadas}}\label{tecnologuxedas-utilizadas}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Motor Principal}: \textbf{R} (≥ 4.0) y \textbf{R-exams}.
+\item
+  \textbf{Visualización}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{LaTeX/TikZ}: Para diagramas, figuras geométricas y
+    notaciones matemáticas de alta calidad.
+  \item
+    \textbf{Python (\texttt{matplotlib}, \texttt{numpy})}: Integrado con
+    \texttt{reticulate} para gráficos avanzados.
+  \item
+    \textbf{R (\texttt{ggplot2})}: Para análisis y gráficos
+    estadísticos.
+  \end{itemize}
+\item
+  \textbf{Entorno}: VSCode con herramientas de IA, sobre Manjaro Plasma
+  KDE.
+\item
+  \textbf{Control de Versiones}: Git y GitHub.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{📁 \textbf{Estructura del
+Repositorio}}{📁 Estructura del Repositorio}}\label{estructura-del-repositorio}
+
+\begin{verbatim}
+RepositorioMatematicasICFES_R_Exams/
+├── 📂 01-Algebra-Y-Calculo/
+├── 📂 05-Geometria/
+├── 📂 06-Estadistica-Y-Probabilidad/
+├── 🏆 A-Produccion/                        # ⭐ Archivos listos para producción
+│   ├── 📂 Ejemplos-Funcionales-Rmd/       # (OBLIGATORIO) Base de código validado
+│   ├── 📂 01-Numeros-Reales/              # Ejercicios de producción por tema
+│   ├── 📂 02-Funciones/
+│   ├── 📂 05-Geometría/
+│   └── 📂 06-Estadística-Y-Probabilidad/
+├── 🛠️ Auxiliares/
+│   ├── 📂 Agente-Graficador-TikZ/         # Laboratorio del agente TikZ
+│   ├── 📂 Estrategia-Avanzada-de-Replicas/ # Templates TikZ profesionales
+│   └── 📂 Python-Documentation/             # Guías para integración con Python
+├── 🧪 Lab-Manjaro/                         # Ejercicios en desarrollo y pruebas
+├── 📄 .gitignore
+├── 📖 README.md                            # Este archivo
+└── 📖 walkthrough.md                       # Guía de uso detallada
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🏆 \textbf{Carpeta A-Produccion: Archivos
+Listos para
+Uso}}{🏆 Carpeta A-Produccion: Archivos Listos para Uso}}\label{carpeta-a-produccion-archivos-listos-para-uso}
+
+\subsubsection{\texorpdfstring{📋
+\textbf{Descripción}}{📋 Descripción}}\label{descripciuxf3n}
+
+La carpeta \textbf{\texttt{A-Produccion/}} contiene archivos
+\texttt{.Rmd} y subproyectos funcionales que han sido validados y están
+\textbf{listos para producción}. Estos archivos representan el estándar
+de calidad del proyecto y pueden utilizarse directamente o con ajustes
+mínimos.
+
+\subsubsection{\texorpdfstring{✨ \textbf{Características de los
+Archivos en
+A-Produccion}}{✨ Características de los Archivos en A-Produccion}}\label{caracteruxedsticas-de-los-archivos-en-a-produccion}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ \textbf{Completamente funcionales}: Compilables sin errores en
+  R-exams
+\item
+  ✅ \textbf{Validados}: Han pasado todas las pruebas de calidad y
+  diversidad (300+ versiones)
+\item
+  ✅ \textbf{Documentados}: Incluyen comentarios y estructura clara
+\item
+  ✅ \textbf{Optimizados}: Siguen las mejores prácticas del proyecto
+\item
+  ✅ \textbf{Modelos de referencia}: Pueden usarse como plantillas para
+  nuevos ejercicios
+\end{itemize}
+
+\subsubsection{\texorpdfstring{📂 \textbf{Contenido de
+A-Produccion}}{📂 Contenido de A-Produccion}}\label{contenido-de-a-produccion}
+
+\begin{verbatim}
+A-Produccion/
+├── 📂 Ejemplos-Funcionales-Rmd/       # ⭐ Base de código validado (CONSULTA OBLIGATORIA)
+│   ├── Plantillas/                    # Templates por tipo de ejercicio
+│   │   ├── Rmd/                       # Plantillas .Rmd (schoice, cloze, etc.)
+│   │   ├── Rnw/                       # Plantillas .Rnw
+│   │   └── TikZ-Documentation/        # Documentación y ejemplos TikZ
+│   └── [Ejercicios validados]         # Ejercicios funcionales de referencia
+├── 📂 01-Numeros-Reales/              # Ejercicios de producción por tema
+├── 📂 02-Funciones/
+├── 📂 05-Geometría/
+└── 📂 06-Estadística-Y-Probabilidad/
+\end{verbatim}
+
+\subsubsection{\texorpdfstring{🎯 \textbf{Uso
+Recomendado}}{🎯 Uso Recomendado}}\label{uso-recomendado}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Como referencia}: Consultar antes de crear nuevos ejercicios
+\item
+  \textbf{Como plantilla}: Copiar y adaptar para nuevos problemas
+  similares
+\item
+  \textbf{Como validación}: Comparar tu código con estos ejemplos
+  funcionales
+\item
+  \textbf{Como aprendizaje}: Estudiar las mejores prácticas
+  implementadas
+\end{enumerate}
+
+\subsubsection{\texorpdfstring{⚠️
+\textbf{Importante}}{⚠️ Importante}}\label{importante}
+
+\begin{quote}
+\textbf{Regla de Oro}: ``Si no está en los ejemplos funcionales, no
+improvises.''
+
+Antes de escribir cualquier código nuevo, es \textbf{OBLIGATORIO}
+consultar los ejercicios en
+\texttt{/A-Produccion/Ejemplos-Funcionales-Rmd/} para seguir los
+patrones validados.
+\end{quote}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{📦 \textbf{Cambio de Ubicación:
+Ejemplos-Funcionales-Rmd}}{📦 Cambio de Ubicación: Ejemplos-Funcionales-Rmd}}\label{cambio-de-ubicaciuxf3n-ejemplos-funcionales-rmd}
+
+\subsubsection{\texorpdfstring{🔄 \textbf{Reorganización del
+Repositorio}}{🔄 Reorganización del Repositorio}}\label{reorganizaciuxf3n-del-repositorio}
+
+La carpeta \textbf{\texttt{Ejemplos-Funcionales-Rmd}} ha sido
+\textbf{reubicada} para mejorar la organización del proyecto y destacar
+su importancia como base de código de producción.
+
+\subsubsection{\texorpdfstring{📍
+\textbf{Ubicaciones}}{📍 Ubicaciones}}\label{ubicaciones}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Aspecto
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Detalle
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Ubicación Anterior} &
+\texttt{/Auxiliares/Ejemplos-Funcionales-Rmd/} \\
+\textbf{Ubicación Nueva} &
+\texttt{/A-Produccion/Ejemplos-Funcionales-Rmd/} \\
+\textbf{Fecha del Cambio} & Diciembre 2025 \\
+\textbf{Razón del Cambio} & Destacar archivos de producción y mejorar
+organización \\
+\end{longtable}
+
+\subsubsection{\texorpdfstring{🎯 \textbf{Propósito del
+Cambio}}{🎯 Propósito del Cambio}}\label{propuxf3sito-del-cambio}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Mayor visibilidad}: Los ejemplos funcionales ahora están en
+  una carpeta de producción destacada
+\item
+  \textbf{Mejor organización}: Separación clara entre archivos de
+  producción y auxiliares
+\item
+  \textbf{Facilitar acceso}: Ubicación más intuitiva para archivos de
+  referencia obligatoria
+\item
+  \textbf{Estandarización}: Agrupar todos los archivos listos para
+  producción en un solo lugar
+\end{enumerate}
+
+\subsubsection{\texorpdfstring{📝 \textbf{Actualización de
+Referencias}}{📝 Actualización de Referencias}}\label{actualizaciuxf3n-de-referencias}
+
+Todas las referencias en el código, documentación y configuraciones han
+sido actualizadas para reflejar la nueva ubicación:
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ Archivos de configuración (\texttt{.json}, \texttt{.yaml})
+\item
+  ✅ Documentación (\texttt{.md})
+\item
+  ✅ Reglas de IA (\texttt{.cursor/rules/}, \texttt{.augment/rules/})
+\item
+  ✅ Scripts y herramientas
+\item
+  ✅ README y guías de uso
+\end{itemize}
+
+\subsubsection{\texorpdfstring{🔧 \textbf{Acción
+Requerida}}{🔧 Acción Requerida}}\label{acciuxf3n-requerida}
+
+Si tienes scripts o configuraciones personales que referencian la
+ubicación antigua, actualízalas a:
+
+\begin{verbatim}
+/A-Produccion/Ejemplos-Funcionales-Rmd/
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🚀 \textbf{Instalación y
+Uso}}{🚀 Instalación y Uso}}\label{instalaciuxf3n-y-uso}
+
+\subsubsection{\texorpdfstring{\textbf{Requisitos
+Previos}}{Requisitos Previos}}\label{requisitos-previos}
+
+Asegúrate de tener instalado R (≥ 4.0), una distribución de LaTeX (se
+recomienda \texttt{tinytex}) y Python.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 1. Instalar paquetes esenciales de R}
+\FunctionTok{install.packages}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"exams"}\NormalTok{, }\StringTok{"tidyverse"}\NormalTok{, }\StringTok{"ggplot2"}\NormalTok{, }\StringTok{"knitr"}\NormalTok{, }\StringTok{"reticulate"}\NormalTok{, }\StringTok{"testthat"}\NormalTok{, }\StringTok{"tinytex"}\NormalTok{))}
+
+\CommentTok{\# 2. Configurar TinyTeX}
+\NormalTok{tinytex}\SpecialCharTok{::}\FunctionTok{install\_tinytex}\NormalTok{()}
+
+\CommentTok{\# 3. Configurar Python para reticulate}
+\FunctionTok{library}\NormalTok{(reticulate)}
+\FunctionTok{use\_python}\NormalTok{(}\StringTok{"/usr/bin/python3"}\NormalTok{, }\AttributeTok{required =} \ConstantTok{TRUE}\NormalTok{) }\CommentTok{\# Ajusta la ruta a tu ejecutable de Python}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{\textbf{Uso del
+Sistema}}{Uso del Sistema}}\label{uso-del-sistema}
+
+El sistema está diseñado para ser operado mediante \textbf{Skills de
+Claude Code} que automatizan el workflow completo.
+
+\paragraph{\texorpdfstring{\textbf{Skills Disponibles} (Workflow
+Automatizado)}{Skills Disponibles (Workflow Automatizado)}}\label{skills-disponibles-workflow-automatizado}
+
+El proyecto incluye skills configurados en \texttt{.claude/skills/} para
+automatizar cada fase del workflow:
+
+\textbf{Workflow Principal:}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{/analizar-icfes} - Análisis ICFES de imagen según 6
+  dimensiones (Fase 1)
+\item
+  \texttt{/generar-schoice} - Generar ejercicio de selección única con
+  nomenclatura obligatoria y carpeta estructurada
+\item
+  \texttt{/generar-cloze} - Generar ejercicio tipo CLOZE con
+  configuración de tolerancias apropiadas
+\item
+  \texttt{/promover-ejercicio} - Promoción a carpeta de producción (Fase
+  7)
+\end{itemize}
+
+\textbf{Skills de Soporte:}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{/corregir-error-imagen} - Corrección automática de errores
+  TikZ
+\item
+  \texttt{/validar-diversidad} - Validar 300+ versiones únicas
+\item
+  \texttt{/validar-icfes} - Validar metadatos y estructura R-exams
+\end{itemize}
+
+\textbf{Skills del Graficador Experto v2.0:}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{/analizar-imagen} - Análisis visual detallado con estado
+  persistente
+\item
+  \texttt{/generar-tikz} - Generación TikZ/LaTeX con métricas
+  cuantitativas
+\item
+  \texttt{/generar-python} - Generación Python/Matplotlib con
+  transferencia de conocimiento
+\item
+  \texttt{/generar-r} - Generación R/ggplot2 con lecciones aprendidas
+\item
+  \texttt{/comparar} - Comparación visual con puntuación 0-100 puntos
+\item
+  \texttt{/iterar} - Refinamiento iterativo con contador de iteraciones
+\item
+  \texttt{/exportar} - Exportación completa con estadísticas y carpeta
+  nomenclada
+\item
+  \texttt{/estado} - Visualización de progreso del workflow en tiempo
+  real
+\item
+  \texttt{/auto-iterar} - Iteración automática hasta umbral de similitud
+\end{itemize}
+
+\paragraph{\texorpdfstring{\textbf{Ejemplo de Uso con
+Skills}}{Ejemplo de Uso con Skills}}\label{ejemplo-de-uso-con-skills}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 1. Analizar imagen de ejercicio ICFES}
+\ExtensionTok{/analizar{-}icfes}\NormalTok{ imagen\_ejercicio.png}
+
+\CommentTok{\# 2. Si tiene gráficos complejos, usar Graficador Experto}
+\ExtensionTok{/analizar{-}imagen}\NormalTok{ grafico\_matematico.png}
+\ExtensionTok{/generar{-}r}  \CommentTok{\# Genera código R (recomendado para R{-}exams)}
+\ExtensionTok{/comparar}   \CommentTok{\# Obtiene puntuación 0{-}100}
+\ExtensionTok{/auto{-}iterar}\NormalTok{ r 95 10  }\CommentTok{\# Itera hasta 95+ puntos (máx 10 iteraciones)}
+
+\CommentTok{\# 3. Generar ejercicio SCHOICE (pregunta al usuario qué versión gráfica usar)}
+\ExtensionTok{/generar{-}schoice}
+
+\CommentTok{\# 4. Validar diversidad de versiones}
+\ExtensionTok{/validar{-}diversidad}\NormalTok{ archivo\_generado.Rmd}
+
+\CommentTok{\# 5. Promover a producción después de validar}
+\ExtensionTok{/promover{-}ejercicio}\NormalTok{ archivo\_generado.Rmd}
+\end{Highlighting}
+\end{Shaded}
+
+\paragraph{\texorpdfstring{\textbf{Comandos Tradicionales
+(Alternativos)}}{Comandos Tradicionales (Alternativos)}}\label{comandos-tradicionales-alternativos}
+
+También puedes usar comandos en lenguaje natural:
+
+\begin{quote}
+``Aplica el sistema condicional automático a esta imagen PNG para
+detectar contenido gráfico y activar el flujo apropiado.''
+\end{quote}
+
+Para problemas que requieren replicación gráfica directa:
+
+\begin{quote}
+``Activa el Agente-Graficador Especializado TikZ para replicar esta
+imagen con 98\%+ fidelidad visual.''
+\end{quote}
+
+El sistema se encargará de analizar la imagen, seleccionar el flujo
+correcto y generar el archivo \texttt{.Rmd} correspondiente en el
+directorio de trabajo.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🤖 \textbf{Configuración de Claude
+Code}}{🤖 Configuración de Claude Code}}\label{configuraciuxf3n-de-claude-code}
+
+El proyecto incluye configuración completa en \texttt{.claude/} para
+automatizar el workflow:
+
+\begin{verbatim}
+.claude/
+├── CLAUDE.md              # Memory file principal del proyecto (v2.1)
+├── rules/                 # Reglas modulares (según doc oficial nov 2025)
+│   ├── ciclo-validacion.md           # Ciclo de Validación Automática (OBLIGATORIO)
+│   ├── codigo-rmd.md                 # Reglas para código R/Markdown
+│   └── documentacion-verificada.md   # Principio de Documentación Verificada
+├── settings.json          # Hooks y configuración global
+├── settings.local.json    # Permisos para skills
+├── schemas/               # Esquemas JSON para estado persistente
+│   ├── workflow_state.schema.json
+│   ├── analisis_inicial.schema.json
+│   ├── metricas_similitud.schema.json
+│   └── lecciones_aprendidas.schema.json
+├── skills/                # Skills del workflow automatizado
+│   ├── analizar-icfes/
+│   ├── generar-schoice/
+│   ├── generar-cloze/
+│   ├── promover-ejercicio/
+│   ├── corregir-error-imagen/
+│   ├── validar-diversidad/
+│   ├── validar-icfes/
+│   └── [Graficador Experto v2.0]
+│       ├── analizar-imagen-matematica/
+│       ├── generar-tikz/
+│       ├── generar-python/
+│       ├── generar-r/
+│       ├── comparar-visual/
+│       ├── refinar-codigo/
+│       ├── gestionar-estado/
+│       └── transferir-conocimiento/
+├── commands/              # Comandos slash para acceso rápido
+│   ├── analizar-imagen.md
+│   ├── generar-tikz.md
+│   ├── generar-python.md
+│   ├── generar-r.md
+│   ├── comparar.md
+│   ├── iterar.md
+│   ├── exportar.md
+│   ├── estado.md
+│   ├── auto-iterar.md
+│   ├── generar-schoice.md
+│   └── generar-cloze.md
+└── docs/                  # Documentación del workflow
+    ├── 01-EXPLICACION_COMPLETA_GRAFICADOR_EXPERTO.md
+    ├── NOMENCLATURA_ARCHIVOS_RMD.md
+    ├── INDICE_DOCUMENTACION.md
+    ├── WORKFLOW_PASO_A_PASO.md
+    └── [otros archivos]
+\end{verbatim}
+
+\textbf{Características:}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ Hooks configurados para recordatorios automáticos
+\item
+  ✅ Permisos preconfigurados para ejecución sin confirmación
+\item
+  ✅ Documentación completa del workflow paso a paso
+\item
+  ✅ Validación automática de estructura ICFES
+\item
+  ✅ \textbf{Graficador Experto v2.0} con estado persistente y métricas
+  cuantitativas
+\item
+  ✅ Sistema de puntuación 0-100 puntos para comparación visual
+\item
+  ✅ Transferencia de conocimiento entre lenguajes (TikZ → Python → R)
+\item
+  ✅ Nomenclatura obligatoria con carpetas estructuradas
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🤝 \textbf{Contribución y
+Calidad}}{🤝 Contribución y Calidad}}\label{contribuciuxf3n-y-calidad}
+
+Cualquier contribución debe adherirse estrictamente a las metodologías y
+protocolos definidos en el proyecto.
+
+\subsubsection{\texorpdfstring{\textbf{Regla de Oro
+Anti-Errores}}{Regla de Oro Anti-Errores}}\label{regla-de-oro-anti-errores}
+
+\textbf{``Si no está en los ejemplos funcionales, no improvises.''}
+Antes de escribir cualquier código, es \textbf{obligatorio} consultar
+los ejercicios en \texttt{/A-Produccion/Ejemplos-Funcionales-Rmd/}.
+
+\subsubsection{\texorpdfstring{\textbf{Criterios de
+Calidad}}{Criterios de Calidad}}\label{criterios-de-calidad}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Fidelidad Visual (98\%+)}: Precisión geométrica, cromática, de
+  posicionamiento y completitud.
+\item
+  \textbf{Funcionalidad R-exams (100\%)}: Compatibilidad con
+  \texttt{exams2*}, 300+ versiones, y aleatorización completa.
+\item
+  \textbf{Alineación ICFES}: Metadatos completos, distractores
+  pedagógicos y nivel de dificultad apropiado.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{📊 \textbf{Información del
+Proyecto}}{📊 Información del Proyecto}}\label{informaciuxf3n-del-proyecto}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Autor}: Álvaro Ángel Molina
+\item
+  \textbf{Institución}: IE Pedacito de Cielo
+\item
+  \textbf{Propósito}: Generación de ejercicios matemáticos de alta
+  calidad para la preparación de la prueba ICFES Saber 11°.
+\item
+  \textbf{Licencia}: Proyecto Educativo
+\item
+  \textbf{Última Actualización}: Diciembre 2025
+\end{itemize}
+
+\subsection{\texorpdfstring{🆕 \textbf{Novedades
+Recientes}}{🆕 Novedades Recientes}}\label{novedades-recientes}
+
+\subsubsection{Graficador Experto v2.0 (Diciembre
+2025)}\label{graficador-experto-v2.0-diciembre-2025}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ \textbf{Estado persistente}: Tracking completo del progreso con
+  recuperación ante interrupciones
+\item
+  ✅ \textbf{Métricas cuantitativas}: Sistema de puntuación 0-100 puntos
+  en 6 categorías
+\item
+  ✅ \textbf{Análisis estructurado}: Formato JSON reutilizable para las
+  3 generaciones
+\item
+  ✅ \textbf{Transferencia de conocimiento}: Lecciones aprendidas
+  aplicadas entre lenguajes
+\item
+  ✅ \textbf{Iteración automática}: Comando \texttt{/auto-iterar} hasta
+  umbral de similitud
+\item
+  ✅ \textbf{Visualización de progreso}: Comando \texttt{/estado} para
+  ver avance en tiempo real
+\end{itemize}
+
+\subsubsection{Nomenclatura Obligatoria y Carpetas
+Estructuradas}\label{nomenclatura-obligatoria-y-carpetas-estructuradas}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ \textbf{Formato estándar}:
+  \texttt{{[}ejercicio{]}\_{[}componente{]}\_{[}competencia{]}\_n{[}nivel{]}\_v{[}version{]}.Rmd}
+\item
+  ✅ \textbf{Carpetas organizadas}: Cada ejercicio en su propia carpeta
+  con todos sus archivos
+\item
+  ✅ \textbf{Exportación mejorada}: \texttt{/exportar} crea carpeta con
+  nomenclatura oficial
+\item
+  ✅ \textbf{Selección de versión gráfica}: Pregunta obligatoria antes
+  de generar .Rmd
+\end{itemize}
+
+\subsubsection{Configuración de Tolerancias para Ejercicios
+CLOZE}\label{configuraciuxf3n-de-tolerancias-para-ejercicios-cloze}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ \textbf{Tolerancias apropiadas}: 0 para schoice, ≥1 para valores
+  numéricos grandes
+\item
+  ✅ \textbf{Documentación mejorada}: Guías específicas en comandos y
+  skills
+\item
+  ✅ \textbf{Validación automática}: Verificación de configuración
+  correcta
+\end{itemize}
+
+Este proyecto representa un sistema integral y robusto que encapsula las
+mejores prácticas para la creación de contenido educativo parametrizado
+y de alta calidad.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🧪 \textbf{Ecosistema de Testing
+Agresivo}}{🧪 Ecosistema de Testing Agresivo}}\label{ecosistema-de-testing-agresivo}
+
+\subsubsection{🎯 Objetivo: 100\% de
+Cobertura}\label{objetivo-100-de-cobertura}
+
+Este proyecto implementa un ecosistema de testing agresivo para
+garantizar calidad máxima en la generación automatizada de ejercicios
+ICFES.
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Componente & Cobertura & Estado \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Validación Matemática} & 100\% & ✅ Completo \\
+\textbf{Ortografía Española} & 100\% & ✅ Completo \\
+\textbf{Renderizado 4 Formatos} & 100\% & ✅ Completo \\
+\textbf{Aleatorización y Diversidad} & 100\% & ✅ Completo \\
+\textbf{Flujo B (Graficador)} & 100\% & ✅ Completo \\
+\textbf{Tests de Regresión} & 100\% & ✅ Completo \\
+\textbf{COBERTURA TOTAL} & \textbf{100\%} & ✅ \textbf{OBJETIVO
+ALCANZADO} \\
+\end{longtable}
+
+\subsubsection{🧪 Suites de Testing
+Implementadas}\label{suites-de-testing-implementadas}
+
+\paragraph{\texorpdfstring{1. \textbf{Validación Matemática}
+(\texttt{test\_validacion\_matematica.R})}{1. Validación Matemática (test\_validacion\_matematica.R)}}\label{validaciuxf3n-matemuxe1tica-test_validacion_matematica.r}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ Detección de errores en chunks R (NaN, Inf, errores de ejecución)
+\item
+  ✅ Validación de archivos SCHOICE válidos
+\item
+  ✅ Detección de \texttt{exshuffle\ =\ FALSE} (prohibido)
+\item
+  ✅ Validación de inconsistencias en CLOZE
+\item
+  ✅ Verificación de metadatos ICFES completos
+\end{itemize}
+
+\paragraph{\texorpdfstring{2. \textbf{Ortografía Española}
+(\texttt{test\_ortografia\_espanol.R})}{2. Ortografía Española (test\_ortografia\_espanol.R)}}\label{ortografuxeda-espauxf1ola-test_ortografia_espanol.r}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ Detección de tildes faltantes
+\item
+  ✅ Exclusión de metadatos R-exams (ASCII obligatorio)
+\item
+  ✅ Exclusión de nombres de variables R
+\item
+  ✅ Correcciones automáticas en texto
+\item
+  ✅ Preservación de código inline
+\end{itemize}
+
+\paragraph{\texorpdfstring{3. \textbf{Renderizado 4 Formatos}
+(\texttt{test\_renderizado\_4\_formatos.R})}{3. Renderizado 4 Formatos (test\_renderizado\_4\_formatos.R)}}\label{renderizado-4-formatos-test_renderizado_4_formatos.r}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ SCHOICE → HTML/PDF/DOCX/NOPS sin errores
+\item
+  ✅ CLOZE → 4 formatos sin errores
+\item
+  ✅ Validación cruzada con misma semilla
+\item
+  ✅ Coherencia de contenido entre formatos
+\end{itemize}
+
+\paragraph{\texorpdfstring{4. \textbf{Aleatorización y Diversidad}
+(\texttt{test\_aleatorization\_diversity.R})}{4. Aleatorización y Diversidad (test\_aleatorization\_diversity.R)}}\label{aleatorizaciuxf3n-y-diversidad-test_aleatorization_diversity.r}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ \texttt{exshuffle\ =\ TRUE} genera orden aleatorio
+\item
+  ✅ Generación de 250+ versiones únicas
+\item
+  ✅ Cobertura de rangos numéricos esperados
+\item
+  ✅ Distractores distintos y plausibles
+\end{itemize}
+
+\paragraph{\texorpdfstring{5. \textbf{Flujo B Graficador}
+(\texttt{test\_flujo\_b\_graficador.R})}{5. Flujo B Graficador (test\_flujo\_b\_graficador.R)}}\label{flujo-b-graficador-test_flujo_b_graficador.r}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ Estructura de \texttt{workflow\_state.json} correcta
+\item
+  ✅ Detección obligatoria de gráficos
+\item
+  ✅ Aprobación secuencial (TikZ → Python → R)
+\item
+  ✅ Similitud \textgreater= 95\% requerida
+\item
+  ✅ Verificación de 5 coherencias
+\end{itemize}
+
+\paragraph{\texorpdfstring{6. \textbf{Tests de Regresión}
+(\texttt{test\_regression\_suite.R})}{6. Tests de Regresión (test\_regression\_suite.R)}}\label{tests-de-regresiuxf3n-test_regression_suite.r}
+
+\begin{itemize}
+\tightlist
+\item
+  ✅ Ejemplos funcionales continúan renderizando
+\item
+  ✅ Scripts mantienen compatibilidad
+\item
+  ✅ Hooks mantienen funcionalidad
+\item
+  ✅ Plantillas mantienen formato
+\item
+  ✅ Metadatos ICFES siguen estándar
+\item
+  ✅ Ciclo completo funciona end-to-end
+\end{itemize}
+
+\subsubsection{🚀 Ejecución de Tests}\label{ejecuciuxf3n-de-tests}
+
+\paragraph{Ejecutar Suite Completa}\label{ejecutar-suite-completa}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Ejecutar todos los tests}
+\ExtensionTok{Rscript}\NormalTok{ tests/run\_all\_tests.R}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Salida esperada:}
+
+\begin{verbatim}
+========================================
+  SUITE DE TESTING COMPLETA
+  Repositorio Matemáticas ICFES R-Exams
+========================================
+
+Ejecutando: Validación Matemática
+--------------------------------------------------
+✓ Validación Matemática completado en 2.34 segundos
+
+...
+
+========================================
+  REPORTE FINAL
+========================================
+
+Suites ejecutadas: 6
+✓ Exitosas: 6
+✗ Fallidas: 0
+Tiempo total: 12.45 segundos
+
+Cobertura de testing: 100.0%
+🎉 ¡OBJETIVO DE 100% ALCANZADO!
+
+✅ TODOS LOS TESTS PASARON
+\end{verbatim}
+
+\paragraph{Ejecutar Suite Individual}\label{ejecutar-suite-individual}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Solo validación matemática}
+\ExtensionTok{Rscript} \AttributeTok{{-}e} \StringTok{"library(testthat); test\_file(\textquotesingle{}tests/testthat/test\_validacion\_matematica.R\textquotesingle{})"}
+
+\CommentTok{\# Solo ortografía}
+\ExtensionTok{Rscript} \AttributeTok{{-}e} \StringTok{"library(testthat); test\_file(\textquotesingle{}tests/testthat/test\_ortografia\_espanol.R\textquotesingle{})"}
+
+\CommentTok{\# Solo renderizado}
+\ExtensionTok{Rscript} \AttributeTok{{-}e} \StringTok{"library(testthat); test\_file(\textquotesingle{}tests/testthat/test\_renderizado\_4\_formatos.R\textquotesingle{})"}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{🔄 Integración Continua
+(CI/CD)}\label{integraciuxf3n-continua-cicd}
+
+El repositorio incluye configuración de GitHub Actions
+(\texttt{.github/workflows/ci-testing.yml}) que ejecuta automáticamente:
+
+\textbf{Triggers:} - ✅ Cada push a \texttt{main} o \texttt{develop} -
+✅ Cada pull request - ✅ Diariamente a las 02:00 UTC
+
+\textbf{Jobs Paralelos:} 1. Tests de Validación Matemática 2. Tests de
+Ortografía 3. Tests de Renderizado 4 Formatos 4. Tests de Aleatorización
+y Diversidad 5. Tests de Flujo B (Graficador) 6. Tests de Regresión 7.
+Reporte de Cobertura
+
+\textbf{Política:} Tolerancia cero a regresiones. Si algún test falla,
+el pipeline completo falla.
+
+\subsubsection{🛡️ Política de Testing}\label{poluxedtica-de-testing}
+
+\paragraph{Reglas Obligatorias}\label{reglas-obligatorias}
+
+\begin{itemize}
+\tightlist
+\item
+  ❌ \textbf{PROHIBIDO} hacer push a \texttt{main} si algún test falla
+\item
+  ❌ \textbf{PROHIBIDO} usar \texttt{git\ commit\ -\/-no-verify} para
+  evadir hooks
+\item
+  ❌ \textbf{PROHIBIDO} comentar tests que fallan (arreglar el código,
+  no el test)
+\item
+  ❌ \textbf{PROHIBIDO} reducir cobertura por debajo del 100\%
+\end{itemize}
+
+\paragraph{Proceso de Contribución}\label{proceso-de-contribuciuxf3n}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Antes de cada commit:} Hook pre-commit valida ortografía
+  automáticamente
+\item
+  \textbf{Después de cada \texttt{exams2*()}:} Hook post-exams2 valida
+  matemática + genera preview PNG
+\item
+  \textbf{Antes de cada push:} Ejecutar
+  \texttt{Rscript\ tests/run\_all\_tests.R} localmente
+\item
+  \textbf{Antes de cada merge:} CI/CD ejecuta suite completa
+  automáticamente
+\end{enumerate}
+
+\subsubsection{📊 Métricas de Calidad}\label{muxe9tricas-de-calidad}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Componente & Tests & Tiempo Promedio & Crítico \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Validación Matemática & 5 tests & \textasciitilde2.5s & ✅ Sí \\
+Ortografía Española & 5 tests & \textasciitilde1.5s & ✅ Sí \\
+Renderizado 4 Formatos & 6 tests & \textasciitilde8.0s & ✅ Sí \\
+Aleatorización & 4 tests & \textasciitilde5.0s & ✅ Sí \\
+Flujo B & 6 tests & \textasciitilde1.0s & ✅ Sí \\
+Regresión & 7 tests & \textasciitilde10.0s & ✅ Sí \\
+\textbf{TOTAL} & \textbf{33+ tests} & \textbf{\textasciitilde28.0s} &
+- \\
+\end{longtable}
+
+\subsubsection{📚 Documentación
+Completa}\label{documentaciuxf3n-completa}
+
+Ver documentación detallada del ecosistema en: -
+\textbf{\texttt{.claude/docs/ECOSISTEMA\_TESTING.md}} - Guía completa de
+testing - \textbf{\texttt{tests/testthat/}} - Suites de tests
+individuales - \textbf{\texttt{tests/run\_all\_tests.R}} - Script
+ejecutor principal - \textbf{\texttt{.github/workflows/ci-testing.yml}}
+- Configuración CI/CD
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\subsection{\texorpdfstring{🔗 \textbf{Integración Graficador Experto
+v2.0 con
+R-exams}}{🔗 Integración Graficador Experto v2.0 con R-exams}}\label{integraciuxf3n-graficador-experto-v2.0-con-r-exams}
+
+El sistema incluye un flujo completo e integrado para transformar
+gráficos matemáticos en ejercicios R-exams:
+
+\subsubsection{Flujo Completo: Imagen → Gráfico →
+Ejercicio}\label{flujo-completo-imagen-gruxe1fico-ejercicio}
+
+\begin{verbatim}
+1. ANÁLISIS VISUAL
+   /analizar-imagen grafico.png
+   ↓
+   Genera: analisis_inicial.json + workflow_state.json
+
+2. GENERACIÓN MULTI-LENGUAJE
+   /generar-tikz → Validado (98%+)
+   /generar-python → Validado (95%+)
+   /generar-r → Validado (96%+)
+   ↓
+   Genera: output_tikz.tex + output_python.py + output_r.R
+
+3. COMPARACIÓN CON MÉTRICAS OBJETIVAS
+   /comparar → Puntuación 0-100 en 6 categorías
+   /auto-iterar r 95 10 → Iteración automática
+   ↓
+   Resultado: 95+ puntos de similitud garantizados
+
+4. EXPORTACIÓN CON NOMENCLATURA
+   /exportar
+   ↓
+   Pregunta: ¿Qué versión usar? (TikZ/Python/R)
+   ↓
+   Crea: [ejercicio]_[componente]_[competencia]_n[nivel]_v[version]/
+         ├── Códigos de las 3 versiones
+         ├── Imágenes generadas
+         ├── Análisis y estado persistente
+         └── Reporte consolidado
+
+5. GENERACIÓN DE EJERCICIO R-EXAMS
+   /generar-schoice (o /generar-cloze)
+   ↓
+   Usa la versión gráfica seleccionada
+   ↓
+   Genera: [nombre_completo].Rmd dentro de la carpeta
+\end{verbatim}
+
+\subsubsection{Ventajas de la
+Integración}\label{ventajas-de-la-integraciuxf3n}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4091}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5909}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Ventaja
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Descripción
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Trazabilidad} & Cada ejercicio tiene historial completo de cómo
+se generó su gráfico \\
+\textbf{Flexibilidad} & 3 versiones disponibles según necesidad
+(vectorial/Python/R) \\
+\textbf{Calidad} & Métricas objetivas 0-100 puntos antes de usar en
+.Rmd \\
+\textbf{Organización} & Carpetas nomencladas con todos los archivos
+relacionados \\
+\textbf{Reproducibilidad} & Estado persistente permite regenerar o
+modificar \\
+\end{longtable}
+
+\subsubsection{Recomendaciones por Tipo de
+Gráfico}\label{recomendaciones-por-tipo-de-gruxe1fico}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3778}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1556}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Tipo de Gráfico
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Versión Recomendada
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Razón
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Geometría precisa & TikZ & Vectorial, máxima precisión \\
+Estadística básica & R/ggplot2 & Nativo R-exams, fácil mantener \\
+Visualización compleja & Python/matplotlib & Flexibilidad, numpy
+integrado \\
+Funciones matemáticas & TikZ o R & Calidad y precisión \\
+Gráficos de barras/líneas & R/ggplot2 & Sintaxis simple, temas
+profesionales \\
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\end{document}

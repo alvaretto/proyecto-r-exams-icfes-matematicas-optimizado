@@ -1,23 +1,106 @@
-# 📁 Estructura del Repositorio - Matemáticas ICFES R-Exams
+# Estructura del Repositorio - Matematicas ICFES R-Exams
 
-## 🎯 Descripción General
+## Descripcion General
 
-Este repositorio contiene ejercicios matemáticos organizados por competencias del ICFES, implementados usando el framework R-exams. La estructura sigue una organización temática que abarca los principales componentes evaluados en las pruebas ICFES de matemáticas.
+Repositorio de ejercicios matematicos para las pruebas Saber 11 (ICFES), implementados con el framework R-exams. La organizacion se alinea con el **Marco de Referencia ICFES Matematicas 2026**, que define 3 competencias, 3 categorias de contenido y 4 niveles de desempeno.
 
-**Total de directorios**: 173
+**Framework**: R-exams (extype: schoice, cloze, mchoice, num, string)
+**Formatos de salida**: HTML, PDF, DOCX, NOPS (Moodle XML)
+**Requisito minimo**: 200+ versiones unicas por ejercicio
 
 ---
 
-## 📊 Estructura Completa del Repositorio
+## Marco Conceptual ICFES Matematicas 2026
+
+### Competencias Evaluadas (3)
+
+| Competencia | Descripcion | Codigo Metadatos |
+|-------------|-------------|------------------|
+| **Interpretacion y representacion** | Comprender y transformar informacion matematica en distintas representaciones | `interpretacion_representacion` |
+| **Formulacion y ejecucion** | Disenar y ejecutar planes de solucion utilizando herramientas matematicas | `formulacion_ejecucion` |
+| **Argumentacion** | Justificar procedimientos y validar propiedades matematicas | `argumentacion` |
+
+### Categorias de Contenido ICFES (3)
+
+Desde 2014, el ICFES reemplazo los antiguos "Componentes" (Numerico-Variacional, Geometrico-Metrico, Aleatorio) por **Categorias de Contenido**, que agrupan los 5 pensamientos matematicos del MEN:
+
+| Categoria ICFES | Pensamientos MEN Agrupados | Codigo Metadatos |
+|-----------------|---------------------------|------------------|
+| **Algebra y Calculo** | Numerico + Variacional | `numerico_variacional` |
+| **Geometria** | Espacial + Metrico | `geometrico_metrico` |
+| **Estadistica** | Aleatorio | `aleatorio` |
+
+**Nota sobre terminologia**: Los codigos de metadatos (`numerico_variacional`, `geometrico_metrico`, `aleatorio`) conservan la nomenclatura historica del repositorio para compatibilidad. La equivalencia con la terminologia ICFES 2026 es la documentada arriba.
+
+### Contenidos Genericos vs No Genericos
+
+Cada categoria tiene dos tipos de contenido:
+
+| Categoria | Contenido Generico (Saber 11 + Razonamiento Cuantitativo) | Contenido No Generico (solo Saber 11) |
+|-----------|-----------------------------------------------------------|---------------------------------------|
+| Algebra y Calculo | Operaciones basicas, proporcionalidad, ecuaciones lineales, funciones lineales/cuadraticas | Funciones exponenciales/logaritmicas, trigonometria, limites |
+| Geometria | Perimetro, area, volumen, transformaciones, plano cartesiano basico | Geometria analitica avanzada (conicas), razones trigonometricas |
+| Estadistica | Tablas/graficos, medidas de tendencia central, probabilidad basica | Distribuciones, probabilidad condicional, intervalos de confianza |
+
+### Niveles de Desempeno (4)
+
+| Nivel | Descripcion | Codigo |
+|-------|-------------|--------|
+| **1** | Reconoce informacion puntual en representaciones basicas | `n1` |
+| **2** | Resuelve problemas rutinarios con una sola operacion o relacion | `n2` |
+| **3** | Integra informacion de multiples fuentes, resuelve problemas no rutinarios | `n3` |
+| **4** | Generaliza, argumenta formalmente, resuelve problemas complejos y abiertos | `n4` |
+
+### Contextos de Evaluacion (4)
+
+- **Familiares o personales**: Situaciones cotidianas del estudiante
+- **Laborales u ocupacionales**: Contextos de trabajo y produccion
+- **Comunitarios o sociales**: Problematicas de la comunidad
+- **Matematicos o cientificos**: Contextos abstractos o de ciencia
+
+### Estructura de la Prueba
+
+- **38 preguntas** en total (todas de seleccion unica en el examen real)
+- **30 preguntas** conforman tambien el subconjunto de Razonamiento Cuantitativo
+- Las 8 preguntas restantes evaluan contenido no generico exclusivo de Matematicas 11
+
+---
+
+## Estructura de Directorios del Repositorio
+
+### Pipeline de Desarrollo
 
 ```
-.
+A-Produccion/
+├── 01-En-PreDesarrollo/      # Laboratorio y prototipos
+├── 02-En-Desarrollo/         # Ejercicios en construccion/validacion
+├── 03-En-Produccion/         # Ejercicios validados (PRODUCCION)
+│   └── Ejemplos-Funcionales-Rmd/  # FUENTE DE VERDAD para patrones
+└── perifericos/              # Archivos de soporte
+```
+
+### Arbol Completo de Produccion (03-En-Produccion/)
+
+La organizacion usa la jerarquia: **Tema Matematico > Pensamiento MEN > Subtema > Ejercicio**.
+Los directorios sin ejercicios son estructura planificada de destino para ejercicios futuros.
+Todos los directorios contienen `.gitkeep` para preservar la estructura en Git.
+
+Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino planificada
+
+```
+03-En-Produccion/
+│
+│ ══════════════════════════════════════════════════════
+│  CATEGORIA ICFES: ALGEBRA Y CALCULO
+│  (Pensamiento Numerico + Pensamiento Variacional)
+│ ══════════════════════════════════════════════════════
+│
 ├── 01-Numeros-Reales/
 │   └── Pensamiento-Numerico/
 │       ├── 01-Numeros-Racionales/
 │       ├── 02-Numeros-Irracionales/
 │       ├── 03-Numeros-Reales/
-│       │   └── 2024-CB-S1_S2-P02-calculo-de-ganancias/
+│       │   └── 22-S2-2025-SEDQ-fracciones_reparto_premio/  [4 .Rmd]
 │       ├── 04-Propiedades-Expresiones-Decimales/
 │       ├── 05-Conjunto-Reales-Desigualdades/
 │       └── 06-Valor-Absoluto/
@@ -33,226 +116,313 @@ Este repositorio contiene ejercicios matemáticos organizados por competencias d
 │       ├── 07-Funciones-Periodicas/
 │       ├── 08-Funcion-Exponencial/
 │       ├── 09-Funcion-Logaritmica/
-│       ├── 10-Traslación-Y-Dilatacion/
+│       ├── 10-Traslacion-Y-Dilatacion/
 │       ├── 11-Variacion-Lineal-Y-Exponencial_Razon-De-Cambio/
-│       │   ├── temp/
-│       │   ├── Variación-Lineal-Auto-Viajero-09/
-│       │   │   ├── docus/
-│       │   │   ├── ejercicios/
-│       │   │   ├── salida/
-│       │   │   └── _snaps/
-│       │   └── Variacion-Lineal-Vuelo-Acrobatico/
-│       │       ├── docus/
-│       │       ├── ejercicios/
-│       │       ├── output/
-│       │       └── salida/
+│       │   ├── Variacion-Lineal-Auto-Viajero-09/               [~16 .Rmd]
+│       │   └── Variacion-Lineal-Vuelo-Acrobatico/              [~11 .Rmd]
 │       └── 12-Introduccion-Al-Limite-De-Una-Sucesion/
+│
+│ ══════════════════════════════════════════════════════
+│  CATEGORIA ICFES: GEOMETRIA (contenido no generico)
+│  (Pensamiento Espacial + Pensamiento Metrico)
+│ ══════════════════════════════════════════════════════
 │
 ├── 03-Razones-Trigonometricas/
 │   └── Pensamiento-Espacial-Metrico-Y-Variacional/
-│       ├── 01-Medidas-De-Angulos/
-│       ├── 02-Triangulos/
-│       ├── 03-Razones-Trigonometricas-En-Un-Triangulo-Rectangulo/
-│       ├── 04-Razones-Trigonometricas-De-Angulos-Notables/
-│       ├── 05-Resolucion-De-Triangulos-Rectangulos/
-│       ├── 06-Angulo-De-Elevacion_Angulo-De-Depresion/
-│       ├── 07-Circunferencia-Unitaria/
-│       ├── 08-Razones-Trigonometricas-En-La-Circunferencia-Unitaria/
-│       ├── 09-Calculo-De-Razones-Trigonometricas-Usando-Angulos-De-Referencia/
-│       ├── 10-Razones-Trigonometricas-Para-Angulos-Negativos-Complementarios-Y-Coterminales/
-│       ├── 11-Definicion-De-Las-Funciones-Trigonometricas/
-│       ├── 12-Teorema-Del-Seno/
-│       └── 13-Teorema-Del-Coseno/
+│       ├── 01-Angulos-Y-Sus-Medidas/
+│       ├── 02-Angulos-En-Posicion-Normal/
+│       ├── 03-Circunferencia-Unitaria/
+│       ├── 04-Seno-Coseno-Tangente/
+│       ├── 05-Cosecante-Secante-Cotangente/
+│       ├── 06-Razones-Trigonometricas-Angulos-Notables/
+│       ├── 07-Signos-Razones-Trigonometricas-Cuadrantes/
+│       ├── 08-Relaciones-Pitagoricas/
+│       ├── 09-Resolucion-Triangulos-Rectangulos/
+│       ├── 10-Ley-De-Senos/
+│       ├── 11-Ley-De-Cosenos/
+│       ├── 12-Aplicaciones-Triangulos-No-Rectangulos/
+│       └── 13-Problemas-De-Aplicacion-Trigonometria/
 │
 ├── 04-Funciones_Identidades-Trigonometricas/
 │   └── Pensamiento-Espacial-Y-Variacional/
-│       ├── 01-Funcion-Seno/
-│       ├── 02-Funcion-Coseno/
-│       ├── 03-Graficas-De-Las-Funciones-Sinusoidales/
-│       ├── 04-Funcion-Tangente/
-│       ├── 05-Funcion-Cotangente/
-│       ├── 06-Funcion-Secante/
-│       ├── 07-Funcion-Cosecante/
-│       ├── 08-Identidades-Trigonometricas-Fundamentales/
-│       ├── 09-Funciones-Trigonometricas-En-Terminos-De-las-Otras/
-│       ├── 10-Simplificacion-De-Expresiones-Trigonometricas/
-│       └── 11-Coordenadas-Polares-Y-Cartesianas/
+│       ├── 01-Funciones-Trigonometricas-Seno-Coseno/
+│       ├── 02-Funcion-Tangente/
+│       ├── 03-Transformaciones-Funciones-Trigonometricas/
+│       ├── 04-Identidades-Trigonometricas-Fundamentales/
+│       ├── 05-Identidades-Suma-Diferencia-Angulos/
+│       ├── 06-Identidades-Angulo-Doble-Mitad/
+│       ├── 07-Ecuaciones-Trigonometricas/
+│       ├── 08-Funciones-Trigonometricas-Inversas/
+│       ├── 09-Coordenadas-Polares/
+│       ├── 10-Numeros-Complejos-Forma-Polar/
+│       └── 11-Aplicaciones-Modelado-Trigonometrico/
 │
-├── 05-Geometria-Analitica/
+│ ══════════════════════════════════════════════════════
+│  CATEGORIA ICFES: GEOMETRIA (contenido generico y no generico)
+│  (Pensamiento Espacial + Pensamiento Metrico)
+│ ══════════════════════════════════════════════════════
+│
+├── 05-Geometria/
 │   └── Pensamiento-Espacial/
-│       ├── 01-Coordenadas-Cartesianas/
-│       ├── 02-La-Linea-Recta/
-│       ├── 03-Posiciones-Relativas-De-Dos-Rectas-En-El-Plano/
-│       ├── 04-Secciones-Conicas/
-│       ├── 05-La-Circunferencia/
-│       ├── 06-Ecuacion-Canonica-De-La-Circunferencia-Con-Centro-En-hk/
-│       ├── 07-Ecuacion-General-De-La-Circunferencia/
-│       ├── 08-La-Parabola/
-│       ├── 09-Ecuacion-Canonica-De-La-Parabola-Con-Vertice-En-hk/
-│       ├── 10-Ecuacion-General-De-La-Parabola/
-│       ├── 11-La-Elipse/
-│       ├── 12-Ecuacion-Canonica-De-La-Elipse-Con-Centro-En-hk/
-│       ├── 13-Ecuacion-General-De-La-Elipse/
-│       ├── 14-La-Hiperbola/
-│       ├── 15-Ecuacion-Canonica-De-La-Hiperbola-Con-Centro-En-hk/
-│       └── 16-Ecuacion-General-De-La-Hiperbola/
+│       ├── 01-Puntos-Y-Lineas/
+│       ├── 02-Segmentos-Y-Rayos/
+│       ├── 03-Angulos-Clasificacion-Y-Medida/
+│       ├── 04-Rectas-Paralelas-Y-Perpendiculares/
+│       ├── 05-Triangulos-Clasificacion-Y-Propiedades/
+│       ├── 06-Cuadrilateros-Y-Poligonos/
+│       ├── 07-Circunferencia-Y-Circulo/
+│       ├── 08-Perimetro-Figuras-Planas/
+│       ├── 09-Area-Figuras-Planas/
+│       ├── 10-Teorema-De-Pitagoras/
+│       ├── 11-Semejanza-Y-Congruencia/
+│       ├── 12-Transformaciones-Geometricas/
+│       ├── 13-Geometria-Analitica-Recta/
+│       ├── 14-Secciones-Conicas/
+│       ├── 15-Solidos-Y-Volumen/
+│       ├── 16-Area-Superficie-Solidos/
+│       ├── 17-Conversion-de-Unidades/
+│       │   └── conversion_unidades_area_formulacion_ejecucion/  [1 .Rmd]
+│       └── 18-Volumen-Y-Raiz-Cubica/
+│           └── raiz_cubica_empaquetamiento_*/                   [2 .Rmd + 1 CLOZE]
 │
-└── 06-Estadística-Y-Probabilidad/
-    └── Pensamiento-Aleatorio/
-        ├── 01-Variables-Cualitativas_Distribucion-De-Frecuencias/
-        │   ├── Accidentalidad_Vial_Genero-16/
-        │   │   ├── docus/
-        │   │   ├── ejercicios/
-        │   │   ├── images/
-        │   │   ├── rsconnect/
-        │   │   │   └── documents/
-        │   │   │       └── accidentalidad-vial-genero-01.Rmd/
-        │   │   │           └── rpubs.com/
-        │   │   │               └── rpubs/
-        │   │   └── salida/
-        │   ├── Copia de Accidentalidad_Vial_Genero-16/
-        │   │   ├── docus/
-        │   │   ├── ejercicios/
-        │   │   ├── images/
-        │   │   ├── rsconnect/
-        │   │   │   └── documents/
-        │   │   │       └── accidentalidad-vial-genero-01.Rmd/
-        │   │   │           └── rpubs.com/
-        │   │   │               └── rpubs/
-        │   │   └── salida/
-        │   └── Graficos_Estadisticos_Adopcion_Mascotas/
-        │       ├── docus/
-        │       ├── ejercicios/
-        │       ├── erres/
-        │       │   ├── cloze/
-        │       │   │   ├── boxhist/
-        │       │   │   │   ├── ejercicios/
-        │       │   │   │   └── salida/
-        │       │   │   └── boxhist2/
-        │       │   │       ├── ejercicios/
-        │       │   │       └── salida/
-        │       │   ├── mchoice/
-        │       │   │   └── automaton_TikZ/
-        │       │   │       ├── ejercicios/
-        │       │   │       └── salida/
-        │       │   ├── num/
-        │       │   ├── schoice/
-        │       │   │   └── logic_TikZ/
-        │       │   │       ├── ejercicios/
-        │       │   │       └── salida/
-        │       │   └── string/
-        │       ├── I_1796473-Opc-B2v2_files/
-        │       │   └── figure-latex/
-        │       ├── salida/
-        │       └── tikz_temp/
-        ├── 02-Variables-Cuantitativas-Discretas_Distribucion-De-Frecuencias/
-        ├── 03-Variables-Cuantitativas-Continuas_Distribucion-De-Frecuencias/
-        ├── 04-Medidas-De-Tendencia-Central/
-        │   ├── 01-MediaMedianaModa/
-        │   │   └── Calificaciones-Universitarias/
-        │   │       ├── ejercicios/
-        │   │       └── salida/
-        │   ├── Media/
-        │   │   └── Promedios-Borrados/
-        │   │       ├── docus/
-        │   │       ├── ejercicios/
-        │   │       ├── Pendientes/
-        │   │       └── salida/
-        │   └── Mediana/
-        │       ├── Baterías-Celulares/
-        │       │   ├── docus/
-        │       │   ├── ejercicios/
-        │       │   └── salida/
-        │       └── Mediana-Farmaceutica/
-        │           ├── ejercicios/
-        │           └── salida/
-        ├── 05-Medidas-De-Dispersión/
-        │   └── confint2-cloze/
-        │       ├── ejercicios/
-        │       └── salida/
-        ├── 06-Medidas-De-Posición/
-        │   ├── docus/
-        │   ├── ejercicios/
-        │   ├── imagenes_diagramas/
-        │   ├── salida/
-        │   └── tikz_temp/
-        ├── 07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/
-        │   ├── Diagramas de Venn/
-        │   │   └── GénerosMusicales/
-        │   │       ├── BaseDeConocimiento/
-        │   │       ├── docus/
-        │   │       ├── ejercicios/
-        │   │       ├── salida/
-        │   │       └── _snaps/
-        │   └── Probabilidad-Bolas-Colores/
-        │       ├── ejercicios/
-        │       └── salida/
-        ├── 08-Probabilidad-De-La-Union-De-Sucesos/
-        └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
+│ ══════════════════════════════════════════════════════
+│  CATEGORIA ICFES: ESTADISTICA
+│  (Pensamiento Aleatorio)
+│ ══════════════════════════════════════════════════════
+│
+├── 06-Estadistica-Y-Probabilidad/
+│   └── Pensamiento-Aleatorio/
+│       ├── 01-Variables-Cualitativas_Distribucion-De-Frecuencias/
+│       │   ├── Accidentalidad_Vial_Genero-16/                  [~6 .Rmd]
+│       │   ├── ExportacionesGraficos-Tebailandia/              [~6 .Rmd]
+│       │   ├── Gas_natural_porcentaje_maximo_aleatorio_*/       [2 .Rmd]
+│       │   ├── Graficos_Estadisticos_Adopcion_Mascotas/        [~8 .Rmd]
+│       │   └── Pasteleria_sabores_ventas_*/                    [1 .Rmd]
+│       ├── 02-Variables-Cuantitativas-Discretas_Distribucion-De-Frecuencias/
+│       ├── 03-Variables-Cuantitativas-Continuas_Distribucion-De-Frecuencias/
+│       │   └── poblaciones_paises_graficas_lineas_*/            [1 .Rmd]
+│       ├── 04-Medidas-De-Tendencia-Central/
+│       │   ├── 01-MediaMedianaModa/
+│       │   │   └── Calificaciones-Universitarias/               [~3 .Rmd]
+│       │   ├── Media/
+│       │   │   └── Promedios-Borrados/                          [~2 .Rmd]
+│       │   └── Mediana/
+│       │       ├── Baterias-Celulares/                          [~9 .Rmd]
+│       │       ├── Mediana-Farmaceutica/                        [~5 .Rmd]
+│       │       └── mediana_salas_cine_formulacion_ejecucion_n2_v1/ [~4 .Rmd]
+│       ├── 05-Medidas-De-Dispersion/
+│       │   └── confint2-cloze/                                  [2 .Rmd]
+│       ├── 06-Medidas-De-Posicion/                              [2 .Rmd]
+│       ├── 07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/
+│       │   ├── Diagramas-de-Venn/
+│       │   │   └── GenerosMusicales/                            [~4 .Rmd]
+│       │   └── Probabilidad-Bolas-Colores/                      [2 .Rmd]
+│       ├── 08-Probabilidad-De-La-Union-De-Sucesos/
+│       └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
+│           └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
+│
+│ ══════════════════════════════════════════════════════
+│  RECURSOS Y PLANTILLAS
+│ ══════════════════════════════════════════════════════
+│
+└── Ejemplos-Funcionales-Rmd/                        # FUENTE DE VERDAD
+    ├── Ejemplo_00_numeros_triangulares_*.Rmd
+    ├── Ejemplo_01.Rmd, Ejemplo_02.Rmd, Ejemplo_03.Rmd
+    ├── Avances-Pedagogicos/
+    ├── Plantillas/
+    │   ├── Python/    # Plantillas con reticulate
+    │   ├── Rmd/       # Plantillas R-exams puro
+    │   │   └── cloze/ # Plantillas tipo CLOZE
+    │   ├── Rnw/       # Plantillas Sweave
+    │   ├── Tablas/    # TikZ y Kable
+    │   ├── erres/     # Plantillas R-exams oficiales
+    │   └── tex/       # Plantillas LaTeX
+    ├── TikZ-Documentation/
+    └── oficial-schoice/
+```
+
+### Mapeo: Directorios <-> Categorias ICFES
+
+| Directorio | Categoria ICFES 2026 | Contenido |
+|------------|---------------------|-----------|
+| `01-Numeros-Reales/` | Algebra y Calculo | Numeros reales, fracciones, operaciones |
+| `02-Funciones/` | Algebra y Calculo | Funciones, variacion lineal/exponencial |
+| `03-Razones-Trigonometricas/` | Geometria (no generico) | Trigonometria basica |
+| `04-Funciones_Identidades-Trigonometricas/` | Geometria (no generico) | Funciones e identidades trigonometricas |
+| `05-Geometria/` | Geometria | Geometria analitica, medidas, conversiones, volumen |
+| `06-Estadistica-Y-Probabilidad/` | Estadistica | Variables, medidas, probabilidad |
+
+---
+
+## Nomenclatura Obligatoria de Archivos .Rmd
+
+### Formato
+
+```
+[tema]_[categoria]_[competencia]_n[nivel]_v[version].Rmd
+```
+
+### Componentes
+
+| Parte | Valores | Ejemplo |
+|-------|---------|---------|
+| `[tema]` | Nombre descriptivo en snake_case | `raiz_cubica_empaquetamiento` |
+| `[categoria]` | `geometrico_metrico`, `numerico_variacional`, `aleatorio` | `geometrico_metrico` |
+| `[competencia]` | `interpretacion_representacion`, `formulacion_ejecucion`, `argumentacion` | `formulacion_ejecucion` |
+| `n[nivel]` | `n1`, `n2`, `n3`, `n4` | `n2` |
+| `v[version]` | `v1`, `v2`, ... | `v1` |
+
+### Variantes CLOZE
+
+Para ejercicios tipo CLOZE, agregar `_cloze` antes de la version:
+
+```
+[tema]_[categoria]_[competencia]_n[nivel]_cloze_v[version].Rmd
+```
+
+### Ejemplo completo
+
+```
+raiz_cubica_empaquetamiento_geometrico_metrico_formulacion_ejecucion_n2_v1.Rmd
+consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd
 ```
 
 ---
 
-## 🎯 Organización por Competencias ICFES
+## Convenciones de Estructura por Ejercicio
 
-### 📊 **Pensamiento Numérico**
-- **Ubicación**: `01-Numeros-Reales/`
-- **Contenidos**: Números racionales, irracionales, reales, expresiones decimales, desigualdades, valor absoluto
-- **Ejercicios desarrollados**: Cálculo de ganancias
+### Directorios Estandar
 
-### 📈 **Pensamiento Variacional y Espacial**
-- **Ubicación**: `02-Funciones/`, `03-Razones-Trigonometricas/`, `04-Funciones_Identidades-Trigonometricas/`
-- **Contenidos**: Funciones, trigonometría, identidades trigonométricas
-- **Ejercicios desarrollados**: Variación lineal (auto viajero, vuelo acrobático)
+| Directorio | Contenido |
+|------------|-----------|
+| `docus/` | Documentacion del ejercicio |
+| `ejercicios/` | Archivos .Rmd (ejercicios legacy) |
+| `salida/` | Archivos generados (HTML, PDF, DOCX, NOPS) |
+| `images/` | Recursos graficos |
+| `tikz_temp/` | Archivos temporales de TikZ |
+| `_snaps/` | Snapshots de pruebas |
 
-### 📐 **Pensamiento Espacial y Métrico**
-- **Ubicación**: `05-Geometria-Analitica/`
-- **Contenidos**: Coordenadas cartesianas, rectas, secciones cónicas, circunferencia, parábola, elipse, hipérbola
+### Tipos de Ejercicios R-exams
 
-### 🎲 **Pensamiento Aleatorio**
-- **Ubicación**: `06-Estadística-Y-Probabilidad/`
-- **Contenidos**: Variables cualitativas/cuantitativas, medidas de tendencia central, dispersión, posición, probabilidad
-- **Ejercicios desarrollados**: Accidentalidad vial, adopción de mascotas, calificaciones universitarias, baterías celulares, géneros musicales
-
----
-
-## 📁 Convenciones de Estructura
-
-### **Directorios Estándar por Ejercicio**
-- `docus/` - Documentación del ejercicio
-- `ejercicios/` - Archivos .Rmd del ejercicio
-- `salida/` - Archivos generados (HTML, PDF, XML)
-- `images/` - Recursos gráficos
-- `tikz_temp/` - Archivos temporales de TikZ
-- `_snaps/` - Snapshots de pruebas
-
-### **Tipos de Ejercicios R-exams**
-- `schoice/` - Selección única (single choice)
-- `mchoice/` - Selección múltiple (multiple choice)
-- `cloze/` - Ejercicios de completar
-- `num/` - Respuesta numérica
-- `string/` - Respuesta de texto
+| Tipo | `extype` | Descripcion |
+|------|----------|-------------|
+| Seleccion unica | `schoice` | Una respuesta correcta entre N opciones |
+| Seleccion multiple | `mchoice` | Varias respuestas correctas posibles |
+| Compuesto | `cloze` | Multiples subpreguntas de tipos mixtos |
+| Numerico | `num` | Respuesta numerica con tolerancia |
+| Texto | `string` | Respuesta de texto libre |
 
 ---
 
-## 🔧 Estado del Desarrollo
+## Metadatos ICFES Obligatorios en R-exams
 
-### ✅ **Áreas con Ejercicios Implementados**
-- Pensamiento Numérico (1 ejercicio)
-- Pensamiento Variacional (2 ejercicios)
-- Pensamiento Aleatorio (6+ ejercicios)
+Todo archivo .Rmd debe incluir las 6 dimensiones ICFES en su seccion Meta-information:
 
-### 🚧 **Áreas en Desarrollo**
-- Razones Trigonométricas (estructura creada)
-- Funciones e Identidades Trigonométricas (estructura creada)
-- Geometría Analítica (estructura creada)
+```
+Meta-information
+================
+exname: nombre_ejercicio_sin_tildes
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulacion
+exextra[Componente]: Geometrico-Metrico
+exextra[Afirmacion]: Descripcion especifica de la afirmacion evaluada
+exextra[Evidencia]: Descripcion especifica de la evidencia esperada
+exextra[Nivel]: 2
+```
 
-### 📈 **Métricas del Repositorio**
-- **Total de directorios**: 173
-- **Ejercicios funcionales**: 9+
-- **Competencias cubiertas**: 4/4
-- **Formatos de salida**: HTML, PDF, Moodle XML
+**Nota**: Los valores de `exextra` usan ASCII sin tildes porque R-exams los parsea como identificadores.
+
+### Correspondencia Metadatos <-> ICFES 2026
+
+| Campo `exextra` | Valores Permitidos | Equivalencia ICFES 2026 |
+|------------------|--------------------|------------------------|
+| `Competencia` | `Interpretacion`, `Formulacion`, `Argumentacion` | 3 competencias evaluadas |
+| `Componente` | `Numerico-Variacional`, `Geometrico-Metrico`, `Aleatorio` | 3 categorias de contenido |
+| `Nivel` | `1`, `2`, `3`, `4` | 4 niveles de desempeno |
 
 ---
 
-*Generado automáticamente desde la estructura del repositorio*
+## Estado del Repositorio
+
+### Ejercicios en Produccion por Categoria
+
+| Categoria ICFES | Directorio | Ejercicios .Rmd | Estado |
+|-----------------|-----------|-----------------|--------|
+| Algebra y Calculo | `01-Numeros-Reales/` | 4 | Activo |
+| Algebra y Calculo | `02-Funciones/` | ~27 | Activo |
+| Geometria (no generico) | `03-Razones-Trigonometricas/` | 0 | Estructura creada |
+| Geometria (no generico) | `04-Funciones_Identidades-Trigonometricas/` | 0 | Estructura creada |
+| Geometria | `05-Geometria/` | ~5 | En crecimiento |
+| Estadistica | `06-Estadistica-Y-Probabilidad/` | ~86 | Mas desarrollado |
+| **Total** | | **~122** | |
+
+### Ejercicios en Desarrollo (02-En-Desarrollo/)
+
+| Ejercicio | Categoria | Competencia | Nivel | Estado |
+|-----------|-----------|-------------|-------|--------|
+| raiz_cubica_empaquetamiento (SCHOICE) | Geometria | Formulacion | n2 | En produccion |
+| raiz_cubica_empaquetamiento (CLOZE) | Geometria | Formulacion | n2 | En desarrollo |
+
+### Areas Pendientes de Desarrollo
+
+| Categoria | Subtemas sin Ejercicios | Prioridad |
+|-----------|------------------------|-----------|
+| Algebra y Calculo | Funciones exponenciales, logaritmicas, ecuaciones cuadraticas | Alta |
+| Geometria | Conicas (parabola, elipse, hiperbola), razonamiento espacial | Alta |
+| Geometria (no generico) | Razones trigonometricas (13 subtemas vacios) | Alta |
+| Geometria (no generico) | Funciones e identidades trigonometricas (11 subtemas vacios) | Alta |
+| Geometria | Geometria basica: puntos, rectas, triangulos, poligonos (16 subtemas vacios) | Media |
+| Estadistica | Probabilidad condicional avanzada, distribuciones | Media |
+| Todas | Ejercicios nivel n3 y n4 | Alta |
+| Todas | Contenido generico (Razonamiento Cuantitativo) | Alta |
+
+---
+
+## Pipeline de Calidad
+
+### Flujo de Promocion
+
+```
+01-En-PreDesarrollo/  →  02-En-Desarrollo/  →  03-En-Produccion/
+    (prototipo)           (construccion)         (validado)
+                          + Ciclo de Validacion
+                          + 5 Coherencias
+                          + 200+ versiones unicas
+                          + Renderizado 4 formatos
+```
+
+### 5 Coherencias Obligatorias
+
+Cada ejercicio debe superar verificacion en:
+
+1. **Semantica**: Gramatica espanola correcta, redaccion ICFES
+2. **Visual-Texto**: Graficos coherentes con enunciado
+3. **Matematica**: Calculos verificables, respuesta correcta valida
+4. **Codigo**: Dinamico, sin hardcoding, compatible 4 formatos
+5. **General**: Legible, estilo ICFES, nivel apropiado
+
+### Validacion Automatica
+
+- **Testing**: 6 suites, 33+ tests unitarios, cobertura 100%
+- **Hooks**: 4 hooks activos (pre/post Edit/Write/Bash)
+- **CI/CD**: GitHub Actions para validacion en remoto
+- **Ortografia**: Verificacion automatica de tildes en espanol
+
+---
+
+## Referencias
+
+- **Marco de Referencia ICFES**: Guia de Orientacion Saber 11 2024-2 (vigente 2026)
+- **Estandares MEN**: Estandares Basicos de Competencias en Matematicas
+- **R-exams**: https://www.R-exams.org/
+- **Fuente de verdad**: `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
+- **Reglas del sistema**: `.claude/rules/` (6 reglas obligatorias)
+- **Testing**: `tests/testthat/` (6 suites)
+
+---
+
+*Actualizado: 2026-02-04 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*

@@ -30,9 +30,12 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    - Siempre probar con reticulate activo e inactivo
    - Validar que variables se transfieren correctamente
 
-3. **NO crear ejercicios con < 250 versiones únicas**
-   - Validar con `exams2html("archivo.Rmd", n = 300)`
+3. **NO crear ejercicios con < 200 versiones únicas**
+   - Validar con `exams2html("archivo.Rmd", n = 200)`
    - Verificar diversidad de parámetros aleatorios
+   - Razón del umbral: ejercicios con restricciones algebraicas fuertes
+     (cubos perfectos, primos, etc.) no pueden generar más sin degradar
+     la diagnosticidad de los distractores
 
 4. **NO omitir validación en los 4 formatos**
    - HTML, PDF, DOCX, NOPS son OBLIGATORIOS

@@ -1,3 +1,11 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+---
+
 # 📚 RepositorioMatematicasICFES_R_Exams (Filosofía 2025)
 
 [![Estado](https://img.shields.io/badge/Estado-Activo-brightgreen)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
