@@ -526,16 +526,67 @@ Estos se ejecutan **automáticamente**:
 
 ---
 
-## 🔧 Configuración de Skills
+## Configuracion de Skills
 
-**Ubicación**: `.claude/skills/`
+**Ubicacion**: `.claude/skills/`
 
-Cada skill tiene:
-- `skill.json` - Metadatos y configuración
-- `skill.prompt` - Prompt principal del agente
-- `examples/` - Ejemplos de uso
+Cada skill sigue el patron **Progressive Disclosure** de Anthropic Agent Skills:
 
-**NO modificar skills** sin ejecutar tests de regresión.
+```
+skill-name/
+├── SKILL.md              # Archivo principal (~3-4KB)
+│   ├── Frontmatter YAML  # name, description, allowed-tools
+│   ├── Decision Tree     # Arbol de decision inicial
+│   ├── Proceso paso a paso
+│   └── Referencias a docs detallados
+└── references/           # Documentacion extraida
+    ├── patron-X.md
+    └── ejemplos-Y.md
+```
+
+**Estructura del frontmatter**:
+
+```yaml
+---
+name: nombre-skill
+description: >
+  Descripcion concisa del skill.
+license: Proyecto Educativo - IE Pedacito de Cielo
+compatibility: Requisitos del skill.
+metadata:
+  author: alvaretto
+  version: "2.1"
+  language: es
+allowed-tools:
+  - Read
+  - Write
+  - Bash(comando:*)
+---
+```
+
+**Skills disponibles** (refactorizados v2.1):
+
+| Skill | Tamano | Referencias | Proposito |
+|-------|--------|-------------|-----------|
+| analizar-icfes | 3.8KB | 3 | Clasificacion 6 dimensiones ICFES |
+| analizar-imagen-grafica | 3.1KB | 2 | Extraccion de elementos visuales |
+| comparar-similitud-visual | 3.7KB | 3 | Puntuacion 0-100 de similitud |
+| corregir-error-imagen | 3.4KB | 1 | ERR_G1: File not found |
+| corregir-graficos | 3.3KB | 1 | ERR_G1-G4: Errores graficos |
+| diagnosticar-errores | 4.4KB | 2 | FASE 3: Clasificacion de errores |
+| generar-cloze | 4.1KB | 2 | Ejercicios tipo CLOZE |
+| generar-codigo-python | 3.4KB | 2 | Matplotlib para graficos |
+| generar-codigo-r | 3.2KB | 2 | ggplot2 para graficos |
+| generar-codigo-tikz | 3.3KB | 2 | TikZ/pgfplots para graficos |
+| generar-schoice | 4.1KB | 2 | Ejercicios tipo SCHOICE |
+| gestionar-estado-graficador | 3.5KB | 2 | workflow_state.json |
+| refinar-codigo-grafico | 3.1KB | 2 | Iteracion hasta >=95% |
+| transferir-conocimiento-grafico | 3.6KB | 2 | Lecciones entre lenguajes |
+| validar-coherencia | 4.2KB | 2 | FASE 2: 5 coherencias |
+| validar-pedagogico | 3.3KB | 1 | Analisis pedagogico Opus 4.5 |
+| validar-renderizado | 3.7KB | 2 | FASE 1: 4 formatos |
+
+**NO modificar skills** sin ejecutar tests de regresion.
 
 ---
 
@@ -549,6 +600,12 @@ Cada skill tiene:
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-02-04
-**Módulo de**: @.claude/CLAUDE.md (v3.0.0)
+**Version**: 1.1
+**Fecha**: 2026-02-06
+**Modulo de**: @.claude/CLAUDE.md (v3.0.0)
+
+### Cambios v1.1 (2026-02-06)
+
+- Documentacion de estructura Progressive Disclosure para skills
+- Tabla completa de 17 skills refactorizados (v2.1)
+- Frontmatter YAML estandarizado para todos los skills

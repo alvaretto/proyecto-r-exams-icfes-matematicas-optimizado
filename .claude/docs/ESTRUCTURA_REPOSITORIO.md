@@ -243,20 +243,39 @@ scripts/
 ---
 
 ##### `skills/`
-**Contenido**: Agent Skills (invocación automática por Claude)
+**Contenido**: Agent Skills (invocacion automatica por Claude)
+
+Estructura Progressive Disclosure (Anthropic Agent Skills v2.1):
 
 ```
 skills/
-├── validar-renderizado/
-│   ├── skill.json
-│   ├── skill.prompt
-│   └── examples/
-├── diagnosticar-errores/
+├── analizar-icfes/
+│   ├── SKILL.md              # Archivo principal (~3-4KB)
+│   └── references/           # Documentacion extraida
+│       ├── dimensiones-icfes.md
+│       ├── plantilla-analisis.md
+│       └── decision-flujo.md
+├── analizar-imagen-grafica/
+├── comparar-similitud-visual/
+├── corregir-error-imagen/
 ├── corregir-graficos/
-└── ...
+├── diagnosticar-errores/
+├── generar-cloze/
+├── generar-codigo-python/
+├── generar-codigo-r/
+├── generar-codigo-tikz/
+├── generar-schoice/
+├── gestionar-estado-graficador/
+├── refinar-codigo-grafico/
+├── transferir-conocimiento-grafico/
+├── validar-coherencia/
+├── validar-pedagogico/
+└── validar-renderizado/
 ```
 
-**NO invocar manualmente**. Claude los usa según contexto.
+**Total**: 17 skills refactorizados (v2.1)
+
+**NO invocar manualmente**. Claude los usa segun contexto.
 
 ---
 
@@ -481,7 +500,7 @@ Total de archivos críticos:
 ├── Suites de tests:           6 suites
 ├── Tests unitarios:          33+ tests
 ├── Comandos manuales:         7 comandos
-├── Skills automáticos:        6+ skills
+├── Skills automaticos:       17 skills (v2.1)
 └── Ejemplos funcionales:     10+ ejemplos
 
 Cobertura de tests:          100%
@@ -529,7 +548,11 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-02-04
-**Módulo de**: @.claude/CLAUDE.md (v3.0.0)
-**Cambios v1.1**: Actualizar 03-En-Produccion con estructura real verificada (6 categorías, 69 subtemas, ~122 .Rmd)
+**Version**: 1.2
+**Fecha**: 2026-02-06
+**Modulo de**: @.claude/CLAUDE.md (v3.0.0)
+
+### Historial de Cambios
+
+- **v1.2** (2026-02-06): Actualizar skills a estructura Progressive Disclosure (17 skills v2.1)
+- **v1.1** (2026-02-04): Actualizar 03-En-Produccion con estructura real verificada (6 categorias, 69 subtemas, ~122 .Rmd)
