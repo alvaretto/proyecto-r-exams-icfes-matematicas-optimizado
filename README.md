@@ -6,14 +6,15 @@ output:
     latex_engine: xelatex
 ---
 
-# 📚 RepositorioMatematicasICFES_R_Exams (Filosofía 2025)
+# 📚 RepositorioMatematicasICFES_R_Exams (Filosofía 2026)
 
 [![Estado](https://img.shields.io/badge/Estado-Activo-brightgreen)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
 [![R-exams](https://img.shields.io/badge/R--exams-Compatible-orange)](https://www.r-exams.org/)
-[![Calidad](https://img.shields.io/badge/Calidad-ICFES_2025-success)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
+[![Calidad](https://img.shields.io/badge/Calidad-ICFES_2026-success)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
 [![Metodología](https://img.shields.io/badge/Metodología-Sistema_Condicional-blue)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
+[![Detractor](https://img.shields.io/badge/Detractor-Obligatorio-red)](https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado)
 
-**Sistema integrado para la generación de ejercicios matemáticos tipo ICFES en formato R-exams a partir de imágenes, siguiendo la filosofía "Matemáticas ICFES 2025".**
+**Sistema integrado para la generación de ejercicios matemáticos tipo ICFES en formato R-exams a partir de imágenes, siguiendo la filosofía "Matemáticas ICFES 2026" con ejercicios metacognitivos y revisión adversarial obligatoria.**
 
 Este repositorio implementa un flujo de trabajo completo y automatizado que transforma imágenes de problemas matemáticos en ejercicios `.Rmd` interactivos, parametrizados y de alta calidad, listos para ser compilados con R-exams.
 
@@ -207,6 +208,12 @@ El proyecto incluye skills configurados en `.claude/skills/` para automatizar ca
 - `/generar-cloze` - Generar ejercicio tipo CLOZE con configuración de tolerancias apropiadas
 - `/promover-ejercicio` - Promoción a carpeta de producción (Fase 7)
 
+**Skills de Revisión (OBLIGATORIOS):**
+
+- `/detractor auditoria [target]` - **🆕** Revisión adversarial en 4 dominios (código, pedagógico, visual, gramática)
+- `/detractor [pregunta]` - Modo inline para decisiones puntuales
+- `/validar-pedagogico` - Análisis pedagógico basado en evidencias científicas
+
 **Skills de Soporte:**
 
 - `/corregir-error-imagen` - Corrección automática de errores TikZ
@@ -267,9 +274,12 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ```
 .claude/
-├── CLAUDE.md              # Memory file principal del proyecto (v2.1)
-├── rules/                 # Reglas modulares (según doc oficial nov 2025)
-│   ├── ciclo-validacion.md           # Ciclo de Validación Automática (OBLIGATORIO)
+├── CLAUDE.md              # Memory file principal del proyecto (v3.2)
+├── detractor-config.yaml  # 🆕 Configuración del skill detractor
+├── rules/                 # Reglas modulares (8 reglas obligatorias)
+│   ├── ciclo-validacion.md           # Ciclo de Validación Automática (v4.0 con FASE 2C)
+│   ├── detractor-obligatorio.md      # 🆕 Revisión adversarial obligatoria
+│   ├── ejercicios-metacognitivos.md  # 🆕 Progressive Disclosure obligatorio
 │   ├── codigo-rmd.md                 # Reglas para código R/Markdown
 │   └── documentacion-verificada.md   # Principio de Documentación Verificada
 ├── settings.json          # Hooks y configuración global
@@ -326,6 +336,8 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 - ✅ Sistema de puntuación 0-100 puntos para comparación visual
 - ✅ Transferencia de conocimiento entre lenguajes (TikZ → Python → R)
 - ✅ Nomenclatura obligatoria con carpetas estructuradas
+- ✅ **🆕 Detractor Obligatorio**: Revisión adversarial en FASE 2C del ciclo de validación
+- ✅ **🆕 Ejercicios Metacognitivos**: Progressive Disclosure y pool de errores conceptuales
 
 ---
 
@@ -349,9 +361,25 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 -   **Institución**: IE Pedacito de Cielo
 -   **Propósito**: Generación de ejercicios matemáticos de alta calidad para la preparación de la prueba ICFES Saber 11°.
 -   **Licencia**: Proyecto Educativo
--   **Última Actualización**: Diciembre 2025
+-   **Última Actualización**: Febrero 2026
 
 ## 🆕 **Novedades Recientes**
+
+### Detractor Obligatorio v1.0 (Febrero 2026)
+
+- ✅ **Revisión adversarial automática**: Skill-detractor se ejecuta en todas las fases de revisión
+- ✅ **FASE 2C añadida**: Nueva fase obligatoria en el ciclo de validación
+- ✅ **4 dominios de revisión**: Código R-exams, pedagógico, visual, gramática
+- ✅ **Fuentes de verdad**: Objeciones respaldadas por documentación oficial (Nivel 1-2)
+- ✅ **Bloqueos automáticos**: Objeciones críticas/altas bloquean promoción
+- ✅ **Configuración personalizable**: `.claude/detractor-config.yaml`
+
+### Ejercicios Metacognitivos v1.0 (Febrero 2026)
+
+- ✅ **Progressive Disclosure obligatorio**: Todo ejercicio debe ser metacognitivo
+- ✅ **Pool de errores conceptuales**: Con códigos y funciones `calcula()`
+- ✅ **Metadatos cognitivos**: DOK, Bloom, SOLO obligatorios
+- ✅ **Antipatrones documentados**: Ejercicios puramente procedimentales PROHIBIDOS
 
 ### Graficador Experto v2.0 (Diciembre 2025)
 

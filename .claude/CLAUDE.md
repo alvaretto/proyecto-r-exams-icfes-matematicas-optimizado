@@ -14,19 +14,22 @@ Este archivo funciona como **índice central** del sistema. Para información de
 @.claude/docs/REGLAS_CRITICAS.md
 
 **Resumen de reglas fundamentales:**
-1. **Flujo B obligatorio** cuando hay gráficos → @.claude/rules/flujo-b-obligatorio.md
-2. **Proceso secuencial** TikZ→Python→R → @.claude/rules/graficador-secuencial.md
-3. **5 Coherencias** a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General)
-4. **Validación visual iterativa** OBLIGATORIA → @.claude/rules/ciclo-validacion.md
-5. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
-6. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
+1. **Ejercicios metacognitivos** con Progressive Disclosure → @.claude/rules/ejercicios-metacognitivos.md
+2. **Flujo B obligatorio** cuando hay gráficos → @.claude/rules/flujo-b-obligatorio.md
+3. **Proceso secuencial** TikZ→Python→R → @.claude/rules/graficador-secuencial.md
+4. **5 Coherencias** a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General)
+5. **Validación visual iterativa** OBLIGATORIA → @.claude/rules/ciclo-validacion.md
+6. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
+7. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
+8. **Detractor obligatorio** en fases de revisión 🆕 → @.claude/rules/detractor-obligatorio.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
-- `/validar-pedagogico` 🆕 - Análisis pedagógico avanzado basado en evidencias
+- `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
+- `/detractor auditoria [target]` 🆕 - Revisión adversarial obligatoria
 - `/auto-refinar-grafico [tikz|python|r]`
 - `/estado-graficador`, `/exportar-graficos`, `/promover-ejercicio`
 
@@ -91,6 +94,7 @@ A-Produccion/
 | Ver comandos disponibles | @.claude/docs/COMANDOS_Y_SKILLS.md |
 | Validar ortografía | @.claude/rules/ortografia-espanol.md |
 | Ejecutar tests | `tests/run_all_tests.R` |
+| Revisar decisiones/código | @.claude/rules/detractor-obligatorio.md |
 
 ### ⚙️ Configuración del Sistema
 
@@ -103,9 +107,27 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.0.0 (Modularización Completa)
-**Fecha**: 2026-02-04
+**Versión**: 3.2.0 (Detractor Obligatorio en Revisiones)
+**Fecha**: 2026-02-07
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.2 (2026-02-07)
+- **DETRACTOR OBLIGATORIO**: Skill-detractor se ejecuta automáticamente en fases de revisión
+- **Nueva regla**: `.claude/rules/detractor-obligatorio.md`
+- **FASE 2C añadida**: Revisión adversarial después de validación visual
+- **Ciclo de validación v4.0**: FASE 1 → 2A → 2B → 2C (detractor) → FASE 3
+- **Puntos de activación**: Post-generación, FASE 2C, pre-promoción
+- **4 dominios de revisión**: Código, pedagógico, visual, gramática
+- **Config por defecto**: `.claude/detractor-config.yaml`
+
+### Cambios v3.1 (2026-02-06)
+- **EJERCICIOS METACOGNITIVOS OBLIGATORIOS**: Todo .Rmd debe aplicar Progressive Disclosure
+- **Nueva regla**: `.claude/rules/ejercicios-metacognitivos.md`
+- **Skills actualizados**: generar-schoice v3.0, generar-cloze v3.0
+- **Nueva referencia**: `anatomia-metacognitiva.md` para estructura de 8 secciones
+- **Pool de errores conceptuales**: Ahora obligatorio con códigos y funciones `calcula()`
+- **Metadatos cognitivos**: DOK, Bloom, SOLO ahora obligatorios
+- **Antipatrones documentados**: Ejercicios puramente procedimentales PROHIBIDOS
 
 ### Cambios v3.0 (2026-02-04)
 - **MODULARIZACIÓN COMPLETA**: CLAUDE.md ahora es índice central

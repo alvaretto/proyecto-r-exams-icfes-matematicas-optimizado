@@ -19,6 +19,22 @@ Cada vez que se aplica CUALQUIER corrección o cambio al código:
 
 ---
 
+## RESUMEN DEL CICLO COMPLETO
+
+```
+FASE 1: Renderizado (HTML/PDF/DOCX/NOPS)
+    ↓
+FASE 2A: Validación matemática [AUTOMÁTICA - hook]
+    ↓
+FASE 2B: Preview visual [AUTOMÁTICA - hook]
+    ↓
+FASE 2C: Revisión Detractor [OBLIGATORIA] ← NUEVO
+    ↓
+FASE 3: Decisión usuario (5 coherencias + aprobación)
+```
+
+---
+
 ## FASE 2A: VALIDACIÓN MATEMÁTICA AUTOMÁTICA (Hook PostToolUse)
 
 **ACTIVACIÓN AUTOMÁTICA**: Después de cada `exams2*()` exitoso, el hook
@@ -71,6 +87,79 @@ post-exams2-validation.sh (después de FASE 2A APROBADO)
 
 **Si no se encontró PDF**: El hook emite aviso para que Claude ejecute `exams2pdf()`.
 Al ejecutar `exams2pdf()`, el hook se reactiva y genera el preview automáticamente.
+
+---
+
+## FASE 2C: REVISIÓN DETRACTOR (OBLIGATORIA)
+
+**Regla detallada**: @.claude/rules/detractor-obligatorio.md
+
+**ACTIVACIÓN**: Después de FASE 2B (preview visual), Claude DEBE ejecutar revisión detractor.
+
+```
+FASE 2B completada (preview visible)
+    ↓
+Claude ejecuta: /detractor auditoria [archivo.Rmd]
+    ↓
+Detractor revisa 4 dominios:
+  - Código R-exams
+  - Estructura pedagógica
+  - Coherencia visual
+  - Gramática/ortografía
+    ↓
+Genera reporte con objeciones (si hay)
+    ↓
+SI objeciones CRÍTICAS/ALTAS → Corregir → VOLVER A FASE 1
+SI APROBAR → Continuar a FASE 3
+```
+
+### Qué Revisa el Detractor
+
+| Dominio | Qué Valida | Fuentes de Verdad |
+|---------|------------|-------------------|
+| **Código** | exshuffle, exsolution, metadatos ICFES | R-exams docs, ejemplos locales |
+| **Pedagógico** | Progressive Disclosure, metacognición, DOK/Bloom | ICFES 2026, Dunlosky, Schraw |
+| **Visual** | Coherencia gráfico-texto, etiquetas, escalas | TikZ docs, estándares ICFES |
+| **Gramática** | Tildes, redacción, terminología | RAE, diccionario local |
+
+### Formato de Reporte FASE 2C
+
+```markdown
+## Revisión Detractor - [Nombre Ejercicio]
+
+**Dominios revisados**: código | pedagógico | visual | gramática
+
+### Objeciones Encontradas
+
+[Lista de objeciones con formato estándar, o "Sin objeciones significativas"]
+
+### Veredicto
+
+**Estado**: APROBAR | APROBAR CON CAMBIOS | RECHAZAR
+
+### Próximos Pasos
+
+[Acciones requeridas o "Continuar a FASE 3"]
+```
+
+### Bloqueos Automáticos
+
+```
+SI veredicto == RECHAZAR:
+    BLOQUEAR avance a FASE 3
+    MOSTRAR objeciones
+    REQUERIR reescritura
+
+SI veredicto == APROBAR CON CAMBIOS:
+    MOSTRAR cambios requeridos
+    APLICAR correcciones
+    VOLVER A FASE 1 (re-renderizar)
+
+SI veredicto == APROBAR:
+    CONTINUAR a FASE 3
+```
+
+**⚠️ PROHIBIDO**: Omitir FASE 2C o ignorar objeciones críticas/altas.
 
 ---
 
@@ -190,14 +279,16 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 ┌─────────────────────────────────────────────────────────┐
 │  ITERACIÓN N                                            │
 ├─────────────────────────────────────────────────────────┤
-│  1. FASE 1: Renderizar (HTML, PDF, DOCX)               │
+│  1. FASE 1: Renderizar (HTML, PDF, DOCX, NOPS)         │
 │  2. FASE 2A: [AUTOMÁTICO] Validación matemática (.R)   │
 │     └── Si ERRORES → Corregir → VOLVER A ITERACIÓN N+1 │
 │  3. FASE 2B: [AUTOMÁTICO] PDF → PNG (magick)           │
 │  4. Claude: Read() cada PNG generado                    │
 │  5. Claude: Verificar 5 coherencias VISUALMENTE         │
-│  6. Claude: Documentar hallazgos con checklist          │
-│  7. FASE 3: ¿Problemas detectados?                      │
+│  6. FASE 2C: [OBLIGATORIO] /detractor auditoria        │
+│     └── Si CRÍTICAS/ALTAS → Corregir → VOLVER N+1      │
+│  7. Claude: Documentar hallazgos con checklist          │
+│  8. FASE 3: ¿Problemas detectados?                      │
 │     │                                                   │
 │     ├── SÍ → Corregir → VOLVER A ITERACIÓN N+1         │
 │     │                                                   │
@@ -241,7 +332,7 @@ exams2pdf("archivo.Rmd", n = 1)
 - PDF: ✅ plain1.pdf (XXkb)
 - DOCX: ✅ pandoc1.docx (XXkb)
 
-### FASE 2: Inspección Visual
+### FASE 2: Inspección Visual + Detractor
 
 [Imagen preview.png mostrada aquí]
 
@@ -257,15 +348,21 @@ exams2pdf("archivo.Rmd", n = 1)
 [Imagen generada mostrada]
 Diferencias: Ninguna significativa / [Lista de diferencias]
 
+#### Revisión Detractor (FASE 2C):
+- Dominios revisados: código | pedagógico | visual | gramática
+- Objeciones: Ninguna significativa
+- Veredicto: APROBAR
+
 ### FASE 3: Decisión
-✅ Todas las coherencias OK - Solicitar aprobación del usuario
+✅ Todas las coherencias OK + Detractor APROBADO - Solicitar aprobación del usuario
 
 **¿Aprueba este ejercicio?**
 ```
 
 ---
 
-**Versión**: 3.0 (Validación Matemática + Visual Automáticas)
-**Fecha**: 2026-02-03
+**Versión**: 4.0 (Validación Matemática + Visual + Detractor Obligatorio)
+**Fecha**: 2026-02-07
+**Cambio v4.0**: FASE 2C (Detractor) es OBLIGATORIA - revisión adversarial en 4 dominios
 **Cambio v3.0**: FASE 2A (matemática) y FASE 2B (preview visual) son AUTOMÁTICAS vía hook PostToolUse
 **Cambio v2.0**: FASE 2 requiere inspección visual REAL con imagen mostrada

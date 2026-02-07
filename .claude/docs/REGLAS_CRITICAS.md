@@ -4,18 +4,126 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
-### Las 6 Reglas Fundamentales
+### Las 8 Reglas Fundamentales
 
-1. **Flujo B obligatorio** cuando hay gráficos
-2. **Proceso secuencial** TikZ→Python→R (no simultáneo)
-3. **5 Coherencias** a verificar en cada validación
-4. **Validación visual iterativa** con inspección REAL
-5. **Ortografía española** con tildes correctas
-6. **Testing automático** permanente con tolerancia cero
+1. **Ejercicios metacognitivos** con Progressive Disclosure
+2. **Flujo B obligatorio** cuando hay gráficos
+3. **Proceso secuencial** TikZ→Python→R (no simultáneo)
+4. **5 Coherencias** a verificar en cada validación
+5. **Validación visual iterativa** con inspección REAL
+6. **Ortografía española** con tildes correctas
+7. **Testing automático** permanente con tolerancia cero
+8. **Detractor obligatorio** en todas las fases de revisión 🆕
 
 ---
 
-## 1. Flujo B (Graficador Experto) - OBLIGATORIO
+## 1. Ejercicios Metacognitivos - OBLIGATORIO 🆕
+
+**Regla detallada**: @.claude/rules/ejercicios-metacognitivos.md
+
+### Principio Fundamental
+
+**TODO ejercicio .Rmd (SCHOICE, CLOZE) DEBE ser metacognitivo con Progressive Disclosure.**
+
+Los ejercicios puramente procedimentales ("calcula X") están **PROHIBIDOS**.
+
+### Qué es un Ejercicio Metacognitivo
+
+Un ejercicio metacognitivo va más allá del cálculo:
+- Requiere **identificar errores** de otros
+- Exige **justificar** por qué algo es correcto/incorrecto
+- Incluye **reflexión** sobre el proceso de solución
+- Aplica **verificación** de resultados
+
+### Patrones Metacognitivos Obligatorios
+
+| Patrón | Descripción | Bloom |
+|--------|-------------|-------|
+| **Análisis de Error Ajeno** | "Juan obtuvo X. ¿Cuál fue su error?" | Analizar |
+| **Evaluación de Afirmación** | "María afirma Y. ¿Por qué es incorrecta?" | Evaluar |
+| **Comparación de Procedimientos** | "¿Cuál estudiante aplicó correctamente Z?" | Analizar |
+
+### Progressive Disclosure (CLOZE)
+
+Todo ejercicio CLOZE DEBE tener **mínimo 4 partes**:
+
+```
+Parte 1 (schoice): IDENTIFICAR el error conceptual
+    ↓ Bloom: Analizar | DOK: 3
+Parte 2 (num): CALCULAR la respuesta correcta
+    ↓ Bloom: Aplicar | DOK: 2
+Parte 3 (mchoice): EVALUAR afirmaciones sobre el concepto
+    ↓ Bloom: Evaluar | DOK: 3
+Parte 4 (schoice V/F): TRANSFERIR a caso específico
+    | Bloom: Analizar/Evaluar | DOK: 3
+```
+
+### Pool de Errores Conceptuales (OBLIGATORIO)
+
+Todo ejercicio DEBE definir un pool de errores con:
+
+```r
+errores_conceptuales <- list(
+  list(
+    codigo = "XXX-YYY-01",          # Ej: EST-MTC-01
+    nombre = "Nombre descriptivo",
+    descripcion_corta = "...",       # Para opciones (max 80 chars)
+    descripcion_larga = "...",       # Para solución
+    causa_raiz = "...",              # Diagnóstico pedagógico
+    calcula = function(...) { ... }  # Función que produce el distractor
+  )
+)
+```
+
+### Metadatos Cognitivos OBLIGATORIOS
+
+```yaml
+exextra[DOK]: [2|3|4]              # Webb's Depth of Knowledge
+exextra[Bloom]: [Analizar|Evaluar]  # Taxonomía de Bloom
+exextra[SOLO]: [Relacional|...]     # Taxonomía SOLO
+exextra[TipoMetacognicion]: [analisis_error|evaluacion_afirmacion|...]
+```
+
+### Sección Solution OBLIGATORIA
+
+```markdown
+Solution
+========
+
+### Análisis del Error
+**Error identificado:** [descripcion_larga]
+**Código de error:** [codigo]
+**Causa raíz:** [causa_raiz]
+
+### Procedimiento Correcto
+**Paso 1:** [descripción + fórmula LaTeX]
+...
+
+### Reflexión Metacognitiva
+[reflexión aleatoria del pool]
+```
+
+### Antipatrones PROHIBIDOS
+
+```markdown
+❌ PROHIBIDO: Ejercicio puramente procedimental
+"Calcula el área de un rectángulo con base 8 cm"
+
+✓ CORRECTO: Ejercicio metacognitivo
+"Un estudiante calculó 8 + 5 = 13 como área. ¿Cuál fue su error?"
+```
+
+```r
+❌ PROHIBIDO: Distractores aleatorios
+distractores <- respuesta + sample(-10:10, 3)
+
+✓ CORRECTO: Distractores basados en errores conceptuales
+distractores <- sapply(errores_conceptuales, function(e) e$calcula(...))
+```
+
+---
+
+## 2. Flujo B (Graficador Experto) - OBLIGATORIO
 
 **Regla detallada**: @.claude/rules/flujo-b-obligatorio.md
 
@@ -56,7 +164,7 @@ outputs/[nombre_ejercicio]/
 
 ---
 
-## 2. Proceso Secuencial del Graficador
+## 3. Proceso Secuencial del Graficador
 
 **Regla detallada**: @.claude/rules/graficador-secuencial.md
 
@@ -108,7 +216,7 @@ generar_tikz() → aprobar_tikz()
 
 ---
 
-## 3. Las 5 Coherencias (Verificación Obligatoria)
+## 4. Las 5 Coherencias (Verificación Obligatoria)
 
 **Todas deben verificarse ANTES de aprobar cualquier ejercicio.**
 
@@ -171,7 +279,7 @@ generar_tikz() → aprobar_tikz()
 
 ---
 
-## 4. Validación Visual Iterativa (OBLIGATORIA)
+## 5. Validación Visual Iterativa (OBLIGATORIA)
 
 **Regla detallada**: @.claude/rules/ciclo-validacion.md
 
@@ -224,7 +332,7 @@ Read("preview.png")  # Mostrar al usuario
 
 ---
 
-## 5. Ortografía Española (OBLIGATORIA)
+## 6. Ortografía Española (OBLIGATORIA)
 
 **Regla detallada**: @.claude/rules/ortografia-espanol.md
 
@@ -276,7 +384,7 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 
 ---
 
-## 6. Testing Automático (PERMANENTE)
+## 7. Testing Automático (PERMANENTE)
 
 **Regla detallada**: @.claude/rules/testing-obligatorio.md
 **Flujo automático**: @.claude/docs/FLUJO_AUTOMATICO_TESTING.md
@@ -388,20 +496,116 @@ ACCIÓN REQUERIDA:
 No proceder sin aprobación.
 ```
 
+### Error: Detractor Omitido
+
+```
+❌ FASE 2C OMITIDA
+
+No se ejecutó revisión detractor después de validación visual.
+
+ACCIÓN REQUERIDA:
+1. Ejecutar: /detractor auditoria [archivo.Rmd]
+2. Revisar objeciones en 4 dominios
+3. Corregir objeciones CRÍTICAS/ALTAS si existen
+4. Solo continuar a FASE 3 si veredicto es APROBAR
+
+No proceder sin revisión detractor.
+```
+
+---
+
+## 8. Detractor Obligatorio en Revisiones - OBLIGATORIO 🆕
+
+**Regla detallada**: @.claude/rules/detractor-obligatorio.md
+
+### Principio Fundamental
+
+**El skill-detractor DEBE invocarse AUTOMÁTICAMENTE en toda fase de revisión.**
+
+El detractor actúa como revisor adversarial que confronta decisiones con fuentes de verdad.
+
+### Puntos de Activación
+
+| Punto | Activación | Bloqueo |
+|-------|------------|---------|
+| **Post-generación** | Después de `/generar-*` | Si hay objeciones CRÍTICAS/ALTAS |
+| **FASE 2C** | Después de preview visual | Si veredicto es RECHAZAR |
+| **Pre-promoción** | Antes de `/promover-ejercicio` | Si hay objeciones pendientes |
+
+### Dominios de Revisión
+
+1. **Código R-exams**: exshuffle, metadatos, estructura
+2. **Pedagógico**: Progressive Disclosure, metacognición, DOK/Bloom
+3. **Visual**: Coherencia gráfico-texto, etiquetas, escalas
+4. **Gramática**: Tildes, redacción, terminología
+
+### Formato de Invocación
+
+```bash
+# Modo Auditoría (completo)
+/detractor auditoria [archivo.Rmd]
+/detractor auditoria [directorio/]
+
+# Modo Inline (rápido)
+/detractor [pregunta específica]
+```
+
+### Umbrales de Severidad
+
+| Nivel | Criterio | Acción |
+|-------|----------|--------|
+| **Crítica** | Errores matemáticos, pérdida coherencia | BLOQUEAR, corregir inmediato |
+| **Alta** | Distractores inválidos, metadatos faltantes | Priorizar corrección |
+| **Media** | Mejoras pedagógicas | Agregar a backlog |
+| **Baja** | Estilo, convenciones | Ignorar |
+
+### Integración con Ciclo de Validación
+
+```
+FASE 1: Renderizado
+    ↓
+FASE 2A: Validación matemática [hook]
+    ↓
+FASE 2B: Preview visual [hook]
+    ↓
+FASE 2C: Detractor [OBLIGATORIO] ← NUEVO
+    ↓
+FASE 3: Decisión usuario
+```
+
+### Prohibiciones
+
+- ❌ **NUNCA** omitir FASE 2C
+- ❌ **NUNCA** ignorar objeciones CRÍTICAS/ALTAS
+- ❌ **NUNCA** promocionar sin auditoría previa
+- ❌ **NUNCA** objetar sin fuente verificable (Nivel 1-2)
+
+### Garantías
+
+✅ Toda decisión confrontada con fuentes de verdad
+✅ Sesgo de confirmación eliminado
+✅ Calidad pedagógica validada científicamente
+✅ Código R-exams cumple estándares oficiales
+
 ---
 
 ## 📋 Checklist de Cumplimiento
 
 Antes de finalizar CUALQUIER ejercicio:
 
+- [ ] **Ejercicio es metacognitivo** (patrón aplicado, no puramente procedimental)
+- [ ] **Pool de errores conceptuales** definido (mínimo 4)
+- [ ] **Metadatos cognitivos** presentes (DOK, Bloom, SOLO)
+- [ ] **Solution incluye** análisis de error + reflexión metacognitiva
 - [ ] Si tiene gráficos → Flujo B completado
 - [ ] TikZ/Python/R aprobados secuencialmente (si aplica)
 - [ ] 5 coherencias verificadas VISUALMENTE
 - [ ] Preview PNG mostrado al usuario
+- [ ] **FASE 2C Detractor ejecutada** (veredicto APROBAR) 🆕
 - [ ] Ortografía validada (tildes correctas)
 - [ ] Tests ejecutados y pasando (100%)
 - [ ] Renderizado exitoso en 4 formatos
-- [ ] 250+ versiones únicas generadas
+- [ ] 200+ versiones únicas generadas (250+ si no hay restricciones fuertes)
 - [ ] Usuario aprobó explícitamente
 - [ ] Documentación actualizada
 
@@ -409,6 +613,8 @@ Antes de finalizar CUALQUIER ejercicio:
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-02-04
-**Módulo de**: @.claude/CLAUDE.md (v3.0.0)
+**Versión**: 1.2
+**Fecha**: 2026-02-07
+**Cambio v1.2**: Añadida regla #8 Detractor Obligatorio en fases de revisión
+**Cambio v1.1**: Añadida regla #1 Ejercicios Metacognitivos con Progressive Disclosure
+**Módulo de**: @.claude/CLAUDE.md (v3.2.0)
