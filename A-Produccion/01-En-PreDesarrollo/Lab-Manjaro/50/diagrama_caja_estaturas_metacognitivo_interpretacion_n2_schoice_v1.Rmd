@@ -528,15 +528,24 @@ crear_y_guardar_boxplot <- function(cuartiles, letra, y_min, y_max, unidad) {
     annotate("text", x = 1.72, y = cuartiles$mediana, label = "Q2", hjust = 0, size = 2.8) +
     annotate("text", x = 1.72, y = cuartiles$q3, label = "Q3", hjust = 0, size = 2.8) +
     annotate("text", x = 1.72, y = cuartiles$max, label = "Máx.", hjust = 0, size = 2.8) +
-    # Escala Y con breaks espaciados (evitar superposición)
-    # Calcular step óptimo según rango
+    # Escala Y con breaks que incluyen valores de cuartiles
     scale_y_continuous(
       limits = c(y_min - 0.5, y_max + 0.5),
       breaks = function(limits) {
         rango <- diff(limits)
-        # Elegir step según tamaño del rango
+        # Breaks regulares según tamaño del rango
         step <- if(rango <= 10) 1 else if(rango <= 20) 2 else 5
-        seq(ceiling(limits[1]), floor(limits[2]), by = step)
+        breaks_regulares <- seq(ceiling(limits[1]), floor(limits[2]), by = step)
+
+        # Agregar valores específicos de cuartiles
+        breaks_cuartiles <- c(cuartiles$min, cuartiles$q1, cuartiles$mediana,
+                              cuartiles$q3, cuartiles$max)
+
+        # Combinar y ordenar, eliminando duplicados
+        breaks_combinados <- sort(unique(c(breaks_regulares, breaks_cuartiles)))
+
+        # Filtrar valores fuera de límites
+        breaks_combinados[breaks_combinados >= limits[1] & breaks_combinados <= limits[2]]
       },
       expand = c(0, 0)
     ) +
