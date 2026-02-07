@@ -1,0 +1,226 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+# Variante metacognitiva: El estudiante debe identificar el error conceptual
+# que llevó a una respuesta incorrecta. Eleva a DOK 3 (Razonamiento Estratégico)
+
+# Nombre del personaje principal (aleatorio)
+protagonista <- sample(c("David", "Patricia", "Valentina", "Andrés", "Gabriela",
+                         "Leonardo", "Daniela", "Felipe", "Isabella", "Paula Andrea",
+                         "Natalia", "Lina María", "Consuelo", "Carlos Eduardo",
+                         "Samuel", "Luis Fernando"), 1)
+
+# Pool de nombres de estudiantes
+pool_nombres <- c(
+  "Alberto", "Juan", "Alejandra", "Camila", "Sebastián", "Lucía", "Miguel", "Sofía",
+  "Diego", "Carla", "María Antonia", "Violeta", "Martha Lucía", "Manuel Evelio",
+  "Álvaro", "José Álvaro", "Santiago", "Elena", "Juliana", "Ricardo", "Andrea",
+  "Cristian", "Daniel", "Valeria", "Martín", "Luciana", "Gabriel", "María José",
+  "Nicolás", "Daniela", "Pedro", "Luisa", "Antonio", "Sara", "Fernanda", "Mariana",
+  "Jorge", "Gonzalo", "Catalina", "Agustín", "Valentín", "Renata", "Lucas", "Eugenia",
+  "Bautista", "Micaela", "Matías", "Adriana"
+)
+
+# Aleatorizar número de estudiantes con edad desconocida: 2 o 3
+num_desconocidos <- sample(2:3, 1)
+
+# Generación de datos válidos
+datos_validos <- FALSE
+
+while(!datos_validos) {
+  num_estudiantes <- sample((num_desconocidos + 3):15, 1)
+  num_conocidos <- num_estudiantes - num_desconocidos
+
+  nombres <- sample(pool_nombres, num_estudiantes)
+  nombres_desconocidos <- nombres[1:num_desconocidos]
+  nombres_conocidos <- nombres[(num_desconocidos + 1):num_estudiantes]
+
+  edades_conocidas <- sample(14:18, num_conocidos, replace = TRUE)
+  suma_conocidas <- sum(edades_conocidas)
+
+  promedio_candidato <- sample(14:18, 1)
+  suma_total <- promedio_candidato * num_estudiantes
+  suma_desconocidas <- suma_total - suma_conocidas
+
+  if(suma_desconocidas %% num_desconocidos == 0 &&
+     suma_desconocidas >= (num_desconocidos * 14) &&
+     suma_desconocidas <= (num_desconocidos * 18)) {
+
+    edad_correcta <- suma_desconocidas / num_desconocidos
+
+    # Generar distractores con sus errores conceptuales
+    distractor_1 <- promedio_candidato  # Error: confundir promedio con respuesta
+    distractor_2 <- suma_desconocidas   # Error: olvidar dividir
+    distractor_3 <- round(suma_total / num_desconocidos)  # Error: dividir suma total
+
+    opciones <- c(edad_correcta, distractor_1, distractor_2, distractor_3)
+
+    if(length(unique(opciones)) == 4 && all(opciones >= 10) && all(opciones <= 100)) {
+      datos_validos <- TRUE
+    }
+  }
+}
+
+# Seleccionar aleatoriamente cuál distractor analizar
+tipo_error <- sample(1:3, 1)
+
+if(tipo_error == 1) {
+  respuesta_erronea <- distractor_1
+  error_correcto <- paste0("Confundió el promedio (", promedio_candidato,
+                           ") con la edad individual que debía calcular")
+  error_d1 <- paste0("Olvidó dividir ", suma_desconocidas, " entre ", num_desconocidos)
+  error_d2 <- paste0("Dividió la suma total (", suma_total, ") en lugar de la suma de edades faltantes")
+  error_d3 <- paste0("Sumó incorrectamente las edades conocidas")
+} else if(tipo_error == 2) {
+  respuesta_erronea <- distractor_2
+  error_correcto <- paste0("Olvidó dividir ", suma_desconocidas, " entre ", num_desconocidos,
+                           " para obtener la edad individual")
+  error_d1 <- paste0("Confundió el promedio (", promedio_candidato, ") con la respuesta")
+  error_d2 <- paste0("Dividió la suma total (", suma_total, ") en lugar de la suma de edades faltantes")
+  error_d3 <- paste0("Restó al revés: edades conocidas menos suma total")
+} else {
+  respuesta_erronea <- distractor_3
+  error_correcto <- paste0("Dividió la suma total (", suma_total, ") entre ", num_desconocidos,
+                           " en lugar de dividir la suma de las edades faltantes (", suma_desconocidas, ")")
+  error_d1 <- paste0("Confundió el promedio (", promedio_candidato, ") con la respuesta")
+  error_d2 <- paste0("Olvidó dividir ", suma_desconocidas, " entre ", num_desconocidos)
+  error_d3 <- paste0("Sumó incorrectamente las edades conocidas")
+}
+
+# Opciones de respuesta (descripciones de errores)
+opciones_errores <- c(error_correcto, error_d1, error_d2, error_d3)
+solucion <- c(TRUE, FALSE, FALSE, FALSE)
+
+# Mezclar opciones
+orden <- sample(1:4)
+opciones_mezcladas <- opciones_errores[orden]
+solucion_mezclada <- solucion[orden]
+
+# Preparar datos para la tabla
+datos_tabla <- data.frame(
+  Estudiante = nombres,
+  Edad = c(rep("?", num_desconocidos), as.character(edades_conocidas)),
+  stringsAsFactors = FALSE
+)
+
+# Texto para el enunciado según número de desconocidos
+if (num_desconocidos == 2) {
+  texto_desconocidos <- paste0(nombres_desconocidos[1], " y ", nombres_desconocidos[2])
+  texto_condicion <- paste0(nombres_desconocidos[1], " y ", nombres_desconocidos[2], " tienen la misma edad")
+} else {
+  texto_desconocidos <- paste0(nombres_desconocidos[1], ", ", nombres_desconocidos[2],
+                               " y ", nombres_desconocidos[3])
+  texto_condicion <- paste0(nombres_desconocidos[1], ", ", nombres_desconocidos[2],
+                            " y ", nombres_desconocidos[3], " tienen la misma edad")
+}
+
+# Texto para solución
+texto_suma <- paste(edades_conocidas, collapse = " + ")
+
+# Función para generar tabla TikZ profesional
+tikz_tabla_edades <- function(datos) {
+  n <- nrow(datos)
+  filas <- sapply(1:n, function(i) {
+    paste0("    ", datos$Estudiante[i], " & ", datos$Edad[i], " \\\\")
+  })
+
+  c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    "  \\begin{tabular}{|l|c|}",
+    "    \\hline",
+    "    \\rowcolor{gray!25} \\textbf{Estudiante} & \\textbf{Edad (años)} \\\\",
+    "    \\hline",
+    filas,
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+}
+
+tikz_code <- tikz_tabla_edades(datos_tabla)
+```
+
+Question
+========
+`r protagonista` recibe un listado con las edades de algunos estudiantes de su colegio y calcula que el promedio de edad es de `r promedio_candidato` años. Se sabe que `r texto_condicion`.
+
+```{r tabla_estudiantes, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
+typ <- match_exams_device()
+
+suppressMessages(
+  include_tikz(tikz_code,
+               name = "tabla_edades",
+               markup = "markdown",
+               format = typ,
+               packages = c("tikz", "colortbl", "xcolor"),
+               width = "6cm")
+)
+```
+
+Un compañero de `r protagonista` intentó resolver el problema y obtuvo como respuesta **`r respuesta_erronea` años** para cada estudiante con edad desconocida.
+
+**¿Cuál error conceptual cometió el compañero para obtener esa respuesta?**
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones_mezcladas, markup = "markdown")
+```
+
+Solution
+========
+
+**Análisis del error**
+
+La respuesta correcta del problema original es **`r edad_correcta` años**.
+
+El compañero respondió **`r respuesta_erronea` años**, lo cual indica que:
+
+**`r error_correcto`**
+
+**Procedimiento correcto:**
+
+1. **Suma total de edades:** $`r promedio_candidato` \times `r num_estudiantes` = `r suma_total`$
+
+2. **Suma de edades conocidas:** $`r texto_suma` = `r suma_conocidas`$
+
+3. **Suma de edades desconocidas:** $`r suma_total` - `r suma_conocidas` = `r suma_desconocidas`$
+
+4. **Edad de cada estudiante:** $\frac{`r suma_desconocidas`}{`r num_desconocidos`} = `r edad_correcta`$
+
+**Reflexión metacognitiva:**
+
+Identificar errores ajenos nos ayuda a evitar cometerlos nosotros mismos. Los errores más comunes al resolver este tipo de problemas son:
+
+- Confundir el promedio con la respuesta buscada
+- Olvidar dividir entre el número de datos faltantes
+- Usar la suma total en lugar de la suma parcial correcta
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solucion_mezclada, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(solucion_mezclada)`
+exname: promedios_borrados_metacognitivo_argumentacion_n3_schoice_v1
+exshuffle: TRUE
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Tendencia-Central
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Identifica y analiza errores conceptuales en procedimientos con la media aritmetica
+exextra[Evidencia]: Justifica por que un procedimiento produce un resultado incorrecto
+exextra[Nivel]: 3
+exextra[Contexto]: Escolar

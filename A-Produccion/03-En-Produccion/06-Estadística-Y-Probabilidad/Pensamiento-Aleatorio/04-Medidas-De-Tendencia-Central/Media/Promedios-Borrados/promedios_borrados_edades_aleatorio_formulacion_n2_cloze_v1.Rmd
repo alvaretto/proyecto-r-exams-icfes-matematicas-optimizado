@@ -1,0 +1,168 @@
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+marcela <- sample(c("David", "Patricia", "Valentina", "Andrés", "Gabriela", "Leonardo", "Daniela", "Felipe", "Isabella", "Paula Andrea", "Natalia", "Lina María", "Consuelo", "Carlos Eduardo", "Samuel", "Luis Fernando"), 1)
+
+# Definir un vector con nombres de estudiantes
+num_students <- sample(5:20, 1)
+est_con <- num_students-2
+nombres_s <- sample(c(
+  "Alberto", "Juan", "Alejandra", "Camila", "Sebastián", "Lucía", "Miguel", "Sofía", "Diego", "Carla", 
+  "María Antonia", "Violeta", "Martha Lucía", "Manuel Evelio", "Álvaro", "José Álvaro", "Santiago", "Elena", 
+  "Juliana", "Ricardo", "Andrea", "Cristian", "Daniel", "Valeria", "Martín", "Luciana", "Gabriel", "María José",
+  "Nicolás", "Daniela", "Pedro", "Luisa", "Antonio", "Sara", "Fernanda", "Mariana", "Jorge", "Gonzalo",
+  "Catalina", "Agustín", "Valentín", "Renata", "Lucas", "Eugenia", "Bautista", "Micaela", "Matías", "Adriana"
+), num_students)
+
+##############################################
+
+
+# Variable de control para encontrar suma par (edades divisibles entre 2)
+suma_encontrada <- FALSE
+
+while(!suma_encontrada) {
+
+  nombres_c <- nombres_s[3:length(nombres_s)]
+
+  # Definir edades aleatorias para los estudiantes (entre 25 y 55)
+  edades_al <- sample(25:55, num_students - 2)
+  
+  tote <- paste(nombres_c, "(", edades_al, ")", sep="")
+  totem <- paste(edades_al, collapse=" + ")
+
+  # Calcular la edad promedio
+  promedio <- round((sum(edades_al) + 2 * sample(25:55, 1)) / num_students)
+
+  # Calcular la suma de las edades conocidas
+  suma_conocida <- sum(edades_al)
+
+  # La suma de las edades de los otros 2 estudiantes es la diferencia entre la suma total y la suma conocida
+  suma_total <- num_students * promedio
+  suma_resto <- suma_total - suma_conocida
+
+  if(suma_resto %% 2 == 0 && suma_resto > 8) {
+    suma_encontrada <- TRUE
+  }
+}
+
+
+
+#######################
+
+
+# La edad individual de los otros 2 estudiantes (que es la misma para ambos)
+edad_resto <- round(suma_resto / 2)
+
+# La validación de edad_resto >= 4 ya está garantizada por suma_resto > 8 en el while anterior
+
+sol <- c(edad_resto)
+```
+
+Question
+========
+`r marcela` recibe un listado con las edades de algunos estudiantes de su colegio y calcula que el promedio de edad es de `r promedio` años. Cuando `r marcela` vuelve a revisar el listado, encuentra que borró la información de dos estudiantes: `r nombres_s[1]` y `r nombres_s[2]`.
+
+
+```{r tabla_estudiantes, echo=FALSE, results='asis'}
+datos_tabla <- data.frame(
+  Estudiante = nombres_s,
+  Edad = c("?", "?", as.character(edades_al)),
+  stringsAsFactors = FALSE
+)
+
+fmt <- match_exams_device()
+
+if (fmt == "pdf") {
+  library(xtable)
+  tbl <- xtable(datos_tabla, align = c('l', 'l', 'c'))
+  print(tbl, type = 'latex', include.rownames = FALSE, comment = FALSE)
+} else {
+  knitr::kable(datos_tabla, format = "html", row.names = FALSE)
+}
+```
+\
+Si se sabe que `r nombres_s[1]` y `r nombres_s[2]` tienen la misma edad, ¿cuántos años tiene cada uno de ellos?
+
+```{r questionlist, echo = FALSE, results = "asis", warning=FALSE, message=FALSE}
+answerlist(rep("", length(sol)), markup = "markdown")
+```
+
+Solution
+========
+
+**Análisis del problema**
+
+`r nombres_s[1]` y `r nombres_s[2]` tienen, cada uno, **`r sol` años**.
+
+**Paso 1:** Entender la situación
+
+`r marcela` tiene las edades de `r num_students` estudiantes y sabe que el promedio es `r promedio` años. El promedio es la suma de todas las edades dividida entre el número de estudiantes.
+
+**Paso 2:** Identificar los datos conocidos
+
+Conocemos la edad de `r est_con` estudiantes:
+
+`r tote`
+
+**Suma de edades conocidas:**
+
+$$\text{Edades conocidas} = `r totem` = `r suma_conocida`$$
+
+**Paso 3:** Calcular la suma total de edades
+
+Para encontrar la edad total de los `r num_students` estudiantes, multiplicamos el promedio por el número de estudiantes:
+
+$$\text{Edades todos} = `r promedio` \times `r num_students` = `r suma_total`$$
+
+**Paso 4:** Encontrar las edades desconocidas
+
+Hallamos la diferencia entre la suma total y las edades conocidas:
+
+$$\text{Edades desconocidas} = `r suma_total` - `r suma_conocida` = `r suma_resto`$$
+
+**Paso 5:** Calcular la edad de cada estudiante
+
+Como `r nombres_s[1]` y `r nombres_s[2]` tienen la misma edad, dividimos entre 2:
+
+$$\text{Edad de cada uno} = \frac{`r suma_resto`}{2} = `r edad_resto`$$
+
+**Conclusión**
+
+- **Edad de `r nombres_s[1]`:** `r edad_resto` años
+- **Edad de `r nombres_s[2]`:** `r edad_resto` años
+
+**Reflexión metacognitiva:**
+
+¿Por qué multiplicamos el promedio por `r num_students` antes de restar? Porque el promedio "esconde" la suma original de todas las edades. La fórmula del promedio es:
+
+$$\text{Promedio} = \frac{\text{Suma total}}{\text{Cantidad de datos}}$$
+
+Por lo tanto, para recuperar la suma total debemos "deshacer" la división multiplicando:
+
+$$\text{Suma total} = \text{Promedio} \times \text{Cantidad de datos}$$
+
+Este razonamiento inverso es clave para resolver problemas donde conocemos el promedio pero necesitamos encontrar valores individuales.
+
+
+Meta-information
+================
+extype: cloze
+exsolution: `r paste(as.character(sol))`
+exclozetype: num
+exname: promedios_borrados_edades_estudiantes_aleatorio_n2_v1
+exshuffle: TRUE
+extol: 0.01
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Tendencia-Central
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Formulacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Aplica propiedades de la media aritmetica para recalcular promedios con datos faltantes
+exextra[Evidencia]: Resuelve ecuaciones algebraicas a partir de la definicion de promedio
+exextra[Nivel]: 2
+exextra[Contexto]: Escolar

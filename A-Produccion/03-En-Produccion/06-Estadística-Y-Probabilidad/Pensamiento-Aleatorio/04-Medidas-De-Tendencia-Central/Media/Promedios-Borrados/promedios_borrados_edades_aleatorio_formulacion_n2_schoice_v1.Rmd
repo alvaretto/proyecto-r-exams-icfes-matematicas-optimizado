@@ -1,0 +1,234 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+# Nombre del personaje principal (aleatorio)
+protagonista <- sample(c("David", "Patricia", "Valentina", "Andrés", "Gabriela",
+                         "Leonardo", "Daniela", "Felipe", "Isabella", "Paula Andrea",
+                         "Natalia", "Lina María", "Consuelo", "Carlos Eduardo",
+                         "Samuel", "Luis Fernando"), 1)
+
+# Pool de nombres de estudiantes
+pool_nombres <- c(
+  "Alberto", "Juan", "Alejandra", "Camila", "Sebastián", "Lucía", "Miguel", "Sofía",
+  "Diego", "Carla", "María Antonia", "Violeta", "Martha Lucía", "Manuel Evelio",
+  "Álvaro", "José Álvaro", "Santiago", "Elena", "Juliana", "Ricardo", "Andrea",
+  "Cristian", "Daniel", "Valeria", "Martín", "Luciana", "Gabriel", "María José",
+  "Nicolás", "Daniela", "Pedro", "Luisa", "Antonio", "Sara", "Fernanda", "Mariana",
+  "Jorge", "Gonzalo", "Catalina", "Agustín", "Valentín", "Renata", "Lucas", "Eugenia",
+  "Bautista", "Micaela", "Matías", "Adriana"
+)
+
+# Generación de datos válidos con distractores bien diferenciados
+datos_validos <- FALSE
+
+while(!datos_validos) {
+  # Número de estudiantes (entre 6 y 15 para tablas manejables)
+  num_estudiantes <- sample(6:15, 1)
+  num_conocidos <- num_estudiantes - 2
+
+  # Seleccionar nombres
+  nombres <- sample(pool_nombres, num_estudiantes)
+  nombres_desconocidos <- nombres[1:2]
+  nombres_conocidos <- nombres[3:num_estudiantes]
+
+  # Edades conocidas (entre 14 y 18 años - contexto escolar realista)
+  edades_conocidas <- sample(14:18, num_conocidos, replace = TRUE)
+  suma_conocidas <- sum(edades_conocidas)
+
+  # Generar promedio que produzca una edad desconocida válida y entera
+  # edad_desconocida = (promedio * num_estudiantes - suma_conocidas) / 2
+  # Para que sea entera: (promedio * num_estudiantes - suma_conocidas) debe ser par
+
+  promedio_candidato <- sample(14:18, 1)
+  suma_total <- promedio_candidato * num_estudiantes
+  suma_desconocidas <- suma_total - suma_conocidas
+
+  # Verificar condiciones
+  if(suma_desconocidas %% 2 == 0 &&
+     suma_desconocidas >= 28 &&
+     suma_desconocidas <= 36) {
+
+    edad_correcta <- suma_desconocidas / 2
+
+    # Generar distractores basados en errores conceptuales comunes
+    # D1: Usar el promedio directamente (no entiende la diferencia)
+    distractor_1 <- promedio_candidato
+
+    # D2: Error de cálculo - olvidar dividir entre 2
+    distractor_2 <- suma_desconocidas
+
+    # D3: Dividir suma_total entre 2 (confunde suma total con suma de desconocidos)
+    distractor_3 <- round(suma_total / 2)
+
+    # Verificar que todos los distractores sean diferentes entre sí y de la correcta
+    # ICFES Colombia usa exactamente 4 opciones (A, B, C, D)
+    opciones <- c(edad_correcta, distractor_1, distractor_2, distractor_3)
+
+    if(length(unique(opciones)) == 4 &&
+       all(opciones >= 10) &&
+       all(opciones <= 100)) {
+      datos_validos <- TRUE
+    }
+  }
+}
+
+# Preparar texto de edades conocidas para la solución
+texto_edades <- paste(nombres_conocidos, "(", edades_conocidas, ")", sep = "")
+texto_suma <- paste(edades_conocidas, collapse = " + ")
+
+# Construir opciones de respuesta con formato (4 opciones estilo ICFES)
+opciones_texto <- paste0(c(edad_correcta, distractor_1, distractor_2, distractor_3), " años")
+
+# Vector de solución (posición 1 es correcta antes de shuffle)
+solucion <- c(TRUE, FALSE, FALSE, FALSE)
+
+# Mezclar opciones
+orden <- sample(1:4)
+opciones_mezcladas <- opciones_texto[orden]
+solucion_mezclada <- solucion[orden]
+
+# Preparar datos para la tabla
+datos_tabla <- data.frame(
+  Estudiante = nombres,
+  Edad = c("?", "?", as.character(edades_conocidas)),
+  stringsAsFactors = FALSE
+)
+
+# Función para generar tabla TikZ profesional
+tikz_tabla_edades <- function(datos) {
+  n <- nrow(datos)
+  filas <- sapply(1:n, function(i) {
+    paste0("    ", datos$Estudiante[i], " & ", datos$Edad[i], " \\\\")
+  })
+
+  c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    "  \\begin{tabular}{|l|c|}",
+    "    \\hline",
+    "    \\rowcolor{gray!25} \\textbf{Estudiante} & \\textbf{Edad (años)} \\\\",
+    "    \\hline",
+    filas,
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+}
+
+tikz_code <- tikz_tabla_edades(datos_tabla)
+```
+
+Question
+========
+`r protagonista` recibe un listado con las edades de algunos estudiantes de su colegio y calcula que el promedio de edad es de `r promedio_candidato` años. Cuando `r protagonista` vuelve a revisar el listado, encuentra que borró la información de dos estudiantes: `r nombres_desconocidos[1]` y `r nombres_desconocidos[2]`.
+
+```{r tabla_estudiantes, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
+typ <- match_exams_device()
+
+suppressMessages(
+  include_tikz(tikz_code,
+               name = "tabla_edades",
+               markup = "markdown",
+               format = typ,
+               packages = c("tikz", "colortbl", "xcolor"),
+               width = "6cm")
+)
+```
+
+Si se sabe que `r nombres_desconocidos[1]` y `r nombres_desconocidos[2]` tienen la misma edad, ¿cuántos años tiene cada uno de ellos?
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones_mezcladas, markup = "markdown")
+```
+
+Solution
+========
+
+**Análisis del problema**
+
+`r nombres_desconocidos[1]` y `r nombres_desconocidos[2]` tienen, cada uno, **`r edad_correcta` años**.
+
+**Paso 1:** Entender la situación
+
+`r protagonista` tiene las edades de `r num_estudiantes` estudiantes y sabe que el promedio es `r promedio_candidato` años. El promedio es la suma de todas las edades dividida entre el número de estudiantes.
+
+**Paso 2:** Identificar los datos conocidos
+
+Conocemos la edad de `r num_conocidos` estudiantes:
+
+`r texto_edades`
+
+**Suma de edades conocidas:**
+
+$$\text{Edades conocidas} = `r texto_suma` = `r suma_conocidas`$$
+
+**Paso 3:** Calcular la suma total de edades
+
+Para encontrar la suma total de los `r num_estudiantes` estudiantes, multiplicamos el promedio por el número de estudiantes:
+
+$$\text{Suma total} = `r promedio_candidato` \times `r num_estudiantes` = `r suma_total`$$
+
+**Paso 4:** Encontrar las edades desconocidas
+
+Hallamos la diferencia entre la suma total y las edades conocidas:
+
+$$\text{Suma edades desconocidas} = `r suma_total` - `r suma_conocidas` = `r suma_desconocidas`$$
+
+**Paso 5:** Calcular la edad de cada estudiante
+
+Como `r nombres_desconocidos[1]` y `r nombres_desconocidos[2]` tienen la misma edad, dividimos entre 2:
+
+$$\text{Edad de cada uno} = \frac{`r suma_desconocidas`}{2} = `r edad_correcta`$$
+
+**Conclusión**
+
+- **Edad de `r nombres_desconocidos[1]`:** `r edad_correcta` años
+- **Edad de `r nombres_desconocidos[2]`:** `r edad_correcta` años
+
+**Análisis de distractores:**
+
+- **`r distractor_1` años**: Confundir el promedio con la edad individual buscada.
+- **`r distractor_2` años**: Olvidar dividir entre 2 la suma de las edades desconocidas.
+- **`r distractor_3` años**: Error al dividir la suma total entre 2 en lugar de la suma de las edades faltantes.
+
+**Reflexión metacognitiva:**
+
+¿Por qué multiplicamos el promedio por `r num_estudiantes` antes de restar? Porque el promedio "esconde" la suma original de todas las edades. La fórmula del promedio es:
+
+$$\text{Promedio} = \frac{\text{Suma total}}{\text{Cantidad de datos}}$$
+
+Por lo tanto, para recuperar la suma total debemos "deshacer" la división multiplicando:
+
+$$\text{Suma total} = \text{Promedio} \times \text{Cantidad de datos}$$
+
+Este razonamiento inverso es clave para resolver problemas donde conocemos el promedio pero necesitamos encontrar valores individuales.
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solucion_mezclada, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(solucion_mezclada)`
+exname: promedios_borrados_edades_aleatorio_formulacion_n2_schoice_v1
+exshuffle: TRUE
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Tendencia-Central
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Formulacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Aplica propiedades de la media aritmetica para recalcular promedios con datos faltantes
+exextra[Evidencia]: Resuelve ecuaciones algebraicas a partir de la definicion de promedio
+exextra[Nivel]: 2
+exextra[Contexto]: Escolar

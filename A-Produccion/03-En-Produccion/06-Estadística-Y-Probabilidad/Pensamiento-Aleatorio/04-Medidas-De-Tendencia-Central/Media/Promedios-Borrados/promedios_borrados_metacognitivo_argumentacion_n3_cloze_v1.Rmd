@@ -1,0 +1,747 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "graphicx"
+      - "float"
+      - "amsmath"
+icfes:
+  competencia: argumentacion
+  nivel_dificultad: 3
+  contenido:
+    categoria: estadistica
+    tipo: medidas_tendencia_central
+  contexto: escolar
+  eje_axial: eje6
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+generar_datos <- function() {
+
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS (8 contextos educativos)
+  # Variabilidad superficial: mismo problema matemático,
+  # diferentes escenarios para evitar memorización
+  # ============================================================
+  contextos <- list(
+    list(
+      rol = "profesora de estadística",
+      protagonista_pool = c("Mariana", "Claudia", "Patricia", "Lucía", "Daniela"),
+      contexto_dato = "las calificaciones de sus estudiantes en el examen final",
+      unidad = "puntos",
+      rango_min = 50,
+      rango_max = 100,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "entrenador de baloncesto",
+      protagonista_pool = c("Carlos", "Andrés", "Miguel", "Roberto", "Fernando"),
+      contexto_dato = "los puntos anotados por cada jugador en la temporada",
+      unidad = "puntos",
+      rango_min = 10,
+      rango_max = 35,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "nutricionista escolar",
+      protagonista_pool = c("Elena", "Sofía", "Andrea", "Paula", "Valentina"),
+      contexto_dato = "el consumo diario de frutas de cada estudiante (en porciones)",
+      unidad = "porciones",
+      rango_min = 1,
+      rango_max = 8,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "coordinador académico",
+      protagonista_pool = c("Eduardo", "Ricardo", "Alejandro", "Pablo", "Jaime"),
+      contexto_dato = "las horas de estudio semanales reportadas por estudiantes",
+      unidad = "horas",
+      rango_min = 5,
+      rango_max = 25,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "directora de colegio",
+      protagonista_pool = c("Isabel", "Carmen", "Gloria", "Teresa", "Marta"),
+      contexto_dato = "las edades de los estudiantes del grupo",
+      unidad = "años",
+      rango_min = 14,
+      rango_max = 18,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "profesor de educación física",
+      protagonista_pool = c("Diego", "Sebastián", "Nicolás", "Camilo", "Julián"),
+      contexto_dato = "los tiempos (en minutos) que tardaron los estudiantes en completar la carrera",
+      unidad = "minutos",
+      rango_min = 8,
+      rango_max = 20,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "bibliotecaria",
+      protagonista_pool = c("Rosa", "Liliana", "Mónica", "Sandra", "Adriana"),
+      contexto_dato = "el número de libros prestados por cada estudiante este semestre",
+      unidad = "libros",
+      rango_min = 2,
+      rango_max = 15,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "orientador vocacional",
+      protagonista_pool = c("Gabriel", "David", "Simón", "Mateo", "Samuel"),
+      contexto_dato = "las puntuaciones de interés vocacional de cada estudiante",
+      unidad = "puntos",
+      rango_min = 40,
+      rango_max = 95,
+      genero_prot = "m"
+    )
+  )
+
+  # ============================================================
+  # POOL DE NOMBRES DE ESTUDIANTES (40 nombres balanceados)
+  # ============================================================
+  pool_nombres <- c(
+    "Alberto", "Juan", "Alejandra", "Camila", "Sebastián", "Lucía", "Miguel", "Sofía",
+    "Diego", "Carla", "María", "Violeta", "Martha", "Manuel", "Álvaro", "José",
+    "Santiago", "Elena", "Juliana", "Ricardo", "Andrea", "Cristian", "Daniel", "Valeria",
+    "Martín", "Luciana", "Gabriel", "María José", "Nicolás", "Pedro", "Luisa", "Antonio",
+    "Sara", "Fernanda", "Mariana", "Jorge", "Gonzalo", "Catalina", "Lucas", "Eugenia"
+  )
+
+  # ============================================================
+  # POOL DE ERRORES CONCEPTUALES CON DIAGNÓSTICO PEDAGÓGICO
+  # Basado en investigación sobre errores comunes en estadística
+  # ============================================================
+  errores_conceptuales <- list(
+    # Error 1: Confundir promedio con el valor buscado
+    list(
+      codigo = "EST-MTC-01",
+      nombre = "Confusión promedio-valor",
+      descripcion_corta = "Confundió el promedio con la respuesta buscada",
+      descripcion_larga = "Confundió el promedio dado en el enunciado con el valor individual que debía calcular. Este error indica que no comprende la diferencia entre una medida de tendencia central (promedio) y los datos individuales que la componen.",
+      causa_raiz = "No diferencia entre estadístico resumen y dato individual",
+      calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
+        promedio
+      }
+    ),
+    # Error 2: Olvidar dividir entre n_desconocidos
+    list(
+      codigo = "EST-MTC-02",
+      nombre = "Omisión de división",
+      descripcion_corta = "Olvidó dividir la suma de valores desconocidos",
+      descripcion_larga = "Calculó correctamente la suma de los valores desconocidos, pero olvidó dividir entre el número de datos faltantes para obtener cada valor individual.",
+      causa_raiz = "Procedimiento incompleto - falta último paso",
+      calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
+        suma_total - suma_conocidas
+      }
+    ),
+    # Error 3: Dividir suma total en lugar de suma de desconocidos
+    list(
+      codigo = "EST-MTC-03",
+      nombre = "Confusión de sumas",
+      descripcion_corta = "Dividió la suma total en lugar de la suma de valores faltantes",
+      descripcion_larga = "Dividió la suma total de todos los datos entre el número de datos faltantes, en lugar de primero restar los valores conocidos.",
+      causa_raiz = "Confunde suma total con suma parcial a encontrar",
+      calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
+        round(suma_total / n_desconocidos)
+      }
+    ),
+    # Error 4: Error de conteo (n±1)
+    list(
+      codigo = "EST-MTC-04",
+      nombre = "Error de conteo",
+      descripcion_corta = "Contó incorrectamente el número total de datos",
+      descripcion_larga = "Usó un número incorrecto de datos totales (uno más o uno menos), lo que afectó el cálculo de la suma total y por ende el resultado final.",
+      causa_raiz = "Error al identificar n en la tabla",
+      calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
+        suma_erronea <- promedio * (n_total + sample(c(-1, 1), 1))
+        round((suma_erronea - suma_conocidas) / n_desconocidos)
+      }
+    ),
+    # Error 5: Sumar en lugar de restar
+    list(
+      codigo = "ALG-OPE-01",
+      nombre = "Inversión de operación",
+      descripcion_corta = "Sumó los valores conocidos a la suma total en lugar de restarlos",
+      descripcion_larga = "Invirtió la operación: sumó los valores conocidos a la suma total en lugar de restarlos, obteniendo un resultado mucho mayor al esperado.",
+      causa_raiz = "Confunde despeje algebraico - error de signo",
+      calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
+        round((suma_total + suma_conocidas) / n_desconocidos)
+      }
+    ),
+    # Error 6: Usar promedio de conocidos
+    list(
+      codigo = "EST-MTC-05",
+      nombre = "Promedio parcial",
+      descripcion_corta = "Calculó el promedio solo de los valores conocidos",
+      descripcion_larga = "Calculó el promedio usando únicamente los valores conocidos de la tabla, ignorando la información del promedio global dado en el enunciado.",
+      causa_raiz = "Ignora información del enunciado - usa solo tabla",
+      calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
+        n_conocidos <- n_total - n_desconocidos
+        round(suma_conocidas / n_conocidos)
+      }
+    )
+  )
+
+  # ============================================================
+  # POOL DE REFLEXIONES METACOGNITIVAS
+  # ============================================================
+  reflexiones_metacognitivas <- list(
+    "Identificar errores ajenos nos ayuda a evitar cometerlos nosotros mismos. La metacognición (pensar sobre cómo pensamos) es una habilidad fundamental en matemáticas.",
+    "Analizar por qué una respuesta es incorrecta es tan valioso como saber calcular la correcta. Esto fortalece la comprensión profunda del concepto.",
+    "Los errores más frecuentes en problemas de promedio son: confundir el promedio con datos individuales, olvidar pasos del procedimiento, o usar mal las operaciones.",
+    "Cuando identificamos el tipo de error, podemos diseñar estrategias para evitarlo en el futuro. La autoevaluación es clave para el aprendizaje."
+  )
+
+  # ============================================================
+  # SELECCIÓN ALEATORIA Y GENERACIÓN DE DATOS
+  # ============================================================
+
+  # Seleccionar contexto
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  protagonista <- sample(ctx$protagonista_pool, 1)
+
+  # Aleatorizar número de desconocidos: 2 o 3
+  num_desconocidos <- sample(2:3, 1)
+
+  # Generación de datos válidos con restricciones
+  datos_validos <- FALSE
+  intentos <- 0
+  max_intentos <- 1000
+
+  while(!datos_validos && intentos < max_intentos) {
+    intentos <- intentos + 1
+
+    num_estudiantes <- sample((num_desconocidos + 3):12, 1)
+    num_conocidos <- num_estudiantes - num_desconocidos
+
+    nombres <- sample(pool_nombres, num_estudiantes)
+    nombres_desconocidos <- nombres[1:num_desconocidos]
+    nombres_conocidos <- nombres[(num_desconocidos + 1):num_estudiantes]
+
+    valores_conocidos <- sample(ctx$rango_min:ctx$rango_max, num_conocidos, replace = TRUE)
+    suma_conocidas <- sum(valores_conocidos)
+
+    # Generar promedio que produzca un valor desconocido válido y entero
+    promedio_candidato <- sample(ctx$rango_min:ctx$rango_max, 1)
+    suma_total <- promedio_candidato * num_estudiantes
+    suma_desconocidas <- suma_total - suma_conocidas
+
+    # Verificar divisibilidad y rango válido
+    if(suma_desconocidas %% num_desconocidos == 0 &&
+       suma_desconocidas >= (num_desconocidos * ctx$rango_min) &&
+       suma_desconocidas <= (num_desconocidos * ctx$rango_max)) {
+
+      valor_correcto <- suma_desconocidas / num_desconocidos
+
+      # Calcular todos los distractores
+      distractores <- lapply(errores_conceptuales, function(err) {
+        tryCatch({
+          err$calcula(promedio_candidato, suma_total, suma_conocidas,
+                     num_estudiantes, num_desconocidos)
+        }, error = function(e) NA)
+      })
+
+      # Filtrar distractores válidos (diferentes del correcto y entre sí)
+      distractores_validos <- unique(unlist(distractores))
+      distractores_validos <- distractores_validos[!is.na(distractores_validos)]
+      distractores_validos <- distractores_validos[distractores_validos != valor_correcto]
+      distractores_validos <- distractores_validos[distractores_validos > 0]
+      distractores_validos <- distractores_validos[distractores_validos <= ctx$rango_max * 2]
+
+      if(length(distractores_validos) >= 3) {
+        datos_validos <- TRUE
+      }
+    }
+  }
+
+  if(!datos_validos) {
+    stop("No se pudieron generar datos válidos después de ", max_intentos, " intentos")
+  }
+
+  # ============================================================
+  # SELECCIONAR ERROR A ANALIZAR (para la pregunta metacognitiva)
+  # ============================================================
+
+  # Encontrar qué errores producen cada distractor
+  error_seleccionado_idx <- sample(1:min(3, length(errores_conceptuales)), 1)
+  error_seleccionado <- errores_conceptuales[[error_seleccionado_idx]]
+
+  respuesta_erronea <- error_seleccionado$calcula(
+    promedio_candidato, suma_total, suma_conocidas,
+    num_estudiantes, num_desconocidos
+  )
+
+  # Asegurar que la respuesta errónea sea diferente de la correcta
+  if(respuesta_erronea == valor_correcto) {
+    error_seleccionado_idx <- 2  # Usar error de omisión de división
+    error_seleccionado <- errores_conceptuales[[error_seleccionado_idx]]
+    respuesta_erronea <- error_seleccionado$calcula(
+      promedio_candidato, suma_total, suma_conocidas,
+      num_estudiantes, num_desconocidos
+    )
+  }
+
+  # ============================================================
+  # PARTE 1 (schoice): IDENTIFICAR EL ERROR CONCEPTUAL
+  # ============================================================
+
+  # Descripción correcta del error
+  desc_error_correcto <- paste0(
+    error_seleccionado$descripcion_corta,
+    " (", suma_desconocidas,
+    ifelse(error_seleccionado_idx == 2,
+           paste0(" sin dividir entre ", num_desconocidos),
+           ""), ")"
+  )
+
+  # Generar 3 distractores (descripciones de otros errores)
+  otros_errores_idx <- setdiff(1:length(errores_conceptuales), error_seleccionado_idx)
+  otros_errores_idx <- sample(otros_errores_idx, min(3, length(otros_errores_idx)))
+
+  desc_distractores <- sapply(otros_errores_idx, function(idx) {
+    errores_conceptuales[[idx]]$descripcion_corta
+  })
+
+  opciones_p1 <- c(desc_error_correcto, desc_distractores[1:3])
+  sol_p1_base <- c(TRUE, FALSE, FALSE, FALSE)
+  orden_p1 <- sample(1:4)
+  opciones_p1 <- opciones_p1[orden_p1]
+  sol_p1 <- as.integer(sol_p1_base[orden_p1])
+
+  # ============================================================
+  # PARTE 2 (num): CALCULAR LA RESPUESTA CORRECTA
+  # ============================================================
+  resp2 <- valor_correcto
+
+  # ============================================================
+  # PARTE 3 (mchoice): AFIRMACIONES SOBRE EL PROMEDIO
+  # ============================================================
+  pool_afirmaciones_v <- list(
+    "El promedio es igual a la suma de todos los datos dividida entre la cantidad de datos.",
+    "Si conocemos el promedio y la cantidad de datos, podemos calcular la suma total multiplicando.",
+    "El promedio puede ser un valor que no aparece en el conjunto de datos originales.",
+    "Para encontrar datos faltantes conociendo el promedio, primero se debe calcular la suma total.",
+    "Si todos los datos son iguales, el promedio es igual a cualquiera de ellos.",
+    "El promedio de un conjunto de datos cambia si se agrega un valor diferente al promedio actual."
+  )
+
+  pool_afirmaciones_f <- list(
+    "El promedio siempre es uno de los valores del conjunto de datos.",
+    "Si se duplica cada dato, el promedio se mantiene igual.",
+    "El promedio de un conjunto de datos siempre es un número entero.",
+    "Para calcular el promedio, basta con sumar los datos sin dividir.",
+    "Si se suma una constante a cada dato, el promedio no cambia.",
+    "El promedio de dos promedios siempre es el promedio del conjunto total."
+  )
+
+  idx_v <- sample(length(pool_afirmaciones_v), 2)
+  idx_f <- sample(length(pool_afirmaciones_f), 2)
+
+  afirmaciones_p3 <- c(pool_afirmaciones_v[idx_v], pool_afirmaciones_f[idx_f])
+  es_verdadera_p3 <- c(TRUE, TRUE, FALSE, FALSE)
+  orden_p3 <- sample(1:4)
+  afirmaciones_p3 <- afirmaciones_p3[orden_p3]
+  sol_p3 <- as.integer(es_verdadera_p3[orden_p3])
+
+  # ============================================================
+  # PARTE 4 (schoice V/F): ENUNCIADO ESPECÍFICO DEL PROBLEMA
+  # ============================================================
+  pool_vf <- list(
+    list(
+      enunciado = paste0("Si el promedio de ", num_estudiantes, " datos es ", promedio_candidato,
+                        ", entonces la suma total de esos datos es ", suma_total, "."),
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = paste0("Si la suma de ", num_conocidos, " datos es ", suma_conocidas,
+                        " y el promedio de todos los ", num_estudiantes, " datos es ", promedio_candidato,
+                        ", entonces la suma de los datos faltantes es ", suma_desconocidas, "."),
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = paste0("Si el promedio de un grupo es ", promedio_candidato,
+                        ", entonces cada dato individual vale exactamente ", promedio_candidato, "."),
+      es_verdadero = FALSE
+    ),
+    list(
+      enunciado = paste0("Para encontrar el valor de cada dato faltante cuando todos son iguales, ",
+                        "basta con calcular la suma de los datos faltantes sin dividir."),
+      es_verdadero = FALSE
+    )
+  )
+
+  sel_vf <- pool_vf[[sample(length(pool_vf), 1)]]
+  enunciado_vf <- sel_vf$enunciado
+
+  if (sel_vf$es_verdadero) {
+    sol_p4 <- c(1L, 0L)
+  } else {
+    sol_p4 <- c(0L, 1L)
+  }
+
+  # ============================================================
+  # PREPARAR TEXTOS DINÁMICOS
+  # ============================================================
+
+  # Concordancia de género - artículo para el enunciado
+  art_indef <- ifelse(ctx$genero_prot == "f", "Una", "Un")
+  pron_pos <- ifelse(ctx$genero_prot == "f", "su", "su")
+
+  # Texto de desconocidos
+  if (num_desconocidos == 2) {
+    texto_desconocidos <- paste0(nombres_desconocidos[1], " y ", nombres_desconocidos[2])
+    texto_condicion <- paste0(nombres_desconocidos[1], " y ", nombres_desconocidos[2],
+                              " tienen el mismo valor")
+  } else {
+    texto_desconocidos <- paste0(nombres_desconocidos[1], ", ", nombres_desconocidos[2],
+                                 " y ", nombres_desconocidos[3])
+    texto_condicion <- paste0(nombres_desconocidos[1], ", ", nombres_desconocidos[2],
+                              " y ", nombres_desconocidos[3], " tienen el mismo valor")
+  }
+
+  # Texto para solución
+  texto_valores <- paste(nombres_conocidos, "(", valores_conocidos, ")", sep = "")
+  texto_suma <- paste(valores_conocidos, collapse = " + ")
+
+  # Reflexión metacognitiva aleatoria
+  reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+  return(list(
+    # Contexto
+    ctx = ctx,
+    protagonista = protagonista,
+    art_indef = art_indef,
+    # Datos del problema
+    num_estudiantes = num_estudiantes,
+    num_desconocidos = num_desconocidos,
+    num_conocidos = num_conocidos,
+    nombres_desconocidos = nombres_desconocidos,
+    nombres_conocidos = nombres_conocidos,
+    valores_conocidos = valores_conocidos,
+    promedio = promedio_candidato,
+    suma_total = suma_total,
+    suma_conocidas = suma_conocidas,
+    suma_desconocidas = suma_desconocidas,
+    valor_correcto = valor_correcto,
+    # Error analizado
+    error_seleccionado = error_seleccionado,
+    respuesta_erronea = respuesta_erronea,
+    # Textos
+    texto_desconocidos = texto_desconocidos,
+    texto_condicion = texto_condicion,
+    texto_valores = texto_valores,
+    texto_suma = texto_suma,
+    reflexion = reflexion,
+    # Parte 1
+    opciones_p1 = opciones_p1,
+    sol_p1 = sol_p1,
+    # Parte 2
+    resp2 = resp2,
+    # Parte 3
+    afirmaciones_p3 = afirmaciones_p3,
+    sol_p3 = sol_p3,
+    # Parte 4
+    enunciado_vf = enunciado_vf,
+    es_verdadero_vf = sel_vf$es_verdadero,
+    sol_p4 = sol_p4
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables para uso en el documento
+ctx <- datos$ctx
+protagonista <- datos$protagonista
+art_indef <- datos$art_indef
+num_estudiantes <- datos$num_estudiantes
+num_desconocidos <- datos$num_desconocidos
+num_conocidos <- datos$num_conocidos
+nombres_desconocidos <- datos$nombres_desconocidos
+nombres_conocidos <- datos$nombres_conocidos
+valores_conocidos <- datos$valores_conocidos
+promedio <- datos$promedio
+suma_total <- datos$suma_total
+suma_conocidas <- datos$suma_conocidas
+suma_desconocidas <- datos$suma_desconocidas
+valor_correcto <- datos$valor_correcto
+error_seleccionado <- datos$error_seleccionado
+respuesta_erronea <- datos$respuesta_erronea
+texto_desconocidos <- datos$texto_desconocidos
+texto_condicion <- datos$texto_condicion
+texto_valores <- datos$texto_valores
+texto_suma <- datos$texto_suma
+reflexion <- datos$reflexion
+opciones_p1 <- datos$opciones_p1
+sol_p1 <- datos$sol_p1
+resp2 <- datos$resp2
+afirmaciones_p3 <- datos$afirmaciones_p3
+sol_p3 <- datos$sol_p3
+enunciado_vf <- datos$enunciado_vf
+es_verdadero_vf <- datos$es_verdadero_vf
+sol_p4 <- datos$sol_p4
+
+# Construir strings de solución
+sol_p1_str <- paste(sol_p1, collapse = "")
+sol_p3_str <- paste(sol_p3, collapse = "")
+sol_p4_str <- paste(sol_p4, collapse = "")
+
+# Preparar datos para la tabla TikZ
+datos_tabla <- data.frame(
+  Nombre = c(nombres_desconocidos, nombres_conocidos),
+  Valor = c(rep("?", num_desconocidos), as.character(valores_conocidos)),
+  stringsAsFactors = FALSE
+)
+
+# Función para generar tabla TikZ profesional
+tikz_tabla <- function(datos, unidad) {
+  n <- nrow(datos)
+  filas <- sapply(1:n, function(i) {
+    paste0("    ", datos$Nombre[i], " & ", datos$Valor[i], " \\\\")
+  })
+
+  c("\\begin{tikzpicture}",
+    "\\node[inner sep=0pt] {",
+    paste0("  \\begin{tabular}{|l|c|}"),
+    "    \\hline",
+    paste0("    \\rowcolor{gray!25} \\textbf{Estudiante} & \\textbf{", unidad, "} \\\\"),
+    "    \\hline",
+    filas,
+    "    \\hline",
+    "  \\end{tabular}",
+    "};",
+    "\\end{tikzpicture}")
+}
+
+tikz_code <- tikz_tabla(datos_tabla, paste0("Valor (", ctx$unidad, ")"))
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for (i in 1:500) {
+    datos_test <- generar_datos()
+    hash_datos <- digest::digest(list(
+      contexto = datos_test$ctx$rol,
+      protagonista = datos_test$protagonista,
+      num_estudiantes = datos_test$num_estudiantes,
+      num_desconocidos = datos_test$num_desconocidos,
+      promedio = datos_test$promedio,
+      valor_correcto = datos_test$valor_correcto,
+      respuesta_erronea = datos_test$respuesta_erronea,
+      error_codigo = datos_test$error_seleccionado$codigo,
+      afirmaciones = sapply(datos_test$afirmaciones_p3, function(x) x),
+      enunciado_vf = datos_test$enunciado_vf
+    ))
+    versiones[[i]] <- hash_datos
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 200,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 200."))
+})
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+test_that("Datos del problema son consistentes", {
+  expect_equal(suma_total, promedio * num_estudiantes)
+  expect_equal(suma_conocidas, sum(valores_conocidos))
+  expect_equal(suma_desconocidas, suma_total - suma_conocidas)
+  expect_equal(valor_correcto, suma_desconocidas / num_desconocidos)
+})
+
+test_that("Parte 1: exactamente una opción correcta", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+})
+
+test_that("Parte 2: resp2 es el valor correcto", {
+  expect_equal(resp2, valor_correcto)
+  expect_true(resp2 > 0)
+})
+
+test_that("Parte 3: mchoice tiene 4 afirmaciones con 2 verdaderas", {
+  expect_equal(length(afirmaciones_p3), 4)
+  expect_equal(length(sol_p3), 4)
+  expect_equal(sum(sol_p3), 2)
+})
+
+test_that("Parte 4: V/F tiene exactamente 2 opciones", {
+  expect_equal(length(sol_p4), 2)
+  expect_equal(sum(sol_p4), 1)
+})
+
+test_that("Error analizado produce respuesta errónea diferente de correcta", {
+  expect_true(respuesta_erronea != valor_correcto)
+})
+
+test_that("Número de desconocidos es 2 o 3", {
+  expect_true(num_desconocidos %in% c(2, 3))
+})
+```
+
+Question
+========
+
+`r protagonista`, `r ctx$rol`, registra `r ctx$contexto_dato` y calcula que el promedio es de `r promedio` `r ctx$unidad`. Al revisar los registros, nota que faltan los datos de `r num_desconocidos` estudiantes: `r texto_desconocidos`. Se sabe que `r texto_condicion`.
+
+```{r tabla_estudiantes, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
+suppressMessages(
+  include_tikz(tikz_code,
+               name = "tabla_datos",
+               markup = "markdown",
+               format = typ,
+               packages = c("tikz", "colortbl", "xcolor"),
+               width = "6cm")
+)
+```
+
+Un compañero de `r protagonista` intentó resolver el problema y obtuvo como respuesta **`r respuesta_erronea` `r ctx$unidad`** para cada estudiante con dato desconocido.
+
+**Parte 1.** ¿Cuál error conceptual cometió el compañero para obtener esa respuesta?
+
+##ANSWER1##
+
+**Parte 2.** ¿Cuál es el valor correcto que corresponde a cada estudiante con dato desconocido?
+
+##ANSWER2##
+
+**Parte 3.** De las siguientes afirmaciones sobre el promedio (media aritmética), seleccione todas las que sean correctas.
+
+##ANSWER3##
+
+**Parte 4.** Determine si la siguiente afirmación es verdadera o falsa: `r enunciado_vf`
+
+##ANSWER4##
+
+Answerlist
+----------
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+* `r afirmaciones_p3[[1]]`
+* `r afirmaciones_p3[[2]]`
+* `r afirmaciones_p3[[3]]`
+* `r afirmaciones_p3[[4]]`
+* Verdadero
+* Falso
+
+Solution
+========
+
+### Análisis del Error (Parte 1)
+
+El compañero respondió **`r respuesta_erronea` `r ctx$unidad`**, cuando la respuesta correcta es **`r valor_correcto` `r ctx$unidad`**.
+
+**Error identificado:** `r error_seleccionado$descripcion_larga`
+
+**Código de error:** `r error_seleccionado$codigo`
+
+**Causa raíz:** `r error_seleccionado$causa_raiz`
+
+### Procedimiento Correcto (Parte 2)
+
+**Paso 1:** Calcular la suma total de todos los datos
+
+$$\text{Suma total} = \text{Promedio} \times n = `r promedio` \times `r num_estudiantes` = `r suma_total`$$
+
+**Paso 2:** Calcular la suma de los datos conocidos
+
+$$\text{Suma conocidas} = `r texto_suma` = `r suma_conocidas`$$
+
+**Paso 3:** Calcular la suma de los datos desconocidos
+
+$$\text{Suma desconocidas} = `r suma_total` - `r suma_conocidas` = `r suma_desconocidas`$$
+
+**Paso 4:** Calcular el valor de cada dato individual
+
+$$\text{Valor de cada uno} = \frac{`r suma_desconocidas`}{`r num_desconocidos`} = `r valor_correcto` \text{ `r ctx$unidad`}$$
+
+### Propiedades del Promedio (Parte 3)
+
+```{r sol_mchoice, echo=FALSE, results='asis'}
+for (k in 1:4) {
+  estado <- ifelse(sol_p3[k] == 1, "VERDADERA", "FALSA")
+  cat(paste0("- ", afirmaciones_p3[[k]], " **[", estado, "]**\n\n"))
+}
+```
+
+### Verdadero o Falso (Parte 4)
+
+`r enunciado_vf` $\to$ **`r ifelse(es_verdadero_vf, "Verdadero", "Falso")`**
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+Answerlist
+----------
+* `r if(sol_p1[1] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* `r if(sol_p1[2] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* `r if(sol_p1[3] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* `r if(sol_p1[4] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* El valor correcto es $`r resp2`$ `r ctx$unidad` para cada estudiante.
+* `r if(sol_p3[1] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[2] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[3] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[4] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p4[1] == 1) "Correcto. La afirmación es verdadera." else "Incorrecto."`
+* `r if(sol_p4[2] == 1) "Correcto. La afirmación es falsa." else "Incorrecto."`
+
+Meta-information
+================
+exname: promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1
+extype: cloze
+exclozetype: schoice|num|mchoice|schoice
+exsolution: `r sol_p1_str`|`r resp2`|`r sol_p3_str`|`r sol_p4_str`
+exshuffle: TRUE
+extol: 0|0.01|0|0
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Tendencia-Central
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Identifica y analiza errores conceptuales en procedimientos con la media aritmetica
+exextra[Evidencia]: Justifica por que un procedimiento produce un resultado incorrecto y aplica el procedimiento correcto
+exextra[Nivel]: 3
+exextra[Contexto]: Escolar
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
