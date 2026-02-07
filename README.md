@@ -81,6 +81,10 @@ RepositorioMatematicasICFES_R_Exams/
 │   ├── 📂 Estrategia-Avanzada-de-Replicas/ # Templates TikZ profesionales
 │   └── 📂 Python-Documentation/             # Guías para integración con Python
 ├── 🧪 Lab-Manjaro/                         # Ejercicios en desarrollo y pruebas
+├── 🔗 SOURCES/                             # ⚙️ Archivos originales compartidos (symlinks)
+│   ├── 📂 documentacion_compartida/       # Docs compartidas entre skills
+│   ├── 📂 scripts_validacion/             # Scripts centralizados
+│   └── 📂 plantillas/                     # Plantillas base (futuro)
 ├── 📄 .gitignore
 ├── 📖 README.md                            # Este archivo
 └── 📖 walkthrough.md                       # Guía de uso detallada
@@ -351,6 +355,65 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 - ✅ **🆕 Ejercicios Metacognitivos**: Progressive Disclosure y pool de errores conceptuales
 - ✅ **🆕 Gráficos Como Opciones**: PNG separados, sin títulos, doble aleatorización
 - ✅ **🆕 Skill-Retroalimentacion**: Generación científica de secciones Solution
+
+---
+
+## 🔗 **Arquitectura de Symlinks (SOURCES/)**
+
+### Principio: Archivos Compartidos Centralizados
+
+El proyecto utiliza **symlinks bidireccionales** para compartir archivos entre módulos sin duplicación.
+
+```
+SOURCES/ (Originales)
+  ├── documentacion_compartida/
+  │   └── anatomia-metacognitiva.md  ← ORIGINAL
+  │          ↑                       ↑
+  │          │ symlink              │ symlink
+  │          │                       │
+  .claude/skills/                    .claude/skills/
+    ├── generar-schoice/               └── generar-cloze/
+    │   └── references/                    └── references/
+    │       └── anatomia-metacognitiva.md     └── anatomia-metacognitiva.md
+```
+
+### ✅ Ventajas
+
+1. **DRY (Don't Repeat Yourself)**: Un solo archivo, múltiples referencias
+2. **Sincronización automática**: Cambios se propagan inmediatamente a todos los symlinks
+3. **Bidireccionalidad**: Edita desde cualquier ubicación (SOURCES/ o symlink)
+4. **Git-friendly**: Git trackea symlinks correctamente, GitHub los muestra
+
+### 📋 Archivos Actuales con Symlinks
+
+| Original (SOURCES/) | Symlinks | Propósito |
+|---------------------|----------|-----------|
+| `documentacion_compartida/anatomia-metacognitiva.md` | `generar-schoice/references/`<br>`generar-cloze/references/` | Estructura metacognitiva de 8 secciones |
+| `scripts_validacion/validar_coherencia_matematica.R` | `.claude/scripts/`<br>`.claude/hooks/scripts/` | Validación matemática compartida |
+| `scripts_validacion/corregir_ortografia_espanol.R` | `.claude/scripts/` | Corrección ortográfica |
+| `scripts_validacion/arsenal_validacion_completa.R` | `.claude/scripts/` | Suite de validación |
+
+### 🛠️ Comandos Útiles
+
+```bash
+# Verificar integridad de symlinks
+.claude/scripts/verificar_symlinks.sh
+
+# Crear nuevo symlink
+cd .claude/skills/nueva-skill/references/
+ln -s ../../../../SOURCES/documentacion_compartida/archivo.md archivo.md
+
+# Ver qué symlinks apuntan a un archivo
+find . -type l -ls | grep "nombre_archivo"
+```
+
+### 📖 Documentación Completa
+
+Ver `SOURCES/README.md` para:
+- Mapa completo de dependencias
+- Guía de edición bidireccional
+- Qué pasa si eliminas un symlink vs. el original
+- Workflow de expansión futura
 
 ---
 

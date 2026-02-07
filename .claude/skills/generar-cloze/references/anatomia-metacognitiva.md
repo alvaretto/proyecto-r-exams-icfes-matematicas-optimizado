@@ -1,1 +1,1 @@
-../../generar-schoice/references/anatomia-metacognitiva.md
+../../../../SOURCES/documentacion_compartida/anatomia-metacognitiva.md
