@@ -758,6 +758,296 @@ en lugar de `knitr::include_graphics()`.
 
 ---
 
+## Error 4: Gráficos como opciones mostrados en grid (no individuales)
+
+### ❌ Síntoma del Error
+
+```
+- Las 4 opciones de gráficos se muestran juntas en un solo grid
+- El Answerlist tiene texto ("Opción A", "Opción B"...) en lugar de imágenes
+- exshuffle no puede mezclar las opciones correctamente
+- El estudiante no puede seleccionar una opción específica
+```
+
+**Ejemplo visual del error:**
+
+```
+┌─────────────────┐  ← Un solo bloque con 4 gráficos
+│  [A]   [B]      │
+│  [C]   [D]      │
+└─────────────────┘
+
+Answerlist:
+* Opción A        ← Texto en lugar de imagen
+* Opción B
+* Opción C
+* Opción D
+```
+
+### 🔍 Causa Raíz
+
+Uso de `grid.arrange()` o similar para mostrar todos los gráficos en una sola imagen, con el Answerlist conteniendo solo texto descriptivo en lugar de las imágenes individuales.
+
+**Código incorrecto:**
+
+```r
+# ❌ PROBLEMA: grid.arrange muestra todo junto
+library(gridExtra)
+grid.arrange(plot_A, plot_B, plot_C, plot_D, ncol = 2)
+
+# ❌ PROBLEMA: Answerlist con texto
+Answerlist
+----------
+* Opción A
+* Opción B
+* Opción C
+* Opción D
+```
+
+### ✅ Solución Verificada
+
+**Enfoque:** Guardar cada gráfico como PNG separado y referenciarlos en el Answerlist.
+
+#### Código DESPUÉS (correcto):
+
+```r
+# ✅ CORRECTO: Función que guarda cada gráfico individualmente
+crear_y_guardar_boxplot <- function(cuartiles, letra, y_min, y_max, unidad) {
+  p <- ggplot(...) + ...
+
+  # OBLIGATORIO: Guardar como archivo PNG individual
+  nombre_archivo <- paste0("diagrama_", tolower(letra), ".png")
+  ggsave(nombre_archivo, plot = p, width = 4, height = 5, dpi = 150, bg = "white")
+
+  return(p)
+}
+
+# Crear los 4 gráficos como archivos separados
+plot_A <- crear_y_guardar_boxplot(opciones$A, "A", y_min, y_max, unidad)
+plot_B <- crear_y_guardar_boxplot(opciones$B, "B", y_min, y_max, unidad)
+plot_C <- crear_y_guardar_boxplot(opciones$C, "C", y_min, y_max, unidad)
+plot_D <- crear_y_guardar_boxplot(opciones$D, "D", y_min, y_max, unidad)
+```
+
+#### Answerlist (correcto):
+
+```markdown
+Answerlist
+----------
+
+` ``{r mostrar_opciones, echo=FALSE, results='asis'}
+cat("* ![](diagrama_a.png){width=60%}\n")
+cat("* ![](diagrama_b.png){width=60%}\n")
+cat("* ![](diagrama_c.png){width=60%}\n")
+cat("* ![](diagrama_d.png){width=60%}\n")
+` ``
+```
+
+### 🧪 Validación de la Solución
+
+```r
+# Verificar que se generaron los 4 PNG
+list.files(pattern = "diagrama_[a-d]\\.png$")
+# Debe retornar: "diagrama_a.png" "diagrama_b.png" "diagrama_c.png" "diagrama_d.png"
+
+# Renderizar y verificar visualmente
+exams2pdf("archivo.Rmd", n = 1)
+# Cada opción (a), (b), (c), (d) debe mostrar su propio gráfico
+```
+
+### 📋 Checklist de Corrección
+
+- [ ] Crear función que use `ggsave()` para guardar cada gráfico
+- [ ] Nombre de archivo: `diagrama_[letra].png` (minúsculas)
+- [ ] Llamar la función para cada opción (A, B, C, D)
+- [ ] Answerlist usa `cat("* ![](diagrama_x.png){width=60%}\n")`
+- [ ] Verificar que `exshuffle: TRUE` mezcla las opciones
+
+### 🔗 Archivos de Referencia
+
+**Ejemplo funcional:**
+
+- `A-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2.Rmd`
+
+**Ejemplo corregido:**
+
+- `A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/50/diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_v1.Rmd`
+
+**Regla asociada:**
+
+- `.claude/rules/graficos-como-opciones.md`
+
+### 📅 Historial
+
+| Fecha | Versión | Estado | Validado en |
+|-------|---------|--------|-------------|
+| 2026-02-07 | v1.0 | ✅ Verificado | diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_v1.Rmd |
+
+---
+
+## Error 5: Gráfico aplastado por escala incompatible (EST-BOX-01)
+
+### ❌ Síntoma del Error
+
+```
+- Uno de los gráficos de opciones aparece casi invisible
+- El diagrama de caja está "aplastado" contra el fondo de la escala
+- El eje Y tiene un rango muy amplio (ej: 1 a 251)
+- Los valores del gráfico problemático son muy pequeños (ej: 1-11)
+```
+
+**Ejemplo visual:**
+
+```
+┌─────────────────┐
+│      251        │
+│                 │
+│                 │  ← Escala de 1 a 251
+│       51        │
+│                 │
+│        1 ■■■■   │  ← Diagrama aplastado aquí (valores 1-11)
+└─────────────────┘
+```
+
+### 🔍 Causa Raíz
+
+El error conceptual EST-BOX-01 (confusión posición/valor) genera cuartiles con valores de posición (1, 3, 6, 9, 11) en lugar de valores reales (ej: 200-400 puntos). Cuando se comparte una escala con gráficos que tienen valores reales, el gráfico con posiciones queda visualmente inutilizable.
+
+**Código incorrecto:**
+
+```r
+# ❌ PROBLEMA: Incluir EST-BOX-01 en ejercicios con gráficos comparativos
+error_seleccionado_idx <- sample(1:3, 1)  # Incluye índice 1 (EST-BOX-01)
+
+# El error EST-BOX-01 genera valores 1-11
+list(min = 1, q1 = 3, mediana = 6, q3 = 9, max = 11)
+
+# Pero los datos reales tienen valores como 200-400
+# → La escala compartida hace ilegible el gráfico con posiciones
+```
+
+### ✅ Solución Verificada
+
+**Enfoque:** Excluir EST-BOX-01 del pool de errores para ejercicios que comparan gráficos visualmente.
+
+```r
+# ✅ CORRECTO: Solo usar errores que mantienen valores en el mismo rango
+errores_validos_para_grafico <- c(2, 3, 4)  # Excluir índice 1 (EST-BOX-01)
+
+# Seleccionar error de los válidos para representación gráfica
+error_seleccionado_idx <- sample(errores_validos_para_grafico, 1)
+
+# Generar distractores solo de errores válidos
+otros_errores_idx <- setdiff(errores_validos_para_grafico, error_seleccionado_idx)
+```
+
+```r
+# ✅ CORRECTO: Calcular rango Y basado en valores reales
+y_min_global <- min(sapply(opciones_graficos, function(x) x$min)) - 2
+y_max_global <- max(sapply(opciones_graficos, function(x) x$max)) + 2
+```
+
+### 🧪 Validación de la Solución
+
+```r
+# Verificar que todos los gráficos son visualmente distinguibles
+exams2pdf("archivo.Rmd", n = 10)
+
+# Inspeccionar visualmente cada PDF
+# Todos los diagramas deben ser legibles en la misma escala
+```
+
+### 📋 Checklist de Corrección
+
+- [ ] Identificar errores que generan valores fuera del rango de datos
+- [ ] Crear lista `errores_validos_para_grafico` excluyendo esos errores
+- [ ] Usar `sample(errores_validos_para_grafico, 1)` para selección
+- [ ] Calcular `y_min_global` y `y_max_global` solo con valores válidos
+- [ ] Verificar visualmente que todos los gráficos son legibles
+
+### 📅 Historial
+
+| Fecha | Versión | Estado | Validado en |
+|-------|---------|--------|-------------|
+| 2026-02-07 | v1.0 | ✅ Verificado | diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_v1.Rmd |
+
+---
+
+## Error 6: Rango insuficiente para sample() sin reemplazo
+
+### ❌ Mensaje de Error
+
+```
+Error en sample.int(length(x), size, replace, prob):
+  imposible tomar una muestra mayor que la población cuando 'replace = FALSE'
+```
+
+### 🔍 Causa Raíz
+
+Un contexto en el pool tiene un rango numérico (rango_max - rango_min + 1) menor que el número de datos requeridos (n_datos), lo que hace imposible seleccionar valores únicos sin repetición.
+
+**Ejemplo:**
+
+```r
+# ❌ PROBLEMA: Rango insuficiente
+list(
+  tipo_dato = "edades",
+  rango_min = 12,
+  rango_max = 18,  # Solo 7 valores únicos: 12,13,14,15,16,17,18
+  n_datos = 11     # Necesita 11 valores únicos → IMPOSIBLE
+)
+```
+
+### ✅ Solución Verificada
+
+**Enfoque 1:** Aumentar el rango del contexto problemático.
+
+```r
+# ✅ CORRECTO: Rango suficiente
+list(
+  tipo_dato = "IMC",
+  rango_min = 18,
+  rango_max = 32,  # 15 valores únicos: 18-32
+  n_datos = 11     # Necesita 11 → POSIBLE
+)
+```
+
+**Enfoque 2:** Agregar validación de rangos antes de seleccionar contexto.
+
+```r
+# ✅ CORRECTO: Filtrar contextos válidos
+contextos_validos <- Filter(function(ctx) {
+  (ctx$rango_max - ctx$rango_min + 1) >= ctx$n_datos
+}, contextos)
+
+# Verificar que hay al menos un contexto válido
+if(length(contextos_validos) == 0) {
+  stop("No hay contextos con rango suficiente para n_datos")
+}
+
+ctx <- contextos_validos[[sample(length(contextos_validos), 1)]]
+```
+
+### 📋 Checklist de Corrección
+
+- [ ] Identificar contextos con rango < n_datos
+- [ ] Opción A: Aumentar rango_max o reducir rango_min
+- [ ] Opción B: Agregar filtro de validación
+- [ ] Verificar con múltiples renderizaciones (n >= 50)
+
+### 📅 Historial
+
+| Fecha | Versión | Estado | Validado en |
+|-------|---------|--------|-------------|
+| 2026-02-07 | v1.0 | ✅ Verificado | diagrama_caja_estaturas_metacognitivo_*.Rmd |
+
+**Contextos corregidos:**
+
+- "edades" (12-18) → "IMC" (18-32)
+- "tiempos" (12-18) → "distancias" (8-25)
+
+---
+
 ## Futuros Errores
 
 *Este espacio se reserva para documentar futuros patrones de error una vez que sean identificados, corregidos y verificados.*

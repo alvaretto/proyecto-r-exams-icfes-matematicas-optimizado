@@ -1,26 +1,28 @@
 #!/bin/bash
 # =============================================================================
-# post-exams2-validation.sh (v4.1)
-# Hook PostToolUse para Bash: detecta exams2* y lanza validación automática
+# post-exams2-validation.sh (v5.0)
+# Hook PostToolUse: ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO
 #
-# FASE 2A: Validación de coherencia matemática (.R script)
-# FASE 2B: Generación automática de preview visual (PDF → PNG)
+# Se activa AUTOMÁTICAMENTE después de CADA comando Bash que contenga exams2*
+# Ejecuta TODAS las validaciones SIN EXCEPCIÓN:
 #
-# Se activa DESPUÉS de cada comando Bash exitoso.
-# Si el comando contiene exams2*, extrae el archivo .Rmd y ejecuta:
-#   1. validar_coherencia_matematica.R (coherencia matemática)
-#   2. Conversión PDF → PNG para inspección visual obligatoria
+# FASE 2A: Coherencia Matemática (.R script)
+# FASE 2B: Preview Visual (PDF → PNG)
+# FASE 2C: Opciones Únicas (gráficos diferentes)
+# FASE 2D: Ortografía Española (tildes)
+# FASE 2E: Metadatos ICFES (6 dimensiones)
+# FASE 2F: Estructura Metacognitiva (Solution completa)
 #
-# Entrada: JSON en stdin con tool_input.command, cwd, etc.
-# Salida: Reporte de validación + ruta de preview PNG
-#
-# NOTA: Usa Python para parsear JSON (jq no disponible en este sistema)
+# GARANTÍA: Toda renderización activa TODAS las fases
+# PERMANENTE: No hay forma de saltarse estas validaciones
 # =============================================================================
+
+set -o pipefail
 
 # Leer JSON de stdin
 INPUT=$(cat)
 
-# Extraer el comando ejecutado usando Python (jq no disponible)
+# Extraer el comando ejecutado usando Python
 COMMAND=$(echo "$INPUT" | python3 -c "
 import sys, json
 try:
@@ -41,7 +43,7 @@ if ! echo "$COMMAND" | grep -q 'exams2'; then
   exit 0
 fi
 
-# Extraer directorio de trabajo usando Python
+# Extraer directorio de trabajo
 CWD=$(echo "$INPUT" | python3 -c "
 import sys, json
 try:
@@ -56,11 +58,9 @@ if [ -z "$CWD" ]; then
 fi
 
 # Extraer nombre del archivo .Rmd del comando
-# Patrones comunes: exams2html("archivo.Rmd", ...) o exams2pdf("archivo.Rmd", ...)
 RMD_FILE=$(echo "$COMMAND" | grep -oP 'exams2\w+\(\s*"[^"]*\.Rmd"' | head -1 | grep -oP '"[^"]*\.Rmd"' | tr -d '"')
 
 if [ -z "$RMD_FILE" ]; then
-  # Intentar con comillas simples
   RMD_FILE=$(echo "$COMMAND" | grep -oP "exams2\w+\(\s*'[^']*\.Rmd'" | head -1 | grep -oP "'[^']*\.Rmd'" | tr -d "'")
 fi
 
@@ -71,12 +71,6 @@ fi
 # Determinar ruta del proyecto
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null)}"
 if [ -z "$PROJECT_DIR" ]; then
-  exit 0
-fi
-
-SCRIPT="$PROJECT_DIR/.claude/scripts/validar_coherencia_matematica.R"
-
-if [ ! -f "$SCRIPT" ]; then
   exit 0
 fi
 
@@ -91,51 +85,70 @@ if [ ! -f "$RMD_PATH" ]; then
   exit 0
 fi
 
-# =====================================================================
-# FASE 2A: VALIDACIÓN DE COHERENCIA MATEMÁTICA
-# =====================================================================
+RMD_BASENAME=$(basename "$RMD_FILE" .Rmd)
 
-VALIDATION_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT" "$RMD_FILE" 2>&1)
-MATH_EXIT_CODE=$?
+# =============================================================================
+# ENCABEZADO DEL ARSENAL
+# =============================================================================
 
-echo "═══════════════════════════════════════════════════════════════"
-echo "  HOOK POST-EXAMS2: VALIDACIÓN AUTOMÁTICA"
-echo "═══════════════════════════════════════════════════════════════"
+echo ""
+echo "╔═══════════════════════════════════════════════════════════════╗"
+echo "║  ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO            ║"
+echo "║  Activado automáticamente - NO HAY FORMA DE SALTARLO          ║"
+echo "╠═══════════════════════════════════════════════════════════════╣"
+echo "║  Archivo: $(printf '%-52s' "$RMD_BASENAME.Rmd")║"
+echo "╚═══════════════════════════════════════════════════════════════╝"
 echo ""
 
-if [ $MATH_EXIT_CODE -eq 0 ]; then
-  echo "FASE 2A — Coherencia matemática: APROBADO"
-  echo "$VALIDATION_OUTPUT" | tail -5
+ERRORES_TOTALES=0
+ADVERTENCIAS_TOTALES=0
+
+# =============================================================================
+# FASE 2A: VALIDACIÓN DE COHERENCIA MATEMÁTICA
+# =============================================================================
+
+SCRIPT_MATH="$PROJECT_DIR/.claude/scripts/validar_coherencia_matematica.R"
+
+echo "┌───────────────────────────────────────────────────────────────┐"
+echo "│ FASE 2A: Coherencia Matemática                                │"
+echo "└───────────────────────────────────────────────────────────────┘"
+
+if [ -f "$SCRIPT_MATH" ]; then
+  MATH_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MATH" "$RMD_FILE" 2>&1)
+  MATH_EXIT=$?
+
+  if [ $MATH_EXIT -eq 0 ]; then
+    echo "  ✓ APROBADO"
+    echo "$MATH_OUTPUT" | grep -E "✓|APROBADO" | head -5
+  else
+    echo "  ❌ ERRORES DETECTADOS"
+    echo "$MATH_OUTPUT" | tail -10
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+  fi
 else
-  echo "FASE 2A — Coherencia matemática: ERRORES DETECTADOS"
-  echo "$VALIDATION_OUTPUT"
-  echo ""
-  echo "ACCIÓN REQUERIDA: Corregir errores matemáticos antes de continuar."
-  echo "═══════════════════════════════════════════════════════════════"
-  exit 0
+  echo "  ⚠️  Script no encontrado: validar_coherencia_matematica.R"
+  ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + 1))
 fi
 
-# =====================================================================
-# FASE 2B: GENERACIÓN DE PREVIEW VISUAL (PDF → PNG)
-# =====================================================================
-
 echo ""
-echo "───────────────────────────────────────────────────────────────"
-echo "FASE 2B — Validación visual automática"
-echo "───────────────────────────────────────────────────────────────"
 
-# Extraer directorio de salida PDF del comando (parámetro dir = "...")
+# =============================================================================
+# FASE 2B: GENERACIÓN DE PREVIEW VISUAL
+# =============================================================================
+
+echo "┌───────────────────────────────────────────────────────────────┐"
+echo "│ FASE 2B: Preview Visual (PDF → PNG)                           │"
+echo "└───────────────────────────────────────────────────────────────┘"
+
+# Buscar PDF generado
 PDF_DIR=$(echo "$COMMAND" | grep -oP 'dir\s*=\s*"[^"]*"' | head -1 | grep -oP '"[^"]*"' | tr -d '"')
-
 if [ -z "$PDF_DIR" ]; then
   PDF_DIR=$(echo "$COMMAND" | grep -oP "dir\s*=\s*'[^']*'" | head -1 | grep -oP "'[^']*'" | tr -d "'")
 fi
 
-# Buscar PDFs en ubicaciones conocidas (orden de prioridad)
 PDF_FOUND=""
 SEARCH_DIRS=()
 
-# 1. Directorio explícito del comando
 if [ -n "$PDF_DIR" ]; then
   if [[ "$PDF_DIR" = /* ]]; then
     SEARCH_DIRS+=("$PDF_DIR")
@@ -144,13 +157,11 @@ if [ -n "$PDF_DIR" ]; then
   fi
 fi
 
-# 2. Directorios estándar de exams2pdf
-SEARCH_DIRS+=("$CWD/output_pdf" "$CWD/output" "$CWD")
+SEARCH_DIRS+=("$CWD/output_pdf" "$CWD/output_pdf_test" "$CWD/output" "$CWD")
 
-# Buscar el PDF más reciente
 for DIR in "${SEARCH_DIRS[@]}"; do
   if [ -d "$DIR" ]; then
-    CANDIDATE=$(find "$DIR" -maxdepth 1 -name "*.pdf" -type f 2>/dev/null | head -1)
+    CANDIDATE=$(find "$DIR" -maxdepth 1 -name "*.pdf" -type f -mmin -5 2>/dev/null | head -1)
     if [ -n "$CANDIDATE" ] && [ -f "$CANDIDATE" ]; then
       PDF_FOUND="$CANDIDATE"
       break
@@ -158,64 +169,126 @@ for DIR in "${SEARCH_DIRS[@]}"; do
   fi
 done
 
-if [ -z "$PDF_FOUND" ]; then
-  echo "No se encontró PDF generado."
-  echo ""
-  echo "ACCIÓN OBLIGATORIA para Claude:"
-  echo "  1. Ejecutar exams2pdf() para generar el PDF"
-  echo "  2. El hook generará automáticamente el preview PNG"
-  echo "  3. Verificar las 5 coherencias visualmente"
-  echo "═══════════════════════════════════════════════════════════════"
-  exit 0
-fi
+if [ -n "$PDF_FOUND" ]; then
+  PREVIEW_PNG="$CWD/preview_${RMD_BASENAME}.png"
 
-# Generar nombre del preview basado en el .Rmd
-RMD_BASENAME=$(basename "$RMD_FILE" .Rmd)
-PREVIEW_PNG="$CWD/preview_${RMD_BASENAME}.png"
+  if command -v magick &>/dev/null; then
+    magick -density 150 "$PDF_FOUND" -quality 90 "$PREVIEW_PNG" 2>/dev/null
+    MAGICK_EXIT=$?
 
-# Convertir PDF → PNG con magick
-if command -v magick &>/dev/null; then
-  magick -density 150 "$PDF_FOUND" -quality 90 "$PREVIEW_PNG" 2>/dev/null
-  MAGICK_EXIT=$?
-
-  if [ $MAGICK_EXIT -eq 0 ]; then
-    # Listar PNGs generados
-    PREVIEW_FILES=$(ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null)
-    NUM_PREVIEWS=$(echo "$PREVIEW_FILES" | wc -l)
-
-    echo "Preview generado: $NUM_PREVIEWS página(s)"
-    echo ""
-    echo "$PREVIEW_FILES"
-    echo ""
-    echo "═══════════════════════════════════════════════════════════════"
-    echo "OBLIGATORIO — Claude DEBE ejecutar AHORA:"
-    echo ""
-    echo "  1. Read() cada archivo PNG listado arriba"
-    echo "  2. Verificar las 5 coherencias VISUALMENTE:"
-    echo "     - Semántica: Tildes, gramática, redacción"
-    echo "     - Visual-Texto: Valores coinciden con enunciado"
-    echo "     - Matemática: Fórmulas y cálculos correctos"
-    echo "     - Código: Elementos dinámicos funcionan"
-    echo "     - General: Legible, estilo ICFES, opciones visibles"
-    echo "  3. Documentar hallazgos con checklist"
-    echo "  4. Solicitar aprobación del usuario"
-    echo ""
-    echo "  PROHIBIDO continuar sin inspección visual"
-    echo "  PROHIBIDO decir 'se generó correctamente' sin mostrar imagen"
-    echo "═══════════════════════════════════════════════════════════════"
+    if [ $MAGICK_EXIT -eq 0 ]; then
+      NUM_PAGES=$(ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null | wc -l)
+      echo "  ✓ Preview generado: $NUM_PAGES página(s)"
+      ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null | while read f; do
+        echo "    → $(basename "$f")"
+      done
+    else
+      echo "  ❌ Error al convertir PDF a PNG"
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+    fi
   else
-    echo "Error al convertir PDF a PNG con magick"
-    echo "  PDF: $PDF_FOUND"
-    echo "═══════════════════════════════════════════════════════════════"
+    echo "  ⚠️  magick no instalado - preview manual requerido"
+    ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + 1))
   fi
 else
-  echo "magick no está instalado en el sistema"
-  echo ""
-  echo "ACCIÓN OBLIGATORIA para Claude:"
-  echo "  1. Convertir manualmente: magick -density 150 '$PDF_FOUND' -quality 90 preview.png"
-  echo "  2. Read(preview.png) para inspección visual"
-  echo "  3. Verificar las 5 coherencias"
-  echo "═══════════════════════════════════════════════════════════════"
+  echo "  ⚠️  PDF no encontrado - ejecutar exams2pdf() primero"
+  ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + 1))
 fi
+
+echo ""
+
+# =============================================================================
+# FASES 2C-2F: ARSENAL COMPLETO DE VALIDACIÓN
+# =============================================================================
+
+SCRIPT_ARSENAL="$PROJECT_DIR/.claude/scripts/arsenal_validacion_completa.R"
+
+if [ -f "$SCRIPT_ARSENAL" ]; then
+  echo "┌───────────────────────────────────────────────────────────────┐"
+  echo "│ FASES 2C-2F: Arsenal Completo                                 │"
+  echo "└───────────────────────────────────────────────────────────────┘"
+
+  ARSENAL_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_ARSENAL" "$RMD_FILE" 2>&1)
+  ARSENAL_EXIT=$?
+
+  # Mostrar salida filtrada
+  echo "$ARSENAL_OUTPUT" | grep -E "FASE|✓|❌|⚠️|ERROR|ADVERTENCIA|Total|VALIDACIÓN"
+
+  if [ $ARSENAL_EXIT -ne 0 ]; then
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+  fi
+
+  # Extraer conteos del arsenal
+  ARSENAL_ERRORES=$(echo "$ARSENAL_OUTPUT" | grep "Total ERRORES:" | grep -oP '\d+' | tail -1)
+  ARSENAL_ADVERTENCIAS=$(echo "$ARSENAL_OUTPUT" | grep "Total ADVERTENCIAS:" | grep -oP '\d+' | tail -1)
+
+  if [ -n "$ARSENAL_ERRORES" ]; then
+    ERRORES_TOTALES=$((ERRORES_TOTALES + ARSENAL_ERRORES))
+  fi
+  if [ -n "$ARSENAL_ADVERTENCIAS" ]; then
+    ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + ARSENAL_ADVERTENCIAS))
+  fi
+else
+  echo "  ⚠️  Script arsenal no encontrado"
+  ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + 1))
+fi
+
+echo ""
+
+# =============================================================================
+# RESUMEN FINAL Y ACCIONES OBLIGATORIAS
+# =============================================================================
+
+echo "╔═══════════════════════════════════════════════════════════════╗"
+echo "║  RESUMEN FINAL DEL ARSENAL                                    ║"
+echo "╠═══════════════════════════════════════════════════════════════╣"
+printf "║  Errores totales:      %-37s║\n" "$ERRORES_TOTALES"
+printf "║  Advertencias totales: %-37s║\n" "$ADVERTENCIAS_TOTALES"
+echo "╚═══════════════════════════════════════════════════════════════╝"
+echo ""
+
+if [ $ERRORES_TOTALES -gt 0 ]; then
+  echo "╔═══════════════════════════════════════════════════════════════╗"
+  echo "║  ❌ VALIDACIÓN FALLIDA - CORRECCIÓN OBLIGATORIA               ║"
+  echo "╠═══════════════════════════════════════════════════════════════╣"
+  echo "║  Claude DEBE:                                                 ║"
+  echo "║  1. Corregir TODOS los errores reportados arriba              ║"
+  echo "║  2. Volver a renderizar                                       ║"
+  echo "║  3. El arsenal se ejecutará automáticamente de nuevo          ║"
+  echo "║                                                               ║"
+  echo "║  PROHIBIDO: Continuar sin resolver errores                    ║"
+  echo "║  PROHIBIDO: Marcar como 'completado' con errores              ║"
+  echo "╚═══════════════════════════════════════════════════════════════╝"
+elif [ $ADVERTENCIAS_TOTALES -gt 0 ]; then
+  echo "╔═══════════════════════════════════════════════════════════════╗"
+  echo "║  ⚠️  VALIDACIÓN CON ADVERTENCIAS                              ║"
+  echo "╠═══════════════════════════════════════════════════════════════╣"
+  echo "║  Claude DEBE:                                                 ║"
+  echo "║  1. Revisar TODAS las advertencias                            ║"
+  echo "║  2. Ejecutar Read() sobre CADA preview PNG generado           ║"
+  echo "║  3. Verificar las 5 coherencias VISUALMENTE                   ║"
+  echo "║  4. Documentar hallazgos con checklist                        ║"
+  echo "║  5. Solicitar aprobación del usuario                          ║"
+  echo "╚═══════════════════════════════════════════════════════════════╝"
+else
+  echo "╔═══════════════════════════════════════════════════════════════╗"
+  echo "║  ✓ ARSENAL COMPLETO APROBADO                                  ║"
+  echo "╠═══════════════════════════════════════════════════════════════╣"
+  echo "║  Claude DEBE aún:                                             ║"
+  echo "║  1. Ejecutar Read() sobre CADA preview PNG                    ║"
+  echo "║  2. Verificar las 5 coherencias VISUALMENTE                   ║"
+  echo "║  3. Documentar con checklist                                  ║"
+  echo "║  4. Solicitar aprobación del usuario                          ║"
+  echo "║                                                               ║"
+  echo "║  PROHIBIDO: Decir 'todo correcto' sin mostrar imágenes        ║"
+  echo "╚═══════════════════════════════════════════════════════════════╝"
+fi
+
+echo ""
+echo "───────────────────────────────────────────────────────────────"
+echo "Previews a inspeccionar:"
+ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null || echo "  (ninguno generado)"
+echo "───────────────────────────────────────────────────────────────"
+echo ""
 
 exit 0

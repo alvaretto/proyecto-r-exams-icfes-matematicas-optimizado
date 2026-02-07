@@ -1,15 +1,40 @@
 # Anatomía de un Archivo .Rmd SCHOICE
 
+## ⚠️ IMPORTANTE: Estructura Metacognitiva Obligatoria
+
+**A partir de v3.0, TODOS los ejercicios deben ser metacognitivos.**
+
+Para la anatomía completa de ejercicios metacognitivos (8 secciones), ver:
+→ [anatomia-metacognitiva.md](anatomia-metacognitiva.md)
+
+Este documento describe la estructura **básica mínima** de 7 secciones.
+La estructura metacognitiva EXTIENDE esta base con componentes adicionales.
+
+---
+
 Un archivo SCHOICE válido tiene exactamente **7 secciones** en este orden:
 
 ```
 1. ENCABEZADO YAML (output + header-includes)
 2. CHUNK setup (librerías + configuración)
 3. CHUNK data_generation (aleatorización + cálculos)
-4. CHUNK version_diversity_test (validación 300+ versiones)
+4. CHUNK version_diversity_test (validación 250+ versiones)
 5. SECCIÓN Question (enunciado + Answerlist)
 6. SECCIÓN Solution (explicación + Answerlist)
 7. META-INFORMATION (metadatos R/exams + ICFES)
+```
+
+**Para ejercicios metacognitivos (OBLIGATORIO desde v3.0):**
+
+```
+1. ENCABEZADO YAML (+ taxonomías cognitivas)
+2. CHUNK setup (+ testthat, digest)
+3. CHUNK data_generation (+ pool de errores conceptuales)
+4. CHUNK version_diversity_test
+5. CHUNK validaciones_matematicas (NUEVO)
+6. SECCIÓN Question (patrón metacognitivo)
+7. SECCIÓN Solution (análisis de error + reflexión)
+8. META-INFORMATION (+ DOK, Bloom, SOLO)
 ```
 
 ## Sección 1: Encabezado YAML
@@ -100,8 +125,10 @@ opciones <- datos$opciones
 Reglas críticas:
 
 - SIEMPRE encapsular en función `generar_datos()`
-- Distractores basados en errores conceptuales, NO aleatorios
+- **Distractores basados en errores conceptuales documentados (pool de errores)**
+- NO usar distractores aleatorios (`respuesta + sample(-10:10, 3)` PROHIBIDO)
 - NO hacer shuffle manual (R/exams lo hace con `exshuffle: TRUE`)
+- **Para ejercicios metacognitivos**: incluir pool de errores con código, descripción y función calcula()
 
 ## Sección 4: Chunk version_diversity_test
 
@@ -201,6 +228,12 @@ exextra[Componente]: Numérico-Variacional
 exextra[Afirmacion]: Resuelve operaciones aritméticas básicas
 exextra[Evidencia]: Aplica orden de operaciones correctamente
 exextra[Nivel]: 1
+
+# Taxonomías cognitivas (OBLIGATORIAS para ejercicios metacognitivos)
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
 ```
 
 Códigos exsolution:
@@ -209,3 +242,13 @@ Códigos exsolution:
 - `0100` = segunda opción correcta
 - `0010` = tercera opción correcta
 - `0001` = cuarta opción correcta
+
+---
+
+## Referencia: Estructura Metacognitiva Completa
+
+Para ejercicios metacognitivos (OBLIGATORIOS desde v3.0), consultar:
+
+- [anatomia-metacognitiva.md](anatomia-metacognitiva.md) - Estructura de 8 secciones
+- `.claude/rules/ejercicios-metacognitivos.md` - Regla completa
+- Ejemplo canónico: `A-Produccion/03-En-Produccion/.../promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`

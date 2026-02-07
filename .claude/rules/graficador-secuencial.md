@@ -2,289 +2,433 @@
 
 ## Principio Fundamental
 
-**Las tres versiones graficas (TikZ, Python, R) se generan e iteran SECUENCIALMENTE, no simultaneamente.**
+**SIEMPRE se generan las TRES versiones gráficas (TikZ, Python, R) de forma SECUENCIAL con iteraciones AUTOMÁTICAS hasta alcanzar ≥98% de fidelidad. El USUARIO SIEMPRE decide cuál versión usar al final.**
 
-Cada lenguaje debe completarse ANTES de pasar al siguiente.
+Claude NO puede decidir qué lenguaje usar. Claude NO puede omitir ningún lenguaje. Las tres opciones SIEMPRE se presentan al usuario.
+
+---
+
+## Reglas Críticas (SIN EXCEPCIONES)
+
+### 1. SIEMPRE generar los tres lenguajes
+
+```
+❌ PROHIBIDO: "Usaré ggplot2 porque es más simple"
+❌ PROHIBIDO: "TikZ es mejor para este caso, omitiré Python"
+❌ PROHIBIDO: Generar solo uno o dos lenguajes
+
+✅ OBLIGATORIO: Generar TikZ → Python → R (los tres, siempre)
+```
+
+### 2. Umbral de fidelidad: 98%
+
+```
+❌ PROHIBIDO: Detener iteraciones con similitud < 98%
+❌ PROHIBIDO: Aceptar "95% es suficiente"
+
+✅ OBLIGATORIO: Iterar AUTOMÁTICAMENTE hasta ≥98% de similitud
+✅ OBLIGATORIO: Máximo 10 iteraciones por lenguaje antes de escalar
+```
+
+### 3. Usuario SIEMPRE decide
+
+```
+❌ PROHIBIDO: Claude selecciona el lenguaje final
+❌ PROHIBIDO: Asumir preferencia del usuario
+
+✅ OBLIGATORIO: Presentar tabla comparativa de los 3 lenguajes
+✅ OBLIGATORIO: Esperar selección explícita del usuario
+```
+
+---
 
 ## Orden Obligatorio
 
 ```
-1. TikZ (dinamico desde R)
-   ↓ Iterar hasta ≥95% + coherencias + aprobacion usuario
+1. TikZ (dinámico desde R)
+   ↓ Iterar AUTOMÁTICAMENTE hasta ≥98% similitud
+   ↓ Verificar 5 coherencias
+   ↓ Mostrar resultado (NO pedir aprobación intermedia)
    ↓
-2. Python (via reticulate)
-   ↓ Iterar hasta ≥95% + coherencias + aprobacion usuario
+2. Python (vía reticulate)
+   ↓ Iterar AUTOMÁTICAMENTE hasta ≥98% similitud
+   ↓ Verificar 5 coherencias
+   ↓ Mostrar resultado (NO pedir aprobación intermedia)
    ↓
 3. R (nativo ggplot2)
-   ↓ Iterar hasta ≥95% + coherencias + aprobacion usuario
+   ↓ Iterar AUTOMÁTICAMENTE hasta ≥98% similitud
+   ↓ Verificar 5 coherencias
+   ↓ Mostrar resultado (NO pedir aprobación intermedia)
    ↓
-4. Seleccion final por usuario
+4. PRESENTAR LAS 3 OPCIONES AL USUARIO
+   ↓ Tabla comparativa con similitud, ventajas, código
+   ↓ USUARIO SELECCIONA cuál usar
+   ↓
+5. Generar .Rmd con versión seleccionada por usuario
 ```
+
+---
 
 ## Proceso Detallado por Lenguaje
 
-### FASE 1: TikZ (Dinamico desde R)
+### FASE 1: TikZ (Dinámico desde R)
 
-**Paso 1.1: Generacion inicial**
+**Paso 1.1: Generación inicial**
+
 ```
 - Analizar imagen original
-- Generar codigo TikZ integrado con R (NO estatico)
-- El codigo R debe generar coordenadas/datos dinamicamente
+- Generar código TikZ integrado con R (NO estático)
+- El código R debe generar coordenadas/datos dinámicamente
 - TikZ se construye con paste0() interpolando variables R
 ```
 
-**Paso 1.2: Renderizado**
-```bash
-# Compilar TikZ a PNG para comparacion
-pdflatex output_tikz_v1.tex
-magick convert -density 150 output_tikz_v1.pdf output_tikz_v1.png
+**Paso 1.2: Iteración AUTOMÁTICA hasta 98%**
+
+```r
+# Pseudocódigo del proceso automático
+similitud <- 0
+iteracion <- 1
+max_iteraciones <- 10
+
+while(similitud < 98 && iteracion <= max_iteraciones) {
+  # Renderizar versión actual
+  renderizar_tikz(version = iteracion)
+
+  # Comparar con original
+  similitud <- comparar_imagenes(original, generada)
+
+  # Si no alcanza 98%, refinar automáticamente
+  if(similitud < 98) {
+    ajustes <- identificar_diferencias(original, generada)
+    aplicar_correcciones(ajustes)
+    iteracion <- iteracion + 1
+  }
+}
+
+# Registrar resultado
+tikz_resultado <- list(
+  similitud_final = similitud,
+  iteraciones = iteracion,
+  codigo = codigo_final
+)
 ```
 
-**Paso 1.3: Comparacion visual**
-```
-- Comparar tikz_output_v1.png con imagen original
-- Calcular similitud (%)
-- SI similitud < 95%: Refinar y repetir
-- SI similitud >= 95%: Continuar a verificaciones
-```
-
-**Paso 1.4: Verificacion de coherencias (TODAS obligatorias)**
+**Paso 1.3: Verificación de coherencias (automática)**
 
 ```markdown
-## Verificacion de Coherencias - TikZ v[N]
+### Coherencias TikZ v[N] - Similitud: [X]%
 
-### 1. Coherencia Semantica (Gramatica)
-- [ ] Etiquetas de ejes sin errores ortograficos
-- [ ] Leyendas correctamente escritas
-- [ ] Titulo (si existe) gramaticalmente correcto
-- [ ] Numeros con formato apropiado (comas, puntos)
-
-### 2. Coherencia Visual con Texto
-- [ ] Grafico coincide con descripcion del enunciado
-- [ ] Valores visuales coinciden con valores mencionados
-- [ ] Colores/estilos coherentes con la descripcion
-- [ ] Escalas apropiadas segun el contexto
-
-### 3. Coherencia Matematica
-- [ ] Formulas/ecuaciones correctas si aplica
-- [ ] Proporciones geometricas correctas
-- [ ] Relaciones matematicas preservadas
-- [ ] Puntos de interseccion en posiciones correctas
-
-### 4. Coherencia de Codigo
-- [ ] Codigo genera grafico dinamicamente (no hardcoded)
-- [ ] Variables R se interpolan correctamente en TikZ
-- [ ] Compatible con include_tikz() de R-exams
-- [ ] Diferentes semillas generan graficos validos
-
-### 5. Coherencia General
-- [ ] Grafico legible (tamano de fuente adecuado)
-- [ ] Estilo visual apropiado para examen ICFES
-- [ ] No hay elementos visuales confusos
-- [ ] Calidad de imagen suficiente
+1. Semántica: [OK/Problema]
+2. Visual-Texto: [OK/Problema]
+3. Matemática: [OK/Problema]
+4. Código: [OK/Problema]
+5. General: [OK/Problema]
 ```
 
-**Paso 1.5: Aprobacion del usuario**
+**NO pedir aprobación. Continuar automáticamente a Python.**
 
-```markdown
-## TikZ v[N] - Solicitud de Aprobacion
+### FASE 2: Python (vía reticulate)
 
-**Similitud alcanzada**: [X]%
+**Mismo proceso que TikZ:**
 
-[Mostrar imagen generada]
-
-### Verificacion de Coherencias
-- Semantica: OK/Pendiente
-- Visual-Texto: OK/Pendiente
-- Matematica: OK/Pendiente
-- Codigo: OK/Pendiente
-- General: OK/Pendiente
-
-**¿Aprueba esta version de TikZ?**
-- Si, aprobar y continuar con Python
-- No, necesito ajustes: [describir]
-- Continuar iterando automaticamente
-```
-
-**SOLO continuar a Python cuando usuario apruebe TikZ.**
-
-### FASE 2: Python (via reticulate)
-
-**Paso 2.1: Generacion inicial**
-```
-- Usar misma logica matematica que TikZ
-- Generar codigo Python/matplotlib
-- Asegurar compatibilidad con reticulate
-```
-
-**Paso 2.2-2.5: Repetir proceso de TikZ**
-- Renderizado, comparacion, coherencias, aprobacion
-
-**SOLO continuar a R cuando usuario apruebe Python.**
+- Iteración automática hasta ≥98%
+- Verificación de coherencias
+- NO pedir aprobación intermedia
+- Continuar automáticamente a R
 
 ### FASE 3: R (nativo ggplot2)
 
-**Paso 3.1: Generacion inicial**
-```
-- Usar misma logica matematica que versiones anteriores
-- Generar codigo R/ggplot2 nativo
-- Formato natural para R-exams
-```
+**Mismo proceso:**
 
-**Paso 3.2-3.5: Repetir proceso**
-- Renderizado, comparacion, coherencias, aprobacion
+- Iteración automática hasta ≥98%
+- Verificación de coherencias
+- NO pedir aprobación intermedia
 
-**SOLO proceder a seleccion cuando usuario apruebe R.**
-
-### FASE 4: Seleccion Final
+### FASE 4: Presentación al Usuario (OBLIGATORIA)
 
 ```markdown
-## Seleccion de Version para el .Rmd
+## Selección de Versión Gráfica
 
-Las tres versiones han sido validadas:
+Las TRES versiones han sido generadas y validadas:
 
-| Version | Similitud | Ventajas | Desventajas |
-|---------|-----------|----------|-------------|
-| TikZ    | [X]%      | Tipografia LaTeX, escalable | Requiere compilacion |
-| Python  | [Y]%      | Flexible, familiar | Dependencia reticulate |
-| R       | [Z]%      | Nativo R-exams | Menos control tipografico |
+| Lenguaje | Similitud | Iteraciones | Ventajas | Desventajas |
+|----------|-----------|-------------|----------|-------------|
+| TikZ     | 98.5%     | 4           | Tipografía LaTeX, escalable vectorial | Requiere compilación LaTeX |
+| Python   | 98.2%     | 3           | Flexible, matplotlib familiar | Dependencia reticulate |
+| R        | 99.1%     | 2           | Nativo R-exams, sin dependencias | Menos control tipográfico |
 
-**¿Cual version desea usar para el archivo .Rmd final?**
+### Previews Generados
+
+[Mostrar imagen TikZ]
+[Mostrar imagen Python]
+[Mostrar imagen R]
+
+### Código Generado (resumen)
+
+**TikZ**: [líneas de código]
+**Python**: [líneas de código]
+**R**: [líneas de código]
+
+---
+
+**¿Cuál versión desea usar para el archivo .Rmd final?**
+
+1. TikZ
+2. Python
+3. R
 ```
+
+**ESPERAR respuesta del usuario antes de continuar.**
+
+---
 
 ## Estados del Workflow
 
 ```json
 {
-  "fase_actual": "tikz_iteracion|tikz_coherencias|tikz_aprobacion|python_iteracion|...|seleccion_final",
+  "fase_actual": "tikz_auto|python_auto|r_auto|seleccion_usuario|completado",
+  "umbral_fidelidad": 98,
+  "max_iteraciones": 10,
   "tikz": {
-    "estado": "pendiente|en_iteracion|verificando|aprobado",
-    "version_actual": 1,
-    "similitud_actual": 0,
-    "coherencias_verificadas": false,
-    "usuario_aprobo": false
+    "estado": "pendiente|iterando|completado",
+    "version_actual": 0,
+    "similitud_final": 0,
+    "iteraciones_totales": 0,
+    "coherencias_ok": false
   },
   "python": {
-    "estado": "bloqueado|pendiente|en_iteracion|verificando|aprobado",
+    "estado": "bloqueado|pendiente|iterando|completado",
     "version_actual": 0,
-    "similitud_actual": 0,
-    "coherencias_verificadas": false,
-    "usuario_aprobo": false
+    "similitud_final": 0,
+    "iteraciones_totales": 0,
+    "coherencias_ok": false
   },
   "r": {
-    "estado": "bloqueado|pendiente|en_iteracion|verificando|aprobado",
+    "estado": "bloqueado|pendiente|iterando|completado",
     "version_actual": 0,
-    "similitud_actual": 0,
-    "coherencias_verificadas": false,
-    "usuario_aprobo": false
-  }
+    "similitud_final": 0,
+    "iteraciones_totales": 0,
+    "coherencias_ok": false
+  },
+  "seleccion_usuario": null,
+  "usuario_decidio": false
 }
-```
-
-## Reglas de Transicion
-
-```
-tikz.estado == "aprobado" → python.estado = "pendiente"
-python.estado == "aprobado" → r.estado = "pendiente"
-r.estado == "aprobado" → fase_actual = "seleccion_final"
-```
-
-## Prohibiciones
-
-### PROHIBIDO: Generacion Simultanea
-```
-# ❌ INCORRECTO - NO HACER
-generar_tikz() AND generar_python() AND generar_r()  # Simultaneo
-```
-
-### PROHIBIDO: Saltar Aprobaciones
-```
-# ❌ INCORRECTO - NO HACER
-if similitud >= 95:
-    marcar_validado()  # Sin pedir aprobacion
-    pasar_siguiente()
-```
-
-### PROHIBIDO: Ignorar Coherencias
-```
-# ❌ INCORRECTO - NO HACER
-if similitud >= 95:
-    aprobar()  # Sin verificar coherencias
-```
-
-## Flujo Correcto Paso a Paso
-
-```
-1. /auto-refinar-grafico tikz 95
-   - Iterar TikZ hasta >=95%
-   - Verificar 5 coherencias
-   - Mostrar resultado y ESPERAR aprobacion
-   - Usuario aprueba
-
-2. /auto-refinar-grafico python 95
-   - Iterar Python hasta >=95%
-   - Verificar 5 coherencias
-   - Mostrar resultado y ESPERAR aprobacion
-   - Usuario aprueba
-
-3. /auto-refinar-grafico r 95
-   - Iterar R hasta >=95%
-   - Verificar 5 coherencias
-   - Mostrar resultado y ESPERAR aprobacion
-   - Usuario aprueba
-
-4. Preguntar: ¿Cual version para el .Rmd?
-   - Usuario selecciona
-   - Registrar en workflow_state.json
-
-5. Generar .Rmd con version seleccionada
-```
-
-## Integracion con R-exams
-
-### TikZ Dinamico (NO estatico)
-
-```r
-# Generar datos en R
-datos <- generar_datos()
-
-# Construir codigo TikZ interpolando variables R
-tikz_code <- paste0(
-  "\\begin{tikzpicture}\n",
-  "\\begin{axis}[\n",
-  "    xlabel={", datos$xlabel, "},\n",
-  "    ylabel={", datos$ylabel, "},\n",
-  "]\n",
-  "\\addplot coordinates {\n",
-  paste0("(", datos$x, ",", datos$y, ")", collapse="\n"),
-  "\n};\n",
-  "\\end{axis}\n",
-  "\\end{tikzpicture}"
-)
-
-# Usar include_tikz de R-exams
-include_tikz(tikz_code, name="grafico", ...)
-```
-
-### Python via Reticulate
-
-```r
-library(reticulate)
-py_run_string(codigo_python)
-# O usar source_python("output_python.py")
-```
-
-### R Nativo
-
-```r
-p <- ggplot(datos, aes(x, y)) + geom_point()
-ggsave("grafico.png", p)
-include_supplement("grafico.png")
 ```
 
 ---
 
-**Fecha de creacion**: 2025-12-30
-**Version**: 1.0
-**Autor**: Sistema automatizado
-**Razon**: Garantizar proceso ordenado y aprobacion explicita del usuario
+## Reglas de Transición
+
+```
+tikz.estado == "completado" → python.estado = "pendiente"
+python.estado == "completado" → r.estado = "pendiente"
+r.estado == "completado" → fase_actual = "seleccion_usuario"
+usuario_decidio == true → fase_actual = "completado"
+```
+
+---
+
+## Prohibiciones Absolutas
+
+### PROHIBIDO: Decidir por el usuario
+
+```
+# ❌ INCORRECTO
+"Recomiendo usar R porque tiene mejor similitud"
+→ Generar .Rmd con R sin preguntar
+
+# ✅ CORRECTO
+"Las tres versiones están listas. ¿Cuál prefiere usar?"
+→ Esperar selección explícita
+```
+
+### PROHIBIDO: Omitir lenguajes
+
+```
+# ❌ INCORRECTO
+"Para este gráfico simple, solo generaré ggplot2"
+
+# ✅ CORRECTO
+Generar TikZ → Python → R (siempre los tres)
+```
+
+### PROHIBIDO: Detener antes de 98%
+
+```
+# ❌ INCORRECTO
+if similitud >= 95:
+    marcar_completado()
+
+# ✅ CORRECTO
+while similitud < 98 && iteraciones < 10:
+    refinar_automaticamente()
+```
+
+### PROHIBIDO: Pedir aprobación intermedia
+
+```
+# ❌ INCORRECTO
+"TikZ alcanzó 98%. ¿Aprueba para continuar con Python?"
+
+# ✅ CORRECTO
+Continuar automáticamente a Python sin preguntar
+Solo preguntar al final: "¿Cuál versión usar?"
+```
+
+---
+
+## Manejo de Errores
+
+### Si un lenguaje no alcanza 98% en 10 iteraciones
+
+```markdown
+⚠️ ADVERTENCIA: TikZ alcanzó máximo 94.5% en 10 iteraciones
+
+**Opciones:**
+1. Continuar con Python/R (puede que logren mejor similitud)
+2. Revisar imagen original (posible complejidad excesiva)
+3. Ajustar manualmente el código TikZ
+
+¿Desea continuar con los otros lenguajes?
+```
+
+### Si ningún lenguaje alcanza 98%
+
+```markdown
+⚠️ NINGÚN LENGUAJE ALCANZÓ 98%
+
+| Lenguaje | Mejor similitud |
+|----------|-----------------|
+| TikZ     | 94.5%           |
+| Python   | 96.2%           |
+| R        | 95.8%           |
+
+**Recomendación:** Revisar la complejidad de la imagen original.
+
+¿Desea:
+1. Usar la mejor versión disponible (Python 96.2%)
+2. Continuar refinando manualmente
+3. Simplificar el gráfico original
+```
+
+---
+
+## Verificación de Coherencias (Las 5)
+
+Para CADA lenguaje, verificar automáticamente:
+
+### 1. Coherencia Semántica
+
+- [ ] Etiquetas de ejes sin errores ortográficos
+- [ ] Leyendas correctamente escritas
+- [ ] Números con formato apropiado
+
+### 2. Coherencia Visual-Texto
+
+- [ ] Gráfico coincide con descripción del enunciado
+- [ ] Valores visuales coinciden con valores mencionados
+- [ ] Escalas apropiadas según el contexto
+
+### 3. Coherencia Matemática
+
+- [ ] Fórmulas/ecuaciones correctas
+- [ ] Proporciones geométricas correctas
+- [ ] Relaciones matemáticas preservadas
+
+### 4. Coherencia de Código
+
+- [ ] Código genera gráfico dinámicamente (no hardcoded)
+- [ ] Variables R se interpolan correctamente
+- [ ] Compatible con R-exams
+- [ ] Diferentes semillas generan gráficos válidos
+
+### 5. Coherencia General
+
+- [ ] Gráfico legible (tamaño de fuente adecuado)
+- [ ] Estilo visual apropiado para examen ICFES
+- [ ] Calidad de imagen suficiente
+
+---
+
+## Integración con Skills
+
+### /auto-refinar-grafico (actualizado)
+
+```
+/auto-refinar-grafico
+  → Ejecuta TikZ automático hasta 98%
+  → Ejecuta Python automático hasta 98%
+  → Ejecuta R automático hasta 98%
+  → Presenta las 3 opciones al usuario
+  → Usuario selecciona
+  → Genera .Rmd
+```
+
+### /estado-graficador
+
+```
+Muestra estado actual del workflow:
+- Lenguaje actual
+- Similitud alcanzada
+- Iteraciones realizadas
+- Lenguajes pendientes
+```
+
+---
+
+## Ejemplo de Flujo Completo
+
+```
+Usuario: /auto-refinar-grafico
+
+Claude: Iniciando Graficador Experto (umbral: 98%)
+
+=== FASE 1: TikZ ===
+Iteración 1: 78% → Ajustando escalas...
+Iteración 2: 89% → Corrigiendo etiquetas...
+Iteración 3: 95% → Refinando posiciones...
+Iteración 4: 98.2% ✓
+
+Coherencias TikZ: ✓ Semántica ✓ Visual ✓ Matemática ✓ Código ✓ General
+
+=== FASE 2: Python ===
+Iteración 1: 82% → Ajustando matplotlib...
+Iteración 2: 94% → Corrigiendo colores...
+Iteración 3: 98.5% ✓
+
+Coherencias Python: ✓ Semántica ✓ Visual ✓ Matemática ✓ Código ✓ General
+
+=== FASE 3: R ===
+Iteración 1: 91% → Ajustando ggplot2...
+Iteración 2: 99.1% ✓
+
+Coherencias R: ✓ Semántica ✓ Visual ✓ Matemática ✓ Código ✓ General
+
+=== SELECCIÓN FINAL ===
+
+| Lenguaje | Similitud | Iteraciones |
+|----------|-----------|-------------|
+| TikZ     | 98.2%     | 4           |
+| Python   | 98.5%     | 3           |
+| R        | 99.1%     | 2           |
+
+[Preview TikZ] [Preview Python] [Preview R]
+
+¿Cuál versión desea usar para el .Rmd?
+
+Usuario: R
+
+Claude: Generando .Rmd con versión R (99.1% similitud)...
+```
+
+---
+
+**Versión**: 2.0
+**Fecha**: 2026-02-07
+**Cambios v2.0**:
+
+- Umbral aumentado de 95% a 98%
+- Iteraciones AUTOMÁTICAS (sin aprobación intermedia)
+- SIEMPRE generar los 3 lenguajes (sin excepciones)
+- Usuario SIEMPRE decide la versión final
+- Claude NO puede elegir el lenguaje

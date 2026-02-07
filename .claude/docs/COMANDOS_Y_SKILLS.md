@@ -521,8 +521,41 @@ Estos se ejecutan **automáticamente**:
 - Diagnosticar errores (cuando hay fallos)
 - Corregir gráficos (cuando detecta errores gráficos)
 - Analizar imagen matemática (al cargar imagen)
+- **Skill-retroalimentación** (al generar sección Solution) 🆕
 
 **NO ejecutar manualmente**. El sistema los invoca cuando corresponde.
+
+---
+
+### Skill-retroalimentación (OBLIGATORIO, AUTOMÁTICO, PERMANENTE) 🆕
+
+**Cuándo se ejecuta**: Al generar la sección Solution de cualquier .Rmd
+
+**Fuente oficial**: ICFES - Guía de Orientación Matemáticas 11° Cuadernillo 2-2023 (pp. 22-51)
+
+**Qué genera automáticamente**:
+
+1. **Encabezado diagnóstico**: Competencia, Componente, Afirmación, Evidencia, Nivel
+2. **¿Qué evalúa?**: Descripción específica de la capacidad evaluada
+3. **Justificación de respuesta correcta**: Pasos matemáticos con fórmulas LaTeX
+4. **Opciones no válidas**: Para CADA distractor, análisis con patrón:
+   > "Es posible que los estudiantes que eligen la opción X [error conceptual]..."
+5. **Reflexión metacognitiva**: Estrategias para evitar errores comunes
+
+**Ejemplo de salida**:
+```markdown
+### Opciones No Válidas
+
+**Opción B:**
+Es posible que los estudiantes que eligen la opción B confundan el
+porcentaje con la cantidad absoluta, poniendo 30 en lugar de calcular
+120 × 30/100 = 36. Este error se presenta cuando el estudiante no
+comprende que el porcentaje es una proporción que debe aplicarse al
+total. Para evitar este error, el estudiante debe recordar que:
+$$\text{Cantidad} = \text{Total} \times \frac{\text{Porcentaje}}{100}$$
+```
+
+**Ubicación del skill**: `.claude/skills/skill-retroalimentacion/SKILL.md`
 
 ---
 
@@ -585,6 +618,7 @@ allowed-tools:
 | validar-coherencia | 4.2KB | 2 | FASE 2: 5 coherencias |
 | validar-pedagogico | 3.3KB | 1 | Analisis pedagogico Opus 4.5 |
 | validar-renderizado | 3.7KB | 2 | FASE 1: 4 formatos |
+| skill-retroalimentacion | 4.5KB | 1 | Retroalimentación científica ICFES (OBLIGATORIO) |
 
 **NO modificar skills** sin ejecutar tests de regresion.
 

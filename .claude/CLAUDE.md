@@ -16,12 +16,13 @@ Este archivo funciona como **índice central** del sistema. Para información de
 **Resumen de reglas fundamentales:**
 1. **Ejercicios metacognitivos** con Progressive Disclosure → @.claude/rules/ejercicios-metacognitivos.md
 2. **Flujo B obligatorio** cuando hay gráficos → @.claude/rules/flujo-b-obligatorio.md
-3. **Proceso secuencial** TikZ→Python→R → @.claude/rules/graficador-secuencial.md
-4. **5 Coherencias** a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General)
-5. **Validación visual iterativa** OBLIGATORIA → @.claude/rules/ciclo-validacion.md
-6. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
-7. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
-8. **Detractor obligatorio** en fases de revisión 🆕 → @.claude/rules/detractor-obligatorio.md
+3. **Proceso secuencial** TikZ→Python→R (98% fidelidad, usuario decide) → @.claude/rules/graficador-secuencial.md
+4. **Gráficos como opciones individuales** (PNGs separados) 🆕 → @.claude/rules/graficos-como-opciones.md
+5. **5 Coherencias** a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General)
+6. **Validación visual iterativa** OBLIGATORIA → @.claude/rules/ciclo-validacion.md
+7. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
+8. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
+9. **Detractor obligatorio** en fases de revisión → @.claude/rules/detractor-obligatorio.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -91,6 +92,8 @@ A-Produccion/
 | Resolver error conocido | @.claude/docs/patrones-errores-conocidos.md |
 | Entender hooks de testing | @.claude/docs/HOOKS_Y_TESTING.md |
 | Configurar gráficos | @.claude/docs/REGLAS_CRITICAS.md + Flujo B |
+| Gráficos como opciones SCHOICE | @.claude/rules/graficos-como-opciones.md |
+| Workflow Graficador (98% + 3 lenguajes) | @.claude/rules/graficador-secuencial.md |
 | Ver comandos disponibles | @.claude/docs/COMANDOS_Y_SKILLS.md |
 | Validar ortografía | @.claude/rules/ortografia-espanol.md |
 | Ejecutar tests | `tests/run_all_tests.R` |
@@ -107,9 +110,24 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.2.1 (Detractor con 7 Dominios)
+**Versión**: 3.2.2 (Gráficos Opciones + Graficador 98%)
 **Fecha**: 2026-02-07
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.2.2 (2026-02-07)
+- **GRÁFICOS COMO OPCIONES INDIVIDUALES**: Nueva regla `.claude/rules/graficos-como-opciones.md`
+  - Cada opción gráfica DEBE ser PNG separado (diagrama_a.png, etc.)
+  - PROHIBIDO usar `grid.arrange()` para mostrar opciones juntas
+  - Answerlist DEBE referenciar imágenes individuales
+- **GRAFICADOR SECUENCIAL v2.0**: Actualizado `.claude/rules/graficador-secuencial.md`
+  - Umbral de fidelidad: 95% → **98%**
+  - Iteraciones: Manuales → **AUTOMÁTICAS**
+  - Lenguajes: SIEMPRE generar **TikZ + Python + R** (los tres)
+  - Decisión final: Claude NO puede elegir → **USUARIO SIEMPRE DECIDE**
+- **3 NUEVOS PATRONES DE ERROR** documentados en `patrones-errores-conocidos.md`:
+  - Error 4: Gráficos en grid (no individuales)
+  - Error 5: EST-BOX-01 escala incompatible
+  - Error 6: sample() sin rango suficiente
 
 ### Cambios v3.2.1 (2026-02-07)
 - **7 DOMINIOS DE REVISIÓN**: código, pedagógico, visual, gramática, matemático, metacognitivo, testing
