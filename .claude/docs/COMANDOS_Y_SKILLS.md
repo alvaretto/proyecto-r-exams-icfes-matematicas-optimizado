@@ -143,12 +143,55 @@ exclozetype: num|schoice|mchoice|string
 - `/validar-pedagogico`: Análisis pedagógico profundo DESPUÉS de crear .Rmd (input: archivo completo)
 
 ---
-exsolution: [valores separados por |]
-extol: [tolerancias numéricas]
-exname: nombre_ejercicio
-exextra[Type]: CLOZE
-# ... resto de metadatos ICFES
+
+#### `/skill-retroalimentacion` 🆕
+**Propósito**: Generar retroalimentación científica para la sección Solution siguiendo estándares ICFES 2026
+
+**Uso**:
+```bash
+/skill-retroalimentacion [ruta-al-ejercicio.Rmd]
 ```
+
+**Requisitos previos**:
+- Archivo .Rmd con estructura SCHOICE o CLOZE
+- Pool de errores conceptuales definido
+- Metadatos ICFES completos
+
+**Qué hace**:
+1. Genera encabezado diagnóstico con competencia y evidencias
+2. Describe específicamente qué capacidad evalúa el ejercicio
+3. Justifica la respuesta correcta con pasos matemáticos detallados
+4. Analiza CADA distractor con el patrón ICFES:
+   > "Es posible que los estudiantes que eligen la opción X [error conceptual]..."
+5. Incluye reflexión metacognitiva con estrategias preventivas
+
+**Output**: Sección Solution completa con estructura científica
+
+**Fuente oficial**: ICFES - Guía de Orientación Matemáticas 11° Cuadernillo 2-2023 (pp. 22-51)
+
+**Estructura de la retroalimentación**:
+```markdown
+### Competencia, Componente, Afirmación y Evidencia
+[Encabezado diagnóstico automático]
+
+### ¿Qué evalúa esta pregunta?
+[Descripción específica de la capacidad]
+
+### Justificación de la Respuesta Correcta
+[Pasos matemáticos con fórmulas LaTeX]
+
+### Opciones No Válidas
+**Opción A:** Es posible que los estudiantes que eligen...
+**Opción B:** Es posible que los estudiantes que eligen...
+[Continúa para cada distractor]
+
+### Reflexión Metacognitiva
+[Estrategias para evitar errores comunes]
+```
+
+**Documentación completa**: `.claude/skills/skill-retroalimentacion/SKILL.md`
+
+**Nota**: También se ejecuta automáticamente al generar ejercicios con `/generar-schoice` o `/generar-cloze`.
 
 ---
 
@@ -634,9 +677,15 @@ allowed-tools:
 
 ---
 
-**Version**: 1.1
-**Fecha**: 2026-02-06
-**Modulo de**: @.claude/CLAUDE.md (v3.0.0)
+**Version**: 1.2
+**Fecha**: 2026-02-07
+**Modulo de**: @.claude/CLAUDE.md (v3.2.2)
+
+### Cambios v1.2 (2026-02-07)
+
+- Agregado comando manual `/skill-retroalimentacion` con documentación completa
+- Incluye estructura de retroalimentación científica estilo ICFES 2026
+- Referencias a fuente oficial (Guía de Orientación Matemáticas 11°)
 
 ### Cambios v1.1 (2026-02-06)
 

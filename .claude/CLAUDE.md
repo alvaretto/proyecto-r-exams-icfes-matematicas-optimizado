@@ -29,6 +29,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
+- `/skill-retroalimentacion` - Generación científica de sección Solution 🆕
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
 - `/detractor auditoria [target]` - Revisión adversarial en 7 dominios
 - `/auto-refinar-grafico [tikz|python|r]`
@@ -94,6 +95,7 @@ A-Produccion/
 | Configurar gráficos | @.claude/docs/REGLAS_CRITICAS.md + Flujo B |
 | Gráficos como opciones SCHOICE | @.claude/rules/graficos-como-opciones.md |
 | Workflow Graficador (98% + 3 lenguajes) | @.claude/rules/graficador-secuencial.md |
+| Generar retroalimentación científica | @.claude/skills/skill-retroalimentacion/SKILL.md |
 | Ver comandos disponibles | @.claude/docs/COMANDOS_Y_SKILLS.md |
 | Validar ortografía | @.claude/rules/ortografia-espanol.md |
 | Ejecutar tests | `tests/run_all_tests.R` |

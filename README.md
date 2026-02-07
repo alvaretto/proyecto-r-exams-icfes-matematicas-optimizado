@@ -210,9 +210,13 @@ El proyecto incluye skills configurados en `.claude/skills/` para automatizar ca
 
 **Skills de Revisión (OBLIGATORIOS):**
 
-- `/detractor auditoria [target]` - **🆕** Revisión adversarial en 4 dominios (código, pedagógico, visual, gramática)
+- `/detractor auditoria [target]` - **🆕** Revisión adversarial en 7 dominios (código, pedagógico, visual, gramática, matemático, metacognitivo, testing)
 - `/detractor [pregunta]` - Modo inline para decisiones puntuales
 - `/validar-pedagogico` - Análisis pedagógico basado en evidencias científicas
+
+**Skills de Generación de Contenido:**
+
+- `/skill-retroalimentacion` - **🆕** Genera retroalimentación científica estilo ICFES para sección Solution
 
 **Skills de Soporte:**
 
@@ -274,13 +278,18 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ```
 .claude/
-├── CLAUDE.md              # Memory file principal del proyecto (v3.2)
+├── CLAUDE.md              # Memory file principal del proyecto (v3.2.2)
 ├── detractor-config.yaml  # 🆕 Configuración del skill detractor
-├── rules/                 # Reglas modulares (8 reglas obligatorias)
+├── rules/                 # Reglas modulares (10 reglas obligatorias)
 │   ├── ciclo-validacion.md           # Ciclo de Validación Automática (v4.0 con FASE 2C)
-│   ├── detractor-obligatorio.md      # 🆕 Revisión adversarial obligatoria
+│   ├── detractor-obligatorio.md      # 🆕 Revisión adversarial obligatoria (7 dominios)
 │   ├── ejercicios-metacognitivos.md  # 🆕 Progressive Disclosure obligatorio
+│   ├── graficos-como-opciones.md     # 🆕 Gráficos individuales SCHOICE (sin títulos)
+│   ├── graficador-secuencial.md      # 🆕 Workflow 98% + 3 lenguajes obligatorios
 │   ├── codigo-rmd.md                 # Reglas para código R/Markdown
+│   ├── flujo-b-obligatorio.md        # Graficador Experto activación automática
+│   ├── testing-obligatorio.md        # Testing automático permanente
+│   ├── ortografia-espanol.md         # Diccionario de referencia obligatorio
 │   └── documentacion-verificada.md   # Principio de Documentación Verificada
 ├── settings.json          # Hooks y configuración global
 ├── settings.local.json    # Permisos para skills
@@ -291,11 +300,13 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 │   └── lecciones_aprendidas.schema.json
 ├── skills/                # Skills del workflow automatizado
 │   ├── analizar-icfes/
-│   ├── generar-schoice/
-│   ├── generar-cloze/
+│   ├── generar-schoice/          # v3.0 Metacognitivo
+│   ├── generar-cloze/            # v3.0 Metacognitivo
+│   ├── skill-retroalimentacion/  # 🆕 Generación científica Solution
 │   ├── promover-ejercicio/
 │   ├── corregir-error-imagen/
 │   ├── validar-diversidad/
+│   ├── validar-pedagogico/
 │   ├── validar-icfes/
 │   └── [Graficador Experto v2.0]
 │       ├── analizar-imagen-matematica/
@@ -332,12 +343,14 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 - ✅ Permisos preconfigurados para ejecución sin confirmación
 - ✅ Documentación completa del workflow paso a paso
 - ✅ Validación automática de estructura ICFES
-- ✅ **Graficador Experto v2.0** con estado persistente y métricas cuantitativas
+- ✅ **Graficador Experto v2.0** con estado persistente y métricas cuantitativas (umbral 98%)
 - ✅ Sistema de puntuación 0-100 puntos para comparación visual
 - ✅ Transferencia de conocimiento entre lenguajes (TikZ → Python → R)
 - ✅ Nomenclatura obligatoria con carpetas estructuradas
-- ✅ **🆕 Detractor Obligatorio**: Revisión adversarial en FASE 2C del ciclo de validación
+- ✅ **🆕 Detractor Obligatorio**: Revisión adversarial en 7 dominios (FASE 2C del ciclo)
 - ✅ **🆕 Ejercicios Metacognitivos**: Progressive Disclosure y pool de errores conceptuales
+- ✅ **🆕 Gráficos Como Opciones**: PNG separados, sin títulos, doble aleatorización
+- ✅ **🆕 Skill-Retroalimentacion**: Generación científica de secciones Solution
 
 ---
 
@@ -365,11 +378,29 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 
 ## 🆕 **Novedades Recientes**
 
-### Detractor Obligatorio v1.0 (Febrero 2026)
+### Sistema v3.2.2 - Gráficos y Graficador (Febrero 2026)
 
-- ✅ **Revisión adversarial automática**: Skill-detractor se ejecuta en todas las fases de revisión
+#### 🎨 Gráficos Como Opciones Individuales (Nueva Regla)
+
+- ✅ **Regla obligatoria**: `.claude/rules/graficos-como-opciones.md`
+- ✅ **PNG separados**: Cada opción gráfica es archivo individual (diagrama_a.png, etc.)
+- ✅ **Sin títulos con letras**: Gráficos NO deben tener título "A", "B", etc. (R-exams asigna automáticamente)
+- ✅ **Mezcla interna + exshuffle:TRUE**: Doble capa de aleatorización
+- ✅ **Tracking letra_correcta**: Para mostrar opción correcta en Solution
+- ✅ **PROHIBIDO grid.arrange()**: Nunca mostrar todas las opciones juntas
+
+#### 🔧 Graficador Secuencial v2.0 (Actualizado)
+
+- ✅ **Umbral aumentado**: 95% → **98%** de fidelidad visual
+- ✅ **Iteraciones automáticas**: Sin aprobación intermedia (solo final)
+- ✅ **SIEMPRE 3 lenguajes**: TikZ + Python + R (los tres, obligatorio)
+- ✅ **Usuario SIEMPRE decide**: Claude NO puede elegir versión final
+- ✅ **Regla actualizada**: `.claude/rules/graficador-secuencial.md` v2.0
+
+### Detractor Obligatorio v1.1 (Febrero 2026)
+
+- ✅ **7 dominios de revisión**: código, pedagógico, visual, gramática, **matemático**, **metacognitivo**, **testing**
 - ✅ **FASE 2C añadida**: Nueva fase obligatoria en el ciclo de validación
-- ✅ **4 dominios de revisión**: Código R-exams, pedagógico, visual, gramática
 - ✅ **Fuentes de verdad**: Objeciones respaldadas por documentación oficial (Nivel 1-2)
 - ✅ **Bloqueos automáticos**: Objeciones críticas/altas bloquean promoción
 - ✅ **Configuración personalizable**: `.claude/detractor-config.yaml`
@@ -379,6 +410,7 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 - ✅ **Progressive Disclosure obligatorio**: Todo ejercicio debe ser metacognitivo
 - ✅ **Pool de errores conceptuales**: Con códigos y funciones `calcula()`
 - ✅ **Metadatos cognitivos**: DOK, Bloom, SOLO obligatorios
+- ✅ **Skill-retroalimentacion**: Generación científica de sección Solution
 - ✅ **Antipatrones documentados**: Ejercicios puramente procedimentales PROHIBIDOS
 
 ### Graficador Experto v2.0 (Diciembre 2025)

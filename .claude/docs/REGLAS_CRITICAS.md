@@ -4,16 +4,18 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
-### Las 8 Reglas Fundamentales
+### Las 10 Reglas Fundamentales
 
 1. **Ejercicios metacognitivos** con Progressive Disclosure
 2. **Flujo B obligatorio** cuando hay gráficos
-3. **Proceso secuencial** TikZ→Python→R (no simultáneo)
-4. **5 Coherencias** a verificar en cada validación
-5. **Validación visual iterativa** con inspección REAL
-6. **Ortografía española** con tildes correctas
-7. **Testing automático** permanente con tolerancia cero
-8. **Detractor obligatorio** en todas las fases de revisión 🆕
+3. **Proceso secuencial** TikZ→Python→R (98% fidelidad, usuario decide) 🆕
+4. **Gráficos como opciones individuales** (PNGs separados) 🆕
+5. **5 Coherencias** a verificar en cada validación
+6. **Validación visual iterativa** con inspección REAL
+7. **Ortografía española** con tildes correctas
+8. **Testing automático** permanente con tolerancia cero
+9. **Detractor obligatorio** en todas las fases de revisión
+10. **Skill-retroalimentación** obligatorio para sección Solution 🆕
 
 ---
 
@@ -164,36 +166,51 @@ outputs/[nombre_ejercicio]/
 
 ---
 
-## 3. Proceso Secuencial del Graficador
+## 3. Proceso Secuencial del Graficador (v2.0) 🆕
 
 **Regla detallada**: @.claude/rules/graficador-secuencial.md
+
+### Cambios Importantes v2.0
+
+- **Umbral de fidelidad**: 95% → **98%**
+- **Iteraciones**: Manuales → **AUTOMÁTICAS**
+- **Lenguajes**: SIEMPRE generar **TikZ + Python + R** (los tres)
+- **Decisión final**: Claude NO puede elegir → **USUARIO SIEMPRE DECIDE**
 
 ### Orden OBLIGATORIO
 
 ```
 1. TikZ (dinámico desde R)
-   ↓ Iterar hasta ≥95% similitud + coherencias + aprobación usuario
+   ↓ Iterar AUTOMÁTICAMENTE hasta ≥98% similitud + coherencias
+   ↓ Mostrar resultado (NO pedir aprobación intermedia)
    ↓
 2. Python (vía reticulate)
-   ↓ Iterar hasta ≥95% similitud + coherencias + aprobación usuario
+   ↓ Iterar AUTOMÁTICAMENTE hasta ≥98% similitud + coherencias
+   ↓ Mostrar resultado (NO pedir aprobación intermedia)
    ↓
 3. R (nativo ggplot2)
-   ↓ Iterar hasta ≥95% similitud + coherencias + aprobación usuario
+   ↓ Iterar AUTOMÁTICAMENTE hasta ≥98% similitud + coherencias
+   ↓ Mostrar resultado (NO pedir aprobación intermedia)
    ↓
-4. Selección final por usuario
+4. PRESENTAR LAS 3 OPCIONES AL USUARIO
+   ↓ Tabla comparativa con similitud, ventajas, código
+   ↓ USUARIO SELECCIONA cuál usar
 ```
 
-### PROHIBIDO: Generación Simultánea
+### PROHIBIDO: Omitir Lenguajes o Decidir por el Usuario
 
 ```r
-# ❌ INCORRECTO - NO HACER
-generar_tikz() AND generar_python() AND generar_r()  # Simultáneo
+# ❌ INCORRECTO - Omitir lenguajes
+"Para este gráfico simple, solo generaré ggplot2"
 
-# ✓ CORRECTO - Secuencial con aprobación
-generar_tikz() → aprobar_tikz()
-→ generar_python() → aprobar_python()
-→ generar_r() → aprobar_r()
-→ seleccionar_version()
+# ❌ INCORRECTO - Decidir por el usuario
+"Recomiendo usar R porque tiene mejor similitud" → [genera .Rmd sin preguntar]
+
+# ✓ CORRECTO - Generar todos y preguntar
+generar_tikz_automatico() → mostrar_resultado
+→ generar_python_automatico() → mostrar_resultado
+→ generar_r_automatico() → mostrar_resultado
+→ "Las tres versiones están listas. ¿Cuál prefiere usar?"
 ```
 
 ### Estados del Workflow
@@ -216,7 +233,94 @@ generar_tikz() → aprobar_tikz()
 
 ---
 
-## 4. Las 5 Coherencias (Verificación Obligatoria)
+## 4. Gráficos Como Opciones Individuales (OBLIGATORIO) 🆕
+
+**Regla detallada**: @.claude/rules/graficos-como-opciones.md
+
+### Principio Fundamental
+
+**Cuando las opciones de respuesta de un ejercicio SCHOICE son gráficos, CADA gráfico DEBE ser una imagen PNG separada.**
+
+Esta regla NO tiene excepciones. **NUNCA usar `grid.arrange()` para mostrar todos los gráficos juntos.**
+
+### ⚠️ REGLA CRÍTICA: Sin Títulos con Letras
+
+**Los gráficos de opciones NUNCA deben tener títulos con letras (A, B, C, D).**
+
+R-exams con `exshuffle: TRUE` mezcla las opciones y asigna automáticamente las letras (a), (b), (c), (d).
+
+```r
+# ❌ PROHIBIDO - Título con letra fija
+labs(title = "A")
+labs(title = paste0("Opción ", letra))
+
+# ✅ CORRECTO - Sin título
+labs(title = NULL)
+```
+
+### Patrón Correcto
+
+1. **Mezcla interna + exshuffle:TRUE**:
+```r
+# Mezclar opciones internamente
+opciones_mezcladas <- sample(todas_opciones)
+
+# Identificar posición de respuesta correcta
+indice_correcto <- which(names(opciones_mezcladas) == "correcta")
+
+# Vector de solución para R-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+```
+
+2. **Gráficos con nombres de letra (sin título)**:
+```r
+# Generar y GUARDAR cada gráfico sin título
+crear_y_guardar_grafico <- function(datos, letra, ...) {
+  p <- ggplot(datos, aes(...)) +
+    geom_...() +
+    labs(title = NULL, x = NULL, y = NULL) +  # Sin título
+    theme_minimal()
+
+  # Guardar con nombre de letra
+  nombre_archivo <- paste0("diagrama_", tolower(letra), ".png")
+  ggsave(nombre_archivo, plot = p, width = 4, height = 5, dpi = 150, bg = "white")
+}
+```
+
+3. **Answerlist con imágenes de letras**:
+```markdown
+` ``{r mostrar_opciones, echo=FALSE, results='asis'}
+cat("* ![](diagrama_a.png){width=60%}\n")
+cat("* ![](diagrama_b.png){width=60%}\n")
+cat("* ![](diagrama_c.png){width=60%}\n")
+cat("* ![](diagrama_d.png){width=60%}\n")
+` ``
+```
+
+4. **Meta-information correcta**:
+```yaml
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE  # OBLIGATORIO
+```
+
+### Antipatrones PROHIBIDOS
+
+```r
+# ❌ PROHIBIDO: Títulos con letras
+labs(title = "A")
+
+# ❌ PROHIBIDO: grid.arrange() para mostrar opciones juntas
+grid.arrange(plot_A, plot_B, plot_C, plot_D, ncol = 2)
+
+# ❌ PROHIBIDO: exshuffle: FALSE
+exshuffle: FALSE
+```
+
+---
+
+## 5. Las 5 Coherencias (Verificación Obligatoria)
 
 **Todas deben verificarse ANTES de aprobar cualquier ejercicio.**
 
@@ -279,7 +383,7 @@ generar_tikz() → aprobar_tikz()
 
 ---
 
-## 5. Validación Visual Iterativa (OBLIGATORIA)
+## 6. Validación Visual Iterativa (OBLIGATORIA)
 
 **Regla detallada**: @.claude/rules/ciclo-validacion.md
 
@@ -332,7 +436,7 @@ Read("preview.png")  # Mostrar al usuario
 
 ---
 
-## 6. Ortografía Española (OBLIGATORIA)
+## 7. Ortografía Española (OBLIGATORIA)
 
 **Regla detallada**: @.claude/rules/ortografia-espanol.md
 
@@ -384,7 +488,7 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 
 ---
 
-## 7. Testing Automático (PERMANENTE)
+## 8. Testing Automático (PERMANENTE)
 
 **Regla detallada**: @.claude/rules/testing-obligatorio.md
 **Flujo automático**: @.claude/docs/FLUJO_AUTOMATICO_TESTING.md
@@ -514,7 +618,7 @@ No proceder sin revisión detractor.
 
 ---
 
-## 8. Detractor Obligatorio en Revisiones - OBLIGATORIO 🆕
+## 9. Detractor Obligatorio en Revisiones
 
 **Regla detallada**: @.claude/rules/detractor-obligatorio.md
 
@@ -532,12 +636,15 @@ El detractor actúa como revisor adversarial que confronta decisiones con fuente
 | **FASE 2C** | Después de preview visual | Si veredicto es RECHAZAR |
 | **Pre-promoción** | Antes de `/promover-ejercicio` | Si hay objeciones pendientes |
 
-### Dominios de Revisión
+### Dominios de Revisión (7 dominios) 🆕
 
 1. **Código R-exams**: exshuffle, metadatos, estructura
 2. **Pedagógico**: Progressive Disclosure, metacognición, DOK/Bloom
 3. **Visual**: Coherencia gráfico-texto, etiquetas, escalas
 4. **Gramática**: Tildes, redacción, terminología
+5. **Coherencia matemática**: Fórmulas, cálculos, distractores plausibles 🆕
+6. **ICFES metacognitivo**: Progressive Disclosure, pool errores, DOK ≥ 2 🆕
+7. **Testing**: Cobertura tests, git hooks, CI/CD 🆕
 
 ### Formato de Invocación
 
@@ -589,6 +696,99 @@ FASE 3: Decisión usuario
 
 ---
 
+## 10. Skill-Retroalimentación Obligatorio (PERMANENTE) 🆕
+
+**Skill detallado**: @.claude/skills/skill-retroalimentacion/SKILL.md
+
+### Principio Fundamental
+
+**TODO ejercicio .Rmd DEBE generar su sección Solution usando el skill-retroalimentacion.**
+
+Este skill se ejecuta AUTOMÁTICAMENTE al generar ejercicios, pero también puede invocarse manualmente.
+
+### Fuente Oficial
+
+**ICFES - Guía de Orientación Matemáticas 11° Cuadernillo 2-2023 (pp. 22-51)**
+
+Esta es la fuente de verdad NIVEL 1 para el formato de retroalimentación.
+
+### Estructura Obligatoria de Solution
+
+```markdown
+Solution
+========
+
+### Competencia, Componente, Afirmación y Evidencia
+[Generado automáticamente desde metadatos]
+
+### ¿Qué evalúa esta pregunta?
+[Descripción específica de la capacidad evaluada]
+
+### Justificación de la Respuesta Correcta
+[Pasos matemáticos detallados con fórmulas LaTeX]
+
+$$
+\text{Fórmula correcta}
+$$
+
+### Opciones No Válidas
+**Opción A:** Es posible que los estudiantes que eligen la opción A
+[error conceptual específico]...
+
+**Opción B:** Es posible que los estudiantes que eligen la opción B
+[error conceptual específico]...
+
+[Continúa para CADA distractor]
+
+### Reflexión Metacognitiva
+[Estrategias para evitar errores comunes]
+```
+
+### Patrón ICFES Obligatorio
+
+Para cada distractor, DEBE usarse el patrón:
+
+> "Es posible que los estudiantes que eligen la opción X [verbo] [error conceptual específico]..."
+
+**Ejemplos**:
+- "Es posible que los estudiantes que eligen la opción B **confundan** el porcentaje con la cantidad absoluta..."
+- "Es posible que los estudiantes que eligen la opción C **apliquen incorrectamente** la fórmula del área..."
+- "Es posible que los estudiantes que eligen la opción D **no consideren** el orden de operaciones..."
+
+### Invocación Manual
+
+```bash
+/skill-retroalimentacion [archivo.Rmd]
+```
+
+### Verificación Obligatoria
+
+Antes de aprobar cualquier ejercicio, verificar que la sección Solution incluye:
+
+- [ ] Encabezado diagnóstico (Competencia, Componente, Afirmación, Evidencia)
+- [ ] Descripción de qué evalúa
+- [ ] Justificación matemática completa con LaTeX
+- [ ] Análisis de CADA distractor con patrón ICFES
+- [ ] Reflexión metacognitiva
+
+### PROHIBIDO
+
+```markdown
+# ❌ PROHIBIDO: Solution sin análisis de distractores
+Solution
+========
+La respuesta correcta es 40.
+
+# ❌ PROHIBIDO: Análisis sin patrón ICFES
+**Opción B es incorrecta** porque usa la fórmula equivocada.
+
+# ✅ CORRECTO: Análisis con patrón ICFES
+**Opción B:** Es posible que los estudiantes que eligen la opción B
+confundan la fórmula del área (b × h) con la del perímetro (2b + 2h)...
+```
+
+---
+
 ## 📋 Checklist de Cumplimiento
 
 Antes de finalizar CUALQUIER ejercicio:
@@ -613,8 +813,26 @@ Antes de finalizar CUALQUIER ejercicio:
 
 ---
 
-**Versión**: 1.2
+**Versión**: 1.3
 **Fecha**: 2026-02-07
-**Cambio v1.2**: Añadida regla #8 Detractor Obligatorio en fases de revisión
-**Cambio v1.1**: Añadida regla #1 Ejercicios Metacognitivos con Progressive Disclosure
-**Módulo de**: @.claude/CLAUDE.md (v3.2.0)
+**Módulo de**: @.claude/CLAUDE.md (v3.2.2)
+
+### Cambios v1.3 (2026-02-07)
+
+- **10 reglas fundamentales** (era 8, ahora 10)
+- **Regla #3 actualizada**: Graficador Secuencial v2.0 (98% fidelidad, iteraciones automáticas, usuario decide)
+- **Regla #4 nueva**: Gráficos como opciones individuales (PNGs separados, sin títulos con letras)
+- **Regla #9 actualizada**: Detractor ahora tiene 7 dominios (era 4)
+- **Regla #10 nueva**: Skill-retroalimentación obligatorio para sección Solution
+- Referencias cruzadas actualizadas en toda la documentación
+
+### Cambios v1.2 (2026-02-07)
+
+- Añadida regla #8 Detractor Obligatorio en fases de revisión
+- Integración de FASE 2C en ciclo de validación
+
+### Cambios v1.1 (2026-02-06)
+
+- Añadida regla #1 Ejercicios Metacognitivos con Progressive Disclosure
+- Pool de errores conceptuales obligatorio
+- Metadatos cognitivos (DOK, Bloom, SOLO)
