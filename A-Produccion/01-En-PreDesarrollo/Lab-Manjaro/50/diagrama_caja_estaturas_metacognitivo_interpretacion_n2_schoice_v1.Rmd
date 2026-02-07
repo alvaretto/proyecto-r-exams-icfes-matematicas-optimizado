@@ -388,22 +388,10 @@ generar_datos <- function() {
   # ============================================================
   # CONSTRUIR TABLA DE DATOS PARA EL ENUNCIADO
   # ============================================================
-  # Crear etiquetas de cuartiles
-  etiquetas_cuartil <- c("Mín", "", "Q1", "", "", "Q2", "", "", "Q3", "", "Máx")
-
-  # Crear columna de valores con etiquetas incluidas
-  valores_con_etiqueta <- sapply(1:11, function(i) {
-    if (etiquetas_cuartil[i] != "") {
-      paste0(datos[i], " (", etiquetas_cuartil[i], ")")
-    } else {
-      as.character(datos[i])
-    }
-  })
-
   tabla_datos <- data.frame(
     Estudiante = 1:11,
-    Valor = valores_con_etiqueta,
-    stringsAsFactors = FALSE
+    Valor = datos,
+    Cuartil = c("Mín", "", "Q1", "", "", "Q2", "", "", "Q3", "", "Máx")
   )
   names(tabla_datos)[2] <- paste0(ctx$tipo_dato, " (", ctx$unidad, ")")
 
