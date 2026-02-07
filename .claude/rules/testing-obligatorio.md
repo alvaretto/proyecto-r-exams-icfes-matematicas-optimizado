@@ -99,254 +99,133 @@ SI PASA → PERMITIR push
 
 ## 🛠️ Implementación de Hooks
 
-### 1. Hook PreToolUse - Edit/Write
+### Estrategia: Git Hooks Nativos + Instrucciones Claude
 
-**Ubicación:** `.claude/settings.json`
+Se usan **git hooks nativos** (en `.git/hooks/`) en lugar de hooks de Claude Code para evitar problemas de parsing y timeouts.
 
-```json
-{
-  "hooks": {
-    "preToolUse": {
-      "edit": {
-        "file": ".claude/hooks/pre-edit-testing.sh",
-        "message": "Verificando tests antes de editar..."
-      },
-      "write": {
-        "file": ".claude/hooks/pre-write-testing.sh",
-        "message": "Verificando tests antes de crear archivo..."
-      }
+### 1. Git Pre-Commit Hook (Nativo)
+
+**Ubicación:** `.git/hooks/pre-commit`
+
+```bash
+#!/bin/bash
+# Git Pre-Commit Hook - Testing Obligatorio
+# Ejecuta validaciones antes de permitir commit:
+# 1. Ortografía española en archivos .Rmd
+# 2. Tests de regresión (opcional, activar con PRECOMMIT_TESTS=1)
+
+# Validación ortográfica obligatoria
+RMD_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.Rmd$' || true)
+if [ -n "$RMD_FILES" ]; then
+    for f in $RMD_FILES; do
+        Rscript .claude/scripts/corregir_ortografia_espanol.R "$f" 2>/dev/null | grep -q "ERRORES" && {
+            echo "❌ COMMIT RECHAZADO: Errores ortográficos en $f"
+            exit 1
+        }
+    done
+fi
+
+# Tests opcionales (activar con PRECOMMIT_TESTS=1)
+if [ "${PRECOMMIT_TESTS:-0}" = "1" ]; then
+    Rscript tests/run_all_tests.R || exit 1
+fi
+
+exit 0
+```
+
+### 2. Git Pre-Push Hook (Nativo)
+
+**Ubicación:** `.git/hooks/pre-push`
+
+```bash
+#!/bin/bash
+# Git Pre-Push Hook - Validación Final
+# Ejecuta suite completa de tests antes de push
+
+# Tests obligatorios (desactivar con PREPUSH_SKIP_TESTS=1)
+if [ "${PREPUSH_SKIP_TESTS:-0}" != "1" ]; then
+    Rscript tests/run_all_tests.R || {
+        echo "❌ PUSH RECHAZADO: Tests fallaron"
+        exit 1
     }
-  }
-}
-```
-
-**Script:** `.claude/hooks/pre-edit-testing.sh`
-
-```bash
-#!/bin/bash
-# Pre-edit testing hook
-# Ejecuta tests relevantes antes de modificar archivos críticos
-
-FILE_PATH="$1"
-
-# Detectar si es componente crítico
-if [[ "$FILE_PATH" == *.claude/scripts/* ]] || \
-   [[ "$FILE_PATH" == *.claude/hooks/* ]] || \
-   [[ "$FILE_PATH" == *.claude/rules/* ]] || \
-   [[ "$FILE_PATH" == *tests/* ]]; then
-
-    echo "⚠️ COMPONENTE CRÍTICO DETECTADO: $FILE_PATH"
-    echo "Ejecutando tests de validación..."
-
-    # Ejecutar tests relacionados
-    if [[ "$FILE_PATH" == *validar_coherencia_matematica.R ]]; then
-        Rscript -e "library(testthat); test_file('tests/testthat/test_validacion_matematica.R')"
-    elif [[ "$FILE_PATH" == *corregir_ortografia_espanol.R ]]; then
-        Rscript -e "library(testthat); test_file('tests/testthat/test_ortografia_espanol.R')"
-    else
-        # Tests de regresión general
-        Rscript -e "library(testthat); test_file('tests/testthat/test_regression_suite.R')"
-    fi
-
-    if [ $? -ne 0 ]; then
-        echo "❌ TESTS FALLARON - No se puede editar archivo crítico"
-        exit 1
-    fi
-
-    echo "✅ Tests pasaron - Procediendo con edición"
 fi
 
 exit 0
 ```
 
-### 2. Hook PostToolUse - Edit/Write
+### 3. Instrucciones para Claude (Regla Activa)
 
-**Script:** `.claude/hooks/post-edit-testing.sh`
+Claude DEBE seguir estas instrucciones antes de git commit/push:
 
-```bash
-#!/bin/bash
-# Post-edit testing hook
-# Ejecuta tests después de modificar archivos para validar cambios
+```
+ANTES DE GIT COMMIT:
+1. Si hay archivos .Rmd modificados → Verificar ortografía
+2. Si hay cambios en .claude/ o tests/ → Ejecutar tests de regresión
+3. Usar mensaje de commit descriptivo con Co-Authored-By
 
-FILE_PATH="$1"
-
-echo "🔍 Validando cambios en: $FILE_PATH"
-
-# Detectar tipo de archivo modificado
-if [[ "$FILE_PATH" == *.R ]]; then
-    echo "Archivo R detectado - Ejecutando tests de validación matemática..."
-    Rscript -e "library(testthat); test_file('tests/testthat/test_validacion_matematica.R')"
-
-elif [[ "$FILE_PATH" == *.Rmd ]]; then
-    echo "Archivo .Rmd detectado - Ejecutando tests de renderizado..."
-    Rscript -e "library(testthat); test_file('tests/testthat/test_renderizado_4_formatos.R')"
-
-elif [[ "$FILE_PATH" == *test_*.R ]]; then
-    echo "Test modificado - Ejecutando suite completa..."
-    Rscript tests/run_all_tests.R
-
-elif [[ "$FILE_PATH" == *.claude/* ]]; then
-    echo "Configuración Claude modificada - Ejecutando tests de regresión..."
-    Rscript -e "library(testthat); test_file('tests/testthat/test_regression_suite.R')"
-fi
-
-if [ $? -ne 0 ]; then
-    echo "❌ TESTS FALLARON DESPUÉS DEL CAMBIO"
-    echo "⚠️ ACCIÓN REQUERIDA: Corregir el código o revertir cambios"
-    exit 1
-fi
-
-echo "✅ Todos los tests pasaron después del cambio"
-exit 0
+ANTES DE GIT PUSH:
+1. Ejecutar: Rscript tests/run_all_tests.R
+2. Solo proceder si todos los tests pasan
+3. Verificar que no hay cambios sin commit
 ```
 
-### 3. Hook PreToolUse - Bash (git commit)
-
-**Script:** `.claude/hooks/pre-commit-testing.sh`
+### Comandos de Control
 
 ```bash
-#!/bin/bash
-# Pre-commit testing hook
-# Ejecuta suite completa antes de permitir commit
+# Activar tests en pre-commit (por sesión)
+PRECOMMIT_TESTS=1 git commit -m "mensaje"
 
-COMMAND="$1"
+# Activar tests en pre-commit (permanente)
+git config hooks.precommit-tests true
 
-# Detectar si es git commit
-if [[ "$COMMAND" == *"git commit"* ]]; then
-    echo "🔒 BLOQUEO PRE-COMMIT ACTIVADO"
-    echo "Ejecutando suite completa de tests..."
+# Desactivar tests en pre-push (por sesión)
+PREPUSH_SKIP_TESTS=1 git push
 
-    # Ejecutar suite completa
-    Rscript tests/run_all_tests.R
-
-    if [ $? -ne 0 ]; then
-        echo ""
-        echo "❌ =============================================="
-        echo "❌ COMMIT RECHAZADO - TESTS FALLARON"
-        echo "❌ =============================================="
-        echo ""
-        echo "Acciones requeridas:"
-        echo "1. Revisar errores de tests arriba"
-        echo "2. Corregir el código que causó la falla"
-        echo "3. Volver a ejecutar: Rscript tests/run_all_tests.R"
-        echo "4. Solo entonces hacer commit"
-        echo ""
-        echo "⚠️ PROHIBIDO usar: git commit --no-verify"
-        echo ""
-        exit 1
-    fi
-
-    echo ""
-    echo "✅ =============================================="
-    echo "✅ TESTS PASARON - COMMIT PERMITIDO"
-    echo "✅ =============================================="
-    echo ""
-fi
-
-exit 0
-```
-
-### 4. Hook PreToolUse - Bash (git push)
-
-**Script:** `.claude/hooks/pre-push-testing.sh`
-
-```bash
-#!/bin/bash
-# Pre-push testing hook
-# Validación final antes de push a remoto
-
-COMMAND="$1"
-
-# Detectar si es git push
-if [[ "$COMMAND" == *"git push"* ]]; then
-    echo "🔒 BLOQUEO PRE-PUSH ACTIVADO"
-    echo "Ejecutando validación final..."
-
-    # 1. Verificar que no hay cambios sin commit
-    if ! git diff-index --quiet HEAD --; then
-        echo "❌ PUSH RECHAZADO - Hay cambios sin commit"
-        exit 1
-    fi
-
-    # 2. Ejecutar suite completa
-    echo "Ejecutando suite completa de tests..."
-    Rscript tests/run_all_tests.R
-
-    if [ $? -ne 0 ]; then
-        echo ""
-        echo "❌ =============================================="
-        echo "❌ PUSH RECHAZADO - TESTS FALLARON"
-        echo "❌ =============================================="
-        echo ""
-        exit 1
-    fi
-
-    # 3. Verificar que CI/CD está configurado
-    if [ ! -f ".github/workflows/ci-testing.yml" ]; then
-        echo "⚠️ ADVERTENCIA: CI/CD no configurado"
-        echo "Se recomienda tener CI/CD para validación automática"
-    fi
-
-    echo ""
-    echo "✅ =============================================="
-    echo "✅ VALIDACIÓN FINAL COMPLETA - PUSH PERMITIDO"
-    echo "✅ =============================================="
-    echo ""
-fi
-
-exit 0
+# Desactivar tests en pre-push (permanente)
+git config hooks.prepush-tests false
 ```
 
 ---
 
-## 📋 Configuración en settings.json
+## 📋 Configuración Claude Code
 
 **Archivo:** `.claude/settings.json`
+
+Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
 
 ```json
 {
   "hooks": {
-    "preToolUse": {
-      "edit": {
-        "file": ".claude/hooks/pre-edit-testing.sh",
-        "message": "🔍 Verificando tests antes de editar..."
-      },
-      "write": {
-        "file": ".claude/hooks/pre-write-testing.sh",
-        "message": "🔍 Verificando tests antes de crear archivo..."
-      },
-      "bash": {
-        "file": ".claude/hooks/pre-bash-testing.sh",
-        "message": "🔍 Verificando comando bash..."
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'TILDES: más ángulo función gráfica dispersión...'",
+            "statusMessage": "Recordatorio de tildes"
+          }
+        ]
       }
-    },
-    "postToolUse": {
-      "edit": {
-        "file": ".claude/hooks/post-edit-testing.sh",
-        "message": "✅ Validando cambios..."
-      },
-      "write": {
-        "file": ".claude/hooks/post-write-testing.sh",
-        "message": "✅ Validando archivo creado..."
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-exams2-validation.sh",
+            "timeout": 120,
+            "statusMessage": "Validando matemática + preview visual..."
+          }
+        ]
       }
-    }
-  },
-  "testing": {
-    "enabled": true,
-    "runOnChange": true,
-    "blockOnFailure": true,
-    "coverageThreshold": 100,
-    "suites": {
-      "validacion_matematica": "tests/testthat/test_validacion_matematica.R",
-      "ortografia": "tests/testthat/test_ortografia_espanol.R",
-      "renderizado": "tests/testthat/test_renderizado_4_formatos.R",
-      "aleatorization": "tests/testthat/test_aleatorization_diversity.R",
-      "flujo_b": "tests/testthat/test_flujo_b_graficador.R",
-      "regression": "tests/testthat/test_regression_suite.R"
-    }
+    ]
   }
 }
 ```
+
+**Nota:** Los tests pre-commit/push se manejan via git hooks nativos, no via Claude Code hooks.
 
 ---
 
