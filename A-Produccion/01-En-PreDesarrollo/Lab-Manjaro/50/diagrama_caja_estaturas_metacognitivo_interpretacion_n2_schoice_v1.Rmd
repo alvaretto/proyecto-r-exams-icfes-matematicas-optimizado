@@ -1,0 +1,720 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "graphicx"
+      - "float"
+      - "amsmath"
+  word_document: default
+  html_document: default
+icfes:
+  competencia: interpretacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: medidas_posicion
+  contexto: escolar
+  eje_axial: datos_azar
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(ggplot2)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+generar_datos <- function() {
+
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS (8 contextos)
+  # ============================================================
+  contextos <- list(
+    list(
+      rol = "profesora de educación física",
+      protagonista_pool = c("Mariana", "Claudia", "Patricia", "Lorena"),
+      contexto_dato = "las estaturas de los estudiantes de grado once",
+      unidad = "cm",
+      tipo_dato = "estaturas",
+      rango_min = 150,
+      rango_max = 185,
+      n_datos = 11,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "entrenador de baloncesto",
+      protagonista_pool = c("Carlos", "Andrés", "Miguel", "Roberto"),
+      contexto_dato = "las estaturas del equipo juvenil",
+      unidad = "cm",
+      tipo_dato = "estaturas",
+      rango_min = 165,
+      rango_max = 195,
+      n_datos = 11,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "médico escolar",
+      protagonista_pool = c("Dr. Ramírez", "Dra. González", "Dr. Pérez"),
+      contexto_dato = "los pesos de los estudiantes de sexto grado",
+      unidad = "kg",
+      tipo_dato = "pesos",
+      rango_min = 35,
+      rango_max = 55,
+      n_datos = 11,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "nutricionista del colegio",
+      protagonista_pool = c("Diana", "Sofía", "Valentina", "Camila"),
+      contexto_dato = "los índices de masa corporal de los participantes",
+      unidad = "kg/m²",
+      tipo_dato = "IMC",
+      rango_min = 18,
+      rango_max = 32,
+      n_datos = 11,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "coordinador académico",
+      protagonista_pool = c("Fernando", "Gustavo", "Héctor", "Iván"),
+      contexto_dato = "los puntajes del simulacro ICFES",
+      unidad = "puntos",
+      tipo_dato = "puntajes",
+      rango_min = 200,
+      rango_max = 400,
+      n_datos = 11,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "directora de deportes",
+      protagonista_pool = c("Ángela", "Beatriz", "Carolina", "Daniela"),
+      contexto_dato = "las distancias alcanzadas en lanzamiento de bala",
+      unidad = "metros",
+      tipo_dato = "distancias",
+      rango_min = 8,
+      rango_max = 25,
+      n_datos = 11,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "profesor de matemáticas",
+      protagonista_pool = c("Jorge", "Luis", "Manuel", "Nicolás"),
+      contexto_dato = "las calificaciones del examen final",
+      unidad = "puntos",
+      tipo_dato = "calificaciones",
+      rango_min = 30,
+      rango_max = 100,
+      n_datos = 11,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "bibliotecaria",
+      protagonista_pool = c("Elena", "Fabiola", "Gloria", "Helena"),
+      contexto_dato = "el número de libros prestados por estudiante",
+      unidad = "libros",
+      tipo_dato = "libros",
+      rango_min = 5,
+      rango_max = 25,
+      n_datos = 11,
+      genero_prot = "f"
+    )
+  )
+
+  # ============================================================
+  # POOL DE ERRORES CONCEPTUALES PARA DIAGRAMAS DE CAJA
+  # ============================================================
+  errores_conceptuales <- list(
+    list(
+      codigo = "EST-BOX-01",
+      nombre = "Confusión posición/valor",
+      descripcion_corta = "Usó las posiciones de los datos (1, 2, 3...) en lugar de los valores reales",
+      descripcion_larga = "Confundió la posición ordinal de los datos (1, 2, 3, ..., n) con los valores numéricos reales. Este error indica que no distingue entre el índice de un dato y su magnitud.",
+      causa_raiz = "No diferencia entre la posición de un dato en la serie ordenada y su valor numérico",
+      genera_grafico = function(datos, ...) {
+        # Retorna posiciones en lugar de valores
+        return(list(
+          min = 1,
+          q1 = 3,
+          mediana = 6,
+          q3 = 9,
+          max = 11
+        ))
+      }
+    ),
+    list(
+      codigo = "EST-BOX-02",
+      nombre = "Q1 mal calculado",
+      descripcion_corta = "Ubicó Q1 en la posición del mínimo o cerca de él",
+      descripcion_larga = "Calculó incorrectamente el primer cuartil (Q1), ubicándolo muy cerca del valor mínimo. Este error indica que no comprende que Q1 marca el 25% inferior de los datos.",
+      causa_raiz = "No comprende que Q1 separa el 25% inferior del 75% superior de los datos",
+      genera_grafico = function(datos, cuartiles_correctos, ...) {
+        # Q1 muy bajo (cerca del mínimo)
+        return(list(
+          min = cuartiles_correctos$min,
+          q1 = cuartiles_correctos$min + 2,  # Muy cerca del mínimo
+          mediana = cuartiles_correctos$mediana,
+          q3 = cuartiles_correctos$q3,
+          max = cuartiles_correctos$max
+        ))
+      }
+    ),
+    list(
+      codigo = "EST-BOX-03",
+      nombre = "Cuartiles intercambiados",
+      descripcion_corta = "Intercambió las posiciones de Q1 y Q3 en el diagrama",
+      descripcion_larga = "Ubicó el primer cuartil (Q1) donde debería estar el tercer cuartil (Q3) y viceversa. Este error indica confusión sobre qué porcentaje de datos queda debajo de cada cuartil.",
+      causa_raiz = "Confunde el significado de Q1 (25%) y Q3 (75%) en la distribución",
+      genera_grafico = function(datos, cuartiles_correctos, ...) {
+        # Intercambia Q1 y Q3
+        return(list(
+          min = cuartiles_correctos$min,
+          q1 = cuartiles_correctos$q3,  # Q3 en lugar de Q1
+          mediana = cuartiles_correctos$mediana,
+          q3 = cuartiles_correctos$q1,  # Q1 en lugar de Q3
+          max = cuartiles_correctos$max
+        ))
+      }
+    ),
+    list(
+      codigo = "EST-BOX-04",
+      nombre = "Q3 muy alto",
+      descripcion_corta = "Ubicó Q3 muy cerca del valor máximo",
+      descripcion_larga = "Calculó incorrectamente el tercer cuartil (Q3), ubicándolo muy cerca del valor máximo. Este error indica que no comprende que Q3 marca el 75% inferior de los datos, dejando solo 25% arriba.",
+      causa_raiz = "No comprende que Q3 separa el 75% inferior del 25% superior de los datos",
+      genera_grafico = function(datos, cuartiles_correctos, ...) {
+        # Q3 muy alto (cerca del máximo)
+        return(list(
+          min = cuartiles_correctos$min,
+          q1 = cuartiles_correctos$q1,
+          mediana = cuartiles_correctos$mediana,
+          q3 = cuartiles_correctos$max - 2,  # Muy cerca del máximo
+          max = cuartiles_correctos$max
+        ))
+      }
+    ),
+    list(
+      codigo = "EST-BOX-05",
+      nombre = "Mediana desplazada hacia Q1",
+      descripcion_corta = "Ubicó la mediana más cerca de Q1 que del centro",
+      descripcion_larga = "Calculó incorrectamente la mediana, ubicándola más cerca del primer cuartil en lugar del valor central. Este error indica confusión sobre la posición del dato central.",
+      causa_raiz = "No comprende que la mediana es el dato de la posición central (n+1)/2",
+      genera_grafico = function(datos, cuartiles_correctos, ...) {
+        # Mediana desplazada hacia Q1
+        return(list(
+          min = cuartiles_correctos$min,
+          q1 = cuartiles_correctos$q1,
+          mediana = cuartiles_correctos$q1 + 2,  # Muy cerca de Q1
+          q3 = cuartiles_correctos$q3,
+          max = cuartiles_correctos$max
+        ))
+      }
+    ),
+    list(
+      codigo = "EST-BOX-06",
+      nombre = "Mediana desplazada hacia Q3",
+      descripcion_corta = "Ubicó la mediana más cerca de Q3 que del centro",
+      descripcion_larga = "Calculó incorrectamente la mediana, ubicándola más cerca del tercer cuartil en lugar del valor central. Este error indica confusión sobre la posición del dato central.",
+      causa_raiz = "No comprende que la mediana es el dato de la posición central (n+1)/2",
+      genera_grafico = function(datos, cuartiles_correctos, ...) {
+        # Mediana desplazada hacia Q3
+        return(list(
+          min = cuartiles_correctos$min,
+          q1 = cuartiles_correctos$q1,
+          mediana = cuartiles_correctos$q3 - 2,  # Muy cerca de Q3
+          q3 = cuartiles_correctos$q3,
+          max = cuartiles_correctos$max
+        ))
+      }
+    )
+  )
+
+  # ============================================================
+  # POOL DE REFLEXIONES METACOGNITIVAS
+  # ============================================================
+  reflexiones_metacognitivas <- list(
+    "Identificar errores en la construcción de diagramas de caja nos ayuda a comprender mejor las medidas de posición.",
+    "Los cuartiles dividen los datos ordenados en cuatro partes iguales: Q1 (25%), Q2 o mediana (50%), Q3 (75%).",
+    "Un error frecuente es confundir la posición del dato con su valor. La posición indica orden, el valor indica magnitud.",
+    "Para verificar un diagrama de caja, siempre debemos confirmar que Min menor o igual Q1 menor o igual Q2 menor o igual Q3 menor o igual Max.",
+    "La caja del diagrama contiene el 50% central de los datos, entre Q1 y Q3."
+  )
+
+  # ============================================================
+  # SELECCIÓN Y GENERACIÓN DE DATOS
+  # ============================================================
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  protagonista <- sample(ctx$protagonista_pool, 1)
+
+  # Generar 11 datos ordenados con restricciones
+  datos_validos <- FALSE
+  intentos <- 0
+  max_intentos <- 1000
+
+  while(!datos_validos && intentos < max_intentos) {
+    intentos <- intentos + 1
+
+    # Generar datos aleatorios
+    datos <- sort(sample(ctx$rango_min:ctx$rango_max, ctx$n_datos, replace = FALSE))
+
+    # Calcular cuartiles correctos (para n=11)
+    # Q1 = dato en posición 3, Q2 = dato en posición 6, Q3 = dato en posición 9
+    cuartiles_correctos <- list(
+      min = datos[1],
+      q1 = datos[3],
+      mediana = datos[6],
+      q3 = datos[9],
+      max = datos[11]
+    )
+
+    # Verificar que los cuartiles sean distintos
+    valores_unicos <- length(unique(c(
+      cuartiles_correctos$min,
+      cuartiles_correctos$q1,
+      cuartiles_correctos$mediana,
+      cuartiles_correctos$q3,
+      cuartiles_correctos$max
+    )))
+
+    if(valores_unicos >= 4 &&
+       cuartiles_correctos$q1 > cuartiles_correctos$min + 3 &&
+       cuartiles_correctos$q3 < cuartiles_correctos$max - 3) {
+      datos_validos <- TRUE
+    }
+  }
+
+  if(!datos_validos) {
+    stop("No se pudieron generar datos válidos después de ", max_intentos, " intentos")
+  }
+
+  # ============================================================
+  # SELECCIONAR ERRORES Y GENERAR GRÁFICOS ERRÓNEOS
+  # ============================================================
+
+  # IMPORTANTE: Excluir EST-BOX-01 (índice 1) porque usa posiciones (1-11)
+  # en lugar de valores reales, lo que hace el gráfico ilegible en escala compartida.
+  # Usar errores 2, 3, 4, 5, 6 que mantienen valores en el mismo rango.
+  errores_validos_para_grafico <- c(2, 3, 4, 5, 6)
+
+  # Seleccionar 3 errores aleatorios diferentes para los distractores
+  errores_seleccionados_idx <- sample(errores_validos_para_grafico, 3)
+
+  # Generar cuartiles para cada distractor
+  error1 <- errores_conceptuales[[errores_seleccionados_idx[1]]]
+  error2 <- errores_conceptuales[[errores_seleccionados_idx[2]]]
+  error3 <- errores_conceptuales[[errores_seleccionados_idx[3]]]
+
+  cuartiles_error1 <- error1$genera_grafico(datos, cuartiles_correctos)
+  cuartiles_error2 <- error2$genera_grafico(datos, cuartiles_correctos)
+  cuartiles_error3 <- error3$genera_grafico(datos, cuartiles_correctos)
+
+  # Verificar que los 4 gráficos sean visualmente distintos
+  todos_cuartiles <- list(cuartiles_correctos, cuartiles_error1, cuartiles_error2, cuartiles_error3)
+  hashes <- sapply(todos_cuartiles, function(c) {
+    paste(c$min, c$q1, c$mediana, c$q3, c$max, sep = "-")
+  })
+
+  # Si hay duplicados, regenerar (máximo 10 intentos)
+  intentos_errores <- 0
+  while(length(unique(hashes)) < 4 && intentos_errores < 10) {
+    intentos_errores <- intentos_errores + 1
+    errores_seleccionados_idx <- sample(errores_validos_para_grafico, 3)
+    error1 <- errores_conceptuales[[errores_seleccionados_idx[1]]]
+    error2 <- errores_conceptuales[[errores_seleccionados_idx[2]]]
+    error3 <- errores_conceptuales[[errores_seleccionados_idx[3]]]
+    cuartiles_error1 <- error1$genera_grafico(datos, cuartiles_correctos)
+    cuartiles_error2 <- error2$genera_grafico(datos, cuartiles_correctos)
+    cuartiles_error3 <- error3$genera_grafico(datos, cuartiles_correctos)
+    todos_cuartiles <- list(cuartiles_correctos, cuartiles_error1, cuartiles_error2, cuartiles_error3)
+    hashes <- sapply(todos_cuartiles, function(c) {
+      paste(c$min, c$q1, c$mediana, c$q3, c$max, sep = "-")
+    })
+  }
+
+  # Usar el primer error seleccionado como "principal" para la solución
+  error_seleccionado <- error1
+  cuartiles_erroneos <- cuartiles_error1
+
+  # ============================================================
+  # CREAR OPCIONES Y MEZCLAR INTERNAMENTE
+  # Patrón del ejemplo funcional: mezcla interna + exshuffle:TRUE
+  # ============================================================
+  todas_opciones <- list(
+    correcta = cuartiles_correctos,
+    error1 = cuartiles_error1,
+    error2 = cuartiles_error2,
+    error3 = cuartiles_error3
+  )
+
+  # Mezclar internamente
+  opciones_mezcladas <- sample(todas_opciones)
+
+  # Identificar la posición de la respuesta correcta después de mezclar (1-4)
+  indice_correcto <- which(names(opciones_mezcladas) == "correcta")
+
+  # Crear vector solución para r-exams basado en la posición
+  sol <- rep(0, 4)
+  sol[indice_correcto] <- 1
+
+  # Asignar letras según POSICIÓN (con exshuffle:FALSE, posición = letra)
+  # Posición 1 = a, Posición 2 = b, Posición 3 = c, Posición 4 = d
+  letras_posicion <- c("a", "b", "c", "d")
+  letra_correcta <- letras_posicion[indice_correcto]
+
+  # Asignar nombres A, B, C, D para generar las imágenes
+  letras <- c("A", "B", "C", "D")
+  names(opciones_mezcladas) <- letras
+  opciones_graficos <- opciones_mezcladas
+
+  # ============================================================
+  # CONSTRUIR TABLA DE DATOS PARA EL ENUNCIADO
+  # ============================================================
+  tabla_datos <- data.frame(
+    Estudiante = 1:11,
+    Valor = datos,
+    Cuartil = c("Mín", "", "Q1", "", "", "Q2", "", "", "Q3", "", "Máx")
+  )
+  names(tabla_datos)[2] <- paste0(ctx$tipo_dato, " (", ctx$unidad, ")")
+
+  # ============================================================
+  # RETORNAR DATOS COMPLETOS
+  # ============================================================
+  return(list(
+    ctx = ctx,
+    protagonista = protagonista,
+    datos = datos,
+    tabla_datos = tabla_datos,
+    cuartiles_correctos = cuartiles_correctos,
+    opciones_graficos = opciones_graficos,
+    error_seleccionado = error_seleccionado,
+    cuartiles_erroneos = cuartiles_erroneos,
+    sol = sol,
+    letra_correcta = letra_correcta,
+    reflexion = reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+  ))
+}
+
+# Ejecutar generación
+datos <- generar_datos()
+
+# Extraer variables para uso en el documento
+ctx <- datos$ctx
+protagonista <- datos$protagonista
+tabla_datos <- datos$tabla_datos
+cuartiles_correctos <- datos$cuartiles_correctos
+opciones_graficos <- datos$opciones_graficos
+error_seleccionado <- datos$error_seleccionado
+sol <- datos$sol
+letra_correcta <- datos$letra_correcta
+reflexion <- datos$reflexion
+datos_numericos <- datos$datos
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide", eval=FALSE}
+# Test de diversidad desactivado durante desarrollo
+# Activar con eval=TRUE para validación final
+options(OutDec = ".")
+
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for (i in 1:300) {
+    datos_test <- generar_datos()
+    hash_datos <- digest::digest(list(
+      contexto = datos_test$ctx$rol,
+      protagonista = datos_test$protagonista,
+      datos = datos_test$datos,
+      error_codigo = datos_test$error_seleccionado$codigo,
+      posicion_correcta = datos_test$posicion_correcta
+    ))
+    versiones[[i]] <- hash_datos
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 200,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 200."))
+})
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide", eval=FALSE}
+# Validaciones desactivadas durante desarrollo
+# Activar con eval=TRUE para validación final
+options(OutDec = ".")
+
+test_that("Cuartiles son consistentes", {
+  expect_true(cuartiles_correctos$min < cuartiles_correctos$q1)
+  expect_true(cuartiles_correctos$q1 < cuartiles_correctos$mediana)
+  expect_true(cuartiles_correctos$mediana < cuartiles_correctos$q3)
+  expect_true(cuartiles_correctos$q3 < cuartiles_correctos$max)
+})
+
+test_that("Exactamente una opción correcta", {
+  expect_equal(sum(sol), 1)
+  expect_equal(length(sol), 4)
+})
+
+test_that("Gráfico correcto tiene cuartiles válidos", {
+  grafico_correcto <- opciones_graficos[[letra_correcta]]
+  expect_equal(grafico_correcto$min, cuartiles_correctos$min)
+  expect_equal(grafico_correcto$q1, cuartiles_correctos$q1)
+  expect_equal(grafico_correcto$mediana, cuartiles_correctos$mediana)
+  expect_equal(grafico_correcto$q3, cuartiles_correctos$q3)
+  expect_equal(grafico_correcto$max, cuartiles_correctos$max)
+})
+```
+
+```{r generar_graficos, echo=FALSE, results="hide", fig.show="hide"}
+options(OutDec = ".")
+
+# Función para crear y GUARDAR un boxplot como imagen individual
+# Estilo ICFES: escala izquierda, etiquetas derecha con líneas atenuadas (R v3 aprobado)
+# SIN TÍTULO - R-exams con exshuffle:TRUE asigna las letras (a), (b), etc.
+crear_y_guardar_boxplot <- function(cuartiles, letra, y_min, y_max, unidad) {
+  df <- data.frame(
+    ymin = cuartiles$min,
+    lower = cuartiles$q1,
+    middle = cuartiles$mediana,
+    upper = cuartiles$q3,
+    ymax = cuartiles$max,
+    x = 1
+  )
+
+  # Color atenuado para líneas de conexión (aprobado en R v3)
+  linea_color <- "gray60"
+
+  p <- ggplot(df, aes(x = x)) +
+    # Boxplot manual
+    geom_boxplot(
+      aes(ymin = ymin, lower = lower, middle = middle, upper = upper, ymax = ymax),
+      stat = "identity",
+      width = 0.45,
+      fill = "white",
+      color = "black",
+      linewidth = 0.5
+    ) +
+    # Líneas de conexión hacia etiquetas (ATENUADAS - gris claro)
+    annotate("segment", x = 1.225, xend = 1.7, y = cuartiles$min, yend = cuartiles$min,
+             linewidth = 0.2, color = linea_color) +
+    annotate("segment", x = 1.225, xend = 1.7, y = cuartiles$q1, yend = cuartiles$q1,
+             linewidth = 0.2, color = linea_color) +
+    annotate("segment", x = 1.225, xend = 1.7, y = cuartiles$mediana, yend = cuartiles$mediana,
+             linewidth = 0.2, color = linea_color) +
+    annotate("segment", x = 1.225, xend = 1.7, y = cuartiles$q3, yend = cuartiles$q3,
+             linewidth = 0.2, color = linea_color) +
+    annotate("segment", x = 1.225, xend = 1.7, y = cuartiles$max, yend = cuartiles$max,
+             linewidth = 0.2, color = linea_color) +
+    # Etiquetas a la derecha
+    annotate("text", x = 1.72, y = cuartiles$min, label = "Mín.", hjust = 0, size = 2.8) +
+    annotate("text", x = 1.72, y = cuartiles$q1, label = "Q1", hjust = 0, size = 2.8) +
+    annotate("text", x = 1.72, y = cuartiles$mediana, label = "Q2", hjust = 0, size = 2.8) +
+    annotate("text", x = 1.72, y = cuartiles$q3, label = "Q3", hjust = 0, size = 2.8) +
+    annotate("text", x = 1.72, y = cuartiles$max, label = "Máx.", hjust = 0, size = 2.8) +
+    # Escala Y con breaks espaciados (evitar superposición)
+    # Calcular step óptimo según rango
+    scale_y_continuous(
+      limits = c(y_min - 0.5, y_max + 0.5),
+      breaks = function(limits) {
+        rango <- diff(limits)
+        # Elegir step según tamaño del rango
+        step <- if(rango <= 10) 1 else if(rango <= 20) 2 else 5
+        seq(ceiling(limits[1]), floor(limits[2]), by = step)
+      },
+      expand = c(0, 0)
+    ) +
+    scale_x_continuous(limits = c(0.4, 2)) +
+    # SIN TÍTULO - R-exams asigna (a), (b), (c), (d) automáticamente
+    labs(title = NULL, x = NULL, y = NULL) +
+    # Tema estilo ICFES
+    theme_minimal() +
+    theme(
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      axis.title = element_blank(),
+      axis.text.y = element_text(size = 7, margin = margin(r = 2)),
+      axis.ticks.y = element_line(linewidth = 0.3),
+      axis.ticks.length.y = unit(2, "pt"),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+      plot.title = element_text(face = "bold", size = 12, hjust = 0.5),
+      plot.margin = margin(8, 8, 8, 8)
+    )
+
+  # Guardar como archivo PNG individual con letra
+  # Patrón del ejemplo funcional: diagrama_a.png, diagrama_b.png, etc.
+  nombre_archivo <- paste0("diagrama_", tolower(letra), ".png")
+  ggsave(nombre_archivo, plot = p, width = 2.8, height = 4.5, dpi = 150, bg = "white")
+
+  return(p)
+}
+
+# Determinar rango del eje Y basado en todos los valores de las opciones
+# (ya no hay caso especial porque EST-BOX-01 fue excluido del pool de errores gráficos)
+todos_mins <- c(opciones_graficos$A$min, opciones_graficos$B$min,
+                opciones_graficos$C$min, opciones_graficos$D$min)
+todos_maxs <- c(opciones_graficos$A$max, opciones_graficos$B$max,
+                opciones_graficos$C$max, opciones_graficos$D$max)
+y_min_global <- min(todos_mins) - 2
+y_max_global <- max(todos_maxs) + 2
+
+# Crear y guardar los 4 gráficos como archivos separados (letras A-D)
+# Patrón del ejemplo funcional: diagrama_a.png, diagrama_b.png, etc.
+plot_A <- crear_y_guardar_boxplot(opciones_graficos$A, "A", y_min_global, y_max_global, ctx$unidad)
+plot_B <- crear_y_guardar_boxplot(opciones_graficos$B, "B", y_min_global, y_max_global, ctx$unidad)
+plot_C <- crear_y_guardar_boxplot(opciones_graficos$C, "C", y_min_global, y_max_global, ctx$unidad)
+plot_D <- crear_y_guardar_boxplot(opciones_graficos$D, "D", y_min_global, y_max_global, ctx$unidad)
+```
+
+Question
+========
+
+`r protagonista`, `r ctx$rol`, registró `r ctx$contexto_dato`. La tabla muestra los datos ordenados de menor a mayor.
+
+```{r tabla, echo=FALSE, results='asis'}
+knitr::kable(tabla_datos, align = "ccc", row.names = FALSE)
+```
+
+Un estudiante de `r protagonista` intentó construir el diagrama de caja correspondiente a estos datos.
+
+**¿Cuál de los siguientes diagramas de caja representa CORRECTAMENTE la información de la tabla?**
+
+Answerlist
+----------
+
+```{r mostrar_opciones, echo=FALSE, results='asis'}
+# Mostrar cada gráfico en el orden de la mezcla interna
+# La mezcla interna ya determinó el orden A, B, C, D
+# R-exams con exshuffle:TRUE los reordenará adicionalmente
+for (letra in c("A", "B", "C", "D")) {
+  nombre_archivo <- paste0("diagrama_", tolower(letra), ".png")
+  cat("* ![](", nombre_archivo, "){width=60%}\n", sep = "")
+}
+```
+
+Solution
+========
+
+### Información de la Pregunta
+
+| Aspecto | Descripción |
+|---------|-------------|
+| **Competencia** | Interpretación y representación |
+| **Componente** | Aleatorio |
+| **Afirmación** | Interpreta representaciones gráficas de datos estadísticos |
+| **Evidencia** | Identifica correspondencia entre tabla de datos y diagrama de caja |
+| **Tarea** | Identificar el diagrama de caja que representa correctamente los cuartiles de un conjunto de datos ordenados |
+| **Nivel de dificultad** | N2 |
+
+### ¿Qué evalúa esta pregunta?
+
+Esta pregunta evalúa la capacidad del estudiante para interpretar tablas de datos ordenados y relacionarlas con su representación gráfica correcta mediante un diagrama de caja y bigotes. El estudiante debe identificar los cinco valores característicos (mínimo, Q1, mediana, Q3, máximo) y verificar cuál diagrama los representa correctamente.
+
+### Respuesta Correcta: Opción `r letra_correcta`
+
+**Justificación matemática:**
+
+Para construir correctamente un diagrama de caja con $n = 11$ datos ordenados, debemos calcular las posiciones de los cuartiles:
+
+**Paso 1:** Calcular la posición de cada cuartil
+$$Q_1 = \text{dato en posición } \frac{n+1}{4} = \frac{11+1}{4} = 3$$
+$$Q_2 = \text{dato en posición } \frac{n+1}{2} = \frac{11+1}{2} = 6$$
+$$Q_3 = \text{dato en posición } \frac{3(n+1)}{4} = \frac{3 \times 12}{4} = 9$$
+
+**Paso 2:** Leer los valores correspondientes de la tabla ordenada
+
+| Medida | Posición | Valor |
+|--------|----------|-------|
+| Mínimo | 1 | `r cuartiles_correctos$min` `r ctx$unidad` |
+| Q1 | 3 | `r cuartiles_correctos$q1` `r ctx$unidad` |
+| Q2 (Mediana) | 6 | `r cuartiles_correctos$mediana` `r ctx$unidad` |
+| Q3 | 9 | `r cuartiles_correctos$q3` `r ctx$unidad` |
+| Máximo | 11 | `r cuartiles_correctos$max` `r ctx$unidad` |
+
+**Por lo tanto**, el diagrama correcto es el que muestra exactamente estos cinco valores: Mín = `r cuartiles_correctos$min`, Q1 = `r cuartiles_correctos$q1`, Q2 = `r cuartiles_correctos$mediana`, Q3 = `r cuartiles_correctos$q3`, Máx = `r cuartiles_correctos$max`.
+
+```{r mostrar_diagrama_correcto, echo=FALSE, results='asis', fig.align='center'}
+# Mostrar el diagrama correcto en la solución
+# letra_correcta ya está en minúscula (a/b/c/d) y corresponde a la posición con exshuffle:FALSE
+nombre_archivo <- paste0("diagrama_", letra_correcta, ".png")
+cat("![](", nombre_archivo, "){width=70%}", sep = "")
+```
+
+### Opciones No Válidas
+
+Las opciones incorrectas contienen errores conceptuales comunes en el cálculo de cuartiles:
+
+**Error del diagrama con `r error_seleccionado$codigo`:**
+
+Es posible que los estudiantes que eligen esta opción `r tolower(error_seleccionado$descripcion_larga)` Este error se presenta cuando `r tolower(error_seleccionado$causa_raiz)`. Para evitar este error, el estudiante debe usar las fórmulas correctas de posición: Q1 en posición (n+1)/4, Q2 en (n+1)/2, Q3 en 3(n+1)/4.
+
+**Otros errores posibles en los diagramas incorrectos:**
+
+- **Cuartiles intercambiados (EST-BOX-03):** Es posible que los estudiantes confundan Q1 con Q3, ubicando el tercer cuartil donde debería ir el primero. Para evitar este error, verificar siempre que Q1 < Q2 < Q3.
+
+- **Q1 mal calculado (EST-BOX-02):** Es posible que los estudiantes ubiquen Q1 muy cerca del mínimo. Para evitar este error, recordar que Q1 está en la posición 3 para n=11 datos.
+
+- **Mediana como promedio (EST-BOX-04):** Es posible que los estudiantes confundan la mediana con el promedio aritmético. Para evitar este error, recordar que la mediana es el valor central, no un cálculo aritmético.
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+**Estrategias para evitar errores comunes:**
+
+1. **Ordenar primero**: Los cuartiles solo se calculan sobre datos ordenados de menor a mayor
+2. **Usar fórmulas de posición**: Para n datos, Q1 está en posición (n+1)/4, Q2 en (n+1)/2, Q3 en 3(n+1)/4
+3. **Verificar coherencia**: Siempre debe cumplirse $\text{Mín} \leq Q_1 \leq Q_2 \leq Q_3 \leq \text{Máx}$
+
+Answerlist
+----------
+
+* `r if(sol[1] == 1) "CORRECTO. Este diagrama representa correctamente los cuartiles de los datos." else "Incorrecto. Este diagrama tiene errores en la ubicación de los cuartiles."`
+* `r if(sol[2] == 1) "CORRECTO. Este diagrama representa correctamente los cuartiles de los datos." else "Incorrecto. Este diagrama tiene errores en la ubicación de los cuartiles."`
+* `r if(sol[3] == 1) "CORRECTO. Este diagrama representa correctamente los cuartiles de los datos." else "Incorrecto. Este diagrama tiene errores en la ubicación de los cuartiles."`
+* `r if(sol[4] == 1) "CORRECTO. Este diagrama representa correctamente los cuartiles de los datos." else "Incorrecto. Este diagrama tiene errores en la ubicación de los cuartiles."`
+
+Meta-information
+================
+exname: diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exshuffle: FALSE
+extol: 0.01
+exsection: Estadistica|Medidas-Posicion|Diagramas-Caja
+
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Pensamiento]: Aleatorio
+exextra[Afirmacion]: Interpreta representaciones graficas de datos estadisticos
+exextra[Evidencia]: Identifica correspondencia entre tabla de datos y diagrama de caja
+exextra[Nivel]: 2
+exextra[Contexto]: Escolar
+
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+
+exextra[TipoMetacognicion]: identificacion_grafico_correcto

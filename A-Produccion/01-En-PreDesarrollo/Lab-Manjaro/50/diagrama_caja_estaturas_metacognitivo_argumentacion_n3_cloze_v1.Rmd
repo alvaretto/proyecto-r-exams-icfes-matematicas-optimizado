@@ -1,0 +1,714 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "graphicx"
+      - "float"
+      - "amsmath"
+icfes:
+  competencia: argumentacion
+  nivel_dificultad: 3
+  contenido:
+    categoria: estadistica
+    tipo: medidas_posicion
+  contexto: escolar
+  eje_axial: datos_azar
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+library(exams)
+library(ggplot2)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+generar_datos <- function() {
+
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS (8 contextos)
+  # ============================================================
+  contextos <- list(
+    list(
+      rol = "profesora de educación física",
+      protagonista_pool = c("Mariana", "Claudia", "Patricia", "Lorena"),
+      contexto_dato = "las estaturas de los estudiantes de grado once",
+      unidad = "cm",
+      tipo_dato = "estaturas",
+      rango_min = 150,
+      rango_max = 185,
+      n_datos = 11,
+      genero_prot = "f",
+      articulo = "la"
+    ),
+    list(
+      rol = "entrenador de baloncesto",
+      protagonista_pool = c("Carlos", "Andrés", "Miguel", "Roberto"),
+      contexto_dato = "las estaturas del equipo juvenil",
+      unidad = "cm",
+      tipo_dato = "estaturas",
+      rango_min = 165,
+      rango_max = 195,
+      n_datos = 11,
+      genero_prot = "m",
+      articulo = "el"
+    ),
+    list(
+      rol = "médico escolar",
+      protagonista_pool = c("Dr. Ramírez", "Dra. González", "Dr. Pérez"),
+      contexto_dato = "los pesos de los estudiantes de sexto grado",
+      unidad = "kg",
+      tipo_dato = "pesos",
+      rango_min = 35,
+      rango_max = 55,
+      n_datos = 11,
+      genero_prot = "m",
+      articulo = "el"
+    ),
+    list(
+      rol = "nutricionista del colegio",
+      protagonista_pool = c("Diana", "Sofía", "Valentina", "Camila"),
+      contexto_dato = "los índices de masa corporal de los participantes",
+      unidad = "kg/m²",
+      tipo_dato = "IMC",
+      rango_min = 18,
+      rango_max = 32,
+      n_datos = 11,
+      genero_prot = "f",
+      articulo = "la"
+    ),
+    list(
+      rol = "coordinador académico",
+      protagonista_pool = c("Fernando", "Gustavo", "Héctor", "Iván"),
+      contexto_dato = "los puntajes del simulacro ICFES",
+      unidad = "puntos",
+      tipo_dato = "puntajes",
+      rango_min = 200,
+      rango_max = 400,
+      n_datos = 11,
+      genero_prot = "m",
+      articulo = "el"
+    ),
+    list(
+      rol = "directora de deportes",
+      protagonista_pool = c("Ángela", "Beatriz", "Carolina", "Daniela"),
+      contexto_dato = "las distancias alcanzadas en lanzamiento de bala",
+      unidad = "metros",
+      tipo_dato = "distancias",
+      rango_min = 8,
+      rango_max = 25,
+      n_datos = 11,
+      genero_prot = "f",
+      articulo = "la"
+    ),
+    list(
+      rol = "profesor de matemáticas",
+      protagonista_pool = c("Jorge", "Luis", "Manuel", "Nicolás"),
+      contexto_dato = "las calificaciones del examen final",
+      unidad = "puntos",
+      tipo_dato = "calificaciones",
+      rango_min = 30,
+      rango_max = 100,
+      n_datos = 11,
+      genero_prot = "m",
+      articulo = "el"
+    ),
+    list(
+      rol = "bibliotecaria",
+      protagonista_pool = c("Elena", "Fabiola", "Gloria", "Helena"),
+      contexto_dato = "el número de libros prestados por estudiante",
+      unidad = "libros",
+      tipo_dato = "libros",
+      rango_min = 5,
+      rango_max = 25,
+      n_datos = 11,
+      genero_prot = "f",
+      articulo = "la"
+    )
+  )
+
+  # ============================================================
+  # POOL DE ERRORES CONCEPTUALES PARA DIAGRAMAS DE CAJA
+  # ============================================================
+  errores_conceptuales <- list(
+    list(
+      codigo = "EST-BOX-01",
+      nombre = "Confusión posición/valor",
+      descripcion_corta = "Usó las posiciones de los datos (1, 2, 3...) en lugar de los valores reales",
+      descripcion_larga = "Confundió la posición ordinal de los datos (1, 2, 3, ..., n) con los valores numéricos reales. Este error indica que no distingue entre el índice de un dato y su magnitud.",
+      causa_raiz = "No diferencia entre la posición de un dato en la serie ordenada y su valor numérico",
+      calcula_q1 = function(datos, cuartiles) {
+        return(3)  # Posición 3 en lugar de valor en posición 3
+      }
+    ),
+    list(
+      codigo = "EST-BOX-02",
+      nombre = "Q1 como promedio del primer grupo",
+      descripcion_corta = "Calculó Q1 como el promedio de los tres primeros datos",
+      descripcion_larga = "Calculó el primer cuartil (Q1) promediando los tres primeros valores en lugar de tomar el valor en la posición correspondiente. Este error indica confusión entre medidas de posición y medidas de tendencia central.",
+      causa_raiz = "Confunde la mediana de un grupo (posición) con el promedio (media aritmética)",
+      calcula_q1 = function(datos, cuartiles) {
+        return(round(mean(datos[1:3])))
+      }
+    ),
+    list(
+      codigo = "EST-BOX-03",
+      nombre = "Q3 en lugar de Q1",
+      descripcion_corta = "Ubicó el valor de Q3 donde debería ir Q1",
+      descripcion_larga = "Confundió el primer cuartil (Q1, 25%) con el tercer cuartil (Q3, 75%), reportando el valor de Q3 cuando se le preguntó por Q1. Este error indica confusión sobre qué porcentaje de datos queda debajo de cada cuartil.",
+      causa_raiz = "No comprende que Q1 deja el 25% de los datos por debajo y Q3 deja el 75%",
+      calcula_q1 = function(datos, cuartiles) {
+        return(cuartiles$q3)  # Retorna Q3 en lugar de Q1
+      }
+    ),
+    list(
+      codigo = "EST-BOX-04",
+      nombre = "Q1 como mínimo + promedio",
+      descripcion_corta = "Calculó Q1 sumando el mínimo más el promedio de la diferencia",
+      descripcion_larga = "Intentó calcular Q1 usando una fórmula incorrecta: Mín + (Máx - Mín)/4, asumiendo que los cuartiles dividen el rango en partes iguales. Este error ignora que los cuartiles dividen los datos, no el rango.",
+      causa_raiz = "Confunde división del rango numérico con división de la cantidad de datos",
+      calcula_q1 = function(datos, cuartiles) {
+        return(round(cuartiles$min + (cuartiles$max - cuartiles$min)/4))
+      }
+    )
+  )
+
+  # ============================================================
+  # POOL DE REFLEXIONES METACOGNITIVAS
+  # ============================================================
+  reflexiones_metacognitivas <- list(
+    "Identificar errores en el cálculo de cuartiles nos ayuda a comprender mejor las medidas de posición.",
+    "Los cuartiles se calculan sobre los datos ordenados: Q1 está en la posición (n+1)/4, Q2 en (n+1)/2, Q3 en 3(n+1)/4.",
+    "Un error frecuente es confundir cuartiles (dividen la cantidad de datos) con percentiles del rango (dividen el intervalo numérico).",
+    "Para verificar cuartiles: siempre debe cumplirse Min menor o igual Q1 menor o igual Q2 menor o igual Q3 menor o igual Max.",
+    "El 50% de los datos está entre Q1 y Q3. Esta región se llama rango intercuartílico (RIC)."
+  )
+
+  # ============================================================
+  # AFIRMACIONES PARA PARTE 3 (mchoice)
+  # ============================================================
+  afirmaciones_pool <- list(
+    list(texto = "El primer cuartil (Q1) divide los datos dejando el 25% por debajo", correcta = TRUE),
+    list(texto = "La mediana (Q2) siempre coincide con el promedio de los datos", correcta = FALSE),
+    list(texto = "El rango intercuartílico se calcula como Q3 - Q1", correcta = TRUE),
+    list(texto = "Los bigotes del diagrama de caja siempre llegan al mínimo y máximo", correcta = TRUE),
+    list(texto = "Si Q1 = Q2, significa que el 25% de los datos tiene el mismo valor que la mediana", correcta = TRUE),
+    list(texto = "El tercer cuartil (Q3) siempre es mayor que el promedio", correcta = FALSE)
+  )
+
+  # ============================================================
+  # SELECCIÓN Y GENERACIÓN DE DATOS
+  # ============================================================
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  protagonista <- sample(ctx$protagonista_pool, 1)
+
+  # Generar 11 datos ordenados con restricciones
+  datos_validos <- FALSE
+  intentos <- 0
+  max_intentos <- 1000
+
+  while(!datos_validos && intentos < max_intentos) {
+    intentos <- intentos + 1
+
+    # Generar datos aleatorios
+    datos <- sort(sample(ctx$rango_min:ctx$rango_max, ctx$n_datos, replace = FALSE))
+
+    # Calcular cuartiles correctos (para n=11)
+    cuartiles_correctos <- list(
+      min = datos[1],
+      q1 = datos[3],
+      mediana = datos[6],
+      q3 = datos[9],
+      max = datos[11]
+    )
+
+    # Verificar que los cuartiles sean distintos y el RIC sea razonable
+    ric <- cuartiles_correctos$q3 - cuartiles_correctos$q1
+
+    if(cuartiles_correctos$q1 > cuartiles_correctos$min + 3 &&
+       cuartiles_correctos$q3 < cuartiles_correctos$max - 3 &&
+       ric >= 5) {
+      datos_validos <- TRUE
+    }
+  }
+
+  if(!datos_validos) {
+    stop("No se pudieron generar datos válidos después de ", max_intentos, " intentos")
+  }
+
+  # ============================================================
+  # SELECCIONAR ERROR PARA PARTE 1
+  # ============================================================
+  error_seleccionado_idx <- sample(1:4, 1)
+  error_seleccionado <- errores_conceptuales[[error_seleccionado_idx]]
+
+  # Calcular Q1 erróneo
+  q1_erroneo <- error_seleccionado$calcula_q1(datos, cuartiles_correctos)
+
+  # Asegurar que Q1 erróneo sea diferente del correcto
+  if(q1_erroneo == cuartiles_correctos$q1) {
+    error_seleccionado_idx <- ifelse(error_seleccionado_idx == 1, 2, 1)
+    error_seleccionado <- errores_conceptuales[[error_seleccionado_idx]]
+    q1_erroneo <- error_seleccionado$calcula_q1(datos, cuartiles_correctos)
+  }
+
+  # ============================================================
+  # CONSTRUIR OPCIONES PARTE 1 (schoice - identificar error)
+  # ============================================================
+  otros_errores_idx <- setdiff(1:4, error_seleccionado_idx)
+  opciones_p1 <- c(
+    error_seleccionado$descripcion_corta,
+    errores_conceptuales[[otros_errores_idx[1]]]$descripcion_corta,
+    errores_conceptuales[[otros_errores_idx[2]]]$descripcion_corta,
+    errores_conceptuales[[otros_errores_idx[3]]]$descripcion_corta
+  )
+
+  # Mezclar opciones
+  orden_p1 <- sample(1:4)
+  opciones_p1_mezcladas <- opciones_p1[orden_p1]
+  sol_p1 <- rep(0, 4)
+  sol_p1[which(orden_p1 == 1)] <- 1
+
+  # ============================================================
+  # PARTE 2: Calcular Q1 correcto (num)
+  # ============================================================
+  sol_p2 <- cuartiles_correctos$q1
+
+  # ============================================================
+  # PARTE 3: Afirmaciones verdaderas (mchoice)
+  # ============================================================
+  # Seleccionar 4 afirmaciones aleatorias
+  idx_afirmaciones <- sample(1:length(afirmaciones_pool), 4)
+  afirmaciones_seleccionadas <- afirmaciones_pool[idx_afirmaciones]
+
+  opciones_p3 <- sapply(afirmaciones_seleccionadas, function(x) x$texto)
+  sol_p3 <- sapply(afirmaciones_seleccionadas, function(x) as.integer(x$correcta))
+
+  # ============================================================
+  # PARTE 4: Caso específico V/F (schoice)
+  # ============================================================
+  ric <- cuartiles_correctos$q3 - cuartiles_correctos$q1
+  mitad_datos <- floor(ctx$n_datos / 2)
+
+  # Afirmación sobre el RIC
+  afirmacion_p4 <- paste0("El ", mitad_datos, "% central de los datos tiene valores entre ",
+                          cuartiles_correctos$q1, " y ", cuartiles_correctos$q3, " ", ctx$unidad)
+
+  # Esta afirmación es FALSA (el 50%, no la mitad de n)
+  sol_p4 <- c(0, 1)  # Falso es correcto
+  opciones_p4 <- c("Verdadero", "Falso")
+
+  # ============================================================
+  # TABLA DE DATOS
+  # ============================================================
+  tabla_datos <- data.frame(
+    Estudiante = 1:11,
+    Valor = datos,
+    Cuartil = c("Mín", "", "Q1", "", "", "Q2", "", "", "Q3", "", "Máx")
+  )
+  names(tabla_datos)[2] <- paste0(ctx$tipo_dato, " (", ctx$unidad, ")")
+
+  # ============================================================
+  # RETORNAR DATOS COMPLETOS
+  # ============================================================
+  return(list(
+    ctx = ctx,
+    protagonista = protagonista,
+    datos = datos,
+    tabla_datos = tabla_datos,
+    cuartiles_correctos = cuartiles_correctos,
+    ric = ric,
+
+    # Error analizado
+    error_seleccionado = error_seleccionado,
+    q1_erroneo = q1_erroneo,
+
+    # Parte 1
+    opciones_p1 = opciones_p1_mezcladas,
+    sol_p1 = sol_p1,
+
+    # Parte 2
+    sol_p2 = sol_p2,
+
+    # Parte 3
+    opciones_p3 = opciones_p3,
+    sol_p3 = sol_p3,
+    afirmaciones_seleccionadas = afirmaciones_seleccionadas,
+
+    # Parte 4
+    afirmacion_p4 = afirmacion_p4,
+    opciones_p4 = opciones_p4,
+    sol_p4 = sol_p4,
+
+    # Reflexión
+    reflexion = reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+  ))
+}
+
+# Ejecutar generación
+datos <- generar_datos()
+
+# Extraer variables
+ctx <- datos$ctx
+protagonista <- datos$protagonista
+tabla_datos <- datos$tabla_datos
+cuartiles_correctos <- datos$cuartiles_correctos
+ric <- datos$ric
+error_seleccionado <- datos$error_seleccionado
+q1_erroneo <- datos$q1_erroneo
+
+opciones_p1 <- datos$opciones_p1
+sol_p1 <- datos$sol_p1
+
+sol_p2 <- datos$sol_p2
+
+opciones_p3 <- datos$opciones_p3
+sol_p3 <- datos$sol_p3
+afirmaciones_seleccionadas <- datos$afirmaciones_seleccionadas
+
+afirmacion_p4 <- datos$afirmacion_p4
+opciones_p4 <- datos$opciones_p4
+sol_p4 <- datos$sol_p4
+
+reflexion <- datos$reflexion
+datos_numericos <- datos$datos
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide", eval=FALSE}
+# Test de diversidad desactivado durante desarrollo
+# Activar con eval=TRUE para validación final
+options(OutDec = ".")
+
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for (i in 1:300) {
+    datos_test <- generar_datos()
+    hash_datos <- digest::digest(list(
+      contexto = datos_test$ctx$rol,
+      protagonista = datos_test$protagonista,
+      datos = datos_test$datos,
+      error_codigo = datos_test$error_seleccionado$codigo,
+      sol_p1 = datos_test$sol_p1,
+      sol_p3 = datos_test$sol_p3
+    ))
+    versiones[[i]] <- hash_datos
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 200,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 200."))
+})
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide", eval=FALSE}
+# Validaciones desactivadas durante desarrollo
+# Activar con eval=TRUE para validación final
+options(OutDec = ".")
+
+test_that("Cuartiles son consistentes", {
+  expect_true(cuartiles_correctos$min < cuartiles_correctos$q1)
+  expect_true(cuartiles_correctos$q1 < cuartiles_correctos$mediana)
+  expect_true(cuartiles_correctos$mediana < cuartiles_correctos$q3)
+  expect_true(cuartiles_correctos$q3 < cuartiles_correctos$max)
+})
+
+test_that("Q1 erróneo es diferente del correcto", {
+  expect_true(q1_erroneo != cuartiles_correctos$q1)
+})
+
+test_that("Parte 1: exactamente una opción correcta", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+})
+
+test_that("Parte 2: Q1 correcto es numérico válido", {
+  expect_true(is.numeric(sol_p2))
+  expect_true(!is.na(sol_p2))
+  expect_true(!is.nan(sol_p2))
+  expect_true(is.finite(sol_p2))
+})
+
+test_that("Parte 3: mchoice tiene 4 opciones", {
+  expect_equal(length(sol_p3), 4)
+  expect_true(all(sol_p3 %in% c(0, 1)))
+})
+
+test_that("Parte 4: schoice V/F tiene 2 opciones", {
+  expect_equal(length(sol_p4), 2)
+  expect_equal(sum(sol_p4), 1)
+})
+
+test_that("RIC es positivo", {
+  expect_true(ric > 0)
+})
+```
+
+Question
+========
+
+`r protagonista`, `r ctx$rol`, registró `r ctx$contexto_dato`. La tabla muestra los datos ordenados de menor a mayor:
+
+```{r tabla, echo=FALSE, results='asis'}
+knitr::kable(tabla_datos, align = "ccc", row.names = FALSE)
+```
+
+Un estudiante de `r protagonista` calculó el primer cuartil (Q1) y obtuvo como resultado **`r q1_erroneo` `r ctx$unidad`**.
+
+---
+
+**Parte 1 (Identificación del error):** ¿Cuál error conceptual cometió el estudiante al calcular Q1?
+
+##ANSWER1##
+
+**Parte 2 (Cálculo correcto):** ¿Cuál es el valor correcto del primer cuartil (Q1) en `r ctx$unidad`?
+
+##ANSWER2##
+
+**Parte 3 (Propiedades de los cuartiles):** Seleccione TODAS las afirmaciones que sean VERDADERAS sobre diagramas de caja y cuartiles:
+
+##ANSWER3##
+
+**Parte 4 (Caso específico):** Analice la siguiente afirmación:
+
+*"`r afirmacion_p4`"*
+
+Esta afirmación es:
+
+##ANSWER4##
+
+Answerlist
+----------
+
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+* ###NUMERICAL###
+* `r opciones_p3[1]`
+* `r opciones_p3[2]`
+* `r opciones_p3[3]`
+* `r opciones_p3[4]`
+* Verdadero
+* Falso
+
+Solution
+========
+
+### Información de la Pregunta
+
+| Aspecto | Descripción |
+|---------|-------------|
+| **Competencia** | Argumentación |
+| **Componente** | Aleatorio |
+| **Afirmación** | Argumenta sobre la validez de procedimientos estadísticos |
+| **Evidencia** | Identifica errores conceptuales en el cálculo de medidas de posición |
+| **Tarea** | Identificar el error conceptual en un diagrama de caja, calcular el valor correcto y evaluar afirmaciones sobre cuartiles |
+| **Nivel de dificultad** | N3 |
+
+### ¿Qué evalúa esta pregunta?
+
+Esta pregunta evalúa la capacidad del estudiante para analizar críticamente el cálculo de medidas de posición (cuartiles), identificar errores conceptuales en el razonamiento de otros, calcular correctamente los valores, evaluar propiedades teóricas de los cuartiles y transferir el conocimiento a casos específicos. Es un ejercicio metacognitivo con progressive disclosure que desarrolla habilidades de autorregulación del aprendizaje.
+
+---
+
+### Parte 1: Identificación del Error
+
+**Respuesta correcta:** `r error_seleccionado$descripcion_corta`
+
+El estudiante obtuvo **Q1 = `r q1_erroneo` `r ctx$unidad`**, cuando el valor correcto es **Q1 = `r cuartiles_correctos$q1` `r ctx$unidad`**.
+
+**Justificación matemática:**
+
+**Error identificado:** `r error_seleccionado$descripcion_larga`
+
+**Código de error:** `r error_seleccionado$codigo`
+
+**Causa raíz:** `r error_seleccionado$causa_raiz`
+
+#### Opciones No Válidas (Parte 1)
+
+```{r analisis_errores_p1, echo=FALSE, results='asis'}
+# Obtener los errores conceptuales que NO fueron seleccionados
+errores_conceptuales_pool <- list(
+  list(
+    codigo = "EST-BOX-01",
+    descripcion_corta = "Usó las posiciones de los datos (1, 2, 3...) en lugar de los valores reales",
+    explicacion = "confundieran la posición ordinal del dato con su valor numérico. Este error indica que no se distingue entre el índice (1, 2, 3...) y la magnitud del dato. Para evitar este error, el estudiante debe recordar que la posición indica orden, pero el cuartil es el VALOR del dato en esa posición."
+  ),
+  list(
+    codigo = "EST-BOX-02",
+    descripcion_corta = "Calculó Q1 como el promedio de los tres primeros datos",
+    explicacion = "promediaran los primeros datos en lugar de tomar el valor en la posición correspondiente. Este error indica confusión entre medidas de posición (cuartiles) y medidas de tendencia central (promedio). Para evitar este error, el estudiante debe recordar que Q1 es un VALOR específico, no un promedio."
+  ),
+  list(
+    codigo = "EST-BOX-03",
+    descripcion_corta = "Ubicó el valor de Q3 donde debería ir Q1",
+    explicacion = "confundieran Q1 con Q3, reportando el tercer cuartil cuando se les preguntó por el primero. Este error indica que no comprenden que Q1 deja el 25% de los datos por debajo y Q3 deja el 75%. Para evitar este error, el estudiante debe verificar siempre que Q1 < Q2 < Q3."
+  ),
+  list(
+    codigo = "EST-BOX-04",
+    descripcion_corta = "Calculó Q1 sumando el mínimo más el promedio de la diferencia",
+    explicacion = "aplicaran una fórmula incorrecta: Mín + (Máx - Mín)/4, asumiendo que los cuartiles dividen el RANGO en partes iguales. Este error ignora que los cuartiles dividen la CANTIDAD de datos, no el intervalo numérico. Para evitar este error, el estudiante debe usar las fórmulas de posición: Q1 en posición (n+1)/4."
+  )
+)
+
+# Mostrar solo los errores que NO corresponden al error seleccionado
+for(err in errores_conceptuales_pool) {
+  if(err$codigo != error_seleccionado$codigo) {
+    cat(paste0("**\"", err$descripcion_corta, "\":**\n\n"))
+    cat(paste0("Es posible que los estudiantes que eligen esta opción ", err$explicacion, "\n\n"))
+  }
+}
+```
+
+---
+
+### Parte 2: Cálculo Correcto
+
+**Respuesta correcta:** `r cuartiles_correctos$q1` `r ctx$unidad`
+
+**Justificación matemática:**
+
+Para calcular los cuartiles con $n = 11$ datos ordenados:
+
+**Paso 1:** Identificar las posiciones de los cuartiles usando las fórmulas
+
+$$Q_1 = \text{dato en posición } \frac{n+1}{4} = \frac{11+1}{4} = \frac{12}{4} = 3$$
+
+$$Q_2 = \text{dato en posición } \frac{n+1}{2} = \frac{11+1}{2} = \frac{12}{2} = 6$$
+
+$$Q_3 = \text{dato en posición } \frac{3(n+1)}{4} = \frac{3 \times 12}{4} = \frac{36}{4} = 9$$
+
+**Paso 2:** Leer los valores correspondientes de la tabla ordenada
+
+| Medida | Posición | Valor |
+|--------|----------|-------|
+| Mínimo | 1 | `r cuartiles_correctos$min` `r ctx$unidad` |
+| **Q1** | **3** | **`r cuartiles_correctos$q1` `r ctx$unidad`** ← Respuesta correcta |
+| Q2 (Mediana) | 6 | `r cuartiles_correctos$mediana` `r ctx$unidad` |
+| Q3 | 9 | `r cuartiles_correctos$q3` `r ctx$unidad` |
+| Máximo | 11 | `r cuartiles_correctos$max` `r ctx$unidad` |
+
+**Por lo tanto**, el primer cuartil (Q1) es **`r cuartiles_correctos$q1` `r ctx$unidad`**.
+
+---
+
+### Parte 3: Propiedades de los Cuartiles
+
+**Análisis de cada afirmación:**
+
+```{r explicacion_p3_detallada, echo=FALSE, results='asis'}
+for(i in 1:4) {
+  estado <- ifelse(afirmaciones_seleccionadas[[i]]$correcta, "VERDADERA", "FALSA")
+  cat(paste0("**\"", opciones_p3[i], "\"** → **", estado, "**\n\n"))
+
+  # Explicación específica según la afirmación
+  if(afirmaciones_seleccionadas[[i]]$correcta) {
+    cat("Esta afirmación es correcta porque refleja una propiedad fundamental de los cuartiles o diagramas de caja.\n\n")
+  } else {
+    cat("Es posible que los estudiantes que marquen esta afirmación como verdadera confundan propiedades de diferentes medidas estadísticas. Para evitar este error, el estudiante debe distinguir claramente entre mediana (valor central) y media (promedio aritmético), y entre cuartiles (dividen datos) y percentiles del rango (dividen intervalos).\n\n")
+  }
+}
+```
+
+---
+
+### Parte 4: Caso Específico
+
+**Afirmación:** "*`r afirmacion_p4`*"
+
+**Respuesta correcta:** FALSO
+
+**Justificación matemática:**
+
+La afirmación es **FALSA** porque el rango intercuartílico (RIC) siempre contiene el **50%** central de los datos, independientemente del número total de datos.
+
+$$\text{Porcentaje entre } Q_1 \text{ y } Q_3 = 75\% - 25\% = 50\%$$
+
+El error en la afirmación es usar `r floor(ctx$n_datos/2)`% (la mitad de n = `r ctx$n_datos` datos) en lugar del 50% correcto.
+
+**Verificación con los datos:**
+- Q1 = `r cuartiles_correctos$q1` `r ctx$unidad` → 25% de los datos están por debajo
+- Q3 = `r cuartiles_correctos$q3` `r ctx$unidad` → 75% de los datos están por debajo
+- Entre Q1 y Q3 → 75% - 25% = **50%** de los datos
+
+Es posible que los estudiantes que marquen "Verdadero" confundan el porcentaje fijo (50%) con la cantidad de datos (mitad de n). Para evitar este error, el estudiante debe recordar que los cuartiles son medidas de posición PORCENTUALES, no absolutas.
+
+---
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+**Estrategias para evitar errores comunes:**
+
+1. **Ordenar primero**: Los cuartiles solo tienen sentido con datos ordenados de menor a mayor
+2. **Usar fórmulas de posición**: Q1 en posición (n+1)/4, Q2 en (n+1)/2, Q3 en 3(n+1)/4
+3. **Distinguir posición de valor**: La fórmula da la POSICIÓN, luego leer el VALOR en esa posición
+4. **Verificar coherencia**: Siempre debe cumplirse $\text{Mín} \leq Q_1 \leq Q_2 \leq Q_3 \leq \text{Máx}$
+5. **Recordar el 50%**: El RIC siempre contiene el 50% de los datos, sin importar n
+
+Answerlist
+----------
+
+* `r if(sol_p1[1] == 1) "CORRECTO. Este es el error que cometió el estudiante." else "Incorrecto. Este no es el error cometido."`
+* `r if(sol_p1[2] == 1) "CORRECTO. Este es el error que cometió el estudiante." else "Incorrecto. Este no es el error cometido."`
+* `r if(sol_p1[3] == 1) "CORRECTO. Este es el error que cometió el estudiante." else "Incorrecto. Este no es el error cometido."`
+* `r if(sol_p1[4] == 1) "CORRECTO. Este es el error que cometió el estudiante." else "Incorrecto. Este no es el error cometido."`
+* El valor correcto de Q1 es `r sol_p2` `r ctx$unidad`.
+* `r if(sol_p3[1] == 1) "VERDADERO." else "FALSO."`
+* `r if(sol_p3[2] == 1) "VERDADERO." else "FALSO."`
+* `r if(sol_p3[3] == 1) "VERDADERO." else "FALSO."`
+* `r if(sol_p3[4] == 1) "VERDADERO." else "FALSO."`
+* Incorrecto. La afirmación es falsa porque el RIC siempre contiene el 50% de los datos.
+* CORRECTO. La afirmación es falsa porque el RIC siempre contiene el 50% de los datos, no `r floor(ctx$n_datos/2)`%.
+
+Meta-information
+================
+exname: diagrama_caja_estaturas_metacognitivo_argumentacion_n3_cloze_v1
+extype: cloze
+exclozetype: schoice|num|mchoice|schoice
+exsolution: `r paste(sol_p1, collapse = "")`|`r sol_p2`|`r paste(sol_p3, collapse = "")`|`r paste(sol_p4, collapse = "")`
+exshuffle: TRUE
+extol: 0|0.01|0|0
+exsection: Estadistica|Medidas-Posicion|Diagramas-Caja
+
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Pensamiento]: Aleatorio
+exextra[Afirmacion]: Argumenta sobre la validez de procedimientos estadisticos
+exextra[Evidencia]: Identifica errores conceptuales en el calculo de medidas de posicion
+exextra[Nivel]: 3
+exextra[Contexto]: Escolar
+
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
+
+exextra[TipoMetacognicion]: analisis_error
