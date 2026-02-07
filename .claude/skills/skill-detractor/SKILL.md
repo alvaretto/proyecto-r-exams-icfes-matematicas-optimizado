@@ -128,7 +128,65 @@ ignorar_estilistico: true
 
 ---
 
-## Dominios de Conocimiento
+## Dominios de Revision (7 obligatorios)
+
+El detractor revisa en **7 dominios obligatorios**:
+
+### 1. Codigo R-exams
+
+- Coherencia de codigo R-exams
+- Uso correcto de exshuffle, exsolution, extype
+- Metadatos ICFES completos (6 dimensiones)
+- Pool de errores con funciones calcula()
+
+### 2. Pedagogico
+
+- Aplicacion de Progressive Disclosure
+- Estructura metacognitiva correcta
+- Reflexiones pedagogicas apropiadas
+- Nivel de dificultad coherente
+
+### 3. Visual/Grafica
+
+- Coherencia visual-texto (grafico vs enunciado)
+- Etiquetas legibles y correctas
+- Escalas y proporciones apropiadas
+- Compatibilidad con 4 formatos de salida
+
+### 4. Gramatica/Ortografia
+
+- Tildes en palabras frecuentes
+- Gramatica española correcta
+- Redaccion estilo ICFES
+- Terminologia matematica apropiada
+
+### 5. Coherencia Matematica
+
+- Formulas y ecuaciones correctas
+- Calculos verificables paso a paso
+- Proporciones y escalas correctas
+- Distractores plausibles pero incorrectos (no absurdos)
+- Variables sin NA/NaN/Inf
+
+### 6. ICFES Metacognitivo
+
+- Progressive Disclosure (4+ partes en CLOZE)
+- Pool de errores conceptuales con codigos y funciones calcula()
+- Metadatos cognitivos completos (DOK >= 2, Bloom, SOLO)
+- Seccion Solution con 6 subsecciones obligatorias
+- Antipatron: ejercicio puramente procedimental
+
+### 7. Testing y Regresion
+
+- Tests unitarios para componentes criticos
+- Cobertura >= 100% para scripts de validacion
+- Tests de diversidad (200+ versiones unicas)
+- Git hooks nativos configurados (pre-commit, pre-push)
+- CI/CD activo y pasando
+
+---
+
+## Dominios de Conocimiento Adicionales
 
 El detractor tiene expertise en:
 
@@ -138,13 +196,6 @@ El detractor tiene expertise en:
 - Supabase (docs, RFCs, patterns)
 - Arquitectura (clean, DDD, SOLID)
 - Testing (TDD, property-based)
-
-### Educacion/ICFES
-
-- R-exams (documentacion, vignettes)
-- Pedagogia basada en evidencias (Dunlosky, Rosenshine)
-- Marco Conceptual ICFES 2026
-- Taxonomias cognitivas (Bloom, Webb, SOLO)
 
 ### General
 
@@ -308,7 +359,12 @@ Ver definicion completa en `.claude/agents/agente-detractor.md`
 
 ---
 
-**Version**: 1.0.0
-**Fecha**: 2026-02-06
+**Version**: 1.1.0
+**Fecha**: 2026-02-07
 **Autor**: Sistema automatizado
 **Inspiracion**: Devil's Advocate Pattern, Adversarial Review, Red Team Testing
+
+### Cambios v1.1.0 (2026-02-07)
+- **7 dominios obligatorios** de revision (antes 4)
+- **Nuevos dominios**: coherencia_matematica, icfes_metacognitivo, testing
+- **Integracion** con testing-obligatorio.md y ejercicios-metacognitivos.md

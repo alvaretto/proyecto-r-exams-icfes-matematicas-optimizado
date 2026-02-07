@@ -29,7 +29,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
-- `/detractor auditoria [target]` 🆕 - Revisión adversarial obligatoria
+- `/detractor auditoria [target]` - Revisión adversarial en 7 dominios
 - `/auto-refinar-grafico [tikz|python|r]`
 - `/estado-graficador`, `/exportar-graficos`, `/promover-ejercicio`
 
@@ -107,9 +107,17 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.2.0 (Detractor Obligatorio en Revisiones)
+**Versión**: 3.2.1 (Detractor con 7 Dominios)
 **Fecha**: 2026-02-07
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.2.1 (2026-02-07)
+- **7 DOMINIOS DE REVISIÓN**: código, pedagógico, visual, gramática, matemático, metacognitivo, testing
+- **Nuevos dominios**:
+  - `coherencia_matematica`: Fórmulas, cálculos, proporciones, distractores plausibles
+  - `icfes_metacognitivo`: Progressive Disclosure, pool errores, metadatos DOK/Bloom/SOLO
+  - `testing`: Cobertura tests, git hooks nativos, CI/CD
+- **Integración mejorada** con testing-obligatorio.md y ejercicios-metacognitivos.md
 
 ### Cambios v3.2 (2026-02-07)
 - **DETRACTOR OBLIGATORIO**: Skill-detractor se ejecuta automáticamente en fases de revisión
@@ -117,7 +125,6 @@ A-Produccion/
 - **FASE 2C añadida**: Revisión adversarial después de validación visual
 - **Ciclo de validación v4.0**: FASE 1 → 2A → 2B → 2C (detractor) → FASE 3
 - **Puntos de activación**: Post-generación, FASE 2C, pre-promoción
-- **4 dominios de revisión**: Código, pedagógico, visual, gramática
 - **Config por defecto**: `.claude/detractor-config.yaml`
 
 ### Cambios v3.1 (2026-02-06)

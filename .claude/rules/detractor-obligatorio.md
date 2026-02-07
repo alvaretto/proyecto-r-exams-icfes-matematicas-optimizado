@@ -108,6 +108,61 @@ Veredicto: MODIFICAR/RECHAZAR → Bloquear promoción
 - RAE (Nivel 1)
 - Diccionario local `.claude/rules/ortografia-espanol.md` (Nivel 1)
 
+### 5. Coherencia Matemática
+
+**Qué revisa:**
+- Fórmulas y ecuaciones correctas
+- Cálculos verificables paso a paso
+- Proporciones y escalas correctas
+- Respuesta correcta matemáticamente válida
+- Distractores plausibles pero incorrectos (no absurdos)
+- Consistencia entre datos del enunciado y opciones
+- Variables sin NA/NaN/Inf
+
+**Fuentes de verdad:**
+- Definiciones matemáticas estándar (Nivel 1)
+- Wolfram Alpha / verificación simbólica (Nivel 1)
+- `.claude/scripts/validar_coherencia_matematica.R` (Nivel 1)
+
+### 6. Coherencia ICFES Metacognitiva
+
+**Qué revisa:**
+- Aplicación de Progressive Disclosure (4+ partes en CLOZE)
+- Pool de errores conceptuales con códigos y funciones `calcula()`
+- Metadatos cognitivos completos (DOK ≥ 2, Bloom, SOLO)
+- Sección Solution con 6 subsecciones obligatorias:
+  - Análisis del error
+  - Procedimiento correcto
+  - Propiedades del concepto
+  - Caso específico
+  - Reflexión metacognitiva
+  - Estrategia para evitar el error
+- Antipatrón detectado: ejercicio puramente procedimental
+- Distractores basados en errores conceptuales reales (no aleatorios)
+
+**Fuentes de verdad:**
+- `.claude/rules/ejercicios-metacognitivos.md` (Nivel 1)
+- Marco Conceptual ICFES 2026 (Nivel 1)
+- Dunlosky et al. (2013) - Learning techniques (Nivel 1)
+- Schraw & Dennison (1994) - Metacognitive awareness (Nivel 1)
+- Anderson & Krathwohl (2001) - Bloom revisado (Nivel 1)
+
+### 7. Testing y Regresión
+
+**Qué revisa:**
+- Tests unitarios existen para componentes críticos
+- Cobertura de tests ≥ 100% para scripts de validación
+- Tests de diversidad (200+ versiones únicas)
+- Sin regresiones en funcionalidad existente
+- Git hooks nativos configurados (pre-commit, pre-push)
+- CI/CD activo y pasando
+
+**Fuentes de verdad:**
+- `tests/testthat/` (Nivel 1)
+- `.claude/rules/testing-obligatorio.md` (Nivel 1)
+- `.git/hooks/pre-commit`, `.git/hooks/pre-push` (Nivel 1)
+- `.github/workflows/ci-testing.yml` (Nivel 1)
+
 ---
 
 ## Formato de Revisión Detractor
@@ -118,7 +173,7 @@ Veredicto: MODIFICAR/RECHAZAR → Bloquear promoción
 ## Revisión Detractor - [Nombre Ejercicio]
 
 **Fecha**: YYYY-MM-DD
-**Dominios revisados**: [código | pedagógico | visual | gramática]
+**Dominios revisados**: [código | pedagógico | visual | gramática | matemático | metacognitivo | testing]
 
 ### Objeciones Encontradas
 
@@ -140,6 +195,9 @@ Dominios analizados:
 - Estructura pedagógica: Conforme
 - Coherencia visual: Conforme
 - Gramática/ortografía: Conforme
+- Coherencia matemática: Conforme
+- ICFES metacognitivo: Conforme
+- Testing/regresión: Conforme
 
 ### Veredicto Global
 
@@ -308,12 +366,15 @@ umbrales:
   fuente_minima: 2
   max_objeciones: 10
 
-# Dominios obligatorios a revisar
+# Dominios obligatorios a revisar (7 dominios)
 dominios_obligatorios:
   - codigo_rexams
   - pedagogico
   - visual
   - gramatica
+  - coherencia_matematica
+  - icfes_metacognitivo
+  - testing
 
 # Fuentes de verdad locales
 fuentes_locales:
@@ -387,9 +448,15 @@ Con el detractor obligatorio:
 
 ---
 
-**Versión**: 1.0
+**Versión**: 1.1
 **Fecha**: 2026-02-07
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
 **Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
+
+### Cambios v1.1 (2026-02-07)
+- **3 nuevos dominios agregados**: coherencia matemática, ICFES metacognitivo, testing
+- **7 dominios totales** de revisión adversarial obligatoria
+- **Fuentes de verdad** documentadas para cada nuevo dominio
+- **Integración** con testing-obligatorio.md y ejercicios-metacognitivos.md

@@ -1,7 +1,8 @@
 # Configuración del Skill Detractor
 # Archivo: .claude/detractor-config.yaml
-# Versión: 1.0
+# Versión: 1.1
 # Fecha: 2026-02-07
+# Cambios v1.1: 7 dominios obligatorios (antes 4)
 
 # =============================================================================
 # ACTIVACIÓN AUTOMÁTICA
@@ -61,6 +62,15 @@ dominios_obligatorios:
 
   # Gramática y ortografía (tildes, redacción, terminología)
   - gramatica
+
+  # Coherencia matemática (fórmulas, cálculos, proporciones, distractores)
+  - coherencia_matematica
+
+  # ICFES metacognitivo (Progressive Disclosure, pool errores, DOK/Bloom/SOLO)
+  - icfes_metacognitivo
+
+  # Testing y regresión (tests unitarios, git hooks, CI/CD)
+  - testing
 
 # =============================================================================
 # DOMINIOS OPCIONALES
