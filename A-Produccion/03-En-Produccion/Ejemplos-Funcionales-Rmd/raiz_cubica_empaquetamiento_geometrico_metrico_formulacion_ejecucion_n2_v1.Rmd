@@ -1,0 +1,1 @@
+../05-Geometría/Pensamiento-Espacial/18-Volumen-Y-Raíz-Cúbica/raiz_cubica_empaquetamiento_geometrico_metrico_formulacion_ejecucion_n2_v1/raiz_cubica_empaquetamiento_geometrico_metrico_formulacion_ejecucion_n2_v1.Rmd

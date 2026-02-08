@@ -20,7 +20,7 @@ icfes:
 ---
 
 ```{r setup, include=FALSE}
-# Configuracion para todos los formatos de salida
+# Configuración para todos los formatos de salida
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
 options(OutDec = ".")
 
