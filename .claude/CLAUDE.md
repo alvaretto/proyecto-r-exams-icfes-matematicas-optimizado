@@ -17,12 +17,13 @@ Este archivo funciona como **índice central** del sistema. Para información de
 1. **Ejercicios metacognitivos** con Progressive Disclosure → @.claude/rules/ejercicios-metacognitivos.md
 2. **Flujo B obligatorio** cuando hay gráficos → @.claude/rules/flujo-b-obligatorio.md
 3. **Proceso secuencial** TikZ→Python→R (98% fidelidad, usuario decide) → @.claude/rules/graficador-secuencial.md
-4. **Gráficos como opciones individuales** (PNGs separados) 🆕 → @.claude/rules/graficos-como-opciones.md
+4. **Gráficos como opciones individuales** (PNGs separados) → @.claude/rules/graficos-como-opciones.md
 5. **5 Coherencias** a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General)
 6. **Validación visual iterativa** OBLIGATORIA → @.claude/rules/ciclo-validacion.md
 7. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
 8. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
 9. **Detractor obligatorio** en fases de revisión → @.claude/rules/detractor-obligatorio.md
+10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md

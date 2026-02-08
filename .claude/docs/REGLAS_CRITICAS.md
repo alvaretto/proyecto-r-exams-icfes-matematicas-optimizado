@@ -4,18 +4,19 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
-### Las 10 Reglas Fundamentales
+### Las 11 Reglas Fundamentales
 
 1. **Ejercicios metacognitivos** con Progressive Disclosure
 2. **Flujo B obligatorio** cuando hay gráficos
-3. **Proceso secuencial** TikZ→Python→R (98% fidelidad, usuario decide) 🆕
-4. **Gráficos como opciones individuales** (PNGs separados) 🆕
+3. **Proceso secuencial** TikZ→Python→R (98% fidelidad, usuario decide)
+4. **Gráficos como opciones individuales** (PNGs separados)
 5. **5 Coherencias** a verificar en cada validación
 6. **Validación visual iterativa** con inspección REAL
 7. **Ortografía española** con tildes correctas
 8. **Testing automático** permanente con tolerancia cero
 9. **Detractor obligatorio** en todas las fases de revisión
-10. **Skill-retroalimentación** obligatorio para sección Solution 🆕
+10. **Skill-retroalimentación** obligatorio para sección Solution
+11. **Validación _neg_ opciones repetidas** (genérica con `digest()`) 🆕
 
 ---
 
@@ -789,6 +790,54 @@ confundan la fórmula del área (b × h) con la del perímetro (2b + 2h)...
 
 ---
 
+## 11. Validación _neg_ Opciones Repetidas (OBLIGATORIO) 🆕
+
+**Regla detallada**: @.claude/rules/validacion-neg-opciones-repetidas.md
+
+### Principio Fundamental
+
+**Todo ejercicio con `_neg_` en el nombre DEBE incluir el test genérico de opciones repetidas. Todo ejercicio SIN `_neg_` DEBE verificar que todas las opciones son únicas.**
+
+### Lógica Negativa vs Positiva
+
+| Tipo | Patrón de opciones | Requisito |
+|------|-------------------|-----------|
+| **Positiva** (sin `_neg_`) | 1 correcta + (N-1) distractores únicos | TODAS las opciones diferentes |
+| **Negativa** (con `_neg_`) | (N-1) correctas idénticas + 1 error | (N-1) idénticas + 1 diferente |
+
+### Dos Variantes de Test
+
+| Variante | Tipo de opciones | Equivalencia | Test |
+|----------|-----------------|-------------|------|
+| **A** (Datos/Gráficos) | Estructuras numéricas | Datos idénticos, diferenciados por color | `digest::digest()` → 2 hashes |
+| **B** (Texto) | Afirmaciones/justificaciones | Significado idéntico, redacción diferente (sinónimos) | Etiquetas semánticas (`correcta1..N`, `error`) |
+
+```r
+# Variante A: digest() para datos/gráficos
+hashes <- sapply(letras, function(l) digest::digest(opciones_data[[l]]))
+# → (N-1) hashes iguales + 1 diferente
+
+# Variante B: etiquetas semánticas para texto
+expect_true("error" %in% names(opciones_mezcladas))
+expect_equal(sum(grepl("^correcta", names(opciones_mezcladas))), n_opciones - 1)
+# + verificar que los textos son todos diferentes (no copiar-pegar)
+```
+
+### Convenciones Obligatorias
+
+- **Nomenclatura**: `_neg_` antes de `_v[N]` en el nombre del archivo
+- **Gráficos**: `colores_opciones` con N colores únicos y neutrales
+- **Texto**: (N-1) opciones correctas formuladas como sinónimos/paráfrasis
+- **`sol`**: Marca la opción con ERROR (respuesta correcta a seleccionar)
+- **Pregunta**: Incluye "***NO***" con énfasis visual
+- **DOK**: ≥ 3 (la lógica negativa aumenta la demanda cognitiva)
+
+### Detección Automática
+
+Claude DEBE detectar `_neg_` en el nombre del archivo y aplicar la variante de validación correspondiente (A o B) automáticamente.
+
+---
+
 ## 📋 Checklist de Cumplimiento
 
 Antes de finalizar CUALQUIER ejercicio:
@@ -813,9 +862,15 @@ Antes de finalizar CUALQUIER ejercicio:
 
 ---
 
-**Versión**: 1.3
-**Fecha**: 2026-02-07
+**Versión**: 1.4
+**Fecha**: 2026-02-08
 **Módulo de**: @.claude/CLAUDE.md (v3.2.2)
+
+### Cambios v1.4 (2026-02-08)
+
+- **11 reglas fundamentales** (era 10, ahora 11)
+- **Regla #11 nueva**: Validación `_neg_` opciones repetidas con `digest::digest()` genérico
+- Regla aplica a: ejercicios con `_neg_` (verificar patrón N-1 idénticas + 1 diferente) y sin `_neg_` (verificar todas únicas)
 
 ### Cambios v1.3 (2026-02-07)
 

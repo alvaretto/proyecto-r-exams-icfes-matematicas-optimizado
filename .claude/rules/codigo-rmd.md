@@ -94,6 +94,14 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
 - Dificultad apropiada al nivel declarado (n1-n4)
 - Tiempo de resolución razonable para el contexto
 
+7. **NO omitir validación de opciones repetidas en ejercicios `_neg_`**
+   ```r
+   # Si el archivo tiene _neg_ en el nombre:
+   # - OBLIGATORIO: test con digest::digest() que verifica (N-1) idénticas + 1 diferente
+   # - OBLIGATORIO: colores_opciones con N colores únicos
+   # Ver: .claude/rules/validacion-neg-opciones-repetidas.md
+   ```
+
 ## ✓ SIEMPRE hacer:
 
 - Validar gráficos dinámicos en PDF Y HTML
@@ -101,6 +109,7 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
 - Ejecutar ciclo completo de validación (FASE 1→2→3)
 - Documentar solo después de confirmar solución 100%
 - Usar metadatos ICFES completos (6 dimensiones)
+- Si archivo es `_neg_`: incluir test genérico de opciones repetidas (regla #11)
 
 ## Metadatos ICFES Requeridos
 
