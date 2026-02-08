@@ -129,7 +129,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 #### `/promover-ejercicio`
 
-**Propósito:** Mover ejercicio testeado desde En-Desarrollo a Nuevos-Ejercicios
+**Propósito:** Mover ejercicio testeado desde En-Desarrollo a 03-En-Produccion/[categoría ICFES]/
 
 **Prerequisitos:**
 

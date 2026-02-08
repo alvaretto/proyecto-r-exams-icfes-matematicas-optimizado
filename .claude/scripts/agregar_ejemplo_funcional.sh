@@ -23,7 +23,7 @@ if [ $# -lt 2 ]; then
     error "Uso: $0 [ruta_ejercicio.Rmd] [codigo_id]
 
 Ejemplo:
-  $0 A-Produccion/02-Nuevos-Ejercicios/ejercicio/ejercicio.Rmd EST-INT-04
+  $0 A-Produccion/02-En-Desarrollo/ejercicio/ejercicio.Rmd EST-INT-04
 
 Códigos válidos:
   [AREA]-[COMP]-[NUM]

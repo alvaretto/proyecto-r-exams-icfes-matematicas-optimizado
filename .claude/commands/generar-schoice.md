@@ -127,7 +127,7 @@ Generación del archivo .Rmd
 ## Ruta de generación
 **Carpeta destino**: `/A-Produccion/En-Desarrollo/`
 
-Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/Nuevos-Ejercicios/`
+Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
 
 ## ⚠️ NOMENCLATURA OBLIGATORIA
 
@@ -272,7 +272,7 @@ outputs/series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v
 Ejecutar skill `validar-diversidad` para confirmar aleatorización.
 
 ### Paso 7: Promoción (después de testear)
-Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
+Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
 
 ## ⚠️ ERRORES COMUNES DE COMPILACIÓN LATEX
 

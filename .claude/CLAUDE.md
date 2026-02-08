@@ -51,8 +51,9 @@ Este archivo funciona como **índice central** del sistema. Para información de
 **Directorios principales:**
 ```
 A-Produccion/
-├── Nuevos-Ejercicios/           # Validados
-├── En-Desarrollo/               # En proceso
+├── 01-En-PreDesarrollo/         # Experimentación
+├── 02-En-Desarrollo/            # En proceso
+├── 03-En-Produccion/            # Validados (por categoría ICFES)
 └── Ejemplos-Funcionales-Rmd/    # FUENTE DE VERDAD
 
 .claude/

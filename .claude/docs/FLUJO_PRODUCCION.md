@@ -296,11 +296,11 @@ find A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/ -maxdepth 1 -name "
 
 ## 🚨 Errores Comunes
 
-### ❌ Error 1: "No encuentro Nuevos-Ejercicios/"
+### ❌ Error 1: "¿Dónde van los ejercicios validados?"
 
-**Problema**: La documentación antigua mencionaba `02-Nuevos-Ejercicios/`
+**Problema**: La documentación antigua mencionaba `Nuevos-Ejercicios/`
 
-**Solución**: NO existe. Los ejercicios validados están en `02-En-Desarrollo/`
+**Solución**: Los ejercicios validados se promueven a `03-En-Produccion/[categoría ICFES]/`
 
 ---
 

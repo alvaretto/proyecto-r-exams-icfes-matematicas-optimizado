@@ -154,7 +154,7 @@ outputs/series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v
 | Estado | Carpeta Base |
 |--------|--------------|
 | En desarrollo | `/A-Produccion/En-Desarrollo/[nombre_ejercicio]/` |
-| Nuevos (validados) | `/A-Produccion/Nuevos-Ejercicios/[nombre_ejercicio]/` |
+| Validados (producción) | `/A-Produccion/03-En-Produccion/[categoría]/[nombre_ejercicio]/` |
 | En producción | `/A-Produccion/En-Produccion/[categoria]/[nombre_ejercicio]/` |
 
 ## Errores Comunes a Evitar

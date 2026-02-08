@@ -196,7 +196,7 @@ exclozetype: num|schoice|mchoice|string
 ---
 
 #### `/promover-ejercicio`
-**Propósito**: Mover ejercicio validado de En-Desarrollo a Nuevos-Ejercicios
+**Propósito**: Mover ejercicio validado de En-Desarrollo a 03-En-Produccion/[categoría ICFES]/
 
 **Uso**:
 ```bash
@@ -212,7 +212,7 @@ exclozetype: num|schoice|mchoice|string
 **Qué hace**:
 1. Verifica estado de validación
 2. Ejecuta tests finales
-3. Mueve archivo a `A-Produccion/Nuevos-Ejercicios/`
+3. Mueve archivo a `A-Produccion/03-En-Produccion/[categoría ICFES]/`
 4. Actualiza índice de ejercicios
 5. Registra en historial
 

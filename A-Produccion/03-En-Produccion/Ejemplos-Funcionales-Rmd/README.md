@@ -444,7 +444,7 @@ Si un ejercicio queda obsoleto:
   - `/generar-cloze` - Genera ejercicios CLOZE
   - `/validar-renderizado` - FASE 1 del ciclo
   - `/validar-coherencia` - FASE 2 del ciclo
-  - `/promover-ejercicio` - Mover a Nuevos-Ejercicios
+  - `/promover-ejercicio` - Mover a 03-En-Produccion/
 
 - **Comandos útiles**:
   ```bash

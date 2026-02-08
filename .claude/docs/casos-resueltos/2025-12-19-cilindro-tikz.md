@@ -237,7 +237,7 @@ Este patrón de corrección aplica a **todos** los casos de:
 
 1. ✅ Ejercicio corregido y validado
 2. ⏭️ Listo para promover con `/promover-ejercicio`
-3. ⏭️ Mover a `/A-Produccion/Nuevos-Ejercicios/`
+3. ⏭️ Mover a `/A-Produccion/03-En-Produccion/[categoría]/`
 
 ### Para el sistema de automatización
 

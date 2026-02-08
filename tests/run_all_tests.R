@@ -68,6 +68,11 @@ suites <- list(
     nombre = "Tests de Regresión",
     archivo = "tests/testthat/test_regression_suite.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "Distintividad Visual _neg_",
+    archivo = "tests/testthat/test_neg_visual_distinctness.R",
+    critico = TRUE
   )
 )
 

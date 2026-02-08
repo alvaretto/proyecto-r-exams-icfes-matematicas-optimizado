@@ -199,7 +199,7 @@
 │     └─ Calidad matemática: ✅ Verificada               │
 │                                                          │
 │  📦 Moviendo archivo a:                                 │
-│     A-Produccion/Nuevos-Ejercicios/                     │
+│     A-Produccion/03-En-Produccion/[categoría]/          │
 │                                                          │
 │  ✅ EJERCICIO EN PRODUCCIÓN                             │
 └──────────────────────────────────────────────────────────┘

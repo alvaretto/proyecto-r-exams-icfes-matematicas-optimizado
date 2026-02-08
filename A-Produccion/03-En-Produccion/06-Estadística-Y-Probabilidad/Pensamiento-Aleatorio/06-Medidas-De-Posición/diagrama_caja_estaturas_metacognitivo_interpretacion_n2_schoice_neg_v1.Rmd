@@ -786,6 +786,12 @@ Las otras tres opciones muestran diagramas de caja que representan **correctamen
 
 En los tres casos se cumple la relación $\text{Mín} \leq Q_1 \leq Q_2 \leq Q_3 \leq \text{Máx}$ y todos los valores coinciden con los calculados. Es posible que los estudiantes que eligen una de estas opciones hayan identificado un diagrama correcto creyendo que era incorrecto, o que no hayan leído con atención que la pregunta solicita el diagrama que **NO** representa correctamente los datos.
 
+### Caso Específico
+
+Con estos datos, consideremos la afirmación: *"El valor `r cuartiles_correctos$q3` `r ctx$unidad` se encuentra en el 75% inferior de los datos"*.
+
+**Verdadero.** El tercer cuartil $Q_3 = `r cuartiles_correctos$q3`$ `r ctx$unidad` marca exactamente el límite que deja el 75% de los datos por debajo y el 25% por encima. En el diagrama correcto, este valor corresponde al borde superior de la caja. Un estudiante que confunde $Q_1$ con $Q_3$ podría pensar incorrectamente que `r cuartiles_correctos$q3` `r ctx$unidad` representa solo el 25% inferior.
+
 ### Reflexión Metacognitiva
 
 `r reflexion`

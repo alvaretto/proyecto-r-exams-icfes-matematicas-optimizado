@@ -610,7 +610,7 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 10 "LaTeX"
 1. **Verifica criterios de calidad**
 2. **Mueve el archivo** a:
    ```
-   A-Produccion/Nuevos-Ejercicios/[archivo].Rmd
+   A-Produccion/03-En-Produccion/[categoría-ICFES]/[archivo].Rmd
    ```
 
 3. **Actualiza registro** de ejercicios en producción
@@ -619,7 +619,7 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 10 "LaTeX"
 ### 7.4 Ubicación Final
 
 ```
-A-Produccion/Nuevos-Ejercicios/
+A-Produccion/03-En-Produccion/[categoría-ICFES]/
 └── Triangulos_Geometrico_Formulacion_n3_v1.Rmd
 ```
 

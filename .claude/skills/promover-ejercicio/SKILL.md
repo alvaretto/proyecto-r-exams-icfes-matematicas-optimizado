@@ -1,5 +1,5 @@
 ---
-description: Mueve un ejercicio validado desde En-Desarrollo a Nuevos-Ejercicios después de completar el Ciclo de Validación.
+description: Mueve un ejercicio validado desde En-Desarrollo a 03-En-Produccion/[categoría ICFES]/ después de completar el Ciclo de Validación.
 ---
 
 # Promover Ejercicio Validado
@@ -20,7 +20,7 @@ Este skill se ejecuta **SOLO** después de completar exitosamente el ciclo compl
     └── ❌ SIN ERRORES → PROMOVER EJERCICIO ← ESTE SKILL
 ```
 
-Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/Nuevos-Ejercicios/`
+Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
 después de validar que cumple todos los criterios de calidad.
 
 ## Parámetros de entrada
@@ -74,18 +74,18 @@ Rscript -e 'library(exams); exams2html("[nombre].Rmd", n=3)'
 ls -la /A-Produccion/En-Desarrollo/[nombre].Rmd
 ```
 
-### Paso 2: Mover archivo
+### Paso 2: Mover archivo a categoría ICFES correspondiente
 ```bash
-mv /A-Produccion/En-Desarrollo/[nombre].Rmd /A-Produccion/Nuevos-Ejercicios/[nombre].Rmd
+mv /A-Produccion/En-Desarrollo/[nombre].Rmd /A-Produccion/03-En-Produccion/[categoría-ICFES]/[nombre].Rmd
 ```
 
 ### Paso 3: Confirmar movimiento
 ```bash
-ls -la /A-Produccion/Nuevos-Ejercicios/[nombre].Rmd
+ls -la /A-Produccion/03-En-Produccion/[categoría-ICFES]/[nombre].Rmd
 ```
 
 ### Paso 4: Actualizar registro (opcional)
-Agregar entrada en `/A-Produccion/Nuevos-Ejercicios/README.md` con:
+Agregar entrada en el directorio correspondiente con:
 
 - Nombre del ejercicio
 - Fecha de promoción

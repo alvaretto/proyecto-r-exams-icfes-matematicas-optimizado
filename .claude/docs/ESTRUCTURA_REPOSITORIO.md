@@ -6,10 +6,10 @@
 RepositorioMatematicasICFES_R_Exams/
 │
 ├── A-Produccion/                      # PRODUCCIÓN
-│   ├── Nuevos-Ejercicios/            # Ejercicios validados listos
-│   ├── En-Desarrollo/                # Ejercicios en creación/validación
-│   ├── Ejemplos-Funcionales-Rmd/     # FUENTE DE VERDAD (INMUTABLES)
-│   └── 03-En-Produccion/             # Ejercicios finalizados por categoría
+│   ├── 01-En-PreDesarrollo/          # Experimentación inicial
+│   ├── 02-En-Desarrollo/             # Ejercicios en creación/validación
+│   ├── 03-En-Produccion/             # Ejercicios validados por categoría ICFES
+│   └── Ejemplos-Funcionales-Rmd/     # FUENTE DE VERDAD (INMUTABLES)
 │
 ├── .claude/                           # SISTEMA CLAUDE CODE
 │   ├── CLAUDE.md                     # Índice principal
@@ -54,27 +54,7 @@ RepositorioMatematicasICFES_R_Exams/
 
 #### Subdirectorios:
 
-##### `Nuevos-Ejercicios/`
-**Estado**: Validados y listos para usar
-**Contenido**: Archivos `.Rmd` que han pasado:
-- Ciclo completo de validación (FASE 1+2+3)
-- Flujo B (si tienen gráficos)
-- 100% de tests
-- Aprobación explícita del usuario
-
-**Promoción**: Archivos movidos aquí desde `En-Desarrollo/` con `/promover-ejercicio`
-
-**Ejemplo**:
-```
-Nuevos-Ejercicios/
-├── Geometria-Triangulo-Area-schoice.Rmd
-├── Algebra-Ecuacion-Lineal-cloze.Rmd
-└── Variacion-Proporcionalidad-schoice.Rmd
-```
-
----
-
-##### `En-Desarrollo/`
+##### `02-En-Desarrollo/`
 **Estado**: En creación o validación
 **Contenido**: Archivos `.Rmd` siendo trabajados
 - Pueden tener errores pendientes
@@ -395,8 +375,8 @@ outputs/
 
 | Necesito... | Directorio/Archivo |
 |-------------|--------------------|
-| Ejercicio listo para usar | `A-Produccion/Nuevos-Ejercicios/` |
-| Ejercicio en desarrollo | `A-Produccion/En-Desarrollo/` |
+| Ejercicio validado en producción | `A-Produccion/03-En-Produccion/[categoría]/` |
+| Ejercicio en desarrollo | `A-Produccion/02-En-Desarrollo/` |
 | Patrón de solución validado | `A-Produccion/Ejemplos-Funcionales-Rmd/` |
 | Regla obligatoria | `.claude/rules/` |
 | Documentación técnica | `.claude/docs/` |
@@ -528,7 +508,7 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 5. Promover
    → /promover-ejercicio
-   → Mover a A-Produccion/Nuevos-Ejercicios/
+   → Mover a A-Produccion/03-En-Produccion/[categoría]/
 
 6. Push
    → Pre-push ejecuta suite completa

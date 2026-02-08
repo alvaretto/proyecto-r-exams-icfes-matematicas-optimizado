@@ -127,7 +127,7 @@ Generación del archivo .Rmd
 ## Ruta de generación
 **Carpeta destino**: `/A-Produccion/En-Desarrollo/`
 
-Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/Nuevos-Ejercicios/`
+Una vez testeado, usar `/promover-ejercicio` para mover a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
 
 ## ⚠️ NOMENCLATURA OBLIGATORIA
 
@@ -278,7 +278,7 @@ outputs/probabilidad_condicional_dados_aleatorio_formulacion_ejecucion_n3_v1/
 Ejecutar skill `validar-diversidad` y `validar-metadatos-icfes`.
 
 ### Paso 8: Promoción (después de testear)
-Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`
+Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
 
 ## ⚠️ ERRORES COMUNES DE COMPILACIÓN LATEX
 
