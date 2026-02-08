@@ -1,94 +1,96 @@
 ---
-description: Mueve un ejercicio validado desde En-Desarrollo a 03-En-Produccion/[categoría ICFES]/ después de completar el Ciclo de Validación.
+description: Mueve un ejercicio a 03-En-Produccion/ SOLO después de validación en aula con estudiantes reales (Nivel 3). Es el ÚLTIMO paso del workflow.
 ---
 
-# Promover Ejercicio Validado
+# Promover Ejercicio a Produccion
 
-## ⚡ CONTEXTO: Ciclo de Validación y Corrección Automática
+## ⚡ CONTEXTO: ÚLTIMO PASO del Workflow
 
-Este skill se ejecuta **SOLO** después de completar exitosamente el ciclo completo:
+Este skill es el **paso final** del flujo de trabajo completo. Se ejecuta **SOLO** despues de que el ejercicio ha sido probado con estudiantes reales en el aula (Nivel 3: Terreno).
 
 ```
-🔄 FASE 1: Renderizado Inicial ✅
+🔄 Niveles 1+2: Validacion automatica (RStudio + Scripts) ✅
     │
     ▼
-🔍 FASE 2: Validación Visual y Funcional ✅
+📋 Ejercicio queda en 02-En-Desarrollo/ como "Listo para Aula"
     │
     ▼
-⚡ FASE 3: Decisión y Acción
+🎓 Nivel 3: Validacion en Terreno (estudiantes reales) ✅
     │
-    └── ❌ SIN ERRORES → PROMOVER EJERCICIO ← ESTE SKILL
+    ▼
+🚀 /promover-ejercicio ← ESTE SKILL (ÚLTIMO PASO)
 ```
 
-Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
-después de validar que cumple todos los criterios de calidad.
+Mueve un archivo .Rmd desde su ubicacion actual a `/A-Produccion/03-En-Produccion/[categoria ICFES]/`
+**SOLO** despues de confirmar validacion con estudiantes.
 
-## Parámetros de entrada
+## Parametros de entrada
 
 - **$ARGUMENTS**: Nombre del archivo .Rmd a promover
 
-## ⛔ PRERREQUISITO OBLIGATORIO
+## ⛔ PRERREQUISITOS OBLIGATORIOS (TODOS)
 
-**El ejercicio DEBE haber pasado el Ciclo de Validación Automática completo:**
+### Nivel 1+2: Validacion Automatica (ya completada)
 
 1. ✅ FASE 1: Renderizado exitoso en 4 formatos (HTML, PDF, DOCX, NOPS)
-2. ✅ FASE 2: Coherencia matemática, imagen-texto, código verificada
+2. ✅ FASE 2: Coherencias verificadas (matematica, visual-texto, codigo, semantica, general)
 3. ✅ FASE 3: Sin errores pendientes
+4. ✅ Diversidad: 200+ versiones unicas de 300 intentos
+5. ✅ Detractor: Auditoria aprobada
 
-## Criterios de validación previos
+### Nivel 3: Validacion en Terreno (OBLIGATORIO NUEVO)
 
-Antes de promover, verificar que el ejercicio cumple:
+6. ✅ **Aplicado en aula** con estudiantes reales
+7. ✅ **Tasa de acierto razonable** (entre 25% y 95%)
+8. ✅ **Sin ambiguedades** reportadas por estudiantes
+9. ✅ **Tiempo de resolucion** apropiado (5-10 min)
+10. ✅ **Feedback** recopilado y documentado
 
-### 1. Diversidad de versiones
-```bash
-# Ejecutar test de diversidad
-Rscript -e 'testthat::test_file("tests/testthat/test_[nombre].R")'
-```
-✅ Debe generar **250+ versiones únicas** (de 300 intentos)
+**⛔ SIN EVIDENCIA DE NIVEL 3, LA PROMOCION ESTA BLOQUEADA.**
 
-### 2. Compilación exitosa
-```bash
-# Probar compilación en RStudio
-Rscript -e 'library(exams); exams2html("[nombre].Rmd", n=3)'
-```
-✅ Debe compilar sin errores en HTML, PDF y Moodle
+## Proceso de promocion
 
-### 3. Metadatos ICFES completos
+### Paso 1: Confirmar evidencia de Nivel 3
 
-- ✅ Competencia definida
-- ✅ Nivel de dificultad (1-4)
-- ✅ Componente especificado
-- ✅ Tipo de ejercicio (schoice/cloze)
+Claude DEBE preguntar al usuario:
 
-### 4. Calidad del contenido
+```markdown
+## Verificacion de Nivel 3 (Terreno)
 
-- ✅ Distractores pedagógicos efectivos
-- ✅ Explicación detallada en Solution
-- ✅ Formato numérico correcto (sin notación científica)
-- ✅ Tolerancias apropiadas (para tipo cloze)
+Antes de promover, confirme:
 
-## Proceso de promoción
-
-### Paso 1: Verificar ubicación actual
-```bash
-ls -la /A-Produccion/En-Desarrollo/[nombre].Rmd
+1. ¿Este ejercicio fue aplicado en aula con estudiantes? [Si/No]
+2. ¿Cual fue la tasa de acierto aproximada? [___%]
+3. ¿Hubo preguntas frecuentes o ambiguedades? [Si/No - Descripcion]
+4. ¿El tiempo de resolucion fue razonable? [Si/No]
+5. ¿Algun feedback relevante de estudiantes? [Texto libre]
 ```
 
-### Paso 2: Mover archivo a categoría ICFES correspondiente
+**Si alguna respuesta indica problemas → BLOQUEAR promocion → Corregir primero.**
+
+### Paso 2: Verificar ubicacion actual
 ```bash
-mv /A-Produccion/En-Desarrollo/[nombre].Rmd /A-Produccion/03-En-Produccion/[categoría-ICFES]/[nombre].Rmd
+ls -la [ruta_actual]/[nombre].Rmd
 ```
 
-### Paso 3: Confirmar movimiento
+### Paso 3: Mover archivo a categoria ICFES correspondiente
 ```bash
-ls -la /A-Produccion/03-En-Produccion/[categoría-ICFES]/[nombre].Rmd
+mv [ruta_actual]/[nombre].Rmd A-Produccion/03-En-Produccion/[categoria-ICFES]/[nombre].Rmd
 ```
 
-### Paso 4: Actualizar registro (opcional)
-Agregar entrada en el directorio correspondiente con:
+### Paso 4: Confirmar movimiento
+```bash
+ls -la A-Produccion/03-En-Produccion/[categoria-ICFES]/[nombre].Rmd
+```
+
+### Paso 5: Registrar evidencia de validacion en terreno
+Agregar entrada con:
 
 - Nombre del ejercicio
-- Fecha de promoción
+- Fecha de promocion
+- Fecha de aplicacion en aula
+- Tasa de acierto observada
+- Feedback resumido
 - Competencia y nivel
 - Tipo de ejercicio
 
@@ -98,20 +100,21 @@ Agregar entrada en el directorio correspondiente con:
 /promover-ejercicio probabilidad_aleatorio_interpretacion_n2_v1.Rmd
 ```
 
-## ⛔ CONDICIONES CRÍTICAS (NO NEGOCIABLES)
+## ⛔ CONDICIONES CRITICAS (NO NEGOCIABLES)
 
-1. ❌ **NUNCA promover** un ejercicio con errores pendientes
-2. ❌ **NUNCA promover** sin completar el Ciclo de Validación
-3. ✓ **SIEMPRE** verificar los 4 criterios de calidad
-4. ✓ **SIEMPRE** confirmar renderizado exitoso en 4 formatos
-5. ✓ El ejercicio debe haber pasado FASE 1, FASE 2 y FASE 3 sin errores
+1. ❌ **NUNCA promover** sin validacion en aula (Nivel 3)
+2. ❌ **NUNCA promover** con errores pendientes de Nivel 1+2
+3. ❌ **NUNCA promover** sin evidencia de feedback estudiantil
+4. ✓ **SIEMPRE** preguntar por evidencia de Nivel 3 antes de mover
+5. ✓ **SIEMPRE** registrar datos de la validacion en terreno
+6. ✓ El ejercicio debe haber pasado los 3 Niveles de Validacion
 
 ## Regla de Oro
-**NUNCA promuevas** un ejercicio sin completar el Ciclo de Validación Automática.
+**`03-En-Produccion/` solo contiene ejercicios probados con estudiantes reales.** Ningun ejercicio llega ahi solo por pasar validacion automatica.
 
 ## Referencias
 
-- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 - `.claude/docs/TRES_NIVELES_VALIDACION.md`
+- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
+- `.claude/rules/ciclo-validacion.md`
 

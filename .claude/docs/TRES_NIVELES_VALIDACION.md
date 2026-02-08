@@ -307,21 +307,22 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 
 | Aspecto | Nivel 1 | Nivel 2 | Nivel 3 |
 |---------|---------|---------|---------|
-| **Cuando** | Durante desarrollo | Antes de promoción | Después de promoción |
-| **Quien** | Desarrollador | Automatizado | Estudiantes |
+| **Cuando** | Durante desarrollo | Antes de testing en aula | **Antes de promocion** |
+| **Quien** | Desarrollador | Automatizado | Estudiantes reales |
 | **Donde** | RStudio | Scripts | Aula |
-| **Detecta** | Errores técnicos | Problemas de formato | Problemas pedagógicos |
-| **Tiempo** | < 1 min | < 5 min | Días/semanas |
+| **Detecta** | Errores tecnicos | Problemas de formato | Problemas pedagogicos |
+| **Tiempo** | < 1 min | < 5 min | Dias/semanas |
 | **Automatizable** | Parcial | Total | No |
-| **Obligatorio** | Sí | Sí | Sí (post-producción) |
+| **Obligatorio** | Si | Si | **Si (pre-produccion)** |
+| **Resultado** | Ejercicio funciona | Listo para aula | **Listo para 03-En-Produccion/** |
 
 ---
 
-## 🔄 Flujo Completo de Validación (Integrado con Ciclo Automático)
+## 🔄 Flujo Completo de Validacion (Integrado con Ciclo Automatico)
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│              PROCESO COMPLETO CON CICLO AUTOMÁTICO         │
+│              PROCESO COMPLETO CON CICLO AUTOMATICO          │
 └────────────────────────────────────────────────────────────┘
 
 1. DESARROLLO
@@ -331,55 +332,50 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
    │   └── ❌ Falla → Corregir y repetir
    └── Desarrollo completo
 
-2. PRE-PRODUCCIÓN (🔄 CICLO AUTOMÁTICO OBLIGATORIO)
+2. VALIDACION AUTOMATICA (🔄 CICLO AUTOMATICO OBLIGATORIO)
    │
-   ├── ═══════════════════════════════════════════════════════
-   │   🔄 FASE 1: RENDERIZADO INICIAL
+   ├── 🔄 FASE 1: RENDERIZADO INICIAL
    │   ├── exams2html(), exams2pdf(), exams2docx(), exams2nops()
    │   └── Capturar errores/advertencias
    │
-   ├── ═══════════════════════════════════════════════════════
-   │   🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
-   │   ├── ✓ Coherencia Matemática
+   ├── 🔍 FASE 2: VALIDACION VISUAL Y FUNCIONAL
+   │   ├── ✓ Coherencia Matematica
    │   ├── ✓ Coherencia Imagen-Texto
-   │   ├── ✓ Coherencia de Código
+   │   ├── ✓ Coherencia de Codigo
    │   └── ✓ Renderizado 4 formatos
    │
-   ├── ═══════════════════════════════════════════════════════
-   │   ⚡ FASE 3: DECISIÓN Y ACCIÓN
-   │   │
+   ├── ⚡ FASE 3: DECISION Y ACCION
    │   ├── ❌ SIN ERRORES → Continuar
-   │   │
-   │   └── ✓ CON ERRORES:
-   │       │
-   │       ├── 📚 SUBFASE 3A: Consultar ejemplos funcionales
-   │       │   Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/
-   │       │
-   │       ├── 🔄 SUBFASE 3B: VOLVER A FASE 1 (Revalidación)
-   │       │   ⚠️ NO TERMINAR hasta resolver todos los errores
-   │       │
-   │       └── 📊 SUBFASE 3C: Documentar solución exitosa
-   │           Ruta: .claude/docs/patrones-errores-conocidos.md
+   │   └── ✓ CON ERRORES → Corregir → VOLVER A FASE 1
    │
-   ├── ═══════════════════════════════════════════════════════
+   └── NIVEL 2: ✅ 100% exito confirmado
+       → Ejercicio queda en 02-En-Desarrollo/ como "LISTO PARA AULA"
+
+3. VALIDACION EN TERRENO (Nivel 3) ← ANTES DE PRODUCCION
+   ├── Aplicar en aula con estudiantes reales
+   ├── Recopilar evidencia:
+   │   ├── Tasa de acierto (25-95%)
+   │   ├── Tiempo de resolucion
+   │   ├── Ambiguedades reportadas
+   │   └── Feedback estudiantil
    │
-   ├── NIVEL 2: ✅ 100% éxito confirmado → Promocionar
-   ├── /promover-ejercicio
-   └── Ejercicio en producción
+   ├── ✅ Funciona bien → Continuar a PROMOCION
+   ├── ⚠️ Problemas menores → Ajustar → VOLVER A PASO 2
+   └── ❌ Problemas graves → Corregir urgente → VOLVER A PASO 1
 
-3. PRODUCCIÓN
-   ├── Aplicar en aula
-   ├── NIVEL 3: Validación con estudiantes
-   │   ├── ✅ Funciona bien → Mantener
-   │   ├── ⚠️ Problemas menores → Ajustar en próxima versión
-   │   └── ❌ Problemas graves → Retirar y corregir urgente
-   └── Feedback al sistema
+4. PROMOCION A PRODUCCION (ULTIMO PASO)
+   ├── /promover-ejercicio (requiere evidencia de Nivel 3)
+   ├── Mover a A-Produccion/03-En-Produccion/[categoria]/
+   └── Registrar datos de validacion en terreno
 
-4. MEJORA CONTINUA
+5. MEJORA CONTINUA
    ├── Documentar lecciones aprendidas en patrones-errores-conocidos.md
    ├── Actualizar ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/
-   └── Mejorar proceso de validación (fuente de verdad)
+   └── Mejorar proceso de validacion (fuente de verdad)
 ```
+
+### ⛔ Regla Fundamental
+**`03-En-Produccion/` solo contiene ejercicios que han pasado los 3 niveles de validacion, incluyendo testing con estudiantes reales.** La validacion automatica (Niveles 1+2) es necesaria pero NO suficiente para promocion.
 
 ---
 

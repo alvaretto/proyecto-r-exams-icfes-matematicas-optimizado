@@ -55,11 +55,12 @@ RepositorioMatematicasICFES_R_Exams/
 #### Subdirectorios:
 
 ##### `02-En-Desarrollo/`
-**Estado**: En creación o validación
-**Contenido**: Archivos `.Rmd` siendo trabajados
-- Pueden tener errores pendientes
-- Validación en progreso
-- Flujo B en curso (si tienen gráficos)
+**Estado**: En creacion, validacion, o **Listo para Aula**
+**Contenido**: Archivos `.Rmd` siendo trabajados o esperando validacion en terreno
+- Pueden tener errores pendientes (en creacion)
+- Validacion automatica en progreso
+- Flujo B en curso (si tienen graficos)
+- **Ejercicios que pasaron Niveles 1+2 permanecen aqui** hasta ser probados con estudiantes
 
 **Organización recomendada**:
 ```
@@ -118,7 +119,8 @@ Ejemplos-Funcionales-Rmd/
 ---
 
 ##### `03-En-Produccion/`
-**Estado**: Ejercicios finalizados organizados por categoría ICFES 2026
+**Estado**: Ejercicios validados con estudiantes reales (Nivel 3: Terreno) organizados por categoria ICFES 2026
+**⛔ SOLO ejercicios que han pasado los 3 niveles de validacion, incluyendo testing en aula.**
 
 **Organización** (6 categorías + Ejemplos):
 ```
@@ -489,30 +491,31 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 ---
 
-## 🔄 Flujo de Trabajo Típico
+## 🔄 Flujo de Trabajo Tipico
 
 ```
 1. Crear ejercicio
-   → A-Produccion/En-Desarrollo/[categoria]/[ejercicio]/
+   → A-Produccion/02-En-Desarrollo/[categoria]/[ejercicio]/
 
 2. Desarrollar
-   → .Rmd + gráficos (si aplica, Flujo B)
+   → .Rmd + graficos (si aplica, Flujo B)
 
-3. Validar automáticamente
+3. Validar automaticamente (Niveles 1+2)
    → Hooks ejecutan FASE 2A + 2B
    → Claude verifica 5 coherencias
+   → Tests automaticos + Detractor
 
-4. Tests automáticos
-   → Pre/Post hooks validan cambios
-   → Suite completa antes de commit
+4. Ejercicio "LISTO PARA AULA"
+   → Permanece en 02-En-Desarrollo/
+   → Commit + Push con tests pasando
 
-5. Promover
-   → /promover-ejercicio
-   → Mover a A-Produccion/03-En-Produccion/[categoría]/
+5. Validar en Terreno (Nivel 3)
+   → Aplicar con estudiantes reales
+   → Recopilar evidencia y feedback
 
-6. Push
-   → Pre-push ejecuta suite completa
-   → CI/CD remoto valida en GitHub Actions
+6. Promover a Produccion (ULTIMO PASO)
+   → /promover-ejercicio (requiere evidencia Nivel 3)
+   → Mover a A-Produccion/03-En-Produccion/[categoria]/
 ```
 
 ---

@@ -420,15 +420,15 @@ bloqueos:
 │     │                                                   │
 │     └── APROBAR → Continuar                            │
 │     ↓                                                   │
-│  8. FASE 3: Documentar 5 coherencias + Pedir aprobación│
+│  8. FASE 3: Documentar 5 coherencias + Pedir aprobacion│
 │     ↓                                                   │
-│  9. Usuario aprueba → /promover-ejercicio              │
+│  9. Usuario aprueba → Ejercicio "LISTO PARA AULA"      │
+│     → Permanece en 02-En-Desarrollo/                   │
 │     ↓                                                   │
-│  10. /detractor auditoria [directorio/] ← OBLIGATORIO  │
-│      │                                                  │
-│      ├── Objeciones → Corregir → VOLVER A (4)          │
-│      │                                                  │
-│      └── APROBAR → Promoción exitosa ✅                │
+│  10. NIVEL 3: Aplicar en aula con estudiantes           │
+│     ↓                                                   │
+│  11. /promover-ejercicio (requiere evidencia Nivel 3)   │
+│      → Mover a 03-En-Produccion/ ✅                    │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```

@@ -1,107 +1,61 @@
 ---
-description: Mueve un ejercicio validado desde En-Desarrollo a 03-En-Produccion/[categoría ICFES]/ después de completar el Ciclo de Validación.
+description: Mueve un ejercicio a 03-En-Produccion/ SOLO despues de validacion en aula con estudiantes reales (Nivel 3). ULTIMO paso del workflow.
 ---
 
-# Promover Ejercicio Validado
+# Promover Ejercicio a Produccion
 
-## ⚡ PRERREQUISITO: Ciclo de Validación Completado
+## ⚡ PRERREQUISITO: Validacion en Terreno (Nivel 3) Completada
 
-Este comando se ejecuta **SOLO** después de completar exitosamente el ciclo completo:
+Este comando es el **ULTIMO PASO** del workflow. Se ejecuta **SOLO** despues de que el ejercicio ha sido probado con estudiantes reales en el aula.
 
 ```
-🔄 FASE 1: Renderizado Inicial ✅
+Niveles 1+2: Validacion automatica ✅
     │
     ▼
-🔍 FASE 2: Validación Visual y Funcional ✅
+Ejercicio en 02-En-Desarrollo/ (Listo para Aula)
     │
     ▼
-⚡ FASE 3: Decisión y Acción
+Nivel 3: Aplicado en aula con estudiantes ✅
     │
-    └── ❌ SIN ERRORES → PROMOVER EJERCICIO ← ESTE COMANDO
+    ▼
+/promover-ejercicio ← ESTE COMANDO (ULTIMO PASO)
 ```
 
-Mueve un archivo .Rmd desde `/A-Produccion/En-Desarrollo/` a `/A-Produccion/03-En-Produccion/[categoría ICFES]/`
-después de validar que cumple todos los criterios de calidad.
-
-## Parámetros de entrada
+## Parametros de entrada
 
 - **$ARGUMENTS**: Nombre del archivo .Rmd a promover
 
-## Criterios de validación previos
+## ⛔ PRERREQUISITOS (TODOS OBLIGATORIOS)
 
-Antes de promover, verificar que el ejercicio cumple:
+### Automaticos (Nivel 1+2)
+- ✅ Renderizado exitoso en 4 formatos
+- ✅ 5 coherencias verificadas
+- ✅ 200+ versiones unicas
+- ✅ Detractor aprobado
 
-### 1. Diversidad de versiones
-```bash
-# Ejecutar test de diversidad
-Rscript -e 'testthat::test_file("tests/testthat/test_[nombre].R")'
-```
-✅ Debe generar **250+ versiones únicas** (de 300 intentos)
+### Terreno (Nivel 3) - OBLIGATORIO
+- ✅ **Aplicado en aula** con estudiantes reales
+- ✅ **Tasa de acierto** entre 25% y 95%
+- ✅ **Sin ambiguedades** reportadas
+- ✅ **Tiempo de resolucion** razonable
+- ✅ **Feedback** documentado
 
-### 2. Compilación exitosa
-```bash
-# Probar compilación en RStudio
-Rscript -e 'library(exams); exams2html("[nombre].Rmd", n=3)'
-```
-✅ Debe compilar sin errores en HTML, PDF y Moodle
+**⛔ SIN EVIDENCIA DE NIVEL 3, BLOQUEAR PROMOCION.**
 
-### 3. Metadatos ICFES completos
+## Proceso
 
-- ✅ Competencia definida
-- ✅ Nivel de dificultad (1-4)
-- ✅ Componente especificado
-- ✅ Tipo de ejercicio (schoice/cloze)
+### 1. Confirmar evidencia de Nivel 3
+Preguntar al usuario:
+- ¿Aplicado en aula? ¿Tasa de acierto? ¿Ambiguedades? ¿Feedback?
 
-### 4. Calidad del contenido
-
-- ✅ Distractores pedagógicos efectivos
-- ✅ Explicación detallada en Solution
-- ✅ Formato numérico correcto (sin notación científica)
-- ✅ Tolerancias apropiadas (para tipo cloze)
-
-## Proceso de promoción
-
-### Paso 1: Verificar ubicación actual
-```bash
-ls -la /A-Produccion/En-Desarrollo/[nombre].Rmd
-```
-
-### Paso 2: Mover archivo a categoría ICFES correspondiente
-```bash
-mv /A-Produccion/En-Desarrollo/[nombre].Rmd /A-Produccion/03-En-Produccion/[categoría-ICFES]/[nombre].Rmd
-```
-
-### Paso 3: Confirmar movimiento
-```bash
-ls -la /A-Produccion/03-En-Produccion/[categoría-ICFES]/[nombre].Rmd
-```
-
-### Paso 4: Actualizar registro (opcional)
-Agregar entrada en el directorio correspondiente con:
-
-- Nombre del ejercicio
-- Fecha de promoción
-- Competencia y nivel
-- Tipo de ejercicio
-
-## Ejemplo de uso
-
-```
-/promover-ejercicio probabilidad_aleatorio_interpretacion_n2_v1.Rmd
-```
-
-## ⛔ CONDICIONES CRÍTICAS
-
-1. ❌ **NUNCA promover** un ejercicio con errores pendientes
-2. ❌ **NUNCA promover** sin completar el Ciclo de Validación
-3. ✓ **SIEMPRE** verificar los 4 criterios de calidad
-4. ✓ **SIEMPRE** confirmar renderizado exitoso en 4 formatos
+### 2. Mover a 03-En-Produccion/[categoria]/
+### 3. Registrar datos de validacion en terreno
 
 ## Regla de Oro
-**NUNCA promuevas** un ejercicio sin completar el Ciclo de Validación Automática.
+**`03-En-Produccion/` = ejercicios probados con estudiantes reales.** Validacion automatica sola NO es suficiente.
 
 ## Referencias
 
-- `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
+- `.claude/docs/TRES_NIVELES_VALIDACION.md`
+- `.claude/skills/promover-ejercicio/SKILL.md`
 

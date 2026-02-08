@@ -578,54 +578,81 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 10 "LaTeX"
 
 ---
 
-## 🚀 PASO 7: Promover a Producción
+## 🎓 PASO 7: Aplicar en Aula (Nivel 3: Terreno)
 
-### 7.1 Verificar Criterios de Promoción
+### 7.1 Preparar para Aula
 
-**Checklist obligatorio:**
+Despues de pasar la validacion automatica (Pasos 1-6), el ejercicio queda en
+`02-En-Desarrollo/` como **"Listo para Aula"**.
 
-- [ ] ✅ Diversidad validada (250+ versiones únicas)
-- [ ] ✅ Compilación PDF exitosa
-- [ ] ✅ Compilación HTML exitosa
-- [ ] ✅ Gráficos correctos (si aplica)
+**Generar versiones para aplicacion:**
+```r
+library(exams)
+exams2pdf("[archivo].Rmd", n = 30, name = "examen_aula")
+# O para Moodle:
+exams2moodle("[archivo].Rmd", n = 30, name = "examen_moodle")
+```
+
+### 7.2 Aplicar con Estudiantes
+
+- Aplicar el ejercicio en condiciones reales de aula
+- Observar el proceso de resolucion
+- Recopilar feedback de estudiantes
+
+### 7.3 Evaluar Resultados
+
+| Indicador | Valor Esperado | Accion si Falla |
+|-----------|----------------|-----------------|
+| Tasa de acierto | 25-95% | Revisar dificultad |
+| Tiempo resolucion | 5-10 min | Revisar complejidad |
+| Ambiguedades | Ninguna | Corregir enunciado |
+| Feedback | Positivo | Ajustar segun comentarios |
+
+### 7.4 Tiempo Estimado
+
+⏱️ **Variable** (depende del calendario de clases)
+
+---
+
+## 🚀 PASO 8: Promover a Produccion (ULTIMO PASO)
+
+### 8.1 Verificar Criterios de Promocion
+
+**Checklist obligatorio (TODOS los niveles):**
+
+Nivel 1+2 (Automatico):
+- [ ] ✅ Diversidad validada (200+ versiones unicas)
+- [ ] ✅ Compilacion PDF/HTML/DOCX exitosa
+- [ ] ✅ 5 coherencias verificadas
 - [ ] ✅ Metadatos ICFES completos
-- [ ] ✅ Calidad matemática verificada
-- [ ] ✅ Sin errores de sintaxis
-- [ ] ✅ Distractores plausibles
+- [ ] ✅ Detractor aprobado
 
-### 7.2 Ejecutar Promoción
+Nivel 3 (Terreno) - **OBLIGATORIO**:
+- [ ] ✅ Aplicado en aula con estudiantes reales
+- [ ] ✅ Tasa de acierto razonable (25-95%)
+- [ ] ✅ Sin ambiguedades reportadas
+- [ ] ✅ Tiempo de resolucion apropiado
+- [ ] ✅ Feedback documentado
+
+### 8.2 Ejecutar Promocion
 
 **Comando:**
 ```bash
-/promover-ejercicio A-Produccion/En-Desarrollo/[archivo].Rmd
+/promover-ejercicio [archivo].Rmd
 ```
 
-**Ejemplo:**
-```bash
-/promover-ejercicio A-Produccion/En-Desarrollo/Triangulos_Geometrico_Formulacion_n3_v1.Rmd
-```
+Claude preguntara por evidencia de Nivel 3 antes de proceder.
 
-### 7.3 Qué Hace el Comando
-
-1. **Verifica criterios de calidad**
-2. **Mueve el archivo** a:
-   ```
-   A-Produccion/03-En-Produccion/[categoría-ICFES]/[archivo].Rmd
-   ```
-
-3. **Actualiza registro** de ejercicios en producción
-4. **Genera reporte** de promoción
-
-### 7.4 Ubicación Final
+### 8.3 Ubicacion Final
 
 ```
-A-Produccion/03-En-Produccion/[categoría-ICFES]/
-└── Triangulos_Geometrico_Formulacion_n3_v1.Rmd
+A-Produccion/03-En-Produccion/[categoria-ICFES]/
+└── [archivo].Rmd
 ```
 
-### 7.5 Tiempo Estimado
+### 8.4 Tiempo Estimado
 
-⏱️ **2-3 minutos**
+⏱️ **2-3 minutos** (despues de completar Nivel 3)
 
 ---
 
@@ -638,7 +665,7 @@ A-Produccion/03-En-Produccion/[categoría-ICFES]/
     ↓
 🔍 PASO 1: /analizar-icfes (2-3 min)
     ↓
-📊 PASO 2: Interpretar Análisis (1 min)
+📊 PASO 2: Interpretar Analisis (1 min)
     ↓
 🛠️ PASO 3: /generar-schoice o /generar-cloze (5-20 min)
     ↓
@@ -648,17 +675,21 @@ A-Produccion/03-En-Produccion/[categoría-ICFES]/
     ↓
 🔨 PASO 6: Compilar PDF/HTML (5-30 min)
     ↓
-🚀 PASO 7: /promover-ejercicio (2-3 min)
+📋 Ejercicio "LISTO PARA AULA" (en 02-En-Desarrollo/)
     ↓
-✅ EJERCICIO EN PRODUCCIÓN
+🎓 PASO 7: Aplicar en aula con estudiantes (variable)
+    ↓
+🚀 PASO 8: /promover-ejercicio (ULTIMO - requiere evidencia Nivel 3)
+    ↓
+✅ EJERCICIO EN 03-EN-PRODUCCION/
 ```
 
 ### Tiempo Total Estimado
 
-| Escenario | Tiempo Mínimo | Tiempo Máximo |
-|-----------|---------------|---------------|
-| **Flujo A (sin gráficas)** | 28 minutos | 70 minutos |
-| **Flujo B (con TikZ)** | 38 minutos | 90 minutos |
+| Escenario | Tiempo Automatico | Tiempo Terreno |
+|-----------|-------------------|----------------|
+| **Flujo A (sin graficas)** | 28-70 min | + tiempo de aula |
+| **Flujo B (con TikZ)** | 38-90 min | + tiempo de aula |
 
 ---
 
@@ -806,13 +837,20 @@ Por favor, mejora la fidelidad visual del código TikZ.
 - [ ] HTML compilado sin errores
 - [ ] Calidad matemática verificada
 
-### Antes de Promover
+### Antes de Promover a 03-En-Produccion/
 
+Nivel 1+2 (Automatico):
 - [ ] Todos los tests pasados
-- [ ] Gráficos correctos (si aplica)
+- [ ] Graficos correctos (si aplica)
 - [ ] Metadatos ICFES completos
 - [ ] Sin errores de sintaxis
 - [ ] Distractores plausibles
+
+Nivel 3 (Terreno - OBLIGATORIO):
+- [ ] Aplicado en aula con estudiantes reales
+- [ ] Tasa de acierto razonable (25-95%)
+- [ ] Sin ambiguedades reportadas
+- [ ] Feedback documentado
 
 ---
 
