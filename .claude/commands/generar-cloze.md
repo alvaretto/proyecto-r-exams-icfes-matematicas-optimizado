@@ -198,7 +198,7 @@ ls /06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/09-Probabilidad-Condici
    - Función `generar_datos()` con aleatorización completa
    - `options(scipen = 999)` para evitar notación científica
    - Funciones `formatear_entero()` y `formato_estandar()`
-4. **Chunk version_diversity_test**: Test de 300+ versiones
+4. **Chunk version_diversity_test**: Test de 250+ versiones únicas (de 300 intentos)
 5. **Sección Question**: 
    - Enunciado con gaps: `##ANSWER1##`, `##ANSWER2##`, etc.
    - Answerlist para cada gap
@@ -275,7 +275,7 @@ outputs/probabilidad_condicional_dados_aleatorio_formulacion_ejecucion_n3_v1/
 - La carpeta DEBE tener el mismo nombre que el archivo .Rmd (sin extensión)
 
 ### Paso 7: Validación
-Ejecutar skill `validar-diversidad-300` y `validar-metadatos-icfes`.
+Ejecutar skill `validar-diversidad` y `validar-metadatos-icfes`.
 
 ### Paso 8: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`

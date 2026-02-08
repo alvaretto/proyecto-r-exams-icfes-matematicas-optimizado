@@ -200,7 +200,7 @@ ls /A-Produccion/En-PreDesarrollo/**/*.Rmd | head -5
 1. **Encabezado YAML** con `output: pdf_document`, `header-includes` para TikZ/babel
 2. **Chunk inicio**: Librerías (exams, tidyverse, knitr, reticulate)
 3. **Chunk data_generation**: Función `generar_datos()` con aleatorización
-4. **Chunk version_diversity_test**: Test de 300+ versiones únicas
+4. **Chunk version_diversity_test**: Test de 250+ versiones únicas (de 300 intentos)
 5. **Sección Question**: Enunciado + Answerlist (4 opciones mínimo)
 6. **Sección Solution**: Explicación detallada + Answerlist (Verdadero/Falso)
 7. **Meta-information**:
@@ -269,7 +269,7 @@ outputs/series_temporales_poblacion_aleatorio_interpretacion_representacion_n2_v
 - La carpeta DEBE tener el mismo nombre que el archivo .Rmd (sin extensión)
 
 ### Paso 6: Validación
-Ejecutar skill `validar-diversidad-300` para confirmar aleatorización.
+Ejecutar skill `validar-diversidad` para confirmar aleatorización.
 
 ### Paso 7: Promoción (después de testear)
 Una vez validado, usar `/promover-ejercicio [nombre.Rmd]` para mover a `/A-Produccion/Nuevos-Ejercicios/`

@@ -84,7 +84,7 @@ Actualizar la documentación del sistema para reflejar la optimización del dire
   * `/analizar-icfes`: `.claude/commands/` → `.claude/skills/analizar-icfes/skill.md`
   * `/generar-schoice`: `.claude/commands/` → `.claude/skills/generar-schoice/skill.md`
   * `/generar-cloze`: `.claude/commands/` → `.claude/skills/generar-cloze/skill.md`
-  * `/validar-diversidad-300`: ruta completa agregada
+  * `/validar-diversidad`: `.claude/commands/` → `.claude/skills/validar-diversidad/skill.md`
   * `/corregir-error-imagen`: `.claude/commands/` → `.claude/skills/corregir-error-imagen/skill.md`
   * `/promover-ejercicio`: `.claude/commands/` → `.claude/skills/promover-ejercicio/skill.md`
 

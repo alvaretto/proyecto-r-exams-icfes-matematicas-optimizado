@@ -114,7 +114,7 @@ El Graficador-Experto está completamente integrado en el workflow principal. Se
 ### Quiero validar la calidad de mi ejercicio
 
 1. **Leer**: [TRES_NIVELES_VALIDACION.md](TRES_NIVELES_VALIDACION.md)
-2. **Ejecutar**: `/validar-diversidad-300`
+2. **Ejecutar**: `/validar-diversidad`
 3. **Verificar**: Checklist en [WORKFLOW_PASO_A_PASO.md](WORKFLOW_PASO_A_PASO.md#paso-4-revisar-el-archivo-rmd)
 
 ### Quiero saber qué ha cambiado en el sistema
@@ -173,7 +173,7 @@ El Graficador-Experto está completamente integrado en el workflow principal. Se
 │   ├── diagnosticar-errores/               # Diagnóstico de errores
 │   ├── promover-ejercicio/                 # Promoción a producción
 │   ├── validar-coherencia/                 # Validación de coherencia
-│   ├── validar-diversidad/                 # Validación de 300+ versiones
+│   ├── validar-diversidad/                 # Validación de 250+ versiones únicas
 │   ├── validar-icfes/                      # Validación de metadatos
 │   └── validar-renderizado/                # Validación de renderizado
 │   ├── analizar-imagen-grafica/           # 🎨 Análisis visual matemático

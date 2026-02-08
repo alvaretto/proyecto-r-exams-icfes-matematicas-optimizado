@@ -395,7 +395,7 @@ Ejecutar la prueba de diversidad de versiones.
 **Criterios de éxito:**
 
 - ✅ `test_that("Prueba de diversidad de versiones", ...)` pasa sin errores
-- ✅ Se generan al menos 300 versiones únicas
+- ✅ Se generan al menos 250 versiones únicas
 - ✅ Todas las versiones generan ecuaciones válidas
 
 **Método:**
@@ -408,7 +408,7 @@ test_that("Prueba de diversidad de versiones", {
     versiones[[i]] <- digest::digest(datos_test)
   }
   n_versiones_unicas <- length(unique(versiones))
-  expect_true(n_versiones_unicas >= 300)
+  expect_true(n_versiones_unicas >= 250)
 })
 ```
 

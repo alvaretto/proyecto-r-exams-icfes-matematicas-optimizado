@@ -1,6 +1,6 @@
 ---
-name: validar-diversidad-300
-description: Ejecuta pruebas de testthat para confirmar la generación de 300+ versiones únicas (Fase 3 del workflow).
+name: validar-diversidad
+description: Ejecuta pruebas de testthat para confirmar la generación de 250+ versiones únicas de 300 intentos (Fase 3 del workflow).
 ---
 # Instrucciones de Validación
 

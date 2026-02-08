@@ -44,7 +44,7 @@ Antes de promover, verificar que el ejercicio cumple:
 # Ejecutar test de diversidad
 Rscript -e 'testthat::test_file("tests/testthat/test_[nombre].R")'
 ```
-✅ Debe generar **300+ versiones únicas**
+✅ Debe generar **250+ versiones únicas** (de 300 intentos)
 
 ### 2. Compilación exitosa
 ```bash

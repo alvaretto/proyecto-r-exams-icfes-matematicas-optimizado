@@ -103,13 +103,13 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 ### 3. Validación y Corrección
 
-#### `/validar-diversidad-300`
+#### `/validar-diversidad`
 
-**Propósito:** Validar que el ejercicio genera 300+ versiones únicas
+**Propósito:** Validar que el ejercicio genera 250+ versiones únicas (de 300 intentos)
 
 **Uso:**
 ```bash
-/validar-diversidad-300 [archivo.Rmd]
+/validar-diversidad [archivo.Rmd]
 ```
 
 #### `/corregir-error-imagen`
@@ -133,7 +133,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Prerequisitos:**
 
-- ✅ Diversidad de 300+ versiones verificada
+- ✅ Diversidad de 250+ versiones únicas verificada
 - ✅ Compilación exitosa en PDF y HTML
 - ✅ Metadatos ICFES completos
 - ✅ Calidad del contenido validada
@@ -162,7 +162,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 3. Revisar archivo .Rmd generado
    ↓
 
-4. /validar-diversidad-300 [archivo.Rmd]
+4. /validar-diversidad [archivo.Rmd]
    ↓
 
 5. Compilar PDF y HTML en RStudio
@@ -232,13 +232,13 @@ ls A-Produccion/Ejemplos-Funcionales-Rmd/
 2. Si es error de imagen faltante: `/corregir-error-imagen`
 3. Verificar logs de compilación
 
-### Problema: Menos de 300 versiones únicas
+### Problema: Menos de 250 versiones únicas
 
 **Solución:**
 
 1. Revisar función `generar_datos()` en el .Rmd
 2. Aumentar rangos de aleatorización
-3. Ejecutar `/validar-diversidad-300` nuevamente
+3. Ejecutar `/validar-diversidad` nuevamente
 
 ### Problema: Metadatos ICFES incompletos
 

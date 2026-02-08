@@ -136,7 +136,7 @@
 ┌──────────────────────────────────────────────────────────┐
 │  💬 Validar Versiones Únicas                             │
 │                                                          │
-│  > /validar-diversidad-300 [archivo.Rmd]               │
+│  > /validar-diversidad [archivo.Rmd]               │
 │                                                          │
 │  🔄 Generando 1000 versiones de prueba...              │
 │                                                          │
@@ -145,12 +145,12 @@
 │  📊 Estadísticas:                                       │
 │     • Versiones generadas: 1000                        │
 │     • Versiones únicas: 847                            │
-│     • Mínimo requerido: 300                            │
+│     • Mínimo requerido: 250 versiones únicas           │
 │     • Estado: ✅ APROBADO                              │
 └──────────────────────────────────────────────────────────┘
 ```
 
-**Criterio:** ≥ 300 versiones únicas
+**Criterio:** ≥ 250 versiones únicas (de 300 intentos)
 
 ---
 
@@ -271,7 +271,7 @@
 │  [ ] ✅ Análisis completo (6 dimensiones)               │
 │  [ ] ✅ Archivo .Rmd generado                           │
 │  [ ] ✅ Estructura revisada                             │
-│  [ ] ✅ Diversidad ≥ 300 versiones                      │
+│  [ ] ✅ Diversidad ≥ 250 versiones únicas               │
 │  [ ] ✅ PDF compila sin errores                         │
 │  [ ] ✅ HTML compila sin errores                        │
 │  [ ] ✅ Gráficos correctos (si aplica)                  │
@@ -293,7 +293,7 @@
 │                                                         │
 │  ❌ Análisis incompleto      → Solicitar 6 dimensiones │
 │  ❌ Error compilación PDF    → /corregir-error-imagen  │
-│  ❌ < 300 versiones          → Aumentar rangos         │
+│  ❌ < 250 versiones únicas   → Aumentar rangos         │
 │  ❌ Gráfico TikZ mal         → Solicitar mejora        │
 │  ❌ Error Python             → Consultar ejemplos      │
 │  ❌ Error LaTeX              → Ver patrones-errores    │
@@ -312,7 +312,7 @@
 │  /analizar-icfes            → Después de subir imagen  │
 │  /generar-schoice           → Si tipo es SCHOICE       │
 │  /generar-cloze             → Si tipo es CLOZE         │
-│  /validar-diversidad-300    → Antes de compilar        │
+│  /validar-diversidad        → Antes de compilar        │
 │  /corregir-error-imagen     → Si error de imagen       │
 │  /promover-ejercicio        → Cuando todo esté OK      │
 └─────────────────────────────────────────────────────────┘

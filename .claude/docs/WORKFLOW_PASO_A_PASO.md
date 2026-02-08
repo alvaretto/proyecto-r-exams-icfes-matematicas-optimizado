@@ -40,7 +40,7 @@ Este workflow utiliza **Skills de Claude Code** configurados en `.claude/skills/
 - `/auto-refinar-grafico` - Graficador secuencial (tikz/python/r)
 - `/promover-ejercicio` - Promocion a carpeta de produccion
 - `/corregir-error-imagen` - Correccion de errores TikZ
-- `/validar-diversidad` - Validar 300+ versiones
+- `/validar-diversidad` - Validar 250+ versiones únicas (de 300 intentos)
 - `/validar-icfes` - Validar metadatos
 
 ---
@@ -289,7 +289,7 @@ El comando de generación:
    - Encabezado YAML con paquetes LaTeX
    - Chunk de configuración inicial
    - Chunk de generación de datos (aleatorización)
-   - Chunk de prueba de diversidad (300+ versiones)
+   - Chunk de prueba de diversidad (250+ versiones únicas de 300 intentos)
    - Chunks de gráficos (TikZ, Python, R según necesidad)
    - Sección Question con enunciado
    - Sección Solution con explicación detallada
@@ -351,7 +351,7 @@ code A-Produccion/En-Desarrollo/[nombre_archivo].Rmd
   - [ ] Formato numérico estándar
   
 - [ ] **Chunk de prueba de diversidad** (`version_diversity_test`)
-  - [ ] Test de 300+ versiones únicas
+  - [ ] Test de 250+ versiones únicas (de 300 intentos)
   
 - [ ] **Chunks de gráficos** (si aplica)
   - [ ] TikZ con `include_tikz()` (Flujo B)
@@ -428,19 +428,19 @@ code A-Produccion/En-Desarrollo/[nombre_archivo].Rmd
 
 **Comando:**
 ```bash
-/validar-diversidad-300 A-Produccion/En-Desarrollo/[archivo].Rmd
+/validar-diversidad A-Produccion/En-Desarrollo/[archivo].Rmd
 ```
 
 **Ejemplo:**
 ```bash
-/validar-diversidad-300 A-Produccion/En-Desarrollo/Triangulos_Geometrico_Formulacion_n3_v1.Rmd
+/validar-diversidad A-Produccion/En-Desarrollo/Triangulos_Geometrico_Formulacion_n3_v1.Rmd
 ```
 
 ### 5.2 Salida Esperada
 
 ```
 ═══════════════════════════════════════════════════════════
-VALIDACIÓN DE DIVERSIDAD - 300+ VERSIONES
+VALIDACIÓN DE DIVERSIDAD - 250+ VERSIONES ÚNICAS
 ═══════════════════════════════════════════════════════════
 
 📊 Generando 1000 versiones de prueba...
@@ -452,7 +452,7 @@ VALIDACIÓN DE DIVERSIDAD - 300+ VERSIONES
    - Versiones generadas: 1000
    - Versiones únicas: 847
    - Tasa de unicidad: 84.7%
-   - Mínimo requerido: 300
+   - Mínimo requerido: 250
    - Estado: ✅ APROBADO
 
 ═══════════════════════════════════════════════════════════
@@ -460,12 +460,12 @@ VALIDACIÓN DE DIVERSIDAD - 300+ VERSIONES
 
 ### 5.3 Si la Validación Falla
 
-**Si se generan < 300 versiones únicas:**
+**Si se generan < 250 versiones únicas:**
 
 ```
 ❌ RESULTADO: 187 versiones únicas generadas
 
-⚠️ PROBLEMA: No se alcanza el mínimo de 300 versiones
+⚠️ PROBLEMA: No se alcanza el mínimo de 250 versiones únicas
 
 💡 SOLUCIONES:
 
@@ -487,7 +487,7 @@ VALIDACIÓN DE DIVERSIDAD - 300+ VERSIONES
    a <- sample(1:50, 1)
    ```
 
-4. Volver a ejecutar `/validar-diversidad-300`
+4. Volver a ejecutar `/validar-diversidad`
 
 ### 5.4 Tiempo Estimado
 
@@ -584,7 +584,7 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 10 "LaTeX"
 
 **Checklist obligatorio:**
 
-- [ ] ✅ Diversidad validada (300+ versiones)
+- [ ] ✅ Diversidad validada (250+ versiones únicas)
 - [ ] ✅ Compilación PDF exitosa
 - [ ] ✅ Compilación HTML exitosa
 - [ ] ✅ Gráficos correctos (si aplica)
@@ -644,7 +644,7 @@ A-Produccion/Nuevos-Ejercicios/
     ↓
 📝 PASO 4: Revisar .Rmd (10-15 min)
     ↓
-✅ PASO 5: /validar-diversidad-300 (2-15 min)
+✅ PASO 5: /validar-diversidad (2-15 min)
     ↓
 🔨 PASO 6: Compilar PDF/HTML (5-30 min)
     ↓
@@ -735,7 +735,7 @@ cat .claude/docs/patrones-errores-conocidos.md
 /corregir-error-imagen [archivo].Rmd
 ```
 
-### Problema 3: Menos de 300 versiones únicas
+### Problema 3: Menos de 250 versiones únicas
 
 **Solución:**
 
@@ -762,7 +762,7 @@ Por favor, mejora la fidelidad visual del código TikZ.
 - `/analizar-icfes` - `.claude/skills/analizar-icfes/skill.md`
 - `/generar-schoice` - `.claude/skills/generar-schoice/skill.md`
 - `/generar-cloze` - `.claude/skills/generar-cloze/skill.md`
-- `/validar-diversidad-300` - `.claude/skills/validar-diversidad/skill.md`
+- `/validar-diversidad` - `.claude/skills/validar-diversidad/skill.md`
 - `/corregir-error-imagen` - `.claude/skills/corregir-error-imagen/skill.md`
 - `/promover-ejercicio` - `.claude/skills/promover-ejercicio/skill.md`
 
@@ -801,7 +801,7 @@ Por favor, mejora la fidelidad visual del código TikZ.
 - [ ] Flujo A o B identificado
 - [ ] Comando de generación ejecutado
 - [ ] Archivo .Rmd revisado
-- [ ] Diversidad validada (300+)
+- [ ] Diversidad validada (250+ versiones únicas)
 - [ ] PDF compilado sin errores
 - [ ] HTML compilado sin errores
 - [ ] Calidad matemática verificada
@@ -829,7 +829,8 @@ Por favor, mejora la fidelidad visual del código TikZ.
 
 ### Errores Comunes a Evitar
 
-1. ❌ **No validar diversidad**: Siempre ejecutar `/validar-diversidad-300`
+1. ❌ **No validar diversidad**: Siempre ejecutar `/validar-diversidad`
+
 2. ❌ **Modificar sin consultar ejemplos**: Revisar ejemplos funcionales primero
 3. ❌ **Ignorar warnings**: Los warnings pueden indicar problemas futuros
 4. ❌ **No probar en HTML**: Siempre compilar tanto PDF como HTML
@@ -906,7 +907,7 @@ N. Validar todos → Compilar todos → Promover todos
 
 | Métrica | Valor Objetivo | Cómo Verificar |
 |---------|----------------|----------------|
-| **Diversidad de versiones** | ≥ 300 | `/validar-diversidad-300` |
+| **Diversidad de versiones** | ≥ 250 únicas (de 300 intentos) | `/validar-diversidad` |
 | **Compilación PDF** | Sin errores | `exams2pdf()` |
 | **Compilación HTML** | Sin errores | `exams2html()` |
 | **Fidelidad gráfica** | ≥ 98% | Comparación visual |
@@ -919,7 +920,7 @@ N. Validar todos → Compilar todos → Promover todos
 **⭐ Básico (Mínimo Aceptable)**
 
 - ✅ Compila sin errores
-- ✅ 300+ versiones únicas
+- ✅ 250+ versiones únicas (de 300 intentos)
 - ✅ Metadatos ICFES completos
 
 **⭐⭐ Bueno (Recomendado)**

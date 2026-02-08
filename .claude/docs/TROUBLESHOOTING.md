@@ -47,7 +47,7 @@ Solo se generaron X versiones únicas. Se requieren al menos 250.
 
 **Validar con:**
 ```bash
-/validar-diversidad-300
+/validar-diversidad
 ```
 
 ---
@@ -135,7 +135,7 @@ icfes:
 1. /analizar-icfes [imagen]
 2. /generar-schoice
 3. Revisar .Rmd generado
-4. /validar-diversidad-300
+4. /validar-diversidad
 5. Compilar PDF y HTML
 6. Si todo OK → /promover-ejercicio
 ```
@@ -162,7 +162,7 @@ icfes:
 **Validación:**
 
 - `/validar-renderizado` - Ciclo completo exams2* (html, pdf, docx, nops)
-- `/validar-diversidad` - Validar 300+ versiones únicas
+- `/validar-diversidad` - Validar 250+ versiones únicas (de 300 intentos)
 - `/validar-coherencia` - Verificar coherencia matemática/imagen/código
 
 **Diagnóstico y Corrección:**
@@ -199,7 +199,7 @@ ls A-Produccion/Templates/*.Rmd
 
 ### Pregunta 3: ¿Es un error de diversidad?
 
-- **Sí** → Aumentar aleatorización, probar `/validar-diversidad-300`
+- **Sí** → Aumentar aleatorización, probar `/validar-diversidad`
 - **No** → Continuar
 
 ### Pregunta 4: ¿Es un error nuevo?
@@ -230,7 +230,7 @@ Antes de usar `/promover-ejercicio`, validar en **TRES NIVELES**:
 
 ### **Validación Adicional**
 
-- [ ] Diversidad ≥ 250/300 versiones únicas
+- [ ] Diversidad ≥ 250 versiones únicas (de 300 intentos)
 - [ ] Metadatos ICFES completos
 - [ ] Solución matemática correcta
 - [ ] Sin errores en tests unitarios

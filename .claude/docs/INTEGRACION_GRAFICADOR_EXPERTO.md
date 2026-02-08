@@ -136,7 +136,7 @@ Itera automáticamente un lenguaje hasta alcanzar umbral de similitud o máximo 
    ```
    /validar-renderizado
    /validar-coherencia
-   /validar-diversidad
+   /validar-diversidad archivo.Rmd
    ```
 
 7. **Promover a producción**:

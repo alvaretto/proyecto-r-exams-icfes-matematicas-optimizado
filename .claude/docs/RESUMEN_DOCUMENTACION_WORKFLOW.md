@@ -25,7 +25,7 @@ Crear documentación completa y accesible del workflow de generación de ejercic
 - ✅ **Paso 2**: Interpretar análisis (6 dimensiones + Flujo A/B)
 - ✅ **Paso 3**: Generar ejercicio (SCHOICE/CLOZE)
 - ✅ **Paso 4**: Revisar archivo .Rmd (checklist completo)
-- ✅ **Paso 5**: Validar diversidad (300+ versiones)
+- ✅ **Paso 5**: Validar diversidad (250+ versiones únicas de 300 intentos)
 - ✅ **Paso 6**: Compilar y probar (PDF/HTML/Moodle)
 - ✅ **Paso 7**: Promover a producción
 

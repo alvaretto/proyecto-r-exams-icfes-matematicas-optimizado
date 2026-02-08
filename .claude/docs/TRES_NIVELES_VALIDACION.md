@@ -396,7 +396,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 
 1. ✅ Ejecutar `test_todos_formatos.R` SIEMPRE
 2. ✅ Revisar TODOS los formatos generados
-3. ✅ Verificar diversidad con `/validar-diversidad-300`
+3. ✅ Verificar diversidad con `/validar-diversidad`
 4. ✅ Comprobar metadatos ICFES completos
 5. ✅ Tasa de éxito debe ser 100% (4 de 4 formatos)
 
@@ -426,7 +426,7 @@ NIVEL 2: GENERACIÓN MASIVA
 [ ] exams2pandoc(): EXITOSO
 [ ] exams2nops(): EXITOSO
 [ ] Tasa de éxito: 100%
-[ ] Diversidad ≥ 250/300
+[ ] Diversidad ≥ 250 versiones únicas (de 300 intentos)
 [ ] Metadatos ICFES completos
 
 NIVEL 3: TERRENO (post-producción)
