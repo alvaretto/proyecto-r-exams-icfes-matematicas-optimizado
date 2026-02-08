@@ -18,21 +18,6 @@ suppressPackageStartupMessages({
   library(exams)
 })
 
-# --- Argumentos ---
-args <- commandArgs(trailingOnly = TRUE)
-if (length(args) < 1) {
-  cat("Uso: Rscript validar_coherencia_matematica.R archivo.Rmd [--strict]\n")
-  quit(status = 2)
-}
-
-archivo_rmd <- args[1]
-modo_estricto <- "--strict" %in% args
-
-if (!file.exists(archivo_rmd)) {
-  cat("ERROR: Archivo no encontrado:", archivo_rmd, "\n")
-  quit(status = 2)
-}
-
 # --- Funciones auxiliares ---
 
 # Parsear contenido del .Rmd en secciones
@@ -378,7 +363,69 @@ validar_codigo <- function(contenido) {
   return(errores)
 }
 
-# --- Ejecución principal ---
+# --- Función callable (para source() desde tests y otros scripts) ---
+
+#' Valida coherencia matemática de un archivo .Rmd
+#' @param archivo_rmd Ruta al archivo .Rmd
+#' @param strict Modo estricto (default FALSE)
+#' @return Lista con: aprobado (logical), errores (character), warnings (character), extype (character)
+validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
+  if (!file.exists(archivo_rmd)) {
+    return(list(
+      aprobado = FALSE,
+      errores = paste("ERROR: Archivo no encontrado:", archivo_rmd),
+      warnings = character(0),
+      extype = NA_character_
+    ))
+  }
+
+  parsed <- parsear_rmd(archivo_rmd)
+  extype <- tolower(trimws(extraer_meta(parsed$meta, "extype")))
+
+  todos_errores <- character(0)
+  todos_warnings <- character(0)
+
+  resultado <- ejecutar_chunks(parsed$chunks_r)
+  todos_errores <- c(todos_errores, resultado$errores)
+  todos_warnings <- c(todos_warnings, resultado$warnings)
+
+  todos_errores <- c(todos_errores, validar_metadatos(parsed$meta))
+
+  if (extype == "schoice") {
+    todos_errores <- c(todos_errores,
+      validar_coherencia_schoice(parsed$meta, resultado$env, parsed$num_q_opciones))
+  } else if (extype == "cloze") {
+    todos_errores <- c(todos_errores,
+      validar_coherencia_cloze(parsed$meta, resultado$env))
+  }
+
+  todos_errores <- c(todos_errores, validar_coherencia_matematica_general(resultado$env))
+  todos_errores <- c(todos_errores, validar_codigo(parsed$contenido))
+
+  return(list(
+    aprobado = length(todos_errores) == 0,
+    errores = todos_errores,
+    warnings = todos_warnings,
+    extype = extype
+  ))
+}
+
+# --- Ejecución CLI (solo cuando se ejecuta con Rscript, no con source()) ---
+if (sys.nframe() == 0) {
+
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 1) {
+  cat("Uso: Rscript validar_coherencia_matematica.R archivo.Rmd [--strict]\n")
+  quit(status = 2)
+}
+
+archivo_rmd <- args[1]
+modo_estricto <- "--strict" %in% args
+
+if (!file.exists(archivo_rmd)) {
+  cat("ERROR: Archivo no encontrado:", archivo_rmd, "\n")
+  quit(status = 2)
+}
 
 cat("=== VALIDACIÓN DE COHERENCIA MATEMÁTICA ===\n")
 cat("Archivo:", archivo_rmd, "\n")
@@ -477,3 +524,5 @@ if (length(todos_errores) == 0) {
   }
   quit(status = 1)
 }
+
+} # end if (sys.nframe() == 0)

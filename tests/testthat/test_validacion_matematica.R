@@ -4,8 +4,11 @@
 library(testthat)
 library(exams)
 
+# Cargar funciones UNA vez (source() es seguro gracias al guard sys.nframe())
+source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
+
 test_that("Validación matemática detecta errores en chunks R", {
-  # Crear archivo .Rmd temporal con chunk que falla
+  # Crear archivo .Rmd temporal con chunk que genera NaN
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(
     "```{r data generation, echo = FALSE, results = \"hide\"}",
@@ -28,16 +31,11 @@ test_that("Validación matemática detecta errores en chunks R", {
     "exshuffle: TRUE"
   ), temp_file)
 
-  # Ejecutar validación
-  result <- tryCatch({
-    source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
-    validar_coherencia_matematica(temp_file)
-  }, error = function(e) {
-    list(errores = TRUE)
-  })
+  result <- validar_coherencia_matematica(temp_file)
 
-  # Verificar que detecta error
-  expect_true(result$errores || grepl("NaN", paste(result, collapse = "")))
+  # Verificar que detecta error (NaN en variable x)
+  expect_false(result$aprobado)
+  expect_true(length(result$errores) > 0)
 
   unlink(temp_file)
 })
@@ -53,7 +51,7 @@ test_that("Validación matemática acepta archivo SCHOICE válido", {
     "",
     "Question",
     "========",
-    "¿Cuánto es `r x` + 5?",
+    "Cuanto es `r x` + 5?",
     "",
     "Answerlist",
     "----------",
@@ -73,23 +71,17 @@ test_that("Validación matemática acepta archivo SCHOICE válido", {
     "exsolution: 1000",
     "exshuffle: TRUE",
     "exextra[Type]: SCHOICE",
-    "exextra[Competencia]: Interpretación",
-    "exextra[Componente]: Numérico",
-    "exextra[Afirmacion]: Realiza cálculos",
-    "exextra[Evidencia]: Suma de números",
+    "exextra[Competencia]: Interpretacion",
+    "exextra[Componente]: Numerico",
+    "exextra[Afirmacion]: Realiza calculos",
+    "exextra[Evidencia]: Suma de numeros",
     "exextra[Nivel]: 1"
   ), temp_file)
 
-  # Ejecutar validación
-  result <- tryCatch({
-    source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
-    validar_coherencia_matematica(temp_file)
-  }, error = function(e) {
-    list(aprobado = FALSE, mensaje = e$message)
-  })
+  result <- validar_coherencia_matematica(temp_file)
 
-  # Verificar que aprueba
-  expect_true(result$aprobado || is.null(result$errores))
+  # Verificar que aprueba (archivo SCHOICE válido con metadatos completos)
+  expect_true(result$aprobado)
 
   unlink(temp_file)
 })
@@ -107,8 +99,8 @@ test_that("Validación detecta exshuffle = FALSE", {
     "",
     "Answerlist",
     "----------",
-    "* Opción 1",
-    "* Opción 2",
+    "* Opcion 1",
+    "* Opcion 2",
     "",
     "Solution",
     "========",
@@ -122,14 +114,10 @@ test_that("Validación detecta exshuffle = FALSE", {
     "exshuffle: FALSE"
   ), temp_file)
 
-  result <- tryCatch({
-    source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
-    validar_coherencia_matematica(temp_file)
-  }, error = function(e) {
-    list(errores = TRUE, mensaje = e$message)
-  })
+  result <- validar_coherencia_matematica(temp_file)
 
-  expect_true(result$errores || grepl("shuffle", tolower(result$mensaje), fixed = TRUE))
+  expect_false(result$aprobado)
+  expect_true(any(grepl("shuffle", result$errores, ignore.case = TRUE)))
 
   unlink(temp_file)
 })
@@ -159,14 +147,10 @@ test_that("Validación CLOZE detecta inconsistencias de tipos", {
     "extol: 0.01"
   ), temp_file)
 
-  result <- tryCatch({
-    source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
-    validar_coherencia_matematica(temp_file)
-  }, error = function(e) {
-    list(errores = TRUE, mensaje = e$message)
-  })
+  result <- validar_coherencia_matematica(temp_file)
 
-  expect_true(result$errores || grepl("inconsisten", tolower(result$mensaje)))
+  expect_false(result$aprobado)
+  expect_true(length(result$errores) > 0)
 
   unlink(temp_file)
 })
@@ -195,14 +179,10 @@ test_that("Validación detecta metadatos ICFES incompletos", {
     # Faltan metadatos ICFES (6 dimensiones)
   ), temp_file)
 
-  result <- tryCatch({
-    source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
-    validar_coherencia_matematica(temp_file)
-  }, error = function(e) {
-    list(errores = TRUE, mensaje = e$message)
-  })
+  result <- validar_coherencia_matematica(temp_file)
 
-  expect_true(result$errores || grepl("metadatos|ICFES", result$mensaje, ignore.case = TRUE))
+  expect_false(result$aprobado)
+  expect_true(any(grepl("ICFES", result$errores)))
 
   unlink(temp_file)
 })

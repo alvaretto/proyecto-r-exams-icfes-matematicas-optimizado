@@ -46,8 +46,9 @@ test_that("exshuffle = TRUE genera orden diferente en múltiples renderizados", 
     html_content <- readLines(file.path(temp_dir, paste0("shuffle_test", i, ".html")))
     html_text <- paste(html_content, collapse = "\n")
 
-    # Extraer el orden de las opciones (simplificado)
-    ordenes[i] <- substr(html_text, 1, 100)
+    # Extraer el contenido de las opciones (answerlist)
+    match <- regmatches(html_text, regexpr("<ol[^>]*>.*?</ol>", html_text, perl = TRUE))
+    ordenes[i] <- if (length(match) > 0) match[1] else html_text
   }
 
   # Verificar que no todas las versiones son idénticas
@@ -120,8 +121,8 @@ test_that("Ejercicio genera al menos 250 versiones únicas", {
   })
 
   expect_true(resultado$exito, info = paste("Error:", resultado$mensaje))
-  expect_gte(resultado$n_unicas, 250,
-             info = paste("Solo se generaron", resultado$n_unicas, "versiones únicas"))
+  expect_true(resultado$n_unicas >= 250,
+              info = paste("Solo se generaron", resultado$n_unicas, "versiones únicas"))
 
   unlink(temp_file)
 })
@@ -176,12 +177,12 @@ test_that("Aleatorización de datos numéricos cubre rango esperado", {
   velocidades_validas <- velocidades[velocidades > 0]
 
   # Verificar que las velocidades cubren el rango esperado
-  expect_gte(min(velocidades_validas), 50,
-             info = "Velocidad mínima fuera de rango")
-  expect_lte(max(velocidades_validas), 150,
-             info = "Velocidad máxima fuera de rango")
-  expect_gte(length(unique(velocidades_validas)), 50,
-             info = "Poca diversidad en valores de velocidad")
+  expect_true(min(velocidades_validas) >= 50,
+              info = "Velocidad mínima fuera de rango")
+  expect_true(max(velocidades_validas) <= 150,
+              info = "Velocidad máxima fuera de rango")
+  expect_true(length(unique(velocidades_validas)) >= 50,
+              info = "Poca diversidad en valores de velocidad")
 
   unlink(temp_file)
 })

@@ -230,8 +230,8 @@ test_that("Formato de metadatos ICFES sigue estándar", {
 
   # Verificar que componentes válidos están definidos
   componentes_validos <- c("Aleatorio", "Cambio", "Datos", "Espacial", "Medida", "Numérico")
-  expect_gte(length(componentes_validos), 5,
-             info = "Deben existir al menos 5 componentes ICFES")
+  expect_true(length(componentes_validos) >= 5,
+              info = "Deben existir al menos 5 componentes ICFES")
 
   # Verificar niveles válidos
   niveles_validos <- c("1", "2", "3", "4")

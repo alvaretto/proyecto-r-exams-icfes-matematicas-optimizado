@@ -164,6 +164,10 @@ diccionario_tildes <- c(
   "movil" = "móvil",
   "habil" = "hábil",
   "fragil" = "frágil",
+  "optima" = "óptima",
+  "optimo" = "óptimo",
+  "cual" = "cuál",
+  "cuales" = "cuáles",
 
   # Verbos conjugados comunes
   # NOTA: "esta/estan" EXCLUIDOS - confunden pronombre demostrativo con verbo
