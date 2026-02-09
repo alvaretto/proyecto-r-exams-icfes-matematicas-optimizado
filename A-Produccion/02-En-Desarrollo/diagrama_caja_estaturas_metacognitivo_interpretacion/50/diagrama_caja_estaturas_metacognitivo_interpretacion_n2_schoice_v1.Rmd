@@ -1,13 +1,13 @@
 ---
 output:
+  html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies:
       - "graphicx"
       - "float"
       - "amsmath"
-  word_document: default
-  html_document: default
 icfes:
   competencia: interpretacion
   nivel_dificultad: 2
@@ -356,7 +356,7 @@ generar_datos <- function() {
 
   # ============================================================
   # CREAR OPCIONES Y MEZCLAR INTERNAMENTE
-  # Patrón del ejemplo funcional: mezcla interna + exshuffle:TRUE
+  # Patrón: mezcla interna con sample() + exshuffle:FALSE
   # ============================================================
   todas_opciones <- list(
     correcta = cuartiles_correctos,
@@ -375,8 +375,8 @@ generar_datos <- function() {
   sol <- rep(0, 4)
   sol[indice_correcto] <- 1
 
-  # Asignar letras según POSICIÓN (con exshuffle:FALSE, posición = letra)
-  # Posición 1 = a, Posición 2 = b, Posición 3 = c, Posición 4 = d
+  # Asignar letras según POSICIÓN de la mezcla interna
+  # exshuffle:FALSE — R-exams NO reordena (sample() interno ya aleatoriza)
   letras_posicion <- c("a", "b", "c", "d")
   letra_correcta <- letras_posicion[indice_correcto]
 
@@ -443,7 +443,7 @@ test_that("Prueba de diversidad de versiones", {
       protagonista = datos_test$protagonista,
       datos = datos_test$datos,
       error_codigo = datos_test$error_seleccionado$codigo,
-      posicion_correcta = datos_test$posicion_correcta
+      posicion_correcta = which(datos_test$sol == 1)
     ))
     versiones[[i]] <- hash_datos
   }
@@ -473,12 +473,21 @@ test_that("Exactamente una opción correcta", {
 })
 
 test_that("Gráfico correcto tiene cuartiles válidos", {
-  grafico_correcto <- opciones_graficos[[letra_correcta]]
+  grafico_correcto <- opciones_graficos[[toupper(letra_correcta)]]
   expect_equal(grafico_correcto$min, cuartiles_correctos$min)
   expect_equal(grafico_correcto$q1, cuartiles_correctos$q1)
   expect_equal(grafico_correcto$mediana, cuartiles_correctos$mediana)
   expect_equal(grafico_correcto$q3, cuartiles_correctos$q3)
   expect_equal(grafico_correcto$max, cuartiles_correctos$max)
+})
+
+# --- Validación de opciones únicas (lógica positiva) ---
+# Regla: .claude/rules/validacion-neg-opciones-repetidas.md
+test_that("Todas las opciones son únicas (lógica positiva)", {
+  letras <- c("A", "B", "C", "D")
+  hashes <- sapply(letras, function(l) digest::digest(opciones_graficos[[l]]))
+  expect_equal(length(unique(hashes)), length(letras),
+    info = "Hay opciones duplicadas - cada opción debe ser única")
 })
 ```
 
@@ -487,7 +496,7 @@ options(OutDec = ".")
 
 # Función para crear y GUARDAR un boxplot como imagen individual
 # Estilo ICFES: escala izquierda, etiquetas derecha con líneas atenuadas (R v3 aprobado)
-# SIN TÍTULO - R-exams con exshuffle:TRUE asigna las letras (a), (b), etc.
+# SIN TÍTULO - las letras se asignan por la mezcla interna con sample()
 crear_y_guardar_boxplot <- function(cuartiles, letra, y_min, y_max, unidad) {
   df <- data.frame(
     ymin = cuartiles$min,
@@ -612,7 +621,7 @@ Answerlist
 ```{r mostrar_opciones, echo=FALSE, results='asis'}
 # Mostrar cada gráfico en el orden de la mezcla interna
 # La mezcla interna ya determinó el orden A, B, C, D
-# R-exams con exshuffle:TRUE los reordenará adicionalmente
+# exshuffle:FALSE para que R-exams NO reordene (la mezcla interna ya aleatoriza)
 for (letra in c("A", "B", "C", "D")) {
   nombre_archivo <- paste0("diagrama_", tolower(letra), ".png")
   cat("* ![](", nombre_archivo, "){width=60%}\n", sep = "")
@@ -637,7 +646,7 @@ Solution
 
 Esta pregunta evalúa la capacidad del estudiante para interpretar tablas de datos ordenados y relacionarlas con su representación gráfica correcta mediante un diagrama de caja y bigotes. El estudiante debe identificar los cinco valores característicos (mínimo, Q1, mediana, Q3, máximo) y verificar cuál diagrama los representa correctamente.
 
-### Respuesta Correcta: Opción `r letra_correcta`
+### Respuesta Correcta: Opción `r toupper(letra_correcta)`
 
 **Justificación matemática:**
 
@@ -662,7 +671,7 @@ $$Q_3 = \text{dato en posición } \frac{3(n+1)}{4} = \frac{3 \times 12}{4} = 9$$
 
 ```{r mostrar_diagrama_correcto, echo=FALSE, results='asis', fig.align='center'}
 # Mostrar el diagrama correcto en la solución
-# letra_correcta ya está en minúscula (a/b/c/d) y corresponde a la posición con exshuffle:FALSE
+# letra_correcta está en minúscula (a/b/c/d) — referencia al PNG generado internamente
 nombre_archivo <- paste0("diagrama_", letra_correcta, ".png")
 cat("![](", nombre_archivo, "){width=70%}", sep = "")
 ```
