@@ -134,7 +134,10 @@ validar_metadatos <- function(meta_lineas) {
     }
   }
 
-  # exshuffle debe ser TRUE
+  # exshuffle debe ser TRUE (regla general)
+  # Excepción: SCHOICE con opciones gráficas PNG + Solution que referencia letra_correcta
+  # En ese caso, exshuffle: FALSE es correcto porque sample() interno ya aleatoriza
+  # y TRUE rompería la referencia en Solution. Ver .claude/rules/graficos-como-opciones.md
   if (!is.na(exshuffle) && toupper(exshuffle) != "TRUE") {
     errores <- c(errores, "ERR_C4: exshuffle debe ser TRUE (ICFES requiere mezcla)")
   }
@@ -390,6 +393,15 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
   todos_warnings <- c(todos_warnings, resultado$warnings)
 
   todos_errores <- c(todos_errores, validar_metadatos(parsed$meta))
+
+  # Excepción exshuffle: SCHOICE con opciones gráficas PNG (diagrama_*.png)
+  # permite exshuffle:FALSE porque sample() interno ya aleatoriza
+  # y TRUE rompería la referencia a letra_correcta en Solution
+  contenido_completo <- readLines(archivo_rmd, warn = FALSE, encoding = "UTF-8")
+  tiene_opciones_graficas_png <- any(grepl("!\\[\\]\\(diagrama_", contenido_completo))
+  if (tiene_opciones_graficas_png && extype == "schoice") {
+    todos_errores <- todos_errores[!grepl("exshuffle", todos_errores)]
+  }
 
   if (extype == "schoice") {
     todos_errores <- c(todos_errores,

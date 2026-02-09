@@ -220,7 +220,7 @@ Rscript .claude/scripts/validar_coherencia_matematica.R [archivo.Rmd]
 **Valida**:
 - Chunks R sin errores (NA/NaN/Inf)
 - Metadatos ICFES completos
-- `exshuffle = TRUE`
+- `exshuffle = TRUE` (excepción: acepta FALSE en SCHOICE con opciones gráficas PNG)
 - SCHOICE: `exsolution` binario, exactamente 1 correcta
 - CLOZE: tipos/soluciones/tolerancias consistentes
 - Coherencia matemática entre variables

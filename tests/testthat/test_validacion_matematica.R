@@ -86,7 +86,7 @@ test_that("Validación matemática acepta archivo SCHOICE válido", {
   unlink(temp_file)
 })
 
-test_that("Validación detecta exshuffle = FALSE", {
+test_that("Validación detecta exshuffle = FALSE en opciones de texto", {
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(
     "```{r data generation, echo = FALSE, results = \"hide\"}",
@@ -118,6 +118,46 @@ test_that("Validación detecta exshuffle = FALSE", {
 
   expect_false(result$aprobado)
   expect_true(any(grepl("shuffle", result$errores, ignore.case = TRUE)))
+
+  unlink(temp_file)
+})
+
+test_that("Validación acepta exshuffle = FALSE en SCHOICE con opciones gráficas PNG", {
+  # Excepción: SCHOICE con opciones gráficas individuales (diagrama_*.png)
+  # usa sample() interno + exshuffle:FALSE porque TRUE rompería la referencia
+  # a letra_correcta en Solution. Ver .claude/rules/graficos-como-opciones.md
+  temp_file <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "```{r data generation, echo = FALSE, results = \"hide\"}",
+    "x <- 5",
+    "```",
+    "",
+    "Question",
+    "========",
+    "Test",
+    "",
+    "Answerlist",
+    "----------",
+    "* ![](diagrama_a.png){width=60%}",
+    "* ![](diagrama_b.png){width=60%}",
+    "",
+    "Solution",
+    "========",
+    "Test",
+    "",
+    "Meta-information",
+    "================",
+    "exname: test_shuffle_graficos",
+    "extype: schoice",
+    "exsolution: 10",
+    "exshuffle: FALSE"
+  ), temp_file)
+
+  result <- validar_coherencia_matematica(temp_file)
+
+  # No debe reportar error de exshuffle porque tiene opciones gráficas PNG
+  expect_false(any(grepl("exshuffle", result$errores, ignore.case = TRUE)),
+    info = "exshuffle:FALSE debe ser aceptado en SCHOICE con opciones gráficas PNG")
 
   unlink(temp_file)
 })

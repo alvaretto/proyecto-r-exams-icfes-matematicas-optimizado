@@ -57,7 +57,7 @@ extype: cloze
 exclozetype: schoice|num|string
 exsolution: 0100|42.5|exponencial
 extol: 0|1|0
-exshuffle: TRUE
+exshuffle: TRUE  # Nota: FALSE solo aplica a SCHOICE con PNGs gráficos (ver graficos-como-opciones.md)
 
 exextra[Type]: CLOZE
 exextra[Competencia]: Formulacion y Ejecucion

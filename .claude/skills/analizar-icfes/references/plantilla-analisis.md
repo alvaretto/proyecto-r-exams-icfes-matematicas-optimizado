@@ -87,7 +87,7 @@
 exname: [Nombre descriptivo del ejercicio]
 extype: [schoice|cloze]
 exsolution: [Respuesta correcta]
-exshuffle: TRUE
+exshuffle: TRUE  # FALSE en SCHOICE con opciones gráficas PNG (ver graficos-como-opciones.md)
 extol: 0.01
 
 # Metadatos ICFES (derivados del analisis)

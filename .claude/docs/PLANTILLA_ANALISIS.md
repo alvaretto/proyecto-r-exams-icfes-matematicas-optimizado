@@ -202,7 +202,7 @@ Esta plantilla te guía paso a paso en el análisis completo de un ejercicio tip
 exname: [Nombre descriptivo del ejercicio]
 extype: [schoice | cloze]
 exsolution: [Respuesta correcta en formato apropiado]
-exshuffle: TRUE
+exshuffle: TRUE  # FALSE en SCHOICE con opciones gráficas PNG (ver graficos-como-opciones.md)
 extol: 0.01
 
 # Metadatos ICFES (derivados del análisis anterior)

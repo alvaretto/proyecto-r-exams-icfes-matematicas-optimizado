@@ -261,7 +261,7 @@ $$I(\theta) = a^2 P(\theta) [1 - P(\theta)]$$
 
 **Solución**:
 - Eliminar pistas
-- Aleatorizar posición de correcta (exshuffle: TRUE)
+- Aleatorizar posición de correcta (exshuffle: TRUE; excepción: FALSE en SCHOICE con PNGs gráficos — ver `graficos-como-opciones.md`)
 - Mejorar plausibilidad de distractores
 
 ---

@@ -12,7 +12,7 @@ Esta regla NO tiene excepciones. Nunca usar `grid.arrange()` o similar para most
 
 **Los gráficos de opciones NUNCA deben tener títulos con letras (A, B, C, D).**
 
-R-exams con `exshuffle: TRUE` mezcla las opciones y asigna automáticamente las letras (a), (b), (c), (d). Si los gráficos tienen títulos fijos, el orden visual no coincidirá con las letras asignadas por R-exams.
+Los gráficos NO deben tener letras fijas porque el orden se determina por la mezcla interna con `sample()`.
 
 ### ❌ PROHIBIDO: Títulos con letras
 
@@ -33,7 +33,7 @@ labs(title = NULL)
 
 ## Patrón Correcto (Basado en Ejemplo Funcional)
 
-### 1. Mezclar opciones internamente + exshuffle:TRUE
+### 1. Mezclar opciones internamente + exshuffle:FALSE
 
 ```r
 # Crear lista de todas las opciones
@@ -126,22 +126,41 @@ cat("![](", nombre_archivo, "){width=70%}", sep = "")
 ```yaml
 extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
-exshuffle: TRUE         # OBLIGATORIO - R-exams mezcla adicionalmente
+exshuffle: FALSE        # La mezcla interna con sample() ya aleatoriza
 ```
 
 ---
 
-## ¿Por Qué Mezcla Interna + exshuffle:TRUE?
+## ¿Por Qué Mezcla Interna + exshuffle:FALSE?
 
-La mezcla interna permite:
-1. Conocer `letra_correcta` para mostrarla en la Solution
-2. Generar archivos con nombres consistentes (diagrama_a.png, etc.)
-3. Cada renderizado produce un orden diferente
+### El problema con exshuffle:TRUE en opciones gráficas
 
-El `exshuffle: TRUE` adicional:
-1. Añade otra capa de aleatorización en R-exams
-2. Garantiza que diferentes formatos (HTML, PDF, Moodle) también tengan orden diferente
-3. Es OBLIGATORIO según las reglas del sistema
+Cuando `exshuffle: TRUE`, R-exams:
+1. Lee las opciones (diagrama_a.png, diagrama_b.png, etc.)
+2. Re-mezcla su ORDEN (diagrama_b podría aparecer como opción (a))
+3. Ajusta `exsolution` automáticamente
+4. **PERO NO modifica el texto de la Solution**
+
+Esto causa que la Solution diga "La respuesta correcta es la **Opción A**" pero R-exams haya movido esa opción a la posición (c). **Inconsistencia fatal.**
+
+### La solución: sample() interno + exshuffle:FALSE
+
+La mezcla interna con `sample()` en `data_generation`:
+1. Aleatoriza el orden de opciones **en cada renderizado** (diferentes semillas = diferente orden)
+2. Permite conocer `letra_correcta` para mostrarla en la Solution
+3. Genera archivos con nombres consistentes (diagrama_a.png, etc.)
+4. `exshuffle: FALSE` evita que R-exams re-mezcle y rompa la referencia en Solution
+
+**Resultado**: Cada renderizado produce un orden diferente (por `sample()`), Y la Solution siempre indica la letra correcta.
+
+### Regla general vs excepción
+
+| Caso | exshuffle | Razón |
+|------|-----------|-------|
+| Opciones de texto | `TRUE` | R-exams puede reordenar sin problema |
+| **Opciones gráficas PNG + Solution con `letra_correcta`** | **`FALSE`** | `sample()` ya aleatoriza; TRUE rompería la referencia en Solution |
+
+**Ver también**: `.claude/rules/codigo-rmd.md` regla #6 para la regla general
 
 ---
 
@@ -163,10 +182,14 @@ library(gridExtra)
 grid.arrange(plot_A, plot_B, plot_C, plot_D, ncol = 2)
 ```
 
-### ❌ 3. exshuffle: FALSE
+### ❌ 3. exshuffle: TRUE con opciones gráficas + Solution con letra
 
 ```yaml
-# ❌ PROHIBIDO - exshuffle SIEMPRE debe ser TRUE
+# ❌ PROHIBIDO en SCHOICE con opciones gráficas PNG + Solution que referencia letra_correcta
+# R-exams re-mezcla las opciones pero NO modifica el texto de la Solution → inconsistencia
+exshuffle: TRUE
+
+# ✅ CORRECTO para este caso - sample() interno ya aleatoriza
 exshuffle: FALSE
 ```
 
@@ -205,7 +228,7 @@ y_max_global <- max(sapply(opciones_graficos, function(x) x$max)) + 2
 - [ ] ¿Los gráficos NO tienen título con letras (`labs(title = NULL)`)?
 - [ ] ¿Hay mezcla interna con `sample()` + tracking de `letra_correcta`?
 - [ ] ¿Los archivos usan nombres con letras (`diagrama_a.png`, etc.)?
-- [ ] ¿`exshuffle: TRUE` está en Meta-information?
+- [ ] ¿`exshuffle: FALSE` está en Meta-information? (sample() interno ya aleatoriza)
 - [ ] ¿Se excluyeron errores fuera de rango (EST-BOX-01)?
 - [ ] ¿El eje Y tiene un rango que incluye todos los valores?
 
@@ -240,7 +263,7 @@ El dominio `visual` del detractor DEBE verificar:
 3. Answerlist referencia imágenes con letras
 4. Escala compartida apropiada para todas las opciones
 5. No hay errores que generen valores fuera de rango
-6. `exshuffle: TRUE` está presente
+6. `exshuffle: FALSE` + mezcla interna con `sample()` (para opciones gráficas con Solution que referencia letra)
 
 ---
 
@@ -250,20 +273,25 @@ El dominio `visual` del detractor DEBE verificar:
 |---------|-------------|-------------|
 | Título del gráfico | `labs(title = "A")` | `labs(title = NULL)` |
 | Nombre de archivo | N/A | `diagrama_a.png` |
-| Mezcla de opciones | Sin mezcla | Interna + exshuffle:TRUE |
+| Mezcla de opciones | Sin mezcla | Interna con `sample()` |
 | Solution | Sin indicar opción | Indica `letra_correcta` |
-| exshuffle | FALSE | TRUE (OBLIGATORIO) |
+| exshuffle | TRUE (rompe referencia en Solution) | FALSE (sample() ya aleatoriza) |
 
 ---
 
-**Versión**: 3.0
-**Fecha**: 2026-02-07
+**Versión**: 4.0
+**Fecha**: 2026-02-08
 **Estado**: ACTIVO Y OBLIGATORIO
-**Excepciones**: NINGUNA
+**Excepciones**: Ver regla general en `codigo-rmd.md` para otros tipos de ejercicios
+
+### Cambios v4.0 (2026-02-08)
+- **CORRECCIÓN CRÍTICA**: `exshuffle: FALSE` es OBLIGATORIO para SCHOICE con opciones gráficas PNG
+- **Razón**: `exshuffle: TRUE` causa que R-exams re-mezcle opciones pero NO modifique el texto de la Solution, rompiendo la referencia a `letra_correcta`
+- **Patrón validado**: `sample()` interno + `exshuffle: FALSE` (aleatorización garantizada por sample)
+- **Referencias cruzadas**: `codigo-rmd.md` regla #6 actualizada con esta excepción
+- **Evidencia**: Sesiones `7e7d763f` y `93b0708f` validaron este patrón
 
 ### Cambios v3.0 (2026-02-07)
-- **Patrón basado en ejemplo funcional**: Mezcla interna + exshuffle:TRUE
-- **Tracking de letra_correcta**: Para mostrar en Solution
+- **Patrón basado en ejemplo funcional**: Mezcla interna + tracking de `letra_correcta`
 - **Nombres con letras**: `diagrama_a.png` (no numéricos)
-- **exshuffle: TRUE OBLIGATORIO**: Sin excepciones
 - **Solution dinámico**: Muestra opción correcta con variable

@@ -216,7 +216,7 @@ Rscript .claude/skills/generar-schoice/scripts/validar-renderizado.R ejercicio.R
 - Formato espanol en todos los numeros
 - Metadatos ICFES completos (6 dimensiones)
 - **Metadatos cognitivos: DOK, Bloom, SOLO**
-- `exshuffle: TRUE` obligatorio
+- `exshuffle: TRUE` obligatorio (excepción: FALSE en SCHOICE con opciones gráficas PNG — ver `graficos-como-opciones.md`)
 
 ### Post-generacion
 

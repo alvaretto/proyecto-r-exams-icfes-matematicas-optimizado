@@ -81,7 +81,7 @@ Usa estos ejemplos como **referencia** cuando analices nuevos ejercicios con el 
 exname: Area Cuadrado Basico
 extype: schoice
 exsolution: 00100
-exshuffle: TRUE
+exshuffle: TRUE  # Nota: FALSE en SCHOICE con opciones gráficas PNG (ver graficos-como-opciones.md)
 extol: 0.01
 
 exextra[Type]: SCHOICE

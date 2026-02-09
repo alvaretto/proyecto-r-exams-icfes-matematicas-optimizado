@@ -248,62 +248,35 @@ Esta regla NO tiene excepciones. **NUNCA usar `grid.arrange()` para mostrar todo
 
 **Los gráficos de opciones NUNCA deben tener títulos con letras (A, B, C, D).**
 
-R-exams con `exshuffle: TRUE` mezcla las opciones y asigna automáticamente las letras (a), (b), (c), (d).
-
 ```r
 # ❌ PROHIBIDO - Título con letra fija
 labs(title = "A")
-labs(title = paste0("Opción ", letra))
 
 # ✅ CORRECTO - Sin título
 labs(title = NULL)
 ```
 
-### Patrón Correcto
+### Patrón Correcto: Mezcla interna + exshuffle:FALSE
 
-1. **Mezcla interna + exshuffle:TRUE**:
 ```r
-# Mezclar opciones internamente
+# 1. Mezclar opciones internamente con sample()
 opciones_mezcladas <- sample(todas_opciones)
-
-# Identificar posición de respuesta correcta
 indice_correcto <- which(names(opciones_mezcladas) == "correcta")
-
-# Vector de solución para R-exams
 solucion <- rep(0, 4)
 solucion[indice_correcto] <- 1
+letra_correcta <- c("a", "b", "c", "d")[indice_correcto]
+
+# 2. Generar PNGs sin título
+ggsave(paste0("diagrama_", tolower(letra), ".png"), plot = p, ...)
+
+# 3. Meta-information: exshuffle: FALSE
+# sample() ya aleatoriza; TRUE rompería la referencia a letra_correcta en Solution
 ```
 
-2. **Gráficos con nombres de letra (sin título)**:
-```r
-# Generar y GUARDAR cada gráfico sin título
-crear_y_guardar_grafico <- function(datos, letra, ...) {
-  p <- ggplot(datos, aes(...)) +
-    geom_...() +
-    labs(title = NULL, x = NULL, y = NULL) +  # Sin título
-    theme_minimal()
-
-  # Guardar con nombre de letra
-  nombre_archivo <- paste0("diagrama_", tolower(letra), ".png")
-  ggsave(nombre_archivo, plot = p, width = 4, height = 5, dpi = 150, bg = "white")
-}
-```
-
-3. **Answerlist con imágenes de letras**:
-```markdown
-` ``{r mostrar_opciones, echo=FALSE, results='asis'}
-cat("* ![](diagrama_a.png){width=60%}\n")
-cat("* ![](diagrama_b.png){width=60%}\n")
-cat("* ![](diagrama_c.png){width=60%}\n")
-cat("* ![](diagrama_d.png){width=60%}\n")
-` ``
-```
-
-4. **Meta-information correcta**:
 ```yaml
 extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
-exshuffle: TRUE  # OBLIGATORIO
+exshuffle: FALSE  # sample() interno ya aleatoriza; TRUE rompe Solution
 ```
 
 ### Antipatrones PROHIBIDOS
@@ -315,9 +288,12 @@ labs(title = "A")
 # ❌ PROHIBIDO: grid.arrange() para mostrar opciones juntas
 grid.arrange(plot_A, plot_B, plot_C, plot_D, ncol = 2)
 
-# ❌ PROHIBIDO: exshuffle: FALSE
-exshuffle: FALSE
+# ❌ PROHIBIDO: exshuffle: TRUE cuando Solution referencia letra_correcta
+# R-exams re-mezcla opciones pero NO modifica el texto de la Solution
+exshuffle: TRUE  # ← rompe coherencia con "Opción X" en Solution
 ```
+
+**Nota**: `exshuffle: TRUE` sigue siendo obligatorio para ejercicios con opciones de **texto** (ver regla #6 en `codigo-rmd.md`). La excepción aplica solo a SCHOICE con PNGs + Solution que referencia `letra_correcta`.
 
 ---
 

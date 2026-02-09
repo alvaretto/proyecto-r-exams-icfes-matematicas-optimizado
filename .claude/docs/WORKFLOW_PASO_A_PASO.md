@@ -371,7 +371,7 @@ code A-Produccion/En-Desarrollo/[nombre_archivo].Rmd
   - [ ] `exname` descriptivo
   - [ ] `extype` correcto (schoice/cloze)
   - [ ] `exsolution` correcto
-  - [ ] `exshuffle: TRUE`
+  - [ ] `exshuffle: TRUE` (excepción: FALSE en SCHOICE con opciones gráficas PNG — ver `graficos-como-opciones.md`)
   - [ ] Metadatos ICFES completos
 
 **Contenido matemático:**

@@ -127,7 +127,7 @@ Reglas críticas:
 - SIEMPRE encapsular en función `generar_datos()`
 - **Distractores basados en errores conceptuales documentados (pool de errores)**
 - NO usar distractores aleatorios (`respuesta + sample(-10:10, 3)` PROHIBIDO)
-- NO hacer shuffle manual (R/exams lo hace con `exshuffle: TRUE`)
+- NO hacer shuffle manual (R/exams lo hace con `exshuffle: TRUE`; excepción: SCHOICE con PNGs gráficos usa `sample()` interno + `exshuffle: FALSE` — ver `graficos-como-opciones.md`)
 - **Para ejercicios metacognitivos**: incluir pool de errores con código, descripción y función calcula()
 
 ## Sección 4: Chunk version_diversity_test
@@ -219,7 +219,7 @@ Meta-information
 exname: nombre_ejercicio
 extype: schoice
 exsolution: 1000
-exshuffle: TRUE
+exshuffle: TRUE  # FALSE en SCHOICE con opciones gráficas PNG (ver graficos-como-opciones.md)
 extol: 0.01
 
 exextra[Type]: SCHOICE

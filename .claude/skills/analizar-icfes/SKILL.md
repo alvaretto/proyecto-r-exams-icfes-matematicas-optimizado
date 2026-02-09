@@ -81,7 +81,7 @@ Ver [decision de flujo](references/decision-flujo.md) para:
 exname: [Nombre descriptivo]
 extype: [schoice|cloze]
 exsolution: [Respuesta]
-exshuffle: TRUE
+exshuffle: TRUE  # FALSE en SCHOICE con opciones gráficas PNG (ver graficos-como-opciones.md)
 extol: 0.01
 
 exextra[Type]: [SCHOICE|CLOZE]

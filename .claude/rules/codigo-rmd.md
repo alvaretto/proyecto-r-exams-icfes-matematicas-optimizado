@@ -44,7 +44,7 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    - Los archivos en `/A-Produccion/Ejemplos-Funcionales-Rmd/` son INMUTABLES
    - Solo copiar patrones, nunca editar directamente
 
-6. **NO usar `exshuffle: FALSE`**
+6. **NO usar `exshuffle: FALSE`** (regla general)
    ```yaml
    # ❌ MAL - permite patrones predecibles
    exshuffle: FALSE
@@ -57,6 +57,12 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    - Estudiante no puede identificar patrones visuales/textuales
    - Obliga al estudiante a analizar cada opción individualmente
    - Genera versiones únicas en cada renderizado
+
+   **⚠️ EXCEPCIÓN**: SCHOICE con opciones gráficas individuales (PNGs) donde la Solution
+   referencia `letra_correcta`. En este caso `exshuffle: FALSE` + mezcla interna con
+   `sample()` es OBLIGATORIO. R-exams con TRUE re-mezclaría las opciones pero NO
+   modificaría el texto de la Solution, causando inconsistencia entre la letra indicada
+   y la posición real. Ver `.claude/rules/graficos-como-opciones.md` para detalles.
 
 ## ⚠️ 5 Coherencias OBLIGATORIAS
 

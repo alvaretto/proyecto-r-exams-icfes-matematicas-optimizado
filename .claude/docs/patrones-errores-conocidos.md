@@ -861,7 +861,7 @@ exams2pdf("archivo.Rmd", n = 1)
 - [ ] Nombre de archivo: `diagrama_[letra].png` (minúsculas)
 - [ ] Llamar la función para cada opción (A, B, C, D)
 - [ ] Answerlist usa `cat("* ![](diagrama_x.png){width=60%}\n")`
-- [ ] Verificar que `exshuffle: TRUE` mezcla las opciones
+- [ ] Verificar que `exshuffle: FALSE` está configurado (SCHOICE con PNGs usa mezcla interna con `sample()`, ver `graficos-como-opciones.md`)
 
 ### 🔗 Archivos de Referencia
 

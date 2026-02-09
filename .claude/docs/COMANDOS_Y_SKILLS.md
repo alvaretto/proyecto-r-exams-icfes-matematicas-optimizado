@@ -63,7 +63,7 @@
 ```yaml
 extype: schoice
 exsolution: [binario, ej: 01000]
-exshuffle: TRUE  # OBLIGATORIO
+exshuffle: TRUE  # OBLIGATORIO (FALSE en SCHOICE con PNGs gráficos — ver graficos-como-opciones.md)
 exname: nombre_ejercicio
 exextra[Type]: SCHOICE
 exextra[Competencia]: [clasificación]

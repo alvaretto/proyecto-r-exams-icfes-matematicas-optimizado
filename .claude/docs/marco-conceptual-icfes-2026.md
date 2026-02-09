@@ -699,7 +699,7 @@ c) ¿Es justo este sistema? Argumenta.
 ```yaml
 extype: schoice
 exsolution: 1000  # Binario: A=1000, B=0100, C=0010, D=0001
-exshuffle: TRUE   # OBLIGATORIO
+exshuffle: TRUE   # OBLIGATORIO (FALSE en SCHOICE con PNGs gráficos — ver graficos-como-opciones.md)
 ```
 
 ---

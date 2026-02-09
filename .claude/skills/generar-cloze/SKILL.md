@@ -354,7 +354,7 @@ exname: [nombre]_metacognitivo_argumentacion_n3_cloze_v1
 extype: cloze
 exclozetype: schoice|num|mchoice|schoice
 exsolution: [sol_p1]|[sol_p2]|[sol_p3]|[sol_p4]
-exshuffle: TRUE
+exshuffle: TRUE  # Nota: FALSE solo aplica a SCHOICE con PNGs gráficos (ver graficos-como-opciones.md)
 extol: 0|0.01|0|0
 
 exextra[DOK]: 3

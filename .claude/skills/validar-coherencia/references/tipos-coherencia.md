@@ -89,7 +89,7 @@ Verificar que metadatos ICFES esten completos y consistentes.
 - exname: Nombre descriptivo
 - extype: schoice o cloze
 - exsolution: Respuesta correcta
-- exshuffle: TRUE
+- exshuffle: TRUE (excepción: FALSE en SCHOICE con opciones gráficas PNG — ver `graficos-como-opciones.md`)
 - extol: 0.01
 
 **Metadatos ICFES (6 dimensiones):**
@@ -112,7 +112,7 @@ Verificar que metadatos ICFES esten completos y consistentes.
 [ ] exname presente y descriptivo
 [ ] extype "schoice" o "cloze"
 [ ] exsolution formato correcto segun extype
-[ ] exshuffle: TRUE
+[ ] exshuffle: TRUE (FALSE si SCHOICE con PNGs gráficos)
 [ ] extol: 0.01 o apropiado
 [ ] exextra[Type]: SCHOICE o CLOZE
 [ ] exextra[Competencia]: Valor valido ICFES

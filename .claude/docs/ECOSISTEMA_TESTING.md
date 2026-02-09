@@ -55,7 +55,8 @@ tests/
 **Cobertura:**
 - ✅ Detección de errores en chunks R (NaN, Inf, errores de ejecución)
 - ✅ Aceptación de archivos SCHOICE válidos
-- ✅ Detección de `exshuffle = FALSE` (prohibido)
+- ✅ Detección de `exshuffle = FALSE` en opciones de texto (excepción: SCHOICE con PNGs gráficos acepta FALSE)
+- ✅ Aceptación de `exshuffle = FALSE` en SCHOICE con opciones gráficas PNG
 - ✅ Validación de inconsistencias en CLOZE (tipos vs. soluciones)
 - ✅ Detección de metadatos ICFES incompletos
 
