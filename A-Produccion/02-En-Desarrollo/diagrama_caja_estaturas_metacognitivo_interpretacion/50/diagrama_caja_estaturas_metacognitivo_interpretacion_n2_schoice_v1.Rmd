@@ -1,13 +1,13 @@
 ---
 output:
-  html_document: default
-  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies:
       - "graphicx"
       - "float"
       - "amsmath"
+  word_document: default
+  html_document: default
 icfes:
   competencia: interpretacion
   nivel_dificultad: 2
@@ -482,7 +482,7 @@ test_that("Gráfico correcto tiene cuartiles válidos", {
 })
 
 # --- Validación de opciones únicas (lógica positiva) ---
-# Regla: .claude/rules/validacion-neg-opciones-repetidas.md
+# Regla: .claude/rules/validación-neg-opciones-repetidas.md
 test_that("Todas las opciones son únicas (lógica positiva)", {
   letras <- c("A", "B", "C", "D")
   hashes <- sapply(letras, function(l) digest::digest(opciones_graficos[[l]]))

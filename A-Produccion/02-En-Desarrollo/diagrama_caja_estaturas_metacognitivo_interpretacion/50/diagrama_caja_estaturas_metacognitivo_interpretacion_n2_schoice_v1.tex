@@ -1,0 +1,296 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+Gustavo, coordinador académico, registró los puntajes del simulacro
+ICFES. La tabla muestra los datos ordenados de menor a mayor.
+
+\begin{longtable}[]{@{}ccc@{}}
+\toprule\noalign{}
+Estudiante & puntajes (puntos) & Cuartil \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1 & 257 & Mín \\
+2 & 263 & \\
+3 & 267 & Q1 \\
+4 & 289 & \\
+5 & 333 & \\
+6 & 334 & Q2 \\
+7 & 338 & \\
+8 & 347 & \\
+9 & 374 & Q3 \\
+10 & 399 & \\
+11 & 400 & Máx \\
+\end{longtable}
+
+Un estudiante de Gustavo intentó construir el diagrama de caja
+correspondiente a estos datos.
+
+\textbf{¿Cuál de los siguientes diagramas de caja representa
+CORRECTAMENTE la información de la tabla?}
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  \includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{diagrama_a.png}
+\item
+  \includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{diagrama_b.png}
+\item
+  \includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{diagrama_c.png}
+\item
+  \includegraphics[width=0.6\linewidth,height=\textheight,keepaspectratio]{diagrama_d.png}
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+\subsubsection{Información de la
+Pregunta}\label{informaciuxf3n-de-la-pregunta}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4091}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5909}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Aspecto
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Descripción
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Competencia} & Interpretación y representación \\
+\textbf{Componente} & Aleatorio \\
+\textbf{Afirmación} & Interpreta representaciones gráficas de datos
+estadísticos \\
+\textbf{Evidencia} & Identifica correspondencia entre tabla de datos y
+diagrama de caja \\
+\textbf{Tarea} & Identificar el diagrama de caja que representa
+correctamente los cuartiles de un conjunto de datos ordenados \\
+\textbf{Nivel de dificultad} & N2 \\
+\end{longtable}
+
+\subsubsection{¿Qué evalúa esta
+pregunta?}\label{quuxe9-evaluxfaa-esta-pregunta}
+
+Esta pregunta evalúa la capacidad del estudiante para interpretar tablas
+de datos ordenados y relacionarlas con su representación gráfica
+correcta mediante un diagrama de caja y bigotes. El estudiante debe
+identificar los cinco valores característicos (mínimo, Q1, mediana, Q3,
+máximo) y verificar cuál diagrama los representa correctamente.
+
+\subsubsection{Respuesta Correcta: Opción
+D}\label{respuesta-correcta-opciuxf3n-d}
+
+\textbf{Justificación matemática:}
+
+Para construir correctamente un diagrama de caja con \(n = 11\) datos
+ordenados, debemos calcular las posiciones de los cuartiles:
+
+\textbf{Paso 1:} Calcular la posición de cada cuartil
+\[Q_1 = \text{dato en posición } \frac{n+1}{4} = \frac{11+1}{4} = 3\]
+\[Q_2 = \text{dato en posición } \frac{n+1}{2} = \frac{11+1}{2} = 6\]
+\[Q_3 = \text{dato en posición } \frac{3(n+1)}{4} = \frac{3 \times 12}{4} = 9\]
+
+\textbf{Paso 2:} Leer los valores correspondientes de la tabla ordenada
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Medida & Posición & Valor \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Mínimo & 1 & 257 puntos \\
+Q1 & 3 & 267 puntos \\
+Q2 (Mediana) & 6 & 334 puntos \\
+Q3 & 9 & 374 puntos \\
+Máximo & 11 & 400 puntos \\
+\end{longtable}
+
+\textbf{Por lo tanto}, el diagrama correcto es el que muestra
+exactamente estos cinco valores: Mín = 257, Q1 = 267, Q2 = 334, Q3 =
+374, Máx = 400.
+
+\includegraphics[width=0.7\linewidth,height=\textheight,keepaspectratio]{diagrama_d.png}
+
+\subsubsection{Opciones No Válidas}\label{opciones-no-vuxe1lidas}
+
+Las opciones incorrectas contienen errores conceptuales comunes en el
+cálculo de cuartiles:
+
+\textbf{Error del diagrama con EST-BOX-03:}
+
+Es posible que los estudiantes que eligen esta opción ubicó el primer
+cuartil (q1) donde debería estar el tercer cuartil (q3) y viceversa.
+este error indica confusión sobre qué porcentaje de datos queda debajo
+de cada cuartil. Este error se presenta cuando confunde el significado
+de q1 (25\%) y q3 (75\%) en la distribución. Para evitar este error, el
+estudiante debe usar las fórmulas correctas de posición: Q1 en posición
+(n+1)/4, Q2 en (n+1)/2, Q3 en 3(n+1)/4.
+
+\textbf{Otros errores posibles en los diagramas incorrectos:}
+
+\begin{itemize}
+\item
+  \textbf{Cuartiles intercambiados (EST-BOX-03):} Es posible que los
+  estudiantes confundan Q1 con Q3, ubicando el tercer cuartil donde
+  debería ir el primero. Para evitar este error, verificar siempre que
+  Q1 \textless{} Q2 \textless{} Q3.
+\item
+  \textbf{Q1 mal calculado (EST-BOX-02):} Es posible que los estudiantes
+  ubiquen Q1 muy cerca del mínimo. Para evitar este error, recordar que
+  Q1 está en la posición 3 para n=11 datos.
+\item
+  \textbf{Mediana como promedio (EST-BOX-04):} Es posible que los
+  estudiantes confundan la mediana con el promedio aritmético. Para
+  evitar este error, recordar que la mediana es el valor central, no un
+  cálculo aritmético.
+\end{itemize}
+
+\subsubsection{Reflexión
+Metacognitiva}\label{reflexiuxf3n-metacognitiva}
+
+La caja del diagrama contiene el 50\% central de los datos, entre Q1 y
+Q3.
+
+\textbf{Estrategias para evitar errores comunes:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Ordenar primero}: Los cuartiles solo se calculan sobre datos
+  ordenados de menor a mayor
+\item
+  \textbf{Usar fórmulas de posición}: Para n datos, Q1 está en posición
+  (n+1)/4, Q2 en (n+1)/2, Q3 en 3(n+1)/4
+\item
+  \textbf{Verificar coherencia}: Siempre debe cumplirse
+  \(\text{Mín} \leq Q_1 \leq Q_2 \leq Q_3 \leq \text{Máx}\)
+\end{enumerate}
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Incorrecto. Este diagrama tiene errores en la ubicación de los
+  cuartiles.
+\item
+  Incorrecto. Este diagrama tiene errores en la ubicación de los
+  cuartiles.
+\item
+  Incorrecto. Este diagrama tiene errores en la ubicación de los
+  cuartiles.
+\item
+  CORRECTO. Este diagrama representa correctamente los cuartiles de los
+  datos.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname:
+diagrama\_caja\_estaturas\_metacognitivo\_interpretacion\_n2\_schoice\_v1
+extype: schoice exsolution: 0001 exshuffle: FALSE extol: 0.01 exsection:
+Estadistica\textbar Medidas-Posicion\textbar Diagramas-Caja
+
+exextra{[}Type{]}: SCHOICE exextra{[}Program{]}: R
+exextra{[}Language{]}: es
+
+exextra{[}Competencia{]}: Interpretacion exextra{[}Componente{]}:
+Aleatorio exextra{[}Pensamiento{]}: Aleatorio exextra{[}Afirmacion{]}:
+Interpreta representaciones graficas de datos estadisticos
+exextra{[}Evidencia{]}: Identifica correspondencia entre tabla de datos
+y diagrama de caja exextra{[}Nivel{]}: 2 exextra{[}Contexto{]}: Escolar
+
+exextra{[}DOK{]}: 2 exextra{[}Bloom{]}: Analizar exextra{[}SOLO{]}:
+Relacional
+
+exextra{[}TipoMetacognicion{]}: identificacion\_grafico\_correcto
+
+\end{document}
