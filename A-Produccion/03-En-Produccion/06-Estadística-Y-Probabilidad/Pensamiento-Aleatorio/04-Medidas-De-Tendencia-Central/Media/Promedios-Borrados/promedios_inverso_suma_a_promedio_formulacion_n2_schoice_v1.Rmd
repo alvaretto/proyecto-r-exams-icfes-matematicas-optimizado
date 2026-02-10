@@ -134,7 +134,7 @@ tikz_code <- tikz_tabla_edades(datos_tabla)
 
 Question
 ========
-`r protagonista` tiene un listado con las edades de `r num_estudiantes` estudiantes de su colegio.
+`r protagonista` tiene un listado con las edades de algunos estudiantes de su colegio.
 
 ```{r tabla_estudiantes, echo=FALSE, results='asis', message=FALSE, warning=FALSE}
 typ <- match_exams_device()
