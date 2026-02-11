@@ -1,13 +1,13 @@
 ---
 output:
+  html_document: default
+  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies:
       - "graphicx"
       - "float"
       - "amsmath"
-  word_document: default
-  html_document: default
 icfes:
   competencia: interpretacion
   nivel_dificultad: 2
