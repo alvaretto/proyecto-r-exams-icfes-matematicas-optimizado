@@ -1,13 +1,13 @@
 ---
 output:
-  html_document: default
-  word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies:
       - "graphicx"
       - "float"
       - "amsmath"
+  word_document: default
+  html_document: default
 icfes:
   competencia: interpretacion
   nivel_dificultad: 2
@@ -538,7 +538,7 @@ include_tikz(tikz_code,
              markup = "markdown",
              format = typ,
              packages = c("tikz", "colortbl", "xcolor"),
-             width = "6cm")
+             width = "3cm")
 ```
 
 `r estudiante_error`, un compañero de clase, analizó estos datos y afirmó: *"La mediana de este conjunto de datos es `r mediana_erronea`"*.
