@@ -4,7 +4,7 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
-### Las 11 Reglas Fundamentales
+### Las 12 Reglas Fundamentales
 
 1. **Ejercicios metacognitivos** con Progressive Disclosure
 2. **Flujo B obligatorio** cuando hay gráficos
@@ -16,7 +16,8 @@
 8. **Testing automático** permanente con tolerancia cero
 9. **Detractor obligatorio** en todas las fases de revisión
 10. **Skill-retroalimentación** obligatorio para sección Solution
-11. **Validación _neg_ opciones repetidas** (genérica con `digest()`) 🆕
+11. **Validación _neg_ opciones repetidas** (genérica con `digest()`)
+12. **Contextos narrativos creativos** (no mecánicos) 🆕
 
 ---
 

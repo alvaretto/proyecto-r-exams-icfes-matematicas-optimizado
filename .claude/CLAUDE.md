@@ -24,6 +24,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 8. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
 9. **Detractor obligatorio** en fases de revisión → @.claude/rules/detractor-obligatorio.md
 10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
+11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
