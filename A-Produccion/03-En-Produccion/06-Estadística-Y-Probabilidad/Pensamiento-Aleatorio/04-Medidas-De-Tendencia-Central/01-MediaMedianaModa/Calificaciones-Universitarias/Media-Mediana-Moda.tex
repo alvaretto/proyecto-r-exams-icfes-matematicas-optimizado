@@ -1,0 +1,262 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\section{Question}\label{question}
+
+Una nutricionista escolar, Elena, registró el consumo diario de frutas
+de cada estudiante (en porciones). Los datos recopilados para 8
+estudiantes se muestran en la siguiente tabla:
+
+\includegraphics[width=3cm,height=\textheight,keepaspectratio]{tabla_datos.png}
+
+Ricardo, un compañero de clase, analizó estos datos y afirmó: \emph{``La
+mediana de este conjunto de datos es 5.75''}.
+
+Sin embargo, Elena sospecha que Ricardo cometió un error conceptual.
+
+\textbf{Parte 1.} ¿Cuál error conceptual cometió Ricardo al calcular la
+mediana?
+
+\#\#ANSWER1\#\#
+
+\textbf{Parte 2.} Calcule la media aritmética correcta de los datos
+(redondee a dos decimales si es necesario).
+
+\#\#ANSWER2\#\#
+
+\textbf{Parte 3.} Calcule la mediana correcta de los datos.
+
+\#\#ANSWER3\#\#
+
+\textbf{Parte 4.} Determine si la siguiente afirmación es verdadera o
+falsa: \emph{``Si todos los datos de un conjunto son iguales, entonces
+la media, la mediana y la moda coinciden.''}
+
+\#\#ANSWER4\#\#
+
+\subsection{Answerlist}\label{answerlist}
+
+\begin{itemize}
+\tightlist
+\item
+  Confundió la mediana con la moda
+\item
+  No ordenó los datos antes de buscar la mediana
+\item
+  Confundió la mediana con la media aritmética
+\item
+  Para un número par de datos, tomó solo uno de los dos valores
+  centrales
+\item
+\item
+\item
+  Verdadero
+\item
+  Falso
+\end{itemize}
+
+\section{Solution}\label{solution}
+
+\subsubsection{Análisis del Error (Parte
+1)}\label{anuxe1lisis-del-error-parte-1}
+
+Ricardo afirmó que la mediana es \textbf{5.75}, cuando la mediana
+correcta es \textbf{5.5}.
+
+\textbf{Error identificado:} El estudiante calculó la media aritmética
+(suma de todos los datos dividida entre n) pero afirmó que ese valor era
+la mediana. Este error indica que no diferencia entre las dos medidas de
+tendencia central.
+
+\textbf{Código de error:} EST-MTC-01
+
+\textbf{Causa raíz:} No diferencia entre mediana (valor central al
+ordenar) y media (promedio aritmético)
+
+Es posible que los estudiantes que eligen otras opciones no distingan
+claramente entre las tres medidas de tendencia central (media, mediana y
+moda) o confundan los procedimientos de cálculo de cada una.
+
+\subsubsection{Procedimiento Correcto (Parte 2 y
+3)}\label{procedimiento-correcto-parte-2-y-3}
+
+\textbf{Cálculo de la media aritmética:}
+
+\textbf{Paso 1:} Sumar todos los datos.
+
+\[\text{Suma} = 1 + 5 + 5 + 5 + 6 + 7 + 8 + 9 = 46\]
+
+\textbf{Paso 2:} Dividir entre el número de datos.
+
+\[\text{Media} = \frac{46}{8} = 5.75\]
+
+\textbf{Cálculo de la mediana:}
+
+\textbf{Paso 1:} Ordenar los datos de menor a mayor.
+
+\[1,\; 5,\; 5,\; 5,\; 6,\; 7,\; 8,\; 9\]
+
+\textbf{Paso 2:} Como hay 8 datos (número \textbf{par}), la mediana es
+el promedio de los dos valores centrales (posiciones 4 y 5).
+
+\[\text{Mediana} = \frac{5 + 6}{2} = 5.5\]
+
+\textbf{Moda:} El valor 5 aparece 3 veces (la mayor frecuencia), por lo
+tanto \(\text{Moda} = 5\).
+
+\subsubsection{Propiedades de las Medidas de Tendencia Central (Parte
+4)}\label{propiedades-de-las-medidas-de-tendencia-central-parte-4}
+
+Si todos los datos de un conjunto son iguales, entonces la media, la
+mediana y la moda coinciden. \(\to\) \textbf{Verdadero}
+
+Esta afirmación es \textbf{verdadera}. La justificación se basa en las
+propiedades matemáticas de las medidas de tendencia central.
+
+\subsubsection{Caso Específico}\label{caso-especuxedfico}
+
+En este conjunto de datos: Media = 5.75, Mediana = 5.5, Moda = 5. Las
+tres medidas son diferentes, lo cual es frecuente cuando la distribución
+de los datos no es simétrica.
+
+\subsubsection{Reflexión
+Metacognitiva}\label{reflexiuxf3n-metacognitiva}
+
+Cuando identificamos el tipo de error, podemos diseñar estrategias para
+evitarlo en el futuro. La autoevaluación es clave para el aprendizaje.
+
+\subsubsection{Estrategia para Evitar el
+Error}\label{estrategia-para-evitar-el-error}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Siempre ordenar} los datos de menor a mayor antes de calcular
+  la mediana.
+\item
+  \textbf{Verificar} si \(n\) es par o impar para aplicar la regla
+  correspondiente.
+\item
+  \textbf{Distinguir} claramente entre media (promedio), mediana (valor
+  central) y moda (más frecuente).
+\item
+  \textbf{Comprobar} que la respuesta tenga sentido: la media y la
+  mediana deben estar entre el valor mínimo y el máximo.
+\end{enumerate}
+
+\subsection{Answerlist}\label{answerlist-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Incorrecto. Este no es el error que explica la respuesta del
+  compañero.
+\item
+  Incorrecto. Este no es el error que explica la respuesta del
+  compañero.
+\item
+  Correcto. Este es el error que cometió el compañero.
+\item
+  Incorrecto. Este no es el error que explica la respuesta del
+  compañero.
+\item
+  La media correcta es \(5.75\) porciones.
+\item
+  La mediana correcta es \(5.5\) porciones.
+\item
+  Correcto. La afirmación es verdadera.
+\item
+  Incorrecto.
+\end{itemize}
+
+\section{Meta-information}\label{meta-information}
+
+exname:
+media\_mediana\_moda\_metacognitivo\_interpretacion\_n2\_cloze\_v1
+extype: cloze exclozetype:
+schoice\textbar num\textbar num\textbar schoice exsolution:
+0010\textbar5.75\textbar5.5\textbar10 exshuffle: TRUE extol:
+0\textbar0.01\textbar0.01\textbar0 exsection:
+Estadistica-Probabilidad\textbar Pensamiento-Aleatorio\textbar Medidas-Tendencia-Central
+exextra{[}Type{]}: CLOZE exextra{[}Program{]}: R exextra{[}Language{]}:
+es exextra{[}Competencia{]}: Interpretacion exextra{[}Componente{]}:
+Aleatorio exextra{[}Afirmacion{]}: Interpreta y diferencia las medidas
+de tendencia central (media, mediana y moda) identificando errores
+conceptuales en su calculo exextra{[}Evidencia{]}: Identifica errores en
+el calculo de la mediana y aplica correctamente los procedimientos para
+media, mediana y moda exextra{[}Nivel{]}: 2 exextra{[}Contexto{]}:
+Escolar exextra{[}DOK{]}: 3 exextra{[}Bloom{]}: Analizar
+exextra{[}SOLO{]}: Relacional exextra{[}TipoMetacognicion{]}:
+analisis\_error
+
+\end{document}
