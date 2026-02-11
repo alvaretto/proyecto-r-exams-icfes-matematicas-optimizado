@@ -1,171 +1,698 @@
 ---
 output:
-  word_document: default
   html_document: default
-  pdf_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "graphicx"
+      - "float"
+      - "amsmath"
+icfes:
+  competencia: interpretacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: medidas_tendencia_central
+  contexto: escolar
+  eje_axial: eje6
+  componente: aleatorio
 ---
 
 ```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
 library(exams)
-knitr::opts_chunk$set(echo = TRUE)
+library(digest)
+library(testthat)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150
+)
 ```
 
-```{r data generation, echo = FALSE, results = "hide"}
-# Generación de datos aleatorios
-set.seed(NULL)  # Asegura aleatoriedad en cada ejecución
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
 
-# Tamaño del conjunto de datos (entre 7 y 12 valores)
-n <- sample(7:12, 1)
+generar_datos <- function() {
 
-# Generar datos con distribución que tenga una moda definida
-# Generamos valores enteros entre 1 y 20
-datos_base <- sample(1:20, n-1, replace = TRUE)
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS (8 contextos)
+  # ============================================================
+  contextos <- list(
+    list(
+      rol = "profesora de estadística",
+      protagonista_pool = c("Mariana", "Claudia", "Patricia", "Lucía", "Daniela"),
+      contexto_dato = "las calificaciones de sus estudiantes en el examen final",
+      unidad = "puntos",
+      rango_min = 50, rango_max = 100,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "entrenador de baloncesto",
+      protagonista_pool = c("Carlos", "Andrés", "Miguel", "Roberto", "Fernando"),
+      contexto_dato = "los puntos anotados por cada jugador en el último torneo",
+      unidad = "puntos",
+      rango_min = 8, rango_max = 35,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "nutricionista escolar",
+      protagonista_pool = c("Elena", "Sofía", "Andrea", "Paula", "Valentina"),
+      contexto_dato = "el consumo diario de frutas de cada estudiante (en porciones)",
+      unidad = "porciones",
+      rango_min = 1, rango_max = 9,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "coordinador académico",
+      protagonista_pool = c("Eduardo", "Ricardo", "Alejandro", "Pablo", "Jaime"),
+      contexto_dato = "las horas de estudio semanales reportadas por estudiantes",
+      unidad = "horas",
+      rango_min = 5, rango_max = 25,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "directora de colegio",
+      protagonista_pool = c("Isabel", "Carmen", "Gloria", "Teresa", "Marta"),
+      contexto_dato = "las edades de los estudiantes de un grupo",
+      unidad = "años",
+      rango_min = 14, rango_max = 19,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "profesor de educación física",
+      protagonista_pool = c("Diego", "Sebastián", "Nicolás", "Camilo", "Julián"),
+      contexto_dato = "los tiempos (en minutos) que tardaron los estudiantes en completar una carrera",
+      unidad = "minutos",
+      rango_min = 8, rango_max = 22,
+      genero_prot = "m"
+    ),
+    list(
+      rol = "bibliotecaria",
+      protagonista_pool = c("Rosa", "Liliana", "Mónica", "Sandra", "Adriana"),
+      contexto_dato = "el número de libros prestados por cada estudiante este semestre",
+      unidad = "libros",
+      rango_min = 2, rango_max = 15,
+      genero_prot = "f"
+    ),
+    list(
+      rol = "orientador vocacional",
+      protagonista_pool = c("Gabriel", "David", "Simón", "Mateo", "Samuel"),
+      contexto_dato = "las puntuaciones de interés vocacional de cada estudiante",
+      unidad = "puntos",
+      rango_min = 40, rango_max = 95,
+      genero_prot = "m"
+    )
+  )
 
-# Aseguramos que haya un valor que se repita (la moda)
-moda_valor <- sample(1:20, 1)
-# Determinar cuántas veces aparecerá la moda (entre 2 y 3 veces)
-moda_repeticiones <- sample(2:3, 1)
+  # ============================================================
+  # POOL DE ERRORES CONCEPTUALES CON DIAGNÓSTICO PEDAGÓGICO
+  # ============================================================
+  errores_conceptuales <- list(
+    list(
+      codigo = "EST-MTC-01",
+      nombre = "Confusión mediana-media",
+      descripcion_corta = "Confundió la mediana con la media aritmética",
+      descripcion_larga = "El estudiante calculó la media aritmética (suma de todos los datos dividida entre n) pero afirmó que ese valor era la mediana. Este error indica que no diferencia entre las dos medidas de tendencia central.",
+      causa_raiz = "No diferencia entre mediana (valor central al ordenar) y media (promedio aritmético)",
+      calcula = function(datos_ord) {
+        round(mean(datos_ord), 2)
+      }
+    ),
+    list(
+      codigo = "EST-MTC-02",
+      nombre = "Confusión mediana-moda",
+      descripcion_corta = "Confundió la mediana con la moda",
+      descripcion_larga = "El estudiante identificó el valor que más se repite (la moda) y afirmó que era la mediana. Esto revela confusión entre las tres medidas de tendencia central.",
+      causa_raiz = "Confunde valor más frecuente (moda) con valor central (mediana)",
+      calcula = function(datos_ord) {
+        tb <- table(datos_ord)
+        as.numeric(names(tb)[which.max(tb)])
+      }
+    ),
+    list(
+      codigo = "EST-MTC-03",
+      nombre = "No ordenar datos",
+      descripcion_corta = "No ordenó los datos antes de buscar la mediana",
+      descripcion_larga = "El estudiante tomó el valor que ocupa la posición central en la lista original sin ordenarla. La mediana requiere que los datos estén ordenados de menor a mayor antes de identificar el valor central.",
+      causa_raiz = "Omite el paso previo de ordenamiento ascendente",
+      calcula = function(datos_ord) {
+        # Simula tomar posición central de datos NO ordenados
+        datos_desordenados <- sample(datos_ord)
+        n <- length(datos_desordenados)
+        if (n %% 2 == 1) {
+          datos_desordenados[(n + 1) / 2]
+        } else {
+          round((datos_desordenados[n / 2] + datos_desordenados[n / 2 + 1]) / 2, 2)
+        }
+      }
+    ),
+    list(
+      codigo = "EST-MTC-04",
+      nombre = "Un solo valor central (n par)",
+      descripcion_corta = "Para un número par de datos, tomó solo uno de los dos valores centrales",
+      descripcion_larga = "Cuando el número de datos es par, el estudiante tomó únicamente uno de los dos valores centrales en lugar de promediarlos. La mediana para n par es el promedio de los dos valores centrales.",
+      causa_raiz = "Aplica la regla de n impar cuando n es par",
+      calcula = function(datos_ord) {
+        n <- length(datos_ord)
+        if (n %% 2 == 0) {
+          datos_ord[n / 2]
+        } else {
+          # Para impar, devuelve un valor adyacente al central
+          pos <- (n + 1) / 2
+          datos_ord[max(1, pos - 1)]
+        }
+      }
+    ),
+    list(
+      codigo = "EST-MTC-05",
+      nombre = "Suma sin dividir para la media",
+      descripcion_corta = "Sumó todos los datos pero olvidó dividir entre n",
+      descripcion_larga = "El estudiante realizó correctamente la suma de todos los datos pero omitió el paso de dividir entre el número de datos, confundiendo la suma total con la media aritmética.",
+      causa_raiz = "Procedimiento incompleto: calcula la suma pero no completa la división",
+      calcula = function(datos_ord) {
+        sum(datos_ord)
+      }
+    ),
+    list(
+      codigo = "EST-MTC-06",
+      nombre = "Confusión moda-máximo",
+      descripcion_corta = "Confundió la moda con el valor máximo del conjunto",
+      descripcion_larga = "El estudiante identificó el valor más grande del conjunto como la moda, confundiendo 'el valor que más se repite' con 'el valor más grande'. Este error es común cuando no se comprende el significado de frecuencia.",
+      causa_raiz = "Confunde 'más frecuente' con 'más grande'",
+      calcula = function(datos_ord) {
+        max(datos_ord)
+      }
+    )
+  )
 
-# Combinar los datos base con las repeticiones de la moda
-datos <- c(datos_base, rep(moda_valor, moda_repeticiones))
-# Mezclar el conjunto de datos
-datos <- sample(datos, length(datos))
+  # ============================================================
+  # POOL DE REFLEXIONES METACOGNITIVAS
+  # ============================================================
+  reflexiones_metacognitivas <- list(
+    "Identificar errores ajenos nos ayuda a evitar cometerlos nosotros mismos. La metacognición (pensar sobre cómo pensamos) es una habilidad fundamental en estadística.",
+    "Analizar por qué una respuesta es incorrecta es tan valioso como saber calcular la correcta. Esto fortalece la comprensión profunda del concepto.",
+    "Los errores más frecuentes en medidas de tendencia central son: confundir media con mediana, no ordenar datos para la mediana, y confundir moda con valor máximo.",
+    "Cuando identificamos el tipo de error, podemos diseñar estrategias para evitarlo en el futuro. La autoevaluación es clave para el aprendizaje.",
+    "Distinguir entre media, mediana y moda requiere comprender qué representa cada medida: el promedio, el centro y lo más frecuente. Cada una tiene un uso diferente.",
+    "Un buen hábito es verificar si la respuesta tiene sentido: la media debe estar entre el mínimo y el máximo, la mediana divide los datos en dos mitades iguales, y la moda debe ser un valor del conjunto."
+  )
 
-# Calcular la media, mediana y moda
-media <- mean(datos)
-mediana <- median(datos)
+  # ============================================================
+  # SELECCIÓN ALEATORIA Y GENERACIÓN DE DATOS
+  # ============================================================
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  protagonista <- sample(ctx$protagonista_pool, 1)
+  art_indef <- ifelse(ctx$genero_prot == "f", "Una", "Un")
 
-# Función para encontrar la moda
-encontrar_moda <- function(x) {
-  tabla <- table(x)
-  modas <- as.numeric(names(tabla[tabla == max(tabla)]))
-  if (length(modas) > 1) {
-    # Selecciona una moda al azar si hay múltiples
-    moda <- sample(modas, 1)
-  } else {
-    moda <- modas[1]
+  # Nombres del estudiante que comete el error
+  pool_estudiantes <- c(
+    "Alberto", "Juan", "Alejandra", "Camila", "Sebastián", "Miguel",
+    "Diego", "Carla", "María", "Manuel", "Santiago", "Elena",
+    "Juliana", "Ricardo", "Andrea", "Daniel", "Valeria", "Martín",
+    "Gabriel", "Nicolás", "Pedro", "Luisa", "Sara", "Fernanda"
+  )
+  estudiante_error <- sample(pool_estudiantes, 1)
+
+  # Generación de datos con moda única y 3 medidas distintas
+  datos_validos <- FALSE
+  intentos <- 0
+  max_intentos <- 500
+
+  while (!datos_validos && intentos < max_intentos) {
+    intentos <- intentos + 1
+
+    n <- sample(7:12, 1)
+
+    # Generar datos con una moda clara
+    moda_valor <- sample(ctx$rango_min:ctx$rango_max, 1)
+    moda_rep <- sample(2:3, 1)
+
+    # Generar n - moda_rep valores únicos distintos de la moda
+    rango_disponible <- setdiff(ctx$rango_min:ctx$rango_max, moda_valor)
+    if (length(rango_disponible) < (n - moda_rep)) next
+
+    otros_valores <- sample(rango_disponible, n - moda_rep, replace = FALSE)
+    datos_brutos <- c(rep(moda_valor, moda_rep), otros_valores)
+    datos_brutos <- sample(datos_brutos)  # Mezclar
+    datos_ord <- sort(datos_brutos)
+
+    # Calcular las 3 medidas
+    media_calc <- round(mean(datos_ord), 2)
+    if (n %% 2 == 1) {
+      mediana_calc <- datos_ord[(n + 1) / 2]
+    } else {
+      mediana_calc <- (datos_ord[n / 2] + datos_ord[n / 2 + 1]) / 2
+    }
+    mediana_calc <- round(mediana_calc, 2)
+
+    tb <- table(datos_ord)
+    max_freq <- max(tb)
+    modas <- as.numeric(names(tb[tb == max_freq]))
+    moda_calc <- modas[1]
+
+    # Verificar: moda única Y 3 medidas distintas
+    if (length(modas) == 1 &&
+        length(unique(c(media_calc, mediana_calc, moda_calc))) == 3) {
+
+      # Seleccionar error y verificar que produce valor distinto de mediana
+      # Errores aplicables a la mediana: 1, 2, 3, 4
+      errores_mediana_idx <- c(1, 2, 3, 4)
+      error_idx <- sample(errores_mediana_idx, 1)
+      error_sel <- errores_conceptuales[[error_idx]]
+      mediana_erronea <- error_sel$calcula(datos_ord)
+
+      if (!is.na(mediana_erronea) && mediana_erronea != mediana_calc) {
+        datos_validos <- TRUE
+      }
+    }
   }
-  return(moda)
+
+  if (!datos_validos) {
+    stop("No se pudieron generar datos válidos después de ", max_intentos, " intentos")
+  }
+
+  # ============================================================
+  # PARTE 1 (schoice): IDENTIFICAR EL ERROR CONCEPTUAL
+  # ============================================================
+
+  # Opción correcta: descripción del error real
+  desc_correcta <- error_sel$descripcion_corta
+
+  # 3 distractores: descripciones de otros errores
+  otros_idx <- setdiff(errores_mediana_idx, error_idx)
+  otros_idx <- sample(otros_idx, 3)
+  desc_distractores <- sapply(otros_idx, function(i) {
+    errores_conceptuales[[i]]$descripcion_corta
+  })
+
+  opciones_p1 <- c(desc_correcta, desc_distractores)
+  sol_p1_base <- c(TRUE, FALSE, FALSE, FALSE)
+  orden_p1 <- sample(1:4)
+  opciones_p1 <- opciones_p1[orden_p1]
+  sol_p1 <- as.integer(sol_p1_base[orden_p1])
+
+  # ============================================================
+  # PARTE 2 (num): CALCULAR LA MEDIA CORRECTA
+  # ============================================================
+  resp2 <- media_calc
+
+  # ============================================================
+  # PARTE 3 (num): CALCULAR LA MEDIANA CORRECTA
+  # ============================================================
+  resp3 <- mediana_calc
+
+  # ============================================================
+  # PARTE 4 (schoice V/F): EVALUAR AFIRMACIÓN SOBRE MTC
+  # ============================================================
+  pool_vf <- list(
+    list(
+      enunciado = paste0("Si se agrega un valor muy grande al conjunto de datos, la media se ve más afectada que la mediana."),
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = paste0("La mediana de ", n, " datos ordenados se calcula igual sin importar si ", n, " es par o impar."),
+      es_verdadero = FALSE
+    ),
+    list(
+      enunciado = paste0("La moda de un conjunto de datos siempre es un valor que pertenece al conjunto."),
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = paste0("Si todos los datos de un conjunto son iguales, entonces la media, la mediana y la moda coinciden."),
+      es_verdadero = TRUE
+    ),
+    list(
+      enunciado = paste0("La moda es siempre el valor más grande del conjunto de datos."),
+      es_verdadero = FALSE
+    ),
+    list(
+      enunciado = paste0("La media de un conjunto de datos siempre es uno de los valores del conjunto."),
+      es_verdadero = FALSE
+    )
+  )
+
+  sel_vf <- pool_vf[[sample(length(pool_vf), 1)]]
+  enunciado_vf <- sel_vf$enunciado
+
+  if (sel_vf$es_verdadero) {
+    sol_p4 <- c(1L, 0L)
+  } else {
+    sol_p4 <- c(0L, 1L)
+  }
+
+  # ============================================================
+  # PREPARAR TEXTOS Y TABLA TikZ
+  # ============================================================
+  reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+  # Construir texto de datos presentados (desordenados para el enunciado)
+  datos_presentados <- datos_brutos  # orden original mezclado
+
+  return(list(
+    ctx = ctx,
+    protagonista = protagonista,
+    art_indef = art_indef,
+    estudiante_error = estudiante_error,
+    n = n,
+    datos_presentados = datos_presentados,
+    datos_ord = datos_ord,
+    media_calc = media_calc,
+    mediana_calc = mediana_calc,
+    moda_calc = moda_calc,
+    max_freq = max_freq,
+    error_sel = error_sel,
+    mediana_erronea = mediana_erronea,
+    reflexion = reflexion,
+    opciones_p1 = opciones_p1,
+    sol_p1 = sol_p1,
+    resp2 = resp2,
+    resp3 = resp3,
+    enunciado_vf = enunciado_vf,
+    es_verdadero_vf = sel_vf$es_verdadero,
+    sol_p4 = sol_p4
+  ))
 }
 
-moda <- encontrar_moda(datos)
+# Generar datos del ejercicio
+datos <- generar_datos()
 
-# Asegurar que los tres valores sean distintos para mayor claridad
-while (length(unique(c(round(media, 2), mediana, moda))) < 3) {
-  # Regenerar datos si la media, mediana y moda son iguales
-  datos_base <- sample(1:20, n-1, replace = TRUE)
-  moda_valor <- sample(1:20, 1)
-  moda_repeticiones <- sample(2:3, 1)
-  datos <- c(datos_base, rep(moda_valor, moda_repeticiones))
-  datos <- sample(datos, length(datos))
-  
-  media <- mean(datos)
-  mediana <- median(datos)
-  moda <- encontrar_moda(datos)
+# Extraer variables para uso en el documento
+ctx <- datos$ctx
+protagonista <- datos$protagonista
+art_indef <- datos$art_indef
+estudiante_error <- datos$estudiante_error
+n <- datos$n
+datos_presentados <- datos$datos_presentados
+datos_ord <- datos$datos_ord
+media_calc <- datos$media_calc
+mediana_calc <- datos$mediana_calc
+moda_calc <- datos$moda_calc
+max_freq <- datos$max_freq
+error_sel <- datos$error_sel
+mediana_erronea <- datos$mediana_erronea
+reflexion <- datos$reflexion
+opciones_p1 <- datos$opciones_p1
+sol_p1 <- datos$sol_p1
+resp2 <- datos$resp2
+resp3 <- datos$resp3
+enunciado_vf <- datos$enunciado_vf
+es_verdadero_vf <- datos$es_verdadero_vf
+sol_p4 <- datos$sol_p4
+
+# Construir strings de solución
+sol_p1_str <- paste(sol_p1, collapse = "")
+sol_p4_str <- paste(sol_p4, collapse = "")
+```
+
+```{r generar_tabla_tikz, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# Organizar datos en dos columnas para presentación compacta
+n_filas <- ceiling(n / 2)
+
+if (n %% 2 == 0) {
+  col1 <- datos_presentados[1:n_filas]
+  col2 <- datos_presentados[(n_filas + 1):n]
+} else {
+  col1 <- datos_presentados[1:n_filas]
+  col2 <- c(datos_presentados[(n_filas + 1):n], "")
 }
 
-# Verificar si hay más de una moda
-tabla_frec <- table(datos)
-max_freq <- max(tabla_frec)
-modas <- as.numeric(names(tabla_frec[tabla_frec == max_freq]))
+# Color aleatorio para la tabla
+colores_tabla <- c("blue", "green", "red", "orange", "purple", "teal")
+color_sel <- sample(colores_tabla, 1)
+intensidad <- sample(c(15, 20, 25), 1)
+color_tabla <- paste0(color_sel, "!", intensidad)
 
-while (length(modas) > 1) {
-  # Regenerar datos si hay más de una moda
-  datos_base <- sample(1:20, n-1, replace = TRUE)
-  moda_valor <- sample(1:20, 1)
-  moda_repeticiones <- sample(2:3, 1)
-  datos <- c(datos_base, rep(moda_valor, moda_repeticiones))
-  datos <- sample(datos, length(datos))
-  
-  media <- mean(datos)
-  mediana <- median(datos)
-  moda <- encontrar_moda(datos)
+# Generar código TikZ
+tikz_code <- c(
+  "\\begin{tikzpicture}",
+  "\\node[inner sep=0pt] {",
+  paste0("  \\begin{tabular}{|c|c|}"),
+  "    \\hline",
+  paste0("    \\rowcolor{", color_tabla, "}"),
+  paste0("    \\textbf{", ctx$unidad, "} & \\textbf{", ctx$unidad, "} \\\\"),
+  "    \\hline"
+)
 
-  tabla_frec <- table(datos)
-  max_freq <- max(tabla_frec)
-  modas <- as.numeric(names(tabla_frec[tabla_frec == max_freq]))
+for (i in seq_along(col1)) {
+  if (i <= length(col2) && col2[i] != "") {
+    tikz_code <- c(tikz_code, paste0("    ", col1[i], " & ", col2[i], " \\\\"))
+  } else {
+    tikz_code <- c(tikz_code, paste0("    ", col1[i], " & \\\\"))
+  }
+  tikz_code <- c(tikz_code, "    \\hline")
 }
 
-# Redondear la media a 2 decimales para la solución
-media_redondeada <- round(media, 2)
+tikz_code <- c(tikz_code,
+  "  \\end{tabular}",
+  "};",
+  "\\end{tikzpicture}"
+)
+```
 
-# Soluciones para el formato cloze
-sol_media <- as.character(media_redondeada)
-sol_mediana <- as.character(mediana)
-sol_moda <- as.character(moda)
+```{r version_diversity_test, echo=FALSE, results="hide"}
+options(OutDec = ".")
 
-# Tolerancia para la respuesta numérica de la media
-tol_media <- 0.01
+test_that("Prueba de diversidad de versiones", {
+  versiones <- list()
+  for (i in 1:300) {
+    datos_test <- generar_datos()
+    hash_datos <- digest::digest(list(
+      contexto = datos_test$ctx$rol,
+      protagonista = datos_test$protagonista,
+      estudiante = datos_test$estudiante_error,
+      n = datos_test$n,
+      datos = datos_test$datos_ord,
+      error = datos_test$error_sel$codigo,
+      enunciado_vf = datos_test$enunciado_vf
+    ))
+    versiones[[i]] <- hash_datos
+  }
+
+  n_versiones_unicas <- length(unique(versiones))
+  expect_true(n_versiones_unicas >= 200,
+              info = paste("Solo se generaron", n_versiones_unicas,
+                          "versiones únicas. Se requieren al menos 200."))
+})
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+test_that("Media calculada correctamente", {
+  expect_equal(media_calc, round(mean(datos_ord), 2))
+  expect_true(media_calc >= min(datos_ord))
+  expect_true(media_calc <= max(datos_ord))
+})
+
+test_that("Mediana calculada correctamente", {
+  if (n %% 2 == 1) {
+    esperada <- datos_ord[(n + 1) / 2]
+  } else {
+    esperada <- (datos_ord[n / 2] + datos_ord[n / 2 + 1]) / 2
+  }
+  expect_equal(mediana_calc, round(esperada, 2))
+})
+
+test_that("Moda es única y correcta", {
+  tb <- table(datos_ord)
+  modas <- as.numeric(names(tb[tb == max(tb)]))
+  expect_equal(length(modas), 1, info = "La moda debe ser única")
+  expect_equal(moda_calc, modas[1])
+})
+
+test_that("Las 3 medidas son distintas entre sí", {
+  expect_equal(length(unique(c(media_calc, mediana_calc, moda_calc))), 3,
+               info = "Media, mediana y moda deben ser valores distintos")
+})
+
+test_that("Error analizado produce mediana errónea diferente de la correcta", {
+  expect_true(mediana_erronea != mediana_calc,
+              info = "La mediana errónea debe ser diferente de la correcta")
+})
+
+test_that("Parte 1: exactamente una opción correcta", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+})
+
+test_that("Parte 4: V/F tiene exactamente 2 opciones", {
+  expect_equal(length(sol_p4), 2)
+  expect_equal(sum(sol_p4), 1)
+})
+
+test_that("Datos no contienen NA ni Inf", {
+  expect_true(all(!is.na(datos_ord)))
+  expect_true(all(is.finite(datos_ord)))
+  expect_true(!is.na(media_calc) && is.finite(media_calc))
+  expect_true(!is.na(mediana_calc) && is.finite(mediana_calc))
+  expect_true(!is.na(moda_calc) && is.finite(moda_calc))
+})
 ```
 
 Question
 ========
 
-En un estudio sobre rendimiento académico universitario, se registraron las siguientes calificaciones obtenidas por estudiantes en la prueba de matemáticas:
+`r art_indef` `r ctx$rol`, `r protagonista`, registró `r ctx$contexto_dato`. Los datos recopilados para `r n` estudiantes se muestran en la siguiente tabla:
 
-$$`r paste(datos, collapse=", ")`$$
-
-Complete la siguiente tabla con los valores correspondientes a las medidas de tendencia central (con dos decimales para la media si es necesario):
-
-```{=html}
-<table border="1" style="border-collapse: collapse; width: 50%;">
-  <tr>
-    <th style="padding: 8px; text-align: center;">Medida</th>
-    <th style="padding: 8px; text-align: center;">Valor</th>
-  </tr>
-  <tr>
-    <td style="padding: 8px;">Media</td>
-    <td style="padding: 8px; text-align: center;">##ANSWER1##</td>
-  </tr>
-  <tr>
-    <td style="padding: 8px;">Mediana</td>
-    <td style="padding: 8px; text-align: center;">##ANSWER2##</td>
-  </tr>
-  <tr>
-    <td style="padding: 8px;">Moda</td>
-    <td style="padding: 8px; text-align: center;">##ANSWER3##</td>
-  </tr>
-</table>
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+include_tikz(tikz_code,
+             name = "tabla_datos",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "colortbl", "xcolor"),
+             width = "6cm")
 ```
+
+`r estudiante_error`, un compañero de clase, analizó estos datos y afirmó: *"La mediana de este conjunto de datos es `r mediana_erronea`"*.
+
+Sin embargo, `r protagonista` sospecha que `r estudiante_error` cometió un error conceptual.
+
+**Parte 1.** ¿Cuál error conceptual cometió `r estudiante_error` al calcular la mediana?
+
+##ANSWER1##
+
+**Parte 2.** Calcule la media aritmética correcta de los datos (redondee a dos decimales si es necesario).
+
+##ANSWER2##
+
+**Parte 3.** Calcule la mediana correcta de los datos.
+
+##ANSWER3##
+
+**Parte 4.** Determine si la siguiente afirmación es verdadera o falsa: *"`r enunciado_vf`"*
+
+##ANSWER4##
+
+Answerlist
+----------
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+*
+* Verdadero
+* Falso
 
 Solution
 ========
 
-Para este conjunto de datos: $`r paste(datos, collapse=", ")`$
+### Análisis del Error (Parte 1)
 
-**Media**:
-La media se calcula sumando todos los valores y dividiendo por el número total de valores.
+`r estudiante_error` afirmó que la mediana es **`r mediana_erronea`**, cuando la mediana correcta es **`r mediana_calc`**.
 
-$$\text{Media} = \frac{`r paste(datos, collapse=" + ")`}{`r length(datos)`} = \frac{`r sum(datos)`}{`r length(datos)`} = `r media_redondeada`$$
+**Error identificado:** `r error_sel$descripcion_larga`
 
-**Mediana**:
-La mediana es el valor central cuando los datos están ordenados.
+**Código de error:** `r error_sel$codigo`
 
-Datos ordenados: $`r paste(sort(datos), collapse=", ")`$
+**Causa raíz:** `r error_sel$causa_raiz`
 
-Como hay `r length(datos)` valores (número `r ifelse(length(datos) %% 2 == 0, "par", "impar")`), la mediana es `r if(length(datos) %% 2 == 0) paste("el promedio de los dos valores centrales:", (sort(datos)[length(datos)/2] + sort(datos)[length(datos)/2 + 1])/2) else paste("el valor central:", sort(datos)[ceiling(length(datos)/2)])`.
+Es posible que los estudiantes que eligen otras opciones no distingan claramente entre las tres medidas de tendencia central (media, mediana y moda) o confundan los procedimientos de cálculo de cada una.
 
-$$\text{Mediana} = `r mediana`$$
+### Procedimiento Correcto (Parte 2 y 3)
 
-**Moda**:
-La moda es el valor que aparece con mayor frecuencia.
+**Cálculo de la media aritmética:**
 
-Frecuencias de cada valor:
-```{r, echo=FALSE, results='asis'}
-tabla_frec <- table(datos)
-for(i in 1:length(tabla_frec)) {
-  cat(paste0("El valor ", names(tabla_frec)[i], " aparece ", tabla_frec[i], " veces\n\n"))
+**Paso 1:** Sumar todos los datos.
+
+$$\text{Suma} = `r paste(datos_ord, collapse = " + ")` = `r sum(datos_ord)`$$
+
+**Paso 2:** Dividir entre el número de datos.
+
+$$\text{Media} = \frac{`r sum(datos_ord)`}{`r n`} = `r media_calc`$$
+
+**Cálculo de la mediana:**
+
+**Paso 1:** Ordenar los datos de menor a mayor.
+
+$$`r paste(datos_ord, collapse = ",\\; ")`$$
+
+```{r sol_mediana, echo=FALSE, results='asis'}
+if (n %% 2 == 1) {
+  pos <- (n + 1) / 2
+  cat(paste0("**Paso 2:** Como hay ", n, " datos (número **impar**), la mediana es el valor en la posición central.\n\n"))
+  cat(paste0("$$\\text{Posición} = \\frac{", n, " + 1}{2} = ", pos, "$$\n\n"))
+  cat(paste0("$$\\text{Mediana} = ", mediana_calc, "$$\n\n"))
+} else {
+  pos1 <- n / 2
+  pos2 <- pos1 + 1
+  cat(paste0("**Paso 2:** Como hay ", n, " datos (número **par**), la mediana es el promedio de los dos valores centrales (posiciones ", pos1, " y ", pos2, ").\n\n"))
+  cat(paste0("$$\\text{Mediana} = \\frac{", datos_ord[pos1], " + ", datos_ord[pos2], "}{2} = ", mediana_calc, "$$\n\n"))
 }
 ```
 
-El valor `r moda` aparece con mayor frecuencia (`r max(table(datos))` veces), por lo tanto:
+**Moda:** El valor `r moda_calc` aparece `r max_freq` veces (la mayor frecuencia), por lo tanto $\text{Moda} = `r moda_calc`$.
 
-$$\text{Moda} = `r moda`$$
+### Propiedades de las Medidas de Tendencia Central (Parte 4)
+
+`r enunciado_vf` $\to$ **`r ifelse(es_verdadero_vf, "Verdadero", "Falso")`**
+
+```{r sol_vf_justificacion, echo=FALSE, results='asis'}
+if (es_verdadero_vf) {
+  cat("Esta afirmación es **verdadera**. La justificación se basa en las propiedades matemáticas de las medidas de tendencia central.\n\n")
+} else {
+  cat("Esta afirmación es **falsa**. Es un error conceptual común que confunde las propiedades de las medidas de tendencia central.\n\n")
+}
+```
+
+### Caso Específico
+
+En este conjunto de datos: Media = `r media_calc`, Mediana = `r mediana_calc`, Moda = `r moda_calc`. Las tres medidas son diferentes, lo cual es frecuente cuando la distribución de los datos no es simétrica.
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+### Estrategia para Evitar el Error
+
+1. **Siempre ordenar** los datos de menor a mayor antes de calcular la mediana.
+2. **Verificar** si $n$ es par o impar para aplicar la regla correspondiente.
+3. **Distinguir** claramente entre media (promedio), mediana (valor central) y moda (más frecuente).
+4. **Comprobar** que la respuesta tenga sentido: la media y la mediana deben estar entre el valor mínimo y el máximo.
+
+Answerlist
+----------
+* `r if(sol_p1[1] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* `r if(sol_p1[2] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* `r if(sol_p1[3] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* `r if(sol_p1[4] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
+* La media correcta es $`r resp2`$ `r ctx$unidad`.
+* La mediana correcta es $`r resp3`$ `r ctx$unidad`.
+* `r if(sol_p4[1] == 1) "Correcto. La afirmación es verdadera." else "Incorrecto."`
+* `r if(sol_p4[2] == 1) "Correcto. La afirmación es falsa." else "Incorrecto."`
 
 Meta-information
 ================
+exname: media_mediana_moda_metacognitivo_interpretacion_n2_cloze_v1
 extype: cloze
-exsolution: `r sol_media`|`r sol_mediana`|`r sol_moda`
-exclozetype: num|num|num
-exname: Media Mediana Moda
-extol: `r tol_media`|0|0
+exclozetype: schoice|num|num|schoice
+exsolution: `r sol_p1_str`|`r resp2`|`r resp3`|`r sol_p4_str`
+exshuffle: TRUE
+extol: 0|0.01|0.01|0
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Tendencia-Central
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Interpreta y diferencia las medidas de tendencia central (media, mediana y moda) identificando errores conceptuales en su calculo
+exextra[Evidencia]: Identifica errores en el calculo de la mediana y aplica correctamente los procedimientos para media, mediana y moda
+exextra[Nivel]: 2
+exextra[Contexto]: Escolar
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error

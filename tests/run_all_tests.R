@@ -73,6 +73,11 @@ suites <- list(
     nombre = "Distintividad Visual _neg_",
     archivo = "tests/testthat/test_neg_visual_distinctness.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "Media-Mediana-Moda CLOZE Metacognitivo",
+    archivo = "tests/testthat/test_media_mediana_moda.R",
+    critico = TRUE
   )
 )
 
