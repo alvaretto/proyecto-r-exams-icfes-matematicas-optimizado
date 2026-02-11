@@ -418,40 +418,25 @@ sol_p4_str <- paste(sol_p4, collapse = "")
 ```{r generar_tabla_tikz, echo=FALSE, results="hide"}
 options(OutDec = ".")
 
-# Organizar datos en dos columnas para presentación compacta
-n_filas <- ceiling(n / 2)
-
-if (n %% 2 == 0) {
-  col1 <- datos_presentados[1:n_filas]
-  col2 <- datos_presentados[(n_filas + 1):n]
-} else {
-  col1 <- datos_presentados[1:n_filas]
-  col2 <- c(datos_presentados[(n_filas + 1):n], "")
-}
-
 # Color aleatorio para la tabla
 colores_tabla <- c("blue", "green", "red", "orange", "purple", "teal")
 color_sel <- sample(colores_tabla, 1)
 intensidad <- sample(c(15, 20, 25), 1)
 color_tabla <- paste0(color_sel, "!", intensidad)
 
-# Generar código TikZ
+# Generar código TikZ — una sola columna para evitar confusión
 tikz_code <- c(
   "\\begin{tikzpicture}",
   "\\node[inner sep=0pt] {",
-  paste0("  \\begin{tabular}{|c|c|}"),
+  paste0("  \\begin{tabular}{|c|}"),
   "    \\hline",
   paste0("    \\rowcolor{", color_tabla, "}"),
-  paste0("    \\textbf{", ctx$unidad, "} & \\textbf{", ctx$unidad, "} \\\\"),
+  paste0("    \\textbf{", ctx$unidad, "} \\\\"),
   "    \\hline"
 )
 
-for (i in seq_along(col1)) {
-  if (i <= length(col2) && col2[i] != "") {
-    tikz_code <- c(tikz_code, paste0("    ", col1[i], " & ", col2[i], " \\\\"))
-  } else {
-    tikz_code <- c(tikz_code, paste0("    ", col1[i], " & \\\\"))
-  }
+for (i in seq_along(datos_presentados)) {
+  tikz_code <- c(tikz_code, paste0("    ", datos_presentados[i], " \\\\"))
   tikz_code <- c(tikz_code, "    \\hline")
 }
 
