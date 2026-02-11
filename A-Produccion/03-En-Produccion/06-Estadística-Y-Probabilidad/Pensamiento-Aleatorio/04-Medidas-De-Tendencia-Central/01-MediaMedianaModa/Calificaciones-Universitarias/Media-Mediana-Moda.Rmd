@@ -549,11 +549,11 @@ Sin embargo, `r protagonista` sospecha que `r estudiante_error` cometió un erro
 
 ##ANSWER1##
 
-**Parte 2.** Calcule la media aritmética correcta de los datos (redondee a dos decimales si es necesario).
+**Parte 2.** Calcule la media aritmética correcta de los datos (redondee a dos decimales si es necesario). *Escriba el número decimal con punto; por ejemplo: 73.25*
 
 ##ANSWER2##
 
-**Parte 3.** Calcule la mediana correcta de los datos.
+**Parte 3.** Calcule la mediana correcta de los datos. *Si el resultado es decimal, use punto; por ejemplo: 68.5*
 
 ##ANSWER3##
 
