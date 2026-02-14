@@ -236,6 +236,34 @@ fi
 echo ""
 
 # =============================================================================
+# FASE 2G: VALIDACIÓN MULTI-SEMILLA RÁPIDA (Nivel 5)
+# =============================================================================
+
+SCRIPT_MULTISEMILLA="$PROJECT_DIR/.claude/scripts/validar_multisemilla.R"
+
+if [ -f "$SCRIPT_MULTISEMILLA" ] && [ $ERRORES_TOTALES -eq 0 ]; then
+  echo "┌───────────────────────────────────────────────────────────────┐"
+  echo "│ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)          │"
+  echo "└───────────────────────────────────────────────────────────────┘"
+
+  MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 20 2>&1)
+  MULTISEED_EXIT=$?
+
+  echo "$MULTISEED_OUTPUT" | grep -E "Semillas|Fallos|Tasa|RESULTADO|ERR_ANS|ERR_SEM"
+
+  if [ $MULTISEED_EXIT -ne 0 ]; then
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+    echo "  ❌ Multi-semilla: FALLOS detectados en alguna(s) semilla(s)"
+  else
+    echo "  ✓ Multi-semilla: 20/20 semillas aprobadas"
+  fi
+elif [ $ERRORES_TOTALES -gt 0 ]; then
+  echo "  ⚠️  Multi-semilla omitida (hay errores previos que resolver primero)"
+fi
+
+echo ""
+
+# =============================================================================
 # RESUMEN FINAL Y ACCIONES OBLIGATORIAS
 # =============================================================================
 

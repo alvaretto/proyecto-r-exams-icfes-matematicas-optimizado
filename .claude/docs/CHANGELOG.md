@@ -7,6 +7,73 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2026-02-14] - Validación Correctitud de Respuesta (Nivel 5)
+
+### ✅ Agregado
+
+#### Nivel 5: Validación de Correctitud de Respuesta
+
+**Problema resuelto:** Estudiantes detectan incoherencias matemáticas — respuestas incorrectas marcadas como correctas, distractores duplicados, valores fuera de rango válido. Destruye la credibilidad del sistema.
+
+**Causa raíz sistémica:** Los Niveles 1-4 validan formato, ejecución, metadatos y coherencia semántica, pero NUNCA verifican que la opción marcada como correcta sea matemáticamente correcta, ni que los distractores sean únicos en tiempo de ejecución.
+
+**Solución implementada — 5 Sub-niveles:**
+
+- **5A**: Evaluación de `exsolution` dinámico (`` `r expr` ``)
+- **5B**: Cross-check respuesta marcada vs `valor_correcto` calculado
+- **5C**: Unicidad de opciones en runtime (`digest::digest()`)
+- **5D**: Validación de rangos matemáticos (mediana, cuartiles, probabilidades)
+- **5E**: Distractor ≠ respuesta correcta
+
+**Códigos de error:**
+- `ERR_ANS_A`: exsolution dinámico inválido (bloqueante)
+- `ERR_ANS_B`: Respuesta marcada no coincide con valor correcto (bloqueante)
+- `ERR_ANS_C`: Opciones duplicadas en SCHOICE (bloqueante)
+- `ERR_ANS_D`: Valor fuera de rango matemático válido (bloqueante)
+- `ERR_ANS_E`: Distractor idéntico a respuesta correcta (bloqueante)
+
+#### Script Multi-semilla: `validar_multisemilla.R`
+
+- Ejecuta .Rmd N veces con semillas dispersas (primos)
+- Modo rápido: 20 semillas (hook automático FASE 2G)
+- Modo exhaustivo: 100 semillas (pre-promoción)
+- Tasa de éxito debe ser 100%
+
+#### Nueva Suite de Tests: `test_correctitud_respuesta.R`
+
+- **14 tests** cubriendo todos los sub-niveles (5A-5E) + integración
+- Total del ecosistema: **10 suites de testing, 82+ tests**
+
+#### FASE 2G en Hook: Multi-semilla rápida
+
+- Integrada en `post-exams2-validation.sh` después de FASES 2A-2F
+- Solo se ejecuta si fases anteriores pasan sin errores
+- 20 semillas con Nivel 5 completo
+
+### 📝 Actualizado
+
+- **`validar_coherencia_matematica.R`**: 7 funciones nuevas para Nivel 5A-5E
+- **`post-exams2-validation.sh`**: FASE 2G multi-semilla rápida
+- **`run_all_tests.R`**: 10 suites (antes 9)
+- **`CLAUDE.md`**: Regla #13 + v3.3.0
+- **`REGLAS_CRITICAS.md`**: 13 reglas (antes 12), conteos actualizados
+- **`HOOKS_Y_TESTING.md`**: 10 suites, FASE 2G, v1.2
+- **`FLUJO_AUTOMATICO_TESTING.md`**: 10 suites, FASE 2G, v1.2
+- **Nueva regla**: `validacion-correctitud-respuesta.md`
+
+### 📊 Métricas
+
+| Métrica | Antes | Después |
+|---------|-------|---------|
+| **Niveles de validación** | 4 (sintáctica, numérica, estructural, semántica) | 5 (+correctitud) |
+| **Sub-niveles Nivel 5** | 0 | 5 (5A-5E) |
+| **Suites de testing** | 9 | 10 |
+| **Tests totales** | 68+ | 82+ |
+| **Reglas obligatorias** | 12 | 13 |
+| **Tests nuevos** | 0 | 14 |
+
+---
+
 ## [2026-02-13] - Validación Semántica Automática (Nivel 4)
 
 ### ✅ Agregado
@@ -565,5 +632,5 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
-**Última actualización:** 2026-02-13
+**Última actualización:** 2026-02-14
 

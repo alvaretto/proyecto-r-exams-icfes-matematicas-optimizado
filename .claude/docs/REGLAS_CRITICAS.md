@@ -4,7 +4,7 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
-### Las 12 Reglas Fundamentales
+### Las 13 Reglas Fundamentales
 
 1. **Ejercicios metacognitivos** con Progressive Disclosure
 2. **Flujo B obligatorio** cuando hay gráficos
@@ -17,7 +17,8 @@
 9. **Detractor obligatorio** en todas las fases de revisión
 10. **Skill-retroalimentación** obligatorio para sección Solution
 11. **Validación _neg_ opciones repetidas** (genérica con `digest()`)
-12. **Contextos narrativos creativos** (no mecánicos) 🆕
+12. **Contextos narrativos creativos** (no mecánicos)
+13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check) 🆕
 
 ---
 
@@ -518,7 +519,8 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 | Distintividad Visual _neg_ | 3 | 100% |
 | Media-Mediana-Moda | 3 | 100% |
 | Validación Semántica (Nivel 4) | 35 | 100% |
-| **TOTAL** | **68+** | **100%** |
+| Correctitud Respuesta (Nivel 5) | 14 | 100% |
+| **TOTAL** | **82+** | **100%** |
 
 ### Garantías del Sistema
 
@@ -819,6 +821,78 @@ Claude DEBE detectar `_neg_` en el nombre del archivo y aplicar la variante de v
 
 ---
 
+## 12. Contextos Narrativos Creativos (OBLIGATORIO)
+
+**Regla detallada**: @.claude/rules/contextos-narrativos-creativos.md
+
+### Principio
+
+**PROHIBIDO el patrón mecánico "Un(a) [oficio], [nombre], registró [datos]".**
+
+Pool de 6+ plantillas narrativas como funciones, 5+ tipos de estructura diferentes.
+
+---
+
+## 13. Validación Correctitud de Respuesta (Nivel 5) - OBLIGATORIO 🆕
+
+**Regla detallada**: @.claude/rules/validacion-correctitud-respuesta.md
+
+### Principio Fundamental
+
+**El sistema DEBE verificar automáticamente que la respuesta marcada como correcta ES realmente la correcta matemáticamente, que los distractores son únicos y diferentes de la respuesta correcta, y que los valores están en rangos válidos.**
+
+### Sub-niveles de Validación
+
+| Sub-nivel | Qué valida | Código de error |
+|-----------|-----------|----------------|
+| **5A** | exsolution dinámico (`` `r expr` ``) evalúa correctamente | `ERR_ANS_A` |
+| **5B** | Respuesta marcada coincide con valor_correcto calculado | `ERR_ANS_B` |
+| **5C** | Opciones únicas en runtime (o patrón _neg_ correcto) | `ERR_ANS_C` |
+| **5D** | Rangos matemáticos válidos (mediana, cuartiles, probabilidades) | `ERR_ANS_D` |
+| **5E** | Ningún distractor idéntico a la respuesta correcta | `ERR_ANS_E` |
+
+**Todos los errores son BLOQUEANTES.** No hay excepciones.
+
+### Validación Multi-semilla
+
+El script `validar_multisemilla.R` ejecuta el .Rmd N veces con diferentes semillas:
+
+| Modo | Semillas | Uso |
+|------|----------|-----|
+| Rápido | 20 | Hook automático (FASE 2G) |
+| Exhaustivo | 100 | Pre-promoción |
+
+```bash
+# Rápido (hook automático)
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 20
+
+# Exhaustivo (pre-promoción)
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
+```
+
+### Integración con Hook
+
+```
+FASE 2A: Coherencia matemática (Niveles 1-4)
+FASE 2B: Preview visual (PDF → PNG)
+FASES 2C-2F: Arsenal estático
+FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5) ← NUEVO
+```
+
+La FASE 2G solo se ejecuta si las fases anteriores no tienen errores.
+
+### Variables Detectadas Automáticamente
+
+- **Vectores de solución**: `sol`, `solucion`, `solucion_vector`
+- **Valor correcto**: `valor_correcto`, `mediana_calc`, `respuesta_correcta`, `media_correcta`, `mediana_correcta`, `moda_correcta`
+- **Opciones**: `opciones_mezcladas`, `opciones_graficos`, `opciones_valores`, `opciones`
+- **Datos**: `datos_ord`, `datos`
+- **Cuartiles**: `cuartiles_correctos` (lista con `q1`, `mediana`, `q3`)
+- **Probabilidades**: Variables con `prob` en el nombre → rango [0, 1]
+- **Porcentajes**: Variables con `porcentaje`, `pct`, `percent` → rango [0, 100]
+
+---
+
 ## 📋 Checklist de Cumplimiento
 
 Antes de finalizar CUALQUIER ejercicio:
@@ -843,9 +917,17 @@ Antes de finalizar CUALQUIER ejercicio:
 
 ---
 
-**Versión**: 1.5
-**Fecha**: 2026-02-13
-**Módulo de**: @.claude/CLAUDE.md (v3.2.3)
+**Versión**: 1.6
+**Fecha**: 2026-02-14
+**Módulo de**: @.claude/CLAUDE.md (v3.3.0)
+
+### Cambios v1.6 (2026-02-14)
+
+- **13 reglas fundamentales** (era 12, ahora 13): Validación correctitud respuesta (Nivel 5)
+- **Nivel 5 completo**: 5A (exsolution dinámico), 5B (cross-check), 5C (unicidad), 5D (rangos), 5E (distractor≠correcto)
+- **Multi-semilla**: validar_multisemilla.R con 20/100 semillas
+- **FASE 2G**: Integrada en hook post-exams2
+- **10 suites de testing** (era 9): 82+ tests (era 68+)
 
 ### Cambios v1.5 (2026-02-13)
 

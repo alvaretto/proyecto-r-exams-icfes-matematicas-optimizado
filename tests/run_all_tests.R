@@ -83,6 +83,11 @@ suites <- list(
     nombre = "Validación Semántica (Nivel 4)",
     archivo = "tests/testthat/test_validacion_semantica.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "Correctitud de Respuesta (Nivel 5)",
+    archivo = "tests/testthat/test_correctitud_respuesta.R",
+    critico = TRUE
   )
 )
 

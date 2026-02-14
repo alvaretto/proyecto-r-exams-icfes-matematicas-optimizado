@@ -747,6 +747,412 @@ validar_precondiciones_error_pool <- function(env) {
   return(errores)
 }
 
+# ============================================================
+# VALIDACIÓN DE CORRECTITUD DE RESPUESTA (Nivel 5)
+#
+# Nivel 1: Sintáctico  — código corre sin errores
+# Nivel 2: Numérico    — valores válidos, no NA/NaN/Inf
+# Nivel 3: Estructural — metadatos completos, formatos correctos
+# Nivel 4: Semántico   — descripción del error corresponde a datos
+# Nivel 5: Correctitud — respuesta marcada ES la correcta
+#
+# Sub-niveles:
+#   5A: Evaluar exsolution dinámico (inline R)
+#   5B: Cross-check respuesta marcada vs valor correcto
+#   5C: Unicidad de opciones en runtime
+#   5D: Validación de rangos matemáticos
+#   5E: Distractor ≠ respuesta correcta
+# ============================================================
+
+# --- 5A: Evaluar exsolution dinámico ---
+# Cuando exsolution contiene `r ...`, el Nivel 3 lo salta.
+# Este nivel lo evalúa en el entorno del ejercicio.
+validar_5a_exsolution_dinamico <- function(meta_lineas, env, extype) {
+  errores <- character(0)
+  if (is.null(env)) return(errores)
+
+  exsolution_raw <- trimws(extraer_meta(meta_lineas, "exsolution"))
+  if (is.na(exsolution_raw)) return(errores)
+
+  # Solo actuar si es dinámico (contiene `r)
+  if (!grepl("`r\\s", exsolution_raw)) return(errores)
+
+  # Extraer la(s) expresión(es) R
+  # Puede ser un solo `r expr` o múltiples separadas por |
+  partes <- strsplit(exsolution_raw, "\\|")[[1]]
+
+  for (i in seq_along(partes)) {
+    parte <- trimws(partes[[i]])
+    if (!grepl("`r\\s", parte)) next
+
+    # Extraer la expresión R del inline
+    expr_match <- regmatches(parte, regexpr("`r\\s+[^`]+`", parte))
+    if (length(expr_match) == 0) next
+
+    expr_r <- sub("^`r\\s+", "", sub("`$", "", expr_match))
+
+    valor_eval <- tryCatch(
+      eval(parse(text = expr_r), envir = env),
+      error = function(e) {
+        errores <<- c(errores, paste0(
+          "ERR_ANS_A: exsolution dinámico parte ", i,
+          " no pudo evaluarse: ", conditionMessage(e)))
+        NULL
+      }
+    )
+
+    if (is.null(valor_eval)) next
+
+    valor_str <- as.character(valor_eval)
+
+    # Validar según tipo de ejercicio
+    if (extype == "schoice") {
+      # Debe ser string binario con exactamente 1 "1"
+      if (!grepl("^[01]+$", valor_str)) {
+        errores <- c(errores, paste0(
+          "ERR_ANS_A: exsolution dinámico evalúa a '", valor_str,
+          "' — no es formato binario válido para SCHOICE"))
+      } else {
+        n_correctas <- sum(strsplit(valor_str, "")[[1]] == "1")
+        if (n_correctas != 1) {
+          errores <- c(errores, paste0(
+            "ERR_ANS_A: exsolution dinámico '", valor_str,
+            "' tiene ", n_correctas, " correctas — SCHOICE requiere exactamente 1"))
+        }
+      }
+    }
+  }
+
+  return(errores)
+}
+
+# --- 5B: Cross-check respuesta marcada vs valor correcto ---
+# Verifica que la opción en la posición marcada como correcta
+# en sol/exsolution REALMENTE corresponde al valor correcto calculado.
+validar_5b_crosscheck <- function(env, extype) {
+  errores <- character(0)
+  if (is.null(env)) return(errores)
+
+  objetos <- ls(envir = env)
+
+  # Detectar vector de solución (sol)
+  sol <- NULL
+  for (vname in c("sol", "solucion", "solucion_vector")) {
+    if (vname %in% objetos) {
+      candidato <- get(vname, envir = env)
+      if (is.numeric(candidato) && all(candidato %in% c(0, 1))) {
+        sol <- candidato
+        break
+      }
+    }
+  }
+
+  # Detectar valor correcto
+  valor_correcto <- NULL
+  for (vname in c("valor_correcto", "mediana_calc", "respuesta_correcta",
+                   "media_correcta", "mediana_correcta", "moda_correcta")) {
+    if (vname %in% objetos) {
+      valor_correcto <- get(vname, envir = env)
+      break
+    }
+  }
+
+  # Detectar opciones (lista o vector con las opciones de respuesta)
+  opciones <- NULL
+  for (vname in c("opciones_mezcladas", "opciones_valores", "opciones",
+                   "opciones_texto", "opciones_num")) {
+    if (vname %in% objetos) {
+      candidato <- get(vname, envir = env)
+      if (is.list(candidato) || is.vector(candidato)) {
+        opciones <- candidato
+        break
+      }
+    }
+  }
+
+  # Solo validar si tenemos los 3 componentes
+  if (is.null(sol) || is.null(valor_correcto) || is.null(opciones)) return(errores)
+
+  # Verificar que sol marca exactamente 1 correcta (SCHOICE)
+  if (extype == "schoice") {
+    idx_correcto <- which(sol == 1)
+    if (length(idx_correcto) != 1) return(errores)  # Ya validado por Nivel 3
+
+    # Obtener la opción marcada como correcta
+    if (idx_correcto <= length(opciones)) {
+      opcion_marcada <- opciones[[idx_correcto]]
+
+      # Comparar con valor correcto
+      if (is.numeric(opcion_marcada) && is.numeric(valor_correcto)) {
+        if (abs(opcion_marcada - valor_correcto) > 0.01) {
+          errores <- c(errores, paste0(
+            "ERR_ANS_B: Opción marcada como correcta (posición ", idx_correcto,
+            ", valor=", opcion_marcada,
+            ") NO coincide con valor_correcto (", valor_correcto, ")"))
+        }
+      }
+    }
+  }
+
+  return(errores)
+}
+
+# --- 5C: Unicidad de opciones en runtime ---
+# Verifica que las opciones de SCHOICE sean todas diferentes entre sí.
+# Para ejercicios _neg_: verifica patrón (N-1) iguales + 1 diferente.
+validar_5c_unicidad <- function(env, extype, archivo_rmd = NULL) {
+  errores <- character(0)
+  if (is.null(env) || extype != "schoice") return(errores)
+
+  objetos <- ls(envir = env)
+
+  # Detectar opciones (varias convenciones de nombres)
+  opciones <- NULL
+  opciones_nombre <- NULL
+  for (vname in c("opciones_mezcladas", "opciones_graficos",
+                   "opciones_valores", "opciones", "opciones_num")) {
+    if (vname %in% objetos) {
+      candidato <- get(vname, envir = env)
+      if ((is.list(candidato) && length(candidato) >= 2) ||
+          (is.vector(candidato) && length(candidato) >= 2)) {
+        opciones <- candidato
+        opciones_nombre <- vname
+        break
+      }
+    }
+  }
+
+  if (is.null(opciones)) return(errores)
+
+  # Calcular hashes de cada opción
+  hashes <- sapply(seq_along(opciones), function(i) {
+    digest::digest(opciones[[i]])
+  })
+
+  # ¿Es ejercicio _neg_?
+  es_negativo <- FALSE
+  if (!is.null(archivo_rmd)) {
+    es_negativo <- grepl("_neg_", basename(archivo_rmd))
+  }
+
+  if (es_negativo) {
+    # Patrón _neg_: exactamente (N-1) iguales + 1 diferente
+    freq <- table(hashes)
+    n_opciones <- length(hashes)
+    if (length(freq) != 2 || !((n_opciones - 1) %in% as.integer(freq))) {
+      errores <- c(errores, paste0(
+        "ERR_ANS_C: Ejercicio _neg_ — se esperan ", n_opciones - 1,
+        " opciones idénticas + 1 diferente, pero hay ",
+        length(freq), " hashes distintos (frecuencias: ",
+        paste(as.integer(freq), collapse = ","), ")"))
+    }
+  } else {
+    # Patrón normal: TODAS las opciones deben ser diferentes
+    n_unicas <- length(unique(hashes))
+    if (n_unicas != length(hashes)) {
+      # Identificar cuáles están duplicadas
+      duplicados <- which(duplicated(hashes))
+      errores <- c(errores, paste0(
+        "ERR_ANS_C: Opciones duplicadas en SCHOICE — ",
+        length(hashes), " opciones pero solo ", n_unicas, " únicas",
+        " (duplicadas en posiciones: ", paste(duplicados, collapse = ","), ")"))
+    }
+  }
+
+  return(errores)
+}
+
+# --- 5D: Validación de rangos matemáticos ---
+# Verifica que los valores calculados estén en rangos válidos.
+validar_5d_rangos <- function(env) {
+  errores <- character(0)
+  if (is.null(env)) return(errores)
+
+  objetos <- ls(envir = env)
+
+  # Obtener datos si existen
+  datos <- NULL
+  for (vname in c("datos_ord", "datos")) {
+    if (vname %in% objetos) {
+      candidato <- get(vname, envir = env)
+      if (is.numeric(candidato) && length(candidato) >= 2) {
+        datos <- candidato
+        break
+      }
+    }
+  }
+
+  if (!is.null(datos)) {
+    rango_min <- min(datos)
+    rango_max <- max(datos)
+
+    # Mediana debe estar en [min, max]
+    for (vname in c("mediana_calc", "mediana_correcta", "mediana")) {
+      if (vname %in% objetos) {
+        val <- get(vname, envir = env)
+        if (is.numeric(val) && length(val) == 1) {
+          if (val < rango_min - 0.01 || val > rango_max + 0.01) {
+            errores <- c(errores, paste0(
+              "ERR_ANS_D: ", vname, " (", val,
+              ") fuera del rango de datos [", rango_min, ", ", rango_max, "]"))
+          }
+        }
+        break
+      }
+    }
+
+    # Media debe estar en rango razonable (min - spread, max + spread)
+    for (vname in c("media_calc", "media_correcta", "media")) {
+      if (vname %in% objetos) {
+        val <- get(vname, envir = env)
+        if (is.numeric(val) && length(val) == 1) {
+          if (val < rango_min - 0.01 || val > rango_max + 0.01) {
+            errores <- c(errores, paste0(
+              "ERR_ANS_D: ", vname, " (", val,
+              ") fuera del rango de datos [", rango_min, ", ", rango_max, "]"))
+          }
+        }
+        break
+      }
+    }
+
+    # Cuartiles deben cumplir min <= Q1 <= Q2 <= Q3 <= max
+    if ("cuartiles_correctos" %in% objetos) {
+      q <- get("cuartiles_correctos", envir = env)
+      if (is.list(q)) {
+        qvals <- c(
+          if (!is.null(q$q1)) q$q1 else NA,
+          if (!is.null(q$mediana)) q$mediana else NA,
+          if (!is.null(q$q3)) q$q3 else NA
+        )
+        qvals <- qvals[!is.na(qvals)]
+        if (length(qvals) >= 2) {
+          # Verificar orden
+          if (is.unsorted(qvals)) {
+            errores <- c(errores, paste0(
+              "ERR_ANS_D: Cuartiles desordenados — valores: ",
+              paste(qvals, collapse = ", ")))
+          }
+          # Verificar rango
+          if (any(qvals < rango_min - 0.01) || any(qvals > rango_max + 0.01)) {
+            errores <- c(errores, paste0(
+              "ERR_ANS_D: Cuartil(es) fuera del rango de datos [",
+              rango_min, ", ", rango_max, "] — valores: ",
+              paste(qvals, collapse = ", ")))
+          }
+        }
+      }
+    }
+  }
+
+  # Probabilidades deben estar en [0, 1]
+  for (vname in objetos) {
+    if (grepl("prob", vname, ignore.case = TRUE)) {
+      val <- tryCatch(get(vname, envir = env), error = function(e) NULL)
+      if (is.numeric(val) && length(val) == 1) {
+        if (val < -0.001 || val > 1.001) {
+          errores <- c(errores, paste0(
+            "ERR_ANS_D: Variable '", vname, "' (", val,
+            ") fuera del rango de probabilidad [0, 1]"))
+        }
+      }
+    }
+  }
+
+  # Porcentajes deben estar en [0, 100]
+  for (vname in objetos) {
+    if (grepl("porcentaje|pct|percent", vname, ignore.case = TRUE)) {
+      val <- tryCatch(get(vname, envir = env), error = function(e) NULL)
+      if (is.numeric(val) && length(val) == 1) {
+        if (val < -0.01 || val > 100.01) {
+          errores <- c(errores, paste0(
+            "ERR_ANS_D: Variable '", vname, "' (", val,
+            ") fuera del rango de porcentaje [0, 100]"))
+        }
+      }
+    }
+  }
+
+  return(errores)
+}
+
+# --- 5E: Distractor ≠ respuesta correcta ---
+# Verifica que ningún distractor sea idéntico a la respuesta correcta.
+validar_5e_distractor_vs_correcto <- function(env, extype) {
+  errores <- character(0)
+  if (is.null(env) || extype != "schoice") return(errores)
+
+  objetos <- ls(envir = env)
+
+  # Detectar sol
+  sol <- NULL
+  for (vname in c("sol", "solucion", "solucion_vector")) {
+    if (vname %in% objetos) {
+      candidato <- get(vname, envir = env)
+      if (is.numeric(candidato) && all(candidato %in% c(0, 1))) {
+        sol <- candidato
+        break
+      }
+    }
+  }
+
+  # Detectar opciones
+  opciones <- NULL
+  for (vname in c("opciones_mezcladas", "opciones_graficos",
+                   "opciones_valores", "opciones", "opciones_num")) {
+    if (vname %in% objetos) {
+      candidato <- get(vname, envir = env)
+      if ((is.list(candidato) || is.vector(candidato)) && length(candidato) >= 2) {
+        opciones <- candidato
+        break
+      }
+    }
+  }
+
+  if (is.null(sol) || is.null(opciones)) return(errores)
+  if (length(sol) != length(opciones)) return(errores)
+
+  idx_correcto <- which(sol == 1)
+  if (length(idx_correcto) != 1) return(errores)
+
+  hash_correcto <- digest::digest(opciones[[idx_correcto]])
+
+  # Verificar que ningún distractor sea idéntico al correcto
+  for (i in seq_along(opciones)) {
+    if (i == idx_correcto) next
+    hash_distractor <- digest::digest(opciones[[i]])
+    if (hash_distractor == hash_correcto) {
+      errores <- c(errores, paste0(
+        "ERR_ANS_E: Distractor en posición ", i,
+        " es IDÉNTICO a la respuesta correcta (posición ", idx_correcto, ")"))
+    }
+  }
+
+  return(errores)
+}
+
+# --- Función orquestadora Nivel 5 ---
+validar_nivel5_correctitud <- function(parsed, env, extype, archivo_rmd = NULL) {
+  errores <- character(0)
+
+  # 5A: Evaluar exsolution dinámico
+  errores <- c(errores, validar_5a_exsolution_dinamico(parsed$meta, env, extype))
+
+  # 5B: Cross-check respuesta marcada vs valor correcto
+  errores <- c(errores, validar_5b_crosscheck(env, extype))
+
+  # 5C: Unicidad de opciones en runtime
+  errores <- c(errores, validar_5c_unicidad(env, extype, archivo_rmd))
+
+  # 5D: Validación de rangos matemáticos
+  errores <- c(errores, validar_5d_rangos(env))
+
+  # 5E: Distractor ≠ respuesta correcta
+  errores <- c(errores, validar_5e_distractor_vs_correcto(env, extype))
+
+  return(errores)
+}
+
 validar_codigo <- function(contenido) {
   errores <- character(0)
 
@@ -824,6 +1230,10 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
   todos_warnings <- c(todos_warnings, sem_warnings)
 
   todos_errores <- c(todos_errores, validar_codigo(parsed$contenido))
+
+  # Validación de correctitud de respuesta (Nivel 5)
+  errores_n5 <- validar_nivel5_correctitud(parsed, resultado$env, extype, archivo_rmd)
+  todos_errores <- c(todos_errores, errores_n5)
 
   return(list(
     aprobado = length(todos_errores) == 0,
@@ -944,6 +1354,21 @@ if (length(err_code) > 0) {
   todos_errores <- c(todos_errores, err_code)
 } else {
   cat("  Código: OK\n")
+}
+
+# 6b. Validar correctitud de respuesta (Nivel 5)
+cat("\n--- Validando correctitud de respuesta (Nivel 5) ---\n")
+err_n5 <- validar_nivel5_correctitud(parsed, resultado$env, extype, archivo_rmd)
+if (length(err_n5) > 0) {
+  cat("  ERRORES de correctitud:\n")
+  for (e in err_n5) cat("    ", e, "\n")
+  todos_errores <- c(todos_errores, err_n5)
+} else {
+  cat("  5A (exsolution dinámico): OK\n")
+  cat("  5B (cross-check respuesta marcada): OK\n")
+  cat("  5C (unicidad de opciones): OK\n")
+  cat("  5D (rangos matemáticos): OK\n")
+  cat("  5E (distractor ≠ correcto): OK\n")
 }
 
 # 7. Resumen

@@ -25,6 +25,7 @@
     ├── ✓ Coherencia Imagen-Texto (descripción vs gráfico, valores sincronizados)
     ├── ✓ Coherencia de Código (R ↔ Python ↔ TikZ)
     ├── ✓ Coherencia Semántica Nivel 4 (descripción error ↔ datos generados)
+    ├── ✓ Correctitud Respuesta Nivel 5 (sol vs valor_correcto, unicidad, rangos)
     ├── ✓ Renderizado correcto en 4 formatos
     │
     ▼
@@ -344,6 +345,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
    │   ├── ✓ Coherencia Imagen-Texto
    │   ├── ✓ Coherencia de Codigo
    │   ├── ✓ Coherencia Semantica Nivel 4 (descripcion error ↔ datos)
+   │   ├── ✓ Correctitud Respuesta Nivel 5 (sol vs valor_correcto, unicidad, rangos)
    │   └── ✓ Renderizado 4 formatos
    │
    ├── ⚡ FASE 3: DECISION Y ACCION
@@ -447,9 +449,13 @@ NIVEL 3: TERRENO (post-producción)
 
 ---
 
-**Última actualización:** 2026-02-13
-**Versión:** 1.1
+**Última actualización:** 2026-02-14
+**Versión:** 1.2
 **Estado:** ✅ Documentado y validado
+
+### Cambios v1.2 (2026-02-14)
+- Agregada Correctitud Respuesta Nivel 5 en FASE 2 (sol vs valor_correcto, unicidad, rangos)
+- 5 sub-niveles (5A-5E) + validación multi-semilla (FASE 2G)
 
 ### Cambios v1.1 (2026-02-13)
 - Agregada Coherencia Semántica Nivel 4 en FASE 2 (descripción error ↔ datos generados)

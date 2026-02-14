@@ -45,8 +45,9 @@ EVENTO 3: Usuario/Claude intenta git push
 
 EVENTO 4: Después de exams2*()
 └─→ PostToolUse Hook (Bash) → post-exams2-validation.sh
-    ├─→ FASE 2A: Validar matemática (script R)
-    └─→ FASE 2B: Generar preview PNG (magick)
+    ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
+    ├─→ FASE 2B: Generar preview PNG (magick)
+    └─→ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
 ```
 
 ---
@@ -211,7 +212,7 @@ git push origin main
    → pre-bash-testing.sh "git commit -m '...'"
    → Detecta: comando git commit
    → Ejecuta: Rscript tests/run_all_tests.R
-   → Suite completa: 9 suites, 68+ tests
+   → Suite completa: 10 suites, 82+ tests
 
 3. Resultado:
    - Si TODO PASA:
@@ -297,8 +298,8 @@ Ejecutando suite completa de tests...
   SUITE DE TESTING COMPLETA
 ========================================
 
-Suites ejecutadas: 9
-✓ Exitosas: 9
+Suites ejecutadas: 10
+✓ Exitosas: 10
 ✗ Fallidas: 0
 
 ✅ TESTS PASARON - COMMIT PERMITIDO
@@ -435,7 +436,8 @@ tests/
     ├── test_regression_suite.R
     ├── test_neg_visual_distinctness.R
     ├── test_media_mediana_moda.R
-    └── test_validacion_semantica.R
+    ├── test_validacion_semantica.R
+    └── test_correctitud_respuesta.R
 
 .github/workflows/
 └── ci-testing.yml                        # CI/CD remoto
@@ -489,10 +491,15 @@ git commit -m "test" --allow-empty
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-02-13
+**Versión:** 1.2
+**Fecha:** 2026-02-14
 **Estado:** ACTIVO Y PERMANENTE
 **Modificable:** Solo con tests pasando
+
+### Cambios v1.2 (2026-02-14)
+- Actualizado a 10 suites, 82+ tests (era 9 suites, 68+)
+- Agregado test_correctitud_respuesta.R al árbol
+- FASE 2G (multi-semilla Nivel 5) agregada al diagrama EVENTO 4
 
 ### Cambios v1.1 (2026-02-13)
 - Actualizado a 9 suites, 68+ tests (era 6 suites, 33+)

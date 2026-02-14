@@ -19,6 +19,7 @@ Este documento describe el ecosistema completo de testing del repositorio, dise�
 | **Distintividad Visual _neg_** | 100% | ✅ Completo |
 | **Media-Mediana-Moda** | 100% | ✅ Completo |
 | **Validación Semántica (Nivel 4)** | 100% | ✅ Completo |
+| **Correctitud de Respuesta (Nivel 5)** | 100% | ✅ Completo |
 | **COBERTURA TOTAL** | **100%** | ✅ **OBJETIVO ALCANZADO** |
 
 ---
@@ -39,7 +40,8 @@ tests/
 │   ├── test_regression_suite.R          # Tests anti-regresión
 │   ├── test_neg_visual_distinctness.R   # Tests distintividad visual _neg_
 │   ├── test_media_mediana_moda.R        # Tests precondiciones Media-Mediana-Moda
-│   └── test_validacion_semantica.R      # Tests validación semántica 3 capas
+│   ├── test_validacion_semantica.R      # Tests validación semántica 3 capas
+│   └── test_correctitud_respuesta.R     # Tests correctitud respuesta Nivel 5
 │
 ├── test_aleatorization.R                # Tests ad-hoc de aleatorización
 ├── test_graficos_visualizacion.R        # Tests ad-hoc de gráficos
@@ -250,6 +252,38 @@ tests/
 
 ---
 
+### 10. **Tests de Correctitud de Respuesta (Nivel 5)** (`test_correctitud_respuesta.R`)
+
+**Objetivo:** Validar que la respuesta marcada como correcta ES realmente correcta, que los distractores son únicos y diferentes de la respuesta correcta, y que los valores están en rangos válidos.
+
+**Cobertura:**
+- ✅ 5A: Evaluación de `exsolution` dinámico (`` `r expr` ``)
+- ✅ 5B: Cross-check respuesta marcada vs `valor_correcto` calculado
+- ✅ 5C: Unicidad de opciones en runtime (`digest::digest()`)
+- ✅ 5D: Validación de rangos matemáticos (mediana, cuartiles, probabilidades)
+- ✅ 5E: Distractor ≠ respuesta correcta
+- ✅ Integración: Múltiples errores simultáneos
+
+**Tests Implementados:**
+- `test_that("5A: evalúa exsolution dinámico correctamente")`
+- `test_that("5A: detecta exsolution dinámico con 0 correctas")`
+- `test_that("5A: detecta exsolution dinámico malformado")`
+- `test_that("5B: detecta respuesta marcada incorrecta")`
+- `test_that("5B: aprueba respuesta marcada correcta")`
+- `test_that("5B: funciona sin variables de referencia")`
+- `test_that("5C: detecta opciones duplicadas en SCHOICE")`
+- `test_that("5C: aprueba opciones únicas")`
+- `test_that("5D: detecta mediana fuera de rango")`
+- `test_that("5D: detecta probabilidad negativa")`
+- `test_that("5D: detecta cuartiles desordenados")`
+- `test_that("5D: aprueba rangos válidos")`
+- `test_that("5E: detecta distractor igual a respuesta correcta")`
+- `test_that("Integración: detecta múltiples errores simultáneos")`
+
+**Integración:** Ejecutado automáticamente vía `validar_coherencia_matematica.R` (Nivel 5) y `validar_multisemilla.R` (FASE 2G).
+
+---
+
 ## 🚀 Ejecución de Tests
 
 ### Opción 1: Ejecutar Suite Completa
@@ -280,8 +314,8 @@ Ejecutando: Ortografía Española
   REPORTE FINAL
 ========================================
 
-Suites ejecutadas: 9
-✓ Exitosas: 9
+Suites ejecutadas: 10
+✓ Exitosas: 10
 ✗ Fallidas: 0
 Tiempo total: 18.5 segundos
 
@@ -352,6 +386,7 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 | **Distintividad Visual _neg_** | 3 | 100% | Ejercicios lógica negativa |
 | **Media-Mediana-Moda** | 3 | 100% | Precondiciones errores |
 | **Validación Semántica** | 35 | 100% | 3 capas, 21 keywords |
+| **Correctitud Respuesta (Nivel 5)** | 14 | 100% | 5A-5E, cross-check, rangos |
 
 ### Tiempo de Ejecución
 
@@ -474,8 +509,8 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 │                                                             │
 │              🎯 COBERTURA: 100% ALCANZADA                    │
 │                                                             │
-│   ✓ 9 Suites de Testing Implementadas                      │
-│   ✓ 68+ Tests Unitarios Ejecutándose                       │
+│   ✓ 10 Suites de Testing Implementadas                     │
+│   ✓ 82+ Tests Unitarios Ejecutándose                       │
 │   ✓ CI/CD Configurado (GitHub Actions)                     │
 │   ✓ Hooks Automáticos Operacionales                        │
 │   ✓ Tolerancia Cero a Regresiones                          │
@@ -486,10 +521,17 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-02-13
+**Versión:** 1.2
+**Fecha:** 2026-02-14
 **Autor:** Sistema Automatizado
 **Estado:** PRODUCCIÓN
+
+### Cambios v1.2 (2026-02-14)
+- **Nueva suite**: Correctitud de Respuesta (Nivel 5) — 14 tests
+- **10 suites totales** (era 9), **82+ tests** (era 68+)
+- **Validación Nivel 5**: 5 sub-niveles (5A-5E) + multi-semilla
+- **Script multi-semilla**: `validar_multisemilla.R` (20/100 semillas)
+- **FASE 2G**: Integrada en hook post-exams2
 
 ### Cambios v1.1 (2026-02-13)
 - **3 nuevas suites**: Distintividad Visual _neg_, Media-Mediana-Moda, Validación Semántica

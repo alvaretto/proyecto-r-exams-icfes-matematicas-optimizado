@@ -146,6 +146,44 @@ Rscript .claude/scripts/validar_coherencia_matematica.R archivo.Rmd
 
 ---
 
+### 7. 🎯 Errores de Correctitud de Respuesta (Nivel 5)
+
+Detectados automáticamente por `validar_coherencia_matematica.R` (sub-niveles 5A-5E) y `validar_multisemilla.R`.
+
+| Código | Sub-nivel | Error | Ejemplo |
+|--------|-----------|-------|---------|
+| ERR_ANS_A | 5A (exsolution dinámico) | exsolution dinámico evalúa a formato inválido | `` `r paste(sol)` `` produce "00" en vez de "0100" |
+| ERR_ANS_B | 5B (Cross-check) | Respuesta marcada no coincide con valor correcto | `opciones[which(sol==1)]` ≠ `valor_correcto` |
+| ERR_ANS_C | 5C (Unicidad) | Opciones duplicadas en SCHOICE | Dos opciones con mismo valor numérico |
+| ERR_ANS_D | 5D (Rangos) | Valor fuera de rango matemático válido | Mediana fuera de [min(datos), max(datos)] |
+| ERR_ANS_E | 5E (Distractor=Correcto) | Distractor idéntico a respuesta correcta | `digest(distractor) == digest(correcto)` |
+
+**Soluciones:**
+
+- **ERR_ANS_A**: Verificar que la expresión inline en `exsolution` produce un string binario válido (ej: "0100" para SCHOICE con 4 opciones).
+
+- **ERR_ANS_B**: Verificar que `sol` marca la posición correcta y que `opciones_mezcladas[which(sol==1)]` coincide con `valor_correcto`.
+
+- **ERR_ANS_C**: Verificar que `sample()` genera opciones todas diferentes. Ampliar rango de distractores si hay colisiones frecuentes.
+
+- **ERR_ANS_D**: Verificar que los cálculos de mediana, cuartiles, probabilidades producen valores dentro de rangos válidos.
+
+- **ERR_ANS_E**: Verificar que `calcula()` de cada error produce un valor diferente al correcto.
+
+**Validar con:**
+```bash
+# Validación rápida (1 semilla)
+Rscript .claude/scripts/validar_coherencia_matematica.R archivo.Rmd
+
+# Multi-semilla rápida (20 semillas)
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 20
+
+# Multi-semilla exhaustiva (100 semillas)
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
+```
+
+---
+
 ## 🚀 Workflows de Corrección
 
 ### Workflow 1: Error de Compilación PDF
@@ -313,8 +351,13 @@ R -e "exams::exams2html('archivo.Rmd', n=1)"
 
 ---
 
-**Última actualización:** 2026-02-13
-**Versión:** 1.1
+**Última actualización:** 2026-02-14
+**Versión:** 1.2
+
+### Cambios v1.2 (2026-02-14)
+- Agregada sección de errores de correctitud de respuesta (ERR_ANS_A/B/C/D/E)
+- Documentadas soluciones para errores de validación Nivel 5
+- Referencia a `validar_multisemilla.R` para stress-testing
 
 ### Cambios v1.1 (2026-02-13)
 - Agregada sección de errores de coherencia semántica (ERR_SEM_A/B/C, WARN_SEM_B)

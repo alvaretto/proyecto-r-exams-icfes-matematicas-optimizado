@@ -5,7 +5,7 @@
 **Sistema de validación automática PERMANENTE** con tolerancia cero a regresiones.
 
 - **4 hooks activos** (PreToolUse/PostToolUse para Edit/Write/Bash)
-- **100% cobertura** de tests (9 suites, 68+ tests unitarios)
+- **100% cobertura** de tests (10 suites, 82+ tests unitarios)
 - **CI/CD automático** con GitHub Actions
 - **Bloqueo proactivo** de cambios que rompen tests
 - **Validación matemática + visual** automática después de renderizar
@@ -260,7 +260,7 @@ preview_nombre-1.png
 **Documentación completa**: @.claude/docs/ECOSISTEMA_TESTING.md
 **Regla obligatoria**: @.claude/rules/testing-obligatorio.md
 
-### Las 9 Suites de Tests
+### Las 10 Suites de Tests
 
 | Suite | Archivo | Tests | Cubre |
 |-------|---------|-------|-------|
@@ -273,7 +273,8 @@ preview_nombre-1.png
 | **Distintividad Visual _neg_** | `test_neg_visual_distinctness.R` | 3 | Colores únicos, digest opciones, lógica negativa |
 | **Media-Mediana-Moda** | `test_media_mediana_moda.R` | 3 | Precondiciones, filtro genérico, 100 semillas |
 | **Validación Semántica (Nivel 4)** | `test_validacion_semantica.R` | 35 | 3 capas, 21 keywords, regresión EST-MTC-04 |
-| **TOTAL** | 9 archivos | **68+** | **100%** |
+| **Correctitud Respuesta (Nivel 5)** | `test_correctitud_respuesta.R` | 14 | 5A-5E, cross-check, unicidad, rangos |
+| **TOTAL** | 10 archivos | **82+** | **100%** |
 
 ### Ejecutor Principal
 
@@ -302,12 +303,12 @@ Ejecutando suite: Ortografía Española
   RESUMEN FINAL
 ========================================
 
-Suites ejecutadas: 9
-✓ Exitosas: 9
+Suites ejecutadas: 10
+✓ Exitosas: 10
 ✗ Fallidas: 0
 
-Tests totales: 68+
-✓ Pasados: 68+
+Tests totales: 82+
+✓ Pasados: 82+
 ✗ Fallidos: 0
 
 ⏱  Tiempo total: ~28.4s
@@ -366,9 +367,11 @@ EVENTO 3: Usuario/Claude intenta git push
 
 EVENTO 4: Después de exams2*()
 └─→ PostToolUse Hook (Bash) → post-exams2-validation.sh
-    ├─→ FASE 2A: Validar matemática (script R)
-    └─→ FASE 2B: Generar preview PNG (magick)
-        └─→ Claude DEBE leer PNG + verificar + aprobar
+    ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
+    ├─→ FASE 2B: Generar preview PNG (magick)
+    │   └─→ Claude DEBE leer PNG + verificar + aprobar
+    └─→ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
+        └─→ Solo si FASES 2A-2F sin errores
 ```
 
 ---
@@ -408,7 +411,7 @@ EVENTO 4: Después de exams2*()
    → pre-bash-testing.sh
    → Detecta: comando git commit
    → Ejecuta: Rscript tests/run_all_tests.R
-   → Suite completa: 9 suites, 68+ tests
+   → Suite completa: 10 suites, 82+ tests
 
 3. Resultado:
    - Si TODO PASA:
@@ -695,10 +698,16 @@ Acciones requeridas:
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-02-13
+**Versión**: 1.2
+**Fecha**: 2026-02-14
 **Estado**: ACTIVO Y PERMANENTE
-**Módulo de**: @.claude/CLAUDE.md (v3.2.3)
+**Módulo de**: @.claude/CLAUDE.md (v3.3.0)
+
+### Cambios v1.2 (2026-02-14)
+- **10 suites** (antes 9): +Correctitud de Respuesta (Nivel 5)
+- **82+ tests** (antes 68+): +14 tests Nivel 5A-5E
+- **FASE 2G** agregada: Multi-semilla rápida (20 semillas) en hook post-exams2
+- Validación Correctitud Nivel 5: cross-check respuesta, unicidad opciones, rangos matemáticos
 
 ### Cambios v1.1 (2026-02-13)
 - **9 suites** (antes 6): +Distintividad Visual _neg_, +Media-Mediana-Moda, +Validación Semántica

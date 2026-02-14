@@ -23,7 +23,7 @@ RepositorioMatematicasICFES_R_Exams/
 │
 ├── tests/                             # ECOSISTEMA DE TESTING
 │   ├── run_all_tests.R               # Ejecutor principal (chmod +x)
-│   └── testthat/                     # Suites de tests (9 suites, 68+ tests)
+│   └── testthat/                     # Suites de tests (10 suites, 82+ tests)
 │
 ├── outputs/                           # Archivos temporales de renderizado
 │   ├── output_pdf/                   # PDFs generados
@@ -215,7 +215,8 @@ hooks/
 
 ```
 scripts/
-├── validar_coherencia_matematica.R  # FASE 2A automática
+├── validar_coherencia_matematica.R  # FASE 2A automática (Niveles 1-5)
+├── validar_multisemilla.R           # Stress-test multi-semilla (Nivel 5)
 ├── corregir_ortografia_espanol.R    # Validación de tildes
 └── [otros scripts de utilidad]
 ```
@@ -301,10 +302,11 @@ tests/
     ├── test_regression_suite.R           # 7 tests
     ├── test_neg_visual_distinctness.R    # 3 tests
     ├── test_media_mediana_moda.R         # 3 tests
-    └── test_validacion_semantica.R       # 35 tests
+    ├── test_validacion_semantica.R       # 35 tests
+    └── test_correctitud_respuesta.R      # 14 tests
 ```
 
-**Total**: 9 suites, 68+ tests unitarios
+**Total**: 10 suites, 82+ tests unitarios
 
 **Ejecución**:
 ```bash
@@ -482,8 +484,8 @@ Total de archivos críticos:
 ├── Documentación:            13+ archivos
 ├── Hooks:                     4 scripts
 ├── Scripts de validación:     2+ scripts
-├── Suites de tests:           9 suites
-├── Tests unitarios:          68+ tests
+├── Suites de tests:          10 suites
+├── Tests unitarios:          82+ tests
 ├── Comandos manuales:         7 comandos
 ├── Skills automaticos:       17 skills (v2.1)
 └── Ejemplos funcionales:     10+ ejemplos
@@ -534,11 +536,12 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 ---
 
-**Version**: 1.2
-**Fecha**: 2026-02-06
-**Modulo de**: @.claude/CLAUDE.md (v3.0.0)
+**Version**: 1.3
+**Fecha**: 2026-02-14
+**Modulo de**: @.claude/CLAUDE.md (v3.3.0)
 
 ### Historial de Cambios
 
+- **v1.3** (2026-02-14): Actualizar a 10 suites, 82+ tests. Agregar test_correctitud_respuesta.R y validar_multisemilla.R
 - **v1.2** (2026-02-06): Actualizar skills a estructura Progressive Disclosure (17 skills v2.1)
 - **v1.1** (2026-02-04): Actualizar 03-En-Produccion con estructura real verificada (6 categorias, 69 subtemas, ~122 .Rmd)

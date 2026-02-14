@@ -26,6 +26,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
+13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check) → @.claude/rules/validacion-correctitud-respuesta.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -43,7 +44,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Sistema automático permanente:**
 - 4 hooks activos (PreToolUse/PostToolUse para Edit/Write/Bash)
-- 100% cobertura de tests (9 suites, 68+ tests)
+- 100% cobertura de tests (10 suites, 82+ tests)
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones
 
@@ -109,16 +110,30 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (9 suites)
+- **Tests**: `tests/testthat/` (10 suites)
 - **Hooks**: `.claude/hooks/` (4 scripts activos)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.2.3 (Validación Semántica Nivel 4)
-**Fecha**: 2026-02-13
+**Versión**: 3.3.0 (Validación Correctitud Nivel 5)
+**Fecha**: 2026-02-14
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.3.0 (2026-02-14)
+- **VALIDACIÓN CORRECTITUD NIVEL 5**: Cross-check respuesta marcada vs valor correcto
+  - 5A: Evaluación de exsolution dinámico (`` `r expr` ``)
+  - 5B: Cross-check respuesta marcada vs valor_correcto calculado
+  - 5C: Unicidad de opciones en runtime (digest::digest)
+  - 5D: Validación de rangos matemáticos (mediana, cuartiles, probabilidades)
+  - 5E: Distractor ≠ respuesta correcta
+- **VALIDACIÓN MULTI-SEMILLA**: Script `validar_multisemilla.R` (20 semillas rápido, 100 exhaustivo)
+- **FASE 2G nueva**: Multi-semilla rápida integrada en hook post-exams2
+- **10 SUITES DE TESTING** (era 9): 82+ tests (era 68+)
+  - Nueva suite: `test_correctitud_respuesta.R` (14 tests)
+- **Errores nuevos**: ERR_ANS_A/B/C/D/E (todos bloqueantes)
+- **Regla #13 nueva**: Validación correctitud respuesta automática y permanente
 
 ### Cambios v3.2.3 (2026-02-13)
 - **VALIDACIÓN SEMÁNTICA NIVEL 4**: Sistema de 3 capas integrado globalmente
