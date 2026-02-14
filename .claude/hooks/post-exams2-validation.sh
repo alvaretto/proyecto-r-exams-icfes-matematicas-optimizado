@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# post-exams2-validation.sh (v5.0)
+# post-exams2-validation.sh (v6.0)
 # Hook PostToolUse: ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO
 #
 # Se activa AUTOMÁTICAMENTE después de CADA comando Bash que contenga exams2*
@@ -12,6 +12,8 @@
 # FASE 2D: Ortografía Española (tildes)
 # FASE 2E: Metadatos ICFES (6 dimensiones)
 # FASE 2F: Estructura Metacognitiva (Solution completa)
+# FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
+# FASE 2H: Stress Test Visual (10 semillas, renderizado real + PNGs)
 #
 # GARANTÍA: Toda renderización activa TODAS las fases
 # PERMANENTE: No hay forma de saltarse estas validaciones
@@ -259,6 +261,40 @@ if [ -f "$SCRIPT_MULTISEMILLA" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   fi
 elif [ $ERRORES_TOTALES -gt 0 ]; then
   echo "  ⚠️  Multi-semilla omitida (hay errores previos que resolver primero)"
+fi
+
+echo ""
+
+# =============================================================================
+# FASE 2H: STRESS TEST VISUAL MULTI-SEMILLA
+# =============================================================================
+
+SCRIPT_STRESS_TEST="$PROJECT_DIR/SOURCES/scripts_validacion/stress_test_visual.R"
+
+if [ -f "$SCRIPT_STRESS_TEST" ] && [ $ERRORES_TOTALES -eq 0 ]; then
+  echo "┌───────────────────────────────────────────────────────────────┐"
+  echo "│ FASE 2H: Stress Test Visual (10 semillas, renderizado + PNGs) │"
+  echo "└───────────────────────────────────────────────────────────────┘"
+
+  STRESS_OUTPUT_DIR="$CWD/stress_test_output"
+  STRESS_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_STRESS_TEST" "$RMD_FILE" --n 10 --output-dir "$STRESS_OUTPUT_DIR" 2>&1)
+  STRESS_EXIT=$?
+
+  echo "$STRESS_OUTPUT" | grep -E "Semillas|Anomalías|VEREDICTO|PASA|FALLA|ADVERTENCIA|sospechosas"
+
+  if [ $STRESS_EXIT -ne 0 ]; then
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+    echo "  ❌ Stress Test Visual: ANOMALÍAS detectadas"
+    echo ""
+    echo "  Claude DEBE:"
+    echo "  1. Read(\"$STRESS_OUTPUT_DIR/reporte.json\") para ver anomalías"
+    echo "  2. Read() CADA PNG en $STRESS_OUTPUT_DIR/pngs/ de semillas sospechosas"
+    echo "  3. Verificar visualmente los problemas reportados"
+  else
+    echo "  ✓ Stress Test Visual: Sin anomalías críticas"
+  fi
+elif [ $ERRORES_TOTALES -gt 0 ]; then
+  echo "  ⚠️  Stress Test Visual omitido (hay errores previos que resolver primero)"
 fi
 
 echo ""

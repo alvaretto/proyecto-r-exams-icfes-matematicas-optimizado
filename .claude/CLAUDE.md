@@ -28,6 +28,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
 13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check) → @.claude/rules/validacion-correctitud-respuesta.md
 14. **Routing de modelos obligatorio** (Opus/Sonnet/Haiku por complejidad) → @.claude/rules/modelo-routing-obligatorio.md
+15. **Stress Test Visual** (FASE 2H: renderizado masivo + análisis anomalías) → @.claude/skills/stress-test-visual/SKILL.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -45,7 +46,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Sistema automático permanente:**
 - 4 hooks activos (PreToolUse/PostToolUse para Edit/Write/Bash)
-- 100% cobertura de tests (10 suites, 82+ tests)
+- 100% cobertura de tests (11 suites, 110+ tests)
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones
 
@@ -107,21 +108,49 @@ A-Produccion/
 | Ejecutar tests | `tests/run_all_tests.R` |
 | Revisar decisiones/código | @.claude/rules/detractor-obligatorio.md |
 | Routing de modelos (Opus/Sonnet/Haiku) | @.claude/rules/modelo-routing-obligatorio.md |
+| Stress test visual multi-semilla | @.claude/skills/stress-test-visual/SKILL.md |
 
 ### ⚙️ Configuración del Sistema
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (10 suites)
+- **Tests**: `tests/testthat/` (11 suites)
 - **Hooks**: `.claude/hooks/` (4 scripts activos)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.4.0 (Routing de Modelos por Complejidad)
+**Versión**: 3.6.0 (Stress Test Visual Multi-Semilla)
 **Fecha**: 2026-02-14
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.6.0 (2026-02-14)
+- **STRESS TEST VISUAL MULTI-SEMILLA**: Renderiza N veces con exams2pdf(), analiza anomalías, genera PNGs
+  - Script R: `SOURCES/scripts_validacion/stress_test_visual.R` (~450 líneas)
+  - Skill: `.claude/skills/stress-test-visual/SKILL.md` (model_recommendation: sonnet)
+  - Tests: `tests/testthat/test_stress_test_visual.R` (28 tests)
+  - Anomalías detectadas: ANOM_COMPILE, ANOM_DUP_OPT, ANOM_DIST_EQ_CORR, ANOM_POS_FIJA, ANOM_BAJA_VAR, ANOM_NA_INF, ANOM_CTX_REPET, ANOM_NEG_PATRON
+- **FASE 2H nueva**: Integrada en hook `post-exams2-validation.sh` v6.0
+  - Se ejecuta automáticamente después de FASE 2G si no hay errores previos
+  - 10 semillas por defecto, renderizado real con exams2pdf()
+  - Claude inspecciona PNGs de semillas sospechosas
+- **11 SUITES DE TESTING** (era 10): 110+ tests (era 82+)
+- **23 SKILLS** (era 22): +stress-test-visual (Sonnet)
+- **Regla #15 nueva**: Stress Test Visual automático y permanente
+
+### Cambios v3.5.0 (2026-02-14)
+- **CAPA D: DETERMINISMO DE calcula()**: Nueva capa de validación semántica
+  - Análisis estático: `deparse()` escanea `sample(`, `runif(`, `rnorm(`, etc.
+  - Test empírico: ejecuta `calcula()` 2 veces con mismos args, compara resultados
+  - `ERR_SEM_D`: error seleccionado no determinista (bloqueante)
+  - `WARN_SEM_D`: error en pool no determinista (bug latente, informativo)
+- **FIX EST-MTC-03**: `calcula()` usaba `sample(datos_ord)` — reemplazado por `datos_presentados`
+  - `set.seed()` del multi-semilla enmascaraba el no-determinismo
+  - Firma estándar ahora: `function(datos_ord, datos_presentados = NULL)`
+- **REGLA**: `calcula()` DEBE ser función pura — PROHIBIDO `sample/runif/rnorm` dentro
+- **6 tests nuevos** en `test_validacion_semantica.R` para Capa D
+- **Docs actualizados**: `ejercicios-metacognitivos.md`, `validacion-correctitud-respuesta.md`
 
 ### Cambios v3.4.0 (2026-02-14)
 - **ROUTING DE MODELOS OBLIGATORIO**: Cada skill/agente usa el modelo apropiado por complejidad

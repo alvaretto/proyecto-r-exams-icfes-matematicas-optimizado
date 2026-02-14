@@ -532,6 +532,9 @@ if (knitr::is_latex_output()) {
 # FASE 1: Renderizado 4 formatos
 # FASE 2A: Validación matemática (hook automático)
 # FASE 2B: Preview PNG (hook automático)
+# FASE 2C-2F: Arsenal completo (hook automático)
+# FASE 2G: Multi-semilla rápida (hook automático)
+# FASE 2H: Stress Test Visual (hook automático)
 # Claude: Verifica 5 coherencias + solicita aprobación
 
 # 5. Promoción
@@ -564,7 +567,8 @@ Estos se ejecutan **automáticamente**:
 - Diagnosticar errores (cuando hay fallos)
 - Corregir gráficos (cuando detecta errores gráficos)
 - Analizar imagen matemática (al cargar imagen)
-- **Skill-retroalimentación** (al generar sección Solution) 🆕
+- **Skill-retroalimentación** (al generar sección Solution)
+- **Stress-test-visual** (FASE 2H: renderizado masivo + análisis anomalías + PNGs)
 
 **NO ejecutar manualmente**. El sistema los invoca cuando corresponde.
 
@@ -641,7 +645,7 @@ allowed-tools:
 ---
 ```
 
-**Skills disponibles** (22 skills con `model_recommendation` en frontmatter):
+**Skills disponibles** (23 skills con `model_recommendation` en frontmatter):
 
 | Skill | Modelo | Proposito |
 |-------|--------|-----------|
@@ -660,6 +664,7 @@ allowed-tools:
 | generar-codigo-r | Sonnet | ggplot2 para gráficos |
 | generar-codigo-tikz | Sonnet | TikZ/pgfplots para gráficos |
 | refinar-codigo-grafico | Sonnet | Iteración hasta ≥95% |
+| stress-test-visual | Sonnet | Stress test multi-semilla + PNGs |
 | gestionar-estado-graficador | Haiku | workflow_state.json |
 | promover-ejercicio | Haiku | Mover a producción |
 | transferir-conocimiento-grafico | Haiku | Lecciones entre lenguajes |
@@ -685,9 +690,16 @@ allowed-tools:
 
 ---
 
-**Versión**: 1.3
+**Versión**: 1.4
 **Fecha**: 2026-02-14
-**Módulo de**: @.claude/CLAUDE.md (v3.4.0)
+**Módulo de**: @.claude/CLAUDE.md (v3.6.0)
+
+### Cambios v1.4 (2026-02-14)
+
+- **23 skills** (era 22): +stress-test-visual (Sonnet)
+- **FASE 2H**: Stress Test Visual integrado en arsenal automático
+- **Hook v6.0**: post-exams2-validation.sh incluye stress test
+- **Skill automático**: Se ejecuta vía hook, renderiza 10 semillas con exams2pdf()
 
 ### Cambios v1.3 (2026-02-14)
 
