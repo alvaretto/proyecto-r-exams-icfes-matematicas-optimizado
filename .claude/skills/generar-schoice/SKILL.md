@@ -12,6 +12,7 @@ metadata:
   author: alvaretto
   version: "3.0"
   language: es
+  model_recommendation: opus
 allowed-tools:
   - Read
   - Write

@@ -11,6 +11,7 @@ metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: sonnet
 allowed-tools:
   - Read
   - Write
@@ -20,6 +21,8 @@ allowed-tools:
   - Bash(Rscript:*)
   - Bash(grep:*)
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: sonnet`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="sonnet")` pasando las instrucciones completas, el archivo .Rmd problemático y los mensajes de error como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # Diagnosticador de Errores R/exams - FASE 3
 

@@ -10,6 +10,7 @@ metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: sonnet
 allowed-tools:
   - Read
   - Write
@@ -17,6 +18,8 @@ allowed-tools:
   - Bash(ls:*)
   - Bash(grep:*)
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: sonnet`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="sonnet")` pasando las instrucciones completas, el archivo .Rmd y el tipo de error gráfico (ERR_G1-G4) como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # SUBFASE 3A - Correccion de Errores Graficos
 

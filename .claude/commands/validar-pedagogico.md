@@ -182,7 +182,7 @@ El agente consulta automáticamente:
 
 ## ⚙️ Configuración
 
-**Modelo**: Claude Opus 4.5 (máxima capacidad cognitiva)
+**Modelo**: Claude Opus 4.6 (máxima capacidad cognitiva)
 
 **Invocación**: Manual (usuario ejecuta comando)
 
@@ -234,7 +234,7 @@ El agente consulta automáticamente:
 **Versión**: 1.1.0
 **Fecha**: 2026-02-04
 **Agente**: PedagogoICFES
-**Modelo**: Claude Opus 4.5
+**Modelo**: Claude Opus 4.6
 
 **Cambios v1.1**:
 - Dimensión "Tarea" agregada (7ª dimensión ICFES)

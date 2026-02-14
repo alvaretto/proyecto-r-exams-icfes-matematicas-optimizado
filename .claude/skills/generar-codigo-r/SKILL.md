@@ -10,12 +10,15 @@ metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: sonnet
 allowed-tools:
   - Read
   - Write
   - Bash(Rscript:*)
   - Bash(ls:*)
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: sonnet`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="sonnet")` pasando las instrucciones completas, la imagen original y los requisitos del grafico como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # Generador de Codigo R (ggplot2)
 

@@ -10,11 +10,14 @@ metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: sonnet
 allowed-tools:
   - Read
   - Bash(ls:*)
   - Bash(magick:*)
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: sonnet`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="sonnet")` pasando las instrucciones completas y las rutas de ambas imagenes (original y generada) como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # Comparacion Visual Inteligente
 

@@ -4,7 +4,7 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
-### Las 13 Reglas Fundamentales
+### Las 14 Reglas Fundamentales
 
 1. **Ejercicios metacognitivos** con Progressive Disclosure
 2. **Flujo B obligatorio** cuando hay gráficos
@@ -18,7 +18,8 @@
 10. **Skill-retroalimentación** obligatorio para sección Solution
 11. **Validación _neg_ opciones repetidas** (genérica con `digest()`)
 12. **Contextos narrativos creativos** (no mecánicos)
-13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check) 🆕
+13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check)
+14. **Routing de modelos obligatorio** (Opus/Sonnet/Haiku por complejidad) 🆕
 
 ---
 
@@ -893,6 +894,55 @@ La FASE 2G solo se ejecuta si las fases anteriores no tienen errores.
 
 ---
 
+## 14. Routing de Modelos Obligatorio (Opus/Sonnet/Haiku) 🆕
+
+**Regla detallada**: @.claude/rules/modelo-routing-obligatorio.md
+**Referencia completa**: @.claude/docs/MODELO_ROUTING.md
+
+### Principio Fundamental
+
+**Cada skill y agente DEBE ejecutarse con el modelo apropiado según su complejidad cognitiva. Claude DEBE delegar vía `Task(model=X)` cuando un skill tiene `model_recommendation` diferente de Opus.**
+
+### Clasificación por Tier
+
+| Tier | Modelo | Cuándo usar | Ejemplos |
+|------|--------|-------------|----------|
+| **Opus 4.6** | `claude-opus-4-6` | Razonamiento profundo, generación .Rmd, revisión adversarial | generar-schoice, generar-cloze, skill-detractor, skill-retroalimentacion |
+| **Sonnet 4.5** | `claude-sonnet-4-5-20250929` | Generación de código gráfico, diagnóstico, comparación visual | generar-codigo-tikz/python/r, diagnosticar-errores, comparar-similitud-visual |
+| **Haiku 4.5** | `claude-haiku-4-5-20251001` | Validaciones mecánicas, estado, transferencia | validar-renderizado, validar-coherencia, estado-graficador, promover-ejercicio |
+
+### Mecanismo de Delegación
+
+```
+Claude lee skill con model_recommendation: sonnet
+    ↓
+Claude DEBE ejecutar:
+    Task(subagent_type="general-purpose", model="sonnet",
+         prompt="[instrucciones del skill + contexto]")
+    ↓
+Sub-agente ejecuta con modelo Sonnet
+    ↓
+Resultado regresa a Claude (Opus)
+```
+
+### Ahorro Estimado
+
+- **50-60%** reducción en tokens/costos
+- **Sin degradación** de calidad (cada modelo opera en su zona óptima)
+- **22 skills** con `model_recommendation` en frontmatter YAML
+- **6 agentes** con modelo actualizado en frontmatter
+
+### PROHIBIDO
+
+```
+❌ Ejecutar validaciones mecánicas (Haiku) directamente en Opus
+❌ Ejecutar generación .Rmd o detractor en Sonnet/Haiku
+❌ Ignorar model_recommendation del frontmatter
+❌ Omitir delegación vía Task() para skills no-Opus
+```
+
+---
+
 ## 📋 Checklist de Cumplimiento
 
 Antes de finalizar CUALQUIER ejercicio:
@@ -912,14 +962,23 @@ Antes de finalizar CUALQUIER ejercicio:
 - [ ] 200+ versiones únicas generadas (250+ si no hay restricciones fuertes)
 - [ ] Usuario aprobó explícitamente
 - [ ] Documentación actualizada
+- [ ] **Routing de modelos** respetado (skills delegados al modelo correcto) 🆕
 
 **Si falta alguno → NO aprobar el ejercicio.**
 
 ---
 
-**Versión**: 1.6
+**Versión**: 1.7
 **Fecha**: 2026-02-14
-**Módulo de**: @.claude/CLAUDE.md (v3.3.0)
+**Módulo de**: @.claude/CLAUDE.md (v3.4.0)
+
+### Cambios v1.7 (2026-02-14)
+
+- **14 reglas fundamentales** (era 13, ahora 14): Routing de modelos obligatorio
+- **Regla #14 nueva**: Routing Opus/Sonnet/Haiku por complejidad cognitiva
+- **22 skills** con `model_recommendation` en frontmatter YAML
+- **6 agentes** con modelo actualizado (Opus 4.6, Sonnet 4.5, Haiku 4.5)
+- **Checklist** actualizado con verificación de routing
 
 ### Cambios v1.6 (2026-02-14)
 

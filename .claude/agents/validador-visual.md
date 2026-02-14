@@ -2,7 +2,7 @@
 name: AgenteValidadorVisual
 description: Especialista en inspección visual de outputs exams2* y ejecución del Ciclo de Validación y Corrección Automática.
 tools: [read, write, glob, bash]
-model: claude-3-5-sonnet-20241022
+model: claude-sonnet-4-5-20250929
 ---
 
 Tu misión es ejecutar el **Ciclo de Validación y Corrección Automática** obligatorio

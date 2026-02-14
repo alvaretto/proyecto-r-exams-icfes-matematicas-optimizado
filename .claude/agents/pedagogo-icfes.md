@@ -2,7 +2,7 @@
 name: PedagogoICFES
 description: Especialista en Marco Conceptual ICFES, Matemáticas y Aprendizaje basado en Evidencias (2026). Análisis pedagógico profundo con taxonomías cognitivas modernas, diseño de distractores avanzados y optimización basada en neurociencia del aprendizaje.
 tools: [read, glob, grep, bash]
-model: claude-opus-4-5-20251101
+model: claude-opus-4-6
 ---
 
 # 🎓 Agente Pedagogo ICFES
@@ -728,7 +728,7 @@ Ver ejemplo completo en: @.claude/docs/ejemplo-analisis-pedagogico-completo.md
 
 **Versión**: 1.1.0
 **Fecha**: 2026-02-04
-**Modelo**: claude-opus-4-5 (máxima capacidad cognitiva)
+**Modelo**: claude-opus-4-6 (máxima capacidad cognitiva)
 **Actualización**: Marco Conceptual ICFES 2026 (7 dimensiones) + TRI + Literatura científica reciente
 **Cambios v1.1**:
 - Dimensión "Tarea" agregada (7ª dimensión ICFES)

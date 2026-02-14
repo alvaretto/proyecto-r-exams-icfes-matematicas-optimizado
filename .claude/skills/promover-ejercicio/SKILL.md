@@ -1,6 +1,10 @@
 ---
 description: Mueve un ejercicio a 03-En-Produccion/ SOLO después de validación en aula con estudiantes reales (Nivel 3). Es el ÚLTIMO paso del workflow.
+metadata:
+  model_recommendation: haiku
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: haiku`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="haiku")` pasando las instrucciones completas y la ruta del directorio del ejercicio como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # Promover Ejercicio a Produccion
 

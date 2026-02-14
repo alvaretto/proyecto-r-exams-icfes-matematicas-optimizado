@@ -1,3 +1,9 @@
+---
+name: skill-detractor
+metadata:
+  model_recommendation: opus
+---
+
 # Skill Detractor - Adversarial Review System
 
 ## Proposito

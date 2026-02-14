@@ -10,11 +10,14 @@ metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: haiku
 allowed-tools:
   - Read
   - Write
   - Bash(ls:*)
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: haiku`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="haiku")` pasando las instrucciones completas como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # Transferencia de Conocimiento entre Lenguajes
 

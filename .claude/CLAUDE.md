@@ -27,6 +27,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
 13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check) → @.claude/rules/validacion-correctitud-respuesta.md
+14. **Routing de modelos obligatorio** (Opus/Sonnet/Haiku por complejidad) → @.claude/rules/modelo-routing-obligatorio.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -105,6 +106,7 @@ A-Produccion/
 | Validar ortografía | @.claude/rules/ortografia-espanol.md |
 | Ejecutar tests | `tests/run_all_tests.R` |
 | Revisar decisiones/código | @.claude/rules/detractor-obligatorio.md |
+| Routing de modelos (Opus/Sonnet/Haiku) | @.claude/rules/modelo-routing-obligatorio.md |
 
 ### ⚙️ Configuración del Sistema
 
@@ -117,9 +119,21 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.3.0 (Validación Correctitud Nivel 5)
+**Versión**: 3.4.0 (Routing de Modelos por Complejidad)
 **Fecha**: 2026-02-14
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.4.0 (2026-02-14)
+- **ROUTING DE MODELOS OBLIGATORIO**: Cada skill/agente usa el modelo apropiado por complejidad
+  - Opus 4.6: 6 skills (generación .Rmd, detractor, retroalimentación, análisis pedagógico) + 2 agentes
+  - Sonnet 4.5: 9 skills (generación gráficos, comparación visual, diagnóstico) + 3 agentes
+  - Haiku 4.5: 7 skills (validaciones, estado, transferencia, promoción) + 1 agente
+- **6 AGENTES actualizados**: Modelos obsoletos (claude-3-5-sonnet, opus-4-5) → modelos actuales
+- **22 SKILLS con `model_recommendation`**: Metadata en frontmatter YAML
+- **16 SKILLS con bloque ROUTING**: Delegación obligatoria via `Task(model=X)`
+- **Regla #14 nueva**: `.claude/rules/modelo-routing-obligatorio.md`
+- **Doc de referencia**: `.claude/docs/MODELO_ROUTING.md` (tabla completa)
+- **Ahorro estimado**: 50-60% en tokens/costos sin degradar calidad
 
 ### Cambios v3.3.0 (2026-02-14)
 - **VALIDACIÓN CORRECTITUD NIVEL 5**: Cross-check respuesta marcada vs valor correcto

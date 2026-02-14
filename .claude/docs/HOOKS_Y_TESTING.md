@@ -701,7 +701,7 @@ Acciones requeridas:
 **Versión**: 1.2
 **Fecha**: 2026-02-14
 **Estado**: ACTIVO Y PERMANENTE
-**Módulo de**: @.claude/CLAUDE.md (v3.3.0)
+**Módulo de**: @.claude/CLAUDE.md (v3.4.0)
 
 ### Cambios v1.2 (2026-02-14)
 - **10 suites** (antes 9): +Correctitud de Respuesta (Nivel 5)

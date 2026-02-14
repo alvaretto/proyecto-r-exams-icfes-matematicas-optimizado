@@ -129,7 +129,7 @@ exclozetype: num|schoice|mchoice|string
 - Puntuación compuesta con desglose
 - Recomendaciones específicas de mejora
 
-**Modelo**: Claude Opus 4.5 (máxima capacidad cognitiva)
+**Modelo**: Claude Opus 4.6 (máxima capacidad cognitiva)
 
 **Documentos consultados automáticamente**:
 - `errores-conceptuales-matematicas.md`
@@ -633,6 +633,7 @@ metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: sonnet    # opus | sonnet | haiku
 allowed-tools:
   - Read
   - Write
@@ -640,30 +641,36 @@ allowed-tools:
 ---
 ```
 
-**Skills disponibles** (refactorizados v2.1):
+**Skills disponibles** (22 skills con `model_recommendation` en frontmatter):
 
-| Skill | Tamano | Referencias | Proposito |
-|-------|--------|-------------|-----------|
-| analizar-icfes | 3.8KB | 3 | Clasificacion 6 dimensiones ICFES |
-| analizar-imagen-grafica | 3.1KB | 2 | Extraccion de elementos visuales |
-| comparar-similitud-visual | 3.7KB | 3 | Puntuacion 0-100 de similitud |
-| corregir-error-imagen | 3.4KB | 1 | ERR_G1: File not found |
-| corregir-graficos | 3.3KB | 1 | ERR_G1-G4: Errores graficos |
-| diagnosticar-errores | 4.4KB | 2 | FASE 3: Clasificacion de errores |
-| generar-cloze | 4.1KB | 2 | Ejercicios tipo CLOZE |
-| generar-codigo-python | 3.4KB | 2 | Matplotlib para graficos |
-| generar-codigo-r | 3.2KB | 2 | ggplot2 para graficos |
-| generar-codigo-tikz | 3.3KB | 2 | TikZ/pgfplots para graficos |
-| generar-schoice | 4.1KB | 2 | Ejercicios tipo SCHOICE |
-| gestionar-estado-graficador | 3.5KB | 2 | workflow_state.json |
-| refinar-codigo-grafico | 3.1KB | 2 | Iteracion hasta >=95% |
-| transferir-conocimiento-grafico | 3.6KB | 2 | Lecciones entre lenguajes |
-| validar-coherencia | 4.2KB | 2 | FASE 2: 5 coherencias |
-| validar-pedagogico | 3.3KB | 1 | Analisis pedagogico Opus 4.5 |
-| validar-renderizado | 3.7KB | 2 | FASE 1: 4 formatos |
-| skill-retroalimentacion | 4.5KB | 1 | Retroalimentación científica ICFES (OBLIGATORIO) |
+| Skill | Modelo | Proposito |
+|-------|--------|-----------|
+| analizar-icfes | **Opus** | Clasificación 6 dimensiones ICFES |
+| generar-schoice | **Opus** | Ejercicios SCHOICE metacognitivos |
+| generar-cloze | **Opus** | Ejercicios CLOZE metacognitivos |
+| skill-detractor | **Opus** | Revisión adversarial 8 dominios |
+| skill-retroalimentacion | **Opus** | Retroalimentación científica ICFES |
+| validar-pedagogico | **Opus** | Análisis pedagógico profundo |
+| analizar-imagen-grafica | Sonnet | Extracción de elementos visuales |
+| comparar-similitud-visual | Sonnet | Puntuación 0-100 de similitud |
+| corregir-error-imagen | Sonnet | ERR_G1: File not found |
+| corregir-graficos | Sonnet | ERR_G1-G4: Errores gráficos |
+| diagnosticar-errores | Sonnet | FASE 3: Clasificación de errores |
+| generar-codigo-python | Sonnet | Matplotlib para gráficos |
+| generar-codigo-r | Sonnet | ggplot2 para gráficos |
+| generar-codigo-tikz | Sonnet | TikZ/pgfplots para gráficos |
+| refinar-codigo-grafico | Sonnet | Iteración hasta ≥95% |
+| gestionar-estado-graficador | Haiku | workflow_state.json |
+| promover-ejercicio | Haiku | Mover a producción |
+| transferir-conocimiento-grafico | Haiku | Lecciones entre lenguajes |
+| validar-coherencia | Haiku | FASE 2: 5 coherencias |
+| validar-diversidad | Haiku | 250+ versiones únicas |
+| validar-icfes | Haiku | Estructura R-exams + ICFES |
+| validar-renderizado | Haiku | FASE 1: 4 formatos |
 
-**NO modificar skills** sin ejecutar tests de regresion.
+**Routing obligatorio**: Skills no-Opus se delegan vía `Task(model=X)`. Ver @.claude/rules/modelo-routing-obligatorio.md
+
+**NO modificar skills** sin ejecutar tests de regresión.
 
 ---
 
@@ -674,12 +681,21 @@ allowed-tools:
 - **Proceso secuencial**: @.claude/rules/graficador-secuencial.md
 - **Ciclo validación**: @.claude/rules/ciclo-validacion.md
 - **Workflow completo**: @.claude/docs/WORKFLOW_PASO_A_PASO.md
+- **Routing de modelos**: @.claude/docs/MODELO_ROUTING.md 🆕
 
 ---
 
-**Version**: 1.2
-**Fecha**: 2026-02-07
-**Modulo de**: @.claude/CLAUDE.md (v3.2.2)
+**Versión**: 1.3
+**Fecha**: 2026-02-14
+**Módulo de**: @.claude/CLAUDE.md (v3.4.0)
+
+### Cambios v1.3 (2026-02-14)
+
+- **22 skills** (era 18): +validar-diversidad, +validar-icfes, +promover-ejercicio, +skill-detractor
+- **Tabla de skills** reorganizada por tier de modelo (Opus/Sonnet/Haiku)
+- **`model_recommendation`** agregado al ejemplo de frontmatter YAML
+- **Modelo** actualizado: Opus 4.5 → Opus 4.6
+- **Referencia** a MODELO_ROUTING.md en documentación relacionada
 
 ### Cambios v1.2 (2026-02-07)
 
@@ -689,6 +705,6 @@ allowed-tools:
 
 ### Cambios v1.1 (2026-02-06)
 
-- Documentacion de estructura Progressive Disclosure para skills
+- Documentación de estructura Progressive Disclosure para skills
 - Tabla completa de 17 skills refactorizados (v2.1)
 - Frontmatter YAML estandarizado para todos los skills

@@ -3,13 +3,14 @@ name: validar-pedagogico
 description: >
   Analisis pedagogico avanzado basado en evidencias cientificas y taxonomias cognitivas modernas.
   Skill CONSULTIVO que requiere aprobacion del usuario para ejecutar.
-  Usa modelo Opus 4.5 para analisis profundo.
+  Usa modelo Opus 4.6 para analisis profundo.
 license: Proyecto Educativo - IE Pedacito de Cielo
-compatibility: Requiere ejercicio .Rmd validado. Modelo Opus 4.5 recomendado.
+compatibility: Requiere ejercicio .Rmd validado. Modelo Opus 4.6 recomendado.
 metadata:
   author: alvaretto
   version: "2.1"
   language: es
+  model_recommendation: opus
 allowed-tools:
   - Read
   - Glob
@@ -74,7 +75,7 @@ El ejercicio ha sido validado. Analisis incluye:
 - Optimizacion con principios cientificos
 - Puntuacion compuesta 0-100
 
-Duracion: 5-10 min | Modelo: Opus 4.5
+Duracion: 5-10 min | Modelo: Opus 4.6
 
 Ejecutar analisis? (Si/No)
 ```
@@ -104,7 +105,7 @@ Si usuario acepta, modificar ejercicio segun sugerencias.
 ## Agente asociado
 
 - **Nombre**: PedagogoICFES
-- **Modelo**: Claude Opus 4.5
+- **Modelo**: Claude Opus 4.6
 - **Herramientas**: read, glob, grep, bash
 - **Base cientifica**: 30+ referencias peer-reviewed
 

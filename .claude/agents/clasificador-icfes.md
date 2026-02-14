@@ -2,7 +2,7 @@
 name: ClasificadorICFES
 description: Analiza imágenes de ejercicios ICFES según las 6 dimensiones del workflow.
 tools: [read, glob, bash]
-model: claude-3-5-sonnet-20241022
+model: claude-haiku-4-5-20251001
 ---
 
 # Agente Clasificador ICFES

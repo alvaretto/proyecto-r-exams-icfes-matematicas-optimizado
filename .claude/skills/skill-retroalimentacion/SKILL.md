@@ -11,6 +11,7 @@ metadata:
   author: alvaretto
   version: "1.0"
   language: es
+  model_recommendation: opus
   fuente_oficial: "ICFES - Guía de Orientación Matemáticas 11° Cuadernillo 2-2023"
 activation:
   type: automatic

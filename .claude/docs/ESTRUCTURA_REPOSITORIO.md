@@ -163,7 +163,14 @@ rules/
 ├── codigo-rmd.md                    # Reglas para archivos .Rmd
 ├── ortografia-espanol.md            # Tildes y ortografía
 ├── documentacion-verificada.md      # Principio de documentación
-└── testing-obligatorio.md           # Sistema de testing automático
+├── testing-obligatorio.md           # Sistema de testing automático
+├── detractor-obligatorio.md         # Detractor en fases de revisión
+├── ejercicios-metacognitivos.md     # Progressive Disclosure obligatorio
+├── graficos-como-opciones.md        # PNGs individuales para SCHOICE
+├── validacion-neg-opciones-repetidas.md  # Lógica negativa _neg_
+├── contextos-narrativos-creativos.md     # Plantillas narrativas variadas
+├── validacion-correctitud-respuesta.md   # Nivel 5: multi-semilla
+└── modelo-routing-obligatorio.md    # Routing Opus/Sonnet/Haiku 🆕
 ```
 
 **Todas son OBLIGATORIAS y NO tienen excepciones.**
@@ -179,6 +186,7 @@ docs/
 ├── COMANDOS_Y_SKILLS.md             # Referencia comandos (NEW v3.0)
 ├── HOOKS_Y_TESTING.md               # Sistema automático (NEW v3.0)
 ├── ESTRUCTURA_REPOSITORIO.md        # Este archivo (NEW v3.0)
+├── MODELO_ROUTING.md                # Routing de modelos por complejidad 🆕
 ├── CHANGELOG.md                     # Historial de cambios (NEW v3.0)
 ├── WORKFLOW_PASO_A_PASO.md          # Guía detallada del flujo
 ├── TRES_NIVELES_VALIDACION.md       # Fases de validación
@@ -232,31 +240,33 @@ Estructura Progressive Disclosure (Anthropic Agent Skills v2.1):
 
 ```
 skills/
-├── analizar-icfes/
-│   ├── SKILL.md              # Archivo principal (~3-4KB)
-│   └── references/           # Documentacion extraida
-│       ├── dimensiones-icfes.md
-│       ├── plantilla-analisis.md
-│       └── decision-flujo.md
-├── analizar-imagen-grafica/
-├── comparar-similitud-visual/
-├── corregir-error-imagen/
-├── corregir-graficos/
-├── diagnosticar-errores/
-├── generar-cloze/
-├── generar-codigo-python/
-├── generar-codigo-r/
-├── generar-codigo-tikz/
-├── generar-schoice/
-├── gestionar-estado-graficador/
-├── refinar-codigo-grafico/
-├── transferir-conocimiento-grafico/
-├── validar-coherencia/
-├── validar-pedagogico/
-└── validar-renderizado/
+├── analizar-icfes/              # Opus — clasificación 6 dimensiones
+│   ├── SKILL.md                 # Archivo principal (~3-4KB)
+│   └── references/              # Documentación extraída
+├── analizar-imagen-grafica/     # Sonnet — extracción visual
+├── comparar-similitud-visual/   # Sonnet — puntuación similitud
+├── corregir-error-imagen/       # Sonnet — ERR_G1 file not found
+├── corregir-graficos/           # Sonnet — ERR_G1-G4
+├── diagnosticar-errores/        # Sonnet — FASE 3 clasificación
+├── generar-cloze/               # Opus — ejercicios CLOZE metacognitivos
+├── generar-codigo-python/       # Sonnet — matplotlib
+├── generar-codigo-r/            # Sonnet — ggplot2
+├── generar-codigo-tikz/         # Sonnet — TikZ/pgfplots
+├── generar-schoice/             # Opus — ejercicios SCHOICE metacognitivos
+├── gestionar-estado-graficador/ # Haiku — workflow_state.json
+├── promover-ejercicio/          # Haiku — mover a producción
+├── refinar-codigo-grafico/      # Sonnet — iteración hasta ≥95%
+├── skill-detractor/             # Opus — revisión adversarial 8 dominios
+├── skill-retroalimentacion/     # Opus — retroalimentación científica ICFES
+├── transferir-conocimiento-grafico/ # Haiku — lecciones entre lenguajes
+├── validar-coherencia/          # Haiku — FASE 2: 5 coherencias
+├── validar-diversidad/          # Haiku — 250+ versiones únicas
+├── validar-icfes/               # Haiku — estructura R-exams + ICFES
+├── validar-pedagogico/          # Opus — análisis pedagógico profundo
+└── validar-renderizado/         # Haiku — FASE 1: 4 formatos
 ```
 
-**Total**: 17 skills refactorizados (v2.1)
+**Total**: 22 skills (v2.1) con `model_recommendation` en frontmatter 🆕
 
 **NO invocar manualmente**. Claude los usa segun contexto.
 
@@ -480,14 +490,15 @@ A-Produccion/03-En-Produccion/02-Funciones/
 
 ```
 Total de archivos críticos:
-├── Reglas obligatorias:      7 archivos
-├── Documentación:            13+ archivos
+├── Reglas obligatorias:      14 archivos
+├── Documentación:            14+ archivos
 ├── Hooks:                     4 scripts
-├── Scripts de validación:     2+ scripts
+├── Scripts de validación:     3+ scripts
 ├── Suites de tests:          10 suites
 ├── Tests unitarios:          82+ tests
 ├── Comandos manuales:         7 comandos
-├── Skills automaticos:       17 skills (v2.1)
+├── Skills automáticos:       22 skills (con model_recommendation)
+├── Agentes especializados:    6 agentes (con modelo asignado)
 └── Ejemplos funcionales:     10+ ejemplos
 
 Cobertura de tests:          100%
@@ -536,12 +547,13 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 ---
 
-**Version**: 1.3
+**Versión**: 1.4
 **Fecha**: 2026-02-14
-**Modulo de**: @.claude/CLAUDE.md (v3.3.0)
+**Módulo de**: @.claude/CLAUDE.md (v3.4.0)
 
 ### Historial de Cambios
 
+- **v1.4** (2026-02-14): Actualizar rules/ (14 archivos), docs/ (+MODELO_ROUTING.md), skills/ (22 con modelo), stats actualizados
 - **v1.3** (2026-02-14): Actualizar a 10 suites, 82+ tests. Agregar test_correctitud_respuesta.R y validar_multisemilla.R
 - **v1.2** (2026-02-06): Actualizar skills a estructura Progressive Disclosure (17 skills v2.1)
 - **v1.1** (2026-02-04): Actualizar 03-En-Produccion con estructura real verificada (6 categorias, 69 subtemas, ~122 .Rmd)
