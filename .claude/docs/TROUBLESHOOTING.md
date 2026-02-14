@@ -114,6 +114,38 @@ icfes:
 
 ---
 
+### 6. 🧠 Errores de Coherencia Semántica (Nivel 4)
+
+Detectados automáticamente por `validar_coherencia_matematica.R` (3 capas).
+
+| Código | Capa | Error | Ejemplo |
+|--------|------|-------|---------|
+| ERR_SEM_A | A (Precondición) | Error seleccionado no cumple `precondicion` | EST-MTC-04 ("par") con n=7 (impar) |
+| ERR_SEM_B | B (Keywords) | Descripción del error incoherente con datos | "datos desordenados" pero datos ya ordenados |
+| WARN_SEM_B | B (Keywords) | Bug latente en pool (error no seleccionado) | Error con "bimodal" pero datos nunca bimodales |
+| ERR_SEM_C | C (Cross-validación) | `calcula()` produce mismo valor que correcto | Distractor = respuesta correcta |
+
+**Soluciones:**
+
+- **ERR_SEM_A**: Agregar campo `precondicion = function(params) { ... }` al error y usar filtro genérico:
+  ```r
+  errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+    if (is.null(err$precondicion)) return(TRUE)
+    err$precondicion(params)
+  }))
+  ```
+
+- **ERR_SEM_B/WARN_SEM_B**: Revisar `descripcion_corta` y `descripcion_larga` del error. Ajustar redacción o agregar `precondicion`.
+
+- **ERR_SEM_C**: Verificar que `calcula()` produce un valor diferente al correcto para todos los datos posibles.
+
+**Validar con:**
+```bash
+Rscript .claude/scripts/validar_coherencia_matematica.R archivo.Rmd
+```
+
+---
+
 ## 🚀 Workflows de Corrección
 
 ### Workflow 1: Error de Compilación PDF
@@ -281,5 +313,9 @@ R -e "exams::exams2html('archivo.Rmd', n=1)"
 
 ---
 
-**Última actualización:** 2025-12-19
-**Versión:** 1.0
+**Última actualización:** 2026-02-13
+**Versión:** 1.1
+
+### Cambios v1.1 (2026-02-13)
+- Agregada sección de errores de coherencia semántica (ERR_SEM_A/B/C, WARN_SEM_B)
+- Documentadas soluciones para errores de validación Nivel 4

@@ -5,7 +5,7 @@
 **Sistema de validación automática PERMANENTE** con tolerancia cero a regresiones.
 
 - **4 hooks activos** (PreToolUse/PostToolUse para Edit/Write/Bash)
-- **100% cobertura** de tests (6 suites, 33+ tests unitarios)
+- **100% cobertura** de tests (9 suites, 68+ tests unitarios)
 - **CI/CD automático** con GitHub Actions
 - **Bloqueo proactivo** de cambios que rompen tests
 - **Validación matemática + visual** automática después de renderizar
@@ -260,7 +260,7 @@ preview_nombre-1.png
 **Documentación completa**: @.claude/docs/ECOSISTEMA_TESTING.md
 **Regla obligatoria**: @.claude/rules/testing-obligatorio.md
 
-### Las 6 Suites de Tests
+### Las 9 Suites de Tests
 
 | Suite | Archivo | Tests | Cubre |
 |-------|---------|-------|-------|
@@ -270,7 +270,10 @@ preview_nombre-1.png
 | **Aleatorización** | `test_aleatorization_diversity.R` | 4 | exshuffle, 250+ versiones, rangos |
 | **Flujo B Graficador** | `test_flujo_b_graficador.R` | 6 | workflow_state.json, aprobaciones, similitud |
 | **Regresión** | `test_regression_suite.R` | 7 | Ejemplos funcionales, scripts, hooks |
-| **TOTAL** | 6 archivos | **33+** | **100%** |
+| **Distintividad Visual _neg_** | `test_neg_visual_distinctness.R` | 3 | Colores únicos, digest opciones, lógica negativa |
+| **Media-Mediana-Moda** | `test_media_mediana_moda.R` | 3 | Precondiciones, filtro genérico, 100 semillas |
+| **Validación Semántica (Nivel 4)** | `test_validacion_semantica.R` | 35 | 3 capas, 21 keywords, regresión EST-MTC-04 |
+| **TOTAL** | 9 archivos | **68+** | **100%** |
 
 ### Ejecutor Principal
 
@@ -299,12 +302,12 @@ Ejecutando suite: Ortografía Española
   RESUMEN FINAL
 ========================================
 
-Suites ejecutadas: 6
-✓ Exitosas: 6
+Suites ejecutadas: 9
+✓ Exitosas: 9
 ✗ Fallidas: 0
 
-Tests totales: 33
-✓ Pasados: 33
+Tests totales: 68+
+✓ Pasados: 68+
 ✗ Fallidos: 0
 
 ⏱  Tiempo total: ~28.4s
@@ -405,7 +408,7 @@ EVENTO 4: Después de exams2*()
    → pre-bash-testing.sh
    → Detecta: comando git commit
    → Ejecuta: Rscript tests/run_all_tests.R
-   → Suite completa: 6 suites, 33+ tests
+   → Suite completa: 9 suites, 68+ tests
 
 3. Resultado:
    - Si TODO PASA:
@@ -692,7 +695,12 @@ Acciones requeridas:
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-02-04
+**Versión**: 1.1
+**Fecha**: 2026-02-13
 **Estado**: ACTIVO Y PERMANENTE
-**Módulo de**: @.claude/CLAUDE.md (v3.0.0)
+**Módulo de**: @.claude/CLAUDE.md (v3.2.3)
+
+### Cambios v1.1 (2026-02-13)
+- **9 suites** (antes 6): +Distintividad Visual _neg_, +Media-Mediana-Moda, +Validación Semántica
+- **68+ tests** (antes 33+)
+- Validación Semántica Nivel 4: 3 capas + 21 keyword rules

@@ -148,6 +148,7 @@ generar_datos <- function() {
       descripcion_corta = "Confundió el promedio con la respuesta buscada",
       descripcion_larga = "Confundió el promedio dado en el enunciado con el valor individual que debía calcular. Este error indica que no comprende la diferencia entre una medida de tendencia central (promedio) y los datos individuales que la componen.",
       causa_raiz = "No diferencia entre estadístico resumen y dato individual",
+      precondicion = function(params) TRUE,
       calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
         promedio
       }
@@ -159,6 +160,7 @@ generar_datos <- function() {
       descripcion_corta = "Olvidó dividir la suma de valores desconocidos",
       descripcion_larga = "Calculó correctamente la suma de los valores desconocidos, pero olvidó dividir entre el número de datos faltantes para obtener cada valor individual.",
       causa_raiz = "Procedimiento incompleto - falta último paso",
+      precondicion = function(params) TRUE,
       calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
         suma_total - suma_conocidas
       }
@@ -170,6 +172,7 @@ generar_datos <- function() {
       descripcion_corta = "Dividió la suma total en lugar de la suma de valores faltantes",
       descripcion_larga = "Dividió la suma total de todos los datos entre el número de datos faltantes, en lugar de primero restar los valores conocidos.",
       causa_raiz = "Confunde suma total con suma parcial a encontrar",
+      precondicion = function(params) TRUE,
       calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
         round(suma_total / n_desconocidos)
       }
@@ -181,6 +184,7 @@ generar_datos <- function() {
       descripcion_corta = "Contó incorrectamente el número total de datos",
       descripcion_larga = "Usó un número incorrecto de datos totales (uno más o uno menos), lo que afectó el cálculo de la suma total y por ende el resultado final.",
       causa_raiz = "Error al identificar n en la tabla",
+      precondicion = function(params) TRUE,
       calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
         suma_erronea <- promedio * (n_total + sample(c(-1, 1), 1))
         round((suma_erronea - suma_conocidas) / n_desconocidos)
@@ -193,6 +197,7 @@ generar_datos <- function() {
       descripcion_corta = "Sumó los valores conocidos a la suma total en lugar de restarlos",
       descripcion_larga = "Invirtió la operación: sumó los valores conocidos a la suma total en lugar de restarlos, obteniendo un resultado mucho mayor al esperado.",
       causa_raiz = "Confunde despeje algebraico - error de signo",
+      precondicion = function(params) TRUE,
       calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
         round((suma_total + suma_conocidas) / n_desconocidos)
       }
@@ -204,6 +209,7 @@ generar_datos <- function() {
       descripcion_corta = "Calculó el promedio solo de los valores conocidos",
       descripcion_larga = "Calculó el promedio usando únicamente los valores conocidos de la tabla, ignorando la información del promedio global dado en el enunciado.",
       causa_raiz = "Ignora información del enunciado - usa solo tabla",
+      precondicion = function(params) TRUE,
       calcula = function(promedio, suma_total, suma_conocidas, n_total, n_desconocidos) {
         n_conocidos <- n_total - n_desconocidos
         round(suma_conocidas / n_conocidos)

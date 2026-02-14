@@ -23,7 +23,7 @@ RepositorioMatematicasICFES_R_Exams/
 │
 ├── tests/                             # ECOSISTEMA DE TESTING
 │   ├── run_all_tests.R               # Ejecutor principal (chmod +x)
-│   └── testthat/                     # Suites de tests (6 suites, 33+ tests)
+│   └── testthat/                     # Suites de tests (9 suites, 68+ tests)
 │
 ├── outputs/                           # Archivos temporales de renderizado
 │   ├── output_pdf/                   # PDFs generados
@@ -298,10 +298,13 @@ tests/
     ├── test_renderizado_4_formatos.R     # 6 tests
     ├── test_aleatorization_diversity.R   # 4 tests
     ├── test_flujo_b_graficador.R         # 6 tests
-    └── test_regression_suite.R           # 7 tests
+    ├── test_regression_suite.R           # 7 tests
+    ├── test_neg_visual_distinctness.R    # 3 tests
+    ├── test_media_mediana_moda.R         # 3 tests
+    └── test_validacion_semantica.R       # 35 tests
 ```
 
-**Total**: 6 suites, 33+ tests unitarios
+**Total**: 9 suites, 68+ tests unitarios
 
 **Ejecución**:
 ```bash
@@ -479,8 +482,8 @@ Total de archivos críticos:
 ├── Documentación:            13+ archivos
 ├── Hooks:                     4 scripts
 ├── Scripts de validación:     2+ scripts
-├── Suites de tests:           6 suites
-├── Tests unitarios:          33+ tests
+├── Suites de tests:           9 suites
+├── Tests unitarios:          68+ tests
 ├── Comandos manuales:         7 comandos
 ├── Skills automaticos:       17 skills (v2.1)
 └── Ejemplos funcionales:     10+ ejemplos

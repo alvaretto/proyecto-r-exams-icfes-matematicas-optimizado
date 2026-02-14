@@ -25,6 +25,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 9. **Detractor obligatorio** en fases de revisión → @.claude/rules/detractor-obligatorio.md
 10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
+12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -33,7 +34,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
 - `/skill-retroalimentacion` - Generación científica de sección Solution 🆕
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
-- `/detractor auditoria [target]` - Revisión adversarial en 7 dominios
+- `/detractor auditoria [target]` - Revisión adversarial en 8 dominios
 - `/auto-refinar-grafico [tikz|python|r]`
 - `/estado-graficador`, `/exportar-graficos`, `/promover-ejercicio`
 
@@ -42,7 +43,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Sistema automático permanente:**
 - 4 hooks activos (PreToolUse/PostToolUse para Edit/Write/Bash)
-- 100% cobertura de tests (6 suites, 33+ tests)
+- 100% cobertura de tests (9 suites, 68+ tests)
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones
 
@@ -108,16 +109,30 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (6 suites)
+- **Tests**: `tests/testthat/` (9 suites)
 - **Hooks**: `.claude/hooks/` (4 scripts activos)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.2.2 (Gráficos Opciones + Graficador 98%)
-**Fecha**: 2026-02-07
+**Versión**: 3.2.3 (Validación Semántica Nivel 4)
+**Fecha**: 2026-02-13
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.2.3 (2026-02-13)
+- **VALIDACIÓN SEMÁNTICA NIVEL 4**: Sistema de 3 capas integrado globalmente
+  - Capa A: Precondiciones declaradas (`precondicion` en cada error del pool)
+  - Capa B: Scanner automático de 21 keywords semánticas
+  - Capa C: Cross-validación `calcula()` ≠ valor correcto
+- **8 DOMINIOS DETRACTOR** (era 7): agregado `coherencia_semantica`
+- **9 SUITES DE TESTING** (era 6): 68+ tests (era 33+)
+  - Nueva suite: `test_validacion_semantica.R` (35 tests)
+  - Nueva suite: `test_media_mediana_moda.R` (3 tests)
+  - Nueva suite: `test_neg_visual_distinctness.R` (3 tests)
+- **Errores semánticos**: ERR_SEM_A/B/C y WARN_SEM_B documentados
+- **Bug fix**: tryCatch scoping en R (asignaciones no propagaban al scope externo)
+- **Regla #12 nueva**: Validación semántica automática (descripción ↔ datos)
 
 ### Cambios v3.2.2 (2026-02-07)
 - **GRÁFICOS COMO OPCIONES INDIVIDUALES**: Nueva regla `.claude/rules/graficos-como-opciones.md`
@@ -177,7 +192,7 @@ A-Produccion/
 
 ### Cambios v2.6 (2026-02-03)
 - Ecosistema de Testing Agresivo implementado
-- COBERTURA 100% ALCANZADA: 6 suites, 33+ tests unitarios
+- COBERTURA 100% ALCANZADA: 9 suites, 68+ tests unitarios
 - CI/CD automático con GitHub Actions
 
 ### Historial Completo

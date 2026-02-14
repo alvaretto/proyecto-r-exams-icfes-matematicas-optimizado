@@ -78,6 +78,11 @@ suites <- list(
     nombre = "Media-Mediana-Moda CLOZE Metacognitivo",
     archivo = "tests/testthat/test_media_mediana_moda.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "Validación Semántica (Nivel 4)",
+    archivo = "tests/testthat/test_validacion_semantica.R",
+    critico = TRUE
   )
 )
 

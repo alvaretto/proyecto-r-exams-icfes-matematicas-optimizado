@@ -7,6 +7,73 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2026-02-13] - Validación Semántica Automática (Nivel 4)
+
+### ✅ Agregado
+
+#### Sistema de Validación Semántica de 3 Capas
+
+**Problema resuelto:** Error EST-MTC-04 ("Para un número par de datos, tomó solo uno de los dos valores centrales") se seleccionaba cuando n=7 (impar). La descripción era matemáticamente imposible con esos datos.
+
+**Causa raíz sistémica:** Los errores conceptuales tenían precondiciones implícitas (conocimiento del autor) no verificables por código.
+
+**Solución implementada — 3 Capas de defensa:**
+
+- **Capa A**: Campo `precondicion` declarado en cada error del pool conceptual
+  - `function(params) TRUE` si siempre aplica
+  - `function(params) params$n %% 2 == 0` si requiere n par
+- **Capa B**: Keyword scanner automático (21 reglas) que escanea `descripcion_corta/larga` buscando condiciones implícitas
+- **Capa C**: Cross-validación `calcula()` — verifica que produce valor diferente al correcto
+
+**Códigos de error:**
+- `ERR_SEM_A`: Precondición declarada no se cumple (bloqueante)
+- `ERR_SEM_B`: Keyword scanner detecta incoherencia en error seleccionado (bloqueante)
+- `WARN_SEM_B`: Keyword scanner detecta bug latente en pool (advertencia)
+- `ERR_SEM_C`: `calcula()` produce mismo valor que respuesta correcta (bloqueante)
+
+**21 reglas de keywords:** paridad, modalidad (unimodal/bimodal/multimodal), datos iguales, datos desordenados, cuartiles, rango, desviación estándar, datos negativos, datos con ceros, datos enteros, datos decimales, frecuencia relativa, datos simétricos, datos asimétricos, outliers, muestra grande, muestra pequeña
+
+#### Nueva Suite de Tests: `test_validacion_semantica.R`
+
+- **35 tests** cubriendo infraestructura, keywords, 3 capas, orquestador, helpers y regresión
+- Test de regresión reproduce el bug original (EST-MTC-04 con n=7)
+- Total del ecosistema: **9 suites de testing**
+
+#### 8vo Dominio del Detractor: `coherencia_semantica`
+
+- Integrado en `.claude/detractor-config.yaml`
+- Revisión obligatoria en FASE 2C y pre-promoción
+
+### 🔧 Corregido
+
+#### Bug tryCatch en Capa A
+
+- Error handler en `tryCatch` creaba variable local (scoping de R)
+- Asignaciones dentro de `function(e) { ... }` no propagaban al scope externo
+- Fix: patrón `resultado <- tryCatch({ ... }, error = function(e) { ... })`
+
+### 📝 Actualizado
+
+- **`validar_coherencia_matematica.R`**: 3 capas semánticas + 21 reglas keywords
+- **`ejercicios-metacognitivos.md`**: Spec del campo `precondicion` + tabla de 21 keywords
+- **`codigo-rmd.md`**: Regla #8 sobre precondiciones obligatorias
+- **`detractor-obligatorio.md`**: 8 dominios (antes 7) + dominio semántico
+- **`detractor-config.yaml`**: v1.2 con `coherencia_semantica`
+- **`CLAUDE.md`**: Regla #12 validación semántica + v3.2.3
+- **`run_all_tests.R`**: 9 suites (antes 8)
+
+### 📊 Métricas
+
+| Métrica | Antes | Después |
+|---------|-------|---------|
+| **Capas de validación** | 3 (sintáctica, numérica, estructural) | 4 (+semántica) |
+| **Reglas de keywords** | 0 | 21 |
+| **Suites de testing** | 8 | 9 |
+| **Dominios del detractor** | 7 | 8 |
+| **Tests totales nuevos** | 0 | 35 |
+
+---
+
 ## [2025-12-29] - Fusión Completa: Workflow Principal + Graficador-Experto
 
 ### 🔄 Cambiado
@@ -498,5 +565,5 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
-**Última actualización:** 2025-12-28
+**Última actualización:** 2026-02-13
 

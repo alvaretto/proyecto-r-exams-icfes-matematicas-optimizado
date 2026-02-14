@@ -9,7 +9,10 @@
 1. [Error: Imagen PNG no encontrada en compilación PDF](#error-1-imagen-png-no-encontrada)
 2. [Error: Argumento no numérico para función matemática abs()](#error-2-argumento-no-numerico-abs)
 3. [Error: Imágenes Python/matplotlib no visibles en exams2pdf](#error-3-imagenes-python-no-visibles-pdf)
-4. [Placeholder para futuros errores](#futuros-errores)
+4. [Error: Gráficos como opciones mostrados en grid](#error-4-gráficos-como-opciones-mostrados-en-grid-no-individuales)
+5. [Error: Gráfico aplastado por escala incompatible](#error-5-gráfico-aplastado-por-escala-incompatible-est-box-01)
+6. [Error: Rango insuficiente para sample()](#error-6-rango-insuficiente-para-sample-sin-reemplazo)
+7. [Error: Descripción de error conceptual incoherente con paridad de datos](#error-7-descripción-de-error-conceptual-incoherente-con-paridad-de-datos)
 
 ---
 
@@ -1045,6 +1048,137 @@ ctx <- contextos_validos[[sample(length(contextos_validos), 1)]]
 
 - "edades" (12-18) → "IMC" (18-32)
 - "tiempos" (12-18) → "distancias" (8-25)
+
+---
+
+## Error 7: Descripción de error conceptual incoherente con paridad de datos
+
+### ❌ Síntoma del Error
+
+```
+El ejercicio genera n=7 datos (impar) pero selecciona como respuesta correcta:
+"Para un número par de datos, tomó solo uno de los dos valores centrales"
+
+La descripción del error es imposible con datos impares — no hay "dos valores centrales"
+cuando n es impar.
+```
+
+**Ejemplo concreto reportado:** 7 estudiantes, error EST-MTC-04 seleccionado.
+
+### 🔍 Causa Raíz
+
+**Dos bugs combinados:**
+
+1. **Filtro de errores sin restricción de paridad:** `errores_mediana_idx <- c(1, 2, 3, 4)` permitía seleccionar EST-MTC-04 sin importar si `n` era par o impar.
+
+2. **Hack silencioso en función calcula:** Para n impar, EST-MTC-04 tenía un fallback que devolvía un valor adyacente al central — producía un número diferente de la mediana, pasando el test numérico, pero con una descripción textual incoherente.
+
+3. **Pool de distractores insuficiente:** Al restringir `errores_mediana_idx` a 3 elementos (n impar), `setdiff()` dejaba solo 2 opciones para `sample(..., 3)`, causando error de sample().
+
+**Fallo sistémico:**
+- El test solo verificaba `mediana_erronea != mediana_calc` (coherencia numérica)
+- No verificaba coherencia semántica: ¿la DESCRIPCIÓN del error aplica a los datos?
+- El script `validar_coherencia_matematica.R` no tiene reglas para este tipo de incoherencia
+- El detractor no detectó la incoherencia descripción-datos
+
+### ✅ Solución Verificada
+
+**Corrección 1:** Filtrar errores según paridad de n.
+
+```r
+# ANTES (incorrecto):
+errores_mediana_idx <- c(1, 2, 3, 4)
+
+# DESPUÉS (correcto):
+if (n %% 2 == 0) {
+  errores_mediana_idx <- c(1, 2, 3, 4)
+} else {
+  errores_mediana_idx <- c(1, 2, 3)  # Excluir EST-MTC-04 cuando n es impar
+}
+```
+
+**Corrección 2:** Eliminar hack de calcula para n impar.
+
+```r
+# ANTES (hack silencioso):
+calcula = function(datos_ord) {
+  n <- length(datos_ord)
+  if (n %% 2 == 0) {
+    datos_ord[n / 2]
+  } else {
+    pos <- (n + 1) / 2
+    datos_ord[max(1, pos - 1)]  # ← Hack: valor arbitrario
+  }
+}
+
+# DESPUÉS (honesto):
+calcula = function(datos_ord) {
+  n <- length(datos_ord)
+  if (n %% 2 == 0) {
+    datos_ord[n / 2]
+  } else {
+    stop("EST-MTC-04 no debe usarse con n impar")
+  }
+}
+```
+
+**Corrección 3:** Distractores del pool completo de 6 errores.
+
+```r
+# ANTES (insuficiente con 3 errores):
+otros_idx <- setdiff(errores_mediana_idx, error_idx)
+otros_idx <- sample(otros_idx, 3)  # ← Falla si solo hay 2
+
+# DESPUÉS (siempre suficiente):
+todos_errores_idx <- seq_along(errores_conceptuales)
+otros_idx <- setdiff(todos_errores_idx, error_idx)
+otros_idx <- sample(otros_idx, 3)  # 5 opciones → siempre OK
+```
+
+**Corrección 4:** Test de coherencia obligatorio.
+
+```r
+test_that("EST-MTC-04 nunca se selecciona cuando n es impar", {
+  if (error_sel$codigo == "EST-MTC-04") {
+    expect_true(n %% 2 == 0,
+      info = paste("EST-MTC-04 con n =", n, "(impar)"))
+  }
+})
+
+test_that("Descripción del error es coherente con los datos (50 semillas)", {
+  for (i in 1:50) {
+    d <- generar_datos()
+    if (d$error_sel$codigo == "EST-MTC-04") {
+      expect_true(d$n %% 2 == 0,
+        info = paste("Semilla", i, ": EST-MTC-04 con n =", d$n))
+    }
+  }
+})
+```
+
+### 🧪 Validación de la Solución
+
+```
+Resultado: 0 incoherencias en 200 ejecuciones
+Distribución de errores: EST-MTC-01 (66), EST-MTC-02 (58), EST-MTC-03 (54), EST-MTC-04 (22)
+HTML: 9/9 seeds OK
+PDF: OK
+DOCX: OK
+```
+
+### 📋 Checklist de Corrección (Generalizable)
+
+- [ ] Verificar que cada error conceptual del pool tiene precondiciones explícitas
+- [ ] Filtrar el pool de errores seleccionables según las características de los datos generados
+- [ ] Funciones `calcula()` deben fallar explícitamente (`stop()`) si se llaman fuera de contexto
+- [ ] Tests deben verificar coherencia semántica (descripción ↔ datos), no solo numérica
+- [ ] Pool de distractores debe ser suficiente después del filtrado
+
+### 📅 Historial
+
+| Fecha | Versión | Estado | Validado en |
+|-------|---------|--------|-------------|
+| 2026-02-13 | v1.0 | ✅ Verificado | Media-Mediana-Moda.Rmd (200 ejecuciones, 0 incoherencias) |
 
 ---
 

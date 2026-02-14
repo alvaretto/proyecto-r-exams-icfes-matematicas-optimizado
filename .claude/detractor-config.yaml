@@ -1,7 +1,8 @@
 # Configuración del Skill Detractor
 # Archivo: .claude/detractor-config.yaml
-# Versión: 1.1
-# Fecha: 2026-02-07
+# Versión: 1.2
+# Fecha: 2026-02-13
+# Cambios v1.2: 8 dominios obligatorios (+coherencia_semantica)
 # Cambios v1.1: 7 dominios obligatorios (antes 4)
 
 # =============================================================================
@@ -71,6 +72,9 @@ dominios_obligatorios:
 
   # Testing y regresión (tests unitarios, git hooks, CI/CD)
   - testing
+
+  # Coherencia semántica (Nivel 4): descripción del error ↔ datos generados
+  - coherencia_semantica
 
 # =============================================================================
 # DOMINIOS OPCIONALES

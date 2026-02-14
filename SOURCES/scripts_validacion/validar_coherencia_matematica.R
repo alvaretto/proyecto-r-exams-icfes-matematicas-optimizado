@@ -344,6 +344,409 @@ validar_coherencia_matematica_general <- function(env) {
   return(errores)
 }
 
+# ============================================================
+# VALIDACIÓN DE COHERENCIA SEMÁNTICA (Nivel 4)
+#
+# Nivel 1: Sintáctico  — código corre sin errores
+# Nivel 2: Numérico    — valores válidos, no NA/NaN/Inf
+# Nivel 3: Estructural — metadatos completos, formatos correctos
+# Nivel 4: Semántico   — descripción del error corresponde a datos
+#
+# Este nivel opera en 3 capas:
+#   Capa A: Precondición declarada — ¿el campo precondicion() se cumple?
+#   Capa B: Escaneo de keywords   — ¿la descripción implica condiciones
+#           no declaradas en precondicion?
+#   Capa C: Cross-validación       — ¿calcula() produce valor ≠ correcto?
+# ============================================================
+
+# Reglas semánticas extensibles: patrón en descripción → condición testeable
+# Para agregar reglas: añadir elemento a esta lista con patron/condicion/mensaje
+REGLAS_SEMANTICAS_KEYWORDS <- list(
+  list(
+    patron = "numero par|n.mero par|par de datos|dos valores centrales|dos datos centrales",
+    nombre = "n_par",
+    condicion = function(params) {
+      if (is.null(params$n)) return(NULL)
+      params$n %% 2 == 0
+    },
+    mensaje = "n debe ser par"
+  ),
+  list(
+    patron = "numero impar|n.mero impar|impar de datos|un solo valor central|.nico valor central|valor central .nico",
+    nombre = "n_impar",
+    condicion = function(params) {
+      if (is.null(params$n)) return(NULL)
+      params$n %% 2 == 1
+    },
+    mensaje = "n debe ser impar"
+  ),
+  list(
+    patron = "moda .nica|\\bunimodal\\b",
+    nombre = "moda_unica",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      tb <- table(params$datos_ord)
+      sum(tb == max(tb)) == 1
+    },
+    mensaje = "los datos deben tener moda unica"
+  ),
+  list(
+    patron = "\\bbimodal\\b|dos modas",
+    nombre = "bimodal",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      tb <- table(params$datos_ord)
+      sum(tb == max(tb)) == 2
+    },
+    mensaje = "los datos deben ser bimodales"
+  ),
+  list(
+    patron = "\\bmultimodal\\b|varias modas|m.ltiples modas",
+    nombre = "multimodal",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      tb <- table(params$datos_ord)
+      sum(tb == max(tb)) >= 2
+    },
+    mensaje = "los datos deben ser multimodales"
+  ),
+  list(
+    patron = "todos iguales|todos los datos son iguales|sin variabilidad",
+    nombre = "datos_iguales",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      length(unique(params$datos_ord)) == 1
+    },
+    mensaje = "todos los datos deben ser iguales"
+  ),
+  # --- Reglas para datos ordenados/desordenados ---
+  list(
+    patron = "sin ordenar|datos desordenados|no orden.|orden original",
+    nombre = "datos_desordenados",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      TRUE  # Siempre aplicable — el error ES no ordenar
+    },
+    mensaje = "el error implica datos desordenados"
+  ),
+  # --- Reglas para cuartiles ---
+  list(
+    patron = "\\bcuartil\\b|\\bQ1\\b|\\bQ3\\b|primer cuartil|tercer cuartil",
+    nombre = "cuartiles",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      length(params$datos_ord) >= 4  # Mínimo 4 datos para cuartiles
+    },
+    mensaje = "se necesitan al menos 4 datos para cuartiles"
+  ),
+  # --- Reglas para rango/recorrido ---
+  list(
+    patron = "\\brango\\b|\\brecorrido\\b|diferencia entre m.ximo y m.nimo|valor m.ximo menos m.nimo",
+    nombre = "rango",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      length(unique(params$datos_ord)) > 1  # Rango requiere datos no constantes
+    },
+    mensaje = "datos deben tener variabilidad para calcular rango"
+  ),
+  # --- Reglas para desviación estándar/varianza ---
+  list(
+    patron = "desviaci.n est.ndar|varianza|desviaci.n t.pica",
+    nombre = "desviacion_estandar",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      length(params$datos_ord) >= 2  # Mínimo 2 datos
+    },
+    mensaje = "se necesitan al menos 2 datos para desviación estándar"
+  ),
+  # --- Reglas para datos negativos ---
+  list(
+    patron = "valores negativos|datos negativos|n.meros negativos",
+    nombre = "datos_negativos",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      any(params$datos_ord < 0)
+    },
+    mensaje = "los datos deben contener valores negativos"
+  ),
+  # --- Reglas para datos con ceros ---
+  list(
+    patron = "contiene ceros|incluye cero|valor cero|dato cero",
+    nombre = "datos_con_ceros",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      0 %in% params$datos_ord
+    },
+    mensaje = "los datos deben contener al menos un cero"
+  ),
+  # --- Reglas para datos enteros ---
+  list(
+    patron = "n.meros enteros|valores enteros|datos enteros|sin decimales",
+    nombre = "datos_enteros",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      all(params$datos_ord == floor(params$datos_ord))
+    },
+    mensaje = "todos los datos deben ser enteros"
+  ),
+  # --- Reglas para datos con decimales ---
+  list(
+    patron = "valores decimales|datos decimales|con decimales|n.meros decimales",
+    nombre = "datos_decimales",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      any(params$datos_ord != floor(params$datos_ord))
+    },
+    mensaje = "los datos deben contener al menos un decimal"
+  ),
+  # --- Reglas para frecuencia ---
+  list(
+    patron = "frecuencia relativa|proporci.n|porcentaje",
+    nombre = "frecuencia_relativa",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      TRUE  # Siempre calculable si hay datos
+    },
+    mensaje = "se requieren datos para calcular frecuencia relativa"
+  ),
+  # --- Reglas para datos simétricos ---
+  list(
+    patron = "\\bsim.tric[oa]\\b|distribuci.n sim.trica",
+    nombre = "datos_simetricos",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      if (length(params$datos_ord) < 3) return(NULL)
+      m <- mean(params$datos_ord)
+      md <- median(params$datos_ord)
+      abs(m - md) / sd(params$datos_ord) < 0.1  # Asimetría baja
+    },
+    mensaje = "los datos deben ser aproximadamente simétricos"
+  ),
+  # --- Reglas para datos asimétricos ---
+  list(
+    patron = "\\basim.tric[oa]\\b|sesgo|sesgad[oa]",
+    nombre = "datos_asimetricos",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      if (length(params$datos_ord) < 3) return(NULL)
+      m <- mean(params$datos_ord)
+      md <- median(params$datos_ord)
+      abs(m - md) / sd(params$datos_ord) >= 0.1
+    },
+    mensaje = "los datos deben ser asimétricos"
+  ),
+  # --- Reglas para outliers/atípicos ---
+  list(
+    patron = "\\bat.pic[oa]s?\\b|\\boutlier\\b|valor extremo|datos extremos",
+    nombre = "tiene_outliers",
+    condicion = function(params) {
+      if (is.null(params$datos_ord)) return(NULL)
+      if (length(params$datos_ord) < 4) return(NULL)
+      q1 <- quantile(params$datos_ord, 0.25)
+      q3 <- quantile(params$datos_ord, 0.75)
+      iqr <- q3 - q1
+      any(params$datos_ord < q1 - 1.5 * iqr | params$datos_ord > q3 + 1.5 * iqr)
+    },
+    mensaje = "los datos deben contener valores atípicos"
+  ),
+  # --- Regla para muestra grande ---
+  list(
+    patron = "muestra grande|muchos datos|gran cantidad de datos",
+    nombre = "muestra_grande",
+    condicion = function(params) {
+      if (is.null(params$n)) return(NULL)
+      params$n >= 30
+    },
+    mensaje = "n debe ser >= 30 (muestra grande)"
+  ),
+  # --- Regla para muestra pequeña ---
+  list(
+    patron = "muestra peque.a|pocos datos|peque.a cantidad",
+    nombre = "muestra_pequena",
+    condicion = function(params) {
+      if (is.null(params$n)) return(NULL)
+      params$n < 30
+    },
+    mensaje = "n debe ser < 30 (muestra pequeña)"
+  )
+)
+
+# --- Construir params desde el entorno del ejercicio ---
+construir_params_desde_env <- function(env) {
+  params <- list()
+  # n: tamaño de muestra (varias convenciones de nombres)
+  if (exists("n", envir = env)) params$n <- get("n", envir = env)
+  if (exists("num_estudiantes", envir = env)) params$n <- get("num_estudiantes", envir = env)
+  if (exists("n_datos", envir = env)) params$n <- get("n_datos", envir = env)
+  # datos ordenados
+  if (exists("datos_ord", envir = env)) params$datos_ord <- get("datos_ord", envir = env)
+  if (exists("datos", envir = env) && is.null(params$datos_ord)) {
+    d <- get("datos", envir = env)
+    if (is.numeric(d)) params$datos_ord <- sort(d)
+  }
+  return(params)
+}
+
+# --- Detectar error seleccionado ---
+detectar_error_seleccionado <- function(env) {
+  if (exists("error_sel", envir = env)) return(get("error_sel", envir = env))
+  if (exists("error_seleccionado", envir = env)) return(get("error_seleccionado", envir = env))
+  return(NULL)
+}
+
+# --- Capa A: Verificar precondición declarada del error seleccionado ---
+validar_capa_a_precondicion <- function(pool, error_sel, params) {
+  errores <- character(0)
+  if (is.null(error_sel)) return(errores)
+
+  if (!is.null(error_sel$precondicion)) {
+    codigo <- if (!is.null(error_sel$codigo)) error_sel$codigo else "desconocido"
+    resultado <- tryCatch({
+      cumple <- error_sel$precondicion(params)
+      if (!isTRUE(cumple)) {
+        paste0(
+          "ERR_SEM_A: Error '", codigo,
+          "' seleccionado pero su precondicion declarada no se cumple con los datos actuales"
+        )
+      } else {
+        NULL
+      }
+    }, error = function(e) {
+      paste0(
+        "ERR_SEM_A: Error '", codigo,
+        "' — precondicion() lanzó excepción: ", conditionMessage(e)
+      )
+    })
+    if (!is.null(resultado)) errores <- c(errores, resultado)
+  }
+
+  return(errores)
+}
+
+# --- Capa B: Escaneo de keywords en descripciones ---
+# Detecta condiciones IMPLICITAS en el texto que NO están
+# declaradas en precondicion. Esto es lo que atrapa errores
+# que el autor olvidó proteger con precondicion.
+validar_capa_b_keywords <- function(pool, error_sel, params) {
+  errores <- character(0)
+
+  codigo_sel <- if (!is.null(error_sel) && !is.null(error_sel$codigo)) {
+    error_sel$codigo
+  } else {
+    NULL
+  }
+
+  for (i in seq_along(pool)) {
+    err <- pool[[i]]
+    codigo <- if (!is.null(err$codigo)) err$codigo else paste0("error_", i)
+
+    # Concatenar descripciones
+    desc <- tolower(paste(
+      if (!is.null(err$descripcion_corta)) err$descripcion_corta else "",
+      if (!is.null(err$descripcion_larga)) err$descripcion_larga else ""
+    ))
+
+    for (regla in REGLAS_SEMANTICAS_KEYWORDS) {
+      if (grepl(regla$patron, desc, perl = TRUE, ignore.case = TRUE)) {
+        # Descripción implica esta condición — ¿se cumple?
+        resultado <- tryCatch(regla$condicion(params), error = function(e) NULL)
+        if (is.null(resultado)) next  # No se puede verificar
+
+        if (!resultado) {
+          # La condición NO se cumple. ¿La precondicion del error lo previene?
+          precond_previene <- FALSE
+          if (!is.null(err$precondicion)) {
+            tryCatch({
+              precond_previene <- !isTRUE(err$precondicion(params))
+            }, error = function(e) {})
+          }
+
+          if (!precond_previene) {
+            # FALLA: descripción implica condición, condición no se cumple,
+            # precondicion no previene la selección
+            es_seleccionado <- !is.null(codigo_sel) && codigo == codigo_sel
+            if (es_seleccionado) {
+              # ERROR BLOQUEANTE: este error FUE seleccionado y es incoherente
+              errores <- c(errores, paste0(
+                "ERR_SEM_B: Error '", codigo,
+                "' SELECCIONADO — descripcion implica '", regla$mensaje,
+                "' pero condicion no se cumple (n=",
+                if (!is.null(params$n)) params$n else "?",
+                ") y precondicion no lo previene"
+              ))
+            } else {
+              # WARNING: error en pool tiene descripción desprotegida
+              # No bloquea pero indica bug latente
+              errores <- c(errores, paste0(
+                "WARN_SEM_B: Error '", codigo,
+                "' en pool — descripcion implica '", regla$mensaje,
+                "' pero no tiene precondicion que lo restrinja cuando condicion no se cumple"
+              ))
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return(errores)
+}
+
+# --- Capa C: Cross-validación calcula() vs valor correcto ---
+# Verifica que el error seleccionado produce un valor diferente del correcto
+validar_capa_c_crossval <- function(pool, error_sel, env) {
+  errores <- character(0)
+  if (is.null(error_sel)) return(errores)
+
+  codigo <- if (!is.null(error_sel$codigo)) error_sel$codigo else "desconocido"
+
+  # Detectar valor correcto y valor erróneo
+  val_correcto <- NULL
+  val_erroneo <- NULL
+  for (vname in c("mediana_calc", "valor_correcto", "respuesta_correcta")) {
+    if (exists(vname, envir = env)) { val_correcto <- get(vname, envir = env); break }
+  }
+  for (vname in c("mediana_erronea", "respuesta_erronea", "valor_erroneo")) {
+    if (exists(vname, envir = env)) { val_erroneo <- get(vname, envir = env); break }
+  }
+
+  if (!is.null(val_correcto) && !is.null(val_erroneo)) {
+    if (isTRUE(val_correcto == val_erroneo)) {
+      errores <- c(errores, paste0(
+        "ERR_SEM_C: Error '", codigo,
+        "' seleccionado pero calcula() produce el mismo valor que la respuesta correcta (",
+        val_correcto, ")"
+      ))
+    }
+  }
+
+  return(errores)
+}
+
+# --- Función principal: orquesta las 3 capas ---
+validar_precondiciones_error_pool <- function(env) {
+  errores <- character(0)
+
+  tiene_pool <- exists("errores_conceptuales", envir = env)
+  if (!tiene_pool) return(errores)
+
+  pool <- get("errores_conceptuales", envir = env)
+  error_sel <- detectar_error_seleccionado(env)
+  params <- construir_params_desde_env(env)
+
+  # Capa A: Precondición declarada
+  errores <- c(errores, validar_capa_a_precondicion(pool, error_sel, params))
+
+  # Capa B: Escaneo de keywords (detección automática)
+  errores <- c(errores, validar_capa_b_keywords(pool, error_sel, params))
+
+  # Capa C: Cross-validación calcula vs correcto
+  errores <- c(errores, validar_capa_c_crossval(pool, error_sel, env))
+
+  # Separar errores bloqueantes de warnings
+  return(errores)
+}
+
 validar_codigo <- function(contenido) {
   errores <- character(0)
 
@@ -412,6 +815,14 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
   }
 
   todos_errores <- c(todos_errores, validar_coherencia_matematica_general(resultado$env))
+
+  # Validación semántica (3 capas): separar errores de warnings
+  sem_resultados <- validar_precondiciones_error_pool(resultado$env)
+  sem_errores <- sem_resultados[grepl("^ERR_SEM", sem_resultados)]
+  sem_warnings <- sem_resultados[grepl("^WARN_SEM", sem_resultados)]
+  todos_errores <- c(todos_errores, sem_errores)
+  todos_warnings <- c(todos_warnings, sem_warnings)
+
   todos_errores <- c(todos_errores, validar_codigo(parsed$contenido))
 
   return(list(
@@ -502,6 +913,27 @@ if (length(err_math) > 0) {
   todos_errores <- c(todos_errores, err_math)
 } else {
   cat("  Matemática general: OK\n")
+}
+
+# 5b. Validar coherencia semántica del pool de errores (3 capas)
+cat("\n--- Validando coherencia semántica (Nivel 4) ---\n")
+err_sem <- validar_precondiciones_error_pool(resultado$env)
+err_sem_bloqueantes <- err_sem[grepl("^ERR_SEM", err_sem)]
+warn_sem <- err_sem[grepl("^WARN_SEM", err_sem)]
+if (length(err_sem_bloqueantes) > 0) {
+  cat("  ERRORES semánticos:\n")
+  for (e in err_sem_bloqueantes) cat("    ", e, "\n")
+  todos_errores <- c(todos_errores, err_sem_bloqueantes)
+}
+if (length(warn_sem) > 0) {
+  cat("  Warnings semánticos (bugs latentes):\n")
+  for (w in warn_sem) cat("    ", w, "\n")
+  todos_warnings <- c(todos_warnings, warn_sem)
+}
+if (length(err_sem) == 0) {
+  cat("  Capa A (precondicion declarada): OK\n")
+  cat("  Capa B (keywords en descripciones): OK\n")
+  cat("  Capa C (cross-validacion calcula vs correcto): OK\n")
 }
 
 # 6. Validar código

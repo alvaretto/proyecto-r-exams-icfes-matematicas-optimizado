@@ -19,11 +19,12 @@
     ├── Capturar y registrar errores/advertencias
     │
     ▼
-🔍 FASE 2: VALIDACIÓN VISUAL Y FUNCIONAL
+🔍 FASE 2: VALIDACIÓN VISUAL, FUNCIONAL Y SEMÁNTICA
     │
     ├── ✓ Coherencia Matemática (fórmulas, cálculos, respuesta correcta)
     ├── ✓ Coherencia Imagen-Texto (descripción vs gráfico, valores sincronizados)
     ├── ✓ Coherencia de Código (R ↔ Python ↔ TikZ)
+    ├── ✓ Coherencia Semántica Nivel 4 (descripción error ↔ datos generados)
     ├── ✓ Renderizado correcto en 4 formatos
     │
     ▼
@@ -342,6 +343,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
    │   ├── ✓ Coherencia Matematica
    │   ├── ✓ Coherencia Imagen-Texto
    │   ├── ✓ Coherencia de Codigo
+   │   ├── ✓ Coherencia Semantica Nivel 4 (descripcion error ↔ datos)
    │   └── ✓ Renderizado 4 formatos
    │
    ├── ⚡ FASE 3: DECISION Y ACCION
@@ -445,6 +447,10 @@ NIVEL 3: TERRENO (post-producción)
 
 ---
 
-**Última actualización:** 2025-12-19
-**Versión:** 1.0
+**Última actualización:** 2026-02-13
+**Versión:** 1.1
 **Estado:** ✅ Documentado y validado
+
+### Cambios v1.1 (2026-02-13)
+- Agregada Coherencia Semántica Nivel 4 en FASE 2 (descripción error ↔ datos generados)
+- Validación automática vía `validar_coherencia_matematica.R` (3 capas, 21 keywords)

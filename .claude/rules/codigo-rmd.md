@@ -108,6 +108,33 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
    # Ver: .claude/rules/validacion-neg-opciones-repetidas.md
    ```
 
+8. **NO seleccionar errores conceptuales sin verificar precondiciones**
+
+   Cada error en `errores_conceptuales` DEBE declarar `precondicion`:
+   - `function(params) TRUE` si siempre aplica (mayoría de errores)
+   - `function(params) params$n %% 2 == 0` si solo aplica con n par
+   - `calcula()` DEBE fallar con `stop()` si se llama fuera de contexto
+
+   **Defensa en profundidad**: Aun sin `precondicion` declarada, el **keyword scanner
+   automático** (Capa B) escanea `descripcion_corta/larga` buscando condiciones
+   implícitas ("número par", "bimodal", "muestra grande"...) y reporta `ERR_SEM_B`
+   si la condición no se cumple con los datos actuales.
+
+   Ver: `.claude/rules/ejercicios-metacognitivos.md` (sección Pool de Errores + Validación Semántica)
+
+   ```r
+   # ❌ MAL - filtrado hardcoded por caso específico
+   if (n %% 2 == 0) errores_idx <- c(1,2,3,4) else errores_idx <- c(1,2,3)
+
+   # ✓ BIEN - filtrado genérico por precondiciones declaradas
+   params <- list(n = n, datos_ord = datos_ord)
+   errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+     if (is.null(err$precondicion)) return(TRUE)
+     err$precondicion(params)
+   }))
+   error_idx <- sample(errores_aplicables_idx, 1)
+   ```
+
 ## ✓ SIEMPRE hacer:
 
 - Validar gráficos dinámicos en PDF Y HTML
@@ -116,6 +143,7 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
 - Documentar solo después de confirmar solución 100%
 - Usar metadatos ICFES completos (6 dimensiones)
 - Si archivo es `_neg_`: incluir test genérico de opciones repetidas (regla #11)
+- Todo error conceptual con aplicabilidad condicional DEBE declarar `precondicion` (regla #8)
 
 ## Metadatos ICFES Requeridos
 

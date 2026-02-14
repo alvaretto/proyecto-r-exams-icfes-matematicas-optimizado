@@ -125,6 +125,7 @@ generar_datos <- function() {
       descripcion_corta = "Confundió la mediana con la media aritmética",
       descripcion_larga = "El estudiante calculó la media aritmética (suma de todos los datos dividida entre n) pero afirmó que ese valor era la mediana. Este error indica que no diferencia entre las dos medidas de tendencia central.",
       causa_raiz = "No diferencia entre mediana (valor central al ordenar) y media (promedio aritmético)",
+      precondicion = function(params) TRUE,
       calcula = function(datos_ord) {
         round(mean(datos_ord), 2)
       }
@@ -135,6 +136,7 @@ generar_datos <- function() {
       descripcion_corta = "Confundió la mediana con la moda",
       descripcion_larga = "El estudiante identificó el valor que más se repite (la moda) y afirmó que era la mediana. Esto revela confusión entre las tres medidas de tendencia central.",
       causa_raiz = "Confunde valor más frecuente (moda) con valor central (mediana)",
+      precondicion = function(params) TRUE,
       calcula = function(datos_ord) {
         tb <- table(datos_ord)
         as.numeric(names(tb)[which.max(tb)])
@@ -146,6 +148,7 @@ generar_datos <- function() {
       descripcion_corta = "No ordenó los datos antes de buscar la mediana",
       descripcion_larga = "El estudiante tomó el valor que ocupa la posición central en la lista original sin ordenarla. La mediana requiere que los datos estén ordenados de menor a mayor antes de identificar el valor central.",
       causa_raiz = "Omite el paso previo de ordenamiento ascendente",
+      precondicion = function(params) TRUE,
       calcula = function(datos_ord) {
         # Simula tomar posición central de datos NO ordenados
         datos_desordenados <- sample(datos_ord)
@@ -163,14 +166,14 @@ generar_datos <- function() {
       descripcion_corta = "Para un número par de datos, tomó solo uno de los dos valores centrales",
       descripcion_larga = "Cuando el número de datos es par, el estudiante tomó únicamente uno de los dos valores centrales en lugar de promediarlos. La mediana para n par es el promedio de los dos valores centrales.",
       causa_raiz = "Aplica la regla de n impar cuando n es par",
+      precondicion = function(params) params$n %% 2 == 0,
       calcula = function(datos_ord) {
         n <- length(datos_ord)
         if (n %% 2 == 0) {
+          # Toma solo el valor en posición n/2 sin promediar con n/2+1
           datos_ord[n / 2]
         } else {
-          # Para impar, devuelve un valor adyacente al central
-          pos <- (n + 1) / 2
-          datos_ord[max(1, pos - 1)]
+          stop("EST-MTC-04 no debe usarse con n impar")
         }
       }
     ),
@@ -180,6 +183,7 @@ generar_datos <- function() {
       descripcion_corta = "Sumó todos los datos pero olvidó dividir entre n",
       descripcion_larga = "El estudiante realizó correctamente la suma de todos los datos pero omitió el paso de dividir entre el número de datos, confundiendo la suma total con la media aritmética.",
       causa_raiz = "Procedimiento incompleto: calcula la suma pero no completa la división",
+      precondicion = function(params) TRUE,
       calcula = function(datos_ord) {
         sum(datos_ord)
       }
@@ -190,6 +194,7 @@ generar_datos <- function() {
       descripcion_corta = "Confundió la moda con el valor máximo del conjunto",
       descripcion_larga = "El estudiante identificó el valor más grande del conjunto como la moda, confundiendo 'el valor que más se repite' con 'el valor más grande'. Este error es común cuando no se comprende el significado de frecuencia.",
       causa_raiz = "Confunde 'más frecuente' con 'más grande'",
+      precondicion = function(params) TRUE,
       calcula = function(datos_ord) {
         max(datos_ord)
       }
@@ -265,10 +270,14 @@ generar_datos <- function() {
     if (length(modas) == 1 &&
         length(unique(c(media_calc, mediana_calc, moda_calc))) == 3) {
 
-      # Seleccionar error y verificar que produce valor distinto de mediana
-      # Errores aplicables a la mediana: 1, 2, 3, 4
-      errores_mediana_idx <- c(1, 2, 3, 4)
-      error_idx <- sample(errores_mediana_idx, 1)
+      # Filtrar errores aplicables según precondiciones
+      # Patrón genérico: cada error declara cuándo aplica via precondicion()
+      params <- list(n = n, datos_ord = datos_ord)
+      errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+        if (is.null(err$precondicion)) return(TRUE)
+        err$precondicion(params)
+      }))
+      error_idx <- sample(errores_aplicables_idx, 1)
       error_sel <- errores_conceptuales[[error_idx]]
       mediana_erronea <- error_sel$calcula(datos_ord)
 
@@ -289,8 +298,11 @@ generar_datos <- function() {
   # Opción correcta: descripción del error real
   desc_correcta <- error_sel$descripcion_corta
 
-  # 3 distractores: descripciones de otros errores
-  otros_idx <- setdiff(errores_mediana_idx, error_idx)
+  # 3 distractores: descripciones de otros errores (del pool completo de 6)
+  # Los distractores pueden incluir EST-MTC-04 como opción textual incluso
+  # si n es impar — el estudiante debe reconocer que no aplica.
+  todos_errores_idx <- seq_along(errores_conceptuales)
+  otros_idx <- setdiff(todos_errores_idx, error_idx)
   otros_idx <- sample(otros_idx, 3)
   desc_distractores <- sapply(otros_idx, function(i) {
     errores_conceptuales[[i]]$descripcion_corta
@@ -506,6 +518,25 @@ test_that("Las 3 medidas son distintas entre sí", {
 test_that("Error analizado produce mediana errónea diferente de la correcta", {
   expect_true(mediana_erronea != mediana_calc,
               info = "La mediana errónea debe ser diferente de la correcta")
+})
+
+test_that("Error seleccionado cumple su precondición", {
+  if (!is.null(error_sel$precondicion)) {
+    params <- list(n = n, datos_ord = datos_ord)
+    expect_true(error_sel$precondicion(params),
+      info = paste(error_sel$codigo, "seleccionado pero precondición no se cumple"))
+  }
+})
+
+test_that("Precondiciones respetadas en 50 semillas", {
+  for (i in 1:50) {
+    d <- generar_datos()
+    if (!is.null(d$error_sel$precondicion)) {
+      params <- list(n = d$n, datos_ord = d$datos_ord)
+      expect_true(d$error_sel$precondicion(params),
+        info = paste("Semilla", i, ":", d$error_sel$codigo, "con n =", d$n))
+    }
+  }
 })
 
 test_that("Parte 1: exactamente una opción correcta", {

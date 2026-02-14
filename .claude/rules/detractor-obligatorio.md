@@ -163,6 +163,22 @@ Veredicto: MODIFICAR/RECHAZAR → Bloquear promoción
 - `.git/hooks/pre-commit`, `.git/hooks/pre-push` (Nivel 1)
 - `.github/workflows/ci-testing.yml` (Nivel 1)
 
+### 8. Coherencia Semántica (Nivel 4)
+
+**Qué revisa:**
+- Campo `precondicion` declarado en cada error del pool conceptual (Capa A)
+- Descripciones de errores coherentes con datos generados — keyword scanner automático (Capa B)
+- `calcula()` produce valor diferente al correcto — cross-validación (Capa C)
+- 21 reglas de keywords cubren: paridad, modalidad, cuartiles, outliers, simetría, tipo de datos, tamaño de muestra
+- Errores `ERR_SEM_A/B/C` (bloqueantes) y `WARN_SEM_B` (bugs latentes)
+- Patrón de selección genérico basado en `precondicion` (no filtros hardcoded)
+
+**Fuentes de verdad:**
+- `.claude/scripts/validar_coherencia_matematica.R` — `REGLAS_SEMANTICAS_KEYWORDS` (Nivel 1)
+- `.claude/rules/ejercicios-metacognitivos.md` — sección "Validación Semántica Automática" (Nivel 1)
+- `.claude/rules/codigo-rmd.md` — regla #8 (Nivel 1)
+- `tests/testthat/test_validacion_semantica.R` (Nivel 1)
+
 ---
 
 ## Formato de Revisión Detractor
@@ -173,7 +189,7 @@ Veredicto: MODIFICAR/RECHAZAR → Bloquear promoción
 ## Revisión Detractor - [Nombre Ejercicio]
 
 **Fecha**: YYYY-MM-DD
-**Dominios revisados**: [código | pedagógico | visual | gramática | matemático | metacognitivo | testing]
+**Dominios revisados**: [código | pedagógico | visual | gramática | matemático | metacognitivo | testing | semántico]
 
 ### Objeciones Encontradas
 
@@ -366,7 +382,7 @@ umbrales:
   fuente_minima: 2
   max_objeciones: 10
 
-# Dominios obligatorios a revisar (7 dominios)
+# Dominios obligatorios a revisar (8 dominios)
 dominios_obligatorios:
   - codigo_rexams
   - pedagogico
@@ -457,6 +473,6 @@ Con el detractor obligatorio:
 
 ### Cambios v1.1 (2026-02-07)
 - **3 nuevos dominios agregados**: coherencia matemática, ICFES metacognitivo, testing
-- **7 dominios totales** de revisión adversarial obligatoria
+- **8 dominios totales** de revisión adversarial obligatoria
 - **Fuentes de verdad** documentadas para cada nuevo dominio
 - **Integración** con testing-obligatorio.md y ejercicios-metacognitivos.md

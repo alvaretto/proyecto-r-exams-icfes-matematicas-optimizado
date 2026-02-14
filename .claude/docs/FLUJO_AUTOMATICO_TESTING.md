@@ -211,7 +211,7 @@ git push origin main
    → pre-bash-testing.sh "git commit -m '...'"
    → Detecta: comando git commit
    → Ejecuta: Rscript tests/run_all_tests.R
-   → Suite completa: 6 suites, 33+ tests
+   → Suite completa: 9 suites, 68+ tests
 
 3. Resultado:
    - Si TODO PASA:
@@ -297,8 +297,8 @@ Ejecutando suite completa de tests...
   SUITE DE TESTING COMPLETA
 ========================================
 
-Suites ejecutadas: 6
-✓ Exitosas: 6
+Suites ejecutadas: 9
+✓ Exitosas: 9
 ✗ Fallidas: 0
 
 ✅ TESTS PASARON - COMMIT PERMITIDO
@@ -432,7 +432,10 @@ tests/
     ├── test_renderizado_4_formatos.R
     ├── test_aleatorization_diversity.R
     ├── test_flujo_b_graficador.R
-    └── test_regression_suite.R
+    ├── test_regression_suite.R
+    ├── test_neg_visual_distinctness.R
+    ├── test_media_mediana_moda.R
+    └── test_validacion_semantica.R
 
 .github/workflows/
 └── ci-testing.yml                        # CI/CD remoto
@@ -486,7 +489,11 @@ git commit -m "test" --allow-empty
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-02-04
+**Versión:** 1.1
+**Fecha:** 2026-02-13
 **Estado:** ACTIVO Y PERMANENTE
 **Modificable:** Solo con tests pasando
+
+### Cambios v1.1 (2026-02-13)
+- Actualizado a 9 suites, 68+ tests (era 6 suites, 33+)
+- Agregados 3 archivos de test al árbol: neg_visual, media_mediana_moda, validacion_semantica

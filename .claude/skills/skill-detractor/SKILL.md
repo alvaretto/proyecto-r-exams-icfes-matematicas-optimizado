@@ -128,9 +128,9 @@ ignorar_estilistico: true
 
 ---
 
-## Dominios de Revision (7 obligatorios)
+## Dominios de Revision (8 obligatorios)
 
-El detractor revisa en **7 dominios obligatorios**:
+El detractor revisa en **8 dominios obligatorios**:
 
 ### 1. Codigo R-exams
 
@@ -183,6 +183,14 @@ El detractor revisa en **7 dominios obligatorios**:
 - Tests de diversidad (200+ versiones unicas)
 - Git hooks nativos configurados (pre-commit, pre-push)
 - CI/CD activo y pasando
+
+### 8. Coherencia Semantica (Nivel 4)
+
+- Campo `precondicion` declarado en errores con restricciones (Capa A)
+- Descripciones de errores coherentes con datos generados — 21 keywords (Capa B)
+- `calcula()` produce valor diferente al correcto (Capa C)
+- Errores ERR_SEM_A/B/C (bloqueantes) y WARN_SEM_B (bugs latentes)
+- Patron de seleccion generico basado en `precondicion`
 
 ---
 
@@ -363,6 +371,11 @@ Ver definicion completa en `.claude/agents/agente-detractor.md`
 **Fecha**: 2026-02-07
 **Autor**: Sistema automatizado
 **Inspiracion**: Devil's Advocate Pattern, Adversarial Review, Red Team Testing
+
+### Cambios v1.2.0 (2026-02-13)
+- **8 dominios obligatorios** de revision (antes 7)
+- **Nuevo dominio**: coherencia_semantica (Nivel 4: descripcion error ↔ datos)
+- **Referencia**: `.claude/scripts/validar_coherencia_matematica.R` — `REGLAS_SEMANTICAS_KEYWORDS`
 
 ### Cambios v1.1.0 (2026-02-07)
 - **7 dominios obligatorios** de revision (antes 4)

@@ -16,6 +16,9 @@ Este documento describe el ecosistema completo de testing del repositorio, dise�
 | **Aleatorización y Diversidad** | 100% | ✅ Completo |
 | **Flujo B (Graficador)** | 100% | ✅ Completo |
 | **Tests de Regresión** | 100% | ✅ Completo |
+| **Distintividad Visual _neg_** | 100% | ✅ Completo |
+| **Media-Mediana-Moda** | 100% | ✅ Completo |
+| **Validación Semántica (Nivel 4)** | 100% | ✅ Completo |
 | **COBERTURA TOTAL** | **100%** | ✅ **OBJETIVO ALCANZADO** |
 
 ---
@@ -33,7 +36,10 @@ tests/
 │   ├── test_renderizado_4_formatos.R    # Tests HTML/PDF/DOCX/NOPS
 │   ├── test_aleatorization_diversity.R  # Tests exshuffle y 250+ versiones
 │   ├── test_flujo_b_graficador.R        # Tests del Graficador Secuencial
-│   └── test_regression_suite.R          # Tests anti-regresión
+│   ├── test_regression_suite.R          # Tests anti-regresión
+│   ├── test_neg_visual_distinctness.R   # Tests distintividad visual _neg_
+│   ├── test_media_mediana_moda.R        # Tests precondiciones Media-Mediana-Moda
+│   └── test_validacion_semantica.R      # Tests validación semántica 3 capas
 │
 ├── test_aleatorization.R                # Tests ad-hoc de aleatorización
 ├── test_graficos_visualizacion.R        # Tests ad-hoc de gráficos
@@ -187,6 +193,63 @@ tests/
 
 ---
 
+### 7. **Tests de Distintividad Visual _neg_** (`test_neg_visual_distinctness.R`)
+
+**Objetivo:** Validar que ejercicios con lógica negativa (`_neg_`) tienen opciones con diferenciación visual correcta.
+
+**Cobertura:**
+- ✅ Colores únicos para cada opción
+- ✅ `digest()` verifica patrón (N-1) idénticas + 1 diferente
+- ✅ Lógica negativa: `sol` marca exactamente 1 opción
+
+**Tests Implementados:**
+- `test_that("Colores de opciones son únicos")`
+- `test_that("Patrón _neg_: exactamente (N-1) opciones idénticas + 1 diferente")`
+- `test_that("Lógica negativa: sol marca exactamente 1 opción")`
+
+**Integración:** Se ejecuta para ejercicios con `_neg_` en el nombre.
+
+---
+
+### 8. **Tests Media-Mediana-Moda** (`test_media_mediana_moda.R`)
+
+**Objetivo:** Validar precondiciones de errores conceptuales y filtro genérico en ejercicio de medidas de tendencia central.
+
+**Cobertura:**
+- ✅ Campo `precondicion` presente en errores con restricciones
+- ✅ Filtro genérico basado en precondiciones funciona correctamente
+- ✅ EST-MTC-04 nunca seleccionado con n impar (100 semillas)
+
+**Tests Implementados:**
+- `test_that("Precondiciones declaradas en errores con restricciones")`
+- `test_that("Filtro genérico respeta precondiciones")`
+- `test_that("EST-MTC-04 nunca seleccionado con n impar en 100 semillas")`
+
+**Integración:** Regresión específica para bug de coherencia semántica detectado 2026-02-13.
+
+---
+
+### 9. **Tests de Validación Semántica (Nivel 4)** (`test_validacion_semantica.R`)
+
+**Objetivo:** Validar el sistema de validación semántica de 3 capas que verifica coherencia entre descripciones de errores y datos generados.
+
+**Cobertura:**
+- ✅ Capa A: Precondiciones declaradas (`precondicion` en cada error)
+- ✅ Capa B: Scanner de keywords (21 reglas semánticas)
+- ✅ Capa C: Cross-validación `calcula()` ≠ valor correcto
+- ✅ Regresión EST-MTC-04: "par" con n impar bloqueado
+- ✅ Errores ERR_SEM_A, ERR_SEM_B, ERR_SEM_C, WARN_SEM_B
+
+**Tests Implementados:** 35 tests cubriendo:
+- Validación de cada capa individualmente
+- 21 reglas de keywords (paridad, modalidad, cuartiles, outliers, simetría, etc.)
+- Integración de las 3 capas
+- Casos de regresión
+
+**Integración:** Ejecutado automáticamente vía `validar_coherencia_matematica.R` (Nivel 4).
+
+---
+
 ## 🚀 Ejecución de Tests
 
 ### Opción 1: Ejecutar Suite Completa
@@ -217,10 +280,10 @@ Ejecutando: Ortografía Española
   REPORTE FINAL
 ========================================
 
-Suites ejecutadas: 6
-✓ Exitosas: 6
+Suites ejecutadas: 9
+✓ Exitosas: 9
 ✗ Fallidas: 0
-Tiempo total: 12.45 segundos
+Tiempo total: 18.5 segundos
 
 Cobertura de testing: 100.0%
 🎉 ¡OBJETIVO DE 100% ALCANZADO!
@@ -286,6 +349,9 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 | **Renderizado** | 6 | 100% | 4 formatos × tipos |
 | **Flujo B** | 6 | 100% | 3 lenguajes secuenciales |
 | **Regresión** | 7 | 100% | Ejemplos funcionales |
+| **Distintividad Visual _neg_** | 3 | 100% | Ejercicios lógica negativa |
+| **Media-Mediana-Moda** | 3 | 100% | Precondiciones errores |
+| **Validación Semántica** | 35 | 100% | 3 capas, 21 keywords |
 
 ### Tiempo de Ejecución
 
@@ -408,8 +474,8 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 │                                                             │
 │              🎯 COBERTURA: 100% ALCANZADA                    │
 │                                                             │
-│   ✓ 6 Suites de Testing Implementadas                      │
-│   ✓ 44+ Tests Unitarios Ejecutándose                       │
+│   ✓ 9 Suites de Testing Implementadas                      │
+│   ✓ 68+ Tests Unitarios Ejecutándose                       │
 │   ✓ CI/CD Configurado (GitHub Actions)                     │
 │   ✓ Hooks Automáticos Operacionales                        │
 │   ✓ Tolerancia Cero a Regresiones                          │
@@ -420,7 +486,13 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-02-04
+**Versión:** 1.1
+**Fecha:** 2026-02-13
 **Autor:** Sistema Automatizado
 **Estado:** PRODUCCIÓN
+
+### Cambios v1.1 (2026-02-13)
+- **3 nuevas suites**: Distintividad Visual _neg_, Media-Mediana-Moda, Validación Semántica
+- **9 suites totales** (era 6), **68+ tests** (era 44+)
+- **Validación Semántica Nivel 4**: 3 capas (precondiciones, keywords, cross-validación)
+- **35 tests nuevos** para scanner de 21 keywords semánticas

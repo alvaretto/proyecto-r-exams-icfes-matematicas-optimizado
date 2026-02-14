@@ -182,11 +182,52 @@ errores_conceptuales <- list(
     descripcion_corta = "...",       # Para opciones
     descripcion_larga = "...",       # Para solución
     causa_raiz = "...",              # Diagnóstico pedagógico
+    precondicion = function(params) TRUE,  # Cuándo aplica este error
     calcula = function(...) { ... }  # Produce el distractor
   ),
   # Mínimo 4-6 errores por ejercicio
 )
 ```
+
+### Campo `precondicion` (OBLIGATORIO)
+
+Cada error DEBE declarar cuándo es aplicable. Esto previene incoherencias
+entre la descripción del error y las propiedades de los datos generados.
+
+- Recibe `params`: lista con propiedades de los datos (`n`, `datos_ord`, etc.)
+- Devuelve `TRUE` si el error aplica, `FALSE` si no
+- La mayoría de errores usan `function(params) TRUE` (siempre aplican)
+- Errores condicionales DEBEN declarar su condición explícitamente
+- Si un error NO tiene `precondicion` (retrocompatibilidad), se asume `TRUE`
+
+```r
+# Ejemplo: error que solo aplica cuando n es par
+list(
+  codigo = "EST-MTC-04",
+  nombre = "Un solo valor central (n par)",
+  descripcion_corta = "Para un número par de datos, tomó solo uno de los dos valores centrales",
+  precondicion = function(params) params$n %% 2 == 0,  # Solo n par
+  calcula = function(datos_ord) {
+    n <- length(datos_ord)
+    if (n %% 2 != 0) stop("EST-MTC-04 no debe usarse con n impar")
+    datos_ord[n / 2]
+  }
+)
+```
+
+### Selección de errores con precondiciones (Patrón genérico)
+
+```r
+# Filtrar errores aplicables según precondiciones
+params <- list(n = n, datos_ord = datos_ord)
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  err$precondicion(params)
+}))
+error_idx <- sample(errores_aplicables_idx, 1)
+```
+
+Este patrón reemplaza cualquier filtrado hardcoded (como `if (n %% 2 == 0) ...`).
 
 ### Taxonomía de Códigos de Error
 
@@ -235,6 +276,100 @@ test_that("Error conceptual es reproducible", {
   resultado <- error_seleccionado$calcula(...)
   expect_equal(resultado, respuesta_erronea)
 })
+
+# 4. Verificar coherencia semántica: error seleccionado aplica a los datos
+test_that("Error seleccionado cumple su precondición", {
+  if (!is.null(error_sel$precondicion)) {
+    params <- list(n = n, datos_ord = datos_ord)
+    expect_true(error_sel$precondicion(params),
+      info = paste(error_sel$codigo, "seleccionado pero precondición no se cumple"))
+  }
+})
+
+# 5. Verificar precondiciones en múltiples semillas
+test_that("Precondiciones respetadas en 100 semillas", {
+  for (i in 1:100) {
+    d <- generar_datos()
+    if (!is.null(d$error_sel$precondicion)) {
+      params <- list(n = d$n, datos_ord = d$datos_ord)
+      expect_true(d$error_sel$precondicion(params),
+        info = paste("Semilla", i, ":", d$error_sel$codigo, "con n =", d$n))
+    }
+  }
+})
+```
+
+---
+
+## Validación Semántica Automática (Nivel 4)
+
+El script `validar_coherencia_matematica.R` valida automáticamente la coherencia semántica del pool de errores en **3 capas**:
+
+### Capa A: Precondición declarada
+
+Verifica que el error seleccionado cumple su `precondicion()` con los datos actuales.
+
+- **Código de error**: `ERR_SEM_A`
+- **Severidad**: Bloqueante
+- **Qué detecta**: Error seleccionado cuya precondición no se cumple
+
+### Capa B: Escaneo de keywords (DETECCIÓN AUTOMÁTICA)
+
+Escanea `descripcion_corta` y `descripcion_larga` de **todos** los errores del pool buscando palabras clave que implican condiciones matemáticas. Si la condición no se cumple Y no hay `precondicion` que lo prevenga, reporta:
+
+- **`ERR_SEM_B`** (bloqueante): El error **fue seleccionado** y es incoherente
+- **`WARN_SEM_B`** (informativo): El error está en el pool sin protección (bug latente)
+
+**Keywords escaneados automáticamente (21 reglas):**
+
+| Keyword en descripción | Condición implicada | Verificación |
+|------------------------|---------------------|--------------|
+| "número par", "par de datos", "dos valores centrales" | n es par | `n %% 2 == 0` |
+| "número impar", "un solo valor central" | n es impar | `n %% 2 == 1` |
+| "moda única", "unimodal" | moda única | `sum(tb == max(tb)) == 1` |
+| "bimodal", "dos modas" | bimodal | `sum(tb == max(tb)) == 2` |
+| "multimodal", "múltiples modas" | multimodal | `sum(tb == max(tb)) >= 2` |
+| "todos iguales", "sin variabilidad" | datos iguales | `length(unique(datos)) == 1` |
+| "sin ordenar", "datos desordenados" | error de no ordenar | siempre aplicable |
+| "cuartil", "Q1", "Q3" | cuartiles calculables | `n >= 4` |
+| "rango", "recorrido" | datos no constantes | `length(unique(datos)) > 1` |
+| "desviación estándar", "varianza" | al menos 2 datos | `n >= 2` |
+| "valores negativos", "datos negativos" | hay negativos | `any(datos < 0)` |
+| "contiene ceros", "valor cero" | hay ceros | `0 %in% datos` |
+| "números enteros", "sin decimales" | todos enteros | `all(datos == floor(datos))` |
+| "valores decimales", "con decimales" | hay decimales | `any(datos != floor(datos))` |
+| "simétrica", "distribución simétrica" | asimetría baja | `abs(mean-median)/sd < 0.1` |
+| "asimétrica", "sesgo", "sesgada" | asimetría alta | `abs(mean-median)/sd >= 0.1` |
+| "atípicos", "outlier", "valor extremo" | hay outliers IQR | regla 1.5*IQR |
+| "muestra grande", "muchos datos" | n grande | `n >= 30` |
+| "muestra pequeña", "pocos datos" | n pequeño | `n < 30` |
+| "frecuencia relativa", "proporción" | datos existentes | siempre si hay datos |
+| "datos desordenados" (en error) | error de ordenamiento | siempre aplicable |
+
+**Extensibilidad**: Agregar nuevas reglas en `REGLAS_SEMANTICAS_KEYWORDS` dentro de `validar_coherencia_matematica.R`. Cada regla tiene: `patron` (regex), `nombre`, `condicion` (función), `mensaje`.
+
+### Capa C: Cross-validación calcula vs correcto
+
+Verifica que `calcula()` del error seleccionado produce un valor diferente de la respuesta correcta.
+
+- **Código de error**: `ERR_SEM_C`
+- **Severidad**: Bloqueante
+- **Qué detecta**: Error que produce el mismo valor que la respuesta correcta (distractor inútil)
+
+### Flujo de ejecución
+
+```
+exams2html() / exams2pdf()
+    ↓ (hook PostToolUse)
+validar_coherencia_matematica.R
+    ↓
+Nivel 1: Sintáctico (chunks ejecutan)
+Nivel 2: Numérico (sin NA/NaN/Inf)
+Nivel 3: Estructural (metadatos, exsolution)
+Nivel 4: Semántico ← NUEVO
+    ├── Capa A: precondicion declarada
+    ├── Capa B: keywords en descripciones
+    └── Capa C: calcula vs correcto
 ```
 
 ---

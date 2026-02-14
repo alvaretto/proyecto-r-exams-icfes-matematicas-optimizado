@@ -515,7 +515,10 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 | Aleatorización | 4 | 100% |
 | Flujo B Graficador | 6 | 100% |
 | Regresión | 7 | 100% |
-| **TOTAL** | **33+** | **100%** |
+| Distintividad Visual _neg_ | 3 | 100% |
+| Media-Mediana-Moda | 3 | 100% |
+| Validación Semántica (Nivel 4) | 35 | 100% |
+| **TOTAL** | **68+** | **100%** |
 
 ### Garantías del Sistema
 
@@ -614,15 +617,16 @@ El detractor actúa como revisor adversarial que confronta decisiones con fuente
 | **FASE 2C** | Después de preview visual | Si veredicto es RECHAZAR |
 | **Pre-promoción** | Antes de `/promover-ejercicio` | Si hay objeciones pendientes |
 
-### Dominios de Revisión (7 dominios) 🆕
+### Dominios de Revisión (8 dominios)
 
 1. **Código R-exams**: exshuffle, metadatos, estructura
 2. **Pedagógico**: Progressive Disclosure, metacognición, DOK/Bloom
 3. **Visual**: Coherencia gráfico-texto, etiquetas, escalas
 4. **Gramática**: Tildes, redacción, terminología
-5. **Coherencia matemática**: Fórmulas, cálculos, distractores plausibles 🆕
-6. **ICFES metacognitivo**: Progressive Disclosure, pool errores, DOK ≥ 2 🆕
-7. **Testing**: Cobertura tests, git hooks, CI/CD 🆕
+5. **Coherencia matemática**: Fórmulas, cálculos, distractores plausibles
+6. **ICFES metacognitivo**: Progressive Disclosure, pool errores, DOK ≥ 2
+7. **Testing**: Cobertura tests, git hooks, CI/CD
+8. **Coherencia semántica**: Descripción error ↔ datos generados (3 capas) 🆕
 
 ### Formato de Invocación
 
@@ -839,9 +843,15 @@ Antes de finalizar CUALQUIER ejercicio:
 
 ---
 
-**Versión**: 1.4
-**Fecha**: 2026-02-08
-**Módulo de**: @.claude/CLAUDE.md (v3.2.2)
+**Versión**: 1.5
+**Fecha**: 2026-02-13
+**Módulo de**: @.claude/CLAUDE.md (v3.2.3)
+
+### Cambios v1.5 (2026-02-13)
+
+- **12 reglas fundamentales** (era 11, ahora 12): Validación semántica automática
+- **8 dominios detractor** (era 7): agregado `coherencia_semantica`
+- **9 suites de testing** (era 6): 68+ tests (era 33+)
 
 ### Cambios v1.4 (2026-02-08)
 
