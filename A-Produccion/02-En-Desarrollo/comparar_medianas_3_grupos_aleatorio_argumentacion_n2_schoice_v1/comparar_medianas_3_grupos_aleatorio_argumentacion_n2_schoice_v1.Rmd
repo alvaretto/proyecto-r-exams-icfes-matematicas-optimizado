@@ -1,0 +1,811 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "booktabs", "array"]
+
+icfes:
+  competencia:
+    - argumentacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: estadistica
+    tipo: mediana
+  contexto: familiar
+  eje_axial: eje4
+  componente: aleatorio
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(scipen = 999)
+
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = "",
+  fig.pos = "H"
+)
+
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# ===========================================================================
+# FUNCIÓN PRINCIPAL DE GENERACIÓN DE DATOS
+# ===========================================================================
+generar_datos <- function() {
+
+  # =========================================================================
+  # 1. POOL DE CONTEXTOS NARRATIVOS (8 plantillas como funciones, 6+ tipos)
+  # Regla: .claude/rules/contextos-narrativos-creativos.md
+  # =========================================================================
+  contextos <- list(
+    # Tipo: Situación problema
+    list(
+      tema = "baterías de celular",
+      unidad = "minutos",
+      tipo_prueba = "pruebas de rendimiento",
+      rango_min = 500, rango_max = 800,
+      tipo_prueba_singular = "Prueba",
+      nombres_grupos_opciones = list(
+        c("Modelo Alpha", "Modelo Beta", "Modelo Gamma"),
+        c("Celular X-200", "Celular Y-300", "Celular Z-400"),
+        c("SmartPhone Pro", "SmartPhone Lite", "SmartPhone Max")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "El departamento de calidad de ", prot,
+          " necesita comparar la duración de batería de tres modelos de celular. ",
+          "Para ello, realizó ", n, " pruebas de rendimiento a cada modelo. ",
+          "La siguiente tabla muestra la duración (en minutos) registrada:"
+        )
+      },
+      protagonistas = c(
+        "una empresa de telecomunicaciones",
+        "el laboratorio de certificación TechTest",
+        "la revista de tecnología MóvilHoy",
+        "el centro de pruebas CellLab"
+      )
+    ),
+    # Tipo: Narración periodística
+    list(
+      tema = "torneos deportivos",
+      unidad = "puntos",
+      tipo_prueba = "partidos",
+      rango_min = 40, rango_max = 95,
+      tipo_prueba_singular = "Partido",
+      nombres_grupos_opciones = list(
+        c("Águilas", "Leones", "Halcones"),
+        c("Equipo Rojo", "Equipo Azul", "Equipo Verde"),
+        c("Los Titanes", "Los Dragones", "Los Cóndores")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "En ", prot, ", tres equipos disputaron ", n,
+          " partidos cada uno durante la fase clasificatoria. ",
+          "Los puntajes obtenidos en cada partido fueron:"
+        )
+      },
+      protagonistas = c(
+        "el campeonato intercolegial de Bogotá",
+        "los Juegos Supérate del departamento",
+        "la final regional de baloncesto",
+        "el torneo municipal de voleibol"
+      )
+    ),
+    # Tipo: Perspectiva del estudiante
+    list(
+      tema = "germinación de semillas",
+      unidad = "días",
+      tipo_prueba = "ensayos",
+      rango_min = 3, rango_max = 18,
+      tipo_prueba_singular = "Ensayo",
+      nombres_grupos_opciones = list(
+        c("Girasol", "Maíz", "Frijol"),
+        c("Semilla tipo A", "Semilla tipo B", "Semilla tipo C"),
+        c("Variedad Roja", "Variedad Amarilla", "Variedad Verde")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          prot,
+          " necesita comparar tres variedades de semillas para su proyecto de biología. ",
+          "Realizó ", n, " ensayos de germinación con cada variedad y registró ",
+          "el número de días que tardó cada semilla en germinar:"
+        )
+      },
+      protagonistas = c(
+        "Valentina", "Santiago", "Isabela", "Mateo", "Luciana"
+      )
+    ),
+    # Tipo: Contexto institucional
+    list(
+      tema = "control de calidad",
+      unidad = "gramos",
+      tipo_prueba = "muestras",
+      rango_min = 200, rango_max = 500,
+      tipo_prueba_singular = "Muestra",
+      nombres_grupos_opciones = list(
+        c("Línea 1", "Línea 2", "Línea 3"),
+        c("Lote Alpha", "Lote Beta", "Lote Gamma"),
+        c("Turno Mañana", "Turno Tarde", "Turno Noche")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "El informe mensual de ", prot,
+          " incluye el peso de ", n, " muestras tomadas de tres líneas de producción. ",
+          "Los pesos registrados (en gramos) fueron:"
+        )
+      },
+      protagonistas = c(
+        "la planta de alimentos NutriCo",
+        "el laboratorio farmacéutico BioSalud",
+        "la fábrica de componentes MetalPro",
+        "la empresa de empaques EcoPack"
+      )
+    ),
+    # Tipo: Pregunta retórica
+    list(
+      tema = "rutas de transporte",
+      unidad = "minutos",
+      tipo_prueba = "recorridos",
+      rango_min = 15, rango_max = 60,
+      tipo_prueba_singular = "Recorrido",
+      nombres_grupos_opciones = list(
+        c("Ruta Norte", "Ruta Sur", "Ruta Centro"),
+        c("Ruta A", "Ruta B", "Ruta C"),
+        c("Trayecto 1", "Trayecto 2", "Trayecto 3")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "¿Cuál ruta de transporte escolar es más eficiente? ",
+          prot, " midió el tiempo de ", n,
+          " recorridos en cada una de tres rutas alternativas. ",
+          "Los tiempos (en minutos) fueron:"
+        )
+      },
+      protagonistas = c(
+        "El comité de padres del colegio",
+        "La secretaría de movilidad del municipio",
+        "El coordinador de transporte escolar",
+        "Una encuesta del consejo estudiantil"
+      )
+    ),
+    # Tipo: Descubrimiento
+    list(
+      tema = "temperaturas de laboratorio",
+      unidad = "grados Celsius",
+      tipo_prueba = "mediciones",
+      rango_min = 20, rango_max = 45,
+      tipo_prueba_singular = "Medición",
+      nombres_grupos_opciones = list(
+        c("Termómetro A", "Termómetro B", "Termómetro C"),
+        c("Sensor 1", "Sensor 2", "Sensor 3"),
+        c("Equipo Digital", "Equipo Mercurio", "Equipo Infrarrojo")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "Al revisar los registros del laboratorio, ", prot,
+          " encontró las temperaturas de ", n,
+          " mediciones realizadas con tres termómetros diferentes. ",
+          "Los valores registrados (en °C) fueron:"
+        )
+      },
+      protagonistas = c(
+        "la profesora de química",
+        "el técnico del laboratorio",
+        "la monitora de ciencias",
+        "el coordinador del área experimental"
+      )
+    ),
+    # Tipo: Diálogo implícito
+    list(
+      tema = "rendimiento académico",
+      unidad = "puntos",
+      tipo_prueba = "evaluaciones",
+      rango_min = 45, rango_max = 98,
+      tipo_prueba_singular = "Evaluación",
+      nombres_grupos_opciones = list(
+        c("Curso 901", "Curso 902", "Curso 903"),
+        c("Grupo A", "Grupo B", "Grupo C"),
+        c("Décimo A", "Décimo B", "Décimo C")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "—Necesito que comparen el rendimiento de estos tres cursos —indicó ", prot,
+          " a sus colegas. Las calificaciones de ", n,
+          " evaluaciones para cada curso fueron:"
+        )
+      },
+      protagonistas = c(
+        "el rector del colegio",
+        "la coordinadora académica",
+        "el jefe del departamento de matemáticas",
+        "la directora de calidad educativa"
+      )
+    ),
+    # Tipo: Acción en curso
+    list(
+      tema = "producción agrícola",
+      unidad = "kilogramos",
+      tipo_prueba = "cosechas",
+      rango_min = 20, rango_max = 80,
+      tipo_prueba_singular = "Cosecha",
+      nombres_grupos_opciones = list(
+        c("Parcela Norte", "Parcela Centro", "Parcela Sur"),
+        c("Variedad Criolla", "Variedad Híbrida", "Variedad Certificada"),
+        c("Cultivo tipo I", "Cultivo tipo II", "Cultivo tipo III")
+      ),
+      plantilla = function(prot, n, nombres_grupos) {
+        paste0(
+          "Durante la temporada de cosecha, ", prot,
+          " registró la producción de ", n,
+          " lotes para tres variedades de cultivo. ",
+          "Las cantidades recolectadas (en kg) fueron:"
+        )
+      },
+      protagonistas = c(
+        "la cooperativa agrícola del municipio",
+        "el ingeniero agrónomo de la finca",
+        "la asociación de productores locales",
+        "el proyecto de agricultura escolar"
+      )
+    )
+  )
+
+  # =========================================================================
+  # 2. POOL DE ERRORES CONCEPTUALES
+  # Regla: .claude/rules/ejercicios-metacognitivos.md
+  # Firma: calcula = function(datos_ord, datos_presentados = NULL)
+  # PROHIBIDO: sample(), runif(), rnorm() dentro de calcula()
+  # =========================================================================
+  errores_conceptuales <- list(
+    list(
+      codigo = "EST-MED-01",
+      nombre = "Confusión mediana-media",
+      descripcion_corta = "Calculó el promedio aritmético de cada grupo en vez de la mediana",
+      descripcion_larga = "Sumó todos los valores de cada grupo y dividió entre el número de datos, obteniendo la media aritmética. La mediana requiere ordenar los datos y encontrar el valor central, no promediar todos los valores.",
+      causa_raiz = "Confunde la definición de mediana (valor central de datos ordenados) con la de media aritmética (suma dividida entre n)",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        round(mean(datos_ord), 1)
+      }
+    ),
+    list(
+      codigo = "EST-MED-02",
+      nombre = "No ordenó los datos",
+      descripcion_corta = "Tomó el valor de la posición central sin ordenar los datos primero",
+      descripcion_larga = "Aplicó la fórmula de posición central directamente sobre los datos en el orden original de la tabla, sin ordenarlos de menor a mayor. La mediana EXIGE que los datos estén ordenados antes de identificar el valor central.",
+      causa_raiz = "No reconoce que la mediana requiere datos ORDENADOS de menor a mayor como paso previo obligatorio",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        if (is.null(datos_presentados)) stop("EST-MED-02 requiere datos_presentados")
+        n <- length(datos_presentados)
+        if (n %% 2 == 1) {
+          datos_presentados[(n + 1) / 2]
+        } else {
+          (datos_presentados[n / 2] + datos_presentados[n / 2 + 1]) / 2
+        }
+      }
+    ),
+    list(
+      codigo = "EST-MED-03",
+      nombre = "Posición n/2 en vez de (n+1)/2 (n impar)",
+      descripcion_corta = "Para un número impar de datos, usó la posición n/2 en vez de (n+1)/2",
+      descripcion_larga = "Calculó la posición de la mediana como n/2 (redondeado hacia abajo) en lugar de (n+1)/2. Por ejemplo, para n=7 esto da posición 3 en vez de 4, tomando un valor menor al correcto.",
+      causa_raiz = "Aplica incorrectamente la fórmula de posición central para n impar, olvidando sumar 1 antes de dividir",
+      precondicion = function(params) params$n %% 2 == 1,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        n <- length(datos_ord)
+        datos_ord[n %/% 2]
+      }
+    ),
+    list(
+      codigo = "EST-MED-04",
+      nombre = "Un solo valor central sin promediar (n par)",
+      descripcion_corta = "Para un número par de datos, tomó solo uno de los dos valores centrales sin promediar",
+      descripcion_larga = "Con un número par de datos, la mediana se calcula promediando los dos valores centrales. Este estudiante tomó solo el valor de la posición n/2 sin considerar el de la posición n/2+1, obteniendo un valor diferente al correcto.",
+      causa_raiz = "No aplica la regla de promediar los dos valores centrales cuando n es par",
+      precondicion = function(params) params$n %% 2 == 0,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        n <- length(datos_ord)
+        datos_ord[n / 2]
+      }
+    ),
+    list(
+      codigo = "EST-MED-05",
+      nombre = "Comparó rangos en vez de medianas",
+      descripcion_corta = "Comparó los rangos (máximo - mínimo) de cada grupo en lugar de las medianas",
+      descripcion_larga = "En vez de calcular la mediana de cada grupo, calculó el rango (diferencia entre el valor máximo y el mínimo) y luego comparó estos rangos como si fueran medianas. El rango es una medida de dispersión, no de tendencia central.",
+      causa_raiz = "Confunde mediana (medida de tendencia central basada en posición) con rango (medida de dispersión)",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        max(datos_ord) - min(datos_ord)
+      }
+    ),
+    list(
+      codigo = "EST-MED-06",
+      nombre = "Tomó el valor máximo como mediana",
+      descripcion_corta = "Tomó el valor máximo de cada grupo como si fuera la mediana",
+      descripcion_larga = "Confundió la mediana con el valor máximo. La mediana es el valor CENTRAL de los datos ordenados, no el mayor. El máximo siempre será mayor o igual que la mediana.",
+      causa_raiz = "No distingue entre la mediana (medida de tendencia central) y el máximo (valor extremo superior)",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        max(datos_ord)
+      }
+    ),
+    list(
+      codigo = "EST-MED-07",
+      nombre = "Promedió extremos (min+max)/2",
+      descripcion_corta = "Promedió el valor mínimo y el máximo de cada grupo creyendo que esa era la mediana",
+      descripcion_larga = "Calculó (mínimo + máximo) / 2 para cada grupo, obteniendo el punto medio del rango. Este valor solo coincide con la mediana cuando la distribución es perfectamente simétrica, algo que rara vez ocurre.",
+      causa_raiz = "Confunde la mediana (valor central por posición ordinal) con la marca de clase o punto medio del rango (mínimo + máximo) / 2",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        (min(datos_ord) + max(datos_ord)) / 2
+      }
+    )
+  )
+
+  # =========================================================================
+  # 3. POOL DE REFLEXIONES METACOGNITIVAS
+  # =========================================================================
+  reflexiones_metacognitivas <- list(
+    "Identificar el error de otro estudiante fortalece nuestra propia comprensión. Al analizar por qué un procedimiento es incorrecto, activamos un nivel de pensamiento más profundo que al simplemente calcular la respuesta.",
+    "Los errores más comunes al calcular la mediana son: no ordenar los datos, confundirla con la media aritmética y no promediar los dos valores centrales cuando n es par. Reconocer estas tendencias nos ayuda a evitarlos.",
+    "La metacognición — pensar sobre cómo pensamos — es una herramienta poderosa. Cuando evaluamos el razonamiento de otros, también evaluamos el nuestro y detectamos posibles errores antes de cometerlos.",
+    "La mediana y la media son medidas de tendencia central, pero se calculan de formas muy diferentes. Confundirlas es uno de los errores más frecuentes en estadística. Verificar siempre qué medida se pide es una estrategia clave.",
+    "Analizar errores ajenos no es solo un ejercicio académico: en la vida profesional, revisar cálculos de otros y detectar inconsistencias es una habilidad fundamental en campos como la auditoría, la investigación y el control de calidad."
+  )
+
+  # =========================================================================
+  # 4. POOLS AUXILIARES
+  # =========================================================================
+  nombres_estudiante <- c("Camila", "Andrés", "Sofía", "Diego", "Laura",
+                          "Sebastián", "Mariana", "Nicolás", "Daniela", "Alejandro")
+
+  # =========================================================================
+  # 5. SELECCIONES ALEATORIAS
+  # =========================================================================
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  prot <- sample(ctx$protagonistas, 1)
+  nombres_grupos <- ctx$nombres_grupos_opciones[[sample(length(ctx$nombres_grupos_opciones), 1)]]
+  nombre_est <- sample(nombres_estudiante, 1)
+  num_pruebas <- sample(5:9, 1)
+  reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+  # =========================================================================
+  # 6. GENERACIÓN DE DATOS NUMÉRICOS (3 grupos)
+  # =========================================================================
+  datos_grupos_presentados <- list()
+  datos_grupos_ordenados <- list()
+  medianas_correctas <- numeric(3)
+
+  for (g in 1:3) {
+    valores <- sample(ctx$rango_min:ctx$rango_max, num_pruebas, replace = FALSE)
+    datos_grupos_presentados[[g]] <- valores
+    datos_grupos_ordenados[[g]] <- sort(valores)
+    medianas_correctas[g] <- median(valores)
+  }
+
+  # Generar comparación correcta entre medianas
+  generar_comparacion <- function(medianas, nombres) {
+    # Comparar grupo 1 vs 2 vs 3
+    comparaciones <- c()
+    for (i in 1:2) {
+      for (j in (i + 1):3) {
+        if (medianas[i] > medianas[j]) {
+          comparaciones <- c(comparaciones,
+            paste0("la mediana de ", nombres[i], " (", medianas[i], ") es mayor que la de ", nombres[j], " (", medianas[j], ")"))
+        } else if (medianas[i] < medianas[j]) {
+          comparaciones <- c(comparaciones,
+            paste0("la mediana de ", nombres[i], " (", medianas[i], ") es menor que la de ", nombres[j], " (", medianas[j], ")"))
+        } else {
+          comparaciones <- c(comparaciones,
+            paste0("la mediana de ", nombres[i], " (", medianas[i], ") es igual a la de ", nombres[j], " (", medianas[j], ")"))
+        }
+      }
+    }
+    paste(comparaciones, collapse = "; ")
+  }
+
+  comparacion_correcta <- generar_comparacion(medianas_correctas, nombres_grupos)
+
+  # =========================================================================
+  # 7. SELECCIÓN DE ERROR (filtrado por precondiciones)
+  # Regla: .claude/rules/ejercicios-metacognitivos.md (patrón genérico)
+  # =========================================================================
+  params <- list(n = num_pruebas, datos_ord = datos_grupos_ordenados[[1]])
+  errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+    if (is.null(err$precondicion)) return(TRUE)
+    err$precondicion(params)
+  }))
+
+  error_idx <- sample(errores_aplicables_idx, 1)
+  error_sel <- errores_conceptuales[[error_idx]]
+
+  # Calcular medianas erróneas usando calcula() del error seleccionado
+  medianas_erroneas <- numeric(3)
+  for (g in 1:3) {
+    medianas_erroneas[g] <- error_sel$calcula(
+      datos_grupos_ordenados[[g]],
+      datos_grupos_presentados[[g]]
+    )
+  }
+
+  comparacion_erronea <- generar_comparacion(medianas_erroneas, nombres_grupos)
+
+  # Verificar que la comparación errónea sea diferente de la correcta
+  # Si por casualidad coinciden, seleccionar otro error
+  intentos <- 0
+  while (comparacion_erronea == comparacion_correcta && intentos < 20) {
+    error_idx <- sample(errores_aplicables_idx, 1)
+    error_sel <- errores_conceptuales[[error_idx]]
+    for (g in 1:3) {
+      medianas_erroneas[g] <- error_sel$calcula(
+        datos_grupos_ordenados[[g]],
+        datos_grupos_presentados[[g]]
+      )
+    }
+    comparacion_erronea <- generar_comparacion(medianas_erroneas, nombres_grupos)
+    intentos <- intentos + 1
+  }
+
+  # =========================================================================
+  # 8. CONSTRUIR OPCIONES (1 correcta + 3 distractores)
+  # =========================================================================
+  # Seleccionar 3 errores diferentes para distractores
+  otros_errores_idx <- setdiff(errores_aplicables_idx, error_idx)
+  if (length(otros_errores_idx) >= 3) {
+    distractores_idx <- sample(otros_errores_idx, 3)
+  } else {
+    distractores_idx <- otros_errores_idx
+    # Completar con errores ya usados si no hay suficientes
+    faltantes <- 3 - length(distractores_idx)
+    extras <- sample(setdiff(errores_aplicables_idx, c(error_idx, distractores_idx)),
+                     min(faltantes, length(setdiff(errores_aplicables_idx, c(error_idx, distractores_idx)))))
+    distractores_idx <- c(distractores_idx, extras)
+  }
+
+  opcion_correcta <- error_sel$descripcion_corta
+  opciones_distractores <- sapply(distractores_idx, function(i) {
+    errores_conceptuales[[i]]$descripcion_corta
+  })
+
+  todas_opciones <- c(opcion_correcta, opciones_distractores)
+
+  # Verificar unicidad textual
+  if (length(unique(todas_opciones)) < 4) {
+    # Agregar contexto diferenciador si hay duplicados
+    for (i in 2:length(todas_opciones)) {
+      if (todas_opciones[i] %in% todas_opciones[1:(i - 1)]) {
+        idx_err <- distractores_idx[i - 1]
+        todas_opciones[i] <- paste0(
+          errores_conceptuales[[idx_err]]$descripcion_corta,
+          " (", errores_conceptuales[[idx_err]]$nombre, ")"
+        )
+      }
+    }
+  }
+
+  # Mezclar opciones
+  orden <- sample(1:4)
+  opciones_mezcladas <- todas_opciones[orden]
+  sol <- rep(0L, 4)
+  sol[which(orden == 1)] <- 1L
+
+  # Feedback para Solution
+  feedback_opciones <- character(4)
+  for (i in 1:4) {
+    idx_original <- orden[i]
+    if (idx_original == 1) {
+      feedback_opciones[i] <- paste0(
+        "Correcto. ", error_sel$descripcion_larga
+      )
+    } else {
+      err_dist <- errores_conceptuales[[distractores_idx[idx_original - 1]]]
+      feedback_opciones[i] <- paste0(
+        "Incorrecto. Este error (", err_dist$codigo, ": ", err_dist$nombre,
+        ") no corresponde al procedimiento descrito. ", err_dist$descripcion_larga
+      )
+    }
+  }
+
+  # =========================================================================
+  # 9. GENERAR ENUNCIADO
+  # =========================================================================
+  enunciado_contexto <- ctx$plantilla(prot, num_pruebas, nombres_grupos)
+
+  # Crear tabla de datos
+  tabla_datos <- data.frame(
+    Prueba = paste(ctx$tipo_prueba_singular, 1:num_pruebas)
+  )
+  for (g in 1:3) {
+    tabla_datos[[nombres_grupos[g]]] <- datos_grupos_presentados[[g]]
+  }
+
+  # =========================================================================
+  # 10. RETORNAR TODO
+  # =========================================================================
+  return(list(
+    ctx = ctx,
+    prot = prot,
+    nombres_grupos = nombres_grupos,
+    nombre_est = nombre_est,
+    num_pruebas = num_pruebas,
+    reflexion = reflexion,
+    datos_grupos_presentados = datos_grupos_presentados,
+    datos_grupos_ordenados = datos_grupos_ordenados,
+    medianas_correctas = medianas_correctas,
+    medianas_erroneas = medianas_erroneas,
+    comparacion_correcta = comparacion_correcta,
+    comparacion_erronea = comparacion_erronea,
+    error_sel = error_sel,
+    error_idx = error_idx,
+    errores_conceptuales = errores_conceptuales,
+    distractores_idx = distractores_idx,
+    opciones_mezcladas = opciones_mezcladas,
+    sol = sol,
+    feedback_opciones = feedback_opciones,
+    enunciado_contexto = enunciado_contexto,
+    tabla_datos = tabla_datos
+  ))
+}
+
+# Generar datos del ejercicio
+datos <- generar_datos()
+
+# Extraer variables para acceso directo
+ctx <- datos$ctx
+nombres_grupos <- datos$nombres_grupos
+nombre_est <- datos$nombre_est
+num_pruebas <- datos$num_pruebas
+reflexion <- datos$reflexion
+datos_grupos_presentados <- datos$datos_grupos_presentados
+datos_grupos_ordenados <- datos$datos_grupos_ordenados
+medianas_correctas <- datos$medianas_correctas
+medianas_erroneas <- datos$medianas_erroneas
+comparacion_correcta <- datos$comparacion_correcta
+comparacion_erronea <- datos$comparacion_erronea
+error_sel <- datos$error_sel
+distractores_idx <- datos$distractores_idx
+opciones_mezcladas <- datos$opciones_mezcladas
+sol <- datos$sol
+feedback_opciones <- datos$feedback_opciones
+enunciado_contexto <- datos$enunciado_contexto
+tabla_datos <- datos$tabla_datos
+```
+
+```{r tests_validacion, echo=FALSE, results="hide"}
+# ===========================================================================
+# TESTS DE VALIDACIÓN INLINE
+# Regla: .claude/rules/testing-obligatorio.md
+# ===========================================================================
+
+# Test 1: Medianas correctas
+test_that("Medianas calculadas correctamente", {
+  for (g in 1:3) {
+    expect_equal(medianas_correctas[g], median(datos_grupos_presentados[[g]]),
+      info = paste("Mediana del grupo", g, "no coincide con median()"))
+  }
+})
+
+# Test 2: Error produce comparación diferente
+test_that("Error seleccionado produce comparación diferente a la correcta", {
+  expect_true(comparacion_erronea != comparacion_correcta,
+    info = paste("Error", error_sel$codigo, "no cambia la comparación"))
+})
+
+# Test 3: Precondiciones respetadas
+test_that("Precondición del error seleccionado se cumple", {
+  params <- list(n = num_pruebas, datos_ord = datos_grupos_ordenados[[1]])
+  if (!is.null(error_sel$precondicion)) {
+    expect_true(error_sel$precondicion(params),
+      info = paste(error_sel$codigo, "seleccionado pero precondición no se cumple"))
+  }
+})
+
+# Test 4: calcula() es determinista (Capa D)
+test_that("calcula() es determinista (función pura)", {
+  for (g in 1:3) {
+    r1 <- error_sel$calcula(datos_grupos_ordenados[[g]], datos_grupos_presentados[[g]])
+    r2 <- error_sel$calcula(datos_grupos_ordenados[[g]], datos_grupos_presentados[[g]])
+    expect_equal(r1, r2,
+      info = paste("Error", error_sel$codigo, "no es determinista en grupo", g))
+  }
+})
+
+# Test 5: 4 opciones textualmente únicas
+test_that("Las 4 opciones son textualmente diferentes", {
+  expect_equal(length(unique(opciones_mezcladas)), 4,
+    info = paste("Opciones duplicadas:", paste(opciones_mezcladas, collapse = " | ")))
+})
+
+# Test 6: Exactamente 1 correcta
+test_that("Exactamente una opción marcada como correcta", {
+  expect_equal(sum(sol), 1L)
+  expect_equal(length(sol), 4L)
+})
+
+# Test 7: Medianas en rango válido
+test_that("Medianas dentro de rango [min, max] de cada grupo", {
+  for (g in 1:3) {
+    expect_true(medianas_correctas[g] >= min(datos_grupos_presentados[[g]]),
+      info = paste("Mediana grupo", g, "menor que el mínimo"))
+    expect_true(medianas_correctas[g] <= max(datos_grupos_presentados[[g]]),
+      info = paste("Mediana grupo", g, "mayor que el máximo"))
+  }
+})
+
+# Test 8: Sin NA/NaN/Inf
+test_that("Sin valores NA, NaN o Inf", {
+  expect_true(all(!is.na(medianas_correctas)))
+  expect_true(all(!is.nan(medianas_correctas)))
+  expect_true(all(is.finite(medianas_correctas)))
+  expect_true(all(!is.na(medianas_erroneas)))
+  expect_true(all(is.finite(medianas_erroneas)))
+})
+```
+
+```{r test_diversidad, echo=FALSE, results="hide"}
+# ===========================================================================
+# TEST DE DIVERSIDAD (umbral: 200 únicas de 300 intentos)
+# Regla: .claude/rules/código-rmd.md (línea 33)
+# ===========================================================================
+test_that("Diversidad >= 200 versiones únicas de 300 intentos", {
+  versiones <- character(300)
+  for (i in 1:300) {
+    d <- generar_datos()
+    versiones[i] <- digest::digest(list(
+      ctx_tema = d$ctx$tema,
+      grupos = d$nombres_grupos,
+      datos = d$datos_grupos_presentados,
+      error = d$error_sel$codigo,
+      pos_correcta = which(d$sol == 1L)
+    ))
+  }
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200,
+    info = paste("Solo", n_unicas, "versiones únicas de 300 intentos. Se requieren 200+."))
+})
+```
+
+Question
+========
+
+`r enunciado_contexto`
+
+```{r mostrar_tabla, echo=FALSE, results='asis'}
+knitr::kable(tabla_datos, align = c("l", rep("c", 3)), row.names = FALSE)
+```
+
+`r nombre_est` calculó las medianas de los tres grupos y concluyó:
+
+> *"`r comparacion_erronea`"*
+
+Sin embargo, al verificar los cálculos, se determinó que esta conclusión es **incorrecta**.
+
+**¿Cuál error conceptual cometió `r nombre_est` al calcular las medianas?**
+
+Answerlist
+----------
+* `r opciones_mezcladas[1]`
+* `r opciones_mezcladas[2]`
+* `r opciones_mezcladas[3]`
+* `r opciones_mezcladas[4]`
+
+Solution
+========
+
+### Análisis del Error
+
+**Error identificado:** `r error_sel$nombre`\
+**Código:** `r error_sel$codigo`\
+**Causa raíz:** `r error_sel$causa_raiz`
+
+`r error_sel$descripcion_larga`
+
+`r nombre_est` aplicó este procedimiento incorrecto a los tres grupos, obteniendo las "medianas" `r paste(medianas_erroneas, collapse = ", ")` (para `r paste(nombres_grupos, collapse = ", ")` respectivamente), y esto produjo la comparación errónea.
+
+### Procedimiento Correcto
+
+Para calcular correctamente la mediana de cada grupo, se deben seguir estos pasos:
+
+```{r solucion_paso_a_paso, echo=FALSE, results='asis'}
+for (g in 1:3) {
+  cat(paste0("\n\n**", nombres_grupos[g], ":**\n\n"))
+  cat(paste0("Datos originales: ", paste(datos_grupos_presentados[[g]], collapse = ", "), "\n\n"))
+  cat(paste0("**Paso 1.** Ordenar de menor a mayor: ", paste(datos_grupos_ordenados[[g]], collapse = ", "), "\n\n"))
+
+  n <- num_pruebas
+  if (n %% 2 == 1) {
+    pos <- (n + 1) / 2
+    cat(paste0("**Paso 2.** Como $n = ", n, "$ (impar), la mediana es el valor en la posición $\\frac{n+1}{2} = \\frac{", n, "+1}{2} = ", pos, "$\n\n"))
+    cat(paste0("$$\\text{Mediana} = ", datos_grupos_ordenados[[g]][pos], " \\text{ ", ctx$unidad, "}$$\n\n"))
+  } else {
+    p1 <- n / 2
+    p2 <- p1 + 1
+    v1 <- datos_grupos_ordenados[[g]][p1]
+    v2 <- datos_grupos_ordenados[[g]][p2]
+    cat(paste0("**Paso 2.** Como $n = ", n, "$ (par), la mediana es el promedio de los valores en las posiciones $\\frac{n}{2} = ", p1, "$ y $\\frac{n}{2}+1 = ", p2, "$\n\n"))
+    cat(paste0("$$\\text{Mediana} = \\frac{", v1, " + ", v2, "}{2} = \\frac{", v1 + v2, "}{2} = ", medianas_correctas[g], " \\text{ ", ctx$unidad, "}$$\n\n"))
+  }
+}
+```
+
+**Comparación correcta:** `r comparacion_correcta`
+
+### Propiedades del Concepto
+
+Afirmaciones sobre la mediana — evalúa si son verdaderas o falsas:
+
+- La mediana **siempre** requiere que los datos estén ordenados de menor a mayor antes de calcularla. (**Verdadero**)
+- La mediana y la media aritmética siempre tienen el mismo valor. (**Falso** — solo coinciden en distribuciones perfectamente simétricas)
+- Para un número par de datos, la mediana es el promedio de los dos valores centrales. (**Verdadero**)
+- El rango (máximo - mínimo) es equivalente a la mediana. (**Falso** — el rango mide dispersión, la mediana mide tendencia central)
+
+### Caso Específico
+
+```{r caso_especifico, echo=FALSE, results='asis'}
+g_ejemplo <- sample(1:3, 1)
+cat(paste0("Consideremos específicamente el ", nombres_grupos[g_ejemplo],
+           " con datos ordenados: ", paste(datos_grupos_ordenados[[g_ejemplo]], collapse = ", "), ".\n\n"))
+cat(paste0("Si aplicamos el error de ", nombre_est, " (", error_sel$nombre, "), obtendríamos: ",
+           medianas_erroneas[g_ejemplo], " ", ctx$unidad, ".\n\n"))
+cat(paste0("Pero la mediana correcta es: **", medianas_correctas[g_ejemplo], " ", ctx$unidad, "**.\n\n"))
+cat(paste0("La diferencia de ", abs(medianas_erroneas[g_ejemplo] - medianas_correctas[g_ejemplo]),
+           " ", ctx$unidad, " demuestra cómo un error conceptual produce resultados significativamente diferentes."))
+```
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+### Estrategia para Evitar el Error
+
+1. **Siempre ordenar** los datos de menor a mayor antes de cualquier cálculo de mediana.
+2. **Verificar si n es par o impar** para aplicar la fórmula correcta: valor central si es impar, promedio de los dos centrales si es par.
+3. **Distinguir claramente** entre mediana (valor central), media (promedio), rango (máximo - mínimo) y moda (valor más frecuente).
+
+Answerlist
+----------
+* `r feedback_opciones[1]`
+* `r feedback_opciones[2]`
+* `r feedback_opciones[3]`
+* `r feedback_opciones[4]`
+
+Meta-information
+================
+exname: comparar_medianas_3_grupos_aleatorio_argumentacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(sol, collapse="")`
+exshuffle: TRUE
+extol: 0.01
+exsection: Estadistica|Medidas-Tendencia-Central|Mediana|Argumentacion
+
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Pensamiento]: Aleatorio
+exextra[Afirmacion]: Valida procedimientos y estrategias para calcular medidas de tendencia central
+exextra[Evidencia]: Identifica errores conceptuales en el calculo de la mediana y justifica la comparacion correcta entre grupos
+exextra[Nivel]: 2
+exextra[Contexto]: Familiar
+
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+
+exextra[TipoMetacognicion]: analisis_error
