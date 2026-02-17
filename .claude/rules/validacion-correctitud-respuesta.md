@@ -67,6 +67,24 @@ Verifica con `digest::digest()` que ningún distractor sea idéntico a la respue
 **Código de error**: `ERR_ANS_E`
 **Severidad**: Bloqueante
 
+### Nivel 4 — Capa D: Determinismo de calcula()
+
+Verifica que `calcula()` de CADA error en el pool sea una función pura:
+
+1. **Análisis estático**: Escanea `deparse(calcula)` buscando `sample(`, `runif(`, `rnorm(`, etc.
+2. **Test empírico**: Ejecuta `calcula()` dos veces con los mismos argumentos y compara resultados.
+
+Si el error es el seleccionado → `ERR_SEM_D` (bloqueante).
+Si el error está en el pool pero no seleccionado → `WARN_SEM_D` (bug latente).
+
+**Código de error**: `ERR_SEM_D` / `WARN_SEM_D`
+**Severidad**: ERR bloqueante, WARN informativo
+
+**Bug original (2026-02-14)**: EST-MTC-03 usaba `sample(datos_ord)` dentro de `calcula()`.
+El `set.seed()` del multi-semilla enmascaraba el problema: cada semilla producía un resultado
+determinista, pero ese resultado NO correspondía a los datos que el estudiante veía en la tabla.
+La Capa D habría detectado `sample(` en el análisis estático y bloqueado el ejercicio.
+
 ---
 
 ## Validación Multi-semilla
@@ -130,6 +148,8 @@ La FASE 2G solo se ejecuta si las fases anteriores no tienen errores.
 | `ERR_ANS_C` | 5C | Opciones duplicadas en SCHOICE | Bloqueante |
 | `ERR_ANS_D` | 5D | Valor fuera de rango matemático válido | Bloqueante |
 | `ERR_ANS_E` | 5E | Distractor idéntico a respuesta correcta | Bloqueante |
+| `ERR_SEM_D` | 4D | calcula() contiene función aleatoria o no es determinista | Bloqueante |
+| `WARN_SEM_D` | 4D | calcula() de error no seleccionado tiene aleatoriedad (bug latente) | Informativo |
 
 ---
 

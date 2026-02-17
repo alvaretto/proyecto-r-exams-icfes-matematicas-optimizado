@@ -723,7 +723,92 @@ validar_capa_c_crossval <- function(pool, error_sel, env) {
   return(errores)
 }
 
-# --- Función principal: orquesta las 3 capas ---
+# --- Capa D: Determinismo de calcula() ---
+# Verifica que calcula() NO contenga funciones aleatorias (sample, runif, etc.)
+# y que produzca resultados idénticos al llamarla dos veces con los mismos args.
+# Bug original: EST-MTC-03 usaba sample() interno, produciendo valores
+# aleatorios que no correspondían a los datos presentados al estudiante.
+validar_capa_d_determinismo <- function(pool, error_sel, env) {
+  errores <- character(0)
+  if (is.null(pool) || length(pool) == 0) return(errores)
+
+  # Obtener datos para llamar a calcula()
+  datos_ord <- if (exists("datos_ord", envir = env)) get("datos_ord", envir = env) else NULL
+  datos_presentados <- if (exists("datos_presentados", envir = env)) {
+    get("datos_presentados", envir = env)
+  } else if (exists("datos_brutos", envir = env)) {
+    get("datos_brutos", envir = env)
+  } else NULL
+
+  for (i in seq_along(pool)) {
+    err <- pool[[i]]
+    if (is.null(err$calcula) || !is.function(err$calcula)) next
+
+    codigo <- if (!is.null(err$codigo)) err$codigo else paste0("error_", i)
+
+    # --- Check D1: Análisis estático — buscar funciones aleatorias ---
+    body_text <- paste(deparse(err$calcula), collapse = " ")
+    funciones_prohibidas <- c("sample\\(", "runif\\(", "rnorm\\(", "rbinom\\(",
+                              "rpois\\(", "rexp\\(", "rcauchy\\(", "rgamma\\(",
+                              "sample\\.int\\(")
+    for (fp in funciones_prohibidas) {
+      if (grepl(fp, body_text)) {
+        fn_nombre <- sub("\\\\\\($", "()", fp)
+        es_seleccionado <- !is.null(error_sel) && !is.null(error_sel$codigo) &&
+                           error_sel$codigo == codigo
+        if (es_seleccionado) {
+          errores <- c(errores, paste0(
+            "ERR_SEM_D: calcula() de '", codigo,
+            "' contiene ", fn_nombre,
+            " — resultado no determinista, incoherente con datos presentados"
+          ))
+        } else {
+          errores <- c(errores, paste0(
+            "WARN_SEM_D: calcula() de '", codigo,
+            "' contiene ", fn_nombre,
+            " — bug latente: si se selecciona, producirá valor aleatorio"
+          ))
+        }
+      }
+    }
+
+    # --- Check D2: Test empírico de determinismo ---
+    # Solo si tenemos datos para ejecutar calcula()
+    if (!is.null(datos_ord)) {
+      resultado1 <- tryCatch(
+        err$calcula(datos_ord, datos_presentados),
+        error = function(e) tryCatch(err$calcula(datos_ord), error = function(e2) NULL)
+      )
+      resultado2 <- tryCatch(
+        err$calcula(datos_ord, datos_presentados),
+        error = function(e) tryCatch(err$calcula(datos_ord), error = function(e2) NULL)
+      )
+
+      if (!is.null(resultado1) && !is.null(resultado2)) {
+        if (!identical(resultado1, resultado2)) {
+          es_seleccionado <- !is.null(error_sel) && !is.null(error_sel$codigo) &&
+                             error_sel$codigo == codigo
+          if (es_seleccionado) {
+            errores <- c(errores, paste0(
+              "ERR_SEM_D: calcula() de '", codigo,
+              "' no es determinista: primera llamada=", resultado1,
+              ", segunda llamada=", resultado2
+            ))
+          } else {
+            errores <- c(errores, paste0(
+              "WARN_SEM_D: calcula() de '", codigo,
+              "' no es determinista — bug latente"
+            ))
+          }
+        }
+      }
+    }
+  }
+
+  return(errores)
+}
+
+# --- Función principal: orquesta las 4 capas ---
 validar_precondiciones_error_pool <- function(env) {
   errores <- character(0)
 
@@ -742,6 +827,9 @@ validar_precondiciones_error_pool <- function(env) {
 
   # Capa C: Cross-validación calcula vs correcto
   errores <- c(errores, validar_capa_c_crossval(pool, error_sel, env))
+
+  # Capa D: Determinismo de calcula() (análisis estático + empírico)
+  errores <- c(errores, validar_capa_d_determinismo(pool, error_sel, env))
 
   # Separar errores bloqueantes de warnings
   return(errores)

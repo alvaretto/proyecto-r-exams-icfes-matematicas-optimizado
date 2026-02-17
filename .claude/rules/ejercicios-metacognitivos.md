@@ -183,11 +183,57 @@ errores_conceptuales <- list(
     descripcion_larga = "...",       # Para solución
     causa_raiz = "...",              # Diagnóstico pedagógico
     precondicion = function(params) TRUE,  # Cuándo aplica este error
-    calcula = function(...) { ... }  # Produce el distractor
+    calcula = function(datos_ord, datos_presentados = NULL) { ... }  # Produce el distractor
   ),
   # Mínimo 4-6 errores por ejercicio
 )
 ```
+
+### Función `calcula()` — Determinismo OBLIGATORIO
+
+**`calcula()` DEBE ser una función pura (determinista).** Llamada con los mismos
+argumentos SIEMPRE debe producir el mismo resultado.
+
+**Firma estándar**: `function(datos_ord, datos_presentados = NULL)`
+
+- `datos_ord`: datos ordenados de menor a mayor
+- `datos_presentados`: datos en el orden que el estudiante ve en la tabla (opcional)
+
+**PROHIBIDO dentro de `calcula()`:**
+
+```r
+# ❌ PROHIBIDO — funciones aleatorias
+sample()       # Genera orden aleatorio no reproducible
+runif()        # Valor aleatorio continuo
+rnorm()        # Valor aleatorio normal
+rbinom()       # Valor aleatorio binomial
+# ... cualquier función r*() de distribuciones
+
+# ❌ PROHIBIDO — Bug real detectado (EST-MTC-03, 2026-02-14)
+# calcula() usaba sample(datos_ord) para simular "datos sin ordenar"
+# Resultado: mediana_erronea ≠ posición central de datos_presentados
+# El estudiante veía un valor que NO correspondía a su tabla
+calcula = function(datos_ord) {
+  datos_desordenados <- sample(datos_ord)  # BUG: orden aleatorio
+  datos_desordenados[(n + 1) / 2]          # valor impredecible
+}
+```
+
+**Patrón correcto cuando el error depende del orden de presentación:**
+
+```r
+# ✅ CORRECTO — usa datos_presentados (el orden real de la tabla)
+calcula = function(datos_ord, datos_presentados = NULL) {
+  if (is.null(datos_presentados)) stop("Requiere datos_presentados")
+  n <- length(datos_presentados)
+  datos_presentados[(n + 1) / 2]  # valor determinista y coherente
+}
+```
+
+**Validación automática (Capa D):** El script `validar_coherencia_matematica.R`
+escanea el cuerpo de `calcula()` buscando funciones aleatorias (análisis estático)
+Y ejecuta la función dos veces verificando idempotencia (test empírico).
+Código de error: `ERR_SEM_D` (bloqueante) / `WARN_SEM_D` (bug latente).
 
 ### Campo `precondicion` (OBLIGATORIO)
 

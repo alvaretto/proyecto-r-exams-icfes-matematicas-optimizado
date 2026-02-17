@@ -558,3 +558,143 @@ test_that("REGRESIÓN: El bug original (EST-MTC-04 con n=7) es detectado por Cap
   expect_true(any(grepl("ERR_SEM_B", err_bloqueantes)),
     info = "Debe ser ERR_SEM_B (keyword scanner)")
 })
+
+# ============================================================
+# TESTS DE CAPA D: DETERMINISMO DE calcula()
+# Regresión del bug EST-MTC-03 (sample() interno en calcula)
+# ============================================================
+
+test_that("Capa D existe como función", {
+  expect_true(exists("validar_capa_d_determinismo"))
+  expect_true(is.function(validar_capa_d_determinismo))
+})
+
+test_that("Capa D detecta sample() en calcula() como ERR_SEM_D (error seleccionado)", {
+  env <- new.env(parent = globalenv())
+  env$datos_ord <- c(2, 5, 12, 13, 14, 15, 15)
+  env$datos_presentados <- c(2, 15, 13, 12, 14, 5, 15)
+
+  pool_buggy <- list(
+    list(
+      codigo = "EST-MTC-03-BUGGY",
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        datos_desordenados <- sample(datos_ord)  # BUG: no determinista
+        n <- length(datos_desordenados)
+        datos_desordenados[(n + 1) / 2]
+      }
+    )
+  )
+  error_sel_buggy <- pool_buggy[[1]]
+
+  errores <- validar_capa_d_determinismo(pool_buggy, error_sel_buggy, env)
+  err_bloqueantes <- errores[grepl("^ERR_SEM_D", errores)]
+
+  expect_true(length(err_bloqueantes) > 0,
+    info = "Debe detectar sample() como ERR_SEM_D bloqueante")
+  expect_true(any(grepl("sample", err_bloqueantes)),
+    info = "El error debe mencionar sample()")
+})
+
+test_that("Capa D detecta sample() en calcula() como WARN_SEM_D (error no seleccionado)", {
+  env <- new.env(parent = globalenv())
+  env$datos_ord <- c(2, 5, 12, 13, 14, 15, 15)
+
+  pool_buggy <- list(
+    list(
+      codigo = "ERR-OK",
+      calcula = function(datos_ord, datos_presentados = NULL) round(mean(datos_ord), 2)
+    ),
+    list(
+      codigo = "ERR-BUGGY",
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        sample(datos_ord, 1)  # BUG latente
+      }
+    )
+  )
+  error_sel <- pool_buggy[[1]]  # El seleccionado es OK
+
+  errores <- validar_capa_d_determinismo(pool_buggy, error_sel, env)
+  warns <- errores[grepl("^WARN_SEM_D", errores)]
+
+  expect_true(length(warns) > 0,
+    info = "Debe reportar WARN_SEM_D para el error no seleccionado con sample()")
+  expect_true(any(grepl("ERR-BUGGY", warns)),
+    info = "El warning debe mencionar el código del error buggy")
+})
+
+test_that("Capa D aprueba calcula() deterministas sin sample()", {
+  env <- new.env(parent = globalenv())
+  env$datos_ord <- c(2, 5, 12, 13, 14, 15, 15)
+  env$datos_presentados <- c(2, 15, 13, 12, 14, 5, 15)
+
+  pool_ok <- list(
+    list(
+      codigo = "EST-MTC-01",
+      calcula = function(datos_ord, datos_presentados = NULL) round(mean(datos_ord), 2)
+    ),
+    list(
+      codigo = "EST-MTC-03-FIXED",
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        if (is.null(datos_presentados)) stop("requiere datos_presentados")
+        n <- length(datos_presentados)
+        datos_presentados[(n + 1) / 2]
+      }
+    )
+  )
+  error_sel <- pool_ok[[2]]
+
+  errores <- validar_capa_d_determinismo(pool_ok, error_sel, env)
+  err_sem_d <- errores[grepl("SEM_D", errores)]
+
+  expect_equal(length(err_sem_d), 0,
+    info = paste("calcula() deterministas no deben generar errores D. Errores:", paste(err_sem_d, collapse="; ")))
+})
+
+test_that("Capa D detecta no-determinismo empírico (runif)", {
+  env <- new.env(parent = globalenv())
+  env$datos_ord <- c(1, 2, 3, 4, 5)
+
+  pool_runif <- list(
+    list(
+      codigo = "ERR-RUNIF",
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        round(runif(1, min(datos_ord), max(datos_ord)), 2)
+      }
+    )
+  )
+  error_sel <- pool_runif[[1]]
+
+  errores <- validar_capa_d_determinismo(pool_runif, error_sel, env)
+  err_bloqueantes <- errores[grepl("^ERR_SEM_D", errores)]
+
+  expect_true(length(err_bloqueantes) > 0,
+    info = "Debe detectar runif() como ERR_SEM_D")
+})
+
+test_that("Capa D integrada en orquestador principal", {
+  env <- new.env(parent = globalenv())
+  env$datos_ord <- c(2, 5, 12, 13, 14, 15, 15)
+  env$datos_presentados <- c(2, 15, 13, 12, 14, 5, 15)
+  env$n <- 7
+
+  env$errores_conceptuales <- list(
+    list(
+      codigo = "EST-BUGGY",
+      descripcion_corta = "Error de prueba",
+      descripcion_larga = "Error de prueba largo",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) {
+        sample(datos_ord, 1)  # BUG
+      }
+    )
+  )
+  env$error_sel <- env$errores_conceptuales[[1]]
+  env$mediana_erronea <- 12
+  env$mediana_calc <- 13
+
+  errores <- validar_precondiciones_error_pool(env)
+  err_d <- errores[grepl("SEM_D", errores)]
+
+  expect_true(length(err_d) > 0,
+    info = "El orquestador principal debe ejecutar Capa D y detectar sample()")
+})
