@@ -14,9 +14,12 @@ modelos <- sample(c("Modelo A", "Modelo B", "Modelo C", "Modelo D", "Modelo E",
                     "Modelo R", "Modelo S", "Modelo T", "Modelo U", "Modelo V",
                     "Modelo W"), 3)
 
+# Número aleatorio de pruebas entre 5 y 8
+num_pruebas <- sample(5:8, 1)
+
 # Generación de datos base para cada modelo
-base_valores <- sample(500:800, 15, replace = TRUE)
-matriz_datos <- matrix(base_valores, nrow = 3, ncol = 5)
+base_valores <- sample(500:800, 3 * num_pruebas, replace = TRUE)
+matriz_datos <- matrix(base_valores, nrow = 3, ncol = num_pruebas)
 
 # Relación deseada: med(Z) > med(X) y med(Z) > med(Y)
 max_iter <- 500
@@ -27,20 +30,25 @@ mediana_deseada_y <- median(matriz_datos[2,])
 # Aseguramos que Y tenga una mediana diferente a X
 iter <- 0
 while (mediana_deseada_y == mediana_deseada_x && iter < max_iter) {
-  matriz_datos[2,] <- matriz_datos[2,] + sample(-5:5, 5, replace = TRUE)
+  matriz_datos[2,] <- matriz_datos[2,] + sample(-5:5, num_pruebas, replace = TRUE)
   mediana_deseada_y <- median(matriz_datos[2,])
   iter <- iter + 1
 }
 if (iter >= max_iter) {
-  matriz_datos[2, 3] <- matriz_datos[2, 3] + sample(c(-10, 10), 1)
+  posicion_mediana <- ceiling(num_pruebas / 2)
+  matriz_datos[2, posicion_mediana] <- matriz_datos[2, posicion_mediana] + sample(c(-10, 10), 1)
   mediana_deseada_y <- median(matriz_datos[2,])
 }
 
 # Aseguramos que Z tenga mediana mayor que X e Y
 matriz_datos[3,] <- sort(matriz_datos[3,])
 max_mediana_xy <- max(mediana_deseada_x, mediana_deseada_y)
-matriz_datos[3, 3] <- max_mediana_xy + sample(5:15, 1)
-matriz_datos[3, 4:5] <- matriz_datos[3, 4:5] + sample(10:20, 2, replace = TRUE)
+posicion_mediana <- ceiling(num_pruebas / 2)
+matriz_datos[3, posicion_mediana] <- max_mediana_xy + sample(5:15, 1)
+if (posicion_mediana < num_pruebas) {
+  n_sup <- num_pruebas - posicion_mediana
+  matriz_datos[3, (posicion_mediana + 1):num_pruebas] <- matriz_datos[3, (posicion_mediana + 1):num_pruebas] + sample(10:20, n_sup, replace = TRUE)
+}
 matriz_datos[3,] <- sample(matriz_datos[3,])
 
 mediana_deseada_z <- median(matriz_datos[3,])
@@ -53,7 +61,7 @@ while (mediana_deseada_z <= max_mediana_xy && iter < max_iter) {
 
 # Dos valores iguales en dos modelos diferentes (distractor de dificultad)
 modelos_para_igualar <- sample(1:3, 2)
-posicion_igual <- sample(1:5, 1)
+posicion_igual <- sample(1:num_pruebas, 1)
 valor_comun <- matriz_datos[modelos_para_igualar[1], posicion_igual]
 matriz_datos[modelos_para_igualar[2], posicion_igual] <- valor_comun
 
@@ -69,7 +77,7 @@ if (mediana_deseada_z <= max(mediana_deseada_x, mediana_deseada_y)) {
 
 # Tabla y medianas finales
 tabla <- data.frame(
-  Prueba = paste("Prueba", 1:5),
+  Prueba = paste("Prueba", 1:num_pruebas),
   Modelo1 = matriz_datos[1,],
   Modelo2 = matriz_datos[2,],
   Modelo3 = matriz_datos[3,]
@@ -88,25 +96,14 @@ prueba_seleccionada <- sample(pruebas, 1)
 
 Question
 ========
-La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante cinco pruebas diferentes:
+La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante `r num_pruebas` pruebas diferentes:
 
 ```{r, echo = FALSE, results = "asis"}
-# Crear un vector de índices aleatorios para reordenar los modelos
 indices_aleatorios <- sample(1:3)
-
-# Crear un vector con los nombres de modelos reordenados
 modelos_aleatorios <- modelos[indices_aleatorios]
-
-# Crear una nueva tabla con las columnas reordenadas para mantener la correspondencia
-# La primera columna (Prueba) siempre se mantiene en su posición
 tabla_reordenada <- tabla[, c(1, indices_aleatorios + 1)]
-
-# Generar la tabla con los nombres de columnas aleatorizados
-# pero manteniendo la correspondencia con los datos
 knitr::kable(tabla_reordenada, col.names = c("", modelos_aleatorios))
 
-# Guardar la correspondencia entre los índices originales y los aleatorios
-# para usarla en el resto del documento
 indice_x <- which(indices_aleatorios == 1)
 indice_y <- which(indices_aleatorios == 2)
 indice_z <- which(indices_aleatorios == 3)
@@ -141,7 +138,7 @@ Para resolver este problema, ordenamos los datos de cada modelo y calculamos la 
 
 Meta-information
 ============
-exname: comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v1
+exname: comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v4
 extype: schoice
 exsolution: 0100
 exshuffle: TRUE

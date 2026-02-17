@@ -18,53 +18,68 @@ modelos <- sample(c("Modelo A", "Modelo B", "Modelo C", "Modelo D", "Modelo E",
 base_valores <- sample(500:800, 15, replace = TRUE)
 matriz_datos <- matrix(base_valores, nrow = 3, ncol = 5)
 
-# Relación deseada: med(Z) > med(X) y med(Z) > med(Y)
+# Relación deseada: med(X) < med(Z) < med(Y)
 max_iter <- 500
 
 mediana_deseada_x <- median(matriz_datos[1,])
+
+# Aseguramos que Y tenga mediana suficientemente mayor que X
+matriz_datos[2,] <- matriz_datos[2,] + 50
 mediana_deseada_y <- median(matriz_datos[2,])
 
-# Aseguramos que Y tenga una mediana diferente a X
 iter <- 0
-while (mediana_deseada_y == mediana_deseada_x && iter < max_iter) {
-  matriz_datos[2,] <- matriz_datos[2,] + sample(-5:5, 5, replace = TRUE)
+while (mediana_deseada_y <= mediana_deseada_x + 30 && iter < max_iter) {
+  matriz_datos[2,] <- matriz_datos[2,] + 10
   mediana_deseada_y <- median(matriz_datos[2,])
   iter <- iter + 1
 }
-if (iter >= max_iter) {
-  matriz_datos[2, 3] <- matriz_datos[2, 3] + sample(c(-10, 10), 1)
-  mediana_deseada_y <- median(matriz_datos[2,])
-}
 
-# Aseguramos que Z tenga mediana mayor que X e Y
-matriz_datos[3,] <- sort(matriz_datos[3,])
-max_mediana_xy <- max(mediana_deseada_x, mediana_deseada_y)
-matriz_datos[3, 3] <- max_mediana_xy + sample(5:15, 1)
-matriz_datos[3, 4:5] <- matriz_datos[3, 4:5] + sample(10:20, 2, replace = TRUE)
-matriz_datos[3,] <- sample(matriz_datos[3,])
-
+# Aseguramos que Z tenga mediana mayor que X pero menor que Y
+matriz_datos[3,] <- sort(matriz_datos[1,]) + 20
 mediana_deseada_z <- median(matriz_datos[3,])
+
 iter <- 0
-while (mediana_deseada_z <= max_mediana_xy && iter < max_iter) {
-  matriz_datos[3,] <- matriz_datos[3,] + 5
+while ((mediana_deseada_z <= mediana_deseada_x || mediana_deseada_z >= mediana_deseada_y) && iter < max_iter) {
+  if (mediana_deseada_z <= mediana_deseada_x) {
+    matriz_datos[3,] <- matriz_datos[3,] + 10
+  } else if (mediana_deseada_z >= mediana_deseada_y) {
+    matriz_datos[3,] <- matriz_datos[3,] - 10
+  }
   mediana_deseada_z <- median(matriz_datos[3,])
   iter <- iter + 1
 }
 
 # Dos valores iguales en dos modelos diferentes (distractor de dificultad)
-modelos_para_igualar <- sample(1:3, 2)
-posicion_igual <- sample(1:5, 1)
-valor_comun <- matriz_datos[modelos_para_igualar[1], posicion_igual]
-matriz_datos[modelos_para_igualar[2], posicion_igual] <- valor_comun
+modelos_con_valor_igual <- sample(1:3, 2)
+posicion_valor_igual <- sample(1:5, 1)
+valor_comun <- matriz_datos[modelos_con_valor_igual[1], posicion_valor_igual]
+matriz_datos[modelos_con_valor_igual[2], posicion_valor_igual] <- valor_comun
 
-# Verificamos que las medianas sigan cumpliendo Z > X, Z > Y
-mediana_deseada_x <- median(matriz_datos[1,])
-mediana_deseada_y <- median(matriz_datos[2,])
-mediana_deseada_z <- median(matriz_datos[3,])
+# Verificamos que las medianas sigan cumpliendo X < Z < Y
+mediana_x <- median(matriz_datos[1,])
+mediana_y <- median(matriz_datos[2,])
+mediana_z <- median(matriz_datos[3,])
 
-if (mediana_deseada_z <= max(mediana_deseada_x, mediana_deseada_y)) {
-  ajuste <- max(mediana_deseada_x, mediana_deseada_y) - mediana_deseada_z + sample(5:10, 1)
-  matriz_datos[3,] <- matriz_datos[3,] + ajuste
+# Si la inserción del valor común rompió Y > X, restaurar la diferencia
+if (mediana_y <= mediana_x) {
+  ajuste_y <- mediana_x - mediana_y + sample(10:30, 1)
+  matriz_datos[2,] <- matriz_datos[2,] + ajuste_y
+  mediana_y <- median(matriz_datos[2,])
+}
+
+iter <- 0
+while (!(mediana_z > mediana_x && mediana_z < mediana_y) && iter < max_iter) {
+  if (mediana_z <= mediana_x) {
+    posiciones_no_comunes <- setdiff(1:5, posicion_valor_igual)
+    pos_a_cambiar <- sample(posiciones_no_comunes, 1)
+    matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] + 20
+  } else if (mediana_z >= mediana_y) {
+    posiciones_no_comunes <- setdiff(1:5, posicion_valor_igual)
+    pos_a_cambiar <- sample(posiciones_no_comunes, 1)
+    matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] - 20
+  }
+  mediana_z <- median(matriz_datos[3,])
+  iter <- iter + 1
 }
 
 # Tabla y medianas finales
@@ -91,22 +106,11 @@ Question
 La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante cinco pruebas diferentes:
 
 ```{r, echo = FALSE, results = "asis"}
-# Crear un vector de índices aleatorios para reordenar los modelos
 indices_aleatorios <- sample(1:3)
-
-# Crear un vector con los nombres de modelos reordenados
 modelos_aleatorios <- modelos[indices_aleatorios]
-
-# Crear una nueva tabla con las columnas reordenadas para mantener la correspondencia
-# La primera columna (Prueba) siempre se mantiene en su posición
 tabla_reordenada <- tabla[, c(1, indices_aleatorios + 1)]
-
-# Generar la tabla con los nombres de columnas aleatorizados
-# pero manteniendo la correspondencia con los datos
 knitr::kable(tabla_reordenada, col.names = c("", modelos_aleatorios))
 
-# Guardar la correspondencia entre los índices originales y los aleatorios
-# para usarla en el resto del documento
 indice_x <- which(indices_aleatorios == 1)
 indice_y <- which(indices_aleatorios == 2)
 indice_z <- which(indices_aleatorios == 3)
@@ -129,21 +133,21 @@ Para resolver este problema, ordenamos los datos de cada modelo y calculamos la 
 * **`r modelos_aleatorios[indice_y]`**: `r sort(matriz_datos[2,])` $\rightarrow$ Mediana = **`r med2`**
 * **`r modelos_aleatorios[indice_z]`**: `r sort(matriz_datos[3,])` $\rightarrow$ Mediana = **`r med3`**
 
-**Respuesta correcta:** El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`, ya que `r med3` > `r med2` y `r med3` > `r med1`.
+**Respuesta correcta:** El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`, ya que `r med1` < `r med3` < `r med2`.
 
 **Análisis de las opciones incorrectas:**
 
-* *"Mediana igual a la del `r modelos_aleatorios[indice_y]` y menor que la del `r modelos_aleatorios[indice_x]`"*: Incorrecto. La mediana de `r modelos_aleatorios[indice_z]` (`r med3`) no es igual a la de `r modelos_aleatorios[indice_y]` (`r med2`), y tampoco es menor que la de `r modelos_aleatorios[indice_x]` (`r med1`); es mayor que ambas.
+* *"Mediana igual a la del `r modelos_aleatorios[indice_y]` y menor que la del `r modelos_aleatorios[indice_x]`"*: Incorrecto. La mediana de `r modelos_aleatorios[indice_z]` (`r med3`) no es igual a la de `r modelos_aleatorios[indice_y]` (`r med2`), sino menor. Además, no es menor que la de `r modelos_aleatorios[indice_x]` (`r med1`), sino mayor.
 
-* *"Mediana igual a la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`"*: Incorrecto. La mediana de `r modelos_aleatorios[indice_z]` (`r med3`) no es igual a la de `r modelos_aleatorios[indice_x]` (`r med1`); de hecho, es mayor.
+* *"Mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`"*: Incorrecto. Si bien `r med3` > `r med1`, la mediana de `r modelos_aleatorios[indice_z]` no es mayor que la de `r modelos_aleatorios[indice_y]` (`r med3` < `r med2`).
 
-* *"Mediana mayor que la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`"*: Incorrecto. Si bien `r med3` > `r med1`, la mediana de `r modelos_aleatorios[indice_z]` no es menor sino mayor que la de `r modelos_aleatorios[indice_y]` (`r med3` > `r med2`).
+* *"Mediana igual a la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`"*: Incorrecto. La mediana de `r modelos_aleatorios[indice_z]` (`r med3`) no es igual a la de `r modelos_aleatorios[indice_x]` (`r med1`); es mayor.
 
 Meta-information
 ============
-exname: comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v1
+exname: comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v3
 extype: schoice
-exsolution: 0100
+exsolution: 0001
 exshuffle: TRUE
 extol: 0.01
 exextra[Type]: SCHOICE

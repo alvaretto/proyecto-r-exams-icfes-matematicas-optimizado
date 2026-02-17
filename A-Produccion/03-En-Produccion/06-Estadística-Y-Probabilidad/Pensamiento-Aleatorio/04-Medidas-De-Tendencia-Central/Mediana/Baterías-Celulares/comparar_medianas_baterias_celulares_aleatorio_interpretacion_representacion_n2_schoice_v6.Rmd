@@ -1,0 +1,161 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r data generation, echo = FALSE, results = "hide"}
+library(exams)
+
+# Generación de nombres aleatorios para modelos
+modelos <- sample(c("Modelo A", "Modelo B", "Modelo C", "Modelo D", "Modelo E",
+                    "Modelo F", "Modelo G", "Modelo H", "Modelo J", "Modelo K",
+                    "Modelo L", "Modelo M", "Modelo N", "Modelo P", "Modelo Q",
+                    "Modelo R", "Modelo S", "Modelo T", "Modelo U", "Modelo V",
+                    "Modelo W"), 3)
+
+# Número aleatorio de pruebas entre 5 y 8
+num_pruebas <- sample(5:8, 1)
+
+# Generación de datos base para cada modelo
+base_valores <- sample(500:800, 3 * num_pruebas, replace = TRUE)
+matriz_datos <- matrix(base_valores, nrow = 3, ncol = num_pruebas)
+
+# Relación deseada: med(X) < med(Z) < med(Y)
+max_iter <- 500
+
+mediana_deseada_x <- median(matriz_datos[1,])
+
+# Aseguramos que Y tenga mediana suficientemente mayor que X
+matriz_datos[2,] <- matriz_datos[2,] + 50
+mediana_deseada_y <- median(matriz_datos[2,])
+
+iter <- 0
+while (mediana_deseada_y <= mediana_deseada_x + 30 && iter < max_iter) {
+  matriz_datos[2,] <- matriz_datos[2,] + 10
+  mediana_deseada_y <- median(matriz_datos[2,])
+  iter <- iter + 1
+}
+
+# Aseguramos que Z tenga mediana mayor que X pero menor que Y
+matriz_datos[3,] <- sort(matriz_datos[1,]) + 20
+mediana_deseada_z <- median(matriz_datos[3,])
+
+iter <- 0
+while ((mediana_deseada_z <= mediana_deseada_x || mediana_deseada_z >= mediana_deseada_y) && iter < max_iter) {
+  if (mediana_deseada_z <= mediana_deseada_x) {
+    matriz_datos[3,] <- matriz_datos[3,] + 10
+  } else if (mediana_deseada_z >= mediana_deseada_y) {
+    matriz_datos[3,] <- matriz_datos[3,] - 10
+  }
+  mediana_deseada_z <- median(matriz_datos[3,])
+  iter <- iter + 1
+}
+
+# Dos valores iguales en dos modelos diferentes (distractor de dificultad)
+modelos_con_valor_igual <- sample(1:3, 2)
+posicion_valor_igual <- sample(1:num_pruebas, 1)
+valor_comun <- matriz_datos[modelos_con_valor_igual[1], posicion_valor_igual]
+matriz_datos[modelos_con_valor_igual[2], posicion_valor_igual] <- valor_comun
+
+# Verificamos que las medianas sigan cumpliendo X < Z < Y
+mediana_x <- median(matriz_datos[1,])
+mediana_y <- median(matriz_datos[2,])
+mediana_z <- median(matriz_datos[3,])
+
+# Si la inserción del valor común rompió Y > X, restaurar la diferencia
+if (mediana_y <= mediana_x) {
+  ajuste_y <- mediana_x - mediana_y + sample(10:30, 1)
+  matriz_datos[2,] <- matriz_datos[2,] + ajuste_y
+  mediana_y <- median(matriz_datos[2,])
+}
+
+iter <- 0
+while (!(mediana_z > mediana_x && mediana_z < mediana_y) && iter < max_iter) {
+  if (mediana_z <= mediana_x) {
+    posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
+    pos_a_cambiar <- sample(posiciones_no_comunes, 1)
+    matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] + 20
+  } else if (mediana_z >= mediana_y) {
+    posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
+    pos_a_cambiar <- sample(posiciones_no_comunes, 1)
+    matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] - 20
+  }
+  mediana_z <- median(matriz_datos[3,])
+  iter <- iter + 1
+}
+
+# Tabla y medianas finales
+tabla <- data.frame(
+  Prueba = paste("Prueba", 1:num_pruebas),
+  Modelo1 = matriz_datos[1,],
+  Modelo2 = matriz_datos[2,],
+  Modelo3 = matriz_datos[3,]
+)
+
+med1 <- median(matriz_datos[1,])
+med2 <- median(matriz_datos[2,])
+med3 <- median(matriz_datos[3,])
+
+# Contexto narrativo
+marcas <- c("SmartCell", "TechLife", "PowerMobile", "CellTech", "MobilPro")
+marca_seleccionada <- sample(marcas, 1)
+pruebas <- c("rendimiento", "uso intensivo", "resistencia", "durabilidad", "eficiencia")
+prueba_seleccionada <- sample(pruebas, 1)
+```
+
+Question
+========
+La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante `r num_pruebas` pruebas diferentes:
+
+```{r, echo = FALSE, results = "asis"}
+indices_aleatorios <- sample(1:3)
+modelos_aleatorios <- modelos[indices_aleatorios]
+tabla_reordenada <- tabla[, c(1, indices_aleatorios + 1)]
+knitr::kable(tabla_reordenada, col.names = c("", modelos_aleatorios))
+
+indice_x <- which(indices_aleatorios == 1)
+indice_y <- which(indices_aleatorios == 2)
+indice_z <- which(indices_aleatorios == 3)
+```
+
+Al comparar la mediana de las duraciones de la batería de los tres modelos, ¿cuál de las siguientes afirmaciones es correcta?
+
+Answerlist
+----------
+* El `r modelos_aleatorios[indice_z]` tiene una mediana igual a la del `r modelos_aleatorios[indice_y]` y menor que la del `r modelos_aleatorios[indice_x]`.
+* El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`.
+* El `r modelos_aleatorios[indice_z]` tiene una mediana igual a la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`.
+* El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`.
+
+Solution
+========
+Para resolver este problema, ordenamos los datos de cada modelo y calculamos la mediana (valor central de los datos ordenados):
+
+* **`r modelos_aleatorios[indice_x]`**: `r sort(matriz_datos[1,])` $\rightarrow$ Mediana = **`r med1`**
+* **`r modelos_aleatorios[indice_y]`**: `r sort(matriz_datos[2,])` $\rightarrow$ Mediana = **`r med2`**
+* **`r modelos_aleatorios[indice_z]`**: `r sort(matriz_datos[3,])` $\rightarrow$ Mediana = **`r med3`**
+
+**Respuesta correcta:** El `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`, ya que `r med1` < `r med3` < `r med2`.
+
+**Análisis de las opciones incorrectas:**
+
+* *"Mediana igual a la del `r modelos_aleatorios[indice_y]` y menor que la del `r modelos_aleatorios[indice_x]`"*: Incorrecto. La mediana de `r modelos_aleatorios[indice_z]` (`r med3`) no es igual a la de `r modelos_aleatorios[indice_y]` (`r med2`), sino menor. Además, no es menor que la de `r modelos_aleatorios[indice_x]` (`r med1`), sino mayor.
+
+* *"Mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`"*: Incorrecto. Si bien `r med3` > `r med1`, la mediana de `r modelos_aleatorios[indice_z]` no es mayor que la de `r modelos_aleatorios[indice_y]` (`r med3` < `r med2`).
+
+* *"Mediana igual a la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`"*: Incorrecto. La mediana de `r modelos_aleatorios[indice_z]` (`r med3`) no es igual a la de `r modelos_aleatorios[indice_x]` (`r med1`); es mayor.
+
+Meta-information
+============
+exname: comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v6
+extype: schoice
+exsolution: 0001
+exshuffle: TRUE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Compara medidas de tendencia central entre conjuntos de datos
+exextra[Evidencia]: Calcula medianas y establece relaciones de orden entre ellas
+exextra[Nivel]: 2
