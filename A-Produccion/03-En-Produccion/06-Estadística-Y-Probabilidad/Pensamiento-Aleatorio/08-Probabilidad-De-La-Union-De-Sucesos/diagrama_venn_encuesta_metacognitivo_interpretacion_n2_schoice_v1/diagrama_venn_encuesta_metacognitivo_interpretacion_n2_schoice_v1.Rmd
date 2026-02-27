@@ -1,0 +1,1164 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r data_generation, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
+library(exams)
+
+# ===================================================================
+# FUNCIONES AUXILIARES: Generación y compilación de diagramas TikZ
+# ===================================================================
+
+generar_tex <- function(nombres_sets, sombreado = NULL,
+                        valores = NULL, n_total = NULL) {
+  tex <- paste0(
+    "\\documentclass[tikz,border=5pt]{standalone}\n",
+    "\\usetikzlibrary{backgrounds}\n",
+    "\\definecolor{shadedregion}{RGB}{144,215,160}\n",
+    "\\newcommand{\\contmark}[1]{\\large \\textbf{#1}}\n",
+    "\\begin{document}\n",
+    "\\begin{tikzpicture}\n",
+    "\\def\\R{2.0}\n",
+    "\\coordinate(S1) at (-0.8,0.8);\n",
+    "\\coordinate(S2) at (2.0,0.8);\n",
+    "\\coordinate(S3) at (0.6,-1.2);\n"
+  )
+  if (!is.null(sombreado)) {
+    tex <- paste0(tex, sombreado, "\n")
+  }
+  tex <- paste0(tex,
+    "\\draw (S1) circle (\\R) node [text=black,above left] {\\contmark{",
+    nombres_sets[1], "}};\n",
+    "\\draw (S2) circle (\\R) node [text=black,above right=0.3cm] {\\contmark{",
+    nombres_sets[2], "}};\n",
+    "\\draw (S3) circle (\\R) node [text=black,below=1.4cm] {\\contmark{",
+    nombres_sets[3], "}};\n"
+  )
+  if (!is.null(valores)) {
+    posiciones <- list(
+      c(-2.0, 0.3), c(3.3, 0.3), c(0.6, -2.5),
+      c(0.6, 1.5), c(-0.5, -0.3), c(1.7, -0.3),
+      c(0.6, 0.4), c(3.5, -2.0)
+    )
+    for (k in seq_along(valores)) {
+      tex <- paste0(tex,
+        "\\node [text=black] at (", posiciones[[k]][1], ",",
+        posiciones[[k]][2], ") {\\contmark{", valores[k], "}};\n"
+      )
+    }
+  }
+  tex <- paste0(tex, "\\draw(-3.5,-3.5)rectangle(5.0,3.2);\n")
+  if (!is.null(n_total)) {
+    tex <- paste0(tex,
+      "\\node [text=black,right] at(5.0,-3) {\\contmark{", n_total, "}};\n"
+    )
+  }
+  tex <- paste0(tex, "\\end{tikzpicture}\n\\end{document}\n")
+  return(tex)
+}
+
+# ===================================================================
+# FUNCIÓN DE SOMBREADO EXPANDIDA (8 categorías de región)
+# Regla: .claude/rules/graficos-como-opciones.md
+# ===================================================================
+
+generar_sombreado <- function(tipo, args = list()) {
+  switch(tipo,
+    # --- Tipos para intersección de par ---
+    "clip_fill_minus" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\clip (", args$c_clip, ") circle (\\R);\n",
+      "\\fill [shadedregion](", args$c_fill, ") circle (\\R);\n",
+      "\\fill [white](", args$c_white, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "clip_fill" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\clip (", args$c_clip, ") circle (\\R);\n",
+      "\\fill [shadedregion](", args$c_fill, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "fill_two_minus" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](", args$c_fill1, ") circle (\\R);\n",
+      "\\fill [shadedregion](", args$c_fill2, ") circle (\\R);\n",
+      "\\fill [white](", args$c_white, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "fill_two" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](", args$c_fill1, ") circle (\\R);\n",
+      "\\fill [shadedregion](", args$c_fill2, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    # --- Tipos para solo ---
+    "fill_minus_two" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](", args$c_fill, ") circle (\\R);\n",
+      "\\fill [white](", args$c_white1, ") circle (\\R);\n",
+      "\\fill [white](", args$c_white2, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "fill_minus_one" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](", args$c_fill, ") circle (\\R);\n",
+      "\\fill [white](", args$c_white, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "fill_one" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](", args$c_fill, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    # --- Tipos para triple ---
+    "clip_clip_fill" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\clip (S1) circle (\\R);\n",
+      "\\clip (S2) circle (\\R);\n",
+      "\\fill [shadedregion](S3) circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "all_overlaps" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\clip (S1) circle (\\R);\n",
+      "\\fill [shadedregion](S2) circle (\\R);\n",
+      "\\end{scope}\n",
+      "\\begin{scope}[on background layer]\n",
+      "\\clip (S1) circle (\\R);\n",
+      "\\fill [shadedregion](S3) circle (\\R);\n",
+      "\\end{scope}\n",
+      "\\begin{scope}[on background layer]\n",
+      "\\clip (S2) circle (\\R);\n",
+      "\\fill [shadedregion](S3) circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "fill_three" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](S1) circle (\\R);\n",
+      "\\fill [shadedregion](S2) circle (\\R);\n",
+      "\\fill [shadedregion](S3) circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    # --- Tipos para complemento ---
+    "complement_all" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](-3.5,-3.5) rectangle (5.0,3.2);\n",
+      "\\fill [white](S1) circle (\\R);\n",
+      "\\fill [white](S2) circle (\\R);\n",
+      "\\fill [white](S3) circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    "complement_one" = paste0(
+      "\\begin{scope}[on background layer]\n",
+      "\\fill [shadedregion](-3.5,-3.5) rectangle (5.0,3.2);\n",
+      "\\fill [white](", args$c_white, ") circle (\\R);\n",
+      "\\end{scope}"
+    ),
+    stop(paste("Tipo de sombreado desconocido:", tipo))
+  )
+}
+
+compilar_tikz <- function(tex_code, nombre_base) {
+  tex_file <- paste0(nombre_base, ".tex")
+  pdf_file <- paste0(nombre_base, ".pdf")
+  png_file <- paste0(nombre_base, ".png")
+  writeLines(tex_code, tex_file)
+  system2("pdflatex",
+          c("-interaction=nonstopmode", "-halt-on-error", tex_file),
+          stdout = FALSE, stderr = FALSE)
+  if (!file.exists(pdf_file)) {
+    stop(paste("Error compilando TikZ:", nombre_base))
+  }
+  system2("magick",
+          c("-density", "200", pdf_file, "-quality", "95",
+            "-background", "white", "-flatten", png_file))
+  if (!file.exists(png_file)) {
+    stop(paste("Error convirtiendo a PNG:", nombre_base))
+  }
+  for (ext in c(".tex", ".pdf", ".aux", ".log")) {
+    f <- paste0(nombre_base, ext)
+    if (file.exists(f)) file.remove(f)
+  }
+  invisible(png_file)
+}
+
+# ===================================================================
+# CONTEXTOS NARRATIVOS CREATIVOS (8 plantillas, 6+ tipos)
+# Regla: .claude/rules/contextos-narrativos-creativos.md
+# ===================================================================
+
+contextos <- list(
+  # Tipo: Situación problema
+  list(
+    sets = c("Mango", "Fresa", "Mora"),
+    verbo = "prefieren", sujeto = "clientes",
+    plantilla = function(prot, n, sets) {
+      paste0(prot, " realizó una encuesta a ", n,
+             " clientes sobre sus jugos favoritos: ",
+             tolower(sets[1]), ", ", tolower(sets[2]), " y ", tolower(sets[3]),
+             ". Los resultados se resumen en el siguiente diagrama de Venn:")
+    },
+    protagonistas = c(
+      "Una cafetería del centro comercial",
+      "El restaurante escolar del colegio",
+      "Una tienda de jugos naturales del barrio"
+    )
+  ),
+  # Tipo: Narración periodística
+  list(
+    sets = c("Voleibol", "Tenis", "Ciclismo"),
+    verbo = "practican", sujeto = "estudiantes",
+    plantilla = function(prot, n, sets) {
+      paste0("En ", prot, " se preguntó a ", n,
+             " estudiantes qué deportes practican: ",
+             tolower(sets[1]), ", ", tolower(sets[2]), " y ", tolower(sets[3]),
+             ". El siguiente diagrama de Venn muestra las respuestas:")
+    },
+    protagonistas = c(
+      "los Juegos Intercolegiados de la ciudad",
+      "el colegio San Martín",
+      "la jornada deportiva del municipio"
+    )
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    sets = c("Piano", "Guitarra", "Flauta"),
+    verbo = "saben tocar", sujeto = "compañeros",
+    plantilla = function(prot, n, sets) {
+      paste0("Para su proyecto de clase, ", prot,
+             " preguntó a ", n,
+             " compañeros qué instrumentos saben tocar: ",
+             tolower(sets[1]), ", ", tolower(sets[2]),
+             " y ", tolower(sets[3]),
+             ". Organizó las respuestas en un diagrama de Venn:")
+    },
+    protagonistas = c("Valentina", "Santiago", "Camila", "Mateo")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    sets = c("Perros", "Gatos", "Peces"),
+    verbo = "tienen como mascota", sujeto = "familias",
+    plantilla = function(prot, n, sets) {
+      paste0("El boletín de ", prot,
+             " publicó los resultados de una encuesta a ", n,
+             " familias del sector sobre sus mascotas: ",
+             tolower(sets[1]), ", ", tolower(sets[2]), " y ", tolower(sets[3]), ".")
+    },
+    protagonistas = c(
+      "la junta del conjunto residencial",
+      "la asociación de vecinos del barrio",
+      "el periódico escolar"
+    )
+  ),
+  # Tipo: Diálogo implícito
+  list(
+    sets = c("Rojo", "Azul", "Verde"),
+    verbo = "eligieron como favorito", sujeto = "estudiantes",
+    plantilla = function(prot, n, sets) {
+      paste0("—Necesitamos elegir los colores del uniforme —dijo ", prot,
+             ". Se encuestó a ", n,
+             " estudiantes sobre sus colores favoritos: ",
+             tolower(sets[1]), ", ", tolower(sets[2]), " y ", tolower(sets[3]), ".")
+    },
+    protagonistas = c(
+      "la representante del curso",
+      "el presidente del consejo estudiantil",
+      "la directora de grupo"
+    )
+  ),
+  # Tipo: Pregunta retórica
+  list(
+    sets = c("Pizza", "Hamburguesa", "Tacos"),
+    verbo = "prefieren", sujeto = "personas",
+    plantilla = function(prot, n, sets) {
+      paste0("¿Qué prefieren comer los jóvenes del sector? ", prot,
+             " encuestó a ", n,
+             " personas sobre sus comidas favoritas: ",
+             tolower(sets[1]), ", ", tolower(sets[2]),
+             " y ", tolower(sets[3]),
+             ". Los resultados se organizaron así:")
+    },
+    protagonistas = c(
+      "El comité de alimentación del colegio",
+      "La cafetería central del barrio",
+      "El equipo organizador de la feria gastronómica"
+    )
+  ),
+  # Tipo: Descubrimiento
+  list(
+    sets = c("Lectura", "Cine", "Videojuegos"),
+    verbo = "disfrutan", sujeto = "participantes",
+    plantilla = function(prot, n, sets) {
+      paste0("Al organizar las actividades del fin de semana, ", prot,
+             " descubrió que entre ", n,
+             " participantes encuestados sobre sus pasatiempos favoritos (",
+             tolower(sets[1]), ", ", tolower(sets[2]), " y ", tolower(sets[3]),
+             ") había combinaciones interesantes:")
+    },
+    protagonistas = c(
+      "el coordinador del club juvenil",
+      "la monitora del programa recreativo",
+      "la líder del grupo scout local"
+    )
+  ),
+  # Tipo: Acción en curso
+  list(
+    sets = c("Cumbia", "Salsa", "Rock"),
+    verbo = "escuchan", sujeto = "asistentes",
+    plantilla = function(prot, n, sets) {
+      paste0("Durante la semana cultural de ", prot,
+             ", se hizo una encuesta a ", n,
+             " asistentes sobre los géneros musicales que escuchan: ",
+             tolower(sets[1]), ", ", tolower(sets[2]), " y ", tolower(sets[3]),
+             ". El diagrama de Venn resume las preferencias:")
+    },
+    protagonistas = c(
+      "el colegio Simón Bolívar",
+      "la casa de la cultura del municipio",
+      "el centro comunitario del barrio"
+    )
+  )
+)
+
+# ===================================================================
+# GENERACIÓN DE DATOS ALEATORIOS
+# ===================================================================
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+ctx$sets <- sample(ctx$sets)   # Aleatorizar orden de nombres dentro del grupo
+prot <- sample(ctx$protagonistas, 1)
+
+# Generación de las 7 regiones + outside e iteración hasta 4 valores únicos
+repeat {
+  solo1   <- sample(3:12, 1)
+  solo2   <- sample(3:12, 1)
+  solo3   <- sample(3:12, 1)
+  int12   <- sample(5:18, 1)
+  int13   <- sample(5:18, 1)
+  int23   <- sample(5:18, 1)
+  triple  <- sample(2:8,  1)
+  outside <- sample(1:5,  1)
+
+  n_total <- solo1 + solo2 + solo3 + int12 + int13 + int23 + triple + outside
+  if (n_total < 50 || n_total > 120) next
+
+  # Helpers para indexación
+  solos      <- c(solo1, solo2, solo3)
+  # Matriz simétrica de intersecciones por pares (diagonal no usada)
+  int_pairs  <- matrix(0, nrow = 3, ncol = 3)
+  int_pairs[1,2] <- int_pairs[2,1] <- int12
+  int_pairs[1,3] <- int_pairs[3,1] <- int13
+  int_pairs[2,3] <- int_pairs[3,2] <- int23
+  total_set  <- c(
+    solo1 + int12 + int13 + triple,
+    solo2 + int12 + int23 + triple,
+    solo3 + int13 + int23 + triple
+  )
+  total_union <- n_total - outside
+
+  # Samplear tipo de región (1-8)
+  tipo_region <- sample(1:8, 1)
+
+  if (tipo_region %in% 1:3) {
+    # Tipos 1-3: región solo de un conjunto
+    categoria   <- "solo"
+    idx_main    <- tipo_region
+    idx_excl    <- setdiff(1:3, idx_main)
+    idx_excl_1  <- idx_excl[1]
+    idx_excl_2  <- idx_excl[2]
+
+    val_correcto <- solos[idx_main]
+    # D1: olvidó excluir idx_excl_1 (solo excluyó idx_excl_2)
+    # Lo que queda: solo_main + int(main, excl_1)
+    val_d1 <- solos[idx_main] + int_pairs[idx_main, idx_excl_1]
+    # D2: olvidó excluir idx_excl_2 (solo excluyó idx_excl_1)
+    # Lo que queda: solo_main + int(main, excl_2)
+    val_d2 <- solos[idx_main] + int_pairs[idx_main, idx_excl_2]
+    # D3: sombreó todo el conjunto main sin ninguna exclusión
+    val_d3 <- total_set[idx_main]
+
+  } else if (tipo_region %in% 4:6) {
+    # Tipos 4-6: intersección de un par excluyendo el tercero
+    categoria <- "par"
+    combos    <- list(c(1,2,3), c(1,3,2), c(2,3,1))
+    idx       <- combos[[tipo_region - 3]]
+    idx_i     <- idx[1]; idx_j <- idx[2]; idx_k <- idx[3]
+
+    val_correcto      <- int_pairs[idx_i, idx_j]
+    val_d1            <- int_pairs[idx_i, idx_j] + triple
+    val_d2            <- solos[idx_i] + solos[idx_j] + int_pairs[idx_i, idx_j]
+    val_d3            <- solos[idx_i] + solos[idx_j] +
+                         int_pairs[idx_i, idx_j] +
+                         int_pairs[idx_i, idx_k] +
+                         int_pairs[idx_j, idx_k] + triple
+
+  } else if (tipo_region == 7) {
+    # Tipo 7: triple intersección
+    categoria <- "triple"
+    par_dist  <- sample(list(c(1L,2L), c(1L,3L), c(2L,3L)), 1)[[1]]
+
+    val_correcto <- triple
+    val_d1       <- int_pairs[par_dist[1], par_dist[2]] + triple
+    val_d2       <- int12 + int13 + int23 + triple
+    val_d3       <- total_union
+
+  } else {
+    # Tipo 8: complemento de la unión (fuera de los tres conjuntos)
+    categoria     <- "complemento"
+    idx_compl_uno <- sample(1:3, 1)
+
+    val_correcto <- outside
+    val_d1       <- triple
+    val_d2       <- total_union
+    val_d3       <- n_total - total_set[idx_compl_uno]
+  }
+
+  vals_opciones <- c(val_correcto, val_d1, val_d2, val_d3)
+  if (length(unique(vals_opciones)) == 4) break
+}
+
+enunciado <- ctx$plantilla(prot, n_total, ctx$sets)
+valores_vec <- c(solo1, solo2, solo3, int12, int13, int23, triple, outside)
+
+# ===================================================================
+# BLOQUE UNIFICADO POR CATEGORÍA
+# Define: nombres, pregunta_texto, notacion_latex, errores_conceptuales,
+#         opciones_config, textos de solución
+# ===================================================================
+
+if (categoria == "solo") {
+
+  nombre_main <- ctx$sets[idx_main]
+  nombre_e1   <- ctx$sets[idx_excl_1]
+  nombre_e2   <- ctx$sets[idx_excl_2]
+
+  pregunta_texto <- paste0(
+    "¿Cuál de los siguientes diagramas representa correctamente la región ",
+    "sombreada correspondiente a los ", ctx$sujeto, " que ", ctx$verbo,
+    " **solo** ", nombre_main, ", es decir, ", nombre_main,
+    " pero ni ", nombre_e1, " ni ", nombre_e2, "?"
+  )
+  notacion_latex <- paste0(
+    "\\text{", nombre_main, "} \\setminus (\\text{", nombre_e1,
+    "} \\cup \\text{", nombre_e2, "})"
+  )
+
+  errores_conceptuales <- list(
+    list(
+      codigo = "CNJ-VEN-04",
+      nombre = "Exclusión parcial: olvidó un conjunto",
+      descripcion_corta = paste0(
+        "Excluyó ", nombre_e2, " pero olvidó excluir ", nombre_e1
+      ),
+      descripcion_larga = paste0(
+        "Realizó la exclusión de ", nombre_e2, " correctamente, pero olvidó ",
+        "también excluir los elementos de ", nombre_e1, ". La región sombreada ",
+        "incluye erróneamente la intersección de ", nombre_main, " con ", nombre_e1,
+        " (", int_pairs[idx_main, idx_excl_1], " ", ctx$sujeto, "), obteniendo ",
+        val_d1, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Omisión parcial del operador diferencia. Aplicó $\\text{", nombre_main,
+        "} \\setminus \\text{", nombre_e2, "}$ en vez de $\\text{", nombre_main,
+        "} \\setminus (\\text{", nombre_e1, "} \\cup \\text{", nombre_e2, "})$."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d1 }
+    ),
+    list(
+      codigo = "CNJ-VEN-05",
+      nombre = "Exclusión parcial: olvidó el otro conjunto",
+      descripcion_corta = paste0(
+        "Excluyó ", nombre_e1, " pero olvidó excluir ", nombre_e2
+      ),
+      descripcion_larga = paste0(
+        "Realizó la exclusión de ", nombre_e1, " correctamente, pero olvidó ",
+        "también excluir los elementos de ", nombre_e2, ". La región sombreada ",
+        "incluye erróneamente la intersección de ", nombre_main, " con ", nombre_e2,
+        " (", int_pairs[idx_main, idx_excl_2], " ", ctx$sujeto, "), obteniendo ",
+        val_d2, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Omisión parcial del operador diferencia. Aplicó $\\text{", nombre_main,
+        "} \\setminus \\text{", nombre_e1, "}$ en vez de $\\text{", nombre_main,
+        "} \\setminus (\\text{", nombre_e1, "} \\cup \\text{", nombre_e2, "})$."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d2 }
+    ),
+    list(
+      codigo = "CNJ-VEN-06",
+      nombre = "Sin exclusión: sombreó todo el conjunto",
+      descripcion_corta = paste0(
+        "Sombreó todo ", nombre_main, " sin excluir ", nombre_e1, " ni ", nombre_e2
+      ),
+      descripcion_larga = paste0(
+        "No aplicó ninguna exclusión y sombreó la totalidad del conjunto ",
+        nombre_main, ", incluyendo las intersecciones con ", nombre_e1, " y ",
+        nombre_e2, " (", total_set[idx_main], " ", ctx$sujeto, "). ",
+        "Obtuvo ", val_d3, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Omisión completa del operador diferencia de conjuntos. Interpretó ",
+        "$\\text{", nombre_main, "} \\setminus (\\text{", nombre_e1,
+        "} \\cup \\text{", nombre_e2, "})$ como simplemente $\\text{",
+        nombre_main, "}$."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d3 }
+    )
+  )
+
+  coord_main <- paste0("S", idx_main)
+  coord_e1   <- paste0("S", idx_excl_1)
+  coord_e2   <- paste0("S", idx_excl_2)
+
+  opciones_config <- list(
+    list(
+      tipo_somb = "fill_minus_two",
+      somb_args = list(c_fill = coord_main, c_white1 = coord_e1, c_white2 = coord_e2),
+      valor = val_correcto, key = "correcto"
+    ),
+    list(
+      tipo_somb = "fill_minus_one",
+      somb_args = list(c_fill = coord_main, c_white = coord_e2),
+      valor = val_d1, key = "error1"
+    ),
+    list(
+      tipo_somb = "fill_minus_one",
+      somb_args = list(c_fill = coord_main, c_white = coord_e1),
+      valor = val_d2, key = "error2"
+    ),
+    list(
+      tipo_somb = "fill_one",
+      somb_args = list(c_fill = coord_main),
+      valor = val_d3, key = "error3"
+    )
+  )
+
+  sol_analisis <- paste0(
+    "La expresión $\\text{", nombre_main, "} \\setminus (\\text{",
+    nombre_e1, "} \\cup \\text{", nombre_e2, "})$ se lee como: los ",
+    ctx$sujeto, " que ", ctx$verbo, " **solo** ", nombre_main,
+    ", es decir, ", nombre_main, " pero **ni** ", nombre_e1,
+    " **ni** ", nombre_e2, ". Esta operación de diferencia requiere ",
+    "excluir simultáneamente dos conjuntos."
+  )
+  sol_procedimiento <- paste0(
+    "**Paso 1 — Contenido total de ", nombre_main, ":** El conjunto ",
+    nombre_main, " contiene ", total_set[idx_main], " ", ctx$sujeto,
+    " distribuidos en cuatro regiones: solo ", nombre_main,
+    " (**", solos[idx_main], "**), intersección con ", nombre_e1,
+    " (**", int_pairs[idx_main, idx_excl_1], "**), intersección con ",
+    nombre_e2, " (**", int_pairs[idx_main, idx_excl_2], "**) y la ",
+    "triple intersección (**", triple, "**).\n\n",
+    "**Paso 2 — Exclusión doble:** De esas regiones, solo la primera cumple ",
+    "la condición 'ni ", nombre_e1, " ni ", nombre_e2, "'. Se excluyen las ",
+    "demás: $", total_set[idx_main], " - ",
+    int_pairs[idx_main, idx_excl_1], " - ",
+    int_pairs[idx_main, idx_excl_2], " - ", triple,
+    " = \\mathbf{", val_correcto, "}$ ", ctx$sujeto, "."
+  )
+  sol_resultado <- paste0(
+    "El diagrama correcto sombreó **únicamente** la región de ", nombre_main,
+    " que no se superpone con ", nombre_e1, " ni con ", nombre_e2,
+    ", correspondiente a **", val_correcto, "** ", ctx$sujeto, "."
+  )
+  sol_estrategia <- paste0(
+    "1. **Identifica** el conjunto principal (", nombre_main,
+    ") y los que se deben excluir (", nombre_e1, " y ", nombre_e2, ").\n",
+    "2. **Excluye** simultáneamente ambos conjuntos, no solo uno.\n",
+    "3. **Verifica** que la región sombreada no toca ninguno de los ",
+    "conjuntos excluidos.\n",
+    "4. **Cuenta** los elementos de la región resultante: deben ser ",
+    val_correcto, " ", ctx$sujeto, "."
+  )
+
+} else if (categoria == "par") {
+
+  nombre_si <- ctx$sets[idx_i]
+  nombre_sj <- ctx$sets[idx_j]
+  nombre_sk <- ctx$sets[idx_k]
+
+  pregunta_texto <- paste0(
+    "¿Cuál de los siguientes diagramas representa correctamente la región ",
+    "sombreada correspondiente a los ", ctx$sujeto, " que ", ctx$verbo,
+    " ", nombre_si, " **y** ", nombre_sj, ", **pero no** ", nombre_sk, "?"
+  )
+  notacion_latex <- paste0(
+    "(\\text{", nombre_si, "} \\cap \\text{", nombre_sj,
+    "}) \\setminus \\text{", nombre_sk, "}"
+  )
+
+  errores_conceptuales <- list(
+    list(
+      codigo = "CNJ-VEN-01",
+      nombre = "Intersección sin exclusión",
+      descripcion_corta = paste0(
+        "Identificó ", nombre_si, " $\\cap$ ", nombre_sj,
+        " pero no excluyó ", nombre_sk
+      ),
+      descripcion_larga = paste0(
+        "Identificó correctamente la intersección de ", nombre_si,
+        " y ", nombre_sj, ", pero no excluyó los elementos que también ",
+        "pertenecen a ", nombre_sk, ". Esto incluye erróneamente los ",
+        triple, " elementos de la triple intersección, obteniendo ",
+        val_d1, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Omisión del operador diferencia de conjuntos. Interpretó (",
+        nombre_si, " $\\cap$ ", nombre_sj, ") $\\setminus$ ", nombre_sk,
+        " como simplemente ", nombre_si, " $\\cap$ ", nombre_sj, "."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d1 }
+    ),
+    list(
+      codigo = "CNJ-VEN-02",
+      nombre = "Unión con exclusión",
+      descripcion_corta = paste0(
+        "Sombreó (", nombre_si, " $\\cup$ ", nombre_sj,
+        ") $\\setminus$ ", nombre_sk, " en vez de la intersección"
+      ),
+      descripcion_larga = paste0(
+        "Confundió la intersección ($\\cap$) con la unión ($\\cup$). En lugar de sombrear ",
+        "solo la región común entre ", nombre_si, " y ", nombre_sj,
+        ", sombreó toda el área cubierta por al menos uno de estos conjuntos, ",
+        "excluyendo correctamente ", nombre_sk,
+        ". Obtuvo ", val_d2, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = "Confusión entre los operadores intersección ($\\cap$) y unión ($\\cup$).",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d2 }
+    ),
+    list(
+      codigo = "CNJ-VEN-03",
+      nombre = "Unión simple sin exclusión",
+      descripcion_corta = paste0(
+        "Sombreó ", nombre_si, " $\\cup$ ", nombre_sj,
+        " sin excluir ", nombre_sk
+      ),
+      descripcion_larga = paste0(
+        "Cometió dos errores: confundió la intersección con la unión, ",
+        "y además no aplicó la exclusión de ", nombre_sk,
+        ". El resultado es toda el área cubierta por ", nombre_si,
+        " o ", nombre_sj, ", obteniendo ",
+        val_d3, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = "Doble error: confusión $\\cap$/$\\cup$ y omisión de la diferencia de conjuntos.",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d3 }
+    )
+  )
+
+  coord_i <- paste0("S", idx_i)
+  coord_j <- paste0("S", idx_j)
+  coord_k <- paste0("S", idx_k)
+
+  opciones_config <- list(
+    list(
+      tipo_somb = "clip_fill_minus",
+      somb_args = list(c_clip = coord_i, c_fill = coord_j, c_white = coord_k),
+      valor = val_correcto, key = "correcto"
+    ),
+    list(
+      tipo_somb = "clip_fill",
+      somb_args = list(c_clip = coord_i, c_fill = coord_j),
+      valor = val_d1, key = "error1"
+    ),
+    list(
+      tipo_somb = "fill_two_minus",
+      somb_args = list(c_fill1 = coord_i, c_fill2 = coord_j, c_white = coord_k),
+      valor = val_d2, key = "error2"
+    ),
+    list(
+      tipo_somb = "fill_two",
+      somb_args = list(c_fill1 = coord_i, c_fill2 = coord_j),
+      valor = val_d3, key = "error3"
+    )
+  )
+
+  sol_analisis <- paste0(
+    "La expresión $(\\text{", nombre_si, "} \\cap \\text{", nombre_sj,
+    "}) \\setminus \\text{", nombre_sk, "}$ se lee como: los ",
+    ctx$sujeto, " que ", ctx$verbo, " ", nombre_si, " **y** ", nombre_sj,
+    ", **pero no** ", nombre_sk, ". Esta operación requiere dos pasos: ",
+    "primero la intersección ($\\cap$) y luego la exclusión ($\\setminus$)."
+  )
+  sol_procedimiento <- paste0(
+    "**Paso 1 — Intersección:** $\\text{", nombre_si, "} \\cap \\text{",
+    nombre_sj, "}$ incluye dos regiones: la intersección exclusiva de ",
+    nombre_si, " y ", nombre_sj, " (sin ", nombre_sk, "): **", val_correcto,
+    "** ", ctx$sujeto, "; y la triple intersección: **", triple, "** ",
+    ctx$sujeto, ". Total: $", val_correcto, " + ", triple, " = ",
+    val_d1, "$ ", ctx$sujeto, ".\n\n",
+    "**Paso 2 — Exclusión:** De los ", val_d1, " ", ctx$sujeto,
+    " anteriores, se excluyen los ", triple, " que también pertenecen a ",
+    nombre_sk, ":\n\n",
+    "$$( \\text{", nombre_si, "} \\cap \\text{", nombre_sj,
+    "}) \\setminus \\text{", nombre_sk, "} = ", val_d1, " - ", triple,
+    " = \\mathbf{", val_correcto, "}$$"
+  )
+  sol_resultado <- paste0(
+    "El diagrama correcto sombreó **únicamente** la región de intersección de ",
+    nombre_si, " y ", nombre_sj, " que **no** pertenece a ", nombre_sk,
+    ", correspondiente a **", val_correcto, "** ", ctx$sujeto, "."
+  )
+  sol_estrategia <- paste0(
+    "1. **Traduce** la expresión simbólica a palabras antes de sombrear el diagrama.\n",
+    "2. **Aplica** cada operación de forma secuencial: primero la intersección ",
+    "($\\cap$), luego la exclusión ($\\setminus$).\n",
+    "3. **Verifica** contando los elementos de la región sombreada y comparando ",
+    "con el cálculo numérico.\n",
+    "4. **Recuerda**: $\\cap$ = \"ambos\"; $\\cup$ = \"al menos uno\"; ",
+    "$\\setminus$ = \"pero no\"."
+  )
+
+} else if (categoria == "triple") {
+
+  pregunta_texto <- paste0(
+    "¿Cuál de los siguientes diagramas representa correctamente la región ",
+    "sombreada correspondiente a los ", ctx$sujeto, " que ", ctx$verbo,
+    " **los tres**: ", ctx$sets[1], ", ", ctx$sets[2],
+    " **y** ", ctx$sets[3], "?"
+  )
+  notacion_latex <- paste0(
+    "\\text{", ctx$sets[1], "} \\cap \\text{", ctx$sets[2],
+    "} \\cap \\text{", ctx$sets[3], "}"
+  )
+
+  coord_pd1 <- paste0("S", par_dist[1])
+  coord_pd2 <- paste0("S", par_dist[2])
+  nombre_pd1 <- ctx$sets[par_dist[1]]
+  nombre_pd2 <- ctx$sets[par_dist[2]]
+
+  errores_conceptuales <- list(
+    list(
+      codigo = "CNJ-VEN-07",
+      nombre = "Confundió triple intersección con intersección de par",
+      descripcion_corta = paste0(
+        "Sombreó solo ", nombre_pd1, " $\\cap$ ", nombre_pd2,
+        " en vez de la triple intersección"
+      ),
+      descripcion_larga = paste0(
+        "Identificó solo la intersección de dos de los tres conjuntos (",
+        nombre_pd1, " y ", nombre_pd2, "), sin requerir que los elementos ",
+        "también pertenezcan al tercer conjunto. La región sombreada incluye ",
+        "tanto la triple intersección (", triple, ") como la intersección ",
+        "exclusiva del par (", int_pairs[par_dist[1], par_dist[2]], "), ",
+        "obteniendo ", val_d1, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Interpretó $\\text{", ctx$sets[1], "} \\cap \\text{", ctx$sets[2],
+        "} \\cap \\text{", ctx$sets[3], "}$ como la intersección de solo dos conjuntos."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d1 }
+    ),
+    list(
+      codigo = "CNJ-VEN-08",
+      nombre = "Incluyó todas las superposiciones",
+      descripcion_corta = paste0(
+        "Sombreó todas las intersecciones por pares más la triple"
+      ),
+      descripcion_larga = paste0(
+        "Sombreó todas las regiones donde al menos dos conjuntos se superponen: ",
+        "las tres intersecciones por pares (", int12, " + ", int13, " + ", int23,
+        ") más la triple intersección (", triple, "). Obtuvo ",
+        val_d2, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Confundió la triple intersección (los tres simultáneamente) con la unión ",
+        "de todas las superposiciones posibles."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d2 }
+    ),
+    list(
+      codigo = "CNJ-VEN-09",
+      nombre = "Confundió intersección con unión",
+      descripcion_corta = paste0(
+        "Sombreó la unión de los tres conjuntos en vez de su triple intersección"
+      ),
+      descripcion_larga = paste0(
+        "Confundió el operador intersección ($\\cap$) con la unión ($\\cup$) y ",
+        "sombreó toda la región cubierta por al menos uno de los tres conjuntos, ",
+        "es decir, la unión completa (", total_union, " ", ctx$sujeto, "). ",
+        "Obtuvo ", val_d3, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = "Confusión fundamental entre los operadores $\\cap$ y $\\cup$.",
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d3 }
+    )
+  )
+
+  opciones_config <- list(
+    list(
+      tipo_somb = "clip_clip_fill",
+      somb_args = list(),
+      valor = val_correcto, key = "correcto"
+    ),
+    list(
+      tipo_somb = "clip_fill",
+      somb_args = list(c_clip = coord_pd1, c_fill = coord_pd2),
+      valor = val_d1, key = "error1"
+    ),
+    list(
+      tipo_somb = "all_overlaps",
+      somb_args = list(),
+      valor = val_d2, key = "error2"
+    ),
+    list(
+      tipo_somb = "fill_three",
+      somb_args = list(),
+      valor = val_d3, key = "error3"
+    )
+  )
+
+  sol_analisis <- paste0(
+    "La expresión $\\text{", ctx$sets[1], "} \\cap \\text{", ctx$sets[2],
+    "} \\cap \\text{", ctx$sets[3], "}$ representa a los ", ctx$sujeto,
+    " que cumplen **los tres** criterios simultáneamente. Es la región ",
+    "más restrictiva del diagrama de Venn: el centro donde se superponen ",
+    "los tres círculos."
+  )
+  sol_procedimiento <- paste0(
+    "**Paso 1 — Identificar la región:** La triple intersección es la única ",
+    "región donde un elemento pertenece a los tres conjuntos al mismo tiempo. ",
+    "En el diagrama, corresponde al área central donde se superponen los tres círculos.\n\n",
+    "**Paso 2 — Leer el valor:** El número en esa región central es directamente ",
+    "el resultado: $\\mathbf{", triple, "}$ ", ctx$sujeto, ".\n\n",
+    "**Verificación:** La triple intersección (", triple, ") es siempre menor que ",
+    "cualquier intersección por pares: $", int12, "$, $", int13, "$, $", int23, "$."
+  )
+  sol_resultado <- paste0(
+    "El diagrama correcto sombreó **únicamente** el centro del diagrama, donde ",
+    "se superponen los tres círculos simultáneamente, correspondiente a ",
+    "**", triple, "** ", ctx$sujeto, "."
+  )
+  sol_estrategia <- paste0(
+    "1. **Localiza** el centro del diagrama donde se superponen los tres círculos.\n",
+    "2. **Verifica** que la región sombreada toca los tres conjuntos, no solo dos.\n",
+    "3. **Distingue** entre la triple intersección (centro) y las intersecciones ",
+    "por pares (zonas entre dos círculos).\n",
+    "4. **Recuerda**: $A \\cap B \\cap C$ exige pertenecer a los tres simultáneamente."
+  )
+
+} else {
+  # categoria == "complemento"
+
+  nombre_compl <- ctx$sets[idx_compl_uno]
+
+  pregunta_texto <- paste0(
+    "¿Cuál de los siguientes diagramas representa correctamente la región ",
+    "sombreada correspondiente a los ", ctx$sujeto, " que **no** ",
+    ctx$verbo, " **ninguno** de los tres: ni ", ctx$sets[1],
+    ", ni ", ctx$sets[2], ", ni ", ctx$sets[3], "?"
+  )
+  notacion_latex <- paste0(
+    "(\\text{", ctx$sets[1], "} \\cup \\text{", ctx$sets[2],
+    "} \\cup \\text{", ctx$sets[3], "})^c"
+  )
+
+  coord_compl <- paste0("S", idx_compl_uno)
+
+  errores_conceptuales <- list(
+    list(
+      codigo = "CNJ-VEN-10",
+      nombre = "Confundió complemento con triple intersección",
+      descripcion_corta = paste0(
+        "Sombreó la triple intersección en vez del complemento de la unión"
+      ),
+      descripcion_larga = paste0(
+        "Confundió el complemento de la unión con la triple intersección. ",
+        "En lugar de sombrear lo que está fuera de todos los conjuntos, ",
+        "sombreó la región central donde se superponen los tres (", triple,
+        " ", ctx$sujeto, "). Obtuvo ", val_d1, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Confusión entre el complemento $(A \\cup B \\cup C)^c$ y la triple ",
+        "intersección $A \\cap B \\cap C$."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d1 }
+    ),
+    list(
+      codigo = "CNJ-VEN-11",
+      nombre = "Sombreó la unión en vez del complemento",
+      descripcion_corta = paste0(
+        "Sombreó la unión de los tres conjuntos (lo opuesto al complemento)"
+      ),
+      descripcion_larga = paste0(
+        "Cometió el error opuesto: sombreó toda la unión de los tres conjuntos ",
+        "(", total_union, " ", ctx$sujeto, ") en vez de lo que queda fuera de ella. ",
+        "Obtuvo ", val_d2, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Inversión del complemento: sombreó $(A \\cup B \\cup C)$ en vez de ",
+        "$(A \\cup B \\cup C)^c$."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d2 }
+    ),
+    list(
+      codigo = "CNJ-VEN-12",
+      nombre = "Solo excluyó un conjunto del complemento",
+      descripcion_corta = paste0(
+        "Sombreó el complemento de solo ", nombre_compl,
+        " en vez del complemento de la unión completa"
+      ),
+      descripcion_larga = paste0(
+        "Aplicó el complemento de solo un conjunto (", nombre_compl,
+        ") en vez del complemento de la unión de los tres. La región sombreada ",
+        "incluye incorrectamente elementos de los otros dos conjuntos. ",
+        "Obtuvo ", val_d3, " en vez de ", val_correcto, "."
+      ),
+      causa_raiz = paste0(
+        "Interpretó $(A \\cup B \\cup C)^c$ como el complemento de un solo conjunto."
+      ),
+      precondicion = function(params) TRUE,
+      calcula = function(datos_ord, datos_presentados = NULL) { val_d3 }
+    )
+  )
+
+  opciones_config <- list(
+    list(
+      tipo_somb = "complement_all",
+      somb_args = list(),
+      valor = val_correcto, key = "correcto"
+    ),
+    list(
+      tipo_somb = "clip_clip_fill",
+      somb_args = list(),
+      valor = val_d1, key = "error1"
+    ),
+    list(
+      tipo_somb = "fill_three",
+      somb_args = list(),
+      valor = val_d2, key = "error2"
+    ),
+    list(
+      tipo_somb = "complement_one",
+      somb_args = list(c_white = coord_compl),
+      valor = val_d3, key = "error3"
+    )
+  )
+
+  sol_analisis <- paste0(
+    "La expresión $(\\text{", ctx$sets[1], "} \\cup \\text{", ctx$sets[2],
+    "} \\cup \\text{", ctx$sets[3], "})^c$ representa a los ", ctx$sujeto,
+    " que **no pertenecen a ninguno** de los tres conjuntos. Es la región ",
+    "del rectángulo que queda completamente fuera de los tres círculos."
+  )
+  sol_procedimiento <- paste0(
+    "**Paso 1 — Calcular la unión:** La unión de los tres conjuntos incluye ",
+    "todos los ", ctx$sujeto, " que pertenecen a al menos uno: $",
+    total_union, "$ ", ctx$sujeto, ".\n\n",
+    "**Paso 2 — Calcular el complemento:** El complemento son los que no ",
+    "pertenecen a ninguno:\n\n",
+    "$$n - n(A \\cup B \\cup C) = ", n_total, " - ", total_union,
+    " = \\mathbf{", outside, "}$$\n\n",
+    "**Verificación:** El número en la esquina del rectángulo (fuera de los ",
+    "tres círculos) es ", outside, ", que coincide con el resultado."
+  )
+  sol_resultado <- paste0(
+    "El diagrama correcto sombreó **únicamente** la región exterior a los tres ",
+    "conjuntos (dentro del rectángulo pero fuera de todos los círculos), ",
+    "correspondiente a **", outside, "** ", ctx$sujeto, "."
+  )
+  sol_estrategia <- paste0(
+    "1. **Identifica** la región del complemento: está dentro del rectángulo ",
+    "pero fuera de los tres círculos.\n",
+    "2. **Calcula** restando la unión del total: $n - n(A \\cup B \\cup C)$.\n",
+    "3. **Verifica** que la región sombreada NO toca ninguno de los tres círculos.\n",
+    "4. **Recuerda**: $(A \\cup B \\cup C)^c$ = lo que no pertenece a ninguno de los tres."
+  )
+}
+
+# ===================================================================
+# MEZCLA INTERNA + TRACKING DE RESPUESTA CORRECTA
+# Regla: .claude/rules/graficos-como-opciones.md
+# exshuffle: FALSE + sample() interno
+# ===================================================================
+
+todas_opciones <- list()
+for (i in seq_along(opciones_config)) {
+  opc <- opciones_config[[i]]
+  todas_opciones[[opc$key]] <- list(
+    tipo_somb  = opc$tipo_somb,
+    somb_args  = opc$somb_args,
+    valor      = opc$valor,
+    error_idx  = if (opc$key == "correcto") NA_integer_
+                 else match(opc$key, c("error1", "error2", "error3"))
+  )
+}
+
+opciones_mezcladas  <- sample(todas_opciones)
+indice_correcto     <- which(names(opciones_mezcladas) == "correcto")
+solucion            <- rep(0L, 4)
+solucion[indice_correcto] <- 1L
+letras              <- c("A", "B", "C", "D")
+letra_correcta      <- letras[indice_correcto]
+names(opciones_mezcladas) <- letras
+
+# ===================================================================
+# COMPILACIÓN DE DIAGRAMAS TikZ → PNG
+# ===================================================================
+
+# Diagrama de contexto (con números, sin sombreado)
+tex_ctx <- generar_tex(ctx$sets, valores = valores_vec, n_total = n_total)
+compilar_tikz(tex_ctx, "diagrama_contexto")
+
+# Diagramas de opciones (con sombreado y números)
+for (l in seq_along(letras)) {
+  opc  <- opciones_mezcladas[[letras[l]]]
+  somb <- generar_sombreado(tipo = opc$tipo_somb, args = opc$somb_args)
+  tex_opc <- generar_tex(ctx$sets, sombreado = somb,
+                         valores = valores_vec, n_total = n_total)
+  compilar_tikz(tex_opc, paste0("diagrama_", tolower(letras[l])))
+}
+
+# ===================================================================
+# REFLEXIONES METACOGNITIVAS
+# ===================================================================
+
+reflexiones <- c(
+  "Identificar errores en la lectura de diagramas de Venn fortalece la comprensión de las operaciones entre conjuntos.",
+  "La diferencia entre intersección y unión es fundamental. Analizar errores ajenos nos ayuda a evitar cometerlos.",
+  "Antes de sombrear un diagrama de Venn, traduce la expresión simbólica a palabras y verifica cada operación paso a paso.",
+  "Los errores más comunes en diagramas de Venn son: confundir $\\cap$ con $\\cup$, olvidar la exclusión y confundir el complemento con la intersección.",
+  "Pensar sobre cómo pensamos (metacognición) es clave para detectar y corregir errores en la interpretación de diagramas."
+)
+reflexion <- reflexiones[sample(length(reflexiones), 1)]
+
+# ===================================================================
+# TEXTOS PARA SOLUTION ANSWERLIST
+# ===================================================================
+
+sol_texts <- sapply(letras, function(l) {
+  opc <- opciones_mezcladas[[l]]
+  if (is.na(opc$error_idx)) {
+    paste0("Correcto. ", sol_resultado)
+  } else {
+    err <- errores_conceptuales[[opc$error_idx]]
+    paste0("Incorrecto (", err$codigo, "): ", err$descripcion_corta,
+           " (", opc$valor, " ", ctx$sujeto, ").")
+  }
+}, USE.NAMES = FALSE)
+
+# ===================================================================
+# VERIFICACIONES
+# ===================================================================
+
+stopifnot(
+  length(unique(vals_opciones)) == 4,
+  sum(solucion) == 1,
+  val_correcto > 0,
+  all(valores_vec > 0),
+  file.exists("diagrama_contexto.png"),
+  all(file.exists(paste0("diagrama_", c("a", "b", "c", "d"), ".png")))
+)
+```
+
+Question
+========
+
+`r enunciado`
+
+```{r mostrar_contexto, echo=FALSE, results='asis'}
+cat("![](diagrama_contexto.png){width=70%}\n")
+```
+
+`r pregunta_texto`
+
+En notación de conjuntos: $`r notacion_latex`$
+
+Answerlist
+----------
+
+```{r mostrar_opciones, echo=FALSE, results='asis'}
+cat("* ![](diagrama_a.png){width=55%}\n")
+cat("* ![](diagrama_b.png){width=55%}\n")
+cat("* ![](diagrama_c.png){width=55%}\n")
+cat("* ![](diagrama_d.png){width=55%}\n")
+```
+
+Solution
+========
+
+### Análisis de la operación
+
+`r sol_analisis`
+
+### Procedimiento correcto
+
+`r sol_procedimiento`
+
+### Respuesta correcta: Opción `r letra_correcta`
+
+```{r mostrar_correcta, echo=FALSE, results='asis'}
+cat(paste0("![](diagrama_", tolower(letra_correcta), ".png){width=60%}\n"))
+```
+
+`r sol_resultado`
+
+### Análisis de errores comunes
+
+```{r analisis_errores, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (!is.na(opc$error_idx)) {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**Error ", err$codigo, " (Opción ", l, "):** ",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+
+### Propiedades de las operaciones de conjuntos
+
+- $A \cap B$ (**intersección**): elementos que pertenecen a **ambos** conjuntos simultáneamente.
+- $A \cup B$ (**unión**): elementos que pertenecen a **al menos uno** de los conjuntos.
+- $A \setminus B$ (**diferencia**): elementos que pertenecen a $A$ pero **no** a $B$.
+- $A^c$ (**complemento**): elementos que **no** pertenecen a $A$ (dentro del universo).
+- $(A \cap B) \setminus C$: intersección de $A$ y $B$ excluyendo los que también están en $C$.
+- $A \cap B \cap C$: elementos que pertenecen a los **tres conjuntos simultáneamente**.
+- $(A \cup B \cup C)^c$: elementos que **no pertenecen a ninguno** de los tres conjuntos.
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar errores
+
+`r sol_estrategia`
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+for (i in 1:4) {
+  cat(paste0("* ", sol_texts[i], "\n"))
+}
+```
+
+Meta-information
+================
+exname: diagrama_venn_encuesta_metacognitivo
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: FALSE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Interpreta y representa operaciones entre conjuntos usando diagramas de Venn
+exextra[Evidencia]: Identifica regiones en diagramas de Venn correspondientes a operaciones de conjuntos incluyendo diferencia, interseccion, complemento y triple interseccion
+exextra[Nivel]: 2
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: identificacion_region_diagrama

@@ -1,0 +1,62 @@
+\documentclass[tikz,border=5pt,png]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes,backgrounds,calc,positioning}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+	
+	\begin{tikzpicture}[thick, scale=1.2]
+		% Definición de colores
+		\definecolor{shadedregion}{RGB}{165, 194, 173} % Verde grisáceo de la imagen
+		\definecolor{labelbox}{RGB}{255, 255, 255} % Blanco para fondo de etiquetas
+		
+		% Coordenadas de los centros de los círculos y radio
+		\coordinate (M) at (-0.8, 0.8); % Mango (Arriba Izquierda)
+		\coordinate (F) at (2.0, 0.8);  % Fresa (Arriba Derecha)
+		\coordinate (Mo) at (0.6, -1.2); % Mora (Abajo)
+		\def\R{2.0} % Radio de los círculos
+		
+		% --- Sombreado para la Imagen C ---
+		% La región sombreada en la imagen C es exactamente la intersección
+		% de los conjuntos "Jugo de Fresa" y "Jugo de Mora".
+		\begin{scope}[on background layer]
+			% Usamos 'clip' para restringir el área de dibujo al círculo de Fresa.
+			\clip (F) circle (\R);
+			% Luego, rellenamos el círculo de Mora dentro de esa área recortada.
+			% El resultado es la región común a ambos círculos.
+			\fill[shadedregion] (Mo) circle (\R);
+		\end{scope}
+		
+		% --- Contornos de los Círculos ---
+		\draw (M) circle (\R);
+		\draw (F) circle (\R);
+		\draw (Mo) circle (\R);
+		
+		% --- Conjunto Universal (Marco) ---
+		\draw (-3.5, -3.5) rectangle (5.0, 3.2);
+		
+		% --- Título ---
+		\node[anchor=south, font=\bfseries\large, align=center] at (0.75, 3.3) {C. \hspace{1em} Números de encuestados= 76};
+		
+		% --- Etiquetas de los Conjuntos ---
+		\tikzset{setlabel/.style={draw, fill=labelbox, font=\bfseries\small, inner sep=3pt}}
+		\node[setlabel, anchor=south] at ($(M) + (0, \R)$) {Jugo de Mango};
+		\node[setlabel, anchor=south] at ($(F) + (0, \R)$) {Jugo de Fresa};
+		\node[setlabel, anchor=north] at ($(Mo) - (0, \R)$) {Jugo de Mora};
+		
+		% --- Números (Datos) ---
+		% Colocación de los números en sus regiones respectivas.
+		\node[font=\bfseries] at (-1.6, 1.2) {7};  % Solo Mango
+		\node[font=\bfseries] at (2.8, 1.2) {5};   % Solo Fresa
+		\node[font=\bfseries] at (0.6, -2.2) {8};  % Solo Mora
+		\node[font=\bfseries] at (0.6, 1.5) {21};  % Mango y Fresa
+		\node[font=\bfseries] at (-0.5, -0.3) {15}; % Mango y Mora
+		\node[font=\bfseries] at (1.7, -0.3) {11};  % Fresa y Mora (Sombreado)
+		\node[font=\bfseries] at (0.6, 0.4) {7};   % Los tres (Sombreado)
+		\node[font=\bfseries] at (3.5, -2.0) {2};   % Fuera
+		
+	\end{tikzpicture}
+	
+\end{document}

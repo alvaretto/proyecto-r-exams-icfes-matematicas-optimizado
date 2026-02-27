@@ -1,0 +1,545 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r data_generation, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
+library(exams)
+library(reticulate)
+use_python(Sys.which("python3"), required = TRUE)
+
+# ===================================================================
+# FUNCIÓN PYTHON: Generación de diagramas de Venn con matplotlib
+# Regla: .claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md
+# ===================================================================
+
+py_func <- '
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import numpy as np
+
+def crear_venn(nombres, archivo, sombreado=None, idx_i=0, idx_j=1, idx_k=2,
+               valores=None, n_total=None):
+    fig, ax = plt.subplots(figsize=(7, 6))
+    centros = [(-0.8, 0.8), (2.0, 0.8), (0.6, -1.2)]
+    R = 2.0
+    color_sombra = "#A5C2AD"
+    if sombreado is not None:
+        xg = np.linspace(-3.8, 5.3, 1000)
+        yg = np.linspace(-3.8, 3.5, 1000)
+        X, Y = np.meshgrid(xg, yg)
+        inc = [np.sqrt((X - c[0])**2 + (Y - c[1])**2) <= R for c in centros]
+        ci, cj, ck = inc[idx_i], inc[idx_j], inc[idx_k]
+        mascaras = {
+            "correcto": ci & cj & ~ck,
+            "sin_exclusion": ci & cj,
+            "union_exclusion": (ci | cj) & ~ck,
+            "union_simple": ci | cj
+        }
+        ax.contourf(X, Y, mascaras[sombreado].astype(float),
+                    levels=[0.5, 1.5], colors=[color_sombra], zorder=0)
+    for c in centros:
+        ax.add_patch(plt.Circle(c, R, fill=False, ec="black", lw=1.5, zorder=1))
+    lpos = [(-1.3, 1.5), (3.1, 1.4), (0.6, -2.8)]
+    for (lx, ly), nm in zip(lpos, nombres):
+        ax.text(lx, ly, nm, fontsize=14, fontweight="bold",
+                ha="center", va="center", zorder=2)
+    if valores is not None:
+        vpos = [(-2.0, 0.3), (3.3, 0.3), (0.6, -2.3),
+                (0.6, 1.5), (-0.5, -0.3), (1.7, -0.3),
+                (0.6, 0.4), (3.8, -2.5)]
+        for (px, py), v in zip(vpos, valores):
+            ax.text(px, py, str(v), fontsize=13, fontweight="bold",
+                    ha="center", va="center", zorder=2)
+    if n_total is not None:
+        ax.text(5.0, -3.0, str(n_total), fontsize=15, fontweight="bold",
+                ha="left", va="center", zorder=2)
+    ax.add_patch(mpatches.Rectangle((-3.5, -3.5), 8.5, 6.7,
+                 fill=False, ec="black", lw=1.5, zorder=1))
+    ax.set_xlim(-3.8, 6.0)
+    ax.set_ylim(-3.8, 3.5)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    plt.savefig(archivo, dpi=150, bbox_inches="tight", facecolor="white", pad_inches=0.1)
+    plt.close(fig)
+'
+py_run_string(py_func)
+
+# ===================================================================
+# CONTEXTOS NARRATIVOS CREATIVOS (8 plantillas, 6+ tipos)
+# Regla: .claude/rules/contextos-narrativos-creativos.md
+# ===================================================================
+
+contextos <- list(
+  # Tipo: Situacion problema
+  list(
+    sets = c("Mango", "Fresa", "Mora"),
+    verbo = "prefieren", sujeto = "clientes",
+    plantilla = function(prot, n) {
+      paste0(prot, " realizó una encuesta a ", n,
+             " clientes sobre sus jugos favoritos: mango, fresa y mora. ",
+             "Los resultados se resumen en el siguiente diagrama de Venn:")
+    },
+    protagonistas = c(
+      "Una cafetería del centro comercial",
+      "El restaurante escolar del colegio",
+      "Una tienda de jugos naturales del barrio"
+    )
+  ),
+  # Tipo: Narracion periodistica
+  list(
+    sets = c("Voleibol", "Tenis", "Ciclismo"),
+    verbo = "practican", sujeto = "estudiantes",
+    plantilla = function(prot, n) {
+      paste0("En ", prot, " se preguntó a ", n,
+             " estudiantes qué deportes practican: voleibol, tenis y ciclismo. ",
+             "El siguiente diagrama de Venn muestra las respuestas:")
+    },
+    protagonistas = c(
+      "los Juegos Intercolegiados de la ciudad",
+      "el colegio San Martín",
+      "la jornada deportiva del municipio"
+    )
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    sets = c("Piano", "Guitarra", "Flauta"),
+    verbo = "saben tocar", sujeto = "compañeros",
+    plantilla = function(prot, n) {
+      paste0("Para su proyecto de clase, ", prot,
+             " preguntó a ", n,
+             " compañeros qué instrumentos saben tocar: piano, guitarra ",
+             "y flauta. Organizó las respuestas en un diagrama de Venn:")
+    },
+    protagonistas = c("Valentina", "Santiago", "Camila", "Mateo")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    sets = c("Perros", "Gatos", "Peces"),
+    verbo = "tienen como mascota", sujeto = "familias",
+    plantilla = function(prot, n) {
+      paste0("El boletín de ", prot,
+             " publicó los resultados de una encuesta a ", n,
+             " familias del sector sobre sus mascotas: perros, gatos y peces.")
+    },
+    protagonistas = c(
+      "la junta del conjunto residencial",
+      "la asociación de vecinos del barrio",
+      "el periódico escolar"
+    )
+  ),
+  # Tipo: Dialogo implicito
+  list(
+    sets = c("Rojo", "Azul", "Verde"),
+    verbo = "eligieron como favorito", sujeto = "estudiantes",
+    plantilla = function(prot, n) {
+      paste0("--Necesitamos elegir los colores del uniforme --dijo ", prot,
+             ". Se encuestó a ", n,
+             " estudiantes sobre sus colores favoritos: rojo, azul y verde.")
+    },
+    protagonistas = c(
+      "la representante del curso",
+      "el presidente del consejo estudiantil",
+      "la directora de grupo"
+    )
+  ),
+  # Tipo: Pregunta retorica
+  list(
+    sets = c("Pizza", "Hamburguesa", "Tacos"),
+    verbo = "prefieren", sujeto = "personas",
+    plantilla = function(prot, n) {
+      paste0("¿Qué prefieren comer los jóvenes del sector? ", prot,
+             " encuestó a ", n,
+             " personas sobre sus comidas favoritas: pizza, hamburguesa ",
+             "y tacos. Los resultados se organizaron así:")
+    },
+    protagonistas = c(
+      "El comité de alimentación del colegio",
+      "La cafetería central del barrio",
+      "El equipo organizador de la feria gastronómica"
+    )
+  ),
+  # Tipo: Descubrimiento
+  list(
+    sets = c("Lectura", "Cine", "Videojuegos"),
+    verbo = "disfrutan", sujeto = "participantes",
+    plantilla = function(prot, n) {
+      paste0("Al organizar las actividades del fin de semana, ", prot,
+             " descubrió que entre ", n,
+             " participantes encuestados sobre sus pasatiempos favoritos ",
+             "(lectura, cine y videojuegos) había combinaciones interesantes:")
+    },
+    protagonistas = c(
+      "el coordinador del club juvenil",
+      "la monitora del programa recreativo",
+      "la líder del grupo scout local"
+    )
+  ),
+  # Tipo: Accion en curso
+  list(
+    sets = c("Cumbia", "Salsa", "Rock"),
+    verbo = "escuchan", sujeto = "asistentes",
+    plantilla = function(prot, n) {
+      paste0("Durante la semana cultural de ", prot,
+             ", se hizo una encuesta a ", n,
+             " asistentes sobre los géneros musicales que escuchan: ",
+             "cumbia, salsa y rock. El diagrama de Venn resume las preferencias:")
+    },
+    protagonistas = c(
+      "el colegio Simón Bolívar",
+      "la casa de la cultura del municipio",
+      "el centro comunitario del barrio"
+    )
+  )
+)
+
+# ===================================================================
+# GENERACION DE DATOS ALEATORIOS
+# ===================================================================
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+prot <- sample(ctx$protagonistas, 1)
+
+# Regiones del Venn (todas > 0) + tipo de pregunta
+# Iterar hasta obtener 4 valores de opciones unicos
+repeat {
+  solo1 <- sample(3:12, 1)
+  solo2 <- sample(3:12, 1)
+  solo3 <- sample(3:12, 1)
+  int12 <- sample(5:18, 1)
+  int13 <- sample(5:18, 1)
+  int23 <- sample(5:18, 1)
+  triple <- sample(2:8, 1)
+  outside <- sample(1:5, 1)
+
+  n_total <- solo1 + solo2 + solo3 + int12 + int13 + int23 + triple + outside
+  if (n_total < 50 || n_total > 120) next
+
+  # Tipo de pregunta: cual par se intersecta y cual se excluye
+  tipo_pregunta <- sample(1:3, 1)
+
+  if (tipo_pregunta == 1) {
+    idx_i <- 1; idx_j <- 2; idx_k <- 3
+    val_correcto <- int12
+    val_sin_exclusion <- int12 + triple
+    val_union_exclusion <- solo1 + solo2 + int12
+    val_union_simple <- solo1 + solo2 + int12 + int13 + int23 + triple
+  } else if (tipo_pregunta == 2) {
+    idx_i <- 1; idx_j <- 3; idx_k <- 2
+    val_correcto <- int13
+    val_sin_exclusion <- int13 + triple
+    val_union_exclusion <- solo1 + solo3 + int13
+    val_union_simple <- solo1 + solo3 + int13 + int12 + int23 + triple
+  } else {
+    idx_i <- 2; idx_j <- 3; idx_k <- 1
+    val_correcto <- int23
+    val_sin_exclusion <- int23 + triple
+    val_union_exclusion <- solo2 + solo3 + int23
+    val_union_simple <- solo2 + solo3 + int23 + int12 + int13 + triple
+  }
+
+  vals_opciones <- c(val_correcto, val_sin_exclusion,
+                     val_union_exclusion, val_union_simple)
+  if (length(unique(vals_opciones)) == 4) break
+}
+
+nombre_si <- ctx$sets[idx_i]
+nombre_sj <- ctx$sets[idx_j]
+nombre_sk <- ctx$sets[idx_k]
+enunciado <- ctx$plantilla(prot, n_total)
+
+# ===================================================================
+# POOL DE ERRORES CONCEPTUALES
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+# ===================================================================
+
+errores_conceptuales <- list(
+  list(
+    codigo = "CNJ-VEN-01",
+    nombre = "Intersección sin exclusión",
+    descripcion_corta = paste0(
+      "Identificó ", nombre_si, " $\\cap$ ", nombre_sj,
+      " pero no excluyó ", nombre_sk
+    ),
+    descripcion_larga = paste0(
+      "Identificó correctamente la intersección de ", nombre_si,
+      " y ", nombre_sj, ", pero no excluyó los elementos que también ",
+      "pertenecen a ", nombre_sk, ". Esto incluye erróneamente los ",
+      triple, " elementos de la triple intersección, obteniendo ",
+      val_sin_exclusion, " en vez de ", val_correcto, "."
+    ),
+    causa_raiz = paste0(
+      "Omisión del operador diferencia de conjuntos. Interpretó (",
+      nombre_si, " $\\cap$ ", nombre_sj, ") $\\setminus$ ", nombre_sk,
+      " como simplemente ", nombre_si, " $\\cap$ ", nombre_sj, "."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      val_sin_exclusion
+    },
+    tipo_sombreado = "sin_exclusion"
+  ),
+  list(
+    codigo = "CNJ-VEN-02",
+    nombre = "Unión con exclusión",
+    descripcion_corta = paste0(
+      "Sombreó (", nombre_si, " $\\cup$ ", nombre_sj,
+      ") $\\setminus$ ", nombre_sk, " en vez de la intersección"
+    ),
+    descripcion_larga = paste0(
+      "Confundió la intersección ($\\cap$) con la unión ($\\cup$). En lugar de sombrear ",
+      "solo la región común entre ", nombre_si, " y ", nombre_sj,
+      ", sombreó toda el área cubierta por al menos uno de estos conjuntos, ",
+      "excluyendo correctamente ", nombre_sk,
+      ". Obtuvo ", val_union_exclusion, " en vez de ", val_correcto, "."
+    ),
+    causa_raiz = "Confusión entre los operadores intersección ($\\cap$) y unión ($\\cup$).",
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      val_union_exclusion
+    },
+    tipo_sombreado = "union_exclusion"
+  ),
+  list(
+    codigo = "CNJ-VEN-03",
+    nombre = "Unión simple sin exclusión",
+    descripcion_corta = paste0(
+      "Sombreó ", nombre_si, " $\\cup$ ", nombre_sj,
+      " sin excluir ", nombre_sk
+    ),
+    descripcion_larga = paste0(
+      "Cometió dos errores: confundió la intersección con la unión, ",
+      "y además no aplicó la exclusión de ", nombre_sk,
+      ". El resultado es toda el área cubierta por ", nombre_si,
+      " o ", nombre_sj, ", obteniendo ",
+      val_union_simple, " en vez de ", val_correcto, "."
+    ),
+    causa_raiz = "Doble error: confusión $\\cap$/$\\cup$ y omisión de la diferencia de conjuntos.",
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      val_union_simple
+    },
+    tipo_sombreado = "union_simple"
+  )
+)
+
+# ===================================================================
+# MEZCLA INTERNA + TRACKING DE RESPUESTA CORRECTA
+# Regla: .claude/rules/graficos-como-opciones.md
+# exshuffle: FALSE + sample() interno
+# ===================================================================
+
+todas_opciones <- list(
+  correcto = list(tipo = "correcto", valor = val_correcto),
+  error1 = list(tipo = "sin_exclusion", valor = val_sin_exclusion,
+                error_idx = 1),
+  error2 = list(tipo = "union_exclusion", valor = val_union_exclusion,
+                error_idx = 2),
+  error3 = list(tipo = "union_simple", valor = val_union_simple,
+                error_idx = 3)
+)
+
+opciones_mezcladas <- sample(todas_opciones)
+indice_correcto <- which(names(opciones_mezcladas) == "correcto")
+solucion <- rep(0L, 4)
+solucion[indice_correcto] <- 1L
+letras <- c("A", "B", "C", "D")
+letra_correcta <- letras[indice_correcto]
+names(opciones_mezcladas) <- letras
+
+# ===================================================================
+# GENERACION DE DIAGRAMAS CON PYTHON/MATPLOTLIB
+# Regla: .claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md
+# ===================================================================
+
+valores_vec <- c(solo1, solo2, solo3, int12, int13, int23, triple, outside)
+
+# Transferir variables R a Python
+py_run_string(paste0(
+  "nombres_sets = ['", paste(ctx$sets, collapse = "', '"), "']\n",
+  "valores_vec = [", paste(valores_vec, collapse = ", "), "]\n",
+  "n_total_py = ", n_total, "\n",
+  "idx_i_py = ", idx_i - 1, "\n",
+  "idx_j_py = ", idx_j - 1, "\n",
+  "idx_k_py = ", idx_k - 1
+))
+
+# Diagrama de contexto (con numeros, sin sombreado)
+py_run_string(
+  "crear_venn(nombres_sets, 'diagrama_contexto.png', valores=valores_vec, n_total=n_total_py)"
+)
+
+# Diagramas de opciones (con sombreado + numeros)
+for (l in seq_along(letras)) {
+  tipo <- opciones_mezcladas[[letras[l]]]$tipo
+  py_run_string(paste0(
+    "crear_venn(nombres_sets, 'diagrama_", tolower(letras[l]), ".png', ",
+    "sombreado='", tipo, "', idx_i=idx_i_py, idx_j=idx_j_py, idx_k=idx_k_py, ",
+    "valores=valores_vec, n_total=n_total_py)"
+  ))
+}
+
+# ===================================================================
+# REFLEXIONES METACOGNITIVAS
+# ===================================================================
+
+reflexiones <- c(
+  "Identificar errores en la lectura de diagramas de Venn fortalece la comprensión de las operaciones entre conjuntos.",
+  "La diferencia entre intersección y unión es fundamental. Analizar errores ajenos nos ayuda a evitar cometerlos.",
+  "Antes de sombrear un diagrama de Venn, traduce la expresión simbólica a palabras y verifica cada operación paso a paso.",
+  "Los errores más comunes en diagramas de Venn son: confundir la intersección con la unión y olvidar la operación de exclusión.",
+  "Pensar sobre cómo pensamos (metacognición) es clave para detectar y corregir errores en la interpretación de diagramas."
+)
+reflexion <- reflexiones[sample(length(reflexiones), 1)]
+
+# ===================================================================
+# TEXTOS PARA SOLUTION ANSWERLIST
+# ===================================================================
+
+sol_texts <- sapply(letras, function(l) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "correcto") {
+    paste0("Correcto. Muestra la intersección de ",
+           nombre_si, " y ", nombre_sj, " excluyendo ", nombre_sk,
+           " (", val_correcto, " ", ctx$sujeto, ").")
+  } else {
+    err <- errores_conceptuales[[opc$error_idx]]
+    paste0("Incorrecto (", err$codigo, "): ", err$descripcion_corta,
+           " (", opc$valor, " ", ctx$sujeto, ").")
+  }
+}, USE.NAMES = FALSE)
+
+# ===================================================================
+# VERIFICACIONES
+# ===================================================================
+
+stopifnot(
+  length(unique(vals_opciones)) == 4,
+  sum(solucion) == 1,
+  val_correcto > 0,
+  all(valores_vec > 0),
+  file.exists("diagrama_contexto.png"),
+  all(file.exists(paste0("diagrama_", c("a", "b", "c", "d"), ".png")))
+)
+```
+
+Question
+========
+
+`r enunciado`
+
+```{r mostrar_contexto, echo=FALSE, results='asis'}
+cat("![](diagrama_contexto.png){width=70%}\n")
+```
+
+¿Cuál de los siguientes diagramas representa correctamente la región sombreada correspondiente a los `r ctx$sujeto` que `r ctx$verbo` `r nombre_si` **y** `r nombre_sj`, **pero no** `r nombre_sk`?
+
+En notación de conjuntos: $(\text{`r nombre_si`} \cap \text{`r nombre_sj`}) \setminus \text{`r nombre_sk`}$
+
+Answerlist
+----------
+
+```{r mostrar_opciones, echo=FALSE, results='asis'}
+cat("* ![](diagrama_a.png){width=55%}\n")
+cat("* ![](diagrama_b.png){width=55%}\n")
+cat("* ![](diagrama_c.png){width=55%}\n")
+cat("* ![](diagrama_d.png){width=55%}\n")
+```
+
+Solution
+========
+
+### Análisis de la operación
+
+La expresión $(\text{`r nombre_si`} \cap \text{`r nombre_sj`}) \setminus \text{`r nombre_sk`}$ se lee como: los `r ctx$sujeto` que `r ctx$verbo` `r nombre_si` **y** `r nombre_sj`, **pero no** `r nombre_sk`.
+
+Esta operación requiere dos pasos:
+
+1. **Intersección** ($\cap$): encontrar los `r ctx$sujeto` que pertenecen a **ambos** conjuntos, `r nombre_si` y `r nombre_sj`.
+2. **Exclusión** ($\setminus$): de esos, excluir los que también pertenecen a `r nombre_sk`.
+
+### Procedimiento correcto
+
+**Paso 1 -- Intersección:**
+
+$\text{`r nombre_si`} \cap \text{`r nombre_sj`}$ incluye dos regiones del diagrama:
+
+- La intersección exclusiva de `r nombre_si` y `r nombre_sj` (sin `r nombre_sk`): **`r val_correcto`** `r ctx$sujeto`.
+- La triple intersección (`r nombre_si` $\cap$ `r nombre_sj` $\cap$ `r nombre_sk`): **`r triple`** `r ctx$sujeto`.
+- Total de la intersección: $`r val_correcto` + `r triple` = `r val_sin_exclusion`$ `r ctx$sujeto`.
+
+**Paso 2 -- Exclusión:**
+
+De los `r val_sin_exclusion` `r ctx$sujeto` anteriores, se excluyen los `r triple` que también pertenecen a `r nombre_sk`:
+
+$$(\text{`r nombre_si`} \cap \text{`r nombre_sj`}) \setminus \text{`r nombre_sk`} = `r val_sin_exclusion` - `r triple` = \mathbf{`r val_correcto`}$$
+
+### Respuesta correcta: Opción `r letra_correcta`
+
+```{r mostrar_correcta, echo=FALSE, results='asis'}
+cat(paste0("![](diagrama_", tolower(letra_correcta), ".png){width=60%}\n"))
+```
+
+El diagrama correcto sombreó **únicamente** la región de intersección de `r nombre_si` y `r nombre_sj` que **no** pertenece a `r nombre_sk`, correspondiente a **`r val_correcto`** `r ctx$sujeto`.
+
+### Analisis de errores comunes
+
+```{r analisis_errores, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**Error ", err$codigo, " (Opcion ", l, "):** ",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+
+### Propiedades de las operaciones de conjuntos
+
+- $A \cap B$ (**interseccion**): elementos que pertenecen a **ambos** conjuntos simultaneamente.
+- $A \cup B$ (**union**): elementos que pertenecen a **al menos uno** de los conjuntos.
+- $A \setminus B$ (**diferencia**): elementos que pertenecen a $A$ pero **no** a $B$.
+- La operacion $(A \cap B) \setminus C$ combina interseccion y diferencia: primero se halla lo que comparten $A$ y $B$, luego se excluye lo que tambien esta en $C$.
+
+### Reflexion metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar errores
+
+1. **Traduce** la expresion simbolica a palabras antes de sombrear el diagrama.
+2. **Aplica** cada operacion de forma secuencial: primero la interseccion ($\cap$), luego la exclusion ($\setminus$).
+3. **Verifica** contando los elementos de la region sombreada y comparando con el calculo numerico.
+4. **Recuerda**: $\cap$ = "ambos"; $\cup$ = "al menos uno"; $\setminus$ = "pero no".
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+for (i in 1:4) {
+  cat(paste0("* ", sol_texts[i], "\n"))
+}
+```
+
+Meta-information
+================
+exname: diagrama_venn_encuesta_metacognitivo_py
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: FALSE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Interpreta y representa operaciones entre conjuntos usando diagramas de Venn
+exextra[Evidencia]: Identifica regiones en diagramas de Venn correspondientes a operaciones compuestas de interseccion y diferencia
+exextra[Nivel]: 2
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: identificacion_region_diagrama
