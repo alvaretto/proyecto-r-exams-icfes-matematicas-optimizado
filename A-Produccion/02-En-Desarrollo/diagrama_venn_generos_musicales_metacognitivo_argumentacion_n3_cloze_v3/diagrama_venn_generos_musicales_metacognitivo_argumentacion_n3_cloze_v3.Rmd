@@ -1,0 +1,1113 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    latex_engine: xelatex
+# icfes:
+#   competencia: argumentación
+#   componente: aleatorio
+#   nivel_dificultad: 3
+#   pensamiento: aleatorio
+#   contenido_matematico: diagramas_de_venn_operaciones_conjuntos
+#   eje_tematico: probabilidad_principios_conteo
+---
+```{r setup, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(exams)
+library(digest)
+library(testthat)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# ============================================================================
+# MOTOR DE GENERACIÓN DE DATOS PARA DIAGRAMA DE VENN (3 CONJUNTOS)
+# ============================================================================
+
+# --- Pool de contextos narrativos creativos (8 plantillas variadas) ---
+contextos <- list(
+  # Tipo 1: Situación problema
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "El comité de bienestar del colegio quiere conocer las preferencias ",
+        "culturales de los estudiantes. ", prot,
+        " coordinó una encuesta a ", n,
+        " jóvenes sobre los géneros musicales que escuchan: ",
+        A, ", ", B, " y ", C, "."
+      )
+    },
+    protagonistas = c(
+      "la orientadora escolar",
+      "el coordinador de convivencia",
+      "la directora de grupo de undécimo"
+    )
+  ),
+  # Tipo 2: Pregunta retórica
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "¿Qué géneros musicales prefieren los adolescentes hoy en día? ",
+        "Para responder esta pregunta, ", prot,
+        " encuestó a ", n,
+        " estudiantes y les preguntó si escuchaban ",
+        A, ", ", B, " o ", C, "."
+      )
+    },
+    protagonistas = c(
+      "el grupo de investigación del colegio",
+      "la emisora escolar",
+      "el semillero de estadística"
+    )
+  ),
+  # Tipo 3: Narración periodística
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "En la última edición del periódico escolar, ", prot,
+        " publicó los resultados de una encuesta realizada a ", n,
+        " estudiantes sobre sus preferencias musicales entre ",
+        A, ", ", B, " y ", C, "."
+      )
+    },
+    protagonistas = c(
+      "el equipo de redacción de décimo",
+      "la sección de cultura y entretenimiento",
+      "los reporteros del noticiero estudiantil"
+    )
+  ),
+  # Tipo 4: Diálogo implícito
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "—Necesitamos estos datos para organizar el festival —dijo ", prot,
+        ". Se preguntó a ", n,
+        " estudiantes si escuchaban ",
+        A, ", ", B, " o ", C, "."
+      )
+    },
+    protagonistas = c(
+      "la representante del consejo estudiantil",
+      "el profesor de música",
+      "la coordinadora cultural"
+    )
+  ),
+  # Tipo 5: Perspectiva del estudiante
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "Para su proyecto de estadística, ", prot,
+        " decidió investigar los gustos musicales de su colegio. Encuestó a ", n,
+        " compañeros preguntándoles si escuchaban ",
+        A, ", ", B, " o ", C, "."
+      )
+    },
+    protagonistas = c(
+      "Valentina", "Santiago", "Isabela", "Mateo", "Luciana"
+    )
+  ),
+  # Tipo 6: Descubrimiento
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "Al analizar los datos de la jornada cultural, ", prot,
+        " descubrió información interesante. Se había encuestado a ", n,
+        " estudiantes sobre si escuchaban ",
+        A, ", ", B, " o ", C, "."
+      )
+    },
+    protagonistas = c(
+      "la profesora de matemáticas",
+      "el director de la banda escolar",
+      "la bibliotecaria del colegio"
+    )
+  ),
+  # Tipo 7: Contexto institucional
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "El informe trimestral de ", prot,
+        " incluyó los resultados de una encuesta aplicada a ", n,
+        " estudiantes sobre sus géneros musicales preferidos: ",
+        A, ", ", B, " y ", C, "."
+      )
+    },
+    protagonistas = c(
+      "la oficina de bienestar estudiantil",
+      "la coordinación académica",
+      "el departamento de arte y cultura"
+    )
+  ),
+  # Tipo 8: Acción en curso
+  list(
+    plantilla = function(prot, n, A, B, C) {
+      paste0(
+        "Durante la semana cultural del colegio, ", prot,
+        " realizó una encuesta a ", n,
+        " estudiantes para conocer cuántos escuchaban ",
+        A, ", ", B, " o ", C, "."
+      )
+    },
+    protagonistas = c(
+      "el comité organizador",
+      "los estudiantes de décimo",
+      "la mesa directiva del gobierno escolar"
+    )
+  )
+)
+
+# --- Pool de temas para los 3 conjuntos ---
+temas_conjuntos <- list(
+  list(A = "Vallenato", B = "Salsa", C = "Reggaetón"),
+  list(A = "Cumbia", B = "Merengue", C = "Bachata"),
+  list(A = "Rap", B = "Electrónica", C = "Rock"),
+  list(A = "Pop", B = "Reggaetón", C = "Vallenato"),
+  list(A = "Salsa", B = "Cumbia", C = "Merengue"),
+  list(A = "Bachata", B = "Pop", C = "Rap"),
+  list(A = "Rock", B = "Salsa", C = "Electrónica"),
+  list(A = "Vallenato", B = "Bachata", C = "Cumbia"),
+  list(A = "Reggaetón", B = "Rock", C = "Pop"),
+  list(A = "Merengue", B = "Rap", C = "Salsa")
+)
+
+# --- Pool de nombres balanceados por género ---
+nombres_femeninos <- c("Mariana", "Sofía", "Valentina", "Isabela", "Luciana",
+                       "Camila", "Daniela", "Laura", "Andrea", "Carolina")
+nombres_masculinos <- c("Santiago", "Mateo", "Sebastián", "Andrés", "David",
+                        "Carlos", "Miguel", "Daniel", "Felipe", "Nicolás")
+
+# ============================================================================
+# GENERACIÓN DE DATOS VÁLIDOS PARA DIAGRAMA DE VENN
+# ============================================================================
+
+generate_valid_data <- function(max_attempts = 1000) {
+  for (attempt in 1:max_attempts) {
+    n_total <- sample(30:50, 1)
+    n_A <- sample(15:25, 1)
+    n_B <- sample(15:25, 1)
+    n_C <- sample(20:30, 1)
+
+    n_AB <- sample(3:8, 1)
+    n_AC <- sample(5:10, 1)
+    n_BC <- sample(3:8, 1)
+    n_all <- sample(2:5, 1)
+
+    n_only_A <- n_A - n_AB - n_AC + n_all
+    n_only_B <- n_B - n_AB - n_BC + n_all
+    n_only_C <- n_C - n_AC - n_BC + n_all
+    n_AB_only <- n_AB - n_all
+    n_AC_only <- n_AC - n_all
+    n_BC_only <- n_BC - n_all
+
+    n_none <- n_total - (n_A + n_B + n_C - n_AB - n_AC - n_BC + n_all)
+
+    # Verificar que TODAS las regiones sean estrictamente positivas (> 0)
+    # para que el diagrama sea interesante y los errores siempre apliquen
+    regiones <- c(n_only_A, n_only_B, n_only_C,
+                  n_AB_only, n_AC_only, n_BC_only,
+                  n_all, n_none)
+
+    if (all(regiones > 0)) {
+      return(list(
+        n_total = n_total,
+        n_A = n_A, n_B = n_B, n_C = n_C,
+        n_AB = n_AB, n_AC = n_AC, n_BC = n_BC, n_all = n_all,
+        n_only_A = n_only_A, n_only_B = n_only_B, n_only_C = n_only_C,
+        n_AB_only = n_AB_only, n_AC_only = n_AC_only, n_BC_only = n_BC_only,
+        n_none = n_none
+      ))
+    }
+  }
+  stop("No se pudieron generar datos válidos después de ", max_attempts, " intentos")
+}
+
+data <- generate_valid_data()
+for (name in names(data)) assign(name, data[[name]])
+
+# Seleccionar tema de conjuntos
+tema <- temas_conjuntos[[sample(length(temas_conjuntos), 1)]]
+A <- tema$A
+B <- tema$B
+C <- tema$C
+
+# Seleccionar contexto narrativo
+ctx <- contextos[[sample(length(contextos), 1)]]
+prot <- sample(ctx$protagonistas, 1)
+enunciado_contexto <- ctx$plantilla(prot, n_total, A, B, C)
+
+# Seleccionar nombre del "estudiante que se equivocó"
+nombre_estudiante <- sample(c(nombres_femeninos, nombres_masculinos), 1)
+genero_est <- ifelse(nombre_estudiante %in% nombres_femeninos, "f", "m")
+
+# ============================================================================
+# POOL DE OPERACIONES DE CONJUNTOS (fuente de preguntas)
+# ============================================================================
+
+# Cada operación tiene: pregunta textual, respuesta correcta, fórmula LaTeX
+operaciones <- list(
+  list(
+    pregunta = function() sprintf("solo %s y %s (sin %s)", A, B, C),
+    valor = n_AB_only,
+    formula = sprintf("|%s \\cap %s| - |%s \\cap %s \\cap %s| = %d - %d = %d",
+                      A, B, A, B, C, n_AB, n_all, n_AB_only),
+    tipo = "interseccion_par"
+  ),
+  list(
+    pregunta = function() sprintf("solo %s y %s (sin %s)", A, C, B),
+    valor = n_AC_only,
+    formula = sprintf("|%s \\cap %s| - |%s \\cap %s \\cap %s| = %d - %d = %d",
+                      A, C, A, B, C, n_AC, n_all, n_AC_only),
+    tipo = "interseccion_par"
+  ),
+  list(
+    pregunta = function() sprintf("solo %s y %s (sin %s)", B, C, A),
+    valor = n_BC_only,
+    formula = sprintf("|%s \\cap %s| - |%s \\cap %s \\cap %s| = %d - %d = %d",
+                      B, C, A, B, C, n_BC, n_all, n_BC_only),
+    tipo = "interseccion_par"
+  ),
+  list(
+    pregunta = function() "los tres géneros musicales",
+    valor = n_all,
+    formula = sprintf("|%s \\cap %s \\cap %s| = %d", A, B, C, n_all),
+    tipo = "triple"
+  ),
+  list(
+    pregunta = function() "ninguno de los tres géneros",
+    valor = n_none,
+    formula = sprintf("n_{total} - |%s \\cup %s \\cup %s| = %d - %d = %d",
+                      A, B, C, n_total,
+                      n_total - n_none, n_none),
+    tipo = "complemento"
+  ),
+  list(
+    pregunta = function() "al menos dos de los tres géneros",
+    valor = n_AB_only + n_AC_only + n_BC_only + n_all,
+    formula = sprintf("(|%s \\cap %s| - |\\text{triple}|) + (|%s \\cap %s| - |\\text{triple}|) + (|%s \\cap %s| - |\\text{triple}|) + |\\text{triple}| = %d + %d + %d + %d = %d",
+                      A, B, A, C, B, C,
+                      n_AB_only, n_AC_only, n_BC_only, n_all,
+                      n_AB_only + n_AC_only + n_BC_only + n_all),
+    tipo = "al_menos_dos"
+  ),
+  list(
+    pregunta = function() "exactamente dos géneros musicales",
+    valor = n_AB_only + n_AC_only + n_BC_only,
+    formula = sprintf("%d + %d + %d = %d",
+                      n_AB_only, n_AC_only, n_BC_only,
+                      n_AB_only + n_AC_only + n_BC_only),
+    tipo = "exactamente_dos"
+  ),
+  list(
+    pregunta = function() "exactamente un género musical",
+    valor = n_only_A + n_only_B + n_only_C,
+    formula = sprintf("%d + %d + %d = %d",
+                      n_only_A, n_only_B, n_only_C,
+                      n_only_A + n_only_B + n_only_C),
+    tipo = "exactamente_uno"
+  )
+)
+
+# Seleccionar una operación aleatoria para la Parte 2
+op_idx <- sample(length(operaciones), 1)
+operacion_sel <- operaciones[[op_idx]]
+pregunta_calculo <- operacion_sel$pregunta()
+valor_correcto <- operacion_sel$valor
+formula_correcta <- operacion_sel$formula
+tipo_operacion <- operacion_sel$tipo
+
+# ============================================================================
+# POOL DE ERRORES CONCEPTUALES (6 errores con calcula() determinista)
+# ============================================================================
+
+errores_conceptuales <- list(
+  list(
+    codigo = "PROB-VENN-01",
+    nombre = "Inclusión sin exclusión triple",
+    descripcion_corta = paste0(
+      "No restó la intersección triple al calcular una intersección de dos conjuntos"
+    ),
+    descripcion_larga = paste0(
+      "Al calcular cuántas personas pertenecen a exactamente dos conjuntos, ",
+      "tomó la intersección total de dos conjuntos sin restar quienes también ",
+      "pertenecen al tercero. Es decir, confundió $|A \\cap B|$ con $|A \\cap B| - |A \\cap B \\cap C|$."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre intersección total e intersección exclusiva. ",
+      "El estudiante no distingue entre «escuchan A y B» (incluye los que también ",
+      "escuchan C) y «escuchan solo A y B» (excluye los que escuchan C)."
+    ),
+    precondicion = function(params) params$tipo_operacion == "interseccion_par",
+    calcula = function(data, tipo_operacion) {
+      if (tipo_operacion == "interseccion_par") {
+        # Devuelve n_AB en vez de n_AB_only (no resta el triple)
+        # Selecciona la intersección que corresponde
+        return(data$n_AB)  # Valor incorrecto: incluye el triple
+      }
+      return(NA)
+    }
+  ),
+  list(
+    codigo = "PROB-VENN-02",
+    nombre = "Exclusivo sin restar intersecciones",
+    descripcion_corta = paste0(
+      "No restó las intersecciones al calcular los que pertenecen solo a un conjunto"
+    ),
+    descripcion_larga = paste0(
+      "Al calcular cuántas personas escuchan solo un género, tomó el total del ",
+      "conjunto sin restar las intersecciones con los otros dos conjuntos. ",
+      "Es decir, usó $|A|$ en vez de $|A| - |A \\cap B| - |A \\cap C| + |A \\cap B \\cap C|$."
+    ),
+    causa_raiz = paste0(
+      "No aplicó correctamente el principio de inclusión-exclusión. ",
+      "Confundió la cardinalidad total del conjunto con la región exclusiva del diagrama."
+    ),
+    precondicion = function(params) params$tipo_operacion == "exactamente_uno",
+    calcula = function(data, tipo_operacion) {
+      if (tipo_operacion == "exactamente_uno") {
+        return(data$n_A)  # Valor incorrecto: total del conjunto, no solo exclusivo
+      }
+      return(NA)
+    }
+  ),
+  list(
+    codigo = "PROB-VENN-03",
+    nombre = "Doble conteo en unión",
+    descripcion_corta = paste0(
+      "Sumó las cardinalidades de dos conjuntos sin restar la intersección"
+    ),
+    descripcion_larga = paste0(
+      "Al calcular la unión de dos o más conjuntos, sumó sus cardinalidades ",
+      "directamente sin aplicar el principio de inclusión-exclusión. ",
+      "Es decir, calculó $|A| + |B|$ en vez de $|A| + |B| - |A \\cap B|$."
+    ),
+    causa_raiz = paste0(
+      "Error de doble conteo: las personas que pertenecen a ambos conjuntos ",
+      "se cuentan dos veces al sumar las cardinalidades individuales."
+    ),
+    precondicion = function(params) TRUE,  # Siempre puede aplicar
+    calcula = function(data, tipo_operacion) {
+      # Suma directa sin restar intersección (doble conteo)
+      return(data$n_A + data$n_B)  # Valor incorrecto
+    }
+  ),
+  list(
+    codigo = "PROB-VENN-04",
+    nombre = "Complemento parcial",
+    descripcion_corta = paste0(
+      "Al calcular el complemento, restó solo un conjunto del total en vez de la unión completa"
+    ),
+    descripcion_larga = paste0(
+      "Al calcular cuántas personas no pertenecen a ninguno de los tres conjuntos, ",
+      "restó solo la cardinalidad de un conjunto del total, en vez de restar la ",
+      "unión de los tres conjuntos: $n_{total} - |A|$ en vez de $n_{total} - |A \\cup B \\cup C|$."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre complemento de un conjunto y complemento de la unión. ",
+      "El estudiante no consideró que «ninguno» significa no pertenecer a ninguno ",
+      "de los tres conjuntos simultáneamente."
+    ),
+    precondicion = function(params) params$tipo_operacion == "complemento",
+    calcula = function(data, tipo_operacion) {
+      if (tipo_operacion == "complemento") {
+        return(data$n_total - data$n_A)  # Valor incorrecto: solo resta un conjunto
+      }
+      return(NA)
+    }
+  ),
+  list(
+    codigo = "PROB-VENN-05",
+    nombre = "Al menos dos = exactamente dos",
+    descripcion_corta = paste0(
+      "Confundió «al menos dos» con «exactamente dos», omitiendo la intersección triple"
+    ),
+    descripcion_larga = paste0(
+      "Al calcular cuántas personas escuchan al menos dos géneros, solo contó ",
+      "quienes escuchan exactamente dos, olvidando incluir a quienes escuchan los tres. ",
+      "«Al menos dos» incluye tanto exactamente dos como exactamente tres."
+    ),
+    causa_raiz = paste0(
+      "Error de interpretación del cuantificador «al menos». ",
+      "El estudiante interpretó «al menos dos» como «exactamente dos», ",
+      "sin considerar que «al menos» es un límite inferior, no un valor exacto."
+    ),
+    precondicion = function(params) params$tipo_operacion == "al_menos_dos",
+    calcula = function(data, tipo_operacion) {
+      if (tipo_operacion == "al_menos_dos") {
+        # Solo exactamente dos, sin incluir el triple
+        return(data$n_AB_only + data$n_AC_only + data$n_BC_only)
+      }
+      return(NA)
+    }
+  ),
+  list(
+    codigo = "PROB-VENN-06",
+    nombre = "Confusión de regiones adyacentes",
+    descripcion_corta = paste0(
+      "Leyó una región incorrecta del diagrama de Venn al responder la pregunta"
+    ),
+    descripcion_larga = paste0(
+      "Al leer el diagrama de Venn, el estudiante tomó el valor de una región ",
+      "adyacente a la correcta. Por ejemplo, al buscar quienes escuchan los tres ",
+      "géneros, tomó el valor de una intersección de solo dos conjuntos."
+    ),
+    causa_raiz = paste0(
+      "Dificultad en la lectura del diagrama de Venn. ",
+      "Las regiones del diagrama de tres conjuntos son visualmente complejas, ",
+      "y el estudiante confundió la ubicación espacial de la región solicitada."
+    ),
+    precondicion = function(params) TRUE,  # Siempre puede aplicar
+    calcula = function(data, tipo_operacion) {
+      # Devuelve un valor de una región diferente a la correcta
+      regiones <- c(data$n_only_A, data$n_only_B, data$n_only_C,
+                    data$n_AB_only, data$n_AC_only, data$n_BC_only)
+      return(regiones[1])  # Primera región disponible (determinista)
+    }
+  )
+)
+
+# --- Filtrar errores aplicables según la operación seleccionada ---
+params <- list(tipo_operacion = tipo_operacion)
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  err$precondicion(params)
+}))
+
+# Seleccionar un error aleatorio entre los aplicables
+error_idx <- sample(errores_aplicables_idx, 1)
+error_sel <- errores_conceptuales[[error_idx]]
+
+# Calcular la respuesta errónea
+respuesta_erronea <- error_sel$calcula(data, tipo_operacion)
+
+# Verificar que la respuesta errónea sea diferente de la correcta y no NA
+# Si coincide o es NA, seleccionar otro error
+intentos_error <- 0
+while ((is.na(respuesta_erronea) || respuesta_erronea == valor_correcto) && intentos_error < 20) {
+  errores_aplicables_idx_filtrado <- setdiff(errores_aplicables_idx, error_idx)
+  if (length(errores_aplicables_idx_filtrado) == 0) break
+  error_idx <- sample(errores_aplicables_idx_filtrado, 1)
+  error_sel <- errores_conceptuales[[error_idx]]
+  respuesta_erronea <- error_sel$calcula(data, tipo_operacion)
+  intentos_error <- intentos_error + 1
+}
+
+# Si aún coincide o es NA, forzar un error aritmético simple
+if (is.na(respuesta_erronea) || respuesta_erronea == valor_correcto) {
+  respuesta_erronea <- valor_correcto + sample(c(-2, -1, 1, 2), 1)
+  error_sel <- list(
+    codigo = "PROB-VENN-07",
+    nombre = "Error aritmético",
+    descripcion_corta = "Cometió un error aritmético al sumar o restar las regiones",
+    descripcion_larga = paste0(
+      "Al realizar las operaciones aritméticas con los valores del diagrama, ",
+      "el estudiante cometió un error de cálculo obteniendo un resultado ",
+      "incorrecto por una diferencia de ", abs(valor_correcto - respuesta_erronea), "."
+    ),
+    causa_raiz = paste0(
+      "Error de cálculo aritmético. Aunque el procedimiento conceptual era correcto, ",
+      "el estudiante se equivocó al sumar o restar los valores numéricos."
+    )
+  )
+}
+
+# ============================================================================
+# PARTE 1 (schoice): IDENTIFICAR EL ERROR CONCEPTUAL
+# ============================================================================
+
+# Construir opciones de la Parte 1
+opciones_p1 <- character(4)
+sol_p1 <- rep(0L, 4)
+
+# La opción correcta es la descripción del error seleccionado
+opciones_p1[1] <- error_sel$descripcion_corta
+
+# Construir 3 distractores de otros errores
+otros_errores_idx <- setdiff(seq_along(errores_conceptuales), error_idx)
+distractores_idx <- sample(otros_errores_idx, min(3, length(otros_errores_idx)))
+for (i in seq_along(distractores_idx)) {
+  opciones_p1[i + 1] <- errores_conceptuales[[distractores_idx[i]]]$descripcion_corta
+}
+
+# Mezclar opciones y rastrear la correcta
+orden_p1 <- sample(4)
+opciones_p1 <- opciones_p1[orden_p1]
+sol_p1[which(orden_p1 == 1)] <- 1L
+
+sol_p1_str <- paste(sol_p1, collapse = "")
+
+# ============================================================================
+# PARTE 2 (num): CALCULAR LA RESPUESTA CORRECTA
+# ============================================================================
+
+resp2 <- valor_correcto
+
+# ============================================================================
+# PARTE 3 (mchoice): EVALUAR AFIRMACIONES SOBRE OPERACIONES DE CONJUNTOS
+# ============================================================================
+
+# Pool de afirmaciones verdaderas
+afirmaciones_verdaderas <- list(
+  list(
+    texto = paste0(
+      "El principio de inclusión-exclusión establece que ",
+      "$|A \\cup B| = |A| + |B| - |A \\cap B|$."
+    ),
+    explicacion = "Esta es la fórmula correcta del principio de inclusión-exclusión para dos conjuntos."
+  ),
+  list(
+    texto = paste0(
+      "El número de personas que no pertenecen a ningún conjunto se calcula como ",
+      "$n_{total} - |A \\cup B \\cup C|$."
+    ),
+    explicacion = "El complemento de la unión contiene exactamente los elementos que no están en ninguno."
+  ),
+  list(
+    texto = paste0(
+      "«Al menos dos» incluye tanto a quienes pertenecen a exactamente dos ",
+      "conjuntos como a quienes pertenecen a los tres."
+    ),
+    explicacion = "«Al menos dos» significa dos o más, lo cuál incluye exactamente dos y exactamente tres."
+  ),
+  list(
+    texto = paste0(
+      "En un diagrama de Venn con tres conjuntos, la región central ",
+      "representa la intersección de los tres conjuntos."
+    ),
+    explicacion = "La región donde se superponen los tres círculos corresponde a $A \\cap B \\cap C$."
+  ),
+  list(
+    texto = paste0(
+      "Para calcular «solo A y B», se debe restar del total de $A \\cap B$ ",
+      "quienes también pertenecen a C."
+    ),
+    explicacion = "Solo $A \\cap B = |A \\cap B| - |A \\cap B \\cap C|$, excluyendo la intersección triple."
+  ),
+  list(
+    texto = paste0(
+      "La suma de todas las regiones del diagrama de Venn (incluyendo el exterior) ",
+      "debe ser igual al total de personas encuestadas."
+    ),
+    explicacion = "Cada persona ocupa exactamente una región del diagrama, por lo que la suma es el total."
+  )
+)
+
+# Pool de afirmaciones falsas
+afirmaciones_falsas <- list(
+  list(
+    texto = paste0(
+      "$|A \\cup B| = |A| + |B|$, pues la unión es simplemente ",
+      "sumar las cardinalidades."
+    ),
+    explicacion = "Esto es falso: la suma directa cuenta dos veces a quienes pertenecen a ambos."
+  ),
+  list(
+    texto = paste0(
+      "«Al menos dos» y «exactamente dos» significan lo mismo ",
+      "en el contexto de diagramas de Venn."
+    ),
+    explicacion = "Esto es falso: «al menos dos» incluye exactamente dos Y exactamente tres."
+  ),
+  list(
+    texto = paste0(
+      "Si $|A| = 20$ y $|B| = 15$, entonces $|A \\cap B| = 35$."
+    ),
+    explicacion = "Esto es falso: 35 sería $|A| + |B|$, no la intersección. La intersección no puede ser mayor que ninguno de los conjuntos."
+  ),
+  list(
+    texto = paste0(
+      "El complemento de A es igual al total menos los que pertenecen ",
+      "solo a A."
+    ),
+    explicacion = "Esto es falso: el complemento de A incluye a quienes no están en A, sin importar si están en B o C."
+  ),
+  list(
+    texto = paste0(
+      "En un diagrama de Venn, $|A \\cap B|$ siempre es igual a ",
+      "«solo A y B»."
+    ),
+    explicacion = "Esto es falso: $|A \\cap B|$ incluye a quienes también pertenecen a C. «Solo A y B» excluye a los del triple."
+  ),
+  list(
+    texto = paste0(
+      "Si una persona pertenece a los tres conjuntos, no se cuenta ",
+      "en ninguna intersección de dos conjuntos."
+    ),
+    explicacion = "Esto es falso: quienes pertenecen a $A \\cap B \\cap C$ también pertenecen a $A \\cap B$, $A \\cap C$ y $B \\cap C$."
+  )
+)
+
+# Seleccionar 2 verdaderas + 2 falsas
+idx_v <- sample(length(afirmaciones_verdaderas), 2)
+idx_f <- sample(length(afirmaciones_falsas), 2)
+
+afirmaciones_sel <- list(
+  afirmaciones_verdaderas[[idx_v[1]]],
+  afirmaciones_falsas[[idx_f[1]]],
+  afirmaciones_verdaderas[[idx_v[2]]],
+  afirmaciones_falsas[[idx_f[2]]]
+)
+
+verdad_sel <- c(TRUE, FALSE, TRUE, FALSE)
+
+# Mezclar
+orden_p3 <- sample(4)
+afirmaciones_sel <- afirmaciones_sel[orden_p3]
+verdad_sel <- verdad_sel[orden_p3]
+
+sol_p3 <- as.integer(verdad_sel)
+sol_p3_str <- paste(sol_p3, collapse = "")
+
+# ============================================================================
+# PARTE 4 (schoice V/F): VERIFICAR AFIRMACIÓN ESPECÍFICA
+# ============================================================================
+
+# Generar una afirmación verificable con los datos del problema
+tipo_afirmacion_p4 <- sample(1:4, 1)
+
+if (tipo_afirmacion_p4 == 1) {
+  afirmacion_p4 <- sprintf(
+    "El número de personas que escuchan %s o %s (o ambos) es %d.",
+    A, B, n_A + n_B - n_AB
+  )
+  es_verdadera_p4 <- TRUE
+  explicacion_p4 <- sprintf(
+    "$|%s \\cup %s| = |%s| + |%s| - |%s \\cap %s| = %d + %d - %d = %d$.",
+    A, B, A, B, A, B, n_A, n_B, n_AB, n_A + n_B - n_AB
+  )
+} else if (tipo_afirmacion_p4 == 2) {
+  valor_falso <- n_A + n_B  # Sin restar intersección
+  afirmacion_p4 <- sprintf(
+    "El número de personas que escuchan %s o %s (o ambos) es %d.",
+    A, B, valor_falso
+  )
+  es_verdadera_p4 <- FALSE
+  explicacion_p4 <- sprintf(
+    "El valor correcto es $|%s \\cup %s| = %d + %d - %d = %d$, no %d. Se realizó doble conteo.",
+    A, B, n_A, n_B, n_AB, n_A + n_B - n_AB, valor_falso
+  )
+} else if (tipo_afirmacion_p4 == 3) {
+  afirmacion_p4 <- sprintf(
+    "Hay más personas que escuchan solo %s (%d) que personas que escuchan los tres géneros (%d).",
+    A, n_only_A, n_all
+  )
+  es_verdadera_p4 <- (n_only_A > n_all)
+  if (es_verdadera_p4) {
+    explicacion_p4 <- sprintf(
+      "Efectivamente, %d > %d, por lo que hay más personas que escuchan solo %s.",
+      n_only_A, n_all, A
+    )
+  } else {
+    explicacion_p4 <- sprintf(
+      "Esto es falso: %d no es mayor que %d.",
+      n_only_A, n_all
+    )
+  }
+} else {
+  afirmacion_p4 <- sprintf(
+    "La suma de todas las regiones del diagrama es %d.",
+    n_total
+  )
+  es_verdadera_p4 <- TRUE
+  explicacion_p4 <- sprintf(
+    "La suma de todas las regiones $(%d + %d + %d + %d + %d + %d + %d + %d) = %d = n_{total}$.",
+    n_only_A, n_only_B, n_only_C, n_AB_only, n_AC_only, n_BC_only, n_all, n_none, n_total
+  )
+}
+
+sol_p4 <- if (es_verdadera_p4) c(1L, 0L) else c(0L, 1L)
+sol_p4_str <- paste(sol_p4, collapse = "")
+
+# ============================================================================
+# POOL DE REFLEXIONES METACOGNITIVAS
+# ============================================================================
+
+reflexiones_metacognitivas <- list(
+  paste0(
+    "Identificar errores en el razonamiento de otros fortalece nuestra propia ",
+    "comprensión. Analizar por qué una respuesta es incorrecta es tan importante ",
+    "como saber calcular la respuesta correcta."
+  ),
+  paste0(
+    "Los diagramas de Venn son herramientas poderosas para organizar información, ",
+    "pero requieren lectura cuidadosa. Cada región tiene un significado preciso ",
+    "que debemos identificar antes de realizar cualquier cálculo."
+  ),
+  paste0(
+    "El principio de inclusión-exclusión evita el doble conteo. Cuando dos o más ",
+    "conjuntos se superponen, sumar sus cardinalidades directamente cuenta algunas ",
+    "personas más de una vez."
+  ),
+  paste0(
+    "Los cuantificadores «al menos», «exactamente» y «como máximo» tienen ",
+    "significados matemáticos precisos. Confundirlos es una fuente frecuente de ",
+    "errores en problemas de conjuntos."
+  )
+)
+
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# ============================================================================
+# TEXTO DESCRIPTIVO DE LA ENCUESTA
+# ============================================================================
+
+texto_encuesta <- sprintf(
+  paste0(
+    "Los resultados mostraron que %d escuchan %s, %d escuchan %s y %d escuchan %s. ",
+    "Además, %d escuchan %s y %s, %d escuchan %s y %s, %d escuchan %s y %s, ",
+    "y %d escuchan los tres géneros."
+  ),
+  n_A, A, n_B, B, n_C, C,
+  n_AB, A, B, n_AC, A, C, n_BC, B, C,
+  n_all
+)
+
+# Texto del error del estudiante
+if (genero_est == "f") {
+  texto_error_est <- sprintf(
+    "%s analizó los datos e intentó calcular cuántas personas escuchan %s. Sin embargo, obtuvo **%d** como respuesta.",
+    nombre_estudiante, pregunta_calculo, respuesta_erronea
+  )
+} else {
+  texto_error_est <- sprintf(
+    "%s analizó los datos e intentó calcular cuántas personas escuchan %s. Sin embargo, obtuvo **%d** como respuesta.",
+    nombre_estudiante, pregunta_calculo, respuesta_erronea
+  )
+}
+
+# ============================================================================
+# CÓDIGO TIKZ PARA EL DIAGRAMA DE VENN
+# ============================================================================
+
+typ <- match_exams_device()
+
+tikz_venn <- sprintf('
+\\begin{tikzpicture}[scale=0.85]
+  \\draw[thick] (-4.5,-4.5) rectangle (4.5,4.5) node[above left] {$U = %d$};
+  \\begin{scope}[opacity=0.4]
+    \\fill[red!60]   ( 90:1.5) circle (2.2);
+    \\fill[green!60] (210:1.5) circle (2.2);
+    \\fill[blue!60]  (330:1.5) circle (2.2);
+  \\end{scope}
+  \\draw[thick] ( 90:1.5) circle (2.2);
+  \\draw[thick] (210:1.5) circle (2.2);
+  \\draw[thick] (330:1.5) circle (2.2);
+  \\node[font=\\bfseries] at ( 90:3.5) {%s};
+  \\node[font=\\bfseries] at (210:3.5) {%s};
+  \\node[font=\\bfseries] at (330:3.5) {%s};
+  \\node at ( 90:1.5) {%d};
+  \\node at (210:1.5) {%d};
+  \\node at (330:1.5) {%d};
+  \\node at ( 30:1.8) {%d};
+  \\node at (150:1.8) {%d};
+  \\node at (270:1.8) {%d};
+  \\node at (0:0) {%d};
+  \\node at (-3.2,-3.5) {Ninguno: %d};
+\\end{tikzpicture}
+', n_total, A, B, C,
+  n_only_A, n_only_B, n_only_C,
+  n_AC_only, n_AB_only, n_BC_only,
+  n_all, n_none)
+
+# Función para incluir diagrama con renderizado condicional
+include_venn <- function() {
+  if (knitr::is_latex_output()) {
+    # Para PDF: insertar TikZ directamente (sin documentclass wrapper)
+    tikz_inline <- sprintf('
+\\begin{center}
+\\begin{tikzpicture}[scale=0.85]
+  \\draw[thick] (-4.5,-4.5) rectangle (4.5,4.5) node[above left] {$U = %d$};
+  \\begin{scope}[opacity=0.4]
+    \\fill[red!60]   ( 90:1.5) circle (2.2);
+    \\fill[green!60] (210:1.5) circle (2.2);
+    \\fill[blue!60]  (330:1.5) circle (2.2);
+  \\end{scope}
+  \\draw[thick] ( 90:1.5) circle (2.2);
+  \\draw[thick] (210:1.5) circle (2.2);
+  \\draw[thick] (330:1.5) circle (2.2);
+  \\node[font=\\bfseries] at ( 90:3.5) {%s};
+  \\node[font=\\bfseries] at (210:3.5) {%s};
+  \\node[font=\\bfseries] at (330:3.5) {%s};
+  \\node at ( 90:1.5) {%d};
+  \\node at (210:1.5) {%d};
+  \\node at (330:1.5) {%d};
+  \\node at ( 30:1.8) {%d};
+  \\node at (150:1.8) {%d};
+  \\node at (270:1.8) {%d};
+  \\node at (0:0) {%d};
+  \\node at (-3.2,-3.5) {Ninguno: %d};
+\\end{tikzpicture}
+\\end{center}
+', n_total, A, B, C,
+  n_only_A, n_only_B, n_only_C,
+  n_AC_only, n_AB_only, n_BC_only,
+  n_all, n_none)
+    cat(tikz_inline)
+  } else {
+    # Para HTML/DOCX: usar include_tikz para generar imagen
+    include_tikz(tikz_venn, name = "venn_diagram",
+                 markup = "markdown",
+                 format = typ,
+                 library = c("shapes", "backgrounds"),
+                 packages = c("tikz"),
+                 header = c("\\usepackage[utf8]{inputenc}", "\\usepackage[T1]{fontenc}"),
+                 width = "8cm")
+  }
+}
+
+# ============================================================================
+# TEXTOS PARA SOLUTION
+# ============================================================================
+
+# Textos de retroalimentación para Parte 1
+sol_texts_p1 <- sapply(1:4, function(i) {
+  if (sol_p1[i] == 1) {
+    paste0("**Correcto.** ", error_sel$descripcion_larga)
+  } else {
+    paste0("Incorrecto. Este no es el error que cometió ", nombre_estudiante, ".")
+  }
+})
+
+# Textos de retroalimentación para Parte 3
+sol_texts_p3 <- sapply(1:4, function(i) {
+  if (verdad_sel[i]) {
+    paste0("**Verdadero.** ", afirmaciones_sel[[i]]$explicacion)
+  } else {
+    paste0("**Falso.** ", afirmaciones_sel[[i]]$explicacion)
+  }
+})
+
+# Textos de retroalimentación para Parte 4
+sol_texts_p4 <- c(
+  if (es_verdadera_p4) paste0("**Verdadero.** ", explicacion_p4)
+  else paste0("Falso. ", explicacion_p4),
+  if (!es_verdadera_p4) paste0("**Falso.** ", explicacion_p4)
+  else paste0("Verdadero. ", explicacion_p4)
+)
+```
+
+```{r test_diversidad, echo=FALSE, results="hide"}
+# ============================================================================
+# TEST DE DIVERSIDAD: ≥200 versiones únicas de 300 intentos
+# Save/restore RNG state to prevent corruption of exams2html(n=N) generations
+# ============================================================================
+
+test_that("Diversidad de versiones: al menos 200 únicas de 300 intentos", {
+  saved_seed <- if (exists(".Random.seed", envir = globalenv())) {
+    get(".Random.seed", envir = globalenv())
+  } else NULL
+
+  versiones <- character(300)
+  for (i in 1:300) {
+    set.seed(i * 7 + 13)
+    d <- generate_valid_data()
+    tema_i <- temas_conjuntos[[sample(length(temas_conjuntos), 1)]]
+    op_i <- sample(length(operaciones), 1)
+    err_i <- sample(length(errores_conceptuales), 1)
+    versiones[i] <- digest::digest(list(d, tema_i, op_i, err_i))
+  }
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200,
+    info = paste("Solo", n_unicas, "versiones únicas de 300 intentos"))
+
+  # Restore RNG state
+  if (!is.null(saved_seed)) {
+    assign(".Random.seed", saved_seed, envir = globalenv())
+  } else {
+    rm(".Random.seed", envir = globalenv())
+  }
+})
+```
+
+```{r test_coherencia, echo=FALSE, results="hide"}
+# ============================================================================
+# TESTS DE COHERENCIA MATEMÁTICA
+# ============================================================================
+
+test_that("Regiones del diagrama suman n_total", {
+  suma_regiones <- n_only_A + n_only_B + n_only_C +
+    n_AB_only + n_AC_only + n_BC_only + n_all + n_none
+  expect_equal(suma_regiones, n_total,
+    info = paste("Suma regiones =", suma_regiones, "vs n_total =", n_total))
+})
+
+test_that("Todas las regiones son positivas", {
+  regiones <- c(n_only_A, n_only_B, n_only_C,
+                n_AB_only, n_AC_only, n_BC_only, n_all, n_none)
+  expect_true(all(regiones > 0),
+    info = paste("Regiones con valor <= 0:", paste(regiones, collapse = ", ")))
+})
+
+test_that("Cardinalidades de conjuntos son consistentes", {
+  expect_equal(n_A, n_only_A + n_AB_only + n_AC_only + n_all)
+  expect_equal(n_B, n_only_B + n_AB_only + n_BC_only + n_all)
+  expect_equal(n_C, n_only_C + n_AC_only + n_BC_only + n_all)
+})
+
+test_that("Parte 1: exactamente 1 opción correcta de 4", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+})
+
+test_that("Parte 2: valor correcto es positivo", {
+  expect_true(resp2 > 0, info = paste("resp2 =", resp2))
+})
+
+test_that("Parte 3: 4 afirmaciones con 2 verdaderas y 2 falsas", {
+  expect_equal(length(sol_p3), 4)
+  expect_equal(sum(sol_p3), 2)
+})
+
+test_that("Parte 4: exactamente 1 opción correcta de 2 (V/F)", {
+  expect_equal(sum(sol_p4), 1)
+  expect_equal(length(sol_p4), 2)
+})
+
+test_that("Error produce respuesta diferente de la correcta", {
+  expect_true(respuesta_erronea != valor_correcto,
+    info = paste("Error:", respuesta_erronea, "== Correcto:", valor_correcto))
+})
+
+test_that("Nivel 5B: resp2 coincide con valor de la operación seleccionada", {
+  expect_equal(resp2, operacion_sel$valor,
+    info = paste("resp2 =", resp2, "pero operacion_sel$valor =", operacion_sel$valor))
+})
+```
+
+
+Question
+========
+
+`r enunciado_contexto`
+
+`r texto_encuesta`
+
+```{r venn_question, echo=FALSE, results="asis"}
+include_venn()
+```
+
+`r texto_error_est`
+
+**Parte 1.** ¿Cuál es el error conceptual que cometió `r nombre_estudiante`?
+
+##ANSWER1##
+
+**Parte 2.** ¿Cuál es la respuesta correcta a la pregunta «cuántas personas escuchan `r pregunta_calculo`»? (Escriba el valor numérico)
+
+##ANSWER2##
+
+**Parte 3.** Seleccione las afirmaciones **verdaderas** sobre operaciones con conjuntos:
+
+##ANSWER3##
+
+**Parte 4.** Analice la siguiente afirmación y determine si es verdadera o falsa: *`r afirmacion_p4`*
+
+##ANSWER4##
+
+Answerlist
+----------
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+* `r afirmaciones_sel[[1]]$texto`
+* `r afirmaciones_sel[[2]]$texto`
+* `r afirmaciones_sel[[3]]$texto`
+* `r afirmaciones_sel[[4]]$texto`
+* Verdadero
+* Falso
+
+
+Solution
+========
+
+### Análisis del Error (Parte 1)
+
+**Error identificado:** `r error_sel$descripcion_larga`
+
+**Código de error:** `r error_sel$codigo`
+
+**Causa raíz:** `r error_sel$causa_raiz`
+
+`r nombre_estudiante` obtuvo **`r respuesta_erronea`** cuando la respuesta correcta es **`r valor_correcto`**.
+
+### Procedimiento Correcto (Parte 2)
+
+Para calcular cuántas personas escuchan `r pregunta_calculo`:
+
+$$`r formula_correcta`$$
+
+**La respuesta correcta es `r valor_correcto`.**
+
+Los valores del diagrama de Venn se obtienen aplicando el principio de inclusión-exclusión:
+
+- Solo $`r A`$: $|`r A`| - |`r A` \cap `r B`| - |`r A` \cap `r C`| + |`r A` \cap `r B` \cap `r C`| = `r n_A` - `r n_AB` - `r n_AC` + `r n_all` = `r n_only_A`$
+- Solo $`r B`$: $`r n_B` - `r n_AB` - `r n_BC` + `r n_all` = `r n_only_B`$
+- Solo $`r C`$: $`r n_C` - `r n_AC` - `r n_BC` + `r n_all` = `r n_only_C`$
+
+### Propiedades de Operaciones con Conjuntos (Parte 3)
+
+```{r sol_propiedades, echo=FALSE, results="asis"}
+for (i in 1:4) {
+  estado <- if (verdad_sel[i]) "**VERDADERA**" else "**FALSA**"
+  cat(paste0(i, ". ", estado, ": ", afirmaciones_sel[[i]]$explicacion, "\n\n"))
+}
+```
+
+### Caso Específico (Parte 4)
+
+`r afirmacion_p4`
+
+**Respuesta:** `r if (es_verdadera_p4) "Verdadero" else "Falso"`.
+
+`r explicacion_p4`
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+### Estrategia para Evitar el Error
+
+1. **Identificar la región correcta** del diagrama antes de calcular.
+2. **Aplicar el principio de inclusión-exclusión** paso a paso.
+3. **Verificar** que la suma de todas las regiones sea igual al total.
+4. **Distinguir** entre «al menos», «exactamente» y «como máximo».
+
+```{r venn_solution, echo=FALSE, results="asis"}
+include_venn()
+```
+
+Answerlist
+----------
+```{r sol_answerlist, echo=FALSE, results="asis"}
+# Parte 1
+for (i in 1:4) cat(paste0("* ", sol_texts_p1[i], "\n"))
+# Parte 2
+cat(paste0("* La respuesta correcta es ", resp2, ".\n"))
+# Parte 3
+for (i in 1:4) cat(paste0("* ", sol_texts_p3[i], "\n"))
+# Parte 4
+for (i in 1:2) cat(paste0("* ", sol_texts_p4[i], "\n"))
+```
+
+
+Meta-information
+================
+exname: diagrama_venn_generos_musicales_metacognitivo_argumentacion_n3_cloze_v3
+extype: cloze
+exclozetype: schoice|num|mchoice|schoice
+exsolution: `r sol_p1_str`|`r resp2`|`r sol_p3_str`|`r sol_p4_str`
+exshuffle: TRUE
+extol: 0|0.01|0|0
+exsection: Diagrama-Venn-Operaciones-Conjuntos
+
+exextra[Type]: Cloze
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Identifica errores conceptuales en operaciones con conjuntos representados mediante diagramas de Venn
+exextra[Evidencia]: Analiza y justifica la aplicación correcta del principio de inclusión-exclusión en diagramas de Venn de tres conjuntos
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
+exextra[TipoMetacognicion]: analisis_error

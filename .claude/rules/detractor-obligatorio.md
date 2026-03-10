@@ -204,7 +204,7 @@ Veredicto: MODIFICAR/RECHAZAR → Bloquear promoción
 
 #### [Si no hay objeciones]
 
-✅ **Sin objeciones significativas**
+✅ **Sin objeciones**
 
 Dominios analizados:
 - Código R-exams: Conforme

@@ -323,6 +323,13 @@ test_that("Error conceptual es reproducible", {
   expect_equal(resultado, respuesta_erronea)
 })
 
+# 3b. Verificar que calcula() no retorna NA (guardia obligatoria)
+test_that("calcula() no retorna NA para la operación seleccionada", {
+  resultado <- error_seleccionado$calcula(datos_ord)
+  expect_false(is.na(resultado),
+    info = paste(error_seleccionado$codigo, "retorna NA — falta guardia is.na() en while loop"))
+})
+
 # 4. Verificar coherencia semántica: error seleccionado aplica a los datos
 test_that("Error seleccionado cumple su precondición", {
   if (!is.null(error_sel$precondicion)) {

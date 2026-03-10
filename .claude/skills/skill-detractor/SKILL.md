@@ -293,7 +293,7 @@ Para cada decision cuestionable:
 
 1. **Reconocer trade-offs**: "Valido pero considerar X"
 2. **Escalar incertidumbre**: "Fuente Nivel 3, requiere verificacion"
-3. **Aprobar explicitamente**: "Analizado, sin objeciones significativas"
+3. **Aprobar explicitamente**: "Analizado, sin objeciones"
 
 ---
 

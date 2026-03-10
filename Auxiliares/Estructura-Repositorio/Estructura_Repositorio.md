@@ -100,7 +100,8 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       ├── 01-Numeros-Racionales/
 │       ├── 02-Numeros-Irracionales/
 │       ├── 03-Numeros-Reales/
-│       │   └── 22-S2-2025-SEDQ-fracciones_reparto_premio/  [4 .Rmd]
+│       │   ├── 22-S2-2025-SEDQ-fracciones_reparto_premio/  [4 .Rmd]
+│       │   └── 2024-CB-S1_S2-P02-calculo-de-ganancias/    [ejercicio legacy]
 │       ├── 04-Propiedades-Expresiones-Decimales/
 │       ├── 05-Conjunto-Reales-Desigualdades/
 │       └── 06-Valor-Absoluto/
@@ -207,7 +208,7 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       │   ├── Media/
 │       │   │   └── Promedios-Borrados/                          [~2 .Rmd]
 │       │   └── Mediana/
-│       │       ├── Baterias-Celulares/                          [~9 .Rmd]
+│       │       ├── Baterias-Celulares/                          [6 .Rmd]
 │       │       ├── Mediana-Farmaceutica/                        [~5 .Rmd]
 │       │       └── mediana_salas_cine_formulacion_ejecucion_n2_v1/ [~4 .Rmd]
 │       ├── 05-Medidas-De-Dispersion/
@@ -218,6 +219,7 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       │   │   └── GenerosMusicales/                            [~4 .Rmd]
 │       │   └── Probabilidad-Bolas-Colores/                      [2 .Rmd]
 │       ├── 08-Probabilidad-De-La-Union-De-Sucesos/
+│       │   └── diagrama_venn_encuesta_metacognitivo_*/          [3 .Rmd]
 │       └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
 │           └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
 │
@@ -353,19 +355,30 @@ exextra[Nivel]: 2
 | Categoria ICFES | Directorio | Ejercicios .Rmd | Estado |
 |-----------------|-----------|-----------------|--------|
 | Algebra y Calculo | `01-Numeros-Reales/` | 4 | Activo |
-| Algebra y Calculo | `02-Funciones/` | ~27 | Activo |
+| Algebra y Calculo | `02-Funciones/` | 17 | Activo |
 | Geometria (no generico) | `03-Razones-Trigonometricas/` | 0 | Estructura creada |
 | Geometria (no generico) | `04-Funciones_Identidades-Trigonometricas/` | 0 | Estructura creada |
-| Geometria | `05-Geometria/` | ~5 | En crecimiento |
-| Estadistica | `06-Estadistica-Y-Probabilidad/` | ~86 | Mas desarrollado |
-| **Total** | | **~122** | |
+| Geometria | `05-Geometria/` | 3 | En crecimiento |
+| Estadistica | `06-Estadistica-Y-Probabilidad/` | 54 | Mas desarrollado |
+| **Total produccion** | | **78** | |
 
 ### Ejercicios en Desarrollo (02-En-Desarrollo/)
 
-| Ejercicio | Categoria | Competencia | Nivel | Estado |
-|-----------|-----------|-------------|-------|--------|
-| raiz_cubica_empaquetamiento (SCHOICE) | Geometria | Formulacion | n2 | En produccion |
-| raiz_cubica_empaquetamiento (CLOZE) | Geometria | Formulacion | n2 | En desarrollo |
+| Ejercicio | Tipo | Estado |
+|-----------|------|--------|
+| canciones/ | Ejercicio | En desarrollo |
+| comparar_medianas_3_grupos_aleatorio_argumentacion_n2_schoice_v1/ | SCHOICE | En desarrollo |
+| consumo_telefonico_adicional/ | Ejercicio | En desarrollo |
+| diagrama_caja_estaturas_metacognitivo_interpretacion/ | Ejercicio | Listo para Aula |
+| dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1/ | Ejercicio | En desarrollo |
+| migracion_atun_representacion_grafica_n2_v1/ | Ejercicio | En desarrollo |
+| piscinas_baldosas_patrones_numerico_variacional_interpretacion_representacion/ | Ejercicio | En desarrollo |
+| probabilidad_condicional_diagrama_arbol_aleatorio_argumentacion/ | Ejercicio | En desarrollo |
+| proceso_recaudacion_sitio_turistico_numerico_variacional_argumentacion_n2_v1/ | Ejercicio | En desarrollo |
+| proyeccion_usuarios_parabola_geometrico_interpretacion/ | Ejercicio | En desarrollo |
+| recta_geometria_analitica_interpretacion_representacion/ | Ejercicio | En desarrollo |
+| tablas_frecuencia_argumentacion/ | Ejercicio | En desarrollo |
+| volumen_cilindro_geometrico_metrico_interpretacion/ | Ejercicio | En desarrollo |
 
 ### Areas Pendientes de Desarrollo
 
@@ -407,7 +420,7 @@ Cada ejercicio debe superar verificacion en:
 
 ### Validacion Automatica
 
-- **Testing**: 6 suites, 33+ tests unitarios, cobertura 100%
+- **Testing**: 12 suites, 110+ tests unitarios, cobertura 100%
 - **Hooks**: 4 hooks activos (pre/post Edit/Write/Bash)
 - **CI/CD**: GitHub Actions para validacion en remoto
 - **Ortografia**: Verificacion automatica de tildes en espanol
@@ -420,9 +433,9 @@ Cada ejercicio debe superar verificacion en:
 - **Estandares MEN**: Estandares Basicos de Competencias en Matematicas
 - **R-exams**: https://www.R-exams.org/
 - **Fuente de verdad**: `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
-- **Reglas del sistema**: `.claude/rules/` (6 reglas obligatorias)
-- **Testing**: `tests/testthat/` (6 suites)
+- **Reglas del sistema**: `.claude/rules/` (15 reglas obligatorias)
+- **Testing**: `tests/testthat/` (12 suites)
 
 ---
 
-*Actualizado: 2026-02-04 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*
+*Actualizado: 2026-02-27 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*

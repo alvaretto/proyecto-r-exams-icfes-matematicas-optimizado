@@ -23,7 +23,7 @@ RepositorioMatematicasICFES_R_Exams/
 │
 ├── tests/                             # ECOSISTEMA DE TESTING
 │   ├── run_all_tests.R               # Ejecutor principal (chmod +x)
-│   └── testthat/                     # Suites de tests (10 suites, 82+ tests)
+│   └── testthat/                     # Suites de tests (12 suites, 110+ tests)
 │
 ├── outputs/                           # Archivos temporales de renderizado
 │   ├── output_pdf/                   # PDFs generados
@@ -127,20 +127,20 @@ Ejemplos-Funcionales-Rmd/
 03-En-Produccion/
 ├── 01-Numeros-Reales/                              # Algebra y Calculo [4 .Rmd]
 │   └── Pensamiento-Numerico/ (6 subtemas)
-├── 02-Funciones/                                    # Algebra y Calculo [~27 .Rmd]
+├── 02-Funciones/                                    # Algebra y Calculo [17 .Rmd]
 │   └── Pensamiento-Variacional-Espacial/ (12 subtemas)
 ├── 03-Razones-Trigonometricas/                      # Geometria no genérico [0 .Rmd]
 │   └── Pensamiento-Espacial-Metrico-Y-Variacional/ (13 subtemas)
 ├── 04-Funciones_Identidades-Trigonometricas/        # Geometria no genérico [0 .Rmd]
 │   └── Pensamiento-Espacial-Y-Variacional/ (11 subtemas)
-├── 05-Geometría/                                    # Geometria [~5 .Rmd]
+├── 05-Geometría/                                    # Geometria [3 .Rmd]
 │   └── Pensamiento-Espacial/ (18 subtemas)
-├── 06-Estadística-Y-Probabilidad/                   # Estadistica [~86 .Rmd]
+├── 06-Estadística-Y-Probabilidad/                   # Estadistica [54 .Rmd]
 │   └── Pensamiento-Aleatorio/ (9 subtemas)
 └── Ejemplos-Funcionales-Rmd/                        # FUENTE DE VERDAD
 ```
 
-**Total**: ~122 archivos .Rmd | 69 subtemas | Todos con `.gitkeep`
+**Total**: 78 archivos .Rmd en produccion | 69 subtemas | Todos con `.gitkeep`
 
 **Documentación completa del árbol**: `Auxiliares/Estructura-Repositorio/Estructura_Repositorio.md`
 
@@ -266,7 +266,7 @@ skills/
 └── validar-renderizado/         # Haiku — FASE 1: 4 formatos
 ```
 
-**Total**: 22 skills (v2.1) con `model_recommendation` en frontmatter 🆕
+**Total**: 23 skills (v2.1) con `model_recommendation` en frontmatter 🆕
 
 **NO invocar manualmente**. Claude los usa segun contexto.
 
@@ -313,10 +313,12 @@ tests/
     ├── test_neg_visual_distinctness.R    # 3 tests
     ├── test_media_mediana_moda.R         # 3 tests
     ├── test_validacion_semantica.R       # 35 tests
-    └── test_correctitud_respuesta.R      # 14 tests
+    ├── test_correctitud_respuesta.R      # 14 tests
+    ├── test_cloze_n3.R                   # tests CLOZE nivel 3
+    └── test_stress_test_visual.R         # 28 tests
 ```
 
-**Total**: 10 suites, 82+ tests unitarios
+**Total**: 12 suites, 110+ tests unitarios
 
 **Ejecución**:
 ```bash
@@ -494,10 +496,10 @@ Total de archivos críticos:
 ├── Documentación:            14+ archivos
 ├── Hooks:                     4 scripts
 ├── Scripts de validación:     3+ scripts
-├── Suites de tests:          10 suites
-├── Tests unitarios:          82+ tests
+├── Suites de tests:          12 suites
+├── Tests unitarios:          110+ tests
 ├── Comandos manuales:         7 comandos
-├── Skills automáticos:       22 skills (con model_recommendation)
+├── Skills automáticos:       23 skills (con model_recommendation)
 ├── Agentes especializados:    6 agentes (con modelo asignado)
 └── Ejemplos funcionales:     10+ ejemplos
 
@@ -547,12 +549,13 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 ---
 
-**Versión**: 1.4
-**Fecha**: 2026-02-14
-**Módulo de**: @.claude/CLAUDE.md (v3.4.0)
+**Versión**: 1.5
+**Fecha**: 2026-02-27
+**Módulo de**: @.claude/CLAUDE.md (v3.6.0)
 
 ### Historial de Cambios
 
+- **v1.5** (2026-02-27): Actualizar conteos produccion (78 .Rmd), 12 suites/110+ tests, 23 skills, promover diagrama_venn a 08-Probabilidad
 - **v1.4** (2026-02-14): Actualizar rules/ (14 archivos), docs/ (+MODELO_ROUTING.md), skills/ (22 con modelo), stats actualizados
 - **v1.3** (2026-02-14): Actualizar a 10 suites, 82+ tests. Agregar test_correctitud_respuesta.R y validar_multisemilla.R
 - **v1.2** (2026-02-06): Actualizar skills a estructura Progressive Disclosure (17 skills v2.1)

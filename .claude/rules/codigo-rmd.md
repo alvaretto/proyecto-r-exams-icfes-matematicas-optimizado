@@ -135,6 +135,77 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
    error_idx <- sample(errores_aplicables_idx, 1)
    ```
 
+9. **NO comparar resultado de `calcula()` sin guardia NA**
+   ```r
+   # ❌ MAL - calcula() puede retornar NA si tipo_operacion no coincide
+   while (respuesta_erronea == valor_correcto && intentos < 20) {
+
+   # ✓ BIEN - guardia NA antes de comparación
+   while ((is.na(respuesta_erronea) || respuesta_erronea == valor_correcto) && intentos < 20) {
+   ```
+   **Razón**: `calcula()` retorna NA cuando `tipo_operacion` no coincide con el error
+   seleccionado. `NA == valor` produce `NA`, no TRUE/FALSE, y R crashea en `while`/`if`.
+   Detectado en ejercicio Venn (semillas 29 y 114 de 200 crasheaban).
+
+10. **NO usar `set.seed()` en chunks de test sin guardar/restaurar `.Random.seed`**
+    ```r
+    # ❌ MAL - corrompe el estado RNG para renderizados posteriores
+    test_that("diversidad", {
+      for (i in 1:300) {
+        set.seed(i * 7)
+        # ... genera versiones
+      }
+    })
+    # Después de esto, exams2html(n=50) produce solo 2 versiones únicas
+
+    # ✓ BIEN - preserva el estado RNG
+    test_that("diversidad", {
+      saved_seed <- if (exists(".Random.seed", envir = globalenv())) {
+        get(".Random.seed", envir = globalenv())
+      } else NULL
+
+      for (i in 1:300) {
+        set.seed(i * 7)
+        # ... genera versiones
+      }
+
+      # Restaurar RNG
+      if (!is.null(saved_seed)) {
+        assign(".Random.seed", saved_seed, envir = globalenv())
+      } else {
+        rm(".Random.seed", envir = globalenv())
+      }
+    })
+    ```
+    **Razón**: `set.seed()` dentro de un test modifica `.Random.seed` global.
+    Si el chunk de test se ejecuta antes que R-exams genere versiones, todas
+    las versiones comparten el mismo estado RNG y producen resultados idénticos.
+    Detectado en ejercicio Venn: 2/50 versiones únicas → 94/100 después del fix.
+
+12. **NO colocar `##ANSWERi##` de CLOZE fuera de orden ni omitir placeholders**
+    ```markdown
+    ❌ MAL - ##ANSWER1## después de Parte 2
+    **Parte 1.** ¿Cuál es el error?
+    **Parte 2.** ¿Cuál es el valor correcto?
+    ##ANSWER1##
+    ##ANSWER2##
+
+    ✓ BIEN - cada ##ANSWERi## inmediatamente después de su parte
+    **Parte 1.** ¿Cuál es el error?
+    ##ANSWER1##
+    **Parte 2.** ¿Cuál es el valor correcto?
+    ##ANSWER2##
+    **Parte 3.** Seleccione las afirmaciones verdaderas:
+    ##ANSWER3##
+    **Parte 4.** Verdadero o falso:
+    ##ANSWER4##
+    ```
+    **Regla para CLOZE**: El número de `##ANSWERi##` DEBE coincidir con el número
+    de tipos en `exclozetype`. Cada placeholder va inmediatamente después de la
+    pregunta de su parte correspondiente. NO usar chunks R con `cat()` para
+    duplicar el Answerlist — R-exams ya renderiza las opciones via el Answerlist
+    del final.
+
 ## ✓ SIEMPRE hacer:
 
 - Validar gráficos dinámicos en PDF Y HTML
@@ -144,6 +215,9 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
 - Usar metadatos ICFES completos (6 dimensiones)
 - Si archivo es `_neg_`: incluir test genérico de opciones repetidas (regla #11)
 - Todo error conceptual con aplicabilidad condicional DEBE declarar `precondicion` (regla #8)
+- Comparaciones con resultado de `calcula()` DEBEN tener guardia `is.na()` (regla #9)
+- Chunks de test con `set.seed()` DEBEN guardar/restaurar `.Random.seed` (regla #10)
+- En CLOZE: `##ANSWERi##` por cada parte, en orden, inmediatamente después de su pregunta (regla #12)
 
 ## Metadatos ICFES Requeridos
 

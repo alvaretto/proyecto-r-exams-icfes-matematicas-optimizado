@@ -570,7 +570,8 @@ Matematicas 11</li>
 <p>La organizacion usa la jerarquia: <strong>Tema Matematico &gt;
 Pensamiento MEN &gt; Subtema &gt; Ejercicio</strong>. Los directorios
 sin ejercicios son estructura planificada de destino para ejercicios
-futuros.</p>
+futuros. Todos los directorios contienen <code>.gitkeep</code> para
+preservar la estructura en Git.</p>
 <p>Leyenda: <code>[N .Rmd]</code> = ejercicios activos | (vacio) =
 estructura de destino planificada</p>
 <pre><code>03-En-Produccion/
@@ -585,7 +586,8 @@ estructura de destino planificada</p>
 │       ├── 01-Numeros-Racionales/
 │       ├── 02-Numeros-Irracionales/
 │       ├── 03-Numeros-Reales/
-│       │   └── 22-S2-2025-SEDQ-fracciones_reparto_premio/  [4 .Rmd]
+│       │   ├── 22-S2-2025-SEDQ-fracciones_reparto_premio/  [4 .Rmd]
+│       │   └── 2024-CB-S1_S2-P02-calculo-de-ganancias/    [ejercicio legacy]
 │       ├── 04-Propiedades-Expresiones-Decimales/
 │       ├── 05-Conjunto-Reales-Desigualdades/
 │       └── 06-Valor-Absoluto/
@@ -603,8 +605,8 @@ estructura de destino planificada</p>
 │       ├── 09-Funcion-Logaritmica/
 │       ├── 10-Traslacion-Y-Dilatacion/
 │       ├── 11-Variacion-Lineal-Y-Exponencial_Razon-De-Cambio/
-│       │   ├── Variacion-Lineal-Auto-Viajero-09/               [~6 .Rmd]
-│       │   └── Variacion-Lineal-Vuelo-Acrobatico/              [~8 .Rmd]
+│       │   ├── Variacion-Lineal-Auto-Viajero-09/               [~16 .Rmd]
+│       │   └── Variacion-Lineal-Vuelo-Acrobatico/              [~11 .Rmd]
 │       └── 12-Introduccion-Al-Limite-De-Una-Sucesion/
 │
 │ ══════════════════════════════════════════════════════
@@ -614,33 +616,33 @@ estructura de destino planificada</p>
 │
 ├── 03-Razones-Trigonometricas/
 │   └── Pensamiento-Espacial-Metrico-Y-Variacional/
-│       ├── 01-Medidas-De-Angulos/
-│       ├── 02-Triangulos/
-│       ├── 03-Razones-Trigonometricas-En-Un-Triangulo-Rectangulo/
-│       ├── 04-Razones-Trigonometricas-De-Angulos-Notables/
-│       ├── 05-Resolucion-De-Triangulos-Rectangulos/
-│       ├── 06-Angulo-De-Elevacion_Angulo-De-Depresion/
-│       ├── 07-Circunferencia-Unitaria/
-│       ├── 08-Razones-Trigonometricas-En-La-Circunferencia-Unitaria/
-│       ├── 09-Calculo-De-Razones-Trigonometricas-Usando-Angulos-De-Referencia/
-│       ├── 10-Razones-Trigonometricas-Para-Angulos-Negativos-Complementarios-Y-Coterminales/
-│       ├── 11-Definicion-De-Las-Funciones-Trigonometricas/
-│       ├── 12-Teorema-Del-Seno/
-│       └── 13-Teorema-Del-Coseno/
+│       ├── 01-Angulos-Y-Sus-Medidas/
+│       ├── 02-Angulos-En-Posicion-Normal/
+│       ├── 03-Circunferencia-Unitaria/
+│       ├── 04-Seno-Coseno-Tangente/
+│       ├── 05-Cosecante-Secante-Cotangente/
+│       ├── 06-Razones-Trigonometricas-Angulos-Notables/
+│       ├── 07-Signos-Razones-Trigonometricas-Cuadrantes/
+│       ├── 08-Relaciones-Pitagoricas/
+│       ├── 09-Resolucion-Triangulos-Rectangulos/
+│       ├── 10-Ley-De-Senos/
+│       ├── 11-Ley-De-Cosenos/
+│       ├── 12-Aplicaciones-Triangulos-No-Rectangulos/
+│       └── 13-Problemas-De-Aplicacion-Trigonometria/
 │
 ├── 04-Funciones_Identidades-Trigonometricas/
 │   └── Pensamiento-Espacial-Y-Variacional/
-│       ├── 01-Funcion-Seno/
-│       ├── 02-Funcion-Coseno/
-│       ├── 03-Graficas-De-Las-Funciones-Sinusoidales/
-│       ├── 04-Funcion-Tangente/
-│       ├── 05-Funcion-Cotangente/
-│       ├── 06-Funcion-Secante/
-│       ├── 07-Funcion-Cosecante/
-│       ├── 08-Identidades-Trigonometricas-Fundamentales/
-│       ├── 09-Funciones-Trigonometricas-En-Terminos-De-las-Otras/
-│       ├── 10-Simplificacion-De-Expresiones-Trigonometricas/
-│       └── 11-Coordenadas-Polares-Y-Cartesianas/
+│       ├── 01-Funciones-Trigonometricas-Seno-Coseno/
+│       ├── 02-Funcion-Tangente/
+│       ├── 03-Transformaciones-Funciones-Trigonometricas/
+│       ├── 04-Identidades-Trigonometricas-Fundamentales/
+│       ├── 05-Identidades-Suma-Diferencia-Angulos/
+│       ├── 06-Identidades-Angulo-Doble-Mitad/
+│       ├── 07-Ecuaciones-Trigonometricas/
+│       ├── 08-Funciones-Trigonometricas-Inversas/
+│       ├── 09-Coordenadas-Polares/
+│       ├── 10-Numeros-Complejos-Forma-Polar/
+│       └── 11-Aplicaciones-Modelado-Trigonometrico/
 │
 │ ══════════════════════════════════════════════════════
 │  CATEGORIA ICFES: GEOMETRIA (contenido generico y no generico)
@@ -649,25 +651,26 @@ estructura de destino planificada</p>
 │
 ├── 05-Geometria/
 │   └── Pensamiento-Espacial/
-│       ├── 01-Coordenadas-Cartesianas/
-│       ├── 02-La-Linea-Recta/
-│       ├── 03-Posiciones-Relativas-De-Dos-Rectas-En-El-Plano/
-│       ├── 04-Secciones-Conicas/
-│       ├── 05-La-Circunferencia/
-│       ├── 06-Ecuacion-Canonica-De-La-Circunferencia-Con-Centro-En-hk/
-│       ├── 07-Ecuacion-General-De-La-Circunferencia/
-│       ├── 08-La-Parabola/
-│       ├── 09-Ecuacion-Canonica-De-La-Parabola-Con-Vertice-En-hk/
-│       ├── 10-Ecuacion-General-De-La-Parabola/
-│       ├── 11-La-Elipse/
-│       ├── 12-Ecuacion-Canonica-De-La-Elipse-Con-Centro-En-hk/
-│       ├── 13-Ecuacion-General-De-La-Elipse/
-│       ├── 14-La-Hiperbola/
-│       ├── 15-Ecuacion-Canonica-De-La-Hiperbola-Con-Centro-En-hk/
-│       ├── 16-Ecuacion-General-De-La-Hiperbola/
+│       ├── 01-Puntos-Y-Lineas/
+│       ├── 02-Segmentos-Y-Rayos/
+│       ├── 03-Angulos-Clasificacion-Y-Medida/
+│       ├── 04-Rectas-Paralelas-Y-Perpendiculares/
+│       ├── 05-Triangulos-Clasificacion-Y-Propiedades/
+│       ├── 06-Cuadrilateros-Y-Poligonos/
+│       ├── 07-Circunferencia-Y-Circulo/
+│       ├── 08-Perimetro-Figuras-Planas/
+│       ├── 09-Area-Figuras-Planas/
+│       ├── 10-Teorema-De-Pitagoras/
+│       ├── 11-Semejanza-Y-Congruencia/
+│       ├── 12-Transformaciones-Geometricas/
+│       ├── 13-Geometria-Analitica-Recta/
+│       ├── 14-Secciones-Conicas/
+│       ├── 15-Solidos-Y-Volumen/
+│       ├── 16-Area-Superficie-Solidos/
 │       ├── 17-Conversion-de-Unidades/
 │       │   └── conversion_unidades_area_formulacion_ejecucion/  [1 .Rmd]
-│       └── 18-Volumen-Y-Raiz-Cubica/                           (destino planificado)
+│       └── 18-Volumen-Y-Raiz-Cubica/
+│           └── raiz_cubica_empaquetamiento_*/                   [2 .Rmd + 1 CLOZE]
 │
 │ ══════════════════════════════════════════════════════
 │  CATEGORIA ICFES: ESTADISTICA
@@ -677,10 +680,11 @@ estructura de destino planificada</p>
 ├── 06-Estadistica-Y-Probabilidad/
 │   └── Pensamiento-Aleatorio/
 │       ├── 01-Variables-Cualitativas_Distribucion-De-Frecuencias/
-│       │   ├── Accidentalidad_Vial_Genero-16/                  [~4 .Rmd]
-│       │   ├── ExportacionesGraficos-Tebailandia/              [~4 .Rmd]
+│       │   ├── Accidentalidad_Vial_Genero-16/                  [~6 .Rmd]
+│       │   ├── ExportacionesGraficos-Tebailandia/              [~6 .Rmd]
 │       │   ├── Gas_natural_porcentaje_maximo_aleatorio_*/       [2 .Rmd]
-│       │   └── Graficos_Estadisticos_Adopcion_Mascotas/        [~8 .Rmd]
+│       │   ├── Graficos_Estadisticos_Adopcion_Mascotas/        [~8 .Rmd]
+│       │   └── Pasteleria_sabores_ventas_*/                    [1 .Rmd]
 │       ├── 02-Variables-Cuantitativas-Discretas_Distribucion-De-Frecuencias/
 │       ├── 03-Variables-Cuantitativas-Continuas_Distribucion-De-Frecuencias/
 │       │   └── poblaciones_paises_graficas_lineas_*/            [1 .Rmd]
@@ -690,19 +694,20 @@ estructura de destino planificada</p>
 │       │   ├── Media/
 │       │   │   └── Promedios-Borrados/                          [~2 .Rmd]
 │       │   └── Mediana/
-│       │       ├── Baterias-Celulares/                          [~7 .Rmd]
-│       │       ├── Mediana-Farmaceutica/                        [~4 .Rmd]
+│       │       ├── Baterias-Celulares/                          [6 .Rmd]
+│       │       ├── Mediana-Farmaceutica/                        [~5 .Rmd]
 │       │       └── mediana_salas_cine_formulacion_ejecucion_n2_v1/ [~4 .Rmd]
 │       ├── 05-Medidas-De-Dispersion/
 │       │   └── confint2-cloze/                                  [2 .Rmd]
 │       ├── 06-Medidas-De-Posicion/                              [2 .Rmd]
 │       ├── 07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/
 │       │   ├── Diagramas-de-Venn/
-│       │   │   └── GenerosMusicales/                            [~3 .Rmd]
+│       │   │   └── GenerosMusicales/                            [~4 .Rmd]
 │       │   └── Probabilidad-Bolas-Colores/                      [2 .Rmd]
 │       ├── 08-Probabilidad-De-La-Union-De-Sucesos/
+│       │   └── diagrama_venn_encuesta_metacognitivo_*/          [3 .Rmd]
 │       └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
-│           └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~4 .Rmd]
+│           └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
 │
 │ ══════════════════════════════════════════════════════
 │  RECURSOS Y PLANTILLAS
@@ -716,8 +721,12 @@ estructura de destino planificada</p>
     │   ├── Python/    # Plantillas con reticulate
     │   ├── Rmd/       # Plantillas R-exams puro
     │   │   └── cloze/ # Plantillas tipo CLOZE
-    │   └── Tablas/    # TikZ y Kable
-    └── TikZ-Documentation/</code></pre>
+    │   ├── Rnw/       # Plantillas Sweave
+    │   ├── Tablas/    # TikZ y Kable
+    │   ├── erres/     # Plantillas R-exams oficiales
+    │   └── tex/       # Plantillas LaTeX
+    ├── TikZ-Documentation/
+    └── oficial-schoice/</code></pre>
 </div>
 <div id="mapeo-directorios---categorias-icfes" class="section level3">
 <h3>Mapeo: Directorios &lt;-&gt; Categorias ICFES</h3>
@@ -748,17 +757,17 @@ estructura de destino planificada</p>
 <tr class="odd">
 <td><code>03-Razones-Trigonometricas/</code></td>
 <td>Geometria (no generico)</td>
-<td>Trigonometria</td>
+<td>Trigonometria basica</td>
 </tr>
 <tr class="even">
-<td><code>04-Funciones-Identidades-Trigonometricas/</code></td>
+<td><code>04-Funciones_Identidades-Trigonometricas/</code></td>
 <td>Geometria (no generico)</td>
-<td>Funciones trigonometricas</td>
+<td>Funciones e identidades trigonometricas</td>
 </tr>
 <tr class="odd">
 <td><code>05-Geometria/</code></td>
 <td>Geometria</td>
-<td>Geometria analitica, medidas, conversiones</td>
+<td>Geometria analitica, medidas, conversiones, volumen</td>
 </tr>
 <tr class="even">
 <td><code>06-Estadistica-Y-Probabilidad/</code></td>
@@ -1007,97 +1016,121 @@ sin tildes porque R-exams los parsea como identificadores.</p>
 <tr class="even">
 <td>Algebra y Calculo</td>
 <td><code>02-Funciones/</code></td>
-<td>~15</td>
+<td>17</td>
 <td>Activo</td>
+</tr>
+<tr class="odd">
+<td>Geometria (no generico)</td>
+<td><code>03-Razones-Trigonometricas/</code></td>
+<td>0</td>
+<td>Estructura creada</td>
+</tr>
+<tr class="even">
+<td>Geometria (no generico)</td>
+<td><code>04-Funciones_Identidades-Trigonometricas/</code></td>
+<td>0</td>
+<td>Estructura creada</td>
 </tr>
 <tr class="odd">
 <td>Geometria</td>
 <td><code>05-Geometria/</code></td>
-<td>1</td>
+<td>3</td>
 <td>En crecimiento</td>
 </tr>
 <tr class="even">
 <td>Estadistica</td>
 <td><code>06-Estadistica-Y-Probabilidad/</code></td>
-<td>~45</td>
+<td>54</td>
 <td>Mas desarrollado</td>
 </tr>
 <tr class="odd">
-<td><strong>Total estimado</strong></td>
+<td><strong>Total produccion</strong></td>
 <td></td>
-<td><strong>~65</strong></td>
+<td><strong>78</strong></td>
 <td></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="ejercicios-en-desarrollo" class="section level3">
-<h3>Ejercicios en Desarrollo</h3>
+<div id="ejercicios-en-desarrollo-02-en-desarrollo" class="section level3">
+<h3>Ejercicios en Desarrollo (02-En-Desarrollo/)</h3>
 <table>
 <colgroup>
-<col width="22%" />
-<col width="22%" />
-<col width="26%" />
-<col width="14%" />
-<col width="16%" />
+<col width="44%" />
+<col width="24%" />
+<col width="32%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th>Ejercicio</th>
-<th>Categoria</th>
-<th>Competencia</th>
-<th>Nivel</th>
+<th>Tipo</th>
 <th>Estado</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>raiz_cubica_empaquetamiento (SCHOICE)</td>
-<td>Geometria</td>
-<td>Formulacion</td>
-<td>n2</td>
-<td>Validado</td>
-</tr>
-<tr class="even">
-<td>raiz_cubica_empaquetamiento (CLOZE)</td>
-<td>Geometria</td>
-<td>Formulacion</td>
-<td>n2</td>
-<td>Validado</td>
-</tr>
-<tr class="odd">
-<td>dispersion_alcance_proyectil</td>
-<td>Estadistica</td>
-<td>Interpretacion</td>
-<td>n2</td>
+<td>canciones/</td>
+<td>Ejercicio</td>
 <td>En desarrollo</td>
 </tr>
 <tr class="even">
-<td>proceso_recaudacion_sitio_turistico</td>
-<td>Algebra y Calculo</td>
-<td>Argumentacion</td>
-<td>n2</td>
+<td>comparar_medianas_3_grupos_aleatorio_argumentacion_n2_schoice_v1/</td>
+<td>SCHOICE</td>
 <td>En desarrollo</td>
 </tr>
 <tr class="odd">
-<td>proyeccion_usuarios_parabola</td>
-<td>Geometria</td>
-<td>Interpretacion</td>
-<td>n2</td>
+<td>consumo_telefonico_adicional/</td>
+<td>Ejercicio</td>
 <td>En desarrollo</td>
 </tr>
 <tr class="even">
-<td>volumen_cilindro</td>
-<td>Geometria</td>
-<td>Interpretacion</td>
-<td>n2</td>
+<td>diagrama_caja_estaturas_metacognitivo_interpretacion/</td>
+<td>Ejercicio</td>
+<td>Listo para Aula</td>
+</tr>
+<tr class="odd">
+<td>dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="even">
+<td>migracion_atun_representacion_grafica_n2_v1/</td>
+<td>Ejercicio</td>
 <td>En desarrollo</td>
 </tr>
 <tr class="odd">
-<td>migracion_atun_representacion_grafica</td>
-<td>Estadistica</td>
-<td>Interpretacion</td>
-<td>n2</td>
+<td>piscinas_baldosas_patrones_numerico_variacional_interpretacion_representacion/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="even">
+<td>probabilidad_condicional_diagrama_arbol_aleatorio_argumentacion/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="odd">
+<td>proceso_recaudacion_sitio_turistico_numerico_variacional_argumentacion_n2_v1/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="even">
+<td>proyeccion_usuarios_parabola_geometrico_interpretacion/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="odd">
+<td>recta_geometria_analitica_interpretacion_representacion/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="even">
+<td>tablas_frecuencia_argumentacion/</td>
+<td>Ejercicio</td>
+<td>En desarrollo</td>
+</tr>
+<tr class="odd">
+<td>volumen_cilindro_geometrico_metrico_interpretacion/</td>
+<td>Ejercicio</td>
 <td>En desarrollo</td>
 </tr>
 </tbody>
@@ -1130,16 +1163,32 @@ sin tildes porque R-exams los parsea como identificadores.</p>
 <td>Alta</td>
 </tr>
 <tr class="odd">
+<td>Geometria (no generico)</td>
+<td>Razones trigonometricas (13 subtemas vacios)</td>
+<td>Alta</td>
+</tr>
+<tr class="even">
+<td>Geometria (no generico)</td>
+<td>Funciones e identidades trigonometricas (11 subtemas vacios)</td>
+<td>Alta</td>
+</tr>
+<tr class="odd">
+<td>Geometria</td>
+<td>Geometria basica: puntos, rectas, triangulos, poligonos (16 subtemas
+vacios)</td>
+<td>Media</td>
+</tr>
+<tr class="even">
 <td>Estadistica</td>
 <td>Probabilidad condicional avanzada, distribuciones</td>
 <td>Media</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>Todas</td>
 <td>Ejercicios nivel n3 y n4</td>
 <td>Alta</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Todas</td>
 <td>Contenido generico (Razonamiento Cuantitativo)</td>
 <td>Alta</td>
@@ -1179,7 +1228,7 @@ apropiado</li>
 <div id="validacion-automatica" class="section level3">
 <h3>Validacion Automatica</h3>
 <ul>
-<li><strong>Testing</strong>: 6 suites, 33+ tests unitarios, cobertura
+<li><strong>Testing</strong>: 12 suites, 110+ tests unitarios, cobertura
 100%</li>
 <li><strong>Hooks</strong>: 4 hooks activos (pre/post
 Edit/Write/Bash)</li>
@@ -1201,14 +1250,14 @@ en Matematicas</li>
 <li><strong>R-exams</strong>: <a href="https://www.R-exams.org/" class="uri">https://www.R-exams.org/</a></li>
 <li><strong>Fuente de verdad</strong>:
 <code>A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/</code></li>
-<li><strong>Reglas del sistema</strong>: <code>.claude/rules/</code> (6
+<li><strong>Reglas del sistema</strong>: <code>.claude/rules/</code> (15
 reglas obligatorias)</li>
-<li><strong>Testing</strong>: <code>tests/testthat/</code> (6
+<li><strong>Testing</strong>: <code>tests/testthat/</code> (12
 suites)</li>
 </ul>
 <hr />
-<p><em>Actualizado: 2026-02-04 | Alineado con Marco ICFES Matematicas
-2026</em></p>
+<p><em>Actualizado: 2026-02-27 | Alineado con Marco ICFES Matematicas
+2026 | Estructura fisica verificada con .gitkeep</em></p>
 </div>
 </div>
 

@@ -131,7 +131,7 @@ SI APROBAR → Continuar a FASE 3
 
 ### Objeciones Encontradas
 
-[Lista de objeciones con formato estándar, o "Sin objeciones significativas"]
+[Lista de objeciones con formato estándar, o "Sin objeciones"]
 
 ### Veredicto
 
@@ -322,6 +322,36 @@ exams2pdf("archivo.Rmd", n = 1)
 "El gráfico se generó." ← Sin comparar con original
 ```
 
+### 4. Lenguaje minimizador en reportes de validación (PROHIBIDO)
+```markdown
+# ❌ INCORRECTO - Minimiza problemas con calificadores
+"Problemas detectados: Ninguno significativo"
+"Sin objeciones significativas"
+"Diferencias: Ninguna significativa"
+
+# ✅ CORRECTO - Reportar con precisión absoluta
+"Problemas detectados: Ninguno"          # Si realmente hay CERO problemas
+"Problemas detectados:"                  # Si hay problemas, listar CADA UNO
+"  1. [descripción exacta del problema]"
+"  2. [descripción exacta del problema]"
+
+# ✅ CORRECTO - Si hubo problemas corregidos en iteraciones previas, listarlos
+"Problemas encontrados y corregidos en esta sesión:"
+"  1. [problema] → [fix aplicado]"
+"  2. [problema] → [fix aplicado]"
+"Estado actual: Todos los problemas resueltos"
+```
+
+**Razón**: El calificador "significativo" es subjetivo y permite que bugs reales pasen
+desapercibidos. En la sesión 2026-02-27, "Ninguno significativo" ocultó 3 bugs que el
+usuario tuvo que descubrir posteriormente:
+- Corrupción de RNG por test de diversidad (2/50 versiones únicas)
+- ##ANSWER1## mal ubicado en CLOZE (opciones después de Parte 2)
+- Crash por NA en comparación while (calcula() retorna NA)
+
+**Regla**: NUNCA usar "significativo", "relevante", "importante" como calificador para
+minimizar hallazgos. Reportar TODOS los hallazgos, sin excepción.
+
 ## ✅ PATRÓN CORRECTO
 
 ```markdown
@@ -346,11 +376,11 @@ exams2pdf("archivo.Rmd", n = 1)
 #### Comparación con original (si aplica):
 [Imagen original mostrada]
 [Imagen generada mostrada]
-Diferencias: Ninguna significativa / [Lista de diferencias]
+Diferencias: Ninguna / [Lista EXHAUSTIVA de diferencias]
 
 #### Revisión Detractor (FASE 2C):
 - Dominios revisados: código | pedagógico | visual | gramática
-- Objeciones: Ninguna significativa
+- Objeciones: Ninguna
 - Veredicto: APROBAR
 
 ### FASE 3: Decisión
@@ -361,8 +391,9 @@ Diferencias: Ninguna significativa / [Lista de diferencias]
 
 ---
 
-**Versión**: 4.0 (Validación Matemática + Visual + Detractor Obligatorio)
-**Fecha**: 2026-02-07
+**Versión**: 5.0 (Antipatrón Lenguaje Minimizador + Validación CLOZE)
+**Fecha**: 2026-02-27
+**Cambio v5.0**: Antipatrón #4 (lenguaje minimizador PROHIBIDO), patrón correcto sin calificadores subjetivos
 **Cambio v4.0**: FASE 2C (Detractor) es OBLIGATORIA - revisión adversarial en 4 dominios
 **Cambio v3.0**: FASE 2A (matemática) y FASE 2B (preview visual) son AUTOMÁTICAS vía hook PostToolUse
 **Cambio v2.0**: FASE 2 requiere inspección visual REAL con imagen mostrada

@@ -1,0 +1,626 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(exams)
+```
+
+```{r DefinicionDeVariables, echo=FALSE, results='hide'}
+# ================================================================
+# EJERCICIO: Pendiente de función lineal - Argumentación
+# TIPO: SCHOICE metacognitivo con Progressive Disclosure
+# COMPONENTE: Numérico-Variacional
+# COMPETENCIA: Argumentación
+# NIVEL: 2
+# ================================================================
+
+# --- Pool de contextos narrativos creativos (6+ plantillas, 5+ tipos) ---
+
+contextos <- list(
+  # Tipo: Situación problema
+  list(
+    plantilla = function(prot, n_datos) {
+      paste0(
+        "En ", prot, " se utiliza la siguiente tabla para establecer la relación ",
+        "entre ", n_datos$var_x, " y ", n_datos$var_y, ":"
+      )
+    },
+    protagonistas = c(
+      "una empresa de neumáticos",
+      "una fábrica de calzado deportivo",
+      "una compañía de accesorios electrónicos"
+    ),
+    var_x_opciones = c("el número de neumáticos vendidos",
+                       "el número de pares producidos",
+                       "el número de unidades vendidas"),
+    var_y_opciones = c("la utilidad (en miles de pesos)",
+                       "la ganancia (en miles de pesos)",
+                       "el beneficio neto (en miles de pesos)"),
+    unidad_x = c("neumáticos", "pares", "unidades"),
+    encabezado_x = c("Neumáticos vendidos", "Pares producidos", "Unidades vendidas"),
+    encabezado_y = c("Utilidad", "Ganancia", "Beneficio neto")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    plantilla = function(prot, n_datos) {
+      paste0(
+        "El informe financiero de ", prot,
+        " presenta los siguientes datos sobre la relación entre ",
+        n_datos$var_x, " y ", n_datos$var_y, ":"
+      )
+    },
+    protagonistas = c(
+      "una cooperativa agrícola",
+      "una editorial independiente",
+      "una panadería artesanal"
+    ),
+    var_x_opciones = c("los kilogramos de café exportados",
+                       "los libros impresos",
+                       "las unidades de pan vendidas"),
+    var_y_opciones = c("el ingreso neto (en miles de pesos)",
+                       "la utilidad (en miles de pesos)",
+                       "la ganancia (en miles de pesos)"),
+    unidad_x = c("kilogramos", "libros", "unidades"),
+    encabezado_x = c("Kilogramos exportados", "Libros impresos", "Unidades vendidas"),
+    encabezado_y = c("Ingreso neto", "Utilidad", "Ganancia")
+  ),
+  # Tipo: Narración periodística
+  list(
+    plantilla = function(prot, n_datos) {
+      paste0(
+        "Un artículo del periódico escolar de ", prot,
+        " publicó la siguiente tabla que muestra cómo se relacionan ",
+        n_datos$var_x, " y ", n_datos$var_y, ":"
+      )
+    },
+    protagonistas = c(
+      "el colegio San Rafael",
+      "la institución educativa Pedacito de Cielo",
+      "el liceo nacional Antonio Nariño"
+    ),
+    var_x_opciones = c("el número de estudiantes inscritos",
+                       "las horas de tutoría ofrecidas",
+                       "el número de talleres realizados"),
+    var_y_opciones = c("el costo operativo mensual (en miles de pesos)",
+                       "el presupuesto asignado (en miles de pesos)",
+                       "la inversión educativa (en miles de pesos)"),
+    unidad_x = c("estudiantes", "horas", "talleres"),
+    encabezado_x = c("Estudiantes inscritos", "Horas de tutoría", "Talleres realizados"),
+    encabezado_y = c("Costo operativo", "Presupuesto asignado", "Inversión educativa")
+  ),
+  # Tipo: Descubrimiento
+  list(
+    plantilla = function(prot, n_datos) {
+      paste0(
+        "Al revisar los registros contables, ", prot,
+        " encontró que la relación entre ",
+        n_datos$var_x, " y ", n_datos$var_y,
+        " se puede representar con la siguiente tabla:"
+      )
+    },
+    protagonistas = c(
+      "el gerente de una empresa de transporte",
+      "la administradora de un restaurante",
+      "el contador de una tienda de ropa"
+    ),
+    var_x_opciones = c("el número de viajes realizados",
+                       "el número de platos preparados",
+                       "el número de prendas confeccionadas"),
+    var_y_opciones = c("la utilidad mensual (en miles de pesos)",
+                       "la ganancia diaria (en miles de pesos)",
+                       "el margen de beneficio (en miles de pesos)"),
+    unidad_x = c("viajes", "platos", "prendas"),
+    encabezado_x = c("Viajes realizados", "Platos preparados", "Prendas confeccionadas"),
+    encabezado_y = c("Utilidad mensual", "Ganancia diaria", "Margen de beneficio")
+  ),
+  # Tipo: Diálogo implícito
+  list(
+    plantilla = function(prot, n_datos) {
+      paste0(
+        "\u2014Analicen esta tabla para el próximo informe \u2014indicó ", prot,
+        " a su equipo. Los datos muestran la relación entre ",
+        n_datos$var_x, " y ", n_datos$var_y, ":"
+      )
+    },
+    protagonistas = c(
+      "la directora comercial de una empresa de tecnología",
+      "el jefe de producción de una fábrica de muebles",
+      "la coordinadora de ventas de una distribuidora"
+    ),
+    var_x_opciones = c("el número de dispositivos ensamblados",
+                       "el número de muebles fabricados",
+                       "el número de pedidos despachados"),
+    var_y_opciones = c("la utilidad (en miles de pesos)",
+                       "la ganancia (en miles de pesos)",
+                       "el beneficio (en miles de pesos)"),
+    unidad_x = c("dispositivos", "muebles", "pedidos"),
+    encabezado_x = c("Dispositivos ensamblados", "Muebles fabricados", "Pedidos despachados"),
+    encabezado_y = c("Utilidad", "Ganancia", "Beneficio")
+  ),
+  # Tipo: Pregunta retórica
+  list(
+    plantilla = function(prot, n_datos) {
+      paste0(
+        "¿Cómo cambia ", n_datos$var_y,
+        " a medida que aumenta ", n_datos$var_x,
+        "? ", prot, " recopiló los siguientes datos para responder esta pregunta:"
+      )
+    },
+    protagonistas = c(
+      "El departamento de análisis de una empresa de alimentos",
+      "La oficina de planeación de una constructora",
+      "El equipo financiero de una empresa de servicios"
+    ),
+    var_x_opciones = c("el número de productos empacados",
+                       "el número de metros cuadrados construidos",
+                       "el número de servicios prestados"),
+    var_y_opciones = c("la utilidad (en miles de pesos)",
+                       "la ganancia (en miles de pesos)",
+                       "el ingreso neto (en miles de pesos)"),
+    unidad_x = c("productos", "metros cuadrados", "servicios"),
+    encabezado_x = c("Productos empacados", "Metros construidos", "Servicios prestados"),
+    encabezado_y = c("Utilidad", "Ganancia", "Ingreso neto")
+  )
+)
+
+# --- Seleccionar contexto aleatorio ---
+ctx_idx <- sample(length(contextos), 1)
+ctx <- contextos[[ctx_idx]]
+prot_idx <- sample(length(ctx$protagonistas), 1)
+protagonista <- ctx$protagonistas[prot_idx]
+var_x <- ctx$var_x_opciones[prot_idx]
+var_y <- ctx$var_y_opciones[prot_idx]
+unidad_x <- ctx$unidad_x[prot_idx]
+encabezado_x <- ctx$encabezado_x[prot_idx]
+encabezado_y <- ctx$encabezado_y[prot_idx]
+
+# --- Generar datos de función lineal: y = m*x + b ---
+# Pendiente: entera (positiva o negativa) para valores limpios
+m <- sample(c(-5000, -4000, -3000, -2500, -2000, -1500, -1000,
+              1000, 1500, 2000, 2500, 3000, 4000, 5000), 1)
+
+# Intercepto: aleatorio
+b <- sample(c(-500000, -400000, -300000, -200000, -100000, 0,
+              100000, 200000, 300000), 1)
+
+# Generar 5 valores de x espaciados
+x_base <- sample(c(50, 100, 150, 200), 1)
+incrementos <- sort(sample(c(50, 100, 150, 200, 250, 300), 4))
+x_vals <- c(x_base, x_base + cumsum(incrementos))
+
+# Calcular y = m*x + b (enteros exactos porque m y b son enteros y x son enteros)
+y_vals <- m * x_vals + b
+
+# --- Formato de la pendiente para mostrar ---
+pendiente_texto <- format(m, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+pendiente_texto <- gsub(" ", "", pendiente_texto)
+
+# --- Determinar si la relación es creciente ---
+relacion_creciente <- m > 0
+signo_pendiente <- ifelse(m > 0, "positiva", "negativa")
+
+# --- Pool de errores conceptuales ---
+errores_conceptuales <- list(
+  list(
+    codigo = "FUN-PEN-01",
+    nombre = "Suma en vez de resta en el numerador",
+    descripcion_corta = "Sumó los valores de y en vez de restarlos",
+    descripcion_larga = "Calculó la pendiente sumando los valores de y en vez de restarlos en el numerador, obteniendo un valor que no corresponde a la razón de cambio real entre los puntos.",
+    causa_raiz = "Error aritmético al aplicar la fórmula de la pendiente: la operación en el numerador debe ser una resta (diferencia de valores), no una suma.",
+    precondicion = function(params) {
+      # Solo aplica si la suma produce un valor diferente de la pendiente
+      dy_sum <- params$y_vals[2] + params$y_vals[1]
+      dx <- params$x_vals[2] - params$x_vals[1]
+      if (dx == 0) return(FALSE)
+      abs(dy_sum / dx - params$m) > 1
+    },
+    calcula = function(x_vals, y_vals) {
+      dy_sum <- y_vals[2] + y_vals[1]
+      dx <- x_vals[2] - x_vals[1]
+      if (dx == 0) return(NA)
+      dy_sum / dx
+    }
+  ),
+  list(
+    codigo = "FUN-PEN-02",
+    nombre = "Error de signo en la pendiente",
+    descripcion_corta = "Invirtió el signo de la pendiente",
+    descripcion_larga = "Calculó la pendiente con los signos invertidos: restó en el orden incorrecto en el numerador o en el denominador, obteniendo una pendiente con signo opuesto al correcto.",
+    causa_raiz = "Error al aplicar la fórmula de la pendiente: se debe restar en el mismo orden en numerador y denominador. Si en el numerador se usa el segundo menos el primero, en el denominador también.",
+    precondicion = function(params) TRUE,
+    calcula = function(x_vals, y_vals) {
+      dy <- y_vals[2] - y_vals[1]
+      dx <- x_vals[2] - x_vals[1]
+      -dy / dx  # Signo invertido
+    }
+  ),
+  list(
+    codigo = "FUN-PEN-03",
+    nombre = "Ignoró el signo de la pendiente",
+    descripcion_corta = "Tomó el valor absoluto de la pendiente ignorando el signo",
+    descripcion_larga = "Calculó correctamente la magnitud de la pendiente pero ignoró su signo, tomando el valor absoluto. Esto lo llevó a concluir que la relación siempre es creciente, independientemente de si los valores de y aumentan o disminuyen.",
+    causa_raiz = "Confusión entre magnitud y signo de la pendiente. El signo determina si la función es creciente (positiva) o decreciente (negativa), y no puede ignorarse.",
+    precondicion = function(params) {
+      # Solo aplica si m es negativa (si m > 0, abs(m) == m y no es distractor útil)
+      params$m < 0
+    },
+    calcula = function(x_vals, y_vals) {
+      dy <- y_vals[2] - y_vals[1]
+      dx <- x_vals[2] - x_vals[1]
+      abs(dy / dx)
+    }
+  ),
+  list(
+    codigo = "FUN-PEN-04",
+    nombre = "Confunde pendiente con intercepto",
+    descripcion_corta = "Reportó el intercepto como si fuera la pendiente",
+    descripcion_larga = "Confundió la pendiente con el intercepto (punto de corte con el eje y). Reportó el valor de b como si fuera m en la ecuación y = mx + b.",
+    causa_raiz = "Confusión entre los parámetros de la ecuación lineal. La pendiente (m) es la razón de cambio, mientras que el intercepto (b) es el valor de y cuando x = 0.",
+    precondicion = function(params) {
+      # Solo aplica si el intercepto da un valor distinto de la pendiente
+      abs(params$b) > 0 && abs(params$b) != abs(params$m)
+    },
+    calcula = function(x_vals, y_vals) {
+      dy <- y_vals[2] - y_vals[1]
+      dx <- x_vals[2] - x_vals[1]
+      m_real <- dy / dx
+      y_vals[1] - m_real * x_vals[1]
+    }
+  ),
+  list(
+    codigo = "FUN-PEN-05",
+    nombre = "Divide y entre x en vez de calcular razón de cambio",
+    descripcion_corta = "Dividió y/x en vez de calcular la razón de cambio",
+    descripcion_larga = "En lugar de calcular la razón de cambio entre dos puntos, dividió directamente un valor de y entre su correspondiente valor de x. Esto solo sería correcto si la recta pasara por el origen.",
+    causa_raiz = "Confusión entre razón de cambio (pendiente) y razón directa (y/x). La pendiente requiere dos puntos y la diferencia entre ellos, no la división directa.",
+    precondicion = function(params) {
+      # Solo si y/x da un valor diferente de la pendiente real
+      ratio <- params$y_vals[1] / params$x_vals[1]
+      abs(ratio - params$m) > 1
+    },
+    calcula = function(x_vals, y_vals) {
+      y_vals[1] / x_vals[1]
+    }
+  ),
+  list(
+    codigo = "FUN-PEN-06",
+    nombre = "Invirtió numerador y denominador",
+    descripcion_corta = "Calculó la razón de cambio invertida (dx/dy en vez de dy/dx)",
+    descripcion_larga = "Invirtió la fórmula de la pendiente calculando el cambio en x dividido por el cambio en y, en lugar del cambio en y dividido por el cambio en x. Esto produce el recíproco de la pendiente real.",
+    causa_raiz = "Confusión en la fórmula de la pendiente: m = Δy/Δx, no Δx/Δy. El numerador siempre es el cambio en la variable dependiente (y) y el denominador es el cambio en la variable independiente (x).",
+    precondicion = function(params) {
+      # Solo si la inversa da un valor diferente de la pendiente
+      dy <- params$y_vals[2] - params$y_vals[1]
+      if (dy == 0) return(FALSE)
+      dx <- params$x_vals[2] - params$x_vals[1]
+      inversa <- dx / dy
+      abs(inversa - params$m) > 1
+    },
+    calcula = function(x_vals, y_vals) {
+      dy <- y_vals[2] - y_vals[1]
+      dx <- x_vals[2] - x_vals[1]
+      if (dy == 0) return(NA)
+      dx / dy
+    }
+  ),
+  list(
+    codigo = "FUN-PEN-07",
+    nombre = "Usó solo un valor de y como pendiente",
+    descripcion_corta = "Reportó un valor de y como si fuera la pendiente",
+    descripcion_larga = "En lugar de calcular la razón de cambio entre dos puntos, reportó directamente uno de los valores de y de la tabla como si fuera la pendiente. La pendiente requiere la diferencia entre dos valores, no un valor individual.",
+    causa_raiz = "Confusión entre un dato de la tabla y la razón de cambio. La pendiente no es un valor de la tabla sino el cociente de las diferencias entre dos pares de valores.",
+    precondicion = function(params) {
+      # Solo si y[1] es diferente de la pendiente
+      abs(params$y_vals[1] - params$m) > 1
+    },
+    calcula = function(x_vals, y_vals) {
+      y_vals[1]
+    }
+  )
+)
+
+# --- Filtrar errores aplicables según precondiciones ---
+params <- list(
+  x_vals = x_vals,
+  y_vals = y_vals,
+  m = m,
+  b = b,
+  n = length(x_vals)
+)
+
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  tryCatch(err$precondicion(params), error = function(e) FALSE)
+}))
+
+# Seleccionar 3 errores distintos (SIN repetir índices)
+errores_seleccionados_idx <- sample(errores_aplicables_idx, min(3, length(errores_aplicables_idx)))
+
+# --- Calcular valores de distractores ---
+valor_correcto <- m
+distractor_vals <- numeric(length(errores_seleccionados_idx))
+
+for (i in seq_along(errores_seleccionados_idx)) {
+  idx <- errores_seleccionados_idx[i]
+  err <- errores_conceptuales[[idx]]
+
+  val <- tryCatch(
+    err$calcula(x_vals, y_vals),
+    error = function(e) NA
+  )
+
+  # Guardia NA
+  if (is.na(val)) val <- m + sample(c(-500, 500, -1000, 1000), 1)
+
+  distractor_vals[i] <- val
+}
+
+# --- Asegurar unicidad de distractores ---
+intentos <- 0
+max_intentos <- 50
+while (intentos < max_intentos) {
+  vals_verificar <- c(valor_correcto, distractor_vals)
+  todos_unicos <- length(unique(round(vals_verificar, 2))) == length(vals_verificar)
+  if (todos_unicos) break
+
+  for (i in seq_along(distractor_vals)) {
+    otros_vals <- c(valor_correcto, distractor_vals[-i])
+    if (any(round(distractor_vals[i], 2) == round(otros_vals, 2))) {
+      distractor_vals[i] <- distractor_vals[i] + sample(c(-100, 100, -200, 200, -500, 500), 1)
+    }
+  }
+  intentos <- intentos + 1
+}
+
+# --- Formatear valores para texto ---
+formatear_valor <- function(val) {
+  if (abs(val - round(val)) < 0.001) {
+    val <- round(val)
+    texto <- format(val, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+    gsub(" ", "", texto)
+  } else {
+    # Intentar expresar como fracción simple
+    for (den in c(2, 3, 4, 5, 10, 100)) {
+      num <- val * den
+      if (abs(num - round(num)) < 0.01) {
+        num <- round(num)
+        if (num < 0) {
+          return(paste0("-", format(abs(num), big.mark = ".", decimal.mark = ","), "/", den))
+        } else {
+          return(paste0(format(num, big.mark = ".", decimal.mark = ","), "/", den))
+        }
+      }
+    }
+    format(round(val, 2), big.mark = ".", decimal.mark = ",", scientific = FALSE)
+  }
+}
+
+# --- Construir las 4 opciones en ORDEN FIJO ---
+# Opción 1 = CORRECTA (siempre primera, R-exams mezclará con exshuffle: TRUE)
+
+if (relacion_creciente) {
+  opcion_correcta <- paste0(
+    "Sí, porque la pendiente es positiva y es equivalente a ", pendiente_texto, ".")
+} else {
+  opcion_correcta <- paste0(
+    "No, porque la pendiente es negativa y es equivalente a ", pendiente_texto, ".")
+}
+
+# Distractores
+opciones_distractores <- character(3)
+sol_explicaciones <- character(3)
+
+for (i in 1:3) {
+  idx <- errores_seleccionados_idx[i]
+  err <- errores_conceptuales[[idx]]
+  val <- distractor_vals[i]
+  val_texto <- formatear_valor(val)
+  signo_val <- ifelse(val > 0, "positiva", ifelse(val < 0, "negativa", "cero"))
+
+  if (val > 0) {
+    prefijo <- "Sí"
+  } else {
+    prefijo <- "No"
+  }
+  opciones_distractores[i] <- paste0(
+    prefijo, ", porque la pendiente es ", signo_val,
+    " y es equivalente a ", val_texto, ".")
+
+  sol_explicaciones[i] <- err$descripcion_larga
+}
+
+# Vector de opciones: [correcta, distractor1, distractor2, distractor3]
+opciones_todas <- c(opcion_correcta, opciones_distractores)
+
+# Solución fija: 1000 (primera opción correcta, R-exams mezclará)
+solucion_binaria <- c(1L, 0L, 0L, 0L)
+
+# --- Generar enunciado con plantilla ---
+n_datos_ctx <- list(var_x = var_x, var_y = var_y)
+enunciado_contexto <- ctx$plantilla(protagonista, n_datos_ctx)
+
+# --- Tabla formateada ---
+y_formateados <- sapply(y_vals, function(v) {
+  txt <- format(v, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+  gsub(" ", "", txt)
+})
+
+x_formateados <- sapply(x_vals, function(v) {
+  format(v, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+})
+
+# --- Pregunta ---
+pregunta_final <- paste0(
+  "¿Teniendo en cuenta la información presentada en la tabla, es correcto ",
+  "afirmar que la relación entre ", var_y, " y ", var_x, " es creciente?"
+)
+
+# --- Pool de reflexiones metacognitivas ---
+reflexiones_metacognitivas <- list(
+  "Para determinar si una relación lineal es creciente o decreciente, basta con analizar el signo de la pendiente: positiva implica crecimiento, negativa implica decrecimiento.",
+  "Un error frecuente es invertir el orden de la resta al calcular la pendiente. Recuerda: la pendiente es el cambio en y dividido por el cambio en x, siempre en el mismo orden.",
+  "Verificar el resultado con al menos dos pares de puntos diferentes ayuda a confirmar que la pendiente calculada es consistente en toda la tabla.",
+  "Confundir la pendiente con el intercepto es un error conceptual que se puede evitar recordando que la pendiente mide la razón de cambio, no el valor inicial.",
+  "Cuando la pendiente es positiva, al aumentar la variable independiente, la variable dependiente también aumenta. Cuando es negativa, al aumentar una, la otra disminuye."
+)
+
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# --- Helper: formatear número sin notación científica ---
+fmt <- function(v) {
+  txt <- format(v, big.mark = ".", decimal.mark = ",", scientific = FALSE)
+  gsub(" ", "", txt)
+}
+
+# --- Solución detallada ---
+x1_sol <- x_vals[1]
+x2_sol <- x_vals[2]
+y1_sol <- y_vals[1]
+y2_sol <- y_vals[2]
+dy_sol <- y2_sol - y1_sol
+dx_sol <- x2_sol - x1_sol
+
+x3_sol <- x_vals[3]
+x4_sol <- x_vals[4]
+y3_sol <- y_vals[3]
+y4_sol <- y_vals[4]
+
+# Textos para Answerlist de Solution (orden fijo: correcta primero)
+sol_texts <- c(
+  "Verdadero.",
+  paste0("Falso. ", sol_explicaciones[1]),
+  paste0("Falso. ", sol_explicaciones[2]),
+  paste0("Falso. ", sol_explicaciones[3])
+)
+
+# --- Identificar errores para la solución narrativa ---
+errores_seleccionados_info <- lapply(errores_seleccionados_idx, function(i) {
+  errores_conceptuales[[i]]
+})
+
+# --- Validaciones internas con mensajes diagnósticos ---
+if (any(is.na(distractor_vals))) {
+  stop("ERROR: distractor_vals contiene NA - revisar calcula() de errores seleccionados")
+}
+if (sum(solucion_binaria) != 1) {
+  stop("ERROR: solucion_binaria debe tener exactamente un 1")
+}
+if (length(opciones_todas) != 4) {
+  stop(paste0("ERROR: opciones_todas tiene ", length(opciones_todas), " elementos (se esperaban 4)"))
+}
+if (length(sol_texts) != 4) {
+  stop(paste0("ERROR: sol_texts tiene ", length(sol_texts), " elementos (se esperaban 4)"))
+}
+if (length(unique(opciones_todas)) != 4) {
+  stop(paste0("ERROR: opciones_todas tiene duplicados: ", paste(opciones_todas, collapse = " | ")))
+}
+```
+
+
+Question
+========
+
+`r enunciado_contexto`
+
+```{r tabla_datos, echo=FALSE, results='asis'}
+cat("\n\n")
+cat(paste0("| ", encabezado_x, " | ", encabezado_y, " |\n"))
+cat("|---:|---:|\n")
+for (i in seq_along(x_vals)) {
+  cat(paste0("| ", x_formateados[i], " | ", y_formateados[i], " |\n"))
+}
+cat("\n\n")
+```
+
+`r pregunta_final`
+
+Answerlist
+----------
+
+* `r opciones_todas[1]`
+* `r opciones_todas[2]`
+* `r opciones_todas[3]`
+* `r opciones_todas[4]`
+
+
+Solution
+========
+
+### Análisis de la relación
+
+Para determinar si la relación entre `r var_y` y `r var_x` es creciente, se debe calcular la **pendiente** de la función lineal que describe los datos.
+
+### Procedimiento correcto
+
+**Paso 1:** Seleccionar dos puntos de la tabla.
+
+Tomamos los puntos $(`r x1_sol`,\ `r fmt(y1_sol)`$) y $(`r x2_sol`,\ `r fmt(y2_sol)`$).
+
+**Paso 2:** Aplicar la fórmula de la pendiente.
+
+$$m = \frac{y_2 - y_1}{x_2 - x_1} = \frac{`r fmt(y2_sol)` - `r ifelse(y1_sol >= 0, fmt(y1_sol), paste0("(", fmt(y1_sol), ")"))`} {`r x2_sol` - `r x1_sol`} = \frac{`r fmt(dy_sol)`}{`r dx_sol`} = `r pendiente_texto`$$
+
+**Paso 3:** Verificar con otro par de puntos.
+
+Con $(`r x3_sol`,\ `r fmt(y3_sol)`$) y $(`r x4_sol`,\ `r fmt(y4_sol)`$):
+
+$$m = \frac{`r fmt(y4_sol)` - `r ifelse(y3_sol >= 0, fmt(y3_sol), paste0("(", fmt(y3_sol), ")"))`} {`r x4_sol` - `r x3_sol`} = \frac{`r fmt(y4_sol - y3_sol)`}{`r x4_sol - x3_sol`} = `r pendiente_texto`$$
+
+La pendiente es constante e igual a **`r pendiente_texto`**, lo cuál confirma que la relación es lineal.
+
+**Paso 4:** Determinar si la relación es creciente.
+
+Como la pendiente es **`r signo_pendiente`** ($m = `r pendiente_texto`$), la relación entre `r var_y` y `r var_x` **`r ifelse(relacion_creciente, "sí es creciente", "no es creciente, sino decreciente")`**.
+
+### Errores conceptuales comunes
+
+```{r errores_solution, echo=FALSE, results='asis'}
+for (i in seq_along(errores_seleccionados_info)) {
+  err <- errores_seleccionados_info[[i]]
+  cat(paste0("- **", err$codigo, " (", err$nombre, ")**: ", err$descripcion_larga, "\n"))
+}
+```
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar errores
+
+1. **Verificar el orden**: al calcular $m = \frac{y_2 - y_1}{x_2 - x_1}$, asegurarse de que el numerador tiene los valores de $y$ y el denominador los de $x$.
+2. **Confirmar el signo**: si $y$ aumenta cuando $x$ aumenta, la pendiente debe ser positiva; si $y$ disminuye, debe ser negativa.
+3. **Validar con otro par**: calcular la pendiente con dos pares de puntos diferentes para confirmar consistencia.
+
+Answerlist
+----------
+
+* `r sol_texts[1]`
+* `r sol_texts[2]`
+* `r sol_texts[3]`
+* `r sol_texts[4]`
+
+
+Meta-information
+================
+exname: pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(as.integer(solucion_binaria), collapse="")`
+exshuffle: TRUE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Numerico-Variacional
+exextra[Pensamiento]: Variacional
+exextra[Contenido]: Funcion lineal - Pendiente y razon de cambio
+exextra[Afirmacion]: Justificar relaciones entre variables a partir de representaciones tabulares
+exextra[Evidencia]: Argumentar sobre la razon de cambio en una funcion lineal
+exextra[Nivel]: 2
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[Grado]: 9

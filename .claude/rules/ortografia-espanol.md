@@ -2,6 +2,62 @@
 
 **Copiar palabras TAL CUAL de aquí. No improvisar.**
 
+## REGLA DE GENERACIÓN (OBLIGATORIA)
+
+**Al generar o escribir CUALQUIER archivo .Rmd (Write/Edit), Claude DEBE incluir tildes correctas en TODO texto español visible al estudiante DESDE EL PRIMER BORRADOR.**
+
+No es aceptable generar sin tildes y corregir después. La generación con tildes correctas es obligatoria en:
+
+1. **Strings `paste0()`** en plantillas de contextos narrativos
+2. **Strings `paste0()`** en descripciones de errores conceptuales (descripcion_corta, descripcion_larga, causa_raiz)
+3. **Strings `c()`** en reflexiones metacognitivas
+4. **Strings `paste0()`** en sol_texts del Answerlist de Solution
+5. **Texto Markdown** en secciones Question y Solution
+6. **Encabezados Markdown** (### Análisis, ### Reflexión, etc.)
+
+**Errores frecuentes de generación (detectados 2026-02-26):**
+
+| Palabra sin tilde (ERROR) | Palabra correcta | Contexto típico |
+|---------------------------|------------------|-----------------|
+| `realizo` | `realizó` | Plantillas narrativas (pretérito) |
+| `pregunto` | `preguntó` | Plantillas narrativas |
+| `organizo` | `organizó` | Plantillas narrativas |
+| `descubrio` | `descubrió` | Plantillas narrativas |
+| `publico` | `publicó` | Plantillas narrativas |
+| `encuesto` | `encuestó` | Plantillas narrativas |
+| `identifico` | `identificó` | Descripción de errores |
+| `excluyo` | `excluyó` | Descripción de errores |
+| `confundio` | `confundió` | Descripción de errores |
+| `sombreo` | `sombreó` | Descripción de errores |
+| `cometio` | `cometió` | Descripción de errores |
+| `aplico` | `aplicó` | Descripción de errores |
+| `interpreto` | `interpretó` | Descripción de errores |
+| `cafeteria` | `cafetería` | Contextos narrativos |
+| `boletin` | `boletín` | Contextos narrativos |
+| `periodico` | `periódico` | Contextos narrativos |
+| `companeros` | `compañeros` | sujeto del contexto |
+| `interseccion` | `intersección` | Errores + Solution |
+| `exclusion` | `exclusión` | Errores + Solution (NO en variables R) |
+| `union` (texto) | `unión` | Errores + Solution (NO en variables R) |
+| `omision` | `omisión` | causa_raiz |
+| `confusion` | `confusión` | causa_raiz |
+| `region` | `región` | Solution markdown |
+| `operacion` | `operación` | Solution markdown |
+| `expresion` | `expresión` | Solution markdown |
+| `analisis` | `análisis` | Encabezados Solution |
+| `opcion` | `opción` | Solution ("Opción A") |
+| `reflexion` | `reflexión` | Encabezados Solution |
+| `tambien` | `también` | Solution markdown |
+| `ademas` | `además` | Descripciones errores |
+| `calculo` | `cálculo` | Solution markdown |
+| `asi` | `así` | Plantillas narrativas |
+| `area` | `área` | Descripciones errores |
+| `Cual` | `¿Cuál` | Pregunta Question (agregar ¿) |
+| `Que` (interrogativo) | `¿Qué` | Pregunta retórica (agregar ¿) |
+| `como` (interrogativo) | `cómo` | Reflexiones metacognitivas |
+
+---
+
 ## Palabras Frecuentes
 
 ```
@@ -11,7 +67,13 @@ más  según  así  después  también  además  aquí  ahí
 
 dispersión  solución  ecuación  relación  variación  descripción  información  configuración  clasificación  validación  explicación  distribución  combinación  iteración  sección  versión  dimensión  selección
 
-matemático  estadística  científico  parabólico  geométrico  numérico  teórico  único  dinámico  automático  semántico
+intersección  exclusión  unión  omisión  confusión  reflexión  operación  expresión  región  opción  comprensión  metacognición  interpretación  argumentación  formulación
+
+matemático  estadística  científico  parabólico  geométrico  numérico  teórico  único  dinámico  automático  semántico  simbólico  simultáneo
+
+realizó  preguntó  organizó  descubrió  publicó  encuestó  identificó  excluyó  confundió  sombreó  cometió  aplicó  interpretó  calculó  obtuvo
+
+cafetería  boletín  periódico  compañeros  jóvenes  líder  géneros  área  comité  gastronómica
 ```
 
 ## Excepciones (SIN tilde)

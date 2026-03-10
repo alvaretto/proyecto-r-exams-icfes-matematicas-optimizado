@@ -13,6 +13,9 @@
 5. [Error: Gráfico aplastado por escala incompatible](#error-5-gráfico-aplastado-por-escala-incompatible-est-box-01)
 6. [Error: Rango insuficiente para sample()](#error-6-rango-insuficiente-para-sample-sin-reemplazo)
 7. [Error: Descripción de error conceptual incoherente con paridad de datos](#error-7-descripción-de-error-conceptual-incoherente-con-paridad-de-datos)
+8. [Error: Corrupción de RNG por test de diversidad](#error-8-corrupción-de-rng-por-test-de-diversidad)
+9. [Error: ##ANSWERi## mal ubicados en ejercicio CLOZE](#error-9-answeri-mal-ubicados-en-ejercicio-cloze)
+10. [Error: NA en comparación while con calcula()](#error-10-na-en-comparación-while-con-calcula)
 
 ---
 
@@ -1231,3 +1234,245 @@ Para agregar un nuevo patrón de error a este documento:
 - ❌ Errores sin solución confirmada
 - ❌ Soluciones no probadas
 - ❌ Casos específicos sin patrón generalizable
+
+---
+
+## Error 8: Corrupción de RNG por test de diversidad
+
+### ❌ Mensaje de Error
+```
+No hay mensaje de error explícito. El síntoma es que exams2html(n=50)
+produce solo 2-3 versiones únicas en lugar de 40+.
+```
+
+### 🔍 Causa Raíz
+Un chunk `test_that()` dentro del .Rmd usa `set.seed()` en un loop para verificar diversidad
+de versiones. Esto modifica `.Random.seed` en el entorno global de R. Cuando R-exams
+genera múltiples versiones después, todas comparten el mismo estado RNG corrompido y
+producen datos casi idénticos.
+
+**Flujo del problema:**
+1. Chunk `data_generation` genera datos aleatorios correctamente
+2. Chunk `diversity_test` ejecuta `for(i in 1:300) { set.seed(i*7); ... }`
+3. `.Random.seed` global queda en el estado del último `set.seed(300*7)`
+4. `exams2html(n=50)` re-ejecuta el .Rmd 50 veces
+5. Cada vez, `data_generation` usa el mismo RNG state → datos idénticos
+
+### ✅ Solución Verificada
+
+#### Código ANTES (incorrecto):
+```r
+test_that("Diversidad de versiones", {
+  versiones <- character(300)
+  for (i in 1:300) {
+    set.seed(i * 7 + 13)
+    # ... genera versiones
+    versiones[i] <- digest::digest(list(...))
+  }
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200)
+})
+```
+
+#### Código DESPUÉS (correcto):
+```r
+test_that("Diversidad de versiones", {
+  # GUARDAR estado RNG antes del test
+  saved_seed <- if (exists(".Random.seed", envir = globalenv())) {
+    get(".Random.seed", envir = globalenv())
+  } else NULL
+
+  versiones <- character(300)
+  for (i in 1:300) {
+    set.seed(i * 7 + 13)
+    # ... genera versiones
+    versiones[i] <- digest::digest(list(...))
+  }
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200)
+
+  # RESTAURAR estado RNG después del test
+  if (!is.null(saved_seed)) {
+    assign(".Random.seed", saved_seed, envir = globalenv())
+  } else {
+    rm(".Random.seed", envir = globalenv())
+  }
+})
+```
+
+### 🧪 Validación de la Solución
+```r
+# Antes del fix: exams2html(n=50) → 2 versiones únicas
+# Después del fix: exams2html(n=100) → 94 versiones únicas (94%)
+```
+
+### 📋 Checklist de Corrección
+1. Buscar TODOS los chunks `test_that` que usen `set.seed()`
+2. Agregar guardado de `.Random.seed` AL INICIO del test
+3. Agregar restauración de `.Random.seed` AL FINAL del test
+4. Verificar con `exams2html(n=50)` que diversidad se mantiene
+
+### 📚 Ejemplo Funcional Utilizado
+Archivo corregido: `diagrama_venn_generos_musicales_metacognitivo_argumentacion_n3_cloze_v3.Rmd`
+
+### 📅 Historial
+
+| Fecha | Archivo | Antes | Después | Verificado |
+|-------|---------|-------|---------|------------|
+| 2026-02-27 | diagrama_venn_generos_musicales (Venn) | 2/50 únicas | 94/100 únicas | ✓ |
+
+---
+
+## Error 9: ##ANSWERi## mal ubicados en ejercicio CLOZE
+
+### ❌ Mensaje de Error
+```
+No hay error de compilación. El síntoma visual es que las opciones de la
+Parte 1 aparecen DESPUÉS del texto de la Parte 2 en el PDF/HTML renderizado.
+```
+
+### 🔍 Causa Raíz
+En ejercicios R-exams tipo CLOZE, cada `##ANSWERi##` es un placeholder que R-exams
+reemplaza con el widget de respuesta correspondiente. Si `##ANSWER1##` se coloca
+después del texto de la Parte 2, R-exams inserta las opciones de la Parte 1 en la
+posición equivocada.
+
+Errores típicos:
+1. `##ANSWER1##` colocado después de `**Parte 2.**` en vez de después de `**Parte 1.**`
+2. `##ANSWER4##` omitido completamente (la última parte no tiene widget)
+3. Chunks R con `cat()` que duplican el contenido del Answerlist (R-exams ya lo renderiza)
+
+### ✅ Solución Verificada
+
+#### Código ANTES (incorrecto):
+```markdown
+**Parte 1.** ¿Cuál es el error?
+
+` ``{r opciones_display, echo=FALSE, results='asis'}
+for (i in 1:4) cat(paste0("- ", opciones[i], "\n"))
+` ``
+
+**Parte 2.** ¿Cuál es el valor correcto?
+
+##ANSWER1##
+##ANSWER2##
+
+**Parte 3.** Seleccione las afirmaciones verdaderas:
+
+##ANSWER3##
+```
+
+#### Código DESPUÉS (correcto):
+```markdown
+**Parte 1.** ¿Cuál es el error?
+
+##ANSWER1##
+
+**Parte 2.** ¿Cuál es el valor correcto?
+
+##ANSWER2##
+
+**Parte 3.** Seleccione las afirmaciones verdaderas:
+
+##ANSWER3##
+
+**Parte 4.** Verdadero o falso:
+
+##ANSWER4##
+
+Answerlist
+----------
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+* `r afirmaciones[1]`
+* `r afirmaciones[2]`
+* `r afirmaciones[3]`
+* `r afirmaciones[4]`
+* Verdadero
+* Falso
+```
+
+### 📋 Checklist de Corrección
+1. Contar tipos en `exclozetype` (ej: `schoice|num|mchoice|schoice` = 4 partes)
+2. Verificar que existen EXACTAMENTE 4 `##ANSWERi##` (uno por parte)
+3. Cada `##ANSWERi##` va INMEDIATAMENTE después del texto de su parte
+4. NO usar chunks R para mostrar opciones — el Answerlist al final se encarga
+5. Para partes `num`: usar `*` vacío en el Answerlist (sin texto)
+6. Verificar visualmente en PDF que cada parte tiene su widget en la posición correcta
+
+### 📚 Referencia
+Patrón validado en: `promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`
+
+### 📅 Historial
+
+| Fecha | Archivo | Síntoma | Verificado |
+|-------|---------|---------|------------|
+| 2026-02-27 | diagrama_venn_generos_musicales (Venn) | Opciones Parte 1 aparecían después de Parte 2 | ✓ |
+
+---
+
+## Error 10: NA en comparación while con calcula()
+
+### ❌ Mensaje de Error
+```
+Error in while (respuesta_erronea == valor_correcto && intentos_error < 20) {
+  : valor ausente donde TRUE/FALSE es necesario
+Calls: exams2moodle -> ... -> <Anonymous>
+```
+
+### 🔍 Causa Raíz
+Las funciones `calcula()` en el pool de errores conceptuales pueden retornar `NA` cuando
+el `tipo_operacion` seleccionado no coincide con lo que el error espera. Aunque las
+precondiciones deberían filtrar estos casos, ciertas combinaciones de RNG producen
+estados donde un error pasa la precondición pero su `calcula()` retorna NA para la
+operación específica.
+
+En R, `NA == valor` produce `NA` (no TRUE ni FALSE), y `while(NA)` crashea.
+
+### ✅ Solución Verificada
+
+#### Código ANTES (incorrecto):
+```r
+while (respuesta_erronea == valor_correcto && intentos_error < 20) {
+  # ... reintenta otro error
+}
+
+if (respuesta_erronea == valor_correcto) {
+  # fallback
+}
+```
+
+#### Código DESPUÉS (correcto):
+```r
+while ((is.na(respuesta_erronea) || respuesta_erronea == valor_correcto) && intentos_error < 20) {
+  # ... reintenta otro error
+}
+
+if (is.na(respuesta_erronea) || respuesta_erronea == valor_correcto) {
+  # fallback
+}
+```
+
+### 🧪 Validación de la Solución
+```r
+# Antes del fix: semillas 29 y 114 crasheaban (de 200 probadas)
+# Después del fix: 0 fallos en 200 semillas
+```
+
+### 📋 Checklist de Corrección
+1. Buscar TODOS los `while` que comparen con resultado de `calcula()`
+2. Agregar `is.na(variable) ||` como primera condición
+3. Hacer lo mismo para `if` statements que usen el resultado
+4. Verificar con 200+ semillas que no hay crashes
+
+### 📚 Ejemplo Funcional Utilizado
+Archivo corregido: `diagrama_venn_generos_musicales_metacognitivo_argumentacion_n3_cloze_v3.Rmd`
+
+### 📅 Historial
+
+| Fecha | Archivo | Semillas fallidas | Verificado |
+|-------|---------|-------------------|------------|
+| 2026-02-27 | diagrama_venn_generos_musicales (Venn) | 2/200 → 0/200 | ✓ |
