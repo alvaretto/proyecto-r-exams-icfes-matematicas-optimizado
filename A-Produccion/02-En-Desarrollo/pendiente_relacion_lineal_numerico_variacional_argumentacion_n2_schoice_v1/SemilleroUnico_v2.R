@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_schoice_v1.Rmd"
+archivo_examen <- "pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_cloze_v1.Rmd"
 copias <- 250  # Número de versiones a generar
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)

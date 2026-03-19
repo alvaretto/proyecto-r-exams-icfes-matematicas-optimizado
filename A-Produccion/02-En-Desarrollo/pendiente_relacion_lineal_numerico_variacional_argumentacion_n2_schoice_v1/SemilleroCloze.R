@@ -28,7 +28,7 @@ archivo_examen <- "01-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_
 
 # Configuración de generación
 config <- list(
-  archivos =500,                  # Número de versiones a generar
+  archivos =300,                  # Número de versiones a generar
   semilla_base = sample(100:1e8, 1), # Semilla base para generar semillas únicas
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
