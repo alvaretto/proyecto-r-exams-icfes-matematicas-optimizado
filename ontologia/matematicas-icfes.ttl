@@ -1,0 +1,122 @@
+@prefix :     <http://icfes.matematicas.edu.co/ontologia#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://icfes.matematicas.edu.co/ontologia>
+    a owl:Ontology ;
+    rdfs:label "Ontología de Matemáticas ICFES" .
+
+# ── CLASES ──────────────────────────────────────────────────────────────────
+
+:ConceptoMatematico a owl:Class ;
+    rdfs:label "Concepto Matemático" .
+
+:Ejercicio a owl:Class ;
+    rdfs:label "Ejercicio ICFES" .
+
+:CompetenciaICFES a owl:Class ;
+    rdfs:label "Competencia ICFES" .
+
+:ComponenteICFES a owl:Class ;
+    rdfs:label "Componente ICFES" .
+
+:ErrorConceptual a owl:Class ;
+    rdfs:label "Error Conceptual" .
+
+:NivelDOK a owl:Class ;
+    rdfs:label "Nivel DOK" .
+
+# ── PROPIEDADES OBJETO ───────────────────────────────────────────────────────
+
+:esPrerequisitoDe a owl:ObjectProperty ;
+    rdfs:label "es prerequisito de" ;
+    rdfs:domain :ConceptoMatematico ;
+    rdfs:range  :ConceptoMatematico .
+
+:esSubconceptoDe a owl:ObjectProperty ;
+    rdfs:label "es subconcepto de" ;
+    rdfs:domain :ConceptoMatematico ;
+    rdfs:range  :ConceptoMatematico .
+
+:cubreConcepto a owl:ObjectProperty ;
+    rdfs:label "cubre concepto" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  :ConceptoMatematico .
+
+:tieneCompetencia a owl:ObjectProperty ;
+    rdfs:label "tiene competencia" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  :CompetenciaICFES .
+
+:tieneComponente a owl:ObjectProperty ;
+    rdfs:label "tiene componente" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  :ComponenteICFES .
+
+:tieneNivel a owl:ObjectProperty ;
+    rdfs:label "tiene nivel DOK" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  :NivelDOK .
+
+:tieneErrorConceptual a owl:ObjectProperty ;
+    rdfs:label "tiene error conceptual" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  :ErrorConceptual .
+
+# ── PROPIEDADES DATATYPE ─────────────────────────────────────────────────────
+
+:rutaArchivo a owl:DatatypeProperty ;
+    rdfs:label "ruta del archivo" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  xsd:string .
+
+:nivelBloom a owl:DatatypeProperty ;
+    rdfs:label "nivel Bloom" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  xsd:string .
+
+:nivelSOLO a owl:DatatypeProperty ;
+    rdfs:label "nivel SOLO" ;
+    rdfs:domain :Ejercicio ;
+    rdfs:range  xsd:string .
+
+# ── INSTANCIAS: CompetenciaICFES ─────────────────────────────────────────────
+
+:InterpretacionRepresentacion a :CompetenciaICFES ;
+    rdfs:label "Interpretación y representación" .
+
+:FormulacionEjecucion a :CompetenciaICFES ;
+    rdfs:label "Formulación y ejecución" .
+
+:Argumentacion a :CompetenciaICFES ;
+    rdfs:label "Argumentación" .
+
+:ResolucionProblemas a :CompetenciaICFES ;
+    rdfs:label "Resolución de problemas" .
+
+# ── INSTANCIAS: ComponenteICFES ───────────────────────────────────────────────
+
+:NumericoVariacional a :ComponenteICFES ;
+    rdfs:label "Numérico-variacional" .
+
+:EspacialMetrico a :ComponenteICFES ;
+    rdfs:label "Espacial-métrico" .
+
+:AleatorioEstadistico a :ComponenteICFES ;
+    rdfs:label "Aleatorio-estadístico" .
+
+# ── INSTANCIAS: NivelDOK ─────────────────────────────────────────────────────
+
+:DOK1 a :NivelDOK ;
+    rdfs:label "Básico (DOK 1)" .
+
+:DOK2 a :NivelDOK ;
+    rdfs:label "Medio (DOK 2)" .
+
+:DOK3 a :NivelDOK ;
+    rdfs:label "Alto (DOK 3)" .
+
+:DOK4 a :NivelDOK ;
+    rdfs:label "Avanzado (DOK 4)" .
