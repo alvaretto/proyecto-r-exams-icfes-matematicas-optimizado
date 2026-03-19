@@ -2,6 +2,11 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 
+<http://icfes.matematicas.edu.co/ontologia/conceptos>
+    a owl:Ontology ;
+    rdfs:comment "Jerarquía de conceptos matemáticos ICFES con prerequisitos" ;
+    owl:imports <http://icfes.matematicas.edu.co/ontologia> .
+
 # ── ÁREA: ESTADÍSTICA Y PROBABILIDAD ────────────────────────────────────────
 
 :Media a :ConceptoMatematico ;
@@ -177,3 +182,34 @@
 # Área padre (concepto contenedor)
 :Estadistica a :ConceptoMatematico ;
     rdfs:label "Estadística descriptiva" .
+
+# ── CONTENEDORES DE ÁREA ─────────────────────────────────────────────────────
+
+:Algebra a :ConceptoMatematico ;
+    rdfs:label "Álgebra y funciones" .
+
+:Geometria a :ConceptoMatematico ;
+    rdfs:label "Geometría y medida" .
+
+:AreaNumerica a :ConceptoMatematico ;
+    rdfs:label "Área numérica" .
+
+# Subconcept relationships for algebra area
+:FuncionLineal :esSubconceptoDe :Algebra .
+:FuncionCuadratica :esSubconceptoDe :Algebra .
+:FuncionExponencial :esSubconceptoDe :Algebra .
+:FuncionLogaritmica :esSubconceptoDe :Algebra .
+:Ecuaciones :esSubconceptoDe :Algebra .
+
+# Subconcept relationships for geometry area
+:Triangulos :esSubconceptoDe :Geometria .
+:Circunferencia :esSubconceptoDe :Geometria .
+:Trigonometria :esSubconceptoDe :Geometria .
+:AreaSuperficies :esSubconceptoDe :Geometria .
+:Volumen :esSubconceptoDe :Geometria .
+
+# Subconcept relationships for numeric area
+:NumerosReales :esSubconceptoDe :AreaNumerica .
+:Proporcionalidad :esSubconceptoDe :AreaNumerica .
+:Porcentajes :esSubconceptoDe :AreaNumerica .
+:Potenciacion :esSubconceptoDe :AreaNumerica .
