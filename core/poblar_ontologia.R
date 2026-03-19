@@ -125,7 +125,9 @@ ejercicio_a_turtle <- function(meta, ruta_archivo) {
   if (is.null(exname) || nchar(trimws(exname)) == 0) return(NULL)
 
   # Sanitizar exname para usar como IRI local
-  iri_local <- gsub("[^a-zA-Z0-9_\\-]", "_", exname)
+  # Eliminar backslashes de LaTeX (ej: \_) y sanitizar para IRI
+  exname_clean <- gsub("\\\\", "", exname)
+  iri_local <- gsub("[^a-zA-Z0-9_-]", "_", exname_clean)
   ejercicio_iri <- paste0("<", ONTOLOGIA_IRI, "ej_", iri_local, ">")
 
   # Campos normalizados

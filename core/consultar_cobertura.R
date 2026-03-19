@@ -13,6 +13,7 @@ suppressPackageStartupMessages(library(httr2))
 
 SPARQL_ENDPOINT <- "http://localhost:3030/icfes/sparql"
 ONTOLOGIA_IRI   <- "http://icfes.matematicas.edu.co/ontologia#"
+EJERCICIOS_GRAPH <- "http://icfes.matematicas.edu.co/ejercicios"
 
 # ── Función base de consulta SPARQL ─────────────────────────────────────────
 
@@ -67,12 +68,14 @@ cobertura_por_competencia <- function() {
 PREFIX : <%s>
 SELECT ?competencia (COUNT(?ej) AS ?n_ejercicios)
 WHERE {
-  ?ej a :Ejercicio .
-  OPTIONAL { ?ej :tieneCompetencia ?competencia }
+  GRAPH <%s> {
+    ?ej a :Ejercicio .
+    OPTIONAL { ?ej :tieneCompetencia ?competencia }
+  }
 }
 GROUP BY ?competencia
 ORDER BY DESC(?n_ejercicios)
-', ONTOLOGIA_IRI)
+', ONTOLOGIA_IRI, EJERCICIOS_GRAPH)
 
   df <- sparql_query(q)
   if (is.null(df) || nrow(df) == 0) {
@@ -91,12 +94,14 @@ cobertura_por_nivel <- function() {
 PREFIX : <%s>
 SELECT ?nivel (COUNT(?ej) AS ?n_ejercicios)
 WHERE {
-  ?ej a :Ejercicio .
-  OPTIONAL { ?ej :tieneNivel ?nivel }
+  GRAPH <%s> {
+    ?ej a :Ejercicio .
+    OPTIONAL { ?ej :tieneNivel ?nivel }
+  }
 }
 GROUP BY ?nivel
 ORDER BY ?nivel
-', ONTOLOGIA_IRI)
+', ONTOLOGIA_IRI, EJERCICIOS_GRAPH)
 
   df <- sparql_query(q)
   if (is.null(df) || nrow(df) == 0) {
@@ -114,13 +119,15 @@ cobertura_competencia_x_nivel <- function() {
 PREFIX : <%s>
 SELECT ?competencia ?nivel (COUNT(?ej) AS ?n_ejercicios)
 WHERE {
-  ?ej a :Ejercicio .
-  OPTIONAL { ?ej :tieneCompetencia ?competencia }
-  OPTIONAL { ?ej :tieneNivel ?nivel }
+  GRAPH <%s> {
+    ?ej a :Ejercicio .
+    OPTIONAL { ?ej :tieneCompetencia ?competencia }
+    OPTIONAL { ?ej :tieneNivel ?nivel }
+  }
 }
 GROUP BY ?competencia ?nivel
 ORDER BY ?competencia ?nivel
-', ONTOLOGIA_IRI)
+', ONTOLOGIA_IRI, EJERCICIOS_GRAPH)
 
   df <- sparql_query(q)
   if (is.null(df) || nrow(df) == 0) {
@@ -137,14 +144,17 @@ ORDER BY ?competencia ?nivel
 brechas_conceptos <- function() {
   q <- sprintf('
 PREFIX : <%s>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?concepto ?label
 WHERE {
   ?concepto a :ConceptoMatematico .
-  OPTIONAL { ?concepto <http://www.w3.org/2000/01/rdf-schema#label> ?label }
-  FILTER NOT EXISTS { ?ej a :Ejercicio ; :cubreConcepto ?concepto }
+  OPTIONAL { ?concepto rdfs:label ?label }
+  FILTER NOT EXISTS {
+    GRAPH <%s> { ?ej a :Ejercicio ; :cubreConcepto ?concepto }
+  }
 }
 ORDER BY ?label
-', ONTOLOGIA_IRI)
+', ONTOLOGIA_IRI, EJERCICIOS_GRAPH)
 
   df <- sparql_query(q)
   if (is.null(df) || nrow(df) == 0) {
