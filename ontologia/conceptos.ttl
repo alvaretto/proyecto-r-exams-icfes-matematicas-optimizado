@@ -1,0 +1,179 @@
+@prefix :     <http://icfes.matematicas.edu.co/ontologia#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+# ── ÁREA: ESTADÍSTICA Y PROBABILIDAD ────────────────────────────────────────
+
+:Media a :ConceptoMatematico ;
+    rdfs:label "Media aritmética" .
+
+:Mediana a :ConceptoMatematico ;
+    rdfs:label "Mediana" .
+
+:Moda a :ConceptoMatematico ;
+    rdfs:label "Moda" .
+
+:Rango a :ConceptoMatematico ;
+    rdfs:label "Rango (estadística)" .
+
+:Cuartiles a :ConceptoMatematico ;
+    rdfs:label "Cuartiles" .
+
+:DiagramaCaja a :ConceptoMatematico ;
+    rdfs:label "Diagrama de caja (boxplot)" .
+
+:Probabilidad a :ConceptoMatematico ;
+    rdfs:label "Probabilidad básica" .
+
+:ProbabilidadCondicional a :ConceptoMatematico ;
+    rdfs:label "Probabilidad condicional" .
+
+:EventosMutuamenteExcluyentes a :ConceptoMatematico ;
+    rdfs:label "Eventos mutuamente excluyentes" .
+
+:TeoremaBayes a :ConceptoMatematico ;
+    rdfs:label "Teorema de Bayes" .
+
+:VariableAleatoria a :ConceptoMatematico ;
+    rdfs:label "Variable aleatoria" .
+
+:DistribucionNormal a :ConceptoMatematico ;
+    rdfs:label "Distribución normal" .
+
+# ── ÁREA: ÁLGEBRA Y FUNCIONES ────────────────────────────────────────────────
+
+:Expresiones a :ConceptoMatematico ;
+    rdfs:label "Expresiones algebraicas" .
+
+:Ecuaciones a :ConceptoMatematico ;
+    rdfs:label "Ecuaciones" .
+
+:Inecuaciones a :ConceptoMatematico ;
+    rdfs:label "Inecuaciones" .
+
+:Sistemas a :ConceptoMatematico ;
+    rdfs:label "Sistemas de ecuaciones" .
+
+:FuncionLineal a :ConceptoMatematico ;
+    rdfs:label "Función lineal" .
+
+:FuncionCuadratica a :ConceptoMatematico ;
+    rdfs:label "Función cuadrática" .
+
+:FuncionExponencial a :ConceptoMatematico ;
+    rdfs:label "Función exponencial" .
+
+:FuncionLogaritmica a :ConceptoMatematico ;
+    rdfs:label "Función logarítmica" .
+
+:Polinomios a :ConceptoMatematico ;
+    rdfs:label "Polinomios" .
+
+:Factorizacion a :ConceptoMatematico ;
+    rdfs:label "Factorización" .
+
+:Sucesiones a :ConceptoMatematico ;
+    rdfs:label "Sucesiones y series" .
+
+# ── ÁREA: GEOMETRÍA Y MEDIDA ─────────────────────────────────────────────────
+
+:Angulos a :ConceptoMatematico ;
+    rdfs:label "Ángulos" .
+
+:Triangulos a :ConceptoMatematico ;
+    rdfs:label "Triángulos" .
+
+:Circunferencia a :ConceptoMatematico ;
+    rdfs:label "Circunferencia y círculo" .
+
+:Poligonos a :ConceptoMatematico ;
+    rdfs:label "Polígonos" .
+
+:AreaSuperficies a :ConceptoMatematico ;
+    rdfs:label "Área de superficies" .
+
+:Volumen a :ConceptoMatematico ;
+    rdfs:label "Volumen de sólidos" .
+
+:Trigonometria a :ConceptoMatematico ;
+    rdfs:label "Trigonometría básica" .
+
+:TeoremaPitagoras a :ConceptoMatematico ;
+    rdfs:label "Teorema de Pitágoras" .
+
+# ── ÁREA: NUMÉRICO ───────────────────────────────────────────────────────────
+
+:NumerosNaturales a :ConceptoMatematico ;
+    rdfs:label "Números naturales" .
+
+:NumerosEnteros a :ConceptoMatematico ;
+    rdfs:label "Números enteros" .
+
+:NumerosRacionales a :ConceptoMatematico ;
+    rdfs:label "Números racionales" .
+
+:NumerosReales a :ConceptoMatematico ;
+    rdfs:label "Números reales" .
+
+:Proporcionalidad a :ConceptoMatematico ;
+    rdfs:label "Proporcionalidad" .
+
+:Porcentajes a :ConceptoMatematico ;
+    rdfs:label "Porcentajes" .
+
+:Potenciacion a :ConceptoMatematico ;
+    rdfs:label "Potenciación y radicación" .
+
+# ── PREREQUISITOS ────────────────────────────────────────────────────────────
+# Dirección: A esPrerequisitoDe B  →  A debe aprenderse ANTES que B
+
+# Estadística
+:Media :esPrerequisitoDe :Mediana .
+:Mediana :esPrerequisitoDe :Cuartiles .
+:Cuartiles :esPrerequisitoDe :DiagramaCaja .
+:Rango :esPrerequisitoDe :DiagramaCaja .
+:Probabilidad :esPrerequisitoDe :ProbabilidadCondicional .
+:Probabilidad :esPrerequisitoDe :EventosMutuamenteExcluyentes .
+:ProbabilidadCondicional :esPrerequisitoDe :TeoremaBayes .
+:Probabilidad :esPrerequisitoDe :VariableAleatoria .
+:VariableAleatoria :esPrerequisitoDe :DistribucionNormal .
+
+# Álgebra y funciones
+:Expresiones :esPrerequisitoDe :Ecuaciones .
+:Ecuaciones :esPrerequisitoDe :Inecuaciones .
+:Ecuaciones :esPrerequisitoDe :Sistemas .
+:Ecuaciones :esPrerequisitoDe :FuncionLineal .
+:FuncionLineal :esPrerequisitoDe :FuncionCuadratica .
+:FuncionCuadratica :esPrerequisitoDe :FuncionExponencial .
+:FuncionExponencial :esPrerequisitoDe :FuncionLogaritmica .
+:Polinomios :esPrerequisitoDe :Factorizacion .
+:Factorizacion :esPrerequisitoDe :FuncionCuadratica .
+:FuncionLineal :esPrerequisitoDe :Sucesiones .
+
+# Geometría
+:Angulos :esPrerequisitoDe :Triangulos .
+:Triangulos :esPrerequisitoDe :TeoremaPitagoras .
+:TeoremaPitagoras :esPrerequisitoDe :Trigonometria .
+:Triangulos :esPrerequisitoDe :AreaSuperficies .
+:Poligonos :esPrerequisitoDe :AreaSuperficies .
+:AreaSuperficies :esPrerequisitoDe :Volumen .
+:Angulos :esPrerequisitoDe :Circunferencia .
+
+# Numérico
+:NumerosNaturales :esPrerequisitoDe :NumerosEnteros .
+:NumerosEnteros :esPrerequisitoDe :NumerosRacionales .
+:NumerosRacionales :esPrerequisitoDe :NumerosReales .
+:NumerosNaturales :esPrerequisitoDe :Proporcionalidad .
+:Proporcionalidad :esPrerequisitoDe :Porcentajes .
+:NumerosReales :esPrerequisitoDe :Potenciacion .
+:Potenciacion :esPrerequisitoDe :FuncionExponencial .
+
+# Conexiones entre áreas
+:NumerosReales :esPrerequisitoDe :Expresiones .
+:Media :esSubconceptoDe :Estadistica .
+:Mediana :esSubconceptoDe :Estadistica .
+:Moda :esSubconceptoDe :Estadistica .
+
+# Área padre (concepto contenedor)
+:Estadistica a :ConceptoMatematico ;
+    rdfs:label "Estadística descriptiva" .
