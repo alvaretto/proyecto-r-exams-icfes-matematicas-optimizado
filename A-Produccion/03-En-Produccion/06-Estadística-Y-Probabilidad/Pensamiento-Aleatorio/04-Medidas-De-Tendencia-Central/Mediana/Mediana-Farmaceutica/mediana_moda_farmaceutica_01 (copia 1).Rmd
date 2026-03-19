@@ -70,3 +70,9 @@ exname: Efectividad de tratamiento farmacéutico
 extype: schoice
 exsolution: `r mchoice2string(solucion == 1:4)`
 exshuffle: TRUE
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Formulacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y calcula la mediana de un conjunto de datos
+exextra[Evidencia]: Selecciona y aplica procedimientos para calcular medidas estadisticas

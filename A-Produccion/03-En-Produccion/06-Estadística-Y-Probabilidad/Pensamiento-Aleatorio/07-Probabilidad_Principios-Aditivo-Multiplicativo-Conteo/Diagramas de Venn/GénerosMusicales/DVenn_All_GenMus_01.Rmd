@@ -257,3 +257,9 @@ exclozetype: num|num|num|num
 exsolution: `r selected_answers[1]`|`r selected_answers[2]`|`r selected_answers[3]`|`r selected_answers[4]`
 extol: 0
 exsection: Diagrama de Venn
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: CLOZE
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Lee e interpreta informacion presentada en graficos y tablas

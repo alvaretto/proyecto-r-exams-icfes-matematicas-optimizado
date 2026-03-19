@@ -268,7 +268,7 @@ Las demás opciones contienen elementos incorrectos:
 
 - Una gráfica no muestra la pirueta con el pico hacia arriba y el descenso, sino que mantiene la altura constante después del ascenso inicial.
 - Otra gráfica muestra solo un descenso constante durante la pirueta, sin el pico hacia arriba que el piloto describió.
-- Otra gráfica incluye una fase adicional de elevación después de la pirueta, la cual no fue mencionada por el piloto.
+- Otra gráfica incluye una fase adicional de elevación después de la pirueta, la cuál no fue mencionada por el piloto.
 
 ```{r version diversity test, echo = FALSE, results = "hide"}
 # Prueba de diversidad de versiones
@@ -302,6 +302,12 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y analiza funciones y razones de cambio
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
 
 exname: vuelo_acrobatico(single-choice)
 extype: schoice

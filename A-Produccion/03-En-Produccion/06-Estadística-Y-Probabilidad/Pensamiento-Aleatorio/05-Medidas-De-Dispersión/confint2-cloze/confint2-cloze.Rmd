@@ -69,3 +69,9 @@ exclozetype: num|num
 exsolution: `r intervalo_inferior`|`r intervalo_superior`
 exname: Intervalo de confianza
 extol: 0.01
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Formulacion
+exextra[Nivel]: 2
+exextra[Type]: CLOZE
+exextra[Afirmacion]: Calcula e interpreta medidas de dispersion
+exextra[Evidencia]: Plantea y ejecuta procedimientos para resolver problemas matematicos

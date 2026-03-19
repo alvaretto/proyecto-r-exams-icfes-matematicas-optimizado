@@ -436,3 +436,6 @@ exextra[Competencia]: Interpretación y representación
 exextra[Componente]: Aleatorio y sistemas de datos
 exextra[Contexto]: Familiar
 exextra[Dificultad]: Media
+exextra[Nivel]: 2
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Establece relaciones entre datos y representaciones matematicas

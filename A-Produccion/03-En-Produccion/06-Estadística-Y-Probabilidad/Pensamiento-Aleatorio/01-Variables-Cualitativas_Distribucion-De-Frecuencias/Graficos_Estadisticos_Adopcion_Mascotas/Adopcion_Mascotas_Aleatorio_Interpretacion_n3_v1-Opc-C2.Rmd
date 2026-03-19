@@ -450,6 +450,11 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 3
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Lee e interpreta informacion presentada en graficos y tablas
 
 % Metadatos ICFES (como comentarios para referencia)
 % competencia: interpretacion_representacion

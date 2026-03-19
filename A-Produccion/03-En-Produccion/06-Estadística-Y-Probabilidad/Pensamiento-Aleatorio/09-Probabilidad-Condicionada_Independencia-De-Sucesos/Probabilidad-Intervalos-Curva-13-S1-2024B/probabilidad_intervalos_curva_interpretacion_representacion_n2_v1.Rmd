@@ -399,6 +399,12 @@ Answerlist
 
 Meta-information
 ================
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Calcula probabilidades condicionadas e independencia de sucesos
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
 
 exname: probabilidad\_distribucion\_grafico\_tabla
 extype: schoice

@@ -449,7 +449,7 @@ Las demás opciones contienen elementos incorrectos que no corresponden con la d
 
 - Mantener la altura constante después del ascenso inicial, sin mostrar la pirueta con el pico hacia arriba y el descenso.
 - Mostrar solo un descenso constante durante la pirueta, sin el pico hacia arriba que el piloto describió.
-- Incluir una fase adicional de elevación después de la pirueta, la cual no fue mencionada por el piloto.
+- Incluir una fase adicional de elevación después de la pirueta, la cuál no fue mencionada por el piloto.
 - Mostrar la pirueta con un pico hacia arriba pero sin el descenso posterior, volviendo a la altura inicial.
 - Mostrar oscilaciones durante la fase de giro, cuando el piloto especificó que mantuvo la misma altura.
 - Presentar tiempos incorrectos en las diferentes fases del vuelo.
@@ -493,6 +493,12 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y analiza funciones y razones de cambio
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
 
 exname: vuelo_acrobatico(single-choice)
 extype: schoice

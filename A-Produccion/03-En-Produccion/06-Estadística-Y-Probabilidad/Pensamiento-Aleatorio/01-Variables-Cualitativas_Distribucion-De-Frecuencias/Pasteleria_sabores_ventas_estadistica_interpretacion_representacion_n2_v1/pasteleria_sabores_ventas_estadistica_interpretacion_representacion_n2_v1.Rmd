@@ -502,3 +502,9 @@ extype: schoice
 exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
 exshuffle: TRUE
 exsection: Estadística/Interpretación de datos/Gráficos y tablas
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones

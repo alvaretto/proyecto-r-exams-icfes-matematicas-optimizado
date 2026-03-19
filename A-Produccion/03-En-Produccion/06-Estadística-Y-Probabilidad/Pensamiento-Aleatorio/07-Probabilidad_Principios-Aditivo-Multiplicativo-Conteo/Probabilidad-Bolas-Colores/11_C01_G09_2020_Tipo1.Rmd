@@ -322,3 +322,9 @@ exname: 11_C01_G09_2020_Tipo1_Probabilidades_N3(single-choice)
 extype: schoice
 exsolution: `r solucion_string`
 exshuffle: FALSE
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Formulacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Plantea y ejecuta procedimientos para resolver problemas matematicos

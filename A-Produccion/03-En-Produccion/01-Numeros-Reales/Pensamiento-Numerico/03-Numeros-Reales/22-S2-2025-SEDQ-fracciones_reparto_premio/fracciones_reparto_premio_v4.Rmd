@@ -525,3 +525,9 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Aritmética|Fracciones|Reparto proporcional
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Formulacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Resuelve problemas con fracciones y repartos proporcionales
+exextra[Evidencia]: Plantea y ejecuta procedimientos para resolver problemas matematicos

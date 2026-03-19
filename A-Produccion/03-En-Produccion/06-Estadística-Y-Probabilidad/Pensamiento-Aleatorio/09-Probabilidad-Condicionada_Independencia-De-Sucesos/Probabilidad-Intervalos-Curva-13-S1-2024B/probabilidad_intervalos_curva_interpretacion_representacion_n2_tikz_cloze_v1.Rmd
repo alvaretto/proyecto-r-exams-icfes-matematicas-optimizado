@@ -879,6 +879,9 @@ for (i in 1:4) {
 
 Meta-information
 ================
+exextra[Nivel]: 2
+exextra[Afirmacion]: Calcula probabilidades condicionadas e independencia de sucesos
+exextra[Evidencia]: Establece relaciones entre datos y representaciones matematicas
 
 exname: Probabilidad Intervalos Curva Interpretación Representación - Análisis Secuencial Cloze
 extype: cloze

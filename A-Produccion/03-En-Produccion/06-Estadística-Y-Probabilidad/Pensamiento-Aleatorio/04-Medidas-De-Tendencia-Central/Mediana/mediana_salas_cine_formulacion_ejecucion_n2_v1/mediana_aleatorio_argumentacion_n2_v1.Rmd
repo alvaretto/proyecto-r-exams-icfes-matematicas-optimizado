@@ -665,3 +665,9 @@ extype: schoice
 exsolution: `r paste(as.integer(1:4 == pos_correcta), collapse="")`
 exshuffle: TRUE
 exsection: Argumentación en Estadística
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Argumentacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y calcula la mediana de un conjunto de datos
+exextra[Evidencia]: Justifica propiedades y relaciones matematicas usando argumentos validos

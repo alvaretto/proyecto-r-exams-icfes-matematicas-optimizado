@@ -751,3 +751,8 @@ exextra[Type]: Interpretación y representación
 exextra[Level]: 2
 exextra[Language]: es
 exextra[Course]: Matemáticas ICFES
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Afirmacion]: Interpreta y calcula la mediana de un conjunto de datos
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones

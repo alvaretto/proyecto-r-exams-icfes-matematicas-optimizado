@@ -403,6 +403,12 @@ Este problema evalúa competencias fundamentales en:
 
 Meta-information
 ================
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 3
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Lee e interpreta informacion presentada en graficos y tablas
 
 exname: Problemattic-PISA-Exportaciones-01(single-choice)
 extype: schoice

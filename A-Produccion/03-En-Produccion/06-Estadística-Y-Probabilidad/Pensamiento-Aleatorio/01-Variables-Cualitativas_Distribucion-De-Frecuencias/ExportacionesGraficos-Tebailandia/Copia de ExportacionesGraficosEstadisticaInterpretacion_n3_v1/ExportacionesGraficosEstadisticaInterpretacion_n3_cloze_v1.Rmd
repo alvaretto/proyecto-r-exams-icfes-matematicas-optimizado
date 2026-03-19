@@ -598,6 +598,9 @@ Esta respuesta es coherente porque:
 
 Meta-information
 ================
+exextra[Nivel]: 3
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Establece relaciones entre datos y representaciones matematicas
 
 exname: ExportacionesGraficos-Estadistica-Interpretacion-Cloze-n3-v1
 extype: cloze

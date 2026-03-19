@@ -326,3 +326,9 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Conversión de unidades de área
+exextra[Componente]: Espacial-Metrico
+exextra[Competencia]: Formulacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Resuelve problemas de conversion de unidades y areas
+exextra[Evidencia]: Plantea y ejecuta procedimientos para resolver problemas matematicos

@@ -437,6 +437,12 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 3
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Lee e interpreta informacion presentada en graficos y tablas
 
 exname: I_1796473/2023-Cuadernillo-Matematicas-11-2(single-choice)
 extype: schoice

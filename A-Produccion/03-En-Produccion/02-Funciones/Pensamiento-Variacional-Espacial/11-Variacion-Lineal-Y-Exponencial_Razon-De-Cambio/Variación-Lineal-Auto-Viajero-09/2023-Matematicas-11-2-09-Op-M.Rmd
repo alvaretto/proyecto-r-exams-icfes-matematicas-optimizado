@@ -191,3 +191,9 @@ exname: Rapidez Media
 extype: mchoice
 exsolution: `r if(variaciones$tipo_error == 'distancia') '1000' else if(variaciones$tipo_error == 'tiempo') '0100' else if(variaciones$tipo_error == 'ambos') '1100' else '0010'`
 exshuffle: TRUE
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: MCHOICE
+exextra[Afirmacion]: Interpreta y analiza funciones y razones de cambio
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones

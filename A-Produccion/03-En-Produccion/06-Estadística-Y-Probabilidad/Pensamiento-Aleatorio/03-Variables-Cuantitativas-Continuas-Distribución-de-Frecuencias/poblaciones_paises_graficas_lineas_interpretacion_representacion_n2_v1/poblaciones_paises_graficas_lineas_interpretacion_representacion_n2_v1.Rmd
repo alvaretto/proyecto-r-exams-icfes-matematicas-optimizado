@@ -424,3 +424,9 @@ extype: schoice
 exsolution: `r paste(solucion, collapse="")`
 exshuffle: TRUE
 exsection: Estadística/Interpretación de Gráficas
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Evidencia]: Lee e interpreta informacion presentada en graficos y tablas

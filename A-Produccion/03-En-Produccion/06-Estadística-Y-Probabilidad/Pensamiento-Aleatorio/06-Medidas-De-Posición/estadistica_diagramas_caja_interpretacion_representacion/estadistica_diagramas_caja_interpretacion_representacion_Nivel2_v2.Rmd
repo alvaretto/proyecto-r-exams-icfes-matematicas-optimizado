@@ -737,3 +737,8 @@ exextra[Type]: Interpretación y representación
 exextra[Level]: 2
 exextra[Language]: es
 exextra[Course]: Matemáticas ICFES
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Afirmacion]: Interpreta diagramas de caja y medidas de posicion
+exextra[Evidencia]: Lee e interpreta informacion presentada en graficos y tablas

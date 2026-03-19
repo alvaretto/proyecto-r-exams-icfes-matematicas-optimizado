@@ -449,6 +449,12 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y analiza funciones y razones de cambio
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
 
 exname: vuelo_acrobatico(single-choice)
 extype: schoice

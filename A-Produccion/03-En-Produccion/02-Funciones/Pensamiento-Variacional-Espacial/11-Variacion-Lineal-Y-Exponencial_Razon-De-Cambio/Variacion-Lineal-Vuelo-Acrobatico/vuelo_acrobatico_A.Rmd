@@ -252,7 +252,7 @@ Esta gráfica es la que tiene color azul y muestra exactamente las tres fases de
 Las demás opciones contienen elementos incorrectos:
 
 - Una gráfica muestra un pico de altura durante las maniobras, pero el piloto mencionó que mantuvo la misma altura.
-- Otra gráfica muestra un descenso durante las maniobras y luego mantiene una altura constante menor, lo cual contradice la descripción del piloto.
+- Otra gráfica muestra un descenso durante las maniobras y luego mantiene una altura constante menor, lo cuál contradice la descripción del piloto.
 - Otra gráfica muestra oscilaciones en la altura durante las maniobras, cuando el piloto especificó que mantuvo la misma altura.
 
 ```{r version diversity test, echo = FALSE, results = "hide"}
@@ -285,6 +285,12 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y analiza funciones y razones de cambio
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
 
 exname: vuelo_acrobatico(single-choice)
 extype: schoice

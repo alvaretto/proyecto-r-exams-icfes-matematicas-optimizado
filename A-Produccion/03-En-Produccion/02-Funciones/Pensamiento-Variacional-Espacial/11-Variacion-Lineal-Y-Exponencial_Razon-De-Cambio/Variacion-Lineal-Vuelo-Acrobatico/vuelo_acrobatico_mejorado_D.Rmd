@@ -403,7 +403,7 @@ La gráfica correcta es la que representa adecuadamente las cinco fases del vuel
 # Generar explicación detallada basada en los errores específicos seleccionados
 explicaciones_errores <- list(
   error1 = "- Falta la fase de recuperación de altitud después de la pirueta. En esta gráfica el avión permanece a media altura después de la pirueta, cuando debería elevarse nuevamente hasta la altura máxima.",
-  error2 = "- La pirueta no muestra un descenso constante como indicó el piloto, sino que presenta un pico hacia arriba (aumento de altura) antes del descenso, lo cual contradice la descripción.",
+  error2 = "- La pirueta no muestra un descenso constante como indicó el piloto, sino que presenta un pico hacia arriba (aumento de altura) antes del descenso, lo cuál contradice la descripción.",
   error3 = "- No muestra la pirueta con descenso constante. En cambio, mantiene la altura constante después del ascenso inicial, contradiciendo la descripción del piloto.",
   error4 = "- Durante la fase de giro, la altura disminuye gradualmente cuando el piloto especificó que mantuvo la misma altura durante esta fase.",
   error5 = "- La altura máxima alcanzada es significativamente mayor que la mencionada por el piloto, lo que distorsiona toda la trayectoria del vuelo.",
@@ -466,6 +466,12 @@ test_that("Prueba de diversidad de versiones", {
 
 Meta-information
 ================
+exextra[Componente]: Numerico-Variacional
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y analiza funciones y razones de cambio
+exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
 
 exname: vuelo_acrobatico_mejorado(single-choice)
 extype: schoice

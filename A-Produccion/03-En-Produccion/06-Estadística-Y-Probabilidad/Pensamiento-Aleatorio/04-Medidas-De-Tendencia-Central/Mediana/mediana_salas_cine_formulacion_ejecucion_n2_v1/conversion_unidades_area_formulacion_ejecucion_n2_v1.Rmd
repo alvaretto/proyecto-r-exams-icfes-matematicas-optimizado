@@ -326,3 +326,9 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Conversión de unidades de área
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Formulacion
+exextra[Nivel]: 2
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y calcula la mediana de un conjunto de datos
+exextra[Evidencia]: Selecciona y aplica procedimientos para calcular medidas estadisticas

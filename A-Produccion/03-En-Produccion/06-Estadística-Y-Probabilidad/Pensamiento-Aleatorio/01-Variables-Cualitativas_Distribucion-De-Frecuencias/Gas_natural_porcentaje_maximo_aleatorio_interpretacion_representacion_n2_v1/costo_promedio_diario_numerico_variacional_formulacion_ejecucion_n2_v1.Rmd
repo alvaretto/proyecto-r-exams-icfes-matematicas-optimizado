@@ -413,3 +413,6 @@ exextra[Competencia]: Formulación y ejecución
 exextra[Componente]: Numérico variacional
 exextra[Contexto]: Familiar
 exextra[Dificultad]: Media
+exextra[Nivel]: 2
+exextra[Afirmacion]: Interpreta y calcula la media de un conjunto de datos
+exextra[Evidencia]: Establece relaciones entre datos y representaciones matematicas
