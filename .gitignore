@@ -282,3 +282,9 @@ augment-cli
 
 # Archivos docx vacíos/placeholder
 avances-*.docx
+
+# =============================================================================
+# ONTOLOGÍA — Archivo generado localmente, no al repo
+# =============================================================================
+ontologia/ejercicios.ttl
+ontologia/.pending_registration
