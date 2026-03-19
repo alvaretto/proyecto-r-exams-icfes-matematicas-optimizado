@@ -31,7 +31,7 @@ normalizar_competencia <- function(comp) {
   comp_lower <- gsub("[ñ]",   "n", comp_lower)
   if (grepl("interpretaci|interpret|representaci", comp_lower))
     return(paste0("<", ONTOLOGIA_IRI, "InterpretacionRepresentacion>"))
-  if (grepl("formulaci|ejecuci|formula|ejecuci", comp_lower))
+  if (grepl("formulaci|ejecuci|formula", comp_lower))
     return(paste0("<", ONTOLOGIA_IRI, "FormulacionEjecucion>"))
   if (grepl("argumentaci|argument", comp_lower))
     return(paste0("<", ONTOLOGIA_IRI, "Argumentacion>"))
@@ -71,6 +71,10 @@ normalizar_nivel <- function(nivel) {
     return(paste0("<", ONTOLOGIA_IRI, "DOK4>"))
   NULL
 }
+
+# ── Operador %||% (null-coalesce) ─────────────────────────────────────────────
+
+`%||%` <- function(a, b) if (!is.null(a)) a else b
 
 # ── Lectura de YAML desde .Rmd ────────────────────────────────────────────────
 
@@ -138,15 +142,12 @@ ejercicio_a_turtle <- function(meta, ruta_archivo) {
   paste(triples, collapse = "\n")
 }
 
-# Operador %||% (null-coalesce)
-`%||%` <- function(a, b) if (!is.null(a)) a else b
-
 # ── Operaciones Fuseki ────────────────────────────────────────────────────────
 
 fuseki_ping <- function() {
   resp <- tryCatch(
     request(FUSEKI_BASE) |>
-      req_url_path("$/ping") |>
+      req_url_path("/$/ping") |>
       req_timeout(3) |>
       req_perform(),
     error = function(e) NULL
@@ -160,7 +161,7 @@ fuseki_cargar_turtle <- function(turtle_text, graph_uri = GRAPH_URI) {
       req_url_path("/icfes/data") |>
       req_url_query("graph" = graph_uri) |>
       req_method("PUT") |>
-      req_body_raw(chartr("\n", "\n", turtle_text), type = "text/turtle; charset=utf-8") |>
+      req_body_raw(turtle_text, type = "text/turtle; charset=utf-8") |>
       req_timeout(30) |>
       req_perform(),
     error = function(e) {
