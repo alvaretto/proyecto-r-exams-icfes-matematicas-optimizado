@@ -80,8 +80,37 @@ normalizar_nivel <- function(nivel) {
 
 leer_yaml_rmd <- function(path) {
   lines <- tryCatch(readLines(path, warn = FALSE), error = function(e) NULL)
-  if (is.null(lines)) return(NULL)
-  if (length(lines) < 3) return(NULL)
+  if (is.null(lines) || length(lines) < 3) return(NULL)
+
+  # Buscar seccion Meta-information (formato R-exams real)
+  meta_idx <- which(grepl("^Meta-information\\s*$", lines, ignore.case = TRUE))
+  if (length(meta_idx) > 0) {
+    start_idx <- meta_idx[1] + 1
+    # Saltar linea de separadores (===, ---, etc.)
+    while (start_idx <= length(lines) &&
+           grepl("^[=\\-]{3,}\\s*$", lines[start_idx])) {
+      start_idx <- start_idx + 1
+    }
+    meta_lines <- lines[start_idx:length(lines)]
+    meta_lines <- meta_lines[nchar(trimws(meta_lines)) > 0]
+
+    result <- list()
+    for (line in meta_lines) {
+      parts <- regmatches(line, regexec("^([^:]+):\\s*(.*)", line, perl = TRUE))[[1]]
+      if (length(parts) < 3) next
+      key   <- trimws(parts[2])
+      value <- trimws(parts[3])
+      value <- gsub("`r [^`]+`", "", value)
+      value <- trimws(value)
+      if (nzchar(value)) result[[key]] <- value
+    }
+
+    if (length(result) > 0 && !is.null(result[["exname"]])) {
+      return(result)
+    }
+  }
+
+  # Fallback: YAML front matter
   if (!grepl("^---", lines[1])) return(NULL)
   end_idx <- which(grepl("^---", lines[-1]))[1] + 1
   if (is.na(end_idx)) return(NULL)
