@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Método Socrático — Razones Trigonométricas | ICFES 2025-2 Pregunta 29</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>
+/* =========================================================
+   VARIABLES Y RESET
+   ========================================================= */
+:root {
+  --bg: #FAF6F0;
+  --bg-card: #FFFFFF;
+  --bg-dark: #1A1A2E;
+  --accent: #C0392B;
+  --accent-light: #E74C3C;
+  --accent-glow: rgba(192,57,43,0.12);
+  --gold: #D4A853;
+  --gold-light: #F0D78C;
+  --gold-bg: #FFF8E7;
+  --text: #2C2C2C;
+  --text-muted: #6B6B6B;
+  --text-light: #999;
+  --success: #27AE60;
+  --success-bg: #E8F8EE;
+  --error: #C0392B;
+  --error-bg: #FDECEB;
+  --blue: #2980B9;
+  --blue-bg: #EBF5FB;
+  --border: #E8E0D6;
+  --shadow: 0 2px 20px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.1);
+  --radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   BARRA DE PROGRESO FIJA
+   ========================================================= */
+#progress-bar-wrap {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  transition: width 0.5s ease;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero {
+  background: var(--bg-dark);
+  color: white;
+  padding: 3.5rem 2rem 4.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(192,57,43,0.18) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%; left: -10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(212,168,83,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(212,168,83,0.2);
+  color: var(--gold-light);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(212,168,83,0.35);
+  margin-bottom: 1.25rem;
+}
+.hero h1 {
+  font-family: 'Crimson Pro', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+.hero h1 span { color: var(--gold); }
+.hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.7);
+  max-width: 600px;
+  margin-bottom: 1.5rem;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.hero-pill {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.78rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+/* =========================================================
+   LAYOUT PRINCIPAL
+   ========================================================= */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 1.5rem 5rem;
+}
+
+/* =========================================================
+   TARJETA DE CONTEXTO
+   ========================================================= */
+.context-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: -2.5rem auto 2.5rem;
+  position: relative;
+  z-index: 2;
+  box-shadow: var(--shadow-lg);
+}
+.context-card .label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.context-card h2 {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.context-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+}
+.context-highlight {
+  background: var(--blue-bg);
+  border-left: 3px solid var(--blue);
+  padding: 0.9rem 1.25rem;
+  border-radius: 0 10px 10px 0;
+  margin-top: 1.25rem;
+  font-size: 0.93rem;
+}
+.context-highlight strong { color: var(--blue); }
+
+/* =========================================================
+   STEPS
+   ========================================================= */
+.step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.3s, opacity 0.4s, filter 0.4s;
+}
+.step:hover:not(.locked) { box-shadow: var(--shadow-lg); }
+.step.locked {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.4);
+}
+.step.completed { border-color: rgba(39,174,96,0.3); }
+.step-header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.step-number {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+.step.completed .step-number { background: var(--success); }
+.step-title {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  flex: 1;
+}
+.step-subtitle {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+.step-body {
+  padding: 0 2rem 1.75rem;
+  padding-left: calc(2rem + 36px + 1rem);
+}
+
+/* =========================================================
+   TRIÁNGULO SVG
+   ========================================================= */
+.triangle-wrap {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin: 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+.triangle-wrap svg {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+.tri-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+}
+.side-label {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* =========================================================
+   TABLA TRIGONOMÉTRICA
+   ========================================================= */
+.trig-table-wrap {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.trig-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+}
+.trig-table th {
+  background: var(--bg-dark);
+  color: var(--gold-light);
+  padding: 0.75rem 1rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+.trig-table td {
+  padding: 0.65rem 1rem;
+  text-align: center;
+  font-size: 0.92rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.trig-table tr:last-child td { border-bottom: none; }
+.trig-table tr:hover td { background: var(--gold-bg); }
+.trig-table tr.highlighted td {
+  background: rgba(192,57,43,0.07);
+  font-weight: 600;
+}
+.trig-table td:first-child { color: var(--accent); font-weight: 700; }
+
+/* =========================================================
+   BURBUJA SOCRÁTICA
+   ========================================================= */
+.socrates {
+  background: linear-gradient(135deg, #FFF8E7, #FFF3D6);
+  border: 1px solid rgba(212,168,83,0.4);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+.socrates::before {
+  content: '🏛️';
+  position: absolute;
+  top: -12px; left: 16px;
+  font-size: 1.1rem;
+  background: var(--bg-card);
+  padding: 0 4px;
+}
+.socrates .q-text {
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: #5D4A1A;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   OPCIONES DE RESPUESTA
+   ========================================================= */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin: 1.1rem 0;
+}
+.options-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+  margin: 1.1rem 0;
+}
+.option-btn {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+  line-height: 1.4;
+}
+.option-btn:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: var(--gold-bg);
+  transform: translateX(3px);
+}
+.option-btn.correct {
+  border-color: var(--success);
+  background: var(--success-bg);
+  color: var(--success);
+  font-weight: 500;
+}
+.option-btn.wrong {
+  border-color: var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+  animation: shake 0.4s ease;
+}
+.option-btn:disabled { cursor: default; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* =========================================================
+   FEEDBACK / ALERTAS
+   ========================================================= */
+.feedback {
+  display: none;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  font-size: 0.93rem;
+  animation: fadeIn 0.35s ease;
+}
+.feedback.show { display: block; }
+.feedback.ok {
+  background: var(--success-bg);
+  border: 1px solid rgba(39,174,96,0.3);
+  color: #1A7A43;
+}
+.feedback.err {
+  background: var(--error-bg);
+  border: 1px solid rgba(192,57,43,0.3);
+  color: #8B1A1A;
+}
+.feedback.info {
+  background: var(--blue-bg);
+  border: 1px solid rgba(41,128,185,0.3);
+  color: #1A5276;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+.check-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.2rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.check-btn:hover { background: var(--accent-light); transform: translateY(-1px); }
+.check-btn:disabled { background: var(--text-light); cursor: default; transform: none; }
+
+.continue-btn {
+  background: linear-gradient(135deg, var(--success), #219A52);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 2rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-top: 1rem;
+  display: none;
+}
+.continue-btn.show { display: inline-block; }
+.continue-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(39,174,96,0.35); }
+
+.regen-btn {
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.3rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.regen-btn:hover { background: #1F6B9A; transform: translateY(-1px); }
+
+/* =========================================================
+   CAJA DE TIP ICFES
+   ========================================================= */
+.tip-box {
+  background: linear-gradient(135deg, #FFF8E7, #FFF3D0);
+  border: 1px solid rgba(212,168,83,0.5);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  color: #5D4A1A;
+}
+.tip-box strong {
+  color: #8B6914;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+/* =========================================================
+   BLOQUE MATEMÁTICO
+   ========================================================= */
+.math-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.math-block.large {
+  padding: 1.5rem 2rem;
+}
+.katex-block {
+  text-align: center;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+}
+
+/* =========================================================
+   PASOS DEL PROCEDIMIENTO (Paso 5)
+   ========================================================= */
+.proc-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  margin: 0.6rem 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+.proc-step:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: var(--gold-bg);
+}
+.proc-step.selected-wrong {
+  border-color: var(--error);
+  background: var(--error-bg);
+  animation: shake 0.4s ease;
+}
+.proc-step.selected-correct {
+  border-color: var(--success);
+  background: var(--success-bg);
+}
+.proc-step.grayed {
+  opacity: 0.5;
+}
+.proc-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  background: var(--bg-dark);
+  color: var(--gold-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.proc-content {
+  flex: 1;
+}
+.proc-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.proc-formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--text);
+}
+.proc-formula .katex-render {
+  text-align: left;
+}
+
+/* =========================================================
+   TARJETAS PRÁCTICA (Paso 6)
+   ========================================================= */
+.practice-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+.practice-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.card-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+.card-badge.new {
+  background: var(--blue-bg);
+  color: var(--blue);
+  border: 1px solid rgba(41,128,185,0.3);
+}
+.score-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--gold);
+  background: var(--gold-bg);
+  padding: 0.2rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212,168,83,0.4);
+}
+
+/* =========================================================
+   CHEAT SHEET
+   ========================================================= */
+.cheat-sheet {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 2rem;
+  margin: 1rem 0;
+}
+.cheat-sheet h3 {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text);
+}
+.cheat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.cheat-section {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+.cheat-section h4 {
+  font-family: 'Crimson Pro', serif;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.cheat-section ul {
+  list-style: none;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+.cheat-section ul li {
+  padding: 0.25rem 0;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+.cheat-section ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+.cheat-section ul li:last-child { border-bottom: none; }
+
+/* =========================================================
+   PUNTUACIÓN FINAL
+   ========================================================= */
+.score-display {
+  background: linear-gradient(135deg, var(--bg-dark), #2C3E50);
+  color: white;
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+.score-number {
+  font-family: 'Crimson Pro', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+.score-label {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.7);
+  margin-top: 0.5rem;
+}
+.reflexion-box {
+  background: var(--gold-bg);
+  border: 1px solid rgba(212,168,83,0.4);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 1rem 0;
+  font-family: 'Crimson Pro', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #5D4A1A;
+  text-align: center;
+}
+.print-btn {
+  background: var(--bg-dark);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.print-btn:hover { background: #2C3E50; transform: translateY(-1px); }
+
+/* =========================================================
+   ANIMACIONES Y UTILIDADES
+   ========================================================= */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+@keyframes unlock {
+  0%   { opacity: 0.4; filter: grayscale(0.4); }
+  50%  { opacity: 0.8; filter: grayscale(0); transform: scale(1.01); }
+  100% { opacity: 1;   filter: grayscale(0); transform: scale(1); }
+}
+.just-unlocked { animation: unlock 0.7s ease; }
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.25rem 0;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 600px) {
+  .step-body {
+    padding: 0 1rem 1.5rem;
+    padding-left: 1rem;
+  }
+  .options-grid { grid-template-columns: 1fr; }
+  .cheat-grid { grid-template-columns: 1fr; }
+  .hero { padding: 2.5rem 1.25rem 3.5rem; }
+  .step-header { padding: 1.25rem; }
+}
+
+/* =========================================================
+   PRINT STYLES
+   ========================================================= */
+@media print {
+  body { background: white; }
+  .step:not(#step7) { display: none !important; }
+  #progress-bar-wrap { display: none; }
+  .hero { background: white; color: black; padding: 1rem 0; }
+  .hero::before, .hero::after { display: none; }
+  .context-card { box-shadow: none; border: 1px solid #ccc; margin-top: 0; }
+  .print-btn, .continue-btn, .check-btn, .regen-btn { display: none !important; }
+  .cheat-sheet { border: 1px solid #ccc; }
+  .step.locked { display: none !important; }
+  #step7 { display: block !important; opacity: 1 !important; filter: none !important; pointer-events: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Barra de progreso fija -->
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">ICFES 2025-2 · Pregunta 29</span>
+    <h1>Razones<br><span>Trigonométricas</span></h1>
+    <p class="hero-sub">Aprende a calcular ángulos en triángulos rectángulos con el método socrático: descubre la lógica detrás de seno, coseno y tangente, e identifica errores procedimentales frecuentes.</p>
+    <div class="hero-meta">
+      <span class="hero-pill">Grado 10°–11°</span>
+      <span class="hero-pill">Pensamiento Espacial y Métrico</span>
+      <span class="hero-pill">Argumentación</span>
+      <span class="hero-pill">DOK 3 · Bloom: Evaluar</span>
+      <span class="hero-pill">7 Pasos · ~25 min</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Tarjeta de contexto -->
+  <div class="context-card">
+    <div class="label">Contexto del ejercicio</div>
+    <h2 id="ctx-title">Una rampa y un ángulo desconocido</h2>
+    <p id="ctx-desc">Se tiene un plano inclinado (rampa) que forma un ángulo <em>α</em> con la horizontal. Se conocen dos lados del triángulo rectángulo que se forma.</p>
+    <div class="context-highlight">
+      <strong>Pregunta ICFES:</strong> En el procedimiento mostrado para hallar el ángulo α, ¿en cuál paso se cometió un error?
+    </div>
+  </div>
+
+  <!-- =====================================================
+       PASO 1: OBSERVA EL TRIÁNGULO
+       ===================================================== -->
+  <section class="step" id="step1">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <div class="step-title">Observa el triángulo rectángulo</div>
+        <div class="step-subtitle">DOK 1 — Identificar lados del triángulo</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="tip-box">
+        <strong>Estrategia ICFES #1</strong>
+        Antes de aplicar cualquier fórmula, identifica los tres lados del triángulo respecto al ángulo de interés: hipotenusa (el mayor, frente al ángulo recto), cateto opuesto (frente al ángulo α) y cateto adyacente (el que forma el ángulo α con la hipotenusa).
+      </div>
+
+      <p style="margin-bottom:0.75rem; color:var(--text-muted); font-size:0.93rem;">
+        El triángulo rectángulo de la rampa tiene el ángulo <em>α</em> en la base izquierda y el ángulo recto en la esquina inferior derecha. Observa las medidas:
+      </p>
+
+      <!-- SVG del triángulo, rellenado por JS -->
+      <div class="triangle-wrap" id="tri-wrap-1">
+        <svg id="tri-svg-1" viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+          <!-- JS generará el triángulo aquí -->
+        </svg>
+        <p id="tri-caption-1" style="font-size:0.85rem; color:var(--text-muted); text-align:center;"></p>
+      </div>
+
+      <div class="socrates">
+        <p class="q-text">Mirando el triángulo: ¿cuál lado es la <strong>hipotenusa</strong>? ¿Cuál es el <strong>cateto opuesto</strong> al ángulo α? ¿Y cuál es el <strong>cateto adyacente</strong> a α?</p>
+      </div>
+
+      <div class="options-col" id="step1-opts">
+        <button class="option-btn" onclick="checkS1(this,'a')">Hipotenusa = lado frente al ángulo recto (el más largo)</button>
+        <button class="option-btn" onclick="checkS1(this,'b')">Hipotenusa = cateto opuesto a α (el lado vertical)</button>
+        <button class="option-btn" onclick="checkS1(this,'c')">Hipotenusa = cateto adyacente (el lado horizontal)</button>
+        <button class="option-btn" onclick="checkS1(this,'d')">No se puede determinar sin conocer los ángulos</button>
+      </div>
+
+      <div class="feedback" id="s1-feedback"></div>
+
+      <button class="continue-btn" id="s1-continue" onclick="unlock(2)">
+        Continuar → Las razones trigonométricas
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PASO 2: LAS RAZONES TRIGONOMÉTRICAS
+       ===================================================== -->
+  <section class="step locked" id="step2">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <div class="step-title">Las razones trigonométricas</div>
+        <div class="step-subtitle">DOK 2 — Comprender definiciones y relaciones</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="socrates">
+        <p class="q-text">¿Por qué hay <em>tres</em> razones trigonométricas principales y no solo una? ¿Qué información distinta entrega cada una sobre el triángulo?</p>
+      </div>
+
+      <p style="margin-bottom:0.75rem; color:var(--text-muted); font-size:0.93rem;">
+        Haz clic en cada fila de la tabla para ver cómo se resaltan los lados correspondientes en el triángulo:
+      </p>
+
+      <div class="trig-table-wrap">
+        <table class="trig-table" id="trig-table">
+          <thead>
+            <tr>
+              <th>Razón</th>
+              <th>Definición</th>
+              <th>Función inversa</th>
+              <th>Recíproca</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="highlightSide('sen')" id="row-sen">
+              <td>sen(α)</td>
+              <td>cat. opuesto / hipotenusa</td>
+              <td>arcoseno</td>
+              <td>cosecante</td>
+            </tr>
+            <tr onclick="highlightSide('cos')" id="row-cos">
+              <td>cos(α)</td>
+              <td>cat. adyacente / hipotenusa</td>
+              <td>arcocoseno</td>
+              <td>secante</td>
+            </tr>
+            <tr onclick="highlightSide('tan')" id="row-tan">
+              <td>tan(α)</td>
+              <td>cat. opuesto / cat. adyacente</td>
+              <td>arcotangente</td>
+              <td>cotangente</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Triángulo interactivo para esta sección -->
+      <div class="triangle-wrap" id="tri-wrap-2">
+        <svg id="tri-svg-2" viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg">
+        </svg>
+        <p id="tri-highlight-label" style="font-size:0.9rem; text-align:center; color:var(--text-muted);">
+          Haz clic en una fila de la tabla para ver los lados resaltados
+        </p>
+      </div>
+
+      <div class="socrates" style="margin-top:1rem;">
+        <p class="q-text">Si en el triángulo de la rampa conoces el <strong>cateto opuesto</strong> y la <strong>hipotenusa</strong>, ¿cuál razón trigonométrica usarías para encontrar el ángulo α?</p>
+      </div>
+
+      <div class="options-grid" id="step2-opts">
+        <button class="option-btn" onclick="checkS2(this,'sen')">Seno — porque relaciona cat. opuesto e hipotenusa</button>
+        <button class="option-btn" onclick="checkS2(this,'cos')">Coseno — porque relaciona cat. adyacente e hipotenusa</button>
+        <button class="option-btn" onclick="checkS2(this,'tan')">Tangente — porque relaciona los dos catetos</button>
+        <button class="option-btn" onclick="checkS2(this,'cualquiera')">Cualquiera sirve si se tiene el triángulo completo</button>
+      </div>
+
+      <div class="feedback" id="s2-feedback"></div>
+      <button class="continue-btn" id="s2-continue" onclick="unlock(3)">
+        Continuar → Aplica la razón
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PASO 3: APLICA LA RAZÓN TRIGONOMÉTRICA
+       ===================================================== -->
+  <section class="step locked" id="step3">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div>
+        <div class="step-title">Aplica la razón trigonométrica</div>
+        <div class="step-subtitle">DOK 2 — Reemplazar valores correctamente</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="socrates">
+        <p class="q-text">Al escribir la fórmula sen(α) = cateto opuesto / hipotenusa y reemplazar los valores numéricos, ¿cuál va en el <strong>numerador</strong> y cuál en el <strong>denominador</strong>? ¿Qué pasaría si los intercambias?</p>
+      </div>
+
+      <p style="margin-bottom:0.75rem; color:var(--text-muted); font-size:0.93rem;">
+        Con los datos de la rampa, el procedimiento correcto para reemplazar es:
+      </p>
+
+      <div class="math-block" id="s3-formula-wrap">
+        <div id="s3-formula" class="katex-block"></div>
+      </div>
+
+      <div class="tip-box">
+        <strong>Estrategia ICFES #2</strong>
+        Siempre escribe la fracción con el cateto opuesto ARRIBA (numerador) y la hipotenusa ABAJO (denominador). Si los inviertes, obtienes la cosecante, no el seno. Es el error más frecuente en este tipo de preguntas.
+      </div>
+
+      <p style="font-size:0.93rem; color:var(--text-muted); margin-bottom:0.75rem;">
+        ¿Cuál es el valor decimal de sen(α) en este triángulo?
+      </p>
+
+      <div class="options-grid" id="step3-opts">
+        <button class="option-btn" onclick="checkS3(this,'correcto')" id="s3-opt-correct"></button>
+        <button class="option-btn" onclick="checkS3(this,'invertido')" id="s3-opt-inv"></button>
+        <button class="option-btn" onclick="checkS3(this,'suma')" id="s3-opt-suma"></button>
+        <button class="option-btn" onclick="checkS3(this,'dif')" id="s3-opt-dif"></button>
+      </div>
+
+      <div class="feedback" id="s3-feedback"></div>
+      <button class="continue-btn" id="s3-continue" onclick="unlock(4)">
+        Continuar → Obtener el ángulo
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PASO 4: OBTENER EL ÁNGULO
+       ===================================================== -->
+  <section class="step locked" id="step4">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div>
+        <div class="step-title">Obtén el ángulo con la función inversa</div>
+        <div class="step-subtitle">DOK 2 — Distinguir función inversa y recíproca</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="socrates">
+        <p class="q-text">Si sen(α) = k/2k = 0.5, ¿cómo "despejas" α? ¿Usas la función <em>inversa</em> del seno o su <em>recíproca</em>? ¿Cuál es la diferencia entre arcoseno y cosecante?</p>
+      </div>
+
+      <p style="margin-bottom:0.75rem; color:var(--text-muted); font-size:0.93rem;">
+        Para despejar el ángulo, aplicamos la función <strong>inversa</strong> del seno en ambos lados:
+      </p>
+
+      <div class="math-block large">
+        <div id="s4-formula" class="katex-block"></div>
+      </div>
+
+      <div class="tip-box">
+        <strong>Estrategia ICFES #3</strong>
+        No confundas función inversa con función recíproca. Arcoseno (sin⁻¹) es la inversa: dado el valor de la razón, devuelve el ángulo. Cosecante (1/sen) es la recíproca: devuelve otro valor numérico, no el ángulo.
+      </div>
+
+      <div class="socrates" style="margin-top:1rem;">
+        <p class="q-text">Si hubieras usado <em>coseno</em> en vez de <em>seno</em>, ¿con qué función inversa obtendrías el ángulo?</p>
+      </div>
+
+      <div class="options-grid" id="step4-opts">
+        <button class="option-btn" onclick="checkS4(this,'arccos')">Con arcocoseno (cos⁻¹)</button>
+        <button class="option-btn" onclick="checkS4(this,'arcsen')">También con arcoseno (sen⁻¹)</button>
+        <button class="option-btn" onclick="checkS4(this,'secante')">Con secante (1/cos)</button>
+        <button class="option-btn" onclick="checkS4(this,'arctan')">Con arcotangente (tan⁻¹)</button>
+      </div>
+
+      <div class="feedback" id="s4-feedback"></div>
+      <button class="continue-btn" id="s4-continue" onclick="unlock(5)">
+        Continuar → Detecta el error (pregunta ICFES)
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PASO 5: DETECTA EL ERROR — NÚCLEO METACOGNITIVO
+       ===================================================== -->
+  <section class="step locked" id="step5">
+    <div class="step-header">
+      <div class="step-number">5</div>
+      <div>
+        <div class="step-title">Detecta el error en el procedimiento</div>
+        <div class="step-subtitle">DOK 3 — Evaluar razonamientos ajenos (Pregunta ICFES real)</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="socrates">
+        <p class="q-text">El ICFES construye sus distractores a partir de errores procedimentales <em>reales</em>. Lee con cuidado cada paso del procedimiento mostrado y encuentra dónde está el error. Un solo paso es incorrecto.</p>
+      </div>
+
+      <div class="tip-box">
+        <strong>Estrategia ICFES #4</strong>
+        Lee cada paso por separado y verifica si es correcto en sí mismo antes de pasar al siguiente. El error puede estar en la selección de la razón, en el reemplazo numérico o en la función inversa.
+      </div>
+
+      <p style="font-size:0.93rem; color:var(--text-muted); margin-bottom:0.75rem;">
+        Un estudiante realizó el siguiente procedimiento para hallar el ángulo <em id="s5-angle-name">α</em>. Haz clic en el paso donde está el error:
+      </p>
+
+      <!-- Los tres pasos del procedimiento, generados por JS -->
+      <div id="proc-steps-wrap">
+        <!-- JS llenará aquí -->
+      </div>
+
+      <div class="feedback" id="s5-feedback"></div>
+
+      <div id="s5-explanation" style="display:none; margin-top:1rem; padding:1.25rem; background:var(--bg); border-radius:12px; border:1px solid var(--border); font-size:0.92rem; line-height:1.65; animation:fadeIn 0.4s ease;">
+        <!-- JS llenará la explicación del error -->
+      </div>
+
+      <button class="continue-btn" id="s5-continue" onclick="unlock(6)">
+        Continuar → Practica con más errores
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PASO 6: PRACTICA CON MÁS ERRORES
+       ===================================================== -->
+  <section class="step locked" id="step6">
+    <div class="step-header">
+      <div class="step-number">6</div>
+      <div>
+        <div class="step-title">Practica: identifica más errores</div>
+        <div class="step-subtitle">DOK 3 — Analizar patrones de error</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="socrates">
+        <p class="q-text">Ahora que conoces los cuatro tipos de error, ¿puedes identificarlos más rápido? Cada intento te da información sobre qué confusiones debes evitar en el examen real.</p>
+      </div>
+
+      <div id="practice-card-wrap">
+        <!-- JS generará las tarjetas de práctica -->
+      </div>
+
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
+        <button class="regen-btn" id="s6-regen" onclick="generarPractica()">
+          Generar otro procedimiento
+        </button>
+        <span id="s6-score-chip" class="score-chip" style="display:none;"></span>
+      </div>
+
+      <div class="feedback" id="s6-feedback"></div>
+
+      <button class="continue-btn" id="s6-continue" onclick="unlock(7)">
+        Continuar → Síntesis y cheat sheet
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PASO 7: SÍNTESIS Y CHEAT SHEET
+       ===================================================== -->
+  <section class="step locked" id="step7">
+    <div class="step-header">
+      <div class="step-number">7</div>
+      <div>
+        <div class="step-title">Síntesis, cheat sheet y reflexión</div>
+        <div class="step-subtitle">DOK 4 — Sintetizar y crear estrategia propia</div>
+      </div>
+    </div>
+    <div class="step-body">
+
+      <div class="score-display">
+        <span class="score-number" id="final-score">—</span>
+        <div class="score-label">Puntuación total del recorrido</div>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.85rem; margin-top:0.4rem;" id="score-msg"></p>
+      </div>
+
+      <div class="cheat-sheet">
+        <h3>Cheat Sheet — Razones Trigonométricas en el ICFES</h3>
+
+        <div class="math-block large" id="cs-formulas">
+          <!-- KaTeX renderizado por JS -->
+        </div>
+
+        <div class="cheat-grid">
+          <div class="cheat-section">
+            <h4>Las tres razones principales</h4>
+            <ul>
+              <li>sen(α) = cat. opuesto / hipotenusa</li>
+              <li>cos(α) = cat. adyacente / hipotenusa</li>
+              <li>tan(α) = cat. opuesto / cat. adyacente</li>
+            </ul>
+          </div>
+          <div class="cheat-section">
+            <h4>Funciones inversas (para hallar α)</h4>
+            <ul>
+              <li>α = arcsen(cat. op / hip)</li>
+              <li>α = arccos(cat. adj / hip)</li>
+              <li>α = arctan(cat. op / cat. adj)</li>
+            </ul>
+          </div>
+          <div class="cheat-section">
+            <h4>Errores procedimentales frecuentes</h4>
+            <ul>
+              <li>Invertir numerador y denominador (Error 1)</li>
+              <li>Escribir la razón incorrecta (Error 2)</li>
+              <li>Definición invertida (Error 3)</li>
+              <li>Función inversa incorrecta (Error 4)</li>
+            </ul>
+          </div>
+          <div class="cheat-section">
+            <h4>Estrategia de 3 pasos ICFES</h4>
+            <ul>
+              <li>Identificar qué lados son conocidos</li>
+              <li>Elegir la razón que los relaciona</li>
+              <li>Aplicar la función inversa correspondiente</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="math-block" id="cs-pitagoras">
+          <!-- KaTeX: ángulos notables -->
+        </div>
+
+        <div class="cheat-section" style="background:var(--error-bg); border:1px solid rgba(192,57,43,0.2);">
+          <h4 style="color:var(--error);">No confundas: inversa vs. recíproca</h4>
+          <ul>
+            <li>sin⁻¹(x) = arcoseno — devuelve el <em>ángulo</em></li>
+            <li>csc(α) = 1/sen(α) — devuelve un <em>número</em></li>
+            <li>Son funciones distintas con propósitos distintos</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reflexion-box" id="reflexion-final">
+        Identificar errores en procedimientos ajenos desarrolla la capacidad de detectar
+        los propios. La metacognición aplicada a la trigonometría no consiste en memorizar
+        fórmulas, sino en comprender el significado de cada paso.
+      </div>
+
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
+        <button class="print-btn" onclick="window.print()">Imprimir cheat sheet</button>
+        <button class="regen-btn" onclick="reiniciar()">Reiniciar con nuevos valores</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* =========================================================
+   ESTADO GLOBAL
+   ========================================================= */
+const STATE = {
+  score: 0,
+  maxScore: 0,
+  practicaCorrectas: 0,
+  practicaTotal: 0,
+  errorUsadoEnPaso5: null,
+  erroresUsadosEnPractica: new Set()
+};
+
+/* =========================================================
+   DATOS DEL EJERCICIO (ALEATORIZADO AL CARGAR)
+   ========================================================= */
+let EJ = {};
+
+function inicializar() {
+  // Elegir k entre 1 y 4 (para tener k y 2k como catetos o hip)
+  const k = [1, 2, 3, 4][Math.floor(Math.random() * 4)];
+  // Elegir configuración: sen(30) o cos(60)
+  const config = Math.random() < 0.5 ? 'sen30' : 'cos60';
+
+  if (config === 'sen30') {
+    EJ = {
+      angulo: 30,
+      razonNombre: 'sen',
+      catOpuesto: k,
+      catAdyacente: Math.round(k * Math.sqrt(3) * 100) / 100,
+      hipotenusa: 2 * k,
+      fraccionNum: k,
+      fraccionDen: 2 * k,
+      fraccionDecimal: 0.5,
+      invFuncion: 'arcsen',
+      invFuncionLatex: '\\arcsen',
+      angResultado: 30,
+      unidad: 'm',
+      k: k
+    };
+  } else {
+    EJ = {
+      angulo: 60,
+      razonNombre: 'cos',
+      catOpuesto: Math.round(k * Math.sqrt(3) * 100) / 100,
+      catAdyacente: k,
+      hipotenusa: 2 * k,
+      fraccionNum: k,
+      fraccionDen: 2 * k,
+      fraccionDecimal: 0.5,
+      invFuncion: 'arccos',
+      invFuncionLatex: '\\arccos',
+      angResultado: 60,
+      unidad: 'm',
+      k: k
+    };
+  }
+
+  // Elegir aleatoriamente el error para el Paso 5
+  const todosErrores = ['TRIG-PROC-01', 'TRIG-PROC-02', 'TRIG-PROC-03', 'TRIG-PROC-04'];
+  STATE.errorUsadoEnPaso5 = todosErrores[Math.floor(Math.random() * todosErrores.length)];
+
+  renderEjercicio();
+}
+
+/* =========================================================
+   DEFINICIÓN DE ERRORES CONCEPTUALES
+   ========================================================= */
+function obtenerErrores() {
+  const e = EJ;
+  const esRazonSen = e.razonNombre === 'sen';
+  const razonCorrecta = esRazonSen ? 'sen' : 'cos';
+  const razonIncorrecta = esRazonSen ? 'cos' : 'sen';
+  const invCorrecta = esRazonSen ? 'arcsen' : 'arccos';
+  const invIncorrecta = esRazonSen ? 'arccos' : 'arcsen';
+
+  return {
+    'TRIG-PROC-01': {
+      codigo: 'TRIG-PROC-01',
+      nombre: 'Valores invertidos en el reemplazo',
+      descripcion_corta: 'Colocó la hipotenusa en el numerador y el cateto opuesto en el denominador',
+      descripcion_larga: `El estudiante invirtió la fracción: escribió ${e.fraccionDen}/${e.fraccionNum} en lugar de ${e.fraccionNum}/${e.fraccionDen}.`,
+      causa_raiz: 'Confusión entre numerador y denominador de la razón trigonométrica',
+      pasos: generarPasos('TRIG-PROC-01'),
+      paso_con_error: 1
+    },
+    'TRIG-PROC-02': {
+      codigo: 'TRIG-PROC-02',
+      nombre: 'Nombre de la razón incorrecto',
+      descripcion_corta: `Escribió "${razonIncorrecta}(α)" cuando debía ser "${razonCorrecta}(α)"`,
+      descripcion_larga: `El estudiante identificó correctamente los lados del triángulo pero eligió la razón trigonométrica equivocada. Usó ${razonIncorrecta}(α) que no relaciona esos dos lados de esa forma.`,
+      causa_raiz: 'Confusión entre seno y coseno respecto a qué lados relacionan',
+      pasos: generarPasos('TRIG-PROC-02'),
+      paso_con_error: 0
+    },
+    'TRIG-PROC-03': {
+      codigo: 'TRIG-PROC-03',
+      nombre: 'Definición invertida de la razón',
+      descripcion_corta: 'Definió sen(α) como hipotenusa/cateto opuesto (al revés)',
+      descripcion_larga: `El estudiante escribió ${razonCorrecta}(α) = hipotenusa/cateto opuesto, invirtiendo la definición. La definición correcta es ${razonCorrecta}(α) = cateto opuesto/hipotenusa.`,
+      causa_raiz: 'No recordar cuál va arriba (numerador) en la definición de la razón',
+      pasos: generarPasos('TRIG-PROC-03'),
+      paso_con_error: 0
+    },
+    'TRIG-PROC-04': {
+      codigo: 'TRIG-PROC-04',
+      nombre: 'Función inversa incorrecta',
+      descripcion_corta: `Usó ${invIncorrecta} en el paso 3 cuando debía usar ${invCorrecta}`,
+      descripcion_larga: `En el paso de despejar α, el estudiante aplicó ${invIncorrecta}(${e.fraccionDecimal}) en lugar de ${invCorrecta}(${e.fraccionDecimal}). La función inversa debe corresponder a la razón usada en el paso 1.`,
+      causa_raiz: 'Confundir qué función inversa corresponde a qué razón trigonométrica',
+      pasos: generarPasos('TRIG-PROC-04'),
+      paso_con_error: 2
+    }
+  };
+}
+
+/* =========================================================
+   GENERADOR DE PASOS DEL PROCEDIMIENTO
+   ========================================================= */
+function generarPasos(codigoError) {
+  const e = EJ;
+  const esRazonSen = e.razonNombre === 'sen';
+  const razonCorrecta = esRazonSen ? 'sen' : 'cos';
+  const razonIncorrecta = esRazonSen ? 'cos' : 'sen';
+  const ladoCorrecto = esRazonSen ? '\\text{cat. opuesto}' : '\\text{cat. adyacente}';
+  const ladoIncorrecto = esRazonSen ? '\\text{cat. adyacente}' : '\\text{cat. opuesto}';
+  const invCorrecta = esRazonSen ? '\\arcsin' : '\\arccos';
+  const invIncorrecta = esRazonSen ? '\\arccos' : '\\arcsin';
+  const num = e.fraccionNum;
+  const den = e.fraccionDen;
+  const dec = e.fraccionDecimal;
+  const ang = e.angResultado;
+
+  const pasosCorrectos = [
+    {
+      label: 'Paso 1: Seleccionar la razón trigonométrica',
+      latex: `\\${razonCorrecta}(\\alpha) = \\dfrac{${ladoCorrecto}}{\\text{hipotenusa}}`
+    },
+    {
+      label: 'Paso 2: Reemplazar los valores conocidos',
+      latex: `\\${razonCorrecta}(\\alpha) = \\dfrac{${num}}{${den}} = ${dec}`
+    },
+    {
+      label: 'Paso 3: Despejar el ángulo con la función inversa',
+      latex: `\\alpha = ${invCorrecta}(${dec}) = ${ang}^{\\circ}`
+    }
+  ];
+
+  switch (codigoError) {
+    case 'TRIG-PROC-01':
+      return [
+        pasosCorrectos[0],
+        {
+          label: 'Paso 2: Reemplazar los valores conocidos',
+          latex: `\\${razonCorrecta}(\\alpha) = \\dfrac{${den}}{${num}} = ${Math.round(den/num * 100)/100}`,
+          error: true
+        },
+        {
+          label: 'Paso 3: Despejar el ángulo con la función inversa',
+          latex: `\\alpha = ${invCorrecta}\\!\\left(${Math.round(den/num * 100)/100}\\right) = ?`,
+          error: false
+        }
+      ];
+
+    case 'TRIG-PROC-02':
+      return [
+        {
+          label: 'Paso 1: Seleccionar la razón trigonométrica',
+          latex: `\\${razonIncorrecta}(\\alpha) = \\dfrac{${ladoCorrecto}}{\\text{hipotenusa}}`,
+          error: true
+        },
+        {
+          label: 'Paso 2: Reemplazar los valores conocidos',
+          latex: `\\${razonIncorrecta}(\\alpha) = \\dfrac{${num}}{${den}} = ${dec}`
+        },
+        {
+          label: 'Paso 3: Despejar el ángulo con la función inversa',
+          latex: `\\alpha = ${invIncorrecta}(${dec}) = ${ang}^{\\circ}`
+        }
+      ];
+
+    case 'TRIG-PROC-03':
+      return [
+        {
+          label: 'Paso 1: Seleccionar la razón trigonométrica',
+          latex: `\\${razonCorrecta}(\\alpha) = \\dfrac{\\text{hipotenusa}}{${ladoCorrecto}}`,
+          error: true
+        },
+        {
+          label: 'Paso 2: Reemplazar los valores conocidos',
+          latex: `\\${razonCorrecta}(\\alpha) = \\dfrac{${den}}{${num}} = ${Math.round(den/num * 100)/100}`
+        },
+        {
+          label: 'Paso 3: Despejar el ángulo con la función inversa',
+          latex: `\\alpha = ${invCorrecta}\\!\\left(${Math.round(den/num * 100)/100}\\right) = ?`
+        }
+      ];
+
+    case 'TRIG-PROC-04':
+      return [
+        pasosCorrectos[0],
+        pasosCorrectos[1],
+        {
+          label: 'Paso 3: Despejar el ángulo con la función inversa',
+          latex: `\\alpha = ${invIncorrecta}(${dec}) = ?`,
+          error: true
+        }
+      ];
+
+    default:
+      return pasosCorrectos;
+  }
+}
+
+/* =========================================================
+   RENDERIZADO DEL EJERCICIO
+   ========================================================= */
+function renderEjercicio() {
+  dibujarTriangulo('tri-svg-1', false, null);
+  dibujarTriangulo('tri-svg-2', false, null);
+
+  const e = EJ;
+  document.getElementById('tri-caption-1').textContent =
+    `Rampa con ángulo α = ${e.angulo}°, cateto opuesto = ${e.catOpuesto} ${e.unidad}, hipotenusa = ${e.hipotenusa} ${e.unidad}`;
+
+  // Paso 3: fórmula correcta
+  renderKatex('s3-formula',
+    `\\${e.razonNombre}(\\alpha) = \\dfrac{${e.fraccionNum}}{${e.fraccionDen}} = ${e.fraccionDecimal}`
+  );
+
+  // Opciones del paso 3
+  document.getElementById('s3-opt-correct').textContent =
+    `${e.fraccionDecimal} (${e.fraccionNum}/${e.fraccionDen})`;
+  document.getElementById('s3-opt-inv').textContent =
+    `${Math.round(e.fraccionDen/e.fraccionNum * 100)/100} (${e.fraccionDen}/${e.fraccionNum} — invertido)`;
+  document.getElementById('s3-opt-suma').textContent =
+    `${e.fraccionNum + e.fraccionDen} (suma de lados)`;
+  document.getElementById('s3-opt-dif').textContent =
+    `${Math.abs(e.fraccionDen - e.fraccionNum)} (diferencia de lados)`;
+
+  // Paso 4: función inversa
+  renderKatex('s4-formula',
+    `\\${e.razonNombre}(\\alpha) = ${e.fraccionDecimal} \\implies \\alpha = ${e.invFuncionLatex.replace('\\arc','\\arc')}(${e.fraccionDecimal}) = ${e.angResultado}^{\\circ}`
+  );
+
+  // Paso 5: procedimiento con error
+  renderProcedimientoConError();
+
+  // Paso 6: primera tarjeta de práctica
+  generarPractica();
+
+  // Cheat sheet fórmulas
+  renderKatex('cs-formulas',
+    `\\text{sen}(\\alpha) = \\dfrac{\\text{cat. opuesto}}{\\text{hip.}} \\qquad \\text{cos}(\\alpha) = \\dfrac{\\text{cat. adyacente}}{\\text{hip.}} \\qquad \\text{tan}(\\alpha) = \\dfrac{\\text{cat. opuesto}}{\\text{cat. adyacente}}`
+  );
+  renderKatex('cs-pitagoras',
+    `\\text{Ángulos notables: } \\sin(30^\\circ)=\\tfrac{1}{2},\\; \\sin(45^\\circ)=\\tfrac{\\sqrt{2}}{2},\\; \\sin(60^\\circ)=\\tfrac{\\sqrt{3}}{2}`
+  );
+}
+
+/* =========================================================
+   TRIÁNGULO SVG
+   ========================================================= */
+function dibujarTriangulo(svgId, highlight, modo) {
+  const svg = document.getElementById(svgId);
+  svg.innerHTML = '';
+
+  const e = EJ;
+  // Coordenadas del triángulo (A = vértice ángulo recto, B = base izq, C = punta)
+  const A = { x: 300, y: 210 }; // ángulo recto
+  const B = { x: 80,  y: 210 }; // ángulo α
+  const C = { x: 300, y: 55  }; // vértice superior
+
+  const colBase     = '#E8E0D6';
+  const colHip      = '#2C2C2C';
+  const colOpuesto  = highlight === 'sen' || highlight === 'tan' ? '#C0392B' : '#2C2C2C';
+  const colAdyacente= highlight === 'cos' || highlight === 'tan' ? '#2980B9' : '#2C2C2C';
+  const swHip       = highlight === 'sen' || highlight === 'cos' ? 3 : 2;
+  const swOp        = highlight === 'sen' || highlight === 'tan' ? 4 : 2;
+  const swAdj       = highlight === 'cos' || highlight === 'tan' ? 4 : 2;
+
+  // Triángulo
+  svg.innerHTML += `<polygon points="${B.x},${B.y} ${A.x},${A.y} ${C.x},${C.y}" fill="#F9F5F0" stroke="none"/>`;
+
+  // Lados
+  // Hipotenusa B→C
+  svg.innerHTML += `<line x1="${B.x}" y1="${B.y}" x2="${C.x}" y2="${C.y}" stroke="${highlight==='sen'||highlight==='cos'?'#C0392B':colHip}" stroke-width="${swHip+1}" stroke-linecap="round"/>`;
+  // Cateto opuesto A→C (vertical)
+  svg.innerHTML += `<line x1="${A.x}" y1="${A.y}" x2="${C.x}" y2="${C.y}" stroke="${colOpuesto}" stroke-width="${swOp}" stroke-linecap="round"/>`;
+  // Cateto adyacente B→A (horizontal)
+  svg.innerHTML += `<line x1="${B.x}" y1="${B.y}" x2="${A.x}" y2="${A.y}" stroke="${colAdyacente}" stroke-width="${swAdj}" stroke-linecap="round"/>`;
+
+  // Cuadradito ángulo recto en A
+  const sq = 14;
+  svg.innerHTML += `<rect x="${A.x-sq}" y="${A.y-sq}" width="${sq}" height="${sq}" fill="none" stroke="#6B6B6B" stroke-width="1.5"/>`;
+
+  // Ángulo α en B
+  svg.innerHTML += `<path d="M${B.x+30},${B.y} A30,30 0 0,0 ${B.x+21},${B.y-21}" fill="rgba(212,168,83,0.25)" stroke="var(--gold)" stroke-width="1.5" fill-rule="nonzero"/>`;
+  svg.innerHTML += `<text x="${B.x+38}" y="${B.y-12}" font-family="Crimson Pro, serif" font-style="italic" font-size="18" fill="#8B6914">α = ${e.angulo}°</text>`;
+
+  // Etiqueta hipotenusa (a lo largo de B→C)
+  const hipMidX = (B.x + C.x) / 2 - 18;
+  const hipMidY = (B.y + C.y) / 2;
+  svg.innerHTML += `<text x="${hipMidX}" y="${hipMidY}" font-family="Crimson Pro, serif" font-style="italic" font-size="15" fill="${highlight==='sen'||highlight==='cos'?'#C0392B':colHip}" text-anchor="middle">hipotenusa = ${e.hipotenusa} m</text>`;
+
+  // Etiqueta cateto opuesto (lado derecho, vertical)
+  svg.innerHTML += `<text x="${A.x+8}" y="${(A.y+C.y)/2}" font-family="Crimson Pro, serif" font-style="italic" font-size="14" fill="${colOpuesto}">cat. opuesto = ${e.catOpuesto} m</text>`;
+
+  // Etiqueta cateto adyacente (abajo, horizontal)
+  svg.innerHTML += `<text x="${(B.x+A.x)/2}" y="${A.y+22}" font-family="Crimson Pro, serif" font-style="italic" font-size="14" fill="${colAdyacente}" text-anchor="middle">cat. adyacente ≈ ${e.catAdyacente} m</text>`;
+}
+
+/* =========================================================
+   PASO 5: PROCEDIMIENTO CON ERROR
+   ========================================================= */
+function renderProcedimientoConError() {
+  const errores = obtenerErrores();
+  const errorActual = errores[STATE.errorUsadoEnPaso5];
+  const pasos = errorActual.pasos;
+  const wrap = document.getElementById('proc-steps-wrap');
+  wrap.innerHTML = '';
+
+  pasos.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'proc-step';
+    div.id = `proc-step-${i}`;
+    div.onclick = () => seleccionarPaso(i, errorActual.paso_con_error);
+
+    const latexDiv = document.createElement('div');
+    latexDiv.id = `proc-latex-${i}`;
+    latexDiv.className = 'proc-formula';
+
+    div.innerHTML = `
+      <div class="proc-num">${i+1}</div>
+      <div class="proc-content">
+        <div class="proc-label">${p.label}</div>
+        <div class="proc-formula" id="proc-latex-${i}"></div>
+      </div>
+    `;
+    wrap.appendChild(div);
+    renderKatex(`proc-latex-${i}`, p.latex);
+  });
+}
+
+function seleccionarPaso(indiceSeleccionado, indiceError) {
+  const wrap = document.getElementById('proc-steps-wrap');
+  const pasos = wrap.querySelectorAll('.proc-step');
+  pasos.forEach(p => p.style.pointerEvents = 'none');
+
+  const errores = obtenerErrores();
+  const errorActual = errores[STATE.errorUsadoEnPaso5];
+  const fb = document.getElementById('s5-feedback');
+  const exp = document.getElementById('s5-explanation');
+
+  if (indiceSeleccionado === indiceError) {
+    pasos[indiceSeleccionado].classList.add('selected-correct');
+    pasos.forEach((p, i) => { if(i !== indiceSeleccionado) p.classList.add('grayed'); });
+
+    fb.className = 'feedback ok show';
+    fb.innerHTML = `<strong>¡Correcto!</strong> El error está en el Paso ${indiceSeleccionado + 1}. ${errorActual.descripcion_larga}`;
+
+    exp.style.display = 'block';
+    exp.innerHTML = `
+      <h4 style="font-family:'Crimson Pro',serif; margin-bottom:0.75rem;">Análisis del error</h4>
+      <p><strong>Código de error:</strong> ${errorActual.codigo}</p>
+      <p><strong>Error:</strong> ${errorActual.descripcion_corta}</p>
+      <p><strong>Causa raíz:</strong> ${errorActual.causa_raiz}</p>
+      <p style="margin-top:0.75rem;"><strong>¿Cómo evitarlo?</strong> Antes de pasar al siguiente paso, verifica que la razón elegida, los valores reemplazados y la función inversa son consistentes entre sí.</p>
+    `;
+
+    STATE.score += 3;
+    STATE.maxScore += 3;
+    actualizarProgreso();
+    mostrarContinuar('s5-continue');
+  } else {
+    pasos[indiceSeleccionado].classList.add('selected-wrong');
+    setTimeout(() => {
+      pasos[indiceSeleccionado].classList.remove('selected-wrong');
+      pasos.forEach(p => p.style.pointerEvents = 'auto');
+    }, 1000);
+
+    fb.className = 'feedback err show';
+    fb.innerHTML = `Ese paso está <em>escrito correctamente</em>. Revisa con más cuidado ${indiceSeleccionado === 0 ? 'la razón elegida' : indiceSeleccionado === 1 ? 'el reemplazo de valores' : 'la función inversa usada'}.`;
+    STATE.maxScore += 1;
+    actualizarProgreso();
+  }
+}
+
+/* =========================================================
+   PASO 6: TARJETA DE PRÁCTICA
+   ========================================================= */
+function generarPractica() {
+  const todosErrores = ['TRIG-PROC-01', 'TRIG-PROC-02', 'TRIG-PROC-03', 'TRIG-PROC-04'];
+  // Rotar errores para no repetir el del paso 5
+  const disponibles = todosErrores.filter(e => e !== STATE.errorUsadoEnPaso5 || STATE.practicaTotal > 3);
+  const idx = Math.floor(Math.random() * disponibles.length);
+  const codigoError = disponibles[idx];
+
+  const errores = obtenerErrores();
+  const errorActual = errores[codigoError];
+  const pasos = generarPasos(codigoError);
+
+  const wrap = document.getElementById('practice-card-wrap');
+  wrap.innerHTML = `
+    <div class="practice-card" id="pcard">
+      <div class="card-header">
+        <span class="card-badge new">Nuevo procedimiento</span>
+        <span class="score-chip" id="practica-score-chip" style="display:none;"></span>
+      </div>
+      <p style="font-size:0.93rem; color:var(--text-muted); margin-bottom:1rem;">
+        Haz clic en el paso que contiene el error:
+      </p>
+      <div id="practice-proc-wrap"></div>
+      <div class="feedback" id="practice-feedback"></div>
+    </div>
+  `;
+
+  const procWrap = document.getElementById('practice-proc-wrap');
+  pasos.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'proc-step';
+    div.id = `prac-step-${i}`;
+    div.onclick = () => verificarPractica(i, errorActual.paso_con_error, codigoError);
+
+    div.innerHTML = `
+      <div class="proc-num">${i+1}</div>
+      <div class="proc-content">
+        <div class="proc-label">${p.label}</div>
+        <div class="proc-formula" id="prac-latex-${i}"></div>
+      </div>
+    `;
+    procWrap.appendChild(div);
+    renderKatex(`prac-latex-${i}`, p.latex);
+  });
+
+  STATE.practicaTotal++;
+  actualizarProgreso();
+}
+
+function verificarPractica(indiceSeleccionado, indiceError, codigoError) {
+  const pasos = document.getElementById('practice-proc-wrap').querySelectorAll('.proc-step');
+  pasos.forEach(p => p.style.pointerEvents = 'none');
+
+  const errores = obtenerErrores();
+  const errorActual = errores[codigoError];
+  const fb = document.getElementById('practice-feedback');
+  const s6fb = document.getElementById('s6-feedback');
+
+  if (indiceSeleccionado === indiceError) {
+    pasos[indiceSeleccionado].classList.add('selected-correct');
+    pasos.forEach((p, i) => { if(i !== indiceSeleccionado) p.classList.add('grayed'); });
+    fb.className = 'feedback ok show';
+    fb.innerHTML = `<strong>¡Correcto!</strong> El error estaba en el Paso ${indiceSeleccionado + 1}: ${errorActual.descripcion_corta}`;
+
+    STATE.practicaCorrectas++;
+    STATE.score += 2;
+    STATE.maxScore += 2;
+
+    const chip = document.getElementById('practica-score-chip');
+    if (chip) { chip.style.display = 'inline'; chip.textContent = `+2 pts`; }
+
+    const chip6 = document.getElementById('s6-score-chip');
+    if (chip6) {
+      chip6.style.display = 'inline';
+      chip6.textContent = `${STATE.practicaCorrectas}/${STATE.practicaTotal} correctos`;
+    }
+
+    actualizarProgreso();
+
+    if (STATE.practicaCorrectas >= 2) {
+      mostrarContinuar('s6-continue');
+      s6fb.className = 'feedback ok show';
+      s6fb.innerHTML = '<strong>¡Excelente!</strong> Identificaste suficientes errores. Ya conoces los cuatro patrones de error del ICFES.';
+    }
+  } else {
+    pasos[indiceSeleccionado].classList.add('selected-wrong');
+    setTimeout(() => {
+      pasos[indiceSeleccionado].classList.remove('selected-wrong');
+      pasos.forEach(p => p.style.pointerEvents = 'auto');
+    }, 1000);
+    fb.className = 'feedback err show';
+    fb.innerHTML = `Ese paso no tiene el error. Revisa con más cuidado los valores o la función usada en ese paso.`;
+    STATE.maxScore += 1;
+    actualizarProgreso();
+  }
+}
+
+/* =========================================================
+   RESALTAR LADOS EN TABLA (Paso 2)
+   ========================================================= */
+function highlightSide(modo) {
+  document.querySelectorAll('#trig-table tbody tr').forEach(tr => tr.classList.remove('highlighted'));
+  document.getElementById(`row-${modo}`).classList.add('highlighted');
+  dibujarTriangulo('tri-svg-2', modo, null);
+
+  const labels = {
+    sen: 'Seno: relaciona el cateto opuesto (rojo) con la hipotenusa (también marcada)',
+    cos: 'Coseno: relaciona el cateto adyacente (azul) con la hipotenusa',
+    tan: 'Tangente: relaciona el cateto opuesto (rojo) con el cateto adyacente (azul)'
+  };
+  document.getElementById('tri-highlight-label').textContent = labels[modo];
+}
+
+/* =========================================================
+   VERIFICADORES DE PASOS
+   ========================================================= */
+function checkS1(btn, resp) {
+  const opts = document.querySelectorAll('#step1-opts .option-btn');
+  opts.forEach(b => { b.disabled = true; });
+  const fb = document.getElementById('s1-feedback');
+
+  if (resp === 'a') {
+    btn.classList.add('correct');
+    fb.className = 'feedback ok show';
+    fb.innerHTML = '<strong>¡Correcto!</strong> La hipotenusa es siempre el lado más largo, opuesto al ángulo recto (90°). En este triángulo, es la rampa misma.';
+    STATE.score += 1;
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    marcarCompletado(1);
+    mostrarContinuar('s1-continue');
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'feedback err show';
+    const msgs = {
+      b: 'No exactamente. El cateto opuesto a α es el lado vertical, pero la hipotenusa es el lado frente al ángulo recto (90°), que es el más largo.',
+      c: 'No. El cateto adyacente es el lado horizontal (la base), pero la hipotenusa es el lado más largo, opuesto al ángulo recto.',
+      d: 'Sí se puede. La hipotenusa siempre es el lado opuesto al ángulo recto (90°), independientemente de cuánto midan los ángulos agudos.'
+    };
+    fb.innerHTML = msgs[resp] || 'Intenta de nuevo.';
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.classList.remove('wrong');
+      opts.forEach(b => { b.disabled = false; });
+    }, 1500);
+  }
+}
+
+function checkS2(btn, resp) {
+  const opts = document.querySelectorAll('#step2-opts .option-btn');
+  opts.forEach(b => b.disabled = true);
+  const fb = document.getElementById('s2-feedback');
+  const correcto = EJ.razonNombre === 'sen' ? 'sen' : 'cos';
+
+  if (resp === correcto) {
+    btn.classList.add('correct');
+    fb.className = 'feedback ok show';
+    const msg = correcto === 'sen'
+      ? '<strong>¡Correcto!</strong> El seno relaciona el cateto opuesto con la hipotenusa. Como conocemos esos dos lados, sen(α) = cateto opuesto / hipotenusa es la razón que debemos usar.'
+      : '<strong>¡Correcto!</strong> El coseno relaciona el cateto adyacente con la hipotenusa. Como conocemos esos dos lados, cos(α) = cateto adyacente / hipotenusa es la razón adecuada.';
+    fb.innerHTML = msg;
+    STATE.score += 1;
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    marcarCompletado(2);
+    mostrarContinuar('s2-continue');
+  } else {
+    btn.classList.add('wrong');
+    const msgs = {
+      sen: 'El seno relaciona cateto opuesto e hipotenusa, pero en este ejercicio los lados conocidos son cateto adyacente e hipotenusa.',
+      cos: 'El coseno relaciona cateto adyacente e hipotenusa, pero en este ejercicio los lados conocidos son cateto opuesto e hipotenusa.',
+      tan: 'La tangente relaciona los dos catetos entre sí, no involucra la hipotenusa. En este problema sí se usa la hipotenusa.',
+      cualquiera: 'Aunque matemáticamente con los tres lados podrías usar cualquier razón, la práctica ICFES es elegir la razón que usa exactamente los dos lados que ya conoces, para calcular directamente.'
+    };
+    fb.className = 'feedback err show';
+    fb.innerHTML = msgs[resp] || 'Revisa qué lados conoces y qué lados relaciona cada razón.';
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      opts.forEach(b => b.disabled = false);
+    }, 1500);
+  }
+}
+
+function checkS3(btn, resp) {
+  const opts = document.querySelectorAll('#step3-opts .option-btn');
+  opts.forEach(b => b.disabled = true);
+  const fb = document.getElementById('s3-feedback');
+
+  if (resp === 'correcto') {
+    btn.classList.add('correct');
+    fb.className = 'feedback ok show';
+    fb.innerHTML = `<strong>¡Correcto!</strong> ${EJ.razonNombre}(α) = ${EJ.fraccionNum}/${EJ.fraccionDen} = ${EJ.fraccionDecimal}. El cateto opuesto va en el numerador y la hipotenusa en el denominador.`;
+    STATE.score += 1;
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    marcarCompletado(3);
+    mostrarContinuar('s3-continue');
+  } else {
+    btn.classList.add('wrong');
+    const msgs = {
+      invertido: `¡Atención! Invertiste numerador y denominador. ${EJ.razonNombre}(α) = cateto opuesto / hipotenusa, no al revés. Ese es el Error TRIG-PROC-01 que veremos más adelante.`,
+      suma: 'Sumar los lados no es una razón trigonométrica. La razón trigonométrica es una fracción (cociente), no una suma.',
+      dif: 'Restar los lados no es una razón trigonométrica. Debes calcular el cociente: cateto opuesto dividido entre hipotenusa.'
+    };
+    fb.className = 'feedback err show';
+    fb.innerHTML = msgs[resp] || 'Revisa la fórmula.';
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      opts.forEach(b => b.disabled = false);
+    }, 1500);
+  }
+}
+
+function checkS4(btn, resp) {
+  const opts = document.querySelectorAll('#step4-opts .option-btn');
+  opts.forEach(b => b.disabled = true);
+  const fb = document.getElementById('s4-feedback');
+
+  if (resp === 'arccos') {
+    btn.classList.add('correct');
+    fb.className = 'feedback ok show';
+    fb.innerHTML = '<strong>¡Correcto!</strong> Si usas coseno, debes aplicar arcocoseno (cos⁻¹) para despejar el ángulo. La función inversa siempre corresponde a la razón usada.';
+    STATE.score += 1;
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    marcarCompletado(4);
+    mostrarContinuar('s4-continue');
+  } else {
+    btn.classList.add('wrong');
+    const msgs = {
+      arcsen: 'No. Si usaste coseno, la función inversa correspondiente es arcocoseno, no arcoseno. Usar arcoseno cuando aplicaste coseno es el Error TRIG-PROC-04.',
+      secante: 'La secante (1/cos) es la función recíproca del coseno, no la inversa. La secante devuelve un número, no un ángulo.',
+      arctan: 'La arcotangente es la inversa de la tangente. Si usaste coseno, necesitas arcocoseno.'
+    };
+    fb.className = 'feedback err show';
+    fb.innerHTML = msgs[resp] || 'Recuerda: la función inversa debe corresponder a la razón usada.';
+    STATE.maxScore += 1;
+    actualizarProgreso();
+    setTimeout(() => {
+      btn.classList.remove('wrong');
+      opts.forEach(b => b.disabled = false);
+    }, 1500);
+  }
+}
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+function renderKatex(elId, latex) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  try {
+    katex.render(latex, el, { throwOnError: false, displayMode: true });
+  } catch(e) {
+    el.textContent = latex;
+  }
+}
+
+function unlock(n) {
+  const el = document.getElementById(`step${n}`);
+  if (!el) return;
+  el.classList.remove('locked');
+  el.classList.add('just-unlocked');
+  setTimeout(() => el.classList.remove('just-unlocked'), 800);
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  marcarCompletado(n - 1);
+  actualizarProgreso();
+
+  if (n === 7) {
+    mostrarPuntuacionFinal();
+  }
+}
+
+function mostrarContinuar(id) {
+  const btn = document.getElementById(id);
+  if (btn) btn.classList.add('show');
+}
+
+function marcarCompletado(n) {
+  const el = document.getElementById(`step${n}`);
+  if (el) el.classList.add('completed');
+}
+
+function actualizarProgreso() {
+  // Contar pasos completados (1-7)
+  let completados = 0;
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById(`step${i}`);
+    if (el && el.classList.contains('completed')) completados++;
+    else if (el && !el.classList.contains('locked')) completados += 0.5;
+  }
+  const pct = Math.min(100, Math.round((completados / 7) * 100));
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function mostrarPuntuacionFinal() {
+  const total = STATE.score;
+  const max = Math.max(STATE.maxScore, 1);
+  const pct = Math.round((total / max) * 100);
+
+  document.getElementById('final-score').textContent = `${pct}%`;
+
+  let msg = '';
+  if (pct >= 85) msg = `¡Excelente! Obtuviste ${total} de ${max} puntos posibles. Dominas la identificación de errores procedimentales en trigonometría.`;
+  else if (pct >= 60) msg = `Buen trabajo. Obtuviste ${total} de ${max} puntos. Revisa los errores donde fallaste para reforzar tu comprensión.`;
+  else msg = `Obtuviste ${total} de ${max} puntos. Te recomendamos repetir el ejercicio con nuevos valores para afianzar los conceptos.`;
+
+  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('progress-bar').style.width = '100%';
+}
+
+function reiniciar() {
+  STATE.score = 0;
+  STATE.maxScore = 0;
+  STATE.practicaCorrectas = 0;
+  STATE.practicaTotal = 0;
+  STATE.errorUsadoEnPaso5 = null;
+  STATE.erroresUsadosEnPractica = new Set();
+
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById(`step${i}`);
+    if (!el) continue;
+    el.classList.remove('completed');
+    if (i > 1) el.classList.add('locked');
+
+    // Rehabilitar botones
+    el.querySelectorAll('button.option-btn, button.continue-btn').forEach(b => {
+      b.disabled = false;
+      b.className = b.className.replace(/\bcorrect\b|\bwrong\b|\bshow\b/g, '').trim();
+    });
+    // Ocultar feedbacks
+    el.querySelectorAll('.feedback').forEach(f => {
+      f.className = 'feedback';
+      f.innerHTML = '';
+    });
+  }
+
+  document.getElementById('progress-bar').style.width = '0%';
+  inicializar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', inicializar);
+</script>
+</body>
+</html>
