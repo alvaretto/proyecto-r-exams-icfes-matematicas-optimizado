@@ -107,7 +107,6 @@ diccionario_tildes <- c(
   "metodos" = "métodos",
   "exito" = "éxito",
   "patron" = "patrón",
-  "patrones" = "patrones",
   "maximo" = "máximo",
   "maxima" = "máxima",
   "minimo" = "mínimo",
@@ -166,8 +165,9 @@ diccionario_tildes <- c(
   "fragil" = "frágil",
   "optima" = "óptima",
   "optimo" = "óptimo",
-  "cual" = "cuál",
-  "cuales" = "cuáles",
+  # "cual"/"cuales" EXCLUIDOS — ambiguos:
+  # "lo cual" (pronombre relativo, SIN tilde) vs "¿cuál?" (interrogativo, CON tilde)
+  # El script no puede distinguir el contexto gramatical.
 
   # Verbos conjugados comunes
   # NOTA: "esta/estan" EXCLUIDOS - confunden pronombre demostrativo con verbo
@@ -191,7 +191,8 @@ diccionario_tildes <- c(
 # Estas palabras NO deben corregirse si aparecen en contexto de código R
 palabras_excluir_en_codigo <- c(
   "solucion", "angulos", "angulo", "funcion", "numero",
-  "grafica", "grafico", "calculo", "codigo", "metodo"
+  "grafica", "grafico", "calculo", "codigo", "metodo",
+  "area"  # Variable R frecuente (par_sel$area, ctx$area)
 )
 
 # Campos de metadatos R-exams que DEBEN permanecer ASCII

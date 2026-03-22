@@ -245,7 +245,7 @@ errores_conceptuales <- list(
     codigo = "EST-COR-05",
     nombre = "Solo interpreta signo sin magnitud",
     justificacion = paste0(
-      "Es verdadera porque ", r_texto, " es positivo, lo cuál por sí solo ",
+      "Es verdadera porque ", r_texto, " es positivo, lo cual por sí solo ",
       "garantiza que la relación entre las variables es fuerte"),
     descripcion_error = paste0(
       "Solo interpreta el signo del coeficiente sin considerar la magnitud. ",
@@ -261,7 +261,7 @@ errores_conceptuales <- list(
     nombre = "Confunde r con r²",
     justificacion = paste0(
       "Es verdadera porque ", r_texto, " al cuadrado es ", r_cuadrado,
-      ", lo cuál significa que el ", r_cuadrado_pct,
+      ", lo cual significa que el ", r_cuadrado_pct,
       "% de la variación se explica, confirmando una relación perfectamente directa"),
     descripcion_error = paste0(
       "Confunde $r$ con $r^2$ (coeficiente de determinación). $r^2 = ",
@@ -283,7 +283,7 @@ errores_conceptuales <- list(
       "Solo interpreta la magnitud de $r$ sin considerar su signo. ",
       "$|r| = ", r_abs_texto, "$ cercano a $1$ indica relación fuerte, pero ",
       "si $r$ es negativo, esa relación fuerte es **inversa** (no directa). ",
-      "La afirmación habla de nota alta en ambas materias, lo cuál requiere ",
+      "La afirmación habla de nota alta en ambas materias, lo cual requiere ",
       "relación directa."),
     causa_raiz = "Interpretación parcial del coeficiente (solo fuerza, sin dirección)",
     precondicion = function(params) abs(params$r) >= 0.70,
@@ -478,7 +478,7 @@ magnitud_texto <- if (abs(r) >= 0.70) {
 }
 
 evaluacion_texto <- if (es_verdadera) {
-  paste0("$r = ", r_texto, "$ indica una relación **directa y fuerte**, lo cuál ",
+  paste0("$r = ", r_texto, "$ indica una relación **directa y fuerte**, lo cual ",
          "justifica que una nota alta en ", var1, " haga muy probable una nota alta en ",
          var2, ". La afirmación es **verdadera**.")
 } else if (tipo_r == "pos_debil") {
@@ -548,7 +548,7 @@ La correlación estadística indica el grado en que dos o más variables están 
 - Si este coeficiente está cercano a $-1$ o a $1$, indica una relación lineal **fuerte** entre las variables. Si está cercano a $0$, la relación es **débil** o inexistente.
 - Si es positivo, indica que al aumentar el valor de una de las variables cabe esperar aumento en el valor de la otra; si es negativo, cabe esperar disminución en el valor de la otra.
 
-`r enunciado_contexto` Con lo cuál afirma: "`r afirmacion`".
+`r enunciado_contexto` Con lo cual afirma: "`r afirmacion`".
 
 **¿Cuál de las siguientes justificaciones es correcta respecto a esta afirmación?**
 
@@ -611,7 +611,7 @@ La afirmación dice: "nota alta en `r var1` → muy probable nota alta en `r var
 
 ### Caso específico
 
-En este ejercicio, $r = `r r_texto`$ se ubica en el rango `r rango_caso`, lo cuál corresponde a una **`r tipo_correlacion`**. `r caso_especifico`
+En este ejercicio, $r = `r r_texto`$ se ubica en el rango `r rango_caso`, lo cual corresponde a una **`r tipo_correlacion`**. `r caso_especifico`
 
 **Importante:** `r nota_causalidad`
 

@@ -150,7 +150,7 @@ errores_conceptuales <- list(
     codigo = "EST-COR-02",
     nombre = "Correlación como medida de dispersión",
     justificacion = paste0(
-      "Porque ", r_texto, " es menor que 1, lo cuál indica que ",
+      "Porque ", r_texto, " es menor que 1, lo cual indica que ",
       "los datos están poco dispersos"),
     descripcion_error = paste0(
       "Confunde el coeficiente de correlación con una medida de dispersión. ",
@@ -194,7 +194,7 @@ errores_conceptuales <- list(
     codigo = "EST-COR-05",
     nombre = "Solo interpreta signo sin magnitud",
     justificacion = paste0(
-      "Porque ", r_texto, " es positivo, lo cuál por sí solo ",
+      "Porque ", r_texto, " es positivo, lo cual por sí solo ",
       "garantiza que la relación entre las variables es fuerte"),
     descripcion_error = paste0(
       "Solo interpreta el signo del coeficiente sin considerar la magnitud. ",
@@ -210,7 +210,7 @@ errores_conceptuales <- list(
     nombre = "Confunde r con r²",
     justificacion = paste0(
       "Porque ", r_texto, " al cuadrado es ", r_cuadrado,
-      ", lo cuál significa que el ", r_cuadrado_pct,
+      ", lo cual significa que el ", r_cuadrado_pct,
       "% de la variación se explica, confirmando una relación perfectamente directa"),
     descripcion_error = paste0(
       "Confunde $r$ con $r^2$ (coeficiente de determinación). $r^2 = ",
@@ -315,7 +315,7 @@ La correlación estadística indica el grado en que dos o más variables están 
 - Si este coeficiente está cercano a $-1$ o a $1$, indica una relación lineal **fuerte** entre las variables. Si está cercano a $0$, la relación es **débil** o inexistente.
 - Si es positivo, indica que al aumentar el valor de una de las variables cabe esperar aumento en el valor de la otra; si es negativo, cabe esperar disminución en el valor de la otra.
 
-`r enunciado_contexto` Con lo cuál afirma: "`r afirmacion`". ¿Por qué es verdadera la afirmación?
+`r enunciado_contexto` Con lo cual afirma: "`r afirmacion`". ¿Por qué es verdadera la afirmación?
 
 ```{r questionlist, echo = FALSE, results = "asis"}
 answerlist(opciones_mezcladas, markup = "markdown")
@@ -354,7 +354,7 @@ $$|r| = `r r_texto` \approx 1 \implies \text{relación fuerte}$$
 
 Como $|r|$ está cercano a $1$, la relación lineal es **fuerte**.
 
-**Conclusión:** $r = `r r_texto`$ indica una relación **directa y fuerte**, lo cuál justifica que una nota alta en `r var1` haga muy probable una nota alta en `r var2`.
+**Conclusión:** $r = `r r_texto`$ indica una relación **directa y fuerte**, lo cual justifica que una nota alta en `r var1` haga muy probable una nota alta en `r var2`.
 
 ### Propiedades del concepto
 
@@ -372,7 +372,7 @@ Como $|r|$ está cercano a $1$, la relación lineal es **fuerte**.
 
 ### Caso específico
 
-En este ejercicio, $r = `r r_texto`$ se ubica en el rango $0.7 < r < 1$, lo cuál corresponde a una **correlación positiva fuerte**. Con `r n_muestra` estudiantes de `r área`, esto indica una tendencia clara y consistente: quienes obtienen mejores resultados en `r var1` tienden a obtener mejores resultados en `r var2`.
+En este ejercicio, $r = `r r_texto`$ se ubica en el rango $0.7 < r < 1$, lo cual corresponde a una **correlación positiva fuerte**. Con `r n_muestra` estudiantes de `r area`, esto indica una tendencia clara y consistente: quienes obtienen mejores resultados en `r var1` tienden a obtener mejores resultados en `r var2`.
 
 **Importante:** Esto NO significa que `r var1` cause el buen desempeño en `r var2`. Podría existir un tercer factor (como las horas de estudio o la aptitud general) que explique ambos resultados.
 
