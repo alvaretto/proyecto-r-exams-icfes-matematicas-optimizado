@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "correlacion_pearson_interpretacion_metacognitivo_argumentacion_n2_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-03-21T18:22:31.852062-05:00",
+  "timestamp_ultima_actualizacion": "2026-03-21T18:25:36.860733-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:31.889977-05:00",
+      "resultado": "N2 Argumentacion Aleatorio - Correlacion Pearson"
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:31.945301-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:31.999901-05:00",
+      "archivo": "correlacion_pearson_interpretacion_metacognitivo_argumentacion_n2_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:32.053990-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:32.107504-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:32.161801-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:32.218541-05:00",
+      "veredicto": "APROBAR"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:22:32.272104-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:25:36.806683-05:00",
+      "versiones_unicas": 299
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-21T18:25:36.860733-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}

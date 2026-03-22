@@ -1,0 +1,649 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+library(testthat)
+library(digest)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+# ============================================================
+# EJERCICIO METACOGNITIVO: Interpretación del Coeficiente de
+# Correlación de Pearson (rango ampliado: 4 casos)
+# Competencia: Argumentación | Componente: Aleatorio
+# Patrón: Evaluación de justificaciones
+# DOK: 3 | Bloom: Evaluar | SOLO: Relacional
+#
+# Casos: pos_fuerte, pos_debil, neg_fuerte, neg_debil
+# La afirmación es verdadera SOLO cuando r es positivo fuerte.
+# El estudiante debe determinar si la afirmación es verdadera
+# o falsa Y seleccionar la justificación correcta.
+# ============================================================
+
+# --- Pool de nombres ---
+pool_nombres <- c(
+  "Mariana", "Carlos", "Valentina", "Andrés", "Gabriela",
+  "Leonardo", "Daniela", "Felipe", "Isabella", "Paula",
+  "Natalia", "Santiago", "Camila", "Diego", "Sofía",
+  "Miguel", "Lucía", "Ricardo", "Andrea", "Juliana",
+  "Samuel", "Elena", "Cristian", "Valeria", "Martín"
+)
+protagonista <- sample(pool_nombres, 1)
+
+# --- Tipo de correlación (4 casos, sin zona ambigua 0.3-0.7) ---
+tipo_r <- sample(c("pos_fuerte", "pos_debil", "neg_fuerte", "neg_debil"), 1)
+
+r <- switch(tipo_r,
+  pos_fuerte = sample(seq(0.72, 0.98, by = 0.01), 1),
+  pos_debil  = sample(seq(0.05, 0.28, by = 0.01), 1),
+  neg_fuerte = sample(seq(-0.98, -0.72, by = 0.01), 1),
+  neg_debil  = sample(seq(-0.28, -0.05, by = 0.01), 1)
+)
+
+es_verdadera <- (tipo_r == "pos_fuerte")
+r_texto <- sprintf("%.2f", r)
+r_abs_texto <- sprintf("%.2f", abs(r))
+r_cuadrado <- round(r^2, 2)
+r_cuadrado_pct <- round(r^2 * 100, 1)
+
+# --- Pares de variables ---
+pares_variables <- list(
+  list(var1 = "Física", var2 = "Cálculo", area = "ingeniería"),
+  list(var1 = "Matemáticas", var2 = "Estadística", area = "ciencias"),
+  list(var1 = "Química", var2 = "Biología", area = "ciencias de la salud"),
+  list(var1 = "Álgebra", var2 = "Geometría", area = "matemáticas"),
+  list(var1 = "Lectura", var2 = "Escritura", area = "humanidades"),
+  list(var1 = "Programación", var2 = "Lógica", area = "sistemas"),
+  list(var1 = "Inglés", var2 = "Francés", area = "idiomas"),
+  list(var1 = "Contabilidad", var2 = "Economía", area = "ciencias económicas"),
+  list(var1 = "Dibujo Técnico", var2 = "Diseño", area = "artes aplicadas"),
+  list(var1 = "Historia", var2 = "Geografía", area = "ciencias sociales")
+)
+par_sel <- pares_variables[[sample(length(pares_variables), 1)]]
+var1 <- par_sel$var1
+var2 <- par_sel$var2
+area <- par_sel$area
+
+# --- Tamaño de muestra ---
+n_muestra <- sample(c(80, 100, 120, 150, 180, 200, 250, 300), 1)
+
+# --- Contextos narrativos creativos (8 plantillas, 6+ tipos) ---
+contextos <- list(
+  # Tipo 1: Situación problema
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Un consejero estudiantil analiza las notas de ", v1,
+           " y ", v2, " de ", n, " estudiantes de ", ar,
+           " y encuentra que el coeficiente de correlación es ", rt, ".")
+  }),
+  # Tipo 2: Narración periodística
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("En un estudio realizado por el departamento de ", ar,
+           " de una universidad, se analizaron los resultados de ", n,
+           " estudiantes en ", v1, " y ", v2,
+           ". El coeficiente de correlación obtenido fue ", rt, ".")
+  }),
+  # Tipo 3: Descubrimiento
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Al revisar los registros académicos del semestre, ", prot,
+           " descubrió que entre las notas de ", v1, " y ", v2,
+           " de ", n, " estudiantes de ", ar,
+           " existe un coeficiente de correlación de ", rt, ".")
+  }),
+  # Tipo 4: Contexto institucional
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("El informe semestral del programa de ", ar,
+           " indica que, para una muestra de ", n, " estudiantes, ",
+           "el coeficiente de correlación entre las calificaciones de ",
+           v1, " y ", v2, " es ", rt, ".")
+  }),
+  # Tipo 5: Diálogo implícito
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("\u2014Calculé la correlación entre ", v1, " y ", v2,
+           " para nuestros ", n, " estudiantes \u2014comentó ", prot,
+           " durante la reunión del comité curricular\u2014. El resultado es ",
+           rt, ".")
+  }),
+  # Tipo 6: Pregunta retórica
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("¿Existe relación entre el desempeño en ", v1, " y en ", v2,
+           "? Para responder, se calculó el coeficiente de correlación ",
+           "de Pearson con los datos de ", n, " estudiantes de ", ar,
+           ", obteniendo un valor de ", rt, ".")
+  }),
+  # Tipo 7: Perspectiva del estudiante
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Para su proyecto de investigación, ", prot,
+           " recopiló las calificaciones de ", v1, " y ", v2,
+           " de ", n, " compañeros de ", ar,
+           " y calculó un coeficiente de correlación de Pearson igual a ",
+           rt, ".")
+  }),
+  # Tipo 8: Acción en curso
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Durante la evaluación institucional del programa de ", ar,
+           ", se determinó que el coeficiente de correlación entre ",
+           v1, " y ", v2, " para ", n, " estudiantes evaluados es ", rt, ".")
+  })
+)
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+enunciado_contexto <- ctx$plantilla(protagonista, n_muestra, var1, var2, area, r_texto)
+
+# --- Afirmación sobre la correlación (constante en todos los casos) ---
+afirmacion <- paste0(
+  "Si un estudiante tiene una nota alta en ", var1,
+  ", es muy probable que su nota en ", var2, " sea alta")
+
+# --- Justificación correcta (depende del tipo de r) ---
+if (tipo_r == "pos_fuerte") {
+  justificacion_correcta <- paste0(
+    "Es verdadera: ", r_texto, " es positivo (relación directa) y su magnitud ",
+    "cercana a 1 indica que la relación es fuerte")
+  explicacion_correcta <- paste0(
+    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ cumple dos condiciones: ",
+    "(1) es positivo, lo que indica relación directa (cuando una variable aumenta, ",
+    "la otra tiende a aumentar), y (2) $|r| = ", r_abs_texto, "$ cercano a $1$, ",
+    "lo que indica relación fuerte. Ambas condiciones justifican la afirmación.")
+} else if (tipo_r == "pos_debil") {
+  justificacion_correcta <- paste0(
+    "Es incorrecta: aunque ", r_texto, " es positivo (relación directa), ",
+    "su magnitud cercana a 0 indica relación débil, no se puede decir \"muy probable\"")
+  explicacion_correcta <- paste0(
+    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ es positivo, lo que indica ",
+    "relación directa. Sin embargo, $|r| = ", r_abs_texto, "$ está cercano a $0$, ",
+    "lo que indica una relación débil. No se puede afirmar que sea 'muy probable' ",
+    "obtener nota alta en ", var2, " por tener nota alta en ", var1, ".")
+} else if (tipo_r == "neg_fuerte") {
+  justificacion_correcta <- paste0(
+    "Es incorrecta: ", r_texto, " es negativo, lo que indica relación inversa; ",
+    "nota alta en ", var1, " se asocia con nota baja en ", var2, ", no alta")
+  explicacion_correcta <- paste0(
+    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ es negativo, lo que indica ",
+    "relación inversa: cuando ", var1, " aumenta, ", var2, " tiende a disminuir. ",
+    "La afirmación dice lo contrario (ambas altas), por lo tanto es incorrecta. ",
+    "Además, $|r| = ", r_abs_texto, "$ indica que esta relación inversa es fuerte.")
+} else { # neg_debil
+  justificacion_correcta <- paste0(
+    "Es incorrecta: ", r_texto, " es negativo (relación inversa) y su magnitud ",
+    "cercana a 0 indica que la relación es débil")
+  explicacion_correcta <- paste0(
+    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ tiene dos problemas respecto ",
+    "a la afirmación: (1) es negativo, lo que indica relación inversa (no directa), ",
+    "y (2) $|r| = ", r_abs_texto, "$ cercano a $0$, lo que indica relación débil. ",
+    "La afirmación es incorrecta por ambas razones.")
+}
+
+# --- Pool de errores conceptuales (10 errores con precondiciones) ---
+errores_conceptuales <- list(
+  list(
+    codigo = "EST-COR-01",
+    nombre = "Correlación como factor multiplicativo",
+    justificacion = paste0(
+      "Es verdadera porque la nota de ", var1, " se obtiene al multiplicar ",
+      r_texto, " por la nota de ", var2),
+    descripcion_error = paste0(
+      "Confunde el coeficiente de correlación con un factor multiplicativo. ",
+      "$r$ no establece que ", var1, " $= ", r_texto,
+      " \\times$ ", var2, ". $r$ mide la fuerza y dirección de la relación lineal, ",
+      "no es un factor de conversión entre variables."),
+    causa_raiz = "Confusión entre correlación estadística y proporcionalidad algebraica",
+    precondicion = function(params) params$r > 0,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-02",
+    nombre = "Correlación como medida de dispersión",
+    justificacion = paste0(
+      "Es verdadera porque ", r_texto, " indica que los datos de ambas ",
+      "materias están poco dispersos"),
+    descripcion_error = paste0(
+      "Confunde el coeficiente de correlación con una medida de dispersión. ",
+      "$r$ no mide qué tan dispersos están los datos (para eso se usa la ",
+      "desviación estándar o el rango). $r$ mide la fuerza de la asociación ",
+      "lineal entre dos variables."),
+    causa_raiz = "Confusión entre correlación y dispersión estadística",
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-03",
+    nombre = "Correlación como constante de proporcionalidad",
+    justificacion = paste0(
+      "Es verdadera porque la constante de proporcionalidad de las notas es ",
+      r_texto),
+    descripcion_error = paste0(
+      "Confunde el coeficiente de correlación con la constante de ",
+      "proporcionalidad ($k$ en $y = kx$). Dos variables pueden tener $r$ cercano a $1$ ",
+      "sin ser proporcionales. La correlación mide tendencia lineal, ",
+      "no establece una razón fija entre las variables."),
+    causa_raiz = "Confusión entre correlación y proporcionalidad directa",
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-04",
+    nombre = "Correlación implica causalidad",
+    justificacion = paste0(
+      "Es verdadera porque un coeficiente de ", r_texto,
+      " demuestra que el desempeño en ", var1,
+      " causa directamente el desempeño en ", var2),
+    descripcion_error = paste0(
+      "Confunde correlación con causalidad. Un coeficiente alto no demuestra que ",
+      var1, " cause el desempeño en ", var2, ". Ambas variables podrían depender de un ",
+      "tercer factor (como horas de estudio). Correlación no implica causalidad."),
+    causa_raiz = "Confusión entre asociación estadística y relación causal",
+    precondicion = function(params) params$r > 0,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-05",
+    nombre = "Solo interpreta signo sin magnitud",
+    justificacion = paste0(
+      "Es verdadera porque ", r_texto, " es positivo, lo cuál por sí solo ",
+      "garantiza que la relación entre las variables es fuerte"),
+    descripcion_error = paste0(
+      "Solo interpreta el signo del coeficiente sin considerar la magnitud. ",
+      "Un valor como $r = 0.10$ también es positivo pero indica una relación ",
+      "muy débil. La fuerza depende de qué tan cercano esté $|r|$ a $1$, ",
+      "no solo de su signo."),
+    causa_raiz = "Interpretación parcial del coeficiente (solo dirección, sin fuerza)",
+    precondicion = function(params) params$r > 0,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-06",
+    nombre = "Confunde r con r²",
+    justificacion = paste0(
+      "Es verdadera porque ", r_texto, " al cuadrado es ", r_cuadrado,
+      ", lo cuál significa que el ", r_cuadrado_pct,
+      "% de la variación se explica, confirmando una relación perfectamente directa"),
+    descripcion_error = paste0(
+      "Confunde $r$ con $r^2$ (coeficiente de determinación). $r^2 = ",
+      r_cuadrado, "$ mide la proporción de varianza explicada, pero no ",
+      "indica la dirección de la relación (siempre es positivo). Además, ",
+      "una 'relación perfectamente directa' requiere $r = 1$, no simplemente ",
+      "que $r^2 > 0$."),
+    causa_raiz = "Confusión entre r y r², y entre relación fuerte y relación perfecta",
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-07",
+    nombre = "Solo interpreta magnitud sin signo",
+    justificacion = paste0(
+      "Es verdadera porque el valor absoluto de r es ", r_abs_texto,
+      ", cercano a 1, lo que confirma que la relación es fuerte"),
+    descripcion_error = paste0(
+      "Solo interpreta la magnitud de $r$ sin considerar su signo. ",
+      "$|r| = ", r_abs_texto, "$ cercano a $1$ indica relación fuerte, pero ",
+      "si $r$ es negativo, esa relación fuerte es **inversa** (no directa). ",
+      "La afirmación habla de nota alta en ambas materias, lo cuál requiere ",
+      "relación directa."),
+    causa_raiz = "Interpretación parcial del coeficiente (solo fuerza, sin dirección)",
+    precondicion = function(params) abs(params$r) >= 0.70,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-08",
+    nombre = "Umbral excesivamente estricto",
+    justificacion = paste0(
+      "Es incorrecta porque ", r_texto,
+      " no es igual a 1, por lo tanto la relación no es lo suficientemente fuerte"),
+    descripcion_error = paste0(
+      "Aplica un umbral excesivamente estricto: exige $r = 1$ (relación perfecta) ",
+      "para considerar la relación como fuerte. En la práctica, valores de ",
+      "$|r| > 0.7$ ya se consideran correlaciones fuertes. No se requiere ",
+      "perfección para justificar una tendencia probable."),
+    causa_raiz = "Confusión entre relación fuerte y relación perfecta",
+    precondicion = function(params) params$r > 0 && abs(params$r) >= 0.70,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-09",
+    nombre = "Nihilismo estadístico",
+    justificacion = paste0(
+      "Es incorrecta porque la correlación estadística nunca permite hacer ",
+      "afirmaciones sobre casos individuales"),
+    descripcion_error = paste0(
+      "Sobregeneraliza las limitaciones de la correlación. Si bien $r$ describe ",
+      "una tendencia grupal, un coeficiente alto sí permite hacer inferencias ",
+      "probabilísticas razonables sobre casos individuales. La palabra 'muy probable' ",
+      "en la afirmación reconoce correctamente esta naturaleza probabilística."),
+    causa_raiz = "Sobregeneralización de las limitaciones de la correlación",
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  ),
+  list(
+    codigo = "EST-COR-10",
+    nombre = "r negativo = ausencia de relación",
+    justificacion = paste0(
+      "Es incorrecta porque ", r_texto,
+      " al ser negativo indica que no existe relación alguna entre las variables"),
+    descripcion_error = paste0(
+      "Confunde relación inversa con ausencia de relación. $r < 0$ indica que ",
+      "existe una relación **inversa** (cuando una variable aumenta, la otra ",
+      "disminuye), no que no haya relación. La ausencia de relación lineal ",
+      "correspondería a $r \\approx 0$."),
+    causa_raiz = "Confusión entre relación inversa y ausencia de relación",
+    precondicion = function(params) params$r < 0,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  )
+  ,
+  list(
+    codigo = "EST-COR-11",
+    nombre = "Confunde relación débil con ausencia de relación",
+    justificacion = paste0(
+      "Es incorrecta porque aunque ", r_texto,
+      " sea positivo, una magnitud tan cercana a 0 no permite ",
+      "afirmar que exista relación entre las variables"),
+    descripcion_error = paste0(
+      "Descarta la afirmación por la magnitud débil, pero articula la razón ",
+      "incorrectamente: no es que 'no exista relación', sino que la relación es ",
+      "demasiado débil para justificar 'muy probable'. Confunde ausencia de ",
+      "relación fuerte con ausencia total de relación. Una correlación débil ",
+      "sigue siendo una correlación."),
+    causa_raiz = "Confusión entre relación débil y ausencia de relación",
+    precondicion = function(params) params$r > 0 && abs(params$r) < 0.30,
+    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+  )
+)
+
+# --- Seleccionar 3 distractores (con balance de veredictos) ---
+params <- list(r = r, tipo_r = tipo_r)
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  err$precondicion(params)
+}))
+errores_aplicables <- errores_conceptuales[errores_aplicables_idx]
+
+# Clasificar distractores aplicables por veredicto
+idx_dice_verdadera <- which(sapply(errores_aplicables, function(e)
+  grepl("^Es verdadera", e$justificacion)))
+idx_dice_incorrecta <- which(sapply(errores_aplicables, function(e)
+  grepl("^Es incorrecta", e$justificacion)))
+
+# Garantizar mezcla de veredictos para evitar que el estudiante
+# identifique la correcta solo por ser la única con cierto veredicto
+# Balance 2:2 en opciones — opuesto al veredicto de la correcta
+# Si correcta dice "Es verdadera" → 1 distractor verdadera + 2 incorrecta (total: 2v+2i)
+# Si correcta dice "Es incorrecta" → 2 distractor verdadera + 1 incorrecta (total: 2v+2i)
+if (es_verdadera && length(idx_dice_incorrecta) >= 2 && length(idx_dice_verdadera) >= 1) {
+  sel <- c(sample(idx_dice_verdadera, 1), sample(idx_dice_incorrecta, 2))
+} else if (!es_verdadera && length(idx_dice_verdadera) >= 2 && length(idx_dice_incorrecta) >= 1) {
+  sel <- c(sample(idx_dice_verdadera, 2), sample(idx_dice_incorrecta, 1))
+} else {
+  sel <- sample(length(errores_aplicables), 3)
+}
+
+d1 <- errores_aplicables[[sel[1]]]
+d2 <- errores_aplicables[[sel[2]]]
+d3 <- errores_aplicables[[sel[3]]]
+
+# --- Construir opciones (R-exams mezcla via exshuffle: TRUE) ---
+opciones_mezcladas <- c(
+  justificacion_correcta,
+  d1$justificacion,
+  d2$justificacion,
+  d3$justificacion
+)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+
+# --- Verificaciones obligatorias (regla ejercicios-metacognitivos.md) ---
+test_that("sol tiene exactamente 1 TRUE", {
+  expect_equal(sum(sol), 1)
+})
+test_that("Opciones son únicas", {
+  expect_equal(length(unique(opciones_mezcladas)), 4,
+    info = "Hay opciones duplicadas — cada opción debe ser única")
+})
+test_that("Distractores distintos entre sí", {
+  distrs <- c(d1$justificacion, d2$justificacion, d3$justificacion)
+  expect_equal(length(unique(distrs)), 3,
+    info = "Hay distractores duplicados")
+})
+test_that("Correcta diferente de todos los distractores", {
+  distrs <- c(d1$justificacion, d2$justificacion, d3$justificacion)
+  expect_false(justificacion_correcta %in% distrs,
+    info = "La justificación correcta es idéntica a un distractor")
+})
+
+# --- Reflexiones metacognitivas ---
+reflexiones_metacognitivas <- list(
+  paste0("Identificar errores de interpretación del coeficiente de correlación ",
+         "nos ayuda a evitar confusiones propias. La metacognición aplicada a la ",
+         "estadística fortalece la comprensión profunda de los conceptos."),
+  paste0("Los errores más frecuentes al interpretar $r$ son: confundirlo con un factor ",
+         "multiplicativo, con una medida de dispersión, o asumir que implica causalidad. ",
+         "Analizar estas confusiones desarrolla pensamiento crítico."),
+  paste0("El coeficiente de correlación tiene dos dimensiones: signo (dirección) y ",
+         "magnitud (fuerza). Interpretar solo una de ellas lleva a conclusiones ",
+         "incompletas. Verificar ambas dimensiones es una estrategia metacognitiva ",
+         "fundamental en estadística."),
+  paste0("Cuando evaluamos justificaciones estadísticas, debemos distinguir entre ",
+         "lo que un indicador mide realmente y lo que creemos que mide. Esta habilidad ",
+         "de monitoreo es central en el pensamiento estadístico.")
+)
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# --- Estrategias para evitar errores ---
+estrategias <- list(
+  paste0("Ante un coeficiente de correlación, verificar siempre dos aspectos: ",
+         "(1) el signo indica la dirección (positivo = directa, negativo = inversa), ",
+         "y (2) el valor absoluto indica la fuerza (cercano a 1 = fuerte, ",
+         "cercano a 0 = débil)."),
+  paste0("Recordar que correlación NO implica causalidad. Un $r$ alto solo indica que ",
+         "las variables se mueven juntas, no que una cause la otra."),
+  paste0("No confundir el coeficiente de correlación con otras medidas estadísticas ",
+         "como la dispersión, la proporcionalidad o el coeficiente de determinación ($r^2$). ",
+         "Cada indicador responde a una pregunta diferente."),
+  paste0("Preguntarse siempre: ¿qué mide exactamente este indicador? El coeficiente $r$ ",
+         "mide fuerza y dirección de la relación lineal. No mide dispersión, ",
+         "no es un factor multiplicativo, y no prueba causalidad.")
+)
+estrategia <- estrategias[[sample(length(estrategias), 1)]]
+
+# --- Textos dinámicos para Solution ---
+veredicto_texto <- if (es_verdadera) "verdadera" else "incorrecta"
+
+signo_formula <- if (r > 0) {
+  "$$r > 0 \\implies \\text{relación directa}$$"
+} else {
+  "$$r < 0 \\implies \\text{relación inversa}$$"
+}
+
+signo_texto <- if (r > 0) {
+  paste0("Como $r$ es positivo, cuando una variable aumenta, la otra tiende a ",
+         "aumentar también. La relación es **directa**.")
+} else {
+  paste0("Como $r$ es negativo, cuando una variable aumenta, la otra tiende a ",
+         "disminuir. La relación es **inversa**.")
+}
+
+magnitud_formula <- if (abs(r) >= 0.70) {
+  paste0("$$|r| = ", r_abs_texto, " \\approx 1 \\implies \\text{relación fuerte}$$")
+} else {
+  paste0("$$|r| = ", r_abs_texto, " \\approx 0 \\implies \\text{relación débil}$$")
+}
+
+magnitud_texto <- if (abs(r) >= 0.70) {
+  paste0("Como $|r| = ", r_abs_texto, "$ está cercano a $1$, la relación lineal es **fuerte**.")
+} else {
+  paste0("Como $|r| = ", r_abs_texto, "$ está cercano a $0$, la relación lineal es **débil**.")
+}
+
+evaluacion_texto <- if (es_verdadera) {
+  paste0("$r = ", r_texto, "$ indica una relación **directa y fuerte**, lo cuál ",
+         "justifica que una nota alta en ", var1, " haga muy probable una nota alta en ",
+         var2, ". La afirmación es **verdadera**.")
+} else if (tipo_r == "pos_debil") {
+  paste0("Aunque la relación es directa ($r > 0$), su magnitud débil ($|r| = ",
+         r_abs_texto, "$ cercano a $0$) no justifica decir que sea 'muy probable'. ",
+         "La afirmación es **incorrecta**.")
+} else if (tipo_r == "neg_fuerte") {
+  paste0("La relación es inversa ($r < 0$): nota alta en ", var1,
+         " se asocia con nota **baja** en ", var2,
+         ", no alta. La afirmación es **incorrecta**.")
+} else { # neg_debil
+  paste0("La relación es inversa ($r < 0$) y débil ($|r|$ cercano a $0$). ",
+         "La afirmación es **incorrecta** por ambas razones.")
+}
+
+rango_caso <- switch(tipo_r,
+  pos_fuerte = "$0.7 < r < 1$",
+  pos_debil  = "$0 < r < 0.3$",
+  neg_fuerte = "$-1 < r < -0.7$",
+  neg_debil  = "$-0.3 < r < 0$"
+)
+
+tipo_correlacion <- switch(tipo_r,
+  pos_fuerte = "correlación positiva fuerte",
+  pos_debil  = "correlación positiva débil",
+  neg_fuerte = "correlación negativa fuerte",
+  neg_debil  = "correlación negativa débil"
+)
+
+caso_especifico <- if (es_verdadera) {
+  paste0("Con ", n_muestra, " estudiantes de ", area,
+         ", esto indica una tendencia clara: quienes obtienen ",
+         "mejores resultados en ", var1, " tienden a obtener mejores resultados en ",
+         var2, ". La afirmación es verdadera.")
+} else if (tipo_r == "pos_debil") {
+  paste0("Con ", n_muestra, " estudiantes de ", area,
+         ", la correlación débil indica que no hay una tendencia clara. ",
+         "Algunos estudiantes con nota alta en ", var1, " pueden tener nota alta en ",
+         var2, ", pero no es 'muy probable'. La afirmación es incorrecta.")
+} else if (tipo_r == "neg_fuerte") {
+  paste0("Con ", n_muestra, " estudiantes de ", area,
+         ", la correlación negativa fuerte indica que quienes obtienen mejores ",
+         "resultados en ", var1, " tienden a obtener **peores** resultados en ",
+         var2, ". La afirmación dice lo contrario, por lo tanto es incorrecta.")
+} else {
+  paste0("Con ", n_muestra, " estudiantes de ", area,
+         ", la correlación negativa débil indica una ligera tendencia inversa. ",
+         "La afirmación es incorrecta tanto por la dirección ",
+         "(inversa, no directa) como por la fuerza (débil, no 'muy probable').")
+}
+
+nota_causalidad <- if (es_verdadera) {
+  paste0("Esto NO significa que ", var1, " cause el buen desempeño en ", var2,
+         ". Podría existir un tercer factor (como las horas de estudio o la aptitud ",
+         "general) que explique ambos resultados.")
+} else {
+  paste0("La afirmación es incorrecta porque no se cumplen las condiciones necesarias ",
+         "de dirección y/o fuerza para justificarla.")
+}
+```
+
+Question
+========
+
+La correlación estadística indica el grado en que dos o más variables están relacionadas linealmente y, generalmente, se mide a través del coeficiente de correlación de Pearson en una escala de $-1$ a $1$.
+
+- Si este coeficiente está cercano a $-1$ o a $1$, indica una relación lineal **fuerte** entre las variables. Si está cercano a $0$, la relación es **débil** o inexistente.
+- Si es positivo, indica que al aumentar el valor de una de las variables cabe esperar aumento en el valor de la otra; si es negativo, cabe esperar disminución en el valor de la otra.
+
+`r enunciado_contexto` Con lo cuál afirma: "`r afirmacion`".
+
+**¿Cuál de las siguientes justificaciones es correcta respecto a esta afirmación?**
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones_mezcladas, markup = "markdown")
+```
+
+Solution
+========
+
+### Análisis de la afirmación
+
+La afirmación "`r afirmacion`" es **`r veredicto_texto`**.
+
+`r explicacion_correcta`
+
+**Errores conceptuales en las demás opciones:**
+
+**`r d1$codigo` — `r d1$nombre`:** `r d1$descripcion_error` *Causa raíz:* `r d1$causa_raiz`.
+
+**`r d2$codigo` — `r d2$nombre`:** `r d2$descripcion_error` *Causa raíz:* `r d2$causa_raiz`.
+
+**`r d3$codigo` — `r d3$nombre`:** `r d3$descripcion_error` *Causa raíz:* `r d3$causa_raiz`.
+
+### Procedimiento correcto
+
+Para evaluar la afirmación, se deben analizar las dos dimensiones del coeficiente de correlación:
+
+**Paso 1.** Interpretar el **signo** de $r = `r r_texto`$:
+
+`r signo_formula`
+
+`r signo_texto`
+
+**Paso 2.** Interpretar la **magnitud** de $|r| = `r r_abs_texto`$:
+
+`r magnitud_formula`
+
+`r magnitud_texto`
+
+**Paso 3.** Evaluar la afirmación:
+
+La afirmación dice: "nota alta en `r var1` → muy probable nota alta en `r var2`". Esto requiere que la relación sea **directa** (signo positivo) Y **fuerte** (magnitud cercana a 1).
+
+`r evaluacion_texto`
+
+### Propiedades del concepto
+
+| Valor de $r$ | Dirección | Fuerza |
+|:---:|:---:|:---:|
+| $r = 1$ | Directa | Perfecta |
+| $0.7 < r < 1$ | Directa | Fuerte |
+| $0.3 < r < 0.7$ | Directa | Moderada |
+| $0 < r < 0.3$ | Directa | Débil |
+| $r = 0$ | — | Sin relación lineal |
+| $-0.3 < r < 0$ | Inversa | Débil |
+| $-0.7 < r < -0.3$ | Inversa | Moderada |
+| $-1 < r < -0.7$ | Inversa | Fuerte |
+| $r = -1$ | Inversa | Perfecta |
+
+### Caso específico
+
+En este ejercicio, $r = `r r_texto`$ se ubica en el rango `r rango_caso`, lo cuál corresponde a una **`r tipo_correlacion`**. `r caso_especifico`
+
+**Importante:** `r nota_causalidad`
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+`r estrategia`
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(sol, "Verdadero", "Falso"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exname: correlacion_pearson_interpretacion_metacognitivo_argumentacion_n2_schoice_v2
+exshuffle: TRUE
+exsection: Estadistica-Probabilidad/Pensamiento-Aleatorio/Correlacion-Pearson
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Evalua justificaciones sobre la interpretacion del coeficiente de correlacion de Pearson considerando signo y magnitud
+exextra[Evidencia]: Evalua justificaciones sobre la relacion entre dos variables a partir del coeficiente de correlacion
+exextra[Nivel]: 2
+exextra[Contexto]: Universitario
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_justificacion
