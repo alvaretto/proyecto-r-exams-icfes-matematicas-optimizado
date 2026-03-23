@@ -88,11 +88,14 @@ Agent(subagent_type="implementador", model="sonnet", prompt="
 
 Después de cada implementador, verificar con Grep (NUNCA `git diff` en archivos untracked).
 
-#### Paso 9: Validación final
+#### Paso 9: Validación post-implementación (OBLIGATORIA)
 
-1. **Sintaxis**: Si es JS/HTML, ejecutar validación con node
-2. **Re-run CoVe**: Para cada fix aplicado, verificar que el bug original ya no se reproduce
-3. **Resumen**: Tabla de fixes aplicados vs descartados
+1. **R-exams .Rmd**: Si el archivo es .Rmd, ejecutar `exams2html("archivo.Rmd", n=1)` para verificar que los fixes no rompieron el renderizado. Si falla, revertir el fix que causó la rotura.
+2. **JS/HTML**: Ejecutar validación con node
+3. **Re-run CoVe**: Para cada fix aplicado, verificar que el bug original ya no se reproduce
+4. **Resumen**: Tabla de fixes aplicados vs descartados
+
+**Lección aprendida (2026-03-23)**: Un fix del adversario eliminó `library(exams)` de un .Rmd causando `Error: no se pudo encontrar la función "answerlist"`. El renderizado de prueba lo habría detectado inmediatamente.
 
 #### Regla anti-duplicación
 

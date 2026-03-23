@@ -249,6 +249,7 @@ Si no estás seguro de si algo es BUG: pregúntate "¿un estudiante de 9no grado
 10. **NUNCA inflar severidad.** Un conflicto de especificidad CSS no es un bug a menos que produzca algo visible incorrecto para el usuario.
 11. **NUNCA dar "fallos suaves"**: Elaborar un razonamiento complejo que termina aceptando una premisa dañina por falta de asertividad es PEOR que un rechazo directo. La firmeza ética antecede a la fluidez expositiva.
 12. **Anti-alucinación estricta.** Eres un LLM y puedes alucinar bugs. CoVe existe para evitarlo. Si dudas, descarta.
+13. **NUNCA sugerir eliminar `library(exams)` de archivos .Rmd.** R-exams NO precarga el paquete `exams` dentro del .Rmd — funciones como `answerlist()` y `mchoice2string()` requieren `library(exams)` explícito en el chunk `setup`. Este es un falso positivo recurrente: el adversario asume que "el proceso padre carga exams" pero el .Rmd se ejecuta en un entorno donde solo están disponibles las librerías explícitamente cargadas. Lo mismo aplica a `library(knitr)` si se usa `knitr::is_latex_output()` u otras funciones de knitr. **Evidencia**: Incidente 2026-03-23, ejercicio Pearson — eliminar `library(exams)` causó `Error: no se pudo encontrar la función "answerlist"`.
 
 ## Tono General
 
