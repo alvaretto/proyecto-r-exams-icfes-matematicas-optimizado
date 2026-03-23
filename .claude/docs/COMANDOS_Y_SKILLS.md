@@ -50,14 +50,25 @@
 - Análisis ICFES completado
 - Si tiene gráficos: Flujo B completado
 
-**Qué hace**:
-1. Verifica requisitos previos
-2. Genera archivo .Rmd con estructura SCHOICE
-3. Incluye metadatos ICFES completos
-4. Aplica plantilla validada
-5. Ejecuta Ciclo de Validación automático
+**Qué hace** (workflow completo de 14 pasos, v4.0):
+1. Selecciona patrón metacognitivo
+2. Verifica análisis ICFES + Flujo B
+3. Consulta ejemplos funcionales
+4. Define pool de errores conceptuales
+5. Crea carpeta + inicializa `workflow-state.sh`
+6. Genera .Rmd metacognitivo
+7. `/skill-retroalimentacion` — Solution científica
+8. Renderizado 4 formatos (HTML/PDF/DOCX/NOPS)
+9. Arsenal post-render automático (FASES 2A-2H)
+10. `/adversario` — Detractor FASE 2C
+11. Documenta 5 coherencias
+12. `/validar-diversidad` — 250+ versiones únicas
+13. `/validar-icfes` — metadatos y estructura
+14. Aprobación usuario → `/promover-ejercicio`
 
-**Output**: Archivo `.Rmd` listo para renderizar
+Todos los pasos registran progreso via `workflow-state.sh complete`.
+
+**Output**: Archivo `.Rmd` validado por 11 pasos del workflow
 
 **Metadatos generados**:
 ```yaml
@@ -85,14 +96,25 @@ exextra[Componente]: [clasificación]
 - Análisis ICFES completado
 - Si tiene gráficos: Flujo B completado
 
-**Qué hace**:
-1. Verifica requisitos previos
-2. Genera archivo .Rmd con estructura CLOZE
-3. Define tipos de subpreguntas (num/schoice/mchoice/string)
-4. Configura tolerancias numéricas
-5. Ejecuta Ciclo de Validación automático
+**Qué hace** (workflow completo de 16 pasos, v4.0):
+1. Define estructura Progressive Disclosure (mín. 4 partes)
+2. Verifica análisis ICFES + Flujo B
+3. Consulta ejemplos funcionales
+4-6. Define pools: errores, afirmaciones, V/F
+7. Crea carpeta + inicializa `workflow-state.sh`
+8. Genera .Rmd CLOZE metacognitivo
+9. `/skill-retroalimentacion` — Solution científica
+10. Renderizado 4 formatos (NOPS falla con num/string = esperado)
+11. Arsenal post-render automático (FASES 2A-2H)
+12. `/adversario` — Detractor FASE 2C
+13. Documenta 5 coherencias
+14. `/validar-diversidad` — 250+ versiones únicas
+15. `/validar-icfes` — metadatos y estructura
+16. Aprobación usuario → `/promover-ejercicio`
 
-**Output**: Archivo `.Rmd` listo para renderizar
+Todos los pasos registran progreso via `workflow-state.sh complete`.
+
+**Output**: Archivo `.Rmd` validado por 11 pasos del workflow
 
 **Metadatos generados**:
 ```yaml

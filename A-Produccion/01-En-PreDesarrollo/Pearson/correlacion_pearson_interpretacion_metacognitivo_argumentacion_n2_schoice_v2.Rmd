@@ -6,8 +6,6 @@ output:
 ---
 ```{r setup, include=FALSE}
 library(exams)
-library(knitr)
-library(testthat)
 library(digest)
 options(scipen = 999)
 ```
@@ -140,44 +138,185 @@ afirmacion <- paste0(
   "Si un estudiante tiene una nota alta en ", var1,
   ", es muy probable que su nota en ", var2, " sea alta")
 
-# --- Justificación correcta (depende del tipo de r) ---
-if (tipo_r == "pos_fuerte") {
-  justificacion_correcta <- paste0(
-    "Es verdadera: ", r_texto, " es positivo (relación directa) y su magnitud ",
-    "cercana a 1 indica que la relación es fuerte")
-  explicacion_correcta <- paste0(
-    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ cumple dos condiciones: ",
-    "(1) es positivo, lo que indica relación directa (cuando una variable aumenta, ",
-    "la otra tiende a aumentar), y (2) $|r| = ", r_abs_texto, "$ cercano a $1$, ",
-    "lo que indica relación fuerte. Ambas condiciones justifican la afirmación.")
-} else if (tipo_r == "pos_debil") {
-  justificacion_correcta <- paste0(
-    "Es incorrecta: aunque ", r_texto, " es positivo (relación directa), ",
-    "su magnitud cercana a 0 indica relación débil, no se puede decir \"muy probable\"")
-  explicacion_correcta <- paste0(
-    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ es positivo, lo que indica ",
-    "relación directa. Sin embargo, $|r| = ", r_abs_texto, "$ está cercano a $0$, ",
-    "lo que indica una relación débil. No se puede afirmar que sea 'muy probable' ",
-    "obtener nota alta en ", var2, " por tener nota alta en ", var1, ".")
-} else if (tipo_r == "neg_fuerte") {
-  justificacion_correcta <- paste0(
-    "Es incorrecta: ", r_texto, " es negativo, lo que indica relación inversa; ",
-    "nota alta en ", var1, " se asocia con nota baja en ", var2, ", no alta")
-  explicacion_correcta <- paste0(
-    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ es negativo, lo que indica ",
-    "relación inversa: cuando ", var1, " aumenta, ", var2, " tiende a disminuir. ",
-    "La afirmación dice lo contrario (ambas altas), por lo tanto es incorrecta. ",
-    "Además, $|r| = ", r_abs_texto, "$ indica que esta relación inversa es fuerte.")
-} else { # neg_debil
-  justificacion_correcta <- paste0(
-    "Es incorrecta: ", r_texto, " es negativo (relación inversa) y su magnitud ",
-    "cercana a 0 indica que la relación es débil")
-  explicacion_correcta <- paste0(
-    "**CORRECTA.** El coeficiente $r = ", r_texto, "$ tiene dos problemas respecto ",
-    "a la afirmación: (1) es negativo, lo que indica relación inversa (no directa), ",
-    "y (2) $|r| = ", r_abs_texto, "$ cercano a $0$, lo que indica relación débil. ",
-    "La afirmación es incorrecta por ambas razones.")
-}
+# --- Pools de justificaciones correctas por tipo de r (variedad entre versiones) ---
+pool_pos_fuerte <- list(
+  list(
+    justificacion = paste0(
+      "Es verdadera: ", r_texto, " es positivo (relación directa) y su magnitud ",
+      "cercana a 1 indica que la relación es fuerte"),
+    explicacion = paste0(
+      "**CORRECTA.** El coeficiente $r = ", r_texto, "$ cumple dos condiciones: ",
+      "(1) es positivo, lo que indica relación directa (cuando una variable aumenta, ",
+      "la otra tiende a aumentar), y (2) $|r| = ", r_abs_texto, "$ cercano a $1$, ",
+      "lo que indica relación fuerte. Ambas condiciones justifican la afirmación.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es verdadera: un coeficiente de ", r_texto,
+      " indica una asociación lineal directa y fuerte entre las variables"),
+    explicacion = paste0(
+      "**CORRECTA.** $r = ", r_texto, "$ es positivo (relación directa: ambas ",
+      "variables tienden a aumentar juntas) y su magnitud está cercana a $1$ ",
+      "(relación fuerte). Esto sustenta la afirmación.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es verdadera: al ser ", r_texto,
+      " positivo y cercano a 1, la relación lineal es directa y fuerte"),
+    explicacion = paste0(
+      "**CORRECTA.** La cercanía de $r = ", r_texto, "$ a $1$ indica fuerza, ",
+      "y su signo positivo indica dirección directa. Ambas propiedades combinadas ",
+      "sustentan que una nota alta en ", var1, " se asocia con nota alta en ", var2, ".")
+  ),
+  list(
+    justificacion = paste0(
+      "Es verdadera: el signo positivo y la magnitud alta de ", r_texto,
+      " muestran que las variables aumentan juntas de forma consistente"),
+    explicacion = paste0(
+      "**CORRECTA.** El signo positivo de $r = ", r_texto, "$ revela dirección directa; ",
+      "la magnitud ($|r| = ", r_abs_texto, " \\approx 1$) revela fuerza. ",
+      "Juntas, dirección y fuerza justifican la afirmación.")
+  )
+)
+
+pool_pos_debil <- list(
+  list(
+    justificacion = paste0(
+      "Es incorrecta: aunque ", r_texto, " es positivo (relación directa), ",
+      "su magnitud cercana a 0 indica relación débil, no se puede decir \"muy probable\""),
+    explicacion = paste0(
+      "**CORRECTA.** El coeficiente $r = ", r_texto, "$ es positivo, lo que indica ",
+      "relación directa. Sin embargo, $|r| = ", r_abs_texto, "$ está cercano a $0$, ",
+      "lo que indica una relación débil. No se puede afirmar que sea 'muy probable' ",
+      "obtener nota alta en ", var2, " por tener nota alta en ", var1, ".")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: ", r_texto,
+      " es positivo pero su cercanía a 0 refleja una relación demasiado débil ",
+      "para justificar \"muy probable\""),
+    explicacion = paste0(
+      "**CORRECTA.** Aunque la dirección es correcta ($r > 0$, directa), la magnitud ",
+      "$|r| = ", r_abs_texto, "$ cercana a $0$ indica relación débil. La palabra ",
+      "'muy probable' exige una relación fuerte, que aquí no se cumple.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: la relación es directa (r positivo) pero débil ",
+      "($|r| = ", r_abs_texto, "$ cercano a 0), por lo que no se sustenta \"muy probable\""),
+    explicacion = paste0(
+      "**CORRECTA.** $r = ", r_texto, "$ indica relación directa (positivo) pero débil ",
+      "(magnitud baja). Para que 'muy probable' sea justificable se requiere $|r|$ ",
+      "cercano a $1$, no a $0$.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: pese a ser positivo, ", r_texto,
+      " cercano a 0 indica que la tendencia directa es tan débil que no ",
+      "justifica la afirmación"),
+    explicacion = paste0(
+      "**CORRECTA.** El signo positivo de $r = ", r_texto, "$ confirma relación directa, ",
+      "pero $|r| = ", r_abs_texto, "$ cercano a $0$ señala debilidad. Una tendencia débil ",
+      "no permite afirmar 'muy probable'.")
+  )
+)
+
+pool_neg_fuerte <- list(
+  list(
+    justificacion = paste0(
+      "Es incorrecta: ", r_texto, " es negativo, lo que indica relación inversa; ",
+      "nota alta en ", var1, " se asocia con nota baja en ", var2, ", no alta"),
+    explicacion = paste0(
+      "**CORRECTA.** El coeficiente $r = ", r_texto, "$ es negativo, lo que indica ",
+      "relación inversa: cuando ", var1, " aumenta, ", var2, " tiende a disminuir. ",
+      "La afirmación dice lo contrario (ambas altas), por lo tanto es incorrecta. ",
+      "Además, $|r| = ", r_abs_texto, "$ indica que esta relación inversa es fuerte.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: con ", r_texto,
+      " negativo, la relación es inversa — cuando ", var1,
+      " aumenta, ", var2, " tiende a disminuir, contradiciendo la afirmación"),
+    explicacion = paste0(
+      "**CORRECTA.** $r = ", r_texto, "$ negativo indica que las variables se mueven ",
+      "en direcciones opuestas. La afirmación requiere que ambas suban juntas ",
+      "(relación directa), lo cual no ocurre.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: el signo negativo de ", r_texto,
+      " muestra una relación inversa fuerte; las notas no suben juntas sino ",
+      "en direcciones opuestas"),
+    explicacion = paste0(
+      "**CORRECTA.** El signo negativo ($r = ", r_texto, "$) indica que cuando ",
+      var1, " sube, ", var2, " baja. La magnitud $|r| = ", r_abs_texto,
+      "$ cercana a $1$ confirma que esta tendencia inversa es fuerte.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: un coeficiente de ", r_texto,
+      " indica que notas altas en ", var1,
+      " se asocian con notas bajas en ", var2, ", no altas"),
+    explicacion = paste0(
+      "**CORRECTA.** $r < 0$ indica relación inversa: mejores resultados en ", var1,
+      " se asocian con peores resultados en ", var2,
+      ". La afirmación supone lo contrario.")
+  )
+)
+
+pool_neg_debil <- list(
+  list(
+    justificacion = paste0(
+      "Es incorrecta: ", r_texto, " es negativo (relación inversa) y su magnitud ",
+      "cercana a 0 indica que la relación es débil"),
+    explicacion = paste0(
+      "**CORRECTA.** El coeficiente $r = ", r_texto, "$ tiene dos problemas respecto ",
+      "a la afirmación: (1) es negativo, lo que indica relación inversa (no directa), ",
+      "y (2) $|r| = ", r_abs_texto, "$ cercano a $0$, lo que indica relación débil. ",
+      "La afirmación es incorrecta por ambas razones.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: con ", r_texto,
+      " negativo y cercano a 0, la relación es inversa y débil — la afirmación ",
+      "falla en dirección y fuerza"),
+    explicacion = paste0(
+      "**CORRECTA.** $r = ", r_texto, "$ negativo indica relación inversa (no directa) ",
+      "y $|r| = ", r_abs_texto, "$ cercano a $0$ indica debilidad. La afirmación ",
+      "requiere relación directa Y fuerte; aquí no se cumple ninguna.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: el coeficiente ", r_texto,
+      " es negativo (no directa) y de magnitud baja (no fuerte), por lo que ",
+      "la afirmación no se sustenta"),
+    explicacion = paste0(
+      "**CORRECTA.** Ni la dirección ni la fuerza respaldan la afirmación: ",
+      "$r = ", r_texto, "$ es negativo (inversa) y $|r| = ", r_abs_texto,
+      "$ es bajo (débil). Se necesitaría $r$ positivo y cercano a $1$.")
+  ),
+  list(
+    justificacion = paste0(
+      "Es incorrecta: tanto el signo negativo como la magnitud débil de ", r_texto,
+      " contradicen la afirmación de notas altas asociadas"),
+    explicacion = paste0(
+      "**CORRECTA.** El signo negativo de $r = ", r_texto,
+      "$ contradice la dirección (inversa, no directa) y $|r| = ", r_abs_texto,
+      "$ cercano a $0$ contradice la fuerza (débil, no 'muy probable'). ",
+      "Dos razones independientes invalidan la afirmación.")
+  )
+)
+
+# --- Seleccionar justificación correcta del pool correspondiente ---
+pool_sel <- switch(tipo_r,
+  pos_fuerte = pool_pos_fuerte,
+  pos_debil  = pool_pos_debil,
+  neg_fuerte = pool_neg_fuerte,
+  neg_debil  = pool_neg_debil
+)
+just_sel <- pool_sel[[sample(length(pool_sel), 1)]]
+justificacion_correcta <- just_sel$justificacion
+explicacion_correcta <- just_sel$explicacion
 
 # --- Pool de errores conceptuales (10 errores con precondiciones) ---
 errores_conceptuales <- list(
@@ -194,7 +333,7 @@ errores_conceptuales <- list(
       "no es un factor de conversión entre variables."),
     causa_raiz = "Confusión entre correlación estadística y proporcionalidad algebraica",
     precondicion = function(params) params$r > 0,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-02",
@@ -209,7 +348,7 @@ errores_conceptuales <- list(
       "lineal entre dos variables."),
     causa_raiz = "Confusión entre correlación y dispersión estadística",
     precondicion = function(params) TRUE,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-03",
@@ -224,7 +363,7 @@ errores_conceptuales <- list(
       "no establece una razón fija entre las variables."),
     causa_raiz = "Confusión entre correlación y proporcionalidad directa",
     precondicion = function(params) TRUE,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-04",
@@ -239,7 +378,7 @@ errores_conceptuales <- list(
       "tercer factor (como horas de estudio). Correlación no implica causalidad."),
     causa_raiz = "Confusión entre asociación estadística y relación causal",
     precondicion = function(params) params$r > 0,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-05",
@@ -254,24 +393,23 @@ errores_conceptuales <- list(
       "no solo de su signo."),
     causa_raiz = "Interpretación parcial del coeficiente (solo dirección, sin fuerza)",
     precondicion = function(params) params$r > 0,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-06",
     nombre = "Confunde r con r²",
     justificacion = paste0(
       "Es verdadera porque ", r_texto, " al cuadrado es ", r_cuadrado,
-      ", lo cual significa que el ", r_cuadrado_pct,
-      "% de la variación se explica, confirmando una relación perfectamente directa"),
+      ", lo cual indica que la relación es perfectamente directa entre las variables"),
     descripcion_error = paste0(
-      "Confunde $r$ con $r^2$ (coeficiente de determinación). $r^2 = ",
-      r_cuadrado, "$ mide la proporción de varianza explicada, pero no ",
-      "indica la dirección de la relación (siempre es positivo). Además, ",
-      "una 'relación perfectamente directa' requiere $r = 1$, no simplemente ",
-      "que $r^2 > 0$."),
+      "Confunde $r$ con $r^2$ y asume que $r^2 = ",
+      r_cuadrado, "$ confirma una relación perfecta. En realidad, $r^2$ mide ",
+      "la proporción de varianza explicada (siempre positivo, no indica dirección). ",
+      "Una relación 'perfectamente directa' requiere $r = 1$, no simplemente ",
+      "que $r^2$ sea alto."),
     causa_raiz = "Confusión entre r y r², y entre relación fuerte y relación perfecta",
     precondicion = function(params) TRUE,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-07",
@@ -287,7 +425,7 @@ errores_conceptuales <- list(
       "relación directa."),
     causa_raiz = "Interpretación parcial del coeficiente (solo fuerza, sin dirección)",
     precondicion = function(params) abs(params$r) >= 0.70,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-08",
@@ -302,7 +440,7 @@ errores_conceptuales <- list(
       "perfección para justificar una tendencia probable."),
     causa_raiz = "Confusión entre relación fuerte y relación perfecta",
     precondicion = function(params) params$r > 0 && abs(params$r) >= 0.70,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-09",
@@ -317,7 +455,7 @@ errores_conceptuales <- list(
       "en la afirmación reconoce correctamente esta naturaleza probabilística."),
     causa_raiz = "Sobregeneralización de las limitaciones de la correlación",
     precondicion = function(params) TRUE,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   ),
   list(
     codigo = "EST-COR-10",
@@ -332,7 +470,7 @@ errores_conceptuales <- list(
       "correspondería a $r \\approx 0$."),
     causa_raiz = "Confusión entre relación inversa y ausencia de relación",
     precondicion = function(params) params$r < 0,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   )
   ,
   list(
@@ -350,7 +488,7 @@ errores_conceptuales <- list(
       "sigue siendo una correlación."),
     causa_raiz = "Confusión entre relación débil y ausencia de relación",
     precondicion = function(params) params$r > 0 && abs(params$r) < 0.30,
-    calcula = function(datos_ord, datos_presentados = NULL) { NA }
+    calcula = function(datos_ord, datos_presentados = NULL) { stop("Ejercicio de justificación textual: calcula() no aplica") }
   )
 )
 
@@ -395,23 +533,11 @@ opciones_mezcladas <- c(
 sol <- c(TRUE, FALSE, FALSE, FALSE)
 
 # --- Verificaciones obligatorias (regla ejercicios-metacognitivos.md) ---
-test_that("sol tiene exactamente 1 TRUE", {
-  expect_equal(sum(sol), 1)
-})
-test_that("Opciones son únicas", {
-  expect_equal(length(unique(opciones_mezcladas)), 4,
-    info = "Hay opciones duplicadas — cada opción debe ser única")
-})
-test_that("Distractores distintos entre sí", {
-  distrs <- c(d1$justificacion, d2$justificacion, d3$justificacion)
-  expect_equal(length(unique(distrs)), 3,
-    info = "Hay distractores duplicados")
-})
-test_that("Correcta diferente de todos los distractores", {
-  distrs <- c(d1$justificacion, d2$justificacion, d3$justificacion)
-  expect_false(justificacion_correcta %in% distrs,
-    info = "La justificación correcta es idéntica a un distractor")
-})
+stopifnot("sol debe tener exactamente 1 TRUE" = sum(sol) == 1)
+stopifnot("Opciones deben ser únicas" = length(unique(opciones_mezcladas)) == 4)
+distrs <- c(d1$justificacion, d2$justificacion, d3$justificacion)
+stopifnot("Distractores deben ser distintos entre sí" = length(unique(distrs)) == 3)
+stopifnot("Correcta debe diferir de todos los distractores" = !(justificacion_correcta %in% distrs))
 
 # --- Reflexiones metacognitivas ---
 reflexiones_metacognitivas <- list(
@@ -600,13 +726,13 @@ La afirmación dice: "nota alta en `r var1` → muy probable nota alta en `r var
 | Valor de $r$ | Dirección | Fuerza |
 |:---:|:---:|:---:|
 | $r = 1$ | Directa | Perfecta |
-| $0.7 < r < 1$ | Directa | Fuerte |
-| $0.3 < r < 0.7$ | Directa | Moderada |
+| $0.7 \leq r < 1$ | Directa | Fuerte |
+| $0.3 \leq r < 0.7$ | Directa | Moderada |
 | $0 < r < 0.3$ | Directa | Débil |
 | $r = 0$ | — | Sin relación lineal |
 | $-0.3 < r < 0$ | Inversa | Débil |
-| $-0.7 < r < -0.3$ | Inversa | Moderada |
-| $-1 < r < -0.7$ | Inversa | Fuerte |
+| $-0.7 < r \leq -0.3$ | Inversa | Moderada |
+| $-1 < r \leq -0.7$ | Inversa | Fuerte |
 | $r = -1$ | Inversa | Perfecta |
 
 ### Caso específico

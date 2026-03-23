@@ -10,7 +10,7 @@ license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere R (>= 4.0), tinytex, paquetes exams y tidyverse. Linux/macOS.
 metadata:
   author: alvaretto
-  version: "3.0"
+  version: "4.0"
   language: es
   model_recommendation: opus
 allowed-tools:
@@ -97,10 +97,13 @@ Formato: `[ejercicio]_metacognitivo_[competencia]_n[nivel]_cloze_v[version].Rmd`
 
 `metacognitivo` y `cloze` son OBLIGATORIOS en el nombre. Nivel minimo: n3. Ver: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 
-### PASO 7: Crear carpeta en En-Desarrollo
+### PASO 7: Crear carpeta e inicializar estado
 
 ```bash
 mkdir -p A-Produccion/02-En-Desarrollo/[nombre_ejercicio]
+.claude/scripts/workflow-state.sh init A-Produccion/02-En-Desarrollo/[nombre_ejercicio] --tipo cloze --nombre "[nombre_ejercicio]"
+.claude/scripts/workflow-state.sh complete A-Produccion/02-En-Desarrollo/[nombre_ejercicio] analisis_icfes
+.claude/scripts/workflow-state.sh complete A-Produccion/02-En-Desarrollo/[nombre_ejercicio] flujo_b --requerido [true|false]
 ```
 
 ### PASO 8: Generar codigo .Rmd CLOZE METACOGNITIVO
@@ -109,21 +112,88 @@ Ver [anatomia CLOZE](references/anatomia-cloze.md) para estructura de GAPS y [an
 
 Estructura Solution obligatoria: Analisis del Error → Procedimiento Correcto → Propiedades del Concepto → Caso Especifico → Reflexion Metacognitiva.
 
-### PASO 9: Validar renderizado
-
 ```bash
-Rscript .claude/skills/generar-schoice/scripts/validar-renderizado.R ejercicio.Rmd
+.claude/scripts/workflow-state.sh complete <dir> generacion_rmd --archivo "[nombre].Rmd"
 ```
 
-NOPS fallara si hay gaps tipo num/string — esto es ESPERADO, no es error.
+### PASO 9: Retroalimentación científica (workflow paso 4)
 
-### PASO 10: Verificar checklist metacognitivo CLOZE
-
-Ver [checklist-cloze.md](references/checklist-cloze.md) para lista completa y metadatos OBLIGATORIOS.
-
-### PASO 11: Promocion
+Ejecutar `/skill-retroalimentacion` para generar la sección Solution con justificación matemática y análisis diagnóstico de cada opción.
 
 ```bash
+.claude/scripts/workflow-state.sh complete <dir> retroalimentacion
+```
+
+### PASO 10: Renderizado 4 formatos (workflow paso 5)
+
+```bash
+Rscript -e 'library(exams); exams2html("[archivo].Rmd", n=1, dir="salida")'
+Rscript -e 'library(exams); exams2pdf("[archivo].Rmd", n=1, dir="salida")'
+Rscript -e 'library(exams); exams2pandoc("[archivo].Rmd", n=1, type="docx", dir="salida")'
+Rscript -e 'library(exams); exams2nops("[archivo].Rmd", n=1, dir="salida")'
+```
+
+NOPS fallará si hay gaps tipo num/string — esto es ESPERADO, no es error.
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> renderizado_4_formatos
+```
+
+### PASO 11: Arsenal post-render (workflow paso 6, AUTOMÁTICO)
+
+El hook `post-exams2-validation.sh` ejecuta automáticamente FASES 2A-2H (validación matemática, preview visual, multi-semilla). No requiere acción manual.
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> arsenal_post_render
+```
+
+### PASO 12: Detractor FASE 2C (workflow paso 7, OBLIGATORIO)
+
+Ejecutar `/adversario [archivo.Rmd]`. Revisa 8 dominios: código, pedagógico, visual, gramática, matemático, metacognitivo, testing, semántico.
+
+- Si veredicto = RECHAZAR → corregir → volver a PASO 10
+- Si veredicto = APROBAR CON CAMBIOS → aplicar → volver a PASO 10
+- Si veredicto = APROBAR → continuar
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> detractor_fase2c --veredicto "[APROBAR|RECHAZAR]"
+```
+
+### PASO 13: Documentar 5 coherencias (workflow paso 8)
+
+Verificar y documentar con checklist:
+- [ ] Semántica: gramática, tildes, redacción ICFES
+- [ ] Visual-Texto: gráfico coincide con enunciado
+- [ ] Matemática: fórmulas, cálculos, distractores plausibles
+- [ ] Código: elementos dinámicos, compatibilidad 4 formatos
+- [ ] General: legibilidad, estilo ICFES, opciones visibles
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> coherencias_5
+```
+
+### PASO 14: Validar diversidad (workflow paso 9)
+
+Ejecutar `/validar-diversidad`. Requiere 250+ versiones únicas de 300 intentos.
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> validar_diversidad --versiones_unicas [N]
+```
+
+### PASO 15: Validar ICFES (workflow paso 10)
+
+Ejecutar `/validar-icfes`. Verifica estructura R-exams, metadatos ICFES (6 dimensiones), exsolution y exshuffle.
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> validar_icfes
+```
+
+### PASO 16: Aprobación del usuario (workflow paso 11)
+
+Solicitar aprobación explícita del usuario. SOLO después de aprobación:
+
+```bash
+.claude/scripts/workflow-state.sh complete <dir> aprobacion_usuario
 /promover-ejercicio [nombre_ejercicio]
 ```
 
@@ -147,12 +217,27 @@ Resumen: (1) NO menos de 4 partes, (2) NO partes sin progresion cognitiva, (3) N
 - Nomenclatura: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 - Ciclo Validacion: `.claude/rules/ciclo-validacion.md`
 
-## Integracion con otros skills
+## Integracion con otros skills (workflow completo de 11 pasos)
 
 ```
-analizar-icfes -> generar-cloze -> validar-renderizado -> promover-ejercicio
-                       ↑
-                       |
-              Regla ejercicios-metacognitivos.md OBLIGATORIA
-              + Progressive Disclosure de 4 partes MINIMO
+1. analizar-icfes ──→ 2. flujo_b ──→ 3. generar-cloze
+                                              ↓
+4. skill-retroalimentacion ←─────────────────┘
+      ↓
+5. renderizado 4 formatos (exams2html/pdf/docx/nops)
+      ↓
+6. arsenal post-render (hook automático FASES 2A-2H)
+      ↓
+7. adversario (detractor FASE 2C) ──→ si RECHAZAR → volver a 5
+      ↓
+8. documentar 5 coherencias
+      ↓
+9. validar-diversidad (250+ versiones únicas)
+      ↓
+10. validar-icfes (metadatos + estructura)
+      ↓
+11. aprobación usuario → promover-ejercicio
 ```
+
+Todos los pasos registran progreso via `workflow-state.sh complete`.
+Progressive Disclosure de 4 partes MÍNIMO es OBLIGATORIO.
