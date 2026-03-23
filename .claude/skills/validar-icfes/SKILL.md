@@ -1,6 +1,9 @@
 ---
-name: validar-metadatos-icfes
-description: Valida que el ejercicio cumpla con la estructura R-exams e ICFES.
+name: validar-icfes
+description: >
+  Valida estructura R-exams y metadatos ICFES de archivos .Rmd. Verifica extype, exsolution, exshuffle,
+  las 6 dimensiones ICFES y distractores pedagógicos con 250+ versiones únicas.
+  Usa cuando necesites "validar icfes", "verificar metadatos", "revisar estructura .Rmd", o "chequear ejercicio".
 metadata:
   model_recommendation: haiku
 ---

@@ -1,9 +1,9 @@
 ---
 name: transferir-conocimiento-grafico
 description: >
-  Captura lecciones aprendidas de cada lenguaje y las aplica en generaciones subsecuentes.
-  Mejora eficiencia transfiriendo estrategias exitosas TikZ->Python->R.
-  Evita repetir errores ya identificados.
+  Captura lecciones aprendidas de cada lenguaje gráfico y las aplica en generaciones subsecuentes.
+  Transfiere estrategias exitosas TikZ->Python->R para evitar repetir errores ya resueltos.
+  Usa con "transferir conocimiento", "lecciones aprendidas", "aplicar estrategias gráficas".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere workflow Graficador Experto activo. Linux/macOS.
 metadata:

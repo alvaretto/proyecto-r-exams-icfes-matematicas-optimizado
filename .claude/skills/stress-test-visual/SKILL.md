@@ -1,6 +1,9 @@
 ---
 name: stress-test-visual
-description: Stress test visual multi-semilla. Renderiza N veces con exams2pdf(), convierte a PNG, analiza anomalías estadísticas y ejecuta inspección visual de semillas sospechosas.
+description: >
+  Stress test visual multi-semilla para ejercicios .Rmd. Renderiza N veces con exams2pdf(),
+  convierte a PNG, analiza anomalías estadísticas y ejecuta inspección visual de semillas sospechosas.
+  Usa con "stress test", "probar con múltiples semillas", "verificar renderizado masivo", "anomalías visuales".
 metadata:
   author: alvaretto
   version: "1.0"

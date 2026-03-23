@@ -1,9 +1,9 @@
 ---
 name: corregir-graficos
 description: >
-  Ejecuta SUBFASE 3A para errores graficos - Correccion basada en ejemplos funcionales.
-  Aplica correcciones especificas para ERR_G1-G4.
-  Requiere revalidacion despues de cada correccion.
+  Ejecuta SUBFASE 3A para errores graficos. Aplica correcciones especificas para ERR_G1-G4
+  basandose en ejemplos funcionales. Requiere revalidacion despues de cada correccion.
+  Usa cuando hay errores de graficos en renderizado, "corregir grafico", "fix error visual", "ERR_G1".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere R-exams, TikZ o Python/matplotlib. Linux/macOS.
 metadata:

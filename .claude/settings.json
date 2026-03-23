@@ -6,6 +6,12 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-write-rmd-gate.sh",
+            "timeout": 5,
+            "statusMessage": "Verificando estado del workflow..."
+          },
+          {
+            "type": "command",
             "command": "echo 'TILDES OBLIGATORIAS en texto visible al estudiante:\n- Verbos: realizó preguntó organizó descubrió publicó encuestó identificó excluyó confundió sombreó cometió aplicó interpretó calculó obtuvo\n- Sustantivos: intersección exclusión unión omisión confusión reflexión operación expresión región opción análisis comprensión metacognición interpretación cafetería boletín periódico compañeros jóvenes área comité\n- Adverbios: también además así más únicamente erróneamente simultáneamente\n- Preguntas: ¿Cuál ¿Qué cómo\n- EXCEPCIONES ASCII: variables R, metadatos exextra, código Python, nombres de tipo (sin_exclusion etc.)\n- Ver: .claude/rules/ortografia-espanol.md'",
             "statusMessage": "Recordatorio de tildes (regla generación)"
           }

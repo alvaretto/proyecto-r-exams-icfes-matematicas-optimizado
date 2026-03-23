@@ -4,6 +4,7 @@ description: >
   Genera codigo R profesional usando ggplot2 para reproducir imagenes matematicas.
   Usa cuando necesites crear graficos nativos R para ejercicios ICFES.
   Parte del Flujo B (Graficador Experto) - fase 3 despues de TikZ y Python.
+  Activar con "generar ggplot", "codigo r grafico", "grafico ggplot2", "plot nativo R".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere R (>= 4.0), ggplot2, tidyverse. Linux/macOS.
 metadata:
@@ -117,6 +118,16 @@ print(p)
 ## Salida
 
 Codigo R completo guardado en `outputs/output_r.R`.
+
+## Ejemplos
+
+**Ejemplo 1**: Diagrama de caja (boxplot) con opciones individuales PNG
+- Input: Datos de estaturas + imagen ICFES con cuatro boxplots comparativos
+- Resultado: `output_r_v1.R` con `geom_boxplot()` usando `ggsave()` para cada opción (diagrama_a.png, etc.)
+
+**Ejemplo 2**: Gráfico de barras con distribución de frecuencias
+- Input: Tabla de frecuencias extraída + gráfica de barras ICFES de referencia
+- Resultado: Código ggplot2 con `geom_bar(stat="identity")` parametrizado por vectores R dinámicos
 
 ## Referencias
 

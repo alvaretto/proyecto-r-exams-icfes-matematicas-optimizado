@@ -4,6 +4,7 @@ description: >
   Genera codigo Python profesional usando matplotlib/numpy para reproducir imagenes matematicas.
   Usa cuando necesites crear graficos via reticulate para ejercicios ICFES.
   Parte del Flujo B (Graficador Experto) - fase 2 despues de TikZ.
+  Activar con "generar python", "codigo matplotlib", "grafico python", "reticulate plot".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere Python 3.8+, matplotlib, numpy. Linux/macOS.
 metadata:
@@ -119,6 +120,16 @@ plt.show()
 ## Salida
 
 Codigo Python completo guardado en `outputs/output_python.py`.
+
+## Ejemplos
+
+**Ejemplo 1**: Histograma de frecuencias con datos generados en R
+- Input: Vector numérico desde R (via reticulate) + imagen ICFES de referencia
+- Resultado: `output_python_v1.py` con `ax.bar()` parametrizado por variables transferidas con `r.variable`
+
+**Ejemplo 2**: Diagrama de dispersión con línea de tendencia
+- Input: Gráfica de dispersión con recta de regresión visible
+- Resultado: Código matplotlib con `ax.scatter()` y `ax.plot()` usando pendiente e intercepto dinámicos
 
 ## Referencias
 

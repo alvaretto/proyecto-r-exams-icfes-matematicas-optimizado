@@ -1,16 +1,5 @@
----
-output:
-  html_document: default
-  pdf_document: default
-  word_document: default
----
-```{r setup, include=FALSE}
-library(exams)
-library(knitr)
-options(scipen = 999)
-```
-
 ```{r data_generation, echo = FALSE, results = "hide"}
+options(scipen = 999)
 # ============================================================
 # Ejercicio metacognitivo: Identificación de errores en
 # procedimientos con razones trigonométricas
@@ -247,7 +236,13 @@ errores_procedimiento <- list(
       "}$, ya que el ", cfg$lado_num, " (", num_val,
       " cm) va en el numerador y ",
       ifelse(cfg$lado_den == "hipotenusa", "la ", "el "),
-      cfg$lado_den, " (", den_val, " cm) en el denominador.")
+      cfg$lado_den, " (", den_val, " cm) en el denominador."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el valor erróneo: razón con valores invertidos
+      # den_val/num_val = 2 en vez de num_val/den_val = 0.5
+      den_val / num_val
+    }
   ),
 
   # TRIG-PROC-02: Nombre de razón incorrecto en el paso 1
@@ -301,7 +296,14 @@ errores_procedimiento <- list(
       "El error está en el paso 1: se nombró como '", rc,
       "' la razón ", def, ", cuando esa definición corresponde al ", rn,
       ". Al usar el nombre incorrecto, toda la cadena del procedimiento ",
-      "queda afectada.")
+      "queda afectada."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el ángulo erróneo: usar función inversa equivocada
+      # El nombre de la razón es incorrecto, pero si se usa la inversa
+      # correspondiente al nombre erróneo, se obtiene ang_w
+      ang_w
+    }
   ),
 
   # TRIG-PROC-03: Definición invertida en el paso 1
@@ -355,7 +357,12 @@ errores_procedimiento <- list(
       "El error está en el paso 1: se invirtió la definición del ", rn,
       ". Se escribió ", ra, " $\\alpha$ = ", def_inv,
       ", cuando la definición correcta es ", ra, " $\\alpha$ = ", def,
-      ". La razón ", def_inv, " corresponde a la ", recip, ".")
+      ". La razón ", def_inv, " corresponde a la ", recip, "."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el valor erróneo: definición invertida = den_val/num_val
+      den_val / num_val
+    }
   ),
 
   # TRIG-PROC-04: Función inversa incorrecta en el paso 3
@@ -415,7 +422,13 @@ errores_procedimiento <- list(
       rn, ", la función inversa correcta es ", inv_nombre,
       ". Al usar ", inv_ca, "(", cfg$valor_resultado,
       ") se obtendría ", ang_w, "$^{\\circ}$, no ", angulo_deseado,
-      "$^{\\circ}$.")
+      "$^{\\circ}$."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el ángulo erróneo: usar inv_c en vez de inv_a
+      # arccos(0.5) = 60° cuando debería ser arcsen(0.5) = 30° (o viceversa)
+      ang_w
+    }
   )
 )
 
@@ -592,6 +605,12 @@ Para verificar que $\alpha = `r angulo_deseado`^{\circ}$ en este triángulo rect
 
 > **Nota:** Las funciones inversas permiten obtener el **ángulo** a partir del valor de la razón. Las funciones recíprocas son simplemente el inverso multiplicativo de la razón.
 
+### Caso Específico
+
+Un estudiante afirma: *"Si en un triángulo rectángulo conozco la hipotenusa y el cateto adyacente a un ángulo, puedo usar el seno de ese ángulo para calcularlo."*
+
+**Falso.** Si se conocen el cateto **adyacente** y la hipotenusa, la razón trigonométrica que los relaciona es el **coseno** (cateto adyacente/hipotenusa), no el seno. El seno relaciona el cateto **opuesto** con la hipotenusa.
+
 ### Reflexión Metacognitiva
 
 `r reflexion`
@@ -612,7 +631,7 @@ Meta-information
 extype: schoice
 exsolution: `r mchoice2string(solucion_mezclada)`
 exname: razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n2_schoice_v1
-exshuffle: TRUE
+exshuffle: FALSE
 extol: 0.01
 exsection: Geometria|Pensamiento-Espacial-Metrico|Trigonometria
 exextra[Type]: SCHOICE

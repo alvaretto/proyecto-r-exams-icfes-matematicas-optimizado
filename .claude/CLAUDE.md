@@ -29,6 +29,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 13. **Validación correctitud respuesta** (Nivel 5: multi-semilla + cross-check) → @.claude/rules/validacion-correctitud-respuesta.md
 14. **Routing de modelos obligatorio** (Opus/Sonnet/Haiku por complejidad) → @.claude/rules/modelo-routing-obligatorio.md
 15. **Stress Test Visual** (FASE 2H: renderizado masivo + análisis anomalías) → @.claude/skills/stress-test-visual/SKILL.md
+16. **Workflow State Enforcement** (gate mecánico PreToolUse + estado persistente) → @.claude/rules/workflow-state-enforcement.md
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -45,7 +46,8 @@ Este archivo funciona como **índice central** del sistema. Para información de
 @.claude/docs/HOOKS_Y_TESTING.md
 
 **Sistema automático permanente:**
-- 4 hooks activos (PreToolUse/PostToolUse para Edit/Write/Bash)
+- 5 hooks activos (PreToolUse: gate .Rmd + tildes; PostToolUse: arsenal post-render)
+- Gate mecánico: `pre-write-rmd-gate.sh` bloquea .Rmd sin `ejercicio_state.json`
 - 100% cobertura de tests (11 suites, 110+ tests)
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones

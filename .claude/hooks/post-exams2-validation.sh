@@ -355,4 +355,27 @@ ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null || echo "  (ninguno gene
 echo "───────────────────────────────────────────────────────────────"
 echo ""
 
+# =============================================================================
+# NUDGE: SIGUIENTE PASO DEL WORKFLOW (si existe ejercicio_state.json)
+# =============================================================================
+STATE_FILE="${CWD}/ejercicio_state.json"
+if [ -f "$STATE_FILE" ]; then
+  # Auto-marcar renderizado y arsenal como completados
+  WORKFLOW_SCRIPT="$PROJECT_DIR/.claude/scripts/workflow-state.sh"
+  if [ -f "$WORKFLOW_SCRIPT" ] && [ $ERRORES_TOTALES -eq 0 ]; then
+    bash "$WORKFLOW_SCRIPT" complete "$CWD" renderizado_4_formatos 2>/dev/null
+    bash "$WORKFLOW_SCRIPT" complete "$CWD" arsenal_post_render 2>/dev/null
+  fi
+
+  NEXT_STEP=$(bash "$WORKFLOW_SCRIPT" next "$CWD" 2>/dev/null)
+  if [ -n "$NEXT_STEP" ]; then
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║  SIGUIENTE PASO OBLIGATORIO DEL WORKFLOW                     ║"
+    echo "╠═══════════════════════════════════════════════════════════════╣"
+    printf "║  %-60s║\n" "$NEXT_STEP"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo ""
+  fi
+fi
+
 exit 0

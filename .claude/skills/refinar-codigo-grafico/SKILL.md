@@ -1,9 +1,9 @@
 ---
 name: refinar-codigo-grafico
 description: >
-  Refina codigo generado basandose en reportes de comparacion visual.
-  Aplica correcciones especificas mientras mantiene calidad y estructura.
-  Itera hasta alcanzar similitud aceptable (>=95%).
+  Refina codigo grafico generado basandose en reportes de comparacion visual.
+  Aplica correcciones especificas mientras mantiene calidad. Itera hasta alcanzar similitud >=95%.
+  Usa con "refinar grafico", "mejorar similitud", "iterar codigo visual", "ajustar grafico generado".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere TikZ, Python matplotlib, o R ggplot2. Linux/macOS.
 metadata:
@@ -19,6 +19,8 @@ allowed-tools:
   - Bash(python:*)
   - Bash(Rscript:*)
 ---
+
+> **ROUTING**: Este skill tiene `model_recommendation: sonnet`. Claude DEBE delegarlo via `Task(subagent_type="general-purpose", model="sonnet")` pasando las instrucciones completas y las rutas de archivos como contexto. Ver regla `.claude/rules/modelo-routing-obligatorio.md`.
 
 # Refinamiento Iterativo de Codigo Grafico
 

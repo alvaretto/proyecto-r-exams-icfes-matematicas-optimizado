@@ -2,8 +2,8 @@
 name: validar-pedagogico
 description: >
   Analisis pedagogico avanzado basado en evidencias cientificas y taxonomias cognitivas modernas.
-  Skill CONSULTIVO que requiere aprobacion del usuario para ejecutar.
-  Usa modelo Opus 4.6 para analisis profundo.
+  Skill CONSULTIVO que requiere aprobacion del usuario. Evalua Progressive Disclosure, DOK, Bloom y SOLO.
+  Usa con "validar pedagogico", "analisis pedagogico", "revisar taxonomias", "evaluar calidad educativa".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere ejercicio .Rmd validado. Modelo Opus 4.6 recomendado.
 metadata:

@@ -1,9 +1,9 @@
 ---
 name: corregir-error-imagen
 description: >
-  Ejecuta SUBFASE 3A para ERR_G1 - Correccion de imagenes faltantes basada en ejemplos.
-  Aplica patron de renderizado condicional para resolver File not found.
-  Skill especializado para el error mas comun con include_tikz().
+  Ejecuta SUBFASE 3A para ERR_G1 (imagenes faltantes). Aplica patron de renderizado condicional
+  para resolver errores "File not found" con include_tikz().
+  Usa cuando aparece "File not found" en renderizado, "imagen faltante", "ERR_G1", "corregir include_tikz".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere R-exams con include_tikz(). Linux/macOS.
 metadata:

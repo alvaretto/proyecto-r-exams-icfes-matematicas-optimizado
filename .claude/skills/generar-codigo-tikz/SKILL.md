@@ -4,6 +4,7 @@ description: >
   Genera codigo TikZ/pgfplots profesional para reproducir imagenes matematicas.
   Usa cuando necesites crear graficos dinamicos desde R para ejercicios ICFES.
   Parte del Flujo B (Graficador Experto) - fase 1 inicial.
+  Activar con "generar tikz", "codigo tikz", "grafico LaTeX", "pgfplots".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere pdflatex, TikZ, pgfplots. Linux/macOS.
 metadata:
@@ -113,6 +114,16 @@ magick convert -density 150 outputs/output_tikz.pdf outputs/output_tikz.png
 ## Salida
 
 Codigo TikZ completo guardado en `outputs/output_tikz.tex`.
+
+## Ejemplos
+
+**Ejemplo 1**: Diagrama de caja con datos dinámicos
+- Input: Imagen de boxplot ICFES + datos extraídos por analizar-imagen-grafica
+- Resultado: Archivo `output_tikz_v1.tex` con código TikZ parametrizado por variables R
+
+**Ejemplo 2**: Plano cartesiano con función
+- Input: Gráfica de parábola con vértice y raíces marcados
+- Resultado: Código pgfplots con `\addplot` dinámico usando coeficientes R
 
 ## Referencias
 

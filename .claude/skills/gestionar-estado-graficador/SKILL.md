@@ -1,9 +1,9 @@
 ---
 name: gestionar-estado-graficador
 description: >
-  Gestiona el estado persistente del workflow Graficador Experto.
-  Permite tracking de progreso, recuperacion ante interrupciones y trazabilidad.
-  Mantiene workflow_state.json actualizado.
+  Gestiona el estado persistente del workflow Graficador Experto via workflow_state.json.
+  Permite tracking de progreso, recuperación ante interrupciones y trazabilidad del proceso TikZ/Python/R.
+  Usa con "estado graficador", "progreso gráficos", "recuperar workflow", "guardar estado".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere workflow Graficador Experto activo. Linux/macOS.
 metadata:

@@ -2,8 +2,8 @@
 name: comparar-similitud-visual
 description: >
   Compara imagenes generadas con originales usando vision por computadora.
-  Calcula similitud cuantitativa (0-100 puntos) en 6 categorias.
-  Genera reportes estructurados con correcciones priorizadas.
+  Calcula similitud cuantitativa (0-100 puntos) en 6 categorias y genera reportes con correcciones priorizadas.
+  Usa con "comparar imagenes", "similitud visual", "que tan parecido quedo", "evaluar grafico generado".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere capacidades de vision de Claude. Linux/macOS.
 metadata:

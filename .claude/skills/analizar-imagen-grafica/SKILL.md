@@ -1,9 +1,9 @@
 ---
 name: analizar-imagen-grafica
 description: >
-  Analiza imagenes matematicas de problemas ICFES y extrae informacion estructurada.
-  Identifica tipos de graficos, valores numericos, simbolos y estilos visuales.
-  Sirve como base para las skills de generacion de codigo.
+  Analiza imágenes matemáticas de problemas ICFES y extrae información estructurada.
+  Identifica tipos de gráficos, valores numéricos, símbolos y estilos visuales como base para generación de código.
+  Usa con "analizar imagen", "extraer datos del gráfico", "qué hay en esta imagen", "describir figura ICFES".
 license: Proyecto Educativo - IE Pedacito de Cielo
 compatibility: Requiere capacidades de vision de Claude. Linux/macOS.
 metadata:

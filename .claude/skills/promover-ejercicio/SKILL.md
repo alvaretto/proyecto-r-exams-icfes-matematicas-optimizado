@@ -1,4 +1,5 @@
 ---
+name: promover-ejercicio
 description: Mueve un ejercicio a 03-En-Produccion/ SOLO después de validación en aula con estudiantes reales (Nivel 3). Es el ÚLTIMO paso del workflow.
 metadata:
   model_recommendation: haiku

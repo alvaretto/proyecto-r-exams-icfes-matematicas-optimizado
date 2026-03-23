@@ -1,6 +1,9 @@
 ---
 name: validar-diversidad
-description: Ejecuta pruebas de testthat para confirmar la generación de 250+ versiones únicas de 300 intentos (Fase 3 del workflow).
+description: >
+  Ejecuta pruebas de testthat para confirmar la generación de 250+ versiones únicas de 300 intentos.
+  Usa para verificar aleatorización completa antes de aprobar un ejercicio o promoverlo a producción.
+  Activar con "validar diversidad", "verificar versiones únicas", "comprobar aleatorización", o "cuántas versiones genera".
 metadata:
   model_recommendation: haiku
 ---
