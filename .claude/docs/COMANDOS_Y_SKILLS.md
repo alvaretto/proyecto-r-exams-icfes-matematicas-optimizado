@@ -38,6 +38,51 @@
 
 ---
 
+#### `/revisar-schoice` 🆕
+**Propósito**: Revisar ejercicio SCHOICE existente ejecutando pasos 4-11 del workflow
+
+**Uso**:
+```bash
+/revisar-schoice [ruta-al-archivo.Rmd]
+```
+
+**Requisitos previos**:
+- Archivo .Rmd SCHOICE ya generado (pasos 1-3 completados)
+
+**Qué hace** (pasos 4-11 secuenciales):
+4. `/skill-retroalimentacion` — Solution científica
+5. Renderizado 4 formatos (HTML/PDF/DOCX/NOPS)
+6. Arsenal post-render automático (FASES 2A-2H)
+7. `/adversario` — Detractor FASE 2C
+8. Documenta 5 coherencias visualmente
+9. `/validar-diversidad` — 250+ versiones únicas
+10. `/validar-icfes` — metadatos y estructura
+11. Aprobación usuario
+
+Detecta automáticamente en qué paso quedó el workflow y retoma desde ahí. Todos los pasos registran progreso via `workflow-state.sh complete`.
+
+---
+
+#### `/revisar-cloze` 🆕
+**Propósito**: Revisar ejercicio CLOZE existente ejecutando pasos 4-11 del workflow
+
+**Uso**:
+```bash
+/revisar-cloze [ruta-al-archivo.Rmd]
+```
+
+**Requisitos previos**:
+- Archivo .Rmd CLOZE ya generado (pasos 1-3 completados)
+
+**Qué hace**:
+- **Validación previa CLOZE**: mín. 4 partes, ##ANSWERi## en orden, exclozetype consistente
+- **Pasos 4-11**: idénticos a `/revisar-schoice` con validaciones CLOZE-específicas
+- NOPS falla con gaps num/string = esperado, NO es error
+
+Detecta automáticamente en qué paso quedó el workflow y retoma desde ahí.
+
+---
+
 #### `/generar-schoice`
 **Propósito**: Generar ejercicio de selección única (Single Choice)
 

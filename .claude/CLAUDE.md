@@ -36,7 +36,8 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
-- `/skill-retroalimentacion` - Generación científica de sección Solution 🆕
+- `/revisar-schoice`, `/revisar-cloze` - Revisión completa pasos 4-11 del workflow 🆕
+- `/skill-retroalimentacion` - Generación científica de sección Solution
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
 - `/detractor auditoria [target]` - Revisión adversarial en 8 dominios
 - `/auto-refinar-grafico [tikz|python|r]`
@@ -111,6 +112,8 @@ A-Produccion/
 | Revisar decisiones/código | @.claude/rules/detractor-obligatorio.md |
 | Routing de modelos (Opus/Sonnet/Haiku) | @.claude/rules/modelo-routing-obligatorio.md |
 | Stress test visual multi-semilla | @.claude/skills/stress-test-visual/SKILL.md |
+| Revisar ejercicio SCHOICE existente | @.claude/skills/revisar-schoice/SKILL.md |
+| Revisar ejercicio CLOZE existente | @.claude/skills/revisar-cloze/SKILL.md |
 
 ### ⚙️ Configuración del Sistema
 
@@ -123,9 +126,22 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.6.0 (Stress Test Visual Multi-Semilla)
-**Fecha**: 2026-02-14
+**Versión**: 3.7.0 (Skills de Revisión + Workflow Completo)
+**Fecha**: 2026-03-23
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.7.0 (2026-03-23)
+- **SKILLS DE REVISIÓN**: `/revisar-schoice` y `/revisar-cloze` ejecutan pasos 4-11 del workflow
+  - Skill SCHOICE: `.claude/skills/revisar-schoice/SKILL.md` (model_recommendation: sonnet)
+  - Skill CLOZE: `.claude/skills/revisar-cloze/SKILL.md` (model_recommendation: sonnet)
+  - Detectan automáticamente paso pendiente y retoman workflow interrumpido
+  - Validaciones específicas por tipo (exsolution binario, ##ANSWERi##, exclozetype)
+- **SKILLS GENERACIÓN v4.0**: `/generar-schoice` y `/generar-cloze` ahora cubren 11 pasos completos
+  - 5 pasos antes ausentes: retroalimentación, detractor, coherencias, diversidad, validar-icfes
+  - `workflow-state.sh init` + `complete` integrado en cada paso
+  - Diagrama de integración actualizado con flujo completo
+- **25 SKILLS** (era 23): +revisar-schoice, +revisar-cloze
+- **DOCS**: `COMANDOS_Y_SKILLS.md` actualizado con los nuevos skills
 
 ### Cambios v3.6.0 (2026-02-14)
 - **STRESS TEST VISUAL MULTI-SEMILLA**: Renderiza N veces con exams2pdf(), analiza anomalías, genera PNGs
