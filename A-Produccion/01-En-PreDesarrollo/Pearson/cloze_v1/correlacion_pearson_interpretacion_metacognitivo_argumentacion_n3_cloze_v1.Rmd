@@ -1,0 +1,600 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+library(exams)
+library(digest)
+library(testthat)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+# ============================================================
+# EJERCICIO METACOGNITIVO CLOZE: Interpretación del Coeficiente
+# de Correlación de Pearson — Progressive Disclosure 4 partes
+# Basado en SCHOICE v1 (r siempre positivo fuerte)
+# Competencia: Argumentación | Componente: Aleatorio
+# DOK: 3 | Bloom: Evaluar | SOLO: Relacional-Extendido
+#
+# Parte 1 (schoice): Identificar error conceptual
+# Parte 2 (num): Calcular r²
+# Parte 3 (mchoice): Evaluar afirmaciones sobre r
+# Parte 4 (schoice V/F): Transferir a caso específico
+# ============================================================
+
+# --- Pool de nombres ---
+pool_nombres <- c(
+  "Mariana", "Carlos", "Valentina", "Andrés", "Gabriela",
+  "Leonardo", "Daniela", "Felipe", "Isabella", "Paula",
+  "Natalia", "Santiago", "Camila", "Diego", "Sofía",
+  "Miguel", "Lucía", "Ricardo", "Andrea", "Juliana",
+  "Samuel", "Elena", "Cristian", "Valeria", "Martín"
+)
+protagonista <- sample(pool_nombres, 1)
+nombre_companero <- sample(setdiff(pool_nombres, protagonista), 1)
+
+# --- Coeficiente de correlación (positivo fuerte) ---
+r <- sample(seq(0.80, 0.98, by = 0.01), 1)
+r_texto <- sprintf("%.2f", r)
+r_cuadrado <- round(r^2, 2)
+r_cuadrado_pct <- round(r^2 * 100, 1)
+
+# --- Pares de variables ---
+pares_variables <- list(
+  list(var1 = "Física", var2 = "Cálculo", area = "ingeniería"),
+  list(var1 = "Matemáticas", var2 = "Estadística", area = "ciencias"),
+  list(var1 = "Química", var2 = "Biología", area = "ciencias de la salud"),
+  list(var1 = "Álgebra", var2 = "Geometría", area = "matemáticas"),
+  list(var1 = "Lectura", var2 = "Escritura", area = "humanidades"),
+  list(var1 = "Programación", var2 = "Lógica", area = "sistemas"),
+  list(var1 = "Inglés", var2 = "Francés", area = "idiomas"),
+  list(var1 = "Contabilidad", var2 = "Economía", area = "ciencias económicas"),
+  list(var1 = "Dibujo Técnico", var2 = "Diseño", area = "artes aplicadas"),
+  list(var1 = "Historia", var2 = "Geografía", area = "ciencias sociales")
+)
+par_sel <- pares_variables[[sample(length(pares_variables), 1)]]
+var1 <- par_sel$var1
+var2 <- par_sel$var2
+area <- par_sel$area
+
+# --- Tamaño de muestra ---
+n_muestra <- sample(c(80, 100, 120, 150, 180, 200, 250, 300), 1)
+
+# --- Contextos narrativos creativos (8 plantillas, 6+ tipos) ---
+contextos <- list(
+  # Tipo 1: Situación problema
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Un consejero estudiantil analiza las notas de ", v1,
+           " y ", v2, " de ", n, " estudiantes de ", ar,
+           " y encuentra que el coeficiente de correlación es ", rt, ".")
+  }),
+  # Tipo 2: Narración periodística
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("En un estudio realizado por el departamento de ", ar,
+           " de una universidad, se analizaron los resultados de ", n,
+           " estudiantes en ", v1, " y ", v2,
+           ". El coeficiente de correlación obtenido fue ", rt, ".")
+  }),
+  # Tipo 3: Descubrimiento
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Al revisar los registros académicos del semestre, ", prot,
+           " descubrió que entre las notas de ", v1, " y ", v2,
+           " de ", n, " estudiantes de ", ar,
+           " existe un coeficiente de correlación de ", rt, ".")
+  }),
+  # Tipo 4: Contexto institucional
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("El informe semestral del programa de ", ar,
+           " indica que, para una muestra de ", n, " estudiantes, ",
+           "el coeficiente de correlación entre las calificaciones de ",
+           v1, " y ", v2, " es ", rt, ".")
+  }),
+  # Tipo 5: Diálogo implícito
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("\u2014Calculé la correlación entre ", v1, " y ", v2,
+           " para nuestros ", n, " estudiantes \u2014comentó ", prot,
+           " durante la reunión del comité curricular\u2014. El resultado es ",
+           rt, ".")
+  }),
+  # Tipo 6: Pregunta retórica
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("¿Existe relación entre el desempeño en ", v1, " y en ", v2,
+           "? Para responder, se calculó el coeficiente de correlación ",
+           "de Pearson con los datos de ", n, " estudiantes de ", ar,
+           ", obteniendo un valor de ", rt, ".")
+  }),
+  # Tipo 7: Perspectiva del estudiante
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Para su proyecto de investigación, ", prot,
+           " recopiló las calificaciones de ", v1, " y ", v2,
+           " de ", n, " compañeros de ", ar,
+           " y calculó un coeficiente de correlación de Pearson igual a ",
+           rt, ".")
+  }),
+  # Tipo 8: Acción en curso
+  list(plantilla = function(prot, n, v1, v2, ar, rt) {
+    paste0("Durante la evaluación institucional del programa de ", ar,
+           ", se determinó que el coeficiente de correlación entre ",
+           v1, " y ", v2, " para ", n, " estudiantes evaluados es ", rt, ".")
+  })
+)
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+enunciado_contexto <- ctx$plantilla(protagonista, n_muestra, var1, var2, area, r_texto)
+
+# --- Afirmación sobre la correlación ---
+afirmacion <- paste0(
+  "Si un estudiante tiene una nota alta en ", var1,
+  ", es muy probable que su nota en ", var2, " sea alta")
+
+# --- Pool de errores conceptuales (6 errores) ---
+errores_conceptuales <- list(
+  list(
+    codigo = "EST-COR-01",
+    nombre = "Correlación como factor multiplicativo",
+    descripcion_corta = paste0(
+      "Interpretó el coeficiente como un factor multiplicativo entre las notas de ",
+      var1, " y ", var2),
+    descripcion_larga = paste0(
+      "Confunde el coeficiente de correlación con un factor multiplicativo. ",
+      "$r$ no establece que ", var1, " $= ", r_texto,
+      " \\times$ ", var2, ". $r$ mide la fuerza y dirección de la relación lineal, ",
+      "no es un factor de conversión entre variables."),
+    causa_raiz = "Confusión entre correlación estadística y proporcionalidad algebraica",
+    justificacion_erronea = paste0(
+      "La nota de ", var1, " se obtiene al multiplicar ",
+      r_texto, " por la nota de ", var2),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      stop("Ejercicio de justificación textual: calcula() no aplica")
+    }
+  ),
+  list(
+    codigo = "EST-COR-02",
+    nombre = "Correlación como medida de dispersión",
+    descripcion_corta = paste0(
+      "Confundió el coeficiente de correlación con una medida de dispersión"),
+    descripcion_larga = paste0(
+      "Confunde el coeficiente de correlación con una medida de dispersión. ",
+      "$r$ no mide qué tan dispersos están los datos (para eso se usa la ",
+      "desviación estándar o el rango). $r$ mide la fuerza de la asociación ",
+      "lineal entre dos variables."),
+    causa_raiz = "Confusión entre correlación y dispersión estadística",
+    justificacion_erronea = paste0(
+      r_texto, " es menor que 1, lo cual indica que ",
+      "los datos están poco dispersos"),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      stop("Ejercicio de justificación textual: calcula() no aplica")
+    }
+  ),
+  list(
+    codigo = "EST-COR-03",
+    nombre = "Correlación como constante de proporcionalidad",
+    descripcion_corta = paste0(
+      "Confundió el coeficiente con la constante de proporcionalidad"),
+    descripcion_larga = paste0(
+      "Confunde el coeficiente de correlación con la constante de ",
+      "proporcionalidad ($k$ en $y = kx$). Dos variables pueden tener $r$ cercano a $1$ ",
+      "sin ser proporcionales. La correlación mide tendencia lineal, ",
+      "no establece una razón fija entre las variables."),
+    causa_raiz = "Confusión entre correlación y proporcionalidad directa",
+    justificacion_erronea = paste0(
+      "La constante de proporcionalidad de las notas es ", r_texto),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      stop("Ejercicio de justificación textual: calcula() no aplica")
+    }
+  ),
+  list(
+    codigo = "EST-COR-04",
+    nombre = "Correlación implica causalidad",
+    descripcion_corta = paste0(
+      "Asumió que la correlación demuestra que ", var1,
+      " causa el desempeño en ", var2),
+    descripcion_larga = paste0(
+      "Confunde correlación con causalidad. Un coeficiente alto no demuestra que ",
+      var1, " cause el desempeño en ", var2, ". Ambas variables podrían depender de un ",
+      "tercer factor (como horas de estudio). Correlación no implica causalidad."),
+    causa_raiz = "Confusión entre asociación estadística y relación causal",
+    justificacion_erronea = paste0(
+      "Un coeficiente de ", r_texto,
+      " demuestra que el desempeño en ", var1,
+      " causa directamente el desempeño en ", var2),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      stop("Ejercicio de justificación textual: calcula() no aplica")
+    }
+  ),
+  list(
+    codigo = "EST-COR-05",
+    nombre = "Solo interpreta signo sin magnitud",
+    descripcion_corta = paste0(
+      "Solo interpretó el signo positivo de $r$, sin evaluar la magnitud"),
+    descripcion_larga = paste0(
+      "Solo interpreta el signo del coeficiente sin considerar la magnitud. ",
+      "Un valor como $r = 0.10$ también es positivo pero indica una relación ",
+      "muy débil. La fuerza depende de qué tan cercano esté $|r|$ a $1$, ",
+      "no solo de su signo."),
+    causa_raiz = "Interpretación parcial del coeficiente (solo dirección, sin fuerza)",
+    justificacion_erronea = paste0(
+      r_texto, " es positivo, lo cual por sí solo ",
+      "garantiza que la relación entre las variables es fuerte"),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      stop("Ejercicio de justificación textual: calcula() no aplica")
+    }
+  ),
+  list(
+    codigo = "EST-COR-06",
+    nombre = "Confunde r con r²",
+    descripcion_corta = paste0(
+      "Confundió $r$ con $r^2$ y asumió que la relación es perfecta"),
+    descripcion_larga = paste0(
+      "Confunde $r$ con $r^2$ y asume que $r^2 = ",
+      r_cuadrado, "$ confirma una relación perfecta. En realidad, $r^2$ mide ",
+      "la proporción de varianza explicada (siempre positivo, no indica dirección). ",
+      "Una relación 'perfectamente directa' requiere $r = 1$, no simplemente ",
+      "que $r^2$ sea alto."),
+    causa_raiz = "Confusión entre r y r², y entre relación fuerte y relación perfecta",
+    justificacion_erronea = paste0(
+      r_texto, " al cuadrado es ", r_cuadrado,
+      ", lo cual indica que la relación es perfectamente directa entre las variables"),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      stop("Ejercicio de justificación textual: calcula() no aplica")
+    }
+  )
+)
+
+# ============================================================
+# PARTE 1 (schoice): IDENTIFICAR EL ERROR CONCEPTUAL
+# ============================================================
+
+# Seleccionar error a analizar
+error_sel_idx <- sample(length(errores_conceptuales), 1)
+error_sel <- errores_conceptuales[[error_sel_idx]]
+
+# Generar 3 distractores
+otros_idx <- sample(setdiff(seq_along(errores_conceptuales), error_sel_idx), 3)
+d1 <- errores_conceptuales[[otros_idx[1]]]
+d2 <- errores_conceptuales[[otros_idx[2]]]
+d3 <- errores_conceptuales[[otros_idx[3]]]
+
+opciones_p1 <- c(error_sel$descripcion_corta, d1$descripcion_corta,
+                 d2$descripcion_corta, d3$descripcion_corta)
+sol_p1_base <- c(TRUE, FALSE, FALSE, FALSE)
+orden_p1 <- sample(1:4)
+opciones_p1 <- opciones_p1[orden_p1]
+sol_p1 <- as.integer(sol_p1_base[orden_p1])
+
+# ============================================================
+# PARTE 2 (num): CALCULAR r²
+# ============================================================
+resp2 <- r_cuadrado
+
+# ============================================================
+# PARTE 3 (mchoice): AFIRMACIONES SOBRE LA CORRELACIÓN
+# ============================================================
+pool_afirmaciones_v <- list(
+  paste0("Un coeficiente $r = ", r_texto,
+         "$ indica una relación lineal directa y fuerte entre las variables."),
+  paste0("El coeficiente de determinación $r^2 = ", r_cuadrado,
+         "$ indica que aproximadamente el ", r_cuadrado_pct,
+         "\\% de la variabilidad de una variable se explica por la otra."),
+  paste0("Si $r$ es positivo, al aumentar el valor de una variable, ",
+         "se espera que aumente el valor de la otra."),
+  "El coeficiente de correlación de Pearson siempre está en el rango de $-1$ a $1$.",
+  "Una correlación fuerte entre dos variables no implica que una cause a la otra.",
+  paste0("$|r| = ", r_texto, "$ está cercano a $1$, lo que confirma que la relación lineal es fuerte.")
+)
+
+pool_afirmaciones_f <- list(
+  paste0("Un coeficiente $r = ", r_texto,
+         "$ indica que la nota de ", var1, " se obtiene multiplicando ",
+         r_texto, " por la nota de ", var2, "."),
+  paste0("Como $r = ", r_texto,
+         "$ es menor que $1$, la relación entre las variables es débil."),
+  paste0("El coeficiente $r = ", r_texto,
+         "$ demuestra que estudiar ", var1, " causa un mejor desempeño en ", var2, "."),
+  paste0("Si $r = ", r_texto,
+         "$, entonces los datos de ambas variables están poco dispersos.")
+)
+
+idx_v <- sample(length(pool_afirmaciones_v), 2)
+idx_f <- sample(length(pool_afirmaciones_f), 2)
+
+afirmaciones_p3 <- c(pool_afirmaciones_v[idx_v], pool_afirmaciones_f[idx_f])
+es_verdadera_p3 <- c(TRUE, TRUE, FALSE, FALSE)
+orden_p3 <- sample(1:4)
+afirmaciones_p3 <- afirmaciones_p3[orden_p3]
+sol_p3 <- as.integer(es_verdadera_p3[orden_p3])
+
+# ============================================================
+# PARTE 4 (schoice V/F): TRANSFERIR A CASO ESPECÍFICO
+# ============================================================
+pool_vf <- list(
+  list(
+    enunciado = paste0("Si $r = ", r_texto,
+                       "$, entonces $r^2 = ", r_cuadrado,
+                       "$, lo que significa que aproximadamente el ",
+                       r_cuadrado_pct, "\\% de la variabilidad de ", var2,
+                       " se explica linealmente por ", var1, "."),
+    es_verdadero = TRUE
+  ),
+  list(
+    enunciado = paste0("Con $r = ", r_texto,
+                       "$, se puede concluir que estudiar más ", var1,
+                       " es la causa directa de obtener mejores notas en ", var2, "."),
+    es_verdadero = FALSE
+  ),
+  list(
+    enunciado = paste0("Un coeficiente de $r = ", r_texto,
+                       "$ indica que, en promedio, por cada punto adicional en ", var1,
+                       " la nota en ", var2, " aumenta exactamente ", r_texto, " puntos."),
+    es_verdadero = FALSE
+  ),
+  list(
+    enunciado = paste0("Si se invirtieran los roles y se calculara la correlación de ",
+                       var2, " con ", var1, ", el coeficiente seguiría siendo $",
+                       r_texto, "$."),
+    es_verdadero = TRUE
+  )
+)
+
+sel_vf <- pool_vf[[sample(length(pool_vf), 1)]]
+enunciado_vf <- sel_vf$enunciado
+
+if (sel_vf$es_verdadero) {
+  sol_p4 <- c(1L, 0L)
+} else {
+  sol_p4 <- c(0L, 1L)
+}
+
+# --- Verificaciones obligatorias ---
+stopifnot("P1: exactamente 1 correcta" = sum(sol_p1) == 1)
+stopifnot("P1: 4 opciones" = length(opciones_p1) == 4)
+stopifnot("P1: opciones únicas" = length(unique(opciones_p1)) == 4)
+stopifnot("P2: r² es positivo" = resp2 > 0 && resp2 < 1)
+stopifnot("P3: exactamente 2 verdaderas" = sum(sol_p3) == 2)
+stopifnot("P3: 4 afirmaciones" = length(afirmaciones_p3) == 4)
+stopifnot("P4: exactamente 1 verdadero" = sum(sol_p4) == 1)
+
+# --- Construir strings de solución ---
+sol_p1_str <- paste(sol_p1, collapse = "")
+sol_p3_str <- paste(sol_p3, collapse = "")
+sol_p4_str <- paste(sol_p4, collapse = "")
+
+# --- Reflexiones metacognitivas ---
+reflexiones_metacognitivas <- list(
+  paste0("Identificar errores de interpretación del coeficiente de correlación ",
+         "nos ayuda a evitar confusiones propias. La metacognición aplicada a la ",
+         "estadística fortalece la comprensión profunda de los conceptos."),
+  paste0("Los errores más frecuentes al interpretar $r$ son: confundirlo con un factor ",
+         "multiplicativo, con una medida de dispersión, o asumir que implica causalidad. ",
+         "Analizar estas confusiones desarrolla pensamiento crítico."),
+  paste0("El coeficiente de correlación tiene dos dimensiones: signo (dirección) y ",
+         "magnitud (fuerza). Interpretar solo una de ellas lleva a conclusiones ",
+         "incompletas. Verificar ambas dimensiones es una estrategia metacognitiva ",
+         "fundamental en estadística."),
+  paste0("Cuando evaluamos justificaciones estadísticas, debemos distinguir entre ",
+         "lo que un indicador mide realmente y lo que creemos que mide. Esta habilidad ",
+         "de monitoreo es central en el pensamiento estadístico.")
+)
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# --- Estrategias para evitar errores ---
+estrategias <- list(
+  paste0("Ante un coeficiente de correlación, verificar siempre dos aspectos: ",
+         "(1) el signo indica la dirección (positivo = directa, negativo = inversa), ",
+         "y (2) el valor absoluto indica la fuerza (cercano a 1 = fuerte, ",
+         "cercano a 0 = débil)."),
+  paste0("Recordar que correlación NO implica causalidad. Un $r$ alto solo indica que ",
+         "las variables se mueven juntas, no que una cause la otra."),
+  paste0("No confundir el coeficiente de correlación con otras medidas estadísticas ",
+         "como la dispersión, la proporcionalidad o el coeficiente de determinación ($r^2$). ",
+         "Cada indicador responde a una pregunta diferente."),
+  paste0("Preguntarse siempre: ¿qué mide exactamente este indicador? El coeficiente $r$ ",
+         "mide fuerza y dirección de la relación lineal. No mide dispersión, ",
+         "no es un factor multiplicativo, y no prueba causalidad.")
+)
+estrategia <- estrategias[[sample(length(estrategias), 1)]]
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+test_that("Prueba de diversidad de versiones", {
+  saved_seed <- if (exists(".Random.seed", envir = globalenv())) {
+    get(".Random.seed", envir = globalenv())
+  } else NULL
+
+  versiones <- list()
+  for (i in 1:300) {
+    set.seed(i * 7)
+    r_test <- sample(seq(0.80, 0.98, by = 0.01), 1)
+    par_test <- sample(length(pares_variables), 1)
+    err_test <- sample(6, 1)
+    ctx_test <- sample(8, 1)
+    prot_test <- sample(length(pool_nombres), 1)
+    n_test <- sample(c(80, 100, 120, 150, 180, 200, 250, 300), 1)
+
+    hash <- digest::digest(list(r_test, par_test, err_test, ctx_test, prot_test, n_test))
+    versiones[[i]] <- hash
+  }
+
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200,
+    info = paste("Solo", n_unicas, "versiones únicas. Se requieren 200+."))
+
+  if (!is.null(saved_seed)) {
+    assign(".Random.seed", saved_seed, envir = globalenv())
+  } else if (exists(".Random.seed", envir = globalenv())) {
+    rm(".Random.seed", envir = globalenv())
+  }
+})
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide"}
+test_that("P1: exactamente una opción correcta", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+})
+
+test_that("P2: r² es coherente", {
+  expect_equal(resp2, round(r^2, 2))
+  expect_true(resp2 > 0 && resp2 < 1)
+})
+
+test_that("P3: mchoice tiene 4 afirmaciones con 2 verdaderas", {
+  expect_equal(length(afirmaciones_p3), 4)
+  expect_equal(sum(sol_p3), 2)
+})
+
+test_that("P4: V/F tiene exactamente 2 opciones", {
+  expect_equal(length(sol_p4), 2)
+  expect_equal(sum(sol_p4), 1)
+})
+```
+
+Question
+========
+
+La correlación estadística indica el grado en que dos o más variables están relacionadas linealmente y, generalmente, se mide a través del coeficiente de correlación de Pearson en una escala de $-1$ a $1$.
+
+- Si este coeficiente está cercano a $-1$ o a $1$, indica una relación lineal **fuerte** entre las variables. Si está cercano a $0$, la relación es **débil** o inexistente.
+- Si es positivo, indica que al aumentar el valor de una de las variables cabe esperar aumento en el valor de la otra; si es negativo, cabe esperar disminución en el valor de la otra.
+
+`r enunciado_contexto` Con lo cual afirma: "`r afirmacion`".
+
+`r nombre_companero` intenta justificar esta afirmación y dice: "`r error_sel$justificacion_erronea`".
+
+**Parte 1.** ¿Cuál error conceptual cometió `r nombre_companero` en su justificación?
+
+##ANSWER1##
+
+**Parte 2.** Calcule el coeficiente de determinación $r^2$ redondeado a dos cifras decimales.
+
+##ANSWER2##
+
+**Parte 3.** De las siguientes afirmaciones sobre el coeficiente de correlación y los datos del estudio, seleccione todas las que sean correctas.
+
+##ANSWER3##
+
+**Parte 4.** Determine si la siguiente afirmación es verdadera o falsa: `r enunciado_vf`
+
+##ANSWER4##
+
+Answerlist
+----------
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+* `r afirmaciones_p3[[1]]`
+* `r afirmaciones_p3[[2]]`
+* `r afirmaciones_p3[[3]]`
+* `r afirmaciones_p3[[4]]`
+* Verdadero
+* Falso
+
+Solution
+========
+
+### Análisis del Error (Parte 1)
+
+`r nombre_companero` justificó la afirmación diciendo: "`r error_sel$justificacion_erronea`".
+
+**Error identificado:** `r error_sel$descripcion_larga`
+
+**Código de error:** `r error_sel$codigo`
+
+**Causa raíz:** `r error_sel$causa_raiz`
+
+La justificación correcta de la afirmación es: $r = `r r_texto`$ es un valor **positivo** (relación directa) y **cercano a 1** (relación fuerte). Ambas condiciones juntas justifican que una nota alta en `r var1` haga muy probable una nota alta en `r var2`.
+
+### Procedimiento Correcto (Parte 2)
+
+**Paso 1.** Identificar el coeficiente de correlación dado:
+
+$$r = `r r_texto`$$
+
+**Paso 2.** Calcular el coeficiente de determinación:
+
+$$r^2 = (`r r_texto`)^2 = `r r_cuadrado`$$
+
+**Interpretación:** El $`r r_cuadrado_pct`$\% de la variabilidad de una variable se explica linealmente por la otra. El $`r round(100 - r_cuadrado_pct, 1)`$\% restante se debe a otros factores.
+
+### Propiedades del Concepto (Parte 3)
+
+| Valor de $r$ | Dirección | Fuerza |
+|:---:|:---:|:---:|
+| $r = 1$ | Directa | Perfecta |
+| $0.7 \leq r < 1$ | Directa | Fuerte |
+| $0.3 \leq r < 0.7$ | Directa | Moderada |
+| $0 < r < 0.3$ | Directa | Débil |
+| $r = 0$ | — | Sin relación lineal |
+| $-0.3 < r < 0$ | Inversa | Débil |
+| $-0.7 < r \leq -0.3$ | Inversa | Moderada |
+| $-1 < r \leq -0.7$ | Inversa | Fuerte |
+| $r = -1$ | Inversa | Perfecta |
+
+**Diferencias clave:**
+
+- **$r$** mide fuerza y dirección de la relación lineal.
+- **$r^2$** mide la proporción de varianza explicada (siempre positivo).
+- **Correlación $\neq$ causalidad**: un $r$ alto no demuestra relación causa-efecto.
+- **Correlación $\neq$ proporcionalidad**: $r$ no es un factor multiplicativo.
+
+### Caso Específico (Parte 4)
+
+En este ejercicio, $r = `r r_texto`$ se ubica en el rango $0.7 < r < 1$, lo cual corresponde a una **correlación positiva fuerte**. Con `r n_muestra` estudiantes de `r area`, esto indica una tendencia clara y consistente.
+
+**Importante:** Correlación no implica causalidad. Un tercer factor podría explicar ambos desempeños.
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+`r estrategia`
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+sol_texts <- c(
+  # Parte 1
+  ifelse(sol_p1 == 1, "Verdadero", "Falso"),
+  # Parte 2
+  "",
+  # Parte 3
+  ifelse(sol_p3 == 1, "Verdadero", "Falso"),
+  # Parte 4
+  ifelse(sol_p4 == 1, "Verdadero", "Falso")
+)
+answerlist(sol_texts, markup = "markdown")
+```
+
+Meta-information
+================
+extype: cloze
+exclozetype: schoice|num|mchoice|schoice
+exsolution: `r sol_p1_str`|`r resp2`|`r sol_p3_str`|`r sol_p4_str`
+exname: correlacion_pearson_interpretacion_metacognitivo_argumentacion_n3_cloze_v1
+exshuffle: TRUE
+extol: 0|0.01|0|0
+exsection: Estadistica-Probabilidad/Pensamiento-Aleatorio/Correlacion-Pearson
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Justifica la interpretacion del coeficiente de correlacion de Pearson mediante argumentos sobre su signo y magnitud
+exextra[Evidencia]: Evalua justificaciones y calcula el coeficiente de determinacion a partir del coeficiente de correlacion
+exextra[Nivel]: 3
+exextra[Contexto]: Universitario
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
+exextra[TipoMetacognicion]: progressive_disclosure
