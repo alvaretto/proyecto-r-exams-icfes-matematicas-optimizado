@@ -1,0 +1,893 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "amsmath"
+---
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+library(exams)
+library(digest)
+library(testthat)
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE,
+  fig.cap = "", dev = c("png", "pdf"), dpi = 150
+)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# ================================================================
+# EJERCICIO: Error relativo — CLOZE metacognitivo con Progressive Disclosure
+# TIPO: CLOZE (schoice|num|mchoice|schoice) — 4 partes
+# COMPONENTE: Numérico-Variacional
+# COMPETENCIA: Interpretación y Representación
+# NIVEL: 3
+# Basado en: SCHOICE v2 (error_relativo_procedimiento)
+#
+# Progressive Disclosure:
+#   Parte 1 (schoice): Identificar el error al calcular error relativo
+#   Parte 2 (num): Calcular el error relativo correcto
+#   Parte 3 (mchoice): Evaluar afirmaciones sobre error relativo
+#   Parte 4 (schoice V/F): Transferir a caso específico
+# ================================================================
+
+# --- Función de formato español (coma decimal) ---
+fmt_es <- function(x, decimales = 1) {
+  formatC(x, format = "f", digits = decimales, decimal.mark = ",", big.mark = ".")
+}
+
+# --- Función generadora principal ---
+generar_datos <- function() {
+
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS CREATIVOS (8 tipos, 5+ estructuras)
+  # Reutilizados del SCHOICE v2 para coherencia temática
+  # ============================================================
+  contextos <- list(
+    # Tipo 1: Descubrimiento (óptica)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Al realizar el control de calidad en ", prot,
+               ", se midieron ", prop_pl, " de ", n,
+               " ", item_pl, " diferentes y los resultados se muestran en la tabla.")
+      },
+      protagonistas = c("un laboratorio de óptica",
+                        "una fábrica de lentes de precisión",
+                        "un taller de instrumentos científicos"),
+      item_singular = "lente", item_plural = "lentes",
+      propiedad_singular = "el radio", propiedad_plural = "los radios",
+      encabezado_item = "Lente", encabezado_prop = "Radio",
+      unidad = "mm", genero = "m",
+      valores_esperados = c(12.0, 15.0, 20.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 2: Situación problema (mecánica)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("En ", prot, " necesitan verificar la precisión de ",
+               n, " ", item_pl, ". Se midieron ", prop_pl,
+               " y los resultados fueron los siguientes:")
+      },
+      protagonistas = c("una fábrica de tornillos de precisión",
+                        "un taller mecánico industrial",
+                        "una planta de manufactura automotriz"),
+      item_singular = "tornillo", item_plural = "tornillos",
+      propiedad_singular = "el diámetro", propiedad_plural = "los diámetros",
+      encabezado_item = "Tornillo", encabezado_prop = "Diámetro",
+      unidad = "mm", genero = "m",
+      valores_esperados = c(6.0, 8.0, 10.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 3: Narración periodística (material escolar)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Un informe técnico publicó los resultados del control ",
+               "de calidad realizado en ", prot,
+               ". Se verificaron ", prop_pl, " de ", n,
+               " ", item_pl, " y los datos obtenidos fueron:")
+      },
+      protagonistas = c("una empresa de instrumentos de medición",
+                        "un almacén de útiles escolares",
+                        "una distribuidora de material didáctico"),
+      item_singular = "regla", item_plural = "reglas",
+      propiedad_singular = "la longitud", propiedad_plural = "las longitudes",
+      encabezado_item = "Regla", encabezado_prop = "Longitud",
+      unidad = "cm", genero = "f",
+      valores_esperados = c(20.0, 30.0, 50.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 4: Contexto institucional (metrología)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("El informe de calibración de ", prot,
+               " reportó ", prop_pl, " de ", n,
+               " ", item_pl, " de referencia:")
+      },
+      protagonistas = c("el laboratorio de metrología",
+                        "el departamento de calibración",
+                        "la oficina de estándares de medición"),
+      item_singular = "pesa", item_plural = "pesas",
+      propiedad_singular = "la masa", propiedad_plural = "las masas",
+      encabezado_item = "Pesa", encabezado_prop = "Masa",
+      unidad = "g", genero = "f",
+      valores_esperados = c(50.0, 100.0, 200.0),
+      desviaciones = c(0.1, 0.2, 0.5),
+      decimales = 1
+    ),
+    # Tipo 5: Diálogo implícito (manufactura)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("\u2014Revisen estos datos antes de cerrar el informe \u2014indicó ",
+               prot, ". Se midieron ", prop_pl, " de ", n,
+               " ", item_pl, " y estos fueron los resultados:")
+      },
+      protagonistas = c("la supervisora de calidad de una fábrica de varillas",
+                        "el ingeniero jefe de una planta metalúrgica",
+                        "la directora técnica de una siderúrgica"),
+      item_singular = "varilla", item_plural = "varillas",
+      propiedad_singular = "la longitud", propiedad_plural = "las longitudes",
+      encabezado_item = "Varilla", encabezado_prop = "Longitud",
+      unidad = "cm", genero = "f",
+      valores_esperados = c(20.0, 25.0, 30.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 6: Pregunta retórica (farmacéutica)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("\u00bfCumplen las ", item_pl, " con el estándar de producción? ",
+               "Para responder, ", prot, " midieron ", prop_pl,
+               " de ", n, " ", item_pl, " seleccionadas al azar:")
+      },
+      protagonistas = c("los analistas del laboratorio farmacéutico",
+                        "los inspectores de la planta de producción",
+                        "los técnicos del departamento de control"),
+      item_singular = "tableta", item_plural = "tabletas",
+      propiedad_singular = "la masa", propiedad_plural = "las masas",
+      encabezado_item = "Tableta", encabezado_prop = "Masa",
+      unidad = "mg", genero = "f",
+      valores_esperados = c(250, 500, 750),
+      desviaciones = c(5, 10, 15),
+      decimales = 0
+    ),
+    # Tipo 7: Acción en curso (construcción)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Durante la inspección de materiales en ", prot,
+               ", se midieron ", prop_pl, " de ", n,
+               " ", item_pl, " que llegaron al almacén:")
+      },
+      protagonistas = c("una obra de construcción en el centro de la ciudad",
+                        "un proyecto de infraestructura vial",
+                        "una edificación residencial en las afueras"),
+      item_singular = "tubo", item_plural = "tubos",
+      propiedad_singular = "el diámetro", propiedad_plural = "los diámetros",
+      encabezado_item = "Tubo", encabezado_prop = "Diámetro",
+      unidad = "mm", genero = "m",
+      valores_esperados = c(25.0, 50.0, 75.0),
+      desviaciones = c(0.5, 1.0, 1.5),
+      decimales = 1
+    ),
+    # Tipo 8: Perspectiva del estudiante (baterías)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Para su proyecto de física, ", prot,
+               " midieron ", prop_pl, " de ", n,
+               " ", item_pl, " del laboratorio del colegio:")
+      },
+      protagonistas = c("los estudiantes de undécimo grado",
+                        "el grupo de investigación del colegio",
+                        "los integrantes del semillero de ciencias"),
+      item_singular = "batería", item_plural = "baterías",
+      propiedad_singular = "el voltaje", propiedad_plural = "los voltajes",
+      encabezado_item = "Batería", encabezado_prop = "Voltaje",
+      unidad = "V", genero = "f",
+      valores_esperados = c(1.5, 3.0, 9.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    )
+  )
+
+  # --- Seleccionar contexto aleatorio ---
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  protagonista <- sample(ctx$protagonistas, 1)
+  valor_esperado <- sample(ctx$valores_esperados, 1)
+
+  # --- Generar datos de medición ---
+  n_items <- sample(6:8, 1)
+  n_iguales <- sample(2:3, 1)
+  n_diferentes <- n_items - n_iguales
+
+  pos_iguales <- sort(sample(1:n_items, n_iguales))
+  pos_diferentes <- setdiff(1:n_items, pos_iguales)
+
+  # Asegurar al menos 1 medida por encima y 1 por debajo
+  direcciones <- c(1, -1)
+  if (n_diferentes > 2) {
+    extras <- n_diferentes - 2
+    n_extra_pos <- sample(1:max(1, extras - 1), 1)
+    n_extra_neg <- extras - n_extra_pos
+    direcciones <- c(direcciones, rep(1, n_extra_pos), rep(-1, n_extra_neg))
+  }
+  direcciones <- sample(direcciones)
+
+  mediciones <- rep(valor_esperado, n_items)
+  for (i in seq_along(pos_diferentes)) {
+    dev <- sample(ctx$desviaciones, 1)
+    mediciones[pos_diferentes[i]] <- valor_esperado + direcciones[i] * dev
+  }
+
+  # --- Identificar subconjuntos ---
+  eps <- 1e-9
+  items_diferentes <- sort(which(abs(mediciones - valor_esperado) > eps))
+  items_iguales <- sort(which(abs(mediciones - valor_esperado) < eps))
+  items_mayores <- sort(which(mediciones > valor_esperado + eps))
+  items_menores <- sort(which(mediciones < valor_esperado - eps))
+
+  # --- Helpers de género ---
+  Todos_g <- ifelse(ctx$genero == "m", "Todos", "Todas")
+  art_pl <- ifelse(ctx$genero == "m", "los", "las")
+
+  # --- Mediciones formateadas ---
+  mediciones_fmt <- sapply(mediciones, function(x) fmt_es(x, ctx$decimales))
+  valor_esp_fmt <- fmt_es(valor_esperado, ctx$decimales)
+
+  # --- Nombre del estudiante ---
+  nombres_estudiante <- c("Andrea", "Santiago", "Valentina", "Mateo",
+                          "Camila", "Sebastián", "Isabella", "Daniel",
+                          "Mariana", "Nicolás", "Laura", "Felipe")
+  nombre_estudiante <- sample(nombres_estudiante, 1)
+
+  # --- Enunciado con plantilla ---
+  enunciado_contexto <- ctx$plantilla(protagonista, n_items,
+                                       ctx$propiedad_plural, ctx$item_plural)
+
+  # ============================================================
+  # SELECCIÓN DEL ITEM PARA ANÁLISIS (debe tener desviación)
+  # ============================================================
+  item_analizado <- sample(items_diferentes, 1)
+  medida_analizada <- mediciones[item_analizado]
+  medida_analizada_fmt <- fmt_es(medida_analizada, ctx$decimales)
+
+  # Error relativo correcto (Parte 2)
+  error_relativo_correcto <- round(abs(medida_analizada - valor_esperado) /
+                                     valor_esperado * 100, 2)
+
+  # Error relativo de TODOS los items (para Parte 4)
+  err_rel_todos <- sapply(mediciones, function(m) {
+    round(abs(m - valor_esperado) / valor_esperado * 100, 2)
+  })
+
+  # ============================================================
+  # POOL DE ERRORES CONCEPTUALES (4 errores claramente distintos)
+  # Cada calcula() es determinista (NO sample/runif/rnorm)
+  # ============================================================
+  errores_conceptuales <- list(
+    list(
+      codigo = "MED-ERR-01",
+      nombre = "Omisión del valor absoluto",
+      descripcion_corta = "No aplicó valor absoluto a la diferencia, obteniendo un resultado negativo",
+      descripcion_larga = paste0(
+        "Calculó (medida - valor esperado) / valor esperado x 100 sin aplicar ",
+        "valor absoluto, obteniendo un porcentaje negativo. El error relativo ",
+        "mide la magnitud de la desviación, por lo que siempre es >= 0%."
+      ),
+      causa_raiz = "No reconoce que el error relativo cuantifica magnitud, no dirección",
+      precondicion = function(params) params$medida < params$esperado,
+      calcula = function(medida, esperado) {
+        round((medida - esperado) / esperado * 100, 2)
+      },
+      tipo_formato = "porcentaje",
+      estrategia = paste0(
+        "1. Recordar: el error relativo siempre es >= 0%.\n",
+        "2. Si el resultado es negativo, verificar que se aplicó valor absoluto ",
+        "a la diferencia.\n",
+        "3. El valor absoluto elimina el signo: |a - b| siempre es positivo.")
+    ),
+    list(
+      codigo = "MED-ERR-02",
+      nombre = "Omisión del factor 100",
+      descripcion_corta = "Olvidó multiplicar por 100 para expresar el resultado como porcentaje",
+      descripcion_larga = paste0(
+        "Realizó la división |medida - esperado| / esperado correctamente, pero ",
+        "no multiplicó por 100. Obtuvo un valor decimal en lugar de un porcentaje."
+      ),
+      causa_raiz = "Confunde la representación fraccionaria con la porcentual del error relativo",
+      precondicion = function(params) TRUE,
+      calcula = function(medida, esperado) {
+        round(abs(medida - esperado) / esperado, 4)
+      },
+      tipo_formato = "decimal",
+      estrategia = paste0(
+        "1. Recordar la fórmula completa: (|medida - esperado| / esperado) x 100.\n",
+        "2. El paso x 100 convierte la fracción decimal en porcentaje.\n",
+        "3. Si el resultado es un número muy pequeño (menor que 1), verificar que se ",
+        "multiplicó por 100.")
+    ),
+    list(
+      codigo = "MED-ERR-03",
+      nombre = "Error absoluto en lugar de relativo",
+      descripcion_corta = "Calculó el error absoluto sin dividir entre el valor esperado",
+      descripcion_larga = paste0(
+        "Calculó |medida - valor esperado| pero no dividió entre el valor esperado ",
+        "ni multiplicó por 100. Obtuvo el error absoluto, que se expresa en las ",
+        "mismas unidades de la medición, no como porcentaje."
+      ),
+      causa_raiz = "Confunde error absoluto con error relativo — procedimiento incompleto",
+      precondicion = function(params) TRUE,
+      calcula = function(medida, esperado) {
+        round(abs(medida - esperado), 2)
+      },
+      tipo_formato = "unidades",
+      estrategia = paste0(
+        "1. Distinguir: error absoluto = |medida - esperado| (en unidades); ",
+        "error relativo = error absoluto / esperado x 100 (en %).\n",
+        "2. El error absoluto es solo el primer paso del procedimiento.\n",
+        "3. Si el resultado tiene las mismas unidades que la medición, faltó ",
+        "dividir entre el valor esperado.")
+    ),
+    list(
+      codigo = "MED-ERR-04",
+      nombre = "Razón sin resta previa",
+      descripcion_corta = "Dividió la medida entre el valor esperado sin calcular primero la diferencia",
+      descripcion_larga = paste0(
+        "Calculó (medida / valor esperado) x 100 sin calcular primero la diferencia, ",
+        "obteniendo un porcentaje cercano a 100% que no representa el error relativo ",
+        "sino la razón porcentual entre la medida y el valor esperado."
+      ),
+      causa_raiz = "Omitió el paso de la resta — confunde razón porcentual con error relativo",
+      precondicion = function(params) TRUE,
+      calcula = function(medida, esperado) {
+        round(medida / esperado * 100, 2)
+      },
+      tipo_formato = "porcentaje",
+      estrategia = paste0(
+        "1. El error relativo NO es la razón medida/esperado.\n",
+        "2. El primer paso SIEMPRE es calcular la diferencia: |medida - esperado|.\n",
+        "3. Si el resultado es cercano a 100%, verificar que se realizó la resta.\n",
+        "4. Un error relativo de 100% significaría que la medida es el doble o ",
+        "cero respecto al esperado, lo cual es muy inusual.")
+    )
+  )
+
+  # ============================================================
+  # SELECCIÓN DE ERROR Y CÁLCULO DE RESPUESTA ERRÓNEA
+  # ============================================================
+  params <- list(medida = medida_analizada, esperado = valor_esperado)
+
+  errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+    if (is.null(err$precondicion)) return(TRUE)
+    err$precondicion(params)
+  }))
+
+  # Seleccionar error que produzca resultado claramente diferente
+  error_found <- FALSE
+  intentos_error <- 0
+  error_idx <- NULL
+  resp_erronea <- NULL
+
+  while (!error_found && intentos_error < 20) {
+    intentos_error <- intentos_error + 1
+    idx_candidato <- sample(errores_aplicables_idx, 1)
+    err_candidato <- errores_conceptuales[[idx_candidato]]
+    val_erroneo <- err_candidato$calcula(medida_analizada, valor_esperado)
+
+    if (!is.na(val_erroneo) && abs(val_erroneo - error_relativo_correcto) > 0.05) {
+      error_found <- TRUE
+      error_idx <- idx_candidato
+      resp_erronea <- val_erroneo
+    }
+  }
+
+  if (!error_found) stop("No se encontró un error válido para el item analizado")
+
+  error_seleccionado <- errores_conceptuales[[error_idx]]
+
+  # Formato de la respuesta errónea para mostrar al estudiante
+  if (error_seleccionado$tipo_formato == "porcentaje") {
+    resp_erronea_texto <- paste0(fmt_es(resp_erronea, 2), " %")
+  } else if (error_seleccionado$tipo_formato == "decimal") {
+    resp_erronea_texto <- fmt_es(resp_erronea, 4)
+  } else {
+    resp_erronea_texto <- paste0(fmt_es(resp_erronea, ctx$decimales), " ", ctx$unidad)
+  }
+
+  # ============================================================
+  # PARTE 1 (schoice): IDENTIFICAR EL ERROR
+  # ============================================================
+  # Distractores: solo errores cuya precondición también se cumple (coherencia semántica)
+  errores_plausibles_idx <- which(sapply(errores_conceptuales, function(err) {
+    if (is.null(err$precondicion)) return(TRUE)
+    err$precondicion(params)
+  }))
+  otros_plausibles_idx <- setdiff(errores_plausibles_idx, error_idx)
+  # Fallback: si quedan menos de 3 plausibles, completar con los restantes
+  if (length(otros_plausibles_idx) < 3) {
+    otros_plausibles_idx <- setdiff(1:length(errores_conceptuales), error_idx)
+  }
+  distractores_idx <- sample(otros_plausibles_idx, 3)
+
+  opciones_p1_base <- c(
+    error_seleccionado$descripcion_corta,
+    errores_conceptuales[[distractores_idx[1]]]$descripcion_corta,
+    errores_conceptuales[[distractores_idx[2]]]$descripcion_corta,
+    errores_conceptuales[[distractores_idx[3]]]$descripcion_corta
+  )
+  sol_p1_base <- c(TRUE, FALSE, FALSE, FALSE)
+  orden_p1 <- sample(1:4)
+  opciones_p1 <- opciones_p1_base[orden_p1]
+  sol_p1 <- as.integer(sol_p1_base[orden_p1])
+
+  # ============================================================
+  # PARTE 2 (num): ERROR RELATIVO CORRECTO
+  # ============================================================
+  resp2 <- error_relativo_correcto
+
+  # ============================================================
+  # PARTE 3 (mchoice): AFIRMACIONES SOBRE ERROR RELATIVO
+  # ============================================================
+  pool_afirmaciones_v <- list(
+    "El error relativo siempre es un valor mayor o igual a 0%.",
+    "Si la medida coincide exactamente con el valor esperado, el error relativo es 0%.",
+    paste0("Dos mediciones con la misma diferencia absoluta pero diferente valor ",
+           "esperado pueden tener distinto error relativo."),
+    paste0("El error relativo permite comparar la precisión de mediciones ",
+           "realizadas con diferentes unidades o escalas."),
+    "El error relativo se expresa como porcentaje del valor de referencia.",
+    "Un error relativo pequeño indica que la medición está cerca del valor esperado."
+  )
+
+  pool_afirmaciones_f <- list(
+    "El error relativo puede ser un porcentaje negativo.",
+    paste0("El error absoluto y el error relativo siempre coinciden ",
+           "numéricamente."),
+    paste0("Para calcular el error relativo basta con restar la medida ",
+           "del valor esperado."),
+    paste0("Si dos mediciones tienen el mismo error relativo, necesariamente ",
+           "tienen la misma diferencia absoluta respecto a sus valores esperados."),
+    "El error relativo no depende del valor esperado.",
+    "Un error relativo de 0% indica que la medición fue incorrecta."
+  )
+
+  idx_v <- sample(length(pool_afirmaciones_v), 2)
+  idx_f <- sample(length(pool_afirmaciones_f), 2)
+
+  afirmaciones_p3_base <- c(pool_afirmaciones_v[idx_v], pool_afirmaciones_f[idx_f])
+  es_verdadera_p3_base <- c(TRUE, TRUE, FALSE, FALSE)
+  orden_p3 <- sample(1:4)
+  afirmaciones_p3 <- afirmaciones_p3_base[orden_p3]
+  sol_p3 <- as.integer(es_verdadera_p3_base[orden_p3])
+
+  # ============================================================
+  # PARTE 4 (schoice V/F): TRANSFERIR A CASO ESPECÍFICO
+  # ============================================================
+  otros_dif <- setdiff(items_diferentes, item_analizado)
+  item_vf <- NULL  # Se asigna si hay otros items diferentes
+
+  pool_vf <- list(
+    # TRUE 1: item con medida = esperado tiene ER = 0%
+    list(
+      enunciado = paste0(
+        "Si ", ctx$propiedad_singular, " de un ", ctx$item_singular,
+        " coincide exactamente con el valor esperado (",
+        valor_esp_fmt, " ", ctx$unidad,
+        "), su error relativo es 0%."),
+      es_verdadero = TRUE
+    ),
+    # FALSE 1: error relativo negativo (conceptual)
+    list(
+      enunciado = paste0(
+        "Un ", ctx$item_singular, " cuya medida es menor que el valor esperado ",
+        "tiene un error relativo negativo."),
+      es_verdadero = FALSE
+    ),
+    # FALSE 2: todos tienen ER > 0 (falso porque hay iguales)
+    list(
+      enunciado = paste0(
+        Todos_g, " ", art_pl, " ", ctx$item_plural,
+        " de la tabla tienen un error relativo mayor que 0%."),
+      es_verdadero = FALSE
+    )
+  )
+
+  # TRUE 2: ER correcto de OTRO item (si existe)
+  if (length(otros_dif) > 0) {
+    item_vf <- sample(otros_dif, 1)
+    pool_vf[[length(pool_vf) + 1]] <- list(
+      enunciado = paste0(
+        "El error relativo del ", ctx$item_singular, " ", item_vf,
+        " (cuya medida es ", mediciones_fmt[item_vf], " ", ctx$unidad,
+        ") es ", fmt_es(err_rel_todos[item_vf], 2), " %."),
+      es_verdadero = TRUE
+    )
+  }
+
+  sel_vf <- pool_vf[[sample(length(pool_vf), 1)]]
+  enunciado_vf <- sel_vf$enunciado
+
+  if (sel_vf$es_verdadero) {
+    sol_p4 <- c(1L, 0L)
+  } else {
+    sol_p4 <- c(0L, 1L)
+  }
+
+  # ============================================================
+  # POOL DE REFLEXIONES METACOGNITIVAS
+  # ============================================================
+  reflexiones_metacognitivas <- list(
+    paste0("Antes de aplicar una fórmula, es fundamental comprender qué mide cada ",
+           "uno de sus componentes. Un procedimiento ejecutado mecánicamente puede ",
+           "producir un número, pero ese número carece de sentido sin comprensión."),
+    paste0("La capacidad de detectar errores en el cálculo del error relativo ",
+           "requiere entender la diferencia entre error absoluto y error relativo. ",
+           "La metacognición nos ayuda a verificar nuestros propios procedimientos."),
+    paste0("Un error común en metrología es confundir la razón entre dos cantidades ",
+           "con el error relativo. El error relativo siempre involucra una diferencia ",
+           "en el numerador."),
+    paste0("Evaluar la razonabilidad del resultado es una estrategia metacognitiva ",
+           "clave: si el error relativo es negativo, mayor que 100%, o está en unidades ",
+           "de la medición, algo salió mal en el procedimiento."),
+    paste0("Distinguir entre error absoluto y error relativo es fundamental. ",
+           "El error absoluto mide la desviación en las unidades originales; ",
+           "el error relativo la expresa como proporción del valor de referencia."),
+    paste0("Verificar el resultado después de cada cálculo previene errores. ",
+           "Un error relativo siempre debe ser un porcentaje no negativo. ",
+           "Si el resultado no cumple esto, hay que revisar el procedimiento.")
+  )
+
+  reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+  return(list(
+    ctx = ctx, protagonista = protagonista,
+    valor_esperado = valor_esperado, valor_esp_fmt = valor_esp_fmt,
+    n_items = n_items, mediciones = mediciones, mediciones_fmt = mediciones_fmt,
+    items_diferentes = items_diferentes, items_iguales = items_iguales,
+    items_mayores = items_mayores, items_menores = items_menores,
+    enunciado_contexto = enunciado_contexto, art_pl = art_pl, Todos_g = Todos_g,
+    item_analizado = item_analizado, medida_analizada = medida_analizada,
+    medida_analizada_fmt = medida_analizada_fmt,
+    error_relativo_correcto = error_relativo_correcto,
+    err_rel_todos = err_rel_todos,
+    nombre_estudiante = nombre_estudiante,
+    error_seleccionado = error_seleccionado, error_idx = error_idx,
+    resp_erronea = resp_erronea, resp_erronea_texto = resp_erronea_texto,
+    opciones_p1 = opciones_p1, sol_p1 = sol_p1, orden_p1 = orden_p1,
+    resp2 = resp2,
+    afirmaciones_p3 = afirmaciones_p3, sol_p3 = sol_p3,
+    enunciado_vf = enunciado_vf, es_verdadero_vf = sel_vf$es_verdadero,
+    sol_p4 = sol_p4, item_vf = item_vf,
+    reflexion = reflexion,
+    errores_conceptuales = errores_conceptuales
+  ))
+}
+
+# --- Ejecutar generación ---
+datos <- generar_datos()
+
+# --- Extraer variables ---
+ctx <- datos$ctx
+protagonista <- datos$protagonista
+valor_esperado <- datos$valor_esperado
+valor_esp_fmt <- datos$valor_esp_fmt
+n_items <- datos$n_items
+mediciones <- datos$mediciones
+mediciones_fmt <- datos$mediciones_fmt
+items_diferentes <- datos$items_diferentes
+items_iguales <- datos$items_iguales
+enunciado_contexto <- datos$enunciado_contexto
+art_pl <- datos$art_pl
+Todos_g <- datos$Todos_g
+item_analizado <- datos$item_analizado
+medida_analizada <- datos$medida_analizada
+medida_analizada_fmt <- datos$medida_analizada_fmt
+error_relativo_correcto <- datos$error_relativo_correcto
+err_rel_todos <- datos$err_rel_todos
+nombre_estudiante <- datos$nombre_estudiante
+error_seleccionado <- datos$error_seleccionado
+resp_erronea <- datos$resp_erronea
+resp_erronea_texto <- datos$resp_erronea_texto
+opciones_p1 <- datos$opciones_p1
+sol_p1 <- datos$sol_p1
+resp2 <- datos$resp2
+afirmaciones_p3 <- datos$afirmaciones_p3
+sol_p3 <- datos$sol_p3
+enunciado_vf <- datos$enunciado_vf
+es_verdadero_vf <- datos$es_verdadero_vf
+sol_p4 <- datos$sol_p4
+orden_p1 <- datos$orden_p1
+item_vf <- datos$item_vf
+reflexion <- datos$reflexion
+errores_conceptuales <- datos$errores_conceptuales
+
+# --- Construir strings de solución ---
+sol_p1_str <- paste(sol_p1, collapse = "")
+sol_p3_str <- paste(sol_p3, collapse = "")
+sol_p4_str <- paste(sol_p4, collapse = "")
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# Guardar estado RNG
+saved_seed <- if (exists(".Random.seed", envir = globalenv())) {
+  get(".Random.seed", envir = globalenv())
+} else NULL
+
+test_that("Prueba de diversidad de versiones (200+ únicas de 300)", {
+  versiones <- character(300)
+  for (i in 1:300) {
+    set.seed(i * 7)
+    d <- generar_datos()
+    versiones[i] <- digest::digest(list(
+      contexto = d$ctx$item_singular,
+      protagonista = d$protagonista,
+      valor_esperado = d$valor_esperado,
+      n_items = d$n_items,
+      mediciones = round(d$mediciones, 6),
+      item_analizado = d$item_analizado,
+      error_idx = d$error_idx,
+      error_relativo_correcto = d$error_relativo_correcto
+    ))
+  }
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200,
+              info = paste("Solo se generaron", n_unicas,
+                           "versiones únicas de 300 intentos. Se requieren al menos 200."))
+})
+
+# Restaurar estado RNG
+if (!is.null(saved_seed)) {
+  assign(".Random.seed", saved_seed, envir = globalenv())
+} else if (exists(".Random.seed", envir = globalenv())) {
+  rm(".Random.seed", envir = globalenv())
+}
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# --- Validaciones FATALES ---
+if (length(items_iguales) < 2)
+  stop(paste("Se esperan al menos 2 items iguales, hay", length(items_iguales)))
+if (length(items_diferentes) < 2)
+  stop(paste("Se esperan al menos 2 items diferentes, hay", length(items_diferentes)))
+if (any(is.na(mediciones)) || any(is.nan(mediciones)) || any(is.infinite(mediciones)))
+  stop("Hay NA/NaN/Inf en mediciones")
+if (!all(mediciones > 0))
+  stop("Todas las mediciones deben ser positivas")
+if (error_relativo_correcto <= 0)
+  stop("Error relativo correcto debe ser > 0")
+if (is.na(resp_erronea) || abs(resp_erronea - error_relativo_correcto) < 0.05)
+  stop("Respuesta errónea no es suficientemente diferente de la correcta")
+
+test_that("Parte 1: exactamente 1 opción correcta de 4", {
+  expect_equal(sum(sol_p1), 1)
+  expect_equal(length(sol_p1), 4)
+  expect_equal(length(opciones_p1), 4)
+})
+
+test_that("Parte 2: error relativo correcto es positivo", {
+  expect_true(resp2 > 0)
+  expect_equal(resp2, error_relativo_correcto)
+})
+
+test_that("Parte 3: mchoice tiene 4 afirmaciones con 2 verdaderas", {
+  expect_equal(length(afirmaciones_p3), 4)
+  expect_equal(length(sol_p3), 4)
+  expect_equal(sum(sol_p3), 2)
+})
+
+test_that("Parte 4: V/F tiene exactamente 2 opciones", {
+  expect_equal(length(sol_p4), 2)
+  expect_equal(sum(sol_p4), 1)
+})
+
+test_that("Error seleccionado cumple su precondición", {
+  params <- list(medida = medida_analizada, esperado = valor_esperado)
+  if (!is.null(error_seleccionado$precondicion)) {
+    expect_true(error_seleccionado$precondicion(params),
+      info = paste(error_seleccionado$codigo, "seleccionado pero precondición no se cumple"))
+  }
+})
+
+test_that("calcula() del error seleccionado es determinista", {
+  r1 <- error_seleccionado$calcula(medida_analizada, valor_esperado)
+  r2 <- error_seleccionado$calcula(medida_analizada, valor_esperado)
+  expect_equal(r1, r2, info = "calcula() no es determinista")
+})
+
+test_that("Respuesta errónea ≠ respuesta correcta", {
+  expect_true(abs(resp_erronea - error_relativo_correcto) > 0.05,
+    info = paste("Errónea:", resp_erronea, "Correcta:", error_relativo_correcto))
+})
+```
+
+
+Question
+========
+
+`r enunciado_contexto`
+
+```{r tabla_datos, echo=FALSE, results='asis'}
+cat("\n\n")
+cat(paste0("| ", ctx$encabezado_item, " | ", ctx$encabezado_prop, " (", ctx$unidad, ") |\n"))
+cat("|:---:|:---:|\n")
+for (i in 1:n_items) {
+  cat(paste0("| ", i, " | ", mediciones_fmt[i], " |\n"))
+}
+cat("\n\n")
+```
+
+`r paste0(toupper(substr(ctx$propiedad_singular, 1, 1)), substr(ctx$propiedad_singular, 2, nchar(ctx$propiedad_singular)), " esperado de ", art_pl, " ", ctx$item_plural, " es ", valor_esp_fmt, " ", ctx$unidad)`, así que, para determinar el error relativo de los registros, se propone usar el siguiente procedimiento:
+
+- **Paso 1.** Calcular el valor absoluto de la diferencia entre `r paste0(ctx$propiedad_singular, " esperado")` y la medida del `r ctx$item_singular`: $|\text{medida} - \text{valor esperado}|$.
+- **Paso 2.** Dividir ese resultado entre `r paste0(valor_esp_fmt, " ", ctx$unidad)`.
+- **Paso 3.** Multiplicar el resultado anterior por 100.
+
+`r nombre_estudiante` intentó calcular el error relativo del `r ctx$item_singular` `r item_analizado` (cuya medida es `r medida_analizada_fmt` `r ctx$unidad`) siguiendo el procedimiento, y afirmó que el resultado es **`r resp_erronea_texto`**.
+
+**Parte 1.** ¿Cuál error cometió `r nombre_estudiante` al aplicar el procedimiento?
+
+##ANSWER1##
+
+**Parte 2.** ¿Cuál es el error relativo correcto del `r ctx$item_singular` `r item_analizado`? (en porcentaje, redondeado a dos cifras decimales)
+
+##ANSWER2##
+
+**Parte 3.** De las siguientes afirmaciones sobre el error relativo, seleccione todas las que sean correctas.
+
+##ANSWER3##
+
+**Parte 4.** Determine si la siguiente afirmación es verdadera o falsa: *`r enunciado_vf`*
+
+##ANSWER4##
+
+Answerlist
+----------
+
+* `r opciones_p1[1]`
+* `r opciones_p1[2]`
+* `r opciones_p1[3]`
+* `r opciones_p1[4]`
+*
+* `r afirmaciones_p3[[1]]`
+* `r afirmaciones_p3[[2]]`
+* `r afirmaciones_p3[[3]]`
+* `r afirmaciones_p3[[4]]`
+* Verdadero
+* Falso
+
+
+Solution
+========
+
+### Análisis del Error (Parte 1)
+
+`r nombre_estudiante` afirmó que el error relativo del `r ctx$item_singular` `r item_analizado` es **`r resp_erronea_texto`**, cuando la respuesta correcta es **`r fmt_es(error_relativo_correcto, 2)` %**.
+
+**Error identificado:** `r error_seleccionado$descripcion_larga`
+
+**Código de error:** `r error_seleccionado$codigo`
+
+**Causa raíz:** `r error_seleccionado$causa_raiz`
+
+### Procedimiento Correcto (Parte 2)
+
+**Paso 1:** Calcular el valor absoluto de la diferencia
+
+$$|\text{medida} - \text{valor esperado}| = |`r fmt_es(medida_analizada, ctx$decimales)` - `r valor_esp_fmt`| = `r fmt_es(abs(medida_analizada - valor_esperado), ctx$decimales)` \text{ `r ctx$unidad`}$$
+
+**Paso 2:** Dividir entre el valor esperado
+
+$$\frac{`r fmt_es(abs(medida_analizada - valor_esperado), ctx$decimales)`}{`r valor_esp_fmt`} = `r fmt_es(abs(medida_analizada - valor_esperado) / valor_esperado, 4)`$$
+
+**Paso 3:** Multiplicar por 100
+
+$$`r fmt_es(abs(medida_analizada - valor_esperado) / valor_esperado, 4)` \times 100 = `r fmt_es(error_relativo_correcto, 2)` \%$$
+
+### Propiedades del Error Relativo (Parte 3)
+
+```{r sol_mchoice, echo=FALSE, results='asis'}
+for (k in 1:4) {
+  estado <- ifelse(sol_p3[k] == 1, "VERDADERA", "FALSA")
+  cat(paste0("- ", afirmaciones_p3[[k]], " **[", estado, "]**\n\n"))
+}
+```
+
+### Caso Específico (Parte 4)
+
+*`r enunciado_vf`* $\to$ **`r ifelse(es_verdadero_vf, "Verdadero", "Falso")`**
+
+```{r sol_vf_justificacion, echo=FALSE, results='asis'}
+if (es_verdadero_vf) {
+  if (grepl("coincide exactamente", enunciado_vf)) {
+    cat(paste0("Esta afirmación es verdadera. Si la medida coincide con el valor esperado, ",
+               "entonces: $|", valor_esp_fmt, " - ", valor_esp_fmt,
+               "| = 0$, y por tanto $\\text{ER} = \\frac{0}{", valor_esp_fmt,
+               "} \\times 100 = 0\\%$.\n"))
+  } else {
+    cat(paste0("Esta afirmación es verdadera. Verificación: ",
+               "$\\frac{|\\text{medida} - \\text{esperado}|}{\\text{esperado}} \\times 100 = ",
+               fmt_es(err_rel_todos[item_vf], 2), "\\%$, ",
+               "que coincide con el valor indicado en la afirmación.\n"))
+  }
+} else {
+  if (grepl("negativo", enunciado_vf)) {
+    cat(paste0("Esta afirmación es falsa. El error relativo usa valor absoluto ",
+               "en el numerador: $|\\text{medida} - \\text{esperado}|$, por lo que el ",
+               "resultado siempre es $\\geq 0\\%$, independientemente de si la medida ",
+               "es mayor o menor que el esperado.\n"))
+  } else {
+    cat(paste0("Esta afirmación es falsa. ", art_pl, " ",
+               ctx$item_plural, " cuya medida coincide con el valor esperado (",
+               valor_esp_fmt, " ", ctx$unidad, ") tienen error relativo de 0%, ",
+               "no mayor que 0%.\n"))
+  }
+}
+```
+
+### Fórmula del Error Relativo
+
+$$\text{Error relativo} = \frac{|\text{medida} - \text{valor esperado}|}{\text{valor esperado}} \times 100\%$$
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+### Estrategia para Evitar el Error
+
+```{r show_estrategia, echo=FALSE, results='asis'}
+cat(error_seleccionado$estrategia)
+```
+
+Answerlist
+----------
+
+* `r if(sol_p1[1] == 1) paste0("Correcto. ", error_seleccionado$descripcion_larga) else paste0("Incorrecto. ", errores_conceptuales[[orden_p1[1]]]$descripcion_larga, " Este error no corresponde al resultado obtenido por ", nombre_estudiante, ".")`
+* `r if(sol_p1[2] == 1) paste0("Correcto. ", error_seleccionado$descripcion_larga) else paste0("Incorrecto. ", errores_conceptuales[[orden_p1[2]]]$descripcion_larga, " Este error no corresponde al resultado obtenido por ", nombre_estudiante, ".")`
+* `r if(sol_p1[3] == 1) paste0("Correcto. ", error_seleccionado$descripcion_larga) else paste0("Incorrecto. ", errores_conceptuales[[orden_p1[3]]]$descripcion_larga, " Este error no corresponde al resultado obtenido por ", nombre_estudiante, ".")`
+* `r if(sol_p1[4] == 1) paste0("Correcto. ", error_seleccionado$descripcion_larga) else paste0("Incorrecto. ", errores_conceptuales[[orden_p1[4]]]$descripcion_larga, " Este error no corresponde al resultado obtenido por ", nombre_estudiante, ".")`
+* El error relativo correcto es `r fmt_es(error_relativo_correcto, 2)` %.
+* `r if(sol_p3[1] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[2] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[3] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p3[4] == 1) "Verdadero." else "Falso."`
+* `r if(sol_p4[1] == 1) "Correcto. La afirmación es verdadera." else "Incorrecto."`
+* `r if(sol_p4[2] == 1) "Correcto. La afirmación es falsa." else "Incorrecto."`
+
+
+Meta-information
+================
+exname: error_relativo_procedimiento_metacognitivo_interpretacion_n3_cloze_v1
+extype: cloze
+exclozetype: schoice|num|mchoice|schoice
+exsolution: `r sol_p1_str`|`r resp2`|`r sol_p3_str`|`r sol_p4_str`
+exshuffle: FALSE
+extol: 0|0.01|0|0
+exsection: Numerico-Variacional|Error-Relativo|Procedimiento
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Numerico-Variacional
+exextra[Pensamiento]: Variacional
+exextra[Contenido]: Error relativo - Identificacion y correccion de errores en el procedimiento
+exextra[Afirmacion]: Identificar errores conceptuales y calcular correctamente el error relativo
+exextra[Evidencia]: Evaluar procedimientos de calculo del error relativo y justificar propiedades
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
+exextra[TipoMetacognicion]: progressive_disclosure
+exextra[Grado]: 9
