@@ -1,0 +1,844 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies:
+      - "amsmath"
+---
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+library(exams)
+library(digest)
+library(testthat)
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE, message = FALSE,
+  fig.cap = "", dev = c("png", "pdf"), dpi = 150
+)
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# ================================================================
+# EJERCICIO: Error relativo — análisis de mediciones y desviaciones
+# TIPO: SCHOICE metacognitivo — v2 (pregunta dinámica)
+# COMPONENTE: Numérico-Variacional
+# COMPETENCIA: Interpretación y Representación
+# NIVEL: 3
+# Basado en: Pregunta 79 — Cuadernillo Matemáticas Galileo 2025-2
+#
+# MEJORA v2: La pregunta varía aleatoriamente entre 4 tipos,
+# de modo que la opción correcta puede ser cualquiera de las 4.
+# Esto anula patrones de respuesta identificables.
+# ================================================================
+
+# --- Función de formato español (coma decimal) ---
+fmt_es <- function(x, decimales = 1) {
+  formatC(x, format = "f", digits = decimales, decimal.mark = ",", big.mark = ".")
+}
+
+# --- Función generadora principal ---
+generar_datos <- function() {
+
+  # ============================================================
+  # POOL DE CONTEXTOS NARRATIVOS CREATIVOS (8 tipos, 5+ estructuras)
+  # ============================================================
+  contextos <- list(
+    # Tipo 1: Descubrimiento (óptica)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Al realizar el control de calidad en ", prot,
+               ", se midieron ", prop_pl, " de ", n,
+               " ", item_pl, " diferentes y los resultados se muestran en la tabla.")
+      },
+      protagonistas = c("un laboratorio de óptica",
+                        "una fábrica de lentes de precisión",
+                        "un taller de instrumentos científicos"),
+      item_singular = "lente", item_plural = "lentes",
+      propiedad_singular = "el radio", propiedad_plural = "los radios",
+      encabezado_item = "Lente", encabezado_prop = "Radio",
+      unidad = "mm", genero = "m",
+      valores_esperados = c(12.0, 15.0, 20.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 2: Situación problema (mecánica)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("En ", prot, " necesitan verificar la precisión de ",
+               n, " ", item_pl, ". Se midieron ", prop_pl,
+               " y los resultados fueron los siguientes:")
+      },
+      protagonistas = c("una fábrica de tornillos de precisión",
+                        "un taller mecánico industrial",
+                        "una planta de manufactura automotriz"),
+      item_singular = "tornillo", item_plural = "tornillos",
+      propiedad_singular = "el diámetro", propiedad_plural = "los diámetros",
+      encabezado_item = "Tornillo", encabezado_prop = "Diámetro",
+      unidad = "mm", genero = "m",
+      valores_esperados = c(6.0, 8.0, 10.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 3: Narración periodística (material escolar)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Un informe técnico publicó los resultados del control ",
+               "de calidad realizado en ", prot,
+               ". Se verificaron ", prop_pl, " de ", n,
+               " ", item_pl, " y los datos obtenidos fueron:")
+      },
+      protagonistas = c("una empresa de instrumentos de medición",
+                        "un almacén de útiles escolares",
+                        "una distribuidora de material didáctico"),
+      item_singular = "regla", item_plural = "reglas",
+      propiedad_singular = "la longitud", propiedad_plural = "las longitudes",
+      encabezado_item = "Regla", encabezado_prop = "Longitud",
+      unidad = "cm", genero = "f",
+      valores_esperados = c(20.0, 30.0, 50.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 4: Contexto institucional (metrología)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("El informe de calibración de ", prot,
+               " reportó ", prop_pl, " de ", n,
+               " ", item_pl, " de referencia:")
+      },
+      protagonistas = c("el laboratorio de metrología",
+                        "el departamento de calibración",
+                        "la oficina de estándares de medición"),
+      item_singular = "pesa", item_plural = "pesas",
+      propiedad_singular = "la masa", propiedad_plural = "las masas",
+      encabezado_item = "Pesa", encabezado_prop = "Masa",
+      unidad = "g", genero = "f",
+      valores_esperados = c(50.0, 100.0, 200.0),
+      desviaciones = c(0.1, 0.2, 0.5),
+      decimales = 1
+    ),
+    # Tipo 5: Diálogo implícito (manufactura)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("\u2014Revisen estos datos antes de cerrar el informe \u2014indicó ",
+               prot, ". Se midieron ", prop_pl, " de ", n,
+               " ", item_pl, " y estos fueron los resultados:")
+      },
+      protagonistas = c("la supervisora de calidad de una fábrica de varillas",
+                        "el ingeniero jefe de una planta metalúrgica",
+                        "la directora técnica de una siderúrgica"),
+      item_singular = "varilla", item_plural = "varillas",
+      propiedad_singular = "la longitud", propiedad_plural = "las longitudes",
+      encabezado_item = "Varilla", encabezado_prop = "Longitud",
+      unidad = "cm", genero = "f",
+      valores_esperados = c(20.0, 25.0, 30.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    ),
+    # Tipo 6: Pregunta retórica (farmacéutica)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("\u00bfCumplen las ", item_pl, " con el estándar de producción? ",
+               "Para responder, ", prot, " midieron ", prop_pl,
+               " de ", n, " ", item_pl, " seleccionadas al azar:")
+      },
+      protagonistas = c("los analistas del laboratorio farmacéutico",
+                        "los inspectores de la planta de producción",
+                        "los técnicos del departamento de control"),
+      item_singular = "tableta", item_plural = "tabletas",
+      propiedad_singular = "la masa", propiedad_plural = "las masas",
+      encabezado_item = "Tableta", encabezado_prop = "Masa",
+      unidad = "mg", genero = "f",
+      valores_esperados = c(250, 500, 750),
+      desviaciones = c(5, 10, 15),
+      decimales = 0
+    ),
+    # Tipo 7: Acción en curso (construcción)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Durante la inspección de materiales en ", prot,
+               ", se midieron ", prop_pl, " de ", n,
+               " ", item_pl, " que llegaron al almacén:")
+      },
+      protagonistas = c("una obra de construcción en el centro de la ciudad",
+                        "un proyecto de infraestructura vial",
+                        "una edificación residencial en las afueras"),
+      item_singular = "tubo", item_plural = "tubos",
+      propiedad_singular = "el diámetro", propiedad_plural = "los diámetros",
+      encabezado_item = "Tubo", encabezado_prop = "Diámetro",
+      unidad = "mm", genero = "m",
+      valores_esperados = c(25.0, 50.0, 75.0),
+      desviaciones = c(0.5, 1.0, 1.5),
+      decimales = 1
+    ),
+    # Tipo 8: Perspectiva del estudiante (baterías)
+    list(
+      plantilla = function(prot, n, prop_pl, item_pl) {
+        paste0("Para su proyecto de física, ", prot,
+               " midieron ", prop_pl, " de ", n,
+               " ", item_pl, " del laboratorio del colegio:")
+      },
+      protagonistas = c("los estudiantes de undécimo grado",
+                        "el grupo de investigación del colegio",
+                        "los integrantes del semillero de ciencias"),
+      item_singular = "batería", item_plural = "baterías",
+      propiedad_singular = "el voltaje", propiedad_plural = "los voltajes",
+      encabezado_item = "Batería", encabezado_prop = "Voltaje",
+      unidad = "V", genero = "f",
+      valores_esperados = c(1.5, 3.0, 9.0),
+      desviaciones = c(0.1, 0.2, 0.3),
+      decimales = 1
+    )
+  )
+
+  # --- Seleccionar contexto aleatorio ---
+  ctx <- contextos[[sample(length(contextos), 1)]]
+  protagonista <- sample(ctx$protagonistas, 1)
+  valor_esperado <- sample(ctx$valores_esperados, 1)
+
+  # --- Generar datos de medición ---
+  n_items <- sample(6:8, 1)
+  n_iguales <- sample(2:3, 1)
+  n_diferentes <- n_items - n_iguales
+
+  pos_iguales <- sort(sample(1:n_items, n_iguales))
+  pos_diferentes <- setdiff(1:n_items, pos_iguales)
+
+  # Asegurar al menos 1 medida por encima y 1 por debajo
+  direcciones <- c(1, -1)
+  if (n_diferentes > 2) {
+    direcciones <- c(direcciones, sample(c(1, -1), n_diferentes - 2, replace = TRUE))
+  }
+  direcciones <- sample(direcciones)
+
+  mediciones <- rep(valor_esperado, n_items)
+  for (i in seq_along(pos_diferentes)) {
+    dev <- sample(ctx$desviaciones, 1)
+    mediciones[pos_diferentes[i]] <- valor_esperado + direcciones[i] * dev
+  }
+
+  # --- Identificar subconjuntos ---
+  eps <- 1e-9
+  items_diferentes <- sort(which(abs(mediciones - valor_esperado) > eps))
+  items_todos <- 1:n_items
+  items_mayores <- sort(which(mediciones > valor_esperado + eps))
+  items_menores <- sort(which(mediciones < valor_esperado - eps))
+  items_iguales <- sort(which(abs(mediciones - valor_esperado) < eps))
+
+  # --- Función para formatear lista de items (con género) ---
+  formatear_items <- function(items, n_total, singular, plural, genero = "m") {
+    art_pl <- ifelse(genero == "m", "los", "las")
+    art_sg <- ifelse(genero == "m", "el", "la")
+
+    if (length(items) == 0) return(paste0("Para ninguno de ", art_pl, " ", plural))
+    if (length(items) == n_total) return(paste0("Para ", art_pl, " ", plural, " del 1 al ", n_total))
+
+    items_s <- sort(items)
+    n <- length(items_s)
+
+    if (n == 1) {
+      return(paste0("\u00danicamente para ", art_sg, " ", singular, " ", items_s[1]))
+    }
+
+    if (all(diff(items_s) == 1) && n >= 3) {
+      return(paste0("Para ", art_pl, " ", plural, " del ", min(items_s), " al ", max(items_s)))
+    }
+
+    if (n == 2) {
+      return(paste0("\u00danicamente para ", art_pl, " ", plural, " ", items_s[1], " y ", items_s[2]))
+    }
+
+    ultimo <- tail(items_s, 1)
+    resto <- head(items_s, -1)
+    return(paste0("Para ", art_pl, " ", plural, " ", paste(resto, collapse = ", "), " y ", ultimo))
+  }
+
+  # --- Mapa de subconjuntos ---
+  subsets_map <- list(
+    diferentes = items_diferentes,
+    iguales = items_iguales,
+    todos = items_todos,
+    mayores = items_mayores,
+    menores = items_menores
+  )
+
+  # --- Helpers de género ---
+  todos_g <- ifelse(ctx$genero == "m", "todos", "todas")
+  Todos_g <- ifelse(ctx$genero == "m", "Todos", "Todas")
+  art_pl <- ifelse(ctx$genero == "m", "los", "las")
+  genero_prop <- ifelse(startsWith(ctx$propiedad_singular, "el "), "m", "f")
+  registrado_a <- ifelse(genero_prop == "m", "registrado", "registrada")
+
+  # --- Mediciones formateadas ---
+  mediciones_fmt <- sapply(mediciones, function(x) fmt_es(x, ctx$decimales))
+  valor_esp_fmt <- fmt_es(valor_esperado, ctx$decimales)
+
+  # --- Nombre del estudiante ---
+  nombres_estudiante <- c("Andrea", "Santiago", "Valentina", "Mateo",
+                          "Camila", "Sebastián", "Isabella", "Daniel",
+                          "Mariana", "Nicolás", "Laura", "Felipe")
+  nombre_estudiante <- sample(nombres_estudiante, 1)
+
+  # --- Enunciado con plantilla ---
+  enunciado_contexto <- ctx$plantilla(protagonista, n_items,
+                                       ctx$propiedad_plural, ctx$item_plural)
+
+  # ============================================================
+  # SELECCIÓN ALEATORIA DEL TIPO DE PREGUNTA (v2)
+  # 4 tipos → la opción correcta varía en contenido
+  # ============================================================
+  tipo_idx <- sample(4, 1)
+
+  if (tipo_idx == 1) {
+    # --- APLICABILIDAD: ¿para cuáles el procedimiento detecta desviación? ---
+    correcta_key <- "diferentes"
+    dist_keys <- c("todos", "mayores", "menores")
+
+    afirmacion_texto <- paste0(
+      "El procedimiento se puede usar para ", todos_g, " ",
+      art_pl, " ", ctx$item_plural, ".")
+
+    pregunta_texto <- paste0(
+      "\u00bfPara cu\u00e1les ", ctx$item_plural,
+      " el procedimiento detecta realmente una desviaci\u00f3n en ",
+      ctx$propiedad_singular, "?")
+
+    sol_analisis <- paste0(
+      nombre_estudiante, " afirm\u00f3 que el procedimiento se puede usar para **",
+      todos_g, "** ", art_pl, " ", ctx$item_plural,
+      ". Sin embargo, cuando ", ctx$propiedad_singular,
+      " coincide exactamente con el valor esperado (",
+      valor_esp_fmt, " ", ctx$unidad,
+      "), la resta da cero y el error relativo es 0%. En estos casos, el procedimiento ",
+      "no detecta ninguna desviaci\u00f3n, por lo que no aporta informaci\u00f3n \u00fatil ",
+      "sobre errores de fabricaci\u00f3n.")
+
+    sol_respuesta_correcta <- paste0(
+      "La respuesta correcta es: **",
+      formatear_items(items_diferentes, n_items, ctx$item_singular,
+                      ctx$item_plural, ctx$genero),
+      "**. Estos ", ctx$item_plural, " tienen medida diferente del valor esperado, ",
+      "por lo que al aplicar el procedimiento se obtiene un error relativo mayor que 0%.")
+
+    sol_text_correcta <- paste0(
+      "Correcto. El procedimiento solo detecta desviaciones en ",
+      art_pl, " ", ctx$item_plural,
+      " cuya medida difiere del valor esperado.")
+
+    sol_dist_texts <- c(
+      paste0("Incorrecto. No ", todos_g, " producen error > 0%. ",
+             art_pl, " ", ctx$item_plural, " ",
+             paste(items_iguales, collapse = " y "),
+             " tienen medida igual al valor esperado, dando error relativo de 0%."),
+      paste0("Incorrecto. Solo incluy\u00f3 ", art_pl, " ", ctx$item_plural,
+             " con medida mayor al esperado, ignorando que ",
+             art_pl, " de medida menor (",
+             ctx$item_plural, " ", paste(items_menores, collapse = " y "),
+             ") tambi\u00e9n producen error relativo > 0%."),
+      paste0("Incorrecto. Solo incluy\u00f3 ", art_pl, " ", ctx$item_plural,
+             " con medida menor al esperado, ignorando que ",
+             art_pl, " de medida mayor (",
+             ctx$item_plural, " ", paste(items_mayores, collapse = " y "),
+             ") tambi\u00e9n producen error relativo > 0%.")
+    )
+
+    sol_estrategia <- paste0(
+      "1. Comparar cada medici\u00f3n con el valor esperado (",
+      valor_esp_fmt, " ", ctx$unidad, ").\n",
+      "2. Si la medida es **igual** al esperado, el error es 0% y el procedimiento ",
+      "no detecta desviaci\u00f3n.\n",
+      "3. Si la medida es **diferente** (mayor o menor), el procedimiento detecta ",
+      "desviaci\u00f3n.\n",
+      "4. No confundir \"se puede calcular\" con \"detecta una desviaci\u00f3n real\".")
+
+  } else if (tipo_idx == 2) {
+    # --- COINCIDENCIA: ¿para cuáles la medida coincide con el esperado? ---
+    correcta_key <- "iguales"
+    dist_keys <- c("todos", "diferentes", "mayores")
+
+    afirmacion_texto <- paste0(
+      Todos_g, " ", art_pl, " ", ctx$item_plural,
+      " presentan alguna desviaci\u00f3n respecto al valor esperado.")
+
+    pregunta_texto <- paste0(
+      "\u00bfPara cu\u00e1les ", ctx$item_plural, " ",
+      ctx$propiedad_singular,
+      " coincide exactamente con el valor esperado?")
+
+    sol_analisis <- paste0(
+      nombre_estudiante, " afirm\u00f3 que **", todos_g, "** ",
+      art_pl, " ", ctx$item_plural,
+      " presentan desviaci\u00f3n. Sin embargo, ", art_pl, " ", ctx$item_plural, " ",
+      paste(items_iguales, collapse = " y "),
+      " tienen ", ctx$propiedad_singular, " exactamente igual a ",
+      valor_esp_fmt, " ", ctx$unidad,
+      ", es decir, **no presentan desviaci\u00f3n alguna**.")
+
+    sol_respuesta_correcta <- paste0(
+      "La respuesta correcta es: **",
+      formatear_items(items_iguales, n_items, ctx$item_singular,
+                      ctx$item_plural, ctx$genero),
+      "**. Estos ", ctx$item_plural, " tienen ", ctx$propiedad_singular,
+      " exactamente igual al valor esperado (",
+      valor_esp_fmt, " ", ctx$unidad, ").")
+
+    sol_text_correcta <- paste0(
+      "Correcto. Estos ", ctx$item_plural, " tienen ",
+      ctx$propiedad_singular, " exactamente igual al valor esperado (",
+      valor_esp_fmt, " ", ctx$unidad, ").")
+
+    sol_dist_texts <- c(
+      paste0("Incorrecto. No ", todos_g, " coinciden con el valor esperado; ",
+             art_pl, " ", ctx$item_plural, " ",
+             paste(items_diferentes, collapse = ", "),
+             " tienen medida diferente."),
+      paste0("Incorrecto. Estos ", ctx$item_plural,
+             " precisamente **no** coinciden con el valor esperado, ",
+             "sino que presentan desviaci\u00f3n (medida diferente de ",
+             valor_esp_fmt, " ", ctx$unidad, ")."),
+      paste0("Incorrecto. Estos ", ctx$item_plural,
+             " superan el valor esperado, por lo que no coinciden con \u00e9l.")
+    )
+
+    sol_estrategia <- paste0(
+      "1. Identificar el valor esperado (", valor_esp_fmt, " ", ctx$unidad, ").\n",
+      "2. Comparar **cada** medici\u00f3n individualmente.\n",
+      "3. Si medida = valor esperado, entonces coincide.\n",
+      "4. Si medida es distinta del valor esperado, entonces no coincide (ya sea mayor o menor).")
+
+  } else if (tipo_idx == 3) {
+    # --- EXCESO: ¿para cuáles la medida supera el esperado? ---
+    correcta_key <- "mayores"
+    dist_keys <- c("diferentes", "todos", "menores")
+
+    afirmacion_texto <- paste0(
+      Todos_g, " ", art_pl, " ", ctx$item_plural,
+      " que difieren del valor esperado tienen ",
+      ctx$propiedad_singular, " mayor.")
+
+    pregunta_texto <- paste0(
+      "\u00bfPara cu\u00e1les ", ctx$item_plural, " ",
+      ctx$propiedad_singular, " ", registrado_a,
+      " supera el valor esperado?")
+
+    sol_analisis <- paste0(
+      nombre_estudiante, " afirm\u00f3 que ", todos_g, " ",
+      art_pl, " ", ctx$item_plural,
+      " con medida diferente al esperado lo **superan**. Sin embargo, ",
+      art_pl, " ", ctx$item_plural, " ",
+      paste(items_menores, collapse = " y "),
+      " tienen ", ctx$propiedad_singular,
+      " **inferior** al valor esperado (",
+      valor_esp_fmt, " ", ctx$unidad,
+      "). La desviaci\u00f3n puede ocurrir en ambas direcciones.")
+
+    sol_respuesta_correcta <- paste0(
+      "La respuesta correcta es: **",
+      formatear_items(items_mayores, n_items, ctx$item_singular,
+                      ctx$item_plural, ctx$genero),
+      "**. Estos ", ctx$item_plural, " tienen ", ctx$propiedad_singular,
+      " superior a ", valor_esp_fmt, " ", ctx$unidad, ".")
+
+    sol_text_correcta <- paste0(
+      "Correcto. Estos ", ctx$item_plural, " tienen ",
+      ctx$propiedad_singular, " superior al valor esperado.")
+
+    sol_dist_texts <- c(
+      paste0("Incorrecto. Incluy\u00f3 tambi\u00e9n ", art_pl, " ", ctx$item_plural,
+             " con medida menor al esperado (",
+             paste(items_menores, collapse = " y "),
+             "), que no lo superan."),
+      paste0("Incorrecto. No ", todos_g, " superan el valor esperado; ",
+             art_pl, " ", ctx$item_plural, " ",
+             paste(items_iguales, collapse = " y "),
+             " coinciden con \u00e9l, y ",
+             art_pl, " ", paste(items_menores, collapse = " y "),
+             " son inferiores."),
+      paste0("Incorrecto. Confundi\u00f3 la direcci\u00f3n: estos ", ctx$item_plural,
+             " tienen medida **inferior**, no superior, al valor esperado.")
+    )
+
+    sol_estrategia <- paste0(
+      "1. Identificar el valor esperado (", valor_esp_fmt, " ", ctx$unidad, ").\n",
+      "2. Comparar cada medici\u00f3n: si medida > esperado, supera; ",
+      "si medida < esperado, es inferior.\n",
+      "3. No asumir que todas las desviaciones van en la misma direcci\u00f3n.\n",
+      "4. Verificar **cada** dato individualmente contra el valor de referencia.")
+
+  } else {
+    # --- DEFECTO: ¿para cuáles la medida es inferior al esperado? ---
+    correcta_key <- "menores"
+    dist_keys <- c("diferentes", "todos", "mayores")
+
+    afirmacion_texto <- paste0(
+      Todos_g, " ", art_pl, " ", ctx$item_plural,
+      " que difieren del valor esperado tienen ",
+      ctx$propiedad_singular, " menor.")
+
+    pregunta_texto <- paste0(
+      "\u00bfPara cu\u00e1les ", ctx$item_plural, " ",
+      ctx$propiedad_singular, " ", registrado_a,
+      " es inferior al valor esperado?")
+
+    sol_analisis <- paste0(
+      nombre_estudiante, " afirm\u00f3 que ", todos_g, " ",
+      art_pl, " ", ctx$item_plural,
+      " con medida diferente al esperado son **inferiores**. Sin embargo, ",
+      art_pl, " ", ctx$item_plural, " ",
+      paste(items_mayores, collapse = " y "),
+      " tienen ", ctx$propiedad_singular,
+      " **superior** al valor esperado (",
+      valor_esp_fmt, " ", ctx$unidad,
+      "). La desviaci\u00f3n puede ocurrir en ambas direcciones.")
+
+    sol_respuesta_correcta <- paste0(
+      "La respuesta correcta es: **",
+      formatear_items(items_menores, n_items, ctx$item_singular,
+                      ctx$item_plural, ctx$genero),
+      "**. Estos ", ctx$item_plural, " tienen ", ctx$propiedad_singular,
+      " inferior a ", valor_esp_fmt, " ", ctx$unidad, ".")
+
+    sol_text_correcta <- paste0(
+      "Correcto. Estos ", ctx$item_plural, " tienen ",
+      ctx$propiedad_singular, " inferior al valor esperado.")
+
+    sol_dist_texts <- c(
+      paste0("Incorrecto. Incluy\u00f3 tambi\u00e9n ", art_pl, " ", ctx$item_plural,
+             " con medida mayor al esperado (",
+             paste(items_mayores, collapse = " y "),
+             "), que no son inferiores."),
+      paste0("Incorrecto. No ", todos_g, " son inferiores al valor esperado; ",
+             art_pl, " ", ctx$item_plural, " ",
+             paste(items_iguales, collapse = " y "),
+             " coinciden con \u00e9l, y ",
+             art_pl, " ", paste(items_mayores, collapse = " y "),
+             " lo superan."),
+      paste0("Incorrecto. Confundi\u00f3 la direcci\u00f3n: estos ", ctx$item_plural,
+             " tienen medida **superior**, no inferior, al valor esperado.")
+    )
+
+    sol_estrategia <- paste0(
+      "1. Identificar el valor esperado (", valor_esp_fmt, " ", ctx$unidad, ").\n",
+      "2. Comparar cada medici\u00f3n: si medida < esperado, es inferior; ",
+      "si medida > esperado, supera.\n",
+      "3. No asumir que todas las desviaciones van en la misma direcci\u00f3n.\n",
+      "4. Verificar **cada** dato individualmente contra el valor de referencia.")
+  }
+
+  # --- Construir opciones ---
+  opcion_correcta_texto <- paste0(
+    formatear_items(subsets_map[[correcta_key]], n_items,
+                    ctx$item_singular, ctx$item_plural, ctx$genero), ".")
+
+  opciones_dist_texto <- sapply(dist_keys, function(k) {
+    paste0(formatear_items(subsets_map[[k]], n_items,
+                           ctx$item_singular, ctx$item_plural, ctx$genero), ".")
+  })
+
+  opciones_todas <- c(opcion_correcta_texto, unname(opciones_dist_texto))
+  solucion_binaria <- c(1L, 0L, 0L, 0L)
+
+  # --- Verificar unicidad de opciones ---
+  if (length(unique(opciones_todas)) != 4) {
+    stop(paste0("Opciones duplicadas: ", paste(opciones_todas, collapse = " | ")))
+  }
+
+  # --- Textos para Solution Answerlist ---
+  sol_texts <- c(sol_text_correcta, sol_dist_texts)
+
+  # --- Pool de reflexiones metacognitivas ---
+  reflexiones_metacognitivas <- list(
+    paste0("Antes de aplicar un procedimiento matem\u00e1tico, es fundamental verificar sus ",
+           "condiciones de aplicabilidad. Un procedimiento puede ser correcto en general, ",
+           "pero no aportar informaci\u00f3n en ciertos casos particulares."),
+    paste0("La capacidad de distinguir cu\u00e1ndo un procedimiento es \u00fatil y cu\u00e1ndo no lo es ",
+           "refleja una comprensi\u00f3n profunda del concepto, no solo del algoritmo."),
+    paste0("Un error com\u00fan en metrolog\u00eda es aplicar f\u00f3rmulas de error a mediciones que ",
+           "coinciden con el valor esperado. En esos casos, el error es cero y el ",
+           "procedimiento no a\u00f1ade informaci\u00f3n nueva."),
+    paste0("Evaluar la aplicabilidad de un procedimiento requiere analizar cada caso ",
+           "individualmente. No basta con saber hacer la operaci\u00f3n; hay que saber ",
+           "cu\u00e1ndo tiene sentido hacerla."),
+    paste0("La diferencia entre un c\u00e1lculo mec\u00e1nico y un an\u00e1lisis cr\u00edtico est\u00e1 en ",
+           "preguntarse: \u00bfpara qu\u00e9 datos tiene sentido este procedimiento?"),
+    paste0("Verificar los datos uno por uno antes de generalizar es una estrategia ",
+           "metacognitiva que previene conclusiones apresuradas."),
+    paste0("Asumir que todas las desviaciones van en la misma direcci\u00f3n es un error ",
+           "de generalizaci\u00f3n. Cada medici\u00f3n debe evaluarse por separado.")
+  )
+
+  reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+  return(list(
+    ctx = ctx,
+    protagonista = protagonista,
+    valor_esperado = valor_esperado,
+    valor_esp_fmt = valor_esp_fmt,
+    n_items = n_items,
+    mediciones = mediciones,
+    mediciones_fmt = mediciones_fmt,
+    items_diferentes = items_diferentes,
+    items_todos = items_todos,
+    items_mayores = items_mayores,
+    items_menores = items_menores,
+    items_iguales = items_iguales,
+    enunciado_contexto = enunciado_contexto,
+    opciones_todas = opciones_todas,
+    solucion_binaria = solucion_binaria,
+    sol_texts = sol_texts,
+    reflexion = reflexion,
+    nombre_estudiante = nombre_estudiante,
+    tipo_idx = tipo_idx,
+    afirmacion_texto = afirmacion_texto,
+    pregunta_texto = pregunta_texto,
+    sol_analisis = sol_analisis,
+    sol_respuesta_correcta = sol_respuesta_correcta,
+    sol_estrategia = sol_estrategia,
+    art_pl = art_pl,
+    registrado_a = registrado_a
+  ))
+}
+
+# --- Ejecutar generación ---
+datos <- generar_datos()
+
+# --- Extraer variables para uso en documento ---
+ctx <- datos$ctx
+protagonista <- datos$protagonista
+valor_esperado <- datos$valor_esperado
+valor_esp_fmt <- datos$valor_esp_fmt
+n_items <- datos$n_items
+mediciones <- datos$mediciones
+mediciones_fmt <- datos$mediciones_fmt
+items_diferentes <- datos$items_diferentes
+items_todos <- datos$items_todos
+items_mayores <- datos$items_mayores
+items_menores <- datos$items_menores
+items_iguales <- datos$items_iguales
+enunciado_contexto <- datos$enunciado_contexto
+opciones_todas <- datos$opciones_todas
+solucion_binaria <- datos$solucion_binaria
+sol_texts <- datos$sol_texts
+reflexion <- datos$reflexion
+nombre_estudiante <- datos$nombre_estudiante
+tipo_idx <- datos$tipo_idx
+afirmacion_texto <- datos$afirmacion_texto
+pregunta_texto <- datos$pregunta_texto
+sol_analisis <- datos$sol_analisis
+sol_respuesta_correcta <- datos$sol_respuesta_correcta
+sol_estrategia <- datos$sol_estrategia
+art_pl <- datos$art_pl
+```
+
+```{r version_diversity_test, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+# Guardar estado RNG
+saved_seed <- if (exists(".Random.seed", envir = globalenv())) {
+  get(".Random.seed", envir = globalenv())
+} else NULL
+
+test_that("Prueba de diversidad de versiones (200+ únicas de 300)", {
+  versiones <- character(300)
+  for (i in 1:300) {
+    set.seed(i * 7)
+    d <- generar_datos()
+    versiones[i] <- digest::digest(list(
+      contexto = d$ctx$item_singular,
+      protagonista = d$protagonista,
+      valor_esperado = d$valor_esperado,
+      n_items = d$n_items,
+      mediciones = round(d$mediciones, 6),
+      items_diferentes = d$items_diferentes,
+      tipo_idx = d$tipo_idx
+    ))
+  }
+  n_unicas <- length(unique(versiones))
+  expect_true(n_unicas >= 200,
+              info = paste("Solo se generaron", n_unicas,
+                           "versiones únicas de 300 intentos. Se requieren al menos 200."))
+})
+
+test_that("Los 4 tipos de pregunta aparecen en 100 semillas", {
+  tipos_vistos <- integer(100)
+  for (i in 1:100) {
+    set.seed(i * 11)
+    d <- generar_datos()
+    tipos_vistos[i] <- d$tipo_idx
+  }
+  tipos_unicos <- sort(unique(tipos_vistos))
+  expect_equal(length(tipos_unicos), 4,
+               info = paste("Solo aparecen tipos:", paste(tipos_unicos, collapse = ", "),
+                            ". Se esperan los 4."))
+})
+
+# Restaurar estado RNG
+if (!is.null(saved_seed)) {
+  assign(".Random.seed", saved_seed, envir = globalenv())
+} else if (exists(".Random.seed", envir = globalenv())) {
+  rm(".Random.seed", envir = globalenv())
+}
+```
+
+```{r validaciones_matematicas, echo=FALSE, results="hide"}
+options(OutDec = ".")
+
+test_that("Datos del problema son consistentes", {
+  expect_true(length(items_iguales) >= 2,
+              info = paste("Se esperan al menos 2 items iguales, hay", length(items_iguales)))
+  expect_true(length(items_mayores) >= 1,
+              info = "Se espera al menos 1 item mayor al esperado")
+  expect_true(length(items_menores) >= 1,
+              info = "Se espera al menos 1 item menor al esperado")
+  expect_equal(sort(items_diferentes), sort(c(items_mayores, items_menores)),
+               info = "items_diferentes debe ser la unión de mayores y menores")
+  expect_equal(sort(c(items_iguales, items_diferentes)), sort(items_todos),
+               info = "La unión de iguales y diferentes debe cubrir todos los items")
+})
+
+test_that("Exactamente una opción correcta", {
+  expect_equal(sum(solucion_binaria), 1)
+  expect_equal(length(solucion_binaria), 4)
+})
+
+test_that("Opciones son únicas", {
+  expect_equal(length(unique(opciones_todas)), 4,
+               info = paste("Opciones duplicadas:", paste(opciones_todas, collapse = " | ")))
+})
+
+test_that("Mediciones numéricamente correctas", {
+  expect_false(any(is.na(mediciones)), info = "Hay NA en mediciones")
+  expect_false(any(is.nan(mediciones)), info = "Hay NaN en mediciones")
+  expect_false(any(is.infinite(mediciones)), info = "Hay Inf en mediciones")
+  expect_true(all(mediciones > 0), info = "Todas las mediciones deben ser positivas")
+})
+
+test_that("tipo_idx es válido", {
+  expect_true(tipo_idx %in% 1:4, info = paste("tipo_idx inválido:", tipo_idx))
+})
+```
+
+
+Question
+========
+
+`r enunciado_contexto`
+
+```{r tabla_datos, echo=FALSE, results='asis'}
+cat("\n\n")
+cat(paste0("| ", ctx$encabezado_item, " | ", ctx$encabezado_prop, " (", ctx$unidad, ") |\n"))
+cat("|:---:|:---:|\n")
+for (i in 1:n_items) {
+  cat(paste0("| ", i, " | ", mediciones_fmt[i], " |\n"))
+}
+cat("\n\n")
+```
+
+`r paste0(toupper(substr(ctx$propiedad_singular, 1, 1)), substr(ctx$propiedad_singular, 2, nchar(ctx$propiedad_singular)), " esperado de ", art_pl, " ", ctx$item_plural, " es ", valor_esp_fmt, " ", ctx$unidad)`, así que, para determinar el error relativo de los registros, se propone usar el siguiente procedimiento:
+
+- **Paso 1.** Restar las medidas, del menor al mayor, entre `r paste0(ctx$propiedad_singular, " esperado")` y la medida del `r ctx$item_singular`.
+- **Paso 2.** Dividir ese resultado entre `r paste0(valor_esp_fmt, " ", ctx$unidad)`.
+- **Paso 3.** Multiplicar el resultado anterior por 100.
+
+`r nombre_estudiante` analizó los datos y afirmó: *"`r afirmacion_texto`"*
+
+**`r pregunta_texto`**
+
+Answerlist
+----------
+
+* `r opciones_todas[1]`
+* `r opciones_todas[2]`
+* `r opciones_todas[3]`
+* `r opciones_todas[4]`
+
+
+Solution
+========
+
+### Análisis de la afirmación de `r nombre_estudiante`
+
+`r sol_analisis`
+
+### Clasificación de `r art_pl` `r ctx$item_plural`
+
+```{r tabla_clasificacion, echo=FALSE, results='asis'}
+cat("\n\n")
+cat(paste0("| ", ctx$encabezado_item, " | ", ctx$encabezado_prop,
+    " (", ctx$unidad, ") | Comparaci\u00f3n | Error relativo |\n"))
+cat("|:---:|:---:|:---:|:---:|\n")
+for (i in 1:n_items) {
+  resta <- abs(mediciones[i] - valor_esperado)
+  err_rel <- (resta / valor_esperado) * 100
+  err_fmt <- fmt_es(err_rel, 2)
+
+  comp <- if (abs(mediciones[i] - valor_esperado) < 1e-9) {
+    "= esperado"
+  } else if (mediciones[i] > valor_esperado) {
+    "> esperado"
+  } else {
+    "< esperado"
+  }
+
+  cat(paste0("| ", i, " | ", mediciones_fmt[i], " | ", comp, " | ", err_fmt, "% |\n"))
+}
+cat("\n\n")
+```
+
+### Respuesta correcta
+
+`r sol_respuesta_correcta`
+
+### Fórmula del error relativo
+
+$$\text{Error relativo} = \frac{|\text{medida} - \text{valor esperado}|}{\text{valor esperado}} \times 100\%$$
+
+Cuando la medida coincide con el valor esperado, la resta es cero y el error relativo es 0%. Cuando difiere, el procedimiento cuantifica la magnitud de la desviación en porcentaje. La desviación puede ocurrir en ambas direcciones (medida mayor o menor al esperado).
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+```{r show_estrategia, echo=FALSE, results='asis'}
+cat(sol_estrategia)
+```
+
+Answerlist
+----------
+
+* `r sol_texts[1]`
+* `r sol_texts[2]`
+* `r sol_texts[3]`
+* `r sol_texts[4]`
+
+
+Meta-information
+================
+exname: error_relativo_procedimiento_metacognitivo_interpretacion_n3_schoice_v2
+extype: schoice
+exsolution: `r paste(as.integer(solucion_binaria), collapse="")`
+exshuffle: TRUE
+extol: 0.01
+exsection: Numerico-Variacional|Error-Relativo|Procedimiento
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Numerico-Variacional
+exextra[Pensamiento]: Variacional
+exextra[Contenido]: Error relativo - Aplicabilidad de procedimientos de medicion
+exextra[Afirmacion]: Interpretar condiciones de aplicabilidad de un procedimiento matematico
+exextra[Evidencia]: Evaluar cuando un procedimiento de calculo de error relativo aporta informacion util
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[Grado]: 9

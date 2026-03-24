@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "error_relativo_procedimiento_metacognitivo_interpretacion_n2_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-03-23T17:42:32.304645-05:00",
+  "timestamp_ultima_actualizacion": "2026-03-23T18:00:20.954350-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:42:32.340025-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-03-23T17:42:32.394019-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-03-23T18:00:20.954350-05:00",
+      "archivo": "error_relativo_procedimiento_metacognitivo_interpretacion_n3_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:48:01.896925-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:47:24.664167-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:47:24.718798-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:54:56.017834-05:00",
+      "veredicto": "APROBAR CON CAMBIOS"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:48:01.952086-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:53:02.232728-05:00",
+      "versiones_unicas": 300
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-23T17:54:56.071400-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}
