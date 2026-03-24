@@ -4,6 +4,9 @@
 library(testthat)
 library(exams)
 
+# Modo rápido para pre-push (R_TESTS_QUICK=1)
+.quick <- identical(Sys.getenv("R_TESTS_QUICK"), "1")
+
 test_that("exshuffle = TRUE genera orden diferente en múltiples renderizados", {
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(
@@ -95,14 +98,15 @@ test_that("Ejercicio genera al menos 250 versiones únicas", {
 
   temp_dir <- tempdir()
 
-  # Generar 300 versiones (para asegurar 250+ únicas)
+  # Generar versiones (para asegurar diversidad)
+  N_DIV <- if (.quick) 30 else 300
   set.seed(NULL)
   resultado <- tryCatch({
-    exams2html(temp_file, n = 300, dir = temp_dir, name = "diversity_test")
+    exams2html(temp_file, n = N_DIV, dir = temp_dir, name = "diversity_test")
 
     # Leer versiones y extraer preguntas únicas
-    preguntas_unicas <- character(300)
-    for (i in 1:300) {
+    preguntas_unicas <- character(N_DIV)
+    for (i in 1:N_DIV) {
       html_file <- file.path(temp_dir, paste0("diversity_test", i, ".html"))
       if (file.exists(html_file)) {
         html_content <- readLines(html_file)
@@ -121,7 +125,7 @@ test_that("Ejercicio genera al menos 250 versiones únicas", {
   })
 
   expect_true(resultado$exito, info = paste("Error:", resultado$mensaje))
-  expect_true(resultado$n_unicas >= 250,
+  expect_true(resultado$n_unicas >= if (.quick) 20 else 250,
               info = paste("Solo se generaron", resultado$n_unicas, "versiones únicas"))
 
   unlink(temp_file)
@@ -154,13 +158,14 @@ test_that("Aleatorización de datos numéricos cubre rango esperado", {
 
   temp_dir <- tempdir()
 
-  # Generar 100 versiones
+  # Generar versiones
+  N_RANGO <- if (.quick) 10 else 100
   set.seed(NULL)
-  exams2html(temp_file, n = 100, dir = temp_dir, name = "rango_test")
+  exams2html(temp_file, n = N_RANGO, dir = temp_dir, name = "rango_test")
 
   # Extraer valores de velocidad de las versiones generadas
-  velocidades <- numeric(100)
-  for (i in 1:100) {
+  velocidades <- numeric(N_RANGO)
+  for (i in 1:N_RANGO) {
     html_file <- file.path(temp_dir, paste0("rango_test", i, ".html"))
     if (file.exists(html_file)) {
       html_content <- readLines(html_file)
@@ -181,8 +186,10 @@ test_that("Aleatorización de datos numéricos cubre rango esperado", {
               info = "Velocidad mínima fuera de rango")
   expect_true(max(velocidades_validas) <= 150,
               info = "Velocidad máxima fuera de rango")
-  expect_true(length(unique(velocidades_validas)) >= 50,
-              info = "Poca diversidad en valores de velocidad")
+  min_diversidad <- if (.quick) 5 else 50
+  expect_true(length(unique(velocidades_validas)) >= min_diversidad,
+              info = paste("Poca diversidad en valores de velocidad:",
+                           length(unique(velocidades_validas)), "de", min_diversidad, "requeridas"))
 
   unlink(temp_file)
 })

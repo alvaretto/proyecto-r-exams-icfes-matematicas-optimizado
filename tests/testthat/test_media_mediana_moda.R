@@ -8,6 +8,9 @@ suppressPackageStartupMessages({
   library(digest)
 })
 
+# Modo rápido para pre-push (R_TESTS_QUICK=1)
+.quick <- identical(Sys.getenv("R_TESTS_QUICK"), "1")
+
 EX_REL <- file.path(
   "A-Produccion", "03-En-Produccion",
   "06-Estad\u00edstica-Y-Probabilidad",
@@ -108,7 +111,7 @@ test_that("Mediana esta entre min y max de los datos", {
 
 test_that("Media y mediana son valores finitos sin NA/NaN", {
   set.seed(99)
-  for (i in 1:20) {
+  for (i in 1:if (.quick) 3 else 20) {
     ex <- .gen_one()
     mi <- ex$metainfo
     media_val <- as.numeric(mi$solution[[2]])
@@ -171,8 +174,9 @@ test_that("Renderiza correctamente en DOCX (pandoc)", {
 context("Media-Mediana-Moda: diversidad de versiones")
 
 test_that("200+ versiones unicas de 300 intentos", {
-  versiones <- character(300)
-  for (i in 1:300) {
+  N_DIV <- if (.quick) 30 else 300
+  versiones <- character(N_DIV)
+  for (i in 1:N_DIV) {
     ex <- .gen_one()
     mi <- ex$metainfo
     hash_version <- digest::digest(list(
@@ -184,8 +188,8 @@ test_that("200+ versiones unicas de 300 intentos", {
     versiones[i] <- hash_version
   }
   n_unicas <- length(unique(versiones))
-  expect_true(n_unicas >= 200,
-    info = paste("Solo", n_unicas, "versiones unicas de 300. Se requieren 200+."))
+  expect_true(n_unicas >= if (.quick) 20 else 200,
+    info = paste("Solo", n_unicas, "versiones unicas de", N_DIV, ". Se requieren", if (.quick) 20 else 200, "+."))
 })
 
 # ============================================================
@@ -195,7 +199,7 @@ context("Media-Mediana-Moda: robustez (50 ejecuciones)")
 
 test_that("50 ejecuciones generan datos validos sin errores", {
   set.seed(2026)
-  for (i in 1:50) {
+  for (i in 1:if (.quick) 5 else 50) {
     ex <- .gen_one()
     mi <- ex$metainfo
 
