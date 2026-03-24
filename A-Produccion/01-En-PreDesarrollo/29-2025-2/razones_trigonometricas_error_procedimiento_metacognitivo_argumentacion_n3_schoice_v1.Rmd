@@ -1,30 +1,10 @@
----
-output:
-  html_document: default
-  word_document: default
-  pdf_document: default
----
-```{r setup, include=FALSE}
-Sys.setlocale(category = "LC_NUMERIC", locale = "C")
-options(OutDec = ".")
-library(exams)
-library(digest)
-library(testthat)
+```{r data_generation, echo = FALSE, results = "hide"}
 options(scipen = 999)
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
-```
-
-```{r data_generation, echo=FALSE, results="hide"}
-options(OutDec = ".")
-
-# ================================================================
-# EJERCICIO: Razones trigonométricas - Errores de procedimiento
-# TIPO: CLOZE metacognitivo con Progressive Disclosure (4 partes)
-# COMPONENTE: Espacial-Métrico
-# COMPETENCIA: Argumentación
-# NIVEL: 2
-# Derivado del SCHOICE v1 (Pregunta 29 ICFES 2025-2)
-# ================================================================
+# ============================================================
+# Ejercicio metacognitivo: Identificación de errores en
+# procedimientos con razones trigonométricas
+# Basado en Pregunta 29 ICFES 2025-2
+# ============================================================
 
 # --- 1. POOL DE CONTEXTOS NARRATIVOS (8 plantillas, 6+ tipos) ---
 
@@ -108,9 +88,11 @@ contextos <- list(
 )
 
 # --- 2. CONFIGURACIONES TRIGONOMÉTRICAS ---
+# Dos configuraciones con valores limpios que involucran diferentes lados
 
 configuraciones <- list(
   # sen(30°) = cateto opuesto / hipotenusa = k / 2k = 0.5
+  # α=30° en vértice inferior izquierdo. Lados visibles: cat.opuesto (vertical) + hipotenusa
   list(
     tipo = "seno", angulo = 30,
     razon_nombre = "seno", razon_abrev = "sen",
@@ -127,6 +109,8 @@ configuraciones <- list(
     alpha_at_top = FALSE
   ),
   # cos(60°) = cateto adyacente / hipotenusa = k / 2k = 0.5
+  # MISMO triángulo 30-60-90, pero α=60° en vértice superior derecho.
+  # El cateto adyacente a 60° es el lado vertical (corto) = k.
   list(
     tipo = "coseno", angulo = 60,
     razon_nombre = "coseno", razon_abrev = "cos",
@@ -148,8 +132,8 @@ configuraciones <- list(
 
 cfg <- configuraciones[[sample(length(configuraciones), 1)]]
 k <- sample(c(40, 50, 60, 70, 80, 90, 100), 1)
-num_val <- k * cfg$factor_num
-den_val <- k * cfg$factor_den
+num_val <- k * cfg$factor_num    # valor del numerador en la razón
+den_val <- k * cfg$factor_den    # valor del denominador en la razón
 angulo_deseado <- cfg$angulo
 
 # --- 4. SELECCIÓN DE CONTEXTO ---
@@ -157,184 +141,6 @@ angulo_deseado <- cfg$angulo
 ctx <- contextos[[sample(length(contextos), 1)]]
 prot <- sample(ctx$protagonistas, 1)
 enunciado_contexto <- ctx$plantilla(prot, angulo_deseado)
-
-# --- 5. VARIABLES DE REFERENCIA ---
-
-rn <- cfg$razon_nombre
-ra <- cfg$razon_abrev
-def <- cfg$definicion
-def_inv <- cfg$definicion_invertida
-inv_nombre <- cfg$funcion_inversa
-inv_a <- cfg$inversa_abrev
-rc <- cfg$razon_confusa
-rc_a <- cfg$razon_confusa_abrev
-inv_c <- cfg$inversa_confusa
-inv_ca <- cfg$inversa_confusa_abrev
-recip <- cfg$reciproca
-ang_w <- cfg$angulo_wrong
-articulo_den <- ifelse(cfg$lado_den == "hipotenusa", "la", "el")
-
-# --- 6. POOL DE ERRORES DE PROCEDIMIENTO ---
-
-errores_procedimiento <- list(
-  # TRIG-PROC-01: Valores invertidos en el paso 2
-  list(
-    codigo = "TRIG-PROC-01",
-    nombre = "Valores invertidos en el paso 2",
-    paso_error = 2,
-    causa_raiz = paste0(
-      "Confusión entre cuál valor corresponde al numerador y cuál al ",
-      "denominador al reemplazar en la razón trigonométrica."),
-    paso1 = paste0(ra, " $\\alpha$ = ", def),
-    paso2 = paste0("$\\text{", ra, "}\\;\\alpha = \\frac{",
-                   den_val, "}{", num_val, "}$"),
-    paso3 = paste0("$\\alpha = \\text{", inv_a,
-                   "}\\left(\\frac{", den_val, "}{", num_val, "}\\right)$"),
-    opcion_correcta = paste0(
-      "En el paso 2, porque al escribir los valores en la fórmula ",
-      "se pusieron en posiciones incorrectas."),
-    descripcion_larga = paste0(
-      "El error está en el paso 2: se escribió ", ra,
-      " $\\alpha = \\frac{", den_val, "}{", num_val,
-      "}$ cuando lo correcto es ", ra,
-      " $\\alpha = \\frac{", num_val, "}{", den_val,
-      "}$, ya que el ", cfg$lado_num, " (", num_val,
-      " cm) va en el numerador y ",
-      articulo_den, " ", cfg$lado_den, " (", den_val,
-      " cm) en el denominador."),
-    precondicion = function(params) TRUE,
-    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
-      den_val / num_val
-    }
-  ),
-  # TRIG-PROC-02: Nombre de razón incorrecto en el paso 1
-  list(
-    codigo = "TRIG-PROC-02",
-    nombre = "Nombre de razón incorrecto en el paso 1",
-    paso_error = 1,
-    causa_raiz = paste0(
-      "Confusión entre las definiciones del seno y el coseno en un ",
-      "triángulo rectángulo."),
-    paso1 = paste0(rc_a, " $\\alpha$ = ", def),
-    paso2 = paste0("$\\text{", rc_a, "}\\;\\alpha = \\frac{",
-                   num_val, "}{", den_val, "}$"),
-    paso3 = paste0("$\\alpha = \\text{", inv_ca,
-                   "}\\left(\\frac{", num_val, "}{", den_val, "}\\right)$"),
-    opcion_correcta = paste0(
-      "En el paso 1, porque la razón trigonométrica que tiene ",
-      def, " es el ", rn, ", no el ", rc, "."),
-    descripcion_larga = paste0(
-      "El error está en el paso 1: se nombró como '", rc,
-      "' la razón ", def, ", cuando esa definición corresponde al ", rn,
-      ". Al usar el nombre incorrecto, toda la cadena del procedimiento ",
-      "queda afectada."),
-    precondicion = function(params) TRUE,
-    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
-      ang_w
-    }
-  ),
-  # TRIG-PROC-03: Definición invertida en el paso 1
-  list(
-    codigo = "TRIG-PROC-03",
-    nombre = paste0("Definición invertida del ", rn, " en el paso 1"),
-    paso_error = 1,
-    causa_raiz = paste0(
-      "Inversión del numerador y denominador en la definición de la ",
-      "razón trigonométrica del ", rn, "."),
-    paso1 = paste0(ra, " $\\alpha$ = ", def_inv),
-    paso2 = paste0("$\\text{", ra, "}\\;\\alpha = \\frac{",
-                   den_val, "}{", num_val, "}$"),
-    paso3 = paste0("$\\alpha = \\text{", inv_a,
-                   "}\\left(\\frac{", den_val, "}{", num_val, "}\\right)$"),
-    opcion_correcta = paste0(
-      "En el paso 1, porque el ", rn, " se define como ", def,
-      ", no como ", def_inv, "."),
-    descripcion_larga = paste0(
-      "El error está en el paso 1: se invirtió la definición del ", rn,
-      ". Se escribió ", ra, " $\\alpha$ = ", def_inv,
-      ", cuando la definición correcta es ", ra, " $\\alpha$ = ", def,
-      ". La razón ", def_inv, " corresponde a la ", recip, "."),
-    precondicion = function(params) TRUE,
-    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
-      den_val / num_val
-    }
-  ),
-  # TRIG-PROC-04: Función inversa incorrecta en el paso 3
-  list(
-    codigo = "TRIG-PROC-04",
-    nombre = "Función inversa incorrecta en el paso 3",
-    paso_error = 3,
-    causa_raiz = paste0(
-      "Confusión entre la función inversa del ", rn, " (", inv_nombre,
-      ") y la función inversa del ", rc, " (", inv_c, ")."),
-    paso1 = paste0(ra, " $\\alpha$ = ", def),
-    paso2 = paste0("$\\text{", ra, "}\\;\\alpha = \\frac{",
-                   num_val, "}{", den_val, "}$"),
-    paso3 = paste0("$\\alpha = \\text{", inv_ca,
-                   "}\\left(\\frac{", num_val, "}{", den_val, "}\\right)$"),
-    opcion_correcta = paste0(
-      "En el paso 3, porque para obtener el ángulo a partir del ",
-      rn, " se debe usar el ", inv_nombre, ", no el ", inv_c, "."),
-    descripcion_larga = paste0(
-      "El error está en el paso 3: se usó ", inv_c,
-      " para despejar el ángulo, pero como la razón utilizada es el ",
-      rn, ", la función inversa correcta es ", inv_nombre,
-      ". Al usar ", inv_ca, "(", cfg$valor_resultado,
-      ") se obtendría ", ang_w, "$^{\\circ}$, no ", angulo_deseado,
-      "$^{\\circ}$."),
-    precondicion = function(params) TRUE,
-    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
-      ang_w
-    }
-  )
-)
-
-# --- 7. SELECCIÓN DE ERROR ---
-
-error_idx <- sample(length(errores_procedimiento), 1)
-error_sel <- errores_procedimiento[[error_idx]]
-
-# --- 8. CÓDIGO TIKZ DEL TRIÁNGULO RECTÁNGULO ---
-
-adj_d <- 5.196
-opp_d <- 3
-
-tikz_code <- c(
-  "\\begin{tikzpicture}[scale=1]",
-  paste0("  \\fill[gray!12] (0,0) -- (", adj_d, ",0) -- (",
-         adj_d, ",", opp_d, ") -- cycle;"),
-  paste0("  \\fill[gray!25] (0,0) -- (", adj_d, ",", opp_d,
-         ") -- (5.309,3.065) -- (0.113,0.065) -- cycle;"),
-  paste0("  \\draw[very thick] (0,0) -- (", adj_d, ",0) -- (",
-         adj_d, ",", opp_d, ") -- cycle;"),
-  "  \\draw (4.896,0) -- (4.896,0.3) -- (5.196,0.3);"
-)
-
-if (!cfg$alpha_at_top) {
-  tikz_code <- c(tikz_code,
-    "  \\draw (0.8,0) arc (0:30:0.8);",
-    "  \\node at (1.11,0.30) {$\\alpha$};")
-} else {
-  tikz_code <- c(tikz_code,
-    paste0("  \\draw (", round(adj_d + 0.8*cos(210*pi/180), 3), ",",
-           round(opp_d + 0.8*sin(210*pi/180), 3), ") arc (210:270:0.8);"),
-    paste0("  \\node at (", round(adj_d + 1.1*cos(240*pi/180), 2), ",",
-           round(opp_d + 1.1*sin(240*pi/180), 2), ") {$\\alpha$};"))
-}
-
-tikz_code <- c(tikz_code,
-  paste0("  \\node[above, rotate=30, font=\\small] at (",
-         round(adj_d / 2, 2), ",", round(opp_d / 2, 2),
-         ") {", den_val, " cm};"))
-
-tikz_code <- c(tikz_code,
-  paste0("  \\node[right, font=\\small] at (",
-         round(adj_d + 0.2, 2), ",", round(opp_d / 2, 2),
-         ") {", num_val, " cm};"))
-
-tikz_code <- c(tikz_code, "\\end{tikzpicture}")
-
-# --- 9. INTRO DEL PROCEDIMIENTO ---
 
 intro_procedimiento <- sample(c(
   paste0("Para verificar que $\\alpha$ mida ", angulo_deseado,
@@ -347,157 +153,352 @@ intro_procedimiento <- sample(c(
          "que contiene un error:")
 ), 1)
 
-# ================================================================
-# PARTE 1 (schoice): Identificar EN CUÁL PASO está el error
-# ================================================================
+# --- 5. GENERACIÓN PARAMÉTRICA DE ERRORES ---
+# Los 4 tipos de error se generan a partir de la configuración
 
-pasos_posibles <- c("Paso 1", "Paso 2", "Paso 3")
-paso_correcto <- error_sel$paso_error
+rn <- cfg$razon_nombre        # "seno" o "coseno"
+ra <- cfg$razon_abrev          # "sen" o "cos"
+def <- cfg$definicion          # "cateto opuesto/hipotenusa" etc.
+def_inv <- cfg$definicion_invertida
+inv_nombre <- cfg$funcion_inversa    # "arcoseno" o "arcocoseno"
+inv_a <- cfg$inversa_abrev           # "arcsen" o "arccos"
+rc <- cfg$razon_confusa              # "coseno" o "seno"
+rc_a <- cfg$razon_confusa_abrev      # "cos" o "sen"
+inv_c <- cfg$inversa_confusa         # "arcocoseno" o "arcoseno"
+inv_ca <- cfg$inversa_confusa_abrev  # "arccos" o "arcsen"
+recip <- cfg$reciproca               # "cosecante" o "secante"
+ang_w <- cfg$angulo_wrong            # 60 o 30
 
-opciones_p1 <- pasos_posibles
-sol_p1 <- rep(0, 3)
-sol_p1[paso_correcto] <- 1
+paso_intro <- paste0(
+  "Seleccionar una razón trigonométrica que relacione las dos medidas ",
+  "dadas y el ángulo que se desea verificar. En este caso, ")
+paso2_intro <- paste0(
+  "Reemplazar los valores de las medidas en la razón trigonométrica: ")
 
-# ================================================================
-# PARTE 2 (num): Calcular el valor CORRECTO del ángulo
-# ================================================================
+errores_procedimiento <- list(
 
-# El ángulo correcto siempre es angulo_deseado
-valor_correcto_p2 <- angulo_deseado
-
-# ================================================================
-# PARTE 3 (mchoice): Evaluar afirmaciones sobre razones trigonométricas
-# ================================================================
-
-# Pool de afirmaciones (genéricas para ambas configuraciones)
-# Se generan 5 afirmaciones: 2-3 verdaderas + 2-3 falsas
-
-afirmacion_v1 <- paste0(
-  "El ", rn, " de un ángulo en un triángulo rectángulo se define como ",
-  def, ".")
-afirmacion_v1_es_verdadera <- TRUE
-
-afirmacion_v2 <- paste0(
-  "La función inversa del ", rn, " (", inv_nombre,
-  ") permite obtener el ángulo a partir del valor del ", rn, ".")
-afirmacion_v2_es_verdadera <- TRUE
-
-afirmacion_v3 <- paste0(
-  "Si ", ra, " $\\alpha$ = ", cfg$valor_resultado,
-  ", entonces $\\alpha$ = ", angulo_deseado, "$^{\\circ}$.")
-afirmacion_v3_es_verdadera <- TRUE
-
-afirmacion_f1 <- paste0(
-  "El ", rn, " de un ángulo se define como ", def_inv, ".")
-afirmacion_f1_es_verdadera <- FALSE
-
-afirmacion_f2 <- paste0(
-  "La ", recip, " del ", rn,
-  " permite obtener el ángulo a partir del valor del ", rn, ".")
-afirmacion_f2_es_verdadera <- FALSE
-
-todas_afirmaciones <- c(afirmacion_v1, afirmacion_v2, afirmacion_v3,
-                        afirmacion_f1, afirmacion_f2)
-todas_verdades <- c(afirmacion_v1_es_verdadera, afirmacion_v2_es_verdadera,
-                    afirmacion_v3_es_verdadera,
-                    afirmacion_f1_es_verdadera, afirmacion_f2_es_verdadera)
-
-# Mezclar afirmaciones
-orden_afirm <- sample(1:5)
-afirmaciones_mezcladas <- todas_afirmaciones[orden_afirm]
-verdades_mezcladas <- todas_verdades[orden_afirm]
-
-sol_p3 <- as.integer(verdades_mezcladas)
-
-# Explicaciones para cada afirmación
-explicaciones_afirmaciones <- c(
-  paste0("Verdadero. La definición del ", rn, " es ", def, "."),
-  paste0("Verdadero. El ", inv_nombre, " es la función inversa que ",
-         "devuelve el ángulo cuyo ", rn, " es un valor dado."),
-  paste0("Verdadero. Aplicando la función inversa: ", inv_a, "(",
-         cfg$valor_resultado, ") = ", angulo_deseado, "$^{\\circ}$."),
-  paste0("Falso. La razón ", def_inv, " corresponde a la ", recip,
-         ", no al ", rn, ". El ", rn, " se define como ", def, "."),
-  paste0("Falso. La ", recip, " es la función recíproca (1/", rn,
-         "), que devuelve un valor numérico, no un ángulo. Para obtener ",
-         "el ángulo se usa el ", inv_nombre, ".")
-)
-explicaciones_afirm_mezcladas <- explicaciones_afirmaciones[orden_afirm]
-
-# ================================================================
-# PARTE 4 (schoice): Verdadero/Falso sobre un caso específico
-# ================================================================
-
-# Pool de casos específicos
-casos_especificos <- list(
+  # TRIG-PROC-01: Valores invertidos en el paso 2
   list(
-    enunciado = paste0(
-      "Si en un triángulo rectángulo el cateto opuesto mide ", num_val,
-      " cm y la hipotenusa mide ", den_val,
-      " cm, entonces el seno del ángulo vale ", num_val, "/", den_val,
-      " = ", cfg$valor_resultado, "."),
-    es_verdadero = (cfg$tipo == "seno"),
-    explicacion_v = paste0(
-      "Verdadero. El seno se define como cateto opuesto/hipotenusa = ",
-      num_val, "/", den_val, " = ", cfg$valor_resultado, "."),
-    explicacion_f = paste0(
-      "Falso. En esta configuración, el ", cfg$lado_num,
-      " es el cateto adyacente al ángulo, no el opuesto. ",
-      "La razón que se calcula con estos lados es el coseno, no el seno.")
+    codigo = "TRIG-PROC-01",
+    nombre = "Valores invertidos en el paso 2",
+    paso_error = 2,
+    causa_raiz = paste0(
+      "Confusión entre cuál valor corresponde al numerador y cuál al ",
+      "denominador al reemplazar en la razón trigonométrica."),
+    paso1 = paste0(paso_intro, ra, " $\\alpha$ = ", def),
+    paso2 = paste0(paso2_intro, "$\\text{", ra, "}\\;\\alpha = \\frac{",
+                   den_val, "}{", num_val, "}$"),
+    paso3 = paste0("Despejar el ángulo: $\\alpha = \\text{", inv_a,
+                   "}\\left(\\frac{", den_val, "}{", num_val, "}\\right)$"),
+    opcion_correcta = paste0(
+      "En el paso 2, porque al escribir los valores en la fórmula ",
+      "se pusieron en posiciones incorrectas."),
+    distractor1 = paste0(
+      "En el paso 1, porque la razón trigonométrica que tiene ",
+      def, " es el ", rc, "."),
+    distractor2 = paste0(
+      "En el paso 1, porque el ", rn, " está en orden incorrecto ",
+      "y debe ser ", def_inv, "."),
+    distractor3 = paste0(
+      "En el paso 3, porque para obtener el valor del ángulo a ",
+      "partir del ", rn, " se utiliza la ", recip, "."),
+    explicacion_correcta = paste0(
+      "Verdadero. El error está en el paso 2: se escribió ", ra,
+      " $\\alpha$ = ", den_val, "/", num_val,
+      " cuando debió ser ", ra, " $\\alpha$ = ", num_val, "/", den_val,
+      ". El ", cfg$lado_num, " (", num_val,
+      " cm) va en el numerador y ",
+      ifelse(cfg$lado_den == "hipotenusa", "la ", "el "),
+      cfg$lado_den, " (", den_val, " cm) en el denominador."),
+    explicacion_d1 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "confundan las definiciones del seno y el coseno. La razón ",
+      def, " corresponde al ", rn, ", que está correctamente ",
+      "identificado en el paso 1."),
+    explicacion_d2 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "crean que el ", rn, " se define como ", def_inv,
+      ". En realidad, esa razón corresponde a la ", recip,
+      ". El ", rn, " se define correctamente como ", def, "."),
+    explicacion_d3 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "confundan la función inversa del ", rn, " (", inv_nombre,
+      ") con su función recíproca (", recip,
+      "). El ", inv_nombre, " permite obtener el ángulo a partir del ",
+      "valor del ", rn, "; la ", recip, " simplemente calcula 1/",
+      rn, "."),
+    descripcion_larga = paste0(
+      "El error está en el paso 2: se escribieron los valores en ",
+      "posiciones incorrectas. Se usó ", ra,
+      " $\\alpha = \\frac{", den_val, "}{", num_val,
+      "}$ cuando lo correcto es ", ra,
+      " $\\alpha = \\frac{", num_val, "}{", den_val,
+      "}$, ya que el ", cfg$lado_num, " (", num_val,
+      " cm) va en el numerador y ",
+      ifelse(cfg$lado_den == "hipotenusa", "la ", "el "),
+      cfg$lado_den, " (", den_val, " cm) en el denominador."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el valor erróneo: razón con valores invertidos
+      # den_val/num_val = 2 en vez de num_val/den_val = 0.5
+      den_val / num_val
+    }
   ),
+
+  # TRIG-PROC-02: Nombre de razón incorrecto en el paso 1
   list(
-    enunciado = paste0(
-      "Si en un triángulo rectángulo el cateto adyacente mide ", num_val,
-      " cm y la hipotenusa mide ", den_val,
-      " cm, entonces el coseno del ángulo vale ", num_val, "/", den_val,
-      " = ", cfg$valor_resultado, "."),
-    es_verdadero = (cfg$tipo == "coseno"),
-    explicacion_v = paste0(
-      "Verdadero. El coseno se define como cateto adyacente/hipotenusa = ",
-      num_val, "/", den_val, " = ", cfg$valor_resultado, "."),
-    explicacion_f = paste0(
-      "Falso. En esta configuración, el ", cfg$lado_num,
-      " es el cateto opuesto al ángulo, no el adyacente. ",
-      "La razón que se calcula con estos lados es el seno, no el coseno.")
+    codigo = "TRIG-PROC-02",
+    nombre = "Nombre de razón incorrecto en el paso 1",
+    paso_error = 1,
+    causa_raiz = paste0(
+      "Confusión entre las definiciones del seno y el coseno en un ",
+      "triángulo rectángulo."),
+    paso1 = paste0(paso_intro, rc_a, " $\\alpha$ = ", def),
+    paso2 = paste0(paso2_intro, "$\\text{", rc_a, "}\\;\\alpha = \\frac{",
+                   num_val, "}{", den_val, "}$"),
+    paso3 = paste0("Despejar el ángulo: $\\alpha = \\text{", inv_ca,
+                   "}\\left(\\frac{", num_val, "}{", den_val, "}\\right)$"),
+    opcion_correcta = paste0(
+      "En el paso 1, porque la razón trigonométrica que tiene ",
+      def, " es el ", rn, ", no el ", rc, "."),
+    distractor1 = paste0(
+      "En el paso 2, porque al escribir los valores en la fórmula ",
+      "se pusieron en posiciones incorrectas."),
+    distractor2 = paste0(
+      "En el paso 1, porque el ", rc, " se define como ",
+      cfg$definicion_confusa_invertida, "."),
+    distractor3 = paste0(
+      "En el paso 3, porque para obtener el ángulo se debe usar el ",
+      inv_nombre, " y no el ", inv_c, "."),
+    explicacion_correcta = paste0(
+      "Verdadero. El error está en el paso 1: se nombró como '", rc,
+      "' la razón ", def, ", pero esa definición corresponde al ", rn,
+      ". El ", rc, " se define de manera diferente."),
+    explicacion_d1 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "crean que los valores están mal ubicados. Sin embargo, los valores ",
+      "en el paso 2 están correctamente asignados según la definición ",
+      "escrita en el paso 1. El error está en el nombre de la razón, ",
+      "no en la sustitución."),
+    explicacion_d2 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "confundan la definición del ", rc, " con su recíproca. El ", rc,
+      " no se define como ", cfg$definicion_confusa_invertida,
+      ". Esa razón corresponde a la ",
+      ifelse(rc == "coseno", "secante", "cosecante"), "."),
+    explicacion_d3 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "identifiquen una consecuencia del error pero no su origen. ",
+      "Si se corrige el paso 1 (cambiando '", rc, "' por '", rn,
+      "'), el paso 3 naturalmente usaría ", inv_nombre,
+      ". El error raíz está en el paso 1."),
+    descripcion_larga = paste0(
+      "El error está en el paso 1: se nombró como '", rc,
+      "' la razón ", def, ", cuando esa definición corresponde al ", rn,
+      ". Al usar el nombre incorrecto, toda la cadena del procedimiento ",
+      "queda afectada."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el ángulo erróneo: usar función inversa equivocada
+      # El nombre de la razón es incorrecto, pero si se usa la inversa
+      # correspondiente al nombre erróneo, se obtiene ang_w
+      ang_w
+    }
   ),
+
+  # TRIG-PROC-03: Definición invertida en el paso 1
   list(
-    enunciado = paste0(
-      "Para obtener un ángulo a partir del valor de su ", rn,
-      ", se debe usar la ", recip, "."),
-    es_verdadero = FALSE,
-    explicacion_v = "",
-    explicacion_f = paste0(
-      "Falso. La ", recip, " es la función recíproca (1/", rn,
-      "), que devuelve un valor numérico, no un ángulo. Para obtener el ",
-      "ángulo se debe usar la función inversa: el ", inv_nombre, ".")
+    codigo = "TRIG-PROC-03",
+    nombre = paste0("Definición invertida del ", rn, " en el paso 1"),
+    paso_error = 1,
+    causa_raiz = paste0(
+      "Inversión del numerador y denominador en la definición de la ",
+      "razón trigonométrica del ", rn, "."),
+    paso1 = paste0(paso_intro, ra, " $\\alpha$ = ", def_inv),
+    paso2 = paste0(paso2_intro, "$\\text{", ra, "}\\;\\alpha = \\frac{",
+                   den_val, "}{", num_val, "}$"),
+    paso3 = paste0("Despejar el ángulo: $\\alpha = \\text{", inv_a,
+                   "}\\left(\\frac{", den_val, "}{", num_val, "}\\right)$"),
+    opcion_correcta = paste0(
+      "En el paso 1, porque el ", rn, " se define como ", def,
+      ", no como ", def_inv, "."),
+    distractor1 = paste0(
+      "En el paso 2, porque al escribir los valores en la fórmula ",
+      "se pusieron en posiciones incorrectas."),
+    distractor2 = paste0(
+      "En el paso 3, porque para obtener el valor del ángulo a ",
+      "partir del ", rn, " se utiliza la ", recip, "."),
+    distractor3 = paste0(
+      "En el paso 1, porque la razón ", def_inv, " corresponde al ",
+      rc, "."),
+    explicacion_correcta = paste0(
+      "Verdadero. El error está en el paso 1: se escribió ", ra,
+      " $\\alpha$ = ", def_inv, ", pero la definición correcta del ",
+      rn, " es ", def, ". La razón ", def_inv, " corresponde a la ",
+      recip, "."),
+    explicacion_d1 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "crean que los valores fueron mal colocados en el paso 2. En ",
+      "realidad, los valores son consistentes con la definición ",
+      "(incorrecta) del paso 1. El error está en la definición, ",
+      "no en la sustitución."),
+    explicacion_d2 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "confundan la función recíproca (", recip, " = 1/", rn,
+      ") con la función inversa (", inv_nombre,
+      "). Son conceptos diferentes: la ", recip,
+      " da un valor numérico, mientras que el ", inv_nombre,
+      " da un ángulo."),
+    explicacion_d3 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "confundan las razones trigonométricas recíprocas. La razón ",
+      def_inv, " es la ", recip, ", no el ", rc, "."),
+    descripcion_larga = paste0(
+      "El error está en el paso 1: se invirtió la definición del ", rn,
+      ". Se escribió ", ra, " $\\alpha$ = ", def_inv,
+      ", cuando la definición correcta es ", ra, " $\\alpha$ = ", def,
+      ". La razón ", def_inv, " corresponde a la ", recip, "."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el valor erróneo: definición invertida = den_val/num_val
+      den_val / num_val
+    }
   ),
+
+  # TRIG-PROC-04: Función inversa incorrecta en el paso 3
   list(
-    enunciado = paste0(
-      "Si ", ra, " $\\alpha$ = ", cfg$valor_resultado,
-      ", entonces $\\alpha$ = ", ang_w, "$^{\\circ}$."),
-    es_verdadero = FALSE,
-    explicacion_v = "",
-    explicacion_f = paste0(
-      "Falso. Si ", ra, " $\\alpha$ = ", cfg$valor_resultado,
+    codigo = "TRIG-PROC-04",
+    nombre = "Función inversa incorrecta en el paso 3",
+    paso_error = 3,
+    causa_raiz = paste0(
+      "Confusión entre la función inversa del ", rn, " (", inv_nombre,
+      ") y la función inversa del ", rc, " (", inv_c, ")."),
+    paso1 = paste0(paso_intro, ra, " $\\alpha$ = ", def),
+    paso2 = paste0(paso2_intro, "$\\text{", ra, "}\\;\\alpha = \\frac{",
+                   num_val, "}{", den_val, "}$"),
+    paso3 = paste0("Despejar el ángulo: $\\alpha = \\text{", inv_ca,
+                   "}\\left(\\frac{", num_val, "}{", den_val, "}\\right)$"),
+    opcion_correcta = paste0(
+      "En el paso 3, porque para obtener el ángulo a partir del ",
+      rn, " se debe usar el ", inv_nombre, ", no el ", inv_c, "."),
+    distractor1 = paste0(
+      "En el paso 1, porque la razón trigonométrica que tiene ",
+      def, " es el ", rc, "."),
+    distractor2 = paste0(
+      "En el paso 2, porque al escribir los valores en la fórmula ",
+      "se pusieron en posiciones incorrectas."),
+    distractor3 = paste0(
+      "En el paso 1, porque el ", rn, " está en orden incorrecto ",
+      "y debe ser ", def_inv, "."),
+    explicacion_correcta = paste0(
+      "Verdadero. El error está en el paso 3: se usó ", inv_c,
+      " para despejar el ángulo, pero como se trabaja con el ", rn,
+      ", la función inversa correcta es ", inv_nombre,
+      ". Si ", ra, " $\\alpha$ = ", num_val, "/", den_val,
+      " = ", cfg$valor_resultado,
       ", entonces $\\alpha$ = ", inv_a, "(", cfg$valor_resultado,
-      ") = ", angulo_deseado, "$^{\\circ}$, no ", ang_w,
-      "$^{\\circ}$. El valor ", ang_w, "$^{\\circ}$ se obtendría con ",
-      rc_a, " $\\alpha$ = ", cfg$valor_resultado, ".")
+      ") = ", angulo_deseado, "$^{\\circ}$."),
+    explicacion_d1 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "confundan las definiciones del seno y el coseno. La razón ",
+      def, " corresponde al ", rn,
+      ", y el paso 1 la identifica correctamente."),
+    explicacion_d2 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "crean que los valores están mal ubicados. Sin embargo, el ",
+      cfg$lado_num, " (", num_val,
+      " cm) está correctamente en el numerador y ",
+      ifelse(cfg$lado_den == "hipotenusa", "la ", "el "),
+      cfg$lado_den, " (", den_val,
+      " cm) en el denominador."),
+    explicacion_d3 = paste0(
+      "Falso. Es posible que los estudiantes que eligen esta opción ",
+      "crean que la definición del ", rn, " está invertida. El ", rn,
+      " se define correctamente como ", def,
+      ", tal como aparece en el paso 1."),
+    descripcion_larga = paste0(
+      "El error está en el paso 3: se usó ", inv_c,
+      " para despejar el ángulo, pero como la razón utilizada es el ",
+      rn, ", la función inversa correcta es ", inv_nombre,
+      ". Al usar ", inv_ca, "(", cfg$valor_resultado,
+      ") se obtendría ", ang_w, "$^{\\circ}$, no ", angulo_deseado,
+      "$^{\\circ}$."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord = NULL, datos_presentados = NULL) {
+      # Produce el ángulo erróneo: usar inv_c en vez de inv_a
+      # arccos(0.5) = 60° cuando debería ser arcsen(0.5) = 30° (o viceversa)
+      ang_w
+    }
   )
 )
 
-caso_sel <- casos_especificos[[sample(length(casos_especificos), 1)]]
+# --- 6. SELECCIÓN DE ERROR Y MEZCLA DE OPCIONES ---
 
-opciones_p4 <- c("Verdadero", "Falso")
-if (caso_sel$es_verdadero) {
-  sol_p4 <- c(1, 0)
-  explicacion_p4 <- caso_sel$explicacion_v
+error_idx <- sample(length(errores_procedimiento), 1)
+error_sel <- errores_procedimiento[[error_idx]]
+
+todas_opciones <- c(error_sel$opcion_correcta, error_sel$distractor1,
+                    error_sel$distractor2, error_sel$distractor3)
+solucion_base <- c(TRUE, FALSE, FALSE, FALSE)
+todas_explicaciones <- c(error_sel$explicacion_correcta, error_sel$explicacion_d1,
+                         error_sel$explicacion_d2, error_sel$explicacion_d3)
+
+orden <- sample(1:4)
+opciones_mezcladas <- todas_opciones[orden]
+solucion_mezclada <- solucion_base[orden]
+explicaciones_mezcladas <- todas_explicaciones[orden]
+
+# --- 7. CÓDIGO TIKZ DEL TRIÁNGULO RECTÁNGULO ---
+# MISMO triángulo 30-60-90 para ambas configuraciones (mismas dimensiones).
+# A(0,0) = base-izq, B(5.196,0) = base-der (ángulo recto), C(5.196,3) = arriba-der
+# Para sen(30°): α en A (abajo-izq). Para cos(60°): α en C (arriba-der).
+# Lados etiquetados: hipotenusa (AC = 2k) + vertical (BC = k) en ambos casos.
+
+adj_d <- 5.196   # base del triángulo (fija)
+opp_d <- 3       # altura del triángulo (fija)
+
+tikz_code <- c(
+  "\\begin{tikzpicture}[scale=1]",
+  paste0("  \\fill[gray!12] (0,0) -- (", adj_d, ",0) -- (",
+         adj_d, ",", opp_d, ") -- cycle;"),
+  paste0("  \\fill[gray!25] (0,0) -- (", adj_d, ",", opp_d,
+         ") -- (5.309,3.065) -- (0.113,0.065) -- cycle;"),
+  paste0("  \\draw[very thick] (0,0) -- (", adj_d, ",0) -- (",
+         adj_d, ",", opp_d, ") -- cycle;"),
+  "  \\draw (4.896,0) -- (4.896,0.3) -- (5.196,0.3);"
+)
+
+# Arco y etiqueta de α según configuración
+if (!cfg$alpha_at_top) {
+  # sen(30°): α = 30° en vértice inferior izquierdo A(0,0)
+  tikz_code <- c(tikz_code,
+    "  \\draw (0.8,0) arc (0:30:0.8);",
+    "  \\node at (1.11,0.30) {$\\alpha$};")
 } else {
-  sol_p4 <- c(0, 1)
-  explicacion_p4 <- caso_sel$explicacion_f
+  # cos(60°): α = 60° en vértice superior derecho C(5.196,3)
+  # Arco entre lados CA (hacia abajo-izq, 210°) y CB (hacia abajo, 270°)
+  tikz_code <- c(tikz_code,
+    paste0("  \\draw (", round(adj_d + 0.8*cos(210*pi/180), 3), ",",
+           round(opp_d + 0.8*sin(210*pi/180), 3), ") arc (210:270:0.8);"),
+    paste0("  \\node at (", round(adj_d + 1.1*cos(240*pi/180), 2), ",",
+           round(opp_d + 1.1*sin(240*pi/180), 2), ") {$\\alpha$};"))
 }
 
-# --- 10. REFLEXIONES METACOGNITIVAS ---
+# Etiqueta hipotenusa (AC, diagonal): siempre rotate=30 (mismo triángulo)
+tikz_code <- c(tikz_code,
+  paste0("  \\node[above, rotate=30, font=\\small] at (",
+         round(adj_d / 2, 2), ",", round(opp_d / 2, 2),
+         ") {", den_val, " cm};"))
+
+# Etiqueta lado vertical (BC): siempre a la derecha
+tikz_code <- c(tikz_code,
+  paste0("  \\node[right, font=\\small] at (",
+         round(adj_d + 0.2, 2), ",", round(opp_d / 2, 2),
+         ") {", num_val, " cm};"))
+
+tikz_code <- c(tikz_code, "\\end{tikzpicture}")
+
+# --- 8. REFLEXIONES METACOGNITIVAS ---
 
 reflexiones_metacognitivas <- list(
   paste0("Identificar errores en procedimientos ajenos fortalece la capacidad ",
@@ -516,8 +517,9 @@ reflexiones_metacognitivas <- list(
 )
 reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
 
-# --- 11. TEXTOS PARA LA SOLUCIÓN ---
+# --- 9. TEXTOS PARA LA SOLUCIÓN ---
 
+articulo_den <- ifelse(cfg$lado_den == "hipotenusa", "la", "el")
 sol_paso1_text <- paste0(
   "Como se conocen el ", cfg$lado_num, " (", num_val, " cm) y ",
   articulo_den, " ", cfg$lado_den, " (", den_val,
@@ -529,22 +531,12 @@ sol_eq2 <- paste0("$$\\text{", ra, "}\\;\\alpha = \\frac{",
 sol_eq3 <- paste0("$$\\alpha = \\text{", inv_a, "}(",
                   cfg$valor_resultado, ") = ", angulo_deseado, "^{\\circ}$$")
 
-# --- 12. STRINGS DE SOLUCIÓN PARA META-INFORMATION ---
+# --- 10. VALIDACIONES ---
 
-sol_p1_str <- mchoice2string(sol_p1)
-sol_p3_str <- mchoice2string(sol_p3)
-sol_p4_str <- mchoice2string(sol_p4)
-
-# --- 13. VALIDACIONES ---
-
-stopifnot(length(unique(opciones_p1)) == 3)
-stopifnot(sum(sol_p1) == 1)
+stopifnot(length(unique(opciones_mezcladas)) == 4)
+stopifnot(sum(solucion_mezclada) == 1)
 stopifnot(den_val == 2 * num_val)
 stopifnot(num_val / den_val == 0.5)
-stopifnot(valor_correcto_p2 == angulo_deseado)
-stopifnot(length(afirmaciones_mezcladas) == 5)
-stopifnot(sum(sol_p3) >= 2 && sum(sol_p3) <= 4)
-stopifnot(sum(sol_p4) == 1)
 ```
 
 Question
@@ -556,7 +548,7 @@ Question
 typ <- match_exams_device()
 suppressMessages(
   include_tikz(tikz_code,
-               name = "triangulo_rampa_cloze",
+               name = "triangulo_rampa",
                markup = "markdown",
                format = typ,
                packages = c("tikz", "xcolor"),
@@ -570,38 +562,16 @@ suppressMessages(
 - **Paso 2.** `r error_sel$paso2`
 - **Paso 3.** `r error_sel$paso3`
 
-**Parte 1.** ¿En cuál paso se cometió el error?
-##ANSWER1##
+De acuerdo con la información anterior, **¿en cuál paso se cometió el error?**
 
-**Parte 2.** Si se corrige el error y se aplica correctamente el procedimiento, ¿cuántos grados mide el ángulo $\alpha$?
-##ANSWER2##
-
-**Parte 3.** Seleccione las afirmaciones **verdaderas** sobre las razones trigonométricas en este contexto:
-##ANSWER3##
-
-**Parte 4.** Analice la siguiente afirmación y determine si es verdadera o falsa:
-
-*"`r caso_sel$enunciado`"*
-##ANSWER4##
-
-Answerlist
-----------
-* `r opciones_p1[1]`
-* `r opciones_p1[2]`
-* `r opciones_p1[3]`
-*
-* `r afirmaciones_mezcladas[1]`
-* `r afirmaciones_mezcladas[2]`
-* `r afirmaciones_mezcladas[3]`
-* `r afirmaciones_mezcladas[4]`
-* `r afirmaciones_mezcladas[5]`
-* Verdadero
-* Falso
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones_mezcladas, markup = "markdown")
+```
 
 Solution
 ========
 
-### Análisis del Error (Parte 1)
+### Análisis del Error
 
 **Error identificado:** `r error_sel$opcion_correcta`
 
@@ -609,9 +579,7 @@ Solution
 
 **Causa raíz:** `r error_sel$causa_raiz`
 
-`r error_sel$descripcion_larga`
-
-### Procedimiento Correcto (Parte 2)
+### Procedimiento Correcto
 
 Para verificar que $\alpha = `r angulo_deseado`^{\circ}$ en este triángulo rectángulo:
 
@@ -627,17 +595,7 @@ Para verificar que $\alpha = `r angulo_deseado`^{\circ}$ en este triángulo rect
 
 `r sol_eq3`
 
-Por lo tanto, el ángulo $\alpha$ mide **`r angulo_deseado` grados**.
-
-### Propiedades del Concepto (Parte 3)
-
-```{r sol_afirmaciones, echo=FALSE, results='asis'}
-for (i in seq_along(afirmaciones_mezcladas)) {
-  cat(paste0("- **Afirmación ", i, ":** ", explicaciones_afirm_mezcladas[i], "\n"))
-}
-```
-
-### Razones Trigonométricas en el Triángulo Rectángulo
+### Propiedades del Concepto
 
 | Razón | Definición | Función inversa | Función recíproca |
 |-------|-----------|-----------------|-------------------|
@@ -647,11 +605,11 @@ for (i in seq_along(afirmaciones_mezcladas)) {
 
 > **Nota:** Las funciones inversas permiten obtener el **ángulo** a partir del valor de la razón. Las funciones recíprocas son simplemente el inverso multiplicativo de la razón.
 
-### Caso Específico (Parte 4)
+### Caso Específico
 
-*"`r caso_sel$enunciado`"*
+Un estudiante afirma: *"Si en un triángulo rectángulo conozco la hipotenusa y el cateto adyacente a un ángulo, puedo usar el seno de ese ángulo para calcularlo."*
 
-`r explicacion_p4`
+**Falso.** Si se conocen el cateto **adyacente** y la hipotenusa, la razón trigonométrica que los relaciona es el **coseno** (cateto adyacente/hipotenusa), no el seno. El seno relaciona el cateto **opuesto** con la hipotenusa.
 
 ### Reflexión Metacognitiva
 
@@ -664,39 +622,28 @@ for (i in seq_along(afirmaciones_mezcladas)) {
 3. Comprobar que el resultado numérico sea razonable: el seno y el coseno siempre están entre $-1$ y $1$.
 4. Usar la función inversa que corresponda a la razón utilizada (arcoseno para seno, arcocoseno para coseno, arcotangente para tangente).
 
-Answerlist
-----------
-* `r if(sol_p1[1] == 1) paste0("Correcto: el error está en el paso ", error_sel$paso_error, ".") else "Incorrecto: este paso no contiene el error."`
-* `r if(sol_p1[2] == 1) paste0("Correcto: el error está en el paso ", error_sel$paso_error, ".") else "Incorrecto: este paso no contiene el error."`
-* `r if(sol_p1[3] == 1) paste0("Correcto: el error está en el paso ", error_sel$paso_error, ".") else "Incorrecto: este paso no contiene el error."`
-* El ángulo mide `r angulo_deseado` grados.
-* `r explicaciones_afirm_mezcladas[1]`
-* `r explicaciones_afirm_mezcladas[2]`
-* `r explicaciones_afirm_mezcladas[3]`
-* `r explicaciones_afirm_mezcladas[4]`
-* `r explicaciones_afirm_mezcladas[5]`
-* `r if(sol_p4[1] == 1) "Correcto. La afirmación es verdadera." else "Incorrecto."`
-* `r if(sol_p4[2] == 1) "Correcto. La afirmación es falsa." else "Incorrecto."`
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(explicaciones_mezcladas, markup = "markdown")
+```
 
 Meta-information
 ================
-exname: razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n2_cloze_v1
-extype: cloze
-exclozetype: schoice|num|mchoice|schoice
-exsolution: `r sol_p1_str`|`r valor_correcto_p2`|`r sol_p3_str`|`r sol_p4_str`
-exshuffle: FALSE
-extol: 0|0.5|0|0
+extype: schoice
+exsolution: `r mchoice2string(solucion_mezclada)`
+exname: razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n3_schoice_v1
+exshuffle: TRUE
+extol: 0.01
 exsection: Geometria|Pensamiento-Espacial-Metrico|Trigonometria
-exextra[Type]: CLOZE
+exextra[Type]: SCHOICE
 exextra[Program]: R
 exextra[Language]: es
 exextra[Competencia]: Argumentacion
 exextra[Componente]: Espacial-Metrico
-exextra[Afirmacion]: Identifica errores en procedimientos que involucran razones trigonometricas y justifica la correccion
-exextra[Evidencia]: Analiza procedimientos con razones trigonometricas, detecta errores y evalua afirmaciones relacionadas
-exextra[Nivel]: 2
+exextra[Afirmacion]: Identifica errores en procedimientos que involucran razones trigonometricas
+exextra[Evidencia]: Analiza procedimientos con razones trigonometricas y detecta errores en la seleccion, sustitucion o despeje
+exextra[Nivel]: 3
 exextra[Contexto]: Construccion
 exextra[DOK]: 3
 exextra[Bloom]: Evaluar
-exextra[SOLO]: Relacional-Extendido
+exextra[SOLO]: Relacional
 exextra[TipoMetacognicion]: analisis_error
