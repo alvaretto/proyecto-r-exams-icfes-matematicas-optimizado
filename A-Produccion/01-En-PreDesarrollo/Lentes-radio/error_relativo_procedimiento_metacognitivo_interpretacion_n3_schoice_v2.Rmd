@@ -212,7 +212,11 @@ generar_datos <- function() {
   # Asegurar al menos 1 medida por encima y 1 por debajo
   direcciones <- c(1, -1)
   if (n_diferentes > 2) {
-    direcciones <- c(direcciones, sample(c(1, -1), n_diferentes - 2, replace = TRUE))
+    extras <- n_diferentes - 2
+    # Forzar balance: al menos mitad arriba y mitad abajo entre extras
+    n_extra_pos <- sample(1:max(1, extras - 1), 1)
+    n_extra_neg <- extras - n_extra_pos
+    direcciones <- c(direcciones, rep(1, n_extra_pos), rep(-1, n_extra_neg))
   }
   direcciones <- sample(direcciones)
 
@@ -414,7 +418,7 @@ generar_datos <- function() {
   } else if (tipo_idx == 3) {
     # --- EXCESO: ¿para cuáles la medida supera el esperado? ---
     correcta_key <- "mayores"
-    dist_keys <- c("diferentes", "todos", "menores")
+    dist_keys <- c("iguales", "todos", "menores")
 
     afirmacion_texto <- paste0(
       Todos_g, " ", art_pl, " ", ctx$item_plural,
@@ -449,10 +453,10 @@ generar_datos <- function() {
       ctx$propiedad_singular, " superior al valor esperado.")
 
     sol_dist_texts <- c(
-      paste0("Incorrecto. Incluy\u00f3 tambi\u00e9n ", art_pl, " ", ctx$item_plural,
-             " con medida menor al esperado (",
-             paste(items_menores, collapse = " y "),
-             "), que no lo superan."),
+      paste0("Incorrecto. Estos ", ctx$item_plural,
+             " tienen medida **igual** al valor esperado (",
+             valor_esp_fmt, " ", ctx$unidad,
+             "), por lo que no lo superan."),
       paste0("Incorrecto. No ", todos_g, " superan el valor esperado; ",
              art_pl, " ", ctx$item_plural, " ",
              paste(items_iguales, collapse = " y "),
@@ -473,7 +477,7 @@ generar_datos <- function() {
   } else {
     # --- DEFECTO: ¿para cuáles la medida es inferior al esperado? ---
     correcta_key <- "menores"
-    dist_keys <- c("diferentes", "todos", "mayores")
+    dist_keys <- c("iguales", "todos", "mayores")
 
     afirmacion_texto <- paste0(
       Todos_g, " ", art_pl, " ", ctx$item_plural,
@@ -508,10 +512,10 @@ generar_datos <- function() {
       ctx$propiedad_singular, " inferior al valor esperado.")
 
     sol_dist_texts <- c(
-      paste0("Incorrecto. Incluy\u00f3 tambi\u00e9n ", art_pl, " ", ctx$item_plural,
-             " con medida mayor al esperado (",
-             paste(items_mayores, collapse = " y "),
-             "), que no son inferiores."),
+      paste0("Incorrecto. Estos ", ctx$item_plural,
+             " tienen medida **igual** al valor esperado (",
+             valor_esp_fmt, " ", ctx$unidad,
+             "), por lo que no son inferiores."),
       paste0("Incorrecto. No ", todos_g, " son inferiores al valor esperado; ",
              art_pl, " ", ctx$item_plural, " ",
              paste(items_iguales, collapse = " y "),
@@ -688,39 +692,27 @@ if (!is.null(saved_seed)) {
 ```{r validaciones_matematicas, echo=FALSE, results="hide"}
 options(OutDec = ".")
 
-test_that("Datos del problema son consistentes", {
-  expect_true(length(items_iguales) >= 2,
-              info = paste("Se esperan al menos 2 items iguales, hay", length(items_iguales)))
-  expect_true(length(items_mayores) >= 1,
-              info = "Se espera al menos 1 item mayor al esperado")
-  expect_true(length(items_menores) >= 1,
-              info = "Se espera al menos 1 item menor al esperado")
-  expect_equal(sort(items_diferentes), sort(c(items_mayores, items_menores)),
-               info = "items_diferentes debe ser la unión de mayores y menores")
-  expect_equal(sort(c(items_iguales, items_diferentes)), sort(items_todos),
-               info = "La unión de iguales y diferentes debe cubrir todos los items")
-})
-
-test_that("Exactamente una opción correcta", {
-  expect_equal(sum(solucion_binaria), 1)
-  expect_equal(length(solucion_binaria), 4)
-})
-
-test_that("Opciones son únicas", {
-  expect_equal(length(unique(opciones_todas)), 4,
-               info = paste("Opciones duplicadas:", paste(opciones_todas, collapse = " | ")))
-})
-
-test_that("Mediciones numéricamente correctas", {
-  expect_false(any(is.na(mediciones)), info = "Hay NA en mediciones")
-  expect_false(any(is.nan(mediciones)), info = "Hay NaN en mediciones")
-  expect_false(any(is.infinite(mediciones)), info = "Hay Inf en mediciones")
-  expect_true(all(mediciones > 0), info = "Todas las mediciones deben ser positivas")
-})
-
-test_that("tipo_idx es válido", {
-  expect_true(tipo_idx %in% 1:4, info = paste("tipo_idx inválido:", tipo_idx))
-})
+# --- Validaciones FATALES (stop) — detienen render si fallan ---
+if (length(items_iguales) < 2)
+  stop(paste("Se esperan al menos 2 items iguales, hay", length(items_iguales)))
+if (length(items_mayores) < 1)
+  stop("Se espera al menos 1 item mayor al esperado")
+if (length(items_menores) < 1)
+  stop("Se espera al menos 1 item menor al esperado")
+if (!identical(sort(items_diferentes), sort(c(items_mayores, items_menores))))
+  stop("items_diferentes debe ser la unión de mayores y menores")
+if (!identical(sort(c(items_iguales, items_diferentes)), sort(items_todos)))
+  stop("La unión de iguales y diferentes debe cubrir todos los items")
+if (sum(solucion_binaria) != 1 || length(solucion_binaria) != 4)
+  stop("solucion_binaria debe tener exactamente 1 correcta de 4")
+if (length(unique(opciones_todas)) != 4)
+  stop(paste("Opciones duplicadas:", paste(opciones_todas, collapse = " | ")))
+if (any(is.na(mediciones)) || any(is.nan(mediciones)) || any(is.infinite(mediciones)))
+  stop("Hay NA/NaN/Inf en mediciones")
+if (!all(mediciones > 0))
+  stop("Todas las mediciones deben ser positivas")
+if (!(tipo_idx %in% 1:4))
+  stop(paste("tipo_idx inválido:", tipo_idx))
 ```
 
 
@@ -741,7 +733,7 @@ cat("\n\n")
 
 `r paste0(toupper(substr(ctx$propiedad_singular, 1, 1)), substr(ctx$propiedad_singular, 2, nchar(ctx$propiedad_singular)), " esperado de ", art_pl, " ", ctx$item_plural, " es ", valor_esp_fmt, " ", ctx$unidad)`, así que, para determinar el error relativo de los registros, se propone usar el siguiente procedimiento:
 
-- **Paso 1.** Restar las medidas, del menor al mayor, entre `r paste0(ctx$propiedad_singular, " esperado")` y la medida del `r ctx$item_singular`.
+- **Paso 1.** Calcular el valor absoluto de la diferencia entre `r paste0(ctx$propiedad_singular, " esperado")` y la medida del `r ctx$item_singular`: $|\text{medida} - \text{valor esperado}|$.
 - **Paso 2.** Dividir ese resultado entre `r paste0(valor_esp_fmt, " ", ctx$unidad)`.
 - **Paso 3.** Multiplicar el resultado anterior por 100.
 
