@@ -122,7 +122,7 @@ test_that("Corrección ortográfica aplica correcciones automáticas", {
 
   expect_true(grepl("Según", texto))
   expect_true(grepl("gráfica", texto))
-  expect_true(grepl("cuál", texto))
+  # "cual" excluido del diccionario (ambiguo: interrogativo vs relativo)
   expect_true(grepl("función", texto))
   expect_true(grepl("más", texto))
   expect_true(grepl("óptima", texto))
