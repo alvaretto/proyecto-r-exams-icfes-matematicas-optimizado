@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   html_document: default
+  word_document: default
   pdf_document: default
 ---
 ```{r setup, include=FALSE}
@@ -24,6 +24,7 @@ library(testthat)
 
 typ <- match_exams_device()
 options(scipen = 999)
+
 knitr::opts_chunk$set(
   warning = FALSE,
   message = FALSE,
@@ -39,8 +40,10 @@ knitr::knit_engines$set(python = function(options) {
   knitr::engine_output(options, options$code, '')
 })
 
-# Asegurar que Python esté correctamente configurado
-use_python(Sys.which("python"), required = TRUE)
+# Usar Python 3 (respeta RETICULATE_PYTHON si está definido)
+if (Sys.getenv("RETICULATE_PYTHON") == "") {
+  use_python(Sys.which("python3"), required = TRUE)
+}
 ```
 
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
@@ -73,6 +76,7 @@ termino_empresa <- sample(terminos_empresas, 1)
 
 terminos_registro <- c("registro", "conteo", "recuento", "estadística", "cifra")
 termino_registro <- sample(terminos_registro, 1)
+articulo_registro <- ifelse(termino_registro %in% c("estadística", "cifra"), "las", "los")
 
 # Aleatorizar años para el estudio (mantener 4 años consecutivos)
 año_inicial <- sample(2000:2018, 1)
@@ -403,7 +407,7 @@ py_run_string(codigo_python_opcion4)
 Question
 ========
 
-Una `r termino_empresa` dedicada a tratar los datos del tránsito en varias de las ciudades del continente americano (`r ciudades_texto`), ha realizado un `r termino_estudio` donde se muestran los(as) `r termino_registro`s de `r termino_mortalidad` por `r termino_accidente` entre los años `r años[1]` y `r años[4]`.
+Una `r termino_empresa` dedicada a tratar los datos del tránsito en varias de las ciudades del continente americano (`r ciudades_texto`), ha realizado un `r termino_estudio` donde se muestran `r articulo_registro` `r termino_registro`s de `r termino_mortalidad` por `r termino_accidente` entre los años `r años[1]` y `r años[4]`.
 
 ```{r grafica_total, echo=FALSE, results='asis', fig.align='center'}
 # Usando método alternativo para incluir imágenes
@@ -441,18 +445,41 @@ cat("![](opcion4.png)\n\n")
 Solution
 ========
 
-La respuesta correcta es la gráfica que representa de manera precisa los datos de `r termino_mortalidad` por género:
+### Verificación de datos
+
+Para identificar la gráfica correcta, se debe calcular el número de víctimas de género femenino restando los datos de la tabla (género masculino) del total mostrado en la gráfica:
+
+| Año | Total | Hombres (tabla) | Mujeres (Total - Hombres) |
+|-----|-------|-----------------|---------------------------|
+| `r años[1]` | `r format(mortalidad_total[1], big.mark=",")` | `r format(mortalidad_hombres[1], big.mark=",")` | `r format(mortalidad_mujeres[1], big.mark=",")` |
+| `r años[2]` | `r format(mortalidad_total[2], big.mark=",")` | `r format(mortalidad_hombres[2], big.mark=",")` | `r format(mortalidad_mujeres[2], big.mark=",")` |
+| `r años[3]` | `r format(mortalidad_total[3], big.mark=",")` | `r format(mortalidad_hombres[3], big.mark=",")` | `r format(mortalidad_mujeres[3], big.mark=",")` |
+| `r años[4]` | `r format(mortalidad_total[4], big.mark=",")` | `r format(mortalidad_hombres[4], big.mark=",")` | `r format(mortalidad_mujeres[4], big.mark=",")` |
+
+### Respuesta correcta
+
+La gráfica correcta es la que muestra estos valores exactos para ambos géneros:
 
 ```{r solucion_grafica, echo=FALSE, results='asis', fig.align='center'}
-# Incluir la imagen de la opción correcta (opción 1) en la sección de solución
 cat("![](opcion1.png)")
 ```
 
-- Número total de víctimas por año: `r paste(format(mortalidad_total, big.mark=","), collapse=", ")`
-- Víctimas de género `r tolower(etiqueta_masculino)` por año: `r paste(format(mortalidad_hombres, big.mark=","), collapse=", ")`
-- Víctimas de género `r tolower(etiqueta_femenino)` por año: `r paste(format(mortalidad_mujeres, big.mark=","), collapse=", ")`
+Los datos muestran que hay aproximadamente `r round(mean(mortalidad_hombres/mortalidad_mujeres))` veces más víctimas masculinas que femeninas en los `r termino_accidente`.
 
-La gráfica correcta debe mostrar claramente la diferencia entre la mortalidad masculina y femenina para cada año del estudio. En este caso, los datos muestran que hay aproximadamente `r round(mean(mortalidad_hombres/mortalidad_mujeres))` veces más víctimas masculinas que femeninas en los `r termino_accidente`.
+### Análisis de las opciones incorrectas
+
+- **Opción con valores masculinos inflados**: muestra datos de género masculino significativamente mayores a los de la tabla proporcionada. Los valores no coinciden con los datos originales.
+
+- **Opción con etiquetas intercambiadas**: intercambia las etiquetas de género — la línea con valores altos aparece como "`r etiqueta_femenino`" y la línea con valores bajos como "`r etiqueta_masculino`", lo cual contradice los datos de la tabla.
+
+- **Opción con tendencia temporal invertida**: invierte el orden cronológico de los datos, mostrando la tendencia en dirección opuesta a la real.
+
+### Estrategia de solución
+
+1. Calcular los datos de mujeres: Total - Hombres para cada año.
+2. Verificar que la gráfica seleccionada muestre los valores exactos de ambos géneros.
+3. Confirmar que las etiquetas de género correspondan a los valores correctos.
+4. Verificar que el orden cronológico de los años sea el correcto.
 
 Answerlist
 ----------
@@ -463,7 +490,7 @@ Answerlist
 
 Meta-information
 ================
-exname: `r paste0(termino_mortalidad, "_", gsub(" ", "_", termino_accidente), "_genero")`
+exname: accidentalidad_vial_genero_aleatorio_interpretacion_representacion_n2_v1
 extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
@@ -472,5 +499,8 @@ exextra[Componente]: Aleatorio
 exextra[Competencia]: Interpretacion
 exextra[Nivel]: 2
 exextra[Type]: SCHOICE
-exextra[Afirmacion]: Aplica principios de conteo y calcula probabilidades
+exextra[Afirmacion]: Interpreta informacion estadistica presentada en tablas y graficas
 exextra[Evidencia]: Interpreta y compara datos presentados en diferentes representaciones
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Multistructural
