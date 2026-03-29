@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "accidentalidad_vial_genero_aleatorio_interpretacion_representacion_n2_v1.Rmd"
+archivo_examen <- "accidentalidad_vial_genero_aleatorio_interpretacion_representacion_n2_v2.Rmd"
 copias <- 1  # Número de versiones a generar
 numpreg <- 5
 semilla_base <- sample(100:1e8, 1)
