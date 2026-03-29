@@ -206,6 +206,25 @@ Además del workflow general, verificar:
 4. **Si archivo es `_neg_`**: Patrón (N-1) idénticas + 1 diferente (ver `validacion-neg-opciones-repetidas.md`)
 5. **Pool de errores**: Mínimo 4-6 con códigos, `calcula()` determinista, `precondicion` declarada
 
+## Consulta de ejemplos para correcciones (Búsqueda Inteligente)
+
+Cuando un paso detecta un problema que requiere corrección, ANTES de corregir:
+
+**Prioridad 1 — Ejercicios SCHOICE recientes aprobados** (patrones vigentes):
+```bash
+ls -t A-Produccion/03-En-Produccion/**/*metacognitivo*schoice*.Rmd 2>/dev/null | head -3
+ls -t A-Produccion/02-En-Desarrollo/**/*metacognitivo*schoice*.Rmd 2>/dev/null | head -3
+```
+
+Solo considerar archivos con `ejercicio_state.json` donde `aprobacion_usuario.completado = true` o en `03-En-Produccion/`.
+
+**Prioridad 2 — Ejemplos Funcionales canónicos**:
+```bash
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
+
+**Protocolo**: Buscar el patrón de solución en el ejemplo más reciente similar. Si no existe, usar el canónico. NUNCA corregir sin consultar al menos 1 ejemplo.
+
 ## Retomar workflow interrumpido
 
 Si el workflow fue interrumpido (ej: sesión anterior), el skill detecta automáticamente:

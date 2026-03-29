@@ -37,6 +37,21 @@ Ejercicio tipo ICFES Saber 11 sobre relacion entre mediana y moda en un conjunto
 - Solucion completa diferente para cada variante (misma calidad y extension)
 - La variante B obliga al estudiante a reconocer que la mediana esta en x3, no en x1
 
+### v4 — Contextos narrativos + inversion minimo/maximo
+
+**Archivo:** `mediana_moda_farmaceutica_v4.Rmd`
+
+- Basada en v3 (misma logica matematica y variantes A/B)
+- **3 ejes de aleatorizacion combinados:**
+  - **6 contextos narrativos:** farmaceutica, colegio, fabrica, robotica, calificaciones, encuesta
+  - **2 relaciones:** moda < mediana (pregunta sobre minimo) o moda > mediana (pregunta sobre maximo)
+  - **2 variantes:** A (respuesta SI) o B (respuesta NO)
+- Total: 6 × 2 × 2 = **24 combinaciones estructurales** (× ~1650 numericas = ~39.600 versiones potenciales)
+- Solucion construida por secciones con paste0() (no sprintf) — mas mantenible
+- Variables parametricas: extremo, pos_moda, comparador_sing, etc. — definidas una vez
+- Contexto ICFES dinamico: `exextra[Contexto]` refleja el contexto seleccionado
+- Corrige inconsistencia v3: nivel_dificultad ahora es 3 (coherente con exextra[Nivel]: 3)
+
 ## Metadata ICFES
 
 | Campo | Valor |
@@ -58,23 +73,35 @@ library(exams)
 
 # 10 versiones en PDF (con shuffle de opciones)
 set.seed(2026)
-exams2pdf("mediana_moda_farmaceutica_v3.Rmd", n=10, template="plain")
+exams2pdf("mediana_moda_farmaceutica_v4.Rmd", n=10, template="plain")
 
 # 10 versiones para Moodle
 set.seed(2026)
-exams2moodle("mediana_moda_farmaceutica_v3.Rmd", n=10)
+exams2moodle("mediana_moda_farmaceutica_v4.Rmd", n=10)
 
 # Otros formatos
-exams2html("mediana_moda_farmaceutica_v3.Rmd", n=5)
-exams2nops("mediana_moda_farmaceutica_v3.Rmd", n=30)  # hojas de respuesta opticas
+exams2html("mediana_moda_farmaceutica_v4.Rmd", n=5)
+exams2nops("mediana_moda_farmaceutica_v4.Rmd", n=30)  # hojas de respuesta opticas
 ```
 
 ## Datos aleatorios
 
-- Moda: 30%–95% (uniforme)
-- Mediana: moda + 1 a moda + 25 (maximo 100%)
-- Restriccion: moda < mediana (siempre)
-- La logica matematica funciona con cualquier par valido
+- Relacion: moda < mediana (pregunta minimo) o moda > mediana (pregunta maximo)
+- Moda: 30–100 (uniforme, rango ajustado por relacion)
+- Mediana: 30–100 (uniforme, rango ajustado por relacion)
+- Offset entre moda y mediana: 1 a 25
+- La logica matematica funciona con cualquier par valido en ambas direcciones
+
+## Ejes de aleatorizacion (v4)
+
+| Eje | Valores | Impacto |
+|-----|---------|---------|
+| Contexto narrativo | 6 plantillas | Enunciado, unidad, texto de pregunta |
+| Relacion moda-mediana | 2 (menor, mayor) | Pregunta sobre minimo vs maximo |
+| Variante | 2 (A=SI, B=NO) | Opcion correcta, solucion |
+| Moda | 30–95 (o derivado) | Valores numericos |
+| Mediana | derivado de moda ± offset | Valores numericos |
+| Reflexion | 4 frases | Cierre metacognitivo |
 
 ## Evolucion
 
@@ -83,3 +110,4 @@ exams2nops("mediana_moda_farmaceutica_v3.Rmd", n=30)  # hojas de respuesta optic
 | v1 | — | Pool de 8 contextos narrativos, respuesta siempre SI |
 | v2 | — | Contexto unico, solucion formal paso a paso, testthat |
 | v3 | 2026-03-24 | Variante aleatoria SI/NO con opciones y solucion adaptadas |
+| v4 | 2026-03-25 | 6 contextos + inversion minimo/maximo + paste0 (24 combinaciones) |

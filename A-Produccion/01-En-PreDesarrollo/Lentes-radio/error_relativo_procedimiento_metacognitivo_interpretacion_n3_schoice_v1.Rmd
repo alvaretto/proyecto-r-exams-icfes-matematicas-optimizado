@@ -29,7 +29,7 @@ options(OutDec = ".")
 # TIPO: SCHOICE metacognitivo
 # COMPONENTE: Numérico-Variacional
 # COMPETENCIA: Interpretación y Representación
-# NIVEL: 2
+# NIVEL: 3
 # Basado en: Pregunta 79 — Cuadernillo Matemáticas Galileo 2025-2
 # ================================================================
 
@@ -322,6 +322,11 @@ generar_datos <- function() {
 
   for (i in 1:3) {
     err <- errores_conceptuales[[i]]
+    if (!is.null(err$precondicion) && !err$precondicion(params_err)) {
+      stop(paste0("BUG: ", err$codigo, " seleccionado pero su precondición no se cumple. ",
+                  "items_mayores=", length(params_err$items_mayores),
+                  " items_menores=", length(params_err$items_menores)))
+    }
     subset_err <- err$genera_subset(params_err)
     opciones_distractores[i] <- paste0(
       formatear_items(subset_err, n_items, ctx$item_singular, ctx$item_plural), ".")
@@ -339,9 +344,8 @@ generar_datos <- function() {
 
   # --- Textos para Solution Answerlist ---
   sol_texts <- c(
-    paste0("Correcto. El procedimiento solo detecta desviaciones en los ",
-           ctx$item_plural, " cuya medida difiere del valor esperado, ",
-           "ya que en los demás la resta da cero y el error relativo es 0%."),
+    paste0("Correcto. El procedimiento produce un error relativo mayor que 0% únicamente en los ",
+           ctx$item_plural, " cuya medida difiere del valor esperado; en los demás la resta da cero y el resultado es 0%."),
     paste0("Incorrecto. ", sol_explicaciones_largas[1]),
     paste0("Incorrecto. ", sol_explicaciones_largas[2]),
     paste0("Incorrecto. ", sol_explicaciones_largas[3])
@@ -528,9 +532,9 @@ cat("\n\n")
 - **Paso 2.** Dividir ese resultado entre `r paste0(valor_esp_fmt, " ", ctx$unidad)`.
 - **Paso 3.** Multiplicar el resultado anterior por 100.
 
-`r nombre_estudiante` analizó los datos y afirmó: *"El procedimiento se puede usar para todos los `r ctx$item_plural`."*
+`r nombre_estudiante` analizó los datos y afirmó: *"El procedimiento produce un error relativo mayor que 0% para todos los `r ctx$item_plural`."*
 
-**¿Para cuáles `r ctx$item_plural` se puede usar realmente ese procedimiento?**
+**¿Para cuáles `r ctx$item_plural` el procedimiento produce un error relativo mayor que 0%?**
 
 Answerlist
 ----------
@@ -546,7 +550,7 @@ Solution
 
 ### Análisis de la afirmación de `r nombre_estudiante`
 
-`r nombre_estudiante` afirmó que el procedimiento se puede usar para **todos** los `r ctx$item_plural`. Sin embargo, esta afirmación es **incorrecta**.
+`r nombre_estudiante` afirmó que el procedimiento produce un error relativo mayor que 0% para **todos** los `r ctx$item_plural`. Sin embargo, esta afirmación es **incorrecta**: aunque el procedimiento siempre produce un resultado, solo es **informativo** (mayor que 0%) para los `r ctx$item_plural` con medida diferente al valor esperado.
 
 El Paso 1 del procedimiento ("restar del menor al mayor") es equivalente a calcular el **valor absoluto** de la diferencia entre la medida y el valor esperado. Formalmente, el procedimiento calcula el **error relativo**:
 
@@ -556,28 +560,28 @@ $$\text{Error relativo} = \frac{|\text{medida} - \text{valor esperado}|}{\text{v
 
 ```{r tabla_errores, echo=FALSE, results='asis'}
 cat("\n\n")
-cat(paste0("| ", ctx$encabezado_item, " | ", ctx$encabezado_prop, " (", ctx$unidad, ") | Resta | Error relativo | \u00bfAplica? |\n"))
+cat(paste0("| ", ctx$encabezado_item, " | ", ctx$encabezado_prop, " (", ctx$unidad, ") | Resta | Error relativo | Resultado |\n"))
 cat("|:---:|:---:|:---:|:---:|:---:|\n")
 for (i in 1:n_items) {
   resta <- abs(mediciones[i] - valor_esperado)
   err_rel <- (resta / valor_esperado) * 100
   resta_fmt <- fmt_es(resta, ctx$decimales)
   err_fmt <- fmt_es(err_rel, 2)
-  aplica <- ifelse(abs(mediciones[i] - valor_esperado) > 1e-9, "S\u00ed", "No")
+  aplica <- ifelse(abs(mediciones[i] - valor_esperado) > 1e-9, "ER > 0%", "ER = 0%")
   cat(paste0("| ", i, " | ", mediciones_fmt[i], " | ", resta_fmt, " | ", err_fmt, "% | ", aplica, " |\n"))
 }
 cat("\n\n")
 ```
 
-### Condición de aplicabilidad
+### Cuándo el resultado es informativo
 
-El procedimiento requiere que **la medida del `r ctx$item_singular` sea diferente del valor esperado** (`r paste0(valor_esp_fmt, " ", ctx$unidad)`). Cuando la medida coincide exactamente con el valor esperado:
+El procedimiento produce un **error relativo mayor que 0%** — es decir, detecta una desviación — únicamente cuando la medida difiere del valor esperado (`r paste0(valor_esp_fmt, " ", ctx$unidad)`). Cuando la medida coincide exactamente con el valor esperado:
 
 - La resta (Paso 1) da **cero**.
 - La división (Paso 2) da **cero**.
 - El resultado final (Paso 3) es **0%**.
 
-Esto significa que el error relativo es **0%**, lo cual indica que la pieza es perfecta. Sin embargo, para el análisis de calidad, solo son relevantes los casos donde existe una **desviación medible**.
+Esto significa que el error relativo es **0%**, lo cual indica ausencia de desviación. El resultado 0% es matemáticamente válido, pero no aporta información sobre errores de fabricación.
 
 Los `r ctx$item_plural` `r paste(items_iguales, collapse = " y ")` tienen `r ctx$propiedad_singular` exactamente igual a `r paste0(valor_esp_fmt, " ", ctx$unidad)`, por lo que no presentan desviación y el procedimiento produce un resultado de 0%.
 

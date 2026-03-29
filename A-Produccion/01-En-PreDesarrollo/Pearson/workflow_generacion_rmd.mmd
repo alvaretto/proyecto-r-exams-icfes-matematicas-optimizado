@@ -1,0 +1,68 @@
+flowchart TD
+    START([📷 Imagen ICFES]) --> P1["/analizar-icfes<br/><i>Opus 4.6</i>"]
+
+    P1 --> |"Clasifica 6 dimensiones ICFES<br/>+ detecta gráficos"| DEC1{¿Requiere<br/>gráficos?}
+
+    %% ===== FLUJO B: GRAFICADOR =====
+    DEC1 -->|SÍ| FB_TIKZ["/auto-refinar-grafico tikz<br/><i>Sonnet</i>"]
+    FB_TIKZ --> |"Iterar hasta ≥98%<br/>+ 5 coherencias"| FB_PY["/auto-refinar-grafico python<br/><i>Sonnet</i>"]
+    FB_PY --> |"Iterar hasta ≥98%<br/>+ 5 coherencias"| FB_R["/auto-refinar-grafico r<br/><i>Sonnet</i>"]
+    FB_R --> SEL_USR{{"👤 Usuario selecciona<br/>versión gráfica<br/>(TikZ / Python / R)"}}
+    SEL_USR --> GEN
+
+    %% ===== GENERACIÓN =====
+    DEC1 -->|NO| GEN
+    GEN{SCHOICE<br/>o CLOZE?}
+    GEN -->|SCHOICE| SC["/generar-schoice<br/><i>Opus 4.6</i>"]
+    GEN -->|CLOZE| CL["/generar-cloze<br/><i>Opus 4.6</i>"]
+
+    SC --> RMD[("📄 archivo.Rmd<br/>generado")]
+    CL --> RMD
+
+    %% ===== RETROALIMENTACIÓN =====
+    RMD --> RETRO["/skill-retroalimentacion<br/><i>Opus 4.6</i><br/>Genera sección Solution"]
+
+    %% ===== CICLO DE VALIDACIÓN =====
+    RETRO --> F1
+
+    subgraph CICLO["🔄 Ciclo de Validación (repetir hasta 0 errores)"]
+        F1["FASE 1: Renderizado<br/>HTML · PDF · DOCX · NOPS"]
+        F1 --> F2A["FASE 2A: Validación matemática<br/><i>Hook automático</i><br/>Niveles 1-4 + Semántica"]
+        F2A --> F2B["FASE 2B: Preview visual<br/><i>Hook automático</i><br/>PDF → PNG"]
+        F2B --> F2C["FASE 2C: Detractor<br/>/adversario<br/><i>Sonnet</i>"]
+        F2C --> F2G["FASE 2G: Multi-semilla<br/>20 semillas · Nivel 5<br/><i>Haiku</i>"]
+        F2G --> F2H["FASE 2H: Stress Test Visual<br/>10 semillas · PNGs<br/><i>Sonnet</i>"]
+
+        F2H --> DEC_ERR{¿Errores?}
+        DEC_ERR -->|"SÍ"| F3A["SUBFASE 3A: Corregir<br/>consultar Ejemplos Funcionales"]
+        F3A --> F1
+    end
+
+    DEC_ERR -->|"NO"| COH
+
+    %% ===== COHERENCIAS =====
+    subgraph COHER["✅ Verificación Final"]
+        COH["5 Coherencias verificadas<br/>□ Semántica<br/>□ Visual-Texto<br/>□ Matemática<br/>□ Código<br/>□ General"]
+        COH --> DIV["/validar-diversidad<br/><i>Haiku</i><br/>250+ versiones únicas"]
+        DIV --> VICFES["/validar-icfes<br/><i>Haiku</i><br/>6 dimensiones + metadatos"]
+    end
+
+    VICFES --> USR_APR{{"👤 Usuario<br/>¿Aprueba?"}}
+    USR_APR -->|"NO"| F1
+    USR_APR -->|"SÍ"| DEV["📁 02-En-Desarrollo/<br/><b>Listo para aula</b>"]
+
+    %% ===== PROMOCIÓN =====
+    DEV --> |"Nivel 3: Aplicar en aula<br/>con estudiantes reales"| PROM["/promover-ejercicio<br/><i>Haiku</i>"]
+    PROM --> PROD["📁 03-En-Producción/<br/><b>Ejercicio validado</b>"]
+
+    %% ===== ESTILOS =====
+    style START fill:#FFE082,stroke:#F57F17,color:#000
+    style RMD fill:#C8E6C9,stroke:#2E7D32,color:#000
+    style PROD fill:#A5D6A7,stroke:#1B5E20,color:#000,stroke-width:3px
+    style DEV fill:#B3E5FC,stroke:#0277BD,color:#000
+    style DEC1 fill:#FFF9C4,stroke:#F9A825,color:#000
+    style DEC_ERR fill:#FFCDD2,stroke:#C62828,color:#000
+    style USR_APR fill:#E1BEE7,stroke:#6A1B9A,color:#000
+    style SEL_USR fill:#E1BEE7,stroke:#6A1B9A,color:#000
+    style CICLO fill:#FFF3E0,stroke:#E65100
+    style COHER fill:#E8F5E9,stroke:#2E7D32

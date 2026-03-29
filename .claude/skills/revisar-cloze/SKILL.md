@@ -272,6 +272,25 @@ Corregir el archivo .Rmd
 
 **Regla especial CLOZE**: Si se corrige un ##ANSWERi## o se modifica exclozetype → SIEMPRE volver a PASO 5 (renderizado completo).
 
+## Consulta de ejemplos para correcciones (Búsqueda Inteligente)
+
+Cuando un paso detecta un problema que requiere corrección, ANTES de corregir:
+
+**Prioridad 1 — Ejercicios CLOZE recientes aprobados** (patrones vigentes):
+```bash
+ls -t A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd 2>/dev/null | head -3
+ls -t A-Produccion/02-En-Desarrollo/**/*metacognitivo*cloze*.Rmd 2>/dev/null | head -3
+```
+
+Solo considerar archivos con `ejercicio_state.json` donde `aprobacion_usuario.completado = true` o en `03-En-Produccion/`.
+
+**Prioridad 2 — Ejemplo canónico CLOZE**:
+```bash
+cat A-Produccion/03-En-Produccion/.../promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd
+```
+
+**Protocolo**: Buscar el patrón de solución en el ejemplo más reciente similar. Si no existe, usar el canónico. NUNCA corregir sin consultar al menos 1 ejemplo.
+
 ## Routing de modelos
 
 | Sub-tarea | Modelo | Razón |

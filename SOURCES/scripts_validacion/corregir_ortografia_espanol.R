@@ -115,7 +115,7 @@ diccionario_tildes <- c(
   "areas" = "áreas",
   "perimetro" = "perímetro",
   "diametro" = "diámetro",
-  "radio" = "radio",
+
   "triangulo" = "triángulo",
   "triangulos" = "triángulos",
   "rectangulo" = "rectángulo",

@@ -558,7 +558,38 @@ Después de generar el .Rmd:
 - [ ] ¿Metadatos incluyen DOK, Bloom, SOLO?
 - [ ] ¿Nivel DOK ≥ 2 (preferible 3)?
 - [ ] ¿Bloom incluye Analizar/Evaluar?
+- [ ] ¿Coherencia Nivel ICFES ↔ DOK? (ver tabla abajo)
 - [ ] ¿Solución tiene todas las subsecciones obligatorias?
+
+---
+
+## Coherencia Nivel ICFES ↔ DOK (OBLIGATORIA)
+
+**El Nivel ICFES del archivo (`_nX_` en el nombre y `exextra[Nivel]`) DEBE ser coherente con el DOK asignado.** Una discrepancia indica clasificación incorrecta.
+
+| DOK | Bloom típico | Nivel ICFES compatible | Nivel ICFES incompatible |
+|-----|-------------|----------------------|------------------------|
+| 1 (Recall) | Recordar | N1 | N2, N3, N4 |
+| 2 (Skill/Concept) | Comprender, Aplicar | N1, N2 | N3, N4 |
+| 3 (Strategic Thinking) | Analizar, Evaluar | **N3** | N1, N2 |
+| 4 (Extended Thinking) | Crear, Sintetizar | N3, N4 | N1, N2 |
+
+**Regla de validación**: Si `DOK >= 3` → `Nivel ICFES >= 3`. Si `Bloom = Evaluar` → `Nivel >= 3`.
+
+**Antipatrón PROHIBIDO:**
+```yaml
+# ❌ INCORRECTO — DOK 3 con Nivel 2 es contradictorio
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[Nivel]: 2   # ← Nivel demasiado bajo para DOK 3
+
+# ✅ CORRECTO — DOK y Nivel coherentes
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[Nivel]: 3   # ← Coherente con DOK 3
+```
+
+**Razón**: Un ejercicio clasificado como DOK 3 (pensamiento estratégico) requiere análisis y evaluación no rutinarios, lo cual corresponde a Nivel 3 ICFES. Asignar Nivel 2 minimiza la complejidad real del ejercicio y confunde la calibración del banco de preguntas.
 
 ---
 

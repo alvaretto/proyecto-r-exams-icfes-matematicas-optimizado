@@ -65,13 +65,26 @@ Ver [estructura-progressive-disclosure.md](references/estructura-progressive-dis
 
 Confirmar: Nivel, Competencia, Componente, Tipo = cloze.
 
-### PASO 2: Consultar ejemplos funcionales METACOGNITIVOS
+### PASO 2: Consultar ejemplos funcionales METACOGNITIVOS (Búsqueda Inteligente)
 
-NUNCA generar codigo sin consultar ejemplos primero. Ejemplo canonico:
+NUNCA generar código sin consultar ejemplos primero. Buscar en **orden de prioridad**:
 
+**Prioridad 1 — Ejercicios CLOZE recientes completados**:
+```bash
+# Buscar .Rmd CLOZE metacognitivos más recientes en producción y desarrollo
+ls -t A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd 2>/dev/null | head -3
+ls -t A-Produccion/02-En-Desarrollo/**/*metacognitivo*cloze*.Rmd 2>/dev/null | head -3
+```
+
+Solo considerar archivos que tengan `ejercicio_state.json` con `aprobacion_usuario.completado = true` o que estén en `03-En-Produccion/`.
+
+**Prioridad 2 — Ejemplos canónicos**:
 ```bash
 cat A-Produccion/03-En-Produccion/.../promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*cloze*.Rmd
 ```
+
+**Protocolo**: Leer al menos 1 ejemplo de Prioridad 1 (si existe) + 1 de Prioridad 2. Copiar patrones del más reciente, validar contra el canónico.
 
 ### PASO 3: Definir pool de errores conceptuales (OBLIGATORIO)
 
@@ -213,7 +226,8 @@ Resumen: (1) NO menos de 4 partes, (2) NO partes sin progresion cognitiva, (3) N
 - [Anatomia Metacognitiva](references/anatomia-metacognitiva.md) - Las 8 secciones obligatorias
 - Regla Metacognitiva: `.claude/rules/ejercicios-metacognitivos.md`
 - generar-schoice: `.claude/skills/generar-schoice/SKILL.md` (estructura base)
-- Ejemplo Canonico: `A-Produccion/03-En-Produccion/.../promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`
+- Ejemplo Canónico: `A-Produccion/03-En-Produccion/.../promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`
+- Ejemplos Recientes (Prioridad 1): `A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd` y `A-Produccion/02-En-Desarrollo/**/*metacognitivo*cloze*.Rmd`
 - Nomenclatura: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 - Ciclo Validacion: `.claude/rules/ciclo-validacion.md`
 

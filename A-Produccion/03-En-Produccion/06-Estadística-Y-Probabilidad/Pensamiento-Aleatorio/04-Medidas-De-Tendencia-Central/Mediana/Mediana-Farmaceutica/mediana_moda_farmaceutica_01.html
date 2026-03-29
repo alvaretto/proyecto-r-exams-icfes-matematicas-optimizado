@@ -352,80 +352,68 @@ display: none;
 </div>
 
 
-<div id="metadatos-icfes" class="section level1">
-<h1>Metadatos ICFES</h1>
-<p>icfes: competencia: - interpretacion_representacion nivel_dificultad:
-2 contenido: categoria: estadistica tipo: generico contexto: laboral
-eje_axial: eje4 componente: aleatorio</p>
-</div>
 <div id="question" class="section level1">
 <h1>Question</h1>
-<p>Una empresa farmacéutica calculó el porcentaje de efectividad de un
-tratamiento para una enfermedad. Para ello, hizo cinco estudios y, de
-cada estudio, se conoció el porcentaje de efectividad que tuvo el
-tratamiento. De los cinco porcentajes, solo hay una moda que es 92% y la
-mediana es 96%.</p>
-<p>¿Es CORRECTO afirmar que la efectividad mínima mostrada en los
-estudios fue de 92%?</p>
+<p>Para su proyecto de bioestadística, Mateo recopiló los resultados de
+5 ensayos clínicos sobre un fármaco experimental.</p>
+<p>De los cinco porcentajes de efectividad obtenidos, solo hay una moda
+que es 64% y la mediana es 74%.</p>
+<p>Un estudiante, Laura, analizó estos datos y concluyó que la
+efectividad mínima mostrada en los estudios fue de
+<strong>69%</strong>.</p>
+<p>¿Cuál error conceptual cometió Laura para llegar a esa
+conclusión?</p>
 <div id="answerlist" class="section level2">
 <h2>Answerlist</h2>
 <ul>
-<li>No, porque la mediana es resultado de un estudio y la moda el de
-otros dos, luego alguno de los restantes podría ser menor que 92%.</li>
-<li>Sí, porque la mediana debe tener dos valores mayores y dos menores,
-y la moda garantiza que los dos menores son 92%.</li>
-<li>No, porque la mediana podría ser esa, por dos estudios muy cercanos
-a 100%, dos iguales y uno menor que 92%.</li>
-<li>Sí, porque la mediana es el resultado de uno de los estudios y la
-moda el de todos los demás, entonces el menor es 92%.</li>
+<li>Promedió la moda y la mediana para obtener el valor mínimo,
+confundiendo el promedio de dos estadísticos con una medida de posición
+extrema</li>
+<li>Confundió la mediana con el valor mínimo, asumiendo que el dato en
+la posición central del conjunto ordenado es siempre el menor valor</li>
+<li>Aplicó simetría falsa alrededor de la moda: calculó el mínimo
+restando a la moda la diferencia entre la mediana y la moda, sin
+justificación para asumir distribución simétrica</li>
+<li>Asumió que debe existir al menos un estudio con efectividad inferior
+a la moda, tomando un porcentaje una unidad menor sin considerar las
+restricciones impuestas por la moda y la mediana</li>
 </ul>
 </div>
 </div>
 <div id="solution" class="section level1">
 <h1>Solution</h1>
-<p>La afirmación es <strong>CORRECTA</strong>. Analicemos por qué:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Datos y Orden:</strong> Tenemos 5 porcentajes de
-efectividad. Si los ordenamos de menor a mayor, los llamamos <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(x_3\)</span>, <span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span>.</p></li>
-<li><p><strong>Mediana:</strong> Al ser 5 datos (un número impar), la
-mediana es el valor central (el 3º). Se nos dice que la mediana es 96%.
-Por lo tanto, <span class="math inline">\(x_3 = 96%\)</span>. La lista
-ordenada es: <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(96%\)</span>, <span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span>. Esto implica que <span class="math inline">\(x_1\)</span> es menor o igual que <span class="math inline">\(x_2\)</span>, que a su vez es menor o igual que
-<span class="math inline">\(96%\)</span>, y que <span class="math inline">\(96%\)</span> es menor o igual que <span class="math inline">\(x_4\)</span>, que a su vez es menor o igual que
-<span class="math inline">\(x_5\)</span>.</p></li>
-<li><p><strong>Moda:</strong> La moda es el valor que más se repite. Se
-nos dice que la moda es 92% y es <em>única</em>.</p>
-<ul>
-<li>Para que 92% sea la moda en 5 datos, debe aparecer al menos dos
-veces.</li>
-<li>¿Podría aparecer 3 o más veces? No, porque si apareciera 3 veces, al
-ordenar los datos, el valor central (la mediana, <span class="math inline">\(x_3\)</span>) sería 92%, lo cual contradice que la
-mediana es 96% (ya que 92% es diferente de 96%).</li>
-<li>Por lo tanto, 92% aparece exactamente <em>dos</em> veces.</li>
-<li>Al ser la <em>única</em> moda, ningún otro valor puede repetirse dos
-o más veces. Esto significa que <span class="math inline">\(x_4\)</span>
-es diferente de 96%, <span class="math inline">\(x_5\)</span> es
-diferente de 96%, y <span class="math inline">\(x_4\)</span> es
-diferente de <span class="math inline">\(x_5\)</span>.</li>
-<li>Es importante destacar que no puede haber otra moda con mayor
-frecuencia (como por ejemplo, tres valores iguales), ya que en ese caso,
-ese valor sería la moda y no 92%.</li>
-</ul></li>
-<li><p><strong>Combinando Mediana y Moda:</strong> Sabemos que la lista
-ordenada es <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, <span class="math inline">\(96%\)</span>, <span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span> y que dos de estos valores son
-92%.</p>
-<ul>
-<li>Dado que 92% (la moda) es menor que 96% (la mediana), los dos
-valores de 92% deben estar necesariamente en las posiciones por debajo
-de la mediana. Es decir, deben ser <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span>.</li>
-<li>La única estructura posible para la lista ordenada es: <span class="math inline">\(92%\)</span>, <span class="math inline">\(92%\)</span>, <span class="math inline">\(96%\)</span>, <span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span>, donde además se cumple que 96% es
-menor que <span class="math inline">\(x_4\)</span>, que a su vez es
-menor que <span class="math inline">\(x_5\)</span>.</li>
-</ul></li>
-<li><p><strong>Conclusión sobre el Mínimo:</strong> En la lista ordenada
-(<span class="math inline">\(92%\)</span>, <span class="math inline">\(92%\)</span>, <span class="math inline">\(96%\)</span>, <span class="math inline">\(x_4\)</span>, <span class="math inline">\(x_5\)</span>), el valor mínimo es <span class="math inline">\(x_1\)</span>, que hemos determinado que debe ser
-92%.</p></li>
-</ol>
+<div id="análisis-del-error" class="section level3">
+<h3>Análisis del Error</h3>
+<p><strong>Error identificado:</strong> EST-FAR-04 — Promedio
+moda-mediana como mínimo</p>
+<p>El estudiante calculó el promedio entre la moda y la mediana: (64 +
+74) ÷ 2 = 69%, y lo presentó como el valor mínimo. Este cálculo no tiene
+relación con la determinación del valor mínimo del conjunto.</p>
+<p><strong>Causa raíz:</strong> Confusión entre el promedio aritmético
+de dos estadísticos (moda y mediana) y el valor mínimo del conjunto.
+Promediar estadísticos no produce otros estadísticos válidos.</p>
+</div>
+<div id="procedimiento-correcto" class="section level3">
+<h3>Procedimiento Correcto</h3>
+<p>Para determinar el valor mínimo, debemos analizar las restricciones
+que la moda y la mediana imponen sobre los cinco datos.</p>
+<p><strong>Paso 1.</strong> Tenemos 5 porcentajes de efectividad. Si los
+ordenamos de menor a mayor: <span class="math inline">\(x_1 \leq x_2
+\leq x_3 \leq x_4 \leq x_5\)</span>.</p>
+<p><strong>Paso 2.</strong> Al ser 5 datos (número impar), la mediana es
+el valor central: <span class="math inline">\(x_3 = 74\%\)</span>.</p>
+<p><strong>Paso 3.</strong> La moda es 64% y es la
+<strong>única</strong> moda. Para que sea moda, debe aparecer al menos 2
+veces. ¿Podría aparecer 3 o más veces? Si apareciera 3 veces, al ordenar
+los datos el valor central (<span class="math inline">\(x_3\)</span>)
+sería 64%, pero la mediana es 74% <span class="math inline">\(\neq\)</span> 64%. Contradicción. Por lo tanto,
+64% aparece <strong>exactamente 2 veces</strong>.</p>
+<p><strong>Paso 4.</strong> Como 64% <span class="math inline">\(&lt;\)</span> 74% (la moda es menor que la
+mediana), las dos apariciones de 64% deben estar <strong>por
+debajo</strong> de la mediana, es decir, en las posiciones <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span>.</p>
+<p><strong>Paso 5.</strong> La lista ordenada es: <span class="math inline">\(64\%,\ 64\%,\ 74\%,\ x_4,\ x_5\)</span>, donde
+<span class="math inline">\(x_4 &gt; 74\%\)</span> y <span class="math inline">\(x_5 &gt; x_4\)</span>.</p>
+<p><span class="math display">\[\text{Mínimo} = x_1 = 64\%\]</span></p>
 <p><strong>Tabla de datos ordenados:</strong></p>
 <table>
 <thead>
@@ -438,39 +426,104 @@ menor que <span class="math inline">\(x_5\)</span>.</li>
 <tbody>
 <tr class="odd">
 <td align="center"><span class="math inline">\(x_1\)</span></td>
-<td align="center">92%</td>
+<td align="center">64%</td>
 <td align="center">Moda (valor mínimo)</td>
 </tr>
 <tr class="even">
 <td align="center"><span class="math inline">\(x_2\)</span></td>
-<td align="center">92%</td>
+<td align="center">64%</td>
 <td align="center">Moda (repetido)</td>
 </tr>
 <tr class="odd">
 <td align="center"><span class="math inline">\(x_3\)</span></td>
-<td align="center">96%</td>
+<td align="center">74%</td>
 <td align="center">Mediana (valor central)</td>
 </tr>
 <tr class="even">
 <td align="center"><span class="math inline">\(x_4\)</span></td>
-<td align="center">&gt; 96%</td>
+<td align="center"><span class="math inline">\(&gt; 74\%\)</span></td>
 <td align="center">Mayor que la mediana</td>
 </tr>
 <tr class="odd">
 <td align="center"><span class="math inline">\(x_5\)</span></td>
-<td align="center">&gt; 96%</td>
+<td align="center"><span class="math inline">\(&gt; 74\%\)</span></td>
 <td align="center">Mayor que la mediana</td>
 </tr>
 </tbody>
 </table>
-<p>Por lo tanto, es correcto afirmar que la efectividad mínima mostrada
-fue 92%.</p>
+</div>
+<div id="propiedades-del-concepto" class="section level3">
+<h3>Propiedades del Concepto</h3>
+<ul>
+<li>La <strong>mediana</strong> de un conjunto impar de datos ordenados
+es el valor en la posición central.</li>
+<li>La <strong>moda</strong> es el valor que aparece con mayor
+frecuencia (y es única si ningún otro valor tiene la misma frecuencia
+máxima).</li>
+<li>Cuando la moda única es <strong>menor</strong> que la mediana y hay
+exactamente 5 datos, la moda debe ser el valor mínimo del conjunto.</li>
+</ul>
+</div>
+<div id="caso-específico" class="section level3">
+<h3>Caso Específico</h3>
+<p>Un ejemplo concreto de datos que cumplen las condiciones:</p>
+<p><span class="math display">\[\{64\%,\ 64\%,\ 74\%,\ 75\%,\
+77\%\}\]</span></p>
+<ul>
+<li>Moda: 64% (aparece 2 veces, único valor repetido)</li>
+<li>Mediana: 74% (posición central)</li>
+<li>Mínimo: 64% <span class="math inline">\(\checkmark\)</span></li>
+</ul>
+</div>
+<div id="reflexión-metacognitiva" class="section level3">
+<h3>Reflexión Metacognitiva</h3>
+<p>Un error común es aplicar fórmulas o procedimientos sin comprender su
+significado. Entender POR QUÉ un método funciona es más valioso que
+memorizar CÓMO aplicarlo.</p>
+</div>
+<div id="estrategia-para-evitar-el-error" class="section level3">
+<h3>Estrategia para Evitar el Error</h3>
+<ol style="list-style-type: decimal">
+<li><strong>Verificar restricciones</strong>: analizar qué posiciones
+pueden ocupar los valores repetidos (moda) según su relación con la
+mediana.</li>
+<li><strong>Construir un ejemplo</strong>: armar un conjunto de datos
+concreto que cumpla todas las condiciones antes de concluir.</li>
+<li><strong>Descartar hipótesis</strong>: si se asume que el mínimo es
+diferente de la moda, verificar si eso genera contradicciones.</li>
+<li><strong>No aplicar simetrías sin justificación</strong>: la
+distribución de los datos no tiene por qué ser simétrica.</li>
+</ol>
+</div>
+<div id="answerlist-1" class="section level2">
+<h2>Answerlist</h2>
+<ul>
+<li><strong>Correcta.</strong> Este es el error que cometió Laura. El
+estudiante calculó el promedio entre la moda y la mediana: (64 + 74) ÷ 2
+= 69%, y lo presentó como el valor mínimo. Este cálculo no tiene
+relación con la determinación del valor mínimo del conjunto.
+<strong>Causa raíz:</strong> Confusión entre el promedio aritmético de
+dos estadísticos (moda y mediana) y el valor mínimo del conjunto.
+Promediar estadísticos no produce otros estadísticos válidos.</li>
+<li>Incorrecta. Este error (EST-FAR-01: Confusión mediana-mínimo) habría
+producido un valor de 74%, no de 69%.</li>
+<li>Incorrecta. Este error (EST-FAR-02: Simetría falsa) habría producido
+un valor de 54%, no de 69%.</li>
+<li>Incorrecta. Este error (EST-FAR-03: Valor inferior a la moda) habría
+producido un valor de 63%, no de 69%.</li>
+</ul>
+</div>
 </div>
 <div id="meta-information" class="section level1">
 <h1>Meta-information</h1>
-<p>exname: Efectividad tratamiento farmaceutico ICFES extype: schoice
-exsolution: 0100 exshuffle: TRUE exnumeric: FALSE extol: 0.01 expoints:
-1</p>
+<p>exname: mediana_moda_farmaceutica_metacognitivo extype: schoice
+exsolution: 1000 exshuffle: TRUE extol: 0.01 exextra[Componente]:
+Aleatorio exextra[Competencia]: Argumentacion exextra[Nivel]: 3
+exextra[Type]: SCHOICE exextra[Afirmacion]: Valida procedimientos y
+estrategias matematicas utilizadas para dar solucion a problemas
+exextra[Evidencia]: Justifica o refuta la validez de un procedimiento o
+solucion estadistica exextra[DOK]: 3 exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional exextra[TipoMetacognicion]: analisis_error</p>
 </div>
 
 

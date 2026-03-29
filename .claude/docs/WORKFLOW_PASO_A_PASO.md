@@ -283,7 +283,7 @@ Por favor, completa el análisis con las 6 dimensiones ICFES
 
 El comando de generación:
 
-1. **Consulta ejemplos funcionales** en `/A-Produccion/Ejemplos-Funcionales-Rmd/`
+1. **Consulta ejemplos funcionales** con Búsqueda Inteligente: primero .Rmd recientes completados en `03-En-Produccion/` y `02-En-Desarrollo/`, luego canónicos en `Ejemplos-Funcionales-Rmd/`
 2. **Genera código .Rmd completo** con:
 
    - Encabezado YAML con paquetes LaTeX
@@ -805,12 +805,15 @@ Por favor, mejora la fidelidad visual del código TikZ.
 - **Metodología TikZ**: Documentada en reglas generales
 - **Python ICFES**: `Auxiliares/Python-Documentation/Python-ICFES-Guide.md`
 
-### Ejemplos Funcionales
+### Ejemplos Funcionales (Búsqueda Inteligente)
 
-- **SCHOICE**: `A-Produccion/Ejemplos-Funcionales-Rmd/`
-- **CLOZE**: `06-Estadística-Y-Probabilidad/.../Probabilidad-Intervalos-Curva-13-S1-2024B/`
-- **En Producción**: `A-Produccion/En-Produccion/`
-- **En Pre-Desarrollo** (también funcionales): `A-Produccion/En-PreDesarrollo/`
+**Prioridad 1 — Recientes completados** (patrones más actualizados):
+- `A-Produccion/03-En-Produccion/**/*metacognitivo*.Rmd` (ordenados por fecha, más reciente primero)
+- `A-Produccion/02-En-Desarrollo/**/*metacognitivo*.Rmd` (solo con `aprobacion_usuario.completado = true`)
+
+**Prioridad 2 — Canónicos inmutables**:
+- **SCHOICE/General**: `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
+- **CLOZE**: `A-Produccion/03-En-Produccion/.../promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`
 
 ---
 

@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "mediana_moda_farmaceutica_v2",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-03-24T20:00:56.648559-05:00",
+  "timestamp_ultima_actualizacion": "2026-03-24T20:24:51.189941-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:01:03.763550-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-03-24T20:01:03.822243-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:01:03.876398-05:00",
+      "archivo": "mediana_moda_farmaceutica_v2.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:09:34.805373-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:09:34.860230-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:24:24.710855-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:24:24.765524-05:00",
+      "veredicto": "APROBAR CON CAMBIOS (corregidos)"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:24:24.819517-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:24:24.873621-05:00",
+      "versiones_unicas": 273
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-24T20:24:51.189941-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}

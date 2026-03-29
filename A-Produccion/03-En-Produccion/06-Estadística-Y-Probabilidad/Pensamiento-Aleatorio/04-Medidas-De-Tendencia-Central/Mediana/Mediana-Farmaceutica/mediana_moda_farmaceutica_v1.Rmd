@@ -1,0 +1,454 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r data_generation, echo = FALSE, results = "hide"}
+library(exams)
+
+# ============================================================
+# POOL DE CONTEXTOS NARRATIVOS (8 plantillas variadas)
+# ============================================================
+contextos <- list(
+  # Tipo: Acción en curso
+  list(
+    plantilla = function(prot, n) {
+      paste0("Durante el último congreso de farmacología, se presentaron ",
+             "los resultados de ", n, " ensayos clínicos sobre ", prot,
+             ". De cada ensayo se conoció el porcentaje de efectividad ",
+             "del tratamiento.")
+    },
+    protagonistas = c(
+      "un nuevo medicamento para la hipertensión",
+      "una vacuna experimental contra la influenza",
+      "un tratamiento innovador para la diabetes tipo 2")
+  ),
+  # Tipo: Situación problema
+  list(
+    plantilla = function(prot, n) {
+      paste0("El comité de calidad de ", prot,
+             " necesita evaluar la efectividad de un fármaco. ",
+             "Para ello, revisó los porcentajes de efectividad ",
+             "obtenidos en ", n, " estudios independientes.")
+    },
+    protagonistas = c(
+      "un laboratorio farmacéutico en Bogotá",
+      "la agencia reguladora de medicamentos",
+      "un centro de investigación clínica")
+  ),
+  # Tipo: Narración periodística
+  list(
+    plantilla = function(prot, n) {
+      paste0("Un artículo publicado en ", prot,
+             " reportó los porcentajes de efectividad obtenidos ",
+             "en ", n, " estudios sobre un tratamiento experimental.")
+    },
+    protagonistas = c(
+      "la Revista Colombiana de Medicina",
+      "el Boletín de Farmacovigilancia",
+      "una revista de investigación clínica")
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    plantilla = function(prot, n) {
+      paste0("Para su proyecto de bioestadística, ", prot,
+             " recopiló los resultados de ", n,
+             " ensayos clínicos sobre un fármaco experimental.")
+    },
+    protagonistas = c("Valentina", "Santiago", "Isabela",
+                      "Mateo", "Luciana", "Andrés")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    plantilla = function(prot, n) {
+      paste0("El informe anual de ", prot,
+             " incluye los porcentajes de efectividad de un tratamiento, ",
+             "obtenidos en ", n, " estudios clínicos.")
+    },
+    protagonistas = c(
+      "la oficina de farmacovigilancia",
+      "el departamento de investigación",
+      "la dirección científica del laboratorio")
+  ),
+  # Tipo: Pregunta retórica
+  list(
+    plantilla = function(prot, n) {
+      paste0("¿Qué tan efectivo resultó el nuevo tratamiento? Los ", n,
+             " ensayos clínicos realizados por ", prot,
+             " arrojaron diferentes porcentajes de efectividad.")
+    },
+    protagonistas = c(
+      "el Instituto Nacional de Salud",
+      "la universidad de ciencias médicas",
+      "el consorcio farmacéutico regional")
+  ),
+  # Tipo: Diálogo implícito
+  list(
+    plantilla = function(prot, n) {
+      paste0("—Debemos analizar estos datos antes de la presentación ",
+             "—indicó ", prot, ". Los ", n,
+             " porcentajes de efectividad del tratamiento ",
+             "requieren evaluación estadística.")
+    },
+    protagonistas = c(
+      "la directora del ensayo clínico",
+      "el coordinador de farmacovigilancia",
+      "la jefa del laboratorio")
+  ),
+  # Tipo: Descubrimiento
+  list(
+    plantilla = function(prot, n) {
+      paste0("Al revisar los registros del ensayo clínico, ", prot,
+             " encontró los porcentajes de efectividad de ", n,
+             " estudios que aún no habían sido analizados.")
+    },
+    protagonistas = c(
+      "el auditor de calidad",
+      "la investigadora principal",
+      "el asistente de investigación")
+  )
+)
+
+# ============================================================
+# GENERACIÓN DE DATOS
+# ============================================================
+n_estudios <- 5
+
+# Generar moda y mediana con separación >= 2
+moda <- sample(60:90, 1)
+max_dif <- min(10, 100 - moda - 2)
+diferencia <- sample(2:max_dif, 1)
+mediana <- moda + diferencia
+
+# Generar los 5 datos ordenados (para calcula y validación)
+max_a <- max(1, min(5, 100 - mediana - 1))
+a_val <- sample(1:max_a, 1)
+max_b <- max(1, min(5, 100 - mediana - a_val))
+b_val <- sample(1:max_b, 1)
+x4 <- mediana + a_val
+x5 <- x4 + b_val
+datos_ord <- c(moda, moda, mediana, x4, x5)
+
+# Valor correcto: el mínimo es la moda
+valor_correcto <- moda
+
+# Seleccionar contexto
+ctx <- contextos[[sample(length(contextos), 1)]]
+prot <- sample(ctx$protagonistas, 1)
+enunciado_contexto <- ctx$plantilla(prot, n_estudios)
+
+# Nombre del estudiante que comete el error
+nombres_estudiantes <- c("Camila", "Sebastián", "Mariana", "Diego",
+                         "Valeria", "Nicolás", "Laura", "Alejandro",
+                         "Sofía", "Daniel", "Gabriela", "Felipe")
+nombre_est <- sample(nombres_estudiantes, 1)
+
+# ============================================================
+# POOL DE ERRORES CONCEPTUALES
+# ============================================================
+errores_conceptuales <- list(
+  list(
+    codigo = "EST-FAR-01",
+    nombre = "Confusión mediana-mínimo",
+    descripcion_corta = paste0(
+      "Confundió la mediana con el valor mínimo, asumiendo ",
+      "que el dato en la posición central del conjunto ",
+      "ordenado es siempre el menor valor"),
+    descripcion_larga = paste0(
+      "El estudiante confundió la mediana (valor central del conjunto ",
+      "ordenado) con el valor mínimo. La mediana ocupa la posición ",
+      "central, pero NO es el valor más pequeño. En este caso, la ",
+      "mediana es ", mediana, "% y el mínimo real es ", moda, "%."),
+    causa_raiz = paste0(
+      "Confusión entre la posición central de los datos ordenados ",
+      "(que define la mediana) y la posición extrema inferior ",
+      "(que define el mínimo)."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      datos_ord[3]
+    }
+  ),
+  list(
+    codigo = "EST-FAR-02",
+    nombre = "Simetría falsa",
+    descripcion_corta = paste0(
+      "Aplicó simetría falsa alrededor de la moda: calculó el ",
+      "mínimo restando a la moda la diferencia entre la ",
+      "mediana y la moda, sin justificación para asumir ",
+      "distribución simétrica"),
+    descripcion_larga = paste0(
+      "El estudiante asumió erróneamente que los datos se distribuyen ",
+      "simétricamente alrededor de la moda. Calculó el mínimo como ",
+      "moda - (mediana - moda) = ", moda, " - ", diferencia, " = ",
+      2 * moda - mediana, "%. Esta suposición de simetría no tiene ",
+      "fundamento con la información proporcionada."),
+    causa_raiz = paste0(
+      "Suposición injustificada de simetría: asumió que la distancia ",
+      "entre el mínimo y la moda es igual a la distancia entre la ",
+      "moda y la mediana."),
+    precondicion = function(params) params$diferencia >= 2,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      2 * datos_ord[1] - datos_ord[3]
+    }
+  ),
+  list(
+    codigo = "EST-FAR-03",
+    nombre = "Valor inferior a la moda",
+    descripcion_corta = paste0(
+      "Asumió que debe existir al menos un estudio con ",
+      "efectividad inferior a la moda, tomando un porcentaje ",
+      "una unidad menor sin considerar las restricciones ",
+      "impuestas por la moda y la mediana"),
+    descripcion_larga = paste0(
+      "El estudiante supuso que, por tener cinco estudios, al menos ",
+      "uno debía tener un porcentaje inferior a la moda. Concluyó ",
+      "que el mínimo es ", moda - 1, "%, sin verificar que las ",
+      "restricciones impuestas por la moda única y la mediana hacen ",
+      "imposible la existencia de un valor por debajo de la moda."),
+    causa_raiz = paste0(
+      "No comprendió que, al ser la moda el valor más frecuente ",
+      "(aparece exactamente dos veces) y ser menor que la mediana, ",
+      "ambas apariciones deben ocupar las dos posiciones más bajas."),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      datos_ord[1] - 1
+    }
+  ),
+  list(
+    codigo = "EST-FAR-04",
+    nombre = "Promedio moda-mediana como mínimo",
+    descripcion_corta = paste0(
+      "Promedió la moda y la mediana para obtener el valor ",
+      "mínimo, confundiendo el promedio de dos estadísticos ",
+      "con una medida de posición extrema"),
+    descripcion_larga = paste0(
+      "El estudiante calculó el promedio entre la moda y la mediana: ",
+      "(", moda, " + ", mediana, ") ÷ 2 = ",
+      round((moda + mediana) / 2),
+      "%, y lo presentó como el valor mínimo. Este cálculo no tiene ",
+      "relación con la determinación del valor mínimo del conjunto."),
+    causa_raiz = paste0(
+      "Confusión entre el promedio aritmético de dos estadísticos ",
+      "(moda y mediana) y el valor mínimo del conjunto. Promediar ",
+      "estadísticos no produce otros estadísticos válidos."),
+    precondicion = function(params) params$diferencia >= 2,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      round((datos_ord[1] + datos_ord[3]) / 2)
+    }
+  )
+)
+
+# ============================================================
+# SELECCIÓN DE ERROR Y CÁLCULO
+# ============================================================
+params <- list(diferencia = diferencia, n = n_estudios, datos_ord = datos_ord)
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  err$precondicion(params)
+}))
+
+error_idx <- sample(errores_aplicables_idx, 1)
+error_sel <- errores_conceptuales[[error_idx]]
+respuesta_erronea <- error_sel$calcula(datos_ord)
+
+# Guardia NA y verificar != valor correcto (regla #9)
+intentos_err <- 0
+while ((is.na(respuesta_erronea) || respuesta_erronea == valor_correcto) &&
+       intentos_err < 20) {
+  error_idx <- sample(errores_aplicables_idx, 1)
+  error_sel <- errores_conceptuales[[error_idx]]
+  respuesta_erronea <- error_sel$calcula(datos_ord)
+  intentos_err <- intentos_err + 1
+}
+stopifnot(!is.na(respuesta_erronea))
+stopifnot(respuesta_erronea != valor_correcto)
+
+# Verificar determinismo de calcula (Capa D)
+check_result <- error_sel$calcula(datos_ord)
+stopifnot(check_result == respuesta_erronea)
+
+# ============================================================
+# CREAR OPCIONES (1 correcta + 3 distractores)
+# ============================================================
+opcion_correcta <- error_sel$descripcion_corta
+
+otros_idx <- setdiff(errores_aplicables_idx, error_idx)
+if (length(otros_idx) >= 3) {
+  distractores_idx <- sample(otros_idx, 3)
+} else {
+  distractores_idx <- otros_idx
+  restantes <- setdiff(seq_along(errores_conceptuales), c(error_idx, otros_idx))
+  faltantes <- 3 - length(distractores_idx)
+  if (length(restantes) >= faltantes) {
+    distractores_idx <- c(distractores_idx, sample(restantes, faltantes))
+  }
+}
+
+opciones_texto <- c(
+  opcion_correcta,
+  sapply(distractores_idx, function(i) errores_conceptuales[[i]]$descripcion_corta)
+)
+stopifnot(length(unique(opciones_texto)) == 4)
+
+# Vector solución: opción 1 es la correcta (exshuffle manejará el orden)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+
+# ============================================================
+# TEXTOS DE SOLUCIÓN POR OPCIÓN
+# ============================================================
+sol_texts <- c(
+  paste0("**Correcta.** Este es el error que cometió ", nombre_est,
+         ". ", error_sel$descripcion_larga,
+         " **Causa raíz:** ", error_sel$causa_raiz),
+  paste0("Incorrecta. Este error (",
+         errores_conceptuales[[distractores_idx[1]]]$codigo, ": ",
+         errores_conceptuales[[distractores_idx[1]]]$nombre,
+         ") habría producido un valor de ",
+         errores_conceptuales[[distractores_idx[1]]]$calcula(datos_ord),
+         "%, no de ", respuesta_erronea, "%."),
+  paste0("Incorrecta. Este error (",
+         errores_conceptuales[[distractores_idx[2]]]$codigo, ": ",
+         errores_conceptuales[[distractores_idx[2]]]$nombre,
+         ") habría producido un valor de ",
+         errores_conceptuales[[distractores_idx[2]]]$calcula(datos_ord),
+         "%, no de ", respuesta_erronea, "%."),
+  paste0("Incorrecta. Este error (",
+         errores_conceptuales[[distractores_idx[3]]]$codigo, ": ",
+         errores_conceptuales[[distractores_idx[3]]]$nombre,
+         ") habría producido un valor de ",
+         errores_conceptuales[[distractores_idx[3]]]$calcula(datos_ord),
+         "%, no de ", respuesta_erronea, "%.")
+)
+
+# ============================================================
+# POOL DE REFLEXIONES METACOGNITIVAS
+# ============================================================
+reflexiones_metacognitivas <- list(
+  paste0("Identificar los errores de otros nos ayuda a evitar cometerlos. ",
+         "La metacognición —pensar sobre nuestro propio pensamiento— ",
+         "es clave para el aprendizaje profundo en estadística."),
+  paste0("Los errores más frecuentes en estadística surgen de confundir ",
+         "las medidas de tendencia central entre sí (media, mediana, moda) ",
+         "o de aplicar propiedades sin verificar sus condiciones."),
+  paste0("Antes de aceptar un resultado, pregúntate: ¿tiene sentido? ",
+         "¿Cumple las restricciones del problema? Verificar activamente ",
+         "las respuestas previene errores conceptuales."),
+  paste0("Cuando un problema involucra varias medidas estadísticas, ",
+         "es fundamental analizar cómo se relacionan entre sí y qué ",
+         "restricciones imponen sobre los datos posibles."),
+  paste0("Un error común es aplicar fórmulas o procedimientos sin ",
+         "comprender su significado. Entender POR QUÉ un método funciona ",
+         "es más valioso que memorizar CÓMO aplicarlo.")
+)
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+```
+
+Question
+========
+
+`r enunciado_contexto`
+
+De los cinco porcentajes de efectividad obtenidos, solo hay una moda que es `r moda`% y la mediana es `r mediana`%.
+
+Un estudiante, `r nombre_est`, analizó estos datos y concluyó que la efectividad mínima mostrada en los estudios fue de **`r respuesta_erronea`%**.
+
+¿Cuál error conceptual cometió `r nombre_est` para llegar a esa conclusión?
+
+Answerlist
+----------
+
+* `r opciones_texto[1]`
+* `r opciones_texto[2]`
+* `r opciones_texto[3]`
+* `r opciones_texto[4]`
+
+Solution
+========
+
+### Análisis del Error
+
+**Error identificado:** `r error_sel$codigo` — `r error_sel$nombre`
+
+`r error_sel$descripcion_larga`
+
+**Causa raíz:** `r error_sel$causa_raiz`
+
+### Procedimiento Correcto
+
+Para determinar el valor mínimo, debemos analizar las restricciones que la moda y la mediana imponen sobre los cinco datos.
+
+**Paso 1.** Tenemos 5 porcentajes de efectividad. Si los ordenamos de menor a mayor: $x_1 \leq x_2 \leq x_3 \leq x_4 \leq x_5$.
+
+**Paso 2.** Al ser 5 datos (número impar), la mediana es el valor central: $x_3 = `r mediana`\%$.
+
+**Paso 3.** La moda es `r moda`% y es la **única** moda. Para que sea moda, debe aparecer al menos 2 veces. ¿Podría aparecer 3 o más veces? Si apareciera 3 veces, al ordenar los datos el valor central ($x_3$) sería `r moda`%, pero la mediana es `r mediana`% $\neq$ `r moda`%. Contradicción. Por lo tanto, `r moda`% aparece **exactamente 2 veces**.
+
+**Paso 4.** Como `r moda`% $<$ `r mediana`% (la moda es menor que la mediana), las dos apariciones de `r moda`% deben estar **por debajo** de la mediana, es decir, en las posiciones $x_1$ y $x_2$.
+
+**Paso 5.** La lista ordenada es: $`r moda`\%,\ `r moda`\%,\ `r mediana`\%,\ x_4,\ x_5$, donde $x_4 > `r mediana`\%$ y $x_5 > x_4$.
+
+$$\text{Mínimo} = x_1 = `r moda`\%$$
+
+**Tabla de datos ordenados:**
+
+| Posición | Valor | Descripción |
+|:--------:|:-----:|:-----------:|
+| $x_1$ | `r moda`% | Moda (valor mínimo) |
+| $x_2$ | `r moda`% | Moda (repetido) |
+| $x_3$ | `r mediana`% | Mediana (valor central) |
+| $x_4$ | $> `r mediana`\%$ | Mayor que la mediana |
+| $x_5$ | $> `r mediana`\%$ | Mayor que la mediana |
+
+### Propiedades del Concepto
+
+- La **mediana** de un conjunto impar de datos ordenados es el valor en la posición central.
+- La **moda** es el valor que aparece con mayor frecuencia (y es única si ningún otro valor tiene la misma frecuencia máxima).
+- Cuando la moda única es **menor** que la mediana y hay exactamente 5 datos, la moda debe ser el valor mínimo del conjunto.
+
+### Caso Específico
+
+Un ejemplo concreto de datos que cumplen las condiciones:
+
+$$\{`r moda`\%,\ `r moda`\%,\ `r mediana`\%,\ `r x4`\%,\ `r x5`\%\}$$
+
+- Moda: `r moda`% (aparece 2 veces, único valor repetido)
+- Mediana: `r mediana`% (posición central)
+- Mínimo: `r moda`% $\checkmark$
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+### Estrategia para Evitar el Error
+
+1. **Verificar restricciones**: analizar qué posiciones pueden ocupar los valores repetidos (moda) según su relación con la mediana.
+2. **Construir un ejemplo**: armar un conjunto de datos concreto que cumpla todas las condiciones antes de concluir.
+3. **Descartar hipótesis**: si se asume que el mínimo es diferente de la moda, verificar si eso genera contradicciones.
+4. **No aplicar simetrías sin justificación**: la distribución de los datos no tiene por qué ser simétrica.
+
+Answerlist
+----------
+
+* `r sol_texts[1]`
+* `r sol_texts[2]`
+* `r sol_texts[3]`
+* `r sol_texts[4]`
+
+Meta-information
+================
+exname: mediana_moda_farmaceutica_metacognitivo
+extype: schoice
+exsolution: `r paste(as.integer(sol), collapse="")`
+exshuffle: TRUE
+extol: 0.01
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Argumentacion
+exextra[Nivel]: 3
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solucion a problemas
+exextra[Evidencia]: Justifica o refuta la validez de un procedimiento o solucion estadistica
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error

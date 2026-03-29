@@ -50,6 +50,12 @@ if (require("reticulate", quietly = TRUE)) {
   })
 }
 
+# mcptools: auto-registro MCP para Claude Code
+source("~/.R/mcp-session-autoconnect.R")
+
+# Abrir archivos encolados por rstudio-open como pestanas nuevas
+source("~/.R/open-queue-watcher.R")
+
 # Mensaje de bienvenida
 cat("R configurado para VSCode\n")
 cat("Biblioteca personal:", .libPaths()[1], "\n")

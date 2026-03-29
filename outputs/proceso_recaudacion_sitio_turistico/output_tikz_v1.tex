@@ -1,0 +1,86 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+
+\begin{document}
+
+% Definición de estilos
+\tikzset{
+    % Cajas de proceso (rectángulos con bordes redondeados)
+    proceso/.style={
+        rectangle,
+        rounded corners=3pt,
+        draw=cyan!70!black,
+        fill=cyan!10,
+        text width=4cm,
+        minimum height=1.5cm,
+        align=center,
+        font=\small
+    },
+    % Caja de resultado final
+    resultado/.style={
+        rectangle,
+        rounded corners=3pt,
+        draw=cyan!70!black,
+        fill=cyan!10,
+        text width=2.5cm,
+        minimum height=1.5cm,
+        align=center,
+        font=\small
+    },
+    % Círculos numerados (pasos)
+    paso/.style={
+        circle,
+        fill=orange,
+        text=white,
+        font=\bfseries\small,
+        minimum size=0.7cm,
+        inner sep=0pt
+    },
+    % Flechas
+    flecha/.style={
+        ->,
+        >=Stealth,
+        thick,
+        cyan!70!black
+    }
+}
+
+\begin{tikzpicture}[node distance=0.8cm and 1.5cm]
+
+% === FILA SUPERIOR (Con reserva) ===
+% Paso 1 superior
+\node[paso] (p1a) {1};
+\node[proceso, right=0.3cm of p1a] (caja1a) {Sumar la cantidad de personas que entraron con reserva durante la semana.};
+
+% Paso 2 superior
+\node[paso, right=1.5cm of caja1a] (p2a) {2};
+\node[proceso, right=0.3cm of p2a] (caja2a) {Multiplicar la cantidad obtenida en el paso \tikz[baseline=-0.5ex]{\node[circle,fill=orange,text=white,font=\bfseries\tiny,inner sep=1pt]{1};} por 22,5.};
+
+% === FILA INFERIOR (Sin reserva) ===
+% Paso 1 inferior
+\node[proceso, below=1.5cm of caja1a] (caja1b) {Sumar la cantidad de personas que entraron sin reserva durante la semana.};
+\node[paso, left=0.3cm of caja1b] (p1b) {1};
+
+% Paso 2 inferior
+\node[proceso, right=1.5cm of caja1b] (caja2b) {Multiplicar la cantidad obtenida en el paso \tikz[baseline=-0.5ex]{\node[circle,fill=orange,text=white,font=\bfseries\tiny,inner sep=1pt]{1};} por 17.};
+\node[paso, left=0.3cm of caja2b] (p2b) {2};
+
+% === PASO 3 (Resultado) ===
+\node[paso, right=1.5cm of caja2a, yshift=-1.5cm] (p3) {3};
+\node[resultado, right=0.3cm of p3] (caja3) {Comparar los resultados};
+
+% === FLECHAS ===
+% Flechas horizontales fila superior
+\draw[flecha] (caja1a.east) -- (p2a.west);
+\draw[flecha] (caja2a.east) -- ++(0.5,0) |- (caja3.west);
+
+% Flechas horizontales fila inferior
+\draw[flecha] (caja1b.east) -- (p2b.west);
+\draw[flecha] (caja2b.east) -- ++(0.5,0) |- (caja3.west);
+
+\end{tikzpicture}
+
+\end{document}

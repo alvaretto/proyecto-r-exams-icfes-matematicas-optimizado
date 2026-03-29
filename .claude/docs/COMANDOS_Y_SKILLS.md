@@ -83,6 +83,33 @@ Detecta automáticamente en qué paso quedó el workflow y retoma desde ahí.
 
 ---
 
+#### `/generar-walkthrough` 🆕
+**Propósito**: Generar walkthrough.md tutorial detallado a partir de un .Rmd existente
+
+**Uso**:
+```bash
+/generar-walkthrough [ruta-al-archivo.Rmd]
+```
+
+**Qué hace**:
+1. Analiza estructura del .Rmd (tipo, complejidad, patrones)
+2. Si >200 líneas: lanza agentes en paralelo (Haiku + Sonnet)
+3. Genera `walkthrough.md` con 7 secciones:
+   - Mapa del ejercicio
+   - Vista de pájaro (con analogías)
+   - Bloque por bloque (código anotado)
+   - Patrones clave
+   - Receta paso a paso
+   - Errores comunes
+   - Glosario rápido
+4. Escribe el archivo en el directorio del .Rmd
+
+**Output**: Archivo `walkthrough.md` tutorial para novatos
+
+**Modelo**: Sonnet (orquestador) + Haiku (extracción) + Sonnet (análisis)
+
+---
+
 #### `/generar-schoice`
 **Propósito**: Generar ejercicio de selección única (Single Choice)
 
@@ -712,7 +739,7 @@ allowed-tools:
 ---
 ```
 
-**Skills disponibles** (23 skills con `model_recommendation` en frontmatter):
+**Skills disponibles** (24 skills con `model_recommendation` en frontmatter):
 
 | Skill | Modelo | Proposito |
 |-------|--------|-----------|
@@ -732,6 +759,7 @@ allowed-tools:
 | generar-codigo-tikz | Sonnet | TikZ/pgfplots para gráficos |
 | refinar-codigo-grafico | Sonnet | Iteración hasta ≥95% |
 | stress-test-visual | Sonnet | Stress test multi-semilla + PNGs |
+| generar-walkthrough | Sonnet | Tutorial walkthrough de .Rmd |
 | gestionar-estado-graficador | Haiku | workflow_state.json |
 | promover-ejercicio | Haiku | Mover a producción |
 | transferir-conocimiento-grafico | Haiku | Lecciones entre lenguajes |
@@ -757,9 +785,15 @@ allowed-tools:
 
 ---
 
-**Versión**: 1.4
-**Fecha**: 2026-02-14
+**Versión**: 1.5
+**Fecha**: 2026-03-25
 **Módulo de**: @.claude/CLAUDE.md (v3.6.0)
+
+### Cambios v1.5 (2026-03-25)
+
+- **24 skills** (era 23): +generar-walkthrough (Sonnet)
+- **Nuevo comando**: `/generar-walkthrough` genera tutorial walkthrough.md desde .Rmd existente
+- **Modelo**: Sonnet orquestador + Haiku extracción + Sonnet análisis (agentes en paralelo si >200 líneas)
 
 ### Cambios v1.4 (2026-02-14)
 

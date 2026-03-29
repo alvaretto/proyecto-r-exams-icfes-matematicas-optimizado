@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 ```{r data_generation, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
 library(exams)

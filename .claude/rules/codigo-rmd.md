@@ -99,6 +99,7 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
 - Estilo visual consistente con estándares ICFES
 - Dificultad apropiada al nivel declarado (n1-n4)
 - Tiempo de resolución razonable para el contexto
+- **Nivel ICFES coherente con DOK**: si DOK ≥ 3 → Nivel ≥ 3 (ver `ejercicios-metacognitivos.md`)
 
 7. **NO omitir validación de opciones repetidas en ejercicios `_neg_`**
    ```r
@@ -238,11 +239,20 @@ exextra[Evidencia]: [Descripción específica]
 exextra[Nivel]: [1|2|3|4]
 ```
 
-## Ejemplos Funcionales = Fuente de Verdad
+## Ejemplos Funcionales = Fuente de Verdad (Búsqueda Inteligente)
 
-Ante cualquier error, SIEMPRE consultar primero:
+Ante cualquier error, consultar en **orden de prioridad**:
+
+**Prioridad 1 — Ejercicios recientes completados** (reflejan patrones vigentes):
 ```bash
-/A-Produccion/Ejemplos-Funcionales-Rmd/
+ls -t A-Produccion/03-En-Produccion/**/*metacognitivo*.Rmd 2>/dev/null | head -3
+ls -t A-Produccion/02-En-Desarrollo/**/*metacognitivo*.Rmd 2>/dev/null | head -3
+```
+Solo considerar .Rmd con `aprobacion_usuario.completado = true` o en `03-En-Produccion/`.
+
+**Prioridad 2 — Ejemplos canónicos inmutables** (fuente de verdad base):
+```bash
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
-Los ejemplos funcionales son la ÚNICA fuente de verdad para patrones de solución validados.
+Los ejemplos canónicos son la fuente de verdad inmutable. Los ejemplos recientes complementan con patrones actualizados.

@@ -67,9 +67,26 @@ Preguntar al usuario: 1. TikZ / 2. Python (reticulate) / 3. R/ggplot2 (RECOMENDA
 
 Confirmar que existe clasificacion previa: Nivel, Competencia, Componente, Tipo = schoice.
 
-### PASO 2: Consultar ejemplos funcionales METACOGNITIVOS
+### PASO 2: Consultar ejemplos funcionales METACOGNITIVOS (Búsqueda Inteligente)
 
-NUNCA generar codigo sin consultar ejemplos primero. Buscar en `A-Produccion/03-En-Produccion/**/*metacognitivo*.Rmd` y `A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd`. Leer ejemplo completo y copiar patrones.
+NUNCA generar código sin consultar ejemplos primero. Buscar en **orden de prioridad**:
+
+**Prioridad 1 — Ejercicios recientes completados** (más actualizados, reflejan patrones vigentes):
+```bash
+# Buscar .Rmd SCHOICE metacognitivos más recientes en producción y desarrollo
+ls -t A-Produccion/03-En-Produccion/**/*metacognitivo*schoice*.Rmd 2>/dev/null | head -3
+ls -t A-Produccion/02-En-Desarrollo/**/*metacognitivo*schoice*.Rmd 2>/dev/null | head -3
+```
+
+Solo considerar archivos que tengan `ejercicio_state.json` con `aprobacion_usuario.completado = true` o que estén en `03-En-Produccion/`.
+
+**Prioridad 2 — Ejemplos Funcionales canónicos** (fuente de verdad inmutable):
+```bash
+ls A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+```
+
+**Protocolo**: Leer al menos 1 ejemplo de Prioridad 1 (si existe) + 1 de Prioridad 2. Copiar patrones del más reciente, validar contra el canónico.
 
 ### PASO 3: Definir pool de errores conceptuales (OBLIGATORIO)
 
@@ -197,7 +214,8 @@ Resumen: (1) NO ejercicios puramente procedimentales, (2) NO distractores aleato
 - [Errores comunes](references/errores-comunes.md) - Patrones incorrecto/correcto
 - [Ejemplos completos](references/ejemplos.md) - Nivel 1 aritmetica + Nivel 3 estadistica
 - Regla Metacognitiva: `.claude/rules/ejercicios-metacognitivos.md`
-- Ejemplos Funcionales: `A-Produccion/Ejemplos-Funcionales-Rmd/`
+- Ejemplos Funcionales (canónicos): `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
+- Ejemplos Recientes (Prioridad 1): `A-Produccion/03-En-Produccion/**/*metacognitivo*.Rmd` y `A-Produccion/02-En-Desarrollo/**/*metacognitivo*.Rmd`
 - Nomenclatura: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 - Ciclo Validacion: `.claude/rules/ciclo-validacion.md`
 - Metadatos: `.claude/rules/codigo-rmd.md`

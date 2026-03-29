@@ -1,0 +1,540 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - argumentacion
+  nivel_dificultad: 3
+  contenido:
+    categoria: estadistica
+    tipo: generico
+  contexto: variado
+  eje_axial: eje4
+  componente: aleatorio
+```{r data_generation, echo = FALSE, results = "hide"}
+library(exams)
+
+# --- Pool de contextos narrativos (6 contextos, 5 tipos de estructura) ---
+contextos <- list(
+  # 1. Laboral — farmacéutica (tipo: acción en curso)
+  list(
+    plantilla = function(n, moda, mediana) {
+      paste0("Una empresa farmacéutica calculó el porcentaje de efectividad de un ",
+             "tratamiento para una enfermedad. Para ello, hizo ", n,
+             " estudios y, de cada estudio, se conoció el porcentaje de efectividad ",
+             "que tuvo el tratamiento. De los ", n, " porcentajes, solo hay una moda ",
+             "que es ", moda, "% y la mediana es ", mediana, "%.")
+    },
+    extremo_min_txt = "la efectividad mínima mostrada en los estudios",
+    extremo_max_txt = "la efectividad máxima mostrada en los estudios",
+    u = "%",
+    contexto_icfes = "Laboral"
+  ),
+  # 2. Institucional — colegio (tipo: situación problema)
+  list(
+    plantilla = function(n, moda, mediana) {
+      paste0("El comité de evaluación de un colegio necesita analizar los resultados ",
+             "de ", n, " grupos en una prueba estandarizada. De los ", n,
+             " porcentajes de aprobación, solo hay una moda que es ",
+             moda, "% y la mediana es ", mediana, "%.")
+    },
+    extremo_min_txt = "el porcentaje de aprobación más bajo entre los grupos",
+    extremo_max_txt = "el porcentaje de aprobación más alto entre los grupos",
+    u = "%",
+    contexto_icfes = "Educativo"
+  ),
+  # 3. Laboral — fábrica (tipo: descubrimiento)
+  list(
+    plantilla = function(n, moda, mediana) {
+      paste0("Al revisar los registros de calidad, el supervisor de una fábrica encontró ",
+             "que se había medido el porcentaje de productos aprobados en ", n,
+             " turnos de trabajo. De los ", n, " porcentajes, solo hay una moda que es ",
+             moda, "% y la mediana es ", mediana, "%.")
+    },
+    extremo_min_txt = "el porcentaje más bajo de productos aprobados entre los turnos",
+    extremo_max_txt = "el porcentaje más alto de productos aprobados entre los turnos",
+    u = "%",
+    contexto_icfes = "Laboral"
+  ),
+  # 4. Cotidiano — competencia (tipo: narración periodística)
+  list(
+    plantilla = function(n, moda, mediana) {
+      paste0("En una competencia regional de robótica, ", n,
+             " equipos fueron evaluados con un puntaje de 0 a 100. De los ", n,
+             " puntajes obtenidos, solo hay una moda que es ",
+             moda, " y la mediana es ", mediana, ".")
+    },
+    extremo_min_txt = "el puntaje más bajo obtenido en la competencia",
+    extremo_max_txt = "el puntaje más alto obtenido en la competencia",
+    u = "",
+    contexto_icfes = "Cotidiano"
+  ),
+  # 5. Educativo — calificaciones (tipo: perspectiva del estudiante)
+  list(
+    plantilla = function(n, moda, mediana) {
+      paste0("Para su proyecto de estadística, un estudiante recopiló las calificaciones ",
+             "finales (de 0 a 100) de ", n, " compañeros en la asignatura de ciencias. ",
+             "De las ", n, " calificaciones, solo hay una moda que es ",
+             moda, " y la mediana es ", mediana, ".")
+    },
+    extremo_min_txt = "la calificación más baja entre los compañeros",
+    extremo_max_txt = "la calificación más alta entre los compañeros",
+    u = "",
+    contexto_icfes = "Educativo"
+  ),
+  # 6. Cotidiano — encuesta (tipo: pregunta retórica)
+  list(
+    plantilla = function(n, moda, mediana) {
+      paste0("¿Qué tan satisfechos están los usuarios de una aplicación de transporte? ",
+             "Una encuesta midió el nivel de satisfacción (de 0 a 100) en ", n,
+             " ciudades. De los ", n, " niveles de satisfacción, solo hay una moda ",
+             "que es ", moda, " y la mediana es ", mediana, ".")
+    },
+    extremo_min_txt = "el nivel de satisfacción más bajo entre las ciudades",
+    extremo_max_txt = "el nivel de satisfacción más alto entre las ciudades",
+    u = "",
+    contexto_icfes = "Cotidiano"
+  )
+)
+
+# --- Generación de datos ---
+n <- 5
+
+relacion <- sample(c("menor", "mayor"), 1)
+
+generar_datos_validos <- function(relacion) {
+  if (relacion == "menor") {
+    moda <- sample(30:95, 1)
+    max_offset <- min(25, 100 - moda)
+    mediana <- moda + sample(1:max_offset, 1)
+    stopifnot(moda < mediana)
+  } else {
+    mediana <- sample(30:95, 1)
+    max_offset <- min(25, 100 - mediana)
+    moda <- mediana + sample(1:max_offset, 1)
+    stopifnot(moda > mediana)
+  }
+  stopifnot(moda >= 30 && moda <= 100)
+  stopifnot(mediana >= 30 && mediana <= 100)
+  return(list(moda = moda, mediana = mediana))
+}
+
+datos <- generar_datos_validos(relacion)
+moda <- datos$moda
+mediana <- datos$mediana
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+variante <- sample(c("A", "B"), 1)
+
+# --- Variables paramétricas (definidas una vez, reusadas en opciones y solución) ---
+u <- ctx$u
+mu <- paste0(moda, u)
+meu <- paste0(mediana, u)
+ctx_icfes <- ctx$contexto_icfes
+
+if (relacion == "menor") {
+  extremo <- "mínimo"
+  extremo_txt <- ctx$extremo_min_txt
+  pos_moda <- "$x_1$ y $x_2$"
+  pos_extremo <- "$x_1$"
+  pos_otros <- "$x_3$, $x_4$, $x_5$"
+  dir_prohibida <- "superior"
+  comp_prohibido <- "$\\geq$"
+  comparador_pl <- "menores"
+  comparador_sing <- "menor"
+  comparador_pl_inv <- "mayores"
+  comparador_sing_inv <- "mayor"
+  limite_cerca <- "100"
+  dir_moda <- "inferiores"
+  lado_centro <- "izquierda"
+  rel_texto_simple <- "moda < mediana"
+} else {
+  extremo <- "máximo"
+  extremo_txt <- ctx$extremo_max_txt
+  pos_moda <- "$x_4$ y $x_5$"
+  pos_extremo <- "$x_5$"
+  pos_otros <- "$x_1$, $x_2$, $x_3$"
+  dir_prohibida <- "inferior"
+  comp_prohibido <- "$\\leq$"
+  comparador_pl <- "mayores"
+  comparador_sing <- "mayor"
+  comparador_pl_inv <- "menores"
+  comparador_sing_inv <- "menor"
+  limite_cerca <- "0"
+  dir_moda <- "superiores"
+  lado_centro <- "derecha"
+  rel_texto_simple <- "moda > mediana"
+}
+
+enunciado_contexto <- ctx$plantilla(n, moda, mediana)
+
+# --- Opciones de respuesta ---
+if (variante == "A") {
+  valor_pregunta <- moda
+  correct_index <- 3
+  opciones <- c(
+    paste0("Sí, porque la mediana es el resultado de uno de los valores y la moda ",
+           "el de todos los demás, entonces el ", comparador_sing, " es ", mu, "."),
+    paste0("No, porque la mediana podría ser esa, por dos valores muy cercanos a ",
+           limite_cerca, ", dos iguales y uno ", comparador_sing, " que ", mu, "."),
+    paste0("Sí, porque la mediana debe tener dos valores mayores y dos menores, ",
+           "y la moda garantiza que los dos ", comparador_pl, " son ", mu, "."),
+    paste0("No, porque la mediana es resultado de un valor y la moda el de otros dos, ",
+           "luego alguno de los restantes podría ser ", comparador_sing, " que ", mu, ".")
+  )
+} else {
+  valor_pregunta <- mediana
+  correct_index <- 2
+  opciones <- c(
+    paste0("Sí, porque la mediana es el valor central de los ", n, " valores y al ser ",
+           comparador_sing_inv, " que la moda, los valores ", dir_moda,
+           " deben ser iguales a ", meu, "."),
+    paste0("No, porque la moda ", mu, " aparece exactamente dos veces en las posiciones ",
+           dir_moda, ", por lo que el valor ", extremo, " es ", mu, ", no ", meu, "."),
+    paste0("Sí, porque con ", n, " valores la mediana ocupa la tercera posición y ",
+           "garantiza que ningún valor es ", comparador_sing, " que ", meu, "."),
+    paste0("No, porque no es posible determinar el valor ", extremo,
+           " conociendo únicamente la moda y la mediana de ", n, " datos.")
+  )
+}
+
+solution_string <- mchoice2string(1:4 == correct_index)
+
+# --- Pool de reflexiones metacognitivas ---
+reflexiones_metacognitivas <- c(
+  "Analizar la relación entre la mediana y la moda nos permite deducir la estructura de un conjunto de datos sin conocer todos los valores.",
+  "La moda y la mediana proporcionan información complementaria: la moda indica repetición y la mediana indica posición central.",
+  "Verificar afirmaciones sobre estadísticos requiere razonamiento lógico, no solo cálculo. Es fundamental considerar todas las restricciones simultáneamente.",
+  "En problemas con pocos datos, las propiedades de los estadísticos imponen restricciones fuertes que determinan la estructura del conjunto."
+)
+reflexion <- reflexiones_metacognitivas[sample(length(reflexiones_metacognitivas), 1)]
+
+# --- Construcción de la solución por secciones ---
+
+# Sección 1: Análisis
+if (variante == "A") {
+  sec_analisis <- paste0(
+    "### Análisis de la afirmación\n\n",
+    "La afirmación es **CORRECTA**. El valor ", extremo, " de los ", n,
+    " valores DEBE ser necesariamente ", mu, " (la moda). ",
+    "A continuación se presenta la demostración completa."
+  )
+} else {
+  sec_analisis <- paste0(
+    "### Análisis de la afirmación\n\n",
+    "La afirmación es **INCORRECTA**. El valor ", extremo, " de los ", n,
+    " valores NO es ", meu, " (la mediana), sino ", mu, " (la moda). ",
+    "A continuación se presenta la demostración completa."
+  )
+}
+
+# Sección 2: Paso 1
+sec_paso1 <- paste0(
+  "**Paso 1. Datos y orden:** Tenemos ", n, " valores. Si los ordenamos de menor a mayor, ",
+  "los llamamos $x_1 \\leq x_2 \\leq x_3 \\leq x_4 \\leq x_5$."
+)
+
+# Sección 3: Paso 2
+sec_paso2 <- paste0(
+  "**Paso 2. Mediana:** Al ser ", n, " datos (impar), la mediana es el valor central: ",
+  "$x_3 = ", mediana, "$", u, "."
+)
+
+# Sección 4: Paso 3
+sec_paso3 <- paste0(
+  "**Paso 3. Moda:** La moda es ", mu, " y es *única*.\n",
+  "- Para que ", mu, " sea la moda, debe aparecer al menos dos veces.\n",
+  "- ¿Podría aparecer 3 o más veces? No, porque si apareciera 3 veces, $x_3$ sería ", mu,
+  ", lo cual contradice que la mediana es ", meu, ".\n",
+  "- Por lo tanto, ", mu, " aparece exactamente *dos* veces.\n",
+  "- Al ser la *única* moda, ningún otro valor se repite."
+)
+
+# Sección 5: Paso 4 (depende de relacion)
+if (relacion == "menor") {
+  sec_paso4 <- paste0(
+    "**Paso 4. Combinando mediana y moda:** La mediana es $x_3 = ", mediana, "$", u,
+    ". Como ", mu, " < ", meu,
+    ", ninguna aparición de la moda puede ocupar la posición $x_3$ o superior ",
+    "(eso la haría $\\geq$ mediana, contradiciendo moda < mediana). ",
+    "Por tanto, los dos valores de ", mu, " están necesariamente en $x_1$ y $x_2$.\n\n",
+    "La única estructura posible es: $", moda, "$", u, ", $", moda, "$", u, ", $",
+    mediana, "$", u, ", $x_4$, $x_5$, donde $", mediana, "$", u, " < $x_4$ < $x_5$."
+  )
+} else {
+  sec_paso4 <- paste0(
+    "**Paso 4. Combinando mediana y moda:** La mediana es $x_3 = ", mediana, "$", u,
+    ". Como ", mu, " > ", meu,
+    ", ninguna aparición de la moda puede ocupar la posición $x_3$ o inferior ",
+    "(eso la haría $\\leq$ mediana, contradiciendo moda > mediana). ",
+    "Por tanto, los dos valores de ", mu, " están necesariamente en $x_4$ y $x_5$.\n\n",
+    "La única estructura posible es: $x_1$, $x_2$, $", mediana, "$", u, ", $",
+    moda, "$", u, ", $", moda, "$", u, ", donde $x_1$ < $x_2$ < $", mediana, "$", u, "."
+  )
+}
+
+# Sección 6: Paso 5 (depende de relacion + variante)
+if (relacion == "menor" && variante == "A") {
+  sec_paso5 <- paste0("**Paso 5. Conclusión:** El valor mínimo es $x_1 = ", moda, "$", u, ".")
+} else if (relacion == "menor" && variante == "B") {
+  sec_paso5 <- paste0(
+    "**Paso 5. Conclusión:** El valor mínimo es $x_1 = ", moda, "$", u,
+    ", NO $", mediana, "$", u,
+    ". La afirmación es incorrecta porque confunde la mediana con el mínimo."
+  )
+} else if (relacion == "mayor" && variante == "A") {
+  sec_paso5 <- paste0("**Paso 5. Conclusión:** El valor máximo es $x_5 = ", moda, "$", u, ".")
+} else {
+  sec_paso5 <- paste0(
+    "**Paso 5. Conclusión:** El valor máximo es $x_5 = ", moda, "$", u,
+    ", NO $", mediana, "$", u,
+    ". La afirmación es incorrecta porque confunde la mediana con el máximo."
+  )
+}
+
+# Sección 7: Propiedades del concepto (depende de relacion + variante)
+if (variante == "A") {
+  fila_mediana <- paste0("| **Mediana** (", n, " datos) | Valor en la posición central ($x_3$) |")
+} else {
+  fila_mediana <- paste0(
+    "| **Mediana** (", n, " datos) | Valor en la posición central ($x_3$), NO el ",
+    extremo, " |"
+  )
+}
+sec_propiedades <- paste0(
+  "### Propiedades del concepto\n\n",
+  "| Propiedad | Descripción |\n",
+  "|:----------|:------------|\n",
+  fila_mediana, "\n",
+  "| **Moda única** | Valor con mayor frecuencia; ningún otro se repite igual o más |\n",
+  "| **Restricción clave** | Si ", rel_texto_simple, ", la moda ocupa las posiciones ",
+  dir_moda, " |"
+)
+
+# Sección 8: Tabla de datos ordenados (depende de relacion + variante)
+if (relacion == "menor") {
+  desc_x1 <- if (variante == "A") "Moda (valor mínimo)" else "Moda (valor mínimo, NO la mediana)"
+  sec_tabla <- paste0(
+    "### Tabla de datos ordenados\n\n",
+    "| Posición | Valor | Descripción |\n",
+    "|:--------:|:-----:|:-----------:|\n",
+    "| $x_1$ | ", mu, " | ", desc_x1, " |\n",
+    "| $x_2$ | ", mu, " | Moda (repetido) |\n",
+    "| $x_3$ | ", meu, " | Mediana (valor central) |\n",
+    "| $x_4$ | > ", meu, " | Mayor que la mediana |\n",
+    "| $x_5$ | > ", meu, " | Mayor que la mediana |"
+  )
+} else {
+  desc_x5 <- if (variante == "A") "Moda (valor máximo)" else "Moda (valor máximo, NO la mediana)"
+  sec_tabla <- paste0(
+    "### Tabla de datos ordenados\n\n",
+    "| Posición | Valor | Descripción |\n",
+    "|:--------:|:-----:|:-----------:|\n",
+    "| $x_1$ | < ", meu, " | Menor que la mediana |\n",
+    "| $x_2$ | < ", meu, " | Menor que la mediana |\n",
+    "| $x_3$ | ", meu, " | Mediana (valor central) |\n",
+    "| $x_4$ | ", mu, " | Moda (repetido) |\n",
+    "| $x_5$ | ", mu, " | ", desc_x5, " |"
+  )
+}
+
+# Sección 9: Reflexión metacognitiva
+sec_reflexion <- paste0("### Reflexión metacognitiva\n\n", reflexion)
+
+# Sección 10: Estrategia (depende de relacion + variante)
+if (variante == "A") {
+  paso4_estrategia <- paste0(
+    "4. **Concluir sobre extremos**: Verificar si las restricciones fijan el ", extremo, "."
+  )
+} else {
+  paso4_estrategia <- paste0(
+    "4. **Identificar el ", extremo, "**: Es la moda (posición ", pos_extremo,
+    "), no la mediana (posición $x_3$)."
+  )
+}
+sec_estrategia <- paste0(
+  "### Estrategia para verificar este tipo de afirmaciones\n\n",
+  "1. **Ordenar mentalmente**: Ubicar cada estadístico en la lista ordenada.\n",
+  "2. **Contar repeticiones**: Determinar cuántas veces aparece la moda.\n",
+  "3. **Aplicar restricciones**: Si ", rel_texto_simple, ", la moda está a la ",
+  lado_centro, " del centro.\n",
+  paso4_estrategia
+)
+
+# Sección 11: Refutaciones de opciones incorrectas (depende de variante + relacion)
+if (variante == "A") {
+  # Refutar opciones 1, 2, 4
+  ref1 <- paste0(
+    "**Opción que dice 'la mediana es el resultado de uno de los valores y la moda ",
+    "el de todos los demás'**: Llega a la conclusión correcta con razonamiento falso. ",
+    "Si la moda fuera el resultado de los ", n - 1, " valores restantes, habría ",
+    n - 1, " valores iguales a ", mu, " y la mediana sería ", mu, ", no ", meu,
+    ". Contradicción."
+  )
+  if (relacion == "menor") {
+    ref2 <- paste0(
+      "**Opción que dice 'la mediana podría ser esa, por dos valores muy cercanos a ",
+      limite_cerca, "'**: Incorrecto. Hemos demostrado que los dos valores de ", mu,
+      " ocupan ", pos_moda, ". No hay espacio para un valor ", comparador_sing, " que ", mu, "."
+    )
+    ref4 <- paste0(
+      "**Opción que dice 'la mediana es resultado de un valor y la moda el de otros dos'**: ",
+      "Incorrecto. Aunque la moda aparece en exactamente dos valores, ambos están en ",
+      pos_moda, ". Los valores ", pos_otros, " son todos ", comp_prohibido, " ", meu,
+      ", que es ", comparador_sing_inv, " que ", mu, "."
+    )
+  } else {
+    ref2 <- paste0(
+      "**Opción que dice 'la mediana podría ser esa, por dos valores muy cercanos a ",
+      limite_cerca, "'**: Incorrecto. Hemos demostrado que los dos valores de ", mu,
+      " ocupan ", pos_moda, ". No hay espacio para un valor ", comparador_sing, " que ", mu, "."
+    )
+    ref4 <- paste0(
+      "**Opción que dice 'la mediana es resultado de un valor y la moda el de otros dos'**: ",
+      "Incorrecto. Aunque la moda aparece en exactamente dos valores, ambos están en ",
+      pos_moda, ". Los valores ", pos_otros, " son todos ", comp_prohibido, " ", meu,
+      ", que es ", comparador_sing_inv, " que ", mu, "."
+    )
+  }
+  sec_refutaciones <- paste0(
+    "### Análisis de las opciones incorrectas\n\n",
+    ref1, "\n\n", ref2, "\n\n", ref4
+  )
+} else {
+  # Refutar opciones 1, 3, 4
+  if (relacion == "menor") {
+    ref1 <- paste0(
+      "**Opción que dice 'la mediana es el valor central y al ser ", comparador_sing_inv,
+      " que la moda, los valores ", dir_moda, " deben ser iguales a ", meu, "'**: ",
+      "Razonamiento falso. La mediana SÍ es el valor central, pero eso no implica que ",
+      "los valores ", dir_moda, " sean iguales a ella. Hemos demostrado que los valores en ",
+      pos_moda, " son la moda (", mu, "), no la mediana (", meu, ")."
+    )
+    ref3 <- paste0(
+      "**Opción que dice 'la mediana ocupa la tercera posición y garantiza que ningún valor ",
+      "es ", comparador_sing, " que ", meu, "'**: Incorrecto. La mediana ocupa la tercera ",
+      "posición ($x_3$), lo cual garantiza que hay dos valores ", comparador_pl,
+      " (en ", pos_moda, "), no que todos los valores sean ", comparador_pl_inv,
+      " o iguales a ella. Los valores en ", pos_moda, " son ", mu,
+      ", que es ", comparador_sing, " que ", meu, "."
+    )
+  } else {
+    ref1 <- paste0(
+      "**Opción que dice 'la mediana es el valor central y al ser ", comparador_sing_inv,
+      " que la moda, los valores ", dir_moda, " deben ser iguales a ", meu, "'**: ",
+      "Razonamiento falso. La mediana SÍ es el valor central, pero eso no implica que ",
+      "los valores ", dir_moda, " sean iguales a ella. Hemos demostrado que los valores en ",
+      pos_moda, " son la moda (", mu, "), no la mediana (", meu, ")."
+    )
+    ref3 <- paste0(
+      "**Opción que dice 'la mediana ocupa la tercera posición y garantiza que ningún valor ",
+      "es ", comparador_sing, " que ", meu, "'**: Incorrecto. La mediana ocupa la tercera ",
+      "posición ($x_3$), lo cual garantiza que hay dos valores ", comparador_pl,
+      " (en ", pos_moda, "), no que todos los valores sean ", comparador_pl_inv,
+      " o iguales a ella. Los valores en ", pos_moda, " son ", mu,
+      ", que es ", comparador_sing, " que ", meu, "."
+    )
+  }
+  ref4 <- paste0(
+    "**Opción que dice 'no es posible determinar el valor ", extremo, "'**: Incorrecto. ",
+    "Hemos demostrado precisamente que SÍ es posible: con moda única ", mu,
+    " y mediana ", meu, ", se puede determinar con certeza que el ", extremo, " es ", mu,
+    " (la moda ocupa ", pos_moda, ")."
+  )
+  sec_refutaciones <- paste0(
+    "### Análisis de las opciones incorrectas\n\n",
+    ref1, "\n\n", ref3, "\n\n", ref4
+  )
+}
+
+# --- Ensamblaje final de la solución ---
+solution_explanation <- paste(
+  sec_analisis,
+  "### Procedimiento correcto paso a paso",
+  sec_paso1,
+  sec_paso2,
+  sec_paso3,
+  sec_paso4,
+  sec_paso5,
+  sec_propiedades,
+  sec_tabla,
+  sec_reflexion,
+  sec_estrategia,
+  sec_refutaciones,
+  sep = "\n\n"
+)
+```
+
+```{r validacion_datos, echo=FALSE, results="hide"}
+library(testthat)
+test_that("Validaciones de coherencia", {
+  # Validar opción correcta
+  if (variante == "A") {
+    expect_true(correct_index == 3)
+    expect_true(grepl("Sí, porque la mediana debe tener dos valores", opciones[correct_index]))
+  } else {
+    expect_true(correct_index == 2)
+    expect_true(grepl("No, porque la moda", opciones[correct_index]))
+  }
+  # Construir datos ejemplo según relación
+  if (relacion == "menor") {
+    datos_ejemplo <- c(moda, moda, mediana, mediana + 1, mediana + 2)
+    expect_true(min(datos_ejemplo) == moda)
+    expect_true(moda < mediana)
+  } else {
+    datos_ejemplo <- c(mediana - 2, mediana - 1, mediana, moda, moda)
+    expect_true(max(datos_ejemplo) == moda)
+    expect_true(moda > mediana)
+  }
+  # Propiedades matemáticas
+  expect_true(median(datos_ejemplo) == mediana)
+  modo_calc <- as.numeric(names(sort(table(datos_ejemplo), decreasing = TRUE)[1]))
+  expect_true(modo_calc == moda)
+  expect_true(sum(datos_ejemplo == moda) == 2)
+  expect_true(sum(datos_ejemplo == mediana) == 1)
+  # Rangos
+  expect_true(moda >= 30 && moda <= 100)
+  expect_true(mediana >= 30 && mediana <= 100)
+})
+```
+
+Question
+========
+`r enunciado_contexto`
+
+¿Es CORRECTO afirmar que `r extremo_txt` fue de `r paste0(valor_pregunta, u)`?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+
+`r solution_explanation`
+
+Meta-information
+================
+exname: Mediana moda argumentacion ICFES
+extype: schoice
+exsolution: `r solution_string`
+exshuffle: TRUE
+extol: 0.01
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Argumentacion
+exextra[Nivel]: 3
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Justifica la validez de afirmaciones sobre mediana y moda en un conjunto de datos
+exextra[Evidencia]: Argumenta sobre la estructura de un conjunto de datos a partir de sus estadisticos descriptivos
+exextra[Contexto]: `r ctx_icfes`
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
