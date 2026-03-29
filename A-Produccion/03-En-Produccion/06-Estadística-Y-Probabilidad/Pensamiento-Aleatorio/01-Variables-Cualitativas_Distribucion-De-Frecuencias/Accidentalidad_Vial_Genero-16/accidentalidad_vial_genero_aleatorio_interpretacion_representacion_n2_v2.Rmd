@@ -385,6 +385,10 @@ Para identificar la gráfica correcta, se debe calcular el número de víctimas 
 
 La gráfica correcta es la que muestra líneas separadas con los valores exactos para ambos géneros, donde la mortalidad masculina es significativamente mayor que la femenina.
 
+```{r solucion_grafica, echo=FALSE, results='asis', fig.align='center'}
+cat("![](opcion1.png)")
+```
+
 ### Análisis de las opciones incorrectas
 
 - **Opción con líneas superpuestas y datos intercambiados**: intercambia los datos de hombres y mujeres, y presenta un área sombreada que no corresponde a la representación solicitada.
