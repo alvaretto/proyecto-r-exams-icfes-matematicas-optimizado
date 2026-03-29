@@ -261,6 +261,40 @@ config_personal.txt
 firebase-debug.log
 
 # =============================================================================
+# ARCHIVOS TEMPORALES Y GENERADOS (añadido 2026-03-28)
+# =============================================================================
+
+# Logs - todos los tipos
+*.log
+
+# Archivos temporales LaTeX
+*.aux
+*.synctex.gz
+
+# Directorios de salida R-exams (todos los formatos)
+**/output_*/
+**/salida/
+**/salida_*/
+
+# Preview images generados (regenerables con exams2pdf)
+**/preview_*.png
+preview_*.png
+
+# Excalidraw logs
+excalidraw.log
+
+# Lock files de LibreOffice
+**/.~lock*
+
+# Backups de estado de ejercicio
+**/ejercicio_state_*backup*
+
+# =============================================================================
+# ANYTHINGLLM - Configuración local con PDFs duplicados (~690 MB)
+# =============================================================================
+AnythingLLM-Config/
+
+# =============================================================================
 # ARCHIVOS GENERADOS Y BINARIOS (añadido 2026-02-03)
 # =============================================================================
 
