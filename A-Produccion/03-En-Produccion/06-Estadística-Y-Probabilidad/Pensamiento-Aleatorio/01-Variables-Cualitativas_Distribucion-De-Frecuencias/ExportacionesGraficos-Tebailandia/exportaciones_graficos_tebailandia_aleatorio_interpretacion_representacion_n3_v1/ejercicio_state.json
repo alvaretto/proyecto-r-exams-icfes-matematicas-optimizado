@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-03-29T21:55:47.740402-05:00",
+  "timestamp_ultima_actualizacion": "2026-03-29T22:12:24.215222-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-29T21:56:05.231769-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-03-29T21:56:05.288556-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-03-29T21:56:05.341316-05:00",
+      "archivo": "exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:09:23.990209-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:09:24.045930-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:09:24.100892-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:12:24.029171-05:00",
+      "veredicto": "APROBAR"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:12:24.095496-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:12:24.158132-05:00",
+      "versiones_unicas": 50
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-03-29T22:12:24.215222-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}

@@ -23,20 +23,34 @@ Sys.setenv(TESTING = "TRUE")
                !identical(Sys.getenv("R_TESTS_FULL"), "1")
 
 # Obtener archivos cambiados respecto a HEAD (staged + unstaged + en el push)
+# .detection_ok distingue "no hay cambios" (safe skip) de "detección falló" (run all)
 .archivos_cambiados <- character(0)
+.detection_ok <- FALSE
 if (.quick_mode) {
-  .archivos_cambiados <- tryCatch({
-    # Archivos en commits pendientes de push
-    pushed <- system("git diff --name-only @{push}.. 2>/dev/null", intern = TRUE)
-    # Archivos modificados localmente
-    locales <- system("git diff --name-only HEAD 2>/dev/null", intern = TRUE)
-    unique(c(pushed, locales))
-  }, error = function(e) character(0))
+  # Fuente 1: variable de entorno pasada por pre-push hook (más confiable)
+  env_files <- Sys.getenv("R_TESTS_CHANGED_FILES", "")
+  if (nzchar(env_files)) {
+    .archivos_cambiados <- strsplit(env_files, "\n")[[1]]
+    .archivos_cambiados <- .archivos_cambiados[nzchar(.archivos_cambiados)]
+    .detection_ok <- TRUE
+  } else {
+    # Fuente 2: detección directa via git
+    .archivos_cambiados <- tryCatch({
+      pushed <- system("git diff --name-only @{push}.. 2>/dev/null", intern = TRUE)
+      locales <- system("git diff --name-only HEAD 2>/dev/null", intern = TRUE)
+      .detection_ok <<- TRUE
+      unique(c(pushed, locales))
+    }, error = function(e) character(0))
+  }
 }
 
 # Función: ¿algún archivo cambiado coincide con los patrones de la suite?
 .suite_afectada <- function(patrones) {
-  if (!.quick_mode || length(.archivos_cambiados) == 0) return(TRUE)
+  if (!.quick_mode) return(TRUE)
+  # Si detección fue exitosa y no hay cambios → safe skip suites con watch
+  if (.detection_ok && length(.archivos_cambiados) == 0) return(FALSE)
+  # Si detección falló → conservador, correr todo
+  if (!.detection_ok) return(TRUE)
   any(sapply(patrones, function(p) any(grepl(p, .archivos_cambiados))))
 }
 

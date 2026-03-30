@@ -6,6 +6,13 @@
 #           el pensamiento analítico sobre la resolución mecánica
 # Autor: Transformación Pedagógica R-Exams
 # Fecha: 2025-01-21
+#
+# MODIFICACIÓN IMPORTANTE:
+# - La función exams2html() ahora genera UN SOLO archivo HTML consolidado
+#   que contiene todas las n preguntas en una sola página
+# - Se cambió de: exams2html(archivo, n = config$archivos)
+#   a: exams2html(rep(archivo, config$archivos))
+# - Esto evita crear n archivos HTML individuales
 # ===============================================================================
 
 # Cargar librerías necesarias
@@ -17,20 +24,20 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "ExportacionesGraficosEstadisticaInterpretacion_n3_cloze_v1.Rmd"
+archivo_examen <- "exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos =400,                    # Número de versiones a generar
-  semilla = sample(100:1e8, 1),     # Semilla aleatoria para reproducibilidad
+  archivos =500,                  # Número de versiones a generar
+  semilla_base = sample(100:1e8, 1), # Semilla base para generar semillas únicas
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
   encoding = "UTF-8"                # Codificación de caracteres
 )
 
-# Establecer semilla para reproducibilidad
-set.seed(config$semilla)
-cat("🎲 Semilla aleatoria establecida:", config$semilla, "\n")
+# NO establecer semilla fija aquí - cada función usará semillas diferentes
+cat("🎲 Semilla base establecida:", config$semilla_base, "\n")
+cat("🔄 Cada versión usará una semilla única derivada de la base\n")
 
 # Crear directorio de salida si no existe
 if (!dir.exists(config$dir_salida)) {
@@ -83,8 +90,9 @@ prueba_rapida <- function(archivo) {
   cat("🧪 Ejecutando prueba rápida...\n")
 
   tryCatch({
-    # Generar una versión de prueba
-    set.seed(config$semilla)
+    # Generar una versión de prueba con semilla única
+    semilla_prueba <- config$semilla_base + 1
+    set.seed(semilla_prueba)
     exams2html(archivo,
                n = 1,
                name = "prueba_hibrida",
@@ -120,33 +128,41 @@ if (!prueba_rapida(archivo_examen)) {
 # FUNCIONES DE GENERACIÓN POR FORMATO
 # ===============================================================================
 
-# Función para generar HTML
+# Función para generar HTML consolidado (un solo archivo con todas las preguntas)
 generar_html <- function() {
-  cat("🌐 Generando archivos HTML...\n")
+  cat("🌐 Generando archivo HTML consolidado...\n")
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "html"), "\n")
   cat("📄 Archivo base:", archivo_examen, "\n")
-  cat("🔢 Número de versiones:", config$archivos, "\n")
-  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("🔢 Número de preguntas:", config$archivos, "\n")
+  cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    set.seed(config$semilla)
-    cat("⏳ Iniciando generación HTML...\n")
+    # NO usar set.seed aquí - exams2html manejará las semillas internamente
+    cat("⏳ Iniciando generación HTML consolidado...\n")
 
-    resultado <- exams2html(archivo_examen,
-                           n = config$archivos,
-                           name = paste0(nombre_base, "_html"),
+    # CLAVE: Usar rep(archivo_examen, config$archivos) para generar
+    # un solo archivo HTML con múltiples preguntas en lugar de
+    # múltiples archivos HTML individuales
+    resultado <- exams2html(rep(archivo_examen, config$archivos),
+                           name = paste0(nombre_base, "_consolidado"),
                            dir = file.path(config$dir_salida, "html"),
                            edir = config$dir_ejercicios,
                            encoding = config$encoding,
+                           template = "plain",
+                           mathjax = TRUE,
+                           svg = FALSE,
                            verbose = TRUE)
 
-    cat("✅ Archivos HTML generados exitosamente\n")
+    cat("✅ Archivo HTML consolidado generado exitosamente\n")
 
-    # Mostrar archivos generados
+    # Mostrar archivo consolidado generado
     archivos_html <- list.files(file.path(config$dir_salida, "html"), pattern = "\\.html$")
     cat("📊 Archivos generados:", length(archivos_html), "\n")
     for(i in seq_along(archivos_html)) {
       cat("  ", i, ":", archivos_html[i], "\n")
+      # Mostrar tamaño del archivo
+      tamaño_kb <- round(file.size(file.path(config$dir_salida, "html", archivos_html[i])) / 1024, 2)
+      cat("     Tamaño:", tamaño_kb, "KB\n")
     }
 
     return(TRUE)
@@ -163,10 +179,10 @@ generar_moodle <- function() {
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "moodle"), "\n")
   cat("📄 Archivo base:", archivo_examen, "\n")
   cat("🔢 Número de versiones:", config$archivos, "\n")
-  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2moodle manejará las semillas internamente
     cat("⏳ Iniciando generación Moodle XML...\n")
 
     resultado <- exams2moodle(archivo_examen,
@@ -175,7 +191,7 @@ generar_moodle <- function() {
                              dir = file.path(config$dir_salida, "moodle"),
                              edir = config$dir_ejercicios,
                              encoding = config$encoding,
-                             svg = FALSE,
+                             svg = TRUE,
                              verbose = TRUE)
 
     cat("✅ Archivos Moodle generados exitosamente\n")
@@ -200,7 +216,7 @@ generar_canvas <- function() {
   cat("🎨 Generando archivos para Canvas...\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2canvas manejará las semillas internamente
     exams2canvas(archivo_examen,
                  n = config$archivos,
                  name = paste0(nombre_base, "_canvas"),
@@ -285,10 +301,10 @@ generar_pdf <- function() {
   cat("📄 Generando archivos PDF...\n")
   cat("📁 Directorio de salida:", file.path(config$dir_salida, "pdf"), "\n")
   cat("🔢 Número de versiones:", config$archivos, "\n")
-  cat("🎲 Semilla:", config$semilla, "\n")
+  cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    set.seed(config$semilla)
+    # NO usar set.seed aquí - exams2pdf manejará las semillas internamente
 
     # Verificar disponibilidad de LaTeX
     cat("🔍 Verificando disponibilidad de LaTeX...\n")

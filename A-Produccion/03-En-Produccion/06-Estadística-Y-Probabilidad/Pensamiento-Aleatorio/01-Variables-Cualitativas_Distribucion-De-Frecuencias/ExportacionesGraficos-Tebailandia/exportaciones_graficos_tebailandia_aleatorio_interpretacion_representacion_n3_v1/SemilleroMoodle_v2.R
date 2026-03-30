@@ -5,8 +5,8 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
-copias <- 400
+archivo_examen <- "exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1.Rmd"
+copias <- 300
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
@@ -97,7 +97,7 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-# NO establecer semilla fija - cada versión usará semilla diferente
+# NO usar set.seed aquí - exams2moodle manejará las semillas internamente
 exams2moodle(archivo_examen,
              n = copias,
              svg = TRUE,

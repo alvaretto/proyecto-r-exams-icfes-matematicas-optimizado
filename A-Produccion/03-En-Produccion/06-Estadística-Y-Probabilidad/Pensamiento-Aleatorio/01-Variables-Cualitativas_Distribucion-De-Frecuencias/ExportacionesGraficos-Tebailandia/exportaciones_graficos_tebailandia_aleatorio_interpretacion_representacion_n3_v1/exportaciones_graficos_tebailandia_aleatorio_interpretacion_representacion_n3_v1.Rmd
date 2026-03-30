@@ -1,0 +1,615 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+```{r setup, include=FALSE}
+# Configuración para todos los formatos de salida
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+
+# Configurar el motor LaTeX globalmente
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{colortbl}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}",
+  "\\usepackage{booktabs}",
+  "\\usepackage{array}"
+))
+
+library(exams)
+library(reticulate)
+library(dplyr)
+library(digest)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.showtext = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+# Asegurar que Python esté correctamente configurado
+use_python(Sys.which("python3"), required = TRUE)
+```
+
+```{r GenerarGraficoBarras, message=FALSE, warning=FALSE, results='asis', include=FALSE}
+# Generar gráfico de barras con Python (exportaciones anuales)
+codigo_barras <- "
+import matplotlib.pyplot as plt
+import random
+
+# Datos de los años y valores de exportaciones
+# Crear lista de años desde 1950 hasta 2023
+year = list(range(1950, 2024))
+
+# Generar un índice inicial aleatorio en la lista year
+start_index = random.randint(0, len(year) - 5)
+
+# Seleccionar 5 valores de la lista year, comenzando desde el índice inicial y respetando la secuencia de menor a mayor en incrementos de a 1
+selected_years = [year[i] for i in range(start_index, start_index + 5)]
+
+valor_aleatorio = [selected_years[0], selected_years[1], selected_years[2], selected_years[3], selected_years[4]]
+
+year_aleatorio = random.choice(valor_aleatorio)
+
+valorex = [round(x / 10, 1) for x in range(101, 911, 1)]
+
+exports = sorted(random.sample(valorex, 5))
+
+# Crear un gráfico de barras
+plt.figure(figsize=(8, 5))
+bars = plt.bar(selected_years, exports, color='#404040', zorder=2)
+
+# Añadir los valores sobre cada barra
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
+
+# Títulos y etiquetas
+plt.title(f'Exportaciones anuales totales de Tebailandia\\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
+plt.xlabel('Año')
+plt.ylabel('Exportaciones (en millones de tebos)')
+
+# Estilo
+plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Guardar el gráfico
+plt.savefig('GraficoBarras.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoBarras.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.close()
+"
+
+py_run_string(codigo_barras)
+```
+
+Question
+========
+
+\
+La imagen muestra dos gráficos relacionados con las exportaciones de Tebailandia, un país que usa "tebos" como su moneda.
+\
+
+![](GraficoBarras.png){width=80%}
+
+\
+
+```{r GenerarGraficoTorta, echo=FALSE, results='hide'}
+codigo_torta <- "
+import matplotlib.pyplot as plt
+import numpy as np
+import random
+
+# Datos para las porciones del gráfico circular.
+labels = [
+    'maíz', 'trigo', 'arroz', 'soja', 'cebada', 'sorgo', 'leche', 'azúcar',
+    'carne de res', 'cerdo', 'aves de corral', 'seda', 'oro', 'platino',
+    'pescado', 'plátanos', 'manzanas', 'naranjas', 'uvas', 'limones',
+    'piñas', 'mangos', 'aguacates', 'tomates', 'papas', 'cebollas',
+    'ajo', 'zanahorias', 'pepinos', 'pimientos', 'aceitunas', 'café',
+    'té', 'tabaco', 'lana', 'celulares'
+]
+
+selectots = random.sample(labels, 8)
+
+def generar_lista_suma_100():
+    numeros = [5] * 8
+    restantes = 60
+
+    while restantes > 0:
+        for i in range(8):
+            adicion = random.randint(0, restantes)
+            numeros[i] += adicion
+            restantes -= adicion
+            if restantes == 0:
+                break
+
+    random.shuffle(numeros)
+    assert sum(numeros) == 100, f'Suma incorrecta: {sum(numeros)}'
+    return numeros
+
+sizes = generar_lista_suma_100()
+
+def generate_light_hex_color():
+    r = random.randint(80, 255)
+    g = random.randint(80, 255)
+    b = random.randint(80, 255)
+    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
+
+predefined_colors = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+    '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+    '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2',
+    '#A3E4D7', '#F9E79F', '#D5A6BD', '#AED6F1', '#A9DFBF',
+    '#FAD7A0', '#D2B4DE', '#AED6F1', '#A9CCE3', '#F7DC6F',
+    '#85C1E9', '#D5DBDB', '#F8D7DA', '#D1ECF1', '#D4EDDA'
+]
+
+coloress = predefined_colors + [generate_light_hex_color() for _ in range(10)]
+colors = random.sample(coloress, 8)
+
+producto_index = random.randint(0, 7)
+explode = [0.1 if i == producto_index else 0 for i in range(8)]
+
+fig1, ax1 = plt.subplots(figsize=(6, 5))
+ax1.pie(sizes, explode=explode, labels=selectots, colors=colors,
+        autopct='%1.0f%%', pctdistance=0.85, labeldistance=1.1,
+        shadow=True, startangle=15)
+ax1.axis('equal')
+ax1.set_title(f'Distribución de exportaciones de\\\\n Tebailandia en {year_aleatorio}', pad=20)
+
+plt.savefig('GraficoTorta.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoTorta.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.close()
+
+# Calcular xol
+year_index = -1
+for i, year in enumerate(selected_years):
+    if year_aleatorio == year:
+        year_index = i
+        break
+
+if year_index == -1:
+    raise ValueError(f'Año aleatorio {year_aleatorio} no encontrado en selected_years')
+
+xol = round(exports[year_index] * (sizes[producto_index] / 100), 2)
+producto_seleccionado = selectots[producto_index]
+"
+
+py_run_string(codigo_torta)
+```
+
+![](GraficoTorta.png){width=70%}
+
+\
+
+```{r DatosYErrores, message=FALSE, warning=FALSE, results='asis', include=FALSE}
+# --- Transferir datos de Python a R ---
+producto_seleccionado <- py$producto_seleccionado
+anio <- as.integer(py$year_aleatorio)
+xol <- round(as.numeric(py$xol), 2)
+anios <- as.integer(unlist(py$selected_years))
+exportaciones <- as.numeric(unlist(py$exports))
+porcentajes <- as.numeric(unlist(py$sizes))
+productos <- as.character(unlist(py$selectots))
+year_index_r <- as.integer(py$year_index) + 1L
+producto_index_r <- as.integer(py$producto_index) + 1L
+total_anio <- exportaciones[year_index_r]
+porcentaje_producto <- porcentajes[producto_index_r]
+
+# --- Parámetros compartidos ---
+params <- list(
+  total = total_anio,
+  porcentaje = porcentaje_producto,
+  exports = exportaciones,
+  year_index = year_index_r,
+  sizes = porcentajes,
+  producto_index_r = producto_index_r,
+  productos = productos,
+  anios = anios,
+  anio = anio,
+  producto = producto_seleccionado,
+  xol = xol
+)
+
+# --- Pool de errores conceptuales (6 errores) ---
+errores_conceptuales <- list(
+  list(
+    codigo = "EXP-LEC-01",
+    nombre = "Lectura de año equivocado",
+    causa_raiz = "Error de lectura visual en el eje horizontal del gráfico de barras: seleccionó una barra adyacente a la correcta.",
+    precondicion = function(params) TRUE,
+    calcula = function(params) {
+      idx <- params$year_index
+      adj_idx <- if (idx < length(params$exports)) idx + 1L else idx - 1L
+      round(params$exports[adj_idx] * params$porcentaje / 100, 2)
+    },
+    genera_descripcion = function(params) {
+      idx <- params$year_index
+      adj_idx <- if (idx < length(params$exports)) idx + 1L else idx - 1L
+      paste0("Leyó el total de exportaciones del año ", params$anios[adj_idx],
+             " (", params$exports[adj_idx], " millones) en el gráfico de barras, ",
+             "en lugar del año ", params$anio, " (", params$total, " millones)")
+    },
+    genera_explicacion = function(params, valor_erroneo) {
+      idx <- params$year_index
+      adj_idx <- if (idx < length(params$exports)) idx + 1L else idx - 1L
+      paste0("El estudiante leyó el valor del año ", params$anios[adj_idx],
+             " (", params$exports[adj_idx], " millones de tebos) en lugar del año ",
+             params$anio, " (", params$total, " millones de tebos). Al multiplicar ",
+             params$exports[adj_idx], " × ", params$porcentaje, "/100 = ",
+             valor_erroneo, " millones de tebos.")
+    }
+  ),
+  list(
+    codigo = "EXP-POR-01",
+    nombre = "Uso del complemento porcentual",
+    causa_raiz = "Confusión entre la parte y su complemento en el gráfico circular: interpretó que el producto representa todo lo demás.",
+    precondicion = function(params) params$porcentaje != 50,
+    calcula = function(params) {
+      round(params$total * (100 - params$porcentaje) / 100, 2)
+    },
+    genera_descripcion = function(params) {
+      paste0("Usó el complemento del porcentaje de ", params$producto,
+             ": 100% - ", params$porcentaje, "% = ",
+             100 - params$porcentaje,
+             "%, en lugar de usar ", params$porcentaje, "% directamente")
+    },
+    genera_explicacion = function(params, valor_erroneo) {
+      paste0("El estudiante usó 100% - ", params$porcentaje, "% = ",
+             100 - params$porcentaje, "% (el complemento) en lugar de ",
+             params$porcentaje, "%. Calculó: ", params$total, " × ",
+             100 - params$porcentaje, "/100 = ", valor_erroneo,
+             " millones de tebos. Esto corresponde al valor de TODOS los demás ",
+             "productos excepto ", params$producto, ".")
+    }
+  ),
+  list(
+    codigo = "EXP-POR-02",
+    nombre = "División en lugar de multiplicación",
+    causa_raiz = "Confusión entre hallar una parte de un todo (multiplicar) y hallar el todo a partir de una parte (dividir).",
+    precondicion = function(params) TRUE,
+    calcula = function(params) {
+      round(params$total / (params$porcentaje / 100), 2)
+    },
+    genera_descripcion = function(params) {
+      paste0("Dividió el total (", params$total,
+             " millones) entre el porcentaje convertido a decimal (",
+             params$porcentaje, "/100 = ",
+             round(params$porcentaje / 100, 4),
+             "), en lugar de multiplicar")
+    },
+    genera_explicacion = function(params, valor_erroneo) {
+      paste0("El estudiante invirtió la operación: ", params$total,
+             " ÷ (", params$porcentaje, "/100) = ", params$total, " ÷ ",
+             round(params$porcentaje / 100, 4), " = ", valor_erroneo,
+             " millones de tebos. Esta operación serviría para hallar el total ",
+             "conociendo solo la parte, no para hallar la parte conociendo el total.")
+    }
+  ),
+  list(
+    codigo = "EXP-LEC-02",
+    nombre = "Lectura de producto equivocado",
+    causa_raiz = "Error de lectura visual en el gráfico circular: confusión entre porciones adyacentes o de tamaño similar.",
+    precondicion = function(params) {
+      any(params$sizes[-params$producto_index_r] != params$porcentaje)
+    },
+    calcula = function(params) {
+      otros_idx <- setdiff(seq_along(params$sizes), params$producto_index_r)
+      diffs <- abs(params$sizes[otros_idx] - params$porcentaje)
+      sel <- otros_idx[which.min(diffs)]
+      round(params$total * params$sizes[sel] / 100, 2)
+    },
+    genera_descripcion = function(params) {
+      otros_idx <- setdiff(seq_along(params$sizes), params$producto_index_r)
+      diffs <- abs(params$sizes[otros_idx] - params$porcentaje)
+      sel <- otros_idx[which.min(diffs)]
+      paste0("Confundió el porcentaje de ", params$producto, " (",
+             params$porcentaje, "%) con el de ", params$productos[sel],
+             " (", params$sizes[sel], "%) en el gráfico circular")
+    },
+    genera_explicacion = function(params, valor_erroneo) {
+      otros_idx <- setdiff(seq_along(params$sizes), params$producto_index_r)
+      diffs <- abs(params$sizes[otros_idx] - params$porcentaje)
+      sel <- otros_idx[which.min(diffs)]
+      paste0("El estudiante leyó el porcentaje de ", params$productos[sel],
+             " (", params$sizes[sel], "%) en lugar del de ", params$producto,
+             " (", params$porcentaje, "%). Calculó: ", params$total, " × ",
+             params$sizes[sel], "/100 = ", valor_erroneo, " millones de tebos.")
+    }
+  ),
+  list(
+    codigo = "EXP-OPE-01",
+    nombre = "No convirtió porcentaje a decimal",
+    causa_raiz = "Omisión de la conversión porcentaje a decimal: usó el número entero del porcentaje directamente como factor.",
+    precondicion = function(params) TRUE,
+    calcula = function(params) {
+      round(params$total * params$porcentaje, 2)
+    },
+    genera_descripcion = function(params) {
+      paste0("Multiplicó el total (", params$total,
+             " millones) directamente por ", params$porcentaje,
+             " sin dividir el porcentaje entre 100")
+    },
+    genera_explicacion = function(params, valor_erroneo) {
+      paste0("El estudiante calculó ", params$total, " × ", params$porcentaje,
+             " = ", valor_erroneo, " millones de tebos, cuando debió calcular ",
+             params$total, " × ", params$porcentaje, "/100 = ", params$xol,
+             " millones de tebos. Olvidó que el porcentaje debe dividirse entre ",
+             "100 para obtener su equivalente decimal.")
+    }
+  ),
+  list(
+    codigo = "EXP-OPE-02",
+    nombre = "Suma en lugar de multiplicación",
+    causa_raiz = "Confusión de la operación proporcional (multiplicar) con suma aritmética directa.",
+    precondicion = function(params) TRUE,
+    calcula = function(params) {
+      round(params$total + params$porcentaje, 2)
+    },
+    genera_descripcion = function(params) {
+      paste0("Sumó el total de exportaciones (", params$total,
+             " millones) con el porcentaje (", params$porcentaje,
+             ") en lugar de multiplicar")
+    },
+    genera_explicacion = function(params, valor_erroneo) {
+      paste0("El estudiante sumó ", params$total, " + ", params$porcentaje,
+             " = ", valor_erroneo, " millones de tebos. La operación correcta ",
+             "para hallar una parte proporcional es multiplicar, no sumar: ",
+             params$total, " × ", params$porcentaje, "/100 = ", params$xol,
+             " millones de tebos.")
+    }
+  )
+)
+
+# --- Calcular valores de todos los errores ---
+valores_error <- sapply(errores_conceptuales, function(err) {
+  if (!err$precondicion(params)) return(NA)
+  tryCatch(err$calcula(params), error = function(e) NA)
+})
+
+# Filtrar: aplicables, diferentes del correcto
+aplicables_idx <- which(!is.na(valores_error) &
+                        abs(valores_error - xol) > 0.01)
+
+# --- Seleccionar 1 error cometido + 3 distractores con valores únicos ---
+intentos <- 0
+exito <- FALSE
+repeat {
+  error_idx <- sample(aplicables_idx, 1)
+  respuesta_erronea <- valores_error[error_idx]
+
+  otros_idx <- aplicables_idx[aplicables_idx != error_idx]
+  seleccionados <- c()
+  valores_usados <- respuesta_erronea
+
+  for (i in sample(otros_idx)) {
+    if (!(round(valores_error[i], 2) %in% round(valores_usados, 2))) {
+      seleccionados <- c(seleccionados, i)
+      valores_usados <- c(valores_usados, valores_error[i])
+    }
+    if (length(seleccionados) == 3) break
+  }
+
+  intentos <- intentos + 1
+  if (length(seleccionados) == 3) { exito <- TRUE; break }
+  if (intentos > 50) break
+}
+
+stopifnot(exito)
+
+error_seleccionado <- errores_conceptuales[[error_idx]]
+distractores_idx <- seleccionados
+
+# --- Generar descripciones de las 4 opciones ---
+desc_correcta <- error_seleccionado$genera_descripcion(params)
+desc_distractores <- sapply(distractores_idx, function(i) {
+  errores_conceptuales[[i]]$genera_descripcion(params)
+})
+desc_opciones <- c(desc_correcta, unlist(desc_distractores))
+
+# --- Pool de reflexiones metacognitivas ---
+reflexiones_metacognitivas <- c(
+  "Interpretar gráficos estadísticos requiere verificar cada paso: identificar el dato correcto, la operación adecuada y la conversión de unidades. Un error en cualquiera de estos pasos produce resultados incorrectos.",
+  "Los errores más frecuentes al combinar información de dos gráficos son: leer el valor equivocado, confundir porcentajes con sus complementos y aplicar la operación incorrecta. Identificar el tipo de error ayuda a prevenirlo.",
+  "Cuando trabajamos con gráficos combinados, es útil anotar los valores extraídos de cada gráfico antes de operar, para reducir errores de lectura visual.",
+  "La metacognición en estadística implica preguntarse: ¿el resultado tiene sentido? Si el porcentaje es pequeño, la parte debe ser mucho menor que el total. Verificar la razonabilidad previene errores.",
+  "Analizar errores ajenos desarrolla la capacidad de monitorear el propio razonamiento. Antes de calcular, conviene preguntarse: ¿qué dato necesito de cada gráfico y qué operación debo aplicar?",
+  "Los gráficos circulares muestran proporciones del total. Para obtener el valor absoluto de una porción, siempre se multiplica el total por el porcentaje dividido entre 100. Esta regla no tiene excepciones."
+)
+
+reflexion <- reflexiones_metacognitivas[sample(length(reflexiones_metacognitivas), 1)]
+
+# --- Pool de plantillas narrativas ---
+nombres_estudiantes <- c("Valentina", "Santiago", "Isabela", "Mateo",
+                          "Luciana", "Andrés", "Camila", "Daniel")
+nombre_estudiante <- sample(nombres_estudiantes, 1)
+
+plantillas_narrativas <- list(
+  function(nom, prod, a, val) {
+    paste0("En clase de estadística, ", nom,
+           " analizó ambos gráficos y concluyó que las exportaciones de **",
+           prod, "** en **", a, "** fueron de **", val,
+           " millones de tebos**. Sin embargo, cometió un error en su razonamiento.")
+  },
+  function(nom, prod, a, val) {
+    paste0("Al preparar un informe económico, ", nom,
+           " calculó que Tebailandia exportó **", val,
+           " millones de tebos** en **", prod, "** durante **", a,
+           "**. Su resultado es incorrecto.")
+  },
+  function(nom, prod, a, val) {
+    paste0("Durante un taller de interpretación de gráficos, ", nom,
+           " determinó que el valor de **", prod,
+           "** exportado en **", a, "** fue **", val,
+           " millones de tebos**. El docente señaló que hay un error en su procedimiento.")
+  },
+  function(nom, prod, a, val) {
+    paste0("Para un proyecto de investigación escolar, ", nom,
+           " combinó la información de ambos gráficos y obtuvo que las exportaciones de **",
+           prod, "** en **", a, "** equivalen a **", val,
+           " millones de tebos**, pero este valor no es correcto.")
+  },
+  function(nom, prod, a, val) {
+    paste0("---Según mis cálculos, ", prod, " representó ", val,
+           " millones de tebos en exportaciones durante ", a,
+           " ---afirmó ", nom,
+           " al presentar su análisis en clase. Sin embargo, su respuesta contiene un error.")
+  },
+  function(nom, prod, a, val) {
+    paste0("El boletín económico del colegio publicó que las exportaciones de **",
+           prod, "** en **", a, "** fueron **", val,
+           " millones de tebos**, según el análisis de ", nom,
+           ". La cifra publicada es incorrecta.")
+  }
+)
+
+plantilla_sel <- plantillas_narrativas[[sample(length(plantillas_narrativas), 1)]]
+enunciado_error <- plantilla_sel(nombre_estudiante, producto_seleccionado,
+                                  anio, respuesta_erronea)
+```
+
+`r enunciado_error`
+
+\
+¿Cuál error conceptual cometió `r nombre_estudiante` para obtener esa respuesta?
+\
+
+Answerlist
+----------
+
+- `r desc_opciones[1]`
+
+- `r desc_opciones[2]`
+
+- `r desc_opciones[3]`
+
+- `r desc_opciones[4]`
+
+
+Solution
+========
+
+\
+
+### Análisis del Error
+
+```{r analisis_error, echo=FALSE, results='asis'}
+cat(paste0("**Error identificado:** ", error_seleccionado$nombre,
+           " (", error_seleccionado$codigo, ")\n\n"))
+cat(paste0("**Descripción:** ", error_seleccionado$genera_descripcion(params), "\n\n"))
+cat(paste0("**Valor erróneo obtenido:** ", respuesta_erronea,
+           " millones de tebos\n\n"))
+cat(paste0("**Valor correcto:** ", xol, " millones de tebos\n\n"))
+cat(paste0("**Causa raíz:** ", error_seleccionado$causa_raiz, "\n\n"))
+cat(paste0(error_seleccionado$genera_explicacion(params, respuesta_erronea), "\n"))
+```
+
+\
+
+### Procedimiento Correcto
+
+Para calcular el valor de `r producto_seleccionado` exportado en `r anio`, se requieren dos datos de los gráficos:
+
+**Paso 1:** Leer el total de exportaciones de `r anio` en el gráfico de barras.
+
+$$\text{Total}_{`r anio`} = `r total_anio` \text{ millones de tebos}$$
+
+**Paso 2:** Leer el porcentaje de `r producto_seleccionado` en el gráfico circular.
+
+$$\text{Porcentaje de `r producto_seleccionado`} = `r porcentaje_producto`\%$$
+
+**Paso 3:** Multiplicar el total por el porcentaje convertido a decimal.
+
+$$\text{Valor} = `r total_anio` \times \frac{`r porcentaje_producto`}{100} = `r total_anio` \times `r round(porcentaje_producto / 100, 4)` = `r xol` \text{ millones de tebos}$$
+
+\
+
+### Propiedades del Concepto
+
+- Un gráfico circular muestra la **distribución porcentual** de las partes de un todo. La suma de todos los porcentajes siempre es 100%.
+- Para obtener el **valor absoluto** de una porción, se multiplica el total por la fracción correspondiente: $\text{Parte} = \text{Total} \times \frac{\%}{100}$.
+- La operación $\text{Total} \times \frac{\%}{100}$ **siempre** produce un valor menor o igual al total.
+- Si el resultado es mayor que el total, hay un error en la operación o en la lectura del porcentaje.
+- Dividir el total entre el porcentaje decimal ($\text{Total} \div \frac{\%}{100}$) responde una pregunta **diferente**: "¿cuál sería el total si esta parte fuera el X%?"
+
+\
+
+### Caso Específico
+
+```{r caso_especifico, echo=FALSE, results='asis'}
+cat(paste0("En este caso, **", producto_seleccionado, "** representa el **",
+           porcentaje_producto, "%** de las exportaciones totales de Tebailandia en **",
+           anio, "**.\n\n"))
+cat(paste0("Como el total fue **", total_anio, " millones de tebos**:\n\n"))
+cat(paste0("$$", total_anio, " \\times \\frac{", porcentaje_producto, "}{100} = ",
+           xol, " \\text{ millones de tebos}$$\n\n"))
+cat(paste0("**Verificación de razonabilidad:** ", xol, " < ", total_anio,
+           " (la parte es menor que el todo). Además, ",
+           xol, " / ", total_anio, " = ",
+           round(xol / total_anio * 100, 1),
+           "%, que coincide con el ", porcentaje_producto,
+           "% leído en el gráfico circular.\n"))
+```
+
+\
+
+### Reflexión Metacognitiva
+
+`r reflexion`
+
+\
+
+### Estrategia para Evitar el Error
+
+1. **Identificar qué dato se necesita de cada gráfico** antes de operar: total del año en el gráfico de barras y porcentaje del producto en el gráfico circular.
+2. **Anotar los valores extraídos** para evitar confusiones de lectura visual.
+3. **Verificar la operación**: para hallar una parte del total, siempre se **multiplica** (no se divide ni se suma).
+4. **Convertir el porcentaje** a decimal dividiendo entre 100 antes de multiplicar.
+5. **Comprobar la razonabilidad del resultado**: debe ser menor que el total y mayor que cero. Si no lo es, revisar cada paso.
+
+
+```{r analisis_opciones_distractoras, echo=FALSE, results='asis'}
+cat("\\  \n\n")
+cat("### Análisis de las opciones incorrectas\n\n")
+for (i in seq_along(distractores_idx)) {
+  err_d <- errores_conceptuales[[distractores_idx[i]]]
+  val_d <- valores_error[distractores_idx[i]]
+  cat(paste0("- **\"", err_d$genera_descripcion(params), "\"**: ",
+             "Este error produciría ", val_d,
+             " millones de tebos, no ", respuesta_erronea,
+             ". No corresponde al valor obtenido por ", nombre_estudiante, ".\n\n"))
+}
+```
+
+
+Meta-information
+================
+exextra[Componente]: Aleatorio
+exextra[Competencia]: Interpretacion
+exextra[Nivel]: 3
+exextra[Type]: SCHOICE
+exextra[Afirmacion]: Interpreta y relaciona informacion presentada en diferentes representaciones graficas
+exextra[Evidencia]: Combina datos de graficos de barras y circulares para resolver problemas
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
+
+exname: exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
