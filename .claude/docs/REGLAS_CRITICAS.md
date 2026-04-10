@@ -477,35 +477,33 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 
 **TODOS los cambios son validados automáticamente. Tolerancia cero a regresiones.**
 
-### Sistema de 4 Hooks
+### Sistema de 2 Hooks Activos + Git hooks nativos
 
-#### 1. PreToolUse - Edit/Write
-**Hook**: `.claude/hooks/pre-edit-testing.sh`
+> v3.8.0 (2026-04-10): los hooks `pre-edit-testing.sh`, `post-edit-testing.sh`
+> y `pre-bash-testing.sh` **nunca** estuvieron cargados en `settings.json` y
+> fueron eliminados del repo. Bloqueos de commit/push se manejan con git hooks
+> nativos (`.git/hooks/pre-commit`, `.git/hooks/pre-push`). Detalles en
+> `.claude/docs/HOOKS_Y_TESTING.md` y `.claude/rules/testing-obligatorio.md`.
 
-- Ejecuta ANTES de editar componentes críticos
-- BLOQUEA edición si tests actuales fallan
-- Componentes críticos: `.claude/scripts/*`, `.claude/hooks/*`, `.claude/rules/*`, `tests/*`
+#### 1. PreToolUse - Write/Edit
+**Hook**: `.claude/hooks/pre-write-rmd-gate.sh`
 
-#### 2. PostToolUse - Edit/Write
-**Hook**: `.claude/hooks/post-edit-testing.sh`
+- Gate mecánico para `.Rmd` en `01-En-PreDesarrollo/` y `02-En-Desarrollo/`.
+- Verifica `ejercicio_state.json` + pasos `analisis_icfes` y `flujo_b` completados.
+- exit 2 bloquea el tool call con instrucciones concretas en stderr.
 
-- Ejecuta DESPUÉS de cualquier Edit/Write
-- Valida que el cambio no rompió tests
-- Reporta errores con instrucciones de corrección
-
-#### 3. PreToolUse - Bash (git commit/push)
-**Hook**: `.claude/hooks/pre-bash-testing.sh`
-
-- **git commit**: Ejecuta suite completa, RECHAZA si falla
-- **git push**: Valida suite + verifica sin cambios pendientes
-- **⚠️ PROHIBIDO**: `git commit --no-verify`
-
-#### 4. PostToolUse - Bash (exams2*)
+#### 2. PostToolUse - Bash (exams2*)
 **Hook**: `.claude/hooks/post-exams2-validation.sh`
 
-- FASE 2A: Validación matemática automática
-- FASE 2B: Preview PNG automático
-- Claude DEBE: Leer PNG + Verificar 5 coherencias + Solicitar aprobación
+- FASE 2A: Validación matemática automática (Niveles 1-4).
+- FASE 2B: Preview PNG automático (magick).
+- FASES 2C-2H: Arsenal, multi-semilla y stress test visual.
+- Claude DEBE: Leer PNG + Verificar 5 coherencias + Solicitar aprobación.
+
+#### Git hooks nativos (NO cargados por Claude)
+- `.git/hooks/pre-commit`: valida ortografía en .Rmd modificados. Tests opcionales con `PRECOMMIT_TESTS=1`.
+- `.git/hooks/pre-push`: ejecuta `Rscript tests/run_all_tests.R` (modo quick soportado con `R_TESTS_QUICK=1`).
+- **⚠️ PROHIBIDO**: `git commit --no-verify`.
 
 ### Cobertura de Tests
 

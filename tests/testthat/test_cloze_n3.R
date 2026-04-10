@@ -8,13 +8,47 @@ suppressPackageStartupMessages({
   library(xml2)
 })
 
-EX_REL <- "Lab-Manjaro/ExportacionesGraficosEstadisticaInterpretacion_n3_v1/ExportacionesGraficosEstadisticaInterpretacion_n3_cloze_v1.Rmd"
-EX_PATH <- normalizePath(file.path("..","..", EX_REL), winslash = "/", mustWork = TRUE)
+# Ruta al .Rmd bajo test: basada en repo root para evitar fragilidad de cwd.
+.repo_root <- tryCatch(system("git rev-parse --show-toplevel", intern = TRUE),
+                       error = function(e) "")
+EX_REL <- file.path(
+  "A-Produccion", "03-En-Produccion", "06-Estadística-Y-Probabilidad",
+  "Pensamiento-Aleatorio",
+  "01-Variables-Cualitativas_Distribucion-De-Frecuencias",
+  "ExportacionesGraficos-Tebailandia",
+  "exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1",
+  "ExportacionesGraficosEstadisticaInterpretacion_n3_cloze_v1.Rmd"
+)
+EX_PATH <- if (length(.repo_root) == 1 && nzchar(.repo_root)) {
+  file.path(.repo_root, EX_REL)
+} else ""
+.ex_available <- nzchar(EX_PATH) && file.exists(EX_PATH)
+
+# xexams copia el .Rmd a un tempdir usando un nombre derivado de la ruta
+# completa, lo cual excede el límite de longitud de filename del filesystem
+# cuando la ruta es larga. Copiamos el .Rmd a una ruta corta una sola vez.
+.ex_short_path <- NULL
+.get_ex_path <- function() {
+  if (is.null(.ex_short_path) || !file.exists(.ex_short_path)) {
+    tmp_dir <- file.path(tempdir(), "cloze_n3_ex")
+    dir.create(tmp_dir, showWarnings = FALSE, recursive = TRUE)
+    short_path <- file.path(tmp_dir, "ex_cloze_n3.Rmd")
+    file.copy(EX_PATH, short_path, overwrite = TRUE)
+    # También copiar supplements del directorio del .Rmd
+    src_dir <- dirname(EX_PATH)
+    supp <- list.files(src_dir, full.names = TRUE)
+    supp <- supp[!grepl("\\.Rmd$", supp) & !dir.exists(supp)]
+    if (length(supp) > 0) file.copy(supp, tmp_dir, overwrite = TRUE)
+    .ex_short_path <<- short_path
+  }
+  .ex_short_path
+}
 
 # Helper: generar 1 instancia con xexams y devolver lista con question/solution/metainfo/supplements
 .gen_one <- function(seed = NULL) {
+  skip_if_not(.ex_available, "Ejercicio .Rmd no encontrado en repo")
   if (!is.null(seed)) set.seed(seed)
-  res <- exams::xexams(EX_PATH, n = 1)
+  res <- exams::xexams(.get_ex_path(), n = 1)
   # estructura: list(exam)[[1]][[1]]
   ex <- res[[1]][[1]]
   stopifnot(is.list(ex$metainfo))
@@ -108,6 +142,7 @@ test_that("exclozetype, exsolution y extol son correctos", {
 # Para placeholders, analizamos directamente el Rmd entre Question y Answerlist
 
 test_that("Placeholders ##ANSWER1##..##ANSWER7## aparecen exactamente una vez en Question", {
+  skip_if_not(.ex_available, "Ejercicio .Rmd no encontrado en repo")
   rmd <- readLines(EX_PATH, warn = FALSE)
   q_i <- which(trimws(rmd) == "Question")
   a_i <- which(trimws(rmd) == "Answerlist")
@@ -127,9 +162,10 @@ test_that("Placeholders ##ANSWER1##..##ANSWER7## aparecen exactamente una vez en
 context("Testing de exportación a formatos")
 
 test_that("exams2moodle/html/qti21 generan archivos e incluyen imágenes", {
+  skip_if_not(.ex_available, "Ejercicio .Rmd no encontrado en repo")
   td <- tempfile("exm_"); dir.create(td)
   # moodle
-  exams2moodle(EX_PATH, n = 1, dir = td, name = "t_cloze")
+  exams2moodle(.get_ex_path(), n = 1, dir = td, name = "t_cloze")
   xmls <- list.files(td, pattern = "\\.xml$", full.names = TRUE)
   expect_true(length(xmls) >= 1)
   # Validar que el XML menciona las imágenes
@@ -140,14 +176,14 @@ test_that("exams2moodle/html/qti21 generan archivos e incluyen imágenes", {
   expect_true(any(grepl("grafico_torta\\.png$", img_names)))
 
   # html
-  exams2html(EX_PATH, n = 1, dir = td, name = "t_cloze_html")
+  exams2html(.get_ex_path(), n = 1, dir = td, name = "t_cloze_html")
   htmls <- list.files(td, pattern = "\\.html$", full.names = TRUE)
   expect_true(length(htmls) >= 1)
   ht <- paste(readLines(htmls[1], warn = FALSE), collapse = "\n")
   expect_true(grepl("<img ", ht))
 
   # qti21 (si el paquete soporta)
-  expect_error(exams2qti21(EX_PATH, n = 1, dir = td, name = "t_cloze_qti"), NA)
+  expect_error(exams2qti21(.get_ex_path(), n = 1, dir = td, name = "t_cloze_qti"), NA)
   # QTI suele generar .xml o un directorio/zip con recursos
   qti_files <- list.files(td, recursive = TRUE, full.names = TRUE)
   expect_true(any(grepl("qti|imsmanifest|xml", tolower(qti_files))))

@@ -74,10 +74,9 @@ No consumen tokens de modelo.
 
 | Hook | Ejecuta | Modelo |
 |------|---------|--------|
+| pre-write-rmd-gate.sh | bash + jq (gate ejercicio_state.json) | N/A |
 | post-exams2-validation.sh | Rscript + magick | N/A |
-| pre-edit-testing.sh | Rscript tests | N/A |
-| post-edit-testing.sh | Rscript tests | N/A |
-| pre-commit-ortografia.sh | Rscript ortografia | N/A |
+| pre-commit-ortografia.sh | Rscript ortografia (git hook nativo) | N/A |
 
 ---
 
