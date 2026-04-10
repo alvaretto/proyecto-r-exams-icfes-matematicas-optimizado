@@ -47,9 +47,9 @@ Este archivo funciona como **índice central** del sistema. Para información de
 @.claude/docs/HOOKS_Y_TESTING.md
 
 **Sistema automático permanente:**
-- 5 hooks activos (PreToolUse: gate .Rmd + tildes; PostToolUse: arsenal post-render)
+- 2 hooks activos (PreToolUse: gate .Rmd + recordatorio tildes; PostToolUse: arsenal post-render)
 - Gate mecánico: `pre-write-rmd-gate.sh` bloquea .Rmd sin `ejercicio_state.json`
-- 100% cobertura de tests (11 suites, 110+ tests)
+- 100% cobertura de tests (12 suites, 130+ tests)
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones
 
@@ -119,8 +119,8 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (11 suites)
-- **Hooks**: `.claude/hooks/` (4 scripts activos)
+- **Tests**: `tests/testthat/` (12 suites)
+- **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
 
 ---
 
@@ -129,6 +129,14 @@ A-Produccion/
 **Versión**: 3.7.0 (Skills de Revisión + Workflow Completo)
 **Fecha**: 2026-03-23
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.8.0 (2026-04-10)
+- **INFRAESTRUCTURA: resuelto drift hooks/tests/CI/docs** — una sola fuente de verdad por componente.
+- **Runner ejecuta 12 suites** (antes 10): `test_cloze_n3.R` y `test_stress_test_visual.R` enganchadas al runner y al modo quick.
+- **CI simplificado**: `.github/workflows/ci-testing.yml` reemplazado por un único job `tests-full` que invoca `Rscript tests/run_all_tests.R`. Upgrades a `actions/checkout@v4` y `actions/upload-artifact@v4`.
+- **Hooks muertos eliminados**: `pre-edit-testing.sh`, `post-edit-testing.sh` y 3 docs stub. `settings.json` carga únicamente los 2 hooks activos (`pre-write-rmd-gate.sh`, `post-exams2-validation.sh`).
+- **Fix aritmético en `post-exams2-validation.sh`**: el conteo del arsenal ya no se duplica cuando el script reporta `Total ERRORES: N` y además falla con exit≠0.
+- **Fix ruta en `test_stress_test_visual.R`**: source basado en `git rev-parse --show-toplevel` — la suite ya corre desde cualquier cwd.
 
 ### Cambios v3.7.0 (2026-03-23)
 - **SKILLS DE REVISIÓN**: `/revisar-schoice` y `/revisar-cloze` ejecutan pasos 4-11 del workflow

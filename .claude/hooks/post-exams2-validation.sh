@@ -216,17 +216,16 @@ if [ -f "$SCRIPT_ARSENAL" ]; then
   # Mostrar salida filtrada
   echo "$ARSENAL_OUTPUT" | grep -E "FASE|✓|❌|⚠️|ERROR|ADVERTENCIA|Total|VALIDACIÓN"
 
-  if [ $ARSENAL_EXIT -ne 0 ]; then
-    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
-  fi
-
-  # Extraer conteos del arsenal
+  # Preferir el conteo reportado por el script; si no lo reporta, fallback a +1 por exit!=0
   ARSENAL_ERRORES=$(echo "$ARSENAL_OUTPUT" | grep "Total ERRORES:" | grep -oP '\d+' | tail -1)
   ARSENAL_ADVERTENCIAS=$(echo "$ARSENAL_OUTPUT" | grep "Total ADVERTENCIAS:" | grep -oP '\d+' | tail -1)
 
   if [ -n "$ARSENAL_ERRORES" ]; then
     ERRORES_TOTALES=$((ERRORES_TOTALES + ARSENAL_ERRORES))
+  elif [ $ARSENAL_EXIT -ne 0 ]; then
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
   fi
+
   if [ -n "$ARSENAL_ADVERTENCIAS" ]; then
     ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + ARSENAL_ADVERTENCIAS))
   fi

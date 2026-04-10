@@ -1,5 +1,20 @@
 # Flujo Automático de Testing Permanente
 
+> ⚠️ **DEPRECADO (2026-04-10, v3.8.0)**: Este documento describe un flujo basado
+> en los hooks `pre-edit-testing.sh` / `post-edit-testing.sh` que **nunca estuvieron
+> cargados** en `.claude/settings.json` y cuyos scripts fueron eliminados del
+> repositorio. Se preserva solo como referencia histórica del diseño original.
+>
+> **Flujo real actual**:
+> - Gate mecánico de `.Rmd`: `.claude/hooks/pre-write-rmd-gate.sh` (PreToolUse).
+> - Validación post-renderizado: `.claude/hooks/post-exams2-validation.sh` (PostToolUse).
+> - Bloqueo de commit/push: git hooks nativos en `.git/hooks/pre-commit` y
+>   `.git/hooks/pre-push` (ver `.claude/rules/testing-obligatorio.md`).
+> - Runner único: `Rscript tests/run_all_tests.R` (12 suites, modo quick
+>   disponible con `R_TESTS_QUICK=1`).
+>
+> Para documentación vigente ver `HOOKS_Y_TESTING.md`.
+
 ## 🎯 Objetivo
 
 Este documento describe cómo el sistema de testing se ejecuta **automáticamente y permanentemente** sin intervención manual, garantizando que NUNCA se rompa el código.

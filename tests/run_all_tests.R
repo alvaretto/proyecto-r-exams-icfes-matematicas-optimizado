@@ -18,6 +18,13 @@ cat("========================================\n\n")
 # Configurar entorno de testing
 Sys.setenv(TESTING = "TRUE")
 
+# Todos los tests deben ejecutarse desde la raíz del repo
+repo_root <- tryCatch(
+  system("git rev-parse --show-toplevel", intern = TRUE),
+  error = function(e) getwd()
+)
+if (length(repo_root) == 1 && nzchar(repo_root)) setwd(repo_root)
+
 # --- Modo quick: detectar archivos cambiados para saltar suites pesadas ---
 .quick_mode <- identical(Sys.getenv("R_TESTS_QUICK"), "1") &&
                !identical(Sys.getenv("R_TESTS_FULL"), "1")
@@ -135,6 +142,18 @@ suites <- list(
     nombre = "Correctitud de Respuesta (Nivel 5)",
     archivo = "tests/testthat/test_correctitud_respuesta.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "CLOZE N3 (Trigonometría)",
+    archivo = "tests/testthat/test_cloze_n3.R",
+    critico = TRUE,
+    watch = c("test_cloze_n3", "03-En-Produccion")
+  ),
+  list(
+    nombre = "Stress Test Visual Multi-Semilla",
+    archivo = "tests/testthat/test_stress_test_visual.R",
+    critico = TRUE,
+    watch = c("stress_test_visual", "test_stress_test_visual")
   )
 )
 

@@ -4,17 +4,23 @@
 
 **Sistema de validación automática PERMANENTE** con tolerancia cero a regresiones.
 
-- **4 hooks activos** (PreToolUse/PostToolUse para Edit/Write/Bash)
-- **100% cobertura** de tests (10 suites, 82+ tests unitarios)
-- **CI/CD automático** con GitHub Actions
-- **Bloqueo proactivo** de cambios que rompen tests
-- **Validación matemática + visual** automática después de renderizar
+- **2 hooks activos** cargados por `settings.json` (PreToolUse: gate .Rmd + recordatorio tildes; PostToolUse: arsenal post-render)
+- **100% cobertura** de tests (12 suites, 130+ tests unitarios)
+- **CI/CD automático** con GitHub Actions (un job llama a `run_all_tests.R`)
+- **Bloqueo proactivo** de `.Rmd` sin `ejercicio_state.json` vía gate mecánico
+- **Validación matemática + arsenal + preview visual** automática después de renderizar
+
+> Nota (v3.8.0, 2026-04-10): los hooks `pre-edit-testing.sh` y `post-edit-testing.sh`
+> fueron eliminados. Nunca estuvieron cargados en `settings.json`. Los git hooks
+> nativos (`.git/hooks/pre-commit`, `.git/hooks/pre-push`) siguen siendo los
+> responsables de bloquear commits/push con tests fallando — ver
+> `.claude/rules/testing-obligatorio.md`.
 
 ---
 
 ## 📋 Índice
 
-1. [Los 4 Hooks Configurados](#los-4-hooks-configurados)
+1. [Los 2 Hooks Configurados](#los-2-hooks-configurados)
 2. [Sistema de Testing (100% Cobertura)](#sistema-de-testing-100-cobertura)
 3. [Flujo Automático Completo](#flujo-automático-completo)
 4. [Garantías del Sistema](#garantías-del-sistema)
@@ -22,182 +28,37 @@
 
 ---
 
-## Los 4 Hooks Configurados
+## Los 2 Hooks Configurados
 
 **Configuración**: @.claude/settings.json
 
-### 1. PreToolUse - Edit/Write
+> Los únicos hooks que Claude Code carga desde `settings.json` son los dos
+> descritos abajo. Commits/push se protegen con git hooks nativos en
+> `.git/hooks/pre-commit` y `.git/hooks/pre-push` (ver
+> `.claude/rules/testing-obligatorio.md`).
 
-**Hook**: `.claude/hooks/pre-edit-testing.sh`
-**Timeout**: 60 segundos
-**Status**: "Verificando tests antes de editar..."
+### 1. PreToolUse - Write/Edit: Gate de .Rmd + recordatorio de tildes
+
+**Hook principal**: `.claude/hooks/pre-write-rmd-gate.sh`
+**Recordatorio**: mensaje `echo` con lista de palabras que llevan tilde.
 
 #### Cuándo se Ejecuta
-Antes de que Claude ejecute herramientas `Edit` o `Write`
+Antes de que Claude ejecute `Write` o `Edit`.
 
 #### Qué Hace
-1. Extrae ruta del archivo desde `$ARGS_FILE`
-2. Detecta si es componente crítico:
-   - `.claude/scripts/*`
-   - `.claude/hooks/*`
-   - `.claude/rules/*`
-   - `tests/*`
+1. Si el archivo objetivo es un `.Rmd` en `01-En-PreDesarrollo/` o `02-En-Desarrollo/`,
+   verifica que exista `ejercicio_state.json` en el directorio del ejercicio y
+   que los pasos obligatorios (`analisis_icfes`, `flujo_b`) estén completos.
+2. Si alguna verificación falla → **exit 2** (bloquea el tool call) con
+   instrucciones concretas en stderr.
+3. Si el archivo está fuera del workflow o en `Ejemplos-Funcionales/` → permite.
+4. Fail open: si el JSON es inválido, permite (nunca bloquear por error del sistema).
 
-3. **Si ES crítico**:
-   - Ejecuta tests relevantes ANTES de permitir edición
-   - Si tests **PASAN** → Permite edición ✅
-   - Si tests **FALLAN** → **BLOQUEA** edición ❌
-
-4. **Si NO es crítico**:
-   - Permite edición sin tests previos
-
-#### Archivos Específicos
-
-| Archivo | Tests Ejecutados |
-|---------|------------------|
-| `validar_coherencia_matematica.R` | `test_validacion_matematica.R` |
-| `corregir_ortografia_espanol.R` | `test_ortografia_espanol.R` |
-| `test_*.R` | Suite completa |
-| Otros en `.claude/*` | `test_regression_suite.R` |
-
-#### Ejemplo de Bloqueo
-
-```
-❌ ==============================================
-❌ EDICIÓN BLOQUEADA - TESTS FALLARON
-❌ ==============================================
-
-Archivo: .claude/scripts/validar_coherencia_matematica.R
-
-ACCIÓN REQUERIDA:
-1. Los tests actuales están fallando
-2. Corregir problemas antes de editar
-3. NO proceder con edición hasta que tests pasen
-```
+Detalles completos en `.claude/rules/workflow-state-enforcement.md`.
 
 ---
 
-### 2. PostToolUse - Edit/Write
-
-**Hook**: `.claude/hooks/post-edit-testing.sh`
-**Timeout**: 60 segundos
-**Status**: "Validando cambios..."
-
-#### Cuándo se Ejecuta
-Inmediatamente después de que Claude ejecuta `Edit` o `Write`
-
-#### Qué Hace
-1. Extrae ruta del archivo modificado
-2. Detecta tipo de archivo:
-   - `validar_coherencia_matematica.R` → Tests de validación
-   - `corregir_ortografia_espanol.R` → Tests de ortografía
-   - `*.Rmd` → Tests de renderizado
-   - `test_*.R` → Suite completa
-   - Configuración Claude → Tests de regresión
-
-3. Ejecuta tests correspondientes
-4. Si **FALLAN**:
-   - Muestra error detallado
-   - Indica que se debe corregir
-   - **NO revierte** cambio (responsabilidad de Claude)
-
-5. Si **PASAN**:
-   - Confirma validación exitosa ✅
-   - Permite continuar
-
-#### Ejemplo de Error
-
-```
-❌ ==============================================
-❌ TESTS FALLARON DESPUÉS DEL CAMBIO
-❌ ==============================================
-
-Archivo: .claude/scripts/validar_coherencia_matematica.R
-
-⚠️ ACCIÓN REQUERIDA:
-1. El cambio introdujo un error
-2. Revisar el código modificado
-3. Corregir el problema
-4. Los tests deben pasar antes de commit
-```
-
----
-
-### 3. PreToolUse - Bash (git commit/push)
-
-**Hook**: `.claude/hooks/pre-bash-testing.sh`
-**Timeout**: 120 segundos
-**Status**: "Validando comando bash..."
-
-#### Cuándo se Ejecuta
-Antes de que Claude ejecute comando `Bash`
-
-#### Detecta y Bloquea
-
-##### A. git commit (excepto --amend)
-
-**Comando detectado**:
-```bash
-git commit -m "mensaje"
-```
-
-**Acciones**:
-1. Ejecuta suite completa:
-   ```bash
-   Rscript tests/run_all_tests.R
-   ```
-
-2. Si **PASA** → Permite commit ✅
-   ```
-   ✅ ==============================================
-   ✅ TESTS PASARON - COMMIT PERMITIDO
-   ✅ ==============================================
-   ```
-
-3. Si **FALLA** → **RECHAZA** commit ❌
-   ```
-   ❌ ==============================================
-   ❌ COMMIT RECHAZADO - TESTS FALLARON
-   ❌ ==============================================
-
-   Acciones requeridas:
-   1. Revisar errores de tests arriba ↑
-   2. Corregir el código que causó la falla
-   3. Volver a ejecutar: Rscript tests/run_all_tests.R
-   4. Solo entonces hacer commit
-
-   ⚠️ PROHIBIDO usar: git commit --no-verify
-   ```
-
-##### B. git push
-
-**Comando detectado**:
-```bash
-git push origin main
-```
-
-**Acciones**:
-1. Verifica que no hay cambios sin commit
-   ```bash
-   git diff-index --quiet HEAD --
-   ```
-
-2. Ejecuta suite completa:
-   ```bash
-   Rscript tests/run_all_tests.R
-   ```
-
-3. Verifica que CI/CD existe:
-   ```bash
-   [ -f ".github/workflows/ci-testing.yml" ]
-   ```
-
-4. Si **TODO PASA** → Permite push ✅
-5. Si **ALGO FALLA** → **RECHAZA** push ❌
-
----
-
-### 4. PostToolUse - Bash (exams2*)
+### 2. PostToolUse - Bash (exams2*)
 
 **Hook**: `.claude/hooks/post-exams2-validation.sh`
 **Timeout**: 120 segundos
@@ -260,7 +121,7 @@ preview_nombre-1.png
 **Documentación completa**: @.claude/docs/ECOSISTEMA_TESTING.md
 **Regla obligatoria**: @.claude/rules/testing-obligatorio.md
 
-### Las 10 Suites de Tests
+### Las 12 Suites de Tests
 
 | Suite | Archivo | Tests | Cubre |
 |-------|---------|-------|-------|
@@ -274,7 +135,15 @@ preview_nombre-1.png
 | **Media-Mediana-Moda** | `test_media_mediana_moda.R` | 3 | Precondiciones, filtro genérico, 100 semillas |
 | **Validación Semántica (Nivel 4)** | `test_validacion_semantica.R` | 35 | 3 capas, 21 keywords, regresión EST-MTC-04 |
 | **Correctitud Respuesta (Nivel 5)** | `test_correctitud_respuesta.R` | 14 | 5A-5E, cross-check, unicidad, rangos |
-| **TOTAL** | 10 archivos | **82+** | **100%** |
+| **CLOZE N3 (Trigonometría)** | `test_cloze_n3.R` | 6 | Estructura CLOZE nivel 3 |
+| **Stress Test Visual Multi-Semilla** | `test_stress_test_visual.R` | 15 | Extracción, anomalías, renderizado masivo |
+| **TOTAL** | 12 archivos | **130+** | **100%** |
+
+> El runner (`run_all_tests.R`) marca como pesadas las suites con campo
+> `watch` y las salta en modo `R_TESTS_QUICK=1` cuando ningún archivo
+> cambiado coincide con los patrones de la suite. Esto aplica hoy a:
+> Renderizado, Aleatorización, Regresión, Media-Mediana-Moda, CLOZE N3 y
+> Stress Test Visual.
 
 ### Ejecutor Principal
 
@@ -336,70 +205,58 @@ Tests totales: 82+
 │                   (SIEMPRE ACTIVO)                       │
 └─────────────────────────────────────────────────────────┘
 
-EVENTO 1: Claude intenta Edit/Write
-├─→ PreToolUse Hook → pre-edit-testing.sh
-│   ├─→ ¿Es componente crítico?
-│   │   ├─→ SÍ: Ejecutar tests relevantes
-│   │   │   ├─→ PASAN: Permitir edición ✅
-│   │   │   └─→ FALLAN: BLOQUEAR edición ❌
-│   │   └─→ NO: Permitir edición
-│   │
-├─→ Claude ejecuta Edit/Write
-│   │
-└─→ PostToolUse Hook → post-edit-testing.sh
-    ├─→ Ejecutar tests según tipo de archivo
-    ├─→ PASAN: ✅ Cambio validado
-    └─→ FALLAN: ❌ Mostrar error + Instrucciones
+EVENTO 1: Claude intenta Write/Edit sobre un .Rmd
+└─→ PreToolUse Hook → pre-write-rmd-gate.sh
+    ├─→ ¿.Rmd en 01-PreDesarrollo/ o 02-Desarrollo/?
+    │   ├─→ SÍ: Verificar ejercicio_state.json + pasos 1-2
+    │   │   ├─→ OK: Permitir ✅
+    │   │   └─→ FALTA: exit 2 → BLOQUEAR ❌
+    │   └─→ NO: Permitir (fuera del workflow)
 
 EVENTO 2: Usuario/Claude intenta git commit
-├─→ PreToolUse Hook (Bash) → pre-bash-testing.sh
-│   ├─→ Ejecutar: Rscript tests/run_all_tests.R
-│   ├─→ PASAN: Permitir commit ✅
-│   └─→ FALLAN: RECHAZAR commit ❌
+└─→ .git/hooks/pre-commit (git hook nativo, NO Claude hook)
+    ├─→ Valida ortografía .Rmd modificados
+    └─→ (Opcional) Ejecuta tests con PRECOMMIT_TESTS=1
 
 EVENTO 3: Usuario/Claude intenta git push
-├─→ PreToolUse Hook (Bash) → pre-bash-testing.sh
-│   ├─→ Verificar no hay cambios sin commit
-│   ├─→ Ejecutar suite completa
-│   ├─→ Verificar CI/CD configurado
-│   ├─→ PASAN: Permitir push ✅
-│   └─→ FALLAN: RECHAZAR push ❌
+└─→ .git/hooks/pre-push (git hook nativo)
+    └─→ Ejecuta Rscript tests/run_all_tests.R (modo quick disponible)
 
 EVENTO 4: Después de exams2*()
 └─→ PostToolUse Hook (Bash) → post-exams2-validation.sh
     ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
     ├─→ FASE 2B: Generar preview PNG (magick)
     │   └─→ Claude DEBE leer PNG + verificar + aprobar
-    └─→ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
-        └─→ Solo si FASES 2A-2F sin errores
+    ├─→ FASES 2C-2F: Arsenal completo de validación
+    ├─→ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
+    └─→ FASE 2H: Stress test visual multi-semilla
+        └─→ Solo si FASES anteriores sin errores
 ```
 
 ---
 
 ### Escenarios Detallados
 
-#### Escenario 1: Claude Edita Script de Validación
+#### Escenario 1: Claude crea un ejercicio .Rmd nuevo
 
 ```
-1. Usuario: "Actualiza validar_coherencia_matematica.R"
+1. Usuario: "Crea ejercicio de mediana"
 
-2. Claude detecta → Edit("validar_coherencia_matematica.R")
+2. Claude ejecuta pasos 1-2 (/analizar-icfes + preguntar flujo_b) y
+   marca ambos en ejercicio_state.json con workflow-state.sh complete.
 
-3. PreToolUse Hook ejecuta:
-   → pre-edit-testing.sh
-   → Detecta: archivo crítico
-   → Ejecuta: test_validacion_matematica.R
-   → Estado actual: PASANDO ✅
+3. Claude: Write("mi-ejercicio.Rmd")
 
-4. Claude procede con Edit
+4. PreToolUse Hook:
+   → pre-write-rmd-gate.sh
+   → Verifica ejercicio_state.json + pasos 1-2 completos
+   → Permite ✅
 
-5. PostToolUse Hook ejecuta:
-   → post-edit-testing.sh
-   → Ejecuta: test_validacion_matematica.R con NUEVO código
+5. Claude: Bash("Rscript -e 'exams2pdf(\"mi-ejercicio.Rmd\")'")
 
-6. Resultado:
-   - Si PASA: ✅ "Tests pasaron después del cambio"
-   - Si FALLA: ❌ "Tests fallaron - Corregir código"
+6. PostToolUse Hook:
+   → post-exams2-validation.sh
+   → FASES 2A-2H automáticas (ver sección siguiente)
 ```
 
 #### Escenario 2: Usuario Hace Commit
@@ -407,36 +264,23 @@ EVENTO 4: Después de exams2*()
 ```
 1. Usuario: git commit -m "feat: nueva funcionalidad"
 
-2. PreToolUse Hook (Bash) ejecuta:
-   → pre-bash-testing.sh
-   → Detecta: comando git commit
-   → Ejecuta: Rscript tests/run_all_tests.R
-   → Suite completa: 10 suites, 82+ tests
+2. .git/hooks/pre-commit (git hook nativo):
+   → Valida ortografía en .Rmd modificados
+   → Opcional: tests con PRECOMMIT_TESTS=1
 
 3. Resultado:
-   - Si TODO PASA:
-     ✅ "TESTS PASARON - COMMIT PERMITIDO"
-     → Commit se ejecuta
-
-   - Si ALGO FALLA:
-     ❌ "COMMIT RECHAZADO - TESTS FALLARON"
-     → Commit NO se ejecuta
-     → Mostrar errores + instrucciones
+   - PASA: commit ejecutado
+   - FALLA: commit rechazado, corregir errores
 ```
 
 #### Escenario 3: Claude Genera .Rmd y lo Renderiza
 
 ```
-1. Claude: Write("ejercicio.Rmd")
+1. Claude: Write("ejercicio.Rmd")  → gate permite si pasos previos OK
 
-2. PostToolUse Hook (Write):
-   → post-edit-testing.sh
-   → Ejecuta: test_renderizado_4_formatos.R
-   → Valida estructura básica
+2. Claude: Bash("Rscript -e 'exams2pdf(\"ejercicio.Rmd\")'")
 
-3. Claude: Bash("Rscript -e 'exams2pdf(\"ejercicio.Rmd\")'")
-
-4. PostToolUse Hook (Bash):
+3. PostToolUse Hook (Bash):
    → post-exams2-validation.sh
    → Detecta: exams2pdf
 
@@ -451,7 +295,10 @@ EVENTO 4: Después de exams2*()
    → Reporta: "PNG generado en [ruta]"
    → Emite: "Claude DEBE leer PNG y verificar 5 coherencias"
 
-5. Claude ejecuta automáticamente:
+   FASES 2C-2H:
+   → Arsenal, multi-semilla, stress test visual
+
+4. Claude ejecuta automáticamente:
    → Read("preview.png")
    → Muestra imagen al usuario
    → Verifica 5 coherencias
@@ -666,17 +513,15 @@ Acciones requeridas:
 
 ### Actualizar Hooks
 
-1. Editar archivo de hook (ej. `pre-edit-testing.sh`)
-2. Los tests de regresión validan automáticamente
-3. Commit y push con sistema automático validando
+1. Editar `pre-write-rmd-gate.sh` o `post-exams2-validation.sh`
+2. Los tests de regresión y la suite completa validan los cambios en CI
+3. Commit y push con git hooks nativos validando
 
 ### Agregar Nuevos Tests
 
-1. Crear `test_nuevo_componente.R`
-2. Sistema detecta que es archivo crítico (`test_*.R`)
-3. Pre-edit ejecuta suite completa
-4. Post-edit valida que el nuevo test funciona
-5. Commit solo permitido si todo pasa
+1. Crear `tests/testthat/test_nuevo_componente.R`
+2. Registrarlo en `tests/run_all_tests.R` (añadir entrada en `suites`)
+3. Al próximo push, CI lo ejecuta automáticamente (el CI llama al runner)
 
 ### Deshabilitar Temporalmente (PROHIBIDO)
 

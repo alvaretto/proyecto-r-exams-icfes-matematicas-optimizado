@@ -1,5 +1,6 @@
 # CI/CD Pipeline para Testing Continuo
-# Ejecuta suite completa de tests en cada push y pull request
+# Ejecuta la suite completa de tests llamando al runner único (run_all_tests.R).
+# Esto garantiza una sola fuente de verdad: lo que corre en local = lo que corre en CI.
 
 name: CI Testing Suite
 
@@ -13,12 +14,12 @@ on:
     - cron: '0 2 * * *'
 
 jobs:
-  test-validacion-matematica:
+  tests-full:
     runs-on: ubuntu-latest
-    name: Tests de Validación Matemática
+    name: Suite completa (run_all_tests.R)
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup R
       uses: r-lib/actions/setup-r@v2
@@ -38,186 +39,18 @@ jobs:
 
     - name: Install R dependencies
       run: |
-        install.packages(c("exams", "testthat", "knitr", "rmarkdown"))
+        install.packages(c(
+          "exams", "testthat", "knitr", "rmarkdown", "tinytex",
+          "jsonlite", "digest", "stringr", "xml2"
+        ))
       shell: Rscript {0}
 
-    - name: Run validación matemática tests
-      run: |
-        library(testthat)
-        test_file("tests/testthat/test_validacion_matematica.R")
-      shell: Rscript {0}
-
-  test-ortografia:
-    runs-on: ubuntu-latest
-    name: Tests de Ortografía Española
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        r-version: '4.3.0'
-
-    - name: Install R dependencies
-      run: |
-        install.packages(c("testthat"))
-      shell: Rscript {0}
-
-    - name: Run ortografía tests
-      run: |
-        library(testthat)
-        test_file("tests/testthat/test_ortografia_espanol.R")
-      shell: Rscript {0}
-
-  test-renderizado-4-formatos:
-    runs-on: ubuntu-latest
-    name: Tests de Renderizado (HTML/PDF/DOCX/NOPS)
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        r-version: '4.3.0'
-
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          texlive-latex-base \
-          texlive-fonts-recommended \
-          texlive-fonts-extra \
-          texlive-latex-extra \
-          pandoc
-
-    - name: Install R dependencies
-      run: |
-        install.packages(c("exams", "testthat", "knitr", "rmarkdown", "tinytex"))
-      shell: Rscript {0}
-
-    - name: Run renderizado tests
-      run: |
-        library(testthat)
-        test_file("tests/testthat/test_renderizado_4_formatos.R")
-      shell: Rscript {0}
-
-  test-aleatorization-diversity:
-    runs-on: ubuntu-latest
-    name: Tests de Aleatorización y Diversidad
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        r-version: '4.3.0'
-
-    - name: Install R dependencies
-      run: |
-        install.packages(c("exams", "testthat"))
-      shell: Rscript {0}
-
-    - name: Run aleatorization tests
-      run: |
-        library(testthat)
-        test_file("tests/testthat/test_aleatorization_diversity.R")
-      shell: Rscript {0}
-
-  test-flujo-b:
-    runs-on: ubuntu-latest
-    name: Tests de Flujo B (Graficador)
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        r-version: '4.3.0'
-
-    - name: Install R dependencies
-      run: |
-        install.packages(c("testthat", "jsonlite"))
-      shell: Rscript {0}
-
-    - name: Run Flujo B tests
-      run: |
-        library(testthat)
-        test_file("tests/testthat/test_flujo_b_graficador.R")
-      shell: Rscript {0}
-
-  test-regression:
-    runs-on: ubuntu-latest
-    name: Tests de Regresión
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        r-version: '4.3.0'
-
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          texlive-latex-base \
-          texlive-fonts-recommended \
-          texlive-fonts-extra \
-          texlive-latex-extra \
-          pandoc \
-          imagemagick
-
-    - name: Install R dependencies
-      run: |
-        install.packages(c("exams", "testthat", "knitr", "rmarkdown", "tinytex"))
-      shell: Rscript {0}
-
-    - name: Run regression tests
-      run: |
-        library(testthat)
-        test_file("tests/testthat/test_regression_suite.R")
-      shell: Rscript {0}
-
-  coverage-report:
-    needs: [test-validacion-matematica, test-ortografia, test-renderizado-4-formatos,
-            test-aleatorization-diversity, test-flujo-b, test-regression]
-    runs-on: ubuntu-latest
-    name: Generar Reporte de Cobertura
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Setup R
-      uses: r-lib/actions/setup-r@v2
-      with:
-        r-version: '4.3.0'
-
-    - name: Install dependencies
-      run: |
-        install.packages(c("testthat", "covr"))
-      shell: Rscript {0}
-
-    - name: Generate coverage report
-      run: |
-        library(testthat)
-        library(covr)
-
-        # Ejecutar todos los tests y generar reporte
-        test_results <- test_dir("tests/testthat")
-
-        cat("\n=== REPORTE DE COBERTURA ===\n")
-        cat("Tests ejecutados con éxito\n")
-        cat("Cobertura objetivo: 100%\n")
-      shell: Rscript {0}
+    - name: Run full test suite
+      run: Rscript tests/run_all_tests.R
 
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: tests/testthat/

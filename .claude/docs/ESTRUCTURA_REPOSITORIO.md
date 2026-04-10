@@ -202,14 +202,13 @@ docs/
 ---
 
 ##### `hooks/`
-**Contenido**: 4 hooks de validación automática (chmod +x)
+**Contenido**: 2 hooks activos cargados por `settings.json` (chmod +x)
 
 ```
 hooks/
-├── pre-edit-testing.sh              # Valida antes de Edit/Write
-├── post-edit-testing.sh             # Valida después de Edit/Write
-├── pre-bash-testing.sh              # Bloquea commit/push sin tests
-└── post-exams2-validation.sh        # FASE 2A + 2B automáticas
+├── pre-write-rmd-gate.sh            # Gate .Rmd: exige ejercicio_state.json (PreToolUse)
+├── post-exams2-validation.sh        # FASE 2A-2H tras exams2* (PostToolUse)
+└── pre-commit-ortografia.sh         # Usado por .git/hooks/pre-commit (no por Claude)
 ```
 
 **Configurados en**: @.claude/settings.json

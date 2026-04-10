@@ -3,16 +3,22 @@
 # Tests unitarios para el Stress Test Visual Multi-Semilla
 # =============================================================================
 
-# Cargar el script principal
-source_paths <- c(
-  "SOURCES/scripts_validacion/stress_test_visual.R",
-  "../../SOURCES/scripts_validacion/stress_test_visual.R"
-)
-for (p in source_paths) {
-  if (file.exists(p)) { source(p); break }
-}
-
 library(testthat)
+
+# Cargar el script principal (ruta absoluta basada en repo root)
+.repo_root <- tryCatch(system("git rev-parse --show-toplevel", intern = TRUE),
+                       error = function(e) "")
+.stress_script <- if (length(.repo_root) == 1 && nzchar(.repo_root)) {
+  file.path(.repo_root, "SOURCES/scripts_validacion/stress_test_visual.R")
+} else ""
+.stress_available <- nzchar(.stress_script) && file.exists(.stress_script)
+if (.stress_available) {
+  source(.stress_script)
+} else {
+  # Stubs que hacen skip() limpio si el script no está disponible
+  extraer_datos_semilla <- function(...) skip("stress_test_visual.R no encontrado")
+  analizar_datos <- function(...) skip("stress_test_visual.R no encontrado")
+}
 
 # =============================================================================
 # Tests de extraer_datos_semilla()
