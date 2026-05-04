@@ -252,24 +252,6 @@
     "neural": {
       "enabled": true
     },
-    "daemon": {
-      "autoStart": false,
-      "workers": [
-        "map",
-        "audit",
-        "optimize"
-      ],
-      "schedules": {
-        "audit": {
-          "interval": "4h",
-          "priority": "critical"
-        },
-        "optimize": {
-          "interval": "2h",
-          "priority": "high"
-        }
-      }
-    },
     "learning": {
       "enabled": true,
       "autoTrain": true,
