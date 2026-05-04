@@ -14,6 +14,7 @@
 # FASE 2F: Estructura Metacognitiva (Solution completa)
 # FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
 # FASE 2H: Stress Test Visual (10 semillas, renderizado real + PNGs)
+# FASE 2I: Detección \pandocbounded en .tex y `![]()` sin width en .Rmd (Errores 16-17)
 #
 # GARANTÍA: Toda renderización activa TODAS las fases
 # PERMANENTE: No hay forma de saltarse estas validaciones
@@ -294,6 +295,71 @@ if [ -f "$SCRIPT_STRESS_TEST" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   fi
 elif [ $ERRORES_TOTALES -gt 0 ]; then
   echo "  ⚠️  Stress Test Visual omitido (hay errores previos que resolver primero)"
+fi
+
+echo ""
+
+# =============================================================================
+# FASE 2I: ANTI-PANDOCBOUNDED + COHERENCIA SOLUTION (Errores 16-17, regla #18)
+# =============================================================================
+
+echo "┌───────────────────────────────────────────────────────────────┐"
+echo "│ FASE 2I: Anti-\\pandocbounded + coherencia Solution (E16-E17)  │"
+echo "└───────────────────────────────────────────────────────────────┘"
+
+PANDOC_BUG_FOUND=0
+SOL_BUG_FOUND=0
+
+# 2I.1 — Markdown sin width en el .Rmd (estático)
+if [ -f "$RMD_FILE" ]; then
+  # Patrón: !\[...\](...\.png) sin {width=...} inmediatamente después
+  IMG_HITS=$(grep -nE '!\[[^]]*\]\([^)]+\.(png|jpe?g|svg|pdf)\)' "$RMD_FILE" | \
+             grep -vE '!\[[^]]*\]\([^)]+\.(png|jpe?g|svg|pdf)\)\{[^}]*width' || true)
+  # Excluir comentarios R puros
+  IMG_HITS=$(echo "$IMG_HITS" | grep -vE '^[0-9]+:\s*#' || true)
+  if [ -n "$IMG_HITS" ]; then
+    PANDOC_BUG_FOUND=1
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+    echo "  ❌ ERROR 16: Markdown sin atributo {width=...} (causará \\pandocbounded en PDF)"
+    echo "$IMG_HITS" | sed 's/^/     /'
+    echo ""
+    echo "     Fix: reemplazar \`![](file.png)\` por \`cat(\"![](file.png){width=80%}\\\\n\")\` en bloque R"
+    echo "     Ver .claude/rules/markdown-imagenes-pdf.md"
+  fi
+fi
+
+# 2I.2 — \pandocbounded en .tex generados durante este render
+TEX_FILES=$(find "$CWD" -maxdepth 4 -name "*.tex" -newer "$RMD_FILE" 2>/dev/null)
+if [ -n "$TEX_FILES" ]; then
+  for tex in $TEX_FILES; do
+    if grep -l 'pandocbounded' "$tex" >/dev/null 2>&1; then
+      PANDOC_BUG_FOUND=1
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+      echo "  ❌ ERROR 16: \\pandocbounded encontrado en $(basename "$tex")"
+    fi
+  done
+fi
+
+# 2I.3 — exshuffle: TRUE + Solution con letra explícita (estático)
+if [ -f "$RMD_FILE" ]; then
+  HAS_EXSHUFFLE_TRUE=$(grep -E '^[[:space:]]*exshuffle[[:space:]]*:[[:space:]]*TRUE' "$RMD_FILE" | head -1)
+  HAS_LETRA_REF=$(grep -nE '`r[[:space:]]+letra_correcta[[:space:]]*`|Opci[oó]n[[:space:]]+\*\*[A-D]\*\*|Opci[oó]n[[:space:]]+[A-D][[:space:]]*\(?CORRECTA' "$RMD_FILE" | head -3)
+
+  if [ -n "$HAS_EXSHUFFLE_TRUE" ] && [ -n "$HAS_LETRA_REF" ]; then
+    SOL_BUG_FOUND=1
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+    echo "  ❌ ERROR 17: exshuffle:TRUE combinado con Solution que referencia letra explícita"
+    echo "     exshuffle: $HAS_EXSHUFFLE_TRUE"
+    echo "     Solution refs:"
+    echo "$HAS_LETRA_REF" | sed 's/^/       /'
+    echo ""
+    echo "     Fix: cambiar a \`exshuffle: FALSE\` + mezcla interna con sample()"
+    echo "     Ver .claude/rules/codigo-rmd.md regla #6 + graficos-como-opciones.md"
+  fi
+fi
+
+if [ $PANDOC_BUG_FOUND -eq 0 ] && [ $SOL_BUG_FOUND -eq 0 ]; then
+  echo "  ✓ FASE 2I: sin patrones de Error 16/17 detectados"
 fi
 
 echo ""

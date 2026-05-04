@@ -159,6 +159,12 @@ suites <- list(
     nombre = "Infraestructura .claude/ (Regla #17)",
     archivo = "tests/testthat/test_infraestructura_claude.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "Pandocbounded + coherencia Solution (Errores 16-17, Regla #18)",
+    archivo = "tests/testthat/test_pandocbounded_y_solution_coherence.R",
+    critico = TRUE,
+    watch = c("\\.Rmd$", "markdown-imagenes-pdf", "test_pandocbounded")
   )
 )
 

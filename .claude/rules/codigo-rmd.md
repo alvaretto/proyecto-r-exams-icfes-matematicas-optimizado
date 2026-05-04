@@ -58,11 +58,27 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    - Obliga al estudiante a analizar cada opción individualmente
    - Genera versiones únicas en cada renderizado
 
-   **⚠️ EXCEPCIÓN**: SCHOICE con opciones gráficas individuales (PNGs) donde la Solution
-   referencia `letra_correcta`. En este caso `exshuffle: FALSE` + mezcla interna con
-   `sample()` es OBLIGATORIO. R-exams con TRUE re-mezclaría las opciones pero NO
-   modificaría el texto de la Solution, causando inconsistencia entre la letra indicada
-   y la posición real. Ver `.claude/rules/graficos-como-opciones.md` para detalles.
+   **⚠️ EXCEPCIÓN (ampliada 2026-05-03)**: `exshuffle: FALSE` + mezcla interna con `sample()`
+   es OBLIGATORIO en CUALQUIERA de estos casos:
+
+   1. SCHOICE con opciones gráficas individuales (PNGs).
+   2. SCHOICE cuya Solution referencia `r letra_correcta` o cualquier letra explícita
+      (ej: "La respuesta correcta es la **Opción A**").
+   3. Cualquier ejercicio donde la sección Solution muestre el contenido específico de
+      la opción correcta basándose en su letra/posición pre-mezcla.
+
+   **Por qué**: R-exams con `exshuffle: TRUE` re-mezcla las opciones del Answerlist y
+   ajusta `exsolution`, pero **NO modifica el texto de la Solution**. Si el .Rmd dice
+   "Opción A" pero R-exams movió esa opción a (c), el estudiante ve una inconsistencia
+   silenciosa que NO detecta validación sintáctica.
+
+   El `sample()` interno en `data_generation` ya garantiza aleatorización en cada
+   renderizado (semillas distintas → órdenes distintos). `exshuffle: FALSE` solo evita
+   la doble mezcla incoherente.
+
+   Ver Error 17 en `.claude/docs/patrones-errores-conocidos.md`,
+   `.claude/rules/graficos-como-opciones.md` y la regla #18
+   `.claude/rules/markdown-imagenes-pdf.md` (vinculada).
 
 ## ⚠️ 5 Coherencias OBLIGATORIAS
 
@@ -183,7 +199,30 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
     las versiones comparten el mismo estado RNG y producen resultados idénticos.
     Detectado en ejercicio Venn: 2/50 versiones únicas → 94/100 después del fix.
 
-12. **NO colocar `##ANSWERi##` de CLOZE fuera de orden ni omitir placeholders**
+13. **NO usar `![](file.png)` Markdown sin atributo `{width=...}`** (regla #18)
+
+    Pandoc 3.x envuelve `\includegraphics` en `\pandocbounded{...}` cuando la imagen
+    no tiene atributo de tamaño, comando que NO está definido en templates LaTeX de
+    R-exams → falla `exams2pdf()` con `Undefined control sequence`.
+
+    ```markdown
+    ❌ MAL — falla en PDF
+    ![](grafico.png)
+    ![texto](g.png)
+    ```
+
+    ```r
+    ❌ MAL — mismo bug vía cat()
+    cat("![](grafico.png)\n")
+
+    ✓ BIEN — atributo width explícito
+    cat("![](grafico.png){width=80%}\n")
+    ```
+
+    Ver `.claude/rules/markdown-imagenes-pdf.md` y Error 16 en
+    `.claude/docs/patrones-errores-conocidos.md`.
+
+14. **NO colocar `##ANSWERi##` de CLOZE fuera de orden ni omitir placeholders**
     ```markdown
     ❌ MAL - ##ANSWER1## después de Parte 2
     **Parte 1.** ¿Cuál es el error?
@@ -218,7 +257,8 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
 - Todo error conceptual con aplicabilidad condicional DEBE declarar `precondicion` (regla #8)
 - Comparaciones con resultado de `calcula()` DEBEN tener guardia `is.na()` (regla #9)
 - Chunks de test con `set.seed()` DEBEN guardar/restaurar `.Random.seed` (regla #10)
-- En CLOZE: `##ANSWERi##` por cada parte, en orden, inmediatamente después de su pregunta (regla #12)
+- En CLOZE: `##ANSWERi##` por cada parte, en orden, inmediatamente después de su pregunta (regla #14)
+- Toda imagen en bloque R `cat()` o Markdown directo DEBE incluir atributo `{width=...}` (regla #13 / regla maestra #18)
 
 ## Metadatos ICFES Requeridos
 

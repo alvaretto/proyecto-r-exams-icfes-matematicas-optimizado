@@ -1777,3 +1777,248 @@ La auto-memoria de Claude Code (los archivos `~/.claude/projects/*/memory/*.md`)
 | Fecha | Estado | Acción |
 |-------|--------|--------|
 | 2026-05-03 | Detectado tras instalación Ruflo | Aceptado, los `MEMORY.md` cubren la necesidad |
+
+
+---
+
+## Error 16: `\pandocbounded` undefined al renderizar PDF con imágenes Markdown sin atributo `width`
+
+### ❌ Mensaje de Error
+
+```
+! Undefined control sequence.
+l.5 \pandocbounded
+                  {\includegraphics[keepaspectratio]{grafico_equilibrio.png}}
+The control sequence at the end of the top line
+of your error message was never \def'ed.
+
+Error: LaTeX failed to compile <archivo>_1.tex.
+```
+
+### 🔍 Causa Raíz
+
+A partir de **pandoc 3.x**, cuando un Markdown contiene una imagen sin atributos explícitos:
+
+```markdown
+![](grafico_equilibrio.png)
+```
+
+pandoc envuelve el `\includegraphics` en LaTeX con un comando `\pandocbounded{...}` que pretende ajustar bounding box. **Este comando NO está definido en los templates LaTeX que usa R/exams** (ni en los stock de TinyTeX), por lo que la compilación PDF falla.
+
+El problema NO aparece en HTML ni DOCX, solo en PDF (y por extensión NOPS, que también compila LaTeX).
+
+**Por qué FASE 2G "20/20 OK" no lo detectó:** la validación multi-semilla previa no compilaba PDF en el entorno real del usuario (TinyTeX en Manjaro/zsh) o usaba un template parcheado. Las validaciones en sandbox no son suficientes; HAY que renderizar PDF en el entorno destino.
+
+### ✅ Solución Verificada (3 patrones, en orden de preferencia)
+
+#### Patrón A — Bloque R con `cat()` y atributo `{width=...}` (RECOMENDADO)
+
+```r
+` ``{r echo=FALSE, results='asis'}
+cat("![](grafico_equilibrio.png){width=80%}\n")
+` ``
+```
+
+**Por qué funciona**: cuando pandoc ve el atributo `{width=80%}`, NO usa `\pandocbounded` — emite directo `\includegraphics[width=0.8\textwidth]{...}`.
+
+Este patrón está validado en producción en `diagrama_venn_encuesta...Rmd` (línea ~1070) y otros ejercicios con gráficos como opciones.
+
+#### Patrón B — `knitr::include_graphics()` con renderizado condicional
+
+```r
+` ``{r echo=FALSE, results='asis'}
+if (knitr::is_latex_output()) {
+  cat("\\includegraphics[width=0.8\\textwidth]{grafico_equilibrio.png}")
+} else {
+  cat('<img src="grafico_equilibrio.png" width="80%" />')
+}
+` ``
+```
+
+**Cuándo usarlo**: si necesitas control fino sobre el HTML output o renderizado distinto por formato.
+
+#### Patrón C — Preamble fix (último recurso, no portable)
+
+Solo si A y B no son aplicables, agregar al template LaTeX:
+
+```latex
+\providecommand{\pandocbounded}[1]{#1}
+```
+
+NO recomendado porque depende de modificar templates fuera del .Rmd.
+
+### 🚫 Antipatrón PROHIBIDO
+
+```markdown
+❌ ![](grafico.png)              # sin atributo → \pandocbounded
+❌ ![texto alternativo](g.png)    # sin atributo → \pandocbounded
+```
+
+```r
+❌ cat("![](g.png)\n")            # genera Markdown sin width → mismo bug
+```
+
+### 🧪 Validación de la Solución
+
+```r
+# Renderizar en entorno real (no simulado)
+exams2pdf("archivo.Rmd", n = 5, dir = "salida_pdf")
+
+# Verificar que el .tex generado NO contiene \pandocbounded
+system("grep -L 'pandocbounded' salida_pdf/*.tex")  # debe listar todos los archivos
+
+# Verificar que los PDFs se generaron
+ls salida_pdf/*.pdf
+```
+
+Suite de tests: `tests/testthat/test_pandocbounded_y_solution_coherence.R` ejecuta este check automáticamente sobre todos los `.Rmd` modificados.
+
+### 📋 Checklist de Corrección
+
+- [ ] Identificar TODAS las imágenes en el `.Rmd` (`grep -n '!\\[' archivo.Rmd`).
+- [ ] Reemplazar cada `![](file.png)` por `cat("![](file.png){width=Y%}\n")` dentro de un bloque R.
+- [ ] Re-renderizar con `exams2pdf()` en el entorno real con ≥5 semillas.
+- [ ] Confirmar `grep -c 'pandocbounded' salida/*.tex` retorna 0 en todos.
+- [ ] Inspección visual: el gráfico aparece en el PDF (no se rompió por el cambio).
+
+### 📚 Ejemplo Funcional Utilizado
+
+`A-Produccion/03-En-Produccion/.../diagrama_venn_encuesta_metacognitivo_*.Rmd` línea 1070+ — patrón A validado en 4/4 formatos y 300/300 versiones únicas.
+
+### 🛡️ Defensa Automática
+
+| Capa | Mecanismo | Detecta |
+|---|---|---|
+| Pre-Write | hook `pre-write-rmd-gate.sh` (futuro) | `![](*.png)` sin width attribute en .Rmd nuevos |
+| Post-Render | hook `post-exams2-validation.sh` FASE 2I | `\pandocbounded` en .tex generado |
+| Test suite | `test_pandocbounded_y_solution_coherence.R` | Patrón Markdown crudo sin width en .Rmd existentes |
+| Agente SCHOICE | pre-flight check en `orquestador-schoice` | Detecta antes de generar |
+
+### 📅 Historial
+
+| Fecha | Archivo afectado | Resultado |
+|-------|------------------|-----------|
+| 2026-05-03 | `interseccion_ingresos_gastos_metacognitivo_interpretacion_n2_schoice_v1.Rmd` | Detectado por usuario al ejecutar `exams2pdf()`. Fix Patrón A aplicado. 5/5 semillas PDF OK post-fix. |
+
+---
+
+## Error 17: Inconsistencia Solution↔Answerlist por `exshuffle: TRUE` con referencia explícita a letra
+
+### ❌ Síntoma
+
+El estudiante ve:
+- En la sección Solution: "La respuesta correcta es la **Opción A** porque..."
+- En el Answerlist: la opción marcada como correcta es **(c)**.
+
+El bug es silencioso: el .Rmd compila correctamente, los 4 formatos generan, pero el contenido es incoherente. NO lo detecta validación sintáctica ni de metadatos.
+
+### 🔍 Causa Raíz
+
+Cuando un .Rmd SCHOICE tiene:
+
+```yaml
+exshuffle: TRUE        # R-exams re-mezcla las opciones
+```
+
+```markdown
+Solution
+========
+La respuesta correcta es la **Opción `r letra_correcta`** porque...
+```
+
+El flujo es:
+
+1. `data_generation` calcula `letra_correcta = "A"` (basado en la posición de la opción correcta tras `sample()` interno).
+2. R-exams parsea el .Rmd y construye el ejercicio con las opciones en su orden actual.
+3. R-exams aplica `exshuffle: TRUE` y **re-mezcla las opciones del Answerlist**, ajustando `exsolution` automáticamente.
+4. **PERO** el texto de la Solution (`r letra_correcta`) ya fue evaluado en el paso 1, así que sigue diciendo "Opción A" aunque ahora la correcta esté en posición (c).
+
+Resultado: incoherencia silenciosa entre Solution narrativa y Answerlist.
+
+### ✅ Solución Verificada
+
+Para SCHOICE con opciones gráficas (PNGs) **O** texto con Solution que referencia la letra explícitamente:
+
+```yaml
+exshuffle: FALSE       # ✓ NO dejar que R-exams re-mezcle
+```
+
+Y en `data_generation`:
+
+```r
+# Mezclar internamente
+opciones_mezcladas <- sample(todas_opciones)
+indice_correcto <- which(names(opciones_mezcladas) == "correcta")
+
+# Vector de solución posicional
+sol <- rep(0, 4)
+sol[indice_correcto] <- 1
+
+# Letra correspondiente (sincronizada con sample interno)
+letras <- c("A", "B", "C", "D")
+names(opciones_mezcladas) <- letras
+letra_correcta <- letras[indice_correcto]
+```
+
+```yaml
+exsolution: `r paste(as.integer(sol), collapse="")`
+```
+
+**La aleatorización ya está garantizada por `sample()`**: cada renderizado con semilla distinta produce orden distinto. `exshuffle: FALSE` solo evita que R-exams haga una segunda mezcla incoherente.
+
+### 🚫 Antipatrón PROHIBIDO
+
+```yaml
+exshuffle: TRUE       # PROHIBIDO si Solution dice "Opción `r letra_correcta`"
+```
+
+```markdown
+La respuesta correcta es la **Opción A** porque...   ← letra hardcoded
+```
+
+### 🧪 Validación de la Solución
+
+```r
+# Renderizar 20 semillas dispersas
+for (s in c(1, 7, 13, 23, 41, 59, 73, 89, 101, 113, 127, 137, 149, 163, 173, 191, 197, 211, 223, 239)) {
+  set.seed(s)
+  out <- exams2html("archivo.Rmd", n = 1)
+
+  # Extraer letra mencionada en Solution y posición correcta en exsolution
+  # Verificar que coinciden
+  assert_solution_matches_answerlist(out)
+}
+```
+
+Suite: `tests/testthat/test_pandocbounded_y_solution_coherence.R` automatiza esta verificación.
+
+### 📋 Checklist de Corrección
+
+- [ ] Si la Solution referencia `r letra_correcta` o cualquier letra explícita: `exshuffle: FALSE`.
+- [ ] Mezcla interna con `sample()` ya garantiza aleatorización (verificar con 20+ semillas: 250+ versiones únicas).
+- [ ] `exsolution` debe construirse desde el vector `sol` posicional.
+- [ ] La variable `letra_correcta` debe calcularse DESPUÉS del `sample()`.
+
+### 📚 Ejemplo Funcional Utilizado
+
+`A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2.Rmd`
+
+### 🛡️ Defensa Automática
+
+| Capa | Mecanismo | Detecta |
+|---|---|---|
+| Test suite | `test_pandocbounded_y_solution_coherence.R` | Combinación `exshuffle: TRUE` + `r letra_correcta` o "Opción [A-D]" en Solution |
+| Hook post-render | `post-exams2-validation.sh` FASE 2I | Mismatch detectado por análisis estático del .Rmd |
+| Detractor | dominio `codigo_rexams` | Reporta como objeción ALTA |
+
+### 📅 Historial
+
+| Fecha | Archivo afectado | Resultado |
+|-------|------------------|-----------|
+| 2026-05-03 | `interseccion_ingresos_gastos_metacognitivo_interpretacion_n2_schoice_v1.Rmd` | Usuario detectó "Opción A en Solution ≠ opción marcada en Answerlist". Fix `exshuffle: FALSE` aplicado. 20/20 semillas coherentes post-fix. |
+
+### 🔗 Reglas Cruzadas
+
+- `.claude/rules/codigo-rmd.md` regla #6 (excepción documentada)
+- `.claude/rules/graficos-como-opciones.md` (caso específico SCHOICE con PNGs)
+- `.claude/rules/markdown-imagenes-pdf.md` (regla anti-pandocbounded)

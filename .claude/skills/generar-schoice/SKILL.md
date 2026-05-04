@@ -202,7 +202,50 @@ Solicitar aprobación explícita del usuario. SOLO después de aprobación:
 
 Ver [antipatrones.md](references/antipatrones.md) para ejemplos con codigo incorrecto/correcto.
 
-Resumen: (1) NO ejercicios puramente procedimentales, (2) NO distractores aleatorios, (3) NO Solution sin analisis de error.
+Resumen: (1) NO ejercicios puramente procedimentales, (2) NO distractores aleatorios, (3) NO Solution sin analisis de error, (4) NO `![](file.png)` sin atributo `{width=...}`, (5) NO `exshuffle: TRUE` cuando Solution referencia letra explícita.
+
+## Patrones obligatorios para Imágenes y exshuffle (lecciones 2026-05-03)
+
+### Imágenes en bloque R (regla #18 markdown-imagenes-pdf.md)
+
+**OBLIGATORIO**: incluir atributo `{width=...}` en TODA imagen Markdown.
+
+```r
+# ✓ CORRECTO
+` ``{r mostrar_grafico, echo=FALSE, results='asis'}
+cat("![](grafico.png){width=80%}\n")
+` ``
+
+# ❌ PROHIBIDO (causa \pandocbounded undefined en PDF)
+cat("![](grafico.png)\n")
+```
+
+### exshuffle con Solution que referencia letra (regla codigo-rmd.md #6)
+
+```yaml
+# ✓ CORRECTO si Solution dice "Opción `r letra_correcta`"
+exshuffle: FALSE
+# (la mezcla interna con sample() ya aleatoriza el orden)
+
+# ❌ PROHIBIDO con Solution referenciando letra → inconsistencia silenciosa
+exshuffle: TRUE
+```
+
+**Patrón completo** en `data_generation`:
+
+```r
+opciones_mezcladas <- sample(todas_opciones)
+indice_correcto <- which(names(opciones_mezcladas) == "correcta")
+sol <- rep(0, 4); sol[indice_correcto] <- 1
+letras <- c("A", "B", "C", "D")
+names(opciones_mezcladas) <- letras
+letra_correcta <- letras[indice_correcto]   # DESPUÉS del sample
+```
+
+```yaml
+exsolution: `r paste(as.integer(sol), collapse="")`
+exshuffle: FALSE
+```
 
 ## Referencias
 
@@ -214,6 +257,8 @@ Resumen: (1) NO ejercicios puramente procedimentales, (2) NO distractores aleato
 - [Errores comunes](references/errores-comunes.md) - Patrones incorrecto/correcto
 - [Ejemplos completos](references/ejemplos.md) - Nivel 1 aritmetica + Nivel 3 estadistica
 - Regla Metacognitiva: `.claude/rules/ejercicios-metacognitivos.md`
+- Regla #18 Markdown-imágenes-PDF (anti `\pandocbounded`): `.claude/rules/markdown-imagenes-pdf.md`
+- Errores conocidos 16-17 (sesión 2026-05-03): `.claude/docs/patrones-errores-conocidos.md`
 - Ejemplos Funcionales (canónicos): `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
 - Ejemplos Recientes (Prioridad 1): `A-Produccion/03-En-Produccion/**/*metacognitivo*.Rmd` y `A-Produccion/02-En-Desarrollo/**/*metacognitivo*.Rmd`
 - Nomenclatura: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`

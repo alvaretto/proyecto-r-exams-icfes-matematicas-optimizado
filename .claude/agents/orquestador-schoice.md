@@ -71,8 +71,40 @@ Antes de cualquier acción destructiva, verifico:
 3. `.claude/hooks/pre-write-rmd-gate.sh` y `.claude/hooks/post-exams2-validation.sh` son ejecutables y `bash -n` los valida.
 4. `Rscript -e 'packageVersion("exams")'` retorna versión válida.
 5. `ruta_destino` está bajo `A-Produccion/01-En-PreDesarrollo/` o `A-Produccion/02-En-Desarrollo/` (NUNCA bajo `03-En-Produccion/` ni `Ejemplos-Funcionales-Rmd/`).
+6. `.claude/rules/markdown-imagenes-pdf.md` existe (regla #18 anti `\pandocbounded`).
+7. `tests/testthat/test_pandocbounded_y_solution_coherence.R` existe.
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
+
+## Lecciones absorbidas de sesiones previas (2026-05-03)
+
+Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones aprendidos de incidentes pasados:
+
+### Incidente A — Inconsistencia Solution↔Answerlist (Error 17)
+
+**Síntoma**: Solution dice "Opción A" pero answerlist marca (c) como correcta.
+**Causa**: `exshuffle: TRUE` re-mezcla opciones después de evaluar `r letra_correcta`.
+**Defensa preventiva**:
+- Si Solution referencia `r letra_correcta` o "Opción [A-D]" → `exshuffle: FALSE` + mezcla interna `sample()`.
+- `letra_correcta` se calcula DESPUÉS del `sample()`.
+- Validar con 20 semillas dispersas que coincide en TODAS.
+
+### Incidente B — `\pandocbounded` undefined en PDF (Error 16)
+
+**Síntoma**: `! Undefined control sequence. l.5 \pandocbounded` al compilar PDF.
+**Causa**: pandoc 3.x envuelve `\includegraphics` cuando Markdown no tiene atributo `width`.
+**Defensa preventiva**:
+- TODA imagen en `cat()` o Markdown directo DEBE incluir `{width=80%}` (o similar).
+- Patrón validado: `cat("![](file.png){width=80%}\n")` (ver `diagrama_venn_encuesta_*.Rmd` línea 1070).
+- Después de `exams2pdf()`, **siempre** verifico que el `.tex` generado NO contiene `\pandocbounded`.
+
+### Validación realista obligatoria (post-corrección)
+
+Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
+1. Ejecutar `exams2pdf()` con ≥5 semillas en el directorio destino real (no temporal).
+2. Inspeccionar el `.tex` generado con `grep -c 'pandocbounded'` → debe ser 0.
+3. Inspeccionar visualmente el PDF de al menos 1 semilla.
+4. Solo después de las 3 verificaciones, marco renderizado_4_formatos como completado.
 
 ## Máquina de estados (los 12 pasos)
 
@@ -239,7 +271,9 @@ Al terminar (éxito o fallo), produzco:
 - ❌ NO auto-decidir Flujo B (regla `flujo-b-obligatorio.md`).
 - ❌ NO auto-seleccionar lenguaje gráfico (regla `graficador-secuencial.md`: "PROHIBIDO: Claude selecciona el lenguaje final").
 - ❌ NO auto-aprobar el ejercicio (regla #16: aprobación humana obligatoria).
-- ❌ NO usar `exshuffle: FALSE` salvo el caso documentado en `graficos-como-opciones.md`.
+- ❌ NO usar `exshuffle: FALSE` salvo en los casos documentados (regla `codigo-rmd.md` regla #6 ampliada): SCHOICE con opciones gráficas O Solution que referencia letra explícita (`r letra_correcta`, "Opción A").
+- ❌ NO emitir imágenes Markdown sin atributo `{width=...}` (regla #18 `markdown-imagenes-pdf.md`). Causaría `\pandocbounded undefined` al compilar PDF.
+- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` y que el PDF abre sin errores (validación realista, no solo "exit 0" del comando).
 - ❌ NO inventar pasos del workflow ni saltar el orden.
 - ❌ NO crear archivos fuera de `<ruta_destino>` y subdirectorios `salida/`.
 - ❌ NO consumir más de 60 turnos (reservar 55-60 para reporte final).

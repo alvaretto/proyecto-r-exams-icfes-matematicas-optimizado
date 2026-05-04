@@ -1,0 +1,599 @@
+---
+output:
+  html_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "tikz", "xcolor"]
+
+# Metadatos ICFES
+icfes:
+  competencia:
+    - interpretacion
+  nivel_dificultad: 2
+  contenido:
+    categoria: numerico_variacional
+    tipo: funciones_lineales
+  contexto: economico
+  eje_axial: eje2
+  componente: numerico_variacional
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+options(tikzLatex = "pdflatex")
+options(tikzXelatex = FALSE)
+options(tikzLatexPackages = c(
+  "\\usepackage{tikz}",
+  "\\usepackage{xcolor}",
+  "\\usepackage{graphicx}",
+  "\\usepackage{float}"
+))
+
+library(exams)
+library(digest)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+
+set.seed(sample(1:100000, 1))
+```
+
+```{r data_generation, echo=FALSE, results="hide"}
+# ===================================================================
+# POOL DE CONTEXTOS NARRATIVOS (regla contextos-narrativos-creativos.md)
+# Tema: interseccion de funciones lineales (punto de equilibrio)
+# ===================================================================
+
+contextos <- list(
+  # Tipo: Situacion problema
+  list(
+    plantilla = function(protagonista, meses) {
+      paste0(
+        "Dos jóvenes quieren iniciar un emprendimiento de ", protagonista,
+        ". Las proyecciones de los gastos y de los ingresos, ambos acumulados, ",
+        "que deberían tener en los primeros ", meses,
+        " meses, se presentan en el siguiente gráfico:"
+      )
+    },
+    negocio = c(
+      "fabricación y venta de helados",
+      "producción y comercialización de postres",
+      "elaboración y distribución de jugos naturales"
+    )
+  ),
+  # Tipo: Narracion periodistica
+  list(
+    plantilla = function(protagonista, meses) {
+      paste0(
+        "En la clase de emprendimiento, un grupo de estudiantes presentó su plan de negocio ",
+        "para un servicio de ", protagonista,
+        ". Su análisis financiero para los primeros ", meses,
+        " meses se resume en la siguiente gráfica:"
+      )
+    },
+    negocio = c(
+      "lavado ecológico de autos",
+      "impresión 3D personalizada",
+      "reparación de dispositivos electrónicos"
+    )
+  ),
+  # Tipo: Descubrimiento
+  list(
+    plantilla = function(protagonista, meses) {
+      paste0(
+        "Al revisar la viabilidad de un negocio de ", protagonista,
+        ", una asesora financiera elaboró la siguiente gráfica que muestra las proyecciones ",
+        "de ingresos y gastos acumulados durante los primeros ", meses, " meses:"
+      )
+    },
+    negocio = c(
+      "café artesanal",
+      "repostería gourmet",
+      "accesorios artesanales"
+    )
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    plantilla = function(protagonista, meses) {
+      paste0(
+        "Para su proyecto de matemáticas financieras, Valentina y Santiago modelaron ",
+        "los costos e ingresos de una empresa de ", protagonista,
+        " durante ", meses, " meses. El resultado se muestra en la gráfica:"
+      )
+    },
+    negocio = c(
+      "diseño gráfico",
+      "fotografía de eventos",
+      "edición de video"
+    )
+  ),
+  # Tipo: Contexto institucional
+  list(
+    plantilla = function(protagonista, meses) {
+      paste0(
+        "El SENA publicó un estudio sobre emprendimientos juveniles. ",
+        "La siguiente gráfica corresponde a un negocio de ", protagonista,
+        " y muestra la evolución de los gastos e ingresos acumulados en ", meses, " meses:"
+      )
+    },
+    negocio = c(
+      "mantenimiento de jardines",
+      "clases particulares de refuerzo",
+      "pastelería a domicilio"
+    )
+  ),
+  # Tipo: Pregunta retorica
+  list(
+    plantilla = function(protagonista, meses) {
+      paste0(
+        "¿En qué momento un negocio empieza a ser rentable? ",
+        "La gráfica de un emprendimiento de ", protagonista,
+        " muestra las proyecciones de ingresos y gastos acumulados para los primeros ",
+        meses, " meses:"
+      )
+    },
+    negocio = c(
+      "venta de plantas ornamentales",
+      "confección de uniformes escolares",
+      "servicio de mensajería en bicicleta"
+    )
+  )
+)
+
+# Seleccionar contexto aleatorio
+ctx <- contextos[[sample(length(contextos), 1)]]
+negocio <- sample(ctx$negocio, 1)
+
+# ===================================================================
+# PARAMETROS DEL GRAFICO_CHART (aleatorios para diversidad)
+# ===================================================================
+
+# Mes de interseccion (punto de equilibrio): entre 4 y 8
+mes_equilibrio <- sample(4:8, 1)
+
+# Meses totales del análisis: entre 10 y 15
+meses_total <- sample(10:15, 1)
+
+# Valor en el punto de interseccion: multiplo de 500000, entre 1000000 y 4000000
+valor_equilibrio <- sample(2:8, 1) * 500000
+
+# Inversion inicial (intercepto de gastos): entre 20% y 50% del valor de equilibrio
+factor_inversion <- sample(20:50, 1) / 100
+inversion_inicial <- round(valor_equilibrio * factor_inversion / 100000) * 100000
+
+# Calcular pendientes
+pendiente_ingresos <- valor_equilibrio / mes_equilibrio
+pendiente_gastos <- (valor_equilibrio - inversion_inicial) / mes_equilibrio
+
+# Valores finales
+ingresos_final <- round(pendiente_ingresos * meses_total)
+gastos_final <- round(inversion_inicial + pendiente_gastos * meses_total)
+
+# Generar enunciado
+enunciado <- ctx$plantilla(negocio, meses_total)
+
+# Formatear valor equilibrio para mostrar
+formato_valor <- function(x) {
+  formatC(x, format = "f", digits = 0, big.mark = " ")
+}
+valor_eq_texto <- formato_valor(valor_equilibrio)
+
+# ===================================================================
+# POOL DE ERRORES CONCEPTUALES (regla ejercicios-metacognitivos.md)
+# Tema: interpretación del punto de interseccion de dos rectas
+# ===================================================================
+
+errores_conceptuales <- list(
+  list(
+    codigo = "FUN-INT-01",
+    nombre = "Confundir interseccion con máximo de ingresos",
+    descripcion_corta = paste0(
+      "Es el mes donde se obtiene la mayor cantidad de ingresos acumulados."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante confundió el punto de intersección de las dos rectas con el ",
+      "punto donde los ingresos alcanzan su valor máximo. En realidad, los ingresos ",
+      "acumulados siguen creciendo después del mes ", mes_equilibrio,
+      "; la intersección solo indica que en ese mes los ingresos igualan a los gastos."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre el punto de cruce de dos funciones y el punto máximo de una función. ",
+      "El estudiante no distingue entre un valor relativo (igualdad entre dos magnitudes) ",
+      "y un valor absoluto (máximo de una sola magnitud)."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos) { NA }
+  ),
+  list(
+    codigo = "FUN-INT-02",
+    nombre = "Interpretar como cese de gastos",
+    descripcion_corta = paste0(
+      "Es el mes desde cuando el emprendimiento no tendrá más gastos acumulados."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante interpretó que a partir del punto de intersección los gastos ",
+      "dejan de existir. Sin embargo, la gráfica muestra que la recta de gastos ",
+      "acumulados continúa creciendo después del mes ", mes_equilibrio,
+      ". La intersección solo marca el momento donde ingresos y gastos se igualan."
+    ),
+    causa_raiz = paste0(
+      "Lectura incorrecta de la gráfica: el estudiante asumió que la intersección ",
+      "marca el final de una de las funciones, cuando en realidad ambas rectas ",
+      "continúan más allá de ese punto."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos) { NA }
+  ),
+  list(
+    codigo = "FUN-INT-03",
+    nombre = "Igualar interseccion con inversion inicial",
+    descripcion_corta = paste0(
+      "Es el mes donde los ingresos acumulados son iguales a los gastos iniciales del emprendimiento."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante confundió el valor de la intersección ($",
+      valor_eq_texto,
+      ") con la inversión inicial del negocio ($",
+      formato_valor(inversion_inicial),
+      "). La intersección indica el punto donde ingresos y gastos acumulados se ",
+      "igualan, no donde los ingresos alcanzan el monto de la inversión inicial."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre el concepto de punto de equilibrio (ingresos = gastos acumulados) ",
+      "y el concepto de recuperación de la inversión inicial. Son conceptos financieros ",
+      "relacionados pero diferentes."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos) { NA }
+  ),
+  list(
+    codigo = "FUN-INT-04",
+    nombre = "Interpretar como máximo de ganancia",
+    descripcion_corta = paste0(
+      "Es el mes donde la ganancia del emprendimiento es la máxima posible."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante confundió el punto de intersección con el punto de máxima ganancia. ",
+      "En la intersección, la ganancia es exactamente cero (ingresos = gastos). ",
+      "Después del mes ", mes_equilibrio,
+      ", los ingresos superan a los gastos, por lo que la ganancia crece progresivamente. ",
+      "La máxima ganancia en el período de estudio se alcanza al final, en el mes ", meses_total, "."
+    ),
+    causa_raiz = paste0(
+      "El estudiante no comprende que la ganancia es la diferencia entre ingresos y ",
+      "gastos (Ganancia = Ingresos - Gastos). En el punto de intersección esa diferencia ",
+      "es cero, no máxima."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos) { NA }
+  ),
+  list(
+    codigo = "FUN-INT-05",
+    nombre = "Interpretar como pendiente",
+    descripcion_corta = paste0(
+      "Es el mes donde la velocidad de crecimiento de los ingresos es igual a la de los gastos."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante confundió la igualdad de valores (f(x) = g(x)) con la igualdad ",
+      "de pendientes (f'(x) = g'(x)). En el punto de intersección las dos funciones ",
+      "tienen el mismo valor, pero sus pendientes son diferentes durante todo el período: ",
+      "la pendiente de ingresos es $", formato_valor(round(pendiente_ingresos)),
+      "/mes y la de gastos es $", formato_valor(round(pendiente_gastos)), "/mes."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre el valor de una función en un punto y su razón de cambio (pendiente). ",
+      "La intersección de dos rectas implica igualdad de ordenadas, no de pendientes. ",
+      "Las pendientes iguales indicarían rectas paralelas."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos) { NA }
+  )
+)
+
+# Respuesta correcta
+respuesta_correcta <- paste0(
+  "Es el mes donde los ingresos acumulados igualan a los gastos acumulados."
+)
+
+# ===================================================================
+# SELECT_ERROR_AND_BUILD_OPTIONS
+# ===================================================================
+
+# Filtrar errores aplicables
+params <- list(mes_equilibrio = mes_equilibrio, meses_total = meses_total)
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  err$precondicion(params)
+}))
+
+# Seleccionar 3 errores aleatorios como distractores
+distractores_idx <- sample(errores_aplicables_idx, 3)
+error_sel_idx <- distractores_idx[1]
+error_sel <- errores_conceptuales[[error_sel_idx]]
+
+# Construir opciones: 1 correcta + 3 distractores
+opciones <- c(
+  list(list(texto = respuesta_correcta, es_correcta = TRUE, codigo = "CORRECTA")),
+  lapply(distractores_idx, function(i) {
+    list(
+      texto = errores_conceptuales[[i]]$descripcion_corta,
+      es_correcta = FALSE,
+      codigo = errores_conceptuales[[i]]$codigo
+    )
+  })
+)
+
+# Mezclar opciones
+orden <- sample(length(opciones))
+opciones_mezcladas <- opciones[orden]
+
+# Vector solución
+sol <- rep(0L, length(opciones_mezcladas))
+idx_correcta <- which(sapply(opciones_mezcladas, function(o) o$es_correcta))
+sol[idx_correcta] <- 1L
+
+# Letra correcta
+letras <- c("A", "B", "C", "D")
+letra_correcta <- letras[idx_correcta]
+
+# Textos para answerlist
+opciones_texto <- sapply(opciones_mezcladas, function(o) o$texto)
+
+# ===================================================================
+# POOL DE REFLEXIONES METACOGNITIVAS
+# ===================================================================
+
+reflexiones_metacognitivas <- list(
+  paste0(
+    "Identificar errores de interpretación gráfica nos ayuda a desarrollar ",
+    "una lectura más precisa de las relaciones entre funciones. ",
+    "La metacognición en matemáticas implica verificar siempre lo que ",
+    "una gráfica realmente muestra, no lo que asumimos que muestra."
+  ),
+  paste0(
+    "El punto de intersección de dos funciones tiene un significado específico: ",
+    "es el valor de la variable independiente donde ambas funciones tienen el mismo ",
+    "valor. En contextos financieros, este concepto se conoce como punto de equilibrio."
+  ),
+  paste0(
+    "Un error frecuente es confundir el punto de intersección con el punto máximo, ",
+    "mínimo o de mayor crecimiento. Es importante leer la gráfica distinguiendo entre ",
+    "valores absolutos de una función y relaciones entre dos funciones."
+  ),
+  paste0(
+    "Para interpretar correctamente una gráfica con dos funciones, es útil hacerse ",
+    "tres preguntas: (1) ¿Qué representa cada eje? (2) ¿Qué representa cada función? ",
+    "(3) ¿Qué significa geométricamente el punto donde se cruzan?"
+  )
+)
+
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# ===================================================================
+# GENERACION DEL TIKZ_CHART (dinámico desde R)
+# ===================================================================
+
+# Escala Y: dividir por factor para que quepa en TikZ
+y_max_tikz <- max(ingresos_final, gastos_final) * 1.15
+factor_y <- y_max_tikz / 9  # Escala para 9 unidades TikZ verticales
+x_max_tikz <- meses_total + 3  # Espacio para etiquetas
+
+# Coordenadas TikZ
+tikz_gastos_y0 <- inversion_inicial / factor_y
+tikz_gastos_y1 <- gastos_final / factor_y
+tikz_ingresos_y1 <- ingresos_final / factor_y
+tikz_eq_y <- valor_equilibrio / factor_y
+
+# Posiciones de etiquetas
+tikz_label_ing_y <- tikz_ingresos_y1 - 0.3
+tikz_label_gas_y <- tikz_gastos_y1 - 0.3
+
+# Función para compilar TikZ a PNG (patrón validado Venn)
+compilar_tikz <- function(tex_code, nombre_base) {
+  tex_file <- paste0(nombre_base, ".tex")
+  pdf_file <- paste0(nombre_base, ".pdf")
+  png_file <- paste0(nombre_base, ".png")
+  writeLines(tex_code, tex_file)
+  system2("pdflatex",
+          c("-interaction=nonstopmode", "-halt-on-error", tex_file),
+          stdout = FALSE, stderr = FALSE)
+  if (!file.exists(pdf_file)) {
+    stop(paste("Error compilando TikZ:", nombre_base))
+  }
+  system2("magick",
+          c("-density", "200", pdf_file, "-quality", "95",
+            "-background", "white", "-flatten", png_file))
+  if (!file.exists(png_file)) {
+    stop(paste("Error convirtiendo a PNG:", nombre_base))
+  }
+  for (ext in c(".tex", ".pdf", ".aux", ".log")) {
+    f <- paste0(nombre_base, ext)
+    if (file.exists(f)) file.remove(f)
+  }
+  invisible(png_file)
+}
+
+# Generar código TikZ completo (standalone)
+grafico_tikz_completo <- paste0(
+  "\\documentclass[border=5mm]{standalone}\n",
+  "\\usepackage{tikz}\n",
+  "\\usepackage[utf8]{inputenc}\n",
+  "\\usepackage[T1]{fontenc}\n",
+  "\\usetikzlibrary{arrows.meta}\n",
+  "\\begin{document}\n",
+  "\\begin{tikzpicture}[scale=0.85]\n",
+  "\\tikzset{\n",
+  "  axis/.style={-{Stealth[length=3mm]}, thick},\n",
+  "  gastos/.style={orange!85!red, line width=1.8pt},\n",
+  "  ingresos/.style={blue!75!black, line width=1.8pt},\n",
+  "  dashed guide/.style={dashed, gray!50, thin},\n",
+  "}\n",
+  "\\draw[axis] (0,0) -- (", x_max_tikz, ",0) node[below=4pt, font=\\bfseries] {Mes};\n",
+  "\\draw[axis] (0,0) -- (0,10);\n",
+  "\\node[anchor=south east, font=\\footnotesize] at (-0.1,9.8) {\\textcircled{\\normalfont\\$}};\n",
+  "\\node[anchor=south west, font=\\footnotesize\\itshape] at (0.35,9.8) {Dinero en pesos};\n",
+  "\\draw[gastos] (0,", round(tikz_gastos_y0, 2), ") -- (",
+    meses_total, ",", round(tikz_gastos_y1, 2), ");\n",
+  "\\fill[orange!85!red] (", meses_total, ",", round(tikz_gastos_y1, 2), ") circle (4pt);\n",
+  "\\draw[ingresos] (0,0) -- (",
+    meses_total, ",", round(tikz_ingresos_y1, 2), ");\n",
+  "\\fill[blue!75!black] (", meses_total, ",", round(tikz_ingresos_y1, 2), ") circle (4pt);\n",
+  "\\draw[dashed guide] (", mes_equilibrio, ",0) -- (",
+    mes_equilibrio, ",", round(tikz_eq_y, 2), ");\n",
+  "\\draw[dashed guide] (0,", round(tikz_eq_y, 2), ") -- (",
+    mes_equilibrio, ",", round(tikz_eq_y, 2), ");\n",
+  "\\fill[black] (", mes_equilibrio, ",", round(tikz_eq_y, 2), ") circle (3pt);\n",
+  "\\node[below=3pt, font=\\bfseries] at (", mes_equilibrio, ",0) {",
+    mes_equilibrio, "};\n",
+  "\\node[left=3pt, font=\\footnotesize] at (0,", round(tikz_eq_y, 2),
+    ") {", gsub(" ", "\\\\,", valor_eq_texto), "};\n",
+  "\\draw[blue!75!black, thin] (", meses_total + 0.15, ",",
+    round(tikz_ingresos_y1, 2), ") -- (",
+    meses_total + 1, ",", round(tikz_label_ing_y, 2), ");\n",
+  "\\node[right, blue!75!black, font=\\footnotesize, align=left] at (",
+    meses_total + 1, ",", round(tikz_label_ing_y, 2),
+    ") {Ingresos\\\\acumulados};\n",
+  "\\draw[orange!85!red, thin] (", meses_total + 0.15, ",",
+    round(tikz_gastos_y1, 2), ") -- (",
+    meses_total + 1, ",", round(tikz_label_gas_y, 2), ");\n",
+  "\\node[right, orange!85!red, font=\\footnotesize, align=left] at (",
+    meses_total + 1, ",", round(tikz_label_gas_y, 2),
+    ") {Gastos\\\\acumulados};\n",
+  "\\end{tikzpicture}\n",
+  "\\end{document}"
+)
+
+# Compilar TikZ a PNG
+grafico_png <- compilar_tikz(grafico_tikz_completo, "grafico_equilibrio")
+
+# ===================================================================
+# TEXTOS PARA SOLUTION
+# ===================================================================
+
+# Análisis de cada opcion
+sol_texts <- sapply(seq_along(opciones_mezcladas), function(i) {
+  opt <- opciones_mezcladas[[i]]
+  if (opt$es_correcta) {
+    paste0(
+      "**Opción ", letras[i], " (CORRECTA):** ", opt$texto, " ",
+      "En el punto de intersección, ambas rectas alcanzan el mismo valor ($",
+      valor_eq_texto, "), lo que significa que los ingresos acumulados y los gastos ",
+      "acumulados son iguales. En un contexto financiero, este punto se denomina ",
+      "**punto de equilibrio** (*break-even point*): antes de este mes el negocio ",
+      "opera con pérdidas (gastos > ingresos) y después genera ganancias (ingresos > gastos)."
+    )
+  } else {
+    err_info <- errores_conceptuales[[which(sapply(errores_conceptuales,
+      function(e) e$codigo == opt$codigo))]]
+    paste0(
+      "**Opción ", letras[i], " (INCORRECTA - ", err_info$codigo, "):** ",
+      opt$texto, " ",
+      err_info$descripcion_larga, " ",
+      "*Causa raíz:* ", err_info$causa_raiz
+    )
+  }
+})
+```
+
+Question
+========
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(enunciado)
+```
+
+```{r grafico, echo=FALSE, results="asis"}
+cat(paste0("![](", grafico_png, "){width=80%}\n"))
+```
+
+¿Qué representa el punto donde las rectas se intersecan?
+
+```{r questionlist, echo=FALSE, results='asis'}
+answerlist(opciones_texto, markup = "markdown")
+```
+
+Solution
+========
+
+### Análisis del punto de intersección
+
+El punto de intersección de las rectas de ingresos y gastos acumulados se encuentra en el **mes `r mes_equilibrio`**, donde ambos valores son iguales a **$`r valor_eq_texto`**.
+
+Este punto se denomina **punto de equilibrio** (*break-even point*) y tiene un significado financiero preciso:
+
+- **Antes del mes `r mes_equilibrio`**: los gastos acumulados superan a los ingresos acumulados, por lo que el negocio opera con pérdidas.
+- **En el mes `r mes_equilibrio`**: ingresos acumulados = gastos acumulados = $`r valor_eq_texto`. La ganancia neta es $0.
+- **Después del mes `r mes_equilibrio`**: los ingresos acumulados superan a los gastos, y el negocio genera ganancias.
+
+### Análisis de cada opción
+
+```{r solucion_opciones, echo=FALSE, results='asis'}
+for (txt in sol_texts) {
+  cat(txt, "\n\n")
+}
+```
+
+### Procedimiento correcto de interpretación
+
+**Paso 1.** Identificar qué representa cada eje.
+
+- Eje horizontal: meses (variable independiente)
+- Eje vertical: dinero en pesos (variable dependiente)
+
+**Paso 2.** Identificar qué representa cada recta.
+
+- Recta azul: ingresos acumulados $I(t) = `r formato_valor(round(pendiente_ingresos))` \cdot t$
+- Recta naranja: gastos acumulados $G(t) = `r formato_valor(inversion_inicial)` + `r formato_valor(round(pendiente_gastos))` \cdot t$
+
+**Paso 3.** Interpretar el punto de intersección.
+
+En $t = `r mes_equilibrio`$:
+$$I(`r mes_equilibrio`) = G(`r mes_equilibrio`) = \$`r valor_eq_texto`$$
+
+Esto significa que los ingresos acumulados son **iguales** a los gastos acumulados.
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+1. Leer las etiquetas de las rectas antes de interpretar el punto de cruce.
+2. Verificar que la interpretación sea consistente con lo que ocurre **antes y después** del punto de intersección.
+3. Recordar: la intersección de dos funciones indica igualdad de valores ($f(x) = g(x)$), no máximo, mínimo ni fin de una función.
+
+```{r solutionlist, echo=FALSE, results='asis'}
+answerlist(
+  ifelse(as.logical(sol), "Correcta", "Incorrecta"),
+  markup = "markdown"
+)
+```
+
+Meta-information
+================
+exname: interseccion_ingresos_gastos_metacognitivo_interpretacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exshuffle: FALSE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Numerico-Variacional
+exextra[Afirmacion]: Interpretar el significado contextual del punto de interseccion de dos funciones lineales
+exextra[Evidencia]: El estudiante interpreta el punto de equilibrio financiero a partir de la grafica de ingresos y gastos acumulados
+exextra[Nivel]: 2
+exextra[DOK]: 2
+exextra[Bloom]: Comprender
+exextra[SOLO]: Multistructural
+exextra[TipoMetacognicion]: analisis_error

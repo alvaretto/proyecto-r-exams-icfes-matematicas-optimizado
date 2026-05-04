@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-05-03
+**Última actualización:** 2026-05-03 (post-orquestador-schoice + fix `\pandocbounded` + regla #18 markdown-imagenes-pdf)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -24,7 +24,8 @@
 | Errores de gráficos | `.claude/docs/patrones-errores-conocidos.md` (Errores 4-6) | Catálogo |
 | Errores de coherencia semántica/RNG | `.claude/docs/patrones-errores-conocidos.md` (Errores 7-10) | Catálogo |
 | Errores de infraestructura `.claude/` | `.claude/docs/patrones-errores-conocidos.md` (Errores 11-15) | Catálogo |
-| Reglas absolutas (17) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
+| Errores de pipeline render PDF + coherencia Solution | `.claude/docs/patrones-errores-conocidos.md` (Errores 16-17) | Catálogo |
+| Reglas absolutas (18) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
 | Decisiones arquitectónicas | `.claude/docs/ADR/*.md` | Inmutable |
 | Casos resueltos individuales | `.claude/docs/casos-resueltos/*.md` | Histórico |
 | Lecciones de usuario / preferencias | `~/.claude/projects/.../memory/MEMORY.md` | Personal |
@@ -70,9 +71,16 @@
 | 14 | `npm error Invalid Version` en `claude-flow doctor` | Dependencia con `package.json` malformado | Aceptar CLI a medias; no usar en flujo crítico | §Error 14 |
 | 15 | "Memory package not available" en SessionStart | Bridge sin paquete npm de embeddings | Vivir sin embeddings; `MEMORY.md` cubre | §Error 15 |
 
+### 2.5 Pipeline render PDF + coherencia Solution (sesión orquestador-schoice 2026-05-03)
+
+| # | Síntoma | Causa raíz | Fix | Fuente |
+|---|---|---|---|---|
+| 16 | `! Undefined control sequence. l.5 \pandocbounded` al compilar PDF | pandoc 3.x envuelve `\includegraphics` en `\pandocbounded{...}` no definido en templates LaTeX de R-exams cuando `![](file.png)` no tiene atributo `width` | Reemplazar `![](file.png)` por `cat("![](file.png){width=80%}\n")` en bloque R | §Error 16 + regla `markdown-imagenes-pdf.md` |
+| 17 | Solution dice "Opción A" pero answerlist marca (c) como correcta | `exshuffle: TRUE` re-mezcla opciones después de que `letra_correcta` ya fue evaluada, sin actualizar el texto de la Solution | `exshuffle: FALSE` + mezcla interna con `sample()` (ya aleatoriza); `letra_correcta` calculada DESPUÉS del sample | §Error 17 + regla `codigo-rmd.md` #6 + `graficos-como-opciones.md` |
+
 ---
 
-## 3. Reglas críticas (17, todas obligatorias)
+## 3. Reglas críticas (18, todas obligatorias)
 
 | # | Regla | Archivo | Categoría |
 |---|---|---|---|
@@ -92,7 +100,8 @@
 | 14 | Routing modelos Opus/Sonnet/Haiku | `modelo-routing-obligatorio.md` | Ingeniería |
 | 15 | Stress Test Visual FASE 2H | (en `stress-test-visual` SKILL) | Validación |
 | 16 | Workflow State Enforcement (gate) | `workflow-state-enforcement.md` | Workflow |
-| **17** | **Infraestructura `.claude/` protegida** | `infraestructura-protegida.md` | **Ingeniería** |
+| 17 | Infraestructura `.claude/` protegida | `infraestructura-protegida.md` | Ingeniería |
+| **18** | **Markdown-imágenes para PDF (anti `\pandocbounded`)** | **`markdown-imagenes-pdf.md`** | **Ingeniería** |
 
 ---
 
@@ -136,7 +145,8 @@ Ver `.claude/CLAUDE.md` sección "Cambios v3.X" o `.claude/docs/CHANGELOG.md`. R
 | 3.6.0 | 2026-02-14 | Stress Test Visual (FASE 2H) |
 | 3.7.0 | 2026-03-23 | Skills de revisión (`/revisar-schoice`, `/revisar-cloze`) |
 | 3.8.0 | 2026-04-10 | Drift hooks/tests/CI/docs resuelto |
-| **3.9.0** | **2026-05-03** | **Convivencia Ruflo + regla #17 + orquestador-schoice** |
+| 3.9.0 | 2026-05-03 | Convivencia Ruflo + regla #17 + orquestador-schoice |
+| **3.10.0** | **2026-05-03** | **Errores 16-17 + regla #18 anti-`\pandocbounded` + FASE 2I + test_pandocbounded_y_solution_coherence.R** |
 
 ---
 
