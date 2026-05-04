@@ -322,3 +322,82 @@ avances-*.docx
 # =============================================================================
 ontologia/ejercicios.ttl
 ontologia/.pending_registration
+
+# Codex local configuration
+.codex/
+
+# Claude Flow runtime data
+.claude-flow/data/
+.claude-flow/logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Claude Code local config
+CLAUDE.local.md
+
+# =============================================================================
+# Ruflo / claude-flow — artefactos de plataforma externa (ADR-001, sesión 2026-05-03)
+# Decisión: NO versionar el árbol Ruflo completo (5000+ archivos) por ahora.
+# Si en el futuro se decide commitearlo selectivamente, ver Hallazgo 3C de la sesión.
+# =============================================================================
+
+# Runtime y datos Ruflo a nivel proyecto
+.claude-flow/
+.agents/
+
+# Backups y snapshots históricos en .claude/
+.claude/backups/
+.claude/deprecated/
+.claude/logs/
+.claude/Mermaid_Chart.txt
+
+# Settings backups (mantenemos los recientes en repo, ignoramos rotaciones futuras)
+.claude/settings.json.pre-*
+
+# Tarball pre-Ruflo (red de seguridad — NO commitear, demasiado grande)
+.claude.pre-ruflo-*.tar.gz
+
+# Wrappers y helpers Ruflo (regenerables con npx ruflo init)
+.claude/helpers/
+
+# Ecosistema agentes/skills/commands Ruflo (no ICFES — regenerables)
+.claude/agents/analysis/
+.claude/agents/architecture/
+.claude/agents/browser/
+.claude/agents/consensus/
+.claude/agents/core/
+.claude/agents/custom/
+.claude/agents/data/
+.claude/agents/development/
+.claude/agents/devops/
+.claude/agents/documentation/
+.claude/agents/flow-nexus/
+.claude/agents/github/
+.claude/agents/goal/
+.claude/agents/optimization/
+.claude/agents/payments/
+.claude/agents/sona/
+.claude/agents/sparc/
+.claude/agents/specialized/
+.claude/agents/sublinear/
+.claude/agents/swarm/
+.claude/agents/templates/
+.claude/agents/testing/
+.claude/agents/v3/
+.claude/commands/analysis/
+.claude/commands/automation/
+.claude/commands/github/
+.claude/commands/hooks/
+.claude/commands/monitoring/
+.claude/commands/optimization/
+.claude/commands/sparc/
+.claude/commands/claude-flow-help.md
+.claude/commands/claude-flow-memory.md
+.claude/commands/claude-flow-swarm.md
+
+# Skills Ruflo (no ICFES) — regenerables con ruflo init
+# (Si en el futuro se identifican skills Ruflo específicos a versionar, agregar
+# excepciones explícitas con !.claude/skills/<nombre>/)

@@ -154,6 +154,11 @@ suites <- list(
     archivo = "tests/testthat/test_stress_test_visual.R",
     critico = TRUE,
     watch = c("stress_test_visual", "test_stress_test_visual")
+  ),
+  list(
+    nombre = "Infraestructura .claude/ (Regla #17)",
+    archivo = "tests/testthat/test_infraestructura_claude.R",
+    critico = TRUE
   )
 )
 

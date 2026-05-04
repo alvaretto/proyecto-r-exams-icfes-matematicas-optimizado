@@ -17,6 +17,13 @@
 9. [Error: ##ANSWERi## mal ubicados en ejercicio CLOZE](#error-9-answeri-mal-ubicados-en-ejercicio-cloze)
 10. [Error: NA en comparación while con calcula()](#error-10-na-en-comparación-while-con-calcula)
 
+### Categoría: Infraestructura `.claude/` (sesión Ruflo 2026-05-03)
+11. [Error: Drift silencioso de hooks tras instalación de plataforma externa](#error-11-drift-silencioso-de-hooks-tras-instalación-de-plataforma-externa)
+12. [Error: `CLAUDE.md` raíz sobrescrito por plantilla genérica de plataforma](#error-12-claudemd-raíz-sobrescrito-por-plantilla-genérica-de-plataforma)
+13. [Error: MCP registrado pero sin conectar (paquete fantasma)](#error-13-mcp-registrado-pero-sin-conectar-paquete-fantasma)
+14. [Error: CLI claude-flow falla con `npm error Invalid Version`](#error-14-cli-claude-flow-falla-con-npm-error-invalid-version)
+15. [Error: Auto-memory bridge sin paquete instalado (`Memory package not available`)](#error-15-auto-memory-bridge-sin-paquete-instalado)
+
 ---
 
 ## Error 1: Imagen PNG no encontrada en compilación PDF
@@ -1476,3 +1483,297 @@ Archivo corregido: `diagrama_venn_generos_musicales_metacognitivo_argumentacion_
 | Fecha | Archivo | Semillas fallidas | Verificado |
 |-------|---------|-------------------|------------|
 | 2026-02-27 | diagrama_venn_generos_musicales (Venn) | 2/200 → 0/200 | ✓ |
+
+---
+
+## Error 11: Drift silencioso de hooks tras instalación de plataforma externa
+
+### ❌ Síntoma
+
+Una herramienta como Ruflo, claude-flow, ruv-swarm o flow-nexus se instala (`npx ... init` o equivalente) y reemplaza `.claude/settings.json`. Los hooks ICFES siguen presentes en `.claude/hooks/*.sh` (ejecutables, sintaxis válida) pero **`settings.json` ya no los carga**. El nuevo handler de la plataforma (típicamente `hook-handler.cjs`) no invoca los `.sh` ICFES.
+
+**Verificación:**
+```bash
+grep -E "rmd-gate|post-exams2|ortografia" .claude/helpers/<wrapper>.cjs
+# Si retorna 0 → wrapper NO invoca hooks ICFES
+```
+
+**Detección tardía:** el drift puede pasar desapercibido durante semanas porque las reglas siguen documentadas y los binarios siguen existiendo. La única forma fiable de detectarlo es ejecutar `tests/testthat/test_infraestructura_claude.R` (regla #17, invariante I-3).
+
+### 🔍 Causa Raíz
+
+Las herramientas externas tratan `.claude/settings.json` como su propio archivo de configuración y lo sobrescriben en `init`. No respetan los hooks pre-existentes ni preguntan al usuario antes de reemplazar.
+
+### ✅ Solución Verificada (Ruta B — Convivencia)
+
+Re-enganchar los hooks ICFES en paralelo a los del wrapper externo:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "sh -c 'exec node \"${CLAUDE_PROJECT_DIR:-.}/.claude/helpers/hook-handler.cjs\" pre-edit'", "timeout": 5000 },
+          { "type": "command", "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/pre-write-rmd-gate.sh\"", "timeout": 5000 },
+          { "type": "command", "command": "echo 'TILDES OBLIGATORIAS...'" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "sh -c 'exec node \"${CLAUDE_PROJECT_DIR:-.}/.claude/helpers/hook-handler.cjs\" post-bash'", "timeout": 5000 },
+          { "type": "command", "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/post-exams2-validation.sh\"", "timeout": 120000 }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### 🧪 Validación
+
+```bash
+# Test live: el gate bloquea correctamente
+mkdir -p A-Produccion/01-En-PreDesarrollo/_test_$$
+echo '{"tool_input":{"file_path":"A-Produccion/01-En-PreDesarrollo/_test_'"$$"'/d.Rmd","content":"x"}}' \
+  | bash .claude/hooks/pre-write-rmd-gate.sh
+# Esperado: exit 0 con mensaje "⛔ GATE: Archivo .Rmd bloqueado..."
+rmdir A-Produccion/01-En-PreDesarrollo/_test_$$
+```
+
+### 📋 Checklist de Prevención
+
+- [ ] ANTES de cualquier `npx ... init`: snapshot `.claude/` con tar (regla #17 paso 1).
+- [ ] DESPUÉS del init: ejecutar `Rscript tests/testthat/test_infraestructura_claude.R`.
+- [ ] Si el test falla: re-enganchar los hooks ICFES en `settings.json` o revertir.
+
+### 📚 Referencias
+
+- Regla #17: `.claude/rules/infraestructura-protegida.md`
+- ADR-001: `.claude/docs/ADR/001-convivencia-ruflo-icfes.md`
+- Backup pre-Ruflo: `.claude.pre-ruflo-20260425-123652.tar.gz`
+- Backup pre-rehook: `.claude/settings.json.pre-icfes-rehook-20260503-171742`
+
+### 📅 Historial
+
+| Fecha | Plataforma | Hooks perdidos | Detección | Recuperación |
+|-------|-----------|----------------|-----------|--------------|
+| 2026-04-25 | Ruflo (claude-flow v3) | `pre-write-rmd-gate.sh`, `post-exams2-validation.sh` | 8 días después | commit `fb6ba030` (2026-05-03) |
+
+---
+
+## Error 12: `CLAUDE.md` raíz sobrescrito por plantilla genérica de plataforma
+
+### ❌ Síntoma
+
+El archivo `CLAUDE.md` raíz, que era el índice ICFES con identidad del repo, queda reemplazado por una plantilla genérica del estilo `# Claude Code Configuration - <Plataforma> V<N>`. Las reglas ICFES (16 críticas) ya no aparecen en la primera carga que hace Claude Code al abrir el repo.
+
+### 🔍 Causa Raíz
+
+`npx ... init` y wizards similares reemplazan `CLAUDE.md` raíz como parte de su instalación, asumiendo que el repo es nuevo o que el archivo no existe. No respetan contenido pre-existente.
+
+**Particularidad descubierta en sesión 2026-05-03:** el `CLAUDE.md` raíz nunca había estado versionado en git. Aparecía como `??` (untracked). Esto significa que NO se podía restaurar desde git history porque nunca se había commiteado.
+
+### ✅ Solución Verificada (Mezcla con priority ICFES)
+
+Insertar al inicio del `CLAUDE.md` raíz un bloque ICFES priority de ~47 líneas con:
+- Identidad del repo: "# Repositorio ICFES R/exams — Configuración del Repo".
+- Pointer a `@.claude/CLAUDE.md` (el índice real).
+- Reglas absolutas resumidas (no sobrescribir hooks, no editar inmutables, etc.).
+- Declaración explícita: "cuando Ruflo y ICFES entren en conflicto, ICFES gana".
+
+Conservar el contenido externo abajo, marcado como descriptivo:
+
+```markdown
+# Repositorio ICFES R/exams — Configuración del Repo
+
+> **IDENTIDAD DEL REPO:** Sistema de generación automatizada de ejercicios ICFES tipo
+> SCHOICE/CLOZE en R/exams. NO es un demo de claude-flow / Ruflo, ni un repo genérico.
+
+## Fuente de verdad operativa
+[...47 líneas ICFES...]
+
+@.claude/CLAUDE.md
+
+---
+
+# Claude Code Configuration - RuFlo V3
+
+> **Nota:** lo que sigue es la configuración de plataforma Ruflo, instalada el
+> 2026-04-25. Es **descriptiva**, no normativa para este repo.
+[...244 líneas Ruflo originales...]
+```
+
+### 🧪 Validación
+
+```bash
+head -1 CLAUDE.md | grep -qE "(ICFES|Repositorio ICFES R/exams)" && echo "I-1 OK"
+```
+
+### 📋 Checklist de Prevención
+
+- [ ] Versionar `CLAUDE.md` raíz en git desde el primer momento (no dejarlo untracked).
+- [ ] Antes de cualquier `init`: `cp CLAUDE.md CLAUDE.md.pre-<plataforma>-<TS>`.
+- [ ] Después: verificar invariante I-1 (regla #17).
+
+### 📚 Referencias
+
+- Regla #17: `.claude/rules/infraestructura-protegida.md` (invariante I-1).
+- ADR-001 §"Mezcla de CLAUDE.md raíz".
+- Commit de fix: `e8bcc2b3` (2026-05-03).
+
+### 📅 Historial
+
+| Fecha | Plataforma | Restauración |
+|-------|-----------|--------------|
+| 2026-04-25 | Ruflo | Mezcla aplicada en commit `e8bcc2b3` (2026-05-03) |
+
+---
+
+## Error 13: MCP registrado pero sin conectar (paquete fantasma)
+
+### ❌ Síntoma
+
+`claude mcp list` muestra:
+```
+ruflo: npx -y ruflo@latest mcp start - ✗ Failed to connect
+```
+
+El MCP está en `~/.claude.json` pero al arrancar la sesión, el comando falla. Las herramientas `mcp__<plataforma>__*` que aparecen en la lista de tools diferidas no son invocables.
+
+### 🔍 Causa Raíz
+
+Tres posibles:
+
+1. El paquete npm no existe (versión retirada de npm registry).
+2. El paquete existe pero `npx -y <paquete>@latest` falla por incompatibilidad de Node, peer dependencies rotas, o `npm error Invalid Version`.
+3. El paquete corre pero el comando `mcp start` falla por config inválida.
+
+### ✅ Solución Verificada
+
+Si la funcionalidad ya está cubierta por otro MCP (ej. `ruv-swarm` y `flow-nexus` cubren coordinación + memoria), **desregistrar el MCP roto**:
+
+```bash
+claude mcp remove <nombre>
+```
+
+Esto edita `~/.claude.json` (fuera del repo). Verificar:
+
+```bash
+claude mcp list 2>&1 | grep -v "✗ Failed" | head
+```
+
+Si la funcionalidad NO está cubierta por otro MCP:
+1. `npx -y <paquete>@latest --version` para diagnosticar.
+2. Probar versiones anteriores: `npx <paquete>@<version-anterior>`.
+3. Revisar `/home/bootcamp/.npm/_logs/<fecha>-debug-0.log` para detalles.
+
+### 📋 Checklist de Prevención
+
+- [ ] Cada vez que `claude mcp list` reporte `✗ Failed to connect`: investigar de inmediato.
+- [ ] No registrar MCPs experimentales en config global; usar config local del proyecto.
+
+### 📅 Historial
+
+| Fecha | MCP | Acción tomada |
+|-------|-----|---------------|
+| 2026-05-03 | `ruflo` | Desregistrado (cubierto por `ruv-swarm` + `flow-nexus`) |
+
+---
+
+## Error 14: CLI claude-flow falla con `npm error Invalid Version`
+
+### ❌ Mensaje de Error
+
+```
+$ npx @claude-flow/cli@latest doctor
+npm warn exec The following package was not found and will be installed: @claude-flow/cli@3.6.21
+npm error Invalid Version:
+npm error A complete log of this run can be found in: /home/bootcamp/.npm/_logs/<fecha>-debug-0.log
+```
+
+### 🔍 Causa Raíz
+
+El paquete `@claude-flow/cli` tiene un `package.json` (propio o de un dependiente) con un campo `version` malformado o incompatible con la versión de npm/Node instalada. El error es de la cadena de dependencias, no del comando que se ejecuta.
+
+### ✅ Solución (parcial — aceptación a medias)
+
+El CLI npm de claude-flow no se usa en el día a día del workflow ICFES. Los componentes locales (`hook-handler.cjs` en `.claude/helpers/`, agentes Ruflo en `.claude/agents/`, skills en `.claude/skills/`) funcionan independientemente del CLI.
+
+**Conclusión adoptada:** aceptar el "Ruflo a medias". El CLI roto no bloquea el workflow ICFES.
+
+**Si en el futuro se necesita el CLI:**
+```bash
+# Diagnóstico
+cat /home/bootcamp/.npm/_logs/<fecha>-debug-0.log | grep -E "Invalid|version"
+
+# Probar versiones anteriores
+npx @claude-flow/cli@3.5.0 doctor
+npx @claude-flow/cli@3.4.0 doctor
+
+# Limpiar caché npm
+npm cache clean --force
+```
+
+### 📋 Checklist de Prevención
+
+- [ ] No depender del CLI `claude-flow` para flujos críticos del workflow ICFES.
+- [ ] Toda funcionalidad importante debe replicarse en scripts locales (`.claude/scripts/`).
+
+### 📅 Historial
+
+| Fecha | Versión rota | Estado |
+|-------|--------------|--------|
+| 2026-05-03 | `@claude-flow/cli@3.6.21` | Aceptado a medias (no usado en flujo crítico) |
+
+---
+
+## Error 15: Auto-memory bridge sin paquete instalado
+
+### ❌ Síntoma
+
+En cada SessionStart, el log muestra:
+```
+[AutoMemory] Importing auto memory files into bridge...
+  Memory package not available — skipping auto memory import
+```
+
+`node .claude/helpers/auto-memory-hook.mjs status` retorna:
+```
+Package:        ❌ Not found
+Store:          ⏸ Not initialized
+LearningBridge: ✅ Enabled
+MemoryGraph:    ✅ Enabled
+AgentScopes:    ✅ Enabled
+```
+
+### 🔍 Causa Raíz
+
+El bridge JS de auto-memoria (parte de Ruflo) está OK, pero la implementación del store (probablemente `@ruflo/agentdb` o `@claude-flow/memory`) no está instalada como paquete npm. El bridge intenta cargarlo dinámicamente, falla silenciosamente y omite la importación.
+
+### ✅ Solución (parcial — vivir sin embeddings)
+
+La auto-memoria de Claude Code (los archivos `~/.claude/projects/*/memory/*.md`) sigue funcionando como siempre — son archivos de texto que Claude lee directamente. Lo que NO se obtiene es la búsqueda semántica vectorial con embeddings ONNX 384-dim.
+
+**Conclusión adoptada:** vivir sin embeddings. Los `MEMORY.md` siguen siendo la fuente de verdad de las lecciones del usuario.
+
+**Si en el futuro se quiere búsqueda semántica:**
+1. Identificar el paquete npm faltante (`grep -nE "require|import" .claude/helpers/auto-memory-hook.mjs`).
+2. `npm install --save <paquete>`.
+3. Verificar: `node .claude/helpers/auto-memory-hook.mjs status` debe reportar `Package: ✅ Found`.
+4. Importación inicial: `node .claude/helpers/auto-memory-hook.mjs import`.
+
+### 📋 Checklist de Prevención
+
+- [ ] No depender de embeddings semánticos para flujos críticos.
+- [ ] Mantener `MEMORY.md` archivos como fuente primaria; embeddings son una feature extra.
+
+### 📅 Historial
+
+| Fecha | Estado | Acción |
+|-------|--------|--------|
+| 2026-05-03 | Detectado tras instalación Ruflo | Aceptado, los `MEMORY.md` cubren la necesidad |

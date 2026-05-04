@@ -31,6 +31,13 @@
    de ortografía.
 6. **Subproyectos** = directorios de ejercicio bajo `A-Produccion/`, cada uno con su
    propio `ejercicio_state.json`. NO son submódulos npm/git.
+7. **Infraestructura `.claude/` protegida** (regla #17): antes de ejecutar
+   cualquier `npx ... init`, `init --force` o `doctor --fix` de plataformas externas
+   (Ruflo, claude-flow, ruv-swarm, flow-nexus), hacer snapshot con `tar -czf
+   .claude.pre-<plataforma>-<TS>.tar.gz .claude/`. Después: ejecutar
+   `Rscript tests/testthat/test_infraestructura_claude.R` para verificar
+   invariantes I-1 a I-7. Si fallan, revertir antes de continuar. Ver
+   `.claude/rules/infraestructura-protegida.md` y `.claude/docs/ADR/001-convivencia-ruflo-icfes.md`.
 
 ## Pointer obligatorio
 
