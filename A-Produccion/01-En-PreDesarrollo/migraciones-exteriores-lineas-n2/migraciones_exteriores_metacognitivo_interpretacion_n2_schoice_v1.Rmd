@@ -1,0 +1,642 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r data_generation, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
+library(exams)
+library(reticulate)
+use_python(Sys.which("python3"), required = TRUE)
+
+# ===================================================================
+# FUNCIÓN PYTHON: Gráfico de líneas de migraciones exteriores
+# Regla: .claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md
+# ===================================================================
+
+py_func <- '
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+def crear_grafico_migraciones(anios, inmigrantes, emigrantes,
+                               archivo, titulo, y_max=850):
+    fig, ax = plt.subplots(figsize=(10, 5.5))
+    ax.plot(anios, inmigrantes, color="#1a3a5c", marker="s", markersize=6,
+            linewidth=1.8, label="Inmigrantes", zorder=3)
+    ax.plot(anios, emigrantes, color="#888888", marker="o", markersize=6,
+            linewidth=1.8, label="Emigrantes", zorder=3)
+    ax.set_title(titulo, fontsize=13, fontweight="bold", pad=12)
+    ax.set_ylabel("Miles", fontsize=11)
+    ax.set_xticks(anios)
+    ax.set_xticklabels([str(int(a)) for a in anios], fontsize=9)
+    ax.set_yticks(range(0, int(y_max) + 100, 100))
+    ax.set_ylim(0, y_max)
+    ax.set_xlim(min(anios) - 0.5, max(anios) + 0.5)
+    ax.grid(True, alpha=0.3)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=2,
+              frameon=False, fontsize=10)
+    plt.tight_layout()
+    plt.savefig(archivo, dpi=150, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+'
+py_run_string(py_func)
+
+# ===================================================================
+# CONTEXTOS NARRATIVOS CREATIVOS (8 plantillas, 6+ tipos)
+# Regla: .claude/rules/contextos-narrativos-creativos.md
+# ===================================================================
+
+contextos <- list(
+  # Tipo: Narracion periodistica
+  list(
+    pais = "Dorandia",
+    plantilla = function(prot, periodo) {
+      paste0("En ", prot,
+             " se publicó un informe sobre las migraciones exteriores de ",
+             "Dorandia durante el período ", periodo,
+             ". El siguiente gráfico muestra la evolución de inmigrantes y emigrantes (en miles):")
+    },
+    protagonistas = c(
+      "el Instituto Nacional de Estadística de Dorandia",
+      "el Observatorio de Migraciones de Dorandia",
+      "la oficina demográfica del gobierno de Dorandia"
+    )
+  ),
+  # Tipo: Situacion problema
+  list(
+    pais = "Valturia",
+    plantilla = function(prot, periodo) {
+      paste0(prot, " necesita analizar las tendencias migratorias de Valturia ",
+             "en el período ", periodo,
+             " para preparar su informe anual. Los datos de inmigrantes y emigrantes ",
+             "(en miles de personas) se presentan en el siguiente gráfico:")
+    },
+    protagonistas = c(
+      "El Ministerio de Asuntos Exteriores de Valturia",
+      "La Comisión de Políticas Migratorias de Valturia",
+      "El comité parlamentario de migración de Valturia"
+    )
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    pais = "Felandia",
+    plantilla = function(prot, periodo) {
+      paste0("Para su proyecto de ciencias sociales, ", prot,
+             " investigó los flujos migratorios exteriores de Felandia entre ",
+             periodo,
+             ". Encontró el siguiente gráfico con datos de inmigrantes y emigrantes (en miles):")
+    },
+    protagonistas = c("Valentina", "Santiago", "Camila", "Andrés", "Luciana")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    pais = "Nortensia",
+    plantilla = function(prot, periodo) {
+      paste0("El boletín estadístico de ", prot,
+             " reportó los datos de migraciones exteriores de Nortensia ",
+             "correspondientes al período ", periodo,
+             ". La siguiente gráfica resume la evolución (en miles de personas):")
+    },
+    protagonistas = c(
+      "la Universidad Central de Nortensia",
+      "la Academia de Ciencias Sociales de Nortensia",
+      "el Centro de Investigación Demográfica de Nortensia"
+    )
+  ),
+  # Tipo: Dialogo implicito
+  list(
+    pais = "Surelia",
+    plantilla = function(prot, periodo) {
+      paste0("--Necesitamos entender las tendencias migratorias recientes --dijo ",
+             prot, " al presentar los datos de Surelia durante ",
+             periodo,
+             ". El gráfico muestra inmigrantes y emigrantes (en miles):")
+    },
+    protagonistas = c(
+      "la directora del censo de Surelia",
+      "el coordinador de análisis poblacional de Surelia",
+      "la ministra de integración de Surelia"
+    )
+  ),
+  # Tipo: Pregunta retorica
+  list(
+    pais = "Estelia",
+    plantilla = function(prot, periodo) {
+      paste0("¿Cómo han cambiado los flujos migratorios de Estelia en los últimos años? ",
+             prot, " analizó los datos del período ", periodo,
+             " y obtuvo la siguiente gráfica con las cifras de inmigrantes y emigrantes (en miles):")
+    },
+    protagonistas = c(
+      "Un equipo de demografía de la Universidad de Estelia",
+      "El grupo de investigación social del Congreso de Estelia",
+      "La fundación para el estudio migratorio de Estelia"
+    )
+  ),
+  # Tipo: Descubrimiento
+  list(
+    pais = "Marelia",
+    plantilla = function(prot, periodo) {
+      paste0("Al revisar los archivos del registro civil, ", prot,
+             " encontró datos reveladores sobre la migración exterior de Marelia ",
+             "durante ", periodo,
+             ". Los resultados (en miles de personas) se resumen en este gráfico:")
+    },
+    protagonistas = c(
+      "el analista del departamento de estadística de Marelia",
+      "la investigadora principal del observatorio demográfico de Marelia",
+      "el equipo de planificación del gobierno de Marelia"
+    )
+  ),
+  # Tipo: Accion en curso
+  list(
+    pais = "Solania",
+    plantilla = function(prot, periodo) {
+      paste0("Durante la conferencia sobre políticas públicas de ", prot,
+             ", se presentaron los datos de migración exterior de Solania ",
+             "correspondientes a ", periodo,
+             ". El gráfico de líneas muestra la evolución de inmigrantes y emigrantes (en miles):")
+    },
+    protagonistas = c(
+      "la Cumbre Latinoamericana de Demografía",
+      "el Foro Regional de Estadísticas Sociales",
+      "la Asamblea Nacional de Planificación de Solania"
+    )
+  )
+)
+
+# ===================================================================
+# GENERACION DE DATOS ALEATORIOS
+# Datos inspirados en patrones reales de migracion
+# Estrategia: 4 perfiles base con desplazamiento aleatorio para
+# garantizar que max_total, max_inm, max_emi y min_inm sean distintos
+# ===================================================================
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+prot <- sample(ctx$protagonistas, 1)
+
+# Período aleatorio de 11 anios
+anio_inicio <- sample(2008:2013, 1)
+anios <- anio_inicio:(anio_inicio + 10)
+periodo_texto <- paste0(anio_inicio, " hasta ", anio_inicio + 10)
+n_anios <- length(anios)
+
+# 4 perfiles base de inmigrantes (diferentes formas de curva)
+perfiles_inm <- list(
+  # Perfil 1: U invertida con pico en posicion 9
+  c(370, 305, 280, 305, 343, 415, 460, 555, 750, 470, 530),
+  # Perfil 2: crecimiento sostenido con caida al final
+  c(250, 280, 310, 350, 390, 430, 480, 550, 620, 580, 500),
+  # Perfil 3: dos picos (posiciones 3 y 9)
+  c(300, 350, 520, 380, 320, 350, 400, 480, 600, 450, 420),
+  # Perfil 4: caida y recuperacion
+  c(450, 380, 310, 270, 300, 380, 450, 530, 620, 480, 510)
+)
+
+# 4 perfiles base de emigrantes (diferentes formas)
+perfiles_emi <- list(
+  # Perfil 1: pico temprano y descenso
+  c(370, 380, 450, 400, 345, 330, 340, 310, 295, 250, 310),
+  # Perfil 2: relativamente estable con pico central
+  c(320, 340, 360, 410, 450, 430, 380, 350, 330, 310, 340),
+  # Perfil 3: creciente
+  c(250, 270, 290, 310, 340, 370, 400, 420, 430, 410, 390),
+  # Perfil 4: pico temprano fuerte
+  c(300, 450, 480, 420, 370, 340, 330, 310, 290, 260, 300)
+)
+
+# Iterar combinaciones de perfiles + ruido hasta 4 anios unicos
+repeat {
+  p_inm <- sample(length(perfiles_inm), 1)
+  p_emi <- sample(length(perfiles_emi), 1)
+
+  ruido_inm <- sample(-30:30, n_anios, replace = TRUE)
+  inmigrantes <- pmax(150, perfiles_inm[[p_inm]] + ruido_inm)
+
+  ruido_emi <- sample(-30:30, n_anios, replace = TRUE)
+  emigrantes <- pmax(150, perfiles_emi[[p_emi]] + ruido_emi)
+
+  total_migrantes <- inmigrantes + emigrantes
+
+  idx_max_total <- which.max(total_migrantes)
+  anio_max_total <- anios[idx_max_total]
+  idx_max_inm <- which.max(inmigrantes)
+  anio_max_inm <- anios[idx_max_inm]
+  idx_max_emi <- which.max(emigrantes)
+  anio_max_emi <- anios[idx_max_emi]
+  idx_min_inm <- which.min(inmigrantes)
+  anio_min_inm <- anios[idx_min_inm]
+
+  anios_clave <- c(anio_max_total, anio_max_inm, anio_max_emi, anio_min_inm)
+  if (length(unique(anios_clave)) == 4) break
+}
+
+# Valor correcto: ano con más migrantes exteriores totales
+valor_correcto <- anio_max_total
+valor_correcto_total <- total_migrantes[idx_max_total]
+
+# Y-max para el gráfico
+y_max <- ceiling(max(c(inmigrantes, emigrantes)) / 100) * 100 + 50
+
+# Titulo del gráfico
+titulo_grafico <- paste0("Evolución de las migraciones exteriores")
+
+enunciado <- ctx$plantilla(prot, periodo_texto)
+
+# ===================================================================
+# POOL DE ERRORES CONCEPTUALES (6 errores)
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+# ===================================================================
+
+errores_conceptuales <- list(
+  list(
+    codigo = "MIG-LEC-01",
+    nombre = "Confusión máximo de una serie con total",
+    descripcion_corta = paste0(
+      "Identificó el año con más inmigrantes (",
+      anio_max_inm, ") en vez del año con más migrantes exteriores en total"
+    ),
+    descripcion_larga = paste0(
+      "Leyó únicamente la línea de inmigrantes e identificó el año ",
+      anio_max_inm, " como el de mayor cantidad. Sin embargo, la pregunta ",
+      "se refiere a migrantes exteriores, que incluyen TANTO inmigrantes como ",
+      "emigrantes. Al sumar ambas series, el año con mayor total es ",
+      anio_max_total, " con ", valor_correcto_total, " miles."
+    ),
+    causa_raiz = paste0(
+      "Lectura parcial del gráfico: consideró solo una de las dos series ",
+      "(inmigrantes) ignorando la otra (emigrantes)."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      anio_max_inm
+    }
+  ),
+  list(
+    codigo = "MIG-LEC-02",
+    nombre = "Confusión emigrantes con total",
+    descripcion_corta = paste0(
+      "Identificó el año con más emigrantes (",
+      anio_max_emi, ") en vez del total de migrantes exteriores"
+    ),
+    descripcion_larga = paste0(
+      "Leyó únicamente la línea de emigrantes e identificó el año ",
+      anio_max_emi, " como el de mayor cantidad. Sin embargo, migrantes ",
+      "exteriores incluye tanto emigrantes como inmigrantes. Al sumar ambas ",
+      "series, el año correcto es ", anio_max_total, " con ",
+      valor_correcto_total, " miles."
+    ),
+    causa_raiz = paste0(
+      "Lectura parcial del gráfico: consideró solo la serie de emigrantes, ",
+      "confundiendo una parte con el todo."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      anio_max_emi
+    }
+  ),
+  list(
+    codigo = "MIG-LEC-03",
+    nombre = "Confusión mínimo con máximo",
+    descripcion_corta = paste0(
+      "Identificó el año con MENOS inmigrantes (",
+      anio_min_inm, ") en vez del año con MAS migrantes en total"
+    ),
+    descripcion_larga = paste0(
+      "Confundió el mínimo con el máximo al leer el gráfico. Seleccionó ",
+      "el año ", anio_min_inm, " que corresponde al punto más BAJO de la ",
+      "línea de inmigrantes, cuando la pregunta pide el año con MAYOR ",
+      "cantidad de migrantes exteriores. El año correcto es ",
+      anio_max_total, "."
+    ),
+    causa_raiz = paste0(
+      "Inversión del criterio de búsqueda: buscó el mínimo en vez del máximo, ",
+      "posiblemente por confusión al interpretar la escala del eje vertical."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      anio_min_inm
+    }
+  ),
+  list(
+    codigo = "MIG-LEC-04",
+    nombre = "Confusión mayor diferencia con mayor total",
+    descripcion_corta = "Buscó el año con mayor diferencia entre series en vez del mayor total",
+    descripcion_larga = paste0(
+      "Interpretó 'mayor cantidad de migrantes exteriores' como el año donde ",
+      "la diferencia entre inmigrantes y emigrantes es mayor. Sin embargo, ",
+      "la cantidad total de migrantes exteriores es la SUMA de ambas series, ",
+      "no su diferencia."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre suma y diferencia: interpretó la separación visual entre ",
+      "las dos líneas como indicador de cantidad total."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      diferencias <- abs(inmigrantes - emigrantes)
+      anios[which.max(diferencias)]
+    }
+  ),
+  list(
+    codigo = "MIG-LEC-05",
+    nombre = "Lectura del punto de cruce como máximo",
+    descripcion_corta = "Seleccionó el año donde las dos líneas se cruzan, no donde hay más migrantes",
+    descripcion_larga = paste0(
+      "Identificó el punto donde las líneas de inmigrantes y emigrantes se ",
+      "cruzan (tienen valores similares) y lo interpretó como el año con ",
+      "más migrantes. El cruce de líneas indica igualdad entre las dos ",
+      "categorías, no un máximo del total."
+    ),
+    causa_raiz = paste0(
+      "Interpretación visual errónea: asoció el cruce de líneas con un evento ",
+      "significativo (máximo), cuando solo indica igualdad entre series."
+    ),
+    precondicion = function(params) {
+      # Solo aplica si hay un cruce visible
+      dif <- inmigrantes - emigrantes
+      cambios_signo <- sum(diff(sign(dif)) != 0)
+      cambios_signo > 0
+    },
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      dif <- inmigrantes - emigrantes
+      # Buscar donde cambia de signo (cruce)
+      cambios <- which(diff(sign(dif)) != 0)
+      if (length(cambios) > 0) {
+        anios[cambios[1]]
+      } else {
+        anios[1]  # fallback
+      }
+    }
+  ),
+  list(
+    codigo = "MIG-LEC-06",
+    nombre = "Lectura del último año como máximo",
+    descripcion_corta = paste0(
+      "Seleccionó el último año del período (",
+      anios[n_anios],
+      ") asumiendo tendencia creciente continua"
+    ),
+    descripcion_larga = paste0(
+      "Asumió que la tendencia migratoria es siempre creciente y selecciónó ",
+      "el último año del gráfico (", anios[n_anios],
+      ") como el de mayor cantidad. Sin embargo, los datos muestran que ",
+      "puede haber caídas y recuperaciones. El año con mayor total real es ",
+      anio_max_total, "."
+    ),
+    causa_raiz = paste0(
+      "Suposición implícita de crecimiento monótono: no verificó los datos ",
+      "reales del gráfico."
+    ),
+    precondicion = function(params) {
+      # Solo aplica si el ultimo anio NO es el máximo
+      anio_max_total != anios[n_anios]
+    },
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      anios[n_anios]
+    }
+  )
+)
+
+# ===================================================================
+# SELECCIÓN DE ERROR Y CONSTRUCCIÓN DE OPCIONES
+# Patrón: analisis_error -- el estudiante cometio el error MIG-LEC-01
+# (leyo solo inmigrantes). La opcion correcta describe ESE error.
+# Los distractores describen otros errores que NO cometio.
+# Regla: .claude/rules/ejercicios-metacognitivos.md (precondiciones)
+# ===================================================================
+
+# Error que el estudiante ficticio cometio: MIG-LEC-01 (leyo solo inmigrantes)
+error_cometido_idx <- 1L
+anio_erroneo_estudiante <- anio_max_inm
+
+# Los distractores son otros errores (MIG-LEC-02, 03 y la respuesta "no cometio error")
+# La opcion correcta es la que describe el error MIG-LEC-01
+
+# Construir 4 opciones:
+# - "correcto" = la descripción del error real (MIG-LEC-01)
+# - "distractor_err2" = MIG-LEC-02 (leyo emigrantes)
+# - "distractor_err3" = MIG-LEC-03 (confundio min con max)
+# - "distractor_no_error" = "No cometio error" (distractor falso)
+opciones_pre <- list(
+  list(tipo = "correcto", error_idx = 1L,
+       texto = errores_conceptuales[[1]]$descripcion_corta),
+  list(tipo = "distractor", error_idx = 2L,
+       texto = errores_conceptuales[[2]]$descripcion_corta),
+  list(tipo = "distractor", error_idx = 3L,
+       texto = errores_conceptuales[[3]]$descripcion_corta),
+  list(tipo = "distractor_no_error", error_idx = NA,
+       texto = paste0("No cometió error: el año con mayor cantidad total de ",
+                      "migrantes exteriores (inmigrantes + emigrantes) es ",
+                      "efectivamente ", anio_erroneo_estudiante))
+)
+
+# Mezcla interna (sample) + exshuffle:FALSE
+# Regla: .claude/rules/código-rmd.md regla #6 ampliada
+orden <- sample(4)
+opciones_mezcladas <- opciones_pre[orden]
+names(opciones_mezcladas) <- c("A", "B", "C", "D")
+
+# Vector solución
+solucion <- rep(0L, 4)
+idx_correcto <- which(sapply(opciones_mezcladas, function(o) o$tipo == "correcto"))
+solucion[idx_correcto] <- 1L
+letra_correcta <- c("A", "B", "C", "D")[idx_correcto]
+
+# ===================================================================
+# POOL DE REFLEXIONES METACOGNITIVAS
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+# ===================================================================
+
+reflexiones_metacognitivas <- list(
+  "Cuando un gráfico presenta varias series de datos, es fundamental identificar si la pregunta se refiere a una serie individual o a la combinación de todas. Leer con atención antes de buscar valores evita errores frecuentes.",
+  "Los gráficos de líneas múltiples pueden generar confusión si no se distingue claramente qué pregunta la operación solicitada: ¿máximo de una serie? ¿suma de series? ¿diferencia entre ellas? Traducir la pregunta a una operación matemática explícita es clave.",
+  "Un error habitual en la lectura de gráficos con dos series es fijarse solo en la línea más visible o la que tiene valores más altos, sin considerar que ambas contribuyen al dato solicitado. Verificar siempre qué incluye el concepto de la pregunta.",
+  "La metacognición en lectura de gráficos implica preguntarse: ¿estoy leyendo lo que me piden o lo que me parece más fácil de identificar? Automonitorear la estrategia de lectura reduce errores de interpretación."
+)
+
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# ===================================================================
+# GENERAR GRÁFICO PRINCIPAL (Python via reticulate)
+# ===================================================================
+
+py$crear_grafico_migraciones(
+  anios = as.numeric(anios),
+  inmigrantes = as.numeric(inmigrantes),
+  emigrantes = as.numeric(emigrantes),
+  archivo = "grafico_migraciones.png",
+  titulo = titulo_grafico,
+  y_max = as.numeric(y_max)
+)
+
+# ===================================================================
+# TEXTOS DE SOLUCIÓN PARA ANSWERLIST
+# ===================================================================
+
+letras <- c("A", "B", "C", "D")
+
+sol_texts <- sapply(letras, function(l) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    paste0("Correcto (", err$codigo, "): ", err$descripcion_larga)
+  } else if (opc$tipo == "distractor_no_error") {
+    paste0("Incorrecto. El estudiante SÍ cometió un error: ",
+           anio_erroneo_estudiante, " no es el año con mayor total de ",
+           "migrantes exteriores. El año correcto es ", anio_max_total,
+           " con ", valor_correcto_total, " miles.")
+  } else {
+    err <- errores_conceptuales[[opc$error_idx]]
+    paste0("Incorrecto. Este error (", err$codigo,
+           ") describe una situación diferente. El estudiante respondió ",
+           anio_erroneo_estudiante, " (año con más inmigrantes), ",
+           "no ", err$calcula(NULL, NULL), ".")
+  }
+}, USE.NAMES = FALSE)
+
+# ===================================================================
+# VERIFICACIONES OBLIGATORIAS
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+# ===================================================================
+
+stopifnot(
+  sum(solucion) == 1,
+  anio_erroneo_estudiante %in% anios,
+  anio_erroneo_estudiante != anio_max_total,
+  file.exists("grafico_migraciones.png")
+)
+```
+
+Question
+========
+
+`r enunciado`
+
+```{r mostrar_grafico, echo=FALSE, results='asis'}
+cat("![](grafico_migraciones.png){width=85%}\n")
+```
+
+Un estudiante observó el gráfico y concluyó que el año con mayor cantidad de migrantes exteriores en `r ctx$pais` fue **`r anio_erroneo_estudiante`**.
+
+¿Cuál fue el error que cometió este estudiante al interpretar el gráfico?
+
+Answerlist
+----------
+
+```{r mostrar_opciones, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  cat(paste0("* ", opc$texto, "\n"))
+}
+```
+
+Solution
+========
+
+### Análisis del error
+
+```{r error_analisis, echo=FALSE, results='asis'}
+err_real <- errores_conceptuales[[error_cometido_idx]]
+cat(paste0(
+  "**Error identificado:** ", err_real$codigo, " -- ", err_real$nombre, "\n\n",
+  "**Descripción:** ", err_real$descripcion_larga, "\n\n",
+  "**Causa raíz:** ", err_real$causa_raiz, "\n\n"
+))
+```
+
+### Procedimiento correcto
+
+La pregunta pide el año con **mayor cantidad de migrantes exteriores**. Según la definición del enunciado, migrantes exteriores incluyen **tanto inmigrantes como emigrantes**. Por lo tanto, debemos sumar ambas series para cada año.
+
+```{r tabla_totales, echo=FALSE, results='asis'}
+cat("| Año | Inmigrantes (miles) | Emigrantes (miles) | **Total** (miles) |\n")
+cat("|-----|--------------------:|-------------------:|------------------:|\n")
+for (i in seq_along(anios)) {
+  negrita_ini <- ""
+  negrita_fin <- ""
+  if (i == idx_max_total) {
+    negrita_ini <- "**"
+    negrita_fin <- "**"
+  }
+  cat(paste0("| ", negrita_ini, anios[i], negrita_fin, " | ",
+             inmigrantes[i], " | ", emigrantes[i], " | ",
+             negrita_ini, total_migrantes[i], negrita_fin, " |\n"))
+}
+cat(paste0("\nEl año con mayor total de migrantes exteriores es **",
+           anio_max_total, "** con **", valor_correcto_total, " miles**.\n"))
+```
+
+### Respuesta correcta: Opción `r letra_correcta`
+
+La opción `r letra_correcta` es correcta porque identifica exactamente el error que cometió el estudiante: leyó únicamente la línea de inmigrantes en vez de sumar ambas series.
+
+### Análisis de los distractores
+
+```{r analisis_errores, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "distractor" && !is.na(opc$error_idx)) {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**Opción ", l, " (", err$codigo, "):** ",
+      "Describe un error diferente al que cometió el estudiante. ",
+      err$descripcion_larga, "\n\n"
+    ))
+  } else if (opc$tipo == "distractor_no_error") {
+    cat(paste0(
+      "**Opción ", l, " (\"No cometió error\"):** ",
+      "Incorrecto. El estudiante SÍ cometió un error. El año ",
+      anio_erroneo_estudiante, " tiene el mayor número de inmigrantes, ",
+      "pero NO el mayor total de migrantes exteriores (inmigrantes + emigrantes). ",
+      "El año correcto es ", anio_max_total, " con ", valor_correcto_total, " miles.\n\n"
+    ))
+  }
+}
+```
+
+### Propiedades de la lectura de gráficos de líneas
+
+- **Migrantes exteriores** = inmigrantes + emigrantes. Ambas categorías contribuyen al total.
+- **Máximo de una serie** $\neq$ **máximo del total**: el año con más inmigrantes puede no ser el año con más migrantes exteriores en total.
+- **Lectura de gráficos de múltiples series**: siempre verificar si la pregunta se refiere a una serie individual o a una operación entre series (suma, diferencia, proporción).
+- **Tendencia vs. valores puntuales**: una tendencia creciente no garantiza que el último año sea el máximo.
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+1. **Identifica** qué pide la pregunta: ¿una serie individual o una combinación?
+2. **Traduce** a operación matemática: "migrantes exteriores" = inmigrantes + emigrantes.
+3. **Calcula** la suma para cada año usando los valores del gráfico.
+4. **Compara** los totales calculados para encontrar el máximo.
+5. **Verifica** que tu respuesta corresponde al total, no a una sola serie.
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+for (i in 1:4) {
+  cat(paste0("* ", sol_texts[i], "\n"))
+}
+```
+
+Meta-information
+================
+exname: migraciones_exteriores_metacognitivo_interpretacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: FALSE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Numerico-Variacional
+exextra[Afirmacion]: Interpreta informacion presentada en graficos de lineas con multiples series para identificar tendencias y valores extremos
+exextra[Evidencia]: Compara y opera datos de dos series temporales representadas en un grafico de lineas para determinar maximos del total combinado
+exextra[Nivel]: 2
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Multistructural
+exextra[TipoMetacognicion]: analisis_error
