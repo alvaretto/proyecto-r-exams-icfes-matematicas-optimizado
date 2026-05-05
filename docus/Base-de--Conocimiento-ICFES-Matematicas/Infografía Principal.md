@@ -1,7 +1,7 @@
 ---
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 # Prueba de Matemáticas Tipo Saber ICFES
@@ -22,11 +22,15 @@ principales:
 
 El evaluado que se ubica en el nivel 1 (Puntaje 0 a 35) demuestra que:
 
+(Descriptor)
+
 - Lee información puntual (un dato por ejemplo) relacionada con situaciones cotidianas y presentada en tablas o gráficas con escala explícita, cuadrícula o por lo menos líneas horizontales.
 
 ### Nivel 2
 
 El evaluado que se ubica en el nivel 2 (Puntaje 36 a 50) además de lo descrito en el nivel 1 demuestra que:
+
+(Descriptores)
 
 - Compara datos de dos variables presentadas en una misma gráfica sin necesidad de hacer operaciones matemáticas.
 - Identifica valores o puntos representativos en diferentes tipos de registro a partir del significado que tienen en la situación.
@@ -38,6 +42,8 @@ El evaluado que se ubica en el nivel 2 (Puntaje 36 a 50) además de lo descrito 
 ### Nivel 3
 
 El evaluado que se ubica en el nivel 3 (Puntaje 51 a 70) además de lo descrito en los niveles 1 y 2 demuestra que:
+
+(Descriptores)
 
 - Selecciona la gráfica (que puede ser de doble entrada, correspondiente a la información de una tabla o a partir de verbalizaciones (características de crecimiento o decrecimiento deseadas) teniendo en cuenta para la selección la escala, el tipo de variable y el tipo de gráfica.
 - Compara información gráfica que requiere algunas manipulaciones aritméticas.
@@ -55,6 +61,8 @@ El evaluado que se ubica en el nivel 3 (Puntaje 51 a 70) además de lo descrito 
 ### Nivel 4
 
 El evaluado que se ubica en el nivel 4 (Puntaje 71 a 100) además de lo descrito en los niveles 1, 2 y 3 demuestra que:
+
+(Descriptores)
 
 - Resuelve problemas que requieren interpretar información de eventos dependientes.
 - Realiza transformaciones de subconjuntos de información que pueden requerir el uso de operaciones complejas (cálculos de porcentajes).
@@ -254,3 +262,8 @@ Las preguntas de esta prueba están distribuidas por competencias:
 - **Tendencia Central, Dispersión, Posición, Asimetría, Curtosis, Diagramas de Cajas, Diagramas de Alambres**: Descriptivos.
 - **Conjuntos, Casillas y Combinaciones**: Espacios muestrales y combinatoria.
 - **Clásica y Condicionales**: Probabilidad y correlación.
+
+Tarea: (Describe en una única oración la situación problemática que enfrenta el 
+estudiante y la acción matemática observable que debe ejecutar para manifestar la 
+habilidad evaluada. Describir qué se le pide hacer al estudiante, no cómo resolverlo 
+ni listar pasos.)
