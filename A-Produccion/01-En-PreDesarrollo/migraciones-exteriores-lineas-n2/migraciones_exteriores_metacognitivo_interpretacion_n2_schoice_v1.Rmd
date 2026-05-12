@@ -300,7 +300,7 @@ errores_conceptuales <- list(
     nombre = "Confusión mínimo con máximo",
     descripcion_corta = paste0(
       "Identificó el año con MENOS inmigrantes (",
-      anio_min_inm, ") en vez del año con MAS migrantes en total"
+      anio_min_inm, ") en vez del año con MÁS migrantes en total"
     ),
     descripcion_larga = paste0(
       "Confundió el mínimo con el máximo al leer el gráfico. Seleccionó ",
@@ -567,9 +567,9 @@ cat(paste0("\nEl año con mayor total de migrantes exteriores es **",
            anio_max_total, "** con **", valor_correcto_total, " miles**.\n"))
 ```
 
-### Respuesta correcta: Opción `r letra_correcta`
+### Respuesta correcta
 
-La opción `r letra_correcta` es correcta porque identifica exactamente el error que cometió el estudiante: leyó únicamente la línea de inmigrantes en vez de sumar ambas series.
+Este argumento es correcto porque identifica exactamente el error que cometió el estudiante: leyó únicamente la línea de inmigrantes en vez de sumar ambas series.
 
 ### Análisis de los distractores
 
@@ -579,13 +579,13 @@ for (l in letras) {
   if (opc$tipo == "distractor" && !is.na(opc$error_idx)) {
     err <- errores_conceptuales[[opc$error_idx]]
     cat(paste0(
-      "**Opción ", l, " (", err$codigo, "):** ",
+      "**", err$codigo, " — ", err$nombre, "** (", err$descripcion_corta, "):\n\n",
       "Describe un error diferente al que cometió el estudiante. ",
       err$descripcion_larga, "\n\n"
     ))
   } else if (opc$tipo == "distractor_no_error") {
     cat(paste0(
-      "**Opción ", l, " (\"No cometió error\"):** ",
+      "**Argumento \"No cometió error\":** ",
       "Incorrecto. El estudiante SÍ cometió un error. El año ",
       anio_erroneo_estudiante, " tiene el mayor número de inmigrantes, ",
       "pero NO el mayor total de migrantes exteriores (inmigrantes + emigrantes). ",

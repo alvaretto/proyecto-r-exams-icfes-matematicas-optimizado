@@ -1,0 +1,651 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r data_generation, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
+library(exams)
+
+# ===================================================================
+# EJERCICIO: Rango como medida de dispersión -- SCHOICE metacognitivo
+# Competencia: Argumentación | Componente: Aleatorio | Nivel: 2
+# Patrón metacognitivo: analisis_error
+#
+# Inspirado en ítem ICFES: "Alejandro empacó agua en 100 botellas..."
+# El estudiante debe argumentar POR QUÉ el rango es el procedimiento
+# adecuado para detectar si hay botellas con diferencia grande,
+# descartando medidas de tendencia central (promedio, moda, mediana).
+# ===================================================================
+
+# ===================================================================
+# CONTEXTOS NARRATIVOS CREATIVOS (8 plantillas, 6+ tipos)
+# Regla: .claude/rules/contextos-narrativos-creativos.md
+# ===================================================================
+
+contextos <- list(
+  # Tipo: Acción en curso
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "Durante el turno de la mañana, ", prot,
+        " envasó ", producto, " en ", n, " ", recipiente,
+        " iguales y quiere verificar que la cantidad de ", producto,
+        " en cada uno sea similar."
+      )
+    },
+    protagonistas = c(
+      "el operario de la planta embotelladora",
+      "la supervisora de calidad del turno",
+      "el técnico de la línea de producción"
+    ),
+    productos = c("agua", "jugo de naranja", "leche"),
+    recipientes = c("botellas", "envases", "recipientes")
+  ),
+  # Tipo: Situación problema
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        prot, " necesita asegurarse de que la máquina dispensadora está ",
+        "funcionando correctamente. Para ello, midió la cantidad de ", producto,
+        " en ", n, " ", recipiente, " recién llenados."
+      )
+    },
+    protagonistas = c(
+      "La ingeniera de procesos",
+      "El jefe de control de calidad",
+      "La coordinadora de producción"
+    ),
+    productos = c("agua mineral", "bebida energética", "yogur líquido"),
+    recipientes = c("botellas", "envases", "frascos")
+  ),
+  # Tipo: Narración periodística
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "En una auditoría realizada por ", prot,
+        ", se seleccionaron ", n, " ", recipiente, " de ", producto,
+        " de la línea de producción para verificar que el contenido ",
+        "fuera uniforme."
+      )
+    },
+    protagonistas = c(
+      "el INVIMA",
+      "la Superintendencia de Industria y Comercio",
+      "el laboratorio de metrología de la empresa"
+    ),
+    productos = c("agua", "gaseosa", "jugo natural"),
+    recipientes = c("botellas", "envases", "unidades")
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "Para su experimento de clase de estadística, ", prot,
+        " midió el volumen de ", producto, " en ", n, " ", recipiente,
+        " del mismo lote y quiere determinar si el contenido es parejo."
+      )
+    },
+    protagonistas = c("Valentina", "Santiago", "Camila", "Andrés", "Luciana"),
+    productos = c("agua", "jugo de mango", "leche saborizada"),
+    recipientes = c("botellas", "cajas", "bolsas")
+  ),
+  # Tipo: Diálogo implícito
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "—Necesitamos verificar que todas las ", recipiente,
+        " tengan la misma cantidad —indicó ", prot,
+        " al recibir un lote de ", n, " ", recipiente,
+        " de ", producto, " para la tienda."
+      )
+    },
+    protagonistas = c(
+      "la administradora del supermercado",
+      "el encargado de inventarios",
+      "la responsable de recepción de mercancía"
+    ),
+    productos = c("agua purificada", "aceite de cocina", "vinagre"),
+    recipientes = c("botellas", "galones", "envases")
+  ),
+  # Tipo: Pregunta retórica
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "¿Cómo saber si una máquina embotelladora está llenando de manera ",
+        "uniforme? ", prot, " tomó ", n, " ", recipiente,
+        " de ", producto, " del mismo lote para averiguarlo."
+      )
+    },
+    protagonistas = c(
+      "Un equipo de metrología",
+      "La división de calidad de la empresa",
+      "El departamento de estadística industrial"
+    ),
+    productos = c("agua", "refresco", "suero oral"),
+    recipientes = c("botellas", "unidades", "envases")
+  ),
+  # Tipo: Descubrimiento
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "Al inspeccionar la bodega, ", prot,
+        " notó que algunas ", recipiente, " de ", producto,
+        " parecían tener diferente nivel de líquido. Decidió medir ",
+        n, " de ellas para confirmarlo."
+      )
+    },
+    protagonistas = c(
+      "el supervisor del almacén",
+      "la inspectora de calidad",
+      "el auxiliar de bodega"
+    ),
+    productos = c("agua", "bebida láctea", "jugo de frutas"),
+    recipientes = c("botellas", "cajas tetra pak", "envases")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    plantilla = function(prot, n, producto, recipiente) {
+      paste0(
+        "El informe de control de calidad de ", prot,
+        " indica que se deben verificar ", n, " ", recipiente,
+        " de ", producto,
+        " de cada lote para garantizar que el volumen sea homogéneo."
+      )
+    },
+    protagonistas = c(
+      "la Empresa de Acueducto",
+      "la planta procesadora de alimentos",
+      "la cooperativa lechera regional"
+    ),
+    productos = c("agua potable", "leche pasteurizada", "jugo concentrado"),
+    recipientes = c("botellas", "bolsas", "envases")
+  )
+)
+
+# ===================================================================
+# GENERACIÓN DE DATOS ALEATORIOS
+# ===================================================================
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+prot <- sample(ctx$protagonistas, 1)
+producto <- sample(ctx$productos, 1)
+recipiente <- sample(ctx$recipientes, 1)
+
+# Número de recipientes (variado para diversidad)
+n_recipientes <- sample(c(50, 80, 100, 120, 150, 200), 1)
+
+# Generar enunciado
+enunciado <- ctx$plantilla(prot, n_recipientes, producto, recipiente)
+
+# Singular del recipiente para uso en texto
+# Diccionario explícito para evitar errores con sub("s$","")
+singulares <- c(
+  "botellas" = "botella", "envases" = "envase", "recipientes" = "recipiente",
+  "frascos" = "frasco", "unidades" = "unidad", "cajas" = "caja",
+  "galones" = "galón", "bolsas" = "bolsa", "cajas tetra pak" = "caja tetra pak"
+)
+recipiente_singular <- ifelse(recipiente %in% names(singulares),
+                              singulares[recipiente],
+                              sub("es$|s$", "", recipiente))
+
+# ===================================================================
+# POOL DE ERRORES CONCEPTUALES (6 errores)
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+#
+# Error central: confundir medida de tendencia central con medida
+# de dispersión. El estudiante ficticio eligió un procedimiento
+# con promedio/moda/mediana cuando necesitaba rango.
+# ===================================================================
+
+errores_conceptuales <- list(
+  list(
+    codigo = "EST-DISP-01",
+    nombre = "Confusión promedio con dispersión",
+    descripcion_corta = paste0(
+      "Calcular el promedio de la cantidad de ", producto,
+      " en las ", recipiente,
+      ": el promedio mide tendencia central, no identifica diferencias extremas"
+    ),
+    descripcion_larga = paste0(
+      "El promedio (media aritmética) indica el valor central o típico del ",
+      "conjunto de datos, pero NO informa sobre qué tan dispersos están. ",
+      "Dos lotes pueden tener el mismo promedio y diferente variabilidad. ",
+      "Para detectar si hay ", recipiente, " con una diferencia grande, se ",
+      "necesita una medida de dispersión como el rango."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre medida de tendencia central (promedio) y medida de ",
+      "dispersión (rango). El promedio resume el centro de los datos, no ",
+      "la variabilidad."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "promedio"
+    }
+  ),
+  list(
+    codigo = "EST-DISP-02",
+    nombre = "Confusión moda con dispersión",
+    descripcion_corta = paste0(
+      "Identificar la moda de las cantidades: la moda indica el valor más ",
+      "frecuente, no revela si hay ", recipiente,
+      " con diferencias grandes"
+    ),
+    descripcion_larga = paste0(
+      "La moda es el valor que más se repite en el conjunto de datos. ",
+      "Conocer cuál cantidad de ", producto, " se repite más no permite ",
+      "saber si existen dos ", recipiente, " con una diferencia grande. ",
+      "La moda es una medida de tendencia central, no de dispersión."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre medida de tendencia central (moda) y medida de ",
+      "dispersión. La moda solo informa sobre la frecuencia, no sobre ",
+      "la amplitud de los datos."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "moda"
+    }
+  ),
+  list(
+    codigo = "EST-DISP-03",
+    nombre = "Confusión mediana con dispersión",
+    descripcion_corta = paste0(
+      "Calcular la mediana de las cantidades: la mediana indica la posición ",
+      "central de los datos ordenados, no mide la dispersión entre ", recipiente
+    ),
+    descripcion_larga = paste0(
+      "La mediana divide los datos ordenados en dos mitades iguales. ",
+      "Saber cuál es el valor central de las cantidades de ", producto,
+      " no informa sobre qué tan separados están el valor máximo y el ",
+      "mínimo. Dos lotes con la misma mediana pueden tener dispersiones ",
+      "muy diferentes."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre medida de posición central (mediana) y medida de ",
+      "dispersión. La mediana ubica el centro de los datos, no mide la ",
+      "separación entre extremos."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "mediana"
+    }
+  ),
+  list(
+    codigo = "EST-DISP-04",
+    nombre = "Confusión frecuencia relativa con dispersión",
+    descripcion_corta = paste0(
+      "Calcular la frecuencia relativa de cada cantidad: las frecuencias ",
+      "relativas muestran proporciones, no miden la diferencia máxima entre ",
+      recipiente
+    ),
+    descripcion_larga = paste0(
+      "La frecuencia relativa indica qué proporción del total corresponde ",
+      "a cada valor. Aunque permite ver la distribución, no responde ",
+      "directamente si hay dos ", recipiente, " con una diferencia grande. ",
+      "El rango (valor máximo - valor mínimo) responde directamente a esa ",
+      "pregunta."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre descripción de la distribución (frecuencias) y medida ",
+      "de dispersión. Las frecuencias describen la forma, no la amplitud."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "frecuencia_relativa"
+    }
+  ),
+  list(
+    codigo = "EST-DISP-05",
+    nombre = "Confusión tabla de frecuencias con dispersión",
+    descripcion_corta = paste0(
+      "Organizar los datos en una tabla de frecuencias absolutas: esto ",
+      "describe cuántas veces se repite cada cantidad, no si hay una ",
+      "diferencia grande entre ", recipiente
+    ),
+    descripcion_larga = paste0(
+      "Una tabla de frecuencias absolutas agrupa los datos y cuenta ",
+      "cuántas veces aparece cada valor. Aunque es útil para organizar ",
+      "la información, no mide directamente si existe una diferencia grande ",
+      "entre la ", recipiente_singular, " con más ", producto, " y la que tiene ",
+      "menos. El rango es la medida que responde a esa pregunta."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre herramienta de organización de datos (tabla de ",
+      "frecuencias) y medida de dispersión (rango)."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "tabla_frecuencias"
+    }
+  ),
+  list(
+    codigo = "EST-DISP-06",
+    nombre = "Confusión diagrama de barras con rango",
+    descripcion_corta = paste0(
+      "Construir un diagrama de barras con las cantidades: un gráfico de ",
+      "barras visualiza frecuencias, pero no calcula la diferencia máxima ",
+      "entre ", recipiente
+    ),
+    descripcion_larga = paste0(
+      "Un diagrama de barras permite visualizar la distribución de los ",
+      "datos, pero no calcula numéricamente si hay una diferencia grande. ",
+      "Se necesita calcular el rango (valor máximo - valor mínimo) para ",
+      "cuantificar la diferencia más grande entre ", recipiente, "."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre representación gráfica de datos y medida numérica ",
+      "de dispersión. Un gráfico puede sugerir variabilidad visual, pero ",
+      "el rango la cuantifica."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "diagrama_barras"
+    }
+  )
+)
+
+# ===================================================================
+# SELECCIÓN DE ERROR Y CONSTRUCCIÓN DE OPCIONES
+# Patrón: analisis_error
+#
+# La pregunta original ICFES pide: ¿Cuál PROCEDIMIENTO permite
+# identificar si hay diferencia grande? La respuesta correcta es
+# "calcular el rango". Los distractores son procedimientos con
+# medidas de tendencia central.
+#
+# Adaptación metacognitiva: un estudiante ficticio eligió el
+# procedimiento del promedio. ¿Por qué ese procedimiento NO
+# le permite identificar si hay diferencia grande?
+#
+# ALTERNATIVA (más fiel al original): pregunta directa sobre
+# cuál procedimiento sirve. Se implementa esta por fidelidad.
+# ===================================================================
+
+# Seleccionar 3 distractores del pool (promedio, moda, mediana siempre
+# + 1 rotativo del pool ampliado)
+errores_fijos <- c(1L, 2L, 3L)  # EST-DISP-01, 02, 03
+error_extra_idx <- sample(4:6, 1)  # rotativo: 04, 05 o 06
+distractores_idx <- c(errores_fijos, error_extra_idx)
+
+# La opción correcta es el procedimiento del rango
+# Los distractores son procedimientos incorrectos (tendencia central)
+
+# Construir textos de procedimiento (estilo ICFES original)
+# Construir textos de procedimiento con Paso 1 y Paso 2 como líneas separadas.
+# Cada opción es un vector de 2 elementos (paso1, paso2).
+# El chunk mostrar_opciones se encargará de emitirlos en renglones diferentes.
+paso1_comun <- paste0(
+  "Paso 1: Calcular la cantidad de ", producto,
+  " en cada ", recipiente_singular, "."
+)
+
+paso2_correcto <- "Paso 2: Calcular el rango de los datos."
+
+pasos2_distractores <- sapply(distractores_idx[1:3], function(idx) {
+  err <- errores_conceptuales[[idx]]
+  medida <- switch(err$codigo,
+    "EST-DISP-01" = "el promedio",
+    "EST-DISP-02" = "la moda",
+    "EST-DISP-03" = "la mediana",
+    "EST-DISP-04" = "la frecuencia relativa de cada cantidad",
+    "EST-DISP-05" = "la tabla de frecuencias absolutas",
+    "EST-DISP-06" = "un diagrama de barras"
+  )
+  paste0("Paso 2: Calcular ", medida, " de los datos.")
+}, USE.NAMES = FALSE)
+
+# Texto completo: formato original ICFES "Paso 1: ... Paso 2: ..." en una
+# sola línea por opcion. R-exams + pandoc colapsan saltos de línea dentro
+# de items del Answerlist en PDF, así que mantenemos formato compacto y
+# consistente en los 4 formatos (HTML, PDF, DOCX, NOPS).
+texto_correcto <- paste0(paso1_comun, " ", paso2_correcto)
+textos_distractores <- paste0(paso1_comun, " ", pasos2_distractores)
+
+# Armar opciones pre-mezcla
+opciones_pre <- list(
+  list(tipo = "correcto",
+       texto = texto_correcto,
+       paso2 = paso2_correcto,
+       error_idx = NA),
+  list(tipo = "distractor",
+       texto = textos_distractores[1],
+       paso2 = pasos2_distractores[1],
+       error_idx = distractores_idx[1]),
+  list(tipo = "distractor",
+       texto = textos_distractores[2],
+       paso2 = pasos2_distractores[2],
+       error_idx = distractores_idx[2]),
+  list(tipo = "distractor",
+       texto = textos_distractores[3],
+       paso2 = pasos2_distractores[3],
+       error_idx = distractores_idx[3])
+)
+
+# Mezcla interna (sample) + exshuffle:FALSE
+# Regla: .claude/rules/codigo-rmd.md regla #6 ampliada
+# (Solution referencia letra_correcta)
+orden <- sample(4)
+opciones_mezcladas <- opciones_pre[orden]
+names(opciones_mezcladas) <- c("A", "B", "C", "D")
+
+# Vector solución
+solucion <- rep(0L, 4)
+idx_correcto <- which(sapply(opciones_mezcladas, function(o) o$tipo == "correcto"))
+solucion[idx_correcto] <- 1L
+letra_correcta <- c("A", "B", "C", "D")[idx_correcto]
+
+# Variables para Answerlist con Paso 1 y Paso 2 en renglones diferentes.
+# Se usan via inline `r` en el Answerlist Markdown directo (no via chunk
+# results='asis', que R-exams colapsa en una sola línea por item).
+paso1_texto <- sub("^Paso 1: ", "", paso1_comun)
+paso2_A <- sub("^Paso 2: ", "", opciones_mezcladas[["A"]]$paso2)
+paso2_B <- sub("^Paso 2: ", "", opciones_mezcladas[["B"]]$paso2)
+paso2_C <- sub("^Paso 2: ", "", opciones_mezcladas[["C"]]$paso2)
+paso2_D <- sub("^Paso 2: ", "", opciones_mezcladas[["D"]]$paso2)
+
+# ===================================================================
+# POOL DE REFLEXIONES METACOGNITIVAS
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+# ===================================================================
+
+reflexiones_metacognitivas <- list(
+  paste0(
+    "Distinguir entre medidas de tendencia central y medidas de dispersión ",
+    "es fundamental en estadística. El promedio, la mediana y la moda ",
+    "describen el centro de los datos; el rango, la varianza y la ",
+    "desviación estándar describen qué tan dispersos están."
+  ),
+  paste0(
+    "Cuando la pregunta se refiere a diferencias, variabilidad o ",
+    "uniformidad de los datos, la herramienta correcta es una medida ",
+    "de dispersión. Identificar qué tipo de información se pide es el ",
+    "primer paso para seleccionar el procedimiento adecuado."
+  ),
+  paste0(
+    "Un error frecuente es asumir que el promedio describe completamente ",
+    "un conjunto de datos. Dos conjuntos con el mismo promedio pueden ",
+    "tener dispersiones muy diferentes. Por eso, siempre es útil ",
+    "complementar la tendencia central con una medida de dispersión."
+  ),
+  paste0(
+    "El rango es la medida de dispersión más sencilla: se calcula como ",
+    "la diferencia entre el valor máximo y el mínimo. Aunque no usa ",
+    "todos los datos intermedios, responde directamente a la pregunta ",
+    "\"¿cuál es la mayor diferencia posible entre dos observaciones?\"."
+  ),
+  paste0(
+    "Antes de aplicar un procedimiento estadístico, pregúntate: ¿la ",
+    "pregunta se refiere al centro, a la dispersión o a la forma de los ",
+    "datos? Esta clasificación inicial evita confundir herramientas que ",
+    "miden aspectos diferentes del conjunto de datos."
+  )
+)
+
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# ===================================================================
+# TEXTOS DE SOLUCIÓN PARA ANSWERLIST (Solution)
+# ===================================================================
+
+letras <- c("A", "B", "C", "D")
+
+sol_texts <- sapply(letras, function(l) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "correcto") {
+    paste0(
+      "Correcto. El rango (valor máximo - valor mínimo) mide directamente ",
+      "la mayor diferencia posible entre dos ", recipiente,
+      ". Si el rango es grande, hay al menos dos ", recipiente,
+      " con cantidades muy diferentes de ", producto, "."
+    )
+  } else {
+    err <- errores_conceptuales[[opc$error_idx]]
+    paste0("Incorrecto (", err$codigo, "): ", err$descripcion_larga)
+  }
+}, USE.NAMES = FALSE)
+
+# ===================================================================
+# VERIFICACIONES OBLIGATORIAS
+# Regla: .claude/rules/ejercicios-metacognitivos.md
+# ===================================================================
+
+stopifnot(
+  sum(solucion) == 1,
+  length(unique(sapply(opciones_mezcladas, function(o) o$texto))) == 4
+)
+```
+
+Question
+========
+
+`r enunciado`
+
+¿Cuál procedimiento le permite identificar si hay dos `r recipiente` que tengan una diferencia grande en la cantidad de `r producto` que contienen?
+
+Answerlist
+----------
+
+* `r opciones_mezcladas[["A"]]$texto`
+* `r opciones_mezcladas[["B"]]$texto`
+* `r opciones_mezcladas[["C"]]$texto`
+* `r opciones_mezcladas[["D"]]$texto`
+
+Solution
+========
+
+### Análisis del error conceptual
+
+```{r error_analisis, echo=FALSE, results='asis'}
+# Describir los errores que representan los distractores
+cat("**Concepto clave:** La pregunta busca identificar si hay **diferencia grande** entre dos ")
+cat(recipiente)
+cat(". Esto es una pregunta sobre **dispersión** de los datos, no sobre su tendencia central.\n\n")
+
+cat("**Errores frecuentes:**\n\n")
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "distractor") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0("- **", err$codigo, " (", err$nombre, "):** ", err$causa_raiz, "\n"))
+  }
+}
+cat("\n")
+```
+
+### Procedimiento correcto
+
+El procedimiento correcto consta de dos pasos:
+
+**Paso 1:** Calcular la cantidad de `r producto` en cada `r recipiente_singular`.
+
+**Paso 2:** Calcular el **rango** de los datos.
+
+$$\text{Rango} = \text{Valor máximo} - \text{Valor mínimo}$$
+
+El rango mide la diferencia entre la `r recipiente_singular` con **más** `r producto` y la que tiene **menos**. Si el rango es grande, significa que hay al menos dos `r recipiente` con una diferencia grande en su contenido.
+
+### ¿Por qué no sirven las medidas de tendencia central?
+
+```{r tabla_comparativa, echo=FALSE, results='asis'}
+cat("| Medida | ¿Qué mide? | ¿Detecta diferencias grandes? |\n")
+cat("|--------|-----------|-------------------------------|\n")
+cat(paste0("| **Rango** | Dispersión: diferencia entre máximo y mínimo | **Sí** -- mide directamente la diferencia más grande |\n"))
+cat(paste0("| Promedio | Tendencia central: valor típico | No -- dos conjuntos con mismo promedio pueden tener dispersión muy diferente |\n"))
+cat(paste0("| Mediana | Posición central: divide datos en dos mitades | No -- no informa sobre la separación entre extremos |\n"))
+cat(paste0("| Moda | Valor más frecuente | No -- indica repetición, no amplitud de los datos |\n"))
+```
+
+### Respuesta correcta
+
+```{r justificacion, echo=FALSE, results='asis'}
+cat(paste0(
+  "**Argumento válido:** \"", texto_correcto, "\"\n\n",
+  "El rango es una **medida de dispersión** ",
+  "que cuantifica la diferencia máxima entre los valores. Cuando se quiere saber si hay dos ",
+  recipiente, " con cantidades muy diferentes de ", producto, ", el rango responde directamente: ",
+  "si es pequeño, las cantidades son similares; si es grande, hay diferencias importantes.\n"
+))
+```
+
+### Análisis de los argumentos incorrectos
+
+```{r analisis_distractores, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "distractor") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+
+### Propiedades de las medidas estadísticas
+
+- **Medidas de tendencia central** (promedio, mediana, moda): describen el valor típico o central del conjunto de datos.
+- **Medidas de dispersión** (rango, varianza, desviación estándar): describen qué tan separados o dispersos están los datos.
+- **Regla práctica:** Si la pregunta habla de "diferencias", "variabilidad", "uniformidad" o "similitud" entre datos, se necesita una medida de dispersión.
+- El rango es la medida de dispersión más sencilla y directa: $\text{Rango} = \max - \min$.
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+1. **Lee** la pregunta con atención: ¿se refiere al centro de los datos o a su dispersión?
+2. **Clasifica** qué tipo de medida necesitas: tendencia central vs. dispersión.
+3. **Verifica** que el procedimiento elegido responda a lo que pide la pregunta.
+4. **Recuerda:** promedio, mediana y moda miden el centro; rango, varianza y desviación estándar miden la dispersión.
+5. **Aplica** la prueba final: ¿mi procedimiento me dice si hay diferencias grandes? Si no, necesito una medida de dispersión.
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+for (i in 1:4) {
+  cat(paste0("* ", sol_texts[i], "\n"))
+}
+```
+
+Meta-information
+================
+exname: rango_dispersion_botellas_metacognitivo_argumentacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: FALSE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Justifica la seleccion de un procedimiento estadistico adecuado para un objetivo especifico distinguiendo entre medidas de tendencia central y dispersion
+exextra[Evidencia]: Argumenta por que el rango es la medida apropiada para identificar diferencias grandes entre valores descartando medidas de tendencia central
+exextra[Nivel]: 2
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error

@@ -713,7 +713,7 @@ Solution
 
 El estudiante calculó una pendiente de **`r respuesta_erronea_texto`**, cuando la pendiente correcta es **`r pendiente_texto`**.
 
-La respuesta correcta es la **opción `r letra_correcta_p1`**: *`r error_seleccionado$descripcion_corta`*.
+El argumento correcto es: *`r error_seleccionado$descripcion_corta`*.
 
 **Error identificado:** `r error_seleccionado$descripcion_larga`
 

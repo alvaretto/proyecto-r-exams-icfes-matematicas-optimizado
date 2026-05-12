@@ -38,16 +38,17 @@ library(testthat)
 # Lista de .Rmd legacy conocidos con bug Error 19 al crear la regla (2026-05-12).
 # Reportar como WARNING informativo, no como FAIL. Action item: fix uno por uno y
 # eliminar de esta lista. Si un .Rmd NUEVO cae aquí (no listado), el test SÍ falla.
-.legacy_known_letter_dep <- c(
-  # 01-En-PreDesarrollo (3)
-  "Comparacion-Lineas-CLOZE/lineas_recursos_metacognitivo_argumentacion_n3_cloze_v1.Rmd",
-  "migraciones-exteriores-lineas-n2/migraciones_exteriores_metacognitivo_interpretacion_n2_schoice_v1.Rmd",
-  "Rango-Dispersion-Botellas-Agua/rango_dispersion_botellas_metacognitivo_argumentacion_n2_schoice_v1.Rmd",
-  # 02-En-Desarrollo (2)
-  "pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_schoice_v1/pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_cloze_v1.Rmd",
-  "probabilidad_condicional_diagrama_arbol_aleatorio_argumentacion/seleccion_canciones_cd_diagrama_arbol_n2_v1.Rmd"
-  # 03-En-Produccion: 3 versiones del Venn (TikZ/py/r) FIXEADAS 2026-05-12
-)
+.legacy_known_letter_dep <- character(0)
+# Historia:
+# - 2026-05-12: lista creada con 8 .Rmd legacy (Error 19).
+# - 2026-05-12 (commit b5f95e74): 3 versiones Venn en 03-En-Produccion fixeadas.
+# - 2026-05-12 (este commit): los 5 restantes fixeados.
+#   - Comparacion-Lineas-CLOZE/lineas_recursos_*
+#   - migraciones-exteriores-lineas-n2/*
+#   - Rango-Dispersion-Botellas-Agua/*
+#   - pendiente_relacion_lineal_*/...cloze_v1
+#   - probabilidad_condicional_*/seleccion_canciones_cd_diagrama_arbol_*
+# Lista vacía: cualquier .Rmd nuevo con patrón Error 19 ahora hace FAIL bloqueante.
 
 listar_rmd_letter <- function() {
   todos <- character(0)

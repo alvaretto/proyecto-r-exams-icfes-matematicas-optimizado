@@ -379,8 +379,15 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
     palabra_mal <- names(diccionario_tildes)[i]
     palabra_bien <- diccionario_tildes[i]
 
-    # Crear patrón que busque la palabra completa
-    patron <- paste0("\\b", palabra_mal, "\\b")
+    # Crear patrón que busque la palabra completa.
+    # Negative lookaheads/lookbehinds para evitar matches dentro de palabras
+    # con sufijos/prefijos acentuados ("seleccion" dentro de "Seleccionó" o
+    # "linea" dentro de "alinear"). Cubre: á é í ó ú ñ + sus mayúsculas.
+    patron <- paste0(
+      "(?<![áéíóúñÁÉÍÓÚÑ])",
+      "\\b", palabra_mal, "\\b",
+      "(?![áéíóúñÁÉÍÓÚÑ])"
+    )
 
     for (num_linea in seq_along(contenido)) {
       linea <- contenido[num_linea]

@@ -312,11 +312,11 @@ answerlist(c("Opción A", "Opción B", "Opción C", "Opción D"), markup = "mark
 Solution
 ========
 
-**Diagrama correcto: Opción D**
+**Diagrama correcto:** estructura de árbol secuencial CD1 → CD2 → CD3 con ramificación completa en cada nivel.
 
-El diagrama debe representar la **secuencia de decisiones** al seleccionar una canción de cada CD en orden: primero del CD1, luego del CD2, y finalmente del CD3.
+El diagrama válido debe representar la **secuencia de decisiones** al seleccionar una canción de cada CD en orden: primero del CD1, luego del CD2, y finalmente del CD3.
 
-**Estructura correcta (Opción D):**
+**Estructura correcta:**
 
 1. **CD1** (inicio): 2 opciones (S o M)
 2. **CD2** (segundo nivel): Desde cada opción de CD1, se ramifican 2 nuevas opciones → 4 ramas totales
@@ -324,13 +324,13 @@ El diagrama debe representar la **secuencia de decisiones** al seleccionar una c
 
 **Total de combinaciones:** 2 × 2 × 2 = **8 combinaciones posibles**
 
-**Análisis de opciones incorrectas:**
+**Análisis de diagramas incorrectos:**
 
-- **Opción A:** Aunque tiene la estructura de árbol correcta, la disposición visual es confusa y no representa claramente la secuencia CD1→CD2→CD3
+- **Diagrama con árbol horizontal de disposición confusa:** aunque tiene la estructura de árbol correcta, la disposición visual es confusa y no representa claramente la secuencia CD1 → CD2 → CD3.
 
-- **Opción B:** ERROR - Muestra CD1, CD2 y CD3 como decisiones independientes en paralelo, no como una secuencia
+- **Diagrama de decisiones paralelas independientes:** muestra CD1, CD2 y CD3 como decisiones independientes en paralelo, no como una secuencia. Este es un error conceptual: el problema sí es secuencial.
 
-- **Opción C:** Aunque muestra una secuencia, la representación visual vertical dificulta ver que cada nivel se ramifica completamente antes de pasar al siguiente
+- **Diagrama con secuencia vertical sin ramificación completa:** aunque muestra una secuencia, la representación visual vertical dificulta ver que cada nivel se ramifica completamente antes de pasar al siguiente.
 
 **Principio clave:** En un proceso secuencial de selección, cada etapa debe representarse como un nivel en el árbol, y todas las ramas deben desarrollarse completamente antes de pasar al siguiente nivel.
 
