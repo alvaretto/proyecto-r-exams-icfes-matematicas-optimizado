@@ -423,6 +423,16 @@ stopifnot(
   file.exists("diagrama_contexto.png"),
   all(file.exists(paste0("diagrama_", c("a", "b", "c", "d"), ".png")))
 )
+
+# Copia con nombre fijo para Solution (regla #19 letter-independence):
+# Solution NO debe depender de letra_correcta en filename.
+file.copy(paste0("diagrama_", tolower(letra_correcta), ".png"),
+          "diagrama_correcto.png",
+          overwrite = TRUE)
+
+stopifnot(
+  file.exists("diagrama_correcto.png")
+)
 ```
 
 Question
@@ -476,10 +486,10 @@ De los `r val_sin_exclusion` `r ctx$sujeto` anteriores, se excluyen los `r tripl
 
 $$(\text{`r nombre_si`} \cap \text{`r nombre_sj`}) \setminus \text{`r nombre_sk`} = `r val_sin_exclusion` - `r triple` = \mathbf{`r val_correcto`}$$
 
-### Respuesta correcta: Opción `r letra_correcta`
+### Respuesta correcta
 
 ```{r mostrar_correcta, echo=FALSE, results='asis'}
-cat(paste0("![](diagrama_", tolower(letra_correcta), ".png){width=60%}\n"))
+cat("![](diagrama_correcto.png){width=60%}\n")
 ```
 
 El diagrama correcto sombreó **únicamente** la región de intersección de `r nombre_si` y `r nombre_sj` que **no** pertenece a `r nombre_sk`, correspondiente a **`r val_correcto`** `r ctx$sujeto`.
@@ -492,7 +502,7 @@ for (l in letras) {
   if (opc$tipo != "correcto") {
     err <- errores_conceptuales[[opc$error_idx]]
     cat(paste0(
-      "**Error ", err$codigo, " (Opcion ", l, "):** ",
+      "**Error ", err$codigo, ":** ",
       err$descripcion_larga, "\n\n"
     ))
   }

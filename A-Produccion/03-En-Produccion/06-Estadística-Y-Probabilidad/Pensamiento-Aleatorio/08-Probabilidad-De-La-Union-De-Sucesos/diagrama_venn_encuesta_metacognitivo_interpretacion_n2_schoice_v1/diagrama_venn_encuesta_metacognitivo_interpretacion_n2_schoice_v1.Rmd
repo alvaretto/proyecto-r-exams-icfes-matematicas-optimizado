@@ -1059,6 +1059,16 @@ stopifnot(
   file.exists("diagrama_contexto.png"),
   all(file.exists(paste0("diagrama_", c("a", "b", "c", "d"), ".png")))
 )
+
+# Copia con nombre fijo para Solution (regla #19 letter-independence):
+# Solution NO debe depender de letra_correcta en filename.
+file.copy(paste0("diagrama_", tolower(letra_correcta), ".png"),
+          "diagrama_correcto.png",
+          overwrite = TRUE)
+
+stopifnot(
+  file.exists("diagrama_correcto.png")
+)
 ```
 
 Question
@@ -1095,10 +1105,10 @@ Solution
 
 `r sol_procedimiento`
 
-### Respuesta correcta: Opción `r letra_correcta`
+### Respuesta correcta
 
 ```{r mostrar_correcta, echo=FALSE, results='asis'}
-cat(paste0("![](diagrama_", tolower(letra_correcta), ".png){width=60%}\n"))
+cat("![](diagrama_correcto.png){width=60%}\n")
 ```
 
 `r sol_resultado`
@@ -1111,7 +1121,7 @@ for (l in letras) {
   if (!is.na(opc$error_idx)) {
     err <- errores_conceptuales[[opc$error_idx]]
     cat(paste0(
-      "**Error ", err$codigo, " (Opción ", l, "):** ",
+      "**Error ", err$codigo, ":** ",
       err$descripcion_larga, "\n\n"
     ))
   }
