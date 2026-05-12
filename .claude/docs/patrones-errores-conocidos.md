@@ -2021,4 +2021,121 @@ Suite: `tests/testthat/test_pandocbounded_y_solution_coherence.R` automatiza est
 
 - `.claude/rules/codigo-rmd.md` regla #6 (excepción documentada)
 - `.claude/rules/graficos-como-opciones.md` (caso específico SCHOICE con PNGs)
+
+---
+
+## Error 19: Solution con `r letra_correcta` rompe coherencia bajo Moodle re-shuffle
+
+**Detectado:** 2026-05-12 (estudiante real KEVIN A. SILVA, p3c-mat)
+**Severidad:** ALTA (silenciosa, solo visible en producción Moodle)
+**Síntoma observado:** estudiante seleccionó Opción C → sistema marcó "Incorrecta" → Solution decía "Respuesta correcta: Opción C". Contradicción visible al estudiante.
+
+### Causa raíz
+
+El `.Rmd` tenía:
+
+```rmd
+### Respuesta correcta: Opción `r letra_correcta` {#respuesta-correcta-...}
+```
+
+con `exshuffle: FALSE` y mezcla interna con `sample()`. La asunción implícita: "exshuffle:FALSE evita re-shuffle".
+
+**Esa asunción es falsa en Moodle.** Moodle tiene un setting independiente "Shuffle answers" en la configuración del cuestionario (no relacionado con exshuffle de R-exams). Cuando está activado, Moodle re-ordena las opciones en tiempo de display PERO no toca el valor de `letra_correcta` ya escrito en la prosa de Solution. Resultado: el estudiante ve "Respuesta correcta: Opción C" pero la opción etiquetada C en su pantalla no es la que R-exams generó como correcta.
+
+### Por qué los validadores no lo detectaron
+
+1. FASES 2A-2H operan sobre R-exams nativo. No simulan Moodle.
+2. FASE 2I.3 detecta `exshuffle:TRUE + letra` (Error 17) pero no `exshuffle:FALSE + letra + Moodle shuffle`.
+3. 4/4 formatos (HTML/PDF/DOCX/NOPS) pasaban porque ninguno aplica re-shuffle adicional.
+4. Multi-semilla (FASE 2G) valida coherencia interna R-exams; el bug solo emerge en el target Moodle.
+
+### Fix permanente (regla #19)
+
+**Regla:** `.claude/rules/solution-letter-independence.md`
+
+Solution NUNCA debe referenciar opciones por letra/posición. SIEMPRE por contenido (`descripcion_corta`), código de error (`GRAF-ARG-NN`) o etiqueta semántica.
+
+Patrones prohibidos en Solution:
+- P1: `` `r letra_correcta` `` o `` `r letras[...]` ``
+- P2: prosa con letra interpolada
+- P3: `cat("**Opción ", l, ...)` en chunk R
+- P4: literal "Opción [A-D]" en Markdown
+
+### Patrón correcto (antes/después)
+
+**Antes (frágil):**
+
+````rmd
+### Respuesta correcta: Opción `r letra_correcta` {#respuesta-correcta-`r ex_uid`}
+
+```{r}
+err_correcto <- errores_conceptuales[[2]]
+cat(paste0(err_correcto$descripcion_larga, "\n"))
+```
+
+### Análisis de los distractores
+
+```{r}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0("**Opción ", l, " (", err$codigo, "):** ", err$descripcion_larga))
+  }
+}
+```
+````
+
+**Después (robusto):**
+
+````rmd
+### Respuesta correcta {#respuesta-correcta-`r ex_uid`}
+
+**Argumento válido:** "`r errores_conceptuales[[2]]$descripcion_corta`"
+
+```{r}
+err_correcto <- errores_conceptuales[[2]]
+cat(paste0(err_correcto$descripcion_larga, "\n"))
+```
+
+### Análisis de los argumentos incorrectos
+
+```{r}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+````
+
+### Defensas implementadas (4 capas)
+
+1. **Hook FASE 2J** (`post-exams2-validation.sh`): detecta P1-P4 en sección Solution. Bloqueante.
+2. **Test estático** (`test_letter_independence.R`): 4 tests + self-test. Falla CI si nuevo .Rmd cae en patrón.
+3. **Pre-write gate** (futuro, regla #16): bloquear Write/Edit de .Rmd con patrones prohibidos.
+4. **Detractor** (dominio `codigo_rexams`): check explícito de letter-independence.
+
+### Action item: .Rmd legacy con bug
+
+Lista en `tests/testthat/test_letter_independence.R::.legacy_known_letter_dep`. Fix uno por uno y remover de la lista. Total al crear la regla: 8 .Rmd.
+
+### 📅 Historial
+
+| Fecha | Archivo afectado | Resultado |
+|-------|------------------|-----------|
+| 2026-05-12 | `Comparacion-Lineas-Temporales-Schoice` | Estudiante real (KEVIN A. SILVA) reportó incoherencia en Moodle. Fix: Solution reescrita sin `r letra_correcta`. Regla #19 creada. Commit `86a4b211`. |
+
+### 🔗 Reglas Cruzadas
+
+- `.claude/rules/solution-letter-independence.md` (regla #19, fix principal)
+- `.claude/rules/codigo-rmd.md` regla #6 excepción (casos 2 y 3 ahora obsoletos)
+- Error 17 (gemelo: exshuffle:TRUE + letra con R-exams)
+- `tests/testthat/test_letter_independence.R`
 - `.claude/rules/markdown-imagenes-pdf.md` (regla anti-pandocbounded)

@@ -247,6 +247,56 @@ exsolution: `r paste(as.integer(sol), collapse="")`
 exshuffle: FALSE
 ```
 
+## Letter-independence en Solution (regla #19, OBLIGATORIO)
+
+La sección Solution del .Rmd **NUNCA** debe identificar opciones por su letra/posición. SIEMPRE por contenido o código de error.
+
+### Patrones prohibidos (bloquean compilación vía FASE 2J)
+
+```rmd
+### Respuesta correcta: Opción `r letra_correcta`
+La opción `r letra_correcta` es la correcta porque...
+**Opción A** es la correcta.
+```
+
+```r
+# Chunk R que emite "Opción <letra>":
+for (l in letras) {
+  cat("**Opción ", l, " (", err$codigo, "):** ", err$descripcion_larga)
+}
+```
+
+### Patrones correctos (auto-contenidos)
+
+```rmd
+### Respuesta correcta
+
+**Argumento válido:** "`r errores_conceptuales[[2]]$descripcion_corta`"
+```
+
+```r
+# Chunk R que identifica por código + nombre + contenido:
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+
+### Razón
+
+Moodle (y otros LMS) tiene un setting "Shuffle answers" INDEPENDIENTE del `exshuffle` de R-exams. Cuando está activado, Moodle re-ordena opciones al desplegar, pero NO toca el texto de Solution. Resultado: si Solution dice "Opción A" pero Moodle movió esa opción a la posición C, el estudiante ve incoherencia. Solo se detecta cuando un estudiante real cae en el ejercicio (cobertura tardía).
+
+`letra_correcta` puede seguir existiendo como variable R interna (logs con `message()` a stderr, asserts en `stopifnot()`) pero NUNCA debe llegar al texto del estudiante.
+
+Ver `.claude/rules/solution-letter-independence.md` (regla #19, sin excepciones).
+
 ## Referencias
 
 - [Anatomia Metacognitiva .Rmd](references/anatomia-metacognitiva.md) - Las 8 secciones obligatorias

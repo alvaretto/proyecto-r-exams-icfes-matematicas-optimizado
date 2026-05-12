@@ -165,6 +165,12 @@ suites <- list(
     archivo = "tests/testthat/test_pandocbounded_y_solution_coherence.R",
     critico = TRUE,
     watch = c("\\.Rmd$", "markdown-imagenes-pdf", "test_pandocbounded")
+  ),
+  list(
+    nombre = "Letter-independence en Solution (Error 19, Regla #19)",
+    archivo = "tests/testthat/test_letter_independence.R",
+    critico = TRUE,
+    watch = c("\\.Rmd$", "solution-letter-independence", "test_letter_independence")
   )
 )
 

@@ -261,13 +261,36 @@ es_nombre_variable <- function(linea, palabra) {
   return(FALSE)
 }
 
-# Función para verificar si la palabra está dentro de un string R
+# Función para verificar si la palabra está dentro de un string R.
+#
+# Algoritmo robusto: enmascarar contenidos de strings reemplazándolos por "".
+# Si después la palabra ya NO aparece, estaba dentro de un string.
+# Si aparece, está FUERA de strings (variable R, identificador, etc.).
+#
+# Esto resuelve el falso positivo del regex anterior cuando la palabra es
+# una variable R interpolada entre dos strings:
+#   paste0("...período ", periodo, ".")
+# El regex viejo veía la palabra entre dos comillas y la marcaba TRUE.
 esta_en_string <- function(linea, palabra) {
-  # Buscar la palabra dentro de comillas
-  if (grepl(paste0('["\'][^"\']*', palabra, '[^"\']*["\']'), linea, perl = TRUE)) {
-    return(TRUE)
-  }
-  return(FALSE)
+  linea_limpia <- gsub('"[^"]*"', '""', linea, perl = TRUE)
+  linea_limpia <- gsub("'[^']*'", "''", linea_limpia, perl = TRUE)
+  patron <- paste0("\\b", palabra, "\\b")
+  return(!grepl(patron, linea_limpia, perl = TRUE))
+}
+
+# Función para verificar si la palabra es parte de un anchor Markdown
+# {#word-...} o {#...-word-...}. Los anchors son identificadores ASCII.
+es_anchor_markdown <- function(linea, palabra) {
+  patron <- paste0("\\{#[^}]*\\b", palabra, "\\b[^}]*\\}")
+  return(grepl(patron, linea, perl = TRUE))
+}
+
+# Función para verificar si la palabra es parte de una ruta o nombre de
+# archivo. Rutas/filenames usan ASCII por convención (Unix/Git compat).
+es_ruta_archivo <- function(linea, palabra) {
+  patron <- paste0("(?<=[/_-])", palabra, "(?=[/_.-])|",
+                   "(?<=[/_-])", palabra, "\\b\\.[a-zA-Z]")
+  return(grepl(patron, linea, perl = TRUE))
 }
 
 # Función para verificar si la palabra está en código R inline
@@ -379,6 +402,16 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
 
         # 3. No corregir palabras excluidas en contexto de código R
         if (es_palabra_excluida_en_codigo(linea, palabra_mal)) {
+          next
+        }
+
+        # 3b. No corregir si es anchor Markdown {#palabra-...} (identificador)
+        if (es_anchor_markdown(linea, palabra_mal)) {
+          next
+        }
+
+        # 3c. No corregir si es parte de ruta/nombre de archivo
+        if (es_ruta_archivo(linea, palabra_mal)) {
           next
         }
 

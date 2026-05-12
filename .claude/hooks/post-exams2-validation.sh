@@ -365,6 +365,80 @@ fi
 echo ""
 
 # =============================================================================
+# FASE 2J: LETTER-INDEPENDENCE EN SOLUTION (Error 19, regla #19)
+# =============================================================================
+# Defensa permanente: Solution NUNCA debe referenciar letra/posicion de opcion.
+# Aplica INDEPENDIENTEMENTE del valor de exshuffle (Moodle puede re-shufflear).
+
+echo "┌───────────────────────────────────────────────────────────────┐"
+echo "│ FASE 2J: Letter-independence en Solution (E19, regla #19)     │"
+echo "└───────────────────────────────────────────────────────────────┘"
+
+LETRA_BUG_FOUND=0
+
+if [ -f "$RMD_FILE" ]; then
+  # Extraer SOLO la seccion Solution (entre 'Solution' y 'Meta-information')
+  SOL_BLOCK=$(awk '
+    /^Solution[[:space:]]*$/ { in_sol = 1; next }
+    /^Meta-information[[:space:]]*$/ { in_sol = 0 }
+    in_sol == 1 { print NR ":" $0 }
+  ' "$RMD_FILE")
+
+  if [ -n "$SOL_BLOCK" ]; then
+    # P1+P2: backtick-r letra_correcta o letras[...]
+    P1_HITS=$(echo "$SOL_BLOCK" | grep -E '`r[[:space:]]+(letra_correcta|letras\[)' || true)
+    if [ -n "$P1_HITS" ]; then
+      LETRA_BUG_FOUND=1
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+      echo "  ❌ ERR_SOL_LETRA_R: Solution interpola letra_correcta o letras[...]"
+      echo "$P1_HITS" | sed 's/^/     /'
+    fi
+
+    # P3: cat("**Opcion ", l, ...) — emision dinamica con variable de letra
+    P3_HITS=$(echo "$SOL_BLOCK" | grep -E 'cat\([^)]*"\*?\*?Opci[oó]n[[:space:]]+",[[:space:]]*l[[:space:],)]' || true)
+    if [ -n "$P3_HITS" ]; then
+      LETRA_BUG_FOUND=1
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+      echo "  ❌ ERR_SOL_LETRA_CAT: chunk R emite 'Opción ' con variable de letra"
+      echo "$P3_HITS" | sed 's/^/     /'
+    fi
+
+    # P4: literal "Opcion A/B/C/D" en Markdown (no dentro de backticks de codigo)
+    # Filtrar lineas que parecen ser parte de codigo R (cat con error$codigo, etc)
+    P4_HITS=$(echo "$SOL_BLOCK" | grep -E '(^|[^`])(\*\*)?Opci[oó]n[[:space:]]+[A-D]\b' || true)
+    # Excluir matches dentro de strings de codigo R que construyen prosa generica
+    P4_HITS=$(echo "$P4_HITS" | grep -vE 'descripcion_corta|descripcion_larga|err\$' || true)
+    if [ -n "$P4_HITS" ]; then
+      LETRA_BUG_FOUND=1
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+      echo "  ❌ ERR_SOL_LETRA_LITERAL: Solution menciona 'Opción [A-D]' literal"
+      echo "$P4_HITS" | sed 's/^/     /'
+    fi
+
+    if [ $LETRA_BUG_FOUND -gt 0 ]; then
+      echo ""
+      echo "     Fix obligatorio (regla #19, sin excepciones):"
+      echo "       1. Quitar 'Opción \`r letra_correcta\`' de headers de Solution"
+      echo "       2. Identificar la opción correcta por contenido o codigo de error"
+      echo "          (ej: cita de descripcion_corta + codigo GRAF-ARG-NN)"
+      echo "       3. En for loop de distractores, NO emitir 'Opcion <letra>'"
+      echo "          Reemplazar por '<codigo> — <nombre>'"
+      echo ""
+      echo "     Ver .claude/rules/solution-letter-independence.md"
+      echo "     Razon: Moodle (y otros LMS) puede re-shufflear las opciones"
+      echo "            INDEPENDIENTEMENTE de exshuffle:FALSE de R-exams, rompiendo"
+      echo "            la coherencia letra <-> contenido para el estudiante."
+    else
+      echo "  ✓ FASE 2J: Solution es letter-independent (regla #19)"
+    fi
+  else
+    echo "  ⊘ FASE 2J: no se encontro seccion Solution en el .Rmd"
+  fi
+fi
+
+echo ""
+
+# =============================================================================
 # RESUMEN FINAL Y ACCIONES OBLIGATORIAS
 # =============================================================================
 

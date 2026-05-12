@@ -73,6 +73,9 @@ Antes de cualquier acción destructiva, verifico:
 5. `ruta_destino` está bajo `A-Produccion/01-En-PreDesarrollo/` o `A-Produccion/02-En-Desarrollo/` (NUNCA bajo `03-En-Produccion/` ni `Ejemplos-Funcionales-Rmd/`).
 6. `.claude/rules/markdown-imagenes-pdf.md` existe (regla #18 anti `\pandocbounded`).
 7. `tests/testthat/test_pandocbounded_y_solution_coherence.R` existe.
+8. `.claude/rules/solution-letter-independence.md` existe (regla #19 anti `letra_correcta` en Solution).
+9. `tests/testthat/test_letter_independence.R` existe.
+10. El hook `post-exams2-validation.sh` incluye FASE 2J (`grep -q "FASE 2J" .claude/hooks/post-exams2-validation.sh`).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -98,13 +101,50 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - Patrón validado: `cat("![](file.png){width=80%}\n")` (ver `diagrama_venn_encuesta_*.Rmd` línea 1070).
 - Después de `exams2pdf()`, **siempre** verifico que el `.tex` generado NO contiene `\pandocbounded`.
 
+### Incidente C — Solution con letra hardcoded + Moodle re-shuffle (Error 19)
+
+**Sesión**: 2026-05-12. Estudiante real reportó confusión: seleccionó opción C marcada "Incorrecta", pero la Solution decía "Respuesta correcta: Opción C". El `.Rmd` tenía `exshuffle: FALSE` y `letra_correcta` se calculaba post-`sample()`. **Sin embargo, Moodle aplicó su propia "Shuffle answers" en el quiz**, re-ordenando las opciones de forma independiente de R-exams.
+
+**Síntoma**: Inconsistencia silenciosa letra ↔ contenido entre lo que la Solution dice y lo que Moodle muestra.
+
+**Causa raíz**: cualquier referencia a `r letra_correcta`, `r letras[...]`, o literal `Opción [A-D]` en la sección Solution es frágil porque depende de orden de opciones del .Rmd, que NO se preserva downstream cuando Moodle (u OpenOLAT, Canvas, etc.) tiene shuffle activado.
+
+**Defensa preventiva (regla #19, sin excepciones)**:
+
+1. **NUNCA** emitir `r letra_correcta` ni `r letras[...]` dentro de la sección `Solution`.
+2. **NUNCA** emitir literal `Opción [A-D]` dentro de la sección `Solution`.
+3. En el loop de análisis de distractores, identificar cada opción por `error$codigo + error$nombre + descripcion_corta`, NUNCA por su letra:
+   ```r
+   # ❌ PROHIBIDO
+   cat("**Opción ", l, " (", err$codigo, "):** ", err$descripcion_larga)
+   # ✓ CORRECTO
+   cat("**", err$codigo, " — ", err$nombre, "**\n\n",
+       "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+       err$descripcion_larga, "\n\n")
+   ```
+4. En el header de "Respuesta correcta", NUNCA emitir la letra:
+   ```r
+   # ❌ PROHIBIDO
+   ### Respuesta correcta: Opción `r letra_correcta`
+   # ✓ CORRECTO
+   ### Respuesta correcta
+
+   **Argumento válido:** "`r errores_conceptuales[[2]]$descripcion_corta`"
+   ```
+5. `letra_correcta` puede seguir computándose para logs internos (`message()` a stderr) pero NUNCA debe llegar al texto del estudiante.
+
+**Verificación automática**:
+- FASE 2J del hook `post-exams2-validation.sh` escanea la Solution buscando los patrones P1-P4. Si encuentra cualquiera, FAIL bloqueante con códigos `ERR_SOL_LETRA_R`, `ERR_SOL_LETRA_CAT`, `ERR_SOL_LETRA_LITERAL`.
+- `tests/testthat/test_letter_independence.R` valida lo mismo en CI.
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
 1. Ejecutar `exams2pdf()` con ≥5 semillas en el directorio destino real (no temporal).
 2. Inspeccionar el `.tex` generado con `grep -c 'pandocbounded'` → debe ser 0.
 3. Inspeccionar visualmente el PDF de al menos 1 semilla.
-4. Solo después de las 3 verificaciones, marco renderizado_4_formatos como completado.
+4. Ejecutar `awk '/^Solution[[:space:]]*$/,/^Meta-information[[:space:]]*$/' <archivo.Rmd> | grep -E '\`r[[:space:]]+(letra_correcta|letras\[)|Opci[oó]n[[:space:]]+[A-D]'` → debe ser vacío (regla #19).
+5. Solo después de las 4 verificaciones, marco renderizado_4_formatos como completado.
 
 ## Máquina de estados (los 12 pasos)
 
@@ -264,14 +304,15 @@ Al terminar (éxito o fallo), produzco:
 ## Restricciones absolutas (NO violar bajo ninguna circunstancia)
 
 - ❌ NO modificar archivos en `A-Produccion/03-En-Produccion/` ni en `A-Produccion/Ejemplos-Funcionales-Rmd/` (inmutables).
-- ❌ NO modificar las 15 reglas en `.claude/rules/`.
+- ❌ NO modificar las 19 reglas en `.claude/rules/` (incluye la nueva regla #19 solution-letter-independence).
 - ❌ NO modificar agentes existentes ni el skill `/generar-schoice`.
 - ❌ NO ejecutar `git commit`, `git push`, `git reset --hard`, `git push --force`. **Sin excepciones.**
 - ❌ NO usar `git commit --no-verify` ni `--no-gpg-sign`.
 - ❌ NO auto-decidir Flujo B (regla `flujo-b-obligatorio.md`).
 - ❌ NO auto-seleccionar lenguaje gráfico (regla `graficador-secuencial.md`: "PROHIBIDO: Claude selecciona el lenguaje final").
 - ❌ NO auto-aprobar el ejercicio (regla #16: aprobación humana obligatoria).
-- ❌ NO usar `exshuffle: FALSE` salvo en los casos documentados (regla `codigo-rmd.md` regla #6 ampliada): SCHOICE con opciones gráficas O Solution que referencia letra explícita (`r letra_correcta`, "Opción A").
+- ❌ NO usar `exshuffle: FALSE` salvo en el caso documentado (regla #6 ampliada): SCHOICE con opciones gráficas individuales (PNGs por opción). La excepción de "Solution con `r letra_correcta`" YA NO APLICA porque la regla #19 prohíbe esa referencia.
+- ❌ NO emitir `r letra_correcta`, `r letras[...]`, ni literal "Opción [A-D]" dentro de la sección `Solution` del `.Rmd` (regla #19, sin excepciones). Identificar la opción correcta por contenido (`descripcion_corta`) o código (`error$codigo`).
 - ❌ NO emitir imágenes Markdown sin atributo `{width=...}` (regla #18 `markdown-imagenes-pdf.md`). Causaría `\pandocbounded undefined` al compilar PDF.
 - ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` y que el PDF abre sin errores (validación realista, no solo "exit 0" del comando).
 - ❌ NO inventar pasos del workflow ni saltar el orden.

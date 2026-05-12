@@ -80,6 +80,8 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    `.claude/rules/graficos-como-opciones.md` y la regla #18
    `.claude/rules/markdown-imagenes-pdf.md` (vinculada).
 
+   **⚠️ ACTUALIZACIÓN 2026-05-12 (regla #19):** los casos 2 y 3 de esta excepción quedan OBSOLETOS porque la regla #19 (`solution-letter-independence.md`) prohíbe terminantemente las referencias `r letra_correcta` y literal "Opción [A-D]" en la sección Solution. Por lo tanto, el único caso vivo de la excepción para `exshuffle: FALSE` es el caso 1 (SCHOICE con opciones gráficas individuales en PNGs). Para SCHOICE de texto, usar `exshuffle: TRUE` o `exshuffle: FALSE + sample() interno` indistintamente — ya no depende de Solution porque Solution es letter-independent.
+
 ## ⚠️ 5 Coherencias OBLIGATORIAS
 
 Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:

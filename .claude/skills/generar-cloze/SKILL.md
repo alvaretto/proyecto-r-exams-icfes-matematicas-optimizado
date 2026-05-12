@@ -216,6 +216,56 @@ Ver [antipatrones-cloze.md](references/antipatrones-cloze.md) para los 4 antipat
 
 Resumen: (1) NO menos de 4 partes, (2) NO partes sin progresion cognitiva, (3) NO afirmaciones sin base conceptual, (4) NO ##ANSWERi## mal ubicado.
 
+## Letter-independence en Solution (regla #19, OBLIGATORIO)
+
+La sección Solution del .Rmd CLOZE **NUNCA** debe identificar opciones por su letra/posición. SIEMPRE por contenido o código de error. Aplica a cada sub-parte schoice del CLOZE.
+
+### Patrones prohibidos (bloquean compilación vía FASE 2J)
+
+```rmd
+### Respuesta correcta Parte 1: Opción `r letra_correcta_p1`
+La opción `r letra_correcta_p3` de la Parte 3 es correcta porque...
+**Opción A** corresponde al error conceptual identificado.
+```
+
+```r
+# Chunk R que emite "Opción <letra>" en cualquier parte del CLOZE:
+for (l in letras_p1) {
+  cat("**Opción ", l, " (", err$codigo, "):** ", err$descripcion_larga)
+}
+```
+
+### Patrones correctos (auto-contenidos)
+
+```rmd
+### Respuesta correcta — Parte 1
+
+**Error identificado:** "`r errores_conceptuales[[error_idx_p1]]$descripcion_corta`"
+```
+
+```r
+# Chunk R que identifica por código + nombre + contenido (sin letra):
+for (l in letras_p1) {
+  opc <- opciones_mezcladas_p1[[l]]
+  if (opc$tipo != "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+
+### Razón
+
+Moodle (y otros LMS) tiene un setting "Shuffle answers" INDEPENDIENTE del `exshuffle` de R-exams. Cuando está activado, Moodle re-ordena las opciones de cada sub-parte schoice del CLOZE, pero NO toca el texto de Solution. Si Solution dice "Opción A de la Parte 1" pero Moodle movió esa opción a la posición C, el estudiante ve incoherencia.
+
+Las variables `letra_correcta_p1`, `letra_correcta_p3`, etc. pueden existir como variables R internas para asserts y logs (`message()` a stderr) pero NUNCA deben llegar al texto visible del estudiante.
+
+Ver `.claude/rules/solution-letter-independence.md` (regla #19, sin excepciones).
+
 ## Referencias
 
 - [Estructura Progressive Disclosure](references/estructura-progressive-disclosure.md) - Secuencia de 4 partes, tipos de gap, plantilla Question, metadatos

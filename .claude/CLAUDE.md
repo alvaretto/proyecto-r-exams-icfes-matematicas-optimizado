@@ -33,6 +33,8 @@ Este archivo funciona como **índice central** del sistema. Para información de
 17. **Infraestructura `.claude/` protegida** (backups + verificación de invariantes I-1 a I-7 antes/después de plataformas externas) → @.claude/rules/infraestructura-protegida.md
 18. **Markdown-imágenes-PDF (anti `\pandocbounded`)** → @.claude/rules/markdown-imagenes-pdf.md
     Toda imagen `.png/.jpg/.svg/.pdf` emitida vía Markdown (directa o `cat()`) en `.Rmd` DEBE incluir atributo `{width=...}`. Pandoc 3.x sin width genera `\pandocbounded` no definido en LaTeX → rompe `exams2pdf()`. Coupled con regla #6 ampliada (`exshuffle: FALSE` para Solution con letra explícita). Errores 16-17 documentados.
+19. **Solution letter-independence** (NUNCA `r letra_correcta` ni "Opción [A-D]" en Solution) → @.claude/rules/solution-letter-independence.md
+    Defensa permanente contra Error 19. La sección Solution debe identificar opciones por contenido/código de error, NUNCA por letra/posición, porque Moodle (y otros LMS) pueden re-shufflear las opciones de forma independiente al `exshuffle` de R-exams, rompiendo coherencia letra ↔ contenido para el estudiante. Capas: hook FASE 2J + test_letter_independence.R + detractor.
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -129,9 +131,20 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.10.0 (Errores 16-17 + Regla #18 anti `\pandocbounded` + FASE 2I + 18 reglas críticas)
-**Fecha**: 2026-05-03
+**Versión**: 3.11.0 (Error 19 + Regla #19 solution-letter-independence + FASE 2J + 19 reglas críticas)
+**Fecha**: 2026-05-12
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.11.0 (2026-05-12)
+- **NUEVA REGLA #19**: `solution-letter-independence.md` — prohíbe `r letra_correcta` y literal "Opción [A-D]" en la sección Solution. Defensa contra re-shuffle externo (Moodle "Shuffle answers").
+- **HOOK FASE 2J**: `post-exams2-validation.sh` agrega detector de patrones P1-P4 en Solution. Errores `ERR_SOL_LETRA_R`, `ERR_SOL_LETRA_CAT`, `ERR_SOL_LETRA_LITERAL` (todos bloqueantes).
+- **NUEVO TEST**: `tests/testthat/test_letter_independence.R` (4 tests). Lista legacy con 8 .Rmd conocidos (action item de fix pendiente).
+- **SCRIPT ORTOGRAFÍA**: `corregir_ortografia_espanol.R` arregla 3 falsos positivos sistemáticos: variables R entre strings concatenados (esta_en_string roto), anchors Markdown `{#...}`, rutas/nombres de archivo en comentarios.
+- **ORQUESTADOR-SCHOICE**: pre-flight checks 8-10 (regla #19, test, hook FASE 2J), Incidente C en lecciones absorbidas, paso 4 de validación realista.
+- **TESTS**: 13 suites enganchadas al runner (era 12).
+- **ERROR 19 EN CATÁLOGO**: documentado en `patrones-errores-conocidos.md`.
+- **EJERCICIO PILOTO**: `Comparacion-Lineas-Temporales-Schoice` renombrado desde `Comparacion-Lineas-Fertilizantes-Rusia-China` + 5 fixes (commit `86a4b211`).
+- **REGLA #6 EXCEPCIÓN #2 OBSOLETA**: la excepción "exshuffle:FALSE permitido si Solution referencia letra" queda obsoleta porque la regla #19 prohíbe esa referencia.
 
 ### Cambios v3.10.0 (2026-05-03)
 - **NUEVA REGLA #18**: `markdown-imagenes-pdf.md` — anti `\pandocbounded undefined`. Toda imagen Markdown en `.Rmd` debe llevar `{width=...}`.
