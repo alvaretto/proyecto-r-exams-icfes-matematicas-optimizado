@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "comparacion_lineas_temporales_metacognitivo_argumentacion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-05-05T18:38:16.149781-05:00",
+  "timestamp_ultima_actualizacion": "2026-05-05T19:22:25.934677-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-05-05T18:38:39.250054-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-05-05T19:01:39.686929-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:04:33.890177-05:00",
+      "archivo": "comparacion_lineas_temporales_metacognitivo_argumentacion_n3_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:04:44.578780-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:15:34.115525-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:15:45.864564-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:16:30.538783-05:00",
+      "veredicto": "APROBAR"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:16:45.397693-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:21:42.309899-05:00",
+      "versiones_unicas": 300
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-05-05T19:22:25.934677-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}

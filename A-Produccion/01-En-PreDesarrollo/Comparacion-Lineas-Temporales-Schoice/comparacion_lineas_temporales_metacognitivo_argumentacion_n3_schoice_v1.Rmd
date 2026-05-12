@@ -1,0 +1,765 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r data_generation, echo=FALSE, results="hide", message=FALSE, warning=FALSE}
+library(exams)
+
+# ===================================================================
+# HELPER: Contracción "de el" -> "del" en español
+# ===================================================================
+
+contraer_de_el <- function(texto) {
+  gsub("(\\bde) (el\\b)", "del", texto, perl = TRUE)
+}
+
+# ===================================================================
+# POOLS ALEATORIOS: PARES DE PAÍSES Y RECURSOS
+# Diversidad combinatoria: 10 pares x 8 recursos x 8 plantillas
+# ===================================================================
+
+pares_paises <- list(
+  list(pais_a = "Rusia",           pais_b = "China"),
+  list(pais_a = "India",           pais_b = "Brasil"),
+  list(pais_a = "Estados Unidos",  pais_b = "Alemania"),
+  list(pais_a = "Francia",         pais_b = "Italia"),
+  list(pais_a = "Japón",           pais_b = "Corea del Sur"),
+  list(pais_a = "México",          pais_b = "Argentina"),
+  list(pais_a = "Canadá",          pais_b = "Australia"),
+  list(pais_a = "España",          pais_b = "Portugal"),
+  list(pais_a = "Egipto",          pais_b = "Sudáfrica"),
+  list(pais_a = "Indonesia",       pais_b = "Vietnam")
+)
+
+# Recursos con unidades plausibles para rango 0-6
+recursos_pool <- list(
+  list(nombre = "fertilizante",      unidad = "miles de toneladas"),
+  list(nombre = "agua potable",      unidad = "miles de millones de litros"),
+  list(nombre = "energía eléctrica", unidad = "miles de GWh"),
+  list(nombre = "acero",             unidad = "millones de toneladas"),
+  list(nombre = "papel reciclado",   unidad = "miles de toneladas"),
+  list(nombre = "trigo",             unidad = "millones de toneladas"),
+  list(nombre = "gas natural",       unidad = "miles de millones de m³"),
+  list(nombre = "cemento",           unidad = "millones de toneladas")
+)
+
+# Seleccionar par de países y recurso aleatorios
+par_sel <- pares_paises[[sample(length(pares_paises), 1)]]
+recurso_obj <- recursos_pool[[sample(length(recursos_pool), 1)]]
+
+pais_a <- par_sel$pais_a
+pais_b <- par_sel$pais_b
+recurso <- recurso_obj$nombre
+unidad <- recurso_obj$unidad
+
+# ===================================================================
+# CONTEXTOS NARRATIVOS CREATIVOS (8 plantillas, 6+ tipos)
+# Las plantillas usan las variables pais_a, pais_b, recurso, unidad
+# del scope externo (closures R).
+# Regla: .claude/rules/contextos-narrativos-creativos.md
+# ===================================================================
+
+contextos <- list(
+  # Tipo: Narración periodística
+  list(
+    plantilla = function(prot, periodo_texto) {
+      paste0("Según un informe publicado por ", prot,
+             ", la gráfica muestra la cantidad de ", recurso,
+             ", en ", unidad,
+             ", utilizada por dos países durante el período ", periodo_texto, ".")
+    },
+    protagonistas = c(
+      "la Organización de las Naciones Unidas para la Alimentación y la Agricultura",
+      "el Banco Mundial",
+      "la Comisión Económica para Europa"
+    )
+  ),
+  # Tipo: Situación problema
+  list(
+    plantilla = function(prot, periodo_texto) {
+      paste0(prot, " necesita comparar el consumo de ", recurso,
+             " entre dos países durante el período ", periodo_texto,
+             ". La siguiente gráfica presenta los datos (en ", unidad, "):")
+    },
+    protagonistas = c(
+      "Un equipo de analistas del sector industrial",
+      "La oficina de planificación económica",
+      "El departamento de estudios ambientales"
+    )
+  ),
+  # Tipo: Perspectiva del estudiante
+  list(
+    plantilla = function(prot, periodo_texto) {
+      paste0("Para su proyecto de geografía económica, ", prot,
+             " encontró datos sobre el consumo de ", recurso,
+             " de dos países en el período ", periodo_texto,
+             ". La gráfica resume la información (en ", unidad, "):")
+    },
+    protagonistas = c("Valentina", "Santiago", "Camila", "Andrés", "Luciana")
+  ),
+  # Tipo: Contexto institucional
+  list(
+    plantilla = function(prot, periodo_texto) {
+      contraer_de_el(paste0(
+        "El boletín anual de ", prot,
+        " reportó los datos de consumo de ", recurso,
+        " correspondientes al período ", periodo_texto,
+        ". La siguiente gráfica resume la evolución (en ", unidad, "):"))
+    },
+    protagonistas = c(
+      "la Asociación Internacional de Productores",
+      "el Instituto de Recursos Mundiales",
+      "el Centro de Estadísticas Económicas"
+    )
+  ),
+  # Tipo: Diálogo implícito
+  list(
+    plantilla = function(prot, periodo_texto) {
+      paste0("---Necesitamos entender la evolución del uso de ", recurso,
+             " en estos dos países ---señaló ", prot,
+             " al presentar los datos del período ", periodo_texto,
+             ". La gráfica muestra las cantidades (en ", unidad, "):")
+    },
+    protagonistas = c(
+      "la directora del observatorio económico",
+      "el coordinador de la mesa de política industrial",
+      "la jefa de la unidad de análisis de recursos"
+    )
+  ),
+  # Tipo: Pregunta retórica
+  list(
+    plantilla = function(prot, periodo_texto) {
+      paste0("¿Cómo ha cambiado el consumo de ", recurso,
+             " en estos dos países? ", prot,
+             " analizó los datos del período ", periodo_texto,
+             " y elaboró la siguiente gráfica (en ", unidad, "):")
+    },
+    protagonistas = c(
+      "Un grupo de investigadores de la ONU",
+      "El equipo de ciencias económicas de la universidad",
+      "La fundación para el desarrollo sostenible"
+    )
+  ),
+  # Tipo: Descubrimiento
+  list(
+    plantilla = function(prot, periodo_texto) {
+      paste0("Al revisar las bases de datos internacionales, ", prot,
+             " encontró información reveladora sobre el consumo de ",
+             recurso, " de dos países durante el período ", periodo_texto,
+             ". Los resultados (en ", unidad, ") se resumen en esta gráfica:")
+    },
+    protagonistas = c(
+      "el analista principal de la Oficina de Estadística",
+      "la investigadora del programa de recursos naturales",
+      "el equipo de monitoreo económico regional"
+    )
+  ),
+  # Tipo: Acción en curso
+  list(
+    plantilla = function(prot, periodo_texto) {
+      contraer_de_el(paste0(
+        "Durante la conferencia sobre desarrollo sostenible de ", prot,
+        ", se presentaron los datos de consumo de ", recurso,
+        " correspondientes al período ", periodo_texto,
+        ". La gráfica de líneas muestra la evolución (en ",
+        unidad, "):"))
+    },
+    protagonistas = c(
+      "la Cumbre Latinoamericana de Medio Ambiente",
+      "el Foro Global de Economía",
+      "la Asamblea de Organizaciones Internacionales"
+    )
+  )
+)
+
+# ===================================================================
+# GENERACIÓN DE DATOS ALEATORIOS
+# Estructura fija: dos países, año de cruce ~2002,
+# país A (sólida) supera a país B (punteada) después del cruce.
+# Los valores tienen ruido para generar versiones únicas.
+# ===================================================================
+
+ctx <- contextos[[sample(length(contextos), 1)]]
+prot <- sample(ctx$protagonistas, 1)
+
+# ===================================================================
+# ESTRUCTURA ALEATORIZADA DEL GRÁFICO (rompe memorización)
+# 4 ejes de aleatorización:
+#   (1) Período: anio_inicio variable, ventana de 9 años
+#   (2) Magnitud: y_max_target ∈ {4..8} -> eje Y escala distinto
+#   (3) Año de cruce: idx_cruce ∈ {2,3,4,6,7,8} (evita cruce medio idx=5)
+#   (4) Dominancia: ganador_es_pa = TRUE/FALSE
+#       (combinando con idx_cruce determina si Pa o Pb domina mayoría)
+# ===================================================================
+
+n_anios <- 9
+
+# (1) Período variable
+anio_inicio <- sample(c(1985, 1990, 1995, 2000, 2005, 2010, 2015), 1)
+anios_base <- seq(anio_inicio, anio_inicio + n_anios - 1)
+
+# (2) Magnitud variable del eje Y
+y_max_target <- sample(c(4, 5, 6, 7, 8), 1)
+
+# (3) Año de cruce (índice 2..8, evitando el 5 para no quedar empatados)
+idx_cruce <- sample(c(2L, 3L, 4L, 6L, 7L, 8L), 1)
+
+# (4) Dirección de la dominancia
+# Reglas de mayoría con n=9 y cruce en idx_cruce:
+#   - Si cruce_temprano (idx<=4): el "subiendo" gana mayoría (>= 5 años)
+#   - Si cruce_tardio  (idx>=6): el "bajando"  gana mayoría (>= 5 años)
+cruce_temprano <- idx_cruce <= 4
+# Aleatorizar quién es Pa (subiendo o bajando)
+pa_es_subiendo <- sample(c(TRUE, FALSE), 1)
+
+# Quién gana la mayoría (Pa o Pb)
+ganador_es_pa <- (cruce_temprano && pa_es_subiendo) ||
+                 (!cruce_temprano && !pa_es_subiendo)
+
+# La afirmación del enunciado es: "Pa utilizó más Pb la mayor parte del tiempo"
+afirmacion_es_verdadera <- ganador_es_pa
+respuesta_si_no <- if (afirmacion_es_verdadera) "Sí" else "No"
+respuesta_si_no_neg <- if (afirmacion_es_verdadera) "No" else "Sí"
+
+# ===================================================================
+# Generar las dos series con la estructura controlada:
+#   serie_sub: parte abajo, supera a serie_baj desde idx_cruce
+#   serie_baj: parte arriba, queda por debajo desde idx_cruce
+# ===================================================================
+gap_min <- 0.3
+serie_sub <- numeric(n_anios)
+serie_baj <- numeric(n_anios)
+
+repeat {
+  # serie_sub (subiendo): comienza bajo y crece monótonamente
+  serie_sub[1] <- round(runif(1, 0, 0.4 * y_max_target), 1)
+  for (i in 2:n_anios) {
+    inc <- runif(1, 0.15, 0.25) * y_max_target
+    serie_sub[i] <- round(serie_sub[i-1] + inc, 1)
+  }
+  # Reescalar a [0, ~y_max_target]
+  serie_sub <- round(serie_sub / max(serie_sub) * y_max_target * runif(1, 0.85, 0.95), 1)
+
+  # serie_baj (bajando relativamente): siempre creciente pero con menor pendiente
+  # Construir condicional a idx_cruce:
+  # - en idx < idx_cruce: serie_baj > serie_sub + gap
+  # - en idx >= idx_cruce: serie_baj < serie_sub - gap
+  ok <- TRUE
+  for (i in 1:n_anios) {
+    gap <- runif(1, gap_min, gap_min + 0.7 * y_max_target / 8)
+    if (i < idx_cruce) {
+      serie_baj[i] <- serie_sub[i] + gap
+    } else {
+      serie_baj[i] <- serie_sub[i] - gap
+    }
+  }
+  # Forzar monotonía no decreciente en serie_baj
+  for (i in 2:n_anios) {
+    if (serie_baj[i] < serie_baj[i-1]) {
+      serie_baj[i] <- serie_baj[i-1] + runif(1, 0.05, 0.3)
+    }
+  }
+  serie_baj <- round(pmax(0, serie_baj), 1)
+
+  # Verificar estructura final
+  before  <- if (idx_cruce > 1) all(serie_sub[1:(idx_cruce-1)] < serie_baj[1:(idx_cruce-1)]) else TRUE
+  fromcruz <- all(serie_sub[idx_cruce:n_anios] > serie_baj[idx_cruce:n_anios])
+  if (before && fromcruz) break
+}
+
+# Asignar series a Pa/Pb según pa_es_subiendo
+if (pa_es_subiendo) {
+  datos_a <- serie_sub
+  datos_b <- serie_baj
+} else {
+  datos_a <- serie_baj
+  datos_b <- serie_sub
+}
+
+# Conteo de años por país (ignorando empates exactos)
+anios_a_mayor <- sum(datos_a > datos_b)
+anios_b_mayor <- sum(datos_b > datos_a)
+
+# Año de cruce en el eje real
+anio_cruce_aprox <- anios_base[idx_cruce]
+
+periodo_texto <- paste0(anios_base[1], "-", anios_base[n_anios])
+
+# Nombres del ganador y perdedor (para usar en descripciones)
+pais_ganador <- if (ganador_es_pa) pais_a else pais_b
+pais_perdedor <- if (ganador_es_pa) pais_b else pais_a
+anios_ganador <- if (ganador_es_pa) anios_a_mayor else anios_b_mayor
+anios_perdedor <- if (ganador_es_pa) anios_b_mayor else anios_a_mayor
+
+# Rango de años donde el ganador domina (CORRECCIÓN BUG):
+# - Si cruce_temprano (idx<=4): ganador = serie_sub, domina post-cruce
+#   (años anios_base[idx_cruce] .. anios_base[n_anios])
+# - Si cruce_tardio (idx>=6): ganador = serie_baj, domina pre-cruce
+#   (años anios_base[1] .. anios_base[idx_cruce-1])
+rango_dominancia <- if (cruce_temprano) {
+  paste0("años ", anios_base[idx_cruce], "-", anios_base[n_anios])
+} else {
+  paste0("años ", anios_base[1], "-", anios_base[idx_cruce - 1])
+}
+
+# Generar enunciado
+enunciado <- ctx$plantilla(prot, periodo_texto)
+
+# Etiqueta del eje Y del gráfico
+etiqueta_y <- paste0(
+  toupper(substring(recurso, 1, 1)), substring(recurso, 2),
+  "\n(", unidad, ")"
+)
+
+# ===================================================================
+# POOL DE ERRORES CONCEPTUALES (6 errores para argumentación)
+# Patrón: evaluacion_afirmacion
+# ===================================================================
+
+errores_conceptuales <- list(
+  list(
+    codigo = "GRAF-ARG-01",
+    nombre = "Argumento basado en un solo punto inicial",
+    descripcion_corta = paste0(
+      "No, porque hay un punto del período donde ambos países usan ",
+      "cantidades iguales de ", recurso
+    ),
+    descripcion_larga = paste0(
+      "Este argumento se basa en uno o pocos puntos del gráfico donde ",
+      "los valores de los dos países son cercanos entre sí. ",
+      "Sin embargo, la cercanía puntual no determina la dominancia general. ",
+      "La afirmación se refiere a la tendencia mayoritaria en todo el período, ",
+      "no a años específicos donde las cantidades parezcan similares."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre un punto individual y la tendencia general. ",
+      "Usar un solo dato para refutar una afirmación sobre el comportamiento ",
+      "global de las series."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "no_punto_inicial"
+    }
+  ),
+  list(
+    codigo = "GRAF-ARG-02",
+    nombre = "Argumento correcto: conteo año por año",
+    descripcion_corta = if (afirmacion_es_verdadera) {
+      paste0(
+        "Sí, porque al comparar año por año ", pais_a,
+        " supera a ", pais_b, " en la mayoría de los años"
+      )
+    } else {
+      paste0(
+        "No, porque al comparar año por año ", pais_b,
+        " supera a ", pais_a, " en la mayoría de los años"
+      )
+    },
+    descripcion_larga = paste0(
+      "Esta es la respuesta correcta. Al analizar la gráfica año por año, ",
+      pais_ganador, " supera a ", pais_perdedor, " en ", anios_ganador,
+      " años de los ", n_anios, " del período (", rango_dominancia, "). ",
+      "Como ", anios_ganador, " es más de la mitad de ", n_anios,
+      " años, ", pais_ganador, " es quien dominó la mayor parte del tiempo. ",
+      if (afirmacion_es_verdadera) {
+        paste0("Por tanto, la afirmación de que ", pais_a, " utilizó más ",
+               recurso, " que ", pais_b, " la mayor parte del tiempo es **correcta**.")
+      } else {
+        paste0("La pregunta consulta si ", pais_a, " utilizó más ", recurso,
+               " que ", pais_b, " la mayor parte del tiempo; como en realidad ",
+               "fue ", pais_b, " quien dominó la mayoría del período, la ",
+               "afirmación es **incorrecta**.")
+      }
+    ),
+    causa_raiz = NA,
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "correcto"
+    }
+  ),
+  list(
+    codigo = "GRAF-ARG-03",
+    nombre = "Argumento basado en el subperíodo del perdedor",
+    descripcion_corta = paste0(
+      "No, porque existen años del período en que ", pais_perdedor,
+      " supera a ", pais_ganador, " en el uso de ", recurso
+    ),
+    descripcion_larga = paste0(
+      "Este argumento identifica un subperíodo real (",
+      anios_perdedor, " año", ifelse(anios_perdedor == 1, "", "s"),
+      " donde ", pais_perdedor, " supera a ", pais_ganador,
+      "), pero generaliza incorrectamente desde la minoría. ",
+      "La afirmación se refiere a la mayoría del período: ",
+      pais_ganador, " supera a ", pais_perdedor, " en ", anios_ganador,
+      " años, que sí constituye \"la mayor parte del tiempo\". ",
+      "Un contraejemplo parcial no refuta una afirmación sobre la mayoría."
+    ),
+    causa_raiz = paste0(
+      "Sobregeneralización a partir de un subperíodo. El estudiante ",
+      "identifica un contraejemplo parcial y lo usa para rechazar una ",
+      "afirmación sobre la tendencia mayoritaria."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "no_subperiodo"
+    }
+  ),
+  list(
+    codigo = "GRAF-ARG-04",
+    nombre = "Argumento basado solo en el último año",
+    descripcion_corta = paste0(
+      "Sí, porque al final del período ", pais_a,
+      " presenta la mayor cantidad de ", recurso
+    ),
+    descripcion_larga = paste0(
+      "Este argumento se apoya en un solo dato puntual (el valor del último año). ",
+      if (pa_es_subiendo) {
+        paste0("Aunque es cierto que ", pais_a, " tiene el valor más alto en el último año, ",
+               "ese dato puntual no determina quién dominó \"la mayor parte del tiempo\". ")
+      } else {
+        paste0("Además la premisa es falsa: en realidad ", pais_b,
+               " es quien presenta la mayor cantidad al final del período. ")
+      },
+      "Para validar la afirmación se requiere comparar ambas series año por año ",
+      "y contar en cuántos años cada país fue superior, no observar solo un dato extremo."
+    ),
+    causa_raiz = paste0(
+      "Conclusión correcta con argumento insuficiente. Usar un solo dato ",
+      "extremo para justificar una afirmación sobre la tendencia general."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "si_ultimo_anio"
+    }
+  ),
+  list(
+    codigo = "GRAF-ARG-05",
+    nombre = "Confusión entre tendencia creciente y superioridad relativa",
+    descripcion_corta = paste0(
+      "Sí, porque la línea de ", pais_a,
+      " crece más rápidamente que la línea de ", pais_b
+    ),
+    descripcion_larga = paste0(
+      "Este argumento confunde la tasa de crecimiento (pendiente) con la ",
+      "comparación directa de valores año por año. ",
+      if (pa_es_subiendo) {
+        paste0("Aun cuando la línea de ", pais_a, " sí tenga mayor pendiente, ",
+               "eso no implica que sus valores sean mayores durante la mayor parte del período. ")
+      } else {
+        paste0("Además la premisa es falsa: en realidad es la línea de ", pais_b,
+               " la que crece más rápidamente. ")
+      },
+      "La afirmación se valida comparando los valores puntuales año por año, ",
+      "no las pendientes ni las tasas de crecimiento."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre valor absoluto y tasa de cambio. Interpretar ",
+      "\"utilizó más\" como \"creció más rápido\"."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "si_pendiente"
+    }
+  ),
+  list(
+    codigo = "GRAF-ARG-06",
+    nombre = "Generalización por crecimiento común",
+    descripcion_corta = paste0(
+      "No, porque ambos países muestran un comportamiento creciente ",
+      "durante todo el período"
+    ),
+    descripcion_larga = paste0(
+      "Este argumento observa que ambas series suben con el tiempo y de ahí ",
+      "concluye que no hay dominancia clara. Sin embargo, dos series pueden ",
+      "crecer simultáneamente y aun así una de ellas superar a la otra durante ",
+      "la mayor parte del tiempo. La afirmación no se refiere a la tendencia ",
+      "(crecer o decrecer) sino al conteo de años en que un país superó al otro."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre comportamiento común (ambas crecen) y dominancia relativa ",
+      "(cuál de las dos es mayor). El estudiante interpreta la similitud de ",
+      "tendencias como ausencia de superioridad."
+    ),
+    precondicion = function(params) TRUE,
+    calcula = function(datos_ord, datos_presentados = NULL) {
+      "no_convergencia"
+    }
+  )
+)
+
+# ===================================================================
+# SELECCIÓN DE OPCIONES (4 de 6 errores) con BALANCE Sí/No FORZADO
+# Opción correcta: GRAF-ARG-02 (índice fijo 2, conclusión depende de dirección)
+# Distractores con conclusión fija:
+#   - Sí: D4 (último año), D5 (pendiente)
+#   - No: D1 (cercanía), D3 (subperíodo perdedor), D6 (crecimiento común)
+# Para evitar que las 4 opciones sean todas del mismo signo:
+#   - Si correcta = Sí: al menos 1 distractor "No"
+#   - Si correcta = No: al menos 1 distractor "Sí"
+# ===================================================================
+
+distractores_si  <- c(4L, 5L)            # conclusión "Sí"
+distractores_no  <- c(1L, 3L, 6L)        # conclusión "No"
+
+if (afirmacion_es_verdadera) {
+  # Correcta = "Sí". Distractores: forzar 1-3 "No" + 0-2 "Sí" de los disponibles
+  n_si_distractores <- sample(0:2, 1)
+  n_no_distractores <- 3L - n_si_distractores
+} else {
+  # Correcta = "No". Distractores: forzar 1-2 "Sí" + 1-2 "No"
+  n_si_distractores <- sample(c(1L, 2L), 1)
+  n_no_distractores <- 3L - n_si_distractores
+}
+
+sel_si <- if (n_si_distractores > 0) sample(distractores_si, n_si_distractores) else integer()
+sel_no <- if (n_no_distractores > 0) sample(distractores_no, n_no_distractores) else integer()
+distractores_seleccionados <- c(sel_si, sel_no)
+
+opciones_pre <- list(
+  list(tipo = "correcto", error_idx = 2L,
+       texto = errores_conceptuales[[2]]$descripcion_corta),
+  list(tipo = "distractor", error_idx = distractores_seleccionados[1],
+       texto = errores_conceptuales[[distractores_seleccionados[1]]]$descripcion_corta),
+  list(tipo = "distractor", error_idx = distractores_seleccionados[2],
+       texto = errores_conceptuales[[distractores_seleccionados[2]]]$descripcion_corta),
+  list(tipo = "distractor", error_idx = distractores_seleccionados[3],
+       texto = errores_conceptuales[[distractores_seleccionados[3]]]$descripcion_corta)
+)
+
+# Mezcla interna (sample) + exshuffle:FALSE
+# Motivo: regla #6 ampliada (exshuffle:FALSE cuando Solution referencia letra)
+orden <- sample(4)
+opciones_mezcladas <- opciones_pre[orden]
+names(opciones_mezcladas) <- c("A", "B", "C", "D")
+
+# Vector solución
+solucion <- rep(0L, 4)
+idx_correcto <- which(sapply(opciones_mezcladas, function(o) o$tipo == "correcto"))
+solucion[idx_correcto] <- 1L
+letra_correcta <- c("A", "B", "C", "D")[idx_correcto]
+
+# ===================================================================
+# POOL DE REFLEXIONES METACOGNITIVAS
+# ===================================================================
+
+reflexiones_metacognitivas <- list(
+  "Cuando una pregunta dice \"la mayor parte del tiempo\", debemos comparar las series año por año y contar. No basta con mirar un solo punto ni con observar la tendencia general sin verificar los datos concretos.",
+  "Un argumento válido necesita tanto una conclusión correcta como una justificación que la respalde con evidencia del gráfico. Una conclusión acertada con un razonamiento erróneo sigue siendo un argumento débil.",
+  "Los gráficos de líneas con dos series invitan a comparar visualmente, pero las comparaciones correctas requieren verificar valores año por año, no dejarse guiar solo por la impresión visual de cuál línea \"parece\" más alta.",
+  "Identificar un contraejemplo parcial (un año donde B supera a A) no invalida una afirmación sobre \"la mayor parte del tiempo\". La clave está en el conteo: ¿cuántos años cumple y cuántos no?"
+)
+
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# ===================================================================
+# GENERAR GRÁFICO (R base — seleccionado por el usuario)
+# Regla: .claude/rules/graficador-secuencial.md
+# ===================================================================
+
+navy <- "#1a2a4f"
+y_max <- ceiling(max(c(datos_a, datos_b))) + 1
+x_min <- anios_base[1] - 0.5
+x_max <- anios_base[n_anios] + 1
+
+# Ajuste dinámico de ancho del PNG y margen derecho según longitud
+# del nombre de país más largo (evita que la leyenda se corte para
+# nombres como "Estados Unidos", "Corea del Sur", "Indonesia").
+max_label_chars <- max(nchar(pais_a), nchar(pais_b))
+png_width <- 700 + max(0, (max_label_chars - 6)) * 14
+mar_derecho <- max(9, 7 + max_label_chars * 0.55)
+
+png("grafico_comparacion.png", width = png_width, height = 550, res = 110,
+    bg = "white", type = "cairo")
+
+par(family = "sans", mar = c(5, 6.5, 2, mar_derecho), xpd = FALSE)
+
+plot(anios_base, datos_a, type = "l", lwd = 3, lty = 1, col = navy,
+     xlab = "", ylab = "",
+     xlim = c(x_min, x_max), ylim = c(0, y_max),
+     xaxt = "n", yaxt = "n",
+     bty = "o", yaxs = "i", xaxs = "i",
+     panel.first = {
+       abline(h = 0:y_max, col = "grey80", lty = 3)
+     })
+lines(anios_base, datos_b, lwd = 2, lty = 2, col = navy)
+
+# Ticks del eje X: cada 2 años, comenzando en el primer año del período
+ticks_x <- seq(anios_base[1], anios_base[n_anios], by = 2)
+axis(1, at = ticks_x, labels = ticks_x, cex.axis = 1.1)
+axis(2, at = 0:y_max, las = 1, cex.axis = 1.1)
+mtext("Año", side = 1, line = 3, cex = 1.3, font = 2)
+mtext(etiqueta_y, side = 2, line = 3.5, cex = 1.0, font = 2)
+
+par(xpd = TRUE)
+legend(x = x_max + 0.2, y = y_max * 0.85, legend = c(pais_a, pais_b),
+       lty = c(1, 2), lwd = c(3, 2), col = navy,
+       bty = "n", cex = 1.1)
+par(xpd = FALSE)
+
+dev.off()
+
+# ===================================================================
+# TEXTOS DE SOLUCIÓN PARA ANSWERLIST
+# ===================================================================
+
+letras <- c("A", "B", "C", "D")
+
+sol_texts <- sapply(letras, function(l) {
+  opc <- opciones_mezcladas[[l]]
+  err <- errores_conceptuales[[opc$error_idx]]
+  if (opc$tipo == "correcto") {
+    paste0("Correcto. ", err$descripcion_larga)
+  } else {
+    paste0("Incorrecto. ", err$descripcion_larga)
+  }
+}, USE.NAMES = FALSE)
+
+# ===================================================================
+# VERIFICACIONES OBLIGATORIAS
+# ===================================================================
+
+stopifnot(
+  sum(solucion) == 1,
+  anios_ganador > anios_perdedor,
+  anios_ganador >= 5,  # ganador domina mayoría estricta de 9 años
+  file.exists("grafico_comparacion.png"),
+  length(unique(sapply(opciones_mezcladas, function(o) o$texto))) == 4
+)
+
+# ===================================================================
+# UID único por versión para evitar "multiply defined labels" en LaTeX
+# cuando se renderizan varias versiones del mismo .Rmd en un solo PDF
+# (típicamente con exams2pdf(rep(file, n))).
+# ===================================================================
+ex_uid <- substr(
+  digest::digest(list(datos_a, datos_b, pais_a, pais_b, recurso,
+                      anio_inicio, idx_cruce, Sys.time())),
+  1, 8
+)
+```
+
+Question
+========
+
+`r enunciado`
+
+```{r mostrar_grafico, echo=FALSE, results='asis'}
+cat("![](grafico_comparacion.png){width=85%}\n")
+```
+
+¿Es correcto afirmar que durante este período la mayor parte del tiempo `r pais_a` utilizó más `r recurso` que `r pais_b`?
+
+Answerlist
+----------
+* `r opciones_mezcladas[["A"]]$texto`
+* `r opciones_mezcladas[["B"]]$texto`
+* `r opciones_mezcladas[["C"]]$texto`
+* `r opciones_mezcladas[["D"]]$texto`
+
+Solution
+========
+
+### Análisis de la afirmación {#afirmacion-`r ex_uid`}
+
+La pregunta pide evaluar si es correcto que `r pais_a` utilizó más `r recurso` que `r pais_b` **la mayor parte del tiempo**. Para verificarlo, debemos comparar los valores de ambos países año por año.
+
+### Procedimiento correcto {#procedimiento-correcto-`r ex_uid`}
+
+```{r tabla_comparacion, echo=FALSE, results='asis'}
+cat("| Año | ", pais_a, " | ", pais_b, " | ¿Quién usó más? |\n")
+cat("|-----|--------:|--------:|-----------------|\n")
+for (i in seq_along(anios_base)) {
+  if (datos_a[i] > datos_b[i]) {
+    quien <- paste0("**", pais_a, "**")
+  } else if (datos_b[i] > datos_a[i]) {
+    quien <- paste0("**", pais_b, "**")
+  } else {
+    quien <- "Iguales"
+  }
+  cat(paste0("| ", anios_base[i], " | ", datos_a[i], " | ", datos_b[i],
+             " | ", quien, " |\n"))
+}
+mitad_periodo <- n_anios / 2
+cat(paste0(
+  "\n**Conteo:** ", pais_a, " superó a ", pais_b,
+  " en **", anios_a_mayor, " de ", n_anios, " años**, mientras que ",
+  pais_b, " superó a ", pais_a, " en **", anios_b_mayor, " de ",
+  n_anios, " años**. ",
+  "Como ", anios_ganador, " > ", mitad_periodo,
+  " (la mitad de ", n_anios, " años), ", pais_ganador,
+  " es quien dominó la mayor parte del período. ",
+  "La afirmación de la pregunta es sobre ", pais_a, ", por tanto **",
+  if (afirmacion_es_verdadera) "es correcta" else "es incorrecta",
+  "**.\n"
+))
+```
+
+### Respuesta correcta {#respuesta-correcta-`r ex_uid`}
+
+**Argumento válido:** "`r errores_conceptuales[[2]]$descripcion_corta`"
+
+```{r justificacion_correcta, echo=FALSE, results='asis'}
+err_correcto <- errores_conceptuales[[2]]
+cat(paste0(err_correcto$descripcion_larga, "\n"))
+```
+
+### Análisis de los argumentos incorrectos {#distractores-`r ex_uid`}
+
+```{r analisis_distractores, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcto") {
+    err <- errores_conceptuales[[opc$error_idx]]
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n"
+    ))
+  }
+}
+```
+
+### Propiedades de la argumentación sobre gráficas {#propiedades-`r ex_uid`}
+
+- **"La mayor parte del tiempo"** requiere un conteo: comparar año por año y verificar que la condición se cumple en más de la mitad de los años.
+- **Argumento completo** = conclusión correcta + justificación basada en evidencia del gráfico.
+- **Un contraejemplo parcial** (un año donde B supera a A) no invalida una afirmación sobre la mayoría del período.
+- **Un solo punto extremo** (el valor máximo al final) no demuestra superioridad sostenida.
+
+### Reflexión metacognitiva {#reflexion-metacognitiva-`r ex_uid`}
+
+`r reflexion`
+
+### Estrategia para evitar errores de argumentación {#estrategia-`r ex_uid`}
+
+1. **Lee** la afirmación cuidadosamente: identifica qué se afirma y qué se necesita para validarla.
+2. **Traduce** la expresión clave ("la mayor parte del tiempo") a un criterio verificable (más de la mitad de los años).
+3. **Compara** las series año por año usando los valores del gráfico.
+4. **Cuenta** los años que cumplen la condición y los que no.
+5. **Evalúa** cada opción verificando si su argumento es completo y correcto (conclusión + justificación).
+
+Answerlist
+----------
+* `r sol_texts[1]`
+* `r sol_texts[2]`
+* `r sol_texts[3]`
+* `r sol_texts[4]`
+
+Meta-information
+================
+exname: comparacion_lineas_temporales_metacognitivo_argumentacion_n3_schoice_v1
+extype: schoice
+exsolution: `r paste(solucion, collapse="")`
+exshuffle: FALSE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Numerico-Variacional
+exextra[Afirmacion]: Valida o invalida afirmaciones sobre relaciones entre dos series temporales representadas en graficas de lineas
+exextra[Evidencia]: Compara valores puntuales de dos series en un grafico de lineas para construir argumentos sobre dominancia temporal
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
