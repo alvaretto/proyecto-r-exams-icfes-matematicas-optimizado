@@ -225,7 +225,8 @@ test_that("P4: Solution no menciona 'Opcion A/B/C/D' literal", {
 # ---------- Self-test del detector ----------
 
 test_that("Self-test: detectores reconocen patrones prohibidos en fixture artificial", {
-  # Crear fixture en /tmp con todos los patrones
+  # Crear fixture en /tmp con todos los patrones (double quotes — patrón
+  # real en .Rmd de producción, ver convención generar-schoice/cloze).
   fixture <- tempfile(fileext = ".Rmd")
   writeLines(c(
     "Question",
@@ -240,7 +241,7 @@ test_that("Self-test: detectores reconocen patrones prohibidos en fixture artifi
     "La **Opción A** es la correcta.",
     "",
     "```{r}",
-    "for (l in letras) cat('**Opción ', l, ': blah')",
+    'for (l in letras) cat("**Opción ", l, ": blah")',
     "```",
     "",
     "Meta-information",
@@ -251,7 +252,7 @@ test_that("Self-test: detectores reconocen patrones prohibidos en fixture artifi
   expect_true(length(detectar_letra_interpolada(fixture)) > 0,
               info = "Debe detectar `r letra_correcta` en fixture")
   expect_true(length(detectar_cat_opcion_letra(fixture)) > 0,
-              info = "Debe detectar cat('**Opción ', l) en fixture")
+              info = "Debe detectar cat(\"**Opción \", l) en fixture")
   expect_true(length(detectar_opcion_literal(fixture)) > 0,
               info = "Debe detectar 'Opción A' literal en fixture")
 
