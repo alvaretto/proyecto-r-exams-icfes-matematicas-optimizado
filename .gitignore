@@ -399,5 +399,42 @@ CLAUDE.local.md
 .claude/commands/claude-flow-swarm.md
 
 # Skills Ruflo (no ICFES) — regenerables con ruflo init
-# (Si en el futuro se identifican skills Ruflo específicos a versionar, agregar
-# excepciones explícitas con !.claude/skills/<nombre>/)
+# Lista cerrada de los 33 directorios depositados por `ruflo init` el 2026-04-25
+# en `.claude/skills/`. NINGUNO está referenciado por hooks, rules ni CLAUDE.md
+# ICFES (grep verificado 2026-05-13). Inertes en disco, contaminan el listado
+# de skills disponibles. Backup en .claude.pre-ruflo-20260425-123652.tar.gz.
+# Si en el futuro se identifica un skill Ruflo concreto que queramos versionar,
+# agregar excepción explícita con `!.claude/skills/<nombre>/`.
+.claude/skills/agentdb-advanced/
+.claude/skills/agentdb-learning/
+.claude/skills/agentdb-memory-patterns/
+.claude/skills/agentdb-optimization/
+.claude/skills/agentdb-vector-search/
+.claude/skills/browser/
+.claude/skills/flow-nexus-neural/
+.claude/skills/flow-nexus-platform/
+.claude/skills/flow-nexus-swarm/
+.claude/skills/github-code-review/
+.claude/skills/github-multi-repo/
+.claude/skills/github-project-management/
+.claude/skills/github-release-management/
+.claude/skills/github-workflow-automation/
+.claude/skills/hooks-automation/
+.claude/skills/pair-programming/
+.claude/skills/reasoningbank-agentdb/
+.claude/skills/reasoningbank-intelligence/
+.claude/skills/skill-builder/
+.claude/skills/sparc-methodology/
+.claude/skills/stream-chain/
+.claude/skills/swarm-advanced/
+.claude/skills/swarm-orchestration/
+.claude/skills/v3-cli-modernization/
+.claude/skills/v3-core-implementation/
+.claude/skills/v3-ddd-architecture/
+.claude/skills/v3-integration-deep/
+.claude/skills/v3-mcp-optimization/
+.claude/skills/v3-memory-unification/
+.claude/skills/v3-performance-optimization/
+.claude/skills/v3-security-overhaul/
+.claude/skills/v3-swarm-coordination/
+.claude/skills/verification-quality/
