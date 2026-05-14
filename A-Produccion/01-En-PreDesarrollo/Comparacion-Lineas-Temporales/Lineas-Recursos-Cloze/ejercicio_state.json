@@ -2,53 +2,53 @@
   "version": "2.0",
   "ejercicio": "lineas_recursos_metacognitivo_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
-  "timestamp_inicio": "2026-05-11T20:22:51.337957-05:00",
-  "timestamp_ultima_actualizacion": "2026-05-11T20:37:49.867259-05:00",
+  "timestamp_inicio": "2026-05-12T11:26:45.010268-05:00",
+  "timestamp_ultima_actualizacion": "2026-05-12T22:10:23.880601-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
-      "timestamp": "2026-05-11T20:22:51.375102-05:00",
+      "timestamp": "2026-05-12T11:26:45.049221-05:00",
       "resultado": null
     },
     "flujo_b": {
       "requerido": true,
       "completado": true,
-      "timestamp": "2026-05-11T20:22:51.432131-05:00"
+      "timestamp": "2026-05-12T11:26:45.109020-05:00"
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-05-11T20:26:45.287445-05:00",
+      "timestamp": "2026-05-12T11:26:45.166201-05:00",
       "archivo": "lineas_recursos_metacognitivo_argumentacion_n3_cloze_v1.Rmd"
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-05-11T20:31:49.394259-05:00"
+      "timestamp": "2026-05-12T22:02:36.325200-05:00"
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-05-11T20:27:49.792981-05:00"
+      "timestamp": "2026-05-12T22:10:23.823620-05:00"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-05-11T20:33:08.618305-05:00"
+      "timestamp": "2026-05-12T11:34:29.949949-05:00"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-05-11T20:37:49.809843-05:00",
-      "veredicto": "APROBAR_CON_FIXES_APLICADOS"
+      "timestamp": "2026-05-12T22:10:23.880601-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS_APLICADOS_V2"
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-05-11T20:33:26.293659-05:00"
+      "timestamp": "2026-05-12T11:43:49.867010-05:00"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-05-11T20:37:49.867259-05:00",
+      "timestamp": "2026-05-12T11:45:35.179704-05:00",
       "versiones_unicas": 300
     },
     "validar_icfes": {
       "completado": true,
-      "timestamp": "2026-05-11T20:33:26.353045-05:00"
+      "timestamp": "2026-05-12T11:46:11.631561-05:00"
     },
     "aprobacion_usuario": {
       "completado": false,

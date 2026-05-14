@@ -5,8 +5,8 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "lineas_recursos_metacognitivo_argumentacion_n3_cloze_v1.Rmd"
-copias <- 200  # Número de versiones a generar
+archivo_examen <- "comparacion_lineas_temporales_metacognitivo_argumentacion_n3_schoice_v1.Rmd"
+copias <- 250  # Número de versiones a generar
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente

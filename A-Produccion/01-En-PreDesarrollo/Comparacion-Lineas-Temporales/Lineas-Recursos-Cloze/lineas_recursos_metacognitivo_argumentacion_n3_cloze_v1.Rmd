@@ -281,7 +281,7 @@ plot(anios_base, datos_a, type = "l", lwd = 3, lty = 1, col = navy,
      })
 lines(anios_base, datos_b, lwd = 2, lty = 2, col = navy)
 
-ticks_x <- seq(anios_base[1], anios_base[n_anios], by = 2)
+ticks_x <- sort(unique(c(seq(anios_base[1], anios_base[n_anios], by = 2), anio_cruce_aprox)))
 axis(1, at = ticks_x, labels = ticks_x, cex.axis = 1.1)
 axis(2, at = 0:y_max, las = 1, cex.axis = 1.1)
 mtext("Año", side = 1, line = 3, cex = 1.3, font = 2)
@@ -329,7 +329,7 @@ afirmaciones_pool_p3 <- list(
                       if (pa_es_subiendo) pais_a else pais_b,
                       " presenta la mayor cantidad de ", recurso, "."),
        valor = TRUE),
-  list(texto = paste0("Ambas líneas son crecientes (no decrecen) durante todo el período."),
+  list(texto = paste0("Ambas líneas son no decrecientes (ninguna presenta una disminución) durante todo el período."),
        valor = TRUE),
   list(texto = paste0(pais_ganador, " superó a ", pais_perdedor,
                       " durante toda la duración del período, sin excepción."),
@@ -344,21 +344,28 @@ afirmaciones_pool_p3 <- list(
   list(texto = paste0("La diferencia entre las dos líneas es exactamente cero ",
                       "en todo el período."),
        valor = FALSE),
+  # Item 8: "antes del año X, pais_perdedor > pais_ganador"
+  # Quien parte arriba en el gráfico es SIEMPRE serie_baj (por construcción del
+  # repeat). El ganador overall es serie_sub si cruce_temprano, serie_baj si
+  # cruce_tardío. Por tanto la afirmación "perdedor > ganador antes del cruce"
+  # es TRUE solo cuando cruce_temprano (perdedor = serie_baj = parte arriba).
+  # Cuando cruce_tardío, el ganador overall ES el que parte arriba → afirmación FALSA.
   list(texto = paste0("Antes del año ", anio_cruce_aprox, ", ", pais_perdedor,
                       " presentaba valores mayores que ", pais_ganador, "."),
-       valor = TRUE),
+       valor = cruce_temprano),
   list(texto = paste0(pais_a, " y ", pais_b,
                       " presentaron exactamente los mismos valores ",
                       "en cada año del período, sin diferencias."),
        valor = FALSE),
-  list(texto = paste0("La línea de ", pais_a,
-                      " es la línea sólida del gráfico, lo que indica que ",
-                      pais_a, " siempre supera a ", pais_b,
-                      " (la línea punteada) en cualquier año."),
+  list(texto = paste0("La diferencia absoluta entre las dos líneas se mantiene constante a lo largo de todo el período."),
        valor = FALSE)
 )
 
 # Seleccionar 4 afirmaciones con balance V/F (al menos 1 V y al menos 1 F)
+# Nota: con item 8 condicional (valor = cruce_temprano), los pools varían:
+#   - cruce_temprano: 6 V / 4 F
+#   - cruce_tardío:   5 V / 5 F
+# Ambos casos garantizan length >= 4 → balance siempre alcanzable.
 idx_v_p3 <- which(sapply(afirmaciones_pool_p3, function(a) a$valor))
 idx_f_p3 <- which(sapply(afirmaciones_pool_p3, function(a) !a$valor))
 n_v <- sample(c(2L, 3L), 1)  # 2 o 3 verdaderas
@@ -370,8 +377,15 @@ if (n_v + n_f < 4) {
   if (length(idx_v_p3) - n_v >= faltan) n_v <- n_v + faltan
   else n_f <- n_f + faltan
 }
-sel_v <- sample(idx_v_p3, n_v)
-sel_f <- sample(idx_f_p3, n_f)
+# Sanity check (patrón D): cantidad solicitada cabe en los pools
+stopifnot(
+  n_v + n_f == 4L,
+  n_v <= length(idx_v_p3),
+  n_f <= length(idx_f_p3)
+)
+# Muestreo seguro contra el gotcha sample() length-1 (patrón C)
+sel_v <- idx_v_p3[sample.int(length(idx_v_p3), n_v)]
+sel_f <- idx_f_p3[sample.int(length(idx_f_p3), n_f)]
 seleccionadas_p3 <- afirmaciones_pool_p3[c(sel_v, sel_f)]
 orden_p3 <- sample(length(seleccionadas_p3))
 seleccionadas_p3 <- seleccionadas_p3[orden_p3]
@@ -432,7 +446,9 @@ opciones_p4_pre <- list(
                       "sobre \"la mayor parte del tiempo\" se requiere comparar año por año."),
        correcto = TRUE)
 )
-sol_p4 <- as.integer(sapply(opciones_p4_pre, function(o) o$correcto))
+orden_p4 <- sample(2)
+opciones_p4_mezcl <- opciones_p4_pre[orden_p4]
+sol_p4 <- as.integer(sapply(opciones_p4_mezcl, function(o) o$correcto))
 sol_p4_str <- paste(sol_p4, collapse = "")
 letra_correcta_p4 <- c("A","B")[which(sol_p4 == 1)]
 
@@ -516,18 +532,18 @@ Answerlist
 * `r afirmaciones_p3[2]`
 * `r afirmaciones_p3[3]`
 * `r afirmaciones_p3[4]`
-* `r opciones_p4_pre[[1]]$texto`
-* `r opciones_p4_pre[[2]]$texto`
+* `r opciones_p4_mezcl[[1]]$texto`
+* `r opciones_p4_mezcl[[2]]$texto`
 
 
 Solution
 ========
 
-### Análisis de la afirmación {#analisis-afirmacion-`r ex_uid`}
+### Análisis de la afirmación (Parte 1) {#analisis-afirmacion-`r ex_uid`}
 
-La pregunta principal evalúa si `r pais_a` utilizó más `r recurso` que `r pais_b` **la mayor parte del tiempo** durante el período `r periodo_texto`. Para responder con rigor, se requiere **comparar año por año** las dos series y contar.
+La Parte 1 pide **identificar** cuál de los dos países utilizó más `r recurso` durante la mayor parte del período `r periodo_texto`. Esta identificación no se decide observando un único punto del gráfico ni la línea que termina más arriba: requiere determinar en cuántos años cada serie estuvo por encima de la otra y elegir el país con más años favorables. El conteo concreto se desarrolla en el procedimiento siguiente.
 
-### Procedimiento: comparación año por año {#procedimiento-`r ex_uid`}
+### Procedimiento Correcto: comparación año por año (Parte 2) {#procedimiento-`r ex_uid`}
 
 ```{r tabla_comparacion, echo=FALSE, results='asis'}
 cat("| Año | ", pais_a, " | ", pais_b, " | ¿Quién usó más? |\n")
@@ -553,15 +569,7 @@ cat(paste0(
 ))
 ```
 
-### Respuesta Parte 1 — Identificación {#parte1-`r ex_uid`}
-
-El país que utilizó más `r recurso` la mayor parte del tiempo es **`r pais_ganador`**. Esta identificación se obtiene contando, año por año, en cuántos años cada país tuvo la mayor cantidad de `r recurso`.
-
-### Respuesta Parte 2 — Conteo: `r resp_p2` años {#parte2-`r ex_uid`}
-
-`r pais_ganador` superó a `r pais_perdedor` en exactamente **`r resp_p2` de los `r n_anios` años** del período. Como `r resp_p2` > `r n_anios/2`, esto valida que la dominancia fue "la mayor parte del tiempo".
-
-### Respuesta Parte 3 — Afirmaciones {#parte3-`r ex_uid`}
+### Propiedades del Concepto: evaluación de afirmaciones (Parte 3) {#parte3-`r ex_uid`}
 
 ```{r sol_p3_chunk, echo=FALSE, results='asis'}
 for (k in seq_along(afirmaciones_p3)) {
@@ -570,17 +578,17 @@ for (k in seq_along(afirmaciones_p3)) {
 }
 ```
 
-### Respuesta Parte 4 — Análisis del argumento {#parte4-`r ex_uid`}
+### Caso Específico: análisis del argumento defectuoso (Parte 4) {#parte4-`r ex_uid`}
 
 El argumento presentado:
 
 > *`r argumento_p4`*
 
-**es insuficiente** porque se basa en `r switch(arg_seleccionado$tipo, "ultimo_anio" = "un único dato puntual (el valor del último año)", "pendiente" = "la tasa de crecimiento (pendiente), no en los valores año por año", "subperiodo" = "un subperíodo donde el otro país superó, generalizando desde la minoría", "cercania" = "puntos donde las cantidades son cercanas, no en el conteo de mayoría")`.
+**es insuficiente** porque se basa en `r switch(arg_seleccionado$tipo, "ultimo_anio" = "un único dato puntual (el valor del último año)", "pendiente" = "la tasa de crecimiento (pendiente), no en los valores año por año", "subperiodo" = "la mera existencia de años en que el otro país superó (sin cuantificar cuántos ni si representan la mayoría), lo que por sí solo no permite concluir nada sobre quién dominó la mayor parte del tiempo", "cercania" = "puntos donde las cantidades son cercanas, no en el conteo de mayoría")`.
 
 Para validar o refutar correctamente una afirmación sobre "la mayor parte del tiempo" se requiere **comparar las dos series año por año** y contar en cuántos años cada una superó a la otra. La respuesta correcta es: comparar las series año por año y contar (no basta con observar tendencia general).
 
-### Propiedades de la argumentación basada en gráficas de líneas {#propiedades-`r ex_uid`}
+### Propiedades de la argumentación con gráficas de líneas {#propiedades-`r ex_uid`}
 
 - **"La mayor parte del tiempo"** = más de la mitad de los años. Requiere conteo, no inspección visual.
 - **Argumento completo** = conclusión + justificación basada en evidencia mayoritaria del gráfico.
@@ -591,7 +599,7 @@ Para validar o refutar correctamente una afirmación sobre "la mayor parte del t
 
 `r reflexion`
 
-### Estrategia para resolver problemas de argumentación con gráficos {#estrategia-`r ex_uid`}
+### Estrategia para evitar errores de argumentación {#estrategia-`r ex_uid`}
 
 1. **Lee** la afirmación e identifica qué se afirma y sobre qué período.
 2. **Traduce** "la mayor parte del tiempo" a un criterio verificable: más de la mitad de los años.
@@ -620,7 +628,7 @@ exname: lineas_recursos_metacognitivo_argumentacion_n3_cloze_v1
 extype: cloze
 exclozetype: schoice|num|mchoice|schoice
 exsolution: `r sol_p1_str`|`r resp_p2`|`r sol_p3_str`|`r sol_p4_str`
-exshuffle: FALSE
+exshuffle: TRUE
 extol: 0|0|0|0
 exextra[Type]: CLOZE
 exextra[Competencia]: Argumentacion

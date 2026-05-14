@@ -438,3 +438,31 @@ CLAUDE.local.md
 .claude/skills/v3-security-overhaul/
 .claude/skills/v3-swarm-coordination/
 .claude/skills/verification-quality/
+
+# =============================================================================
+# Housekeeping ICFES (2026-05-13)
+# =============================================================================
+
+# Documentación raíz Ruflo (regenerables con ruflo init)
+/AGENTS.md
+/RUFLO.md
+
+# Backups locales de configuración MCP (siguen patrón settings.json.pre-*)
+.mcp.json.pre-*
+
+# Backups locales de .Rmd (artefactos automáticos)
+**/.backup_*.Rmd
+
+# Outputs regenerables de R-exams en directorios de desarrollo
+# Los .Rmd fuente sí se versionan; los outputs son producto de exams2*.
+**/plain1.pdf
+**/plain1.html
+**/pandoc1.docx
+**/nops*.pdf
+A-Produccion/01-En-PreDesarrollo/**/*.pdf
+A-Produccion/01-En-PreDesarrollo/**/*.docx
+A-Produccion/02-En-Desarrollo/**/*.pdf
+A-Produccion/02-En-Desarrollo/**/*.docx
+
+# Logs de Excalidraw embebido
+**/excalidraw.log

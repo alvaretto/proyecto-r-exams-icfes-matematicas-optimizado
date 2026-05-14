@@ -322,8 +322,8 @@ errores_conceptuales <- list(
     codigo = "GRAF-ARG-01",
     nombre = "Argumento basado en un solo punto inicial",
     descripcion_corta = paste0(
-      "No, porque hay un punto del período donde ambos países usan ",
-      "cantidades iguales de ", recurso
+      "No, porque hay puntos del período donde los dos países usan ",
+      "cantidades muy similares de ", recurso
     ),
     descripcion_larga = paste0(
       "Este argumento se basa en uno o pocos puntos del gráfico donde ",
@@ -381,10 +381,22 @@ errores_conceptuales <- list(
   list(
     codigo = "GRAF-ARG-03",
     nombre = "Argumento basado en el subperíodo del perdedor",
-    descripcion_corta = paste0(
-      "No, porque existen años del período en que ", pais_perdedor,
-      " supera a ", pais_ganador, " en el uso de ", recurso
-    ),
+    descripcion_corta = if (afirmacion_es_verdadera) {
+      # afirmacion=TRUE: Pa=ganador. El estudiante mira los pocos años
+      # donde Pb (perdedor) supera a Pa y concluye "No" incorrectamente.
+      paste0(
+        "No, porque existen años del período en que ", pais_b,
+        " supera a ", pais_a, " en el uso de ", recurso
+      )
+    } else {
+      # afirmacion=FALSE: Pa=perdedor. El estudiante mira los pocos años
+      # donde Pa (perdedor) supera a Pb y concluye "Sí" incorrectamente
+      # (sobregeneraliza desde la minoría para confirmar la afirmación falsa).
+      paste0(
+        "Sí, porque existen años del período en que ", pais_a,
+        " supera a ", pais_b, " en el uso de ", recurso
+      )
+    },
     descripcion_larga = paste0(
       "Este argumento identifica un subperíodo real (",
       anios_perdedor, " año", ifelse(anios_perdedor == 1, "", "s"),
@@ -393,7 +405,14 @@ errores_conceptuales <- list(
       "La afirmación se refiere a la mayoría del período: ",
       pais_ganador, " supera a ", pais_perdedor, " en ", anios_ganador,
       " años, que sí constituye \"la mayor parte del tiempo\". ",
-      "Un contraejemplo parcial no refuta una afirmación sobre la mayoría."
+      if (afirmacion_es_verdadera) {
+        paste0("Por tanto, la afirmación es **correcta**, y este argumento ",
+               "llega a la conclusión opuesta basándose en una minoría de años.")
+      } else {
+        paste0("Por tanto, la afirmación es **incorrecta**, y este argumento ",
+               "la confirma erróneamente basándose en una minoría de años.")
+      },
+      " Un subperíodo parcial no refuta ni confirma una afirmación sobre la mayoría."
     ),
     causa_raiz = paste0(
       "Sobregeneralización a partir de un subperíodo. El estudiante ",
@@ -490,30 +509,63 @@ errores_conceptuales <- list(
 
 # ===================================================================
 # SELECCIÓN DE OPCIONES (4 de 6 errores) con BALANCE Sí/No FORZADO
-# Opción correcta: GRAF-ARG-02 (índice fijo 2, conclusión depende de dirección)
-# Distractores con conclusión fija:
-#   - Sí: D4 (último año), D5 (pendiente)
-#   - No: D1 (cercanía), D3 (subperíodo perdedor), D6 (crecimiento común)
-# Para evitar que las 4 opciones sean todas del mismo signo:
-#   - Si correcta = Sí: al menos 1 distractor "No"
-#   - Si correcta = No: al menos 1 distractor "Sí"
+# Opción correcta: GRAF-ARG-02 (índice fijo 2, conclusión = afirmacion_es_verdadera)
+#
+# Conclusión final de cada distractor (depende del flag afirmacion):
+#   D1 (cercanía):            "No" siempre
+#   D3 (subperíodo perdedor): "No" si afirmacion=TRUE / "Sí" si afirmacion=FALSE
+#                              (fix bug #1: evita incoherencia interna conclusión-justificación)
+#   D4 (último año):          "Sí" siempre (premisa puede ser contrafáctica;
+#                              descripcion_larga lo reconoce explícitamente)
+#   D5 (pendiente):           "Sí" siempre (idem)
+#   D6 (crecimiento común):   "No" siempre
+#
+# Los pools se construyen dinámicamente para incluir D3 en el lado correcto.
 # ===================================================================
 
-distractores_si  <- c(4L, 5L)            # conclusión "Sí"
-distractores_no  <- c(1L, 3L, 6L)        # conclusión "No"
+concl_distractor <- function(idx) {
+  if (idx == 1L) return("No")
+  if (idx == 3L) return(if (afirmacion_es_verdadera) "No" else "Sí")
+  if (idx == 4L) return("Sí")
+  if (idx == 5L) return("Sí")
+  if (idx == 6L) return("No")
+  stop("idx inválido")
+}
 
+todos_distractores <- c(1L, 3L, 4L, 5L, 6L)
+concl_por_idx <- sapply(todos_distractores, concl_distractor)
+distractores_si <- todos_distractores[concl_por_idx == "Sí"]
+distractores_no <- todos_distractores[concl_por_idx == "No"]
+
+# Balance Sí/No: evitar que las 4 opciones tengan la misma conclusión
 if (afirmacion_es_verdadera) {
-  # Correcta = "Sí". Distractores: forzar 1-3 "No" + 0-2 "Sí" de los disponibles
-  n_si_distractores <- sample(0:2, 1)
+  # Correcta = "Sí". Distractores: 0-2 "Sí" + el resto "No" (acotado a pool)
+  max_si <- min(2L, length(distractores_si))
+  n_si_distractores <- if (max_si == 0L) 0L else sample(0:max_si, 1)
   n_no_distractores <- 3L - n_si_distractores
 } else {
-  # Correcta = "No". Distractores: forzar 1-2 "Sí" + 1-2 "No"
-  n_si_distractores <- sample(c(1L, 2L), 1)
+  # Correcta = "No". Distractores: 1-2 "Sí" + el resto "No" (al menos 1 "Sí" si hay)
+  max_si <- min(2L, length(distractores_si))
+  min_si <- if (length(distractores_si) >= 1L) 1L else 0L
+  n_si_distractores <- if (min_si > max_si) max_si else sample(min_si:max_si, 1)
   n_no_distractores <- 3L - n_si_distractores
 }
 
-sel_si <- if (n_si_distractores > 0) sample(distractores_si, n_si_distractores) else integer()
-sel_no <- if (n_no_distractores > 0) sample(distractores_no, n_no_distractores) else integer()
+# Sanity checks: nunca pedir más distractores de los disponibles
+stopifnot(
+  n_si_distractores + n_no_distractores == 3L,
+  n_si_distractores <= length(distractores_si),
+  n_no_distractores <= length(distractores_no)
+)
+
+# Patrón seguro contra el gotcha de sample() con length(x)==1
+# (sample(c(3), 1) NO retorna 3, sino un número aleatorio en 1:3).
+sel_si <- if (n_si_distractores > 0) {
+  distractores_si[sample.int(length(distractores_si), n_si_distractores)]
+} else integer()
+sel_no <- if (n_no_distractores > 0) {
+  distractores_no[sample.int(length(distractores_no), n_no_distractores)]
+} else integer()
 distractores_seleccionados <- c(sel_si, sel_no)
 
 opciones_pre <- list(
