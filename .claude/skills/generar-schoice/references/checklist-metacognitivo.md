@@ -49,4 +49,22 @@ Verificar TODOS los items antes de avanzar:
 - **Solucion incluye todas las subsecciones obligatorias** (6 secciones)
 - Ciclo de validacion completo (FASE 1 → 2A → 2B → 2C → 3)
 
+### Para ejercicios con distractores Si/No (argumentacion / evaluacion)
+
+- [ ] **Coherencia conclusion-justificacion**: si la justificacion (`descripcion_corta`)
+      usa variables con roles invertibles (perdedor/ganador), la conclusion
+      ("Si"/"No") es **condicional al mismo flag** que invierte los roles (Patron A)
+- [ ] **Premisas consistentes con restricciones de generacion**: ninguna
+      `descripcion_corta` afirma como premisa algo que `gap_min`, `stopifnot` u
+      otras restricciones garantizan que NO ocurre (Patron B)
+- [ ] **Seleccion segura de pools**: `sel <- pool[sample.int(length(pool), n)]`
+      en lugar de `sample(pool, n)` (Patron C, evita el gotcha length-1)
+- [ ] **Sanity checks de pools dinamicos**: `stopifnot(n_si + n_no == 3,
+      n_si <= length(distractores_si), n_no <= length(distractores_no))`
+      ejecutado antes del muestreo (Patron D)
+- [ ] **Verificacion de balance en TODOS los casos de flags**: simular el
+      producto cartesiano de flags binarios y confirmar que ningun caso colapsa
+      `distractores_si` ni `distractores_no` a 0 (Patron E: si colapsa, aceptar
+      premisas contrafacticas con `descripcion_larga` que las reconozca)
+
 NO terminar con errores pendientes.

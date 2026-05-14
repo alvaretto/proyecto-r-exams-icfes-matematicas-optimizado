@@ -73,3 +73,74 @@ La respuesta correcta es 40.
 **Por que:** La Solution debe desarrollar consciencia metacognitiva, no solo
 confirmar la respuesta. Ver `.claude/rules/ejercicios-metacognitivos.md` —
 seccion "Solucion Solution Obligatoria".
+
+---
+
+## 4. Conclusion fija + justificacion con roles invertibles (lecciones 2026-05-12)
+
+```r
+❌ list(
+   codigo = "GRAF-ARG-03",
+   descripcion_corta = paste0(
+     "No, porque existen años donde ", pais_perdedor,
+     " supera a ", pais_ganador
+   )
+ )
+```
+
+**Problema:** cuando `afirmacion_es_verdadera = FALSE`, `pais_perdedor` toma el rol
+de `pais_a` → el texto dice "Pa supera a Pb" (justificacion apoya conclusion "Si")
+pero la opcion empieza con "No" → **incoherencia interna silenciosa**.
+
+```r
+✓ list(
+   codigo = "GRAF-ARG-03",
+   descripcion_corta = if (afirmacion_es_verdadera) {
+     paste0("No, porque existen años donde ", pais_b, " supera a ", pais_a)
+   } else {
+     paste0("Si, porque existen años donde ", pais_a, " supera a ", pais_b)
+   }
+ )
+```
+
+**Regla:** si la justificacion usa variables que invierten rol segun un flag,
+la conclusion ("Si"/"No") tambien debe ser condicional al MISMO flag.
+
+---
+
+## 5. Premisas que la generacion garantiza que NO ocurren
+
+```r
+❌ gap_min <- 0.3   # garantiza series_a[i] != series_b[i] siempre
+   descripcion_corta = "No, porque hay un punto donde ambos países usan cantidades iguales..."
+```
+
+**Problema:** el estudiante mira el grafico, ve que las series NUNCA son iguales,
+descarta el distractor automaticamente. El distractor pierde valor diagnostico.
+
+```r
+✓ descripcion_corta = "No, porque hay puntos donde los dos países usan cantidades muy similares..."
+```
+
+**Regla:** la `descripcion_corta` no debe afirmar como premisa observable
+algo que las restricciones de generacion garantizan que NO ocurre.
+
+---
+
+## 6. Gotcha `sample(x, n)` cuando length(x) == 1
+
+```r
+❌ sel_si <- sample(distractores_si, n_si)
+```
+
+**Problema:** R interpreta `sample(c(3L), 1)` NO como "elige el elemento 3",
+sino como `sample(1:3, 1)` (trata el escalar como rango). Cuando los pools
+dinamicos colapsan a un solo elemento, la seleccion retorna un indice invalido
+→ falla `stopifnot(opciones unicas)` o produce duplicados silenciosos.
+
+```r
+✓ sel_si <- distractores_si[sample.int(length(distractores_si), n_si)]
+```
+
+**Regla:** SIEMPRE usar `x[sample.int(length(x), n)]` para muestrear vectores
+cuyo tamaño pueda ser 1 en algun caso (pools dinamicos por flags).

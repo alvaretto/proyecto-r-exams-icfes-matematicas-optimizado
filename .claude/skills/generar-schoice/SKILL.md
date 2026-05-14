@@ -297,6 +297,95 @@ Moodle (y otros LMS) tiene un setting "Shuffle answers" INDEPENDIENTE del `exshu
 
 Ver `.claude/rules/solution-letter-independence.md` (regla #19, sin excepciones).
 
+## Distractores con conclusión binaria Sí/No (lecciones 2026-05-12)
+
+Aplica a ejercicios de **argumentación** y **evaluación de afirmaciones** donde cada distractor empieza con "Sí, porque..." o "No, porque...".
+
+### Patrón A — Coherencia conclusión-justificación condicional
+
+Cuando la justificación (`descripcion_corta`) usa variables que invierten su rol según el estado del ejercicio (`pais_perdedor`/`pais_ganador`, `error_seleccionado`, etc.), la **conclusión "Sí/No" también debe ser condicional** al flag que invierte esos roles. De lo contrario, en la mitad de las semillas la justificación apoya una conclusión y el texto declara la opuesta → incoherencia interna silenciosa.
+
+```r
+# ❌ ANTIPATRÓN: conclusión fija + justificación con roles invertibles
+list(
+  codigo = "GRAF-ARG-03",
+  descripcion_corta = paste0(
+    "No, porque existen años donde ", pais_perdedor,
+    " supera a ", pais_ganador
+  )
+  # Cuando afirmacion=FALSE, pais_perdedor=Pa → texto dice "Pa supera a Pb"
+  # → justificación apoya "Sí" pero la conclusión dice "No". Incoherente.
+)
+
+# ✓ CORRECTO: ambos (conclusión + justificación) condicionales al MISMO flag
+list(
+  codigo = "GRAF-ARG-03",
+  descripcion_corta = if (afirmacion_es_verdadera) {
+    paste0("No, porque existen años donde ", pais_b,
+           " supera a ", pais_a)
+  } else {
+    paste0("Sí, porque existen años donde ", pais_a,
+           " supera a ", pais_b)
+  }
+)
+```
+
+### Patrón B — Premisas consistentes con restricciones de generación
+
+Si la generación garantiza una propiedad de los datos (e.g., `gap_min=0.3` impone series **nunca iguales**), ningún distractor puede afirmar como premisa observable la negación de esa propiedad.
+
+```r
+# ❌ ANTIPATRÓN: premisa imposible
+gap_min <- 0.3   # garantiza series_a[i] != series_b[i] siempre
+descripcion_corta <- "No, porque hay un punto donde ambos países usan cantidades iguales..."
+# El estudiante mira el gráfico, ve que NO hay iguales, descarta automáticamente.
+# El distractor pierde valor diagnóstico.
+
+# ✓ CORRECTO: redacción coherente con la restricción
+descripcion_corta <- "No, porque hay puntos donde los dos países usan cantidades muy similares..."
+```
+
+### Patrón C — Gotcha `sample()` con length(x)==1
+
+`sample(c(3L), 1)` **NO retorna 3**: trata el escalar como `1:3` y muestrea uniformemente. Es el gotcha #1 de selección de pools en R cuando el pool puede colapsar a un solo elemento (caso límite con flags condicionales).
+
+```r
+# ❌ ANTIPATRÓN: rompe cuando length(distractores_si)==1
+sel_si <- sample(distractores_si, n_si)
+
+# ✓ CORRECTO: patrón seguro vía indexación
+sel_si <- distractores_si[sample.int(length(distractores_si), n_si)]
+```
+
+### Patrón D — Pools dinámicos con sanity checks
+
+Cuando los distractores tienen conclusiones que dependen de flags, los pools "Sí"/"No" no son listas fijas — se calculan en runtime y pueden colapsar. Construirlos con función explícita y validar con `stopifnot`:
+
+```r
+concl_distractor <- function(idx) {
+  if (idx == 1L) return("No")
+  if (idx == 3L) return(if (afirmacion_es_verdadera) "No" else "Sí")
+  # ... casos restantes
+}
+todos <- c(1L, 3L, 4L, 5L, 6L)
+concl_por_idx <- sapply(todos, concl_distractor)
+distractores_si <- todos[concl_por_idx == "Sí"]
+distractores_no <- todos[concl_por_idx == "No"]
+
+# Sanity checks ANTES de muestrear
+stopifnot(
+  n_si + n_no == 3L,
+  n_si <= length(distractores_si),
+  n_no <= length(distractores_no)
+)
+```
+
+### Patrón E — Tradeoff balance Sí/No vs premisas verdaderas
+
+Si forzar premisas siempre verdaderas (Patrón B aplicado a todos los distractores) colapsa el pool de un lado a `length == 0` para alguna combinación de flags → las 4 opciones renderizadas tendrán la misma conclusión, dando al estudiante una metaregla delatora ("única opción Sí = correcta").
+
+**Resolución aceptada**: priorizar balance Sí/No. Distractor con premisa contrafáctica es válido si su `descripcion_larga` lo reconoce explícitamente ("Además la premisa es falsa: en realidad..."). Es patrón didáctico de "verificar premisas antes de aceptar el argumento".
+
 ## Referencias
 
 - [Anatomia Metacognitiva .Rmd](references/anatomia-metacognitiva.md) - Las 8 secciones obligatorias

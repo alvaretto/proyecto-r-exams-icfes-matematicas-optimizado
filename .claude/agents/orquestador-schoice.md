@@ -137,6 +137,27 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - FASE 2J del hook `post-exams2-validation.sh` escanea la Solution buscando los patrones P1-P4. Si encuentra cualquiera, FAIL bloqueante con códigos `ERR_SOL_LETRA_R`, `ERR_SOL_LETRA_CAT`, `ERR_SOL_LETRA_LITERAL`.
 - `tests/testthat/test_letter_independence.R` valida lo mismo en CI.
 
+### Incidente D — Distractores Sí/No: coherencia condicional + gotcha sample (sesión 2026-05-12)
+
+**Sesión**: 2026-05-12, ejercicio `Comparacion-Lineas-Temporales-Schoice`. Análisis del HTML renderizado detectó 4 bugs sistémicos en el pool de errores que pasaron las FASES 2A-2J originales sin detección:
+
+1. **Incoherencia conclusión-justificación** (~50% de semillas): un distractor con `descripcion_corta` fija "No, porque…" + justificación construida con `pais_perdedor` / `pais_ganador` produce "No, porque Pa supera a Pb" cuando `afirmacion=FALSE` (la justificación apoya "Sí" pero la conclusión declara "No").
+2. **Premisa imposible** (100% de semillas): `descripcion_corta` afirmando "cantidades iguales" mientras `gap_min=0.3` garantiza que NUNCA hay valores iguales.
+3. **Gotcha sample()** (caso límite): `sample(distractores_si, n)` con `length(distractores_si)==1` no retorna ese elemento sino un número en `1:n`.
+4. **Pools dinámicos sin guardias**: caso `(afirmacion=TRUE, pa_es_subiendo=FALSE)` colapsa `distractores_si` a longitud 0 → balance Sí/No roto.
+
+**Defensa preventiva (Patrones A–E)**: aplicar al diseño de TODO `errores_conceptuales` cuya `descripcion_corta` empiece con "Sí, " o "No, ":
+
+- **A. Coherencia condicional**: si la justificación usa variables con roles invertibles (perdedor/ganador, subiendo/bajando), la conclusión "Sí/No" también es `if (flag) ... else ...` con el MISMO flag.
+- **B. Premisas consistentes con restricciones**: cruzar `gap_min`, `stopifnot`, monotonías y demás invariantes con las premisas de `descripcion_corta`. Reformular si una premisa es objetivamente imposible.
+- **C. Patrón seguro de muestreo**: `x[sample.int(length(x), n)]` en lugar de `sample(x, n)` para pools dinámicos.
+- **D. Sanity checks**: `stopifnot(n_si + n_no == 3L, n_si <= length(distractores_si), n_no <= length(distractores_no))` antes de muestrear.
+- **E. Tradeoff balance vs premisas**: si forzar premisas verdaderas colapsa un pool a 0, priorizar balance Sí/No y aceptar premisas contrafácticas en distractores cuya `descripcion_larga` las reconozca explícitamente.
+
+**Verificación post-generación**: simular el producto cartesiano de flags binarios (típicamente `afirmacion × pa_es_subiendo` = 4 casos) y verificar que **ningún caso** colapsa los pools de selección a inviabilidad. Si la simulación falla, retrocedo al diseño del pool antes de seguir al paso 4.
+
+**Referencia detallada**: `.claude/skills/generar-schoice/SKILL.md` § "Distractores con conclusión binaria Sí/No".
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
@@ -144,7 +165,11 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 2. Inspeccionar el `.tex` generado con `grep -c 'pandocbounded'` → debe ser 0.
 3. Inspeccionar visualmente el PDF de al menos 1 semilla.
 4. Ejecutar `awk '/^Solution[[:space:]]*$/,/^Meta-information[[:space:]]*$/' <archivo.Rmd> | grep -E '\`r[[:space:]]+(letra_correcta|letras\[)|Opci[oó]n[[:space:]]+[A-D]'` → debe ser vacío (regla #19).
-5. Solo después de las 4 verificaciones, marco renderizado_4_formatos como completado.
+5. **Para ejercicios de argumentación con distractores Sí/No** (Incidente D):
+   - Detectar si hay `descripcion_corta` que empiece con "Sí, " o "No, " usando variables con roles invertibles.
+   - Renderizar ≥10 semillas y, para cada distractor Sí/No del pool seleccionado, verificar que la justificación textual sea **internamente coherente con la conclusión declarada** (no apoye la conclusión opuesta).
+   - Si se detecta incoherencia interna en cualquier semilla → ABORTAR y aplicar Patrón A antes de continuar.
+6. Solo después de las 5 verificaciones, marco renderizado_4_formatos como completado.
 
 ## Máquina de estados (los 12 pasos)
 

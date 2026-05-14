@@ -206,6 +206,66 @@ Además del workflow general, verificar:
 4. **Si archivo es `_neg_`**: Patrón (N-1) idénticas + 1 diferente (ver `validacion-neg-opciones-repetidas.md`)
 5. **Pool de errores**: Mínimo 4-6 con códigos, `calcula()` determinista, `precondicion` declarada
 
+### Para ejercicios con distractores Sí/No (argumentación / evaluación de afirmaciones)
+
+Ver patrones en `.claude/skills/generar-schoice/SKILL.md` § "Distractores con conclusión binaria".
+
+6. **Patrón A — Coherencia conclusión-justificación condicional**: Para cada
+   error en el pool cuya `descripcion_corta` empiece con "Sí, " o "No, ",
+   verificar que **si la justificación usa variables con roles invertibles**
+   (`pais_perdedor`/`pais_ganador`, `serie_baja`/`serie_alta`, etc.), la
+   conclusión también es condicional al mismo flag que invierte esos roles.
+
+   **Antipatrón a detectar (regex)**:
+   ```bash
+   grep -nE 'descripcion_corta\s*=\s*paste0\(\s*"(Sí|No),' archivo.Rmd
+   # Para cada match: verificar si el texto que sigue contiene variables tipo
+   # pais_perdedor/ganador SIN un if() condicional alrededor.
+   ```
+
+   Si la conclusión es fija pero la justificación es condicional → **bug
+   sistémico**: la mitad de las semillas producirán incoherencia interna
+   conclusión-justificación. Reportar como objeción CRÍTICA.
+
+7. **Patrón B — Premisas consistentes con restricciones de generación**:
+   Cruzar las premisas de cada `descripcion_corta` con las restricciones
+   declaradas en `data_generation`:
+
+   - Si `gap_min > 0` → ninguna `descripcion_corta` debe afirmar "valores iguales".
+   - Si `stopifnot(serie_a[i] != serie_b[i])` → ninguna premisa debe asumir
+     igualdad puntual observable.
+   - Si la generación garantiza monotonía → ninguna premisa debe asumir
+     comportamiento no monótono observable.
+
+   Reportar como objeción ALTA cuando la premisa es objetivamente imposible
+   de cumplir en cualquier semilla.
+
+8. **Patrón C — Gotcha `sample()` con length(x)==1**: Buscar todas las
+   apariciones de `sample(<var>, <n>)` donde `<var>` pueda ser un vector
+   construido dinámicamente (pool filtrado, pool por flags).
+
+   ```bash
+   grep -nE 'sample\(distractores_(si|no|aplicables|filtrados)' archivo.Rmd
+   ```
+
+   Si encuentra coincidencias y NO usa el patrón `x[sample.int(length(x), n)]`,
+   reportar como objeción ALTA con el riesgo: cuando el pool colapsa a 1
+   elemento por la lógica de flags, `sample(c(3L), 1)` retorna un número
+   aleatorio en 1:3 en lugar del elemento 3 → opciones inválidas o duplicadas
+   silenciosamente.
+
+9. **Patrón D — Pools dinámicos sin `stopifnot`**: Si el código construye
+   `distractores_si`/`distractores_no` dinámicamente a partir de flags,
+   verificar que existe un bloque `stopifnot` justo antes del muestreo que
+   valide:
+   - `n_si + n_no == cantidad_esperada` (típicamente 3)
+   - `n_si <= length(distractores_si)`
+   - `n_no <= length(distractores_no)`
+
+   Sin estas guardias, una semilla rara puede pedir más distractores de los
+   disponibles → error oscuro en `sample()` o duplicación silenciosa.
+   Reportar como objeción MEDIA.
+
 ## Consulta de ejemplos para correcciones (Búsqueda Inteligente)
 
 Cuando un paso detecta un problema que requiere corrección, ANTES de corregir:
