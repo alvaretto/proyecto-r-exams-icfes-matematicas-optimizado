@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-05-03 (post-orquestador-schoice + fix `\pandocbounded` + regla #18 markdown-imagenes-pdf)
+**Última actualización:** 2026-05-14 (post-v2 distribucion-contagiados + Errores 18/20 + Formato Equilibrado en opciones gráficas)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -24,8 +24,9 @@
 | Errores de gráficos | `.claude/docs/patrones-errores-conocidos.md` (Errores 4-6) | Catálogo |
 | Errores de coherencia semántica/RNG | `.claude/docs/patrones-errores-conocidos.md` (Errores 7-10) | Catálogo |
 | Errores de infraestructura `.claude/` | `.claude/docs/patrones-errores-conocidos.md` (Errores 11-15) | Catálogo |
-| Errores de pipeline render PDF + coherencia Solution | `.claude/docs/patrones-errores-conocidos.md` (Errores 16-17) | Catálogo |
-| Reglas absolutas (18) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
+| Errores de pipeline render PDF + coherencia Solution | `.claude/docs/patrones-errores-conocidos.md` (Errores 16-20) | Catálogo |
+| Errores de diseño de opciones gráficas | `.claude/docs/patrones-errores-conocidos.md` (Errores 18 y 20) + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado | Catálogo + Normativo |
+| Reglas absolutas (20) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
 | Decisiones arquitectónicas | `.claude/docs/ADR/*.md` | Inmutable |
 | Casos resueltos individuales | `.claude/docs/casos-resueltos/*.md` | Histórico |
 | Lecciones de usuario / preferencias | `~/.claude/projects/.../memory/MEMORY.md` | Personal |
@@ -51,6 +52,8 @@
 | 4 | Gráficos en grid (no individuales) | `grid.arrange()` para mostrar opciones juntas | Cada opción como PNG separado + answerlist con `![](diagrama_a.png)` | §Error 4 + regla `graficos-como-opciones.md` |
 | 5 | Gráfico aplastado por escala | `EST-BOX-01` produce valores fuera de rango | Excluir errores fuera de rango en `errores_validos_para_grafico` | §Error 5 |
 | 6 | "cannot take a sample larger than the population" | Rango `1:N` con `replace=FALSE` y `size>N` | Ampliar rango o usar `replace=TRUE` o reducir `size` | §Error 6 |
+| **18** | **Estudiante identifica opción correcta por formato sin verificar datos** | **Solo 1 opción del formato correcto (ej: 3 tortas + 1 barra)** | **Formato equilibrado: min 2 del mismo formato que la correcta** | **§Error 18 + regla `graficos-como-opciones.md` §Formato Equilibrado** |
+| **20** | **GRAF-BAR-01 — Barras con categorías correctas pero alturas permutadas** | **Verificación incompleta: solo categorías, no valores por categoría** | **Distractor GRAF-BAR-01: permutar frecuencias entre categorías con guardia anti-coincidencia** | **§Error 20** |
 
 ### 2.3 Coherencia semántica y aleatoriedad
 
@@ -77,10 +80,12 @@
 |---|---|---|---|---|
 | 16 | `! Undefined control sequence. l.5 \pandocbounded` al compilar PDF | pandoc 3.x envuelve `\includegraphics` en `\pandocbounded{...}` no definido en templates LaTeX de R-exams cuando `![](file.png)` no tiene atributo `width` | Reemplazar `![](file.png)` por `cat("![](file.png){width=80%}\n")` en bloque R | §Error 16 + regla `markdown-imagenes-pdf.md` |
 | 17 | Solution dice "Opción A" pero answerlist marca (c) como correcta | `exshuffle: TRUE` re-mezcla opciones después de que `letra_correcta` ya fue evaluada, sin actualizar el texto de la Solution | `exshuffle: FALSE` + mezcla interna con `sample()` (ya aleatoriza); `letra_correcta` calculada DESPUÉS del sample | §Error 17 + regla `codigo-rmd.md` #6 + `graficos-como-opciones.md` |
+| **18** | **Estudiante identifica opción correcta por formato gráfico sin verificar datos** | **Solo 1 opción del formato correcto (ej: 3 tortas + 1 barra cuando la correcta es torta)** | **Formato equilibrado: al menos 2 opciones deben compartir el formato de la correcta (ej: 2 barras + 2 tortas)** | **§Error 18 + regla `graficos-como-opciones.md` §Formato Equilibrado** |
+| **20** | **GRAF-BAR-01 — Barras con categorías correctas pero alturas permutadas** | **El estudiante verifica solo categorías, no valores por categoría. Las alturas parecen plausibles (son valores reales) pero están mal asignadas** | **Permutar `frecuencias` con guardia `while(!all(perm == orig))`; usar como distractor de barras para lograr 2+2 equilibrio** | **§Error 20** |
 
 ---
 
-## 3. Reglas críticas (18, todas obligatorias)
+## 3. Reglas críticas (20, todas obligatorias)
 
 | # | Regla | Archivo | Categoría |
 |---|---|---|---|
@@ -147,6 +152,7 @@ Ver `.claude/CLAUDE.md` sección "Cambios v3.X" o `.claude/docs/CHANGELOG.md`. R
 | 3.8.0 | 2026-04-10 | Drift hooks/tests/CI/docs resuelto |
 | 3.9.0 | 2026-05-03 | Convivencia Ruflo + regla #17 + orquestador-schoice |
 | **3.10.0** | **2026-05-03** | **Errores 16-17 + regla #18 anti-`\pandocbounded` + FASE 2I + test_pandocbounded_y_solution_coherence.R** |
+| **3.13.0** | **2026-05-14** | **Errores 18 y 20 + Formato Equilibrado en opciones gráficas (v5.0 de graficos-como-opciones.md) + GRAF-BAR-01** |
 
 ---
 
@@ -170,7 +176,9 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 |---|---|
 | "¿Cómo genero un .Rmd SCHOICE?" | `.claude/skills/generar-schoice/SKILL.md` o `Task(subagent_type="orquestador-schoice")` |
 | "¿Cómo manejo los gráficos?" | Regla `flujo-b-obligatorio.md` + `graficador-secuencial.md` |
-| "¿Por qué falló el render?" | `.claude/docs/patrones-errores-conocidos.md` Errores 1-6 |
+| "¿Por qué falló el render?" | `.claude/docs/patrones-errores-conocidos.md` Errores 1-6, 16 |
+| "¿Cómo evito patrones detectables en opciones gráficas?" | Error 18 + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado |
+| "¿Cómo diseño un buen distractor de barras?" | Error 20 (GRAF-BAR-01) — alturas permutadas |
 | "¿Por qué solo se generan N versiones únicas?" | Error 8 + regla `codigo-rmd.md` #10 |
 | "¿Qué hago si el detractor reporta una objeción?" | Regla `detractor-obligatorio.md` §Bifurcación |
 | "¿Cómo manejo Ruflo y los hooks ICFES juntos?" | ADR-001 + regla #17 |

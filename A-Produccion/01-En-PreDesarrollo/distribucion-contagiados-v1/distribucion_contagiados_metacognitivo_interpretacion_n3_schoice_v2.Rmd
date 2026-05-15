@@ -1,0 +1,601 @@
+```{r data_generation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+library(ggplot2)
+library(testthat)
+
+# ---- Semilla por versión ----
+seed_global <- as.integer(Sys.time()) %% 100000 + sample(1:99999, 1)
+set.seed(seed_global)
+
+# ---- Rangos de edad fijos (las categorias de la tabla) ----
+categorias_tabla <- c("45-64", "65-74", "75+")
+
+# ---- Generar frecuencias dinamicas con proporciones claramente diferenciadas ----
+# Restricciones: freq_dom > freq_int > freq_peq >= 2, suma = total_personas
+
+total_personas <- sample(seq(80, 120, by = 4), 1)
+freq_peq <- sample(2:6, 1)
+freq_int <- round(total_personas * runif(1, 0.18, 0.30))
+freq_dom <- total_personas - freq_peq - freq_int
+
+intentos <- 0
+while ((freq_dom <= freq_int || freq_int <= freq_peq || freq_peq < 2) && intentos < 100) {
+  total_personas <- total_personas + sample(c(0, 4, 8), 1)
+  freq_peq <- sample(2:5, 1)
+  freq_int <- round(total_personas * runif(1, 0.18, 0.28))
+  freq_dom <- total_personas - freq_peq - freq_int
+  intentos <- intentos + 1
+}
+stopifnot(freq_dom > freq_int, freq_int > freq_peq, freq_peq >= 2,
+          freq_dom + freq_peq + freq_int == total_personas)
+
+frecuencias <- c(freq_dom, freq_peq, freq_int)
+names(frecuencias) <- categorias_tabla
+
+# Tabla de frecuencias para mostrar en el enunciado
+tabla_datos <- data.frame(
+  `Rango de edad` = categorias_tabla,
+  `Personas contagiadas` = frecuencias,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+)
+
+# ---- Paleta de colores ICFES (sobria) ----
+colores_opciones <- c(
+  "45-64" = "#4472C4",
+  "65-74" = "#ED7D31",
+  "75+"   = "#70AD47"
+)
+color_extra <- "#A5A5A5"
+
+# ---- Tema minimalista ICFES para tortas ----
+tema_torta <- theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_blank(),
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.border = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    legend.position = "none"
+  )
+
+# ---- Tema minimalista ICFES para barras ----
+tema_barras <- theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.title.x = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.background = element_rect(fill = "white", color = NA),
+    legend.position = "none"
+  )
+
+# ---- Función: generar torta con N categorias ----
+generar_torta <- function(cats, vals, colores_vector, archivo) {
+  n <- length(cats)
+  props <- vals / sum(vals)
+  datos <- data.frame(
+    Categoria = factor(cats, levels = cats),
+    Prop = props,
+    Label = paste0(cats, "\n", vals, " (", round(props * 100), "%)"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggplot(datos, aes(x = "", y = Prop, fill = Categoria)) +
+    geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.5) +
+    coord_polar("y", start = 0) +
+    scale_fill_manual(values = colores_vector) +
+    geom_text(aes(label = Label),
+              position = position_stack(vjust = 0.5),
+              size = 3.2, fontface = "bold") +
+    tema_torta
+
+  ggsave(archivo, plot = p, width = 5, height = 5, dpi = 200, bg = "white")
+  invisible(p)
+}
+
+# ---- Función: generar barras con etiquetas de valor sobre cada barra ----
+generar_barras <- function(cats, vals, colores_vector, archivo) {
+  datos <- data.frame(
+    Categoria = factor(cats, levels = cats),
+    Frecuencia = vals,
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggplot(datos, aes(x = Categoria, y = Frecuencia, fill = Categoria)) +
+    geom_bar(stat = "identity", color = "white", linewidth = 0.3, width = 0.7) +
+    scale_fill_manual(values = colores_vector) +
+    geom_text(aes(label = Frecuencia), vjust = -0.5, size = 4, fontface = "bold") +
+    tema_barras +
+    labs(y = "Personas contagiadas") +
+    theme(axis.title.y = element_text(size = 11, color = "gray40"))
+
+  ggsave(archivo, plot = p, width = 5, height = 5, dpi = 200, bg = "white")
+  invisible(p)
+}
+
+# ============================================================
+#  V2: OPCION CORRECTA = gráfico DE BARRAS (diagrama de barras)
+#  Mezcla: 2 barras + 2 tortas para evitar patrones de formato
+# ============================================================
+
+# ---- Frecuencias permutadas para el distractor de barras ----
+# Las categorias son correctas pero los valores estan asignados a categorias equivocadas
+# Garantizar que la permutacion NO coincida con el orden original
+freq_perm <- frecuencias
+while (TRUE) {
+  freq_perm <- sample(frecuencias)
+  # Verificar que al menos un valor cambio de posicion
+  if (!all(freq_perm == frecuencias)) break
+}
+
+# ---- Opcion CORRECTA: barras con categorias y frecuencias exactas ----
+cats_correcta <- categorias_tabla
+vals_correcta <- as.numeric(frecuencias)
+cols_correcta <- colores_opciones
+
+# ---- Distractor 1 (torta): categoria extra "Otro" ----
+freq_extra <- sample(3:15, 1)
+cats_D1 <- c(categorias_tabla, "Otro")
+vals_D1 <- c(as.numeric(frecuencias), freq_extra)
+cols_D1 <- c(colores_opciones, "Otro" = color_extra)
+
+# ---- Distractor 2 (torta): áreas iguales (proporciones ignoradas) ----
+cats_D2 <- categorias_tabla
+vals_D2 <- c(1, 1, 1)
+cols_D2 <- colores_opciones
+
+# ---- Distractor 3 (barras): categorias correctas, valores permutados ----
+cats_D3 <- categorias_tabla
+vals_D3 <- as.numeric(freq_perm)
+cols_D3 <- colores_opciones
+
+# ---- Pool de opciones ANTES de mezclar ----
+opciones_pre_mezcla <- list(
+  correcta = list(
+    tipo     = "correcto",
+    cats     = cats_correcta,
+    vals     = vals_correcta,
+    cols     = cols_correcta,
+    formato  = "barras",
+    archivo  = "diagrama_correcta.png",
+    error_codigo  = "NINGUNO",
+    error_nombre  = "Representación correcta",
+    descripcion_corta = paste0(
+      "La gráfica de barras muestra exactamente las tres categorias de edad ",
+      "de la tabla (45-64, 65-74 y 75+) con alturas proporcionales a las ",
+      "frecuencias registradas: ", freq_dom, ", ", freq_peq, " y ", freq_int,
+      " personas contagiadas respectivamente."
+    ),
+    descripcion_larga = "",
+    causa_raiz  = ""
+  ),
+  error_torta_cat_extra = list(
+    tipo     = "error",
+    cats     = cats_D1,
+    vals     = vals_D1,
+    cols     = cols_D1,
+    formato  = "torta",
+    archivo  = "diagrama_error1.png",
+    error_codigo  = "GRAF-TOR-01",
+    error_nombre  = "Inclusion de categoria espuria",
+    descripcion_corta = paste0(
+      "La gráfica circular incluye la categoria 'Otro' que no aparece ",
+      "en la tabla de datos original."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante acepta una gráfica circular que contiene un sector adicional ",
+      "etiquetado como 'Otro'. La tabla declara exactamente tres rangos de edad ",
+      "cuya suma ya completa el total de ", total_personas, " personas contagiadas; ",
+      "por tanto, no existe ni puede existir una categoria residual. Incluir 'Otro' ",
+      "implica suponer datos que no fueron registrados y distorsiona las áreas ",
+      "de los demas sectores, alterando la interpretación de la distribución real."
+    ),
+    causa_raiz = paste0(
+      "El estudiante no verifica que todas las categorias del gráfico correspondan ",
+      "exactamente a las de la tabla. La presencia del sector 'Otro' introduce una ",
+      "categoria inexistente que distorsiona la distribución real."
+    )
+  ),
+  error_torta_areas_iguales = list(
+    tipo     = "error",
+    cats     = cats_D2,
+    vals     = vals_D2,
+    cols     = cols_D2,
+    formato  = "torta",
+    archivo  = "diagrama_error2.png",
+    error_codigo  = "GRAF-TOR-02",
+    error_nombre  = "Proporciones ignoradas (áreas iguales)",
+    descripcion_corta = paste0(
+      "La gráfica circular muestra tres sectores de áreas aproximadamente iguales, ",
+      "ignorando por completo las frecuencias reales de la tabla."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante se conforma con verificar que las etiquetas de las categorias ",
+      "coinciden con las de la tabla, pero omite la verificacion crucial: las áreas ",
+      "de los sectores deben ser proporcionales a las frecuencias. En este caso, ",
+      "los tres sectores tienen el mismo tamano (~33% cada uno), lo cual contradice ",
+      "los valores de la tabla donde 45-64 concentra aproximadamente el ",
+      round(100 * freq_dom / total_personas), "% de los casos, mientras que ",
+      "65-74 representa solo el ", round(100 * freq_peq / total_personas),
+      "%. Una gráfica circular fiel debe reflejar estas diferencias en las áreas."
+    ),
+    causa_raiz = paste0(
+      "El estudiante verifica la coincidencia de etiquetas (nombres de categorias) ",
+      "pero no realiza la verificacion visual de proporcionalidad entre áreas y ",
+      "frecuencias. Confunde 'tener las categorias correctas' con 'representar la ",
+      "distribución correctamente'."
+    )
+  ),
+  error_barras_vals_permutados = list(
+    tipo     = "error",
+    cats     = cats_D3,
+    vals     = vals_D3,
+    cols     = cols_D3,
+    formato  = "barras",
+    archivo  = "diagrama_error3.png",
+    error_codigo  = "GRAF-BAR-01",
+    error_nombre  = "Alturas de barras intercambiadas",
+    descripcion_corta = paste0(
+      "La gráfica de barras tiene las categorias correctas, pero las alturas ",
+      "no corresponden a las frecuencias reales de cada grupo de edad en la tabla."
+    ),
+    descripcion_larga = paste0(
+      "El estudiante verifica que las tres categorias del eje horizontal coinciden ",
+      "con las de la tabla y asume que la gráfica es correcta. Sin embargo, aunque ",
+      "las etiquetas de las barras son las correctas (45-64, 65-74, 75+), las ",
+      "alturas no reflejan las frecuencias reales registradas. Por ejemplo, la ",
+      "categoria 45-64 que en la tabla tiene ", freq_dom, " personas contagiadas ",
+      "podria mostrar una altura correspondiente a otra categoria. Elegir el tipo ",
+      "de gráfica y verificar las categorias no basta: hay que comprobar que cada ",
+      "barra tenga la altura exacta que le corresponde según la tabla."
+    ),
+    causa_raiz = paste0(
+      "El estudiante realiza una verificacion parcial: confirma que el formato ",
+      "(barras) es valido y que las categorias coinciden, pero omite la comparacion ",
+      "sistematica entre la altura de cada barra y la frecuencia registrada para ",
+      "esa categoria en la tabla. Asumir que categorias correctas implican valores ",
+      "correctos es un error de verificacion incompleta."
+    )
+  )
+)
+
+# ---- Mezclar internamente las opciones (sample()) ----
+opciones_mezcladas <- sample(opciones_pre_mezcla)
+
+# Asignar letras A, B, C, D al orden mezclado
+letras <- c("A", "B", "C", "D")
+names(opciones_mezcladas) <- letras
+
+# Identificar posicion de la opcion correcta
+indice_correcto <- which(sapply(opciones_mezcladas, function(x) x$tipo == "correcto"))
+stopifnot(length(indice_correcto) == 1)
+
+# Vector solución para R-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+
+# Variable letra_correcta (SOLO para logs/stderr, NUNCA en Solution renderizada — regla #19)
+letra_correcta <- letras[indice_correcto]
+message("DEBUG: letra_correcta = ", letra_correcta)
+
+# ---- Generar los 4 archivos PNG (diagrama_a.png, etc.) ----
+for (letra in letras) {
+  opc <- opciones_mezcladas[[letra]]
+  archivo_salida <- paste0("diagrama_", tolower(letra), ".png")
+  opc$archivo <- archivo_salida
+
+  if (opc$formato == "torta") {
+    generar_torta(opc$cats, opc$vals, opc$cols, archivo_salida)
+  } else {
+    generar_barras(opc$cats, opc$vals, opc$cols, archivo_salida)
+  }
+}
+
+# ---- Mapeo letra -> tipo para la Solution ----
+mapeo_letras_tipo <- setNames(
+  sapply(opciones_mezcladas, function(x) x$tipo),
+  letras
+)
+
+# ---- Pool de reflexiones metacognitivas ----
+reflexiones_metacognitivas <- c(
+  "Interpretar correctamente una gráfica requiere verificar tres elementos: las categorias representadas, las proporciones entre ellas y la correspondencia con la tabla de datos original.",
+  "Un error frecuente al leer gráficos es detenerse en la primera coincidencia (por ejemplo, 'las categorias existen') sin verificar si las alturas o áreas reflejan fielmente los valores numericos de cada categoria.",
+  "Antes de elegir una representación gráfica, conviene preguntarse: ¿estan todas las categorias de la tabla? ¿hay categorias que no aparecen en los datos? ¿las alturas o áreas son proporcionales a los valores?",
+  "La alfabetizacion estadística incluye la capacidad de detectar cuando un gráfico distorsiona la información, ya sea agregando datos inexistentes, igualando proporciones desiguales o intercambiando los valores entre categorias.",
+  "Cuando evaluamos representaciones gráficas, debemos desconfiar de las que 'se ven bien' pero no resisten una comparacion sistematica con la tabla de datos que pretenden representar.",
+  "Un gráfico de barras es fiel a los datos cuando cada barra tiene una altura proporcional a la frecuencia de su categoria. Si dos barras tienen alturas intercambiadas, la información se distorsiona aunque las etiquetas sean correctas.",
+  "Verificar que las categorias del gráfico coinciden con las de la tabla es necesario pero no suficiente: también hay que comprobar que los valores representados correspondan exactamente a los de la tabla.",
+  "La verificacion completa de un gráfico estadístico exige comparar categoria por categoria entre la tabla y la representación visual, sin asumir que una coincidencia parcial garantiza la fidelidad total."
+)
+reflexion <- sample(reflexiones_metacognitivas, 1)
+
+# ---- Contextos narrativos creativos (pool de 8 plantillas variadas) ----
+contextos <- list(
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("Durante el seguimiento semanal de un brote viral, un pequeno hospital registro los casos confirmados entre sus pacientes. La tabla muestra la distribución de las ", total, " personas contagiadas según su rango de edad."),
+        paste0("El comite de vigilancia epidemiologica de un hospital local documento los contagios detectados en una semana. Los ", total, " casos se distribuyeron por edad de la siguiente manera:"),
+        paste0("Al cierre del mes, un centro de salud recopilo la información de todos los pacientes que resultaron positivos para el virus. En total fueron ", total, " personas, clasificadas por grupo etario:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("Las autoridades de salud necesitan entender como afecta el virus a los distintos grupos de edad. Un hospital reporto ", total, " casos confirmados distribuidos así:"),
+        paste0("Para disenar una campana de prevencion, el departamento de salud publica solicito los datos de contagios por edad. El hospital entrego esta tabla con ", total, " personas contagiadas:"),
+        paste0("Un equipo de investigacion medica analiza la relación entre la edad y la probabilidad de contagio. Como primer paso, reunieron los datos de ", total, " pacientes infectados en el hospital:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("El boletin informativo del Hospital Regional publico las cifras de contagios de la ultima quincena. De las ", total, " personas que resultaron positivas, la distribución por edad fue:"),
+        paste0("En la sección de salud del periódico local, se informo que un hospital del municipio atendio ", total, " casos de contagio en los ultimos dias. La clasificación por grupo de edad mostro los siguientes resultados:"),
+        paste0("Según el reporte oficial del centro de salud, los ", total, " nuevos casos confirmados se concentraron en los siguientes rangos de edad:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("La doctora a cargo de la sala de aislamiento organizo los expedientes de sus pacientes por grupo de edad. Con ", total, " personas bajo observación, los datos se resumieron así:"),
+        paste0("El jefe de enfermeria preparo un informe para la direccion del hospital. Durante el pico de contagios, se atendieron ", total, " pacientes cuya distribución etaria fue:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("La oficina de estadística del Ministerio de Salud recibio los datos consolidados de un hospital centinela. El resumen de ", total, " personas contagiadas, agrupadas por edad, es el siguiente:"),
+        paste0("El sistema de vigilancia centinela reporto los casos de un brote local. La caracterizacion de las ", total, " personas afectadas por grupo etario fue:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("¿Como se distribuyeron los contagios entre los distintos grupos de edad atendidos en el hospital? La tabla siguiente responde a esta pregunta con los datos de ", total, " personas que dieron positivo:"),
+        paste0("¿Afecta el virus por igual a todas las edades? Para responder, un hospital analizo sus ", total, " casos confirmados y los clasifico de la siguiente forma:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("Al revisar los archivos de la semana, el director del hospital noto un patrón en las edades de los pacientes contagiados. Pidio al equipo de registros que tabulara los ", total, " casos y el resultado fue:"),
+        paste0("Revisando el historial clinico de los ultimos dias, la epidemiologa del hospital encontro que los ", total, " contagios confirmados presentaban la siguiente composicion por edad:")
+      )
+      sample(stems, 1)
+    }
+  ),
+  list(
+    plantilla = function(total) {
+      stems <- c(
+        paste0("—Necesito saber en que grupos de edad se estan concentrando los casos —solicito la directora del hospital. El equipo medico entrego esta tabla con ", total, " pacientes:"),
+        paste0("—¿Cual es el perfil de edad de los contagiados? —pregunto el coordinador de la sala de urgencias. Los registros de ", total, " pacientes mostraron lo siguiente:")
+      )
+      sample(stems, 1)
+    }
+  )
+)
+
+# Seleccionar contexto aleatorio
+ctx <- contextos[[sample(length(contextos), 1)]]
+enunciado_contexto <- ctx$plantilla(total_personas)
+
+# ---- Pool de errores conceptuales (para referencia en Solution) ----
+errores_conceptuales <- list(
+  list(
+    codigo = "GRAF-TOR-01",
+    nombre = "Inclusion de categoria espuria",
+    descripcion_corta = paste0("La gráfica circular incluye una categoria adicional que no esta en la tabla ('Otro'), creando un sector que no corresponde a ningun dato real."),
+    descripcion_larga = paste0("El estudiante acepta una gráfica con categorias que no aparecen en los datos. Al introducir un sector adicional, la gráfica distorsiona la distribución real porque (a) la suma de todas las categorias de la tabla ya es el total de ", total_personas, " y (b) no hay registros de personas en una categoria 'Otro'. La presencia de este sector modifica las áreas de los demas sectores, alterando la interpretación de la distribución."),
+    causa_raiz = "El estudiante no contrasta la lista de categorias del gráfico con la tabla de datos. Se enfoca en que 'la mayoria' de las categorias coinciden sin exigir una correspondencia exacta."
+  ),
+  list(
+    codigo = "GRAF-TOR-02",
+    nombre = "Proporciones ignoradas (áreas iguales)",
+    descripcion_corta = paste0("La gráfica circular muestra tres sectores de áreas aproximadamente iguales (~33% cada uno), ignorando que la tabla tiene proporciones claramente diferentes: ", round(100 * freq_dom / total_personas), "%, ", round(100 * freq_peq / total_personas), "% y ", round(100 * freq_int / total_personas), "%."),
+    descripcion_larga = paste0("El estudiante verifica las etiquetas de las categorias y, al encontrar que coinciden con la tabla, da por valida la gráfica. Sin embargo, las áreas de los sectores son todas iguales, lo cual contradice directamente los valores de la tabla: el grupo 45-64 concentra aproximadamente el ", round(100 * freq_dom / total_personas), "% de los casos, mientras que 65-74 representa solo el ", round(100 * freq_peq / total_personas), "%. Una gráfica circular fiel debe reflejar estas diferencias en las áreas de los sectores."),
+    causa_raiz = "El estudiante reduce la validación de una gráfica circular a la verificacion de etiquetas, omitiendo el elemento central de este tipo de representación: la proporcionalidad entre el área de cada sector y la frecuencia de la categoria."
+  ),
+  list(
+    codigo = "GRAF-BAR-01",
+    nombre = "Alturas de barras intercambiadas entre categorias",
+    descripcion_corta = paste0("La gráfica de barras muestra las tres categorias correctas pero con alturas que no corresponden a las frecuencias de la tabla: los valores estan asignados a categorias equivocadas."),
+    descripcion_larga = paste0("El estudiante verifica que las categorias del eje horizontal coinciden con las de la tabla y asume que la gráfica es correcta. Sin embargo, aunque las etiquetas son correctas (45-64, 65-74, 75+), las alturas de las barras no reflejan las frecuencias reales. La categoria 45-64 tiene ", freq_dom, " personas en la tabla, pero en el gráfico aparece con una altura que corresponde a otra categoria. Este error es particularmente peligroso porque el formato (barras) y las etiquetas son correctos, lo que puede generar una falsa sensacion de verificacion completa."),
+    causa_raiz = "El estudiante realiza una verificacion en dos pasos —confirmar el formato y confirmar las categorias— pero omite el tercer paso crucial: comparar sistematicamente la altura de cada barra con la frecuencia registrada para esa categoria especifica en la tabla."
+  )
+)
+
+# ---- Verificaciones internas (stopifnot base R) ----
+hashes <- sapply(letras, function(l) {
+  opc <- opciones_mezcladas[[l]]
+  digest::digest(list(cats = opc$cats, vals = opc$vals))
+})
+stopifnot(length(unique(hashes)) == 4)
+
+stopifnot(sum(solucion) == 1)
+
+stopifnot(length(categorias_tabla) == 3,
+          sum(frecuencias) == total_personas)
+
+# Verificar que la opcion correcta es de barras y tiene los datos exactos
+opc_correcta <- opciones_mezcladas[[letra_correcta]]
+stopifnot(opc_correcta$formato == "barras",
+          length(opc_correcta$cats) == 3,
+          all(sort(opc_correcta$cats) == sort(categorias_tabla)),
+          all(opc_correcta$vals == as.numeric(frecuencias)))
+
+# Verificar que hay exactamente 2 barras y 2 tortas
+formatos <- sapply(opciones_mezcladas, function(x) x$formato)
+stopifnot(sum(formatos == "barras") == 2,
+          sum(formatos == "torta") == 2)
+
+# Verificar que el distractor de áreas iguales tiene valores identicos
+idx_iguales <- which(sapply(opciones_mezcladas, function(x) x$error_codigo == "GRAF-TOR-02"))
+stopifnot(length(idx_iguales) == 1,
+          length(unique(opciones_mezcladas[[idx_iguales]]$vals)) == 1)
+
+# Verificar que todos los archivos PNG existen y tienen tamano razonable
+for (letra in letras) {
+  archivo <- paste0("diagrama_", tolower(letra), ".png")
+  stopifnot(file.exists(archivo),
+            file.info(archivo)$size > 1000)
+}
+
+# ---- Tabla en formato Markdown para el enunciado ----
+tabla_md <- paste0(
+  "| Rango de edad | Personas contagiadas |\n",
+  "|------------|----------------------|\n",
+  paste(sapply(1:3, function(i) {
+    sprintf("| %s | %d |", categorias_tabla[i], frecuencias[i])
+  }), collapse = "\n"),
+  "\n| **Total** | **", total_personas, "** |"
+)
+```
+
+Question
+========
+
+`r enunciado_contexto`
+
+`r tabla_md`
+
+¿Cuál de las siguientes gráficas muestra correctamente la distribución de las personas contagiadas en el hospital?
+
+```{r mostrar_opciones, echo=FALSE, results='asis'}
+cat("* ![](diagrama_a.png){width=65%}\n")
+cat("* ![](diagrama_b.png){width=65%}\n")
+cat("* ![](diagrama_c.png){width=65%}\n")
+cat("* ![](diagrama_d.png){width=65%}\n")
+```
+
+Answerlist
+----------
+
+* Opcion A
+* Opcion B
+* Opcion C
+* Opcion D
+
+Solution
+========
+
+### Análisis de la respuesta correcta
+
+```{r solucion_contenido, echo=FALSE, results='asis'}
+# Identificar la opcion correcta por su descripción (NO por letra — regla #19)
+opc_correcta <- opciones_mezcladas[[letra_correcta]]
+
+cat(paste0(
+  "**Argumento valido:** \"", opc_correcta$descripcion_corta, "\"\n\n"
+))
+
+cat(paste0(
+  "La representación gráfica que reproduce fielmente la distribución de la tabla es ",
+  "la **gráfica de barras** que muestra **tres barras** correspondientes a los tres ",
+  "rangos de edad registrados (45-64, 65-74 y 75+), cuyas alturas son exactamente ",
+  "iguales a las frecuencias de la tabla. En este caso:\n\n",
+  "- La barra de **45-64** tiene una altura de **", freq_dom, "** personas ",
+  "(de un total de ", total_personas, ").\n",
+  "- La barra de **65-74** tiene una altura de **", freq_peq, "** personas ",
+  "(de un total de ", total_personas, ").\n",
+  "- La barra de **75+** tiene una altura de **", freq_int, "** personas ",
+  "(de un total de ", total_personas, ").\n\n",
+  "La clave para identificar la representación correcta es verificar simultaneamente ",
+  "tres condiciones: (1) que las categorias del gráfico coincidan **exactamente** con ",
+  "las de la tabla, (2) que la altura de cada barra (o el área de cada sector, según ",
+  "el tipo de gráfica) sea proporcional a la frecuencia de su categoria, y (3) que ",
+  "el total de personas representadas coincida con el total de la tabla."
+))
+
+# Mostrar la gráfica de la opcion correcta
+cat(paste0("\n\n**Gráfica que representa correctamente la distribución:**\n\n"))
+cat(paste0("![](diagrama_", tolower(letra_correcta), ".png){width=65%}\n"))
+```
+
+### Análisis de los errores en las otras opciones
+
+```{r solucion_distractores, echo=FALSE, results='asis'}
+# Recorrer las 3 opciones de error, identificandolas por código de error (NO por letra — regla #19)
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcto") {
+    cat(paste0(
+      "\n---\n\n",
+      "**", opc$error_codigo, " — ", opc$error_nombre, "**\n\n",
+      "*Argumento:* \"", opc$descripcion_corta, "\"\n\n",
+      opc$descripcion_larga, "\n"
+    ))
+  }
+}
+```
+
+### Propiedades del concepto: Lectura critica de gráficos estadisticos
+
+Para evaluar si una representación gráfica es fiel a una tabla de datos, se deben verificar **tres criterios**, sin importar si el gráfico es de barras o circular:
+
+1. **Correspondencia de categorias**: Todas las categorias del gráfico deben coincidir exactamente con las de la tabla. Si el gráfico introduce una categoria nueva o elimina una existente, la información esta distorsionada independientemente del tipo de gráfica utilizado.
+
+2. **Proporcionalidad**: En un gráfico de barras, la altura de cada barra debe ser directamente proporcional a la frecuencia de su categoria. En un gráfico circular, el área de cada sector debe serlo. Si dos categorias con frecuencias muy diferentes (por ejemplo, `r freq_dom` y `r freq_peq`) aparecen con alturas o áreas iguales, el gráfico es enganoso.
+
+3. **Verificacion del total**: La suma de las frecuencias representadas debe coincidir con el total declarado en la tabla. En este caso, las tres categorias suman exactamente `r total_personas`, por lo que no existe ni puede existir una categoria adicional ni sobrantes.
+
+### Caso especifico: Reflexion sobre el tipo de gráfica
+
+> **Afirmacion**: "Si una gráfica de barras tiene las mismas categorias que la tabla, entonces representa correctamente los datos."
+>
+> **Veredicto**: **Falsa**. Que las categorias del eje horizontal coincidan con las de la tabla es una condicion necesaria pero no suficiente. Además, hay que verificar que la altura de cada barra corresponda exactamente a la frecuencia registrada para esa categoria. Una gráfica de barras puede tener las categorias correctas y aun así distorsionar la información si las alturas estan intercambiadas o mal asignadas.
+
+> **Afirmacion**: "Una gráfica circular siempre es mejor que una de barras para representar frecuencias por categorias."
+>
+> **Veredicto**: **Falsa**. Ambos tipos de gráfica son validos para representar distribuciones de frecuencias. La calidad de la representación no depende del formato (barras o circular) sino de la fidelidad con que reproduce los datos de la tabla: categorias correctas, valores proporcionados y total verificado. Cualquier formato puede ser correcto o enganoso según como se utilice.
+
+### Reflexion metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar estos errores
+
+1. **Leer la tabla completa** antes de mirar las gráficas: identificar el número de categorias, sus nombres exactos y las frecuencias de cada una.
+
+2. **Verificar categorias sistematicamente**: tachar en la tabla cada categoria que aparece en el gráfico. Si sobra alguna en el gráfico o falta alguna de la tabla, la representación es incorrecta.
+
+3. **Comparar valores categoria por categoria**: para cada categoria de la tabla, verificar que la altura de la barra (o el área del sector) corresponde al valor numérico registrado. No asumir que categorias correctas implican valores correctos.
+
+4. **No confiar en el formato**: una gráfica de barras no es automaticamente correcta por ser de barras, ni una circular por ser circular. Ambos formatos requieren la misma verificacion sistematica de categorias, valores y proporciones.
+
+5. **Desconfiar de la primera impresion**: un gráfico puede "verse bien" y sin embargo distorsionar los datos. La única garantia es la verificacion sistematica de los tres criterios.
+
+Meta-information
+================
+exname: distribucion_contagiados_metacognitivo_interpretacion_n3_schoice_v2
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: FALSE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos
+exextra[Evidencia]: Transforma la representacion de una o mas piezas de informacion
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion

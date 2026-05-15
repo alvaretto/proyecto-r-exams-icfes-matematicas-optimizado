@@ -24,6 +24,13 @@
 14. [Error: CLI claude-flow falla con `npm error Invalid Version`](#error-14-cli-claude-flow-falla-con-npm-error-invalid-version)
 15. [Error: Auto-memory bridge sin paquete instalado (`Memory package not available`)](#error-15-auto-memory-bridge-sin-paquete-instalado)
 
+### Categoría: Pipeline render PDF + coherencia Solution (sesiones 2026-05-03/14)
+16. [Error: `\pandocbounded` undefined en PDF](#error-16-pandocbounded-undefined-al-renderizar-pdf-con-imágenes-markdown-sin-atributo-width)
+17. [Error: Inconsistencia Solution↔Answerlist por exshuffle](#error-17-inconsistencia-solutionanswerlist-por-exshuffle-true-con-referencia-explícita-a-letra)
+18. [Error: Estudiante identifica opción correcta por formato gráfico sin verificar datos](#error-18-estudiante-puede-identificar-opción-correcta-por-formato-gráfico-sin-verificar-datos)
+19. [Error: Solution con letra_correcta rompe coherencia bajo Moodle](#error-19-solution-con-r-letra_correcta-rompe-coherencia-bajo-moodle-re-shuffle)
+20. [Error: GRAF-BAR-01 — Barras con categorías correctas pero alturas permutadas](#error-20-graf-bar-01--gráfico-de-barras-con-categorías-correctas-pero-alturas-permutadas)
+
 ---
 
 ## Error 1: Imagen PNG no encontrada en compilación PDF
@@ -2024,6 +2031,62 @@ Suite: `tests/testthat/test_pandocbounded_y_solution_coherence.R` automatiza est
 
 ---
 
+## Error 18: Estudiante puede identificar opción correcta por formato gráfico sin verificar datos
+
+**Detectado:** 2026-05-14 (sesión v2 distribucion-contagiados)
+**Severidad:** ALTA (el ejercicio mide formato, no comprensión de datos)
+**Síntoma observado:** si el conjunto de opciones tiene un solo gráfico de barras (o una sola torta) y ese formato coincide siempre con la opción correcta, el estudiante aprende a responder por formato sin analizar los datos.
+
+### Causa raíz
+
+Cuando las 4 opciones de un SCHOICE gráfico tienen distribución desigual de formatos —por ejemplo, 3 tortas + 1 barra— el estudiante puede inferir la respuesta correcta por eliminación visual sin verificar categorías ni proporciones. En la v1 de `distribucion-contagiados`, la opción correcta era SIEMPRE una torta de 3 sectores. El estudiante que detectaba ese patrón podía acertar sin leer la tabla.
+
+### Consecuencia pedagógica
+
+El ejercicio deja de evaluar la competencia declarada ("Interpretar y transformar información entre formatos") y pasa a evaluar "reconocer el tipo de gráfico que siempre es correcto". La Alfirmación y Evidencia ICFES quedan sin verificar.
+
+### Fix permanente (format diversity principle)
+
+**Principio:** Para todo SCHOICE con opciones gráficas, el formato de la opción correcta DEBE aparecer en al menos 2 de las 4 opciones. Idealmente, usar 2 de un formato + 2 de otro (ej: 2 barras + 2 tortas).
+
+**Regla asociada:** `.claude/rules/graficos-como-opciones.md` §Formato equilibrado
+
+**Implementación en la v2 de distribucion-contagiados:**
+
+| Opción | v1 (frágil) | v2 (robusto) |
+|--------|-------------|--------------|
+| Correcta | Torta 3 sectores proporcionales | **Barras** 3 categorías + alturas exactas |
+| Distractor 1 | Torta + categoría "Otro" | Torta + categoría "Otro" |
+| Distractor 2 | Torta áreas iguales | Torta áreas iguales |
+| Distractor 3 | Barras + categoría "0-45" | **Barras** categorías correctas + alturas permutadas |
+
+En v2, el estudiante ve 2 barras y 2 tortas. No puede descartar por formato. Debe verificar:
+- ¿Están todas las categorías de la tabla? (descarta la torta con "Otro")
+- ¿Las áreas/alturas son proporcionales a las frecuencias? (descarta la torta de áreas iguales)
+- ¿La altura de cada barra coincide con su categoría específica? (descarta la barra con alturas permutadas)
+
+### Verificación en el código
+
+```r
+# Validación obligatoria en data_generation: verificar equilibrio de formatos
+formatos <- sapply(opciones_mezcladas, function(x) x$formato)
+stopifnot(sum(formatos == "barras") == 2, sum(formatos == "torta") == 2)
+```
+
+### 📅 Historial
+
+| Fecha | Archivo afectado | Resultado |
+|-------|------------------|-----------|
+| 2026-05-14 | `distribucion_contagiados_metacognitivo_interpretacion_n3_schoice_v1.Rmd` | v1 vulnerable (1 formato correcto = único en su tipo). v2 creada con 2 barras + 2 tortas. Verificado 10 semillas: correcta siempre = barras, formato nunca delata. |
+
+### 🔗 Reglas Cruzadas
+
+- `.claude/rules/graficos-como-opciones.md` §Formato equilibrado (nueva sección, 2026-05-14)
+- Error 20 (GRAF-BAR-01): patrón de distractor de barras con alturas permutadas que hace posible el equilibrio de formatos
+- `.claude/rules/ejercicios-metacognitivos.md` (Progressive Disclosure: el estudiante debe analizar, no reconocer patrones superficiales)
+
+---
+
 ## Error 19: Solution con `r letra_correcta` rompe coherencia bajo Moodle re-shuffle
 
 **Detectado:** 2026-05-12 (estudiante real KEVIN A. SILVA, p3c-mat)
@@ -2139,3 +2202,65 @@ Lista en `tests/testthat/test_letter_independence.R::.legacy_known_letter_dep`. 
 - Error 17 (gemelo: exshuffle:TRUE + letra con R-exams)
 - `tests/testthat/test_letter_independence.R`
 - `.claude/rules/markdown-imagenes-pdf.md` (regla anti-pandocbounded)
+
+---
+
+## Error 20: GRAF-BAR-01 — Gráfico de barras con categorías correctas pero alturas permutadas
+
+**Detectado:** 2026-05-14 (sesión v2 distribucion-contagiados)
+**Severidad:** MEDIA (patrón de distractor pedagógico; no es un bug sino un nuevo tipo de distractor a catalogar)
+**Código:** GRAF-BAR-01
+
+### Descripción del patrón
+
+Un distractor de gráfico de barras que muestra las categorías correctas del eje horizontal (coinciden con la tabla) pero con alturas que no corresponden a las frecuencias reales — los valores están permutados entre categorías. El estudiante que solo verifica "¿las categorías coinciden?" cae en este distractor. Solo quien verifica "¿la altura de CADA barra coincide con la frecuencia de SU categoría?" lo descarta correctamente.
+
+### Valor pedagógico
+
+Este distractor es más fuerte que los basados en formato (GRAF-TOR-01: categoría extra; GRAF-TOR-02: áreas iguales) porque:
+
+1. **Pasa la verificación de categorías**: las 3 etiquetas del eje X coinciden con la tabla
+2. **Pasa la verificación de formato**: es un gráfico de barras, formato perfectamente válido
+3. **Solo falla en la verificación de valores por categoría**: hay que comparar cada barra con su celda correspondiente en la tabla
+
+Esto lo hace particularmente adecuado para ejercicios de Nivel 3 (DOK 3), donde el estudiante debe realizar verificación sistemática y no solo reconocimiento de patrones.
+
+### Uso del patrón
+
+El distractor se construye permutando las frecuencias entre las categorías, con una guardia que garantiza que la permutación NO coincida con el orden original:
+
+```r
+# Generar frecuencias permutadas para el distractor de barras
+freq_perm <- frecuencias
+while (TRUE) {
+  freq_perm <- sample(frecuencias)
+  if (!all(freq_perm == frecuencias)) break  # Garantiza que al menos una cambió
+}
+
+# Las categorías son LAS MISMAS que la tabla
+cats_distractor <- categorias_tabla  # "45-64", "65-74", "75+"
+# Pero las alturas están asignadas a categorías equivocadas
+vals_distractor <- as.numeric(freq_perm)
+```
+
+### Verificación en el código
+
+```r
+# Validar que las categorías del distractor de barras coinciden con la tabla
+# pero las alturas NO (eso es lo que lo hace ser un distractor)
+stopifnot(all(cats_distractor == categorias_tabla))
+stopifnot(!all(vals_distractor == as.numeric(frecuencias)))
+```
+
+### 📅 Historial
+
+| Fecha | Archivo | Resultado |
+|-------|---------|-----------|
+| 2026-05-14 | `distribucion_contagiados_metacognitivo_interpretacion_n3_schoice_v2.Rmd` | GRAF-BAR-01 implementado como distractor 3. Combinado con GRAF-TOR-01 y GRAF-TOR-02 para lograr 2 barras + 2 tortas. |
+
+### 🔗 Reglas Cruzadas
+
+- `.claude/rules/graficos-como-opciones.md` §Formato equilibrado (la diversidad de formatos requiere distractores en ambos formatos)
+- Error 18 (format-based guessing): GRAF-BAR-01 es la pieza que permite equilibrar formatos sin sacrificar calidad de distractores
+- `.claude/rules/ejercicios-metacognitivos.md` (pool de errores conceptuales con códigos documentados)
+- `Error 5 (EST-BOX-01)` — otro error de gráficos por confusión valor/posición, pero en boxplots

@@ -41,7 +41,8 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
-- `/revisar-schoice`, `/revisar-cloze` - Revisión completa pasos 4-11 del workflow 🆕
+- `/orquestador-schoice`, `/orquestador-cloze` - Pipeline end-to-end (11 pasos, 3 pausas humanas) 🆕
+- `/revisar-schoice`, `/revisar-cloze` - Revisión completa pasos 4-11 del workflow
 - `/skill-retroalimentacion` - Generación científica de sección Solution
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
 - `/detractor auditoria [target]` - Revisión adversarial en 8 dominios
@@ -119,6 +120,8 @@ A-Produccion/
 | Stress test visual multi-semilla | @.claude/skills/stress-test-visual/SKILL.md |
 | Revisar ejercicio SCHOICE existente | @.claude/skills/revisar-schoice/SKILL.md |
 | Revisar ejercicio CLOZE existente | @.claude/skills/revisar-cloze/SKILL.md |
+| Pipeline end-to-end SCHOICE (11 pasos) | @.claude/agents/orquestador-schoice.md + `/orquestador-schoice` |
+| Pipeline end-to-end CLOZE (11 pasos) | @.claude/agents/orquestador-cloze.md + `/orquestador-cloze` |
 
 ### ⚙️ Configuración del Sistema
 
@@ -131,9 +134,36 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.11.0 (Error 19 + Regla #19 solution-letter-independence + FASE 2J + 19 reglas críticas)
-**Fecha**: 2026-05-12
+**Versión**: 3.13.0 (Formato Equilibrado en opciones gráficas + Errores 18 y 20 + GRAF-BAR-01)
+**Fecha**: 2026-05-14
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.13.0 (2026-05-14)
+- **NUEVA SECCIÓN**: Formato Equilibrado en `graficos-como-opciones.md` (v5.0) — al menos 2 opciones deben compartir el formato de la correcta
+  - Previene que el estudiante adivine por formato sin verificar datos (ej: 3 tortas + 1 barra cuando la correcta siempre es torta)
+  - Catálogo de distractores por formato: GRAF-TOR-01, GRAF-TOR-02, GRAF-TOR-03, GRAF-BAR-01
+  - Verificación obligatoria en `data_generation`: `stopifnot(n_formato_correcto >= 2)`
+- **ERROR 18**: Format-based guessing vulnerability — documentado en `patrones-errores-conocidos.md`
+  - Detectado en v1 de `distribucion-contagiados`: la torta siempre era correcta y la barra siempre incorrecta
+  - Fix: v2 con 2 barras + 2 tortas, correcta = barras
+- **ERROR 20 (GRAF-BAR-01)**: Nuevo patrón de distractor — barras con categorías correctas pero alturas permutadas
+  - Pasa verificación de categorías, solo falla en verificación de valores por categoría
+  - Permite equilibrio 2+2 sin sacrificar calidad de distractores
+- **EJERCICIO**: `distribucion_contagiados_metacognitivo_interpretacion_n3_schoice_v2.Rmd` — correcta = barras, 2+2 equilibrio
+- **MEMORIA**: 2 nuevas memorias de feedback persistente (format-diversity, GRAF-BAR-01)
+- **DOCS**: `INDICE_LECCIONES.md` actualizado con errores 18/20 + v3.13.0
+
+### Cambios v3.12.0 (2026-05-14)
+- **NUEVO ORQUESTADOR CLOZE**: `/orquestador-cloze` — pipeline end-to-end de 11 pasos para ejercicios CLOZE, gemelo de `/orquestador-schoice`.
+  - Agente: `.claude/agents/orquestador-cloze.md` (Opus, 65 turnos, 400+ líneas)
+  - Comando: `.claude/commands/orquestador-cloze.md` (wrapper que valida y delega)
+  - Soporta: 4+ partes Progressive Disclosure, exclozetype multi-gap, validaciones V1-V4 específicas CLOZE
+  - Mismos 3 WAIT_USER que SCHOICE (Flujo B, lenguaje gráfico, aprobación)
+  - NOPS tratado como N/A esperado cuando hay gaps num/string (no como error)
+  - 5 incidentes documentados específicos CLOZE (##ANSWERi## fuera de orden, pandocbounded, letter-independence en sub-partes, colapso pools mchoice, NOPS falso error)
+- **INFRAESTRUCTURA**: I-5 (invariante de agentes) sube de 8 a 9 agentes con la adición de orquestador-cloze
+- **DOCS**: `COMANDOS_Y_SKILLS.md` actualizado con documentación completa de ambos orquestadores + tabla comparativa SCHOICE vs CLOZE
+- **REFERENCIAS CRUZADAS**: `CLAUDE.md` índice actualizado con los 2 orquestadores
 
 ### Cambios v3.11.0 (2026-05-12)
 - **NUEVA REGLA #19**: `solution-letter-independence.md` — prohíbe `r letra_correcta` y literal "Opción [A-D]" en la sección Solution. Defensa contra re-shuffle externo (Moodle "Shuffle answers").

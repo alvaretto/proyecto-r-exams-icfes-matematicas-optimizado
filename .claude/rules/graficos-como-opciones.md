@@ -264,6 +264,66 @@ El dominio `visual` del detractor DEBE verificar:
 4. Escala compartida apropiada para todas las opciones
 5. No hay errores que generen valores fuera de rango
 6. `exshuffle: FALSE` + mezcla interna con `sample()` (para opciones gráficas con Solution que referencia letra)
+7. **Formato equilibrado**: al menos 2 opciones comparten el formato de la opción correcta (ver §Formato Equilibrado)
+
+---
+
+## Formato Equilibrado en Opciones Gráficas (OBLIGATORIO)
+
+### Principio Fundamental
+
+**Cuando las opciones de un SCHOICE son gráficos, el formato de la opción correcta (barras, torta, etc.) DEBE aparecer en al menos 2 de las 4 opciones. Idealmente, usar 2 opciones de un formato + 2 de otro.**
+
+Esta regla previene que el estudiante identifique la respuesta correcta por el formato del gráfico sin verificar los datos. Si hay 3 tortas y 1 barra, y la barra siempre es incorrecta (o siempre es correcta), el estudiante aprende el patrón y deja de analizar.
+
+### Evidencia del problema
+
+En la v1 de `distribucion-contagiados` (2026-05-14), la opción correcta era SIEMPRE una torta de 3 sectores. Las 4 opciones eran: 3 tortas + 1 barra. Un estudiante que detectara "la barra nunca es correcta" podía descartar una opción sin leer la tabla.
+
+En la v2, se reorganizó a 2 barras + 2 tortas. El estudiante ya no puede descartar por formato.
+
+### Patrón Correcto (2+2)
+
+```
+✅ CORRECTO — formato equilibrado
+   Opción correcta: Barras con categorías y alturas exactas
+   Distractor 1:   Torta con categoría extra
+   Distractor 2:   Torta con áreas iguales
+   Distractor 3:   Barras con categorías correctas + alturas permutadas (GRAF-BAR-01)
+
+   → 2 barras + 2 tortas. Estudiante debe verificar datos, no formato.
+```
+
+### Patrones PROHIBIDOS
+
+```
+❌ 3 tortas + 1 barra (o viceversa) — el formato único delata la respuesta
+❌ 4 del mismo formato — no evalúa interpretación entre formatos
+❌ La opción correcta es la ÚNICA de su formato — patrón detectable
+```
+
+### Verificación obligatoria en data_generation
+
+```r
+# Validar equilibrio de formatos (al menos 2 del formato correcto)
+formato_correcto <- opciones_mezcladas[[letra_correcta]]$formato
+n_formato_correcto <- sum(sapply(opciones_mezcladas, function(x) x$formato == formato_correcto))
+stopifnot(n_formato_correcto >= 2,
+          "La opción correcta es la única de su formato — el estudiante puede detectar el patrón")
+```
+
+### Catálogo de distractores por formato
+
+Para lograr el equilibrio 2+2 sin sacrificar calidad, se requieren distractores en AMBOS formatos:
+
+| Formato | Distractor | Código | Qué viola |
+|---------|-----------|--------|-----------|
+| Torta | Categoría extra ("Otro") | GRAF-TOR-01 | Correspondencia de categorías |
+| Torta | Áreas iguales | GRAF-TOR-02 | Proporcionalidad |
+| Barras | Categoría inventada | GRAF-TOR-03 | Correspondencia de categorías |
+| Barras | Alturas permutadas | GRAF-BAR-01 | Fidelidad de valores por categoría |
+
+Ver Error 20 en `patrones-errores-conocidos.md` para el patrón GRAF-BAR-01.
 
 ---
 
@@ -276,13 +336,23 @@ El dominio `visual` del detractor DEBE verificar:
 | Mezcla de opciones | Sin mezcla | Interna con `sample()` |
 | Solution | Sin indicar opción | Indica `letra_correcta` |
 | exshuffle | TRUE (rompe referencia en Solution) | FALSE (sample() ya aleatoriza) |
+| Formato equilibrado | 1 solo del formato correcto | Al menos 2 comparten el formato correcto |
 
 ---
 
-**Versión**: 4.0
-**Fecha**: 2026-02-08
+**Versión**: 5.0
+**Fecha**: 2026-05-14
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver regla general en `codigo-rmd.md` para otros tipos de ejercicios
+
+### Cambios v5.0 (2026-05-14)
+- **NUEVA SECCIÓN**: Formato Equilibrado en Opciones Gráficas (OBLIGATORIO)
+- **Principio**: al menos 2 de las 4 opciones deben compartir el formato de la opción correcta
+- **Catálogo de distractores por formato**: GRAF-TOR-01, GRAF-TOR-02, GRAF-TOR-03, GRAF-BAR-01
+- **Verificación en código**: `stopifnot` de equilibrio de formatos en `data_generation`
+- **Origen**: sesión v2 `distribucion-contagiados` — detectado patrón "la torta siempre es correcta"
+- **Referencias cruzadas**: Error 18 y Error 20 en `patrones-errores-conocidos.md`
+- **Detractor**: checklist ampliado a 7 puntos (agregado punto 7: formato equilibrado)
 
 ### Cambios v4.0 (2026-02-08)
 - **CORRECCIÓN CRÍTICA**: `exshuffle: FALSE` es OBLIGATORIO para SCHOICE con opciones gráficas PNG
