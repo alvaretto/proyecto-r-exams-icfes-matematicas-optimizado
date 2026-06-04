@@ -428,6 +428,10 @@ names(df_tabla)[1] <- paste0(toupper(substr(ctx$individuo_label, 1, 1)),
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 ```{r enunciado, echo=FALSE, results='asis'}
 cat(ctx$plantilla(nombres_individuos, n_controles))
 cat("\n\n")
