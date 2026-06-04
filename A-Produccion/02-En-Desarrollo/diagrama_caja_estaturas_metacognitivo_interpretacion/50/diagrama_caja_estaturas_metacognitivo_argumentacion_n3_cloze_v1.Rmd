@@ -468,6 +468,10 @@ test_that("RIC es positivo", {
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r protagonista`, `r ctx$rol`, registró `r ctx$contexto_dato`. La tabla muestra los datos ordenados de menor a mayor:
 
 ```{r tabla, echo=FALSE, results='asis'}

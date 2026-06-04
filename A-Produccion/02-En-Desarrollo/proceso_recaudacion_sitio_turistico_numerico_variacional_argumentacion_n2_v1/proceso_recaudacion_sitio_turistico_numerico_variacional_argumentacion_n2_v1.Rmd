@@ -499,6 +499,10 @@ include_supplement("diagrama_flujo.png")
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r ifelse(articulo == "el", "El", ifelse(articulo == "la", "La", "Las"))` `r sitio` en `r ubicacion` es uno de los sitios turísticos más representativos de `r pais`. En la tabla se relaciona la cantidad de personas que ingresó cada día durante una semana, según el tipo de entrada que pagó.
 
 Se pagan `r precio_base_fmt` `r moneda` de entrada y `r extra_reserva_fmt` más si se realiza reserva.

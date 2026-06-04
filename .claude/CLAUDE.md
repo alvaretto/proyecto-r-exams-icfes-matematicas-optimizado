@@ -43,7 +43,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
-- `/orquestador-schoice`, `/orquestador-cloze` - Pipeline end-to-end (11 pasos, 3 pausas humanas) 🆕
+- `/orquestador-schoice` - Pipeline end-to-end (11 pasos, 3 pausas humanas) 🆕 (`/orquestador-cloze`: documentado en v3.12.0 pero NO implementado — ver nota en Cambios v3.14.0)
 - `/revisar-schoice`, `/revisar-cloze` - Revisión completa pasos 4-11 del workflow
 - `/skill-retroalimentacion` - Generación científica de sección Solution
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
@@ -123,7 +123,7 @@ A-Produccion/
 | Revisar ejercicio SCHOICE existente | @.claude/skills/revisar-schoice/SKILL.md |
 | Revisar ejercicio CLOZE existente | @.claude/skills/revisar-cloze/SKILL.md |
 | Pipeline end-to-end SCHOICE (11 pasos) | @.claude/agents/orquestador-schoice.md + `/orquestador-schoice` |
-| Pipeline end-to-end CLOZE (11 pasos) | @.claude/agents/orquestador-cloze.md + `/orquestador-cloze` |
+| Pipeline end-to-end CLOZE (11 pasos) | ⚠️ NO implementado (documentado en v3.12.0, nunca commiteado). Usar `@.claude/agents/orquestador-schoice.md` como referencia |
 
 ### ⚙️ Configuración del Sistema
 
@@ -148,6 +148,8 @@ A-Produccion/
 - **GENERACIÓN**: `generar-schoice`, `generar-cloze` (skills) y `orquestador-schoice` (Incidente E + pre-flight check 11) incluyen el guard por defecto en ejercicios con tablas.
 - **EJERCICIO**: `rango_colesterol_metacognitivo_interpretacion_n3_schoice_v1` — fix aplicado y verificado con pandoc 3.8.3 y 3.6 (PDF, NOPS×3, HTML, DOCX). Commit `d22caf93`.
 - **MEMORIA**: `feedback_pandoc_ltcaptype_none.md`.
+- **FIX MASIVO REGLA #20**: guard `\newcounter{none}` insertado en los 15 `.Rmd` legacy de `01-En-PreDesarrollo/` y `02-En-Desarrollo/` con tablas Markdown (verificado render pandoc 3.8.3). Los 11 de `03-En-Produccion/` (inmutable) quedan en el allowlist permanente del test.
+- **CORRECCIÓN DE INCONSISTENCIA (changelog)**: el `orquestador-cloze` documentado en v3.12.0 (agente `.claude/agents/orquestador-cloze.md` + comando + "I-5 sube a 9 agentes") **nunca fue commiteado** (git sin registro de su creación). La realidad: solo existe `orquestador-schoice`; la invariante I-5 y `test_infraestructura_claude.R` cuentan **8 agentes** correctamente. Las referencias del índice se marcaron como NO implementado. Decisión pendiente del usuario: construirlo o eliminar las referencias.
 
 ### Cambios v3.13.0 (2026-05-14)
 - **NUEVA SECCIÓN**: Formato Equilibrado en `graficos-como-opciones.md` (v5.0) — al menos 2 opciones deben compartir el formato de la correcta

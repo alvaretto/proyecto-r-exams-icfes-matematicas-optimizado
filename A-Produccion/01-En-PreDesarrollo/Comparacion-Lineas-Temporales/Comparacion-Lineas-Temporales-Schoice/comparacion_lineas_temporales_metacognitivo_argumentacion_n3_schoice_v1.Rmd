@@ -694,6 +694,10 @@ ex_uid <- substr(
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r enunciado`
 
 ```{r mostrar_grafico, echo=FALSE, results='asis'}

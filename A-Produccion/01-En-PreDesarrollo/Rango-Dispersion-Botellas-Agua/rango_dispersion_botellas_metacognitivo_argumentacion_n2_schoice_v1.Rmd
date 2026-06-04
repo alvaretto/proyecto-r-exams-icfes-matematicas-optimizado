@@ -519,6 +519,10 @@ stopifnot(
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r enunciado`
 
 ¿Cuál procedimiento le permite identificar si hay dos `r recipiente` que tengan una diferencia grande en la cantidad de `r producto` que contienen?

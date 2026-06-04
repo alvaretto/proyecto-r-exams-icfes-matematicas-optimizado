@@ -46,21 +46,9 @@ es_junk <- function(rel) {
 # --- Allowlist LEGACY (deuda preexistente al 2026-06-03; regla #20). ---
 # 03-En-Produccion es inmutable -> permanente. 01/02 -> action item de fix.
 LEGACY_ALLOWLIST <- c(
-  "A-Produccion/01-En-PreDesarrollo/Comparacion-Lineas-Temporales/Comparacion-Lineas-Temporales-Schoice/comparacion_lineas_temporales_metacognitivo_argumentacion_n3_schoice_v1.Rmd",
-  "A-Produccion/01-En-PreDesarrollo/Comparacion-Lineas-Temporales/Lineas-Recursos-Cloze/lineas_recursos_metacognitivo_argumentacion_n3_cloze_v1.Rmd",
-  "A-Produccion/01-En-PreDesarrollo/Lentes-radio/error_relativo_procedimiento_metacognitivo_interpretacion_n3_cloze_v1.Rmd",
-  "A-Produccion/01-En-PreDesarrollo/Lentes-radio/error_relativo_procedimiento_metacognitivo_interpretacion_n3_schoice_v1.Rmd",
-  "A-Produccion/01-En-PreDesarrollo/Lentes-radio/error_relativo_procedimiento_metacognitivo_interpretacion_n3_schoice_v2.Rmd",
-  "A-Produccion/01-En-PreDesarrollo/migraciones-exteriores-lineas-n2/migraciones_exteriores_metacognitivo_interpretacion_n2_schoice_v1.Rmd",
-  "A-Produccion/01-En-PreDesarrollo/Rango-Dispersion-Botellas-Agua/rango_dispersion_botellas_metacognitivo_argumentacion_n2_schoice_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/comparar_medianas_3_grupos_aleatorio_argumentacion_n2_schoice_v1/comparar_medianas_3_grupos_aleatorio_argumentacion_n2_schoice_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/diagrama_caja_estaturas_metacognitivo_interpretacion/50/diagrama_caja_estaturas_metacognitivo_argumentacion_n3_cloze_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/diagrama_caja_estaturas_metacognitivo_interpretacion/50/diagrama_caja_estaturas_metacognitivo_interpretacion_n2_cloze_neg_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/diagrama_caja_estaturas_metacognitivo_interpretacion/50/diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_neg_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/diagrama_caja_estaturas_metacognitivo_interpretacion/50/diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_schoice_v1/pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_cloze_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_schoice_v1/pendiente_relacion_lineal_numerico_variacional_argumentacion_n2_schoice_v1.Rmd",
-  "A-Produccion/02-En-Desarrollo/proceso_recaudacion_sitio_turistico_numerico_variacional_argumentacion_n2_v1/proceso_recaudacion_sitio_turistico_numerico_variacional_argumentacion_n2_v1.Rmd",
+  # Los 15 violadores de 01/02 fueron corregidos en el fix masivo de la regla #20
+  # (2026-06-03): se les insertó el guard \newcounter{none}. Quedan SOLO los 11 de
+  # 03-En-Produccion (inmutable -> permanecen en el allowlist de forma permanente).
   "A-Produccion/03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/04-Medidas-De-Tendencia-Central/Mediana/Baterías-Celulares/comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v1.Rmd",
   "A-Produccion/03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/04-Medidas-De-Tendencia-Central/Mediana/Baterías-Celulares/comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v2.Rmd",
   "A-Produccion/03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/04-Medidas-De-Tendencia-Central/Mediana/Baterías-Celulares/comparar_medianas_baterias_celulares_aleatorio_interpretacion_representacion_n2_schoice_v3.Rmd",

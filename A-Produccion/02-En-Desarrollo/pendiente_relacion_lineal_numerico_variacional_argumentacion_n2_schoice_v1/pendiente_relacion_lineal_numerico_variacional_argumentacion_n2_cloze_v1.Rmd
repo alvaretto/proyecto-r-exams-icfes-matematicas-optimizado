@@ -661,6 +661,10 @@ test_that("Opciones de Parte 1 son todas distintas", {
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r enunciado_contexto`
 
 ```{r tabla_datos, echo=FALSE, results='asis'}

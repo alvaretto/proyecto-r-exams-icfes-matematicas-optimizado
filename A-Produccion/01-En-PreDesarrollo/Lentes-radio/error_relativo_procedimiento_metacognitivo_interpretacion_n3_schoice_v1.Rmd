@@ -514,6 +514,10 @@ test_that("Mediciones numéricamente correctas", {
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r enunciado_contexto`
 
 ```{r tabla_datos, echo=FALSE, results='asis'}

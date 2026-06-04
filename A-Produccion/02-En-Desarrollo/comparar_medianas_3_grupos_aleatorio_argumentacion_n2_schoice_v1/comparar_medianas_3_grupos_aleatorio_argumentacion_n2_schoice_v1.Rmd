@@ -682,6 +682,10 @@ test_that("Diversidad >= 200 versiones únicas de 300 intentos", {
 Question
 ========
 
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r enunciado_contexto`
 
 ```{r mostrar_tabla, echo=FALSE, results='asis'}
