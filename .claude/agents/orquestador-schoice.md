@@ -76,6 +76,7 @@ Antes de cualquier acción destructiva, verifico:
 8. `.claude/rules/solution-letter-independence.md` existe (regla #19 anti `letra_correcta` en Solution).
 9. `tests/testthat/test_letter_independence.R` existe.
 10. El hook `post-exams2-validation.sh` incluye FASE 2J (`grep -q "FASE 2J" .claude/hooks/post-exams2-validation.sh`).
+11. `.claude/rules/markdown-tablas-pandoc.md` existe (regla #20 anti `No counter 'none' defined`).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -157,6 +158,28 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 **Verificación post-generación**: simular el producto cartesiano de flags binarios (típicamente `afirmacion × pa_es_subiendo` = 4 casos) y verificar que **ningún caso** colapsa los pools de selección a inviabilidad. Si la simulación falla, retrocedo al diseño del pool antes de seguir al paso 4.
 
 **Referencia detallada**: `.claude/skills/generar-schoice/SKILL.md` § "Distractores con conclusión binaria Sí/No".
+
+### Incidente E — Tablas Markdown rompen en RStudio pandoc 3.8.3: guard contador `none` (Error 21)
+
+**Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (o cualquier entorno con pandoc ≥ 3.7 bundleado) fallan con:
+```
+! LaTeX Error: No counter 'none' defined.
+```
+aunque la misma corrida en terminal con pandoc 3.6 haya dado OK. El ejercicio tiene tablas Markdown (`kable(format="markdown")` o bloques `| col | col |`).
+
+**Causa**: pandoc ≥ 3.7 introduce `\def\LTcaptype{none}` en la salida longtable para tablas Markdown que carecen de caption; eso invoca internamente `\refstepcounter{none}`, que requiere un contador LaTeX `none` no definido en la plantilla de R-exams. Es el gemelo del Error 16 (`\pandocbounded`): un cambio de comportamiento de pandoc que es invisible en HTML/DOCX y solo explota en el pipeline PDF/NOPS. El entorno del desarrollador (pandoc 3.6 en terminal) puede enmascarar el bug hasta que el usuario final lo detecta en RStudio con pandoc 3.8.3.
+
+**Fix obligatorio**: en el paso 3 (generacion_rmd), si el `.Rmd` usa tablas Markdown, insertar al inicio de la sección `Question` el siguiente bloque raw LaTeX (fence de 3 backticks con `{=latex}`):
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+La guardia `@ifundefined` evita redefinir el contador si ya existe (importante en `exams2nops()` multi-ítem donde la misma sesión LaTeX procesa varios ejercicios). El bloque es ignorado completamente en HTML y DOCX.
+
+**Detección automática**: al renderizar con `exams2pdf()`, el hook FASE 2K (`post-exams2-validation.sh`) escanea el `.tex` generado buscando `\LTcaptype{none}` y verifica que el `.Rmd` fuente contiene la guardia `@ifundefined{c@none}`. Si el `.tex` contiene `\LTcaptype` pero el `.Rmd` no contiene la guardia → `ERR_TABLA_NONE` (bloqueante).
+
+**Referencia**: `.claude/rules/markdown-tablas-pandoc.md` (regla #20), Error 21 en `.claude/docs/patrones-errores-conocidos.md`, hook FASE 2K.
 
 ### Validación realista obligatoria (post-corrección)
 

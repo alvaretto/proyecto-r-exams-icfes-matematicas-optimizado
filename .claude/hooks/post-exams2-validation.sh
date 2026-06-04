@@ -439,6 +439,42 @@ fi
 echo ""
 
 # =============================================================================
+# FASE 2K: GUARD CONTADOR 'none' PARA TABLAS (Error 21, regla #20)
+# =============================================================================
+# pandoc >=3.7 (RStudio bundlea 3.8.3) envuelve longtable con \def\LTcaptype{none}.
+# La plantilla LaTeX de R-exams no define el contador 'none' -> exams2pdf/nops
+# fallan con "No counter 'none' defined". Todo .Rmd con tabla markdown DEBE incluir
+# el guard \newcounter{none} al inicio de Question.
+
+echo "┌───────────────────────────────────────────────────────────────┐"
+echo "│ FASE 2K: Guard contador 'none' para tablas (E21, regla #20)   │"
+echo "└───────────────────────────────────────────────────────────────┘"
+
+if [ -f "$RMD_FILE" ]; then
+  TIENE_TABLA=$(grep -nE 'kable\(|format[[:space:]]*=[[:space:]]*"markdown"|cat\("\|' "$RMD_FILE" || true)
+  TIENE_GUARD=$(grep -nE 'newcounter\{none\}|@ifundefined\{c@none\}' "$RMD_FILE" || true)
+  if [ -n "$TIENE_TABLA" ] && [ -z "$TIENE_GUARD" ]; then
+    ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+    echo "  ❌ ERR_TABLA_NONE: .Rmd con tabla markdown SIN guard del contador 'none'"
+    echo "     pandoc >=3.7 (RStudio usa 3.8.3) -> exams2pdf/nops fallan con"
+    echo "     'No counter \"none\" defined' (invisible con el pandoc 3.6 de terminal)."
+    echo ""
+    echo "     Fix obligatorio (regla #20): al INICIO de la seccion Question, un"
+    echo "     bloque raw LaTeX (se ignora en HTML/DOCX):"
+    echo '       ```{=latex}'
+    echo '       \makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother'
+    echo '       ```'
+    echo "     Ver .claude/rules/markdown-tablas-pandoc.md"
+  elif [ -n "$TIENE_TABLA" ]; then
+    echo "  ✓ FASE 2K: tabla markdown con guard del contador 'none' presente"
+  else
+    echo "  ⊘ FASE 2K: el .Rmd no usa tablas markdown (guard no requerido)"
+  fi
+fi
+
+echo ""
+
+# =============================================================================
 # RESUMEN FINAL Y ACCIONES OBLIGATORIAS
 # =============================================================================
 

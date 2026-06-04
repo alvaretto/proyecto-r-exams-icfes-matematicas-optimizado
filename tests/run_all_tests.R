@@ -171,6 +171,12 @@ suites <- list(
     archivo = "tests/testthat/test_letter_independence.R",
     critico = TRUE,
     watch = c("\\.Rmd$", "solution-letter-independence", "test_letter_independence")
+  ),
+  list(
+    nombre = "Tablas Markdown guard 'none' (Error 21, Regla #20)",
+    archivo = "tests/testthat/test_markdown_tablas_none_guard.R",
+    critico = TRUE,
+    watch = c("\\.Rmd$", "markdown-tablas-pandoc", "test_markdown_tablas_none_guard")
   )
 )
 

@@ -35,6 +35,8 @@ Este archivo funciona como **índice central** del sistema. Para información de
     Toda imagen `.png/.jpg/.svg/.pdf` emitida vía Markdown (directa o `cat()`) en `.Rmd` DEBE incluir atributo `{width=...}`. Pandoc 3.x sin width genera `\pandocbounded` no definido en LaTeX → rompe `exams2pdf()`. Coupled con regla #6 ampliada (`exshuffle: FALSE` para Solution con letra explícita). Errores 16-17 documentados.
 19. **Solution letter-independence** (NUNCA `r letra_correcta` ni "Opción [A-D]" en Solution) → @.claude/rules/solution-letter-independence.md
     Defensa permanente contra Error 19. La sección Solution debe identificar opciones por contenido/código de error, NUNCA por letra/posición, porque Moodle (y otros LMS) pueden re-shufflear las opciones de forma independiente al `exshuffle` de R-exams, rompiendo coherencia letra ↔ contenido para el estudiante. Capas: hook FASE 2J + test_letter_independence.R + detractor.
+20. **Markdown-tablas-pandoc (guard contador `none`)** → @.claude/rules/markdown-tablas-pandoc.md
+    Defensa permanente contra Error 21. Todo `.Rmd` con tabla Markdown (`kable(format="markdown")` o `cat("| ...")`) DEBE incluir, al inicio de `Question`, el bloque raw LaTeX `` ```{=latex}\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother``` ``. pandoc ≥3.7 (RStudio bundlea 3.8.3, distinto del 3.6 de terminal) envuelve `longtable` con `\def\LTcaptype{none}`, contador que la plantilla de R-exams no define → `exams2pdf/exams2nops` fallan con `No counter 'none' defined`. Gemelo del Error 16. Capas: generación (skills + orquestador) + hook FASE 2K (`ERR_TABLA_NONE`) + test_markdown_tablas_none_guard.R + validación con pandoc de RStudio.
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -134,9 +136,18 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.13.0 (Formato Equilibrado en opciones gráficas + Errores 18 y 20 + GRAF-BAR-01)
-**Fecha**: 2026-05-14
+**Versión**: 3.14.0 (Regla #20 — guard contador `none` para tablas Markdown + Error 21)
+**Fecha**: 2026-06-03
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.14.0 (2026-06-03)
+- **NUEVA REGLA #20**: `markdown-tablas-pandoc.md` — guard del contador `none` para tablas Markdown. pandoc ≥3.7 (RStudio bundlea 3.8.3, ≠ 3.6 de terminal) envuelve `longtable` con `\def\LTcaptype{none}`; la plantilla R-exams no define `none` → `exams2pdf/exams2nops` fallan con `No counter 'none' defined`. Gemelo del Error 16 (pandocbounded): env-específico por versión de pandoc.
+- **ERROR 21**: documentado en `patrones-errores-conocidos.md` — fix = bloque raw `{=latex}` con `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question (se ignora en HTML/DOCX; guardia evita redefinir en NOPS multi-ítem).
+- **HOOK FASE 2K**: `post-exams2-validation.sh` detecta tablas Markdown sin guard → `ERR_TABLA_NONE` (bloqueante).
+- **NUEVO TEST**: `tests/testthat/test_markdown_tablas_none_guard.R` (2 tests) — detección estática en `.Rmd` de 01/02/03. Runner: 16 suites (era 15).
+- **GENERACIÓN**: `generar-schoice`, `generar-cloze` (skills) y `orquestador-schoice` (Incidente E + pre-flight check 11) incluyen el guard por defecto en ejercicios con tablas.
+- **EJERCICIO**: `rango_colesterol_metacognitivo_interpretacion_n3_schoice_v1` — fix aplicado y verificado con pandoc 3.8.3 y 3.6 (PDF, NOPS×3, HTML, DOCX). Commit `d22caf93`.
+- **MEMORIA**: `feedback_pandoc_ltcaptype_none.md`.
 
 ### Cambios v3.13.0 (2026-05-14)
 - **NUEVA SECCIÓN**: Formato Equilibrado en `graficos-como-opciones.md` (v5.0) — al menos 2 opciones deben compartir el formato de la correcta

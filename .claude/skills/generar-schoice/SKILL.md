@@ -297,6 +297,69 @@ Moodle (y otros LMS) tiene un setting "Shuffle answers" INDEPENDIENTE del `exshu
 
 Ver `.claude/rules/solution-letter-independence.md` (regla #19, sin excepciones).
 
+## Patrón obligatorio: guard del contador `none` para tablas (regla #20)
+
+Aplica a todo ejercicio SCHOICE que incluya una tabla Markdown generada con `knitr::kable(format="markdown")` o con `cat("| ...")`.
+
+### Problema
+
+pandoc ≥ 3.7 envuelve las tablas longtable con `\def\LTcaptype{none}`, lo que requiere un contador LaTeX `none` que NO está definido en la plantilla de R-exams. Resultado: `exams2pdf()` y `exams2nops()` fallan con:
+
+```
+! LaTeX Error: No counter 'none' defined.
+```
+
+El bug es silencioso en HTML/DOCX (pandoc no emite LaTeX allí), pero bloquea completamente PDF y NOPS. RStudio bundlea pandoc 3.8.3 mientras la terminal puede tener 3.6 — la discrepancia hace que el error solo aparezca en ciertos entornos.
+
+### Fix obligatorio
+
+Insertar el siguiente bloque **inmediatamente después del encabezado `Question`**, antes de cualquier contenido de la pregunta:
+
+````markdown
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+````
+
+El bloque `{=latex}` es un raw block de pandoc: se pasa directo al compilador LaTeX y se **ignora** en HTML y DOCX. La guardia `\@ifundefined{c@none}` evita redefinir el contador cuando `exams2nops()` compila varios ejercicios en el mismo documento (el segundo ejercicio encontraría el contador ya definido y fallaría sin la guardia).
+
+### Cuándo aplicar
+
+```
+SI el ejercicio incluye alguna tabla Markdown (kable o cat("| ...")):
+    → OBLIGATORIO: insertar el bloque {=latex} justo después de `Question\n========`
+
+SI el ejercicio NO usa tablas Markdown:
+    → No necesario
+```
+
+### Ejemplo completo
+
+```rmd
+Question
+========
+
+` ``{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+` ``
+
+` ``{r mostrar_tabla, echo=FALSE, results='asis'}
+knitr::kable(tabla_datos, format = "markdown")
+` ``
+
+¿Cuál de los siguientes errores cometió...
+```
+
+### Referencias
+
+- Ver `.claude/rules/markdown-tablas-pandoc.md` (regla #20) para la descripción completa y defensa automática.
+- Ver `.claude/docs/patrones-errores-conocidos.md` Error 21 para el caso documentado.
+
+---
+
 ## Distractores con conclusión binaria Sí/No (lecciones 2026-05-12)
 
 Aplica a ejercicios de **argumentación** y **evaluación de afirmaciones** donde cada distractor empieza con "Sí, porque..." o "No, porque...".

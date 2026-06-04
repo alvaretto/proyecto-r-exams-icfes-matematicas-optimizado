@@ -2264,3 +2264,76 @@ stopifnot(!all(vals_distractor == as.numeric(frecuencias)))
 - Error 18 (format-based guessing): GRAF-BAR-01 es la pieza que permite equilibrar formatos sin sacrificar calidad de distractores
 - `.claude/rules/ejercicios-metacognitivos.md` (pool de errores conceptuales con códigos documentados)
 - `Error 5 (EST-BOX-01)` — otro error de gráficos por confusión valor/posición, pero en boxplots
+
+---
+
+## Error 21: `No counter 'none' defined` — tablas Markdown con pandoc ≥3.7 (RStudio)
+
+### ❌ Mensaje de Error
+
+```
+! LaTeX Error: No counter 'none' defined.
+
+Error: LaTeX failed to compile <archivo>_1.tex. See ...
+```
+
+Ocurre al ejecutar `exams2pdf()` / `exams2nops()` **desde RStudio**, aunque la validación del pipeline (terminal) diera 4/4 OK.
+
+### 🔍 Causa Raíz
+
+RStudio usa su **pandoc bundleado** (`/usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/pandoc`, v**3.8.3**), distinto del pandoc de terminal (**3.6**) que usa `Rscript` y la validación del pipeline. Pandoc **≥3.7** envuelve toda tabla `longtable` (lo que produce un pipe table Markdown de `knitr::kable(format="markdown")` o `cat("| ...")`) con:
+
+```latex
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}...@{}}
+...
+\end{longtable}
+}
+```
+
+`\def\LTcaptype{none}` asume un contador LaTeX `none` que la plantilla minimalista de R-exams **no define**. Pandoc 3.6 no emite ese wrapper → el bug es invisible en terminal. Gemelo del **Error 16** (`\pandocbounded`): env-específico por versión de pandoc.
+
+### ✅ Solución Verificada
+
+Al inicio de la sección `Question`, un bloque raw LaTeX (ignorado en HTML/DOCX), con guardia para no redefinir en NOPS multi-ítem (fence de 3 backticks con `{=latex}`):
+
+```
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+### 🧪 Validación de la Solución
+
+Probado con **pandoc 3.8.3 (RStudio) y 3.6 (terminal)**:
+
+| Llamada | pandoc 3.8.3 | pandoc 3.6 |
+|---|---|---|
+| `exams2pdf(f, n=1)` | ✓ | ✓ |
+| `exams2nops(rep(f,3), n=1)` | ✓ | ✓ |
+| `exams2html(f, n=1)` | ✓ (sin fuga LaTeX) | — |
+| `exams2pandoc(f, type="docx")` | ✓ | — |
+
+Reproducir el entorno RStudio en terminal:
+```r
+Sys.setenv(RSTUDIO_PANDOC = "/usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64")
+stopifnot(as.character(rmarkdown::pandoc_version()) >= "3.7")
+```
+
+### 📋 Checklist de Corrección
+
+1. ¿El `.Rmd` usa tabla Markdown (`kable(format="markdown")` o `cat("| ...")`)? → requiere el guard.
+2. Insertar el bloque `{=latex}` con `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de `Question`.
+3. Re-render con pandoc de RStudio (PDF + NOPS×N) y con pandoc de terminal.
+4. Confirmar que el HTML no muestra LaTeX crudo.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-06-03 | rango_colesterol_..._n3_schoice_v1.Rmd | pandoc 3.8.3 RStudio + `\LTcaptype{none}` | guard `\newcounter{none}` en Question | PDF/NOPS×3/HTML/DOCX OK (commit `d22caf93`) |
+
+### 📚 Referencias
+
+- Regla #20: `.claude/rules/markdown-tablas-pandoc.md`
+- Regla #18 / Error 16 (`\pandocbounded`): mismo patrón de diferencia de pandoc en entorno destino
+- Hook FASE 2K (`ERR_TABLA_NONE`) + `tests/testthat/test_markdown_tablas_none_guard.R`
+- Memoria: `feedback_pandoc_ltcaptype_none.md`

@@ -266,6 +266,70 @@ Las variables `letra_correcta_p1`, `letra_correcta_p3`, etc. pueden existir como
 
 Ver `.claude/rules/solution-letter-independence.md` (regla #19, sin excepciones).
 
+## Patrón obligatorio: guard del contador `none` para tablas (regla #20)
+
+### Qué hacer
+
+Si el ejercicio incluye una tabla Markdown (`knitr::kable(format="markdown")` o bloques `cat("| ...")`), insertar **inmediatamente después del encabezado `Question`** el siguiente bloque raw LaTeX:
+
+````markdown
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+````
+
+### Por qué
+
+pandoc ≥ 3.7 envuelve las tablas en entorno `longtable` y emite `\def\LTcaptype{none}` en el preámbulo del chunk, lo que requiere que exista un contador `none` en LaTeX. La plantilla de R-exams no define ese contador, por lo que `exams2pdf()` y `exams2nops()` fallan con:
+
+```
+! LaTeX Error: No counter 'none' defined.
+```
+
+La guardia `\@ifundefined{c@none}` evita redefinir el contador cuando `exams2nops()` renderiza múltiples ejercicios en el mismo documento (el segundo ejercicio ya lo encontraría definido y lanzaría un error diferente sin la guardia). El bloque `{=latex}` es ignorado silenciosamente en HTML y DOCX.
+
+**Versiones afectadas:** RStudio bundlea pandoc 3.8.3 mientras que el pandoc del sistema puede ser 3.6 (no afectado). El error aparece al renderizar desde RStudio o con el pandoc del PATH si este es ≥ 3.7.
+
+### Nota para ejercicios CLOZE
+
+El guard va **una sola vez** al inicio de la sección `Question`, antes de la primera tabla. Cubre todas las partes del Progressive Disclosure (Partes 1–4) sin necesidad de repetirlo.
+
+```r
+# data_generation puede tener knitr::kable:
+tabla_datos <- knitr::kable(df, format = "markdown", ...)
+```
+
+```markdown
+Question
+========
+
+` ``{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+` ``
+
+` ``{r mostrar_contexto, echo=FALSE, results='asis'}
+cat(enunciado_contexto)
+cat("\n\n")
+cat(tabla_datos)
+` ``
+
+**Parte 1.** ...
+##ANSWER1##
+
+**Parte 2.** ...
+##ANSWER2##
+```
+
+### Referencias
+
+- Regla #20: `.claude/rules/markdown-tablas-pandoc.md`
+- Error 21: `.claude/docs/patrones-errores-conocidos.md`
+
+---
+
 ## Referencias
 
 - [Estructura Progressive Disclosure](references/estructura-progressive-disclosure.md) - Secuencia de 4 partes, tipos de gap, plantilla Question, metadatos
