@@ -1,0 +1,532 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+# ============================================================================
+# Ejercicio: Rango de colesterol — SCHOICE metacognitivo
+# Fuente: MAT-2026-1-095 (Alineación Curricular Matemáticas 2026-1)
+# Patrón: Opciones = individuos; metacognición en Solution
+# Regla #19: Solution letter-independent (identificar por nombre, no por letra)
+# ============================================================================
+
+# --- Pool de nombres para los 4 individuos ---
+pool_nombres_individuos <- list(
+  c("Alejandra", "Bernardo", "Catalina", "Diego"),
+  c("Mariana", "Felipe", "Lucía", "Santiago"),
+  c("Valentina", "Andrés", "Gabriela", "Leonardo"),
+  c("Isabella", "Mateo", "Daniela", "Nicolás"),
+  c("Sofía", "Sebastián", "Camila", "Ricardo"),
+  c("Elena", "Carlos", "Paula", "Julián"),
+  c("Sara", "Miguel", "Laura", "David"),
+  c("Natalia", "Fernando", "Andrea", "Gustavo")
+)
+nombres_set <- pool_nombres_individuos[[sample(length(pool_nombres_individuos), 1)]]
+
+# --- Pool de contextos narrativos creativos (8 plantillas, 5+ tipos) ---
+# FIX 1: cada contexto incluye campo `articulo` ("los"/"las") para concordancia
+#         de género con n_controles_label en la pregunta principal.
+#         Todos los individuo_label pluralizan con +s (comunes en español).
+#         Todos los variable empiezan con sustantivo masculino → "en el" concuerda.
+contextos <- list(
+  # Tipo 1: Acción en curso
+  list(
+    variable = "nivel de colesterol en sangre",
+    unidad = "mg/dl",
+    n_controles_label = "controles médicos periódicos",
+    articulo = "los",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Durante un programa de seguimiento cardiovascular, un laboratorio clínico ",
+        "registró el nivel de colesterol en sangre (mg/dl) de cuatro pacientes en ",
+        n_ctrl, " controles médicos periódicos."
+      )
+    }
+  ),
+  # Tipo 2: Situación problema
+  list(
+    variable = "nivel de glucosa en ayunas",
+    unidad = "mg/dl",
+    n_controles_label = "mediciones trimestrales",
+    articulo = "las",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Un médico internista necesita determinar cuál de sus pacientes presenta ",
+        "la menor variabilidad en los niveles de glucosa en ayunas. Para ello, revisó ",
+        "los resultados de ", n_ctrl, " mediciones trimestrales (en mg/dl)."
+      )
+    }
+  ),
+  # Tipo 3: Narración periodística
+  list(
+    variable = "nivel de presión arterial sistólica",
+    unidad = "mmHg",
+    n_controles_label = "visitas al consultorio",
+    articulo = "las",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "En el Hospital Universitario San Martín, el departamento de cardiología ",
+        "publicó un informe sobre la estabilidad de la presión arterial sistólica (mmHg) ",
+        "de cuatro pacientes a lo largo de ", n_ctrl, " visitas al consultorio."
+      )
+    }
+  ),
+  # Tipo 4: Perspectiva del estudiante
+  list(
+    variable = "nivel de frecuencia cardíaca en reposo",
+    unidad = "latidos por minuto",
+    n_controles_label = "evaluaciones físicas",
+    articulo = "las",
+    individuo_label = "deportista",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Para su proyecto de biología, una estudiante de undécimo grado recopiló ",
+        "la frecuencia cardíaca en reposo (latidos por minuto) de cuatro deportistas ",
+        "del colegio durante ", n_ctrl, " evaluaciones físicas."
+      )
+    }
+  ),
+  # Tipo 5: Contexto institucional (FIX 3: reemplaza IMC decimal por triglicéridos enteros)
+  list(
+    variable = "nivel de triglicéridos",
+    unidad = "mg/dl",
+    n_controles_label = "revisiones semestrales",
+    articulo = "las",
+    individuo_label = "empleado",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "El programa de bienestar laboral de una empresa registró el nivel de ",
+        "triglicéridos (mg/dl) de cuatro empleados durante ", n_ctrl,
+        " revisiones semestrales."
+      )
+    }
+  ),
+  # Tipo 6: Pregunta retórica (FIX 3: reemplaza hemoglobina decimal por colesterol LDL entero)
+  list(
+    variable = "nivel de colesterol LDL",
+    unidad = "mg/dl",
+    n_controles_label = "análisis de sangre",
+    articulo = "los",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "¿Cuál paciente mantuvo la menor variación en su nivel de colesterol LDL? ",
+        "Para responder, un hematólogo revisó los resultados (en mg/dl) de ",
+        n_ctrl, " análisis de sangre realizados a cuatro pacientes."
+      )
+    }
+  ),
+  # Tipo 7: Descubrimiento (FIX 3: reemplaza temperatura decimal por glucosa postprandial entera)
+  list(
+    variable = "nivel de glucosa postprandial",
+    unidad = "mg/dl",
+    n_controles_label = "registros posteriores a las comidas",
+    articulo = "los",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Al revisar los expedientes clínicos, la nutricionista encontró los registros ",
+        "de glucosa postprandial (mg/dl) de cuatro pacientes tomados en ",
+        n_ctrl, " registros posteriores a las comidas."
+      )
+    }
+  ),
+  # Tipo 8: Diálogo implícito
+  list(
+    variable = "nivel de saturación de oxígeno",
+    unidad = "%",
+    n_controles_label = "mediciones del día",
+    articulo = "las",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "—Necesito identificar cuál paciente tuvo la menor variación —indicó la ",
+        "neumóloga al revisar los datos de saturación de oxígeno (%) obtenidos en ",
+        n_ctrl, " mediciones del día para cuatro pacientes."
+      )
+    }
+  )
+)
+
+# --- Seleccionar contexto ---
+ctx <- contextos[[sample(length(contextos), 1)]]
+
+# --- Rangos de valores por contexto (FIX 3: TODOS enteros, span >= 40) ---
+rangos_valores <- list(
+  "nivel de colesterol en sangre" = c(150, 260),
+  "nivel de glucosa en ayunas" = c(70, 180),
+  "nivel de presión arterial sistólica" = c(100, 180),
+  "nivel de frecuencia cardíaca en reposo" = c(50, 100),
+  "nivel de triglicéridos" = c(80, 300),
+  "nivel de colesterol LDL" = c(60, 200),
+  "nivel de glucosa postprandial" = c(90, 250),
+  "nivel de saturación de oxígeno" = c(88, 100)
+)
+rango_var <- rangos_valores[[ctx$variable]]
+
+# --- Número de controles: 3 (como el original) ---
+n_controles <- 3
+
+# --- Generación de datos con restricciones ---
+datos_validos <- FALSE
+intentos <- 0
+max_intentos <- 5000
+
+while (!datos_validos && intentos < max_intentos) {
+  intentos <- intentos + 1
+
+  # FIX 3: SIEMPRE generar valores enteros (sin rama decimal)
+  valores <- matrix(
+    sample(rango_var[1]:rango_var[2], 4 * n_controles, replace = TRUE),
+    nrow = 4, ncol = n_controles
+  )
+
+  # Calcular rangos
+  rangos <- apply(valores, 1, function(x) max(x) - min(x))
+
+  # Calcular métricas para diagnosticidad de distractores
+  maximos <- apply(valores, 1, max)
+  minimos <- apply(valores, 1, min)
+  valores_min_individuales <- apply(valores, 1, min)
+  dif_ultimo_primero <- valores[, n_controles] - valores[, 1]
+
+  # Paciente con menor rango (correcto)
+  idx_menor_rango <- which.min(rangos)
+
+  # Paciente con menor valor individual global
+  min_global <- min(valores)
+  idx_menor_valor <- which(apply(valores, 1, function(x) min(x) == min_global))[1]
+
+  # Paciente con menor máximo
+  idx_menor_maximo <- which.min(maximos)
+
+  # FIX 2: Restricciones reforzadas para diagnosticidad de distractores.
+  # Se exige que AMBOS (menor máximo y menor valor individual) sean
+  # distintos del correcto, garantizando >= 2 distractores con error
+  # conceptual específico (EST-RAN-01 y EST-RAN-05).
+  rangos_unicos <- length(unique(rangos)) == 4
+  dist_menor_valor <- idx_menor_valor != idx_menor_rango
+  dist_menor_maximo <- idx_menor_maximo != idx_menor_rango
+
+  if (rangos_unicos && dist_menor_valor && dist_menor_maximo) {
+    datos_validos <- TRUE
+  }
+}
+
+stopifnot(datos_validos)
+
+# --- Asignar nombres a los individuos ---
+nombres_individuos <- nombres_set
+
+# --- Pool de errores conceptuales (referencia para diagnóstico en Solution) ---
+# Los códigos EST-RAN-01/02/03/05/06 se mapean dinámicamente en la sección
+# "Diagnóstico DINÁMICO de distractores" más abajo. Este bloque documenta
+# el catálogo completo y mantiene las funciones calcula() para validación.
+errores_conceptuales <- list(
+  list(codigo = "EST-RAN-01", nombre = "Confusión rango con máximo",
+       calcula = function(v) max(v)),
+  list(codigo = "EST-RAN-05", nombre = "Confusión menor rango con menor valor",
+       calcula = function(v) min(v)),
+  list(codigo = "EST-RAN-06", nombre = "Rango como diferencia primer-último control",
+       calcula = function(v) v[length(v)] - v[1]),
+  list(codigo = "EST-RAN-02", nombre = "Rango como suma de valores",
+       calcula = function(v) sum(v)),
+  list(codigo = "EST-RAN-03", nombre = "Rango como promedio",
+       calcula = function(v) mean(v))
+)
+
+# --- Construir las 4 opciones (son los 4 individuos) ---
+# La opción correcta = el paciente con menor rango real
+# Las demás son distractores (pacientes incorrectos)
+opciones_texto <- paste0(nombres_individuos)
+
+# Vector de solución: 1 para el correcto, 0 para los demás
+sol <- rep(0L, 4)
+sol[idx_menor_rango] <- 1L
+
+# Nombre del individuo correcto (para Solution letter-independent)
+nombre_correcto <- nombres_individuos[idx_menor_rango]
+rango_correcto <- rangos[idx_menor_rango]
+
+# --- Diagnóstico DINÁMICO de distractores para Solution (FIX 2) ---
+# Para cada distractor, computar en R qué error conceptual lo seleccionaría:
+#   - ¿Es el individuo con menor máximo? → EST-RAN-01
+#   - ¿Es el individuo con menor valor individual global? → EST-RAN-05
+#   - ¿Es el individuo con menor |último − primer control|? → EST-RAN-06
+#   - ¿Es el individuo con menor suma? → EST-RAN-02
+#   - ¿Es el individuo con menor promedio? → EST-RAN-03
+# Solo usar genérico como fallback final.
+
+# Precomputar índices de cada error conceptual
+idx_error_ran01 <- which.min(maximos)                          # menor máximo
+idx_error_ran05 <- idx_menor_valor                              # menor valor global
+idx_error_ran06 <- which.min(abs(dif_ultimo_primero))           # menor |último-primero|
+idx_error_ran02 <- which.min(apply(valores, 1, sum))            # menor suma
+idx_error_ran03 <- which.min(apply(valores, 1, mean))           # menor promedio
+
+diagnosticos <- list()
+errores_ya_usados <- character(0)  # Evitar duplicar códigos en la Solution
+
+for (i in 1:4) {
+  if (i == idx_menor_rango) next
+
+  error_asignado <- NULL
+
+  # Intentar asignar el error más específico y relevante (prioridad descendente)
+  if (i == idx_error_ran01 && !("EST-RAN-01" %in% errores_ya_usados)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-01",
+      nombre = "Confusión rango con máximo",
+      descripcion_larga = paste0(
+        "El estudiante identificó el valor máximo de cada ",
+        ctx$individuo_label,
+        " y eligió al que tuviera el menor máximo (",
+        maximos[i], " ", ctx$unidad,
+        "), sin calcular la diferencia entre el máximo y el mínimo."
+      ),
+      causa_raiz = "No diferencia entre un valor extremo y una medida de dispersión."
+    )
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-01")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran05 &&
+      !("EST-RAN-05" %in% errores_ya_usados)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-05",
+      nombre = "Confusión menor rango con menor valor",
+      descripcion_larga = paste0(
+        "El estudiante buscó el valor individual más bajo en toda la tabla y eligió al ",
+        ctx$individuo_label,
+        " al que pertenecía ese valor (",
+        minimos[i], " ", ctx$unidad,
+        "), sin considerar que el rango mide la diferencia entre el máximo y el mínimo, ",
+        "no el valor absoluto más pequeño."
+      ),
+      causa_raiz = "Confunde una medida de dispersión (rango) con un dato puntual."
+    )
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-05")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran06 &&
+      !("EST-RAN-06" %in% errores_ya_usados)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-06",
+      nombre = "Rango como diferencia primer-último control",
+      descripcion_larga = paste0(
+        "El estudiante restó el valor del último control menos el primero para cada ",
+        ctx$individuo_label,
+        " (obteniendo ", abs(dif_ultimo_primero[i]), " ", ctx$unidad,
+        " para ", nombres_individuos[i],
+        "), en lugar de calcular máximo menos mínimo."
+      ),
+      causa_raiz = "Confunde el rango estadístico con la variación temporal entre extremos cronológicos."
+    )
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-06")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran02 &&
+      !("EST-RAN-02" %in% errores_ya_usados)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-02",
+      nombre = "Rango como suma de valores",
+      descripcion_larga = paste0(
+        "El estudiante sumó todos los valores de las mediciones de cada ",
+        ctx$individuo_label,
+        " y eligió al de menor suma (",
+        sum(valores[i, ]), " ", ctx$unidad,
+        "), confundiendo una operación de agregación con una medida de dispersión."
+      ),
+      causa_raiz = "No conoce la definición de rango; aplica una operación genérica (suma) por defecto."
+    )
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-02")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran03 &&
+      !("EST-RAN-03" %in% errores_ya_usados)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-03",
+      nombre = "Rango como promedio",
+      descripcion_larga = paste0(
+        "El estudiante calculó el promedio de las mediciones de cada ",
+        ctx$individuo_label,
+        " y eligió al de menor promedio (aproximadamente ",
+        round(mean(valores[i, ])), " ", ctx$unidad,
+        "), confundiendo una medida de tendencia central con una medida de dispersión."
+      ),
+      causa_raiz = "Confunde medidas de tendencia central (promedio) con medidas de dispersión (rango)."
+    )
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-03")
+  }
+
+  # Fallback genérico (solo si ningún error específico mapeó a este individuo)
+  if (is.null(error_asignado)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-GEN",
+      nombre = "Error de cálculo",
+      descripcion_larga = paste0(
+        "El estudiante cometió un error al calcular el rango de ",
+        nombres_individuos[i], ". El rango correcto es ",
+        rangos[i], " ", ctx$unidad,
+        " (máximo ", maximos[i], " menos mínimo ", minimos[i], "), ",
+        "que no es el menor de los cuatro."
+      ),
+      causa_raiz = "Error aritmético o de lectura de la tabla."
+    )
+  }
+
+  diagnosticos[[as.character(i)]] <- list(
+    nombre_individuo = nombres_individuos[i],
+    rango_real = rangos[i],
+    maximo = maximos[i],
+    minimo = minimos[i],
+    error = error_asignado
+  )
+}
+
+# Conteo de distractores con error específico (para métricas)
+n_especificos <- sum(sapply(diagnosticos, function(d) d$error$codigo != "EST-RAN-GEN"))
+
+# --- Pool de reflexiones metacognitivas ---
+reflexiones_metacognitivas <- c(
+  "El rango es la medida de dispersión más sencilla, pero requiere identificar correctamente el máximo y el mínimo de cada conjunto. Un error frecuente es confundir el rango con otros valores como el máximo, el mínimo o el promedio.",
+  "Analizar por qué una respuesta es incorrecta fortalece la comprensión del concepto. Al verificar cada paciente, el estudiante practica el cálculo del rango y desarrolla habilidades de autoevaluación.",
+  "Identificar errores ajenos nos ayuda a evitar cometerlos. Los errores más comunes al calcular el rango son: confundir 'menor rango' con 'menor valor', usar el máximo en lugar del rango, o calcular diferencias entre controles consecutivos.",
+  "El rango mide dispersión: cuánto varían los datos. Un paciente con valores altos pero estables tiene un rango pequeño, mientras que uno con valores moderados pero variables tiene un rango grande.",
+  "Antes de comparar rangos entre individuos, es fundamental verificar que se calculó correctamente máximo menos mínimo para cada uno. Un solo error de lectura en la tabla puede cambiar completamente la respuesta."
+)
+reflexion <- reflexiones_metacognitivas[sample(length(reflexiones_metacognitivas), 1)]
+
+# --- Generar identificador único para el ejercicio ---
+ex_uid <- paste0("rango-col-", sample(1000:9999, 1))
+
+# --- Preparar tabla de datos para mostrar ---
+df_tabla <- data.frame(
+  Individuo = nombres_individuos,
+  stringsAsFactors = FALSE
+)
+for (j in 1:n_controles) {
+  nombre_col <- paste0(ctx$n_controles_label, " ", j)
+  # Capitalizar primera letra
+  nombre_col <- paste0(toupper(substr(nombre_col, 1, 1)), substr(nombre_col, 2, nchar(nombre_col)))
+  df_tabla[[nombre_col]] <- valores[, j]
+}
+names(df_tabla)[1] <- paste0(toupper(substr(ctx$individuo_label, 1, 1)),
+                              substr(ctx$individuo_label, 2, nchar(ctx$individuo_label)))
+```
+
+Question
+========
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(ctx$plantilla(nombres_individuos, n_controles))
+cat("\n\n")
+```
+
+```{r tabla_datos, echo=FALSE, results='asis'}
+cat(knitr::kable(df_tabla, format = "markdown", align = c("l", rep("c", n_controles))), sep = "\n")
+cat("\n")
+```
+
+Durante `r ctx$articulo` `r n_controles` `r ctx$n_controles_label`, ¿cuál de los `r ctx$individuo_label`s registró un menor rango en el `r ctx$variable`?
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones_texto, markup = "markdown")
+```
+
+Solution
+========
+
+### Respuesta correcta {#respuesta-correcta-`r ex_uid`}
+
+El `r ctx$individuo_label` con menor rango es **`r nombre_correcto`**, con un rango de **`r rango_correcto` `r ctx$unidad`**.
+
+### Procedimiento correcto
+
+El **rango** es una medida de dispersión que se calcula como la diferencia entre el valor máximo y el valor mínimo de un conjunto de datos:
+
+$$\text{Rango} = \text{Valor máximo} - \text{Valor mínimo}$$
+
+```{r tabla_rangos, echo=FALSE, results='asis'}
+cat("| ", names(df_tabla)[1], " | Mínimo | Máximo | Rango |\n", sep = "")
+cat("|---|---|---|---|\n")
+for (i in 1:4) {
+  es_correcto <- (i == idx_menor_rango)
+  if (es_correcto) {
+    cat("| **", nombres_individuos[i], "** | **", minimos[i], "** | **",
+        maximos[i], "** | **", rangos[i], "** |", sep = "")
+  } else {
+    cat("| ", nombres_individuos[i], " | ", minimos[i], " | ",
+        maximos[i], " | ", rangos[i], " |", sep = "")
+  }
+  cat("\n")
+}
+cat("\n")
+```
+
+El menor rango corresponde a **`r nombre_correcto`** (`r rango_correcto` `r ctx$unidad`), lo cual indica que este `r ctx$individuo_label` presentó la menor variabilidad en sus mediciones.
+
+### Análisis de cada opción incorrecta
+
+```{r diagnostico_distractores, echo=FALSE, results='asis'}
+for (key in names(diagnosticos)) {
+  d <- diagnosticos[[key]]
+  cat(paste0(
+    "**", d$error$codigo, " — ", d$error$nombre, "**\n\n",
+    "Elegir a **", d$nombre_individuo, "** (rango real: ", d$rango_real, " ", ctx$unidad,
+    ") podría deberse a lo siguiente: ", d$error$descripcion_larga, "\n\n",
+    "*Causa raíz:* ", d$error$causa_raiz, "\n\n"
+  ))
+}
+```
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+1. **Identificar máximo y mínimo** de cada `r ctx$individuo_label` recorriendo todas las mediciones, sin asumir que el primer o último control son los extremos.
+2. **Calcular el rango** como $\text{máximo} - \text{mínimo}$ para cada `r ctx$individuo_label`.
+3. **Comparar los rangos** obtenidos y seleccionar el menor.
+4. **Verificar**: un rango pequeño no implica valores bajos; implica valores cercanos entre sí.
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(
+  ifelse(as.logical(sol), "Verdadero", "Falso"),
+  markup = "markdown"
+)
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exname: rango_colesterol_metacognitivo_interpretacion_n3_schoice_v1
+exshuffle: TRUE
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Dispersion|Rango
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos
+exextra[Evidencia]: Da cuenta de las caracteristicas basicas de la informacion presentada en diferentes formatos
+exextra[Nivel]: 3
+exextra[Contexto]: Salud
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
+exextra[Descriptor]: D3.2
