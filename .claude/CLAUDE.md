@@ -43,7 +43,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
 
 **Comandos principales:**
 - `/analizar-icfes`, `/generar-schoice`, `/generar-cloze`
-- `/orquestador-schoice` - Pipeline end-to-end (11 pasos, 3 pausas humanas) 🆕 (`/orquestador-cloze`: documentado en v3.12.0 pero NO implementado — ver nota en Cambios v3.14.0)
+- `/orquestador-schoice`, `/orquestador-cloze` - Pipeline end-to-end (11 pasos, 3 pausas humanas) 🆕
 - `/revisar-schoice`, `/revisar-cloze` - Revisión completa pasos 4-11 del workflow
 - `/skill-retroalimentacion` - Generación científica de sección Solution
 - `/validar-pedagogico` - Análisis pedagógico avanzado basado en evidencias
@@ -123,7 +123,7 @@ A-Produccion/
 | Revisar ejercicio SCHOICE existente | @.claude/skills/revisar-schoice/SKILL.md |
 | Revisar ejercicio CLOZE existente | @.claude/skills/revisar-cloze/SKILL.md |
 | Pipeline end-to-end SCHOICE (11 pasos) | @.claude/agents/orquestador-schoice.md + `/orquestador-schoice` |
-| Pipeline end-to-end CLOZE (11 pasos) | ⚠️ NO implementado (documentado en v3.12.0, nunca commiteado). Usar `@.claude/agents/orquestador-schoice.md` como referencia |
+| Pipeline end-to-end CLOZE (11 pasos) | @.claude/agents/orquestador-cloze.md + `/orquestador-cloze` |
 
 ### ⚙️ Configuración del Sistema
 
@@ -136,9 +136,15 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.14.0 (Regla #20 — guard contador `none` para tablas Markdown + Error 21)
+**Versión**: 3.15.0 (orquestador-cloze implementado — gemelo CLOZE del orquestador-schoice)
 **Fecha**: 2026-06-03
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.15.0 (2026-06-03)
+- **NUEVO ORQUESTADOR CLOZE (real)**: `.claude/agents/orquestador-cloze.md` (547 líneas, Opus, maxTurns 65) + `.claude/commands/orquestador-cloze.md` (71 líneas). Gemelo fiel del `orquestador-schoice`: 11 pasos, 3 WAIT_USER (Flujo B, lenguaje gráfico, aprobación), dry-run y reanudación.
+- **VALIDACIONES CLOZE V1–V4** (bloqueantes): V1 nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; V2 orden/inmediatez de `##ANSWERi##` (regla #14); V3 `exsolution`/`extol` por gap (num/string/schoice/mchoice); V4 Progressive Disclosure ≥4 partes.
+- **6 INCIDENTES CLOZE** documentados: A `##ANSWERi##` fuera de orden, B `\pandocbounded` (regla #18), C letter-independence en sub-partes (regla #19), D colapso de pools `mchoice`, E NOPS N/A esperado con gaps num/string (no es error), F guard contador `none` para tablas (regla #20).
+- **INFRAESTRUCTURA**: I-5 sube de 8 a **9 agentes** (real esta vez) — `test_infraestructura_claude.R` y `infraestructura-protegida.md` actualizados. Resuelve la inconsistencia del changelog v3.12.0.
 
 ### Cambios v3.14.0 (2026-06-03)
 - **NUEVA REGLA #20**: `markdown-tablas-pandoc.md` — guard del contador `none` para tablas Markdown. pandoc ≥3.7 (RStudio bundlea 3.8.3, ≠ 3.6 de terminal) envuelve `longtable` con `\def\LTcaptype{none}`; la plantilla R-exams no define `none` → `exams2pdf/exams2nops` fallan con `No counter 'none' defined`. Gemelo del Error 16 (pandocbounded): env-específico por versión de pandoc.
@@ -149,7 +155,7 @@ A-Produccion/
 - **EJERCICIO**: `rango_colesterol_metacognitivo_interpretacion_n3_schoice_v1` — fix aplicado y verificado con pandoc 3.8.3 y 3.6 (PDF, NOPS×3, HTML, DOCX). Commit `d22caf93`.
 - **MEMORIA**: `feedback_pandoc_ltcaptype_none.md`.
 - **FIX MASIVO REGLA #20**: guard `\newcounter{none}` insertado en los 15 `.Rmd` legacy de `01-En-PreDesarrollo/` y `02-En-Desarrollo/` con tablas Markdown (verificado render pandoc 3.8.3). Los 11 de `03-En-Produccion/` (inmutable) quedan en el allowlist permanente del test.
-- **CORRECCIÓN DE INCONSISTENCIA (changelog)**: el `orquestador-cloze` documentado en v3.12.0 (agente `.claude/agents/orquestador-cloze.md` + comando + "I-5 sube a 9 agentes") **nunca fue commiteado** (git sin registro de su creación). La realidad: solo existe `orquestador-schoice`; la invariante I-5 y `test_infraestructura_claude.R` cuentan **8 agentes** correctamente. Las referencias del índice se marcaron como NO implementado. Decisión pendiente del usuario: construirlo o eliminar las referencias.
+- **INCONSISTENCIA DETECTADA (changelog)**: el `orquestador-cloze` documentado en v3.12.0 nunca había sido commiteado (git sin registro de su creación). **Reconstruido en v3.15.0** (ver abajo); las referencias del índice y la invariante I-5 (9 agentes) se restauraron.
 
 ### Cambios v3.13.0 (2026-05-14)
 - **NUEVA SECCIÓN**: Formato Equilibrado en `graficos-como-opciones.md` (v5.0) — al menos 2 opciones deben compartir el formato de la correcta

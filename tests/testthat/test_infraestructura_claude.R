@@ -130,7 +130,7 @@ test_that("I-4: las 17 reglas ICFES existen como archivos no vacíos", {
 # I-5: Agentes ICFES presentes
 # ============================================================
 
-test_that("I-5: los 8 agentes ICFES existen", {
+test_that("I-5: los 9 agentes ICFES existen", {
   agentes_esperados <- c(
     "clasificador-icfes.md",
     "pedagogo-icfes.md",
@@ -139,7 +139,8 @@ test_that("I-5: los 8 agentes ICFES existen", {
     "diagnosticador-errores.md",
     "corrector-coherencia.md",
     "adversario.md",
-    "orquestador-schoice.md"   # nuevo, sesión 2026-05-03
+    "orquestador-schoice.md",  # nuevo, sesión 2026-05-03
+    "orquestador-cloze.md"     # nuevo, sesión 2026-06-03 (v3.15.0)
   )
 
   for (agente in agentes_esperados) {
