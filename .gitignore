@@ -357,8 +357,9 @@ CLAUDE.local.md
 # Settings backups (mantenemos los recientes en repo, ignoramos rotaciones futuras)
 .claude/settings.json.pre-*
 
-# Tarball pre-Ruflo (red de seguridad — NO commitear, demasiado grande)
+# Tarballs de backup pre-instalación/regla (red de seguridad — NO commitear, demasiado grandes)
 .claude.pre-ruflo-*.tar.gz
+.claude.pre-*.tar.gz
 
 # Wrappers y helpers Ruflo (regenerables con npx ruflo init)
 .claude/helpers/
@@ -466,3 +467,4 @@ A-Produccion/02-En-Desarrollo/**/*.docx
 
 # Logs de Excalidraw embebido
 **/excalidraw.log
+.positai

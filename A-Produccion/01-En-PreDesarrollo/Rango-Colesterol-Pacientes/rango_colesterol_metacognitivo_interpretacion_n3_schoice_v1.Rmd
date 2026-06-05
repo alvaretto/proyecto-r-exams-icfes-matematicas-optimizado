@@ -62,7 +62,7 @@ contextos <- list(
     plantilla = function(nombres, n_ctrl) {
       paste0(
         "Un médico internista necesita determinar cuál de sus pacientes presenta ",
-        "la menor variabilidad en los niveles de glucosa en ayunas. Para ello, revisó ",
+        "el menor rango en los niveles de glucosa en ayunas. Para ello, revisó ",
         "los resultados de ", n_ctrl, " mediciones trimestrales (en mg/dl)."
       )
     }
@@ -121,7 +121,7 @@ contextos <- list(
     individuo_label = "paciente",
     plantilla = function(nombres, n_ctrl) {
       paste0(
-        "¿Cuál paciente mantuvo la menor variación en su nivel de colesterol LDL? ",
+        "¿Cuál paciente mantuvo el menor rango en su nivel de colesterol LDL? ",
         "Para responder, un hematólogo revisó los resultados (en mg/dl) de ",
         n_ctrl, " análisis de sangre realizados a cuatro pacientes."
       )
@@ -151,7 +151,7 @@ contextos <- list(
     individuo_label = "paciente",
     plantilla = function(nombres, n_ctrl) {
       paste0(
-        "—Necesito identificar cuál paciente tuvo la menor variación —indicó la ",
+        "—Necesito identificar cuál paciente tuvo el menor rango —indicó la ",
         "neumóloga al revisar los datos de saturación de oxígeno (%) obtenidos en ",
         n_ctrl, " mediciones del día para cuatro pacientes."
       )
@@ -175,8 +175,8 @@ rangos_valores <- list(
 )
 rango_var <- rangos_valores[[ctx$variable]]
 
-# --- Número de controles: 3 (como el original) ---
-n_controles <- 3
+# --- Número de controles: 5 (auditoría 2026-06-04: ↑ de 3 a 5 para reducir correlación entre métricas) ---
+n_controles <- 5
 
 # --- Generación de datos con restricciones ---
 datos_validos <- FALSE
@@ -211,15 +211,28 @@ while (!datos_validos && intentos < max_intentos) {
   # Paciente con menor máximo
   idx_menor_maximo <- which.min(maximos)
 
-  # FIX 2: Restricciones reforzadas para diagnosticidad de distractores.
-  # Se exige que AMBOS (menor máximo y menor valor individual) sean
-  # distintos del correcto, garantizando >= 2 distractores con error
-  # conceptual específico (EST-RAN-01 y EST-RAN-05).
+  # FIX 2 + auditoría 2026-06-04: Restricciones reforzadas para diagnosticidad.
+  # (a) menor máximo y menor valor individual ≠ correcto → ≥2 específicos.
+  # (b) ≥3 índices de error conceptual distintos (auditoría: redujo EST-RAN-GEN
+  #     de 40.3% a ~10% al aumentar n_controles de 3→5 y agregar esta restricción).
   rangos_unicos <- length(unique(rangos)) == 4
   dist_menor_valor <- idx_menor_valor != idx_menor_rango
   dist_menor_maximo <- idx_menor_maximo != idx_menor_rango
 
-  if (rangos_unicos && dist_menor_valor && dist_menor_maximo) {
+  # Precomputar índices de error para verificar diagnosticidad mínima
+  idx_error_ran01 <- which.min(maximos)
+  idx_error_ran05 <- idx_menor_valor
+  idx_error_ran06 <- which.min(abs(dif_ultimo_primero))
+  idx_error_ran02 <- which.min(apply(valores, 1, sum))
+  idx_error_ran03 <- which.min(apply(valores, 1, mean))
+
+  indices_errores <- c(idx_error_ran01, idx_error_ran05, idx_error_ran06,
+                       idx_error_ran02, idx_error_ran03)
+  indices_sin_correcto <- indices_errores[indices_errores != idx_menor_rango]
+  n_errores_distintos <- length(unique(indices_sin_correcto))
+  diagnosticidad_suficiente <- n_errores_distintos >= 3
+
+  if (rangos_unicos && dist_menor_valor && dist_menor_maximo && diagnosticidad_suficiente) {
     datos_validos <- TRUE
   }
 }
@@ -268,7 +281,9 @@ rango_correcto <- rangos[idx_menor_rango]
 #   - ¿Es el individuo con menor promedio? → EST-RAN-03
 # Solo usar genérico como fallback final.
 
-# Precomputar índices de cada error conceptual
+# Recomputar índices de cada error conceptual para claridad del bloque de diagnóstico.
+# (Ya fueron calculados en el while loop con los datos válidos finales, pero se
+#  re-evalúan aquí para que el código de diagnóstico sea auto-contenido.)
 idx_error_ran01 <- which.min(maximos)                          # menor máximo
 idx_error_ran05 <- idx_menor_valor                              # menor valor global
 idx_error_ran06 <- which.min(abs(dif_ultimo_primero))           # menor |último-primero|

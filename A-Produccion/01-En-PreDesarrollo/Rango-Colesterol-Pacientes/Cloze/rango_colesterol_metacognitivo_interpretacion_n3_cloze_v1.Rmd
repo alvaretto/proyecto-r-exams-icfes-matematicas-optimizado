@@ -1,0 +1,1010 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+```{r setup, include=FALSE}
+library(exams)
+library(knitr)
+options(scipen = 999)
+```
+
+```{r data_generation, echo = FALSE, results = "hide"}
+# ============================================================================
+# Ejercicio CLOZE: Rango de colesterol — 6 partes Progressive Disclosure
+# Fuente: MAT-2026-1-095 (Alineación Curricular Matemáticas 2026-1)
+# Basado en: SCHOICE validado en Rango-Colesterol-Pacientes/
+# Regla #14: ##ANSWERi## en orden inmediato tras cada parte
+# Regla #19: Solution letter-independent
+# Regla #20: guard contador none para tablas Markdown
+# ============================================================================
+
+# --- Pool de nombres para los 4 individuos ---
+pool_nombres_individuos <- list(
+  c("Alejandra", "Bernardo", "Catalina", "Diego"),
+  c("Mariana", "Felipe", "Lucía", "Santiago"),
+  c("Valentina", "Andrés", "Gabriela", "Leonardo"),
+  c("Isabella", "Mateo", "Daniela", "Nicolás"),
+  c("Sofía", "Sebastián", "Camila", "Ricardo"),
+  c("Elena", "Carlos", "Paula", "Julián"),
+  c("Sara", "Miguel", "Laura", "David"),
+  c("Natalia", "Fernando", "Andrea", "Gustavo")
+)
+nombres_set <- pool_nombres_individuos[[sample(length(pool_nombres_individuos), 1)]]
+
+# --- Pool de contextos narrativos creativos (8 plantillas, 5+ tipos) ---
+contextos <- list(
+  # Tipo 1: Acción en curso
+  list(
+    variable = "nivel de colesterol en sangre",
+    unidad = "mg/dl",
+    n_controles_label = "controles médicos periódicos",
+    articulo = "los",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Durante un programa de seguimiento cardiovascular, un laboratorio clínico ",
+        "registró el nivel de colesterol en sangre (mg/dl) de cuatro pacientes en ",
+        n_ctrl, " controles médicos periódicos."
+      )
+    }
+  ),
+  # Tipo 2: Situación problema
+  list(
+    variable = "nivel de glucosa en ayunas",
+    unidad = "mg/dl",
+    n_controles_label = "mediciones trimestrales",
+    articulo = "las",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Un médico internista necesita determinar cuál de sus pacientes presenta ",
+        "el menor rango en los niveles de glucosa en ayunas. Para ello, revisó ",
+        "los resultados de ", n_ctrl, " mediciones trimestrales (en mg/dl)."
+      )
+    }
+  ),
+  # Tipo 3: Narración periodística
+  list(
+    variable = "nivel de presión arterial sistólica",
+    unidad = "mmHg",
+    n_controles_label = "visitas al consultorio",
+    articulo = "las",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "En el Hospital Universitario San Martín, el departamento de cardiología ",
+        "publicó un informe sobre la estabilidad de la presión arterial sistólica (mmHg) ",
+        "de cuatro pacientes a lo largo de ", n_ctrl, " visitas al consultorio."
+      )
+    }
+  ),
+  # Tipo 4: Perspectiva del estudiante
+  list(
+    variable = "nivel de frecuencia cardíaca en reposo",
+    unidad = "latidos por minuto",
+    n_controles_label = "evaluaciones físicas",
+    articulo = "las",
+    individuo_label = "deportista",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Para su proyecto de biología, una estudiante de undécimo grado recopiló ",
+        "la frecuencia cardíaca en reposo (latidos por minuto) de cuatro deportistas ",
+        "del colegio durante ", n_ctrl, " evaluaciones físicas."
+      )
+    }
+  ),
+  # Tipo 5: Contexto institucional
+  list(
+    variable = "nivel de triglicéridos",
+    unidad = "mg/dl",
+    n_controles_label = "revisiones semestrales",
+    articulo = "las",
+    individuo_label = "empleado",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "El programa de bienestar laboral de una empresa registró el nivel de ",
+        "triglicéridos (mg/dl) de cuatro empleados durante ", n_ctrl,
+        " revisiones semestrales."
+      )
+    }
+  ),
+  # Tipo 6: Pregunta retórica
+  list(
+    variable = "nivel de colesterol LDL",
+    unidad = "mg/dl",
+    n_controles_label = "análisis de sangre",
+    articulo = "los",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "¿Cuál paciente mantuvo el menor rango en su nivel de colesterol LDL? ",
+        "Para responder, un hematólogo revisó los resultados (en mg/dl) de ",
+        n_ctrl, " análisis de sangre realizados a cuatro pacientes."
+      )
+    }
+  ),
+  # Tipo 7: Descubrimiento
+  list(
+    variable = "nivel de glucosa postprandial",
+    unidad = "mg/dl",
+    n_controles_label = "registros posteriores a las comidas",
+    articulo = "los",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "Al revisar los expedientes clínicos, la nutricionista encontró los registros ",
+        "de glucosa postprandial (mg/dl) de cuatro pacientes tomados en ",
+        n_ctrl, " registros posteriores a las comidas."
+      )
+    }
+  ),
+  # Tipo 8: Diálogo implícito
+  list(
+    variable = "nivel de presión arterial diastólica",
+    unidad = "mmHg",
+    n_controles_label = "mediciones del día",
+    articulo = "las",
+    individuo_label = "paciente",
+    plantilla = function(nombres, n_ctrl) {
+      paste0(
+        "—Necesito identificar cuál paciente tuvo el menor rango —indicó la ",
+        "cardióloga al revisar los datos de presión arterial diastólica (mmHg) obtenidos en ",
+        n_ctrl, " mediciones del día para cuatro pacientes."
+      )
+    }
+  )
+)
+
+# --- Seleccionar contexto ---
+ctx <- contextos[[sample(length(contextos), 1)]]
+
+# --- Rangos de valores por contexto (TODOS enteros, span >= 40) ---
+rangos_valores <- list(
+  "nivel de colesterol en sangre" = c(150, 260),
+  "nivel de glucosa en ayunas" = c(70, 180),
+  "nivel de presión arterial sistólica" = c(100, 180),
+  "nivel de frecuencia cardíaca en reposo" = c(50, 100),
+  "nivel de triglicéridos" = c(80, 300),
+  "nivel de colesterol LDL" = c(60, 200),
+  "nivel de glucosa postprandial" = c(90, 250),
+  "nivel de presión arterial diastólica" = c(60, 120)
+)
+rango_var <- rangos_valores[[ctx$variable]]
+
+# --- Número de controles: 5 ---
+n_controles <- 5
+
+# --- Generación de datos con restricciones ---
+datos_validos <- FALSE
+intentos <- 0
+max_intentos <- 5000
+
+while (!datos_validos && intentos < max_intentos) {
+  intentos <- intentos + 1
+
+  valores <- matrix(
+    sample(rango_var[1]:rango_var[2], 4 * n_controles, replace = TRUE),
+    nrow = 4, ncol = n_controles
+  )
+
+  rangos <- apply(valores, 1, function(x) max(x) - min(x))
+  maximos <- apply(valores, 1, max)
+  minimos <- apply(valores, 1, min)
+  dif_ultimo_primero <- valores[, n_controles] - valores[, 1]
+
+  idx_menor_rango <- which.min(rangos)
+  idx_mayor_rango <- which.max(rangos)
+
+  min_global <- min(valores)
+  idx_menor_valor <- which(apply(valores, 1, function(x) min(x) == min_global))[1]
+  idx_menor_maximo <- which.min(maximos)
+
+  rangos_unicos <- length(unique(rangos)) == 4
+  dist_menor_valor <- idx_menor_valor != idx_menor_rango
+  dist_menor_maximo <- idx_menor_maximo != idx_menor_rango
+  # Dispersión clara entre rangos: garantiza que la afirmación falsa
+  # "los cuatro tienen aproximadamente el mismo rango" sea inequívocamente falsa.
+  dispersion_clara <- (max(rangos) - min(rangos)) >= 15
+
+  idx_error_ran01 <- which.min(maximos)
+  idx_error_ran05 <- idx_menor_valor
+  idx_error_ran06 <- which.min(abs(dif_ultimo_primero))
+  idx_error_ran02 <- which.min(apply(valores, 1, sum))
+  idx_error_ran03 <- which.min(apply(valores, 1, mean))
+
+  indices_errores <- c(idx_error_ran01, idx_error_ran05, idx_error_ran06,
+                       idx_error_ran02, idx_error_ran03)
+  indices_sin_correcto <- indices_errores[indices_errores != idx_menor_rango]
+  n_errores_distintos <- length(unique(indices_sin_correcto))
+  diagnosticidad_suficiente <- n_errores_distintos >= 3
+
+  if (rangos_unicos && dist_menor_valor && dist_menor_maximo &&
+      dispersion_clara && diagnosticidad_suficiente) {
+    datos_validos <- TRUE
+  }
+}
+
+stopifnot(datos_validos)
+
+nombres_individuos <- nombres_set
+
+# --- Pool de errores conceptuales ---
+errores_conceptuales <- list(
+  list(codigo = "EST-RAN-01", nombre = "Confusión rango con máximo",
+       calcula = function(v) max(v)),
+  list(codigo = "EST-RAN-05", nombre = "Confusión menor rango con menor valor",
+       calcula = function(v) min(v)),
+  list(codigo = "EST-RAN-06", nombre = "Rango como diferencia primer-último control",
+       calcula = function(v) abs(v[length(v)] - v[1])),
+  list(codigo = "EST-RAN-02", nombre = "Rango como suma de valores",
+       calcula = function(v) sum(v)),
+  list(codigo = "EST-RAN-03", nombre = "Rango como promedio",
+       calcula = function(v) mean(v))
+)
+
+# --- Variables base ---
+nombres_individuos <- nombres_set
+
+# ============================================================================
+# PARTE 1 (schoice): Identificar el paciente con menor rango
+# ============================================================================
+opciones_p1 <- nombres_individuos
+sol_p1 <- rep(0L, 4)
+sol_p1[idx_menor_rango] <- 1L
+nombre_correcto <- nombres_individuos[idx_menor_rango]
+rango_correcto <- rangos[idx_menor_rango]
+
+# ============================================================================
+# PARTE 2 (num): Valor exacto del menor rango
+# ============================================================================
+valor_rango_menor <- rangos[idx_menor_rango]
+
+# ============================================================================
+# PARTE 3 (schoice): Diagnosticar error conceptual
+# Seleccionar un distractor con error específico (no GEN)
+# ============================================================================
+# Recomputar índices de error
+idx_error_ran01 <- which.min(maximos)
+idx_error_ran05 <- idx_menor_valor
+idx_error_ran06 <- which.min(abs(dif_ultimo_primero))
+idx_error_ran02 <- which.min(apply(valores, 1, sum))
+idx_error_ran03 <- which.min(apply(valores, 1, mean))
+
+# Mapa: índice paciente → código del error más específico que le aplica
+mapeo_error <- list()
+errores_ya_usados <- character(0)
+
+for (i in 1:4) {
+  if (i == idx_menor_rango) next
+  codigo_asignado <- NULL
+
+  if (i == idx_error_ran01 && !("EST-RAN-01" %in% errores_ya_usados)) {
+    codigo_asignado <- "EST-RAN-01"
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-01")
+  }
+  if (is.null(codigo_asignado) && i == idx_error_ran05 && !("EST-RAN-05" %in% errores_ya_usados)) {
+    codigo_asignado <- "EST-RAN-05"
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-05")
+  }
+  if (is.null(codigo_asignado) && i == idx_error_ran06 && !("EST-RAN-06" %in% errores_ya_usados)) {
+    codigo_asignado <- "EST-RAN-06"
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-06")
+  }
+  if (is.null(codigo_asignado) && i == idx_error_ran02 && !("EST-RAN-02" %in% errores_ya_usados)) {
+    codigo_asignado <- "EST-RAN-02"
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-02")
+  }
+  if (is.null(codigo_asignado) && i == idx_error_ran03 && !("EST-RAN-03" %in% errores_ya_usados)) {
+    codigo_asignado <- "EST-RAN-03"
+    errores_ya_usados <- c(errores_ya_usados, "EST-RAN-03")
+  }
+  if (is.null(codigo_asignado)) {
+    codigo_asignado <- "EST-RAN-GEN"
+  }
+  mapeo_error[[as.character(i)]] <- codigo_asignado
+}
+
+# Seleccionar un distractor aleatorio que tenga error específico
+distractores_especificos <- names(mapeo_error)[mapeo_error != "EST-RAN-GEN"]
+if (length(distractores_especificos) == 0) {
+  distractores_especificos <- names(mapeo_error)
+}
+# Preferir distractores explicados por UN SOLO error de los 4 mostrados en la Parte 3.
+# Evita que la Solution afirme falsamente que un error alternativo "no explica" la
+# elección cuando ese error también seleccionaría al mismo paciente (ambigüedad).
+indices_mostrados_p3 <- c(idx_error_ran01, idx_error_ran05, idx_error_ran06, idx_error_ran02)
+distractores_unicos <- Filter(
+  function(k) sum(indices_mostrados_p3 == as.integer(k)) == 1,
+  distractores_especificos
+)
+pool_distractor_p3 <- if (length(distractores_unicos) > 0) distractores_unicos else distractores_especificos
+distractor_p3_key <- sample(pool_distractor_p3, 1)
+distractor_p3_idx <- as.integer(distractor_p3_key)
+error_p3_codigo <- mapeo_error[[distractor_p3_key]]
+nombre_distractor_p3 <- nombres_individuos[distractor_p3_idx]
+
+# Descripciones genéricas de los 4 errores principales para las opciones
+descripciones_errores <- list(
+  "EST-RAN-01" = paste0(
+    "Identificó el valor máximo de cada ", ctx$individuo_label,
+    " y eligió al que tenía el máximo más bajo, sin calcular la ",
+    "diferencia entre el valor máximo y el mínimo (el rango)."
+  ),
+  "EST-RAN-05" = paste0(
+    "Buscó el valor individual más pequeño de toda la tabla y eligió al ",
+    ctx$individuo_label, " al que pertenecía ese dato, sin considerar ",
+    "que el rango mide la diferencia entre el máximo y el mínimo."
+  ),
+  "EST-RAN-06" = paste0(
+    "Restó el valor del último control menos el del primer control para cada ",
+    ctx$individuo_label, ", en lugar de calcular máximo menos mínimo. ",
+    "Midió variación cronológica, no dispersión estadística."
+  ),
+  "EST-RAN-02" = paste0(
+    "Sumó todas las mediciones de cada ", ctx$individuo_label,
+    " y eligió al de menor suma, aplicando una operación de agregación ",
+    "en lugar de una medida de dispersión."
+  )
+)
+
+# Si el error del distractor no está entre los 4 descritos, usar primer grupo
+codigos_p3_opciones <- c("EST-RAN-01", "EST-RAN-05", "EST-RAN-06", "EST-RAN-02")
+if (!(error_p3_codigo %in% codigos_p3_opciones)) {
+  # Reemplazar el último por el código real con descripción genérica
+  codigos_p3_opciones[4] <- error_p3_codigo
+  descripciones_errores[[error_p3_codigo]] <- paste0(
+    "Cometió un error de cálculo al estimar el rango del ",
+    ctx$individuo_label, ", sin aplicar correctamente la fórmula ",
+    "de máximo menos mínimo."
+  )
+}
+
+# Nombres cortos para las opciones de Parte 3
+nombres_p3_opciones <- list(
+  "EST-RAN-01" = "Confundir rango con el valor máximo",
+  "EST-RAN-05" = "Confundir menor rango con menor valor individual",
+  "EST-RAN-06" = "Calcular rango como diferencia primer-último control",
+  "EST-RAN-02" = "Confundir rango con la suma de todos los valores",
+  "EST-RAN-03" = "Confundir rango con el promedio de los valores"
+)
+
+opciones_p3 <- character(4)
+for (j in seq_along(codigos_p3_opciones)) {
+  opciones_p3[j] <- descripciones_errores[[codigos_p3_opciones[j]]]
+}
+
+sol_p3 <- rep(0L, 4)
+sol_p3[which(codigos_p3_opciones == error_p3_codigo)] <- 1L
+stopifnot(sum(sol_p3) == 1)
+
+# ============================================================================
+# PARTE 4 (num): Rango del paciente con MAYOR dispersión
+# ============================================================================
+valor_rango_mayor <- rangos[idx_mayor_rango]
+nombre_mayor_rango <- nombres_individuos[idx_mayor_rango]
+
+# ============================================================================
+# PARTE 5 (mchoice): Afirmaciones verdaderas sobre los rangos
+# ============================================================================
+n_afirmaciones <- 6
+
+# Construir pool de afirmaciones (funciones que dependen de los datos)
+afirmaciones_pool <- list(
+  # Verdaderas
+  list(
+    texto = function() paste0("El rango es una medida de dispersión que se calcula como la diferencia entre el valor máximo y el valor mínimo de un conjunto de datos."),
+    es_verdadera = TRUE
+  ),
+  list(
+    texto = function() paste0("El ", ctx$individuo_label, " con el menor rango es ", nombre_correcto, " (", rango_correcto, " ", ctx$unidad, "), lo que indica que sus mediciones fueron las más estables."),
+    es_verdadera = TRUE
+  ),
+  list(
+    texto = function() paste0("El ", ctx$individuo_label, " ", nombre_mayor_rango, " tiene el rango más grande (", valor_rango_mayor, " ", ctx$unidad, "), lo que indica mayor variabilidad en sus mediciones."),
+    es_verdadera = TRUE
+  ),
+  list(
+    texto = function() paste0("Un ", ctx$individuo_label, " cuyo rango es pequeño tiene mediciones que varían poco entre sí, independientemente de si los valores son altos o bajos."),
+    es_verdadera = TRUE
+  ),
+  list(
+    texto = function() paste0("El rango de ", nombres_individuos[idx_menor_valor], " es de ", rangos[idx_menor_valor], " ", ctx$unidad, ", aunque este ", ctx$individuo_label, " registró el valor individual más bajo de toda la tabla."),
+    es_verdadera = TRUE
+  ),
+  list(
+    texto = function() paste0("El rango se expresa en las mismas unidades que la variable medida (", ctx$unidad, ")."),
+    es_verdadera = TRUE
+  ),
+  # Falsas
+  list(
+    texto = function() paste0("El ", ctx$individuo_label, " ", nombres_individuos[idx_menor_maximo], " es el que tiene el menor rango, porque su valor máximo (", maximos[idx_menor_maximo], " ", ctx$unidad, ") es el más bajo de los cuatro."),
+    es_verdadera = FALSE
+  ),
+  list(
+    texto = function() paste0("Para calcular el rango de un ", ctx$individuo_label, " basta con restar el valor del primer control menos el del último control."),
+    es_verdadera = FALSE
+  ),
+  list(
+    texto = function() paste0("Si todas las mediciones de un ", ctx$individuo_label, " aumentaran en 10 ", ctx$unidad, ", su rango también aumentaría en 10 ", ctx$unidad, "."),
+    es_verdadera = FALSE
+  ),
+  list(
+    texto = function() paste0("Si un ", ctx$individuo_label, " tiene el valor individual más bajo de la tabla, necesariamente tiene el menor rango."),
+    es_verdadera = FALSE
+  ),
+  list(
+    texto = function() paste0("Los cuatro ", ctx$individuo_label, "s tienen aproximadamente el mismo rango, sin diferencias importantes entre ellos."),
+    es_verdadera = FALSE
+  ),
+  list(
+    texto = function() paste0("El rango de un conjunto de datos se obtiene promediando el valor máximo y el valor mínimo."),
+    es_verdadera = FALSE
+  )
+)
+
+# Seleccionar afirmaciones con al menos 2 verdaderas y 2 falsas.
+# Familia 1 (regla #21): construcción determinista sin bucle. El pool garantiza
+# >=4 verdaderas y >=4 falsas, y n_verdaderas_sel in {2,3,4} => n_falsas_sel in {2,3,4},
+# por lo que la condición siempre se cumple; el stopifnot la deja explícita y verificable.
+verdaderas_idx <- which(sapply(afirmaciones_pool, function(a) a$es_verdadera))
+falsas_idx <- which(sapply(afirmaciones_pool, function(a) !a$es_verdadera))
+
+n_verdaderas_sel <- sample(2:4, 1)
+n_falsas_sel <- n_afirmaciones - n_verdaderas_sel
+
+stopifnot(n_verdaderas_sel >= 2, n_falsas_sel >= 2,
+          n_verdaderas_sel <= length(verdaderas_idx),
+          n_falsas_sel <= length(falsas_idx))
+
+sel_verdaderas <- sample(verdaderas_idx, n_verdaderas_sel)
+sel_falsas <- sample(falsas_idx, n_falsas_sel)
+sel_afirmaciones <- sample(c(sel_verdaderas, sel_falsas))
+
+afirmaciones_p5_texto <- sapply(sel_afirmaciones, function(idx) afirmaciones_pool[[idx]]$texto())
+sol_p5 <- sapply(sel_afirmaciones, function(idx) as.integer(afirmaciones_pool[[idx]]$es_verdadera))
+
+# ============================================================================
+# PARTE 6 (schoice T/F): Transferir — quinto paciente hipotético
+# ============================================================================
+rango_mas_grande <- max(rangos)
+span_var <- rango_var[2] - rango_var[1]
+
+# Construcción determinista de los valores del quinto individuo con un rango
+# objetivo GARANTIZADO (sin bucles repeat). Esto elimina el riesgo de cuelgue:
+# cuando rango_mas_grande >= span_var, la condición rango_extra > rango_mas_grande
+# es imposible y un repeat se colgaría indefinidamente.
+# pick_int(a, b): entero uniforme en [a, b], seguro cuando a == b (evita la
+# trampa de sample(x, 1) que reinterpreta un escalar como 1:x).
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+
+# Solo se puede ofrecer P6 = "Verdadero" si existe margen para superar el mayor rango.
+if (rango_mas_grande >= span_var) {
+  es_verdadero_p6 <- FALSE
+} else {
+  es_verdadero_p6 <- sample(c(TRUE, FALSE), 1)
+}
+
+if (es_verdadero_p6) {
+  # rango_extra estrictamente mayor que rango_mas_grande (dentro de lo posible)
+  rango_objetivo <- pick_int(rango_mas_grande + 1, span_var)
+} else {
+  # rango_extra menor o igual que rango_mas_grande
+  rango_objetivo <- pick_int(0, rango_mas_grande)
+}
+
+# Base que garantiza que base y base+rango_objetivo caen dentro de rango_var
+base_extra <- pick_int(rango_var[1], rango_var[2] - rango_objetivo)
+if (rango_objetivo == 0) {
+  relleno_extra <- rep(base_extra, n_controles - 2)
+} else {
+  relleno_extra <- sample(base_extra:(base_extra + rango_objetivo),
+                          n_controles - 2, replace = TRUE)
+}
+vals_extra <- sample(c(base_extra, base_extra + rango_objetivo, relleno_extra))
+rango_extra <- max(vals_extra) - min(vals_extra)
+stopifnot(rango_extra == rango_objetivo,
+          es_verdadero_p6 == (rango_extra > rango_mas_grande))
+
+nombre_extra <- sample(c("Héctor", "Beatriz", "Óscar", "Diana", "Manuel", "Rosa",
+                          "Patricio", "Carmen", "Joaquín", "Lorena"), 1)
+
+enunciado_p6 <- paste0(
+  "En los mismos ", n_controles, " controles, un quinto ", ctx$individuo_label,
+  " (", nombre_extra, ") obtuvo los siguientes valores de ", ctx$variable,
+  " (", ctx$unidad, "): ",
+  paste(vals_extra, collapse = ", "),
+  ". ¿Es verdad que el rango de ", nombre_extra, " es mayor que el rango más grande ",
+  "de los 4 ", ctx$individuo_label, "s originales (", rango_mas_grande, " ", ctx$unidad, ")?"
+)
+
+sol_p6 <- if (es_verdadero_p6) c(1L, 0L) else c(0L, 1L)
+opciones_p6 <- c("Verdadero", "Falso")
+
+# ============================================================================
+# DIAGNÓSTICO de distractores (para Solution)
+# ============================================================================
+diagnosticos <- list()
+errores_ya_usados_sol <- character(0)
+
+for (i in 1:4) {
+  if (i == idx_menor_rango) next
+
+  error_asignado <- NULL
+
+  if (i == idx_error_ran01 && !("EST-RAN-01" %in% errores_ya_usados_sol)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-01",
+      nombre = "Confusión rango con máximo",
+      descripcion_larga = paste0(
+        "El estudiante identificó el valor máximo de cada ",
+        ctx$individuo_label,
+        " y eligió al que tuviera el menor máximo (",
+        maximos[i], " ", ctx$unidad,
+        "), sin calcular la diferencia entre el máximo y el mínimo."
+      ),
+      causa_raiz = "No diferencia entre un valor extremo y una medida de dispersión."
+    )
+    errores_ya_usados_sol <- c(errores_ya_usados_sol, "EST-RAN-01")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran05 &&
+      !("EST-RAN-05" %in% errores_ya_usados_sol)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-05",
+      nombre = "Confusión menor rango con menor valor",
+      descripcion_larga = paste0(
+        "El estudiante buscó el valor individual más bajo en toda la tabla y eligió al ",
+        ctx$individuo_label,
+        " al que pertenecía ese valor (",
+        minimos[i], " ", ctx$unidad,
+        "), sin considerar que el rango mide la diferencia entre el máximo y el mínimo."
+      ),
+      causa_raiz = "Confunde una medida de dispersión (rango) con un dato puntual."
+    )
+    errores_ya_usados_sol <- c(errores_ya_usados_sol, "EST-RAN-05")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran06 &&
+      !("EST-RAN-06" %in% errores_ya_usados_sol)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-06",
+      nombre = "Rango como diferencia primer-último control",
+      descripcion_larga = paste0(
+        "El estudiante restó el valor del último control menos el primero para cada ",
+        ctx$individuo_label,
+        " (obteniendo ", abs(dif_ultimo_primero[i]), " ", ctx$unidad,
+        " para ", nombres_individuos[i],
+        "), en lugar de calcular máximo menos mínimo."
+      ),
+      causa_raiz = "Confunde el rango estadístico con la variación temporal entre extremos cronológicos."
+    )
+    errores_ya_usados_sol <- c(errores_ya_usados_sol, "EST-RAN-06")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran02 &&
+      !("EST-RAN-02" %in% errores_ya_usados_sol)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-02",
+      nombre = "Rango como suma de valores",
+      descripcion_larga = paste0(
+        "El estudiante sumó todos los valores de las mediciones de cada ",
+        ctx$individuo_label,
+        " y eligió al de menor suma (",
+        sum(valores[i, ]), " ", ctx$unidad,
+        "), confundiendo una operación de agregación con una medida de dispersión."
+      ),
+      causa_raiz = "No conoce la definición de rango; aplica una operación genérica (suma) por defecto."
+    )
+    errores_ya_usados_sol <- c(errores_ya_usados_sol, "EST-RAN-02")
+  }
+
+  if (is.null(error_asignado) && i == idx_error_ran03 &&
+      !("EST-RAN-03" %in% errores_ya_usados_sol)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-03",
+      nombre = "Rango como promedio",
+      descripcion_larga = paste0(
+        "El estudiante calculó el promedio de las mediciones de cada ",
+        ctx$individuo_label,
+        " y eligió al de menor promedio (aproximadamente ",
+        round(mean(valores[i, ])), " ", ctx$unidad,
+        "), confundiendo una medida de tendencia central con una medida de dispersión."
+      ),
+      causa_raiz = "Confunde medidas de tendencia central (promedio) con medidas de dispersión (rango)."
+    )
+    errores_ya_usados_sol <- c(errores_ya_usados_sol, "EST-RAN-03")
+  }
+
+  if (is.null(error_asignado)) {
+    error_asignado <- list(
+      codigo = "EST-RAN-GEN",
+      nombre = "Error de cálculo",
+      descripcion_larga = paste0(
+        "El estudiante cometió un error al calcular el rango de ",
+        nombres_individuos[i], ". El rango correcto es ",
+        rangos[i], " ", ctx$unidad,
+        " (máximo ", maximos[i], " menos mínimo ", minimos[i], ")."
+      ),
+      causa_raiz = "Error aritmético o de lectura de la tabla."
+    )
+  }
+
+  diagnosticos[[as.character(i)]] <- list(
+    nombre_individuo = nombres_individuos[i],
+    rango_real = rangos[i],
+    maximo = maximos[i],
+    minimo = minimos[i],
+    error = error_asignado
+  )
+}
+
+# --- Pool de reflexiones metacognitivas ---
+reflexiones_metacognitivas <- c(
+  "El rango es la medida de dispersión más sencilla, pero requiere identificar correctamente el máximo y el mínimo de cada conjunto. Un error frecuente es confundir el rango con otros valores como el máximo, el mínimo o el promedio.",
+  "Analizar por qué una respuesta es incorrecta fortalece la comprensión del concepto. Al verificar cada paciente, el estudiante practica el cálculo del rango y desarrolla habilidades de autoevaluación.",
+  "Identificar errores ajenos nos ayuda a evitar cometerlos. Los errores más comunes al calcular el rango son: confundir 'menor rango' con 'menor valor', usar el máximo en lugar del rango, o calcular diferencias entre controles consecutivos.",
+  "El rango mide dispersión: cuánto varían los datos. Un paciente con valores altos pero estables tiene un rango pequeño, mientras que uno con valores moderados pero variables tiene un rango grande.",
+  "Antes de comparar rangos entre individuos, es fundamental verificar que se calculó correctamente máximo menos mínimo para cada uno. Un solo error de lectura en la tabla puede cambiar completamente la respuesta."
+)
+reflexion <- reflexiones_metacognitivas[sample(length(reflexiones_metacognitivas), 1)]
+
+# --- Identificador único ---
+ex_uid <- paste0("rango-cloze-", sample(1000:9999, 1))
+
+# --- Etiqueta corta de columna (evita desbordamiento de la tabla en PDF) ---
+etiquetas_col_cortas <- c(
+  "controles médicos periódicos" = "Control",
+  "mediciones trimestrales" = "Medición",
+  "visitas al consultorio" = "Visita",
+  "evaluaciones físicas" = "Evaluación",
+  "revisiones semestrales" = "Revisión",
+  "análisis de sangre" = "Análisis",
+  "registros posteriores a las comidas" = "Registro",
+  "mediciones del día" = "Medición"
+)
+etiqueta_col <- etiquetas_col_cortas[[ctx$n_controles_label]]
+if (is.null(etiqueta_col)) etiqueta_col <- "Medición"
+
+# --- Helper reutilizable: tabla RESPONSIVA (familia de soluciones .claude) ---
+# PDF/NOPS (is_latex_output TRUE): tabla Markdown (requiere guard \newcounter{none}).
+# HTML/Moodle/DOCX (is_latex_output FALSE): tabla HTML envuelta en un contenedor
+# con scroll horizontal -> legible en pantallas pequeñas (móvil). Verificado:
+# la tabla HTML cruda sobrevive la conversión a DOCX vía pandoc.
+# bold_rows: índices de fila a resaltar (negrita) de forma format-aware.
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
+  df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+  # Negrita Markdown nativa (**x**): pandoc la renderiza en LaTeX, HTML y DOCX.
+  if (length(bold_rows)) {
+    for (r in bold_rows) df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+  }
+  md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+  if (knitr::is_latex_output()) {
+    md  # PDF/NOPS: tabla Markdown -> longtable (requiere guard \newcounter{none})
+  } else {
+    # HTML/Moodle: fenced div de pandoc con scroll horizontal -> legible en móvil.
+    # En DOCX el div se ignora pero la tabla Markdown se conserva como tabla nativa
+    # de Word (verificado: <w:tbl> presente). Solución cross-formato sin romper nada.
+    paste0(
+      "::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
+      md, "\n\n:::\n"
+    )
+  }
+}
+
+# --- Helper reutilizable: ecuación display RESPONSIVA (familia de soluciones .claude) ---
+# PDF/NOPS: $$...$$ normal. HTML/Moodle: ecuación envuelta en fenced div con scroll
+# horizontal -> en móvil la ecuación larga hace scroll en vez de desbordar el layout.
+# (MathJax sigue renderizando el math dentro del div; verificado en Moodle/HTML.)
+# OJO sintaxis pandoc: requiere el espacio en "::: {".
+eq_display <- function(tex) {
+  if (knitr::is_latex_output()) {
+    paste0("$$", tex, "$$")
+  } else {
+    paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
+           "$$", tex, "$$\n\n:::\n")
+  }
+}
+
+# --- Tabla de datos para mostrar ---
+df_tabla <- data.frame(
+  Individuo = nombres_individuos,
+  stringsAsFactors = FALSE
+)
+for (j in 1:n_controles) {
+  nombre_col <- paste0(etiqueta_col, " ", j)
+  df_tabla[[nombre_col]] <- valores[, j]
+}
+names(df_tabla)[1] <- paste0(toupper(substr(ctx$individuo_label, 1, 1)),
+                              substr(ctx$individuo_label, 2, nchar(ctx$individuo_label)))
+
+# --- Armar exsolution completo ---
+exsol_p1 <- paste(sol_p1, collapse = "")
+exsol_p3 <- paste(sol_p3, collapse = "")
+exsol_p5 <- paste(sol_p5, collapse = "")
+exsol_p6 <- paste(sol_p6, collapse = "")
+
+# --- Contar opciones por parte para Answerlist ---
+n_p1 <- 4   # schoice
+n_p2 <- 0   # num (no va en Answerlist)
+n_p3 <- 4   # schoice
+n_p4 <- 0   # num (no va en Answerlist)
+n_p5 <- n_afirmaciones  # mchoice
+n_p6 <- 2   # schoice T/F
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(ctx$plantilla(nombres_individuos, n_controles))
+cat("\n\n")
+```
+
+```{r tabla_datos, echo=FALSE, results='asis'}
+cat(tabla_responsiva(df_tabla, align = c("l", rep("c", n_controles))), "\n")
+cat("\n")
+```
+
+**Parte 1.** De acuerdo con la tabla anterior, ¿cuál de los `r ctx$individuo_label`s registró el **menor rango** en el `r ctx$variable` durante `r ctx$articulo` `r n_controles` `r ctx$n_controles_label`?
+
+##ANSWER1##
+
+**Parte 2.** ¿Cuál es el valor exacto del menor rango? Responda con un número entero (sin decimales) en `r ctx$unidad`.
+
+##ANSWER2##
+
+**Parte 3.** Un estudiante que analizó los mismos datos respondió que el `r ctx$individuo_label` con menor rango es **`r nombre_distractor_p3`**. ¿Cuál de los siguientes errores conceptuales explica mejor esa respuesta?
+
+##ANSWER3##
+
+**Parte 4.** ¿Cuál es el valor del rango del `r ctx$individuo_label` con **mayor** dispersión? Responda con un número entero (sin decimales) en `r ctx$unidad`.
+
+##ANSWER4##
+
+**Parte 5.** De las siguientes afirmaciones sobre los rangos de los `r ctx$individuo_label`s, seleccione **todas** las que sean **verdaderas**.
+
+##ANSWER5##
+
+**Parte 6.** `r enunciado_p6`
+
+##ANSWER6##
+
+Answerlist
+----------
+
+```{r answerlist, echo=FALSE, results='asis'}
+# P1: 4 pacientes (schoice)
+for (i in 1:n_p1) {
+  cat("* ", opciones_p1[i], "\n", sep = "")
+}
+
+# P2 es num, no tiene entradas en Answerlist
+
+# P3: 4 errores (schoice)
+for (i in 1:n_p3) {
+  cat("* ", opciones_p3[i], "\n", sep = "")
+}
+
+# P4 es num, no tiene entradas en Answerlist
+
+# P5: afirmaciones (mchoice)
+for (i in 1:n_p5) {
+  cat("* ", afirmaciones_p5_texto[i], "\n", sep = "")
+}
+
+# P6: V/F (schoice)
+cat("* Verdadero\n")
+cat("* Falso\n")
+```
+
+Solution
+========
+
+### Información de la pregunta
+
+- **Competencia:** Interpretación y representación
+- **Componente:** Aleatorio
+- **Afirmación:** Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+- **Evidencia:** Da cuenta de las características básicas de la información presentada en diferentes formatos (series, gráficas, tablas y esquemas).
+- **Tarea:** Calcular el rango (máximo menos mínimo) de varios conjuntos de datos organizados en una tabla, compararlos para identificar los de menor y mayor dispersión, y diagnosticar errores conceptuales asociados al cálculo del rango.
+- **Nivel de dificultad:** N3
+
+### ¿Qué evalúa esta pregunta?
+
+Esta pregunta evalúa la capacidad del estudiante para interpretar información cuantitativa organizada en una tabla y calcular el **rango** como medida de dispersión (valor máximo menos valor mínimo) de varios conjuntos de datos. Además, exige comparar los rangos obtenidos para decidir cuál presenta mayor o menor variabilidad y reconocer errores conceptuales frecuentes que confunden el rango con otras medidas, como el valor máximo, el valor mínimo, la suma o el promedio de los datos.
+
+### Parte 1 — Identificación del paciente con menor rango
+
+El `r ctx$individuo_label` con menor rango es **`r nombre_correcto`**, con un rango de **`r rango_correcto` `r ctx$unidad`**.
+
+El **rango** de un conjunto de datos se calcula como:
+
+```{r eq_def_rango, echo=FALSE, results='asis'}
+cat(eq_display("\\text{Rango} = \\text{Valor máximo} - \\text{Valor mínimo}"))
+```
+
+```{r tabla_rangos_sol, echo=FALSE, results='asis'}
+df_rangos <- data.frame(
+  Individuo = nombres_individuos,
+  "Mínimo"  = minimos,
+  "Máximo"  = maximos,
+  "Rango"   = rangos,
+  check.names = FALSE, stringsAsFactors = FALSE
+)
+names(df_rangos)[1] <- names(df_tabla)[1]
+cat(tabla_responsiva(df_rangos, align = c("l", "c", "c", "c"), bold_rows = idx_menor_rango), "\n")
+cat("\n")
+```
+
+`r nombre_correcto` presenta el rango más bajo (`r rango_correcto` `r ctx$unidad`), lo que indica que sus mediciones fueron las más estables (con menor variabilidad).
+
+### Análisis de las opciones no válidas (Parte 1)
+
+Los demás `r ctx$individuo_label`s funcionan como distractores: cada uno corresponde a un error conceptual frecuente al calcular el rango.
+
+```{r analisis_distractores_p1, echo=FALSE, results='asis'}
+lc1 <- function(s) paste0(tolower(substr(s, 1, 1)), substr(s, 2, nchar(s)))
+estrategias_correctivas <- list(
+  "EST-RAN-01" = "calcular el rango como máximo menos mínimo y no quedarse únicamente con el valor máximo de cada conjunto.",
+  "EST-RAN-05" = "recordar que el rango mide la diferencia entre los valores extremos, no el dato más pequeño de toda la tabla.",
+  "EST-RAN-06" = "comparar el mayor con el menor de todas las mediciones, y no solo el primer control con el último.",
+  "EST-RAN-02" = "distinguir entre sumar los datos (agregación) y restar máximo menos mínimo (dispersión).",
+  "EST-RAN-03" = "diferenciar una medida de tendencia central (el promedio) de una medida de dispersión (el rango).",
+  "EST-RAN-GEN" = "releer la tabla con cuidado y aplicar la fórmula rango = máximo − mínimo verificando cada valor."
+)
+for (k in names(diagnosticos)) {
+  d <- diagnosticos[[k]]
+  estrategia <- estrategias_correctivas[[d$error$codigo]]
+  if (is.null(estrategia)) estrategia <- estrategias_correctivas[["EST-RAN-GEN"]]
+  cat("**", d$nombre_individuo, "** — rango real: ", d$rango_real, " ", ctx$unidad,
+      " (máximo ", d$maximo, ", mínimo ", d$minimo, ").\n\n", sep = "")
+  cat("Es posible que los estudiantes que eligen a ", d$nombre_individuo,
+      " incurran en el error *", d$error$nombre, "*. ", d$error$descripcion_larga,
+      " Este error se presenta cuando ", lc1(d$error$causa_raiz),
+      " Para evitar este error, el estudiante debe ", estrategia, "\n\n", sep = "")
+}
+```
+
+### Parte 2 — Cálculo del menor rango
+
+Para obtener el rango de `r nombre_correcto`:
+
+```{r eq_menor_rango, echo=FALSE, results='asis'}
+cat(eq_display(paste0(
+  "\\text{Rango} = \\text{Máximo} - \\text{Mínimo} = ",
+  maximos[idx_menor_rango], " - ", minimos[idx_menor_rango], " = ",
+  rango_correcto, " \\text{ ", ctx$unidad, "}")))
+```
+
+**Respuesta correcta: `r valor_rango_menor` `r ctx$unidad`**
+
+### Parte 3 — Análisis del error conceptual
+
+Un estudiante respondió que **`r nombre_distractor_p3`** era el `r ctx$individuo_label` con menor rango. El rango real de `r nombre_distractor_p3` es **`r rangos[distractor_p3_idx]` `r ctx$unidad`** (máximo `r maximos[distractor_p3_idx]`, mínimo `r minimos[distractor_p3_idx]`), que no es el menor.
+
+```{r diagnostico_p3, echo=FALSE, results='asis'}
+# Describir por qué cada opción es correcta/incorrecta para este caso
+for (j in seq_along(codigos_p3_opciones)) {
+  cod <- codigos_p3_opciones[j]
+  es_correcta <- cod == error_p3_codigo
+  if (es_correcta) {
+    cat("**Opción correcta:** ", nombres_p3_opciones[[cod]], "\n\n", sep = "")
+    # Buscar el error en errores_conceptuales para obtener detalles
+    for (err in errores_conceptuales) {
+      if (err$codigo == cod) break
+    }
+    cat("Este fue el error que llevó al estudiante a elegir **", nombre_distractor_p3,
+        "**. Al aplicar este razonamiento erróneo se obtiene precisamente a ",
+        nombre_distractor_p3, " como resultado.\n\n", sep = "")
+  } else {
+    # Paciente que ESTE error seleccionaría (para no afirmar falsamente "no explica"
+    # si por azar otro error apuntara al mismo distractor). Ver Error 22 / análisis adversarial.
+    idx_cod <- switch(cod,
+                      "EST-RAN-01" = idx_error_ran01, "EST-RAN-05" = idx_error_ran05,
+                      "EST-RAN-06" = idx_error_ran06, "EST-RAN-02" = idx_error_ran02,
+                      "EST-RAN-03" = idx_error_ran03, distractor_p3_idx)
+    cat("**Opción incorrecta:** ", nombres_p3_opciones[[cod]], "\n\n", sep = "")
+    if (idx_cod == distractor_p3_idx) {
+      cat("Este también es un error conceptual real; sin embargo, el razonamiento que ",
+          "la opción correcta describe es el que caracteriza con mayor precisión la ",
+          "confusión cometida en este caso.\n\n", sep = "")
+    } else {
+      cat("Aunque es un error conceptual real que algunos estudiantes cometen, ",
+          "aplicarlo conduciría a elegir a ", nombres_individuos[idx_cod],
+          ", no a ", nombre_distractor_p3,
+          "; por lo tanto no explica esta respuesta.\n\n", sep = "")
+    }
+  }
+}
+```
+
+### Parte 4 — Cálculo del mayor rango
+
+El `r ctx$individuo_label` con **mayor** dispersión es **`r nombre_mayor_rango`**:
+
+```{r eq_mayor_rango, echo=FALSE, results='asis'}
+cat(eq_display(paste0(
+  "\\text{Rango de ", nombre_mayor_rango, "} = ",
+  maximos[idx_mayor_rango], " - ", minimos[idx_mayor_rango], " = ",
+  valor_rango_mayor, " \\text{ ", ctx$unidad, "}")))
+```
+
+**Respuesta correcta: `r valor_rango_mayor` `r ctx$unidad`**
+
+### Parte 5 — Afirmaciones sobre los rangos
+
+```{r sol_p5_detail, echo=FALSE, results='asis'}
+for (i in seq_len(n_afirmaciones)) {
+  es_v <- sol_p5[i] == 1
+  estado <- if (es_v) "VERDADERA" else "FALSA"
+  cat("- ", afirmaciones_p5_texto[i], " **[", estado, "]**\n\n", sep = "")
+}
+```
+
+### Parte 6 — Transferencia al quinto paciente
+
+El quinto `r ctx$individuo_label`, **`r nombre_extra`**, obtuvo los valores: `r paste(vals_extra, collapse = ", ")` `r ctx$unidad`.
+
+```{r eq_extra, echo=FALSE, results='asis'}
+cat(eq_display(paste0(
+  "\\text{Rango de ", nombre_extra, "} = ",
+  max(vals_extra), " - ", min(vals_extra), " = ",
+  rango_extra, " \\text{ ", ctx$unidad, "}")))
+```
+
+El rango más grande entre los 4 `r ctx$individuo_label`s originales es `r rango_mas_grande` `r ctx$unidad`.
+
+`r if(es_verdadero_p6) paste0("Como ", rango_extra, " > ", rango_mas_grande, ", la afirmación es **Verdadera**.") else paste0("Como ", rango_extra, " es menor o igual que ", rango_mas_grande, ", la afirmación es **Falsa**.")`
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar estos errores
+
+1. **Identificar el máximo y el mínimo** de cada `r ctx$individuo_label` recorriendo **todas** las mediciones, sin asumir que el primer o último control son los extremos.
+2. **Calcular el rango** como $\text{máximo} - \text{mínimo}$ para cada `r ctx$individuo_label`.
+3. **Comparar los rangos** obtenidos y seleccionar el menor (o el mayor, según lo que se pregunte).
+4. **Verificar**: un rango pequeño no implica valores bajos; implica valores **cercanos entre sí** (poca variabilidad).
+5. **No confundir** el rango con otras medidas estadísticas como el promedio, la suma, el valor máximo o el valor mínimo.
+
+```{r solutionlist, echo=FALSE, results='asis'}
+answerlist(c(
+  ifelse(as.logical(sol_p1), "Correcto. Este paciente tiene el menor rango.", "Incorrecto. Este paciente no tiene el menor rango."),
+  paste0("El valor correcto del menor rango es ", valor_rango_menor, " ", ctx$unidad, "."),
+  ifelse(as.logical(sol_p3), "Correcto. Este es el error conceptual que explica la respuesta del estudiante.", "Incorrecto. Este error no explica la elección del estudiante en este caso."),
+  paste0("El valor correcto del mayor rango es ", valor_rango_mayor, " ", ctx$unidad, "."),
+  ifelse(as.logical(sol_p5), "Verdadero. Esta afirmación es correcta.", "Falso. Esta afirmación no es correcta."),
+  ifelse(as.logical(sol_p6), "Correcto. La afirmación es verdadera.", "Incorrecto. La afirmación es falsa.")
+), markup = "markdown")
+```
+
+Meta-information
+================
+exname: rango_colesterol_metacognitivo_interpretacion_n3_cloze_v1
+extype: cloze
+exclozetype: schoice|num|schoice|num|mchoice|schoice
+exsolution: `r exsol_p1`|`r valor_rango_menor`|`r exsol_p3`|`r valor_rango_mayor`|`r exsol_p5`|`r exsol_p6`
+exshuffle: TRUE
+extol: 0|0.01|0|0.01|0|0
+exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Dispersion|Rango
+exextra[Type]: CLOZE
+exextra[Program]: R
+exextra[Language]: es
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos
+exextra[Evidencia]: Da cuenta de las caracteristicas basicas de la informacion presentada en diferentes formatos, como series, graficas, tablas y esquemas
+exextra[Nivel]: 3
+exextra[Contexto]: Salud
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional-Extendido
+exextra[TipoMetacognicion]: analisis_error
+exextra[Descriptor]: D3.2

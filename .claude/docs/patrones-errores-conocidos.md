@@ -2337,3 +2337,94 @@ stopifnot(as.character(rmarkdown::pandoc_version()) >= "3.7")
 - Regla #18 / Error 16 (`\pandocbounded`): mismo patrón de diferencia de pandoc en entorno destino
 - Hook FASE 2K (`ERR_TABLA_NONE`) + `tests/testthat/test_markdown_tablas_none_guard.R`
 - Memoria: `feedback_pandoc_ltcaptype_none.md`
+
+---
+
+## Error 22: Bucle `repeat`/`while` sin cota en `data_generation` → cuelgue en ~1-2% de semillas
+
+### ❌ Mensaje de Error
+
+No hay mensaje: el proceso **se congela** (sin error, sin salida). `exams2html/pdf(n=200)`, la prueba de diversidad o el multi-semilla quedan colgados indefinidamente en una fracción de las semillas. Con timeout por semilla se observa:
+
+```
+Cuelgues (timeout): 9  -> seeds: 23,229,298,351,404,433,527,564,587   (de 600)
+```
+
+### 🔍 Causa Raíz
+
+Un bucle de reintento que **resamplea hasta cumplir una condición que puede ser imposible** para ciertos datos. Caso real (`rango_colesterol_..._cloze_v1`, Parte 6):
+
+```r
+# ❌ ANTI-PATRÓN
+es_verdadero_p6 <- sample(c(TRUE, FALSE), 1)
+rango_mas_grande <- max(rangos)
+if (es_verdadero_p6) {
+  repeat {                                           # sin contador, sin límite
+    vals_extra <- sample(rango_var[1]:rango_var[2], n_controles, replace = TRUE)
+    rango_extra <- max(vals_extra) - min(vals_extra)
+    if (rango_extra > rango_mas_grande) break        # IMPOSIBLE si rango_mas_grande >= span
+  }
+}
+```
+
+El rango máximo alcanzable por `vals_extra` es `span = rango_var[2] - rango_var[1]`. Cuando los datos generan `rango_mas_grande >= span` (sucede en ~2% de las semillas), la condición `rango_extra > rango_mas_grande` **nunca se cumple** → bucle infinito. Aun sin llegar al caso imposible, cuando `rango_mas_grande = span - 1` el bucle puede tardar miles de iteraciones (probabilidad ínfima de muestrear ambos extremos en 5 draws) → cuelgue práctico.
+
+### ✅ Solución Verificada
+
+**Construcción determinista del valor objetivo en lugar de reintentar.** Se elige el rango objetivo dentro del rango factible y se construyen los valores garantizando ese rango exacto:
+
+```r
+# ✅ CORRECTO — sin bucles, termina siempre
+rango_mas_grande <- max(rangos)
+span_var <- rango_var[2] - rango_var[1]
+# pick_int: entero uniforme en [a,b], seguro cuando a==b (evita la trampa sample(escalar,1))
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+
+if (rango_mas_grande >= span_var) {
+  es_verdadero_p6 <- FALSE                      # "Verdadero" sería imposible -> forzar Falso
+} else {
+  es_verdadero_p6 <- sample(c(TRUE, FALSE), 1)
+}
+if (es_verdadero_p6) rango_objetivo <- pick_int(rango_mas_grande + 1, span_var)
+else                 rango_objetivo <- pick_int(0, rango_mas_grande)
+
+base_extra <- pick_int(rango_var[1], rango_var[2] - rango_objetivo)
+relleno_extra <- if (rango_objetivo == 0) rep(base_extra, n_controles - 2)
+                 else sample(base_extra:(base_extra + rango_objetivo), n_controles - 2, replace = TRUE)
+vals_extra <- sample(c(base_extra, base_extra + rango_objetivo, relleno_extra))
+rango_extra <- max(vals_extra) - min(vals_extra)
+stopifnot(rango_extra == rango_objetivo,
+          es_verdadero_p6 == (rango_extra > rango_mas_grande))
+```
+
+**Trampa adicional cubierta** (`sample()` con vector de longitud 1): `sample(x, k)` cuando `length(x)==1` reinterpreta `x` como `1:x`. Por eso `pick_int(a,a)` retorna `a` y el relleno usa `rep()` cuando `rango_objetivo == 0`.
+
+### 🧪 Validación de la Solución
+
+| Métrica | Antes del fix | Después del fix |
+|---|---|---|
+| Cuelgues (600 semillas, timeout 4s) | 9 | **0** |
+| Semillas con `rmg >= span` | 12 (3 contadas + 9 colgadas) | 12 (todas → P6=Falso, sin cuelgue) |
+| Diversidad (300 generaciones) | colgaba | **300/300 únicas, 0 fallos** |
+| Multi-semilla Nivel 5 (20) | — | **100% APROBADO** |
+| Invariantes P1-P6 violadas | 0 | 0 |
+
+### 📋 Checklist de Corrección
+
+1. ¿Hay un `repeat {` o `while(...)` que resamplea hasta cumplir una condición?
+2. ¿La condición puede ser **imposible** para algún dato válido (objetivo fuera del rango alcanzable)?
+3. Reemplazar por construcción determinista del valor objetivo, o agregar **contador + `max_intentos`** con `stopifnot`/fallback.
+4. Cuidar la trampa `sample(escalar, k)` (usar `pick_int`/`rep`).
+5. Validar con stress test de timeout por semilla (≥ 200 semillas).
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-06-05 | rango_colesterol_..._n3_cloze_v1.Rmd | `repeat` Parte 6 con condición imposible si `rango_mas_grande >= span` | construcción determinista con `pick_int` | 0 cuelgues / 300 únicas / FASE 2A APROBADO |
+
+### 📚 Referencias
+
+- Test de regresión: `tests/testthat/test_data_generation_no_hang.R` (detector estático `repeat` sin cota + guard runtime con timeout)
+- `codigo-rmd.md` regla #9 (guardia `is.na()` en `while` con `calcula()`) — patrón hermano de robustez en bucles
+- Memoria: `feedback_repeat_sin_cota_cuelgue.md`

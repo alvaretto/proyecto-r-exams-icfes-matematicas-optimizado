@@ -821,3 +821,19 @@ allowed-tools:
 - Documentación de estructura Progressive Disclosure para skills
 - Tabla completa de 17 skills refactorizados (v2.1)
 - Frontmatter YAML estandarizado para todos los skills
+
+---
+
+## Agente: auditor-visual-html (auditoría visual masiva de HTML)
+
+**Nuevo (2026-06-05).** Décimo agente del ecosistema ICFES (invariante I-5). Complementa al `adversario` (lógica/matemática del código) y al `AgenteValidadorVisual` (ciclo 4 formatos): se especializa en la **revisión visual de varias decenas de versiones HTML** renderizadas multi-semilla, para detectar errores de todo tipo que solo se ven al renderizar.
+
+**Comando:** `/auditor-visual-html <ruta/al/ejercicio.Rmd> [N]`  (N = nº de versiones, default 24)
+
+**Pipeline:** `.claude/scripts/render_html_shots.R` renderiza N versiones, las captura con `chromium --headless` a **360px (móvil)** y **1024px (desktop)**, recorta con `magick` y arma contact sheets de triaje.
+
+**Detecta (7 categorías):** fugas de markup (`:::`, `\pandocbounded`, `##ANSWERi##`, HTML crudo, `NA/Inf`), math sin renderizar, incoherencias tabla↔texto, partes faltantes/Solution truncada, desbordes/responsividad @360px, mojibake/tildes faltantes, anomalías cross-versión.
+
+**Modelo:** Sonnet · **Solo lectura** (reporta, no corrige) · `maxTurns: 40` · severidad binaria (CRÍTICO/NO-CRÍTICO) · veredicto APTO_VISUAL / APTO_CON_OBSERVACIONES / NO_APTO_VISUAL.
+
+**Requiere:** `chromium`/`google-chrome-stable` + `magick` (presentes en el entorno).

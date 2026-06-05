@@ -475,6 +475,25 @@ fi
 echo ""
 
 # =============================================================================
+# FASE 2L: AUDITORÍA VISUAL HTML MASIVA (recordatorio — ejecuta el workflow)
+# =============================================================================
+# NO corre el render masivo aquí (respeta el timeout del hook). La auditoría
+# visual de varias decenas de HTMLs (móvil 360px + desktop 1024px) es un paso
+# del workflow, automatizado por orquestador-{schoice,cloze} y
+# revisar-{schoice,cloze}. Sirve para SCHOICE y CLOZE (el agente auto-detecta).
+if [ -n "$RMD_FILE" ] && [ "$ERRORES_TOTALES" -eq 0 ]; then
+  echo "┌───────────────────────────────────────────────────────────────┐"
+  echo "│ FASE 2L: Auditoría visual HTML multi-semilla (schoice/cloze)  │"
+  echo "└───────────────────────────────────────────────────────────────┘"
+  echo "  Paso del workflow — ejecutar el auditor visual masivo:"
+  echo "    /auditor-visual-html \"$RMD_FILE\" 24"
+  echo "  (o agente subagent_type=\"auditor-visual-html\"). Renderiza N"
+  echo "  versiones, captura móvil 360px + desktop 1024px y detecta fugas de"
+  echo "  markup, math sin renderizar, desbordes/responsividad y anomalías."
+  echo ""
+fi
+
+# =============================================================================
 # RESUMEN FINAL Y ACCIONES OBLIGATORIAS
 # =============================================================================
 

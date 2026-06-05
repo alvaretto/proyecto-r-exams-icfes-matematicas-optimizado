@@ -177,6 +177,12 @@ suites <- list(
     archivo = "tests/testthat/test_markdown_tablas_none_guard.R",
     critico = TRUE,
     watch = c("\\.Rmd$", "markdown-tablas-pandoc", "test_markdown_tablas_none_guard")
+  ),
+  list(
+    nombre = "data_generation sin cuelgue (Error 22, bucle repeat sin cota)",
+    archivo = "tests/testthat/test_data_generation_no_hang.R",
+    critico = TRUE,
+    watch = c("Rango-Colesterol-Pacientes-Cloze", "test_data_generation_no_hang")
   )
 )
 

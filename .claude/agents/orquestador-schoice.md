@@ -206,7 +206,8 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 3 | generacion_rmd | Construir `.Rmd` SCHOICE metacognitivo (lógica del skill /generar-schoice inline) | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con justificación + análisis diagnóstico de cada distractor | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc/nops` | Bash | — |
-| 6 | arsenal_post_render | Hook automático FASES 2A-2H | (automático) | — |
+| 6 | arsenal_post_render | Hook automático FASES 2A-2L | (automático) | — |
+| 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
 | 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` | Bash | — |
@@ -225,6 +226,7 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 5. Si el detractor (paso 7) reporta CRÍTICA o ALTA → corrijo → re-ejecuto desde paso 5 (renderizado).
 6. Si el detractor reporta APROBAR CON CAMBIOS → aplico cambios → re-ejecuto desde paso 5.
 7. Si el detractor reporta APROBAR → sigo a paso 8.
+8. **Paso 6b (auditoría visual):** SIEMPRE lo ejecuto tras el arsenal (paso 6), antes del detractor. Si el `auditor-visual-html` reporta `NO_APTO_VISUAL` o hallazgos **CRÍTICOS** → corrijo → re-ejecuto desde paso 5. Si `APTO_CON_OBSERVACIONES` → anoto y sigo; si `APTO_VISUAL` → sigo a paso 7.
 
 **Tope global**: si el pipeline completo lleva más de 50 turnos sin llegar al paso 11 (aprobación humana), paro y reporto estado parcial. Reservo turnos 55-60 para producir reporte final.
 

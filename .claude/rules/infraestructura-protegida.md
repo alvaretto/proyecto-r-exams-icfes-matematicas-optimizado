@@ -86,13 +86,13 @@ test $(ls .claude/rules/*.md 2>/dev/null | wc -l) -ge 16
 
 ### I-5 — Agentes ICFES presentes
 
-**Invariante:** los 9 agentes del workflow ICFES (clasificador, pedagogo, detractor, validador-visual, diagnosticador, corrector-coherencia, adversario, **orquestador-schoice**, **orquestador-cloze**) deben existir.
+**Invariante:** los 10 agentes del workflow ICFES (clasificador, pedagogo, detractor, validador-visual, diagnosticador, corrector-coherencia, adversario, **orquestador-schoice**, **orquestador-cloze**, **auditor-visual-html**) deben existir.
 
 **Verificación:**
 ```bash
 for a in clasificador-icfes pedagogo-icfes agente-detractor validador-visual \
          diagnosticador-errores corrector-coherencia adversario \
-         orquestador-schoice orquestador-cloze; do
+         orquestador-schoice orquestador-cloze auditor-visual-html; do
   test -f ".claude/agents/${a}.md" || { echo "FALTA: $a"; exit 1; }
 done
 echo 'I-5 OK'

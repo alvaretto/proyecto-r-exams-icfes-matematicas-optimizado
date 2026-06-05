@@ -261,7 +261,8 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 3 | generacion_rmd | Construir `.Rmd` CLOZE metacognitivo (lógica del skill /generar-cloze inline): mín. 4 partes, exclozetype multi-gap, ##ANSWERi## en orden | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con 6 subsecciones (análisis error + procedimiento + propiedades + caso específico + reflexión + estrategia) por parte | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc` (NOPS N/A esperado con gaps num/string) | Bash | — |
-| 6 | arsenal_post_render | Hook automático FASES 2A-2K | (automático) | — |
+| 6 | arsenal_post_render | Hook automático FASES 2A-2L | (automático) | — |
+| 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
 | 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` | Bash | — |
@@ -319,6 +320,7 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 5. Si el detractor (paso 7) reporta CRÍTICA o ALTA → corrijo → re-ejecuto desde paso 5 (renderizado).
 6. Si el detractor reporta APROBAR CON CAMBIOS → aplico cambios → re-ejecuto desde paso 5.
 7. Si el detractor reporta APROBAR → sigo a paso 8.
+8. **Paso 6b (auditoría visual):** SIEMPRE lo ejecuto tras el arsenal (paso 6), antes del detractor. Si el `auditor-visual-html` reporta `NO_APTO_VISUAL` o hallazgos **CRÍTICOS** → corrijo → re-ejecuto desde paso 5. Si `APTO_CON_OBSERVACIONES` → anoto y sigo; si `APTO_VISUAL` → sigo a paso 7.
 
 **Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V4.
 

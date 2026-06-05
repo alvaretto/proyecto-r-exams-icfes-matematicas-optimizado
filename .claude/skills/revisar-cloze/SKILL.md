@@ -158,6 +158,19 @@ El hook `post-exams2-validation.sh` se ejecuta automáticamente. Para CLOZE veri
 .claude/scripts/workflow-state.sh complete <dir> arsenal_post_render
 ```
 
+### PASO 6B: Auditoría visual HTML masiva (AUTOMÁTICO)
+
+Lanzar SIEMPRE el agente `auditor-visual-html` (Sonnet, solo lectura) sobre el `.Rmd`:
+
+```
+Task(subagent_type="auditor-visual-html", model="sonnet",
+     prompt="Audita visualmente: <ruta>.Rmd  N=24  outdir=/tmp/auditshots_<nombre>")
+```
+
+Renderiza ~24 versiones a HTML, las captura a **360px (móvil)** y **1024px (desktop)** y detecta errores que solo se ven al renderizar (fugas de markup `:::`/`\pandocbounded`/`##ANSWERi##` sin resolver, math sin renderizar, incoherencia tabla↔texto, partes faltantes, **desbordes/responsividad en móvil**, mojibake, anomalías cross-versión). El agente auto-detecta el tipo (CLOZE → verifica todas las partes/gaps).
+
+**Acción**: Si el veredicto es `NO_APTO_VISUAL` o hay hallazgos **CRÍTICOS** → corregir → volver a PASO 5. Si `APTO_VISUAL`/`APTO_CON_OBSERVACIONES` → continuar.
+
 ### PASO 7: Detractor FASE 2C (OBLIGATORIO)
 
 Ejecutar `/adversario [archivo.Rmd]`.
