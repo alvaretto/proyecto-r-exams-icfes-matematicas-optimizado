@@ -1,10 +1,10 @@
 ---
 output:
-  html_document: default
   word_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float"]
+  html_document: default
 ---
 ```{r setup, include=FALSE}
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -51,6 +51,11 @@ pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
 #   - |m*b| <= 20 (controla el distractor FUN-LIN-02, cuyo intercepto y es -m*b)
 # Resultado: 52 pares (m, b) distintos (rango ampliado respecto a la versión
 # previa de 36), todos con parejas ordenadas enteras y legibles.
+# EXCEPCIÓN AL UMBRAL DE 200 VERSIONES (regla .claude/rules/codigo-rmd.md #3): la condición
+# "b múltiplo entero no nulo de m" es una restricción algebraica fuerte que
+# acota el núcleo a 52 problemas (m,b). Es la excepción explícita prevista por
+# la regla; la variación de enunciado (3 intros), reflexión (4) y la permutación
+# de opciones (24) amplían las versiones renderizadas. Ver test de diversidad abajo.
 m_pool <- c(-4L, -3L, -2L, -1L, 1L, 2L, 3L, 4L)
 combos_mb <- list()
 for (mm in m_pool) {
@@ -197,7 +202,14 @@ errores_validos_idx <- which(sapply(rectas_errores, function(r) {
   !(r$m == recta_correcta$m && r$b == recta_correcta$b)
 }))
 
-# Necesitamos exactamente 3 distractores distintos entre sí
+# Necesitamos exactamente 3 distractores distintos entre sí.
+# Barajar el orden para que los 5 errores conceptuales roten de forma justa:
+# antes, el break-en-3 por orden de índice dejaba FUN-LIN-05 sin usar nunca
+# (0/52) y FUN-LIN-04 rara vez (14/52). Guarda length>1 por la trampa
+# sample(escalar) (Familia 5, regla #21).
+if (length(errores_validos_idx) > 1L) {
+  errores_validos_idx <- sample(errores_validos_idx)
+}
 rectas_unicas <- list()
 idx_seleccionados <- integer(0)
 for (i in errores_validos_idx) {
@@ -234,6 +246,12 @@ while (length(idx_seleccionados) < 3L && offset_fb <= 50L) {
   offset_fb <- offset_fb + 1L
 }
 
+# Red de seguridad: con el pool actual SIEMPRE hay >=4 distractores distintos,
+# así que el fallback de arriba no se ejercita; esta aserción hace que un cambio
+# futuro en las cotas del pool falle ruidosamente en vez de producir un ejercicio
+# con menos de 3 distractores.
+stopifnot(length(idx_seleccionados) >= 3L)
+
 # Construir las opciones: correcta + 3 distractores
 opciones_pre <- list(
   correcta = list(
@@ -263,10 +281,6 @@ names(opciones_mezcladas) <- letras
 indice_correcto <- which(sapply(opciones_mezcladas, function(o) o$tipo == "correcto"))
 sol <- rep(0L, 4L)
 sol[indice_correcto] <- 1L
-
-# Para logs internos (NUNCA en texto al estudiante — regla #19)
-letra_correcta <- letras[indice_correcto]
-message("DEBUG: letra_correcta = ", letra_correcta)
 
 # PNG de la gráfica correcta (variable pre-computada para la Solution;
 # evita que el hook FASE 2J detecte `r letra_correcta` dentro de Solution)
@@ -319,7 +333,7 @@ intros <- list(
   },
   function(m_val, b_val) {
     paste0(
-      "Recuerda que una función lineal $f(x) = mx + b$ se representa como una línea recta en el ",
+      "Una función lineal $f(x) = mx + b$ se representa como una línea recta en el ",
       "plano cartesiano. La pendiente $m$ determina la inclinación: si $m > 0$, la recta es creciente; ",
       "si $m < 0$, es decreciente. El valor $b$ indica dónde la recta cruza el eje $y$.\n\n",
       "Sea la función $f$ definida por $f(x) = ", m_val, "x ",
@@ -341,7 +355,7 @@ intros <- list(
 
 intro_idx <- pick_int(1L, length(intros))
 texto_intro <- intros[[intro_idx]](m, b)
-texto_pregunta <- "\\textquestiondown Cuál de los siguientes gráficos representa a la gráfica de $f$?"
+texto_pregunta <- "¿Cuál de los siguientes gráficos representa a la gráfica de $f$?"
 
 # --- Reflexiones metacognitivas ---
 reflexiones <- c(
@@ -365,30 +379,15 @@ for (i in 1:4) {
 
   df_recta <- data.frame(x = x_seq, y = y_seq)
 
-  # Cortes con ejes
-  corte_y_opc <- opc$b
-  corte_x_opc <- as.integer(round(-opc$b / opc$m))   # entero por construcción
-
-  df_puntos <- data.frame(
-    x = c(0, corte_x_opc),
-    y = c(corte_y_opc, 0),
-    label = c(
-      paste0("(0, ", corte_y_opc, ")"),
-      paste0("(", corte_x_opc, ", 0)")
-    )
-  )
-
   p <- ggplot(df_recta, aes(x = x, y = y)) +
     # Ejes cartesianos
     geom_hline(yintercept = 0, color = "gray40", linewidth = 0.4) +
     geom_vline(xintercept = 0, color = "gray40", linewidth = 0.4) +
-    # Recta de la función
+    # Recta de la función. NO se marcan ni rotulan los interceptos: el estudiante
+    # debe LEER la gráfica contra la cuadrícula (pendiente, corte con y, corte con
+    # x). Rotular las coordenadas exactas convertiría la tarea en emparejar números
+    # y degradaría el DOK 3 declarado a identificación directa (DOK 1-2).
     geom_line(color = "blue", linewidth = 1.0) +
-    # Puntos de corte
-    geom_point(data = df_puntos, aes(x = x, y = y),
-               color = "red", size = 2.5) +
-    geom_text(data = df_puntos, aes(x = x, y = y, label = label),
-              vjust = -0.8, hjust = 0.1, size = 3.2, color = "red") +
     # Escala y tema
     scale_x_continuous(limits = x_lim, breaks = seq(x_lim[1], x_lim[2], by = break_x)) +
     scale_y_continuous(limits = y_lim, breaks = seq(y_lim[1], y_lim[2], by = break_y)) +
@@ -399,6 +398,7 @@ for (i in 1:4) {
       panel.grid.major = element_line(color = "gray85", linewidth = 0.3),
       panel.grid.minor = element_blank(),
       axis.title = element_text(size = 12, face = "italic"),
+      axis.title.y = element_text(size = 12, face = "italic", angle = 0, vjust = 0.5),
       plot.margin = margin(5, 10, 5, 10)
     )
 
@@ -428,6 +428,10 @@ test_that("Distractores no coinciden con la recta correcta", {
     expect_false(opc$m == m && opc$b == b,
       info = paste("Distractor en posición", i, "es idéntico a la correcta"))
   }
+})
+
+test_that("Pool (m,b) cumple el mínimo de diversidad bajo la excepción algebraica", {
+  expect_gte(length(combos_mb), 50L)
 })
 
 # UID para anclas en Solution (regla #19: sin letra en ancla)
