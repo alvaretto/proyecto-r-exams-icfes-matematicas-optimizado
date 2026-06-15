@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-06-13T18:55:27.055865-05:00",
+  "timestamp_ultima_actualizacion": "2026-06-13T19:47:56.612075-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-06-13T18:55:36.533693-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-06-13T19:28:49.534952-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:32:26.872286-05:00",
+      "archivo": "grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:32:26.934934-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:34:44.255790-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:34:44.314401-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:39:38.408921-05:00",
+      "veredicto": "APROBAR"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:39:20.273904-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:39:20.330697-05:00",
+      "versiones_unicas": 50
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:39:20.386851-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-06-13T19:47:56.612075-05:00"
+    }
+  }
+}

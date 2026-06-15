@@ -1,0 +1,886 @@
+---
+output:
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float", "amsmath"]
+  html_document: default
+---
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+library(exams)
+library(ggplot2)
+library(digest)
+library(testthat)
+library(knitr)
+
+typ <- match_exams_device()
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = "",
+  fig.keep = 'all',
+  dev = c("png", "pdf"),
+  dpi = 150,
+  fig.pos = "H"
+)
+```
+
+```{r data_generation, echo=FALSE, results='hide'}
+# ==============================================================================
+# Ejercicio CLOZE: Gráfica de función lineal f(x) = mx + b
+# Basado en: SAI2-PS-26 (SAI-CND10S223, Matemáticas II, Grado 10)
+# Gemelo CLOZE del SCHOICE v1 del mismo directorio padre
+# Tipo: CLOZE metacognitivo con 6 partes Progressive Disclosure
+# exclozetype: schoice|num|num|schoice|mchoice|schoice
+# ==============================================================================
+
+# --- Helpers (Familia 5 + Familia 2 + Familia 3, regla #21) ---
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+safe_sample <- function(x, size, replace = TRUE) {
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
+
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
+  df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+  if (length(bold_rows)) for (r in bold_rows)
+    df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+  md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+  if (knitr::is_latex_output()) md
+  else paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
+              md, "\n\n:::\n")
+}
+
+eq_display <- function(tex) {
+  if (knitr::is_latex_output()) paste0("$$", tex, "$$")
+  else paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
+              "$$", tex, "$$\n\n:::\n")
+}
+
+# ==============================================================================
+# GENERACIÓN DE PARÁMETROS (idéntica al SCHOICE fuente)
+# ==============================================================================
+
+# Pool de (m, b) con coordenadas enteras en interceptos y f(1)
+m_pool <- c(-4L, -3L, -2L, -1L, 1L, 2L, 3L, 4L)
+combos_mb <- list()
+for (mm in m_pool) {
+  for (bb in setdiff(-8:8, 0L)) {
+    if (bb %% mm != 0L) next
+    if (abs(bb %/% mm) > 6L) next
+    if (abs(mm * bb) > 20L) next
+    combos_mb[[length(combos_mb) + 1L]] <- c(m = mm, b = bb)
+  }
+}
+sel_mb <- combos_mb[[pick_int(1L, length(combos_mb))]]
+m <- as.integer(sel_mb[["m"]])
+b <- as.integer(sel_mb[["b"]])
+
+# Propiedades derivadas
+corte_y <- b
+corte_x <- as.integer(round(-b / m))
+es_creciente <- m > 0
+f1 <- m * 1L + b
+
+# ==============================================================================
+# POOL DE ERRORES CONCEPTUALES (heredado del SCHOICE)
+# ==============================================================================
+errores_conceptuales <- list(
+  list(
+    codigo = "FUN-LIN-01",
+    nombre = "Pendiente con signo invertido",
+    descripcion_corta = "Invierte el signo de la pendiente",
+    descripcion_larga = paste0(
+      "El estudiante confundió el signo de la pendiente. La función f(x) = ",
+      m, "x + (", b, ") tiene pendiente m = ", m,
+      if (es_creciente) ", lo que significa que la recta es CRECIENTE (sube de izquierda a derecha)."
+      else ", lo que significa que la recta es DECRECIENTE (baja de izquierda a derecha).",
+      " Sin embargo, seleccionó una recta con pendiente de signo opuesto."
+    ),
+    causa_raiz = "Confusión entre el signo de m y la dirección de la recta.",
+    precondicion = function(params) TRUE,
+    genera_recta = function(m_val, b_val) list(m = -m_val, b = b_val)
+  ),
+  list(
+    codigo = "FUN-LIN-02",
+    nombre = "Intercepto confundido con corte en eje x",
+    descripcion_corta = "Confunde b con el corte en el eje x",
+    descripcion_larga = paste0(
+      "El estudiante interpretó el valor b = ", b,
+      " como el punto donde la recta cruza el eje x, en lugar del eje y. ",
+      "El intercepto b en f(x) = mx + b indica el punto (0, ", b,
+      ") donde la recta cruza el eje y."
+    ),
+    causa_raiz = "Confusión entre intercepto con eje y (valor de b) e intercepto con eje x.",
+    precondicion = function(params) TRUE,
+    genera_recta = function(m_val, b_val) list(m = m_val, b = -m_val * b_val)
+  ),
+  list(
+    codigo = "FUN-LIN-03",
+    nombre = "Corte con eje x desplazado",
+    descripcion_corta = "Acepta corte con eje x incorrecto",
+    descripcion_larga = paste0(
+      "El estudiante seleccionó una recta con la pendiente correcta, pero ",
+      "desplazada respecto a la original, de modo que cruza el eje x en un ",
+      "punto entero diferente al esperado (", corte_x, ")."
+    ),
+    causa_raiz = "Error aritmético al calcular el corte con eje x, o verificación visual imprecisa.",
+    precondicion = function(params) TRUE,
+    genera_recta = function(m_val, b_val) {
+      corte_x_orig <- as.integer(round(-b_val / m_val))
+      desplazamientos <- c(-2L, -1L, 1L, 2L)
+      desp <- desplazamientos[pick_int(1L, length(desplazamientos))]
+      corte_x_nuevo <- corte_x_orig + desp
+      if (corte_x_nuevo == 0L || corte_x_nuevo == corte_x_orig) {
+        corte_x_nuevo <- corte_x_orig + 3L * sign(desp)
+      }
+      list(m = m_val, b = as.integer(-m_val * corte_x_nuevo))
+    }
+  ),
+  list(
+    codigo = "FUN-LIN-04",
+    nombre = "Pendiente invertida e intercepto opuesto",
+    descripcion_corta = "Invierte pendiente y refleja intercepto",
+    descripcion_larga = paste0(
+      "El estudiante seleccionó una recta donde tanto la pendiente como el ",
+      "intercepto tienen signos opuestos: m' = ", -m, " y b' = ", -b,
+      " en lugar de m = ", m, " y b = ", b, "."
+    ),
+    causa_raiz = "Doble confusión de signos: interpreta f(x) = -mx - b.",
+    precondicion = function(params) TRUE,
+    genera_recta = function(m_val, b_val) list(m = -m_val, b = -b_val)
+  ),
+  list(
+    codigo = "FUN-LIN-05",
+    nombre = "Pendiente correcta pero intercepto con signo cambiado",
+    descripcion_corta = "Cambia el signo del intercepto",
+    descripcion_larga = paste0(
+      "El estudiante identificó correctamente la pendiente m = ", m,
+      " pero seleccionó una recta que cruza el eje y en ", -b,
+      " en lugar de ", b, "."
+    ),
+    causa_raiz = "Error de signo en b al interpretar la forma canónica f(x) = mx + b.",
+    precondicion = function(params) TRUE,
+    genera_recta = function(m_val, b_val) list(m = m_val, b = -b_val)
+  )
+)
+
+# ==============================================================================
+# SELECCIÓN DE 3 DISTRACTORES (idéntica al SCHOICE)
+# ==============================================================================
+rectas_errores <- lapply(errores_conceptuales, function(err) err$genera_recta(m, b))
+recta_correcta <- list(m = m, b = b)
+
+errores_validos_idx <- which(sapply(rectas_errores, function(r) {
+  !(r$m == recta_correcta$m && r$b == recta_correcta$b)
+}))
+if (length(errores_validos_idx) > 1L) {
+  errores_validos_idx <- sample(errores_validos_idx)
+}
+
+rectas_unicas <- list()
+idx_seleccionados <- integer(0)
+for (i in errores_validos_idx) {
+  r <- rectas_errores[[i]]
+  es_duplicado <- any(sapply(rectas_unicas, function(ru) ru$m == r$m && ru$b == r$b))
+  if (!es_duplicado) {
+    rectas_unicas <- c(rectas_unicas, list(r))
+    idx_seleccionados <- c(idx_seleccionados, i)
+  }
+  if (length(idx_seleccionados) == 3L) break
+}
+
+# Fallback determinista (Familia 1, regla #21)
+offset_fb <- 1L
+while (length(idx_seleccionados) < 3L && offset_fb <= 50L) {
+  m_pert <- m + (if ((offset_fb %% 2L) == 1L) 1L else -1L)
+  if (m_pert == 0L) m_pert <- m + 2L
+  corte_x_pert <- corte_x + offset_fb
+  if (corte_x_pert == 0L) corte_x_pert <- corte_x + offset_fb + 1L
+  b_pert <- as.integer(-m_pert * corte_x_pert)
+  r_new <- list(m = as.integer(m_pert), b = b_pert)
+  es_dup <- (r_new$m == recta_correcta$m && r_new$b == recta_correcta$b) ||
+    any(sapply(rectas_unicas, function(ru) ru$m == r_new$m && ru$b == r_new$b))
+  if (!es_dup) {
+    rectas_unicas <- c(rectas_unicas, list(r_new))
+    idx_seleccionados <- c(idx_seleccionados, 0L)
+  }
+  offset_fb <- offset_fb + 1L
+}
+stopifnot(length(idx_seleccionados) >= 3L)
+
+# ==============================================================================
+# PARTE 1 (schoice): OPCIONES GRÁFICAS — mezcla interna + exshuffle:FALSE
+# ==============================================================================
+opciones_pre <- list(
+  correcta = list(tipo = "correcto", m = recta_correcta$m, b = recta_correcta$b, error_idx = NA)
+)
+for (k in seq_along(idx_seleccionados)) {
+  opciones_pre[[paste0("distractor", k)]] <- list(
+    tipo = "distractor", m = rectas_unicas[[k]]$m, b = rectas_unicas[[k]]$b,
+    error_idx = idx_seleccionados[k]
+  )
+}
+
+perm <- sample(4)
+opciones_mezcladas <- opciones_pre[perm]
+letras <- c("A", "B", "C", "D")
+names(opciones_mezcladas) <- letras
+
+indice_correcto_p1 <- which(sapply(opciones_mezcladas, function(o) o$tipo == "correcto"))
+sol_p1 <- rep(0L, 4L)
+sol_p1[indice_correcto_p1] <- 1L
+png_correcto <- paste0("diagrama_", tolower(letras[indice_correcto_p1]), ".png")
+
+# ==============================================================================
+# DETERMINAR RANGO DEL GRÁFICO (compartido por las 4 opciones)
+# ==============================================================================
+todos_m <- sapply(opciones_mezcladas, function(o) o$m)
+todos_b <- sapply(opciones_mezcladas, function(o) o$b)
+todos_corte_x <- -todos_b / todos_m
+
+x_min_raw <- min(c(0, todos_corte_x, -2))
+x_max_raw <- max(c(0, todos_corte_x, 2))
+margen_x <- max(1, ceiling((x_max_raw - x_min_raw) * 0.2))
+x_lim <- c(max(-8L, floor(x_min_raw - margen_x)), min(8L, ceiling(x_max_raw + margen_x)))
+if (x_lim[1] > -2) x_lim[1] <- -2L
+if (x_lim[2] < 2) x_lim[2] <- 2L
+
+# C2 (fix legibilidad eje y): acotar y_lim a la región de los interceptos (cortes con
+# los ejes), NO a los extremos de las rectas empinadas evaluadas en x_lim. Eso inflaba
+# el rango (mediana 33, máx 88), forzaba break_y=5 y dejaba las gráficas ilegibles. Las
+# rectas empinadas se recortan con coord_cartesian; basta mostrar dirección + cortes.
+y_focus <- c(sapply(opciones_mezcladas, function(o) o$b), 0)   # cortes con eje y + eje x
+y_top <- max(abs(y_focus)) + 2L
+y_lim <- c(-y_top, y_top)
+
+rango_x <- x_lim[2] - x_lim[1]
+rango_y <- y_lim[2] - y_lim[1]
+break_x <- if (rango_x <= 12) 1L else if (rango_x <= 20) 2L else 5L
+break_y <- if (rango_y <= 12) 1L else 2L
+
+# ==============================================================================
+# GENERAR Y GUARDAR LOS 4 PNGs (regla .claude/rules/graficos-como-opciones.md)
+# ==============================================================================
+for (i in 1:4) {
+  opc <- opciones_mezcladas[[i]]
+  letra_lower <- tolower(letras[i])
+  nombre_png <- paste0("diagrama_", letra_lower, ".png")
+  x_seq <- seq(x_lim[1], x_lim[2], length.out = 200)
+  y_seq <- opc$m * x_seq + opc$b
+  df_recta <- data.frame(x = x_seq, y = y_seq)
+
+  p <- ggplot(df_recta, aes(x = x, y = y)) +
+    geom_hline(yintercept = 0, color = "gray40", linewidth = 0.4) +
+    geom_vline(xintercept = 0, color = "gray40", linewidth = 0.4) +
+    geom_line(color = "blue", linewidth = 1.0) +
+    scale_x_continuous(limits = x_lim, breaks = seq(x_lim[1], x_lim[2], by = break_x)) +
+    scale_y_continuous(limits = y_lim, breaks = seq(y_lim[1], y_lim[2], by = break_y)) +
+    coord_cartesian(xlim = x_lim, ylim = y_lim) +
+    labs(title = NULL, x = "x", y = "y") +
+    theme_minimal(base_size = 11) +
+    theme(
+      panel.grid.major = element_line(color = "gray85", linewidth = 0.3),
+      panel.grid.minor = element_blank(),
+      axis.title = element_text(size = 12, face = "italic"),
+      axis.title.y = element_text(size = 12, face = "italic", angle = 0, vjust = 0.5),
+      plot.margin = margin(5, 10, 5, 10)
+    )
+  ggsave(nombre_png, plot = p, width = 4.5, height = 3.8, dpi = 150, bg = "white")
+}
+
+# ==============================================================================
+# PARTE 2 (num): Intercepto con eje x → respuesta correcta = corte_x
+# ==============================================================================
+sol_p2 <- corte_x  # entero
+tol_p2 <- 0        # exacto (es entero por construcción)
+
+# ==============================================================================
+# PARTE 3 (num): f(1) = m + b → respuesta correcta = f1
+# ==============================================================================
+sol_p3 <- f1       # entero
+tol_p3 <- 0        # exacto
+
+# ==============================================================================
+# PARTE 4 (schoice): Identificar el error conceptual de la gráfica incorrecta
+# Seleccionamos UNO de los distractores visibles y preguntamos qué error cometió
+# ==============================================================================
+# Elegir uno de los 3 distractores que aparecen en la Parte 1
+idx_dist_visible <- which(sol_p1 == 0L)
+idx_dist_elegido <- idx_dist_visible[pick_int(1L, length(idx_dist_visible))]
+opc_dist_elegida <- opciones_mezcladas[[idx_dist_elegido]]
+
+# Construir las opciones de la Parte 4
+# La correcta es la descripcion_corta del error del distractor elegido
+# Los distractores de P4 son descripciones de OTROS errores
+if (opc_dist_elegida$error_idx > 0 && opc_dist_elegida$error_idx <= length(errores_conceptuales)) {
+  err_real <- errores_conceptuales[[opc_dist_elegida$error_idx]]
+  texto_error_real <- err_real$descripcion_corta
+  codigo_error_real <- err_real$codigo
+} else {
+  # Fallback para distractor generado por perturbación
+  texto_error_real <- "Usa parámetros diferentes a los de la función original"
+  codigo_error_real <- "FUN-LIN-FB"
+}
+
+# Pool de descripciones de errores para distractores de P4
+descripciones_errores_p4 <- c(
+  "Invierte el signo de la pendiente",
+  "Confunde b con el corte en el eje x",
+  "Acepta corte con eje x incorrecto",
+  "Invierte pendiente y refleja intercepto",
+  "Cambia el signo del intercepto"
+)
+
+# B1 (fix ambigüedad P4): una descripción puede describir correctamente la g(x)
+# mostrada aunque NO sea la del error "oficial". En particular "Acepta corte con eje x
+# incorrecto" (FUN-LIN-03) es genérica y subsume a FUN-LIN-02 y FUN-LIN-05 (misma
+# pendiente, corte x distinto); y cuando m=±1, FUN-LIN-02 y FUN-LIN-05 producen la
+# MISMA recta. Hay que excluir del pool de distractores TODA descripción válida para
+# g, no solo la marcada como correcta, para que la Parte 4 tenga respuesta ÚNICA.
+es_valida_para_g <- function(desc, mg, bg) {
+  if (desc == "Invierte el signo de la pendiente")       return(mg == -m && bg == b)
+  if (desc == "Confunde b con el corte en el eje x")     return(mg ==  m && bg == -m * b)
+  if (desc == "Acepta corte con eje x incorrecto")       return(mg ==  m && bg != b)
+  if (desc == "Invierte pendiente y refleja intercepto") return(mg == -m && bg == -b)
+  if (desc == "Cambia el signo del intercepto")          return(mg ==  m && bg == -b)
+  FALSE
+}
+mg_e <- opc_dist_elegida$m; bg_e <- opc_dist_elegida$b
+pool_dist_p4 <- Filter(
+  function(d) d != texto_error_real && !es_valida_para_g(d, mg_e, bg_e),
+  descripciones_errores_p4
+)
+# Si el pool no tiene suficientes (caso raro), agregar opciones genéricas
+if (length(pool_dist_p4) < 3L) {
+  extras <- c(
+    "Calcula incorrectamente el dominio de la función",
+    "Confunde función lineal con función cuadrática",
+    "Intercambia los ejes x e y"
+  )
+  pool_dist_p4 <- c(pool_dist_p4, extras)
+}
+dist_p4 <- pool_dist_p4[1:3]
+
+# Mezclar opciones P4
+opciones_p4_pre <- c(list(texto_error_real), as.list(dist_p4))
+perm_p4 <- sample(4)
+opciones_p4 <- opciones_p4_pre[perm_p4]
+sol_p4 <- rep(0L, 4L)
+sol_p4[which(perm_p4 == 1L)] <- 1L
+
+# Texto de la recta incorrecta para el enunciado de P4
+# C1 (fix colisión de notación): la gráfica incorrecta de la Parte 4 se nombra h(x)
+# porque la letra g se reserva para la nueva función de la Parte 6 (misma render).
+texto_recta_incorrecta <- paste0("$h(x) = ", opc_dist_elegida$m, "x ",
+  ifelse(opc_dist_elegida$b >= 0, paste0("+ ", opc_dist_elegida$b),
+         paste0("- ", abs(opc_dist_elegida$b))), "$")
+
+# ==============================================================================
+# PARTE 5 (mchoice): Evaluar 6 afirmaciones V/F sobre f(x) = mx + b
+# ==============================================================================
+# Construir pool de afirmaciones (siempre 3 verdaderas + 3 falsas)
+afirmaciones_todas <- list(
+  # --- VERDADERAS ---
+  list(
+    texto = paste0("La recta cruza el eje $y$ en el punto $(0, ", b, ")$"),
+    verdadera = TRUE,
+    justificacion = paste0("Correcto: al evaluar f(0) = ", m, "(0) + (", b, ") = ", b,
+                           ", se obtiene el punto (0, ", b, ").")
+  ),
+  list(
+    texto = paste0("La función es ",
+                   ifelse(es_creciente, "creciente", "decreciente"),
+                   " en todo su dominio"),
+    verdadera = TRUE,
+    justificacion = paste0("Correcto: la pendiente m = ", m,
+                           ifelse(es_creciente,
+                                  " es positiva, por lo tanto la función crece.",
+                                  " es negativa, por lo tanto la función decrece."))
+  ),
+  list(
+    texto = paste0("El intercepto con el eje $x$ es el punto $(", corte_x, ", 0)$"),
+    verdadera = TRUE,
+    justificacion = paste0("Correcto: resolviendo ", m, "x + (", b, ") = 0 se obtiene x = ", corte_x, ".")
+  ),
+  list(
+    texto = paste0("La pendiente de la recta es $m = ", m, "$"),
+    verdadera = TRUE,
+    justificacion = paste0("Correcto: en f(x) = ", m, "x + (", b, "), el coeficiente de x es ", m, ".")
+  ),
+  # --- FALSAS ---
+  list(
+    texto = paste0("La recta pasa por el origen $(0, 0)$"),
+    verdadera = FALSE,
+    justificacion = paste0("Falso: $f(0) = ", b, " \\neq 0$. La recta NO pasa por el origen porque $b = ", b, " \\neq 0$.")
+  ),
+  list(
+    texto = paste0("La función es ",
+                   ifelse(es_creciente, "decreciente", "creciente"),
+                   " porque $b ",
+                   ifelse(b > 0, "> 0$", "< 0$")),
+    verdadera = FALSE,
+    justificacion = paste0("Falso: la dirección (creciente/decreciente) depende del signo de m, no de b. ",
+                           "m = ", m, ifelse(es_creciente, " > 0 implica que la función es creciente.", " < 0 implica que la función es decreciente."))
+  ),
+  list(
+    texto = paste0("El intercepto con el eje $y$ es $(0, ", -b, ")$"),
+    verdadera = FALSE,
+    justificacion = paste0("Falso: el intercepto con el eje y es (0, ", b, "), no (0, ", -b, "). ",
+                           "Se confunde el signo de b.")
+  ),
+  list(
+    texto = paste0("La recta cruza el eje $x$ en $x = ", b, "$"),
+    verdadera = FALSE,
+    justificacion = paste0("Falso: el corte con el eje x se obtiene de mx + b = 0, es decir x = -b/m = ", corte_x,
+                           ", no x = ", b, ". Se confunde b con el corte x.")
+  ),
+  list(
+    texto = paste0("Si se duplica la pendiente, el intercepto con el eje $y$ también se duplica"),
+    verdadera = FALSE,
+    justificacion = "Falso: el intercepto con el eje y (b) es independiente de la pendiente (m). Cambiar m no afecta b."
+  )
+)
+
+# B2 (fix P5): cuando m=-1 se cumple corte_x = -b/m = b, de modo que la afirmación
+# "La recta cruza el eje x en x=b" sería VERDADERA (no un error de confusión b↔corte_x).
+# Para no etiquetar como FALSA una afirmación verdadera —y evitar que coexista con la
+# afirmación verdadera "(corte_x,0) es el corte con el eje x", contradiciéndola— se
+# excluye esa afirmación del pool en ese caso. Quedan 4 verdaderas + 4 falsas (3+3 OK).
+if (corte_x == b) {
+  afirmaciones_todas <- Filter(
+    function(a) !grepl("cruza el eje \\$x\\$ en \\$x =", a$texto),
+    afirmaciones_todas
+  )
+}
+
+# Seleccionar 3 verdaderas y 3 falsas
+idx_verdaderas <- which(sapply(afirmaciones_todas, function(a) a$verdadera))
+idx_falsas <- which(sapply(afirmaciones_todas, function(a) !a$verdadera))
+
+sel_verdaderas <- sort(safe_sample(idx_verdaderas, 3, replace = FALSE))
+sel_falsas <- sort(safe_sample(idx_falsas, 3, replace = FALSE))
+
+# Mezclar las 6 afirmaciones
+idx_p5_pre <- c(sel_verdaderas, sel_falsas)
+perm_p5 <- sample(6)
+idx_p5 <- idx_p5_pre[perm_p5]
+afirmaciones_p5 <- afirmaciones_todas[idx_p5]
+
+# Vector de solución mchoice: 1 si verdadera, 0 si falsa
+sol_p5 <- sapply(afirmaciones_p5, function(a) if (a$verdadera) 1L else 0L)
+# Verificar que hay al menos 1 verdadera y 1 falsa (por diseño hay 3+3)
+stopifnot(sum(sol_p5) >= 1L, sum(sol_p5) < length(sol_p5))
+
+# ==============================================================================
+# PARTE 6 (schoice): Transferir — ¿qué pasa si cambiamos la pendiente?
+# ==============================================================================
+# Pregunta: si la pendiente cambia de m a m_nuevo, ¿qué propiedad se mantiene?
+# Variantes de pendiente nueva
+if (es_creciente) {
+  m_nuevo <- -abs(m)  # cambiar a decreciente
+  texto_cambio <- paste0("cambia de $m = ", m, "$ a $m = ", m_nuevo, "$")
+} else {
+  m_nuevo <- abs(m)   # cambiar a creciente
+  texto_cambio <- paste0("cambia de $m = ", m, "$ a $m = ", m_nuevo, "$")
+}
+
+# Opciones P6: ¿qué se mantiene igual?
+opciones_p6_pre <- list(
+  list(
+    texto = paste0("El intercepto con el eje $y$ se mantiene en $(0, ", b, ")$"),
+    correcta = TRUE,
+    justificacion = paste0("Correcto: cambiar m no afecta b. La nueva función g(x) = ", m_nuevo,
+                           "x + (", b, ") sigue cruzando el eje y en (0, ", b, ").")
+  ),
+  list(
+    texto = paste0("El intercepto con el eje $x$ se mantiene en $(", corte_x, ", 0)$"),
+    correcta = FALSE,
+    justificacion = paste0("Falso: el nuevo corte x es -b/m' = -(", b, ")/(", m_nuevo, ") = ",
+                           as.integer(round(-b / m_nuevo)),
+                           ", diferente al original ", corte_x, ".")
+  ),
+  list(
+    texto = paste0("La función sigue siendo ",
+                   ifelse(es_creciente, "creciente", "decreciente")),
+    correcta = FALSE,
+    justificacion = paste0("Falso: m cambia de ", m, " a ", m_nuevo,
+                           ", invirtiendo la dirección de la recta.")
+  ),
+  list(
+    texto = paste0("El valor de $f(1)$ se mantiene igual a ", f1),
+    correcta = FALSE,
+    justificacion = paste0("Falso: con la nueva pendiente, g(1) = ", m_nuevo, "(1) + (", b, ") = ",
+                           m_nuevo + b, ", que es diferente de f(1) = ", f1, ".")
+  )
+)
+
+perm_p6 <- sample(4)
+opciones_p6 <- opciones_p6_pre[perm_p6]
+sol_p6 <- rep(0L, 4L)
+sol_p6[which(sapply(opciones_p6, function(o) o$correcta))] <- 1L
+
+# ==============================================================================
+# TEXTO DEL ENUNCIADO (contextos introductorios variados)
+# ==============================================================================
+intros <- list(
+  function(m_val, b_val) {
+    paste0(
+      "Una función lineal tiene la forma $f(x) = mx + b$, donde $m$ es la pendiente y $b$ el intercepto, ",
+      "ambos números pertenecen al conjunto de los números reales. Si $b$ es distinto de cero, la recta ",
+      "no pasa por la coordenada $(0, 0)$. Si $m < 0$ la función es decreciente; en caso contrario, es ",
+      "creciente.\n\n",
+      "Considera la función $f$, cuyo dominio es el conjunto de los números reales, definida por ",
+      "$f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$."
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "Una función lineal $f(x) = mx + b$ se representa como una línea recta en el ",
+      "plano cartesiano. La pendiente $m$ determina la inclinación: si $m > 0$, la recta es creciente; ",
+      "si $m < 0$, es decreciente. El valor $b$ indica dónde la recta cruza el eje $y$.\n\n",
+      "Sea la función $f$ definida por $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$, con dominio en los reales."
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "En el plano cartesiano, la gráfica de una función lineal $f(x) = mx + b$ es una línea recta. ",
+      "El parámetro $m$ (pendiente) indica si la recta sube ($m > 0$) o baja ($m < 0$), y $b$ ",
+      "(intercepto) indica el punto $(0, b)$ donde la recta corta el eje $y$.\n\n",
+      "Dada la función $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$, definida para todo número real:"
+    )
+  }
+)
+
+intro_idx <- pick_int(1L, length(intros))
+texto_intro <- intros[[intro_idx]](m, b)
+
+# ==============================================================================
+# REFLEXIONES METACOGNITIVAS
+# ==============================================================================
+reflexiones <- c(
+  "Identificar errores ajenos en la lectura de gráficas fortalece la comprensión de funciones lineales. La metacognición nos ayuda a evitar confusiones entre pendiente e intercepto.",
+  "Verificar la coherencia entre la expresión algebraica y la gráfica es una habilidad fundamental. Siempre conviene evaluar la función en puntos clave (interceptos, valores enteros).",
+  "Los errores más comunes al graficar funciones lineales involucran confundir el signo de la pendiente o la ubicación del intercepto. Analizar estos errores en otros nos previene de cometerlos.",
+  "Al interpretar gráficas de funciones lineales, verificar al menos 3 propiedades (pendiente, corte con eje y, corte con eje x) reduce significativamente la posibilidad de error."
+)
+reflexion <- reflexiones[pick_int(1L, length(reflexiones))]
+
+# ==============================================================================
+# VECTORES DE SOLUCIÓN COMBINADOS (exclozetype: schoice|num|num|schoice|mchoice|schoice)
+# ==============================================================================
+exsolution_str <- paste0(
+  paste(sol_p1, collapse = ""), "|",   # P1: schoice (4 opciones)
+  sol_p2, "|",                          # P2: num
+  sol_p3, "|",                          # P3: num
+  paste(sol_p4, collapse = ""), "|",   # P4: schoice (4 opciones)
+  paste(sol_p5, collapse = ""), "|",   # P5: mchoice (6 opciones)
+  paste(sol_p6, collapse = "")         # P6: schoice (4 opciones)
+)
+
+extol_str <- paste0("0|", tol_p2, "|", tol_p3, "|0|0|0")
+
+# UID para anclas en Solution (regla #19)
+ex_uid <- paste0(abs(m), abs(b), sample(1000:9999, 1))
+
+# ==============================================================================
+# VERIFICACIONES INTERNAS
+# ==============================================================================
+test_that("P1: Vector sol tiene exactamente 1 opción correcta", {
+  expect_equal(sum(sol_p1), 1L)
+})
+test_that("P1: Todas las rectas son distintas entre sí", {
+  hashes <- sapply(opciones_mezcladas, function(o) digest(list(o$m, o$b)))
+  expect_equal(length(unique(hashes)), 4L)
+})
+test_that("P2: corte_x es entero (por construcción b múltiplo de m)", {
+  expect_equal(corte_x, as.integer(corte_x))
+})
+test_that("P4: Vector sol tiene exactamente 1 opción correcta", {
+  expect_equal(sum(sol_p4), 1L)
+})
+test_that("P5: mchoice tiene al menos 1 verdadera y 1 falsa", {
+  expect_gte(sum(sol_p5), 1L)
+  expect_lt(sum(sol_p5), length(sol_p5))
+})
+test_that("P5: 6 afirmaciones únicas", {
+  textos <- sapply(afirmaciones_p5, function(a) a$texto)
+  expect_equal(length(unique(textos)), 6L)
+})
+test_that("P6: Vector sol tiene exactamente 1 opción correcta", {
+  expect_equal(sum(sol_p6), 1L)
+})
+test_that("Conteo de gaps: 6 partes", {
+  n_gaps <- 6L
+  expect_equal(n_gaps, 6L)
+})
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado_intro, echo=FALSE, results='asis'}
+cat(texto_intro, "\n\n")
+```
+
+**Parte 1.** ¿Cuál de los siguientes gráficos representa la gráfica de $f$?
+
+##ANSWER1##
+
+```{r parte2_enunciado, echo=FALSE, results='asis'}
+cat(paste0(
+  "\n\n**Parte 2.** Calcula el intercepto de $f$ con el eje $x$. ",
+  "Es decir, encuentra el valor de $x$ tal que $f(x) = 0$.\n\n"
+))
+```
+
+##ANSWER2##
+
+```{r parte3_enunciado, echo=FALSE, results='asis'}
+cat(paste0(
+  "\n\n**Parte 3.** Evalúa $f(1)$. ",
+  "Es decir, calcula el valor de la función cuando $x = 1$.\n\n"
+))
+```
+
+##ANSWER3##
+
+```{r parte4_enunciado, echo=FALSE, results='asis'}
+cat(paste0(
+  "\n\nUn estudiante seleccionó una gráfica diferente a la correcta. La gráfica que seleccionó ",
+  "corresponde a la función ", texto_recta_incorrecta, ".\n\n",
+  "**Parte 4.** ¿Cuál error conceptual cometió ese estudiante al seleccionar esa gráfica?\n\n"
+))
+```
+
+##ANSWER4##
+
+**Parte 5.** Selecciona todas las afirmaciones **verdaderas** sobre la función $f$.
+
+##ANSWER5##
+
+```{r parte6_enunciado, echo=FALSE, results='asis'}
+cat(paste0(
+  "\n\n**Parte 6.** Supón que se define una nueva función lineal $g$ de la forma ",
+  "$g(x) = m'x + b$, donde la pendiente ", texto_cambio,
+  " pero el intercepto $b = ", b, "$ se conserva. ",
+  "¿Cuál de las siguientes propiedades se mantiene igual?\n\n"
+))
+```
+
+##ANSWER6##
+
+Answerlist
+----------
+
+```{r answerlist_enunciado, echo=FALSE, results='asis'}
+# P1: 4 opciones gráficas (schoice)
+cat("* ![](diagrama_a.png){width=70%}\n")
+cat("* ![](diagrama_b.png){width=70%}\n")
+cat("* ![](diagrama_c.png){width=70%}\n")
+cat("* ![](diagrama_d.png){width=70%}\n")
+# P2: num — sin opciones en answerlist del enunciado
+# P3: num — sin opciones en answerlist del enunciado
+# P4: 4 opciones texto (schoice)
+for (i in 1:4) {
+  cat(paste0("* ", opciones_p4[[i]], "\n"))
+}
+# P5: 6 afirmaciones (mchoice)
+for (i in 1:6) {
+  cat(paste0("* ", afirmaciones_p5[[i]]$texto, "\n"))
+}
+# P6: 4 opciones texto (schoice)
+for (i in 1:4) {
+  cat(paste0("* ", opciones_p6[[i]]$texto, "\n"))
+}
+```
+
+Solution
+========
+
+```{r sol_parte1, echo=FALSE, results='asis'}
+cat(paste0("### Respuesta correcta — Parte 1 {#resp-p1-", ex_uid, "}\n\n"))
+cat(paste0(
+  "La gráfica correcta de $f(x) = ", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+  "$ es la que cumple **simultáneamente** estas tres propiedades:\n\n",
+  "1. **Pendiente $m = ", m, "$**: la recta es **",
+  ifelse(es_creciente, "creciente", "decreciente"),
+  "** (", ifelse(es_creciente, "sube", "baja"),
+  " de izquierda a derecha).\n",
+  "2. **Intercepto con eje $y$**: cruza el eje $y$ en $(0, ", b, ")$.\n",
+  "3. **Intercepto con eje $x$**: resolviendo $0 = ", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+  "$ se obtiene $x = ", corte_x, "$, es decir $(", corte_x, ", 0)$.\n\n"
+))
+cat("![](", png_correcto, "){width=70%}\n\n", sep = "")
+```
+
+```{r sol_parte2, echo=FALSE, results='asis'}
+cat(paste0("### Respuesta correcta — Parte 2 {#resp-p2-", ex_uid, "}\n\n"))
+cat(paste0("El intercepto con el eje $x$ se obtiene resolviendo $f(x) = 0$:\n\n"))
+cat(eq_display(paste0(m, "x ", ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+                      " = 0 \\quad \\Rightarrow \\quad x = \\frac{",
+                      ifelse(b >= 0, paste0("-", b), paste0("", abs(b))),
+                      "}{", m, "} = ", corte_x)))
+cat("\n\n")
+cat(paste0("**Respuesta:** $x = ", corte_x, "$\n\n"))
+```
+
+```{r sol_parte3, echo=FALSE, results='asis'}
+cat(paste0("### Respuesta correcta — Parte 3 {#resp-p3-", ex_uid, "}\n\n"))
+cat(paste0("Se evalúa la función en $x = 1$:\n\n"))
+cat(eq_display(paste0("f(1) = ", m, "(1) ",
+                      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+                      " = ", m, " ",
+                      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+                      " = ", f1)))
+cat("\n\n")
+cat(paste0("**Respuesta:** $f(1) = ", f1, "$\n\n"))
+```
+
+```{r sol_parte4, echo=FALSE, results='asis'}
+cat(paste0("### Respuesta correcta — Parte 4 {#resp-p4-", ex_uid, "}\n\n"))
+cat(paste0(
+  "El estudiante seleccionó la gráfica de ", texto_recta_incorrecta,
+  " en lugar de $f(x) = ", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))), "$.\n\n"
+))
+
+if (opc_dist_elegida$error_idx > 0 && opc_dist_elegida$error_idx <= length(errores_conceptuales)) {
+  err <- errores_conceptuales[[opc_dist_elegida$error_idx]]
+  cat(paste0(
+    "**Error identificado:** ", err$codigo, " — ", err$nombre, "\n\n",
+    err$descripcion_larga, "\n\n",
+    "*Causa raíz:* ", err$causa_raiz, "\n\n"
+  ))
+} else {
+  cat(paste0(
+    "**Error identificado:** La gráfica seleccionada tiene parámetros ($m = ",
+    opc_dist_elegida$m, "$, $b = ", opc_dist_elegida$b,
+    "$) diferentes a los de la función original.\n\n"
+  ))
+}
+```
+
+```{r sol_parte5, echo=FALSE, results='asis'}
+cat(paste0("### Respuesta correcta — Parte 5 {#resp-p5-", ex_uid, "}\n\n"))
+cat("Análisis de cada afirmación:\n\n")
+for (i in 1:6) {
+  a <- afirmaciones_p5[[i]]
+  cat(paste0(
+    "- **\"", a$texto, "\"** → **",
+    ifelse(a$verdadera, "VERDADERA", "FALSA"),
+    "**. ", a$justificacion, "\n\n"
+  ))
+}
+```
+
+```{r sol_parte6, echo=FALSE, results='asis'}
+cat(paste0("### Respuesta correcta — Parte 6 {#resp-p6-", ex_uid, "}\n\n"))
+cat(paste0(
+  "Cuando la pendiente ", texto_cambio,
+  " pero $b = ", b, "$ no cambia:\n\n"
+))
+for (i in 1:4) {
+  o <- opciones_p6[[i]]
+  cat(paste0(
+    "- **\"", o$texto, "\"** → **",
+    ifelse(o$correcta, "CORRECTA", "INCORRECTA"),
+    "**. ", o$justificacion, "\n\n"
+  ))
+}
+```
+
+```{r sol_reflexion, echo=FALSE, results='asis'}
+cat(paste0("### Reflexión metacognitiva {#refl-", ex_uid, "}\n\n"))
+cat(reflexion, "\n\n")
+```
+
+```{r sol_estrategia, echo=FALSE, results='asis'}
+cat(paste0("### Estrategia para evitar errores {#estrat-", ex_uid, "}\n\n"))
+cat(paste0(
+  "1. **Verificar la dirección**: determinar si $m > 0$ (creciente) o $m < 0$ (decreciente). Descartar inmediatamente las rectas con dirección opuesta.\n",
+  "2. **Ubicar el intercepto $y$**: el valor de $b$ indica dónde la recta cruza el eje $y$ (no el eje $x$). Verificar que la gráfica cruce el eje $y$ en $(0, ", b, ")$.\n",
+  "3. **Calcular el intercepto $x$**: resolver $mx + b = 0$ para encontrar el corte con el eje $x$ y comparar con la gráfica.\n",
+  "4. **Evaluar un punto de control**: sustituir un valor simple como $x = 1$ para verificar que la gráfica pasa por el punto esperado.\n\n"
+))
+```
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+# P1: feedback por opción gráfica (4 ítems schoice)
+for (i in 1:4) {
+  opc <- opciones_mezcladas[[i]]
+  if (opc$tipo == "correcto") {
+    cat(paste0("* Correcta: la recta tiene pendiente $m = ", opc$m,
+               "$ e intercepto $b = ", opc$b, "$.\n"))
+  } else {
+    err_idx <- opc$error_idx
+    if (err_idx > 0 && err_idx <= length(errores_conceptuales)) {
+      err <- errores_conceptuales[[err_idx]]
+      cat(paste0("* Incorrecta (", err$codigo, "): ", err$descripcion_corta, ".\n"))
+    } else {
+      cat(paste0("* Incorrecta: recta con $m = ", opc$m,
+                 "$ y $b = ", opc$b, "$ no corresponde a $f$.\n"))
+    }
+  }
+}
+# P2: feedback num (1 ítem)
+cat(paste0("* El intercepto con el eje $x$ es $x = -b/m = ", corte_x, "$.\n"))
+# P3: feedback num (1 ítem)
+cat(paste0("* $f(1) = ", m, "(1) + (", b, ") = ", f1, "$.\n"))
+# P4: feedback por opción (4 ítems schoice)
+for (i in 1:4) {
+  if (sol_p4[i] == 1L) {
+    cat(paste0("* Correcto: el error cometido es \"", opciones_p4[[i]], "\".\n"))
+  } else {
+    cat(paste0("* Incorrecto: \"", opciones_p4[[i]], "\" no describe el error real.\n"))
+  }
+}
+# P5: feedback por afirmación (6 ítems mchoice)
+for (i in 1:6) {
+  a <- afirmaciones_p5[[i]]
+  cat(paste0("* ", ifelse(a$verdadera, "Verdadera", "Falsa"), ": ", a$justificacion, "\n"))
+}
+# P6: feedback por opción (4 ítems schoice)
+for (i in 1:4) {
+  o <- opciones_p6[[i]]
+  cat(paste0("* ", ifelse(o$correcta, "Correcta", "Incorrecta"), ": ", o$justificacion, "\n"))
+}
+```
+
+Meta-information
+================
+exname: grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1
+extype: cloze
+exclozetype: schoice|num|num|schoice|mchoice|schoice
+exsolution: `r exsolution_str`
+extol: `r extol_str`
+exshuffle: FALSE
+
+exextra[Type]: CLOZE
+exextra[Competencia]: Interpretacion y representacion
+exextra[Componente]: Numerico-variacional
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos
+exextra[Evidencia]: Da cuenta de las caracteristicas basicas de la informacion presentada en diferentes formatos
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
+exextra[TipoMetacognicion]: analisis_error
+exextra[ItemOriginal]: SAI2-PS-26 (SAI-CND10S223)
