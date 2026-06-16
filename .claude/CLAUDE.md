@@ -150,7 +150,8 @@ A-Produccion/
 - **NUEVO TEST**: `tests/testthat/test_neg_variante_b.R` (8 tests; guardas verificadas contra el código pre-fix). Runner: **19 suites** (era 18).
 - **TEST VISUAL ROBUSTO**: `test_neg_visual_distinctness` (EST-BOX-03) ahora compara **píxeles** (`png::readPNG`, <1%) en vez del tamaño de archivo PNG (proxy ruidoso, daba 6.8% en imágenes pixel-idénticas → falso positivo dependiente del entorno).
 - **RUNNER ENDURECIDO**: `tests/run_all_tests.R` (`ejecutar_suite`) marca una suite como **fallida** si `test_file()` reporta `failed>0` o `error>0`, no solo si el script revienta. Antes reportaba "100%" ocultando fallas a nivel de expectativa.
-- **ENTORNO**: recompilado `dplyr` desde fuente (su `.so` quedó con `undefined symbol: R_shallow_duplicate_attr` tras actualizar a R 4.6.0) — desbloquea `test_cloze_n3`.
+- **RUNNER AISLADO POR SUBPROCESO**: `ejecutar_suite` ahora ejecuta cada suite en su propio proceso R (`tests/run_one_suite.R`, veredicto vía exit status) → elimina la contaminación cruzada de estado global entre suites (Python/reticulate de proceso único, RNG, options). Resuelve `test_cloze_n3` (renderiza un ejercicio reticulate **inmutable** de 03-En-Produccion) que pasaba aislado pero fallaba al correr tras otra suite Python (`__main__` sin `producto_seleccionado`). Validado: 19/19 verde real (0 Failure/Error en todo el log).
+- **ENTORNO**: recompilado `dplyr` desde fuente (su `.so` quedó con `undefined symbol: R_shallow_duplicate_attr` tras actualizar a R 4.6.0) — desbloquea `test_cloze_n3`. Ver memoria `ref_dplyr_recompile_tras_upgrade_R.md`.
 - **MEMORIA**: `feedback_detractor_alucina_codigo.md` (el detractor puede fabricar estructura de código al "simular"; verificar contra el `.Rmd` real).
 
 ### Cambios v3.16.0 (2026-06-15)
