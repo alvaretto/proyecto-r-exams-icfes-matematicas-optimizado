@@ -69,8 +69,21 @@ ejecutar_suite <- function(nombre, archivo) {
   inicio <- Sys.time()
 
   resultado <- tryCatch({
-    test_file(archivo, reporter = "summary")
-    list(exito = TRUE, tiempo = difftime(Sys.time(), inicio, units = "secs"))
+    # stop_on_failure = FALSE: test_file devuelve los resultados en vez de lanzar,
+    # para inspeccionar fallas a nivel de EXPECTATIVA (no solo errores de script).
+    res <- test_file(archivo, reporter = "summary", stop_on_failure = FALSE)
+    df <- as.data.frame(res)
+    n_failed <- if ("failed" %in% names(df)) sum(df$failed, na.rm = TRUE) else 0L
+    n_error  <- if ("error"  %in% names(df)) sum(as.logical(df$error), na.rm = TRUE) else 0L
+    tiempo <- difftime(Sys.time(), inicio, units = "secs")
+    if (n_failed > 0 || n_error > 0) {
+      list(exito = FALSE,
+           error = sprintf("%d expectativa(s) fallida(s), %d test(s) con error",
+                           n_failed, n_error),
+           tiempo = tiempo)
+    } else {
+      list(exito = TRUE, tiempo = tiempo)
+    }
   }, error = function(e) {
     list(exito = FALSE, error = e$message, tiempo = difftime(Sys.time(), inicio, units = "secs"))
   })
