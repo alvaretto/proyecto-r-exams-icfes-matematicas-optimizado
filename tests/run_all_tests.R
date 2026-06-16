@@ -68,25 +68,28 @@ ejecutar_suite <- function(nombre, archivo) {
 
   inicio <- Sys.time()
 
-  resultado <- tryCatch({
-    # stop_on_failure = FALSE: test_file devuelve los resultados en vez de lanzar,
-    # para inspeccionar fallas a nivel de EXPECTATIVA (no solo errores de script).
-    res <- test_file(archivo, reporter = "summary", stop_on_failure = FALSE)
-    df <- as.data.frame(res)
-    n_failed <- if ("failed" %in% names(df)) sum(df$failed, na.rm = TRUE) else 0L
-    n_error  <- if ("error"  %in% names(df)) sum(as.logical(df$error), na.rm = TRUE) else 0L
-    tiempo <- difftime(Sys.time(), inicio, units = "secs")
-    if (n_failed > 0 || n_error > 0) {
-      list(exito = FALSE,
-           error = sprintf("%d expectativa(s) fallida(s), %d test(s) con error",
-                           n_failed, n_error),
-           tiempo = tiempo)
-    } else {
-      list(exito = TRUE, tiempo = tiempo)
-    }
-  }, error = function(e) {
-    list(exito = FALSE, error = e$message, tiempo = difftime(Sys.time(), inicio, units = "secs"))
-  })
+  # Aislar cada suite en su propio proceso R (tests/run_one_suite.R): evita la
+  # contaminación cruzada de estado global entre suites (Python/reticulate — un
+  # único intérprete por proceso —, RNG, options, variables globales). El
+  # subproceso reporta su veredicto vía exit status: 0 = todo verde; !=0 = hay
+  # expect-failures/errores o el script reventó. El helper inspecciona
+  # test_file(..., stop_on_failure = FALSE) para no enmascarar fallas de expectativa.
+  rscript <- file.path(R.home("bin"), "Rscript")
+  status <- tryCatch(
+    system2(rscript, args = c("tests/run_one_suite.R", archivo),
+            stdout = "", stderr = ""),
+    error = function(e) 1L
+  )
+  tiempo <- difftime(Sys.time(), inicio, units = "secs")
+  exito <- identical(as.integer(status), 0L)
+  resultado <- if (exito) {
+    list(exito = TRUE, tiempo = tiempo)
+  } else {
+    list(exito = FALSE,
+         error = sprintf("subproceso terminó con exit status %s (expect-failures/errores o script roto)",
+                         status),
+         tiempo = tiempo)
+  }
 
   if (resultado$exito) {
     cat(sprintf("✓ %s completado en %.2f segundos\n\n", nombre, resultado$tiempo))
