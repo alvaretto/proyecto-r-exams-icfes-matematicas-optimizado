@@ -182,7 +182,7 @@ done
 
 ### 4A. Modo rápido (pre-push)
 ```bash
-echo "=== Suite Completa (15 suites) ==="
+echo "=== Suite Completa (19 suites) ==="
 R_TESTS_FULL=1 Rscript tests/run_all_tests.R 2>&1
 ```
 
@@ -315,7 +315,7 @@ fi
 ║  FASE 1: Lint (R + Bash)                             ║
 ║  FASE 2: Types/Schemas (JSON + Invariantes I-1..7)   ║
 ║  FASE 3: Style (Ortografía + Reglas #18 #19)         ║
-║  FASE 4: Unit (15 suites, 130+ tests)                ║
+║  FASE 4: Unit (19 suites, 130+ tests)                ║
 ║  FASE 5: E2E (Workflows completos de usuario)        ║
 ╚══════════════════════════════════════════════════════╝
 ```

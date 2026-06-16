@@ -315,7 +315,14 @@ SI NO _neg_ en nombre:
 
 ### FASE 2A (Validación matemática automática)
 
-El hook `post-exams2-validation.sh` y el script `validar_coherencia_matematica.R` DEBEN incluir la detección `_neg_` y aplicar el test correspondiente.
+El script `validar_coherencia_matematica.R` (vía `validar_5c_unicidad`, Nivel 5C) **AUTO-DETECTA la variante** a partir del entorno del ejercicio:
+
+- **Variante B** si existe `etiquetas_mezcladas` (o `opciones_pre_mezcla` con nombres) que contengan `error` + `correcta*` → valida estructura semántica (1 `error` + (N-1) `correcta*`) y que los textos sean **todos distintos** (NO exige hashes idénticos).
+- **Variante A** en caso contrario → exige (N-1) opciones idénticas + 1 diferente.
+
+Además, `construir_params_desde_env` respeta el objeto `params` que el propio ejercicio declara (p.ej. funciones lineales con `m`, `b`, `corte_x`), de modo que las precondiciones de los errores (Capa A) se evalúan con los campos correctos y no producen falsos `ERR_SEM_A`.
+
+Regresión cubierta por `tests/testthat/test_neg_variante_b.R` (8 tests: Variante B válida/inválida, Variante A preservada, Capa A con `params` propio).
 
 ### FASE 2C (Detractor)
 
@@ -383,11 +390,16 @@ opciones <- list(correcta1 = "...", correcta2 = "...", correcta3 = "...", error 
 
 ---
 
-**Versión**: 2.0
-**Fecha**: 2026-02-08
+**Versión**: 2.1
+**Fecha**: 2026-06-16
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
 **Aplica a**: Todo archivo .Rmd con `_neg_` en el nombre
+
+### Cambios v2.1 (2026-06-16)
+- **Validador con soporte real de Variante B**: `validar_5c_unicidad` (Nivel 5C) AUTO-DETECTA Variante A vs B desde el entorno (`etiquetas_mezcladas`/`opciones_pre_mezcla`). Antes asumía Variante A y reportaba falso `ERR_ANS_C` para los textos sinónimos (distintos por diseño) de Variante B.
+- **Capa A respeta `params` del ejercicio**: `construir_params_desde_env` fusiona el objeto `params` declarado por el ejercicio (m, b, corte_x…) además del schema estadístico (n, datos_ord) → elimina falso `ERR_SEM_A` en ejercicios de función lineal.
+- **Test de regresión**: `tests/testthat/test_neg_variante_b.R` (8 tests). Origen: `grafica_funcion_lineal_metacognitivo_argumentacion_n3_schoice_neg_v1` (SAI2-PS-26).
 
 ### Cambios v2.0 (2026-02-08)
 - **Dos variantes de test**: Variante A (datos/gráficos con `digest()`) y Variante B (texto sinónimo con etiquetas semánticas)

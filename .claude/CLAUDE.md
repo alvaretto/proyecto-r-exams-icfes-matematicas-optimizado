@@ -138,9 +138,20 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.16.0 (orquestador-cloze: Incidente G + validación V5 — gráficas-opción fuera del gap)
-**Fecha**: 2026-06-15
+**Versión**: 3.17.0 (validador con soporte _neg_ Variante B + runner endurecido + ejercicio función lineal _neg_)
+**Fecha**: 2026-06-16
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.17.0 (2026-06-16)
+- **VALIDADOR — SOPORTE _neg_ VARIANTE B**: `validar_coherencia_matematica.R` daba falsos positivos en SCHOICE `_neg_` **Variante B** (texto sinónimo). Fix de causa raíz:
+  - `validar_5c_unicidad` (Nivel 5C) AUTO-DETECTA Variante A vs B desde el entorno (`etiquetas_mezcladas`/`opciones_pre_mezcla` con `error`+`correcta*`). Variante B valida estructura semántica + textos distintos; Variante A sigue exigiendo (N-1) idénticas + 1 diferente → elimina falso `ERR_ANS_C`.
+  - `construir_params_desde_env` respeta el objeto `params` del ejercicio (m, b, corte_x…) además de (n, datos_ord) → elimina falso `ERR_SEM_A` en Capa A. Ver regla #10 `validacion-neg-opciones-repetidas.md` v2.1.
+- **NUEVO EJERCICIO**: `grafica_funcion_lineal_metacognitivo_argumentacion_n3_schoice_neg_v1` (SAI2-PS-26) — SCHOICE `_neg_` Variante B sobre propiedades de f(x)=mx+b (pool de 5 errores FUN-LIN-01..05 con precondiciones). Verificado: correctitud exhaustiva (52 pares (m,b)×5 = 248 evals, 0 violaciones), 250/250 versiones únicas, 4 formatos, letter-independence, coherencia APROBADO.
+- **NUEVO TEST**: `tests/testthat/test_neg_variante_b.R` (8 tests; guardas verificadas contra el código pre-fix). Runner: **19 suites** (era 18).
+- **TEST VISUAL ROBUSTO**: `test_neg_visual_distinctness` (EST-BOX-03) ahora compara **píxeles** (`png::readPNG`, <1%) en vez del tamaño de archivo PNG (proxy ruidoso, daba 6.8% en imágenes pixel-idénticas → falso positivo dependiente del entorno).
+- **RUNNER ENDURECIDO**: `tests/run_all_tests.R` (`ejecutar_suite`) marca una suite como **fallida** si `test_file()` reporta `failed>0` o `error>0`, no solo si el script revienta. Antes reportaba "100%" ocultando fallas a nivel de expectativa.
+- **ENTORNO**: recompilado `dplyr` desde fuente (su `.so` quedó con `undefined symbol: R_shallow_duplicate_attr` tras actualizar a R 4.6.0) — desbloquea `test_cloze_n3`.
+- **MEMORIA**: `feedback_detractor_alucina_codigo.md` (el detractor puede fabricar estructura de código al "simular"; verificar contra el `.Rmd` real).
 
 ### Cambios v3.16.0 (2026-06-15)
 - **ORQUESTADOR-CLOZE — INCIDENTE G**: gráficas-opción dentro de un gap CLOZE no se renderizan en Moodle. Un gap CLOZE (`{1:MULTICHOICE:...}`) muestra sus opciones como texto plano y descarta el HTML → las `<img>` desaparecen ("no se ven los gráficos en el Paso N"). Distinto del SCHOICE puro, donde cada opción es un `<answer>` con HTML completo y las imágenes-opción sí funcionan.

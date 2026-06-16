@@ -10,11 +10,11 @@ El agente `validator` del Context Engineering global tiene la función de "crear
 
 | Responsabilidad Validator CE | Cobertura ICFES | Mecanismo |
 |------------------------------|-----------------|-----------|
-| Crear tests post-implementación | 15 suites testthat (130+ tests) | `tests/testthat/test_*.R` |
+| Crear tests post-implementación | 19 suites testthat (130+ tests) | `tests/testthat/test_*.R` |
 | Validar que cambios no rompen nada | Hook post-exams2 (FASE 2A-2J) | `post-exams2-validation.sh` |
 | Ejecutar tests automáticamente | Git hooks nativos + CI/CD | `.git/hooks/pre-commit`, `.github/workflows/ci-testing.yml` |
 | Verificar sintaxis/lint | Ortografía española + bash -n | `pre-commit-ortografia.sh`, `corregir_ortografia_espanol.R` |
-| Validar cobertura de tests | Runner unificado con 15 suites | `tests/run_all_tests.R` |
+| Validar cobertura de tests | Runner unificado con 19 suites | `tests/run_all_tests.R` |
 | Prevenir regresiones | Test de regresión + detractor | `test_regression_suite.R`, FASE 2C |
 | Validación visual | Preview automático PDF→PNG | FASE 2B del hook post-exams2 |
 
@@ -90,7 +90,7 @@ Archivo: `.github/workflows/ci-testing.yml`
 El agente `validator` CE **NO necesita ser invocado explícitamente** en este proyecto. Su rol está cubierto de forma más completa por:
 
 1. **Hook post-exams2-validation.sh** → validación continua post-renderizado
-2. **15 suites testthat** → 130+ tests unitarios, integración y regresión
+2. **19 suites testthat** → 130+ tests unitarios, integración y regresión
 3. **Git hooks nativos** → bloqueo pre-commit y pre-push
 4. **CI/CD** → validación remota en GitHub Actions
 5. **Detractor** → revisión adversarial en 8 dominios (FASE 2C)
