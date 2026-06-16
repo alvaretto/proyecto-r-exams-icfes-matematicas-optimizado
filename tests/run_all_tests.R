@@ -189,6 +189,13 @@ suites <- list(
     archivo = "tests/testthat/test_cloze_graficas_no_en_gap.R",
     critico = TRUE,
     watch = c("\\.Rmd$", "graficos-como-opciones", "test_cloze_graficas_no_en_gap")
+  ),
+  list(
+    nombre = "_neg_ Variante B + params propio (validador 5C / Capa A)",
+    archivo = "tests/testthat/test_neg_variante_b.R",
+    critico = TRUE,
+    watch = c("validacion-neg-opciones-repetidas", "test_neg_variante_b",
+              "validar_coherencia_matematica")
   )
 )
 
