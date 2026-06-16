@@ -183,6 +183,12 @@ suites <- list(
     archivo = "tests/testthat/test_data_generation_no_hang.R",
     critico = TRUE,
     watch = c("Rango-Colesterol-Pacientes-Cloze", "test_data_generation_no_hang")
+  ),
+  list(
+    nombre = "CLOZE gráficas-opción fuera del gap (V5, Incidente G)",
+    archivo = "tests/testthat/test_cloze_graficas_no_en_gap.R",
+    critico = TRUE,
+    watch = c("\\.Rmd$", "graficos-como-opciones", "test_cloze_graficas_no_en_gap")
   )
 )
 

@@ -15,6 +15,10 @@
 # FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
 # FASE 2H: Stress Test Visual (10 semillas, renderizado real + PNGs)
 # FASE 2I: Detección \pandocbounded en .tex y `![]()` sin width en .Rmd (Errores 16-17)
+# FASE 2J: Letter-independence en Solution (Error 19, regla #19)
+# FASE 2K: Guard contador 'none' para tablas (Error 21, regla #20)
+# FASE 2L: Gráficas-opción en gap CLOZE (V5, Incidente G, regla graficos-como-opciones)
+# FASE 2M: Auditoría visual HTML masiva (recordatorio — workflow)
 #
 # GARANTÍA: Toda renderización activa TODAS las fases
 # PERMANENTE: No hay forma de saltarse estas validaciones
@@ -475,7 +479,55 @@ fi
 echo ""
 
 # =============================================================================
-# FASE 2L: AUDITORÍA VISUAL HTML MASIVA (recordatorio — ejecuta el workflow)
+# FASE 2L: GRÁFICAS-OPCIÓN EN GAP CLOZE (V5, Incidente G, regla graficos-como-opciones)
+# =============================================================================
+# En Moodle un gap CLOZE ({1:MULTICHOICE:...}) renderiza sus opciones como texto
+# plano y descarta el HTML -> las <img> de las opciones desaparecen ("no se ven
+# los graficos en el Paso N"). Las graficas-opcion de un CLOZE DEBEN ir rotuladas
+# en el ENUNCIADO + opciones de TEXTO. Deteccion estatica: imagen markdown dentro
+# del Answerlist del ENUNCIADO (las imagenes legitimas del enunciado van ANTES del
+# header "Answerlist", por lo que no son falso positivo). Distinto del SCHOICE puro.
+
+echo "┌───────────────────────────────────────────────────────────────┐"
+echo "│ FASE 2L: Gráficas-opción en gap CLOZE (V5, Incidente G)       │"
+echo "└───────────────────────────────────────────────────────────────┘"
+
+if [ -f "$RMD_FILE" ]; then
+  ES_CLOZE=$(grep -nE '^extype:[[:space:]]*cloze|^exclozetype:' "$RMD_FILE" || true)
+  if [ -n "$ES_CLOZE" ]; then
+    # Answerlist del ENUNCIADO = primer bloque Answerlist, antes de la seccion Solution.
+    ENUNCIADO_AL=$(awk '
+      /^Solution[[:space:]]*$/ { in_al=0; next }
+      /^Answerlist[[:space:]]*$/ && !seen { in_al=1; seen=1; next }
+      in_al { print }
+    ' "$RMD_FILE")
+    # Imagen markdown ![](...) dentro de las opciones del gap (directa o via cat()).
+    IMG_EN_AL=$(echo "$ENUNCIADO_AL" | grep -nE '!\[[^]]*\]\(' || true)
+    if [ -n "$IMG_EN_AL" ]; then
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+      echo "  ❌ ERR_CLOZE_V5: el Answerlist del enunciado (opciones del gap) contiene"
+      echo "     imágenes markdown. En Moodle un gap CLOZE NO renderiza <img> -> el"
+      echo "     estudiante 'no ve los gráficos en el Paso N'."
+      echo "$IMG_EN_AL" | sed 's/^/     /'
+      echo ""
+      echo "     Fix obligatorio (Incidente G, regla graficos-como-opciones.md):"
+      echo "       1. Mover las gráficas ROTULADAS (I, II, III…) al ENUNCIADO de la"
+      echo "          parte (chunk results='asis' con ![](file.png){width=...})."
+      echo "       2. En el Answerlist del enunciado, opciones de TEXTO: '* Gráfica I'…"
+      echo "       3. En Solution citar el rótulo por contenido (regla #19), no la letra."
+      echo "     (Distinto del SCHOICE puro: ahí las imágenes-opción sí funcionan.)"
+    else
+      echo "  ✓ FASE 2L: ninguna gráfica-opción dentro del gap CLOZE (V5 OK)"
+    fi
+  else
+    echo "  ⊘ FASE 2L: el .Rmd no es CLOZE (V5 no aplica)"
+  fi
+fi
+
+echo ""
+
+# =============================================================================
+# FASE 2M: AUDITORÍA VISUAL HTML MASIVA (recordatorio — ejecuta el workflow)
 # =============================================================================
 # NO corre el render masivo aquí (respeta el timeout del hook). La auditoría
 # visual de varias decenas de HTMLs (móvil 360px + desktop 1024px) es un paso
@@ -483,7 +535,7 @@ echo ""
 # revisar-{schoice,cloze}. Sirve para SCHOICE y CLOZE (el agente auto-detecta).
 if [ -n "$RMD_FILE" ] && [ "$ERRORES_TOTALES" -eq 0 ]; then
   echo "┌───────────────────────────────────────────────────────────────┐"
-  echo "│ FASE 2L: Auditoría visual HTML multi-semilla (schoice/cloze)  │"
+  echo "│ FASE 2M: Auditoría visual HTML multi-semilla (schoice/cloze)  │"
   echo "└───────────────────────────────────────────────────────────────┘"
   echo "  Paso del workflow — ejecutar el auditor visual masivo:"
   echo "    /auditor-visual-html \"$RMD_FILE\" 24"

@@ -1,10 +1,10 @@
 ---
 output:
-  word_document: default
+  html_document: default
   pdf_document:
     keep_tex: true
     extra_dependencies: ["graphicx", "float", "amsmath"]
-  html_document: default
+  word_document: default
 ---
 ```{r setup, include=FALSE}
 Sys.setlocale(category = "LC_NUMERIC", locale = "C")
@@ -233,6 +233,15 @@ indice_correcto_p1 <- which(sapply(opciones_mezcladas, function(o) o$tipo == "co
 sol_p1 <- rep(0L, 4L)
 sol_p1[indice_correcto_p1] <- 1L
 png_correcto <- paste0("diagrama_", tolower(letras[indice_correcto_p1]), ".png")
+
+# Rótulos visuales fijos para la Parte 1. Las 4 gráficas van en el ENUNCIADO (no como
+# opciones del gap) porque Moodle NO renderiza <img> dentro de un gap CLOZE
+# (MULTICHOICE): el HTML de las opciones se descarta y las imágenes desaparecen. Las
+# opciones del gap pasan a ser texto ("Gráfica I"…"Gráfica IV"); el rótulo es CONTENIDO
+# (no la letra A-D de posición), por lo que sobrevive a cualquier reshuffle externo
+# (regla #19, letter-independence).
+rotulos_p1 <- c("I", "II", "III", "IV")
+rotulo_correcto_p1 <- rotulos_p1[indice_correcto_p1]
 
 # ==============================================================================
 # DETERMINAR RANGO DEL GRÁFICO (compartido por las 4 opciones)
@@ -635,7 +644,17 @@ Question
 cat(texto_intro, "\n\n")
 ```
 
-**Parte 1.** ¿Cuál de los siguientes gráficos representa la gráfica de $f$?
+**Parte 1.** Observa las siguientes cuatro gráficas. ¿Cuál de ellas representa la gráfica de $f$?
+
+```{r parte1_graficas, echo=FALSE, results='asis'}
+# Las 4 gráficas se muestran ROTULADAS en el enunciado (no en las opciones del gap),
+# para que se rendericen en TODOS los formatos —incluido Moodle, donde un gap CLOZE no
+# muestra imágenes—. La opción del gap referencia el rótulo ("Gráfica I"…"Gráfica IV").
+for (i in 1:4) {
+  cat(paste0("\n**Gráfica ", rotulos_p1[i], ":**\n\n",
+             "![](diagrama_", tolower(letras[i]), ".png){width=60%}\n\n"))
+}
+```
 
 ##ANSWER1##
 
@@ -686,11 +705,9 @@ Answerlist
 ----------
 
 ```{r answerlist_enunciado, echo=FALSE, results='asis'}
-# P1: 4 opciones gráficas (schoice)
-cat("* ![](diagrama_a.png){width=70%}\n")
-cat("* ![](diagrama_b.png){width=70%}\n")
-cat("* ![](diagrama_c.png){width=70%}\n")
-cat("* ![](diagrama_d.png){width=70%}\n")
+# P1: 4 opciones de TEXTO que referencian las gráficas rotuladas del enunciado.
+# Las imágenes NO pueden ir aquí: en Moodle un gap CLOZE no renderiza <img>.
+for (i in 1:4) cat(paste0("* Gráfica ", rotulos_p1[i], "\n"))
 # P2: num — sin opciones en answerlist del enunciado
 # P3: num — sin opciones en answerlist del enunciado
 # P4: 4 opciones texto (schoice)
@@ -713,9 +730,9 @@ Solution
 ```{r sol_parte1, echo=FALSE, results='asis'}
 cat(paste0("### Respuesta correcta — Parte 1 {#resp-p1-", ex_uid, "}\n\n"))
 cat(paste0(
-  "La gráfica correcta de $f(x) = ", m, "x ",
+  "La **Gráfica ", rotulo_correcto_p1, "** es la correcta para $f(x) = ", m, "x ",
   ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
-  "$ es la que cumple **simultáneamente** estas tres propiedades:\n\n",
+  "$, porque es la única que cumple **simultáneamente** estas tres propiedades:\n\n",
   "1. **Pendiente $m = ", m, "$**: la recta es **",
   ifelse(es_creciente, "creciente", "decreciente"),
   "** (", ifelse(es_creciente, "sube", "baja"),
@@ -823,19 +840,20 @@ Answerlist
 ----------
 
 ```{r sol_answerlist, echo=FALSE, results='asis'}
-# P1: feedback por opción gráfica (4 ítems schoice)
+# P1: feedback por opción (4 ítems schoice), citando el rótulo de cada gráfica
 for (i in 1:4) {
   opc <- opciones_mezcladas[[i]]
   if (opc$tipo == "correcto") {
-    cat(paste0("* Correcta: la recta tiene pendiente $m = ", opc$m,
+    cat(paste0("* Gráfica ", rotulos_p1[i], " (correcta): pendiente $m = ", opc$m,
                "$ e intercepto $b = ", opc$b, "$.\n"))
   } else {
     err_idx <- opc$error_idx
     if (err_idx > 0 && err_idx <= length(errores_conceptuales)) {
       err <- errores_conceptuales[[err_idx]]
-      cat(paste0("* Incorrecta (", err$codigo, "): ", err$descripcion_corta, ".\n"))
+      cat(paste0("* Gráfica ", rotulos_p1[i], " (incorrecta, ", err$codigo, "): ",
+                 err$descripcion_corta, ".\n"))
     } else {
-      cat(paste0("* Incorrecta: recta con $m = ", opc$m,
+      cat(paste0("* Gráfica ", rotulos_p1[i], " (incorrecta): recta con $m = ", opc$m,
                  "$ y $b = ", opc$b, "$ no corresponde a $f$.\n"))
     }
   }

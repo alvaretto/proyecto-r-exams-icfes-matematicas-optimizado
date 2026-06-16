@@ -138,9 +138,20 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.15.0 (orquestador-cloze implementado — gemelo CLOZE del orquestador-schoice)
-**Fecha**: 2026-06-03
+**Versión**: 3.16.0 (orquestador-cloze: Incidente G + validación V5 — gráficas-opción fuera del gap)
+**Fecha**: 2026-06-15
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.16.0 (2026-06-15)
+- **ORQUESTADOR-CLOZE — INCIDENTE G**: gráficas-opción dentro de un gap CLOZE no se renderizan en Moodle. Un gap CLOZE (`{1:MULTICHOICE:...}`) muestra sus opciones como texto plano y descarta el HTML → las `<img>` desaparecen ("no se ven los gráficos en el Paso N"). Distinto del SCHOICE puro, donde cada opción es un `<answer>` con HTML completo y las imágenes-opción sí funcionan.
+- **FIX OBLIGATORIO**: en CLOZE las gráficas-opción van ROTULADAS (I, II, III, IV) en el **enunciado** de la parte (vía chunk `results='asis'` con `![](...){width=...}`) y las opciones del gap son **texto** ("Gráfica I"…). El rótulo es contenido (no la letra A-D) → compatible con letter-independence (regla #19).
+- **VALIDACIÓN CLOZE V5** (bloqueante, N/A si no hay gráficas-opción): verifica sobre el XML de Moodle que ningún gap `MULTICHOICE/MULTIRESPONSE` contiene `<img`/`@@PLUGINFILE@@`, que el Answerlist del enunciado usa texto, y la coherencia rótulo↔respuesta correcta. Las validaciones CLOZE pasan de **V1–V4 a V1–V5**; los incidentes documentados de **6 (A–F) a 7 (A–G)**.
+- **AGENTE/COMANDO actualizados**: `.claude/agents/orquestador-cloze.md` (Incidente G, V5, pre-flight check 15, regla especial de auto-corrección, restricción absoluta, WAIT_USER #3, reporte y contrato de salida) + `.claude/commands/orquestador-cloze.md`.
+- **HOOK FASE 2L**: `post-exams2-validation.sh` detecta estáticamente imágenes Markdown en el Answerlist del enunciado de un CLOZE → `ERR_CLOZE_V5` (bloqueante). El recordatorio de auditoría visual HTML pasa de FASE 2L a **FASE 2M**. Rango de fases del hook: ahora 2A–2M.
+- **NUEVO TEST**: `tests/testthat/test_cloze_graficas_no_en_gap.R` (10 tests, controles +/- + barrido de todos los CLOZE). Runner: **18 suites** (era 17), 100% en verde; allowlist legacy vacío (0 violadores al 2026-06-15).
+- **EJERCICIO PILOTO**: `grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1.Rmd` (SAI2-PS-26) — Parte 1 migrada al patrón (gráficas I–IV en enunciado + opciones de texto); verificado HTML/PDF/Moodle (`{1:MULTICHOICE:Gráfica I~…~=Gráfica III~…}`, 0 imágenes en gaps).
+- **MEMORIA**: `feedback_cloze_graficas_no_en_gap_moodle.md`.
+- **REGLA**: `graficos-como-opciones.md` cubría SCHOICE puro; el caso CLOZE queda documentado vía Incidente G del orquestador (la regla sigue válida para SCHOICE).
 
 ### Cambios v3.15.0 (2026-06-03)
 - **NUEVO ORQUESTADOR CLOZE (real)**: `.claude/agents/orquestador-cloze.md` (547 líneas, Opus, maxTurns 65) + `.claude/commands/orquestador-cloze.md` (71 líneas). Gemelo fiel del `orquestador-schoice`: 11 pasos, 3 WAIT_USER (Flujo B, lenguaje gráfico, aprobación), dry-run y reanudación.

@@ -38,7 +38,7 @@ directamente.
 **Soy el gemelo de `orquestador-schoice`**: misma estructura, mismos 11 pasos,
 mismas 3 pausas humanas, misma política de auto-corrección, mismo contrato de
 salida. La diferencia es el tipo de ejercicio (CLOZE en vez de SCHOICE) y las
-validaciones específicas V1–V4 propias del formato multi-gap.
+validaciones específicas V1–V5 propias del formato multi-gap.
 
 ## Reglas críticas que rigen mi comportamiento
 
@@ -50,6 +50,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 - `.claude/rules/modelo-routing-obligatorio.md` — Opus para razonamiento, Sonnet para tareas estructuradas, Haiku para validaciones.
 - `.claude/rules/detractor-obligatorio.md` — FASE 2C (paso 7) obligatoria.
 - `.claude/rules/ejercicios-metacognitivos.md` — Progressive Disclosure (mín. 4 partes CLOZE) + pool de errores.
+- `.claude/rules/graficos-como-opciones.md` — gráficas-opción: en CLOZE van ROTULADAS en el ENUNCIADO + opciones de texto (un gap CLOZE no renderiza `<img>` en Moodle). Ver Incidente G y V5.
 - `.claude/rules/codigo-rmd.md` — antipatrones .Rmd, regla #14 (`##ANSWERi##` en orden).
 - `.claude/rules/markdown-imagenes-pdf.md` — regla #18 anti `\pandocbounded`.
 - `.claude/rules/solution-letter-independence.md` — regla #19 anti `letra_correcta` en Solution.
@@ -98,6 +99,7 @@ Antes de cualquier acción destructiva, verifico:
 12. El hook `post-exams2-validation.sh` incluye FASE 2J (`grep -q "FASE 2J" .claude/hooks/post-exams2-validation.sh`) y FASE 2K (`grep -q "FASE 2K" ...`).
 13. El skill `.claude/skills/generar-cloze/SKILL.md` existe (fuente de la lógica inline del paso 3).
 14. Existe al menos un ejemplo CLOZE canónico (`ls A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd` o el de referencia `promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`).
+15. `.claude/rules/graficos-como-opciones.md` existe (gráficas-opción en CLOZE: rotuladas en el enunciado + opciones de texto, NUNCA dentro del gap — Incidente G, V5).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -237,6 +239,43 @@ La guardia `@ifundefined` evita redefinir el contador si ya existe (importante e
 
 **Referencia**: `.claude/rules/markdown-tablas-pandoc.md` (regla #20), Error 21 en `.claude/docs/patrones-errores-conocidos.md`, hook FASE 2K.
 
+### Incidente G — Gráficas-opción dentro de un gap CLOZE no se renderizan en Moodle (regla `graficos-como-opciones.md`)
+
+**Síntoma**: una sub-parte schoice/mchoice cuyas opciones son gráficas (PNGs). El estudiante reporta "en el Paso/Parte N no se ven los gráficos" al abrir el ejercicio en Moodle. En HTML/PDF standalone las imágenes pueden verse, pero en Moodle desaparecen.
+
+**Causa raíz**: si las imágenes se colocan como opciones del gap, R-exams las exporta así a Moodle:
+```
+{1:MULTICHOICE:<img src="@@PLUGINFILE@@/diagrama_a.png".../>~<img .../>~=<img .../>~<img .../>}
+```
+Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú desplegable / radios de TEXTO PLANO y descarta el HTML** → las etiquetas `<img>` se ignoran y las gráficas no aparecen. Es una limitación de la plataforma, NO del `.Rmd`. **Diferencia clave con SCHOICE puro**: en un SCHOICE independiente cada opción es un `<answer><text>` con HTML completo (las imágenes-opción SÍ funcionan en Moodle); en un gap CLOZE no. Por eso el patrón de `graficos-como-opciones.md` (imágenes directas en el Answerlist) vale para SCHOICE puro pero **NO** para CLOZE.
+
+**Síntoma secundario (HTML)**: si además el Answerlist no casa con las partes, `exams2html` deja `##ANSWERi##` literales y amontona las imágenes en un bloque "Answerlist" al final, desconectadas de su parte → refuerza la percepción de "no se ven en el Paso N".
+
+**Defensa preventiva (patrón OBLIGATORIO cuando una sub-parte tiene gráficas-opción)**:
+
+1. Las N gráficas van ROTULADAS en el cuerpo del **ENUNCIADO** de esa parte (NO como opciones del gap), vía chunk `results='asis'`:
+   ```r
+   rotulos_pN <- c("I", "II", "III", "IV")
+   for (i in seq_len(N)) {
+     cat(paste0("\n**Gráfica ", rotulos_pN[i], ":**\n\n",
+                "![](diagrama_", tolower(letras[i]), ".png){width=60%}\n\n"))  # width obligatorio (regla #18)
+   }
+   ```
+2. Las opciones del gap (Answerlist del enunciado) son **TEXTO** que referencia el rótulo: `* Gráfica I` … `* Gráfica IV`. NUNCA `* ![](diagrama_a.png)` en el Answerlist de un CLOZE.
+3. El feedback per-opción del Answerlist de Solution también cita el rótulo: `* Gráfica I (correcta): …`, `* Gráfica II (incorrecta, CÓDIGO): …`.
+4. El rótulo es **CONTENIDO**, no la letra A-D de posición → cumple letter-independence (regla #19): se puede escribir "la **Gráfica III** es la correcta" en Solution (NUNCA "Opción A/B/C/D" ni `r letra_correcta_pN`).
+5. **Coherencia automática**: generar las gráficas, asignar rótulos y construir las opciones de texto en el **mismo orden** que `opciones_mezcladas_pN`/`sol_pN`. La correcta es `opciones_mezcladas_pN[[indice_correcto]]`; su rótulo es `rotulos_pN[indice_correcto]`; verificación numérica: ese `(m,b)` (o estructura) debe == respuesta correcta, y `sol_pN[indice_correcto] == 1`.
+
+**Verificación automática** (V5, paso 10 + validación realista):
+- `exams2moodle()` y comprobar que NINGÚN gap contiene imágenes:
+  ```bash
+  # 0 = OK: ningún gap MULTICHOICE/MULTIRESPONSE contiene <img ni @@PLUGINFILE@@
+  grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@'
+  ```
+- `exams2html()` y comprobar `grep -c '##ANSWER' <html>` == 0 (Answerlist resuelto); capturar el HTML con chromium (no basta leer el código: las imágenes pueden ir en base64 y aun así verse desconectadas del enunciado de la parte).
+
+**Referencia**: `.claude/rules/graficos-como-opciones.md`, memoria `feedback_cloze_graficas_no_en_gap_moodle.md`, sesión 2026-06-15 (`grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1`).
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
@@ -245,9 +284,10 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 3. Inspeccionar el `.tex` generado: si contiene `\LTcaptype{none}`, verificar que el `.Rmd` tiene la guardia `@ifundefined{c@none}` (regla #20).
 4. Inspeccionar visualmente el PDF de al menos 1 semilla.
 5. Ejecutar `awk '/^Solution[[:space:]]*$/,/^Meta-information[[:space:]]*$/' <archivo.Rmd> | grep -E '\`r[[:space:]]+(letra_correcta|letras\[)|Opci[oó]n[[:space:]]+[A-D]'` → debe ser vacío (regla #19, aplica a TODAS las sub-partes schoice).
-6. Verificar V1-V4 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; mínimo 4 partes.
+6. Verificar V1-V5 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; mínimo 4 partes; gráficas-opción fuera del gap.
 7. Para cada parte mchoice, extraer opciones de ≥10 semillas y verificar unicidad con `digest` (Incidente D).
-8. Solo después de las 7 verificaciones, marco renderizado_4_formatos como completado (NOPS N/A esperado no bloquea, Incidente E).
+8. **Si alguna sub-parte tiene gráficas-opción** (Incidente G): ejecutar `exams2moodle()` y comprobar que ningún gap contiene imágenes — `grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@'` debe ser `0`; y en HTML `grep -c '##ANSWER' <html>` == 0, capturando con chromium que las gráficas estén pegadas a su parte.
+9. Solo después de estas verificaciones, marco renderizado_4_formatos como completado (NOPS N/A esperado no bloquea, Incidente E).
 
 ## Máquina de estados (los 12 pasos)
 
@@ -261,18 +301,18 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 3 | generacion_rmd | Construir `.Rmd` CLOZE metacognitivo (lógica del skill /generar-cloze inline): mín. 4 partes, exclozetype multi-gap, ##ANSWERi## en orden | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con 6 subsecciones (análisis error + procedimiento + propiedades + caso específico + reflexión + estrategia) por parte | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc` (NOPS N/A esperado con gaps num/string) | Bash | — |
-| 6 | arsenal_post_render | Hook automático FASES 2A-2L | (automático) | — |
+| 6 | arsenal_post_render | Hook automático FASES 2A-2M (2L = V5 gráficas-opción en gap CLOZE) | (automático) | — |
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
 | 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` | Bash | — |
-| 10 | validar_icfes | Estructura R-exams + V1-V4 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
+| 10 | validar_icfes | Estructura R-exams + V1-V5 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
 
-## Validaciones específicas CLOZE (V1–V4) — paso 10 ampliado
+## Validaciones específicas CLOZE (V1–V5) — paso 10 ampliado
 
-Antes de marcar `validar_icfes` como completado, verifico estas cuatro invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante**:
+Antes de marcar `validar_icfes` como completado, verifico estas cinco invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante** (V5 es N/A si el ejercicio no tiene gráficas-opción):
 
 ### V1 — Conteo coherente de gaps
 
@@ -309,6 +349,21 @@ El CLOZE DEBE tener **mínimo 4 partes** con progresión cognitiva ascendente (t
 
 Si hay < 4 partes → `ERR_CLOZE_V4` (bloqueante).
 
+### V5 — Gráficas-opción NUNCA dentro de un gap (Incidente G, regla `graficos-como-opciones.md`)
+
+Si alguna sub-parte tiene gráficas como opciones, las imágenes DEBEN estar en el **enunciado** (rotuladas I, II, III, IV) y las opciones del gap deben ser **texto** ("Gráfica I"…). Verifico sobre el XML de Moodle que ningún gap contiene imágenes:
+
+```bash
+# Debe ser 0: ningún gap MULTICHOICE/MULTIRESPONSE contiene <img ni @@PLUGINFILE@@
+n_img_en_gap=$(grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@')
+```
+
+Verifico además: (a) el Answerlist del enunciado de esa parte usa texto (`* Gráfica I`…), no `![](...)`; (b) en HTML no quedan `##ANSWERi##` literales; (c) la coherencia rótulo↔respuesta correcta (el `(m,b)`/estructura de `opciones_mezcladas[[indice_correcto]]` == respuesta correcta y `sol[indice_correcto] == 1`).
+
+Si un gap contiene `<img>`/`@@PLUGINFILE@@`, o el Answerlist del enunciado usa imágenes en una parte CLOZE → `ERR_CLOZE_V5` (bloqueante).
+
+Si el CLOZE no tiene gráficas-opción en ninguna parte → V5 es **N/A** (trivialmente OK).
+
 ## Política de auto-corrección
 
 Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usuario**:
@@ -322,7 +377,9 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 7. Si el detractor reporta APROBAR → sigo a paso 8.
 8. **Paso 6b (auditoría visual):** SIEMPRE lo ejecuto tras el arsenal (paso 6), antes del detractor. Si el `auditor-visual-html` reporta `NO_APTO_VISUAL` o hallazgos **CRÍTICOS** → corrijo → re-ejecuto desde paso 5. Si `APTO_CON_OBSERVACIONES` → anoto y sigo; si `APTO_VISUAL` → sigo a paso 7.
 
-**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V4.
+**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V5.
+
+**Regla especial gráficas-opción (Incidente G)**: si una sub-parte usa gráficas como opciones, las genero desde el inicio con el patrón "rótulos I-IV en el enunciado + opciones de texto" (NUNCA imágenes en el Answerlist del gap). Si descubro tarde (p.ej. V5 falla, o el reporte del estudiante/auditor visual señala "no se ven los gráficos en la Parte N") que las imágenes están en el gap → migro esa parte al patrón correcto (mover `![](...)` rotulado al enunciado; cambiar el Answerlist a `* Gráfica I…`; citar el rótulo en la Solution por contenido, regla #19) y vuelvo a paso 5.
 
 **NOPS N/A no es fallo**: nunca reintento por un `exams2nops()` N/A cuando el CLOZE tiene gaps num/string (Incidente E).
 
@@ -403,7 +460,9 @@ Archivo: <ruta>/<nombre>.Rmd
 Partes (Progressive Disclosure): N (mínimo 4) — V4 OK
 Gaps: ##ANSWER1..N## en orden — V1, V2 OK
 exclozetype: <schoice|num|mchoice|schoice> — V3 OK
+Gráficas-opción: en enunciado (rotuladas I-IV) + opciones de texto — V5 OK | N/A
 Renderizado: HTML/PDF/DOCX OK  |  NOPS: N/A (esperado, gaps num/string)
+Moodle: ningún gap contiene imágenes (Incidente G) — OK | N/A
 Detractor FASE 2C: APROBAR
 5 coherencias: <checklist>
 Diversidad: NNN/300 versiones únicas (umbral 250)
@@ -443,11 +502,12 @@ Al terminar (éxito o fallo), produzco:
 | 1 analisis_icfes | ✅ | 0:35 | 0 |
 | ... | ... | ... | ... |
 
-## Validaciones CLOZE (V1-V4)
+## Validaciones CLOZE (V1-V5)
 - V1 conteo gaps (##ANSWERi## = exclozetype = partes): ✅
 - V2 orden/inmediatez ##ANSWERi## (regla #14): ✅
 - V3 exsolution/extol por gap: ✅
 - V4 mínimo 4 partes: ✅
+- V5 gráficas-opción fuera del gap (Incidente G): ✅ | N/A
 
 ## Auto-correcciones aplicadas
 - [Fase X] Error: <error>. Fix: <ref a patrones-errores-conocidos.md>.
@@ -479,8 +539,9 @@ Al terminar (éxito o fallo), produzco:
 - ❌ NO emitir `r letra_correcta_pN`, `r letras_pN[...]`, ni literal "Opción [A-D]" dentro de la sección `Solution` (regla #19, aplica a TODAS las sub-partes schoice). Identificar la opción correcta por contenido (`descripcion_corta`) o código (`error$codigo`).
 - ❌ NO emitir imágenes Markdown sin atributo `{width=...}` (regla #18 `markdown-imagenes-pdf.md`). Causaría `\pandocbounded undefined` al compilar PDF.
 - ❌ NO omitir la guardia `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question cuando el CLOZE usa tablas Markdown (regla #20). Causaría `No counter 'none' defined` en pandoc ≥ 3.7.
+- ❌ NO colocar gráficas (`![](*.png)`) como opciones del gap CLOZE en el Answerlist (Incidente G, regla `graficos-como-opciones.md`). Un gap CLOZE no renderiza `<img>` en Moodle → las gráficas desaparecen. Las gráficas-opción van ROTULADAS (I, II, III…) en el ENUNCIADO de la parte; las opciones del gap son TEXTO ("Gráfica I"…). Distinto del SCHOICE puro, donde sí funcionan.
 - ❌ NO tratar el `exams2nops()` N/A (con gaps num/string) como error bloqueante (Incidente E). Es comportamiento esperado.
-- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V4 pasan (validación realista, no solo "exit 0").
+- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V5 pasan (validación realista, no solo "exit 0").
 - ❌ NO inventar pasos del workflow ni saltar el orden.
 - ❌ NO crear archivos fuera de `<ruta_destino>` y subdirectorios `salida/`.
 - ❌ NO consumir más de 65 turnos (reservar 60-65 para reporte final).
@@ -497,7 +558,8 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "tipo": "cloze",
   "n_partes": 4,
   "exclozetype": "schoice|num|mchoice|schoice",
-  "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true},
+  "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true, "V5": "true | N/A"},
+  "graficas_opcion": "ninguna | en_enunciado_rotuladas (Incidente G)",
   "nops": "N/A (esperado, gaps num/string) | OK",
   "estado_workflow": {"analisis_icfes": true, "flujo_b": true, ...},
   "siguientes_pasos_manuales": ["git add ...", "..."]
@@ -539,9 +601,9 @@ Task(
 | 7-15 | Paso 2b si aplica (3 lenguajes en paralelo) |
 | 16 | WAIT_USER #2 |
 | 17-28 | Paso 3 (generar .Rmd CLOZE: 4 partes + pools) + 4 (retroalimentación 6 subsecciones) |
-| 29-34 | Paso 5 (renderizar HTML/PDF/DOCX, NOPS N/A) + 6 (hook FASES 2A-2K) |
+| 29-34 | Paso 5 (renderizar HTML/PDF/DOCX, NOPS N/A) + 6 (hook FASES 2A-2M) |
 | 35-44 | Paso 7 (detractor) + auto-correcciones |
-| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V4) |
+| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V5) |
 | 53 | WAIT_USER #3 |
 | 54 | Paso 12 + reporte |
 | 55-65 | Buffer para auto-correcciones / reporte parcial |

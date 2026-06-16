@@ -206,7 +206,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 3 | generacion_rmd | Construir `.Rmd` SCHOICE metacognitivo (lógica del skill /generar-schoice inline) | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con justificación + análisis diagnóstico de cada distractor | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc/nops` | Bash | — |
-| 6 | arsenal_post_render | Hook automático FASES 2A-2L | (automático) | — |
+| 6 | arsenal_post_render | Hook automático FASES 2A-2M (2L = V5 CLOZE, N/A en schoice) | (automático) | — |
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
