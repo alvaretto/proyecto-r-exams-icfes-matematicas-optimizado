@@ -1,0 +1,734 @@
+---
+output:
+  word_document: default
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: ["graphicx", "float"]
+  html_document: default
+---
+```{r setup, include=FALSE}
+Sys.setlocale(category = "LC_NUMERIC", locale = "C")
+options(OutDec = ".")
+library(exams)
+library(digest)
+library(testthat)
+library(knitr)
+
+options(scipen = 999)
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  fig.cap = "",
+  fig.keep = 'all'
+)
+```
+
+```{r data_generation, echo=FALSE, results='hide'}
+# ==============================================================================
+# Ejercicio: Propiedades de la función lineal f(x) = mx + b (LOGICA NEGATIVA)
+# Basado en: SAI2-PS-26 (SAI-CND10S223, Matematicas II, Grado 10)
+# Tipo: SCHOICE _neg_ — Variante B (afirmaciones de texto, etiquetas semanticas)
+# Patrón metacognitivo: evaluación de afirmación (identificar la afirmación FALSA)
+# Competencia: Argumentación (evaluar validez de afirmaciones matemáticas)
+# ==============================================================================
+
+# --- Helper: pick_int (Familia 5, regla #21) ---
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+safe_sample <- function(x, size, replace = TRUE)
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+
+# --- Generacion de parametros aleatorios ---
+# Misma logica del ejercicio base: (m, b) con b multiplo de m, |b/m| <= 6, etc.
+m_pool <- c(-4L, -3L, -2L, -1L, 1L, 2L, 3L, 4L)
+combos_mb <- list()
+for (mm in m_pool) {
+  for (bb in setdiff(-8:8, 0L)) {
+    if (bb %% mm != 0L) next
+    if (abs(bb %/% mm) > 6L) next
+    if (abs(mm * bb) > 20L) next
+    combos_mb[[length(combos_mb) + 1L]] <- c(m = mm, b = bb)
+  }
+}
+sel_mb <- combos_mb[[pick_int(1L, length(combos_mb))]]
+m <- as.integer(sel_mb[["m"]])
+b <- as.integer(sel_mb[["b"]])
+
+# Propiedades derivadas
+corte_y <- b
+corte_x <- as.integer(round(-b / m))
+es_creciente <- m > 0
+f1 <- m * 1L + b
+direccion <- if (es_creciente) "creciente" else "decreciente"
+direccion_opuesta <- if (es_creciente) "decreciente" else "creciente"
+signo_m <- if (m > 0) "positivo" else "negativo"
+
+# --- Pool de afirmaciones VERDADERAS ---
+# Cada afirmacion es una parafrasis diferente de una propiedad correcta de f.
+# Se generan más de 3 para que la selección rote entre semillas.
+afirmaciones_verdaderas <- list(
+  # --- Grupo A: sobre la pendiente y crecimiento/decrecimiento ---
+  list(
+    id = "V-PEND-01",
+    grupo = "pendiente",
+    texto = function() {
+      paste0(
+        "La pendiente de $f$ es $m = ", m,
+        "$, lo que indica que la recta es ", direccion, "."
+      )
+    }
+  ),
+  list(
+    id = "V-PEND-02",
+    grupo = "pendiente",
+    texto = function() {
+      paste0(
+        "Como el valor de $m$ es ", signo_m,
+        ", la función $f$ ", if (es_creciente) "aumenta" else "disminuye",
+        " a medida que $x$ crece."
+      )
+    }
+  ),
+  list(
+    id = "V-PEND-03",
+    grupo = "pendiente",
+    texto = function() {
+      paste0(
+        "Al avanzar una unidad en el eje $x$, el valor de $f(x)$ ",
+        if (es_creciente) "se incrementa" else "se reduce",
+        " en $", abs(m), if (abs(m) == 1L) "$ unidad." else "$ unidades."
+      )
+    }
+  ),
+  # --- Grupo B: sobre el intercepto con eje y ---
+  list(
+    id = "V-INTY-01",
+    grupo = "intercepto_y",
+    texto = function() {
+      paste0(
+        "La recta cruza el eje $y$ en el punto $(0, ", b, ")$, ",
+        "ya que $f(0) = ", m, "(0) ",
+        ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+        " = ", b, "$."
+      )
+    }
+  ),
+  list(
+    id = "V-INTY-02",
+    grupo = "intercepto_y",
+    texto = function() {
+      paste0(
+        "El intercepto con el eje $y$ es $b = ", b,
+        "$, lo cual significa que al evaluar $f$ en $x = 0$ se obtiene $", b, "$."
+      )
+    }
+  ),
+  list(
+    id = "V-INTY-03",
+    grupo = "intercepto_y",
+    texto = function() {
+      paste0(
+        "Cuando $x = 0$, la función vale $f(0) = ", b,
+        "$; por lo tanto, la gráfica corta al eje vertical en $(0, ", b, ")$."
+      )
+    }
+  ),
+  # --- Grupo C: sobre el intercepto con eje x ---
+  list(
+    id = "V-INTX-01",
+    grupo = "intercepto_x",
+    texto = function() {
+      paste0(
+        "La recta corta el eje $x$ en $(", corte_x,
+        ", 0)$, pues al resolver $", m, "x ",
+        ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+        " = 0$ se obtiene $x = ", corte_x, "$."
+      )
+    }
+  ),
+  list(
+    id = "V-INTX-02",
+    grupo = "intercepto_x",
+    texto = function() {
+      paste0(
+        "El punto donde $f(x) = 0$ es $x = ", corte_x,
+        "$, es decir, la gráfica interseca al eje horizontal en $(",
+        corte_x, ", 0)$."
+      )
+    }
+  ),
+  list(
+    id = "V-INTX-03",
+    grupo = "intercepto_x",
+    texto = function() {
+      paste0(
+        "La raíz de la función es $x = ", corte_x,
+        "$, ya que $f(", corte_x, ") = ", m, "(", corte_x, ") ",
+        ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+        " = 0$."
+      )
+    }
+  ),
+  # --- Grupo D: sobre f(1) o punto adicional ---
+  list(
+    id = "V-EVAL-01",
+    grupo = "evaluación",
+    texto = function() {
+      paste0(
+        "Al evaluar en $x = 1$, se tiene $f(1) = ", m, "(1) ",
+        ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+        " = ", f1, "$, por lo que la gráfica pasa por $(1, ", f1, ")$."
+      )
+    }
+  ),
+  list(
+    id = "V-EVAL-02",
+    grupo = "evaluación",
+    texto = function() {
+      paste0(
+        "La imagen de $x = 1$ bajo $f$ es $", f1,
+        "$, lo que confirma que el punto $(1, ", f1,
+        ")$ pertenece a la gráfica de la función."
+      )
+    }
+  )
+)
+
+# --- Pool de errores conceptuales (afirmaciones FALSAS) ---
+# Cada error produce una afirmacion incorrecta basada en una confusion real.
+errores_conceptuales <- list(
+  list(
+    codigo = "FUN-LIN-01",
+    nombre = "Pendiente con signo invertido",
+    descripcion_corta = "Invierte el signo de la pendiente",
+    descripcion_larga = paste0(
+      "La afirmación declara que la recta es ", direccion_opuesta,
+      ", pero la pendiente $m = ", m,
+      "$ es ", signo_m,
+      ", lo que significa que la recta es ", direccion,
+      ". El error consiste en confundir el signo de $m$ con la dirección ",
+      "de la recta."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre el signo de m y la dirección de la recta, ",
+      "o asociación errónea del signo de b con que la función 'baja'."
+    ),
+    precondicion = function(params) TRUE,
+    genera_texto = function() {
+      variantes <- list(
+        function() paste0(
+          "Dado que $m = ", m, "$, la recta definida por $f$ es ",
+          direccion_opuesta, "."
+        ),
+        function() paste0(
+          "La función $f$ es ", direccion_opuesta,
+          " porque su pendiente es $", m, "$."
+        ),
+        function() paste0(
+          "Como la pendiente vale $", m,
+          "$, la recta ", if (!es_creciente) "sube" else "baja",
+          " de izquierda a derecha."
+        )
+      )
+      variantes[[pick_int(1L, length(variantes))]]()
+    }
+  ),
+  list(
+    codigo = "FUN-LIN-02",
+    nombre = "Intercepto confundido con corte en eje x",
+    descripcion_corta = "Confunde b con el corte en el eje x",
+    descripcion_larga = paste0(
+      "La afirmación ubica el corte con el eje $x$ en $(", b, ", 0)$, ",
+      "confundiendo el valor del intercepto $b = ", b,
+      "$ con la coordenada $x$ del cruce con el eje horizontal. ",
+      "En realidad, $b$ indica donde la recta corta el eje $y$: $(0, ", b,
+      ")$. El corte con el eje $x$ se obtiene resolviendo $", m, "x ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+      " = 0$, lo que da $x = ", corte_x, "$."
+    ),
+    causa_raiz = paste0(
+      "Confusión entre intercepto con eje y (valor de b) e intercepto ",
+      "con eje x (solución de mx + b = 0)."
+    ),
+    precondicion = function(params) {
+      # Solo aplica si b != corte_x (de lo contrario la afirmacion seria verdadera)
+      params$b != params$corte_x
+    },
+    genera_texto = function() {
+      variantes <- list(
+        function() paste0(
+          "La recta definida por $f$ cruza el eje $x$ en el punto $(",
+          b, ", 0)$."
+        ),
+        function() paste0(
+          "El valor de $b = ", b,
+          "$ indica que la gráfica corta al eje horizontal en $(",
+          b, ", 0)$."
+        ),
+        function() paste0(
+          "La coordenada $x$ del punto donde la recta interseca al eje $x$ es $",
+          b, "$."
+        )
+      )
+      variantes[[pick_int(1L, length(variantes))]]()
+    }
+  ),
+  list(
+    codigo = "FUN-LIN-03",
+    nombre = "Intercepto y con signo cambiado",
+    descripcion_corta = "Cambia el signo del intercepto y",
+    descripcion_larga = paste0(
+      "La afirmación declara que la recta cruza el eje $y$ en $(0, ", -b,
+      ")$ en lugar de $(0, ", b,
+      ")$. Esto es incorrecto: el intercepto con el eje $y$ es $b = ", b,
+      "$, no $", -b, "$. El error surge al confundir el signo de $b$ ",
+      "en la expresión $f(x) = ", m, "x ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))), "$."
+    ),
+    causa_raiz = paste0(
+      "Error de signo en b, posiblemente al interpretar la forma ",
+      "f(x) = mx + b cuando b aparece con un signo explícito."
+    ),
+    precondicion = function(params) {
+      # Solo aplica si b != -b, es decir b != 0 (siempre true por restriccion del pool)
+      params$b != -params$b
+    },
+    genera_texto = function() {
+      variantes <- list(
+        function() paste0(
+          "La gráfica de $f$ interseca el eje $y$ en el punto $(0, ", -b, ")$."
+        ),
+        function() paste0(
+          "Al evaluar $f$ en $x = 0$ se obtiene $f(0) = ", -b,
+          "$, de modo que la recta cruza el eje vertical en $(0, ", -b, ")$."
+        ),
+        function() paste0(
+          "El intercepto con el eje $y$ de la función $f$ es $", -b, "$."
+        )
+      )
+      variantes[[pick_int(1L, length(variantes))]]()
+    }
+  ),
+  list(
+    codigo = "FUN-LIN-04",
+    nombre = "Evaluación errónea de f(1)",
+    descripcion_corta = "Calcula incorrectamente f(1)",
+    descripcion_larga = paste0(
+      "La afirmación declara que $f(1) = ", m * 1L - b,
+      "$, pero el cálculo correcto es $f(1) = ", m, "(1) ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+      " = ", f1, "$. ",
+      "El error proviene de restar $b$ en lugar de sumarlo ",
+      "(o viceversa) al evaluar la función en $x = 1$."
+    ),
+    causa_raiz = paste0(
+      "Error de signo al evaluar f(1): el estudiante calcula m(1) - b ",
+      "en lugar de m(1) + b."
+    ),
+    precondicion = function(params) {
+      # Solo aplica si el valor erroneo (m - b) es distinto del correcto (m + b)
+      # Es decir, b != 0 (siempre true por restriccion del pool)
+      (params$m - params$b) != (params$m + params$b)
+    },
+    genera_texto = function() {
+      f1_err <- m * 1L - b
+      variantes <- list(
+        function() paste0(
+          "Al sustituir $x = 1$ en $f$, se obtiene $f(1) = ", f1_err,
+          "$, por lo que la gráfica pasa por $(1, ", f1_err, ")$."
+        ),
+        function() paste0(
+          "La imagen de $x = 1$ bajo $f$ es $", f1_err,
+          "$, lo cual ubica al punto $(1, ", f1_err,
+          ")$ sobre la recta."
+        ),
+        function() paste0(
+          "Evaluando la función en $x = 1$: $f(1) = ", m, " \\cdot 1 ",
+          ifelse(-b >= 0, paste0("+ ", -b), paste0("- ", abs(-b))),
+          " = ", f1_err, "$."
+        )
+      )
+      variantes[[pick_int(1L, length(variantes))]]()
+    }
+  ),
+  list(
+    codigo = "FUN-LIN-05",
+    nombre = "Corte con eje x incorrecto",
+    descripcion_corta = "Ubica el corte con eje x en -corte_x",
+    descripcion_larga = paste0(
+      "La afirmación ubica el corte con el eje $x$ en $(", -corte_x,
+      ", 0)$ en lugar de $(", corte_x,
+      ", 0)$. El corte correcto se obtiene resolviendo $", m, "x ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+      " = 0$, que da $x = ", corte_x,
+      "$, no $x = ", -corte_x, "$. ",
+      "El error surge al omitir o duplicar el signo negativo en el cálculo ",
+      "$x = -b/m$."
+    ),
+    causa_raiz = paste0(
+      "Error aritmético al calcular x = -b/m: el estudiante obtiene ",
+      "x = b/m (sin el signo negativo) o x = -(-b/m)."
+    ),
+    precondicion = function(params) {
+      # Solo aplica si corte_x != -corte_x, es decir corte_x != 0
+      params$corte_x != 0L
+    },
+    genera_texto = function() {
+      variantes <- list(
+        function() paste0(
+          "La raíz de la función es $x = ", -corte_x,
+          "$, es decir, la recta corta al eje $x$ en $(", -corte_x, ", 0)$."
+        ),
+        function() paste0(
+          "Resolviendo $f(x) = 0$ se obtiene $x = ", -corte_x,
+          "$, de modo que la gráfica cruza el eje horizontal en ese punto."
+        ),
+        function() paste0(
+          "El punto donde $f(x) = 0$ es $x = ", -corte_x,
+          "$, lo que ubica al corte con el eje $x$ en $(", -corte_x, ", 0)$."
+        )
+      )
+      variantes[[pick_int(1L, length(variantes))]]()
+    }
+  )
+)
+
+# --- Parametros para precondiciones ---
+params <- list(m = m, b = b, corte_x = corte_x, f1 = f1)
+
+# Filtrar errores aplicables
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  err$precondicion(params)
+}))
+
+# Seleccionar 1 error
+stopifnot(length(errores_aplicables_idx) >= 1L)
+error_sel_idx <- safe_sample(errores_aplicables_idx, 1L)
+error_sel <- errores_conceptuales[[error_sel_idx]]
+
+# Generar texto de la afirmacion falsa
+texto_falso <- error_sel$genera_texto()
+
+# --- Seleccionar 3 afirmaciones verdaderas de grupos DISTINTOS ---
+# Barajar el pool y seleccionar de grupos diferentes para maximizar variedad
+pool_v <- sample(seq_along(afirmaciones_verdaderas))
+grupos_usados <- character(0)
+sel_verdaderas <- list()
+
+for (idx in pool_v) {
+  af <- afirmaciones_verdaderas[[idx]]
+  if (!(af$grupo %in% grupos_usados)) {
+    sel_verdaderas <- c(sel_verdaderas, list(af))
+    grupos_usados <- c(grupos_usados, af$grupo)
+  }
+  if (length(sel_verdaderas) == 3L) break
+}
+
+# Red de seguridad: si no se alcanzan 3 grupos distintos, completar de cualquier grupo
+if (length(sel_verdaderas) < 3L) {
+  for (idx in pool_v) {
+    af <- afirmaciones_verdaderas[[idx]]
+    ya_usado_id <- sapply(sel_verdaderas, function(s) s$id)
+    if (!(af$id %in% ya_usado_id)) {
+      sel_verdaderas <- c(sel_verdaderas, list(af))
+    }
+    if (length(sel_verdaderas) == 3L) break
+  }
+}
+
+stopifnot(length(sel_verdaderas) == 3L)
+
+# Generar textos de las afirmaciones verdaderas
+textos_verdaderos <- sapply(sel_verdaderas, function(af) af$texto())
+
+# --- Construir opciones con etiquetas semanticas (regla _neg_ Variante B) ---
+opciones_pre_mezcla <- list(
+  correcta1 = textos_verdaderos[1],
+  correcta2 = textos_verdaderos[2],
+  correcta3 = textos_verdaderos[3],
+  error = texto_falso
+)
+
+# Mezcla interna
+perm <- sample(4L)
+opciones_mezcladas <- opciones_pre_mezcla[perm]
+letras <- c("A", "B", "C", "D")
+names(opciones_mezcladas) <- letras
+
+# Vector sol: la opcion con etiqueta "error" es la respuesta correcta a marcar
+etiquetas_mezcladas <- names(opciones_pre_mezcla)[perm]
+indice_error <- which(etiquetas_mezcladas == "error")
+sol <- rep(0L, 4L)
+sol[indice_error] <- 1L
+
+# --- Texto del enunciado ---
+intros <- list(
+  function(m_val, b_val) {
+    paste0(
+      "Una función lineal tiene la forma $f(x) = mx + b$, donde $m$ es la pendiente y $b$ el intercepto, ",
+      "ambos números pertenecen al conjunto de los números reales. Si $b$ es distinto de cero, la recta ",
+      "no pasa por la coordenada $(0, 0)$. Si $m < 0$ la función es decreciente; en caso contrario, es ",
+      "creciente.\n\n",
+      "Considera la función $f$, cuyo dominio es el conjunto de los números reales, definida por ",
+      "$f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$."
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "Una función lineal $f(x) = mx + b$ se representa como una línea recta en el ",
+      "plano cartesiano. La pendiente $m$ determina la inclinación: si $m > 0$, la recta es creciente; ",
+      "si $m < 0$, es decreciente. El valor $b$ indica donde la recta cruza el eje $y$.\n\n",
+      "Sea la función $f$ definida por $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$, con dominio en los reales."
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "En el plano cartesiano, la gráfica de una función lineal $f(x) = mx + b$ es una línea recta. ",
+      "El parámetro $m$ (pendiente) indica si la recta sube ($m > 0$) o baja ($m < 0$), y $b$ ",
+      "(intercepto) indica el punto $(0, b)$ donde la recta corta el eje $y$.\n\n",
+      "Dada la función $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$, definida para todo número real:"
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "Recordemos que en la función lineal $f(x) = mx + b$, el coeficiente $m$ se denomina ",
+      "pendiente y el término independiente $b$ es el intercepto con el eje $y$. Cuando $m$ es positivo ",
+      "la recta es creciente; cuando es negativo, es decreciente.\n\n",
+      "Considera la función $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$."
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "La representación gráfica de $f(x) = mx + b$ es una recta que se puede describir completamente ",
+      "con dos datos: la pendiente $m$ (que mide la inclinación) y el intercepto $b$ (que señala ",
+      "el cruce con el eje $y$). Si $m > 0$, la función crece; si $m < 0$, decrece.\n\n",
+      "Se tiene la función $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$."
+    )
+  },
+  function(m_val, b_val) {
+    paste0(
+      "Para analizar una función lineal $f(x) = mx + b$ se pueden examinar varias propiedades: ",
+      "el signo de la pendiente $m$ (que determina si la recta sube o baja), el valor de $b$ ",
+      "(que indica donde corta el eje $y$) y la raíz $x = -b/m$ (donde la recta corta el eje $x$).\n\n",
+      "Analiza la función $f(x) = ", m_val, "x ",
+      ifelse(b_val >= 0, paste0("+ ", b_val), paste0("- ", abs(b_val))),
+      "$."
+    )
+  }
+)
+
+intro_idx <- pick_int(1L, length(intros))
+texto_intro <- intros[[intro_idx]](m, b)
+texto_pregunta <- paste0(
+  "\n\n",
+  "A continuación se presentan cuatro afirmaciones sobre la función $f$. ",
+  "Tres de ellas son correctas y una es incorrecta.\n\n",
+  "***NO*** es correcta la afirmación:"
+)
+
+# --- Reflexiones metacognitivas ---
+reflexiones <- c(
+  "Evaluar la validez de afirmaciones matemáticas es una habilidad clave de argumentación. La metacognición nos permite detectar confusiones entre propiedades de una función lineal.",
+  "Identificar una afirmación falsa entre varias verdaderas exige verificar cada propiedad de forma independiente. Este proceso fortalece el pensamiento crítico.",
+  "Los errores más comunes al analizar funciones lineales involucran confundir el signo de la pendiente, el intercepto $y$ con el corte en $x$, o errores de signo al evaluar. Evaluar afirmaciones ayuda a prevenirlos.",
+  "Argumentar por qué una afirmación es falsa requiere identificar exactamente cuál propiedad se viola y por qué. Esta práctica desarrolla la precisión en el razonamiento matemático."
+)
+reflexion <- reflexiones[pick_int(1L, length(reflexiones))]
+
+# --- Verificaciones internas (test _neg_ Variante B; ver regla de opciones repetidas) ---
+test_that("Patrón _neg_ texto: estructura semántica correcta", {
+  expect_equal(sum(sol), 1L,
+    info = "sol debe marcar exactamente 1 opcion como correcta (el error)")
+  idx_err <- which(sol == 1L)
+  expect_equal(length(idx_err), 1L,
+    info = "Debe haber exactamente 1 posicion marcada en sol")
+  expect_equal(etiquetas_mezcladas[idx_err], "error",
+    info = "La posicion marcada en sol debe corresponder a la etiqueta 'error'")
+  n_correctas <- sum(grepl("^correcta", etiquetas_mezcladas))
+  expect_equal(n_correctas, 3L,
+    info = "Se esperaban 3 opciones 'correcta*'")
+})
+
+test_that("Patrón _neg_ texto: todas las opciones son textualmente distintas", {
+  textos <- unlist(opciones_mezcladas)
+  expect_equal(length(unique(textos)), 4L,
+    info = "Opciones deben tener redaccion diferente entre si (no copiar-pegar)")
+})
+
+test_that("La afirmación falsa no coincide con ninguna verdadera", {
+  for (txt_v in textos_verdaderos) {
+    expect_false(identical(texto_falso, txt_v),
+      info = "La afirmación falsa coincide con una verdadera")
+  }
+})
+
+test_that("Pool (m,b) cumple el mínimo de diversidad", {
+  expect_gte(length(combos_mb), 50L)
+})
+
+# UID para anclas en Solution (regla #19: sin letra en ancla)
+ex_uid <- paste0(abs(m), abs(b), sample(1000:9999, 1))
+```
+
+Question
+========
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(texto_intro, "\n\n")
+cat(texto_pregunta, "\n\n")
+```
+
+Answerlist
+----------
+
+```{r opciones_texto, echo=FALSE, results='asis'}
+for (i in 1:4) {
+  cat(paste0("* ", opciones_mezcladas[[i]], "\n"))
+}
+```
+
+Solution
+========
+
+```{r solucion_header, echo=FALSE, results='asis'}
+cat("### Respuesta correcta {#resp-", ex_uid, "}\n\n", sep = "")
+cat(paste0(
+  "La afirmación ***incorrecta*** es la que declara:\n\n",
+  "> \"", texto_falso, "\"\n\n",
+  "**Error identificado:** ", error_sel$codigo, " --- ", error_sel$nombre, "\n\n",
+  error_sel$descripcion_larga, "\n\n",
+  "*Causa raíz:* ", error_sel$causa_raiz, "\n\n"
+))
+```
+
+```{r analisis_verdaderas, echo=FALSE, results='asis'}
+cat("### Por qué las demás afirmaciones son correctas {#analisis-", ex_uid, "}\n\n", sep = "")
+cat("Las otras tres afirmaciones describen propiedades verificables de ")
+cat(paste0(
+  "$f(x) = ", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+  "$:\n\n"
+))
+
+for (k in seq_along(sel_verdaderas)) {
+  af <- sel_verdaderas[[k]]
+  cat(paste0("- **", af$id, "** (", af$grupo, "): \"", textos_verdaderos[k], "\" --- "))
+  # Justificacion por grupo
+  if (af$grupo == "pendiente") {
+    cat(paste0(
+      "Correcto, pues $m = ", m, "$ es ", signo_m,
+      " y la recta es ", direccion, ".\n\n"
+    ))
+  } else if (af$grupo == "intercepto_y") {
+    cat(paste0(
+      "Correcto, pues $f(0) = ", m, "(0) ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+      " = ", b, "$.\n\n"
+    ))
+  } else if (af$grupo == "intercepto_x") {
+    cat(paste0(
+      "Correcto, pues al resolver $", m, "x ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+      " = 0$ se obtiene $x = ", corte_x, "$.\n\n"
+    ))
+  } else if (af$grupo == "evaluación") {
+    cat(paste0(
+      "Correcto, pues $f(1) = ", m, "(1) ",
+      ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+      " = ", f1, "$.\n\n"
+    ))
+  }
+}
+```
+
+```{r procedimiento, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Procedimiento de verificación {#proc-", ex_uid, "}\n\n",
+  "Para determinar cuál afirmación ***NO*** es correcta, se deben verificar las ",
+  "propiedades de $f(x) = ", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+  "$ sistemáticamente:\n\n",
+  "1. **Pendiente y dirección:** $m = ", m,
+  ifelse(es_creciente,
+    " > 0$ $\\Rightarrow$ recta **creciente**.\n",
+    " < 0$ $\\Rightarrow$ recta **decreciente**.\n"
+  ),
+  "2. **Intercepto con eje $y$:** $f(0) = ", b,
+  "$ $\\Rightarrow$ punto $(0, ", b, ")$.\n",
+  "3. **Intercepto con eje $x$:** $", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+  " = 0$ $\\Rightarrow$ $x = ", corte_x, "$ $\\Rightarrow$ punto $(",
+  corte_x, ", 0)$.\n",
+  "4. **Evaluación en $x = 1$:** $f(1) = ", f1, "$ $\\Rightarrow$ punto $(1, ", f1, ")$.\n\n",
+  "Cualquier afirmación que contradiga alguna de estas propiedades es incorrecta.\n\n"
+))
+```
+
+```{r reflexion_meta, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Reflexión metacognitiva {#refl-", ex_uid, "}\n\n",
+  reflexion, "\n\n"
+))
+```
+
+```{r estrategia, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Estrategia para evitar el error {#estrat-", ex_uid, "}\n\n",
+  "1. **No asumir, verificar:** antes de aceptar una afirmación, comprobar cada ",
+  "propiedad mencionada (signo de $m$, valor de $b$, raíz) con un cálculo directo.\n",
+  "2. **Distinguir ejes:** el intercepto $b$ indica el cruce con el eje $y$ (vertical), ",
+  "NO con el eje $x$ (horizontal). Para el corte con $x$, resolver $f(x) = 0$.\n",
+  "3. **Cuidar los signos:** en $f(x) = ", m, "x ",
+  ifelse(b >= 0, paste0("+ ", b), paste0("- ", abs(b))),
+  "$, el signo que acompaña a $", abs(b),
+  "$ es parte de la expresión; no cambiarlo al evaluar o interpretar.\n",
+  "4. **Evaluar un punto de control:** sustituir $x = 1$ (o cualquier valor sencillo) ",
+  "para confirmar que la afirmación coincide con el resultado algebraico.\n\n"
+))
+```
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+for (i in 1:4) {
+  etiq <- etiquetas_mezcladas[i]
+  if (etiq == "error") {
+    cat(paste0("* Incorrecta (", error_sel$codigo, "): ", error_sel$descripcion_corta, ".\n"))
+  } else {
+    af_idx <- as.integer(sub("correcta", "", etiq))
+    af <- sel_verdaderas[[af_idx]]
+    cat(paste0("* Correcta (", af$id, "): afirmación verdadera sobre ", af$grupo, ".\n"))
+  }
+}
+```
+
+Meta-information
+================
+exname: grafica_funcion_lineal_metacognitivo_argumentacion_n3_schoice_neg_v1
+extype: schoice
+exsolution: `r paste(sol, collapse="")`
+exshuffle: TRUE
+extol: 0
+
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Numerico-variacional
+exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solucion a problemas
+exextra[Evidencia]: Argumenta a favor o en contra de un procedimiento de solucion de un problema a la luz de criterios presentados o establecidos
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: SAI2-PS-26 (SAI-CND10S223) - Variante _neg_ textual

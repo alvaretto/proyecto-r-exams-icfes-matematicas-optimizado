@@ -584,6 +584,15 @@ construir_params_desde_env <- function(env) {
     d <- get("datos", envir = env)
     if (is.numeric(d)) params$datos_ord <- sort(d)
   }
+  # Si el ejercicio declaró su propio objeto `params` (p.ej. funciones lineales
+  # con m, b, corte_x), respetarlo: el autor diseñó esos campos justamente para
+  # sus precondiciones. Sus claves tienen prioridad sobre las inferidas arriba.
+  if (exists("params", envir = env)) {
+    params_autor <- get("params", envir = env)
+    if (is.list(params_autor)) {
+      for (k in names(params_autor)) params[[k]] <- params_autor[[k]]
+    }
+  }
   return(params)
 }
 
@@ -1023,8 +1032,41 @@ validar_5c_unicidad <- function(env, extype, archivo_rmd = NULL) {
     es_negativo <- grepl("_neg_", basename(archivo_rmd))
   }
 
-  if (es_negativo) {
-    # Patrón _neg_: exactamente (N-1) iguales + 1 diferente
+  # ¿Variante B (texto sinónimo con etiquetas semánticas) o Variante A (datos idénticos)?
+  # Variante B: el ejercicio expone etiquetas "correcta*"/"error" (ver
+  # validacion-neg-opciones-repetidas.md). En ese caso las (N-1) correctas son
+  # paráfrasis con redacción DISTINTA por diseño, no datos idénticos.
+  etiquetas <- NULL
+  if ("etiquetas_mezcladas" %in% objetos) {
+    etiquetas <- get("etiquetas_mezcladas", envir = env)
+  } else if ("opciones_pre_mezcla" %in% objetos) {
+    opm <- get("opciones_pre_mezcla", envir = env)
+    if (is.list(opm)) etiquetas <- names(opm)
+  }
+  es_variante_b <- !is.null(etiquetas) &&
+    ("error" %in% etiquetas) && any(grepl("^correcta", etiquetas))
+
+  if (es_negativo && es_variante_b) {
+    # Variante B: 3 correctas sinónimas (texto distinto) + 1 error.
+    # Verificar (a) estructura semántica y (b) que todos los textos sean distintos.
+    n_opciones <- length(hashes)
+    n_err <- sum(etiquetas == "error")
+    n_cor <- sum(grepl("^correcta", etiquetas))
+    if (n_err != 1L || n_cor != (n_opciones - 1L)) {
+      errores <- c(errores, paste0(
+        "ERR_ANS_C: Ejercicio _neg_ Variante B — estructura semántica inválida: ",
+        n_err, " etiqueta(s) 'error' + ", n_cor, " 'correcta*' (se esperaba 1 + ",
+        n_opciones - 1L, ")"))
+    }
+    n_unicas <- length(unique(hashes))
+    if (n_unicas != n_opciones) {
+      errores <- c(errores, paste0(
+        "ERR_ANS_C: Ejercicio _neg_ Variante B — las ", n_opciones,
+        " opciones de texto deben ser todas distintas (posible copiar-pegar): ",
+        n_unicas, " únicas"))
+    }
+  } else if (es_negativo) {
+    # Variante A: datos idénticos — exactamente (N-1) iguales + 1 diferente
     freq <- table(hashes)
     n_opciones <- length(hashes)
     if (length(freq) != 2 || !((n_opciones - 1) %in% as.integer(freq))) {
