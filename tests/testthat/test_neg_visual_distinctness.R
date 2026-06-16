@@ -41,15 +41,22 @@ test_that("EST-BOX-03 (Q1/Q3 swap) produce diagrama idéntico al correcto en ggp
     ggsave(archivo_box03, p_box03, width = 3, height = 4, dpi = 72)
   })
 
-  # Comparar tamaños de archivo (proxy para identidad visual)
-  size_correcto <- file.info(archivo_correcto)$size
-  size_box03 <- file.info(archivo_box03)$size
+  # Comparar PÍXELES, no tamaño de archivo: el tamaño del PNG es un proxy ruidoso
+  # (compresión/metadatos varían entre entornos aunque la imagen sea idéntica;
+  # se observaron ~6.8% de diferencia de tamaño con imágenes pixel-idénticas).
+  skip_if_not_installed("png")
+  img_correcto <- png::readPNG(archivo_correcto)
+  img_box03 <- png::readPNG(archivo_box03)
+  expect_equal(dim(img_correcto), dim(img_box03),
+    info = "Las imágenes deben tener las mismas dimensiones")
 
-  # Los archivos deben ser casi idénticos en tamaño (< 5% diferencia)
-  diff_pct <- abs(size_correcto - size_box03) / size_correcto * 100
-  expect_true(diff_pct < 5,
+  # ggplot2 geom_boxplot(stat='identity') auto-ordena lower/upper, así que el swap
+  # Q1/Q3 es visualmente invisible: la diferencia es solo ruido de antialiasing en
+  # los bordes (medido ~0.06%). Umbral 1% (margen ~17x).
+  diff_pct <- mean(abs(img_correcto - img_box03)) * 100
+  expect_true(diff_pct < 1,
     info = paste("EST-BOX-03 debería ser visualmente idéntico al correcto.",
-                 "Diferencia:", round(diff_pct, 1), "%"))
+                 "Diferencia media de píxeles:", round(diff_pct, 3), "%"))
 
   file.remove(archivo_correcto, archivo_box03)
 })
