@@ -1,0 +1,352 @@
+
+---
+title: "Gráfica Circular - Consumo de Agua"
+author: "ICFES - Matemáticas"
+date: "`r format(Sys.Date(), '%Y')`"
+output:
+  html_document:
+    pandoc_args: ["--standalone"]
+  pdf_document:
+    latex_engine: xelatex
+---
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r data_generation, echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(digest)
+library(knitr)
+library(testthat) # Para los test_that de diversidad
+
+# --- Funciones auxiliares (Familias de Soluciones, Regla #21) ---
+# F1: Generación robusta SIN cuelgue (Error 22)
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+# F5: Trampa sample() con vector de longitud 1 (+ guarda length-0: campo NULL/typo)
+safe_sample <- function(x, size, replace = TRUE) {
+  if (length(x) == 0L)
+    stop("safe_sample(): vector de entrada vacío o NULL (¿campo inexistente o mal escrito en una lista?).")
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
+
+# Familia 2: tabla RESPONSIVA cross-formato
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), col.names = NULL) {
+  df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+  if (length(bold_rows)) for (r in bold_rows)
+    df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+  md <- paste(knitr::kable(df2, format = "markdown", align = align, col.names = col.names), collapse = "\n")
+  if (knitr::is_latex_output()) {
+    md
+  } else {
+    paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
+           md, "\n\n:::\n")
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Aleatorización de datos y meses para la tabla
+# ---------------------------------------------------------------------------
+
+# Pool de meses para elegir 4
+pool_meses_disponibles <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+meses <- safe_sample(pool_meses_disponibles, 4, replace = FALSE)
+# Asegurar orden alfabético para consistencia en el gráfico si se usa aes(x=mes) sin factor
+meses <- sort(meses)
+
+# Generar 4 valores de consumo de agua. Asegurar mínimo y máximo claros.
+# Rango entre 100 y 1000
+valor_min_general <- pick_int(100, 300)
+valor_max_general <- pick_int(700, 1000)
+
+valores_otros <- safe_sample(setdiff(100:1000, c(valor_min_general, valor_max_general)), 2)
+valores_tabla_desordenados <- c(valor_min_general, valor_max_general, valores_otros)
+valores_tabla <- safe_sample(valores_tabla_desordenados, 4, replace = FALSE) # Suflearlos para asignarlos a meses aleatorios
+
+# Crear data.frame y ordenar por mes para facilitar la asignación al gráfico
+df_base <- data.frame(mes = meses, valor = valores_tabla, stringsAsFactors = FALSE)
+df_base <- df_base[order(df_base$mes), ]
+
+meses_ordenados <- df_base$mes
+valores_tabla_ordenados <- df_base$valor
+
+mes_mayor <- meses_ordenados[which.max(valores_tabla_ordenados)]
+valor_mayor <- max(valores_tabla_ordenados)
+
+mes_menor <- meses_ordenados[which.min(valores_tabla_ordenados)]
+valor_menor <- min(valores_tabla_ordenados)
+
+# ---------------------------------------------------------------------------
+# Generar el GRÁFICO DE LA PREGUNTA (la gráfica errónea del director)
+# El error será intercambiar el VALOR del mes mayor con el VALOR del mes menor
+# ---------------------------------------------------------------------------
+valores_grafica_erronea <- valores_tabla_ordenados
+
+# Encontrar los índices de los meses con el valor mayor y menor
+idx_mes_mayor <- which(meses_ordenados == mes_mayor)
+idx_mes_menor <- which(meses_ordenados == mes_menor)
+
+# Intercambiar los valores para crear el error visual
+valores_grafica_erronea[idx_mes_mayor] <- valor_menor
+valores_grafica_erronea[idx_mes_menor] <- valor_mayor
+
+# Colores para la gráfica (se pueden ajustar aquí o aleatorizar si es necesario)
+colores_dona <- c("#2E86AB", "#73C0DE", "#5FAD56", "#F6C90E")
+# Asignar nombres a los colores según los meses ordenados
+names(colores_dona) <- meses_ordenados
+
+crear_grafico_dona <- function(vals, etiqueta_archivo) {
+  df <- data.frame(
+    mes   = meses_ordenados,
+    valor = vals,
+    stringsAsFactors = FALSE
+  )
+  df$mes <- factor(df$mes, levels = meses_ordenados)
+
+  p <- ggplot(df, aes(x = 2, y = valor, fill = mes)) +
+    geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.8) +
+    coord_polar(theta = "y", start = 0) +
+    scale_fill_manual(values = colores_dona) +
+    xlim(0.5, 2.5) + # Ajuste para que se vea como dona
+    theme_void() +
+    theme(
+      legend.position  = "bottom",
+      legend.title     = element_blank(),
+      legend.text      = element_text(size = 8),
+      plot.margin      = margin(5, 5, 5, 5),
+      plot.title       = element_text(size = 9, hjust = 0.5)
+    ) +
+    labs(title = "Vasos de agua consumidos por mes")
+
+  ggsave(etiqueta_archivo, plot = p, width = 4, height = 4.5, dpi = 150, bg = "white")
+  invisible(p)
+}
+
+# Gráfica de la PREGUNTA (con el error de inversión)
+crear_grafico_dona(valores_grafica_erronea, "grafico_pregunta.png")
+
+# ---------------------------------------------------------------------------
+# Pool de contextos narrativos (Regla #21 contextos-narrativos-creativos.md)
+# ---------------------------------------------------------------------------
+pool_contextos <- list(
+  # Tipo: Situación problema
+  list(
+    plantilla = function(entidad) {
+      paste0("La empresa de saneamiento básico de la ciudad está analizando los patrones ",
+             "de consumo de agua potable. El gerente de consumo pidió un informe ",
+             "y presentó la siguiente tabla con los datos del último trimestre:")
+    },
+    entidades = c("la empresa de saneamiento básico", "una compañía de servicios públicos", "la oficina de gestión ambiental")
+  ),
+  # Tipo: Narración periodística
+  list(
+    plantilla = function(entidad) {
+      paste0("En el reciente informe de sostenibilidad de ", entidad, ", se destacó la importancia ",
+             "de monitorear el uso de recursos. A continuación, la tabla que muestra ",
+             "el consumo de agua de la compañía durante un período de cuatro meses:")
+    },
+    entidades = c("una importante constructora", "la asociación de fabricantes", "un colectivo de impacto ambiental")
+  ),
+  # Tipo: Perspectiva del empleado
+  list(
+    plantilla = function(quien) {
+      paste0(quien, " fue encargado de documentar el consumo de agua por mes. ",
+             "Después de recopilar los datos, organizó la siguiente tabla de consumo:")
+    },
+    entidades = c("el analista de sostenibilidad", "el encargado de recursos hídricos", "el auditor de consumo")
+  )
+)
+
+# Seleccionar contexto aleatorio
+ctx_elegido <- safe_sample(pool_contextos, 1)[[1]]
+entidad_elegida <- safe_sample(ctx_elegido$entidades, 1)
+enunciado_contexto <- ctx_elegido$plantilla(entidad_elegida)
+
+# Nombre del director ahora puede variar
+roles_director <- c("el director de Recursos Humanos", "el gerente de planta", "la coordinadora de sostenibilidad")
+director_elegido <- safe_sample(roles_director, 1)
+
+# ---------------------------------------------------------------------------
+# Pool de errores conceptuales (justificaciones per-opción)
+# Adaptar los diagnósticos a los meses aleatorios
+# ---------------------------------------------------------------------------
+opciones_pool <- list(
+  list(
+    texto       = "Sí, porque presenta la cantidad de vasos de agua consumidos al mes.",
+    es_correcta = FALSE,
+    diagnostico = paste0(
+      "El estudiante observa que la gráfica tiene cuatro sectores, uno por mes, ",
+      "y acepta que la gráfica es correcta sin comparar las proporciones relativas ",
+      "de cada sector con los valores de la tabla. No detecta que el sector más pequeño ",
+      "debería corresponder a ", mes_menor, " (", valor_menor, "), no a ", mes_mayor, " (", valor_mayor, "). "
+    )
+  ),
+  list(
+    texto       = paste0("No, porque se muestra que el mes de menor consumo es ", mes_mayor, "."),
+    es_correcta = TRUE,
+    diagnostico = paste0(
+      "La gráfica muestra que el mes de menor consumo es ", mes_mayor, " (representado con el sector más pequeño), ",
+      "pero según la tabla, ", mes_mayor, " tiene el mayor consumo (", valor_mayor, " vasos). ",
+      "El mes de menor consumo real es ", mes_menor, " (", valor_menor, " vasos), por lo que la gráfica es incorrecta."
+    )
+  ),
+  list(
+    texto       = "Sí, porque muestra los cuatro meses registrados en la tabla.",
+    es_correcta = FALSE,
+    diagnostico = paste0(
+      "El estudiante verifica que la gráfica circular contiene los cuatro meses ",
+      "correctamente etiquetados y concluye que está bien construida. No verifica ",
+      "que los tamaños de los sectores sean proporcionales a los datos (", mes_mayor, " debería ",
+      "ser el sector más grande, no el más pequeño)."
+    )
+  ),
+  list(
+    texto       = "No, porque falta el consumo de vasos de agua para cada uno de los meses.",
+    es_correcta = FALSE,
+    diagnostico = paste0(
+      "El estudiante señala que en la gráfica no aparecen los valores numéricos ",
+      "(", paste(valores_tabla_ordenados, collapse = ", "), ") dentro de los sectores ",
+      "y afirma que eso la hace incorrecta. Sin embargo, en una gráfica circular bien ",
+      "construida los valores no son obligatorios cuando las proporciones son correctas. ",
+      "El error real es la asignación incorrecta del tamaño de los sectores, donde ",
+      mes_mayor, " se muestra como el mes de menor consumo."
+    )
+  )
+)
+
+solucion <- sapply(opciones_pool, function(o) as.integer(o$es_correcta))
+opcion_correcta_diagnostico <- opciones_pool[[which(solucion == 1)]]$diagnostico
+
+
+```
+
+`r enunciado_contexto`
+`r director_elegido` diseña una gráfica que muestra la información presentada en la tabla:
+
+```{r tabla_pregunta_show, echo=FALSE, results='asis'}
+df_tabla_pregunta <- data.frame(Mes = meses_ordenados, `Vasos de agua` = valores_tabla_ordenados, check.names = FALSE)
+cat(tabla_responsiva(df_tabla_pregunta, align = c("l", "c"), col.names = c("Mes", "Vasos de agua")), "\n")
+```
+
+```{r grafico_pregunta_show, echo=FALSE, results='asis'}
+cat("![](grafico_pregunta.png){width=55%}\n")
+```
+
+¿Es correcta la gráfica diseñada por `r director_elegido`?
+
+Answerlist
+----------
+
+```{r answerlist_pregunta, echo=FALSE, results='asis'}
+# exshuffle: TRUE manejará este orden
+for (op in opciones_pool) {
+  cat("*", op$texto, "\n")
+}
+```
+
+Solution
+========
+
+```{r solution_content, echo=FALSE, results='asis'}
+cat("### Análisis del Error\n\n")
+
+cat("**¿Por qué la respuesta correcta es la opción que afirma: «", opciones_pool[[which(solucion == 1)]]$texto, "»?**\n\n")
+cat("La gráfica presentada por ", director_elegido, " tiene un error de proporción. Si bien representa la cantidad de vasos de agua para cada mes, comete un error clave:\n\n")
+cat("Según la tabla, el mes de mayor consumo de agua es **", mes_mayor, "** con ", valor_mayor, " vasos.\n")
+cat("El mes de menor consumo de agua es **", mes_menor, "** con ", valor_menor, " vasos.\n\n")
+cat("La gráfica muestra visualmente que el mes con el sector más grande es **", meses_ordenados[which.max(valores_grafica_erronea)], "** (con ", max(valores_grafica_erronea), " vasos representados erróneamente), y el mes con el sector más pequeño es **", meses_ordenados[which.min(valores_grafica_erronea)], "** (con ", min(valores_grafica_erronea), " vasos representados erróneamente). \n\n")
+cat("La correcta interpretación debería ser que ", mes_mayor, " tiene el sector más grande y ", mes_menor, " el más pequeño, lo cual la gráfica no cumple.\n\n")
+cat("### Procedimiento Correcto\n\n")
+cat("Para verificar si una gráfica circular representa correctamente una tabla de datos:\n\n")
+cat("1. **Identificar el mayor valor** de la tabla: **", mes_mayor, "** con ", valor_mayor, " vasos.\n")
+cat("2. **Identificar el menor valor** de la tabla: **", mes_menor, "** con ", valor_menor, " vasos.\n")
+cat("3. **Comparar con la gráfica**: el sector **más grande** debería corresponder a **", mes_mayor, "** y el sector **más pequeño** a **", mes_menor, "**.\n")
+cat("4. **Detectar la discrepancia**: la gráfica muestra a ", mes_mayor, " como el sector *más pequeño*, ",
+    "lo que contradice los datos de la tabla.\n\n")
+
+cat("**Tabla comparativa (datos reales vs. proporciones correctas):**\n\n")
+
+df_datos_solucion <- data.frame(
+  Mes        = meses_ordenados,
+  Vasos      = valores_tabla_ordenados,
+  Porcentaje = paste0(round(valores_tabla_ordenados / sum(valores_tabla_ordenados) * 100, 1), "%"),
+  Magnitud   = sapply(seq_along(meses_ordenados), function(i) {
+    if (i == which.max(valores_tabla_ordenados)) "el **más grande**"
+    else if (i == which.min(valores_tabla_ordenados)) "el **más pequeño**"
+    else "intermedio"
+  }),
+  stringsAsFactors = FALSE
+)
+
+cat(tabla_responsiva(df_datos_solucion, align = c("l", "c", "c", "l"),
+                     col.names = c("Mes", "Vasos", "% correcto", "Sector que debería ser")), "\n")
+
+cat("### Propiedades del Concepto\n\n")
+cat("- En una **gráfica circular**, el tamaño de cada sector es *proporcional* a su valor:  \n")
+cat("  ángulo = (valor del mes / total) × 360°\n")
+cat("- Una gráfica circular es **correcta** cuando:\n")
+cat("  - El sector más grande corresponde al dato más alto.\n")
+cat("  - El sector más pequeño corresponde al dato más bajo.\n")
+cat("  - Las proporciones visuales reflejan fielmente los valores numéricos.\n")
+cat("- Una gráfica puede incluir etiquetas (meses) y colores correctos, pero aun así ser\n")
+cat("  **incorrecta** si los tamaños de los sectores no coinciden con los datos.\n\n")
+
+cat("### Por qué las otras opciones son incorrectas\n\n")
+for (op in opciones_pool) {
+  if (!op$es_correcta) {
+    cat("**Opción que afirma: «", op$texto, "»**\n\n")
+    cat(op$diagnostico, "\n\n")
+  }
+}
+
+cat("### Reflexión Metacognitiva\n\n")
+reflexiones <- c(
+  paste0(
+    "Un error frecuente al analizar gráficas circulares es verificar solo que los ",
+    "sectores existan o tengan las etiquetas correctas, sin comparar sus tamaños ",
+    "relativos con los datos numéricos. La validación de una gráfica requiere ",
+    "revisar tanto la *forma* como el *fondo*: que los sectores sean proporcionales a los valores."
+  ),
+  paste0(
+    "Cuando evaluamos si una representación gráfica es correcta (DOK 3), debemos ir más allá ",
+    "de comprobar que 'se ven' todos los elementos. La pregunta clave es: ¿el tamaño visual ",
+    "de cada parte refleja fielmente la magnitud del dato correspondiente?"
+  ),
+  paste0(
+    "El error de ", director_elegido, " es un ejemplo de *apariencia de corrección*: ",
+    "la gráfica tiene los meses, tiene colores, tiene forma circular, pero las proporciones ",
+    "están invertidas. Aprender a distinguir entre lo que una gráfica *parece* representar ",
+    "y lo que *realmente* muestra es una habilidad matemática esencial."
+  )
+)
+cat(reflexiones[sample(length(reflexiones), 1)], "\n\n")
+
+cat("### Estrategia para Evitar el Error\n\n")
+cat("1. Antes de aceptar una gráfica como correcta, **leer la tabla de datos** cuidadosamente.\n")
+cat("2. Identificar cuál dato es el **mayor** y cuál es el **menor**.\n")
+cat("3. Verificar que en la gráfica el **sector más grande** corresponda al dato mayor (", mes_mayor, ").\n")
+cat("4. Verificar que en la gráfica el **sector más pequeño** corresponda al dato menor (", mes_menor, ").\n")
+cat("5. Si los tamaños de los sectores no coinciden con los datos reales, la gráfica tiene un **error de representación**.\n")
+cat("6. Recordar: las etiquetas correctas y los colores no garantizan proporciones correctas.\n")
+```
+
+Meta-information
+================
+exname: grafica_circular_consumo_agua_metacognitivo_argumentacion_n3_schoice_v2
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse="")`
+exshuffle: TRUE
+extol: 0.01
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solucion a problemas.
+exextra[Evidencia]: Establece la validez o pertinencia de una solucion propuesta a un problema dado.
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[Descriptor]: D3.10

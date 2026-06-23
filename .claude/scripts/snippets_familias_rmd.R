@@ -18,6 +18,13 @@ pick_int <- function(a, b) {
 
 safe_sample <- function(x, size, replace = TRUE) {
   # Muestra de tamaño 'size'; si x tiene un solo elemento, repite ese valor.
+  # Guarda length-0: NULL o vector vacío (típicamente un campo inexistente en una
+  # lista, p.ej. un typo de nombre de campo) hacían caer sample() en
+  # sample.int(0, ...) -> "primer argumento inválido", error críptico e intermitente.
+  # Aquí falla de inmediato señalando la causa real.
+  if (length(x) == 0L)
+    stop("safe_sample(): el vector de entrada está vacío o es NULL ",
+         "(¿campo inexistente en una lista o nombre de campo mal escrito?).")
   if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
 }
 

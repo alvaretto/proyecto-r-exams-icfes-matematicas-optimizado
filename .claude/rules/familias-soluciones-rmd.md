@@ -106,15 +106,18 @@ eq_display <- function(tex) {
 
 ## Familia 5 — Trampa `sample()` con vector de longitud 1
 
-**Síntoma:** `sample(x, k)` devuelve valores en `1:x` cuando `length(x)==1` (R reinterpreta el escalar como `n`).
+**Síntoma:** `sample(x, k)` devuelve valores en `1:x` cuando `length(x)==1` (R reinterpreta el escalar como `n`). **Variante length-0:** si `x` es `NULL`/vacío (típicamente un campo inexistente o mal escrito en una `list`, p.ej. `ctx$entidades` cuando el campo se llamó `quienes`), `sample(x, k)` cae en `sample.int(0, ...)` → `"primer argumento inválido"`, error **críptico e intermitente** (solo cuando el RNG toca el elemento defectuoso).
 
 **Familia:**
 ```r
 pick_int   <- function(a, b)  if (a >= b) a else sample(a:b, 1L)        # 1 entero en [a,b]
-safe_sample <- function(x, size, replace = TRUE)                        # muestra segura
+safe_sample <- function(x, size, replace = TRUE) {                      # muestra segura
+  if (length(x) == 0L)                                                  # guarda length-0
+    stop("safe_sample(): vector de entrada vacío o NULL (¿campo inexistente o mal escrito en una lista?).")
   if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
 ```
-Usar en cualquier muestreo cuyo soporte pueda colapsar a un solo valor (rangos degenerados, `objetivo == 0`, etc.).
+Usar en cualquier muestreo cuyo soporte pueda colapsar a un solo valor (rangos degenerados, `objetivo == 0`, etc.). La guarda `length-0` convierte el error críptico de `sample.int` en un mensaje que apunta a la causa real (campo NULL/typo). Origen: `grafica-circular-consumo-agua` v2 (2026-06-22), pool de contextos con un campo `quienes` donde los demás usaban `entidades`.
 
 ---
 
