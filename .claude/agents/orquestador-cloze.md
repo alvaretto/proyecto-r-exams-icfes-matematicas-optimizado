@@ -291,6 +291,7 @@ Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú 
 2. Los gráficos del enunciado que varían con los datos DEBEN generarse dinámicamente (nunca `file.copy` de PNG estático).
 3. El conteo de versiones únicas del render NO es evidencia de diversidad sustantiva.
 4. **Predictibilidad posicional (Error 24)**: aunque el VALOR de la respuesta correcta de un gap varíe, su **posición/orientación/cuadrante** visual NO debe ser siempre la misma. Aleatorizar la dimensión posicional/orientacional (misma transformación para todas las opciones) y reflejarla en el texto del enunciado de la parte. **Ojo**: `validar_diversidad_sustantiva.R` mide variación de VALOR y reporta `PASS` aunque la posición sea fija → verificar manualmente renderizando ≥8 versiones que la correcta cambie de posición, no solo de valor.
+5. **Calidad del distractor direccional/posicional (Error 24 / regla #22 §P5)**: el distractor que representa "dirección o posición equivocada" NO debe ser un outlier obvio (giro de 180°, longitud única, formato único, cuadrante muy alejado) — se elimina por percepción, no por razonamiento. Debe ser un **cuasi-acierto plausible** que comparta los rasgos salientes de la correcta (misma distancia/formato) y difiera SOLO en la dimensión evaluada (p.ej. reflejo este↔oeste a la distancia correcta, en vez de 180°). Gemelo del "Formato Equilibrado" de `graficos-como-opciones.md`. El nombre del error en el pool debe describir el error real.
 
 **Verificación automática (paso 9 obligatorio)**:
 

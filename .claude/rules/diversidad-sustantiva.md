@@ -72,6 +72,20 @@ Aun cuando el **valor** de la respuesta correcta varíe entre versiones (distint
 
 ---
 
+### ❌ P5: Distractor direccional/posicional como OUTLIER obvio (eliminable de un vistazo)
+
+```r
+# ❌ PROHIBIDO — el distractor de "dirección equivocada" es un giro de 180° (la flecha apunta al revés)
+dibujar_diagrama("distractor_dir.png", ..., th_axis = (th_axis + 180) %% 360, dist = otra_distancia)
+# → el estudiante descarta "la que apunta al lado contrario" sin analizar; además su longitud única lo delata
+```
+
+Un distractor que se distingue por un rasgo saliente y obvio (apunta exactamente al revés, es el único con otra longitud, el único con otro formato, el único en otro cuadrante muy alejado) se elimina por percepción, no por razonamiento. Esto degrada el poder diagnóstico aunque el resto del ítem sea correcto. Es el gemelo conceptual del **Formato Equilibrado** de `graficos-como-opciones.md` (≥2 opciones comparten el formato de la correcta).
+
+**Defensa**: el distractor direccional/posicional debe ser un **cuasi-acierto plausible** que comparta los rasgos salientes de la correcta y se diferencie SOLO en la dimensión evaluada. Para "dirección equivocada", preferir un **reflejo respecto al eje (lado opuesto: este↔oeste) a la distancia correcta** antes que un giro de 180°: misma magnitud y mismo ángulo, solo cambia el lado → obliga a verificar la dirección. Incidente: `desplazamiento-avion-aeropuerto` (2026-06-28) — el distractor de dirección pasó de 180°-opuesto (a otra distancia, outlier evidente) a **espejo este↔oeste a la distancia correcta** (cuasi-acierto). Coherente con que el nombre del error describa el error real (era "perpendicular" pero se dibujaba a 180°).
+
+---
+
 ## Patrón Correcto
 
 ### ✅ Aleatorizar los parámetros que determinan la respuesta

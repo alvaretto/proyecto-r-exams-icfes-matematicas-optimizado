@@ -179,6 +179,7 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 | "¿Por qué falló el render?" | `.claude/docs/patrones-errores-conocidos.md` Errores 1-6, 16 |
 | "¿Por qué se solapan etiquetas en un diagrama dinámico?" | Error 23 — radio del label consciente del ancho del texto + `1/sin(ángulo/2)`; validar el caso extremo (ángulo mínimo) |
 | "¿La respuesta correcta es predecible por su posición/cuadrante?" | Error 24 + regla #22 §P4 — aleatorizar orientación global (NE/NO/SE/SO); el validador de diversidad por VALOR no detecta predictibilidad posicional |
+| "¿Mi distractor de dirección/posición se elimina de un vistazo?" | Error 24 + regla #22 §P5 — no usar outlier obvio (180°, longitud/formato único); usar cuasi-acierto plausible (reflejo este↔oeste a la distancia correcta). Gemelo del Formato Equilibrado |
 | "¿Cómo evito patrones detectables en opciones gráficas?" | Error 18 + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado |
 | "¿Cómo diseño un buen distractor de barras?" | Error 20 (GRAF-BAR-01) — alturas permutadas |
 | "¿Por qué solo se generan N versiones únicas?" | Error 8 + regla `codigo-rmd.md` #10 |

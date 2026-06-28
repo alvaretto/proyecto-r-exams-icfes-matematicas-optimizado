@@ -26,9 +26,11 @@ orientaciones <- list(
   list(quad = "SO", th_axis = 270, dir_sign = -1, eje = "sur",   lado = "oeste")
 )
 orient <- orientaciones[[sample(length(orientaciones), 1)]]
-# Orientación opuesta (cuadrante diagonalmente opuesto) para el distractor de dirección distinta.
-th_axis_opuesto  <- (orient$th_axis + 180) %% 360
-dir_sign_opuesto <- orient$dir_sign
+# Distractor de dirección: posición REFLEJADA al lado opuesto del MISMO eje (este<->oeste), a la
+# distancia correcta. Representa confundir el lado hacia el que se mide el ángulo (no es un giro de 180°).
+th_axis_espejo  <- orient$th_axis
+dir_sign_espejo <- -orient$dir_sign
+lado_espejo     <- if (orient$lado == "este") "oeste" else "este"
 # Descripción textual de la dirección, coherente con el cuadrante (p.ej. "30° al este del norte").
 dir_desc <- paste0(angulo_direccion, "° al ", orient$lado, " del ", orient$eje)
 
@@ -97,18 +99,18 @@ km <- function(d) paste0(d, " km")
 dibujar_diagrama("diagrama_correcta.png",  km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
 dibujar_diagrama("diagrama_recorrida.png", km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
 dibujar_diagrama("diagrama_suma.png",      km(distancia_total+distancia_avanzada), distancia_total+distancia_avanzada, escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
-dibujar_diagrama("diagrama_perp.png",      km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, th_axis_opuesto, dir_sign_opuesto)
+dibujar_diagrama("diagrama_perp.png",      km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, th_axis_espejo,  dir_sign_espejo)
 
 # ---- Pool de errores conceptuales ----
 errores_conceptuales <- list(
   list(
     codigo          = "GEO-DES-01",
-    nombre          = "Dirección perpendicular",
-    descripcion_corta = paste0("El avión aparece a ", distancia_avanzada, " km del aeropuerto, pero en una dirección distinta a la indicada (no en los ", angulo_direccion, "° dados)."),
-    descripcion_larga = paste0("Se confunde el avance de ", distancia_avanzada, " km hacia el aeropuerto en la dirección de ", angulo_direccion, "° con un desplazamiento en una dirección diferente. El estudiante interpreta la distancia recorrida como un desplazamiento lateral, ignorando la dirección angular de ", angulo_direccion, "° dada en el enunciado."),
-    causa_raiz       = "Confusión entre desplazamiento en una dirección angular y desplazamiento sobre un eje cardinal. El estudiante no integra la información del ángulo con la distancia.",
+    nombre          = "Dirección reflejada (lado opuesto del eje)",
+    descripcion_corta = paste0("El avión aparece a la distancia correcta (", distancia_restante, " km), pero hacia el lado equivocado: a ", angulo_direccion, "° al ", lado_espejo, " del ", orient$eje, ", en lugar de al ", orient$lado, "."),
+    descripcion_larga = paste0("Se calcula correctamente la distancia restante (", distancia_restante, " km), pero se mide el ángulo de ", angulo_direccion, "° hacia el lado equivocado del eje ", orient$eje, " (al ", lado_espejo, " en vez de al ", orient$lado, "). La posición queda reflejada respecto al eje vertical: la magnitud es correcta, pero la dirección apunta al lado contrario."),
+    causa_raiz       = paste0("Confusión sobre el lado del eje ", orient$eje, " hacia el cual se mide el ángulo (este por oeste). El estudiante obtiene la distancia correcta pero invierte la orientación lateral, sin integrar bien la dirección dada en el enunciado."),
     precondicion     = function(params) TRUE,
-    calcula          = function(...) "dirección distinta a la indicada"
+    calcula          = function(...) paste0("dirección reflejada al ", lado_espejo, " del ", orient$eje)
   ),
   list(
     codigo          = "GEO-DES-02",
@@ -301,7 +303,7 @@ enunciado_contexto <- ctx$plantilla(protagonista, n)
 
 # ---- Crear opciones con diagramas ----
 # Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios:
-# diagrama_perp.png     → avión a distancia_avanzada km en dirección opuesta (error GEO-DES-01)
+# diagrama_perp.png     → avión a distancia_restante km en dirección reflejada (lado opuesto del eje, error GEO-DES-01)
 # diagrama_recorrida.png → avión a distancia_avanzada km a angulo_direccion° (error GEO-DES-02)
 # diagrama_correcta.png  → avión a distancia_restante km a angulo_direccion° (CORRECTA)
 # diagrama_suma.png      → avión a distancia_total+distancia_avanzada km a angulo_direccion° (error GEO-DES-03)
@@ -378,7 +380,7 @@ test_that("La opción correcta es la de tipo 'correcta'", {
 
 test_that("Las 4 opciones-diagrama son distintas (distancia o dirección)", {
   fps <- c(paste(distancia_restante, orient$quad), paste(distancia_avanzada, orient$quad),
-           paste(distancia_total+distancia_avanzada, orient$quad), paste(distancia_avanzada, "OPUESTO"))
+           paste(distancia_total+distancia_avanzada, orient$quad), paste(distancia_restante, "ESPEJO"))
   expect_equal(length(unique(fps)), 4)
   expect_true(all(file.exists(c("diagrama_correcta.png","diagrama_recorrida.png","diagrama_suma.png","diagrama_perp.png"))))
 })

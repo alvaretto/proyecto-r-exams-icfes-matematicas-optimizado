@@ -2509,7 +2509,16 @@ dir_desc <- paste0(angulo_direccion, "° al ", orient$lado, " del ", orient$eje)
 # th_line = th_axis + dir_sign*angulo  → la dirección cae en cualquier cuadrante
 ```
 
-El texto del enunciado y de la Solution usan `dir_desc` (coherente con el cuadrante elegido). El distractor de "dirección distinta" usa el cuadrante OPUESTO.
+El texto del enunciado y de la Solution usan `dir_desc` (coherente con el cuadrante elegido).
+
+**Calidad del distractor direccional (refinación, regla #22 §P5)**: el distractor de "dirección equivocada" NO debe ser un outlier obvio (giro de 180°, longitud única, otro cuadrante muy alejado), porque se elimina por percepción y no por razonamiento. Debe ser un **cuasi-acierto plausible**: un **reflejo respecto al eje vertical (lado opuesto este↔oeste) a la distancia correcta**. Misma magnitud, mismo ángulo, solo cambia el lado → obliga a verificar la dirección. (En el incidente, el distractor se llamaba "perpendicular" pero se dibujaba a 180°: el nombre debe describir el error real.)
+
+```r
+# Distractor de dirección = REFLEJO al lado opuesto del MISMO eje, a la distancia correcta (no 180°)
+th_axis_espejo  <- orient$th_axis        # mismo eje (norte/sur)
+dir_sign_espejo <- -orient$dir_sign      # lado opuesto (este<->oeste)
+dibujar_diagrama("diagrama_perp.png", km(distancia_restante), distancia_restante, ..., th_axis_espejo, dir_sign_espejo)
+```
 
 ### 🧪 Validación de la Solución
 
@@ -2527,9 +2536,11 @@ El texto del enunciado y de la Solution usan `dir_desc` (coherente con el cuadra
 | Fecha | Archivo | Causa | Fix | Resultado |
 |-------|---------|-------|-----|-----------|
 | 2026-06-28 | desplazamiento_avion_aeropuerto_..._n3_schoice_v1.Rmd | correcta siempre en cuadrante NE (modo `"ne"` fijo) | orientación global aleatoria (NE/NO/SE/SO) + texto `dir_desc` coherente + distractor en cuadrante opuesto | correcta en los 4 cuadrantes; diversidad PASS; sin solapes |
+| 2026-06-28 | desplazamiento_avion_aeropuerto_..._n3_schoice_v1.Rmd | distractor de dirección = giro 180° a otra distancia (outlier obvio, eliminable de un vistazo) | reflejo este↔oeste a la **distancia correcta** (cuasi-acierto) + renombrar GEO-DES-01 "Dirección reflejada (lado opuesto del eje)" | distractor plenamente diagnóstico; 6 renders correcta-vs-espejo sin solapes; diversidad PASS (39/40) |
 
 ### 📚 Referencias
 
-- Regla #22 `diversidad-sustantiva.md` § "P4: Predictibilidad posicional/orientacional".
+- Regla #22 `diversidad-sustantiva.md` § "P4: Predictibilidad posicional/orientacional" y § "P5: Distractor direccional/posicional como outlier obvio".
 - Error 23 (solape de etiquetas) — mismo ejercicio, fix complementario.
-- Incidente F (orquestador-schoice) / Incidente H (orquestador-cloze): diversidad sustantiva ampliada a la dimensión posicional.
+- `graficos-como-opciones.md` § "Formato Equilibrado" — principio gemelo (el distractor no debe ser un outlier perceptual).
+- Incidente F (orquestador-schoice) / Incidente H (orquestador-cloze): diversidad sustantiva ampliada a la dimensión posicional + calidad del distractor.
