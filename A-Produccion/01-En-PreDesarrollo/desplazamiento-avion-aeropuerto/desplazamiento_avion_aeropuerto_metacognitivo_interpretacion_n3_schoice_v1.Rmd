@@ -16,10 +16,27 @@ angulo_direccion <- sample(seq(30, 70, by = 5), 1)
 distancia_restante <- distancia_total - distancia_avanzada
 stopifnot(distancia_restante > 0, distancia_restante != distancia_avanzada)
 
+# ---- Orientación global aleatoria por versión (rompe la predictibilidad del cuadrante) ----
+# El cuadrante donde aparece la respuesta correcta varía entre versiones (NE/NO/SE/SO), de modo
+# que el estudiante NO puede predecir la opción correcta por su posición/orientación (regla #22).
+orientaciones <- list(
+  list(quad = "NE", th_axis = 90,  dir_sign = -1, eje = "norte", lado = "este"),
+  list(quad = "NO", th_axis = 90,  dir_sign =  1, eje = "norte", lado = "oeste"),
+  list(quad = "SE", th_axis = 270, dir_sign =  1, eje = "sur",   lado = "este"),
+  list(quad = "SO", th_axis = 270, dir_sign = -1, eje = "sur",   lado = "oeste")
+)
+orient <- orientaciones[[sample(length(orientaciones), 1)]]
+# Orientación opuesta (cuadrante diagonalmente opuesto) para el distractor de dirección distinta.
+th_axis_opuesto  <- (orient$th_axis + 180) %% 360
+dir_sign_opuesto <- orient$dir_sign
+# Descripción textual de la dirección, coherente con el cuadrante (p.ej. "30° al este del norte").
+dir_desc <- paste0(angulo_direccion, "° al ", orient$lado, " del ", orient$eje)
+
 # ---- Función de dibujo de un diagrama individual (sin letra, centrado) ----
 .cols <- list(slate800 = "#1E293B", slate600 = "#475569", teal = "#0F766E", orange = "#EA580C")
-dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angulo, modo) {
-  # modo: "ne" = ángulo a la derecha del norte (noreste); "so" = dirección opuesta (suroeste)
+dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angulo, th_axis, dir_sign) {
+  # Orientación en convención matemática (eje +x = 0°, norte = 90°, sur = 270°): la línea forma el
+  # ángulo dado con el eje cardinal (th_axis), en el sentido de dir_sign; cae en cualquier cuadrante.
   png(archivo, width = 460, height = 460, bg = "white", res = 110)
   on.exit(dev.off(), add = TRUE)
   grid.newpage(); pushViewport(viewport(xscale = c(0, 460), yscale = c(460, 0)))
@@ -34,15 +51,22 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
   pl(c(cx,cx-5,cx+5),c(cy+L,cy+L-11,cy+L-11),.cols$slate600)
   pl(c(cx-L,cx-L+11,cx-L+11),c(cy,cy-5,cy+5),.cols$slate600)
   pl(c(cx+L,cx+L-11,cx+L-11),c(cy,cy-5,cy+5),.cols$slate600)
-  tx("N", cx, cy-L-13, 16, .cols$slate800, f = 2); cir(cx,cy,5,.cols$slate600)
-  a <- angulo*pi/180; Lpx <- dist_km*escala_px_km
-  if (modo == "ne") { dx <- sin(a); dy <- -cos(a) } else { dx <- -sin(a); dy <- cos(a) }
+  # Rótulos de los 4 puntos cardinales (la dirección puede caer en cualquier cuadrante)
+  tx("N", cx, cy-L-13, 16, .cols$slate800, f = 2)
+  tx("S", cx, cy+L+15, 16, .cols$slate800, f = 2)
+  tx("E", cx+L+15, cy, 16, .cols$slate800, f = 2)
+  tx("O", cx-L-15, cy, 16, .cols$slate800, f = 2)
+  cir(cx,cy,5,.cols$slate600)
+  Lpx <- dist_km*escala_px_km
+  th_line <- th_axis + dir_sign*angulo                  # grados (math: +x=0, N=90, S=270)
+  a <- th_line*pi/180; dx <- cos(a); dy <- -sin(a)      # dy: coordenadas de pantalla (y hacia abajo)
   ex <- cx + Lpx*dx; ey <- cy + Lpx*dy
   ln(cx,cy,ex,ey,.cols$teal,3); cir(ex,ey,6,.cols$orange)
-  if (modo == "ne") { th <- seq(90-angulo,90,length.out=40)*pi/180; lab<-(90-angulo/2)*pi/180 }
-  else              { th <- seq(270,270+angulo,length.out=40)*pi/180; lab<-(270+angulo/2)*pi/180 }
+  # Arco del ángulo entre el eje cardinal (th_axis) y la línea, y bisectriz para la etiqueta
+  th  <- seq(min(th_axis, th_line), max(th_axis, th_line), length.out=40)*pi/180
   grid.lines(unit(cx+28*cos(th),"native"), unit(cy-28*sin(th),"native"), gp=gpar(col=.cols$orange,lwd=1.8))
-  # Etiqueta del ángulo: la cuña entre el norte y la línea se estrecha con ángulos pequeños,
+  lab <- (th_axis + dir_sign*angulo/2)*pi/180
+  # Etiqueta del ángulo: la cuña entre el eje y la línea se estrecha con ángulos pequeños,
   # así que el texto horizontal "NN°" (ancho ~30 px) no cabe cerca del vértice. R_fit es el
   # radio mínimo para que AMBOS bordes del texto despejen la línea y el eje (escala con el
   # ancho del texto y 1/sin(ángulo/2)). Además, si el punto naranja cae justo a la altura de
@@ -51,12 +75,16 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
   R_fit <- max(34, (8 + 11 * cos(semi)) / sin(semi))
   rang  <- if (abs(Lpx - R_fit) < 22) Lpx + 24 else R_fit
   tx(paste0(angulo,"°"), cx+rang*cos(lab), cy-rang*sin(lab), 13, .cols$orange, "centre", 2)
-  if (dx >= 0) tx("Aeropuerto", cx-12, cy-9, 12, .cols$slate600, "right") else tx("Aeropuerto", cx+12, cy-9, 12, .cols$slate600, "left")
+  # "Aeropuerto" cerca del origen, en el cuadrante OPUESTO al vuelo (horizontal y vertical)
+  apx  <- if (dx >= 0) cx-12 else cx+12
+  apy  <- if (dy >= 0) cy-9  else cy+13
+  ajus <- if (dx >= 0) "right" else "left"
+  tx("Aeropuerto", apx, apy, 12, .cols$slate600, ajus)
   # Etiquetas del extremo ancladas sobre el rayo con radio mínimo legible: el punto naranja queda en
   # su posición proporcional real (ex,ey) y SOLO el texto se desplaza hacia afuera con vectores cortos.
   rtext <- max(Lpx, 58)
   lx <- cx + rtext*dx; ly <- cy + rtext*dy
-  if (dy < 0) ly <- min(ly, cy - 32) else ly <- max(ly, cy + 23)  # no cruzar el eje E-O si el vector es casi horizontal
+  if (dy < 0) ly <- min(ly, cy - 32) else ly <- max(ly, cy + 30)  # no cruzar el eje E-O si el vector es casi horizontal
   offx <- if (dx >= 0) 13 else -13; jus <- if (dx >= 0) "left" else "right"
   tx("Avión", lx+offx, ly+15, 13, .cols$slate600, jus)
   tx(etiqueta_dist, lx+offx, ly-6, 14, .cols$teal, jus, 2)
@@ -66,10 +94,10 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
 # ---- Generar los 4 diagramas (escala global → longitudes proporcionales y comparables) ----
 escala_px_km <- 120 / (distancia_total + distancia_avanzada)
 km <- function(d) paste0(d, " km")
-dibujar_diagrama("diagrama_correcta.png",  km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, "ne")
-dibujar_diagrama("diagrama_recorrida.png", km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, "ne")
-dibujar_diagrama("diagrama_suma.png",      km(distancia_total+distancia_avanzada), distancia_total+distancia_avanzada, escala_px_km, angulo_direccion, "ne")
-dibujar_diagrama("diagrama_perp.png",      km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, "so")
+dibujar_diagrama("diagrama_correcta.png",  km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
+dibujar_diagrama("diagrama_recorrida.png", km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
+dibujar_diagrama("diagrama_suma.png",      km(distancia_total+distancia_avanzada), distancia_total+distancia_avanzada, escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
+dibujar_diagrama("diagrama_perp.png",      km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, th_axis_opuesto, dir_sign_opuesto)
 
 # ---- Pool de errores conceptuales ----
 errores_conceptuales <- list(
@@ -119,8 +147,8 @@ contextos <- list(
         "En la torre de control del ", prot,
         ", un operador monitorea la pantalla del radar. ",
         "El sistema muestra un avión a ", distancia_total,
-        " km de distancia, en dirección de ", angulo_direccion,
-        "° a la derecha del norte. Minutos después, el radar indica ",
+        " km de distancia, en dirección de ", dir_desc,
+        ". Minutos después, el radar indica ",
         "que el avión avanzó ", distancia_avanzada,
         " km directamente hacia el aeropuerto, sin cambiar su dirección."
       )
@@ -138,8 +166,8 @@ contextos <- list(
       paste0(
         "El control de aproximación sigue al piloto ", prot, ". ",
         "El radar ubica el avión a ", distancia_total,
-        " km del aeropuerto, en dirección ", angulo_direccion,
-        "° a la derecha del norte. Tras avanzar ", distancia_avanzada,
+        " km del aeropuerto, en dirección ", dir_desc,
+        ". Tras avanzar ", distancia_avanzada,
         " km en línea recta hacia el aeropuerto manteniendo el rumbo, ",
         "se verifica su nueva posición."
       )
@@ -158,8 +186,8 @@ contextos <- list(
         "Durante un simulacro de navegación aérea en ", prot,
         ", los estudiantes deben interpretar las lecturas del radar. ",
         "La pantalla muestra una aeronave ubicada a ", distancia_total,
-        " km del punto de origen, con un rumbo de ", angulo_direccion,
-        "° a la derecha del norte. La aeronave se desplaza ", distancia_avanzada,
+        " km del punto de origen, con un rumbo de ", dir_desc,
+        ". La aeronave se desplaza ", distancia_avanzada,
         " km hacia el origen sin modificar su trayectoria."
       )
     },
@@ -176,8 +204,8 @@ contextos <- list(
       paste0(
         prot, " está resolviendo un problema de geometría para su clase ",
         "de matemáticas. El enunciado dice: \"Un radar detecta un avión a ",
-        distancia_total, " km en dirección ", angulo_direccion,
-        "° al este del norte. El avión avanza ", distancia_avanzada,
+        distancia_total, " km en dirección ", dir_desc,
+        ". El avión avanza ", distancia_avanzada,
         " km hacia el radar sin desviarse.\" ",
         prot, " debe identificar el diagrama que muestra la posición final del avión."
       )
@@ -194,8 +222,8 @@ contextos <- list(
         "El informe técnico de ", prot,
         " incluye el siguiente caso: un vuelo comercial fue detectado por ",
         "el radar a ", distancia_total, " km del aeropuerto de destino, ",
-        "con una marcación de ", angulo_direccion,
-        "° a la derecha del norte. ",
+        "con una marcación de ", dir_desc,
+        ". ",
         "La aeronave reportó haber avanzado ", distancia_avanzada,
         " km en dirección al aeropuerto. Se necesita un diagrama ",
         "que represente la nueva posición."
@@ -213,8 +241,8 @@ contextos <- list(
       paste0(
         "Al revisar el registro de vuelos del día, ", prot,
         " encuentra una anotación interesante: \"A las 14:30, aeronave ",
-        "detectada a ", distancia_total, " km con rumbo ", angulo_direccion,
-        "° NE. A las 14:42, había recorrido ", distancia_avanzada,
+        "detectada a ", distancia_total, " km con rumbo ", dir_desc,
+        ". A las 14:42, había recorrido ", distancia_avanzada,
         " km aproximándose al aeropuerto sin variar el rumbo.\" ",
         "El instructor decide usar este caso real como ejemplo en clase."
       )
@@ -233,8 +261,8 @@ contextos <- list(
         "¿Cómo determina un controlador aéreo la posición de un avión que ",
         "se aproxima al aeropuerto? En ", prot,
         ", se estudia este escenario: el radar marca un avión a ", distancia_total,
-        " km con dirección ", angulo_direccion,
-        "° a la derecha del norte. El piloto informa que avanzó ", distancia_avanzada,
+        " km con dirección ", dir_desc,
+        ". El piloto informa que avanzó ", distancia_avanzada,
         " km directamente hacia el aeropuerto sin cambiar el rumbo."
       )
     },
@@ -252,8 +280,8 @@ contextos <- list(
         "—Necesito que verifiquen esta trayectoria antes de autorizar el aterrizaje ",
         "—solicitó ", prot, " al equipo de control. ",
         "En la pantalla del radar, el vuelo aparece a ", distancia_total,
-        " km del aeropuerto con un ángulo de ", angulo_direccion,
-        "° respecto al norte. En los últimos minutos, la aeronave se desplazó ",
+        " km del aeropuerto con una orientación de ", dir_desc,
+        ". En los últimos minutos, la aeronave se desplazó ",
         distancia_avanzada, " km en dirección al aeropuerto."
       )
     },
@@ -349,8 +377,8 @@ test_that("La opción correcta es la de tipo 'correcta'", {
 })
 
 test_that("Las 4 opciones-diagrama son distintas (distancia o dirección)", {
-  fps <- c(paste(distancia_restante,"ne"), paste(distancia_avanzada,"ne"),
-           paste(distancia_total+distancia_avanzada,"ne"), paste(distancia_avanzada,"so"))
+  fps <- c(paste(distancia_restante, orient$quad), paste(distancia_avanzada, orient$quad),
+           paste(distancia_total+distancia_avanzada, orient$quad), paste(distancia_avanzada, "OPUESTO"))
   expect_equal(length(unique(fps)), 4)
   expect_true(all(file.exists(c("diagrama_correcta.png","diagrama_recorrida.png","diagrama_suma.png","diagrama_perp.png"))))
 })
@@ -421,15 +449,15 @@ for (l in letras) {
 Para determinar la nueva posición del avión:
 
 1. **Distancia inicial:** El avión está a `r distancia_total` km del aeropuerto.
-2. **Dirección:** El avión se encuentra a `r angulo_direccion`° a la derecha del norte.
+2. **Dirección:** El avión se encuentra a `r dir_desc`.
 3. **Avance hacia el aeropuerto:** Recorre `r distancia_avanzada` km en dirección al aeropuerto, manteniendo la misma dirección.
 4. **Nueva distancia:** Como el avión se acerca al aeropuerto, la distancia restante es:
 
 $$d_{\text{nueva}} = d_{\text{inicial}} - d_{\text{avanzada}} = `r distancia_total` - `r distancia_avanzada` = `r distancia_restante` \text{ km}$$
 
-5. **Dirección final:** La dirección se mantiene en `r angulo_direccion`° a la derecha del norte.
+5. **Dirección final:** La dirección se mantiene en `r dir_desc`.
 
-**Por lo tanto, la nueva posición del avión es a `r distancia_restante` km del aeropuerto en dirección `r angulo_direccion`° a la derecha del norte.**
+**Por lo tanto, la nueva posición del avión es a `r distancia_restante` km del aeropuerto en dirección `r dir_desc`.**
 
 El diagrama que representa correctamente esta situación es:
 

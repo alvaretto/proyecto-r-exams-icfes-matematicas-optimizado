@@ -178,6 +178,7 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 | "¿Cómo manejo los gráficos?" | Regla `flujo-b-obligatorio.md` + `graficador-secuencial.md` |
 | "¿Por qué falló el render?" | `.claude/docs/patrones-errores-conocidos.md` Errores 1-6, 16 |
 | "¿Por qué se solapan etiquetas en un diagrama dinámico?" | Error 23 — radio del label consciente del ancho del texto + `1/sin(ángulo/2)`; validar el caso extremo (ángulo mínimo) |
+| "¿La respuesta correcta es predecible por su posición/cuadrante?" | Error 24 + regla #22 §P4 — aleatorizar orientación global (NE/NO/SE/SO); el validador de diversidad por VALOR no detecta predictibilidad posicional |
 | "¿Cómo evito patrones detectables en opciones gráficas?" | Error 18 + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado |
 | "¿Cómo diseño un buen distractor de barras?" | Error 20 (GRAF-BAR-01) — alturas permutadas |
 | "¿Por qué solo se generan N versiones únicas?" | Error 8 + regla `codigo-rmd.md` #10 |

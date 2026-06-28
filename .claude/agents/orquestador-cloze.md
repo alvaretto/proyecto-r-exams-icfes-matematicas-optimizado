@@ -290,6 +290,7 @@ Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú 
 1. TODOS los parámetros que determinan CUÁL es la respuesta correcta en CUALQUIER parte del CLOZE DEBEN contener al menos una llamada a `sample`/`runif`/`rnorm` u otra función de aleatorización.
 2. Los gráficos del enunciado que varían con los datos DEBEN generarse dinámicamente (nunca `file.copy` de PNG estático).
 3. El conteo de versiones únicas del render NO es evidencia de diversidad sustantiva.
+4. **Predictibilidad posicional (Error 24)**: aunque el VALOR de la respuesta correcta de un gap varíe, su **posición/orientación/cuadrante** visual NO debe ser siempre la misma. Aleatorizar la dimensión posicional/orientacional (misma transformación para todas las opciones) y reflejarla en el texto del enunciado de la parte. **Ojo**: `validar_diversidad_sustantiva.R` mide variación de VALOR y reporta `PASS` aunque la posición sea fija → verificar manualmente renderizando ≥8 versiones que la correcta cambie de posición, no solo de valor.
 
 **Verificación automática (paso 9 obligatorio)**:
 

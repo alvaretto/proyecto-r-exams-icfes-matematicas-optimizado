@@ -2479,3 +2479,57 @@ Grilla COMPLETA de parámetros (333 combos válidos `total×avanzada×ángulo`; 
 - Reglas `flujo-b-obligatorio.md` + `graficador-secuencial.md` (las 5 coherencias, coherencia visual).
 - Incidente G (orquestador-schoice) / Incidente I (orquestador-cloze): verificación del caso extremo de parámetros en diagramas dinámicos.
 - Memoria: `pendiente-solapamiento-diagramas-avion` (resuelto 2026-06-28).
+
+## Error 24: Predictibilidad posicional de la respuesta correcta (cuadrante/posición fija)
+
+### ❌ Síntoma
+
+La opción correcta es fácil de adivinar por su **posición/orientación visual**, aunque su valor cambie entre versiones. Caso real (`desplazamiento_avion_aeropuerto_..._n3_schoice_v1`, 2026-06-28): la opción correcta (y las distractoras `recorrida`/`suma`) se dibujaban siempre en modo `"ne"` → la respuesta correcta **siempre aparecía en el primer cuadrante (NE)**. El estudiante aprende "la correcta apunta arriba-derecha" sin analizar distancia ni dirección.
+
+### 🔍 Causa Raíz
+
+Una dimensión de la respuesta correcta (posición, orientación, cuadrante, celda de grilla, altura relativa) está **fija o hardcoded**, mientras solo varía otra dimensión (el valor numérico). La diversidad por valor enmascara la predictibilidad posicional.
+
+**Por qué el validador no lo atrapa**: `validar_diversidad_sustantiva.R` (regla #22) toma un *fingerprint del VALOR* de la respuesta correcta. Si el valor varía (aquí: la distancia), reporta `PASS` (39/40 únicos) **aunque la posición/orientación sea invariante**. Es un punto ciego: diversidad de valor ≠ diversidad posicional.
+
+### ✅ Solución Verificada
+
+Aleatorizar la orientación/posición GLOBAL de la escena por versión, aplicando la MISMA transformación a TODAS las opciones (preserva la estructura relativa correcta) y reflejándola en el texto:
+
+```r
+# Orientación global aleatoria → el cuadrante de la correcta varía (NE/NO/SE/SO)
+orientaciones <- list(
+  list(quad="NE", th_axis=90,  dir_sign=-1, eje="norte", lado="este"),
+  list(quad="NO", th_axis=90,  dir_sign= 1, eje="norte", lado="oeste"),
+  list(quad="SE", th_axis=270, dir_sign= 1, eje="sur",   lado="este"),
+  list(quad="SO", th_axis=270, dir_sign=-1, eje="sur",   lado="oeste")
+)
+orient <- orientaciones[[sample(length(orientaciones), 1)]]
+dir_desc <- paste0(angulo_direccion, "° al ", orient$lado, " del ", orient$eje)  # texto coherente
+# th_line = th_axis + dir_sign*angulo  → la dirección cae en cualquier cuadrante
+```
+
+El texto del enunciado y de la Solution usan `dir_desc` (coherente con el cuadrante elegido). El distractor de "dirección distinta" usa el cuadrante OPUESTO.
+
+### 🧪 Validación de la Solución
+
+8+ renders reales → la respuesta correcta aparece en los 4 cuadrantes (NE/NO/SE/SO); el texto del enunciado coincide con el diagrama en cada versión; `validar_diversidad_sustantiva.R --n 40` → PASS (39/40); PDF/HTML compilan; sin solapamientos (Error 23 preservado en los 4 cuadrantes).
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. ¿La posición/orientación/cuadrante/celda de la opción correcta es SIEMPRE la misma entre versiones?
+2. ¿Solo varía el valor (número, distancia) pero no la ubicación visual?
+3. Aleatorizar la dimensión posicional con la MISMA transformación para todas las opciones, y reflejarla en el texto.
+4. **Verificación**: renderizar ≥8 versiones y confirmar que la correcta cambia de posición/orientación, no solo de valor. El `PASS` del validador de diversidad por valor NO es suficiente.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-06-28 | desplazamiento_avion_aeropuerto_..._n3_schoice_v1.Rmd | correcta siempre en cuadrante NE (modo `"ne"` fijo) | orientación global aleatoria (NE/NO/SE/SO) + texto `dir_desc` coherente + distractor en cuadrante opuesto | correcta en los 4 cuadrantes; diversidad PASS; sin solapes |
+
+### 📚 Referencias
+
+- Regla #22 `diversidad-sustantiva.md` § "P4: Predictibilidad posicional/orientacional".
+- Error 23 (solape de etiquetas) — mismo ejercicio, fix complementario.
+- Incidente F (orquestador-schoice) / Incidente H (orquestador-cloze): diversidad sustantiva ampliada a la dimensión posicional.

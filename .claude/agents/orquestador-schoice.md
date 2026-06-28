@@ -203,6 +203,7 @@ La guardia `@ifundefined` evita redefinir el contador si ya existe (importante e
 1. Todos los parámetros que determinan CUÁL opción es correcta DEBEN contener al menos una llamada a `sample`/`runif`/`rnorm` u otra función de aleatorización R.
 2. Los gráficos de opciones DEBEN generarse dinámicamente por versión (ggplot2, TikZ, matplotlib), parametrizados con las variables aleatorias del `data_generation`. Nunca `file.copy(png_estatico, opcion_X.png)`.
 3. El conteo de versiones únicas del render NO es evidencia de diversidad sustantiva.
+4. **Predictibilidad posicional (Error 24)**: aunque el VALOR de la correcta varíe, su **posición/orientación/cuadrante** NO debe ser siempre la misma (p.ej. la correcta siempre en el primer cuadrante, o siempre la barra más alta). Aleatorizar la dimensión posicional/orientacional (misma transformación para todas las opciones) y reflejarla en el texto. **Ojo**: `validar_diversidad_sustantiva.R` mide variación de VALOR y reporta `PASS` aunque la posición sea fija → verificar manualmente renderizando ≥8 versiones que la correcta cambie de posición, no solo de valor.
 
 **Verificación automática (paso 9 obligatorio)**:
 

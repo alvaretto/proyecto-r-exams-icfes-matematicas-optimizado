@@ -55,6 +55,21 @@ exams2html("ejercicio.Rmd", n = 300)
 
 El conteo de versiones únicas del render (`exams2html(n=300)`) mide si el **envoltorio** difiere (distintos contextos narrativos, distintos órdenes de opciones, distintas reflexiones). **No garantiza** que los datos numéricos o el contenido gráfico de la respuesta correcta cambien. Un ejercicio con 8 contextos × 4 órdenes de opciones produce 32 versiones únicas aunque la respuesta correcta sea siempre la misma.
 
+### ❌ P4: Predictibilidad POSICIONAL/ORIENTACIONAL de la respuesta correcta
+
+```r
+# ❌ PROHIBIDO — la respuesta correcta SIEMPRE en el mismo cuadrante/posición/orientación
+dibujar_diagrama("correcta.png", ..., modo = "ne")   # siempre noreste
+dibujar_diagrama("distractor.png", ..., modo = "ne") # los distractores también
+# → el estudiante aprende "la correcta apunta arriba-derecha" sin analizar los datos
+```
+
+Aun cuando el **valor** de la respuesta correcta varíe entre versiones (distinta distancia, distinto número), si su **posición, orientación o cuadrante visual es siempre el mismo**, el estudiante predice la correcta por su ubicación, no por el contenido. Casos: la opción correcta siempre en el primer cuadrante de un plano; la barra correcta siempre la más alta; el gráfico correcto siempre en la misma celda de la grilla; la afirmación correcta siempre con cierta estructura.
+
+**Trampa del validador**: `validar_diversidad_sustantiva.R` extrae un *fingerprint del VALOR* de la respuesta correcta. Si el valor varía (p.ej. la distancia), reporta `PASS` **aunque la posición/orientación sea invariante**. Por eso la diversidad por valor NO basta: hay que aleatorizar también la dimensión posicional/orientacional. Incidente real: `desplazamiento-avion-aeropuerto` (2026-06-28) — el validador daba 39/40 valores únicos pero la correcta SIEMPRE caía en el cuadrante NE.
+
+**Defensa**: aleatorizar la orientación/posición global de la escena por versión (p.ej. cuadrante ∈ {NE, NO, SE, SO}), aplicando la MISMA transformación a todas las opciones (preserva la estructura relativa correcta) y reflejándola en el texto del enunciado (la descripción de dirección/posición debe ser coherente con la transformación elegida). Verificación: renderizar ≥8 versiones y confirmar que la respuesta correcta aparece en posiciones/orientaciones distintas.
+
 ---
 
 ## Patrón Correcto
