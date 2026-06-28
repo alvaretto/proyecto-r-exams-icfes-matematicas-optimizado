@@ -19,6 +19,7 @@
 # FASE 2K: Guard contador 'none' para tablas (Error 21, regla #20)
 # FASE 2L: Gráficas-opción en gap CLOZE (V5, Incidente G, regla graficos-como-opciones)
 # FASE 2M: Auditoría visual HTML masiva (recordatorio — workflow)
+# FASE 2N: Detección ESTÁTICA de diversidad cosmética (regla #22 — WARN_DIV_ESTATICA)
 #
 # GARANTÍA: Toda renderización activa TODAS las fases
 # PERMANENTE: No hay forma de saltarse estas validaciones
@@ -542,6 +543,49 @@ if [ -n "$RMD_FILE" ] && [ "$ERRORES_TOTALES" -eq 0 ]; then
   echo "  (o agente subagent_type=\"auditor-visual-html\"). Renderiza N"
   echo "  versiones, captura móvil 360px + desktop 1024px y detecta fugas de"
   echo "  markup, math sin renderizar, desbordes/responsividad y anomalías."
+  echo ""
+fi
+
+# =============================================================================
+# FASE 2N: DETECCIÓN ESTÁTICA DE DIVERSIDAD COSMÉTICA (regla #22)
+# =============================================================================
+# Detección ESTÁTICA (solo grep — no ejecuta validar_diversidad_sustantiva.R).
+# La validación dinámica exhaustiva vive en el orquestador (paso 9).
+# Esta fase emite WARN_DIV_ESTATICA (NO bloqueante) cuando detecta señales
+# estáticas de diversidad cosmética para recordar al desarrollador.
+if [ -n "$RMD_FILE" ]; then
+  echo "┌───────────────────────────────────────────────────────────────┐"
+  echo "│ FASE 2N: Detección estática diversidad cosmética (regla #22) │"
+  echo "└───────────────────────────────────────────────────────────────┘"
+  # Extraer bloque data_generation (entre el primer ```{r data_generation y el cierre ```)
+  DG_BLOCK=$(awk '/^```\{r[ ,].*data_generation/,/^```\s*$/' "$RMD_FILE" 2>/dev/null || true)
+  if [ -z "$DG_BLOCK" ]; then
+    # Fallback: primer bloque R del archivo
+    DG_BLOCK=$(awk '/^```\{r/,/^```\s*$/' "$RMD_FILE" 2>/dev/null | head -80 || true)
+  fi
+  DIV_WARN=0
+  # Señal 1: file.copy( usado para PNGs que se referencian en el answerlist
+  if echo "$DG_BLOCK" | grep -qE 'file\.copy\('; then
+    if echo "$DG_BLOCK" | grep -qE 'file\.copy\(.*\.png|\.png.*file\.copy'; then
+      echo "  WARN_DIV_ESTATICA: se usa file.copy() para PNGs en data_generation."
+      echo "    -> Los PNGs estáticos producen contenido idéntico en todas las semillas."
+      echo "    -> Si son opciones gráficas, deben generarse dinámicamente (ggplot2/TikZ/reticulate)."
+      echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 40"
+      DIV_WARN=1
+    fi
+  fi
+  # Señal 2: ausencia total de funciones de aleatorización en data_generation
+  if ! echo "$DG_BLOCK" | grep -qE 'sample\(|runif\(|rnorm\(|rbinom\(|rpois\(|rexp\(|rgeom\(|rhyper\(|runif\(|pick_int\(|safe_sample\('; then
+    echo "  WARN_DIV_ESTATICA: no se detecta ninguna función de aleatorización en data_generation."
+    echo "    -> Sin sample()/runif()/rnorm() la respuesta correcta puede ser invariante entre versiones."
+    echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 40"
+    DIV_WARN=1
+  fi
+  if [ "$DIV_WARN" -eq 0 ]; then
+    echo "  ✓ FASE 2N: señales estáticas OK (file.copy PNG no detectado; aleatorización presente)."
+    echo "    Nota: verificación sustantiva COMPLETA solo via validar_diversidad_sustantiva.R (orquestador paso 9)."
+  fi
+  ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + DIV_WARN))
   echo ""
 fi
 

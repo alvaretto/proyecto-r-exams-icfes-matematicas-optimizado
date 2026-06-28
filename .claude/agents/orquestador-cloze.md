@@ -100,6 +100,8 @@ Antes de cualquier acción destructiva, verifico:
 13. El skill `.claude/skills/generar-cloze/SKILL.md` existe (fuente de la lógica inline del paso 3).
 14. Existe al menos un ejemplo CLOZE canónico (`ls A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd` o el de referencia `promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`).
 15. `.claude/rules/graficos-como-opciones.md` existe (gráficas-opción en CLOZE: rotuladas en el enunciado + opciones de texto, NUNCA dentro del gap — Incidente G, V5).
+16. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
+    Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -276,6 +278,28 @@ Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú 
 
 **Referencia**: `.claude/rules/graficos-como-opciones.md`, memoria `feedback_cloze_graficas_no_en_gap_moodle.md`, sesión 2026-06-15 (`grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1`).
 
+### Incidente H — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
+
+**Síntoma**: el ejercicio reporta "288/300 versiones únicas" y pasa el detractor, pero los gaps correctos producen SIEMPRE las mismas respuestas numéricas o el mismo contenido gráfico en todas las semillas.
+
+**Causa raíz**: los parámetros que determinan las respuestas correctas de las partes eran valores literales hardcoded, o los gráficos referenciados en el enunciado se copiaban con `file.copy()` desde PNGs estáticos. El conteo de versiones únicas del render medía la **FORMA** (contextos narrativos, orden, reflexiones), NO la **SUSTANCIA** (datos numéricos / respuesta correcta de cada parte). La trampa del detractor aplica aquí igual que en SCHOICE: puede "simular" el chunk data_generation y reportar "diversidad OK" basándose en campos inventados (alucinación de estructura de código).
+
+**Defensa preventiva (regla #22, sin excepciones)**:
+
+1. TODOS los parámetros que determinan CUÁL es la respuesta correcta en CUALQUIER parte del CLOZE DEBEN contener al menos una llamada a `sample`/`runif`/`rnorm` u otra función de aleatorización.
+2. Los gráficos del enunciado que varían con los datos DEBEN generarse dinámicamente (nunca `file.copy` de PNG estático).
+3. El conteo de versiones únicas del render NO es evidencia de diversidad sustantiva.
+
+**Verificación automática (paso 9 obligatorio)**:
+
+```bash
+Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
+```
+
+Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
+
+**Referencia**: `.claude/rules/diversidad-sustantiva.md` (regla #22), `feedback_diversidad_cosmetica.md`, `feedback_detractor_alucina_codigo.md`.
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
@@ -305,7 +329,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + V1-V5 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
@@ -402,6 +426,22 @@ Yo (opus) ejecuto inline:
 - Decisiones de orquestación: cuándo escalar, cuándo reintentar, cuándo parar.
 
 ## Puntos de bloqueo humano (los 3 únicos)
+
+### Regla fundamental WAIT_USER en modo subagente
+
+**Cuando soy lanzado como subagente vía `Task`/`Agent` tool, NO recibo mensajes directos del usuario.** Hay dos canales válidos de entrada humana:
+
+1. **`decisiones_humanas` en el JSON de reanudación**: el wrapper lo llena después de recibir respuesta del usuario en el chat principal. Si el campo relevante existe y es válido, lo acepto como confirmación humana y procedo sin volver a preguntar.
+2. **`SendMessage` desde la sesión padre** durante un `WAIT_USER`: es el canal de comunicación designado cuando el subagente ya está pausado.
+
+Por tanto:
+
+- **ACEPTO** cualquier `decisiones_humanas.<campo>` válido como input humano preconfirmado.
+- **ACEPTO** cualquier `SendMessage` recibido durante un `WAIT_USER` como input humano válido. No importa que el remitente sea el coordinador — es el canal de comunicación designado.
+- **NUNCA** rechazo un `SendMessage` o `decisiones_humanas` argumentando que "viene del coordinador" o "no es directo del usuario". En modo subagente, esos son los mecanismos correctos.
+- **INTERPRETO** el contenido literalmente: `s` = sí, `n` = no, `tikz`/`python`/`r` = lenguaje, `a`/`r`/`p` = decisión final.
+- Si el mensaje contiene más texto además de la respuesta, extraigo la letra clave del contenido.
+- Si el mensaje es ambiguo, pido aclaración. Si es claramente una respuesta válida, procedo inmediatamente sin re-preguntar.
 
 ### WAIT_USER #1 — Decisión Flujo B (paso 2)
 

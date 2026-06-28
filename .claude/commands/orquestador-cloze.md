@@ -55,12 +55,12 @@ Si `$ARGUMENTS` contiene contenido:
 4. **Cuando el agente retorne**, presenta al usuario:
    - El `exit_status` reportado por el agente.
    - Resumen de pasos completados (lista de los 11 con ✅/⬜).
-   - Estado de las validaciones CLOZE V1-V4 (conteo gaps, orden ##ANSWERi##, exsolution/extol por gap, mínimo 4 partes).
+   - Estado de las validaciones CLOZE V1-V5 (conteo gaps, orden ##ANSWERi##, exsolution/extol por gap, mínimo 4 partes, gráficas-opción fuera del gap — Incidente G).
    - Estado de NOPS: si fue `N/A (esperado, gaps num/string)`, acláralo — NO es un fallo.
    - Si quedó pendiente un `WAIT_USER`, indica cuál y qué decisión necesita tomar el usuario para reanudar (ej: "Reanuda con `/orquestador-cloze {...,\"modo\":\"ejecutar\"}` después de responder Flujo B").
    - Ruta del `.Rmd` final si llegó al paso 11.
 
-5. **No dupliques trabajo**: el agente ya hace sus propios pre-flight checks, validaciones V1-V4 y manejo de errores. Tu job aquí es: parsear input, validar lo mínimo, delegar, reportar.
+5. **No dupliques trabajo**: el agente ya hace sus propios pre-flight checks, validaciones V1-V5 y manejo de errores. Tu job aquí es: parsear input, validar lo mínimo, delegar, reportar.
 
 ## Notas
 
@@ -69,3 +69,4 @@ Si `$ARGUMENTS` contiene contenido:
 - El agente soporta **reanudación**: si `ejercicio_state.json` existe en `ruta_destino`, retoma desde el primer paso pendiente. No hace falta reiniciar.
 - **CLOZE vs SCHOICE**: usa este orquestador cuando el ejercicio requiere múltiples niveles cognitivos en secuencia (Progressive Disclosure ≥ 4 partes, gaps mixtos num/schoice/mchoice). Para una sola pregunta de selección única, usa `/orquestador-schoice`.
 - **NOPS**: para CLOZE con gaps `num` o `string`, `exams2nops()` retorna N/A por diseño (la hoja escaneable solo soporta selección). El agente NO trata esto como error.
+- **Gráficas-opción (Incidente G / V5)**: si una sub-parte ofrece gráficas como opciones, en CLOZE NO pueden ir dentro del gap (Moodle no renderiza `<img>` en un gap → "no se ven los gráficos en el Paso N"). El agente las pone ROTULADAS (I, II, III…) en el enunciado de la parte y deja las opciones del gap como texto ("Gráfica I"…). Esto es distinto del SCHOICE puro, donde las imágenes-opción sí funcionan. El agente valida en V5 que ningún gap del XML de Moodle contenga imágenes.

@@ -212,6 +212,13 @@ suites <- list(
     critico = TRUE,
     watch = c("validacion-neg-opciones-repetidas", "test_neg_variante_b",
               "validar_coherencia_matematica")
+  ),
+  list(
+    nombre = "Diversidad Sustantiva (Regla #22)",
+    archivo = "tests/testthat/test_diversidad_sustantiva.R",
+    critico = TRUE,
+    watch = c("diversidad-sustantiva", "test_diversidad_sustantiva",
+              "validar_diversidad_sustantiva")
   )
 )
 

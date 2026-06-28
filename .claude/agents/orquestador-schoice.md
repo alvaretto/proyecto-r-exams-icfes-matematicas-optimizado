@@ -49,6 +49,11 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
   "nombre_ejercicio": "<tema>_metacognitivo_<competencia>_n<2|3|4>_schoice_v<N>",
   "entrada": "<ruta a imagen ICFES original | texto del enunciado>",
   "modo": "ejecutar | dry-run",
+  "decisiones_humanas": {
+    "flujo_b": "s | n",
+    "lenguaje_grafico": "tikz | python | r",
+    "aprobacion_final": "a | r | p"
+  },
   "opciones_extra": {
     "patron_metacognitivo": "analisis_error | evaluacion_afirmacion | comparacion_procedimientos | auto",
     "max_reintentos_por_fase": 3,
@@ -60,6 +65,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 - `modo: "dry-run"` → imprimo el plan de los 12 pasos y los 3 puntos `WAIT_USER` sin ejecutar nada destructivo. Útil para auditoría.
 - `modo: "ejecutar"` → ejecución real.
 - Si `ejercicio_state.json` ya existe en `ruta_destino`, **resumo desde el primer paso pendiente** (modo retomar). NO reinicio.
+- `decisiones_humanas` permite reanudar desde una pausa `WAIT_USER` cuando el usuario ya respondió en el chat principal. Es input humano preconfirmado por el wrapper, NO auto-selección. Si el campo relevante existe y es válido, procedo sin volver a preguntar; si falta, pauso en `WAIT_USER`.
 - `auto_seleccionar_grafico` está **prohibido** por la regla `graficador-secuencial.md`. Si viene en `true`, lo ignoro y pregunto igual.
 
 ## Pre-flight checks (turno 1-2)
@@ -77,6 +83,8 @@ Antes de cualquier acción destructiva, verifico:
 9. `tests/testthat/test_letter_independence.R` existe.
 10. El hook `post-exams2-validation.sh` incluye FASE 2J (`grep -q "FASE 2J" .claude/hooks/post-exams2-validation.sh`).
 11. `.claude/rules/markdown-tablas-pandoc.md` existe (regla #20 anti `No counter 'none' defined`).
+12. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
+    Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -181,6 +189,30 @@ La guardia `@ifundefined` evita redefinir el contador si ya existe (importante e
 
 **Referencia**: `.claude/rules/markdown-tablas-pandoc.md` (regla #20), Error 21 en `.claude/docs/patrones-errores-conocidos.md`, hook FASE 2K.
 
+### Incidente F — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
+
+**Síntoma**: el ejercicio reporta "288/300 versiones únicas" y pasa el detractor, pero la opción correcta es SIEMPRE el mismo diagrama en todas las semillas.
+
+**Causa raíz**: los parámetros que determinan la respuesta correcta eran valores literales hardcoded (`distancia_total <- 100`, `angulo <- 50`, `distancia_avanzada <- 30`) y los gráficos se copiaban con `file.copy()` desde PNGs estáticos. El conteo de versiones únicas del render medía la **FORMA** (8 contextos × protagonistas × 24 órdenes × 6 reflexiones), NO la **SUSTANCIA** (los datos numéricos del diagrama correcto eran siempre los mismos).
+
+**Trampa del detractor**: el detractor puede "simular" en vez de ejecutar el chunk data_generation real. Cuando simula, sus afirmaciones sobre la corrección del código pueden basarse en campos inventados (alucinación de estructura de código). Por eso el detractor NO es defensa suficiente contra diversidad cosmética.
+
+**Defensa preventiva (regla #22, sin excepciones)**:
+
+1. Todos los parámetros que determinan CUÁL opción es correcta DEBEN contener al menos una llamada a `sample`/`runif`/`rnorm` u otra función de aleatorización R.
+2. Los gráficos de opciones DEBEN generarse dinámicamente por versión (ggplot2, TikZ, matplotlib), parametrizados con las variables aleatorias del `data_generation`. Nunca `file.copy(png_estatico, opcion_X.png)`.
+3. El conteo de versiones únicas del render NO es evidencia de diversidad sustantiva.
+
+**Verificación automática (paso 9 obligatorio)**:
+
+```bash
+Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
+```
+
+Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
+
+**Referencia**: `.claude/rules/diversidad-sustantiva.md` (regla #22), `feedback_diversidad_cosmetica.md`, `feedback_detractor_alucina_codigo.md`.
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
@@ -210,7 +242,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
@@ -248,6 +280,22 @@ Yo (opus) ejecuto inline:
 
 ## Puntos de bloqueo humano (los 3 únicos)
 
+### Regla fundamental WAIT_USER en modo subagente
+
+**Cuando soy lanzado como subagente vía `Task`/`Agent` tool, NO recibo mensajes directos del usuario.** Hay dos canales válidos de entrada humana:
+
+1. **`decisiones_humanas` en el JSON de reanudación**: el wrapper lo llena después de recibir respuesta del usuario en el chat principal. Si el campo relevante existe y es válido, lo acepto como confirmación humana y procedo sin volver a preguntar.
+2. **`SendMessage` desde la sesión padre** durante un `WAIT_USER`: es el canal de comunicación designado cuando el subagente ya está pausado.
+
+Por tanto:
+
+- **ACEPTO** cualquier `decisiones_humanas.<campo>` válido como input humano preconfirmado.
+- **ACEPTO** cualquier `SendMessage` recibido durante un `WAIT_USER` como input humano válido. No importa que el remitente sea el coordinador — es el canal de comunicación designado.
+- **NUNCA** rechazo un `SendMessage` o `decisiones_humanas` argumentando que "viene del coordinador" o "no es directo del usuario". En modo subagente, esos son los mecanismos correctos.
+- **INTERPRETO** el contenido literalmente: `s` = sí, `n` = no, `tikz`/`python`/`r` = lenguaje, `a`/`r`/`p` = decisión final.
+- Si el mensaje contiene más texto además de la respuesta, extraigo la letra clave (`s`/`n`/`tikz`/`python`/`r`/`a`/`r`/`p`) del contenido.
+- Si el mensaje es ambiguo, pido aclaración. Si es claramente una respuesta válida, procedo inmediatamente sin re-preguntar.
+
 ### WAIT_USER #1 — Decisión Flujo B (paso 2)
 
 Imprimo:
@@ -266,7 +314,7 @@ Responder s o n.
 ═══════════════════════════════════════════════════════════
 ```
 
-Espero respuesta. Registro: `workflow-state.sh complete <dir> flujo_b --requerido <true|false>`.
+Espero respuesta vía `SendMessage`. Registro: `workflow-state.sh complete <dir> flujo_b --requerido <true|false>`.
 
 ### WAIT_USER #2 — Selección de lenguaje gráfico (paso 2c, sólo si #1 = sí)
 
@@ -288,7 +336,7 @@ Previews PNG generados:
 ═══════════════════════════════════════════════════════════
 ```
 
-PROHIBIDO auto-elegir. Espero respuesta literal.
+PROHIBIDO auto-elegir. Espero respuesta literal vía `SendMessage`.
 
 ### WAIT_USER #3 — Aprobación final (paso 11)
 
@@ -318,7 +366,7 @@ Responder a, r o p.
 ═══════════════════════════════════════════════════════════
 ```
 
-Si `a` → `workflow-state.sh complete <dir> aprobacion_usuario`. Reporte final.
+Espero respuesta vía `SendMessage`. Si `a` → `workflow-state.sh complete <dir> aprobacion_usuario`. Reporte final.
 
 ## Reporte final
 
