@@ -102,6 +102,7 @@ Antes de cualquier acción destructiva, verifico:
 15. `.claude/rules/graficos-como-opciones.md` existe (gráficas-opción en CLOZE: rotuladas en el enunciado + opciones de texto, NUNCA dentro del gap — Incidente G, V5).
 16. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
+17. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B, sea en el enunciado o como gráficas-opción rotuladas), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo del pool + vectores más corto y más largo), no una sola semilla — Incidente I / Error 23 (etiquetas solapadas en cuña estrecha).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -299,6 +300,21 @@ Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
 Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
 
 **Referencia**: `.claude/rules/diversidad-sustantiva.md` (regla #22), `feedback_diversidad_cosmetica.md`, `feedback_detractor_alucina_codigo.md`.
+
+### Incidente I — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
+
+**Síntoma**: en un diagrama generado dinámicamente (en el enunciado de una parte o como gráfica-opción rotulada), una etiqueta de texto (ángulo, distancia, rótulo) se solapa con una línea/punto/eje en SOLO algunas versiones. HTML/PDF rinden "sin error"; el defecto es visual y depende de los parámetros aleatorios. Caso real (origen SCHOICE): la etiqueta `"30°"` montada sobre la línea y el punto cuando el ángulo era el **mínimo del pool**.
+
+**Causa raíz**: la etiqueta se posicionaba con una heurística que ignoraba la geometría real (radio según la longitud del vector, no según el ángulo de la cuña ni el ancho del texto). En cuñas angulares estrechas el texto horizontal no cabe; además, un marcador móvil (el punto) puede coincidir con el radio de la etiqueta.
+
+**Defensa preventiva**:
+1. El offset/radio de cualquier etiqueta dentro de una cuña angular DEBE escalar con `1/sin(ángulo/2)` y considerar el ANCHO del texto, no solo una distancia radial fija. Patrón validado: `rang <- max(R_min, (holgura + media_anchura*cos(semi)) / sin(semi))`.
+2. Si un marcador cuya posición varía por versión puede coincidir con la etiqueta, empujar la etiqueta más allá del marcador (`rang <- Lpx + margen`).
+3. NUNCA fijar la posición de una etiqueta solo en función de la longitud del vector.
+
+**Verificación obligatoria (Flujo B)**: para TODO diagrama dinámico con etiquetas (incluidas las gráficas-opción rotuladas I–IV que van en el enunciado — Incidente G), renderizar y leer visualmente el **caso EXTREMO de parámetros** — el ángulo MÍNIMO del pool y los vectores más corto Y más largo — no una sola semilla. Si se detecta cualquier solape → corregir el posicionamiento antes de continuar.
+
+**Referencia**: Error 23 en `.claude/docs/patrones-errores-conocidos.md`, reglas `flujo-b-obligatorio.md` + `graficador-secuencial.md` (coherencia visual), memoria `pendiente-solapamiento-diagramas-avion`.
 
 ### Validación realista obligatoria (post-corrección)
 

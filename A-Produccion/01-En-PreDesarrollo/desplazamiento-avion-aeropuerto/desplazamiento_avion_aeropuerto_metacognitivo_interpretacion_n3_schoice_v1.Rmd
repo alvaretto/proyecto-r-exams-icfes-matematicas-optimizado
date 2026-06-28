@@ -42,11 +42,24 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
   if (modo == "ne") { th <- seq(90-angulo,90,length.out=40)*pi/180; lab<-(90-angulo/2)*pi/180 }
   else              { th <- seq(270,270+angulo,length.out=40)*pi/180; lab<-(270+angulo/2)*pi/180 }
   grid.lines(unit(cx+28*cos(th),"native"), unit(cy-28*sin(th),"native"), gp=gpar(col=.cols$orange,lwd=1.8))
-  tx(paste0(angulo,"°"), cx+34*cos(lab), cy-34*sin(lab), 13, .cols$orange, "centre", 2)
+  # Etiqueta del ángulo: la cuña entre el norte y la línea se estrecha con ángulos pequeños,
+  # así que el texto horizontal "NN°" (ancho ~30 px) no cabe cerca del vértice. R_fit es el
+  # radio mínimo para que AMBOS bordes del texto despejen la línea y el eje (escala con el
+  # ancho del texto y 1/sin(ángulo/2)). Además, si el punto naranja cae justo a la altura de
+  # R_fit, se aleja la etiqueta más allá del punto (Lpx + 24) para no solaparlo.
+  semi  <- (angulo/2) * pi/180
+  R_fit <- max(34, (8 + 11 * cos(semi)) / sin(semi))
+  rang  <- if (abs(Lpx - R_fit) < 22) Lpx + 24 else R_fit
+  tx(paste0(angulo,"°"), cx+rang*cos(lab), cy-rang*sin(lab), 13, .cols$orange, "centre", 2)
   if (dx >= 0) tx("Aeropuerto", cx-12, cy-9, 12, .cols$slate600, "right") else tx("Aeropuerto", cx+12, cy-9, 12, .cols$slate600, "left")
+  # Etiquetas del extremo ancladas sobre el rayo con radio mínimo legible: el punto naranja queda en
+  # su posición proporcional real (ex,ey) y SOLO el texto se desplaza hacia afuera con vectores cortos.
+  rtext <- max(Lpx, 58)
+  lx <- cx + rtext*dx; ly <- cy + rtext*dy
+  if (dy < 0) ly <- min(ly, cy - 32) else ly <- max(ly, cy + 23)  # no cruzar el eje E-O si el vector es casi horizontal
   offx <- if (dx >= 0) 13 else -13; jus <- if (dx >= 0) "left" else "right"
-  tx("Avión", ex+offx, ey+15, 13, .cols$slate600, jus)
-  tx(etiqueta_dist, ex+offx, ey-6, 14, .cols$teal, jus, 2)
+  tx("Avión", lx+offx, ly+15, 13, .cols$slate600, jus)
+  tx(etiqueta_dist, lx+offx, ly-6, 14, .cols$teal, jus, 2)
   popViewport()
 }
 
