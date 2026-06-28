@@ -73,8 +73,10 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
   # radio mínimo para que AMBOS bordes del texto despejen la línea y el eje (escala con el
   # ancho del texto y 1/sin(ángulo/2)). Además, si el punto naranja cae justo a la altura de
   # R_fit, se aleja la etiqueta más allá del punto (Lpx + 24) para no solaparlo.
+  # Piso 50 (no 34): para ángulos grandes (cuña ancha, p.ej. 70°) la fórmula da ~30 y la línea
+  # casi horizontal clipaba la etiqueta; empujarla por la bisectriz hasta radio 50 da holgura.
   semi  <- (angulo/2) * pi/180
-  R_fit <- max(34, (8 + 11 * cos(semi)) / sin(semi))
+  R_fit <- max(50, (8 + 11 * cos(semi)) / sin(semi))
   rang  <- if (abs(Lpx - R_fit) < 22) Lpx + 24 else R_fit
   tx(paste0(angulo,"°"), cx+rang*cos(lab), cy-rang*sin(lab), 13, .cols$orange, "centre", 2)
   # "Aeropuerto" cerca del origen, en el cuadrante OPUESTO al vuelo (horizontal y vertical)

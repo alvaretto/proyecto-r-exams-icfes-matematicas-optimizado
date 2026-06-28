@@ -2441,6 +2441,7 @@ Colocar la etiqueta con una heurística que **ignora la geometría real**. Dos c
 
 1. **Cuña estrecha + texto ancho**: la etiqueta del ángulo va sobre la bisectriz, dentro de la cuña entre dos rectas separadas por `ángulo`. La distancia perpendicular del CENTRO del texto a cada recta es `radio·sin(ángulo/2)`; con ángulos pequeños se hace diminuta. Y el texto horizontal tiene ancho (~30 px para `"NN°"`): su borde más cercano a la recta reduce esa holgura en `media_anchura·cos(ángulo/2)`. La fórmula anterior fijaba el radio según la **longitud del vector** (`Lpx`), no según el ángulo ni el ancho del texto → con 30° y radio 34 quedaban ~8.8 px de centro y ~2.8 px de borde → toque.
 2. **Colisión con marcador móvil**: el punto está sobre una recta a radio `Lpx` (variable por versión); la etiqueta sobre la bisectriz a radio fijo. Cuando `Lpx ≈ radio_etiqueta` ambos quedan a la misma "altura" separados solo por `ángulo/2` → se tocan en vectores de longitud media.
+3. **Ángulo grande + piso bajo (descubierto 2026-06-28)**: para ángulos grandes (p.ej. 70°) la fórmula `(8+11·cos(semi))/sin(semi)` da ~30 (por debajo del piso), así que se usa el piso. Con piso 34 la etiqueta queda cerca del vértice y la **recta casi horizontal** (la otra frontera de la cuña ancha) clipa el borde superior del texto. La validación inicial (montajes en miniatura) NO lo detectó; se vio sólo al ampliar el HTML ×2.4. Fix: subir el piso a 50 → holgura `50·sin(35°) ≈ 28 px`.
 
 ### ✅ Solución Verificada
 
@@ -2452,26 +2453,27 @@ rang <- 34 + max(0, 26 - Lpx)
 
 # ✅ DESPUÉS
 semi  <- (angulo/2) * pi/180
-R_fit <- max(34, (8 + 11 * cos(semi)) / sin(semi))   # 8 = holgura; 11 = media-anchura aprox de "NN°"
+R_fit <- max(50, (8 + 11 * cos(semi)) / sin(semi))   # 8 = holgura; 11 = media-anchura aprox de "NN°"; piso 50 cubre ángulos grandes
 rang  <- if (abs(Lpx - R_fit) < 22) Lpx + 24 else R_fit   # si el punto cae a la altura del label, más allá del punto
 ```
 
 ### 🧪 Validación de la Solución
 
-Grilla COMPLETA de parámetros (333 combos válidos `total×avanzada×ángulo`; 37 por ángulo) × 4 tipos de diagrama (correcta/recorrida/suma/perp) × ángulos {30,40,55,70}; montajes + recortes ampliados leídos visualmente → **0 solapamientos** (incluido el peor caso ángulo=30°). `exams2html` y `exams2pdf` compilan. Diversidad sustantiva intacta.
+Grilla COMPLETA de parámetros (333 combos válidos `total×avanzada×ángulo`; 37 por ángulo) × 4 tipos de diagrama (correcta/recorrida/suma/perp) × ángulos {30,40,55,70}; montajes + recortes ampliados → 0 solapamientos en ángulos pequeños/medios. **Corrección 2026-06-28**: el ángulo 70° (cuña ancha) SÍ clipaba con el piso 34 (la miniatura lo ocultó; visible al ampliar ×2.4 el HTML autocontenido). Se subió el piso a 50 y se revalidó con **40 semillas reales** (ángulos 30–70, 4 cuadrantes, vectores 20–200 km), ampliando ×2.4 los 13 casos de 60–70° y el caso corto+70° → **0 solapamientos**. `exams2html/pdf/pandoc(docx)/nops` compilan; diversidad sustantiva PASS.
 
 ### 📋 Checklist de Corrección (generalizable)
 
 1. ¿La etiqueta se coloca relativa a elementos geométricos cuya posición depende de parámetros aleatorios (ángulo, longitud)?
 2. ¿El radio/offset de la etiqueta considera el ÁNGULO de la cuña y el ANCHO del texto, no solo una distancia radial?
 3. ¿Puede un marcador móvil (punto, flecha) coincidir con la posición de la etiqueta? Si sí, empujarla más allá del marcador.
-4. **Verificación visual del caso EXTREMO**: renderizar el ángulo mínimo (cuña más estrecha) y los vectores más corto Y más largo, no una sola semilla. Leer los PNGs (Flujo B).
+4. **Verificación visual del caso EXTREMO a ALTA magnificación**: renderizar el ángulo mínimo Y el máximo (cuña estrecha Y cuña ancha) y los vectores más corto Y más largo; ampliar los recortes ≥×2.4 (las miniaturas ocultan toques marginales de 2–3 px — fue exactamente lo que pasó con el ángulo 70°). Leer los PNGs (Flujo B).
 
 ### 📅 Historial
 
 | Fecha | Archivo | Causa | Fix | Resultado |
 |-------|---------|-------|-----|-----------|
 | 2026-06-28 | desplazamiento_avion_aeropuerto_..._n3_schoice_v1.Rmd | radio del label del ángulo solo dependía de `Lpx`; cuña de 30° muy estrecha para texto horizontal | radio = `max(34, (8+11·cos(semi))/sin(semi))` + esquive del punto según `Lpx` | 0 solapamientos en 333×4 combos; PDF/HTML OK |
+| 2026-06-28 | (mismo) | piso `R_fit=34` insuficiente para ángulos grandes (70°): la recta casi horizontal clipaba el borde superior del label (la miniatura lo ocultó) | piso 34 → 50 (empuja el label por la bisectriz, holgura ~28 px) | 0 solapamientos en 40 semillas reales (áng. 30–70, 4 cuad., 20–200 km) con zoom ×2.4; 4 formatos OK |
 
 ### 📚 Referencias
 

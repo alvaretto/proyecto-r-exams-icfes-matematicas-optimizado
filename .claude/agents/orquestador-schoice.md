@@ -85,7 +85,7 @@ Antes de cualquier acción destructiva, verifico:
 11. `.claude/rules/markdown-tablas-pandoc.md` existe (regla #20 anti `No counter 'none' defined`).
 12. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
-13. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo del pool + vectores más corto y más largo), no una sola semilla — Incidente G / Error 23 (etiquetas solapadas en cuña estrecha).
+13. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo **Y máximo** del pool + vectores más corto y más largo + todos los cuadrantes), ampliando los recortes ≥×2.4 (las miniaturas ocultan toques marginales), no una sola semilla — Incidente G / Error 23 (etiquetas solapadas en cuña estrecha Y ancha).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -218,16 +218,17 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 ### Incidente G — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
 
-**Síntoma**: en un diagrama generado dinámicamente, una etiqueta de texto (ángulo, distancia, nombre) se solapa con una línea/punto/eje en SOLO algunas versiones. HTML/PDF rinden "sin error"; el defecto es visual y depende de los parámetros aleatorios. Caso real: la etiqueta `"30°"` montada sobre la línea y el punto cuando el ángulo era el **mínimo del pool**.
+**Síntoma**: en un diagrama generado dinámicamente, una etiqueta de texto (ángulo, distancia, nombre) se solapa con una línea/punto/eje en SOLO algunas versiones. HTML/PDF rinden "sin error"; el defecto es visual y depende de los parámetros aleatorios. Casos reales: `"30°"` montado sobre la línea/punto con ángulo **mínimo** del pool (cuña estrecha); y `"70°"` clipado por la línea casi horizontal con ángulo **máximo** del pool (cuña ancha + piso de radio insuficiente).
 
-**Causa raíz**: la etiqueta se posicionaba con una heurística que ignoraba la geometría real (radio según la longitud del vector, no según el ángulo de la cuña ni el ancho del texto). En cuñas angulares estrechas (ángulo pequeño) el texto horizontal no cabe; además, un marcador móvil (el punto) puede coincidir con el radio de la etiqueta.
+**Causa raíz**: la etiqueta se posicionaba con una heurística que ignoraba la geometría real (radio según la longitud del vector, no según el ángulo de la cuña ni el ancho del texto). En cuñas estrechas (ángulo pequeño) el texto horizontal no cabe; en cuñas anchas (ángulo grande) la fórmula cae por debajo del **piso** y la línea casi horizontal clipa el label; además, un marcador móvil (el punto) puede coincidir con el radio de la etiqueta.
 
 **Defensa preventiva**:
 1. El offset/radio de cualquier etiqueta colocada dentro de una cuña angular DEBE escalar con `1/sin(ángulo/2)` y considerar el ANCHO del texto, no solo una distancia radial fija. Patrón validado: `rang <- max(R_min, (holgura + media_anchura*cos(semi)) / sin(semi))`.
-2. Si un marcador cuya posición varía por versión puede coincidir con la etiqueta, empujar la etiqueta más allá del marcador (`rang <- Lpx + margen`).
-3. NUNCA fijar la posición de una etiqueta solo en función de la longitud del vector.
+2. El **piso `R_min`** debe ser suficiente para los ÁNGULOS GRANDES (cuña ancha): con `R_min=34` el `70°` se clipaba; subir a `50` da holgura `50·sin(35°)≈28 px`.
+3. Si un marcador cuya posición varía por versión puede coincidir con la etiqueta, empujar la etiqueta más allá del marcador (`rang <- Lpx + margen`).
+4. NUNCA fijar la posición de una etiqueta solo en función de la longitud del vector.
 
-**Verificación obligatoria (Flujo B, paso 5/6)**: para TODO diagrama dinámico con etiquetas, renderizar y leer visualmente el **caso EXTREMO de parámetros** — el ángulo MÍNIMO del pool (cuña más estrecha) y los vectores más corto Y más largo — no una sola semilla. Un único render "se ve bien" NO garantiza que el resto del espacio de parámetros tampoco tenga solapes. Si se detecta cualquier solape → corregir el posicionamiento antes de continuar.
+**Verificación obligatoria (Flujo B, paso 5/6)**: para TODO diagrama dinámico con etiquetas, renderizar y leer el **caso EXTREMO de parámetros** — ángulo MÍNIMO **Y MÁXIMO** del pool (cuña estrecha Y ancha) × vectores más corto Y más largo × todos los cuadrantes/orientaciones — no una sola semilla. **Ampliar los recortes ≥×2.4**: las miniaturas ocultan toques marginales de 2–3 px (fue exactamente lo que dejó pasar el `70°` en la primera validación). Si se detecta cualquier solape → corregir el posicionamiento antes de continuar.
 
 **Referencia**: Error 23 en `.claude/docs/patrones-errores-conocidos.md`, reglas `flujo-b-obligatorio.md` + `graficador-secuencial.md` (coherencia visual), memoria `pendiente-solapamiento-diagramas-avion`.
 
