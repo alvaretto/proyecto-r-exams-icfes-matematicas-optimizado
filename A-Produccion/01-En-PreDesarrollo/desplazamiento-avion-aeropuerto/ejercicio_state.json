@@ -1,0 +1,64 @@
+{
+  "version": "2.0",
+  "ejercicio": "desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-06-27T07:31:53.422795-05:00",
+  "timestamp_ultima_actualizacion": "2026-06-27T21:03:40.803154-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-06-27T07:32:35.370611-05:00",
+      "resultado": null,
+      "competencia": "Interpretacion y Representacion",
+      "componente": "Geometrico-Metrico",
+      "nivel": 2,
+      "dok": 2,
+      "bloom": "Comprender",
+      "solo": "Relacional"
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-06-27T15:56:51.217451-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:06:06.682501-05:00",
+      "archivo": "desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:06:07.344956-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:08:42.551615-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:10:26.601434-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:18:07.416449-05:00",
+      "veredicto": "APROBAR"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:18:22.312164-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:20:56.954387-05:00",
+      "versiones_unicas": 294
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-06-27T16:21:19.095684-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-06-27T21:03:40.803154-05:00"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[x=1pt,y=-1pt]
+\fill[white] (0,0) rectangle (800,600);
+\definecolor{slate900}{HTML}{0F172A}
+\definecolor{slate800}{HTML}{1E293B}
+\definecolor{slate600}{HTML}{475569}
+\definecolor{teal}{HTML}{0F766E}
+\definecolor{orange}{HTML}{EA580C}
+\tikzset{axis/.style={draw=slate600,line width=1.5pt}, vec/.style={draw=teal,line width=2.5pt,line cap=round}}
+\newcommand{\Axes}[3]{%
+  \draw[axis] (#1-108,#2) -- (#1+108,#2);\draw[axis] (#1,#2-108) -- (#1,#2+108);
+  \fill[slate600] (#1,#2-116) -- (#1-4,#2-108) -- (#1+4,#2-108) -- cycle;
+  \fill[slate600] (#1,#2+116) -- (#1-4,#2+108) -- (#1+4,#2+108) -- cycle;
+  \fill[slate600] (#1-116,#2) -- (#1-108,#2-4) -- (#1-108,#2+4) -- cycle;
+  \fill[slate600] (#1+116,#2) -- (#1+108,#2-4) -- (#1+108,#2+4) -- cycle;
+  \node[font=\bfseries\fontsize{15}{17}\selectfont,text=slate800] at (#1,#2-125) {N};
+  \ifnum#3=1 \node[anchor=west,font=\fontsize{13}{15}\selectfont,text=slate600] at (#1+12,#2-7) {Aeropuerto};\else \node[anchor=east,font=\fontsize{13}{15}\selectfont,text=slate600] at (#1-12,#2-7) {Aeropuerto};\fi
+  \fill[slate600] (#1,#2) circle (4pt);
+}
+\newcommand{\DiagA}{%
+  \node[anchor=west,font=\bfseries\fontsize{24}{28}\selectfont,text=slate900] at (45,55) {A.};
+  \Axes{200}{160}{1}
+  \draw[vec] (200,160)--(169.4,185.7);\fill[orange] (169.4,185.7) circle (5pt);
+  \draw[orange,line width=1.5pt] (200,185) arc[start angle=90,end angle=140,radius=25pt];
+  \node[font=\bfseries\fontsize{13}{15}\selectfont,text=orange] at (196,192) {50\textdegree};
+  \node[anchor=east,font=\fontsize{13}{15}\selectfont,text=teal] at (148,198) {30 km};
+  \node[anchor=east,font=\fontsize{13}{15}\selectfont,text=slate600] at (148,216) {Avión};}
+\newcommand{\DiagB}{%
+  \node[anchor=west,font=\bfseries\fontsize{24}{28}\selectfont,text=slate900] at (445,55) {B.};
+  \Axes{600}{160}{0}
+  \draw[vec] (600,160)--(630.6,134.3);\fill[orange] (630.6,134.3) circle (5pt);
+  \draw[orange,line width=1.5pt] (600,135) arc[start angle=270,end angle=320,radius=25pt];
+  \node[font=\bfseries\fontsize{13}{15}\selectfont,text=orange] at (594,138) {50\textdegree};
+  \node[anchor=west,font=\fontsize{13}{15}\selectfont,text=slate600] at (644,126) {Avión};
+  \node[anchor=west,font=\fontsize{13}{15}\selectfont,text=teal] at (644,142) {30 km};}
+\newcommand{\DiagC}{%
+  \node[anchor=west,font=\bfseries\fontsize{24}{28}\selectfont,text=slate900] at (45,335) {C.};
+  \Axes{200}{440}{0}
+  \draw[vec] (200,440)--(257.5,391.8);\fill[orange] (257.5,391.8) circle (5pt);
+  \draw[orange,line width=1.5pt] (200,415) arc[start angle=270,end angle=320,radius=25pt];
+  \node[font=\bfseries\fontsize{13}{15}\selectfont,text=orange] at (194,418) {50\textdegree};
+  \node[font=\fontsize{13}{15}\selectfont,text=slate600] at (257.5,378) {Avión};
+  \node[anchor=west,font=\fontsize{13}{15}\selectfont,text=teal] at (270,405) {70 km};}
+\newcommand{\DiagD}{%
+  \node[anchor=west,font=\bfseries\fontsize{24}{28}\selectfont,text=slate900] at (445,335) {D.};
+  \Axes{600}{440}{0}
+  \draw[vec] (600,440)--(691.9,362.9);\fill[orange] (691.9,362.9) circle (5pt);
+  \draw[orange,line width=1.5pt] (600,415) arc[start angle=270,end angle=320,radius=25pt];
+  \node[font=\bfseries\fontsize{13}{15}\selectfont,text=orange] at (594,418) {50\textdegree};
+  \node[font=\fontsize{13}{15}\selectfont,text=slate600] at (691.9,349) {Avión};
+  \node[anchor=west,font=\fontsize{13}{15}\selectfont,text=teal] at (704,376) {130 km};}
+\DiagA\DiagB\DiagC\DiagD
+\end{tikzpicture}
+\end{document}

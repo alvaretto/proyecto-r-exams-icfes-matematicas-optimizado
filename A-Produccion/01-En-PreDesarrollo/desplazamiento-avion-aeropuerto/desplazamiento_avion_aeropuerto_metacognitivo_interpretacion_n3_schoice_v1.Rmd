@@ -1,0 +1,481 @@
+```{r data_generation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+library(testthat)
+
+# ---- Semilla por versión ----
+seed_global <- as.integer(Sys.time()) %% 100000 + sample(1:99999, 1)
+set.seed(seed_global)
+
+library(grid)
+
+# ---- Parámetros aleatorios por versión ----
+distancia_total <- sample(seq(80, 150, by = 10), 1)
+avanzadas_validas <- Filter(function(x) x < distancia_total && distancia_total != 2 * x,
+                            seq(20, 60, by = 10))
+distancia_avanzada <- avanzadas_validas[sample(length(avanzadas_validas), 1)]
+angulo_direccion <- sample(seq(30, 70, by = 5), 1)
+distancia_restante <- distancia_total - distancia_avanzada
+stopifnot(distancia_restante > 0, distancia_restante != distancia_avanzada)
+
+# ---- Función de dibujo de un diagrama individual (sin letra, centrado) ----
+.cols <- list(slate800 = "#1E293B", slate600 = "#475569", teal = "#0F766E", orange = "#EA580C")
+dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angulo, modo) {
+  # modo: "ne" = ángulo a la derecha del norte (noreste); "so" = dirección opuesta (suroeste)
+  png(archivo, width = 460, height = 460, bg = "white", res = 110)
+  on.exit(dev.off(), add = TRUE)
+  grid.newpage(); pushViewport(viewport(xscale = c(0, 460), yscale = c(460, 0)))
+  grid.rect(gp = gpar(fill = "white", col = NA))
+  cx <- 230; cy <- 230; L <- 150
+  ln  <- function(x1,y1,x2,y2,col=.cols$slate600,lwd=1.8) grid.lines(unit(c(x1,x2),"native"),unit(c(y1,y2),"native"),gp=gpar(col=col,lwd=lwd,lineend="round"))
+  tx  <- function(t,x,y,s=14,col=.cols$slate600,j="centre",f=1) grid.text(t,unit(x,"native"),unit(y,"native"),gp=gpar(col=col,fontsize=s,fontface=f),just=j)
+  pl  <- function(xs,ys,col) grid.polygon(unit(xs,"native"),unit(ys,"native"),gp=gpar(fill=col,col=col))
+  cir <- function(x,y,r,col) grid.circle(unit(x,"native"),unit(y,"native"),r=unit(r,"native"),gp=gpar(fill=col,col=col))
+  ln(cx-L,cy,cx+L,cy); ln(cx,cy-L,cx,cy+L)
+  pl(c(cx,cx-5,cx+5),c(cy-L,cy-L+11,cy-L+11),.cols$slate600)
+  pl(c(cx,cx-5,cx+5),c(cy+L,cy+L-11,cy+L-11),.cols$slate600)
+  pl(c(cx-L,cx-L+11,cx-L+11),c(cy,cy-5,cy+5),.cols$slate600)
+  pl(c(cx+L,cx+L-11,cx+L-11),c(cy,cy-5,cy+5),.cols$slate600)
+  tx("N", cx, cy-L-13, 16, .cols$slate800, f = 2); cir(cx,cy,5,.cols$slate600)
+  a <- angulo*pi/180; Lpx <- dist_km*escala_px_km
+  if (modo == "ne") { dx <- sin(a); dy <- -cos(a) } else { dx <- -sin(a); dy <- cos(a) }
+  ex <- cx + Lpx*dx; ey <- cy + Lpx*dy
+  ln(cx,cy,ex,ey,.cols$teal,3); cir(ex,ey,6,.cols$orange)
+  if (modo == "ne") { th <- seq(90-angulo,90,length.out=40)*pi/180; lab<-(90-angulo/2)*pi/180 }
+  else              { th <- seq(270,270+angulo,length.out=40)*pi/180; lab<-(270+angulo/2)*pi/180 }
+  grid.lines(unit(cx+28*cos(th),"native"), unit(cy-28*sin(th),"native"), gp=gpar(col=.cols$orange,lwd=1.8))
+  tx(paste0(angulo,"°"), cx+34*cos(lab), cy-34*sin(lab), 13, .cols$orange, "centre", 2)
+  if (dx >= 0) tx("Aeropuerto", cx-12, cy-9, 12, .cols$slate600, "right") else tx("Aeropuerto", cx+12, cy-9, 12, .cols$slate600, "left")
+  offx <- if (dx >= 0) 13 else -13; jus <- if (dx >= 0) "left" else "right"
+  tx("Avión", ex+offx, ey+15, 13, .cols$slate600, jus)
+  tx(etiqueta_dist, ex+offx, ey-6, 14, .cols$teal, jus, 2)
+  popViewport()
+}
+
+# ---- Generar los 4 diagramas (escala global → longitudes proporcionales y comparables) ----
+escala_px_km <- 120 / (distancia_total + distancia_avanzada)
+km <- function(d) paste0(d, " km")
+dibujar_diagrama("diagrama_correcta.png",  km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, "ne")
+dibujar_diagrama("diagrama_recorrida.png", km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, "ne")
+dibujar_diagrama("diagrama_suma.png",      km(distancia_total+distancia_avanzada), distancia_total+distancia_avanzada, escala_px_km, angulo_direccion, "ne")
+dibujar_diagrama("diagrama_perp.png",      km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, "so")
+
+# ---- Pool de errores conceptuales ----
+errores_conceptuales <- list(
+  list(
+    codigo          = "GEO-DES-01",
+    nombre          = "Dirección perpendicular",
+    descripcion_corta = paste0("El avión aparece a ", distancia_avanzada, " km del aeropuerto, pero en una dirección distinta a la indicada (no en los ", angulo_direccion, "° dados)."),
+    descripcion_larga = paste0("Se confunde el avance de ", distancia_avanzada, " km hacia el aeropuerto en la dirección de ", angulo_direccion, "° con un desplazamiento en una dirección diferente. El estudiante interpreta la distancia recorrida como un desplazamiento lateral, ignorando la dirección angular de ", angulo_direccion, "° dada en el enunciado."),
+    causa_raiz       = "Confusión entre desplazamiento en una dirección angular y desplazamiento sobre un eje cardinal. El estudiante no integra la información del ángulo con la distancia.",
+    precondicion     = function(params) TRUE,
+    calcula          = function(...) "dirección distinta a la indicada"
+  ),
+  list(
+    codigo          = "GEO-DES-02",
+    nombre          = "Distancia recorrida en vez de restante",
+    descripcion_corta = paste0("El avión aparece a ", distancia_avanzada, " km del aeropuerto en la dirección de ", angulo_direccion, "°."),
+    descripcion_larga = paste0("Se devuelve la distancia recorrida (", distancia_avanzada, " km) en lugar de la distancia restante (", distancia_total, " - ", distancia_avanzada, " = ", distancia_restante, " km). El estudiante confunde el trayecto ya completado con la nueva posición respecto al aeropuerto, sin calcular cuánto falta por recorrer."),
+    causa_raiz       = paste0("Confusión entre distancia recorrida y distancia restante. El estudiante lee correctamente los ", distancia_avanzada, " km del enunciado pero no los resta de los ", distancia_total, " km iniciales."),
+    precondicion     = function(params) TRUE,
+    calcula          = function(...) paste0("distancia recorrida (", distancia_avanzada, " km) en vez de restante (", distancia_restante, " km)")
+  ),
+  list(
+    codigo          = "GEO-DES-03",
+    nombre          = "Suma en vez de resta",
+    descripcion_corta = paste0("El avión aparece a ", distancia_total + distancia_avanzada, " km del aeropuerto en la dirección de ", angulo_direccion, "°."),
+    descripcion_larga = paste0("Se suman las distancias (", distancia_total, " + ", distancia_avanzada, " = ", distancia_total + distancia_avanzada, " km) en lugar de restarlas. El estudiante interpreta \"avanzar hacia el aeropuerto\" como un alejamiento adicional en la misma dirección."),
+    causa_raiz       = "Interpretación errónea del sentido del movimiento: \"hacia\" se interpreta como \"en dirección a\" (alejándose) en lugar de \"aproximándose a\".",
+    precondicion     = function(params) TRUE,
+    calcula          = function(...) paste0("suma (", distancia_total, "+", distancia_avanzada, "=", distancia_total + distancia_avanzada, " km) en vez de resta (", distancia_restante, " km)")
+  )
+)
+
+# ---- La opción correcta no es un "error" sino la representación correcta ----
+# La clave es el diagrama C: 70 km a 50°
+descripcion_correcta <- paste0(
+  "El avión avanzó ", distancia_avanzada, " km hacia el aeropuerto desde los ", distancia_total, " km iniciales; ",
+  "la nueva distancia es ", distancia_total, " - ", distancia_avanzada,
+  " = ", distancia_restante, " km en la misma dirección de ", angulo_direccion, "°."
+)
+
+# ---- Pool de contextos narrativos (8 plantillas, al menos 5 tipos diferentes) ----
+contextos <- list(
+  # Tipo 1: Acción en curso — torre de control
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "En la torre de control del ", prot,
+        ", un operador monitorea la pantalla del radar. ",
+        "El sistema muestra un avión a ", distancia_total,
+        " km de distancia, en dirección de ", angulo_direccion,
+        "° a la derecha del norte. Minutos después, el radar indica ",
+        "que el avión avanzó ", distancia_avanzada,
+        " km directamente hacia el aeropuerto, sin cambiar su dirección."
+      )
+    },
+    protagonistas = c(
+      "Aeropuerto Internacional El Dorado",
+      "Aeropuerto José María Córdova",
+      "Aeropuerto Alfonso Bonilla Aragón",
+      "Aeropuerto Ernesto Cortissoz"
+    )
+  ),
+  # Tipo 2: Situación problema — piloto
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "El control de aproximación sigue al piloto ", prot, ". ",
+        "El radar ubica el avión a ", distancia_total,
+        " km del aeropuerto, en dirección ", angulo_direccion,
+        "° a la derecha del norte. Tras avanzar ", distancia_avanzada,
+        " km en línea recta hacia el aeropuerto manteniendo el rumbo, ",
+        "se verifica su nueva posición."
+      )
+    },
+    protagonistas = c(
+      "del vuelo 847 de Avianca",
+      "del vuelo 312 de LATAM",
+      "del vuelo 905 de Copa Airlines",
+      "de un vuelo comercial de carga"
+    )
+  ),
+  # Tipo 3: Narración — simulacro de emergencia
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "Durante un simulacro de navegación aérea en ", prot,
+        ", los estudiantes deben interpretar las lecturas del radar. ",
+        "La pantalla muestra una aeronave ubicada a ", distancia_total,
+        " km del punto de origen, con un rumbo de ", angulo_direccion,
+        "° a la derecha del norte. La aeronave se desplaza ", distancia_avanzada,
+        " km hacia el origen sin modificar su trayectoria."
+      )
+    },
+    protagonistas = c(
+      "la Escuela de Aviación Militar",
+      "el Centro de Instrucción Aeronáutica",
+      "la academia de pilotos comerciales",
+      "el instituto de formación de controladores aéreos"
+    )
+  ),
+  # Tipo 4: Perspectiva del estudiante — tarea
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        prot, " está resolviendo un problema de geometría para su clase ",
+        "de matemáticas. El enunciado dice: \"Un radar detecta un avión a ",
+        distancia_total, " km en dirección ", angulo_direccion,
+        "° al este del norte. El avión avanza ", distancia_avanzada,
+        " km hacia el radar sin desviarse.\" ",
+        prot, " debe identificar el diagrama que muestra la posición final del avión."
+      )
+    },
+    protagonistas = c(
+      "Valentina", "Santiago", "Isabela", "Mateo", "Luciana", "Felipe",
+      "Camila", "Andrés"
+    )
+  ),
+  # Tipo 5: Contexto institucional — informe
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "El informe técnico de ", prot,
+        " incluye el siguiente caso: un vuelo comercial fue detectado por ",
+        "el radar a ", distancia_total, " km del aeropuerto de destino, ",
+        "con una marcación de ", angulo_direccion,
+        "° a la derecha del norte. ",
+        "La aeronave reportó haber avanzado ", distancia_avanzada,
+        " km en dirección al aeropuerto. Se necesita un diagrama ",
+        "que represente la nueva posición."
+      )
+    },
+    protagonistas = c(
+      "la Aeronáutica Civil",
+      "la Oficina de Seguridad Operacional",
+      "el departamento de control de tráfico aéreo"
+    )
+  ),
+  # Tipo 6: Descubrimiento — instructor
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "Al revisar el registro de vuelos del día, ", prot,
+        " encuentra una anotación interesante: \"A las 14:30, aeronave ",
+        "detectada a ", distancia_total, " km con rumbo ", angulo_direccion,
+        "° NE. A las 14:42, había recorrido ", distancia_avanzada,
+        " km aproximándose al aeropuerto sin variar el rumbo.\" ",
+        "El instructor decide usar este caso real como ejemplo en clase."
+      )
+    },
+    protagonistas = c(
+      "el instructor de vuelo",
+      "la profesora de navegación aérea",
+      "el jefe de entrenamiento de pilotos",
+      "la coordinadora del programa de aviación"
+    )
+  ),
+  # Tipo 7: Pregunta retórica
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "¿Cómo determina un controlador aéreo la posición de un avión que ",
+        "se aproxima al aeropuerto? En ", prot,
+        ", se estudia este escenario: el radar marca un avión a ", distancia_total,
+        " km con dirección ", angulo_direccion,
+        "° a la derecha del norte. El piloto informa que avanzó ", distancia_avanzada,
+        " km directamente hacia el aeropuerto sin cambiar el rumbo."
+      )
+    },
+    protagonistas = c(
+      "el curso de control de tráfico aéreo",
+      "la capacitación de operadores de radar",
+      "el seminario de seguridad aérea",
+      "el taller de navegación para pilotos"
+    )
+  ),
+  # Tipo 8: Diálogo implícito
+  list(
+    plantilla = function(prot, n_ctx) {
+      paste0(
+        "—Necesito que verifiquen esta trayectoria antes de autorizar el aterrizaje ",
+        "—solicitó ", prot, " al equipo de control. ",
+        "En la pantalla del radar, el vuelo aparece a ", distancia_total,
+        " km del aeropuerto con un ángulo de ", angulo_direccion,
+        "° respecto al norte. En los últimos minutos, la aeronave se desplazó ",
+        distancia_avanzada, " km en dirección al aeropuerto."
+      )
+    },
+    protagonistas = c(
+      "el controlador jefe de turno",
+      "la supervisora de operaciones aéreas",
+      "el coordinador de aproximación",
+      "la jefa de la torre de control"
+    )
+  )
+)
+
+# ---- Seleccionar contexto ----
+ctx <- contextos[[sample(length(contextos), 1)]]
+protagonista <- sample(ctx$protagonistas, 1)
+enunciado_contexto <- ctx$plantilla(protagonista, n)
+
+# ---- Crear opciones con diagramas ----
+# Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios:
+# diagrama_perp.png     → avión a distancia_avanzada km en dirección opuesta (error GEO-DES-01)
+# diagrama_recorrida.png → avión a distancia_avanzada km a angulo_direccion° (error GEO-DES-02)
+# diagrama_correcta.png  → avión a distancia_restante km a angulo_direccion° (CORRECTA)
+# diagrama_suma.png      → avión a distancia_total+distancia_avanzada km a angulo_direccion° (error GEO-DES-03)
+
+opciones_pre_mezcla <- list(
+  list(
+    archivo   = "diagrama_perp.png",
+    tipo      = "error",
+    codigo    = "GEO-DES-01",
+    descrip   = errores_conceptuales[[1]]$descripcion_corta
+  ),
+  list(
+    archivo   = "diagrama_recorrida.png",
+    tipo      = "error",
+    codigo    = "GEO-DES-02",
+    descrip   = errores_conceptuales[[2]]$descripcion_corta
+  ),
+  list(
+    archivo   = "diagrama_correcta.png",
+    tipo      = "correcta",
+    codigo    = "CORRECTA",
+    descrip   = descripcion_correcta
+  ),
+  list(
+    archivo   = "diagrama_suma.png",
+    tipo      = "error",
+    codigo    = "GEO-DES-03",
+    descrip   = errores_conceptuales[[3]]$descripcion_corta
+  )
+)
+
+# Mezclar internamente (sample interno + exshuffle:FALSE)
+opciones_mezcladas <- sample(opciones_pre_mezcla)
+
+# Identificar la posición de la respuesta correcta
+indice_correcto <- which(sapply(opciones_mezcladas, function(x) x$tipo == "correcta"))
+stopifnot(length(indice_correcto) == 1)
+
+# Vector solución para R-exams
+solucion <- rep(0, 4)
+solucion[indice_correcto] <- 1
+
+# Mapeo letras ↔ opciones
+letras <- c("A", "B", "C", "D")
+names(opciones_mezcladas) <- letras
+
+# Identificar qué letra corresponde a la respuesta correcta (solo para uso interno)
+letra_correcta <- letras[indice_correcto]
+
+# ---- Pool de reflexiones metacognitivas ----
+reflexiones_metacognitivas <- list(
+  "Interpretar diagramas de posición y desplazamiento requiere integrar la información de distancia y dirección. No basta con leer un número; hay que verificar que el diagrama refleje correctamente ambas magnitudes.",
+  "Al analizar representaciones gráficas de vectores, un error frecuente es fijarse solo en la distancia e ignorar el ángulo. La dirección es tan importante como la magnitud.",
+  "Cuando un objeto se mueve hacia un punto de referencia, la distancia disminuye. Si el movimiento es en la misma dirección, la distancia se resta, no se suma.",
+  "Los diagramas de navegación combinan geometría (ángulos) con aritmética (distancias). Verificar ambas dimensiones por separado ayuda a detectar errores en la representación.",
+  "Identificar el error en un diagrama ajeno fortalece la capacidad de leer críticamente representaciones visuales, una habilidad esencial en ciencias e ingeniería.",
+  "La estrategia de \"avanzar hacia\" significa restar la distancia recorrida de la distancia inicial. Confundir este concepto lleva a sumar cuando se debe restar o a ignorar el ángulo."
+)
+reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
+
+# ---- Verificaciones ----
+test_that("Exactamente una opción marcada como correcta", {
+  expect_equal(sum(solucion), 1)
+})
+
+test_that("Las 4 opciones son diferentes entre sí", {
+  archivos <- sapply(opciones_mezcladas, function(x) x$archivo)
+  expect_equal(length(unique(archivos)), 4)
+})
+
+test_that("La opción correcta es la de tipo 'correcta'", {
+  expect_equal(opciones_mezcladas[[letra_correcta]]$tipo, "correcta")
+})
+
+test_that("Las 4 opciones-diagrama son distintas (distancia o dirección)", {
+  fps <- c(paste(distancia_restante,"ne"), paste(distancia_avanzada,"ne"),
+           paste(distancia_total+distancia_avanzada,"ne"), paste(distancia_avanzada,"so"))
+  expect_equal(length(unique(fps)), 4)
+  expect_true(all(file.exists(c("diagrama_correcta.png","diagrama_recorrida.png","diagrama_suma.png","diagrama_perp.png"))))
+})
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(enunciado_contexto, "\n\n")
+```
+
+¿Cuál de los siguientes diagramas representa correctamente la nueva posición del avión respecto al aeropuerto?
+
+Answerlist
+----------
+
+```{r answerlist_opciones, echo=FALSE, results='asis'}
+for (l in letras) {
+  cat(sprintf("* ![](%s){width=70%%}\n", opciones_mezcladas[[l]]$archivo))
+}
+```
+
+Solution
+========
+
+```{r solution_setup, echo=FALSE, results='hide'}
+# Preparar datos para la solución: mapear cada letra a su descripción
+mapeo_descripciones <- sapply(letras, function(l) {
+  opciones_mezcladas[[l]]$descrip
+})
+mapeo_codigos <- sapply(letras, function(l) {
+  opciones_mezcladas[[l]]$codigo
+})
+```
+
+### Análisis de los diagramas
+
+```{r analisis_diagramas, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo == "correcta") {
+    cat(sprintf(
+      "**Representación correcta (avión a %d km en dirección %d°):** %s\n\n",
+      distancia_restante, angulo_direccion, opc$descrip
+    ))
+  } else {
+    err <- NULL
+    for (e in errores_conceptuales) {
+      if (e$codigo == opc$codigo) { err <- e; break }
+    }
+    if (!is.null(err)) {
+      cat(sprintf(
+        "**%s — %s:** %s\n\n",
+        err$codigo, err$nombre, err$descripcion_larga
+      ))
+    }
+  }
+}
+```
+
+### Procedimiento correcto
+
+Para determinar la nueva posición del avión:
+
+1. **Distancia inicial:** El avión está a `r distancia_total` km del aeropuerto.
+2. **Dirección:** El avión se encuentra a `r angulo_direccion`° a la derecha del norte.
+3. **Avance hacia el aeropuerto:** Recorre `r distancia_avanzada` km en dirección al aeropuerto, manteniendo la misma dirección.
+4. **Nueva distancia:** Como el avión se acerca al aeropuerto, la distancia restante es:
+
+$$d_{\text{nueva}} = d_{\text{inicial}} - d_{\text{avanzada}} = `r distancia_total` - `r distancia_avanzada` = `r distancia_restante` \text{ km}$$
+
+5. **Dirección final:** La dirección se mantiene en `r angulo_direccion`° a la derecha del norte.
+
+**Por lo tanto, la nueva posición del avión es a `r distancia_restante` km del aeropuerto en dirección `r angulo_direccion`° a la derecha del norte.**
+
+El diagrama que representa correctamente esta situación es:
+
+```{r diagrama_correcto_solucion, echo=FALSE, results='asis'}
+# Mostrar la gráfica de la opción correcta (identificada por contenido, no por letra)
+archivo_correcto <- opciones_mezcladas[[indice_correcto]]$archivo
+cat(sprintf("![](%s){width=55%%}\n\n", archivo_correcto))
+```
+
+### ¿Por qué los otros diagramas son incorrectos?
+
+```{r explicacion_errores, echo=FALSE, results='asis'}
+for (l in letras) {
+  opc <- opciones_mezcladas[[l]]
+  if (opc$tipo != "correcta") {
+    err <- NULL
+    for (e in errores_conceptuales) {
+      if (e$codigo == opc$codigo) { err <- e; break }
+    }
+    if (!is.null(err)) {
+      cat(sprintf(
+        "- **%s:** %s\n",
+        err$codigo, err$causa_raiz
+      ))
+    }
+  }
+}
+```
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para interpretar diagramas de desplazamiento
+
+1. **Identificar las dos magnitudes:** distancia al origen y dirección angular. Ambas deben ser correctas en el diagrama.
+2. **Determinar el sentido del movimiento:** ¿se acerca o se aleja del punto de referencia? Si se acerca, la distancia **disminuye**.
+3. **Calcular la nueva distancia:** aplicar la operación correcta (resta si se acerca, suma si se aleja).
+4. **Verificar la dirección:** el ángulo debe mantenerse igual si el enunciado dice que no cambió el rumbo.
+5. **Comparar cada opción** contra estos criterios antes de seleccionar.
+
+Meta-information
+================
+
+extype: schoice
+exsolution: `r paste(as.integer(solucion), collapse = "")`
+exshuffle: FALSE
+extol: 0.01
+exname: desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Geometrico-Metrico
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos.
+exextra[Evidencia]: Transforma la representacion de una o mas piezas de informacion.
+exextra[Nivel]: 3
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_representacion_grafica
+exextra[Descriptor]: D3.8 - Selecciona informacion necesaria para resolver problemas que involucran caracteristicas medibles de figuras geometricas elementales.
+exextra[Estandar]: Identifico caracteristicas de localizacion de objetos en sistemas de representacion cartesiana y geografica. (6-7, Pensamiento espacial)
+exextra[Origen]: MAT-2026-1-020 (cuadernillo 2026-1, pregunta 114)
