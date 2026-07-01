@@ -121,6 +121,35 @@ test -f .claude.pre-ruflo-20260425-123652.tar.gz
 
 **Si falla:** alertar y NO continuar. El backup es la única forma de restaurar el estado pre-Ruflo si todo lo demás fracasa.
 
+### I-8 — Integridad de los helpers Ruflo (añadido v1.1, 2026-07-01)
+
+**Invariante:** los helpers `.claude/helpers/{hook-handler,intelligence,statusline}.cjs`
+—que se **autoejecutan en cada tool-use** con privilegios completos de Node— no deben
+cambiar de contenido sin revisión. Se fija su hash SHA-256 de referencia; cualquier
+`npx claude-flow update`/`init` que los altere debe detectarse y auditarse.
+
+Motivación: auditoría de seguridad 2026-07-01. El código actual de estos helpers está
+auditado y limpio (sin red, sin `exec`/`require` controlable por entrada externa), pero
+Ruflo puede sobrescribirlos en cualquier actualización (ver antipatrón #5). El hash es la
+única defensa contra una alteración silenciosa de la superficie que se autoejecuta.
+
+**Verificación:**
+```bash
+sha256sum -c tests/testthat/ruflo-helpers.sha256
+```
+
+**Si falla:** revisar el `diff` del helper alterado buscando red (`fetch`/`http`),
+ejecución (`child_process`/`exec`/`eval`), o exfiltración de entorno (`process.env` enviado
+fuera). Solo si el cambio es benigno, regenerar la referencia:
+`sha256sum .claude/helpers/*.cjs > tests/testthat/ruflo-helpers.sha256`.
+
+**Nota de cadena de suministro (MCP de terceros):**
+- `.mcp.json` NO debe usar `@latest` en `npx` para MCP de terceros: fijar versión o retirarlos.
+- Los MCP instalados pero sin cablear (p. ej. `.mcps/`) son superficie latente: retirarlos o
+  auditar sus `node_modules` (`npm audit` + grep de `postinstall`) antes de cablearlos.
+
+**Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-8).
+
 ---
 
 ## Procedimiento obligatorio antes de cualquier instalación/upgrade externo
@@ -148,7 +177,7 @@ echo "Backup creado: .claude.pre-${PLATAFORMA}-${TS}.tar.gz"
 npx <plataforma>@latest <comando>
 ```
 
-### Paso 3 — Verificar invariantes I-1 a I-7
+### Paso 3 — Verificar invariantes I-1 a I-8
 
 Ejecutar el script `tests/testthat/test_infraestructura_claude.R` (creado por esta misma regla) o el equivalente:
 
@@ -192,7 +221,7 @@ Patrones específicos de conflicto y su resolución:
 | Recomendación externa | Regla ICFES violada | Decisión |
 |---|---|---|
 | Ruflo: "usa hierarchical-mesh + 15 agentes" | #14 routing de modelos por complejidad | Ignorar; usar el routing ICFES |
-| Ruflo: "init --force re-genera todo" | I-1 a I-7 | NO ejecutar sin snapshot previo |
+| Ruflo: "init --force re-genera todo" | I-1 a I-8 | NO ejecutar sin snapshot previo |
 | claude-flow doctor --fix | Puede tocar settings.json | Solo `doctor` (sin --fix) hasta validar diff |
 | Ruflo skill X duplica skill ICFES | #6, #8, #16 | Mantener el ICFES, marcar el Ruflo como "no usar" |
 | auto-memory bridge sin paquete | (memoria N2) | Vivir sin él hasta tener tiempo de instalar limpiamente |
@@ -270,8 +299,8 @@ Se ejecuta automáticamente en `tests/run_all_tests.R` y en pre-push. Si falla, 
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-05-03
+**Versión:** 1.1
+**Fecha:** 2026-07-01 (v1.1 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo el ecosistema `.claude/` y archivos raíz `CLAUDE.md`, `CLAUDE.local.md`.

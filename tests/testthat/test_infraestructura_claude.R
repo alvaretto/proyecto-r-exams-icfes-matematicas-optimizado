@@ -1,7 +1,7 @@
 # Tests de Infraestructura .claude/ — Regla #17 (infraestructura-protegida.md)
-# Cobertura: 7 invariantes I-1 a I-7
-# Versión: 1.0
-# Fecha: 2026-05-03
+# Cobertura: 8 invariantes I-1 a I-8
+# Versión: 1.1
+# Fecha: 2026-07-01
 #
 # Estos tests verifican que la convivencia Ruflo+ICFES sigue intacta.
 # Si fallan, la sesión Ruflo del 2026-04-25 ha vuelto a romper el ecosistema.
@@ -42,17 +42,18 @@ test_that("I-2: .claude/CLAUDE.md tiene índice ICFES con >= 17 reglas", {
   ruta <- ".claude/CLAUDE.md"
   expect_true(file.exists(ruta), info = ".claude/CLAUDE.md no existe")
 
-  contenido <- readLines(ruta)
+  # Lectura robusta a encoding/locale: leer bytes y partir por líneas.
+  # readLines() sobre este archivo (tildes/emojis) devolvía 0 líneas en
+  # locales como es_CO.UTF-8 → falso FAIL histórico de I-2 (2026-07-01).
+  raw_txt <- readChar(ruta, file.info(ruta)$size, useBytes = TRUE)
+  contenido <- strsplit(raw_txt, "\n", fixed = TRUE)[[1]]
   # Buscar entradas numeradas tipo "1. **...**" — patrón del índice
-  reglas <- grep("^[0-9]{1,2}\\. \\*\\*", contenido, value = TRUE)
+  reglas <- grep("^[0-9]{1,2}\\. \\*\\*", contenido, value = TRUE, useBytes = TRUE)
   expect_gte(length(reglas), 17,
              label = paste("Reglas en índice:", length(reglas)))
 
-  # Identidad ICFES debe estar presente
-  identidad <- any(grepl("Sistema de Generación Automatizada", contenido,
-                         fixed = TRUE) |
-                   grepl("Sistema de Generacion Automatizada", contenido,
-                         fixed = TRUE))
+  # Identidad ICFES debe estar presente (subcadena ASCII, byte-segura)
+  identidad <- grepl("Sistema de Generaci", raw_txt, fixed = TRUE, useBytes = TRUE)
   expect_true(identidad,
               info = ".claude/CLAUDE.md no contiene identidad ICFES")
 })
@@ -194,6 +195,30 @@ test_that("I-7: backup pre-Ruflo existe (red de seguridad)", {
 })
 
 # ============================================================
+# I-8: Integridad de helpers Ruflo (autoejecutados en cada tool-use)
+# ============================================================
+
+test_that("I-8: helpers Ruflo .cjs coinciden con hashes de referencia", {
+  helpers <- c(".claude/helpers/hook-handler.cjs",
+               ".claude/helpers/intelligence.cjs",
+               ".claude/helpers/statusline.cjs")
+  if (!all(file.exists(helpers))) {
+    skip("Helpers Ruflo no presentes (Ruflo no instalado en este entorno)")
+  }
+  ref <- "tests/testthat/ruflo-helpers.sha256"
+  expect_true(file.exists(ref),
+              info = "Falta el fichero de hashes de referencia de los helpers Ruflo")
+
+  # sha256sum -c resuelve rutas relativas a la raíz del repo (cwd ya = repo_root)
+  res <- system2("sha256sum", c("-c", "--status", ref),
+                 stdout = FALSE, stderr = FALSE)
+  expect_equal(res, 0L,
+    info = paste("Un helper Ruflo .cjs cambió respecto al hash de referencia.",
+                 "Auditar el diff (red/exec/env) ANTES de aceptar; si es benigno,",
+                 "regenerar: sha256sum .claude/helpers/*.cjs > tests/testthat/ruflo-helpers.sha256"))
+})
+
+# ============================================================
 # Test extra: ADR y docs de la sesión Ruflo presentes
 # ============================================================
 
@@ -214,10 +239,12 @@ test_that("EXTRA: ADR-001 y INDICE_LECCIONES.md existen tras consolidación", {
 test_that("EXTRA: patrones-errores-conocidos.md tiene Errores 11-15 (sesión Ruflo)", {
   ruta <- ".claude/docs/patrones-errores-conocidos.md"
   expect_true(file.exists(ruta))
-  contenido <- paste(readLines(ruta), collapse = "\n")
+  # Lectura byte-robusta (mismo motivo que I-2: readLines corrompe UTF-8 en locale C)
+  contenido <- readChar(ruta, file.info(ruta)$size, useBytes = TRUE)
   for (n in 11:15) {
     expect_match(contenido,
                  paste0("Error ", n, ":"),
+                 fixed = TRUE, useBytes = TRUE,
                  info = paste("Falta documentar Error", n,
                               "(lecciones sesión Ruflo 2026-05-03)"))
   }
