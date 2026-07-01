@@ -1,0 +1,417 @@
+```{r data_generation, echo=FALSE, results='hide'}
+# ============================================================
+# coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1
+# Basado en item ICFES MAT-2026-1-022 (pregunta 116)
+# Competencia: Interpretación y representación
+# Componente: Geométrico-métrico
+# Nivel: 2  |  DOK: 2  |  Bloom: Comprender
+# ============================================================
+
+library(ggplot2)
+
+# === Helpers (Familia 1 y 5 — regla #21) ===
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+safe_sample <- function(x, size, replace = TRUE) {
+  if (length(x) == 0L)
+    stop("safe_sample(): vector de entrada vacio o NULL.")
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
+
+# === Parametros del plano ===
+grid_max <- 10L
+
+# === Parametros del barco (aleatorizados por semilla — regla #22) ===
+ancho_barco <- pick_int(3L, 6L)
+alto_barco  <- pick_int(1L, 2L)
+
+x_min <- pick_int(1L, grid_max - ancho_barco)
+x_max <- x_min + ancho_barco
+
+# y_min con restricciones para garantizar 4 opciones DISTINTAS:
+#   y_min != x_min   (distractor inversion != correcta)
+#   y_max != x_max   (idem)
+#   y_min != x_max   (diagonal distractor tiene 4 puntos distintos)
+#   y_max != x_min   (idem)
+y_pool <- 1L:(grid_max - alto_barco)
+y_pool <- setdiff(y_pool, x_min)
+y_pool <- y_pool[y_pool + alto_barco != x_max]
+y_pool <- setdiff(y_pool, x_max)
+y_pool <- y_pool[y_pool + alto_barco != x_min]
+stopifnot(length(y_pool) > 0L)
+y_min <- safe_sample(y_pool, 1L)
+y_max <- y_min + alto_barco
+
+# === Respuesta correcta ===
+correcta <- paste0(
+  "(", x_min, ", ", y_min, "); (",
+  x_min, ", ", y_max, "); (",
+  x_max, ", ", y_min, ") y (",
+  x_max, ", ", y_max, ")."
+)
+
+# === Distractores ===
+# GEO-COORD-01: Inversion de ejes (intercambia x <-> y)
+dist_inv <- paste0(
+  "(", y_min, ", ", x_min, "); (",
+  y_max, ", ", x_min, "); (",
+  y_min, ", ", x_max, ") y (",
+  y_max, ", ", x_max, ")."
+)
+
+# GEO-COORD-02: Rango reducido (toma solo el centro del barco)
+x_mid <- as.integer(floor((x_min + x_max) / 2))
+dist_centro <- paste0(
+  "(", x_mid, ", ", y_min, "); (",
+  x_mid, ", ", y_max, "); (",
+  x_mid + 1L, ", ", y_min, ") y (",
+  x_mid + 1L, ", ", y_max, ")."
+)
+
+# GEO-COORD-03: Puntos sobre la diagonal y = x
+dist_diag <- paste0(
+  "(", x_min, ", ", x_min, "); (",
+  y_min, ", ", y_min, "); (",
+  y_max, ", ", y_max, ") y (",
+  x_max, ", ", x_max, ")."
+)
+
+# === Verificar 4 opciones distintas ===
+all_opts <- c(correcta, dist_inv, dist_centro, dist_diag)
+stopifnot(length(unique(all_opts)) == 4L)
+
+# === Mezclar opciones (exshuffle: TRUE se encarga, pero preparamos sol) ===
+opciones_pre <- list(
+  correcta       = correcta,
+  inv_ejes       = dist_inv,
+  rango_reducido = dist_centro,
+  diagonal       = dist_diag
+)
+perm <- sample(4L)
+opciones <- unlist(opciones_pre[perm], use.names = FALSE)
+nombres  <- names(opciones_pre)[perm]
+sol <- as.integer(nombres == "correcta")
+
+# === Info de errores para Solution (identificados por contenido, regla #19) ===
+errores_info <- list(
+  inv_ejes = list(
+    codigo = "GEO-COORD-01",
+    nombre = paste0("Inversi", "ó", "n de ejes"),
+    texto = dist_inv,
+    diagnostico = paste0(
+      "Invierte las coordenadas x e y: lee la extensi", "ó", "n horizontal ",
+      "del barco (de x = ", x_min, " a x = ", x_max, ") como si estuviera en el ",
+      "eje vertical, y la extensi", "ó", "n vertical (de y = ", y_min,
+      " a y = ", y_max, ") como si estuviera en el eje horizontal. ",
+      "El par (x, y) se escribi", "ó", " como (y, x)."
+    )
+  ),
+  rango_reducido = list(
+    codigo = "GEO-COORD-02",
+    nombre = "Rango reducido al centro",
+    texto = dist_centro,
+    diagnostico = paste0(
+      "Reduce el rango horizontal a solo 1 unidad (toma x = ", x_mid,
+      " y x = ", x_mid + 1L, " en lugar del rango completo x = ", x_min,
+      " a x = ", x_max, "). No identifica los extremos izquierdo y ",
+      "derecho del barco, sino que selecciona ", "ú", "nicamente ",
+      "la parte central."
+    )
+  ),
+  diagonal = list(
+    codigo = "GEO-COORD-03",
+    nombre = "Puntos sobre la diagonal",
+    texto = dist_diag,
+    diagnostico = paste0(
+      "Coloca los puntos sobre la diagonal principal (x = y): (",
+      x_min, ", ", x_min, "), (", y_min, ", ", y_min, "), (",
+      y_max, ", ", y_max, "), (", x_max, ", ", x_max,
+      "). En lugar de formar un rect", "á", "ngulo que encierre ",
+      "al barco, los 4 puntos est", "á", "n alineados sobre la ",
+      "recta y = x. Confunde la forma del barco con una distribuci",
+      "ó", "n diagonal en el plano."
+    )
+  )
+)
+
+# === Protagonista (variedad narrativa) ===
+protagonistas <- c(
+  "Tina", "Laura", "Sofía", "Miguel",
+  "Carlos", "Ana", "Pedro", "Valentina"
+)
+protagonista <- safe_sample(protagonistas, 1L)
+
+# === Reflexiones metacognitivas ===
+reflexiones <- c(
+  paste0(
+    "Identificar los vértices de un rectángulo en el plano cartesiano ",
+    "requiere distinguir claramente el eje x (horizontal) del eje y (vertical). ",
+    "Una estrategia efectiva es ubicar primero los extremos izquierdo y derecho ",
+    "(rango en x), y luego los extremos inferior y superior (rango en y)."
+  ),
+  paste0(
+    "Los errores al leer coordenadas en el plano cartesiano suelen originarse en ",
+    "la confusión entre las dos dimensiones. Practicar la lectura punto por ",
+    "punto, verificando primero la coordenada x y luego la y, ayuda a consolidar ",
+    "esta habilidad."
+  ),
+  paste0(
+    "Al resolver problemas con coordenadas, conviene verificar que cada par (x, y) ",
+    "efectivamente corresponde a un punto del objeto representado. Marcar los puntos ",
+    "extremos en el gráfico antes de escribir la respuesta reduce ",
+    "significativamente los errores."
+  ),
+  paste0(
+    "La metacognición en geometría analítica implica ser consciente ",
+    "de qué eje se está leyendo. Un error frecuente es asumir que el ",
+    "primer número siempre es la coordenada horizontal, sin verificarlo ",
+    "visualmente en el plano."
+  )
+)
+reflexion <- safe_sample(reflexiones, 1L)
+
+# === Dibujar barco parametrico ===
+dibujar_barco <- function(xmn, xmx, ymn, ymx, gmax, filename) {
+  cx <- (xmn + xmx) / 2;  cy <- (ymn + ymx) / 2
+  w  <- xmx - xmn;        h  <- ymx - ymn
+  n  <- 400L
+  tf <- seq(0, 1, length.out = n)
+
+  prof <- function(t) {
+    ifelse(t < 0.15,
+      (h / 2) * (t / 0.15)^0.7,
+      ifelse(t < 0.85,
+        h / 2,
+        (h / 2) * ((1 - t) / 0.15)^0.5))
+  }
+
+  xt <- xmn + tf * w;  yt <- cy + prof(tf)
+  xb <- xmx - tf * w;  yb <- cy - prof(tf)
+  hull_df <- data.frame(x = c(xt, xb), y = c(yt, yb))
+
+  ix <- w * 0.03;  iy <- h * 0.10
+  pi2 <- function(t) {
+    ifelse(t < 0.18,
+      ((h / 2) - iy) * (t / 0.18)^0.7,
+      ifelse(t < 0.82,
+        (h / 2) - iy,
+        ((h / 2) - iy) * ((1 - t) / 0.18)^0.5))
+  }
+  ixt <- (xmn + ix) + tf * (w - 2 * ix)
+  inner_df <- data.frame(
+    x = c(ixt, rev(ixt)),
+    y = c(cy + pi2(tf), cy - pi2(rev(tf)))
+  )
+
+  ph_df <- data.frame(
+    x = rep(c(cx - w * 0.18, cx - w * 0.12), each = 3),
+    y = rep(c(cy + h * 0.20, cy, cy - h * 0.20), 2)
+  )
+
+  bt1 <- seq(-1.1, 1.1, length.out = 80)
+  b1cx <- cx + w * 0.03
+  b1_df <- data.frame(
+    x = c(b1cx + h * 0.46 * cos(bt1), b1cx + h * 0.34 * cos(rev(bt1))),
+    y = c(cy   + h * 0.46 * sin(bt1), cy   + h * 0.34 * sin(rev(bt1)))
+  )
+  bt2 <- seq(-0.9, 0.9, length.out = 60)
+  b2cx <- cx + w * 0.16
+  b2_df <- data.frame(
+    x = c(b2cx + h * 0.40 * cos(bt2), b2cx + h * 0.30 * cos(rev(bt2))),
+    y = c(cy   + h * 0.40 * sin(bt2), cy   + h * 0.30 * sin(rev(bt2)))
+  )
+
+  bw <- w * 0.10;  bh <- h * 0.50;  bcx <- cx + w * 0.32
+  br_df <- data.frame(
+    x = c(bcx - bw / 2, bcx + bw / 2, bcx + bw / 2, bcx - bw / 2),
+    y = c(cy  - bh / 2, cy  - bh / 2, cy  + bh / 2, cy  + bh / 2)
+  )
+
+  p <- ggplot() +
+    geom_hline(yintercept = 0:gmax, color = "gray82", linewidth = 0.3) +
+    geom_vline(xintercept = 0:gmax, color = "gray82", linewidth = 0.3) +
+    geom_segment(aes(x = 0, y = 0, xend = gmax + 0.4, yend = 0), linewidth = 1.5) +
+    geom_segment(aes(x = 0, y = 0, xend = 0, yend = gmax + 0.4), linewidth = 1.5) +
+    geom_polygon(data = hull_df, aes(x, y),
+                 fill = "gray96", color = "black", linewidth = 2.0) +
+    geom_polygon(data = inner_df, aes(x, y),
+                 fill = NA, color = "gray60", linewidth = 0.4) +
+    geom_polygon(data = b1_df, aes(x, y), fill = "gray15", color = NA) +
+    geom_polygon(data = b2_df, aes(x, y), fill = "gray15", color = NA) +
+    geom_polygon(data = br_df, aes(x, y),
+                 fill = "gray15", color = "black", linewidth = 0.6) +
+    geom_point(data = ph_df, aes(x, y),
+               size = 2.0, shape = 16, color = "black") +
+    scale_x_continuous(breaks = 1:gmax,
+                       limits = c(-0.5, gmax + 0.7), expand = c(0, 0)) +
+    scale_y_continuous(breaks = 1:gmax,
+                       limits = c(-0.5, gmax + 0.7), expand = c(0, 0)) +
+    annotate("text", x = gmax + 0.55, y = -0.25, label = "x",
+             fontface = "bold", size = 6) +
+    annotate("text", x = -0.30, y = gmax + 0.55, label = "y",
+             fontface = "bold", size = 6) +
+    coord_fixed() +
+    theme_minimal(base_size = 14) +
+    theme(
+      panel.grid  = element_blank(),
+      axis.text   = element_text(size = 13, color = "black", face = "bold"),
+      axis.title  = element_blank(),
+      plot.margin = margin(8, 12, 8, 8)
+    )
+
+  ggsave(filename, p, width = 7, height = 7, dpi = 150, bg = "white")
+}
+
+dibujar_barco(x_min, x_max, y_min, y_max, grid_max, "plano_barco.png")
+
+# UID para anchors
+ex_uid <- paste0(safe_sample(letters, 6L, replace = FALSE), collapse = "")
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(paste0(
+  protagonista, " está participando en un juego en el que se ubican barcos ",
+  "en un plano cartesiano y se busca eliminar los barcos de otro jugador, ",
+  "adivinando su ubicación. En un momento del juego, a ", protagonista,
+  " le queda un barco ubicado como muestra la figura.\n\n"
+))
+```
+
+```{r grafico, echo=FALSE, results='asis'}
+cat("![](plano_barco.png){width=80%}\n\n")
+```
+
+```{r pregunta, echo=FALSE, results='asis'}
+cat(paste0(
+  "¿Cuáles son las coordenadas (x, y) de los vértices que ",
+  "encierran el barco que le queda a ", protagonista, "?\n"
+))
+```
+
+Answerlist
+----------
+```{r answerlist_q, echo=FALSE, results='asis'}
+for (i in seq_along(opciones)) {
+  cat(paste0("* ", opciones[i], "\n"))
+}
+```
+
+Solution
+========
+
+```{r sol_header, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Respuesta correcta {#resp-", ex_uid, "}\n\n",
+  "La respuesta correcta es la que indica las coordenadas **",
+  correcta, "**\n\n",
+  "El barco ocupa la franja horizontal entre x = ", x_min,
+  " y x = ", x_max, ", y entre y = ", y_min, " e y = ", y_max,
+  ". Los cuatro vértices del rectángulo que encierra ",
+  "el barco son:\n\n",
+  "$$\\left(", x_min, ",\\, ", y_min, "\\right), \\quad ",
+  "\\left(", x_min, ",\\, ", y_max, "\\right), \\quad ",
+  "\\left(", x_max, ",\\, ", y_min, "\\right), \\quad ",
+  "\\left(", x_max, ",\\, ", y_max, "\\right)$$\n\n"
+))
+```
+
+```{r sol_analisis, echo=FALSE, results='asis'}
+cat("### Análisis de cada opción\n\n")
+
+for (i in seq_along(opciones)) {
+  nm <- nombres[i]
+  if (nm == "correcta") {
+    cat(paste0(
+      "**Correcta: ", opciones[i], "**\n\n",
+      "Identifica correctamente los cuatro vértices del rectángulo ",
+      "que encierra el barco, leyendo el rango horizontal (x = ", x_min,
+      " a x = ", x_max, ") y el rango vertical (y = ", y_min,
+      " a y = ", y_max, ") de forma adecuada.\n\n"
+    ))
+  } else {
+    err <- errores_info[[nm]]
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, ": ",
+      opciones[i], "**\n\n",
+      err$diagnostico, "\n\n"
+    ))
+  }
+}
+```
+
+```{r sol_procedimiento, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Procedimiento correcto\n\n",
+  "Para identificar los vértices del rectángulo que encierra un ",
+  "objeto en el plano cartesiano:\n\n",
+  "1. **Eje horizontal (x):** Observar el rango de valores de x que ocupa ",
+  "el objeto. En este caso, el barco se extiende de x = ", x_min,
+  " a x = ", x_max, ".\n",
+  "2. **Eje vertical (y):** Observar el rango de valores de y que ocupa ",
+  "el objeto. En este caso, el barco se extiende de y = ", y_min,
+  " a y = ", y_max, ".\n",
+  "3. **Vértices:** Combinar los valores extremos para obtener los ",
+  "4 vértices: (", x_min, ", ", y_min, "), (",
+  x_min, ", ", y_max, "), (", x_max, ", ", y_min, ") y (",
+  x_max, ", ", y_max, ").\n\n"
+))
+```
+
+```{r sol_reflexion, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Reflexión metacognitiva\n\n",
+  reflexion, "\n\n"
+))
+```
+
+```{r sol_estrategia, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Estrategia para evitar el error\n\n",
+  "1. Identificar primero el eje **horizontal** (x) y anotar los valores ",
+  "mínimo y máximo que ocupa el objeto.\n",
+  "2. Luego identificar el eje **vertical** (y) y anotar los valores ",
+  "mínimo y máximo.\n",
+  "3. Verificar que cada par ordenado (x, y) escriba primero la coordenada ",
+  "horizontal y luego la vertical.\n",
+  "4. Comprobar que los 4 vértices forman un rectángulo que ",
+  "efectivamente encierra el objeto.\n"
+))
+```
+
+Answerlist
+----------
+```{r answerlist_s, echo=FALSE, results='asis'}
+for (i in seq_along(opciones)) {
+  nm <- nombres[i]
+  if (nm == "correcta") {
+    cat("* Correcto. Los vértices corresponden al rectángulo que encierra el barco.\n")
+  } else {
+    err <- errores_info[[nm]]
+    cat(paste0("* Incorrecto. ", err$codigo, ": ", err$nombre, ".\n"))
+  }
+}
+```
+
+Meta-information
+================
+exname: coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion
+exextra[Componente]: Geometrico-metrico
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos
+exextra[Evidencia]: Da cuenta de las caracteristicas basicas de la informacion presentada en diferentes formatos
+exextra[Nivel]: 2
+exextra[DOK]: 2
+exextra[Bloom]: Comprender
+exextra[SOLO]: Multi-estructural
+exextra[TipoMetacognicion]: analisis_error
