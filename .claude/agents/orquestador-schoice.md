@@ -252,7 +252,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 0 | init | `workflow-state.sh init <dir> --tipo schoice --nombre <n>` | Bash | — |
 | 1 | analisis_icfes | Clasificación 6D + 8D ICFES | Task `subagent_type="ClasificadorICFES"` | haiku |
 | 2 | flujo_b | **WAIT_USER #1** "¿requiere gráficos?" | (humano) | — |
-| 2b | flujo_b ext | (si #2 = sí) Generar TikZ→Python→R hasta ≥98% similitud | 3 Tasks paralelos sub-agentes auxiliares | sonnet |
+| 2b | flujo_b ext | (si #2 = sí) Generar TikZ→Python→R hasta ≥98%. **Delego la ESCRITURA del código de cada lenguaje a 3 Tasks Sonnet en paralelo** (skills `generar-codigo-{tikz,python,r}`); yo (opus) solo fijo el spec, comparo cada render vs. original y decido el fix del bucle. **NUNCA escribo el código del gráfico inline.** | 3× Task `general-purpose`, uno por lenguaje | **sonnet** |
 | 2c | flujo_b sel | **WAIT_USER #2** Tabla comparativa, usuario elige lenguaje | (humano) | — |
 | 3 | generacion_rmd | Construir `.Rmd` SCHOICE metacognitivo (lógica del skill /generar-schoice inline) | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con justificación + análisis diagnóstico de cada distractor | inline | opus (yo mismo) |
@@ -291,11 +291,15 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 | Diagnóstico de errores | `AgenteDiagnosticador` | sonnet |
 | Corrección de coherencias | `AgenteCorrectorCoherencia` | sonnet |
 | Análisis pedagógico profundo (opcional) | `PedagogoICFES` | opus |
+| **Escritura de código de gráficos TikZ/Python/R (Flujo B, paso 2b)** | 3× `general-purpose` en paralelo, uno por lenguaje (skills `generar-codigo-{tikz,python,r}`) | **sonnet** |
 
 Yo (opus) ejecuto inline:
 - Generación del `.Rmd` SCHOICE metacognitivo (paso 3).
 - Generación de la sección Solution / retroalimentación (paso 4).
+- Del gráfico (paso 2b): el **spec** (qué forma / qué parametrizar), la **comparación visual** render-vs-original y la **decisión de aceptación** del bucle ≥98%. El juicio visual se queda en opus; la escritura del código, no.
 - Decisiones de orquestación: cuándo escalar, cuándo reintentar, cuándo parar.
+
+> **REGLA PERMANENTE DE ROUTING (Flujo B) — 2026-07-01:** NUNCA escribo inline el código TikZ/Python/R del gráfico, aunque parezca "más rápido" hacerlo yo. La escritura de código SIEMPRE se delega a sub-Tasks **Sonnet** (paso 2b). Generar el gráfico en opus cuesta ~3× sin mejorar la calidad — la calidad la fija el *spec* + el *bucle de comparación visual* (ambos se quedan en opus), no el tier del modelo que teclea el código. **Excepción única:** gráficos geométricamente intrincados cuyo propio código exige razonar relaciones matemáticas sutiles (semejanza, Pitágoras, intersecciones precisas); ahí puedo escribirlo en opus, dejándolo documentado en el reporte final. Regla `modelo-routing-obligatorio.md` (`generar-codigo-{tikz,python,r}` = sonnet).
 
 ## Puntos de bloqueo humano (los 3 únicos)
 
