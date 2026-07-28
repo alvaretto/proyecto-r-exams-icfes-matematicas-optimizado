@@ -86,6 +86,7 @@ Antes de cualquier acción destructiva, verifico:
 12. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 13. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo **Y máximo** del pool + vectores más corto y más largo + todos los cuadrantes), ampliando los recortes ≥×2.4 (las miniaturas ocultan toques marginales), no una sola semilla — Incidente G / Error 23 (etiquetas solapadas en cuña estrecha Y ancha).
+14. Distractores no extremos por construcción: ningún distractor debe ocupar sistemáticamente el rango extremo (máximo/mínimo) de la magnitud comparada (longitud, valor, distancia) entre las opciones — Incidente H / regla #22 §P5. Planifico verificar el ORDEN/RANK de la respuesta correcta entre las opciones sobre ≥40 versiones en el paso 9, no solo su valor absoluto.
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -231,6 +232,23 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 **Verificación obligatoria (Flujo B, paso 5/6)**: para TODO diagrama dinámico con etiquetas, renderizar y leer el **caso EXTREMO de parámetros** — ángulo MÍNIMO **Y MÁXIMO** del pool (cuña estrecha Y ancha) × vectores más corto Y más largo × todos los cuadrantes/orientaciones — no una sola semilla. **Ampliar los recortes ≥×2.4**: las miniaturas ocultan toques marginales de 2–3 px (fue exactamente lo que dejó pasar el `70°` en la primera validación). Si se detecta cualquier solape → corregir el posicionamiento antes de continuar.
 
 **Referencia**: Error 23 en `.claude/docs/patrones-errores-conocidos.md`, reglas `flujo-b-obligatorio.md` + `graficador-secuencial.md` (coherencia visual), memoria `pendiente-solapamiento-diagramas-avion`.
+
+### Incidente H — Distractor extremo por construcción algebraica (2026-07-28)
+
+**Síntoma**: un distractor resulta ser SIEMPRE el valor/longitud máxima o mínima entre las opciones, por identidad aritmética — no por azar. El estudiante puede descartarlo (o elegirlo) con un atajo posicional ("la más larga nunca es la correcta") sin necesidad de razonar sobre los datos del enunciado.
+
+**Causa raíz**: en `desplazamiento-avion-aeropuerto`, `escala_px_km <- 120/(distancia_total + distancia_avanzada)` acoplaba la escala GLOBAL del diagrama al valor de UN distractor concreto (la opción "suma"). Esa identidad algebraica forzaba a que ese distractor midiera exactamente 120 px en el 100% de las versiones (enumeración exhaustiva: 37/37 semillas), mientras que la respuesta correcta nunca ocupaba el rank 1 (más larga) entre las opciones. `validar_diversidad_sustantiva.R` reportó `PASS` porque el VALOR de la correcta sí variaba entre semillas — el defecto está en el ORDEN/RANK relativo entre opciones, no en el valor absoluto, y ese validador no lo mide.
+
+**Defensa preventiva**:
+1. NUNCA derivar una escala o parámetro GLOBAL (que afecta a TODAS las opciones) de una fórmula que fija el valor de UN distractor específico. Las magnitudes de las opciones deben poder variar independientemente entre sí y respecto a la correcta.
+2. Ampliar el pool de errores conceptuales para que el distractor que ocupa el extremo (máximo o mínimo) cambie de versión en versión, en vez de quedar fijado por una fórmula.
+3. Es el mismo principio de regla #22 §P5 (distractor eliminable por rasgo superficial): un distractor sistemáticamente en el extremo es un rasgo saliente y perceptible, igual que un giro de 180° o una longitud única.
+
+**Verificación obligatoria (paso 9, ADEMÁS de `validar_diversidad_sustantiva.R`)**: sobre ≥40 versiones, calcular el ORDEN/RANK de la magnitud comparada (longitud, valor, distancia) entre TODAS las opciones y verificar que NINGÚN distractor ocupa sistemáticamente (100% de las veces) el rank extremo, y que la respuesta correcta sí alcanza ese rank en algunas versiones. El validador de diversidad por VALOR no detecta esto — es una verificación adicional sobre el ORDEN relativo, no sobre el valor absoluto.
+
+**Fix recomendado**: desacoplar cualquier escala/parámetro global del valor de un distractor concreto (derivarla de propiedades intrínsecas del diagrama, no de la fórmula de un error específico); ampliar el pool de errores para que la selección del distractor "extremo" varíe por versión.
+
+**Referencia**: regla #22 §P5 (`.claude/rules/diversidad-sustantiva.md`), incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
 
 ### Validación realista obligatoria (post-corrección)
 

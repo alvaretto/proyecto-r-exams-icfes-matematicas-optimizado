@@ -62,6 +62,15 @@ Si `$ARGUMENTS` contiene contenido:
 
 5. **No dupliques trabajo**: el agente ya hace sus propios pre-flight checks, validaciones V1-V5 y manejo de errores. Tu job aquí es: parsear input, validar lo mínimo, delegar, reportar.
 
+## Salvaguardas que aplica el agente
+
+Este wrapper es delgado a propósito: las defensas viven en `.claude/agents/orquestador-cloze.md` (pre-flight checks + incidentes A-J). Resumen para quien lea este comando sin abrir el agente:
+
+- **Regla #22 — Diversidad sustantiva** ([`.claude/rules/diversidad-sustantiva.md`](../rules/diversidad-sustantiva.md)): el paso 9 ejecuta `.claude/scripts/validar_diversidad_sustantiva.R --n 40`; `ERR_DIV_COSMETICA` (respuesta correcta invariante en cualquier parte/gap) es **BLOQUEANTE** (exit 1).
+- **Error 23** (etiquetas solapadas en diagramas dinámicos, caso extremo de parámetros) y **Error 24** (predictibilidad posicional/orientacional + distractor extremo por construcción algebraica) — ver [`.claude/docs/patrones-errores-conocidos.md`](../docs/patrones-errores-conocidos.md).
+- **Reglas #18, #19, #20**: imágenes Markdown con `{width=...}` (anti `\pandocbounded`), Solution letter-independent en TODAS las sub-partes schoice (nunca `r letra_correcta_pN`/"Opción A-D"), guard `\newcounter{none}` en tablas Markdown.
+- **Incidente G (CLOZE, [`.claude/rules/graficos-como-opciones.md`](../rules/graficos-como-opciones.md))**: las gráficas-opción NUNCA van dentro del gap `MULTICHOICE`/`MULTIRESPONSE` — Moodle no renderiza `<img>` ahí. Van ROTULADAS (I, II, III, IV) en el ENUNCIADO de la parte, con las opciones del gap como texto ("Gráfica I"…). Verificado en V5 (paso 10) sobre el XML de Moodle.
+
 ## Notas
 
 - El agente tiene `maxTurns: 65` y `model: opus`. Una corrida completa es costosa.
