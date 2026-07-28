@@ -80,7 +80,8 @@ pero ajustadas al membrete institucional (I. E. Pedacito de Cielo).
 
 ```
 desplazamiento-avion-aeropuerto/
-├── desplazamiento_..._v1.Rmd      # FUENTE — el ejercicio (561 líneas, 7 chunks)
+├── desplazamiento_..._v1.Rmd      # FUENTE — el ejercicio (7 chunks; el data_generation
+│                                  #   abre con índice de 14 secciones + 5 invariantes)
 ├── SemilleroUnico_v2.R            # FUENTE — exportación completa (HTML/PDF/DOCX/Moodle/NOPS)
 ├── SemilleroMoodle_v2.R           # FUENTE — exportación masiva a Moodle (300 copias)
 ├── SemilleroCloze.R               # FUENTE — variante cloze+schoice (exploratorio)

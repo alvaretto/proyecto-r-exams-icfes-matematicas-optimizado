@@ -38,7 +38,7 @@ documentados (`GEO-DES-01/02/03`), no ruido numérico.
 | **OE3** | Diversidad **posicional** (Error 24): la correcta no cae siempre en el mismo cuadrante | ✅ HECHO | `dd5f10d1` — pool `orientaciones` (NE/NO/SE/SO) aleatorizado |
 | **OE4** | Legibilidad de diagramas: la etiqueta del ángulo no se solapa (Error 23) | ✅ HECHO | `169ab8c6` + `287afc01` — piso `R_fit >= 50` |
 | **OE5** | Distractor direccional **plausible**, no outlier eliminable de un vistazo (regla #22 §P5) | ✅ HECHO | `779d7383` — espejo este↔oeste a la distancia correcta, en vez de giro de 180° |
-| **OE6** | **Modularizar**: extraer helpers reutilizables del `.Rmd` (561 líneas) | 🚫 **BLOQUEADO** | Intentado el 2026-07-28 con `include_supplement()`: los 5 formatos renderizan, pero rompe `validar_diversidad_sustantiva.R` (40/40 semillas en error). Revertido. Ver `docs/BACKLOG.md` P1.1 |
+| **OE6** | **Modularizar**: extraer helpers reutilizables del `.Rmd` | ✅ HECHO **en la forma que el ecosistema admite** | La extracción a archivo externo sigue bloqueada (`include_supplement()` rompe el validador de la regla #22; ver `docs/BACKLOG.md` P1.1). La modularización se hizo por el patrón que prescribe la **regla #21**: los helpers canónicos viven en `../../../.claude/scripts/snippets_familias_rmd.R` como **Familia 6** (`dibujar_diagrama_cardinal`, `orientaciones_cardinales`, `seleccionar_combinacion_con_cascada`, `renombrar_opciones_neutral`) y el `.Rmd` lleva una **copia con procedencia** declarada en §4. Además el chunk se reestructuró con índice de 14 secciones + 5 invariantes |
 | **OE7** | **Documentar**: README, Syllabus, Roadmap, Backlog, BluePrint | ✅ HECHO | `README.md` + `docs/{SYLLABUS,ROADMAP,BACKLOG,BLUEPRINT}.md` (2026-07-28) |
 | **OE8** | **Cablear orquestadores**: propagar reglas #22 / Errores 23-24 al wrapper de comando | ✅ HECHO | Los 4 wrappers/agentes + Incidente "distractor extremo por construcción" + pre-flight #14/#18 |
 | **OE9** | `.claude/` local del subproyecto | ✅ HECHO | `.claude/CLAUDE.md` + `.claude/rules/diagramas-vectoriales.md` + `.gitignore` |
@@ -81,10 +81,26 @@ ocurría.
 | Dos sesiones de R independientes, 5 versiones cada una | huellas distintas (`20c87cf7 42bab918 …` vs `d2696b8a a909acc2 …`) |
 | Diversidad sustantiva (valor de la respuesta correcta, 40 semillas) | **39/40 únicos** — mejor que los 35/40 previos al cambio |
 
-Lo que **sí** cambia, y es lo que se buscaba: si alguien fija la semilla a propósito
-(`set.seed(K)` antes de `exams2*`), ahora el examen se repite. Antes el reloj lo pisaba. Eso es
-lo que permite reproducir una versión defectuosa para corregirla y regenerar el examen exacto que
-vio un curso.
+Lo que **sí** cambia, y es lo que se buscaba: si alguien fija la semilla a propósito, ahora el
+examen se repite. Antes el reloj lo pisaba. Eso es lo que permite reproducir una versión
+defectuosa para corregirla y regenerar el examen exacto que vio un curso.
+
+**Verificación contra el código fuente de `exams` 2.4-2** (2026-07-28; `deparse()` de las
+funciones instaladas, equivalentes a `R/xexams.R` y `R/read_exercise.R` de
+<https://github.com/cran/exams>):
+
+| Afirmación | Veredicto | Evidencia |
+|---|---|---|
+| "R-exams fija una semilla por versión antes de evaluar los chunks" | ❌ **REFUTADA** | `seed_i <- if (is.null(seed)) NULL else seed[i, id]`; `set.seed()` solo se ejecuta `if (!is.null(seed_i))`. Con el defecto `seed = NULL` **nunca** se llama. La diversidad viene de que el RNG global sigue avanzando en el mismo proceso |
+| El mecanismo documentado de reproducibilidad es el argumento `seed` | ✅ CONFIRMADA | Ayuda oficial de `xexams`: *"a matrix of random seeds for each possible exercise to be set prior to calling `driver@sweave`. If `NULL` no random seeds are set"* |
+| `include_supplement()` depende de estado interno de `xexams()` | ✅ CONFIRMADA | Lee `.exams_get_internal("xexams_dir_exercises")`, que **solo** se setea dentro de `xexams()`; fuera del pipeline cae a `getwd()` o —peor— arrastra un valor **stale** de una llamada anterior en la misma sesión R |
+| Moodle expone el nombre de archivo; HTML no | ✅ CONFIRMADA | `exams2html` usa `base64 = TRUE` (data URI, sin nombre); `exams2moodle` con `pluginfile = TRUE` usa `base64 = FALSE` y escribe el nombre en **dos** sitios del XML: `src="@@PLUGINFILE@@/f"` y `<file name="f">`. Solo el CONTENIDO va en base64 |
+| La prosa de `Solution` queda fuera del shuffle | ✅ CONFIRMADA | `read_exercise()` permuta `questionlist`, `solutionlist`, `metainfo$solution` y `metainfo$tolerance`; la variable `solution` (prosa libre) no se reasigna nunca y llega intacta al `return` |
+
+**Limitación práctica que conviene tener presente:** `exams2html()` y `exams2pdf()` propagan
+`seed`, pero **`exams2moodle()` no lo expone en su firma**. Como Moodle es el destino real
+(`SemilleroMoodle_v2.R`), para reproducir un caso concreto hay que generarlo con
+`exams2pdf`/`exams2html` + `seed`, no con la exportación a Moodle.
 
 **Efecto en los exportadores** (verificado): en `SemilleroUnico_v2.R` y `SemilleroMoodle_v2.R` el
 `set.seed` está **comentado** (con nota explícita de dejar que `exams2*` maneje las semillas), así
@@ -92,7 +108,24 @@ que para producción no cambia nada. El único `set.seed` activo es `SemilleroCl
 `prueba_rapida()` — ahí el cambio es a favor: esa prueba ahora rinde **siempre la misma versión**,
 que es lo que uno quiere de una prueba de humo.
 
-### Anatomía del `.Rmd` (561 líneas, 7 chunks)
+### Estructura del chunk `data_generation` (desde 2026-07-28)
+
+Abre con un **índice de 14 secciones** (`§1`…`§14`) y una lista de **5 invariantes** que el chunk
+garantiza; romper una es un defecto, no un cambio de estilo:
+
+| # | Invariante | Defensa de |
+|---|---|---|
+| I1 | Ninguna letra (a/b/c/d) se asigna antes de la mezcla | regla #19 + regla #22 §P6 (Error 25) |
+| I2 | Los 4 PNG se generan por versión, nunca se copian | regla #22 (diversidad sustantiva) |
+| I3 | La correcta comparte longitud con ≥1 distractor | regla #22 §P5 |
+| I4 | La opción más corta respeta el ratio de legibilidad vigente | H7 |
+| I5 | Sin bucles de reintento sin cota | regla #21 Familia 1 (Error 22) |
+
+El bloque de dibujo (§4) lleva un recuadro de **procedencia**: es copia local de la **Familia 6**
+de `../../../.claude/scripts/snippets_familias_rmd.R`, que es la fuente de verdad. Si corriges un
+defecto de dibujo aquí, propágalo allá (y viceversa).
+
+### Anatomía del `.Rmd` (7 chunks)
 
 | Chunk | Líneas | Función |
 |---|---|---|
@@ -152,13 +185,14 @@ letter-independence: `letra_correcta` solo se usa internamente, nunca se emite a
 | **H3** | **El distractor `GEO-DES-03` (suma) es siempre el vector más largo.** No es estadístico sino **algebraico**: `escala_px_km = 120/(dt+da)` ⟹ `Lpx_suma ≡ 120` px exactos; y `dt+da > dr` y `> da` siempre. La correcta **nunca** ocupa el rank 1 (rank 2 en 168/200, rank 3 en 32/200). Enumeración exhaustiva: 37/37. Atajo: *"la más larga nunca es la correcta"* descarta una opción sin razonar → regla #22 §P5. | Medición propia + Adversario A + Adversario B | ✅ **RESUELTO 2026-07-28** — pool ampliado a 6 errores (1 fijo + 2 sorteados de 5) + escala desacoplada. Ver §5.2 |
 | **H5** | **La lista del «Procedimiento correcto» reiniciaba la numeración.** La ecuación en display estaba a columna 0 dentro de la lista ordenada; pandoc cerraba la enumeración y abría otra, así que en PDF el estudiante leía «(a) Dirección final» justo después de «(d) Nueva distancia». | Inspección visual FASE 2B del PDF | 🔧 **CORREGIDO 2026-07-28** (`defe2f24`) — ecuación indentada 3 espacios dentro del ítem 4; verificado (a)→(e) |
 | **H6** | **El ejercicio ignora la semilla de R-exams.** Líneas 11-12: `seed_global <- as.integer(Sys.time()) %% 100000 + sample(1:99999,1)` seguido de `set.seed(seed_global)`. Verificado empíricamente: `set.seed(42)` dos veces produce `dt=130,ang=45` y luego `dt=140,ang=55`. Consecuencia: **ninguna validación multi-semilla es reproducible aquí** — un fallo visto en la semilla N no se puede volver a provocar, y el PASS de diversidad lo garantiza en parte el reloj. No es exclusivo: 11 `.Rmd` del repo usan el patrón, 2 ya en `03-En-Produccion`. Ninguna otra línea usa `seed_global` (quitarlo = 2 líneas). | Prueba empírica propia (misma semilla, dos corridas) | 🔧 **CORREGIDO 2026-07-28** — reseed retirado por decisión del usuario; en su lugar queda un comentario que explica por qué no se debe reintroducir. Verificado: `set.seed(42)` ahora da el mismo ejercicio en corridas sucesivas; diversidad **PASS 39/40 valores únicos** (subió desde 35/40); 5 formatos OK; rank de la correcta 10/22/8 (sin regresión) |
-| **H7** | **Piso de legibilidad de 30 px, apretado.** En 3/40 versiones (7,5 %) la opción más corta cae exactamente en el piso `f=0.25`; ahí el arco y la etiqueta del ángulo sobresalen del propio vector (radio de etiqueta ≥50 px > longitud del vector). Legible, pero visualmente estrecho. Subir `f` lo suavizaría a costa de reducir el espacio de combinaciones válidas. | Medición propia (40 versiones) + inspección visual | ⏳ BACKLOG — observación, no bloqueante |
-| **H4** | **El rótulo numérico permite descartar 2 de 4.** Cada diagrama muestra su distancia ("20 km"). El estudiante calcula `dt−da` y descarta los dos cuyo rótulo no coincide, quedando solo correcta vs. espejo. Reduce la parte del ítem que exige razonar la dirección. | Adversario A | ⏳ BACKLOG — decisión de diseño pedagógico |
+| **H7** | **Piso de legibilidad de 30 px, apretado.** En 3/40 versiones (7,5 %) la opción más corta caía en el piso `f=0.25`; ahí el arco y la etiqueta del ángulo sobresalían del propio vector. | Medición propia (40 versiones) + inspección visual | 🔧 **CORREGIDO 2026-07-28** — cascada `c(0.40, 0.35, 0.30, 0.25)`: cada versión se queda en el escalón más alto factible y degrada de a uno, nunca falla. Barrido previo: a partir de 0.45 hay versiones sin pareja válida que el `stopifnot` convertía en error de render. Verificado (80 semillas): 0.40 en 79/80, mínimo **40 px**, 0 versiones apretadas. Ver `docs/BACKLOG.md` P1.4 |
+| **H4** | **El rótulo numérico permite descartar 2 de 4.** Cada diagrama muestra su distancia ("20 km"). El estudiante calcula `dt−da` y descarta las que no coinciden. Medición: quedaban 3 candidatas en el 60 % de las versiones y **solo 2 en el 40 %**. | Adversario A + medición propia | 🔧 **CORREGIDO 2026-07-28** — nuevo error **`GEO-DES-07`** (ángulo medido desde el eje cardinal opuesto): conserva distancia y lado, falla solo en el eje de referencia. Con tres distractores que conservan magnitud (01/05/07), el reparto pasa a **2→24 %, 3→60 %, 4→16 %**: en el 16 % de las versiones el filtro numérico no descarta nada. Ver `docs/BACKLOG.md` P1.5 |
 
 ### 5.2 — Resolución de H3 (2026-07-28)
 
-**Pool ampliado de 3 a 6 errores conceptuales**, con `GEO-DES-01` (espejo) **siempre presente** —
-es el discriminador central del ítem — y **2 sorteados** de los otros cinco:
+**Pool ampliado de 3 a 6 errores conceptuales** (y a **7** ese mismo día al resolver H4), con
+`GEO-DES-01` (espejo) **siempre presente** — es el discriminador central del ítem — y **2
+sorteados** de los demás:
 
 | Código | Error conceptual | Longitud vs. correcta | Precondición |
 |---|---|---|---|
@@ -168,6 +202,7 @@ es el discriminador central del ítem — y **2 sorteados** de los otros cinco:
 | `GEO-DES-04` | Posición inicial sin actualizar | mayor | siempre |
 | `GEO-DES-05` | Ángulo medido desde el eje perpendicular | **igual** | `ángulo ≠ 45` |
 | `GEO-DES-06` | Resta aplicada dos veces | **menor** | `avanzada < total/2` y `total ≠ 3·avanzada` |
+| `GEO-DES-07` | Ángulo medido desde el eje cardinal **opuesto** (añadido el 2026-07-28 para H4) | **igual** | siempre |
 
 `GEO-DES-05` y `GEO-DES-06` son los que rompen el sesgo que advertía el adversario: uno conserva
 la magnitud correcta y el otro produce un vector **más corto** que la correcta, de modo que los
@@ -197,6 +232,12 @@ Cambios de mecánica:
 La última fila es la garantía estructural: **la longitud nunca identifica la respuesta por sí
 sola**, porque la correcta y su espejo siempre miden lo mismo. Quien intente "la más larga" o "la
 más corta" se queda con dos candidatas y debe comparar dirección — que es lo que el ítem evalúa.
+
+**Re-medición tras los fixes de H4 y H7** (mismo día, pool de 7 + cascada de legibilidad; 40
+semillas): rank de la correcta por longitud **1 en 18/40, 2 en 18/40, 3 en 4/40**; vector más corto
+**48 px de mínimo** (mediana 75,7), ninguna versión en el piso de 30 px. El aumento del rank 1 no
+es un sesgo nuevo: viene de que ahora hay más opciones **empatadas** en longitud con la correcta
+(01, 05 y 07 conservan la magnitud), que es precisamente lo que se buscaba.
 
 ### 5.3 — Espacio de versiones: ¿cuántas preguntas distintas puede dar el ejercicio?
 
@@ -306,15 +347,15 @@ re-validación completa está hecha (§3) y H3/H5 quedaron resueltos. Por decisi
 habilita OE10 es la **prueba de campo con estudiantes** — no hay más trabajo técnico que sea
 prerrequisito del movimiento.
 
-Al retomar, quedan dos cosas abiertas, ninguna bloqueante y ninguna técnica:
+**No queda trabajo técnico pendiente.** Los siete hallazgos H1-H7 están cerrados: H4 y H7, las dos
+últimas decisiones de diseño, se resolvieron el 2026-07-28 (pool de 7 errores conceptuales +
+cascada de legibilidad). El siguiente hito es la **prueba de campo con estudiantes**, único
+criterio que habilita OE10.
 
-1. **H7 — piso de 30 px**: la opción más corta toca el piso en ~10 % de las versiones y ahí el
-   diagrama queda visualmente estrecho. Subir `f` por encima de 0.25 lo suaviza a costa de
-   reducir el espacio de combinaciones válidas de distractores.
-2. **H4 — el rótulo numérico permite descartar 2 de 4**: decisión de diseño pedagógico (si se
-   quita el rótulo de distancia, el ítem exige estimar la magnitud a ojo).
-
-Ambas son decisiones de diseño, no defectos. El siguiente hito real es la **prueba de campo**.
+Si al aplicarlo en aula aparece algo, el orden para retomar es: registrar el hallazgo en
+`docs/BACKLOG.md` con criterio de aceptación verificable, corregir, y re-validar con la batería de
+siempre — diversidad sustantiva `--n 40`, los 5 formatos, grep del XML de Moodle, inspección
+visual de las opciones y `tests/run_all_tests.R`.
 
 <details>
 <summary>Contexto histórico de H3 (resuelto)</summary>
@@ -330,15 +371,23 @@ diversidad + rank de la correcta, (3) promover a `02-En-Desarrollo` (OE10).
 
 </details>
 
-**OE6 (modularización) está BLOQUEADO — no reintentar sin desbloquear primero.** Se intentó el
-2026-07-28 extrayendo estos bloques a `SP/R/helpers_diagramas.R` con el mecanismo oficial
-`include_supplement()`; los 5 formatos renderizaban bien, pero `validar_diversidad_sustantiva.R`
-falló en 40/40 semillas (evalúa el chunk aislado en un tempdir, donde `include_supplement()` no
-tiene contexto). Se revirtió. El helper extraído quedó en
-`_archivo/propuesta-modularizacion/helpers_diagramas.R`, listo para reactivarse. Criterio de
-desbloqueo en `docs/BACKLOG.md` (P1.1).
+**OE6 (modularización): CERRADO en la forma que el ecosistema admite; la extracción a archivo
+externo sigue bloqueada.** Los helpers canónicos viven en la **Familia 6** de
+`../../../.claude/scripts/snippets_familias_rmd.R` y el `.Rmd` lleva una copia con procedencia
+declarada en §4 de su chunk — que es exactamente el patrón que prescribe la regla #21, no una
+omisión.
 
-Bloques candidatos, cuando se desbloquee:
+Lo que sigue bloqueado es sacar el código a un archivo aparte: se intentó el 2026-07-28 con el
+mecanismo oficial `include_supplement()` y, aunque los 5 formatos renderizaban bien,
+`validar_diversidad_sustantiva.R` falló en 40/40 semillas. La causa se confirmó después contra el
+fuente de `exams` 2.4-2: `include_supplement()` lee `.exams_get_internal("xexams_dir_exercises")`,
+un valor que **solo** se establece dentro de `xexams()`; en evaluación aislada cae a `getwd()` o
+—peor— arrastra un valor *stale* de una llamada anterior en la misma sesión R. El helper extraído
+quedó en `_archivo/propuesta-modularizacion/helpers_diagramas.R`. Criterio de desbloqueo en
+`docs/BACKLOG.md` (P1.1).
+
+Bloques que ya están canonizados en la Familia 6 (y que serían los candidatos a externalizar si
+algún día se desbloquea):
 
 | Bloque | Líneas | Helper propuesto |
 |---|---|---|

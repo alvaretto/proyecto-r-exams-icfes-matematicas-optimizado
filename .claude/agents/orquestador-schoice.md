@@ -87,6 +87,10 @@ Antes de cualquier acción destructiva, verifico:
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 13. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo **Y máximo** del pool + vectores más corto y más largo + todos los cuadrantes), ampliando los recortes ≥×2.4 (las miniaturas ocultan toques marginales), no una sola semilla — Incidente G / Error 23 (etiquetas solapadas en cuña estrecha Y ancha).
 14. Distractores no extremos por construcción: ningún distractor debe ocupar sistemáticamente el rango extremo (máximo/mínimo) de la magnitud comparada (longitud, valor, distancia) entre las opciones — Incidente H / regla #22 §P5. Planifico verificar el ORDEN/RANK de la respuesta correcta entre las opciones sobre ≥40 versiones en el paso 9, no solo su valor absoluto.
+15. `.claude/scripts/snippets_familias_rmd.R` existe y contiene el helper `seleccionar_combinacion_con_cascada()` (Familia 6). Si el ejercicio filtra combinaciones de parámetros por un umbral de legibilidad (p. ej. ratio min/max de distancias), planifico usar una CASCADA de umbrales decrecientes (`c(0.40, 0.35, 0.30, 0.25)`), nunca un umbral único con `stopifnot` — Incidente J.
+16. Ningún `.Rmd` que genero reseedea el RNG dentro de `data_generation` con `set.seed(as.integer(Sys.time())...)` ni `set.seed(...proc.time()...)` — Incidente I. Verifico: detección en DOS pasos (un `grep` de una sola línea NO basta: el patrón real suele estar partido en dos líneas — `s <- as.integer(Sys.time()) ...` seguido de `set.seed(s)` — o dentro de una expresión — `set.seed(s + sample(1:1000, 1))`): `grep -nE 'set\.seed' <archivo.Rmd>` y `grep -nE 'Sys\.time|proc\.time|Sys\.Date' <archivo.Rmd>`; si ambos devuelven líneas, inspeccionar si la semilla deriva del reloj.
+17. Si el ejercicio tiene opciones gráficas con un rótulo numérico visible (p. ej. "40 km"), planifico incluir en el pool de errores conceptuales 2-3 distractores que CONSERVEN el mismo valor/magnitud que la respuesta correcta y difieran solo en la dimensión evaluada (dirección, orientación, eje de referencia) — Incidente K.
+18. Si el `.Rmd` incluye una ecuación en display (`$$...$$`) dentro de una lista Markdown numerada (Question o Solution), verifico que esté indentada dentro del bloque del ítem, nunca a columna 0 — Incidente L.
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -249,6 +253,56 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 **Fix recomendado**: desacoplar cualquier escala/parámetro global del valor de un distractor concreto (derivarla de propiedades intrínsecas del diagrama, no de la fórmula de un error específico); ampliar el pool de errores para que la selección del distractor "extremo" varíe por versión.
 
 **Referencia**: regla #22 §P5 (`.claude/rules/diversidad-sustantiva.md`), incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
+
+### Incidente I — Reseed del RNG dentro de `data_generation` rompe la reproducibilidad multi-semilla (2026-07-28)
+
+**Síntoma**: una validación multi-semilla (FASE 2G, stress test visual, `validar_diversidad_sustantiva.R`) detecta un fallo puntual en alguna semilla, pero al reintentar con esa misma semilla el fallo no se reproduce — parece "intermitente" sin causa aparente.
+
+**Causa raíz**: el chunk `data_generation` llama `set.seed(as.integer(Sys.time()) ...)` (o `proc.time()`) para "asegurar aleatoriedad". Verificado en el código fuente de `exams:::xexams()`: el control del RNG es del LLAMADOR. Sin argumento `seed` (por defecto `NULL`), `xexams()` NO fija semilla por versión (`seed_i <- if (is.null(seed)) NULL else seed[i, id]`) y deja correr el flujo RNG global — las versiones ya difieren entre sí sin necesidad de reseedear dentro del ejercicio. Con `seed` (matriz o `TRUE`), `xexams()` ejecuta `set.seed(seed_i[j])` antes de cada versión y restaura `.Random.seed` al terminar — ese es el mecanismo DOCUMENTADO de reproducibilidad. Un `set.seed()` manual dentro del `.Rmd` pisa esa semilla: el argumento `seed` del llamador deja de tener efecto y NINGUNA validación multi-semilla puede reproducir un fallo ya detectado.
+
+**Defensa preventiva**:
+1. NUNCA llamar `set.seed()` dentro de `data_generation` usando una fuente de entropía externa (`Sys.time()`, `proc.time()`).
+2. Si se necesita determinismo para depurar, usar el mecanismo oficial `seed=` de `xexams()`/`exams2*()` desde FUERA del `.Rmd`, nunca un reseed manual dentro de él.
+
+**Verificación (pre-flight check 16 + paso 9)**: detección en DOS pasos (un `grep` de una sola línea NO basta: el patrón real suele estar partido en dos líneas — `s <- as.integer(Sys.time()) ...` seguido de `set.seed(s)` — o dentro de una expresión — `set.seed(s + sample(1:1000, 1))`): `grep -nE 'set\.seed' <archivo.Rmd>` y `grep -nE 'Sys\.time|proc\.time|Sys\.Date' <archivo.Rmd>`; si ambos devuelven líneas, inspeccionar si la semilla deriva del reloj. Dato de contexto (auditoría 2026-07-28, conteo verificado con detección robusta): **11 `.Rmd` del repo** arrastran este patrón — 9 en `01-En-PreDesarrollo/` y **2 en `03-En-Produccion/`** (inmutables: `ExportacionesGraficosEstadisticaInterpretacion_n3_cloze_v1.Rmd` y `mediana_salas_cine_formulacion_ejecucion_n2_v1.Rmd`). En ejercicios NUEVOS lo trato como defecto bloqueante que corrijo antes de continuar.
+
+**Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28); código fuente `exams:::xexams()` (paquete `exams`, CRAN).
+
+### Incidente J — Umbral de legibilidad único revienta el render o deja diagramas degenerados (Familia 6, 2026-07-28)
+
+**Síntoma**: un ejercicio con opciones gráficas que filtra combinaciones de parámetros por un ratio de legibilidad (p. ej. `min(dist)/max(dist) >= f`) falla de dos formas opuestas según el valor elegido de `f`: si es bajo, hay versiones con vectores casi ilegibles (diagrama degenerado, Error 26); si es alto, hay versiones donde NINGUNA combinación cumple el umbral y el `stopifnot` revienta el render con "ninguna combinación válida".
+
+**Causa raíz**: un único valor de `f` no puede satisfacer simultáneamente "suficientemente permisivo para que siempre exista alguna combinación válida" y "suficientemente exigente para garantizar legibilidad visual". Medición empírica (barrido de 40 semillas por valor de `f`): `f=0.40` → ~48 px de longitud mínima, sin fallos; `f=0.45` → 2/40 versiones sin ninguna combinación válida (render revienta).
+
+**Defensa preventiva**: usar una CASCADA de umbrales decrecientes, nunca un valor único con `stopifnot`. Patrón: probar el escalón más exigente primero (`0.40`) y bajar de a uno (`0.35`, `0.30`, `0.25`) hasta encontrar al menos una combinación válida; cada versión se queda en el umbral más alto que le sea factible y nunca se queda sin opciones.
+
+**Helper canónico**: `seleccionar_combinacion_con_cascada(n_candidatos, k, es_valida, umbrales = c(0.40, 0.35, 0.30, 0.25))` en `.claude/scripts/snippets_familias_rmd.R` (Familia 6). Devuelve la combinación elegida junto con el umbral realmente conseguido.
+
+**Referencia**: `.claude/scripts/snippets_familias_rmd.R` (Familia 6 — aún no indexada en `.claude/rules/familias-soluciones-rmd.md`, que documenta solo Familias 1-5), incidente `desplazamiento-avion-aeropuerto` (2026-07-28), Error 26 en `.claude/docs/patrones-errores-conocidos.md`.
+
+### Incidente K — Distractores que revelan la respuesta por el rótulo numérico (2026-07-28)
+
+**Síntoma**: en un ejercicio con opciones gráficas que muestran su valor numérico (p. ej. "40 km" bajo el diagrama), el estudiante calcula el valor correcto y descarta las demás opciones por el rótulo, sin necesidad de analizar la representación visual (dirección, orientación, eje).
+
+**Causa raíz**: si solo la opción correcta comparte su rótulo numérico con el resultado del cálculo esperado, el rótulo por sí solo resuelve el ítem — la dimensión que el ejercicio pretende evaluar (interpretación de dirección/orientación en el diagrama) queda sin evaluar.
+
+**Defensa preventiva**: incluir en el pool de errores conceptuales varios distractores que CONSERVEN el mismo valor/magnitud que la respuesta correcta y difieran SOLO en la dimensión evaluada (dirección, ángulo medido desde otro eje, orientación). En el ejercicio de referencia hay tres (espejo del eje, ángulo desde el eje perpendicular, ángulo desde el eje cardinal opuesto); reparto medido sobre 80 semillas: 2 opciones comparten el rótulo en 24% de las versiones, 3 en 60%, 4 en 16%. Es la generalización natural del "Formato Equilibrado" de `graficos-como-opciones.md`: si una dimensión superficial (formato, longitud, rótulo numérico) basta para descartar una opción, el ítem no evalúa lo que dice evaluar.
+
+**Nota de alcance**: aplica sobre todo a ejercicios con opciones gráficas. Si las opciones son solo texto sin rótulo numérico visible, esta lección no aplica directamente.
+
+**Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28), regla `graficos-como-opciones.md` §"Formato Equilibrado".
+
+### Incidente L — Ecuación en display sin indentar rompe una lista numerada (2026-07-28)
+
+**Síntoma**: en PDF, una lista numerada de la sección Question o Solution muestra "(a)" repetido después de "(d)" (o el conteo se reinicia a mitad de la lista).
+
+**Causa raíz**: un bloque `$$...$$` (ecuación en display) colocado a columna 0 dentro de un ítem de una lista ordenada de Markdown CIERRA esa lista para pandoc. Los ítems siguientes abren una lista nueva con numeración reiniciada.
+
+**Defensa preventiva**: indentar la ecuación (3 espacios, alineada con el contenido del ítem) para que quede DENTRO del bloque del ítem, en vez de a columna 0.
+
+**Verificación**: buscar `$$` a columna 0 entre ítems de una lista numerada en las secciones Question/Solution — no toda ocurrencia a columna 0 es errónea, solo la que cae dentro de una lista numerada; requiere inspección de contexto, no solo grep.
+
+**Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
 
 ### Validación realista obligatoria (post-corrección)
 

@@ -5,24 +5,59 @@ output:
   word_document: default
 ---
 ```{r data_generation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+# =============================================================================================
+# ÍNDICE DEL CHUNK  (auto-contenido a propósito — ver §4 y docs/BACKLOG.md P1.1)
+# ---------------------------------------------------------------------------------------------
+#  §1  Semilla: por qué este chunk NO debe llamar a set.seed()
+#  §2  Parámetros aleatorios de la versión (distancias y ángulo)
+#  §3  Orientación global (cuadrante NE/NO/SE/SO) — antipredictibilidad posicional, regla #22 §P4
+#  §4  BLOQUE REUTILIZABLE: dibujo de diagramas vectoriales cardinales  [copia con procedencia]
+#  §5  Pool de 7 errores conceptuales (código, descripciones, causa raíz, precondición)
+#  §6  La representación correcta
+#  §7  Selección de distractores: enumeración + cascada de legibilidad (sin bucles sin cota)
+#  §8  Escala de dibujo, desacoplada de cualquier distractor concreto
+#  §9  Generación de los 4 PNG de la versión
+#  §10 Pool de contextos narrativos
+#  §11 Selección del contexto
+#  §12 Mezcla interna y renombrado neutral de los PNG (a/b/c/d, POST-mezcla)
+#  §13 Pool de reflexiones metacognitivas
+#  §14 Verificaciones internas (testthat) que corren en cada render
+#
+# INVARIANTES QUE ESTE CHUNK GARANTIZA (romper una es un defecto, no un cambio de estilo):
+#   I1  Ninguna letra (a/b/c/d) se asigna antes de la mezcla         -> regla #19 + regla #22 §P6
+#   I2  Los 4 PNG se generan por versión, nunca se copian            -> regla #22 (diversidad)
+#   I3  La correcta comparte longitud con >=1 distractor             -> regla #22 §P5
+#   I4  La opción más corta respeta el ratio de legibilidad vigente  -> H7 (docs/BACKLOG.md P1.4)
+#   I5  Sin bucles de reintento sin cota                             -> regla #21 Familia 1
+# =============================================================================================
 library(testthat)
 
-# ---- Semilla por versión ----
-# NO reseedear aquí. R-exams ya fija la semilla de cada versión antes de evaluar este chunk,
-# y esa semilla es lo que hace reproducible una versión concreta. Un `set.seed()` derivado del
-# reloj (p. ej. `as.integer(Sys.time())`) la descarta y rompe toda validación multi-semilla:
-# el validador fija la semilla N y obtiene un ejercicio distinto en cada corrida, así que un
-# fallo detectado en la semilla N no se puede volver a provocar para corregirlo. Ver H6 en
-# HANDOFF.md (retirado el 2026-07-28).
+# ---- §1 — Semilla por versión: NO reseedear aquí ----
+# Verificado en el fuente de `exams:::xexams()` (2026-07-28): el control del RNG es del LLAMADOR,
+# no del ejercicio. Son dos regímenes y este chunk no debe interferir con ninguno:
+#   (a) sin argumento `seed` (por defecto, seed = NULL): xexams NO fija semilla por versión —
+#       `seed_i <- if (is.null(seed)) NULL else seed[i, id]` — y deja correr el flujo RNG global,
+#       así que la versión k+1 continúa donde quedó la k y sale distinta. R inicializa ese flujo
+#       desde el reloj y el PID al arrancar la sesión, de modo que dos corridas ya difieren solas.
+#   (b) con `seed` (matriz o TRUE): xexams ejecuta `set.seed(seed_i[j])` antes de cada versión y
+#       restaura `.Random.seed` después. Es el mecanismo DOCUMENTADO para regenerar exactamente
+#       la misma versión (reproducir un examen aplicado, o una versión defectuosa para corregirla).
+#       OJO: `exams2html()` y `exams2pdf()` propagan `seed`, pero `exams2moodle()` NO lo expone en
+#       su firma (verificado con `args()`, exams 2.4-2), así que la exportación a Moodle no puede
+#       pedir una versión reproducible por esta vía: hay que generar con exams2pdf/html + `seed`
+#       si se necesita reproducir un caso concreto.
+# Un `set.seed()` derivado del reloj dentro del chunk (p. ej. `as.integer(Sys.time())`) rompe (b)
+# por completo: pisa la semilla que el llamador acaba de fijar, así que el argumento `seed` deja de
+# tener efecto y ninguna validación multi-semilla puede reproducir un fallo. Retirado el
+# 2026-07-28; ver H6 en HANDOFF.md.
 
 library(grid)
 
-# ---- Parámetros aleatorios por versión ----
+# ---- §2 — Parámetros aleatorios por versión ----
 distancia_total <- sample(seq(80, 150, by = 10), 1)
-# Legibilidad del diagrama: ya NO se filtra aquí. Se garantiza en la SELECCIÓN de errores (ver
-# bloque "Selección del pool de distractores" más abajo), que exige min(dist)/max(dist) >= 0.25
-# sobre las 4 opciones REALMENTE elegidas — más preciso que filtrar distancia_avanzada a ciegas,
-# porque el conjunto de distractores candidatos ahora varía por versión (pool de 6, se eligen 3).
+# Legibilidad del diagrama: ya NO se filtra aquí. Se garantiza en §7, sobre las 4 opciones
+# REALMENTE elegidas (cascada de ratios min/max) — más preciso que filtrar distancia_avanzada a
+# ciegas, porque el conjunto de distractores candidatos varía por versión (pool de 7, se eligen 3).
 avanzadas_validas <- Filter(function(x) x < distancia_total && distancia_total != 2 * x,
                             seq(20, 60, by = 10))
 stopifnot(length(avanzadas_validas) > 0)
@@ -31,7 +66,7 @@ angulo_direccion <- sample(seq(30, 70, by = 5), 1)
 distancia_restante <- distancia_total - distancia_avanzada
 stopifnot(distancia_restante > 0, distancia_restante != distancia_avanzada)
 
-# ---- Orientación global aleatoria por versión (rompe la predictibilidad del cuadrante) ----
+# ---- §3 — Orientación global aleatoria por versión (rompe la predictibilidad del cuadrante) ----
 # El cuadrante donde aparece la respuesta correcta varía entre versiones (NE/NO/SE/SO), de modo
 # que el estudiante NO puede predecir la opción correcta por su posición/orientación (regla #22).
 # th_perp/sign_perp: eje cardinal PERPENDICULAR al eje de referencia (norte/sur -> este/oeste),
@@ -48,10 +83,26 @@ orient <- orientaciones[[sample(length(orientaciones), 1)]]
 th_axis_espejo  <- orient$th_axis
 dir_sign_espejo <- -orient$dir_sign
 lado_espejo     <- if (orient$lado == "este") "oeste" else "este"
+# Distractor GEO-DES-07: mismo lado y misma distancia, pero el ángulo se mide desde el eje cardinal
+# OPUESTO (norte<->sur). Geométricamente es un reflejo respecto al eje este-oeste; conserva la
+# magnitud, así que su rótulo de distancia coincide con el de la correcta (ver H4 en HANDOFF.md).
+# th_axis + 180 nunca colisiona con la correcta (exigiría ángulo 90°), ni con el espejo (difieren
+# 180°), ni con GEO-DES-05 (difieren 90° o 270° en los cuatro cuadrantes).
+eje_opuesto      <- if (orient$eje == "norte") "sur" else "norte"
+th_axis_opuesto  <- (orient$th_axis + 180) %% 360
+dir_sign_opuesto <- -orient$dir_sign
 # Descripción textual de la dirección, coherente con el cuadrante (p.ej. "30° al este del norte").
 dir_desc <- paste0(angulo_direccion, "° al ", orient$lado, " del ", orient$eje)
 
-# ---- Función de dibujo de un diagrama individual (sin letra, centrado) ----
+# ---- §4 — BLOQUE REUTILIZABLE: dibujo de diagramas vectoriales cardinales ----
+# ┌─ PROCEDENCIA ────────────────────────────────────────────────────────────────────────────┐
+# │ Copia local de la Familia 6 de `.claude/scripts/snippets_familias_rmd.R`                  │
+# │ (`dibujar_diagrama_cardinal`, `orientaciones_cardinales`,                                 │
+# │  `seleccionar_combinacion_con_cascada`, `renombrar_opciones_neutral`).                    │
+# │ La librería es la FUENTE DE VERDAD; esta copia está adaptada al dominio (aeropuerto/avión,│
+# │ km) y puede diferir en nombres. Si corriges un defecto de dibujo aquí, propágalo allá.     │
+# │ Copiar en vez de source() es el patrón prescrito por la regla #21, no una omisión.         │
+# └──────────────────────────────────────────────────────────────────────────────────────────┘
 # NOTA DE DISEÑO (2026-07-28): esta función se mantiene DENTRO del chunk a propósito.
 # Se intentó extraerla a R/helpers_diagramas.R con el mecanismo oficial include_supplement()
 # + source(), y aunque los 5 formatos renderizan bien, ROMPE el validador de la regla #22:
@@ -126,7 +177,7 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
 
 km <- function(d) paste0(d, " km")
 
-# ---- Pool de errores conceptuales (6 candidatos; se eligen 3 por versión — ver más abajo) ----
+# ---- §5 — Pool de errores conceptuales (7 candidatos; se eligen 3 por versión, ver §7) ----
 errores_conceptuales <- list(
   list(
     codigo          = "GEO-DES-01",
@@ -181,10 +232,19 @@ errores_conceptuales <- list(
     causa_raiz       = "Duplicación de la operación al reprocesar el dato. Es un error de control del procedimiento, no de comprensión del concepto: restar es lo correcto, pero se repite.",
     precondicion     = function(params) params$distancia_avanzada < params$distancia_total / 2 && params$distancia_total != 3 * params$distancia_avanzada,
     calcula          = function(...) paste0("resta aplicada dos veces (", distancia_total, "-", distancia_avanzada, "-", distancia_avanzada, "=", distancia_total - 2 * distancia_avanzada, " km)")
+  ),
+  list(
+    codigo          = "GEO-DES-07",
+    nombre          = "Ángulo medido desde el eje cardinal opuesto",
+    descripcion_corta = paste0("El avión aparece a ", distancia_restante, " km y al ", orient$lado, ", pero con el ángulo de ", angulo_direccion, "° medido desde el ", eje_opuesto, " en lugar del ", orient$eje, "."),
+    descripcion_larga = paste0("La distancia se calcula bien (", distancia_restante, " km) y el lado también (", orient$lado, "), pero el ángulo de ", angulo_direccion, "° se mide tomando como referencia el eje cardinal opuesto al que indica el enunciado: \"", angulo_direccion, "° al ", orient$lado, " del ", orient$eje, "\" se lee como si dijera \"", angulo_direccion, "° al ", orient$lado, " del ", eje_opuesto, "\". La posición conserva la magnitud, pero queda reflejada respecto al eje este-oeste."),
+    causa_raiz       = paste0("Lectura incompleta de la notación de rumbo: se retiene el lado hacia el que se abre el ángulo (", orient$lado, ") pero se pierde el eje desde el cual se mide (", orient$eje, " por ", eje_opuesto, "). El estudiante opera bien con la distancia y con el lado, y falla solo en el eje de referencia."),
+    precondicion     = function(params) TRUE,
+    calcula          = function(...) paste0("ángulo medido desde el ", eje_opuesto, " en vez del ", orient$eje, " (", angulo_direccion, "°, ", distancia_restante, " km)")
   )
 )
 
-# ---- La opción correcta no es un "error" sino la representación correcta ----
+# ---- §6 — La opción correcta no es un "error" sino la representación correcta ----
 # La clave es el diagrama C: 70 km a 50°
 descripcion_correcta <- paste0(
   "El avión avanzó ", distancia_avanzada, " km hacia el aeropuerto desde los ", distancia_total, " km iniciales; ",
@@ -192,8 +252,8 @@ descripcion_correcta <- paste0(
   " = ", distancia_restante, " km en la misma dirección de ", angulo_direccion, "°."
 )
 
-# ---- Selección del pool de distractores (6 candidatos -> 3 elegidos + la correcta) ----
-# GEO-DES-01 (espejo) SIEMPRE está presente. Los otros 2 se sortean entre {02,03,04,05,06},
+# ---- §7 — Selección del pool de distractores (7 candidatos -> 3 elegidos + la correcta) ----
+# GEO-DES-01 (espejo) SIEMPRE está presente. Los otros 2 se sortean entre {02,...,07},
 # filtrados primero por su precondicion (regla #8, .claude/rules/codigo-rmd.md) y luego por legibilidad +
 # distinción visual de las 4 opciones resultantes. Enumeración exhaustiva de parejas + sample()
 # sobre las válidas, sin repeat/while sin cota (regla #21 Familia 1, familias-soluciones-rmd.md).
@@ -208,24 +268,24 @@ params <- list(
 th_axis_por_codigo <- list(
   "CORRECTA"   = orient$th_axis, "GEO-DES-01" = th_axis_espejo,  "GEO-DES-02" = orient$th_axis,
   "GEO-DES-03" = orient$th_axis, "GEO-DES-04" = orient$th_axis,  "GEO-DES-05" = orient$th_perp,
-  "GEO-DES-06" = orient$th_axis
+  "GEO-DES-06" = orient$th_axis, "GEO-DES-07" = th_axis_opuesto
 )
 dir_sign_por_codigo <- list(
   "CORRECTA"   = orient$dir_sign, "GEO-DES-01" = dir_sign_espejo, "GEO-DES-02" = orient$dir_sign,
   "GEO-DES-03" = orient$dir_sign, "GEO-DES-04" = orient$dir_sign, "GEO-DES-05" = orient$sign_perp,
-  "GEO-DES-06" = orient$dir_sign
+  "GEO-DES-06" = orient$dir_sign, "GEO-DES-07" = dir_sign_opuesto
 )
 dist_por_codigo <- list(
   "CORRECTA"   = distancia_restante,                       "GEO-DES-01" = distancia_restante,
   "GEO-DES-02" = distancia_avanzada,                       "GEO-DES-03" = distancia_total + distancia_avanzada,
   "GEO-DES-04" = distancia_total,                          "GEO-DES-05" = distancia_restante,
-  "GEO-DES-06" = distancia_total - 2 * distancia_avanzada
+  "GEO-DES-06" = distancia_total - 2 * distancia_avanzada, "GEO-DES-07" = distancia_restante
 )
 nombre_temp_por_codigo <- list(
   "CORRECTA"   = "diagrama_correcta.png",  "GEO-DES-01" = "diagrama_perp.png",
   "GEO-DES-02" = "diagrama_recorrida.png", "GEO-DES-03" = "diagrama_suma.png",
   "GEO-DES-04" = "diagrama_total.png",     "GEO-DES-05" = "diagrama_angulo.png",
-  "GEO-DES-06" = "diagrama_dobleresta.png"
+  "GEO-DES-06" = "diagrama_dobleresta.png","GEO-DES-07" = "diagrama_ejeopuesto.png"
 )
 th_efectivo <- function(cod) th_axis_por_codigo[[cod]] + dir_sign_por_codigo[[cod]] * angulo_direccion
 
@@ -234,7 +294,7 @@ precondicion_por_codigo <- setNames(
   lapply(errores_conceptuales, function(e) e$precondicion),
   sapply(errores_conceptuales, function(e) e$codigo)
 )
-codigos_candidatos <- c("GEO-DES-02", "GEO-DES-03", "GEO-DES-04", "GEO-DES-05", "GEO-DES-06")
+codigos_candidatos <- c("GEO-DES-02", "GEO-DES-03", "GEO-DES-04", "GEO-DES-05", "GEO-DES-06", "GEO-DES-07")
 candidatos_seleccion <- lapply(codigos_candidatos, function(cod) {
   list(codigo = cod, dist = dist_por_codigo[[cod]], th = th_efectivo(cod))
 })
@@ -250,31 +310,49 @@ espejo_sel   <- list(codigo = "GEO-DES-01", dist = dist_por_codigo[["GEO-DES-01"
 
 # Enumerar TODAS las parejas de candidatos aplicables y quedarse con las VÁLIDAS: distancias
 # positivas, las 4 opciones (correcta + espejo + 2 elegidos) visualmente distintas, y legibles
-# (ratio min/max de distancia >= 0.25; con lienzo de 120 px equivale a un mínimo de 30 px).
-RATIO_MIN_LEGIBILIDAD <- 0.25
+# (ratio min/max de distancia; con el lienzo de 120 px, ratio r equivale a un mínimo de 120*r px).
+#
+# DOS UMBRALES, no uno (2026-07-28, hallazgo H7). Con el piso único de 0.25 el vector más corto
+# medía 30 px en ~10 % de las versiones: ahí el arco (radio 28) casi toca la punta, y tanto la
+# etiqueta del ángulo (radio >= 50) como el rótulo de distancia (radio >= 58) quedaban FUERA del
+# vector, unidos por la guía punteada. Barrido de 40 semillas por valor: 0.30 -> 40 px,
+# 0.35 -> 43.6 px, 0.40 -> 48 px, todos sin fallos; a partir de 0.45 aparecen versiones SIN
+# ninguna pareja válida (2/40), que con el `stopifnot` anterior reventaban el render.
+# Por eso NO hay un umbral único sino una CASCADA: se intenta 0.40 y, si esa versión concreta no
+# admite ninguna pareja, se baja un escalón por vez hasta 0.25 (mínimo histórico, siempre viable).
+# Cada versión se queda en el ratio más alto que le sea factible, en vez de caer al suelo de golpe.
+RATIOS_LEGIBILIDAD <- c(0.40, 0.35, 0.30, 0.25)
 pares <- combn(length(aplicables), 2, simplify = FALSE)
-pares_validos <- Filter(function(p) {
-  ops <- c(list(correcta_sel, espejo_sel), aplicables[p])
-  d <- sapply(ops, function(x) x$dist)
-  t <- sapply(ops, function(x) round(x$th %% 360, 6))
-  if (any(d <= 0)) return(FALSE)
-  if (length(unique(paste(d, t, sep = "@"))) != 4) return(FALSE)
-  (min(d) / max(d)) >= RATIO_MIN_LEGIBILIDAD
-}, pares)
-stopifnot(length(pares_validos) > 0)
+filtrar_pares <- function(ratio_min) {
+  Filter(function(p) {
+    ops <- c(list(correcta_sel, espejo_sel), aplicables[p])
+    d <- sapply(ops, function(x) x$dist)
+    t <- sapply(ops, function(x) round(x$th %% 360, 6))
+    if (any(d <= 0)) return(FALSE)
+    if (length(unique(paste(d, t, sep = "@"))) != 4) return(FALSE)
+    (min(d) / max(d)) >= ratio_min
+  }, pares)
+}
+pares_validos  <- list()
+ratio_aplicado <- NA_real_
+for (r_min in RATIOS_LEGIBILIDAD) {        # degradación elegante escalón a escalón, nunca error
+  pares_validos <- filtrar_pares(r_min)
+  if (length(pares_validos) > 0) { ratio_aplicado <- r_min; break }
+}
+stopifnot(length(pares_validos) > 0, !is.na(ratio_aplicado))
 
 par_elegido     <- pares_validos[[sample(length(pares_validos), 1)]]
 seleccionados   <- aplicables[par_elegido]
 codigos_extra   <- sapply(seleccionados, function(x) x$codigo)
 codigos_finales <- c("CORRECTA", "GEO-DES-01", codigos_extra)
 
-# ---- Escala DESACOPLADA de cualquier distractor concreto: depende de las 4 opciones elegidas ----
+# ---- §8 — Escala DESACOPLADA de cualquier distractor concreto (depende de las 4 elegidas) ----
 # (antes derivaba de distancia_total+distancia_avanzada, lo que fijaba GEO-DES-03 en 120 px
 # exactos siempre por identidad algebraica — ver docs/BACKLOG.md P0.1).
 distancias_finales <- sapply(codigos_finales, function(cod) dist_por_codigo[[cod]])
 escala_px_km <- 120 / max(distancias_finales)
 
-# ---- Generar los 4 diagramas seleccionados en esta versión (dependen de la selección) ----
+# ---- §9 — Generar los 4 diagramas seleccionados en esta versión ----
 for (cod in codigos_finales) {
   dibujar_diagrama(
     nombre_temp_por_codigo[[cod]], km(dist_por_codigo[[cod]]), dist_por_codigo[[cod]], escala_px_km,
@@ -282,7 +360,7 @@ for (cod in codigos_finales) {
   )
 }
 
-# ---- Pool de contextos narrativos (8 plantillas, al menos 5 tipos diferentes) ----
+# ---- §10 — Pool de contextos narrativos (8 plantillas, al menos 5 tipos diferentes) ----
 contextos <- list(
   # Tipo 1: Acción en curso — torre de control
   list(
@@ -438,12 +516,12 @@ contextos <- list(
   )
 )
 
-# ---- Seleccionar contexto ----
+# ---- §11 — Seleccionar contexto ----
 ctx <- contextos[[sample(length(contextos), 1)]]
 protagonista <- sample(ctx$protagonistas, 1)
 enunciado_contexto <- ctx$plantilla(protagonista, n)
 
-# ---- Crear opciones con diagramas ----
+# ---- §12 — Mezcla interna y renombrado neutral de los PNG (cierra la fuga del nombre) ----
 # Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios, y el conjunto
 # de 4 opciones (CORRECTA + 3 errores) también varía por versión: GEO-DES-01 (espejo) siempre está
 # presente, y los otros 2 se sortean entre {02,03,04,05,06} (ver bloque de selección más arriba).
@@ -496,7 +574,7 @@ for (l in letras) {
 # Identificar qué letra corresponde a la respuesta correcta (solo para uso interno)
 letra_correcta <- letras[indice_correcto]
 
-# ---- Pool de reflexiones metacognitivas ----
+# ---- §13 — Pool de reflexiones metacognitivas ----
 reflexiones_metacognitivas <- list(
   "Interpretar diagramas de posición y desplazamiento requiere integrar la información de distancia y dirección. No basta con leer un número; hay que verificar que el diagrama refleje correctamente ambas magnitudes.",
   "Al analizar representaciones gráficas de vectores, un error frecuente es fijarse solo en la distancia e ignorar el ángulo. La dirección es tan importante como la magnitud.",
@@ -507,7 +585,7 @@ reflexiones_metacognitivas <- list(
 )
 reflexion <- reflexiones_metacognitivas[[sample(length(reflexiones_metacognitivas), 1)]]
 
-# ---- Verificaciones ----
+# ---- §14 — Verificaciones (se ejecutan en CADA render; fallar aquí aborta la versión) ----
 test_that("Exactamente una opción marcada como correcta", {
   expect_equal(sum(solucion), 1)
 })
@@ -528,9 +606,14 @@ test_that("Las 4 opciones-diagrama elegidas son distintas (distancia y direcció
   expect_equal(length(unique(fps)), 4)
 })
 
-test_that("Legibilidad: la opción más corta mide al menos 25% de la más larga", {
+test_that("Legibilidad: la opción más corta respeta el ratio aplicado en esta versión", {
   px <- sapply(codigos_finales, function(cod) dist_por_codigo[[cod]] * escala_px_km)
-  expect_true(min(px) / max(px) >= RATIO_MIN_LEGIBILIDAD - 1e-9)
+  # ratio_aplicado es el escalón de la cascada que esta versión consiguió (0.40 lo normal;
+  # baja a 0.35/0.30/0.25 solo si ninguna pareja de distractores cumplía el escalón anterior).
+  expect_true(ratio_aplicado %in% RATIOS_LEGIBILIDAD)
+  expect_true(min(px) / max(px) >= ratio_aplicado - 1e-9)
+  # Suelo absoluto: el vector más corto nunca baja del mínimo histórico de 30 px.
+  expect_true(min(px) >= 120 * min(RATIOS_LEGIBILIDAD) - 1e-9)
 })
 
 test_that("Los 4 PNG existen tras el renombrado a nombres neutrales", {
@@ -651,7 +734,7 @@ for (l in letras) {
 1. **Identificar las dos magnitudes:** distancia al origen y dirección angular. Ambas deben ser correctas en el diagrama.
 2. **Determinar el sentido del movimiento:** ¿se acerca o se aleja del punto de referencia? Si se acerca, la distancia **disminuye**.
 3. **Calcular la nueva distancia:** aplicar la operación correcta (resta si se acerca, suma si se aleja).
-4. **Verificar la dirección:** el ángulo debe mantenerse igual si el enunciado dice que no cambió el rumbo.
+4. **Verificar la dirección completa**, que son tres datos y no uno: el **valor** del ángulo (debe mantenerse igual si el enunciado dice que no cambió el rumbo), el **eje desde el cual se mide** (en "`r dir_desc`" se mide desde el `r orient$eje`, no desde el `r orient$lado` ni desde el `r eje_opuesto`) y el **lado hacia el que se abre** (al `r orient$lado`, no al `r lado_espejo`). Dos diagramas con la misma distancia y el mismo número de grados pueden representar posiciones distintas si difieren en el eje o en el lado.
 5. **Comparar cada opción** contra estos criterios antes de seleccionar.
 
 Meta-information

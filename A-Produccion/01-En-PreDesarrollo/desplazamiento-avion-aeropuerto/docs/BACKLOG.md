@@ -52,7 +52,7 @@ ocupa el rank 1: ocupa el rank 2 en 168/200 casos y el rank 3 en 32/200 casos (s
 distancia ni dirección**, sin siquiera leer el enunciado con atención. Esto reduce el poder
 discriminante del ítem — el estudiante que adivina por el atajo se ve favorecido frente al que
 razona, lo opuesto del propósito metacognitivo del ejercicio. Viola
-`../../../.claude/rules/diversidad-sustantiva.md` §P5 (distractor identificable como outlier
+`../../../../.claude/rules/diversidad-sustantiva.md` §P5 (distractor identificable como outlier
 por un rasgo saliente en vez de por análisis).
 
 **Fix recomendado**:
@@ -85,7 +85,7 @@ generadas con semillas distintas,
   versiones.
 
 Script de verificación sugerido: extender
-`Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R` o un script ad-hoc que, para
+`Rscript ../../../../.claude/scripts/validar_diversidad_sustantiva.R` o un script ad-hoc que, para
 cada semilla, calcule las 4 longitudes en píxeles y registre el rank de la opción marcada como
 correcta y el rank de cada código de error.
 
@@ -95,13 +95,29 @@ correcta y el rank de cada código de error.
 
 ### P1.1 — Modularizar helpers del `.Rmd` a `SP/R/` (OE6) — **BLOQUEADO por incompatibilidad de herramienta**
 
+> **Causa raíz confirmada contra el código fuente de `exams` 2.4-2 (2026-07-28).**
+> `include_supplement()` resuelve el directorio leyendo `.exams_get_internal("xexams_dir_exercises")`,
+> un valor del entorno interno del paquete que **solo** se establece dentro del cuerpo de
+> `xexams()`. Fuera de ese pipeline —que es exactamente como evalúa el chunk
+> `validar_diversidad_sustantiva.R`, con `eval()` en un tempdir— la función cae a `getwd()`, donde
+> el suplemento no existe. Peor aún: como ese estado interno **no se limpia al terminar**
+> `xexams()`, en una misma sesión de R puede arrastrar un valor *stale* de una llamada anterior,
+> lo que haría el fallo intermitente y dependiente del orden de ejecución. No es un defecto del
+> ejercicio ni del validador: es que el mecanismo oficial de suplementos requiere un contexto que
+> la evaluación aislada no puede reproducir.
+>
+> **La modularización sí se hizo, por la vía que el ecosistema admite** (regla #21): los helpers
+> canónicos viven en `../../../../.claude/scripts/snippets_familias_rmd.R` como **Familia 6** y el
+> `.Rmd` lleva una copia con procedencia declarada en §4 de su chunk. Este ítem queda abierto solo
+> para la extracción a archivo externo, que requeriría cambiar el validador.
+
 **Estado: BLOQUEADO (2026-07-28).** No es un pendiente simple de "hacer cuando haya tiempo": se
 **intentó**, se **midió** el resultado, y el resultado deshabilita el validador obligatorio de la
 regla #22. No reintentar sin resolver primero el criterio de desbloqueo de abajo.
 
 **Qué se intentó**: extraer `dibujar_diagrama()`/`km()`/`.cols` del chunk `data_generation` a
 `SP/R/helpers_diagramas.R`, cargándolo con el mecanismo **oficial** de R/exams para archivos
-suplementarios (ver `../../../.claude/docs/AUTOCONTENCION_REXAMS.md`):
+suplementarios (ver `../../../../.claude/docs/AUTOCONTENCION_REXAMS.md`):
 
 ```r
 include_supplement("helpers_diagramas.R", dir = "R")
@@ -109,7 +125,7 @@ source("helpers_diagramas.R")
 ```
 
 **Resultado**: los 5 formatos (HTML/PDF/DOCX/NOPS/Moodle) renderizaron correctamente con este
-patrón. **Pero** `../../../.claude/scripts/validar_diversidad_sustantiva.R --n 40` falló en
+patrón. **Pero** `../../../../.claude/scripts/validar_diversidad_sustantiva.R --n 40` falló en
 **40/40 semillas** con `WARN_DIV_INDET` (ninguna evaluación del `data_generation` tuvo éxito).
 
 **Causa raíz** (verificada leyendo el script, líneas 100-109):
@@ -162,7 +178,7 @@ el XML de Moodle.
 `SP/_archivo/propuesta-modularizacion/helpers_diagramas.R`, listo para reactivar en cuanto se
 cumpla el criterio de desbloqueo.
 
-**Criterio de desbloqueo**: adaptar `../../../.claude/scripts/validar_diversidad_sustantiva.R`
+**Criterio de desbloqueo**: adaptar `../../../../.claude/scripts/validar_diversidad_sustantiva.R`
 para que soporte ejercicios modularizados — p. ej. copiando también los archivos auxiliares
 (`R/*.R`) al tempdir antes de evaluar, o evaluando el chunk con el `cwd` del ejercicio en vez de un
 tempdir aislado. Hasta entonces, este ejercicio (y cualquier otro con opciones gráficas generadas
@@ -185,7 +201,12 @@ de mantenibilidad, no un defecto del ejercicio), pero deja de ser un P1 "cuando 
 **bloqueado** que depende de trabajo en una herramienta compartida
 (`validar_diversidad_sustantiva.R`), no del propio ejercicio.
 
-### P1.2 — Re-confirmar `validar_diversidad` y `coherencias_5` de `ejercicio_state.json`
+### P1.2 — Re-confirmar `validar_diversidad` y `coherencias_5` de `ejercicio_state.json` — ✅ RESUELTO 2026-07-28
+
+> **RESUELTO** en el commit `defe2f24`. Se re-confirmaron `renderizado_4_formatos`,
+> `coherencias_5` y `validar_diversidad` con timestamp nuevo, tras verificar: diversidad
+> sustantiva PASS (40/40 evaluadas, 0 errores), 5 formatos incluido Moodle, XML de Moodle sin
+> nombres semánticos, e inspección visual de varias semillas. Lo que sigue es el análisis original.
 
 `ejercicio_state.json` marca estos dos pasos como completados el **2026-06-27T16:18-16:20**,
 **antes** de los fixes de Error 23 (`169ab8c6`, `287afc01`) y Error 24 (`dd5f10d1`) del
@@ -193,15 +214,58 @@ de mantenibilidad, no un defecto del ejercicio), pero deja de ser un P1 "cuando 
 
 **Criterio de aceptación**:
 ```bash
-Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
+Rscript ../../../../.claude/scripts/validar_diversidad_sustantiva.R \
   desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1.Rmd --n 40
 # exit 0 esperado (PASS o WARN_DIV_BAJA, nunca ERR_DIV_COSMETICA)
 ```
-y documentar las 5 coherencias (`../../../.claude/rules/codigo-rmd.md`) contra el `.Rmd` vigente,
+y documentar las 5 coherencias (`../../../../.claude/rules/codigo-rmd.md`) contra el `.Rmd` vigente,
 actualizando `ejercicio_state.json` con un nuevo timestamp tras la re-confirmación.
 
 **Prioridad P1**: condición previa a OE10 (promoción), pero no bloquea el uso actual del
 ejercicio en `01-En-PreDesarrollo/`.
+
+### P1.4 — Piso de legibilidad de 30 px (H7) — ✅ RESUELTO 2026-07-28
+
+Con el umbral único `RATIO_MIN_LEGIBILIDAD <- 0.25`, el vector más corto medía 30 px en ~10 % de
+las versiones: ahí el arco (radio 28), la etiqueta del ángulo (radio ≥50) y el rótulo de distancia
+(radio ≥58) quedaban todos FUERA del vector, unidos por la guía punteada.
+
+**Barrido de 40 semillas por valor**: 0.30 → 40 px, 0.35 → 43,6 px, 0.40 → 48 px, todos sin
+fallos; **a partir de 0.45 aparecen versiones sin ninguna pareja válida** (2/40) que el
+`stopifnot` convertía en un error de render. El techo duro está en 0.40.
+
+**Fix**: cascada `RATIOS_LEGIBILIDAD <- c(0.40, 0.35, 0.30, 0.25)` — cada versión se queda en el
+escalón más alto que le sea factible y degrada de a uno en vez de caer al suelo; nunca falla.
+
+**Criterio de aceptación verificado (80 semillas, 0 fallos)**: 0.40 aplicado en 79/80, 0.30 en 1;
+vector más corto **40 px de mínimo** (mediana 75 px), **0 versiones por debajo de 40 px**.
+
+### P1.5 — El rótulo numérico permitía descartar 2 de 4 (H4) — ✅ RESUELTO 2026-07-28
+
+Cada diagrama muestra su distancia ("20 km"), así que el estudiante calculaba `dt − da` y
+descartaba las opciones cuyo rótulo no coincidía. Medición previa: quedaban 3 candidatas en el
+60 % de las versiones y **solo 2 en el 40 %**, reduciendo el ítem a una comparación binaria.
+
+**Fix**: séptimo error conceptual **`GEO-DES-07` — «Ángulo medido desde el eje cardinal opuesto»**
+(se lee "N° al este del sur" como si dijera "N° al este del norte"). Conserva distancia **y** lado,
+y solo falla en el eje de referencia: geométricamente es un reflejo respecto al eje este-oeste. Con
+él, el pool tiene **tres** distractores que conservan la magnitud (01 espejo, 05 eje perpendicular,
+07 eje opuesto), así que el rótulo coincide con el de la correcta mucho más a menudo.
+
+Garantías geométricas (demostradas, no muestreadas): `th_axis + 180` nunca colisiona con la
+correcta (exigiría ángulo de 90°, fuera del rango 30-70), ni con el espejo (difieren exactamente
+180°), ni con `GEO-DES-05` (difieren 90° o 270° en los cuatro cuadrantes). Por eso su precondición
+es `TRUE`.
+
+**Criterio de aceptación verificado (80 semillas, 0 fallos)**: opciones que comparten el rótulo de
+la correcta → **2 en 19 (24 %), 3 en 48 (60 %), 4 en 13 (16 %)**. En el 16 % el filtro numérico no
+descarta nada. Efecto colateral favorable: las parejas válidas suben de mediana 4,5 a **8,5** y las
+combinaciones distintas de distractores de 10 a **13**; `GEO-DES-07` aparece en 41/80 y
+`GEO-DES-05` en 33/80, sin que ninguno domine el pool.
+
+También se completó el paso 4 de la «Estrategia para interpretar diagramas» en la Solution: la
+dirección se verifica con **tres** datos (valor del ángulo, eje desde el que se mide, lado hacia el
+que se abre), que es exactamente lo que distinguen los distractores 01/05/07.
 
 ### P1.3 — Cablear el wrapper del comando `orquestador-schoice` (OE8)
 
@@ -222,8 +286,12 @@ futuro con opciones gráficas** que se genere invocando el comando en vez del ag
 
 ### P2.1 — Promoción a `02-En-Desarrollo/` (OE10)
 
-Condicionada a resolver P0.1 y re-confirmar P1.2. Ejecutar `/promover-ejercicio` (o el paso
-equivalente) una vez ambos estén cerrados. Ver [`ROADMAP.md` §3](ROADMAP.md#3-vía-a-02-en-desarrollo).
+> **Criterio corregido el 2026-07-28 (decisión D6 del usuario):** la promoción **no** depende de
+> la validación técnica, que ya está completa (P0.1, P1.2, P1.4 y P1.5 cerrados). Depende de haber
+> **testeado el ejercicio en campo con estudiantes**. Hasta entonces se queda en
+> `01-En-PreDesarrollo/`, aunque todos los ítems técnicos estén en verde.
+
+Ver [`ROADMAP.md` §3](ROADMAP.md#3-vía-a-02-en-desarrollo).
 
 **Criterio de aceptación**: el directorio del ejercicio existe en
 `A-Produccion/02-En-Desarrollo/` con `ejercicio_state.json` actualizado y sin degradar ningún
@@ -254,6 +322,6 @@ no es una acción automática.
 - [`ROADMAP.md`](ROADMAP.md) — hitos y qué bloquea qué
 - [`SYLLABUS.md`](SYLLABUS.md) — nota de discrepancia DOK/Nivel en `ejercicio_state.json` (P1.2)
 - [`BLUEPRINT.md`](BLUEPRINT.md) — contrato de `dibujar_diagrama()` afectado por P0.1 y P1.1
-- `../../../.claude/rules/diversidad-sustantiva.md` — regla #22, §P5 (base del hallazgo P0.1)
-- `../../../.claude/docs/patrones-errores-conocidos.md` — Error 24 (predictibilidad posicional,
+- `../../../../.claude/rules/diversidad-sustantiva.md` — regla #22, §P5 (base del hallazgo P0.1)
+- `../../../../.claude/docs/patrones-errores-conocidos.md` — Error 24 (predictibilidad posicional,
   antecedente directo del mismo tipo de sesgo que P0.1 ataca en la dimensión de longitud)

@@ -3,12 +3,15 @@
 ## Principio Fundamental
 
 **Todo diagrama vectorial usado como opción gráfica en este ejercicio (distancia + dirección
-sobre ejes cardinales) DEBE construirse con tres garantías simultáneas: (1) la etiqueta del
+sobre ejes cardinales) DEBE construirse con cinco garantías simultáneas: (1) la etiqueta del
 ángulo nunca se solapa con la línea ni con el eje en ningún punto del rango de ángulos
 aleatorizados, (2) la escala del dibujo se deriva del máximo valor efectivamente dibujado —
-nunca de una constante ni del valor de un distractor concreto —, y (3) la orientación global
+nunca de una constante ni del valor de un distractor concreto —, (3) la orientación global
 (cuadrante) se aleatoriza de forma idéntica para las cuatro opciones, de modo que la posición
-visual de la respuesta correcta no sea predecible entre versiones.**
+visual de la respuesta correcta no sea predecible entre versiones, (4) el umbral de legibilidad
+se aplica como CASCADA de escalones, nunca como umbral único con `stopifnot`, y (5) varios
+distractores conservan la magnitud de la correcta, de modo que el rótulo numérico no permita
+descartar opciones sin analizar la representación.**
 
 Esta regla es **local a este subproyecto** (no forma parte de la numeración de reglas críticas
 del repositorio raíz) y complementa, sin sustituir, las reglas heredadas de
@@ -100,6 +103,47 @@ descripción textual de la dirección sea coherente con el cuadrante dibujado en
 
 ---
 
+### 4. Umbral de legibilidad en CASCADA, no umbral único
+
+```r
+# ✓ CORRECTO — escalones descendentes: cada versión se queda en el más alto que le sea factible
+RATIOS_LEGIBILIDAD <- c(0.40, 0.35, 0.30, 0.25)
+pares_validos  <- list(); ratio_aplicado <- NA_real_
+for (r_min in RATIOS_LEGIBILIDAD) {
+  pares_validos <- filtrar_pares(r_min)
+  if (length(pares_validos) > 0) { ratio_aplicado <- r_min; break }
+}
+stopifnot(length(pares_validos) > 0, !is.na(ratio_aplicado))
+```
+
+Un umbral único falla por los dos extremos: si es bajo (0.25) hay versiones con el vector más
+corto en 30 px, donde el arco, la etiqueta del ángulo y el rótulo de distancia quedan todos FUERA
+del vector; si es alto (≥0.45) hay versiones donde **ninguna** pareja de distractores cumple y el
+`stopifnot` revienta el render. Barrido de 40 semillas por valor (2026-07-28): 0.30 → 40 px,
+0.35 → 43,6 px, 0.40 → 48 px, todos sin fallos; 0.45 y 0.50 → 2/40 versiones sin pareja válida.
+
+Verificación tras el cambio (80 semillas): 0.40 aplicado en 79/80, mínimo 48 px, 0 fallos.
+
+### 5. Varios distractores deben CONSERVAR la magnitud de la correcta
+
+Cada diagrama muestra su distancia ("40 km"). Si solo la correcta y su espejo comparten ese
+rótulo, el estudiante calcula el valor y descarta la mitad de las opciones sin mirar el dibujo.
+El pool debe incluir **varios** errores que produzcan la MISMA magnitud y difieran solo en la
+dimensión evaluada (lado del eje, eje de referencia, eje perpendicular). Hoy son tres:
+`GEO-DES-01` (espejo del lado), `GEO-DES-05` (ángulo desde el eje perpendicular) y `GEO-DES-07`
+(ángulo desde el eje cardinal opuesto).
+
+Reparto verificado sobre 80 semillas: **2 opciones comparten el rótulo en el 24 % de las
+versiones, 3 en el 60 % y 4 en el 16 %**. En ese último 16 % el filtro numérico no descarta nada.
+
+Antes de añadir un distractor que conserve la magnitud hay que **demostrar** que su dirección no
+colisiona con ninguna otra opción en ningún cuadrante ni ángulo del rango (para `GEO-DES-07`: con
+la correcta exigiría un ángulo de 90°, fuera del rango 30-70; con el espejo difieren exactamente
+180°; con `GEO-DES-05`, 90° o 270° según el cuadrante). Sin esa demostración, la precondición no
+puede ser `TRUE`.
+
+---
+
 ## Patrones PROHIBIDOS
 
 ### ❌ P1: Fórmula de radio sin piso mínimo
@@ -131,6 +175,29 @@ dibujar_diagrama("diagrama_correcta.png", ..., th_axis = sample(c(90,270),1), ..
 dibujar_diagrama("diagrama_suma.png",     ..., th_axis = sample(c(90,270),1), ...)  # sorteo distinto
 ```
 
+### ❌ P5: Umbral único de legibilidad con `stopifnot`
+
+```r
+# ❌ PROHIBIDO — o deja versiones degeneradas (umbral bajo) o revienta el render (umbral alto)
+RATIO_MIN_LEGIBILIDAD <- 0.40
+pares_validos <- filtrar_pares(RATIO_MIN_LEGIBILIDAD)
+stopifnot(length(pares_validos) > 0)   # falla en las versiones sin ninguna pareja válida
+```
+
+### ❌ P6: `set.seed()` dentro del chunk
+
+```r
+# ❌ PROHIBIDO — pisa la semilla que fija el llamador vía el argumento `seed` de exams2*/xexams,
+#    con lo que ninguna validación multi-semilla puede reproducir un fallo detectado
+seed_global <- as.integer(Sys.time()) %% 100000 + sample(1:99999, 1)
+set.seed(seed_global)
+```
+
+Verificado en el fuente de `exams:::xexams()`: sin argumento `seed` (por defecto) NO se fija
+semilla por versión y el flujo RNG global avanza solo — las versiones ya difieren entre sí; con
+`seed` (matriz o TRUE) se ejecuta `set.seed()` por versión y se restaura `.Random.seed` después.
+El régimen (b) es el mecanismo documentado de reproducibilidad, y el reseed por reloj lo anula.
+
 ### ❌ P4: Distractor con rasgo saliente que lo hace un outlier obvio
 
 ```r
@@ -159,7 +226,7 @@ Antes de aprobar cualquier cambio a `dibujar_diagrama()`, `escala_px_km` o al po
    *valor* de la respuesta varíe; su *posición* también debe hacerlo. Comando de referencia:
 
    ```bash
-   Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
+   Rscript ../../../../../.claude/scripts/validar_diversidad_sustantiva.R \
      desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1.Rmd --n 40
    ```
 
@@ -175,8 +242,9 @@ Antes de aprobar cualquier cambio a `dibujar_diagrama()`, `escala_px_km` o al po
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-07-28
+**Versión:** 2.0
+**Fecha:** 2026-07-28 (v2.0 — garantías 4 y 5: cascada de umbrales de legibilidad [H7] y
+distractores que conservan la magnitud [H4]; antipatrones P5 y P6; v1.0 mismo día)
 **Estado:** ACTIVO (regla local de subproyecto)
 **Excepciones:** NINGUNA
 **Aplica a:** el chunk `data_generation` de
