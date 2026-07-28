@@ -150,6 +150,39 @@ fuera). Solo si el cambio es benigno, regenerar la referencia:
 
 **Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-8).
 
+### I-9 — Herramientas de agentes en PascalCase válido (añadido v1.2, 2026-07-28)
+
+**Invariante:** todo agente `.claude/agents/*.md` que declare `tools:` en su frontmatter
+debe listar los nombres de herramienta en **PascalCase canónico** (`Read`, `Write`, `Edit`,
+`MultiEdit`, `Bash`, `Grep`, `Glob`, `Task`, `WebFetch`, `WebSearch`, `TodoWrite`,
+`NotebookEdit`). Claude Code **no reconoce** variantes en minúscula (`read`, `glob`,
+`bash`, ...); un agente con `tools:` en minúscula se instancia **sin ninguna herramienta**
+("would be spawned with zero tools — refusing").
+
+Motivación: incidente 2026-07-28. 6 de los 10 agentes ICFES (`agente-detractor.md`,
+`clasificador-icfes.md`, `corrector-coherencia.md`, `diagnosticador-errores.md`,
+`pedagogo-icfes.md`, `validador-visual.md`) declaraban `tools:` en minúscula
+(ej. `tools: [read, glob, grep, bash]`). El defecto pasó desapercibido porque el
+frontmatter es sintácticamente válido YAML — solo se manifiesta al intentar lanzar el
+agente vía `Task`, momento en que Claude Code rechaza la instanciación por falta de
+herramientas. Fix aplicado: los 6 archivos se corrigieron a PascalCase, preservando
+exactamente el mismo conjunto de capacidades por agente.
+
+**Verificación:**
+```bash
+Rscript tests/testthat/test_infraestructura_claude.R
+```
+(el bloque `test_that("I-9: ...")` recorre cada `.claude/agents/*.md`, extrae la línea
+`tools:` — con o sin corchetes — y falla si algún nombre no empieza en mayúscula o no
+pertenece al conjunto válido).
+
+**Si falla:** localizar el agente reportado y corregir manualmente la línea `tools:` al
+PascalCase correspondiente (`read`→`Read`, `write`→`Write`, `glob`→`Glob`, `grep`→`Grep`,
+`bash`→`Bash`, `webfetch`→`WebFetch`, `websearch`→`WebSearch`), sin alterar el conjunto de
+capacidades ni ninguna otra línea del frontmatter. Re-ejecutar el test hasta que pase.
+
+**Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-9).
+
 ---
 
 ## Procedimiento obligatorio antes de cualquier instalación/upgrade externo
@@ -177,7 +210,7 @@ echo "Backup creado: .claude.pre-${PLATAFORMA}-${TS}.tar.gz"
 npx <plataforma>@latest <comando>
 ```
 
-### Paso 3 — Verificar invariantes I-1 a I-8
+### Paso 3 — Verificar invariantes I-1 a I-9
 
 Ejecutar el script `tests/testthat/test_infraestructura_claude.R` (creado por esta misma regla) o el equivalente:
 
@@ -221,7 +254,7 @@ Patrones específicos de conflicto y su resolución:
 | Recomendación externa | Regla ICFES violada | Decisión |
 |---|---|---|
 | Ruflo: "usa hierarchical-mesh + 15 agentes" | #14 routing de modelos por complejidad | Ignorar; usar el routing ICFES |
-| Ruflo: "init --force re-genera todo" | I-1 a I-8 | NO ejecutar sin snapshot previo |
+| Ruflo: "init --force re-genera todo" | I-1 a I-9 | NO ejecutar sin snapshot previo |
 | claude-flow doctor --fix | Puede tocar settings.json | Solo `doctor` (sin --fix) hasta validar diff |
 | Ruflo skill X duplica skill ICFES | #6, #8, #16 | Mantener el ICFES, marcar el Ruflo como "no usar" |
 | auto-memory bridge sin paquete | (memoria N2) | Vivir sin él hasta tener tiempo de instalar limpiamente |
@@ -299,8 +332,8 @@ Se ejecuta automáticamente en `tests/run_all_tests.R` y en pre-push. Si falla, 
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-07-01 (v1.1 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
+**Versión:** 1.2
+**Fecha:** 2026-07-28 (v1.2 — I-9 PascalCase de `tools:` en agentes; v1.1 2026-07-01 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo el ecosistema `.claude/` y archivos raíz `CLAUDE.md`, `CLAUDE.local.md`.

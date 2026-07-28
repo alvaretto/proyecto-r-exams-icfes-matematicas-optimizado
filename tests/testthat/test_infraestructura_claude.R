@@ -1,7 +1,7 @@
 # Tests de Infraestructura .claude/ — Regla #17 (infraestructura-protegida.md)
-# Cobertura: 8 invariantes I-1 a I-8
-# Versión: 1.1
-# Fecha: 2026-07-01
+# Cobertura: 9 invariantes I-1 a I-9
+# Versión: 1.2
+# Fecha: 2026-07-28
 #
 # Estos tests verifican que la convivencia Ruflo+ICFES sigue intacta.
 # Si fallan, la sesión Ruflo del 2026-04-25 ha vuelto a romper el ecosistema.
@@ -216,6 +216,64 @@ test_that("I-8: helpers Ruflo .cjs coinciden con hashes de referencia", {
     info = paste("Un helper Ruflo .cjs cambió respecto al hash de referencia.",
                  "Auditar el diff (red/exec/env) ANTES de aceptar; si es benigno,",
                  "regenerar: sha256sum .claude/helpers/*.cjs > tests/testthat/ruflo-helpers.sha256"))
+})
+
+# ============================================================
+# I-9: Herramientas de agentes en PascalCase válido (frontmatter tools:)
+# ============================================================
+#
+# Origen: 2026-07-28 — 6 de 10 agentes .claude/agents/*.md declaraban
+# `tools:` en minúscula (ej. [read, glob, grep, bash]). Claude Code no
+# reconoce esos nombres y el agente se instancia SIN herramientas
+# ("would be spawned with zero tools — refusing"), detectado al intentar
+# lanzar AgenteDetractor. Fix: PascalCase canónico en los 6 archivos.
+# Esta invariante evita que el drift vuelva a colarse silenciosamente.
+
+test_that("I-9: 'tools:' en agentes .claude/agents/*.md usa nombres PascalCase válidos", {
+  herramientas_validas <- c(
+    "Read", "Write", "Edit", "MultiEdit", "Bash", "Grep", "Glob",
+    "Task", "WebFetch", "WebSearch", "TodoWrite", "NotebookEdit"
+  )
+
+  archivos_agentes <- list.files(".claude/agents", pattern = "\\.md$", full.names = TRUE)
+  expect_gt(length(archivos_agentes), 0,
+            label = "No se encontraron agentes en .claude/agents/")
+
+  for (archivo in archivos_agentes) {
+    # Lectura byte-robusta (mismo motivo que I-2: readLines corrompe UTF-8 en locale C)
+    raw_txt <- readChar(archivo, file.info(archivo)$size, useBytes = TRUE)
+    lineas <- strsplit(raw_txt, "\n", fixed = TRUE)[[1]]
+
+    linea_tools <- grep("^tools:", lineas, value = TRUE, useBytes = TRUE)
+    if (length(linea_tools) == 0) next  # agente sin campo tools: en el frontmatter
+
+    # Soporta ambos formatos vistos en el repo: "tools: [Read, Glob]" y
+    # "tools: Read, Grep, Glob" (sin corchetes)
+    valor <- sub("^tools:\\s*", "", linea_tools[1], useBytes = TRUE)
+    valor <- gsub("[][]", "", valor, useBytes = TRUE)
+    herramientas <- trimws(strsplit(valor, ",", fixed = TRUE)[[1]])
+    herramientas <- herramientas[nzchar(herramientas)]
+
+    expect_gt(length(herramientas), 0,
+              label = paste("Agente con 'tools:' vacío o sin parsear:", basename(archivo)))
+
+    for (h in herramientas) {
+      # Debe empezar por mayúscula — detecta explícitamente el patrón "minúscula"
+      # que causó el incidente, aunque el %in% de abajo ya lo cubriría por
+      # sí solo (Claude Code no reconoce "read"/"glob"/etc en minúscula).
+      expect_match(h, "^[A-Z]",
+        info = paste0("Agente ", basename(archivo), ": herramienta '", h,
+                      "' no empieza con mayúscula. Nombres en minúscula NO son ",
+                      "reconocidos por Claude Code y el agente se instancia SIN ",
+                      "herramientas. Ver .claude/rules/infraestructura-protegida.md (I-9)."))
+
+      expect_true(h %in% herramientas_validas,
+        info = paste0("Agente ", basename(archivo), " declara herramienta inválida '", h,
+                      "' en 'tools:'. Debe ser una de: ",
+                      paste(herramientas_validas, collapse = ", "),
+                      ". Ver .claude/rules/infraestructura-protegida.md (I-9)."))
+    }
+  }
 })
 
 # ============================================================

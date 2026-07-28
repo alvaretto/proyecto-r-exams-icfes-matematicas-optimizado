@@ -1,7 +1,7 @@
 ---
 name: AgenteDiagnosticador
 description: Especialista en diagnóstico de errores y ejecución de SUBFASE 3A del Ciclo de Validación.
-tools: [read, write, glob, bash]
+tools: [Read, Write, Glob, Bash]
 model: claude-sonnet-4-5-20250929
 ---
 
