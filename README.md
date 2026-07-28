@@ -31,7 +31,7 @@ El proyecto se basa en un flujo de trabajo de 3 fases diseñado para maximizar l
 
 2.  **⚙️ Fase 2: Procesamiento y Generación**
     *   **Flujo A (Sin Gráficas)**: Proceso estándar de 8 fases para la generación del `.Rmd`.
-    *   **Flujo B (Con Gráficas)**: Activación del **Agente-Graficador Especializado TikZ** para replicar la imagen con una fidelidad visual superior al 98%.
+    *   **Flujo B (Con Gráficas)**: Activación del **Graficador Experto**, que genera de forma SECUENCIAL y OBLIGATORIA las **tres versiones** —TikZ, Python (`matplotlib`) y R (`ggplot2`)—, iterando cada una automáticamente hasta alcanzar **≥98% de fidelidad visual**. Claude **no puede elegir** el lenguaje: el **usuario siempre decide** cuál de las tres versiones usar (ver [`graficador-secuencial.md`](.claude/rules/graficador-secuencial.md), regla #3).
     *   Generación de código `.Rmd` completo, siguiendo una estructura obligatoria y validada.
 
 3.  **🔄 Fase 3: Iteración y Mejora Continua**
@@ -43,11 +43,11 @@ El proyecto se basa en un flujo de trabajo de 3 fases diseñado para maximizar l
 ## ✨ **Características Principales**
 
 -   **🤖 Sistema Condicional Automático**: Activa flujos de trabajo especializados según el contenido de la imagen.
--   **🎨 Agente-Graficador TikZ**: Replica imágenes con una fidelidad visual del 98%+, manejando colores RGB precisos, posicionamiento sistemático y características avanzadas.
+-   **🎨 Graficador Experto (TikZ + Python + R)**: Genera SIEMPRE las tres versiones —TikZ, Python (`matplotlib`) y R (`ggplot2`)—, iterando cada una automáticamente hasta alcanzar ≥98% de fidelidad visual (colores RGB precisos, posicionamiento sistemático). El **usuario siempre decide** cuál de las tres usar (ver [`graficador-secuencial.md`](.claude/rules/graficador-secuencial.md), regla #3).
 -   **🧩 Soporte Híbrido**: Genera ejercicios que integran R, Python (vía `reticulate`), y LaTeX/TikZ para visualizaciones complejas.
 -   **✅ Calidad ICFES Garantizada**: Cumple con metadatos obligatorios, sistema avanzado de distractores y criterios de calidad rigurosos.
 -   **🔧 Protocolo Anti-Errores**: Utiliza una base de "ejemplos funcionales" para prevenir errores de implementación, asegurando que todo el código generado sea robusto y compilable.
--   **✔️ Pruebas de Diversidad**: Generación mínima de 300 versiones únicas por ejercicio, verificada con `testthat`.
+-   **✔️ Pruebas de Diversidad**: Generación mínima de **200+ versiones únicas** por ejercicio (regla #3 en [`codigo-rmd.md`](.claude/rules/codigo-rmd.md); la práctica operativa apunta a 250+), verificada con `testthat`. Desde la regla #22 ([`diversidad-sustantiva.md`](.claude/rules/diversidad-sustantiva.md)) el conteo de versiones únicas **no basta**: se exige además diversidad **sustantiva** (que la respuesta correcta varíe, no solo el envoltorio narrativo), verificada con `.claude/scripts/validar_diversidad_sustantiva.R --n 40` (`ERR_DIV_COSMETICA` es bloqueante).
 
 ---
 
@@ -101,7 +101,7 @@ La carpeta **`A-Produccion/`** contiene archivos `.Rmd` y subproyectos funcional
 ### ✨ **Características de los Archivos en A-Produccion**
 
 - ✅ **Completamente funcionales**: Compilables sin errores en R-exams
-- ✅ **Validados**: Han pasado todas las pruebas de calidad y diversidad (300+ versiones)
+- ✅ **Validados**: Han pasado las pruebas de calidad y diversidad — 200+ versiones únicas (práctica operativa 250+; regla #3 en [`codigo-rmd.md`](.claude/rules/codigo-rmd.md)) con diversidad **sustantiva** verificada (regla #22 en [`diversidad-sustantiva.md`](.claude/rules/diversidad-sustantiva.md))
 - ✅ **Documentados**: Incluyen comentarios y estructura clara
 - ✅ **Optimizados**: Siguen las mejores prácticas del proyecto
 - ✅ **Modelos de referencia**: Pueden usarse como plantillas para nuevos ejercicios
@@ -225,7 +225,7 @@ El proyecto incluye skills configurados en `.claude/skills/` para automatizar ca
 **Skills de Soporte:**
 
 - `/corregir-error-imagen` - Corrección automática de errores TikZ
-- `/validar-diversidad` - Validar 300+ versiones únicas
+- `/validar-diversidad` - Validar 200+ versiones únicas (regla #3) y diversidad sustantiva (regla #22)
 - `/validar-icfes` - Validar metadatos y estructura R-exams
 
 **Skills del Graficador Experto v2.0:**
@@ -270,9 +270,9 @@ También puedes usar comandos en lenguaje natural:
 
 Para problemas que requieren replicación gráfica directa:
 
-> "Activa el Agente-Graficador Especializado TikZ para replicar esta imagen con 98%+ fidelidad visual."
+> "Activa el Graficador Experto para replicar esta imagen: genera las tres versiones (TikZ, Python y R) e itera cada una hasta ≥98% de fidelidad visual."
 
-El sistema se encargará de analizar la imagen, seleccionar el flujo correcto y generar el archivo `.Rmd` correspondiente en el directorio de trabajo.
+El sistema se encargará de analizar la imagen, seleccionar el flujo correcto y generar el archivo `.Rmd` correspondiente en el directorio de trabajo. Recuerda que el Graficador Experto produce **siempre los tres lenguajes** y que **la elección final de cuál usar es tuya**, no del sistema (regla #3, [`graficador-secuencial.md`](.claude/rules/graficador-secuencial.md)).
 
 ---
 
@@ -282,9 +282,9 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ```
 .claude/
-├── CLAUDE.md              # Memory file principal del proyecto (v3.2.2)
+├── CLAUDE.md              # Memory file principal del proyecto (v3.17.1, 2026-06-27)
 ├── detractor-config.yaml  # 🆕 Configuración del skill detractor
-├── rules/                 # Reglas modulares (10 reglas obligatorias)
+├── rules/                 # Reglas modulares (22 reglas obligatorias — ver tabla completa más abajo)
 │   ├── ciclo-validacion.md           # Ciclo de Validación Automática (v4.0 con FASE 2C)
 │   ├── detractor-obligatorio.md      # 🆕 Revisión adversarial obligatoria (7 dominios)
 │   ├── ejercicios-metacognitivos.md  # 🆕 Progressive Disclosure obligatorio
@@ -358,6 +358,50 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ---
 
+## 📋 **Índice de Reglas Críticas (22 reglas obligatorias)**
+
+Lista completa sincronizada con `.claude/CLAUDE.md` (sección "Reglas Críticas"). Todas son
+obligatorias y sin excepciones salvo lo indicado en cada archivo.
+
+| # | Regla | Archivo |
+|---|-------|---------|
+| 1 | Ejercicios metacognitivos con Progressive Disclosure | [`ejercicios-metacognitivos.md`](.claude/rules/ejercicios-metacognitivos.md) |
+| 2 | Flujo B obligatorio cuando hay gráficos | [`flujo-b-obligatorio.md`](.claude/rules/flujo-b-obligatorio.md) |
+| 3 | Proceso secuencial TikZ→Python→R (98% fidelidad, usuario decide) | [`graficador-secuencial.md`](.claude/rules/graficador-secuencial.md) |
+| 4 | Gráficos como opciones individuales (PNGs separados) | [`graficos-como-opciones.md`](.claude/rules/graficos-como-opciones.md) |
+| 5 | 5 Coherencias a verificar siempre (Semántica, Visual-Texto, Matemática, Código, General) | ver [`ciclo-validacion.md`](.claude/rules/ciclo-validacion.md) |
+| 6 | Validación visual iterativa obligatoria | [`ciclo-validacion.md`](.claude/rules/ciclo-validacion.md) |
+| 7 | Ortografía española con tildes | [`ortografia-espanol.md`](.claude/rules/ortografia-espanol.md) |
+| 8 | Testing automático permanente | [`testing-obligatorio.md`](.claude/rules/testing-obligatorio.md) |
+| 9 | Detractor obligatorio en fases de revisión | [`detractor-obligatorio.md`](.claude/rules/detractor-obligatorio.md) |
+| 10 | Validación de opciones repetidas en ejercicios `_neg_` | [`validacion-neg-opciones-repetidas.md`](.claude/rules/validacion-neg-opciones-repetidas.md) |
+| 11 | Contextos narrativos creativos (no mecánicos) | [`contextos-narrativos-creativos.md`](.claude/rules/contextos-narrativos-creativos.md) |
+| 12 | Validación semántica automática (Nivel 4: descripción ↔ datos) | [`ejercicios-metacognitivos.md`](.claude/rules/ejercicios-metacognitivos.md) (sección Validación Semántica) |
+| 13 | Validación de correctitud de respuesta (Nivel 5: multi-semilla + cross-check) | [`validacion-correctitud-respuesta.md`](.claude/rules/validacion-correctitud-respuesta.md) |
+| 14 | Routing de modelos obligatorio (Opus/Sonnet/Haiku por complejidad) | [`modelo-routing-obligatorio.md`](.claude/rules/modelo-routing-obligatorio.md) |
+| 15 | Stress Test Visual (FASE 2H: renderizado masivo + análisis de anomalías) | [`stress-test-visual/SKILL.md`](.claude/skills/stress-test-visual/SKILL.md) |
+| 16 | Workflow State Enforcement (gate mecánico PreToolUse + estado persistente) | [`workflow-state-enforcement.md`](.claude/rules/workflow-state-enforcement.md) |
+| 17 | Infraestructura `.claude/` protegida (invariantes I-1 a I-9) | [`infraestructura-protegida.md`](.claude/rules/infraestructura-protegida.md) |
+| 18 | Markdown-imágenes-PDF (anti `\pandocbounded`) | [`markdown-imagenes-pdf.md`](.claude/rules/markdown-imagenes-pdf.md) |
+| 19 | Solution letter-independence (nunca letra/posición en Solution) | [`solution-letter-independence.md`](.claude/rules/solution-letter-independence.md) |
+| 20 | Markdown-tablas-pandoc (guard del contador `none`) | [`markdown-tablas-pandoc.md`](.claude/rules/markdown-tablas-pandoc.md) |
+| 21 | Familias de Soluciones Reutilizables | [`familias-soluciones-rmd.md`](.claude/rules/familias-soluciones-rmd.md) |
+| 22 | Diversidad Sustantiva (la respuesta correcta debe variar entre versiones, no solo el envoltorio narrativo) | [`diversidad-sustantiva.md`](.claude/rules/diversidad-sustantiva.md) |
+
+> **Invariante I-9** (regla #17, añadida 2026-07-28): los `tools:` de un agente en
+> `.claude/agents/*.md` deben declararse en **PascalCase** (`Read`, `Write`, `Bash`...); en
+> minúscula el agente se instancia **sin ninguna herramienta**.
+
+> **📌 Caso de estudio — SCHOICE con opciones gráficas dinámicas**: el subproyecto
+> [`A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto`](A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/HANDOFF.md)
+> ejemplifica el patrón completo de gráficos generados dinámicamente por versión (diagramas
+> de vuelo con ángulo/distancia aleatorizados). De su auditoría (2026-06-27/28) surgieron la
+> **regla #22** (Diversidad Sustantiva) y los **Errores 23 y 24** del catálogo de patrones.
+> Ver [`HANDOFF.md`](A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/HANDOFF.md)
+> y [`docs/BLUEPRINT.md`](A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/docs/BLUEPRINT.md).
+
+---
+
 ## 🔗 **Arquitectura de Symlinks (SOURCES/)**
 
 ### Principio: Archivos Compartidos Centralizados
@@ -425,8 +469,8 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 **"Si no está en los ejemplos funcionales, no improvises."** Antes de escribir cualquier código, es **obligatorio** consultar los ejercicios en `/A-Produccion/Ejemplos-Funcionales-Rmd/`.
 
 ### **Criterios de Calidad**
--   **Fidelidad Visual (98%+)**: Precisión geométrica, cromática, de posicionamiento y completitud.
--   **Funcionalidad R-exams (100%)**: Compatibilidad con `exams2*`, 300+ versiones, y aleatorización completa.
+-   **Fidelidad Visual (≥98%, en las tres versiones TikZ/Python/R)**: Precisión geométrica, cromática, de posicionamiento y completitud; el usuario decide la versión final (regla #3).
+-   **Funcionalidad R-exams (100%)**: Compatibilidad con `exams2*`, 200+ versiones únicas (práctica operativa 250+; regla #3) con diversidad **sustantiva** verificada (regla #22, `.claude/scripts/validar_diversidad_sustantiva.R --n 40`), y aleatorización completa.
 -   **Alineación ICFES**: Metadatos completos, distractores pedagógicos y nivel de dificultad apropiado.
 
 ---
@@ -437,9 +481,37 @@ Cualquier contribución debe adherirse estrictamente a las metodologías y proto
 -   **Institución**: IE Pedacito de Cielo
 -   **Propósito**: Generación de ejercicios matemáticos de alta calidad para la preparación de la prueba ICFES Saber 11°.
 -   **Licencia**: Proyecto Educativo
--   **Última Actualización**: Febrero 2026
+-   **Última Actualización**: v3.17.1 (2026-06-27) — ver [`.claude/CLAUDE.md`](.claude/CLAUDE.md)
 
 ## 🆕 **Novedades Recientes**
+
+### Resumen v3.3.0 → v3.17.1 (2026-02 a 2026-06)
+
+El sistema evolucionó considerablemente desde v3.2.2 (histórico, ver sección siguiente).
+Resumen de los hitos principales registrados en el changelog de [`.claude/CLAUDE.md`](.claude/CLAUDE.md):
+
+| Versión | Fecha | Novedad principal |
+|---------|-------|--------------------|
+| v3.3.0 | 2026-02-14 | Validación de correctitud de respuesta Nivel 5 (cross-check `exsolution`, unicidad de opciones, rangos matemáticos) + validación multi-semilla |
+| v3.4.0 | 2026-02-14 | Routing obligatorio de modelos (Opus/Sonnet/Haiku) por complejidad de la tarea |
+| v3.5.0 | 2026-02-14 | Capa D: determinismo obligatorio de `calcula()` (prohibido `sample`/`runif`/`rnorm` dentro) |
+| v3.6.0 | 2026-02-14 | Stress Test Visual multi-semilla (FASE 2H): renderizado masivo + detección de anomalías |
+| v3.7.0 | 2026-03-23 | Skills `/revisar-schoice` y `/revisar-cloze` (retoman el workflow interrumpido en pasos 4-11) |
+| v3.8.0 | 2026-04-10 | Resuelto drift hooks/tests/CI/docs; runner unificado de 12 suites; CI simplificado a un solo job |
+| v3.10.0 | 2026-05-03 | Regla #18 anti-`\pandocbounded` (imágenes Markdown requieren `{width=...}`) |
+| v3.11.0 | 2026-05-12 | Regla #19 *solution-letter-independence* (la Solution nunca referencia letra/posición de opción) |
+| v3.12.0 / v3.15.0 | 2026-05-14 / 2026-06-03 | Orquestador CLOZE end-to-end (11 pasos, gemelo del orquestador SCHOICE) |
+| v3.13.0 | 2026-05-14 | Formato Equilibrado en gráficos-opción (al menos 2 opciones comparten el formato de la correcta) |
+| v3.14.0 | 2026-06-03 | Regla #20: guard del contador `none` para tablas Markdown en PDF/NOPS (pandoc ≥3.7) |
+| v3.16.0 | 2026-06-15 | CLOZE: las gráficas-opción van en el enunciado, nunca dentro de un gap (Moodle no las renderiza) |
+| v3.17.0 | 2026-06-16 | Validador con soporte real de ejercicios `_neg_` Variante B (texto sinónimo) |
+| v3.17.1 | 2026-06-27 | Fix de `WAIT_USER` en orquestadores ejecutados como subagente |
+
+Adicionalmente, las reglas #21 (Familias de Soluciones Reutilizables) y #22 (Diversidad
+Sustantiva) se incorporaron al índice de reglas críticas sin entrada de changelog versionada
+propia; el origen de la regla #22 está documentado en el incidente del subproyecto
+`desplazamiento-avion-aeropuerto` (2026-06-27) — ver la sección "Índice de Reglas Críticas"
+más abajo en este mismo documento.
 
 ### Sistema v3.2.2 - Gráficos y Graficador (Febrero 2026)
 
@@ -681,12 +753,15 @@ El sistema incluye un flujo completo e integrado para transformar gráficos mate
    ↓
    Genera: analisis_inicial.json + workflow_state.json
 
-2. GENERACIÓN MULTI-LENGUAJE
-   /generar-tikz → Validado (98%+)
-   /generar-python → Validado (95%+)
-   /generar-r → Validado (96%+)
+2. GENERACIÓN MULTI-LENGUAJE (umbral único, regla #3)
+   /generar-tikz   → Validado (≥98%)
+   /generar-python → Validado (≥98%)
+   /generar-r      → Validado (≥98%)
    ↓
    Genera: output_tikz.tex + output_python.py + output_r.R
+   (Los tres lenguajes son obligatorios y comparten el mismo umbral de fidelidad;
+    la elección final de cuál usar es del usuario, no del sistema — ver
+    graficador-secuencial.md, regla #3)
 
 3. COMPARACIÓN CON MÉTRICAS OBJETIVAS
    /comparar → Puntuación 0-100 en 6 categorías
