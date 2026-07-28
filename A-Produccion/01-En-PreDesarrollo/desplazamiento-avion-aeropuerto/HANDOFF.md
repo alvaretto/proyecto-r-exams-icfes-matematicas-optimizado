@@ -12,7 +12,7 @@
 | **Tipo** | SCHOICE metacognitivo con **opciones gráficas** (4 PNG generados dinámicamente) |
 | **Origen ICFES** | `MAT-2026-1-020` (cuadernillo 2026-1, pregunta 114) |
 | **Rama / remote** | `main` → `git@github.com:alvaretto/proyecto-r-exams-icfes-matematicas-optimizado.git` |
-| **Última sesión de trabajo** | 2026-07-28 (commits `08b0130b`, `1e5482c9`, `defe2f24`) |
+| **Última sesión de trabajo** | 2026-07-28 (commits `08b0130b`, `1e5482c9`, `defe2f24`, `5baf44da`, `834c5273`, `73cef21d`, `2c38150a`) |
 | **Este handoff** | 2026-07-28 (actualizado al cierre de la sesión de la tarde) |
 
 ---
@@ -38,7 +38,7 @@ documentados (`GEO-DES-01/02/03`), no ruido numérico.
 | **OE3** | Diversidad **posicional** (Error 24): la correcta no cae siempre en el mismo cuadrante | ✅ HECHO | `dd5f10d1` — pool `orientaciones` (NE/NO/SE/SO) aleatorizado |
 | **OE4** | Legibilidad de diagramas: la etiqueta del ángulo no se solapa (Error 23) | ✅ HECHO | `169ab8c6` + `287afc01` — piso `R_fit >= 50` |
 | **OE5** | Distractor direccional **plausible**, no outlier eliminable de un vistazo (regla #22 §P5) | ✅ HECHO | `779d7383` — espejo este↔oeste a la distancia correcta, en vez de giro de 180° |
-| **OE6** | **Modularizar**: extraer helpers reutilizables del `.Rmd` | ✅ HECHO **en la forma que el ecosistema admite** | La extracción a archivo externo sigue bloqueada (`include_supplement()` rompe el validador de la regla #22; ver `docs/BACKLOG.md` P1.1). La modularización se hizo por el patrón que prescribe la **regla #21**: los helpers canónicos viven en `../../../.claude/scripts/snippets_familias_rmd.R` como **Familia 6** (`dibujar_diagrama_cardinal`, `orientaciones_cardinales`, `seleccionar_combinacion_con_cascada`, `renombrar_opciones_neutral`) y el `.Rmd` lleva una **copia con procedencia** declarada en §4. Además el chunk se reestructuró con índice de 14 secciones + 5 invariantes |
+| **OE6** | **Modularizar**: extraer helpers reutilizables del `.Rmd` | ✅ HECHO **en la forma que el ecosistema admite** | La extracción a archivo externo sigue bloqueada (`include_supplement()` rompe el validador de la regla #22; ver `docs/BACKLOG.md` P1.1). La modularización se hizo por el patrón que prescribe la **regla #21**: los helpers canónicos viven en `../../../.claude/scripts/snippets_familias_rmd.R` como **Familia 6** (`dibujar_diagrama_cardinal`, `orientaciones_cardinales`, `seleccionar_combinacion_con_cascada`, `renombrar_opciones_neutral`) y el `.Rmd` lleva una **copia con procedencia** declarada en §4. La Familia 6 quedó **indexada en la regla #21** (`../../../.claude/rules/familias-soluciones-rmd.md` v1.1) y en el resumen de `.claude/CLAUDE.md`, commit `2c38150a`. Además el chunk se reestructuró con índice de 14 secciones + 5 invariantes |
 | **OE7** | **Documentar**: README, Syllabus, Roadmap, Backlog, BluePrint | ✅ HECHO | `README.md` + `docs/{SYLLABUS,ROADMAP,BACKLOG,BLUEPRINT}.md` (2026-07-28) |
 | **OE8** | **Cablear orquestadores**: propagar reglas #22 / Errores 23-24 al wrapper de comando | ✅ HECHO | Los 4 wrappers/agentes + Incidente "distractor extremo por construcción" + pre-flight #14/#18 |
 | **OE9** | `.claude/` local del subproyecto | ✅ HECHO | `.claude/CLAUDE.md` + `.claude/rules/diagramas-vectoriales.md` + `.gitignore` |
@@ -124,6 +124,13 @@ garantiza; romper una es un defecto, no un cambio de estilo:
 El bloque de dibujo (§4) lleva un recuadro de **procedencia**: es copia local de la **Familia 6**
 de `../../../.claude/scripts/snippets_familias_rmd.R`, que es la fuente de verdad. Si corriges un
 defecto de dibujo aquí, propágalo allá (y viceversa).
+
+La Familia 6 está **documentada en la regla #21** (`../../../.claude/rules/familias-soluciones-rmd.md`
+v1.1, commit `2c38150a`): helpers canónicos y qué garantiza cada uno, patrón de la cascada de
+umbrales, exigencia de distractores que conserven la magnitud, y la verificación asociada
+(diversidad sustantiva `--n 40`, grep del XML de Moodle, rank de longitud sobre ≥40 versiones,
+inspección visual ≥×2 en los ángulos extremos). Ese es el sitio a consultar antes de reutilizar
+este patrón en otro ejercicio; este subproyecto es solo su primera aplicación.
 
 ### Anatomía del `.Rmd` (7 chunks)
 
