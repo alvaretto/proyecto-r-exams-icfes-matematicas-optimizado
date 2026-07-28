@@ -34,7 +34,7 @@ documentados (`GEO-DES-01/02/03`), no ruido numérico.
 | OE | Objetivo | Estado | Evidencia |
 |---|---|---|---|
 | **OE1** | `.Rmd` funcional que renderice en los 4 formatos (HTML/PDF/DOCX/NOPS) | ✅ HECHO | `ejercicio_state.json` paso `renderizado_4_formatos`; `output_*/` |
-| **OE2** | Diversidad **sustantiva** (regla #22): el **valor** de la respuesta correcta varía entre versiones | ✅ HECHO | 294/300 versiones únicas; parámetros vía `sample()`, sin `file.copy` |
+| **OE2** | Diversidad **sustantiva** (regla #22): el **valor** de la respuesta correcta varía entre versiones | ✅ HECHO | 2026-07-28: **200/200** versiones únicas del render y **39/40** valores únicos de la respuesta correcta; espacio de 1332 enunciados distintos (§5.3). Parámetros vía `sample()`, sin `file.copy` |
 | **OE3** | Diversidad **posicional** (Error 24): la correcta no cae siempre en el mismo cuadrante | ✅ HECHO | `dd5f10d1` — pool `orientaciones` (NE/NO/SE/SO) aleatorizado |
 | **OE4** | Legibilidad de diagramas: la etiqueta del ángulo no se solapa (Error 23) | ✅ HECHO | `169ab8c6` + `287afc01` — piso `R_fit >= 50` |
 | **OE5** | Distractor direccional **plausible**, no outlier eliminable de un vistazo (regla #22 §P5) | ✅ HECHO | `779d7383` — espejo este↔oeste a la distancia correcta, en vez de giro de 180° |
@@ -65,6 +65,32 @@ documentados (`GEO-DES-01/02/03`), no ruido numérico.
 | Legibilidad: longitud en píxeles de la opción más corta | mediana 55 px; toca el piso de 30 px en **3/40 versiones (7,5 %)** |
 | Inspección visual FASE 2B (2 semillas × 4 opciones, ampliadas ×2) | sin solapes de etiqueta; ejes, rótulos y arcos coherentes con el enunciado |
 | `tests/run_all_tests.R` | **20/20 suites en verde** (683 s) |
+
+### Diversidad tras retirar el reseed por reloj (H6) — medición
+
+Pregunta natural al quitar `set.seed(Sys.time()...)`: *¿se pierde variedad al renderizar?* **No.**
+El reseed no era la fuente de la variedad, sino un sustituto de ella: R-exams no reinicia la
+semilla en cada versión, deja correr su flujo de números aleatorios, así que la versión *k+1*
+continúa donde quedó la *k* y sale distinta. Y al arrancar, R inicializa ese flujo desde el reloj
+y el PID por su cuenta — justo lo que las 2 líneas borradas hacían a mano encima de algo que ya
+ocurría.
+
+| Escenario | Resultado |
+|---|---|
+| Un solo render de 60 versiones (`xexams(n=60)`) | **60/60 únicas** |
+| Dos sesiones de R independientes, 5 versiones cada una | huellas distintas (`20c87cf7 42bab918 …` vs `d2696b8a a909acc2 …`) |
+| Diversidad sustantiva (valor de la respuesta correcta, 40 semillas) | **39/40 únicos** — mejor que los 35/40 previos al cambio |
+
+Lo que **sí** cambia, y es lo que se buscaba: si alguien fija la semilla a propósito
+(`set.seed(K)` antes de `exams2*`), ahora el examen se repite. Antes el reloj lo pisaba. Eso es
+lo que permite reproducir una versión defectuosa para corregirla y regenerar el examen exacto que
+vio un curso.
+
+**Efecto en los exportadores** (verificado): en `SemilleroUnico_v2.R` y `SemilleroMoodle_v2.R` el
+`set.seed` está **comentado** (con nota explícita de dejar que `exams2*` maneje las semillas), así
+que para producción no cambia nada. El único `set.seed` activo es `SemilleroCloze.R:95`, dentro de
+`prueba_rapida()` — ahí el cambio es a favor: esa prueba ahora rinde **siempre la misma versión**,
+que es lo que uno quiere de una prueba de humo.
 
 ### Anatomía del `.Rmd` (561 líneas, 7 chunks)
 
@@ -171,6 +197,32 @@ Cambios de mecánica:
 La última fila es la garantía estructural: **la longitud nunca identifica la respuesta por sí
 sola**, porque la correcta y su espejo siempre miden lo mismo. Quien intente "la más larga" o "la
 más corta" se queda con dos candidatas y debe comparar dirección — que es lo que el ítem evalúa.
+
+### 5.3 — Espacio de versiones: ¿cuántas preguntas distintas puede dar el ejercicio?
+
+Conteo exacto sobre el código (no estimación), a 2026-07-28:
+
+| Factor | Valores | Qué cambia |
+|---|---|---|
+| Pares `(distancia_total, distancia_avanzada)` válidos | **37** | los números del enunciado y de las 4 opciones |
+| `angulo_direccion` — `seq(30, 70, by = 5)` | **9** | la dirección dibujada y el rótulo del ángulo |
+| `orient` — cuadrante NE/NO/SE/SO | **4** | la orientación de toda la escena y el texto de dirección |
+| **Enunciados matemáticamente distintos** | **37 × 9 × 4 = 1332** | |
+| Pareja de distractores (además de `GEO-DES-01`, siempre presente) | 10 posibles, mediana **6** válidas por versión | qué errores conceptuales se contrastan |
+| Contextos narrativos (cada uno con varios protagonistas) | **8** | la situación del enunciado |
+| Reflexiones metacognitivas | **6** | solo la Solution |
+| Orden de las 4 opciones (`sample()` interno) | **24** | la posición de la correcta |
+
+El umbral del repo (regla #3 de `codigo-rmd.md`) es **200+ versiones únicas**, y el espacio
+sustantivo por sí solo —sin contar contexto, orden ni reflexión— es de **1332 enunciados**.
+
+**Medición del 2026-07-28 (tras retirar el reseed):** `xexams(n = 200)` → **200/200 versiones
+únicas**, sin una sola colisión. El umbral de la regla #3 se cumple con holgura; el registro
+previo de "294/300" es del estado anterior al cambio.
+
+El límite práctico no es la combinatoria del ejercicio sino el muestreo: al pedir muchas más
+versiones que 200, alguna colisión aparece por el problema del cumpleaños (extracción con
+reemplazo de un espacio finito), no por falta de variedad del generador.
 
 ### 5.1 — Infraestructura
 
