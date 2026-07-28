@@ -281,6 +281,17 @@ exextra[Evidencia]: [Descripción específica]
 exextra[Nivel]: [1|2|3|4]
 ```
 
+## Modularización de Código Entre Ejercicios
+
+Si necesitas extraer código común (helpers de gráficos, funciones de validación) a un
+archivo `.R` externo reutilizable entre varios ejercicios, **NO uses `source("ruta/relativa.R")`
+directo**: R/exams copia solo el `.Rmd` del ejercicio a un directorio temporal aislado y
+hace `setwd()` antes de renderizar, así que el helper externo nunca se copia con él. Usa el
+mecanismo oficial `include_supplement("helper.R")` seguido de `source("helper.R")`.
+
+Ver `.claude/docs/AUTOCONTENCION_REXAMS.md` para el mecanismo verificado (cita de código
+fuente de `xexams.R` y de la documentación de `include_supplement()`).
+
 ## Ejemplos Funcionales = Fuente de Verdad (Búsqueda Inteligente)
 
 Ante cualquier error, consultar en **orden de prioridad**:

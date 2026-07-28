@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-05-14 (post-v2 distribucion-contagiados + Errores 18/20 + Formato Equilibrado en opciones gráficas)
+**Última actualización:** 2026-07-28 (Errores 21-24 agregados retroactivamente al catálogo §2 — existían en `patrones-errores-conocidos.md` pero faltaban en el índice; secuencia numérica 21-26 ahora continua)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -22,10 +22,11 @@
 |---|---|---|
 | Errores de renderizado `.Rmd` | `.claude/docs/patrones-errores-conocidos.md` (Errores 1-3) | Catálogo |
 | Errores de gráficos | `.claude/docs/patrones-errores-conocidos.md` (Errores 4-6) | Catálogo |
-| Errores de coherencia semántica/RNG | `.claude/docs/patrones-errores-conocidos.md` (Errores 7-10) | Catálogo |
+| Errores de coherencia semántica/RNG | `.claude/docs/patrones-errores-conocidos.md` (Errores 7-10, 22) | Catálogo |
 | Errores de infraestructura `.claude/` | `.claude/docs/patrones-errores-conocidos.md` (Errores 11-15) | Catálogo |
-| Errores de pipeline render PDF + coherencia Solution | `.claude/docs/patrones-errores-conocidos.md` (Errores 16-20) | Catálogo |
+| Errores de pipeline render PDF + coherencia Solution | `.claude/docs/patrones-errores-conocidos.md` (Errores 16-21) | Catálogo |
 | Errores de diseño de opciones gráficas | `.claude/docs/patrones-errores-conocidos.md` (Errores 18 y 20) + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado | Catálogo + Normativo |
+| Errores de legibilidad geométrica y fuga de información en diagramas dinámicos | `.claude/docs/patrones-errores-conocidos.md` (Errores 23-26) + `.claude/rules/graficos-como-opciones.md` §Canal de fuga + `.claude/rules/diversidad-sustantiva.md` §P4/P5/P6 + regla local `A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/.claude/rules/diagramas-vectoriales.md` | Catálogo + Normativo |
 | Reglas absolutas (20) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
 | Decisiones arquitectónicas | `.claude/docs/ADR/*.md` | Inmutable |
 | Casos resueltos individuales | `.claude/docs/casos-resueltos/*.md` | Histórico |
@@ -63,6 +64,7 @@
 | 8 | 2/200 versiones únicas (debería ser 287/300) | `set.seed()` en chunk de test sin restaurar `.Random.seed` | Guardar y restaurar `.Random.seed` en bloque test | §Error 8 + regla `codigo-rmd.md` #10 |
 | 9 | `##ANSWERi##` después de Parte 2 (CLOZE) | Placeholder mal ubicado | Cada `##ANSWERi##` inmediatamente después de su pregunta | §Error 9 + regla `codigo-rmd.md` #12 |
 | 10 | Crash en `while (calcula() == valor)` | `calcula()` retorna `NA` para algunas semillas | Guardia `is.na(resultado)` antes de comparación | §Error 10 + regla `codigo-rmd.md` #9 |
+| **22** | **Render se congela sin error (~1-2% de semillas; `exams2html/pdf(n=200)` o el multi-semilla no terminan)** | **`repeat`/`while` en `data_generation` resamplea hasta una condición matemáticamente imposible para ciertos datos** | **Construcción determinista del valor objetivo (`pick_int`) en vez de reintentar; si el bucle es inevitable, contador + `max_intentos`; validar con stress test de timeout por semilla** | **§Error 22 + regla `familias-soluciones-rmd.md` Familia 1** |
 
 ### 2.4 Infraestructura `.claude/` (lecciones sesión Ruflo, 2026-05-03)
 
@@ -82,6 +84,16 @@
 | 17 | Solution dice "Opción A" pero answerlist marca (c) como correcta | `exshuffle: TRUE` re-mezcla opciones después de que `letra_correcta` ya fue evaluada, sin actualizar el texto de la Solution | `exshuffle: FALSE` + mezcla interna con `sample()` (ya aleatoriza); `letra_correcta` calculada DESPUÉS del sample | §Error 17 + regla `codigo-rmd.md` #6 + `graficos-como-opciones.md` |
 | **18** | **Estudiante identifica opción correcta por formato gráfico sin verificar datos** | **Solo 1 opción del formato correcto (ej: 3 tortas + 1 barra cuando la correcta es torta)** | **Formato equilibrado: al menos 2 opciones deben compartir el formato de la correcta (ej: 2 barras + 2 tortas)** | **§Error 18 + regla `graficos-como-opciones.md` §Formato Equilibrado** |
 | **20** | **GRAF-BAR-01 — Barras con categorías correctas pero alturas permutadas** | **El estudiante verifica solo categorías, no valores por categoría. Las alturas parecen plausibles (son valores reales) pero están mal asignadas** | **Permutar `frecuencias` con guardia `while(!all(perm == orig))`; usar como distractor de barras para lograr 2+2 equilibrio** | **§Error 20** |
+| **21** | **`! LaTeX Error: No counter 'none' defined.` al compilar PDF/NOPS desde RStudio** | **Pandoc ≥3.7 (RStudio bundlea 3.8.3, distinto del 3.6 de terminal) envuelve `longtable` con `\def\LTcaptype{none}`; la plantilla LaTeX de R-exams no define ese contador** | **Bloque raw `{=latex}` con `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de `Question`; validar con el pandoc bundleado de RStudio** | **§Error 21 + regla `markdown-tablas-pandoc.md` (regla #20)** |
+
+### 2.6 Legibilidad geométrica y fuga de información en diagramas dinámicos (sesión `desplazamiento-avion-aeropuerto`, 2026-06-28 y 2026-07-28)
+
+| # | Síntoma | Causa raíz | Fix | Fuente |
+|---|---|---|---|---|
+| **23** | **Etiqueta de texto (ángulo) solapada con línea/punto en un diagrama dinámico, solo en algunas versiones** | **Radio del label solo dependía de la longitud del vector (`Lpx`), no del ángulo de la cuña ni del ancho del texto; piso insuficiente para ángulos grandes** | **Radio consciente del ángulo y ancho de texto (`max(50, (8+11·cos(semi))/sin(semi))`) + esquive del marcador móvil; verificar el caso extremo a alta magnificación (×2.4)** | **§Error 23 + regla local `A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/.claude/rules/diagramas-vectoriales.md`** |
+| **24** | **Respuesta correcta predecible por posición/cuadrante aunque su valor varíe entre versiones** | **Orientación/cuadrante de la escena fijo (siempre `"ne"`); la diversidad por VALOR enmascara la predictibilidad posicional** | **Aleatorizar la orientación global (NE/NO/SE/SO) con la misma transformación para todas las opciones + texto coherente; distractor de dirección = reflejo este↔oeste a la distancia correcta (no outlier de 180°)** | **§Error 24 + regla `diversidad-sustantiva.md` §P4 y §P5 (regla #22)** |
+| **25** | **El nombre del archivo PNG revela la opción correcta en el XML de `exams2moodle()`** | **PNGs guardados con nombre semántico (`diagrama_correcta.png`) en vez de letra neutral; invisible en HTML/PDF (imagen embebida/base64) pero visible en texto plano dentro del XML de Moodle** | **Renombrar a letra neutral (`diagrama_a.png`) DESPUÉS de la mezcla `sample()`; verificar con `exams2moodle()` + `grep` del XML** | **§Error 25 + regla `graficos-como-opciones.md` §Canal de fuga + regla #22 §P6** |
+| **26** | **Diagrama con vector casi nulo (~17 px) cuando una magnitud es pequeña respecto a la escena total** | **Escala de dibujo calculada sobre la SUMA de magnitudes, sin piso de legibilidad por vector individual** | **Filtro de proporción mínima `(mayor - menor) >= 0.25*(mayor + menor)` (f=0.25 por barrido) + línea guía punteada cuando la etiqueta se separa del marcador** | **§Error 26** |
 
 ---
 
@@ -180,6 +192,8 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 | "¿Por qué se solapan etiquetas en un diagrama dinámico?" | Error 23 — radio del label consciente del ancho del texto + `1/sin(ángulo/2)`; validar el caso extremo (ángulo mínimo) |
 | "¿La respuesta correcta es predecible por su posición/cuadrante?" | Error 24 + regla #22 §P4 — aleatorizar orientación global (NE/NO/SE/SO); el validador de diversidad por VALOR no detecta predictibilidad posicional |
 | "¿Mi distractor de dirección/posición se elimina de un vistazo?" | Error 24 + regla #22 §P5 — no usar outlier obvio (180°, longitud/formato único); usar cuasi-acierto plausible (reflejo este↔oeste a la distancia correcta). Gemelo del Formato Equilibrado |
+| "¿El nombre de archivo de mis opciones gráficas puede filtrar la respuesta?" | Error 25 + regla #22 §P6 + `graficos-como-opciones.md` §Canal de fuga — invisible en HTML/PDF, visible en el XML de `exams2moodle()`; renombrar a letra POST-mezcla y verificar con `grep` |
+| "¿Mi diagrama dinámico se ve degenerado (vector casi nulo) en algunas versiones?" | Error 26 — filtro de proporción mínima entre magnitudes de la escena (f=0.25 por barrido), no solo validez matemática |
 | "¿Cómo evito patrones detectables en opciones gráficas?" | Error 18 + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado |
 | "¿Cómo diseño un buen distractor de barras?" | Error 20 (GRAF-BAR-01) — alturas permutadas |
 | "¿Por qué solo se generan N versiones únicas?" | Error 8 + regla `codigo-rmd.md` #10 |
@@ -213,5 +227,5 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 
 ---
 
-**Versión del índice:** 1.0
-**Próxima revisión:** cuando se agregue una nueva categoría o el catálogo de errores supere los 20 entries.
+**Versión del índice:** 1.2 (2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
+**Próxima revisión:** cuando se agregue una nueva categoría o el catálogo de errores supere los 30 entries.

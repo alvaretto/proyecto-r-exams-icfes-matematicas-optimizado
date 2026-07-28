@@ -84,6 +84,28 @@ Un distractor que se distingue por un rasgo saliente y obvio (apunta exactamente
 
 **Defensa**: el distractor direccional/posicional debe ser un **cuasi-acierto plausible** que comparta los rasgos salientes de la correcta y se diferencie SOLO en la dimensión evaluada. Para "dirección equivocada", preferir un **reflejo respecto al eje (lado opuesto: este↔oeste) a la distancia correcta** antes que un giro de 180°: misma magnitud y mismo ángulo, solo cambia el lado → obliga a verificar la dirección. Incidente: `desplazamiento-avion-aeropuerto` (2026-06-28) — el distractor de dirección pasó de 180°-opuesto (a otra distancia, outlier evidente) a **espejo este↔oeste a la distancia correcta** (cuasi-acierto). Coherente con que el nombre del error describa el error real (era "perpendicular" pero se dibujaba a 180°).
 
+### ❌ P6: Fuga de la respuesta por metadato NO VISUAL (nombre de archivo, orden, id)
+
+```r
+# ❌ PROHIBIDO — el nombre de archivo delata el rol semántico fuera del contenido visual
+ggsave("diagrama_correcta.png", plot = p_correcta, ...)
+ggsave("diagrama_perp.png", plot = p_distractor_direccion, ...)
+# → invisible en exams2html()/exams2pdf() (imagen embebida/base64), pero el XML de
+#   exams2moodle() referencia el archivo por nombre: src="@@PLUGINFILE@@/diagrama_correcta.png"
+```
+
+Los patrones P1-P5 cubren fugas en el **contenido visual o numérico** de la opción (valores, posición, formato). P6 cubre una dimensión distinta: cualquier **metadato que acompaña a la opción sin ser parte de lo que el estudiante lee o ve directamente**, pero que es recuperable por un canal técnico — nombre de archivo, orden alfabético/de creación, id del elemento HTML/XML, clase CSS, o cualquier atributo que revele el rol (correcta/distractor) de la opción. Estos metadatos no se detectan revisando el HTML renderizado ni el PDF compilado: ambos ocultan o embeben el artefacto. El canal de fuga solo se manifiesta en exportaciones que referencian recursos por nombre (Moodle vía `exams2moodle()`, QTI y formatos similares).
+
+**Defensa**: generar cada opción con un identificador neutral (letra: `diagrama_a.png`, `diagrama_b.png`...) asignado **DESPUÉS** de la mezcla interna con `sample()` — nunca antes, y nunca basado en el rol semántico de la opción. Verificar explícitamente exportando a Moodle y haciendo `grep` del XML resultante en busca de nombres de rol filtrados:
+
+```bash
+Rscript -e 'library(exams); exams2moodle("archivo.Rmd", n = 1, dir = "moodle_output")'
+grep -oE 'diagrama_[a-z]+\.png' moodle_output/*.xml | sort -u
+# Esperado: solo diagrama_a.png / diagrama_b.png / diagrama_c.png / diagrama_d.png
+```
+
+Incidente: `desplazamiento-avion-aeropuerto` (2026-07-28) — ver Error 25 en `patrones-errores-conocidos.md` y regla `graficos-como-opciones.md` §"Canal de fuga: el nombre de archivo delata la respuesta en Moodle".
+
 ---
 
 ## Patrón Correcto
@@ -204,14 +226,27 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 - `validar_diversidad_sustantiva.R` — `.claude/scripts/validar_diversidad_sustantiva.R`
 - Incidente 2026-06-27 — ejercicio `desplazamiento-avion-aeropuerto`
+- Incidente 2026-07-28 (P6) — ejercicio `desplazamiento-avion-aeropuerto` — Error 25 en `patrones-errores-conocidos.md`
 - `feedback_diversidad_cosmetica.md` — memoria del proyecto
 - `feedback_detractor_alucina_codigo.md` — por qué el detractor no es suficiente
+- `feedback_fuga_nombre_archivo_moodle.md` — memoria del proyecto (P6)
 - Regla #21 (`familias-soluciones-rmd.md`) — Familia 1 (sin cuelgue), Familia 5 (safe_sample)
+- Regla `graficos-como-opciones.md` §"Canal de fuga: el nombre de archivo delata la respuesta en Moodle"
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-06-27
+**Versión:** 1.1
+**Fecha:** 2026-07-28
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.1 (2026-07-28)
+- **NUEVO PATRÓN PROHIBIDO**: P6 — Fuga de la respuesta por metadato NO VISUAL (nombre de archivo, orden alfabético/de creación, id del elemento, cualquier atributo que revele el rol de la opción)
+- **Origen**: Error 25 (`patrones-errores-conocidos.md`) — PNGs con nombres semánticos (`diagrama_correcta.png`) visibles en texto plano dentro del XML de `exams2moodle()`, aunque invisibles en HTML/PDF (imagen embebida/base64)
+- **Verificación asociada nueva**: `exams2moodle()` + `grep` del XML resultante — HTML/PDF NO son suficientes para detectar este patrón
+- **Referencias cruzadas**: regla `graficos-como-opciones.md` v6.0 §"Canal de fuga: el nombre de archivo delata la respuesta en Moodle"
+
+### Cambios v1.0 (2026-06-27)
+- Versión inicial: patrones P1-P5, script `validar_diversidad_sustantiva.R`, hook FASE 2N (`WARN_DIV_ESTATICA`)
+- Origen: incidente `desplazamiento-avion-aeropuerto` — 288/300 versiones únicas con respuesta correcta invariante (diversidad cosmética)

@@ -2546,3 +2546,144 @@ dibujar_diagrama("diagrama_perp.png", km(distancia_restante), distancia_restante
 - Error 23 (solape de etiquetas) — mismo ejercicio, fix complementario.
 - `graficos-como-opciones.md` § "Formato Equilibrado" — principio gemelo (el distractor no debe ser un outlier perceptual).
 - Incidente F (orquestador-schoice) / Incidente H (orquestador-cloze): diversidad sustantiva ampliada a la dimensión posicional + calidad del distractor.
+
+## Error 25: Fuga de la respuesta correcta por el NOMBRE DEL ARCHIVO en Moodle
+
+### ❌ Síntoma
+
+En un SCHOICE con opciones gráficas, los PNG de las opciones se guardaban con nombres **semánticos** (`diagrama_correcta.png`, `diagrama_perp.png`, `diagrama_recorrida.png`, `diagrama_suma.png`) en lugar de nombres neutrales por letra. Caso real (`desplazamiento_avion_aeropuerto_..._n3_schoice_v1`, 2026-07-28): al exportar con `exams2moodle()`, el XML resultante incluye literalmente `src="@@PLUGINFILE@@/diagrama_correcta.png"`. Un estudiante que use "Inspeccionar elemento" en el navegador (o revise el nombre del archivo descargado) lee directamente cuál opción es la correcta, sin necesidad de razonar sobre el contenido matemático.
+
+**Matiz importante**: en `exams2html()` este defecto **NO ocurre**, porque R-exams incrusta las imágenes como `data:image/png;base64,...` — el nombre de archivo original no sobrevive al HTML autocontenido. El canal vulnerable es específicamente **Moodle** (y cualquier exportación que referencie archivos por nombre en vez de incrustarlos, p.ej. QTI). Por eso el defecto puede pasar completamente desapercibido si la validación visual solo se hace sobre HTML — el patrón visual FASE 2B (preview PDF→PNG) tampoco lo detecta, porque el PDF tampoco expone nombres de archivo al lector.
+
+### 🔍 Causa Raíz
+
+La función que genera y guarda los diagramas usaba el **rol semántico** de cada opción (correcta/distractor) como parte del nombre de archivo — por conveniencia de depuración durante el desarrollo — en lugar de renombrar cada PNG a una letra neutral (`diagrama_a.png`, `diagrama_b.png`...) **después** de la mezcla interna con `sample()`. La regla `graficos-como-opciones.md` ya exigía nombres neutrales por letra desde su v3.0 (2026-02-07), pero el ejercicio incumplía este requisito y ninguna capa de validación existente (hook, tests, detractor) comprobaba el XML de salida de `exams2moodle()` en busca de nombres semánticos filtrados — todas las verificaciones previas se centraban en HTML/PDF.
+
+### ✅ Solución Verificada
+
+Renombrar los PNG a nombres neutrales por letra **DESPUÉS** de la mezcla interna, y referenciar el archivo vía el campo de la lista mezclada (nunca el nombre original semántico) tanto en el Answerlist como en la Solution:
+
+```r
+# ❌ ANTES — nombres semánticos, delatan el rol en el XML de Moodle
+dibujar_diagrama("diagrama_correcta.png", ...)
+dibujar_diagrama("diagrama_perp.png", ...)
+dibujar_diagrama("diagrama_recorrida.png", ...)
+dibujar_diagrama("diagrama_suma.png", ...)
+# Answerlist:
+cat("* ![](diagrama_correcta.png){width=60%}\n")   # <- el nombre YA revela cuál es
+```
+
+```r
+# ✅ DESPUÉS — mezcla interna primero, renombrado a letra neutral DESPUÉS
+opciones_mezcladas <- sample(list(
+  correcta  = list(archivo_tmp = "diagrama_correcta.png", ...),
+  perp      = list(archivo_tmp = "diagrama_perp.png", ...),
+  recorrida = list(archivo_tmp = "diagrama_recorrida.png", ...),
+  suma      = list(archivo_tmp = "diagrama_suma.png", ...)
+))
+letras <- c("A", "B", "C", "D")
+for (i in seq_along(letras)) {
+  archivo_neutral <- paste0("diagrama_", tolower(letras[i]), ".png")
+  file.rename(opciones_mezcladas[[i]]$archivo_tmp, archivo_neutral)
+  opciones_mezcladas[[i]]$archivo <- archivo_neutral
+}
+names(opciones_mezcladas) <- letras
+# Answerlist (usa el campo, nunca un literal semántico):
+cat(paste0("* ![](", opciones_mezcladas[[l]]$archivo, "){width=60%}\n"))
+```
+
+### 🧪 Validación de la Solución
+
+`exams2moodle("archivo.Rmd", n = 1)` seguido de un `grep` sobre el XML generado buscando cualquier nombre de archivo semántico:
+
+```bash
+grep -oE 'diagrama_[a-z]+\.png' moodle_output/*.xml | sort -u
+```
+
+Antes del fix: aparecían `diagrama_correcta.png`, `diagrama_perp.png`, `diagrama_recorrida.png`, `diagrama_suma.png` — el rol legible en texto plano dentro del XML. Después del fix: solo `diagrama_a.png`, `diagrama_b.png`, `diagrama_c.png`, `diagrama_d.png` (0 coincidencias de nombres semánticos), confirmado en múltiples semillas. `exams2html()` no mostró diferencia (ya usaba base64 antes y después).
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. ¿Los PNG de opciones gráficas se guardan con nombre neutral (letra) o con el rol semántico (correcta/distractor/tipo de error)?
+2. ¿El renombrado a letra ocurre DESPUÉS de la mezcla `sample()` (para que la letra asignada no sea predecible entre semillas)?
+3. ¿El Answerlist y la Solution referencian el archivo vía el campo de la estructura mezclada (`opciones_mezcladas[[l]]$archivo`), nunca un literal con el nombre semántico original?
+4. ¿Se verificó explícitamente con `exams2moodle()` + `grep` del XML? La validación en HTML/PDF **no es suficiente** — ambos canales ocultan el nombre de archivo original (base64 / incrustación directa).
+5. ¿Aplica el mismo chequeo a otros metadatos no visuales que acompañen la opción (ver Error 26 y regla #22 §P6)?
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-07-28 | desplazamiento_avion_aeropuerto_..._n3_schoice_v1.Rmd | PNGs nombrados por rol semántico (`diagrama_correcta.png`, etc.), visibles en texto plano dentro del XML de `exams2moodle()` | Renombrado a letra neutral (`diagrama_a.png`...) DESPUÉS de la mezcla interna; Answerlist/Solution referencian `opciones_mezcladas[[l]]$archivo` | 0 nombres semánticos en el XML de Moodle; HTML sin cambios (ya usaba base64) |
+
+### 📚 Referencias
+
+- Regla `graficos-como-opciones.md` (ya exigía nombres por letra desde v3.0; sección reforzada con el caso Moodle explícito en esta misma sesión).
+- Regla #22 `diversidad-sustantiva.md` § "P6: Fuga de la respuesta por metadato no visual" (patrón gemelo, generalizado a cualquier canal de metadatos: nombre de archivo, orden alfabético, id del elemento).
+- Error 17 / Error 19 (Solution con letra hardcoded) — mismo principio: el contenido accesible al estudiante no debe depender de un artefacto filtrable ajeno al razonamiento matemático.
+
+## Error 26: Diagrama degenerado por escala relativa (vector casi nulo)
+
+### ❌ Síntoma
+
+En un diagrama dinámico donde la escala de dibujo se calcula en función de la SUMA de dos magnitudes de la escena (`escala_px_km <- 120/(distancia_total + distancia_avanzada)`), cuando una magnitud individual (`distancia_restante = distancia_total - distancia_avanzada`) es pequeña respecto a la otra, el vector correspondiente se dibuja con apenas **~17 px** sobre un lienzo de 460 px: el marcador queda pegado al origen, la dirección deja de ser legible, y la etiqueta de la distancia (p.ej. "20 km") — sujeta al piso `rtext <- max(Lpx, 58)` — queda flotando a 58 px del origen, sugiriendo visualmente una distancia mayor que la representada. Caso real (`desplazamiento_avion_aeropuerto_..._n3_schoice_v1`, 2026-07-28). Frecuencia **medida**: 2/37 combinaciones válidas (5,4%) en enumeración exhaustiva de un ángulo dado; 4/60 (6,7%) en muestreo aleatorio amplio.
+
+### 🔍 Causa Raíz
+
+La escala de dibujo (px por km) se calculaba en función de la magnitud TOTAL de la escena (`distancia_total + distancia_avanzada`), pero el filtro de generación de parámetros solo garantizaba **validez matemática** (`distancia_restante > 0`), no **legibilidad visual**. Ninguna condición impedía que `distancia_restante` fuera arbitrariamente pequeña en proporción a la escena completa, produciendo vectores de pocos píxeles que el ojo humano no puede interpretar como una dirección ni una magnitud fiable — y cuyo piso de etiqueta (pensado para evitar solapes, ver Error 23) agravaba el problema al desconectar visualmente la etiqueta del vector real.
+
+### ✅ Solución Verificada
+
+Condición de proporción mínima en el filtro de generación de parámetros, exigiendo que la magnitud menor de la escena sea al menos una fracción `f` de la magnitud total. El umbral `f = 0.25` se eligió por **barrido empírico** (no arbitrario):
+
+| `f` | Vector mínimo resultante | Combinaciones conservadas | Distancias distintas |
+|-----|---------------------------|---------------------------|-----------------------|
+| 0.20 | ~24 px (insuficiente, cerca del piso) | — | — |
+| **0.25** | **~30 px** | **34/37** | **10** |
+| 0.30 | ~44 px | 31/37 (pierde 6) | menos variedad |
+
+```r
+# ❌ ANTES — sin restricción de legibilidad, solo validez matemática
+distancia_restante <- distancia_total - distancia_avanzada
+stopifnot(distancia_restante > 0)   # matemáticamente válido, pero puede ser ilegible en píxeles
+
+# ✅ DESPUÉS — condición de proporción mínima (f = 0.25, elegido por barrido)
+f <- 0.25
+combinaciones_validas <- combinaciones_validas[
+  (combinaciones_validas$distancia_total - combinaciones_validas$distancia_avanzada) >=
+    f * (combinaciones_validas$distancia_total + combinaciones_validas$distancia_avanzada)
+, ]
+```
+
+Complementariamente, se añadió una línea guía punteada cuando el piso de la etiqueta la separa visiblemente del marcador (mismo mecanismo de piso descrito en el Error 23):
+
+```r
+# Línea guía punteada cuando la etiqueta se aleja del marcador por el piso rtext
+if (rtext - Lpx > 15) {
+  segments(x_marcador, y_marcador, x_etiqueta, y_etiqueta, lty = "dotted", col = "gray50")
+}
+```
+
+### 🧪 Validación de la Solución
+
+Barrido de `f` en {0.20, 0.25, 0.30} sobre la grilla COMPLETA de combinaciones válidas por ángulo, midiendo (a) tamaño en píxeles del vector más pequeño resultante y (b) número de combinaciones descartadas. `f = 0.25` fue el punto de mejor balance: elimina los vectores degenerados (<30 px) conservando 34/37 combinaciones y 10 distancias distintas (frente a solo 31/37 con `f = 0.30`). Verificado que tras el fix no quedan vectores por debajo del piso legible; la diversidad sustantiva (regla #22) se preservó.
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. ¿La escala de dibujo depende de la magnitud TOTAL de la escena en vez de garantizar un tamaño mínimo por elemento individual?
+2. ¿Existe un piso de tamaño en píxeles explícito para el vector/marcador más pequeño posible dado el rango completo de parámetros?
+3. ¿El umbral de proporción mínima (`f`) se determinó mediante barrido empírico (midiendo px resultantes Y combinaciones descartadas), no eligiendo un valor arbitrario?
+4. ¿Cuando el piso de la etiqueta la separa del marcador, existe una guía visual (línea punteada) que conecte ambos para no sugerir una magnitud falsa?
+5. ¿Se verificó con ENUMERACIÓN EXHAUSTIVA (no solo muestreo aleatorio) la frecuencia de combinaciones degeneradas, antes y después del fix?
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-07-28 | desplazamiento_avion_aeropuerto_..._n3_schoice_v1.Rmd | escala global (`120/(distancia_total+distancia_avanzada)`) sin piso de legibilidad por vector individual; `distancia_restante` pequeña → vector ~17 px, etiqueta flotante | Filtro de proporción mínima `(distancia_total - distancia_avanzada) >= 0.25*(distancia_total + distancia_avanzada)` (f=0.25 por barrido) + línea guía punteada cuando `rtext - Lpx > 15` | 0 vectores degenerados; 34/37 combinaciones conservadas; 10 distancias distintas |
+
+### 📚 Referencias
+
+- Función `dibujar_diagrama()` / filtro de generación de parámetros del ejercicio (chunk `data_generation`).
+- Error 23 (solape de etiquetas por cuña angular) — mismo ejercicio, defecto complementario de legibilidad geométrica (ambos derivan del mismo piso `rtext`/`R_fit`).
+- Regla #22 `diversidad-sustantiva.md` — la legibilidad visual de cada elemento no debe sacrificarse al maximizar el número de combinaciones matemáticamente válidas.

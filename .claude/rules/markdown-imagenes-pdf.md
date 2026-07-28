@@ -18,7 +18,11 @@ l.5 \pandocbounded
                   {\includegraphics[keepaspectratio]{grafico_equilibrio.png}}
 ```
 
-Causa: el `.Rmd` contenía un chunk R que emitía `cat("![](grafico_equilibrio.png)\n")` sin atributo width. pandoc 3.x al convertir Markdown→LaTeX envuelve `\includegraphics` en un comando `\pandocbounded{...}` que **NO está definido** en los templates LaTeX que R-exams usa (ni en TinyTeX stock).
+Causa: el `.Rmd` contenía un chunk R que emitía `cat("![](grafico_equilibrio.png)\n")` sin atributo width. Desde **pandoc 3.2.1** (2024-06-24), al convertir Markdown→LaTeX, pandoc envuelve `\includegraphics`/`\includesvg` en un comando `\pandocbounded{...}` cuando la imagen NO especifica width/height explícito — ese macro se define en la plantilla LaTeX estándar de pandoc, pero **NO está definido** en los templates LaTeX minimalistas que R-exams usa (ni en TinyTeX stock).
+
+**Fuente verificada (changelog pandoc 3.2.1, consultado 2026-07-28)**: "New method for ensuring images don't overflow (#9660). [...] The new approach uses a new macro `\pandocbounded` that is now defined in the LaTeX template. [...] The LaTeX writer has been changed to enclose `\includegraphics` and `\includesvg` commands in this macro when they don't explicitly specify a width or height." El propio changelog advierte explícitamente: "If custom templates are used with the new LaTeX writer, they will have to be updated to include the new `\pandocbounded` macro, or an error will be raised because of the undefined macro." — esto describe EXACTAMENTE el fallo con la plantilla minimalista de R-exams.
+
+Dato adicional: pandoc **3.8.1** agregó "LaTeX reader: Ignore `\pandocbounded` (#11140)" — pero eso afecta al LECTOR de LaTeX, no resuelve el problema de ESCRITURA que produce este error.
 
 El bug es de pipeline: HTML/DOCX no pasan por LaTeX, así que no fallan; PDF/NOPS sí.
 
@@ -152,14 +156,16 @@ No hay excepciones a esta regla. Si un caso especial requiere `![](file.png)` si
 ## Referencias
 
 - Error #16 en `.claude/docs/patrones-errores-conocidos.md`
-- Pandoc release notes 3.0+ (introducción de `\pandocbounded`)
+- Pandoc changelog 3.2.1 (2024-06-24) — https://github.com/jgm/pandoc/blob/main/changelog.md — introducción de `\pandocbounded` (#9660)
+- Pandoc changelog 3.8.1 (2025-09-29) — mismo changelog — "LaTeX reader: Ignore `\pandocbounded` (#11140)" (solo afecta al lector, no al escritor)
+- Fecha de consulta de estas fuentes: 2026-07-28
 - TeX StackExchange: https://tex.stackexchange.com/questions/665980/pandocbounded-undefined
 - Ejemplo funcional validado: `diagrama_venn_encuesta_metacognitivo_*.Rmd` línea 1070
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-05-03
+**Versión:** 1.1
+**Fecha:** 2026-07-28 (v1.1 — precisión factual: `\pandocbounded` se introdujo en pandoc 3.2.1 [2024-06-24], no en un "3.x" genérico; fuentes verificadas con changelog oficial; v1.0 2026-05-03)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` que renderice imágenes en PDF/NOPS.

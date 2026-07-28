@@ -90,6 +90,58 @@ plot_C <- crear_y_guardar_grafico(opciones_mezcladas$C, "C", ...)
 plot_D <- crear_y_guardar_grafico(opciones_mezcladas$D, "D", ...)
 ```
 
+---
+
+### ⚠️ CANAL DE FUGA: el NOMBRE DE ARCHIVO delata la respuesta en Moodle (Error 25)
+
+**El nombre neutral por letra (`diagrama_a.png`) NO es una convención estética — es una defensa de seguridad pedagógica.** Guardar los PNGs con nombres semánticos (`diagrama_correcta.png`, `diagrama_perp.png`, `diagrama_recorrida.png`, `diagrama_suma.png`) filtra la respuesta correcta aunque el resto del ejercicio esté bien diseñado.
+
+**Por qué el canal es Moodle y NO HTML:**
+
+| Formato de salida | ¿Nombre de archivo visible al estudiante? | Riesgo |
+|---|---|---|
+| `exams2html()` | **NO** — R-exams incrusta la imagen como `data:image/png;base64,...`, el nombre original no sobrevive | Ninguno |
+| `exams2pdf()` / `exams2nops()` | **NO** — la imagen se embebe directamente en el PDF compilado | Ninguno |
+| `exams2moodle()` | **SÍ** — el XML de importación referencia el archivo por nombre: `src="@@PLUGINFILE@@/diagrama_correcta.png"` | **CRÍTICO** — visible con "Inspeccionar elemento" o al descargar el adjunto |
+
+Por eso este defecto puede pasar **completamente desapercibido** si la validación visual (FASE 2B, preview PDF→PNG) solo cubre HTML/PDF: esos dos canales no exponen el nombre de archivo, así que el ejercicio "se ve bien" en la revisión estándar mientras el XML de Moodle sigue filtrando la respuesta en texto plano.
+
+**Verificación OBLIGATORIA** (no reemplazable por inspección visual de HTML/PDF):
+
+```bash
+# 1. Exportar a Moodle
+Rscript -e 'library(exams); exams2moodle("archivo.Rmd", n = 1, dir = "moodle_output")'
+
+# 2. Grep del XML buscando nombres semánticos filtrados
+grep -oE 'diagrama_[a-z]+\.png' moodle_output/*.xml | sort -u
+```
+
+El resultado DEBE contener **únicamente** `diagrama_a.png`, `diagrama_b.png`, `diagrama_c.png`, `diagrama_d.png` (letras). Cualquier coincidencia con un nombre de rol (`correcta`, `distractor`, `perp`, `recorrida`, `suma`, `error`, etc.) es un defecto bloqueante — ver Error 25 en `patrones-errores-conocidos.md`.
+
+**El renombrado a letra DEBE ocurrir POST-mezcla**, nunca antes:
+
+```r
+# ✅ CORRECTO — orden obligatorio: 1) generar con nombre temporal/semántico
+#    (para depuración), 2) sample() mezcla, 3) RECIÉN AHÍ renombrar a letra
+opciones_mezcladas <- sample(list(
+  correcta  = list(archivo_tmp = "diagrama_correcta.png", ...),
+  perp      = list(archivo_tmp = "diagrama_perp.png", ...),
+  recorrida = list(archivo_tmp = "diagrama_recorrida.png", ...),
+  suma      = list(archivo_tmp = "diagrama_suma.png", ...)
+))
+letras <- c("A", "B", "C", "D")
+for (i in seq_along(letras)) {
+  archivo_neutral <- paste0("diagrama_", tolower(letras[i]), ".png")
+  file.rename(opciones_mezcladas[[i]]$archivo_tmp, archivo_neutral)
+  opciones_mezcladas[[i]]$archivo <- archivo_neutral   # usar ESTE campo en Answerlist/Solution
+}
+names(opciones_mezcladas) <- letras
+```
+
+Si el renombrado ocurriera ANTES de la mezcla (p. ej. generar directamente `diagrama_a.png` para "la correcta" según el orden de creación del código), la letra asignada sería predecible entre semillas y el defecto persistiría de otra forma.
+
+---
+
 ### 3. Answerlist con imágenes de letras
 
 ```markdown
@@ -227,7 +279,7 @@ y_max_global <- max(sapply(opciones_graficos, function(x) x$max)) + 2
 
 - [ ] ¿Los gráficos NO tienen título con letras (`labs(title = NULL)`)?
 - [ ] ¿Hay mezcla interna con `sample()` + tracking de `letra_correcta`?
-- [ ] ¿Los archivos usan nombres con letras (`diagrama_a.png`, etc.)?
+- [ ] ¿Los archivos usan nombres con letras (`diagrama_a.png`, etc.), renombrados POST-mezcla (no antes)?
 - [ ] ¿`exshuffle: FALSE` está en Meta-information? (sample() interno ya aleatoriza)
 - [ ] ¿Se excluyeron errores fuera de rango (EST-BOX-01)?
 - [ ] ¿El eje Y tiene un rango que incluye todos los valores?
@@ -241,6 +293,7 @@ y_max_global <- max(sapply(opciones_graficos, function(x) x$max)) + 2
 - [ ] ¿Cada opción muestra un gráfico diferente?
 - [ ] ¿La Solution indica correctamente la opción correcta?
 - [ ] ¿Al renderizar múltiples veces, las opciones se mezclan?
+- [ ] ¿Se ejecutó `exams2moodle()` + `grep -oE 'diagrama_[a-z]+\.png' *.xml` y el resultado son solo letras (sin nombres semánticos)? (Error 25 — HTML/PDF NO detectan este defecto)
 
 ---
 
@@ -265,6 +318,7 @@ El dominio `visual` del detractor DEBE verificar:
 5. No hay errores que generen valores fuera de rango
 6. `exshuffle: FALSE` + mezcla interna con `sample()` (para opciones gráficas con Solution que referencia letra)
 7. **Formato equilibrado**: al menos 2 opciones comparten el formato de la opción correcta (ver §Formato Equilibrado)
+8. **Nombres de archivo neutrales verificados en el XML de Moodle** (`exams2moodle()` + grep, ver §Canal de fuga por nombre de archivo) — no basta con revisar HTML/PDF
 
 ---
 
@@ -332,18 +386,27 @@ Ver Error 20 en `patrones-errores-conocidos.md` para el patrón GRAF-BAR-01.
 | Aspecto | ❌ PROHIBIDO | ✅ CORRECTO |
 |---------|-------------|-------------|
 | Título del gráfico | `labs(title = "A")` | `labs(title = NULL)` |
-| Nombre de archivo | N/A | `diagrama_a.png` |
+| Nombre de archivo | `diagrama_correcta.png` (fuga en Moodle, Error 25) | `diagrama_a.png`, renombrado POST-mezcla |
 | Mezcla de opciones | Sin mezcla | Interna con `sample()` |
 | Solution | Sin indicar opción | Indica `letra_correcta` |
 | exshuffle | TRUE (rompe referencia en Solution) | FALSE (sample() ya aleatoriza) |
 | Formato equilibrado | 1 solo del formato correcto | Al menos 2 comparten el formato correcto |
+| Verificación de fuga | Solo HTML/PDF (insuficiente) | `exams2moodle()` + grep del XML |
 
 ---
 
-**Versión**: 5.0
-**Fecha**: 2026-05-14
+**Versión**: 6.0
+**Fecha**: 2026-07-28
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver regla general en `codigo-rmd.md` para otros tipos de ejercicios
+
+### Cambios v6.0 (2026-07-28)
+- **NUEVA SECCIÓN**: "⚠️ CANAL DE FUGA: el NOMBRE DE ARCHIVO delata la respuesta en Moodle" (Error 25)
+- **Hallazgo**: nombres de PNG semánticos (`diagrama_correcta.png`, etc.) son invisibles en HTML/PDF (imágenes embebidas/base64) pero **visibles en texto plano dentro del XML de `exams2moodle()`** (`src="@@PLUGINFILE@@/diagrama_correcta.png"`)
+- **Verificación obligatoria nueva**: `exams2moodle()` + `grep -oE 'diagrama_[a-z]+\.png' *.xml` — debe devolver solo letras, nunca nombres de rol
+- **Regla de orden**: el renombrado a letra neutral DEBE ocurrir POST-mezcla (`sample()`), nunca antes
+- **Checklists actualizados**: Pre-Generación, Post-Generación, Integración con Detractor (punto 8 nuevo), Resumen de la Regla (2 filas nuevas)
+- **Referencias cruzadas**: Error 25 en `patrones-errores-conocidos.md`; regla #22 `diversidad-sustantiva.md` §P6 (patrón gemelo generalizado a cualquier metadato no visual)
 
 ### Cambios v5.0 (2026-05-14)
 - **NUEVA SECCIÓN**: Formato Equilibrado en Opciones Gráficas (OBLIGATORIO)

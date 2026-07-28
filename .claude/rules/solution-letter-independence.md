@@ -118,6 +118,37 @@ El argumento válido es el que ...
 
 ---
 
+## Evidencia de código primario (R/exams)
+
+Esta regla dejó de ser una precaución defensiva: hay evidencia directa en el código fuente del paquete `exams` (CRAN) que demuestra el mecanismo exacto de la falla.
+
+**Fuente verificada (consultada 2026-07-28)**: `R/read_exercise.R` — https://github.com/cran/exams/blob/master/R/read_exercise.R
+
+```r
+if(!identical(metainfo$shuffle, FALSE) & metainfo$type %in% c("schoice","mchoice")) {
+  o <- shuffle_choice(metainfo$solution, metainfo$shuffle, metainfo$type, metainfo$file)
+  questionlist <- questionlist[o]
+  solutionlist <- solutionlist[o]
+  metainfo$solution <- metainfo$solution[o]
+  metainfo$tolerance <- metainfo$tolerance[o]
+  ...
+}
+```
+
+Este bloque reordena, con la **misma permutación `o`**, exactamente tres elementos:
+
+1. `questionlist[o]` — las alternativas mostradas en el Answerlist del enunciado.
+2. `solutionlist[o]` — la retroalimentación por opción (el segundo Answerlist de la sección Solution, feedback "Correcto/Incorrecto" por alternativa).
+3. `metainfo$solution[o]` (y `metainfo$tolerance[o]`) — el vector `exsolution` que marca cuál posición es la correcta.
+
+**Lo que NO se reordena**: la variable `solution` (singular, la PROSA de la sección `Solution` — el texto explicativo que el `.Rmd` escribe como Markdown/LaTeX libre) se extrae del `.Rmd` **antes** de este bloque y **nunca se reasigna dentro de él**. Queda fuera del alcance de la permutación `o`.
+
+**Consecuencia demostrada, no hipotética**: si esa prosa contiene una referencia hardcoded a la letra ("la opción C es correcta"), `shuffle_choice()` reordenará las alternativas y el vector de solución, pero el texto de prosa seguirá diciendo "opción C" aunque la opción que ahora ocupa la posición C ya no sea la misma. Esto es consistente con lo reportado por el estudiante KEVIN A. SILVA (ver "Origen" arriba) y también con el caso `exshuffle: FALSE` + reshuffle downstream en Moodle: el mecanismo interno de `exams` que protege el Answerlist y `exsolution` **no tiene ningún control** sobre re-mezclas hechas fuera de R (por ejemplo, "Shuffle answers" de Moodle), y tampoco protege la prosa de Solution ni siquiera cuando el shuffle ocurre DENTRO de `exams` (`shuffle: TRUE`).
+
+Por lo tanto, la regla #19 no es una medida de precaución adicional: es la única forma de que el texto de Solution sea correcto bajo el contrato real de `read_exercise.R`, independientemente de qué mecanismo de shuffle (interno o externo) se aplique.
+
+---
+
 ## Defensa Automática (4 capas)
 
 ### Capa 1 — Hook PreToolUse (gate pre-write)
@@ -230,12 +261,13 @@ Casos que NO son excepciones (deben cumplir igual):
 - Error 19 en `.claude/docs/patrones-errores-conocidos.md` (post-2026-05-12)
 - Sesión 2026-05-12 con estudiante real KEVIN A. SILVA
 - Issue gemelo: Error 17 (exshuffle:TRUE + letra)
+- Código fuente verificado: R/exams `R/read_exercise.R` — https://github.com/cran/exams/blob/master/R/read_exercise.R — consultado 2026-07-28
 - Commit del fix original: `86a4b211` (lineas-temporales-schoice)
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-05-12
+**Versión:** 1.1
+**Fecha:** 2026-07-28 (v1.1 — sección "Evidencia de código primario (R/exams)": cita verificada de `read_exercise.R` que demuestra el mecanismo exacto de la falla; v1.0 2026-05-12)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` con sección `Solution` que justifique la respuesta correcta.
