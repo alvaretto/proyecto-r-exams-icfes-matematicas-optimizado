@@ -121,9 +121,42 @@ Usar en cualquier muestreo cuyo soporte pueda colapsar a un solo valor (rangos d
 
 ---
 
+## Familia 6 — Opciones gráficas de diagramas vectoriales cardinales
+
+**Cuándo aplica:** SCHOICE cuyas 4 opciones son diagramas del tipo "magnitud + dirección" sobre ejes cardinales (desplazamientos, vectores, rumbos). Requiere `library(grid)`. Consolida cuatro defensas que costaron incidentes documentados: Error 23 (etiqueta del ángulo solapada), Error 24 (predictibilidad posicional), Error 25 (el nombre del PNG delata el rol de la opción en el XML de Moodle) y Error 26 + H7 (diagramas degenerados por escala).
+
+**Helpers canónicos** (en `.claude/scripts/snippets_familias_rmd.R`):
+
+| Helper | Qué garantiza |
+|---|---|
+| `orientaciones_cardinales()` | Pool de 4 cuadrantes (NE/NO/SE/SO). Sortear **uno por versión** y aplicarlo a las 4 opciones: rompe la predictibilidad posicional (regla #22 §P4) preservando la estructura relativa |
+| `seleccionar_combinacion_con_cascada()` | Enumeración de combinaciones + **cascada de umbrales** en vez de umbral único. Nunca un bucle de reintento sin cota (Familia 1) |
+| `renombrar_opciones_neutral()` | Renombrado a `diagrama_a/b/c/d.png` **POST-mezcla** (regla #22 §P6, Error 25) |
+| `dibujar_diagrama_cardinal()` | Un PNG por opción (nunca una grilla, regla #4), con el piso de radio que evita el solape de la etiqueta del ángulo |
+
+**Patrón de la cascada** (lo que distingue esta familia): un umbral de legibilidad único falla por los dos extremos — si es bajo deja diagramas degenerados, y si es alto hay versiones donde **ninguna** combinación cumple y el `stopifnot` revienta el render. La cascada prueba el escalón más exigente y baja de a uno, de modo que cada versión se queda en el más alto que le sea factible:
+
+```r
+RATIOS_LEGIBILIDAD <- c(0.40, 0.35, 0.30, 0.25)
+pares_validos <- list(); ratio_aplicado <- NA_real_
+for (r_min in RATIOS_LEGIBILIDAD) {
+  pares_validos <- filtrar_pares(r_min)
+  if (length(pares_validos) > 0) { ratio_aplicado <- r_min; break }
+}
+stopifnot(length(pares_validos) > 0, !is.na(ratio_aplicado))
+```
+
+**Regla de diseño de distractores que acompaña a esta familia:** si cada opción muestra su valor numérico ("40 km"), el pool debe incluir **varios** errores que produzcan la MISMA magnitud que la correcta y difieran solo en la dimensión evaluada (lado del eje, eje de referencia, eje perpendicular). Si solo la correcta y un distractor comparten el rótulo, el estudiante calcula el valor y descarta la mitad de las opciones sin mirar el dibujo. Antes de añadir uno de estos distractores hay que **demostrar** que su dirección no colisiona con ninguna otra opción en ningún cuadrante ni ángulo del rango.
+
+**Escala de dibujo:** derivarla del **máximo efectivamente dibujado entre las opciones elegidas**, nunca de una constante ni del valor de un distractor concreto (Error 26 y su gemelo: un distractor cuya longitud en píxeles queda fija por identidad algebraica).
+
+**Origen y verificación:** `desplazamiento-avion-aeropuerto` (2026-07-28). Sobre 80 semillas: 0.40 aplicado en 79/80, vector más corto 48 px (antes 30), 0 fallos; opciones que comparten el rótulo de la correcta 2→24 %, 3→60 %, 4→16 %.
+
+---
+
 ## Librería de helpers
 
-Las funciones de las familias 1–3 y 5 están en:
+Las funciones de las familias 1–3, 5 y 6 están en:
 
 ```
 .claude/scripts/snippets_familias_rmd.R
@@ -137,6 +170,7 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 
 - `generar-cloze` y `generar-schoice`: incluir por defecto `tabla_responsiva()`/`eq_display()` cuando el ejercicio tenga tablas/ecuaciones, y aplicar Familia 1 (sin `repeat` sin cota).
 - Orquestadores: agregar a su pre-flight la verificación de las familias relevantes.
+- Ejercicios con **opciones gráficas**: aplicar Familia 6 completa (orientación sorteada, cascada de legibilidad, renombrado neutral post-mezcla y distractores que conserven la magnitud). Los orquestadores la cablean en sus pre-flight checks y en los incidentes I-L (schoice) / K-N (cloze).
 
 ---
 
@@ -149,10 +183,13 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 | 3 (ecuaciones responsivas) | igual que F2 (divs por ecuación) |
 | 4 (marcas cloze) | verificador marca-vs-verdad sobre XML Moodle |
 | 5 (sample escalar) | cubierto por F1 + análisis estático de `sample(` en `calcula()` |
+| 6 (diagramas cardinales) | `Rscript .claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` + `exams2moodle()` y grep del XML (solo `diagrama_a/b/c/d.png`) + medición del rank de longitud de la correcta sobre ≥40 versiones + inspección visual ampliada ≥×2 en los ángulos extremos del rango |
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-06-05
+**Versión:** 1.1
+**Fecha:** 2026-07-28 (v1.1 — indexada la **Familia 6** (opciones gráficas de diagramas vectoriales
+cardinales), que ya existía en la librería de helpers sin estar documentada aquí; v1.0 2026-06-05)
 **Estado:** ACTIVO (índice operativo de patrones; aplicar las familias relevantes en toda generación/corrección)
-**Origen:** auditoría `rango_colesterol_..._cloze_v1` (Errores 22 + responsividad)
+**Origen:** auditoría `rango_colesterol_..._cloze_v1` (Errores 22 + responsividad); Familia 6 desde
+`desplazamiento-avion-aeropuerto` (Errores 23-26 + hallazgos H4/H7)
