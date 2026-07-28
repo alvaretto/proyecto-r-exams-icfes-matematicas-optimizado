@@ -8,9 +8,57 @@
 
 ## P0 — Bloqueante para promoción
 
-**Ninguno confirmado al 2026-07-28.**
+### P0.1 — `GEO-COORD-03` es eliminable por su forma, sin razonar geometría — **ABIERTO**
 
-La batería de verificación no encontró ningún defecto de corrección:
+**Origen:** auditoría adversarial (2026-07-28). **Verificado de forma independiente por enumeración
+exhaustiva sobre las 222 versiones.**
+
+Los cuatro vértices de cualquier rectángulo alineado a los ejes tienen una estructura fija: **2
+valores de x × 2 valores de y, en las 4 combinaciones** — la forma `(A,C); (A,D); (B,C); (B,D)`.
+
+| Opción | Estructura 2×2 | Medición |
+|---|---|---|
+| Correcta | Sí | **222/222** |
+| `GEO-COORD-01` (inversión de ejes) | Sí | **222/222** |
+| `GEO-COORD-02` (rango reducido) | Sí | **222/222** |
+| `GEO-COORD-03` (diagonal) | **No** | **0/222** |
+| `GEO-COORD-03`: los 4 puntos con forma `(v,v)` | — | **222/222** |
+
+`GEO-COORD-03` es el **único** distractor cuyos cuatro puntos son de la forma `(v, v)`, es decir
+colineales sobre la recta `y = x`. Cuatro puntos colineales **nunca** pueden ser los vértices de una
+figura bidimensional.
+
+**Riesgo concreto:** un estudiante que reconozca ese hecho descarta la opción **por la forma del
+texto**, sin mirar la figura ni leer una sola coordenada del barco. Eso sube su probabilidad de
+acierto por azar de 25 % a 33 %. Además, el error que dice diagnosticar («confunde la forma del
+barco con una distribución diagonal») es poco plausible como error real de lectura de un plano.
+
+Es el análogo, en estructura de texto, del patrón **P5** de la regla #22 (distractor *outlier*
+eliminable de un vistazo) y del «Formato Equilibrado» de `graficos-como-opciones.md`.
+
+**Por qué es P0 y no P1:** degrada la validez psicométrica del ítem en el **100 %** de las
+versiones, no en un subconjunto. Un distractor que se descarta sin usar el conocimiento evaluado no
+cumple su función.
+
+**Dirección de fix (requiere diseño, no es un parche listo):** sustituirlo por un error que
+**conserve la estructura 2×2**. Por ejemplo, un desplazamiento de una unidad al contar la
+cuadrícula —`(x_min+1, y_min); (x_min+1, y_max); (x_max+1, y_min); (x_max+1, y_max)`— que es un
+error de lectura frecuente y estructuralmente indistinguible de las demás opciones. Antes de
+adoptarlo hay que:
+
+1. Verificar que no se sale de la grilla (`x_max + 1 ≤ 10`), lo que obliga a acotar `x_min`.
+2. Verificar que no colisiona con ninguna otra opción en las 222 versiones.
+3. Actualizar `errores_info$diagonal` (código, nombre y diagnóstico) en consecuencia.
+4. Re-ejecutar la enumeración exhaustiva, `validar_diversidad_sustantiva.R` y `verificar_render.R`.
+
+**Criterio de cierre:** los cuatro textos de opción comparten la estructura 2×2 en las 222
+versiones (misma comprobación de la tabla de arriba, con `GEO-COORD-03` pasando a 222/222).
+
+---
+
+### Resto de la batería de verificación: sin defectos de corrección
+
+Ninguna de estas comprobaciones encontró problemas:
 
 | Verificación | Resultado |
 |---|---|
@@ -44,10 +92,41 @@ La batería de verificación no encontró ningún defecto de corrección:
 `ancho = 3, alto = 2` (`x ∈ [3,6]`, `y ∈ [5,7]`): la figura es una cápsula de esquinas redondeadas;
 además las dos bandas oscuras decorativas y el puente se fusionan en una sola mancha.
 
-**Causa raíz.** La proa y la popa ocupan una fracción **fija** del 15 % de la longitud
-(`prof(t)`, `t < 0.15` y `t > 0.85`). Con `w/h` grande esa fracción produce un afinado suave y un
-tramo central largo — un barco. Con `w/h` pequeño, la proa debe subir `h/2` en solo `0.15·w` de
-recorrido horizontal: el afinado se vuelve casi vertical y el contorno degenera.
+**Causa raíz — medida analíticamente, no supuesta.** Son **dos** mecanismos independientes:
+
+1. **El contorno.** La proa y la popa ocupan una fracción **fija** del 15 % de la longitud
+   (`prof(t)`, `t < 0.15` y `t > 0.85`). Con `w/h` grande, eso da un afinado suave y un tramo
+   central largo — un barco. Con `w/h` pequeño, la proa debe subir `h/2` en sólo `0.15·w` de
+   recorrido horizontal: el afinado se vuelve casi vertical y la silueta degenera en cápsula.
+2. **Los adornos (el mecanismo dominante).** Las dos bandas oscuras (`b1_df`, `b2_df`) tienen
+   **radio proporcional a `h`** (`h·0.46` y `h·0.40`) pero sus centros están separados por una
+   **fracción de `w`** (`w·0.03` y `w·0.16`). Cuando `h` es máximo y `w` mínimo, los radios crecen
+   mientras la separación se encoge, y las dos bandas se solapan hasta fundirse en una sola mancha:
+
+   | ancho | alto | Solape entre banda 1 y banda 2 |
+   |---|---|---|
+   | 3 | 2 | **72,3 %** — fusionadas |
+   | 4 | 2 | **65,2 %** — fusionadas |
+   | 5 | 2 | 58,2 % |
+   | 6 | 2 | 51,1 % |
+   | 3-6 | 1 | 51,1 % → 8,7 % |
+
+**Corrección de un diagnóstico erróneo.** Dos auditorías independientes reportaron que el
+rectángulo del puente «se sale del contorno del casco» con `ancho = 3, alto = 2`. **Eso es falso**,
+y se puede demostrar sin renderizar: el borde derecho del puente cae siempre en
+
+```
+t = (cx + w·0.32 + w·0.05 − x_min) / w = 0.5 + 0.37 = 0.87
+```
+
+es decir, en una posición **invariante de escala**, independiente de `ancho` y `alto`. Ahí la
+semialtura del casco vale `prof(0.87)·h = 0.4655·h` y la semialtura del puente vale `0.25·h`, de
+modo que el puente ocupa **el 53,7 % del espacio disponible en las 8 combinaciones**, sin
+excepción. Nunca sale del casco.
+
+Lo que ambas auditorías **vieron** correctamente es la mancha negra fusionada; lo que atribuyeron
+mal es su causa. El síntoma es real, el mecanismo es el solape de las bandas, no el puente. Anotado
+aquí para que un fix futuro toque el parámetro correcto.
 
 **Impacto.** **No afecta la corrección del ítem**: el *bounding box* sigue siendo exactamente
 `[x_min,x_max] × [y_min,y_max]` en las 222 versiones (verificado), así que la clave es válida
@@ -74,11 +153,19 @@ invariante I-2 sobre `prof()`.
 | **A** | Restringir el sorteo a `ratio ≥ 2.5` (`alto_barco = 2` sólo con `ancho_barco ≥ 5`) | Espacio de versiones 222 → **162 preguntas distintas** (−27 %). Sigue muy por encima de lo que exigen los validadores: `validar_diversidad` cuenta renders únicos (162 × 8 protagonistas × 4 reflexiones × 24 órdenes ≈ 124 000) |
 | **B** | Rediseñar el perfil del casco para que funcione a cualquier aspecto (p. ej. proa asimétrica con popa roma explícita, en vez de un perfil casi simétrico) | Trabajo de diseño gráfico + re-verificación completa. Conserva las 222 versiones |
 | **C** | Aceptar el 27 % como está | Coste 0. El ítem es correcto; sólo pierde fidelidad narrativa en algunas versiones |
+| **D** | Atacar el mecanismo dominante: acotar el radio de las bandas por el ancho, p. ej. `r1 <- min(h*0.46, w*0.28)` y `r2 <- min(h*0.40, w*0.24)`, de modo que dejen de solaparse cuando `w` es pequeño | Conserva **las 222 versiones**. No toca `prof()` ni la invariante I-2 (las bandas son decorativas, no participan del *bounding box*). Requiere re-inspección visual de las 8 combinaciones |
 
-**Recomendación:** **opción A**. Es un cambio de dos líneas en el sorteo de parámetros, no toca
-`dibujar_barco()` ni la invariante I-2, y 162 preguntas sustantivamente distintas siguen siendo
-holgadas para un banco de ítems. La opción B es la correcta a largo plazo si este casco se va a
-reutilizar en otros ejercicios.
+**Recomendación:** **opción D**, y sólo si no basta, combinarla con **A**.
+
+La opción D ataca el mecanismo que las mediciones señalan como dominante (el solape de bandas,
+72,3 % en el caso peor) sin recortar el espacio de versiones ni tocar la geometría del casco, que es
+lo que sostiene la clave. La opción A es más contundente pero paga 60 preguntas; tenerla como
+respaldo es razonable si tras D el contorno sigue sin leerse como barco a `ratio 1.5`.
+
+**Precedente de esta sesión (leer antes de intentar un fix):** se probó una **quinta** vía —hacer la
+fracción de proa adaptativa al aspecto— y se midió que **empeoraba** el resultado global. Los
+detalles están más abajo. La lección es que en este casco los parámetros están acoplados y cualquier
+cambio debe medirse sobre **las 8 combinaciones**, no sobre el caso que motivó el arreglo.
 
 **Criterio de cierre:** tras aplicar la opción elegida, re-ejecutar la enumeración exhaustiva
 (0 desajustes de *bounding box*), `validar_diversidad_sustantiva.R --n 40` (PASS) y
@@ -189,6 +276,38 @@ regeneran en cada render. Hoy no están cubiertos por ninguna regla de exclusió
 untracked. No se tocó el `.gitignore` del repo raíz en esta sesión porque ya venía modificado en el
 árbol de trabajo por otro trabajo ajeno a este subproyecto. **Acción sugerida:** añadir un
 `.gitignore` local al subproyecto cuando se resuelva el estado del `.gitignore` raíz.
+
+### P2.5 — La Solution tiene 4 de las 6 subsecciones canónicas
+**Origen:** auditoría del detractor (2026-07-28).
+
+La regla #1 (`ejercicios-metacognitivos.md`, «Sección Solution Obligatoria») lista seis
+subsecciones. El chunk `solucion` incluye cuatro: *Respuesta correcta* + *Análisis de cada opción*
+(cubre «Análisis del error»), *Procedimiento correcto*, *Reflexión metacognitiva* y *Estrategia
+para evitar el error*.
+
+Faltan:
+
+- **Propiedades del concepto** — p. ej.: en un par ordenado la primera coordenada es siempre la
+  horizontal; un rectángulo alineado a los ejes queda determinado por los extremos de ambos rangos
+  y tiene exactamente 4 vértices.
+- **Caso específico (transferencia)** — p. ej.: «si el barco se desplazara 2 unidades a la derecha,
+  ¿cuáles serían los nuevos vértices?».
+
+**Impacto:** bajo. El ejercicio ya es metacognitivo (diagnóstico por distractor con código de
+error, reflexión y estrategia). Las dos subsecciones añadirían profundidad, no corrigen un defecto.
+
+**Acción sugerida:** insertarlas entre *Procedimiento correcto* y *Reflexión metacognitiva*.
+Conviene resolverlo **junto con P0.1**, porque el rediseño del tercer distractor obliga a tocar el
+mismo bloque de la Solution.
+
+### P2.6 — `sample()` interno redundante con `exshuffle: TRUE`
+**Origen:** auditoría del detractor (2026-07-28). Severidad BAJA.
+
+Las líneas 89-92 mezclan las opciones con `perm <- sample(4L)` y además `exshuffle: TRUE` vuelve a
+mezclarlas. Ambos mecanismos son coherentes entre sí (R/exams reordena `questionlist`,
+`solutionlist` y `exsolution` con la misma permutación), así que **no hay bug**: sólo lógica
+redundante. Se puede simplificar dejando que `exshuffle` haga todo el trabajo, o mantenerlo como
+control explícito. No urge.
 
 ### P2.4 — `SemilleroCloze.R` no aplica a este ejercicio
 Es una plantilla exploratoria de formato cloze+schoice; este ejercicio es SCHOICE puro. Se conserva

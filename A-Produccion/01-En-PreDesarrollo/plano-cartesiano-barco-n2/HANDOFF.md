@@ -103,17 +103,39 @@ Renders distintos posibles: 222 × 8 protagonistas × 4 reflexiones × 24 órden
 
 ## 5. Hallazgos abiertos
 
+### 5.0 — `GEO-COORD-03` es eliminable por su forma (P0.1) — **BLOQUEANTE**
+
+Los vértices de un rectángulo alineado a los ejes tienen siempre estructura **2×2**: dos valores de
+x combinados con dos de y. La correcta, `GEO-COORD-01` y `GEO-COORD-02` la cumplen en **222/222**
+versiones. `GEO-COORD-03` la cumple en **0/222**: sus cuatro puntos son siempre de la forma `(v,v)`,
+colineales sobre `y = x`, algo que nunca puede ser el conjunto de vértices de una figura.
+
+Un estudiante que reconozca eso descarta la opción **por la forma del texto**, sin mirar la figura
+ni leer una coordenada — sube su acierto por azar del 25 % al 33 %.
+
+Hallazgo de la auditoría adversarial, verificado de forma independiente por enumeración exhaustiva.
+Es el análogo en texto del patrón P5 de la regla #22. **Es lo primero que hay que resolver.**
+Dirección de fix y criterio de cierre en [`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
+
 ### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — **requiere tu decisión**
 
-60 de 222 versiones tienen `ancho/alto ≤ 2` y el casco degenera en una cápsula redondeada. **No
-afecta la corrección**: la clave sigue siendo válida en las 222. Afecta la fidelidad narrativa.
+60 de 222 versiones tienen `ancho/alto ≤ 2`. **No afecta la corrección**: la clave sigue siendo
+válida en las 222. Afecta la fidelidad narrativa.
 
-Hay tres opciones con su trade-off medido en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1. La
-recomendación es la **opción A** (restringir el sorteo a `ratio ≥ 2.5`), que cuesta bajar de 222 a
-**162 preguntas distintas** —holgado para los validadores— y es un cambio de dos líneas que no toca
-`dibujar_barco()`.
+El mecanismo dominante está **medido**: las dos bandas oscuras tienen radio proporcional al alto
+pero separación proporcional al ancho, así que con `alto = 2` y `ancho ≤ 4` se solapan un 65-72 % y
+se funden en una mancha. Cuatro opciones con su coste en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1;
+la recomendada es la **D** (acotar el radio de las bandas por el ancho), que conserva las 222
+versiones y no toca la geometría del casco.
 
-**Esto es lo primero que hay que resolver al retomar.**
+**Ojo con dos cosas al intentar arreglarlo:**
+
+- Dos auditorías reportaron que «el puente se sale del casco». **Es falso** y está demostrado: el
+  borde derecho del puente cae siempre en `t = 0.87`, posición invariante de escala, ocupando el
+  53,7 % del espacio disponible en las 8 combinaciones. El síntoma que vieron (mancha negra) es
+  real; la causa que le atribuyeron, no.
+- Ya se probó una vía que **empeoró** el resultado (proa adaptativa al aspecto). Ver el registro en
+  BACKLOG P1.1 antes de reintentarla.
 
 ### 5.2 — Modularización del `.Rmd` bloqueada (P1.2)
 
@@ -169,21 +191,28 @@ Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
 
 ### Siguiente paso concreto
 
-**Decidir P1.1** (ver [`docs/BACKLOG.md`](docs/BACKLOG.md)): elegir entre restringir el sorteo a
-`ratio ≥ 2.5` (opción A, recomendada), rediseñar el perfil del casco (opción B) o aceptar el 27 %
-de versiones degeneradas (opción C).
+**1. Resolver P0.1 (bloqueante): rediseñar `GEO-COORD-03`.** Sustituir el distractor de la diagonal
+por uno que conserve la estructura 2×2 —la dirección propuesta es un desplazamiento de una unidad
+al contar la cuadrícula— comprobando antes que no se sale de la grilla ni colisiona con otra opción
+en las 222 versiones. Detalle y criterio de cierre en [`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
 
-Si eliges **A**, el cambio es en el chunk `data_generation`, en el sorteo de `alto_barco`: hacer que
-`alto_barco = 2` sólo sea posible cuando `ancho_barco >= 5`. Después:
+**2. Decidir P1.1** (casco degenerado): la recomendación es la opción **D**, acotar el radio de las
+bandas por el ancho, que conserva las 222 versiones.
+
+Conviene hacer los dos en la misma pasada, junto con P2.5 (las dos subsecciones que faltan en la
+Solution), porque tocan el mismo bloque.
+
+Después de cualquiera de los dos:
 
 ```bash
-# Re-verificar la invariante y la diversidad
 Rscript verificar_render.R
 Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40
-# + enumeración exhaustiva (el script está en .claude/rules/barco-parametrico.md §Verificación)
+Rscript ../../../.claude/scripts/validar_coherencia_matematica.R <rmd>
+# + enumeración exhaustiva (script en .claude/rules/barco-parametrico.md §Verificación)
+# + comprobación de estructura 2×2 de las 4 opciones sobre las 222 versiones (BACKLOG P0.1)
 ```
 
-Tras cerrar P1.1, el subproyecto queda listo para el gate de promoción a `02-En-Desarrollo/`
+Tras cerrar P0.1 y P1.1, el subproyecto queda listo para el gate de promoción a `02-En-Desarrollo/`
 ([`docs/ROADMAP.md`](docs/ROADMAP.md) §3).
 
 ---
