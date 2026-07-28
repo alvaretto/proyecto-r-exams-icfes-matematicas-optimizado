@@ -1,3 +1,9 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
 ```{r data_generation, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
 library(testthat)
 
@@ -598,7 +604,7 @@ Para determinar la nueva posición del avión:
 3. **Avance hacia el aeropuerto:** Recorre `r distancia_avanzada` km en dirección al aeropuerto, manteniendo la misma dirección.
 4. **Nueva distancia:** Como el avión se acerca al aeropuerto, la distancia restante es:
 
-$$d_{\text{nueva}} = d_{\text{inicial}} - d_{\text{avanzada}} = `r distancia_total` - `r distancia_avanzada` = `r distancia_restante` \text{ km}$$
+   $$d_{\text{nueva}} = d_{\text{inicial}} - d_{\text{avanzada}} = `r distancia_total` - `r distancia_avanzada` = `r distancia_restante` \text{ km}$$
 
 5. **Dirección final:** La dirección se mantiene en `r dir_desc`.
 
