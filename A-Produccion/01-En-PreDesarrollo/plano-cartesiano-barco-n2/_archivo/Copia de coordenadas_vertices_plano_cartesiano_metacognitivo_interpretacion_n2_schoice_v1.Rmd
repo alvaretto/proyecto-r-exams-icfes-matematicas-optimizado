@@ -95,14 +95,14 @@ sol <- as.integer(nombres == "correcta")
 errores_info <- list(
   inv_ejes = list(
     codigo = "GEO-COORD-01",
-    nombre = "Inversión de ejes",
+    nombre = paste0("Inversi", "ó", "n de ejes"),
     texto = dist_inv,
     diagnostico = paste0(
-      "Invierte las coordenadas x e y: lee la extensión horizontal ",
+      "Invierte las coordenadas x e y: lee la extensi", "ó", "n horizontal ",
       "del barco (de x = ", x_min, " a x = ", x_max, ") como si estuviera en el ",
-      "eje vertical, y la extensión vertical (de y = ", y_min,
+      "eje vertical, y la extensi", "ó", "n vertical (de y = ", y_min,
       " a y = ", y_max, ") como si estuviera en el eje horizontal. ",
-      "El par (x, y) se escribió como (y, x)."
+      "El par (x, y) se escribi", "ó", " como (y, x)."
     )
   ),
   rango_reducido = list(
@@ -113,7 +113,8 @@ errores_info <- list(
       "Reduce el rango horizontal a solo 1 unidad (toma x = ", x_mid,
       " y x = ", x_mid + 1L, " en lugar del rango completo x = ", x_min,
       " a x = ", x_max, "). No identifica los extremos izquierdo y ",
-      "derecho del barco, sino que selecciona únicamente la parte central."
+      "derecho del barco, sino que selecciona ", "ú", "nicamente ",
+      "la parte central."
     )
   ),
   diagonal = list(
@@ -124,9 +125,10 @@ errores_info <- list(
       "Coloca los puntos sobre la diagonal principal (x = y): (",
       x_min, ", ", x_min, "), (", y_min, ", ", y_min, "), (",
       y_max, ", ", y_max, "), (", x_max, ", ", x_max,
-      "). En lugar de formar un rectángulo que encierre al barco, ",
-      "los 4 puntos están alineados sobre la recta y = x. ",
-      "Confunde la forma del barco con una distribución diagonal en el plano."
+      "). En lugar de formar un rect", "á", "ngulo que encierre ",
+      "al barco, los 4 puntos est", "á", "n alineados sobre la ",
+      "recta y = x. Confunde la forma del barco con una distribuci",
+      "ó", "n diagonal en el plano."
     )
   )
 )
@@ -174,10 +176,6 @@ dibujar_barco <- function(xmn, xmx, ymn, ymx, gmax, filename) {
   n  <- 400L
   tf <- seq(0, 1, length.out = n)
 
-  # INVARIANTE I-2 (ver .claude/rules/barco-parametrico.md): prof(t) vale EXACTAMENTE
-  # h/2 en el tramo central, de modo que el casco toca ymn e ymx y su bounding box
-  # ES la respuesta correcta. No suavizar ni alargar estas fracciones sin re-verificar
-  # la enumeracion exhaustiva de las 222 combinaciones.
   prof <- function(t) {
     ifelse(t < 0.15,
       (h / 2) * (t / 0.15)^0.7,
@@ -276,14 +274,20 @@ Question
 \makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
 ```
 
-```{r question_body, echo=FALSE, results='asis'}
+```{r enunciado, echo=FALSE, results='asis'}
 cat(paste0(
   protagonista, " está participando en un juego en el que se ubican barcos ",
   "en un plano cartesiano y se busca eliminar los barcos de otro jugador, ",
   "adivinando su ubicación. En un momento del juego, a ", protagonista,
   " le queda un barco ubicado como muestra la figura.\n\n"
 ))
+```
+
+```{r grafico, echo=FALSE, results='asis'}
 cat("![](plano_barco.png){width=80%}\n\n")
+```
+
+```{r pregunta, echo=FALSE, results='asis'}
 cat(paste0(
   "¿Cuáles son las coordenadas (x, y) de los vértices que ",
   "encierran el barco que le queda a ", protagonista, "?\n"
@@ -301,23 +305,25 @@ for (i in seq_along(opciones)) {
 Solution
 ========
 
-```{r solucion, echo=FALSE, results='asis'}
-# --- Respuesta correcta ---
+```{r sol_header, echo=FALSE, results='asis'}
 cat(paste0(
   "### Respuesta correcta {#resp-", ex_uid, "}\n\n",
   "La respuesta correcta es la que indica las coordenadas **",
   correcta, "**\n\n",
   "El barco ocupa la franja horizontal entre x = ", x_min,
   " y x = ", x_max, ", y entre y = ", y_min, " e y = ", y_max,
-  ". Los cuatro vértices del rectángulo que encierra el barco son:\n\n",
+  ". Los cuatro vértices del rectángulo que encierra ",
+  "el barco son:\n\n",
   "$$\\left(", x_min, ",\\, ", y_min, "\\right), \\quad ",
   "\\left(", x_min, ",\\, ", y_max, "\\right), \\quad ",
   "\\left(", x_max, ",\\, ", y_min, "\\right), \\quad ",
   "\\left(", x_max, ",\\, ", y_max, "\\right)$$\n\n"
 ))
+```
 
-# --- Análisis por opción ---
+```{r sol_analisis, echo=FALSE, results='asis'}
 cat("### Análisis de cada opción\n\n")
+
 for (i in seq_along(opciones)) {
   nm <- nombres[i]
   if (nm == "correcta") {
@@ -337,8 +343,9 @@ for (i in seq_along(opciones)) {
     ))
   }
 }
+```
 
-# --- Procedimiento correcto ---
+```{r sol_procedimiento, echo=FALSE, results='asis'}
 cat(paste0(
   "### Procedimiento correcto\n\n",
   "Para identificar los vértices del rectángulo que encierra un ",
@@ -354,11 +361,16 @@ cat(paste0(
   x_min, ", ", y_max, "), (", x_max, ", ", y_min, ") y (",
   x_max, ", ", y_max, ").\n\n"
 ))
+```
 
-# --- Reflexión metacognitiva ---
-cat(paste0("### Reflexión metacognitiva\n\n", reflexion, "\n\n"))
+```{r sol_reflexion, echo=FALSE, results='asis'}
+cat(paste0(
+  "### Reflexión metacognitiva\n\n",
+  reflexion, "\n\n"
+))
+```
 
-# --- Estrategia para evitar el error ---
+```{r sol_estrategia, echo=FALSE, results='asis'}
 cat(paste0(
   "### Estrategia para evitar el error\n\n",
   "1. Identificar primero el eje **horizontal** (x) y anotar los valores ",

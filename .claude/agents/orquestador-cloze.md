@@ -108,8 +108,19 @@ Antes de cualquier acción destructiva, verifico:
 20. Ningún `.Rmd` que genero reseedea el RNG dentro de `data_generation` con `set.seed(as.integer(Sys.time())...)` ni `set.seed(...proc.time()...)` — Incidente K. Verifico: detección en DOS pasos (un `grep` de una sola línea NO basta: el patrón real suele estar partido en dos líneas — `s <- as.integer(Sys.time()) ...` seguido de `set.seed(s)` — o dentro de una expresión — `set.seed(s + sample(1:1000, 1))`): `grep -nE 'set\.seed' <archivo.Rmd>` y `grep -nE 'Sys\.time|proc\.time|Sys\.Date' <archivo.Rmd>`; si ambos devuelven líneas, inspeccionar si la semilla deriva del reloj.
 21. Si alguna sub-parte tiene gráficas-opción rotuladas en el enunciado (Incidente G) con un rótulo numérico visible, planifico incluir en el pool de esa parte 2-3 distractores que CONSERVEN el mismo valor/magnitud que la respuesta correcta y difieran solo en la dimensión evaluada (dirección, orientación, eje de referencia) — Incidente M.
 22. Si el `.Rmd` incluye una ecuación en display (`$$...$$`) dentro de una lista Markdown numerada (en cualquier parte de Question o Solution), verifico que esté indentada dentro del bloque del ítem, nunca a columna 0 — Incidente N.
+23. **Reglas locales del subproyecto** (Incidente O): si existe `<ruta_destino>/.claude/CLAUDE.md`, lo **leo antes** de crear o editar el `.Rmd`, junto con `<ruta_destino>/.claude/rules/*.md` y `<ruta_destino>/HANDOFF.md` cuando existan. Esos archivos declaran invariantes del ejercicio concreto que el `.claude/` del repo raíz no puede conocer: qué función NO extraer, qué constante NO bajar, qué patrón que *parece* deuda técnica es intencional. Precedencia: una regla local **prevalece** sobre mi criterio genérico dentro de ese subproyecto; si contradice una regla del repo raíz, prevalece la del repo raíz y lo reporto como conflicto en vez de resolverlo en silencio. Verificación: `ls <ruta_destino>/.claude/ 2>/dev/null` y, si hay contenido, `Read` de cada archivo antes del paso 3 (`generacion_rmd`).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
+
+### Incidente O — Ignorar el `.claude/` local de un subproyecto (2026-07-28)
+
+**Síntoma**: un agente "mejora" un ejercicio maduro y rompe una invariante que el subproyecto tenía documentada (extrae una función a un archivo externo, suaviza una constante geométrica, unifica un umbral en cascada, reescribe el enunciado para cumplir una regla genérica). El `.Rmd` sigue compilando y **todos los validadores siguen en verde**, pero el ejercicio queda degradado o con la clave falsa.
+
+**Causa raíz**: los subproyectos maduros declaran sus invariantes en un `.claude/CLAUDE.md` **local** y en `.claude/rules/*.md` locales. Ese material no está en el `.claude/` del repo raíz y no se descubre leyendo el `.Rmd`: describe precisamente por qué algo que parece deuda técnica o código duplicado es una decisión medida.
+
+**Defensa preventiva**: pre-flight check 23 — leer `<ruta_destino>/.claude/**` y `<ruta_destino>/HANDOFF.md` antes del paso 3, y tratar sus invariantes como restricciones duras dentro de ese subproyecto.
+
+**Referencia**: gemelo del Incidente M de `.claude/agents/orquestador-schoice.md`; casos reales `desplazamiento-avion-aeropuerto` y `plano-cartesiano-barco-n2` (2026-07-28).
 
 ## Lecciones absorbidas de sesiones previas (incidentes CLOZE)
 

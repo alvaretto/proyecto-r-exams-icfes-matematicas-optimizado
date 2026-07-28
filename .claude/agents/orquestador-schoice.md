@@ -91,6 +91,7 @@ Antes de cualquier acción destructiva, verifico:
 16. Ningún `.Rmd` que genero reseedea el RNG dentro de `data_generation` con `set.seed(as.integer(Sys.time())...)` ni `set.seed(...proc.time()...)` — Incidente I. Verifico: detección en DOS pasos (un `grep` de una sola línea NO basta: el patrón real suele estar partido en dos líneas — `s <- as.integer(Sys.time()) ...` seguido de `set.seed(s)` — o dentro de una expresión — `set.seed(s + sample(1:1000, 1))`): `grep -nE 'set\.seed' <archivo.Rmd>` y `grep -nE 'Sys\.time|proc\.time|Sys\.Date' <archivo.Rmd>`; si ambos devuelven líneas, inspeccionar si la semilla deriva del reloj.
 17. Si el ejercicio tiene opciones gráficas con un rótulo numérico visible (p. ej. "40 km"), planifico incluir en el pool de errores conceptuales 2-3 distractores que CONSERVEN el mismo valor/magnitud que la respuesta correcta y difieran solo en la dimensión evaluada (dirección, orientación, eje de referencia) — Incidente K.
 18. Si el `.Rmd` incluye una ecuación en display (`$$...$$`) dentro de una lista Markdown numerada (Question o Solution), verifico que esté indentada dentro del bloque del ítem, nunca a columna 0 — Incidente L.
+19. **Reglas locales del subproyecto** (Incidente M): si existe `<ruta_destino>/.claude/CLAUDE.md`, lo **leo antes** de crear o editar el `.Rmd`, junto con `<ruta_destino>/.claude/rules/*.md` y `<ruta_destino>/HANDOFF.md` cuando existan. Esos archivos declaran invariantes del ejercicio concreto que el `.claude/` del repo raíz no puede conocer: qué función NO extraer, qué constante NO bajar, qué patrón que *parece* deuda técnica es intencional. Precedencia: una regla local **prevalece** sobre mi criterio genérico dentro de ese subproyecto; si contradice una regla del repo raíz, prevalece la del repo raíz y lo reporto como conflicto en vez de resolverlo en silencio. Verificación: `ls <ruta_destino>/.claude/ 2>/dev/null` y, si hay contenido, `Read` de cada archivo antes del paso 3 (`generacion_rmd`).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
@@ -303,6 +304,22 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 **Verificación**: buscar `$$` a columna 0 entre ítems de una lista numerada en las secciones Question/Solution — no toda ocurrencia a columna 0 es errónea, solo la que cae dentro de una lista numerada; requiere inspección de contexto, no solo grep.
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
+
+### Incidente M — Ignorar el `.claude/` local de un subproyecto (2026-07-28)
+
+**Síntoma**: un agente "mejora" un ejercicio ya maduro y rompe una invariante que el subproyecto tenía documentada — extrae una función a un archivo externo, suaviza una constante geométrica, unifica un umbral en cascada, o reescribe el enunciado para cumplir una regla genérica. El `.Rmd` sigue compilando y **todos los validadores sintácticos y semánticos siguen en verde**, pero el ejercicio queda degradado o directamente con la clave falsa.
+
+**Causa raíz**: los subproyectos maduros declaran sus invariantes en un `.claude/CLAUDE.md` **local** (particularidades operativas) y en `.claude/rules/*.md` locales. Ese material no está en el `.claude/` del repo raíz y no se descubre navegando el `.Rmd`: describe precisamente lo que *no* se ve en el código, es decir, por qué algo que parece deuda técnica o código duplicado es una decisión medida. Un agente que solo lee las reglas globales no tiene forma de saberlo.
+
+**Casos reales que motivan este incidente**:
+- `desplazamiento-avion-aeropuerto/.claude/CLAUDE.md` — 11 particularidades. Entre ellas: no extraer los helpers a `R/*.R` (rompe `validar_diversidad_sustantiva.R` en 40/40 semillas), no bajar el piso `R_fit >= 50`, no convertir la cascada `RATIOS_LEGIBILIDAD` en umbral único, no acoplar `escala_px_km` a un distractor.
+- `plano-cartesiano-barco-n2/.claude/CLAUDE.md` — 10 particularidades. Entre ellas: `prof()` debe valer exactamente `h/2` en el tramo central, porque de esa identidad depende que el *bounding box* del casco **sea** la respuesta correcta; suavizar el perfil produce un ejercicio que compila, valida y entrega una clave falsa.
+
+**Defensa preventiva**: pre-flight check 19 — leer `<ruta_destino>/.claude/**` y `<ruta_destino>/HANDOFF.md` antes del paso 3 (`generacion_rmd`), y tratar sus invariantes como restricciones duras dentro de ese subproyecto.
+
+**Precedencia**: regla local > criterio genérico del orquestador. Regla del repo raíz > regla local (y el conflicto se reporta, no se resuelve en silencio).
+
+**Referencia**: incidentes `desplazamiento-avion-aeropuerto` y `plano-cartesiano-barco-n2` (2026-07-28); regla #17 `infraestructura-protegida.md` (el `.claude/` local del subproyecto NO forma parte de la infraestructura protegida del raíz, pero sí es fuente de verdad dentro de su alcance).
 
 ### Validación realista obligatoria (post-corrección)
 

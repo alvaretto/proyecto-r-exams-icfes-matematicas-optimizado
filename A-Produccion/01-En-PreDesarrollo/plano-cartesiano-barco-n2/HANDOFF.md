@@ -1,0 +1,203 @@
+# HANDOFF — Subproyecto `plano-cartesiano-barco-n2`
+
+> **Documento de reanudación.** Si retomas este subproyecto después de una pausa, lee este archivo
+> y `ejercicio_state.json` **antes** de explorar el repositorio. Todo lo necesario para continuar
+> sin re-descubrir contexto está aquí.
+
+| Campo | Valor |
+|---|---|
+| **Ruta (SP)** | `A-Produccion/01-En-PreDesarrollo/plano-cartesiano-barco-n2` |
+| **Repo raíz (RR)** | `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams` |
+| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (405 líneas, 5 chunks) |
+| **Tipo** | SCHOICE metacognitivo, **opciones de texto**, una sola figura compartida |
+| **Origen ICFES** | `MAT-2026-1-022` (cuadernillo 2026-1, pregunta 116, clave C) |
+| **Rama** | `main` |
+| **Commit fundacional** | `fc5a8c1a` (2026-07-01) |
+| **Última sesión** | 2026-07-28 |
+| **Frase de reanudación** | «Continúa con el proyecto plano-cartesiano-barco» |
+
+---
+
+## 1. Objetivo general
+
+Producir y mantener un **ejercicio ICFES SCHOICE metacognitivo de Nivel 2** (competencia
+*Interpretación y representación*, componente *Geométrico-métrico*) sobre lectura de las
+coordenadas de los vértices que encierran un barco en un plano cartesiano, derivado del ítem real
+`MAT-2026-1-022`.
+
+El ítem **no evalúa cálculo aritmético**: evalúa si el estudiante distingue el eje horizontal del
+vertical y lee el **rango completo** del objeto representado (no sólo su centro). Los tres
+distractores son errores conceptuales documentados (`GEO-COORD-01/02/03`), no ruido numérico.
+
+**No confundir con el subproyecto hermano** `desplazamiento-avion-aeropuerto`: aquél tiene 4
+opciones **gráficas** y usa `exshuffle: FALSE`; éste tiene opciones de **texto** y usa
+`exshuffle: TRUE`. Los patrones no son intercambiables.
+
+---
+
+## 2. Objetivos específicos
+
+Ver la tabla completa con veredictos y evidencia en [`docs/ROADMAP.md`](docs/ROADMAP.md) §2.
+Resumen: **OE1-OE7 cumplidos y verificados**, OE8 (modularización) parcial por bloqueo de
+herramienta, OE9 (auditoría) con un hallazgo abierto, OE10-OE11 (promoción y aula) pendientes.
+
+Estos OE **no existían declarados** antes del 2026-07-28: el subproyecto no tenía `README.md`,
+`ROADMAP.md`, `.claude/` local ni memoria. Se declararon en esa sesión y se persistieron en
+`~/.claude/projects/<slug>/memory/project_objetivos_plano_cartesiano_barco.md`.
+
+---
+
+## 3. Estado real del ejercicio (verificado 2026-07-28)
+
+| Verificación | Comando | Resultado |
+|---|---|---|
+| Coherencia matemática, Niveles 1-5 + Capas semánticas A-D | `Rscript RR/.claude/scripts/validar_coherencia_matematica.R <rmd>` | **APROBADO, 0 errores** |
+| Diversidad sustantiva (regla #22) | `Rscript RR/.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` | **PASS**, 40/40 evaluadas, 36 valores únicos |
+| Render 4 formatos + Moodle | `Rscript verificar_render.R` | **5/5 OK** |
+| Regla #18 (`{width=}`) | grep | OK (línea 282 del original, hoy desplazada por el comentario I-2) |
+| Regla #19 (letter-independence) | grep sobre la sección Solution | OK, 0 coincidencias |
+| Regla #20 (guard `\newcounter{none}`) | grep | Presente |
+| Regla #22 §P6 (fuga por nombre de archivo) | `exams2moodle` + grep del XML | OK — único archivo `plano_barco.png` |
+| Incidente I (reseed por reloj) | doble grep | No aplica: sin `set.seed`, sin `Sys.time/proc.time/Sys.Date` |
+| Invariantes de infraestructura I-1 a I-9 | `Rscript RR/tests/testthat/test_infraestructura_claude.R` | **11 bloques en verde** |
+
+### Espacio de versiones — medido exhaustivamente, no muestreado
+
+Enumeración completa de las combinaciones `(ancho_barco, alto_barco, x_min, y_min)`:
+
+- **222 combinaciones válidas → 222 respuestas correctas distintas** (biyección).
+- **0** casos de `y_pool` vacío → el `stopifnot` del pool no puede dispararse.
+- **0** colisiones entre las 4 opciones → el `stopifnot` de unicidad no puede dispararse.
+- **0** casos donde el *bounding box* del casco difiera de `[x_min,x_max] × [y_min,y_max]` →
+  **la clave es correcta en el 100 % del espacio de versiones**, no sólo en las semillas probadas.
+
+Renders distintos posibles: 222 × 8 protagonistas × 4 reflexiones × 24 órdenes = **170 496**.
+
+---
+
+## 4. Qué se hizo en esta sesión (2026-07-28)
+
+1. **`/goal`**: se detectó que el subproyecto no tenía ningún objetivo declarado. Se declararon
+   OE1-OE11 y se persistieron en memoria.
+2. **Verificación completa** de los validadores + enumeración exhaustiva del espacio de versiones
+   (esto último es nuevo: antes sólo había muestreo por semillas).
+3. **Reestructuración**: se crearon `docs/`, `.claude/` y `_archivo/`; se archivó el prototipo del
+   Flujo B (`grafico_barco_parametrico.R`, con parámetros hardcoded, superado por `dibujar_barco()`
+   dentro del `.Rmd`) y la copia obsoleta del `.Rmd`.
+4. **`verificar_render.R`**: nueva herramienta de verificación (5 formatos + chequeo P6), separada
+   de `SemilleroUnico_v2.R` (exportación real).
+5. **Documentación**: `README.md`, `docs/{SYLLABUS,ROADMAP,BACKLOG,BLUEPRINT}.md`, este `HANDOFF.md`,
+   `.claude/CLAUDE.md` (10 particularidades operativas) y `.claude/rules/barco-parametrico.md`.
+6. **Cableado de orquestadores** (repo raíz, con el protocolo de la regla #17: snapshot +
+   verificación de invariantes):
+   - `orquestador-schoice`: pre-flight check **19** + **Incidente M**.
+   - `orquestador-cloze`: pre-flight check **23** + **Incidente O**.
+   - Ambos obligan a leer el `.claude/` **local** del subproyecto antes de tocar su `.Rmd`.
+7. **Un cambio aplicado y revertido**, documentado en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1: se
+   intentó una proa adaptativa al aspecto del casco; preservaba la invariante y las 222 versiones,
+   pero no resolvía el caso peor y **regresaba** los ratios medios (36,5 % de las versiones). Se
+   revirtió. El `.Rmd` conserva la geometría original más un comentario que documenta la
+   invariante I-2.
+
+---
+
+## 5. Hallazgos abiertos
+
+### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — **requiere tu decisión**
+
+60 de 222 versiones tienen `ancho/alto ≤ 2` y el casco degenera en una cápsula redondeada. **No
+afecta la corrección**: la clave sigue siendo válida en las 222. Afecta la fidelidad narrativa.
+
+Hay tres opciones con su trade-off medido en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1. La
+recomendación es la **opción A** (restringir el sorteo a `ratio ≥ 2.5`), que cuesta bajar de 222 a
+**162 preguntas distintas** —holgado para los validadores— y es un cambio de dos líneas que no toca
+`dibujar_barco()`.
+
+**Esto es lo primero que hay que resolver al retomar.**
+
+### 5.2 — Modularización del `.Rmd` bloqueada (P1.2)
+
+Bloqueada por incompatibilidad entre `include_supplement()` y
+`validar_diversidad_sustantiva.R`. Medido en el subproyecto hermano: 40/40 semillas fallidas. No
+reintentar sin resolver antes el criterio de desbloqueo (adaptar el validador, que es herramienta
+compartida). Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.2.
+
+### 5.3 — Decisiones cerradas (no reabrir sin motivo nuevo)
+
+- **Regla #11 (contextos narrativos)**: sólo varía el protagonista, y es correcto — el enunciado y
+  las opciones se conservan *verbatim* del ítem ICFES oficial. Ver BACKLOG P1.3.
+- **Pool sin `precondicion`/`calcula()`**: es un patrón legítimo aquí, porque los distractores son
+  cadenas de coordenadas, no valores calculados. Ver BACKLOG P1.4.
+
+---
+
+## 6. Riesgos
+
+| Riesgo | Mitigación |
+|---|---|
+| Un agente "limpia" el código duplicado y extrae `dibujar_barco()` a un archivo externo | `.claude/CLAUDE.md` particularidad 1 + invariante I-1 + pre-flight 19 del orquestador |
+| Un agente "suaviza" `prof()` para que el barco se vea mejor → la clave pasa a ser falsa sin error de sintaxis | `.claude/rules/barco-parametrico.md` (contrato C1-C3) + comentario de la invariante I-2 en el propio `.Rmd` |
+| Se copia el `exshuffle: FALSE` del subproyecto hermano por analogía | `.claude/CLAUDE.md` particularidad 4 |
+| Se borran `Semillero*.R` o `pcielo*.tex` por parecer ruido | `.claude/CLAUDE.md` particularidad 6 + README §Cómo exportar |
+| Las citas de línea de la documentación se desplazan al editar el `.Rmd` | `docs/BLUEPRINT.md` §6 lista anclas de control para re-verificar |
+
+---
+
+## 7. Cómo retomar
+
+### Comandos de arranque
+
+```bash
+cd "$RR/A-Produccion/01-En-PreDesarrollo/plano-cartesiano-barco-n2"
+
+# 1. Estado del workflow (11 pasos)
+../../../.claude/scripts/workflow-state.sh status .
+
+# 2. Qué cambió desde la última sesión
+git log --oneline -5 -- .
+git status --short -- .
+
+# 3. Salud del ejercicio (sale con status 1 si algo falla)
+Rscript verificar_render.R
+
+# 4. Corrección y diversidad
+Rscript ../../../.claude/scripts/validar_coherencia_matematica.R \
+  coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd
+Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
+  coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd --n 40
+```
+
+### Siguiente paso concreto
+
+**Decidir P1.1** (ver [`docs/BACKLOG.md`](docs/BACKLOG.md)): elegir entre restringir el sorteo a
+`ratio ≥ 2.5` (opción A, recomendada), rediseñar el perfil del casco (opción B) o aceptar el 27 %
+de versiones degeneradas (opción C).
+
+Si eliges **A**, el cambio es en el chunk `data_generation`, en el sorteo de `alto_barco`: hacer que
+`alto_barco = 2` sólo sea posible cuando `ancho_barco >= 5`. Después:
+
+```bash
+# Re-verificar la invariante y la diversidad
+Rscript verificar_render.R
+Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40
+# + enumeración exhaustiva (el script está en .claude/rules/barco-parametrico.md §Verificación)
+```
+
+Tras cerrar P1.1, el subproyecto queda listo para el gate de promoción a `02-En-Desarrollo/`
+([`docs/ROADMAP.md`](docs/ROADMAP.md) §3).
+
+---
+
+## 8. Reglas del repo que aplican
+
+`#16` workflow state enforcement · `#18` `{width=...}` anti-`\pandocbounded` · `#19`
+letter-independence · `#20` guard `\newcounter{none}` · `#21` Familias 1 y 5 (`pick_int`,
+`safe_sample`) · `#22` diversidad sustantiva · `#17` infraestructura protegida (se aplicó su
+protocolo al cablear los orquestadores).
+
+Reglas locales: [`.claude/CLAUDE.md`](.claude/CLAUDE.md) ·
+[`.claude/rules/barco-parametrico.md`](.claude/rules/barco-parametrico.md).
+
+---
+
+**Versión:** 1.0 · **Fecha:** 2026-07-28
