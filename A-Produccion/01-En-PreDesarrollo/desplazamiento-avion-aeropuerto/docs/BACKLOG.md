@@ -5,7 +5,20 @@
 
 ## P0 — Bloqueante para promoción
 
-### P0.1 — Distractor `GEO-DES-03` extremo por construcción (regla #22 §P5)
+### P0.1 — Distractor `GEO-DES-03` extremo por construcción (regla #22 §P5) — ✅ RESUELTO 2026-07-28
+
+> **RESUELTO.** Pool ampliado de 3 a 6 errores (`GEO-DES-01` fijo + 2 sorteados de 5) y escala
+> desacoplada (`120 / max(distancias_finales)`). Los dos errores nuevos que rompen el sesgo son
+> `GEO-DES-05` (ángulo desde el eje perpendicular, magnitud correcta) y `GEO-DES-06` (resta
+> aplicada dos veces, **más corto** que la correcta).
+>
+> **Criterio de aceptación verificado sobre 60 versiones del chunk real, 0 errores:** la correcta
+> alcanza el rank 1 de longitud en 9/60 (15 %, antes 0/200); la dominancia máxima del extremo baja
+> de 100 % a 43,3 % (más largo) y 58,3 % (más corto); `px_min` 30,0 px sin versiones por debajo; y
+> **siempre hay ≥2 opciones con la longitud de la correcta**, de modo que la longitud nunca
+> identifica la respuesta por sí sola. 10 combinaciones distintas de distractores.
+>
+> Detalle completo en `../HANDOFF.md` §5.2. Lo que sigue es el análisis original que motivó el fix.
 
 **Hallazgo confirmado por medición + demostración algebraica, 2026-07-28.**
 

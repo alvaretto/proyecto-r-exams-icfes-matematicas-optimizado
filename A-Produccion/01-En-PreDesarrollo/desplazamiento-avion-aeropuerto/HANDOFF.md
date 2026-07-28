@@ -110,19 +110,51 @@ letter-independence: `letra_correcta` solo se usa internamente, nunca se emite a
 |---|---|---|---|
 | **H1** | **Fuga de la respuesta por nombre de archivo.** `exams2moodle` emite `src="@@PLUGINFILE@@/diagrama_correcta.png"`. Un estudiante que inspeccione el HTML en Moodle ve la respuesta sin razonar. En HTML puro NO ocurre (R-exams incrusta base64); el canal afectado es **Moodle**, que es el destino real (`SemilleroMoodle_v2.R`). Viola `graficos-como-opciones.md`, que exige nombres neutrales `diagrama_a.png`. | Adversario A + verificación directa del XML | 🔧 **CORREGIDO 2026-07-28** (renombrado neutral post-mezcla) |
 | **H2** | **Diagramas degenerados.** Con `dt=80, da=60` → `dr=20` y `escala=120/140`, el vector correcto mide **17,1 px**: el punto queda sobre el origen y la etiqueta flota a 58 px. Afecta a **2/37 combinaciones (5,4 %)**; el adversario midió 4/60 (6,7 %) por muestreo. | Barrido visual propio + Adversario A | 🔧 **CORREGIDO 2026-07-28** (umbral `f=0.25`, mín. 30 px) |
-| **H3** | **El distractor `GEO-DES-03` (suma) es siempre el vector más largo.** No es estadístico sino **algebraico**: `escala_px_km = 120/(dt+da)` ⟹ `Lpx_suma ≡ 120` px exactos; y `dt+da > dr` y `> da` siempre. La correcta **nunca** ocupa el rank 1 (rank 2 en 168/200, rank 3 en 32/200). Enumeración exhaustiva: 37/37. Atajo: *"la más larga nunca es la correcta"* descarta una opción sin razonar → regla #22 §P5. | Medición propia + Adversario A + Adversario B | ⏳ **P0 del BACKLOG** — requiere rediseño del pool, decisión del usuario |
+| **H3** | **El distractor `GEO-DES-03` (suma) es siempre el vector más largo.** No es estadístico sino **algebraico**: `escala_px_km = 120/(dt+da)` ⟹ `Lpx_suma ≡ 120` px exactos; y `dt+da > dr` y `> da` siempre. La correcta **nunca** ocupa el rank 1 (rank 2 en 168/200, rank 3 en 32/200). Enumeración exhaustiva: 37/37. Atajo: *"la más larga nunca es la correcta"* descarta una opción sin razonar → regla #22 §P5. | Medición propia + Adversario A + Adversario B | ✅ **RESUELTO 2026-07-28** — pool ampliado a 6 errores (1 fijo + 2 sorteados de 5) + escala desacoplada. Ver §5.2 |
 | **H4** | **El rótulo numérico permite descartar 2 de 4.** Cada diagrama muestra su distancia ("20 km"). El estudiante calcula `dt−da` y descarta los dos cuyo rótulo no coincide, quedando solo correcta vs. espejo. Reduce la parte del ítem que exige razonar la dirección. | Adversario A | ⏳ BACKLOG — decisión de diseño pedagógico |
 
-**Sobre H3 — advertencia de diseño para quien lo resuelva:** el fix recomendado por el adversario
-es ampliar el pool a 5 errores y elegir 3 por versión, **más** desacoplar `escala_px_km` del valor
-de un distractor concreto (derivarla del máximo efectivamente dibujado). Cuidado: casi todo error
-de "resta incompleta" produce valores ≥ `distancia_restante`, así que el pool ampliado **debe**
-incluir al menos un error que no dependa de una resta incompleta (p. ej. variantes de dirección
-con la magnitud correcta), o el sesgo "distractores más grandes que la correcta" se reproduce.
+### 5.2 — Resolución de H3 (2026-07-28)
 
-**Criterio de aceptación de H3:** sobre ≥40 versiones, la respuesta correcta alcanza el rank 1 de
-longitud en una fracción no trivial de casos, y ningún distractor ocupa el rango extremo en el
-100 %.
+**Pool ampliado de 3 a 6 errores conceptuales**, con `GEO-DES-01` (espejo) **siempre presente** —
+es el discriminador central del ítem — y **2 sorteados** de los otros cinco:
+
+| Código | Error conceptual | Longitud vs. correcta | Precondición |
+|---|---|---|---|
+| `GEO-DES-01` | Dirección reflejada (espejo del eje) | **igual** | siempre |
+| `GEO-DES-02` | Usa la distancia recorrida | menor o mayor | siempre |
+| `GEO-DES-03` | Suma en vez de restar | mayor | siempre |
+| `GEO-DES-04` | Posición inicial sin actualizar | mayor | siempre |
+| `GEO-DES-05` | Ángulo medido desde el eje perpendicular | **igual** | `ángulo ≠ 45` |
+| `GEO-DES-06` | Resta aplicada dos veces | **menor** | `avanzada < total/2` y `total ≠ 3·avanzada` |
+
+`GEO-DES-05` y `GEO-DES-06` son los que rompen el sesgo que advertía el adversario: uno conserva
+la magnitud correcta y el otro produce un vector **más corto** que la correcta, de modo que los
+distractores dejan de estar sistemáticamente "por encima".
+
+Cambios de mecánica:
+
+- **Escala desacoplada:** `escala_px_km <- 120 / max(distancias_finales)` — ya no deriva de
+  `distancia_total + distancia_avanzada`, que era lo que fijaba a `GEO-DES-03` en 120 px exactos.
+- **Selección por enumeración, sin bucles de reintento** (regla #21, Familia 1): se enumeran todas
+  las parejas de candidatos aplicables con `combn()`, se filtran las que cumplen distancias
+  positivas + 4 diagramas distintos + `min/max ≥ 0.25` (legibilidad), y se sortea entre las
+  válidas. Mediana de 6 parejas válidas por versión; 0 versiones sin pareja viable.
+- El filtro `f_legibilidad` sobre `distancia_avanzada` se **eliminó**: la legibilidad se garantiza
+  ahora sobre las 4 opciones realmente elegidas, que es más preciso.
+
+**Verificación del criterio de aceptación (60 versiones del chunk real, 0 errores):**
+
+| Criterio | Antes | Ahora |
+|---|---|---|
+| La correcta alcanza rank 1 de longitud | 0/200 (0 %) | **9/60 (15 %)** |
+| Dominancia máxima del extremo | `GEO-DES-03` 100 % | **43,3 % (largo) / 58,3 % (corto)** |
+| Legibilidad `px_min` | — | **30,0 px; 0 versiones por debajo** |
+| Opciones que comparten longitud con la correcta | 1 (la longitud delataba) | **siempre ≥2** |
+| Combinaciones distintas de distractores | 1 (fija) | **10** |
+
+La última fila es la garantía estructural: **la longitud nunca identifica la respuesta por sí
+sola**, porque la correcta y su espejo siempre miden lo mismo. Quien intente "la más larga" o "la
+más corta" se queda con dos candidatas y debe comparar dirección — que es lo que el ítem evalúa.
 
 ### 5.1 — Infraestructura
 
@@ -201,6 +233,13 @@ Rscript ../../../tests/testthat/test_infraestructura_claude.R   # invariantes I-
 
 ### Siguiente paso concreto
 
+**H3 quedó RESUELTO el 2026-07-28** (ver §5.2). El siguiente paso natural es **OE10: promover a
+`02-En-Desarrollo`**, re-confirmando antes los pasos `validar_diversidad` y `coherencias_5` de
+`ejercicio_state.json`, que siguen reflejando la validación previa a los cambios de hoy.
+
+<details>
+<summary>Contexto histórico de H3 (resuelto)</summary>
+
 **Decisión pendiente tuya: el hallazgo H3** (el distractor `GEO-DES-03` es el vector más largo en
 el 100 % de los casos, por identidad algebraica). Está documentado como **P0 en `docs/BACKLOG.md`**
 con la propuesta técnica y su criterio de aceptación. Requiere rediseñar el pool de distractores
@@ -209,6 +248,8 @@ con la propuesta técnica y su criterio de aceptación. Requiere rediseñar el p
 
 Si decides abordarlo, el orden sugerido es: (1) resolver H3, (2) re-validar los 4 formatos +
 diversidad + rank de la correcta, (3) promover a `02-En-Desarrollo` (OE10).
+
+</details>
 
 **OE6 (modularización) está BLOQUEADO — no reintentar sin desbloquear primero.** Se intentó el
 2026-07-28 extrayendo estos bloques a `SP/R/helpers_diagramas.R` con el mecanismo oficial

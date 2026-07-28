@@ -9,13 +9,11 @@ library(grid)
 
 # ---- Parámetros aleatorios por versión ----
 distancia_total <- sample(seq(80, 150, by = 10), 1)
-# Legibilidad del diagrama: el vector de la respuesta correcta debe ocupar al menos el 25%
-# de la escala global (>= 30 px), o el punto queda pegado al origen y la dirección no se lee.
-# Umbral f=0.25 medido por barrido (f=0.20 -> 24 px; f=0.30 -> 44 px pero pierde 6 de 37
-# combinaciones). Conserva 34/37 combinaciones y 10 distancias distintas. NO bajar sin re-medir.
-f_legibilidad <- 0.25
-avanzadas_validas <- Filter(function(x) x < distancia_total && distancia_total != 2 * x &&
-                              (distancia_total - x) >= f_legibilidad * (distancia_total + x),
+# Legibilidad del diagrama: ya NO se filtra aquí. Se garantiza en la SELECCIÓN de errores (ver
+# bloque "Selección del pool de distractores" más abajo), que exige min(dist)/max(dist) >= 0.25
+# sobre las 4 opciones REALMENTE elegidas — más preciso que filtrar distancia_avanzada a ciegas,
+# porque el conjunto de distractores candidatos ahora varía por versión (pool de 6, se eligen 3).
+avanzadas_validas <- Filter(function(x) x < distancia_total && distancia_total != 2 * x,
                             seq(20, 60, by = 10))
 stopifnot(length(avanzadas_validas) > 0)
 distancia_avanzada <- avanzadas_validas[sample(length(avanzadas_validas), 1)]
@@ -26,11 +24,13 @@ stopifnot(distancia_restante > 0, distancia_restante != distancia_avanzada)
 # ---- Orientación global aleatoria por versión (rompe la predictibilidad del cuadrante) ----
 # El cuadrante donde aparece la respuesta correcta varía entre versiones (NE/NO/SE/SO), de modo
 # que el estudiante NO puede predecir la opción correcta por su posición/orientación (regla #22).
+# th_perp/sign_perp: eje cardinal PERPENDICULAR al eje de referencia (norte/sur -> este/oeste),
+# necesario para el distractor GEO-DES-05 (ángulo medido desde el eje equivocado).
 orientaciones <- list(
-  list(quad = "NE", th_axis = 90,  dir_sign = -1, eje = "norte", lado = "este"),
-  list(quad = "NO", th_axis = 90,  dir_sign =  1, eje = "norte", lado = "oeste"),
-  list(quad = "SE", th_axis = 270, dir_sign =  1, eje = "sur",   lado = "este"),
-  list(quad = "SO", th_axis = 270, dir_sign = -1, eje = "sur",   lado = "oeste")
+  list(quad = "NE", th_axis = 90,  dir_sign = -1, eje = "norte", lado = "este",  th_perp = 0,   sign_perp =  1),
+  list(quad = "NO", th_axis = 90,  dir_sign =  1, eje = "norte", lado = "oeste", th_perp = 180, sign_perp = -1),
+  list(quad = "SE", th_axis = 270, dir_sign =  1, eje = "sur",   lado = "este",  th_perp = 360, sign_perp = -1),
+  list(quad = "SO", th_axis = 270, dir_sign = -1, eje = "sur",   lado = "oeste", th_perp = 180, sign_perp =  1)
 )
 orient <- orientaciones[[sample(length(orientaciones), 1)]]
 # Distractor de dirección: posición REFLEJADA al lado opuesto del MISMO eje (este<->oeste), a la
@@ -116,14 +116,7 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
 
 km <- function(d) paste0(d, " km")
 
-# ---- Generar los 4 diagramas (escala global → longitudes proporcionales y comparables) ----
-escala_px_km <- 120 / (distancia_total + distancia_avanzada)
-dibujar_diagrama("diagrama_correcta.png",  km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
-dibujar_diagrama("diagrama_recorrida.png", km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
-dibujar_diagrama("diagrama_suma.png",      km(distancia_total+distancia_avanzada), distancia_total+distancia_avanzada, escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
-dibujar_diagrama("diagrama_perp.png",      km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, th_axis_espejo,  dir_sign_espejo)
-
-# ---- Pool de errores conceptuales ----
+# ---- Pool de errores conceptuales (6 candidatos; se eligen 3 por versión — ver más abajo) ----
 errores_conceptuales <- list(
   list(
     codigo          = "GEO-DES-01",
@@ -151,6 +144,33 @@ errores_conceptuales <- list(
     causa_raiz       = "Interpretación errónea del sentido del movimiento: \"hacia\" se interpreta como \"en dirección a\" (alejándose) en lugar de \"aproximándose a\".",
     precondicion     = function(params) TRUE,
     calcula          = function(...) paste0("suma (", distancia_total, "+", distancia_avanzada, "=", distancia_total + distancia_avanzada, " km) en vez de resta (", distancia_restante, " km)")
+  ),
+  list(
+    codigo          = "GEO-DES-04",
+    nombre          = "Posición inicial sin actualizar",
+    descripcion_corta = paste0("El avión aparece a ", distancia_total, " km del aeropuerto, la distancia que tenía antes de avanzar."),
+    descripcion_larga = paste0("Se representa la posición inicial (", distancia_total, " km) en lugar de la posición después del desplazamiento. Se identifica correctamente la dirección, pero no se aplica el avance de ", distancia_avanzada, " km, como si el movimiento no hubiera modificado la distancia al aeropuerto."),
+    causa_raiz       = "No se interpreta que desplazarse hacia un punto de referencia cambia la distancia a ese punto. Se copia el dato del enunciado sin operar con él.",
+    precondicion     = function(params) TRUE,
+    calcula          = function(...) paste0("posición inicial sin actualizar (", distancia_total, " km)")
+  ),
+  list(
+    codigo          = "GEO-DES-05",
+    nombre          = "Ángulo medido desde el eje perpendicular",
+    descripcion_corta = paste0("El avión aparece a ", distancia_restante, " km, pero con el ángulo de ", angulo_direccion, "° medido desde el eje ", orient$lado, " en lugar del eje ", orient$eje, "."),
+    descripcion_larga = paste0("La distancia se calcula bien (", distancia_restante, " km), pero la dirección se construye midiendo los ", angulo_direccion, "° desde el eje ", orient$lado, " en vez del eje ", orient$eje, ". Se intercambian los ejes de referencia: \"", angulo_direccion, "° al ", orient$lado, " del ", orient$eje, "\" se lee como si fuera \"", angulo_direccion, "° al ", orient$eje, " del ", orient$lado, "\"."),
+    causa_raiz       = "Confusión en el orden de lectura de una dirección cardinal compuesta. El ángulo se mide desde el eje que se nombra en segundo lugar, no desde el primero.",
+    precondicion     = function(params) params$angulo != 45,
+    calcula          = function(...) paste0("ángulo medido desde el eje ", orient$lado, " en vez de ", orient$eje, " (", angulo_direccion, "°)")
+  ),
+  list(
+    codigo          = "GEO-DES-06",
+    nombre          = "Resta aplicada dos veces",
+    descripcion_corta = paste0("El avión aparece a ", distancia_total - 2 * distancia_avanzada, " km del aeropuerto."),
+    descripcion_larga = paste0("Se resta la distancia recorrida dos veces (", distancia_total, " - ", distancia_avanzada, " - ", distancia_avanzada, " = ", distancia_total - 2 * distancia_avanzada, " km) en lugar de una sola. La operación elegida es la correcta, pero se aplica una vez de más."),
+    causa_raiz       = "Duplicación de la operación al reprocesar el dato. Es un error de control del procedimiento, no de comprensión del concepto: restar es lo correcto, pero se repite.",
+    precondicion     = function(params) params$distancia_avanzada < params$distancia_total / 2 && params$distancia_total != 3 * params$distancia_avanzada,
+    calcula          = function(...) paste0("resta aplicada dos veces (", distancia_total, "-", distancia_avanzada, "-", distancia_avanzada, "=", distancia_total - 2 * distancia_avanzada, " km)")
   )
 )
 
@@ -161,6 +181,96 @@ descripcion_correcta <- paste0(
   "la nueva distancia es ", distancia_total, " - ", distancia_avanzada,
   " = ", distancia_restante, " km en la misma dirección de ", angulo_direccion, "°."
 )
+
+# ---- Selección del pool de distractores (6 candidatos -> 3 elegidos + la correcta) ----
+# GEO-DES-01 (espejo) SIEMPRE está presente. Los otros 2 se sortean entre {02,03,04,05,06},
+# filtrados primero por su precondicion (regla #8, .claude/rules/codigo-rmd.md) y luego por legibilidad +
+# distinción visual de las 4 opciones resultantes. Enumeración exhaustiva de parejas + sample()
+# sobre las válidas, sin repeat/while sin cota (regla #21 Familia 1, familias-soluciones-rmd.md).
+params <- list(
+  angulo             = angulo_direccion,
+  distancia_avanzada = distancia_avanzada,
+  distancia_total    = distancia_total,
+  distancia_restante = distancia_restante
+)
+
+# Tablas código -> (eje de referencia, sentido del ángulo, distancia en km, archivo temporal)
+th_axis_por_codigo <- list(
+  "CORRECTA"   = orient$th_axis, "GEO-DES-01" = th_axis_espejo,  "GEO-DES-02" = orient$th_axis,
+  "GEO-DES-03" = orient$th_axis, "GEO-DES-04" = orient$th_axis,  "GEO-DES-05" = orient$th_perp,
+  "GEO-DES-06" = orient$th_axis
+)
+dir_sign_por_codigo <- list(
+  "CORRECTA"   = orient$dir_sign, "GEO-DES-01" = dir_sign_espejo, "GEO-DES-02" = orient$dir_sign,
+  "GEO-DES-03" = orient$dir_sign, "GEO-DES-04" = orient$dir_sign, "GEO-DES-05" = orient$sign_perp,
+  "GEO-DES-06" = orient$dir_sign
+)
+dist_por_codigo <- list(
+  "CORRECTA"   = distancia_restante,                       "GEO-DES-01" = distancia_restante,
+  "GEO-DES-02" = distancia_avanzada,                       "GEO-DES-03" = distancia_total + distancia_avanzada,
+  "GEO-DES-04" = distancia_total,                          "GEO-DES-05" = distancia_restante,
+  "GEO-DES-06" = distancia_total - 2 * distancia_avanzada
+)
+nombre_temp_por_codigo <- list(
+  "CORRECTA"   = "diagrama_correcta.png",  "GEO-DES-01" = "diagrama_perp.png",
+  "GEO-DES-02" = "diagrama_recorrida.png", "GEO-DES-03" = "diagrama_suma.png",
+  "GEO-DES-04" = "diagrama_total.png",     "GEO-DES-05" = "diagrama_angulo.png",
+  "GEO-DES-06" = "diagrama_dobleresta.png"
+)
+th_efectivo <- function(cod) th_axis_por_codigo[[cod]] + dir_sign_por_codigo[[cod]] * angulo_direccion
+
+# Filtrar candidatos (02-06) por su precondicion declarada en el pool de errores
+precondicion_por_codigo <- setNames(
+  lapply(errores_conceptuales, function(e) e$precondicion),
+  sapply(errores_conceptuales, function(e) e$codigo)
+)
+codigos_candidatos <- c("GEO-DES-02", "GEO-DES-03", "GEO-DES-04", "GEO-DES-05", "GEO-DES-06")
+candidatos_seleccion <- lapply(codigos_candidatos, function(cod) {
+  list(codigo = cod, dist = dist_por_codigo[[cod]], th = th_efectivo(cod))
+})
+aplicables <- Filter(function(cand) {
+  pc <- precondicion_por_codigo[[cand$codigo]]
+  if (is.null(pc)) return(TRUE)
+  isTRUE(pc(params))
+}, candidatos_seleccion)
+stopifnot(length(aplicables) >= 2)
+
+correcta_sel <- list(codigo = "CORRECTA",   dist = dist_por_codigo[["CORRECTA"]],   th = th_efectivo("CORRECTA"))
+espejo_sel   <- list(codigo = "GEO-DES-01", dist = dist_por_codigo[["GEO-DES-01"]], th = th_efectivo("GEO-DES-01"))
+
+# Enumerar TODAS las parejas de candidatos aplicables y quedarse con las VÁLIDAS: distancias
+# positivas, las 4 opciones (correcta + espejo + 2 elegidos) visualmente distintas, y legibles
+# (ratio min/max de distancia >= 0.25; con lienzo de 120 px equivale a un mínimo de 30 px).
+RATIO_MIN_LEGIBILIDAD <- 0.25
+pares <- combn(length(aplicables), 2, simplify = FALSE)
+pares_validos <- Filter(function(p) {
+  ops <- c(list(correcta_sel, espejo_sel), aplicables[p])
+  d <- sapply(ops, function(x) x$dist)
+  t <- sapply(ops, function(x) round(x$th %% 360, 6))
+  if (any(d <= 0)) return(FALSE)
+  if (length(unique(paste(d, t, sep = "@"))) != 4) return(FALSE)
+  (min(d) / max(d)) >= RATIO_MIN_LEGIBILIDAD
+}, pares)
+stopifnot(length(pares_validos) > 0)
+
+par_elegido     <- pares_validos[[sample(length(pares_validos), 1)]]
+seleccionados   <- aplicables[par_elegido]
+codigos_extra   <- sapply(seleccionados, function(x) x$codigo)
+codigos_finales <- c("CORRECTA", "GEO-DES-01", codigos_extra)
+
+# ---- Escala DESACOPLADA de cualquier distractor concreto: depende de las 4 opciones elegidas ----
+# (antes derivaba de distancia_total+distancia_avanzada, lo que fijaba GEO-DES-03 en 120 px
+# exactos siempre por identidad algebraica — ver docs/BACKLOG.md P0.1).
+distancias_finales <- sapply(codigos_finales, function(cod) dist_por_codigo[[cod]])
+escala_px_km <- 120 / max(distancias_finales)
+
+# ---- Generar los 4 diagramas seleccionados en esta versión (dependen de la selección) ----
+for (cod in codigos_finales) {
+  dibujar_diagrama(
+    nombre_temp_por_codigo[[cod]], km(dist_por_codigo[[cod]]), dist_por_codigo[[cod]], escala_px_km,
+    angulo_direccion, th_axis_por_codigo[[cod]], dir_sign_por_codigo[[cod]]
+  )
+}
 
 # ---- Pool de contextos narrativos (8 plantillas, al menos 5 tipos diferentes) ----
 contextos <- list(
@@ -324,42 +434,29 @@ protagonista <- sample(ctx$protagonistas, 1)
 enunciado_contexto <- ctx$plantilla(protagonista, n)
 
 # ---- Crear opciones con diagramas ----
-# Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios. Los nombres de
-# archivo listados abajo son TEMPORALES (solo sirven para vincular tipo/código antes de mezclar);
+# Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios, y el conjunto
+# de 4 opciones (CORRECTA + 3 errores) también varía por versión: GEO-DES-01 (espejo) siempre está
+# presente, y los otros 2 se sortean entre {02,03,04,05,06} (ver bloque de selección más arriba).
+# Los nombres de archivo son TEMPORALES (solo sirven para vincular tipo/código antes de mezclar);
 # tras la mezcla y el mapeo a letras se RENOMBRAN a diagrama_a/b/c/d.png, nombres neutrales que no
 # revelan el rol de la opción (regla .claude/rules/graficos-como-opciones.md — en Moodle el src
 # al alumno vía @@PLUGINFILE@@/nombre.png, así que el nombre original filtraría la respuesta):
-# diagrama_perp.png      (temporal) → avión a distancia_restante km en dirección reflejada (lado opuesto del eje, error GEO-DES-01)
-# diagrama_recorrida.png (temporal) → avión a distancia_avanzada km a angulo_direccion° (error GEO-DES-02)
-# diagrama_correcta.png  (temporal) → avión a distancia_restante km a angulo_direccion° (CORRECTA)
-# diagrama_suma.png      (temporal) → avión a distancia_total+distancia_avanzada km a angulo_direccion° (error GEO-DES-03)
+# diagrama_correcta.png   (temporal) → avión a distancia_restante km en dirección correcta (CORRECTA)
+# diagrama_perp.png       (temporal) → avión a distancia_restante km en dirección reflejada (GEO-DES-01)
+# diagrama_recorrida.png  (temporal) → avión a distancia_avanzada km en dirección correcta (GEO-DES-02)
+# diagrama_suma.png       (temporal) → avión a distancia_total+distancia_avanzada km (GEO-DES-03)
+# diagrama_total.png      (temporal) → avión a distancia_total km, posición inicial sin actualizar (GEO-DES-04)
+# diagrama_angulo.png     (temporal) → avión a distancia_restante km, ángulo desde el eje perpendicular (GEO-DES-05)
+# diagrama_dobleresta.png (temporal) → avión a distancia_total-2*distancia_avanzada km (GEO-DES-06)
 
-opciones_pre_mezcla <- list(
-  list(
-    archivo   = "diagrama_perp.png",
-    tipo      = "error",
-    codigo    = "GEO-DES-01",
-    descrip   = errores_conceptuales[[1]]$descripcion_corta
-  ),
-  list(
-    archivo   = "diagrama_recorrida.png",
-    tipo      = "error",
-    codigo    = "GEO-DES-02",
-    descrip   = errores_conceptuales[[2]]$descripcion_corta
-  ),
-  list(
-    archivo   = "diagrama_correcta.png",
-    tipo      = "correcta",
-    codigo    = "CORRECTA",
-    descrip   = descripcion_correcta
-  ),
-  list(
-    archivo   = "diagrama_suma.png",
-    tipo      = "error",
-    codigo    = "GEO-DES-03",
-    descrip   = errores_conceptuales[[3]]$descripcion_corta
-  )
-)
+opciones_pre_mezcla <- lapply(codigos_finales, function(cod) {
+  if (cod == "CORRECTA") {
+    list(archivo = nombre_temp_por_codigo[[cod]], tipo = "correcta", codigo = "CORRECTA", descrip = descripcion_correcta)
+  } else {
+    err <- errores_conceptuales[[which(sapply(errores_conceptuales, function(e) e$codigo == cod))]]
+    list(archivo = nombre_temp_por_codigo[[cod]], tipo = "error", codigo = cod, descrip = err$descripcion_corta)
+  }
+})
 
 # Mezclar internamente (sample interno + exshuffle:FALSE)
 opciones_mezcladas <- sample(opciones_pre_mezcla)
@@ -405,7 +502,7 @@ test_that("Exactamente una opción marcada como correcta", {
   expect_equal(sum(solucion), 1)
 })
 
-test_that("Las 4 opciones son diferentes entre sí", {
+test_that("Las 4 opciones son diferentes entre sí (archivo neutral)", {
   archivos <- sapply(opciones_mezcladas, function(x) x$archivo)
   expect_equal(length(unique(archivos)), 4)
 })
@@ -414,10 +511,19 @@ test_that("La opción correcta es la de tipo 'correcta'", {
   expect_equal(opciones_mezcladas[[letra_correcta]]$tipo, "correcta")
 })
 
-test_that("Las 4 opciones-diagrama son distintas (distancia o dirección)", {
-  fps <- c(paste(distancia_restante, orient$quad), paste(distancia_avanzada, orient$quad),
-           paste(distancia_total+distancia_avanzada, orient$quad), paste(distancia_restante, "ESPEJO"))
+test_that("Las 4 opciones-diagrama elegidas son distintas (distancia y dirección)", {
+  fps <- sapply(codigos_finales, function(cod) {
+    paste(round(dist_por_codigo[[cod]], 6), round(th_efectivo(cod) %% 360, 6))
+  })
   expect_equal(length(unique(fps)), 4)
+})
+
+test_that("Legibilidad: la opción más corta mide al menos 25% de la más larga", {
+  px <- sapply(codigos_finales, function(cod) dist_por_codigo[[cod]] * escala_px_km)
+  expect_true(min(px) / max(px) >= RATIO_MIN_LEGIBILIDAD - 1e-9)
+})
+
+test_that("Los 4 PNG existen tras el renombrado a nombres neutrales", {
   # Nombres neutrales post-renombrado (diagrama_a/b/c/d.png), no los temporales pre-mezcla
   expect_true(all(file.exists(sapply(opciones_mezcladas, function(x) x$archivo))))
 })
