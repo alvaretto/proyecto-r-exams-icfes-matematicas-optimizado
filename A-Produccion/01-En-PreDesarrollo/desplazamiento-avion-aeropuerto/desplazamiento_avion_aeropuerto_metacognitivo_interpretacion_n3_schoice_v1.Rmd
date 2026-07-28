@@ -8,8 +8,12 @@ output:
 library(testthat)
 
 # ---- Semilla por versión ----
-seed_global <- as.integer(Sys.time()) %% 100000 + sample(1:99999, 1)
-set.seed(seed_global)
+# NO reseedear aquí. R-exams ya fija la semilla de cada versión antes de evaluar este chunk,
+# y esa semilla es lo que hace reproducible una versión concreta. Un `set.seed()` derivado del
+# reloj (p. ej. `as.integer(Sys.time())`) la descarta y rompe toda validación multi-semilla:
+# el validador fija la semilla N y obtiene un ejercicio distinto en cada corrida, así que un
+# fallo detectado en la semilla N no se puede volver a provocar para corregirlo. Ver H6 en
+# HANDOFF.md (retirado el 2026-07-28).
 
 library(grid)
 

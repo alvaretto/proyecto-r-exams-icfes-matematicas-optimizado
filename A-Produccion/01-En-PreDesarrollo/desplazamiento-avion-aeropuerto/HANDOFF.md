@@ -12,8 +12,8 @@
 | **Tipo** | SCHOICE metacognitivo con **opciones gráficas** (4 PNG generados dinámicamente) |
 | **Origen ICFES** | `MAT-2026-1-020` (cuadernillo 2026-1, pregunta 114) |
 | **Rama / remote** | `main` → `git@github.com:alvaretto/proyecto-r-exams-icfes-matematicas-optimizado.git` |
-| **Última sesión de trabajo** | 2026-06-28 (commits `287afc01`, `779d7383`) |
-| **Este handoff** | 2026-07-28 |
+| **Última sesión de trabajo** | 2026-07-28 (commits `08b0130b`, `1e5482c9`, `defe2f24`) |
+| **Este handoff** | 2026-07-28 (actualizado al cierre de la sesión de la tarde) |
 
 ---
 
@@ -42,17 +42,29 @@ documentados (`GEO-DES-01/02/03`), no ruido numérico.
 | **OE7** | **Documentar**: README, Syllabus, Roadmap, Backlog, BluePrint | ✅ HECHO | `README.md` + `docs/{SYLLABUS,ROADMAP,BACKLOG,BLUEPRINT}.md` (2026-07-28) |
 | **OE8** | **Cablear orquestadores**: propagar reglas #22 / Errores 23-24 al wrapper de comando | ✅ HECHO | Los 4 wrappers/agentes + Incidente "distractor extremo por construcción" + pre-flight #14/#18 |
 | **OE9** | `.claude/` local del subproyecto | ✅ HECHO | `.claude/CLAUDE.md` + `.claude/rules/diagramas-vectoriales.md` + `.gitignore` |
-| **OE10** | Promover a `02-En-Desarrollo/` | ⏳ PENDIENTE | Decisión: **no** en este pase; re-validar tras el refactor |
+| **OE10** | Promover a `02-En-Desarrollo/` | ⏳ PENDIENTE | **Criterio fijado por el usuario el 2026-07-28 (decisión D6): la promoción a `02-En-Desarrollo` NO depende de la validación técnica, sino de haber testeado el ejercicio en campo con estudiantes.** La re-validación técnica ya está hecha (ver §3) y no habilita por sí sola el movimiento |
 | **OE11** | Validación Nivel 3 (aula, estudiantes reales) → `03-En-Produccion/` | ⏳ FUTURO | Requisito de `/promover-ejercicio` |
 
 ---
 
 ## 3. Estado real del ejercicio (verificado 2026-07-28)
 
-`ejercicio_state.json` declara los **11 pasos completados** con `aprobacion_usuario` el
-2026-06-27T21:03. **Pero hay una segunda ronda de fixes del 2026-06-28 que ese estado NO
-refleja** (Errores 23 y 24). Al retomar, considera el paso `validar_diversidad` y
-`coherencias_5` como *pendientes de re-confirmación*, no como firmes.
+`ejercicio_state.json` declara los **11 pasos completados**. Los pasos
+`renderizado_4_formatos`, `coherencias_5` y `validar_diversidad` fueron **re-confirmados el
+2026-07-28** (commit `defe2f24`), de modo que ya reflejan los fixes de los Errores 23/24, H1
+(fuga en Moodle), H2 (diagramas degenerados) y H3 (distractor extremo).
+
+### Re-validación del 2026-07-28 (evidencia)
+
+| Verificación | Resultado |
+|---|---|
+| `validar_diversidad_sustantiva.R --n 40` | **PASS** — 35 valores únicos, 0 errores, 0 indeterminadas |
+| Renderizado HTML / PDF / DOCX / NOPS / **Moodle** | **5/5 OK** |
+| H1 — nombres de archivo en el XML de Moodle | cerrada: solo `diagrama_a/b/c/d.png` |
+| H3 — rank de longitud de la correcta (40 versiones, medición independiente) | rank 1 en 8/40 (20 %), rank 2 en 24/40, rank 3 en 8/40 → sin extremo sistemático |
+| Legibilidad: longitud en píxeles de la opción más corta | mediana 55 px; toca el piso de 30 px en **3/40 versiones (7,5 %)** |
+| Inspección visual FASE 2B (2 semillas × 4 opciones, ampliadas ×2) | sin solapes de etiqueta; ejes, rótulos y arcos coherentes con el enunciado |
+| `tests/run_all_tests.R` | **20/20 suites en verde** (683 s) |
 
 ### Anatomía del `.Rmd` (561 líneas, 7 chunks)
 
@@ -95,6 +107,7 @@ letter-independence: `letra_correcta` solo se usa internamente, nunca se emite a
 | D2 | **Crear `SP/.claude/` local** | Subproyecto autocontenido sin tocar la infraestructura protegida de `RR/.claude/` |
 | D3 | Ruido → **`SP/_archivo/`** (mover, no borrar) | Reversible; nada se pierde |
 | D4 | **NO promover** a `02-En-Desarrollo` en este pase | El refactor invalida parte de la validación previa; re-validar primero |
+| D6 | **La promoción a `02-En-Desarrollo` exige prueba de campo con estudiantes** (2026-07-28) | Decisión explícita del usuario. La validación técnica (renderizado, diversidad, coherencias, tests) es condición necesaria pero **no suficiente**: el ejercicio se queda en `01-En-PreDesarrollo` hasta que se aplique en aula. Deja obsoleta la lectura previa de que OE10 se habilitaba al terminar la re-validación |
 | D5 | **`Semillero*.R` y `pcielo*.tex` NO son ruido** | ⚠️ **Corrección sobre el plan inicial.** `SemilleroUnico_v2.R` referencia el `.Rmd` y usa `template = "solpcielo"` / `"pcielo.tex"` en líneas **activas** (70, 83). Archivarlos rompe la exportación a PDF/Moodle. Son **código fuente a trackear**, y sus rutas son relativas al directorio del ejercicio → **no moverlos** |
 
 ---
@@ -111,6 +124,9 @@ letter-independence: `letra_correcta` solo se usa internamente, nunca se emite a
 | **H1** | **Fuga de la respuesta por nombre de archivo.** `exams2moodle` emite `src="@@PLUGINFILE@@/diagrama_correcta.png"`. Un estudiante que inspeccione el HTML en Moodle ve la respuesta sin razonar. En HTML puro NO ocurre (R-exams incrusta base64); el canal afectado es **Moodle**, que es el destino real (`SemilleroMoodle_v2.R`). Viola `graficos-como-opciones.md`, que exige nombres neutrales `diagrama_a.png`. | Adversario A + verificación directa del XML | 🔧 **CORREGIDO 2026-07-28** (renombrado neutral post-mezcla) |
 | **H2** | **Diagramas degenerados.** Con `dt=80, da=60` → `dr=20` y `escala=120/140`, el vector correcto mide **17,1 px**: el punto queda sobre el origen y la etiqueta flota a 58 px. Afecta a **2/37 combinaciones (5,4 %)**; el adversario midió 4/60 (6,7 %) por muestreo. | Barrido visual propio + Adversario A | 🔧 **CORREGIDO 2026-07-28** (umbral `f=0.25`, mín. 30 px) |
 | **H3** | **El distractor `GEO-DES-03` (suma) es siempre el vector más largo.** No es estadístico sino **algebraico**: `escala_px_km = 120/(dt+da)` ⟹ `Lpx_suma ≡ 120` px exactos; y `dt+da > dr` y `> da` siempre. La correcta **nunca** ocupa el rank 1 (rank 2 en 168/200, rank 3 en 32/200). Enumeración exhaustiva: 37/37. Atajo: *"la más larga nunca es la correcta"* descarta una opción sin razonar → regla #22 §P5. | Medición propia + Adversario A + Adversario B | ✅ **RESUELTO 2026-07-28** — pool ampliado a 6 errores (1 fijo + 2 sorteados de 5) + escala desacoplada. Ver §5.2 |
+| **H5** | **La lista del «Procedimiento correcto» reiniciaba la numeración.** La ecuación en display estaba a columna 0 dentro de la lista ordenada; pandoc cerraba la enumeración y abría otra, así que en PDF el estudiante leía «(a) Dirección final» justo después de «(d) Nueva distancia». | Inspección visual FASE 2B del PDF | 🔧 **CORREGIDO 2026-07-28** (`defe2f24`) — ecuación indentada 3 espacios dentro del ítem 4; verificado (a)→(e) |
+| **H6** | **El ejercicio ignora la semilla de R-exams.** Líneas 11-12: `seed_global <- as.integer(Sys.time()) %% 100000 + sample(1:99999,1)` seguido de `set.seed(seed_global)`. Verificado empíricamente: `set.seed(42)` dos veces produce `dt=130,ang=45` y luego `dt=140,ang=55`. Consecuencia: **ninguna validación multi-semilla es reproducible aquí** — un fallo visto en la semilla N no se puede volver a provocar, y el PASS de diversidad lo garantiza en parte el reloj. No es exclusivo: 11 `.Rmd` del repo usan el patrón, 2 ya en `03-En-Produccion`. Ninguna otra línea usa `seed_global` (quitarlo = 2 líneas). | Prueba empírica propia (misma semilla, dos corridas) | 🔧 **CORREGIDO 2026-07-28** — reseed retirado por decisión del usuario; en su lugar queda un comentario que explica por qué no se debe reintroducir. Verificado: `set.seed(42)` ahora da el mismo ejercicio en corridas sucesivas; diversidad **PASS 39/40 valores únicos** (subió desde 35/40); 5 formatos OK; rank de la correcta 10/22/8 (sin regresión) |
+| **H7** | **Piso de legibilidad de 30 px, apretado.** En 3/40 versiones (7,5 %) la opción más corta cae exactamente en el piso `f=0.25`; ahí el arco y la etiqueta del ángulo sobresalen del propio vector (radio de etiqueta ≥50 px > longitud del vector). Legible, pero visualmente estrecho. Subir `f` lo suavizaría a costa de reducir el espacio de combinaciones válidas. | Medición propia (40 versiones) + inspección visual | ⏳ BACKLOG — observación, no bloqueante |
 | **H4** | **El rótulo numérico permite descartar 2 de 4.** Cada diagrama muestra su distancia ("20 km"). El estudiante calcula `dt−da` y descarta los dos cuyo rótulo no coincide, quedando solo correcta vs. espejo. Reduce la parte del ítem que exige razonar la dirección. | Adversario A | ⏳ BACKLOG — decisión de diseño pedagógico |
 
 ### 5.2 — Resolución de H3 (2026-07-28)
@@ -233,9 +249,20 @@ Rscript ../../../tests/testthat/test_infraestructura_claude.R   # invariantes I-
 
 ### Siguiente paso concreto
 
-**H3 quedó RESUELTO el 2026-07-28** (ver §5.2). El siguiente paso natural es **OE10: promover a
-`02-En-Desarrollo`**, re-confirmando antes los pasos `validar_diversidad` y `coherencias_5` de
-`ejercicio_state.json`, que siguen reflejando la validación previa a los cambios de hoy.
+**El ejercicio está técnicamente validado y se queda en `01-En-PreDesarrollo`.** La
+re-validación completa está hecha (§3) y H3/H5 quedaron resueltos. Por decisión D6, lo único que
+habilita OE10 es la **prueba de campo con estudiantes** — no hay más trabajo técnico que sea
+prerrequisito del movimiento.
+
+Al retomar, quedan dos cosas abiertas, ninguna bloqueante y ninguna técnica:
+
+1. **H7 — piso de 30 px**: la opción más corta toca el piso en ~10 % de las versiones y ahí el
+   diagrama queda visualmente estrecho. Subir `f` por encima de 0.25 lo suaviza a costa de
+   reducir el espacio de combinaciones válidas de distractores.
+2. **H4 — el rótulo numérico permite descartar 2 de 4**: decisión de diseño pedagógico (si se
+   quita el rótulo de distancia, el ítem exige estimar la magnitud a ojo).
+
+Ambas son decisiones de diseño, no defectos. El siguiente hito real es la **prueba de campo**.
 
 <details>
 <summary>Contexto histórico de H3 (resuelto)</summary>
