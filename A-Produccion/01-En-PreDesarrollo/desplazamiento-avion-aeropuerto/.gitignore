@@ -1,0 +1,56 @@
+# =============================================================================
+# .gitignore local — subproyecto desplazamiento-avion-aeropuerto
+# =============================================================================
+# Este archivo es ADITIVO al .gitignore del repositorio raíz (RR/.gitignore), que ya cubre
+# patrones genéricos (**/output_*/, *.html, *.pdf bajo 01-En-PreDesarrollo/, etc.). Se declara
+# aquí de forma explícita y local para que las reglas de este subproyecto sean auto-contenidas
+# y no dependan de recordar el .gitignore raíz al revisar este directorio.
+#
+# Regla de fondo (regla #22 del repo raíz, diversidad sustantiva — originada en este mismo
+# ejercicio): los artefactos regenerables NUNCA deben commitearse como si fueran fuente, porque
+# ocultan si el generador (data_generation en el .Rmd) realmente produce contenido distinto por
+# versión. Ver .claude/CLAUDE.md → "Particularidades operativas", punto 6.
+# =============================================================================
+
+# Diagramas PNG de opciones — regenerados por dibujar_diagrama() en cada render.
+# NUNCA editar a mano ni commitear: si su contenido no cambia entre semillas es un bug
+# (diversidad cosmética), no algo a preservar en el historial.
+diagrama_*.png
+
+# Salidas de renderizado por formato — se regeneran con exams2html/pdf/pandoc/nops.
+output_html/
+output_pdf/
+output_docx/
+output_nops/
+
+# Carpeta de material archivado (ruido movido, no borrado — ver HANDOFF.md decisión D3).
+# Reversible por diseño, pero no pertenece al historial de commits del ejercicio activo.
+_archivo/
+
+# Objetos R serializados temporales (si se generan durante debugging/validación manual).
+*.rds
+
+# -----------------------------------------------------------------------------------------
+# EXCEPCIÓN NECESARIA: el .gitignore del repositorio raíz ignora *.pdf bajo 01-En-PreDesarrollo/
+# (RR/.gitignore línea ~463, `A-Produccion/01-En-PreDesarrollo/**/*.pdf`). output_tikz_v1.pdf es
+# evidencia del Flujo B (versión TikZ generada y evaluada), no un output de renderizado del
+# ejercicio final — se re-incluye explícitamente. No tocar RR/.gitignore para resolver esto: la
+# excepción vive aquí, en el .gitignore más específico (mayor precedencia).
+!output_tikz_v1.pdf
+
+# -----------------------------------------------------------------------------------------
+# NO IGNORAR (documentado explícitamente para evitar que un patrón futuro los capture por
+# accidente — estos son fuente activa o evidencia del workflow, ver HANDOFF.md y CLAUDE.md):
+#
+#   - el .Rmd del ejercicio
+#   - HANDOFF.md
+#   - docs/
+#   - .claude/ (este ecosistema local)
+#   - Semillero*.R          (SemilleroUnico_v2.R, SemilleroCloze.R, SemilleroMoodle_v2.R)
+#   - *.tex                 (pcielo.tex, pcielo_nosol.tex, solpcielo.tex — plantillas activas)
+#   - referencia_original.png (insumo del Flujo B, imagen fuente del cuadernillo ICFES)
+#   - ejercicio_state.json  (estado persistente del workflow, regla #16 del repo raíz)
+#   - output_tikz_v1.*      (evidencia del Flujo B: versión TikZ generada y evaluada)
+#   - output_python_v1.py   (evidencia del Flujo B: versión Python generada y evaluada)
+#   - output_r_v1.R         (evidencia del Flujo B: versión R generada y evaluada)
+# -----------------------------------------------------------------------------------------

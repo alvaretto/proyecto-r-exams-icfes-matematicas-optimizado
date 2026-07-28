@@ -9,8 +9,15 @@ library(grid)
 
 # ---- Parámetros aleatorios por versión ----
 distancia_total <- sample(seq(80, 150, by = 10), 1)
-avanzadas_validas <- Filter(function(x) x < distancia_total && distancia_total != 2 * x,
+# Legibilidad del diagrama: el vector de la respuesta correcta debe ocupar al menos el 25%
+# de la escala global (>= 30 px), o el punto queda pegado al origen y la dirección no se lee.
+# Umbral f=0.25 medido por barrido (f=0.20 -> 24 px; f=0.30 -> 44 px pero pierde 6 de 37
+# combinaciones). Conserva 34/37 combinaciones y 10 distancias distintas. NO bajar sin re-medir.
+f_legibilidad <- 0.25
+avanzadas_validas <- Filter(function(x) x < distancia_total && distancia_total != 2 * x &&
+                              (distancia_total - x) >= f_legibilidad * (distancia_total + x),
                             seq(20, 60, by = 10))
+stopifnot(length(avanzadas_validas) > 0)
 distancia_avanzada <- avanzadas_validas[sample(length(avanzadas_validas), 1)]
 angulo_direccion <- sample(seq(30, 70, by = 5), 1)
 distancia_restante <- distancia_total - distancia_avanzada
@@ -35,6 +42,14 @@ lado_espejo     <- if (orient$lado == "este") "oeste" else "este"
 dir_desc <- paste0(angulo_direccion, "° al ", orient$lado, " del ", orient$eje)
 
 # ---- Función de dibujo de un diagrama individual (sin letra, centrado) ----
+# NOTA DE DISEÑO (2026-07-28): esta función se mantiene DENTRO del chunk a propósito.
+# Se intentó extraerla a R/helpers_diagramas.R con el mecanismo oficial include_supplement()
+# + source(), y aunque los 5 formatos renderizan bien, ROMPE el validador de la regla #22:
+# validar_diversidad_sustantiva.R hace setwd() a un tempdir y evalúa el chunk AISLADO, fuera
+# del pipeline de R/exams, donde include_supplement() no tiene contexto y falla (40/40 semillas
+# con error -> WARN_DIV_INDET). La auto-contención del ejercicio es un requisito del ecosistema
+# de validación, no una preferencia de estilo. Ver docs/BACKLOG.md (ítem de modularización) y
+# .claude/docs/AUTOCONTENCION_REXAMS.md.
 .cols <- list(slate800 = "#1E293B", slate600 = "#475569", teal = "#0F766E", orange = "#EA580C")
 dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angulo, th_axis, dir_sign) {
   # Orientación en convención matemática (eje +x = 0°, norte = 90°, sur = 270°): la línea forma el
@@ -90,14 +105,19 @@ dibujar_diagrama <- function(archivo, etiqueta_dist, dist_km, escala_px_km, angu
   lx <- cx + rtext*dx; ly <- cy + rtext*dy
   if (dy < 0) ly <- min(ly, cy - 32) else ly <- max(ly, cy + 30)  # no cruzar el eje E-O si el vector es casi horizontal
   offx <- if (dx >= 0) 13 else -13; jus <- if (dx >= 0) "left" else "right"
+  if (rtext - Lpx > 15) {   # la etiqueta se separó del marcador: guía punteada para no engañar
+    grid.lines(unit(c(ex, lx), "native"), unit(c(ey, ly), "native"),
+               gp = gpar(col = .cols$slate600, lwd = 0.6, lty = "dotted"))
+  }
   tx("Avión", lx+offx, ly+15, 13, .cols$slate600, jus)
   tx(etiqueta_dist, lx+offx, ly-6, 14, .cols$teal, jus, 2)
   popViewport()
 }
 
+km <- function(d) paste0(d, " km")
+
 # ---- Generar los 4 diagramas (escala global → longitudes proporcionales y comparables) ----
 escala_px_km <- 120 / (distancia_total + distancia_avanzada)
-km <- function(d) paste0(d, " km")
 dibujar_diagrama("diagrama_correcta.png",  km(distancia_restante),                distancia_restante,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
 dibujar_diagrama("diagrama_recorrida.png", km(distancia_avanzada),                distancia_avanzada,                escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
 dibujar_diagrama("diagrama_suma.png",      km(distancia_total+distancia_avanzada), distancia_total+distancia_avanzada, escala_px_km, angulo_direccion, orient$th_axis,  orient$dir_sign)
@@ -304,11 +324,15 @@ protagonista <- sample(ctx$protagonistas, 1)
 enunciado_contexto <- ctx$plantilla(protagonista, n)
 
 # ---- Crear opciones con diagramas ----
-# Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios:
-# diagrama_perp.png     → avión a distancia_restante km en dirección reflejada (lado opuesto del eje, error GEO-DES-01)
-# diagrama_recorrida.png → avión a distancia_avanzada km a angulo_direccion° (error GEO-DES-02)
-# diagrama_correcta.png  → avión a distancia_restante km a angulo_direccion° (CORRECTA)
-# diagrama_suma.png      → avión a distancia_total+distancia_avanzada km a angulo_direccion° (error GEO-DES-03)
+# Los diagramas se generan dinámicamente en cada versión con parámetros aleatorios. Los nombres de
+# archivo listados abajo son TEMPORALES (solo sirven para vincular tipo/código antes de mezclar);
+# tras la mezcla y el mapeo a letras se RENOMBRAN a diagrama_a/b/c/d.png, nombres neutrales que no
+# revelan el rol de la opción (regla .claude/rules/graficos-como-opciones.md — en Moodle el src
+# al alumno vía @@PLUGINFILE@@/nombre.png, así que el nombre original filtraría la respuesta):
+# diagrama_perp.png      (temporal) → avión a distancia_restante km en dirección reflejada (lado opuesto del eje, error GEO-DES-01)
+# diagrama_recorrida.png (temporal) → avión a distancia_avanzada km a angulo_direccion° (error GEO-DES-02)
+# diagrama_correcta.png  (temporal) → avión a distancia_restante km a angulo_direccion° (CORRECTA)
+# diagrama_suma.png      (temporal) → avión a distancia_total+distancia_avanzada km a angulo_direccion° (error GEO-DES-03)
 
 opciones_pre_mezcla <- list(
   list(
@@ -352,6 +376,16 @@ solucion[indice_correcto] <- 1
 letras <- c("A", "B", "C", "D")
 names(opciones_mezcladas) <- letras
 
+# Renombrar a nombres neutrales POST-mezcla: el nombre del archivo no debe revelar el rol
+# de la opción (regla .claude/rules/graficos-como-opciones.md). En Moodle el src queda expuesto.
+for (l in letras) {
+  archivo_neutral <- paste0("diagrama_", tolower(l), ".png")
+  if (file.exists(opciones_mezcladas[[l]]$archivo)) {
+    file.rename(opciones_mezcladas[[l]]$archivo, archivo_neutral)
+  }
+  opciones_mezcladas[[l]]$archivo <- archivo_neutral
+}
+
 # Identificar qué letra corresponde a la respuesta correcta (solo para uso interno)
 letra_correcta <- letras[indice_correcto]
 
@@ -384,7 +418,8 @@ test_that("Las 4 opciones-diagrama son distintas (distancia o dirección)", {
   fps <- c(paste(distancia_restante, orient$quad), paste(distancia_avanzada, orient$quad),
            paste(distancia_total+distancia_avanzada, orient$quad), paste(distancia_restante, "ESPEJO"))
   expect_equal(length(unique(fps)), 4)
-  expect_true(all(file.exists(c("diagrama_correcta.png","diagrama_recorrida.png","diagrama_suma.png","diagrama_perp.png"))))
+  # Nombres neutrales post-renombrado (diagrama_a/b/c/d.png), no los temporales pre-mezcla
+  expect_true(all(file.exists(sapply(opciones_mezcladas, function(x) x$archivo))))
 })
 ```
 

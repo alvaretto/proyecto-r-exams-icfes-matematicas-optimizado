@@ -11,9 +11,9 @@
       "resultado": null,
       "competencia": "Interpretacion y Representacion",
       "componente": "Geometrico-Metrico",
-      "nivel": 2,
-      "dok": 2,
-      "bloom": "Comprender",
+      "nivel": 3,
+      "dok": 3,
+      "bloom": "Analizar",
       "solo": "Relacional"
     },
     "flujo_b": {
