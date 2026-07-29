@@ -15,6 +15,9 @@
 | 2026-07-01 | Los 11 pasos del workflow marcados completos, incluida `aprobacion_usuario` | `ejercicio_state.json` |
 | *(sin commitear)* | Consolidación de 8 chunks → 5 y normalización de tildes | `git diff` al inicio de 2026-07-28 |
 | 2026-07-28 | Re-validación completa, enumeración exhaustiva del espacio de versiones, documentación del subproyecto, `.claude/` local, auditoría adversarial | Esta sesión |
+| 2026-07-28 | P0.1 resuelto: `GEO-COORD-03` (diagonal, eliminable por su forma) sustituido por `GEO-COORD-04` (desplazamiento de una unidad) | `docs/BACKLOG.md` P0.1 |
+| 2026-07-28 | P2.5 resuelto: Solution ampliada con las 6 subsecciones canónicas (+ *Propiedades del concepto* y *Caso específico*) | `docs/BACKLOG.md` P2.5 |
+| 2026-07-28 | P2.7 resuelto: retiradas las 4 exclusiones de `y_pool` (una de ellas justificada de forma falsa); espacio de versiones 222 → 374 | `docs/BACKLOG.md` P2.7 |
 
 ---
 
@@ -27,8 +30,8 @@ se persisten en la memoria del proyecto.
 | OE | Enunciado | Estado | Evidencia |
 |---|---|---|---|
 | **OE1** | Ejercicio SCHOICE N2 que renderiza en los 4 formatos canónicos + Moodle | ✅ | `Rscript verificar_render.R` → 5/5 OK |
-| **OE2** | Corrección matemática de la clave en **todo** el espacio de versiones, no solo en semillas muestreadas | ✅ | Enumeración exhaustiva: 0/222 desajustes del bounding box |
-| **OE3** | Diversidad sustantiva (regla #22): la respuesta correcta varía entre versiones | ✅ | `validar_diversidad_sustantiva.R --n 40` → PASS (36 valores únicos); 222 preguntas distintas por enumeración |
+| **OE2** | Corrección matemática de la clave en **todo** el espacio de versiones, no solo en semillas muestreadas | ✅ | Enumeración exhaustiva: 0/374 desajustes del bounding box (0/222 antes de P2.7) |
+| **OE3** | Diversidad sustantiva (regla #22): la respuesta correcta varía entre versiones | ✅ | `validar_diversidad_sustantiva.R --n 40` → PASS (**38** valores únicos, antes 36); **374** preguntas distintas por enumeración (antes 222, tras P2.7) |
 | **OE4** | Cumplimiento de las reglas #18, #19, #20, #21 | ✅ | grep verificado: `{width=80%}`, 0 referencias a letra en Solution, guard `\newcounter{none}` presente, helpers Familia 1/5 |
 | **OE5** | Coherencia matemática y semántica (Niveles 1-5, Capas A-D) | ✅ | `validar_coherencia_matematica.R` → APROBADO, 0 errores |
 | **OE6** | Documentación completa del subproyecto (README, SYLLABUS, ROADMAP, BACKLOG, BLUEPRINT, HANDOFF) | ✅ | Esta sesión |
@@ -53,12 +56,13 @@ Criterios que deben cumplirse **todos** antes de mover el subproyecto:
 - [x] `Rscript tests/run_all_tests.R` del repo raíz en verde (20 suites, 0 fallidas, 2026-07-28).
 - [x] Auditoría adversarial (adversario + detractor + auditor visual) sin objeciones
       CRÍTICAS/ALTAS abiertas — **OE9**. El bloqueante P0.1 quedó resuelto.
-- [x] Las 4 opciones comparten estructura 2×2 en las 222 versiones (criterio de cierre de P0.1):
-      222/222 en las cuatro, verificado por enumeración exhaustiva.
+- [x] Las 4 opciones comparten estructura 2×2 en las 374 versiones (criterio de cierre de P0.1):
+      374/374 en las cuatro (222/222 en el espacio vigente al resolver P0.1, re-confirmado tras
+      ampliar el espacio en P2.7), verificado por enumeración exhaustiva.
 
-**Todos los criterios están cumplidos al 2026-07-28.** La promoción a `02-En-Desarrollo/` puede
-ejecutarse; queda a criterio del responsable si antes se resuelve el residual visual de P1.1
-(silueta a `ratio 1.5`, no bloqueante) y P2.5.
+**Todos los criterios están cumplidos al 2026-07-28** (P2.5 y P2.7 también resueltos en esta
+sesión). La promoción a `02-En-Desarrollo/` puede ejecutarse; queda a criterio del responsable si
+antes se resuelve el residual visual de P1.1 (silueta a `ratio 1.5`, no bloqueante).
 
 **Comando de promoción**: el movimiento entre `01-` y `02-` es un `git mv` del directorio completo;
 tras moverlo hay que re-verificar las rutas relativas `../../../../.claude/...` de los documentos
@@ -74,7 +78,7 @@ skill `/promover-ejercicio` exige:
 
 1. Aplicación del ítem con un grupo de estudiantes reales de grado 10 u 11.
 2. Registro de la distribución de respuestas por opción.
-3. Análisis de la **diagnosticidad de los distractores**: cada uno de `GEO-COORD-01/02/03` debería
+3. Análisis de la **diagnosticidad de los distractores**: cada uno de `GEO-COORD-01/02/04` debería
    captar una fracción no trivial de las respuestas incorrectas. Un distractor con 0 % de elección
    es un distractor muerto y debe rediseñarse.
 4. Evidencia de que el ítem discrimina: los estudiantes de mayor desempeño global aciertan más.
@@ -94,4 +98,5 @@ psicométrica.**
 
 ---
 
-**Versión:** 1.0 · **Fecha:** 2026-07-28
+**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5 y P2.7 resueltos: línea de tiempo, OE3, gate
+de promoción y cifras actualizados a 374)

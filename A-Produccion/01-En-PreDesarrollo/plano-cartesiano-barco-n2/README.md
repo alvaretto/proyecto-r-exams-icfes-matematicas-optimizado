@@ -118,7 +118,7 @@ plano-cartesiano-barco-n2/
 │   ├── CLAUDE.md                  # Particularidades operativas para agentes
 │   └── rules/
 │       └── barco-parametrico.md   # Contrato del casco: cómo tocarlo sin invalidar la clave
-├── coordenadas_vertices_..._n2_schoice_v1.Rmd  # FUENTE — el ejercicio, auto-contenido (436 líneas,
+├── coordenadas_vertices_..._n2_schoice_v1.Rmd  # FUENTE — el ejercicio, auto-contenido (483 líneas,
 │                                  #   5 chunks: data_generation, question_body, answerlist_q,
 │                                  #   solucion, answerlist_s)
 ├── ejercicio_state.json           # Estado del workflow (11/11 pasos completados, aprobado 2026-07-01)
@@ -153,8 +153,8 @@ son fuente y deben trackearse.
   `plano_barco.png`, se referencia con atributo de ancho explícito
   (`![](plano_barco.png){width=80%}`, línea 317), nunca sin `{width=...}`.
 - `../../../.claude/rules/solution-letter-independence.md` — regla #19: la Solution identifica
-  cada opción por su texto de coordenadas y su código de error (`GEO-COORD-01/02/03`, líneas
-  316-335), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 425) sin
+  cada opción por su texto de coordenadas y su código de error (`GEO-COORD-01/02/04`, líneas
+  373-378), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 472) sin
   romper coherencia si R/exams o Moodle reordenan las opciones.
 - `../../../.claude/rules/markdown-tablas-pandoc.md` — regla #20: el guard
   `\@ifundefined{c@none}{\newcounter{none}}{}` está presente por defecto al inicio de `Question`
@@ -181,4 +181,5 @@ son fuente y deben trackearse.
 
 ---
 
-**Versión:** 1.0 · **Fecha:** 2026-07-28
+**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — citas de línea y códigos de error
+actualizados tras P0.1, P2.5 y P2.7)

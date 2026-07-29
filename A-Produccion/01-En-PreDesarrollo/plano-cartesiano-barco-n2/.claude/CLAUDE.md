@@ -28,7 +28,7 @@ Lee en este orden, ANTES de explorar el repositorio o tocar el `.Rmd`:
 | Competencia / Componente | Interpretación y representación / Geométrico-métrico |
 | Qué evalúa | Leer el *bounding box* de un objeto en un plano cartesiano |
 | Figura | Una sola (`plano_barco.png`), compartida por las 4 opciones |
-| Espacio de versiones | **222 preguntas sustantivamente distintas** (enumeración exhaustiva) |
+| Espacio de versiones | **374 preguntas sustantivamente distintas** (enumeración exhaustiva; 222 antes de P2.7) |
 
 ---
 
@@ -52,24 +52,27 @@ declarada, no deuda técnica.
 
 ### 2. `prof()` debe valer exactamente `h/2` en el tramo central — de eso depende que la clave sea verdadera
 
-`prof(t)` (líneas 200-206) vale `h/2` para `t ∈ [0.15, 0.85]`. Eso hace que el casco toque `y_min` e
+`prof(t)` (líneas 208-214) vale `h/2` para `t ∈ [0.15, 0.85]`. Eso hace que el casco toque `y_min` e
 `y_max`, y por tanto que su *bounding box* sea exactamente `[x_min,x_max] × [y_min,y_max]` — que es
 literalmente la respuesta correcta.
 
 Si alguien "suaviza" el perfil para que el barco se vea más estilizado y deja de alcanzar `h/2`, **la
 clave del ejercicio pasa a ser falsa** y ningún validador sintáctico lo detecta. Verificado por
-enumeración exhaustiva: 0/222 casos de desajuste.
+enumeración exhaustiva: 0/374 casos de desajuste (0/222 antes de P2.7).
 
-### 3. Las 4 exclusiones de `y_pool` no son paranoia
+### 3. `y_pool` NO lleva exclusiones — el `stopifnot` de unicidad es la red de seguridad real
 
-Líneas 30-41. Las 2 primeras (`y_min ≠ x_min`, `y_max ≠ x_max`) evitan que `GEO-COORD-01`
-(inversión) colapse sobre la respuesta correcta. Las 2 últimas (`y_min ≠ x_max`, `y_max ≠ x_min`)
-quedaron heredadas del distractor retirado `GEO-COORD-03` (diagonal): garantizaban que ese
-distractor tuviera siempre **4 puntos distintos**, porque si no, habría mostrado un punto repetido
-y sería descartable de un vistazo. Con `GEO-COORD-04` (particularidad 11) ya no protegen a ningún
-distractor específico, pero se conservan porque siguen garantizando 4 opciones distintas.
-Verificado exhaustivamente: 0 colisiones y 0 casos de `y_pool` vacío sobre las 222 combinaciones.
-No "simplificar" ese filtrado.
+Líneas 30-49. Hasta el 2026-07-28 este bloque aplicaba 4 exclusiones (`y_min ≠ x_min`,
+`y_max ≠ x_max`, `y_min ≠ x_max`, `y_max ≠ x_min`), heredadas del distractor retirado
+`GEO-COORD-03` (diagonal). Se midieron por enumeración exhaustiva (P2.7, `docs/BACKLOG.md`) y
+**ninguna era necesaria**: incluso la justificación de la primera («evita que `GEO-COORD-01`
+colapse sobre la correcta») era **falsa** — esa colisión exigiría `alto_barco == 0`, imposible con
+`alto_barco >= 1`. Se retiraron las cuatro; el espacio de versiones subió de 222 a **374**.
+
+Lo que realmente garantiza 4 opciones distintas es `stopifnot(length(unique(all_opts)) == 4L)`
+(línea 103), no el filtrado del pool. Verificado exhaustivamente sobre las 374 combinaciones: **0**
+colisiones y **0** casos de `y_pool` vacío. **No reintroducir exclusiones de `y_pool` sin volver a
+medir** (`docs/BACKLOG.md` P2.7, `docs/BLUEPRINT.md` invariante I-3).
 
 ### 4. `exshuffle: TRUE` es CORRECTO aquí — no copiar el `exshuffle: FALSE` del hermano
 
@@ -81,16 +84,16 @@ identifica las opciones por contenido y por código de error, nunca por letra (r
 ### 5. La variación narrativa se limita al protagonista — A PROPÓSITO
 
 La regla #11 (`contextos-narrativos-creativos.md`) pide 6+ plantillas narrativas con 5 tipos de
-estructura. Este ejercicio **solo varía el nombre del protagonista** (8 nombres, líneas 154-158)
+estructura. Este ejercicio **solo varía el nombre del protagonista** (8 nombres, líneas 162-167)
 sobre un enunciado fijo.
 
 Es deliberado: el enunciado y las 4 opciones se conservan **verbatim** del ítem ICFES real
 `MAT-2026-1-022`, según la política registrada en la memoria del proyecto
 (`feedback_respetar_enunciado_original.md`): al derivar de un ítem oficial se respeta su redacción y
-sus opciones, y la metacognición se aporta en la Solution (diagnóstico por distractor), no
-reescribiendo el enunciado. Reescribir el contexto narrativo para "cumplir la regla #11"
-**destruiría la trazabilidad con el ítem oficial**. Ver el veredicto argumentado en
-[`../docs/BACKLOG.md`](../docs/BACKLOG.md).
+sus opciones, y la metacognición se aporta en la Solution (diagnóstico por distractor, más las dos
+subsecciones añadidas en P2.5), no reescribiendo el enunciado. Reescribir el contexto narrativo
+para "cumplir la regla #11" **destruiría la trazabilidad con el ítem oficial**. Ver el veredicto
+argumentado en [`../docs/BACKLOG.md`](../docs/BACKLOG.md).
 
 ### 6. `Semillero*.R` y `pcielo*.tex` son FUENTE ACTIVA — no son ruido
 
@@ -128,7 +131,7 @@ orquestador. No reintroducirlo: colapsaría la diversidad multi-semilla.
 
 ### 11. El tercer distractor DEBE conservar la estructura 2×2
 
-`GEO-COORD-04` (líneas 72-91, «desplazamiento de una unidad al contar la cuadrícula») sustituyó a
+`GEO-COORD-04` (líneas 80-100, «desplazamiento de una unidad al contar la cuadrícula») sustituyó a
 `GEO-COORD-03` (diagonal `y = x`) el 2026-07-28. La razón: `GEO-COORD-03` era la única opción cuyos
 4 puntos tenían la forma `(v, v)` — colineales — mientras la correcta y los otros dos distractores
 comparten la estructura «2 valores de x combinados con 2 valores de y» (un rectángulo). Un
@@ -137,20 +140,20 @@ estudiante podía descartar `GEO-COORD-03` por la FORMA del texto, sin mirar la 
 Si en el futuro se reemplaza este tercer distractor por otro error conceptual, la nueva opción
 **tiene que seguir teniendo la estructura 2×2**: cualquier opción con forma distinta (colineal, un
 solo par repetido, etc.) se vuelve descartable sin razonar y degrada el ítem de 4 opciones
-plausibles a 3. Criterio de verificación: enumerar las 222 combinaciones y confirmar que las 4
-opciones cumplen la estructura 2×2 en el 100% de los casos (no basta con probar unas pocas
-semillas). Ver [`../docs/BACKLOG.md`](../docs/BACKLOG.md) P0.1.
+plausibles a 3. Criterio de verificación: enumerar las 374 combinaciones (222 antes de P2.7) y
+confirmar que las 4 opciones cumplen la estructura 2×2 en el 100% de los casos (no basta con probar
+unas pocas semillas). Ver [`../docs/BACKLOG.md`](../docs/BACKLOG.md) P0.1.
 
 ---
 
 ## Reglas del repo raíz con mayor peso en este ejercicio
 
-`#18` `{width=80%}` anti-`\pandocbounded` (línea 317) · `#19` letter-independence (la Solution
+`#18` `{width=80%}` anti-`\pandocbounded` (línea 325) · `#19` letter-independence (la Solution
 identifica por contenido y por código `GEO-COORD-0x`) · `#20` guard `\newcounter{none}`
-(líneas 306-308, presente aunque hoy no haya tablas) · `#21` Familias 1 y 5 (`pick_int`,
+(línea 315, presente aunque hoy no haya tablas) · `#21` Familias 1 y 5 (`pick_int`,
 `safe_sample`, construcción determinista sin bucles de reintento) · `#22` diversidad sustantiva
-(222 preguntas distintas; §P6 no aplica por ser opciones de texto, pero `verificar_render.R` lo
-comprueba igual).
+(374 preguntas distintas, antes 222; §P6 no aplica por ser opciones de texto, pero
+`verificar_render.R` lo comprueba igual).
 
 ---
 
@@ -174,7 +177,10 @@ comprueba igual).
 - Reescribir el enunciado o las opciones para "cumplir" la regla #11 (particularidad 5).
 - Cambiar a `exshuffle: FALSE` por analogía con el subproyecto hermano (particularidad 4).
 - Sustituir el tercer distractor por una opción que no conserve la estructura 2×2 (particularidad 11).
+- Reintroducir exclusiones en `y_pool` sin medir de nuevo el espacio de versiones (particularidad 3).
 
 ---
 
-**Versión:** 1.1 · **Fecha:** 2026-07-28 · **Estado:** ACTIVO
+**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — particularidad 3 reescrita: `y_pool` sin
+exclusiones tras P2.7, espacio de versiones 222 → 374; citas de línea re-verificadas contra el
+`.Rmd` de 483 líneas) · **Estado:** ACTIVO

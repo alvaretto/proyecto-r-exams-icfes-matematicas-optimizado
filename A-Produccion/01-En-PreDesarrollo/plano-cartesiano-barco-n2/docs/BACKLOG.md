@@ -11,7 +11,9 @@
 ### P0.1 — `GEO-COORD-03` era eliminable por su forma — ✅ **RESUELTO 2026-07-28**
 
 **Origen:** auditoría adversarial (2026-07-28). **Verificado de forma independiente por enumeración
-exhaustiva sobre las 222 versiones.**
+exhaustiva sobre las 222 versiones** (el espacio vigente en ese momento; tras retirar las
+exclusiones de `y_pool` en P2.7 el espacio creció a 374 y la estructura 2×2 se re-confirmó sobre el
+espacio ampliado — ver la tabla de re-verificación en P2.7, más abajo).
 
 Los cuatro vértices de cualquier rectángulo alineado a los ejes tienen una estructura fija: **2
 valores de x × 2 valores de y, en las 4 combinaciones** — la forma `(A,C); (A,D); (B,C); (B,D)`.
@@ -92,9 +94,10 @@ GEO-COORD-01  (1, 5); (2, 5); (1, 9) y (2, 9).
 
 Ninguna opción se distingue ya por su forma: hay que leer las coordenadas del barco.
 
-**Re-validación completa:** `validar_coherencia_matematica.R` → APROBADO 0 errores ·
-`validar_diversidad_sustantiva.R --n 40` → PASS, 36 valores únicos · `verificar_render.R` → 5/5
-formatos OK, sin fuga P6.
+**Re-validación completa (sobre el espacio de 222 vigente entonces):**
+`validar_coherencia_matematica.R` → APROBADO 0 errores · `validar_diversidad_sustantiva.R --n 40` →
+PASS, 36 valores únicos · `verificar_render.R` → 5/5 formatos OK, sin fuga P6. **Re-confirmado tras
+P2.7** sobre el espacio ampliado a 374 — ver la tabla de re-verificación en P2.7, más abajo.
 
 ---
 
@@ -111,6 +114,9 @@ Ninguna de estas comprobaciones encontró problemas:
 | Reglas #18 / #19 / #20 / #21 / #22 §P6 | OK |
 | Incidentes I (reseed por reloj) y L (ecuación sin indentar) del orquestador | No aplican: 0 coincidencias |
 
+> Medición hecha sobre el espacio de 222 vigente en el momento (antes de P2.7). Tras retirar las
+> exclusiones de `y_pool` el espacio creció a 374 y se re-ejecutó la batería completa — ver P2.7.
+
 ---
 
 ## P1 — Deuda de desarrollo
@@ -123,7 +129,9 @@ Ninguna de estas comprobaciones encontró problemas:
 > mecanismo 1, que la opción D no aborda por diseño. Ver «Resolución aplicada» al final del ítem.
 
 **Medición (2026-07-28).** La forma del casco depende de la relación de aspecto
-`ratio = ancho_barco / alto_barco`. Distribución sobre las 222 combinaciones válidas:
+`ratio = ancho_barco / alto_barco`. Distribución sobre las **222** combinaciones válidas vigentes en
+el momento de esta medición (antes de P2.7; el espacio creció después a 374 y esta distribución de
+ratios no se volvió a medir sobre el espacio ampliado):
 
 | ratio | Combinaciones | % | Lectura visual |
 |---|---|---|---|
@@ -357,15 +365,15 @@ untracked. No se tocó el `.gitignore` del repo raíz en esta sesión porque ya 
 árbol de trabajo por otro trabajo ajeno a este subproyecto. **Acción sugerida:** añadir un
 `.gitignore` local al subproyecto cuando se resuelva el estado del `.gitignore` raíz.
 
-### P2.5 — La Solution tiene 4 de las 6 subsecciones canónicas
+### P2.5 — La Solution tenía 4 de las 6 subsecciones canónicas — ✅ **RESUELTO 2026-07-28**
 **Origen:** auditoría del detractor (2026-07-28).
 
 La regla #1 (`ejercicios-metacognitivos.md`, «Sección Solution Obligatoria») lista seis
-subsecciones. El chunk `solucion` incluye cuatro: *Respuesta correcta* + *Análisis de cada opción*
+subsecciones. El chunk `solucion` incluía cuatro: *Respuesta correcta* + *Análisis de cada opción*
 (cubre «Análisis del error»), *Procedimiento correcto*, *Reflexión metacognitiva* y *Estrategia
 para evitar el error*.
 
-Faltan:
+Faltaban:
 
 - **Propiedades del concepto** — p. ej.: en un par ordenado la primera coordenada es siempre la
   horizontal; un rectángulo alineado a los ejes queda determinado por los extremos de ambos rangos
@@ -373,12 +381,28 @@ Faltan:
 - **Caso específico (transferencia)** — p. ej.: «si el barco se desplazara 2 unidades a la derecha,
   ¿cuáles serían los nuevos vértices?».
 
-**Impacto:** bajo. El ejercicio ya es metacognitivo (diagnóstico por distractor con código de
-error, reflexión y estrategia). Las dos subsecciones añadirían profundidad, no corrigen un defecto.
+#### Resolución aplicada
 
-**Acción sugerida:** insertarlas entre *Procedimiento correcto* y *Reflexión metacognitiva*.
-Conviene resolverlo **junto con P0.1**, porque el rediseño del tercer distractor obliga a tocar el
-mismo bloque de la Solution.
+Se insertaron ambas subsecciones entre *Procedimiento correcto* y *Reflexión metacognitiva*
+(líneas 397-415 y 416-437 del `.Rmd`):
+
+- **Propiedades del concepto** (líneas 397-415): cuatro propiedades — el orden del par ordenado no
+  es intercambiable; un rectángulo de lados paralelos a los ejes queda determinado por dos valores
+  de x y dos de y; el rectángulo que encierra un objeto usa el mínimo y el máximo de cada eje; los
+  cuatro vértices nunca están alineados.
+- **Caso específico** (líneas 416-437): transferencia — si el barco se desplaza 1 unidad en
+  vertical (dirección adaptativa según el margen disponible), el rango en x no cambia y solo se
+  desplazan las segundas coordenadas de los 4 vértices; refuerza que los dos ejes se leen por
+  separado.
+
+La Solution tiene ahora las **6 subsecciones canónicas**. Verificado en el XML de Moodle
+renderizado: las 7 cabeceras `### ` están presentes (*Respuesta correcta*, *Análisis de cada
+opción*, *Procedimiento correcto*, *Propiedades del concepto*, *Caso específico*, *Reflexión
+metacognitiva*, *Estrategia para evitar el error*).
+
+**Impacto:** el ejercicio ya era metacognitivo (diagnóstico por distractor con código de error,
+reflexión y estrategia); las dos subsecciones nuevas añaden profundidad conceptual y de
+transferencia, coherente con la regla #1.
 
 ### P2.6 — `sample()` interno redundante con `exshuffle: TRUE`
 **Origen:** auditoría del detractor (2026-07-28). Severidad BAJA.
@@ -389,21 +413,58 @@ mezclarlas. Ambos mecanismos son coherentes entre sí (R/exams reordena `questio
 redundante. Se puede simplificar dejando que `exshuffle` haga todo el trabajo, o mantenerlo como
 control explícito. No urge.
 
-### P2.7 — Dos exclusiones de `y_pool` podrían haber quedado obsoletas
+### P2.7 — Las exclusiones de `y_pool` habían quedado obsoletas — ✅ **RESUELTO 2026-07-28** (alcance mayor al previsto)
 **Origen:** consecuencia de resolver P0.1 (2026-07-28).
 
 Las cuatro exclusiones de `y_pool` (`y_min ≠ x_min`, `y_max ≠ x_max`, `y_min ≠ x_max`,
-`y_max ≠ x_min`) se introdujeron para garantizar que el retirado `GEO-COORD-03` (diagonal) tuviera
-4 puntos distintos. Con ese distractor fuera, las dos últimas podrían ser innecesarias: las dos
-primeras siguen haciendo falta para que `GEO-COORD-01` (inversión) no colapse sobre la correcta.
+`y_max ≠ x_min`) se habían introducido para garantizar que el retirado `GEO-COORD-03` (diagonal)
+tuviera 4 puntos distintos. La hipótesis inicial era que sólo las dos últimas podían ser
+innecesarias, porque las dos primeras «seguían haciendo falta para que `GEO-COORD-01` (inversión)
+no colapsara sobre la correcta».
 
-**Se conservan las cuatro** deliberadamente: relajarlas **ampliaría** el espacio de versiones por
-encima de 222, lo que obliga a re-ejecutar toda la validación. No se hizo en la misma pasada que
-P0.1 y P1.1 para no mezclar tres cambios de comportamiento a la vez.
+#### Medición por enumeración exhaustiva
 
-**Acción sugerida:** medir cuántas versiones se ganan al retirar las dos últimas exclusiones y
-verificar que las 4 opciones siguen siendo distintas en el espacio ampliado. Si el resultado es
-limpio, retirarlas. El comentario del `.Rmd` (líneas 30-41) ya apunta a este ítem.
+| Configuración | Versiones | Correctas únicas | Colisiones |
+|---|---|---|---|
+| Las 4 exclusiones (antes) | 222 | 222 | 0 |
+| Solo las 2 primeras | 286 | 286 | 0 |
+| **Ninguna (aplicado)** | **374** | **374** | **0** |
+
+**Se retiraron las CUATRO exclusiones**, no solo las dos últimas: la medición mostró que ninguna
+era necesaria.
+
+#### Hallazgo: la justificación de `y_min ≠ x_min` era falsa
+
+La exclusión `y_min != x_min` se justificaba como «evita que `GEO-COORD-01` (inversión) colapse
+sobre la correcta». **Esa justificación era falsa**: la inversión nunca puede igualar a la
+correcta, porque exigiría a la vez `y_min == x_min` **y** `y_max == x_min`, o sea
+`alto_barco == 0`, imposible con `alto_barco >= 1`. El `stopifnot(length(unique(all_opts)) == 4L)`
+(línea 103) es la red de seguridad real — no las exclusiones del pool.
+
+**El espacio de versiones sube de 222 a 374 (+68 %).**
+
+#### Re-verificación completa sobre el espacio de 374 (2026-07-28)
+
+```
+Versiones: 374   respuestas correctas distintas: 374
+Estructura 2x2 correcta      : 374/374
+Estructura 2x2 GEO-COORD-01  : 374/374
+Estructura 2x2 GEO-COORD-02  : 374/374
+Estructura 2x2 GEO-COORD-04  : 374/374
+4 opciones distintas         : 374/374
+Desplazamiento fuera grilla  : 0
+Caso de transferencia (P2.5) fuera de grilla : 0
+Bounding box roto (invariante I-2) : 0
+```
+
+Más: `validar_coherencia_matematica.R` → APROBADO 0 errores · `validar_diversidad_sustantiva.R
+--n 40` → **PASS, 38 valores únicos** (antes 36 — el espacio ampliado mejoró la diversidad) ·
+`verificar_render.R` → 5/5 formatos OK sin fuga P6 · ortografía 0 errores.
+
+Renders distintos posibles: **374 × 8 protagonistas × 4 reflexiones × 24 órdenes = 287 232**.
+
+**Acción:** ninguna pendiente. El comentario del `.Rmd` (líneas 30-46) documenta la medición y el
+hallazgo de la justificación falsa.
 
 ### P2.4 — `SemilleroCloze.R` no aplica a este ejercicio
 Es una plantilla exploratoria de formato cloze+schoice; este ejercicio es SCHOICE puro. Se conserva
@@ -424,4 +485,5 @@ que no se va a usar.
 
 ---
 
-**Versión:** 1.0 · **Fecha:** 2026-07-28
+**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5 y P2.7 resueltos: Solution con 6 subsecciones
+canónicas; retiradas las 4 exclusiones de `y_pool`, espacio de versiones 222 → 374)

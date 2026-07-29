@@ -8,7 +8,7 @@
 |---|---|
 | **Ruta (SP)** | `A-Produccion/01-En-PreDesarrollo/plano-cartesiano-barco-n2` |
 | **Repo raíz (RR)** | `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams` |
-| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (436 líneas, 5 chunks) |
+| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (483 líneas, 5 chunks) |
 | **Tipo** | SCHOICE metacognitivo, **opciones de texto**, una sola figura compartida |
 | **Origen ICFES** | `MAT-2026-1-022` (cuadernillo 2026-1, pregunta 116, clave C) |
 | **Rama** | `main` |
@@ -27,7 +27,7 @@ coordenadas de los vértices que encierran un barco en un plano cartesiano, deri
 
 El ítem **no evalúa cálculo aritmético**: evalúa si el estudiante distingue el eje horizontal del
 vertical y lee el **rango completo** del objeto representado (no sólo su centro). Los tres
-distractores son errores conceptuales documentados (`GEO-COORD-01/02/03`), no ruido numérico.
+distractores son errores conceptuales documentados (`GEO-COORD-01/02/04`), no ruido numérico.
 
 **No confundir con el subproyecto hermano** `desplazamiento-avion-aeropuerto`: aquél tiene 4
 opciones **gráficas** y usa `exshuffle: FALSE`; éste tiene opciones de **texto** y usa
@@ -52,7 +52,7 @@ Estos OE **no existían declarados** antes del 2026-07-28: el subproyecto no ten
 | Verificación | Comando | Resultado |
 |---|---|---|
 | Coherencia matemática, Niveles 1-5 + Capas semánticas A-D | `Rscript RR/.claude/scripts/validar_coherencia_matematica.R <rmd>` | **APROBADO, 0 errores** |
-| Diversidad sustantiva (regla #22) | `Rscript RR/.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` | **PASS**, 40/40 evaluadas, 36 valores únicos |
+| Diversidad sustantiva (regla #22) | `Rscript RR/.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` | **PASS**, 40/40 evaluadas, **38** valores únicos (antes 36, tras ampliar el espacio en P2.7) |
 | Render 4 formatos + Moodle | `Rscript verificar_render.R` | **5/5 OK** |
 | Regla #18 (`{width=}`) | grep | OK (línea 317 del original, hoy desplazada por el comentario I-2) |
 | Regla #19 (letter-independence) | grep sobre la sección Solution | OK, 0 coincidencias |
@@ -65,13 +65,15 @@ Estos OE **no existían declarados** antes del 2026-07-28: el subproyecto no ten
 
 Enumeración completa de las combinaciones `(ancho_barco, alto_barco, x_min, y_min)`:
 
-- **222 combinaciones válidas → 222 respuestas correctas distintas** (biyección).
+- **374 combinaciones válidas → 374 respuestas correctas distintas** (biyección). Eran 222 hasta
+  que P2.7 (2026-07-28) retiró las 4 exclusiones de `y_pool` — una de ellas justificada de forma
+  falsa (ver `docs/BACKLOG.md` P2.7) — y amplió el espacio un 68 %.
 - **0** casos de `y_pool` vacío → el `stopifnot` del pool no puede dispararse.
 - **0** colisiones entre las 4 opciones → el `stopifnot` de unicidad no puede dispararse.
 - **0** casos donde el *bounding box* del casco difiera de `[x_min,x_max] × [y_min,y_max]` →
   **la clave es correcta en el 100 % del espacio de versiones**, no sólo en las semillas probadas.
 
-Renders distintos posibles: 222 × 8 protagonistas × 4 reflexiones × 24 órdenes = **170 496**.
+Renders distintos posibles: 374 × 8 protagonistas × 4 reflexiones × 24 órdenes = **287 232**.
 
 ---
 
@@ -98,6 +100,17 @@ Renders distintos posibles: 222 × 8 protagonistas × 4 reflexiones × 24 órden
    pero no resolvía el caso peor y **regresaba** los ratios medios (36,5 % de las versiones). Se
    revirtió. El `.Rmd` conserva la geometría original más un comentario que documenta la
    invariante I-2.
+8. **P2.5 resuelto**: se añadieron a la Solution las dos subsecciones canónicas que faltaban de la
+   regla #1 — *Propiedades del concepto* (líneas 397-415) y *Caso específico* (líneas 416-437). La
+   Solution tiene ahora las 6 subsecciones canónicas; verificado en el XML de Moodle renderizado.
+   Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md) P2.5.
+9. **P2.7 resuelto, con más alcance del previsto**: se retiraron las **4** exclusiones de `y_pool`
+   (no solo 2, como se había previsto), tras medir que ninguna era necesaria — la justificación de
+   `y_min ≠ x_min` («evita que `GEO-COORD-01` colapse sobre la correcta») resultó ser **falsa**. El
+   espacio de versiones sube de 222 a **374** (+68 %). Re-verificación completa: coherencia
+   matemática APROBADO, diversidad sustantiva PASS (38 valores únicos), render 5/5, estructura 2×2
+   374/374 en las tres opciones que la requieren. Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md)
+   P2.7.
 
 ---
 
@@ -106,15 +119,15 @@ Renders distintos posibles: 222 × 8 protagonistas × 4 reflexiones × 24 órden
 ### 5.0 — `GEO-COORD-03` era eliminable por su forma (P0.1) — ✅ **RESUELTO 2026-07-28**
 
 Los vértices de un rectángulo alineado a los ejes tienen siempre estructura **2×2**: dos valores de
-x combinados con dos de y. `GEO-COORD-03` (diagonal) la cumplía en **0/222** versiones — sus cuatro
-puntos eran siempre `(v,v)`, colineales — así que se podía descartar por la forma del texto sin
-mirar la figura.
+x combinados con dos de y. `GEO-COORD-03` (diagonal) la cumplía en **0/222** versiones (el espacio
+vigente entonces) — sus cuatro puntos eran siempre `(v,v)`, colineales — así que se podía descartar
+por la forma del texto sin mirar la figura.
 
 **Se retiró y se sustituyó por `GEO-COORD-04`** («desplazamiento de una unidad al contar la
-cuadrícula»), que conserva la estructura 2×2 en **222/222** versiones. La dirección del
-desplazamiento es adaptativa (`+1`, o `−1` si el barco toca el borde derecho), lo que evita salirse
-de la grilla **sin perder ni una versión**. Detalle y tabla de verificación en
-[`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
+cuadrícula»), que conserva la estructura 2×2 en **222/222** versiones (re-confirmado en
+**374/374** tras ampliar el espacio en P2.7). La dirección del desplazamiento es adaptativa (`+1`, o
+`−1` si el barco toca el borde derecho), lo que evita salirse de la grilla **sin perder ni una
+versión**. Detalle y tabla de verificación en [`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
 
 ### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — 🟡 **RESUELTO EN PARTE**
 
@@ -126,8 +139,9 @@ puente.
 
 **Residual:** la silueta a `ratio 1.5` sigue siendo una cápsula redondeada más que un barco. Eso es
 el mecanismo del contorno, que la opción D no aborda. Si quieres resolverlo también, siguen
-disponibles la opción **A** (restringir a `ratio ≥ 2.5`, cuesta 60 de las 222 versiones) y la **B**
-(rediseñar el perfil). **No es bloqueante**: la clave es correcta en las 222.
+disponibles la opción **A** (restringir a `ratio ≥ 2.5`, cuesta 60 de las 222 versiones — medición
+sobre el espacio vigente al momento del análisis, no re-medida tras P2.7) y la **B** (rediseñar el
+perfil). **No es bloqueante**: la clave es correcta en las 374.
 
 **Ojo con dos cosas si vuelves sobre esto:**
 
@@ -147,6 +161,12 @@ compartida). Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.2.
 
 ### 5.2 — `ejercicio_state.json` tiene dos pasos desactualizados por el cambio de distractor
 
+> **Nota (post P2.5/P2.7):** el `.Rmd` recibió dos cambios adicionales en la misma sesión —
+> la Solution ganó dos subsecciones (P2.5) y `y_pool` perdió sus 4 exclusiones (P2.7) — así que la
+> distancia entre lo que `aprobacion_usuario` describe y el ejercicio actual **aumentó**, no se
+> resolvió. La recomendación de re-confirmar la aprobación (final de esta sección) aplica con más
+> razón todavía.
+
 El estado sigue marcando los 11 pasos como completados, pero dos de ellos son **anteriores** al
 cambio del 2026-07-28 y ya no describen el ejercicio actual:
 
@@ -165,6 +185,15 @@ actual, o registrar explícitamente que el cambio de distractor no la invalida.
   las opciones se conservan *verbatim* del ítem ICFES oficial. Ver BACKLOG P1.3.
 - **Pool sin `precondicion`/`calcula()`**: es un patrón legítimo aquí, porque los distractores son
   cadenas de coordenadas, no valores calculados. Ver BACKLOG P1.4.
+
+### 5.4 — P2.5 (Solution con 6 subsecciones) — ✅ **RESUELTO 2026-07-28**
+
+Ver punto 8 de §4 y [`docs/BACKLOG.md`](docs/BACKLOG.md) P2.5. No queda ninguna acción pendiente.
+
+### 5.5 — P2.7 (exclusiones de `y_pool`) — ✅ **RESUELTO 2026-07-28**, alcance mayor al previsto
+
+Ver punto 9 de §4 y [`docs/BACKLOG.md`](docs/BACKLOG.md) P2.7. No queda ninguna acción pendiente;
+no reintroducir exclusiones sin volver a medir (invariante I-3 de `docs/BLUEPRINT.md`).
 
 ---
 
@@ -206,20 +235,16 @@ Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
 
 ### Siguiente paso concreto
 
-**P0.1 y P1.1 están cerrados** (2026-07-28). No queda ningún bloqueante abierto. Lo que sigue, por
-orden de valor:
+**P0.1, P1.1 (en parte), P2.5 y P2.7 están cerrados** (2026-07-28). No queda ningún bloqueante
+abierto. Lo que sigue, por orden de valor:
 
 **1. Decidir si el residual de P1.1 importa.** La silueta a `ratio 1.5` sigue sin leerse como barco
-(27 % de las versiones). No es bloqueante — la clave es correcta en las 222 — pero si quieres
-resolverlo, las opciones A y B siguen documentadas en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1.
+(27 % de las versiones, medido sobre el espacio de 222 vigente entonces). No es bloqueante — la
+clave es correcta en las 374 — pero si quieres resolverlo, las opciones A y B siguen documentadas
+en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1.
 
-**2. P2.5** — añadir a la Solution las dos subsecciones canónicas que faltan («Propiedades del
-concepto» y «Caso específico»). Impacto bajo, trabajo pequeño.
-
-**3. P2.7** — evaluar si dos de las cuatro exclusiones de `y_pool` quedaron obsoletas al retirar el
-distractor de la diagonal. Relajarlas ampliaría el espacio de versiones por encima de 222.
-
-**4. Promoción a `02-En-Desarrollo/`** — ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §3.
+**2. Promoción a `02-En-Desarrollo/`** — ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §3. Todos los
+criterios de promoción están cumplidos.
 
 Después de cualquier cambio:
 
@@ -228,10 +253,11 @@ Rscript verificar_render.R
 Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40
 Rscript ../../../.claude/scripts/validar_coherencia_matematica.R <rmd>
 # + enumeración exhaustiva (script en .claude/rules/barco-parametrico.md §Verificación)
-# + comprobación de estructura 2×2 de las 4 opciones sobre las 222 versiones (BACKLOG P0.1)
+# + comprobación de estructura 2×2 de las 4 opciones sobre las 374 versiones (BACKLOG P0.1, P2.7)
 ```
 
-Tras cerrar P0.1 y P1.1, el subproyecto queda listo para el gate de promoción a `02-En-Desarrollo/`
+Tras cerrar P0.1, P1.1, P2.5 y P2.7, el subproyecto queda listo para el gate de promoción a
+`02-En-Desarrollo/`
 ([`docs/ROADMAP.md`](docs/ROADMAP.md) §3).
 
 ---
@@ -248,4 +274,5 @@ Reglas locales: [`.claude/CLAUDE.md`](.claude/CLAUDE.md) ·
 
 ---
 
-**Versión:** 1.0 · **Fecha:** 2026-07-28
+**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5 y P2.7 resueltos: Solution con 6 subsecciones
+canónicas, espacio de versiones 222 → 374, diversidad 38/40 únicos)
