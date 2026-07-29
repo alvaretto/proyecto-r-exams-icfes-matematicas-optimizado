@@ -11,7 +11,7 @@
 | **Frase de reanudación** | `Continúa con el proyecto A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4` |
 
 > Al retomar: lee **este archivo** y `ejercicio_state.json` ANTES de explorar el `.Rmd`, y después
-> [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (10 particularidades operativas) y
+> [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (12 particularidades operativas) y
 > [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md)
 > (contrato de las 6 invariantes). Ahí está el porqué del código; sin eso, un agente "arregla" fixes
 > deliberados.
@@ -54,7 +54,7 @@ Los OE se declararon en esta misma sesión y se persistieron en
 | Clave = `n!` en Moodle | idem, V5 | 12/12 preguntas |
 | Unicidad y magnitud | idem, V6 | **30/30 ternas** (enumeración exhaustiva), razón máx/clave 1,0×–10,8× |
 | Instancia canónica verbatim | idem, V7 | contexto 1 con n=4 == `MAT-2026-1-004` |
-| Coherencia matemática | `validar_coherencia_matematica.R` | **APROBADO, 0 errores** (Capas A/B/C + Nivel 5A-5E) |
+| Coherencia matemática | `validar_coherencia_matematica.R` | **APROBADO, 0 errores** (Capas A/B/C + Nivel 5A-5E). Desde el code-review el Nivel 5B **se ejecuta de verdad**: antes retornaba temprano por nombres de variable y su «OK» era vacuo (probado por mutación) |
 | Diversidad sustantiva | `validar_diversidad_sustantiva.R --n 40` | exit 0 · 3 claves · `WARN_DIV_BAJA` (esperado, ver §5.2) |
 | Diversidad de render | 300 evaluaciones del `data_generation` | **297/300 versiones únicas** · 10/10 ternas de error · 16 instancias canónicas |
 | Ortografía | `corregir_ortografia_espanol.R` | sin errores |
@@ -81,6 +81,8 @@ Los OE se declararon en esta misma sesión y se persistieron en
 6. Auditoría adversarial con **dos agentes independientes**. Veredicto consolidado:
    *APROBAR CON CAMBIOS*. Se aplicaron los cambios (§5.1) y se re-validó todo.
 7. Se sincronizó `ejercicio_state.json` (pasos 3-10) y se escribió toda la documentación.
+8. **Code-review de alta intensidad sobre la rama** (36 candidatos → 28 confirmados → 10 defectos
+   distintos, 8 refutados). Aplicados 9 de 10; ver §5.3.
 
 ---
 
@@ -111,13 +113,50 @@ Los OE se declararon en esta misma sesión y se persistieron en
 | **`WARN_DIV_BAJA` se acepta** | Estructural: solo hay 3 claves legales. Ampliar el rango violaría la particularidad 3. `ERR_DIV_COSMETICA` sí sería fallo y no ocurre |
 | **Enunciado verbatim en la instancia canónica** | La metacognición vive en la Solution, no reescribiendo el enunciado |
 
-### 5.3 Hallazgos abiertos
+### 5.3 Code-review de alta intensidad (2026-07-29) — 9 de 10 aplicados
 
-- **Orden de magnitud parcialmente fijo** (BAJA, observado sin acción): para `n ≥ 4` siempre
-  `n² < n! < n^(n-1)`, así que cuando la terna incluye `EST-PER-01` y `EST-PER-02` el orden relativo
-  de esas tres magnitudes es fijo. Explotarlo exige conocer tasas de crecimiento factorial vs.
-  potencial —más avanzado que lo evaluado—, y desde la ampliación del pool el rango de la correcta
-  ya varía (3.º o 4.º). Documentado en [`docs/BACKLOG.md`](docs/BACKLOG.md), no se corrige.
+El patrón dominante no fue «salida rota» sino **capas de verificación que se citaban como evidencia
+verde estando vacías**. Tres de los diez defectos eran verificadores que no verificaban.
+
+| # | Defecto | Estado |
+|---|---|---|
+| 1 | I-3 es unilateral: la clave nunca queda entre las 2 opciones menores (50 % de adivinanza) | ⏸️ **NO aplicado** — escalado a H1, requiere decisión pedagógica humana (§5.4) |
+| 2 | La suite de invariantes fijaba la ruta `01-En-PreDesarrollo/`: al promover, fallaría y **bloquearía todo push** del repo, apagando además la guarda I-5 vía `skip_if_not` | ✅ localización por nombre |
+| 3 | El Nivel 5B del validador genérico **nunca se ejecutaba** (buscaba `valor_correcto`/`opciones_valores`/`error_sel`; el chunk usaba otros nombres) → APROBADO vacuo | ✅ tres alias + `stopifnot` de alineación; probado por mutación |
+| 4 | Ediciones sin commitear en el árbol **inmutable** `03-En-Produccion/` (YAML reordenado + 5 PNG git-lfs) | ✅ revertido a `stash@{1}` (recuperable) |
+| 5 | V6 decía «enumeración EXHAUSTIVA» sobre una **copia hardcoded** del pool, no el del `.Rmd` | ✅ extrae pool y `N_POOL` del `.Rmd` |
+| 6 | V5 imprimía `revisadas/revisadas` (tautológico): descartar versiones en silencio se veía verde | ✅ compara contra `N_VERSIONES`; probado por mutación (`7/12`) |
+| 7 | V7 hacía `eval(parse(...))` sin `try()`: un encabezado de chunk renombrado abortaba el script y se perdía todo el reporte V1-V8 | ✅ extracción validada + `try()` |
+| 8 | `copias <- 300` → `100` sin comentario en el `SemilleroMoodle_v2.R` del **hermano del avión**: banco Moodle por debajo del estándar de ≥200 | ✅ revertido a `stash@{0}` |
+| 9 | `repo_root` con `system(intern=TRUE)` sin `ignore.stderr` ni fallback → `RMD` literal `"NA/A-Produccion/..."` | ✅ versión endurecida de la suite hermana |
+| 10 | ~93 números de línea del `.Rmd` en los docs, varios ya erróneos (I-3 citado en «línea 142», estaba en la 291) | ✅ 83 convertidos a anclas; §6 del BLUEPRINT reindexada por construcción |
+
+**Cierre**: `verificar_render.R` V1-V8 todo verde · `test_permutaciones_invariantes.R` 0 fail / 0 error
+/ **0 skip** (antes 8 de 9 tests podían apagarse) · `validar_coherencia_matematica.R` APROBADO ·
+`validar_diversidad_sustantiva.R --n 40` exit 0 · ortografía sin errores ·
+`tests/run_all_tests.R` **22/22 suites, 0 fallidas** (660 s).
+
+**Refutados** (8, no accionar): numeración no monotónica de los pre-flight del orquestador; la rama
+`es_canonica` «salta» el filtro `aplicables` (las 5 precondiciones son incondicionales, no hay estado
+alcanzable); `set.seed()` en el helper del test (es un test, no el chunk); `encoding="UTF-8"` ausente
+en los `exams2*` del verificador; `errores_info` recalcula `calcula(n)`; el «Caso específico» de la
+Solution colisiona con `EST-PER-01` en `n=5`; el `.gitkeep` del avión en esta rama.
+
+---
+
+### 5.4 Hallazgos abiertos
+
+- **H1 — La clave nunca queda entre las 2 opciones menores** (🔴 ABIERTO, requiere decisión humana).
+  Antes catalogado como BAJA «observado sin acción»; el code-review del 2026-07-29 lo midió y lo
+  **reclasificó**. Medición exhaustiva de las 30 ternas: el rango de la clave por magnitud es 3.º en
+  18/30 y 4.º en 12/30, **nunca 1.º ni 2.º**. Descartar las dos menores deja una adivinanza al 50 %
+  (no 25 %) y «elegir el mayor» acierta en el 40 % de las versiones. El razonamiento con que se cerró
+  antes era erróneo: que el rango varíe entre 3.º y 4.º **no** diluye el patrón, porque ambos están en
+  la mitad alta. I-3 no lo detecta porque es unilateral: cuando la clave es el máximo, su ratio vale
+  1,0×. Corregirlo exige añadir fórmulas > `n!` al pool → cambia el contenido evaluado, obliga a
+  re-medir las 60 ternas resultantes y colisiona con OE1 (el propio ítem oficial pone la clave en 3.º).
+  Mitigación ya aplicada: V6 falla si el rango llegara a ser un valor único, reporta
+  `clave/mayor distractor` (hasta 20,0×) y emite un AVISO. Ver [`docs/BACKLOG.md`](docs/BACKLOG.md) §H1.
 - **Falso positivo del corrector ortográfico** (BAJA): `--fix` convierte `codigo-rmd.md` en
   `código-rmd.md` dentro de comentarios. Mitigado escribiendo la referencia como ruta completa.
   Falta reportarlo al script del repo raíz.

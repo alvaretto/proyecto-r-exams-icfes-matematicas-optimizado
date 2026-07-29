@@ -15,13 +15,13 @@
 | 2026-07-29 | Flujo B = `false` (el ejercicio no requiere gráficos) | `ejercicio_state.json` → `flujo_b.requerido = false, completado = true` |
 | 2026-07-29 | Decisión de diseño D1: DOK 3 / Bloom "Evaluar" para preservar la coherencia con el Nivel 4 oficial, aprobada por el usuario | [`BLUEPRINT.md`](BLUEPRINT.md) §4.2 |
 | 2026-07-29 | Decisión de diseño D2: rango `n ∈ {4,5,6}` fijado por enumeración exhaustiva | [`BLUEPRINT.md`](BLUEPRINT.md) §2 |
-| 2026-07-29 | Generación del `.Rmd` (405 líneas, 4 chunks R + 1 guard LaTeX) | archivo en el subproyecto |
+| 2026-07-29 | Generación del `.Rmd` (4 chunks R + 1 guard LaTeX) | archivo en el subproyecto |
 | 2026-07-29 16:44 | Verificación real ejecutada: HTML, PDF, DOCX, NOPS y Moodle renderizan sin error | `verif_render/` (mtime de `plain1.pdf`, `nops1.pdf`, `pandoc1.docx`, `moodle/perm_check.xml`) |
 | 2026-07-29 | Coherencia matemática y diversidad sustantiva verificadas | `validar_coherencia_matematica.R` → APROBADO; `validar_diversidad_sustantiva.R --n 40` → exit 0 |
 | 2026-07-29 | Ortografía verificada | `corregir_ortografia_espanol.R` → sin errores |
 | 2026-07-29 | Documentación inicial del subproyecto (este README + `docs/*`) | Sesión previa |
 | 2026-07-29 | Auditoría adversarial ejecutada sobre el `.Rmd` (dos adversarios independientes) | `ejercicio_state.json` → `detractor_fase2c.veredicto = "APROBAR CON CAMBIOS (aplicados)"` |
-| 2026-07-29 | Pool de errores ampliado de 3 a 5 (regla #1: mínimo 4-6 por ejercicio); `EST-PER-01` renombrado y su descripción corregida (doble supuesto `n-1`/`n`, no `n^n`); nueva decisión D3 (excepción canónica que fuerza los 3 errores oficiales) | `.Rmd` líneas 63-162 y 251-277; [`BLUEPRINT.md`](BLUEPRINT.md) §4.8 |
+| 2026-07-29 | Pool de errores ampliado de 3 a 5 (regla #1: mínimo 4-6 por ejercicio); `EST-PER-01` renombrado y su descripción corregida (doble supuesto `n-1`/`n`, no `n^n`); nueva decisión D3 (excepción canónica que fuerza los 3 errores oficiales) | `.Rmd`: pool `errores_conceptuales` y bloque de selección; [`BLUEPRINT.md`](BLUEPRINT.md) §4.8 |
 | 2026-07-29 | Re-validación completa tras los cambios: `V1`-`V8` verdes (`V6` ahora exhaustivo, 30/30 ternas), `validar_coherencia_matematica.R` → APROBADO 0 errores, `validar_diversidad_sustantiva.R --n 40` → exit 0, ortografía sin errores, 0 coincidencias de letter-independence | `verif_render/`, salidas de los 4 scripts (esta sesión) |
 | 2026-07-29 | `ejercicio_state.json` sincronizado: 10/11 pasos `completado: true` (`validar_diversidad` registra `versiones_unicas: 297`) | `ejercicio_state.json` |
 | 2026-07-29 | Documentación del subproyecto actualizada tras la auditoría (este README + `docs/*`, v1.1) | Esta sesión |
@@ -43,7 +43,7 @@ pendiente es `aprobacion_usuario`, que por diseño no puede completar un agente 
 | **OE3** | Pool de errores derivado de las justificaciones oficiales, con `calcula()` determinista | ✅ | **5** errores `EST-PER-01` a `05` (ampliado de 3 a 5 en la auditoría adversarial del 2026-07-29 para cumplir la regla #1, mínimo 4-6), 3 elegidos por versión salvo la excepción canónica D3; `calcula()` puras sin `sample`/`runif` (invariante I-9, [`BLUEPRINT.md`](BLUEPRINT.md) §5 y §4.8) |
 | **OE4** | Familia `n ∈ {4,5,6}` con unicidad y plausibilidad por construcción | ✅ | Enumeración exhaustiva ([`BLUEPRINT.md`](BLUEPRINT.md) §2); invariantes I-1 a I-4 verificadas en tiempo de generación |
 | **OE5** | `.Rmd` auto-contenido | ✅ | Helpers y pool de errores dentro de `data_generation` (invariante I-6) |
-| **OE6** | Solution canónica y letter-independent | ✅ | 7 encabezados (6 subsecciones canónicas), identificación por contenido/código (`.Rmd` líneas 315-316) |
+| **OE6** | Solution canónica y letter-independent | ✅ | 7 encabezados (6 subsecciones canónicas), identificación por contenido/código (chunk `solucion`) |
 | **OE7** | Render verde 4 formatos + Moodle | ✅ | `verificar_render.R` → `V1`-`V5` OK (`verif_render/`, 2026-07-29 16:44) |
 | **OE8** | Diversidad sustantiva + ≥250/300 | ✅ | `validar_diversidad_sustantiva.R --n 40` → exit 0, `WARN_DIV_BAJA` (esperado y aceptado, [`BACKLOG.md`](BACKLOG.md) P1.2); 300 evaluaciones del `data_generation`: **297/300** versiones únicas de render, **10 de 10** ternas de error posibles alcanzadas, 16 instancias canónicas |
 | **OE9** | Documentación con referencias cruzadas y auditoría adversarial limpia | ✅ | Auditoría adversarial ejecutada el 2026-07-29 con **dos adversarios independientes**; veredicto `"APROBAR CON CAMBIOS"`, cambios aplicados (pool 3→5, decisión D3, renombrado de `EST-PER-01`) y todo re-validado; documentación con referencias cruzadas actualizada (este README + `docs/SYLLABUS/ROADMAP/BACKLOG/BLUEPRINT`, v1.1) |

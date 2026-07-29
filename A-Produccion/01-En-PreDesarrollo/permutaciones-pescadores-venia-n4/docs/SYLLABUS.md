@@ -8,7 +8,7 @@
 
 **Regla dura de este documento**: los campos siguientes son texto oficial del `.Rmd` y se copian
 **carácter por carácter** de la sección `Meta-information`
-(`../permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd`, líneas 389-405,
+(`../permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd`, chunk `solucion`,
 verificadas con `grep -n` el 2026-07-29). Ninguno se parafrasea.
 
 | Campo (`.Rmd`) | Valor literal |
@@ -29,7 +29,7 @@ verificadas con `grep -n` el 2026-07-29). Ninguno se parafrasea.
 | `exextra[SOLO]` | `Relacional` |
 | `exextra[TipoMetacognicion]` | `analisis_error` |
 
-**Clasificación oficial ADOPTADA, no re-derivada** (comentario del `.Rmd`, líneas 8-11): estos
+**Clasificación oficial ADOPTADA, no re-derivada** (comentario de cabecera del `.Rmd`): estos
 campos provienen de la ficha oficial del ítem `MAT-2026-1-004`, en
 `/home/bootcamp/Proyectos-2026/Todo-Pajaro/Alineacion-curricular-de-items/Simulacros/Alineacion-Curricular-de-items-ERA-2026/Matematicas/Alineacion-curricular-de-items-Matematicas-ERA-2026.md`,
 líneas 965-996 — incluye Competencia, Componente, Contenido, Grado sugerido, Afirmación,
@@ -59,7 +59,7 @@ Ver la discusión completa en [`BLUEPRINT.md`](BLUEPRINT.md) §4.2.
 ## 2. Qué evalúa el ítem
 
 El enunciado original (ítem `MAT-2026-1-004`, reproducido verbatim en el contexto canónico del
-`.Rmd`, líneas 153-164): *«En una obra de teatro, hay 4 personas que interpretan pescadores. Al
+`.Rmd`, `contextos[[1]]`): *«En una obra de teatro, hay 4 personas que interpretan pescadores. Al
 finalizar la obra, los 4 pescadores deben ubicarse en fila en el escenario y hacer una venia ante
 el público. ¿De cuántas formas pueden ubicarse los cuatro pescadores durante la venia final?»*
 (opciones oficiales: 64, **24**, 16, 4; clave B).
@@ -86,23 +86,23 @@ muestreo aleatorio, muestreo con remplazo). (10°-11°, Pensamiento aleatorio)»
 
 Los distractores **no son ruido numérico**: cada uno es un error conceptual, y ninguno se calcula
 con `sample`/`runif`/`rnorm` (verificado — Capa D de `validar_coherencia_matematica.R`). El pool
-`errores_conceptuales` (`.Rmd`, líneas 63-162) tiene **cinco** entradas — ampliado de 3 a 5 en la
+`errores_conceptuales` (`.Rmd`, chunk `data_generation`) tiene **cinco** entradas — ampliado de 3 a 5 en la
 auditoría adversarial del 2026-07-29 para cumplir la regla #1
 (`ejercicios-metacognitivos.md`, «Mínimo 4-6 errores por ejercicio»: el pool original tenía
 exactamente 3 para 3 espacios, así que el *tipo* de error nunca variaba entre versiones). Los tres
 primeros (`EST-PER-01/02/03`) se toman **literalmente** de las Justificaciones MetaCognitivas de la
-ficha oficial `MAT-2026-1-004` (comentario del `.Rmd`, líneas 60-62) y generalizados de `n = 4` a
+ficha oficial `MAT-2026-1-004` (comentario del pool en el `.Rmd`) y generalizados de `n = 4` a
 `n ∈ {4,5,6}`; los dos últimos (`EST-PER-04/05`) son ampliación propia del subproyecto para cumplir
 el mínimo de la regla #1.
 
 | Código | Nombre | `calcula(n)` (`.Rmd`) | Valor en `n=4` | Qué diagnostica |
 |---|---|---|---|---|
-| (correcta) | Permutación de `n` elementos | `factorial(n)` (línea 53) | 24 | — |
-| `EST-PER-01` | Repetición sin descontar los elementos ya ubicados | `n^(n - 1L)` (línea 83) | 64 | Doble supuesto: cuenta solo `n-1` posiciones —como si la última quedara determinada sola— y conserva las `n` opciones en cada una. Aplica el principio multiplicativo **con** reemplazo a una situación **sin** reemplazo. Renombrado el 2026-07-29 (ver nota abajo). |
-| `EST-PER-02` | Producto de solo dos posiciones | `n * n` (línea 102) | 16 | Trunca el principio multiplicativo en dos factores y además lo aplica con reemplazo — como si solo hubiera dos posiciones y en cada una se pudiera elegir de nuevo entre los `n` elementos. |
-| `EST-PER-03` | Confusión entre cardinal del conjunto y número de arreglos | `n` (línea 120) | 4 | Confunde «cuántas formas hay de ordenar `n` elementos» con «cuántos elementos hay» — un error de interpretación de la pregunta, previo a cualquier cálculo, sin aplicar ningún principio de conteo. |
-| `EST-PER-04` | Fórmula de permutación circular aplicada a una fila | `factorial(n - 1L)` (línea 139) | 6 | Aplica la fórmula de permutaciones **circulares**, `(n-1)!`, que descuenta las rotaciones porque un círculo no tiene primer lugar; en una fila sí lo hay, y cada rotación produce un arreglo distinto. |
-| `EST-PER-05` | Principio aditivo en lugar de multiplicativo | `n * (n + 1L) / 2L` (línea 160) | 10 | Suma la secuencia de posiciones disponibles en vez de multiplicarla. Identifica correctamente cuántas opciones quedan en cada posición pero combina esos conteos con el principio aditivo en vez del multiplicativo. |
+| (correcta) | Permutación de `n` elementos | `factorial(n)` | 24 | — |
+| `EST-PER-01` | Repetición sin descontar los elementos ya ubicados | `n^(n - 1L)` | 64 | Doble supuesto: cuenta solo `n-1` posiciones —como si la última quedara determinada sola— y conserva las `n` opciones en cada una. Aplica el principio multiplicativo **con** reemplazo a una situación **sin** reemplazo. Renombrado el 2026-07-29 (ver nota abajo). |
+| `EST-PER-02` | Producto de solo dos posiciones | `n * n` | 16 | Trunca el principio multiplicativo en dos factores y además lo aplica con reemplazo — como si solo hubiera dos posiciones y en cada una se pudiera elegir de nuevo entre los `n` elementos. |
+| `EST-PER-03` | Confusión entre cardinal del conjunto y número de arreglos | `n` | 4 | Confunde «cuántas formas hay de ordenar `n` elementos» con «cuántos elementos hay» — un error de interpretación de la pregunta, previo a cualquier cálculo, sin aplicar ningún principio de conteo. |
+| `EST-PER-04` | Fórmula de permutación circular aplicada a una fila | `factorial(n - 1L)` | 6 | Aplica la fórmula de permutaciones **circulares**, `(n-1)!`, que descuenta las rotaciones porque un círculo no tiene primer lugar; en una fila sí lo hay, y cada rotación produce un arreglo distinto. |
+| `EST-PER-05` | Principio aditivo en lugar de multiplicativo | `n * (n + 1L) / 2L` | 10 | Suma la secuencia de posiciones disponibles en vez de multiplicarla. Identifica correctamente cuántas opciones quedan en cada posición pero combina esos conteos con el principio aditivo en vez del multiplicativo. |
 
 **Corrección del 2026-07-29 sobre `EST-PER-01`**: la ficha anterior de este documento describía el
 error como «supone `n` opciones en cada posición», lo que implicaría $n^n = 256$ para $n=4$, no
@@ -115,7 +115,7 @@ de «tres posiciones» para `n=4` (`n-1 = 3`).
 **Selección por versión (regla #1 + Decisión D3).** Cada versión muestra 3 de los 5 errores,
 elegidos con `safe_sample()` entre los aplicables por `precondicion` (todas aplican siempre para
 este ítem). La única excepción es la **instancia canónica** (contexto 1 con `n = 4`): ahí se
-fuerzan los tres errores oficiales (`EST-PER-01/02/03`, `CODIGOS_OFICIALES` en `.Rmd` línea 260)
+fuerzan los tres errores oficiales (`EST-PER-01/02/03`, `CODIGOS_OFICIALES` en `.Rmd`)
 para que esa versión reproduzca íntegro el ítem `MAT-2026-1-004`, incluidas sus cuatro opciones
 oficiales (64, 24, 16, 4). Ver la decisión D3 en [`BLUEPRINT.md`](BLUEPRINT.md) §4.8.
 
@@ -138,21 +138,21 @@ magnitud desproporcionada. Ver la tabla de medición completa en [`BLUEPRINT.md`
 
 ### 3.1 Solution con las 6 subsecciones canónicas + ítem espejo
 
-El chunk `solucion` (`.Rmd`, líneas 374-463) cubre las seis subsecciones que exige la regla #1
+El chunk `solucion` del `.Rmd` cubre las seis subsecciones que exige la regla #1
 (`ejercicios-metacognitivos.md`, «Sección Solution Obligatoria»): *Respuesta correcta*
-(líneas 376-382) + *Análisis de cada opción* (líneas 384-399, cubre «Análisis del error» —
++ *Análisis de cada opción* (cubre «Análisis del error» —
 identifica cada opción por su código `EST-PER-0x`, nunca por letra, regla #19), *Procedimiento
-correcto* (líneas 401-413), *Propiedades del concepto* (líneas 415-426: cuatro propiedades sobre
+correcto*, *Propiedades del concepto* (cuatro propiedades sobre
 permutaciones — orden importa, crecimiento del factorial, diferencia con conteo con repetición),
-*Caso específico* (líneas 428-446), *Reflexión metacognitiva* (líneas 448-450) y *Estrategia para
-evitar el error* (líneas 452-462).
+*Caso específico*, *Reflexión metacognitiva* y *Estrategia para
+evitar el error*.
 
 **El *Caso específico* transfiere a un segundo ítem oficial real**, no a un ejemplo inventado: el
 ítem espejo `MAT-2026-1-029`, que comparte el mismo descriptor `D4.8` pero pide un conteo **con**
 repetición (códigos de 4 cifras con dígitos de `{1,...,5}` que sí pueden repetirse:
 `5×5×5×5 = 5⁴ = 625`). La Solution señala que aplicar la potencia al problema de la fila de
 pescadores es precisamente el error `EST-PER-01`, pero **solo cuando ese error está entre los tres
-seleccionados en la versión actual** (`.Rmd`, líneas 442-446) — desde que el pool creció a cinco
+seleccionados en la versión actual** (subsección *Caso específico*) — desde que el pool creció a cinco
 entradas, `EST-PER-01` ya no está garantizado en cada versión, salvo en la instancia canónica,
 donde sí está siempre presente por ser uno de los tres errores oficiales (Decisión D3,
 [`BLUEPRINT.md`](BLUEPRINT.md) §4.8). El eje diagnóstico del pool sigue siendo la distinción

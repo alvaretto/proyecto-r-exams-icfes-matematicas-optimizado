@@ -33,8 +33,8 @@ principio aditivo. Ver el detalle pedagógico completo en [`docs/SYLLABUS.md`](d
 >
 > No extraigas `pick_int()`, `safe_sample()`, `fmt()` ni el pool `errores_conceptuales` a un
 > archivo `.R` externo, ni siquiera con el mecanismo oficial `include_supplement()`. El chunk
-> `data_generation` (líneas 1-279 del `.Rmd`) lo declara explícitamente en su comentario de
-> cabecera (líneas 13-16): `validar_diversidad_sustantiva.R` (regla #22, obligatorio) hace
+> `data_generation` del `.Rmd` lo declara explícitamente en su comentario de
+> cabecera: `validar_diversidad_sustantiva.R` (regla #22, obligatorio) hace
 > `setwd(tempdir())` y evalúa el chunk en un `new.env()` **fuera** del pipeline de `xexams()`; ahí
 > `include_supplement()` no tiene el estado interno que necesita y falla. El subproyecto hermano
 > `desplazamiento-avion-aeropuerto` lo intentó y lo midió: 5 formatos renderizaban bien, pero el
@@ -145,34 +145,34 @@ persistente del workflow (regla #16), no un derivado de render.
 ## Reglas del repositorio que aplican
 
 - `../../../.claude/rules/ejercicios-metacognitivos.md` — regla #1: pool de **cinco** errores
-  conceptuales con código, `precondicion` y `calcula()` (líneas 63-162; ampliado de 3 a 5 en la
+  conceptuales con código, `precondicion` y `calcula()` (pool `errores_conceptuales`; ampliado de 3 a 5 en la
   auditoría adversarial del 2026-07-29 — la regla exige mínimo 4-6), de los que se eligen 3 por
-  versión (líneas 251-277), salvo la excepción canónica (decisión D3) que fuerza los 3 oficiales.
-  Solution con las 6 subsecciones canónicas (líneas 374-463). Ver la nota de coherencia DOK↔Nivel
+  versión (bloque «Selección de los 3 errores que se muestran»), salvo la excepción canónica (decisión D3) que fuerza los 3 oficiales.
+  Solution con las 6 subsecciones canónicas (chunk `solucion`). Ver la nota de coherencia DOK↔Nivel
   en [`docs/SYLLABUS.md`](docs/SYLLABUS.md) §1 y las decisiones de diseño D1/D3 en
   [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §4.2 y §4.8.
 - `../../../.claude/rules/codigo-rmd.md` — regla #8: filtrado genérico por `precondicion`
-  declarada (líneas 122-128), no `if` hardcoded; regla #10: sin `set.seed()` dentro del chunk
-  (línea 18, verificado).
+  declarada (`aplicables <- which(vapply(...))`), no `if` hardcoded; regla #10: sin `set.seed()`
+  dentro del chunk (verificado por `test_permutaciones_invariantes.R`).
 - `../../../.claude/rules/contextos-narrativos-creativos.md` — regla #11: 6 plantillas
-  narrativas, 6 estructuras gramaticales distintas (líneas 147-223), ninguna usa el verbo
+  narrativas, 6 estructuras gramaticales distintas (lista `contextos`), ninguna usa el verbo
   «registró». El contexto 1 es canónico y reproduce verbatim el ítem oficial.
 - `../../../.claude/rules/solution-letter-independence.md` — regla #19: la Solution identifica
   cada opción por su contenido y su código de error (cualquiera de los cinco `EST-PER-01` a `05`,
-  bucle en líneas 394-399), nunca por letra. Por eso este ejercicio usa `exshuffle: TRUE`
-  (línea 470) sin riesgo de incoherencia si Moodle reordena las opciones.
+  bucle sobre `errores_info` en el chunk `solucion`), nunca por letra. Por eso este ejercicio usa
+  `exshuffle: TRUE` sin riesgo de incoherencia si Moodle reordena las opciones.
 - `../../../.claude/rules/markdown-tablas-pandoc.md` — regla #20: el guard
-  `\@ifundefined{c@none}{\newcounter{none}}{}` está presente al inicio de `Question` (línea 355),
+  `\@ifundefined{c@none}{\newcounter{none}}{}` está presente al inicio de `Question`,
   aunque este ejercicio no usa tablas Markdown — lo aplican los skills y orquestadores de
   generación como estándar.
 - `../../../.claude/rules/familias-soluciones-rmd.md` — regla #21: usa la Familia 1 (`pick_int()`,
-  línea 22) y la Familia 5 (`safe_sample()`, líneas 24-29), declaradas explícitamente en el
-  comentario de la línea 21. A diferencia del hermano `plano-cartesiano-barco-n2`, ninguno de los
+  `pick_int()`) y la Familia 5 (`safe_sample()`), declaradas explícitamente en el comentario de
+  cabecera del chunk. A diferencia del hermano `plano-cartesiano-barco-n2`, ninguno de los
   pools de este ejercicio (`N_POOL`, contextos, reflexiones) colapsa hoy a longitud 1 — `safe_sample()`
   se usa aquí de forma defensiva/consistente con el patrón del repo, no porque el caso límite se
   dispare actualmente.
 - `../../../.claude/rules/diversidad-sustantiva.md` — regla #22: `n` se aleatoriza con
-  `safe_sample(N_POOL, 1L)` (línea 48), nunca es un literal fijo. El espacio de respuestas
+  `safe_sample(N_POOL, 1L)`, nunca es un literal fijo. El espacio de respuestas
   correctas distintas sigue siendo **3** (`n ∈ {4,5,6}` → claves 24/120/720) — los distractores
   oficiales del ítem fijan esa cardinalidad, ver la discusión completa (no accionable sin
   apartarse de la ficha oficial) en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.2 — pero desde que el

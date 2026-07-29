@@ -82,13 +82,41 @@ alguien "limpia" la guarda interna. Ninguna de las dos capas es redundante.
 
 ---
 
-## Qué NO protege ningún validador del repo
+## Qué protege y qué NO protege el validador genérico del repo
 
-`validar_coherencia_matematica.R` da APROBADO con 0 errores tanto en el ejercicio correcto como
-—si se desactivara I-5— en uno con la clave falsa: sus 21 reglas de keywords semánticas cubren
-propiedades de conjuntos de datos estadísticos (paridad, cuartiles, outliers), no combinatoria.
-Es un punto ciego conocido para este dominio. La correctitud combinatoria de este ejercicio la
-sostienen **I-1..I-6 y V5/V6**, no el validador genérico.
+**Actualizado el 2026-07-29 tras el code-review de alta intensidad.** La afirmación anterior de esta
+sección —«`validar_coherencia_matematica.R` da APROBADO incluso con la clave falsa»— era **cierta,
+pero por una razón distinta de la que estaba escrita**, y ya no lo es.
+
+La razón real no era sólo que las 21 keywords semánticas de la Capa B sean de estadística
+descriptiva (eso sigue siendo verdad y sigue siendo un punto ciego en combinatoria). Era que el
+validador busca **nombres de variable fijos** y este ejercicio usaba otros, de modo que sus
+comprobaciones ni se ejecutaban:
+
+| Comprobación | Nombre que busca | Nombre que había | Efecto |
+|---|---|---|---|
+| Capa A / Capa C | `error_sel` / `error_seleccionado` | `errores_sel` (lista de 3) | `return()` temprano |
+| Nivel 5B (cross-check de la clave) | `valor_correcto` | `correcta_val` | `return()` temprano |
+| Nivel 5B (valores de opción) | `opciones_valores` antes que `opciones` | sólo `opciones` (cadenas de `fmt()`) | se salta por `!is.numeric` |
+
+El `.Rmd` expone ahora esos tres alias (`valor_correcto`, `opciones_valores`, `error_sel`) al final
+del bloque de mezcla, con un `stopifnot` que verifica que `opciones_valores` siga alineado con
+`opciones`/`sol`. **No los borres**: sin ellos el APROBADO de FASE 2A vuelve a ser vacuo.
+
+**Medido por mutación el 2026-07-29** (misma clave falsa en los dos casos, guardas internas
+desactivadas):
+
+| Mutante | Alias | Veredicto de `validar_coherencia_matematica.R` |
+|---|---|---|
+| clave falsa | **sin** alias (estado previo) | `APROBADO (0 errores)` · 5B imprime «OK» estando ciego |
+| clave falsa | **con** alias | `ERR_ANS_B: Opción marcada (valor=7776) NO coincide con valor_correcto (720)` |
+
+**Cobertura resultante:** 5B cubre la clave; la Capa A cubre la precondición de **uno** de los tres
+errores seleccionados (el validador espera un error, no una terna); la Capa C sigue inerte a
+propósito (necesitaría un `valor_erroneo` único, que con 3 distractores sería una ficción, y la
+relación que comprobaría —distractor ≠ clave— ya la garantiza I-2). Las tres a la vez sólo las
+cubren **I-1..I-6, V5/V6 y `test_permutaciones_invariantes.R`**; el validador genérico es ahora una
+capa adicional real, no la principal.
 
 Mismo patrón que documentó el hermano del barco: *si la clave es una propiedad calculada, ningún
 validador genérico la protege; hace falta un test propio que enumere el espacio completo*.

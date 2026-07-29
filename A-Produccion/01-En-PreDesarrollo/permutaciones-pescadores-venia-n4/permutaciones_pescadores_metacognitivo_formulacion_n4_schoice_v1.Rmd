@@ -316,6 +316,32 @@ stopifnot(sum(sol) == 1L, length(sol) == 4L)
 stopifnot(identical(opciones[which(sol == 1L)], correcta))
 stopifnot(length(unique(opciones)) == 4L)
 
+# --- Alias para el validador genérico del repo -------------------------------
+# `.claude/scripts/validar_coherencia_matematica.R` busca nombres FIJOS. Sin
+# ellos su Nivel 5B (`validar_5b_crosscheck`) y su Capa A retornan temprano y el
+# APROBADO de FASE 2A es VACUO: nunca compara la opción marcada contra n!.
+#   - `valor_correcto`   -> lo busca 5B y Capa C (aquí `correcta_val`).
+#   - `opciones_valores` -> 5B lo prefiere ANTES que `opciones`; debe ser
+#     NUMÉRICO, porque `opciones` son cadenas de fmt() y 5B se salta la
+#     comparación si `!is.numeric(opcion_marcada)`.
+#   - `error_sel`        -> lo busca `detectar_error_seleccionado()`, que espera
+#     UN error, no la lista de 3; se expone el primero de los seleccionados.
+# Cobertura real: 5B cubre la clave; Capa A cubre la precondición de UNO de los
+# tres errores. Las tres a la vez sólo las cubre
+# `tests/testthat/test_permutaciones_invariantes.R` (I-1..I-6). No inventar un
+# `valor_erroneo` para despertar la Capa C: con 3 distractores, un único "valor
+# erróneo" sería una ficción, y la relación que la Capa C comprobaría (distractor
+# != clave) ya la garantiza I-2.
+valor_correcto   <- correcta_val
+valores_pre      <- c(list(correcta = correcta_val),
+                      stats::setNames(as.list(unname(vals)), names(vals)))
+opciones_valores <- as.numeric(unlist(valores_pre[perm], use.names = FALSE))
+error_sel        <- errores_sel[[1L]]
+# El alias sólo sirve si sigue alineado con `opciones`/`sol`.
+stopifnot(length(opciones_valores) == 4L,
+          identical(opciones_valores[which(sol == 1L)], as.numeric(correcta_val)),
+          identical(fmt(as.integer(opciones_valores[which(sol == 1L)])), correcta))
+
 # --- Reflexiones metacognitivas ----------------------------------------------
 reflexiones <- c(
   paste0("Identificar por qué una estrategia de conteo falla es tan valioso ",

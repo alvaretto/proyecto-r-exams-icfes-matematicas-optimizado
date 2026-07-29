@@ -101,9 +101,39 @@ al nombre anterior.**
 ### 7. `verificar_render.R` es verificación, no exportación
 
 Comprueba V1-V8 y devuelve exit 1 si algo falla. **V6 enumera el espacio completo** (3 valores de
-`n` × C(5,3) = 30 ternas), no una muestra. **V5 lee `n` del enunciado**, no de `min(vals)`: desde
-que el pool tiene 5 errores, el distractor «cardinal» (que vale `n`) puede no estar en la terna.
-Si vuelves a inferir `n` del mínimo, V5 dará falsos positivos.
+`n` × C(5,3) = 30 ternas), no una muestra, y desde el code-review del 2026-07-29 **extrae el pool y
+`N_POOL` del `.Rmd`** en vez de reimplementarlos: una copia local del pool quedaba obsoleta en
+silencio y V6 seguía anunciando «30/30 todo verde» sobre las fórmulas viejas. **No vuelvas a
+hardcodear las fórmulas ahí.** **V5 lee `n` del enunciado**, no de `min(vals)`: desde que el pool
+tiene 5 errores, el distractor «cardinal» (que vale `n`) puede no estar en la terna. Si vuelves a
+inferir `n` del mínimo, V5 dará falsos positivos.
+
+**V5 compara la cobertura contra `N_VERSIONES`, no consigo misma.** Antes imprimía
+`revisadas/revisadas` —tautológico—, así que descartar versiones en silencio se veía igual que
+revisarlas todas. Verificado por mutación: con las versiones `n=6` no parseables, V5 reporta
+`cobertura incompleta: 7/12`; antes decía «7/7 … es exactamente n!» y exit 0. **No sustituyas el
+denominador por `revisadas`.**
+
+### 11. Los tres alias del final del bloque de mezcla NO son redundantes
+
+`valor_correcto`, `opciones_valores` y `error_sel` parecen duplicar a `correcta_val`, `opciones` y
+`errores_sel`. **Existen porque `validar_coherencia_matematica.R` busca nombres FIJOS**: sin ellos su
+Nivel 5B y su Capa A retornan temprano y el APROBADO de FASE 2A es **vacuo** (probado por mutación:
+con la clave falsa y sin alias el validador dice `APROBADO (0 errores)`; con alias dice
+`ERR_ANS_B`). El `stopifnot` que los acompaña verifica que `opciones_valores` siga alineado con
+`opciones`/`sol` — si lo borras, el alias puede desalinearse y el cross-check pasaría a comparar la
+opción equivocada. Detalle y tabla de cobertura en
+[`rules/permutaciones-parametricas.md`](rules/permutaciones-parametricas.md).
+
+### 12. Los docs se citan por ANCLA, no por número de línea
+
+`README.md`, `docs/BLUEPRINT.md`, `docs/SYLLABUS.md` y `docs/ROADMAP.md` fijaban ~93 números de
+línea del `.Rmd`. El code-review del 2026-07-29 encontró varios ya erróneos (p. ej. el `stopifnot`
+de I-3 citado como «línea 142» cuando estaba en la 291) y, como el `.Rmd` se edita, el resto caducaba
+en silencio; al obligar este archivo a leer los docs ANTES del `.Rmd`, mandaban al lector al bloque
+equivocado. Se sustituyeron por **anclas estables** (nombre de chunk, identificador, subsección) y
+la §6 del BLUEPRINT se reindexó por construcción. **Al documentar algo nuevo, cita el identificador
+y localízalo con `grep -n`; no escribas números de línea del `.Rmd`.**
 
 ### 8. Prohibido `set.seed()` dentro del chunk
 
@@ -150,8 +180,13 @@ nueva a un `.md`, escríbela como ruta completa.** Ver `../docs/BACKLOG.md`.
 - Reescribir `EST-PER-01/02/03` apartándose de la ficha oficial (particularidad 5).
 - Revertir el nombre de `EST-PER-01` (particularidad 6).
 - Inferir `n` desde `min(vals)` en el verificador (particularidad 7).
+- Reimplementar el pool o `N_POOL` dentro de `verificar_render.R` en vez de extraerlos del `.Rmd`,
+  o devolver el denominador de cobertura de V5 a `revisadas` (particularidad 7).
 - `set.seed()` dentro del chunk (particularidad 8).
 - Ampliar `N_POOL` para "resolver" `WARN_DIV_BAJA` (particularidad 9).
+- Borrar los alias `valor_correcto` / `opciones_valores` / `error_sel` o su `stopifnot` de
+  alineación (particularidad 11).
+- Escribir números de línea del `.Rmd` en los docs (particularidad 12).
 - Marcar `aprobacion_usuario` en `ejercicio_state.json` sin aprobación humana explícita.
 
 ---

@@ -26,6 +26,7 @@ suppressMessages(library(exams))
 
 RMD <- "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd"
 OUT <- "verif_render"
+N_VERSIONES <- 12L   # versiones que V5 exporta a Moodle Y exige haber parseado
 dir.create(OUT, showWarnings = FALSE)
 
 fails <- character(0)
@@ -61,7 +62,7 @@ set.seed(105)
 mdir <- file.path(OUT, "moodle")
 dir.create(mdir, showWarnings = FALSE)
 r <- try(suppressWarnings(
-  exams2moodle(RMD, n = 12, dir = mdir, edir = ".", name = "perm_check")
+  exams2moodle(RMD, n = N_VERSIONES, dir = mdir, edir = ".", name = "perm_check")
 ), silent = TRUE)
 
 if (inherits(r, "try-error")) {
@@ -117,51 +118,100 @@ if (inherits(r, "try-error")) {
       bad("V5", "0 preguntas parseadas del XML — el verificador está ciego")
     } else if (malos > 0L) {
       bad("V5", sprintf("%d/%d preguntas con clave != n!", malos, revisadas))
+    } else if (revisadas < N_VERSIONES) {
+      # La cobertura NO puede reportarse como "revisadas/revisadas": sería
+      # tautológica. Tres rutas descartan una versión en silencio (opciones que
+      # no parsean a número, enunciado sin \b[456]\b, cuarteto incompleto), así
+      # que una clave mutada confinada a las versiones descartadas —p. ej. sólo
+      # en la rama n=6, la única que alcanza la razón extrema 10,8x— se
+      # publicaría sin detección mientras el resto sigue en verde.
+      bad("V5", sprintf(
+        "cobertura incompleta: %d/%d versiones parseadas (%d preguntas en el XML, %d descartadas)",
+        revisadas, N_VERSIONES, length(qs), length(qs) - revisadas))
     } else {
-      ok("V5", sprintf("%d/%d preguntas: la opción marcada es exactamente n!",
-                       revisadas, revisadas))
+      ok("V5", sprintf("%d/%d versiones: la opción marcada es exactamente n!",
+                       revisadas, N_VERSIONES))
     }
   }
 }
 
-cat("\n=== V6: unicidad y magnitud — enumeración EXHAUSTIVA del espacio ===\n")
-# El pool tiene 5 errores y se eligen 3 por versión: hay C(5,3) = 10 ternas
-# posibles por cada valor de n. Se enumeran TODAS (3 x 10 = 30 combinaciones),
-# no una muestra.
-N_POOL <- c(4L, 5L, 6L)
-formulas <- list(
-  repeticion = function(n) n^(n - 1L),
-  cuadrado   = function(n) n * n,
-  cardinal   = function(n) n,
-  circular   = function(n) factorial(n - 1L),
-  suma       = function(n) n * (n + 1L) / 2L
-)
-combos <- utils::combn(length(formulas), 3L)
-dup <- 0L; igual_corr <- 0L; excede <- 0L; total <- 0L
-ratios <- numeric(0); rank_corr <- integer(0)
-for (n in N_POOL) {
-  corr <- factorial(n)
-  for (j in seq_len(ncol(combos))) {
-    total <- total + 1L
-    d <- vapply(combos[, j], function(k) formulas[[k]](n), numeric(1L))
-    v <- c(corr, d)
-    if (length(unique(v)) != 4L) dup <- dup + 1L
-    if (any(d == corr))          igual_corr <- igual_corr + 1L
-    r <- max(v) / corr
-    ratios <- c(ratios, r)
-    if (r > 15) excede <- excede + 1L
-    rank_corr <- c(rank_corr, rank(v)[1])   # posición de la correcta por tamaño
+# --- Extracción del chunk real del .Rmd (base de V6 y V7) --------------------
+# V6 y V7 deben medir el ejercicio REAL, no una copia. `sub()` devuelve la
+# entrada intacta cuando el patrón no coincide, así que un encabezado de chunk
+# renombrado haría que `parse()` recibiera el .Rmd completo; y un `stopifnot` de
+# invariante que salte dentro del chunk aborta el script. Ambos casos se capturan
+# aquí para que el reporte V1-V8 y el resumen final siempre se impriman.
+src   <- paste(readLines(RMD, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+chunk <- sub("(?s).*?```\\{r data_generation[^}]*\\}(.*?)```.*", "\\1", src, perl = TRUE)
+env   <- NULL
+err_extraccion <- NA_character_
+if (identical(chunk, src) || !nzchar(trimws(chunk))) {
+  err_extraccion <- "no se pudo extraer el chunk `data_generation` (¿cambió su encabezado?)"
+} else {
+  env <- new.env()
+  set.seed(106)
+  r_chunk <- try(suppressWarnings(eval(parse(text = chunk), envir = env)),
+                 silent = TRUE)
+  if (inherits(r_chunk, "try-error")) {
+    err_extraccion <- paste0("el chunk data_generation ABORTA: ",
+                             sub("\n.*", "", as.character(r_chunk)))
+    env <- NULL
   }
 }
-if (dup == 0L && igual_corr == 0L && excede == 0L) {
-  ok("V6", sprintf(
-    "%d/%d ternas: 4 opciones únicas, ninguna == correcta, razón máx/clave en [%.1fx, %.1fx] (umbral 15x)",
-    total, total, min(ratios), max(ratios)))
-  cat(sprintf("         rango de la correcta por magnitud: %s (varía => sin patrón posicional)\n",
-              paste(sort(unique(rank_corr)), collapse = "/")))
+
+cat("\n=== V6: unicidad y magnitud — enumeración EXHAUSTIVA del espacio ===\n")
+# El pool y el rango de n se EXTRAEN del .Rmd, no se reimplementan aquí: una
+# copia local queda obsoleta en silencio en cuanto alguien añade o cambia una
+# fórmula, y V6 seguiría anunciando "todo verde" sobre el pool viejo mientras el
+# ejercicio real aborta en `exams2moodle` a mitad del lote (regla local:
+# "si añades o cambias una fórmula del pool, V6 debe volver a dar 100 %").
+if (is.null(env)) {
+  bad("V6", err_extraccion)
 } else {
-  bad("V6", sprintf("de %d ternas: %d con duplicados, %d con distractor==correcta, %d exceden 15x",
-                    total, dup, igual_corr, excede))
+  N_POOL   <- env$N_POOL
+  formulas <- lapply(env$errores_conceptuales, function(e) e$calcula)
+  n_slots  <- length(env$errores_sel)
+  combos   <- utils::combn(length(formulas), n_slots)
+  dup <- 0L; igual_corr <- 0L; excede <- 0L; total <- 0L
+  ratios <- numeric(0); domina <- numeric(0); rank_corr <- integer(0)
+  for (n in N_POOL) {
+    corr <- factorial(n)
+    for (j in seq_len(ncol(combos))) {
+      total <- total + 1L
+      d <- vapply(combos[, j], function(k) as.numeric(formulas[[k]](n)), numeric(1L))
+      v <- c(corr, d)
+      if (length(unique(v)) != (n_slots + 1L)) dup <- dup + 1L
+      if (any(d == corr))                      igual_corr <- igual_corr + 1L
+      r <- max(v) / corr
+      ratios <- c(ratios, r)
+      if (r > 15) excede <- excede + 1L
+      domina    <- c(domina, corr / max(d))    # cuánto domina la clave (I-3 es unilateral)
+      rank_corr <- c(rank_corr, rank(v)[1])    # posición de la correcta por tamaño
+    }
+  }
+  if (dup == 0L && igual_corr == 0L && excede == 0L) {
+    ok("V6", sprintf(
+      "%d/%d ternas (pool=%d, slots=%d, n=%s): 4 opciones únicas, ninguna == correcta, razón máx/clave en [%.1fx, %.1fx] (umbral 15x)",
+      total, total, length(formulas), n_slots, paste(N_POOL, collapse = "/"),
+      min(ratios), max(ratios)))
+  } else {
+    bad("V6", sprintf("de %d ternas: %d con duplicados, %d con distractor==correcta, %d exceden 15x",
+                      total, dup, igual_corr, excede))
+  }
+  # Guarda de deriva POSICIONAL sobre la clave (regla #22, patrón P4 aplicado a
+  # la respuesta correcta). I-3 sólo acota que un distractor sea muy grande; NO
+  # acota que la clave domine a todos. Si además el rango de la correcta fuera
+  # siempre el mismo, el ítem sería resoluble por posición sin razonar.
+  cat(sprintf("         rango de la correcta por magnitud: %s en %d ternas | clave/mayor distractor hasta %.1fx\n",
+              paste(sort(unique(rank_corr)), collapse = "/"), total, max(domina)))
+  if (length(unique(rank_corr)) < 2L) {
+    bad("V6", sprintf("rango de la correcta FIJO en el %d.º puesto en las %d ternas: patrón posicional",
+                      unique(rank_corr)[1], total))
+  }
+  if (!any(rank_corr <= 2L)) {
+    cat("         AVISO: la clave nunca queda entre las 2 opciones menores — descartar las 2 menores\n")
+    cat("                deja al estudiante adivinando al 50 %. Ver docs/BACKLOG.md, hallazgo H1.\n")
+  }
 }
 
 cat("\n=== V7: la instancia canónica reproduce el ítem ICFES ===\n")
@@ -174,17 +224,23 @@ canon_pregunta <- paste0(
   "¿De cuántas formas pueden ubicarse los cuatro ",
   "pescadores durante la venia final?"
 )
-src <- paste(readLines(RMD, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
-env <- new.env()
-chunk <- sub("(?s).*?```\\{r data_generation[^}]*\\}(.*?)```.*", "\\1", src, perl = TRUE)
-eval(parse(text = chunk), envir = env)
-e1 <- env$contextos[[1]]$enunciado(4L, "cuatro")
-p1 <- env$contextos[[1]]$pregunta(4L, "cuatro")
-if (identical(e1, canon_enunciado) && identical(p1, canon_pregunta)) {
-  ok("V7", "contexto 1 con n=4 == MAT-2026-1-004 verbatim")
+if (is.null(env)) {
+  bad("V7", err_extraccion)
 } else {
-  bad("V7", "el contexto canónico NO reproduce el ítem original")
-  cat("    esperado: ", canon_enunciado, "\n    obtenido: ", e1, "\n", sep = "")
+  r7 <- try({
+    e1 <- env$contextos[[1]]$enunciado(4L, "cuatro")
+    p1 <- env$contextos[[1]]$pregunta(4L, "cuatro")
+    list(e1 = e1, p1 = p1)
+  }, silent = TRUE)
+  if (inherits(r7, "try-error")) {
+    bad("V7", paste0("no se pudo evaluar el contexto canónico: ",
+                     sub("\n.*", "", as.character(r7))))
+  } else if (identical(r7$e1, canon_enunciado) && identical(r7$p1, canon_pregunta)) {
+    ok("V7", "contexto 1 con n=4 == MAT-2026-1-004 verbatim")
+  } else {
+    bad("V7", "el contexto canónico NO reproduce el ítem original")
+    cat("    esperado: ", canon_enunciado, "\n    obtenido: ", r7$e1, "\n", sep = "")
+  }
 }
 
 cat("\n=== V8: fuga de rol por nombre de archivo ===\n")

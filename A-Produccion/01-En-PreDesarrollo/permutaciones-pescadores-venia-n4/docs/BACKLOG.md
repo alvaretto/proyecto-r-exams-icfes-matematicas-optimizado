@@ -109,25 +109,54 @@ Ver [`../README.md`](../README.md) §"Exportación institucional".
 
 ---
 
-### P1.4 — Orden relativo fijo entre `n²`, `n!` y `n^(n-1)` para `n≥4` — 🔵 OBSERVADO, SIN ACCIÓN
+### H1 (antes P1.4) — La clave nunca está entre las 2 opciones menores: adivinable al 50 % — 🔴 ABIERTO, REQUIERE DECISIÓN HUMANA
 
-**Origen:** detectado por el adversario de corrección matemática en la auditoría del 2026-07-29.
+**Origen:** observado parcialmente por el adversario matemático el 2026-07-29 y catalogado entonces
+como 🔵 BAJA. El code-review de alta intensidad del 2026-07-29 lo **midió** y lo reclasificó: el
+razonamiento con que se cerró («desde que el pool se amplió a 5 errores el rango ya no es
+invariante, 3.º o 4.º, lo que diluye el patrón») era **incorrecto** — que el rango varíe entre 3.º y
+4.º no diluye nada, porque ambos están en la mitad alta.
 
-Para todo `n ≥ 4` se cumple siempre `n² < n! < n^(n-1)` (verificable algebraicamente). Cuando la
-terna sorteada para una versión incluye simultáneamente `EST-PER-01` (`n^(n-1)`) y `EST-PER-02`
-(`n²`), el orden relativo de esas dos magnitudes frente a la correcta (`n!`) es, por tanto, fijo:
-`EST-PER-02` siempre queda por debajo de la clave y `EST-PER-01` siempre por encima.
+**Medición exhaustiva** (3 valores de `n` × C(5,3) = 30 ternas, el espacio completo):
 
-**Por qué no se corrige:** explotar esta regularidad exige conocer tasas de crecimiento factorial
-frente a potencial — un conocimiento más avanzado que el que evalúa el ítem (Nivel 4, no cálculo
-asintótico) — y, desde que el pool se amplió a 5 errores, el rango de la correcta por magnitud ya
-**no** es invariante entre versiones (antes siempre 3.ª, ahora 3.ª o 4.ª, ver
-[`BLUEPRINT.md`](BLUEPRINT.md) §3), lo que diluye el patrón cuando `EST-PER-01`/`EST-PER-02` no son
-ambos parte de la terna sorteada.
+| rango de la clave por magnitud | ternas | % |
+|---|---:|---:|
+| 1.º o 2.º (mitad baja) | **0** | 0 % |
+| 3.º | 18 | 60 % |
+| 4.º (la clave es el máximo) | 12 | 40 % |
 
-**Decisión:** se documenta como observación aceptada, sin acción correctiva. No es un defecto de
-diseño — es una propiedad algebraica de las fórmulas involucradas, y su explotabilidad requiere una
-estrategia fuera del alcance evaluado por el ítem.
+**Consecuencia para el estudiante:** descartar las dos opciones menores sin saber combinatoria deja
+una adivinanza al **50 %** en vez del 25 %; y la heurística «elegir el número mayor» acierta en el
+**40 %** de las versiones. Es la regla #22 patrón P5 (distractor descartable por magnitud) invertida
+sobre la CLAVE, y contradice el pre-flight 14 del `orquestador-schoice`, que exige «verificar el
+ORDEN/RANK de la respuesta correcta».
+
+**Por qué I-3 no lo detecta:** `stopifnot(max(all_vals) / correcta_val <= 15)` es **unilateral**.
+Cuando la clave ES el máximo, la expresión vale `correcta_val/correcta_val = 1.0` y la guarda pasa
+trivialmente. Peor caso medido: `n=6` con terna {cuadrado, cardinal, suma} → opciones
+`{720, 36, 21, 6}`, donde la clave es **20× el mayor distractor** y el ratio de I-3 da 1,0×.
+
+**Por qué no se corrige en esta pasada:** el pool sólo contiene UNA fórmula mayor que `n!`
+(`n^(n-1)`), así que llevar la clave a la mitad baja exige **añadir fórmulas > `n!`** al pool. Eso:
+
+1. cambia el contenido evaluado del ítem (decisión pedagógica, no de mantenimiento);
+2. obliga a re-medir el espacio completo (C(6,3)=20 ternas × 3 `n` = 60) y a re-validar render,
+   diversidad y las 6 invariantes — la regla local lo exige explícitamente;
+3. colisiona con **OE1**: la instancia canónica debe reproducir las 4 opciones oficiales
+   `{4, 16, 24, 64}` de `MAT-2026-1-004`, donde la clave 24 también es la 3.ª. Es decir, **el propio
+   ítem oficial del ICFES tiene esta propiedad**; corregirla en las versiones no canónicas crea una
+   asimetría deliberada que hay que decidir, no deducir;
+4. roza la decisión cerrada **D2** (`n ∈ {4,5,6}` medido), porque las fórmulas candidatas
+   (p. ej. `(n+1)!` = 5040 en `n=6`, 7,0×) mueven la razón de magnitud.
+
+**Mitigación aplicada mientras se decide:** `verificar_render.R` V6 ya no sólo imprime el rango, sino
+que (a) FALLA si el rango de la clave llegara a ser un valor ÚNICO en las 30 ternas (deriva a patrón
+posicional puro), (b) reporta `clave / mayor distractor` para hacer visible la dominancia que I-3 no
+acota, y (c) emite un AVISO explícito mientras la clave no alcance nunca los puestos 1.º o 2.º.
+
+**Decisión pendiente del usuario:** aceptar la propiedad por fidelidad al ítem oficial (y dejar H1
+como observación permanente), o autorizar la ampliación del pool con fórmulas > `n!` y la
+re-medición completa que conlleva.
 
 ---
 

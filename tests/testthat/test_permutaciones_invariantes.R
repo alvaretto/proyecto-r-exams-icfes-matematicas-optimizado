@@ -21,7 +21,9 @@
 # clave FALSA. Este test es la red que atrapa ese caso.
 #
 # Mismo patrón que `test_barco_bbox_invariante.R`: se EXTRAE la definición real
-# del `.Rmd` (no se reimplementa aquí) y se enumera el espacio COMPLETO.
+# del `.Rmd` (no se reimplementa aquí), se enumera el espacio COMPLETO y el
+# `.Rmd` se localiza por NOMBRE, de modo que la suite sobrevive a las promociones
+# 01-En-PreDesarrollo -> 02-En-Desarrollo -> 03-En-Produccion.
 #
 # Referencias:
 #   - A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md
@@ -32,16 +34,40 @@
 
 library(testthat)
 
-repo_root <- tryCatch(
-  system("git rev-parse --show-toplevel", intern = TRUE)[1],
-  error = function(e) normalizePath("..", mustWork = FALSE)
-)
+# --- Raíz del repo (robusto desde cualquier cwd) ------------------------------
+# `system(intern = TRUE)` NO lanza error cuando git falta o el árbol no es un
+# checkout: sólo advierte y devuelve character(0), así que un `tryCatch(error=)`
+# nunca se dispara y `[1]` daría NA. Se comprueba el resultado y se cae a un
+# fallback por archivo marcador (misma forma que test_barco_bbox_invariante.R).
+repo_root <- tryCatch({
+  r <- system("git rev-parse --show-toplevel", intern = TRUE, ignore.stderr = TRUE)
+  if (length(r) >= 1 && dir.exists(r[1])) r[1] else NA_character_
+}, error = function(e) NA_character_)
+if (is.na(repo_root)) {
+  cand <- c(getwd(), file.path(getwd(), "..", ".."))
+  hit  <- cand[file.exists(file.path(cand, ".claude", "rules", "diversidad-sustantiva.md"))]
+  repo_root <- if (length(hit)) normalizePath(hit[1]) else normalizePath(getwd())
+}
 
-RMD <- file.path(
-  repo_root,
-  "A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4",
-  "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd"
-)
+RMD_NAME <- "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd"
+
+# El subproyecto migra 01-En-PreDesarrollo -> 02-En-Desarrollo -> 03-En-Produccion
+# (su destino en producción ya está reservado en esta misma rama). Se busca por
+# NOMBRE para que el test sobreviva a esas promociones: con la ruta fija, el día
+# de la promoción esta suite fallaría, `run_all_tests.R` saldría 1 y el hook
+# pre-push bloquearía todo push del repo, además de apagar en silencio (vía
+# skip_if_not) la guarda I-5, que es la única red contra una clave FALSA.
+localizar_rmd <- function() {
+  hits <- list.files(file.path(repo_root, "A-Produccion"),
+                     pattern = paste0("^", RMD_NAME, "$"),
+                     recursive = TRUE, full.names = TRUE)
+  hits[!grepl("/_archivo/|/salida/|/revision/|/verif_render/", hits)]
+}
+
+RMD <- {
+  h <- localizar_rmd()
+  if (length(h) == 1L) h[1] else ""   # "" => file.exists() FALSE, sin NA
+}
 
 UMBRAL_MAGNITUD <- 15   # razón máx/clave admitida (regla #22, patrón P5)
 N_SLOTS         <- 3L   # distractores por versión (SCHOICE de 4 opciones)
@@ -57,8 +83,15 @@ extraer_entorno <- function(semilla) {
   e
 }
 
-test_that("el .Rmd del subproyecto existe", {
-  expect_true(file.exists(RMD), info = paste("No se encontró:", RMD))
+test_that("el .Rmd del subproyecto se localiza de forma única", {
+  hits <- localizar_rmd()
+  expect_equal(
+    length(hits), 1L,
+    info = paste("Se esperaba exactamente 1 copia de", RMD_NAME,
+                 "bajo A-Produccion/; encontradas:", length(hits),
+                 if (length(hits)) paste0("(", paste(hits, collapse = ", "), ")") else "")
+  )
+  expect_true(file.exists(RMD), info = paste("No se localizó:", RMD_NAME))
 })
 
 test_that("el pool cumple el mínimo de la regla #1 y hay selección por versión", {
