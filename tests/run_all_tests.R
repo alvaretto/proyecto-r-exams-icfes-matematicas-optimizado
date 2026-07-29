@@ -219,6 +219,13 @@ suites <- list(
     critico = TRUE,
     watch = c("diversidad-sustantiva", "test_diversidad_sustantiva",
               "validar_diversidad_sustantiva")
+  ),
+  list(
+    nombre = "Invariante I-2 barco (bbox del casco == clave)",
+    archivo = "tests/testthat/test_barco_bbox_invariante.R",
+    critico = TRUE,
+    watch = c("plano-cartesiano-barco", "coordenadas_vertices_plano_cartesiano",
+              "barco-parametrico", "test_barco_bbox_invariante")
   )
 )
 
