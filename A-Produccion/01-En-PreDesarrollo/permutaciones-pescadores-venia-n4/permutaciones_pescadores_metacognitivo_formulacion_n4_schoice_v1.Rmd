@@ -1,0 +1,481 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+# =============================================================================
+# permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1
+#
+# SCHOICE metacognitivo · Nivel 4 · Descriptor D4.8
+# Competencia: Formulación y ejecución · Componente: Aleatorio
+#
+# Origen: item real MAT-2026-1-004 (simulacro ERA-2026 Matematicas, Sesion 1,
+#         pregunta impresa 4; verbatim de MAT-2026-1-098 del cuadernillo
+#         Matematicas 2026-1). Clasificación ADOPTADA de la ficha oficial,
+#         no re-derivada. Clave oficial: B = 24 = 4!
+#
+# AUTO-CONTENCION OBLIGATORIA: todos los helpers viven DENTRO de este chunk.
+#   validar_diversidad_sustantiva.R hace setwd(tempdir()) e include_supplement()
+#   falla ahí (medido: 40/40 semillas en el hermano desplazamiento-avion).
+#   Ver .claude/CLAUDE.md local, particularidad 1.
+#
+# PROHIBIDO set.seed() dentro de este chunk (regla #10 de .claude/rules/codigo-rmd.md).
+# =============================================================================
+
+# --- Helpers: Familias 1 y 5 de la regla #21 ---------------------------------
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+
+safe_sample <- function(x, size = 1L, replace = FALSE) {
+  if (length(x) == 0L) {
+    stop("safe_sample(): vector de entrada vacio o NULL (campo inexistente?).")
+  }
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
+
+# Formato de miles con punto, al estilo del cuadernillo ICFES ("3.125").
+fmt <- function(x) {
+  formatC(as.integer(x), format = "d", big.mark = ".", decimal.mark = ",")
+}
+
+ex_uid <- paste0("perm-", paste(safe_sample(c(letters, 0:9), 8L, replace = TRUE),
+                                collapse = ""))
+
+# --- Parametro sustantivo: n = número de elementos distintos a ordenar -------
+# Rango MEDIDO por enumeracion exhaustiva (ver docs/BLUEPRINT.md, sección 4.1):
+#   n <= 2 -> colisionan 2 opciones (n! == n^(n-1) == n)
+#   n == 3 -> n^(n-1) == n^2 == 9            -> ERR_ANS_C (opciones duplicadas)
+#   n en {4,5,6} -> 4 opciones unicas; razón max/clave = 2.7x / 5.2x / 10.8x
+#   n >= 7 -> razón >= 23.3x: el distractor mayor se descarta por magnitud
+#             sin razonar (regla #22, patrón P5). Umbral fijado en 15x, con la
+#             ventana medida 10.8x .. 23.3x (holgura factor 2.2, no al filo).
+N_POOL <- c(4L, 5L, 6L)
+n <- safe_sample(N_POOL, 1L)
+
+numeral <- c("4" = "cuatro", "5" = "cinco", "6" = "seis")[[as.character(n)]]
+
+# --- Respuesta correcta: permutaciones lineales de n elementos distintos -----
+correcta_val <- as.integer(factorial(n))          # n!
+correcta     <- fmt(correcta_val)
+
+# Desarrollo del producto para la Solution: n x (n-1) x ... x 1
+desarrollo <- paste(seq.int(n, 1L), collapse = " \\times ")
+
+# --- Pool de errores conceptuales -------------------------------------------
+# Tomados LITERALMENTE de las Justificaciones MetaCognitivas de la ficha
+# oficial MAT-2026-1-004 y generalizados a n. calcula() es determinista
+# (función pura, sin sample/runif): lo verifica la Capa D del validador.
+errores_conceptuales <- list(
+  list(
+    clave             = "repeticion",
+    codigo            = "EST-PER-01",
+    nombre            = "Repetición sin descontar los elementos ya ubicados",
+    descripcion_corta = "Supone que en cada posición siguen disponibles todos los elementos",
+    descripcion_larga = paste0(
+      "Calcula $", n, "^{", n - 1L, "}$: cuenta solo ", n - 1L, " posiciones ",
+      "—como si la última quedara determinada sola— y supone que en cada una ",
+      "de ellas conserva las ", n, " opciones. El doble supuesto es el error: ",
+      "ni el número de posiciones es ", n - 1L, ", ni las opciones se mantienen ",
+      "en ", n, ". Al ir ocupando lugares, los elementos disponibles disminuyen (",
+      paste(seq.int(n, 1L), collapse = ", "), ")."
+    ),
+    causa_raiz  = paste0(
+      "Aplica el principio multiplicativo **con** reemplazo (variación con ",
+      "repetición) a una situación **sin** reemplazo: un elemento ya ubicado ",
+      "en la fila no puede volver a ocupar otra posición."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(n^(n - 1L))
+  ),
+  list(
+    clave             = "cuadrado",
+    codigo            = "EST-PER-02",
+    nombre            = "Producto de solo dos posiciones",
+    descripcion_corta = "Multiplica el número de elementos por sí mismo",
+    descripcion_larga = paste0(
+      "Calcula $", n, " \\times ", n, " = ", n * n, "$: trata la situación ",
+      "como si hubiera solo dos posiciones y en cada una pudiera elegir de ",
+      "nuevo entre los ", n, " elementos. No aplica el factorial ni reduce las ",
+      "opciones disponibles por posición."
+    ),
+    causa_raiz = paste0(
+      "Trunca el principio multiplicativo en dos factores y además lo aplica ",
+      "con reemplazo. Suele aparecer cuando se memoriza «multiplicar» sin ",
+      "identificar cuántas posiciones hay que llenar."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(n * n)
+  ),
+  list(
+    clave             = "cardinal",
+    codigo            = "EST-PER-03",
+    nombre            = "Confusión entre el cardinal del conjunto y el número de arreglos",
+    descripcion_corta = "Responde cuántos elementos hay, no de cuántas formas se ordenan",
+    descripcion_larga = paste0(
+      "Responde ", n, ", que es la cantidad de elementos del conjunto. ",
+      "Confunde «cuántas formas hay de ordenar ", n, " elementos» con ",
+      "«cuántos elementos hay», sin aplicar ningún principio de conteo ",
+      "combinatorio al problema de ordenarlos."
+    ),
+    causa_raiz = paste0(
+      "Lee el dato numérico del enunciado y lo devuelve como respuesta. Es un ",
+      "error de interpretación de la pregunta, previo a cualquier cálculo."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(n)
+  ),
+  list(
+    clave             = "circular",
+    codigo            = "EST-PER-04",
+    nombre            = "Fórmula de permutación circular aplicada a una fila",
+    descripcion_corta = "Usa (n − 1)! en vez de n!, como si el arreglo fuera cerrado",
+    descripcion_larga = paste0(
+      "Calcula $(", n, " - 1)! = ", factorial(n - 1L), "$, que es el número de ",
+      "permutaciones **circulares** de ", n, " elementos. Esa fórmula descuenta ",
+      "las rotaciones porque en un círculo no hay un primer lugar; en una fila ",
+      "sí lo hay, y cada rotación produce un arreglo distinto."
+    ),
+    causa_raiz = paste0(
+      "Aplica una fórmula memorizada sin verificar la condición que la ",
+      "justifica. Confunde un arreglo lineal (con extremos distinguibles) con ",
+      "uno circular (invariante bajo rotación)."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(factorial(n - 1L))
+  ),
+  list(
+    clave             = "suma",
+    codigo            = "EST-PER-05",
+    nombre            = "Principio aditivo en lugar de multiplicativo",
+    descripcion_corta = "Suma las opciones de cada posición en vez de multiplicarlas",
+    descripcion_larga = paste0(
+      "Suma la secuencia en lugar de multiplicarla: $",
+      paste(seq.int(n, 1L), collapse = " + "), " = ",
+      as.integer(n * (n + 1L) / 2L), "$. Identifica correctamente cuántas ",
+      "opciones quedan en cada posición, pero combina esos conteos con la ",
+      "operación equivocada."
+    ),
+    causa_raiz = paste0(
+      "Confunde el principio aditivo con el multiplicativo. El aditivo cuenta ",
+      "alternativas **excluyentes** (o esto o aquello); el multiplicativo, ",
+      "decisiones **sucesivas** (esto y después aquello), que es el caso de ",
+      "llenar posiciones una tras otra."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(n * (n + 1L) / 2L)
+  )
+)
+
+# La selección de los 3 errores y el cálculo de los distractores viven más
+# abajo, después de elegir el contexto: la instancia canónica (contexto 1 con
+# n = 4) fuerza los 3 errores oficiales del ítem ICFES.
+
+# --- Contextos narrativos (regla #11: 6 plantillas, 6 estructuras) -----------
+# El contexto 1 es CANONICO: con n = 4 reproduce VERBATIM el item ICFES
+# MAT-2026-1-004. Los otros 5 son variaciones de la misma estructura
+# matemática (ordenar n elementos distintos en una fila).
+# Ninguna plantilla usa el verbo "registro" (regla #11, límite del 25%).
+contextos <- list(
+  list(  # 1. Escena + accion  -- CANONICO (verbatim ICFES con n = 4)
+    canonico  = TRUE,
+    enunciado = function(n, numeral) paste0(
+      "En una obra de teatro, hay ", n, " personas que interpretan pescadores. ",
+      "Al finalizar la obra, los ", n, " pescadores deben ubicarse en fila en ",
+      "el escenario y hacer una venia ante el público."
+    ),
+    pregunta = function(n, numeral) paste0(
+      "¿De cuántas formas pueden ubicarse los ", numeral,
+      " pescadores durante la venia final?"
+    )
+  ),
+  list(  # 2. Evento + fotografia oficial
+    canonico  = FALSE,
+    enunciado = function(n, numeral) paste0(
+      "En la ceremonia de clausura de los Juegos Intercolegiados, ", n,
+      " atletas medallistas deben formar una sola hilera sobre el podio para ",
+      "la fotografía oficial."
+    ),
+    pregunta = function(n, numeral) paste0(
+      "¿De cuántas maneras distintas pueden ordenarse los ", numeral,
+      " atletas en la hilera?"
+    )
+  ),
+  list(  # 3. Necesidad institucional
+    canonico  = FALSE,
+    enunciado = function(n, numeral) paste0(
+      "El comité organizador de un festival escolar de música debe definir el ",
+      "orden de presentación. Hay ", n, " bandas inscritas y todas tocarán, ",
+      "una después de otra, en la única tarima del evento."
+    ),
+    pregunta = function(n, numeral) paste0(
+      "¿Cuántos órdenes de presentación distintos puede elegir el comité para ",
+      "las ", numeral, " bandas?"
+    )
+  ),
+  list(  # 4. Documento / boletin
+    canonico  = FALSE,
+    enunciado = function(n, numeral) paste0(
+      "El boletín trimestral del colegio publicará, en una sola fila ",
+      "horizontal, las fotografías de los ", n, " estudiantes que ganaron la ",
+      "feria de ciencias."
+    ),
+    pregunta = function(n, numeral) paste0(
+      "¿De cuántas maneras pueden disponerse las ", numeral,
+      " fotografías en esa fila?"
+    )
+  ),
+  list(  # 5. Proyecto del estudiante
+    canonico  = FALSE,
+    enunciado = function(n, numeral) paste0(
+      "Para su proyecto de la clase de tecnología, Valentina debe conectar ", n,
+      " sensores, uno detrás de otro, en un mismo circuito en serie."
+    ),
+    pregunta = function(n, numeral) paste0(
+      "¿Cuántas secuencias distintas de conexión puede armar Valentina con los ",
+      numeral, " sensores?"
+    )
+  ),
+  list(  # 6. Dialogo
+    canonico  = FALSE,
+    enunciado = function(n, numeral) paste0(
+      "—¿En qué orden salimos? —preguntó uno de los ", n, " bailarines antes ",
+      "de la presentación. El coreógrafo respondió que debían formar una sola ",
+      "fila y que cualquier orden era válido."
+    ),
+    pregunta = function(n, numeral) paste0(
+      "¿Cuántas filas distintas pueden formar los ", numeral, " bailarines?"
+    )
+  )
+)
+
+ctx_idx <- safe_sample(seq_along(contextos), 1L)
+ctx     <- contextos[[ctx_idx]]
+texto_enunciado <- ctx$enunciado(n, numeral)
+texto_pregunta  <- ctx$pregunta(n, numeral)
+
+# --- Selección de los 3 errores que se muestran ------------------------------
+# Regla #1 (.claude/rules/ejercicios-metacognitivos.md, "Mínimo 4-6 errores por
+# ejercicio"): el pool tiene 5 y se eligen 3 por versión, con el patrón genérico
+# de filtrado por precondiciones (regla #8 de .claude/rules/codigo-rmd.md).
+#
+# EXCEPCIÓN CANÓNICA: cuando la versión es la instancia del ítem ICFES original
+# (contexto 1 con n = 4) se fuerzan los 3 errores oficiales, de modo que esa
+# versión reproduce MAT-2026-1-004 completo: enunciado, pregunta Y las cuatro
+# opciones (64, 24, 16, 4). Ver docs/BLUEPRINT.md, decisión D3.
+CODIGOS_OFICIALES <- c("EST-PER-01", "EST-PER-02", "EST-PER-03")
+
+params <- list(n = n, correcta_val = correcta_val)
+aplicables <- which(vapply(errores_conceptuales, function(err) {
+  if (is.null(err$precondicion)) return(TRUE)
+  isTRUE(err$precondicion(params))
+}, logical(1L)))
+stopifnot(length(aplicables) >= 3L)
+
+es_canonica <- (ctx_idx == 1L && n == 4L)
+if (es_canonica) {
+  sel <- which(vapply(errores_conceptuales,
+                      function(e) e$codigo %in% CODIGOS_OFICIALES, logical(1L)))
+} else {
+  sel <- sort(safe_sample(aplicables, 3L, replace = FALSE))
+}
+stopifnot(length(sel) == 3L)
+errores_sel <- errores_conceptuales[sel]
+
+# --- Distractores ------------------------------------------------------------
+vals <- vapply(errores_sel, function(err) err$calcula(n), integer(1L))
+names(vals) <- vapply(errores_sel, function(err) err$clave, character(1L))
+
+# I-1: las 4 opciones deben ser distintas (previene ERR_ANS_C).
+all_vals <- c(correcta_val, unname(vals))
+stopifnot(length(unique(all_vals)) == 4L)
+
+# I-2: ningún distractor puede coincidir con la respuesta correcta.
+stopifnot(!any(unname(vals) == correcta_val))
+
+# I-3: plausibilidad de magnitud (regla #22, patrón P5). Umbral medido: 15x.
+stopifnot(max(all_vals) / correcta_val <= 15)
+
+# I-4: todas las opciones son enteros positivos.
+stopifnot(all(all_vals > 0L), all(all_vals == as.integer(all_vals)))
+
+# I-6: la instancia canónica reproduce las opciones oficiales del ítem.
+if (es_canonica) {
+  stopifnot(setequal(all_vals, c(24L, 64L, 16L, 4L)))
+}
+
+# --- Mezcla interna de opciones ---------------------------------------------
+# exshuffle: TRUE es CORRECTO aquí (opciones de TEXTO y Solution
+# letter-independent, regla #19). La mezcla interna solo fija `sol`.
+opciones_pre <- c(
+  list(correcta = correcta),
+  stats::setNames(lapply(unname(vals), fmt), names(vals))
+)
+stopifnot(length(opciones_pre) == 4L)
+perm     <- sample(4L)
+opciones <- unlist(opciones_pre[perm], use.names = FALSE)
+nombres  <- names(opciones_pre)[perm]
+sol      <- as.integer(nombres == "correcta")
+
+# I-5: exactamente una opcion marcada y coincide con el valor correcto.
+stopifnot(sum(sol) == 1L, length(sol) == 4L)
+stopifnot(identical(opciones[which(sol == 1L)], correcta))
+stopifnot(length(unique(opciones)) == 4L)
+
+# --- Reflexiones metacognitivas ----------------------------------------------
+reflexiones <- c(
+  paste0("Identificar por qué una estrategia de conteo falla es tan valioso ",
+         "como aplicar la correcta: el error revela qué supuesto se dio por sentado."),
+  paste0("Antes de elegir una fórmula de conteo conviene preguntarse si los ",
+         "elementos pueden repetirse. Esa sola pregunta separa $n!$ de $n^k$."),
+  paste0("Cuando un problema pide ordenar, verificar el caso más pequeño ",
+         "(con dos elementos hay solo 2 órdenes posibles) permite descartar ",
+         "fórmulas incorrectas en segundos."),
+  paste0("Contar cuántos objetos hay y contar de cuántas formas se pueden ",
+         "organizar son preguntas distintas; confundirlas es uno de los ",
+         "errores más frecuentes en problemas de conteo."),
+  paste0("El principio multiplicativo exige revisar, posición por posición, ",
+         "cuántas opciones quedan realmente disponibles en cada paso."),
+  paste0("Estimar el orden de magnitud antes de calcular ayuda: si una ",
+         "respuesta es muchas veces mayor que las demás, conviene revisar si ",
+         "se permitió repetir elementos sin que el problema lo autorice.")
+)
+reflexion <- safe_sample(reflexiones, 1L)
+
+# --- Info de errores para la Solution (identificados por CONTENIDO) ----------
+errores_info <- lapply(errores_sel, function(err) {
+  list(
+    codigo      = err$codigo,
+    nombre      = err$nombre,
+    texto       = fmt(err$calcula(n)),
+    diagnostico = err$descripcion_larga,
+    causa_raiz  = err$causa_raiz
+  )
+})
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r question_body, echo = FALSE, results = "asis"}
+cat(texto_enunciado, "\n\n", sep = "")
+cat(texto_pregunta, "\n", sep = "")
+```
+
+Answerlist
+----------
+```{r answerlist_q, echo = FALSE, results = "asis"}
+for (i in seq_along(opciones)) {
+  cat("* ", opciones[i], "\n", sep = "")
+}
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+# --- 1. Respuesta correcta ---------------------------------------------------
+cat("### Respuesta correcta {#resp-", ex_uid, "}\n\n", sep = "")
+cat("La respuesta correcta es la opción que indica **", correcta,
+    "**.\n\n", sep = "")
+cat("Ordenar ", n, " elementos distintos en una fila es una **permutación** de ",
+    n, " elementos. El número de permutaciones es el factorial de ", n, ":\n\n",
+    sep = "")
+cat("$$", n, "! = ", desarrollo, " = ", correcta_val, "$$\n\n", sep = "")
+
+# --- 2. Análisis de cada opcion ---------------------------------------------
+# Regla #19: las opciones se identifican por su CONTENIDO y por el código del
+# error, NUNCA por su letra o posicion.
+cat("### Análisis de cada opción\n\n")
+cat("**Opción correcta — ", correcta, "**\n\n", sep = "")
+cat("Se aplica el principio multiplicativo reconociendo que las opciones ",
+    "disponibles disminuyen en cada posición: hay ", n,
+    " candidatos para el primer lugar, ", n - 1L, " para el segundo, ",
+    n - 2L, " para el tercero, y así hasta que solo queda uno.\n\n", sep = "")
+
+for (e in errores_info) {
+  cat("**", e$codigo, " — ", e$nombre, " (respuesta ", e$texto, ")**\n\n",
+      sep = "")
+  cat(e$diagnostico, "\n\n", sep = "")
+  cat("*Causa raíz:* ", e$causa_raiz, "\n\n", sep = "")
+}
+
+# --- 3. Procedimiento correcto ----------------------------------------------
+cat("### Procedimiento correcto\n\n")
+cat("**Paso 1.** Identificar cuántas posiciones hay que llenar. La fila tiene ",
+    n, " lugares, uno por cada elemento.\n\n", sep = "")
+cat("**Paso 2.** Determinar cuántas opciones quedan en cada posición. ",
+    "Como un elemento ya ubicado no puede repetirse, el conjunto disponible ",
+    "decrece de uno en uno:\n\n", sep = "")
+cat("$$", paste(sprintf("\\underbrace{%d}_{\\text{pos. %d}}",
+                        seq.int(n, 1L), seq_len(n)),
+                collapse = " \\times "), "$$\n\n", sep = "")
+cat("**Paso 3.** Multiplicar. El resultado es el factorial de ", n, ":\n\n",
+    sep = "")
+cat("$$", n, "! = ", desarrollo, " = ", correcta_val, "$$\n\n", sep = "")
+
+# --- 4. Propiedades del concepto ---------------------------------------------
+cat("### Propiedades del concepto\n\n")
+cat("- Una **permutación** es un arreglo ordenado que usa **todos** los ",
+    "elementos del conjunto, cada uno exactamente una vez.\n", sep = "")
+cat("- **El orden importa**: intercambiar dos elementos de lugar produce un ",
+    "arreglo distinto y, por tanto, se cuenta aparte.\n", sep = "")
+cat("- El factorial **crece muy rápido**: pasar de ", n, " a ", n + 1L,
+    " elementos multiplica el resultado por ", n + 1L, " (de ", correcta,
+    " a ", fmt(as.integer(factorial(n + 1L))), ").\n", sep = "")
+cat("- Si los elementos **pudieran repetirse**, la respuesta ya no sería ",
+    "$n!$ sino una potencia. Esa es exactamente la diferencia entre este ",
+    "problema y el del caso siguiente.\n\n", sep = "")
+
+# --- 5. Caso especifico: transferencia al conteo CON repeticion --------------
+cat("### Caso específico\n\n")
+cat("Considere ahora un problema en apariencia parecido: formar códigos de 4 ",
+    "cifras usando los dígitos del conjunto $\\{1,2,3,4,5\\}$, **donde los ",
+    "dígitos sí se pueden repetir**. Aquí cada una de las 4 posiciones ",
+    "conserva las 5 opciones, porque usar un dígito no lo elimina del ",
+    "conjunto:\n\n", sep = "")
+cat("$$5 \\times 5 \\times 5 \\times 5 = 5^4 = 625$$\n\n")
+cat("La estructura del cálculo es la misma —multiplicar las opciones de cada ",
+    "posición—, pero el número de opciones por posición **no decrece**. ",
+    "Reconocer si hay o no reemplazo es lo que decide entre $n!$ y una ",
+    "potencia.\n\n", sep = "")
+# El puntero al error de repetición solo se emite si ese error está entre los
+# tres seleccionados en esta versión (el pool es de 5 y se eligen 3).
+codigos_sel <- vapply(errores_sel, function(e) e$codigo, character(1L))
+if ("EST-PER-01" %in% codigos_sel) {
+  cat("Aplicar la potencia al problema de la fila es precisamente el error ",
+      "EST-PER-01 analizado arriba.\n\n", sep = "")
+}
+
+# --- 6. Reflexion metacognitiva ----------------------------------------------
+cat("### Reflexión metacognitiva\n\n")
+cat(reflexion, "\n\n", sep = "")
+
+# --- 7. Estrategia para evitar el error --------------------------------------
+cat("### Estrategia para evitar el error\n\n")
+cat("1. **Leer qué se pregunta**: ¿cuántos elementos hay, o de cuántas formas ",
+    "se organizan? Son preguntas distintas.\n", sep = "")
+cat("2. **Contar las posiciones** que hay que llenar y escribirlas como ",
+    "casillas vacías.\n", sep = "")
+cat("3. **Preguntarse si hay reemplazo**: ¿un elemento ya usado vuelve a estar ",
+    "disponible? Si no, las opciones decrecen y el resultado es un factorial.\n",
+    sep = "")
+cat("4. **Verificar con un caso pequeño**: con 2 elementos solo hay 2 órdenes ",
+    "posibles. Una fórmula que ahí no dé 2 es incorrecta.\n\n", sep = "")
+```
+
+Meta-information
+================
+exname: permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre informacion cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra informacion cuantitativa o esquematica.
+exextra[Nivel]: 4
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error

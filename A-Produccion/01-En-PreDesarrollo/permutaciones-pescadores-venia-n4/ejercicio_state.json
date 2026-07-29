@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-07-29T16:28:02.061050-05:00",
+  "timestamp_ultima_actualizacion": "2026-07-29T16:59:23.235463-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:28:02.098539-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-07-29T16:28:02.155260-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:11.911126-05:00",
+      "archivo": "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:11.967598-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:12.026072-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:12.081593-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:12.138701-05:00",
+      "veredicto": "APROBAR CON CAMBIOS (aplicados)"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:12.194390-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:23.235463-05:00",
+      "versiones_unicas": 297
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-07-29T16:59:12.254113-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}

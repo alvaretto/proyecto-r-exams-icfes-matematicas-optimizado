@@ -1,0 +1,30 @@
+# .gitignore local — subproyecto permutaciones-pescadores-venia-n4
+#
+# Alcance DELIBERADAMENTE mínimo: solo cubre los artefactos derivados que el
+# .gitignore del repo raíz NO atrapa. Todo lo demás (salida/, output_*/, *.html,
+# *.pdf, *.docx, *.xml) ya está cubierto allí, y duplicarlo aquí solo crearía
+# dos fuentes de verdad que se desincronizan.
+#
+# La distinción fuente/derivado está documentada en README.md, sección
+# "Estructura de archivos". Regla corta: si lo regenera un `exams2*()` o
+# `verificar_render.R`, es derivado.
+#
+# Nota: este ejercicio NO genera imágenes (Flujo B = false), así que —a
+# diferencia del hermano plano-cartesiano-barco-n2— aquí no hace falta ninguna
+# regla que contrarreste la negación `!**/*.png` del .gitignore raíz.
+
+# ---------------------------------------------------------------------------
+# Salida transitoria de verificar_render.R
+# ---------------------------------------------------------------------------
+# Sus .html/.pdf/.docx/.xml ya los ignora la raíz, pero NO el .rds de metadatos
+# que escribe exams2nops(), ni el XML de Moodle que produce V5. Se ignora el
+# directorio completo, que es lo que corresponde a una salida transitoria.
+/verif_render/
+
+# ---------------------------------------------------------------------------
+# Metadatos de exams2nops()
+# ---------------------------------------------------------------------------
+# exams2nops() escribe un .rds con la correspondencia versión↔respuestas en su
+# `dir`. Si alguien lo ejecuta sin `dir=` acaba en la raíz del subproyecto.
+# Ningún .rds es fuente en este subproyecto.
+*.rds
