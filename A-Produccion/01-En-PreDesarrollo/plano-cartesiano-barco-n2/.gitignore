@@ -1,0 +1,44 @@
+# .gitignore local — subproyecto plano-cartesiano-barco-n2
+#
+# Resuelve el ítem P2.3 de docs/BACKLOG.md.
+#
+# Alcance DELIBERADAMENTE mínimo: solo cubre los artefactos derivados que el
+# .gitignore del repo raíz NO atrapa. Todo lo demás (salida/, output_*/, *.html,
+# *.pdf, *.docx, *.xml) ya está cubierto allí, y duplicarlo aquí solo crearía dos
+# fuentes de verdad que se desincronizan.
+#
+# La distinción fuente/derivado está documentada en README.md, sección
+# "Estructura de archivos". Regla corta: si lo regenera un `exams2*()` o
+# `verificar_render.R`, es derivado.
+
+# ---------------------------------------------------------------------------
+# Figura del ejercicio
+# ---------------------------------------------------------------------------
+# La regenera dibujar_barco() en CADA render, dentro del directorio temporal de
+# xexams(). La copia que aparece en la raíz del subproyecto proviene de una
+# ejecución manual y no la usa el render.
+#
+# Hace falta la regla explícita porque el .gitignore de la raíz contiene una
+# NEGACIÓN (`!**/*.png`, línea 94) que des-ignora todos los PNG del repo. Sin
+# esta línea, `plano_barco.png` reaparece como untracked tras cada render.
+#
+# La barra inicial ancla la regla a este directorio: NO debe afectar a
+# _archivo/prototipo-flujo-b/comparacion_flujo_b.png, que sí está trackeado
+# como artefacto histórico del Flujo B.
+/plano_barco.png
+
+# ---------------------------------------------------------------------------
+# Salida transitoria de verificar_render.R
+# ---------------------------------------------------------------------------
+# Sus .html/.pdf/.docx/.xml ya los ignora la raíz, pero NO el .rds de metadatos
+# que escribe exams2nops(). Se ignora el directorio completo, que es lo que
+# corresponde a una salida transitoria de verificación.
+/verif_render/
+
+# ---------------------------------------------------------------------------
+# Metadatos de exams2nops()
+# ---------------------------------------------------------------------------
+# exams2nops() escribe un .rds con la correspondencia versión↔respuestas en su
+# `dir`. Si alguien lo ejecuta sin `dir=` acaba en la raíz del subproyecto.
+# Ningún .rds es fuente en este subproyecto (verificado con `git ls-files`).
+*.rds

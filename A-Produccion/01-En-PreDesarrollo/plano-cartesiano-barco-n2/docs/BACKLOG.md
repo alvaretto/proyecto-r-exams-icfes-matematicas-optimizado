@@ -358,12 +358,39 @@ Requiere cerrar P1.1 (decisión del usuario) y la suite completa del repo en ver
 Requiere aplicación con estudiantes reales y análisis de diagnosticidad por distractor. Ver
 [`ROADMAP.md`](ROADMAP.md) §4. Es el gate que la validación automática **no** puede sustituir.
 
-### P2.3 — Artefactos derivados sin regla de exclusión en git
-`plano_barco.png`, `salida/`, `verif_render/` y el `.html` suelto de la raíz son derivados que se
-regeneran en cada render. Hoy no están cubiertos por ninguna regla de exclusión y aparecen como
-untracked. No se tocó el `.gitignore` del repo raíz en esta sesión porque ya venía modificado en el
-árbol de trabajo por otro trabajo ajeno a este subproyecto. **Acción sugerida:** añadir un
-`.gitignore` local al subproyecto cuando se resuelva el estado del `.gitignore` raíz.
+### P2.3 — Artefactos derivados sin regla de exclusión en git — ✅ **RESUELTO 2026-07-28**
+
+Se añadió un **`.gitignore` local** al subproyecto, en vez de tocar el del repo raíz (que ya venía
+modificado en el árbol de trabajo por trabajo ajeno a este subproyecto).
+
+**Auditoría previa.** Antes de escribirlo se comprobó, con `git check-ignore -q` y su código de
+salida, qué cubría ya la raíz:
+
+| Artefacto | ¿Lo ignora la raíz? |
+|---|---|
+| `salida/*`, `output_*/`, `*.html` de la raíz del SP | Sí |
+| `verif_render/*.html`, `*.pdf`, `*.docx`, `*.xml` | Sí |
+| `verif_render/*.rds` (metadatos de `exams2nops()`) | **No** |
+| `plano_barco.png` | **No** — la raíz tiene una **negación** `!**/*.png` (línea 94) que des-ignora todos los PNG del repo |
+
+Por eso el `.gitignore` local tiene alcance **deliberadamente mínimo**: solo esas dos brechas más
+un `*.rds` defensivo. Duplicar lo que ya cubre la raíz crearía dos fuentes de verdad que se
+desincronizan.
+
+```gitignore
+/plano_barco.png    # anclado: NO debe afectar a _archivo/prototipo-flujo-b/comparacion_flujo_b.png
+/verif_render/
+*.rds
+```
+
+**La barra inicial de `/plano_barco.png` es esencial**: sin ella la regla también atraparía
+`_archivo/prototipo-flujo-b/comparacion_flujo_b.png`, que **sí está trackeado** como artefacto
+histórico del Flujo B. Verificado con `git ls-files` que es el único `.png` trackeado del
+subproyecto, y con `git check-ignore` que sigue sin ignorarse tras el cambio.
+
+**Criterio de cierre — verificado:** `git status` del subproyecto queda limpio (sin untracked);
+`plano_barco.png`, `verif_render/` y cualquier `.rds` de la raíz quedan ignorados; el PNG archivado
+sigue trackeado.
 
 ### P2.5 — La Solution tenía 4 de las 6 subsecciones canónicas — ✅ **RESUELTO 2026-07-28**
 **Origen:** auditoría del detractor (2026-07-28).

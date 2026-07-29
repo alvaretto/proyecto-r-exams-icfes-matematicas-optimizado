@@ -107,6 +107,7 @@ pero ajustadas al membrete institucional (I. E. Pedacito de Cielo).
 
 ```
 plano-cartesiano-barco-n2/
+├── .gitignore                     # FUENTE — ignora los derivados que la raíz no cubre
 ├── README.md                      # Este archivo
 ├── HANDOFF.md                     # Documento de reanudación — fuente principal
 ├── docs/
