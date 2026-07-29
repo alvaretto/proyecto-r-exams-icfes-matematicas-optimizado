@@ -56,7 +56,7 @@ Rscript ../../../.claude/scripts/validar_coherencia_matematica.R \
 
 Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
   coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd --n 40
-# → PASS, 40/40 evaluadas, 36 valores únicos de la respuesta correcta
+# → PASS, 40/40 evaluadas, 38 valores únicos de la respuesta correcta
 ```
 
 ## Cómo renderizar los 4 formatos canónicos
@@ -151,21 +151,22 @@ son fuente y deben trackearse.
 
 - `../../../.claude/rules/markdown-imagenes-pdf.md` — regla #18: la única imagen del ejercicio,
   `plano_barco.png`, se referencia con atributo de ancho explícito
-  (`![](plano_barco.png){width=80%}`, línea 317), nunca sin `{width=...}`.
+  (`![](plano_barco.png){width=80%}`, línea 325), nunca sin `{width=...}`.
 - `../../../.claude/rules/solution-letter-independence.md` — regla #19: la Solution identifica
   cada opción por su texto de coordenadas y su código de error (`GEO-COORD-01/02/04`, líneas
-  373-378), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 472) sin
+  372-376), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 472) sin
   romper coherencia si R/exams o Moodle reordenan las opciones.
 - `../../../.claude/rules/markdown-tablas-pandoc.md` — regla #20: el guard
   `\@ifundefined{c@none}{\newcounter{none}}{}` está presente por defecto al inicio de `Question`
-  (líneas 306-308), aunque este ejercicio no usa tablas Markdown — lo aplican los skills y
+  (línea 315), aunque este ejercicio no usa tablas Markdown — lo aplican los skills y
   orquestadores de generación como estándar.
 - `../../../.claude/rules/familias-soluciones-rmd.md` — regla #21: usa la Familia 1
   (`pick_int()`, sin `repeat` sin cota) y la Familia 5 (`safe_sample()`, protección contra la
   trampa `sample(escalar)`), ambas declaradas explícitamente en el comentario de la línea 12.
 - `../../../.claude/rules/diversidad-sustantiva.md` — regla #22: `ancho_barco`, `alto_barco`,
-  `x_min` y `y_min` se aleatorizan con `pick_int()`/`safe_sample()` (líneas 24-43), no son
-  literales fijos. Verificado con `validar_diversidad_sustantiva.R --n 40`: PASS, 36/40 valores
+  `x_min` y `y_min` se aleatorizan con `pick_int()`/`safe_sample()` (líneas 24-51), no son
+  literales fijos. `y_pool` ya no lleva exclusiones (P2.7, 2026-07-28): espacio de versiones
+  222 → 374. Verificado con `validar_diversidad_sustantiva.R --n 40`: PASS, 38/40 valores
   únicos de la respuesta correcta.
 
 ## Enlaces
