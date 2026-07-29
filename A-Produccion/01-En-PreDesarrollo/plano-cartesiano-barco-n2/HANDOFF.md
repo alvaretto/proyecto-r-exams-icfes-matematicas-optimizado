@@ -187,7 +187,21 @@ Bloqueada por incompatibilidad entre `include_supplement()` y
 reintentar sin resolver antes el criterio de desbloqueo (adaptar el validador, que es herramienta
 compartida). Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.2.
 
-### 5.2 — `ejercicio_state.json` tiene dos pasos desactualizados — ⏳ **EN MANOS DEL USUARIO**
+### 5.2 — `ejercicio_state.json` tenía dos pasos desactualizados — ✅ **RESUELTO 2026-07-28**
+
+> **Cierre.** El usuario revisó el ítem y lo declaró **aprobado para testear en el aula**. Se
+> re-selló `aprobacion_usuario` (2026-07-28 21:31) y se re-corrió el detractor sobre la versión
+> actual — veredicto **APROBAR**, sin objeciones críticas ni altas — sellando `detractor_fase2c`.
+> Ambos pasos describen ahora el ejercicio vigente (318 versiones, `GEO-COORD-04`, Solution de 6
+> subsecciones). La única objeción del detractor (severidad media, no bloqueante) era la ausencia de
+> guarda automática de la invariante I-2, **ya resuelta** con
+> `tests/testthat/test_barco_bbox_invariante.R` (ver §6).
+>
+> **El subproyecto NO se promovió.** Se ejecutó el `git mv` a `02-En-Desarrollo/` y el usuario pidió
+> deshacerlo; permanece en `01-En-PreDesarrollo/` y se probará en aula desde aquí. No re-proponer la
+> promoción sin que el usuario la pida.
+
+<details><summary>Contexto histórico (por qué estaban desactualizados)</summary>
 
 > **Nota (post P2.5/P2.7/P1.1-A′):** el `.Rmd` recibió tres cambios adicionales en la misma fecha —
 > la Solution ganó dos subsecciones (P2.5), `y_pool` perdió sus 4 exclusiones (P2.7) y el espacio
@@ -209,6 +223,8 @@ cambio del 2026-07-28 y ya no describen el ejercicio actual:
 **No se modificó el JSON**: cambiar un estado de aprobación humana no es decisión de un agente.
 Antes de promover a `02-En-Desarrollo/` conviene **re-confirmar la aprobación** sobre la versión
 actual, o registrar explícitamente que el cambio de distractor no la invalida.
+
+</details>
 
 ### 5.3 — Decisiones cerradas (no reabrir sin motivo nuevo)
 
@@ -233,9 +249,9 @@ no reintroducir exclusiones sin volver a medir (invariante I-3 de `docs/BLUEPRIN
 | Riesgo | Mitigación |
 |---|---|
 | Un agente "limpia" el código duplicado y extrae `dibujar_barco()` a un archivo externo | `.claude/CLAUDE.md` particularidad 1 + invariante I-1 + pre-flight 19 del orquestador |
-| Un agente "suaviza" `prof()` para que el barco se vea mejor → la clave pasa a ser falsa sin error de sintaxis | `.claude/rules/barco-parametrico.md` (contrato C1-C3) + comentario de la invariante I-2 en el propio `.Rmd` |
+| Un agente "suaviza" `prof()` para que el barco se vea mejor → la clave pasa a ser falsa sin error de sintaxis | **`tests/testthat/test_barco_bbox_invariante.R`** (guarda automática desde 2026-07-28: extrae `dibujar_barco()` del `.Rmd` real y compara el bbox con la clave en las 318 combinaciones; enganchado al runner → corre en pre-push y CI) + `.claude/rules/barco-parametrico.md` (contrato C1-C3) + comentario de la invariante I-2 en el propio `.Rmd` |
 | Se copia el `exshuffle: FALSE` del subproyecto hermano por analogía | `.claude/CLAUDE.md` particularidad 4 |
-| Se borran `Semillero*.R` o `pcielo*.tex` por parecer ruido | `.claude/CLAUDE.md` particularidad 6 + README §Cómo exportar |
+| Se borran `Semillero*.R` o `pcielo*.tex` por parecer ruido | **PROHIBIDO — directiva explícita del usuario (2026-07-28): «hacen parte fundamental del render».** `SemilleroUnico_v2.R` los usa como plantillas institucionales (`template = "solpcielo"` → PDF, `template = "pcielo.tex"` → DOCX). Los 6 archivos existen y nunca fueron borrados en la historia de git. No borrarlos, no "limpiarlos", no moverlos a `_archivo/`. Refuerzo: `.claude/CLAUDE.md` particularidad 6 + README §Cómo exportar |
 | Las citas de línea de la documentación se desplazan al editar el `.Rmd` | `docs/BLUEPRINT.md` §6 lista anclas de control para re-verificar |
 
 ---
@@ -266,12 +282,18 @@ Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
 
 ### Siguiente paso concreto
 
-**P0.1, P1.1, P2.5 y P2.7 están cerrados** (2026-07-28). **No queda ningún pendiente técnico.** Lo
-único que falta es una decisión humana:
+**P0.1, P1.1, P2.5, P2.7 y la re-confirmación de la aprobación están cerrados** (2026-07-28). El
+ítem está **aprobado para testear en el aula** y el subproyecto **se queda en
+`01-En-PreDesarrollo/`** por decisión del usuario (se promovió y se revirtió; ver §5.2).
 
-**1. Revisar el ítem y re-confirmar la aprobación.** El usuario pidió revisarlo personalmente antes
-de re-confirmar o promover (§5.2). El material está listo en `revision/` (no versionado, es
-derivado):
+**Siguiente paso: aplicarlo en aula (OE11).** Exportar con `SemilleroMoodle_v2.R` (ya apuntado a
+este ejercicio, `copias <- 100`) o `SemilleroUnico_v2.R` para PDF/DOCX con plantillas `pcielo`.
+Después, la evidencia de Nivel 3 habilita `/promover-ejercicio`. Destino ya reservado:
+`03-En-Produccion/05-Geometría/Pensamiento-Espacial/01-Puntos-Y-Lineas/coordenadas_vertices_plano_cartesiano_n2/`.
+
+<details><summary>Material de revisión humana (ya usado, se conserva para futuras iteraciones)</summary>
+
+El material está en `revision/` (no versionado, es derivado):
 
 | Archivo | Para qué |
 |---|---|
@@ -281,12 +303,10 @@ derivado):
 
 Regenerarlo: `exams2html(rmd, n = 12, dir = "revision")` + `exams2pdf(...)` y `magick montage`.
 
-**2. Según el resultado de esa revisión:**
+Resultado de la revisión del 2026-07-28: **aprobado**. Si en una iteración futura apareciera algo,
+abrir el ítem correspondiente en [`docs/BACKLOG.md`](docs/BACKLOG.md).
 
-- Si la aprobación sigue vigente → registrar la re-confirmación en `ejercicio_state.json`
-  (`aprobacion_usuario` y `detractor_fase2c`) y promover a `02-En-Desarrollo/` con `git mv`
-  (ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §3).
-- Si aparece algo → abrir el ítem correspondiente en [`docs/BACKLOG.md`](docs/BACKLOG.md).
+</details>
 
 **Opcional, no bloqueante:** quedan 48 versiones (15,1 %) de `ratio 2.0` — cápsulas alargadas,
 aceptables. Eliminarlas también cuesta 48 versiones más (opción **A**, 318 → 270) o exige rediseñar
@@ -321,7 +341,12 @@ Reglas locales: [`.claude/CLAUDE.md`](.claude/CLAUDE.md) ·
 
 ---
 
-**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — **P1.1 cerrado** con la opción A′: `ratio ≥ 2` por
+**Versión:** 1.3 · **Fecha:** 2026-07-28 (v1.3 — **ítem aprobado para aula**: `aprobacion_usuario`
+re-sellada y detractor re-corrido sobre la versión actual (APROBAR); su única objeción (media, no
+bloqueante) resuelta con `tests/testthat/test_barco_bbox_invariante.R`, guarda automática de la
+invariante I-2 verificada por mutación; el `git mv` a `02-En-Desarrollo/` se ejecutó y **se
+revirtió** a petición del usuario → el subproyecto se queda en `01-En-PreDesarrollo/`; reforzada la
+prohibición de borrar `Semillero*.R`/`pcielo*.tex`. v1.2 — **P1.1 cerrado** con la opción A′: `ratio ≥ 2` por
 construcción, espacio de versiones 374 → **318**, invariante I-9; material de revisión humana en
 `revision/`; único pendiente = re-confirmación de la aprobación. v1.1 — P2.5 y P2.7 resueltos:
 Solution con 6 subsecciones canónicas, espacio de versiones 222 → 374)

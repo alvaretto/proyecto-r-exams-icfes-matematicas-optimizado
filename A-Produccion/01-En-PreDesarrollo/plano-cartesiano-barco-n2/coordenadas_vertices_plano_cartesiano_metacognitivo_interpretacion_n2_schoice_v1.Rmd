@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 ```{r data_generation, echo=FALSE, results='hide'}
 # ============================================================
 # coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1

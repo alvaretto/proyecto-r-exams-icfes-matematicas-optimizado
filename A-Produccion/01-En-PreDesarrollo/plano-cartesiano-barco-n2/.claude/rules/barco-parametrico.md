@@ -45,7 +45,23 @@ restricción podría levantarse, pero solo tras re-medir.
 
 ## Verificación obligatoria tras cualquier cambio en `dibujar_barco()`
 
-No basta con mirar un PNG. Ejecutar la enumeración exhaustiva del espacio de parámetros:
+**Guarda automática (desde 2026-07-28).** El contrato C1-C2 tiene test de regresión en el repo raíz:
+
+```bash
+Rscript tests/run_one_suite.R tests/testthat/test_barco_bbox_invariante.R   # ~2 s
+```
+
+No reimplementa el dibujo: **extrae `dibujar_barco()` del `.Rmd` real** (todo lo anterior al
+`p <- ggplot()`), lo ejecuta sobre las 318 combinaciones y compara el *bounding box* del casco con la
+clave. Verificado por mutación: perturbar el tramo central de `prof()` a `h/2 * 0.97` lo hace fallar
+en **318/318** — mientras `validar_coherencia_matematica.R` sigue diciendo APROBADO y
+`validar_diversidad_sustantiva.R` sigue diciendo PASS. Está enganchado a `tests/run_all_tests.R`
+(suite «Invariante I-2 barco»), así que también corre en pre-push y CI.
+
+Si cambias el espacio de parámetros, actualiza `N_ESPERADO` y `combinaciones()` en ese test; sus
+anclas de texto sobre el `.Rmd` fallan a propósito para avisarte.
+
+Además, no basta con mirar un PNG. Ejecutar la enumeración exhaustiva del espacio de parámetros:
 
 ```r
 grid_max <- 10L
