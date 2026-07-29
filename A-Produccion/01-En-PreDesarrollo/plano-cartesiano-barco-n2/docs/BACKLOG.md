@@ -121,17 +121,23 @@ Ninguna de estas comprobaciones encontró problemas:
 
 ## P1 — Deuda de desarrollo
 
-### P1.1 — El casco no se lee como barco en el 27 % de las versiones — 🟡 **RESUELTO EN PARTE 2026-07-28** (opción D aplicada)
+### P1.1 — El casco no se lee como barco en el 27 % de las versiones — ✅ **RESUELTO 2026-07-28** (opción D + opción A′)
 
-> **Estado:** se aplicó la **opción D**, que ataca el mecanismo dominante (solape de las bandas).
-> El defecto de la mancha negra fusionada está corregido y verificado. **Queda un residual**: el
-> contorno del casco a `ratio 1.5` sigue siendo una cápsula redondeada más que un barco — eso es el
-> mecanismo 1, que la opción D no aborda por diseño. Ver «Resolución aplicada» al final del ítem.
+> **Estado final:** se atacaron **los dos** mecanismos. La **opción D** (radio de las bandas acotado
+> por el ancho) resolvió el mecanismo dominante —la mancha negra fusionada—. La **opción A′**
+> (`ratio ≥ 2`, decisión del usuario) resolvió el residual del contorno eliminando del sorteo las 56
+> versiones de `ratio 1.5`, las únicas que la inspección visual califica de inaceptables. Espacio de
+> versiones **374 → 318** (−15,0 %). Ver «Resolución del residual — opción A′» al final del ítem.
+
+> **Re-medición sobre el espacio ampliado (2026-07-28, sesión posterior).** La distribución de
+> ratios se volvió a medir por enumeración exhaustiva sobre las **374** combinaciones vigentes tras
+> P2.7. El resultado y los costes actualizados de las opciones están en «Re-medición post-P2.7» al
+> final del ítem. **La proporción de versiones degeneradas prácticamente no cambió** (27,0 % → 27,8 %),
+> pero los costes absolutos de la opción A sí, y la tabla de opciones los citaba desactualizados.
 
 **Medición (2026-07-28).** La forma del casco depende de la relación de aspecto
 `ratio = ancho_barco / alto_barco`. Distribución sobre las **222** combinaciones válidas vigentes en
-el momento de esta medición (antes de P2.7; el espacio creció después a 374 y esta distribución de
-ratios no se volvió a medir sobre el espacio ampliado):
+el momento de esta medición (antes de P2.7):
 
 | ratio | Combinaciones | % | Lectura visual |
 |---|---|---|---|
@@ -205,8 +211,8 @@ invariante I-2 sobre `prof()`.
 
 | Opción | Qué hace | Coste |
 |---|---|---|
-| **A** | Restringir el sorteo a `ratio ≥ 2.5` (`alto_barco = 2` sólo con `ancho_barco ≥ 5`) | Espacio de versiones 222 → **162 preguntas distintas** (−27 %). Sigue muy por encima de lo que exigen los validadores: `validar_diversidad` cuenta renders únicos (162 × 8 protagonistas × 4 reflexiones × 24 órdenes ≈ 124 000) |
-| **B** | Rediseñar el perfil del casco para que funcione a cualquier aspecto (p. ej. proa asimétrica con popa roma explícita, en vez de un perfil casi simétrico) | Trabajo de diseño gráfico + re-verificación completa. Conserva las 222 versiones |
+| **A** | Restringir el sorteo a `ratio ≥ 2.5` (`alto_barco = 2` sólo con `ancho_barco ≥ 5`) | *(coste re-medido sobre 374 — ver «Re-medición post-P2.7»)* Espacio de versiones 374 → **270 preguntas distintas** (−27,8 %). Sigue muy por encima de lo que exigen los validadores: `validar_diversidad` cuenta renders únicos (270 × 8 protagonistas × 4 reflexiones × 24 órdenes ≈ 207 000) |
+| **B** | Rediseñar el perfil del casco para que funcione a cualquier aspecto (p. ej. proa asimétrica con popa roma explícita, en vez de un perfil casi simétrico) | Trabajo de diseño gráfico + re-verificación completa. Conserva las 374 versiones |
 | **C** | Aceptar el 27 % como está | Coste 0. El ítem es correcto; sólo pierde fidelidad narrativa en algunas versiones |
 | **D** | Atacar el mecanismo dominante: acotar el radio de las bandas por el ancho, p. ej. `r1 <- min(h*0.46, w*0.28)` y `r2 <- min(h*0.40, w*0.24)`, de modo que dejen de solaparse cuando `w` es pequeño | Conserva **las 222 versiones**. No toca `prof()` ni la invariante I-2 (las bandas son decorativas, no participan del *bounding box*). Requiere re-inspección visual de las 8 combinaciones |
 
@@ -252,13 +258,103 @@ invariante I-2 (re-verificado: 222/222 sin desajuste).
 **Verificación visual (`w=3, h=2`, el caso peor):** antes, las dos medialunas y el puente formaban
 una sola mancha negra; ahora los tres elementos se distinguen individualmente. **Residual honesto:**
 la silueta sigue siendo una cápsula redondeada, no un barco — eso es el mecanismo 1 (contorno), y
-las opciones **A** (restringir a `ratio ≥ 2.5`, cuesta 60 versiones) y **B** (rediseñar el perfil)
-siguen disponibles si se quiere resolver también.
+las opciones **A** (restringir a `ratio ≥ 2.5`, cuesta 104 versiones sobre el espacio actual) y
+**B** (rediseñar el perfil) siguen disponibles si se quiere resolver también.
+
+#### Re-medición post-P2.7 (2026-07-28, sesión posterior)
+
+La distribución de ratios de arriba se midió sobre 222 combinaciones. Tras P2.7 el espacio es de
+374, así que se **re-enumeró exhaustivamente** (no muestreo) para que la decisión pendiente se tome
+con cifras vigentes:
+
+| ratio | Combinaciones | % | Lectura visual (verificada con render ampliado ×2) |
+|---|---|---|---|
+| 1.5 | 56 | 15,0 % | **Octágono simétrico — no se lee como barco** |
+| 2.0 | 48 | 12,8 % | Cápsula alargada, aún simétrica — marginal |
+| 2.5 | 40 | 10,7 % | Ya se lee como casco (proa y popa afinadas) |
+| 3.0 | 95 | 25,4 % | Correcto |
+| 4.0 | 54 | 14,4 % | Correcto |
+| 5.0 | 45 | 12,0 % | Correcto |
+| 6.0 | 36 | 9,6 % | Correcto (el mejor) |
+
+**104 de 374 versiones (27,8 %) tienen `ratio ≤ 2`** — la proporción apenas se movió respecto del
+27,0 % medido sobre 222, pero el coste absoluto de recortar sí cambió.
+
+**Precisión sobre el mecanismo residual.** La inspección ampliada de los cuatro casos muestra que lo
+que falla no es «el afinado es demasiado brusco», sino que **el perfil es casi simétrico**: proa
+(`t^0.7`) y popa (`t^0.5`) son apenas distinguibles, de modo que la silueta no tiene dirección. A
+`ratio ≥ 2.5` la elongación compensa esa falta de dirección y la figura se lee como casco; a 1.5 y
+2.0 no hay elongación que la compense. Esto acota el alcance de la opción **B**: no basta con
+retocar el exponente del afinado, hay que introducir **asimetría explícita** proa/popa.
+
+**Costes actualizados de las opciones (medidos por enumeración):**
+
+| Opción | Restricción | Versiones resultantes | Coste |
+|---|---|---|---|
+| **C** | Ninguna (aceptar) | **374** | 0 — 104 versiones (27,8 %) siguen siendo cápsulas |
+| **A′** *(nueva)* | `ratio ≥ 2` (`alto = 2` sólo con `ancho ≥ 4`) | **318** | −56 versiones (−15,0 %). Elimina sólo el caso claramente malo; conserva el marginal |
+| **A** | `ratio ≥ 2.5` (`alto = 2` sólo con `ancho ≥ 5`) | **270** | −104 versiones (−27,8 %). Elimina cápsula y marginal |
+| **B** | Rediseño del perfil con asimetría proa/popa | **374** | Diseño gráfico + re-verificación completa de la invariante I-2 |
+
+La variante **A′** no estaba contemplada en la tabla original y es el punto medio real: cuesta la
+mitad que A y elimina el caso que la inspección visual señala como inaceptable.
 
 **Criterio de cierre:** tras aplicar la opción elegida, re-ejecutar la enumeración exhaustiva
 (0 desajustes de *bounding box*), `validar_diversidad_sustantiva.R --n 40` (PASS) y
 `verificar_render.R` (5/5), e inspeccionar visualmente los dos casos extremos de forma que queden
 en el espacio resultante.
+
+#### Resolución del residual — opción A′ (2026-07-28, decisión del usuario)
+
+**Cambio aplicado.** `alto_barco` deja de sortearse libremente en `1:2` y pasa a depender de
+`ancho_barco`, de modo que `ratio = ancho/alto ≥ 2` por construcción:
+
+```r
+alto_pool  <- if (ancho_barco >= 4L) 1L:2L else 1L
+alto_barco <- safe_sample(alto_pool, 1L)
+stopifnot(ancho_barco / alto_barco >= 2)
+```
+
+El `stopifnot` no es decorativo: convierte la restricción en una invariante verificable en tiempo de
+ejecución, no en una convención que un edit futuro pueda romper en silencio. `safe_sample` (Familia
+5, regla #21) cubre el caso `alto_pool` de longitud 1 —`ancho_barco == 3`—, donde `sample()` habría
+caído en la trampa del escalar.
+
+**Por qué A′ y no A ni B.** A′ elimina exactamente las 56 versiones que la inspección visual
+ampliada califica de inaceptables (`ratio 1.5`, octágono simétrico) y conserva las 48 marginales
+(`ratio 2.0`, cápsula alargada). A costaba el doble (104 versiones) por eliminar además un caso que
+no es inaceptable; B conservaba las 374 pero exige rediseño con asimetría proa/popa y ya hay un
+intento fallido documentado en este mismo ítem.
+
+**Verificación completa tras el cambio (enumeración exhaustiva, no muestreo):**
+
+| Verificación | Antes (374) | Después (318) |
+|---|---|---|
+| Combinaciones válidas | 374 | **318** |
+| Respuestas correctas distintas | 374 | **318** (biyección conservada) |
+| Ratio mínimo | 1.5 | **2.0** |
+| Versiones con `ratio < 2` | 104 (27,8 %) | **0** |
+| *Bounding box* = clave (invariante I-2) | 374/374 | **318/318**, 0 desajustes |
+| Colisiones entre las 4 opciones | 0 | **0** |
+| Estructura 2×2 en las 4 opciones | 374/374 | **318/318** en las cuatro |
+| Desplazamiento de `GEO-COORD-04` fuera de grilla | 0 | **0** |
+| `y_pool` vacío | 0 | **0** |
+| `validar_coherencia_matematica.R` | APROBADO | **APROBADO**, 0 errores |
+| `validar_diversidad_sustantiva.R --n 40` | PASS, 38 únicos | **PASS**, 37 únicos |
+| `verificar_render.R` | 5/5 + P6 | **5/5 + P6 sin fuga** |
+
+**Inspección visual de los extremos del espacio resultante** (render ampliado ×2): el caso más
+compacto es ahora `w=4, h=2` (`ratio 2.0`) y el más alargado `w=6, h=1` (`ratio 6.0`). En ambos las
+dos medialunas y el puente se distinguen individualmente (efecto de la opción D) y la silueta se
+lee como casco. El octágono simétrico ya no puede aparecer.
+
+**Renders posibles tras A′:** 318 × 8 protagonistas × 4 reflexiones × 24 órdenes = **244 224**.
+
+**Residual restante:** ninguno bloqueante. Las 48 versiones de `ratio 2.0` son cápsulas alargadas
+—aceptables, no inaceptables—. Si en el futuro se quisiera eliminarlas también, la opción **A**
+(`ratio ≥ 2.5`, 318 → 270) y la **B** (rediseño con asimetría proa/popa, conserva las 318) siguen
+documentadas arriba, con la advertencia de que B requiere asimetría explícita y no un retoque del
+exponente del afinado.
 
 ---
 
@@ -512,5 +608,7 @@ que no se va a usar.
 
 ---
 
-**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5 y P2.7 resueltos: Solution con 6 subsecciones
-canónicas; retiradas las 4 exclusiones de `y_pool`, espacio de versiones 222 → 374)
+**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — **P1.1 cerrado**: re-medición de ratios sobre el
+espacio de 374, opción **A′** aplicada por decisión del usuario, espacio 374 → 318, `ratio ≥ 2` por
+construcción; costes de las opciones A/B actualizados; v1.1 — P2.5 y P2.7 resueltos: Solution con 6
+subsecciones canónicas; retiradas las 4 exclusiones de `y_pool`, espacio de versiones 222 → 374)

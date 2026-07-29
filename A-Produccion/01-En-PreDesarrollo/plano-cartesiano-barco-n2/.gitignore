@@ -36,6 +36,18 @@
 /verif_render/
 
 # ---------------------------------------------------------------------------
+# Material de revisión humana (regenerable)
+# ---------------------------------------------------------------------------
+# `revision/` contiene N versiones renderizadas (HTML + PDF) y un contact sheet
+# PNG, generados para que el responsable inspeccione el ítem antes de
+# re-confirmar la aprobación (docs/ROADMAP.md §3). Es 100% derivado: se
+# regenera con exams2html()/exams2pdf() + montage.
+#
+# El contact sheet necesita regla explícita por la misma razón que
+# plano_barco.png: la negación `!**/*.png` del .gitignore raíz lo des-ignoraría.
+/revision/
+
+# ---------------------------------------------------------------------------
 # Metadatos de exams2nops()
 # ---------------------------------------------------------------------------
 # exams2nops() escribe un .rds con la correspondencia versión↔respuestas en su

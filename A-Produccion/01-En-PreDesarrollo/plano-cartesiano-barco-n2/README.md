@@ -119,7 +119,7 @@ plano-cartesiano-barco-n2/
 │   ├── CLAUDE.md                  # Particularidades operativas para agentes
 │   └── rules/
 │       └── barco-parametrico.md   # Contrato del casco: cómo tocarlo sin invalidar la clave
-├── coordenadas_vertices_..._n2_schoice_v1.Rmd  # FUENTE — el ejercicio, auto-contenido (483 líneas,
+├── coordenadas_vertices_..._n2_schoice_v1.Rmd  # FUENTE — el ejercicio, auto-contenido (500 líneas,
 │                                  #   5 chunks: data_generation, question_body, answerlist_q,
 │                                  #   solucion, answerlist_s)
 ├── ejercicio_state.json           # Estado del workflow (11/11 pasos completados, aprobado 2026-07-01)
@@ -134,6 +134,7 @@ plano-cartesiano-barco-n2/
 ├── coordenadas_..._v1.html        # DERIVADO — salida HTML de una sesión anterior
 ├── salida/                        # DERIVADO — salidas de SemilleroUnico_v2.R (PDF, DOCX, Moodle, NOPS, webquiz)
 ├── verif_render/                  # DERIVADO — salidas transitorias de verificar_render.R
+├── revision/                      # DERIVADO — 12 versiones (HTML+PDF) + contact sheet para revisión humana
 └── _archivo/
     ├── Copia de coordenadas_..._v1.Rmd   # copia obsoleta
     └── prototipo-flujo-b/         # prototipo Flujo B superado (parámetros hardcoded,
@@ -143,32 +144,35 @@ plano-cartesiano-barco-n2/
         └── comparacion_flujo_b.png
 ```
 
-**Regla fuente vs. derivado**: `plano_barco.png` y todo el contenido de `salida/` y
-`verif_render/` se regeneran en cada `exams2*()` — nunca se editan a mano ni se commitean como si
-fueran fuente. El `.Rmd`, los `Semillero*.R`, `verificar_render.R` y las tres plantillas `.tex` sí
+**Regla fuente vs. derivado**: `plano_barco.png` y todo el contenido de `salida/`,
+`verif_render/` y `revision/` se regeneran en cada `exams2*()` — nunca se editan a mano ni se
+commitean como si fueran fuente. El `.Rmd`, los `Semillero*.R`, `verificar_render.R` y las tres plantillas `.tex` sí
 son fuente y deben trackearse.
 
 ## Reglas del repositorio que aplican
 
 - `../../../.claude/rules/markdown-imagenes-pdf.md` — regla #18: la única imagen del ejercicio,
   `plano_barco.png`, se referencia con atributo de ancho explícito
-  (`![](plano_barco.png){width=80%}`, línea 325), nunca sin `{width=...}`.
+  (`![](plano_barco.png){width=80%}`, línea 342), nunca sin `{width=...}`.
 - `../../../.claude/rules/solution-letter-independence.md` — regla #19: la Solution identifica
   cada opción por su texto de coordenadas y su código de error (`GEO-COORD-01/02/04`, líneas
-  372-376), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 472) sin
+  389-393), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 489) sin
   romper coherencia si R/exams o Moodle reordenan las opciones.
 - `../../../.claude/rules/markdown-tablas-pandoc.md` — regla #20: el guard
   `\@ifundefined{c@none}{\newcounter{none}}{}` está presente por defecto al inicio de `Question`
-  (línea 315), aunque este ejercicio no usa tablas Markdown — lo aplican los skills y
+  (línea 332), aunque este ejercicio no usa tablas Markdown — lo aplican los skills y
   orquestadores de generación como estándar.
 - `../../../.claude/rules/familias-soluciones-rmd.md` — regla #21: usa la Familia 1
   (`pick_int()`, sin `repeat` sin cota) y la Familia 5 (`safe_sample()`, protección contra la
   trampa `sample(escalar)`), ambas declaradas explícitamente en el comentario de la línea 12.
+  `safe_sample()` es además lo que hace segura la restricción A′: cuando `ancho_barco == 3` el
+  pool de `alto_barco` tiene un solo elemento, el caso exacto que la Familia 5 protege.
 - `../../../.claude/rules/diversidad-sustantiva.md` — regla #22: `ancho_barco`, `alto_barco`,
-  `x_min` y `y_min` se aleatorizan con `pick_int()`/`safe_sample()` (líneas 24-51), no son
-  literales fijos. `y_pool` ya no lleva exclusiones (P2.7, 2026-07-28): espacio de versiones
-  222 → 374. Verificado con `validar_diversidad_sustantiva.R --n 40`: PASS, 38/40 valores
-  únicos de la respuesta correcta.
+  `x_min` y `y_min` se aleatorizan con `pick_int()`/`safe_sample()` (líneas 24-69), no son
+  literales fijos. `y_pool` ya no lleva exclusiones (P2.7, 2026-07-28) y `alto_barco` está acotado
+  para que `ratio ≥ 2` (P1.1/A′, 2026-07-28): espacio de versiones 222 → 374 → **318**.
+  Verificado con `validar_diversidad_sustantiva.R --n 40`: PASS, 37/40 valores únicos de la
+  respuesta correcta.
 
 ## Enlaces
 
@@ -183,5 +187,6 @@ son fuente y deben trackearse.
 
 ---
 
-**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — citas de línea y códigos de error
-actualizados tras P0.1, P2.5 y P2.7)
+**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — P1.1 cerrado con la opción A′: `ratio ≥ 2` por
+construcción, espacio de versiones 374 → 318; citas de línea re-verificadas contra el `.Rmd` de 500
+líneas; v1.1 — citas de línea y códigos de error actualizados tras P0.1, P2.5 y P2.7)

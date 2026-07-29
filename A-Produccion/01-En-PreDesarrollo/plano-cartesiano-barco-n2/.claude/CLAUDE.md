@@ -28,7 +28,7 @@ Lee en este orden, ANTES de explorar el repositorio o tocar el `.Rmd`:
 | Competencia / Componente | Interpretación y representación / Geométrico-métrico |
 | Qué evalúa | Leer el *bounding box* de un objeto en un plano cartesiano |
 | Figura | Una sola (`plano_barco.png`), compartida por las 4 opciones |
-| Espacio de versiones | **374 preguntas sustantivamente distintas** (enumeración exhaustiva; 222 antes de P2.7) |
+| Espacio de versiones | **318 preguntas sustantivamente distintas** (enumeración exhaustiva; 222 con las exclusiones de `y_pool`, 374 sin ellas, 318 tras exigir `ratio ≥ 2` en P1.1/A′) |
 
 ---
 
@@ -52,17 +52,17 @@ declarada, no deuda técnica.
 
 ### 2. `prof()` debe valer exactamente `h/2` en el tramo central — de eso depende que la clave sea verdadera
 
-`prof(t)` (líneas 208-214) vale `h/2` para `t ∈ [0.15, 0.85]`. Eso hace que el casco toque `y_min` e
+`prof(t)` (líneas 225-231) vale `h/2` para `t ∈ [0.15, 0.85]`. Eso hace que el casco toque `y_min` e
 `y_max`, y por tanto que su *bounding box* sea exactamente `[x_min,x_max] × [y_min,y_max]` — que es
 literalmente la respuesta correcta.
 
 Si alguien "suaviza" el perfil para que el barco se vea más estilizado y deja de alcanzar `h/2`, **la
 clave del ejercicio pasa a ser falsa** y ningún validador sintáctico lo detecta. Verificado por
-enumeración exhaustiva: 0/374 casos de desajuste (0/222 antes de P2.7).
+enumeración exhaustiva: **0/318** casos de desajuste (0/374 antes de P1.1/A′, 0/222 antes de P2.7).
 
 ### 3. `y_pool` NO lleva exclusiones — el `stopifnot` de unicidad es la red de seguridad real
 
-Líneas 30-49. Hasta el 2026-07-28 este bloque aplicaba 4 exclusiones (`y_min ≠ x_min`,
+Líneas 47-66. Hasta el 2026-07-28 este bloque aplicaba 4 exclusiones (`y_min ≠ x_min`,
 `y_max ≠ x_max`, `y_min ≠ x_max`, `y_max ≠ x_min`), heredadas del distractor retirado
 `GEO-COORD-03` (diagonal). Se midieron por enumeración exhaustiva (P2.7, `docs/BACKLOG.md`) y
 **ninguna era necesaria**: incluso la justificación de la primera («evita que `GEO-COORD-01`
@@ -70,9 +70,13 @@ colapse sobre la correcta») era **falsa** — esa colisión exigiría `alto_bar
 `alto_barco >= 1`. Se retiraron las cuatro; el espacio de versiones subió de 222 a **374**.
 
 Lo que realmente garantiza 4 opciones distintas es `stopifnot(length(unique(all_opts)) == 4L)`
-(línea 103), no el filtrado del pool. Verificado exhaustivamente sobre las 374 combinaciones: **0**
-colisiones y **0** casos de `y_pool` vacío. **No reintroducir exclusiones de `y_pool` sin volver a
-medir** (`docs/BACKLOG.md` P2.7, `docs/BLUEPRINT.md` invariante I-3).
+(línea 120), no el filtrado del pool. Verificado exhaustivamente sobre las 374 combinaciones y
+re-confirmado sobre las **318** vigentes: **0** colisiones y **0** casos de `y_pool` vacío. **No
+reintroducir exclusiones de `y_pool` sin volver a medir** (`docs/BACKLOG.md` P2.7,
+`docs/BLUEPRINT.md` invariante I-3).
+
+> No confundir esta particularidad con la **12** (`ratio ≥ 2`): aquélla acota `alto_barco`, ésta
+> habla de `y_pool`. Son restricciones sobre variables distintas y se midieron por separado.
 
 ### 4. `exshuffle: TRUE` es CORRECTO aquí — no copiar el `exshuffle: FALSE` del hermano
 
@@ -84,7 +88,7 @@ identifica las opciones por contenido y por código de error, nunca por letra (r
 ### 5. La variación narrativa se limita al protagonista — A PROPÓSITO
 
 La regla #11 (`contextos-narrativos-creativos.md`) pide 6+ plantillas narrativas con 5 tipos de
-estructura. Este ejercicio **solo varía el nombre del protagonista** (8 nombres, líneas 162-167)
+estructura. Este ejercicio **solo varía el nombre del protagonista** (8 nombres, líneas 179-184)
 sobre un enunciado fijo.
 
 Es deliberado: el enunciado y las 4 opciones se conservan **verbatim** del ítem ICFES real
@@ -131,7 +135,7 @@ orquestador. No reintroducirlo: colapsaría la diversidad multi-semilla.
 
 ### 11. El tercer distractor DEBE conservar la estructura 2×2
 
-`GEO-COORD-04` (líneas 80-100, «desplazamiento de una unidad al contar la cuadrícula») sustituyó a
+`GEO-COORD-04` (líneas 97-117, «desplazamiento de una unidad al contar la cuadrícula») sustituyó a
 `GEO-COORD-03` (diagonal `y = x`) el 2026-07-28. La razón: `GEO-COORD-03` era la única opción cuyos
 4 puntos tenían la forma `(v, v)` — colineales — mientras la correcta y los otros dos distractores
 comparten la estructura «2 valores de x combinados con 2 valores de y» (un rectángulo). Un
@@ -140,19 +144,40 @@ estudiante podía descartar `GEO-COORD-03` por la FORMA del texto, sin mirar la 
 Si en el futuro se reemplaza este tercer distractor por otro error conceptual, la nueva opción
 **tiene que seguir teniendo la estructura 2×2**: cualquier opción con forma distinta (colineal, un
 solo par repetido, etc.) se vuelve descartable sin razonar y degrada el ítem de 4 opciones
-plausibles a 3. Criterio de verificación: enumerar las 374 combinaciones (222 antes de P2.7) y
-confirmar que las 4 opciones cumplen la estructura 2×2 en el 100% de los casos (no basta con probar
-unas pocas semillas). Ver [`../docs/BACKLOG.md`](../docs/BACKLOG.md) P0.1.
+plausibles a 3. Criterio de verificación: enumerar las **318** combinaciones vigentes (374 antes de
+P1.1/A′, 222 antes de P2.7) y confirmar que las 4 opciones cumplen la estructura 2×2 en el 100% de
+los casos (no basta con probar unas pocas semillas). Ver
+[`../docs/BACKLOG.md`](../docs/BACKLOG.md) P0.1.
+
+### 12. `ratio = ancho_barco / alto_barco >= 2` es una INVARIANTE, no una preferencia estética
+
+Líneas 26-42. `alto_barco` **no** se sortea libre en `1:2`: depende de `ancho_barco`
+(`alto_pool <- if (ancho_barco >= 4L) 1L:2L else 1L`), y el `stopifnot` de la línea 42 lo verifica
+en tiempo de ejecución.
+
+La razón está medida, no supuesta: a `ratio 1.5` (`ancho=3, alto=2`) la silueta degenera en un
+octágono simétrico que **no se lee como barco**. El mecanismo es que `prof()` tiene un perfil casi
+simétrico (proa `t^0.7`, popa `t^0.5`), así que la figura solo se lee como casco cuando la
+elongación compensa la falta de dirección. Sobre las 374 combinaciones previas eran 56 casos
+(15,0 %); A′ los elimina y deja el espacio en **318** (regla local: `docs/BACKLOG.md` P1.1,
+`docs/BLUEPRINT.md` §4.7 e invariante **I-9**).
+
+**No revertirlo "para recuperar versiones"**: devuelve las 56 versiones degeneradas. Y no confundirlo
+con una restricción de corrección — la clave era válida también en ellas; el problema es de
+fidelidad narrativa (el enunciado habla de un barco). Si algún día se quiere ampliar el espacio,
+la vía es la opción **B** (rediseñar `prof()` con asimetría proa/popa explícita), no quitar el
+`stopifnot`.
 
 ---
 
 ## Reglas del repo raíz con mayor peso en este ejercicio
 
-`#18` `{width=80%}` anti-`\pandocbounded` (línea 325) · `#19` letter-independence (la Solution
+`#18` `{width=80%}` anti-`\pandocbounded` (línea 342) · `#19` letter-independence (la Solution
 identifica por contenido y por código `GEO-COORD-0x`) · `#20` guard `\newcounter{none}`
-(línea 315, presente aunque hoy no haya tablas) · `#21` Familias 1 y 5 (`pick_int`,
-`safe_sample`, construcción determinista sin bucles de reintento) · `#22` diversidad sustantiva
-(374 preguntas distintas, antes 222; §P6 no aplica por ser opciones de texto, pero
+(línea 332, presente aunque hoy no haya tablas) · `#21` Familias 1 y 5 (`pick_int`,
+`safe_sample` — este último es lo que hace segura la restricción A′ cuando el pool de `alto_barco`
+queda con un solo elemento) · `#22` diversidad sustantiva
+(318 preguntas distintas; §P6 no aplica por ser opciones de texto, pero
 `verificar_render.R` lo comprueba igual).
 
 ---
@@ -178,9 +203,12 @@ identifica por contenido y por código `GEO-COORD-0x`) · `#20` guard `\newcount
 - Cambiar a `exshuffle: FALSE` por analogía con el subproyecto hermano (particularidad 4).
 - Sustituir el tercer distractor por una opción que no conserve la estructura 2×2 (particularidad 11).
 - Reintroducir exclusiones en `y_pool` sin medir de nuevo el espacio de versiones (particularidad 3).
+- Quitar el `stopifnot(ancho_barco / alto_barco >= 2)` o devolver `alto_barco` a `pick_int(1L, 2L)`
+  (particularidad 12).
 
 ---
 
-**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — particularidad 3 reescrita: `y_pool` sin
-exclusiones tras P2.7, espacio de versiones 222 → 374; citas de línea re-verificadas contra el
-`.Rmd` de 483 líneas) · **Estado:** ACTIVO
+**Versión:** 1.3 · **Fecha:** 2026-07-28 (v1.3 — **nueva particularidad 12**: `ratio ≥ 2` por
+construcción tras P1.1/A′, espacio de versiones 374 → 318; todas las citas de línea re-verificadas
+contra el `.Rmd` de 500 líneas; v1.2 — particularidad 3 reescrita: `y_pool` sin exclusiones tras
+P2.7, espacio de versiones 222 → 374) · **Estado:** ACTIVO

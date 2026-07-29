@@ -75,7 +75,8 @@ combinan esas coordenadas, nunca datos distintos.
 > permitía descartarlo por la **forma del texto**, sin mirar la figura ni leer una coordenada, y
 > subía el acierto por azar del 25 % al 33 %. Verificado por enumeración exhaustiva sobre el espacio
 > de 222 vigente entonces: rompía la estructura en 222/222 versiones (re-confirmado en 374/374 tras
-> ampliar el espacio en P2.7). Ver [`BACKLOG.md`](BACKLOG.md) P0.1.
+> ampliar el espacio en P2.7 y en 318/318 tras acotarlo en P1.1/A′). Ver
+> [`BACKLOG.md`](BACKLOG.md) P0.1.
 
 **Plausibilidad para un estudiante de grado 10-11**: los tres errores son transcripciones
 razonables de una lectura apresurada del plano — no requieren un malentendido exótico. Invertir
@@ -87,9 +88,9 @@ cualquier representación cuadriculada.
 
 **Los cuatro comparten la misma estructura.** Las cuatro opciones —correcta y distractores— tienen
 la forma «2 valores de x × 2 valores de y en las 4 combinaciones», que es la estructura real de los
-vértices de un rectángulo alineado a los ejes. Verificado en 374/374 versiones (222/222 en el
-momento de P0.1, re-confirmado sobre el espacio ampliado tras P2.7). Ninguna se puede descartar por
-su forma: hay que leer las coordenadas del barco.
+vértices de un rectángulo alineado a los ejes. Verificado en **318/318** versiones (222/222 en el
+momento de P0.1, 374/374 tras P2.7, re-confirmado sobre el espacio acotado tras P1.1/A′). Ninguna
+se puede descartar por su forma: hay que leer las coordenadas del barco.
 
 **Nota de diseño — unicidad garantizada por el `stopifnot`, no por exclusiones del pool**: hasta el
 2026-07-28, `y_min` se sorteaba de un `y_pool` filtrado con 4 exclusiones que evitaban que el
@@ -104,9 +105,10 @@ la correcta») era falsa, porque esa colisión exigiría `alto_barco == 0`, impo
 última es la que realmente garantiza la unicidad.
 
 **Ninguna de las dos puede dispararse dentro del espacio de parámetros declarado.** Se comprobó por
-enumeración exhaustiva (2026-07-28, re-medida tras retirar las exclusiones) de las combinaciones
-`(ancho, alto, x_min, y_min)`: **374 combinaciones válidas → 374 respuestas correctas distintas**
-(222 antes de retirar las exclusiones), con **0** casos de `y_pool` vacío y **0** colisiones entre
+enumeración exhaustiva (2026-07-28, re-medida tras retirar las exclusiones y de nuevo tras acotar
+`ratio ≥ 2`) de las combinaciones
+`(ancho, alto, x_min, y_min)`: **318 combinaciones válidas → 318 respuestas correctas distintas**
+(222 con las exclusiones, 374 sin ellas), con **0** casos de `y_pool` vacío y **0** colisiones entre
 opciones. Los `stopifnot` no son código muerto: documentan la invariante y protegerían ante un
 cambio futuro de los rangos de `ancho_barco`/`alto_barco`.
 
@@ -156,6 +158,7 @@ metacognitiva* y *Estrategia para evitar el error*. Las dos subsecciones en negr
 
 ---
 
-**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5: nueva §3.1 sobre las 6 subsecciones de la
-Solution; P2.7: `y_pool` sin exclusiones, espacio de versiones 222 → 374; citas de línea
-re-verificadas)
+**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — P1.1/A′: `ratio ≥ 2` por construcción, espacio de
+versiones 374 → **318**; cifras de verificación de estructura 2×2 y de unicidad actualizadas;
+v1.1 — P2.5: nueva §3.1 sobre las 6 subsecciones de la Solution; P2.7: `y_pool` sin exclusiones,
+espacio de versiones 222 → 374; citas de línea re-verificadas)

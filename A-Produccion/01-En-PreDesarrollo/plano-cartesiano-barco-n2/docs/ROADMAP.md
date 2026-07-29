@@ -18,6 +18,7 @@
 | 2026-07-28 | P0.1 resuelto: `GEO-COORD-03` (diagonal, eliminable por su forma) sustituido por `GEO-COORD-04` (desplazamiento de una unidad) | `docs/BACKLOG.md` P0.1 |
 | 2026-07-28 | P2.5 resuelto: Solution ampliada con las 6 subsecciones canónicas (+ *Propiedades del concepto* y *Caso específico*) | `docs/BACKLOG.md` P2.5 |
 | 2026-07-28 | P2.7 resuelto: retiradas las 4 exclusiones de `y_pool` (una de ellas justificada de forma falsa); espacio de versiones 222 → 374 | `docs/BACKLOG.md` P2.7 |
+| 2026-07-28 | P1.1 cerrado: re-medición de ratios sobre el espacio de 374 + opción **A′** (`ratio ≥ 2` por construcción, decisión del usuario); espacio de versiones 374 → 318 | `docs/BACKLOG.md` P1.1 §«Resolución del residual» |
 
 ---
 
@@ -30,15 +31,15 @@ se persisten en la memoria del proyecto.
 | OE | Enunciado | Estado | Evidencia |
 |---|---|---|---|
 | **OE1** | Ejercicio SCHOICE N2 que renderiza en los 4 formatos canónicos + Moodle | ✅ | `Rscript verificar_render.R` → 5/5 OK |
-| **OE2** | Corrección matemática de la clave en **todo** el espacio de versiones, no solo en semillas muestreadas | ✅ | Enumeración exhaustiva: 0/374 desajustes del bounding box (0/222 antes de P2.7) |
-| **OE3** | Diversidad sustantiva (regla #22): la respuesta correcta varía entre versiones | ✅ | `validar_diversidad_sustantiva.R --n 40` → PASS (**38** valores únicos, antes 36); **374** preguntas distintas por enumeración (antes 222, tras P2.7) |
+| **OE2** | Corrección matemática de la clave en **todo** el espacio de versiones, no solo en semillas muestreadas | ✅ | Enumeración exhaustiva: **0/318** desajustes del bounding box (0/374 antes de P1.1/A′; 0/222 antes de P2.7) |
+| **OE3** | Diversidad sustantiva (regla #22): la respuesta correcta varía entre versiones | ✅ | `validar_diversidad_sustantiva.R --n 40` → PASS (**37** valores únicos); **318** preguntas distintas por enumeración (222 → 374 en P2.7, 374 → 318 en P1.1/A′) |
 | **OE4** | Cumplimiento de las reglas #18, #19, #20, #21 | ✅ | grep verificado: `{width=80%}`, 0 referencias a letra en Solution, guard `\newcounter{none}` presente, helpers Familia 1/5 |
 | **OE5** | Coherencia matemática y semántica (Niveles 1-5, Capas A-D) | ✅ | `validar_coherencia_matematica.R` → APROBADO, 0 errores |
 | **OE6** | Documentación completa del subproyecto (README, SYLLABUS, ROADMAP, BACKLOG, BLUEPRINT, HANDOFF) | ✅ | Esta sesión |
 | **OE7** | `.claude/` local con particularidades operativas y regla del casco paramétrico | ✅ | `.claude/CLAUDE.md` + `.claude/rules/barco-parametrico.md` |
 | **OE8** | Modularización dentro de la restricción de auto-contención | ✅ parcial | Externo reestructurado (`_archivo/`, `docs/`, `verificar_render.R`); el `.Rmd` permanece auto-contenido **por bloqueo de herramienta** — ver [`BACKLOG.md`](BACKLOG.md) P1.1 |
-| **OE9** | Auditoría adversarial sin objeciones bloqueantes | ✅ | Auditoría ejecutada (adversarial + 8 dominios + visual). El único hallazgo bloqueante (`GEO-COORD-03` eliminable por su forma) se **resolvió**: sustituido por `GEO-COORD-04`, estructura 2×2 en 222/222. Ver [`BACKLOG.md`](BACKLOG.md) P0.1 |
-| **OE10** | Promoción a `02-En-Desarrollo/` | ⬜ | Requiere OE9 cerrado |
+| **OE9** | Auditoría adversarial sin objeciones bloqueantes | ✅ | Auditoría ejecutada (adversarial + 8 dominios + visual). El único hallazgo bloqueante (`GEO-COORD-03` eliminable por su forma) se **resolvió**: sustituido por `GEO-COORD-04`, estructura 2×2 en 318/318. Ver [`BACKLOG.md`](BACKLOG.md) P0.1 |
+| **OE10** | Promoción a `02-En-Desarrollo/` | ⬜ | Criterios técnicos cumplidos. Pendiente **re-confirmación humana** de la aprobación (§3): el registro del 2026-07-01 es anterior a P0.1/P2.5/P2.7/P1.1 |
 | **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | Requiere aplicación con estudiantes reales |
 
 ---
@@ -56,13 +57,22 @@ Criterios que deben cumplirse **todos** antes de mover el subproyecto:
 - [x] `Rscript tests/run_all_tests.R` del repo raíz en verde (20 suites, 0 fallidas, 2026-07-28).
 - [x] Auditoría adversarial (adversario + detractor + auditor visual) sin objeciones
       CRÍTICAS/ALTAS abiertas — **OE9**. El bloqueante P0.1 quedó resuelto.
-- [x] Las 4 opciones comparten estructura 2×2 en las 374 versiones (criterio de cierre de P0.1):
-      374/374 en las cuatro (222/222 en el espacio vigente al resolver P0.1, re-confirmado tras
-      ampliar el espacio en P2.7), verificado por enumeración exhaustiva.
+- [x] Las 4 opciones comparten estructura 2×2 en **las 318 versiones** (criterio de cierre de P0.1):
+      318/318 en las cuatro, verificado por enumeración exhaustiva (222/222 al resolver P0.1,
+      374/374 tras P2.7, re-confirmado tras acotar el espacio en P1.1/A′).
+- [x] Residual visual de P1.1 resuelto: `ratio ≥ 2` por construcción, **0** versiones degeneradas
+      (invariante I-9 de `BLUEPRINT.md`).
 
-**Todos los criterios están cumplidos al 2026-07-28** (P2.5 y P2.7 también resueltos en esta
-sesión). La promoción a `02-En-Desarrollo/` puede ejecutarse; queda a criterio del responsable si
-antes se resuelve el residual visual de P1.1 (silueta a `ratio 1.5`, no bloqueante).
+**Todos los criterios técnicos están cumplidos al 2026-07-28** (P0.1, P1.1, P2.5 y P2.7 cerrados).
+
+**Bloqueo administrativo pendiente, no técnico.** `ejercicio_state.json` marca
+`aprobacion_usuario` y `detractor_fase2c` como completados el **2026-07-01**, es decir, sobre una
+versión anterior del ítem: desde entonces cambió el tercer distractor (`GEO-COORD-03` →
+`GEO-COORD-04`), la Solution ganó dos subsecciones (P2.5), `y_pool` perdió sus exclusiones (P2.7) y
+el espacio quedó acotado a `ratio ≥ 2` (P1.1/A′). Ese registro **no se modificó**: alterar una
+aprobación humana no es decisión de un agente. Antes de promover hay que re-confirmar la aprobación
+sobre la versión actual. El usuario indicó el 2026-07-28 que **revisará el ítem personalmente**
+antes de decidir.
 
 **Comando de promoción**: el movimiento entre `01-` y `02-` es un `git mv` del directorio completo;
 tras moverlo hay que re-verificar las rutas relativas `../../../../.claude/...` de los documentos
@@ -98,5 +108,6 @@ psicométrica.**
 
 ---
 
-**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5 y P2.7 resueltos: línea de tiempo, OE3, gate
-de promoción y cifras actualizados a 374)
+**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — P1.1 cerrado con la opción A′: cifras actualizadas
+a **318**, gate de promoción con el bloqueo administrativo explícito, OE10 con su condición real;
+v1.1 — P2.5 y P2.7 resueltos: línea de tiempo, OE3, gate de promoción y cifras actualizados a 374)

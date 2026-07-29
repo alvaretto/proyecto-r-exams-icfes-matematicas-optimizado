@@ -22,7 +22,24 @@ grid_max <- 10L
 
 # === Parametros del barco (aleatorizados por semilla — regla #22) ===
 ancho_barco <- pick_int(3L, 6L)
-alto_barco  <- pick_int(1L, 2L)
+
+# alto_barco ACOTADO para que ratio = ancho/alto >= 2 (opcion A' de docs/BACKLOG.md P1.1).
+#
+# Con alto = 2 y ancho = 3 el ratio cae a 1.5 y el casco degenera: la silueta es un
+# octagono simétrico que no se lee como barco. Medido por enumeracion exhaustiva +
+# inspeccion visual ampliada x2 sobre las 374 combinaciones: 56 casos (15.0%).
+# El mecanismo es que el perfil de prof() es casi simétrico (proa t^0.7 vs popa
+# t^0.5), así que la figura no tiene direccion; a ratio >= 2 la elongación compensa.
+#
+# Restringir alto = 2 a ancho >= 4 elimina exactamente esos 56 casos:
+# espacio de versiones 374 -> 318 (-15.0%), con 318 respuestas correctas distintas.
+#
+# NO es una restriccion de correccion: la clave era valida también en los 56 casos
+# (el bounding box no depende del ratio). Es fidelidad narrativa: el enunciado habla
+# de un barco y el estudiante veia una capsula.
+alto_pool  <- if (ancho_barco >= 4L) 1L:2L else 1L
+alto_barco <- safe_sample(alto_pool, 1L)
+stopifnot(ancho_barco / alto_barco >= 2)
 
 x_min <- pick_int(1L, grid_max - ancho_barco)
 x_max <- x_min + ancho_barco
@@ -204,7 +221,7 @@ dibujar_barco <- function(xmn, xmx, ymn, ymx, gmax, filename) {
   # INVARIANTE I-2 (ver .claude/rules/barco-parametrico.md): prof(t) vale EXACTAMENTE
   # h/2 en el tramo central, de modo que el casco toca ymn e ymx y su bounding box
   # ES la respuesta correcta. No suavizar ni alargar estas fracciones sin re-verificar
-  # la enumeracion exhaustiva de las 222 combinaciones.
+  # la enumeracion exhaustiva de las 318 combinaciones.
   prof <- function(t) {
     ifelse(t < 0.15,
       (h / 2) * (t / 0.15)^0.7,

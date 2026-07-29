@@ -8,7 +8,7 @@
 |---|---|
 | **Ruta (SP)** | `A-Produccion/01-En-PreDesarrollo/plano-cartesiano-barco-n2` |
 | **Repo raíz (RR)** | `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams` |
-| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (483 líneas, 5 chunks) |
+| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (500 líneas, 5 chunks) |
 | **Tipo** | SCHOICE metacognitivo, **opciones de texto**, una sola figura compartida |
 | **Origen ICFES** | `MAT-2026-1-022` (cuadernillo 2026-1, pregunta 116, clave C) |
 | **Rama** | `main` |
@@ -52,9 +52,9 @@ Estos OE **no existían declarados** antes del 2026-07-28: el subproyecto no ten
 | Verificación | Comando | Resultado |
 |---|---|---|
 | Coherencia matemática, Niveles 1-5 + Capas semánticas A-D | `Rscript RR/.claude/scripts/validar_coherencia_matematica.R <rmd>` | **APROBADO, 0 errores** |
-| Diversidad sustantiva (regla #22) | `Rscript RR/.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` | **PASS**, 40/40 evaluadas, **38** valores únicos (antes 36, tras ampliar el espacio en P2.7) |
+| Diversidad sustantiva (regla #22) | `Rscript RR/.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` | **PASS**, 40/40 evaluadas, **37** valores únicos |
 | Render 4 formatos + Moodle | `Rscript verificar_render.R` | **5/5 OK** |
-| Regla #18 (`{width=}`) | grep | OK (línea 317 del original, hoy desplazada por el comentario I-2) |
+| Regla #18 (`{width=}`) | grep | OK (línea 342) |
 | Regla #19 (letter-independence) | grep sobre la sección Solution | OK, 0 coincidencias |
 | Regla #20 (guard `\newcounter{none}`) | grep | Presente |
 | Regla #22 §P6 (fuga por nombre de archivo) | `exams2moodle` + grep del XML | OK — único archivo `plano_barco.png` |
@@ -65,15 +65,17 @@ Estos OE **no existían declarados** antes del 2026-07-28: el subproyecto no ten
 
 Enumeración completa de las combinaciones `(ancho_barco, alto_barco, x_min, y_min)`:
 
-- **374 combinaciones válidas → 374 respuestas correctas distintas** (biyección). Eran 222 hasta
-  que P2.7 (2026-07-28) retiró las 4 exclusiones de `y_pool` — una de ellas justificada de forma
-  falsa (ver `docs/BACKLOG.md` P2.7) — y amplió el espacio un 68 %.
+- **318 combinaciones válidas → 318 respuestas correctas distintas** (biyección). Trayectoria: 222
+  con las 4 exclusiones de `y_pool` → **374** al retirarlas (P2.7, una de ellas justificada de forma
+  falsa) → **318** al exigir `ratio ≥ 2` (P1.1/A′, decisión del usuario del 2026-07-28).
 - **0** casos de `y_pool` vacío → el `stopifnot` del pool no puede dispararse.
 - **0** colisiones entre las 4 opciones → el `stopifnot` de unicidad no puede dispararse.
 - **0** casos donde el *bounding box* del casco difiera de `[x_min,x_max] × [y_min,y_max]` →
   **la clave es correcta en el 100 % del espacio de versiones**, no sólo en las semillas probadas.
+- **0** versiones con `ratio < 2` → ninguna silueta degenerada (invariante I-9).
+- Estructura 2×2 en **318/318** para las 4 opciones → ninguna descartable por su forma.
 
-Renders distintos posibles: 374 × 8 protagonistas × 4 reflexiones × 24 órdenes = **287 232**.
+Renders distintos posibles: 318 × 8 protagonistas × 4 reflexiones × 24 órdenes = **244 224**.
 
 ---
 
@@ -112,6 +114,28 @@ Renders distintos posibles: 374 × 8 protagonistas × 4 reflexiones × 24 órden
    374/374 en las tres opciones que la requieren. Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md)
    P2.7.
 
+### Continuación de la misma fecha — cierre de P1.1
+
+10. **Re-medición de la distribución de ratios sobre el espacio de 374.** La medición de P1.1 se
+    había hecho sobre 222 y no se había repetido tras P2.7. Resultado: **104/374 (27,8 %)** de
+    versiones con `ratio ≤ 2`, prácticamente la misma proporción que antes (27,0 %), pero con
+    costes absolutos distintos — la tabla de opciones citaba **162** versiones para la opción A
+    cuando el número real era **270**.
+11. **Inspección visual ampliada ×2 de los cuatro ratios representativos** (1.5, 2.0, 2.5, 6.0).
+    Precisó el mecanismo residual: no es que el afinado sea brusco, es que **el perfil es casi
+    simétrico** (proa `t^0.7` vs popa `t^0.5`), de modo que la silueta no tiene dirección; a
+    `ratio ≥ 2.5` la elongación lo compensa. Esto acota la opción B: exige asimetría explícita
+    proa/popa, no un retoque del exponente.
+12. **Opción A′ aplicada** (decisión del usuario entre A′/A/B/C): `alto_barco` pasa a depender de
+    `ancho_barco` de modo que `ratio ≥ 2` por construcción, con `stopifnot` de respaldo. Espacio de
+    versiones **374 → 318** (−15,0 %). Re-verificación completa en verde (ver §3). Nueva invariante
+    **I-9** en [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) y **particularidad 12** en
+    [`.claude/CLAUDE.md`](.claude/CLAUDE.md).
+13. **Citas de línea re-verificadas**: el `.Rmd` pasa de 483 a 500 líneas y todas las referencias
+    posteriores a la línea 24 se desplazan +17. Actualizadas en README, SYLLABUS, ROADMAP,
+    BLUEPRINT (incluida la tabla de anclas de control §6), `.claude/CLAUDE.md` y
+    `.claude/rules/barco-parametrico.md`.
+
 ---
 
 ## 5. Hallazgos abiertos
@@ -129,21 +153,22 @@ cuadrícula»), que conserva la estructura 2×2 en **222/222** versiones (re-con
 `−1` si el barco toca el borde derecho), lo que evita salirse de la grilla **sin perder ni una
 versión**. Detalle y tabla de verificación en [`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
 
-### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — 🟡 **RESUELTO EN PARTE**
+### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — ✅ **RESUELTO 2026-07-28**
 
-Se aplicó la **opción D**: acotar el radio de las bandas por el ancho (`rb <- min(h, w * 0.25)`),
-con el factor calibrado midiendo el solape sobre las 8 combinaciones. El solape en el caso peor baja
-de **72,3 % a 37,0 %** y los casos alargados (`5×1`, `6×1`) quedan **idénticos**. Verificado
-visualmente: donde antes había una sola mancha negra, ahora se distinguen las dos medialunas y el
-puente.
+Se atacaron **los dos** mecanismos identificados:
 
-**Residual:** la silueta a `ratio 1.5` sigue siendo una cápsula redondeada más que un barco. Eso es
-el mecanismo del contorno, que la opción D no aborda. Si quieres resolverlo también, siguen
-disponibles la opción **A** (restringir a `ratio ≥ 2.5`, cuesta 60 de las 222 versiones — medición
-sobre el espacio vigente al momento del análisis, no re-medida tras P2.7) y la **B** (rediseñar el
-perfil). **No es bloqueante**: la clave es correcta en las 374.
+- **Opción D** (mecanismo dominante, los adornos): radio de las bandas acotado por el ancho
+  (`rb <- min(h, w * 0.25)`), con el factor calibrado midiendo el solape sobre las 8 combinaciones.
+  El solape en el caso peor bajó de **72,3 % a 37,0 %** y los casos alargados quedaron idénticos.
+- **Opción A′** (mecanismo del contorno, decisión del usuario): `ratio ≥ 2` por construcción, lo que
+  elimina del sorteo las 56 versiones de `ratio 1.5` — las únicas que la inspección visual califica
+  de inaceptables. Espacio **374 → 318** (−15,0 %).
 
-**Ojo con dos cosas si vuelves sobre esto:**
+Quedan 48 versiones de `ratio 2.0` (cápsula alargada), consideradas **aceptables**. Si algún día se
+quisieran eliminar también, la opción **A** (`ratio ≥ 2.5`, 318 → 270) y la **B** (rediseñar el
+perfil) siguen documentadas en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1.
+
+**Tres cosas que hay que saber si vuelves sobre esto:**
 
 - Dos auditorías reportaron que «el puente se sale del casco». **Es falso** y está demostrado: el
   borde derecho del puente cae siempre en `t = 0.87`, posición invariante de escala, ocupando el
@@ -151,6 +176,9 @@ perfil). **No es bloqueante**: la clave es correcta en las 374.
   real; la causa que le atribuyeron, no.
 - Ya se probó una vía que **empeoró** el resultado (proa adaptativa al aspecto). Ver el registro en
   BACKLOG P1.1 antes de reintentarla.
+- La opción **B** no es «retocar el exponente del afinado». El problema medido es que el perfil es
+  casi **simétrico** (proa `t^0.7`, popa `t^0.5`) y por tanto la silueta no tiene dirección; B exige
+  introducir asimetría proa/popa explícita.
 
 ### 5.2 — Modularización del `.Rmd` bloqueada (P1.2)
 
@@ -159,13 +187,16 @@ Bloqueada por incompatibilidad entre `include_supplement()` y
 reintentar sin resolver antes el criterio de desbloqueo (adaptar el validador, que es herramienta
 compartida). Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.2.
 
-### 5.2 — `ejercicio_state.json` tiene dos pasos desactualizados por el cambio de distractor
+### 5.2 — `ejercicio_state.json` tiene dos pasos desactualizados — ⏳ **EN MANOS DEL USUARIO**
 
-> **Nota (post P2.5/P2.7):** el `.Rmd` recibió dos cambios adicionales en la misma sesión —
-> la Solution ganó dos subsecciones (P2.5) y `y_pool` perdió sus 4 exclusiones (P2.7) — así que la
-> distancia entre lo que `aprobacion_usuario` describe y el ejercicio actual **aumentó**, no se
-> resolvió. La recomendación de re-confirmar la aprobación (final de esta sección) aplica con más
-> razón todavía.
+> **Nota (post P2.5/P2.7/P1.1-A′):** el `.Rmd` recibió tres cambios adicionales en la misma fecha —
+> la Solution ganó dos subsecciones (P2.5), `y_pool` perdió sus 4 exclusiones (P2.7) y el espacio
+> quedó acotado a `ratio ≥ 2` (P1.1/A′) — así que la distancia entre lo que `aprobacion_usuario`
+> describe y el ejercicio actual **aumentó**, no se resolvió.
+>
+> **Decisión tomada el 2026-07-28:** preguntado explícitamente, el usuario optó por **revisar el
+> ítem personalmente** antes de re-confirmar la aprobación o promover. El JSON sigue **sin tocar**.
+> Material de revisión disponible en `revision/` (ver §7).
 
 El estado sigue marcando los 11 pasos como completados, pero dos de ellos son **anteriores** al
 cambio del 2026-07-28 y ya no describen el ejercicio actual:
@@ -235,16 +266,31 @@ Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
 
 ### Siguiente paso concreto
 
-**P0.1, P1.1 (en parte), P2.5 y P2.7 están cerrados** (2026-07-28). No queda ningún bloqueante
-abierto. Lo que sigue, por orden de valor:
+**P0.1, P1.1, P2.5 y P2.7 están cerrados** (2026-07-28). **No queda ningún pendiente técnico.** Lo
+único que falta es una decisión humana:
 
-**1. Decidir si el residual de P1.1 importa.** La silueta a `ratio 1.5` sigue sin leerse como barco
-(27 % de las versiones, medido sobre el espacio de 222 vigente entonces). No es bloqueante — la
-clave es correcta en las 374 — pero si quieres resolverlo, las opciones A y B siguen documentadas
-en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1.
+**1. Revisar el ítem y re-confirmar la aprobación.** El usuario pidió revisarlo personalmente antes
+de re-confirmar o promover (§5.2). El material está listo en `revision/` (no versionado, es
+derivado):
 
-**2. Promoción a `02-En-Desarrollo/`** — ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §3. Todos los
-criterios de promoción están cumplidos.
+| Archivo | Para qué |
+|---|---|
+| `revision/contact_sheet_12_versiones.png` | Las 12 versiones de un vistazo — lo más rápido para juzgar la silueta y la variedad |
+| `revision/revision_barco1..12.html` | Versión navegable, como la ve el estudiante en Moodle |
+| `revision/revision_barco01..12.pdf` | Enunciado + Solution completa, con las 6 subsecciones canónicas |
+
+Regenerarlo: `exams2html(rmd, n = 12, dir = "revision")` + `exams2pdf(...)` y `magick montage`.
+
+**2. Según el resultado de esa revisión:**
+
+- Si la aprobación sigue vigente → registrar la re-confirmación en `ejercicio_state.json`
+  (`aprobacion_usuario` y `detractor_fase2c`) y promover a `02-En-Desarrollo/` con `git mv`
+  (ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §3).
+- Si aparece algo → abrir el ítem correspondiente en [`docs/BACKLOG.md`](docs/BACKLOG.md).
+
+**Opcional, no bloqueante:** quedan 48 versiones (15,1 %) de `ratio 2.0` — cápsulas alargadas,
+aceptables. Eliminarlas también cuesta 48 versiones más (opción **A**, 318 → 270) o exige rediseñar
+el perfil con asimetría proa/popa (opción **B**, conserva las 318). Ambas en BACKLOG P1.1.
 
 Después de cualquier cambio:
 
@@ -252,13 +298,14 @@ Después de cualquier cambio:
 Rscript verificar_render.R
 Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40
 Rscript ../../../.claude/scripts/validar_coherencia_matematica.R <rmd>
-# + enumeración exhaustiva (script en .claude/rules/barco-parametrico.md §Verificación)
-# + comprobación de estructura 2×2 de las 4 opciones sobre las 374 versiones (BACKLOG P0.1, P2.7)
+# + enumeración exhaustiva (script en .claude/rules/barco-parametrico.md §Verificación;
+#   su assert n == 318L detecta si el bucle se desincroniza del .Rmd)
+# + comprobación de estructura 2×2 de las 4 opciones sobre las 318 versiones (BACKLOG P0.1, P2.7)
 ```
 
-Tras cerrar P0.1, P1.1, P2.5 y P2.7, el subproyecto queda listo para el gate de promoción a
-`02-En-Desarrollo/`
-([`docs/ROADMAP.md`](docs/ROADMAP.md) §3).
+Tras cerrar P0.1, P1.1, P2.5 y P2.7, el subproyecto cumple **todos los criterios técnicos** del gate
+de promoción a `02-En-Desarrollo/` ([`docs/ROADMAP.md`](docs/ROADMAP.md) §3). El único bloqueo
+restante es administrativo: la re-confirmación humana de la aprobación (§5.2).
 
 ---
 
@@ -274,5 +321,7 @@ Reglas locales: [`.claude/CLAUDE.md`](.claude/CLAUDE.md) ·
 
 ---
 
-**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — P2.5 y P2.7 resueltos: Solution con 6 subsecciones
-canónicas, espacio de versiones 222 → 374, diversidad 38/40 únicos)
+**Versión:** 1.2 · **Fecha:** 2026-07-28 (v1.2 — **P1.1 cerrado** con la opción A′: `ratio ≥ 2` por
+construcción, espacio de versiones 374 → **318**, invariante I-9; material de revisión humana en
+`revision/`; único pendiente = re-confirmación de la aprobación. v1.1 — P2.5 y P2.7 resueltos:
+Solution con 6 subsecciones canónicas, espacio de versiones 222 → 374)
