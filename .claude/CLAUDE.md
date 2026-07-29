@@ -133,16 +133,23 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (12 suites)
+- **Tests**: `tests/testthat/` (22 suites enganchadas a `tests/run_all_tests.R`)
 - **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.17.1 (fix WAIT_USER en orquestadores subagente + ambos agentes aceptan SendMessage)
-**Fecha**: 2026-06-27
+**Versión**: 3.18.0 (Error 27 + pool de errores en orquestadores + subproyecto permutaciones-pescadores-venia-n4)
+**Fecha**: 2026-07-29
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.18.0 (2026-07-29)
+- **NUEVO PATRÓN DE ERROR 27**: pool de errores conceptuales del mismo tamaño que el número de distractores. Verde en todo el arsenal y aun así el tipo de error nunca varía entre versiones. Documentado en `patrones-errores-conocidos.md`.
+- **CABLEADO DE ORQUESTADORES**: `orquestador-schoice.md` gana el pre-flight check 20 y el Incidente N; `orquestador-cloze.md` gana el pre-flight check 24 y el Incidente P. Ambos exigen pool ≥4-6 con `sample()` y re-enumeración exhaustiva del espacio de combinaciones tras ampliarlo.
+- **PUNTO CIEGO DOCUMENTADO**: la Capa B (21 keywords semánticas) es específica de estadística descriptiva; en combinatoria no tiene reglas aplicables y su APROBADO no acredita corrección conceptual del pool. En esos dominios la carga de la prueba recae en invariantes propias del ejercicio y en un verificador que enumere el espacio completo.
+- **NUEVO SUBPROYECTO**: `permutaciones-pescadores-venia-n4` — SCHOICE N4, descriptor D4.8, derivado del ítem real `MAT-2026-1-004` (ERA-2026 Sesión 1, pregunta 4). Familia paramétrica n∈{4,5,6} con clave n!; pool de 5 errores y excepción canónica que reproduce el ítem oficial verbatim (enunciado + las 4 opciones). Verificado: 4 formatos + Moodle 12/12 clave = n!, 30/30 ternas, 297/300 versiones únicas, coherencia APROBADO, letter-independence limpio.
+- **DESTINO RESERVADO**: `03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/permutaciones_pescadores_venia_n4/`.
 
 ### Cambios v3.17.1 (2026-06-27)
 - **FIX WAIT_USER MODO SUBAGENTE**: `orquestador-schoice` y `orquestador-cloze` rechazaban respuestas humanas reenviadas vía `SendMessage` durante `WAIT_USER` ("no puedo aceptar una confirmación reenviada por el coordinador"). **Causa raíz**: los agentes no tenían instrucciones para el caso subagente, donde `SendMessage` es el único canal de entrada. **Fix**: nueva sección "Regla fundamental WAIT_USER en modo subagente" en ambos agentes — aceptan `SendMessage` como input humano válido, nunca rechazan por "venir del coordinador", interpretan contenido literalmente. Resuelve ciclo infinito de 3+ reintentos fallidos por WAIT_USER.

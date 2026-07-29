@@ -108,6 +108,8 @@ Antes de cualquier acción destructiva, verifico:
 20. Ningún `.Rmd` que genero reseedea el RNG dentro de `data_generation` con `set.seed(as.integer(Sys.time())...)` ni `set.seed(...proc.time()...)` — Incidente K. Verifico: detección en DOS pasos (un `grep` de una sola línea NO basta: el patrón real suele estar partido en dos líneas — `s <- as.integer(Sys.time()) ...` seguido de `set.seed(s)` — o dentro de una expresión — `set.seed(s + sample(1:1000, 1))`): `grep -nE 'set\.seed' <archivo.Rmd>` y `grep -nE 'Sys\.time|proc\.time|Sys\.Date' <archivo.Rmd>`; si ambos devuelven líneas, inspeccionar si la semilla deriva del reloj.
 21. Si alguna sub-parte tiene gráficas-opción rotuladas en el enunciado (Incidente G) con un rótulo numérico visible, planifico incluir en el pool de esa parte 2-3 distractores que CONSERVEN el mismo valor/magnitud que la respuesta correcta y difieran solo en la dimensión evaluada (dirección, orientación, eje de referencia) — Incidente M.
 22. Si el `.Rmd` incluye una ecuación en display (`$$...$$`) dentro de una lista Markdown numerada (en cualquier parte de Question o Solution), verifico que esté indentada dentro del bloque del ítem, nunca a columna 0 — Incidente N.
+24. **Tamaño del pool de errores conceptuales** (Incidente P): antes de cerrar el paso 3 verifico que `errores_conceptuales` tenga **al menos 4-6 entradas** (regla #1, línea 188) y que la selección por versión use `sample()` sobre los aplicables, no el pool entero. `pool == nº de distractores` es un defecto: el **tipo** de error nunca varía y ningún validador del arsenal lo detecta. Verificación: contar entradas `list(` de primer nivel dentro del bloque y comprobar que existe un `sample(` sobre los índices aplicables. Si el ítem debe reproducir un cuadernillo ICFES verbatim, uso una **excepción canónica** que fuerce los distractores oficiales solo en esa instancia. Tras ampliar el pool, re-enumero el espacio COMPLETO de combinaciones verificando unicidad y razón de magnitud.
+
 23. **Reglas locales del subproyecto** (Incidente O): si existe `<ruta_destino>/.claude/CLAUDE.md`, lo **leo antes** de crear o editar el `.Rmd`, junto con `<ruta_destino>/.claude/rules/*.md` y `<ruta_destino>/HANDOFF.md` cuando existan. Esos archivos declaran invariantes del ejercicio concreto que el `.claude/` del repo raíz no puede conocer: qué función NO extraer, qué constante NO bajar, qué patrón que *parece* deuda técnica es intencional. Precedencia: una regla local **prevalece** sobre mi criterio genérico dentro de ese subproyecto; si contradice una regla del repo raíz, prevalece la del repo raíz y lo reporto como conflicto en vez de resolverlo en silencio. Verificación: `ls <ruta_destino>/.claude/ 2>/dev/null` y, si hay contenido, `Read` de cada archivo antes del paso 3 (`generacion_rmd`).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
@@ -401,6 +403,24 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 **Verificación**: buscar `$$` a columna 0 entre ítems de una lista numerada en el enunciado de cualquier parte y en la Solution — no toda ocurrencia a columna 0 es errónea, solo la que cae dentro de una lista numerada; requiere inspección de contexto, no solo grep.
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
+
+### Incidente P — Pool de errores del mismo tamaño que el número de slots (2026-07-29)
+
+**Síntoma**: el ejercicio pasa TODO el arsenal en verde (coherencia matemática APROBADO, Nivel 5A-5E, diversidad sustantiva exit 0) y aun así el **tipo** de error conceptual que ve el estudiante es idéntico en el 100 % de las versiones: solo cambia el valor numérico sustituido. La diversidad medida en el render puede ser alta (contextos narrativos, mezcla de opciones, reflexiones) y ocultar por completo esta pobreza. En CLOZE el efecto se multiplica: si varias partes comparten el mismo pool, el estudiante recorre el ejercicio entero viendo siempre los mismos tipos de error.
+
+**Causa raíz**: `errores_conceptuales` se construye con exactamente tantas entradas como distractores necesita el gap y se usan **todas**, sin `sample()`. Ningún validador lo detecta: `validar_diversidad_sustantiva.R` mide la variación del **valor** de la respuesta correcta, no la del tipo de distractor; `validar_coherencia_matematica.R` valida cada error, no cuántos hay.
+
+**Regla vulnerada**: `.claude/rules/ejercicios-metacognitivos.md` línea 188 — «Mínimo 4-6 errores por ejercicio».
+
+**Defensa**:
+1. Pool con **al menos 4-6 errores** y selección por versión: `sel <- sample(errores_aplicables_idx, <n_slots>)`, respetando `precondicion`.
+2. Al ampliar el pool, **re-enumerar el espacio completo** de combinaciones (C(pool, slots) × valores del parámetro) verificando unicidad de opciones y razón máx/clave en todas, no en una muestra.
+3. Si el ítem procede de un cuadernillo ICFES real y debe reproducirlo verbatim, conciliar ambas exigencias con una **excepción canónica**: forzar los distractores oficiales en la instancia del ítem original y sortear del pool ampliado en las demás, con un `stopifnot` que lo garantice.
+4. En CLOZE, comprobar además que gaps distintos no colapsen al mismo subconjunto de errores en la misma versión.
+
+**Punto ciego relacionado**: el escáner de keywords semánticas (Capa B) cubre propiedades de conjuntos de datos estadísticos (paridad, cuartiles, outliers, modalidad). En dominios como **combinatoria** no tiene reglas aplicables: un APROBADO de la Capa B no dice nada sobre la corrección conceptual del pool. Ahí la carga de la prueba recae en invariantes propias del ejercicio y en un verificador que enumere el espacio.
+
+**Referencia**: `permutaciones-pescadores-venia-n4` (2026-07-29), SCHOICE derivado de `MAT-2026-1-004`; la lección es independiente del tipo de ítem.
 
 ### Validación realista obligatoria (post-corrección)
 

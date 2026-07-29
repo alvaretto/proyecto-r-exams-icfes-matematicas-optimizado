@@ -2687,3 +2687,97 @@ Barrido de `f` en {0.20, 0.25, 0.30} sobre la grilla COMPLETA de combinaciones v
 - Función `dibujar_diagrama()` / filtro de generación de parámetros del ejercicio (chunk `data_generation`).
 - Error 23 (solape de etiquetas por cuña angular) — mismo ejercicio, defecto complementario de legibilidad geométrica (ambos derivan del mismo piso `rtext`/`R_fit`).
 - Regla #22 `diversidad-sustantiva.md` — la legibilidad visual de cada elemento no debe sacrificarse al maximizar el número de combinaciones matemáticamente válidas.
+
+## Error 27: Pool de errores conceptuales del mismo tamaño que el número de distractores
+
+### ❌ Síntoma
+
+No hay ningún mensaje de error. El ejercicio pasa TODO el arsenal en verde: `validar_coherencia_matematica.R` reporta APROBADO 0 errores (incluidas las Capas A/B/C de validación semántica y el Nivel 5A-5E de correctitud de respuesta), `validar_diversidad_sustantiva.R` sale con exit 0, y el render compila sin fallos en los 4 formatos. Y aun así, el **tipo** de error conceptual que ve el estudiante es idéntico en el 100 % de las versiones: entre semilla y semilla solo cambia el valor numérico sustituido, nunca cuál distractor conceptual aparece.
+
+### 🔍 Causa Raíz
+
+`errores_conceptuales` se declaraba con exactamente tantas entradas como distractores tiene el ítem (3 para un SCHOICE de 4 opciones), y las tres se usaban siempre, sin ningún `sample()` sobre el pool. La diversidad del render puede seguir siendo alta por otras vías (contextos narrativos, mezcla de opciones, reflexiones metacognitivas), lo que enmascara por completo la pobreza real del pool de errores.
+
+**Por qué ningún validador lo detecta**:
+- `validar_diversidad_sustantiva.R` (regla #22) mide la variación del **valor** de la respuesta correcta entre versiones, no la variación del **tipo** de distractor conceptual seleccionado.
+- `validar_coherencia_matematica.R` valida cada error individualmente (que su `precondicion` se cumpla, que `calcula()` sea determinista, que el distractor difiera de la respuesta correcta), pero nunca evalúa **cuántas entradas** tiene el pool completo ni si se está muestreando un subconjunto de él.
+- La Capa B (escáner de 21 keywords semánticas) cubre propiedades de conjuntos de datos estadísticos — paridad, cuartiles, outliers, modalidad. En dominios de **combinatoria** no existe ninguna regla aplicable: su APROBADO no certifica la corrección conceptual del pool, es simplemente un dominio fuera de su cobertura. Es un punto ciego del validador por dominio, no una garantía universal.
+
+### ✅ Solución Verificada
+
+Ampliar el pool más allá del número de distractores y seleccionar un subconjunto por versión con `sample()` sobre los índices que cumplen su `precondicion`:
+
+```r
+# ❌ ANTES — pool del mismo tamaño que los distractores, sin sample()
+errores_conceptuales <- list(
+  list(codigo = "COMB-PER-01", ...),
+  list(codigo = "COMB-PER-02", ...),
+  list(codigo = "COMB-PER-03", ...)
+)
+vals <- vapply(errores_conceptuales, function(e) e$calcula(n), numeric(1))
+```
+
+```r
+# ✅ DESPUÉS — pool ampliado (5) + selección aleatoria de 3 por versión
+errores_conceptuales <- list(
+  list(codigo = "COMB-PER-01", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-02", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-03", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-04", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-05", precondicion = function(p) TRUE, ...)
+)
+aplicables <- which(sapply(errores_conceptuales, function(e) e$precondicion(list(n = n))))
+sel <- sort(safe_sample(aplicables, 3L, replace = FALSE))
+errores_sel <- errores_conceptuales[sel]
+```
+
+**Excepción canónica**: cuando la versión debe reproducir verbatim un ítem oficial del cuadernillo ICFES, se fuerzan los distractores oficiales en lugar de sortear el pool:
+
+```r
+# Excepción: si la versión es la instancia canónica del ítem original (contexto 1, n=4),
+# se fuerzan los códigos oficiales del cuadernillo en vez de sortear
+es_canonica <- (ctx_idx == 1L && n == 4L)
+if (es_canonica) {
+  sel <- which(sapply(errores_conceptuales, function(e) e$codigo) %in%
+               c("COMB-PER-01", "COMB-PER-02", "COMB-PER-04"))
+} else {
+  sel <- sort(safe_sample(aplicables, 3L, replace = FALSE))
+}
+all_vals <- c(24L, 64L, 16L, 4L)  # clave + 3 distractores oficiales del cuadernillo
+stopifnot(setequal(all_vals, c(24L, 64L, 16L, 4L)))
+```
+
+### 🧪 Validación de la Solución
+
+Mediciones reales del caso que motivó este error (`permutaciones-pescadores-venia-n4`, 2026-07-29):
+
+| Métrica | Antes | Después |
+|---|---|---|
+| Entradas del pool | 3 | 5 |
+| Ternas de error distintas alcanzadas en 300 versiones | 1 | 10 de 10 posibles |
+| Versiones únicas en 300 evaluaciones | 280/300 | 297/300 |
+| Rango de la respuesta correcta por magnitud | siempre el 3.º | 3.º o 4.º |
+| Combinaciones verificadas por el verificador | 3 valores del parámetro | 30 (3 valores × C(5,3)=10), enumeración exhaustiva |
+
+Tras el cambio: `validar_coherencia_matematica.R` → APROBADO 0 errores; `verificar_render.R` → V1-V8 todo verde; `validar_diversidad_sustantiva.R --n 40` → exit 0.
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. ¿El número de entradas de primer nivel de `errores_conceptuales` es igual al número de distractores del ítem?
+2. ¿Existe un `sample()` (o `safe_sample()`) sobre los índices aplicables antes de fijar los errores usados en la versión, o se usa siempre el pool completo?
+3. Si el ítem debe reproducir un cuadernillo ICFES verbatim, ¿está declarada explícitamente la excepción canónica con su propio `stopifnot` de verificación?
+4. Tras ampliar el pool, ¿se re-enumeró el espacio COMPLETO de combinaciones (pool × slots × valores del parámetro), verificando unicidad de opciones y coherencia de la razón máx/clave?
+5. ¿Se re-ejecutó el arsenal completo (coherencia matemática, diversidad sustantiva, render 4 formatos) después de ampliar el pool?
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-07-29 | permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd | pool de 3 errores == número de distractores, sin `sample()` — detectado por auditoría adversarial | pool ampliado a 5 + `sample()` sobre índices aplicables + excepción canónica para el ítem oficial verbatim | 10/10 ternas alcanzadas, 297/300 versiones únicas, arsenal completo APROBADO |
+
+### 📚 Referencias
+
+- Regla #1 `ejercicios-metacognitivos.md` (línea 188 — «Mínimo 4-6 errores por ejercicio», sección OBLIGATORIA «Pool de Errores Conceptuales»).
+- Regla #22 `diversidad-sustantiva.md` — mide diversidad de VALOR, no de TIPO de distractor; punto ciego complementario a este error.
+- Incidente N de `.claude/agents/orquestador-schoice.md` / Incidente P de `.claude/agents/orquestador-cloze.md`.
+- `A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md`.

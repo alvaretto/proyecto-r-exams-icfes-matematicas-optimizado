@@ -91,6 +91,8 @@ Antes de cualquier acción destructiva, verifico:
 16. Ningún `.Rmd` que genero reseedea el RNG dentro de `data_generation` con `set.seed(as.integer(Sys.time())...)` ni `set.seed(...proc.time()...)` — Incidente I. Verifico: detección en DOS pasos (un `grep` de una sola línea NO basta: el patrón real suele estar partido en dos líneas — `s <- as.integer(Sys.time()) ...` seguido de `set.seed(s)` — o dentro de una expresión — `set.seed(s + sample(1:1000, 1))`): `grep -nE 'set\.seed' <archivo.Rmd>` y `grep -nE 'Sys\.time|proc\.time|Sys\.Date' <archivo.Rmd>`; si ambos devuelven líneas, inspeccionar si la semilla deriva del reloj.
 17. Si el ejercicio tiene opciones gráficas con un rótulo numérico visible (p. ej. "40 km"), planifico incluir en el pool de errores conceptuales 2-3 distractores que CONSERVEN el mismo valor/magnitud que la respuesta correcta y difieran solo en la dimensión evaluada (dirección, orientación, eje de referencia) — Incidente K.
 18. Si el `.Rmd` incluye una ecuación en display (`$$...$$`) dentro de una lista Markdown numerada (Question o Solution), verifico que esté indentada dentro del bloque del ítem, nunca a columna 0 — Incidente L.
+20. **Tamaño del pool de errores conceptuales** (Incidente N): antes de cerrar el paso 3 verifico que `errores_conceptuales` tenga **al menos 4-6 entradas** (regla #1, línea 188) y que la selección por versión use `sample()` sobre los aplicables, no el pool entero. `pool == nº de distractores` es un defecto: el **tipo** de error nunca varía y ningún validador del arsenal lo detecta (`validar_diversidad_sustantiva.R` mide el valor de la respuesta, no el tipo de distractor). Verificación: contar entradas `list(` de primer nivel dentro del bloque y comprobar que existe un `sample(` sobre los índices aplicables. Si el ítem debe reproducir un cuadernillo ICFES verbatim, uso una **excepción canónica** que fuerce los distractores oficiales solo en esa instancia. Tras ampliar el pool, re-enumero el espacio COMPLETO de combinaciones (C(pool, slots) × valores del parámetro) verificando unicidad y razón de magnitud.
+
 19. **Reglas locales del subproyecto** (Incidente M): si existe `<ruta_destino>/.claude/CLAUDE.md`, lo **leo antes** de crear o editar el `.Rmd`, junto con `<ruta_destino>/.claude/rules/*.md` y `<ruta_destino>/HANDOFF.md` cuando existan. Esos archivos declaran invariantes del ejercicio concreto que el `.claude/` del repo raíz no puede conocer: qué función NO extraer, qué constante NO bajar, qué patrón que *parece* deuda técnica es intencional. Precedencia: una regla local **prevalece** sobre mi criterio genérico dentro de ese subproyecto; si contradice una regla del repo raíz, prevalece la del repo raíz y lo reporto como conflicto en vez de resolverlo en silencio. Verificación: `ls <ruta_destino>/.claude/ 2>/dev/null` y, si hay contenido, `Read` de cada archivo antes del paso 3 (`generacion_rmd`).
 
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
@@ -320,6 +322,24 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 **Precedencia**: regla local > criterio genérico del orquestador. Regla del repo raíz > regla local (y el conflicto se reporta, no se resuelve en silencio).
 
 **Referencia**: incidentes `desplazamiento-avion-aeropuerto` y `plano-cartesiano-barco-n2` (2026-07-28); regla #17 `infraestructura-protegida.md` (el `.claude/` local del subproyecto NO forma parte de la infraestructura protegida del raíz, pero sí es fuente de verdad dentro de su alcance).
+
+### Incidente N — Pool de errores del mismo tamaño que el número de slots (2026-07-29)
+
+**Síntoma**: el ejercicio pasa TODO el arsenal en verde (coherencia matemática APROBADO, Nivel 5A-5E, diversidad sustantiva exit 0) y aun así el **tipo** de error conceptual que ve el estudiante es idéntico en el 100 % de las versiones: solo cambia el valor numérico sustituido. La diversidad medida en el render puede ser alta (contextos narrativos, mezcla de opciones, reflexiones) y ocultar por completo esta pobreza.
+
+**Causa raíz**: `errores_conceptuales` se construye con exactamente tantas entradas como distractores tiene el ítem (3 para un SCHOICE de 4 opciones) y se usan **todas**, sin `sample()`. Ningún validador lo detecta: `validar_diversidad_sustantiva.R` mide la variación del **valor** de la respuesta correcta, no la del tipo de distractor; `validar_coherencia_matematica.R` valida cada error, no cuántos hay.
+
+**Regla vulnerada**: `.claude/rules/ejercicios-metacognitivos.md` línea 188 — «Mínimo 4-6 errores por ejercicio», dentro de la sección OBLIGATORIA del pool.
+
+**Defensa**:
+1. El pool DEBE tener **al menos 4-6 errores** y seleccionar por versión con el patrón genérico de precondiciones: `sel <- sample(errores_aplicables_idx, <n_slots>)`.
+2. Al ampliar el pool hay que **re-enumerar el espacio completo**: con 5 errores y 3 slots hay C(5,3)=10 ternas por cada valor del parámetro. Verificar unicidad de opciones y razón máx/clave en **todas**, no en una muestra.
+3. Si el ítem procede de un cuadernillo ICFES real y debe reproducirlo verbatim, conciliar ambas exigencias con una **excepción canónica**: forzar los distractores oficiales cuando la versión es la instancia del ítem original, y sortear del pool ampliado en las demás. Guardarlo con un `stopifnot` propio.
+4. Beneficio colateral medido: ampliar el pool rompe patrones de magnitud fijos. En el caso real el rango de la correcta pasó de invariante a variable, y las versiones únicas subieron de 280/300 a 297/300.
+
+**Punto ciego relacionado**: el escáner de keywords semánticas (Capa B) cubre propiedades de conjuntos de datos estadísticos (paridad, cuartiles, outliers, modalidad). En dominios como **combinatoria** no tiene reglas aplicables, así que un APROBADO de la Capa B no dice nada sobre la corrección conceptual del pool. En esos dominios la carga de la prueba recae en invariantes propias del ejercicio y en un verificador que enumere el espacio.
+
+**Referencia**: `permutaciones-pescadores-venia-n4` (2026-07-29), derivado de `MAT-2026-1-004`.
 
 ### Validación realista obligatoria (post-corrección)
 
