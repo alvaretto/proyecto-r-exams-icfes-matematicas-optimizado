@@ -8,7 +8,7 @@
 |---|---|
 | **Ruta (SP)** | `A-Produccion/01-En-PreDesarrollo/plano-cartesiano-barco-n2` |
 | **Repo raíz (RR)** | `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams` |
-| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (405 líneas, 5 chunks) |
+| **Ejercicio** | `coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1.Rmd` (436 líneas, 5 chunks) |
 | **Tipo** | SCHOICE metacognitivo, **opciones de texto**, una sola figura compartida |
 | **Origen ICFES** | `MAT-2026-1-022` (cuadernillo 2026-1, pregunta 116, clave C) |
 | **Rama** | `main` |
@@ -54,7 +54,7 @@ Estos OE **no existían declarados** antes del 2026-07-28: el subproyecto no ten
 | Coherencia matemática, Niveles 1-5 + Capas semánticas A-D | `Rscript RR/.claude/scripts/validar_coherencia_matematica.R <rmd>` | **APROBADO, 0 errores** |
 | Diversidad sustantiva (regla #22) | `Rscript RR/.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` | **PASS**, 40/40 evaluadas, 36 valores únicos |
 | Render 4 formatos + Moodle | `Rscript verificar_render.R` | **5/5 OK** |
-| Regla #18 (`{width=}`) | grep | OK (línea 282 del original, hoy desplazada por el comentario I-2) |
+| Regla #18 (`{width=}`) | grep | OK (línea 317 del original, hoy desplazada por el comentario I-2) |
 | Regla #19 (letter-independence) | grep sobre la sección Solution | OK, 0 coincidencias |
 | Regla #20 (guard `\newcounter{none}`) | grep | Presente |
 | Regla #22 §P6 (fuga por nombre de archivo) | `exams2moodle` + grep del XML | OK — único archivo `plano_barco.png` |
@@ -103,32 +103,33 @@ Renders distintos posibles: 222 × 8 protagonistas × 4 reflexiones × 24 órden
 
 ## 5. Hallazgos abiertos
 
-### 5.0 — `GEO-COORD-03` es eliminable por su forma (P0.1) — **BLOQUEANTE**
+### 5.0 — `GEO-COORD-03` era eliminable por su forma (P0.1) — ✅ **RESUELTO 2026-07-28**
 
 Los vértices de un rectángulo alineado a los ejes tienen siempre estructura **2×2**: dos valores de
-x combinados con dos de y. La correcta, `GEO-COORD-01` y `GEO-COORD-02` la cumplen en **222/222**
-versiones. `GEO-COORD-03` la cumple en **0/222**: sus cuatro puntos son siempre de la forma `(v,v)`,
-colineales sobre `y = x`, algo que nunca puede ser el conjunto de vértices de una figura.
+x combinados con dos de y. `GEO-COORD-03` (diagonal) la cumplía en **0/222** versiones — sus cuatro
+puntos eran siempre `(v,v)`, colineales — así que se podía descartar por la forma del texto sin
+mirar la figura.
 
-Un estudiante que reconozca eso descarta la opción **por la forma del texto**, sin mirar la figura
-ni leer una coordenada — sube su acierto por azar del 25 % al 33 %.
+**Se retiró y se sustituyó por `GEO-COORD-04`** («desplazamiento de una unidad al contar la
+cuadrícula»), que conserva la estructura 2×2 en **222/222** versiones. La dirección del
+desplazamiento es adaptativa (`+1`, o `−1` si el barco toca el borde derecho), lo que evita salirse
+de la grilla **sin perder ni una versión**. Detalle y tabla de verificación en
+[`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
 
-Hallazgo de la auditoría adversarial, verificado de forma independiente por enumeración exhaustiva.
-Es el análogo en texto del patrón P5 de la regla #22. **Es lo primero que hay que resolver.**
-Dirección de fix y criterio de cierre en [`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
+### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — 🟡 **RESUELTO EN PARTE**
 
-### 5.1 — El casco no se lee como barco en el 27 % de las versiones (P1.1) — **requiere tu decisión**
+Se aplicó la **opción D**: acotar el radio de las bandas por el ancho (`rb <- min(h, w * 0.25)`),
+con el factor calibrado midiendo el solape sobre las 8 combinaciones. El solape en el caso peor baja
+de **72,3 % a 37,0 %** y los casos alargados (`5×1`, `6×1`) quedan **idénticos**. Verificado
+visualmente: donde antes había una sola mancha negra, ahora se distinguen las dos medialunas y el
+puente.
 
-60 de 222 versiones tienen `ancho/alto ≤ 2`. **No afecta la corrección**: la clave sigue siendo
-válida en las 222. Afecta la fidelidad narrativa.
+**Residual:** la silueta a `ratio 1.5` sigue siendo una cápsula redondeada más que un barco. Eso es
+el mecanismo del contorno, que la opción D no aborda. Si quieres resolverlo también, siguen
+disponibles la opción **A** (restringir a `ratio ≥ 2.5`, cuesta 60 de las 222 versiones) y la **B**
+(rediseñar el perfil). **No es bloqueante**: la clave es correcta en las 222.
 
-El mecanismo dominante está **medido**: las dos bandas oscuras tienen radio proporcional al alto
-pero separación proporcional al ancho, así que con `alto = 2` y `ancho ≤ 4` se solapan un 65-72 % y
-se funden en una mancha. Cuatro opciones con su coste en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1;
-la recomendada es la **D** (acotar el radio de las bandas por el ancho), que conserva las 222
-versiones y no toca la geometría del casco.
-
-**Ojo con dos cosas al intentar arreglarlo:**
+**Ojo con dos cosas si vuelves sobre esto:**
 
 - Dos auditorías reportaron que «el puente se sale del casco». **Es falso** y está demostrado: el
   borde derecho del puente cae siempre en `t = 0.87`, posición invariante de escala, ocupando el
@@ -143,6 +144,20 @@ Bloqueada por incompatibilidad entre `include_supplement()` y
 `validar_diversidad_sustantiva.R`. Medido en el subproyecto hermano: 40/40 semillas fallidas. No
 reintentar sin resolver antes el criterio de desbloqueo (adaptar el validador, que es herramienta
 compartida). Detalle en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.2.
+
+### 5.2 — `ejercicio_state.json` tiene dos pasos desactualizados por el cambio de distractor
+
+El estado sigue marcando los 11 pasos como completados, pero dos de ellos son **anteriores** al
+cambio del 2026-07-28 y ya no describen el ejercicio actual:
+
+| Paso | Marcado | Por qué quedó desactualizado |
+|---|---|---|
+| `detractor_fase2c` | `APROBAR`, 2026-07-01 | La auditoría del 2026-07-28 sí encontró un bloqueante (`GEO-COORD-03`). El veredicto de julio 1 se emitió sobre una versión con un distractor que ya no existe |
+| `aprobacion_usuario` | completado, 2026-07-01 | La aprobación se dio sobre un ejercicio cuyo tercer distractor era el de la diagonal. El ítem que ve hoy el estudiante tiene `GEO-COORD-04` en su lugar |
+
+**No se modificó el JSON**: cambiar un estado de aprobación humana no es decisión de un agente.
+Antes de promover a `02-En-Desarrollo/` conviene **re-confirmar la aprobación** sobre la versión
+actual, o registrar explícitamente que el cambio de distractor no la invalida.
 
 ### 5.3 — Decisiones cerradas (no reabrir sin motivo nuevo)
 
@@ -191,18 +206,22 @@ Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
 
 ### Siguiente paso concreto
 
-**1. Resolver P0.1 (bloqueante): rediseñar `GEO-COORD-03`.** Sustituir el distractor de la diagonal
-por uno que conserve la estructura 2×2 —la dirección propuesta es un desplazamiento de una unidad
-al contar la cuadrícula— comprobando antes que no se sale de la grilla ni colisiona con otra opción
-en las 222 versiones. Detalle y criterio de cierre en [`docs/BACKLOG.md`](docs/BACKLOG.md) P0.1.
+**P0.1 y P1.1 están cerrados** (2026-07-28). No queda ningún bloqueante abierto. Lo que sigue, por
+orden de valor:
 
-**2. Decidir P1.1** (casco degenerado): la recomendación es la opción **D**, acotar el radio de las
-bandas por el ancho, que conserva las 222 versiones.
+**1. Decidir si el residual de P1.1 importa.** La silueta a `ratio 1.5` sigue sin leerse como barco
+(27 % de las versiones). No es bloqueante — la clave es correcta en las 222 — pero si quieres
+resolverlo, las opciones A y B siguen documentadas en [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1.
 
-Conviene hacer los dos en la misma pasada, junto con P2.5 (las dos subsecciones que faltan en la
-Solution), porque tocan el mismo bloque.
+**2. P2.5** — añadir a la Solution las dos subsecciones canónicas que faltan («Propiedades del
+concepto» y «Caso específico»). Impacto bajo, trabajo pequeño.
 
-Después de cualquiera de los dos:
+**3. P2.7** — evaluar si dos de las cuatro exclusiones de `y_pool` quedaron obsoletas al retirar el
+distractor de la diagonal. Relajarlas ampliaría el espacio de versiones por encima de 222.
+
+**4. Promoción a `02-En-Desarrollo/`** — ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §3.
+
+Después de cualquier cambio:
 
 ```bash
 Rscript verificar_render.R

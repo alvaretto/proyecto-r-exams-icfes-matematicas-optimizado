@@ -28,10 +28,12 @@ x_min <- pick_int(1L, grid_max - ancho_barco)
 x_max <- x_min + ancho_barco
 
 # y_min con restricciones para garantizar 4 opciones DISTINTAS:
-#   y_min != x_min   (distractor inversion != correcta)
+#   y_min != x_min   (evita que GEO-COORD-01 (inversion) colapse sobre la correcta)
 #   y_max != x_max   (idem)
-#   y_min != x_max   (diagonal distractor tiene 4 puntos distintos)
-#   y_max != x_min   (idem)
+#   y_min != x_max   (heredadas del retirado GEO-COORD-03; se conservan porque
+#   y_max != x_min    siguen garantizando 4 opciones distintas en 222/222 versiones.
+#                     Podrian relajarse — ver docs/BACKLOG.md P2.7 — pero eso
+#                     ampliaria el espacio de versiones y exige re-validar todo.)
 y_pool <- 1L:(grid_max - alto_barco)
 y_pool <- setdiff(y_pool, x_min)
 y_pool <- y_pool[y_pool + alto_barco != x_max]
@@ -67,24 +69,39 @@ dist_centro <- paste0(
   x_mid + 1L, ", ", y_max, ")."
 )
 
-# GEO-COORD-03: Puntos sobre la diagonal y = x
-dist_diag <- paste0(
-  "(", x_min, ", ", x_min, "); (",
-  y_min, ", ", y_min, "); (",
-  y_max, ", ", y_max, ") y (",
-  x_max, ", ", x_max, ")."
+# GEO-COORD-04: Desplazamiento de una unidad al contar la cuadricula.
+#
+# SUSTITUYE a GEO-COORD-03 (4 puntos sobre la diagonal y = x), retirado el
+# 2026-07-28 por ser estructuralmente eliminable: era la única opcion cuyos 4
+# puntos tenian la forma (v,v) — colineales — mientras las otras tres comparten
+# la estructura "2 valores de x x 2 valores de y". Un estudiante podia
+# descartarlo por la FORMA del texto, sin mirar la figura (regla #22 §P5).
+# Ver docs/BACKLOG.md P0.1.
+#
+# Este distractor conserva la estructura 2x2, así que solo se puede descartar
+# leyendo las coordenadas reales del barco. La direccion del desplazamiento se
+# adapta para no salirse de la grilla: a la derecha si hay margen, a la
+# izquierda si el barco ya toca el borde derecho.
+desplaz <- if (x_max < grid_max) 1L else -1L
+dist_desplaz <- paste0(
+  "(", x_min + desplaz, ", ", y_min, "); (",
+  x_min + desplaz, ", ", y_max, "); (",
+  x_max + desplaz, ", ", y_min, ") y (",
+  x_max + desplaz, ", ", y_max, ")."
 )
 
 # === Verificar 4 opciones distintas ===
-all_opts <- c(correcta, dist_inv, dist_centro, dist_diag)
+all_opts <- c(correcta, dist_inv, dist_centro, dist_desplaz)
 stopifnot(length(unique(all_opts)) == 4L)
+# Los 4 desplazamientos deben caer dentro de la grilla [1, grid_max]
+stopifnot(x_min + desplaz >= 1L, x_max + desplaz <= grid_max)
 
 # === Mezclar opciones (exshuffle: TRUE se encarga, pero preparamos sol) ===
 opciones_pre <- list(
   correcta       = correcta,
   inv_ejes       = dist_inv,
   rango_reducido = dist_centro,
-  diagonal       = dist_diag
+  desplazamiento = dist_desplaz
 )
 perm <- sample(4L)
 opciones <- unlist(opciones_pre[perm], use.names = FALSE)
@@ -116,17 +133,19 @@ errores_info <- list(
       "derecho del barco, sino que selecciona únicamente la parte central."
     )
   ),
-  diagonal = list(
-    codigo = "GEO-COORD-03",
-    nombre = "Puntos sobre la diagonal",
-    texto = dist_diag,
+  desplazamiento = list(
+    codigo = "GEO-COORD-04",
+    nombre = "Desplazamiento de una unidad al contar la cuadrícula",
+    texto = dist_desplaz,
     diagnostico = paste0(
-      "Coloca los puntos sobre la diagonal principal (x = y): (",
-      x_min, ", ", x_min, "), (", y_min, ", ", y_min, "), (",
-      y_max, ", ", y_max, "), (", x_max, ", ", x_max,
-      "). En lugar de formar un rectángulo que encierre al barco, ",
-      "los 4 puntos están alineados sobre la recta y = x. ",
-      "Confunde la forma del barco con una distribución diagonal en el plano."
+      "Identifica correctamente la forma del rectángulo y el rango vertical ",
+      "(de y = ", y_min, " a y = ", y_max, "), pero desplaza el rango ",
+      "horizontal una unidad: reporta de x = ", x_min + desplaz,
+      " a x = ", x_max + desplaz, " en lugar de x = ", x_min,
+      " a x = ", x_max, ". Es el error clásico de contar los cuadros de la ",
+      "cuadrícula en vez de leer las marcas del eje, o de empezar a contar ",
+      "desde el primer cuadro que ocupa el barco en lugar de desde la línea ",
+      "donde comienza."
     )
   )
 )
@@ -209,17 +228,29 @@ dibujar_barco <- function(xmn, xmx, ymn, ymx, gmax, filename) {
     y = rep(c(cy + h * 0.20, cy, cy - h * 0.20), 2)
   )
 
+  # Radio de las bandas ACOTADO POR EL ANCHO (opcion D de docs/BACKLOG.md P1.1).
+  # Las bandas tienen radio proporcional a h pero sus centros estan separados por
+  # una fracción de w (0.16w - 0.03w = 0.13w). Con h máximo y w mínimo los radios
+  # crecian mientras la separacion se encogia, y las dos bandas se fundian en una
+  # sola mancha: 72.3% de solape en (w=3,h=2) y 65.2% en (w=4,h=2).
+  # Acotar el radio por 0.25*w deja el solape en 37% como máximo — el mismo nivel
+  # que (w=4,h=1), que ya se veia bien — y NO altera los casos alargados
+  # (w=5,6 con h=1 quedan exactamente igual que antes).
+  # Las bandas son decorativas: no participan del bounding box, así que este
+  # cambio no toca la invariante I-2.
+  rb <- min(h, w * 0.25)
+
   bt1 <- seq(-1.1, 1.1, length.out = 80)
   b1cx <- cx + w * 0.03
   b1_df <- data.frame(
-    x = c(b1cx + h * 0.46 * cos(bt1), b1cx + h * 0.34 * cos(rev(bt1))),
-    y = c(cy   + h * 0.46 * sin(bt1), cy   + h * 0.34 * sin(rev(bt1)))
+    x = c(b1cx + rb * 0.46 * cos(bt1), b1cx + rb * 0.34 * cos(rev(bt1))),
+    y = c(cy   + rb * 0.46 * sin(bt1), cy   + rb * 0.34 * sin(rev(bt1)))
   )
   bt2 <- seq(-0.9, 0.9, length.out = 60)
   b2cx <- cx + w * 0.16
   b2_df <- data.frame(
-    x = c(b2cx + h * 0.40 * cos(bt2), b2cx + h * 0.30 * cos(rev(bt2))),
-    y = c(cy   + h * 0.40 * sin(bt2), cy   + h * 0.30 * sin(rev(bt2)))
+    x = c(b2cx + rb * 0.40 * cos(bt2), b2cx + rb * 0.30 * cos(rev(bt2))),
+    y = c(cy   + rb * 0.40 * sin(bt2), cy   + rb * 0.30 * sin(rev(bt2)))
   )
 
   bw <- w * 0.10;  bh <- h * 0.50;  bcx <- cx + w * 0.32

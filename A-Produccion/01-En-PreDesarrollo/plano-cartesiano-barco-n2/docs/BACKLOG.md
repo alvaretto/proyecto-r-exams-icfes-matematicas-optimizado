@@ -8,7 +8,7 @@
 
 ## P0 — Bloqueante para promoción
 
-### P0.1 — `GEO-COORD-03` es eliminable por su forma, sin razonar geometría — **ABIERTO**
+### P0.1 — `GEO-COORD-03` era eliminable por su forma — ✅ **RESUELTO 2026-07-28**
 
 **Origen:** auditoría adversarial (2026-07-28). **Verificado de forma independiente por enumeración
 exhaustiva sobre las 222 versiones.**
@@ -40,19 +40,61 @@ eliminable de un vistazo) y del «Formato Equilibrado» de `graficos-como-opcion
 versiones, no en un subconjunto. Un distractor que se descarta sin usar el conocimiento evaluado no
 cumple su función.
 
-**Dirección de fix (requiere diseño, no es un parche listo):** sustituirlo por un error que
-**conserve la estructura 2×2**. Por ejemplo, un desplazamiento de una unidad al contar la
-cuadrícula —`(x_min+1, y_min); (x_min+1, y_max); (x_max+1, y_min); (x_max+1, y_max)`— que es un
-error de lectura frecuente y estructuralmente indistinguible de las demás opciones. Antes de
-adoptarlo hay que:
+#### Resolución aplicada
 
-1. Verificar que no se sale de la grilla (`x_max + 1 ≤ 10`), lo que obliga a acotar `x_min`.
-2. Verificar que no colisiona con ninguna otra opción en las 222 versiones.
-3. Actualizar `errores_info$diagonal` (código, nombre y diagnóstico) en consecuencia.
-4. Re-ejecutar la enumeración exhaustiva, `validar_diversidad_sustantiva.R` y `verificar_render.R`.
+`GEO-COORD-03` (diagonal) se **retiró** y se sustituyó por **`GEO-COORD-04` — «Desplazamiento de
+una unidad al contar la cuadrícula»**:
 
-**Criterio de cierre:** los cuatro textos de opción comparten la estructura 2×2 en las 222
-versiones (misma comprobación de la tabla de arriba, con `GEO-COORD-03` pasando a 222/222).
+```r
+desplaz <- if (x_max < grid_max) 1L else -1L
+dist_desplaz <- paste0(
+  "(", x_min + desplaz, ", ", y_min, "); (",
+  x_min + desplaz, ", ", y_max, "); (",
+  x_max + desplaz, ", ", y_min, ") y (",
+  x_max + desplaz, ", ", y_max, ")."
+)
+```
+
+Diagnostica un error de lectura frecuente y real: contar los **cuadros** de la cuadrícula en vez de
+las **marcas** del eje, o empezar a contar desde el primer cuadro que ocupa el barco en lugar de
+desde la línea donde empieza.
+
+**La dirección del desplazamiento es adaptativa** (`+1` si hay margen a la derecha, `−1` si el barco
+ya toca el borde). Eso evita el problema que tenía la propuesta original —salirse de la grilla con
+`x_max + 1 > 10`— **sin recortar ni una sola versión**: cuando `x_max = 10` se cumple
+`x_min = 10 − ancho ≥ 4`, así que el desplazamiento a la izquierda siempre cabe. El chunk lo
+verifica con `stopifnot(x_min + desplaz >= 1L, x_max + desplaz <= grid_max)`.
+
+#### Criterio de cierre — verificado
+
+Enumeración exhaustiva sobre las 222 versiones, tras el cambio:
+
+| Comprobación | Antes | Después |
+|---|---|---|
+| Correcta con estructura 2×2 | 222/222 | 222/222 |
+| `GEO-COORD-01` con estructura 2×2 | 222/222 | 222/222 |
+| `GEO-COORD-02` con estructura 2×2 | 222/222 | 222/222 |
+| **Tercer distractor con estructura 2×2** | **0/222** | **222/222** ✅ |
+| Las 4 opciones distintas entre sí | 222/222 | 222/222 |
+| Desplazamiento fuera de la grilla | — | **0** |
+| Espacio de versiones | 222 | **222** (sin pérdida) |
+| Respuestas correctas distintas | 222 | **222** |
+| *Bounding box* = clave (invariante I-2) | 222/222 | 222/222 |
+
+Ejemplo real del XML de Moodle renderizado (correcta `x ∈ [5,9]`, `y ∈ [1,2]`):
+
+```
+correcta      (5, 1); (5, 2); (9, 1) y (9, 2).
+GEO-COORD-04  (6, 1); (6, 2); (10, 1) y (10, 2).     <- misma forma que la correcta
+GEO-COORD-02  (7, 1); (7, 2); (8, 1) y (8, 2).
+GEO-COORD-01  (1, 5); (2, 5); (1, 9) y (2, 9).
+```
+
+Ninguna opción se distingue ya por su forma: hay que leer las coordenadas del barco.
+
+**Re-validación completa:** `validar_coherencia_matematica.R` → APROBADO 0 errores ·
+`validar_diversidad_sustantiva.R --n 40` → PASS, 36 valores únicos · `verificar_render.R` → 5/5
+formatos OK, sin fuga P6.
 
 ---
 
@@ -73,7 +115,12 @@ Ninguna de estas comprobaciones encontró problemas:
 
 ## P1 — Deuda de desarrollo
 
-### P1.1 — El casco no se lee como barco en el 27 % de las versiones — **ABIERTO, requiere decisión**
+### P1.1 — El casco no se lee como barco en el 27 % de las versiones — 🟡 **RESUELTO EN PARTE 2026-07-28** (opción D aplicada)
+
+> **Estado:** se aplicó la **opción D**, que ataca el mecanismo dominante (solape de las bandas).
+> El defecto de la mancha negra fusionada está corregido y verificado. **Queda un residual**: el
+> contorno del casco a `ratio 1.5` sigue siendo una cápsula redondeada más que un barco — eso es el
+> mecanismo 1, que la opción D no aborda por diseño. Ver «Resolución aplicada» al final del ítem.
 
 **Medición (2026-07-28).** La forma del casco depende de la relación de aspecto
 `ratio = ancho_barco / alto_barco`. Distribución sobre las 222 combinaciones válidas:
@@ -167,6 +214,39 @@ fracción de proa adaptativa al aspecto— y se midió que **empeoraba** el resu
 detalles están más abajo. La lección es que en este casco los parámetros están acoplados y cualquier
 cambio debe medirse sobre **las 8 combinaciones**, no sobre el caso que motivó el arreglo.
 
+#### Resolución aplicada — opción D (2026-07-28)
+
+El factor se **calibró midiendo**, no eligiendo a ojo. Barrido de `rb <- min(h, w·k)` sobre las 8
+combinaciones:
+
+| `w × h` | k=1.00 (antes) | k=0.35 | k=0.30 | **k=0.25** | k=0.20 |
+|---|---|---|---|---|---|
+| 3 × 2 | **72,3 %** | 53,1 % | 46,4 % | **37,0 %** | 22,8 % |
+| 4 × 2 | 65,2 % | 53,1 % | 46,4 % | **37,0 %** | 22,8 % |
+| 5 × 2 | 58,2 % | 53,1 % | 46,4 % | **37,0 %** | 22,8 % |
+| 6 × 2 | 51,1 % | 51,1 % | 46,4 % | **37,0 %** | 22,8 % |
+| 3 × 1 | 51,1 % | 51,1 % | 46,4 % | **37,0 %** | 22,8 % |
+| 4 × 1 | 37,0 % | 37,0 % | 37,0 % | **37,0 %** | 22,8 % |
+| 5 × 1 | 22,8 % | 22,8 % | 22,8 % | **22,8 %** | 22,8 % |
+| 6 × 1 | 8,7 % | 8,7 % | 8,7 % | **8,7 %** | 8,7 % |
+
+Se eligió **k = 0,25**: baja el peor caso de 72,3 % a 37,0 % —el mismo nivel que `4 × 1`, que ya se
+veía bien— y **no altera los casos alargados**: `5 × 1` y `6 × 1` quedan idénticos, verificado
+comparando el render antes/después.
+
+```r
+rb <- min(h, w * 0.25)   # y las bandas usan rb en vez de h para su radio
+```
+
+Las bandas son decorativas: **no participan del *bounding box***, así que este cambio no toca la
+invariante I-2 (re-verificado: 222/222 sin desajuste).
+
+**Verificación visual (`w=3, h=2`, el caso peor):** antes, las dos medialunas y el puente formaban
+una sola mancha negra; ahora los tres elementos se distinguen individualmente. **Residual honesto:**
+la silueta sigue siendo una cápsula redondeada, no un barco — eso es el mecanismo 1 (contorno), y
+las opciones **A** (restringir a `ratio ≥ 2.5`, cuesta 60 versiones) y **B** (rediseñar el perfil)
+siguen disponibles si se quiere resolver también.
+
 **Criterio de cierre:** tras aplicar la opción elegida, re-ejecutar la enumeración exhaustiva
 (0 desajustes de *bounding box*), `validar_diversidad_sustantiva.R --n 40` (PASS) y
 `verificar_render.R` (5/5), e inspeccionar visualmente los dos casos extremos de forma que queden
@@ -217,7 +297,7 @@ herramienta de verificación separada de `SemilleroUnico_v2.R` (exportación).
 
 La regla #11 (`contextos-narrativos-creativos.md`) exige un pool de 6+ plantillas narrativas con al
 menos 5 estructuras gramaticales distintas. Este ejercicio varía **únicamente el nombre del
-protagonista** (8 nombres, líneas 135-139) sobre un enunciado fijo.
+protagonista** (8 nombres, líneas 154-158) sobre un enunciado fijo.
 
 **Veredicto: no es una violación que haya que corregir.** La regla #11 gobierna ejercicios de
 contexto **inventado**, donde la narrativa es libre. Este ítem deriva de un ítem ICFES **real**
@@ -240,8 +320,8 @@ con esa política.
 
 La regla #1 (`ejercicios-metacognitivos.md`) describe pools de errores con un campo `precondicion`
 (cuándo aplica el error) y una función `calcula()` (que produce el distractor). Aquí `errores_info`
-(líneas 95-132) guarda `codigo` / `nombre` / `texto` / `diagnostico`, y los distractores se
-construyen con `paste0` (líneas 54-76).
+(líneas 112-151) guarda `codigo` / `nombre` / `texto` / `diagnostico`, y los distractores se
+construyen con `paste0` (líneas 55-91).
 
 **Veredicto: no es un defecto.** Los campos `precondicion` y `calcula()` existen para pools donde
 el distractor es un **valor numérico derivado** de los datos y cuya aplicabilidad depende de
@@ -303,11 +383,27 @@ mismo bloque de la Solution.
 ### P2.6 — `sample()` interno redundante con `exshuffle: TRUE`
 **Origen:** auditoría del detractor (2026-07-28). Severidad BAJA.
 
-Las líneas 89-92 mezclan las opciones con `perm <- sample(4L)` y además `exshuffle: TRUE` vuelve a
+Las líneas 106-109 mezclan las opciones con `perm <- sample(4L)` y además `exshuffle: TRUE` vuelve a
 mezclarlas. Ambos mecanismos son coherentes entre sí (R/exams reordena `questionlist`,
 `solutionlist` y `exsolution` con la misma permutación), así que **no hay bug**: sólo lógica
 redundante. Se puede simplificar dejando que `exshuffle` haga todo el trabajo, o mantenerlo como
 control explícito. No urge.
+
+### P2.7 — Dos exclusiones de `y_pool` podrían haber quedado obsoletas
+**Origen:** consecuencia de resolver P0.1 (2026-07-28).
+
+Las cuatro exclusiones de `y_pool` (`y_min ≠ x_min`, `y_max ≠ x_max`, `y_min ≠ x_max`,
+`y_max ≠ x_min`) se introdujeron para garantizar que el retirado `GEO-COORD-03` (diagonal) tuviera
+4 puntos distintos. Con ese distractor fuera, las dos últimas podrían ser innecesarias: las dos
+primeras siguen haciendo falta para que `GEO-COORD-01` (inversión) no colapse sobre la correcta.
+
+**Se conservan las cuatro** deliberadamente: relajarlas **ampliaría** el espacio de versiones por
+encima de 222, lo que obliga a re-ejecutar toda la validación. No se hizo en la misma pasada que
+P0.1 y P1.1 para no mezclar tres cambios de comportamiento a la vez.
+
+**Acción sugerida:** medir cuántas versiones se ganan al retirar las dos últimas exclusiones y
+verificar que las 4 opciones siguen siendo distintas en el espacio ampliado. Si el resultado es
+limpio, retirarlas. El comentario del `.Rmd` (líneas 30-41) ya apunta a este ítem.
 
 ### P2.4 — `SemilleroCloze.R` no aplica a este ejercicio
 Es una plantilla exploratoria de formato cloze+schoice; este ejercicio es SCHOICE puro. Se conserva

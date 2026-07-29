@@ -118,7 +118,7 @@ plano-cartesiano-barco-n2/
 │   ├── CLAUDE.md                  # Particularidades operativas para agentes
 │   └── rules/
 │       └── barco-parametrico.md   # Contrato del casco: cómo tocarlo sin invalidar la clave
-├── coordenadas_vertices_..._n2_schoice_v1.Rmd  # FUENTE — el ejercicio, auto-contenido (401 líneas,
+├── coordenadas_vertices_..._n2_schoice_v1.Rmd  # FUENTE — el ejercicio, auto-contenido (436 líneas,
 │                                  #   5 chunks: data_generation, question_body, answerlist_q,
 │                                  #   solucion, answerlist_s)
 ├── ejercicio_state.json           # Estado del workflow (11/11 pasos completados, aprobado 2026-07-01)
@@ -151,20 +151,20 @@ son fuente y deben trackearse.
 
 - `../../../.claude/rules/markdown-imagenes-pdf.md` — regla #18: la única imagen del ejercicio,
   `plano_barco.png`, se referencia con atributo de ancho explícito
-  (`![](plano_barco.png){width=80%}`, línea 282), nunca sin `{width=...}`.
+  (`![](plano_barco.png){width=80%}`, línea 317), nunca sin `{width=...}`.
 - `../../../.claude/rules/solution-letter-independence.md` — regla #19: la Solution identifica
   cada opción por su texto de coordenadas y su código de error (`GEO-COORD-01/02/03`, líneas
-  316-335), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 390) sin
+  316-335), nunca por letra. Por eso este ejercicio puede usar `exshuffle: TRUE` (línea 425) sin
   romper coherencia si R/exams o Moodle reordenan las opciones.
 - `../../../.claude/rules/markdown-tablas-pandoc.md` — regla #20: el guard
   `\@ifundefined{c@none}{\newcounter{none}}{}` está presente por defecto al inicio de `Question`
-  (líneas 271-273), aunque este ejercicio no usa tablas Markdown — lo aplican los skills y
+  (líneas 306-308), aunque este ejercicio no usa tablas Markdown — lo aplican los skills y
   orquestadores de generación como estándar.
 - `../../../.claude/rules/familias-soluciones-rmd.md` — regla #21: usa la Familia 1
   (`pick_int()`, sin `repeat` sin cota) y la Familia 5 (`safe_sample()`, protección contra la
   trampa `sample(escalar)`), ambas declaradas explícitamente en el comentario de la línea 12.
 - `../../../.claude/rules/diversidad-sustantiva.md` — regla #22: `ancho_barco`, `alto_barco`,
-  `x_min` y `y_min` se aleatorizan con `pick_int()`/`safe_sample()` (líneas 24-41), no son
+  `x_min` y `y_min` se aleatorizan con `pick_int()`/`safe_sample()` (líneas 24-43), no son
   literales fijos. Verificado con `validar_diversidad_sustantiva.R --n 40`: PASS, 36/40 valores
   únicos de la respuesta correcta.
 

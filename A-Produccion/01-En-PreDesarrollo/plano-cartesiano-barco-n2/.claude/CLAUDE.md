@@ -52,7 +52,7 @@ declarada, no deuda técnica.
 
 ### 2. `prof()` debe valer exactamente `h/2` en el tramo central — de eso depende que la clave sea verdadera
 
-`prof(t)` (líneas 177-183) vale `h/2` para `t ∈ [0.15, 0.85]`. Eso hace que el casco toque `y_min` e
+`prof(t)` (líneas 200-206) vale `h/2` para `t ∈ [0.15, 0.85]`. Eso hace que el casco toque `y_min` e
 `y_max`, y por tanto que su *bounding box* sea exactamente `[x_min,x_max] × [y_min,y_max]` — que es
 literalmente la respuesta correcta.
 
@@ -62,8 +62,12 @@ enumeración exhaustiva: 0/222 casos de desajuste.
 
 ### 3. Las 4 exclusiones de `y_pool` no son paranoia
 
-Líneas 35-40. Existen para garantizar que `GEO-COORD-03` (diagonal) tenga siempre **4 puntos
-distintos**; si no, ese distractor mostraría un punto repetido y sería descartable de un vistazo.
+Líneas 30-41. Las 2 primeras (`y_min ≠ x_min`, `y_max ≠ x_max`) evitan que `GEO-COORD-01`
+(inversión) colapse sobre la respuesta correcta. Las 2 últimas (`y_min ≠ x_max`, `y_max ≠ x_min`)
+quedaron heredadas del distractor retirado `GEO-COORD-03` (diagonal): garantizaban que ese
+distractor tuviera siempre **4 puntos distintos**, porque si no, habría mostrado un punto repetido
+y sería descartable de un vistazo. Con `GEO-COORD-04` (particularidad 11) ya no protegen a ningún
+distractor específico, pero se conservan porque siguen garantizando 4 opciones distintas.
 Verificado exhaustivamente: 0 colisiones y 0 casos de `y_pool` vacío sobre las 222 combinaciones.
 No "simplificar" ese filtrado.
 
@@ -77,7 +81,7 @@ identifica las opciones por contenido y por código de error, nunca por letra (r
 ### 5. La variación narrativa se limita al protagonista — A PROPÓSITO
 
 La regla #11 (`contextos-narrativos-creativos.md`) pide 6+ plantillas narrativas con 5 tipos de
-estructura. Este ejercicio **solo varía el nombre del protagonista** (8 nombres, líneas 135-139)
+estructura. Este ejercicio **solo varía el nombre del protagonista** (8 nombres, líneas 154-158)
 sobre un enunciado fijo.
 
 Es deliberado: el enunciado y las 4 opciones se conservan **verbatim** del ítem ICFES real
@@ -122,13 +126,28 @@ Verificado 2026-07-28: el `.Rmd` no contiene `set.seed`, `Sys.time`, `proc.time`
 ejercicio **no** está entre los 9 de `01-En-PreDesarrollo/` que arrastran el Incidente I del
 orquestador. No reintroducirlo: colapsaría la diversidad multi-semilla.
 
+### 11. El tercer distractor DEBE conservar la estructura 2×2
+
+`GEO-COORD-04` (líneas 72-91, «desplazamiento de una unidad al contar la cuadrícula») sustituyó a
+`GEO-COORD-03` (diagonal `y = x`) el 2026-07-28. La razón: `GEO-COORD-03` era la única opción cuyos
+4 puntos tenían la forma `(v, v)` — colineales — mientras la correcta y los otros dos distractores
+comparten la estructura «2 valores de x combinados con 2 valores de y» (un rectángulo). Un
+estudiante podía descartar `GEO-COORD-03` por la FORMA del texto, sin mirar la figura.
+
+Si en el futuro se reemplaza este tercer distractor por otro error conceptual, la nueva opción
+**tiene que seguir teniendo la estructura 2×2**: cualquier opción con forma distinta (colineal, un
+solo par repetido, etc.) se vuelve descartable sin razonar y degrada el ítem de 4 opciones
+plausibles a 3. Criterio de verificación: enumerar las 222 combinaciones y confirmar que las 4
+opciones cumplen la estructura 2×2 en el 100% de los casos (no basta con probar unas pocas
+semillas). Ver [`../docs/BACKLOG.md`](../docs/BACKLOG.md) P0.1.
+
 ---
 
 ## Reglas del repo raíz con mayor peso en este ejercicio
 
-`#18` `{width=80%}` anti-`\pandocbounded` (línea 282) · `#19` letter-independence (la Solution
+`#18` `{width=80%}` anti-`\pandocbounded` (línea 317) · `#19` letter-independence (la Solution
 identifica por contenido y por código `GEO-COORD-0x`) · `#20` guard `\newcounter{none}`
-(líneas 271-273, presente aunque hoy no haya tablas) · `#21` Familias 1 y 5 (`pick_int`,
+(líneas 306-308, presente aunque hoy no haya tablas) · `#21` Familias 1 y 5 (`pick_int`,
 `safe_sample`, construcción determinista sin bucles de reintento) · `#22` diversidad sustantiva
 (222 preguntas distintas; §P6 no aplica por ser opciones de texto, pero `verificar_render.R` lo
 comprueba igual).
@@ -154,7 +173,8 @@ comprueba igual).
 - Alterar `prof()` de forma que el casco no alcance `h/2` en el tramo central (particularidad 2).
 - Reescribir el enunciado o las opciones para "cumplir" la regla #11 (particularidad 5).
 - Cambiar a `exshuffle: FALSE` por analogía con el subproyecto hermano (particularidad 4).
+- Sustituir el tercer distractor por una opción que no conserve la estructura 2×2 (particularidad 11).
 
 ---
 
-**Versión:** 1.0 · **Fecha:** 2026-07-28 · **Estado:** ACTIVO
+**Versión:** 1.1 · **Fecha:** 2026-07-28 · **Estado:** ACTIVO

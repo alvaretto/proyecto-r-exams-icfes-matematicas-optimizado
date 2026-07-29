@@ -27,12 +27,12 @@ Sea `h = y_max - y_min`, `cy = (y_min + y_max)/2`, `t ∈ [0,1]` el parámetro l
 
 | # | Condición | Dónde | Consecuencia si se rompe |
 |---|---|---|---|
-| **C1** | `prof(t) = h/2` para todo `t` en un subintervalo no vacío de `[0,1]` | líneas 177-183 | El casco no toca `y_min`/`y_max`: la clave sobrestima la altura del barco |
-| **C2** | `x` recorre linealmente `[x_min, x_max]` cuando `t` recorre `[0,1]` | líneas 185-186 | El casco no toca `x_min`/`x_max`: la clave sobrestima el ancho |
-| **C3** | `dibujar_barco()` no llama a `sample()`, `runif()`, `rnorm()` ni `set.seed()` | líneas 171-260 | El dibujo deja de corresponder a los parámetros con que se calculó la clave |
+| **C1** | `prof(t) = h/2` para todo `t` en un subintervalo no vacío de `[0,1]` | líneas 200-206 | El casco no toca `y_min`/`y_max`: la clave sobrestima la altura del barco |
+| **C2** | `x` recorre linealmente `[x_min, x_max]` cuando `t` recorre `[0,1]` | líneas 208-209 | El casco no toca `x_min`/`x_max`: la clave sobrestima el ancho |
+| **C3** | `dibujar_barco()` no llama a `sample()`, `runif()`, `rnorm()` ni `set.seed()` | líneas 190-295 | El dibujo deja de corresponder a los parámetros con que se calculó la clave |
 
 Las capas decorativas (línea interior, ojos de buey, bandas oscuras, puente) **pueden** modificarse
-libremente: no participan del *bounding box*. Solo el polígono `hull_df` (línea 187) lo determina.
+libremente: no participan del *bounding box*. Solo el polígono `hull_df` (línea 210) lo determina.
 
 ---
 
@@ -75,10 +75,11 @@ Además, inspeccionar visualmente **los dos casos extremos de forma**, no una se
 - Sustituir el perfil por una curva suave global (elipse, spline, `sin`) que solo **tienda** a `h/2`
   sin alcanzarlo: rompe C1 de forma silenciosa.
 - Añadir margen visual al casco (`h/2 * 0.95`, `x_min + 0.1`) "para que respire": rompe C1/C2.
-- Mover la llamada `dibujar_barco()` (línea 262) fuera del chunk `data_generation`, o hacerla
+- Mover la llamada `dibujar_barco()` (línea 297) fuera del chunk `data_generation`, o hacerla
   condicional al formato de salida.
 - Extraer la función a un archivo externo (ver particularidad 1 de [`../CLAUDE.md`](../CLAUDE.md)).
 
 ---
 
-**Versión:** 1.0 · **Fecha:** 2026-07-28
+**Versión:** 1.1 · **Fecha:** 2026-07-28 (v1.1 — citas de línea actualizadas tras sustituir
+el tercer distractor y acotar el radio de las bandas)
