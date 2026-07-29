@@ -56,7 +56,17 @@ No reimplementa el dibujo: **extrae `dibujar_barco()` del `.Rmd` real** (todo lo
 clave. Verificado por mutación: perturbar el tramo central de `prof()` a `h/2 * 0.97` lo hace fallar
 en **318/318** — mientras `validar_coherencia_matematica.R` sigue diciendo APROBADO y
 `validar_diversidad_sustantiva.R` sigue diciendo PASS. Está enganchado a `tests/run_all_tests.R`
-(suite «Invariante I-2 barco»), así que también corre en pre-push y CI.
+(suite «Invariante I-2 barco», con `watch`).
+
+> **No confíes solo en el pre-push para esta suite.** El runner corre en modo *quick* durante el
+> push y salta las suites con `watch` cuyo patrón no coincida con los archivos detectados. Esa
+> detección hoy está **degradada**: `.git/hooks/pre-push` llama a `git lfs pre-push` (git-lfs está
+> instalado) **antes** del `while read local_ref local_sha …`, y git-lfs consume el stdin con la
+> lista de refs, así que el hook nunca ve los commits que se están empujando. Observado el
+> 2026-07-28: en el push de `8bfff28a..b92f2f44` se saltaron las **9** suites con `watch`, esta
+> incluida, pese a que los commits tocaban `plano-cartesiano-barco-n2/`. Con la lista correcta la
+> suite sí corre (2,12 s, en verde). Ejecútala a mano tras tocar `dibujar_barco()`, o fuerza la
+> suite completa con `R_TESTS_FULL=1`.
 
 Si cambias el espacio de parámetros, actualiza `N_ESPERADO` y `combinaciones()` en ese test; sus
 anclas de texto sobre el `.Rmd` fallan a propósito para avisarte.
