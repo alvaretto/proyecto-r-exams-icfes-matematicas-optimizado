@@ -435,8 +435,9 @@ Cada ejercicio debe superar verificacion en:
 - **Estandares MEN**: Estandares Basicos de Competencias en Matematicas
 - **R-exams**: https://www.R-exams.org/
 - **Fuente de verdad**: `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
-- **Reglas del sistema**: `.claude/rules/` (15 reglas obligatorias)
-- **Testing**: `tests/testthat/` (12 suites)
+- **Reglas del sistema**: `.claude/CLAUDE.md` (22 reglas obligatorias; 21 tienen archivo propio en
+  `.claude/rules/` — la #5, las «5 Coherencias», se define en el propio indice)
+- **Testing**: `tests/testthat/` (22 suites enganchadas a `tests/run_all_tests.R`)
 
 ---
 
