@@ -11,9 +11,9 @@
 | **Frase de reanudación** | `Continúa con el proyecto A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4` |
 
 > Al retomar: lee **este archivo** y `ejercicio_state.json` ANTES de explorar el `.Rmd`, y después
-> [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (12 particularidades operativas) y
+> [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (13 particularidades operativas) y
 > [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md)
-> (contrato de las 6 invariantes). Ahí está el porqué del código; sin eso, un agente "arregla" fixes
+> (contrato de las 7 invariantes). Ahí está el porqué del código; sin eso, un agente "arregla" fixes
 > deliberados.
 
 ---
@@ -37,7 +37,7 @@ es intercambiable con éste.
 
 ## 2. Objetivos específicos
 
-Tabla completa con evidencia en [`docs/ROADMAP.md`](docs/ROADMAP.md) §2. Resumen al 2026-07-29:
+Tabla completa con evidencia en [`docs/ROADMAP.md`](docs/ROADMAP.md) §2. Resumen al 2026-07-30:
 **OE1-OE9 cumplidos y verificados**; **OE10** (promoción a `02-En-Desarrollo/`) y **OE11**
 (evidencia Nivel 3 en aula) pendientes.
 
@@ -106,9 +106,15 @@ Todo lo de esta tabla se volvió a ejecutar el 2026-07-30 sobre la versión vige
    de 5, invariantes I-1..I-6, 30 ternas, `V1-V8` y H1 abierto. Incluye resolver una **colisión de
    numeración**: el código usa `I-7` para «la clave nunca es la mayor», mientras el BLUEPRINT usaba
    `I-7` para «auto-contenido» — las invariantes meta se corrieron a I-8/I-9/I-10.
-7. Se **corrigió `copias <- 100` → `300`** en `SemilleroMoodle_v2.R` (defecto #8 del code-review,
-   replicado al copiar el script del hermano) y se documentó el porqué en el propio script.
+7. Se revisó `copias` en `SemilleroMoodle_v2.R`. Primero se subió a 300 invocando la regla #3, y
+   después se **corrigió esa lectura**: la regla #3 gobierna la capacidad del ejercicio
+   (`exams2html(n = 200)`, aquí 298/300), no el tamaño del banco. Queda en **100** por decisión del
+   usuario, con la justificación escrita en el script. Lo que sí era defecto en el hermano del avión
+   es que el valor cambiara **sin comentario**.
 8. Se cerraron en el BACKLOG **H1** y **P2.1** (scripts de exportación institucional, ya presentes).
+9. Se **regeneró el banco de Moodle** (100 preguntas) y se verificó con la lógica de V5: 100/100 con
+   la clave = `n!`, 4 opciones distintas, I-7 respetada, **99/100** preguntas completas distintas y 18
+   enunciados distintos (6 contextos × 3 valores de `n`, el techo del diseño narrativo).
 
 ---
 
@@ -154,7 +160,7 @@ verde estando vacías**. Tres de los diez defectos eran verificadores que no ver
 | 5 | V6 decía «enumeración EXHAUSTIVA» sobre una **copia hardcoded** del pool, no el del `.Rmd` | ✅ extrae pool y `N_POOL` del `.Rmd` |
 | 6 | V5 imprimía `revisadas/revisadas` (tautológico): descartar versiones en silencio se veía verde | ✅ compara contra `N_VERSIONES`; probado por mutación (`7/12`) |
 | 7 | V7 hacía `eval(parse(...))` sin `try()`: un encabezado de chunk renombrado abortaba el script y se perdía todo el reporte V1-V8 | ✅ extracción validada + `try()` |
-| 8 | `copias <- 300` → `100` sin comentario en el `SemilleroMoodle_v2.R` del **hermano del avión**: banco Moodle por debajo del estándar de ≥200 | ✅ revertido a `stash@{0}` |
+| 8 | `copias <- 300` → `100` sin comentario en el `SemilleroMoodle_v2.R` del **hermano del avión** | ✅ revertido a `stash@{0}` — pero ver la nota de abajo: la *justificación* de este hallazgo era errónea |
 | 9 | `repo_root` con `system(intern=TRUE)` sin `ignore.stderr` ni fallback → `RMD` literal `"NA/A-Produccion/..."` | ✅ versión endurecida de la suite hermana |
 | 10 | ~93 números de línea del `.Rmd` en los docs, varios ya erróneos (I-3 citado en «línea 142», estaba en la 291) | ✅ 83 convertidos a anclas; §6 del BLUEPRINT reindexada por construcción |
 
@@ -162,6 +168,16 @@ verde estando vacías**. Tres de los diez defectos eran verificadores que no ver
 / **0 skip** (antes 8 de 9 tests podían apagarse) · `validar_coherencia_matematica.R` APROBADO ·
 `validar_diversidad_sustantiva.R --n 40` exit 0 · ortografía sin errores ·
 `tests/run_all_tests.R` **22/22 suites, 0 fallidas** (660 s).
+
+**Nota sobre el defecto #8 (añadida el 2026-07-30):** el hallazgo era correcto en su forma (un
+valor cambiado sin comentario es indistinguible de un descuido) pero **su justificación era falsa**.
+Decía que el banco quedaba «por debajo del estándar de ≥200» de la regla #3 de
+`codigo-rmd.md`; esa regla habla de la **capacidad del ejercicio** para generar versiones únicas y se
+valida con `exams2html(archivo, n = 200)` —aquí 298/300—, no del número de preguntas exportadas al
+banco. `copias` no está gobernada por ninguna regla del repo. En este subproyecto el valor quedó en
+**100 por decisión del usuario**, con la justificación escrita en el script. Queda pendiente revisar
+si el hermano `desplazamiento-avion-aeropuerto` necesita la misma matización (ver
+[`docs/BACKLOG.md`](docs/BACKLOG.md) P2.1).
 
 **Refutados** (8, no accionar): numeración no monotónica de los pre-flight del orquestador; la rama
 `es_canonica` «salta» el filtro `aplicables` (las 5 precondiciones son incondicionales, no hay estado
@@ -256,8 +272,8 @@ humana**. El paso 11 (`aprobacion_usuario`) no puede sellarlo un agente. Materia
 
 - `verif_render/` — HTML, PDF, DOCX, NOPS y el XML de Moodle de la última corrida (verificación).
 - `salida/` — la exportación **institucional** con membrete (PDF, DOCX, HTML interactivo, NOPS y XML
-  de Moodle). Ojo: ese banco se generó con `copias <- 100`; tras la corrección a 300, regenéralo con
-  `Rscript SemilleroMoodle_v2.R` si vas a importarlo a Moodle.
+  de Moodle). El banco de Moodle son **100 preguntas** (tamaño decidido por el usuario el 2026-07-30),
+  regenerado y verificado ese día: 100/100 con la clave = `n!` y 99/100 preguntas completas distintas.
 - La instancia canónica (contexto 1 con `n=4`) es la que hay que comparar contra el ítem oficial
   `MAT-2026-1-004`: debe coincidir verbatim, enunciado y las cuatro opciones `{24, 64, 16, 4}`.
 

@@ -117,16 +117,18 @@ funcional es `archivo_examen`.
 
 ```bash
 Rscript SemilleroUnico_v2.R     # 1 versión con membrete: PDF + DOCX + HTML interactivo + NOPS
-Rscript SemilleroMoodle_v2.R    # banco de 300 versiones -> XML de importación a Moodle
+Rscript SemilleroMoodle_v2.R    # banco de 100 preguntas -> XML de importación a Moodle
 ```
 
 Todo lo que escriben va a `salida/`, que es **derivado** (ignorado por git) y se regenera cuando se
 necesite. `verificar_render.R` cubre otro propósito: verificación rápida sin membrete, para CI.
 
-⚠️ `copias <- 300` en `SemilleroMoodle_v2.R` responde al estándar de **≥ 200 versiones únicas** de
-`../../../.claude/rules/codigo-rmd.md`. Llegó en 100 al copiarse del hermano y se corrigió el
-2026-07-30 — es el defecto #8 del code-review, replicado por la copia. No lo bajes sin justificarlo.
-Ver [`docs/BACKLOG.md`](docs/BACKLOG.md) P2.1.
+`copias <- 100` en `SemilleroMoodle_v2.R` es el tamaño de banco **decidido por el usuario**
+(2026-07-30), documentado en el propio script. Ojo con una confusión fácil: la regla #3 de
+`../../../.claude/rules/codigo-rmd.md` («< 200 versiones únicas») se refiere a la **capacidad del
+ejercicio** —se valida con `exams2html(n = 200)` y aquí da 298/300—, no al número de preguntas que se
+exportan. Si cambias `copias`, deja el porqué escrito: el defecto real del caso análogo en el hermano
+del avión fue cambiarlo **sin comentario**. Ver [`docs/BACKLOG.md`](docs/BACKLOG.md) P2.1.
 
 ## Estructura de archivos
 

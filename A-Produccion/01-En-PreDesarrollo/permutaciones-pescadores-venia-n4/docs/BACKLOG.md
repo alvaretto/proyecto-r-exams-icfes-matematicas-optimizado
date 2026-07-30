@@ -111,16 +111,24 @@ Se copiaron del hermano y se adaptaron: la única diferencia funcional respecto 
 `archivo_examen`, apuntado al `.Rmd` de este subproyecto. Verificado por ejecución: `salida/` contiene
 el PDF, el DOCX, el NOPS, el HTML interactivo y el XML de Moodle generados.
 
-**Defecto encontrado y corregido al revisarlos (2026-07-30):** `SemilleroMoodle_v2.R` llegó con
-`copias <- 100`, por debajo del estándar de **≥ 200 versiones únicas** que fija
-`../../../.claude/rules/codigo-rmd.md`. Es exactamente el defecto #8 del code-review del 2026-07-29,
-que ya se había tenido que revertir en el hermano `desplazamiento-avion-aeropuerto`: al copiar el
-script se replicó el valor degradado. Corregido a `copias <- 300` **con un comentario que explica el
-porqué**, para que la próxima copia no lo repita en silencio.
+**Tamaño del banco de Moodle — decidido por el usuario (2026-07-30):** `copias <- 100`.
 
-Nota: el banco de `salida/` se generó con el valor antiguo (100 copias). `salida/` es un derivado
-ignorado por git y se regenera con `Rscript SemilleroMoodle_v2.R`; no hay nada que arreglar en el
-repositorio, pero **si vas a importar ese XML a Moodle, regenéralo primero**.
+Este punto pasó por una lectura errónea que conviene dejar registrada, porque es fácil de repetir.
+El script llegó con `copias <- 100` al copiarse del hermano, y en la primera pasada se "corrigió" a
+300 invocando la regla #3 de `../../../.claude/rules/codigo-rmd.md` («NO crear ejercicios con < 200
+versiones únicas»). **Esa regla no gobierna `copias`**: habla de la CAPACIDAD del ejercicio para
+generar versiones distintas y se valida con `exams2html(archivo, n = 200)` — requisito cumplido y
+medido aquí (**298/300**). Cuántas preguntas se exportan al banco es una decisión de uso, no una
+restricción de la regla.
+
+El code-review del 2026-07-29 marcó el mismo valor como defecto #8 en el hermano
+`desplazamiento-avion-aeropuerto` con esa misma lectura. Lo que allí era un defecto real es que el
+valor se cambió **sin comentario**: nadie podía distinguir una decisión de un descuido. Aquí queda
+con su justificación explícita en el propio script.
+
+Banco verificado (100 preguntas): **100/100** con la clave = `n!`, 4 opciones distintas, **I-7**
+respetada (la clave nunca es la mayor), **99/100** preguntas completas distintas y 18 enunciados
+distintos (6 contextos × 3 valores de `n` — el techo del diseño narrativo).
 
 **Distinción fuente/derivado:** los `Semillero*.R` y los `pcielo*.tex` son **fuente** (se versionan);
 `salida/`, `verif_render/` y los `.html`/`.pdf`/`.docx`/`.xml`/`.rds` de la raíz del subproyecto son

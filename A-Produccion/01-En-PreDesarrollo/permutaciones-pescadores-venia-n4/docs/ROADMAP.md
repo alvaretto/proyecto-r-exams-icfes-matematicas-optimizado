@@ -31,7 +31,9 @@
 | 2026-07-30 | `verificar_render.R` gana **V9** (la selección real del chunk se queda en el espacio legal, 240 semillas) y V6 pasa a medir el espacio legal con guardas que FALLAN, no avisan | `verificar_render.R` |
 | 2026-07-30 | Re-verificación completa: `V1`-`V9` verdes (V6 **105/105** ternas, 93 legales; clave en 1.º/2.º/3.º, nunca 4.º; «elegir el mayor» 0,0 %), suite `I-1..I-7` 0 fail/0 error/0 skip, coherencia matemática APROBADO, diversidad exit 0, ortografía sin errores | `verif_render/`, salidas de los 4 scripts |
 | 2026-07-30 | Diversidad re-medida con el pool de 7: **298/300** versiones únicas, 89 de 93 ternas legales alcanzadas, 16 instancias canónicas | 300 evaluaciones del `data_generation` |
-| 2026-07-30 | Scripts de exportación institucional añadidos (`Semillero*.R`, `pcielo*.tex`); corregido `copias <- 100` → `300` en `SemilleroMoodle_v2.R` (estándar ≥ 200; defecto #8 del code-review replicado al copiar del hermano) | [`BACKLOG.md`](BACKLOG.md) P2.1 |
+| 2026-07-30 | Scripts de exportación institucional añadidos (`Semillero*.R`, `pcielo*.tex`) | [`BACKLOG.md`](BACKLOG.md) P2.1 |
+| 2026-07-30 | Banco de Moodle fijado en **100 preguntas** por decisión del usuario, con justificación en el script. Se corrigió de paso una lectura errónea propia: la regla #3 («< 200 versiones únicas») gobierna la capacidad del ejercicio (`exams2html(n=200)`, aquí 298/300), no el tamaño del banco exportado | `SemilleroMoodle_v2.R`; [`BACKLOG.md`](BACKLOG.md) P2.1 |
+| 2026-07-30 | Banco de 100 regenerado y verificado: 100/100 clave = `n!`, 4 opciones distintas, I-7 respetada, 99/100 preguntas completas distintas, 18 enunciados distintos | `salida/*.xml` (derivado, no versionado) |
 | 2026-07-30 | Documentación sincronizada con el código (este ROADMAP + README + `docs/*` + `.claude/*`, v2.0): la anterior seguía describiendo pool de 5, I-1..I-6, 30 ternas y H1 abierto | Esta sesión |
 
 **Nota de sincronización (actualizada 2026-07-29).** Tras la auditoría adversarial,

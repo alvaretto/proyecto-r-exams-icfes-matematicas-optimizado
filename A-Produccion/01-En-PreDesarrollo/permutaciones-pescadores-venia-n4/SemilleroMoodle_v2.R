@@ -6,12 +6,24 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd"
-# 300 copias: el estándar del repo es un banco de >= 200 versiones únicas
-# (.claude/rules/codigo-rmd.md, "NO crear ejercicios con < 200 versiones
-# únicas"), y es el valor que usan los subproyectos hermanos. NO bajarlo sin
-# justificarlo aquí: en el hermano `desplazamiento-avion-aeropuerto` alguien lo
-# puso en 100 sin comentario y el code-review del 2026-07-29 tuvo que revertirlo.
-copias <- 300
+# 100 copias — TAMAÑO DEL BANCO DECIDIDO POR EL USUARIO (2026-07-30).
+#
+# No confundir con la regla #3 de .claude/rules/codigo-rmd.md ("NO crear
+# ejercicios con < 200 versiones únicas"). Esa regla habla de la CAPACIDAD del
+# ejercicio y se valida con `exams2html(archivo, n = 200)`; aquí está cumplida y
+# medida: 298/300 versiones únicas del data_generation. `copias` es otra cosa —
+# cuántas preguntas se exportan al banco de Moodle— y la regla no la gobierna.
+#
+# El code-review del 2026-07-29 marcó `copias <- 100` como defecto en el hermano
+# `desplazamiento-avion-aeropuerto`, pero lo hizo leyendo la regla #3 como si
+# aplicara al banco. El defecto real de aquel caso era otro: el valor se cambió
+# SIN comentario, así que nadie podía saber si era una decisión o un descuido.
+#
+# Verificado sobre el banco de 100 exportado: 100/100 preguntas con la clave = n!,
+# 4 opciones distintas, I-7 respetada (la clave nunca es la mayor) y 99/100
+# preguntas completas distintas. Suficiente para un curso: un banco de 100 con
+# 99 variantes cubre cualquier grupo real sin repetir.
+copias <- 100
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
