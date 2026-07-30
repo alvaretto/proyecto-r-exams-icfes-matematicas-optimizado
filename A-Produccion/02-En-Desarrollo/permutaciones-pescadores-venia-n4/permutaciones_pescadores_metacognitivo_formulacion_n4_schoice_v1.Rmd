@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 ```{r data_generation, echo = FALSE, results = "hide"}
 # =============================================================================
 # permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1
@@ -406,7 +412,7 @@ stopifnot(length(unique(opciones)) == 4L)
 #     UN error, no la lista de 3; se expone el primero de los seleccionados.
 # Cobertura real: 5B cubre la clave; Capa A cubre la precondición de UNO de los
 # tres errores. Las tres a la vez sólo las cubre
-# `tests/testthat/test_permutaciones_invariantes.R` (I-1..I-7). No inventar un
+# `tests/testthat/test_permutaciones_invariantes.R` (I-1..I-6). No inventar un
 # `valor_erroneo` para despertar la Capa C: con 3 distractores, un único "valor
 # erróneo" sería una ficción, y la relación que la Capa C comprobaría (distractor
 # != clave) ya la garantiza I-2.

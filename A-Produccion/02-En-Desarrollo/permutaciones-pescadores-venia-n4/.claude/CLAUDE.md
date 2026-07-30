@@ -21,7 +21,7 @@ verificado, decisiones, hallazgos abiertos, riesgos y siguiente paso. **Léelo p
 `../ejercicio_state.json`, antes de explorar el `.Rmd`.
 
 ```
-Continúa con el proyecto A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4
+Continúa con el proyecto A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
 ```
 debe disparar la lectura de `HANDOFF.md` + `ejercicio_state.json` como primera acción.
 

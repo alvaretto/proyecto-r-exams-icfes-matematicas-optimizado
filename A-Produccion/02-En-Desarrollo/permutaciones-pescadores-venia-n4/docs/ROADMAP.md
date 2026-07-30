@@ -57,8 +57,8 @@ pendiente es `aprobacion_usuario`, que por diseño no puede completar un agente 
 | **OE7** | Render verde 4 formatos + Moodle | ✅ | `verificar_render.R` → `V1`-`V9` OK (`verif_render/`, re-verificado el 2026-07-30 sobre el pool de 7) |
 | **OE8** | Diversidad sustantiva + ≥250/300 | ✅ | `validar_diversidad_sustantiva.R --n 40` → exit 0, `WARN_DIV_BAJA` (esperado y aceptado, [`BACKLOG.md`](BACKLOG.md) P1.2); 300 evaluaciones del `data_generation`: **298/300** versiones únicas de render, **89 de 93** ternas legales alcanzadas, 16 instancias canónicas (re-medido el 2026-07-30 con el pool de 7) |
 | **OE9** | Documentación con referencias cruzadas y auditoría adversarial limpia | ✅ | Auditoría adversarial del 2026-07-29 con **dos adversarios independientes**; veredicto `"APROBAR CON CAMBIOS"`, cambios aplicados (pool 3→5, decisión D3, renombrado de `EST-PER-01`) y todo re-validado. Después: code-review de alta intensidad (9 de 10 defectos aplicados) y cierre de H1 con la decisión D4. Documentación sincronizada con el código el 2026-07-30 (v2.0) |
-| **OE10** | Promoción a `02-En-Desarrollo/` | ⬜ | Criterios técnicos mayormente cumplidos; pendiente sincronizar `ejercicio_state.json` con el estado real y obtener aprobación humana explícita — ver §3 |
-| **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | Requiere aplicación con estudiantes reales de grado 10-11 |
+| **OE10** | Promoción a `02-En-Desarrollo/` | ✅ | **Cumplido el 2026-07-30**: aprobación humana explícita («Aprobado para llevar al aula y testear con estudiantes») → `ejercicio_state.json` 11/11 y `git mv` del subproyecto a `02-En-Desarrollo/` |
+| **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | **Único OE abierto.** Requiere aplicación con estudiantes reales de grado 10-11 y análisis de diagnosticidad por distractor. Destino ya reservado: `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` |
 
 ---
 

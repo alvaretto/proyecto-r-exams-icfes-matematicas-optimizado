@@ -212,21 +212,25 @@ constante; `V9` comprueba que la selección real se queda en el espacio legal; e
 
 ## P3 — Bloqueado por evidencia externa (no técnico, no accionable por un agente)
 
-### P3.1 — OE10 (promoción a `02-En-Desarrollo/`) y OE11 (evidencia Nivel 3 en aula) pendientes
+### P3.1 — OE11 (evidencia Nivel 3 en aula) pendiente — 🟡 EN CURSO
 
 Ver [`ROADMAP.md`](ROADMAP.md) §2-4.
 
-- **OE10** ya tiene resuelto lo técnico: `ejercicio_state.json` está sincronizado (**10/11** pasos
-  `completado: true`) y la auditoría adversarial formal se ejecutó el 2026-07-29 (dos adversarios
-  independientes, veredicto `"APROBAR CON CAMBIOS (aplicados)"`). Falta completar `HANDOFF.md` y
-  `.claude/CLAUDE.md` (pendientes de otro agente en esta misma sesión) y obtener una aprobación
-  humana explícita (`aprobacion_usuario`).
-- **OE11** requiere aplicación del ítem con estudiantes reales de grado 10-11 y análisis de
-  diagnosticidad por distractor (ahora sobre un pool de **siete** códigos, `EST-PER-01` a `07`) —
-  el gate que la validación automática **no** puede sustituir (ver [`ROADMAP.md`](ROADMAP.md) §4).
+- **OE10 — ✅ CUMPLIDO el 2026-07-30.** Aprobación humana explícita («Aprobado para llevar al aula y
+  testear con estudiantes») → `ejercicio_state.json` en **11/11** pasos y el subproyecto promovido a
+  `02-En-Desarrollo/` con todas sus rutas resincronizadas.
+- **OE11 — pendiente.** Requiere aplicación del ítem con estudiantes reales de grado 10-11 y análisis
+  de diagnosticidad por distractor (sobre el pool de **siete** códigos, `EST-PER-01` a `07`) — el gate
+  que la validación automática **no** puede sustituir (ver [`ROADMAP.md`](ROADMAP.md) §4). Es el único
+  objetivo abierto del subproyecto.
 
-Ninguno de los dos ítems es resoluble por un agente trabajando solo sobre el código del ejercicio:
-ambos dependen de una decisión o una acción humana externa al `.Rmd`.
+Qué mirar cuando vuelvan los datos del aula: si algún distractor no lo elige **nadie**, no discrimina
+y conviene revisarlo; y si `EST-PER-01` (`n^(n-1)`) resulta el más elegido, coincidiría con lo que
+reporta la ficha oficial del ítem, lo que sería evidencia de que la generalización de `n = 4` a
+`n ∈ {4,5,6}` conserva el comportamiento del original.
+
+Destino en producción ya reservado:
+`03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/10-Combinatoria_Permutaciones-Variaciones-Combinaciones/permutaciones_pescadores_venia_n4/`.
 
 ---
 

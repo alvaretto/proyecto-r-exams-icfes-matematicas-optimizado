@@ -156,7 +156,7 @@ validador genérico la protege; hace falta un test propio que enumere el espacio
 ## Cómo verificar tras cualquier cambio
 
 ```bash
-cd A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4
+cd A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
 Rscript verificar_render.R                    # V1-V9, exit 1 si algo falla
 cd ../../..
 Rscript .claude/scripts/validar_coherencia_matematica.R <ruta_al_rmd>

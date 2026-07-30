@@ -2780,4 +2780,4 @@ Tras el cambio: `validar_coherencia_matematica.R` → APROBADO 0 errores; `verif
 - Regla #1 `ejercicios-metacognitivos.md` (línea 188 — «Mínimo 4-6 errores por ejercicio», sección OBLIGATORIA «Pool de Errores Conceptuales»).
 - Regla #22 `diversidad-sustantiva.md` — mide diversidad de VALOR, no de TIPO de distractor; punto ciego complementario a este error.
 - Incidente N de `.claude/agents/orquestador-schoice.md` / Incidente P de `.claude/agents/orquestador-cloze.md`.
-- `A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md`.
+- `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md`.

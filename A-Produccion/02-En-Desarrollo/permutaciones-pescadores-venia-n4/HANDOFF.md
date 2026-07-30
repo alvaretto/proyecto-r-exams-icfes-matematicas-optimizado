@@ -2,13 +2,13 @@
 
 | Campo | Valor |
 |---|---|
-| **Ruta** | `A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4/` |
+| **Ruta** | `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/` |
 | **Repo raíz** | `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams` |
 | **Ejercicio** | `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd` |
 | **Tipo** | SCHOICE metacognitivo · opciones de TEXTO · sin figura (Flujo B = false) |
 | **Origen ICFES** | `MAT-2026-1-004` (ERA-2026, Sesión 1, pregunta impresa 4) |
 | **Sesión fundacional** | 2026-07-29 |
-| **Frase de reanudación** | `Continúa con el proyecto A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4` |
+| **Frase de reanudación** | `Continúa con el proyecto A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4` |
 
 > Al retomar: lee **este archivo** y `ejercicio_state.json` ANTES de explorar el `.Rmd`, y después
 > [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (13 particularidades operativas) y
@@ -67,7 +67,8 @@ Todo lo de esta tabla se volvió a ejecutar el 2026-07-30 sobre la versión vige
 | Letter-independence (#19) | grep de `letra_correcta` / «Opción [A-D]» | 0 coincidencias |
 | Prueba de mutación de la clave | ver regla local | I-5 aborta la generación; desactivada, V5 detecta 8/8 |
 
-`ejercicio_state.json`: **10/11 pasos**. Falta solo `aprobacion_usuario`.
+`ejercicio_state.json`: **11/11 pasos**. `aprobacion_usuario` completado el 2026-07-30 («Aprobado
+para llevar al aula y testear con estudiantes»), y el subproyecto se promovió a `02-En-Desarrollo/`.
 
 ## 4. Qué se hizo en esta sesión (2026-07-29)
 
@@ -262,8 +263,8 @@ decisión **D4** en [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §4.9.
 
 ```bash
 cd /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams
-bash .claude/scripts/workflow-state.sh status A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4
-cd A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4
+bash .claude/scripts/workflow-state.sh status A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
+cd A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
 Rscript verificar_render.R
 ```
 

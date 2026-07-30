@@ -26,7 +26,7 @@
 # 01-En-PreDesarrollo -> 02-En-Desarrollo -> 03-En-Produccion.
 #
 # Referencias:
-#   - A-Produccion/01-En-PreDesarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md
+#   - A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md
 #   - .claude/docs/patrones-errores-conocidos.md  (Error 27)
 #   - .claude/rules/ejercicios-metacognitivos.md  (pool de 4-6 errores)
 #   - .claude/rules/diversidad-sustantiva.md      (P5: distractor por magnitud)

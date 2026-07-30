@@ -24,8 +24,10 @@ reemplazo, un producto truncado, el simple cardinal del conjunto, una permutaci�
 principio aditivo. Ver el detalle pedagógico completo en [`docs/SYLLABUS.md`](docs/SYLLABUS.md).
 
 - **Archivo fuente**: `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd`
-  (481 líneas, 4 chunks R + 1 guard LaTeX — ver [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md))
-- **Estado**: `01-En-PreDesarrollo/` (no promovido; ver [`docs/ROADMAP.md`](docs/ROADMAP.md))
+  (585 líneas, 4 chunks R + 1 guard LaTeX — ver [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md))
+- **Estado**: `02-En-Desarrollo/` — **aprobado y listo para aula** (11/11 pasos; aprobación humana
+  del 2026-07-30). Pendiente la evidencia de Nivel 3 para `03-En-Produccion/`; ver
+  [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - **Arquitectura técnica**: [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md)
 - **Trabajo pendiente priorizado**: [`docs/BACKLOG.md`](docs/BACKLOG.md)
 
