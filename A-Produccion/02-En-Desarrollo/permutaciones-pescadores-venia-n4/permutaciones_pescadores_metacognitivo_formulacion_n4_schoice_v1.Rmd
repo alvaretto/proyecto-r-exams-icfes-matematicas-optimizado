@@ -46,7 +46,11 @@ ex_uid <- paste0("perm-", paste(safe_sample(c(letters, 0:9), 8L, replace = TRUE)
 # Rango MEDIDO por enumeracion exhaustiva (ver docs/BLUEPRINT.md, sección 2):
 #   n <= 2 -> colisionan 2 opciones (n! == n^(n-1) == n)
 #   n == 3 -> n^(n-1) == n^2 == 9            -> ERR_ANS_C (opciones duplicadas)
-#   n en {4,5,6} -> 4 opciones unicas; razón max/clave = 2.7x / 5.2x / 10.8x
+#   n en {4,5,6} -> 4 opciones unicas; razón max/clave sobre el pool de 7:
+#                   5.0x / 6.0x / 10.8x (el máximo lo pone EST-PER-06 en n=4 y
+#                   n=5, y EST-PER-01 en n=6). Las cifras 2.7/5.2/10.8 que
+#                   figuraban aquí eran del pool ORIGINAL de 4 formulas y
+#                   subestimaban el ratio real en dos de los tres valores.
 #   n >= 7 -> razón >= 23.3x: el distractor mayor se descarta por magnitud
 #             sin razonar (regla #22, patrón P5). Umbral fijado en 15x, con la
 #             ventana medida 10.8x .. 23.3x (holgura factor 2.2, no al filo).
@@ -137,7 +141,13 @@ errores_conceptuales <- list(
     clave             = "circular",
     codigo            = "EST-PER-04",
     nombre            = "Fórmula de permutación circular aplicada a una fila",
-    descripcion_corta = "Usa (n − 1)! en vez de n!, como si el arreglo fuera cerrado",
+    # OJO: solo ASCII en descripcion_corta. El signo menos tipografico U+2212
+    # ("−") rompe la compilación LaTeX ("Unicode character not set up for use
+    # with LaTeX"). Aquí el campo no se emite nunca, así que la mina era
+    # latente; la variante CLOZE hermana SI lo emite (opciones de su Parte 3) y
+    # ahí reventó exams2pdf(). Se corrigio en los dos .Rmd a la vez para que los
+    # pools no diverjan.
+    descripcion_corta = "Usa (n-1)! en vez de n!, como si el arreglo fuera cerrado",
     descripcion_larga = paste0(
       "Calcula $(", n, " - 1)! = ", factorial(n - 1L), "$, que es el número de ",
       "permutaciones **circulares** de ", n, " elementos. Esa fórmula descuenta ",

@@ -2,7 +2,7 @@
 
 > Ruta del subproyecto desde `01-En-PreDesarrollo/` hasta `03-En-Produccion/`, con los gates que
 > hay que superar en cada tramo. Para el detalle de lo pendiente ver [`BACKLOG.md`](BACKLOG.md);
-> para el estado de trabajo, [`../HANDOFF.md`](../HANDOFF.md) (pendiente).
+> para el estado de trabajo, [`../HANDOFF.md`](../HANDOFF.md).
 
 ---
 
@@ -35,12 +35,21 @@
 | 2026-07-30 | Banco de Moodle fijado en **100 preguntas** por decisión del usuario, con justificación en el script. Se corrigió de paso una lectura errónea propia: la regla #3 («< 200 versiones únicas») gobierna la capacidad del ejercicio (`exams2html(n=200)`, aquí 298/300), no el tamaño del banco exportado | `SemilleroMoodle_v2.R`; [`BACKLOG.md`](BACKLOG.md) P2.1 |
 | 2026-07-30 | Banco de 100 regenerado y verificado: 100/100 clave = `n!`, 4 opciones distintas, I-7 respetada, 99/100 preguntas completas distintas, 18 enunciados distintos | `salida/*.xml` (derivado, no versionado) |
 | 2026-07-30 | Documentación sincronizada con el código (este ROADMAP + README + `docs/*` + `.claude/*`, v2.0): la anterior seguía describiendo pool de 5, I-1..I-6, 30 ternas y H1 abierto | Esta sesión |
+| 2026-07-30 | Variante **CLOZE** creada en `cloze/`: `.Rmd` de Progressive Disclosure (6 partes) que preserva el contrato paramétrico del SCHOICE (invariantes I-1..I-7 + instancia canónica), verificador propio y `ejercicio_state.json` independiente | `cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd`, `cloze/verificar_render.R`, `cloze/ejercicio_state.json` |
+| 2026-07-30 | Verificación del CLOZE ejecutada: `V1`-`V11` todo verde (`V5` 12/12, `V6` 105/105 ternas [93 legales], `V9` 240/240, `V10` 8 valores por `n` distintos dos a dos, `V11` 6/6); `validar_coherencia_matematica.R` → APROBADO 0 errores; `validar_diversidad_sustantiva.R --n 40` → exit 0 (`WARN_DIV_BAJA` estructural); ortografía sin errores | `cloze/verif_render/`, salidas de los 4 scripts |
+| 2026-07-30 | Diversidad sustantiva del CLOZE medida: **300/300** versiones únicas sobre 300 evaluaciones del `data_generation`, **90 de 93** ternas legales alcanzadas, 12 instancias canónicas | 300 evaluaciones (CLOZE) |
+| 2026-07-30 | Hallazgo de sesión: `descripcion_corta` contenía el signo menos tipográfico U+2212 (rompe la compilación LaTeX si llega a emitirse) en ambos `.Rmd`, sin haberse detectado antes porque el campo no se usaba en ningún chunk emitido — corregido en SCHOICE y CLOZE | ambos `.Rmd` |
+| 2026-07-30 | Hallazgo de sesión: `pick_int()` quedó como código muerto en el SCHOICE (definido, sin invocación en ningún chunk); la variante CLOZE ya no lo define | `grep -n "pick_int"` en ambos `.Rmd`; [`BACKLOG.md`](BACKLOG.md) nuevo ítem |
+| 2026-07-30 | Documentación re-sincronizada con el código (este ROADMAP + [`BACKLOG.md`](BACKLOG.md), v3.0): incorpora la variante CLOZE (OE12) y cierra las marcas «(pendiente)» ya resueltas sobre `HANDOFF.md`, `.claude/CLAUDE.md` y la regla local del pool | Esta sesión |
 
-**Nota de sincronización (actualizada 2026-07-29).** Tras la auditoría adversarial,
-`ejercicio_state.json` quedó sincronizado con el estado real: **10 de 11** pasos marcan
-`completado: true` — incluido `validar_diversidad`, que registra `versiones_unicas: 297` — y el
-veredicto de `detractor_fase2c` quedó como `"APROBAR CON CAMBIOS (aplicados)"`. El único paso
-pendiente es `aprobacion_usuario`, que por diseño no puede completar un agente — ver §3.
+**Nota de sincronización (actualizada 2026-07-30).** El `ejercicio_state.json` del **SCHOICE**
+(raíz del subproyecto) está en **11 de 11** pasos `completado: true`: `validar_diversidad` registra
+`versiones_unicas: 298` y `aprobacion_usuario` quedó confirmado tras la aprobación humana explícita
+del 2026-07-30 — ver OE10 en §2. El `cloze/ejercicio_state.json` de la variante **CLOZE** (OE12) está
+en **10 de 11**: `detractor_fase2c` se cerró el 2026-07-30 con dos adversarios independientes
+(veredicto «APROBAR CON CAMBIOS», 6 hallazgos MENOR, todos aplicados), así que falta únicamente
+`aprobacion_usuario`, que por diseño no puede completar un agente — ver §3 para el SCHOICE y la nota
+de OE12 en §2 para el CLOZE.
 
 ---
 
@@ -54,11 +63,12 @@ pendiente es `aprobacion_usuario`, que por diseño no puede completar un agente 
 | **OE4** | Familia `n ∈ {4,5,6}` con unicidad y plausibilidad por construcción | ✅ | Enumeración exhaustiva de las 105 ternas ([`BLUEPRINT.md`](BLUEPRINT.md) §2 y §3); invariantes I-1 a I-4 **e I-7** verificadas en tiempo de generación y por `V6`/`V9` |
 | **OE5** | `.Rmd` auto-contenido | ✅ | Helpers y pool de errores dentro de `data_generation` (invariante I-8; renumerada desde I-6 al introducir el código sus propias I-6 e I-7 — ver la nota de numeración de [`BLUEPRINT.md`](BLUEPRINT.md) §5) |
 | **OE6** | Solution canónica y letter-independent | ✅ | 7 encabezados (6 subsecciones canónicas), identificación por contenido/código (chunk `solucion`) |
-| **OE7** | Render verde 4 formatos + Moodle | ✅ | `verificar_render.R` → `V1`-`V9` OK (`verif_render/`, re-verificado el 2026-07-30 sobre el pool de 7) |
-| **OE8** | Diversidad sustantiva + ≥250/300 | ✅ | `validar_diversidad_sustantiva.R --n 40` → exit 0, `WARN_DIV_BAJA` (esperado y aceptado, [`BACKLOG.md`](BACKLOG.md) P1.2); 300 evaluaciones del `data_generation`: **298/300** versiones únicas de render, **89 de 93** ternas legales alcanzadas, 16 instancias canónicas (re-medido el 2026-07-30 con el pool de 7) |
-| **OE9** | Documentación con referencias cruzadas y auditoría adversarial limpia | ✅ | Auditoría adversarial del 2026-07-29 con **dos adversarios independientes**; veredicto `"APROBAR CON CAMBIOS"`, cambios aplicados (pool 3→5, decisión D3, renombrado de `EST-PER-01`) y todo re-validado. Después: code-review de alta intensidad (9 de 10 defectos aplicados) y cierre de H1 con la decisión D4. Documentación sincronizada con el código el 2026-07-30 (v2.0) |
+| **OE7** | Render verde 4 formatos + Moodle | ✅ | SCHOICE: `verificar_render.R` → `V1`-`V9` OK (`verif_render/`, re-verificado el 2026-07-30 sobre el pool de 7). CLOZE: `cloze/verificar_render.R` → `V1`-`V11` OK (`cloze/verif_render/`); NOPS es **N/A** para CLOZE por restricción de `exams` (ver [`BLUEPRINT.md`](BLUEPRINT.md)), aplican HTML/PDF/DOCX/Moodle |
+| **OE8** | Diversidad sustantiva + ≥250/300 | ✅ | SCHOICE: `validar_diversidad_sustantiva.R --n 40` → exit 0, `WARN_DIV_BAJA` (esperado y aceptado, [`BACKLOG.md`](BACKLOG.md) P1.2); 300 evaluaciones: **298/300** versiones únicas, **89 de 93** ternas legales, 16 instancias canónicas. CLOZE: mismo validador → exit 0, `WARN_DIV_BAJA` estructural; 300 evaluaciones: **300/300** versiones únicas, **90 de 93** ternas legales, 12 instancias canónicas |
+| **OE9** | Documentación con referencias cruzadas y auditoría adversarial limpia | ✅ | Auditoría adversarial del 2026-07-29 con **dos adversarios independientes**; veredicto `"APROBAR CON CAMBIOS"`, cambios aplicados (pool 3→5, decisión D3, renombrado de `EST-PER-01`) y todo re-validado. Después: code-review de alta intensidad (9 de 10 defectos aplicados) y cierre de H1 con la decisión D4. Documentación sincronizada con el código el 2026-07-30 (v3.0), incluida la variante CLOZE |
 | **OE10** | Promoción a `02-En-Desarrollo/` | ✅ | **Cumplido el 2026-07-30**: aprobación humana explícita («Aprobado para llevar al aula y testear con estudiantes») → `ejercicio_state.json` 11/11 y `git mv` del subproyecto a `02-En-Desarrollo/` |
-| **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | **Único OE abierto.** Requiere aplicación con estudiantes reales de grado 10-11 y análisis de diagnosticidad por distractor. Destino ya reservado: `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` |
+| **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | Requiere aplicación con estudiantes reales de grado 10-11 y análisis de diagnosticidad por distractor. Destino ya reservado: `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` |
+| **OE12** | Variante CLOZE en `cloze/`: Progressive Disclosure de 6 partes que preserva el contrato paramétrico del SCHOICE (invariantes I-1..I-7 + la instancia canónica) | 🚧 | **En curso.** `cloze/verificar_render.R` → `V1`-`V11` OK; `validar_coherencia_matematica.R` → APROBADO 0 errores; `cloze/ejercicio_state.json` → **10/11** (auditoría adversarial cerrada con 2 agentes independientes: 6 hallazgos MENOR aplicados; falta solo `aprobacion_usuario`, humano) |
 
 ---
 
@@ -74,18 +84,18 @@ Criterios que deben cumplirse **todos** antes de mover el subproyecto:
 - [x] `corregir_ortografia_espanol.R` → sin errores.
 - [x] Reglas #1 / #8 / #10 / #11 / #19 / #20 / #21 / #22 verificadas ([`BLUEPRINT.md`](BLUEPRINT.md) §4-5).
 - [x] Documentación del subproyecto completa y con referencias cruzadas sin enlaces rotos.
-- [x] `ejercicio_state.json` sincronizado con el estado real: **10/11** pasos `completado: true`
+- [x] `ejercicio_state.json` sincronizado con el estado real: **11/11** pasos `completado: true`
       (ver nota de §1).
 - [x] Auditoría adversarial formal registrada sobre esta versión del `.Rmd`: dos adversarios
       independientes, veredicto `"APROBAR CON CAMBIOS (aplicados)"`.
-- [ ] `HANDOFF.md` y `.claude/CLAUDE.md` locales escritos (pendientes de otro agente en esta misma
-      sesión).
-- [ ] Re-confirmación de aprobación humana (`aprobacion_usuario` en `ejercicio_state.json`).
+- [x] `HANDOFF.md` y `.claude/CLAUDE.md` locales escritos.
+- [x] Re-confirmación de aprobación humana (`aprobacion_usuario` en `ejercicio_state.json`).
 
-**Los criterios técnicos de contenido, render y auditoría adversarial están cumplidos al
-2026-07-29.** Lo único que falta para `02-En-Desarrollo/` es cerrar la documentación local
-pendiente de otro agente (`HANDOFF.md`, `.claude/CLAUDE.md`) y obtener la aprobación humana
-explícita — ninguna de las dos es una decisión que le corresponda tomar a un agente por su cuenta.
+**Todos los criterios se cumplieron el 2026-07-30.** El usuario dio la aprobación humana explícita
+(«Aprobado para llevar al aula y testear con estudiantes»), `ejercicio_state.json` quedó en
+**11/11** pasos `completado: true` y el subproyecto se movió con `git mv` a `02-En-Desarrollo/`
+(ver OE10 en §2). Esta sección se conserva como registro de los gates que se exigieron, no como
+lista de pendientes.
 
 **Comando de promoción**: el movimiento entre `01-` y `02-` es un `git mv` del directorio completo;
 tras moverlo hay que re-verificar las rutas relativas `../../../.claude/...` de los documentos (la
@@ -105,7 +115,7 @@ skill `/promover-ejercicio` exige:
 1. Aplicación del ítem con un grupo de estudiantes reales de grado 10 u 11.
 2. Registro de la distribución de respuestas por opción.
 3. Análisis de la **diagnosticidad de los distractores**: cada uno de los siete (`EST-PER-01` a
-   `05`) debería captar una fracción no trivial de las respuestas incorrectas en las versiones
+   `07`) debería captar una fracción no trivial de las respuestas incorrectas en las versiones
    donde aparece. Un distractor con 0 % de elección es un distractor muerto y debe rediseñarse.
 4. Evidencia de que el ítem discrimina: los estudiantes de mayor desempeño global aciertan más.
 
@@ -117,13 +127,15 @@ psicométrica.**
 
 ## 5. Referencias cruzadas
 
-- [`../README.md`](../README.md) · [`../HANDOFF.md`](../HANDOFF.md) (pendiente)
+- [`../README.md`](../README.md) · [`../HANDOFF.md`](../HANDOFF.md)
 - [`SYLLABUS.md`](SYLLABUS.md) · [`BACKLOG.md`](BACKLOG.md) · [`BLUEPRINT.md`](BLUEPRINT.md)
-- `../.claude/CLAUDE.md` (pendiente)
+- `../.claude/CLAUDE.md`
 - `../../../../.claude/rules/workflow-state-enforcement.md` — regla #16, los 11 pasos y su gate
-- `../.claude/rules/permutaciones-parametricas.md` — contrato local del pool `n!` (pendiente)
+- `../.claude/rules/permutaciones-parametricas.md` — contrato local del pool `n!`
 
 ---
 
-**Versión**: 2.0 (bitácora del code-review y de la decisión D4; OE3/OE4/OE5/OE7/OE8/OE9 actualizados)
+**Versión**: 3.0 (variante CLOZE registrada como OE12; cierre de marcas «(pendiente)» sobre
+`HANDOFF.md`/`.claude/CLAUDE.md`/regla local ya resueltas; corrección de rango `EST-PER-01` a `07`
+en §4; nota de sincronización actualizada a 11/11 SCHOICE + 10/11 CLOZE)
 **Fecha**: 2026-07-30

@@ -1,8 +1,8 @@
 # Syllabus — Permutaciones de los pescadores en la venia final
 
-> Ver [`../HANDOFF.md`](../HANDOFF.md) para el estado de trabajo completo (pendiente de escribir
-> en esta sesión). Este documento describe **qué enseña y evalúa** el ejercicio, no su estado de
-> desarrollo.
+> Ver [`../HANDOFF.md`](../HANDOFF.md) para el estado de trabajo completo. Este documento describe
+> **qué enseña y evalúa** el ejercicio — de sus **dos variantes**, la SCHOICE (raíz) y la CLOZE
+> (`../cloze/`, §5) — no su estado de desarrollo.
 
 ## 1. Ficha de metadatos ICFES (copia literal del `.Rmd`)
 
@@ -86,8 +86,9 @@ muestreo aleatorio, muestreo con remplazo). (10°-11°, Pensamiento aleatorio)»
 
 Los distractores **no son ruido numérico**: cada uno es un error conceptual, y ninguno se calcula
 con `sample`/`runif`/`rnorm` (verificado — Capa D de `validar_coherencia_matematica.R`). El pool
-`errores_conceptuales` (`.Rmd`, chunk `data_generation`) tiene **cinco** entradas — ampliado de 3 a 5 en la
-auditoría adversarial del 2026-07-29 para cumplir la regla #1
+`errores_conceptuales` (`.Rmd`, chunk `data_generation`) tiene **siete** entradas — ampliado de 3 a
+5 en la auditoría adversarial del 2026-07-29 y de 5 a 7 en la decisión D4 del 2026-07-30, para
+cumplir la regla #1
 (`ejercicios-metacognitivos.md`, «Mínimo 4-6 errores por ejercicio»: el pool original tenía
 exactamente 3 para 3 espacios, así que el *tipo* de error nunca variaba entre versiones). Los tres
 primeros (`EST-PER-01/02/03`) se toman **literalmente** de las Justificaciones MetaCognitivas de la
@@ -161,8 +162,8 @@ evitar el error*.
 repetición (códigos de 4 cifras con dígitos de `{1,...,5}` que sí pueden repetirse:
 `5×5×5×5 = 5⁴ = 625`). La Solution señala que aplicar la potencia al problema de la fila de
 pescadores es precisamente el error `EST-PER-01`, pero **solo cuando ese error está entre los tres
-seleccionados en la versión actual** (subsección *Caso específico*) — desde que el pool creció a cinco
-entradas, `EST-PER-01` ya no está garantizado en cada versión, salvo en la instancia canónica,
+seleccionados en la versión actual** (subsección *Caso específico*) — desde que el pool creció a
+siete entradas, `EST-PER-01` ya no está garantizado en cada versión, salvo en la instancia canónica,
 donde sí está siempre presente por ser uno de los tres errores oficiales (Decisión D3,
 [`BLUEPRINT.md`](BLUEPRINT.md) §4.8). El eje diagnóstico del pool sigue siendo la distinción
 con/sin reemplazo que separa a los dos ítems oficiales.
@@ -179,14 +180,70 @@ con/sin reemplazo que separa a los dos ítems oficiales.
 - No se requiere la fórmula general de variaciones con repetición (`n^k`) como prerrequisito: el
   ítem la introduce como contraste en el *Caso específico* de la Solution, no en el enunciado.
 
-## 5. Referencias cruzadas
+## 5. Variante CLOZE (`cloze/`): el mismo razonamiento en 6 partes
 
-- [`../HANDOFF.md`](../HANDOFF.md) — estado de trabajo, decisiones, hallazgos abiertos (pendiente)
-- [`../README.md`](../README.md) — cómo verificar y renderizar el ejercicio
+El subdirectorio [`../cloze/`](../cloze/) contiene una **segunda variante** del ítem —
+`permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd` (971 líneas, 9 chunks R) —
+que descompone en 6 partes Progressive Disclosure el mismo razonamiento evaluado por la SCHOICE de
+la raíz. No la sustituye: la SCHOICE conserva la fidelidad verbatim al ítem oficial en una sola
+pregunta (§2); la CLOZE existe para uso formativo, donde interesa poder evaluar cada pieza del
+razonamiento por separado. Arquitectura completa en [`BLUEPRINT.md`](BLUEPRINT.md) §7.
+
+`exclozetype: schoice|num|schoice|num|mchoice|schoice`, `exshuffle: TRUE`:
+
+| Parte | Tipo | Qué evalúa | Relación con el contenido de §2-§3 |
+|---|---|---|---|
+| 1 | `schoice` | La pregunta del ítem oficial: clave `n!` + 3 distractores del pool | Reproduce la pregunta de §2 |
+| 2 | `num` | Cuántos pescadores quedan disponibles para el segundo lugar → `n-1` | Operacionaliza el punto 1 de §2 (el conjunto decrece) como pregunta numérica directa |
+| 3 | `schoice` | Identificar, entre 4 descripciones, el error que produce un valor dado (los 3 mostrados en la Parte 1 + 1 error del pool que NO se mostró) | Obliga a evaluar una descripción de error nueva, no solo las tres ya vistas — el estudiante no puede resolverla por eliminación |
+| 4 | `num` | Conteo **con** repetición: códigos de `n` cifras con dígitos de `{1..n}` repetibles → `n^n` | Convierte en pregunta el ítem espejo `MAT-2026-1-029` que en la SCHOICE solo aparecía como *Caso específico* de la Solution (§3.1), después de responder |
+| 5 | `mchoice` | 6 afirmaciones, de las que son verdaderas `k ∈ {2,3,4}` (varía por versión) | Amplía las «Propiedades del concepto» de la Solution de la SCHOICE (§3.1) a un ítem propio |
+| 6 | `schoice` V/F | Factor de crecimiento al pasar de `n` a `n+1` elementos | Extiende la noción de crecimiento factorial más allá del caso puntual de §2 |
+
+El Answerlist del enunciado tiene **16** ítems (4+4+6+2, solo los gaps de elección) y el de la
+Solution tiene **18** (+1 por cada uno de los 2 gaps `num` — Partes 2 y 4); es el contrato normal
+de R/exams para CLOZE con gaps mixtos (`BLUEPRINT.md` §7.3, invariante C-3), no un descuadre.
+
+**NOPS es N/A para esta variante**: `exams2nops()` rechaza cualquier `extype: cloze`, sin importar
+los tipos de gap — verificado en el código fuente de `exams` 2.4.2, consultado 2026-07-30 (ver
+`BLUEPRINT.md` §7.5 y `BACKLOG.md` P2.3). Formatos aplicables: HTML, PDF, DOCX y Moodle.
+
+### Cómo verificar la variante CLOZE
+
+```bash
+cd cloze/
+Rscript verificar_render.R
+# → V1-V11 todo verde (V5 12/12, V6 105/105 ternas [93 legales], V9 240/240,
+#   V10 8 valores por n distintos dos a dos, V11 6/6)
+
+cd ..
+Rscript ../../../.claude/scripts/validar_coherencia_matematica.R \
+  cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd
+# → APROBADO, 0 errores
+
+Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
+  cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd --n 40
+# → exit 0 · WARN_DIV_BAJA (estructural, igual que en la SCHOICE)
+
+Rscript ../../../.claude/scripts/corregir_ortografia_espanol.R \
+  cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd
+# → sin errores
+```
+
+Sobre 300 evaluaciones del `data_generation`: **300/300** versiones únicas, **90 de las 93** ternas
+legales alcanzadas, reparto de `n` 90/113/97 y **12** instancias canónicas. Estado del workflow:
+`cloze/ejercicio_state.json` — 10/11 pasos; falta `aprobacion_usuario` (paso humano).
+
+## 6. Referencias cruzadas
+
+- [`../HANDOFF.md`](../HANDOFF.md) — estado de trabajo, decisiones, hallazgos abiertos
+- [`../README.md`](../README.md) — cómo verificar y renderizar el ejercicio (SCHOICE y CLOZE)
 - [`BLUEPRINT.md`](BLUEPRINT.md) — arquitectura técnica del pool `errores_conceptuales` y del
-  pipeline de mezcla de opciones
-- [`BACKLOG.md`](BACKLOG.md) — pendientes priorizados
-- [`ROADMAP.md`](ROADMAP.md) — hitos y objetivos específicos (OE1-OE11)
+  pipeline de mezcla de opciones (SCHOICE en §1-6; variante CLOZE en §7)
+- [`BACKLOG.md`](BACKLOG.md) — pendientes priorizados (P2.2: `pick_int()` código muerto en el
+  SCHOICE; P2.3: restricción `exams2nops()` + `extype: cloze` no documentada oficialmente)
+- [`ROADMAP.md`](ROADMAP.md) — hitos y objetivos específicos (OE1-OE12; OE12 es la variante CLOZE)
+- [`../cloze/`](../cloze/) — variante CLOZE de 6 partes (§5)
 - `../../../../.claude/rules/ejercicios-metacognitivos.md` — Progressive Disclosure, pool de
   errores, coherencia DOK↔Nivel
 - `../../../../.claude/rules/solution-letter-independence.md` — regla #19, por qué la Solution
@@ -203,5 +260,6 @@ con/sin reemplazo que separa a los dos ítems oficiales.
 
 ---
 
-**Versión**: 2.0 (pool 5 → 7: `EST-PER-06` y `EST-PER-07` de la decisión D4)
+**Versión**: 3.0 (documentada la variante CLOZE en §5; corregida deriva de documentación: pool
+«cinco» → siete en §3 y §3.1, HANDOFF.md ya existe)
 **Fecha**: 2026-07-30

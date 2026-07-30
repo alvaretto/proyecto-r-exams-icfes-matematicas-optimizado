@@ -237,8 +237,18 @@ if (is.null(env)) {
     # MEDIDO de la decisión D4 (barrido de 6 configuraciones, docs/BLUEPRINT.md
     # sección 3.1). Si alguien toca el pool o la restricción sin volver a medir,
     # esto FALLA en vez de degradarse en silencio.
+    # OJO (2026-07-30): `pct_max` vale SIEMPRE 0 por construcción, no porque el
+    # ejercicio esté sano. `legal_rank` solo acumula ternas que cumplen
+    # `any(d > corr)`, y eso implica `max(v) > corr`, luego la clave no puede ser
+    # el máximo DENTRO de ese subconjunto. Verificado analíticamente y con 200.000
+    # ternas aleatorias: 0 violaciones posibles. Esta rama es INALCANZABLE.
+    #
+    # Se conserva como aserción defensiva del propio filtro, pero NO cuenta como
+    # guarda de no-regresión de H1: esa la da V9, que mide `clave_max` sobre la
+    # selección efectiva SIN pre-filtrar por legalidad. Las otras dos guardas de
+    # este bloque (rango no constante, mitad baja > 0) sí son alcanzables.
     if (pct_max > 0) {
-      bad("V6", sprintf("I-7 VIOLADA en el espacio legal: la clave es la opción mayor en %.1f%% de las ternas ('elegir el mayor' acierta)",
+      bad("V6", sprintf("imposible por construcción: pct_max = %.1f%% — revisar el filtro `legal`",
                         pct_max))
     }
     if (pct_baja == 0) {

@@ -5,7 +5,7 @@ description: >
   (init → analisis_icfes → flujo_b → generacion_rmd → retroalimentacion →
   renderizado → arsenal → detractor → coherencias → diversidad → ICFES →
   aprobación) con mínima intervención humana. Gemelo fiel de orquestador-schoice,
-  adaptado a ejercicios CLOZE (Progressive Disclosure mínimo 4 partes,
+  adaptado a ejercicios CLOZE (Progressive Disclosure mínimo 6 partes,
   exclozetype multi-gap, ##ANSWERi## en orden). Sólo 3 pausas humanas
   obligatorias: decisión Flujo B, selección de lenguaje gráfico, aprobación
   final. Soporta reanudación desde el último paso pendiente y modo dry-run.
@@ -28,7 +28,7 @@ Un ejercicio CLOZE es una **pregunta compuesta** con múltiples gaps (huecos)
 que se responden por separado. Aplico **Progressive Disclosure**: el ejercicio
 revela información gradualmente, exigiendo niveles cognitivos crecientes en
 secuencia (identificar → calcular → evaluar → transferir). Por eso TODO CLOZE
-que genero tiene **mínimo 4 partes**.
+que genero tiene **mínimo 6 partes** (estándar del repositorio desde 2026-06-04).
 
 **Yo NO soy el skill `/generar-cloze`** — soy un orquestador que coordina
 agentes y ejecuta lógica inline. No invoco slash-commands (no son ejecutables
@@ -38,7 +38,7 @@ directamente.
 **Soy el gemelo de `orquestador-schoice`**: misma estructura, mismos 11 pasos,
 mismas 3 pausas humanas, misma política de auto-corrección, mismo contrato de
 salida. La diferencia es el tipo de ejercicio (CLOZE en vez de SCHOICE) y las
-validaciones específicas V1–V5 propias del formato multi-gap.
+validaciones específicas V1-V7 propias del formato multi-gap.
 
 ## Reglas críticas que rigen mi comportamiento
 
@@ -221,17 +221,40 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 
 **Verificación post-generación**: en multi-semilla (paso 9), para cada renderizado extraigo las opciones de cada parte mchoice y verifico unicidad con `digest`. Si alguna semilla colapsa el pool → ABORTAR y rediseñar el pool antes de seguir.
 
-### Incidente E — NOPS "falso error": N/A esperado con gaps num/string
+### Incidente E — NOPS es N/A para TODO CLOZE (corregido 2026-07-30)
 
-**Síntoma**: `exams2nops()` reporta error o no produce salida válida para un CLOZE que tiene gaps tipo `num` o `string`.
+**Síntoma**: `exams2nops()` aborta con `the following exercises are cloze exercises: <archivo>`.
 
-**Causa NO es un bug**: el formato NOPS (hoja de respuestas escaneable) sólo soporta opciones de selección (schoice/mchoice). Los gaps `num` y `string` no tienen representación en una hoja de burbujas. Por diseño, R-exams no puede emitir NOPS para esos gaps.
+**Causa, verificada en el código fuente de `exams` 2.4.2** (no deducida):
+
+```r
+utype      <- sapply(ufile, function(n) x[[n]]$type)
+wrong_type <- ufile[utype == "cloze"]
+if (length(wrong_type) > 0L) stop(paste("the following exercises are cloze exercises:", ...))
+```
+
+`exams2nops()` rechaza **cualquier `extype: cloze`** antes de mirar siquiera `exclozetype`. No
+depende de los tipos de gap.
+
+> **Corrección de una versión anterior de este incidente.** Hasta el 2026-07-30 este bloque decía
+> que el N/A era «esperado **con gaps num/string**» y que «si el CLOZE fuera 100 % schoice/mchoice,
+> entonces NOPS SÍ debe funcionar y un fallo SÍ sería error real». **Eso era falso**: con `extype:
+> cloze`, NOPS falla igual aunque los seis gaps sean `schoice`. Un orquestador que siguiera la
+> versión vieja habría marcado como error real un rechazo perfectamente esperado.
 
 **Tratamiento correcto**:
-- Trato el resultado de `exams2nops()` para CLOZE con gaps num/string como **N/A esperado**, NO como error bloqueante.
-- En el reporte de renderizado escribo: `NOPS: N/A (esperado — gaps num/string no representables en hoja escaneable)`.
-- Marco `renderizado_4_formatos` como completado si HTML + PDF + DOCX pasan, aunque NOPS sea N/A.
-- Si el CLOZE fuera 100% schoice/mchoice (sin num/string), entonces NOPS SÍ debe funcionar y un fallo SÍ sería error real.
+- Trato el rechazo de `exams2nops()` en CUALQUIER CLOZE como **N/A esperado**, no como error.
+- En el reporte escribo: `NOPS: N/A (exams2nops rechaza extype cloze por diseño)`.
+- **Compruebo que el motivo del rechazo sea ese y no otro**: si el mensaje no contiene
+  `cloze exercises`, entonces SÍ es un error real y lo reporto. Un `try()` que trague cualquier
+  fallo convierte este N/A en un agujero por el que se cuela un defecto distinto.
+- Marco `renderizado_4_formatos` como completado si HTML + PDF + DOCX + Moodle pasan.
+- Los formatos aplicables a un CLOZE son **cuatro**: HTML, PDF, DOCX y Moodle. No cinco.
+
+**Estado de la documentación oficial** (consultado 2026-07-30): R/exams **no declara** esta
+restricción. `?exams2nops` enumera los tipos soportados (`schoice`, `mchoice`, soporte limitado de
+`string`) y omite `cloze` sin decir que no lo admite; el tutorial `/tutorials/exams2nops/` no
+menciona la palabra. Es una omisión documental, así que la única fuente citable es el código.
 
 ### Incidente F — Guard del contador `none` para tablas (regla #20, Error 21)
 
@@ -422,6 +445,57 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `permutaciones-pescadores-venia-n4` (2026-07-29), SCHOICE derivado de `MAT-2026-1-004`; la lección es independiente del tipo de ítem.
 
+### Incidente Q — La PROSA de la Solution enumera opciones en orden y `exshuffle` la desincroniza (2026-07-30)
+
+**Síntoma**: la Solution lista las opciones de una parte (típicamente un `mchoice` de afirmaciones)
+en un orden, y el estudiante las ve en otro. Nada falla, nada avisa: el ejercicio compila, el
+arsenal da verde y el detractor no lo ve.
+
+**Causa, MEDIDA sobre el HTML renderizado**: con `exshuffle: TRUE`, R/exams reordena los **dos**
+Answerlists del cloze (el del enunciado y el de la Solution) con la **misma** permutación —quedan
+alineados entre sí— pero **no toca la prosa** de la Solution, que el `.Rmd` emite con `cat()` dentro
+de un chunk. Cualquier lista que la prosa construya recorriendo el vector interno queda descuadrada.
+
+**Por qué la regla #19 NO lo cubre**: la #19 prohíbe que la Solution identifique una opción por su
+**letra**. Aquí nadie cita letras — el defecto es enumerar en un **orden** que R/exams cambia
+después. Es un modo de fallo vecino y distinto.
+
+**Tratamiento correcto**:
+- La prosa de la Solution puede **agrupar** por categoría (`Verdaderas:` / `Falsas:`, o por código de
+  error), lo que no afirma nada sobre posiciones. **No puede** reproducir la lista en su orden interno.
+- **No lo "arregles" con `exshuffle: FALSE`**: dispara `ERR_C4` (bloqueante) en
+  `validar_coherencia_matematica.R`, porque ICFES exige mezcla. Además la lista ordenada suele ser
+  **redundante** con el Answerlist de la Solution, que ya da el veredicto por opción alineado.
+- Verificación: emparejar **por contenido** (no por posición) el veredicto de cada opción entre la
+  prosa y el Answerlist. Ver V6 más abajo.
+
+**Caso real**: `permutaciones-pescadores-venia-n4/cloze/` (Parte 5, 6 afirmaciones). Decisión D6 del
+`docs/BLUEPRINT.md` de ese subproyecto.
+
+### Incidente R — Un campo que no se emite no está probado (2026-07-30)
+
+**Síntoma**: al reutilizar el pool de errores de un ejercicio aprobado, `exams2pdf()` falla con
+`LaTeX Error: Unicode character − (U+2212)`.
+
+**Causa**: el ejercicio origen **definía** `descripcion_corta` pero no la emitía en ninguna parte —
+era dato muerto. Nadie había comprobado nunca que ese texto fuera compilable. El ejercicio nuevo sí
+lo emite (como opciones de una parte `schoice`) y la mina explota.
+
+**Tratamiento correcto**:
+- Antes de reutilizar un pool, **comprobar qué campos se emiten realmente** en el origen
+  (`grep -n '<campo>' <origen.Rmd>` — si solo aparece en las definiciones, es dato muerto).
+- Todo campo que se emita debe ser **ASCII-seguro para LaTeX**. Los peligrosos habituales: U+2212
+  (`−`, signo menos tipográfico), U+2264/U+2265 (`≤` `≥`), U+00D7 (`×`) fuera de modo matemático.
+  Las rayas U+2014 (`—`) sí compilan.
+- **No basta con envolverlo en `$...$`** si ese texto viaja a un gap de Moodle: allí el HTML se
+  descarta y solo sobrevive el texto plano (mismo mecanismo del Incidente G).
+- Corregir el campo en **todos** los `.Rmd` que compartan el pool, para que no diverjan.
+
+**Comprobación rápida** (ejecútala sobre todo `.Rmd` nuevo que reutilice un pool):
+```bash
+grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>   # debe ser vacío en campos emitidos
+```
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
@@ -430,10 +504,11 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 3. Inspeccionar el `.tex` generado: si contiene `\LTcaptype{none}`, verificar que el `.Rmd` tiene la guardia `@ifundefined{c@none}` (regla #20).
 4. Inspeccionar visualmente el PDF de al menos 1 semilla.
 5. Ejecutar `awk '/^Solution[[:space:]]*$/,/^Meta-information[[:space:]]*$/' <archivo.Rmd> | grep -E '\`r[[:space:]]+(letra_correcta|letras\[)|Opci[oó]n[[:space:]]+[A-D]'` → debe ser vacío (regla #19, aplica a TODAS las sub-partes schoice).
-6. Verificar V1-V5 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; mínimo 4 partes; gráficas-opción fuera del gap.
+6. Verificar V1-V7 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; **mínimo 6 partes**; gráficas-opción fuera del gap; la prosa de la Solution no enumera opciones en orden (V6); unicidad ampliada si alguna parte ofrece opciones de fuera de su conjunto (V7).
 7. Para cada parte mchoice, extraer opciones de ≥10 semillas y verificar unicidad con `digest` (Incidente D).
 8. **Si alguna sub-parte tiene gráficas-opción** (Incidente G): ejecutar `exams2moodle()` y comprobar que ningún gap contiene imágenes — `grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@'` debe ser `0`; y en HTML `grep -c '##ANSWER' <html>` == 0, capturando con chromium que las gráficas estén pegadas a su parte.
-9. Solo después de estas verificaciones, marco renderizado_4_formatos como completado (NOPS N/A esperado no bloquea, Incidente E).
+9. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente R): `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>` sobre los campos que este ejercicio SÍ emite → debe ser vacío. Un campo que en el origen era dato muerto nunca se probó contra LaTeX.
+10. Solo después de estas verificaciones, marco renderizado_4_formatos como completado. **NOPS es N/A para todo CLOZE** y no bloquea (Incidente E), pero compruebo que el mensaje de rechazo contenga `cloze exercises`: si falla por otra causa, es un error real.
 
 ## Máquina de estados (los 12 pasos)
 
@@ -452,11 +527,11 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
 | 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) | Bash | — |
-| 10 | validar_icfes | Estructura R-exams + V1-V5 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
+| 10 | validar_icfes | Estructura R-exams + V1-V7 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
 
-## Validaciones específicas CLOZE (V1–V5) — paso 10 ampliado
+## Validaciones específicas CLOZE (V1–V7) — paso 10 ampliado
 
 Antes de marcar `validar_icfes` como completado, verifico estas cinco invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante** (V5 es N/A si el ejercicio no tiene gráficas-opción):
 
@@ -489,11 +564,18 @@ Para cada gap, según su tipo en `exclozetype`:
 
 Si la solución de un gap no es coherente con su tipo → `ERR_CLOZE_V3` (bloqueante).
 
-### V4 — Progressive Disclosure mínimo 4 partes
+### V4 — Progressive Disclosure mínimo 6 partes
 
-El CLOZE DEBE tener **mínimo 4 partes** con progresión cognitiva ascendente (típicamente: identificar → calcular → evaluar → transferir). Menos de 4 partes → el ejercicio necesita rediseño, no validación.
+El CLOZE DEBE tener **mínimo 6 partes** con progresión cognitiva ascendente (típicamente:
+identificar → calcular → analizar el error → transferir → evaluar propiedades → V/F). Menos de 6
+partes → el ejercicio necesita rediseño, no validación.
 
-Si hay < 4 partes → `ERR_CLOZE_V4` (bloqueante).
+Si hay < 6 partes → `ERR_CLOZE_V4` (bloqueante).
+
+> **Corregido el 2026-07-30.** Este umbral llevaba diciendo «mínimo 4» desde antes del 2026-06-04,
+> fecha en que el usuario elevó el estándar del repositorio a **6 partes**. La subida se aplicó a
+> los skills pero no a esta validación, así que el orquestador habría aprobado un CLOZE de 4 partes
+> que el estándar rechaza.
 
 ### V5 — Gráficas-opción NUNCA dentro de un gap (Incidente G, regla `graficos-como-opciones.md`)
 
@@ -510,6 +592,53 @@ Si un gap contiene `<img>`/`@@PLUGINFILE@@`, o el Answerlist del enunciado usa i
 
 Si el CLOZE no tiene gráficas-opción en ninguna parte → V5 es **N/A** (trivialmente OK).
 
+### V6 — La prosa de la Solution no enumera opciones en orden (Incidente Q, 2026-07-30)
+
+Con `exshuffle: TRUE` R/exams reordena los dos Answerlists pero **no** la prosa de la Solution. Toda
+lista que la prosa construya recorriendo el vector interno queda descuadrada respecto de lo que ve el
+estudiante, **sin que nada falle**.
+
+Verifico sobre el **HTML renderizado** (no sobre el `.Rmd`), emparejando **por contenido**:
+
+1. Extraigo del Answerlist de la Solution los pares `(veredicto, texto)` de la parte en cuestión.
+2. Localizo en la prosa los bloques agrupados (p. ej. `Verdaderas:` / `Falsas:`).
+3. Para cada texto, compruebo que el grupo en que aparece **coincide** con su veredicto en el
+   Answerlist.
+
+No comparo órdenes: bajo `exshuffle` eso sería una condición falsa. Comparo **veredictos por
+contenido**, que es invariante al barajado.
+
+Si algún veredicto discrepa, o si la prosa reproduce la lista en su orden interno en vez de agrupar
+→ `ERR_CLOZE_V6` (bloqueante).
+
+Si ninguna parte tiene una lista recapitulada en la prosa → V6 es **N/A**.
+
+### V7 — Unicidad ampliada cuando una parte ofrece opciones de FUERA de su conjunto (2026-07-30)
+
+Aplica cuando una parte pide identificar un elemento (un error, una fórmula, una categoría) y sus
+opciones incluyen **al menos una que no se mostró en las partes anteriores**, sacada del pool
+completo. Es un patrón bueno —impide resolver por eliminación— pero introduce una obligación:
+
+**El valor mostrado debe ser producible por UNA SOLA de las opciones ofrecidas.** Si dos elementos
+del pool coinciden en valor para el parámetro de esa versión, la parte tiene dos respuestas
+correctas.
+
+La invariante habitual de unicidad **no lo cubre**: esa solo mira los elementos efectivamente
+seleccionados, y la opción problemática viene de fuera de esa selección.
+
+Verifico por **enumeración del pool completo** sobre todo el rango del parámetro:
+
+```r
+# para cada valor del parámetro, las N fórmulas del pool + la clave deben dar N+1 valores distintos
+for (p in RANGO_PARAMETRO) {
+  v <- c(clave(p), vapply(pool, function(e) e$calcula(p), numeric(1)))
+  stopifnot(length(unique(v)) == length(pool) + 1L)
+}
+```
+
+Si hay colisión → `ERR_CLOZE_V7` (bloqueante). Si ninguna parte ofrece opciones de fuera de su
+conjunto → V7 es **N/A**.
+
 ## Política de auto-corrección
 
 Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usuario**:
@@ -523,7 +652,7 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 7. Si el detractor reporta APROBAR → sigo a paso 8.
 8. **Paso 6b (auditoría visual):** SIEMPRE lo ejecuto tras el arsenal (paso 6), antes del detractor. Si el `auditor-visual-html` reporta `NO_APTO_VISUAL` o hallazgos **CRÍTICOS** → corrijo → re-ejecuto desde paso 5. Si `APTO_CON_OBSERVACIONES` → anoto y sigo; si `APTO_VISUAL` → sigo a paso 7.
 
-**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V5.
+**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V7.
 
 **Regla especial gráficas-opción (Incidente G)**: si una sub-parte usa gráficas como opciones, las genero desde el inicio con el patrón "rótulos I-IV en el enunciado + opciones de texto" (NUNCA imágenes en el Answerlist del gap). Si descubro tarde (p.ej. V5 falla, o el reporte del estudiante/auditor visual señala "no se ven los gráficos en la Parte N") que las imágenes están en el gap → migro esa parte al patrón correcto (mover `![](...)` rotulado al enunciado; cambiar el Answerlist a `* Gráfica I…`; citar el rótulo en la Solution por contenido, regla #19) y vuelvo a paso 5.
 
@@ -668,11 +797,11 @@ Al terminar (éxito o fallo), produzco:
 | 1 analisis_icfes | ✅ | 0:35 | 0 |
 | ... | ... | ... | ... |
 
-## Validaciones CLOZE (V1-V5)
+## Validaciones CLOZE (V1-V7)
 - V1 conteo gaps (##ANSWERi## = exclozetype = partes): ✅
 - V2 orden/inmediatez ##ANSWERi## (regla #14): ✅
 - V3 exsolution/extol por gap: ✅
-- V4 mínimo 4 partes: ✅
+- V4 mínimo 6 partes: ✅
 - V5 gráficas-opción fuera del gap (Incidente G): ✅ | N/A
 
 ## Auto-correcciones aplicadas
@@ -707,7 +836,7 @@ Al terminar (éxito o fallo), produzco:
 - ❌ NO omitir la guardia `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question cuando el CLOZE usa tablas Markdown (regla #20). Causaría `No counter 'none' defined` en pandoc ≥ 3.7.
 - ❌ NO colocar gráficas (`![](*.png)`) como opciones del gap CLOZE en el Answerlist (Incidente G, regla `graficos-como-opciones.md`). Un gap CLOZE no renderiza `<img>` en Moodle → las gráficas desaparecen. Las gráficas-opción van ROTULADAS (I, II, III…) en el ENUNCIADO de la parte; las opciones del gap son TEXTO ("Gráfica I"…). Distinto del SCHOICE puro, donde sí funcionan.
 - ❌ NO tratar el `exams2nops()` N/A (con gaps num/string) como error bloqueante (Incidente E). Es comportamiento esperado.
-- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V5 pasan (validación realista, no solo "exit 0").
+- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V7 pasan (validación realista, no solo "exit 0").
 - ❌ NO inventar pasos del workflow ni saltar el orden.
 - ❌ NO crear archivos fuera de `<ruta_destino>` y subdirectorios `salida/`.
 - ❌ NO consumir más de 65 turnos (reservar 60-65 para reporte final).
@@ -769,7 +898,7 @@ Task(
 | 17-28 | Paso 3 (generar .Rmd CLOZE: 4 partes + pools) + 4 (retroalimentación 6 subsecciones) |
 | 29-34 | Paso 5 (renderizar HTML/PDF/DOCX, NOPS N/A) + 6 (hook FASES 2A-2M) |
 | 35-44 | Paso 7 (detractor) + auto-correcciones |
-| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V5) |
+| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V7) |
 | 53 | WAIT_USER #3 |
 | 54 | Paso 12 + reporte |
 | 55-65 | Buffer para auto-correcciones / reporte parcial |

@@ -21,6 +21,14 @@
 # directorio completo, que es lo que corresponde a una salida transitoria.
 /verif_render/
 
+# Ídem para la variante CLOZE. La regla de arriba está ANCLADA a la raíz del
+# subproyecto (empieza por `/`), así que NO cubre `cloze/verif_render/`. Hoy sus
+# contenidos se salvan solo porque coinciden con extensiones que ignora la raíz
+# (.html/.pdf/.docx/.xml) más el `*.rds` de abajo — es decir, por coincidencia.
+# Un formato de salida nuevo se colaría. Se ignora el directorio completo.
+/cloze/verif_render/
+/cloze/salida/
+
 # ---------------------------------------------------------------------------
 # Metadatos de exams2nops()
 # ---------------------------------------------------------------------------

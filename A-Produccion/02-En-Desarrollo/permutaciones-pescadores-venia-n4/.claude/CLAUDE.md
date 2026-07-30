@@ -21,18 +21,32 @@ verificado, decisiones, hallazgos abiertos, riesgos y siguiente paso. **Léelo p
 `../ejercicio_state.json`, antes de explorar el `.Rmd`.
 
 ```
-Continúa con el proyecto A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
+Continúa con el proyecto permutaciones-pescadores-venia
 ```
-debe disparar la lectura de `HANDOFF.md` + `ejercicio_state.json` como primera acción.
+(o cualquier variante con la ruta completa) debe disparar, **como primera acción y en este orden**:
+
+1. [`../HANDOFF.md`](../HANDOFF.md)
+2. los **DOS** `ejercicio_state.json` — el de la raíz (SCHOICE) y el de `cloze/` (CLOZE)
+3. este archivo (19 particularidades operativas)
+4. [`rules/permutaciones-parametricas.md`](rules/permutaciones-parametricas.md) (I-1..I-7 + C-1..C-3)
+
+**Solo después** abrir los `.Rmd`. Al 2026-07-30 el estado es: SCHOICE 11/11 aprobado; CLOZE 10/11,
+a la espera del paso 11 (revisión y aprobación humana), que un agente no puede sellar.
 
 ---
 
 ## Identidad del ejercicio
 
+> **Hay DOS variantes.** Desde el 2026-07-30 el subproyecto contiene el SCHOICE original (raíz) y
+> una variante **CLOZE** de 6 partes en `cloze/`, con su propio `ejercicio_state.json` y su propio
+> `verificar_render.R`. Comparten el contrato paramétrico completo. **Antes de editar, mira en cuál
+> de los dos estás**: varias particularidades de abajo aplican a uno y no al otro.
+
 | Campo | Valor |
 |---|---|
-| **Archivo** | `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd` |
-| **Tipo** | SCHOICE metacognitivo — 4 opciones de **TEXTO** (números). **Sin figura**: Flujo B = false |
+| **Archivo (SCHOICE)** | `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd` |
+| **Archivo (CLOZE)** | `cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd` |
+| **Tipo** | SCHOICE metacognitivo — 4 opciones de **TEXTO** (números). **Sin figura**: Flujo B = false. La variante CLOZE descompone lo mismo en 6 partes (`schoice\|num\|schoice\|num\|mchoice\|schoice`) |
 | **Nivel ICFES** | N4 (`exextra[Nivel]: 4`, `DOK: 3`, `Bloom: Evaluar`, `SOLO: Relacional`) |
 | **Descriptor** | `D4.8` — «Resuelve problemas de conteo que requieren el uso de permutaciones.» |
 | **Competencia / Componente** | Formulación y ejecución / Aleatorio |
@@ -203,6 +217,74 @@ avisan) si cualquiera de las tres cifras regresa.
 
 ---
 
+### 14. La variante CLOZE **no sustituye** a la SCHOICE, y no es una copia
+
+Viven las dos. La SCHOICE es la que sostiene **OE1**: reproduce el ítem oficial tal como se evalúa,
+en una sola pregunta. La CLOZE descompone el mismo razonamiento en 6 partes para uso formativo — eso
+cambia lo que se mide, así que **no es un reemplazo**. Si te piden «actualizar el ejercicio»,
+pregunta cuál, o actualiza los dos y dilo.
+
+El pool de 7 errores, `N_POOL` y los `stopifnot` de I-1..I-7 están **duplicados literalmente** en
+los dos `.Rmd`. Es deliberado (auto-contención, particularidad 1): no los factorices a un archivo
+común. **Si cambias el contrato, cámbialo en los dos y vuelve a correr los dos verificadores.**
+
+### 15. `fmt()` diverge entre variantes A PROPÓSITO (decisión D5)
+
+La SCHOICE agrupa miles (`7.776`, estilo cuadernillo ICFES); la CLOZE **no** (`7776`). No es un
+descuido: la CLOZE tiene dos gaps `num` que el estudiante **escribe**, y `46.656` se parsea como el
+decimal 46,656 → respuesta correcta marcada como incorrecta. No «unifiques» los dos helpers.
+
+No afecta a la fidelidad del ítem oficial: en la instancia canónica (`n = 4`) las cuatro opciones
+son menores que 1000, así que ambas convenciones coinciden.
+
+### 16. La Solution del CLOZE **nunca** enumera la Parte 5 en orden (decisión D6)
+
+Medido sobre el HTML: con `exshuffle: TRUE`, R/exams reordena los **dos** Answerlists del cloze con
+la misma permutación —quedan alineados— pero **no toca la prosa** de la Solution, que el `.Rmd`
+emite con `cat()`. La primera versión listaba ahí las 6 afirmaciones en el orden del chunk y tras el
+barajado quedaban descuadradas respecto de las opciones.
+
+Es un modo de fallo **vecino a la regla #19 pero distinto**: la #19 prohíbe citar la **letra**; esto
+es enumerar en un **orden** que R/exams cambia después. Por eso la prosa **agrupa** por valor de
+verdad (`Verdaderas:` / `Falsas:`), que no afirma nada sobre posiciones. `V11` de
+`cloze/verificar_render.R` lo comprueba emparejando **por contenido**; falla si alguien restaura la
+lista ordenada.
+
+No lo «arregles» poniendo `exshuffle: FALSE`: eso dispara `ERR_C4` (bloqueante) en
+`validar_coherencia_matematica.R`, porque ICFES exige mezcla.
+
+### 17. La Parte 3 del CLOZE depende de la invariante C-1
+
+Muestra el valor de un error y pide identificarlo entre 4 descripciones, **una de las cuales es de
+un error que no aparece en la Parte 1**. Eso obliga a que las 7 fórmulas del pool y `n!` den **8
+valores distintos dos a dos** para cada `n` — si dos coincidieran, esa parte tendría dos respuestas
+correctas. **I-1 no lo detecta**: solo mira la terna seleccionada. Lo cubren el `stopifnot` del
+chunk y `V10`. Si tocas el pool, vuelve a correr V10.
+
+### 18. NOPS es N/A en el CLOZE por diseño de `exams`, NO por los gaps `num`
+
+`exams2nops()` rechaza **cualquier** `extype: cloze` antes de mirar `exclozetype` (verificado en el
+código de `exams` 2.4.2: `wrong_type <- ufile[utype == "cloze"]`). El Incidente E del
+`orquestador-cloze` lo enunciaba como «N/A esperado cuando hay gaps num/string», que es **más
+estrecho que la realidad**. `V4` comprueba que el motivo del rechazo siga siendo ese y no otro.
+
+La documentación oficial de R/exams **no lo declara** (consultado 2026-07-30): `?exams2nops` enumera
+los tipos soportados y omite `cloze` sin decir que no lo admite.
+
+### 19. `descripcion_corta` debe ser **ASCII**
+
+Contenía el signo menos tipográfico **U+2212** (`−`) en `EST-PER-04`. En la SCHOICE ese campo
+**nunca se emite** —es dato muerto—, así que la mina estuvo latente; la CLOZE sí lo emite (son las
+opciones de su Parte 3) y **reventó `exams2pdf()`** con «Unicode character not set up for use with
+LaTeX». Corregido en los dos `.Rmd` a la vez el 2026-07-30.
+
+Tampoco sirve envolverlo en `$...$`: ese texto viaja a un gap `MULTICHOICE` de Moodle, donde el HTML
+se descarta y solo sobrevive el texto plano. Las rayas `—` (U+2014) sí compilan bien; el problema es
+específicamente U+2212.
+
+**Patrón general que conviene recordar:** *un campo que no se emite no está probado. El día que
+alguien lo emita, revienta.*
+
 ## Reglas del repo raíz con mayor peso aquí
 
 | Regla | Por qué importa en este ejercicio |
@@ -237,7 +319,18 @@ avisan) si cualquiera de las tres cifras regresa.
 - Sustituir la enumeración del espacio legal por un bucle de reintento (`repeat`/`while`) —
   Error 22, regla #21 Familia 1 (particularidad 13).
 - Derivar `es_mayor` de una lista de códigos hardcoded en vez de `calcula()` (particularidad 13).
-- Marcar `aprobacion_usuario` en `ejercicio_state.json` sin aprobación humana explícita.
+- Marcar `aprobacion_usuario` en `ejercicio_state.json` sin aprobación humana explícita — **en
+  ninguno de los dos** `ejercicio_state.json` (raíz y `cloze/`).
+- Tratar la variante CLOZE como reemplazo de la SCHOICE, o factorizar el pool común a un archivo
+  compartido (particularidad 14).
+- Unificar el `fmt()` de las dos variantes (particularidad 15): rompe los gaps `num` del CLOZE.
+- Restaurar en la Solution del CLOZE la lista ordenada de la Parte 5, o poner `exshuffle: FALSE`
+  para «arreglar» el orden (particularidad 16): lo segundo dispara `ERR_C4` bloqueante.
+- Tocar el pool sin volver a correr `V10`, del que depende que la Parte 3 tenga respuesta única
+  (particularidad 17).
+- Reportar el N/A de NOPS en el CLOZE como un fallo, o atribuirlo a los gaps `num`
+  (particularidad 18).
+- Introducir U+2212 (`−`) o cualquier no-ASCII exótico en `descripcion_corta` (particularidad 19).
 
 ---
 
@@ -246,10 +339,12 @@ avisan) si cualquiera de las tres cifras regresa.
 - [`../HANDOFF.md`](../HANDOFF.md) — reanudación
 - [`../README.md`](../README.md) — entrada del subproyecto
 - [`rules/permutaciones-parametricas.md`](rules/permutaciones-parametricas.md) — contrato del pool
-- [`../docs/BLUEPRINT.md`](../docs/BLUEPRINT.md) — arquitectura y decisiones D1/D2/D3
+- [`../docs/BLUEPRINT.md`](../docs/BLUEPRINT.md) — arquitectura, decisiones D1-D6 y §7 (variante CLOZE)
+- [`../cloze/verificar_render.R`](../cloze/verificar_render.R) — verificador de la variante CLOZE (V1-V11)
 - [`../docs/SYLLABUS.md`](../docs/SYLLABUS.md) · [`../docs/ROADMAP.md`](../docs/ROADMAP.md) · [`../docs/BACKLOG.md`](../docs/BACKLOG.md)
 
 ---
 
-**Versión**: 2.0 (particularidad 13: decisión D4 — pool de 7 + I-7 que cierra el hallazgo H1)
+**Versión**: 3.0 (variante CLOZE en `cloze/`: particularidades 14-19, decisiones D5 y D6,
+invariantes C-1..C-3)
 **Fecha**: 2026-07-30

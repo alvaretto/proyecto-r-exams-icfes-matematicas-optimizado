@@ -140,9 +140,38 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.18.0 (Error 27 + pool de errores en orquestadores + subproyecto permutaciones-pescadores-venia-n4)
-**Fecha**: 2026-07-29
+**Versión**: 3.19.0 (variante CLOZE de permutaciones + Incidentes Q/R/O + V6/V7 CLOZE + tres correcciones de deriva en los orquestadores)
+**Fecha**: 2026-07-30
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.19.0 (2026-07-30)
+- **NUEVA VARIANTE CLOZE**: `permutaciones-pescadores-venia-n4/cloze/` — 6 partes Progressive
+  Disclosure (`schoice|num|schoice|num|mchoice|schoice`) sobre el mismo contrato paramétrico que su
+  SCHOICE hermano (I-1..I-7 + instancia canónica), más tres invariantes propias **C-1..C-3**.
+  Verificador propio `cloze/verificar_render.R` (**V1-V11**). Verificado: V1-V11 verde, 300/300
+  versiones únicas, coherencia APROBADO, diversidad exit 0, ortografía limpia, y **prueba de
+  mutación** que confirma que V5 detecta una clave falsa y V11 detecta la desincronización de orden.
+- **CORRECCIÓN FACTUAL — Incidente E del `orquestador-cloze`**: decía que el N/A de NOPS era
+  «esperado **con gaps num/string**» y que un CLOZE 100 % schoice/mchoice **sí** debía renderizar
+  NOPS. **Era falso.** `exams2nops()` rechaza **cualquier `extype: cloze`** antes de mirar
+  `exclozetype` (verificado en el código de `exams` 2.4.2). Un orquestador que siguiera la versión
+  vieja habría marcado como error real un rechazo esperado. La restricción **no está documentada
+  oficialmente** por R/exams (consultado 2026-07-30).
+- **CORRECCIÓN DE DERIVA — V4 del `orquestador-cloze`**: exigía «mínimo 4 partes» cuando el estándar
+  del repositorio subió a **6** el 2026-06-04. La subida se había aplicado a los skills pero no a
+  esta validación, así que el orquestador habría aprobado un CLOZE que el estándar rechaza.
+- **NUEVO INCIDENTE Q** (`orquestador-cloze`): la **prosa** de la Solution enumera opciones en orden
+  y `exshuffle` la desincroniza. Modo de fallo **vecino a la regla #19 pero distinto**: la #19
+  prohíbe citar la **letra**; esto es enumerar en un **orden** que R/exams cambia después. Medido
+  sobre el HTML. Fix: la prosa agrupa por categoría, nunca reproduce la lista. **Nueva validación
+  V6** (empareja veredictos **por contenido**, no por posición).
+- **NUEVO INCIDENTE R / O** (`orquestador-cloze` y `orquestador-schoice`): *un campo que no se emite
+  no está probado*. `descripcion_corta` era dato muerto en el SCHOICE y contenía **U+2212**, que
+  rompe LaTeX; explotó al crear la variante CLOZE, que sí lo emite. Comprobación cableada en los
+  pre-flight de ambos orquestadores.
+- **NUEVA VALIDACIÓN V7** (`orquestador-cloze`): unicidad **ampliada** cuando una parte ofrece
+  opciones tomadas de fuera del conjunto ya mostrado. La unicidad habitual no lo cubre porque solo
+  mira los elementos seleccionados.
 
 ### Cambios v3.18.0 (2026-07-29)
 - **NUEVO PATRÓN DE ERROR 27**: pool de errores conceptuales del mismo tamaño que el número de distractores. Verde en todo el arsenal y aun así el tipo de error nunca varía entre versiones. Documentado en `patrones-errores-conocidos.md`.

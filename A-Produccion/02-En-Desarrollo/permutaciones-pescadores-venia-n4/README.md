@@ -1,9 +1,14 @@
-# Permutaciones de los pescadores en la venia final (SCHOICE metacognitivo, opciones de texto)
+# Permutaciones de los pescadores en la venia final (SCHOICE + CLOZE metacognitivos, opciones de texto)
 
 > Documento de entrada del subproyecto. Para el estado detallado de trabajo (objetivos,
 > decisiones, hallazgos abiertos, riesgos) ver **[`HANDOFF.md`](HANDOFF.md)** — es la fuente
-> principal, léelo primero si vas a retomar el desarrollo. *(Pendiente de escribir en esta
-> sesión — lo redacta otro agente; el enlace queda listo desde ya.)*
+> principal, léelo primero si vas a retomar el desarrollo.
+
+> **Dos variantes conviven en este subproyecto.** La raíz contiene el **SCHOICE**, fiel verbatim
+> al ítem oficial `MAT-2026-1-004` en una sola pregunta (instancia canónica). El subdirectorio
+> [`cloze/`](cloze/) contiene una variante **CLOZE** de 6 partes Progressive Disclosure que
+> descompone el mismo razonamiento en pasos formativos — **no sustituye** a la SCHOICE, la
+> complementa. Ver [«Variante CLOZE»](#variante-cloze-cloze) más abajo.
 
 ## Qué es este ejercicio
 
@@ -17,17 +22,22 @@ A diferencia de sus dos hermanos del repositorio (`desplazamiento-avion-aeropuer
 gráficas, y `plano-cartesiano-barco-n2`, con opciones de texto pero una figura compartida), este
 ejercicio **no tiene ninguna figura** (Flujo B = `false`): las cuatro opciones son valores
 numéricos (el factorial de `n` y tres distractores conceptuales, elegidos por versión de un **pool
-de cinco**) y el enunciado pide contar de cuántas formas pueden ubicarse `n` pescadores en fila
+de siete**) y el enunciado pide contar de cuántas formas pueden ubicarse `n` pescadores en fila
 para una venia. El ítem no evalúa aritmética compleja — evalúa si el estudiante reconoce que el
 conteo es **sin reemplazo** (una permutación, `n!`) y no lo confunde con una variación **con**
 reemplazo, un producto truncado, el simple cardinal del conjunto, una permutación circular o el
 principio aditivo. Ver el detalle pedagógico completo en [`docs/SYLLABUS.md`](docs/SYLLABUS.md).
 
-- **Archivo fuente**: `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd`
-  (585 líneas, 4 chunks R + 1 guard LaTeX — ver [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md))
-- **Estado**: `02-En-Desarrollo/` — **aprobado y listo para aula** (11/11 pasos; aprobación humana
-  del 2026-07-30). Pendiente la evidencia de Nivel 3 para `03-En-Produccion/`; ver
-  [`docs/ROADMAP.md`](docs/ROADMAP.md)
+- **Archivo fuente (SCHOICE)**: `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd`
+  (601 líneas, 4 chunks R + 1 guard LaTeX — ver [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md))
+- **Estado (SCHOICE)**: `02-En-Desarrollo/` — **aprobado y listo para aula** (11/11 pasos;
+  aprobación humana del 2026-07-30). Pendiente la evidencia de Nivel 3 para `03-En-Produccion/`;
+  ver [`docs/ROADMAP.md`](docs/ROADMAP.md)
+- **Archivo fuente (CLOZE)**: `cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd`
+  (971 líneas, 9 chunks R + 1 guard LaTeX — ver [«Variante CLOZE»](#variante-cloze-cloze) y
+  [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §7)
+- **Estado (CLOZE)**: `cloze/` — **10/11 pasos** (`cloze/ejercicio_state.json`); falta únicamente
+  `aprobacion_usuario`, que es humano (OE12 en [`docs/ROADMAP.md`](docs/ROADMAP.md))
 - **Arquitectura técnica**: [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md)
 - **Trabajo pendiente priorizado**: [`docs/BACKLOG.md`](docs/BACKLOG.md)
 
@@ -42,8 +52,9 @@ principio aditivo. Ver el detalle pedagógico completo en [`docs/SYLLABUS.md`](d
 > `desplazamiento-avion-aeropuerto` lo intentó y lo midió: 5 formatos renderizaban bien, pero el
 > validador falló **40/40 semillas** y hubo que revertirlo — el mismo precedente que documenta
 > `plano-cartesiano-barco-n2` en su propio README. Detalle en
-> [`docs/BACKLOG.md`](docs/BACKLOG.md) (P1.1) y en `.claude/CLAUDE.md` (pendiente de escribir en
-> esta sesión).
+> [`docs/BACKLOG.md`](docs/BACKLOG.md) (P1.1) y en `.claude/CLAUDE.md`. La misma restricción
+> aplica al chunk `data_generation` de la variante CLOZE (`cloze/`), que declara la misma
+> auto-contención en su propio comentario de cabecera.
 
 ## Cómo verificar
 
@@ -109,6 +120,78 @@ automáticamente las FASES 2A-2N de validación (matemática, preview visual, le
 guard de tablas, diversidad estática, etc.) — ver `.claude/rules/ciclo-validacion.md` en la raíz
 del repositorio.
 
+## Variante CLOZE (`cloze/`)
+
+El subdirectorio [`cloze/`](cloze/) contiene una **segunda variante** del mismo ítem: un CLOZE de
+**6 partes** Progressive Disclosure, para uso formativo en aula — **no sustituye** a la SCHOICE de
+la raíz, que mantiene la fidelidad verbatim al ítem oficial en una sola pregunta. Nace el mismo día
+(2026-07-30), reutilizando **íntegro** el contrato paramétrico del SCHOICE (`N_POOL`, clave `n!`,
+pool de 7 errores, invariantes I-1..I-7 e instancia canónica) y el patrón de subdirectorio del
+hermano [`Rango-Colesterol-Pacientes/Cloze/`](../../01-En-PreDesarrollo/Rango-Colesterol-Pacientes/Cloze/),
+que ya convive así con su SCHOICE. Arquitectura completa en
+[`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §7.
+
+- **Archivo fuente**: `cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd`
+  (971 líneas, 9 chunks R — `data_generation`, `enunciado`, `parte2`, `parte3`, `parte4`, `parte6`,
+  `answerlist_q`, `solucion`, `answerlist_s` — + 1 guard LaTeX)
+- **Verificador propio**: `cloze/verificar_render.R` (587 líneas, chequeos `V1`-`V11`)
+- **Estado**: `cloze/ejercicio_state.json` — 10/11 pasos; falta
+  `aprobacion_usuario` (humano)
+
+### Las 6 partes
+
+`exclozetype: schoice|num|schoice|num|mchoice|schoice`, `exshuffle: TRUE`, `extol: 0|0|0|0|0|0`:
+
+| Parte | Tipo | Qué pide |
+|---|---|---|
+| 1 | `schoice` | La pregunta del ítem oficial: clave `n!` + 3 distractores del pool |
+| 2 | `num` | Cuántos pescadores quedan disponibles para el segundo lugar → `n-1` |
+| 3 | `schoice` | Identificar, entre 4 descripciones, el error que produce un valor dado (los 3 mostrados en la Parte 1 + 1 error del pool que NO se mostró) |
+| 4 | `num` | Conteo **con** repetición: códigos de `n` cifras con dígitos de `{1..n}` repetibles → `n^n` — el ítem espejo `MAT-2026-1-029` convertido en pregunta |
+| 5 | `mchoice` | 6 afirmaciones, de las que son verdaderas `k ∈ {2,3,4}` (varía por versión para que «siempre 3 verdaderas» no sea un atajo) |
+| 6 | `schoice` V/F | Factor de crecimiento al pasar de `n` a `n+1` elementos |
+
+El Answerlist del enunciado tiene **16** ítems (4+4+6+2, solo los gaps de elección) y el de la
+Solution tiene **18** (+1 por cada uno de los 2 gaps `num` — Partes 2 y 4). Es el contrato normal
+de R/exams para CLOZE con gaps mixtos, no un descuadre — ver
+[`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §7.3 (invariante C-3).
+
+### NOPS es N/A — no un formato pendiente
+
+`exams2nops()` rechaza **cualquier** ejercicio con `extype: cloze`, sin importar los tipos de gap
+que use — verificado en el código fuente de `exams` 2.4.2 (`wrong_type <- ufile[utype == "cloze"]`,
+consultado 2026-07-30; la documentación oficial no lo declara explícitamente en prosa, ver
+[`docs/BACKLOG.md`](docs/BACKLOG.md) P2.3). Los formatos aplicables a esta variante son **HTML,
+PDF, DOCX y Moodle**, no los 4 formatos canónicos que sí aplican a la SCHOICE.
+
+### Cómo verificar la variante CLOZE
+
+```bash
+cd cloze/
+Rscript verificar_render.R
+# → V1-V11 todo verde: V5 12/12 versiones con Parte1 = n!, Parte2 = n-1, Parte4 = n^n;
+#   V6 105/105 ternas (93 legales); V9 240/240; V10 los 8 valores por n distintos dos a dos;
+#   V11 6/6 afirmaciones coherentes
+
+cd ..
+Rscript ../../../.claude/scripts/validar_coherencia_matematica.R \
+  cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd
+# → APROBADO, 0 errores
+
+Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R \
+  cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd --n 40
+# → exit 0 · WARN_DIV_BAJA (estructural y aceptado, igual que en la SCHOICE — 3 claves posibles)
+
+Rscript ../../../.claude/scripts/corregir_ortografia_espanol.R \
+  cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd
+# → sin errores
+```
+
+Sobre 300 evaluaciones del `data_generation`: **300/300** versiones únicas, **90 de las 93** ternas
+legales alcanzadas, reparto de `n` 90/113/97 y **12** instancias canónicas. La instancia canónica
+(contexto 1, `n = 4`) reproduce `MAT-2026-1-004` **verbatim en la Parte 1**, con sus cuatro
+opciones oficiales {24, 64, 16, 4}.
+
 ## Exportación institucional
 
 El subproyecto ya tiene los scripts `SemilleroUnico_v2.R`, `SemilleroMoodle_v2.R`,
@@ -140,21 +223,29 @@ permutaciones-pescadores-venia-n4/
 ├── HANDOFF.md                     # Documento de reanudación — fuente principal
 ├── docs/
 │   ├── SYLLABUS.md                # Qué enseña/evalúa el ítem
-│   ├── ROADMAP.md                 # Hitos y objetivos específicos (OE1-OE11)
+│   ├── ROADMAP.md                 # Hitos y objetivos específicos (OE1-OE12)
 │   ├── BACKLOG.md                 # Pendientes priorizados
-│   └── BLUEPRINT.md               # Arquitectura técnica (decisiones D1-D4, invariantes)
+│   └── BLUEPRINT.md               # Arquitectura técnica (decisiones D1-D6, invariantes)
 ├── .claude/
 │   ├── CLAUDE.md                  # 13 particularidades operativas
 │   └── rules/
 │       └── permutaciones-parametricas.md  # Contrato del pool n! e invariantes I-1..I-7
-├── permutaciones_pescadores_..._n4_schoice_v1.Rmd  # FUENTE — auto-contenido, 585 líneas,
-│                                  #   4 chunks R (data_generation, question_body, answerlist_q,
-│                                  #   solucion) + 1 guard LaTeX
-├── ejercicio_state.json           # Estado del workflow (ver nota de sincronización en ROADMAP)
-├── verificar_render.R             # FUENTE — verificación rápida (V1-V9)
+├── permutaciones_pescadores_..._n4_schoice_v1.Rmd  # FUENTE (SCHOICE) — auto-contenido, 601
+│                                  #   líneas, 4 chunks R (data_generation, question_body,
+│                                  #   answerlist_q, solucion) + 1 guard LaTeX
+├── ejercicio_state.json           # Estado del workflow SCHOICE (ver nota de sincronización en ROADMAP)
+├── verificar_render.R             # FUENTE (SCHOICE) — verificación rápida (V1-V9)
+├── cloze/                         # Variante CLOZE — no sustituye a la SCHOICE, la complementa
+│   ├── permutaciones_pescadores_..._n4_cloze_v1.Rmd  # FUENTE — 971 líneas, 9 chunks R
+│   │                              #   (data_generation, enunciado, parte2, parte3, parte4,
+│   │                              #   parte6, answerlist_q, solucion, answerlist_s) + 1 guard
+│   ├── ejercicio_state.json       # Estado del workflow CLOZE — 10/11 pasos
+│   ├── verificar_render.R         # FUENTE — verificación rápida (V1-V11), 587 líneas
+│   └── verif_render/              # DERIVADO — salidas de verificar_render.R (ignorado)
 ├── SemilleroUnico_v2.R            # FUENTE — exportación institucional: 1 versión con membrete
-├── SemilleroMoodle_v2.R           # FUENTE — exportación institucional: banco Moodle (300 copias)
-├── SemilleroCloze.R               # FUENTE — variante CLOZE de la exportación (heredada)
+├── SemilleroMoodle_v2.R           # FUENTE — exportación institucional: banco Moodle (100 copias)
+├── SemilleroCloze.R               # FUENTE — exportación institucional heredada del hermano;
+│                                  #   genérica y sin adaptar, distinta del subdirectorio `cloze/`
 ├── pcielo.tex                     # FUENTE — plantilla LaTeX institucional (con solución)
 ├── pcielo_nosol.tex               # FUENTE — plantilla LaTeX institucional (sin solución)
 ├── solpcielo.tex                  # FUENTE — plantilla LaTeX de solucionario
@@ -167,7 +258,8 @@ de la raíz del subproyecto se regeneran con `verificar_render.R` o los `Semille
 editan a mano ni se commitean como si fueran fuente, y el `.gitignore` los cubre. El `.Rmd`,
 `verificar_render.R`, los `Semillero*.R` y las plantillas `pcielo*.tex`/`solpcielo.tex` sí son fuente
 y deben trackearse. `ejercicio_state.json` es estado persistente del workflow (regla #16), no un
-derivado de render.
+derivado de render. El mismo patrón fuente/derivado aplica dentro de `cloze/`: su `.Rmd`,
+`verificar_render.R` y `ejercicio_state.json` son fuente; `cloze/verif_render/` es derivado.
 
 ## Reglas del repositorio que aplican
 
@@ -193,12 +285,16 @@ derivado de render.
   `\@ifundefined{c@none}{\newcounter{none}}{}` está presente al inicio de `Question`,
   aunque este ejercicio no usa tablas Markdown — lo aplican los skills y orquestadores de
   generación como estándar.
-- `../../../.claude/rules/familias-soluciones-rmd.md` — regla #21: usa la Familia 1 (`pick_int()`,
-  `pick_int()`) y la Familia 5 (`safe_sample()`), declaradas explícitamente en el comentario de
-  cabecera del chunk. A diferencia del hermano `plano-cartesiano-barco-n2`, ninguno de los
-  pools de este ejercicio (`N_POOL`, contextos, reflexiones) colapsa hoy a longitud 1 — `safe_sample()`
-  se usa aquí de forma defensiva/consistente con el patrón del repo, no porque el caso límite se
-  dispare actualmente.
+- `../../../.claude/rules/familias-soluciones-rmd.md` — regla #21: el SCHOICE **define**
+  `pick_int()` en el comentario de cabecera del chunk, pero no lo invoca en ningún otro punto del
+  archivo — queda como código muerto (ver [`docs/BACKLOG.md`](docs/BACKLOG.md) P2.2, decisión
+  pendiente). La Familia 1 se cumple por la vía que importa: ningún bucle de reintento — la terna
+  de errores se elige enumerando el espacio legal (`utils::combn`) y sorteando un índice con
+  `safe_sample()` (Familia 5). La variante CLOZE (`cloze/`) directamente **no define** `pick_int()`,
+  por la misma razón declarada en su propio comentario de cabecera. A diferencia del hermano
+  `plano-cartesiano-barco-n2`, ninguno de los pools de este ejercicio (`N_POOL`, contextos,
+  reflexiones) colapsa hoy a longitud 1 — `safe_sample()` se usa aquí de forma
+  defensiva/consistente con el patrón del repo, no porque el caso límite se dispare actualmente.
 - `../../../.claude/rules/diversidad-sustantiva.md` — regla #22: `n` se aleatoriza con
   `safe_sample(N_POOL, 1L)`, nunca es un literal fijo. El espacio de respuestas
   correctas distintas sigue siendo **3** (`n ∈ {4,5,6}` → claves 24/120/720) — los distractores
@@ -213,16 +309,21 @@ derivado de render.
 
 - [HANDOFF.md](HANDOFF.md) — documento de reanudación (fuente principal)
 - [docs/SYLLABUS.md](docs/SYLLABUS.md) — qué enseña y evalúa
-- [docs/ROADMAP.md](docs/ROADMAP.md) — hitos y objetivos específicos (OE1-OE11)
+- [docs/ROADMAP.md](docs/ROADMAP.md) — hitos y objetivos específicos (OE1-OE12)
 - [docs/BACKLOG.md](docs/BACKLOG.md) — pendientes priorizados
-- [docs/BLUEPRINT.md](docs/BLUEPRINT.md) — arquitectura técnica
+- [docs/BLUEPRINT.md](docs/BLUEPRINT.md) — arquitectura técnica (SCHOICE en §1-6, variante CLOZE
+  en §7)
 - [.claude/CLAUDE.md](.claude/CLAUDE.md) — índice local: 13 particularidades operativas
 - [.claude/rules/permutaciones-parametricas.md](.claude/rules/permutaciones-parametricas.md) —
   contrato local: la clave `n!`, el pool de siete errores conceptuales y las invariantes I-1..I-7
+- [cloze/](cloze/) — variante CLOZE de 6 partes (no sustituye a la SCHOICE; ver
+  [«Variante CLOZE»](#variante-cloze-cloze) arriba)
 - `../../../.claude/rules/` — reglas obligatorias del repositorio (índice en
   `../../../.claude/CLAUDE.md`)
 
 ---
 
-**Versión**: 2.0 (pool de 7 e invariante I-7 tras la decisión D4; exportación institucional presente)
+**Versión**: 3.0 (documentada la variante CLOZE en `cloze/`; corregida deriva de documentación:
+pool «cinco» → siete, 585 → 601 líneas, HANDOFF.md y `.claude/CLAUDE.md` ya existen, banco Moodle
+300 → 100 copias, duplicado de `pick_int()` en la regla #21 corregido)
 **Fecha**: 2026-07-30

@@ -1,16 +1,23 @@
 # Blueprint — Permutaciones de los pescadores en la venia final
 
-> Arquitectura técnica del ejercicio. Para el encuadre pedagógico ver
+> Arquitectura técnica de la familia. Para el encuadre pedagógico ver
 > [`SYLLABUS.md`](SYLLABUS.md); para el estado de trabajo ver [`../HANDOFF.md`](../HANDOFF.md).
 
-| Campo | Valor |
-|---|---|
-| **Archivo fuente** | `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd` |
-| **Líneas** | 585 (verificado con `wc -l`, 2026-07-30 — 405 → 481 tras la auditoría adversarial, → 585 tras la decisión D4) |
-| **Chunks R** | 4 (`data_generation`, `question_body`, `answerlist_q`, `solucion`) + 1 guard LaTeX |
-| **Lenguaje gráfico** | Ninguno — Flujo B = `false`, el ejercicio no tiene figura |
-| **Tipo** | SCHOICE, opciones de **texto** (valores numéricos), sin imagen |
-| **Auto-contenido** | **Sí, obligatorio** (ver §5, invariante I-8) |
+El subproyecto contiene **dos variantes** del mismo ítem, que comparten el contrato paramétrico
+(`N_POOL`, clave `n!`, pool de 7 errores, invariantes I-1..I-7 y la instancia canónica) y difieren
+solo en la forma de interrogar. La arquitectura común está en §1-§5; lo propio de la variante
+CLOZE, en **§7**.
+
+| Campo | SCHOICE (raíz) | CLOZE (`cloze/`) |
+|---|---|---|
+| **Archivo fuente** | `permutaciones_pescadores_..._n4_schoice_v1.Rmd` | `cloze/permutaciones_pescadores_..._n4_cloze_v1.Rmd` |
+| **Líneas** | 601 (`wc -l`, 2026-07-30) | 971 (`wc -l`, 2026-07-30) |
+| **Chunks R** | 4 (`data_generation`, `question_body`, `answerlist_q`, `solucion`) + 1 guard LaTeX | 9 (`data_generation`, `enunciado`, `parte2`, `parte3`, `parte4`, `parte6`, `answerlist_q`, `solucion`, `answerlist_s`) + 1 guard LaTeX |
+| **Verificador** | `verificar_render.R` (V1–V9) | `cloze/verificar_render.R` (V1–V11) |
+| **Formatos** | HTML, PDF, DOCX, **NOPS**, Moodle | HTML, PDF, DOCX, Moodle — **NOPS es N/A** (§7.5) |
+| **Lenguaje gráfico** | Ninguno — Flujo B = `false`, no hay figura | Ninguno — ídem |
+| **Tipo** | SCHOICE, 1 pregunta, opciones de texto | CLOZE, 6 partes Progressive Disclosure |
+| **Auto-contenido** | **Sí, obligatorio** (ver §5, invariante I-8) | **Sí, obligatorio** (ídem) |
 
 ---
 
@@ -71,13 +78,19 @@ mismas cuatro fórmulas (`n!`, `n^(n-1)`, `n²`, `n`) que produce el `.Rmd`.
 
 | `n` | `n!` | `n^(n-1)` | `n²` | `n` | Opciones únicas | Máx/clave | Veredicto |
 |---|---|---|---|---|---|---|---|
-| 2 | 2 | 4 | 2 | 2 | 2,0x | Colisión doble (`n! == n^(n-1)`) |
-| 6 | 9 | 9 | 3 | 3 | 1,5x | Colisión `n^(n-1) == n²` |
+| 2 | 2 | 2 | 4 | 2 | 2 | 2,0x | Colisión doble (`n! == n^(n-1)`) |
+| 3 | 6 | 9 | 9 | 3 | 3 | 1,5x | Colisión `n^(n-1) == n²` |
 | **4** | **24** | 64 | 16 | 4 | **4** | 2,7x | **OK** |
 | **5** | **120** | 625 | 25 | 5 | **4** | 5,2x | **OK** |
 | **6** | **720** | 7776 | 36 | 6 | **4** | 10,8x | **OK** |
-| 5040 | 117649 | 49 | 7 | 4 | 23,3x | Outlier de magnitud |
-| 40320 | 2097152 | 64 | 8 | 4 | 52,0x | Outlier de magnitud |
+| 7 | 5040 | 117649 | 49 | 7 | 4 | 23,3x | Outlier de magnitud |
+| 8 | 40320 | 2097152 | 64 | 8 | 4 | 52,0x | Outlier de magnitud |
+
+> **Corrección de formato (2026-07-30).** Hasta hoy, cuatro de las siete filas de esta tabla
+> (`n` = 2, 3, 7, 8) **no tenían su primera celda**, así que se leían desplazadas una columna: la
+> fila de `n=3` empezaba por `| 6 |` y parecía decir «n = 6». El defecto fue reportado por `/goal`
+> el 2026-07-29 y la memoria del proyecto lo daba por corregido; no lo estaba. Las cifras se han
+> recalculado con `factorial(n)`, `n^(n-1)`, `n^2` y `n` para `n` de 2 a 8 antes de reescribirla.
 
 **Rango adoptado: `n ∈ {4, 5, 6}`**, codificado en `N_POOL <- c(4L, 5L, 6L)`. El umbral
 de plausibilidad de magnitud se fijó en **15×** (`stopifnot(max(all_vals) / correcta_val <= 15)`,
@@ -284,8 +297,11 @@ cadena, y tampoco colapsa (el alfabeto de origen tiene 36 símbolos).
 
 El contexto 1 (`.Rmd`) no es una plantilla narrativa más: es la reproducción
 **verbatim** del ítem oficial cuando `n = 4` — enunciado y pregunta idénticos carácter por
-carácter a `MAT-2026-1-004`, verificado automáticamente por `verificar_render.R` (`V7`, líneas
-167-188). El ítem espejo `MAT-2026-1-029` (mismo descriptor `D4.8`, conteo **con** repetición) se
+carácter a `MAT-2026-1-004`, verificado automáticamente por el chequeo `V7` de
+`verificar_render.R` (localízalo con `grep -n 'V7' verificar_render.R`; la versión previa de este
+documento lo citaba como «líneas 167-188», que ya no era cierto — es justo lo que prohíbe la
+particularidad 12). El ítem espejo `MAT-2026-1-029` (mismo descriptor `D4.8`, conteo **con**
+repetición) se
 usa como *Caso específico* de la Solution (§4.2 arriba) — no es un ejemplo decorativo: ancla la
 Solution a un segundo ítem oficial real y refuerza que la distinción con/sin reemplazo es el eje
 diagnóstico completo del pool de errores (ver [`SYLLABUS.md`](SYLLABUS.md) §3.1). Desde que el pool
@@ -383,6 +399,13 @@ cifras de H1 en cada corrida, `V9` comprueba la selección real sobre 240 semill
 | **I-9** (antes I-8) | No hay `set.seed()` dentro de ningún chunk | Corrompería el RNG del render y colapsaría la diversidad (regla #10) | `grep -n 'set.seed' <rmd>` → 0 coincidencias dentro de los chunks del ejercicio (los únicos `set.seed()` del subproyecto viven en `verificar_render.R` y en la suite de tests, fuera del `.Rmd`, uso estándar para reproducibilidad de la verificación) |
 | **I-10** (antes I-9) | Las **siete** `calcula()` del pool son funciones puras (sin `sample`/`runif`/`rnorm`) | Capa D de `validar_coherencia_matematica.R`: `calcula()` debe ser determinista | Los siete `calcula = function(n)` del bloque `errores_conceptuales` son puramente aritméticos sobre `n`; localizarlos con `grep -n 'calcula *= *function' <rmd>` |
 
+**Alcance (actualizado 2026-07-30).** Las diez invariantes de esta tabla rigen para **las dos
+variantes**: los `stopifnot` de I-1..I-7 están duplicados literalmente en los dos `.Rmd` porque el
+pool y el contrato son los mismos, y las meta I-8..I-10 (auto-contenido, sin `set.seed`, `calcula()`
+puras) se aplican igual a ambos. La variante CLOZE añade **tres invariantes propias, C-1..C-3**,
+descritas en §7.3; se numeran con prefijo `C` en vez de continuar la serie `I` justamente para no
+disparar otra vez la renumeración que describe la nota siguiente.
+
 **Nota de numeración (actualizada 2026-07-29).** El `.Rmd` etiqueta invariantes en sus propios
 comentarios, y esas etiquetas son la fuente de verdad: cuando colisionan con la numeración de este
 documento, se renumeran las invariantes **"meta"** de este documento (auto-contenido, sin
@@ -446,16 +469,147 @@ del `.Rmd`. Si añades una construcción, añádela aquí por su identificador, 
 
 ---
 
-## 7. Referencias cruzadas
+## 7. La variante CLOZE (`cloze/`)
+
+Añadida el 2026-07-30. Reutiliza **íntegro** el pipeline de §1 hasta `errores_info` y añade encima
+la descomposición en partes. El patrón de subdirectorio se tomó del hermano
+`01-En-PreDesarrollo/Rango-Colesterol-Pacientes/Cloze/`, que ya convive así con su SCHOICE.
+
+### 7.1 Por qué una variante y no un reemplazo
+
+La SCHOICE es la que sostiene **OE1**: reproduce el ítem oficial tal como se evalúa, en una sola
+pregunta con cuatro opciones. Descomponerlo en seis partes cambia lo que se mide —deja de ser «¿sabe
+resolverlo?» y pasa a ser «¿reconoce cada pieza del razonamiento?»—, que es útil en clase pero ya no
+es el ítem oficial. Por eso conviven: **la CLOZE no sustituye a la SCHOICE**.
+
+### 7.2 Las 6 partes (Progressive Disclosure)
+
+`exclozetype: schoice|num|schoice|num|mchoice|schoice`
+
+| Parte | Tipo | Qué pregunta | Clave | Demanda |
+|---|---|---|---|---|
+| 1 | `schoice` | La pregunta del ítem oficial | `n!` | Aplicar |
+| 2 | `num` | Cuántos quedan para el segundo lugar | `n-1` | Comprender el decrecimiento |
+| 3 | `schoice` | Qué error produce un valor dado | el error mostrado | Analizar |
+| 4 | `num` | Conteo **con** repetición: `n` cifras de `{1..n}` | `n^n` | Transferir |
+| 5 | `mchoice` | 6 afirmaciones, `k ∈ {2,3,4}` verdaderas | vector binario | Evaluar |
+| 6 | `schoice` V/F | Factor de crecimiento de `n` a `n+1` | V si el factor es `n+1` | Evaluar |
+
+Dos detalles de diseño que no son cosméticos:
+
+- **La Parte 4 es el ítem espejo `MAT-2026-1-029` convertido en pregunta.** En la SCHOICE ese ítem
+  aparecía solo como *Caso específico* de la Solution, es decir, después de responder. Aquí el
+  estudiante tiene que ejecutarlo, y el contraste `n!` vs `n^n` deja de ser una lectura para
+  convertirse en la única dimensión que separa las dos respuestas.
+- **La cuarta opción de la Parte 3 viene de un error que NO se mostró en la Parte 1.** Si las cuatro
+  descripciones fueran las de los tres distractores vistos más la correcta, el estudiante podría
+  resolverla por eliminación sin evaluar ninguna fórmula.
+
+### 7.3 Invariantes propias de la variante (C-1 a C-3)
+
+Las I-1..I-7 se heredan sin cambios. Estas tres son nuevas porque describen propiedades que la
+SCHOICE no necesitaba.
+
+| # | Invariante | Por qué | Dónde se verifica |
+|---|---|---|---|
+| **C-1** | Para cada `n ∈ N_POOL`, las 7 fórmulas del pool y `n!` dan **8 valores distintos dos a dos** | La Parte 3 muestra un valor y pide identificar su error entre 4 descripciones, **una de las cuales pertenece a un error ajeno a la terna**. Si dos fórmulas coincidieran en valor para ese `n`, esa parte tendría dos respuestas correctas — e **I-1 no lo vería**, porque solo mira la terna seleccionada | `stopifnot` en el chunk + `V10` del verificador, sobre `N_POOL` completo |
+| **C-2** | nº de `##ANSWERi##` == nº de `exclozetype` == nº de bloques de `exsolution` == nº de bloques de `extol` == 6, y los placeholders están **en orden** | Regla #14. Un `##ANSWERi##` fuera de orden es el Incidente A del orquestador CLOZE y **ningún render lo detecta**: compila igual y asocia la respuesta a la parte equivocada | `stopifnot` en el chunk (conteos) + `V8` (orden, análisis estático del `.Rmd`) |
+| **C-3** | Answerlist del enunciado = **16** ítems (solo gaps de elección: 4+4+6+2); Answerlist de la Solution = **18** (+1 por cada gap `num`) | Es el contrato de R/exams. La asimetría 16 ≠ 18 es un **falso positivo recurrente** de los auditores, que la leen como descuadre | `stopifnot` en el chunk + `V8` |
+
+Sobre C-3, con precisión sobre lo que respalda cada mitad: la omisión de las entradas `num` en el
+Answerlist del **enunciado** está documentada oficialmente («the empty entries for all other `num`
+or `string`/`essay`/`file` elements can optionally be omitted», `NEWS.md` de `exams` 2.4-1). Que el
+Answerlist de la **Solution** lleve además un ítem por gap `num` **no está declarado en la
+documentación oficial** (consultado 2026-07-30): es el comportamiento observado en el render y el
+que usa el hermano `Rango-Colesterol-Pacientes/Cloze/`.
+
+### 7.4 Decisiones D5 y D6
+
+**D5 — dos divergencias deliberadas respecto del SCHOICE.**
+
+1. `fmt()` **no agrupa miles**. La SCHOICE escribe `7.776` al estilo del cuadernillo ICFES porque
+   todas sus opciones se eligen con el ratón. Aquí hay dos gaps `num` que el estudiante **escribe**,
+   y un separador de miles convierte `46.656` en el decimal 46,656 al parsear: respuesta correcta
+   marcada como incorrecta. Una sola convención numérica en todo el ítem. **No afecta a OE1**: en la
+   instancia canónica (`n = 4`) las cuatro opciones son menores que 1000.
+2. **No se define `pick_int()`**. En la SCHOICE quedó sin ninguna invocación (código muerto). La
+   Familia 1 de la regla #21 se cumple por la vía que importa: ningún bucle de reintento.
+
+**D6 — la Solution nunca enumera la Parte 5 en su orden interno.** Medido sobre el HTML, no
+deducido: con `exshuffle: TRUE`, R/exams reordena los **dos** Answerlists con la misma permutación
+—quedan alineados entre sí— pero **no toca la prosa** de la Solution, que el `.Rmd` emite con
+`cat()`. La primera versión listaba ahí las 6 afirmaciones en el orden del chunk y, tras el
+barajado, esa lista y las opciones quedaban en órdenes distintos.
+
+Es un modo de fallo **vecino** al de la regla #19 pero distinto: la regla #19 prohíbe identificar
+una opción por su **letra**; aquí nadie cita letras — el defecto es enumerar en un **orden** que
+R/exams cambia después.
+
+Se descartó la salida fácil (`exshuffle: FALSE`, que alinearía los tres bloques): la aleatorización
+interna la dan `perm`/`perm3`/`perm5`, pero `validar_coherencia_matematica.R` marca **`ERR_C4`**
+—bloqueante— porque ICFES exige mezcla, y pedir una excepción para conservar una lista **redundante**
+es mal negocio: el Answerlist de la Solution ya da el veredicto de cada afirmación. La regla que
+queda: la prosa puede **agrupar** por valor de verdad (no afirma nada sobre posiciones), nunca
+reproducir la lista en su orden interno.
+
+### 7.5 NOPS es N/A, y no por los gaps `num`
+
+`exams2nops()` **rechaza cualquier `extype: cloze`**, con independencia de los tipos de gap.
+Verificado en el código de `exams` 2.4.2, que antes de mirar `exclozetype` hace:
+
+```r
+utype      <- sapply(ufile, function(n) x[[n]]$type)
+wrong_type <- ufile[utype == "cloze"]
+if (length(wrong_type) > 0L) stop(paste("the following exercises are cloze exercises:", ...))
+```
+
+La documentación oficial **no lo declara**: `?exams2nops` enumera los tipos soportados
+(`schoice`, `mchoice`, y soporte limitado de `string`) y omite `cloze` sin decir que no lo admite;
+el tutorial `/tutorials/exams2nops/` no menciona la palabra. Es una omisión documental, no una
+prohibición escrita (consultado 2026-07-30). `V4` comprueba que el motivo del rechazo **sigue siendo
+ese** y no otro: si algún día `exams` admitiera cloze en NOPS, o si fallara por otra causa, lo dirá.
+
+### 7.6 Evidencia medida (2026-07-30)
+
+| Verificación | Resultado |
+|---|---|
+| `cloze/verificar_render.R` | **V1–V11 todo verde** |
+| V5 — Moodle | **12/12** versiones: 6 gaps en orden y con su tipo; Parte 1 = `n!`, Parte 2 = `n-1`, Parte 4 = `n^n` |
+| V6 — espacio | **105/105** ternas; 93 legales; rango de la clave 1/2/3; mitad baja 41,9 %; «elegir el mayor» 0,0 % |
+| V9 — selección | **240/240** versiones; 84 ternas distintas |
+| V10 — C-1 | 8 valores por `n` distintos dos a dos en `n = 4/5/6` |
+| V11 — D6 | 6/6 afirmaciones con el mismo veredicto en prosa y Answerlist |
+| `validar_coherencia_matematica.R` | **APROBADO, 0 errores** |
+| `validar_diversidad_sustantiva.R --n 40` | exit 0 · `WARN_DIV_BAJA` (estructural, §5 de `BACKLOG.md`) |
+| Ortografía | sin errores |
+| Diversidad (300 evaluaciones) | **300/300 versiones únicas** · 90 de 93 ternas legales · 12 instancias canónicas · reparto de `n` 90/113/97 |
+
+**Prueba de mutación del verificador** (se desactivaron las guardas internas para que el mutante
+llegue a renderizar):
+
+| Mutación | Resultado |
+|---|---|
+| `exshuffle: FALSE` → `TRUE` sin agrupar la prosa | **V11 falla**; V5 sigue verde (la clave no cambia) — el guard mide lo que dice medir |
+| Clave falsa en la Parte 1 + I-5 y el `stopifnot` del alias desactivados | **V5 falla**: 8 incoherencias en 12/12 versiones |
+
+La segunda mutación tuvo que repetirse: al primer intento el chunk abortaba por un `stopifnot`
+**distinto** del que se pretendía neutralizar (el del bloque de alias), de modo que el mutante no
+llegaba a probar V5. Es la utilidad concreta de la prueba de mutación: descubrió que la clave está
+protegida por **dos** guardas independientes, no una.
+
+---
+
+## 8. Referencias cruzadas
 
 - [`../README.md`](../README.md) — entrada del subproyecto
-- [`../HANDOFF.md`](../HANDOFF.md) — estado de trabajo y cómo retomar (pendiente)
+- [`../HANDOFF.md`](../HANDOFF.md) — estado de trabajo y cómo retomar
 - [`SYLLABUS.md`](SYLLABUS.md) — encuadre pedagógico y pool de errores
 - [`BACKLOG.md`](BACKLOG.md) — pendientes priorizados
 - [`ROADMAP.md`](ROADMAP.md) — hitos y objetivos específicos
-- `../.claude/CLAUDE.md` — particularidades operativas para agentes (pendiente)
-- `../.claude/rules/permutaciones-parametricas.md` — contrato local del pool `n!` y del pool de
-  cinco errores conceptuales (pendiente, lo escribe otro agente)
+- [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) — particularidades operativas para agentes
+- [`../.claude/rules/permutaciones-parametricas.md`](../.claude/rules/permutaciones-parametricas.md)
+  — contrato local: la clave `n!`, el pool de **siete** errores conceptuales y las invariantes
+  I-1..I-7 (más las C-1..C-3 propias de la variante CLOZE, §7.3)
 - Reglas del repo raíz: `#1` `ejercicios-metacognitivos.md` · `#8`/`#10` `codigo-rmd.md` ·
   `#11` `contextos-narrativos-creativos.md` · `#19` `solution-letter-independence.md` ·
   `#20` `markdown-tablas-pandoc.md` · `#21` `familias-soluciones-rmd.md` ·
@@ -464,5 +618,8 @@ del `.Rmd`. Si añades una construcción, añádela aquí por su identificador, 
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-07-29
+**Versión**: 3.0 (variante CLOZE en §7, con las invariantes C-1..C-3 y las decisiones D5 y D6;
+tabla de §2 reconstruida —cuatro filas estaban descuadradas—; recuento de líneas y referencias
+«(pendiente)» sincronizados con la realidad; la cita por número de línea de §4.7 sustituida por
+ancla)
+**Fecha**: 2026-07-30

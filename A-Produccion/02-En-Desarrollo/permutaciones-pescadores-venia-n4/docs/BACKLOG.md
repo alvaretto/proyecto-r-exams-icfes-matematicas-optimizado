@@ -98,6 +98,25 @@ versiones únicas.
 
 ---
 
+### P1.4 — Corrector ortográfico no corrige palabras en MAYÚSCULAS — 🟡 MITIGADO, no resuelto en la herramienta
+
+**Origen:** ejecución de `../../../.claude/scripts/corregir_ortografia_espanol.R` sobre archivos de
+este subproyecto (2026-07-30, durante el trabajo sobre la variante CLOZE).
+
+El script detecta correctamente palabras sin tilde en MAYÚSCULAS (p. ej. «NUMERICO», «MAS»), pero
+su modo `--fix` no las sustituye: la lógica de reemplazo asume minúsculas/capitalización estándar y
+no cubre la variante en mayúsculas. El resultado observado fue un bucle de 3 pasadas de `--fix`
+reportando siempre los mismos 2 hallazgos, sin que ninguna pasada los corrigiera.
+
+**Mitigación aplicada:** las palabras detectadas se corrigieron a mano en este subproyecto.
+
+**Falta:** reportar el defecto al mantenedor de `corregir_ortografia_espanol.R`. Igual que P1.1, es
+una herramienta compartida por todo el repositorio — el fix no le corresponde a este subproyecto.
+
+**Prioridad:** baja.
+
+---
+
 ## P2 — Diferible
 
 ### P2.1 — Scripts de exportación institucional (`Semillero*.R`, plantillas `pcielo*.tex`) — ✅ RESUELTO (2026-07-30)
@@ -210,6 +229,84 @@ constante; `V9` comprueba que la selección real se queda en el espacio legal; e
 
 ---
 
+### P2.2 — `pick_int()` es código muerto en el SCHOICE — ⬜ DECISIÓN PENDIENTE
+
+**Origen:** revisión del `.Rmd` del SCHOICE durante la sesión del 2026-07-30 (variante CLOZE).
+
+`pick_int()` se define en el chunk `data_generation` del SCHOICE
+(`permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd`) pero no se invoca en
+ningún otro punto del archivo — verificado con `grep -n "pick_int"`, que solo devuelve la línea de
+la definición. La variante CLOZE, escrita después, ya no la define.
+
+**Por qué no se corrigió de una vez:** el SCHOICE es un ejercicio **aprobado** (`ejercicio_state.json`
+11/11, `aprobacion_usuario.completado = true`). Eliminar una función, aunque esté sin uso, toca un
+`.Rmd` ya aprobado y exige re-ejecutar el ciclo completo de verificación (`verificar_render.R`,
+`validar_coherencia_matematica.R`, `validar_diversidad_sustantiva.R`, ortografía) para confirmar que
+el cambio no tiene efectos colaterales — no es un cambio cosmético gratuito.
+
+**Opciones:**
+
+1. Eliminar `pick_int()` del SCHOICE y re-verificar el ciclo completo.
+2. Dejarla documentada como código muerto conocido (este ítem) sin tocar el archivo aprobado.
+
+**Prioridad:** baja.
+
+---
+
+### P2.3 — Restricción `exams2nops()` + `extype: cloze` no está documentada oficialmente — 🔵 INFORMATIVO
+
+**Origen:** verificación del código fuente del paquete `exams` 2.4.2 durante el diseño del
+verificador de la variante CLOZE (2026-07-30): `exams2nops()` rechaza cualquier ejercicio con
+`extype: cloze` — de ahí que NOPS sea **N/A** para el CLOZE (ver OE7 en [`ROADMAP.md`](ROADMAP.md)
+§2 y [`BLUEPRINT.md`](BLUEPRINT.md)).
+
+Esa restricción consta en el código fuente de `exams` pero no aparece mencionada en la ayuda de la
+función (`?exams2nops`) ni en los tutoriales oficiales de R-exams consultados el 2026-07-30. No es
+un defecto de este subproyecto ni requiere ninguna acción sobre el `.Rmd`; es una discrepancia entre
+comportamiento real y documentación de una dependencia externa.
+
+**Falta:** considerar reportarlo como issue upstream al proyecto `exams` (CRAN/GitHub). Fuera del
+alcance de este subproyecto.
+
+**Prioridad:** baja.
+
+---
+
+### P2.4 — URL del tutorial de Moodle Quiz de R-exams devuelve 404 — 🔵 INFORMATIVO
+
+**Origen:** verificación de referencias externas durante la sesión del 2026-07-30.
+`http://www.R-exams.org/tutorials/moodle_quiz/` devuelve 404. El tutorial vivo equivalente es
+`/tutorials/elearning/`.
+
+Ningún documento de este subproyecto cita esa URL (`grep -rn "moodle_quiz"` sobre `docs/`, `.claude/`
+y los `.Rmd` no devuelve coincidencias), así que no hay nada que corregir aquí ahora. Se deja
+registrado por si algún documento futuro del subproyecto (o de otro subproyecto del repositorio)
+la cita por error.
+
+**Prioridad:** baja.
+
+---
+
+### P2.5 — Patrón: un campo sin emitir no está probado — ✅ RESUELTO (2026-07-30), patrón para recordar
+
+**Origen:** `descripcion_corta` de ambos `.Rmd` (SCHOICE y CLOZE) contenía el signo menos tipográfico
+U+2212 (`−`, distinto del guion ASCII `-`) en la fórmula de uno de los errores del pool. El campo no
+se emitía en ningún chunk (`Solution` usa `descripcion_larga`, no `descripcion_corta`), así que el
+carácter problemático nunca se había ejercitado en un render real — de haberse emitido, U+2212 rompe
+la compilación LaTeX (no es un carácter válido en modo matemático sin paquete que lo redefina).
+
+**Resolución:** corregido en ambos `.Rmd` el 2026-07-30, reemplazando U+2212 por el guion ASCII.
+
+**Patrón a recordar:** un campo de datos que existe en el código pero no se emite a ningún formato de
+salida no está cubierto por la validación de renderizado — puede acumular defectos invisibles hasta
+el día en que alguien lo conecte a una salida. No es exclusivo de este subproyecto; es un caso
+concreto de por qué la auditoría de código debe revisar también los campos "muertos" o no usados
+(ver P2.2, mismo subproyecto, mismo día).
+
+**Prioridad:** informativa (ya resuelto).
+
+---
+
 ## P3 — Bloqueado por evidencia externa (no técnico, no accionable por un agente)
 
 ### P3.1 — OE11 (evidencia Nivel 3 en aula) pendiente — 🟡 EN CURSO
@@ -221,8 +318,11 @@ Ver [`ROADMAP.md`](ROADMAP.md) §2-4.
   `02-En-Desarrollo/` con todas sus rutas resincronizadas.
 - **OE11 — pendiente.** Requiere aplicación del ítem con estudiantes reales de grado 10-11 y análisis
   de diagnosticidad por distractor (sobre el pool de **siete** códigos, `EST-PER-01` a `07`) — el gate
-  que la validación automática **no** puede sustituir (ver [`ROADMAP.md`](ROADMAP.md) §4). Es el único
-  objetivo abierto del subproyecto.
+  que la validación automática **no** puede sustituir (ver [`ROADMAP.md`](ROADMAP.md) §4).
+- **OE12 — 🚧 EN CURSO.** La variante CLOZE en `cloze/` tiene su propio `ejercicio_state.json` en
+  **10/11**: falta únicamente
+  `aprobacion_usuario` (humano, igual que OE10). No bloquea OE11 ni la promoción ya cumplida del
+  SCHOICE — son dos artefactos independientes del mismo subproyecto.
 
 Qué mirar cuando vuelvan los datos del aula: si algún distractor no lo elige **nadie**, no discrimina
 y conviene revisarlo; y si `EST-PER-01` (`n^(n-1)`) resulta el más elegido, coincidiría con lo que
@@ -245,8 +345,12 @@ Destino en producción ya reservado:
   (su P1.2) y del formato de este documento
 - [`../.claude/rules/permutaciones-parametricas.md`](../.claude/rules/permutaciones-parametricas.md)
   — contrato local: la clave `n!`, el pool de siete errores conceptuales y las invariantes I-1..I-7
+- `../cloze/verificar_render.R` — verificador propio de la variante CLOZE (OE12), V1-V11
 
 ---
 
-**Versión**: 2.0 (H1 y P2.1 cerrados; `copias` de Moodle corregido de 100 a 300)
+**Versión**: 3.0 (variante CLOZE: OE12 en P3.1 + referencia cruzada a su verificador; 4 ítems nuevos
+en P2 —`pick_int()` código muerto en el SCHOICE, restricción `exams2nops`+cloze no documentada, URL
+404 del tutorial Moodle Quiz de R-exams, patrón "campo sin emitir no está probado"— y P1.4
+—corrector ortográfico no corrige MAYÚSCULAS—)
 **Fecha**: 2026-07-30

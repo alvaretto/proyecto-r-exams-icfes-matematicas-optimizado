@@ -341,6 +341,33 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `permutaciones-pescadores-venia-n4` (2026-07-29), derivado de `MAT-2026-1-004`.
 
+### Incidente O — Un campo que no se emite no está probado (2026-07-30)
+
+**Síntoma**: al reutilizar el pool de errores de un ejercicio aprobado en otro ejercicio,
+`exams2pdf()` falla con `LaTeX Error: Unicode character − (U+2212)`.
+
+**Causa**: el ejercicio origen **definía** `descripcion_corta` en las siete entradas del pool pero no
+la emitía en ninguna parte — era dato muerto. Nadie había comprobado nunca que ese texto fuera
+compilable en LaTeX. El ejercicio nuevo sí lo emite y la mina explota.
+
+**Por qué me importa a mí, que hago SCHOICE**: es el lado que *deja* la mina. Un pool que solo emite
+`descripcion_larga` y `causa_raiz` deja `descripcion_corta` sin probar, y el siguiente ejercicio de la
+familia —una variante CLOZE, un `_neg_`, un ejercicio hermano— la hereda.
+
+**Tratamiento correcto**:
+- En el paso de generación, **emitir o auditar** todos los campos del pool. Si un campo no se emite
+  en ninguna parte, o lo elimino, o lo compruebo igualmente.
+- Todo texto de un pool debe ser **ASCII-seguro para LaTeX**. Peligrosos habituales: U+2212 (`−`,
+  signo menos tipográfico), U+2264/U+2265 (`≤` `≥`), U+00D7 (`×`) fuera de modo matemático. Las
+  rayas U+2014 (`—`) sí compilan.
+- Comprobación: `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>`.
+- Si el pool está duplicado en varios `.Rmd` de la misma familia (patrón obligado por la
+  auto-contención), corregirlo en **todos** para que no diverjan.
+
+**Caso real**: `permutaciones-pescadores-venia-n4` — el campo llevaba latente desde la creación del
+SCHOICE y solo explotó al crear la variante CLOZE, que sí lo emite. Ver el Incidente R del
+`orquestador-cloze`.
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:

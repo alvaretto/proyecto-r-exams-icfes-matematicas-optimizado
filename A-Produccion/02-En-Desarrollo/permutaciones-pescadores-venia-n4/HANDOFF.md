@@ -4,300 +4,313 @@
 |---|---|
 | **Ruta** | `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/` |
 | **Repo raíz** | `/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams` |
-| **Ejercicio** | `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd` |
-| **Tipo** | SCHOICE metacognitivo · opciones de TEXTO · sin figura (Flujo B = false) |
+| **Variantes** | **SCHOICE** (raíz) · **CLOZE** de 6 partes (`cloze/`) |
 | **Origen ICFES** | `MAT-2026-1-004` (ERA-2026, Sesión 1, pregunta impresa 4) |
-| **Sesión fundacional** | 2026-07-29 |
-| **Frase de reanudación** | `Continúa con el proyecto A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4` |
+| **Sesión fundacional** | 2026-07-29 · **Última sesión**: 2026-07-30 (variante CLOZE) |
+| **Frase de reanudación** | `Continúa con el proyecto permutaciones-pescadores-venia` |
 
-> Al retomar: lee **este archivo** y `ejercicio_state.json` ANTES de explorar el `.Rmd`, y después
-> [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (13 particularidades operativas) y
-> [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md)
-> (contrato de las 7 invariantes). Ahí está el porqué del código; sin eso, un agente "arregla" fixes
-> deliberados.
+> **Al retomar, en este orden**: este archivo → los **dos** `ejercicio_state.json`
+> (raíz y `cloze/`) → [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (**19** particularidades
+> operativas) → [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md)
+> (invariantes I-1..I-7 + C-1..C-3). Ahí está el porqué del código; sin eso, un agente "arregla"
+> fixes deliberados. **Solo después** abre los `.Rmd`.
+
+---
+
+## 0. Estado en una línea
+
+Las dos variantes están **técnicamente cerradas y verdes**. La SCHOICE ya tiene aprobación humana
+(2026-07-30). **La CLOZE está en 10/11: le falta exactamente un paso, el 11 — la revisión y
+aprobación humana, que un agente no puede sellar.** No hay ningún FAIL vivo ni deuda técnica
+bloqueante.
 
 ---
 
 ## 1. Objetivo general
 
-Producir y mantener un **ejercicio ICFES SCHOICE metacognitivo de Nivel 4** (competencia
+Producir y mantener una **familia de ejercicios ICFES metacognitivos de Nivel 4** (competencia
 *Formulación y ejecución*, componente *Aleatorio*, descriptor **D4.8**) sobre el conteo de
-**permutaciones lineales** de `n` elementos distintos, derivado del ítem real `MAT-2026-1-004`.
+**permutaciones lineales** de `n` elementos distintos, derivada del ítem real `MAT-2026-1-004`.
 
 El ítem **no evalúa la aritmética del factorial**: evalúa si el estudiante reconoce que al ocupar
-posiciones sucesivas el conjunto disponible **decrece**, frente a las estrategias que lo tratan
-como constante. Los distractores son errores conceptuales documentados, no ruido numérico.
+posiciones sucesivas el conjunto disponible **decrece**, frente a las estrategias que lo tratan como
+constante. Los distractores son errores conceptuales documentados, no ruido numérico.
 
-**No confundir con los hermanos.** `plano-cartesiano-barco-n2` comparte el patrón (opciones de
-texto, `exshuffle: TRUE`, ítem verbatim) pero es N2 geométrico.
-`desplazamiento-avion-aeropuerto` usa opciones **gráficas** y `exshuffle: FALSE`: su patrón **no**
-es intercambiable con éste.
+**Las dos variantes comparten el contrato paramétrico** (`n ∈ {4,5,6}`, clave `n!`, pool de 7
+errores, invariantes I-1..I-7, instancia canónica) y difieren solo en la forma de interrogar:
+
+| Variante | Rol | Por qué existe |
+|---|---|---|
+| **SCHOICE** (raíz) | 1 pregunta, 4 opciones | Sostiene **OE1**: reproduce el ítem oficial tal como se evalúa |
+| **CLOZE** (`cloze/`) | 6 partes Progressive Disclosure | Descompone el mismo razonamiento para uso formativo |
+
+**La CLOZE no sustituye a la SCHOICE.** Descomponer en seis partes cambia lo que se mide —deja de
+ser «¿sabe resolverlo?» y pasa a ser «¿reconoce cada pieza?»—, así que ya no es el ítem oficial.
+
+**No confundir con los hermanos.** `plano-cartesiano-barco-n2` comparte el patrón (opciones de texto,
+ítem verbatim) pero es N2 geométrico. `desplazamiento-avion-aeropuerto` usa opciones **gráficas**:
+su patrón **no** es intercambiable con éste.
 
 ---
 
 ## 2. Objetivos específicos
 
 Tabla completa con evidencia en [`docs/ROADMAP.md`](docs/ROADMAP.md) §2. Resumen al 2026-07-30:
-**OE1-OE9 cumplidos y verificados**; **OE10** (promoción a `02-En-Desarrollo/`) y **OE11**
-(evidencia Nivel 3 en aula) pendientes.
 
-Los OE se declararon en esta misma sesión y se persistieron en
-`~/.claude/projects/<slug>/memory/project_objetivos_permutaciones_pescadores_venia_n4.md`.
+- **OE1-OE10**: cumplidos y verificados.
+- **OE11** (evidencia Nivel 3 en aula → `03-En-Produccion/`): abierto, requiere estudiantes reales.
+- **OE12** (variante CLOZE): **en curso** — solo falta la aprobación humana.
+
+Persistidos en `~/.claude/projects/<slug>/memory/project_objetivos_permutaciones_pescadores_venia_n4.md`.
 
 ---
 
-## 3. Estado real verificado (2026-07-30)
+## 3. Estado real verificado (2026-07-30, re-ejecutado sobre la versión vigente)
 
-Todo lo de esta tabla se volvió a ejecutar el 2026-07-30 sobre la versión vigente del `.Rmd` (pool de
-7 + invariante I-7). No es evidencia heredada.
+Nada de esta tabla es evidencia heredada: todo se volvió a correr después del último cambio.
+
+### 3.1 Variante CLOZE (`cloze/`)
 
 | Verificación | Comando | Resultado |
 |---|---|---|
-| Render 4 formatos | `Rscript verificar_render.R` | HTML, PDF, DOCX, NOPS: OK |
-| Clave = `n!` en Moodle | idem, V5 | 12/12 preguntas |
-| Unicidad y magnitud | idem, V6 | **105/105 ternas** (enumeración exhaustiva del espacio), razón máx/clave 1,0×–10,8× (umbral 15×) |
-| Cierre de H1 — espacio | idem, V6 | espacio legal **93/105**; rango de la clave **1/2/3, nunca 4.º**; mitad baja **41,9 %**; «elegir el mayor» **0,0 %**; clave/mayor distractor ≤ **0,50×** |
-| Cierre de H1 — selección | idem, **V9** (nuevo) | **240/240** versiones: toda terna con ≥1 distractor > `n!`; 89 ternas distintas alcanzadas |
-| Instancia canónica verbatim | idem, V7 | contexto 1 con n=4 == `MAT-2026-1-004` |
-| Invariantes I-1..I-7 | `Rscript tests/run_one_suite.R tests/testthat/test_permutaciones_invariantes.R` | **0 fail / 0 error / 0 skip** |
-| Coherencia matemática | `validar_coherencia_matematica.R` | **APROBADO, 0 errores** (Capas A/B/C + Nivel 5A-5E). El Nivel 5B **se ejecuta de verdad** desde el code-review: antes retornaba temprano por nombres de variable y su «OK» era vacuo (probado por mutación) |
-| Diversidad sustantiva | `validar_diversidad_sustantiva.R --n 40` | exit 0 · 3 claves · `WARN_DIV_BAJA` (esperado, ver §5.2) |
-| Diversidad de render | 300 evaluaciones del `data_generation` | **298/300 versiones únicas** · 89 de 93 ternas legales · 16 instancias canónicas · reparto de `n` 105/95/100 |
+| Los 11 chequeos | `cd cloze && Rscript verificar_render.R` | **V1-V11 todo verde** |
+| Render | idem V1-V3 | HTML, PDF, DOCX OK |
+| NOPS | idem V4 | **N/A esperado** — `exams2nops()` rechaza `extype: cloze` (§5.4) |
+| Moodle | idem V5 | **12/12** versiones: 6 gaps en orden y tipo · P1 = `n!` · P2 = `n-1` · P4 = `n^n` · **P3 y P6 verificadas semánticamente** · P5 con 6 opciones y 2-4 marcas |
+| Espacio de ternas | idem V6 | **105/105**; 93 legales; rango de la clave 1/2/3; mitad baja 41,9 %; «elegir el mayor» 0,0 % |
+| Canónica verbatim | idem V7 | contexto 1 con `n=4` == `MAT-2026-1-004` (Parte 1) |
+| Estructura CLOZE | idem V8 | 6 `##ANSWERi##` en orden == `exclozetype` == `exsolution` == `extol`; answerlist **16 / 18** |
+| Selección legal | idem V9 | **240/240**; 84 ternas distintas |
+| C-1 | idem V10 | 8 valores por `n` distintos dos a dos en `n = 4/5/6` |
+| D6 | idem V11 | **6/6** afirmaciones con el mismo veredicto en prosa y Answerlist |
+| Coherencia matemática | `validar_coherencia_matematica.R` | **APROBADO, 0 errores** |
+| Diversidad sustantiva | `validar_diversidad_sustantiva.R --n 40` | exit 0 · `WARN_DIV_BAJA` (estructural, §5.5) |
+| Diversidad de render | 300 evaluaciones del `data_generation` | **300/300 versiones únicas** · 90 de 93 ternas legales · 12 canónicas · 0 fallos |
 | Ortografía | `corregir_ortografia_espanol.R` | sin errores |
-| Letter-independence (#19) | grep de `letra_correcta` / «Opción [A-D]» | 0 coincidencias |
-| Prueba de mutación de la clave | ver regla local | I-5 aborta la generación; desactivada, V5 detecta 8/8 |
 
-`ejercicio_state.json`: **11/11 pasos**. `aprobacion_usuario` completado el 2026-07-30 («Aprobado
-para llevar al aula y testear con estudiantes»), y el subproyecto se promovió a `02-En-Desarrollo/`.
+`cloze/ejercicio_state.json`: **10/11**. Falta `aprobacion_usuario`.
 
-## 4. Qué se hizo en esta sesión (2026-07-29)
+### 3.2 Variante SCHOICE (raíz) — no-regresión
 
-1. Se adoptó la clasificación oficial de la ficha `MAT-2026-1-004` sin re-derivarla, y se verificó
-   la paridad literal de Afirmación, Evidencia (`FyE_E3`), Descriptor (`D4.8`) y Estándar EBC
-   contra los catálogos canónicos de Todo-Pajaro.
-2. Se midió el rango legal de `n` por enumeración antes de fijarlo (decisión D2).
-3. Se escribió el `.Rmd` con 6 contextos narrativos (el primero canónico y verbatim) y pool de
-   errores derivado de las Justificaciones MetaCognitivas oficiales.
-4. Se leyó el HTML renderizado —no solo el veredicto de los validadores— y eso destapó tres
-   defectos invisibles para el arsenal: un `\times` fuera de modo matemático que se evaporaba, y
-   texto sin tildes visible al estudiante.
-5. Se construyó `verificar_render.R` (V1-V8) y se validó por mutación que V5 detecta una clave
-   falsa.
-6. Auditoría adversarial con **dos agentes independientes**. Veredicto consolidado:
-   *APROBAR CON CAMBIOS*. Se aplicaron los cambios (§5.1) y se re-validó todo.
-7. Se sincronizó `ejercicio_state.json` (pasos 3-10) y se escribió toda la documentación.
-8. **Code-review de alta intensidad sobre la rama** (36 candidatos → 28 confirmados → 10 defectos
-   distintos, 8 refutados). Aplicados 10 de 10 (el último, el 2026-07-30); ver §5.3.
+Se tocó por dos motivos (§5.2 y §5.3). Re-verificada entera:
 
-## 4 bis. Qué se hizo el 2026-07-30
+| Verificación | Resultado |
+|---|---|
+| `Rscript verificar_render.R` | **V1-V9 todo verde** (incluye NOPS, que aquí sí aplica) |
+| `validar_coherencia_matematica.R` | **APROBADO, 0 errores** |
+| `validar_diversidad_sustantiva.R --n 40` | exit 0 · `WARN_DIV_BAJA` esperado |
+| Ortografía | sin errores |
 
-1. Se **confirmó la decisión D4** con el usuario: el hallazgo H1 estaba marcado en el BACKLOG como
-   «decisión pendiente del usuario» y una sesión posterior al HANDOFF v1.0 ya había ejecutado una de
-   las dos salidas (ampliar el pool) sin que constara la autorización. Autorizada.
-2. Se **midió el barrido de configuraciones** que el `.Rmd` citaba como «BLUEPRINT §3.1» — sección
-   que no existía. Se documentó con 6 configuraciones reproducibles, extrayendo las fórmulas del
-   `.Rmd` real. Hallazgo del propio barrido: «pool de 5 + I-7» **no era viable** (deja el rango de la
-   clave fijo en 3.º, patrón posicional puro que V6 rechaza). Ver [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §3.1.
-3. Se **corrigió una cifra no verificable**: el `.Rmd` y el test decían «barrido de 9
-   configuraciones»; no se pudo confirmar y se ajustó a las 6 realmente medidas.
-4. Se **re-ejecutó el arsenal completo** sobre la versión vigente (la verificación anterior era de las
-   20:29 y el `.Rmd` se había editado a las 20:41 — la evidencia no cubría el código actual).
-5. Se **re-midió la diversidad** con el pool de 7: 297 → **298/300** versiones únicas.
-6. Se **sincronizó toda la documentación** con el código. Los 8 documentos seguían describiendo pool
-   de 5, invariantes I-1..I-6, 30 ternas, `V1-V8` y H1 abierto. Incluye resolver una **colisión de
-   numeración**: el código usa `I-7` para «la clave nunca es la mayor», mientras el BLUEPRINT usaba
-   `I-7` para «auto-contenido» — las invariantes meta se corrieron a I-8/I-9/I-10.
-7. Se revisó `copias` en `SemilleroMoodle_v2.R`. Primero se subió a 300 invocando la regla #3, y
-   después se **corrigió esa lectura**: la regla #3 gobierna la capacidad del ejercicio
-   (`exams2html(n = 200)`, aquí 298/300), no el tamaño del banco. Queda en **100** por decisión del
-   usuario, con la justificación escrita en el script. Lo que sí era defecto en el hermano del avión
-   es que el valor cambiara **sin comentario**.
-8. Se cerraron en el BACKLOG **H1** y **P2.1** (scripts de exportación institucional, ya presentes).
-9. Se **regeneró el banco de Moodle** (100 preguntas) y se verificó con la lógica de V5: 100/100 con
-   la clave = `n!`, 4 opciones distintas, I-7 respetada, **99/100** preguntas completas distintas y 18
-   enunciados distintos (6 contextos × 3 valores de `n`, el techo del diseño narrativo).
+`ejercicio_state.json` (raíz): **11/11**, aprobado el 2026-07-30.
+
+---
+
+## 4. Qué se hizo en la sesión del 2026-07-30 (variante CLOZE)
+
+1. **`/goal`** encontró **12 puntos de deriva** entre documentos y realidad, y **2 conflictos entre
+   fuentes**. Todos corregidos (§5.6). Dos merecen mención porque eran *cifras citadas que nadie
+   volvió a ejecutar*: el HANDOFF atribuía a V9 «89 ternas» cuando reproduce **84** (el 89 era de otra
+   medición), y la memoria del proyecto afirmaba que `copias` se había corregido de 100 a **300**
+   cuando el script tiene **100** con su justificación escrita.
+2. **Se generó la variante CLOZE** con 6 partes, preservando el contrato paramétrico completo.
+3. **Se escribió `cloze/verificar_render.R`** (V1-V11) y se **probó por mutación** (§6).
+4. **Se leyó el HTML renderizado**, no solo el veredicto de los validadores. Eso destapó tres
+   defectos que ningún validador marca (§5.1).
+5. **Auditoría adversarial con dos agentes independientes**: 6 hallazgos, todos MENOR, todos
+   aplicados (§5.7). Cero críticos.
+6. **Se corrigieron tres derivas en los orquestadores del repo raíz** (§5.8).
+7. Documentación sincronizada: 8 documentos del subproyecto + `.claude/` local + índice raíz.
 
 ---
 
 ## 5. Hallazgos y decisiones
 
-### 5.1 Cambios exigidos por la auditoría — aplicados
+### 5.1 Tres defectos que solo aparecieron al LEER el artefacto renderizado
 
-- **Pool de errores 3 → 5, se eligen 3** (hallazgo ALTA). La regla #1 exige «Mínimo 4-6 errores por
-  ejercicio»; con pool == slots el **tipo** de error nunca variaba. Se añadieron `EST-PER-04`
-  (permutación circular `(n-1)!`) y `EST-PER-05` (principio aditivo `n(n+1)/2`). Medición posterior:
-  10/10 ternas alcanzadas, versiones únicas 280 → **297**/300.
-  - *Matiz honesto*: el adversario afirmó que el 100 % de los ejemplos comparables del codebase usa
-    pool > slots con `sample()`. Al verificarlo encontré un ejercicio **ya promovido** con pool=3 y
-    sin `sample()`. El cambio se hizo por el texto explícito de la regla, no por unanimidad del
-    codebase.
-- **`EST-PER-01` renombrado y su prosa reescrita** (consenso de ambos adversarios). Ver
-  [`.claude/CLAUDE.md`](.claude/CLAUDE.md) particularidad 6.
-- **Nueva decisión D3 y nueva invariante I-6**: la instancia canónica fuerza los tres errores
-  oficiales, de modo que reproduce el ítem ICFES completo (enunciado + las cuatro opciones).
+Ninguno de los tres lo marca ningún validador del repo. Los tres se encontraron abriendo el HTML.
 
-### 5.2 Decisiones cerradas — no reabrir sin autorización
+| Defecto | Cómo se manifestaba | Fix |
+|---|---|---|
+| **Desincronización de orden en la Parte 5** | La prosa de la Solution listaba las 6 afirmaciones en un orden y las opciones en otro | Decisión **D6**: la prosa **agrupa** por valor de verdad, nunca enumera. Guarda: `V11` |
+| **Concordancia de género rota** | «dos de **los** bandas», «**los mismos** fotografías» en 2 de los 6 contextos (≈33 % de las versiones) | Campo `genero` por contexto + artículos derivados |
+| **Vocabulario incoherente** | «Al ubicar uno de los sensores en **la fila**» cuando el enunciado habla de un circuito en serie | Campo `disposicion` por contexto (fila / hilera / secuencia), todos femeninos singulares para que la concordancia no dependa del contexto |
+
+### 5.2 El `.Rmd` no compilaba a PDF: U+2212 en un campo que el SCHOICE nunca emitía
+
+`exams2pdf()` falló con `Unicode character − (U+2212)`. La causa estaba en `descripcion_corta` de
+`EST-PER-04`, que contenía el **signo menos tipográfico**. En el SCHOICE ese campo **nunca se
+emite** —es dato muerto—, así que la mina llevaba ahí desde la creación del ejercicio sin que nadie
+la pisara. La CLOZE sí lo emite (son las opciones de su Parte 3) y explotó.
+
+Corregido **en los dos `.Rmd` a la vez** para que los pools no diverjan. Cableado como incidente en
+los dos orquestadores del repo. Las rayas `—` (U+2014) sí compilan; el problema es específicamente
+U+2212.
+
+**Patrón para recordar: un campo que no se emite no está probado.**
+
+### 5.3 `exshuffle`: por qué `TRUE` y no `FALSE` (decisión D6)
+
+Al detectar la desincronización de la Parte 5, la salida fácil era `exshuffle: FALSE` (la
+aleatorización interna la dan `perm`/`perm3`/`perm5`). Se descartó: dispara **`ERR_C4`**, bloqueante,
+porque ICFES exige mezcla. Y la lista ordenada que se pretendía salvar era **redundante** con el
+Answerlist de la Solution, que ya da el veredicto por opción alineado por construcción.
+
+Detalle completo en [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §7.4.
+
+### 5.4 NOPS es N/A para todo CLOZE, y no por los gaps `num`
+
+`exams2nops()` rechaza **cualquier `extype: cloze`** antes de mirar `exclozetype`. Verificado en el
+código de `exams` 2.4.2 (`wrong_type <- ufile[utype == "cloze"]`). El Incidente E del
+`orquestador-cloze` lo enunciaba mal («N/A esperado **con gaps num/string**», y afirmaba que un CLOZE
+100 % schoice **sí** debía renderizar NOPS) — corregido.
+
+La restricción **no está documentada oficialmente** por R/exams (consultado 2026-07-30): `?exams2nops`
+enumera los tipos soportados y omite `cloze` sin decir que no lo admite.
+
+### 5.5 Decisiones cerradas — no reabrir sin autorización
 
 | Decisión | Contenido |
 |---|---|
-| **Flujo B = false** | El ítem no tiene figura ni en el JPG ni en la ficha. Motor Hermes: N/A |
-| **DOK 3 / Bloom Evaluar** | El Nivel 4 es canónico e intocable; el DOK 3 se justifica por la carga metacognitiva de la Solution, no por la aritmética. Resuelve la incompatibilidad DOK2↔N4 de la tabla del repo |
-| **`n ∈ {4,5,6}`** | Medido, no elegido. Ver particularidad 3 |
-| **`WARN_DIV_BAJA` se acepta** | Estructural: solo hay 3 claves legales. Ampliar el rango violaría la particularidad 3. `ERR_DIV_COSMETICA` sí sería fallo y no ocurre |
-| **Enunciado verbatim en la instancia canónica** | La metacognición vive en la Solution, no reescribiendo el enunciado |
+| **Flujo B = false** | Ninguna de las dos variantes tiene figura |
+| **`n ∈ {4,5,6}`** | Medido, no elegido. Particularidad 3 |
+| **`WARN_DIV_BAJA` se acepta** | Estructural: solo hay 3 claves legales. `ERR_DIV_COSMETICA` sí sería fallo, y no ocurre |
+| **D5** | `fmt()` sin separador de miles en la CLOZE (hay gaps `num` que el estudiante escribe); sin `pick_int()` |
+| **D6** | La prosa de la Solution nunca enumera la Parte 5 en orden |
+| **La CLOZE no sustituye a la SCHOICE** | §1 |
 
-### 5.3 Code-review de alta intensidad (2026-07-29) — 9 de 10 aplicados
+### 5.6 Deriva documental corregida (12 puntos)
 
-El patrón dominante no fue «salida rota» sino **capas de verificación que se citaban como evidencia
-verde estando vacías**. Tres de los diez defectos eran verificadores que no verificaban. El décimo
-(H1) quedó pendiente de decisión humana y se cerró el 2026-07-30 — ver §5.5.
+Pool «de cinco» cuando son siete (README, SYLLABUS) · cinco marcas «(pendiente)» sobre archivos que
+existen · recuento de líneas documentado (585) distinto del real · la tabla de `docs/BLUEPRINT.md` §2 con **cuatro filas
+sin su primera celda** (defecto que `/goal` ya había reportado el 2026-07-29 y que la memoria daba
+por corregido — no lo estaba) · una cita por número de línea en §4.7 · dos criterios `[ ]` del
+ROADMAP ya cumplidos · rango `EST-PER-01 a 05` cuando son 07 · versiones de documento desfasadas ·
+`copias` 100 vs 300 · V9 84 vs 89 · referencias `OE1-OE11` y `D1-D4`.
 
-| # | Defecto | Estado |
+### 5.7 Auditoría adversarial (2 agentes independientes) — 6 hallazgos, 0 críticos
+
+Los seis se **verificaron de forma independiente** antes de actuar (uno de ellos con 200.000 ternas
+aleatorias). Todos aplicados.
+
+| # | Hallazgo | Estado |
 |---|---|---|
-| 1 | I-3 es unilateral: la clave nunca queda entre las 2 opciones menores (50 % de adivinanza) | ✅ **aplicado el 2026-07-30** — decisión D4 autorizada: pool 5→7 + invariante I-7. Ver §5.5 |
-| 2 | La suite de invariantes fijaba la ruta `01-En-PreDesarrollo/`: al promover, fallaría y **bloquearía todo push** del repo, apagando además la guarda I-5 vía `skip_if_not` | ✅ localización por nombre |
-| 3 | El Nivel 5B del validador genérico **nunca se ejecutaba** (buscaba `valor_correcto`/`opciones_valores`/`error_sel`; el chunk usaba otros nombres) → APROBADO vacuo | ✅ tres alias + `stopifnot` de alineación; probado por mutación |
-| 4 | Ediciones sin commitear en el árbol **inmutable** `03-En-Produccion/` (YAML reordenado + 5 PNG git-lfs) | ✅ revertido a `stash@{1}` (recuperable) |
-| 5 | V6 decía «enumeración EXHAUSTIVA» sobre una **copia hardcoded** del pool, no el del `.Rmd` | ✅ extrae pool y `N_POOL` del `.Rmd` |
-| 6 | V5 imprimía `revisadas/revisadas` (tautológico): descartar versiones en silencio se veía verde | ✅ compara contra `N_VERSIONES`; probado por mutación (`7/12`) |
-| 7 | V7 hacía `eval(parse(...))` sin `try()`: un encabezado de chunk renombrado abortaba el script y se perdía todo el reporte V1-V8 | ✅ extracción validada + `try()` |
-| 8 | `copias <- 300` → `100` sin comentario en el `SemilleroMoodle_v2.R` del **hermano del avión** | ✅ revertido a `stash@{0}` — pero ver la nota de abajo: la *justificación* de este hallazgo era errónea |
-| 9 | `repo_root` con `system(intern=TRUE)` sin `ignore.stderr` ni fallback → `RMD` literal `"NA/A-Produccion/..."` | ✅ versión endurecida de la suite hermana |
-| 10 | ~93 números de línea del `.Rmd` en los docs, varios ya erróneos (I-3 citado en «línea 142», estaba en la 291) | ✅ 83 convertidos a anclas; §6 del BLUEPRINT reindexada por construcción |
+| 1 | Comentario con razones máx/clave del pool **antiguo** de 4 fórmulas (2,7x/5,2x/10,8x); las reales con el pool de 7 son **5,0x/6,0x/10,8x** | ✅ corregido en los dos `.Rmd` |
+| 2 | Vocabulario «fila» incoherente con 2 de los 6 contextos | ✅ campo `disposicion` |
+| 3 | Comentario que atribuía a la Parte 6 un uso de `sujeto` que no hace | ✅ reescrito |
+| 4 | **La guarda `pct_max > 0` de V6 es código muerto**: `legal_rank` solo acumula ternas con `any(d > corr)`, lo que implica que la clave no puede ser el máximo *dentro de ese subconjunto*. La rama es **inalcanzable** | ✅ documentado como dato descriptivo en **los dos** verificadores. La protección real de H1 la da **V9** |
+| 5 | V10 es redundante con V6 en cobertura (probado por mutación: una colisión del pool produce 15 ternas duplicadas que V6 ya detecta) | ✅ comentario honesto; se conserva por su mensaje causal y porque sería la única guarda si `n_slots` bajara a 1 |
+| 6 | V5 no miraba el gap 5 en absoluto, y las Partes 3 y 6 solo se comprobaban **estructuralmente** («hay una marcada»), no semánticamente | ✅ V5 ahora verifica que la marca de P3 corresponda al error que produce el valor del enunciado, que la de P6 sea coherente con el factor, y que P5 tenga 6 opciones y 2-4 marcas. **Probado por mutación** |
 
-**Cierre**: `verificar_render.R` V1-V8 todo verde · `test_permutaciones_invariantes.R` 0 fail / 0 error
-/ **0 skip** (antes 8 de 9 tests podían apagarse) · `validar_coherencia_matematica.R` APROBADO ·
-`validar_diversidad_sustantiva.R --n 40` exit 0 · ortografía sin errores ·
-`tests/run_all_tests.R` **22/22 suites, 0 fallidas** (660 s).
+**El hallazgo 4 es el más valioso**: el subproyecto documentaba esas tres condiciones de V6 como
+«guardas de no-regresión que **fallan**, no avisan». Una de las tres no podía fallar nunca.
 
-**Nota sobre el defecto #8 (añadida el 2026-07-30):** el hallazgo era correcto en su forma (un
-valor cambiado sin comentario es indistinguible de un descuido) pero **su justificación era falsa**.
-Decía que el banco quedaba «por debajo del estándar de ≥200» de la regla #3 de
-`codigo-rmd.md`; esa regla habla de la **capacidad del ejercicio** para generar versiones únicas y se
-valida con `exams2html(archivo, n = 200)` —aquí 298/300—, no del número de preguntas exportadas al
-banco. `copias` no está gobernada por ninguna regla del repo. En este subproyecto el valor quedó en
-**100 por decisión del usuario**, con la justificación escrita en el script. Queda pendiente revisar
-si el hermano `desplazamiento-avion-aeropuerto` necesita la misma matización (ver
-[`docs/BACKLOG.md`](docs/BACKLOG.md) P2.1).
+### 5.8 Correcciones propagadas al repo raíz
 
-**Refutados** (8, no accionar): numeración no monotónica de los pre-flight del orquestador; la rama
-`es_canonica` «salta» el filtro `aplicables` (las 5 precondiciones son incondicionales, no hay estado
-alcanzable); `set.seed()` en el helper del test (es un test, no el chunk); `encoding="UTF-8"` ausente
-en los `exams2*` del verificador; `errores_info` recalcula `calcula(n)`; el «Caso específico» de la
-Solution colisiona con `EST-PER-01` en `n=5`; el `.gitkeep` del avión en esta rama.
+- `orquestador-cloze`: Incidente E corregido · **V4 subido de 4 a 6 partes** (el estándar subió el
+  2026-06-04 y esta validación se quedó atrás) · nuevos **Incidente Q** (prosa que enumera en orden)
+  e **Incidente R** (campo sin emitir) · nuevas validaciones **V6** y **V7**.
+- `orquestador-schoice`: nuevo **Incidente O** (campo sin emitir — es el lado que *deja* la mina).
+- `.claude/commands/orquestador-cloze.md` sincronizado.
+- `.claude/CLAUDE.md` raíz: entrada de changelog v3.19.0.
+
+### 5.9 Hallazgos abiertos
+
+Ninguno bloqueante. En [`docs/BACKLOG.md`](docs/BACKLOG.md): `pick_int()` es código muerto en el
+SCHOICE (P2.2) · la restricción `exams2nops`+cloze no está documentada upstream (P2.3) · la URL
+`R-exams.org/tutorials/moodle_quiz/` da **404** (P2.4) · el corrector ortográfico del repo no
+sustituye palabras en MAYÚSCULAS y entra en bucle (P1.4) · el falso positivo de `--fix` con
+`codigo-rmd.md` (P1.1).
 
 ---
 
-### 5.4 Hallazgos abiertos
+## 6. Prueba de mutación del verificador CLOZE
 
-- **Falso positivo del corrector ortográfico** (BAJA): `--fix` convierte `codigo-rmd.md` en
-  `código-rmd.md` dentro de comentarios de R. Mitigado escribiendo la referencia como ruta completa
-  (particularidad 10). Falta reportarlo al mantenedor del script del repo raíz — es una herramienta
-  compartida, no un defecto de este ejercicio. Ver [`docs/BACKLOG.md`](docs/BACKLOG.md) P1.1.
+Un verificador que nunca se ha visto fallar no es evidencia. Cada guarda se probó desactivando lo
+que debía atrapar:
 
-No hay ningún otro hallazgo abierto. Los dos que estaban en esta sección se cerraron el 2026-07-30:
-**H1** (§5.5) y los **scripts de exportación institucional**, que ya existen y están verificados por
-ejecución ([`docs/BACKLOG.md`](docs/BACKLOG.md) P2.1).
+| Mutación | Resultado esperado | Resultado real |
+|---|---|---|
+| Clave falsa en la Parte 1 (+ I-5 y el `stopifnot` del alias desactivados) | V5 falla | **8 incoherencias en 12/12** |
+| `exshuffle: FALSE` → `TRUE` con la prosa sin agrupar | V11 falla | **falla**; V5 sigue verde (la clave no cambia) |
+| Marca de la Parte 3 movida a otra opción | V5 falla | **11 incoherencias en 12/12** (en 1 acertó por azar) |
+| `k_v <- 5` (fuera del rango 2-4 de la Parte 5) | V5 falla | **12/12** |
+| Marca de la Parte 6 invertida | V5 falla | **12/12** |
 
----
-
-### 5.5 Cierre del hallazgo H1 — decisión D4 (2026-07-30)
-
-**H1 era el único defecto pedagógico vivo** y el único punto del proyecto que un agente no podía
-cerrar solo: el BACKLOG lo declaraba «decisión pendiente del usuario». Autorizado el 2026-07-30.
-
-**El defecto.** Con el pool de 5, cuatro de las cinco fórmulas eran menores que `n!`, así que la clave
-quedaba en 3.º lugar el 60 % de las veces y era **la mayor** el 40 % restante — nunca en la mitad
-baja. Descartar las dos opciones menores sin saber combinatoria subía la adivinanza del 25 % al
-**50 %**, y «elegir el número mayor» acertaba 2 de cada 5 versiones. `I-3` no lo veía por ser
-unilateral: cuando la clave es el máximo su ratio vale 1,0× y la guarda pasa trivialmente.
-
-**El fix, en dos mitades que no funcionan solas** (barrido en [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §3.1):
-
-1. `EST-PER-06` (`(n+1)!`) y `EST-PER-07` (`2·n!`), errores conceptuales diagnósticos por derecho
-   propio y ambos mayores que `n!`.
-2. La invariante **I-7**: toda terna lleva al menos un distractor mayor que `n!`. Sin ella el pool de
-   7 aún deja un 11,4 % de ternas con la clave como máxima.
-
-| métrica | antes | después |
-|---|---:|---:|
-| rango de la clave | 3.º / 4.º | **1.º / 2.º / 3.º** |
-| mitad baja | 0,0 % | **41,9 %** |
-| «elegir el mayor» acierta | 40,0 % | **0,0 %** |
-| clave / mayor distractor | hasta 20,00× | ≤ **0,50×** |
-| versiones únicas (300) | 297 | **298** |
-
-**Las cuatro objeciones que lo bloqueaban, resueltas.** Dos eran reales (cambia el contenido evaluado
-→ requería autorización; obliga a re-medir → hecho, 105/105 + V9 + suite + arsenal). Las otras dos
-**no se sostuvieron al medirlas**: no colisiona con OE1, porque los tres errores oficiales incluyen
-`EST-PER-01` (`64 > 24`) y la terna canónica cumple I-7 por sí sola —`MAT-2026-1-004` se sigue
-reproduciendo verbatim con su clave en 3.º—; y no roza D2, porque las fórmulas nuevas valen 7,0× y
-2,0× en el peor `n`, por debajo del 10,8× que ya aportaba `EST-PER-01`. La asimetría resultante es
-deliberada: **fidelidad en la instancia canónica, mitigación en las variantes**.
-
-**Guardas de no-regresión (fallan, no avisan):** V6 re-mide las tres cifras en cada corrida; V9
-comprueba la selección real sobre 240 semillas; el test fija `expect_gte(length(pool), 7L)`.
-Documentado como particularidad **13** en [`.claude/CLAUDE.md`](.claude/CLAUDE.md), invariante **I-7**
-en [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md) y
-decisión **D4** en [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §4.9.
+La primera mutación **hubo que repetirla**: al primer intento el chunk abortaba por un `stopifnot`
+*distinto* del que se pretendía neutralizar, así que el mutante no llegaba a probar V5. Eso reveló
+que la clave está protegida por **dos** guardas independientes, no una.
 
 ---
 
-## 6. Riesgos
+## 7. Riesgos
 
 | Riesgo | Mitigación cableada |
 |---|---|
-| Un agente "modulariza" y saca los helpers del chunk | Particularidad 1 + el propio `validar_diversidad_sustantiva.R` fallaría |
-| Un agente copia `exshuffle: FALSE` del hermano del avión | Particularidad 2 |
-| Un agente amplía `N_POOL` para silenciar `WARN_DIV_BAJA` | Particularidades 3 y 9 + I-1/I-3 |
-| Un agente borra la rama `es_canonica` al "simplificar" | Particularidad 4 + invariante I-6 |
-| Un agente "limpia" el `stopifnot` de I-5 | V5 del verificador lo atrapa (probado por mutación) |
-| Se ejecuta el corrector ortográfico y rompe una referencia | Particularidad 10 |
-| Un agente "simplifica" el pool a 5 o borra el filtro `legales` | Particularidad 13 + `stopifnot` de I-7 + V6/V9 + `expect_gte(pool, 7L)`: **reintroduce H1** |
-| Un agente cambia la enumeración del espacio legal por un `repeat` | Particularidad 13 (Error 22, regla #21 Familia 1: cuelga el render) |
-| Un agente lee el HANDOFF viejo y "corrige" el código hacia pool de 5 | Toda la documentación quedó sincronizada el 2026-07-30; este riesgo se materializó una vez y es la razón de §4 bis punto 6 |
+| Un agente trata la CLOZE como reemplazo de la SCHOICE | Particularidad 14 + §1 |
+| Un agente "unifica" el `fmt()` de las dos variantes | Particularidad 15: rompe los gaps `num` |
+| Un agente restaura la lista ordenada de la Parte 5, o pone `exshuffle: FALSE` | Particularidad 16 + `V11` + `ERR_C4` |
+| Un agente toca el pool sin re-correr V10 | Particularidad 17 |
+| Un agente reporta el N/A de NOPS como fallo | Particularidad 18 + `V4` |
+| Un agente introduce U+2212 en un campo emitido | Particularidad 19 + Incidentes Q/R/O de los orquestadores |
+| Un agente factoriza el pool común a un archivo compartido | Particularidad 1 (auto-contención) + el propio validador de diversidad fallaría |
+| Un agente edita una variante y no la otra | Regla local `permutaciones-parametricas.md`: el contrato rige para las dos |
+| **Correr «el verificador del SCHOICE» y ejecutar el del CLOZE sin darse cuenta** | Ocurrió en esta sesión: un `cd cloze` sin subshell dejó el directorio cambiado. Los comandos de la regla local usan `(cd cloze && …)` |
 
 ---
 
-## 7. Cómo retomar
+## 8. Cómo retomar
 
 ```bash
 cd /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams
 bash .claude/scripts/workflow-state.sh status A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
+bash .claude/scripts/workflow-state.sh status A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/cloze
+
 cd A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
-Rscript verificar_render.R
+Rscript verificar_render.R            # SCHOICE → V1-V9,  "todo verde"
+(cd cloze && Rscript verificar_render.R)   # CLOZE → V1-V11, "todo verde"
 ```
 
-**Próximo paso concreto**: el ejercicio está técnicamente cerrado y a la espera de **revisión
-humana**. El paso 11 (`aprobacion_usuario`) no puede sellarlo un agente. Material para revisar:
+### Próximo paso concreto
 
-- `verif_render/` — HTML, PDF, DOCX, NOPS y el XML de Moodle de la última corrida (verificación).
-- `salida/` — la exportación **institucional** con membrete (PDF, DOCX, HTML interactivo, NOPS y XML
-  de Moodle). El banco de Moodle son **100 preguntas** (tamaño decidido por el usuario el 2026-07-30),
-  regenerado y verificado ese día: 100/100 con la clave = `n!` y 99/100 preguntas completas distintas.
-- La instancia canónica (contexto 1 con `n=4`) es la que hay que comparar contra el ítem oficial
-  `MAT-2026-1-004`: debe coincidir verbatim, enunciado y las cuatro opciones `{24, 64, 16, 4}`.
+**Revisión humana de la variante CLOZE** (paso 11). Es lo único que falta y no lo puede sellar un
+agente. Material para revisar:
 
-Tras la aprobación: OE10 (promoción a `02-En-Desarrollo/`) y, más adelante, OE11 (aplicación en
-aula, requisito de Nivel 3 para `03-En-Produccion/`).
+- `cloze/verif_render/` — HTML, PDF, DOCX y el XML de Moodle de la última corrida.
+- La **instancia canónica** (contexto 1 con `n = 4`): su **Parte 1** debe coincidir verbatim con
+  `MAT-2026-1-004`, con las opciones `{24, 64, 16, 4}`.
+- Las **6 partes**: conviene leer una versión entera de principio a fin y juzgar si la progresión
+  cognitiva (aplicar → comprender el decrecimiento → analizar el error → transferir → evaluar
+  propiedades → V/F) es la adecuada para N4.
+
+Si se aprueba:
+```bash
+bash .claude/scripts/workflow-state.sh complete \
+  A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/cloze aprobacion_usuario
+```
+
+Después, **OE11** para las dos variantes: aplicación en aula (requisito de Nivel 3 para
+`03-En-Produccion/`).
 
 **Destino reservado en producción**:
 `03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/10-Combinatoria_Permutaciones-Variaciones-Combinaciones/`
 
 ---
 
-## 8. Enlaces
+## 9. Enlaces
 
 [`README.md`](README.md) · [`.claude/CLAUDE.md`](.claude/CLAUDE.md) ·
 [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md) ·
 [`docs/SYLLABUS.md`](docs/SYLLABUS.md) · [`docs/ROADMAP.md`](docs/ROADMAP.md) ·
-[`docs/BACKLOG.md`](docs/BACKLOG.md) · [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md)
+[`docs/BACKLOG.md`](docs/BACKLOG.md) · [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) ·
+[`cloze/verificar_render.R`](cloze/verificar_render.R)
 
 Ficha oficial del ítem: `Todo-Pajaro/Alineacion-curricular-de-items/Simulacros/Alineacion-Curricular-de-items-ERA-2026/Matematicas/Alineacion-curricular-de-items-Matematicas-ERA-2026.md` (líneas 965-996).
-Ítem espejo `MAT-2026-1-029` (mismo D4.8, conteo **con** repetición): líneas 1946-1985.
+Ítem espejo `MAT-2026-1-029` (mismo D4.8, conteo **con** repetición): líneas 1946-1985. Es la
+**Parte 4** de la variante CLOZE.
 
 ---
 
-**Versión**: 2.0 (estado re-verificado el 2026-07-30; H1 cerrado con la decisión D4; documentación
-sincronizada con el código)
+**Versión**: 3.0 (variante CLOZE; decisiones D5 y D6; invariantes C-1..C-3; auditoría adversarial
+de 6 hallazgos; 12 puntos de deriva documental corregidos; tres correcciones propagadas a los
+orquestadores del repo raíz)
 **Fecha**: 2026-07-30

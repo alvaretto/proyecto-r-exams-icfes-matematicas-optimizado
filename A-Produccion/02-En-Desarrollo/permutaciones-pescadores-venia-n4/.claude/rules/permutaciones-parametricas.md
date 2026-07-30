@@ -7,6 +7,14 @@ fórmulas fijas sobre un único parámetro `n`. La respuesta correcta ES `n!`. C
 `N_POOL`, en las fórmulas del pool o en la lógica de selección debe preservar, simultáneamente,
 las siete invariantes de abajo — verificadas por enumeración exhaustiva, no por muestreo.**
 
+**Este contrato rige para las DOS variantes** del subproyecto: el SCHOICE de la raíz y el CLOZE de
+`cloze/`. El pool, `N_POOL` y los `stopifnot` de I-1..I-7 están **duplicados literalmente** en los
+dos `.Rmd` (auto-contención obligatoria; ver `../CLAUDE.md` particularidad 1). No los factorices a
+un archivo común: `validar_diversidad_sustantiva.R` evalúa el chunk en `tempdir()` y cualquier
+`source()`/`include_supplement()` falla ahí. **Si cambias el contrato, cámbialo en los dos y vuelve
+a correr los dos verificadores.** La variante CLOZE añade además tres invariantes propias
+(C-1..C-3, más abajo).
+
 Análogo local a `plano-cartesiano-barco-n2/.claude/rules/barco-parametrico.md`, donde la clave es
 el bounding box del dibujo. Aquí la clave es el valor de una fórmula, así que el riesgo no es
 geométrico sino combinatorio: una fórmula nueva puede colisionar con otra y producir dos opciones
@@ -55,6 +63,31 @@ sin tocar nada más y no hay dos fuentes de verdad que se desincronicen.
 **I-5 es la crítica.** Es la única que, si se desactiva, produce un ejercicio que compila, renderiza
 en los cuatro formatos y pasa el resto de validadores del repo **con la clave falsa**. Verificado
 por mutación el 2026-07-29 (ver abajo).
+
+### Las tres invariantes propias de la variante CLOZE (C-1 a C-3)
+
+Solo aplican a `cloze/permutaciones_pescadores_..._n4_cloze_v1.Rmd`. Describen propiedades que el
+SCHOICE no necesitaba porque no tiene partes.
+
+| # | Condición | Dónde se comprueba | Consecuencia si se rompe |
+|---|---|---|---|
+| **C-1** | Para cada `n ∈ N_POOL`, las 7 fórmulas del pool y `n!` dan **8 valores distintos dos a dos** | `stopifnot` del chunk + `V10` (sobre `N_POOL` completo) | La Parte 3 tendría **dos** respuestas correctas. Su cuarta opción es la descripción de un error **ajeno a la terna**, así que dos fórmulas con el mismo valor la vuelven ambigua — e **I-1 no lo ve**, porque solo mira la terna seleccionada |
+| **C-2** | nº de `##ANSWERi##` == nº de `exclozetype` == nº de bloques de `exsolution` == nº de bloques de `extol` == 6, y los placeholders **en orden** | `stopifnot` del chunk (conteos) + `V8` (orden, estático) | Incidente A del `orquestador-cloze`: un `##ANSWERi##` fuera de orden **compila igual** y asocia la respuesta a la parte equivocada. Ningún render lo detecta |
+| **C-3** | Answerlist del enunciado = **16** ítems; Answerlist de la Solution = **18** (+1 por gap `num`) | `stopifnot` del chunk + `V8` | El feedback por opción se desalinea. Ojo: la asimetría 16 ≠ 18 es el **contrato de R/exams**, no un descuadre — es un falso positivo recurrente de los auditores |
+
+Sobre C-3, separando lo documentado de lo observado: la omisión de las entradas `num` en el
+Answerlist del **enunciado** está documentada oficialmente (`NEWS.md` de `exams` 2.4-1: «the empty
+entries for all other `num` or `string`/`essay`/`file` elements can optionally be omitted»). Que el
+Answerlist de la **Solution** lleve además un ítem por gap `num` **no está declarado en la
+documentación oficial** (consultado 2026-07-30): es el comportamiento observado en el render y el
+que usa el hermano `Rango-Colesterol-Pacientes/Cloze/`.
+
+**Una cuarta condición, sin número, que también es del CLOZE:** la prosa de la Solution **no puede
+enumerar la Parte 5 en su orden interno** (decisión D6). `exshuffle: TRUE` reordena los dos
+Answerlists pero no la prosa. Lo verifica `V11` emparejando **por contenido**. Ver `../CLAUDE.md`
+particularidad 16.
+
+---
 
 **I-7 es la que ningún validador genérico puede dar, ni siquiera en principio.** No es una propiedad
 de corrección —el ítem con la clave en 4.º lugar es matemáticamente impecable— sino de **calidad
@@ -155,14 +188,28 @@ validador genérico la protege; hace falta un test propio que enumere el espacio
 
 ## Cómo verificar tras cualquier cambio
 
+**Los dos verificadores, siempre.** Un cambio en el contrato afecta a las dos variantes aunque solo
+hayas editado un archivo.
+
 ```bash
 cd A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4
-Rscript verificar_render.R                    # V1-V9, exit 1 si algo falla
+Rscript verificar_render.R                    # SCHOICE: V1-V9,  exit 1 si algo falla
+(cd cloze && Rscript verificar_render.R)      # CLOZE:   V1-V11, exit 1 si algo falla
 cd ../../..
-Rscript .claude/scripts/validar_coherencia_matematica.R <ruta_al_rmd>
-Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_rmd> --n 40
-Rscript .claude/scripts/corregir_ortografia_espanol.R <ruta_al_rmd>
+for R in \
+  A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd \
+  A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd
+do
+  Rscript .claude/scripts/validar_coherencia_matematica.R "$R"
+  Rscript .claude/scripts/validar_diversidad_sustantiva.R "$R" --n 40
+  Rscript .claude/scripts/corregir_ortografia_espanol.R "$R"
+done
 ```
+
+Nota sobre el ejecutable de arriba: `cd cloze` va entre paréntesis a propósito. Sin subshell, el
+directorio queda cambiado y el resto de comandos se ejecuta desde `cloze/` — en esta misma sesión
+(2026-07-30) eso hizo que una comprobación «del SCHOICE» volviera a correr el CLOZE y estuvo a punto
+de reportarse como evidencia de no-regresión del archivo equivocado.
 
 ---
 
@@ -176,6 +223,7 @@ Rscript .claude/scripts/corregir_ortografia_espanol.R <ruta_al_rmd>
 
 ---
 
-**Versión**: 2.0 (pool 5 → 7, invariante I-7 y V9 tras la decisión D4 que cerró el hallazgo H1)
+**Versión**: 3.0 (el contrato pasa a regir las dos variantes; invariantes C-1..C-3 propias del
+CLOZE; comandos de verificación para ambos verificadores)
 **Fecha**: 2026-07-30
 **Estado**: ACTIVO
