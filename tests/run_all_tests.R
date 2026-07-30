@@ -228,7 +228,7 @@ suites <- list(
               "barco-parametrico", "test_barco_bbox_invariante")
   ),
   list(
-    nombre = "Invariantes I-1..I-6 permutaciones (clave == n!)",
+    nombre = "Invariantes I-1..I-7 permutaciones (clave == n!)",
     archivo = "tests/testthat/test_permutaciones_invariantes.R",
     critico = TRUE,
     watch = c("permutaciones-pescadores-venia", "permutaciones_pescadores",

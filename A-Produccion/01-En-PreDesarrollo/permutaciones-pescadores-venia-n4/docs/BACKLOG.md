@@ -60,9 +60,9 @@ apartarse de la ficha oficial del ítem — una decisión que no le corresponde 
 
 **Evidencia complementaria (fuera del validador, muestreo directo de 300 evaluaciones del
 `data_generation`, no enumeración exhaustiva para el número de claves — trivial porque solo hay 3
-valores de `n`, ver [`BLUEPRINT.md`](BLUEPRINT.md) §2):** tras la ampliación del pool a 5 errores,
-**297/300** versiones únicas de render (antes de la ampliación: 280/300), con las **10 de 10**
-ternas de error posibles alcanzadas y **16** instancias canónicas. La distribución de claves por
+valores de `n`, ver [`BLUEPRINT.md`](BLUEPRINT.md) §2):** con el pool de 7 (decisión D4),
+**298/300** versiones únicas de render, **89 de las 93** ternas legales alcanzadas y **16**
+instancias canónicas. Progresión histórica: 280/300 con el pool de 3, 297/300 con el de 5. La distribución de claves por
 valor de `n` y la distribución por contexto narrativo no se re-midieron en esta pasada — no son
 necesarias para este ítem, que depende solo de la cardinalidad de claves distintas (3), invariante
 ante el cambio del pool de errores.
@@ -91,25 +91,48 @@ posibles (3 valores de `n` × C(5,3) = 10) y confirma que las 4 opciones son sie
 300 evaluaciones del `data_generation` se alcanzaron las **10 de 10** ternas posibles y **297/300**
 versiones únicas de render (antes: 280/300, con solo 1 terna posible).
 
+**Superado el 2026-07-30 (decisión D4).** El pool subió de 5 a **7** al cerrar el hallazgo H1 (ver
+abajo). Las cifras de este párrafo son las del estado intermedio y se conservan por trazabilidad; las
+vigentes son 105 ternas enumeradas, 93 legales, 89 alcanzadas en 300 evaluaciones y **298/300**
+versiones únicas.
+
 ---
 
 ## P2 — Diferible
 
-### P2.1 — Scripts de exportación institucional (`Semillero*.R`, plantillas `pcielo*.tex`) no existen todavía
+### P2.1 — Scripts de exportación institucional (`Semillero*.R`, plantillas `pcielo*.tex`) — ✅ RESUELTO (2026-07-30)
 
-El subproyecto hermano `plano-cartesiano-barco-n2` tiene `SemilleroUnico_v2.R`,
-`SemilleroMoodle_v2.R`, `SemilleroCloze.R` y las plantillas `pcielo.tex` / `solpcielo.tex` /
-`pcielo_nosol.tex`, que exportan el ejercicio con el membrete institucional (I. E. Pedacito de
-Cielo) a PDF/DOCX/Moodle/NOPS/webquiz interactivo. Este subproyecto **no los tiene**.
+El subproyecto ya tiene los cuatro artefactos que antes solo existían en el hermano
+`plano-cartesiano-barco-n2`: `SemilleroUnico_v2.R`, `SemilleroMoodle_v2.R`, `SemilleroCloze.R` y las
+plantillas `pcielo.tex` / `pcielo_nosol.tex` / `solpcielo.tex`, que exportan el ejercicio con el
+membrete institucional (I. E. Pedacito de Cielo) a PDF/DOCX/Moodle/NOPS y al webquiz interactivo.
 
-**Falta evaluar** si este ejercicio los necesita antes de exportarlo para uso real en el aula, o
-si `verificar_render.R` — que ya cubre HTML/PDF/DOCX/NOPS/Moodle sin plantillas institucionales,
-pensado para verificación (CI), no para exportación — es suficiente para el caso de uso actual.
-Ver [`../README.md`](../README.md) §"Exportación institucional".
+Se copiaron del hermano y se adaptaron: la única diferencia funcional respecto al original es
+`archivo_examen`, apuntado al `.Rmd` de este subproyecto. Verificado por ejecución: `salida/` contiene
+el PDF, el DOCX, el NOPS, el HTML interactivo y el XML de Moodle generados.
+
+**Defecto encontrado y corregido al revisarlos (2026-07-30):** `SemilleroMoodle_v2.R` llegó con
+`copias <- 100`, por debajo del estándar de **≥ 200 versiones únicas** que fija
+`../../../.claude/rules/codigo-rmd.md`. Es exactamente el defecto #8 del code-review del 2026-07-29,
+que ya se había tenido que revertir en el hermano `desplazamiento-avion-aeropuerto`: al copiar el
+script se replicó el valor degradado. Corregido a `copias <- 300` **con un comentario que explica el
+porqué**, para que la próxima copia no lo repita en silencio.
+
+Nota: el banco de `salida/` se generó con el valor antiguo (100 copias). `salida/` es un derivado
+ignorado por git y se regenera con `Rscript SemilleroMoodle_v2.R`; no hay nada que arreglar en el
+repositorio, pero **si vas a importar ese XML a Moodle, regenéralo primero**.
+
+**Distinción fuente/derivado:** los `Semillero*.R` y los `pcielo*.tex` son **fuente** (se versionan);
+`salida/`, `verif_render/` y los `.html`/`.pdf`/`.docx`/`.xml`/`.rds` de la raíz del subproyecto son
+**derivados** (ignorados, ver [`../.gitignore`](../.gitignore) y `../README.md` §"Estructura de
+archivos").
 
 ---
 
-### H1 (antes P1.4) — La clave nunca está entre las 2 opciones menores: adivinable al 50 % — 🔴 ABIERTO, REQUIERE DECISIÓN HUMANA
+### H1 (antes P1.4) — La clave nunca está entre las 2 opciones menores: adivinable al 50 % — ✅ RESUELTO (2026-07-30, decisión D4)
+
+> Se conserva en su posición histórica dentro de `P2` por trazabilidad: nació como P1.4, se
+> reclasificó a hallazgo abierto y se cerró con autorización explícita del usuario el 2026-07-30.
 
 **Origen:** observado parcialmente por el adversario matemático el 2026-07-29 y catalogado entonces
 como 🔵 BAJA. El code-review de alta intensidad del 2026-07-29 lo **midió** y lo reclasificó: el
@@ -117,7 +140,7 @@ razonamiento con que se cerró («desde que el pool se amplió a 5 errores el ra
 invariante, 3.º o 4.º, lo que diluye el patrón») era **incorrecto** — que el rango varíe entre 3.º y
 4.º no diluye nada, porque ambos están en la mitad alta.
 
-**Medición exhaustiva** (3 valores de `n` × C(5,3) = 30 ternas, el espacio completo):
+**El defecto medido** (pool de 5, espacio completo de 30 ternas):
 
 | rango de la clave por magnitud | ternas | % |
 |---|---:|---:|
@@ -125,38 +148,57 @@ invariante, 3.º o 4.º, lo que diluye el patrón») era **incorrecto** — que 
 | 3.º | 18 | 60 % |
 | 4.º (la clave es el máximo) | 12 | 40 % |
 
-**Consecuencia para el estudiante:** descartar las dos opciones menores sin saber combinatoria deja
-una adivinanza al **50 %** en vez del 25 %; y la heurística «elegir el número mayor» acierta en el
-**40 %** de las versiones. Es la regla #22 patrón P5 (distractor descartable por magnitud) invertida
-sobre la CLAVE, y contradice el pre-flight 14 del `orquestador-schoice`, que exige «verificar el
-ORDEN/RANK de la respuesta correcta».
+Consecuencia: descartar las dos opciones menores sin saber combinatoria dejaba una adivinanza al
+**50 %** en vez del 25 %, y «elegir el número mayor» acertaba el **40 %** de las versiones. Es la
+regla #22 patrón P5 invertido sobre la CLAVE. `I-3` no lo detectaba por ser **unilateral**: cuando la
+clave es el máximo, `max(all_vals)/correcta_val` vale 1,0× y la guarda pasa trivialmente. Peor caso:
+`n=6` con {cuadrado, cardinal, suma} → `{720, 36, 21, 6}`, clave **20×** el mayor distractor.
 
-**Por qué I-3 no lo detecta:** `stopifnot(max(all_vals) / correcta_val <= 15)` es **unilateral**.
-Cuando la clave ES el máximo, la expresión vale `correcta_val/correcta_val = 1.0` y la guarda pasa
-trivialmente. Peor caso medido: `n=6` con terna {cuadrado, cardinal, suma} → opciones
-`{720, 36, 21, 6}`, donde la clave es **20× el mayor distractor** y el ratio de I-3 da 1,0×.
+---
 
-**Por qué no se corrige en esta pasada:** el pool sólo contiene UNA fórmula mayor que `n!`
-(`n^(n-1)`), así que llevar la clave a la mitad baja exige **añadir fórmulas > `n!`** al pool. Eso:
+**Resolución — decisión D4, autorizada por el usuario el 2026-07-30.**
 
-1. cambia el contenido evaluado del ítem (decisión pedagógica, no de mantenimiento);
-2. obliga a re-medir el espacio completo (C(6,3)=20 ternas × 3 `n` = 60) y a re-validar render,
-   diversidad y las 6 invariantes — la regla local lo exige explícitamente;
-3. colisiona con **OE1**: la instancia canónica debe reproducir las 4 opciones oficiales
-   `{4, 16, 24, 64}` de `MAT-2026-1-004`, donde la clave 24 también es la 3.ª. Es decir, **el propio
-   ítem oficial del ICFES tiene esta propiedad**; corregirla en las versiones no canónicas crea una
-   asimetría deliberada que hay que decidir, no deducir;
-4. roza la decisión cerrada **D2** (`n ∈ {4,5,6}` medido), porque las fórmulas candidatas
-   (p. ej. `(n+1)!` = 5040 en `n=6`, 7,0×) mueven la razón de magnitud.
+De las dos salidas planteadas (aceptar la propiedad por fidelidad al ítem oficial, o ampliar el pool
+con fórmulas mayores que `n!`) se autorizó la segunda. Se aplicaron **dos** cambios, porque ninguno
+funciona solo — barrido completo en [`BLUEPRINT.md`](BLUEPRINT.md) §3.1:
 
-**Mitigación aplicada mientras se decide:** `verificar_render.R` V6 ya no sólo imprime el rango, sino
-que (a) FALLA si el rango de la clave llegara a ser un valor ÚNICO en las 30 ternas (deriva a patrón
-posicional puro), (b) reporta `clave / mayor distractor` para hacer visible la dominancia que I-3 no
-acota, y (c) emite un AVISO explícito mientras la clave no alcance nunca los puestos 1.º o 2.º.
+1. **Pool 5 → 7**: `EST-PER-06` (`(n+1)!`, contar una posición más de las que hay) y `EST-PER-07`
+   (`2·n!`, duplicar el conteo por el orden inverso). Ambos son errores conceptuales diagnósticos por
+   derecho propio, no relleno numérico.
+2. **Invariante I-7**: toda terna debe contener al menos un distractor mayor que `n!`. La terna se
+   elige enumerando el espacio legal y sorteando un índice — nunca con un bucle de reintento
+   (regla #21 Familia 1, Error 22).
 
-**Decisión pendiente del usuario:** aceptar la propiedad por fidelidad al ítem oficial (y dejar H1
-como observación permanente), o autorizar la ampliación del pool con fórmulas > `n!` y la
-re-medición completa que conlleva.
+**Estado medido después** (espacio completo de 105 ternas, 93 legales):
+
+| métrica | antes (pool 5) | después (pool 7 + I-7) |
+|---|---:|---:|
+| rango de la clave | 3.º / 4.º | **1.º / 2.º / 3.º** (nunca 4.º) |
+| mitad baja (1.º o 2.º) | 0,0 % | **41,9 %** |
+| «elegir el mayor» acierta | 40,0 % | **0,0 %** |
+| clave / mayor distractor | hasta 20,00× | ≤ **0,50×** |
+| versiones únicas (300 evals) | 297 | **298** |
+
+**Las cuatro objeciones que bloqueaban el cierre, resueltas:**
+
+1. *«Cambia el contenido evaluado»* — sí, y por eso requería autorización humana. Concedida.
+2. *«Obliga a re-medir el espacio completo»* — hecho: 105/105 ternas verdes en `V6`, más `V9` sobre
+   240 semillas para la selección real, la suite `I-1..I-7`, coherencia matemática APROBADO,
+   diversidad exit 0 y ortografía sin errores.
+3. *«Colisiona con OE1»* — **no colisiona.** Los tres errores oficiales incluyen `EST-PER-01`
+   (`64 > 24`), así que la terna canónica cumple I-7 por sí sola: `MAT-2026-1-004` se sigue
+   reproduciendo verbatim con `{24, 64, 16, 4}` y su clave en 3.º, igual que el original. La asimetría
+   es deliberada: **fidelidad en la instancia canónica, mitigación en las variantes**.
+4. *«Roza la decisión D2»* — **no la roza.** `(n+1)!` vale 7,0× y `2·n!` vale 2,0× en el peor `n`,
+   ambas por debajo del 10,8× que ya aportaba `EST-PER-01`. El umbral de 15× y `n ∈ {4,5,6}` quedan
+   intactos.
+
+**Guardas de no-regresión** (fallan, no avisan): `V6` re-mide las tres cifras en cada corrida y
+devuelve FAIL si la mitad baja cae a 0 %, si «elegir el mayor» sube de 0 % o si el rango se vuelve
+constante; `V9` comprueba que la selección real se queda en el espacio legal; el test fija
+`expect_gte(length(pool), 7L)`. Documentado como particularidad **13** en
+[`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) e invariante **I-7** en
+[`../.claude/rules/permutaciones-parametricas.md`](../.claude/rules/permutaciones-parametricas.md).
 
 ---
 
@@ -172,7 +214,7 @@ Ver [`ROADMAP.md`](ROADMAP.md) §2-4.
   `.claude/CLAUDE.md` (pendientes de otro agente en esta misma sesión) y obtener una aprobación
   humana explícita (`aprobacion_usuario`).
 - **OE11** requiere aplicación del ítem con estudiantes reales de grado 10-11 y análisis de
-  diagnosticidad por distractor (ahora sobre un pool de **cinco** códigos, `EST-PER-01` a `05`) —
+  diagnosticidad por distractor (ahora sobre un pool de **siete** códigos, `EST-PER-01` a `07`) —
   el gate que la validación automática **no** puede sustituir (ver [`ROADMAP.md`](ROADMAP.md) §4).
 
 Ninguno de los dos ítems es resoluble por un agente trabajando solo sobre el código del ejercicio:
@@ -182,17 +224,17 @@ ambos dependen de una decisión o una acción humana externa al `.Rmd`.
 
 ## Referencias cruzadas
 
-- [`../README.md`](../README.md) · [`../HANDOFF.md`](../HANDOFF.md) (pendiente)
+- [`../README.md`](../README.md) · [`../HANDOFF.md`](../HANDOFF.md)
 - [`SYLLABUS.md`](SYLLABUS.md) · [`ROADMAP.md`](ROADMAP.md) · [`BLUEPRINT.md`](BLUEPRINT.md)
-- `../.claude/CLAUDE.md` (pendiente)
+- [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) — particularidad 13 (decisión D4)
 - `../../../../.claude/rules/diversidad-sustantiva.md` — regla #22, contexto de P1.2
 - `../../../../.claude/rules/ortografia-espanol.md` — regla #7, contexto de P1.1
 - `../../plano-cartesiano-barco-n2/docs/BACKLOG.md` — precedente del bloqueo de auto-contención
   (su P1.2) y del formato de este documento
-- `../.claude/rules/permutaciones-parametricas.md` — contrato local del pool `n!` y del pool de
-  cinco errores conceptuales (pendiente, lo escribe otro agente)
+- [`../.claude/rules/permutaciones-parametricas.md`](../.claude/rules/permutaciones-parametricas.md)
+  — contrato local: la clave `n!`, el pool de siete errores conceptuales y las invariantes I-1..I-7
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-07-29
+**Versión**: 2.0 (H1 y P2.1 cerrados; `copias` de Moodle corregido de 100 a 300)
+**Fecha**: 2026-07-30

@@ -17,9 +17,13 @@
 #   V3  DOCX   renderiza (pandoc)
 #   V4  NOPS   renderiza
 #   V5  Moodle renderiza y la opción marcada como correcta ES n!
-#   V6  las 4 opciones son distintas en todas las semillas probadas
+#   V6  enumeración EXHAUSTIVA del espacio de ternas: unicidad (I-1), magnitud
+#       (I-3) y, sobre el espacio LEGAL, el rango de la clave y la no-regresión
+#       del hallazgo H1 (la clave nunca es la opción mayor — I-7)
 #   V7  la instancia canónica (contexto 1, n = 4) reproduce el ítem ICFES
 #   V8  ninguna fuga de rol en el XML de Moodle (no hay figuras: N/A informativo)
+#   V9  la SELECCIÓN real del chunk se queda en el espacio legal (complemento
+#       empírico de V6, que sólo mide el espacio y no la selección)
 # =============================================================================
 
 suppressMessages(library(exams))
@@ -140,7 +144,7 @@ if (inherits(r, "try-error")) {
 # entrada intacta cuando el patrón no coincide, así que un encabezado de chunk
 # renombrado haría que `parse()` recibiera el .Rmd completo; y un `stopifnot` de
 # invariante que salte dentro del chunk aborta el script. Ambos casos se capturan
-# aquí para que el reporte V1-V8 y el resumen final siempre se impriman.
+# aquí para que el reporte V1-V9 y el resumen final siempre se impriman.
 src   <- paste(readLines(RMD, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
 chunk <- sub("(?s).*?```\\{r data_generation[^}]*\\}(.*?)```.*", "\\1", src, perl = TRUE)
 env   <- NULL
@@ -173,7 +177,15 @@ if (is.null(env)) {
   n_slots  <- length(env$errores_sel)
   combos   <- utils::combn(length(formulas), n_slots)
   dup <- 0L; igual_corr <- 0L; excede <- 0L; total <- 0L
-  ratios <- numeric(0); domina <- numeric(0); rank_corr <- integer(0)
+  ratios <- numeric(0)
+  # ESPACIO LEGAL vs ILEGAL. La selección del .Rmd exige >= 1 distractor > n!
+  # (invariante I-7, decisión D4). I-1/I-3 se comprueban sobre las ternas
+  # COMPLETAS (superconjunto: si alguien relajara la restricción, el ejercicio
+  # seguiría siendo sano). Pero las métricas que ve el estudiante —rango de la
+  # clave y dominancia— se miden SOLO sobre el espacio legal: medirlas sobre el
+  # total daría un FALSO VERDE, porque las ternas ilegales aportan precisamente
+  # los rangos que la restricción existe para eliminar.
+  legal_rank <- integer(0); legal_dom <- numeric(0); n_legal <- 0L
   for (n in N_POOL) {
     corr <- factorial(n)
     for (j in seq_len(ncol(combos))) {
@@ -185,8 +197,11 @@ if (is.null(env)) {
       r <- max(v) / corr
       ratios <- c(ratios, r)
       if (r > 15) excede <- excede + 1L
-      domina    <- c(domina, corr / max(d))    # cuánto domina la clave (I-3 es unilateral)
-      rank_corr <- c(rank_corr, rank(v)[1])    # posición de la correcta por tamaño
+      if (any(d > corr)) {                     # terna LEGAL (satisface I-7)
+        n_legal    <- n_legal + 1L
+        legal_rank <- c(legal_rank, rank(v)[1])
+        legal_dom  <- c(legal_dom, corr / max(d))
+      }
     }
   }
   if (dup == 0L && igual_corr == 0L && excede == 0L) {
@@ -198,19 +213,37 @@ if (is.null(env)) {
     bad("V6", sprintf("de %d ternas: %d con duplicados, %d con distractor==correcta, %d exceden 15x",
                       total, dup, igual_corr, excede))
   }
-  # Guarda de deriva POSICIONAL sobre la clave (regla #22, patrón P4 aplicado a
-  # la respuesta correcta). I-3 sólo acota que un distractor sea muy grande; NO
-  # acota que la clave domine a todos. Si además el rango de la correcta fuera
-  # siempre el mismo, el ítem sería resoluble por posición sin razonar.
-  cat(sprintf("         rango de la correcta por magnitud: %s en %d ternas | clave/mayor distractor hasta %.1fx\n",
-              paste(sort(unique(rank_corr)), collapse = "/"), total, max(domina)))
-  if (length(unique(rank_corr)) < 2L) {
-    bad("V6", sprintf("rango de la correcta FIJO en el %d.º puesto en las %d ternas: patrón posicional",
-                      unique(rank_corr)[1], total))
-  }
-  if (!any(rank_corr <= 2L)) {
-    cat("         AVISO: la clave nunca queda entre las 2 opciones menores — descartar las 2 menores\n")
-    cat("                deja al estudiante adivinando al 50 %. Ver docs/BACKLOG.md, hallazgo H1.\n")
+
+  # --- Métricas sobre el espacio LEGAL (lo que puede ver un estudiante) -------
+  if (n_legal == 0L) {
+    bad("V6", "0 ternas legales: la restricción I-7 dejó el espacio vacío")
+  } else {
+    pct_baja <- 100 * mean(legal_rank <= 2L)
+    pct_max  <- 100 * mean(legal_rank == (n_slots + 1L))
+    cat(sprintf("         espacio legal %d/%d (%d descartadas por I-7: sin ningún distractor > n!)\n",
+                n_legal, total, total - n_legal))
+    cat(sprintf("         rango de la clave: %s | mitad baja %.1f%% | 'elegir el mayor' acierta %.1f%% | clave/mayor distr. máx %.2fx\n",
+                paste(sort(unique(legal_rank)), collapse = "/"),
+                pct_baja, pct_max, max(legal_dom)))
+
+    # Guarda de deriva POSICIONAL (regla #22, patrón P4 sobre la respuesta
+    # correcta): si el rango fuera un valor único, el ítem se resolvería por
+    # posición sin razonar.
+    if (length(unique(legal_rank)) < 2L) {
+      bad("V6", sprintf("rango de la clave FIJO en el %d.º puesto en las %d ternas legales: patrón posicional",
+                        unique(legal_rank)[1], n_legal))
+    }
+    # Guarda de NO-REGRESIÓN de H1. Estas dos condiciones son el resultado
+    # MEDIDO de la decisión D4 (barrido de 6 configuraciones, docs/BLUEPRINT.md
+    # sección 3.1). Si alguien toca el pool o la restricción sin volver a medir,
+    # esto FALLA en vez de degradarse en silencio.
+    if (pct_max > 0) {
+      bad("V6", sprintf("I-7 VIOLADA en el espacio legal: la clave es la opción mayor en %.1f%% de las ternas ('elegir el mayor' acierta)",
+                        pct_max))
+    }
+    if (pct_baja == 0) {
+      bad("V6", "REGRESIÓN de H1: la clave nunca queda entre las 2 opciones menores; descartar las 2 menores deja una adivinanza al 50 %")
+    }
   }
 }
 
@@ -245,6 +278,53 @@ if (is.null(env)) {
 
 cat("\n=== V8: fuga de rol por nombre de archivo ===\n")
 ok("V8", "N/A — el ejercicio no genera imágenes (Flujo B = false)")
+
+cat("\n=== V9: la selección del .Rmd se queda en el espacio legal ===\n")
+# V6 demuestra que el espacio legal es sano; V9 demuestra que el .Rmd REALMENTE
+# se restringe a él. Los dos chequeos no son redundantes: V6 mide el ESPACIO
+# (enumera combn del pool), no la SELECCIÓN. Si alguien borrara el filtro
+# `legales` del chunk, V6 seguiría en verde e imprimiendo "mitad baja 41,9 %"
+# mientras el ejercicio real vuelve a emitir ternas donde la clave es la mayor.
+N_EMP <- 240L
+if (is.null(env)) {
+  bad("V9", err_extraccion)
+} else {
+  ilegales <- 0L; clave_max <- 0L; evaluadas <- 0L
+  ternas_vistas <- character(0); ranks_obs <- integer(0)
+  for (s in seq_len(N_EMP)) {
+    e9 <- new.env()
+    set.seed(20000L + s)
+    r9 <- try(suppressWarnings(eval(parse(text = chunk), envir = e9)), silent = TRUE)
+    if (inherits(r9, "try-error")) next
+    evaluadas <- evaluadas + 1L
+    d    <- as.numeric(unname(e9$vals))
+    corr <- as.numeric(e9$correcta_val)
+    if (!any(d > corr))          ilegales  <- ilegales + 1L
+    if (max(c(corr, d)) == corr) clave_max <- clave_max + 1L
+    ranks_obs <- c(ranks_obs, rank(c(corr, d))[1])
+    ternas_vistas <- c(ternas_vistas, paste0(e9$n, ":", paste(sort(vapply(
+      e9$errores_sel, function(x) x$codigo, character(1L))), collapse = "+")))
+  }
+  if (evaluadas == 0L) {
+    bad("V9", "0 evaluaciones del chunk completaron — el chequeo está ciego")
+  } else if (evaluadas < N_EMP) {
+    # Un chunk que aborta es un defecto en sí: alguna invariante saltó. Y si se
+    # reportara sólo sobre las que sí completaron, la cobertura sería tautológica
+    # (el mismo error que ya se corrigió en V5).
+    bad("V9", sprintf("el chunk abortó en %d de %d semillas — alguna invariante salta",
+                      N_EMP - evaluadas, N_EMP))
+  } else if (ilegales > 0L || clave_max > 0L) {
+    bad("V9", sprintf("%d/%d ternas sin ningún distractor > n! y %d con la clave como opción mayor: la restricción I-7 no se está aplicando",
+                      ilegales, evaluadas, clave_max))
+  } else {
+    cat(sprintf("         %d ternas (n:códigos) distintas alcanzadas | rango de la clave observado: %s | mitad baja %.1f%%\n",
+                length(unique(ternas_vistas)),
+                paste(sort(unique(ranks_obs)), collapse = "/"),
+                100 * mean(ranks_obs <= 2L)))
+    ok("V9", sprintf("%d/%d versiones: toda terna tiene ≥1 distractor > n! y la clave nunca es la mayor",
+                     evaluadas, N_EMP))
+  }
+}
 
 cat("\n")
 if (length(fails)) {

@@ -38,7 +38,7 @@ debe disparar la lectura de `HANDOFF.md` + `ejercicio_state.json` como primera a
 | **Competencia / Componente** | Formulación y ejecución / Aleatorio |
 | **Origen** | `MAT-2026-1-004` (ERA-2026, Sesión 1, pregunta impresa 4; verbatim de `MAT-2026-1-098`) |
 | **Evalúa** | Reconocer que al ocupar posiciones el conjunto disponible **decrece** (no la aritmética de `n!`) |
-| **Pool de errores** | 5 (`EST-PER-01..05`), se eligen **3** por versión |
+| **Pool de errores** | 7 (`EST-PER-01..07`), se eligen **3** por versión, con restricción I-7 |
 
 ---
 
@@ -86,7 +86,7 @@ el ejercicio deja de reproducir el ítem oficial** y la invariante I-6 falla.
 ### 5. Los tres errores oficiales vienen de la ficha, no de la imaginación
 
 `EST-PER-01/02/03` son transcripción generalizada de las *Justificaciones MetaCognitivas* de la
-ficha `MAT-2026-1-004`. No los reescribas por estilo. `EST-PER-04/05` sí son ampliación propia
+ficha `MAT-2026-1-004`. No los reescribas por estilo. `EST-PER-04/05/06/07` sí son ampliación propia
 (para cumplir el mínimo de la regla #1) y pueden editarse con más libertad.
 
 ### 6. El nombre de `EST-PER-01` fue corregido a propósito
@@ -100,13 +100,18 @@ al nombre anterior.**
 
 ### 7. `verificar_render.R` es verificación, no exportación
 
-Comprueba V1-V8 y devuelve exit 1 si algo falla. **V6 enumera el espacio completo** (3 valores de
-`n` × C(5,3) = 30 ternas), no una muestra, y desde el code-review del 2026-07-29 **extrae el pool y
+Comprueba V1-V9 y devuelve exit 1 si algo falla. **V6 enumera el espacio completo** (3 valores de
+`n` × C(7,3) = 105 ternas), no una muestra, y desde el code-review del 2026-07-29 **extrae el pool y
 `N_POOL` del `.Rmd`** en vez de reimplementarlos: una copia local del pool quedaba obsoleta en
 silencio y V6 seguía anunciando «30/30 todo verde» sobre las fórmulas viejas. **No vuelvas a
 hardcodear las fórmulas ahí.** **V5 lee `n` del enunciado**, no de `min(vals)`: desde que el pool
-tiene 5 errores, el distractor «cardinal» (que vale `n`) puede no estar en la terna. Si vuelves a
-inferir `n` del mínimo, V5 dará falsos positivos.
+tiene más errores que slots, el distractor «cardinal» (que vale `n`) puede no estar en la terna. Si
+vuelves a inferir `n` del mínimo, V5 dará falsos positivos.
+
+**V9 no es redundante con V6.** V6 mide el ESPACIO de ternas (enumera `combn` del pool); V9 mide la
+SELECCIÓN real del chunk sobre 240 semillas. Si alguien borrara el filtro `legales`, V6 seguiría en
+verde imprimiendo «mitad baja 41,9 %» mientras el ejercicio vuelve a emitir ternas donde la clave es
+la mayor. Ver particularidad 13.
 
 **V5 compara la cobertura contra `N_VERSIONES`, no consigo misma.** Antes imprimía
 `revisadas/revisadas` —tautológico—, así que descartar versiones en silencio se veía igual que
@@ -145,8 +150,9 @@ Regla #10 de `RR/.claude/rules/codigo-rmd.md`. Verificado el 2026-07-29: el chun
 `validar_diversidad_sustantiva.R` reporta 3 valores únicos de respuesta correcta (24, 120, 720)
 frente a un umbral de 12. Es **estructural**: solo hay tres valores legales de `n`. Ampliar el
 rango violaría la particularidad 3. El validador devuelve exit 0; `ERR_DIV_COSMETICA` sí sería un
-fallo, y no ocurre. La diversidad real la aportan los 6 contextos, las 10 ternas de error y las 6
-reflexiones: **297/300 versiones únicas** medidas.
+fallo, y no ocurre. La diversidad real la aportan los 6 contextos, las ternas de error y las 6
+reflexiones: **298/300 versiones únicas** medidas con el pool de 7 (2026-07-30), con 89 de las 93
+ternas legales alcanzadas y un reparto de `n` equilibrado (105/95/100 sobre 300).
 
 ### 10. El corrector ortográfico daña una referencia si se ejecuta sin cuidado
 
@@ -156,18 +162,57 @@ excluir rutas y nombres de archivo). Por eso las referencias a esa regla están 
 completa `.claude/rules/codigo-rmd.md`, forma que sí queda excluida. **Si añades una referencia
 nueva a un `.md`, escríbela como ruta completa.** Ver `../docs/BACKLOG.md`.
 
+### 13. El pool es de 7 y la terna exige un distractor mayor que `n!` (decisión D4)
+
+Es la particularidad más fácil de destruir por "limpieza", porque a primera vista el pool parece
+inflado y el filtro `legales` parece un rodeo. Las dos cosas son el cierre **medido** del hallazgo
+H1, autorizado por el usuario el 2026-07-30.
+
+Con el pool de 5 anterior, cuatro de las cinco fórmulas eran menores que `n!`, así que la clave
+quedaba en 3.º lugar el 60 % de las veces y era **la mayor** el 40 % restante, nunca en la mitad
+baja. Efecto para el estudiante: descartar las dos opciones menores sin saber combinatoria subía la
+adivinanza del 25 % al **50 %**, y «elegir el número mayor» acertaba 2 de cada 5 versiones. Es la
+regla #22 patrón P5 aplicada a la CLAVE en lugar de a un distractor, y **I-3 no puede detectarlo**
+porque es unilateral: cuando la clave es el máximo su ratio vale 1,0× y la guarda pasa trivialmente.
+
+El fix tiene dos mitades y **ninguna sirve sola** (medido, `../docs/BLUEPRINT.md` §3.1):
+
+1. `EST-PER-06` (`(n+1)!`) y `EST-PER-07` (`2·n!`), ambas mayores que `n!`. Sin ellas, añadir solo el
+   filtro deja el rango de la clave **fijo en 3.º** — cambia un atajo por otro (patrón posicional
+   puro), y la propia guarda de V6 lo rechaza.
+2. La restricción **I-7**: toda terna lleva al menos un distractor mayor que `n!`. Sin ella, el pool
+   de 7 aún deja un 11,4 % de ternas donde la clave es la mayor.
+
+Resultado: rango de la clave 1/2/3 (nunca 4.º), mitad baja 41,9 %, «elegir el mayor» 0,0 %.
+
+Tres detalles del código que **no** son estilo:
+
+- **`es_mayor` se deriva de `calcula()`**, no es una lista de códigos. Así una fórmula nueva cae en el
+  grupo correcto sin tocar nada más y no hay dos fuentes de verdad que se desincronicen.
+- **La terna se elige enumerando el espacio legal y sorteando un índice**, nunca con un bucle de
+  reintento: `repeat`/`while` hasta cumplir la condición es exactamente el Error 22 (regla #21,
+  Familia 1), que cuelga el render en una fracción de semillas.
+- **La instancia canónica no necesita excepción**: sus tres errores oficiales incluyen `EST-PER-01`
+  (`64 > 24`), así que cumple I-7 por sí sola y `MAT-2026-1-004` se sigue reproduciendo verbatim, con
+  la clave en 3.º como en el original. La asimetría es deliberada: fidelidad en la canónica,
+  mitigación en las variantes.
+
+El pool de 7 excede el «4-6» que menciona la regla #1, cuyo texto literal es *«Mínimo 4-6»* — un
+piso, no un techo. **No lo encojas**: el test fija `expect_gte(length(pool), 7L)` y V6/V9 fallan (no
+avisan) si cualquiera de las tres cifras regresa.
+
 ---
 
 ## Reglas del repo raíz con mayor peso aquí
 
 | Regla | Por qué importa en este ejercicio |
 |---|---|
-| #1 `ejercicios-metacognitivos.md` | Pool de 4-6 errores con selección; Solution con subsecciones canónicas; coherencia Nivel↔DOK |
+| #1 `ejercicios-metacognitivos.md` | Pool mínimo 4-6 errores con selección (aquí **7**, ver particularidad 13); Solution con subsecciones canónicas; coherencia Nivel↔DOK |
 | #7 `ortografia-espanol.md` | Todo el texto visible lleva tildes; los `exextra[...]` van en ASCII |
 | #11 `contextos-narrativos-creativos.md` | 6 plantillas como funciones, 6 estructuras, sin «registró» |
 | #19 `solution-letter-independence.md` | La Solution identifica por contenido y código, jamás por letra |
 | #21 `familias-soluciones-rmd.md` | Familia 1 (sin bucles sin cota) y Familia 5 (`safe_sample`) |
-| #22 `diversidad-sustantiva.md` | P5 (distractor eliminable por magnitud) gobierna el umbral 15× |
+| #22 `diversidad-sustantiva.md` | P5 (eliminable por magnitud) gobierna el umbral 15× **y**, aplicado a la clave, la invariante I-7; P4 (predictibilidad posicional) gobierna la guarda de rango no constante |
 
 ---
 
@@ -187,6 +232,11 @@ nueva a un `.md`, escríbela como ruta completa.** Ver `../docs/BACKLOG.md`.
 - Borrar los alias `valor_correcto` / `opciones_valores` / `error_sel` o su `stopifnot` de
   alineación (particularidad 11).
 - Escribir números de línea del `.Rmd` en los docs (particularidad 12).
+- Encoger el pool por debajo de 7 errores, borrar `EST-PER-06`/`EST-PER-07`, eliminar el filtro
+  `legales` de la selección o el `stopifnot` de I-7 (particularidad 13): reintroduce el hallazgo H1.
+- Sustituir la enumeración del espacio legal por un bucle de reintento (`repeat`/`while`) —
+  Error 22, regla #21 Familia 1 (particularidad 13).
+- Derivar `es_mayor` de una lista de códigos hardcoded en vez de `calcula()` (particularidad 13).
 - Marcar `aprobacion_usuario` en `ejercicio_state.json` sin aprobación humana explícita.
 
 ---
@@ -201,5 +251,5 @@ nueva a un `.md`, escríbela como ruta completa.** Ver `../docs/BACKLOG.md`.
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-07-29
+**Versión**: 2.0 (particularidad 13: decisión D4 — pool de 7 + I-7 que cierra el hallazgo H1)
+**Fecha**: 2026-07-30

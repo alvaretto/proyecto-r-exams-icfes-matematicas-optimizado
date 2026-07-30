@@ -92,8 +92,9 @@ auditoría adversarial del 2026-07-29 para cumplir la regla #1
 exactamente 3 para 3 espacios, así que el *tipo* de error nunca variaba entre versiones). Los tres
 primeros (`EST-PER-01/02/03`) se toman **literalmente** de las Justificaciones MetaCognitivas de la
 ficha oficial `MAT-2026-1-004` (comentario del pool en el `.Rmd`) y generalizados de `n = 4` a
-`n ∈ {4,5,6}`; los dos últimos (`EST-PER-04/05`) son ampliación propia del subproyecto para cumplir
-el mínimo de la regla #1.
+`n ∈ {4,5,6}`; `EST-PER-04/05` son ampliación propia del subproyecto para cumplir el mínimo de la
+regla #1, y `EST-PER-06/07` son la ampliación de la **decisión D4** (2026-07-30) que cerró el
+hallazgo H1 — ambas mayores que `n!`, para que la clave no sea nunca la opción de mayor magnitud.
 
 | Código | Nombre | `calcula(n)` (`.Rmd`) | Valor en `n=4` | Qué diagnostica |
 |---|---|---|---|---|
@@ -103,6 +104,8 @@ el mínimo de la regla #1.
 | `EST-PER-03` | Confusión entre cardinal del conjunto y número de arreglos | `n` | 4 | Confunde «cuántas formas hay de ordenar `n` elementos» con «cuántos elementos hay» — un error de interpretación de la pregunta, previo a cualquier cálculo, sin aplicar ningún principio de conteo. |
 | `EST-PER-04` | Fórmula de permutación circular aplicada a una fila | `factorial(n - 1L)` | 6 | Aplica la fórmula de permutaciones **circulares**, `(n-1)!`, que descuenta las rotaciones porque un círculo no tiene primer lugar; en una fila sí lo hay, y cada rotación produce un arreglo distinto. |
 | `EST-PER-05` | Principio aditivo en lugar de multiplicativo | `n * (n + 1L) / 2L` | 10 | Suma la secuencia de posiciones disponibles en vez de multiplicarla. Identifica correctamente cuántas opciones quedan en cada posición pero combina esos conteos con el principio aditivo en vez del multiplicativo. |
+| `EST-PER-06` | Cuenta una posición más de las que hay | `factorial(n + 1L)` | 120 | Aplica **bien** el principio multiplicativo, pero sobre un conjunto que no es el del problema: cuenta `n+1` lugares por llenar cuando el enunciado describe `n` elementos. El método es correcto; el conjunto sobre el que se aplica, no. Error de conteo de las posiciones **antes** de la fórmula. |
+| `EST-PER-07` | Duplica el conteo por el orden inverso | `2L * factorial(n)` | 48 | Obtiene bien las `n!` permutaciones y luego las duplica, suponiendo que leer la fila de izquierda a derecha y de derecha a izquierda son dos colocaciones distintas que hay que sumar. Doble conteo por una simetría que el factorial ya incluye: es el error **simétrico** de `EST-PER-04` — aquél divide por rotaciones que no debería descontar, éste multiplica por reflexiones ya contadas. |
 
 **Corrección del 2026-07-29 sobre `EST-PER-01`**: la ficha anterior de este documento describía el
 error como «supone `n` opciones en cada posición», lo que implicaría $n^n = 256$ para $n=4$, no
@@ -112,14 +115,16 @@ supuesto** real: contar solo `n-1` posiciones (como si la última quedara determ
 cada una de esas `n-1`, conservar las `n` opciones — fiel al texto oficial de la ficha, que habla
 de «tres posiciones» para `n=4` (`n-1 = 3`).
 
-**Selección por versión (regla #1 + Decisión D3).** Cada versión muestra 3 de los 5 errores,
-elegidos con `safe_sample()` entre los aplicables por `precondicion` (todas aplican siempre para
-este ítem). La única excepción es la **instancia canónica** (contexto 1 con `n = 4`): ahí se
+**Selección por versión (regla #1 + Decisiones D3 y D4).** Cada versión muestra 3 de los 7 errores.
+La terna se elige **enumerando el espacio legal** —las combinaciones que contienen al menos un
+distractor mayor que `n!`, invariante I-7— y sorteando un índice con `safe_sample()`, entre los
+aplicables por `precondicion` (todas aplican siempre para este ítem). Nunca con un bucle de
+reintento: eso es el Error 22 y cuelga el render (regla #21, Familia 1). La única excepción es la **instancia canónica** (contexto 1 con `n = 4`): ahí se
 fuerzan los tres errores oficiales (`EST-PER-01/02/03`, `CODIGOS_OFICIALES` en `.Rmd`)
 para que esa versión reproduzca íntegro el ítem `MAT-2026-1-004`, incluidas sus cuatro opciones
 oficiales (64, 24, 16, 4). Ver la decisión D3 en [`BLUEPRINT.md`](BLUEPRINT.md) §4.8.
 
-**Plausibilidad para un estudiante de grado 10-11**: los cinco errores son transcripciones
+**Plausibilidad para un estudiante de grado 10-11**: los siete errores son transcripciones
 razonables de una lectura apresurada del principio multiplicativo o de una fórmula memorizada sin
 verificar su condición — no requieren un malentendido exótico. Confundir permutación con variación
 con repetición (`EST-PER-01`) es, según la propia ficha oficial del ítem, el distractor más elegido
@@ -127,14 +132,18 @@ en la aplicación real; truncar el producto a dos factores (`EST-PER-02`) ocurre
 "multiplicar" sin contar cuántas posiciones hay que llenar; responder el cardinal (`EST-PER-03`) es
 el error de interpretación más elemental de la pregunta; aplicar la fórmula circular (`EST-PER-04`)
 ocurre cuando se memoriza `(n-1)!` sin distinguir arreglo circular de arreglo en fila; y sumar en
-vez de multiplicar (`EST-PER-05`) es la confusión más básica entre los dos principios de conteo.
+vez de multiplicar (`EST-PER-05`) es la confusión más básica entre los dos principios de conteo;
+contar una posición de más (`EST-PER-06`) es un desliz de lectura del enunciado que deja el método
+intacto; y duplicar por el orden inverso (`EST-PER-07`) es la sobrecorrección de quien recuerda que
+«en algunos conteos hay que dividir o multiplicar por una simetría» sin verificar si aquí aplica.
 
-**Los cinco tienen la misma estructura algebraica** (un valor entero positivo derivado de `n`), y
+**Los siete tienen la misma estructura algebraica** (un valor entero positivo derivado de `n`), y
 la unicidad y plausibilidad de magnitud de cada terna {correcta, distractor, distractor,
 distractor} se garantiza **por construcción**, no por exclusión de casos: el rango de `n` y la
-enumeración exhaustiva de las 30 ternas posibles (3 valores de `n` × C(5,3) = 10 combinaciones) se
-verificaron para que las cuatro opciones sean siempre distintas y ninguna sea descartable por
-magnitud desproporcionada. Ver la tabla de medición completa en [`BLUEPRINT.md`](BLUEPRINT.md) §3.
+enumeración exhaustiva de las **105** ternas posibles (3 valores de `n` × C(7,3) = 35 combinaciones)
+se verificaron para que las cuatro opciones sean siempre distintas, ninguna sea descartable por
+magnitud desproporcionada y **la clave nunca sea la mayor** (I-7). Ver la tabla de medición completa
+en [`BLUEPRINT.md`](BLUEPRINT.md) §3 y el barrido que fijó el tamaño del pool en §3.1.
 
 ### 3.1 Solution con las 6 subsecciones canónicas + ítem espejo
 
@@ -189,10 +198,10 @@ con/sin reemplazo que separa a los dos ítems oficiales.
   [`BACKLOG.md`](BACKLOG.md) P1.2)
 - `../../../../.claude/rules/contextos-narrativos-creativos.md` — regla #11, pool de 6 plantillas
   narrativas
-- `../.claude/rules/permutaciones-parametricas.md` — contrato local del pool `n!` y del pool de
-  cinco errores conceptuales (pendiente, lo escribe otro agente)
+- [`../.claude/rules/permutaciones-parametricas.md`](../.claude/rules/permutaciones-parametricas.md)
+  — contrato local: la clave `n!`, el pool de siete errores conceptuales y las invariantes I-1..I-7
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-07-29
+**Versión**: 2.0 (pool 5 → 7: `EST-PER-06` y `EST-PER-07` de la decisión D4)
+**Fecha**: 2026-07-30

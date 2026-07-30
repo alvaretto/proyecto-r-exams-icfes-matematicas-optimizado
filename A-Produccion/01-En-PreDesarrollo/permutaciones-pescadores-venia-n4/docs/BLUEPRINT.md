@@ -1,17 +1,16 @@
 # Blueprint — Permutaciones de los pescadores en la venia final
 
 > Arquitectura técnica del ejercicio. Para el encuadre pedagógico ver
-> [`SYLLABUS.md`](SYLLABUS.md); para el estado de trabajo ver [`../HANDOFF.md`](../HANDOFF.md)
-> (pendiente).
+> [`SYLLABUS.md`](SYLLABUS.md); para el estado de trabajo ver [`../HANDOFF.md`](../HANDOFF.md).
 
 | Campo | Valor |
 |---|---|
 | **Archivo fuente** | `permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd` |
-| **Líneas** | 481 (verificado con `wc -l`, 2026-07-29 — creció de 405 tras la auditoría adversarial que amplió el pool de errores) |
+| **Líneas** | 585 (verificado con `wc -l`, 2026-07-30 — 405 → 481 tras la auditoría adversarial, → 585 tras la decisión D4) |
 | **Chunks R** | 4 (`data_generation`, `question_body`, `answerlist_q`, `solucion`) + 1 guard LaTeX |
 | **Lenguaje gráfico** | Ninguno — Flujo B = `false`, el ejercicio no tiene figura |
 | **Tipo** | SCHOICE, opciones de **texto** (valores numéricos), sin imagen |
-| **Auto-contenido** | **Sí, obligatorio** (ver §5, invariante I-6) |
+| **Auto-contenido** | **Sí, obligatorio** (ver §5, invariante I-8) |
 
 ---
 
@@ -26,22 +25,29 @@ semilla (R RNG)
     ├─► correcta_val = n!
     ├─► desarrollo (texto "n × (n-1) × ... × 1" para la Solution)
     │
-    ├─► errores_conceptuales (pool de 5, con precondicion/calcula)
-    │      ├─► EST-PER-01  calcula(n) = n^(n-1)
+    ├─► errores_conceptuales (pool de 7, con precondicion/calcula)
+    │      ├─► EST-PER-01  calcula(n) = n^(n-1)      > n!
     │      ├─► EST-PER-02  calcula(n) = n*n
     │      ├─► EST-PER-03  calcula(n) = n
     │      ├─► EST-PER-04  calcula(n) = (n-1)!
-    │      └─► EST-PER-05  calcula(n) = n*(n+1)/2
+    │      ├─► EST-PER-05  calcula(n) = n*(n+1)/2
+    │      ├─► EST-PER-06  calcula(n) = (n+1)!       > n!   [Decisión D4]
+    │      └─► EST-PER-07  calcula(n) = 2*n!         > n!   [Decisión D4]
     │
     ├─► ctx ← 1 de 6 contextos narrativos (canónico + 5 variantes)
     ├─► texto_enunciado, texto_pregunta ← ctx$enunciado/pregunta(n)
     │
-    ├─► aplicables ← filtrado por precondicion (los 5 aplican siempre)
+    ├─► aplicables ← filtrado por precondicion (los 7 aplican siempre)
+    ├─► es_mayor ← calcula(n) > correcta_val   (derivado, no lista hardcoded)
     ├─► es_canonica ← (ctx_idx==1 && n==4)
-    ├─► sel ← 3 oficiales SI es_canonica, si no sample(aplicables,3)  [Decisión D3]
+    ├─► sel ← 3 oficiales SI es_canonica, si no:                   [Decisión D3]
+    │      ├─► ternas  ← combn(aplicables, 3)          espacio completo
+    │      ├─► legales ← ternas con >= 1 distractor > n!  [I-7, Decisión D4]
+    │      └─► sample(legales, 1)   ← índice sorteado, NUNCA bucle de reintento
     ├─► vals ← calcula(n) de los 3 errores seleccionados
     │      ├─► stopifnot I-1..I-4 (unicidad, ≠correcta, ratio≤15x, enteros>0)
-    │      └─► stopifnot I-6 (canónica ⇒ opciones = {24,64,16,4})
+    │      ├─► stopifnot I-6 (canónica ⇒ opciones = {24,64,16,4})
+    │      └─► stopifnot I-7 (algún distractor > clave ⇒ la clave nunca es la mayor)
     │
     ├─► perm ← sample(4L); opciones ← mezcla; sol ← posición correcta
     │      └─► stopifnot I-5 (sol coincide con correcta, 4 únicas)
@@ -86,11 +92,16 @@ subproyecto hermano `desplazamiento-avion-aeropuerto`, aunque allí aplicado a u
 geométrica y aquí a una algebraica).
 
 **Nota (2026-07-29):** la tabla anterior usa solo las cuatro fórmulas originales (`n!`, `n^(n-1)`,
-`n²`, `n`), porque así se fijó `N_POOL` cuando el pool de errores tenía 3 entradas. Tras la
-auditoría adversarial que amplió el pool a 5 (`EST-PER-04` circular, `EST-PER-05` aditivo), el
-contrato de unicidad y plausibilidad debe verificarse para **todas** las combinaciones de 3
-distractores posibles, no solo para esta terna fija — ver §3, que reemplaza esta tabla como fuente
-de verdad del contrato vigente.
+`n²`, `n`), porque así se fijó `N_POOL` cuando el pool de errores tenía 3 entradas. El pool creció
+después a 5 (auditoría adversarial: `EST-PER-04` circular, `EST-PER-05` aditivo) y luego a **7**
+(decisión **D4**: `EST-PER-06` `(n+1)!` y `EST-PER-07` `2·n!`, ambas mayores que `n!`, para cerrar el
+hallazgo H1). El contrato de unicidad y plausibilidad debe verificarse para **todas** las
+combinaciones de 3 distractores posibles, no solo para esta terna fija — ver §3, que reemplaza esta
+tabla como fuente de verdad del contrato vigente.
+
+Las dos fórmulas añadidas por D4 **no mueven** el techo de magnitud: en `n=6`, `(n+1)! = 5040` es
+7,0× la clave y `2·n! = 1440` es 2,0×, ambas por debajo del 10,8× que ya aportaba `EST-PER-01`. El
+umbral de 15× y el rango `n ∈ {4,5,6}` siguen intactos, así que D4 **no roza** la decisión D2.
 
 ---
 
@@ -98,39 +109,86 @@ de verdad del contrato vigente.
 
 `plano-cartesiano-barco-n2` sostiene su clave con un contrato **geométrico** (el *bounding box*
 del casco dibujado debe coincidir con la clave). Aquí, al no haber dibujo, el contrato es
-**algebraico**: para cada `n ∈ N_POOL` y para **cada una de las C(5,3) = 10 combinaciones** de tres
-distractores elegidos del pool de cinco fórmulas (`n^(n-1)`, `n²`, `n`, `(n-1)!`, `n(n+1)/2`), el
-conjunto {correcta, distractor, distractor, distractor} debe tener **4 elementos distintos**,
-ninguno debe superar **15×** la clave, y los cuatro deben ser enteros positivos. Son **30
-combinaciones en total** (3 valores de `n` × 10 ternas) — el espacio completo, no una muestra. Este
-contrato se verifica en dos capas independientes:
+**algebraico**: para cada `n ∈ N_POOL` y para **cada una de las C(7,3) = 35 combinaciones** de tres
+distractores elegidos del pool de siete fórmulas (`n^(n-1)`, `n²`, `n`, `(n-1)!`, `n(n+1)/2`,
+`(n+1)!`, `2·n!`), el conjunto {correcta, distractor, distractor, distractor} debe tener **4
+elementos distintos**, ninguno debe superar **15×** la clave, y los cuatro deben ser enteros
+positivos. Son **105 combinaciones en total** (3 valores de `n` × 35 ternas) — el espacio completo,
+no una muestra.
 
-1. **En tiempo de generación** (`.Rmd`): los `stopifnot` I-1 a I-4 (sobre la terna
-   efectivamente seleccionada en esa versión) e I-6 (sobre la instancia canónica) abortan la
-   generación si el contrato se rompe.
-2. **Fuera del render**, por enumeración exhaustiva de las 30 combinaciones en
-   `verificar_render.R` (`V6`): para cada `n ∈ {4,5,6}` recorre las 10 ternas
-   posibles de `utils::combn(5, 3)`, calcula las 4 opciones y verifica unicidad, `distractor ≠
-   correcta` y `max/clave ≤ 15`, de forma independiente del RNG del render.
+Sobre ese espacio, la selección del `.Rmd` se restringe además al **espacio legal**: las ternas con
+al menos un distractor mayor que `n!` (invariante **I-7**, decisión **D4**). Son **93 de las 105**;
+las 12 descartadas son exactamente las que no contienen ninguna de las tres fórmulas mayores
+(`C(4,3) = 4` por cada valor de `n`). Este contrato se verifica en **tres** capas independientes:
 
-**Resultado de la enumeración exhaustiva (2026-07-29, 30/30 ternas verdes):** la razón máx/clave
-observada se **amplió** de `[2,7×, 10,8×]` (cuando el pool tenía 3 distractores fijos, siempre
-incluidos) a **`[1,0×, 10,8×]`** — el límite superior no cambió (sigue siendo `n=6` con
-`EST-PER-01`), pero ahora existen ternas que **excluyen** el distractor más grande (`EST-PER-01`,
-`n^(n-1)`), y en esas ternas el valor máximo de las 4 opciones es la propia clave (ratio 1,0×). Una
-consecuencia directa: **el rango de la correcta por magnitud ya no es invariante**. Antes, con los
-3 distractores oficiales siempre presentes, la clave ocupaba siempre la 3.ª posición al ordenar las
-4 opciones (`cardinal < cuadrado < clave < repeticion`). Ahora, en las ternas que excluyen
-`EST-PER-01`, la clave puede ser la **mayor** de las 4 (4.ª posición) — por ejemplo, para `n=4` con
-la terna {`EST-PER-02`=16, `EST-PER-04`=6, `EST-PER-05`=10}: ordenadas, `6 < 10 < 16 < 24`, la
-clave (24) queda en 4.ª posición, no en 3.ª. `verificar_render.R` reporta el conjunto de rangos
-observados (`rank_corr`) explícitamente para dejar esta variación auditable en cada corrida.
+1. **En tiempo de generación** (`.Rmd`): los `stopifnot` I-1 a I-4 (sobre la terna efectivamente
+   seleccionada en esa versión), I-6 (sobre la instancia canónica) e I-7 abortan la generación si el
+   contrato se rompe.
+2. **Fuera del render, sobre el ESPACIO**, por enumeración exhaustiva de las 105 combinaciones en
+   `verificar_render.R` (`V6`): para cada `n ∈ {4,5,6}` recorre las 35 ternas de
+   `utils::combn(7, 3)` y verifica unicidad, `distractor ≠ correcta` y `max/clave ≤ 15` sobre el
+   espacio completo; las métricas que ve el estudiante (rango de la clave, dominancia) las mide
+   **solo sobre las 93 legales**, porque incluir las ilegales daría un falso verde: aportan
+   precisamente los rangos que la restricción existe para eliminar.
+3. **Fuera del render, sobre la SELECCIÓN** (`V9`, 240 semillas): comprueba que el chunk *realmente*
+   se restringe al espacio legal. V6 mide el espacio, no la selección: si alguien borrara el filtro
+   `legales`, V6 seguiría verde informando «mitad baja 41,9 %» mientras el ejercicio emite otra vez
+   ternas donde la clave es la mayor.
+
+**Resultado de la enumeración exhaustiva (2026-07-29, 105/105 ternas verdes):** la razón máx/clave
+observada es **`[1,0×, 10,8×]`**; el límite superior sigue siendo `n=6` con `EST-PER-01`. Sobre las
+93 ternas legales, el **rango de la clave por magnitud es 1.º, 2.º o 3.º — nunca 4.º**: la clave
+queda en la mitad baja en el **41,9 %** de las ternas, «elegir el número mayor» acierta en el
+**0,0 %**, y la clave vale como máximo **0,50×** el mayor distractor. `verificar_render.R` imprime
+las tres cifras en cada corrida y **falla** —no avisa— si cualquiera de ellas regresa.
 
 A diferencia del contrato geométrico del hermano —que puede romperse en silencio si alguien
 "suaviza" `prof()` sin que ningún validador sintáctico lo note—, el contrato algebraico aquí es una
-propiedad **decidible por cálculo directo** de cinco fórmulas cerradas: no depende de ninguna
-función auxiliar que alguien pueda editar sin querer, y la enumeración exhaustiva de las 30
+propiedad **decidible por cálculo directo** de siete fórmulas cerradas: no depende de ninguna
+función auxiliar que alguien pueda editar sin querer, y la enumeración exhaustiva de las 105
 combinaciones (en vez de una muestra) elimina cualquier duda sobre combinaciones no cubiertas.
+
+### 3.1 Barrido de configuraciones del pool (evidencia de la decisión D4)
+
+Antes de fijar el pool en 7 fórmulas + I-7 se **midieron** las alternativas por enumeración
+exhaustiva del espacio de cada una. La tabla es reproducible: extrae las fórmulas del `.Rmd` real
+(no una copia) y recorre `combn` sobre cada configuración.
+
+| Configuración | ternas | rangos de la clave | % mitad baja | % la clave es la mayor | dominancia máx |
+|---|---:|:---:|---:|---:|---:|
+| A. pool 5, sin I-7 | 30 | 3/4 | 0,0 % | **40,0 %** | 20,00× |
+| B. pool 5 + I-7 | 30 | **3 (fijo)** | 0,0 % | 0,0 % | 0,38× |
+| C. pool 6 (+`(n+1)!`) + I-7 | 60 | 2/3 | 25,0 % | 0,0 % | 0,38× |
+| D. pool 6 (+`2·n!`) + I-7 | 60 | 2/3 | 25,0 % | 0,0 % | 0,50× |
+| E. pool 7, sin I-7 | 105 | 1/2/3/4 | 37,1 % | 11,4 % | 20,00× |
+| **F. pool 7 + I-7 — ELEGIDA** | **105** | **1/2/3** | **41,9 %** | **0,0 %** | **0,50×** |
+
+Ninguna configuración produjo opciones duplicadas ni superó el umbral de 15×, así que la elección se
+decidió solo por el patrón de magnitud. Lecturas que fijan la decisión:
+
+- **A es el defecto H1** en su estado original: la clave nunca cae en la mitad baja y «elegir el
+  mayor» acierta 2 de cada 5 versiones.
+- **B (añadir solo la restricción, sin ampliar el pool) NO es viable.** Elimina el atajo del máximo,
+  pero deja el rango de la clave **fijo en 3.º** en las 30 ternas — un patrón posicional puro, que es
+  justo lo que la guarda de V6 rechaza (regla #22, patrón P4). Corrige un atajo creando otro.
+- **C y D funcionan** pero cubren la mitad baja solo el 25 % y no alcanzan nunca el 1.º puesto,
+  porque una terna de 3 no puede contener 3 fórmulas mayores si solo hay 2 en el pool.
+- **E muestra que las fórmulas nuevas no bastan por sí solas**: sin I-7 sigue habiendo un 11,4 % de
+  ternas donde la clave es la mayor. La restricción es la mitad esencial de D4, no un adorno.
+- **F** es la configuración mínima que cierra H1 sin borrar ningún distractor diagnóstico: 7 es el
+  tamaño más pequeño que permite rango 1.º y maximiza la cobertura de mitad baja. Por eso el test
+  `test_permutaciones_invariantes.R` fija `expect_gte(length(pool), 7L)`: encogerlo reintroduce el
+  patrón en silencio.
+
+El pool de 7 excede el «4-6» que menciona el comentario de la regla #1
+(`.claude/rules/ejercicios-metacognitivos.md`), cuyo texto es *«Mínimo 4-6 errores por ejercicio»* —
+un piso, no un techo. 7 es el precio medido de cerrar H1.
+
+**Reproducir la tabla:** el script del barrido no se versiona (es un instrumento de medición de una
+sola decisión, no infraestructura). Su lógica está congelada en las capas permanentes: V6 mide la
+fila F en cada corrida de `verificar_render.R`, y el bloque `I-7` de
+`tests/testthat/test_permutaciones_invariantes.R` reproduce sus dos guardas de no-regresión
+(`any(rangos <= 2)` y `!any(rangos == 4)`) contra el pool extraído del `.Rmd`.
 
 ---
 
@@ -243,8 +301,9 @@ pool más allá de las 3 entradas originales. Pero **OE1** (fidelidad al ítem o
 sus cuatro opciones oficiales (64, 24, 16, 4) — y esas cuatro opciones dependen exactamente de los
 tres errores oficiales (`EST-PER-01/02/03`), no de una terna cualquiera del pool ampliado.
 
-**La resolución (Decisión D3):** la selección normal de errores es `sample(aplicables, 3)` sobre el
-pool de 5 (`.Rmd`). Pero cuando la versión es la **instancia canónica** — contexto 1 (el
+**La resolución (Decisión D3):** la selección normal de errores sortea una terna del espacio legal
+del pool de 7 (`.Rmd`; con la decisión D4 el sorteo pasó de `sample(aplicables, 3)` a enumerar las
+ternas que cumplen I-7 y sortear un índice). Pero cuando la versión es la **instancia canónica** — contexto 1 (el
 verbatim de `MAT-2026-1-004`) **y** `n == 4` simultáneamente — se fuerzan los tres errores
 oficiales (`CODIGOS_OFICIALES <- c("EST-PER-01", "EST-PER-02", "EST-PER-03")`;
 condicional `es_canonica`). Así conviven la regla #1 (pool ampliado, variedad de
@@ -263,25 +322,77 @@ evaluaciones del `data_generation` se observaron **16** instancias canónicas (v
 
 ---
 
+### 4.9 Decisión D4 — pool de 7 y restricción I-7 para cerrar el hallazgo H1
+
+**Autorizada por el usuario el 2026-07-30.** El hallazgo H1 quedó registrado en
+[`BACKLOG.md`](BACKLOG.md) como decisión humana pendiente con dos salidas: aceptar la propiedad por
+fidelidad al ítem oficial, o ampliar el pool con fórmulas mayores que `n!`. Se autorizó la segunda.
+
+**El problema.** Con el pool de 5, las cuatro fórmulas menores que `n!` (`n²`, `n`, `(n-1)!`,
+`n(n+1)/2`) superaban en número a la única mayor (`n^(n-1)`). Consecuencia medida sobre las 30
+ternas: la clave quedaba en 3.º lugar en el 60 % y era **la mayor** en el 40 % restante, nunca en la
+mitad baja. Un estudiante que descartara las dos opciones menores sin saber combinatoria pasaba de
+adivinar al 25 % a adivinar al **50 %**, y la heurística «elegir el número mayor» acertaba 2 de cada
+5 versiones. Es la regla #22 patrón P5 aplicada a la **clave** en vez de a un distractor.
+
+**La corrección tiene dos mitades, y ninguna funciona sola** (§3.1):
+
+1. **Dos fórmulas nuevas mayores que `n!`** — `EST-PER-06` `(n+1)!` (contar una posición más de las
+   que hay) y `EST-PER-07` `2·n!` (duplicar el conteo por el orden inverso). Ambas son errores
+   conceptuales diagnósticos por derecho propio, no relleno numérico: la primera es un error de
+   conteo del conjunto antes de aplicar la fórmula; la segunda, un doble conteo por una simetría que
+   el factorial ya incluye — el error simétrico de la fórmula circular de `EST-PER-04`.
+2. **La restricción I-7**: toda terna debe contener al menos un distractor mayor que `n!`. Sin ella,
+   el pool de 7 aún deja un 11,4 % de ternas donde la clave es la mayor (configuración E).
+
+**Coste y por qué se acepta.** El pool sube a 7, por encima del «4-6» que menciona la regla #1 (cuyo
+texto es *«Mínimo 4-6»*, un piso). La alternativa de quedarse en 6 cubre la mitad baja solo el 25 % y
+nunca alcanza el 1.º puesto. Quedarse en 5 y añadir solo la restricción **empeora** el ítem: deja el
+rango de la clave fijo en 3.º, un patrón posicional puro que la propia guarda de V6 rechaza.
+
+**Lo que D4 NO toca:**
+
+- **La instancia canónica.** Los tres errores oficiales incluyen `EST-PER-01` (`64 > 24`), así que la
+  terna canónica cumple I-7 por sí sola y `MAT-2026-1-004` se sigue reproduciendo verbatim con sus
+  opciones `{24, 64, 16, 4}` — donde la clave es la 3.ª, igual que en el original. La asimetría es
+  deliberada: **fidelidad en la instancia canónica, mitigación en las variantes**.
+- **La decisión D2.** Las fórmulas nuevas valen 7,0× y 2,0× la clave en el peor `n`, por debajo del
+  10,8× que ya aportaba `EST-PER-01`. El umbral de 15× y `n ∈ {4,5,6}` quedan intactos (§2).
+- **La forma de sortear.** La terna se elige enumerando el espacio legal y sorteando un índice, nunca
+  con un bucle de reintento (regla #21, Familia 1 — el patrón del Error 22 que cuelga el render).
+
+**Coste de mantenimiento asumido:** cualquier cambio futuro del pool obliga a re-medir el espacio
+completo. Está cableado para que falle en vez de degradarse: `V6` re-mide las 105 ternas y las tres
+cifras de H1 en cada corrida, `V9` comprueba la selección real sobre 240 semillas, y el test fija
+`expect_gte(length(pool), 7L)`.
+
+---
+
 ## 5. Invariantes que no se deben romper
 
 | # | Invariante | Por qué | Cómo verificarlo |
 |---|---|---|---|
-| **I-1** | Las 4 opciones son distintas: `length(unique(all_vals)) == 4L` | Previene `ERR_ANS_C` (opciones duplicadas) | `stopifnot`; 0 colisiones en las 30 ternas exhaustivas (§3) |
+| **I-1** | Las 4 opciones son distintas: `length(unique(all_vals)) == 4L` | Previene `ERR_ANS_C` (opciones duplicadas) | `stopifnot`; 0 colisiones en las **105** ternas exhaustivas (§3) |
 | **I-2** | Ningún distractor coincide con la respuesta correcta | Un distractor igual a la clave no discrimina nada | `stopifnot` |
-| **I-3** | Plausibilidad de magnitud: `max(all_vals) / correcta_val <= 15` | Regla #22, patrón P5: un distractor *outlier* de magnitud se descarta sin razonar | `stopifnot`; rango observado ahora `[1,0×, 10,8×]` (§3), umbral con holgura |
+| **I-3** | Plausibilidad de magnitud: `max(all_vals) / correcta_val <= 15` | Regla #22, patrón P5: un distractor *outlier* de magnitud se descarta sin razonar | `stopifnot`; rango observado `[1,0×, 10,8×]` (§3), umbral con holgura. **Es unilateral**: no acota que la clave domine — eso lo cubre I-7 |
 | **I-4** | Las 4 opciones son enteros positivos | Coherencia de tipo con la pregunta ("¿de cuántas formas...?") | `stopifnot` |
 | **I-5** | Exactamente una opción marcada y coincide con `n!` | Correctitud de `exsolution` (Nivel 5B de `validar_coherencia_matematica.R`) | `stopifnot` |
-| **I-6** (nueva, 2026-07-29) | En la instancia canónica (`ctx_idx==1` y `n==4`), el conjunto de opciones es exactamente `{24, 64, 16, 4}` | Fidelidad al ítem oficial (OE1) cuando la Decisión D3 fuerza los 3 errores oficiales | `stopifnot` (dentro de `if (es_canonica)`), ver §4.8 |
-| **I-7** (antes I-6) | El `.Rmd` permanece **auto-contenido**: `pick_int()`, `safe_sample()`, `fmt()` y `errores_conceptuales` viven dentro de `data_generation` | `validar_diversidad_sustantiva.R` (regla #22, obligatorio) hace `setwd(tempdir())` y evalúa el chunk en un `new.env()` fuera del pipeline de `xexams()`; ahí `include_supplement()` falla — el hermano `desplazamiento-avion-aeropuerto` lo midió: 40/40 semillas | `Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` |
-| **I-8** (antes I-7) | No hay `set.seed()` dentro de ningún chunk | Corrompería el RNG del render y colapsaría la diversidad (regla #10) | `grep -n 'set.seed' <rmd>` → 0 coincidencias dentro de los chunks del ejercicio (el único `set.seed()` del subproyecto vive en `verificar_render.R`, fuera del `.Rmd`, uso estándar para reproducibilidad de la verificación) |
-| **I-9** (antes I-8) | Las **cinco** `calcula()` del pool son funciones puras (sin `sample`/`runif`/`rnorm`) | Capa D de `validar_coherencia_matematica.R`: `calcula()` debe ser determinista | `calcula()` en, 102, 120, 139, 160 — puramente aritméticas sobre `n` |
+| **I-6** (2026-07-29) | En la instancia canónica (`ctx_idx==1` y `n==4`), el conjunto de opciones es exactamente `{24, 64, 16, 4}` | Fidelidad al ítem oficial (OE1) cuando la Decisión D3 fuerza los 3 errores oficiales | `stopifnot` (dentro de `if (es_canonica)`), ver §4.8 |
+| **I-7** (nueva, 2026-07-29) | Al menos un distractor supera la clave: `any(unname(vals) > correcta_val)` ⇒ la clave **nunca** es la opción de mayor magnitud | Cierra el hallazgo H1: sin ella, «elegir el número mayor» acertaba el 40 % de las versiones y la clave llegaba a valer 20× el mayor distractor. I-3 no puede darlo porque cuando la clave *es* el máximo su ratio vale 1,0× y pasa trivialmente | `stopifnot`; `V6` (espacio: 93/105 legales) + `V9` (selección: 240/240), ver §3.1 y Decisión D4 |
+| **I-8** (antes I-7) | El `.Rmd` permanece **auto-contenido**: `pick_int()`, `safe_sample()`, `fmt()` y `errores_conceptuales` viven dentro de `data_generation` | `validar_diversidad_sustantiva.R` (regla #22, obligatorio) hace `setwd(tempdir())` y evalúa el chunk en un `new.env()` fuera del pipeline de `xexams()`; ahí `include_supplement()` falla — el hermano `desplazamiento-avion-aeropuerto` lo midió: 40/40 semillas | `Rscript ../../../.claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` |
+| **I-9** (antes I-8) | No hay `set.seed()` dentro de ningún chunk | Corrompería el RNG del render y colapsaría la diversidad (regla #10) | `grep -n 'set.seed' <rmd>` → 0 coincidencias dentro de los chunks del ejercicio (los únicos `set.seed()` del subproyecto viven en `verificar_render.R` y en la suite de tests, fuera del `.Rmd`, uso estándar para reproducibilidad de la verificación) |
+| **I-10** (antes I-9) | Las **siete** `calcula()` del pool son funciones puras (sin `sample`/`runif`/`rnorm`) | Capa D de `validar_coherencia_matematica.R`: `calcula()` debe ser determinista | Los siete `calcula = function(n)` del bloque `errores_conceptuales` son puramente aritméticos sobre `n`; localizarlos con `grep -n 'calcula *= *function' <rmd>` |
 
-**Nota de numeración (2026-07-29):** el `.Rmd` etiqueta en sus propios comentarios una invariante
-`I-6` (la de la instancia canónica) que colisionaba con la numeración anterior de
-este documento, donde I-6 era la del auto-contenido. Se resolvió renumerando las invariantes
-"meta" (auto-contenido, sin `set.seed`, `calcula()` puras) de I-6/I-7/I-8 a I-7/I-8/I-9, dejando
-I-6 para la invariante que el código mismo etiqueta así.
+**Nota de numeración (actualizada 2026-07-29).** El `.Rmd` etiqueta invariantes en sus propios
+comentarios, y esas etiquetas son la fuente de verdad: cuando colisionan con la numeración de este
+documento, se renumeran las invariantes **"meta"** de este documento (auto-contenido, sin
+`set.seed`, `calcula()` puras), nunca las del código.
+
+Ha ocurrido dos veces. Primero el `.Rmd` introdujo `I-6` (instancia canónica) y las meta pasaron de
+I-6/I-7/I-8 a I-7/I-8/I-9. Ahora la decisión D4 introdujo `I-7` (la clave nunca es la mayor) y las
+meta pasan de I-7/I-8/I-9 a **I-8/I-9/I-10**. Las siete primeras (I-1..I-7) son exactamente las que
+el código verifica con `stopifnot` y las que enumera
+[`../.claude/rules/permutaciones-parametricas.md`](../.claude/rules/permutaciones-parametricas.md).
 
 ---
 
@@ -300,29 +411,34 @@ bloque equivocado. Localiza cada elemento con `grep -n` sobre su identificador.
 | `N_POOL <- c(4L, 5L, 6L)` |
 | `n <- safe_sample(N_POOL, 1L)` |
 | `correcta_val <- as.integer(factorial(n))` |
-| pool de **5** errores conceptuales (`EST-PER-01` a `05`) |
+| pool de **7** errores conceptuales (`EST-PER-01` a `07`) |
 | `calcula = function(n) as.integer(n^(n - 1L))` (`EST-PER-01`) |
 | `calcula = function(n) as.integer(n * n)` (`EST-PER-02`) |
 | `calcula = function(n) as.integer(n)` (`EST-PER-03`) |
-| `calcula = function(n) as.integer(factorial(n - 1L))` (`EST-PER-04`, nuevo) |
-| `calcula = function(n) as.integer(n * (n + 1L) / 2L)` (`EST-PER-05`, nuevo) |
+| `calcula = function(n) as.integer(factorial(n - 1L))` (`EST-PER-04`) |
+| `calcula = function(n) as.integer(n * (n + 1L) / 2L)` (`EST-PER-05`) |
+| `calcula = function(n) as.integer(factorial(n + 1L))` (`EST-PER-06`, D4 — mayor que `n!`) |
+| `calcula = function(n) as.integer(2L * factorial(n))` (`EST-PER-07`, D4 — mayor que `n!`) |
 | pool de 6 contextos narrativos (regla #11) |
 | `ctx_idx <- safe_sample(seq_along(contextos), 1L)` |
 | `CODIGOS_OFICIALES <- c("EST-PER-01", "EST-PER-02", "EST-PER-03")` (Decisión D3) |
 | filtrado por `precondicion` (patrón genérico, regla #8) |
+| `es_mayor <- vapply(errores_conceptuales, function(e) e$calcula(n) > correcta_val, logical(1L))` (clasificación DERIVADA, no lista de códigos) |
 | `es_canonica`; selección de 3 errores (o de los 3 oficiales si es canónica — Decisión D3) |
+| `ternas <- utils::combn(aplicables, 3L)`; `legales <- which(apply(ternas, 2L, function(idx) any(es_mayor[idx])))`; `sel <- sort(ternas[, safe_sample(legales, 1L)])` (I-7 / D4 — enumeración + índice sorteado, sin bucle de reintento) |
 | `stopifnot(length(unique(all_vals)) == 4L)` (I-1) |
 | `stopifnot(!any(unname(vals) == correcta_val))` (I-2) |
 | `stopifnot(max(all_vals) / correcta_val <= 15)` (I-3) |
 | `stopifnot(all(all_vals > 0L), all(all_vals == as.integer(all_vals)))` (I-4) |
-| `if (es_canonica) stopifnot(setequal(all_vals, c(24L, 64L, 16L, 4L)))` (I-6, nueva) |
+| `if (es_canonica) stopifnot(setequal(all_vals, c(24L, 64L, 16L, 4L)))` (I-6) |
+| `stopifnot(any(unname(vals) > correcta_val))` (I-7, nueva — D4) |
 | `perm     <- sample(4L)` |
 | `stopifnot(sum(sol) == 1L, ...)`; `stopifnot(identical(opciones[which(sol == 1L)], correcta))`; `stopifnot(length(unique(opciones)) == 4L)` (I-5) |
 | `reflexion <- safe_sample(reflexiones, 1L)` |
 | `\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother` |
 | comentario: regla #19, opciones identificadas por contenido y código, nunca por letra |
 | bucle sobre `errores_info` (Análisis de cada opción) |
-| 429-446 | *Caso específico* — transferencia al ítem espejo `MAT-2026-1-029`; puntero condicional a `EST-PER-01` |
+| subsección *Caso específico* de la `Solution` — transferencia al ítem espejo `MAT-2026-1-029`; puntero condicional a `EST-PER-01` |
 | `exshuffle: TRUE` |
 
 Ninguna entrada de este inventario depende de números de línea, así que sobrevive a las ediciones

@@ -3,7 +3,7 @@
   "ejercicio": "permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-07-29T16:28:02.061050-05:00",
-  "timestamp_ultima_actualizacion": "2026-07-29T16:59:23.235463-05:00",
+  "timestamp_ultima_actualizacion": "2026-07-30T06:41:39.930422-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -43,8 +43,8 @@
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-07-29T16:59:23.235463-05:00",
-      "versiones_unicas": 297
+      "timestamp": "2026-07-30T06:41:39.930422-05:00",
+      "versiones_unicas": 298
     },
     "validar_icfes": {
       "completado": true,

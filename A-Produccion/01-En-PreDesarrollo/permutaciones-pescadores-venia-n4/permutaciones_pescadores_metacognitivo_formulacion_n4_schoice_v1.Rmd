@@ -37,13 +37,15 @@ ex_uid <- paste0("perm-", paste(safe_sample(c(letters, 0:9), 8L, replace = TRUE)
                                 collapse = ""))
 
 # --- Parametro sustantivo: n = número de elementos distintos a ordenar -------
-# Rango MEDIDO por enumeracion exhaustiva (ver docs/BLUEPRINT.md, sección 4.1):
+# Rango MEDIDO por enumeracion exhaustiva (ver docs/BLUEPRINT.md, sección 2):
 #   n <= 2 -> colisionan 2 opciones (n! == n^(n-1) == n)
 #   n == 3 -> n^(n-1) == n^2 == 9            -> ERR_ANS_C (opciones duplicadas)
 #   n en {4,5,6} -> 4 opciones unicas; razón max/clave = 2.7x / 5.2x / 10.8x
 #   n >= 7 -> razón >= 23.3x: el distractor mayor se descarta por magnitud
 #             sin razonar (regla #22, patrón P5). Umbral fijado en 15x, con la
 #             ventana medida 10.8x .. 23.3x (holgura factor 2.2, no al filo).
+# NO amplíes N_POOL sin volver a medir TODAS las ternas del pool (hoy 105, de las
+# que 93 son legales). Ver .claude/CLAUDE.md local, particularidad 3.
 N_POOL <- c(4L, 5L, 6L)
 n <- safe_sample(N_POOL, 1L)
 
@@ -57,9 +59,15 @@ correcta     <- fmt(correcta_val)
 desarrollo <- paste(seq.int(n, 1L), collapse = " \\times ")
 
 # --- Pool de errores conceptuales -------------------------------------------
-# Tomados LITERALMENTE de las Justificaciones MetaCognitivas de la ficha
-# oficial MAT-2026-1-004 y generalizados a n. calcula() es determinista
-# (función pura, sin sample/runif): lo verifica la Capa D del validador.
+# Pool de 7; se eligen 3 por versión (ver el bloque de selección más abajo).
+#   EST-PER-01/02/03: tomados LITERALMENTE de las Justificaciones MetaCognitivas
+#     de la ficha oficial MAT-2026-1-004 y generalizados de n = 4 a n. NO los
+#     reescribas por estilo (.claude/CLAUDE.md local, particularidad 5).
+#   EST-PER-04/05:    ampliación propia, para cumplir el mínimo de la regla #1.
+#   EST-PER-06/07:    ampliación propia, ambas > n!, para cerrar el hallazgo H1
+#     (la clave nunca quedaba entre las 2 opciones menores). Decisión D4.
+# calcula() es determinista (función pura, sin sample/runif): lo verifica la
+# Capa D de .claude/scripts/validar_coherencia_matematica.R.
 errores_conceptuales <- list(
   list(
     clave             = "repeticion",
@@ -158,6 +166,47 @@ errores_conceptuales <- list(
     ),
     precondicion = function(params) TRUE,
     calcula      = function(n) as.integer(n * (n + 1L) / 2L)
+  ),
+  list(
+    clave             = "posicion_extra",
+    codigo            = "EST-PER-06",
+    nombre            = "Cuenta una posición más de las que hay",
+    descripcion_corta = "Aplica el factorial a n + 1 elementos en vez de a n",
+    descripcion_larga = paste0(
+      "Calcula $(", n, " + 1)! = ", as.integer(factorial(n + 1L)), "$: ",
+      "aplica bien el principio multiplicativo, pero sobre un conjunto que no ",
+      "es el del problema. Cuenta ", n + 1L, " lugares por llenar cuando el ",
+      "enunciado solo describe ", n, " elementos."
+    ),
+    causa_raiz = paste0(
+      "Error de conteo de las posiciones **antes** de aplicar la fórmula: ",
+      "suma un lugar que el problema no menciona. El método es correcto; el ",
+      "conjunto sobre el que se aplica, no."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(factorial(n + 1L))
+  ),
+  list(
+    clave             = "doble_sentido",
+    codigo            = "EST-PER-07",
+    nombre            = "Duplica el conteo por el orden inverso",
+    descripcion_corta = "Multiplica n! por 2 para contar aparte la fila leída al revés",
+    descripcion_larga = paste0(
+      "Calcula $2 \\times ", n, "! = ", as.integer(2L * factorial(n)), "$: ",
+      "obtiene bien las ", correcta_val, " permutaciones y después las duplica, ",
+      "suponiendo que leer la fila de izquierda a derecha y de derecha a ",
+      "izquierda son dos colocaciones distintas que hay que sumar. Ya están ",
+      "contadas: una fila y su inversa son **dos** de las ", correcta_val,
+      " permutaciones, no una contada dos veces."
+    ),
+    causa_raiz = paste0(
+      "Doble conteo por una simetría que el factorial ya incluye. Es el error ",
+      "simétrico de la fórmula circular: aquélla **divide** por las rotaciones ",
+      "que no debería descontar, y ésta **multiplica** por las reflexiones que ",
+      "ya estaban contadas."
+    ),
+    precondicion = function(params) TRUE,
+    calcula      = function(n) as.integer(2L * factorial(n))
   )
 )
 
@@ -249,14 +298,28 @@ texto_enunciado <- ctx$enunciado(n, numeral)
 texto_pregunta  <- ctx$pregunta(n, numeral)
 
 # --- Selección de los 3 errores que se muestran ------------------------------
-# Regla #1 (.claude/rules/ejercicios-metacognitivos.md, "Mínimo 4-6 errores por
-# ejercicio"): el pool tiene 5 y se eligen 3 por versión, con el patrón genérico
-# de filtrado por precondiciones (regla #8 de .claude/rules/codigo-rmd.md).
+# El pool tiene 7 y se eligen 3 por versión, con el patrón genérico de filtrado
+# por precondiciones (regla #8 de .claude/rules/codigo-rmd.md). El pool excede el
+# «4-6» que sugiere el comentario de la regla #1
+# (.claude/rules/ejercicios-metacognitivos.md, piso duro 4): es el precio medido
+# de cerrar H1 sin borrar ningún distractor diagnóstico. Ver decisión D4.
+#
+# RESTRICCIÓN DE MITAD BAJA (hallazgo H1, decisión D4): toda terna debe contener
+# al menos UN distractor mayor que n!. Sin ella la clave nunca queda entre las 2
+# opciones menores, «elegir el número mayor» acierta el 40 % de las versiones y
+# la clave llega a valer 20x el mayor distractor — cosa que I-3 no puede acotar
+# porque es unilateral. Medido por enumeración exhaustiva del espacio completo
+# (105 ternas, 93 legales); ver docs/BLUEPRINT.md, sección 3.1.
+#
+# La terna se elige ENUMERANDO el espacio legal y sorteando un índice, NUNCA con
+# un bucle de reintento (regla #21, Familia 1 — el patrón que causó el Error 22:
+# un `repeat` que resamplea hasta cumplir una condición cuelga el render).
 #
 # EXCEPCIÓN CANÓNICA: cuando la versión es la instancia del ítem ICFES original
 # (contexto 1 con n = 4) se fuerzan los 3 errores oficiales, de modo que esa
 # versión reproduce MAT-2026-1-004 completo: enunciado, pregunta Y las cuatro
-# opciones (64, 24, 16, 4). Ver docs/BLUEPRINT.md, decisión D3.
+# opciones (64, 24, 16, 4). Ver docs/BLUEPRINT.md, decisión D3. Esa terna
+# contiene EST-PER-01 (64 > 24), así que cumple la restricción por sí sola.
 CODIGOS_OFICIALES <- c("EST-PER-01", "EST-PER-02", "EST-PER-03")
 
 params <- list(n = n, correcta_val = correcta_val)
@@ -266,12 +329,21 @@ aplicables <- which(vapply(errores_conceptuales, function(err) {
 }, logical(1L)))
 stopifnot(length(aplicables) >= 3L)
 
+# Clasificación por magnitud DERIVADA de calcula(), no una lista de códigos
+# hardcoded: si se añade una fórmula al pool, cae en el grupo correcto sin tocar
+# nada más, y no hay dos fuentes de verdad que se desincronicen.
+es_mayor <- vapply(errores_conceptuales,
+                   function(e) e$calcula(n) > correcta_val, logical(1L))
+
 es_canonica <- (ctx_idx == 1L && n == 4L)
 if (es_canonica) {
   sel <- which(vapply(errores_conceptuales,
                       function(e) e$codigo %in% CODIGOS_OFICIALES, logical(1L)))
 } else {
-  sel <- sort(safe_sample(aplicables, 3L, replace = FALSE))
+  ternas  <- utils::combn(aplicables, 3L)
+  legales <- which(apply(ternas, 2L, function(idx) any(es_mayor[idx])))
+  stopifnot(length(legales) >= 1L)
+  sel <- sort(ternas[, safe_sample(legales, 1L)])
 }
 stopifnot(length(sel) == 3L)
 errores_sel <- errores_conceptuales[sel]
@@ -297,6 +369,12 @@ stopifnot(all(all_vals > 0L), all(all_vals == as.integer(all_vals)))
 if (es_canonica) {
   stopifnot(setequal(all_vals, c(24L, 64L, 16L, 4L)))
 }
+
+# I-7: al menos un distractor supera a la clave, de modo que la clave NUNCA es
+# la opción de mayor magnitud (hallazgo H1, decisión D4). Es la guarda que I-3 no
+# puede dar: I-3 acota max/clave, y cuando la clave ES el máximo vale 1.0x y pasa
+# trivialmente. Sin I-7, «elegir el número mayor» acertaba el 40 % de las veces.
+stopifnot(any(unname(vals) > correcta_val))
 
 # --- Mezcla interna de opciones ---------------------------------------------
 # exshuffle: TRUE es CORRECTO aquí (opciones de TEXTO y Solution
@@ -328,7 +406,7 @@ stopifnot(length(unique(opciones)) == 4L)
 #     UN error, no la lista de 3; se expone el primero de los seleccionados.
 # Cobertura real: 5B cubre la clave; Capa A cubre la precondición de UNO de los
 # tres errores. Las tres a la vez sólo las cubre
-# `tests/testthat/test_permutaciones_invariantes.R` (I-1..I-6). No inventar un
+# `tests/testthat/test_permutaciones_invariantes.R` (I-1..I-7). No inventar un
 # `valor_erroneo` para despertar la Capa C: con 3 distractores, un único "valor
 # erróneo" sería una ficción, y la relación que la Capa C comprobaría (distractor
 # != clave) ya la garantiza I-2.

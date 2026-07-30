@@ -1,15 +1,15 @@
 # =============================================================================
 # test_permutaciones_invariantes.R
 #
-# Guarda automática de las invariantes I-1 a I-6 del subproyecto
+# Guarda automática de las invariantes I-1 a I-7 del subproyecto
 # `permutaciones-pescadores-venia-n4`.
 #
 # POR QUÉ EXISTE
 # --------------
 # La respuesta correcta de ese ejercicio es el VALOR de una fórmula (`n!`)
-# evaluada sobre un parámetro sorteado, y sus distractores son otras cuatro
-# fórmulas del mismo parámetro. Ningún validador genérico del repo protege esa
-# relación:
+# evaluada sobre un parámetro sorteado, y sus distractores son otras seis
+# fórmulas del mismo parámetro (pool de 7, se eligen 3 por versión). Ningún
+# validador genérico del repo protege esa relación:
 #   - `validar_coherencia_matematica.R` valida cada error por separado, no el
 #     conjunto, y su Capa B (21 keywords semánticas) es específica de
 #     estadística descriptiva: en combinatoria no tiene reglas aplicables.
@@ -97,11 +97,16 @@ test_that("el .Rmd del subproyecto se localiza de forma única", {
 test_that("el pool cumple el mínimo de la regla #1 y hay selección por versión", {
   skip_if_not(file.exists(RMD))
   e <- extraer_entorno(1L)
-  expect_gte(length(e$errores_conceptuales), 4L)
+  expect_gte(length(e$errores_conceptuales), 4L)   # piso duro de la regla #1
   # pool estrictamente mayor que los slots: si fueran iguales, el TIPO de error
   # no variaría nunca entre versiones (Error 27).
   expect_gt(length(e$errores_conceptuales), N_SLOTS)
   expect_equal(length(e$errores_sel), N_SLOTS)
+  # 7 es la configuración MEDIDA por el barrido de la decisión D4: es el tamaño
+  # mínimo que cierra H1 sin borrar ningún distractor diagnóstico. Encogerlo
+  # reintroduce el patrón de magnitud, así que se fija aquí para que reducirlo
+  # falle en vez de degradar el ítem en silencio.
+  expect_gte(length(e$errores_conceptuales), 7L)
 })
 
 test_that("I-1..I-4 se cumplen en TODAS las combinaciones del espacio", {
@@ -134,9 +139,63 @@ test_that("I-1..I-4 se cumplen en TODAS las combinaciones del espacio", {
       expect_true(all(v == floor(v)), info = paste("I-4", etiqueta))
     }
   }
-  # El espacio es pequeño y se enumera entero: 3 valores de n x C(5,3) = 30.
-  expect_equal(total, length(n_pool) * ncol(combos))
-  expect_gte(total, 30L)
+  # El espacio es pequeño y se enumera entero: 3 valores de n x C(7,3) = 105.
+  # `choose()` (forma cerrada) es una ruta de cálculo INDEPENDIENTE de
+  # `ncol(combn())` (enumeración): comparar `total` contra `ncol(combos)` sería
+  # tautológico, porque `total` se incrementa una vez por columna de `combos`.
+  expect_equal(total, length(n_pool) * choose(length(fórmulas), N_SLOTS))
+  expect_gte(total, 105L)
+})
+
+test_that("I-7: toda terna legal tiene un distractor > n! y la clave nunca es la mayor", {
+  skip_if_not(file.exists(RMD))
+  e <- extraer_entorno(1L)
+
+  n_pool   <- e$N_POOL
+  fórmulas <- lapply(e$errores_conceptuales, function(x) x$calcula)
+  combos   <- utils::combn(length(fórmulas), N_SLOTS)
+
+  # (a) Enumeración del espacio LEGAL (ternas con >= 1 distractor > n!).
+  #     Las métricas se miden SOLO ahí: incluir las ilegales daría un falso
+  #     verde, porque aportan justo los rangos que la restricción elimina.
+  rangos <- integer(0); dominancia <- numeric(0); ilegales <- 0L
+  for (n in n_pool) {
+    correcta <- factorial(n)
+    for (j in seq_len(ncol(combos))) {
+      d <- vapply(combos[, j], function(k) as.numeric(fórmulas[[k]](n)), numeric(1L))
+      if (!any(d > correcta)) { ilegales <- ilegales + 1L; next }
+      v <- c(correcta, d)
+      rangos     <- c(rangos, rank(v)[1])
+      dominancia <- c(dominancia, correcta / max(d))
+    }
+  }
+  expect_gt(length(rangos), 0L)
+  # La clave NUNCA es la opción de mayor magnitud: "elegir el mayor" no acierta.
+  expect_false(any(rangos == (N_SLOTS + 1L)),
+               info = "hay ternas legales donde la clave es la opción mayor")
+  # Y nunca domina al mayor distractor (lo que I-3, unilateral, no puede acotar).
+  expect_true(all(dominancia < 1),
+              info = sprintf("dominancia máx clave/mayor distractor = %.2fx", max(dominancia)))
+
+  # (b) NO-REGRESIÓN del hallazgo H1. Resultado MEDIDO de la decisión D4
+  #     (barrido de 6 configuraciones). Si alguien cambia el pool o la
+  #     restricción sin volver a medir, esto FALLA en vez de degradarse callado.
+  expect_true(any(rangos <= 2L),
+              info = "REGRESIÓN H1: la clave nunca queda entre las 2 opciones menores")
+  expect_gt(length(unique(rangos)), 1L)   # ningún patrón posicional puro
+
+  # (c) La SELECCIÓN real del chunk se queda en el espacio legal. (a) mide el
+  #     espacio; esto mide la selección. Si se borrara el filtro `legales` del
+  #     `.Rmd`, (a) seguiría en verde y sólo este bloque lo atraparía.
+  for (s in 1:60) {
+    ee   <- extraer_entorno(s)
+    d    <- as.numeric(unname(ee$vals))
+    corr <- as.numeric(ee$correcta_val)
+    expect_true(any(d > corr),
+                info = sprintf("semilla %d (n=%d): ninguna opción supera la clave", s, ee$n))
+    expect_false(max(c(corr, d)) == corr,
+                 info = sprintf("semilla %d (n=%d): la clave es la opción mayor", s, ee$n))
+  }
 })
 
 test_that("I-5: la opción marcada es siempre n! (barrido de semillas)", {
