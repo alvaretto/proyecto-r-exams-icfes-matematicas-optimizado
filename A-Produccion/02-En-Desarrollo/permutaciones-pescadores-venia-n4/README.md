@@ -227,7 +227,7 @@ permutaciones-pescadores-venia-n4/
 │   ├── BACKLOG.md                 # Pendientes priorizados
 │   └── BLUEPRINT.md               # Arquitectura técnica (decisiones D1-D6, invariantes)
 ├── .claude/
-│   ├── CLAUDE.md                  # 13 particularidades operativas
+│   ├── CLAUDE.md                  # 20 particularidades operativas
 │   └── rules/
 │       └── permutaciones-parametricas.md  # Contrato del pool n! e invariantes I-1..I-7
 ├── permutaciones_pescadores_..._n4_schoice_v1.Rmd  # FUENTE (SCHOICE) — auto-contenido, 601
@@ -313,7 +313,7 @@ derivado de render. El mismo patrón fuente/derivado aplica dentro de `cloze/`: 
 - [docs/BACKLOG.md](docs/BACKLOG.md) — pendientes priorizados
 - [docs/BLUEPRINT.md](docs/BLUEPRINT.md) — arquitectura técnica (SCHOICE en §1-6, variante CLOZE
   en §7)
-- [.claude/CLAUDE.md](.claude/CLAUDE.md) — índice local: 13 particularidades operativas
+- [.claude/CLAUDE.md](.claude/CLAUDE.md) — índice local: 20 particularidades operativas
 - [.claude/rules/permutaciones-parametricas.md](.claude/rules/permutaciones-parametricas.md) —
   contrato local: la clave `n!`, el pool de siete errores conceptuales y las invariantes I-1..I-7
 - [cloze/](cloze/) — variante CLOZE de 6 partes (no sustituye a la SCHOICE; ver

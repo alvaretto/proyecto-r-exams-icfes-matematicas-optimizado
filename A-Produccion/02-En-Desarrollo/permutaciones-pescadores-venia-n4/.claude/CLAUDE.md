@@ -27,7 +27,7 @@ Continúa con el proyecto permutaciones-pescadores-venia
 
 1. [`../HANDOFF.md`](../HANDOFF.md)
 2. los **DOS** `ejercicio_state.json` — el de la raíz (SCHOICE) y el de `cloze/` (CLOZE)
-3. este archivo (19 particularidades operativas)
+3. este archivo (20 particularidades operativas)
 4. [`rules/permutaciones-parametricas.md`](rules/permutaciones-parametricas.md) (I-1..I-7 + C-1..C-3)
 
 **Solo después** abrir los `.Rmd`. Al 2026-07-30 el estado es: SCHOICE 11/11 aprobado; CLOZE 10/11,
@@ -285,6 +285,34 @@ específicamente U+2212.
 **Patrón general que conviene recordar:** *un campo que no se emite no está probado. El día que
 alguien lo emita, revienta.*
 
+### 20. Los textos que viajan a un GAP van sin markdown (y con el sujeto correcto)
+
+Las 10 afirmaciones de la Parte 5 y las 4 descripciones de la Parte 3 acaban **dentro** de un gap
+`MULTIRESPONSE`/`MULTICHOICE` de Moodle, que muestra sus opciones como **texto plano** (Incidente G
+del `orquestador-cloze`, el mismo mecanismo que impide poner imágenes ahí). Una de las afirmaciones
+llevaba `**todos**`: pandoc lo convertía a `<strong>todos</strong>` y el XML lo entregaba así
+**dentro del gap**, donde el markup no puede dar formato. Medido el 2026-07-30 sobre el XML: 7 de
+72 gaps afectados. **El énfasis va en las palabras, no en el markup.**
+
+La misma línea tenía el sujeto equivocado —«**El número** de arreglos posibles **usa** todos los n
+elementos»; un número no usa elementos— corregido a «**Cada arreglo posible** usa todos los n
+elementos, cada uno exactamente una vez». Sigue siendo verdadera y el pool conserva sus 5+5.
+
+**Ninguno de los dos defectos lo marca ningún validador**: V5 comprueba la estructura y la
+**semántica de las marcas**, no el markup ni la sintaxis del texto de la opción; la coherencia
+matemática y la diversidad tampoco lo miran. Aparecieron **leyendo el HTML y haciendo grep del
+XML** — la misma vía que destapó los tres defectos de §5.1 del HANDOFF.
+
+Comprobación (0 etiquetas dentro de gaps es el contrato):
+```bash
+(cd cloze && Rscript verificar_render.R)   # regenera verif_render/moodle/permcz_check.xml
+python3 -c "
+import re,html
+t=html.unescape(open('cloze/verif_render/moodle/permcz_check.xml',encoding='utf-8').read())
+g=re.findall(r'\{[0-9]*:(?:MULTICHOICE|MULTIRESPONSE|NUMERICAL|SHORTANSWER)[^{}]*\}',t)
+print(sum(len(re.findall(r'</?[a-zA-Z][^>]*>',x)) for x in g), 'etiquetas en', len(g), 'gaps')"
+```
+
 ## Reglas del repo raíz con mayor peso aquí
 
 | Regla | Por qué importa en este ejercicio |
@@ -331,6 +359,9 @@ alguien lo emita, revienta.*
 - Reportar el N/A de NOPS en el CLOZE como un fallo, o atribuirlo a los gaps `num`
   (particularidad 18).
 - Introducir U+2212 (`−`) o cualquier no-ASCII exótico en `descripcion_corta` (particularidad 19).
+- Poner markdown (`**`, `_`, `$…$`, imágenes) en las afirmaciones de la Parte 5 o en las
+  descripciones de la Parte 3: van dentro de un gap y el markup no da formato ahí
+  (particularidad 20).
 
 ---
 
@@ -345,6 +376,7 @@ alguien lo emita, revienta.*
 
 ---
 
-**Versión**: 3.0 (variante CLOZE en `cloze/`: particularidades 14-19, decisiones D5 y D6,
+**Versión**: 3.1 (particularidad 20: sin markdown en los textos que viajan a un gap + sujeto de la
+afirmación corregido; v3.0 — variante CLOZE en `cloze/`: particularidades 14-19, decisiones D5 y D6,
 invariantes C-1..C-3)
 **Fecha**: 2026-07-30

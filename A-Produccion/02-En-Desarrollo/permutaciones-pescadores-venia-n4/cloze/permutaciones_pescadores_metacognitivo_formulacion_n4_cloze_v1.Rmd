@@ -516,6 +516,10 @@ stopifnot(resp_p4 > correcta_val)
 # Se eligen k verdaderas (k entre 2 y 4) y 6-k falsas de dos pools de 5, y se
 # mezclan. k varia por versión para que "siempre hay 3 verdaderas" no sea un
 # atajo (regla #22, patrón P4 aplicado al número de marcas).
+# SIN MARKDOWN en estos textos: viajan a un gap MULTIRESPONSE de Moodle, que
+# muestra sus opciones como texto plano (Incidente G del orquestador-cloze). Un
+# `**todos**` llegaba al XML como <strong>todos</strong> DENTRO del gap, donde
+# el markup no aporta formato y solo puede estorbar. El énfasis va en palabras.
 afirmaciones_verdaderas <- c(
   paste0("Al ubicar ", art_uno, " de ", art_los, " ", sujeto, " en la ", disposicion, ", ",
          "deja de estar disponible para las posiciones restantes."),
@@ -525,7 +529,7 @@ afirmaciones_verdaderas <- c(
          "y no un factorial."),
   paste0("Para llenar la primera posición hay ", n, " candidatos y para la ",
          "segunda quedan ", n - 1L, "."),
-  paste0("El número de arreglos posibles usa **todos** los ", n,
+  paste0("Cada arreglo posible usa todos los ", n,
          " elementos, cada uno exactamente una vez.")
 )
 afirmaciones_falsas <- c(

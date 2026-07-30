@@ -10,7 +10,7 @@
 | **Frase de reanudación** | `Continúa con el proyecto permutaciones-pescadores-venia` |
 
 > **Al retomar, en este orden**: este archivo → los **dos** `ejercicio_state.json`
-> (raíz y `cloze/`) → [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (**19** particularidades
+> (raíz y `cloze/`) → [`.claude/CLAUDE.md`](.claude/CLAUDE.md) (**20** particularidades
 > operativas) → [`.claude/rules/permutaciones-parametricas.md`](.claude/rules/permutaciones-parametricas.md)
 > (invariantes I-1..I-7 + C-1..C-3). Ahí está el porqué del código; sin eso, un agente "arregla"
 > fixes deliberados. **Solo después** abre los `.Rmd`.
@@ -23,6 +23,13 @@ Las dos variantes están **técnicamente cerradas y verdes**. La SCHOICE ya tien
 (2026-07-30). **La CLOZE está en 10/11: le falta exactamente un paso, el 11 — la revisión y
 aprobación humana, que un agente no puede sellar.** No hay ningún FAIL vivo ni deuda técnica
 bloqueante.
+
+> **Sesión 2026-07-30 (tarde).** Al preparar el material del paso 11 se encontraron **dos defectos
+> en la misma línea** del pool de la Parte 5 (particularidad 20): `**todos**` llegaba como
+> `<strong>todos</strong>` **dentro** de un gap de Moodle (7 de 72 gaps) y el sujeto de la
+> afirmación era incorrecto. Corregidos y **todo re-verificado sobre la versión vigente** (§3.1).
+> Se añadió `cloze/verif_render/canonica/` con la **instancia canónica renderizada**, que es lo que
+> el paso 11 pide revisar. La aprobación humana sigue pendiente.
 
 ---
 
@@ -65,9 +72,15 @@ Persistidos en `~/.claude/projects/<slug>/memory/project_objetivos_permutaciones
 
 ---
 
-## 3. Estado real verificado (2026-07-30, re-ejecutado sobre la versión vigente)
+## 3. Estado real verificado (2026-07-30 **tarde**, re-ejecutado sobre la versión vigente)
 
-Nada de esta tabla es evidencia heredada: todo se volvió a correr después del último cambio.
+Nada de esta tabla es evidencia heredada: todo se volvió a correr **después del fix de la
+particularidad 20**, que es el último cambio del `.Rmd`.
+
+> **Cómo comprobar que esta tabla sigue vigente**, en vez de creerle: `ls -la --time-style=+%F\ %R`
+> sobre el `.Rmd` y sobre `cloze/verif_render/`. Si el `.Rmd` es **más nuevo** que la evidencia, la
+> tabla no cubre el código vigente y hay que re-correr los verificadores. Así se detectó, al abrir
+> esta sesión, que la evidencia de la mañana (10:31) era anterior a la última edición (11:53).
 
 ### 3.1 Variante CLOZE (`cloze/`)
 
@@ -275,9 +288,16 @@ Rscript verificar_render.R            # SCHOICE → V1-V9,  "todo verde"
 **Revisión humana de la variante CLOZE** (paso 11). Es lo único que falta y no lo puede sellar un
 agente. Material para revisar:
 
-- `cloze/verif_render/` — HTML, PDF, DOCX y el XML de Moodle de la última corrida.
-- La **instancia canónica** (contexto 1 con `n = 4`): su **Parte 1** debe coincidir verbatim con
-  `MAT-2026-1-004`, con las opciones `{24, 64, 16, 4}`.
+- `cloze/verif_render/canonica/canonica1.html` y `.pdf` — **la instancia canónica ya renderizada**
+  (contexto 1 con `n = 4`, semilla 20). Su **Parte 1** coincide verbatim con `MAT-2026-1-004` y sus
+  opciones son `{64, 4, 24, 16}`. Es el artefacto que conviene leer primero.
+- `cloze/verif_render/` — HTML, PDF, DOCX y el XML de Moodle de una versión cualquiera.
+
+  > `verif_render/` está **gitignored** (artefactos regenerables). Para reconstruir la canónica:
+  > `(cd cloze && Rscript render_canonica.R)`. El script localiza la versión evaluando el chunk con
+  > semillas sucesivas hasta que `ctx_idx == 1` y `n == 4`, y **confirma el acierto buscando el
+  > enunciado oficial en el HTML** en vez de darlo por supuesto. Semillas que la producen: 20, 28,
+  > 58, 81, 133.
 - Las **6 partes**: conviene leer una versión entera de principio a fin y juzgar si la progresión
   cognitiva (aplicar → comprender el decrecimiento → analizar el error → transferir → evaluar
   propiedades → V/F) es la adecuada para N4.
@@ -310,7 +330,9 @@ Ficha oficial del ítem: `Todo-Pajaro/Alineacion-curricular-de-items/Simulacros/
 
 ---
 
-**Versión**: 3.0 (variante CLOZE; decisiones D5 y D6; invariantes C-1..C-3; auditoría adversarial
-de 6 hallazgos; 12 puntos de deriva documental corregidos; tres correcciones propagadas a los
-orquestadores del repo raíz)
+**Versión**: 3.1 (particularidad 20 — markup dentro de un gap de Moodle y sujeto de la afirmación —
+con todo re-verificado; instancia canónica renderizada para el paso 11; regla de vigencia de la
+evidencia por mtime; v3.0 — variante CLOZE; decisiones D5 y D6; invariantes C-1..C-3; auditoría
+adversarial de 6 hallazgos; 12 puntos de deriva documental corregidos; tres correcciones propagadas
+a los orquestadores del repo raíz)
 **Fecha**: 2026-07-30
