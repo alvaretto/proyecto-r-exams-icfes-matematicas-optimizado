@@ -233,6 +233,13 @@ suites <- list(
     critico = TRUE,
     watch = c("permutaciones-pescadores-venia", "permutaciones_pescadores",
               "permutaciones-parametricas", "test_permutaciones_invariantes")
+  ),
+  list(
+    nombre = "Diversidad grafica circular (tabla, meses y par del error)",
+    archivo = "tests/testthat/test_diversidad_grafica_circular.R",
+    critico = TRUE,
+    watch = c("grafica-circular-consumo-agua", "grafica_circular_consumo_agua",
+              "test_diversidad_grafica_circular")
   )
 )
 
