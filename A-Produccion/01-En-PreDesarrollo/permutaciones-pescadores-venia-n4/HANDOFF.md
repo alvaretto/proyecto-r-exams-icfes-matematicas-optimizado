@@ -281,7 +281,7 @@ Tras la aprobación: OE10 (promoción a `02-En-Desarrollo/`) y, más adelante, O
 aula, requisito de Nivel 3 para `03-En-Produccion/`).
 
 **Destino reservado en producción**:
-`03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/`
+`03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/10-Combinatoria_Permutaciones-Variaciones-Combinaciones/`
 
 ---
 

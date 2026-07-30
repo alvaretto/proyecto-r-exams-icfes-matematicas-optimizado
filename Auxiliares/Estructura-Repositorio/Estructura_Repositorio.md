@@ -220,8 +220,10 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       │   └── Probabilidad-Bolas-Colores/                      [2 .Rmd]
 │       ├── 08-Probabilidad-De-La-Union-De-Sucesos/
 │       │   └── diagrama_venn_encuesta_metacognitivo_*/          [3 .Rmd]
-│       └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
-│           └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
+│       ├── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
+│       │   └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
+│       └── 10-Combinatoria_Permutaciones-Variaciones-Combinaciones/
+│           └── permutaciones_pescadores_venia_n4/               [reservado]
 │
 │ ══════════════════════════════════════════════════════
 │  RECURSOS Y PLANTILLAS
@@ -438,4 +440,10 @@ Cada ejercicio debe superar verificacion en:
 
 ---
 
-*Actualizado: 2026-02-27 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*
+*Actualizado: 2026-07-30 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*
+
+*Cambio 2026-07-30: nuevo nodo `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` bajo
+`06-Estadistica-Y-Probabilidad/Pensamiento-Aleatorio/`, para conteo combinatorio (permutaciones,
+variaciones, combinaciones). Se crea aparte del `07-` —que pese a llamarse «...-Conteo» solo
+contiene probabilidad y diagramas de Venn— y se numera `10-` en vez de insertarse antes del `07-`
+para no renumerar rutas ya citadas del arbol inmutable `03-En-Produccion/`.*

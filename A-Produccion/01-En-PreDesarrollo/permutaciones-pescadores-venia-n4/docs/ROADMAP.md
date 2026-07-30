@@ -93,7 +93,7 @@ profundidad no cambia entre `01-En-PreDesarrollo/` y `02-En-Desarrollo/`, así q
 romperse, pero hay que comprobarlo).
 
 **Destino planificado en producción** (una vez alcance `03-En-Produccion/`):
-`03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/`.
+`03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/10-Combinatoria_Permutaciones-Variaciones-Combinaciones/`.
 
 ---
 
