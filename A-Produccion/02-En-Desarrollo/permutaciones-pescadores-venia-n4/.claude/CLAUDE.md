@@ -30,8 +30,10 @@ Continúa con el proyecto permutaciones-pescadores-venia
 3. este archivo (20 particularidades operativas)
 4. [`rules/permutaciones-parametricas.md`](rules/permutaciones-parametricas.md) (I-1..I-7 + C-1..C-3)
 
-**Solo después** abrir los `.Rmd`. Al 2026-07-30 el estado es: SCHOICE 11/11 aprobado; CLOZE 10/11,
-a la espera del paso 11 (revisión y aprobación humana), que un agente no puede sellar.
+**Solo después** abrir los `.Rmd`. Al 2026-07-30 el estado es: **las dos variantes en 11/11 y
+aprobadas para aula** (SCHOICE por la mañana, CLOZE por la tarde). Ambas siguen en
+`02-En-Desarrollo/`: la aprobación humana cierra la corrección, **no** es el gate de
+`03-En-Produccion/`. El único objetivo abierto es **OE11** (evidencia Nivel 3 en aula), para las dos.
 
 ---
 

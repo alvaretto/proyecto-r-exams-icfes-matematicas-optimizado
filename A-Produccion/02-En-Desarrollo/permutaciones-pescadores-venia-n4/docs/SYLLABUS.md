@@ -232,7 +232,8 @@ Rscript ../../../.claude/scripts/corregir_ortografia_espanol.R \
 
 Sobre 300 evaluaciones del `data_generation`: **300/300** versiones únicas, **90 de las 93** ternas
 legales alcanzadas, reparto de `n` 90/113/97 y **12** instancias canónicas. Estado del workflow:
-`cloze/ejercicio_state.json` — 10/11 pasos; falta `aprobacion_usuario` (paso humano).
+`cloze/ejercicio_state.json` — **11/11 pasos**; `aprobacion_usuario` sellado el 2026-07-30 tras la
+aprobación humana explícita para llevarlo al aula.
 
 ## 6. Referencias cruzadas
 

@@ -3,7 +3,7 @@
   "ejercicio": "permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-07-30T10:19:08.650835-05:00",
-  "timestamp_ultima_actualizacion": "2026-07-30T11:05:25.001339-05:00",
+  "timestamp_ultima_actualizacion": "2026-07-30T17:32:19.808326-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -51,8 +51,8 @@
       "timestamp": "2026-07-30T10:45:48.709352-05:00"
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-07-30T17:32:19.808326-05:00"
     }
   }
 }

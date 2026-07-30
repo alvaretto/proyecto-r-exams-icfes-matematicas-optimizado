@@ -36,8 +36,8 @@ principio aditivo. Ver el detalle pedagógico completo en [`docs/SYLLABUS.md`](d
 - **Archivo fuente (CLOZE)**: `cloze/permutaciones_pescadores_metacognitivo_formulacion_n4_cloze_v1.Rmd`
   (971 líneas, 9 chunks R + 1 guard LaTeX — ver [«Variante CLOZE»](#variante-cloze-cloze) y
   [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) §7)
-- **Estado (CLOZE)**: `cloze/` — **10/11 pasos** (`cloze/ejercicio_state.json`); falta únicamente
-  `aprobacion_usuario`, que es humano (OE12 en [`docs/ROADMAP.md`](docs/ROADMAP.md))
+- **Estado (CLOZE)**: `cloze/` — **11/11 pasos** (`cloze/ejercicio_state.json`); aprobado para aula el
+  2026-07-30 (OE12 ✅ en [`docs/ROADMAP.md`](docs/ROADMAP.md))
 - **Arquitectura técnica**: [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md)
 - **Trabajo pendiente priorizado**: [`docs/BACKLOG.md`](docs/BACKLOG.md)
 
@@ -135,8 +135,7 @@ que ya convive así con su SCHOICE. Arquitectura completa en
   (971 líneas, 9 chunks R — `data_generation`, `enunciado`, `parte2`, `parte3`, `parte4`, `parte6`,
   `answerlist_q`, `solucion`, `answerlist_s` — + 1 guard LaTeX)
 - **Verificador propio**: `cloze/verificar_render.R` (587 líneas, chequeos `V1`-`V11`)
-- **Estado**: `cloze/ejercicio_state.json` — 10/11 pasos; falta
-  `aprobacion_usuario` (humano)
+- **Estado**: `cloze/ejercicio_state.json` — **11/11 pasos**; aprobado para aula el 2026-07-30
 
 ### Las 6 partes
 
@@ -239,7 +238,7 @@ permutaciones-pescadores-venia-n4/
 │   ├── permutaciones_pescadores_..._n4_cloze_v1.Rmd  # FUENTE — 971 líneas, 9 chunks R
 │   │                              #   (data_generation, enunciado, parte2, parte3, parte4,
 │   │                              #   parte6, answerlist_q, solucion, answerlist_s) + 1 guard
-│   ├── ejercicio_state.json       # Estado del workflow CLOZE — 10/11 pasos
+│   ├── ejercicio_state.json       # Estado del workflow CLOZE — 11/11 pasos
 │   ├── verificar_render.R         # FUENTE — verificación rápida (V1-V11), 587 líneas
 │   └── verif_render/              # DERIVADO — salidas de verificar_render.R (ignorado)
 ├── SemilleroUnico_v2.R            # FUENTE — exportación institucional: 1 versión con membrete

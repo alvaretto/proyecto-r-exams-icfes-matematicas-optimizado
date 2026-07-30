@@ -19,17 +19,21 @@
 
 ## 0. Estado en una línea
 
-Las dos variantes están **técnicamente cerradas y verdes**. La SCHOICE ya tiene aprobación humana
-(2026-07-30). **La CLOZE está en 10/11: le falta exactamente un paso, el 11 — la revisión y
-aprobación humana, que un agente no puede sellar.** No hay ningún FAIL vivo ni deuda técnica
-bloqueante.
+**Las dos variantes están cerradas en 11/11 y aprobadas para aula.** La SCHOICE el 2026-07-30 por la
+mañana; la **CLOZE el 2026-07-30 por la tarde** («Aprobado para testear en el aula con estudiantes»).
+No hay ningún FAIL vivo ni deuda técnica bloqueante.
 
-> **Sesión 2026-07-30 (tarde).** Al preparar el material del paso 11 se encontraron **dos defectos
-> en la misma línea** del pool de la Parte 5 (particularidad 20): `**todos**` llegaba como
-> `<strong>todos</strong>` **dentro** de un gap de Moodle (7 de 72 gaps) y el sujeto de la
-> afirmación era incorrecto. Corregidos y **todo re-verificado sobre la versión vigente** (§3.1).
-> Se añadió `cloze/verif_render/canonica/` con la **instancia canónica renderizada**, que es lo que
-> el paso 11 pide revisar. La aprobación humana sigue pendiente.
+> **Ambas siguen en `02-En-Desarrollo/`.** La aprobación humana cierra la validación de *corrección*;
+> **no** es el gate de `03-En-Produccion/`, que exige evidencia de aplicación real con estudiantes.
+> El siguiente objetivo es **OE11** para las dos variantes (§8).
+
+> **Sesión 2026-07-30 (tarde, 2ª parte).** Al retomar, el chequeo de `mtime` de §3 **hizo su
+> trabajo**: el `.Rmd` del CLOZE (14:33) era más nuevo que toda su evidencia (12:18-12:26), así que
+> la tabla de §3.1 no cubría el código vigente. Causa: **RStudio reordenó dos claves del bloque YAML
+> `output:`** al pulsar «Knit» — un cambio de una línea, inerte para `exams2*` (que nunca lee ese
+> bloque), pero se re-verificó en vez de suponerlo. Resultado: **V1-V11 verde sobre la versión
+> vigente**. Además se regeneró la canónica (17:20) y se verificó el contrato de gaps sobre las
+> **100 versiones reales** que generó el usuario, no sobre 12.
 
 ---
 
@@ -65,17 +69,19 @@ su patrón **no** es intercambiable con éste.
 Tabla completa con evidencia en [`docs/ROADMAP.md`](docs/ROADMAP.md) §2. Resumen al 2026-07-30:
 
 - **OE1-OE10**: cumplidos y verificados.
-- **OE11** (evidencia Nivel 3 en aula → `03-En-Produccion/`): abierto, requiere estudiantes reales.
-- **OE12** (variante CLOZE): **en curso** — solo falta la aprobación humana.
+- **OE12** (variante CLOZE): **cumplido el 2026-07-30** — 11/11, aprobada para aula.
+- **OE11** (evidencia Nivel 3 en aula → `03-En-Produccion/`): **único objetivo abierto**, ahora para
+  las **dos** variantes. Requiere estudiantes reales; su evidencia **no es transferible** entre
+  variantes (ver [`docs/ROADMAP.md`](docs/ROADMAP.md) §4).
 
 Persistidos en `~/.claude/projects/<slug>/memory/project_objetivos_permutaciones_pescadores_venia_n4.md`.
 
 ---
 
-## 3. Estado real verificado (2026-07-30 **tarde**, re-ejecutado sobre la versión vigente)
+## 3. Estado real verificado (2026-07-30 **17:0x-17:20**, re-ejecutado sobre la versión vigente)
 
-Nada de esta tabla es evidencia heredada: todo se volvió a correr **después del fix de la
-particularidad 20**, que es el último cambio del `.Rmd`.
+Nada de esta tabla es evidencia heredada: todo se volvió a correr **después del último cambio del
+`.Rmd`** (la reordenación del YAML por RStudio, 14:33).
 
 > **Cómo comprobar que esta tabla sigue vigente**, en vez de creerle: `ls -la --time-style=+%F\ %R`
 > sobre el `.Rmd` y sobre `cloze/verif_render/`. Si el `.Rmd` es **más nuevo** que la evidencia, la
@@ -100,8 +106,14 @@ particularidad 20**, que es el último cambio del `.Rmd`.
 | Diversidad sustantiva | `validar_diversidad_sustantiva.R --n 40` | exit 0 · `WARN_DIV_BAJA` (estructural, §5.5) |
 | Diversidad de render | 300 evaluaciones del `data_generation` | **300/300 versiones únicas** · 90 de 93 ternas legales · 12 canónicas · 0 fallos |
 | Ortografía | `corregir_ortografia_espanol.R` | sin errores |
+| **Banco Moodle real** | XML de `SemilleroCloze.R` (100 versiones, semilla base 17670454) | **600 gaps = 100 × 6 · 0 etiquetas dentro de gap · 300 `MULTICHOICE` / 200 `NUMERICAL` / 100 `MULTIRESPONSE` · 0 U+2212** |
+| **Canónica** | `(cd cloze && Rscript render_canonica.R)` | regenerada 17:20 sobre el `.Rmd` vigente; semilla 20 **confirmada** contra el enunciado oficial |
 
-`cloze/ejercicio_state.json`: **10/11**. Falta `aprobacion_usuario`.
+`cloze/ejercicio_state.json`: **11/11**. `aprobacion_usuario` sellado el 2026-07-30 a las 17:32.
+
+> El banco de 100 versiones amplía la evidencia del contrato de la particularidad 20, que hasta
+> entonces solo se había medido sobre las 12 versiones de `V5`. Es el artefacto que efectivamente se
+> importaría a Moodle, así que verificarlo ahí vale más que verificarlo sobre una muestra sintética.
 
 ### 3.2 Variante SCHOICE (raíz) — no-regresión
 
@@ -285,31 +297,36 @@ Rscript verificar_render.R            # SCHOICE → V1-V9,  "todo verde"
 
 ### Próximo paso concreto
 
-**Revisión humana de la variante CLOZE** (paso 11). Es lo único que falta y no lo puede sellar un
-agente. Material para revisar:
+**OE11 — aplicación en aula con estudiantes**, para las **dos** variantes. Es lo único abierto y no
+tiene atajo automatizable: `03-En-Produccion/` exige evidencia de aplicación real, y **la validación
+automática mide corrección, no calidad psicométrica**.
 
-- `cloze/verif_render/canonica/canonica1.html` y `.pdf` — **la instancia canónica ya renderizada**
-  (contexto 1 con `n = 4`, semilla 20). Su **Parte 1** coincide verbatim con `MAT-2026-1-004` y sus
-  opciones son `{64, 4, 24, 16}`. Es el artefacto que conviene leer primero.
-- `cloze/verif_render/` — HTML, PDF, DOCX y el XML de Moodle de una versión cualquiera.
+Qué hay que registrar (detalle y criterios en [`docs/ROADMAP.md`](docs/ROADMAP.md) §4):
 
-  > `verif_render/` está **gitignored** (artefactos regenerables). Para reconstruir la canónica:
+| Variante | Qué medir | Por qué |
+|---|---|---|
+| **SCHOICE** | Distribución de respuestas entre las 4 opciones | Diagnosticidad por distractor: los 7 errores (`EST-PER-01..07`) deberían captar una fracción no trivial de los fallos en las versiones donde aparecen. Un distractor con 0 % es un distractor muerto |
+| **CLOZE** | Acierto **por parte** (las 6) | La progresión cognitiva es justamente lo que se pone a prueba. Señal clave: fallar la **Parte 1** y acertar la **Parte 2** (`n-1` disponibles) indica que la descomposición funciona |
+
+La evidencia **no es transferible entre variantes**: miden cosas distintas (§1).
+
+Material ya listo para llevar al aula:
+
+- `cloze/salida_hibrida/moodle/…_hibrido_moodle.xml` — **banco de 100 versiones** listo para importar
+  a Moodle (generado con `SemilleroCloze.R`, semilla base 17670454; verificado: 600 gaps, 0 etiquetas
+  dentro de gap).
+- `cloze/verif_render/canonica/canonica1.html` y `.pdf` — instancia canónica (contexto 1, `n = 4`,
+  semilla 20), cuya **Parte 1** coincide verbatim con `MAT-2026-1-004` y cuyas opciones son
+  `{64, 4, 24, 16}`.
+
+  > `verif_render/` está **gitignored** (artefactos regenerables). Para reconstruirla:
   > `(cd cloze && Rscript render_canonica.R)`. El script localiza la versión evaluando el chunk con
   > semillas sucesivas hasta que `ctx_idx == 1` y `n == 4`, y **confirma el acierto buscando el
   > enunciado oficial en el HTML** en vez de darlo por supuesto. Semillas que la producen: 20, 28,
   > 58, 81, 133.
-- Las **6 partes**: conviene leer una versión entera de principio a fin y juzgar si la progresión
-  cognitiva (aplicar → comprender el decrecimiento → analizar el error → transferir → evaluar
-  propiedades → V/F) es la adecuada para N4.
 
-Si se aprueba:
-```bash
-bash .claude/scripts/workflow-state.sh complete \
-  A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/cloze aprobacion_usuario
-```
-
-Después, **OE11** para las dos variantes: aplicación en aula (requisito de Nivel 3 para
-`03-En-Produccion/`).
+Cuando exista la evidencia de aula, la promoción a `03-En-Produccion/` va por `/promover-ejercicio`
+(no por `git mv` manual: ese skill valida los gates de Nivel 3).
 
 **Destino reservado en producción**:
 `03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/10-Combinatoria_Permutaciones-Variaciones-Combinaciones/`
@@ -330,9 +347,11 @@ Ficha oficial del ítem: `Todo-Pajaro/Alineacion-curricular-de-items/Simulacros/
 
 ---
 
-**Versión**: 3.1 (particularidad 20 — markup dentro de un gap de Moodle y sujeto de la afirmación —
-con todo re-verificado; instancia canónica renderizada para el paso 11; regla de vigencia de la
-evidencia por mtime; v3.0 — variante CLOZE; decisiones D5 y D6; invariantes C-1..C-3; auditoría
-adversarial de 6 hallazgos; 12 puntos de deriva documental corregidos; tres correcciones propagadas
-a los orquestadores del repo raíz)
+**Versión**: 3.2 (**CLOZE aprobada para aula → 11/11, OE12 cumplido**; la regla de vigencia por
+`mtime` de §3 detectó que el `.Rmd` era posterior a su evidencia por una reordenación del YAML hecha
+por RStudio, y se re-verificó V1-V11 sobre la versión vigente; contrato de gaps medido sobre las 100
+versiones reales del banco Moodle; canónica regenerada; §8 reorientada a OE11 para ambas variantes;
+v3.1 — particularidad 20; instancia canónica; regla de vigencia por mtime; v3.0 — variante CLOZE;
+decisiones D5 y D6; invariantes C-1..C-3; auditoría adversarial de 6 hallazgos; 12 puntos de deriva
+documental corregidos; tres correcciones propagadas a los orquestadores del repo raíz)
 **Fecha**: 2026-07-30

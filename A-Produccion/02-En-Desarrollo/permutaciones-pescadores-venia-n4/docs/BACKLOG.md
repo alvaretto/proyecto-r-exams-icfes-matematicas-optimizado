@@ -316,13 +316,16 @@ Ver [`ROADMAP.md`](ROADMAP.md) §2-4.
 - **OE10 — ✅ CUMPLIDO el 2026-07-30.** Aprobación humana explícita («Aprobado para llevar al aula y
   testear con estudiantes») → `ejercicio_state.json` en **11/11** pasos y el subproyecto promovido a
   `02-En-Desarrollo/` con todas sus rutas resincronizadas.
-- **OE11 — pendiente.** Requiere aplicación del ítem con estudiantes reales de grado 10-11 y análisis
-  de diagnosticidad por distractor (sobre el pool de **siete** códigos, `EST-PER-01` a `07`) — el gate
-  que la validación automática **no** puede sustituir (ver [`ROADMAP.md`](ROADMAP.md) §4).
-- **OE12 — 🚧 EN CURSO.** La variante CLOZE en `cloze/` tiene su propio `ejercicio_state.json` en
-  **10/11**: falta únicamente
-  `aprobacion_usuario` (humano, igual que OE10). No bloquea OE11 ni la promoción ya cumplida del
-  SCHOICE — son dos artefactos independientes del mismo subproyecto.
+- **OE12 — ✅ CUMPLIDO (2026-07-30).** La variante CLOZE en `cloze/` quedó en **11/11**: aprobación
+  humana explícita para llevarla al aula. Antes de sellarla se re-verificó `V1`-`V11` sobre la versión
+  vigente del `.Rmd` (la evidencia previa había quedado invalidada por una reordenación del YAML hecha
+  por RStudio) y se comprobó el contrato de gaps sobre las **100 versiones reales** del banco Moodle.
+- **OE11 — pendiente, y ahora el ÚNICO objetivo abierto.** Requiere aplicación con estudiantes reales
+  de grado 10-11 y análisis de diagnosticidad por distractor (sobre el pool de **siete** códigos,
+  `EST-PER-01` a `07`) — el gate que la validación automática **no** puede sustituir (ver
+  [`ROADMAP.md`](ROADMAP.md) §4). Aplica a las **dos** variantes, y su evidencia **no es transferible**
+  entre ellas: en el SCHOICE se mide la distribución entre las 4 opciones; en el CLOZE, el acierto
+  **por parte**.
 
 Qué mirar cuando vuelvan los datos del aula: si algún distractor no lo elige **nadie**, no discrimina
 y conviene revisarlo; y si `EST-PER-01` (`n^(n-1)`) resulta el más elegido, coincidiría con lo que

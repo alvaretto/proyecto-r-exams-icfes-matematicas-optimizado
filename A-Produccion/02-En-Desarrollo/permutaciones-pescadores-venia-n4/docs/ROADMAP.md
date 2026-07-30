@@ -41,15 +41,22 @@
 | 2026-07-30 | Hallazgo de sesión: `descripcion_corta` contenía el signo menos tipográfico U+2212 (rompe la compilación LaTeX si llega a emitirse) en ambos `.Rmd`, sin haberse detectado antes porque el campo no se usaba en ningún chunk emitido — corregido en SCHOICE y CLOZE | ambos `.Rmd` |
 | 2026-07-30 | Hallazgo de sesión: `pick_int()` quedó como código muerto en el SCHOICE (definido, sin invocación en ningún chunk); la variante CLOZE ya no lo define | `grep -n "pick_int"` en ambos `.Rmd`; [`BACKLOG.md`](BACKLOG.md) nuevo ítem |
 | 2026-07-30 | Documentación re-sincronizada con el código (este ROADMAP + [`BACKLOG.md`](BACKLOG.md), v3.0): incorpora la variante CLOZE (OE12) y cierra las marcas «(pendiente)» ya resueltas sobre `HANDOFF.md`, `.claude/CLAUDE.md` y la regla local del pool | Esta sesión |
+| 2026-07-30 (tarde) | Fix de la particularidad 20 (markup dentro de un gap de Moodle + sujeto de la afirmación) y `verif_render/canonica/` añadido | Commit `95e9d5be` |
+| 2026-07-30 17:0x | **Re-verificación de vigencia**: se detectó por `mtime` que el `.Rmd` del CLOZE (14:33) era posterior a toda su evidencia (12:18-12:26). Causa: RStudio reordenó dos claves del bloque YAML `output:` al usar «Knit» — cambio inerte para `exams2*`, pero re-verificado en vez de supuesto. `V1`-`V11` **todo verde sobre la versión vigente** | `cloze/verificar_render.R`; `git diff` de 1 línea |
+| 2026-07-30 17:20 | Instancia canónica **regenerada** sobre el `.Rmd` vigente y confirmada contra el enunciado oficial (semilla 20; candidatas 20/28/58/81/133) | `cloze/verif_render/canonica/canonica1.{html,pdf}` |
+| 2026-07-30 | Banco Moodle del CLOZE generado por el usuario (`SemilleroCloze.R`, 100 versiones, semilla base 17670454, solo formato Moodle). Contrato de la particularidad 20 verificado **sobre 100 versiones reales**, no 12: **600 gaps, 0 etiquetas dentro de gap**, tipos 300 `MULTICHOICE` / 200 `NUMERICAL` / 100 `MULTIRESPONSE`, 0 U+2212 | `cloze/salida_hibrida/moodle/*.xml` (derivado, no versionado) |
+| 2026-07-30 | **OE12 cumplido**: aprobación humana explícita de la variante CLOZE («Aprobado para testear en el aula con estudiantes») → `cloze/ejercicio_state.json` **11/11** | `cloze/ejercicio_state.json` → `aprobacion_usuario.completado = true` |
 
-**Nota de sincronización (actualizada 2026-07-30).** El `ejercicio_state.json` del **SCHOICE**
-(raíz del subproyecto) está en **11 de 11** pasos `completado: true`: `validar_diversidad` registra
-`versiones_unicas: 298` y `aprobacion_usuario` quedó confirmado tras la aprobación humana explícita
-del 2026-07-30 — ver OE10 en §2. El `cloze/ejercicio_state.json` de la variante **CLOZE** (OE12) está
-en **10 de 11**: `detractor_fase2c` se cerró el 2026-07-30 con dos adversarios independientes
-(veredicto «APROBAR CON CAMBIOS», 6 hallazgos MENOR, todos aplicados), así que falta únicamente
-`aprobacion_usuario`, que por diseño no puede completar un agente — ver §3 para el SCHOICE y la nota
-de OE12 en §2 para el CLOZE.
+**Nota de sincronización (actualizada 2026-07-30, tarde).** Las **dos** variantes están en **11 de
+11** pasos `completado: true`. El `ejercicio_state.json` del **SCHOICE** (raíz) registra
+`versiones_unicas: 298` y su `aprobacion_usuario` se confirmó el 2026-07-30 por la mañana (OE10 en
+§2). El `cloze/ejercicio_state.json` de la variante **CLOZE** (OE12) registra `versiones_unicas: 300`
+y su `aprobacion_usuario` se selló el 2026-07-30 por la tarde, tras la aprobación humana explícita
+—único paso que por diseño no puede completar un agente—.
+
+**Lo que la aprobación significa y lo que no.** Ambas variantes quedan **«LISTAS PARA AULA» y
+permanecen en `02-En-Desarrollo/`**. La aprobación humana cierra la validación de corrección; **no**
+es el gate de `03-En-Produccion/`, que exige evidencia de aplicación real con estudiantes (§4, OE11).
 
 ---
 
@@ -67,8 +74,8 @@ de OE12 en §2 para el CLOZE.
 | **OE8** | Diversidad sustantiva + ≥250/300 | ✅ | SCHOICE: `validar_diversidad_sustantiva.R --n 40` → exit 0, `WARN_DIV_BAJA` (esperado y aceptado, [`BACKLOG.md`](BACKLOG.md) P1.2); 300 evaluaciones: **298/300** versiones únicas, **89 de 93** ternas legales, 16 instancias canónicas. CLOZE: mismo validador → exit 0, `WARN_DIV_BAJA` estructural; 300 evaluaciones: **300/300** versiones únicas, **90 de 93** ternas legales, 12 instancias canónicas |
 | **OE9** | Documentación con referencias cruzadas y auditoría adversarial limpia | ✅ | Auditoría adversarial del 2026-07-29 con **dos adversarios independientes**; veredicto `"APROBAR CON CAMBIOS"`, cambios aplicados (pool 3→5, decisión D3, renombrado de `EST-PER-01`) y todo re-validado. Después: code-review de alta intensidad (9 de 10 defectos aplicados) y cierre de H1 con la decisión D4. Documentación sincronizada con el código el 2026-07-30 (v3.0), incluida la variante CLOZE |
 | **OE10** | Promoción a `02-En-Desarrollo/` | ✅ | **Cumplido el 2026-07-30**: aprobación humana explícita («Aprobado para llevar al aula y testear con estudiantes») → `ejercicio_state.json` 11/11 y `git mv` del subproyecto a `02-En-Desarrollo/` |
-| **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | Requiere aplicación con estudiantes reales de grado 10-11 y análisis de diagnosticidad por distractor. Destino ya reservado: `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` |
-| **OE12** | Variante CLOZE en `cloze/`: Progressive Disclosure de 6 partes que preserva el contrato paramétrico del SCHOICE (invariantes I-1..I-7 + la instancia canónica) | 🚧 | **En curso.** `cloze/verificar_render.R` → `V1`-`V11` OK; `validar_coherencia_matematica.R` → APROBADO 0 errores; `cloze/ejercicio_state.json` → **10/11** (auditoría adversarial cerrada con 2 agentes independientes: 6 hallazgos MENOR aplicados; falta solo `aprobacion_usuario`, humano) |
+| **OE11** | Validación Nivel 3 en aula → `03-En-Produccion/` | ⬜ | **Siguiente objetivo, ahora para las DOS variantes** (ambas aprobadas para aula el 2026-07-30). Requiere aplicación con estudiantes reales de grado 10-11 y análisis de diagnosticidad por distractor. Destino ya reservado: `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` |
+| **OE12** | Variante CLOZE en `cloze/`: Progressive Disclosure de 6 partes que preserva el contrato paramétrico del SCHOICE (invariantes I-1..I-7 + la instancia canónica) | ✅ | **Cumplido el 2026-07-30**: `cloze/verificar_render.R` → `V1`-`V11` OK **sobre la versión vigente** (re-verificado a las 17:0x tras detectar por `mtime` que la evidencia era anterior al `.Rmd`); `validar_coherencia_matematica.R` → APROBADO 0 errores; contrato de gaps verificado sobre **100 versiones reales** del banco Moodle (600 gaps, 0 etiquetas); aprobación humana explícita → `cloze/ejercicio_state.json` **11/11** |
 
 ---
 
@@ -123,6 +130,15 @@ Hasta que exista esa evidencia, el ejercicio permanece en `01-` o `02-`, por muy
 toda la validación automática. **La validación automática mide corrección, no calidad
 psicométrica.**
 
+**Aplica por separado a cada variante.** Desde el 2026-07-30 las dos están aprobadas para aula, pero
+la evidencia de Nivel 3 **no es transferible entre ellas**: miden cosas distintas (§1 del
+[`../HANDOFF.md`](../HANDOFF.md)). El SCHOICE se evalúa como ítem único, así que su evidencia es la
+distribución de respuestas entre las 4 opciones; en el CLOZE hay que registrar el acierto **por
+parte**, porque la progresión cognitiva de las 6 partes es justamente lo que se está poniendo a
+prueba. En particular, la **Parte 2** (`n-1` disponibles tras ocupar el primer lugar) es la que aísla
+el concepto que decide todo el ítem: si los estudiantes fallan la Parte 1 pero aciertan la Parte 2,
+la descomposición está funcionando.
+
 ---
 
 ## 5. Referencias cruzadas
@@ -135,7 +151,9 @@ psicométrica.**
 
 ---
 
-**Versión**: 3.0 (variante CLOZE registrada como OE12; cierre de marcas «(pendiente)» sobre
-`HANDOFF.md`/`.claude/CLAUDE.md`/regla local ya resueltas; corrección de rango `EST-PER-01` a `07`
-en §4; nota de sincronización actualizada a 11/11 SCHOICE + 10/11 CLOZE)
+**Versión**: 3.1 (**OE12 cumplido**: aprobación humana de la variante CLOZE → 11/11; re-verificación
+de vigencia por `mtime` tras la reordenación del YAML por RStudio; contrato de gaps medido sobre 100
+versiones reales; canónica regenerada; OE11 pasa a ser el siguiente objetivo para **ambas** variantes,
+con la nota de §4 sobre que su evidencia no es transferible entre ellas; v3.0 — variante CLOZE
+registrada como OE12; cierre de marcas «(pendiente)»; corrección de rango `EST-PER-01` a `07` en §4)
 **Fecha**: 2026-07-30
