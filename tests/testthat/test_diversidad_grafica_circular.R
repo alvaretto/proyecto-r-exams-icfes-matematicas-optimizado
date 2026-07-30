@@ -13,6 +13,9 @@ get_generated_vars <- function(rmd_file) {
   # `{r data_generation` es una llave de cuantificador inválida -> error
   # "Invalid contents of {}". Con ese bug los 3 test_that de este archivo
   # morían en la primera línea del helper, así que la suite nunca verificó nada.
+  # La ruta se normaliza ANTES de cambiar de directorio: mas abajo el chunk se
+  # evalua desde un tempdir, y una ruta relativa dejaria de resolver alli.
+  rmd_file   <- normalizePath(rmd_file, mustWork = TRUE)
   rmd_lines  <- readLines(rmd_file, warn = FALSE)
   start_line <- grep("```{r data_generation", rmd_lines, fixed = TRUE)[1]
   cierres    <- grep("```", rmd_lines, fixed = TRUE)
@@ -20,7 +23,17 @@ get_generated_vars <- function(rmd_file) {
   stopifnot(!is.na(start_line), !is.na(end_line))
   data_gen_code <- rmd_lines[(start_line + 1):(end_line - 1)]
 
-  # Evaluar el código en el entorno temporal
+  # Evaluar en un DIRECTORIO TEMPORAL. El chunk llama a
+  # ggsave("grafico_pregunta.png", ...) con ruta relativa, asi que escribe en el
+  # working directory del proceso: sin esto, cada corrida de la suite dejaba un
+  # grafico_pregunta.png suelto dentro de tests/testthat/ (residuo untracked que
+  # ensucia el repo). on.exit() restaura el wd aunque el chunk falle a mitad.
+  wd_original <- getwd()
+  on.exit(setwd(wd_original), add = TRUE)
+  tmp_wd <- file.path(tempdir(), "diversidad_grafica_circular")
+  dir.create(tmp_wd, showWarnings = FALSE, recursive = TRUE)
+  setwd(tmp_wd)
+
   eval(parse(text = data_gen_code), envir = env)
 
   # Retornar las variables relevantes del entorno para testeos
