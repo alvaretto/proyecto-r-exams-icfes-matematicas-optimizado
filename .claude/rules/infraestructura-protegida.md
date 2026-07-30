@@ -101,13 +101,25 @@ echo 'I-5 OK'
 ### I-6 — Hooks ejecutables y sintaxis válida
 
 **Invariante:** los `.sh` ICFES deben ser ejecutables y `bash -n` debe pasar.
+Son **4** desde 2026-07-29: los 3 originales más `pre-push.sh`, la versión
+canónica versionada del hook `pre-push` (antes vivía solo en `.git/hooks/`,
+fuera de control de versiones — ver regla #8 de `testing-obligatorio.md`).
 
 **Verificación:**
 ```bash
-for h in .claude/hooks/{pre-write-rmd-gate,post-exams2-validation,pre-commit-ortografia}.sh; do
+for h in .claude/hooks/{pre-write-rmd-gate,post-exams2-validation,pre-commit-ortografia,pre-push}.sh; do
   test -x "$h" && bash -n "$h" || { echo "FAIL: $h"; exit 1; }
 done
 echo 'I-6 OK'
+```
+
+**Nota sobre `pre-push.sh`:** el que git ejecuta es `.git/hooks/pre-push`, que
+**no** es versionable. Debe ser un wrapper que delegue en el canónico
+propagando stdin y `"$@"` (el contrato `pre-push` depende de ambos). Si el
+wrapper falta o deja de delegar, el hook corregido no se aplica aunque I-6 pase.
+Verificación complementaria:
+```bash
+grep -q 'pre-push.sh' .git/hooks/pre-push && echo 'wrapper OK' || echo 'FAIL: wrapper no delega'
 ```
 
 ### I-7 — Backup pre-Ruflo preservado
@@ -332,8 +344,8 @@ Se ejecuta automáticamente en `tests/run_all_tests.R` y en pre-push. Si falla, 
 
 ---
 
-**Versión:** 1.2
-**Fecha:** 2026-07-28 (v1.2 — I-9 PascalCase de `tools:` en agentes; v1.1 2026-07-01 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
+**Versión:** 1.3
+**Fecha:** 2026-07-29 (v1.3 — I-6 pasa de 3 a 4 hooks con `pre-push.sh` + sub-invariante I-6b: contrato de stdin del pre-push y wrapper que delega; v1.2 2026-07-28 — I-9 PascalCase de `tools:` en agentes; v1.1 2026-07-01 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo el ecosistema `.claude/` y archivos raíz `CLAUDE.md`, `CLAUDE.local.md`.

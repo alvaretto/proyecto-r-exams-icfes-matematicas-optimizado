@@ -135,22 +135,58 @@ exit 0
 
 ### 2. Git Pre-Push Hook (Nativo)
 
-**Ubicación:** `.git/hooks/pre-push`
+**Fuente de verdad (versionada):** `.claude/hooks/pre-push.sh`
+**Instalación:** `.git/hooks/pre-push` es un wrapper que delega (el directorio
+`.git/` NO está bajo control de versiones, así que en cada clon nuevo hay que
+reinstalarlo):
 
 ```bash
+cat > .git/hooks/pre-push <<'WRAPPER'
 #!/bin/bash
-# Git Pre-Push Hook - Validación Final
-# Ejecuta suite completa de tests antes de push
+exec bash "$(git rev-parse --show-toplevel)/.claude/hooks/pre-push.sh" "$@"
+WRAPPER
+chmod +x .git/hooks/pre-push
+```
 
-# Tests obligatorios (desactivar con PREPUSH_SKIP_TESTS=1)
-if [ "${PREPUSH_SKIP_TESTS:-0}" != "1" ]; then
-    Rscript tests/run_all_tests.R || {
-        echo "❌ PUSH RECHAZADO: Tests fallaron"
-        exit 1
-    }
-fi
+El hook ejecuta, en orden: (1) `git lfs pre-push`, (2) aviso de cambios sin
+commit, (3) detección de archivos cambiados, (4) `R_TESTS_QUICK=1 Rscript
+tests/run_all_tests.R`. Falla el push si los tests fallan.
 
-exit 0
+#### Contrato de stdin (⚠️ TRAMPA DOCUMENTADA — Error de falso verde)
+
+git entrega al hook `pre-push`, **por stdin**, una línea por ref:
+
+```
+<local_ref> <local_sha> <remote_ref> <remote_sha>
+```
+
+Ese stdin **se puede leer UNA SOLA VEZ**, y `git lfs pre-push` lo consume hasta
+EOF. Todo consumidor posterior lee vacío. Por eso el hook captura stdin al
+inicio (`PREPUSH_STDIN=$(cat)`) y reparte una copia a cada consumidor.
+
+**PROHIBIDO** pasar el stdin real a `git lfs pre-push` (ni a ningún otro
+consumidor) antes de calcular el rango del push.
+
+**Por qué importa:** el rango del push alimenta `R_TESTS_CHANGED_FILES`, que es
+lo que el runner usa para decidir qué suites saltar en modo quick. Si esa lista
+llega vacía o incompleta, el modo quick salta suites relevantes y el hook
+reporta `✅ TODOS LOS TESTS PASARON / Cobertura 100%` **sin haber ejecutado las
+suites que cubren el commit** — un falso verde que no distingue "pasó" de "no se
+corrió". Incidente 2026-07-29 (commit `b2144d2d`): al pushear `002ebe22`
+corrieron 11 de 22 suites y se saltó `Invariantes I-1..I-6 permutaciones`, que
+era justo la del commit. La suite completa pasó después (22/22).
+
+#### Regla de detección incompleta
+
+Si el hook no parsea ninguna ref, **NO** debe exportar `R_TESTS_CHANGED_FILES`.
+Dejarla sin definir hace que el runner use su propia detección (`@{push}..`);
+exportar una lista parcial es peor que no exportar nada, porque el runner la
+trata como confiable (`.detection_ok = TRUE`) y salta suites en silencio.
+
+El hook registra siempre una línea auditable con lo que detectó:
+
+```
+🔎 Detección: 1 ref(s) en el push, 14 archivo(s) afectado(s)
 ```
 
 ### 3. Instrucciones para Claude (Regla Activa)
@@ -164,10 +200,16 @@ ANTES DE GIT COMMIT:
 3. Usar mensaje de commit descriptivo con Co-Authored-By
 
 ANTES DE GIT PUSH:
-1. Ejecutar: Rscript tests/run_all_tests.R
+1. Ejecutar: R_TESTS_FULL=1 Rscript tests/run_all_tests.R
 2. Solo proceder si todos los tests pasan
 3. Verificar que no hay cambios sin commit
 ```
+
+⚠️ **Leer el conteo de suites, no solo el veredicto.** El hook corre en modo
+quick: `Suites ejecutadas: 11 / Saltadas: 11` con "Cobertura 100%" NO significa
+que el commit esté cubierto. Si entre las saltadas hay alguna que cubre lo que
+toca el commit, correr la suite completa con `R_TESTS_FULL=1` antes de confiar
+en el verde.
 
 ### Comandos de Control
 
@@ -183,6 +225,13 @@ PREPUSH_SKIP_TESTS=1 git push
 
 # Desactivar tests en pre-push (permanente)
 git config hooks.prepush-tests false
+
+# Forzar suite COMPLETA ignorando el modo quick (obligatorio pre-promoción)
+R_TESTS_FULL=1 Rscript tests/run_all_tests.R
+
+# Diagnosticar la detección del pre-push sin correr tests
+printf '%s\n' "refs/heads/<rama> <local_sha> refs/heads/<rama> <remote_sha>" \
+  | PREPUSH_DEBUG_DETECT=1 bash .claude/hooks/pre-push.sh origin <url>
 ```
 
 ---
@@ -385,7 +434,11 @@ Si se modifica un archivo test_*.R:
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-02-04
+**Versión:** 1.1
+**Fecha:** 2026-07-29 (v1.1 — sección 2 reescrita contra el hook real: fuente
+canónica versionada en `.claude/hooks/pre-push.sh` + wrapper en `.git/hooks/`,
+contrato de stdin y trampa de `git lfs pre-push` (falso verde del modo quick),
+regla de detección incompleta, `R_TESTS_FULL=1` y `PREPUSH_DEBUG_DETECT=1`;
+v1.0 2026-02-04)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA

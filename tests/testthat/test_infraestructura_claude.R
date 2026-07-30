@@ -160,7 +160,10 @@ test_that("I-6: hooks .sh son ejecutables y tienen sintaxis bash válida", {
   hooks <- c(
     ".claude/hooks/pre-write-rmd-gate.sh",
     ".claude/hooks/post-exams2-validation.sh",
-    ".claude/hooks/pre-commit-ortografia.sh"
+    ".claude/hooks/pre-commit-ortografia.sh",
+    # Canónico versionado del hook git pre-push (2026-07-29). El que git ejecuta
+    # es .git/hooks/pre-push, no versionable, que debe delegar aquí.
+    ".claude/hooks/pre-push.sh"
   )
 
   for (h in hooks) {
@@ -179,6 +182,74 @@ test_that("I-6: hooks .sh son ejecutables y tienen sintaxis bash válida", {
     expect_equal(sintaxis_ok, 0,
                  info = paste("Hook con sintaxis inválida:", h))
   }
+})
+
+# ============================================================
+# I-6b: contrato de stdin del pre-push (anti falso verde)
+# ============================================================
+# git entrega las refs del push por stdin y ese stdin se lee UNA SOLA VEZ.
+# `git lfs pre-push` lo consume hasta EOF: si se le pasa el stdin real, el
+# cálculo del rango del push queda ciego, R_TESTS_CHANGED_FILES sale vacío o
+# parcial y el modo quick salta las suites del commit reportando
+# "TODOS LOS TESTS PASARON / Cobertura 100%". Incidente 2026-07-29 (b2144d2d).
+
+test_that("I-6b: pre-push.sh captura stdin antes de invocar git-lfs", {
+  hook <- ".claude/hooks/pre-push.sh"
+  expect_true(file.exists(hook), info = paste("Hook faltante:", hook))
+  lineas <- readLines(hook, warn = FALSE)
+  # Escanear SOLO código: el propio hook documenta la trampa en comentarios que
+  # mencionan `git lfs pre-push`, y contarlos daría falsos positivos.
+  es_codigo <- !grepl("^\\s*#", lineas)
+  grep_codigo <- function(patron) {
+    i <- grep(patron, lineas)
+    i[es_codigo[i]]
+  }
+
+  # 1) Captura de stdin una sola vez
+  idx_captura <- grep_codigo("PREPUSH_STDIN=\\$\\(cat")
+  expect_gt(length(idx_captura), 0,
+            label = "pre-push.sh sin captura de stdin (PREPUSH_STDIN=$(cat ...))")
+
+  # 2) git-lfs alimentado desde la copia, NO del stdin real
+  idx_lfs <- grep_codigo("git lfs pre-push")
+  expect_gt(length(idx_lfs), 0, label = "pre-push.sh no invoca git lfs pre-push")
+  for (i in idx_lfs) {
+    expect_match(lineas[i], "PREPUSH_STDIN",
+                 info = paste0("Línea ", i, ": `git lfs pre-push` recibe el stdin real; ",
+                               "debe alimentarse de la copia capturada. ",
+                               "Ver .claude/rules/testing-obligatorio.md §Contrato de stdin"))
+  }
+
+  # 3) La captura ocurre ANTES de git-lfs (si no, la copia llega vacía)
+  if (length(idx_captura) > 0 && length(idx_lfs) > 0) {
+    expect_lt(min(idx_captura), min(idx_lfs),
+              label = "La captura de stdin debe preceder a `git lfs pre-push`")
+  }
+
+  # 4) El bucle de refs lee de la copia, no de stdin
+  idx_while <- grep_codigo("^\\s*while\\s+read")
+  expect_gt(length(idx_while), 0, label = "pre-push.sh sin bucle de parseo de refs")
+  expect_gt(length(grep_codigo("done\\s*<<<\\s*\"?\\$PREPUSH_STDIN")), 0,
+            label = "El bucle de refs debe alimentarse de $PREPUSH_STDIN (here-string)")
+
+  # 5) Detección incompleta NO se exporta como confiable
+  idx_export <- grep_codigo("export R_TESTS_CHANGED_FILES")
+  expect_gt(length(idx_export), 0, label = "pre-push.sh no exporta R_TESTS_CHANGED_FILES")
+  expect_true(any(grepl("REFS_PARSED", lineas[es_codigo])),
+              info = paste("El export de R_TESTS_CHANGED_FILES debe estar condicionado a",
+                           "haber parseado al menos una ref; una lista parcial es peor",
+                           "que ninguna (el runner la trata como confiable)"))
+})
+
+test_that("I-6b: .git/hooks/pre-push delega en el canónico versionado", {
+  wrapper <- ".git/hooks/pre-push"
+  if (!file.exists(wrapper)) {
+    skip("Wrapper .git/hooks/pre-push no instalado (clon nuevo: ver testing-obligatorio.md)")
+  }
+  contenido <- paste(readLines(wrapper, warn = FALSE), collapse = "\n")
+  expect_match(contenido, "\\.claude/hooks/pre-push\\.sh",
+               info = paste("El wrapper NO delega en .claude/hooks/pre-push.sh:",
+                            "el hook corregido no se está aplicando aunque I-6 pase"))
 })
 
 # ============================================================
