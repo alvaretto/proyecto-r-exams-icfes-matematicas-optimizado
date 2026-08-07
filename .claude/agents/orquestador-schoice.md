@@ -84,6 +84,7 @@ Antes de cualquier acción destructiva, verifico:
 10. El hook `post-exams2-validation.sh` incluye FASE 2J (`grep -q "FASE 2J" .claude/hooks/post-exams2-validation.sh`).
 11. `.claude/rules/markdown-tablas-pandoc.md` existe (regla #20 anti `No counter 'none' defined`).
 12. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
+12b. `.claude/scripts/validar_diagnosticidad.R` existe. Mide **discriminación**: si la opción correcta se identifica por una heurística superficial (ser la única mucho más larga o mucho más corta; ser la única con su primera palabra). Ninguna otra validación del arsenal la mide — corrección, formato, unicidad y diversidad pueden estar todas en verde sobre un ítem que se resuelve sin leer las opciones. Lo ejecuto en el paso 9.
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 13. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo **Y máximo** del pool + vectores más corto y más largo + todos los cuadrantes), ampliando los recortes ≥×2.4 (las miniaturas ocultan toques marginales), no una sola semilla — Incidente G / Error 23 (etiquetas solapadas en cuña estrecha Y ancha).
 14. Distractores no extremos por construcción: ningún distractor debe ocupar sistemáticamente el rango extremo (máximo/mínimo) de la magnitud comparada (longitud, valor, distancia) entre las opciones — Incidente H / regla #22 §P5. Planifico verificar el ORDEN/RANK de la respuesta correcta entre las opciones sobre ≥40 versiones en el paso 9, no solo su valor absoluto.
@@ -99,9 +100,40 @@ Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_fa
 
 ## Lecciones absorbidas de sesiones previas (2026-05-03)
 
+### Índice de incidentes — identificadores estables
+
+Las letras son **posicionales** y NO coinciden entre gemelos: el mismo modo de fallo es la `H`
+aquí y la `F` en `orquestador-schoice`. Por eso cada incidente lleva además un **ID estable por
+tema**, que sí es común a los dos. Al referenciar un incidente desde código, reglas, memoria o
+desde el otro gemelo, **usar el ID**, no la letra.
+
+| ID estable | CLOZE | SCHOICE | Tema |
+|---|---|---|---|
+| `INC-ANSWER-ORDEN` | A | — | `##ANSWERi##` fuera de orden o faltante |
+| `INC-PANDOCBOUNDED` | B | B | `\pandocbounded` undefined en PDF |
+| `INC-LETRA-SOLUTION` | C | C | Letter-independence en la Solution |
+| `INC-POOL-MCHOICE` | D | — | Colapso de pools de distractores `mchoice` |
+| `INC-NOPS-NA` | E | — | NOPS es N/A para todo CLOZE |
+| `INC-TABLA-NONE` | F | E | Guard del contador `none` en tablas Markdown |
+| `INC-GRAF-EN-GAP` | G | — | Gráficas-opción dentro de un gap CLOZE |
+| `INC-DIV-COSMETICA` | H | F | Diversidad cosmética: clave invariante |
+| `INC-ETIQUETA-SOLAPE` | I | G | Etiquetas solapadas en diagramas dinámicos |
+| `INC-DISTRACTOR-EXTREMO` | J | H | Distractor extremo por construcción algebraica |
+| `INC-RNG-RESEED` | K | I | Reseed del RNG dentro de `data_generation` |
+| `INC-UMBRAL-CASCADA` | L | J | Umbral de legibilidad único en vez de cascada |
+| `INC-ROTULO-NUMERICO` | M | K | Distractores delatados por el rótulo numérico |
+| `INC-ECUACION-LISTA` | N | L | Ecuación en display sin indentar en lista numerada |
+| `INC-CLAUDE-LOCAL` | O | M | Ignorar el `.claude/` local del subproyecto |
+| `INC-POOL-TAMANO` | P | N | Pool de errores del tamaño del nº de slots |
+| `INC-SOLUTION-ORDEN` | Q | — | La prosa de la Solution enumera en orden |
+| `INC-CAMPO-NO-EMITIDO` | R | O | Un campo que no se emite no está probado |
+| `INC-MUTANTE-SONDA` | S | P | El mutante muere por la sonda equivocada |
+| `INC-SINO-BINARIO` | T | D | Distractores Sí/No: coherencia condicional |
+| `INC-SOLUTION-ANSWERLIST` | — | A | Inconsistencia Solution↔Answerlist |
+
 Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones aprendidos de incidentes pasados:
 
-### Incidente A — Inconsistencia Solution↔Answerlist (Error 17)
+### Incidente A · `INC-SOLUTION-ANSWERLIST` — Inconsistencia Solution↔Answerlist (Error 17)
 
 **Síntoma**: Solution dice "Opción A" pero answerlist marca (c) como correcta.
 **Causa**: `exshuffle: TRUE` re-mezcla opciones después de evaluar `r letra_correcta`.
@@ -110,7 +142,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - `letra_correcta` se calcula DESPUÉS del `sample()`.
 - Validar con 20 semillas dispersas que coincide en TODAS.
 
-### Incidente B — `\pandocbounded` undefined en PDF (Error 16)
+### Incidente B · `INC-PANDOCBOUNDED` — `\pandocbounded` undefined en PDF (Error 16)
 
 **Síntoma**: `! Undefined control sequence. l.5 \pandocbounded` al compilar PDF.
 **Causa**: pandoc 3.x envuelve `\includegraphics` cuando Markdown no tiene atributo `width`.
@@ -119,7 +151,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - Patrón validado: `cat("![](file.png){width=80%}\n")` (ver `diagrama_venn_encuesta_*.Rmd` línea 1070).
 - Después de `exams2pdf()`, **siempre** verifico que el `.tex` generado NO contiene `\pandocbounded`.
 
-### Incidente C — Solution con letra hardcoded + Moodle re-shuffle (Error 19)
+### Incidente C · `INC-LETRA-SOLUTION` — Solution con letra hardcoded + Moodle re-shuffle (Error 19)
 
 **Sesión**: 2026-05-12. Estudiante real reportó confusión: seleccionó opción C marcada "Incorrecta", pero la Solution decía "Respuesta correcta: Opción C". El `.Rmd` tenía `exshuffle: FALSE` y `letra_correcta` se calculaba post-`sample()`. **Sin embargo, Moodle aplicó su propia "Shuffle answers" en el quiz**, re-ordenando las opciones de forma independiente de R-exams.
 
@@ -155,7 +187,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - FASE 2J del hook `post-exams2-validation.sh` escanea la Solution buscando los patrones P1-P4. Si encuentra cualquiera, FAIL bloqueante con códigos `ERR_SOL_LETRA_R`, `ERR_SOL_LETRA_CAT`, `ERR_SOL_LETRA_LITERAL`.
 - `tests/testthat/test_letter_independence.R` valida lo mismo en CI.
 
-### Incidente D — Distractores Sí/No: coherencia condicional + gotcha sample (sesión 2026-05-12)
+### Incidente D · `INC-SINO-BINARIO` — Distractores Sí/No: coherencia condicional + gotcha sample (sesión 2026-05-12)
 
 **Sesión**: 2026-05-12, ejercicio `Comparacion-Lineas-Temporales-Schoice`. Análisis del HTML renderizado detectó 4 bugs sistémicos en el pool de errores que pasaron las FASES 2A-2J originales sin detección:
 
@@ -176,7 +208,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 
 **Referencia detallada**: `.claude/skills/generar-schoice/SKILL.md` § "Distractores con conclusión binaria Sí/No".
 
-### Incidente E — Tablas Markdown rompen en RStudio pandoc 3.8.3: guard contador `none` (Error 21)
+### Incidente E · `INC-TABLA-NONE` — Tablas Markdown rompen en RStudio pandoc 3.8.3: guard contador `none` (Error 21)
 
 **Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (o cualquier entorno con pandoc ≥ 3.7 bundleado) fallan con:
 ```
@@ -198,7 +230,7 @@ La guardia `@ifundefined` evita redefinir el contador si ya existe (importante e
 
 **Referencia**: `.claude/rules/markdown-tablas-pandoc.md` (regla #20), Error 21 en `.claude/docs/patrones-errores-conocidos.md`, hook FASE 2K.
 
-### Incidente F — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
+### Incidente F · `INC-DIV-COSMETICA` — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
 
 **Síntoma**: el ejercicio reporta "288/300 versiones únicas" y pasa el detractor, pero la opción correcta es SIEMPRE el mismo diagrama en todas las semillas.
 
@@ -222,9 +254,19 @@ Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
 
 Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
 
+**6. Diagnosticidad de los distractores (paso 9, obligatorio)**: un ítem puede tener 4 opciones únicas, clave correcta y datos que cambian en cada versión, y aun así resolverse **sin leer el contenido** porque la correcta es siempre la única mucho más larga. Es una de las heurísticas de examen más conocidas y ninguna otra validación la mide.
+
+```bash
+Rscript .claude/scripts/validar_diagnosticidad.R <ruta_al_.Rmd> --n 40
+```
+
+Sondas: H1 más-larga / H1 más-corta (la correcta es la ÚNICA en el extremo **y** por un margen relativo ≥ 15% sobre su rival más próximo) y H2 prefijo (única con su primera palabra y único singleton). `ERR_DIAG_SUPERFICIAL` (exit 1, el 100% de las versiones) → **BLOQUEANTE**: igualar la extensión de las opciones y volver al paso 5. `WARN_DIAG_SUPERFICIAL` no bloquea pero se declara en el reporte.
+
+El margen forma parte de la sonda: sin él, un conjunto de opciones ya igualado (8 caracteres de diferencia sobre 115) seguía reportando 100%. La `NOTA DE ORDEN` que imprime el script —"la correcta es la única más larga en el N% de las versiones, pero por un margen mediano de M%"— se transcribe al reporte: `PASS` con nota no significa "no hay señal", significa "la señal es demasiado pequeña para explotarla".
+
 **Referencia**: `.claude/rules/diversidad-sustantiva.md` (regla #22), `feedback_diversidad_cosmetica.md`, `feedback_detractor_alucina_codigo.md`.
 
-### Incidente G — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
+### Incidente G · `INC-ETIQUETA-SOLAPE` — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
 
 **Síntoma**: en un diagrama generado dinámicamente, una etiqueta de texto (ángulo, distancia, nombre) se solapa con una línea/punto/eje en SOLO algunas versiones. HTML/PDF rinden "sin error"; el defecto es visual y depende de los parámetros aleatorios. Casos reales: `"30°"` montado sobre la línea/punto con ángulo **mínimo** del pool (cuña estrecha); y `"70°"` clipado por la línea casi horizontal con ángulo **máximo** del pool (cuña ancha + piso de radio insuficiente).
 
@@ -240,7 +282,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: Error 23 en `.claude/docs/patrones-errores-conocidos.md`, reglas `flujo-b-obligatorio.md` + `graficador-secuencial.md` (coherencia visual), memoria `pendiente-solapamiento-diagramas-avion`.
 
-### Incidente H — Distractor extremo por construcción algebraica (2026-07-28)
+### Incidente H · `INC-DISTRACTOR-EXTREMO` — Distractor extremo por construcción algebraica (2026-07-28)
 
 **Síntoma**: un distractor resulta ser SIEMPRE el valor/longitud máxima o mínima entre las opciones, por identidad aritmética — no por azar. El estudiante puede descartarlo (o elegirlo) con un atajo posicional ("la más larga nunca es la correcta") sin necesidad de razonar sobre los datos del enunciado.
 
@@ -257,7 +299,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: regla #22 §P5 (`.claude/rules/diversidad-sustantiva.md`), incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
 
-### Incidente I — Reseed del RNG dentro de `data_generation` rompe la reproducibilidad multi-semilla (2026-07-28)
+### Incidente I · `INC-RNG-RESEED` — Reseed del RNG dentro de `data_generation` rompe la reproducibilidad multi-semilla (2026-07-28)
 
 **Síntoma**: una validación multi-semilla (FASE 2G, stress test visual, `validar_diversidad_sustantiva.R`) detecta un fallo puntual en alguna semilla, pero al reintentar con esa misma semilla el fallo no se reproduce — parece "intermitente" sin causa aparente.
 
@@ -271,7 +313,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28); código fuente `exams:::xexams()` (paquete `exams`, CRAN).
 
-### Incidente J — Umbral de legibilidad único revienta el render o deja diagramas degenerados (Familia 6, 2026-07-28)
+### Incidente J · `INC-UMBRAL-CASCADA` — Umbral de legibilidad único revienta el render o deja diagramas degenerados (Familia 6, 2026-07-28)
 
 **Síntoma**: un ejercicio con opciones gráficas que filtra combinaciones de parámetros por un ratio de legibilidad (p. ej. `min(dist)/max(dist) >= f`) falla de dos formas opuestas según el valor elegido de `f`: si es bajo, hay versiones con vectores casi ilegibles (diagrama degenerado, Error 26); si es alto, hay versiones donde NINGUNA combinación cumple el umbral y el `stopifnot` revienta el render con "ninguna combinación válida".
 
@@ -283,7 +325,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `.claude/scripts/snippets_familias_rmd.R` (Familia 6 — aún no indexada en `.claude/rules/familias-soluciones-rmd.md`, que documenta solo Familias 1-5), incidente `desplazamiento-avion-aeropuerto` (2026-07-28), Error 26 en `.claude/docs/patrones-errores-conocidos.md`.
 
-### Incidente K — Distractores que revelan la respuesta por el rótulo numérico (2026-07-28)
+### Incidente K · `INC-ROTULO-NUMERICO` — Distractores que revelan la respuesta por el rótulo numérico (2026-07-28)
 
 **Síntoma**: en un ejercicio con opciones gráficas que muestran su valor numérico (p. ej. "40 km" bajo el diagrama), el estudiante calcula el valor correcto y descarta las demás opciones por el rótulo, sin necesidad de analizar la representación visual (dirección, orientación, eje).
 
@@ -295,7 +337,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28), regla `graficos-como-opciones.md` §"Formato Equilibrado".
 
-### Incidente L — Ecuación en display sin indentar rompe una lista numerada (2026-07-28)
+### Incidente L · `INC-ECUACION-LISTA` — Ecuación en display sin indentar rompe una lista numerada (2026-07-28)
 
 **Síntoma**: en PDF, una lista numerada de la sección Question o Solution muestra "(a)" repetido después de "(d)" (o el conteo se reinicia a mitad de la lista).
 
@@ -307,7 +349,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
 
-### Incidente M — Ignorar el `.claude/` local de un subproyecto (2026-07-28)
+### Incidente M · `INC-CLAUDE-LOCAL` — Ignorar el `.claude/` local de un subproyecto (2026-07-28)
 
 **Síntoma**: un agente "mejora" un ejercicio ya maduro y rompe una invariante que el subproyecto tenía documentada — extrae una función a un archivo externo, suaviza una constante geométrica, unifica un umbral en cascada, o reescribe el enunciado para cumplir una regla genérica. El `.Rmd` sigue compilando y **todos los validadores sintácticos y semánticos siguen en verde**, pero el ejercicio queda degradado o directamente con la clave falsa.
 
@@ -323,7 +365,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidentes `desplazamiento-avion-aeropuerto` y `plano-cartesiano-barco-n2` (2026-07-28); regla #17 `infraestructura-protegida.md` (el `.claude/` local del subproyecto NO forma parte de la infraestructura protegida del raíz, pero sí es fuente de verdad dentro de su alcance).
 
-### Incidente N — Pool de errores del mismo tamaño que el número de slots (2026-07-29)
+### Incidente N · `INC-POOL-TAMANO` — Pool de errores del mismo tamaño que el número de slots (2026-07-29)
 
 **Síntoma**: el ejercicio pasa TODO el arsenal en verde (coherencia matemática APROBADO, Nivel 5A-5E, diversidad sustantiva exit 0) y aun así el **tipo** de error conceptual que ve el estudiante es idéntico en el 100 % de las versiones: solo cambia el valor numérico sustituido. La diversidad medida en el render puede ser alta (contextos narrativos, mezcla de opciones, reflexiones) y ocultar por completo esta pobreza.
 
@@ -341,7 +383,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `permutaciones-pescadores-venia-n4` (2026-07-29), derivado de `MAT-2026-1-004`.
 
-### Incidente O — Un campo que no se emite no está probado (2026-07-30)
+### Incidente O · `INC-CAMPO-NO-EMITIDO` — Un campo que no se emite no está probado (2026-07-30)
 
 **Síntoma**: al reutilizar el pool de errores de un ejercicio aprobado en otro ejercicio,
 `exams2pdf()` falla con `LaTeX Error: Unicode character − (U+2212)`.
@@ -368,6 +410,38 @@ familia —una variante CLOZE, un `_neg_`, un ejercicio hermano— la hereda.
 SCHOICE y solo explotó al crear la variante CLOZE, que sí lo emite. Ver el Incidente R del
 `orquestador-cloze`.
 
+### Incidente P · `INC-MUTANTE-SONDA` — El mutante muere por la sonda equivocada (2026-08-06)
+
+**Síntoma**: un `verificar_render.R` que yo generé cierra con `RESULTADO: APROBADO (0 errores)` y
+declara varias invariantes "verificadas", pero una de ellas nunca se ejecutó: su prueba de mutación
+fue cazada por **otra** sonda.
+
+**Causa raíz**: una prueba de mutación sin contrato no prueba nada. Basta con que el mutante sea
+rechazado por cualquier motivo para que la fase se declare en verde. Caso real
+(`excedente-almuerzo-proporcional-n4/cloze`): la fase se anunciaba como prueba de I-1 (`E > 0`)
+forzando `P > T`, pero el `.Rmd` leía `E` de una tabla precomputada y el mutante no la tocaba;
+`env$E` seguía positivo, el rechazo lo produjo `I-3_formula`, y la línea que lo habría detectado
+(`has_i1 <- any(grepl("I-1", batch))`) se computaba **sin usarse**. Mi propio `HANDOFF.md` de
+`permutaciones-pescadores-venia-n4` documenta el mismo fallo ("las dos mutaciones no mutaban el
+artefacto"): es reincidente.
+
+**Contrato de mutación obligatorio** — todo mutante que yo genere:
+
+1. **Declara su sonda esperada** (`sonda_esperada <- "I-1"`). Sin declaración, el mutante no es válido.
+2. **Muere por SU sonda**: la fase falla si `!any(grepl(sonda_esperada, batch, fixed = TRUE))`, con
+   mensaje explícito `MUTANTE <id> CAZADO POR LA SONDA EQUIVOCADA`. Un `grepl` cuyo resultado no
+   condiciona nada es código muerto: si lo calculo, lo uso.
+3. **Verifica que la mutación llegó al ENTORNO**, no al texto: la guarda se escribe sobre `env_mut`
+   (`if (env_mut$E > 0) errors <- c(errors, "MUTANTE MAL CONSTRUIDO: ...")`), no sobre el `.Rmd`.
+   Si una magnitud se **lee** de una estructura precomputada en vez de recalcularse, mutar sus
+   insumos NO la altera: hay que mutar la variable que la invariante observa.
+
+**Cobertura mínima**: una invariante sin mutante que la cace por su propia sonda se reporta como
+`sin_prueba_de_deteccion`, nunca dentro de un "0 errores".
+
+**Referencia**: gemelo del Incidente S de `.claude/agents/orquestador-cloze.md` (§ Contrato de
+mutación), donde está la versión extendida con los snippets completos.
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
@@ -379,7 +453,8 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
    - Detectar si hay `descripcion_corta` que empiece con "Sí, " o "No, " usando variables con roles invertibles.
    - Renderizar ≥10 semillas y, para cada distractor Sí/No del pool seleccionado, verificar que la justificación textual sea **internamente coherente con la conclusión declarada** (no apoye la conclusión opuesta).
    - Si se detecta incoherencia interna en cualquier semilla → ABORTAR y aplicar Patrón A antes de continuar.
-6. Solo después de las 5 verificaciones, marco renderizado_4_formatos como completado.
+6. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente P): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que la guarda de "mutante mal construido" se evalúa sobre el ENTORNO, no sobre el texto del `.Rmd`. Un `APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
+7. Solo después de estas verificaciones, marco renderizado_4_formatos como completado.
 
 ## Máquina de estados (los 12 pasos)
 
@@ -397,7 +472,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) **+ DIAGNOSTICIDAD** via `validar_diagnosticidad.R --n 40` (`ERR_DIAG_SUPERFICIAL` bloqueante) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |

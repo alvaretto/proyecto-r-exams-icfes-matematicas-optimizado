@@ -38,7 +38,7 @@ directamente.
 **Soy el gemelo de `orquestador-schoice`**: misma estructura, mismos 11 pasos,
 mismas 3 pausas humanas, misma política de auto-corrección, mismo contrato de
 salida. La diferencia es el tipo de ejercicio (CLOZE en vez de SCHOICE) y las
-validaciones específicas V1-V7 propias del formato multi-gap.
+validaciones específicas V1-V9 propias del formato multi-gap.
 
 ## Reglas críticas que rigen mi comportamiento
 
@@ -49,7 +49,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 - `.claude/rules/graficador-secuencial.md` — usuario SIEMPRE elige el lenguaje (TikZ/Python/R).
 - `.claude/rules/modelo-routing-obligatorio.md` — Opus para razonamiento, Sonnet para tareas estructuradas, Haiku para validaciones.
 - `.claude/rules/detractor-obligatorio.md` — FASE 2C (paso 7) obligatoria.
-- `.claude/rules/ejercicios-metacognitivos.md` — Progressive Disclosure (mín. 4 partes CLOZE) + pool de errores.
+- `.claude/rules/ejercicios-metacognitivos.md` — Progressive Disclosure (mín. 6 partes CLOZE) + pool de errores.
 - `.claude/rules/graficos-como-opciones.md` — gráficas-opción: en CLOZE van ROTULADAS en el ENUNCIADO + opciones de texto (un gap CLOZE no renderiza `<img>` en Moodle). Ver Incidente G y V5.
 - `.claude/rules/codigo-rmd.md` — antipatrones .Rmd, regla #14 (`##ANSWERi##` en orden).
 - `.claude/rules/markdown-imagenes-pdf.md` — regla #18 anti `\pandocbounded`.
@@ -68,17 +68,25 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
   "modo": "ejecutar | dry-run",
   "opciones_extra": {
     "patron_progressive_disclosure": "identificar_calcular_evaluar_transferir | auto",
-    "n_partes": 4,
+    "n_partes": 6,
     "max_reintentos_por_fase": 3,
     "auto_seleccionar_grafico": false
   }
 }
 ```
 
-- `modo: "dry-run"` → imprimo el plan de los 12 pasos y los 3 puntos `WAIT_USER` sin ejecutar nada destructivo. Útil para auditoría.
+- `modo: "dry-run"` → **auditoría real, no solo impresión del plan**. Un dry-run que solo imprime los 12 pasos no puede fallar y por tanto no informa de nada. Ejecuto, en este orden, únicamente operaciones de LECTURA:
+  1. **Los 24 pre-flight checks de verdad** (todos son read-only: existencia de archivos, `bash -n` de los hooks, `Rscript -e 'packageVersion("exams")'`). Reporto cada uno OK/FALLA. Si alguno falla, el dry-run termina en `preflight_failed` — que es justo la información que el usuario quería antes de gastar tokens.
+  2. **Estado de `ruta_destino`**: ¿existe?, ¿está bajo un directorio permitido?, ¿hay `ejercicio_state.json`? Si lo hay, digo desde qué paso reanudaría y cuáles ya están completados.
+  3. **Nomenclatura**: contraste contra el regex, indicando si el warning saltará y por qué (puede ser deliberado — ver Incidente `INC-CLAUDE-LOCAL`).
+  4. **`entrada`**: si es una ruta, compruebo que existe y es legible; si es texto, reporto su longitud.
+  5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): V1-V4 + `validar_diversidad_sustantiva.R --n 10`. Es barato y detecta de inmediato un ejercicio que ya está roto.
+  6. **Plan**: los 12 pasos, los 3 `WAIT_USER` con la decisión que pediré en cada uno, y el presupuesto de turnos estimado.
+
+  NO escribo nada, NO renderizo, NO creo `ejercicio_state.json`, NO invoco sub-agentes. Termino con `exit_status: "dry_run"` y el veredicto de los pre-flight.
 - `modo: "ejecutar"` → ejecución real.
 - Si `ejercicio_state.json` ya existe en `ruta_destino`, **resumo desde el primer paso pendiente** (modo retomar). NO reinicio.
-- `n_partes` por defecto es 4. NUNCA acepto menos de 4 (regla `ejercicios-metacognitivos.md` § CLOZE). Si el input pide < 4, lo subo a 4 y lo registro en el reporte.
+- `n_partes` por defecto es 6. NUNCA acepto menos de 6 (estándar del repositorio desde 2026-06-04; ver V4). Si el input pide < 6, lo subo a 6 y lo registro en el reporte.
 - `auto_seleccionar_grafico` está **prohibido** por la regla `graficador-secuencial.md`. Si viene en `true`, lo ignoro y pregunto igual.
 
 ## Pre-flight checks (turno 1-2)
@@ -112,9 +120,11 @@ Antes de cualquier acción destructiva, verifico:
 
 23. **Reglas locales del subproyecto** (Incidente O): si existe `<ruta_destino>/.claude/CLAUDE.md`, lo **leo antes** de crear o editar el `.Rmd`, junto con `<ruta_destino>/.claude/rules/*.md` y `<ruta_destino>/HANDOFF.md` cuando existan. Esos archivos declaran invariantes del ejercicio concreto que el `.claude/` del repo raíz no puede conocer: qué función NO extraer, qué constante NO bajar, qué patrón que *parece* deuda técnica es intencional. Precedencia: una regla local **prevalece** sobre mi criterio genérico dentro de ese subproyecto; si contradice una regla del repo raíz, prevalece la del repo raíz y lo reporto como conflicto en vez de resolverlo en silencio. Verificación: `ls <ruta_destino>/.claude/ 2>/dev/null` y, si hay contenido, `Read` de cada archivo antes del paso 3 (`generacion_rmd`).
 
+25. `.claude/scripts/validar_diagnosticidad.R` existe (V9). Mide si la opción correcta de un gap de selección única se identifica por una heurística **superficial** (ser la única mucho más larga o mucho más corta; ser la única con su primera palabra). Ninguna otra validación del arsenal mide **discriminación**: V1-V8 cubren conteo, coherencia, formato, unicidad y diversidad, y pueden estar todas en verde sobre un gap que se resuelve sin leer el contenido. Verificación: `test -f .claude/scripts/validar_diagnosticidad.R`. Lo ejecuto en el paso 9 (ver V9).
+
 Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_failed"`.
 
-### Incidente O — Ignorar el `.claude/` local de un subproyecto (2026-07-28)
+### Incidente O · `INC-CLAUDE-LOCAL` — Ignorar el `.claude/` local de un subproyecto (2026-07-28)
 
 **Síntoma**: un agente "mejora" un ejercicio maduro y rompe una invariante que el subproyecto tenía documentada (extrae una función a un archivo externo, suaviza una constante geométrica, unifica un umbral en cascada, reescribe el enunciado para cumplir una regla genérica). El `.Rmd` sigue compilando y **todos los validadores siguen en verde**, pero el ejercicio queda degradado o con la clave falsa.
 
@@ -126,9 +136,40 @@ Si alguno falla → reporto el problema y aborto con `exit_status: "preflight_fa
 
 ## Lecciones absorbidas de sesiones previas (incidentes CLOZE)
 
+### Índice de incidentes — identificadores estables
+
+Las letras son **posicionales** y NO coinciden entre gemelos: el mismo modo de fallo es la `H`
+aquí y la `F` en `orquestador-schoice`. Por eso cada incidente lleva además un **ID estable por
+tema**, que sí es común a los dos. Al referenciar un incidente desde código, reglas, memoria o
+desde el otro gemelo, **usar el ID**, no la letra.
+
+| ID estable | CLOZE | SCHOICE | Tema |
+|---|---|---|---|
+| `INC-ANSWER-ORDEN` | A | — | `##ANSWERi##` fuera de orden o faltante |
+| `INC-PANDOCBOUNDED` | B | B | `\pandocbounded` undefined en PDF |
+| `INC-LETRA-SOLUTION` | C | C | Letter-independence en la Solution |
+| `INC-POOL-MCHOICE` | D | — | Colapso de pools de distractores `mchoice` |
+| `INC-NOPS-NA` | E | — | NOPS es N/A para todo CLOZE |
+| `INC-TABLA-NONE` | F | E | Guard del contador `none` en tablas Markdown |
+| `INC-GRAF-EN-GAP` | G | — | Gráficas-opción dentro de un gap CLOZE |
+| `INC-DIV-COSMETICA` | H | F | Diversidad cosmética: clave invariante |
+| `INC-ETIQUETA-SOLAPE` | I | G | Etiquetas solapadas en diagramas dinámicos |
+| `INC-DISTRACTOR-EXTREMO` | J | H | Distractor extremo por construcción algebraica |
+| `INC-RNG-RESEED` | K | I | Reseed del RNG dentro de `data_generation` |
+| `INC-UMBRAL-CASCADA` | L | J | Umbral de legibilidad único en vez de cascada |
+| `INC-ROTULO-NUMERICO` | M | K | Distractores delatados por el rótulo numérico |
+| `INC-ECUACION-LISTA` | N | L | Ecuación en display sin indentar en lista numerada |
+| `INC-CLAUDE-LOCAL` | O | M | Ignorar el `.claude/` local del subproyecto |
+| `INC-POOL-TAMANO` | P | N | Pool de errores del tamaño del nº de slots |
+| `INC-SOLUTION-ORDEN` | Q | — | La prosa de la Solution enumera en orden |
+| `INC-CAMPO-NO-EMITIDO` | R | O | Un campo que no se emite no está probado |
+| `INC-MUTANTE-SONDA` | S | P | El mutante muere por la sonda equivocada |
+| `INC-SINO-BINARIO` | T | D | Distractores Sí/No: coherencia condicional |
+| `INC-SOLUTION-ANSWERLIST` | — | A | Inconsistencia Solution↔Answerlist |
+
 Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones aprendidos de incidentes pasados. Son los riesgos específicos del formato CLOZE multi-gap:
 
-### Incidente A — `##ANSWERi##` fuera de orden o faltante (regla #14)
+### Incidente A · `INC-ANSWER-ORDEN` — `##ANSWERi##` fuera de orden o faltante (regla #14)
 
 **Síntoma**: R-exams renderiza las opciones de una parte en la posición equivocada, o un gap no muestra campo de respuesta. El estudiante ve las opciones de la Parte 2 antes de leer la Parte 2, o falta un input.
 
@@ -154,7 +195,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - NUNCA uso chunks R con `cat()` para duplicar el Answerlist: R-exams ya renderiza las opciones vía el Answerlist del final.
 - Verifico V1 y V2 (ver paso 10) en cada renderizado.
 
-### Incidente B — `\pandocbounded` undefined en PDF (regla #18, Error 16)
+### Incidente B · `INC-PANDOCBOUNDED` — `\pandocbounded` undefined en PDF (regla #18, Error 16)
 
 **Síntoma**: `! Undefined control sequence. l.5 \pandocbounded` al compilar PDF/NOPS.
 **Causa**: pandoc 3.x envuelve `\includegraphics` cuando el Markdown no tiene atributo `width`. Invisible en HTML/DOCX, sólo explota en el pipeline LaTeX.
@@ -163,7 +204,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - Patrón validado: `cat("![](file.png){width=80%}\n")` (ver `diagrama_venn_encuesta_*.Rmd` línea 1070).
 - Después de `exams2pdf()`, **siempre** verifico que el `.tex` generado NO contiene `\pandocbounded`.
 
-### Incidente C — Letter-independence en sub-partes schoice DENTRO del CLOZE (regla #19, Error 19)
+### Incidente C · `INC-LETRA-SOLUTION` — Letter-independence en sub-partes schoice DENTRO del CLOZE (regla #19, Error 19)
 
 **Síntoma**: La Solution de una sub-parte schoice del CLOZE dice "Opción A de la Parte 1", pero Moodle (con "Shuffle answers" activado, setting INDEPENDIENTE de `exshuffle`) movió esa opción a otra posición. El estudiante ve incoherencia silenciosa letra ↔ contenido.
 
@@ -206,7 +247,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 - FASE 2J del hook `post-exams2-validation.sh` escanea la Solution buscando los patrones P1-P4. Códigos bloqueantes: `ERR_SOL_LETRA_R`, `ERR_SOL_LETRA_CAT`, `ERR_SOL_LETRA_LITERAL`.
 - `tests/testthat/test_letter_independence.R` valida lo mismo en CI.
 
-### Incidente D — Colapso de pools de distractores en partes `mchoice`
+### Incidente D · `INC-POOL-MCHOICE` — Colapso de pools de distractores en partes `mchoice`
 
 **Síntoma**: La Parte 3 (mchoice) muestra opciones duplicadas, o menos opciones de las esperadas, o las afirmaciones verdaderas/falsas no suman el total. El estudiante puede adivinar por descarte porque dos opciones son idénticas.
 
@@ -221,7 +262,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 
 **Verificación post-generación**: en multi-semilla (paso 9), para cada renderizado extraigo las opciones de cada parte mchoice y verifico unicidad con `digest`. Si alguna semilla colapsa el pool → ABORTAR y rediseñar el pool antes de seguir.
 
-### Incidente E — NOPS es N/A para TODO CLOZE (corregido 2026-07-30)
+### Incidente E · `INC-NOPS-NA` — NOPS es N/A para TODO CLOZE (corregido 2026-07-30)
 
 **Síntoma**: `exams2nops()` aborta con `the following exercises are cloze exercises: <archivo>`.
 
@@ -256,7 +297,7 @@ restricción. `?exams2nops` enumera los tipos soportados (`schoice`, `mchoice`, 
 `string`) y omite `cloze` sin decir que no lo admite; el tutorial `/tutorials/exams2nops/` no
 menciona la palabra. Es una omisión documental, así que la única fuente citable es el código.
 
-### Incidente F — Guard del contador `none` para tablas (regla #20, Error 21)
+### Incidente F · `INC-TABLA-NONE` — Guard del contador `none` para tablas (regla #20, Error 21)
 
 **Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (pandoc ≥ 3.7 bundleado) fallan con:
 ```
@@ -283,7 +324,7 @@ La guardia `@ifundefined` evita redefinir el contador si ya existe (importante e
 
 **Referencia**: `.claude/rules/markdown-tablas-pandoc.md` (regla #20), Error 21 en `.claude/docs/patrones-errores-conocidos.md`, hook FASE 2K.
 
-### Incidente G — Gráficas-opción dentro de un gap CLOZE no se renderizan en Moodle (regla `graficos-como-opciones.md`)
+### Incidente G · `INC-GRAF-EN-GAP` — Gráficas-opción dentro de un gap CLOZE no se renderizan en Moodle (regla `graficos-como-opciones.md`)
 
 **Síntoma**: una sub-parte schoice/mchoice cuyas opciones son gráficas (PNGs). El estudiante reporta "en el Paso/Parte N no se ven los gráficos" al abrir el ejercicio en Moodle. En HTML/PDF standalone las imágenes pueden verse, pero en Moodle desaparecen.
 
@@ -320,7 +361,7 @@ Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú 
 
 **Referencia**: `.claude/rules/graficos-como-opciones.md`, memoria `feedback_cloze_graficas_no_en_gap_moodle.md`, sesión 2026-06-15 (`grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1`).
 
-### Incidente H — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
+### Incidente H · `INC-DIV-COSMETICA` — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
 
 **Síntoma**: el ejercicio reporta "288/300 versiones únicas" y pasa el detractor, pero los gaps correctos producen SIEMPRE las mismas respuestas numéricas o el mismo contenido gráfico en todas las semillas.
 
@@ -344,7 +385,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `.claude/rules/diversidad-sustantiva.md` (regla #22), `feedback_diversidad_cosmetica.md`, `feedback_detractor_alucina_codigo.md`.
 
-### Incidente I — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
+### Incidente I · `INC-ETIQUETA-SOLAPE` — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
 
 **Síntoma**: en un diagrama generado dinámicamente (en el enunciado de una parte o como gráfica-opción rotulada), una etiqueta de texto (ángulo, distancia, rótulo) se solapa con una línea/punto/eje en SOLO algunas versiones. HTML/PDF rinden "sin error"; el defecto es visual y depende de los parámetros aleatorios. Casos reales (origen SCHOICE): `"30°"` montado sobre la línea/punto con ángulo **mínimo** del pool (cuña estrecha); y `"70°"` clipado por la línea casi horizontal con ángulo **máximo** del pool (cuña ancha + piso de radio insuficiente).
 
@@ -360,7 +401,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: Error 23 en `.claude/docs/patrones-errores-conocidos.md`, reglas `flujo-b-obligatorio.md` + `graficador-secuencial.md` (coherencia visual), memoria `pendiente-solapamiento-diagramas-avion`.
 
-### Incidente J — Distractor extremo por construcción algebraica (2026-07-28)
+### Incidente J · `INC-DISTRACTOR-EXTREMO` — Distractor extremo por construcción algebraica (2026-07-28)
 
 **Síntoma**: en alguna parte/gap del CLOZE, un distractor resulta ser SIEMPRE el valor/longitud máxima o mínima entre las opciones, por identidad aritmética — no por azar. El estudiante puede descartarlo (o elegirlo) con un atajo posicional ("la más larga nunca es la correcta") sin necesidad de razonar sobre los datos de esa parte.
 
@@ -377,7 +418,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: regla #22 §P5 (`.claude/rules/diversidad-sustantiva.md`), incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
 
-### Incidente K — Reseed del RNG dentro de `data_generation` rompe la reproducibilidad multi-semilla (2026-07-28)
+### Incidente K · `INC-RNG-RESEED` — Reseed del RNG dentro de `data_generation` rompe la reproducibilidad multi-semilla (2026-07-28)
 
 **Síntoma**: una validación multi-semilla (FASE 2G, stress test visual, `validar_diversidad_sustantiva.R`) detecta un fallo puntual en alguna semilla, pero al reintentar con esa misma semilla el fallo no se reproduce — parece "intermitente" sin causa aparente. En CLOZE afecta potencialmente a TODAS las partes, porque comparten un único chunk `data_generation`.
 
@@ -391,7 +432,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28); código fuente `exams:::xexams()` (paquete `exams`, CRAN).
 
-### Incidente L — Umbral de legibilidad único revienta el render o deja diagramas degenerados (Familia 6, 2026-07-28)
+### Incidente L · `INC-UMBRAL-CASCADA` — Umbral de legibilidad único revienta el render o deja diagramas degenerados (Familia 6, 2026-07-28)
 
 **Síntoma**: una parte/gap con opciones gráficas que filtra combinaciones de parámetros por un ratio de legibilidad (p. ej. `min(dist)/max(dist) >= f`) falla de dos formas opuestas según el valor elegido de `f`: si es bajo, hay versiones con vectores casi ilegibles (diagrama degenerado, Error 26); si es alto, hay versiones donde NINGUNA combinación cumple el umbral y el `stopifnot` revienta el render con "ninguna combinación válida".
 
@@ -403,7 +444,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `.claude/scripts/snippets_familias_rmd.R` (Familia 6 — aún no indexada en `.claude/rules/familias-soluciones-rmd.md`, que documenta solo Familias 1-5), incidente `desplazamiento-avion-aeropuerto` (2026-07-28), Error 26 en `.claude/docs/patrones-errores-conocidos.md`.
 
-### Incidente M — Distractores que revelan la respuesta por el rótulo numérico (2026-07-28)
+### Incidente M · `INC-ROTULO-NUMERICO` — Distractores que revelan la respuesta por el rótulo numérico (2026-07-28)
 
 **Síntoma**: en una sub-parte con gráficas-opción rotuladas en el enunciado (Incidente G) que muestran su valor numérico (p. ej. "40 km" bajo el diagrama), el estudiante calcula el valor correcto de esa parte y descarta las demás gráficas por el rótulo, sin necesidad de analizar la representación visual (dirección, orientación, eje).
 
@@ -415,7 +456,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28), regla `graficos-como-opciones.md` §"Formato Equilibrado".
 
-### Incidente N — Ecuación en display sin indentar rompe una lista numerada (2026-07-28)
+### Incidente N · `INC-ECUACION-LISTA` — Ecuación en display sin indentar rompe una lista numerada (2026-07-28)
 
 **Síntoma**: en PDF, una lista numerada dentro del enunciado de una parte o de la Solution muestra "(a)" repetido después de "(d)" (o el conteo se reinicia a mitad de la lista).
 
@@ -427,7 +468,40 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: incidente `desplazamiento-avion-aeropuerto` (2026-07-28).
 
-### Incidente P — Pool de errores del mismo tamaño que el número de slots (2026-07-29)
+### Incidente T · `INC-SINO-BINARIO` — Distractores Sí/No: coherencia condicional + gotcha `sample` (importado del SCHOICE, 2026-08-06)
+
+**Por qué me importa a mí, que hago CLOZE**: una sub-parte `schoice` cuyas opciones son
+justificaciones que empiezan por "Sí, …" / "No, …" es un patrón frecuente en Progressive Disclosure
+(la parte de *evaluar la determinabilidad* casi siempre tiene esa forma). El gemelo SCHOICE lo tiene
+documentado como su Incidente D desde 2026-05-12 y **al CLOZE le faltaba**, pese a ser igual de
+aplicable — y agravado, porque un CLOZE puede tener varias sub-partes con conclusión binaria, cada
+una con su propio pool.
+
+**Los cuatro bugs del incidente original** (detectados sobre el HTML, tras pasar las FASES 2A-2J):
+incoherencia conclusión↔justificación cuando la justificación usa variables con roles invertibles;
+premisa imposible por contradecir una restricción del generador; `sample(x, n)` con `length(x)==1`
+devolviendo `1:n` en vez del elemento (Familia 5); y pools dinámicos que colapsan a longitud 0 en
+alguna combinación de flags.
+
+**Defensa preventiva, aplicada a CADA sub-parte con conclusión binaria:**
+
+- **A. Coherencia condicional**: si la justificación usa variables con roles invertibles, la
+  conclusión "Sí/No" se calcula con el MISMO flag (`if (flag) ... else ...`), nunca fija.
+- **B. Premisas consistentes con las restricciones**: cruzar las premisas de cada `descripcion_corta`
+  con los `stopifnot`/invariantes del generador. Una premisa objetivamente imposible se reformula.
+- **C. Muestreo seguro**: `x[sample.int(length(x), k)]` en vez de `sample(x, k)` (Familia 5).
+- **D. Sanity checks** antes de muestrear: `stopifnot(n_si + n_no == <slots>, n_si <= length(pool_si), n_no <= length(pool_no))`.
+- **E. Tradeoff balance vs premisas**: si forzar premisas verdaderas colapsa un pool a 0, priorizar el
+  balance Sí/No y reconocer la premisa contrafáctica en la `descripcion_larga`.
+
+**Verificación post-generación**: simular el producto cartesiano de los flags binarios de esa parte y
+comprobar que **ningún** caso colapsa los pools a inviabilidad. Añadir la comprobación de coherencia
+conclusión↔justificación sobre ≥10 semillas del HTML renderizado, por sub-parte.
+
+**Referencia**: gemelo del Incidente D de `.claude/agents/orquestador-schoice.md`;
+`.claude/skills/generar-schoice/SKILL.md` § "Distractores con conclusión binaria Sí/No".
+
+### Incidente P · `INC-POOL-TAMANO` — Pool de errores del mismo tamaño que el número de slots (2026-07-29)
 
 **Síntoma**: el ejercicio pasa TODO el arsenal en verde (coherencia matemática APROBADO, Nivel 5A-5E, diversidad sustantiva exit 0) y aun así el **tipo** de error conceptual que ve el estudiante es idéntico en el 100 % de las versiones: solo cambia el valor numérico sustituido. La diversidad medida en el render puede ser alta (contextos narrativos, mezcla de opciones, reflexiones) y ocultar por completo esta pobreza. En CLOZE el efecto se multiplica: si varias partes comparten el mismo pool, el estudiante recorre el ejercicio entero viendo siempre los mismos tipos de error.
 
@@ -445,7 +519,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 
 **Referencia**: `permutaciones-pescadores-venia-n4` (2026-07-29), SCHOICE derivado de `MAT-2026-1-004`; la lección es independiente del tipo de ítem.
 
-### Incidente Q — La PROSA de la Solution enumera opciones en orden y `exshuffle` la desincroniza (2026-07-30)
+### Incidente Q · `INC-SOLUTION-ORDEN` — La PROSA de la Solution enumera opciones en orden y `exshuffle` la desincroniza (2026-07-30)
 
 **Síntoma**: la Solution lista las opciones de una parte (típicamente un `mchoice` de afirmaciones)
 en un orden, y el estudiante las ve en otro. Nada falla, nada avisa: el ejercicio compila, el
@@ -472,7 +546,7 @@ después. Es un modo de fallo vecino y distinto.
 **Caso real**: `permutaciones-pescadores-venia-n4/cloze/` (Parte 5, 6 afirmaciones). Decisión D6 del
 `docs/BLUEPRINT.md` de ese subproyecto.
 
-### Incidente R — Un campo que no se emite no está probado (2026-07-30)
+### Incidente R · `INC-CAMPO-NO-EMITIDO` — Un campo que no se emite no está probado (2026-07-30)
 
 **Síntoma**: al reutilizar el pool de errores de un ejercicio aprobado, `exams2pdf()` falla con
 `LaTeX Error: Unicode character − (U+2212)`.
@@ -504,11 +578,12 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 3. Inspeccionar el `.tex` generado: si contiene `\LTcaptype{none}`, verificar que el `.Rmd` tiene la guardia `@ifundefined{c@none}` (regla #20).
 4. Inspeccionar visualmente el PDF de al menos 1 semilla.
 5. Ejecutar `awk '/^Solution[[:space:]]*$/,/^Meta-information[[:space:]]*$/' <archivo.Rmd> | grep -E '\`r[[:space:]]+(letra_correcta|letras\[)|Opci[oó]n[[:space:]]+[A-D]'` → debe ser vacío (regla #19, aplica a TODAS las sub-partes schoice).
-6. Verificar V1-V7 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; **mínimo 6 partes**; gráficas-opción fuera del gap; la prosa de la Solution no enumera opciones en orden (V6); unicidad ampliada si alguna parte ofrece opciones de fuera de su conjunto (V7).
+6. Verificar V1-V9 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; **mínimo 6 partes**; gráficas-opción fuera del gap; la prosa de la Solution no enumera opciones en orden (V6); unicidad ampliada si alguna parte ofrece opciones de fuera de su conjunto (V7); diversidad declarada por gap (V8); diagnosticidad de los distractores (V9).
 7. Para cada parte mchoice, extraer opciones de ≥10 semillas y verificar unicidad con `digest` (Incidente D).
 8. **Si alguna sub-parte tiene gráficas-opción** (Incidente G): ejecutar `exams2moodle()` y comprobar que ningún gap contiene imágenes — `grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@'` debe ser `0`; y en HTML `grep -c '##ANSWER' <html>` == 0, capturando con chromium que las gráficas estén pegadas a su parte.
 9. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente R): `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>` sobre los campos que este ejercicio SÍ emite → debe ser vacío. Un campo que en el origen era dato muerto nunca se probó contra LaTeX.
-10. Solo después de estas verificaciones, marco renderizado_4_formatos como completado. **NOPS es N/A para todo CLOZE** y no bloquea (Incidente E), pero compruebo que el mensaje de rechazo contenga `cloze exercises`: si falla por otra causa, es un error real.
+10. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente S): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que existe una guarda de "mutante mal construido" evaluada sobre el ENTORNO (`env_mut$...`), no sobre el texto del `.Rmd`. Ver § Contrato de mutación. Un `RESULTADO: APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
+11. Solo después de estas verificaciones, marco renderizado_4_formatos como completado. **NOPS es N/A para todo CLOZE** y no bloquea (Incidente E), pero compruebo que el mensaje de rechazo contenga `cloze exercises`: si falla por otra causa, es un error real.
 
 ## Máquina de estados (los 12 pasos)
 
@@ -519,21 +594,21 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 | 2 | flujo_b | **WAIT_USER #1** "¿requiere gráficos?" | (humano) | — |
 | 2b | flujo_b ext | (si #2 = sí) Generar TikZ→Python→R hasta ≥98%. **Delego la ESCRITURA del código de cada lenguaje a 3 Tasks Sonnet en paralelo** (skills `generar-codigo-{tikz,python,r}`); yo (opus) solo fijo el spec, comparo cada render vs. original y decido el fix del bucle. **NUNCA escribo el código del gráfico inline.** | 3× Task `general-purpose`, uno por lenguaje | **sonnet** |
 | 2c | flujo_b sel | **WAIT_USER #2** Tabla comparativa, usuario elige lenguaje | (humano) | — |
-| 3 | generacion_rmd | Construir `.Rmd` CLOZE metacognitivo (lógica del skill /generar-cloze inline): mín. 4 partes, exclozetype multi-gap, ##ANSWERi## en orden | Read+Write inline | opus (yo mismo) |
+| 3 | generacion_rmd | Construir `.Rmd` CLOZE metacognitivo (lógica del skill /generar-cloze inline): mín. 6 partes, exclozetype multi-gap, ##ANSWERi## en orden | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con 6 subsecciones (análisis error + procedimiento + propiedades + caso específico + reflexión + estrategia) por parte | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc` (NOPS N/A esperado con gaps num/string) | Bash | — |
 | 6 | arsenal_post_render | Hook automático FASES 2A-2M (2L = V5 gráficas-opción en gap CLOZE) | (automático) | — |
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) | Bash | — |
-| 10 | validar_icfes | Estructura R-exams + V1-V7 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 40` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 40` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
+| 10 | validar_icfes | Estructura R-exams + V1-V9 CLOZE + 6 dimensiones + DOK/Bloom/SOLO | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
 
-## Validaciones específicas CLOZE (V1–V7) — paso 10 ampliado
+## Validaciones específicas CLOZE (V1–V9) — paso 10 ampliado
 
-Antes de marcar `validar_icfes` como completado, verifico estas cinco invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante** (V5 es N/A si el ejercicio no tiene gráficas-opción):
+Antes de marcar `validar_icfes` como completado, verifico estas **nueve** invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante**, salvo las que se declaran N/A por construcción (V5 si no hay gráficas-opción; V6 si la prosa no recapitula listas; V7 si ninguna parte ofrece opciones de fuera de su conjunto; V9 si no hay gaps de selección única):
 
 ### V1 — Conteo coherente de gaps
 
@@ -639,6 +714,141 @@ for (p in RANGO_PARAMETRO) {
 Si hay colisión → `ERR_CLOZE_V7` (bloqueante). Si ninguna parte ofrece opciones de fuera de su
 conjunto → V7 es **N/A**.
 
+### V8 — Diversidad declarada POR GAP (2026-08-06)
+
+Un CLOZE tiene **N claves, una por gap**. La regla #22 y el Incidente H razonan sobre "la respuesta
+correcta" en singular, así que un ejercicio puede tener gaps con clave perfectamente variable y otros
+con clave invariante sin que ninguna validación lo observe.
+
+`validar_diversidad_sustantiva.R` opera desde 2026-08-06 en **modo CLOZE**: descubre las claves por
+gap (`sol_pN`/`opciones_pN`/`exsol_pN`), reporta valores únicos por gap, declara su **cobertura**
+(gaps medidos vs. declarados) y emite `WARN_DIV_GAP_FIJO` nombrando los invariantes.
+`ERR_DIV_COSMETICA` (bloqueante) queda reservado al caso en que **todos** los gaps son invariantes.
+
+Mi obligación en el paso 9:
+
+1. Ejecutar el script y **transcribir su tabla por gap** al reporte, no un agregado.
+2. Si la salida trae `NOTA DE COBERTURA`, **decir cuántos gaps quedaron sin medir y cuáles**. Una
+   medición parcial presentada como total es el fallo que este script existe para evitar.
+3. Por cada gap marcado `FIJA` (o no medido), **declarar y justificar** en el reporte: `variable` o
+   `fija-justificada`, con una frase de por qué la fijeza es pedagógicamente correcta (p. ej. la
+   parte evalúa una definición conceptual única). Una clave fija sin justificación es un defecto.
+
+**Límite conocido, no lo presento como cobertura completa:** la huella de un gap `schoice`/`mchoice`
+es el CONTENIDO textual de la opción marcada. Si ese texto interpola variables del contexto narrativo
+(`ctx$miembros`, el protagonista…), el texto varía aunque el **concepto** correcto sea siempre el
+mismo. En esos gaps el script cuenta variación narrativa como si fuera sustantiva y reporta `ok`.
+Por eso V8 exige la declaración humana/agente del punto 3: el script mide, pero no distingue
+concepto de envoltorio. Verificado el 2026-08-06 sobre
+`excedente-almuerzo-proporcional-n4/cloze`, cuyas Partes 3 y 4 tienen conjunto de opciones estático
+y aun así puntúan `ok`.
+
+V8 no es bloqueante por sí misma: bloquea `ERR_DIV_COSMETICA` (todos los gaps fijos) y exige
+declaración explícita en el resto.
+
+### V9 — Diagnosticidad de los distractores por gap (2026-08-06)
+
+V1-V8 miden que el gap esté bien **construido** (conteo, tipo, unicidad, variación). Ninguna mide
+que **discrimine**: un gap puede tener 4 opciones únicas, clave correcta y datos que cambian en cada
+versión, y aun así resolverse sin leer el contenido porque la correcta es siempre la única mucho más
+larga. Es una de las heurísticas de examen más conocidas y el arsenal entero la deja pasar en verde.
+
+Ejecuto en el paso 9, sobre el `.Rmd`:
+
+```bash
+Rscript .claude/scripts/validar_diagnosticidad.R <archivo.Rmd> --n 40
+```
+
+Sondas (cada una sobre los gaps de selección única, `opciones_pN` + `sol_pN`):
+
+| Sonda | Dispara cuando la correcta es… |
+|---|---|
+| H1 más-larga | la ÚNICA más larga **y** por un margen relativo ≥ 15% sobre su rival más próximo |
+| H1 más-corta | la ÚNICA más corta con el mismo criterio de margen |
+| H2 prefijo | la única con su primera palabra **y** el único singleton del conjunto |
+
+Veredictos: `PASS` (exit 0) · `WARN_DIAG_SUPERFICIAL` (exit 0, tasa entre el umbral y el 99%) ·
+`ERR_DIAG_SUPERFICIAL` (**exit 1, bloqueante**: en el 100% de las versiones la correcta se
+identifica sin razonar).
+
+**El margen es parte de la sonda, no un adorno** (2026-08-06). La primera versión de H1 solo miraba
+el orden ("¿es la única más larga?"). Con eso, un gap cuyas opciones se habían igualado
+deliberadamente —8 caracteres medianos de diferencia sobre 115, el 7%— seguía reportando 100% y
+quedaba bloqueado por una diferencia que ningún estudiante puede usar. El umbral del 15% está
+calibrado contra las dos versiones medidas del mismo gap: original 32% y 21% (siguen cazadas),
+corregido 7% y 5% (ya no).
+
+**Lo que no debo hacer con la `NOTA DE ORDEN`:** el script imprime, aunque no dispare, el margen
+mediano y el porcentaje de versiones en que la correcta ocupa el extremo. `PASS` con una nota que
+diga "la correcta es la única más larga en el 100% de las versiones" **no** es lo mismo que "no hay
+señal": significa que la señal existe pero es demasiado pequeña para explotarla. La transcribo al
+reporte tal cual. Si además puedo igualar las longitudes sin dañar la redacción, lo hago.
+
+Si el veredicto es `ERR_DIAG_SUPERFICIAL` → **bloqueante**: reescribo las opciones del gap señalado
+(igualar extensión / evitar que la correcta sea la única con su prefijo) y vuelvo al paso 5.
+`WARN_DIAG_SUPERFICIAL` no bloquea pero se declara en el reporte con el gap y la tasa.
+
+Si el CLOZE no tiene ningún gap de selección única → V9 es **N/A** (`WARN_DIAG_INDET`).
+
+## Contrato de mutación (todo verificador propio que yo genere)
+
+Cuando un ejercicio tiene invariantes propias, escribo un `verificar_render.R` con pruebas de
+mutación: copias deliberadamente rotas del `.Rmd` que la batería **debe** rechazar. Una prueba de
+mutación sin contrato no prueba nada: basta con que el mutante sea rechazado **por cualquier
+motivo** para que la fase se declare en verde, aunque la invariante que decía estar probando nunca
+se haya ejecutado.
+
+**Incidente S · `INC-MUTANTE-SONDA` — el mutante muere por la sonda equivocada (2026-08-06).** En
+`excedente-almuerzo-proporcional-n4/cloze`, la Fase 4 se anunciaba como prueba de I-1 (`E > 0`)
+forzando `P > T`. El `.Rmd` lee `E <- combos$E[idx]` de una tabla precomputada y el mutante
+intercambiaba `P`/`Ttotal` sin tocar `E`: `env$E` seguía siendo positivo, I-1 nunca se disparó y el
+rechazo lo produjo `I-3_formula`. La línea que lo habría detectado —
+`has_i1 <- any(grepl("I-1", batch_b))` — se computaba y **nunca se usaba**. Salida final:
+`RESULTADO: APROBADO (0 errores)` con I-1 sin ninguna prueba de detección. El gemelo SCHOICE
+documenta el mismo fallo en su `HANDOFF.md` ("tres rondas de rechazo […] las dos mutaciones no
+mutaban el artefacto"): es un modo de fallo **reincidente**, no mala suerte.
+
+Por tanto, TODO mutante que yo genere cumple estas tres obligaciones:
+
+1. **Declara su sonda esperada.** Cada mutante nombra explícitamente el código de error que debe
+   cazarlo (`sonda_esperada <- "I-1"`). Sin esa declaración el mutante no es válido.
+2. **Muere por SU sonda, no por otra.** La fase falla si el rechazo vino de una sonda distinta:
+
+   ```r
+   batch <- run_battery(env_mut)
+   if (length(batch) == 0L) {
+     errors <- c(errors, sprintf("MUTANTE %s NO DETECTADO", id))
+   } else if (!any(grepl(sonda_esperada, batch, fixed = TRUE))) {
+     errors <- c(errors, sprintf(
+       "MUTANTE %s CAZADO POR LA SONDA EQUIVOCADA: esperaba '%s', obtuve '%s' -- %s no tiene prueba de deteccion",
+       id, sonda_esperada, paste(batch, collapse = "; "), sonda_esperada))
+   }
+   ```
+
+   Un `grepl` cuyo resultado no condiciona nada es código muerto: si lo calculo, lo uso.
+3. **Verifica que la mutación se materializó en el ENTORNO, no en el texto.** Que un `gsub`/`sub`
+   haya sustituido una cadena del archivo no implica que el estado evaluado cambiara. La guarda se
+   escribe sobre `env_mut`, no sobre el `.Rmd`:
+
+   ```r
+   # MUTANTE B MAL CONSTRUIDO: pretende E<0 pero el entorno dice lo contrario
+   if (env_mut$E > 0)
+     errors <- c(errors, "MUTANTE B MAL CONSTRUIDO: E sigue siendo positivo; la mutacion no llego al entorno")
+   ```
+
+   Regla derivada: si una magnitud se **lee** de una estructura precomputada (`combos$E[idx]`) en
+   vez de recalcularse, mutar sus insumos NO la altera. Mutar siempre la variable que la invariante
+   observa.
+
+**Cobertura mínima:** una invariante sin mutante que la cace por su propia sonda queda marcada en el
+reporte final como `sin_prueba_de_deteccion`. No la presento como "verificada" ni la cuento en un
+"0 errores". Prefiero un verificador que declare tres invariantes probadas y cinco sin probar, a uno
+que declare ocho en verde sin distinguir "pasó" de "no se midió".
+
+**Reporte:** el bloque `mutantes` del contrato de salida lleva, por mutante, `sonda_esperada`,
+`sonda_real` y `veredicto` ∈ {`cazado_por_su_sonda`, `cazado_por_otra`, `no_detectado`,
+`mal_construido`}. Sólo `cazado_por_su_sonda` cuenta como prueba superada.
+
 ## Política de auto-corrección
 
 Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usuario**:
@@ -652,7 +862,7 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 7. Si el detractor reporta APROBAR → sigo a paso 8.
 8. **Paso 6b (auditoría visual):** SIEMPRE lo ejecuto tras el arsenal (paso 6), antes del detractor. Si el `auditor-visual-html` reporta `NO_APTO_VISUAL` o hallazgos **CRÍTICOS** → corrijo → re-ejecuto desde paso 5. Si `APTO_CON_OBSERVACIONES` → anoto y sigo; si `APTO_VISUAL` → sigo a paso 7.
 
-**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V7.
+**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V9.
 
 **Regla especial gráficas-opción (Incidente G)**: si una sub-parte usa gráficas como opciones, las genero desde el inicio con el patrón "rótulos I-IV en el enunciado + opciones de texto" (NUNCA imágenes en el Answerlist del gap). Si descubro tarde (p.ej. V5 falla, o el reporte del estudiante/auditor visual señala "no se ven los gráficos en la Parte N") que las imágenes están en el gap → migro esa parte al patrón correcto (mover `![](...)` rotulado al enunciado; cambiar el Answerlist a `* Gráfica I…`; citar el rótulo en la Solution por contenido, regla #19) y vuelvo a paso 5.
 
@@ -673,7 +883,7 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 | **Escritura de código de gráficos TikZ/Python/R (Flujo B, paso 2b)** | 3× `general-purpose` en paralelo, uno por lenguaje (skills `generar-codigo-{tikz,python,r}`) | **sonnet** |
 
 Yo (opus) ejecuto inline:
-- Generación del `.Rmd` CLOZE metacognitivo (paso 3): estructura Progressive Disclosure mín. 4 partes, pools de errores/afirmaciones/V-F, exclozetype multi-gap.
+- Generación del `.Rmd` CLOZE metacognitivo (paso 3): estructura Progressive Disclosure mín. 6 partes, pools de errores/afirmaciones/V-F, exclozetype multi-gap.
 - Generación de la sección Solution / retroalimentación (paso 4): 6 subsecciones por parte.
 - Del gráfico (paso 2b): el **spec** (qué forma / qué parametrizar), la **comparación visual** render-vs-original y la **decisión de aceptación** del bucle ≥98%. El juicio visual se queda en opus; la escritura del código, no.
 - Decisiones de orquestación: cuándo escalar, cuándo reintentar, cuándo parar.
@@ -797,12 +1007,44 @@ Al terminar (éxito o fallo), produzco:
 | 1 analisis_icfes | ✅ | 0:35 | 0 |
 | ... | ... | ... | ... |
 
-## Validaciones CLOZE (V1-V7)
+## Validaciones CLOZE (V1-V9)
 - V1 conteo gaps (##ANSWERi## = exclozetype = partes): ✅
 - V2 orden/inmediatez ##ANSWERi## (regla #14): ✅
 - V3 exsolution/extol por gap: ✅
 - V4 mínimo 6 partes: ✅
 - V5 gráficas-opción fuera del gap (Incidente G): ✅ | N/A
+- V6 prosa de la Solution sin enumerar en orden (Incidente Q): ✅ | N/A
+- V7 unicidad ampliada (opciones de fuera del conjunto): ✅ | N/A
+- V8 diversidad declarada por gap: ✅ (ver tabla)
+- V9 diagnosticidad de los distractores (`validar_diagnosticidad.R --n 40`): ✅ | ⚠ WARN | N/A
+  - tabla por gap (tasa + margen mediano) y `NOTA DE ORDEN` transcritas literalmente
+
+## Diversidad por gap (V8, regla #22)
+Transcribo la tabla literal de `validar_diversidad_sustantiva.R` y añado la declaración:
+
+| Gap | Valores únicos / evaluados | Estado script | Declaración | Justificación si es fija |
+|---|---|---|---|---|
+| p1 | 8/20 | ok | variable | — |
+| … | … | … | variable \| fija-justificada | … |
+
+Cobertura: `<N>` gap(s) medidos de `<M>` declarados. Si N < M, listo **cuáles** quedaron sin medir
+y dejo constancia de que su diversidad está **SIN VERIFICAR** — no la doy por buena.
+
+## Pruebas de mutación (§ Contrato de mutación)
+| Mutante | Sonda esperada | Sonda real | Veredicto |
+|---|---|---|---|
+| A | `<código>` | `<código>` | cazado_por_su_sonda |
+
+Invariantes **sin prueba de detección propia**: `<lista o "ninguna">`. No las cuento como verificadas.
+
+## Presupuesto de turnos consumido
+| Fase | Turnos | Acumulado / 65 |
+|---|---|---|
+| Pre-flight + pasos 0-1 | `<n>` | `<n>` |
+| … | … | … |
+| **Total** | | `<n>` / 65 |
+
+Sin esta tabla el coste real del pipeline no es medible y no puedo justificar añadir o quitar pasos.
 
 ## Auto-correcciones aplicadas
 - [Fase X] Error: <error>. Fix: <ref a patrones-errores-conocidos.md>.
@@ -828,7 +1070,7 @@ Al terminar (éxito o fallo), produzco:
 - ❌ NO auto-decidir Flujo B (regla `flujo-b-obligatorio.md`).
 - ❌ NO auto-seleccionar lenguaje gráfico (regla `graficador-secuencial.md`: "PROHIBIDO: Claude selecciona el lenguaje final").
 - ❌ NO auto-aprobar el ejercicio (regla #16: aprobación humana obligatoria).
-- ❌ NO generar un CLOZE con menos de 4 partes (regla `ejercicios-metacognitivos.md` § CLOZE).
+- ❌ NO generar un CLOZE con menos de **6** partes (estándar del repositorio desde 2026-06-04; ver V4). Este umbral tiene sitios espejo en este documento: reglas críticas, `n_partes` de los inputs, paso 3 de la máquina de estados, política de delegación, contrato de salida, ejemplo de invocación y presupuesto de turnos. Si vuelve a subir, actualizarlos TODOS a la vez.
 - ❌ NO colocar `##ANSWERi##` fuera de orden ni agruparlos al final (regla #14). Cada uno inmediatamente tras la pregunta de su parte.
 - ❌ NO duplicar el Answerlist con chunks R `cat()`: R-exams ya renderiza las opciones vía el Answerlist.
 - ❌ NO emitir `r letra_correcta_pN`, `r letras_pN[...]`, ni literal "Opción [A-D]" dentro de la sección `Solution` (regla #19, aplica a TODAS las sub-partes schoice). Identificar la opción correcta por contenido (`descripcion_corta`) o código (`error$codigo`).
@@ -836,7 +1078,8 @@ Al terminar (éxito o fallo), produzco:
 - ❌ NO omitir la guardia `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question cuando el CLOZE usa tablas Markdown (regla #20). Causaría `No counter 'none' defined` en pandoc ≥ 3.7.
 - ❌ NO colocar gráficas (`![](*.png)`) como opciones del gap CLOZE en el Answerlist (Incidente G, regla `graficos-como-opciones.md`). Un gap CLOZE no renderiza `<img>` en Moodle → las gráficas desaparecen. Las gráficas-opción van ROTULADAS (I, II, III…) en el ENUNCIADO de la parte; las opciones del gap son TEXTO ("Gráfica I"…). Distinto del SCHOICE puro, donde sí funcionan.
 - ❌ NO tratar el `exams2nops()` N/A (con gaps num/string) como error bloqueante (Incidente E). Es comportamiento esperado.
-- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V7 pasan (validación realista, no solo "exit 0").
+- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V9 pasan (validación realista, no solo "exit 0").
+- ❌ NO presentar como "verificada" una invariante cuyo mutante murió por una sonda distinta de la declarada, ni computar un `grepl` de comprobación sin que su resultado condicione el veredicto de la fase (Incidente S, § Contrato de mutación). Una invariante sin prueba de detección propia se reporta como `sin_prueba_de_deteccion`, nunca dentro de un "0 errores".
 - ❌ NO inventar pasos del workflow ni saltar el orden.
 - ❌ NO crear archivos fuera de `<ruta_destino>` y subdirectorios `salida/`.
 - ❌ NO consumir más de 65 turnos (reservar 60-65 para reporte final).
@@ -851,9 +1094,12 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "ejercicio": "<nombre>",
   "ruta_rmd": "<ruta>/<nombre>.Rmd | null",
   "tipo": "cloze",
-  "n_partes": 4,
-  "exclozetype": "schoice|num|mchoice|schoice",
-  "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true, "V5": "true | N/A"},
+  "n_partes": 6,
+  "exclozetype": "schoice|num|schoice|mchoice|num|schoice",
+  "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true, "V5": "true | N/A", "V6": "true | N/A", "V7": "true | N/A", "V8": true, "V9": "true | warn | N/A"},
+  "diversidad_por_gap": {"cobertura": "<medidos>/<declarados>", "gaps": [{"gap": "p1", "unicos": 8, "evaluados": 20, "declaracion": "variable | fija-justificada", "justificacion": "<frase o null>"}], "sin_medir": ["<gaps o vacío>"]},
+  "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
+  "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
   "graficas_opcion": "ninguna | en_enunciado_rotuladas (Incidente G)",
   "nops": "N/A (esperado, gaps num/string) | OK",
   "estado_workflow": {"analisis_icfes": true, "flujo_b": true, ...},
@@ -870,7 +1116,7 @@ Task(
          ' "nombre_ejercicio": "mediana_grupo_impar_metacognitivo_argumentacion_n3_cloze_v1",'
          ' "entrada": "/path/imagen_icfes_estaturas.png",'
          ' "modo": "ejecutar",'
-         ' "opciones_extra": {"patron_progressive_disclosure": "auto", "n_partes": 4, "max_reintentos_por_fase": 3}}'
+         ' "opciones_extra": {"patron_progressive_disclosure": "auto", "n_partes": 6, "max_reintentos_por_fase": 3}}'
 )
 ```
 
@@ -895,10 +1141,10 @@ Task(
 | 6 | WAIT_USER #1 |
 | 7-15 | Paso 2b si aplica (3 lenguajes en paralelo) |
 | 16 | WAIT_USER #2 |
-| 17-28 | Paso 3 (generar .Rmd CLOZE: 4 partes + pools) + 4 (retroalimentación 6 subsecciones) |
+| 17-28 | Paso 3 (generar .Rmd CLOZE: 6 partes + pools) + 4 (retroalimentación 6 subsecciones) |
 | 29-34 | Paso 5 (renderizar HTML/PDF/DOCX, NOPS N/A) + 6 (hook FASES 2A-2M) |
 | 35-44 | Paso 7 (detractor) + auto-correcciones |
-| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V7) |
+| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V9) |
 | 53 | WAIT_USER #3 |
 | 54 | Paso 12 + reporte |
 | 55-65 | Buffer para auto-correcciones / reporte parcial |

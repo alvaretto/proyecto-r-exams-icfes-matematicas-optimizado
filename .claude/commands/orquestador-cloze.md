@@ -40,7 +40,7 @@ Si `$ARGUMENTS` contiene contenido:
    - `ruta_destino` está bajo `A-Produccion/01-En-PreDesarrollo/` o `02-En-Desarrollo/`. Si está bajo `03-En-Produccion/` o `Ejemplos-Funcionales-Rmd/` → **rechaza** y muestra la regla violada.
    - `nombre_ejercicio` matchea `^[a-z0-9_]+_metacognitivo_[a-z]+_n[234]_cloze_v[0-9]+$` (warning, no bloqueo, si no coincide).
    - `modo` ∈ {"ejecutar","dry-run"}; si falta, default `"ejecutar"`.
-   - `n_partes` (si viene en `opciones_extra`) debe ser ≥ 4. Si es < 4 → warning: el agente lo subirá a 4 (regla `ejercicios-metacognitivos.md` § CLOZE).
+   - `n_partes` (si viene en `opciones_extra`) debe ser ≥ **6**. Si es < 6 → warning: el agente lo subirá a 6 (estándar del repositorio desde 2026-06-04; validación V4 del agente).
 
 3. **Lanza el agente** con un único `Task` call (foreground, NO background — el orquestador necesita interactuar con el usuario en los 3 `WAIT_USER`):
 
@@ -55,18 +55,19 @@ Si `$ARGUMENTS` contiene contenido:
 4. **Cuando el agente retorne**, presenta al usuario:
    - El `exit_status` reportado por el agente.
    - Resumen de pasos completados (lista de los 11 con ✅/⬜).
-   - Estado de las validaciones CLOZE V1-V7 (conteo gaps, orden ##ANSWERi##, exsolution/extol por gap, mínimo 6 partes, gráficas-opción fuera del gap — Incidente G; V6 prosa de la Solution sin enumerar en orden — Incidente Q; V7 unicidad ampliada si una parte ofrece opciones de fuera de su conjunto).
+   - Estado de las validaciones CLOZE V1-V9 (conteo gaps, orden ##ANSWERi##, exsolution/extol por gap, mínimo 6 partes, gráficas-opción fuera del gap — Incidente G; V6 prosa de la Solution sin enumerar en orden — Incidente Q; V7 unicidad ampliada si una parte ofrece opciones de fuera de su conjunto; V8 diversidad declarada por gap; V9 diagnosticidad de los distractores).
    - Estado de NOPS: para un CLOZE es **siempre** `N/A` — `exams2nops()` rechaza cualquier `extype: cloze` (verificado en el código de exams 2.4.2). Acláralo — NO es un fallo. Los formatos aplicables son cuatro: HTML, PDF, DOCX y Moodle.
    - Si quedó pendiente un `WAIT_USER`, indica cuál y qué decisión necesita tomar el usuario para reanudar (ej: "Reanuda con `/orquestador-cloze {...,\"modo\":\"ejecutar\"}` después de responder Flujo B").
    - Ruta del `.Rmd` final si llegó al paso 11.
 
-5. **No dupliques trabajo**: el agente ya hace sus propios pre-flight checks, validaciones V1-V7 y manejo de errores. Tu job aquí es: parsear input, validar lo mínimo, delegar, reportar.
+5. **No dupliques trabajo**: el agente ya hace sus propios pre-flight checks, validaciones V1-V9 y manejo de errores. Tu job aquí es: parsear input, validar lo mínimo, delegar, reportar.
 
 ## Salvaguardas que aplica el agente
 
 Este wrapper es delgado a propósito: las defensas viven en `.claude/agents/orquestador-cloze.md` (pre-flight checks + incidentes A-N). Resumen para quien lea este comando sin abrir el agente:
 
 - **Regla #22 — Diversidad sustantiva** ([`.claude/rules/diversidad-sustantiva.md`](../rules/diversidad-sustantiva.md)): el paso 9 ejecuta `.claude/scripts/validar_diversidad_sustantiva.R --n 40`; `ERR_DIV_COSMETICA` (respuesta correcta invariante en cualquier parte/gap) es **BLOQUEANTE** (exit 1).
+- **V9 — Diagnosticidad de los distractores**: el paso 9 ejecuta también `.claude/scripts/validar_diagnosticidad.R --n 40`; `ERR_DIAG_SUPERFICIAL` (en TODAS las versiones la correcta se identifica por longitud o prefijo, sin razonar el contenido) es **BLOQUEANTE** (exit 1). Ninguna otra validación mide discriminación.
 - **Error 23** (etiquetas solapadas en diagramas dinámicos, caso extremo de parámetros) y **Error 24** (predictibilidad posicional/orientacional + distractor extremo por construcción algebraica) — ver [`.claude/docs/patrones-errores-conocidos.md`](../docs/patrones-errores-conocidos.md).
 - **Reglas #18, #19, #20**: imágenes Markdown con `{width=...}` (anti `\pandocbounded`), Solution letter-independent en TODAS las sub-partes schoice (nunca `r letra_correcta_pN`/"Opción A-D"), guard `\newcounter{none}` en tablas Markdown.
 - **Incidente G (CLOZE, [`.claude/rules/graficos-como-opciones.md`](../rules/graficos-como-opciones.md))**: las gráficas-opción NUNCA van dentro del gap `MULTICHOICE`/`MULTIRESPONSE` — Moodle no renderiza `<img>` ahí. Van ROTULADAS (I, II, III, IV) en el ENUNCIADO de la parte, con las opciones del gap como texto ("Gráfica I"…). Verificado en V5 (paso 10) sobre el XML de Moodle.

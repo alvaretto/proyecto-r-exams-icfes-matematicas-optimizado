@@ -133,7 +133,7 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (22 suites enganchadas a `tests/run_all_tests.R`)
+- **Tests**: `tests/testthat/` (24 suites enganchadas a `tests/run_all_tests.R`)
 - **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
 
 ---

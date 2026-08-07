@@ -221,6 +221,13 @@ suites <- list(
               "validar_diversidad_sustantiva")
   ),
   list(
+    nombre = "Diagnosticidad de distractores (V9, margen relativo de H1)",
+    archivo = "tests/testthat/test_diagnosticidad.R",
+    critico = TRUE,
+    watch = c("validar_diagnosticidad", "test_diagnosticidad",
+              "orquestador-cloze", "orquestador-schoice")
+  ),
+  list(
     nombre = "Invariante I-2 barco (bbox del casco == clave)",
     archivo = "tests/testthat/test_barco_bbox_invariante.R",
     critico = TRUE,
