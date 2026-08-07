@@ -18,9 +18,9 @@ output:
 # forma de interrogar: la SCHOICE hace una sola pregunta; ésta descompone el
 # mismo razonamiento en 6 partes graduadas (Progressive Disclosure).
 #
-# Origen: item real MAT-2026-1-004 (simulacro ERA-2026 Matematicas, Sesion 1,
+# Origen: item real MAT-2026-1-004 (simulacro ERA-2026 Matematicas, Sesión 1,
 #         pregunta impresa 4). Clave oficial: B = 24 = 4!.
-#         Item espejo MAT-2026-1-029 (mismo D4.8, conteo CON repeticion) ->
+#         Item espejo MAT-2026-1-029 (mismo D4.8, conteo CON repetición) ->
 #         es la Parte 4.
 #
 # AUTO-CONTENCION OBLIGATORIA: todos los helpers viven DENTRO de este chunk.
@@ -37,7 +37,7 @@ output:
 #      cuadernillo ICFES porque todas sus opciones se eligen con el raton; aquí
 #      hay dos gaps `num` que el estudiante ESCRIBE, y un separador de miles
 #      convierte "46.656" en el decimal 46,656 al parsear -> respuesta valida
-#      marcada como incorrecta. Una sola convencion numérica en todo el item.
+#      marcada como incorrecta. Una sola convención numérica en todo el item.
 #      En la instancia canonica (n = 4) las cuatro opciones son < 1000, así que
 #      la fidelidad verbatim al item oficial NO se ve afectada por esto.
 #   2. No se define pick_int(): en la SCHOICE quedo sin uso. La Familia 1 de la
@@ -61,7 +61,7 @@ ex_uid <- paste0("permcz-", paste(safe_sample(c(letters, 0:9), 8L, replace = TRU
                                   collapse = ""))
 
 # --- Parametro sustantivo: n = número de elementos distintos a ordenar -------
-# Rango MEDIDO por enumeracion exhaustiva; identico al del SCHOICE hermano.
+# Rango MEDIDO por enumeración exhaustiva; identico al del SCHOICE hermano.
 #   n <= 2 -> colisionan 2 opciones (n! == n^(n-1) == n)
 #   n == 3 -> n^(n-1) == n^2 == 9            -> ERR_ANS_C (opciones duplicadas)
 #   n en {4,5,6} -> 4 opciones unicas; razón max/clave sobre el pool de 7:
@@ -91,14 +91,14 @@ desarrollo <- paste(seq.int(n, 1L), collapse = " \\times ")
 #   EST-PER-01/02/03: tomados LITERALMENTE de las Justificaciones MetaCognitivas
 #     de la ficha oficial MAT-2026-1-004 y generalizados de n = 4 a n. NO los
 #     reescribas por estilo (../.claude/CLAUDE.md, particularidad 5).
-#   EST-PER-04/05:    ampliacion propia, para cumplir el mínimo de la regla #1.
-#   EST-PER-06/07:    ampliacion propia, ambas > n!, para cerrar el hallazgo H1
-#     (la clave nunca quedaba entre las 2 opciones menores). Decision D4.
+#   EST-PER-04/05:    ampliación propia, para cumplir el mínimo de la regla #1.
+#   EST-PER-06/07:    ampliación propia, ambas > n!, para cerrar el hallazgo H1
+#     (la clave nunca quedaba entre las 2 opciones menores). Decisión D4.
 # calcula() es determinista (función pura, sin sample/runif): lo verifica la
 # Capa D de .claude/scripts/validar_coherencia_matematica.R.
 errores_conceptuales <- list(
   list(
-    clave             = "repeticion",
+    clave             = "repetición",
     codigo            = "EST-PER-01",
     nombre            = "Repetición sin descontar los elementos ya ubicados",
     descripcion_corta = "Supone que en cada posición siguen disponibles todos los elementos",
@@ -248,12 +248,12 @@ errores_conceptuales <- list(
 # pregunta del item ICFES MAT-2026-1-004. Los otros 5 son variaciones de la
 # misma estructura matemática (ordenar n elementos distintos en una fila).
 # Ninguna plantilla usa el verbo "registro" (regla #11, límite del 25%).
-# Los campos `sujeto`, `genero` y `disposicion` existen solo en esta variante
+# Los campos `sujeto`, `genero` y `disposición` existen solo en esta variante
 # CLOZE: la Parte 2 y las afirmaciones de la Parte 5 nombran los elementos que
 # se ordenan y el tipo de arreglo, cosa que el SCHOICE no necesitaba porque
 # nunca los menciona fuera del enunciado. La Parte 6 es genérica y NO usa
-# `sujeto` (habla de "un elemento más"), aunque sí usa `disposicion`.
-# `disposicion` evita decir "fila" cuando el contexto no describe una: el
+# `sujeto` (habla de "un elemento más"), aunque sí usa `disposición`.
+# `disposición` evita decir "fila" cuando el contexto no describe una: el
 # festival de bandas ocurre en una tarima y los sensores van en un circuito en
 # serie. Se eligieron sustantivos FEMENINOS SINGULARES en los seis contextos
 # para que la concordancia del texto que los interpola no dependa del contexto.
@@ -356,7 +356,7 @@ sujeto          <- ctx$sujeto
 disposicion     <- ctx$disposicion
 disposicion_pl  <- paste0(disposicion, "s")
 # Concordancia de genero: `sujeto` puede ser femenino ("bandas", "fotografias").
-# Sin esto el texto visible al estudiante decia "dos de los bandas" en 2 de los
+# Sin esto el texto visible al estudiante decía "dos de los bandas" en 2 de los
 # 6 contextos (~33 % de las versiones). Detectado leyendo el HTML renderizado.
 art_los  <- if (identical(ctx$genero, "f")) "las"    else "los"
 art_uno  <- if (identical(ctx$genero, "f")) "una"    else "uno"
@@ -373,22 +373,22 @@ stopifnot(!is.null(ctx$genero), ctx$genero %in% c("m", "f"),
 # Identica a la del SCHOICE hermano. El pool tiene 7 y se eligen 3 por versión,
 # con el patrón generico de filtrado por precondiciones (regla #8).
 #
-# RESTRICCION DE MITAD BAJA (hallazgo H1, decision D4): toda terna debe contener
+# RESTRICCION DE MITAD BAJA (hallazgo H1, decisión D4): toda terna debe contener
 # al menos UN distractor mayor que n!. Sin ella la clave nunca queda entre las 2
 # opciones menores, «elegir el número mayor» acierta el 40 % de las versiones y
 # la clave llega a valer 20x el mayor distractor -- cosa que I-3 no puede acotar
-# porque es unilateral. Medido por enumeracion exhaustiva del espacio completo
+# porque es unilateral. Medido por enumeración exhaustiva del espacio completo
 # (105 ternas, 93 legales); ver ../docs/BLUEPRINT.md, sección 3.1.
 #
 # La terna se elige ENUMERANDO el espacio legal y sorteando un indice, NUNCA con
 # un bucle de reintento (regla #21, Familia 1 -- el patrón que causo el Error 22:
-# un `repeat` que resamplea hasta cumplir una condicion cuelga el render).
+# un `repeat` que resamplea hasta cumplir una condición cuelga el render).
 #
 # EXCEPCION CANONICA: cuando la versión es la instancia del item ICFES original
 # (contexto 1 con n = 4) se fuerzan los 3 errores oficiales, de modo que la
 # Parte 1 reproduce MAT-2026-1-004 completo: enunciado, pregunta Y las cuatro
-# opciones (64, 24, 16, 4). Ver ../docs/BLUEPRINT.md, decision D3. Esa terna
-# contiene EST-PER-01 (64 > 24), así que cumple la restriccion por si sola.
+# opciones (64, 24, 16, 4). Ver ../docs/BLUEPRINT.md, decisión D3. Esa terna
+# contiene EST-PER-01 (64 > 24), así que cumple la restricción por si sola.
 CODIGOS_OFICIALES <- c("EST-PER-01", "EST-PER-02", "EST-PER-03")
 
 params <- list(n = n, correcta_val = correcta_val)
@@ -449,7 +449,7 @@ stopifnot(any(unname(vals) > correcta_val))
 # pool y n! producen 8 valores distintos dos a dos. La Parte 3 muestra el valor
 # de UN error y pide identificarlo entre 4 descripciones, una de las cuales
 # pertenece a un error NO seleccionado en la Parte 1; si dos formulas coincidieran
-# en valor para este n, esa parte tendria DOS respuestas correctas y ninguna
+# en valor para este n, esa parte tendría DOS respuestas correctas y ninguna
 # invariante del SCHOICE lo detectaria (I-1 solo mira la terna seleccionada).
 # Verificada además sobre N_POOL completo por cloze/verificar_render.R (C1).
 valores_pool <- vapply(errores_conceptuales, function(e) e$calcula(n), integer(1L))
@@ -459,7 +459,7 @@ stopifnot(length(unique(c(correcta_val, valores_pool))) ==
 # --- PARTE 1 (schoice): la pregunta del ítem oficial -------------------------
 # Mezcla interna de las 4 opciones. La aleatorización de ESTE ejercicio la da
 # `sample()`, no `exshuffle` -- ver la nota sobre exshuffle: FALSE al final del
-# chunk y la decision D6 de ../docs/BLUEPRINT.md.
+# chunk y la decisión D6 de ../docs/BLUEPRINT.md.
 opciones_pre <- c(
   list(correcta = correcta),
   stats::setNames(lapply(unname(vals), fmt), names(vals))
@@ -505,7 +505,7 @@ stopifnot(sum(sol_p3) == 1L, length(unique(opciones_p3)) == 4L,
 
 # --- PARTE 4 (num): transferencia al conteo CON repetición -------------------
 # Es el item espejo MAT-2026-1-029 (mismo descriptor D4.8), parametrizado: n
-# cifras tomadas de {1,...,n} con repeticion permitida -> n^n. Contrasta con la
+# cifras tomadas de {1,...,n} con repetición permitida -> n^n. Contrasta con la
 # Parte 1 en la única dimensión que decide entre n! y una potencia: si el
 # conjunto disponible decrece o no.
 resp_p4         <- as.integer(n^n)
@@ -559,7 +559,7 @@ stopifnot(length(afirmaciones_p5) == 6L, sum(sol_p5) == k_v,
           length(unique(afirmaciones_p5)) == 6L)
 
 # --- PARTE 6 (schoice V/F): crecimiento del factorial ------------------------
-# Afirmacion sobre el factor por el que crece el conteo al anadir un elemento.
+# Afirmación sobre el factor por el que crece el conteo al anadir un elemento.
 # Verdadera si y solo si el multiplicador es n+1.
 mult_correcto  <- n + 1L
 mult_falsos    <- setdiff(unique(c(2L, n, n + 2L, 2L * n)), mult_correcto)
@@ -594,7 +594,7 @@ stopifnot(
 )
 
 # C-3: el Answerlist del ENUNCIADO lista solo las opciones de los gaps de
-# eleccion (4+4+6+2 = 16); el de la SOLUTION anade un feedback por cada gap
+# elección (4+4+6+2 = 16); el de la SOLUTION anade un feedback por cada gap
 # num/string (4+1+4+1+6+2 = 18). La asimetria 16 != 18 es el contrato de
 # R/exams, no un defecto -- es un falso positivo recurrente de los auditores.
 n_answerlist_enunciado <- length(opciones_p1) + length(opciones_p3) +
@@ -605,44 +605,44 @@ stopifnot(n_answerlist_enunciado == 16L, n_answerlist_solucion == 18L)
 # --- Decisión D6: por qué la Solution NUNCA enumera la Parte 5 en orden ------
 # MEDIDO sobre el HTML renderizado, no deducido. Con `exshuffle: TRUE` R/exams
 # reordena los DOS Answerlists de un CLOZE (el del enunciado y el de la
-# Solution) con la MISMA permutacion --quedan alineados entre si-- pero NO toca
+# Solution) con la MISMA permutación --quedan alineados entre si-- pero NO toca
 # la PROSA de la Solution, que este ejercicio emite con cat() en el chunk
 # `solución`. La primera versión listaba ahí las 6 afirmaciones de la Parte 5 en
 # el orden interno del chunk: tras el shuffle, esa lista y las opciones que ve
 # el estudiante quedaban en ordenes distintos.
 #
 # Es un modo de fallo VECINO al de la regla #19 pero distinto: la regla #19
-# prohibe que la Solution identifique una opcion por su LETRA; aquí nadie cita
+# prohibe que la Solution identifique una opción por su LETRA; aquí nadie cita
 # letras, el defecto es enumerar en un ORDEN que R/exams puede cambiar después.
 #
 # Se descartó la salida fácil (`exshuffle: FALSE`, que alinearía los tres
 # bloques): la aleatorización interna la dan `perm`/`perm3`/`perm5`, pero
 # `validar_coherencia_matematica.R` marca ERR_C4 --bloqueante-- porque ICFES
-# exige mezcla, y pedir una excepcion para conservar una lista redundante es
+# exige mezcla, y pedir una excepción para conservar una lista redundante es
 # mal negocio. El Answerlist de la Solution YA da el veredicto de cada
-# afirmacion, alineado por construcción.
+# afirmación, alineado por construcción.
 #
 # Regla que queda para esta variante: la prosa de la Solution puede AGRUPAR por
 # valor de verdad (verdaderas / falsas), lo que no afirma nada sobre posiciones,
 # pero NO puede reproducir la lista en su orden interno. Lo verifica
-# cloze/verificar_render.R (V11) comparando el veredicto de cada afirmacion
-# entre prosa y Answerlist POR CONTENIDO, no por posicion.
+# cloze/verificar_render.R (V11) comparando el veredicto de cada afirmación
+# entre prosa y Answerlist POR CONTENIDO, no por posición.
 
 # --- Alias para el validador genérico del repo -------------------------------
 # `.claude/scripts/validar_coherencia_matematica.R` y
 # `.claude/scripts/validar_diversidad_sustantiva.R` buscan nombres FIJOS. Sin
 # ellos sus comprobaciones retornan temprano y el APROBADO es VACUO: nunca
-# comparan la opcion marcada contra n!. Se exponen sobre la PARTE 1, que es la
+# comparan la opción marcada contra n!. Se exponen sobre la PARTE 1, que es la
 # que porta la clave del item oficial.
 #   - `sol` / `opciones`   -> huella de la respuesta correcta (diversidad).
 #   - `valor_correcto`     -> Nivel 5B y Capa C.
 #   - `opciones_valores`   -> 5B lo prefiere ANTES que `opciones`; debe ser
-#     NUMÉRICO, porque `opciones` son cadenas y 5B se salta la comparacion si
+#     NUMÉRICO, porque `opciones` son cadenas y 5B se salta la comparación si
 #     `!is.numeric(opcion_marcada)`.
 #   - `error_sel`          -> `detectar_error_seleccionado()` espera UN error,
 #     no la lista de 3; se expone el que interroga la Parte 3.
 # No inventar un `valor_erroneo` para despertar la Capa C: con 3 distractores un
-# único "valor erroneo" seria una ficcion, y la relación que comprobaria
+# único "valor erróneo" seria una ficción, y la relación que comprobaria
 # (distractor != clave) ya la garantiza I-2.
 sol      <- sol_p1
 opciones <- opciones_p1

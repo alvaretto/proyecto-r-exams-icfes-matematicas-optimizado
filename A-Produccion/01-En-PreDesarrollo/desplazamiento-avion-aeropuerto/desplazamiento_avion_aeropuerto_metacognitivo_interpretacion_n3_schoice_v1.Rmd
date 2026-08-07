@@ -254,7 +254,7 @@ descripcion_correcta <- paste0(
 
 # ---- §7 — Selección del pool de distractores (7 candidatos -> 3 elegidos + la correcta) ----
 # GEO-DES-01 (espejo) SIEMPRE está presente. Los otros 2 se sortean entre {02,...,07},
-# filtrados primero por su precondicion (regla #8, .claude/rules/codigo-rmd.md) y luego por legibilidad +
+# filtrados primero por su precondición (regla #8, .claude/rules/codigo-rmd.md) y luego por legibilidad +
 # distinción visual de las 4 opciones resultantes. Enumeración exhaustiva de parejas + sample()
 # sobre las válidas, sin repeat/while sin cota (regla #21 Familia 1, familias-soluciones-rmd.md).
 params <- list(
@@ -289,7 +289,7 @@ nombre_temp_por_codigo <- list(
 )
 th_efectivo <- function(cod) th_axis_por_codigo[[cod]] + dir_sign_por_codigo[[cod]] * angulo_direccion
 
-# Filtrar candidatos (02-06) por su precondicion declarada en el pool de errores
+# Filtrar candidatos (02-06) por su precondición declarada en el pool de errores
 precondicion_por_codigo <- setNames(
   lapply(errores_conceptuales, function(e) e$precondicion),
   sapply(errores_conceptuales, function(e) e$codigo)

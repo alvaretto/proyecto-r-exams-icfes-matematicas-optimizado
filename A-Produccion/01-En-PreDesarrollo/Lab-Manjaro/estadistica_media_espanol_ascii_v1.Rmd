@@ -1,11 +1,11 @@
 ```{r data generation, echo = FALSE, results = "hide"}
 ## GENERACION DE DATOS
-# Configuracion inicial
+# Configuración inicial
 Sys.setlocale("LC_ALL", "C")
 options(OutDec = ".")
 options(scipen = 999)
 
-# Generar numero de calificaciones (entre 4 y 6)
+# Generar número de calificaciones (entre 4 y 6)
 num_calificaciones <- sample(4:6, 1)
 
 # Generar calificaciones realistas del sistema colombiano (entre 2.5 y 5.0)
@@ -31,13 +31,13 @@ if(mediana_val != media_correcta) {
   distractores <- c(distractores, mediana_val)
 }
 
-# Distractor 2: Valor maximo (error conceptual comun)
+# Distractor 2: Valor máximo (error conceptual comun)
 max_val <- max(calificaciones)
 if(max_val != media_correcta) {
   distractores <- c(distractores, max_val)
 }
 
-# Distractor 3: Promedio de extremos (minimo y maximo)
+# Distractor 3: Promedio de extremos (mínimo y máximo)
 extremos_val <- round((min(calificaciones) + max(calificaciones)) / 2, 1)
 if(extremos_val != media_correcta) {
   distractores <- c(distractores, extremos_val)
@@ -51,7 +51,7 @@ while(length(distractores) < 4) {
   }
 }
 
-## TRANSFORMAR A OPCION MULTIPLE
+## TRANSFORMAR A OPCIÓN MULTIPLE
 questions <- c(media_correcta, distractores[1:4])
 solutions <- c(TRUE, rep(FALSE, 4))
 
@@ -67,7 +67,7 @@ En el `r periodo` de `r materia`, `r estudiante` obtuvo las siguientes calificac
 
 `r paste(calificaciones, collapse = ", ")`
 
-¿Cual es la media aritmetica de estas calificaciones?
+¿Cuál es la media aritmetica de estas calificaciones?
 
 ```{r questionlist, echo = FALSE, results = "asis"}
 answerlist(questions, markup = "markdown")
@@ -80,12 +80,12 @@ Para calcular la media aritmetica de las calificaciones de `r estudiante`, debem
 **Paso 1:** Sumar todas las calificaciones
 `r paste(calificaciones, collapse = " + ")` = `r suma_total`
 
-**Paso 2:** Dividir la suma por el numero total de calificaciones
+**Paso 2:** Dividir la suma por el número total de calificaciones
 `r suma_total` / `r num_calificaciones` = `r media_correcta`
 
 **Respuesta:** La media aritmetica es `r media_correcta`
 
-**Explicacion:** La media aritmetica (o promedio) se calcula sumando todos los valores y dividiendo el resultado por la cantidad total de datos. En este caso, `r estudiante` tuvo `r num_calificaciones` calificaciones que suman `r suma_total`, por lo que su promedio es `r media_correcta`.
+**Explicación:** La media aritmetica (o promedio) se calcula sumando todos los valores y dividiendo el resultado por la cantidad total de datos. En este caso, `r estudiante` tuvo `r num_calificaciones` calificaciones que suman `r suma_total`, por lo que su promedio es `r media_correcta`.
 
 ```{r solutionlist, echo = FALSE, results = "asis"}
 answerlist(ifelse(solutions, "Correcto", "Incorrecto"), markup = "markdown")

@@ -11,7 +11,7 @@ output:
 # SCHOICE metacognitivo · Nivel 4 · Descriptor D4.8
 # Competencia: Formulación y ejecución · Componente: Aleatorio
 #
-# Origen: item real MAT-2026-1-004 (simulacro ERA-2026 Matematicas, Sesion 1,
+# Origen: item real MAT-2026-1-004 (simulacro ERA-2026 Matematicas, Sesión 1,
 #         pregunta impresa 4; verbatim de MAT-2026-1-098 del cuadernillo
 #         Matematicas 2026-1). Clasificación ADOPTADA de la ficha oficial,
 #         no re-derivada. Clave oficial: B = 24 = 4!
@@ -43,7 +43,7 @@ ex_uid <- paste0("perm-", paste(safe_sample(c(letters, 0:9), 8L, replace = TRUE)
                                 collapse = ""))
 
 # --- Parametro sustantivo: n = número de elementos distintos a ordenar -------
-# Rango MEDIDO por enumeracion exhaustiva (ver docs/BLUEPRINT.md, sección 2):
+# Rango MEDIDO por enumeración exhaustiva (ver docs/BLUEPRINT.md, sección 2):
 #   n <= 2 -> colisionan 2 opciones (n! == n^(n-1) == n)
 #   n == 3 -> n^(n-1) == n^2 == 9            -> ERR_ANS_C (opciones duplicadas)
 #   n en {4,5,6} -> 4 opciones unicas; razón max/clave sobre el pool de 7:
@@ -80,7 +80,7 @@ desarrollo <- paste(seq.int(n, 1L), collapse = " \\times ")
 # Capa D de .claude/scripts/validar_coherencia_matematica.R.
 errores_conceptuales <- list(
   list(
-    clave             = "repeticion",
+    clave             = "repetición",
     codigo            = "EST-PER-01",
     nombre            = "Repetición sin descontar los elementos ya ubicados",
     descripcion_corta = "Supone que en cada posición siguen disponibles todos los elementos",
@@ -405,7 +405,7 @@ opciones <- unlist(opciones_pre[perm], use.names = FALSE)
 nombres  <- names(opciones_pre)[perm]
 sol      <- as.integer(nombres == "correcta")
 
-# I-5: exactamente una opcion marcada y coincide con el valor correcto.
+# I-5: exactamente una opción marcada y coincide con el valor correcto.
 stopifnot(sum(sol) == 1L, length(sol) == 4L)
 stopifnot(identical(opciones[which(sol == 1L)], correcta))
 stopifnot(length(unique(opciones)) == 4L)
@@ -501,9 +501,9 @@ cat("Ordenar ", n, " elementos distintos en una fila es una **permutación** de 
     sep = "")
 cat("$$", n, "! = ", desarrollo, " = ", correcta_val, "$$\n\n", sep = "")
 
-# --- 2. Análisis de cada opcion ---------------------------------------------
+# --- 2. Análisis de cada opción ---------------------------------------------
 # Regla #19: las opciones se identifican por su CONTENIDO y por el código del
-# error, NUNCA por su letra o posicion.
+# error, NUNCA por su letra o posición.
 cat("### Análisis de cada opción\n\n")
 cat("**Opción correcta — ", correcta, "**\n\n", sep = "")
 cat("Se aplica el principio multiplicativo reconociendo que las opciones ",
@@ -545,7 +545,7 @@ cat("- Si los elementos **pudieran repetirse**, la respuesta ya no sería ",
     "$n!$ sino una potencia. Esa es exactamente la diferencia entre este ",
     "problema y el del caso siguiente.\n\n", sep = "")
 
-# --- 5. Caso especifico: transferencia al conteo CON repeticion --------------
+# --- 5. Caso especifico: transferencia al conteo CON repetición --------------
 cat("### Caso específico\n\n")
 cat("Considere ahora un problema en apariencia parecido: formar códigos de 4 ",
     "cifras usando los dígitos del conjunto $\\{1,2,3,4,5\\}$, **donde los ",
@@ -565,7 +565,7 @@ if ("EST-PER-01" %in% codigos_sel) {
       "EST-PER-01 analizado arriba.\n\n", sep = "")
 }
 
-# --- 6. Reflexion metacognitiva ----------------------------------------------
+# --- 6. Reflexión metacognitiva ----------------------------------------------
 cat("### Reflexión metacognitiva\n\n")
 cat(reflexion, "\n\n", sep = "")
 
