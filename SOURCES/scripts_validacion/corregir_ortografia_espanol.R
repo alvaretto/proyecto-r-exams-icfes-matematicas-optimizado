@@ -770,6 +770,17 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
             contenido[num_linea],
             perl = TRUE
           )
+          # Y la versión en MAYÚSCULAS (bug corregido 2026-08-06): la detección
+          # es case-insensitive pero la sustitución solo cubría minúscula y
+          # Capitalizada, así que "OPCION" se reportaba en cada pasada y no se
+          # corregía nunca — el hook pre-commit rechazaba el archivo para
+          # siempre. En español la mayúscula CONSERVA la tilde (RAE).
+          contenido[num_linea] <- gsub(
+            paste0("\\b", toupper(palabra_mal), "\\b"),
+            toupper(palabra_bien),
+            contenido[num_linea],
+            perl = TRUE
+          )
         }
       }
     }

@@ -184,6 +184,32 @@ test_that("La regla morfológica cubre -cion/-sion/-xion fuera del diccionario",
   unlink(temp_file)
 })
 
+test_that("Corrige también la forma en MAYÚSCULAS (si no, el hook rechaza para siempre)", {
+  # La detección es case-insensitive pero la sustitución solo cubría minúscula y
+  # Capitalizada: "OPCION" se reportaba en cada pasada sin corregirse nunca, y el
+  # hook pre-commit rechazaba el archivo indefinidamente. Medido el 2026-08-06.
+  temp_file <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "Question",
+    "========",
+    "# V2: OPCION CORRECTA = gráfico de barras",
+    "La opcion correcta y la Opcion siguiente."
+  ), temp_file)
+
+  system2("Rscript", c(SCRIPT_ORTO, temp_file, "--fix"), stdout = FALSE, stderr = FALSE)
+  txt <- paste(readLines(temp_file, encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl("OPCIÓN CORRECTA", txt), info = "no corrigió la forma en mayúsculas")
+  expect_true(grepl("La opción correcta", txt))
+  expect_true(grepl("la Opción siguiente", txt))
+
+  # Y el archivo queda sin errores pendientes: sin esto el hook nunca deja pasar.
+  salida <- paste(system2("Rscript", c(SCRIPT_ORTO, temp_file),
+                          stdout = TRUE, stderr = TRUE), collapse = "\n")
+  expect_false(grepl("ERRORES", salida))
+
+  unlink(temp_file)
+})
+
 test_that("La regla morfológica no produce palabras con dos tildes", {
   # "Seleccionó" empareja hasta "-cion" si la regla no lleva el lookahead de
   # vocal acentuada: el resultado era "Selecciónó". Medido el 2026-08-06.
