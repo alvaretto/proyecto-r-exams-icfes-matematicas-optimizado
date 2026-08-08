@@ -51,17 +51,26 @@ p_largo_max <- combos$pmax[idx_combo]
 p_ancho     <- combos$pa[idx_combo]
 
 # --- Cálculos ---
-pct_largo_min <- p_largo_min * 100
-pct_largo_max <- p_largo_max * 100
-pct_ancho     <- p_ancho * 100
+# round() en el ORIGEN, no al formatear: en IEEE-754 `0.9 * 100` no da 90 exacto
+# y `100 - 90.00000000000001` = 9.999999999999986, que paste0() interpola crudo
+# como "9.999999999999999" con punto decimal ingles. El ruido esta presente en
+# ~92 % de las versiones pero solo se VE cuando el valor cae justo por debajo de
+# un entero pequeño: 44.00000000000001 se imprime "44" con 15 digitos
+# significativos y pasa desapercibido. Todos los porcentajes son multiplos de 5
+# por construcción (seq(..., by = 0.05)), así que round() es exacto y seguro.
+pct_largo_min <- round(p_largo_min * 100)
+pct_largo_max <- round(p_largo_max * 100)
+pct_ancho     <- round(p_ancho * 100)
 
 comp_largo_max <- 100 - pct_largo_max
 comp_largo_min <- 100 - pct_largo_min
 comp_ancho     <- 100 - pct_ancho
 
 # CORRECTO: complemento del PRODUCTO
-correct_min <- 100 * (1 - p_largo_max * p_ancho)
-correct_max <- 100 * (1 - p_largo_min * p_ancho)
+# El filtro de combos garantiza que estos dos son enteros; round() solo limpia
+# el ruido de coma flotante que arrastra el producto.
+correct_min <- round(100 * (1 - p_largo_max * p_ancho))
+correct_max <- round(100 * (1 - p_largo_min * p_ancho))
 
 # --- Instancia canonica: el item oficial del cuadernillo ---
 is_canonical <- (abs(p_largo_min - 0.70) < 1e-9 &&
@@ -94,8 +103,11 @@ sum_comp_min <- comp_largo_max + comp_ancho
 sum_comp_max <- comp_largo_min + comp_ancho
 
 # Error: producto de complementos
-prod_comp_min <- (1 - p_largo_max) * (1 - p_ancho) * 100
-prod_comp_max <- (1 - p_largo_min) * (1 - p_ancho) * 100
+# Este SI puede tener decimales legitimos (p.ej. 0,25 x 0,15 = 3,75 %), así que
+# se limpia el ruido a 6 decimales en vez de redondear a entero. fmt_v() decide
+# después cuantos decimales mostrar.
+prod_comp_min <- round((1 - p_largo_max) * (1 - p_ancho) * 100, 6)
+prod_comp_max <- round((1 - p_largo_min) * (1 - p_ancho) * 100, 6)
 
 # --- Verificaciones de unicidad ---
 # La afirmación debe coincidir con el valor correcto EXACTAMENTE cuando el flag
