@@ -70,6 +70,35 @@ Aun cuando el **valor** de la respuesta correcta varíe entre versiones (distint
 
 **Defensa**: aleatorizar la orientación/posición global de la escena por versión (p.ej. cuadrante ∈ {NE, NO, SE, SO}), aplicando la MISMA transformación a todas las opciones (preserva la estructura relativa correcta) y reflejándola en el texto del enunciado (la descripción de dirección/posición debe ser coherente con la transformación elegida). Verificación: renderizar ≥8 versiones y confirmar que la respuesta correcta aparece en posiciones/orientaciones distintas.
 
+#### P4-bis — Variante SEMÁNTICA: el VEREDICTO de la clave es invariante (2026-08-08)
+
+El caso más traicionero de P4 no es visual sino textual, y estaba descrito en la lista de arriba («la afirmación correcta siempre con cierta estructura») sin que **ningún validador lo midiera**.
+
+En un ítem de conclusión binaria —opciones que empiezan por «Sí, porque…» / «No, porque…»— la clave puede tener **siempre el mismo veredicto** aunque su valor numérico varíe en cada versión. Ocurre cuando la afirmación que el estudiante debe evaluar es falsa **por construcción**: si el enunciado siempre propone un valor obtenido con el procedimiento erróneo, la respuesta correcta es siempre «No».
+
+```r
+# ❌ PROHIBIDO — la afirmación evaluada es falsa en el 100 % de las versiones
+afirmacion_min <- comp_largo_max   # complemento lineal: nunca coincide con el
+afirmacion_max <- comp_largo_min   # complemento del producto -> clave siempre "No"
+
+# ✅ CORRECTO — se sortea si la afirmación es verdadera o falsa
+afirmacion_es_verdadera <- if (is_canonical) FALSE else sample(c(TRUE, FALSE), 1)
+```
+
+**Por qué ninguna defensa previa lo veía:**
+
+| Validación | Qué mide | Por qué no lo detecta |
+|---|---|---|
+| `validar_diagnosticidad.R` H2 | Que la clave sea la **única** con su prefijo, dentro de una versión | Con balance 2+2 nunca es única → 0 % |
+| `validar_diversidad_sustantiva.R` | Que el **valor** de la clave varíe | Varía (decenas de valores únicos); el veredicto no es un valor |
+| Balance Sí/No 2+2 | Que cada versión tenga 2 y 2 | Es intra-versión: se cumple en todas y aun así la clave es siempre «No» |
+
+**Impacto:** el estudiante que aprende el patrón descarta la mitad de las opciones sin razonar — de 25 % a 50 % de acierto por azar.
+
+**Defensa cableada:** sonda **H3** de `validar_diagnosticidad.R` (cross-versión). Mide la frecuencia de la primera palabra de la clave a lo largo de las versiones: 100 % → `ERR_DIAG_SUPERFICIAL` (bloqueante, exit 1); ≥90 % → aviso. Descarta las versiones en que todas las opciones comparten prefijo, para no penalizar ítems donde el prefijo no informa.
+
+**Nota de diseño:** si el ítem reproduce un cuadernillo oficial, la instancia canónica conserva el veredicto del ítem real (allí la clave es la que es) y son las **demás versiones** las que alternan. Cuando se añade una clave alternativa con el veredicto opuesto, hay que **excluir del pool a su gemela**: dos opciones con el mismo rango y veredictos contrarios convierten el ítem en irresoluble.
+
 ---
 
 ### ❌ P5: Distractor direccional/posicional como OUTLIER obvio (eliminable de un vistazo)

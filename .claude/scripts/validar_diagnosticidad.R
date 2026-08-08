@@ -19,6 +19,23 @@
 #   H2 PREFIJO   la correcta es la única con su primera palabra Y es el único
 #                singleton — si TODAS las opciones tienen prefijo distinto, no
 #                destaca y NO se cuenta (falso positivo de opciones numéricas).
+#   H3 VEREDICTO la primera palabra de la correcta es SIEMPRE la misma A LO
+#                LARGO DE LAS VERSIONES. Única sonda CROSS-versión: H1 y H2
+#                miran dentro de una versión y por eso no la ven. Caso típico:
+#                ítem de conclusión binaria ("Sí, porque…" / "No, porque…") en
+#                el que la clave es siempre "No" porque la afirmación evaluada
+#                es falsa por construcción. Un balance 2+2 dentro de cada
+#                versión NO protege: el estudiante que aprende el patrón
+#                descarta la mitad de las opciones sin razonar (25% -> 50% de
+#                acierto por azar). Solo cuentan las versiones en que el prefijo
+#                actúa como CATEGORÍA (al menos dos opciones lo comparten y no
+#                todas son iguales): si todas empiezan igual no informa de nada,
+#                y si todas empiezan distinto el prefijo identifica cada opción
+#                por separado — caso de las opciones numéricas, donde la primera
+#                palabra ES el valor.
+#                Añadida 2026-08-08 tras detectarse en un SCHOICE N4 de
+#                argumentación con 60/60 versiones de clave "No". Ver la regla
+#                #22 §P4, que ya describía el caso sin que nada lo midiera.
 #
 # POR QUÉ EL MARGEN (2026-08-06): la v1 de la sonda H1 solo miraba el orden
 # ("¿es la única más larga?"), no la distancia. Tras igualar deliberadamente la
@@ -110,8 +127,20 @@ for (i in seq_len(n)) {
     es_unica <- tb[[pw[ic]]] == 1L && sum(tb == 1L) == 1L
     if (is.null(acc[[g]]))
       acc[[g]] <- list(cnt = c(h1max = 0, h1min = 0, h2 = 0, n = 0, umax = 0, umin = 0),
-                       mmax = numeric(0), mmin = numeric(0))
+                       mmax = numeric(0), mmin = numeric(0), pwc = character(0))
     acc[[g]]$cnt <- acc[[g]]$cnt + c(es_max, es_min, es_unica, 1, unica_max, unica_min)
+    # H3: primera palabra de la correcta, para medir invariancia ENTRE versiones.
+    # Solo cuenta si el prefijo funciona como CATEGORIA, es decir si agrupa
+    # opciones: al menos dos comparten prefijo (unicos < total) y no todas son
+    # iguales (unicos >= 2). Misma logica de guarda que H2.
+    #   - todas iguales  -> el prefijo no distingue nada.
+    #   - todas distintas-> el prefijo identifica a cada opcion por separado, no
+    #     hay categoria binaria que aprender; ademas en opciones numericas la
+    #     primera palabra ES el valor y "siempre la misma" no se sostiene.
+    # Sin esta guarda la sonda daba un 100% espurio en items cuyas opciones
+    # llevan etiquetas fijas distintas (fixture de test_diagnosticidad.R).
+    if (length(unique(pw)) >= 2L && length(unique(pw)) < length(pw))
+      acc[[g]]$pwc <- c(acc[[g]]$pwc, pw[ic])
     if (unica_max) acc[[g]]$mmax <- c(acc[[g]]$mmax, m_max)
     if (unica_min) acc[[g]]$mmin <- c(acc[[g]]$mmin, m_min)
   }
@@ -132,6 +161,18 @@ for (g in names(acc)[order(names(acc))]) {
   tasas <- 100 * c(a[["h1max"]], a[["h1min"]], a[["h2"]]) / N
   cat(sprintf("%-6s %6d  %13.0f%% (%5s)  %13.0f%% (%5s)  %11.0f%%\n", g, N,
               tasas[1], fmt_m(acc[[g]]$mmax), tasas[2], fmt_m(acc[[g]]$mmin), tasas[3]))
+  # H3 (cross-version): ¿la primera palabra de la correcta es siempre la misma?
+  pwc <- acc[[g]]$pwc
+  if (length(pwc) >= 5L) {
+    tasa_h3 <- 100 * max(table(pwc)) / length(pwc)
+    moda_h3 <- names(which.max(table(pwc)))
+    cat(sprintf("%-6s %6s  H3 veredicto: la correcta empieza por \"%s\" en el %.0f%% de %d versiones\n",
+                "", "", moda_h3, tasa_h3, length(pwc)))
+    if (tasa_h3 >= 100)
+      criticos <- c(criticos, sprintf("%s (H3 veredicto invariante: siempre \"%s\")", g, moda_h3))
+    else if (tasa_h3 >= 90)
+      avisos <- c(avisos, sprintf("%s (H3 veredicto casi invariante: \"%s\" en %.0f%%)", g, moda_h3, tasa_h3))
+  }
   peor <- max(peor, max(tasas))
   etiq <- c("H1 mas-larga", "H1 mas-corta", "H2 prefijo")
   for (j in seq_along(tasas)) {
