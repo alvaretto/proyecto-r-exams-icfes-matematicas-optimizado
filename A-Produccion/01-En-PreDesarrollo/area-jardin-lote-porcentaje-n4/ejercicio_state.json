@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "area_jardin_lote_metacognitivo_argumentacion_n4_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-08-08T11:45:26.113334-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-08T14:18:55.400825-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-08T11:45:30.335933-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-08-08T11:45:34.934517-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-08-08T12:55:32.509275-05:00",
+      "archivo": "area_jardin_lote_metacognitivo_argumentacion_n4_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-08-08T12:55:32.601083-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-08-08T13:10:29.483793-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-08-08T13:10:29.549178-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-08-08T14:18:55.278587-05:00",
+      "veredicto": "APROBAR CON CAMBIOS - las 5 objeciones resueltas (obj 3 cerrada: la Solution cita la opcion literal, incluida la canonica en fracciones)"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-08-08T14:18:55.339765-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-08-08T13:30:07.003459-05:00",
+      "versiones_unicas": 277
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-08T13:11:46.131949-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-08-08T14:18:55.400825-05:00"
+    }
+  }
+}

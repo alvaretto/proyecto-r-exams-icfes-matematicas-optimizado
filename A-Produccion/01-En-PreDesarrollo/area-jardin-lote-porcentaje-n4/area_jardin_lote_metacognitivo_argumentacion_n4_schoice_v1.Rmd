@@ -1,0 +1,689 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+# =========================================================================
+# EJERCICIO: Área del jardín dentro de un lote rectangular (SCHOICE N4)
+# Derivado de: MAT-2026-1-026 (ERA-2026, Sesión 2, pregunta 26)
+# =========================================================================
+# ORTOGRAFIA: en el cuadernillo oficial la opción A omite la tilde del adverbio
+# afirmativo inicial y la opción B omite la coma que lo separa. Por decisión del
+# humano (2026-08-08) ambas se normalizan a la forma correcta "Sí, porque".
+# Es una corrección ortografica: NO altera el contenido matemático ni la clave.
+# (El ejemplo literal del error NO se transcribe aquí: el corrector automático
+#  del repo lo "arreglaria" y el comentario pasaria a contradecirse a si mismo.)
+# =========================================================================
+
+# library(exams) es OBLIGATORIO: la sección Answerlist llama a answerlist().
+# Si solo se carga el namespace (exams::exams2html) la función queda invisible
+# para el chunk y el render muere con:
+#   Error en answerlist(...): no se pudo encontrar la función "answerlist"
+# NO eliminar: no es una dependencia redundante.
+library(exams)
+library(reticulate)
+
+# --- Helpers (Familia 5: safe_sample / pick_int) ---
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+safe_sample <- function(x, size, replace = FALSE) {
+  if (length(x) == 0L) stop("safe_sample(): vector vacio.")
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
+
+# --- Parametros aleatorios ---
+# Se usan combinaciones que producen porcentajes enteros en la clave.
+# Paso de 0.10 para largo/ancho garantiza productos enteros (%);
+# se agregan valores de 0.05 con p_ancho = 0.80 (que siempre da entero).
+combos <- expand.grid(
+  pmin = seq(0.40, 0.80, by = 0.05),
+  gap  = c(0.05, 0.10, 0.15, 0.20, 0.25),
+  pa   = seq(0.50, 0.90, by = 0.05),
+  stringsAsFactors = FALSE
+)
+combos$pmax <- combos$pmin + combos$gap
+combos <- combos[combos$pmax <= 0.95 & combos$pmax >= 0.55, ]
+# Filtro enteros: el producto p_largo * p_ancho * 100 DEBE ser entero para evitar
+# punto decimal ingles y restas inconsistentes en la Solution (detractor Objeción 1)
+combos <- combos[
+  abs(combos$pmin * combos$pa * 100 - round(combos$pmin * combos$pa * 100)) < 1e-9 &
+  abs(combos$pmax * combos$pa * 100 - round(combos$pmax * combos$pa * 100)) < 1e-9, ]
+stopifnot(nrow(combos) >= 30)
+
+idx_combo <- safe_sample(seq_len(nrow(combos)), 1)
+p_largo_min <- combos$pmin[idx_combo]
+p_largo_max <- combos$pmax[idx_combo]
+p_ancho     <- combos$pa[idx_combo]
+
+# --- Cálculos ---
+pct_largo_min <- p_largo_min * 100
+pct_largo_max <- p_largo_max * 100
+pct_ancho     <- p_ancho * 100
+
+comp_largo_max <- 100 - pct_largo_max
+comp_largo_min <- 100 - pct_largo_min
+comp_ancho     <- 100 - pct_ancho
+
+# CORRECTO: complemento del PRODUCTO
+correct_min <- 100 * (1 - p_largo_max * p_ancho)
+correct_max <- 100 * (1 - p_largo_min * p_ancho)
+
+# --- Instancia canonica: el item oficial del cuadernillo ---
+is_canonical <- (abs(p_largo_min - 0.70) < 1e-9 &&
+                 abs(p_largo_max - 0.80) < 1e-9 &&
+                 abs(p_ancho - 0.80) < 1e-9)
+
+# VEREDICTO DE LA CLAVE NO INVARIANTE (regla #22 §P4).
+# Si la afirmación del enunciado fuera SIEMPRE falsa, la clave empezaria siempre
+# por "No" y el estudiante descartaria de entrada las dos opciones "Si" sin
+# razonar: pasaria de 25 % a 50 % de acierto por azar. Ninguna validación del
+# arsenal lo detecta (H2 mide prefijo ÚNICO dentro de una versión, y con balance
+# 2+2 nunca es único; la diversidad sustantiva mide el VALOR, no el veredicto).
+# Por eso se sortea si la persona afirma el rango CORRECTO o el erróneo.
+# La instancia canonica queda fijada en FALSA: reproduce el item oficial, cuya
+# clave es "No, porque entre un 36 % y un 44 %...".
+afirmacion_es_verdadera <- if (is_canonical) FALSE else sample(c(TRUE, FALSE), 1)
+
+if (afirmacion_es_verdadera) {
+  # La persona acierta: afirma el complemento del producto.
+  afirmacion_min <- correct_min
+  afirmacion_max <- correct_max
+} else {
+  # La persona yerra: usa el complemento lineal del largo e ignora el ancho.
+  afirmacion_min <- comp_largo_max
+  afirmacion_max <- comp_largo_min
+}
+
+# Error: suma de complementos
+sum_comp_min <- comp_largo_max + comp_ancho
+sum_comp_max <- comp_largo_min + comp_ancho
+
+# Error: producto de complementos
+prod_comp_min <- (1 - p_largo_max) * (1 - p_ancho) * 100
+prod_comp_max <- (1 - p_largo_min) * (1 - p_ancho) * 100
+
+# --- Verificaciones de unicidad ---
+# La afirmación debe coincidir con el valor correcto EXACTAMENTE cuando el flag
+# dice que es verdadera. Si no se condicionara, la rama verdadera abortaria el
+# render: ahí la afirmación ES el rango correcto por construcción.
+if (afirmacion_es_verdadera) {
+  stopifnot(correct_min == afirmacion_min, correct_max == afirmacion_max)
+} else {
+  stopifnot(correct_min != afirmacion_min || correct_max != afirmacion_max)
+}
+stopifnot(sum_comp_min != correct_min || sum_comp_max != correct_max)
+stopifnot(prod_comp_min != correct_min || prod_comp_max != correct_max)
+# Guarda eliminada: comp_ancho < correct_min siempre (algebraico, p_largo < 1)
+# La disyunción original era tautologica (detractor O6)
+
+# --- Formateo con coma decimal ---
+fmt_v <- function(x) {
+  if (abs(x - round(x)) < 0.01) as.character(round(x))
+  else sub("\\.", ",", sprintf("%.1f", x))
+}
+# Formato: sin trailing zeros (0,80 -> 0,8; 0,75 -> 0,75)
+label_fmt <- function(x) {
+  s <- sprintf("%.2f", x)
+  s <- sub("0$", "", s)
+  sub("\\.", ",", s)
+}
+label_largo_min <- label_fmt(p_largo_min)
+label_largo_max <- label_fmt(p_largo_max)
+label_ancho     <- label_fmt(p_ancho)
+
+# --- Pool de errores conceptuales (9 entradas, >= 4-6 exigidas) ---
+errores_conceptuales <- list(
+  list(
+    codigo = "GEO-ARE-01",
+    nombre = "Complemento lineal del largo (resta aritmética)",
+    veredicto = "si",
+    descripcion_corta = paste0(
+      "Sí, porque al restar ", pct_largo_max, " % del 100 % da ",
+      comp_largo_max, " % y al restar ", pct_largo_min,
+      " % del 100 % da ", comp_largo_min, " %."),
+    descripcion_larga = paste0(
+      "Este razonamiento resta cada porcentaje del largo del 100 % por separado, ",
+      "sin considerar que el área es un producto de DOS dimensiones (largo x ancho). ",
+      "Ignora completamente el porcentaje del ancho (", pct_ancho, " %)."),
+    causa_raiz = "Confunde el complemento de una dimensión lineal con el complemento del área bidimensional.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-02",
+    nombre = "Fracciones dimensionales sin producto",
+    veredicto = "si",
+    descripcion_corta = paste0(
+      "Sí, porque el área del lote sin jardín corresponde a ",
+      comp_ancho, " % del ancho y como máximo a ",
+      comp_largo_min, " % del largo."),
+    descripcion_larga = paste0(
+      "Identifica correctamente los complementos de cada dimensión (",
+      comp_ancho, " % del ancho, entre ", comp_largo_max, " % y ",
+      comp_largo_min, " % del largo), pero asume que el porcentaje del área libre ",
+      "coincide con los porcentajes lineales, sin calcular el producto."),
+    causa_raiz = "Trata los complementos dimensionales como equivalentes al porcentaje de área.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-07",
+    nombre = "El complemento del largo ES el porcentaje del área",
+    veredicto = "si",
+    descripcion_corta = paste0(
+      "Sí, porque si del largo del lote el jardín ocupa entre ",
+      pct_largo_min, " % y ", pct_largo_max,
+      " %, queda libre entre ", comp_largo_max, " % y ",
+      comp_largo_min, " % del largo, que es el mismo porcentaje del área."),
+    descripcion_larga = paste0(
+      "Afirma explícitamente que el porcentaje libre del largo equivale al ",
+      "porcentaje libre del área total. Esto solo sería cierto si el jardín ",
+      "ocupara el 100 % del ancho, lo cual no ocurre (ocupa ", pct_ancho, " %)."),
+    causa_raiz = "Iguala el complemento lineal al complemento de área, olvidando la segunda dimensión.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-03",
+    nombre = "Suma de complementos lineales",
+    veredicto = "no",
+    descripcion_corta = paste0(
+      "No, porque entre ", sum_comp_min, " % y ",
+      sum_comp_max, " % del área del lote quedó sin jardín."),
+    descripcion_larga = paste0(
+      "Suma los complementos de cada dimensión: (100 - ", pct_largo_max,
+      ") + (100 - ", pct_ancho, ") = ", sum_comp_min, " % y (100 - ",
+      pct_largo_min, ") + (100 - ", pct_ancho, ") = ", sum_comp_max,
+      " %. Sumar los complementos sobreestima el área libre porque cuenta ",
+      "dos veces la esquina donde ambos complementos se superponen."),
+    causa_raiz = "Suma los complementos lineales en vez de calcular el complemento del producto.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-04",
+    nombre = "Complemento del producto (CORRECTO)",
+    veredicto = "no",
+    es_correcto = TRUE,
+    descripcion_corta = paste0(
+      "No, porque entre un ", fmt_v(correct_min), " % y un ",
+      fmt_v(correct_max), " % del área del lote quedó sin jardín."),
+    descripcion_larga = paste0(
+      "El área del jardín es el PRODUCTO de sus dimensiones: entre ",
+      pct_largo_min, " % x ", pct_ancho, " % = ",
+      round(p_largo_min * p_ancho * 100), " % y ",
+      pct_largo_max, " % x ", pct_ancho, " % = ",
+      round(p_largo_max * p_ancho * 100), " % del lote. ",
+      "El área sin jardín es entre 100 % - ",
+      round(p_largo_max * p_ancho * 100), " % = ", correct_min,
+      " % y 100 % - ", round(p_largo_min * p_ancho * 100), " % = ",
+      correct_max, " %."),
+    causa_raiz = "Cálculo correcto: el área es un producto bidimensional, no una suma de porcentajes lineales.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-05",
+    nombre = "Producto de los complementos",
+    veredicto = "no",
+    descripcion_corta = paste0(
+      "No, porque entre un ", fmt_v(prod_comp_min), " % y un ",
+      fmt_v(prod_comp_max), " % del área del lote quedó sin jardín."),
+    descripcion_larga = paste0(
+      "Multiplica los complementos de cada dimensión: (1 - ",
+      label_largo_max, ") x (1 - ", label_ancho, ") = ",
+      fmt_v(prod_comp_min), " % y (1 - ",
+      label_largo_min, ") x (1 - ", label_ancho, ") = ",
+      fmt_v(prod_comp_max), " %. Este cálculo da el área de la esquina ",
+      "opuesta al jardín, no el área total sin jardín."),
+    causa_raiz = "Confunde (1-a)(1-b) con 1-ab: el producto de los complementos NO es el complemento del producto.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-06",
+    nombre = "Solo considera el ancho",
+    veredicto = "no",
+    descripcion_corta = paste0(
+      "No, porque solo un ", comp_ancho,
+      " % del área del lote quedó sin jardín."),
+    descripcion_larga = paste0(
+      "Considera únicamente que el jardín ocupa ", pct_ancho,
+      " % del ancho, concluyendo que el ", comp_ancho,
+      " % restante del ancho es el área libre. Ignora que el largo del jardín ",
+      "también varia (entre ", pct_largo_min, " % y ", pct_largo_max,
+      " %), lo que produce un rango de área libre, no un valor fijo."),
+    causa_raiz = "Reduce el problema bidimensional a una sola dimensión.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    codigo = "GEO-ARE-08",
+    nombre = "Confunde área del jardín con área sin jardín",
+    veredicto = "no",
+    descripcion_corta = paste0(
+      "No, porque entre un ", fmt_v(round(p_largo_min * p_ancho * 100)),
+      " % y un ", fmt_v(round(p_largo_max * p_ancho * 100)),
+      " % del área del lote quedó sin jardín."),
+    descripcion_larga = paste0(
+      "Calcula correctamente el producto de las fracciones (",
+      pct_largo_min, " % x ", pct_ancho, " % = ",
+      round(p_largo_min * p_ancho * 100), " % y ",
+      pct_largo_max, " % x ", pct_ancho, " % = ",
+      round(p_largo_max * p_ancho * 100),
+      " %), pero confunde el porcentaje que OCUPA el jardín con el que ",
+      "QUEDA SIN jardín. Los valores calculados son el área del jardín, ",
+      "no su complemento."),
+    causa_raiz = "Invierte el sentido del complemento: da el área del jardín como si fuera el área sin jardín.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    # Clave ALTERNATIVA: se usa cuando la afirmación del enunciado es VERDADERA.
+    # Su existencia es lo que impide que el veredicto de la clave sea invariante.
+    codigo = "GEO-ARE-09",
+    nombre = "Complemento del producto, afirmación acertada (CORRECTO)",
+    veredicto = "si",
+    es_correcto = TRUE,
+    descripcion_corta = paste0(
+      "Sí, porque el jardín ocupa el producto de sus dos fracciones y su ",
+      "complemento está entre un ", fmt_v(correct_min), " % y un ",
+      fmt_v(correct_max), " % del área del lote."),
+    descripcion_larga = paste0(
+      "La afirmación es correcta y su justificación también: el área del jardín ",
+      "es el PRODUCTO de sus dimensiones (entre ",
+      round(p_largo_min * p_ancho * 100), " % y ",
+      round(p_largo_max * p_ancho * 100), " % del lote), así que el área sin ",
+      "jardín queda entre ", fmt_v(correct_min), " % y ", fmt_v(correct_max),
+      " %. Validar una afirmación exige comprobar el procedimiento, no solo el ",
+      "resultado: aquí ambos son correctos."),
+    causa_raiz = "Sin error: aplica el complemento del producto, que es el procedimiento válido.",
+    precondicion = function(params) TRUE
+  )
+)
+
+# --- Selección de errores ---
+# Hay DOS claves posibles y solo una entra por versión: GEO-ARE-04 (veredicto
+# "no") cuando la afirmación es falsa, y GEO-ARE-09 (veredicto "si") cuando es
+# verdadera. La otra se EXCLUYE del pool: dejarla dentro produciria dos opciones
+# con el rango correcto y veredictos opuestos.
+idx_ok_no <- which(sapply(errores_conceptuales, function(e)
+                   isTRUE(e$es_correcto) && e$veredicto == "no"))
+idx_ok_si <- which(sapply(errores_conceptuales, function(e)
+                   isTRUE(e$es_correcto) && e$veredicto == "si"))
+stopifnot(length(idx_ok_no) == 1L, length(idx_ok_si) == 1L)
+
+if (afirmacion_es_verdadera) {
+  idx_ok <- idx_ok_si; idx_excluir <- idx_ok_no
+  n_si_distractores <- 1L; n_no_distractores <- 2L
+} else {
+  idx_ok <- idx_ok_no; idx_excluir <- idx_ok_si
+  n_si_distractores <- 2L; n_no_distractores <- 1L
+}
+
+# Distractores: mismo veredicto declarado, pero nunca la clave ni su gemela.
+idx_si   <- setdiff(which(sapply(errores_conceptuales, function(e)
+                   e$veredicto == "si" && !isTRUE(e$es_correcto))), idx_excluir)
+idx_no_d <- setdiff(which(sapply(errores_conceptuales, function(e)
+                   e$veredicto == "no" && !isTRUE(e$es_correcto))), idx_excluir)
+stopifnot(length(idx_si) >= n_si_distractores,
+          length(idx_no_d) >= n_no_distractores)
+
+if (is_canonical) {
+  # Excepción canonica: forzar opciones A-D del cuadernillo oficial
+  opciones_texto <- c(
+    paste0("Sí, porque al restar 80 % del 100 % da 20 % y al restar ",
+           "70 % del 100 % da 30 %."),
+    paste0("Sí, porque el área del lote sin jardín es un quinto del ",
+           "ancho y como máximo un tercio del largo."),
+    paste0("No, porque entre dos quintas partes y la mitad del área ",
+           "del lote quedó sin jardín."),
+    paste0("No, porque entre un 36 % y un 44 % del área del lote ",
+           "quedó sin jardín.")
+  )
+  sol <- c(0L, 0L, 0L, 1L)
+  errores_sel <- errores_conceptuales[c(1, 2, 4, 5)]
+  codigos_sel <- c("GEO-ARE-01", "GEO-ARE-02", "GEO-ARE-03", "GEO-ARE-04")
+
+  # La Solution cita descripcion_corta como "Argumento:". Aquí las opciones NO se
+  # generan desde el pool sino que se fuerzan al texto oficial del cuadernillo, que
+  # usa otro registro (el oficial dice "dos quintas partes y la mitad" donde el pool
+  # dice "40 % y 50 %"). Sin esta sincronización el análisis entrecomilla un texto
+  # que el estudiante nunca leyo. Regla: el argumento citado en la Solution debe ser
+  # LITERALMENTE la opción mostrada, use el registro que use la pregunta original.
+  for (i in seq_along(errores_sel)) {
+    errores_sel[[i]]$descripcion_corta <- opciones_texto[i]
+  }
+} else {
+  sel_si <- safe_sample(idx_si, n_si_distractores)
+  sel_no <- safe_sample(idx_no_d, n_no_distractores)
+  indices <- c(sel_si, sel_no, idx_ok)
+  errores_sel <- errores_conceptuales[indices]
+  opciones_texto <- sapply(errores_sel, function(e) e$descripcion_corta)
+  sol <- c(0L, 0L, 0L, 1L)
+  codigos_sel <- sapply(errores_sel, function(e) e$codigo)
+
+  # Mezcla interna
+  orden <- sample(4)
+  opciones_texto <- opciones_texto[orden]
+  sol <- sol[orden]
+  errores_sel <- errores_sel[orden]
+  codigos_sel <- codigos_sel[orden]
+}
+
+# Alias canonico para el arsenal de validación: validar_diagnosticidad.R busca el
+# par (opciones|opciones_mezcladas) + (sol|solución). Sin este alias el script
+# reporta WARN_DIAG_INDET, que NO es "paso": es "no midio".
+opciones <- opciones_texto
+
+# Verificar balance 2 Si + 2 No (INC-SINO-BINARIO)
+n_si_sel <- sum(sapply(errores_sel, function(e) e$veredicto == "si"))
+n_no_sel <- sum(sapply(errores_sel, function(e) e$veredicto == "no"))
+stopifnot(n_si_sel == 2L, n_no_sel == 2L)
+
+# --- Contextos narrativos (regla #11: >= 6 plantillas, 5 tipos) ---
+contextos <- list(
+  list(plantilla = function(prot) paste0(
+    prot, " compró un lote que tiene forma rectangular: el largo mide $x$ metros y el ancho mide $y$ metros. Dentro del lote, construyó un jardín con forma rectangular, atendiendo a dos especificaciones:"
+  ), protagonistas = c("Ramon", "Daniela", "Alejandro")),
+  list(plantilla = function(prot) paste0(
+    "El comité de un conjunto residencial encargó a ", prot,
+    " diseñar un jardín dentro de un terreno rectangular que mide $x$ metros de largo y $y$ metros de ancho. El jardín, también rectangular, se construyó bajo dos especificaciones:"
+  ), protagonistas = c("la arquitecta", "el paisajista", "la ingeniera")),
+  list(plantilla = function(prot) paste0(
+    "Para su proyecto de geometría, ", prot,
+    " analizó un terreno rectangular de $x$ metros de largo y $y$ metros de ancho, donde se construyó un jardín rectangular siguiendo dos especificaciones:"
+  ), protagonistas = c("Valentina", "Santiago", "Luciana")),
+  list(plantilla = function(prot) paste0(
+    "La administración de ", prot,
+    " destinó un terreno rectangular de $x$ metros de largo y $y$ metros de ancho para instalar un jardín rectangular, cumpliendo dos condiciones:"
+  ), protagonistas = c("un colegio", "una universidad", "un centro deportivo")),
+  list(plantilla = function(prot) paste0(
+    "En el nuevo proyecto urbanístico de ", prot,
+    ", cada propietario recibió un lote rectangular de $x$ metros de largo y $y$ metros de ancho. Dentro de cada lote se reservó un espacio rectangular para jardín, con dos restricciones:"
+  ), protagonistas = c("la zona norte", "el barrio residencial", "la urbanización Los Pinos")),
+  list(plantilla = function(prot) paste0(
+    "Al revisar los planos del proyecto, ", prot,
+    " encontró que un terreno rectangular de $x$ metros de largo y $y$ metros de ancho tiene un jardín rectangular que fue construido bajo dos condiciones:"
+  ), protagonistas = c("la supervisora de obras", "el inspector municipal", "la directora del proyecto")),
+  list(plantilla = function(prot) paste0(
+    "---Revisemos las especificaciones del jardín--- indicó ", prot,
+    " a su equipo. El terreno rectangular mide $x$ metros de largo y $y$ metros de ancho, y el jardín rectangular se construyó bajo dos condiciones:"
+  ), protagonistas = c("la coordinadora", "el director de obra", "la jefa de diseño")),
+  list(plantilla = function(prot) paste0(
+    "En ", prot,
+    " se tiene un terreno rectangular de $x$ metros de largo y $y$ metros de ancho con un jardín rectangular construido bajo dos especificaciones:"
+  ), protagonistas = c("el parque central", "la plaza del municipio", "el campus universitario"))
+)
+
+if (is_canonical) {
+  ctx_idx <- 1L; prot_idx <- 1L
+} else {
+  ctx_idx <- safe_sample(seq_along(contextos), 1)
+  prot_idx <- safe_sample(seq_along(contextos[[ctx_idx]]$protagonistas), 1)
+}
+prot <- contextos[[ctx_idx]]$protagonistas[prot_idx]
+enunciado_intro <- contextos[[ctx_idx]]$plantilla(prot)
+
+# --- Reflexiones metacognitivas ---
+reflexiones <- c(
+  "Un error frecuente en problemas de áreas es tratar las proporciones de cada dimensión por separado, olvidando que el área es el producto de largo por ancho.",
+  "Cuando se trabaja con porcentajes de áreas rectangulares, es fundamental recordar que el área total depende del producto de ambas dimensiones, no de la suma de sus complementos.",
+  "Para verificar afirmaciones sobre porcentajes de área, conviene calcular primero el área del jardín como fracción del total: largo del jardín / largo del lote multiplicado por ancho del jardín / ancho del lote.",
+  "En problemas de geometría con porcentajes, un paso útil es asignar valores numéricos concretos a $x$ e $y$ para verificar si las proporciones declaradas son correctas."
+)
+reflexion <- reflexiones[safe_sample(seq_along(reflexiones), 1)]
+
+# --- Identificar error correcto para la Solution ---
+idx_correcto <- which(sol == 1L)
+error_correcto <- errores_sel[[idx_correcto]]
+
+# --- Generar figura via matplotlib (reticulate) ---
+py_code <- paste0('
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import numpy as np
+
+p_largo_min = ', p_largo_min, '
+p_largo_max = ', p_largo_max, '
+p_ancho = ', p_ancho, '
+
+lote_ancho = 8.0
+lote_alto = 5.0
+jardin_ancho = p_largo_max * lote_ancho
+jardin_alto = p_ancho * lote_alto
+linea_min_x = p_largo_min * lote_ancho
+
+COLOR_JARDIN = "#B8D4E3"
+COLOR_BORDE = "black"
+COLOR_GRID = "#BFBFBF"
+TICK_LEN = 0.10
+
+fig, ax = plt.subplots(figsize=(8, 6), dpi=150)
+fig.patch.set_facecolor("white")
+ax.set_facecolor("white")
+
+jardin_patch = Rectangle((0, 0), jardin_ancho, jardin_alto,
+    facecolor=COLOR_JARDIN, edgecolor="none", zorder=1)
+ax.add_patch(jardin_patch)
+
+for xv in np.linspace(0, lote_ancho, 11)[1:-1]:
+    ax.plot([xv, xv], [0, lote_alto], color=COLOR_GRID, linewidth=0.7, zorder=2)
+for yv in np.linspace(0, lote_alto, 7)[1:-1]:
+    ax.plot([0, lote_ancho], [yv, yv], color=COLOR_GRID, linewidth=0.7, zorder=2)
+
+ax.add_patch(Rectangle((0, 0), lote_ancho, lote_alto,
+    facecolor="none", edgecolor=COLOR_BORDE, linewidth=1.2, zorder=3))
+ax.add_patch(Rectangle((0, 0), jardin_ancho, jardin_alto,
+    facecolor="none", edgecolor=COLOR_BORDE, linewidth=1.2, zorder=4))
+
+ax.plot([linea_min_x, linea_min_x], [0, jardin_alto],
+    color=COLOR_BORDE, linewidth=1.2, linestyle=(0, (4, 3)), zorder=5)
+
+ax.text(jardin_ancho / 2, jardin_alto / 2, "Jardín",
+    ha="center", va="center", fontsize=15, fontweight="bold",
+    color="black", family="sans-serif", zorder=6)
+
+def _tick(x, y, horiz, length=TICK_LEN):
+    if horiz:
+        ax.plot([x - length, x + length], [y, y],
+                color=COLOR_BORDE, linewidth=1.3, solid_capstyle="butt", zorder=6)
+    else:
+        ax.plot([x, x], [y - length, y + length],
+                color=COLOR_BORDE, linewidth=1.3, solid_capstyle="butt", zorder=6)
+
+def cota_h(x0, x1, y, texto, dy=0.28, fs=12.5, va="bottom"):
+    ax.plot([x0, x1], [y, y], color=COLOR_BORDE, linewidth=1.2, zorder=6)
+    _tick(x0, y, False); _tick(x1, y, False)
+    d = dy if va == "bottom" else -dy
+    ax.text((x0+x1)/2, y+d, texto, ha="center", va=va, fontsize=fs,
+            family="sans-serif", color="black", zorder=6)
+
+def cota_v(y0, y1, x, texto, dx=0.35, fs=12.5, ha_t="right"):
+    ax.plot([x, x], [y0, y1], color=COLOR_BORDE, linewidth=1.2, zorder=6)
+    _tick(x, y0, True); _tick(x, y1, True)
+    d = -dx if ha_t == "right" else dx
+    ax.text(x+d, (y0+y1)/2, texto, ha=ha_t, va="center", fontsize=fs,
+            family="sans-serif", color="black", zorder=6)
+
+label_lmin = "', label_largo_min, '"
+label_lmax = "', label_largo_max, '"
+label_a = "', label_ancho, '"
+
+cota_h(0, lote_ancho, lote_alto + 0.45,
+       "Largo = $\\\\mathit{x}$ metros", dy=0.30, fs=13.5)
+cota_v(0, lote_alto, lote_ancho + 0.45,
+       "Ancho = $\\\\mathit{y}$ metros", dx=0.20, fs=13.5, ha_t="left")
+cota_v(0, jardin_alto, -0.45,
+       label_a + "$\\\\mathit{y}$ metros", dx=0.15, fs=12.5, ha_t="right")
+cota_h(0, linea_min_x, -0.45,
+       label_lmin + "$\\\\mathit{x}$ metros", dy=0.30, fs=12.5, va="top")
+cota_h(0, jardin_ancho, -1.15,
+       label_lmax + "$\\\\mathit{x}$ metros", dy=0.30, fs=12.5, va="top")
+
+ax.set_xlim(-2.6, 10.6)
+ax.set_ylim(-2.4, 6.6)
+ax.set_aspect("equal")
+ax.axis("off")
+plt.tight_layout()
+plt.savefig("plano_lote.png", dpi=150, facecolor="white", bbox_inches="tight")
+plt.close(fig)
+')
+
+reticulate::py_run_string(py_code)
+stopifnot(file.exists("plano_lote.png"))
+
+# --- exsolution ---
+exsolution <- paste(sol, collapse = "")
+```
+
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado_intro, "\n\n")
+cat(paste0("1. El largo del jardín ocupó entre el ", pct_largo_min,
+           " % y ", pct_largo_max, " % del largo del lote.\n"))
+cat(paste0("2. El ancho del jardín ocupó el ", pct_ancho,
+           " % del ancho del lote.\n\n"))
+cat("La imagen muestra un plano del lote, en el que la parte sombreada corresponde al espacio que posiblemente ocupó el jardín.\n\n")
+cat("![](plano_lote.png){width=80%}\n\n")
+cat(paste0("Una persona afirmó que entre un ", afirmacion_min,
+           " % y un ", afirmacion_max,
+           " % del área del lote quedó sin jardín.\n\n"))
+cat("¿Es correcta la afirmación?\n")
+```
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones_texto, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+# --- Respuesta correcta (sin citar letra, regla #19) ---
+cat("### Respuesta correcta {-}\n\n")
+cat(paste0("**Argumento válido:** \"", error_correcto$descripcion_corta, "\"\n\n"))
+
+cat("### Procedimiento correcto {-}\n\n")
+cat(paste0(
+  "El área del jardín respecto al lote se calcula como el **producto** de las ",
+  "fracciones de cada dimensión, no como la diferencia de cada una por separado.\n\n"))
+
+cat(paste0(
+  "   - Fracción mínima del área del jardín: $",
+  label_largo_min, " \\times ", label_ancho, " = ",
+  sub("\\.", ",", sprintf("%.2f", p_largo_min * p_ancho)), "$, ",
+  "es decir, ", round(p_largo_min * p_ancho * 100), " % del lote.\n"))
+cat(paste0(
+  "   - Fracción máxima del área del jardín: $",
+  label_largo_max, " \\times ", label_ancho, " = ",
+  sub("\\.", ",", sprintf("%.2f", p_largo_max * p_ancho)), "$, ",
+  "es decir, ", round(p_largo_max * p_ancho * 100), " % del lote.\n\n"))
+
+cat(paste0(
+  "Por lo tanto, el área **sin jardín** está entre $100 \\% - ",
+  round(p_largo_max * p_ancho * 100), " \\% = ", correct_min,
+  " \\%$ y $100 \\% - ",
+  round(p_largo_min * p_ancho * 100), " \\% = ", correct_max,
+  " \\%$.\n\n"))
+
+# El veredicto de esta frase DEBE derivar del mismo flag que fija la afirmación
+# (INC-SINO-BINARIO, patrón A): con afirmación verdadera, declararla incorrecta
+# contradiria a la clave.
+cat(paste0(
+  "La persona afirmó que era entre ", fmt_v(afirmacion_min), " % y ",
+  fmt_v(afirmacion_max), " %, lo cual es **",
+  if (afirmacion_es_verdadera) "correcto" else "incorrecto", "**.\n\n"))
+
+# --- Propiedades del concepto (regla #1: subsección obligatoria) ---
+cat("### Propiedades del concepto {-}\n\n")
+cat(paste0(
+  "Si una figura se reduce a una fracción $a$ de su largo y a una fracción $b$ ",
+  "de su ancho, estas tres propiedades se cumplen **siempre**, cualesquiera ",
+  "sean $a$ y $b$ entre 0 y 1:\n\n"))
+cat(paste0(
+  "1. El área resultante es el **producto** $a \\times b$ del área original, ",
+  "nunca la suma ni la diferencia de las fracciones por separado.\n"))
+cat(paste0(
+  "2. El área libre **no** es la suma de los complementos. La identidad exacta es ",
+  "$1 - ab = (1-a) + (1-b) - (1-a)(1-b)$: al sumar los dos complementos se cuenta ",
+  "**dos veces** el rectángulo de la esquina, de área $(1-a)(1-b)$.\n"))
+cat(paste0(
+  "3. Como $a < 1$ y $b < 1$, se cumple $ab < a$ y $ab < b$: el área ocupada es ",
+  "menor que cualquiera de las dos fracciones lineales. Por eso un porcentaje de ",
+  "área nunca puede leerse directamente de una sola dimensión.\n\n"))
+
+# --- Caso especifico (regla #1: subsección obligatoria) ---
+cat("### Caso específico {-}\n\n")
+cat(paste0(
+  "Con los valores de esta versión ($", label_ancho, "$ del ancho y entre $",
+  label_largo_min, "$ y $", label_largo_max, "$ del largo), la propiedad 2 se ",
+  "verifica numéricamente:\n\n"))
+cat(paste0(
+  "   - Sumar los complementos da entre ", sum_comp_min, " % y ",
+  sum_comp_max, " %.\n"))
+cat(paste0(
+  "   - El valor correcto está entre ", fmt_v(correct_min), " % y ",
+  fmt_v(correct_max), " %.\n"))
+cat(paste0(
+  "   - La diferencia entre ambos es exactamente el rectángulo de la esquina: ",
+  fmt_v(prod_comp_min), " % y ", fmt_v(prod_comp_max), " %.\n\n"))
+cat(paste0(
+  "Esa diferencia es la huella del error más frecuente en este tipo de problema: ",
+  "no aparece por descuido aritmético, sino por sumar donde corresponde multiplicar.\n\n"))
+
+# --- Análisis de cada distractor (por contenido, no por letra) ---
+cat("### Análisis de distractores {-}\n\n")
+for (i in seq_along(errores_sel)) {
+  err <- errores_sel[[i]]
+  if (!is.null(err$es_correcto) && err$es_correcto) next
+  cat(paste0(
+    "**", err$codigo, " — ", err$nombre, "**\n\n",
+    "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+    err$descripcion_larga, "\n\n",
+    "*Causa raíz:* ", err$causa_raiz, "\n\n"
+  ))
+}
+
+# --- Reflexión metacognitiva ---
+cat("### Reflexión metacognitiva {-}\n\n")
+cat(reflexion, "\n\n")
+
+# --- Estrategia para evitar el error (regla #1: subsección obligatoria) ---
+cat("### Estrategia para evitar el error {-}\n\n")
+cat(paste0(
+  "1. **Pregúntese qué magnitud pide el enunciado.** Si pide un porcentaje de ",
+  "**área**, ninguna respuesta puede salir de una sola dimensión: hacen falta las dos.\n"))
+cat(paste0(
+  "2. **Calcule primero lo que SÍ ocupa la figura, y reste al final.** Es más ",
+  "seguro obtener el área del jardín ($", label_largo_min, " \\times ", label_ancho,
+  "$) y restarla de 1, que intentar razonar directamente sobre lo que queda libre.\n"))
+cat(paste0(
+  "3. **Desconfíe de los números redondos que aparecen sin multiplicar.** Si un ",
+  "resultado se obtuvo solo restando o sumando porcentajes, casi seguro ignora una ",
+  "de las dos dimensiones.\n"))
+cat(paste0(
+  "4. **Verifique con una cota rápida.** El área libre siempre es mayor que cada ",
+  "complemento lineal por separado (aquí, mayor que ",
+  max(comp_ancho, comp_largo_max), " %) y siempre menor que la suma de ambos (aquí, ",
+  "menor que ", sum_comp_max, " %). Cualquier respuesta fuera de ese intervalo es ",
+  "descartable sin terminar el cálculo.\n\n"))
+# Cota verificada: 1-ab > max(1-a, 1-b) se cumple para todo a,b < 1 usando el
+# complemento del largo MÁXIMO (comp_largo_max). Con comp_largo_min la desigualdad
+# se invierte cuando pmin > pmax*pa (p.ej. 0.40 / 0.45 / 0.90).
+```
+
+Meta-information
+================
+exname: area_jardin_lote_metacognitivo_argumentacion_n4_schoice_v1
+extype: schoice
+exsolution: `r exsolution`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Geometrico-metrico
+exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solucion a problemas.
+exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretacion dada a la informacion disponible en el marco de la solucion de un problema.
+exextra[Nivel]: 4
+exextra[Descriptor]: D4.5 - Manipula expresiones algebraicas o aritméticas haciendo uso de las propiedades de las operaciones.
+exextra[Contenido]: Geometria
+exextra[Estandar]: Resuelvo y formulo problemas que involucren relaciones y propiedades de semejanza y congruencia usando representaciones visuales. (6-7, Pensamiento espacial)
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-1-026
+exextra[GradoSugerido]: 9-10
