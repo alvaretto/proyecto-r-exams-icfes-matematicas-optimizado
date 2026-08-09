@@ -378,3 +378,49 @@ test_that("EXTRA: patrones-errores-conocidos.md tiene Errores 11-15 (sesión Ruf
                               "(lecciones sesión Ruflo 2026-05-03)"))
   }
 })
+
+# =============================================================================
+# I-10: los scripts de .claude/scripts/ que son SYMLINKS resuelven a un archivo
+#       existente en SOURCES/scripts_validacion/
+# -----------------------------------------------------------------------------
+# Origen: sesión 2026-08-09. Al corregir el Error 31 se intentó editar
+# `.claude/scripts/validar_multisemilla.R` y la escritura fue rechazada por ser un
+# symlink. Cuatro validadores del arsenal viven así (modo 120000 en git), de modo
+# que **editar la ruta de `.claude/` no surte ningún efecto sobre el código que se
+# ejecuta** — o peor, si alguien reemplaza el symlink por un archivo regular, el
+# repo pasa a tener dos copias divergentes del mismo validador y la que corre
+# depende de qué ruta se invoque.
+#
+# Este invariante fija las dos mitades: el enlace apunta a algo que existe, y
+# ningún archivo regular ha suplantado a un symlink conocido.
+# =============================================================================
+
+test_that("I-10: los symlinks de .claude/scripts/ resuelven a SOURCES/scripts_validacion/", {
+  dir_scripts <- ".claude/scripts"
+  skip_if_not(dir.exists(dir_scripts), "no existe .claude/scripts")
+
+  # Validadores que HOY son symlinks. Si alguno deja de serlo, el test avisa:
+  # puede ser deliberado, pero exige actualizar esta lista a conciencia.
+  canonicos <- c("validar_multisemilla.R", "validar_coherencia_matematica.R",
+                 "corregir_ortografia_espanol.R", "arsenal_validacion_completa.R")
+
+  for (nombre in canonicos) {
+    ruta <- file.path(dir_scripts, nombre)
+    expect_true(file.exists(ruta), info = paste("falta", ruta))
+
+    es_symlink <- nzchar(Sys.readlink(ruta))
+    expect_true(es_symlink,
+      info = paste0(ruta, " dejó de ser un symlink. Si es deliberado, actualiza I-10; ",
+                    "si no, el repo tiene dos copias divergentes del mismo validador ",
+                    "y cuál corre depende de la ruta que se invoque."))
+
+    if (es_symlink) {
+      destino <- normalizePath(ruta, mustWork = FALSE)
+      expect_true(file.exists(destino),
+        info = paste0(ruta, " apunta a un destino inexistente: ", destino))
+      expect_true(grepl("SOURCES/scripts_validacion", destino, fixed = TRUE),
+        info = paste0(ruta, " debería resolver dentro de SOURCES/scripts_validacion/, ",
+                      "y resuelve a: ", destino))
+    }
+  }
+})

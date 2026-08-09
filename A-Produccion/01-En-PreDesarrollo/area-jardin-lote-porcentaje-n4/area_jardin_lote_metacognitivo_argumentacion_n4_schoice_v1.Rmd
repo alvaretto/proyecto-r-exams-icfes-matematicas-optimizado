@@ -176,9 +176,11 @@ errores_conceptuales <- list(
     nombre = "Fracciones dimensionales sin producto",
     veredicto = "si",
     afirma_rango_area = FALSE,
+    # Acortada 2026-08-09 (detractor, refinamiento de salencia): 99 -> ~66 caracteres.
+    # Ver la nota de GEO-ARE-07: el objetivo es comprimir el rango de longitudes del
+    # conjunto para que "la más larga" deje de ser perceptible de un vistazo.
     descripcion_corta = paste0(
-      "Sí, porque el área del lote sin jardín corresponde a ",
-      comp_ancho, " % del ancho y como máximo a ",
+      "Sí, porque el área sin jardín es ", comp_ancho, " % del ancho y ",
       comp_largo_min, " % del largo."),
     descripcion_larga = paste0(
       "Identifica correctamente los complementos de cada dimensión (",
@@ -193,11 +195,17 @@ errores_conceptuales <- list(
     nombre = "El complemento del largo ES el porcentaje del área",
     veredicto = "si",
     afirma_rango_area = TRUE,
+    # Acortada 2026-08-09 (detractor, refinamiento de salencia): 145 -> ~81 caracteres.
+    # Era la opción más larga del pool con diferencia, y eso hacía PERCEPTIBLE cuál
+    # era la más larga: ventaja mediana de la 1ª sobre la 2ª +25,3 %, p90 +76,8 %.
+    # La tasa de "descartar la más larga" no baja por acortarla —la clave sigue sin
+    # ser nunca la más larga—, pero la ventaja cae a +7,3 %, por debajo del margen
+    # del 15 % con el que el propio repo calibró la sonda H1: deja de ser explotable.
+    # El error que representa se conserva intacto (el complemento del largo tomado
+    # como porcentaje del área) y su rango sigue siendo el de comp_largo.
     descripcion_corta = paste0(
-      "Sí, porque si del largo del lote el jardín ocupa entre ",
-      pct_largo_min, " % y ", pct_largo_max,
-      " %, queda libre entre ", comp_largo_max, " % y ",
-      comp_largo_min, " % del largo, que es el mismo porcentaje del área."),
+      "Sí, porque del largo queda libre entre ", comp_largo_max, " % y ",
+      comp_largo_min, " %, que es el porcentaje del área."),
     descripcion_larga = paste0(
       "Afirma explícitamente que el porcentaje libre del largo equivale al ",
       "porcentaje libre del área total. Esto solo sería cierto si el jardín ",

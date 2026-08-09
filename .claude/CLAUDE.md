@@ -144,9 +144,47 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.4 (la FASE 2G llevaba en falso ROJO permanente y nadie lo miraba)
+**Versión**: 3.20.5 (las trampas de medición dejan de ser folclore y pasan a ser invariantes)
 **Fecha**: 2026-08-09
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.5 (2026-08-09)
+
+> Cierre definitivo del bloque. Se aplica el refinamiento que la v3.20.4 dejó medido pero sin
+> aplicar, y las lecciones que solo vivían en la memoria privada del asistente pasan al repositorio,
+> donde cualquier agente las lee. **Una lección que solo está en la memoria de quien la aprendió no
+> es una defensa: es una anécdota.**
+
+- **REFINAMIENTO DE SALENCIA APLICADO**: `GEO-ARE-07` (145 → 81 caracteres) y `GEO-ARE-02`
+  (99 → 65). Resultado medido sobre 800 versiones, **mejor que la proyección del detractor**:
+  ventaja de la opción más larga sobre la segunda **+25,3 % → +12,9 %** (mediana), p90
+  **+76,8 % → +27,1 %** — por debajo del margen del 15 % con el que el repo calibró la sonda H1, es
+  decir, deja de ser perceptible. Y lo que la proyección no anticipaba: **la clave pasa a ser a
+  veces la más larga (9,2 %)**, así que «descartar la más larga» deja de ser gratis y pasa a ser
+  arriesgada. El validador oficial confirma la caída: margen H1 **26 % → 3 %**.
+- **NUEVO INVARIANTE I-10** (regla #17 → v1.4): los cuatro validadores compartidos de
+  `.claude/scripts/` son **symlinks** a `SOURCES/scripts_validacion/`. El invariante fija sus dos
+  mitades: que el enlace resuelva a un archivo existente, y que **ningún archivo regular haya
+  suplantado a un symlink conocido** —eso dejaría dos copias divergentes del mismo validador, y cuál
+  se ejecuta dependería de la ruta invocada—. Detector verificado sobre un fixture temporal con los
+  tres casos (enlace correcto, archivo regular suplantando, enlace roto).
+- **CUATRO TRAMPAS DE MEDICIÓN** añadidas a la tabla «Puntos ciegos de mi propio arsenal» de **ambos**
+  orquestadores. Las cuatro producen verdes o rojos falsos y las cuatro se cometieron en esta sesión:
+  `cmd | grep …; echo $?` mide el exit del **pipe**, no del comando; editar `.claude/scripts/` no
+  toca el código que corre; mutar el archivo **real** deja el repo roto si el paso de restaurar se va
+  a segundo plano; y un `grep` que no encuentra nada puede ser «no hay defecto» o «el patrón no
+  coincide» —comillas tipográficas, `.latex` en vez de `.tex`, un glob contando 0 sobre CERO
+  archivos—, así que **toda sonda necesita un control positivo que demuestre que dispara**.
+- **`area-jardin-lote-porcentaje-n4` → 11/11**: aprobación humana explícita el 2026-08-09. Queda
+  **listo para llevar al aula**; sigue en `01-En-PreDesarrollo/` porque el gate de
+  `/promover-ejercicio` es la evidencia de Nivel 3 con estudiantes, no la aprobación del profesor.
+- **DEUDA DEL ÁRBOL DE TRABAJO SALDADA**: se commitean los cambios acumulados de otros subproyectos
+  tras verificarlos uno a uno — `excedente-almuerzo-proporcional-n4` (su propio `verificar_render.R`
+  da APROBADO con los mutantes muriendo cada uno por su sonda), el PNG LFS de
+  `migraciones-exteriores-lineas-n2` (inspeccionado visualmente), el reordenamiento del bloque
+  `output:` de `grafica-circular-consumo-agua`, el destino reservado en `Estructura_Repositorio` y
+  `.gitignore`. **Revertido** el `archivos = 1200` de `permutaciones-…/cloze/SemilleroCloze.R`: era
+  resto de un experimento local, fuera del rango de todos sus hermanos (10–500).
 
 ### Cambios v3.20.4 (2026-08-09)
 

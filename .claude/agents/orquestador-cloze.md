@@ -1006,6 +1006,10 @@ correcto:
 | Render OK desde mi sesión | Si el `.Rmd` no declara `library(exams)`, renderiza aquí y revienta en un knit limpio. Verifico en R limpio con `exams::exams2*()` |
 | Un campo del pool que no se emite | No está probado por nada (Incidente R). O lo emito, o lo audito, o lo elimino |
 | Reporte de un subagente | No es evidencia: el detractor puede simular y alucinar estructura (Incidente H) |
+| `cmd \| grep …; echo $?` | **Mide el exit del PIPE, no del comando.** Así se leyó «exit=0» de un script que salía con 2, y de ahí salió una aserción falsa en un test. Medir `cmd >/dev/null 2>&1; echo $?` |
+| Editar `.claude/scripts/<validador>.R` | Cuatro validadores son **symlinks** a `SOURCES/scripts_validacion/` (invariante I-10). Editar la ruta de `.claude/` no cambia el código que se ejecuta |
+| Una prueba de mutación sobre el archivo REAL | Si el paso de restaurar queda en un job en segundo plano, el repo se queda con el artefacto roto en disco. **Mutar siempre una copia** en `/tmp` |
+| `grep` que no encuentra nada | Puede ser «no hay defecto» o «el patrón no coincide»: comillas tipográficas, extensión distinta (`.latex` vs `.tex`), glob sin coincidencias contando 0 sobre CERO archivos. Toda sonda necesita un **control positivo** que demuestre que dispara |
 
 ## Política de auto-corrección
 

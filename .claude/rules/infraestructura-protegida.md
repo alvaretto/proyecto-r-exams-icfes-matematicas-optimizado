@@ -195,6 +195,37 @@ capacidades ni ninguna otra línea del frontmatter. Re-ejecutar el test hasta qu
 
 **Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-9).
 
+### I-10 — Los validadores de `.claude/scripts/` son SYMLINKS y resuelven a `SOURCES/` (añadido v1.4, 2026-08-09)
+
+**Invariante:** los cuatro validadores compartidos de `.claude/scripts/` —`validar_multisemilla.R`,
+`validar_coherencia_matematica.R`, `corregir_ortografia_espanol.R` y
+`arsenal_validacion_completa.R`— son **symlinks** (modo `120000` en git) que resuelven a un archivo
+existente dentro de `SOURCES/scripts_validacion/`.
+
+Motivación: sesión 2026-08-09. Al corregir el Error 31 se intentó editar
+`.claude/scripts/validar_multisemilla.R` y la escritura fue rechazada por ser un symlink. Las dos
+mitades del invariante importan por razones distintas:
+
+- **El enlace apunta a algo que existe**: si el destino desaparece, el script deja de cargarse y el
+  fallo aparece como un error de R que no menciona el symlink.
+- **Ningún archivo regular ha suplantado a un symlink conocido**: si alguien lo reemplaza por una
+  copia, el repo pasa a tener **dos versiones divergentes del mismo validador**, y cuál se ejecuta
+  depende de qué ruta se invoque. Un fix aplicado en una ruta puede quedar invisible desde la otra.
+
+**Consecuencia operativa:** para corregir cualquiera de esos cuatro scripts hay que editar
+`SOURCES/scripts_validacion/<nombre>.R`. Editar la ruta de `.claude/scripts/` **no surte efecto
+alguno** sobre el código que se ejecuta.
+
+**Verificación:**
+```bash
+find .claude/scripts -maxdepth 1 -type l -printf '%f -> %l\n'
+Rscript tests/testthat/test_infraestructura_claude.R
+```
+
+**Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-10). El detector se verificó
+sobre un fixture temporal con los tres casos: enlace correcto, archivo regular que suplanta al
+enlace, y enlace roto.
+
 ---
 
 ## Procedimiento obligatorio antes de cualquier instalación/upgrade externo
