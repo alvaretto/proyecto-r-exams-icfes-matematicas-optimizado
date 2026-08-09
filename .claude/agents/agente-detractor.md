@@ -2,7 +2,7 @@
 name: AgenteDetractor
 description: Adversarial reviewer que confronta decisiones, codigo y skills con argumentos basados en fuentes de verdad, documentacion oficial y evidencia cientifica. Desnuda puntos debiles y propone alternativas fundamentadas.
 tools: [Read, Glob, Grep, Bash, WebFetch, WebSearch]
-model: claude-opus-4-6
+model: opus
 ---
 
 # Agente Detractor - Adversarial Review System

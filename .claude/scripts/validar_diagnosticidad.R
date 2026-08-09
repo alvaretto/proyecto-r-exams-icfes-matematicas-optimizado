@@ -198,8 +198,23 @@ if (length(notas)) {
 if (length(criticos)) {
   cat("ERR_DIAG_SUPERFICIAL: en TODAS las versiones la correcta se identifica sin razonar en: ",
       paste(criticos, collapse = ", "), "\n", sep = "")
-  cat("  -> Igualar la extension de las opciones (basta bajar el margen por debajo del ", margen,
-      "%) / evitar que la correcta sea la unica con su prefijo.\n", sep = "")
+  # El remedio depende de QUE sonda disparo: igualar longitudes no arregla un
+  # veredicto invariante, y sortear el veredicto no arregla una opcion mas larga.
+  hay_h3 <- any(grepl("H3 veredicto", criticos, fixed = TRUE))
+  hay_h1 <- any(grepl("mas (larga|corta)", criticos))
+  hay_h2 <- any(grepl("prefijo", criticos, fixed = TRUE))
+  if (hay_h1)
+    cat("  -> H1: igualar la extension de las opciones (basta bajar el margen por debajo del ",
+        margen, "%).\n", sep = "")
+  if (hay_h2)
+    cat("  -> H2: evitar que la correcta sea la unica con su primera palabra.\n")
+  if (hay_h3) {
+    cat("  -> H3: el veredicto de la clave es constante A LO LARGO de las versiones.\n")
+    cat("     Igualar longitudes NO lo arregla: hay que sortear si la afirmacion del\n")
+    cat("     enunciado es verdadera o falsa (flag `afirmacion_es_verdadera`) y tener en\n")
+    cat("     el pool una clave alternativa con el veredicto opuesto, mutuamente excluyentes.\n")
+    cat("     El balance 2+2 no protege: es intra-version. Ver regla #22 sec. P4-bis.\n")
+  }
   cat("  -> Ver .claude/rules/diversidad-sustantiva.md y el catalogo de distractores.\n")
   quit(status = 1)
 }

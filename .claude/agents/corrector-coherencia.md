@@ -2,7 +2,7 @@
 name: AgenteCorrectorCoherencia
 description: Especialista en verificar y corregir coherencias matemáticas, imagen-texto y código.
 tools: [Read, Write, Glob, Bash]
-model: claude-sonnet-4-5-20250929
+model: sonnet
 ---
 
 Tu misión es detectar y corregir incoherencias entre los componentes de un ejercicio R/exams:

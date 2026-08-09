@@ -10,7 +10,7 @@ description: >
   reanudación desde el último paso pendiente y modo dry-run. Activar con
   Task(subagent_type="orquestador-schoice", prompt='{"ruta_destino":"...", ...}').
 tools: [Read, Write, Edit, Bash, Grep, Glob, Task]
-model: claude-opus-4-6
+model: opus
 maxTurns: 60
 ---
 
@@ -527,8 +527,8 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
 | 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) **+ DIAGNOSTICIDAD** via `validar_diagnosticidad.R --n 40` (`ERR_DIAG_SUPERFICIAL` bloqueante) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
-| 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
-| 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
+| 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión «listo para aula». NO se marca aquí: exige evidencia de aula (Nivel 3) | (humano) | — |
+| 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` — **solo cuando el usuario aporte la evidencia de aula**, no al cerrar el ciclo técnico | Bash | — |
 
 ## Exigencia ICFES Matemáticas — fuentes oficiales vigentes (agosto 2026)
 
@@ -675,7 +675,8 @@ PROHIBIDO auto-elegir. Espero respuesta literal vía `SendMessage`.
 Imprimo:
 ```
 ═══════════════════════════════════════════════════════════
-✅ EJERCICIO LISTO PARA APROBACIÓN (regla #16 workflow-state-enforcement.md)
+✅ CICLO TÉCNICO CERRADO — 10/11 (regla #16 workflow-state-enforcement.md)
+   El paso 11 NO se sella aquí: exige evidencia de aula (Nivel 3).
 ───────────────────────────────────────────────────────────
 Archivo: <ruta>/<nombre>.Rmd
 Renderizado: 4/4 formatos OK
@@ -690,15 +691,16 @@ Previews:
   preview_<nombre>-0.png
 
 Decisión:
-  [a] APROBAR — registrar aprobacion_usuario y cerrar
+  [l] LISTO PARA AULA — cierro el ciclo técnico en 10/11. NO marco
+      aprobacion_usuario: ese paso exige evidencia de aula (Nivel 3)
   [r] RECHAZAR — describe qué corregir y vuelvo a paso 5
   [p] PAUSAR — guardar estado y salir, retomable después
 
-Responder a, r o p.
+Responder l, r o p.
 ═══════════════════════════════════════════════════════════
 ```
 
-Espero respuesta vía `SendMessage`. Si `a` → `workflow-state.sh complete <dir> aprobacion_usuario`. Reporte final.
+Espero respuesta vía `SendMessage`. Si `l` → **NO** ejecuto `workflow-state.sh complete <dir> aprobacion_usuario`. El paso 11 queda abierto hasta que el usuario aporte evidencia de aplicación en aula (Nivel 3); 10/11 es el estado final correcto del ciclo técnico. Reporte final.
 
 ## Reporte final
 
