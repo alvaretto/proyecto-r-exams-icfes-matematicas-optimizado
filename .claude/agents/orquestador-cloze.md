@@ -172,6 +172,8 @@ desde el otro gemelo, **usar el ID**, no la letra.
 | `INC-MUTANTE-SONDA` | S | P | El mutante muere por la sonda equivocada |
 | `INC-SINO-BINARIO` | T | D | Distractores Sí/No: coherencia condicional |
 | `INC-SOLUTION-ANSWERLIST` | — | A | Inconsistencia Solution↔Answerlist (N/A aquí: presupone un Answerlist único con la letra citada en la Solution; en CLOZE cada gap lleva el suyo y la regla #19 ya prohíbe la cita) |
+| `INC-CLAVE-ALTERNATIVA` | U | R | La defensa §P4-bis crea deuda en el pool existente |
+| `INC-MULTISEMILLA-ROTO` | V | S | `validar_multisemilla.R` falla siempre (fallback inalcanzable) |
 
 Los cuatro `—` de la columna SCHOICE **no son huecos de paridad**: `INC-ANSWER-ORDEN`,
 `INC-POOL-MCHOICE`, `INC-NOPS-NA` e `INC-GRAF-EN-GAP` dependen de mecanismos que sólo existen con
@@ -598,6 +600,65 @@ conclusión↔justificación sobre ≥10 semillas del HTML renderizado, por sub-
 
 **Referencia**: gemelo de `INC-SINO-BINARIO` en `.claude/agents/orquestador-schoice.md` (allí es la letra D);
 `.claude/skills/generar-schoice/SKILL.md` § "Distractores con conclusión binaria Sí/No".
+
+### Incidente U · `INC-CLAVE-ALTERNATIVA` — La defensa §P4-bis crea deuda en el pool existente (2026-08-09)
+
+**Origen**: SCHOICE (`area-jardin-lote-porcentaje-n4`). **Me aplica igual**: el mecanismo es de la
+clave alternante, no del tipo de ítem. Cualquier gap `schoice` o `mchoice` de **conclusión binaria**
+(«Sí, porque…»/«No, porque…», verdadero/falso, aumenta/disminuye) que use la defensa de la regla #22
+§P4-bis tiene exactamente la misma exposición.
+
+**Síntoma**: tras introducir una clave alternativa para que el veredicto no sea invariante, el ítem
+mantiene TODO el arsenal en verde y aun así muestra opciones que se contradicen a sí mismas y una
+clave adivinable por longitud.
+
+**Causa raíz**: añadir la clave alternativa **cambia qué significa el enunciado** en la mitad de las
+versiones, y con ello la premisa sobre la que se escribió el pool. No es un cambio local.
+
+**Los tres fallos, que aparecen juntos** (medidos sobre 600 versiones en el caso de origen):
+
+1. **Guarda anti-colisión que solo mira la clave vigente** (Error 28). Protege únicamente la rama
+   cuya clave comparte plantilla con el distractor; en la otra, el distractor pasa afirmando el
+   rango correcto con el veredicto contrario. 3/600. Fix: comparar contra **ambas** claves.
+2. **Distractores escritos para la clave única quedan incoherentes** (Error 29, `INC-SINO-BINARIO`
+   defecto 1): declaran un veredicto que su justificación contradice. 81/600 (13,5 %).
+3. **H1 no ve dentro de la rama** (Error 30). Al excluir en (2) el único distractor más largo que la
+   clave, ésta queda determinísticamente la más larga de su rama: **100 %** dentro de la rama,
+   `PASS` en el agregado, **50,5 %** de acierto sin razonar frente al 25 % de azar.
+
+**Lo que tengo que hacer yo**: si el ítem tiene clave alternante, re-auditar el pool completo contra
+la nueva semántica del enunciado tras el paso 3; y en el paso 9 medir H1/H2 **condicionando por
+rama** — el `PASS` agregado de `validar_diagnosticidad.R` no acredita este caso y hoy la medición
+por rama es manual. **Ojo al gap**: en CLOZE la rama puede estar definida por un flag que afecta a
+varias partes a la vez, así que hay que agrupar por ese flag, no por parte.
+
+**Referencia**: Errores 28-30 de `patrones-errores-conocidos.md`; regla #22 v1.3 §P4-bis
+(subsección «La propia defensa crea deuda»); Incidente R del gemelo SCHOICE.
+
+### Incidente V · `INC-MULTISEMILLA-ROTO` — `validar_multisemilla.R` falla siempre; su fallback es inalcanzable (2026-08-09)
+
+**Síntoma**: FASE 2G reporta fallo, o el paso 9 no puede completarse, con
+`Error en sys.frame(1): no hay tantas estructuras en la pila`.
+
+**Causa**: `.claude/scripts/validar_multisemilla.R` línea 21 resuelve su propia ruta con
+`dirname(sys.frame(1)$ofile)`. Bajo `Rscript` no existe el frame 1: la expresión **revienta antes**
+de que la comprobación `is.null()` de la línea 22 se ejecute, así que el fallback por rutas
+conocidas es **código inalcanzable**.
+
+**Alcance verificado**: falla con cualquier `.Rmd` —incluido un ejemplo canónico intacto— y también
+**sin argumentos**. Es del script, no del ejercicio. El hook lo invoca así en FASE 2G, de modo que
+esa fase suma un error en todo el repositorio: **falso ROJO permanente**.
+
+**Cómo debo tratarlo mientras no esté corregido**: NO interpretarlo como defecto del ejercicio ni
+auto-corregir el `.Rmd`; declarar la cobertura de multisemilla como **NO VERIFICABLE**, nunca como
+verde; y sustituirla por enumeración propia de ≥300 versiones del chunk `data_generation` con las
+invariantes del ítem más el Nivel 5A-5E de `validar_coherencia_matematica.R`, que sí corre.
+Distinguir siempre «falló» de «no se pudo ejecutar».
+
+**Fix pendiente** (una línea):
+`script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")`.
+
+**Referencia**: Error 31 de `patrones-errores-conocidos.md`; Incidente S del gemelo SCHOICE.
 
 ### Validación realista obligatoria (post-corrección)
 

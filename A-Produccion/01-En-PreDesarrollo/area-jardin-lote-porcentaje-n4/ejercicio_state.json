@@ -3,7 +3,7 @@
   "ejercicio": "area_jardin_lote_metacognitivo_argumentacion_n4_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-08-08T11:45:26.113334-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-08T14:18:55.400825-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-09T12:57:21.593219-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -26,33 +26,33 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-08-08T13:10:29.483793-05:00"
+      "timestamp": "2026-08-09T12:57:21.309141-05:00"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-08-08T13:10:29.549178-05:00"
+      "timestamp": "2026-08-09T12:57:21.365987-05:00"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-08-08T14:18:55.278587-05:00",
-      "veredicto": "APROBAR CON CAMBIOS - las 5 objeciones resueltas (obj 3 cerrada: la Solution cita la opcion literal, incluida la canonica en fracciones)"
+      "veredicto": "APROBAR_CON_CAMBIOS (detractor independiente 2026-08-09, reporte entregado con marcador). O3 y O4 resueltas. O1 (ALTA, diagnosticidad por rama: clave unica mas larga 100% de la rama verdadera, 50,5% de acierto sin razonar) y O2 (MEDIA, GEO-ARE-01) PENDIENTES DE DECISION DEL USUARIO - no aplicar sin su visto bueno",
+      "timestamp": "2026-08-09T12:57:21.422680-05:00"
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-08-08T14:18:55.339765-05:00"
+      "timestamp": "2026-08-09T12:57:21.479655-05:00"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-08-08T13:30:07.003459-05:00",
-      "versiones_unicas": 277
+      "timestamp": "2026-08-09T12:57:21.537548-05:00",
+      "versiones_unicas": 300
     },
     "validar_icfes": {
       "completado": true,
-      "timestamp": "2026-08-08T13:11:46.131949-05:00"
+      "timestamp": "2026-08-09T12:57:21.593219-05:00"
     },
     "aprobacion_usuario": {
-      "completado": true,
-      "timestamp": "2026-08-08T14:18:55.400825-05:00"
+      "completado": false,
+      "timestamp": null
     }
   }
 }

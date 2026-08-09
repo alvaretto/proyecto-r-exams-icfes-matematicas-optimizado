@@ -43,6 +43,15 @@ combos <- combos[combos$pmax <= 0.95 & combos$pmax >= 0.55, ]
 combos <- combos[
   abs(combos$pmin * combos$pa * 100 - round(combos$pmin * combos$pa * 100)) < 1e-9 &
   abs(combos$pmax * combos$pa * 100 - round(combos$pmax * combos$pa * 100)) < 1e-9, ]
+# PLAUSIBILIDAD DEL DISTRACTOR "suma de complementos" (2026-08-08): debe quedar
+# por DEBAJO del 100 %. Si (100 - pmin*100) + (100 - pa*100) >= 100, ese error
+# genera la opción "No, porque entre 90 % y 110 % del área del lote quedó sin
+# jardín": un área libre >= 100 % es imposible si hay jardín, y el estudiante la
+# descarta sin razonar. Medido antes del filtro: 4 de 300 versiones mostraban una
+# opción así. Excluye 7 de 106 combinaciones (la canónica 0,7/0,8/0,8 sobrevive).
+# El CLOZE hermano (cloze/) lleva el mismo filtro.
+combos <- combos[(100 - round(combos$pmin * 100)) +
+                 (100 - round(combos$pa * 100)) < 100, ]
 stopifnot(nrow(combos) >= 30)
 
 idx_combo <- safe_sample(seq_len(nrow(combos)), 1)
@@ -105,7 +114,7 @@ sum_comp_max <- comp_largo_min + comp_ancho
 # Error: producto de complementos
 # Este SI puede tener decimales legitimos (p.ej. 0,25 x 0,15 = 3,75 %), así que
 # se limpia el ruido a 6 decimales en vez de redondear a entero. fmt_v() decide
-# después cuantos decimales mostrar.
+# después cuántos decimales mostrar.
 prod_comp_min <- round((1 - p_largo_max) * (1 - p_ancho) * 100, 6)
 prod_comp_max <- round((1 - p_largo_min) * (1 - p_ancho) * 100, 6)
 
@@ -144,6 +153,7 @@ errores_conceptuales <- list(
     codigo = "GEO-ARE-01",
     nombre = "Complemento lineal del largo (resta aritmética)",
     veredicto = "si",
+    afirma_rango_area = FALSE,
     descripcion_corta = paste0(
       "Sí, porque al restar ", pct_largo_max, " % del 100 % da ",
       comp_largo_max, " % y al restar ", pct_largo_min,
@@ -159,6 +169,7 @@ errores_conceptuales <- list(
     codigo = "GEO-ARE-02",
     nombre = "Fracciones dimensionales sin producto",
     veredicto = "si",
+    afirma_rango_area = FALSE,
     descripcion_corta = paste0(
       "Sí, porque el área del lote sin jardín corresponde a ",
       comp_ancho, " % del ancho y como máximo a ",
@@ -175,6 +186,7 @@ errores_conceptuales <- list(
     codigo = "GEO-ARE-07",
     nombre = "El complemento del largo ES el porcentaje del área",
     veredicto = "si",
+    afirma_rango_area = TRUE,
     descripcion_corta = paste0(
       "Sí, porque si del largo del lote el jardín ocupa entre ",
       pct_largo_min, " % y ", pct_largo_max,
@@ -252,7 +264,7 @@ errores_conceptuales <- list(
       "Considera únicamente que el jardín ocupa ", pct_ancho,
       " % del ancho, concluyendo que el ", comp_ancho,
       " % restante del ancho es el área libre. Ignora que el largo del jardín ",
-      "también varia (entre ", pct_largo_min, " % y ", pct_largo_max,
+      "también varía (entre ", pct_largo_min, " % y ", pct_largo_max,
       " %), lo que produce un rango de área libre, no un valor fijo."),
     causa_raiz = "Reduce el problema bidimensional a una sola dimensión.",
     precondicion = function(params) TRUE
@@ -320,11 +332,63 @@ if (afirmacion_es_verdadera) {
   n_si_distractores <- 2L; n_no_distractores <- 1L
 }
 
+# PRECONDICIONES (regla #1 § Pool de Errores + regla #8 de .claude/rules/codigo-rmd.md). Las 9
+# entradas la DECLARAN, así que la selección debe EVALUARLA: un campo declarado y
+# nunca leído es dato muerto, y el día que un error lleve una precondición real se
+# aplicaría igual (INC-CAMPO-NO-EMITIDO, mismo modo de fallo por el lado del uso).
+# Hoy las nueve devuelven TRUE y el filtro no cambia ninguna versión; lo que cambia
+# es que el contrato del pool pasa a ser ejecutable.
+params <- list(p_largo_min = p_largo_min, p_largo_max = p_largo_max,
+               p_ancho = p_ancho, correct_min = correct_min,
+               correct_max = correct_max,
+               afirmacion_es_verdadera = afirmacion_es_verdadera)
+aplica <- function(e) is.null(e$precondicion) || isTRUE(e$precondicion(params))
+
 # Distractores: mismo veredicto declarado, pero nunca la clave ni su gemela.
 idx_si   <- setdiff(which(sapply(errores_conceptuales, function(e)
-                   e$veredicto == "si" && !isTRUE(e$es_correcto))), idx_excluir)
+                   e$veredicto == "si" && !isTRUE(e$es_correcto) && aplica(e))), idx_excluir)
 idx_no_d <- setdiff(which(sapply(errores_conceptuales, function(e)
-                   e$veredicto == "no" && !isTRUE(e$es_correcto))), idx_excluir)
+                   e$veredicto == "no" && !isTRUE(e$es_correcto) && aplica(e))), idx_excluir)
+
+# COHERENCIA CONCLUSION <-> JUSTIFICACION (INC-SINO-BINARIO, defecto 1).
+# Una opción "Sí" endosa la afirmación del enunciado. Si además afirma un rango de
+# área libre propio, solo es coherente cuando ese rango ES el afirmado. Con la clave
+# única original siempre lo era: la afirmación falsa ERA el rango del complemento
+# lineal, justo lo que afirma GEO-ARE-07. Al introducir la clave alternativa
+# GEO-ARE-09 (rama de afirmación verdadera, regla #22 §P4-bis) la afirmación pasó a
+# ser el rango CORRECTO, y GEO-ARE-07 quedaba diciendo "Sí, porque [otro rango]":
+# su justificación apoya la conclusión opuesta a la que declara.
+# Medido antes del fix: 81 de 600 versiones (13,5 %), todas en la rama verdadera.
+if (afirmacion_es_verdadera) {
+  idx_si <- idx_si[!vapply(idx_si, function(i)
+    isTRUE(errores_conceptuales[[i]]$afirma_rango_area), logical(1L))]
+}
+
+# COLISION TEXTUAL CON LA CLAVE (corregido 2026-08-08). Excluir un distractor
+# por su código no basta: hay que excluirlo por lo que el estudiante LEE. Si el
+# área ocupada coincide con el área libre —es decir, si (pmin+pmax)*pa == 1—
+# GEO-ARE-08 redacta exactamente la misma frase que la clave GEO-ARE-04, y el
+# estudiante ve dos opciones identicas, una marcada correcta y otra incorrecta.
+# Ocurre en 3 de las 99 combinaciones (0,60/0,65/0,80 · 0,55/0,70/0,80 ·
+# 0,50/0,75/0,80); medido en la versión commiteada: 2 de 400 versiones. El
+# balance 2 Si + 2 No no lo detectaba porque los veredictos SI eran correctos.
+#
+# AMPLIADO 2026-08-09: comparar contra la clave VIGENTE solo cubre la rama de
+# afirmación falsa. Con la clave alternativa GEO-ARE-09 (rama verdadera, §P4-bis)
+# el texto de la clave es otro —"Sí, porque el jardín ocupa el producto..."— y el
+# filtro dejaba pasar a GEO-ARE-08 afirmando EL RANGO CORRECTO con veredicto "No":
+# una opción cuya justificación contradice su propia conclusión (INC-SINO-BINARIO,
+# defecto 1). Medido antes del fix: 3 de 600 versiones, todas con (pmin+pmax)*pa == 1.
+# Se compara contra AMBAS claves porque GEO-ARE-04 y GEO-ARE-08 comparten plantilla:
+# cuando los rangos colisionan, sus textos son idénticos, así que el texto de la
+# clave NO vigente es la firma exacta de la colisión que hay que excluir.
+txt_claves <- c(errores_conceptuales[[idx_ok_no]]$descripcion_corta,
+                errores_conceptuales[[idx_ok_si]]$descripcion_corta)
+sin_colision <- function(idx) idx[vapply(idx, function(i)
+  !(errores_conceptuales[[i]]$descripcion_corta %in% txt_claves), logical(1L))]
+idx_si   <- sin_colision(idx_si)
+idx_no_d <- sin_colision(idx_no_d)
+
 stopifnot(length(idx_si) >= n_si_distractores,
           length(idx_no_d) >= n_no_distractores)
 
@@ -341,8 +405,19 @@ if (is_canonical) {
            "quedó sin jardín.")
   )
   sol <- c(0L, 0L, 0L, 1L)
-  errores_sel <- errores_conceptuales[c(1, 2, 4, 5)]
-  codigos_sel <- c("GEO-ARE-01", "GEO-ARE-02", "GEO-ARE-03", "GEO-ARE-04")
+  # Se elige por identificador, nunca por posición (detractor 2026-08-09, objeción 3).
+  # Antes: `errores_conceptuales[c(1, 2, 4, 5)]`. Ese mapeo daba 01/02/03/04 sólo por
+  # accidente de dónde está GEO-ARE-07 en la lista (el orden real es 01,02,07,03,04,
+  # 05,06,08,09). Insertar un error en el pool desplazaba la elección en SILENCIO:
+  # los textos de las opciones seguirían siendo los oficiales —se sobrescriben más
+  # abajo— pero el análisis de distractores de la Solution imprimiría los datos
+  # (nombre, descripcion_larga, causa_raiz) de OTROS errores, con las opciones y
+  # `exsolution` correctos. Ningún validador del arsenal lo detectaría.
+  codigos_canon <- c("GEO-ARE-01", "GEO-ARE-02", "GEO-ARE-03", "GEO-ARE-04")
+  idx_canon <- match(codigos_canon,
+                     vapply(errores_conceptuales, function(e) e$codigo, character(1L)))
+  stopifnot(!anyNA(idx_canon), length(idx_canon) == 4L)
+  errores_sel <- errores_conceptuales[idx_canon]
 
   # La Solution cita descripcion_corta como "Argumento:". Aquí las opciones NO se
   # generan desde el pool sino que se fuerzan al texto oficial del cuadernillo, que
@@ -360,20 +435,28 @@ if (is_canonical) {
   errores_sel <- errores_conceptuales[indices]
   opciones_texto <- sapply(errores_sel, function(e) e$descripcion_corta)
   sol <- c(0L, 0L, 0L, 1L)
-  codigos_sel <- sapply(errores_sel, function(e) e$codigo)
+  # `codigos_sel` eliminado (detractor 2026-08-09, objeción 3): se asignaba, se
+  # permutaba con `orden` y NUNCA se leía — el análisis de la Solution recorre
+  # `errores_sel` y usa `err$codigo`. Una lista de códigos que nadie consulta da la
+  # impresión de ser una verificación y no verifica nada.
 
   # Mezcla interna
   orden <- sample(4)
   opciones_texto <- opciones_texto[orden]
   sol <- sol[orden]
   errores_sel <- errores_sel[orden]
-  codigos_sel <- codigos_sel[orden]
 }
 
 # Alias canonico para el arsenal de validación: validar_diagnosticidad.R busca el
 # par (opciones|opciones_mezcladas) + (sol|solución). Sin este alias el script
 # reporta WARN_DIAG_INDET, que NO es "paso": es "no midio".
 opciones <- opciones_texto
+
+# UNICIDAD de las 4 opciones. Faltaba: el ejercicio solo verificaba el balance
+# 2 Si + 2 No, que se cumple aunque dos opciones sean el MISMO texto. R/exams lo
+# avisaba en tiempo de render ("duplicated items in question list"), un warning
+# fácil de perder entre la salida de exams2html(n=300).
+stopifnot(length(unique(opciones_texto)) == 4L)
 
 # Verificar balance 2 Si + 2 No (INC-SINO-BINARIO)
 n_si_sel <- sum(sapply(errores_sel, function(e) e$veredicto == "si"))
@@ -384,7 +467,7 @@ stopifnot(n_si_sel == 2L, n_no_sel == 2L)
 contextos <- list(
   list(plantilla = function(prot) paste0(
     prot, " compró un lote que tiene forma rectangular: el largo mide $x$ metros y el ancho mide $y$ metros. Dentro del lote, construyó un jardín con forma rectangular, atendiendo a dos especificaciones:"
-  ), protagonistas = c("Ramon", "Daniela", "Alejandro")),
+  ), protagonistas = c("Ramón", "Daniela", "Alejandro")),
   list(plantilla = function(prot) paste0(
     "El comité de un conjunto residencial encargó a ", prot,
     " diseñar un jardín dentro de un terreno rectangular que mide $x$ metros de largo y $y$ metros de ancho. El jardín, también rectangular, se construyó bajo dos especificaciones:"
@@ -422,7 +505,20 @@ if (is_canonical) {
   prot_idx <- safe_sample(seq_along(contextos[[ctx_idx]]$protagonistas), 1)
 }
 prot <- contextos[[ctx_idx]]$protagonistas[prot_idx]
-enunciado_intro <- contextos[[ctx_idx]]$plantilla(prot)
+
+# CONTRACCION OBLIGATORIA (RAE): a + el -> al, de + el -> del. Las plantillas
+# interpolan al protagonista, y varios empiezan por "el", así que la concatenación
+# produce "encargó a el paisajista" y "urbanístico de el barrio residencial".
+# Medido antes del fix: 34 de 400 versiones (8,5 %), en dos combinaciones
+# plantilla x protagonista. No se arregla en el pool de protagonistas porque la
+# forma válida depende de la plantilla que los precede ("En el parque central" es
+# correcto): se arregla en el punto donde ambos se unen. El límite [^[:alnum:]]
+# evita tocar "para el", "hacia el" o "contra el", donde no hay contracción.
+contraer <- function(txt) {
+  txt <- gsub("(^|[^[:alnum:]])a el ",  "\\1al ",  txt)
+  gsub("(^|[^[:alnum:]])de el ", "\\1del ", txt)
+}
+enunciado_intro <- contraer(contextos[[ctx_idx]]$plantilla(prot))
 
 # --- Reflexiones metacognitivas ---
 reflexiones <- c(
@@ -687,8 +783,8 @@ extol: 0
 exextra[Type]: SCHOICE
 exextra[Competencia]: Argumentacion
 exextra[Componente]: Geometrico-metrico
-exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solucion a problemas.
-exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretacion dada a la informacion disponible en el marco de la solucion de un problema.
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.
 exextra[Nivel]: 4
 exextra[Descriptor]: D4.5 - Manipula expresiones algebraicas o aritméticas haciendo uso de las propiedades de las operaciones.
 exextra[Contenido]: Geometria

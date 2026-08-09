@@ -150,6 +150,8 @@ un incidente desde código, reglas, memoria o desde el gemelo CLOZE, **usar el I
 | `INC-MUTANTE-SONDA` | S | P | El mutante muere por la sonda equivocada |
 | `INC-SINO-BINARIO` | T | D | Distractores Sí/No: coherencia condicional |
 | `INC-SOLUTION-ANSWERLIST` | — | A | Inconsistencia Solution↔Answerlist |
+| `INC-CLAVE-ALTERNATIVA` | U | R | La defensa §P4-bis crea deuda en el pool existente |
+| `INC-MULTISEMILLA-ROTO` | V | S | `validar_multisemilla.R` falla siempre (fallback inalcanzable) |
 
 **Ningún `—` de esta tabla es un hueco de paridad; todos llevan razón.** Los cuatro que me faltan a
 mí (`INC-ANSWER-ORDEN`, `INC-POOL-MCHOICE`, `INC-NOPS-NA`, `INC-GRAF-EN-GAP`) dependen de mecanismos
@@ -507,6 +509,86 @@ opción entre la prosa de la Solution y el Answerlist renderizado. Un `grep` de 
 **Referencia**: `INC-SOLUTION-ORDEN` en `.claude/agents/orquestador-cloze.md` (allí también es la
 letra Q; caso real medido sobre HTML: `permutaciones-pescadores-venia-n4/cloze/`, Parte 5);
 regla #19 § "Evidencia de código primario".
+
+### Incidente R · `INC-CLAVE-ALTERNATIVA` — La defensa §P4-bis crea deuda en el pool existente (2026-08-09)
+
+**Aplica también al gemelo CLOZE**: el mecanismo es de la clave alternante, no del tipo de ítem.
+Un gap `schoice` de conclusión binaria tiene la misma exposición.
+
+**Síntoma**: tras introducir una clave alternativa para que el veredicto no sea invariante
+(regla #22 §P4-bis), el ítem sigue con TODO el arsenal en verde — coherencia `APROBADO`,
+diversidad `PASS`, diagnosticidad `PASS`, 5 formatos OK — y aun así presenta al estudiante
+opciones que se contradicen a sí mismas y una clave adivinable por longitud.
+
+**Causa raíz**: añadir la clave alternativa **cambia qué significa el enunciado** en la mitad de
+las versiones, y con ello la premisa sobre la que se escribió el pool. No es un cambio local.
+
+**Los tres fallos, que aparecieron juntos** (`area-jardin-lote-porcentaje-n4`, medidos sobre 600
+versiones):
+
+1. **Guarda anti-colisión que solo mira la clave vigente** (Error 28). Comparar cada candidato
+   contra la `descripcion_corta` de la clave de esa versión protege únicamente la rama cuya clave
+   comparte plantilla con el distractor. En la otra rama la clave se redacta distinto, el literal
+   no coincide y el distractor pasa **afirmando el rango correcto con el veredicto contrario**.
+   3/600. Fix: comparar contra **ambas** claves — la NO vigente es la firma exacta de la colisión.
+2. **Distractores escritos para la clave única quedan incoherentes** (Error 29, `INC-SINO-BINARIO`
+   defecto 1). Eran coherentes porque la afirmación *era* lo que ellos afirman; al alternar, declaran
+   un veredicto que su justificación contradice. 81/600 (13,5 %). Fix: declarar `afirma_rango_area`
+   por entrada y excluir las `TRUE` en la rama donde dejan de ser coherentes.
+3. **H1 no ve dentro de la rama** (Error 30). Al excluir en (2) el único distractor más largo que la
+   clave, la clave queda **determinísticamente** la más larga de su rama: **100 %** dentro de la
+   rama, 0 % en la otra, `PASS` en el agregado. Acierto sin razonar **50,5 %** frente al 25 % de azar.
+
+**Lo que tengo que hacer yo**:
+
+- Si el ítem tiene clave alternante, tras el paso 3 **re-auditar el pool completo** contra la nueva
+  semántica del enunciado, entrada por entrada. No basta con que la alternancia funcione.
+- En el paso 9, medir H1/H2 **condicionando por rama** (agrupar por el flag que la define y
+  recalcular dentro de cada grupo). El `PASS` agregado de `validar_diagnosticidad.R` **no acredita
+  este caso**; hoy es verificación manual y así se declara en el reporte.
+- **Un fix de diagnosticidad puede desplazar el defecto de canal** — de la semántica a la longitud,
+  de la longitud al léxico. Tras cada fix, medir el ítem completo, no solo la dimensión corregida.
+  Y al igualar longitudes, comprobar la **señal inversa**: si la clave no es NUNCA la más larga,
+  «descartar la más larga» sube el azar de 25 % a 33 %.
+
+**Referencia**: Errores 28-30 de `patrones-errores-conocidos.md`; regla #22 v1.3 §P4-bis
+(subsección «La propia defensa crea deuda»).
+
+### Incidente S · `INC-MULTISEMILLA-ROTO` — `validar_multisemilla.R` falla siempre; su fallback es inalcanzable (2026-08-09)
+
+**Aplica también al gemelo CLOZE**: ambos lo citan en el paso 9 y el hook lo ejecuta en FASE 2G
+para cualquier tipo de ítem.
+
+**Síntoma**: FASE 2G reporta fallo, o el paso 9 no puede completarse, con:
+
+```
+Error en sys.frame(1): no hay tantas estructuras en la pila
+Calls: dirname -> sys.frame
+```
+
+**Causa**: `.claude/scripts/validar_multisemilla.R` línea 21 resuelve su propia ruta con
+`dirname(sys.frame(1)$ofile)`. Bajo `Rscript` no existe el frame 1, así que la expresión **revienta
+antes** de que la comprobación `is.null()` de la línea 22 pueda ejecutarse: el fallback por rutas
+conocidas es **código inalcanzable**.
+
+**Alcance verificado**: falla con el `.Rmd` auditado, con un ejemplo canónico intacto de
+`Ejemplos-Funcionales-Rmd/` y **sin argumentos** → es del script, no del ejercicio. El hook lo
+invoca exactamente así, de modo que la FASE 2G suma un error en **todo** ejercicio del repositorio:
+es un **falso ROJO permanente**, y un gate que siempre falla se aprende a ignorar.
+
+**Cómo debo tratarlo mientras no esté corregido**:
+
+- **NO** interpretar ese fallo como defecto del ejercicio ni intentar auto-corregir el `.Rmd`.
+- Declarar la cobertura de multisemilla como **NO VERIFICABLE** en el reporte, nunca como verde.
+- Sustituirla mientras tanto por evidencia equivalente que sí puedo producir: enumeración propia de
+  ≥300 versiones del chunk `data_generation` con las invariantes del ítem, más el Nivel 5A-5E de
+  `validar_coherencia_matematica.R`, que sí corre.
+- Distinguir siempre **«falló»** de **«no se pudo ejecutar»** al leer la salida de un hook.
+
+**Fix pendiente** (una línea, fuera del alcance de la sesión que lo detectó):
+`script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")`.
+
+**Referencia**: Error 31 de `patrones-errores-conocidos.md`.
 
 ### Validación realista obligatoria (post-corrección)
 

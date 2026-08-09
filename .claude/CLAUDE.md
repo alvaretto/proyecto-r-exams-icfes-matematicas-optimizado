@@ -144,9 +144,60 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.2 (el detractor no entregaba y la FASE 2C se cerraba con autoevaluación)
+**Versión**: 3.20.3 (la defensa §P4-bis crea deuda en el pool que ya existía)
 **Fecha**: 2026-08-09
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.3 (2026-08-09)
+
+> Primera aplicación real del contrato de entrega de la v3.20.2, y funcionó: el detractor falló la
+> primera vez, el marcador `VEREDICTO_DETRACTOR:` lo detectó como NO ENTREGADO, el reclamo del
+> protocolo lo recuperó y su objeción ALTA resultó ser **contra la corrección que había aplicado el
+> coordinador**. Es exactamente para eso que la regla #9 v1.2 exige independencia.
+
+- **REGLA #22 → v1.3**, nueva subsección en §P4-bis: **«La propia defensa crea deuda»**. La v1.2
+  decía qué defensa aplicar contra el veredicto invariante, pero no que aplicarla **cambia la
+  premisa sobre la que se escribió el pool existente**. Tres verificaciones obligatorias después de
+  introducir una clave alternativa, medidas en `area-jardin-lote-porcentaje-n4` sobre 600 versiones:
+  (a) las guardas anti-colisión deben recorrer **todas** las claves — comparar contra la vigente
+  solo protege una rama, y la clave NO vigente es la firma exacta de la colisión (3/600 con dos
+  opciones del mismo rango y veredictos opuestos); (b) los distractores escritos para la clave única
+  quedan declarando un veredicto que su justificación contradice (81/600 = **13,5 %**); (c) al
+  corregir (b) excluyendo el único distractor más largo que la clave, la clave queda
+  **determinísticamente** la más larga de su rama.
+- **PUNTO CIEGO DEL ARSENAL DECLARADO**: `validar_diagnosticidad.R` **agrega sobre versiones sin
+  condicionar por rama**. En un ítem con clave alternante las dos ramas son estructuralmente
+  distintas, así que un reparto 100 %/0 % se lee como ~50 % y pasa bajo el umbral del 70 %. Medido:
+  clave identificable por longitud en el **100 %** de una rama con `PASS` en el agregado, y
+  **50,5 %** de acierto sin razonar frente al 25 % de azar. Es el mismo punto ciego que dio origen a
+  la sonda H3 — un patrón que solo existe *entre* versiones no lo ve una sonda que mira *cada* una.
+  Hoy la medición por rama es **manual**; queda declarada como tal, no simulada.
+- **ADVERTENCIA DE LA SEÑAL INVERSA**: igualar longitudes hasta que la clave no sea NUNCA la más
+  larga tampoco es neutro — habilita «descartar la más larga», que sube el azar de 25 % a 33 %.
+  Un fix de diagnosticidad puede **desplazar el defecto de canal** (semántica → longitud → léxico);
+  hay que volver a medir el ítem completo tras cada fix, no solo la dimensión corregida.
+- **4 PATRONES NUEVOS** en `patrones-errores-conocidos.md`: **28** (exclusión por texto que solo
+  cubre la clave vigente), **29** (§P4-bis reabre `INC-SINO-BINARIO`), **30** (la sonda agrega sin
+  condicionar por rama), **31** (`validar_multisemilla.R` roto).
+- **`validar_multisemilla.R` ESTÁ ROTO** (Error 31): la línea 21 resuelve su propia ruta con
+  `dirname(sys.frame(1)$ofile)`, que bajo `Rscript` **revienta antes** de que la guarda `is.null()`
+  de la línea 22 pueda ejecutarse — el fallback por rutas conocidas es **código inalcanzable**.
+  Verificado que falla con cualquier `.Rmd`, incluido un ejemplo canónico intacto, y **sin
+  argumentos**. El hook lo invoca así en FASE 2G, de modo que esa fase es un **falso ROJO
+  permanente** en todo el repositorio, y un gate que siempre falla se aprende a ignorar. Fix de una
+  línea (`tryCatch`) **pendiente de aplicar**: es infraestructura compartida y quedó fuera del
+  alcance de la sesión que lo detectó. Mientras tanto, ambos orquestadores tienen instrucción de
+  declarar la cobertura multisemilla como **NO VERIFICABLE**, nunca como verde.
+- **AMBOS ORQUESTADORES** ganan los incidentes gemelos `INC-CLAVE-ALTERNATIVA` (R en SCHOICE, U en
+  CLOZE) e `INC-MULTISEMILLA-ROTO` (S / V), con sus dos filas en la tabla de IDs estables. Ninguno
+  lleva `—`: el mecanismo de la clave alternante es del ítem binario, no del tipo, y el del script
+  roto es del arsenal, así que **los dos aplican a los dos gemelos**.
+- **EJERCICIO**: `area_jardin_lote_..._n4_schoice_v1` — 6 correcciones verificadas por enumeración de
+  600 versiones, prueba de mutación con contrato de sonda (`cazado_por_su_sonda`) y control negativo.
+  Incluye literalidad del paso 10 restaurada contra el catálogo canónico (Afirmación y Evidencia
+  estaban de-acentuadas) y una contracción `a el`/`de el` visible al estudiante en 8,5 % de las
+  versiones que el corrector de ortografía no ve. **Sigue en 10/11**: dos objeciones del detractor
+  quedan abiertas a decisión del profesor, porque tocan el texto de la clave.
 
 ### Cambios v3.20.2 (2026-08-09)
 

@@ -99,6 +99,18 @@ afirmacion_es_verdadera <- if (is_canonical) FALSE else sample(c(TRUE, FALSE), 1
 
 **Nota de diseño:** si el ítem reproduce un cuadernillo oficial, la instancia canónica conserva el veredicto del ítem real (allí la clave es la que es) y son las **demás versiones** las que alternan. Cuando se añade una clave alternativa con el veredicto opuesto, hay que **excluir del pool a su gemela**: dos opciones con el mismo rango y veredictos contrarios convierten el ítem en irresoluble.
 
+#### La propia defensa crea deuda — tres cosas que hay que revisar DESPUÉS de aplicarla
+
+Añadir una clave alternativa no es un cambio local: **cambia qué significa el enunciado** en la mitad de las versiones, y con ello la premisa sobre la que se escribió el pool existente. Verificado en `area-jardin-lote-porcentaje-n4` (2026-08-09), donde los tres puntos fallaron a la vez y todo el arsenal seguía en verde.
+
+1. **Las guardas anti-colisión deben recorrer TODAS las claves, no la vigente.** Una guarda que compara cada candidato contra `descripcion_corta` de la clave de esa versión solo protege la rama cuya clave comparte plantilla con el distractor. En la otra rama la clave se redacta distinto, el literal no coincide y el distractor pasa afirmando el rango correcto con el veredicto contrario. La clave **NO vigente** es la firma exacta de esa colisión. → Error 28.
+
+2. **Los distractores escritos para una sola clave pueden quedar incoherentes.** Si eran coherentes porque la afirmación del enunciado *era* lo que ellos afirman, al alternar la afirmación dejan de serlo: declaran un veredicto y su justificación apoya el contrario (`INC-SINO-BINARIO`, defecto 1). Medido: 81 de 600 versiones (13,5 %), todas en la rama nueva. → Error 29.
+
+3. **La sonda H1 no ve lo que pasa dentro de cada rama.** Un ítem con clave alternante tiene **dos ramas estructuralmente distintas**, y H1/H2 promedian sobre todas las versiones sin condicionar por rama: un reparto 100 % / 0 % se lee como ~50 % y queda bajo el umbral del 70 %. Al corregir el punto 2 excluyendo un distractor, si ese era el único más largo que la clave, la clave pasa a ser **determinísticamente** la más larga de su rama. Medido: 100 % dentro de la rama, `PASS` en el agregado, **50,5 % de acierto sin razonar** frente al 25 % de azar. → Error 30.
+
+**Regla operativa:** tras aplicar §P4-bis, medir H1/H2 **condicionando por rama** (agrupar por el flag que la define y recalcular dentro de cada grupo). El `PASS` agregado de `validar_diagnosticidad.R` no acredita ese caso; hoy es verificación manual. Y al igualar longitudes, comprobar que no se crea la **señal inversa**: si la clave pasa a no ser NUNCA la más larga, «descartar la más larga» sube el azar de 25 % a 33 %.
+
 ---
 
 ### ❌ P5: Distractor direccional/posicional como OUTLIER obvio (eliminable de un vistazo)
@@ -264,11 +276,29 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.2
-**Fecha:** 2026-08-08
+**Versión:** 1.3
+**Fecha:** 2026-08-09
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.3 (2026-08-09)
+- **NUEVA SUBSECCIÓN en §P4-bis — «La propia defensa crea deuda»**: tres verificaciones
+  obligatorias DESPUÉS de introducir una clave alternativa. La v1.2 describía qué defensa aplicar
+  pero no que aplicarla **cambia la premisa sobre la que se escribió el pool existente**.
+- **Origen**: `area-jardin-lote-porcentaje-n4` (2026-08-09). Los tres puntos fallaron a la vez
+  con el arsenal completo en verde: (1) la guarda anti-colisión solo cubría la clave vigente
+  (3/600 versiones con dos opciones del mismo rango y veredictos opuestos); (2) los distractores
+  escritos para la clave única quedaron declarando un veredicto que su justificación contradice
+  (81/600 = 13,5 %); (3) al corregir (2) excluyendo el único distractor más largo que la clave,
+  la clave quedó siendo **determinísticamente** la más larga de su rama — 100 % dentro de la
+  rama, `PASS` en el agregado de H1, **50,5 % de acierto sin razonar** frente al 25 % de azar.
+- **Punto ciego del arsenal declarado**: H1/H2 promedian sobre versiones **sin condicionar por
+  rama**. En un ítem con clave alternante las dos ramas son estructuralmente distintas y un
+  reparto 100 %/0 % se lee como ~50 %. Hoy la medición por rama es manual.
+- **Advertencia de la señal inversa**: igualar longitudes hasta que la clave no sea NUNCA la más
+  larga tampoco es neutro — habilita una heurística de eliminación que sube el azar a 33 %.
+- **Errores nuevos en el catálogo**: 28, 29 y 30 de `patrones-errores-conocidos.md`.
 
 ### Cambios v1.2 (2026-08-08)
 - **NUEVO SUB-PATRÓN PROHIBIDO**: §P4-bis — Variante **semántica** de P4: el **veredicto** de la

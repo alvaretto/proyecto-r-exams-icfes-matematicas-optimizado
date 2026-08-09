@@ -2781,3 +2781,207 @@ Tras el cambio: `validar_coherencia_matematica.R` → APROBADO 0 errores; `verif
 - Regla #22 `diversidad-sustantiva.md` — mide diversidad de VALOR, no de TIPO de distractor; punto ciego complementario a este error.
 - Incidente N de `.claude/agents/orquestador-schoice.md` / Incidente P de `.claude/agents/orquestador-cloze.md`.
 - `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md`.
+
+---
+
+## Error 28: La exclusión por texto solo cubre la clave VIGENTE cuando el ítem tiene dos claves mutuamente excluyentes
+
+### ❌ Síntoma
+
+El estudiante ve **dos opciones que afirman el mismo rango numérico con veredictos opuestos**: una marcada correcta y otra incorrecta. Sin mensaje de error: el render compila, la unicidad textual pasa (los textos difieren), el balance 2 Sí + 2 No se cumple y el arsenal completo da verde.
+
+### 🔍 Causa Raíz
+
+El ítem implementa la defensa de la regla #22 §P4-bis con **dos claves mutuamente excluyentes**: una de veredicto «No» cuando la afirmación del enunciado es falsa, y una alternativa de veredicto «Sí» cuando es verdadera. La guarda anti-colisión comparaba cada candidato contra `txt_clave`, es decir contra la clave **vigente en esa versión**:
+
+```r
+# ❌ ANTES — solo cubre la rama cuya clave comparte plantilla con el distractor
+txt_clave <- errores_conceptuales[[idx_ok]]$descripcion_corta
+sin_colision <- function(idx) idx[vapply(idx, function(i)
+  errores_conceptuales[[i]]$descripcion_corta != txt_clave, logical(1L))]
+```
+
+Funciona en la rama donde la clave y el distractor comparten plantilla. En la otra rama la clave se redacta distinto, el literal ya no coincide y el distractor **pasa el filtro afirmando el rango correcto con el veredicto contrario**. El resultado es una opción que se contradice a sí misma (declara «No» mientras su justificación reafirma lo afirmado), lo que además la vuelve descartable por absurda.
+
+La clave NO vigente es la firma exacta de la colisión: comparte plantilla con el distractor, así que cuando los rangos coinciden sus textos son **idénticos**.
+
+### ✅ Solución Verificada
+
+```r
+# ✅ DESPUÉS — comparar contra AMBAS claves, vigente y excluida
+txt_claves <- c(errores_conceptuales[[idx_ok_no]]$descripcion_corta,
+                errores_conceptuales[[idx_ok_si]]$descripcion_corta)
+sin_colision <- function(idx) idx[vapply(idx, function(i)
+  !(errores_conceptuales[[i]]$descripcion_corta %in% txt_claves), logical(1L))]
+```
+
+### 🧪 Validación de la Solución
+
+Enumeración de 600 versiones + prueba de mutación con contrato de sonda (Incidente P):
+
+- Sano: 0 violaciones sobre 600 versiones.
+- Mutante M1 (revertir a comparar solo contra la clave vigente): la mutación llegó al **entorno** (`txt_claves` colapsa a un valor único) y murió por **su propia sonda**, `I6_rango_clave`, con 3 casos y sin ruido de otras sondas → `cazado_por_su_sonda`.
+- Los 3 casos son exactamente las combinaciones con `(pmin + pmax) · pa == 1`.
+
+### 📋 Checklist de Corrección
+
+1. ¿El ítem tiene más de una clave posible (defensa §P4-bis)? Si sí, toda guarda anti-colisión debe recorrer **todas** las claves, no la vigente.
+2. ¿La guarda compara por lo que el estudiante LEE, no por código de error?
+3. ¿Hay una prueba de mutación que revierta la guarda y muera por su propia sonda?
+
+### 📚 Referencias
+
+- Regla #22 `diversidad-sustantiva.md` §P4-bis; Incidente F (`INC-DIV-COSMETICA`) y P (`INC-MUTANTE-SONDA`) de `orquestador-schoice.md`.
+- Memoria `feedback_colision_textual_distractor_clave.md` — este error es su continuación: la colisión no era solo textual.
+
+---
+
+## Error 29: La clave alternativa de §P4-bis reabre INC-SINO-BINARIO en distractores escritos para una sola clave
+
+### ❌ Síntoma
+
+Una opción declara «Sí» (endosa la afirmación del enunciado) mientras su justificación afirma **un rango distinto del afirmado**. Es decir, su justificación apoya la conclusión contraria a la que declara. Todo el arsenal en verde.
+
+### 🔍 Causa Raíz
+
+Los distractores se escribieron cuando la afirmación del enunciado era **siempre** el rango del complemento lineal, que es justamente lo que ellos afirman: eran coherentes por construcción. Al introducir la clave alternativa para que el veredicto no sea invariante (regla #22 §P4-bis), la afirmación pasa a ser en la mitad de las versiones el rango **correcto**, y esos distractores quedan diciendo «Sí, porque [otro rango]».
+
+Es la lección general: **una defensa nueva puede invalidar la premisa sobre la que se escribió el pool existente**. §P4-bis cambia qué significa el enunciado, no solo cuál opción es la clave.
+
+### ✅ Solución Verificada
+
+Declarar explícitamente qué opciones afirman un rango propio y excluirlas de la rama donde ya no son coherentes:
+
+```r
+# en cada entrada "si" del pool
+veredicto = "si",
+afirma_rango_area = TRUE,   # o FALSE si solo enuncia un método, sin rango propio
+
+# en la selección
+if (afirmacion_es_verdadera) {
+  idx_si <- idx_si[!vapply(idx_si, function(i)
+    isTRUE(errores_conceptuales[[i]]$afirma_rango_area), logical(1L))]
+}
+```
+
+### 🧪 Validación de la Solución
+
+Sonda **auto-verificada** antes de usarla (extrae el rango de la ÚLTIMA construcción `entre X % y Y %`, porque la primera puede ser lo que la opción dice que *ocupa*, no lo que queda libre) y con **control negativo** (al revertir el fix del Error 28 vuelve a detectar sus 3 casos):
+
+| | antes | después |
+|---|---|---|
+| Opciones cuya justificación contradice su conclusión | **81 / 600 (13,5 %)** | **0 / 600** |
+
+Una primera versión de esta sonda daba 280 falsos positivos por tomar los dos primeros números del texto. Sin el control negativo, un «0 incoherencias» no distingue «no hay defecto» de «la sonda no mide».
+
+### ⚠️ Efecto colateral — leer el Error 30
+
+Este fix **desplazó el defecto de canal**. Ver Error 30 antes de aplicarlo tal cual.
+
+### 📚 Referencias
+
+- Incidente D (`INC-SINO-BINARIO`) de `orquestador-schoice.md`; regla #22 §P4-bis.
+
+---
+
+## Error 30: La sonda de diagnosticidad agrega sobre versiones sin condicionar por rama
+
+### ❌ Síntoma
+
+`validar_diagnosticidad.R` reporta `PASS` (H1 en torno al 40-50 %, umbral 70 %) y sin embargo, **dentro de una de las ramas estructurales del ítem, la clave es identificable en el 100 % de las versiones** por una señal de superficie.
+
+### 🔍 Causa Raíz
+
+Un ítem con clave alternante (regla #22 §P4-bis) tiene **dos ramas estructuralmente distintas**. Las sondas H1/H2 promedian sobre todas las versiones sin condicionar por rama, así que un reparto 100 % / 0 % se lee como ~50 % y queda por debajo del umbral. Es el mismo punto ciego que dio origen a la sonda H3: un patrón que solo existe *entre* versiones no lo ve una sonda que mira *cada* versión.
+
+**Agravante — el defecto lo introdujo el fix del Error 29.** El distractor excluido de la rama verdadera era el único más largo que la clave; al quitarlo, la clave quedó siendo **determinísticamente** la opción más larga de esa rama.
+
+### 📊 Medición
+
+Medido de forma independiente por dos auditores con semillas distintas (concordancia dentro del ruido de muestreo):
+
+| | rama verdadera | rama falsa |
+|---|---|---|
+| clave = única opción más larga | **100 %** | 0 % |
+| token del procedimiento identifica la clave | **100 %** | — |
+
+Acierto **sin razonar** (azar = 25 %): heurística «la más larga» **50,5 %**; heurística «la que nombra el procedimiento» **62,9 %**.
+
+Longitudes medianas del pool: clave alternativa 125 caracteres; su rival más largo disponible en esa rama, 99.
+
+### ✅ Tratamiento
+
+1. **Medir condicionando por rama**, no solo el agregado del validador. Mientras `validar_diagnosticidad.R` no lo soporte, es verificación manual: agrupar por el flag que define la rama y recalcular H1/H2 dentro de cada grupo.
+2. Al igualar la extensión de las opciones, comprobar que no se crea la **señal inversa**: si la clave pasa a no ser NUNCA la más larga, «descartar la más larga» se convierte en una heurística de eliminación que sube el azar de 25 % a 33 %.
+3. Regla general: **un fix de diagnosticidad puede desplazar el defecto de canal** (de la semántica a la longitud, de la longitud al léxico). Medir el ítem completo después de cada fix, no solo la dimensión que se corrigió.
+
+### 📚 Referencias
+
+- Regla #22 `diversidad-sustantiva.md` §P4-bis; `validar_diagnosticidad.R` (sondas H1/H2/H3).
+- Error 29 — el fix que lo introdujo.
+
+---
+
+## Error 31: `validar_multisemilla.R` falla siempre bajo `Rscript` — la guarda de su fallback es código inalcanzable
+
+### ❌ Mensaje de Error
+
+```
+Error en sys.frame(1): no hay tantas estructuras en la pila
+Calls: dirname -> sys.frame
+Ejecución interrumpida
+```
+
+### 🔍 Causa Raíz
+
+`.claude/scripts/validar_multisemilla.R`, línea 21:
+
+```r
+script_dir <- dirname(sys.frame(1)$ofile)
+if (is.null(script_dir) || script_dir == "") {   # <- INALCANZABLE
+  ...fallback por rutas conocidas...
+}
+```
+
+Bajo `Rscript` no existe el frame 1, así que `sys.frame(1)` **lanza un error** antes de que `dirname()` devuelva nada: la comprobación `is.null()` de la línea siguiente nunca llega a evaluarse. El fallback existe, está bien escrito y es **código muerto**.
+
+Es el mismo modo de fallo que la «guarda inalcanzable» ya documentada en memoria: una condición escrita para un valor que nunca llega porque la expresión revienta primero.
+
+### 📊 Alcance
+
+Verificado que el fallo es **del script, no del ejercicio**:
+
+| Invocación | exit |
+|---|---|
+| con el `.Rmd` auditado | 1 |
+| con un ejemplo canónico intacto de `Ejemplos-Funcionales-Rmd/` | 1 |
+| sin argumentos | 1 |
+
+`post-exams2-validation.sh` (FASE 2G) lo invoca exactamente así:
+
+```bash
+MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 20 2>&1)
+```
+
+y luego incrementa `ERRORES_TOTALES` si el exit no es 0. La consecuencia es un **falso ROJO permanente**: la FASE 2G suma un error en todo ejercicio del repositorio. Un gate que siempre falla es un gate que se aprende a ignorar.
+
+### ✅ Fix propuesto (PENDIENTE DE APLICAR)
+
+```r
+script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")
+if (is.null(script_dir) || script_dir == "") { ...fallback... }
+```
+
+Estado: **no aplicado**. Es infraestructura compartida y quedó fuera del alcance de la sesión que lo detectó.
+
+### 📋 Checklist
+
+1. Toda resolución de la propia ruta bajo `Rscript` debe ir en `tryCatch`, o resolverse desde `commandArgs()` (como hace `validar_diagnosticidad.R`, que no tiene el problema).
+2. Una guarda cuya condición se evalúa DESPUÉS de la expresión que puede reventar no es una guarda.
+3. Al leer la salida de un hook, distinguir «falló» de «no se pudo ejecutar».
+
+### 📅 Historial
+
+| Fecha | Componente | Causa | Estado |
+|-------|-----------|-------|--------|
+| 2026-08-09 | `.claude/scripts/validar_multisemilla.R` | `sys.frame(1)` revienta antes de la guarda `is.null()` | Detectado y documentado; fix de una línea pendiente |
