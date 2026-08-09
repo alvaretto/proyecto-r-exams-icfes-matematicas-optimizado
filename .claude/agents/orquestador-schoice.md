@@ -64,7 +64,15 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 }
 ```
 
-- `modo: "dry-run"` → imprimo el plan completo (las 16 filas de la máquina de estados: los 11 pasos persistentes + `init`, `sello` y los auxiliares 2b/2c/6b) y los 3 puntos `WAIT_USER`, sin ejecutar nada destructivo. Útil para auditoría.
+- `modo: "dry-run"` → **auditoría real, no solo impresión del plan**. Un dry-run que solo imprime las filas de la máquina de estados no puede fallar y por tanto no informa de nada. Ejecuto, en este orden, únicamente operaciones de LECTURA:
+  1. **Los 25 pre-flight checks de verdad** (numerados 1–12, 12b, 12c y 13–23; todos son read-only: existencia de archivos, `bash -n` de los hooks, `Rscript -e 'packageVersion("exams")'`). Reporto cada uno OK/FALLA. Si alguno falla, el dry-run termina en `preflight_failed` — que es justo la información que el usuario quería antes de gastar tokens.
+  2. **Estado de `ruta_destino`**: ¿existe?, ¿está bajo un directorio permitido?, ¿hay `ejercicio_state.json`? Si lo hay, digo desde qué paso reanudaría y cuáles ya están completados — recordando que `2b`, `2c` y `6b` **no** se persisten (§ "Qué se persiste y qué no").
+  3. **Nomenclatura**: contraste contra el regex, indicando si el warning saltará y por qué (puede ser deliberado — ver `INC-CLAUDE-LOCAL`).
+  4. **`entrada`**: si es una ruta, compruebo que existe y es legible; si es texto, reporto su longitud.
+  5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): `validar_diversidad_sustantiva.R --n 10` y `validar_diagnosticidad.R --n 10`. Es barato y detecta de inmediato un ítem que ya está roto.
+  6. **Plan**: las 16 filas de la máquina de estados, los 3 `WAIT_USER` con la decisión que pediré en cada uno, y el presupuesto de turnos estimado.
+
+  NO escribo nada, NO renderizo, NO creo `ejercicio_state.json`, NO invoco sub-agentes. Termino con `exit_status: "dry_run"` y el veredicto de los pre-flight.
 - `modo: "ejecutar"` → ejecución real.
 - Si `ejercicio_state.json` ya existe en `ruta_destino`, **resumo desde el primer paso pendiente** (modo retomar). NO reinicio.
 - `decisiones_humanas` permite reanudar desde una pausa `WAIT_USER` cuando el usuario ya respondió en el chat principal. Es input humano preconfirmado por el wrapper, NO auto-selección. Si el campo relevante existe y es válido, procedo sin volver a preguntar; si falta, pauso en `WAIT_USER`.
@@ -142,6 +150,14 @@ un incidente desde código, reglas, memoria o desde el gemelo CLOZE, **usar el I
 | `INC-MUTANTE-SONDA` | S | P | El mutante muere por la sonda equivocada |
 | `INC-SINO-BINARIO` | T | D | Distractores Sí/No: coherencia condicional |
 | `INC-SOLUTION-ANSWERLIST` | — | A | Inconsistencia Solution↔Answerlist |
+
+**Ningún `—` de esta tabla es un hueco de paridad; todos llevan razón.** Los cuatro que me faltan a
+mí (`INC-ANSWER-ORDEN`, `INC-POOL-MCHOICE`, `INC-NOPS-NA`, `INC-GRAF-EN-GAP`) dependen de mecanismos
+que sólo existen con `extype: cloze`: placeholders `##ANSWERi##`, gaps `mchoice` dentro de un ítem,
+el rechazo de `exams2nops()` y el gap como contenedor de opciones. El que le falta al gemelo
+(`INC-SOLUTION-ANSWERLIST`) presupone un Answerlist único con la letra citada en la Solution; en
+CLOZE cada gap lleva el suyo y la regla #19 ya prohíbe la cita. Un `—` sin esta razón escrita sería
+una **hipótesis, no un hecho**: así se descubrió que `INC-SOLUTION-ORDEN` sí me aplicaba a mí.
 
 Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones aprendidos de incidentes pasados:
 
@@ -419,8 +435,8 @@ familia —una variante CLOZE, un `_neg_`, un ejercicio hermano— la hereda.
   auto-contención), corregirlo en **todos** para que no diverjan.
 
 **Caso real**: `permutaciones-pescadores-venia-n4` — el campo llevaba latente desde la creación del
-SCHOICE y solo explotó al crear la variante CLOZE, que sí lo emite. Ver el Incidente R del
-`orquestador-cloze`.
+SCHOICE y solo explotó al crear la variante CLOZE, que sí lo emite. Ver `INC-CAMPO-NO-EMITIDO` en
+`.claude/agents/orquestador-cloze.md` (allí es la letra R).
 
 ### Incidente P · `INC-MUTANTE-SONDA` — El mutante muere por la sonda equivocada (2026-08-06)
 
@@ -451,8 +467,9 @@ artefacto"): es reincidente.
 **Cobertura mínima**: una invariante sin mutante que la cace por su propia sonda se reporta como
 `sin_prueba_de_deteccion`, nunca dentro de un "0 errores".
 
-**Referencia**: gemelo del Incidente S de `.claude/agents/orquestador-cloze.md` (§ Contrato de
-mutación), donde está la versión extendida con los snippets completos.
+**Referencia**: gemelo de `INC-MUTANTE-SONDA` en `.claude/agents/orquestador-cloze.md` (allí es la
+letra S, redactado dentro de § "Contrato de mutación"), donde está la versión extendida con los
+snippets completos.
 
 ### Incidente Q · `INC-SOLUTION-ORDEN` — La PROSA de la Solution enumera opciones en orden (2026-08-08)
 
@@ -485,8 +502,9 @@ distinto; por eso los detectores P1–P4 de la FASE 2J lo dejan pasar.
 **Verificación (paso 9)**: emparejar **por contenido**, nunca por posición, el veredicto de cada
 opción entre la prosa de la Solution y el Answerlist renderizado. Un `grep` de orden no sirve.
 
-**Referencia**: Incidente Q de `.claude/agents/orquestador-cloze.md` (caso real medido sobre HTML:
-`permutaciones-pescadores-venia-n4/cloze/`, Parte 5); regla #19 § "Evidencia de código primario".
+**Referencia**: `INC-SOLUTION-ORDEN` en `.claude/agents/orquestador-cloze.md` (allí también es la
+letra Q; caso real medido sobre HTML: `permutaciones-pescadores-venia-n4/cloze/`, Parte 5);
+regla #19 § "Evidencia de código primario".
 
 ### Validación realista obligatoria (post-corrección)
 
@@ -717,6 +735,38 @@ Al terminar (éxito o fallo), produzco:
 | 1 analisis_icfes | ✅ | 0:35 | 0 |
 | ... | ... | ... | ... |
 
+## Diagnosticidad (`validar_diagnosticidad.R --n 40`)
+Transcribo **literalmente** la tabla de sondas y la `NOTA DE ORDEN`, aunque el veredicto sea `PASS`:
+una nota que diga "la correcta es la única más larga en el 100% de las versiones" significa que la
+señal existe pero es demasiado pequeña para explotarla, no que no haya señal.
+
+| Sonda | Tasa | Margen mediano | Veredicto |
+|---|---|---|---|
+| H1 más-larga / más-corta | `<%>` | `<%>` | PASS \| WARN \| **ERR** |
+| H2 prefijo | `<%>` | — | … |
+| H3 veredicto invariante | `<%>` | — | … |
+
+Un `WARN_DIAG_INDET` **no es PASS**: significa que el validador no pudo medir. Si aparece, digo que
+la diagnosticidad quedó **SIN VERIFICAR** y por qué (típicamente el `.Rmd` no expone el par
+`opciones` + `sol`).
+
+## Pruebas de mutación (Incidente P · `INC-MUTANTE-SONDA`)
+| Mutante | Sonda esperada | Sonda real | Veredicto |
+|---|---|---|---|
+| A | `<código>` | `<código>` | cazado_por_su_sonda |
+
+Invariantes **sin prueba de detección propia**: `<lista o "ninguna">`. No las cuento como verificadas
+ni las incluyo en un "0 errores".
+
+## Presupuesto de turnos consumido
+| Fase | Turnos | Acumulado / 60 |
+|---|---|---|
+| Pre-flight + pasos 0-1 | `<n>` | `<n>` |
+| … | … | … |
+| **Total** | | `<n>` / 60 |
+
+Sin esta tabla el coste real del pipeline no es medible y no puedo justificar añadir o quitar pasos.
+
 ## Auto-correcciones aplicadas
 - [Fase X] Error: <error>. Fix: <ref a patrones-errores-conocidos.md>.
 
@@ -755,9 +805,13 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
 
 ```json
 {
-  "exit_status": "completado | parcial | abortado | dry_run",
+  "exit_status": "completado | parcial | abortado | dry_run | preflight_failed",
   "ejercicio": "<nombre>",
   "ruta_rmd": "<ruta>/<nombre>.Rmd | null",
+  "tipo": "schoice",
+  "diagnosticidad": {"H1": "<tasa + margen mediano>", "H2": "<tasa>", "H3": "<tasa>", "nota_de_orden": "<literal o null>"},
+  "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
+  "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
   "estado_workflow": {"analisis_icfes": true, "flujo_b": true, ...},
   "siguientes_pasos_manuales": ["git add ...", "..."]
 }
