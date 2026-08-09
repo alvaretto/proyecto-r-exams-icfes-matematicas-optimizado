@@ -573,7 +573,9 @@ documentado como su Incidente D desde 2026-05-12 y **al CLOZE le faltaba**, pese
 aplicable — y agravado, porque un CLOZE puede tener varias sub-partes con conclusión binaria, cada
 una con su propio pool.
 
-**Los cuatro bugs del incidente original** (detectados sobre el HTML, tras pasar las FASES 2A-2J):
+**Los cuatro bugs del incidente original** (detectados sobre el HTML, tras pasar las FASES 2A-2J —
+que era el arsenal completo **en aquella fecha**, mayo de 2026; hoy llega a 2N: el dato es
+histórico, no un rango obsoleto):
 incoherencia conclusión↔justificación cuando la justificación usa variables con roles invertibles;
 premisa imposible por contradecir una restricción del generador; `sample(x, n)` con `length(x)==1`
 devolviendo `1:n` en vez del elemento (Familia 5); y pools dinámicos que colapsan a longitud 0 en
@@ -608,6 +610,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
 6. Verificar V1-V9 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; **mínimo 6 partes**; gráficas-opción fuera del gap; la prosa de la Solution no enumera opciones en orden (V6); unicidad ampliada si alguna parte ofrece opciones de fuera de su conjunto (V7); diversidad declarada por gap (V8); diagnosticidad de los distractores (V9).
 7. Para cada parte mchoice, extraer opciones de ≥10 semillas y verificar unicidad con `digest` (Incidente D).
 8. **Si alguna sub-parte tiene gráficas-opción** (Incidente G): ejecutar `exams2moodle()` y comprobar que ningún gap contiene imágenes — `grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@'` debe ser `0`; y en HTML `grep -c '##ANSWER' <html>` == 0, capturando con chromium que las gráficas estén pegadas a su parte.
+8b. **Con ese MISMO XML delante** (no hace falta re-exportar), la verificación anti-fuga del pre-flight 15 apartado (b) (regla #22 §P6 / Error 25): `grep -oE 'diagrama_[a-z0-9]+\.png' <archivo>_moodle.xml | sort -u` debe devolver **solo** `diagrama_a..d.png`. Cualquier nombre que revele el rol (`_correcta`, `_distractor…`, `_perp`, `_suma`) es defecto bloqueante. Es gratis y se olvidaba: el paso 8 ya tenía el XML abierto para otra comprobación. Recordatorio: HTML y PDF **no** sirven aquí porque embeben la imagen y no exponen el nombre — y en CLOZE tampoco basta con haber movido las gráficas al enunciado.
 9. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente R): `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>` sobre los campos que este ejercicio SÍ emite → debe ser vacío. Un campo que en el origen era dato muerto nunca se probó contra LaTeX.
 10. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente S): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que existe una guarda de "mutante mal construido" evaluada sobre el ENTORNO (`env_mut$...`), no sobre el texto del `.Rmd`. Ver § Contrato de mutación. Un `RESULTADO: APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
 11. Solo después de estas verificaciones, marco renderizado_4_formatos como completado. **NOPS es N/A para todo CLOZE** y no bloquea (Incidente E), pero compruebo que el mensaje de rechazo contenga `cloze exercises`: si falla por otra causa, es un error real.
@@ -910,6 +913,11 @@ orientación > infografías > TEA. Ante discrepancia gana el PDF oficial.
   md5 `6339b53011f5e43480a19b3c6c5c9bab` (constructo, competencias y estructura).
 - Si el catálogo no está montado en la máquina, **no adivino**: aborto el paso 10 con
   `[VERIFICAR: catálogo canónico no disponible]` y lo reporto.
+- **Esta comprobación es JUICIO HUMANO, no automatizada.** Ningún script del arsenal compara los
+  `exextra[…]` del `.Rmd` contra los JSON del catálogo: la literalidad la verifico yo, campo por
+  campo, abriendo el JSON. Lo digo explícitamente porque el resto del paso 10 sí tiene validadores
+  (V1-V9) y es fácil suponer que este también — un «paso 10 OK» **no** significa que un script haya
+  certificado la literalidad del descriptor ni la coherencia Nivel↔DOK.
 
 **Coherencia obligatoria Nivel ↔ DOK** (regla #1): `DOK ≥ 3 ⇒ Nivel ICFES ≥ 3`; `Bloom = Evaluar ⇒
 Nivel ≥ 3`. En un CLOZE el Nivel se declara **una vez para el ítem completo**, así que debe
@@ -1189,6 +1197,7 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
   "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
   "graficas_opcion": "ninguna | en_enunciado_rotuladas (Incidente G)",
+  "fuga_nombre_moodle": "N/A | verificado sobre el XML: solo diagrama_a..d.png",
   "nops": "N/A (esperado: exams2nops rechaza extype cloze por diseño)",
   "estado_workflow": {"analisis_icfes": true, "flujo_b": true, ...},
   "siguientes_pasos_manuales": ["git add ...", "..."]
