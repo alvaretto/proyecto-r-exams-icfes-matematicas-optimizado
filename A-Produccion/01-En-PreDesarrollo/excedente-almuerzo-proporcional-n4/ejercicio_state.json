@@ -3,7 +3,7 @@
   "ejercicio": "excedente_almuerzo_numerico_variacional_argumentacion_n4_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-08-06T08:00:09.483274-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-06T08:40:35.677914-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-09T11:37:56.051406-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -26,11 +26,11 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-08-06T08:31:35.738275-05:00"
+      "timestamp": "2026-08-09T11:37:55.820432-05:00"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-08-06T08:31:35.795474-05:00"
+      "timestamp": "2026-08-09T11:37:55.878040-05:00"
     },
     "detractor_fase2c": {
       "completado": true,
@@ -39,16 +39,16 @@
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-08-06T08:40:35.554001-05:00"
+      "timestamp": "2026-08-09T11:37:55.934387-05:00"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-08-06T08:40:35.616762-05:00",
-      "versiones_unicas": 300
+      "timestamp": "2026-08-09T11:37:56.051406-05:00",
+      "versiones_unicas": 299
     },
     "validar_icfes": {
       "completado": true,
-      "timestamp": "2026-08-06T08:40:35.677914-05:00"
+      "timestamp": "2026-08-09T11:37:55.992369-05:00"
     },
     "aprobacion_usuario": {
       "completado": false,

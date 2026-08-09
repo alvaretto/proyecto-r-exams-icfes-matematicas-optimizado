@@ -104,7 +104,9 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       │   └── 2024-CB-S1_S2-P02-calculo-de-ganancias/    [ejercicio legacy]
 │       ├── 04-Propiedades-Expresiones-Decimales/
 │       ├── 05-Conjunto-Reales-Desigualdades/
-│       └── 06-Valor-Absoluto/
+│       ├── 06-Valor-Absoluto/
+│       └── 07-Proporcionalidad-Directa-E-Inversa/
+│           └── excedente_almuerzo_proporcional_n4/            [reservado]
 │
 ├── 02-Funciones/
 │   └── Pensamiento-Variacional-Espacial/

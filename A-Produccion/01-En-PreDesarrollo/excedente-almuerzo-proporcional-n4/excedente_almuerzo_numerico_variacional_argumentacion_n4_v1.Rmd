@@ -23,6 +23,11 @@ fmt_cop <- function(x) {
   paste0("\\$", formatC(x, format = "f", digits = 0,
                         big.mark = ".", decimal.mark = ","))
 }
+# Número crudo para modo matemático. `paste0()` usa as.character(), que emite
+# notación científica en cuanto es más corta: as.character(300000) -> "3e+05".
+# Eso llegaba al estudiante dentro de la fórmula ("\times 3e+05") y ningún
+# validador del arsenal lo ve: solo aparece en la inspección visual.
+fmt_num <- function(x) formatC(x, format = "d")
 eq_display <- function(tex) {
   is_latex <- tryCatch(knitr::is_latex_output(), error = function(e) FALSE)
   if (is_latex) paste0("$$", tex, "$$")
@@ -155,6 +160,15 @@ tipo <- safe_sample(c("1", "2a", "2b"), 1L)
 n_pool <- c(5, 6, 8, 10, 12, 15, 20)
 P_grid <- seq(150000, 600000, by = 50000)
 
+# Tope de verosimilitud del consumo individual. `c` es el precio de UN artículo
+# de restaurante (jugo, café, postre, sándwich...): la cota puramente numérica
+# c < q = P/n lo dejaba llegar a $117.000 (mediana $13.500, p90 $32.650), y de
+# ahí salían enunciados como "un jugo de $51.000". Con el tope, el espacio
+# TIPO 1 pasa de 3948 a 2291 combinaciones -- muy por encima de las 250
+# versiones que exige el repositorio -- y conserva tanto la instancia canónica
+# (c = $5.000) como la cobertura completa de P, n y T.
+C_MAX_VEROSIMIL <- 15000
+
 pn_pares <- expand.grid(P = P_grid, n = n_pool, stringsAsFactors = FALSE)
 pn_pares$q <- pn_pares$P / pn_pares$n
 pn_pares <- pn_pares[pn_pares$q == floor(pn_pares$q) & pn_pares$q >= 5000, ]
@@ -174,7 +188,7 @@ if (tipo == "1") {
       c_round <- round(c_exact)
       es_entero <- abs(c_exact - c_round) < 0.01
       es_mult500 <- (c_round %% 500) == 0
-      en_rango  <- c_round > 0 & c_round < qi
+      en_rango  <- c_round > 0 & c_round < qi & c_round <= C_MAX_VEROSIMIL
       valido <- es_entero & es_mult500 & en_rango
       for (k in which(valido)) {
         counter <- counter + 1L
@@ -197,7 +211,7 @@ if (tipo == "1") {
   E      <- combos$E[idx]
 
   # Verificación I-1..I-5
-  stopifnot(E > 0, q == floor(q), c_val < q,
+  stopifnot(E > 0, q == floor(q), c_val < q, c_val <= C_MAX_VEROSIMIL,
             abs(a_val - c_val * E / Ttotal) < 0.01, a_val > 0,
             a_val == floor(a_val),
             P %% 50000 == 0, Ttotal %% 50000 == 0, c_val %% 500 == 0)
@@ -208,12 +222,13 @@ if (tipo == "1") {
   P     <- pn_pares$P[idx]
   n_emp <- pn_pares$n[idx]
   q     <- pn_pares$q[idx]
-  c_pool <- seq(500, q - 500, by = 500)
+  c_pool <- seq(500, min(q - 500, C_MAX_VEROSIMIL), by = 500)
   c_val  <- safe_sample(c_pool, 1L)
   # T, E, a no aplican en TIPO 2a (sentinelas, nunca emitidos)
   Ttotal <- 0; E <- 0; a_val <- 0
 
-  stopifnot(P %% 50000 == 0, c_val %% 500 == 0, c_val < q)
+  stopifnot(P %% 50000 == 0, c_val %% 500 == 0, c_val < q,
+            c_val <= C_MAX_VEROSIMIL)
 
 } else {
   # --- TIPO 2b: c omitido ---
@@ -279,7 +294,9 @@ if (tipo == "1" || tipo == "2a") {
 enunciado_completo <- paste0(enunciado_p1, " ", enunciado_p2,
                              "\n\n", enunciado_p3)
 
-# --- Pool de errores conceptuales (6 errores, regla #1 línea 188) ---------
+# --- Pool de errores conceptuales (8 errores, regla #1 línea 188) ---------
+# El pool NOMINAL no basta: lo que importa es el pool APLICABLE por categoría
+# en cada tipo, porque se eligen 2 opciones "Sí" y 2 "No" (Incidente N).
 q_fmt <- fmt_cop(q)
 
 errores_conceptuales <- list(
@@ -337,7 +354,14 @@ errores_conceptuales <- list(
     causa_raiz = paste0(
       "No reconoce que T ya contiene la información agregada de todos ",
       "los consumos."),
-    precondicion = function(params) TRUE,
+    # NO aplica a TIPO 2a. Ahí el dato omitido es T, y T es exactamente la SUMA
+    # de todos los pedidos: conocer los de los demás (más c, que si se da)
+    # determinaria T y con el la respuesta. En 2a esta opción dejaria de ser un
+    # distractor falso para ser una segunda respuesta defendible, y el item
+    # perderia la unicidad de la clave. En TIPO 1 (donde T se conoce y los demás
+    # son irrelevantes) y en TIPO 2b (donde falta c, que no se deduce de los
+    # pedidos ajenos) sigue siendo claramente falsa.
+    precondicion = function(params) params$tipo != "2a",
     calcula = function(params) NA
   ),
   list(
@@ -384,6 +408,10 @@ errores_conceptuales <- list(
     codigo = "PRO-SUF-06",
     nombre = "El dato omitido se puede deducir",
     categoria = "si",
+    # Solo hay dos ramas emisibles: este error no aplica a tipo 1. La tercera
+    # rama es NA (no texto), para que ningun literal viaje sin haber sido nunca
+    # emitido ni probado contra LaTeX (Incidente O -- INC-CAMPO-NO-EMITIDO).
+    # La guarda de NA esta junto a la unicidad de opciones_texto.
     descripcion_corta = if (tipo == "2a") {
       paste0("Sí, porque el valor total de la cuenta se puede deducir ",
              "de los demás datos disponibles.")
@@ -393,8 +421,7 @@ errores_conceptuales <- list(
              ctx$miembro_sg,
              " se puede deducir de los demás datos disponibles.")
     } else {
-      paste0("Sí, porque los datos disponibles son suficientes para ",
-             "deducir cualquier valor faltante.")
+      NA_character_
     },
     descripcion_larga = paste0(
       "Afirma que el dato omitido se deduce de los restantes, pero confunde ",
@@ -405,6 +432,45 @@ errores_conceptuales <- list(
       "No distingue entre dato derivable y dato ausente/primario."),
     precondicion = function(params) params$tipo %in% c("2a", "2b"),
     calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-07",
+    nombre = "Supone cargos no declarados en la cuenta",
+    categoria = "no",
+    descripcion_corta = paste0(
+      "No, porque no se sabe si el valor de la cuenta incluye impuestos o ",
+      "propina, lo que cambiaría el excedente que se debe repartir."),
+    descripcion_larga = paste0(
+      "Introduce una condición que el enunciado no plantea. La propuesta ",
+      "reparte el excedente sobre la cuenta tal como se enuncia; suponer ",
+      "cargos adicionales no declarados no es un problema de SUFICIENCIA de ",
+      "información, sino una premisa añadida por quien responde. La pregunta ",
+      "es si los datos DADOS bastan, no si el escenario podría ser otro."),
+    causa_raiz = paste0(
+      "Confunde un dato ausente del problema con una suposición externa ",
+      "no declarada."),
+    precondicion = function(params) TRUE,
+    calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-08",
+    nombre = "La cuota equitativa como valor a pagar",
+    categoria = "si",
+    descripcion_corta = paste0(
+      "Sí, porque con el presupuesto y el número de ", ctx$miembros,
+      " se obtiene la cuota que le corresponde pagar a cada ",
+      ctx$miembro_sg, "."),
+    descripcion_larga = paste0(
+      "Calcula la cuota equitativa q = P/n = ", q_fmt, " y la presenta como ",
+      "el valor que debe pagar ", ctx$miembro_det, ". Pero q es la parte del ",
+      "PRESUPUESTO que cubre a cada ", ctx$miembro_sg, ", no el aporte sobre ",
+      "el EXCEDENTE, que la propuesta reparte de manera proporcional al ",
+      "consumo individual. Son dos cantidades distintas."),
+    causa_raiz = paste0(
+      "Confusión entre la cuota equitativa del presupuesto y el aporte ",
+      "proporcional sobre el excedente."),
+    precondicion = function(params) TRUE,
+    calcula = function(params) params$q
   )
 )
 
@@ -454,8 +520,24 @@ if (categoria_correcta == "si") {
 }
 stopifnot(length(idx_si) >= n_si_err, length(idx_no) >= n_no_err)
 
-sel_si <- safe_sample(idx_si, n_si_err)
-sel_no <- safe_sample(idx_no, n_no_err)
+idx_de <- function(cod) {
+  i <- which(vapply(errores_conceptuales, function(e) e$codigo, "") == cod)
+  stopifnot(length(i) == 1L)
+  i
+}
+
+if (es_canonico) {
+  # EXCEPCION CANONICA (pre-flight check 20 del orquestador-schoice).
+  # El item oficial MAT-2026-1-017 trae 3 distractores fijos; sortearlos del
+  # pool reproduciria el enunciado pero NO las 4 opciones oficiales, que es
+  # lo que exige I-6 y ESPECIFICACION.md 3 ("reproducir VERBATIM").
+  sel_si <- idx_de("PRO-SUF-01")
+  sel_no <- c(idx_de("PRO-SUF-02"), idx_de("PRO-SUF-03"))
+  stopifnot(length(sel_si) == n_si_err, length(sel_no) == n_no_err)
+} else {
+  sel_si <- safe_sample(idx_si, n_si_err)
+  sel_no <- safe_sample(idx_no, n_no_err)
+}
 sel_distractores <- c(sel_si, sel_no)
 stopifnot(length(sel_distractores) == 3L)
 
@@ -473,8 +555,9 @@ sol <- c(TRUE, rep(FALSE, length(sel_distractores)))
 opciones_texto  <- sapply(opciones, function(o) o$texto)
 opciones_codigo <- sapply(opciones, function(o) o$codigo)
 
-# Verificar unicidad de opciones
-stopifnot(length(unique(opciones_texto)) == length(opciones_texto))
+# Verificar unicidad de opciones y que ninguna arrastre texto no emisible
+stopifnot(length(unique(opciones_texto)) == length(opciones_texto),
+          !anyNA(opciones_texto), all(nzchar(opciones_texto)))
 
 # --- Reflexiones metacognitivas -------------------------------------------
 reflexiones <- c(
@@ -522,8 +605,9 @@ if (tipo == "1") {
     ctx$miembro_det, " debe pagar. La fórmula del aporte proporcional es:\n\n"))
   cat(eq_display("a = \\frac{c}{T} \\times E = \\frac{c}{T} \\times (T - P)"), "\n\n")
   cat(paste0(
-    "Sustituyendo: $a = \\frac{", c_val, "}{", Ttotal, "} \\times ",
-    E, " = ", a_val, "$, es decir, ", fmt_cop(a_val), ".\n\n",
+    "Sustituyendo: $a = \\frac{", fmt_num(c_val), "}{", fmt_num(Ttotal),
+    "} \\times ", fmt_num(E), " = ", fmt_num(a_val),
+    "$, es decir, ", fmt_cop(a_val), ".\n\n",
     "La fórmula solo requiere **c** (consumo individual) y **T** ",
     "(total de la cuenta); ambos están disponibles en el enunciado. ",
     "Los consumos de los demás ", ctx$miembros, " no son necesarios ",

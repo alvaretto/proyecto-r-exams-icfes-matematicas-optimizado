@@ -12,11 +12,19 @@ Texto puro, sin figura. Descriptor **D4.9** (suficiencia de informacion).
 | `P` | Presupuesto de la entidad | 150.000 -- 600.000 (mult. 50.000) |
 | `n` | Numero de miembros | {5, 6, 8, 10, 12, 15, 20} |
 | `T` | Total de la cuenta | P+50.000 -- min(P+500.000, 1.200.000) (mult. 50.000) |
-| `c` | Consumo individual | mult. 500, < q = P/n |
+| `c` | Consumo individual | mult. 500, < q = P/n, **<= $15.000** (`C_MAX_VEROSIMIL`) |
 | `a` | Aporte proporcional | c*E/T, entero, > 0 (solo TIPO 1) |
 | `tipo` | {1, 2a, 2b} | ~33% cada uno |
 
-Espacio enumerado TIPO 1: **3948 combinaciones validas**.
+Espacio enumerado TIPO 1: **2291 combinaciones validas** (auditoria 2026-08-09).
+
+> Eran 3948 mientras `c` solo estaba acotado por `c < q = P/n`. Esa cota es
+> matematica, no de verosimilitud: dejaba llegar el consumo hasta **$117.000**
+> (mediana $13.500, p90 $32.650) y producia enunciados como "consumio solamente
+> un jugo de $51.000". Con `C_MAX_VEROSIMIL = 15.000` la mediana de `c` baja a
+> $8.000, se conservan la instancia canonica (c = $5.000) y la cobertura
+> completa de P (10), n (7) y T (19), y quedan 2291 combinaciones -- muy por
+> encima de las 250 versiones exigidas.
 
 ## Decision de diseno -- RUTA (a)
 
@@ -41,9 +49,20 @@ mutacion **C**, que construye esa variante prohibida y comprueba que `KEY_SUFF` 
 | I-7 | Sin Unicode problematico (U+2212 etc.) | todos |
 | I-8 | Dato omitido no aparece en enunciado | tipo 2a, 2b |
 
-## Pool de errores (6)
+## Pool de errores (8)
 
-PRO-SUF-01..06. Seleccion con `sample()` sobre aplicables. Tipo de error varia entre versiones.
+PRO-SUF-01..08. Seleccion con `sample()` sobre aplicables. Tipo de error varia entre versiones.
+
+> Eran 6 hasta la auditoria del 2026-08-09. El pool NOMINAL cumplia la regla
+> (>= 4-6), pero el pool **aplicable por categoria** colapsaba al numero de
+> ranuras: la seleccion es 2 "Si" + 2 "No", y en TIPO 1 solo habia 2 errores
+> "No" aplicables y en TIPO 2b solo 2 "Si". Resultado medido: **2 combinaciones
+> posibles** de distractores en tipo 1 y 2 en tipo 2b (PRO-SUF-02 y 03 aparecian
+> en el 100 % de las versiones tipo 1), es decir, en el 67 % de las versiones dos
+> de los tres distractores eran fijos. Ningun validador del arsenal lo detecta.
+> Con PRO-SUF-07 ("no", supone impuestos/propina no declarados) y PRO-SUF-08
+> ("si", confunde la cuota equitativa q = P/n con el aporte proporcional), las
+> combinaciones pasan a **9 / 30 / 9** por tipo.
 
 ## Nomenclatura y ubicacion (decision del usuario, 2026-08-06)
 
@@ -82,7 +101,12 @@ El ejercicio vive por ahora en `A-Produccion/01-En-PreDesarrollo/excedente-almue
   KEY_SUFF verifica suficiencia real: deriva del TEXTO del enunciado si T y c estan
   presentes (= a determinable) y compara contra la categoria de la clave; independiente
   de la etiqueta tipo.
-- **I-6 (canonico, incondicional)**: semilla 43914 produce la instancia canonica.
+- **I-6 (canonico, incondicional)**: semilla **13355** produce la instancia canonica
+  (era 43914 sobre el espacio de 3948; la Fase 0 la recalcula ahora sobre el espacio
+  real leido del `.Rmd`, no sobre una copia de la enumeracion).
+  La reproduccion verbatim del item oficial ya **no depende del sorteo**: una
+  EXCEPCION CANONICA fija los tres distractores oficiales (PRO-SUF-01/02/03).
+  Antes salia bien 107/200 veces (54 %); ahora 200/200.
   Enunciado + 4 opciones verificados caracter por caracter contra ESPECIFICACION.md §3.
   0 errores.
 - **Mutacion A (clave falsa)**: copia del .Rmd con `sol` invertido. Rechazada por

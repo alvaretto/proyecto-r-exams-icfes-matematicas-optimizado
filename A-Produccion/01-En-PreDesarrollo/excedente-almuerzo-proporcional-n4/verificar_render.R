@@ -138,31 +138,24 @@ run_battery <- function(env) {
 # ===== FASE 0: Enumerar combos y encontrar semilla canonica ================
 cat("Fase 0: Enumerar espacio parametrico y buscar semilla canonica\n")
 
-n_pool <- c(5, 6, 8, 10, 12, 15, 20)
-P_grid <- seq(150000, 600000, by = 50000)
-pn_pares <- expand.grid(P = P_grid, n = n_pool, stringsAsFactors = FALSE)
-pn_pares$q <- pn_pares$P / pn_pares$n
-pn_pares <- pn_pares[pn_pares$q == floor(pn_pares$q) & pn_pares$q >= 5000, ]
+# El espacio se OBTIENE del .Rmd, no se re-implementa aqui. Una copia de la
+# enumeracion diverge en silencio en cuanto el ejercicio cambia una cota: al
+# acotar `c` a C_MAX_VEROSIMIL el .Rmd paso a 2291 combinaciones mientras esta
+# fase seguia reportando 3948 y buscando la canonica en el espacio viejo.
+.rmd_txt <- readLines(RMD, warn = FALSE)
+.ini <- grep("^```\\{r data_generation", .rmd_txt)[1]
+.fin <- grep("^```\\s*$", .rmd_txt); .fin <- .fin[.fin > .ini][1]
+stopifnot(!is.na(.ini), !is.na(.fin))
+.code_dg <- paste(.rmd_txt[(.ini + 1):(.fin - 1)], collapse = "\n")
+.code_t1 <- sub("tipo <- safe_sample\\(c\\(\"1\", \"2a\", \"2b\"\\), 1L\\)",
+                "tipo <- \"1\"", .code_dg)
+stopifnot(grepl("tipo <- \"1\"", .code_t1, fixed = TRUE))  # la sustitucion ocurrio
 
-combos_list <- list(); counter <- 0L
-for (i in seq_len(nrow(pn_pares))) {
-  Pi <- pn_pares$P[i]; qi <- pn_pares$q[i]
-  for (Tj in seq(Pi + 50000, min(Pi + 500000, 1200000), by = 50000)) {
-    Ej <- Tj - Pi; a_upper <- floor(qi * Ej / Tj)
-    if (a_upper < 500) next
-    a_cands <- seq(500, min(10000, a_upper), by = 500)
-    c_exact <- a_cands * Tj / Ej; c_round <- round(c_exact)
-    v <- abs(c_exact - c_round) < 0.01 & (c_round %% 500) == 0 &
-         c_round > 0 & c_round < qi
-    for (k in which(v)) {
-      counter <- counter + 1L
-      combos_list[[counter]] <- c(Pi, pn_pares$n[i], Tj,
-                                  a_cands[k], c_round[k], qi, Ej)
-    }
-  }
-}
-combos <- as.data.frame(do.call(rbind, combos_list))
-names(combos) <- c("P", "n", "Ttotal", "a_val", "c_val", "q", "E")
+.env_esp <- new.env(); set.seed(1L)
+eval(parse(text = .code_t1), envir = .env_esp)
+combos <- .env_esp$combos
+stopifnot(is.data.frame(combos), nrow(combos) > 0,
+          all(c("P", "n", "Ttotal", "a_val", "c_val") %in% names(combos)))
 N_COMBOS <- nrow(combos)
 
 canon_idx <- which(combos$P == 300000 & combos$n == 10 &
@@ -172,16 +165,17 @@ canon_idx <- canon_idx[1]
 cat("  Combos TYPE 1:", N_COMBOS, "\n")
 cat("  Indice canonico:", canon_idx, "\n")
 
-# Buscar semilla canonica simulando el path RNG exacto del .Rmd
-# Draws: d1=tipo(3), d2=combo(N), d3=ctx(8), d4=art(4), d5=sel_si(2)
+# Buscar semilla canonica simulando el path RNG del .Rmd.
+# Draws: d1=tipo(3), d2=combo(N). Los draws de contexto y articulo ocurren pero
+# no condicionan (es_canonico los sobrescribe con contextos[[1]] y "un jugo").
+# YA NO se filtra por el sorteo de sel_si: la EXCEPCION CANONICA fija los tres
+# distractores oficiales por construccion, asi que ese draw no ocurre en esta
+# rama. Filtrar por el era lo que hacia que la canonica saliera bien "de suerte".
 canon_seed <- NA_integer_
 for (s in seq_len(500000L)) {
   set.seed(s)
   if (sample.int(3L, 1L) != 1L) next
   if (sample.int(N_COMBOS, 1L) != canon_idx) next
-  sample.int(8L, 1L)
-  sample.int(4L, 1L)
-  if (sample.int(2L, 1L) != 1L) next
   canon_seed <- s; break
 }
 if (is.na(canon_seed)) stop("No se encontro semilla canonica en 500000 intentos")
@@ -230,8 +224,10 @@ exp_enun <- paste0(
 
 if (env_canon$enunciado_completo != exp_enun) {
   errors_f2 <- c(errors_f2, "I-6_ENUNCIADO: mismatch caracter por caracter")
-  cat("  ESPERADO:\n  ", repr::repr_str(exp_enun), "\n")
-  cat("  ACTUAL:\n  ", repr::repr_str(env_canon$enunciado_completo), "\n")
+  # base R: `repr` no es dependencia del repo y esta rama solo se ejecuta
+  # cuando I-6 falla, asi que su crash pasaba inadvertido.
+  cat("  ESPERADO:\n  ", encodeString(exp_enun, quote = '"'), "\n")
+  cat("  ACTUAL:\n  ", encodeString(env_canon$enunciado_completo, quote = '"'), "\n")
 }
 
 # 4 opciones esperadas (como conjunto, independiente del orden)
@@ -273,16 +269,31 @@ rmd_mut_a <- gsub(
   paste(rmd_lines, collapse = "\n"), fixed = TRUE)
 writeLines(strsplit(rmd_mut_a, "\n")[[1]], mut_a_path)
 
+# Contrato de mutacion (Incidente P -- INC-MUTANTE-SONDA): el mutante declara
+# la sonda que DEBE cazarlo. Morir por otra sonda no cuenta como deteccion.
+sonda_esperada_A <- "KEY_PHRASE"
+
 env_mut_a <- tryCatch(knit_env(mut_a_path, 42L), error = function(e) {
   errors_f3 <<- c(errors_f3, paste0("CRASH: ", conditionMessage(e))); NULL
 })
 if (!is.null(env_mut_a)) {
+  # Guarda sobre el ENTORNO (no sobre el texto del .Rmd): la marca debe haber
+  # caido sobre un distractor, o el mutante no es el que dice ser.
+  marcada <- which(as.logical(env_mut_a$sol))
+  if (length(marcada) != 1L || isTRUE(env_mut_a$opciones[[marcada[1]]]$es_correcta))
+    errors_f3 <- c(errors_f3,
+      "MUTANTE A MAL CONSTRUIDO: sol no quedo invertido (la marca sigue en la correcta)")
+
   batch_a <- run_battery(env_mut_a)
   if (length(batch_a) == 0) {
     errors_f3 <- c(errors_f3,
       "MUTACION A NO DETECTADA: el mutante paso la bateria sin errores")
+  } else if (!any(grepl(sonda_esperada_A, batch_a, fixed = TRUE))) {
+    errors_f3 <- c(errors_f3, paste0(
+      "MUTANTE A CAZADO POR LA SONDA EQUIVOCADA: esperaba ", sonda_esperada_A,
+      ", rechazado por: ", paste(batch_a, collapse = " | ")))
   } else {
-    cat("  Mutante A rechazado con", length(batch_a), "error(es):\n")
+    cat("  Mutante A rechazado por su sonda (", sonda_esperada_A, "):\n")
     for (e in batch_a) cat("    ", e, "\n")
   }
 }
@@ -292,6 +303,7 @@ cat("  Errores Fase 3:", length(errors_f3), "\n\n")
 cat("Fase 4: Mutacion B (TIPO 2a filtra T; detectado por I-8)\n")
 
 errors_f4 <- character(0)
+sonda_esperada_B <- "I-8"   # contrato de mutacion (Incidente P)
 mut_b_path <- file.path(SCRATCHPAD, "mutant_B.Rmd")
 
 # Mod 1: TYPE 2a provee T real
@@ -320,13 +332,24 @@ if (is.na(mut_b_seed)) {
   errors_f4 <- c(errors_f4, "No se encontro semilla TYPE 2a para mutante B")
 } else {
   env_mut_b <- knit_env(mut_b_path, mut_b_seed)
-  batch_b   <- run_battery(env_mut_b)
+  # Guarda sobre el ENTORNO: la fuga debe existir de verdad (T emitido en 2a).
+  if (env_mut_b$Ttotal <= 0 ||
+      !grepl("total de la cuenta por pagar fue de",
+             env_mut_b$enunciado_completo, fixed = TRUE))
+    errors_f4 <- c(errors_f4,
+      "MUTANTE B MAL CONSTRUIDO: TIPO 2a no llego a emitir T en el enunciado")
+
+  batch_b <- run_battery(env_mut_b)
   if (length(batch_b) == 0) {
     errors_f4 <- c(errors_f4,
       "MUTACION B NO DETECTADA: el mutante paso la bateria sin errores")
+  } else if (!any(grepl(sonda_esperada_B, batch_b, fixed = TRUE))) {
+    errors_f4 <- c(errors_f4, paste0(
+      "MUTANTE B CAZADO POR LA SONDA EQUIVOCADA: esperaba ", sonda_esperada_B,
+      ", rechazado por: ", paste(batch_b, collapse = " | ")))
   } else {
-    cat("  Mutante B (seed=", mut_b_seed, ") rechazado con",
-        length(batch_b), "error(es):\n")
+    cat("  Mutante B (seed=", mut_b_seed, ") rechazado por su sonda (",
+        sonda_esperada_B, "):\n")
     for (e in batch_b) cat("    ", e, "\n")
   }
 }
@@ -336,6 +359,7 @@ cat("  Errores Fase 4:", length(errors_f4), "\n\n")
 cat("Fase 5: Mutacion C (TIPO 2 omite n en vez de T/c; KEY_SUFF debe rechazar)\n")
 
 errors_f5 <- character(0)
+sonda_esperada_C <- "KEY_SUFF"   # contrato de mutacion (Incidente P)
 # Mutante C INDEPENDIENTE (no reutiliza el B): copia del .Rmd donde la rama
 # TIPO 2b omite `n` en lugar de `c`. Resultado: el enunciado entrega P, T y c
 # (datos suficientes para a = c/T*(T-P)) y omite n, que es IRRELEVANTE para la
@@ -377,13 +401,16 @@ if (is.na(mut_c_seed)) {
     errors_f5 <- c(errors_f5,
       "MUTANTE C MAL CONSTRUIDO: c no aparece en el enunciado")
   batch_c   <- run_battery(env_mut_c)
-  has_key_suff <- any(grepl("KEY_SUFF", batch_c))
+  has_key_suff <- any(grepl(sonda_esperada_C, batch_c, fixed = TRUE))
   if (!has_key_suff) {
-    errors_f5 <- c(errors_f5,
-      "MUTACION C NO DETECTADA por KEY_SUFF: datos bastan pero clave No paso sin KEY_SUFF")
+    errors_f5 <- c(errors_f5, paste0(
+      "MUTANTE C CAZADO POR LA SONDA EQUIVOCADA (o no detectado): esperaba ",
+      sonda_esperada_C, ", rechazado por: ",
+      if (length(batch_c)) paste(batch_c, collapse = " | ") else "<nada>"))
   } else {
-    suff_msgs <- batch_c[grepl("KEY_SUFF", batch_c)]
-    cat("  Mutante C (seed=", mut_c_seed, ") rechazado por KEY_SUFF:\n")
+    suff_msgs <- batch_c[grepl(sonda_esperada_C, batch_c, fixed = TRUE)]
+    cat("  Mutante C (seed=", mut_c_seed, ") rechazado por su sonda (",
+        sonda_esperada_C, "):\n")
     for (e in suff_msgs) cat("    ", e, "\n")
   }
 }
