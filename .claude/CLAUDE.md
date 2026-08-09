@@ -140,9 +140,55 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.0 (diagnosticidad V9 + sonda H3 + diversidad por gap V8 + corrector de ortografía morfológico + ciclo de endurecimiento de los dos orquestadores)
+**Versión**: 3.20.1 (segunda pasada del mega-prompt sobre ambos orquestadores: exigencias que no tenían dónde ejecutarse ni dónde declararse)
 **Fecha**: 2026-08-08
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.1 (2026-08-08)
+
+> Segunda pasada completa de `mega-prompt-endurecimiento-orquestadores.md` sobre cada gemelo, ahora
+> con las 9 fases y las 8 puertas. Los 7 hallazgos son del **mismo tipo**: exigencias documentadas
+> en un pre-flight o un incidente que luego **no aparecen en la checklist que se ejecuta**, o que no
+> tienen **ningún campo donde declararse** en el contrato de salida. No son reglas nuevas: son
+> reglas que existían sin punto de cumplimiento.
+
+- **`orquestador-schoice` — la validación realista no comprobaba tres cosas que el propio archivo
+  exige**: (a) el guard del contador `none` (Incidente E, regla #20), que es un fallo que **solo se
+  manifiesta en el entorno del usuario** — RStudio bundlea pandoc ≥3.7 y la terminal 3.6 —, así que
+  si no se comprueba ahí no se comprueba en ninguna parte; (b) el barrido de U+2212 al reutilizar un
+  pool ajeno (Incidente O); (c) la fuga por nombre de archivo en el XML de Moodle (§P6 / Error 25).
+  Los tres estaban en el gemelo CLOZE y aquí faltaban.
+- **`orquestador-cloze` — el punto 8 de su validación realista ya ejecutaba `exams2moodle()`** para
+  comprobar que ningún gap contiene imágenes, es decir, **tenía el XML abierto delante**, y no le
+  hacía el `grep` de nombres que su propio pre-flight 15 exige. Nuevo paso **8b**, que reutiliza ese
+  XML sin re-exportar.
+- **Contratos de salida — exigencias sin campo donde declararse**: SCHOICE gana `graficas_opcion`,
+  `formato_equilibrado` y `fuga_nombre_moodle`; CLOZE gana `fuga_nombre_moodle`. El pre-flight pedía
+  verificaciones cuyo resultado no se reportaba en ningún sitio.
+- **Paso 5 del SCHOICE**: añade `exams2moodle` cuando hay opciones gráficas — es el **único** canal
+  que expone el nombre de archivo (HTML y PDF embeben la imagen).
+- **La literalidad ICFES queda marcada como JUICIO HUMANO en ambos**: ningún script del arsenal
+  compara los `exextra[…]` contra los JSON del catálogo canónico. Con V1-V9 automatizadas alrededor,
+  era fácil suponer que un «paso 10 OK» certificaba también el descriptor, y no lo hace.
+- **Dos rangos `FASES 2A-2J` blindados como dato histórico, no «corregidos»**: en mayo de 2026 ese
+  era el arsenal completo. Reescribirlos a 2N habría falseado la crónica del incidente; llevan ahora
+  la aclaración de la fecha.
+- **Referencias falsas introducidas y corregidas en la misma pasada**: «pre-flight 15b» y «21c»
+  apuntaban a checks inexistentes, porque ambos archivos tienen checks **numerados** `12b`, `12c` y
+  `16b`. Son apartados `(b)` y `(c)`, y así se escriben.
+- **Mutación (G5) sobre casos que NINGÚN hook cubre**: SCHOICE 4 mutantes —fuga de nombre en el XML
+  y **veredicto invariante cazado nominalmente por H3** (100 % de 40 versiones frente al 55 % del
+  control sano)—; CLOZE 3 nuevos (fuga, H3 por gap, V4 con 5 partes), 7 acumulados. **0 desviados**
+  en ambos.
+- **El Incidente S se reprodujo dentro del propio verificador, dos veces**: primero un harness que
+  daba tres falsos negativos porque el comando simulado llevaba comillas escapadas que el regex del
+  hook no reconoce (salía en silencio), y después un mutante que **no mutaba el artefacto** — el
+  nombre del PNG se genera con `paste0`, no como literal, así que el `sed` no tocaba nada. Ambos los
+  atrapó la guarda que distingue «sonda limpia» de «sonda nunca ejecutada». Sin esa guarda, las dos
+  veces habrían contado como verde.
+- **Verificación**: SCHOICE +1.5 %, CLOZE +0.7 % (presupuesto +8 %); 25/25 y 26/26 pre-flight
+  declarados = reales; 16 filas en ambas máquinas de estados; 0 referencias muertas fuera de los
+  bloques marcados como ilustrativos; runner completo 24/24 suites, 0 fallidas; I-1..I-9 en verde.
 
 ### Cambios v3.20.0 (2026-08-08)
 
