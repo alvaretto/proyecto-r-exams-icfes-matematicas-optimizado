@@ -2,6 +2,12 @@
 
 > Prompt genérico y reutilizable. Para usarlo en otro proyecto, cambia **solo** el bloque
 > `## 0. Variables` y el resto funciona igual.
+>
+> **Este archivo NO está adaptado a este repo** — sus variables apuntan al proyecto
+> `horarios-pcielo`, donde nació. Para endurecer un orquestador ICFES usa la adaptación
+> `mega-prompt-endurecimiento-orquestadores.md`, que sustituye las fases de proyecto
+> (E2E de app, modularización, docs) por las que aplican a un archivo de definición de
+> agente: inventario de referencias, paridad entre gemelos, exigencia ICFES y mutación.
 > Uso previsto: pegar este archivo (o decir «ejecuta `mega-prompt.md`») al inicio de una sesión.
 
 ---
