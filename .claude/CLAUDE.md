@@ -23,6 +23,10 @@ Este archivo funciona como **índice central** del sistema. Para información de
 7. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
 8. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
 9. **Detractor obligatorio** en fases de revisión → @.claude/rules/detractor-obligatorio.md
+   Desde la v1.2: el detractor DEBE ser un agente **distinto** del que escribió o corrigió el
+   artefacto (autoevaluación ≠ FASE 2C), su reporte se considera entregado sólo si cierra con
+   el marcador `VEREDICTO_DETRACTOR:`, y si no entrega tras 2 intentos se **escala al usuario**
+   — PROHIBIDO sustituirlo por la auditoría propia del coordinador y sellar `detractor_fase2c`.
 10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
@@ -133,16 +137,51 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (24 suites enganchadas a `tests/run_all_tests.R`)
+- **Tests**: `tests/testthat/` (25 suites enganchadas a `tests/run_all_tests.R`)
 - **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.1 (segunda pasada del mega-prompt sobre ambos orquestadores: exigencias que no tenían dónde ejecutarse ni dónde declararse)
-**Fecha**: 2026-08-08
+**Versión**: 3.20.2 (el detractor no entregaba y la FASE 2C se cerraba con autoevaluación)
+**Fecha**: 2026-08-09
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.2 (2026-08-09)
+
+> Un agente cuyo trabajo es romper el sesgo de confirmación no servía de nada si su reporte no
+> llegaba: la FASE 2C acababa cerrándose con la autoevaluación del mismo agente que había escrito
+> el código. El agujero no era el análisis — era **el canal de entrega y la falta de una regla de
+> independencia**.
+
+- **CONTRATO DE ENTREGA en `agente-detractor.md`**: su texto final **es** el reporte. Prohibido
+  terminar el turno sin él, escribirlo a un archivo, o anunciar que lo entregará. Si se queda sin
+  presupuesto, entrega parcial declarando los dominios `no auditado`. Cierra siempre con
+  `VEREDICTO_DETRACTOR: APROBAR | APROBAR_CON_CAMBIOS | RECHAZAR`, marcador que permite a quien
+  invoca comprobar **mecánicamente** que el reporte llegó entero: sin esa línea, NO ENTREGADO
+  aunque contenga análisis. Añadido además `maxTurns: 30` — era el único agente de reporte que no
+  declaraba presupuesto (el `adversario` global sí).
+- **REGLA #9 → v1.2**, dos secciones nuevas. **Independencia**: el detractor DEBE ser un agente
+  distinto del que escribió o corrigió el artefacto, con tabla de qué cuenta como FASE 2C válida
+  (incluye el caso del detractor **caducado** por una edición posterior). **Protocolo de
+  no-entrega**: 2 reintentos (reclamo al mismo agente → agente nuevo con contexto limpio) y luego
+  **escalado obligatorio al usuario**; PROHIBIDO sustituir el detractor por la auditoría propia y
+  sellar `detractor_fase2c`. El coordinador puede revisar por su cuenta, pero debe declararlo
+  **no independiente** y dejar la fase abierta.
+- **TABLA — cuál de los dos detractores usar**: `AgenteDetractor` (canónico para `.Rmd` en
+  workflow, 8 dominios) vs `adversario` global (anti-sicofancia). Ambos existían y ninguna regla
+  decía cuándo usar cada uno.
+- **NUEVO TEST**: `tests/testthat/test_contrato_detractor.R` (16 aserciones) — verifica el
+  contrato, `maxTurns`, ambas secciones de la regla, y que agente y regla usen **el mismo**
+  marcador (si divergen, la comprobación de entrega se rompe en silencio). Runner: **25 suites**.
+  Verificado por mutación: al renombrar el marcador en el agente, el test falla nombrando la causa.
+- **Origen**: incidente 2026-08-09 en `excedente-almuerzo-proporcional-n4`. Tres invocaciones
+  consecutivas terminaron en notificación de «disponible» sin reporte. El defecto de mayor
+  severidad del ejercicio era **semántico** —un distractor que en una de las tres ramas señalaba
+  información que SÍ resolvía el problema, rompiendo la unicidad de la clave— y todo el arsenal
+  automático estaba en verde: coherencia APROBADO, diagnosticidad PASS, diversidad sin objeción.
+  Es exactamente la clase de hallazgo que depende de una mirada independiente.
 
 ### Cambios v3.20.1 (2026-08-08)
 

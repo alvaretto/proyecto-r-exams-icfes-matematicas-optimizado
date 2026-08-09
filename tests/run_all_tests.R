@@ -214,6 +214,12 @@ suites <- list(
               "validar_coherencia_matematica")
   ),
   list(
+    nombre = "Contrato de entrega e independencia del detractor (Regla #9 v1.2)",
+    archivo = "tests/testthat/test_contrato_detractor.R",
+    critico = TRUE,
+    watch = c("agente-detractor", "detractor-obligatorio", "test_contrato_detractor")
+  ),
+  list(
     nombre = "Diversidad Sustantiva (Regla #22)",
     archivo = "tests/testthat/test_diversidad_sustantiva.R",
     critico = TRUE,
