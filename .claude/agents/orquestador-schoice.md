@@ -217,7 +217,9 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 
 ### Incidente D · `INC-SINO-BINARIO` — Distractores Sí/No: coherencia condicional + gotcha sample (sesión 2026-05-12)
 
-**Sesión**: 2026-05-12, ejercicio `Comparacion-Lineas-Temporales-Schoice`. Análisis del HTML renderizado detectó 4 bugs sistémicos en el pool de errores que pasaron las FASES 2A-2J originales sin detección:
+**Sesión**: 2026-05-12, ejercicio `Comparacion-Lineas-Temporales-Schoice`. Análisis del HTML renderizado detectó 4 bugs sistémicos en el pool de errores que pasaron las FASES 2A-2J originales sin detección
+(2A-2J era el arsenal completo **en aquella fecha**; hoy llega a 2N — el dato es histórico, no un
+rango obsoleto):
 
 1. **Incoherencia conclusión-justificación** (~50% de semillas): un distractor con `descripcion_corta` fija "No, porque…" + justificación construida con `pais_perdedor` / `pais_ganador` produce "No, porque Pa supera a Pb" cuando `afirmacion=FALSE` (la justificación apoya "Sí" pero la conclusión declara "No").
 2. **Premisa imposible** (100% de semillas): `descripcion_corta` afirmando "cantidades iguales" mientras `gap_min=0.3` garantiza que NUNCA hay valores iguales.
@@ -518,7 +520,10 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
    - Renderizar ≥10 semillas y, para cada distractor Sí/No del pool seleccionado, verificar que la justificación textual sea **internamente coherente con la conclusión declarada** (no apoye la conclusión opuesta).
    - Si se detecta incoherencia interna en cualquier semilla → ABORTAR y aplicar Patrón A antes de continuar.
 6. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente P): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que la guarda de "mutante mal construido" se evalúa sobre el ENTORNO, no sobre el texto del `.Rmd`. Un `APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
-7. Solo después de estas verificaciones, marco renderizado_4_formatos como completado.
+7. **Si el `.Rmd` usa tablas Markdown** (Incidente E, regla #20): inspecciono el `.tex` generado y, si contiene `\LTcaptype{none}`, verifico que el `.Rmd` trae la guardia `@ifundefined{c@none}`. Lo tenía documentado como incidente pero fuera de esta lista, y es un fallo que **solo aparece en el entorno del usuario** (RStudio bundlea pandoc ≥3.7; la terminal, 3.6): si no lo compruebo aquí, no lo compruebo en ninguna parte.
+8. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente O): `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>` sobre los campos que este ítem SÍ emite → debe ser vacío. Un campo que en el origen era dato muerto nunca se probó contra LaTeX.
+9. **Si el ítem tiene opciones gráficas** (pre-flight 21 apartado (c), regla #22 §P6 / Error 25): exporto a Moodle y compruebo que ningún PNG conserva un nombre de rol — `grep -oE 'diagrama_[a-z]+\.png' moodle_output/*.xml | sort -u` debe devolver solo `_a`.. `_d`. HTML y PDF **no** sirven para esto: embeben la imagen y no exponen el nombre.
+10. Solo después de estas verificaciones, marco renderizado_4_formatos como completado.
 
 ## Máquina de estados (16 filas: 0–12 con los auxiliares 2b/2c/6b)
 
@@ -538,7 +543,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 2c | flujo_b sel | **WAIT_USER #2** Tabla comparativa, usuario elige lenguaje | (humano) | — |
 | 3 | generacion_rmd | Construir `.Rmd` SCHOICE metacognitivo (lógica del skill /generar-schoice inline) | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con justificación + análisis diagnóstico de cada distractor | inline | opus (yo mismo) |
-| 5 | renderizado_4_formatos | `exams2html/pdf/pandoc/nops` | Bash | — |
+| 5 | renderizado_4_formatos | `exams2html/pdf/pandoc/nops` (+ `exams2moodle` si hay opciones gráficas: es el único canal que expone el nombre de archivo — pre-flight 21 apartado (c)) | Bash | — |
 | 6 | arsenal_post_render | Hook automático FASES 2A-2N (2L = V5 CLOZE, N/A en schoice; **2N** = `WARN_DIV_ESTATICA`, regla #22) | (automático) | — |
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
@@ -575,6 +580,11 @@ orientación > infografías > TEA. Ante discrepancia gana el PDF oficial.
   md5 `6339b53011f5e43480a19b3c6c5c9bab` (constructo, competencias y estructura).
 - Si el catálogo no está montado en la máquina, **no adivino**: aborto el paso 10 con
   `[VERIFICAR: catálogo canónico no disponible]` y lo reporto.
+- **Esta comprobación es JUICIO HUMANO, no automatizada.** Ningún script del arsenal compara los
+  `exextra[…]` del `.Rmd` contra los JSON del catálogo: la literalidad la verifico yo, campo por
+  campo, abriendo el JSON. Lo digo explícitamente porque el resto del paso 10 sí tiene validadores y
+  es fácil suponer que este también — un «paso 10 OK» no significa que un script haya certificado la
+  literalidad del descriptor.
 
 **Coherencia obligatoria Nivel ↔ DOK** (regla #1): `DOK ≥ 3 ⇒ Nivel ICFES ≥ 3`; `Bloom = Evaluar ⇒
 Nivel ≥ 3`. Un DOK 3 con Nivel 2 es contradictorio y descalibra el banco. Las tres competencias
@@ -812,6 +822,9 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "diagnosticidad": {"H1": "<tasa + margen mediano>", "H2": "<tasa>", "H3": "<tasa>", "nota_de_orden": "<literal o null>"},
   "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
   "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
+  "graficas_opcion": "ninguna | un_png_por_opcion (regla graficos-como-opciones)",
+  "formato_equilibrado": "N/A | <n> de 4 opciones comparten el formato de la correcta (mínimo 2)",
+  "fuga_nombre_moodle": "N/A | verificado sobre el XML: solo diagrama_a..d.png",
   "estado_workflow": {"analisis_icfes": true, "flujo_b": true, ...},
   "siguientes_pasos_manuales": ["git add ...", "..."]
 }
