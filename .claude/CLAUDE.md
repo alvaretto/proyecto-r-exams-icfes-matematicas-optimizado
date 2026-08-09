@@ -140,9 +140,88 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.19.0 (variante CLOZE de permutaciones + Incidentes Q/R/O + V6/V7 CLOZE + tres correcciones de deriva en los orquestadores)
-**Fecha**: 2026-07-30
+**Versión**: 3.20.0 (diagnosticidad V9 + sonda H3 + diversidad por gap V8 + corrector de ortografía morfológico + ciclo de endurecimiento de los dos orquestadores)
+**Fecha**: 2026-08-08
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.0 (2026-08-08)
+
+> Esta entrada cubre los **15 commits** del bloque 2026-08-06 → 2026-08-08. El changelog se había
+> quedado en la v3.19.0 mientras entraban V8, V9, la sonda H3 y la ampliación del corrector: es
+> deriva documental, no cambios nuevos. Se registra en bloque para que el índice deje de omitirlos.
+
+- **NUEVO VALIDADOR — DIAGNOSTICIDAD (V9)**: `.claude/scripts/validar_diagnosticidad.R`. El arsenal
+  medía corrección, formato, unicidad y diversidad, pero **nada medía si los distractores
+  discriminan**: un ítem puede tener opciones únicas, clave correcta y datos que cambian en cada
+  versión, y aun así resolverse sin leer el contenido. Sondas **H1** más-larga/más-corta, **H2**
+  prefijo y **H3** veredicto invariante. `ERR_DIAG_SUPERFICIAL` (exit 1) cuando la clave se
+  identifica así en el 100 % de las versiones; `WARN_DIAG_SUPERFICIAL` entre el umbral y el 99 %.
+- **EL MARGEN ES PARTE DE LA SONDA**: H1 exige además un margen relativo **≥ 15 %** sobre el rival
+  más próximo. Sin él, un gap ya igualado a propósito (8 caracteres medianos sobre 115 → 7 %) seguía
+  reportando 100 % y quedaba bloqueado por una diferencia que ningún estudiante puede explotar.
+  Umbral calibrado contra las dos versiones medidas del mismo gap: original 32 % y 21 % siguen
+  cazadas, corregido 7 % y 5 % ya no. Se imprime siempre el margen mediano y una **NOTA DE ORDEN**,
+  para que «no dispara» no se confunda con «no hay señal».
+- **NUEVA SONDA H3 — regla #22 §P4-bis** (`diversidad-sustantiva.md`): en un ítem de conclusión
+  binaria («Sí, porque…»/«No, porque…») la clave puede tener SIEMPRE el mismo veredicto aunque su
+  valor numérico cambie. Medido en `area-jardin-lote-porcentaje-n4`: **60/60 versiones con clave
+  "No"** y todo el arsenal en verde. Las tres defensas que parecían cubrirlo miran otra cosa — H2
+  exige que la clave sea la única con su prefijo (con balance 2+2 nunca lo es → 0 %),
+  `validar_diversidad_sustantiva.R` mide el VALOR (que sí variaba) y el balance 2+2 es
+  intra-versión. Impacto: 25 % → 50 % de acierto por azar. **Primera sonda cross-versión** del
+  arsenal.
+- **DIVERSIDAD POR GAP (V8)**: `validar_diversidad_sustantiva.R` opera en **modo CLOZE** — descubre
+  las claves por gap (`sol_pN`/`opciones_pN`/`exsol_pN`), declara su **cobertura** y emite
+  `WARN_DIV_GAP_FIJO` nombrando los invariantes. `ERR_DIV_COSMETICA` queda reservado al caso en que
+  **todos** los gaps son invariantes. Límite declarado: en gaps cuyo texto interpola el contexto
+  narrativo, el script cuenta variación de envoltorio como sustantiva, así que V8 exige declaración
+  explícita por gap (`variable` | `fija-justificada`).
+- **VALIDACIONES CLOZE V1–V7 → V1–V9** en `orquestador-cloze`, con V8 y V9 cableadas en el paso 9,
+  el contrato de salida y el checklist de aprobación.
+- **CORRECTOR DE ORTOGRAFÍA — el agujero era la FORMA de la lista, no su longitud**:
+  `corregir_ortografia_espanol.R` firmaba «✓ limpio» sobre un `.Rmd` que emitía al estudiante
+  `formula`×14, `Si, porque`×11, `demas`×7 y `consumio`×4; la regla #7 y el hook de pre-commit se
+  apoyan en esa salida, así que el defecto atravesaba las tres capas con un limpio firmado. Ahora:
+  regla **morfológica** por sufijo `-ción/-sión/-xión` (cubre vocabulario abierto sin enumerarlo),
+  reglas **contextuales** auto-corregibles solo donde la lectura alternativa es gramaticalmente
+  imposible (`Si,`/`Si.` → `Sí`, interrogativos tras `¿`), y un segundo diccionario
+  **`diccionario_ambiguo`** cuyas formas se reportan como `REVISION_MANUAL` y que `--fix` **nunca**
+  toca. Un archivo con ambiguos ya no se declara limpio. Barrido `--fix` aplicado a los `.Rmd` sin
+  código embebido de `01-` y `02-`.
+- **ROUTING — alias genérico en los 10 agentes**: `claude-opus-4-6` seguía activo, pero el Opus de
+  agosto 2026 es Claude Opus 5, tres generaciones por delante. Los IDs pinneados envejecen en
+  silencio, así que los 10 agentes pasan a `opus`/`sonnet`/`haiku`, que resuelven al modelo vigente
+  de cada tier. Arrastró dos Sonnet 4.5 pinneados que no estaban reportados.
+- **CICLO DE ENDURECIMIENTO DE LOS DOS ORQUESTADORES** (`35d7d2e0`, `1ca6f6ad`, `f5b4f88c`,
+  `93b24724`), guiado por `.claude/docs/mega-prompt-endurecimiento-orquestadores.md` (movido desde
+  `.claude/agents/`, donde confundía la auditoría del directorio, y parametrizado por
+  ARTEFACTO_UNICO/GEMELO_SOLO_LECTURA). En CLOZE, el hallazgo con consecuencias operativas fueron
+  **cinco residuos** de la versión vieja del Incidente E («NOPS N/A esperado con gaps num/string»),
+  falsa desde el 2026-07-30: `exams2nops()` rechaza **cualquier** `extype: cloze` antes de mirar
+  `exclozetype`, así que un orquestador que leyera la máquina de estados habría tratado como error
+  real un rechazo esperado. Más: `WAIT_USER #3` imprimía «mínimo 4» contra el V4 de 6 — el único
+  sitio espejo donde el umbral se MUESTRA en vez de gobernar una decisión, y por eso sobrevivió;
+  conteo de pre-flight 24→26 reales; FASE 2N ausente del check 12; `decisiones_humanas` sin declarar
+  en el esquema de inputs; bloque «Qué se persiste y qué no» (2b/2c/6b no los registra
+  `workflow-state.sh`); fuga por nombre de PNG en el XML de Moodle (§P6), que **mover las gráficas al
+  enunciado no elimina**. En SCHOICE: dry-run que no podía fallar, `preflight_failed` ausente de su
+  propio contrato de salida, reporte sin bloque de mutantes pese a que el Incidente P lo exige, y
+  citas cruzadas al gemelo **por letra** (las letras no coinciden entre gemelos).
+- **UN `—` SIN RAZÓN ES UNA HIPÓTESIS**: la tabla de IDs `INC-*` marcaba `INC-SOLUTION-ORDEN` como
+  N/A para SCHOICE y era falso — el mecanismo es de `exshuffle`, no del tipo de ítem. Ahora los `—`
+  de ambos gemelos llevan su razón escrita en las dos direcciones.
+- **CORRECCIÓN DE POLÍTICA — paso 11** (`7f3abf69` revierte `1ca6f6ad`): se había cableado que
+  `aprobacion_usuario` «exige evidencia de aula (Nivel 3)». Es falso. El paso 11 es la aprobación
+  **del profesor** y se sella ANTES del aula: es lo que habilita llevar el ejercicio a estudiantes.
+  La evidencia de Nivel 3 es el gate de `/promover-ejercicio` hacia `03-En-Produccion/`. Evidencia
+  en disco: `permutaciones-pescadores-venia-n4` tiene `aprobacion_usuario: true` (11/11) y vive en
+  `02-En-Desarrollo/`; con la política revertida ese estado sería inalcanzable.
+- **NUEVOS SUBPROYECTOS**: `excedente-almuerzo-proporcional-n4` (SCHOICE + CLOZE v1, y **CLOZE v2
+  aprobado para aula**, 11/11, D1-D5 cerrados) y `area-jardin-lote-porcentaje-n4` (SCHOICE N4 de
+  argumentación derivado de `MAT-2026-1-026`, con los porcentajes redondeados **en el origen** para
+  que el ruido de coma flotante no llegue al enunciado).
+- **VERIFICACIÓN DEL BLOQUE**: runner completo **24/24 suites, 0 fallidas**; invariantes I-1..I-9 en
+  verde; 10 agentes; 21 archivos en `.claude/rules/` (22 reglas en este índice).
 
 ### Cambios v3.19.0 (2026-07-30)
 - **NUEVA VARIANTE CLOZE**: `permutaciones-pescadores-venia-n4/cloze/` — 6 partes Progressive
