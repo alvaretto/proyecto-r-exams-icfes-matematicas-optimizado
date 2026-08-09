@@ -2965,14 +2965,66 @@ MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 2
 
 y luego incrementa `ERRORES_TOTALES` si el exit no es 0. La consecuencia es un **falso ROJO permanente**: la FASE 2G suma un error en todo ejercicio del repositorio. Un gate que siempre falla es un gate que se aprende a ignorar.
 
-### ✅ Fix propuesto (PENDIENTE DE APLICAR)
+### ✅ Solución Verificada (aplicada 2026-08-09)
+
+El archivo real es `SOURCES/scripts_validacion/validar_multisemilla.R`; `.claude/scripts/` solo
+contiene un **symlink** (modo `120000` en git). Editar la ruta de `.claude/scripts/` no funciona.
+
+La resolución de la propia ruta pasa a cuatro pasos por orden de fiabilidad, cada uno aislado:
 
 ```r
-script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")
-if (is.null(script_dir) || script_dir == "") { ...fallback... }
+.resolver_script_dir <- function() {
+  args <- commandArgs(trailingOnly = FALSE)          # 1. Rscript
+  hit <- grep("^--file=", args, value = TRUE)
+  if (length(hit) > 0) {
+    d <- tryCatch(dirname(normalizePath(sub("^--file=", "", hit[1]), mustWork = TRUE)),
+                  error = function(e) "")
+    if (length(d) == 1L && nzchar(d)) return(d)
+  }
+  d <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")   # 2. source()
+  if (!is.null(d) && length(d) == 1L && nzchar(d)) return(d)
+  ""
+}
 ```
 
-Estado: **no aplicado**. Es infraestructura compartida y quedó fuera del alcance de la sesión que lo detectó.
+más `git rev-parse --show-toplevel` (3) y las rutas relativas conocidas (4) dentro de
+`.cargar_dependencia()`, que **aborta con `stop()`** si ninguna candidata existe.
+
+**Segundo defecto corregido a la vez**: la versión anterior recorría las rutas relativas y, si
+ninguna existía, terminaba el bucle **sin cargar nada** y continuaba. El fallo aparecía mucho
+después como «no se pudo encontrar la función», que no apunta a la causa.
+
+### 🧪 Validación de la Solución
+
+Los cuatro modos de invocación, con el exit real medido sin tuberías que lo enmascaren:
+
+| Invocación | Antes | Después |
+|---|---|---|
+| sin argumentos | exit 1 (crash) | **exit 2** + imprime el uso (contrato declarado en su cabecera) |
+| desde la raíz, por el symlink | exit 1 | **APROBADO** |
+| desde un cwd ajeno (`/tmp`) | exit 1 | **APROBADO** |
+| vía `source()` | — | función disponible |
+
+**Prueba de mutación sobre una COPIA en `/tmp`**, no sobre el archivo del repo: el mutante con el
+patrón viejo sale con exit 1 y su salida contiene `sys.frame`, así que ambas aserciones del test
+disparan. *(Lección aparte: la primera vez se mutó el archivo real y el paso de restaurar quedó en
+un job en segundo plano — durante unos minutos el repo tuvo en disco el validador roto. Mutar
+siempre una copia.)*
+
+### 🛡️ Defensa permanente
+
+`tests/testthat/test_validar_multisemilla_invocable.R` (enganchado al runner, suite crítica):
+
+1. **Barrido de todo el arsenal** — ningún `.R` de `.claude/scripts/` ni de
+   `SOURCES/scripts_validacion/` puede usar `sys.frame(<literal>)` fuera de un `tryCatch`.
+2. **Invocabilidad real** bajo `Rscript` desde un `tempdir()`, por el symlink y por la ruta real:
+   la salida no contiene `sys.frame`, el exit es 2 y aparece el uso.
+3. **Contrato del fix**: el fuente declara `--file=`, `tryCatch` y el mensaje de aborto.
+
+**El detector es del índice LITERAL, no de `sys.frame` a secas.** La primera versión marcaba
+cualquier `sys.frame(`, y daba un **falso positivo** en `stress_test_visual.R:34`, que usa
+`sys.frame(i)` dentro de `for (i in seq_len(sys.nframe()))` — bajo `Rscript` el cuerpo simplemente
+no se ejecuta, y además prueba `--file=` primero. Ese script es correcto: sale con 2, no con 1.
 
 ### 📋 Checklist
 
@@ -2984,4 +3036,4 @@ Estado: **no aplicado**. Es infraestructura compartida y quedó fuera del alcanc
 
 | Fecha | Componente | Causa | Estado |
 |-------|-----------|-------|--------|
-| 2026-08-09 | `.claude/scripts/validar_multisemilla.R` | `sys.frame(1)` revienta antes de la guarda `is.null()` | Detectado y documentado; fix de una línea pendiente |
+| 2026-08-09 | `SOURCES/scripts_validacion/validar_multisemilla.R` | `sys.frame(1)` revienta antes de la guarda `is.null()`; y el bucle de rutas relativas podía terminar sin cargar nada | **RESUELTO** — resolución en 4 pasos + aborto explícito + `test_validar_multisemilla_invocable.R` en el runner. FASE 2G deja de ser un falso ROJO |

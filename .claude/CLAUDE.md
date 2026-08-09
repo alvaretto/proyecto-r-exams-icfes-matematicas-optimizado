@@ -144,9 +144,76 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.3 (la defensa §P4-bis crea deuda en el pool que ya existía)
+**Versión**: 3.20.4 (la FASE 2G llevaba en falso ROJO permanente y nadie lo miraba)
 **Fecha**: 2026-08-09
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.4 (2026-08-09)
+
+> Cierre del bloque anterior: se aplican las dos objeciones que el detractor dejó abiertas y se
+> resuelve de raíz el Error 31, que la v3.20.3 solo había documentado.
+
+- **ERROR 31 RESUELTO — `validar_multisemilla.R`**. Resolución de la propia ruta en cuatro pasos
+  aislados (`--file=` de `commandArgs` → `sys.frame` dentro de `tryCatch` → `git rev-parse
+  --show-toplevel` → rutas relativas) y **aborto con `stop()`** si ninguna candidata existe. Esto
+  último corrige un **segundo defecto latente** que la v3.20.3 no había visto: el bucle de rutas
+  relativas podía terminar sin cargar nada y continuar, y el fallo salía mucho después como «no se
+  pudo encontrar la función». Verificado en los cuatro modos de invocación —sin argumentos, desde la
+  raíz por el symlink, desde un cwd ajeno y vía `source()`—, midiendo el exit **real**, sin tuberías
+  que lo enmascaren. **La FASE 2G informa de verdad por primera vez**: 20/20 semillas, exit 0.
+- **TRAMPA DE EDICIÓN**: el archivo real es `SOURCES/scripts_validacion/validar_multisemilla.R`;
+  `.claude/scripts/` contiene solo un **symlink** (modo `120000` en git). Editar la ruta de
+  `.claude/scripts/` no surte efecto. Lo mismo vale para `validar_coherencia_matematica.R`,
+  `corregir_ortografia_espanol.R` y `arsenal_validacion_completa.R`.
+- **NUEVA SUITE CRÍTICA (26 en el runner)**: `test_validar_multisemilla_invocable.R`. Barre TODO el
+  arsenal buscando `sys.frame(<literal>)` fuera de `tryCatch`, comprueba la invocabilidad real bajo
+  `Rscript` desde un `tempdir()` y fija el contrato del fix. **El detector es del índice literal, no
+  de `sys.frame` a secas**: la primera versión daba un falso positivo en `stress_test_visual.R:34`,
+  que usa `sys.frame(i)` dentro de `for (i in seq_len(sys.nframe()))` y es correcto. Verificado por
+  mutación sobre una **copia en `/tmp`** — la primera vez se mutó el archivo real y el paso de
+  restaurar quedó pendiente en un job en segundo plano, dejando unos minutos el validador roto en
+  disco. Mutar siempre una copia.
+- **OBJECIÓN 1 DEL DETRACTOR APLICADA**: la clave alternativa `GEO-ARE-09` pasa a **conclusión
+  desnuda**, con el mismo registro que `GEO-ARE-04`. Medido sobre 800 versiones: «elegir la más
+  larga» **50,5 % → 0,0 %**; «la que dice *producto*» **62,9 % → 25,0 %** (= azar). H1 del validador
+  oficial: 50 % → **0 %**.
+- **RESIDUO DECLARADO, NO OCULTADO**: la clave pasa a no ser NUNCA la más larga, así que «descartar
+  la más larga» rinde **33,3 %** frente al 25 % de azar. Es la señal inversa que la regla #22 v1.3
+  advierte, y baja la ventaja de 25 puntos a 8. Su causa es estructural del formato: todas las
+  justificaciones «Sí» son más largas que todas las «No». Queda abierto.
+- **PASADA DE CONFIRMACIÓN DEL DETRACTOR** (aplicar sus cambios vuelve a caducar su veredicto, así
+  que se le pidió confirmar su propia implementación). Cerró 1, 2 y 3 **por ejecución** —1584
+  corridas, 0 errores— y encontró **dos defectos en la entrada que se había añadido para resolver
+  su objeción 2**, ambos corregidos:
+  - **Comparar intervalos donde la propiedad es puntual**: `descripcion_larga` de `GEO-ARE-10`
+    yuxtaponía `[correct_min, correct_max]` y `[comp_largo_max, comp_largo_min]` y afirmaba que el
+    primero «supera a ambos». Es cierto **valor a valor**, pero como intervalos **se solapan en 30
+    de los 99 combos**, así que el estudiante leía una contradicción. Reescrito en forma puntual,
+    explicando además por qué los extremos pueden solaparse.
+  - **La única opción sin cifras**: `GEO-ARE-10` era la única sin ningún dígito en el 100 % de las
+    versiones en que aparecía (49,9 % del total) y, como nunca es la clave, se descartaba de un
+    vistazo. El residuo real era **36,2 %**, no 33,3 %. Ahora cita el complemento del ancho —un
+    porcentaje **lineal**, no de área, así que `afirma_rango_area` sigue siendo `FALSE` con la misma
+    lógica que `GEO-ARE-02`—. Medido: versiones con una sola opción sin dígitos **49,9 % → 0 %**;
+    heurística combinada **36,2 % → 33,3 %**; coherencia conclusión↔justificación 0/600 con el
+    control negativo activo.
+- **REFINAMIENTO NO APLICADO, con su medición**: acortar `GEO-ARE-07` (145→~80) y `GEO-ARE-02`
+  (99→~72) **no baja** la tasa del 33,3 %, pero hunde la ventaja perceptible de la opción más larga
+  sobre la segunda de **+25,3 % a +7,3 %** (mediana) — por debajo del margen ≥15 % con el que el
+  propio repo calibró la sonda H1, es decir, por debajo de lo explotable. Verificado sobre copia
+  (1188 corridas). No se aplica porque su efecto pedagógico sobre esos dos distractores es juicio
+  humano.
+- **OBJECIÓN 2 APLICADA**: `GEO-ARE-01` se marca `afirma_rango_area = TRUE` — emite exactamente los
+  mismos dos números que `GEO-ARE-07`, así que arrastraba el mismo defecto en 391 de 1584 versiones;
+  el criterio anterior para distinguirlos (¿dice «del área»?) era de superficie. Como eso dejaba el
+  pool «sí» de esa rama con **un solo** elemento y margen 0, se añade **`GEO-ARE-10`** (error
+  conceptualmente distinto, sin rango de área propio, coherente en ambas ramas). Pool: 9 → **10**.
+  Márgenes medidos: `min(idx_si) = 2`, `min(idx_no_d) = 3`.
+- **Verificado tras los cambios**: 5 formatos + LaTeX en R limpio, `pandocbounded` 0, coherencia
+  `APROBADO`, diversidad `PASS`, diagnosticidad `PASS` (H1 0 % · H2 0 % · H3 50 %), multisemilla
+  20/20, ortografía limpia, 600/600 versiones sin violar invariantes, mutante
+  `cazado_por_su_sonda`, 0 incoherencias Sí/No con control negativo activo, instancia canónica
+  intacta.
 
 ### Cambios v3.20.3 (2026-08-09)
 

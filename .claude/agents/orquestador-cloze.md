@@ -649,14 +649,21 @@ conocidas es **código inalcanzable**.
 **sin argumentos**. Es del script, no del ejercicio. El hook lo invoca así en FASE 2G, de modo que
 esa fase suma un error en todo el repositorio: **falso ROJO permanente**.
 
-**Cómo debo tratarlo mientras no esté corregido**: NO interpretarlo como defecto del ejercicio ni
-auto-corregir el `.Rmd`; declarar la cobertura de multisemilla como **NO VERIFICABLE**, nunca como
-verde; y sustituirla por enumeración propia de ≥300 versiones del chunk `data_generation` con las
-invariantes del ítem más el Nivel 5A-5E de `validar_coherencia_matematica.R`, que sí corre.
-Distinguir siempre «falló» de «no se pudo ejecutar».
+**RESUELTO el 2026-08-09.** Resolución de la propia ruta en cuatro pasos aislados (`--file=` de
+`commandArgs` → `sys.frame` en `tryCatch` → `git rev-parse --show-toplevel` → rutas relativas) y
+aborto con `stop()` si ninguna candidata existe, en vez de continuar sin la dependencia. El archivo
+real vive en `SOURCES/scripts_validacion/`; `.claude/scripts/` es un **symlink**. Verificado en los
+cuatro modos de invocación, incluido desde un cwd ajeno.
 
-**Fix pendiente** (una línea):
-`script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")`.
+**Lo que sigo teniendo que hacer**: distinguir «falló» de «no se pudo ejecutar» al leer un hook —un
+gate que no arranca se reporta como **NO VERIFICABLE**, no como rojo—; si la multisemilla no corre,
+sustituirla por enumeración propia de ≥300 versiones del chunk `data_generation` con las invariantes
+del ítem más el Nivel 5A-5E de `validar_coherencia_matematica.R`; y no tratar un fallo de
+herramienta como defecto del ejercicio.
+
+**Defensa permanente**: `tests/testthat/test_validar_multisemilla_invocable.R` (suite crítica) barre
+todo el arsenal buscando `sys.frame(<literal>)` fuera de `tryCatch` y comprueba la invocabilidad real
+bajo `Rscript` desde un `tempdir()`.
 
 **Referencia**: Error 31 de `patrones-errores-conocidos.md`; Incidente S del gemelo SCHOICE.
 

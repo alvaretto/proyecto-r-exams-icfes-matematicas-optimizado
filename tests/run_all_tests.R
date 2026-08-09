@@ -220,6 +220,13 @@ suites <- list(
     watch = c("agente-detractor", "detractor-obligatorio", "test_contrato_detractor")
   ),
   list(
+    nombre = "Invocabilidad de validar_multisemilla (Error 31)",
+    archivo = "tests/testthat/test_validar_multisemilla_invocable.R",
+    critico = TRUE,
+    watch = c("validar_multisemilla", "stress_test_visual",
+              "test_validar_multisemilla_invocable", "post-exams2-validation")
+  ),
+  list(
     nombre = "Diversidad Sustantiva (Regla #22)",
     archivo = "tests/testthat/test_diversidad_sustantiva.R",
     critico = TRUE,

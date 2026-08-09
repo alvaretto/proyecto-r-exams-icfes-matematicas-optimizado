@@ -576,17 +576,26 @@ conocidas es **código inalcanzable**.
 invoca exactamente así, de modo que la FASE 2G suma un error en **todo** ejercicio del repositorio:
 es un **falso ROJO permanente**, y un gate que siempre falla se aprende a ignorar.
 
-**Cómo debo tratarlo mientras no esté corregido**:
+**RESUELTO el 2026-08-09.** La resolución de la propia ruta pasa a cuatro pasos aislados
+(`--file=` de `commandArgs` → `sys.frame` en `tryCatch` → `git rev-parse --show-toplevel` → rutas
+relativas), y si ninguna candidata existe **aborta con `stop()`** en vez de continuar sin cargar la
+dependencia. El archivo real es `SOURCES/scripts_validacion/…`; `.claude/scripts/` es un **symlink**,
+así que editar esa ruta no sirve. Verificado en los cuatro modos de invocación, incluido desde un cwd
+ajeno. La FASE 2G vuelve a informar de verdad.
 
-- **NO** interpretar ese fallo como defecto del ejercicio ni intentar auto-corregir el `.Rmd`.
-- Declarar la cobertura de multisemilla como **NO VERIFICABLE** en el reporte, nunca como verde.
-- Sustituirla mientras tanto por evidencia equivalente que sí puedo producir: enumeración propia de
-  ≥300 versiones del chunk `data_generation` con las invariantes del ítem, más el Nivel 5A-5E de
-  `validar_coherencia_matematica.R`, que sí corre.
-- Distinguir siempre **«falló»** de **«no se pudo ejecutar»** al leer la salida de un hook.
+**Lo que sigo teniendo que hacer**:
 
-**Fix pendiente** (una línea, fuera del alcance de la sesión que lo detectó):
-`script_dir <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")`.
+- Distinguir siempre **«falló»** de **«no se pudo ejecutar»** al leer la salida de un hook. Un gate
+  que no arranca no es un gate en rojo: es un gate ausente, y se reporta como **NO VERIFICABLE**.
+- Si por cualquier motivo la multisemilla no corre, sustituirla por evidencia equivalente que sí
+  puedo producir —enumeración propia de ≥300 versiones del chunk `data_generation` con las
+  invariantes del ítem, más el Nivel 5A-5E de `validar_coherencia_matematica.R`— y declararlo.
+- **NO** interpretar un fallo de herramienta como defecto del ejercicio ni auto-corregir el `.Rmd`
+  por ello.
+
+**Defensa permanente**: `tests/testthat/test_validar_multisemilla_invocable.R` (suite crítica del
+runner) barre TODO el arsenal buscando `sys.frame(<literal>)` fuera de `tryCatch`, y comprueba la
+invocabilidad real bajo `Rscript` desde un `tempdir()`.
 
 **Referencia**: Error 31 de `patrones-errores-conocidos.md`.
 

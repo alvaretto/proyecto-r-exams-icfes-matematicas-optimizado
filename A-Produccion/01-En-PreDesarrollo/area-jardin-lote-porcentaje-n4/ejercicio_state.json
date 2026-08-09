@@ -3,7 +3,7 @@
   "ejercicio": "area_jardin_lote_metacognitivo_argumentacion_n4_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-08-08T11:45:26.113334-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-09T12:57:21.593219-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-09T14:43:51.700040-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -26,29 +26,29 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-08-09T12:57:21.309141-05:00"
+      "timestamp": "2026-08-09T14:43:51.472343-05:00"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-08-09T12:57:21.365987-05:00"
+      "timestamp": "2026-08-09T14:43:51.528998-05:00"
     },
     "detractor_fase2c": {
       "completado": true,
-      "veredicto": "APROBAR_CON_CAMBIOS (detractor independiente 2026-08-09, reporte entregado con marcador). O3 y O4 resueltas. O1 (ALTA, diagnosticidad por rama: clave unica mas larga 100% de la rama verdadera, 50,5% de acierto sin razonar) y O2 (MEDIA, GEO-ARE-01) PENDIENTES DE DECISION DEL USUARIO - no aplicar sin su visto bueno",
-      "timestamp": "2026-08-09T12:57:21.422680-05:00"
+      "veredicto": "APROBAR_CON_CAMBIOS (detractor independiente, 2 pasadas + confirmacion, 2026-08-09). Objeciones 1-4 CERRADAS y verificadas por ejecucion (1584 corridas). Sus 2 hallazgos de la pasada de confirmacion sobre GEO-ARE-10 tambien corregidos y medidos. Sin objeciones criticas ni altas. Residuo declarado: 'descartar la mas larga' 33,3% vs 25% de azar, estructural del formato; refinamiento medido (acortar GEO-ARE-07/02: ventaja +25,3% -> +7,3%) NO aplicado, es juicio pedagogico del profesor",
+      "timestamp": "2026-08-09T14:43:51.414045-05:00"
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-08-09T12:57:21.479655-05:00"
+      "timestamp": "2026-08-09T14:43:51.585511-05:00"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-08-09T12:57:21.537548-05:00",
+      "timestamp": "2026-08-09T14:43:51.642860-05:00",
       "versiones_unicas": 300
     },
     "validar_icfes": {
       "completado": true,
-      "timestamp": "2026-08-09T12:57:21.593219-05:00"
+      "timestamp": "2026-08-09T14:43:51.700040-05:00"
     },
     "aprobacion_usuario": {
       "completado": false,

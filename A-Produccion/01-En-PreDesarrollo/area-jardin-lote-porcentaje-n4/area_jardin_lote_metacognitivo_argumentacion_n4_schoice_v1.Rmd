@@ -147,13 +147,19 @@ label_largo_min <- label_fmt(p_largo_min)
 label_largo_max <- label_fmt(p_largo_max)
 label_ancho     <- label_fmt(p_ancho)
 
-# --- Pool de errores conceptuales (9 entradas, >= 4-6 exigidas) ---
+# --- Pool de errores conceptuales (10 entradas, >= 4-6 exigidas) ---
 errores_conceptuales <- list(
   list(
     codigo = "GEO-ARE-01",
     nombre = "Complemento lineal del largo (resta aritmética)",
     veredicto = "si",
-    afirma_rango_area = FALSE,
+    # TRUE desde 2026-08-09 (detractor, objeción 2). Emite EXACTAMENTE los mismos
+    # dos números que GEO-ARE-07 —comp_largo_max y comp_largo_min— así que en la
+    # rama verdadera decía "Sí" a un rango mientras su aritmética producía otro:
+    # el mismo defecto por el que se excluye GEO-ARE-07, en 391 de 1584 versiones.
+    # El criterio anterior para distinguirlos (¿dice explícitamente "del área"?)
+    # era de superficie, no del mecanismo.
+    afirma_rango_area = TRUE,
     descripcion_corta = paste0(
       "Sí, porque al restar ", pct_largo_max, " % del 100 % da ",
       comp_largo_max, " % y al restar ", pct_largo_min,
@@ -296,10 +302,20 @@ errores_conceptuales <- list(
     nombre = "Complemento del producto, afirmación acertada (CORRECTO)",
     veredicto = "si",
     es_correcto = TRUE,
+    # Registro simétrico con la otra clave (detractor 2026-08-09, objeción 1).
+    # Antes narraba el método: "Sí, porque el jardín ocupa el producto de sus dos
+    # fracciones y su complemento está entre un X % y un Y % del área del lote."
+    # Eran 125 caracteres frente a 99 del rival más largo de su rama, así que la
+    # clave era la ÚNICA más larga en el 100 % de la rama verdadera, y además la
+    # única que contenía "producto". Medido: 50,5 % de acierto con la heurística
+    # "la más larga" frente al 25 % de azar. `validar_diagnosticidad.R` daba PASS
+    # porque promedia sin condicionar por rama y la otra rama marca 0 %.
+    # Ahora dice lo mismo que GEO-ARE-04 con el veredicto opuesto: mismo registro
+    # en las dos ramas. El procedimiento no se pierde — la sección "Procedimiento
+    # correcto" de la Solution lo desarrolla entero.
     descripcion_corta = paste0(
-      "Sí, porque el jardín ocupa el producto de sus dos fracciones y su ",
-      "complemento está entre un ", fmt_v(correct_min), " % y un ",
-      fmt_v(correct_max), " % del área del lote."),
+      "Sí, porque entre un ", fmt_v(correct_min), " % y un ",
+      fmt_v(correct_max), " % del área del lote quedó sin jardín."),
     descripcion_larga = paste0(
       "La afirmación es correcta y su justificación también: el área del jardín ",
       "es el PRODUCTO de sus dimensiones (entre ",
@@ -309,6 +325,41 @@ errores_conceptuales <- list(
       " %. Validar una afirmación exige comprobar el procedimiento, no solo el ",
       "resultado: aquí ambos son correctos."),
     causa_raiz = "Sin error: aplica el complemento del producto, que es el procedimiento válido.",
+    precondicion = function(params) TRUE
+  ),
+  list(
+    # Añadido 2026-08-09 (detractor, objeción 2). Al marcar GEO-ARE-01 con
+    # `afirma_rango_area = TRUE`, el pool "sí" de la rama verdadera se quedaba con
+    # UN solo elemento (GEO-ARE-02) y el `stopifnot` de más abajo sobrevivía con
+    # margen 0: cualquier filtro futuro lo agotaba, y además el distractor "sí" de
+    # esa rama habría sido siempre el mismo. Este error es conceptualmente distinto
+    # de los otros tres y NO afirma un rango de área propio, así que es coherente
+    # en las dos ramas.
+    codigo = "GEO-ARE-10",
+    nombre = "El área libre acotada por los complementos lineales",
+    veredicto = "si",
+    afirma_rango_area = FALSE,
+    # Cita el complemento del ANCHO, que es un porcentaje lineal, no de área: por eso
+    # `afirma_rango_area` sigue siendo FALSE, igual que en GEO-ARE-02. Lleva cifra a
+    # propósito (detractor 2026-08-09, hallazgo 2): sin ella era la ÚNICA opción sin
+    # dígitos en el 100 % de las versiones en que aparece, y como nunca es la clave,
+    # se descartaba de un vistazo — el residuo real subía de 33,3 % a 36,2 %.
+    descripcion_corta = paste0(
+      "Sí, porque el área sin jardín queda entre el complemento del ancho (",
+      comp_ancho, " %) y el del largo."),
+    # La comparación es VALOR A VALOR, no entre los extremos de los dos rangos
+    # (detractor 2026-08-09, hallazgo 1). Como intervalos, [correct_min, correct_max]
+    # y [comp_largo_max, comp_largo_min] SÍ se solapan en 30 de los 99 combos, así que
+    # yuxtaponerlos y afirmar "lo supera a ambos" se leía como una contradicción.
+    descripcion_larga = paste0(
+      "Supone que el porcentaje de área libre queda acotado por los complementos ",
+      "lineales. En realidad, para CADA porcentaje del largo, el área libre que le ",
+      "corresponde supera tanto a su propio complemento como al del ancho (",
+      comp_ancho, " %): el jardín ocupa el producto de dos fracciones menores que 1, ",
+      "así que su área es menor que cada una de ellas por separado y lo que queda ",
+      "libre es mayor que ambos complementos. La comparación hay que hacerla valor a ",
+      "valor: los extremos de los dos rangos sí pueden solaparse."),
+    causa_raiz = "Cree que el porcentaje de área libre está acotado por los complementos de cada dimensión, cuando en realidad los supera a ambos.",
     precondicion = function(params) TRUE
   )
 )
