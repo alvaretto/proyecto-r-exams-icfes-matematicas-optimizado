@@ -264,11 +264,30 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-07-28
+**Versión:** 1.2
+**Fecha:** 2026-08-08
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.2 (2026-08-08)
+- **NUEVO SUB-PATRÓN PROHIBIDO**: §P4-bis — Variante **semántica** de P4: el **veredicto** de la
+  clave es invariante entre versiones aunque su **valor** cambie. Ocurre en ítems de conclusión
+  binaria («Sí, porque…»/«No, porque…», verdadero/falso, aumenta/disminuye) cuando la afirmación
+  evaluada es falsa por construcción.
+- **Origen**: `area-jardin-lote-porcentaje-n4` — **60/60 versiones con clave "No"** y todo el
+  arsenal en verde. §P4 ya describía el caso en una frase («la afirmación correcta siempre con
+  cierta estructura») sin que **nada** lo midiera.
+- **Por qué las defensas previas no lo veían**: H2 exige que la clave sea la única con su prefijo
+  dentro de una versión — con balance 2+2 nunca lo es (0 %); `validar_diversidad_sustantiva.R` mide
+  el VALOR de la clave, que sí variaba; y el balance 2+2 es **intra-versión**, se cumple en todas
+  mientras el veredicto sigue constante. Impacto: 25 % → 50 % de acierto por azar.
+- **Defensa cableada nueva**: sonda **H3** de `.claude/scripts/validar_diagnosticidad.R`, la
+  **primera cross-versión** del arsenal — 100 % → `ERR_DIAG_SUPERFICIAL` (exit 1, bloqueante);
+  ≥90 % → aviso.
+- **Corrección de deriva documental**: §P4-bis entró con el commit `162063c0` (2026-08-08) sin
+  actualizar este pie, que siguió declarando v1.1 (2026-07-28) sobre un cuerpo ya modificado.
+  Detectado al auditar los orquestadores el 2026-08-08.
 
 ### Cambios v1.1 (2026-07-28)
 - **NUEVO PATRÓN PROHIBIDO**: P6 — Fuga de la respuesta por metadato NO VISUAL (nombre de archivo, orden alfabético/de creación, id del elemento, cualquier atributo que revele el rol de la opción)
