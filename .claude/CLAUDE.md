@@ -144,9 +144,49 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.5 (las trampas de medición dejan de ser folclore y pasan a ser invariantes)
+**Versión**: 3.20.6 (el fix de coherencia metió una fuga léxica peor que el defecto)
 **Fecha**: 2026-08-09
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.6 (2026-08-09)
+
+> Auditoría del gemelo CLOZE de `area-jardin-lote-porcentaje-n4` con la misma vara que su hermano.
+> Encontró un defecto al **100 %** de las versiones, y **la corrección introdujo uno peor** que solo
+> apareció porque el detractor la auditó. Es la tercera vez en la misma sesión que un fix desplaza
+> el defecto de canal: semántica → longitud → **léxico**.
+
+- **DEFECTO ORIGINAL, 600/600 versiones**: en la Parte 6 (conclusión binaria) una opción decía
+  «**Sí**, porque queda libre [un rango que desmiente lo afirmado]». No era descuido sino una
+  **restricción imposible**: con balance 2 Sí + 2 No y todas las opciones justificadas por un rango,
+  solo el rango afirmado hace coherente un «Sí», así que el segundo tenía que mentirse.
+  Decisión del profesor entre tres alternativas: **los «Sí» se justifican por MÉTODO, los «No» por
+  RANGO**. Resultado: 600/600 → **0/600**.
+- **NUEVO PATRÓN — ERROR 32, la fuga léxica**: al sustituir cuatro cadenas homogéneas por siete
+  justificaciones redactadas a mano, el ítem pasó a resolverse **sin leer el enunciado al 88,4 %**
+  (azar 25 %) — peor que el defecto §P4-bis que el diseño ya vigila. Tres causas medidas: (a) solo
+  la justificación correcta contenía «jardín», y ese método nunca es distractor, así que su
+  **presencia o ausencia predecía la rama en 800/800**; (b) 4 de 6 erróneas eran prescriptivas
+  («hay que…», «basta…») y la correcta declarativa, con lo que «elige el declarativo» acertaba el
+  100 %; (c) sesgo algebraico del pool —`1-ab` supera a 4 de los 6 métodos— con lo que «elige el
+  rango mayor» acertaba el 77 %. Fix: **molde único y paralelo** más **estratificación del
+  distractor por el lado del rango**. Medido: **88,4 % → 24,2 %**.
+- **PUNTO CIEGO NUEVO, declarado en ambos orquestadores**: un `PASS` de `validar_diagnosticidad.R`
+  **no acredita ausencia de fuga léxica**. H2 mide la **primera palabra** y H3 la invariancia del
+  veredicto; **ninguna sonda inspecciona el vocabulario del cuerpo de la opción**. Prueba de
+  aceptación ejecutable en el Error 32: ningún token de más de 2 caracteres puede ser exclusivo de
+  la clave en ≥70 % de las versiones, ni dentro de cada rama por separado.
+- **Otras tres objeciones del detractor, cerradas y medidas**: la Solution imprimía «entre 45 % y
+  45 %» cuando el rango afirmado es puntual (10,7 % de las versiones → 0/40, aplicando el
+  `fmt_rango()` que el propio archivo declara para eso); y su prosa de verificación recorría el
+  orden **pre**-permutación, con lo que la clave encabezaba la lista en 300/300 mientras el
+  estudiante veía otro orden (→ 26 %, lo esperable al azar). Vecino del Incidente Q.
+- **Correcciones a lo que yo mismo había reportado**: el `ejercicio_state.json` del CLOZE declaraba
+  **60 versiones únicas** y lo di por incumplimiento de la regla #3; medido, son **300/300**. Y el
+  `set.seed` que detecté era un **comentario** que dice «PROHIBIDO set.seed()».
+- **Lo que el CLOZE hace MEJOR que su hermano**: la colisión de rangos (Error 28) está prevenida
+  **por construcción** — filtra los métodos con rango duplicado y el que iguale al correcto. 0/600.
+- **Pendiente declarado**: `WARN_DIV_BAJA` en el gap p3 (7 valores únicos de 40), preexistente y no
+  bloqueante. El CLOZE queda en **10/11**: su aprobación es del profesor.
 
 ### Cambios v3.20.5 (2026-08-09)
 

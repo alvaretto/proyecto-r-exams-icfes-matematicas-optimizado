@@ -3037,3 +3037,80 @@ no se ejecuta, y además prueba `--file=` primero. Ese script es correcto: sale 
 | Fecha | Componente | Causa | Estado |
 |-------|-----------|-------|--------|
 | 2026-08-09 | `SOURCES/scripts_validacion/validar_multisemilla.R` | `sys.frame(1)` revienta antes de la guarda `is.null()`; y el bucle de rutas relativas podía terminar sin cargar nada | **RESUELTO** — resolución en 4 pasos + aborto explícito + `test_validar_multisemilla_invocable.R` en el runner. FASE 2G deja de ser un falso ROJO |
+
+---
+
+## Error 32: Un fix de coherencia introduce una fuga LÉXICA, y ninguna sonda del arsenal la ve
+
+### ❌ Síntoma
+
+Se corrige un defecto semántico sustituyendo cadenas homogéneas por justificaciones redactadas en lenguaje natural, una por cada caso. El arsenal completo sigue en verde —coherencia `APROBADO`, `validar_diagnosticidad.R` `PASS`, diversidad, ortografía, todos los formatos— y sin embargo el ítem pasa a resolverse **sin leer el enunciado**, solo comparando las palabras de las cuatro opciones.
+
+Caso medido (`area-jardin-lote-porcentaje-n4/cloze`, 2026-08-09): **88,4 % de acierto frente al 25 % de azar**, peor que el defecto §P4-bis que el diseño ya vigilaba (que daría 50 %).
+
+### 🔍 Causa Raíz
+
+Al redactar cada justificación «a su aire» se cuelan **regularidades léxicas y gramaticales que correlacionan con el rol de la opción**:
+
+1. **Token exclusivo de la clave.** Solo la justificación del método correcto contenía la palabra «jardín», y ese método nunca es distractor. Consecuencia doble: la opción con «jardín» era la clave en el 100 % de una rama, y su **ausencia** anunciaba que la otra rama estaba activa — la presencia del token predecía la rama en 800/800 versiones.
+2. **Forma gramatical que separa clave de distractores.** Cuatro de las seis justificaciones erróneas eran prescriptivas («hay que sumar…», «basta restar…») y la correcta declarativa («el área **es** el producto…»). «Entre los dos Sí, elige el declarativo» acertaba el 100 % de las veces en que aplicaba.
+3. **Sesgo algebraico del pool**, que el fix no creó pero cuyo peso aumentó: para `a, b ∈ (0,1)` se cumple `1-ab > max{1-a, 1-b, (1-a)(1-b), 1-(a+b)/2}` y `1-ab < (1-a)+(1-b)`. Es decir, 4 de 6 métodos erróneos producen **siempre** un rango menor que el correcto, 1 siempre mayor y 1 mixto: «elige el rango mayor» acertaba el 77 %.
+
+**Por qué el arsenal no lo detecta:** `validar_diagnosticidad.R` calcula `pw <- primera palabra de cada opción`. Con opciones que empiezan por «Sí»/«No», **H2 mide exactamente eso y da 0 %**, y H3 mide invariancia del veredicto, que estaba equilibrada. **Ninguna sonda inspecciona los tokens del cuerpo de la opción.** Es el mismo punto ciego que la regla #22 §P6 generaliza —«cualquier metadato que revele el rol de la opción»—, solo que aquí el metadato es léxico en vez de un nombre de archivo.
+
+### ✅ Solución Verificada
+
+**Molde único y paralelo**: todas las justificaciones comparten sujeto, verbo y vocabulario, y se diferencian **solo en la operación**, que es lo que el ítem evalúa.
+
+```r
+# ❌ ANTES — cada una a su aire: "jardín" solo en la correcta, y 4 prescriptivas
+producto   = "el área del jardín es el producto de sus dos fracciones",
+lineal     = "basta restar del 100 % el porcentaje del largo",
+suma       = "hay que sumar el complemento del largo y el del ancho",
+```
+
+```r
+# ✅ DESPUÉS — mismo molde "el área sin jardín es …", todas declarativas
+producto   = "el área sin jardín es el complemento del producto de las dos fracciones",
+lineal     = "el área sin jardín es el complemento de la fracción del largo",
+suma       = "el área sin jardín es la suma de los complementos de las dos fracciones",
+```
+
+Y **estratificar por el lado del rango** cuando el pool está algebraicamente sesgado: sortear primero si el distractor irá por encima o por debajo del valor correcto, y elegir el método después.
+
+### 🧪 Validación de la Solución
+
+| medida (800 versiones) | antes | después |
+|---|---|---|
+| la presencia de un token predice la rama | 100 % | 48,8 % (= azar) |
+| «entre los dos Sí, elige el declarativo» | 100 % | N/A: ya no hay dos formas |
+| rama «No»: la clave es el rango mayor | 77,3 % | 54,6 % |
+| **acierto sin leer el enunciado** | **88,4 %** | **24,2 %** |
+
+### 📋 Prueba de aceptación (ejecutable)
+
+Ningún token de más de 2 caracteres puede ser exclusivo de la clave en ≥70 % de las versiones, **ni dentro de cada rama por separado**:
+
+```r
+tok <- function(t) unique(tolower(unlist(strsplit(
+  gsub("[^[:alnum:]áéíóúñü ]", " ", t), " +"))))
+# por versión: setdiff(tok(clave), unlist(lapply(distractores, tok)))
+```
+
+En el caso corregido devuelve el conjunto vacío; el token más frecuente («producto») baja al 31 %.
+
+### ⚠️ Lección transferible
+
+**Al sustituir cadenas homogéneas por texto redactado, se cambia un eje de variación por otro.** Antes de dar por bueno el fix hay que medir el ítem **completo**, no solo la dimensión corregida: es la tercera vez en la misma sesión que un fix desplaza el defecto de canal (semántica → longitud → léxico). Y `PASS` de `validar_diagnosticidad.R` **no** acredita ausencia de fuga léxica: sus sondas miran la primera palabra y la longitud, nunca el vocabulario.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-08-09 | `area_jardin_lote_..._n4_cloze_v1.Rmd` | justificaciones redactadas sin molde común tras corregir `INC-SINO-BINARIO` | molde declarativo paralelo + estratificación del distractor por lado del rango | acierto sin razonar 88,4 % → 24,2 % |
+
+### 📚 Referencias
+
+- Errores 29 y 30 (el fix que lo originó y el desplazamiento de canal previo).
+- Regla #22 §P6 — el principio general: ningún rasgo que revele el rol de la opción.
+- Haladyna, Downing & Rodriguez (2002), *Applied Measurement in Education* 15(3):309-334 — «Avoid giving clues to the right answer»: *word repeats* entre enunciado y clave.

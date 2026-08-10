@@ -697,6 +697,7 @@ Nivel ≥ 3`. Un DOK 3 con Nivel 2 es contradictorio y descalibra el banco. Las 
 | Editar `.claude/scripts/<validador>.R` | Cuatro validadores son **symlinks** a `SOURCES/scripts_validacion/` (invariante I-10). Editar la ruta de `.claude/` no cambia el código que se ejecuta |
 | Una prueba de mutación sobre el archivo REAL | Si el paso de restaurar queda en un job en segundo plano, el repo se queda con el artefacto roto en disco. **Mutar siempre una copia** en `/tmp` |
 | `grep` que no encuentra nada | Puede ser «no hay defecto» o «el patrón no coincide»: comillas tipográficas, extensión distinta (`.latex` vs `.tex`), glob sin coincidencias contando 0 sobre CERO archivos. Toda sonda necesita un **control positivo** que demuestre que dispara |
+| `PASS` de `validar_diagnosticidad.R` | **No acredita ausencia de fuga LÉXICA**: H2 mide la PRIMERA PALABRA y H3 la invariancia del veredicto; ninguna sonda inspecciona el vocabulario del cuerpo de la opción. Un ítem con un token exclusivo de la clave da `PASS` y se resuelve al 88 % sin leer el enunciado (Error 32) |
 
 ## Política de auto-corrección
 

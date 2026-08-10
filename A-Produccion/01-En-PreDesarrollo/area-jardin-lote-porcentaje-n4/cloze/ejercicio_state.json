@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "area_jardin_lote_metacognitivo_argumentacion_n4_cloze_v1",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-08-08T17:02:08.189720-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-09T22:32:00.824278-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-08T17:02:13.281579-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-08-08T17:19:03.672972-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-08-08T17:22:40.927249-05:00",
+      "archivo": "area_jardin_lote_metacognitivo_argumentacion_n4_cloze_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-08-08T17:22:41.034214-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-08-09T22:32:00.577508-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-08-09T22:32:00.636334-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "veredicto": "APROBAR_CON_CAMBIOS (detractor independiente 2026-08-09, pasada acotada sobre el rediseno de la Parte 6; 2000 versiones ejecutadas). Sustituye al veredicto del 2026-08-08, caducado por edicion. 7 objeciones: 0 criticas, 2 altas, 3 medias, 2 bajas. O1-O5 CERRADAS y medidas: acierto sin leer el enunciado 88,4% -> 24,2% (azar 25%). Pendiente declarado: WARN_DIV_BAJA en el gap p3 (preexistente, no bloqueante)",
+      "timestamp": "2026-08-09T22:32:00.519270-05:00"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-08-09T22:32:00.693781-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-08-09T22:32:00.753903-05:00",
+      "versiones_unicas": 300
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-09T22:32:00.824278-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}
