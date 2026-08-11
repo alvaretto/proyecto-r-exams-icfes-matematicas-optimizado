@@ -165,11 +165,19 @@ done
 ### 3D. Convenciones de nombres de archivo
 ```bash
 echo "=== Verificando nomenclatura de archivos ==="
-# Deben seguir: [tema]_[subtema]_metacognitivo_[competencia]_n[nivel]_[tipo]_v[N].Rmd
+# Formato oficial. Fuente única: .claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md
+#   [ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_v[N].Rmd   (+ _neg opcional)
+# `metacognitivo` NO va en el nombre: es universal por la regla #1 y ocupaba la
+# ranura del componente ICFES sin informar nada.
+NOMENCLATURA='^[a-z0-9_]+_(geometrico_metrico|numerico_variacional|aleatorio)_(interpretacion_representacion|formulacion_ejecucion|argumentacion)_n[1-4]_(schoice|cloze)(_neg)?_v[0-9]+(_interactivo)?$'
+LEGACY="tests/testthat/nomenclatura-legacy.txt"
 find A-Produccion/ -name "*.Rmd" ! -path "*/Ejemplos-Funcionales-Rmd/*" | while read f; do
   BASENAME=$(basename "$f")
-  if ! echo "$BASENAME" | grep -qE '_metacognitivo_'; then
-    echo "⚠ SIN metacognitivo en nombre: $BASENAME"
+  if ! echo "${BASENAME%.Rmd}" | grep -qE "$NOMENCLATURA"; then
+    # Los legacy declarados no son hallazgo: son deuda ya inventariada.
+    if ! grep -qxF "$BASENAME" "$LEGACY" 2>/dev/null; then
+      echo "❌ FUERA DE NOMENCLATURA (y no está en el allowlist legacy): $BASENAME"
+    fi
   fi
 done
 ```

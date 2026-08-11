@@ -118,9 +118,10 @@ Ver [pool-errores-afirmaciones.md](references/pool-errores-afirmaciones.md) para
 
 ### PASO 6: Generar nombre con nomenclatura
 
-Formato: `[ejercicio]_metacognitivo_[competencia]_n[nivel]_cloze_v[version].Rmd`
+Formato: `[ejercicio]_[componente]_[competencia]_n[nivel]_cloze_v[version].Rmd`
 
-`metacognitivo` y `cloze` son OBLIGATORIOS en el nombre. Nivel minimo: n3. Ver: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
+`[componente]` ∈ geometrico_metrico|numerico_variacional|aleatorio. `[competencia]` en forma larga: interpretacion_representacion|formulacion_ejecucion|argumentacion. `cloze` es OBLIGATORIO en el nombre; `metacognitivo` NO va (lo cubre la regla #1, universal). Nivel minimo: n3.
+Fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 
 ### PASO 7: Crear carpeta e inicializar estado
 

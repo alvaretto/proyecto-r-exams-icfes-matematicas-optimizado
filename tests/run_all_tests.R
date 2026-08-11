@@ -227,6 +227,13 @@ suites <- list(
               "test_contrato_entrega_orquestadores")
   ),
   list(
+    nombre = "Nomenclatura oficial de .Rmd (fuente única + gate + citas)",
+    archivo = "tests/testthat/test_nomenclatura_rmd.R",
+    critico = TRUE,
+    watch = c("NOMENCLATURA_ARCHIVOS_RMD", "pre-write-rmd-gate", "nomenclatura-legacy",
+              "test_nomenclatura_rmd", "\\.Rmd$", "generar-schoice", "generar-cloze")
+  ),
+  list(
     nombre = "Invocabilidad de validar_multisemilla (Error 31)",
     archivo = "tests/testthat/test_validar_multisemilla_invocable.R",
     critico = TRUE,

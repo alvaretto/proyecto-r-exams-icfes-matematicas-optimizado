@@ -144,9 +144,84 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.7 (la defensa contra el silencio existía, aplicada a uno solo de los tres agentes)
+**Versión**: 3.20.8 (un formato que solo vive en un documento pierde contra uno que vive en un regex)
 **Fecha**: 2026-08-10
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.8 (2026-08-10)
+
+> El repositorio tenía **dos nomenclaturas de archivo rivales conviviendo en nueve sitios**, y
+> ninguna reconciliaba a la otra. Ganaba la equivocada por una razón puramente mecánica: era la
+> única cableada en comprobaciones ejecutables. La pregunta del profesor —«¿estás nombrando el
+> `.Rmd` según la nomenclatura oficial vigente?»— destapó que yo mismo acababa de reproducirla.
+
+- **LA DERIVA, MEDIDA**: `NOMENCLATURA_ARCHIVOS_RMD.md` prescribía
+  `[ejercicio]_[componente]_[competencia]_n[nivel]_v[N]` y **no estaba cableado en ningún sitio**.
+  En paralelo, desde la regla de ejercicios metacognitivos (v3.1, 2026-02-06) creció un formato de
+  facto, `[ejercicio]_metacognitivo_[competencia_corta]_n[nivel]_[tipo]_v[N]`, **sí cableado** en el
+  regex de los dos comandos orquestadores, los dos skills generadores y la regla #10. Sobre los 142
+  `.Rmd` tocados desde febrero: **53 seguían el de facto, 10 el documentado**.
+- **QUÉ SE HABÍA PERDIDO**: la palabra `metacognitivo` es **constante** en todos los ejercicios
+  desde que la regla #1 la hizo universal, así que ocupaba la ranura del **componente ICFES** sin
+  aportar un bit; y la competencia se acortó, perdiendo su forma oficial.
+- **DECISIÓN DEL PROFESOR**: vuelve a regir el formato documentado, **extendido con la ranura de
+  tipo** y sin `metacognitivo`:
+  `[ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_v[N].Rmd` (+ `_neg` opcional).
+- **LA RANURA DE TIPO NO ES OPCIONAL, Y SE DEMOSTRÓ**: adoptar el formato documentado *literalmente*
+  era **imposible**. El repo tiene **13 familias** con dos o tres variantes del mismo enunciado
+  (`area_jardin_lote_…` schoice + cloze; `diagrama_caja_estaturas_…` con tres), que sin la ranura
+  colisionan en el mismo nombre de archivo. Medido antes de proponer, no supuesto.
+- **ALCANCE — de aquí en adelante**: allowlist legacy de **299 archivos** en
+  `tests/testthat/nomenclatura-legacy.txt`, con cabecera que declara que **no admite altas y solo
+  puede decrecer**. Los de `03-En-Produccion/` son inmutables (regla #2) y permanecen indefinidamente.
+  Conformes hoy: 13.
+- **TRES CAPAS, no prosa**: (1) **gate PreToolUse** que bloquea la **creación** de un `.Rmd` fuera de
+  formato con un mensaje que enumera los cuatro errores frecuentes; (2) `test_nomenclatura_rmd.R`
+  (**25 aserciones**, suite **28** del runner); (3) verificación de que las **citas** del formato en
+  skills, comandos y reglas no vuelvan a divergir de la fuente única.
+- **EL GATE SOLO MIRA AL CREAR**, nunca al editar: bloquear la edición dejaría **congelados** los 299
+  legacy. Es lo que hace que «de aquí en adelante» sea implementable sin allowlist dentro del hook.
+- **`NOMENCLATURA_ARCHIVOS_RMD.md` → v2.0**: fuente única declarada en la cabecera, semántica del
+  sufijo `_neg` como **disparador mecánico** (`validar_5c_unicidad` hace
+  `grepl("_neg_", basename(...))`, así que ponerlo en un ítem que no cumple la regla #10 vuelca al
+  validador a la rama contraria), tabla nombre ↔ `exextra[...]`, rutas actualizadas a `01-/02-/03-`
+  y §Historial con la medición de la deriva.
+- **TRES BUGS DEL PROPIO TEST, cazados por sus controles**: (a) `system2(stdin=)` espera **una ruta
+  de archivo**, no una conexión — con `textConnection()` el hook ni se ejecutaba y el fallo salía
+  como «sh: línea 1: 5: No existe el fichero», que no parece un bug del test; (b) el discriminador
+  de citas marcaba **referencias a archivos legacy reales** (`promedios_borrados_…` vive en
+  `03-En-Produccion` y es inmutable: «corregirlas» habría roto punteros vivos); (c) y marcaba
+  también la línea que **prohíbe** el patrón viejo — no distinguía «usa el patrón» de «advierte
+  contra el patrón», castigando justo la documentación que arregla el problema. El discriminador
+  final exige `_metacognitivo_` **entre guiones bajos** más un marcador de plantilla, y lleva sus
+  dos controles negativos escritos.
+- **Verificado**: `test_nomenclatura_rmd.R` 25/25 con el gate ejercitado de verdad (JSON por stdin,
+  bloqueo real en 2 nombres inválidos, no-bloqueo en el válido y en la edición de un legacy).
+  Runner completo: **28/28 suites, 0 fallidas, cobertura 100 %, exit real 0**.
+
+- **REGLA #20 VERIFICADA EMPÍRICAMENTE POR PRIMERA VEZ (y una objeción refutada).** Una auditoría
+  reportó que el guard `\newcounter{none}` era **inerte**, porque no aparece en
+  `out_tex/pandoc1.latex`. La observación es cierta pero la inferencia era falsa: ese archivo es
+  artefacto de `exams2pandoc(type="latex")`, **otra ruta de conversión** que la de `exams2pdf`.
+  A/B controlado por el pipeline real (pandoc 3.8.3 de RStudio, misma tabla Markdown, única
+  variable el guard):
+
+  | Variante | Resultado |
+  |---|---|
+  | Sin guard | **FALLA** — `! LaTeX Error: No counter 'none' defined.` |
+  | `` ```{=latex} `` (el que prescribe la regla #20) | **COMPILA** |
+  | Chunk R con `results='asis'` | FALLA |
+  | LaTeX crudo en línea | COMPILA |
+
+  Conclusiones: (a) el **Error 21 sigue reproduciéndose** con pandoc ≥3.8.1, así que la regla #20
+  protege algo real; (b) la forma prescrita **funciona**; (c) la variante por chunk **no** sirve
+  —conviene saberlo antes de que alguien la proponga como alternativa «más limpia»—; y (d) que el
+  hook FASE 2K compruebe el `.Rmd` y no el `.tex` es **correcto**, porque el guard actúa a nivel de
+  fuente. Se había llegado a calificar ese check de «verde que no significa nada» por dar por buena
+  la causa ajena sin comprobarla.
+  **Residuo declarado**: en la salida de `exams2pandoc(type="latex")` el guard efectivamente no
+  aparece; quien compile ESE `.latex` a mano no está protegido. No es la ruta con la que el repo
+  produce PDFs.
 
 ### Cambios v3.20.7 (2026-08-10)
 

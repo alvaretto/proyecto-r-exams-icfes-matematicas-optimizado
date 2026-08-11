@@ -14,7 +14,7 @@ Uso: /orquestador-cloze <input>
 Donde <input> es UNO de:
 
 1) JSON completo (recomendado para producción):
-   /orquestador-cloze {"ruta_destino":"A-Produccion/01-En-PreDesarrollo/mi-ejercicio","nombre_ejercicio":"mediana_metacognitivo_argumentacion_n3_cloze_v1","entrada":"<ruta-imagen-o-texto>","modo":"ejecutar"}
+   /orquestador-cloze {"ruta_destino":"A-Produccion/01-En-PreDesarrollo/mi-ejercicio","nombre_ejercicio":"mediana_aleatorio_argumentacion_n3_cloze_v1","entrada":"<ruta-imagen-o-texto>","modo":"ejecutar"}
 
 2) Forma corta (texto libre): describe destino + entrada y yo construyo el JSON antes de lanzar:
    /orquestador-cloze mediana n3 desde imagenes/p23.png en 01-En-PreDesarrollo/mediana-cloze-v1
@@ -24,7 +24,7 @@ Donde <input> es UNO de:
 
 Schema del JSON (ver `.claude/agents/orquestador-cloze.md`):
 - ruta_destino:    debe estar bajo A-Produccion/01-En-PreDesarrollo/ o /02-En-Desarrollo/
-- nombre_ejercicio: <tema>_metacognitivo_<competencia>_n<2|3|4>_cloze_v<N>
+- nombre_ejercicio: <tema>_<componente>_<competencia>_n<2|3|4>_cloze_v<N>  (componente: geometrico_metrico|numerico_variacional|aleatorio · competencia: interpretacion_representacion|formulacion_ejecucion|argumentacion)
 - entrada:         ruta a imagen ICFES original | texto del enunciado
 - modo:            "ejecutar" | "dry-run"
 - opciones_extra:  { patron_progressive_disclosure, n_partes, max_reintentos_por_fase, auto_seleccionar_grafico } (opcional)
@@ -38,7 +38,8 @@ Si `$ARGUMENTS` contiene contenido:
 
 2. **Valida pre-flight ligero antes de delegar** (no reemplaza los pre-flight del agente, solo evita lanzamientos obviamente rotos):
    - `ruta_destino` está bajo `A-Produccion/01-En-PreDesarrollo/` o `02-En-Desarrollo/`. Si está bajo `03-En-Produccion/` o `Ejemplos-Funcionales-Rmd/` → **rechaza** y muestra la regla violada.
-   - `nombre_ejercicio` matchea `^[a-z0-9_]+_metacognitivo_[a-z]+_n[234]_cloze_v[0-9]+$` (warning, no bloqueo, si no coincide).
+   - `nombre_ejercicio` matchea `^[a-z0-9_]+_(geometrico_metrico|numerico_variacional|aleatorio)_(interpretacion_representacion|formulacion_ejecucion|argumentacion)_n[1-4]_cloze(_neg)?_v[0-9]+$` (**bloqueo**: la nomenclatura es obligatoria — ver `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`).
+     Fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
    - `modo` ∈ {"ejecutar","dry-run"}; si falta, default `"ejecutar"`.
    - `n_partes` (si viene en `opciones_extra`) debe ser ≥ **6**. Si es < 6 → warning: el agente lo subirá a 6 (estándar del repositorio desde 2026-06-04; validación V4 del agente).
 

@@ -192,12 +192,13 @@ test_that("Todas las opciones son únicas (lógica positiva)", {
 El nombre del archivo DEBE contener `_neg_` antes de la versión:
 
 ```
-[tema]_[subtema]_metacognitivo_[competencia]_n[nivel]_[tipo]_neg_v[N].Rmd
+[ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_neg_v[N].Rmd
 ```
+Fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 
 Ejemplo:
 ```
-diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_neg_v1.Rmd
+diagrama_caja_estaturas_aleatorio_interpretacion_representacion_n2_schoice_neg_v1.Rmd
 ```
 
 ### 2. Diferenciación de opciones equivalentes
