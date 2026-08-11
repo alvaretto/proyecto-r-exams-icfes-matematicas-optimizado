@@ -144,9 +144,88 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.6 (el fix de coherencia metió una fuga léxica peor que el defecto)
-**Fecha**: 2026-08-09
+**Versión**: 3.20.7 (la defensa contra el silencio existía, aplicada a uno solo de los tres agentes)
+**Fecha**: 2026-08-10
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.7 (2026-08-10)
+
+> La v3.20.2 diagnosticó bien el agujero —un agente de reporte que termina el turno en silencio— y
+> lo cerró **solo en `agente-detractor.md`**. Los dos orquestadores, que son igual de agentes de
+> reporte y además los que más caro salen por corrida, se quedaron fuera. Volvió a pasar hoy.
+
+- **INCIDENTE 2026-08-10**: un `dry-run` de `orquestador-schoice` sobre `MAT-2026-1-010` terminó
+  **dos veces consecutivas** en notificación de «disponible» sin reporte —una tras el reclamo del
+  protocolo de no-entrega, con agente nuevo y contexto limpio—. En `dry-run` el daño es total: el
+  plan auditado es el **único** producto y no deja rastro en disco, así que no hay nada que
+  reconstruir. El disco vacío es además **el estado correcto** de un dry-run, de modo que
+  «no dejó archivos» no distingue «auditó y calló» de «no hizo nada».
+- **CONTRATO DE ENTREGA en AMBOS ORQUESTADORES**, calcado del que ya funciona en el detractor: el
+  texto final de retorno ES el reporte; prohibido terminar sin él, escribirlo a un archivo o
+  anunciarlo; entrega parcial declarada si se agota el presupuesto. Cierra con el marcador
+  `VEREDICTO_ORQUESTADOR: completado | parcial | abortado | dry_run | preflight_failed`.
+- **EL MARCADOR REUSA EL VOCABULARIO EXISTENTE**, no inventa uno paralelo: sus cinco valores son
+  los mismos del campo `exit_status` del contrato de salida, y el test compara ambos **como
+  conjuntos**. Dos sitios espejo del mismo vocabulario es justo la forma de deriva que este repo
+  ya sufrió con el «mínimo 4» de WAIT_USER #3 frente al V4 de 6.
+- **CLÁUSULA EXPLÍCITA DE `dry-run`**: el contrato dice que también aplica ahí. Sin esa frase, un
+  agente puede leer «reporte final» como «reporte de la ejecución» y considerar que un dry-run no
+  lo necesita — que es exactamente lo que se observó.
+- **NUEVA SUITE (27 en el runner)**: `test_contrato_entrega_orquestadores.R`, 33 aserciones.
+  Verifica sección, marcador, prohibición del silencio, cláusula dry-run, `maxTurns`, coherencia
+  marcador↔`exit_status` por archivo, que **los gemelos compartan marcador** entre sí, y que el
+  detractor **conserve el suyo distinto** (unificarlos rompería la validación de quien invoca).
+- **EL DETECTOR ES UNA FUNCIÓN DE LA RUTA**, no un bloque con rutas fijas: eso permite el control
+  positivo con **4 mutantes sobre fixtures en `tempdir()`** —sin sección, sin marcador, vocabulario
+  divergente, sin cláusula dry-run— sin tocar los archivos reales. Mutar el archivo real y
+  restaurarlo después ya dejó una vez el arsenal roto en disco (`validar_multisemilla.R`, 2026-08-09).
+- **DOS BUGS DEL PROPIO TEST, cazados por su control positivo**: (a) la frase de la cláusula
+  dry-run lleva `**` y backticks, que como regex son operadores de repetición inválidos — hay que
+  compararla con `fixed = TRUE`; (b) el control positivo usaba **un solo `&&` encadenado** y, al
+  fallar, el mensaje culpó al sub-check equivocado (`vocabulario_ok`, cuando el roto era
+  `cubre_dry_run`). Ahora comprueba sub-check por sub-check y nombra al culpable. Un control
+  positivo que miente sobre QUÉ falló es media defensa.
+- **Verificado**: suite nueva 33/33 con los 4 mutantes cazados · invariantes I-1..I-10 en verde
+  (214/214) · `test_contrato_detractor.R` 16/16 sin regresión.
+- **LÍMITE DECLARADO**: un subagente carga su definición **desde HEAD**, no desde el disco, así que
+  este contrato NO rige para agentes ya registrados ni para la corrida que lo motivó. Empieza a
+  aplicar tras el commit, en sesión nueva.
+- **CORRECCIÓN AL DIAGNÓSTICO, medida**: el contrato NO era la causa del silencio. Recuperando la
+  transcripción del subagente (`…/subagents/agent-<nombre>-<hash>.jsonl`, 267 KB) se comprobó que
+  el agente **sí emitió** el reporte completo y **sí cerró con el marcador**: lo que falló fue el
+  canal de entrega al padre, que solo transmitió la notificación de «disponible». El contrato queda
+  como higiene correcta —el hueco existía— pero no habría evitado este fallo. **Vía de recuperación
+  cuando vuelva a pasar: leer el último bloque `text` de esa transcripción.**
+
+- **PUNTO CIEGO DEL ARSENAL CERRADO — regla #22 → v1.4, nueva sonda H3b.** Lo encontró el propio
+  dry-run: cuando las cuatro opciones comparten primera palabra (ítems cuyas opciones son
+  **preguntas**, `¿Cuál es…?`), **dos de las tres sondas dejan de medir y el script lo callaba**.
+  Verificado en el código: `pw` descarta el `¿` → las 4 dan `cuál`; H2 exige que la clave sea la
+  única con su prefijo → **0 % por construcción**; la guarda de H3 exige ≥2 prefijos → `pwc` vacío
+  y, bajo `if (length(pwc) >= 5L)`, **la fila H3 ni se imprime**. Un `PASS` así es «sin medición»
+  leído como «sin señal» — el mismo modo de fallo que originó H3, un piso más abajo.
+- **H3b mide por CONTENIDO** (texto en minúsculas, sin dígitos ni puntuación), con guarda análoga a
+  la de H3 (la firma debe discriminar dentro de la versión; las opciones numéricas colapsan y
+  quedan fuera). Medido sobre fixtures: clave de tipo fijo **100 % → exit 1**; tipo sorteado de un
+  pool de 4 → **33 %, PASS**.
+- **CALIBRACIÓN DE RELEVO, y por qué**: H3b bloquea **solo** si el prefijo es uniforme en ≥90 % de
+  las versiones. La primera versión bloqueaba siempre y puso en **ROJO un fixture existente** que
+  existe para probar que H1 *no* dispara —sus opciones llevan prefijos distintos, así que H2/H3 sí
+  aplican ahí—. Una sonda nueva que cambia el veredicto de casos ya revisados no es más rigor.
+- **LA CEGUERA SE DECLARA SIEMPRE**, dispare o no: `H2/H3 CIEGAS` con su porcentaje y la frase «el
+  0 % de H2 NO es ausencia de señal, es ausencia de medición»; y `H3b: NO MEDIBLE` cuando la firma
+  tampoco discrimina, exigiendo verificador propio del ejercicio.
+- **`test_diagnosticidad.R`: 10 → 24 aserciones** (4 casos nuevos), con control de que el fixture
+  prueba lo que dice —H2 en 0 % y H3 sin medir— y no-regresión de la calibración de relevo.
+- **TRAMPA REINCIDENTE, cometida y corregida aquí mismo**: se midió el exit de `Rscript … | grep |
+  tail` y salió 0 sobre un caso que **sí** bloqueaba. Es la trampa que la v3.20.5 ya documentó
+  (`cmd | grep …; echo $?` mide el exit del **pipe**). El exit real —1 y 0— se confirmó redirigiendo
+  a archivo, sin tubería.
+- **DECISIÓN DE ALCANCE (documentada a petición del usuario)**: el dry-run proponía un verificador
+  *ad-hoc* del ejercicio. Se decidió **cerrar antes el punto ciego en el arsenal compartido**,
+  porque un verificador por ejercicio dejaría a H2/H3 igual de ciegas para todo ítem futuro con
+  molde uniforme de opciones. El verificador propio sigue siendo necesario para el caso en que
+  H3b resulte `NO MEDIBLE`; ya no lo es para éste.
 
 ### Cambios v3.20.6 (2026-08-09)
 

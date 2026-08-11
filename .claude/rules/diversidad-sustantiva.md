@@ -111,6 +111,45 @@ Añadir una clave alternativa no es un cambio local: **cambia qué significa el 
 
 **Regla operativa:** tras aplicar §P4-bis, medir H1/H2 **condicionando por rama** (agrupar por el flag que la define y recalcular dentro de cada grupo). El `PASS` agregado de `validar_diagnosticidad.R` no acredita ese caso; hoy es verificación manual. Y al igualar longitudes, comprobar que no se crea la **señal inversa**: si la clave pasa a no ser NUNCA la más larga, «descartar la más larga» sube el azar de 25 % a 33 %.
 
+#### El molde uniforme de opciones ciega a H2 y a H3 — sonda H3b (2026-08-10)
+
+Cuando las cuatro opciones comparten primera palabra —el caso típico es un ítem cuyas opciones son
+**preguntas** (`¿Cuál es…?`), o cualquier molde con encabezado común— **dos de las tres sondas dejan
+de medir, y el script lo callaba**. Verificado en el código, no en la documentación:
+
+| Mecanismo | Consecuencia |
+|---|---|
+| `pw` descarta el `¿` inicial y toma el primer token alfanumérico | las 4 opciones dan `cuál` |
+| H2 exige que la clave sea la **única** con su prefijo | **0 % por construcción**, nunca dispara |
+| La guarda de H3 exige ≥2 prefijos distintos | `pwc` queda vacío |
+| La impresión de H3 va bajo `if (length(pwc) >= 5L)` | **la fila H3 no se imprime**: no sale «0 %», no sale nada |
+
+Un `PASS` en esas condiciones **no acredita** que el tipo de clave varíe: es «sin medición»
+disfrazado de «sin señal». Es el mismo modo de fallo que dio origen a H3, un piso más abajo.
+
+**Defensa cableada — sonda H3b (cross-versión, por contenido).** Mide lo mismo que H3 —¿la clave es
+siempre del mismo tipo?— pero sobre la **firma de contenido** de la opción: texto en minúsculas, sin
+dígitos ni puntuación, espacios colapsados. Así, «¿Cuál es la ubicación…?» y «¿Cuál es el área del
+lote de 50 por 120 metros?» tienen firmas distintas aunque compartan prefijo, y los parámetros
+numéricos no cuentan como variación.
+
+- **Guarda análoga a la de H3**: la firma debe discriminar *dentro* de la versión
+  (`length(unique(sg)) >= 2`). Las opciones puramente numéricas colapsan a cadena vacía al quitar
+  dígitos, así que quedan excluidas — es la misma razón por la que H3 exige ≥2 prefijos.
+- **Bloquea solo cuando es relevo de una sonda ciega** (prefijo uniforme en ≥90 % de las versiones).
+  Si H3 puede medir, H3b es una segunda lectura del mismo fenómeno y se queda en aviso. No es
+  timidez: con H3b bloqueando siempre, un fixture de `test_diagnosticidad.R` que existe para probar
+  que H1 **no** dispara pasaba a ROJO — es decir, una sonda nueva cambiaba el veredicto de un caso
+  ya revisado por un motivo que nadie había mirado.
+- **La ceguera se declara siempre**, dispare o no H3b: el reporte imprime `H2/H3 CIEGAS` con el
+  porcentaje de versiones afectadas y la frase «el 0 % de H2 NO es ausencia de señal, es ausencia de
+  medición». Si además la firma no discrimina, imprime `H3b: NO MEDIBLE` y exige un verificador
+  propio del ejercicio. **Nunca se deja un hueco pasando por aprobado.**
+
+Origen: dry-run de `MAT-2026-1-010` (2026-08-10), ítem cuyas cuatro opciones son preguntas.
+Tests: `tests/testthat/test_diagnosticidad.R` (4 casos nuevos: ceguera declarada, H3b caza clave
+invariante con exit 1, H3b calla con clave sorteada de un pool, H3b no gobierna cuando H3 aplica).
+
 ---
 
 ### ❌ P5: Distractor direccional/posicional como OUTLIER obvio (eliminable de un vistazo)
@@ -276,11 +315,29 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.3
-**Fecha:** 2026-08-09
+**Versión:** 1.4
+**Fecha:** 2026-08-10
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.4 (2026-08-10)
+- **NUEVA SUBSECCIÓN en §P4-bis — «El molde uniforme de opciones ciega a H2 y a H3»**, con la tabla
+  del mecanismo verificada contra el código de `validar_diagnosticidad.R` (no contra su
+  documentación): `pw` descarta el `¿`, H2 sale 0 % por construcción, la guarda de H3 deja `pwc`
+  vacío y el `if (length(pwc) >= 5L)` hace que **la fila H3 ni se imprima**.
+- **NUEVA SONDA H3b** (cross-versión, por **contenido normalizado** de la clave: sin dígitos ni
+  puntuación). Mide la invariancia del **tipo** de clave cuando el prefijo no puede.
+- **Calibración de relevo, deliberada**: H3b bloquea **solo** si el prefijo es uniforme en ≥90 % de
+  las versiones; si H3 puede medir, se queda en aviso. Con H3b bloqueando siempre, un fixture de
+  `test_diagnosticidad.R` que existe para probar que H1 **no** dispara pasaba a ROJO. Una sonda
+  nueva que cambia el veredicto de casos ya revisados no es más rigor: es ruido.
+- **La ceguera se declara siempre**, dispare o no la sonda: `H2/H3 CIEGAS` con su porcentaje, y
+  `H3b: NO MEDIBLE` cuando la firma tampoco discrimina, exigiendo verificador propio del ejercicio.
+- **4 tests nuevos** en `tests/testthat/test_diagnosticidad.R` (10 → 24 aserciones), incluido el
+  control de que el fixture prueba lo que dice (H2 en 0 % y H3 sin medir) y el de no-regresión de
+  la calibración de relevo.
+- **Origen**: dry-run de `MAT-2026-1-010`, ítem cuyas cuatro opciones son preguntas `¿Cuál es…?`.
 
 ### Cambios v1.3 (2026-08-09)
 - **NUEVA SUBSECCIÓN en §P4-bis — «La propia defensa crea deuda»**: tres verificaciones

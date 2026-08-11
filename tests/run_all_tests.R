@@ -220,6 +220,13 @@ suites <- list(
     watch = c("agente-detractor", "detractor-obligatorio", "test_contrato_detractor")
   ),
   list(
+    nombre = "Contrato de entrega de los orquestadores (paridad con el detractor)",
+    archivo = "tests/testthat/test_contrato_entrega_orquestadores.R",
+    critico = TRUE,
+    watch = c("orquestador-schoice", "orquestador-cloze", "agente-detractor",
+              "test_contrato_entrega_orquestadores")
+  ),
+  list(
     nombre = "Invocabilidad de validar_multisemilla (Error 31)",
     archivo = "tests/testthat/test_validar_multisemilla_invocable.R",
     critico = TRUE,
