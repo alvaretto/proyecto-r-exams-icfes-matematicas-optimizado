@@ -44,7 +44,14 @@ listar_rmd <- function() {
   fs <- list.files(zonas, pattern = "\\.[Rr]md$", recursive = TRUE, full.names = TRUE)
   fs <- fs[!grepl("Ejemplos-Funcionales", fs)]
   fs <- fs[!grepl("(^|/)\\.", basename(fs))]        # sin ocultos
-  fs[!grepl("/\\.", fs)]                            # sin directorios ocultos
+  fs <- fs[!grepl("/\\.", fs)]                      # sin directorios ocultos
+  # Los `.Rmd` dentro de `salida/` son COPIAS que deja el renderizado, no
+  # ejercicios fuente. Incluirlos hacía el test inestable por construcción: un
+  # re-render los borra y recrea, así que la misma comprobación pasaba en una
+  # corrida y fallaba en la siguiente sin que cambiara nada real. Ocurrió: el
+  # runner dio 28/28 y minutos después la suite salía roja, porque una copia
+  # con el nombre viejo había desaparecido de `salida/`.
+  fs[!grepl("/salida/", fs)]
 }
 
 cargar_allowlist <- function() {
