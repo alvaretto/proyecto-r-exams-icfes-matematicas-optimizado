@@ -698,10 +698,34 @@ ocurrencia_es_texto_visible <- function(contenido, num_linea, palabra) {
   return(FALSE)
 }
 
+# Rutas de material de REFERENCIA EXTERNA, fuera del alcance de la regla #7.
+# La regla exige tildes en "texto visible al estudiante" de ejercicios ICFES en
+# español; no rige sobre plantillas de terceros en inglés, que además son copias
+# verbatim inmutables (ver SOURCES/plantillas/rexams-oficiales/README.md).
+# Sin este guard, la regla morfológica -sion/-sión y la entrada `area` del
+# diccionario marcan como error las palabras inglesas `regression`, `impression`
+# y `Area`, y el hook de pre-commit bloquea con 11 falsos positivos.
+RUTAS_EXCLUIDAS_ORTOGRAFIA <- c(
+  "SOURCES/plantillas/rexams-oficiales/"
+)
+
+es_referencia_externa <- function(archivo) {
+  ruta <- gsub("\\\\", "/", archivo)
+  any(vapply(RUTAS_EXCLUIDAS_ORTOGRAFIA,
+             function(p) grepl(p, ruta, fixed = TRUE),
+             logical(1)))
+}
+
 # Función para detectar y corregir
 corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
   if (!file.exists(archivo)) {
     stop(paste("Archivo no encontrado:", archivo))
+  }
+
+  if (es_referencia_externa(archivo)) {
+    cat("\n⊘ Omitido (referencia externa, no es texto ICFES en español):",
+        archivo, "\n")
+    return(invisible(TRUE))
   }
 
   # Leer contenido

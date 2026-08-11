@@ -132,6 +132,7 @@ A-Produccion/
 | Revisar ejercicio CLOZE existente | @.claude/skills/revisar-cloze/SKILL.md |
 | Pipeline end-to-end SCHOICE (11 pasos) | @.claude/agents/orquestador-schoice.md + `/orquestador-schoice` |
 | Pipeline end-to-end CLOZE (11 pasos) | @.claude/agents/orquestador-cloze.md + `/orquestador-cloze` |
+| Ver sintaxis oficial de R/exams (referencia externa, NO estándar ICFES) | `SOURCES/plantillas/rexams-oficiales/CATALOGO.md` |
 
 ### ⚙️ Configuración del Sistema
 

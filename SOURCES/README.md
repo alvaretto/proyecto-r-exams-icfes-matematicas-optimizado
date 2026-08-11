@@ -25,8 +25,21 @@ SOURCES/
 │   └── arsenal_validacion_completa.R
 │
 └── plantillas/                # Plantillas base para ejercicios
-    └── (futuro)
+    └── rexams-oficiales/      # Plantillas OFICIALES de R/exams (referencia externa)
+        ├── README.md          #   jerarquía de autoridad + prohibiciones
+        ├── CATALOGO.md        #   índice de 46 ejercicios por área y por técnica
+        ├── LICENSE-exams.txt  #   GPL-2 | GPL-3 + atribución
+        ├── VERSION.txt        #   procedencia + manifiesto con hashes
+        ├── rmd/               #   45 archivos .Rmd
+        └── rnw/               #   46 archivos .Rnw
 ```
+
+### ⚠️ `plantillas/rexams-oficiales/` NO usa symlinks
+
+A diferencia del resto de `SOURCES/`, este subdirectorio **no** es origen de ningún
+symlink y **no** debe serlo. Son copias verbatim de upstream (paquete `exams`), su
+valor depende de no modificarse, y enlazarlas dentro de `A-Produccion/` rompería el
+runner de tests. Ver `plantillas/rexams-oficiales/README.md` §Prohibiciones.
 
 ---
 

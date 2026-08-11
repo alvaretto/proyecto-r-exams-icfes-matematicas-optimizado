@@ -1,0 +1,134 @@
+PROCEDENCIA DE LAS PLANTILLAS OFICIALES DE R/exams
+==================================================
+
+Fecha de extraccion : 2026-08-10
+Destino             : SOURCES/plantillas/rexams-oficiales/
+
+FUENTE PRIMARIA (89 de 91 archivos)
+------------------------------------
+  Paquete instalado : exams 2.4-2
+  Ruta origen       : system.file("exercises", package = "exams")
+                      = /home/bootcamp/R/library/exams/exercises
+  Metodo            : cp -p (copia verbatim, mtime preservado)
+  Archivos          : 44 .Rmd + 45 .Rnw
+
+FUENTE SECUNDARIA (2 de 91 archivos)  [origen: web]
+---------------------------------------------------
+  penguins.Rmd, penguins.Rnw
+  Motivo   : listados en https://www.r-exams.org/templates/ pero AUSENTES
+             de exams 2.4-2. Se incorporaron en exams 2.4-4 (2026-07-31).
+  Origen   : https://raw.githubusercontent.com/cran/exams/master/inst/exercises/
+  ADVERTENCIA: penguins usa format_metainfo(), funcion inexistente en 2.4-2.
+               No renderiza con el paquete instalado. Requiere exams >= 2.4-3.
+
+VERIFICACION DE INTEGRIDAD
+--------------------------
+  Metodo: git blob SHA-1 de cada archivo local comparado contra el SHA que
+  reporta la API de GitHub para cran/exams@master (exams 2.4-4).
+
+  Resultado de la comparacion 2.4-2 (local) vs 2.4-4 (upstream):
+    - Archivos solo en upstream        : penguins.Rmd, penguins.Rnw
+    - Archivos solo en local           : ninguno
+    - Comunes con contenido DISTINTO   : 0
+  => los 89 archivos de exams 2.4-2 son byte-identicos a los de 2.4-4.
+     El corpus es coherente pese a mezclar dos versiones del paquete.
+
+  Reproducir la verificacion:
+    curl -s 'https://api.github.com/repos/cran/exams/contents/inst/exercises?ref=master'
+    # comparar con: sha1('blob <len>\0' + contenido) de cada archivo local
+
+MANIFIESTO (nombre  sha1-blob  bytes  origen)
+---------------------------------------------
+  anova.Rmd              cc1bb7c45956a2760399a5892e039382cf65a930   5660  pkg
+  automaton.Rmd          f6108e96c74b4817e93cad848e1eeab4feee5fc1   2586  pkg
+  boxhist.Rmd            957cd16a2da0fabd357888b2cbcd9ede20ad7845   3478  pkg
+  boxhist2.Rmd           b1ffb60090f0dc9e36fecda94047a4ef6faba617   3743  pkg
+  boxplots.Rmd           999b6bde744a297fe3a71b6197838c9d6afbe852   6426  pkg
+  capitals.Rmd           651a47572f40e078e3917320056c2a91d57650c3    983  pkg
+  cholesky.Rmd           fc8dabc3371c86353ca2281055af3498980a9b43   1695  pkg
+  confint.Rmd            b7a28925b9eb754299c9ddc1756da1425e0c5fdf   1213  pkg
+  confint2.Rmd           0145fa91eb9609721a667718d3417fdcfbecab5e   1440  pkg
+  confint3.Rmd           ca471d50674d5be73f8468b4926de12aadec8bab   2713  pkg
+  countrycodes.Rmd       29dc5dcf65ff0e82a916e1527a097bc9bbc6a161   3989  pkg
+  currency8.Rmd          716e1f474de6ae6c4708a4d168330aa0f93b3815    939  pkg
+  deriv.Rmd              868083211ec034807c49ea5eb0de82d11675c36b   1124  pkg
+  deriv2.Rmd             31fdfc669cd48347e647290573dce61ff446d409   1623  pkg
+  dist.Rmd               832f5593a4fea7be1bdbfda0fed3f3405e4a634e   1072  pkg
+  dist2.Rmd              c48b87f54635911d9bdf694d1b13bbf1b38b28dd   1691  pkg
+  dist3.Rmd              428cd5626472afa75049e191ef45e3ca6d76d0f4   1559  pkg
+  essayreg.Rmd           26267ae91ac813066da7b5030a4a09f5959a903c   1992  pkg
+  essayreg2.Rmd          5b87f9e5eef9682c15eb6b2b6cc1130ee8fcae5a   2793  pkg
+  flags.Rmd              3074f2a766586d30f8a7ccdcb40258d0a85c2dee  26662  pkg
+  fourfold.Rmd           393d78f9f6beae939f25eb71367d91591da2e327   2961  pkg
+  fourfold2.Rmd          bee69389efeef94a25cc594d5da3ca9910d1fb9d   3411  pkg
+  fruit.Rmd              b78d461e6afc928a3d83e49316c5c583d3a12555  40505  pkg
+  fruit2.Rmd             efe3bf2c1eebf1336dd25948418b91df8b4f1350  40933  pkg
+  function.Rmd           0b6507e75441ad8bb92b5a4c764dc4c779e5dbdd   1028  pkg
+  gaussmarkov.Rmd        bebada529bbc54dc2c6eb195d6052b0b770b3631    884  pkg
+  hessian.Rmd            156229daa5c26f2bf8df210f850920680babbed6   1944  pkg
+  lagrange.Rmd           fb99807828c5f181887c6c21f836933c3e39b878   4578  pkg
+  lm.Rmd                 d079fc15ead2667ac376ec0af3b07751af8f0907   1409  pkg
+  lm2.Rmd                16cdafe4e21ac27026d9cfc8666c7dbd024ca359   2803  pkg
+  lm3.Rmd                24719a746033d2c2a7ad4bb78c9e5a01b4b2b4a8   4152  pkg
+  logic.Rmd              46815ea7aca9de64207cf8a295c524bd0dfe2200   2898  pkg
+  penguins.Rmd           4746b2b471dab111e5fa39bbfce9cfd5adebf1b3   3353  web
+  regression.Rmd         f6da813064b6f1c71e484e2007e42756384bea79   1904  pkg
+  relfreq.Rmd            9d9290e4be6fb4bf48cfd10f0edeae9b8a5f2e80   9248  pkg
+  Rlogo.Rmd              3ce5741afdef9c9eb85283957bbf57049f26e00a    890  pkg
+  scatterplot.Rmd        9f936f0906dee70c13764f493b5e96ba0801c3d1   4758  pkg
+  sumdiff.Rmd            ffe88765c66ef3bc6128e76951e45bd69b22fe8c    439  pkg
+  swisscapital.Rmd       7b8a89b63f66234b05b881ff05128320632e326a    498  pkg
+  switzerland.Rmd        2900dd44adc009d88055d8ce20270a7fb4d62fe4    850  pkg
+  tstat.Rmd              ed100e42865c053eabf171a61857e0d31bf86a68   1300  pkg
+  tstat2.Rmd             2a59830cf3ac3e2c33360d752fe8f5d25a66ac76   2054  pkg
+  ttest.Rmd              2029faa51156ffbf2c0f93a401b64badb96794c2   3376  pkg
+  vowels.Rmd             bdb5e80f12f21ff9411bd496ce620a8353730439   2545  pkg
+  vowels2.Rmd            dc0ef91560dffcbd7b44d6821783088aa779f2af   1511  pkg
+  anova.Rnw              458c019b9ab89e6a9be654b59e951071fe362fb9   5624  pkg
+  automaton.Rnw          6eeed459a7660d4121999472b11c534cc8be293c   2588  pkg
+  boxhist.Rnw            21ecf09a59f8c3e80c4e514bf806574fbc38693a   3440  pkg
+  boxhist2.Rnw           9827af86daaa96887be328b59c0310dd06e2630e   3663  pkg
+  boxplots.Rnw           fb581a3a705922f0c9af249cf18ac9ae1915d9fb   6353  pkg
+  capitals.Rnw           333157d48258fd32967e25b99576bdbeae2c6da1   1147  pkg
+  cholesky.Rnw           d64f61d56dced3e2efbefc5de27b8484aa5d3aea   1574  pkg
+  confint.Rnw            6c918d05e806d90eea40080db1d698cb6ddd93e3   1297  pkg
+  confint2.Rnw           d764db718b8f46b6967d26fc99c78342438e5f8b   1563  pkg
+  confint3.Rnw           a0ca7c1d7c820e090e92cec7dd6b2b3baf78d3d2   2800  pkg
+  countrycodes.Rnw       964fd37a5fa50e028498f873fa8a96413c08a7b6   3996  pkg
+  currency8.Rnw          b7629d599bd1c19fd7ae44a66231d750a8742b09    986  pkg
+  deriv.Rnw              319b757a6dd2e75054ca6f5229a0990da215f807   1232  pkg
+  deriv2.Rnw             087fe0dfd45c23728523b73de7717c00c6691305   1635  pkg
+  dist.Rnw               f2fe89857d946721943fdf990bc76ea315c2a33d   1056  pkg
+  dist2.Rnw              30d7378a21cfa0c4bc81b09f44536370bfb54c01   1824  pkg
+  dist3.Rnw              f919b0a9de894413cd68b49a4c135b13b70c04ef   1447  pkg
+  essayreg.Rnw           26c803eaaa261285c24294ea36010ef9faeea33f   2062  pkg
+  essayreg2.Rnw          eb5fa216261382a87b5c326a77299ca1931dc1eb   2962  pkg
+  flags.Rnw              1ac97e2d6046ed9929e7313bd30b43880ca0e273  26565  pkg
+  fourfold.Rnw           5628175cb826d97a325cc3bdc3b013fc22a4da4c   2935  pkg
+  fourfold2.Rnw          1a2e4c4b2f256e28ed346ffb8fac6d04639b6fb0   3429  pkg
+  fruit.Rnw              b897cdf5f2da36a7dd148651129830b71912b123  40100  pkg
+  fruit2.Rnw             da84368f91c6740cf1606dc39f3d6dc570261792  40360  pkg
+  function.Rnw           899c4e2cfa3b36dee281b2efcbce6d4b72058508   1042  pkg
+  gaussmarkov.Rnw        2985f22bb01f3337b306709250c2bcbe55257709    978  pkg
+  hessian.Rnw            6af8688ffdbfe93180eb5a3bf606158f06186b86   1905  pkg
+  lagrange.Rnw           943d34d280a22497d85cd40f793c2e9bcc7520fa   5081  pkg
+  lm.Rnw                 5d1ce83669b415641fe5c3bbdf34f194fe6b0a0e   1443  pkg
+  lm2.Rnw                3610652a944ab1083ce3b52d11e803c738b87e51   3013  pkg
+  lm3.Rnw                db32a63dbf6f893a0ed118bfffbff6f48be5e680   4381  pkg
+  logic.Rnw              3b65d4fc3cd3c2470d4cf4e5e89b838713fd5e7a   2816  pkg
+  penguins.Rnw           cc1e5f8b10a6639539fbafa692311e4dfdb9c6a8   3520  web
+  regression.Rnw         31d68b7112da4aa6ef9c1e1aaa3227d27b2699ee   2011  pkg
+  relfreq.Rnw            69a7b1094c966db256ea06871103c053e303cb4f   9077  pkg
+  Rlogo.Rnw              192d100925c8be8424295290215545ea6c513b2b   1009  pkg
+  scatterplot.Rnw        41adcc10358f8f5829caeddadd121fce9422810d   4648  pkg
+  sumdiff.Rnw            7babdeb80189bdd18482518f952953c2fb04ca26    481  pkg
+  swisscapital.Rnw       32a2ce34940e856d1a08d1d0faaa99d288d0ce7b    611  pkg
+  switzerland.Rnw        8dbf74005918370bb2de257a06ef0faef17e2374    932  pkg
+  tstat.Rnw              af81f9c6dd8384b98734b5957462ebc27b2cd242   1414  pkg
+  tstat2.Rnw             ce5a80a142f8be19f664dc399662b8517103ce63   1998  pkg
+  tstat_verbatim.Rnw     f3ada741357f5515238d4fa7d25d2e1ae81a6aaa   2098  pkg
+  ttest.Rnw              7da7585eb29e08ee6df235d469e4765e3d1bd8a0   3353  pkg
+  vowels.Rnw             64dcfb5ebdd6f52e458d842d621c1c7b0b85009b   2656  pkg
+  vowels2.Rnw            e2699a6cd7c047e4c246a264a3ac7b0a1fa1dbd0   1512  pkg
+
+  Total: 45 .Rmd + 46 .Rnw = 91 archivos

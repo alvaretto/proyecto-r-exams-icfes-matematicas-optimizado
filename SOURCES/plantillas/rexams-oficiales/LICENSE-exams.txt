@@ -1,0 +1,47 @@
+LICENCIA Y ATRIBUCIÓN — contenido de rmd/ y rnw/
+================================================
+
+Los archivos de los directorios rmd/ y rnw/ NO son obra de este repositorio.
+Son los ejercicios-plantilla del paquete R "exams", copiados verbatim.
+
+  Paquete : exams — "Automatic Generation of Exams in R"
+  Sitio   : https://www.R-exams.org/
+  CRAN    : https://CRAN.R-project.org/package=exams
+  Licencia: GPL-2 | GPL-3
+
+AUTORES (campo Author del DESCRIPTION del paquete)
+--------------------------------------------------
+  Achim Zeileis    [aut, cre]  ORCID 0000-0003-0918-3766
+  Bettina Gruen    [aut]       ORCID 0000-0001-7265-4773
+  Friedrich Leisch [aut]       ORCID 0000-0001-7278-1983
+  Nikolaus Umlauf  [aut]       ORCID 0000-0003-2160-9803
+  Mirko Birbaumer  [ctb]
+  Dominik Ernst    [ctb]
+  Patrik Keller    [ctb]
+  Niels Smits      [ctb]       ORCID 0000-0003-3669-9266
+  Reto Stauffer    [ctb]       ORCID 0000-0002-3798-5507
+  Kenji Sato       [ctb]       ORCID 0009-0000-4520-2560
+  Florian Wickelmaier [ctb]
+  Sebastian Bachler   [ctb]
+
+  Mantenedor: Achim Zeileis <Achim.Zeileis@R-project.org>
+
+CITA RECOMENDADA
+----------------
+  Zeileis A, Umlauf N, Leisch F (2014). "Flexible Generation of E-Learning Exams
+  in R: Moodle Quizzes, OLAT Assessments, and Beyond." Journal of Statistical
+  Software, 58(1), 1-36. doi:10.18637/jss.v058.i01
+
+CONDICIONES DE USO EN ESTE REPOSITORIO
+--------------------------------------
+  - Se usan como material de REFERENCIA de sintaxis. No se redistribuyen como
+    obra propia ni se presentan como ejercicios ICFES.
+  - No se ha modificado ni una línea de su contenido (integridad verificada por
+    hash contra upstream; ver VERSION.txt).
+  - Cualquier ejercicio ICFES derivado de estas plantillas es obra nueva de este
+    repositorio; si reutiliza porciones sustanciales de código de un template,
+    debe conservar esta atribución.
+
+El texto completo de la GPL-2 y la GPL-3 está en:
+  https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  https://www.gnu.org/licenses/gpl-3.0.html

@@ -21,6 +21,14 @@ RepositorioMatematicasICFES_R_Exams/
 │   ├── skills/                       # Agent Skills (invocación automática)
 │   └── commands/                     # Slash Commands (invocación manual)
 │
+├── SOURCES/                           # ARCHIVOS ORIGINALES COMPARTIDOS
+│   ├── documentacion_compartida/     # Docs referenciadas por symlink
+│   ├── scripts_validacion/           # Validadores (symlinks desde .claude/scripts/)
+│   └── plantillas/
+│       └── rexams-oficiales/         # Plantillas oficiales de R/exams (REFERENCIA
+│                                     #   EXTERNA de sintaxis, NO estándar ICFES;
+│                                     #   fuera de A-Produccion/ a propósito)
+│
 ├── tests/                             # ECOSISTEMA DE TESTING
 │   ├── run_all_tests.R               # Ejecutor principal (chmod +x)
 │   └── testthat/                     # Suites de tests (12 suites, 110+ tests)
