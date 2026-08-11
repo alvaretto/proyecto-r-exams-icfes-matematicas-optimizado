@@ -1,0 +1,63 @@
+{
+  "version": "2.0",
+  "ejercicio": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-08-10T19:44:14.840202-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-10T23:56:48.214255-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-10T19:44:14.876204-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-08-10T19:44:14.932404-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-08-10T23:26:14.599394-05:00",
+      "archivo": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-08-10T21:46:58.649094-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-08-10T23:56:48.214255-05:00",
+      "formatos": "HTML/PDF/DOCX/NOPS/Moodle/TEX 6/6 en sesion R limpia"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-08-10T23:56:48.214255-05:00",
+      "detalle": "6/6 formatos; coherencia APROBADO; multisemilla 20/20; diversidad PASS; diagnosticidad PASS; ortografia exit 0; 500/500 semillas sin violar guardas"
+    },
+    "detractor_fase2c": {
+      "completado": false,
+      "timestamp": null,
+      "veredicto": "ronda 3 = RECHAZAR (0 criticas, 3 altas). Aplicadas ALTA 1 (carretera anclada), ALTA 2 (ambiguedad realizable: adversario 73,7->57,4 %), MEDIA 5, MEDIA 6, BAJA 8. ABIERTAS: ALTA 3 (FIJ-01/06 nunca clave) y MEDIA 4 (POR-01..05 inalcanzables). Veredicto caducado por los fixes."
+    },
+    "coherencias_5": {
+      "completado": false,
+      "timestamp": null,
+      "nota": "pendiente de re-verificacion visual tras el rediseño del 2026-08-10"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-08-10T21:48:39.629626-05:00",
+      "versiones_unicas": null,
+      "nota": "diversidad sustantiva PASS: 24 valores unicos de la clave en 40 versiones"
+    },
+    "validar_icfes": {
+      "completado": false,
+      "timestamp": null,
+      "nota": "contrastado contra ITEM_OFICIAL.md: enunciado y 4 opciones canonicas verbatim (guarda G7). Afirmacion/Evidencia/Descriptor coinciden con la ficha oficial. Pendiente: confirmacion humana del Estandar EBC."
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}
