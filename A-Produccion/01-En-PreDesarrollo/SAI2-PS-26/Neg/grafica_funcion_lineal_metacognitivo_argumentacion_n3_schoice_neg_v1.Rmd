@@ -37,7 +37,7 @@ pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
 safe_sample <- function(x, size, replace = TRUE)
   if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
 
-# --- Generacion de parametros aleatorios ---
+# --- Generación de parametros aleatorios ---
 # Misma logica del ejercicio base: (m, b) con b multiplo de m, |b/m| <= 6, etc.
 m_pool <- c(-4L, -3L, -2L, -1L, 1L, 2L, 3L, 4L)
 combos_mb <- list()
@@ -63,7 +63,7 @@ direccion_opuesta <- if (es_creciente) "decreciente" else "creciente"
 signo_m <- if (m > 0) "positivo" else "negativo"
 
 # --- Pool de afirmaciones VERDADERAS ---
-# Cada afirmacion es una parafrasis diferente de una propiedad correcta de f.
+# Cada afirmación es una parafrasis diferente de una propiedad correcta de f.
 # Se generan más de 3 para que la selección rote entre semillas.
 afirmaciones_verdaderas <- list(
   # --- Grupo A: sobre la pendiente y crecimiento/decrecimiento ---
@@ -194,7 +194,7 @@ afirmaciones_verdaderas <- list(
 )
 
 # --- Pool de errores conceptuales (afirmaciones FALSAS) ---
-# Cada error produce una afirmacion incorrecta basada en una confusion real.
+# Cada error produce una afirmación incorrecta basada en una confusión real.
 errores_conceptuales <- list(
   list(
     codigo = "FUN-LIN-01",
@@ -250,7 +250,7 @@ errores_conceptuales <- list(
       "con eje x (solución de mx + b = 0)."
     ),
     precondicion = function(params) {
-      # Solo aplica si b != corte_x (de lo contrario la afirmacion seria verdadera)
+      # Solo aplica si b != corte_x (de lo contrario la afirmación seria verdadera)
       params$b != params$corte_x
     },
     genera_texto = function() {
@@ -289,7 +289,7 @@ errores_conceptuales <- list(
       "f(x) = mx + b cuando b aparece con un signo explícito."
     ),
     precondicion = function(params) {
-      # Solo aplica si b != -b, es decir b != 0 (siempre true por restriccion del pool)
+      # Solo aplica si b != -b, es decir b != 0 (siempre true por restricción del pool)
       params$b != -params$b
     },
     genera_texto = function() {
@@ -325,8 +325,8 @@ errores_conceptuales <- list(
       "en lugar de m(1) + b."
     ),
     precondicion = function(params) {
-      # Solo aplica si el valor erroneo (m - b) es distinto del correcto (m + b)
-      # Es decir, b != 0 (siempre true por restriccion del pool)
+      # Solo aplica si el valor erróneo (m - b) es distinto del correcto (m + b)
+      # Es decir, b != 0 (siempre true por restricción del pool)
       (params$m - params$b) != (params$m + params$b)
     },
     genera_texto = function() {
@@ -406,7 +406,7 @@ stopifnot(length(errores_aplicables_idx) >= 1L)
 error_sel_idx <- safe_sample(errores_aplicables_idx, 1L)
 error_sel <- errores_conceptuales[[error_sel_idx]]
 
-# Generar texto de la afirmacion falsa
+# Generar texto de la afirmación falsa
 texto_falso <- error_sel$genera_texto()
 
 # --- Seleccionar 3 afirmaciones verdaderas de grupos DISTINTOS ---
@@ -455,7 +455,7 @@ opciones_mezcladas <- opciones_pre_mezcla[perm]
 letras <- c("A", "B", "C", "D")
 names(opciones_mezcladas) <- letras
 
-# Vector sol: la opcion con etiqueta "error" es la respuesta correcta a marcar
+# Vector sol: la opción con etiqueta "error" es la respuesta correcta a marcar
 etiquetas_mezcladas <- names(opciones_pre_mezcla)[perm]
 indice_error <- which(etiquetas_mezcladas == "error")
 sol <- rep(0L, 4L)
@@ -548,12 +548,12 @@ reflexion <- reflexiones[pick_int(1L, length(reflexiones))]
 # --- Verificaciones internas (test _neg_ Variante B; ver regla de opciones repetidas) ---
 test_that("Patrón _neg_ texto: estructura semántica correcta", {
   expect_equal(sum(sol), 1L,
-    info = "sol debe marcar exactamente 1 opcion como correcta (el error)")
+    info = "sol debe marcar exactamente 1 opción como correcta (el error)")
   idx_err <- which(sol == 1L)
   expect_equal(length(idx_err), 1L,
-    info = "Debe haber exactamente 1 posicion marcada en sol")
+    info = "Debe haber exactamente 1 posición marcada en sol")
   expect_equal(etiquetas_mezcladas[idx_err], "error",
-    info = "La posicion marcada en sol debe corresponder a la etiqueta 'error'")
+    info = "La posición marcada en sol debe corresponder a la etiqueta 'error'")
   n_correctas <- sum(grepl("^correcta", etiquetas_mezcladas))
   expect_equal(n_correctas, 3L,
     info = "Se esperaban 3 opciones 'correcta*'")
@@ -562,7 +562,7 @@ test_that("Patrón _neg_ texto: estructura semántica correcta", {
 test_that("Patrón _neg_ texto: todas las opciones son textualmente distintas", {
   textos <- unlist(opciones_mezcladas)
   expect_equal(length(unique(textos)), 4L,
-    info = "Opciones deben tener redaccion diferente entre si (no copiar-pegar)")
+    info = "Opciones deben tener redacción diferente entre si (no copiar-pegar)")
 })
 
 test_that("La afirmación falsa no coincide con ninguna verdadera", {
@@ -623,7 +623,7 @@ cat(paste0(
 for (k in seq_along(sel_verdaderas)) {
   af <- sel_verdaderas[[k]]
   cat(paste0("- **", af$id, "** (", af$grupo, "): \"", textos_verdaderos[k], "\" --- "))
-  # Justificacion por grupo
+  # Justificación por grupo
   if (af$grupo == "pendiente") {
     cat(paste0(
       "Correcto, pues $m = ", m, "$ es ", signo_m,

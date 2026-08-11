@@ -214,6 +214,33 @@ suites <- list(
               "validar_coherencia_matematica")
   ),
   list(
+    nombre = "Contrato de entrega e independencia del detractor (Regla #9 v1.2)",
+    archivo = "tests/testthat/test_contrato_detractor.R",
+    critico = TRUE,
+    watch = c("agente-detractor", "detractor-obligatorio", "test_contrato_detractor")
+  ),
+  list(
+    nombre = "Contrato de entrega de los orquestadores (paridad con el detractor)",
+    archivo = "tests/testthat/test_contrato_entrega_orquestadores.R",
+    critico = TRUE,
+    watch = c("orquestador-schoice", "orquestador-cloze", "agente-detractor",
+              "test_contrato_entrega_orquestadores")
+  ),
+  list(
+    nombre = "Nomenclatura oficial de .Rmd (fuente única + gate + citas)",
+    archivo = "tests/testthat/test_nomenclatura_rmd.R",
+    critico = TRUE,
+    watch = c("NOMENCLATURA_ARCHIVOS_RMD", "pre-write-rmd-gate", "nomenclatura-legacy",
+              "test_nomenclatura_rmd", "\\.Rmd$", "generar-schoice", "generar-cloze")
+  ),
+  list(
+    nombre = "Invocabilidad de validar_multisemilla (Error 31)",
+    archivo = "tests/testthat/test_validar_multisemilla_invocable.R",
+    critico = TRUE,
+    watch = c("validar_multisemilla", "stress_test_visual",
+              "test_validar_multisemilla_invocable", "post-exams2-validation")
+  ),
+  list(
     nombre = "Diversidad Sustantiva (Regla #22)",
     archivo = "tests/testthat/test_diversidad_sustantiva.R",
     critico = TRUE,
@@ -221,11 +248,32 @@ suites <- list(
               "validar_diversidad_sustantiva")
   ),
   list(
+    nombre = "Diagnosticidad de distractores (V9, margen relativo de H1)",
+    archivo = "tests/testthat/test_diagnosticidad.R",
+    critico = TRUE,
+    watch = c("validar_diagnosticidad", "test_diagnosticidad",
+              "orquestador-cloze", "orquestador-schoice")
+  ),
+  list(
     nombre = "Invariante I-2 barco (bbox del casco == clave)",
     archivo = "tests/testthat/test_barco_bbox_invariante.R",
     critico = TRUE,
     watch = c("plano-cartesiano-barco", "coordenadas_vertices_plano_cartesiano",
               "barco-parametrico", "test_barco_bbox_invariante")
+  ),
+  list(
+    nombre = "Invariantes I-1..I-7 permutaciones (clave == n!)",
+    archivo = "tests/testthat/test_permutaciones_invariantes.R",
+    critico = TRUE,
+    watch = c("permutaciones-pescadores-venia", "permutaciones_pescadores",
+              "permutaciones-parametricas", "test_permutaciones_invariantes")
+  ),
+  list(
+    nombre = "Diversidad grafica circular (tabla, meses y par del error)",
+    archivo = "tests/testthat/test_diversidad_grafica_circular.R",
+    critico = TRUE,
+    watch = c("grafica-circular-consumo-agua", "grafica_circular_consumo_agua",
+              "test_diversidad_grafica_circular")
   )
 )
 

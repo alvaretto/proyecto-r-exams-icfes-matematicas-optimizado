@@ -1,0 +1,58 @@
+{
+  "version": "2.0",
+  "ejercicio": "excedente_almuerzo_numerico_variacional_argumentacion_n4_cloze_v2",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-08-06T21:32:27.223408-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-06T22:09:50.137463-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:32:35.122745-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-08-06T21:32:35.183251-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:35:52.934441-05:00",
+      "archivo": "excedente_almuerzo_numerico_variacional_argumentacion_n4_cloze_v2.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:35:52.993762-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:36:56.746159-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:36:56.806451-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:37:46.244093-05:00",
+      "veredicto": "APROBAR"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:58:50.857724-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:58:50.919803-05:00",
+      "versiones_unicas": 300
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-06T21:58:51.001473-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-08-06T22:09:50.137463-05:00"
+    }
+  }
+}

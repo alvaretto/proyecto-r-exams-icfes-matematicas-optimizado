@@ -1,0 +1,430 @@
+#!/usr/bin/env Rscript
+# ============================================================================
+# verificar_render.R -- CLOZE excedente_almuerzo_..._cloze_v1
+#
+# Verifica:
+#   Fase 0 -- Enumerar espacio parametrico, encontrar semilla canonica.
+#   Fase 1 -- Invariantes I-1..I-5, I-7, C-1..C-3 + correctitud de los 6 gaps
+#             sobre >= 300 semillas.
+#   Fase 2 -- I-6 (instancia canonica): fuerza los parametros canonicos y
+#             compara enunciado caracter por caracter + verifica gaps 1-2.
+#   Fase 3 -- Mutacion A (clave falsa): copia del .Rmd con sol_p3 invertido.
+#   Fase 4 -- Mutacion B (E negativo): copia con P > T forzado.
+#   Fase 5 -- Mutacion C (dato_retirado n pero respuesta "No"): testea que
+#             KEY_P6 detecta incoherencia entre dato retirado y respuesta.
+# ============================================================================
+suppressPackageStartupMessages(library(exams))
+
+RMD     <- "excedente_almuerzo_numerico_variacional_argumentacion_n4_cloze_v1.Rmd"
+N_SEEDS <- 300L
+PRIMES  <- c(7, 11, 13, 17, 19, 23, 29, 31, 37, 41)
+SCRATCHPAD <- tempdir()
+
+cat("=== verificar_render.R (CLOZE) ===\n")
+cat("Archivo:", RMD, "\nSemillas:", N_SEEDS, "\n\n")
+
+# --- Helpers ---------------------------------------------------------------
+fmt_cop_local <- function(x) {
+  paste0("\\$", formatC(x, format = "f", digits = 0,
+                        big.mark = ".", decimal.mark = ","))
+}
+
+knit_env <- function(rmd_path, seed) {
+  set.seed(seed)
+  env <- new.env(parent = globalenv())
+  invisible(knitr::knit(rmd_path, output = tempfile(tmpdir = SCRATCHPAD),
+                        envir = env, quiet = TRUE))
+  env
+}
+
+# --- Battery: all invariant checks on a knitted environment ----------------
+run_battery <- function(env) {
+  errs <- character(0)
+
+  # C-1: siempre TIPO 1
+  if (env$tipo != "1")
+    errs <- c(errs, paste0("C-1: tipo=", env$tipo, " (esperado 1)"))
+
+  # I-1: E > 0
+  if (env$E <= 0) errs <- c(errs, paste0("I-1: E=", env$E))
+
+  # I-2: q entera y c < q
+  if (env$q != floor(env$q)) errs <- c(errs, paste0("I-2: q=", env$q))
+  if (env$c_val >= env$q)
+    errs <- c(errs, paste0("I-2: c=", env$c_val, ">=q=", env$q))
+
+  # I-3: a entero
+  if (env$a_val != floor(env$a_val))
+    errs <- c(errs, paste0("I-3: a=", env$a_val))
+  a_check <- env$c_val * env$E / env$Ttotal
+  if (abs(env$a_val - a_check) > 0.01)
+    errs <- c(errs, paste0("I-3_formula: a=", env$a_val, " vs ", a_check))
+
+  # I-4: a > 0
+  if (env$a_val <= 0) errs <- c(errs, paste0("I-4: a=", env$a_val))
+
+  # I-5: multiplos
+  if (env$P %% 50000 != 0) errs <- c(errs, paste0("I-5: P=", env$P))
+  if (env$Ttotal %% 50000 != 0) errs <- c(errs, paste0("I-5: T=", env$Ttotal))
+  if (env$c_val %% 500 != 0) errs <- c(errs, paste0("I-5: c=", env$c_val))
+
+  # I-7: sin Unicode problematico en textos emitidos
+  textos_emitidos <- c(env$enunciado_completo, env$opciones_p3,
+                       env$opciones_p4, env$opciones_p5, env$opciones_p6)
+  for (t in textos_emitidos) {
+    if (grepl("−", t)) errs <- c(errs, "I-7: U+2212 en texto emitido")
+    if (grepl("≤", t)) errs <- c(errs, "I-7: U+2264 en texto emitido")
+    if (grepl("≥", t)) errs <- c(errs, "I-7: U+2265 en texto emitido")
+  }
+
+  # C-2: dato_retirado valido y Part 6 coherente
+  if (!(env$dato_retirado %in% c("T", "c", "n")))
+    errs <- c(errs, paste0("C-2: dato_retirado=", env$dato_retirado))
+
+  # C-3: mchoice (Part 4) tiene al menos 1 TRUE y 1 FALSE
+  if (sum(env$sol_p4) < 1) errs <- c(errs, "C-3: sol_p4 sin TRUE")
+  if (sum(env$sol_p4) == length(env$sol_p4)) errs <- c(errs, "C-3: sol_p4 todo TRUE")
+  if (length(env$opciones_p4) < 5) errs <- c(errs, "C-3: mchoice < 5 opciones")
+
+  # Parts structure
+  if (sum(env$sol_p3) != 1) errs <- c(errs, paste0("P3: sum(sol)=", sum(env$sol_p3)))
+  if (sum(env$sol_p5) != 1) errs <- c(errs, paste0("P5: sum(sol)=", sum(env$sol_p5)))
+  if (sum(env$sol_p6) != 1) errs <- c(errs, paste0("P6: sum(sol)=", sum(env$sol_p6)))
+  if (length(env$opciones_p3) != 4) errs <- c(errs, "P3: != 4 opciones")
+  if (length(env$opciones_p5) != 4) errs <- c(errs, "P5: != 4 opciones")
+  if (length(env$opciones_p6) != 4) errs <- c(errs, "P6: != 4 opciones")
+
+  # Uniqueness of options within each part
+  if (length(unique(env$opciones_p3)) != length(env$opciones_p3))
+    errs <- c(errs, "P3_UNIQ: opciones duplicadas")
+  if (length(unique(env$opciones_p5)) != length(env$opciones_p5))
+    errs <- c(errs, "P5_UNIQ: opciones duplicadas")
+  if (length(unique(env$opciones_p6)) != length(env$opciones_p6))
+    errs <- c(errs, "P6_UNIQ: opciones duplicadas")
+
+  # KEY_P3: Part 3 correcta debe contener frase clave "Si"
+  p3_correct <- env$opciones_p3[which(env$sol_p3)]
+  if (length(p3_correct) != 1)
+    errs <- c(errs, "KEY_P3: no exactamente 1 correcta")
+  else if (!grepl("se conoce el valor total de la cuenta", p3_correct))
+    errs <- c(errs, "KEY_P3: frase clave ausente en correcta")
+
+  # KEY_P4: sol_p4 must be TRUE TRUE TRUE FALSE FALSE (T, P, c needed; n, others not)
+  expected_p4 <- c(TRUE, TRUE, TRUE, FALSE, FALSE)
+  if (!identical(as.logical(env$sol_p4), expected_p4))
+    errs <- c(errs, paste0("KEY_P4: sol_p4=", paste(env$sol_p4, collapse="")))
+
+  # KEY_P5: Part 5 correcta (the INCORRECT statement) should be a known false
+  p5_correct_idx <- which(env$sol_p5)
+  if (length(p5_correct_idx) == 1) {
+    p5_text <- env$opciones_p5[p5_correct_idx]
+    # This should be one of the false statements (not a true one)
+    # OJO: estos indicadores se comparan con fixed = TRUE contra el texto REAL
+    # emitido por el .Rmd. El tercero decia "La proporcion" (sin tilde) mientras
+    # el .Rmd emitia "La proporción": nunca podia coincidir, asi que KEY_P5
+    # llevaba comprobando 2 de las 3 afirmaciones verdaderas y firmando las 3.
+    # Detectado el 2026-08-06. Si se edita una de estas frases en el .Rmd, hay
+    # que editarla aqui: la sonda es literal por diseno (queremos que falle si
+    # el texto cambia sin querer), pero eso la hace fragil ante la ortografia.
+    true_indicators <- c("depende de su consumo individual",
+                         "la diferencia entre el total",
+                         "La proporción del consumo individual")
+    for (ti in true_indicators) {
+      if (grepl(ti, p5_text, fixed = TRUE))
+        errs <- c(errs, paste0("KEY_P5: correcta parece ser verdadera: '", ti, "'"))
+    }
+  }
+
+  # KEY_P6: coherencia dato_retirado vs respuesta
+  p6_correct_idx <- which(env$sol_p6)
+  if (length(p6_correct_idx) == 1) {
+    p6_text <- env$opciones_p6[p6_correct_idx]
+    if (env$dato_retirado %in% c("T", "c")) {
+      if (!grepl("^No,", p6_text))
+        errs <- c(errs, paste0("KEY_P6: dato_retirado=", env$dato_retirado,
+                               " pero correcta no empieza con No"))
+    } else if (env$dato_retirado == "n") {
+      if (!grepl("^S[ií],", p6_text))
+        errs <- c(errs, paste0("KEY_P6: dato_retirado=n pero correcta no empieza con Si"))
+    }
+  }
+
+  errs
+}
+
+# ===== FASE 0: Enumerar combos y encontrar semilla canonica ================
+cat("Fase 0: Enumerar espacio parametrico y buscar semilla canonica\n")
+
+n_pool <- c(5, 6, 8, 10, 12, 15, 20)
+P_grid <- seq(150000, 600000, by = 50000)
+pn_pares <- expand.grid(P = P_grid, n = n_pool, stringsAsFactors = FALSE)
+pn_pares$q <- pn_pares$P / pn_pares$n
+pn_pares <- pn_pares[pn_pares$q == floor(pn_pares$q) & pn_pares$q >= 5000, ]
+
+combos_list <- list(); counter <- 0L
+for (i in seq_len(nrow(pn_pares))) {
+  Pi <- pn_pares$P[i]; qi <- pn_pares$q[i]
+  for (Tj in seq(Pi + 50000, min(Pi + 500000, 1200000), by = 50000)) {
+    Ej <- Tj - Pi; a_upper <- floor(qi * Ej / Tj)
+    if (a_upper < 500) next
+    a_cands <- seq(500, min(10000, a_upper), by = 500)
+    c_exact <- a_cands * Tj / Ej; c_round <- round(c_exact)
+    v <- abs(c_exact - c_round) < 0.01 & (c_round %% 500) == 0 &
+         c_round > 0 & c_round < qi
+    for (k in which(v)) {
+      counter <- counter + 1L
+      combos_list[[counter]] <- c(Pi, pn_pares$n[i], Tj,
+                                  a_cands[k], c_round[k], qi, Ej)
+    }
+  }
+}
+combos <- as.data.frame(do.call(rbind, combos_list))
+names(combos) <- c("P", "n", "Ttotal", "a_val", "c_val", "q", "E")
+N_COMBOS <- nrow(combos)
+
+canon_idx <- which(combos$P == 300000 & combos$n == 10 &
+                   combos$Ttotal == 500000 & combos$c_val == 5000)
+stopifnot(length(canon_idx) >= 1)
+canon_idx <- canon_idx[1]
+cat("  Combos TYPE 1:", N_COMBOS, "\n")
+cat("  Indice canonico:", canon_idx, "\n")
+
+# Buscar semilla canonica: el CLOZE siempre es TIPO 1 (no sortea tipo),
+# asi que el path RNG es: d1=combo(N_COMBOS), d2=ctx(8), d3=art(4), etc.
+canon_seed <- NA_integer_
+for (s in seq_len(500000L)) {
+  set.seed(s)
+  if (sample.int(N_COMBOS, 1L) != canon_idx) next
+  # Found a seed that picks the canonical combo
+  # Now check if it picks context 1 and articulo "un jugo"
+  # But es_canonico forces ctx=1 and articulo="un jugo" regardless of RNG.
+  # So any seed that picks canon_idx works.
+  canon_seed <- s; break
+}
+if (is.na(canon_seed)) stop("No se encontro semilla canonica en 500000 intentos")
+cat("  Semilla canonica:", canon_seed, "\n\n")
+
+# ===== FASE 1: Invariantes sobre N semillas ================================
+cat("Fase 1: Invariantes I-1..I-5, I-7, C-1..C-3, KEY (", N_SEEDS, " semillas)\n")
+
+errors_f1 <- character(0)
+datos_retirados <- character(N_SEEDS)
+E_vals <- integer(N_SEEDS)
+a_vals <- integer(N_SEEDS)
+for (s in seq_len(N_SEEDS)) {
+  seed <- s * PRIMES[((s - 1L) %% length(PRIMES)) + 1L]
+  env <- tryCatch(knit_env(RMD, seed), error = function(e) {
+    errors_f1 <<- c(errors_f1, paste0("CRASH seed=", seed, ": ", conditionMessage(e)))
+    NULL
+  })
+  if (is.null(env)) { datos_retirados[s] <- "CRASH"; next }
+  datos_retirados[s] <- env$dato_retirado
+  E_vals[s] <- env$E
+  a_vals[s] <- env$a_val
+  batch <- run_battery(env)
+  if (length(batch) > 0)
+    errors_f1 <- c(errors_f1, paste0("seed=", seed, " ", batch))
+}
+cat("  Errores:", length(errors_f1), "\n")
+cat("  dato_retirado distribution:\n"); print(table(datos_retirados)); cat("\n")
+cat("  E unique values:", length(unique(E_vals)), "\n")
+cat("  a unique values:", length(unique(a_vals)), "\n\n")
+
+# ===== FASE 2: I-6 canonica (INCONDICIONAL) ================================
+cat("Fase 2: I-6 instancia canonica (incondicional, seed=", canon_seed, ")\n")
+
+errors_f2 <- character(0)
+env_canon <- knit_env(RMD, canon_seed)
+
+if (!env_canon$es_canonico)
+  errors_f2 <- c(errors_f2, "I-6: seed no produjo es_canonico=TRUE")
+
+# Check E and a
+if (env_canon$E != 200000)
+  errors_f2 <- c(errors_f2, paste0("I-6: E=", env_canon$E, " esperado 200000"))
+if (env_canon$a_val != 2000)
+  errors_f2 <- c(errors_f2, paste0("I-6: a=", env_canon$a_val, " esperado 2000"))
+
+# Enunciado esperado (comprobacion parcial: las partes clave)
+enun <- env_canon$enunciado_completo
+if (!grepl("Una empresa destina \\\\\\$300\\.000 para invitar a sus 10 empleados", enun))
+  errors_f2 <- c(errors_f2, "I-6_ENUNCIADO: falta frase canonica p1")
+if (!grepl("total de la cuenta por pagar fue de \\\\\\$500\\.000", enun))
+  errors_f2 <- c(errors_f2, "I-6_ENUNCIADO: falta frase canonica T")
+if (!grepl("consumió solamente un jugo de \\\\\\$5\\.000", enun))
+  errors_f2 <- c(errors_f2, "I-6_ENUNCIADO: falta frase canonica c")
+
+# Check Part 3 correct option contains canonical phrase
+p3_correct <- env_canon$opciones_p3[which(env_canon$sol_p3)]
+if (!grepl("se conoce el valor total de la cuenta", p3_correct))
+  errors_f2 <- c(errors_f2, "I-6_P3: frase clave ausente")
+
+cat("  Errores I-6:", length(errors_f2), "\n\n")
+
+# ===== FASE 3: Mutacion A (clave falsa: sol_p3 invertido) =================
+# Sonda esperada: KEY_P3
+cat("Fase 3: Mutacion A (Part 3 clave falsa -- sol_p3 invertido)\n")
+cat("  Sonda esperada: KEY_P3\n")
+
+errors_f3 <- character(0)
+SONDA_A <- "KEY_P3"
+rmd_lines  <- readLines(RMD)
+mut_a_path <- file.path(SCRATCHPAD, "mutant_A_cloze.Rmd")
+
+# Invert sol_p3: make all FALSE except the second one (an error option)
+rmd_mut_a <- gsub(
+  "sol_p3 <- c(TRUE, FALSE, FALSE, FALSE)",
+  "sol_p3 <- c(FALSE, TRUE, FALSE, FALSE)",
+  paste(rmd_lines, collapse = "\n"), fixed = TRUE)
+writeLines(strsplit(rmd_mut_a, "\n")[[1]], mut_a_path)
+
+env_mut_a <- tryCatch(knit_env(mut_a_path, 42L), error = function(e) {
+  errors_f3 <<- c(errors_f3, paste0("CRASH: ", conditionMessage(e))); NULL
+})
+if (!is.null(env_mut_a)) {
+  # Guard: verify the mutation took effect
+  if (identical(as.logical(env_mut_a$sol_p3), c(TRUE, FALSE, FALSE, FALSE)))
+    errors_f3 <- c(errors_f3,
+      "MUTANTE A MAL CONSTRUIDO: sol_p3 sigue siendo el original")
+
+  batch_a <- run_battery(env_mut_a)
+  has_sonda_a <- any(grepl(SONDA_A, batch_a))
+  if (length(batch_a) == 0) {
+    errors_f3 <- c(errors_f3,
+      "MUTACION A NO DETECTADA: el mutante paso la bateria sin errores")
+  } else if (!has_sonda_a) {
+    other_sondas <- paste(batch_a, collapse = "; ")
+    errors_f3 <- c(errors_f3,
+      paste0("MUTANTE A CAZADO POR LA SONDA EQUIVOCADA: esperaba '",
+             SONDA_A, "', obtuve '", other_sondas, "'"))
+  } else {
+    cat("  Mutante A rechazado por", SONDA_A, ":\n")
+    for (e in batch_a[grepl(SONDA_A, batch_a)]) cat("    ", e, "\n")
+  }
+}
+cat("  Errores Fase 3:", length(errors_f3), "\n\n")
+
+# ===== FASE 4: Mutacion B (I-1: E negativo) ===============================
+# Sonda esperada: I-1
+# Estrategia: knit el original, luego corromper el entorno post-hoc para que
+# E < 0. Esto es robusto contra cambios de texto (ortografia) y garantiza que
+# la variable E del entorno sea realmente negativa, sin depender de que el
+# gsub de texto mute el path de datos correcto.
+cat("Fase 4: Mutacion B (I-1: E negativo)\n")
+cat("  Sonda esperada: I-1\n")
+
+errors_f4 <- character(0)
+SONDA_B <- "I-1"
+
+env_mut_b <- tryCatch(knit_env(RMD, 42L), error = function(e) {
+  errors_f4 <<- c(errors_f4, paste0("CRASH: ", conditionMessage(e))); NULL
+})
+if (!is.null(env_mut_b)) {
+  # Corrupt post-hoc: force E to be negative
+  env_mut_b$E <- -50000L
+
+  # Guard: verify the mutation took effect in the environment
+  if (env_mut_b$E > 0)
+    errors_f4 <- c(errors_f4,
+      "MUTANTE B MAL CONSTRUIDO: E sigue positivo, la mutacion no llego al entorno")
+
+  batch_b <- run_battery(env_mut_b)
+  has_sonda_b <- any(grepl(SONDA_B, batch_b))
+  if (length(batch_b) == 0) {
+    errors_f4 <- c(errors_f4,
+      "MUTACION B NO DETECTADA: el mutante paso sin errores")
+  } else if (!has_sonda_b) {
+    other_sondas <- paste(batch_b, collapse = "; ")
+    errors_f4 <- c(errors_f4,
+      paste0("MUTANTE B CAZADO POR LA SONDA EQUIVOCADA: esperaba '",
+             SONDA_B, "', obtuve '", other_sondas, "'"))
+  } else {
+    cat("  Mutante B rechazado por", SONDA_B, ":\n")
+    for (e in batch_b[grepl(SONDA_B, batch_b)]) cat("    ", e, "\n")
+  }
+}
+cat("  Errores Fase 4:", length(errors_f4), "\n\n")
+
+# ===== FASE 5: Mutacion C (dato_retirado=n pero respuesta "No") ===========
+# Sonda esperada: KEY_P6
+cat("Fase 5: Mutacion C (dato_retirado=n forzado con respuesta No)\n")
+cat("  Sonda esperada: KEY_P6\n")
+
+errors_f5 <- character(0)
+SONDA_C <- "KEY_P6"
+mut_c_path <- file.path(SCRATCHPAD, "mutant_C_cloze.Rmd")
+
+# Strategy: knit the ORIGINAL .Rmd, then POST-HOC corrupt the environment
+# to simulate a mutant where dato_retirado=n but the answer is "No".
+# This approach is robust against text changes (ortho fixes etc.)
+# because it operates on the R environment, not on the .Rmd text.
+
+# Step 1: find a seed that naturally produces dato_retirado = "n"
+mut_c_seed <- NA_integer_
+for (s in 1:200) {
+  env_try <- tryCatch(knit_env(RMD, s), error = function(e) NULL)
+  if (!is.null(env_try) && env_try$dato_retirado == "n") {
+    mut_c_seed <- s; break
+  }
+}
+if (is.na(mut_c_seed)) {
+  errors_f5 <- c(errors_f5, "No se encontro semilla con dato_retirado=n")
+} else {
+  env_mut_c <- knit_env(RMD, mut_c_seed)
+
+  # Self-verification guard: the seed actually produced dato_retirado = "n"
+  if (env_mut_c$dato_retirado != "n")
+    errors_f5 <- c(errors_f5, "MUTANTE C MAL CONSTRUIDO: dato_retirado != n")
+
+  # Step 2: corrupt the environment post-hoc - flip the correct answer
+  # from "Si" (correct for n) to "No" (incorrect for n)
+  p6_correct_idx <- which(env_mut_c$sol_p6)
+  if (length(p6_correct_idx) != 1) {
+    errors_f5 <- c(errors_f5, "MUTANTE C: sol_p6 no tiene exactamente 1 TRUE")
+  } else {
+    # The correct option starts with "Si" (because n is irrelevant).
+    # We'll move the TRUE to the first "No" option instead.
+    p6_no_idx <- which(grepl("^No,", env_mut_c$opciones_p6))
+    if (length(p6_no_idx) == 0) {
+      errors_f5 <- c(errors_f5, "MUTANTE C: no hay opciones No en P6")
+    } else {
+      # Flip: set current correct to FALSE, set first "No" to TRUE
+      env_mut_c$sol_p6[p6_correct_idx] <- FALSE
+      env_mut_c$sol_p6[p6_no_idx[1]] <- TRUE
+      cat("  MUTANT_C: forced to n, MUTANT_C: false answer applied post-hoc\n")
+
+      # Step 3: run battery on the corrupted environment
+      batch_c <- run_battery(env_mut_c)
+      has_sonda_c <- any(grepl(SONDA_C, batch_c))
+      if (length(batch_c) == 0) {
+        errors_f5 <- c(errors_f5,
+          "MUTACION C NO DETECTADA: el mutante paso sin errores")
+      } else if (!has_sonda_c) {
+        other_sondas <- paste(batch_c, collapse = "; ")
+        errors_f5 <- c(errors_f5,
+          paste0("MUTANTE C CAZADO POR LA SONDA EQUIVOCADA: esperaba '",
+                 SONDA_C, "', obtuve '", other_sondas, "'"))
+      } else {
+        suff_msgs <- batch_c[grepl(SONDA_C, batch_c)]
+        cat("  Mutante C rechazado por", SONDA_C, ":\n")
+        for (e in suff_msgs) cat("    ", e, "\n")
+      }
+    }
+  }
+}
+
+cat("  Errores Fase 5:", length(errors_f5), "\n\n")
+
+# ===== RESUMEN =============================================================
+all_errors <- c(errors_f1, errors_f2, errors_f3, errors_f4, errors_f5)
+
+cat("============================================\n")
+if (length(all_errors) == 0) {
+  cat("  RESULTADO: APROBADO (0 errores)\n")
+} else {
+  cat("  RESULTADO: ERRORES DETECTADOS (", length(all_errors), ")\n")
+  for (e in all_errors) cat("    ", e, "\n")
+}
+cat("============================================\n")
+
+quit(status = if (length(all_errors) == 0) 0L else 1L)

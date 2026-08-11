@@ -181,7 +181,8 @@ Después de que el usuario seleccione la versión:
 
 ```bash
 # 1. Construir nombre según nomenclatura:
-NOMBRE="[ejercicio]_[componente]_[competencia]_n[nivel]_v[version]"
+# Fuente única: .claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md
+NOMBRE="[ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_v[version]"
 
 # 2. Crear carpeta:
 mkdir -p outputs/$NOMBRE

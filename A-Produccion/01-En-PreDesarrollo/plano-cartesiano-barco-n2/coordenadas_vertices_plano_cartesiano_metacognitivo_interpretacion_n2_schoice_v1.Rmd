@@ -29,20 +29,20 @@ grid_max <- 10L
 # === Parametros del barco (aleatorizados por semilla — regla #22) ===
 ancho_barco <- pick_int(3L, 6L)
 
-# alto_barco ACOTADO para que ratio = ancho/alto >= 2 (opcion A' de docs/BACKLOG.md P1.1).
+# alto_barco ACOTADO para que ratio = ancho/alto >= 2 (opción A' de docs/BACKLOG.md P1.1).
 #
 # Con alto = 2 y ancho = 3 el ratio cae a 1.5 y el casco degenera: la silueta es un
-# octagono simétrico que no se lee como barco. Medido por enumeracion exhaustiva +
-# inspeccion visual ampliada x2 sobre las 374 combinaciones: 56 casos (15.0%).
+# octagono simétrico que no se lee como barco. Medido por enumeración exhaustiva +
+# inspección visual ampliada x2 sobre las 374 combinaciones: 56 casos (15.0%).
 # El mecanismo es que el perfil de prof() es casi simétrico (proa t^0.7 vs popa
-# t^0.5), así que la figura no tiene direccion; a ratio >= 2 la elongación compensa.
+# t^0.5), así que la figura no tiene dirección; a ratio >= 2 la elongación compensa.
 #
 # Restringir alto = 2 a ancho >= 4 elimina exactamente esos 56 casos:
 # espacio de versiones 374 -> 318 (-15.0%), con 318 respuestas correctas distintas.
 #
-# NO es una restriccion de correccion: la clave era valida también en los 56 casos
+# NO es una restricción de corrección: la clave era valida también en los 56 casos
 # (el bounding box no depende del ratio). Es fidelidad narrativa: el enunciado habla
-# de un barco y el estudiante veia una capsula.
+# de un barco y el estudiante veía una capsula.
 alto_pool  <- if (ancho_barco >= 4L) 1L:2L else 1L
 alto_barco <- safe_sample(alto_pool, 1L)
 stopifnot(ancho_barco / alto_barco >= 2)
@@ -57,14 +57,14 @@ x_max <- x_min + ancho_barco
 # retirado GEO-COORD-03 (4 puntos sobre la diagonal y = x) no mostrara puntos
 # repetidos. Al sustituirlo por GEO-COORD-04 quedaron obsoletas.
 #
-# Medido por enumeracion exhaustiva (docs/BACKLOG.md P2.7): sin ninguna
-# exclusion hay 374 versiones con 374 respuestas correctas distintas y CERO
+# Medido por enumeración exhaustiva (docs/BACKLOG.md P2.7): sin ninguna
+# exclusión hay 374 versiones con 374 respuestas correctas distintas y CERO
 # colisiones entre las 4 opciones. Retirarlas amplia el espacio un 68%
 # (222 -> 374) sin ningun efecto adverso.
 #
-# Nota: la exclusion y_min != x_min se justificaba como "evita que
-# GEO-COORD-01 (inversion) colapse sobre la correcta". Esa justificacion era
-# FALSA: la inversion nunca puede igualar a la correcta, porque exigiria a la
+# Nota: la exclusión y_min != x_min se justificaba como "evita que
+# GEO-COORD-01 (inversión) colapse sobre la correcta". Esa justificación era
+# FALSA: la inversión nunca puede igualar a la correcta, porque exigiria a la
 # vez y_min == x_min e y_max == x_min, o sea alto_barco == 0, imposible con
 # alto_barco >= 1.
 #
@@ -83,7 +83,7 @@ correcta <- paste0(
 )
 
 # === Distractores ===
-# GEO-COORD-01: Inversion de ejes (intercambia x <-> y)
+# GEO-COORD-01: Inversión de ejes (intercambia x <-> y)
 dist_inv <- paste0(
   "(", y_min, ", ", x_min, "); (",
   y_max, ", ", x_min, "); (",
@@ -103,14 +103,14 @@ dist_centro <- paste0(
 # GEO-COORD-04: Desplazamiento de una unidad al contar la cuadricula.
 #
 # SUSTITUYE a GEO-COORD-03 (4 puntos sobre la diagonal y = x), retirado el
-# 2026-07-28 por ser estructuralmente eliminable: era la única opcion cuyos 4
+# 2026-07-28 por ser estructuralmente eliminable: era la única opción cuyos 4
 # puntos tenian la forma (v,v) — colineales — mientras las otras tres comparten
-# la estructura "2 valores de x x 2 valores de y". Un estudiante podia
+# la estructura "2 valores de x x 2 valores de y". Un estudiante podía
 # descartarlo por la FORMA del texto, sin mirar la figura (regla #22 §P5).
 # Ver docs/BACKLOG.md P0.1.
 #
 # Este distractor conserva la estructura 2x2, así que solo se puede descartar
-# leyendo las coordenadas reales del barco. La direccion del desplazamiento se
+# leyendo las coordenadas reales del barco. La dirección del desplazamiento se
 # adapta para no salirse de la grilla: a la derecha si hay margen, a la
 # izquierda si el barco ya toca el borde derecho.
 desplaz <- if (x_max < grid_max) 1L else -1L
@@ -227,7 +227,7 @@ dibujar_barco <- function(xmn, xmx, ymn, ymx, gmax, filename) {
   # INVARIANTE I-2 (ver .claude/rules/barco-parametrico.md): prof(t) vale EXACTAMENTE
   # h/2 en el tramo central, de modo que el casco toca ymn e ymx y su bounding box
   # ES la respuesta correcta. No suavizar ni alargar estas fracciones sin re-verificar
-  # la enumeracion exhaustiva de las 318 combinaciones.
+  # la enumeración exhaustiva de las 318 combinaciones.
   prof <- function(t) {
     ifelse(t < 0.15,
       (h / 2) * (t / 0.15)^0.7,
@@ -259,13 +259,13 @@ dibujar_barco <- function(xmn, xmx, ymn, ymx, gmax, filename) {
     y = rep(c(cy + h * 0.20, cy, cy - h * 0.20), 2)
   )
 
-  # Radio de las bandas ACOTADO POR EL ANCHO (opcion D de docs/BACKLOG.md P1.1).
-  # Las bandas tienen radio proporcional a h pero sus centros estan separados por
+  # Radio de las bandas ACOTADO POR EL ANCHO (opción D de docs/BACKLOG.md P1.1).
+  # Las bandas tienen radio proporcional a h pero sus centros están separados por
   # una fracción de w (0.16w - 0.03w = 0.13w). Con h máximo y w mínimo los radios
-  # crecian mientras la separacion se encogia, y las dos bandas se fundian en una
+  # crecian mientras la separación se encogia, y las dos bandas se fundian en una
   # sola mancha: 72.3% de solape en (w=3,h=2) y 65.2% en (w=4,h=2).
   # Acotar el radio por 0.25*w deja el solape en 37% como máximo — el mismo nivel
-  # que (w=4,h=1), que ya se veia bien — y NO altera los casos alargados
+  # que (w=4,h=1), que ya se veía bien — y NO altera los casos alargados
   # (w=5,6 con h=1 quedan exactamente igual que antes).
   # Las bandas son decorativas: no participan del bounding box, así que este
   # cambio no toca la invariante I-2.

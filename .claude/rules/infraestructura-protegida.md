@@ -101,13 +101,25 @@ echo 'I-5 OK'
 ### I-6 — Hooks ejecutables y sintaxis válida
 
 **Invariante:** los `.sh` ICFES deben ser ejecutables y `bash -n` debe pasar.
+Son **4** desde 2026-07-29: los 3 originales más `pre-push.sh`, la versión
+canónica versionada del hook `pre-push` (antes vivía solo en `.git/hooks/`,
+fuera de control de versiones — ver regla #8 de `testing-obligatorio.md`).
 
 **Verificación:**
 ```bash
-for h in .claude/hooks/{pre-write-rmd-gate,post-exams2-validation,pre-commit-ortografia}.sh; do
+for h in .claude/hooks/{pre-write-rmd-gate,post-exams2-validation,pre-commit-ortografia,pre-push}.sh; do
   test -x "$h" && bash -n "$h" || { echo "FAIL: $h"; exit 1; }
 done
 echo 'I-6 OK'
+```
+
+**Nota sobre `pre-push.sh`:** el que git ejecuta es `.git/hooks/pre-push`, que
+**no** es versionable. Debe ser un wrapper que delegue en el canónico
+propagando stdin y `"$@"` (el contrato `pre-push` depende de ambos). Si el
+wrapper falta o deja de delegar, el hook corregido no se aplica aunque I-6 pase.
+Verificación complementaria:
+```bash
+grep -q 'pre-push.sh' .git/hooks/pre-push && echo 'wrapper OK' || echo 'FAIL: wrapper no delega'
 ```
 
 ### I-7 — Backup pre-Ruflo preservado
@@ -182,6 +194,37 @@ PascalCase correspondiente (`read`→`Read`, `write`→`Write`, `glob`→`Glob`,
 capacidades ni ninguna otra línea del frontmatter. Re-ejecutar el test hasta que pase.
 
 **Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-9).
+
+### I-10 — Los validadores de `.claude/scripts/` son SYMLINKS y resuelven a `SOURCES/` (añadido v1.4, 2026-08-09)
+
+**Invariante:** los cuatro validadores compartidos de `.claude/scripts/` —`validar_multisemilla.R`,
+`validar_coherencia_matematica.R`, `corregir_ortografia_espanol.R` y
+`arsenal_validacion_completa.R`— son **symlinks** (modo `120000` en git) que resuelven a un archivo
+existente dentro de `SOURCES/scripts_validacion/`.
+
+Motivación: sesión 2026-08-09. Al corregir el Error 31 se intentó editar
+`.claude/scripts/validar_multisemilla.R` y la escritura fue rechazada por ser un symlink. Las dos
+mitades del invariante importan por razones distintas:
+
+- **El enlace apunta a algo que existe**: si el destino desaparece, el script deja de cargarse y el
+  fallo aparece como un error de R que no menciona el symlink.
+- **Ningún archivo regular ha suplantado a un symlink conocido**: si alguien lo reemplaza por una
+  copia, el repo pasa a tener **dos versiones divergentes del mismo validador**, y cuál se ejecuta
+  depende de qué ruta se invoque. Un fix aplicado en una ruta puede quedar invisible desde la otra.
+
+**Consecuencia operativa:** para corregir cualquiera de esos cuatro scripts hay que editar
+`SOURCES/scripts_validacion/<nombre>.R`. Editar la ruta de `.claude/scripts/` **no surte efecto
+alguno** sobre el código que se ejecuta.
+
+**Verificación:**
+```bash
+find .claude/scripts -maxdepth 1 -type l -printf '%f -> %l\n'
+Rscript tests/testthat/test_infraestructura_claude.R
+```
+
+**Test asociado:** `tests/testthat/test_infraestructura_claude.R` (I-10). El detector se verificó
+sobre un fixture temporal con los tres casos: enlace correcto, archivo regular que suplanta al
+enlace, y enlace roto.
 
 ---
 
@@ -332,8 +375,8 @@ Se ejecuta automáticamente en `tests/run_all_tests.R` y en pre-push. Si falla, 
 
 ---
 
-**Versión:** 1.2
-**Fecha:** 2026-07-28 (v1.2 — I-9 PascalCase de `tools:` en agentes; v1.1 2026-07-01 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
+**Versión:** 1.3
+**Fecha:** 2026-07-29 (v1.3 — I-6 pasa de 3 a 4 hooks con `pre-push.sh` + sub-invariante I-6b: contrato de stdin del pre-push y wrapper que delega; v1.2 2026-07-28 — I-9 PascalCase de `tools:` en agentes; v1.1 2026-07-01 — I-8 integridad helpers Ruflo + nota cadena de suministro; v1.0 2026-05-03)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo el ecosistema `.claude/` y archivos raíz `CLAUDE.md`, `CLAUDE.local.md`.

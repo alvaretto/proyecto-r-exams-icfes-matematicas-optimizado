@@ -148,7 +148,7 @@ opciones_finales <- opciones_todas[orden_opciones]
 solucion <- as.integer(opciones_finales == opcion_correcta_texto)
 
 # Verificar que haya al menos 300 variantes (aproximación)
-# N (8 opciones) * N1 (aprox N/2 opciones) * k (aprox 5 opciones) * m (aprox k/2 opciones) * colores (aprox 8*7 opciones) * terminos (varias opciones)
+# N (8 opciones) * N1 (aprox N/2 opciones) * k (aprox 5 opciones) * m (aprox k/2 opciones) * colores (aprox 8*7 opciones) * términos (varias opciones)
 # 8 * 5 * 5 * 2 * 56 * ~10^5 >> 300. La aleatorización es suficiente.
 ```
 

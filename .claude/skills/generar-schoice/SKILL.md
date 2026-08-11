@@ -108,9 +108,10 @@ Ver [pool-errores-conceptuales.md](references/pool-errores-conceptuales.md) para
 
 ### PASO 4: Generar nombre con nomenclatura
 
-Formato: `[ejercicio]_metacognitivo_[competencia]_n[nivel]_schoice_v[version].Rmd`
+Formato: `[ejercicio]_[componente]_[competencia]_n[nivel]_schoice_v[version].Rmd`
 
-`metacognitivo` es OBLIGATORIO en el nombre. Nivel minimo: n2. Ver: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
+`[componente]` ∈ geometrico_metrico|numerico_variacional|aleatorio. `[competencia]` en forma larga: interpretacion_representacion|formulacion_ejecucion|argumentacion. `metacognitivo` NO va en el nombre (lo cubre la regla #1, universal). Nivel minimo: n2.
+Fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 
 ### PASO 5: Crear carpeta e inicializar estado
 

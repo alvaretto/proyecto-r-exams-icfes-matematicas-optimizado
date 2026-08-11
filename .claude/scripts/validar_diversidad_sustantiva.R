@@ -49,6 +49,43 @@ if (is.null(expr)) { cat("WARN_DIV_INDET: data_generation no parseable de forma 
 d <- digest::digest
 hash_file <- function(f) if (file.exists(f)) d(readBin(f, "raw", n = file.info(f)$size)) else NA_character_
 
+# --- Fingerprint POR GAP (modo CLOZE) ----------------------------------------
+# Un CLOZE tiene N claves, una por gap, y nombra sus variables por parte
+# (sol_p3, opciones_p3, exsol_p1...). Las tres estrategias de fp_respuesta()
+# buscan nombres SIN sufijo, así que devuelven NA para todo CLOZE y el veredicto
+# degenera en WARN_DIV_INDET con 0 versiones evaluadas: la puerta se ejecuta pero
+# no mide nada. Esta función cubre ese caso. (Ver regla #22 y el informe de
+# auditoría del 2026-08-06.)
+fp_gaps <- function(env) {
+  nms <- ls(envir = env, all.names = FALSE)
+  idx <- unique(sort(as.integer(sub("^(?:sol|solucion|opciones|exsol)_p(\\d+)$", "\\1",
+                                    grep("^(?:sol|solucion|opciones|exsol)_p\\d+$", nms, value = TRUE)))))
+  if (length(idx) == 0L) return(character(0))
+  out <- character(0)
+  for (i in idx) {
+    key <- NA_character_
+    sn <- intersect(paste0(c("sol", "solucion"), "_p", i), nms)
+    on <- intersect(paste0("opciones_p", i), nms)
+    # (a) vector solución + lista de opciones -> CONTENIDO de la(s) marcada(s).
+    #     A diferencia de fp_respuesta(), acepta >1 marca: un gap mchoice tiene varias.
+    if (length(sn) && length(on)) {
+      sol <- get(sn[1], envir = env); ops <- get(on[1], envir = env)
+      marcas <- which(as.logical(sol))
+      if (length(marcas) >= 1L && length(ops) == length(sol))
+        key <- d(lapply(marcas, function(k) ops[[k]]))
+    }
+    # (b) gap num/string: el propio valor esperado es la clave.
+    if (is.na(key)) {
+      en <- intersect(paste0("exsol_p", i), nms)
+      if (length(en)) key <- d(get(en[1], envir = env))
+    }
+    # (c) solo hay opciones (sin vector sol legible): huella del conjunto completo.
+    if (is.na(key) && length(on)) key <- d(get(on[1], envir = env))
+    if (!is.na(key)) out[paste0("p", i)] <- key
+  }
+  out
+}
+
 # --- Fingerprint del CONTENIDO de la respuesta correcta (nunca de su posición) ---
 fp_respuesta <- function(env) {
   # Estrategia 1: lista de opciones con $tipo == "correcta"
@@ -99,7 +136,7 @@ fp_respuesta <- function(env) {
 # --- Ejecutar n veces en entorno + cwd aislados ---
 tmp <- file.path(tempdir(), paste0("divsust_", Sys.getpid())); dir.create(tmp, showWarnings = FALSE, recursive = TRUE)
 old <- getwd(); on.exit({ setwd(old); unlink(tmp, recursive = TRUE) }, add = TRUE)
-fps <- character(0); errs <- 0L; indet <- 0L
+fps <- character(0); errs <- 0L; indet <- 0L; gap_fps <- list()
 for (i in seq_len(n)) {
   setwd(tmp)
   env <- new.env(parent = globalenv())
@@ -109,7 +146,65 @@ for (i in seq_len(n)) {
   setwd(old)
   if (!okr) { errs <- errs + 1L; next }
   f <- tryCatch(fp_respuesta(env), error = function(e) NA_character_)
+  g <- tryCatch(fp_gaps(env), error = function(e) character(0))
+  for (nm in names(g)) gap_fps[[nm]] <- c(gap_fps[[nm]], g[[nm]])
   if (is.na(f)) { indet <- indet + 1L } else { fps <- c(fps, f) }
+}
+
+# --- Veredicto CLOZE (multi-gap): una clave POR GAP, no una sola ------------
+# Se activa solo con >=2 gaps detectados; con 0 o 1 se usa la ruta clasica de
+# abajo, que queda intacta para SCHOICE.
+if (length(gap_fps) >= 2L) {
+  gaps <- names(gap_fps)[order(as.integer(sub("^p", "", names(gap_fps))))]
+  # Cobertura explicita: un conteo parcial que parece total es el fallo que este
+  # script existe para combatir. Declarados = tipos en exclozetype.
+  ectl <- grep("^exclozetype:", lines, value = TRUE)
+  ecval <- if (length(ectl)) trimws(sub("^exclozetype:", "", ectl[1])) else NA_character_
+  # Si el valor es una expresion R inline (`r ...`) no se puede contar estaticamente:
+  # dejarlo indeterminado en vez de contar 1 y anunciar una cobertura falsa.
+  n_decl <- if (is.na(ecval) || grepl("`r ", ecval, fixed = TRUE)) NA_integer_
+            else length(strsplit(ecval, "|", fixed = TRUE)[[1]])
+  fuente_decl <- "exclozetype"
+  # Fallback si exclozetype es dinamico: contar los encabezados de parte (como V1).
+  if (is.na(n_decl)) {
+    np <- length(unique(regmatches(paste(lines, collapse = "\n"),
+                                   gregexpr("\\*\\*Parte[[:space:]]+[0-9]+\\.", paste(lines, collapse = "\n")))[[1]]))
+    if (np > 0L) { n_decl <- np; fuente_decl <- "encabezados **Parte N.**" }
+  }
+  cat(sprintf("Diversidad sustantiva (CLOZE): %d gap(s) medidos%s | %d version(es) evaluadas | errores=%d\n",
+              length(gaps),
+              if (!is.na(n_decl)) sprintf(" de %d declarados (%s)", n_decl, fuente_decl) else "",
+              max(lengths(gap_fps)), errs))
+  if (!is.na(n_decl) && length(gaps) < n_decl)
+    cat(sprintf("  NOTA DE COBERTURA: %d gap(s) sin medir (sus claves no siguen la convencion sol_pN/opciones_pN/exsol_pN, o solo exponen un vector de posiciones, que NO se puede usar como huella sin violar la regla #22). Su diversidad queda SIN VERIFICAR.\n",
+                n_decl - length(gaps)))
+  fijos <- character(0); bajos <- character(0)
+  for (gp in gaps) {
+    v <- gap_fps[[gp]]; u <- length(unique(v))
+    umb <- max(2L, ceiling(length(v) * 0.30))
+    estado <- if (u == 1L) "FIJA" else if (u < umb) "baja" else "ok"
+    if (u == 1L) fijos <- c(fijos, gp) else if (u < umb) bajos <- c(bajos, gp)
+    cat(sprintf("  gap %-4s clave: %3d valor(es) unico(s) de %3d  [%s]\n", gp, u, length(v), estado))
+  }
+  if (length(fijos) == length(gaps)) {
+    cat("ERR_DIV_COSMETICA: la clave de TODOS los gaps es INVARIANTE entre versiones — la diversidad es solo cosmetica.\n")
+    cat("  -> Aleatorizar los datos numericos/el contenido de la opcion correcta. PROHIBIDO valores fijos hardcoded o PNGs estaticos como opciones.\n")
+    cat("  -> Ver .claude/rules/diversidad-sustantiva.md\n")
+    quit(status = 1)
+  }
+  if (length(fijos) > 0L) {
+    cat(sprintf("WARN_DIV_GAP_FIJO: clave invariante en %s. No bloquea, pero cada gap fijo debe declararse y justificarse en el reporte (V8).\n",
+                paste(fijos, collapse = ", ")))
+    cat("  -> Ver .claude/rules/diversidad-sustantiva.md\n")
+    quit(status = 0)
+  }
+  if (length(bajos) > 0L) {
+    cat(sprintf("WARN_DIV_BAJA: la clave varia poco en %s. Ampliar rangos de aleatorizacion.\n",
+                paste(bajos, collapse = ", ")))
+    quit(status = 0)
+  }
+  cat("PASS: la clave de cada gap varia suficientemente (diversidad sustantiva confirmada por gap).\n")
+  quit(status = 0)
 }
 
 # --- Veredicto ---

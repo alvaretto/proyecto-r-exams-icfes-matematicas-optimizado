@@ -56,6 +56,56 @@ if [[ "$FILE_PATH" != *"A-Produccion/01-En-PreDesarrollo"* && \
 fi
 
 # ---------------------------------------------------------------------------
+# Filtro 3b: NOMENCLATURA OFICIAL (fuente: .claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md)
+# ---------------------------------------------------------------------------
+# Solo se comprueba al CREAR un .Rmd. Si el archivo ya existe, es una edición y
+# se permite: hay 56 archivos legacy anteriores al 2026-08-10 y bloquear su
+# edición los dejaría congelados. El alcance decidido es "de aquí en adelante".
+if [[ ! -f "$FILE_PATH" ]]; then
+    RMD_BASE=$(basename "$FILE_PATH")
+    RMD_BASE="${RMD_BASE%.Rmd}"; RMD_BASE="${RMD_BASE%.rmd}"
+    NOMENCLATURA='^[a-z0-9_]+_(geometrico_metrico|numerico_variacional|aleatorio)_(interpretacion_representacion|formulacion_ejecucion|argumentacion)_n[1-4]_(schoice|cloze)(_neg)?_v[0-9]+(_interactivo)?$'
+
+    if [[ ! "$RMD_BASE" =~ $NOMENCLATURA ]]; then
+        cat >&2 <<EOF
+❌ ============================================================
+❌ BLOQUEADO: el nombre del .Rmd no sigue la nomenclatura oficial
+❌ ============================================================
+
+Archivo: ${RMD_BASE}.Rmd
+
+Formato obligatorio:
+  [ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_v[N].Rmd
+
+  componente  : geometrico_metrico | numerico_variacional | aleatorio
+  competencia : interpretacion_representacion | formulacion_ejecucion | argumentacion
+  nivel       : n1 | n2 | n3 | n4
+  tipo        : schoice | cloze          (+ _neg solo si cumple la regla #10)
+
+Ejemplo:
+  informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_schoice_v1.Rmd
+
+Errores frecuentes:
+  - Usar 'metacognitivo' en la ranura del componente. Que el ejercicio sea
+    metacognitivo lo dice la regla #1, que es universal; el nombre debe declarar
+    el COMPONENTE ICFES.
+  - Competencia en forma corta ('interpretacion'). La oficial es la larga
+    ('interpretacion_representacion').
+  - Omitir la ranura de tipo. Sin ella, las variantes schoice y cloze del mismo
+    ejercicio colisionan en el mismo nombre de archivo.
+  - Poner '_neg' porque el enunciado diga "¿cuál NO...?". El sufijo es un
+    disparador mecánico del validador (rama de opciones equivalentes); solo va
+    si el ejercicio cumple la regla #10.
+
+El nombre debe coincidir además con 'exname' y con los exextra[...] del .Rmd.
+
+Fuente única de verdad: .claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md
+EOF
+        exit 2
+    fi
+fi
+
+# ---------------------------------------------------------------------------
 # Resolver directorio padre del .Rmd
 # ---------------------------------------------------------------------------
 RMD_DIR=$(python3 -c "
