@@ -1,6 +1,17 @@
 # HANDOFF — CLOZE `informacion_insuficiente_lote_..._n4_cloze_v1`
 
-**Última sesión:** 2026-08-13 · **Estado:** **10/11 pasos** · solo falta la aprobación del profesor
+**Última sesión:** 2026-08-13 · **Estado:** **11/11 — APROBADO PARA LLEVAR AL AULA**
+
+> ✅ **Aprobación del profesor: 2026-08-13.** El ciclo técnico está cerrado y el ejercicio puede
+> aplicarse con estudiantes.
+>
+> **Lo que esa aprobación NO es:** no es la promoción a `03-En-Produccion/`. El gate de
+> `/promover-ejercicio` es la **evidencia de Nivel 3 con estudiantes reales**, que se recoge
+> *después* de llevarlo al aula. Por eso el ejercicio sigue aquí, en `01-En-PreDesarrollo/`, con
+> 11/11 — igual que `permutaciones-pescadores-venia-n4`, que está aprobado y vive en
+> `02-En-Desarrollo/`. Un 11/11 sin aula no promueve.
+>
+> **Siguiente hito real: aplicarlo en clase y recoger la evidencia.**
 
 > **FASE 2C CERRADA en pasada de confirmación: `VEREDICTO_DETRACTOR: APROBAR`.**
 > Las 6 objeciones aplicadas y verificadas por un agente distinto sobre la versión vigente

@@ -3,7 +3,7 @@
   "ejercicio": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-08-12T17:55:27.055928-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-13T09:56:15.461687-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-13T11:31:51.933552-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -52,8 +52,8 @@
       "timestamp": "2026-08-13T08:18:12.436663-05:00"
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-08-13T11:31:51.933552-05:00"
     }
   }
 }
