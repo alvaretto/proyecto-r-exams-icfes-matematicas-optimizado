@@ -183,7 +183,7 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 | 3 (ecuaciones responsivas) | igual que F2 (divs por ecuación) |
 | 4 (marcas cloze) | verificador marca-vs-verdad sobre XML Moodle |
 | 5 (sample escalar) | cubierto por F1 + análisis estático de `sample(` en `calcula()` |
-| 6 (diagramas cardinales) | `Rscript .claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 40` + `exams2moodle()` y grep del XML (solo `diagrama_a/b/c/d.png`) + medición del rank de longitud de la correcta sobre ≥40 versiones + inspección visual ampliada ≥×2 en los ángulos extremos del rango |
+| 6 (diagramas cardinales) | `Rscript .claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 100` + `exams2moodle()` y grep del XML (solo `diagrama_a/b/c/d.png`) + medición del rank de longitud de la correcta sobre ≥40 versiones + inspección visual ampliada ≥×2 en los ángulos extremos del rango |
 
 ---
 

@@ -250,10 +250,13 @@ SCRIPT_MULTISEMILLA="$PROJECT_DIR/.claude/scripts/validar_multisemilla.R"
 
 if [ -f "$SCRIPT_MULTISEMILLA" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   echo "┌───────────────────────────────────────────────────────────────┐"
-  echo "│ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)          │"
+  echo "│ FASE 2G: Multi-semilla (100 semillas, Nivel 5) — regla #23    │"
   echo "└───────────────────────────────────────────────────────────────┘"
 
-  MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 20 2>&1)
+  # N=100 = muestra estandar unica (.claude/rules/muestra-estandar-validacion.md).
+  # El timeout del hook en settings.json subio a 300 s para que quepa: medido
+  # 61 s en el ejercicio con el motor mas pesado del repo.
+  MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 100 2>&1)
   MULTISEED_EXIT=$?
 
   echo "$MULTISEED_OUTPUT" | grep -E "Semillas|Fallos|Tasa|RESULTADO|ERR_ANS|ERR_SEM"
@@ -570,7 +573,7 @@ if [ -n "$RMD_FILE" ]; then
       echo "  WARN_DIV_ESTATICA: se usa file.copy() para PNGs en data_generation."
       echo "    -> Los PNGs estáticos producen contenido idéntico en todas las semillas."
       echo "    -> Si son opciones gráficas, deben generarse dinámicamente (ggplot2/TikZ/reticulate)."
-      echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 40"
+      echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 100"
       DIV_WARN=1
     fi
   fi
@@ -578,7 +581,7 @@ if [ -n "$RMD_FILE" ]; then
   if ! echo "$DG_BLOCK" | grep -qE 'sample\(|runif\(|rnorm\(|rbinom\(|rpois\(|rexp\(|rgeom\(|rhyper\(|runif\(|pick_int\(|safe_sample\('; then
     echo "  WARN_DIV_ESTATICA: no se detecta ninguna función de aleatorización en data_generation."
     echo "    -> Sin sample()/runif()/rnorm() la respuesta correcta puede ser invariante entre versiones."
-    echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 40"
+    echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 100"
     DIV_WARN=1
   fi
   if [ "$DIV_WARN" -eq 0 ]; then

@@ -29,6 +29,13 @@ Renderizar un ejercicio .Rmd N veces con diferentes semillas, analizar los resul
 1. **Hook automático (FASE 2H)**: Después de cada renderizado exitoso, si las fases 2A-2G pasan
 2. **Manual**: El usuario invoca `/stress-test-visual archivo.Rmd [--n 30]`
 
+> ⚠️ **Regla #23 — este skill es Familia B (renderizado real).** Su muestra NO está fijada en
+> 100 como la de los validadores sobre `data_generation`, porque aquí **cada unidad compila un
+> PDF**. El objetivo sigue siendo 100; si se usa menos, el reporte **DEBE declarar la cifra y
+> la razón en la misma línea del resultado**. Un «stress test OK» sin decir cuántas versiones
+> se renderizaron es un reporte incompleto, no un aprobado.
+> Ver `.claude/rules/muestra-estandar-validacion.md`.
+
 ## Flujo de ejecución
 
 ### Paso 1: Ejecutar script R

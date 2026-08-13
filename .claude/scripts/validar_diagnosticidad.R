@@ -49,7 +49,7 @@
 # no). Entre paréntesis se reporta SIEMPRE el margen mediano observado, aunque
 # no supere el umbral, para que "no dispara" no se confunda con "no hay señal".
 #
-# Uso:  Rscript validar_diagnosticidad.R archivo.Rmd [--n 30] [--umbral 70] [--margen 15]
+# Uso:  Rscript validar_diagnosticidad.R archivo.Rmd [--n 100] [--umbral 70] [--margen 15]
 #
 # Veredictos:
 #   PASS                   (exit 0) ninguna sonda supera el umbral
@@ -60,7 +60,7 @@
 
 args <- commandArgs(trailingOnly = TRUE)
 rmd <- if (length(args) >= 1) args[1] else NA
-n <- 30L; umbral <- 70; margen <- 15
+n <- 100L; umbral <- 70; margen <- 15
 if ("--n" %in% args) { v <- suppressWarnings(as.integer(args[which(args == "--n") + 1])); if (!is.na(v)) n <- v }
 if ("--umbral" %in% args) { v <- suppressWarnings(as.numeric(args[which(args == "--umbral") + 1])); if (!is.na(v)) umbral <- v }
 if ("--margen" %in% args) { v <- suppressWarnings(as.numeric(args[which(args == "--margen") + 1])); if (!is.na(v)) margen <- v }

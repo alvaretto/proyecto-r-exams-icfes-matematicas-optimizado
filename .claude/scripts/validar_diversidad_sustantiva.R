@@ -13,7 +13,7 @@
 #   reflexión), no la SUSTANCIA (datos numéricos / respuesta correcta).
 #
 # Uso:
-#   Rscript validar_diversidad_sustantiva.R archivo.Rmd [--n 40]
+#   Rscript validar_diversidad_sustantiva.R archivo.Rmd [--n 100]
 #
 # Veredictos (stdout + exit status):
 #   PASS               (exit 0) -> la respuesta correcta varía lo suficiente
@@ -27,9 +27,9 @@ if (!ok_digest) { cat("WARN_DIV_INDET: paquete 'digest' no disponible\n"); quit(
 
 args <- commandArgs(trailingOnly = TRUE)
 rmd <- if (length(args) >= 1) args[1] else NA
-n <- 40L
+n <- 100L
 if ("--n" %in% args) { v <- suppressWarnings(as.integer(args[which(args == "--n") + 1])); if (!is.na(v)) n <- v }
-if (n < 5L) n <- 40L
+if (n < 5L) n <- 100L
 if (is.na(rmd) || !file.exists(rmd)) { cat("WARN_DIV_INDET: .Rmd no encontrado:", rmd, "\n"); quit(status = 0) }
 
 rmd <- normalizePath(rmd)

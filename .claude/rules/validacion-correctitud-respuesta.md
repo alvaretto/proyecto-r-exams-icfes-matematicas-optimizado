@@ -109,14 +109,18 @@ Reportar:
 
 | Modo | Semillas | Uso |
 |------|----------|-----|
-| Rápido | 20 | Hook automático (FASE 2G) |
-| Exhaustivo | 100 | Pre-promoción |
+| Estándar (default) | **100** | Hook automático (FASE 2G) y toda medición reportada |
+| Exhaustivo | 100 | Pre-promoción — `max(n, 100)`, hoy idéntico al estándar |
+
+> Desde la **regla #23** (`muestra-estandar-validacion.md`, 2026-08-13) el tamaño de muestra
+> es **único: N = 100**. El antiguo «modo rápido de 20» desapareció: era uno de los cinco
+> números rivales que convivían sin fuente única. Invocar sin `--n` ya da el estándar.
 
 ### Ejecución
 
 ```bash
 # Rápido (hook automático)
-Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 20
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 100
 
 # Exhaustivo (pre-promoción)
 Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo

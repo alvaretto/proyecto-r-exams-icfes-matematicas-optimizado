@@ -124,7 +124,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
   2. **Estado de `ruta_destino`**: ¿existe?, ¿está bajo un directorio permitido?, ¿hay `ejercicio_state.json`? Si lo hay, digo desde qué paso reanudaría y cuáles ya están completados.
   3. **Nomenclatura**: contraste contra el regex, indicando si el warning saltará y por qué (puede ser deliberado — ver Incidente `INC-CLAUDE-LOCAL`).
   4. **`entrada`**: si es una ruta, compruebo que existe y es legible; si es texto, reporto su longitud.
-  5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): V1-V4 + `validar_diversidad_sustantiva.R --n 10`. Es barato y detecta de inmediato un ejercicio que ya está roto.
+  5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): V1-V4 + `validar_diversidad_sustantiva.R --n 100`. Es barato y detecta de inmediato un ejercicio que ya está roto.
   6. **Plan**: las 16 filas de la máquina de estados (los 11 pasos persistentes + `init`, `sello` y los auxiliares 2b/2c/6b), los 3 `WAIT_USER` con la decisión que pediré en cada uno, y el presupuesto de turnos estimado.
 
   NO escribo nada, NO renderizo, NO creo `ejercicio_state.json`, NO invoco sub-agentes. Termino con `exit_status: "dry_run"` y el veredicto de los pre-flight.
@@ -161,7 +161,7 @@ Antes de cualquier acción destructiva, verifico:
 16. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 
-16b. **Veredicto de la clave no invariante** (regla #22 §P4-bis). Aplica a cualquier gap `schoice`/`mchoice` de **conclusión binaria** («Sí, porque…» / «No, porque…», verdadero/falso, correcto/incorrecto, aumenta/disminuye). Si la afirmación que el gap evalúa es falsa por construcción, la clave de ese gap tiene siempre el mismo veredicto aunque su valor numérico varíe, y el estudiante descarta la mitad de las opciones sin razonar (25 % → 50 % de acierto por azar). El balance 2+2 **no** protege: es intra-versión. En CLOZE el riesgo se multiplica porque **cada gap** puede tenerlo por separado, y la sonda los mide de forma independiente (una fila por gap). Defensa: sortear un flag que decida si la afirmación evaluada es verdadera o falsa, con clave alternativa de veredicto opuesto y exclusión mutua entre ambas. Verificación: `validar_diagnosticidad.R --n 40` debe reportar H3 por debajo del 90 % **en todos los gaps**, no solo en el conjunto.
+16b. **Veredicto de la clave no invariante** (regla #22 §P4-bis). Aplica a cualquier gap `schoice`/`mchoice` de **conclusión binaria** («Sí, porque…» / «No, porque…», verdadero/falso, correcto/incorrecto, aumenta/disminuye). Si la afirmación que el gap evalúa es falsa por construcción, la clave de ese gap tiene siempre el mismo veredicto aunque su valor numérico varíe, y el estudiante descarta la mitad de las opciones sin razonar (25 % → 50 % de acierto por azar). El balance 2+2 **no** protege: es intra-versión. En CLOZE el riesgo se multiplica porque **cada gap** puede tenerlo por separado, y la sonda los mide de forma independiente (una fila por gap). Defensa: sortear un flag que decida si la afirmación evaluada es verdadera o falsa, con clave alternativa de veredicto opuesto y exclusión mutua entre ambas. Verificación: `validar_diagnosticidad.R --n 100` debe reportar H3 por debajo del 90 % **en todos los gaps**, no solo en el conjunto.
 17. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B, sea en el enunciado o como gráficas-opción rotuladas), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo **Y máximo** del pool + vectores más corto y más largo + todos los cuadrantes), ampliando los recortes ≥×2.4 (las miniaturas ocultan toques marginales), no una sola semilla — Incidente I / Error 23 (etiquetas solapadas en cuña estrecha Y ancha).
 18. Distractores no extremos por construcción: ningún distractor de ninguna parte/gap debe ocupar sistemáticamente el rango extremo (máximo/mínimo) de la magnitud comparada (longitud, valor, distancia) entre las opciones — Incidente J / regla #22 §P5. Planifico verificar el ORDEN/RANK de la respuesta correcta entre las opciones sobre ≥40 versiones en el paso 9, no solo su valor absoluto.
 19. `.claude/scripts/snippets_familias_rmd.R` existe y contiene el helper `seleccionar_combinacion_con_cascada()` (Familia 6). Si alguna parte/gap con opciones gráficas filtra combinaciones de parámetros por un umbral de legibilidad, planifico usar una CASCADA de umbrales decrecientes (`c(0.40, 0.35, 0.30, 0.25)`), nunca un umbral único con `stopifnot` — Incidente L.
@@ -433,7 +433,7 @@ Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú 
 **Verificación automática (paso 9 obligatorio)**:
 
 ```bash
-Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
+Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 100
 ```
 
 Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
@@ -743,7 +743,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 40` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 40` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 100` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 100` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + V1-V9 CLOZE + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
@@ -898,7 +898,7 @@ larga. Es una de las heurísticas de examen más conocidas y el arsenal entero l
 Ejecuto en el paso 9, sobre el `.Rmd`:
 
 ```bash
-Rscript .claude/scripts/validar_diagnosticidad.R <archivo.Rmd> --n 40
+Rscript .claude/scripts/validar_diagnosticidad.R <archivo.Rmd> --n 100
 ```
 
 Sondas (cada una sobre los gaps de selección única, `opciones_pN` + `sol_pN`):
@@ -1220,7 +1220,7 @@ Al terminar (éxito o fallo), produzco:
 - V6 prosa de la Solution sin enumerar en orden (Incidente Q): ✅ | N/A
 - V7 unicidad ampliada (opciones de fuera del conjunto): ✅ | N/A
 - V8 diversidad declarada por gap: ✅ (ver tabla)
-- V9 diagnosticidad de los distractores (`validar_diagnosticidad.R --n 40`): ✅ | ⚠ WARN | N/A
+- V9 diagnosticidad de los distractores (`validar_diagnosticidad.R --n 100`): ✅ | ⚠ WARN | N/A
   - tabla por gap (tasa + margen mediano) y `NOTA DE ORDEN` transcritas literalmente
 
 ## Diversidad por gap (V8, regla #22)

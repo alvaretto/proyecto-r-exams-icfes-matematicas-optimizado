@@ -368,16 +368,41 @@ test_that("Si hay .tex generados HOY, ninguno contiene \\pandocbounded", {
     skip("No hay .tex modificados en las últimas 24h; el test pasa por defecto")
   }
 
+  # El Error 16 NO es "aparece la cadena \pandocbounded": es "se USA sin estar
+  # DEFINIDO". Pandoc >=3.2.1 emite en el preambulo
+  #     \providecommand{\pandocbounded}[1]{#1}
+  # que es precisamente la DEFENSA -- ese .tex compila. Contarlo como bug es
+  # castigar a la proteccion, el mismo modo de fallo que el discriminador de
+  # citas de nomenclatura (v3.20.8): no distinguia "usa el patron" de "advierte
+  # contra el patron". Falso rojo detectado el 2026-08-13 sobre los texkeep del
+  # CLOZE informacion-insuficiente-lote-n4, cuyos .tex SI llevan la definicion.
+  esta_definido <- function(txt) {
+    grepl("\\providecommand{\\pandocbounded}", txt, fixed = TRUE) ||
+    grepl("\\newcommand{\\pandocbounded}",     txt, fixed = TRUE) ||
+    grepl("\\def\\pandocbounded",              txt, fixed = TRUE) ||
+    grepl("\\renewcommand{\\pandocbounded}",   txt, fixed = TRUE)
+  }
   archivos_con_bug <- character(0)
   for (tex in texs_recientes) {
     contenido <- tryCatch(
       paste(readLines(tex, warn = FALSE), collapse = "\n"),
       error = function(e) ""
     )
-    if (grepl("\\pandocbounded", contenido, fixed = TRUE)) {
+    if (grepl("\\pandocbounded", contenido, fixed = TRUE) &&
+        !esta_definido(contenido)) {
       archivos_con_bug <- c(archivos_con_bug, tex)
     }
   }
+
+  # Controles del propio detector (sin tocar disco): que siga cazando el uso sin
+  # definicion, y que NO marque el .tex protegido.
+  .bug  <- "\\pandocbounded{\\includegraphics{g.png}}"
+  .safe <- paste("\\providecommand{\\pandocbounded}[1]{#1}",
+                 "\\pandocbounded{\\includegraphics{g.png}}", sep = "\n")
+  stopifnot(
+    grepl("\\pandocbounded", .bug, fixed = TRUE) && !esta_definido(.bug),
+    grepl("\\pandocbounded", .safe, fixed = TRUE) && esta_definido(.safe)
+  )
 
   expect_equal(
     length(archivos_con_bug), 0,

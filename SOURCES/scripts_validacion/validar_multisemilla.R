@@ -5,7 +5,7 @@
 # y valida correctitud (Nivel 5) en cada ejecución.
 #
 # Uso:
-#   Rscript validar_multisemilla.R archivo.Rmd [--n 20] [--modo rapido|exhaustivo]
+#   Rscript validar_multisemilla.R archivo.Rmd [--n 100] [--modo rapido|exhaustivo]
 #
 # Modos:
 #   rapido     - 20 semillas (default, para hook automático)
@@ -87,9 +87,9 @@
 #' Ejecuta validación multi-semilla sobre un archivo .Rmd
 #'
 #' @param archivo_rmd Ruta al archivo .Rmd
-#' @param n_semillas Número de semillas a probar (default 20)
+#' @param n_semillas Número de semillas a probar (default 100 -- regla #23)
 #' @return Lista con: total_semillas, fallos (lista), tasa_exito, aprobado
-validar_multisemilla <- function(archivo_rmd, n_semillas = 20) {
+validar_multisemilla <- function(archivo_rmd, n_semillas = 100) {
   if (!file.exists(archivo_rmd)) {
     return(list(
       total_semillas = n_semillas,
@@ -178,12 +178,12 @@ if (sys.nframe() == 0) {
 
   args <- commandArgs(trailingOnly = TRUE)
   if (length(args) < 1) {
-    cat("Uso: Rscript validar_multisemilla.R archivo.Rmd [--n 20] [--modo rapido|exhaustivo]\n")
+    cat("Uso: Rscript validar_multisemilla.R archivo.Rmd [--n 100] [--modo rapido|exhaustivo]\n")
     quit(status = 2)
   }
 
   archivo_rmd <- args[1]
-  n_semillas <- 20
+  n_semillas <- 100
   modo <- "rapido"
 
   # Parsear argumentos opcionales

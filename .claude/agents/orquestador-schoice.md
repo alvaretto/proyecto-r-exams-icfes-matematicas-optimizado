@@ -105,7 +105,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
   2. **Estado de `ruta_destino`**: ¿existe?, ¿está bajo un directorio permitido?, ¿hay `ejercicio_state.json`? Si lo hay, digo desde qué paso reanudaría y cuáles ya están completados — recordando que `2b`, `2c` y `6b` **no** se persisten (§ "Qué se persiste y qué no").
   3. **Nomenclatura**: contraste contra el regex, indicando si el warning saltará y por qué (puede ser deliberado — ver `INC-CLAUDE-LOCAL`).
   4. **`entrada`**: si es una ruta, compruebo que existe y es legible; si es texto, reporto su longitud.
-  5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): `validar_diversidad_sustantiva.R --n 10` y `validar_diagnosticidad.R --n 10`. Es barato y detecta de inmediato un ítem que ya está roto.
+  5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): `validar_diversidad_sustantiva.R --n 100` y `validar_diagnosticidad.R --n 100`. Es barato y detecta de inmediato un ítem que ya está roto.
   6. **Plan**: las 16 filas de la máquina de estados, los 3 `WAIT_USER` con la decisión que pediré en cada uno, y el presupuesto de turnos estimado.
 
   NO escribo nada, NO renderizo, NO creo `ejercicio_state.json`, NO invoco sub-agentes. Termino con `exit_status: "dry_run"` y el veredicto de los pre-flight.
@@ -132,7 +132,7 @@ Antes de cualquier acción destructiva, verifico:
 12. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
 12b. `.claude/scripts/validar_diagnosticidad.R` existe. Es el **único** validador que mide si la clave se acierta sin leer las opciones (corrección, formato, unicidad y diversidad pueden estar en verde sobre un ítem así). Sondas H1/H2/H3 y comando: Incidente F pto 6. Lo ejecuto en el paso 9.
 
-12c. **Veredicto de la clave no invariante** (regla #22 §P4-bis, Incidente F · `INC-DIV-COSMETICA`). Si el ítem tiene **conclusión binaria** («Sí, porque…»/«No, porque…», verdadero/falso, aumenta/disminuye), verifico ANTES de cerrar el paso 3 que la afirmación evaluada NO sea falsa por construcción. El balance 2+2 **no** protege: es intra-versión. Defensa: sortear `afirmacion_es_verdadera` + clave alternativa de veredicto opuesto, con exclusión mutua entre ambas; si el ítem reproduce un cuadernillo oficial, la instancia canónica conserva el veredicto real y alternan las demás. Veredicto: `validar_diagnosticidad.R --n 40` debe reportar **H3 < 90 %** (100 % = `ERR_DIAG_SUPERFICIAL`, exit 1, bloqueante).
+12c. **Veredicto de la clave no invariante** (regla #22 §P4-bis, Incidente F · `INC-DIV-COSMETICA`). Si el ítem tiene **conclusión binaria** («Sí, porque…»/«No, porque…», verdadero/falso, aumenta/disminuye), verifico ANTES de cerrar el paso 3 que la afirmación evaluada NO sea falsa por construcción. El balance 2+2 **no** protege: es intra-versión. Defensa: sortear `afirmacion_es_verdadera` + clave alternativa de veredicto opuesto, con exclusión mutua entre ambas; si el ítem reproduce un cuadernillo oficial, la instancia canónica conserva el veredicto real y alternan las demás. Veredicto: `validar_diagnosticidad.R --n 100` debe reportar **H3 < 90 %** (100 % = `ERR_DIAG_SUPERFICIAL`, exit 1, bloqueante).
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
 13. Si el ejercicio tiene diagramas dinámicos con etiquetas (Flujo B), planifico validar el **caso EXTREMO de parámetros** (ángulo mínimo **Y** máximo del pool × vectores más corto y más largo × todos los cuadrantes) con recortes ampliados **≥×2.4**, nunca una sola semilla — Incidente G.
 14. Distractores no extremos por construcción: ninguno debe ocupar sistemáticamente el rango extremo de la magnitud comparada — Incidente H / regla #22 §P5. Planifico medir en el paso 9 el **rank** de la correcta entre las opciones sobre ≥40 versiones, no solo su valor.
@@ -317,7 +317,7 @@ La guardia `@ifundefined` evita redefinir el contador si ya existe (importante e
 **Verificación automática (paso 9 obligatorio)**:
 
 ```bash
-Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
+Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 100
 ```
 
 Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
@@ -325,7 +325,7 @@ Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BL
 **6. Diagnosticidad de los distractores (paso 9, obligatorio)**: un ítem puede tener 4 opciones únicas, clave correcta y datos que cambian en cada versión, y aun así resolverse **sin leer el contenido** porque la correcta es siempre la única mucho más larga. Es una de las heurísticas de examen más conocidas y ninguna otra validación la mide.
 
 ```bash
-Rscript .claude/scripts/validar_diagnosticidad.R <ruta_al_.Rmd> --n 40
+Rscript .claude/scripts/validar_diagnosticidad.R <ruta_al_.Rmd> --n 100
 ```
 
 Sondas: **H1** más-larga / más-corta (la correcta es la ÚNICA en el extremo **y** por un margen relativo ≥ 15% sobre su rival más próximo), **H2** prefijo (única con su primera palabra y único singleton) y **H3** veredicto invariante cross-versión (regla #22 §P4-bis: 100% → bloqueante, ≥90% → aviso). `ERR_DIAG_SUPERFICIAL` (exit 1, el 100% de las versiones) → **BLOQUEANTE**: igualar la extensión de las opciones y volver al paso 5. `WARN_DIAG_SUPERFICIAL` no bloquea pero se declara en el reporte.
@@ -675,7 +675,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 40` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) **+ DIAGNOSTICIDAD** via `validar_diagnosticidad.R --n 40` (`ERR_DIAG_SUPERFICIAL` bloqueante) | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 100` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) **+ DIAGNOSTICIDAD** via `validar_diagnosticidad.R --n 100` (`ERR_DIAG_SUPERFICIAL` bloqueante) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
@@ -877,7 +877,7 @@ Al terminar (éxito o fallo), produzco:
 | 1 analisis_icfes | ✅ | 0:35 | 0 |
 | ... | ... | ... | ... |
 
-## Diagnosticidad (`validar_diagnosticidad.R --n 40`)
+## Diagnosticidad (`validar_diagnosticidad.R --n 100`)
 Transcribo **literalmente** la tabla de sondas y la `NOTA DE ORDEN`, aunque el veredicto sea `PASS`:
 una nota que diga "la correcta es la única más larga en el 100% de las versiones" significa que la
 señal existe pero es demasiado pequeña para explotarla, no que no haya señal.

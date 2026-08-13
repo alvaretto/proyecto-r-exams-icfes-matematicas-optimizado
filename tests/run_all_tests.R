@@ -234,6 +234,15 @@ suites <- list(
               "test_nomenclatura_rmd", "\\.Rmd$", "generar-schoice", "generar-cloze")
   ),
   list(
+    nombre = "Muestra estándar de validación N=100 (regla #23)",
+    archivo = "tests/testthat/test_muestra_estandar.R",
+    critico = TRUE,
+    watch = c("muestra-estandar-validacion", "validar_diagnosticidad",
+              "validar_diversidad_sustantiva", "validar_multisemilla",
+              "post-exams2-validation", "settings\\.json", "test_muestra_estandar",
+              "orquestador-schoice", "orquestador-cloze")
+  ),
+  list(
     nombre = "Invocabilidad de validar_multisemilla (Error 31)",
     archivo = "tests/testthat/test_validar_multisemilla_invocable.R",
     critico = TRUE,

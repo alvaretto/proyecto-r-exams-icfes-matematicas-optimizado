@@ -217,7 +217,7 @@ ggsave("opcion_correcta.png", p_correcto, ...)
 
 ```bash
 # Verificación obligatoria en el orquestador (paso 9)
-Rscript .claude/scripts/validar_diversidad_sustantiva.R ejercicio.Rmd --n 40
+Rscript .claude/scripts/validar_diversidad_sustantiva.R ejercicio.Rmd --n 100
 ```
 
 Si la salida contiene `ERR_DIV_COSMETICA` → BLOQUEAR. El ejercicio tiene diversidad solo cosmética y no puede avanzar a aprobación.
@@ -242,7 +242,7 @@ Ejecuta `n` versiones del `data_generation` con semillas dispersas, extrae un **
 **Uso**:
 
 ```bash
-Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 40
+Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 100
 ```
 
 El script NO requiere que el `.Rmd` renderice a PDF/HTML — extrae y evalúa directamente el chunk `data_generation`. Es barato y rápido (40 evals de data_generation, sin pdflatex).
@@ -258,7 +258,7 @@ El hook `post-exams2-validation.sh` ejecuta FASE 2N con detección estática (gr
 
 El paso 9 (`validar_diversidad`) de ambos orquestadores (`orquestador-schoice.md` y `orquestador-cloze.md`) exige, ADEMÁS del conteo tradicional de versiones:
 
-1. Ejecutar `Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta> --n 40`.
+1. Ejecutar `Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta> --n 100`.
 2. Si `ERR_DIV_COSMETICA` (exit 1) → **DEFECTO BLOQUEANTE** — no avanzar a aprobación.
 3. Solo si `PASS` o `WARN_DIV_BAJA`/`WARN_DIV_INDET` (exit 0) → continuar.
 

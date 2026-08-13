@@ -25,7 +25,10 @@
    `workflow-state-enforcement.md`). Requiere `ejercicio_state.json` con pasos previos
    completados.
 4. **Después de cada `exams2*()`**: el hook `post-exams2-validation.sh` ejecuta
-   FASES 2A-2H automáticamente. NO suprimir su salida ni acortar su timeout (120s).
+   FASES 2A-2H automáticamente. NO suprimir su salida ni acortar su timeout (300s
+   desde 2026-08-13: subido de 120s para que quepa la muestra estándar N=100 de la
+   regla #23, 170s medidos en el ejercicio más pesado del repo). Subirlo es legítimo;
+   bajarlo corta la FASE 2G a media ejecución.
 5. **Tildes obligatorias** en texto visible al estudiante (regla #7,
    `ortografia-espanol.md`). NO usar `git commit --no-verify` para evadir el hook
    de ortografía.
