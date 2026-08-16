@@ -64,11 +64,27 @@ Clasifico ejercicios según **3 taxonomías simultáneamente**:
 | **DOK 3** | Strategic Thinking | Razonamiento complejo | 3-5 min |
 | **DOK 4** | Extended Thinking | Investigación extendida | >5 min |
 
-**Mapeo ICFES**:
-- Nivel 1 → DOK 1-2
-- Nivel 2 → DOK 2
-- Nivel 3 → DOK 2-3
-- Nivel 4 → DOK 3-4
+**Mapeo ICFES — OJO A LA DIRECCIÓN (corregido 2026-08-15)**:
+
+El Nivel ICFES **no es una escala cognitiva: es una banda de puntaje del evaluado**
+(`niveles-mat.json → puntajes_oficiales`: N1 `"0 a 35"` … N4 `"71 a 100"`; el encabezado
+oficial dice *«El **evaluado** que se ubica en el nivel {N}… demuestra que»*). Mide dónde cae
+el **estudiante**, no cuán complejo es el ítem — y en el catálogo oficial **no aparece DOK
+por ninguna parte**.
+
+Por eso sólo se infiere **en una dirección**:
+
+- `DOK ≥ 3` ⇒ `Nivel ≥ 3` — **válido**: un ítem que exige razonamiento estratégico no lo
+  resuelven los evaluados de las bandas bajas.
+- `Nivel ≥ 3` ⇒ `DOK ≥ 3` — **FALSO**. Un ítem rutinario puede ser empíricamente difícil
+  (pendiente fraccionaria negativa, manejo de signos) y discriminar en **N4 con DOK 2**.
+
+La tabla anterior (`Nivel 4 → DOK 3-4`) codificaba justamente la recíproca falsa y empujaba a
+**inflar el DOK declarado** para cuadrar con el Nivel: el ítem no cambiaba, cambiaba la
+etiqueta. Al analizar un ítem con Nivel alto y DOK bajo, lo que hay que exigir es el
+**obstáculo empírico concreto** que lo hace difícil — no subir el DOK.
+
+Ver `.claude/rules/ejercicios-metacognitivos.md` §Coherencia Nivel ICFES ↔ DOK (v1.1).
 
 ---
 

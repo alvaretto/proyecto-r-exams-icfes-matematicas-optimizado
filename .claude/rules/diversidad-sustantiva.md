@@ -188,6 +188,98 @@ Incidente: `desplazamiento-avion-aeropuerto` (2026-07-28) — ver Error 25 en `p
 
 ---
 
+### ❌ P7: Batería de eliminación SIN cierre por familias de dimensión
+
+Los patrones P1–P6 nombran canales de fuga **concretos**. P7 es distinto: no es un canal,
+es un defecto **del verificador**. Dice cómo hay que medir para que un «no encontré nada»
+signifique algo.
+
+> **Una batería de reglas de eliminación necesita CIERRE POR FAMILIAS DE DIMENSIÓN
+> —magnitud, divisibilidad, signo, posición, formato, léxico—, no sólo por mínimo y máximo.**
+
+**Cómo apareció (dos veces, en dos ejercicios distintos):** el verificador medía seis reglas
+intra-celda y **ninguna tocaba la divisibilidad**. El canal real —**47,4 %** de acierto sin
+razonar— estaba justo en esa familia sin sonda. El informe lo leyó como «sin señal». El
+principio que se sigue de ahí:
+
+> **Una batería incompleta no mide «sin señal», mide «SIN SONDA».**
+
+Es el mismo modo de fallo que la ceguera de H2/H3 documentada en §P4-bis, un piso más
+arriba: allí eran dos sondas concretas las que dejaban de medir en silencio; aquí es una
+familia entera de reglas que nadie escribió.
+
+#### Las tres exigencias (ninguna es opcional)
+
+**1. Cobertura declarada.** Cada una de las seis familias debe tener sonda, o estar
+declarada **no aplicable con su justificación** (`signo = "todas las magnitudes son
+positivas"`). Una familia sin sonda ni declaración **invalida el veredicto completo**: el
+resultado es `SIN_COBERTURA`, nunca `PASS`.
+
+**2. Techo nulo.** Un máximo sobre miles de combinaciones **está inflado por selección**:
+con 4 opciones una regla acierta ~25 % por azar, pero el *máximo* de ~19 reglas ronda el
+35 %. Se calibra **permutando cuál opción es la clave y dejando las reglas intactas**.
+Medición del ejercicio que originó la lección:
+
+| Estadístico | Valor |
+|---|---|
+| Máximo observado | **69,6 %** |
+| Techo nulo (clave permutada) | **34,8 %** |
+| **Exceso** | **+35 pp** |
+
+**Sin esa calibración el número no significa nada.** Comparar el 69,6 % contra el 25 % del
+azar puro exagera el hallazgo; compararlo contra su techo nulo lo mide.
+
+**3. Declaración de incertidumbre.** Cuando el máximo cae a **menos de 5 pp del umbral**,
+con N = 100 el estadístico es un **máximo sobre ~19 reglas** y **no es reproducible tirada a
+tirada**. Hay que decirlo: el veredicto es `NO_CONCLUYENTE` —ni verde ni rojo—, y la salida
+es subir N o reducir la batería. **PROHIBIDO redondearlo a `PASS`.** Es la misma disciplina
+que la regla #23 impone a los estratos con n < 20.
+
+#### Helper (la parte genérica ya está resuelta)
+
+`.claude/scripts/bateria_eliminacion.R` — `nueva_regla()`, `evaluar_bateria()`,
+`imprimir_bateria()`, `exit_bateria()`. Aporta cobertura, techo nulo y banda; **las reglas
+siguen siendo propias de cada ejercicio**, porque la divisibilidad sólo aplica a claves
+enteras, el signo sólo donde hay negativos y la posición sólo donde hay disposición
+espacial. Veredictos: `PASS` (exit 0) · `BLOQUEA` · `SIN_COBERTURA` · `NO_CONCLUYENTE` ·
+`UMBRAL_DEGENERADO` (exit 1).
+
+`UMBRAL_DEGENERADO` es un cuarto guardián que salió al construir el helper: **si el techo
+nulo alcanza el umbral, el umbral no discrimina nada** —hasta una batería de puro ruido lo
+cruzaría—. Un umbral por debajo del ruido produce rojos que no significan nada, que es la
+otra forma de que un gate se aprenda a ignorar.
+
+```r
+source(".claude/scripts/bateria_eliminacion.R")
+bateria <- list(
+  nueva_regla("la mayor",     "magnitud",      function(o) which.max(as.numeric(o))),
+  nueva_regla("la unica par", "divisibilidad", function(o) {
+    i <- which(as.numeric(o) %% 2 == 0); if (length(i) == 1L) i else NA_integer_ }),
+  # ... una por familia, o declararla no aplicable
+)
+res <- evaluar_bateria(bateria, opciones, claves, umbral = 0.70,
+                       familias_no_aplicables = c(signo = "todas las magnitudes son positivas"))
+imprimir_bateria(res); quit(status = exit_bateria(res))
+```
+
+#### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
+
+Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden
+propiedades del texto (longitud, prefijo, contenido) que existen en cualquier ítem. Las
+familias de P7 **no lo son**: una batería automática de divisibilidad sobre un ítem de
+opciones textuales no aplicaría nunca, y el script imprimiría un `PASS` sobre una familia
+que jamás sondeó — recreando exactamente «sin sonda» reportado como «sin señal», el defecto
+que esta sección existe para cerrar. El repositorio ya aprendió esa lección con H3b:
+**declarar la ceguera vale más que añadir una sonda débil.** Por eso lo genérico
+—calibración y cobertura— vive en el helper, y las reglas se escriben por ejercicio.
+
+**Test:** `tests/testthat/test_bateria_eliminacion.R` (33 aserciones). Su control decisivo
+es el caso **«mismos datos, sonda retirada»**: con el canal real al 100 % en divisibilidad,
+al quitar esa sonda la batería reporta **19 %** —una cifra baja y tranquilizadora— y el
+helper igualmente **se niega a declarar PASS**.
+
+---
+
 ## Patrón Correcto
 
 ### ✅ Aleatorizar los parámetros que determinan la respuesta
@@ -272,6 +364,10 @@ El paso 9 (`validar_diversidad`) de ambos orquestadores (`orquestador-schoice.md
 | `WARN_DIV_BAJA` | Script (exit 0) | La respuesta varía pero poco (< 30%) | Informativo |
 | `WARN_DIV_INDET` | Script (exit 0) | No se pudo identificar la respuesta correcta para fingerprint | Informativo |
 | `WARN_DIV_ESTATICA` | Hook FASE 2N | `file.copy(` para PNGs de opciones o ausencia de funciones aleatorias en data_generation | Advertencia (hook) |
+| `BLOQUEA` (§P7) | `bateria_eliminacion.R` (exit 1) | Una regla de eliminación supera el umbral con exceso positivo sobre el techo nulo | **BLOQUEANTE** |
+| `SIN_COBERTURA` (§P7) | `bateria_eliminacion.R` (exit 1) | Una familia de dimensión sin sonda ni declaración: la batería no mide, sólo calla | **BLOQUEANTE** |
+| `NO_CONCLUYENTE` (§P7) | `bateria_eliminacion.R` (exit 1) | El máximo cae a menos de 5 pp del umbral: no reproducible a esta N | **NO es PASS** |
+| `UMBRAL_DEGENERADO` (§P7) | `bateria_eliminacion.R` (exit 1) | El techo nulo alcanza el umbral: el umbral no discrimina nada | **BLOQUEANTE** |
 
 ---
 
@@ -280,6 +376,7 @@ El paso 9 (`validar_diversidad`) de ambos orquestadores (`orquestador-schoice.md
 | Test | Suite | Verifica |
 |------|-------|---------|
 | `tests/testthat/test_diversidad_sustantiva.R` | Nueva (suite #20) | Fixture con respuesta FIJA → exit 1 / `ERR_DIV_COSMETICA`; fixture con respuesta ALEATORIA → exit 0 / `PASS` |
+| `tests/testthat/test_bateria_eliminacion.R` | Suite #32 | §P7: control positivo (canal real cazado y atribuido a su familia), control negativo (ítem sano = `PASS`), **«mismos datos, sonda retirada»** (19 % y aun así `SIN_COBERTURA`), banda de incertidumbre, umbral degenerado, inflación del techo nulo sobre el 25 % del azar |
 
 ---
 
@@ -315,11 +412,48 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.4
-**Fecha:** 2026-08-10
+**Versión:** 1.5
+**Fecha:** 2026-08-15
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.5 (2026-08-15) — §P7: cierre por familias de dimensión
+
+- **NUEVO §P7**, y es de otra naturaleza que P1–P6: no nombra un canal de fuga, nombra un
+  defecto **del verificador**. La lección ya había aparecido en **dos ejercicios distintos**
+  y sólo vivía en el verificador de uno de ellos.
+- **Lo que la originó**: una batería de seis reglas intra-celda donde **ninguna tocaba la
+  divisibilidad**, que era justo donde estaba el canal real (**47,4 %**). Se reportó como
+  «sin señal». Principio: *una batería incompleta no mide «sin señal», mide «sin sonda»*.
+- **Tres exigencias, ninguna opcional**: (1) **cobertura** de las seis familias —magnitud,
+  divisibilidad, signo, posición, formato, léxico—, con declaración justificada para las
+  inaplicables; (2) **techo nulo** por permutación de la clave con las reglas intactas
+  (medido en el incidente: máximo **69,6 %** contra techo **34,8 %**, exceso **+35 pp** —
+  sin esa calibración el número no significa nada); (3) **banda de incertidumbre** de 5 pp,
+  porque a N = 100 un máximo sobre ~19 reglas no es reproducible tirada a tirada.
+- **NUEVO HELPER**: `.claude/scripts/bateria_eliminacion.R`. Aporta sólo la parte genérica
+  —cobertura, techo nulo, banda—; **las reglas siguen siendo por ejercicio**, y se explica
+  por qué eso no es pereza sino diseño.
+- **CUARTO GUARDIÁN, aparecido al construirlo**: `UMBRAL_DEGENERADO`. Si el techo nulo
+  alcanza el umbral, **el umbral no discrimina**: hasta una batería de ruido lo cruzaría.
+  Un gate que siempre falla se aprende a ignorar igual que uno que nunca falla.
+- **DECISIÓN DE ALCANCE DOCUMENTADA**: se evaluó cablearlo dentro de
+  `validar_diagnosticidad.R` y **se descartó a propósito**. Una batería automática de
+  divisibilidad sobre opciones textuales no aplicaría nunca y el script imprimiría `PASS`
+  sobre una familia que jamás sondeó — recreando el defecto que §P7 existe para cerrar.
+  Mismo criterio que fijó H3b: declarar la ceguera vale más que añadir una sonda débil.
+- **NUEVA SUITE (32 en el runner)**: `test_bateria_eliminacion.R`, 33 aserciones. Su control
+  decisivo es **«mismos datos, sonda retirada»**: con el canal real al 100 %, quitar esa
+  sonda hace que la batería reporte **19 %** y el helper **siga negándose a dar PASS**.
+- **DOS BUGS DEL PROPIO TEST, cazados por sus controles**: (a) `expect_lt`/`expect_gt` **no
+  aceptan `info =`** —tres aserciones reventaban por eso, no por el helper—; y (b) el caso
+  de la banda se construyó acercando el umbral al máximo de un ítem **sano**, lo que empuja
+  el umbral **por debajo del techo nulo** y hace que el veredicto correcto pase a ser
+  `UMBRAL_DEGENERADO`. El helper tenía razón y el escenario estaba mal: hizo falta un canal
+  **parcial**. Además, sortear ese canal con probabilidad 0,66 aterrizó en **61 %** y sacó
+  al test de su propia banda — es la irreproducibilidad que la exigencia (3) describe,
+  reproducida dentro del test que la prueba; el fixture pasa a usar un conteo **exacto**.
 
 ### Cambios v1.4 (2026-08-10)
 - **NUEVA SUBSECCIÓN en §P4-bis — «El molde uniforme de opciones ciega a H2 y a H3»**, con la tabla

@@ -557,39 +557,99 @@ Después de generar el .Rmd:
 - [ ] ¿Distractores son únicos entre sí?
 - [ ] ¿Metadatos incluyen DOK, Bloom, SOLO?
 - [ ] ¿Nivel DOK ≥ 2 (preferible 3)?
-- [ ] ¿Bloom incluye Analizar/Evaluar?
-- [ ] ¿Coherencia Nivel ICFES ↔ DOK? (ver tabla abajo)
+- [ ] ¿El verbo Bloom declarado corresponde a lo que el ítem **realmente** exige?
+      NO se exige que sea Analizar/Evaluar: un ítem legítimo de la competencia
+      **Formulación y ejecución** es *Aplicar*, y forzarlo a «Evaluar» sólo falsea
+      la etiqueta. Lo que se comprueba es la correspondencia, no el nivel del verbo.
+- [ ] ¿Se respeta `DOK ≥ 3 → Nivel ≥ 3`? (implicación en UNA dirección; la
+      recíproca `Nivel ≥ 3 → DOK ≥ 3` **NO** se exige — ver tabla abajo)
 - [ ] ¿Solución tiene todas las subsecciones obligatorias?
 
 ---
 
-## Coherencia Nivel ICFES ↔ DOK (OBLIGATORIA)
+## Coherencia Nivel ICFES ↔ DOK (implicación en UNA sola dirección)
 
-**El Nivel ICFES del archivo (`_nX_` en el nombre y `exextra[Nivel]`) DEBE ser coherente con el DOK asignado.** Una discrepancia indica clasificación incorrecta.
+### Lo primero: el Nivel ICFES NO es una escala cognitiva, es una BANDA DE PUNTAJE
 
-| DOK | Bloom típico | Nivel ICFES compatible | Nivel ICFES incompatible |
-|-----|-------------|----------------------|------------------------|
-| 1 (Recall) | Recordar | N1 | N2, N3, N4 |
-| 2 (Skill/Concept) | Comprender, Aplicar | N1, N2 | N3, N4 |
-| 3 (Strategic Thinking) | Analizar, Evaluar | **N3** | N1, N2 |
-| 4 (Extended Thinking) | Crear, Sintetizar | N3, N4 | N1, N2 |
+Esta sección se escribió (v1.0, 2026-02-06) dando por hecho que N1…N4 medían complejidad
+cognitiva creciente del **ítem**. **Es falso, y el catálogo oficial lo dice con todas las
+letras.** Verificado el 2026-08-15 contra
+`Todo-Pajaro/Alineacion-curricular-de-items/Matematicas/catalogos-oficiales-mat/niveles-mat.json`
+(estado `CANONICO_INMUTABLE`, derivado de *Niveles-de-desempeño-Matemáticas-Saber-11-2025.pdf*):
 
-**Regla de validación**: Si `DOK >= 3` → `Nivel ICFES >= 3`. Si `Bloom = Evaluar` → `Nivel >= 3`.
+| Evidencia | Cita literal del catálogo |
+|---|---|
+| Clave `puntajes_oficiales` | `"N1": "0 a 35"`, `"N2": "36 a 50"`, `"N3": "51 a 70"`, `"N4": "71 a 100"` |
+| Clave `encabezado_oficial` | `"El evaluado que se ubica en el nivel {N}, demuestra que / además de lo descrito en el/los nivel(es) anterior(es), demuestra que:"` |
+| `grep -ri 'DOK\|Bloom\|Webb'` sobre los 6 archivos del catálogo | **cero coincidencias** |
 
-**Antipatrón PROHIBIDO:**
+Dos hechos se siguen de ahí:
+
+1. **El sujeto gramatical es «El evaluado»**, no la pregunta. El nivel describe qué demuestra
+   *la persona* que cae en ese rango de puntaje (0–100), no qué estructura tiene el ítem.
+2. **DOK, Bloom y Webb no existen en el marco ICFES.** Son taxonomías externas que este
+   repositorio adopta por su valor de diseño pedagógico; ICFES nunca las usó para definir N1–N4.
+
+Asignar un Nivel a un ítem es legítimo —el propio catálogo lo prevé en `regla_aplicacion`
+(«Si Nivel del descriptor > Nivel del ítem → INCONSISTENCIA»)— y es la práctica psicométrica
+habitual de *bookmarking*: significa **«en qué banda de puntaje discrimina este ítem»**, es
+decir, a partir de qué desempeño empieza a resolverse. **No significa «qué tan complejo es».**
+
+### La consecuencia práctica: un ítem rutinario puede ser difícil
+
+Dificultad empírica y demanda cognitiva son **ejes distintos**. Un ítem de DOK 2 —aplicar un
+procedimiento conocido— puede caer perfectamente en N3 o N4 si el procedimiento se aplica sobre
+datos que hacen tropezar a la mayoría: pendiente fraccionaria **negativa**, manejo de signos,
+conversión de unidades encadenada, lectura de una escala no unitaria. Nada de eso sube el DOK
+—sigue siendo aplicar un procedimiento— y sin embargo hunde el porcentaje de acierto.
+
+Por eso la tabla anterior, que marcaba **DOK 2 como «incompatible» con N3/N4**, quedaba
+matemáticamente equivocada y además empujaba a inflar el DOK declarado para «cuadrar» con el
+Nivel: el ítem no cambiaba, cambiaba la etiqueta.
+
+### Lo que SÍ se sostiene
+
+| Implicación | ¿Válida? | Por qué |
+|---|---|---|
+| `DOK ≥ 3` ⇒ `Nivel ≥ 3` | **SÍ — se conserva** | Un ítem que exige razonamiento estratégico no rutinario no lo resuelven los evaluados de las bandas bajas. Su banda de discriminación no puede ser N1/N2. |
+| `Nivel ≥ 3` ⇒ `DOK ≥ 3` | **NO — recíproca falsa** | Es la que producía el error. Un ítem difícil por aritmética con signos es N3/N4 con DOK 2. |
+| `DOK = 2` ⇒ `Nivel ≤ 2` | **NO — contrapositiva de la anterior** | Era la fila que la tabla vieja declaraba «incompatible». |
+| `Bloom = Evaluar` ⇒ `Nivel ≥ 3` | **SÍ, con el mismo razonamiento** | Pero NO al revés: un N4 no obliga a que Bloom sea Analizar/Evaluar. |
+
+**Regla de validación vigente (una sola dirección):** `DOK >= 3 → Nivel ICFES >= 3`.
+
+### Antipatrones
+
 ```yaml
-# ❌ INCORRECTO — DOK 3 con Nivel 2 es contradictorio
+# ❌ INCORRECTO — DOK 3 declarado con Nivel 2: viola la implicación válida
 exextra[DOK]: 3
 exextra[Bloom]: Evaluar
-exextra[Nivel]: 2   # ← Nivel demasiado bajo para DOK 3
+exextra[Nivel]: 2   # ← un ítem de razonamiento estratégico no discrimina en la banda 36-50
 
-# ✅ CORRECTO — DOK y Nivel coherentes
+# ❌ INCORRECTO — DOK inflado para "cuadrar" con un Nivel alto
+exextra[DOK]: 3           # ← el ítem sólo aplica y=mx+b con m negativa fraccionaria: es DOK 2
+exextra[Nivel]: 4         # el Nivel puede ser 4 por dificultad empírica; el DOK NO se sube por eso
+
+# ✅ CORRECTO — ítem rutinario pero empíricamente difícil
+exextra[DOK]: 2                    # aplicar un procedimiento conocido
+exextra[Bloom]: Aplicar            # competencia "Formulación y ejecución"
+exextra[Nivel]: 4                  # banda de puntaje donde discrimina (signos + fracciones)
+
+# ✅ CORRECTO — razonamiento no rutinario
 exextra[DOK]: 3
 exextra[Bloom]: Evaluar
-exextra[Nivel]: 3   # ← Coherente con DOK 3
+exextra[Nivel]: 3
 ```
 
-**Razón**: Un ejercicio clasificado como DOK 3 (pensamiento estratégico) requiere análisis y evaluación no rutinarios, lo cual corresponde a Nivel 3 ICFES. Asignar Nivel 2 minimiza la complejidad real del ejercicio y confunde la calibración del banco de preguntas.
+**Cómo justificar un Nivel alto con DOK bajo:** en el análisis del ítem, nombrar el **obstáculo
+empírico concreto** que lo hace difícil (qué error comete la mayoría y por qué). Si no se puede
+nombrar, el Nivel alto no está justificado — pero la solución es bajar el **Nivel**, nunca inflar
+el DOK.
+
+> **Nota de alcance:** ningún gate ejecutable del repositorio lee `DOK`. Verificado el 2026-08-15:
+> `grep -rn 'DOK' .claude/scripts/ SOURCES/scripts_validacion/ tests/ .claude/hooks/` → **0
+> coincidencias**. Esta coherencia es juicio humano documentado, no una comprobación automática;
+> por eso la redacción de la tabla importa tanto: es lo único que la sostiene.
 
 ---
 
@@ -597,8 +657,12 @@ exextra[Nivel]: 3   # ← Coherente con DOK 3
 
 ```yaml
 # Taxonomías cognitivas (OBLIGATORIAS)
+# OJO: son taxonomías EXTERNAS que adopta este repositorio. El marco ICFES no las
+# usa (cero menciones a DOK/Bloom/Webb en el catálogo oficial, verificado 2026-08-15).
 exextra[DOK]: [2|3|4]              # Webb's Depth of Knowledge
-exextra[Bloom]: [Analizar|Evaluar] # Taxonomía Bloom Revisada
+exextra[Bloom]: [Aplicar|Analizar|Evaluar]  # Bloom Revisada — declarar el verbo REAL.
+                                   # "Aplicar" es correcto y frecuente en la competencia
+                                   # Formulación y ejecución; no inflarlo a "Evaluar".
 exextra[SOLO]: [Relacional|Abstracto-Extendido]  # Estructura SOLO
 
 # Tipo de metacognición
@@ -614,13 +678,40 @@ Ver archivo de referencia:
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-02-06
+**Versión**: 1.1
+**Fecha**: 2026-08-15
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
+
+### Cambios v1.1 (2026-08-15) — el Nivel ICFES es una banda de puntaje, no una escala cognitiva
+
+- **La tabla DOK↔Nivel estaba equivocada** y llevaba 6 meses en vigor. Marcaba **DOK 2 como
+  «incompatible» con N3/N4**, lo que sólo es cierto si el Nivel mide complejidad del ítem.
+  No la mide: el catálogo canónico define N1–N4 por **rango de puntaje** (`"0 a 35"` …
+  `"71 a 100"`) y su encabezado oficial tiene como sujeto **«El evaluado»**, no la pregunta.
+- **Un ítem cognitivamente rutinario puede ser empíricamente difícil** (pendiente fraccionaria
+  negativa, manejo de signos) y por tanto discriminar en N4 con DOK 2. La tabla vieja empujaba
+  a **inflar el DOK declarado** para cuadrar con el Nivel: el ítem no cambiaba, cambiaba la
+  etiqueta.
+- **Se conserva `DOK ≥ 3 ⇒ Nivel ≥ 3`**, que sí se sostiene, y se declara explícitamente que
+  **la recíproca es falsa**. Se añade la tabla de las cuatro implicaciones con su veredicto.
+- **Checklist post-generación**: «¿Bloom incluye Analizar/Evaluar?» exigía algo que un ítem
+  legítimo de la competencia **Formulación y ejecución** no cumple (su verbo es *Aplicar*).
+  Pasa a comprobar la **correspondencia** entre el verbo declarado y lo que el ítem exige.
+- **Alcance verificado**: `grep -rn 'DOK' .claude/scripts/ SOURCES/scripts_validacion/ tests/
+  .claude/hooks/` → **0 coincidencias**. Ningún gate ejecutable leía la tabla, así que la
+  corrección es documental y no altera ninguna comprobación automática. Esa misma ausencia es
+  la razón por la que la redacción tiene que ser precisa: es lo único que sostiene el criterio.
+- **Fuente verificada** (no citada de segunda mano):
+  `Todo-Pajaro/Alineacion-curricular-de-items/Matematicas/catalogos-oficiales-mat/niveles-mat.json`,
+  claves `puntajes_oficiales`, `encabezado_oficial` y `regla_aplicacion`.
 
 **Fundamento científico**:
 - Schraw & Dennison (1994) - Metacognitive awareness
 - Dunlosky et al. (2013) - Learning techniques meta-analysis
 - Anderson & Krathwohl (2001) - Bloom's Taxonomy Revised
 - Webb (1997) - Depth of Knowledge
+
+**Fuente oficial ICFES** (para el Nivel de Desempeño, que NO es taxonomía cognitiva):
+- `niveles-mat.json` (`CANONICO_INMUTABLE`), derivado de
+  *Niveles-de-desempeño-Matemáticas-Saber-11-2025.pdf* (ICFES 2025), páginas 2-7.
