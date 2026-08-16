@@ -49,7 +49,10 @@ Error detectado: "File '*.png' not found"?
 ```bash
 ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 
-grep -l "is_latex_output" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+# NO buscar "is_latex_output" como ejemplo a copiar: el patrón que lo usa para
+# renderizado condicional fue RETIRADO el 2026-08-15 (pierde la figura en el PDF).
+# Buscar en cambio el sustituto vigente:
+grep -l 'markup = "markdown"' /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 
 grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
@@ -72,7 +75,9 @@ Ver [patron de renderizado condicional](references/patron-renderizado-condiciona
 
 - Codigo antes/despues completo
 - Separar generacion de visualizacion
-- Usar `knitr::is_latex_output()` para decidir formato
+- Usar `include_tikz(..., markup = "markdown")` en una sola llamada, SIN ramificar por
+  `knitr::is_latex_output()` (retirado 2026-08-15: es SIEMPRE FALSE bajo R/exams y el
+  condicional pierde la figura en el PDF — ver `.claude/rules/codigo-rmd.md` regla #1)
 
 ### PASO 4: SUBFASE 3B - Revalidar
 
@@ -91,10 +96,12 @@ OBLIGATORIO: Volver automaticamente a FASE 1
 
 ## Algoritmo de correccion
 
-1. Eliminar `include_tikz()` del chunk de generacion
-2. Crear nuevo chunk con condicional `is_latex_output()`
-3. Para LaTeX: insertar codigo TikZ con `cat()`
-4. Para HTML: mantener `include_tikz()`
+1. Eliminar `include_tikz()` del chunk de generacion (dejar solo la construccion del `tikz_code`)
+2. Crear nuevo chunk `results='asis'` con UNA sola llamada a
+   `include_tikz(tikz_code, ..., markup = "markdown")`, SIN condicional (NO usar
+   `is_latex_output()`: es SIEMPRE FALSE bajo R/exams, ver regla #1 de `codigo-rmd.md`)
+3. `markup = "markdown"` es el que hace que pandoc enrute la figura a los 5 destinos
+   (html/pdf/docx/nops/moodle) sin necesidad de ramificar por formato
 
 ## Condiciones criticas
 

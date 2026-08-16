@@ -178,7 +178,9 @@ Tasa de éxito: 4 de 4 formatos (100%)
 #### `exams2pdf()`
 
 - Genera PDF imprimible
-- Usa código TikZ directo (con `knitr::is_latex_output()`)
+- Renderiza figuras vía `include_tikz(..., markup = "markdown")` — SIN ramificar por
+  `knitr::is_latex_output()` (retirado 2026-08-15: es SIEMPRE FALSE bajo R/exams, ver
+  `.claude/rules/codigo-rmd.md` regla #1)
 - Template: "solpcielo"
 
 #### `exams2pandoc()`

@@ -1,4 +1,15 @@
-# Patron de Renderizado Condicional para ERR_G1
+# Patron de Renderizado Condicional para ERR_G1 — RETIRADO (ver sustituto vigente abajo)
+
+> ⚠️ **El patrón "renderizado condicional" (`if (knitr::is_latex_output()) ... else ...`) que da
+> nombre a este documento fue RETIRADO el 2026-08-15.** Medido con fixtures renderizados:
+> `knitr::is_latex_output()` es **SIEMPRE FALSE** bajo R/exams — los 5 pipelines (html, pdf, docx,
+> nops, moodle) tejen siempre a Markdown y delegan en pandoc, así que durante el `knit` no hay
+> destino LaTeX que detectar. La rama LaTeX nunca se ejecuta; si la rama `else` emite HTML/PNG por
+> `include_graphics()`, el escritor LaTeX de pandoc descarta ese HTML crudo y **la figura
+> desaparece en el PDF sin error ni warning**. Ver `.claude/rules/codigo-rmd.md` regla #1 y
+> `.claude/rules/markdown-imagenes-pdf.md` Patrón B' para la medición completa y el sustituto.
+> La sección "DESPUES (CORRECTO)" de este documento queda corregida más abajo; el resto se
+> conserva como referencia histórica del síntoma ERR_G1.
 
 ## Contexto del Error
 
@@ -34,7 +45,7 @@ include_tikz(tikz_code,
 ![](mi_diagrama.png){width=50%}
 ```
 
-### DESPUES (CORRECTO)
+### DESPUES (CORRECTO, actualizado 2026-08-15) — una sola llamada, SIN condicional
 
 ```r
 ```{r generar_diagrama, echo=FALSE, results="hide"}
@@ -46,25 +57,21 @@ tikz_code <- generar_tikz_funcion(params)
 
 ```r
 ```{r mostrar_diagrama, echo=FALSE, results='asis', fig.align='center'}
-# Detectar formato de salida
-es_latex <- knitr::is_latex_output()
-
-if (es_latex) {
-  # Para PDF: insertar codigo TikZ directamente
-  cat("\\begin{center}\n")
-  cat(tikz_code)
-  cat("\n\\end{center}\n")
-} else {
-  # Para HTML: usar include_tikz
-  include_tikz(tikz_code,
-               name = "mi_diagrama",
-               markup = "markdown",
-               format = typ,
-               packages = c("tikz", "xcolor"),
-               width = "8cm")
-  cat("\n\n")
-}
+# ✅ Una sola llamada, sin ramificar por is_latex_output(): markup="markdown" hace que
+# pandoc enrute correctamente por tipo de bloque en los 5 destinos (html/pdf/docx/nops/moodle)
+include_tikz(tikz_code,
+             name = "mi_diagrama",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "xcolor"),
+             width = "8cm")
+cat("\n\n")
 ```
+
+**Por qué NO hace falta condicional**: verificado sobre fixture — con `markup = "markdown"` el
+`.tex` generado contiene `\includegraphics[width=8cm,…]{mi_diagrama.png}` y el HTML contiene
+`<img …>`; cero fuga en ningún destino. Ver regla #21 §Familia 2 (medición sobre los cinco
+pipelines) y regla #18 §Patrón B'.
 
 ## Casos de Uso
 

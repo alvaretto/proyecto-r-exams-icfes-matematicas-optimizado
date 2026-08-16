@@ -13,18 +13,45 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
 
 ### ❌ NUNCA hacer:
 
-1. **NO usar `include_tikz()` sin renderizado condicional**
+1. **NO usar `include_tikz()` con `markup="tex"` (el default), NI ramificar con `is_latex_output()`**
+
    ```r
-   # MAL - falla en HTML
+   # MAL - markup="tex" (default) emite LaTeX crudo: pandoc lo descarta al
+   #       escribir HTML -> la figura desaparece en HTML/Moodle
    include_tikz("grafico.tex")
 
-   # BIEN - renderizado condicional
+   # ⛔ MAL, Y PEOR - "renderizado condicional" (prescrito aquí hasta 2026-08-15):
+   #    la figura desaparece en el PDF, sin error y sin warning
    if (knitr::is_latex_output()) {
      include_tikz("grafico.tex")
    } else {
      knitr::include_graphics("grafico.png")
    }
+
+   # BIEN - una sola llamada, sin condicional, válida en los 5 formatos
+   include_tikz(tikz_code, name = "grafico", format = "png",
+                width = "8cm", markup = "markdown")
    ```
+
+   **Por qué el condicional está retirado** (medido el 2026-08-15 con fixtures renderizados):
+
+   - `knitr::is_latex_output()` es **FALSE también en `exams2pdf()` y `exams2nops()`**: R/exams
+     teje siempre a Markdown y delega la conversión en pandoc, así que durante el `knit` no hay
+     destino LaTeX que detectar. La rama `include_tikz()` **nunca se ejecuta**.
+   - La rama que sí se ejecuta, `knitr::include_graphics()`, tampoco llega al PDF: bajo R/exams
+     emite un `<div class="figure"><img …></div>`, y el escritor LaTeX de pandoc **descarta el
+     HTML crudo**. En el `.tex` solo queda el texto alternativo literal `plot of chunk <nombre>`.
+     Verificado: `.tex` con **0 `\includegraphics`**.
+
+   Es decir, el patrón «corregía» una figura perdida en HTML **perdiéndola en PDF**. Los dos
+   fallos son silenciosos: compilan, no emiten warning y ninguna fase del arsenal los detecta.
+
+   `include_tikz(markup = "markdown")` resuelve ambos a la vez — verificado sobre fixture:
+   PDF → `\includegraphics[width=8cm,…]{grafico.png}`; HTML → `<img>`. Un chunk que **dibuja
+   directamente** (`plot()`, `ggplot()`) tampoco necesita condicional: knitr ya emite un enlace
+   Markdown que pandoc enruta a cada destino.
+
+   Ver regla #21 §Familia 2 (medición sobre los cinco pipelines) y regla #18 §Patrón B'.
 
 2. **NO mezclar código Python/R sin validar en ambos**
    - Siempre probar con reticulate activo e inactivo

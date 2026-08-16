@@ -55,7 +55,10 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 
 grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 
-grep -l "is_latex_output" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+# NO buscar "is_latex_output" como ejemplo a copiar: el patrón que lo usa para
+# renderizado condicional fue RETIRADO el 2026-08-15 (pierde la figura en el PDF).
+# Buscar en cambio el sustituto vigente:
+grep -l 'markup = "markdown"' /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
 ### PASO 1: Identificar tipo de error

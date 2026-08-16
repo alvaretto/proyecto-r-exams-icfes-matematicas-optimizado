@@ -51,6 +51,14 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
   if (length(bold_rows)) for (r in bold_rows)
     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+  # ⚠️ RAMA MUERTA (anotado 2026-08-15): `knitr::is_latex_output()` es SIEMPRE FALSE
+  # bajo R/exams — los 5 pipelines tejen a Markdown y delegan la conversión en pandoc,
+  # así que durante el knit no hay destino LaTeX que detectar. Esta rama NUNCA se
+  # ejecuta; el fenced div del `else` es el que sale en los 5 formatos, y es inocuo en
+  # PDF (pandoc ignora el div y emite el longtable). Se conserva por decisión explícita
+  # —quitarla no cambia ninguna salida— PERO NO ES UN PATRÓN A COPIAR:
+  # ramificar por is_latex_output() para ELEGIR CONTENIDO (p. ej. \includegraphics vs
+  # <img>) pierde la imagen en el PDF. Ver regla #21 §Familia 2 y `codigo-rmd.md` #1.
   if (knitr::is_latex_output()) {
     md
   } else {
@@ -63,6 +71,10 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
 # 'tex' es el contenido LaTeX SIN los delimitadores $$. En HTML/Moodle se envuelve
 # en un fenced div con scroll (MathJax renderiza dentro). OJO: el espacio en "::: {".
 eq_display <- function(tex) {
+  # ⚠️ RAMA MUERTA: misma situación que en `tabla_responsiva()` — ver el aviso extenso
+  # de arriba. is_latex_output() es SIEMPRE FALSE bajo R/exams; se conserva porque el
+  # `else` produce salida correcta en los 5 formatos. NO copiar el patrón para decidir
+  # QUÉ contenido emitir.
   if (knitr::is_latex_output()) {
     paste0("$$", tex, "$$")
   } else {

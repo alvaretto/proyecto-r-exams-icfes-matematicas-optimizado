@@ -49,7 +49,45 @@ stopifnot(max(valores) - min(valores) == objetivo)
 
 **Síntoma:** en Moodle/HTML la tabla desborda en pantallas pequeñas (no hay scroll).
 
-**Clave técnica:** bajo R-exams `knitr::is_latex_output()` es el ÚNICO discriminador (TRUE = PDF/NOPS; FALSE = HTML/Moodle/**DOCX** indistinguibles). Una tabla HTML cruda **se aplana** en DOCX. La solución que funciona en TODOS los formatos es un **fenced div de pandoc** (`::: {style=...}`, OJO el espacio) envolviendo una tabla **Markdown nativa**: en HTML/Moodle → `<div overflow-x><table>`; en DOCX → el div se ignora y la tabla Markdown se convierte a tabla nativa `<w:tbl>`; en PDF → longtable (requiere guard `\newcounter{none}`, regla #20).
+> ### ⚠️ `knitr::is_latex_output()` NO discrimina bajo R/exams — es SIEMPRE FALSE
+>
+> Esta regla afirmaba hasta la v1.2 que «bajo R-exams `knitr::is_latex_output()` es el ÚNICO
+> discriminador (TRUE = PDF/NOPS; FALSE = HTML/Moodle/DOCX)». **Es falso.** Medido el
+> 2026-08-15 con una sonda que escribe el valor a disco desde `data_generation`, ejecutada
+> por los cinco pipelines:
+>
+> | pipeline | `is_latex_output()` |
+> |---|---|
+> | `exams2html` | **FALSE** |
+> | `exams2pdf` | **FALSE** |
+> | `exams2pandoc(docx)` | **FALSE** |
+> | `exams2nops` | **FALSE** (dos tejidos, ambos FALSE) |
+> | `exams2moodle` | **FALSE** |
+>
+> **Causa (arquitectónica, no un bug):** R/exams **siempre** teje el `.Rmd` a **Markdown** y
+> después llama a **pandoc** para convertir ese `.md` al destino final. Durante el `knit` no
+> existe todavía un destino LaTeX que knitr pueda detectar. Es distinto de un `.Rmd` normal de
+> rmarkdown, donde knitr sí conoce el formato de salida.
+>
+> **Quién enruta de verdad: pandoc, por el TIPO DE BLOQUE.** Medido con fixtures renderizados:
+>
+> | Lo que se emite | Llega a PDF | Llega a HTML |
+> |---|---|---|
+> | Markdown `![](f.png){width=...}` | sí | sí |
+> | LaTeX crudo (`cat("\\includegraphics…")` o ` ```{=latex} `) | **sí** | no (descartado) |
+> | HTML crudo (`cat("<img …>")` o ` ```{=html} `) | **no (descartado)** | sí |
+>
+> **Consecuencia para las Familias 2 y 3:** la rama `if (knitr::is_latex_output())` de
+> `tabla_responsiva()` y `eq_display()` es **código muerto**: nunca se ejecuta. El efecto es
+> **inocuo por accidente** — se emite siempre el fenced div y el escritor LaTeX de pandoc lo
+> descarta (los `Div` se renderizan transparentes). Verificado: **0 de 487** `.tex` del
+> repositorio contienen `overflow-x`, frente a 6 HTML que sí lo llevan. Los helpers producen la
+> salida correcta en los cinco formatos y **no se cambian**; la rama se conserva como
+> no-operativa. Lo que NO se puede hacer es **copiar el idioma** a un sitio donde las dos ramas
+> emitan cosas distintas: allí siempre gana la rama `else`. Ver regla #18 (Patrón B retirado)
+> y `codigo-rmd.md` regla #1.
+
+**Clave técnica:** una tabla HTML cruda **se aplana** en DOCX, y además el escritor LaTeX de pandoc la descartaría entera. La solución que funciona en TODOS los formatos es un **fenced div de pandoc** (`::: {style=...}`, OJO el espacio) envolviendo una tabla **Markdown nativa**: en HTML/Moodle → `<div overflow-x><table>`; en DOCX → el div se ignora y la tabla Markdown se convierte a tabla nativa `<w:tbl>`; en PDF → el div se ignora y queda longtable (requiere guard `\newcounter{none}`, regla #20). El fenced div funciona **sin condicional**: es pandoc quien decide qué hacer con él en cada destino.
 
 **Familia (helper):**
 ```r
@@ -58,14 +96,14 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
   if (length(bold_rows)) for (r in bold_rows)
     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))  # negrita nativa
   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
-  if (knitr::is_latex_output()) md
+  if (knitr::is_latex_output()) md   # RAMA MUERTA: siempre FALSE bajo R/exams (ver aviso arriba)
   else paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
               md, "\n\n:::\n")
 }
 # Uso: cat(tabla_responsiva(df, align = c("l", rep("c", k)), bold_rows = idx_correcto), "\n")
 ```
 
-**Requisitos:** mantener el guard `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de `Question` (la rama LaTeX sigue emitiendo `format="markdown"`).
+**Requisitos:** mantener el guard `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de `Question`. En PDF se ejecuta la rama `else`, y dentro del fenced div sigue viajando la tabla `format="markdown"` que pandoc convierte a `longtable`: el guard sigue siendo obligatorio (regla #20).
 **Verificación:** render 4 formatos; en HTML/Moodle buscar `<div ... overflow-x`; en DOCX confirmar `<w:tbl>` (no texto aplanado); en PDF compilar con pandoc de RStudio (3.8.3).
 
 ---
@@ -77,7 +115,7 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
 **Familia (helper):**
 ```r
 eq_display <- function(tex) {
-  if (knitr::is_latex_output()) paste0("$$", tex, "$$")
+  if (knitr::is_latex_output()) paste0("$$", tex, "$$")   # RAMA MUERTA: siempre FALSE (ver Familia 2)
   else paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
               "$$", tex, "$$\n\n:::\n")   # OJO: espacio en "::: {"; MathJax renderiza dentro del div
 }
@@ -187,8 +225,13 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-07-28 (v1.1 — indexada la **Familia 6** (opciones gráficas de diagramas vectoriales
+**Versión:** 1.2
+**Fecha:** 2026-08-15 (v1.2 — **corrección factual**: la Familia 2 afirmaba que
+`knitr::is_latex_output()` es el «ÚNICO discriminador (TRUE = PDF/NOPS)» bajo R/exams. Medido:
+es **FALSE en los cinco pipelines**, porque R/exams teje siempre a Markdown y delega la conversión
+en pandoc. Quien enruta es pandoc, por tipo de bloque. Las ramas LaTeX de `tabla_responsiva()` y
+`eq_display()` son código muerto **inocuo** (0 de 487 `.tex` del repo contienen `overflow-x`) y no
+se cambian; v1.1 2026-07-28 — indexada la **Familia 6** (opciones gráficas de diagramas vectoriales
 cardinales), que ya existía en la librería de helpers sin estar documentada aquí; v1.0 2026-06-05)
 **Estado:** ACTIVO (índice operativo de patrones; aplicar las familias relevantes en toda generación/corrección)
 **Origen:** auditoría `rango_colesterol_..._cloze_v1` (Errores 22 + responsividad); Familia 6 desde

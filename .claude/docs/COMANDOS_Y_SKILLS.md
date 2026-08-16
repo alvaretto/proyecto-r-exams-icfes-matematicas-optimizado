@@ -549,14 +549,18 @@ Claude DEBE entonces:
 - Sintaxis TikZ incorrecta
 - No usa `include_tikz()` correctamente
 
-**Solución**:
+**Solución** (actualizada 2026-08-15 — sin condicional, ver `.claude/rules/codigo-rmd.md` #1):
 ```r
-# Renderizado condicional
-if (knitr::is_latex_output()) {
-  include_tikz("grafico.tex", ...)
-} else {
-  knitr::include_graphics("grafico.png")
-}
+# ⛔ RETIRADO: is_latex_output() es SIEMPRE FALSE bajo R/exams — la rama TikZ nunca
+#    corre y la rama include_graphics() pierde la figura en el PDF.
+# if (knitr::is_latex_output()) {
+#   include_tikz("grafico.tex", ...)
+# } else {
+#   knitr::include_graphics("grafico.png")
+# }
+
+# ✅ VIGENTE: una sola llamada, sin condicional
+include_tikz(tikz_code, name = "grafico", markup = "markdown", format = typ, width = "8cm")
 ```
 
 ---

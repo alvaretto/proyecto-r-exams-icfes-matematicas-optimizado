@@ -16,12 +16,13 @@ Error: LaTeX failed to compile archivo.tex
 
 **Causa:** Uso de `include_tikz()` en chunk de generación
 
-**Solución rápida:**
+**Solución rápida** (actualizada 2026-08-15 — el "renderizado condicional" con
+`is_latex_output()` fue RETIRADO: es SIEMPRE FALSE bajo R/exams y pierde la figura en el PDF):
 
-1. Mover `include_tikz()` fuera del chunk de generación
-2. Usar renderizado condicional con `knitr::is_latex_output()`
-3. Para LaTeX: `cat(tikz_code)` directamente
-4. Para HTML: mantener `include_tikz()`
+1. Mover `include_tikz()` fuera del chunk de generación (dejar solo la construcción del código)
+2. En el chunk visible (`results='asis'`), UNA sola llamada:
+   `include_tikz(tikz_code, ..., markup = "markdown")` — SIN condicional
+3. `markup = "markdown"` enruta correctamente a los 5 formatos (html/pdf/docx/nops/moodle)
 
 **Documentación completa:** `.claude/docs/patrones-errores-conocidos.md#error-1`
 

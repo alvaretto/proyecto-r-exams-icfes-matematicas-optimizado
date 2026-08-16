@@ -4,6 +4,14 @@
 **Error identificado:** `File 'cilindro_vaso.png' not found` en compilación PDF
 **Estado:** ✅ Resuelto y documentado
 
+> ⚠️ **ACTUALIZACIÓN 2026-08-15**: el "renderizado condicional" con `knitr::is_latex_output()`
+> que este caso documenta como solución quedó **RETIRADO** — medido que es SIEMPRE FALSE bajo
+> R/exams (los 5 pipelines tejen a Markdown y delegan en pandoc), así que la rama LaTeX nunca se
+> ejecuta y la figura desaparece en el PDF sin error ni warning. Este documento se conserva
+> íntegro como registro histórico del incidente original; el enfoque VIGENTE para ERR_G1 es
+> `include_tikz(..., markup = "markdown")` en una sola llamada, sin condicional. Ver
+> `.claude/rules/codigo-rmd.md` regla #1 y `.claude/docs/patrones-errores-conocidos.md` §Error 1.
+
 ---
 
 ## Error Original

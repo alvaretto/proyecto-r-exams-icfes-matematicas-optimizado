@@ -35,6 +35,15 @@
 
 ## Error 1: Imagen PNG no encontrada en compilación PDF
 
+> ⚠️ **OBSOLETO (parcial) — 2026-08-15**: la solución "renderizado condicional" con
+> `knitr::is_latex_output()` documentada en la sección "Código DESPUÉS (correcto)" de este error
+> quedó **RETIRADA**. Medido con fixtures renderizados: `is_latex_output()` es SIEMPRE FALSE bajo
+> R/exams (los 5 pipelines tejen a Markdown y delegan en pandoc), así que la rama LaTeX nunca se
+> ejecuta y la figura desaparece en el PDF sin error ni warning. El código de esta entrada se
+> conserva como referencia histórica del incidente original (2025-12-19); el enfoque VIGENTE es
+> `include_tikz(..., markup = "markdown")` en una sola llamada, sin condicional. Ver
+> `.claude/rules/codigo-rmd.md` regla #1 y `.claude/rules/markdown-imagenes-pdf.md` Patrón B'.
+
 ### ❌ Mensaje de Error
 ```
 Package pdftex.def Error: File `nombre_archivo.png' not found: using draft setting.
@@ -87,7 +96,7 @@ Uso en Question:
 ![](cilindro_vaso.png){width=50%}
 ```
 
-#### Código DESPUÉS (correcto):
+#### Código DESPUÉS (histórico — el condicional `is_latex_output()` de este bloque quedó RETIRADO el 2026-08-15, ver nota al inicio de este Error 1; sustituto vigente después del bloque):
 
 ```r
 ```{r generar_codigo_tikz, echo=FALSE, results="hide"}
@@ -137,6 +146,20 @@ if (es_latex) {
                width = "8cm")
   cat("\n\n")
 }
+```
+
+#### Código VIGENTE (2026-08-15) — sustituto sin condicional
+
+```r
+```{r mostrar_cilindro, echo=FALSE, results='asis', fig.align='center'}
+# ✅ Una sola llamada, sin ramificar por is_latex_output(): markup="markdown" enruta
+# correctamente a los 5 destinos (html/pdf/docx/nops/moodle)
+include_tikz(tikz_cilindro,
+             name = "cilindro_vaso",
+             markup = "markdown",
+             format = typ,
+             packages = c("tikz", "xcolor", "amsmath"),
+             width = "8cm")
 ```
 
 ### 🧪 Validación de la Solución
@@ -209,16 +232,16 @@ Validación en el aula con estudiantes reales.
 **Importante:**
 > Esta validación detecta errores que no son visibles en pruebas técnicas: ambigüedades en el lenguaje, errores matemáticos sutiles, contextos confusos, etc.
 
-### 📋 Checklist de Corrección
+### 📋 Checklist de Corrección (actualizado 2026-08-15)
 
 - [ ] Identificar chunks que usan `include_tikz()`
-- [ ] Mover `include_tikz()` fuera del chunk de generación
-- [ ] Crear chunk de renderizado condicional con `knitr::is_latex_output()`
-- [ ] Para LaTeX: usar `cat()` para insertar código TikZ directamente
-- [ ] Para HTML: mantener `include_tikz()`
+- [ ] Mover `include_tikz()` fuera del chunk de generación (dejar solo la construcción del código)
+- [ ] Crear UN chunk `results='asis'` con `include_tikz(tikz_code, ..., markup = "markdown")` —
+      **NO** ramificar con `knitr::is_latex_output()` (RETIRADO: SIEMPRE FALSE bajo R/exams,
+      pierde la figura en el PDF, ver `.claude/rules/codigo-rmd.md` regla #1)
 - [ ] Verificar compilación a PDF
 - [ ] Verificar compilación a HTML
-- [ ] Confirmar visualización correcta en ambos formatos
+- [ ] Confirmar visualización correcta en ambos formatos (y en Moodle/DOCX si aplica)
 
 ### 🎯 Casos Aplicables
 
@@ -1830,9 +1853,12 @@ cat("![](grafico_equilibrio.png){width=80%}\n")
 
 Este patrón está validado en producción en `diagrama_venn_encuesta...Rmd` (línea ~1070) y otros ejercicios con gráficos como opciones.
 
-#### Patrón B — `knitr::include_graphics()` con renderizado condicional
+#### Patrón B — RETIRADO el 2026-08-15: pierde la imagen en el PDF
 
 ```r
+❌ NO USAR — medido: la imagen NO llega al PDF (is_latex_output() es SIEMPRE FALSE bajo R/exams,
+   la rama LaTeX nunca corre; se ejecuta la rama else, que emite HTML crudo, y el escritor LaTeX
+   de pandoc lo descarta)
 ` ``{r echo=FALSE, results='asis'}
 if (knitr::is_latex_output()) {
   cat("\\includegraphics[width=0.8\\textwidth]{grafico_equilibrio.png}")
@@ -1842,7 +1868,19 @@ if (knitr::is_latex_output()) {
 ` ``
 ```
 
-**Cuándo usarlo**: si necesitas control fino sobre el HTML output o renderizado distinto por formato.
+**Sustituto vigente — Patrón B'** (emitir ambos markups sin condicional; pandoc descarta el que
+no corresponde a su destino):
+
+```r
+` ``{r echo=FALSE, results='asis'}
+cat("\\includegraphics[width=0.8\\textwidth]{grafico_equilibrio.png}\n")  # sobrevive solo en LaTeX
+cat('<img src="grafico_equilibrio.png" width="80%" />\n')                 # sobrevive solo en HTML
+` ``
+```
+
+**Cuándo usarlo**: solo si necesitas markups realmente distintos por formato. Para el caso normal
+—una imagen con un tamaño— el Patrón A (`{width=...}`) basta y es más simple. Ver
+`.claude/rules/markdown-imagenes-pdf.md` Patrón B'.
 
 #### Patrón C — Preamble fix (último recurso, no portable)
 

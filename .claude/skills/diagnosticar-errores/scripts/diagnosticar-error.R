@@ -30,7 +30,7 @@ diagnosticar_error <- function(mensaje, archivo_rmd = NULL) {
   if (grepl("File.*\\.png.*not found|include_tikz.*failed", mensaje, ignore.case = TRUE)) {
     return(list(codigo = "ERR_G1", categoria = "GRAFICOS", prioridad = "ALTA",
                 descripcion = "Graficas no visualizadas",
-                solucion = "Usar renderizado condicional con is_latex_output()"))
+                solucion = "NO usar renderizado condicional con is_latex_output() (SIEMPRE FALSE bajo R/exams, pierde la figura en el PDF). Usar include_tikz(markup='markdown') o Markdown ![](){width=...} sin condicional. Ver .claude/rules/codigo-rmd.md #1 y .claude/rules/markdown-imagenes-pdf.md Patron B'"))
   }
 
   # LaTeX

@@ -1,21 +1,28 @@
 # Patrones de Errores Comunes
 
-## Patron 1: TikZ No Renderiza en HTML
+## Patron 1: TikZ No Renderiza en HTML (o en PDF)
 
 **Sintomas:**
 
-- PDF OK, HTML muestra espacio en blanco
+- PDF OK, HTML muestra espacio en blanco (o viceversa: HTML OK, PDF sin la figura)
 
 **Diagnostico:** ERR_G1
 
-**Solucion verificada:**
+**Solucion verificada** (actualizada 2026-08-15): el condicional `is_latex_output()` de abajo
+está **RETIRADO** — medido que es SIEMPRE FALSE bajo R/exams (los 5 pipelines tejen a Markdown y
+delegan en pandoc), así que la rama `include_tikz()` nunca se ejecuta y la figura se pierde en el
+PDF. Ver `.claude/rules/codigo-rmd.md` regla #1.
 
 ```r
+# ⛔ RETIRADO — pierde la figura en el PDF
 if (knitr::is_latex_output()) {
   include_tikz("grafico.tex")
 } else {
   knitr::include_graphics("grafico.png")
 }
+
+# ✅ VIGENTE — una sola llamada, sin condicional
+include_tikz(tikz_code, name = "grafico", markup = "markdown", format = typ, width = "8cm")
 ```
 
 **Ejemplo funcional:** `/A-Produccion/Ejemplos-Funcionales-Rmd/grafico_lineas_poblacion.Rmd`

@@ -42,7 +42,7 @@
 
 | # | Síntoma | Causa raíz | Fix | Fuente |
 |---|---|---|---|---|
-| 1 | "File 'imagen.png' not found" en exams2pdf | `include_tikz()` genera PNG en `/tmp/` no accesible | Renderizado condicional `if(knitr::is_latex_output())` | `patrones-errores-conocidos.md` §Error 1 |
+| 1 | "File 'imagen.png' not found" en exams2pdf | `include_tikz()` genera PNG en `/tmp/` no accesible | `include_tikz(..., markup="markdown")` en 1 sola llamada — **NO** `if(knitr::is_latex_output())` (RETIRADO 2026-08-15, ver `codigo-rmd.md` #1) | `patrones-errores-conocidos.md` §Error 1 |
 | 2 | "argumento no numérico" en `abs()` | Variable string pasada a función matemática | Verificar tipos en `data_generation` con `is.numeric()` | §Error 2 |
 | 3 | Imágenes Python no visibles en PDF | `reticulate` + matplotlib sin `plt.savefig()` explícito | Guardar PNG con ruta absoluta + `cat("![](ruta)")` | §Error 3 |
 

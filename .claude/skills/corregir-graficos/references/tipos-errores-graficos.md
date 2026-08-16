@@ -6,7 +6,8 @@
 
 **Causa raiz**: `include_tikz()` en chunk de generacion crea archivos temporales inaccesibles
 
-**Solucion**:
+**Solucion** (actualizada 2026-08-15 — sin condicional `is_latex_output()`, RETIRADO: es SIEMPRE
+FALSE bajo R/exams y ese patrón pierde la figura en el PDF, ver `.claude/rules/codigo-rmd.md` #1):
 
 ```r
 # ANTES (incorrecto)
@@ -14,15 +15,9 @@
 include_tikz(tikz_code, name = "grafico", ...)
 ```
 
-# DESPUES (correcto)
+# DESPUES (correcto) — una sola llamada, sin condicional
 ```{r mostrar, echo=FALSE, results='asis'}
-if (knitr::is_latex_output()) {
-  cat("\\begin{center}\n")
-  cat(tikz_code)
-  cat("\n\\end{center}\n")
-} else {
-  include_tikz(tikz_code, name = "grafico", ...)
-}
+include_tikz(tikz_code, name = "grafico", markup = "markdown", ...)
 ```
 ```
 
