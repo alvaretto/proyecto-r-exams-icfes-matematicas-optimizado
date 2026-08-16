@@ -1,0 +1,1109 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+library(exams)
+
+# =============================================================================
+# pendiente_rectas_paralelas_..._n4_schoice_v1
+# Derivado de la pregunta impresa 43 de ERA-2026 Sesión 2, que en el corpus
+# 2026-1 es el item MAT-2026-1-129.
+# OJO — NO escribir "MAT-2026-1-043" en `exextra[ItemOriginal]`: ese ID EXISTE
+# en el corpus 2026-1 y designa OTRO item (descriptor D2.2, Nivel 2). El
+# metadato usa la forma desambiguada `ERA-2026-S2-P43 (= MAT-2026-1-129 ...)`.
+#
+# Clave del item oficial: K = (0, 0) con m = -2 y H = (1, -2).
+#   m(H,K) = (0 - (-2)) / (0 - 1) = 2 / (-1) = -2  = pendiente de L2.
+#
+# NOTA H-2 (regla #24): el recuadro del tablero se reproduce TAL CUAL, incluida
+# la concordancia "que pertenece" del original (dos puntos, verbo en singular).
+# PROHIBIDO "corregirla": es un rasgo del estimulo oficial.
+#
+# BLOOM = Aplicar y DOK = 2 (ARBITRADO contra las fuentes oficiales, 2026-08-15).
+# La versión anterior ponía Bloom = Evaluar y DOK = 3 razonando que el estudiante
+# "juzga cuál de los cuatro candidatos satisface la condición". Ese argumento se
+# descarta: elegir entre cuatro opciones es una propiedad del FORMATO SCHOICE, no
+# de la tarea. Si bastara para clasificar como Evaluar, TODO ítem de selección
+# múltiple sería Evaluar y la categoría no distinguiría nada.
+#
+# Lo que dicen las fuentes oficiales (catálogo CANONICO_INMUTABLE en
+# .../catalogos-oficiales-mat/). Los CUATRO campos oficiales que este ítem
+# declara usan verbos de EJECUCIÓN, ninguno de juicio:
+#   · Competencia  : "Formulación y EJECUCIÓN"
+#   · Afirmación   : "...plantea e IMPLEMENTA estrategias..."      (evidencias-mat.json, FyE)
+#   · Evidencia    : "EJECUTA un plan de solución para un problema
+#                     que involucra información cuantitativa..."   (evidencias-mat.json, FyE_E2)
+#   · Descriptor   : "MANIPULA expresiones algebraicas o aritméticas
+#                     haciendo uso de las propiedades..."          (niveles-mat.json, D4.5)
+# "Evaluar" es el territorio de la competencia ARGUMENTACIÓN —Arg_E2 "Argumenta a
+# favor o en contra de un procedimiento...", Arg_E3 "Establece la validez o
+# pertinencia de una solución propuesta"— y del descriptor N4 "Toma decisiones
+# sobre la veracidad o falsedad de una afirmación". Este ítem NO declara ninguno.
+#
+# DOK = 2 por Webb: se aplica UN procedimiento conocido —y además DADO en el
+# recuadro del enunciado— en varios pasos, con una sola vía de solución y una
+# sola respuesta, sin que se exija justificar nada. Eso es Skill/Concept, no
+# Strategic Thinking.
+#
+# POR QUE DOK 2 NO CONTRADICE EL NIVEL 4, que es dato oficial e inmutable: el
+# Nivel ICFES NO es una escala de complejidad cognitiva sino una BANDA DE PUNTAJE
+# empírica. `niveles-mat.json` lo fija sin ambigüedad —N1: 0 a 35, N2: 36 a 50,
+# N3: 51 a 70, N4: 71 a 100— y su encabezado oficial dice "El evaluado que se
+# ubica en el nivel {N}... demuestra que". Mide DONDE CAE EL ESTUDIANTE, no cuán
+# complejo es el ítem. Un ítem empíricamente difícil (aquí: pendiente fraccionaria
+# negativa y manejo de signos) puede ser cognitivamente rutinario. Nivel 4 y
+# D4.5 se copian literales del catálogo y NO se tocan; lo que se ajusta son los
+# metadatos INTERNOS del repo (DOK/Bloom/SOLO), que no aparecen en ningún
+# documento oficial de Saber 11.
+#
+# CONSECUENCIA DECLARADA, no resuelta aquí: la tabla DOK<->Nivel de la regla #1
+# (`ejercicios-metacognitivos.md`) marca DOK 2 como "incompatible" con N3/N4, y
+# eso confunde una banda de puntaje con una escala cognitiva. La regla vive en
+# `.claude/` y NO se edita desde un subproyecto: queda declarado en el reporte.
+# Ningún script del arsenal comprueba la relación DOK<->Nivel (verificado por
+# grep sobre .claude/scripts/, SOURCES/scripts_validacion/ y tests/), así que
+# este cambio no altera ningún gate.
+# =============================================================================
+
+# ---- Helpers Familia 1 y 5 (regla #21) --------------------------------------
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+
+safe_sample <- function(x, size, replace = FALSE) {
+  if (length(x) == 0L)
+    stop("safe_sample(): vector de entrada vacío o NULL.")
+  if (length(x) == 1L) rep(x, size) else sample(x, size, replace = replace)
+}
+
+# ---- Helper Familia 3: ecuaciones display responsivas (regla #21) -----------
+eq_display <- function(tex) {
+  if (knitr::is_latex_output()) {
+    paste0("$$", tex, "$$")
+  } else {
+    paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
+           "$$", tex, "$$\n\n:::\n")
+  }
+}
+
+# ---- Aritmetica de fracciones ----------------------------------------------
+mcd <- function(a, b) {
+  a <- abs(a); b <- abs(b)
+  while (b > 0) { t <- b; b <- a %% b; a <- t }
+  if (a == 0) 1 else a
+}
+
+simplificar <- function(p, q) {
+  stopifnot(q != 0)
+  g <- mcd(p, q)
+  p <- p / g; q <- q / g
+  if (q < 0) { p <- -p; q <- -q }
+  c(p, q)
+}
+
+# Pendiente como texto LaTeX (entero o fracción)
+fmt_pend <- function(p, q) {
+  pq <- simplificar(p, q)
+  if (pq[2] == 1) return(as.character(pq[1]))
+  sg <- if (pq[1] < 0) "-" else ""
+  paste0(sg, "\\frac{", abs(pq[1]), "}{", pq[2], "}")
+}
+
+# Par ordenado como texto LaTeX. ASCII-safe: guion normal, NUNCA U+2212.
+fmt_punto <- function(x, y) paste0("$(", x, ",\\, {", y, "})$")
+
+# Cadena "cociente crudo = valor reducido", OMITIENDO el segundo término cuando
+# es identico al primero. Sin esto salia al estudiante una tautologia del tipo
+# "= \frac{3}{2} = \frac{3}{2}" en el 5 % de las claves y el 9,6 % de las líneas
+# de distractor: se lee como un paso vacio o como una errata.
+fmt_reduccion <- function(dy, dx) {
+  crudo <- paste0("\\frac{", dy, "}{", dx, "}")
+  red   <- fmt_pend(dy, dx)
+  if (identical(crudo, red)) crudo else paste0(crudo, " = ", red)
+}
+
+# Contracción obligatoria "de + el" -> "del". Sin esto salen al estudiante frases
+# como "copio de el tablero"; el corrector de ortografia NO detecta contracciones.
+de_contraido <- function(sop) {
+  if (grepl("^el ", sop)) sub("^el ", "del ", sop) else paste0("de ", sop)
+}
+
+# =============================================================================
+# POOL DE ERRORES CONCEPTUALES (regla #1: mínimo 4-6; aquí 10)
+#
+# Cada error devuelve un DESPLAZAMIENTO (dx, dy) desde H. El punto candidato es
+# K' = (hx + dx, hy + dy) y su pendiente real es dy/dx.
+# `calcula(hx, hy, p, q, t, k04)` es PURA: mismos argumentos -> mismo resultado
+# (Capa D, regla #13). K04 se pasa como argumento para que NINGUN error lea
+# variables libres del entorno (antes FUN-PEN-04 leia K04 global: no era pura).
+#
+# LA "CELDA" (signo, lado de 1) — por que existen FUN-PEN-08 y -09 y por que
+# FUN-PEN-04 cambio de forma. Con el pool de 7 anterior, un atajo de DOS BITS
+# resolvia el item el 73,4 % de las veces (N = 1200, azar 25 %) SIN calcular
+# ninguna pendiente: por cada opción, (a) mirar si el signo de dy/dx coincide con
+# el pedido y (b) mirar si |dy| es mayor o menor que |dx|, que es el mismo lado
+# de 1 que |m|. Ninguna de las dos comprobaciones exige dividir.
+# La causa era que la celda (mismo signo, mismo lado de 1) estaba casi VACIA:
+#   · FUN-PEN-01 (reciproco q/p) y FUN-PEN-03 caen SIEMPRE al otro lado de 1,
+#     por identidad algebraica — PEND_POOL excluye |p| = q, así que |m| != 1;
+#   · FUN-PEN-06 vale exactamente 1 y no esta en NINGUN lado;
+#   · FUN-PEN-02 y -05 invierten el signo;
+#   · FUN-PEN-04 dividia siempre, así que con |m| > 1 cruzaba el 1 salvo k < |m|.
+# La clave quedaba sola en su celda en el 47,8 % de las versiones, donde el atajo
+# acierta el 100 %. Regla #22 §P5.
+# CIERRE: CUATRO errores quedan en la celda POR CONSTRUCCION (04, 08, 09 y, desde
+# 2026-08-15b, el 10 bajo su precondición) y el bucle exige >= 3 opciones en ella,
+# lo que acota el atajo a 1/3. Los cuatro NO se reparten igual respecto de 1:
+# 08 y 10 ACERCAN, 04 y 09 ALEJAN. Ese equilibrio es lo que permite que la clave
+# ocupe cualquiera de los tres lugares de su celda en vez de quedarse siempre en
+# el central — ver el filtro `pos_d1_obj`.
+#
+# ALCANCE REAL DE LA CAPA A (precondiciones). De las 10 precondiciones, DOS
+# excluyen alguna vez: la de FUN-PEN-07 (hy != 0), que apaga el error en el
+# 11,8 % de las versiones, y la de FUN-PEN-10, que lo apaga en la mitad de las
+# pendientes del pool (cubre 10 de las 20 entradas). Las otras ocho son TRUE en
+# el 100 % del espacio admisible:
+# seis son `TRUE` literal, y `abs(p) != abs(q)` (FUN-PEN-01 y -06) no puede ser
+# falsa porque PEND_POOL excluye por construcción las pendientes +-1. Es decir,
+# la Capa A se ejercita por UNA de nueve puertas; las otras ocho son correctas
+# como contrato (documentan cuando el error dejaria de tener sentido) pero NO
+# son defensas activas hoy. Se declara aquí para que un "Capa A OK" del arsenal
+# no se lea como "las nueve precondiciones fueron ejercitadas".
+#
+# RESTRICCION ESTRUCTURAL NO OBVIA: con p = -1, FUN-PEN-05 da pendiente
+# -sign(-1)*(1+2)/3 = +1, identica a la de FUN-PEN-06. El par nunca coexiste en
+# una versión (0,0 % medido): lo impide la comprobación `ya_pend` del bucle, que
+# fuerza un reintento de la terna. No sesga la clave, pero explica por que esas
+# dos frecuencias caen juntas en las pendientes de numerador +-1.
+# =============================================================================
+errores_conceptuales <- list(
+  list(
+    codigo = "FUN-PEN-01",
+    nombre = "Invierte la fórmula de la pendiente",
+    descripcion_corta = "Divide la diferencia de abscisas entre la diferencia de ordenadas.",
+    descripcion_larga = paste0(
+      "Aplica la fórmula al revés: calcula $\\dfrac{x_2 - x_1}{y_2 - y_1}$ en lugar ",
+      "de $\\dfrac{y_2 - y_1}{x_2 - x_1}$. El resultado es el recíproco de la ",
+      "pendiente buscada, que conserva el signo pero no el valor."),
+    causa_raiz = paste0(
+      "Memoriza la fórmula como \"una resta sobre otra resta\" sin retener cuál ",
+      "diferencia va en el numerador; el signo coincide y eso refuerza la elección."),
+    precondicion = function(params) abs(params$p) != abs(params$q),
+    calcula = function(hx, hy, p, q, t, k04) c(p * t, q * t)
+  ),
+  list(
+    codigo = "FUN-PEN-02",
+    nombre = "Ignora el signo de la pendiente",
+    descripcion_corta = "Obtiene el valor absoluto correcto pero con el signo contrario.",
+    descripcion_larga = paste0(
+      "Resta las coordenadas en orden cruzado en uno solo de los dos términos ",
+      "(por ejemplo $y_2 - y_1$ arriba y $x_1 - x_2$ abajo). El módulo de la ",
+      "pendiente sale bien, pero el signo queda invertido y la recta se inclina ",
+      "hacia el lado opuesto."),
+    causa_raiz = paste0(
+      "Trata la fórmula como un cociente de distancias, que son siempre positivas, ",
+      "en vez de un cociente de diferencias con signo."),
+    precondicion = function(params) TRUE,
+    calcula = function(hx, hy, p, q, t, k04) c(q * t, -p * t)
+  ),
+  list(
+    codigo = "FUN-PEN-03",
+    nombre = "Confunde rectas paralelas con perpendiculares",
+    descripcion_corta = "Busca el recíproco cambiado de signo en vez de la misma pendiente.",
+    descripcion_larga = paste0(
+      "Usa la condición de perpendicularidad $m_1 \\cdot m_2 = -1$ cuando el ",
+      "enunciado pide paralelismo. Obtiene $-\\dfrac{1}{m}$, que produce rectas ",
+      "que se cortan en ángulo recto, no rectas que nunca se cortan."),
+    causa_raiz = paste0(
+      "Recuerda que existen dos condiciones sobre las pendientes de dos rectas y ",
+      "elige la equivocada, porque ambas se estudian juntas."),
+    precondicion = function(params) TRUE,
+    calcula = function(hx, hy, p, q, t, k04) c(-p * t, q * t)
+  ),
+  list(
+    codigo = "FUN-PEN-04",
+    nombre = "Verifica el signo pero no el valor",
+    descripcion_corta = "Acepta cualquier pendiente del mismo signo sin comprobar el valor.",
+    descripcion_larga = paste0(
+      "Comprueba únicamente que la pendiente calculada tenga el mismo signo que la ",
+      "de la recta dada y da por buena la coincidencia. El paralelismo exige ",
+      "igualdad exacta de las pendientes, no coincidencia de signo."),
+    causa_raiz = paste0(
+      "Sustituye la condición \"pendientes iguales\" por la condición más débil ",
+      "\"pendientes del mismo tipo\", que es más fácil de verificar mentalmente."),
+    precondicion = function(params) TRUE,
+    # BUCKET-SEGURO POR CONSTRUCCION (cierre del atajo de dos bits). El error es
+    # "mismo signo, valor equivocado", y eso admite tanto multiplicar como
+    # dividir la pendiente: las dos versiones son el mismo razonamiento erróneo.
+    # Se toma la dirección que ALEJA de 1 sin cruzarlo, para que la opción quede
+    # siempre del mismo lado de 1 que la clave:
+    #     |m| > 1  ->  k*m   (|k*m| > |m| > 1)
+    #     |m| < 1  ->  m/k   (|m/k| < |m| < 1)
+    # Antes dividia SIEMPRE, así que con |m| > 1 cruzaba el 1 salvo que k < |m|,
+    # y era una de las razones de que la celda de la clave quedara casi vacia.
+    # Alejar de 1 (en vez de acercar) es deliberado: 08 y 09 acercan, de modo que
+    # la clave queda ENTRE ellos y no es la extrema de su celda.
+    calcula = function(hx, hy, p, q, t, k04)
+      if (abs(p) > q) c(q * t, k04 * p * t) else c(k04 * q * t, p * t)
+  ),
+  list(
+    codigo = "FUN-PEN-05",
+    # El nombre NO afirma que este punto sea el más separado de H: lo es solo en
+    # el 46 % de las versiones en que aparece, y el `nombre` sí se emite al
+    # estudiante. Describe el razonamiento erróneo, no la geometría del punto.
+    nombre = "Confunde la separación de los puntos con la inclinación",
+    descripcion_corta = "Supone que separar más las coordenadas basta para conservar la inclinación.",
+    descripcion_larga = paste0(
+      "Razona que, si las coordenadas se separan bastante, la recta \"sube o baja más\" ",
+      "y por eso sería paralela. La pendiente no depende de cuánto se alejen los ",
+      "puntos, sino del cociente entre las dos diferencias, que aquí ni siquiera ",
+      "conserva el signo."),
+    causa_raiz = paste0(
+      "Confunde la longitud del segmento con su inclinación: dos puntos muy ",
+      "separados pueden definir una recta casi horizontal."),
+    precondicion = function(params) TRUE,
+    calcula = function(hx, hy, p, q, t, k04) c(3L * t, -sign(p) * (abs(p) + 2L) * t)
+  ),
+  list(
+    codigo = "FUN-PEN-06",
+    nombre = "Aplica la pendiente por igual a las dos coordenadas",
+    descripcion_corta = "Desplaza el punto la misma cantidad en abscisa y en ordenada.",
+    descripcion_larga = paste0(
+      "Interpreta la pendiente como \"cuánto hay que moverse\" y avanza lo mismo ",
+      "en horizontal que en vertical, con lo que obtiene siempre una pendiente de ",
+      "$1$, sin importar el valor pedido."),
+    causa_raiz = paste0(
+      "Entiende la pendiente como un desplazamiento único y no como la razón entre ",
+      "el cambio vertical y el cambio horizontal."),
+    precondicion = function(params) abs(params$p) != abs(params$q),
+    calcula = function(hx, hy, p, q, t, k04) c(t, t)
+  ),
+  list(
+    codigo = "FUN-PEN-07",
+    nombre = "Suma en vez de restar en el numerador",
+    descripcion_corta = "Suma las ordenadas en lugar de restarlas.",
+    descripcion_larga = paste0(
+      "Calcula $\\dfrac{y_2 + y_1}{x_2 - x_1}$: cambia la resta del numerador por ",
+      "una suma y ajusta el punto hasta que ese cociente coincide con la pendiente ",
+      "pedida. Como el numerador correcto es una diferencia, el punto elegido no ",
+      "produce la pendiente buscada."),
+    causa_raiz = paste0(
+      "Arrastra el hábito de sumar coordenadas del cálculo del punto medio, donde ",
+      "la suma sí aparece, y lo traslada a la fórmula de la pendiente."),
+    precondicion = function(params) params$hy != 0,
+    calcula = function(hx, hy, p, q, t, k04) c(q * t, p * t - 2L * hy)
+  ),
+  list(
+    codigo = "FUN-PEN-08",
+    # `nombre` SE EMITE al estudiante como titular del distractor (ver el bucle de
+    # la Solution), así que esta sujeto al mismo contrato que las descripciones.
+    # Decía "sumar lo mismo arriba y abajo", que es falso para m < 0: el código
+    # suma a la MAGNITUD, y con p = -3 el numerador pasa de -3 a -4.
+    nombre = "Cree que sumar una unidad a los dos avances conserva la razón",
+    # EL TEXTO DESCRIBE EL AVANCE, NO EL NUMERADOR CON SIGNO (A-2, FASE 2C).
+    # La versión anterior decía "suma una unidad al numerador y al denominador".
+    # Es falsa cuando m < 0, que es ~la mitad de las versiones: el código emite
+    # sign(p)*(|p|+1), así que con p = -3 el numerador pasa de -3 a -4, es decir
+    # se le RESTA uno. Lo que se suma es la MAGNITUD de los dos avances, y el
+    # sentido de la inclinación se conserva. Descrito así, el texto reproduce el
+    # punto emitido para los dos signos.
+    descripcion_corta = "Suma una unidad al avance vertical y otra al avance horizontal.",
+    descripcion_larga = paste0(
+      "Lee la pendiente como una razón entre dos avances —cuánto se sube o se baja ",
+      "por cada cuánto se avanza en horizontal— y da por hecho que sumar una unidad ",
+      "a cada uno la deja igual. Las fracciones equivalentes se obtienen ",
+      "**multiplicando** los dos términos por un mismo número, no sumándoles la ",
+      "misma cantidad: el sentido de la inclinación se conserva, pero el cociente ",
+      "que resulta queda entre la pendiente pedida y $1$, cerca de la correcta pero ",
+      "distinto de ella."),
+    causa_raiz = paste0(
+      "Traslada a las razones el razonamiento aditivo que sí vale para las ",
+      "igualdades, en lugar del razonamiento multiplicativo que exigen las ",
+      "fracciones equivalentes."),
+    precondicion = function(params) TRUE,
+    # EN LA CELDA POR CONSTRUCCION: |dy|/|dx| = (|p|+1)/(q+1) esta del mismo lado
+    # de 1 que |p|/q (porque |p|+1 > q+1 <=> |p| > q) y conserva el signo de p.
+    # Nunca iguala la clave: (|p|+1)/(q+1) = |p|/q exigiria q = |p|, que
+    # PEND_POOL excluye. Nunca da dx = 0: q + 1 >= 2.
+    calcula = function(hx, hy, p, q, t, k04)
+      c((q + 1L) * t, sign(p) * (abs(p) + 1L) * t)
+  ),
+  list(
+    codigo = "FUN-PEN-09",
+    # `nombre` SE EMITE (ver el bucle de la Solution). Decía "restar lo mismo
+    # arriba y abajo", que describe (q-1, |p|-1) y NO el (2q-1, 2|p|-1) emitido:
+    # es la MISMA prosa falsa que A-2 corrigio en `descripcion_corta`, que se
+    # quedo viva aquí porque el bloque (N) solo miraba los campos `descripcion_*`.
+    nombre = "Cree que descontar una unidad a los dos avances duplicados conserva la razón",
+    # EL TEXTO REPRODUCE EL PUNTO EMITIDO (A-2, FASE 2C). La versión anterior
+    # decía "descuenta una unidad al avance vertical y otra al horizontal", que
+    # describe (q-1, |p|-1) y NO el (2q-1, 2|p|-1) que el código emite: los dos
+    # solo coincidirian si |p| = q, que PEND_POOL excluye por construcción, de
+    # modo que la descripción no reproducia el punto en NINGUNA versión; y con
+    # q = 1 la operación descrita da un denominador 0. El doblado estaba
+    # documentado en el comentario de abajo pero no en el texto que lee el
+    # estudiante, que es el único que cuenta.
+    descripcion_corta = "Duplica los dos avances y luego descuenta una unidad a cada uno.",
+    descripcion_larga = paste0(
+      "Es el reverso del razonamiento anterior. Primero duplica el avance vertical ",
+      "y el horizontal —eso sí es válido, porque multiplicar los dos términos por ",
+      "un mismo número da una fracción equivalente— y después descuenta una unidad ",
+      "a cada uno dando por hecho que la razón tampoco cambia. Restar la misma ",
+      "cantidad a los dos términos no conserva una fracción; a diferencia de ",
+      "sumarla, aleja el cociente de $1$."),
+    causa_raiz = paste0(
+      "Generaliza a la resta la regla \"lo que se hace arriba se hace abajo\", que ",
+      "solo es cierta para el producto y el cociente."),
+    precondicion = function(params) TRUE,
+    # EN LA CELDA POR CONSTRUCCION: (2|p|-1)/(2q-1) esta del mismo lado de 1 que
+    # |p|/q (porque 2|p|-1 > 2q-1 <=> |p| > q), conserva el signo de p y se ALEJA
+    # de 1. Iguala la clave solo si q = |p|, que PEND_POOL excluye. Nunca da
+    # dx = 0: 2q - 1 >= 1.
+    #
+    # LA RESTA SE APLICA SOBRE EL AVANCE DOBLADO, y el paso t multiplica DESPUÉS.
+    # Dos razones medidas, ninguna cosmetica:
+    #   1. Sobre el avance simple, restar una unidad ANULA una de las dos
+    #      diferencias cuando q = 1 (dx = 0) o |p| = 1 (dy = 0), y ahí el punto
+    #      deja de representar el error descrito. Con el doble, ambas quedan >= 1.
+    #   2. Restar DENTRO del paso —(q*t - 1, p*t - 1)— destruye el factor comun
+    #      |t| que llevan la clave y los demás distractores. Eso creaba un canal
+    #      nuevo: "quedarse con las opciones cuyo gcd(dx, dy) > 1" subia del
+    #      31,9 % al 35,6 % (azar 25 %) porque la clave casi siempre tenía factor
+    #      comun y esta opción casi nunca. Multiplicando por t al final,
+    #      gcd(dx, dy) = |t| * gcd(2q-1, 2|p|-1) >= |t|, igual que la clave.
+    calcula = function(hx, hy, p, q, t, k04)
+      c((2L * q - 1L) * t, sign(p) * (2L * abs(p) - 1L) * t)
+  ),
+  list(
+    codigo = "FUN-PEN-10",
+    # AÑADIDO 2026-08-15b. Es el ÚNICO error del pool que, estando en la celda,
+    # ACERCA a 1 además de FUN-PEN-08; sin el, los dos acompanantes de celda
+    # salian de {04, 08, 09} y la clave quedaba ENTRE ellos en el 66,3 % de las
+    # versiones (medido, N = 100 sin canonicas). Ver el comentario del filtro
+    # `pos_d1_obj` más abajo: este error es lo que hace ALCANZABLE que la clave
+    # sea la más lejana de 1 dentro de su celda.
+    nombre = "Cuenta un cuadro de más en el menor de los dos avances",
+    # CONTRATO A-2: el texto describe EXACTAMENTE el punto emitido en las DOS
+    # ramas. En ambas el incremento cae sobre el avance de MENOR magnitud:
+    #   · |m| > 1 (el avance vertical es el mayor) -> suma 1 al horizontal;
+    #   · |m| < 1 (el horizontal es el mayor)      -> suma 1 al vertical.
+    # La precondición garantiza que el avance incrementado sigue siendo el menor,
+    # de modo que la frase es cierta en el 100 % del espacio admisible. El bloque
+    # (N) de auditoria_propia.R lo comprueba por enumeración.
+    descripcion_corta = "Cuenta un cuadro de más al medir el menor de los dos avances.",
+    descripcion_larga = paste0(
+      "Al leer los desplazamientos sobre la cuadrícula cuenta las líneas en lugar ",
+      "de los espacios que hay entre ellas, y por eso añade una unidad al más ",
+      "corto de los dos avances. El avance más largo sí queda bien medido, así que ",
+      "el sentido de la inclinación se conserva y el cociente resulta muy próximo ",
+      "al pedido; pero basta con que uno solo de los dos términos cambie para que ",
+      "la razón deje de ser la misma."),
+    causa_raiz = paste0(
+      "Confunde el número de líneas de la cuadrícula con el número de espacios que ",
+      "hay entre ellas. El descuido pasa inadvertido justamente en el avance más ",
+      "corto, donde una unidad de diferencia es menos visible."),
+    # SEGUNDA PUERTA VIVA DE LA CAPA A. Hasta ahora solo la precondición de
+    # FUN-PEN-07 excluia alguna vez (hy != 0); las otras ocho eran TRUE en todo el
+    # espacio. Esta excluye cuando el avance incrementado dejaria de ser el menor
+    # —y, con ello, cuando la opción se saldria de la celda—: con |m| > 1 exige
+    # |p| > q + 1 para que |p|/(q+1) siga por encima de 1, y con |m| < 1 exige
+    # |p| + 1 < q para que (|p|+1)/q siga por debajo. Cubre 10 de las 20 entradas
+    # de PEND_POOL; el bloque (A)/(B) del auditor imprime el recuento real.
+    precondicion = function(params)
+      if (abs(params$p) > params$q) abs(params$p) > params$q + 1L
+      else abs(params$p) + 1L < params$q,
+    # EN LA CELDA POR CONSTRUCCION (dada la precondición) y ACERCA a 1:
+    #   |m| > 1 : |p|/(q+1) < |p|/q  y  > 1 por la precondición
+    #   |m| < 1 : (|p|+1)/q > |p|/q  y  < 1 por la precondición
+    # Conserva el signo de p. Nunca iguala la clave (exigiria 1 = 0). Nunca da
+    # dx = 0 (q >= 1, q + 1 >= 2). Nunca coincide con FUN-PEN-08, que incrementa
+    # los DOS avances.
+    calcula = function(hx, hy, p, q, t, k04)
+      if (abs(p) > q) c((q + 1L) * t, p * t)
+      else c(q * t, sign(p) * (abs(p) + 1L) * t)
+  )
+)
+
+stopifnot(length(errores_conceptuales) >= 4L)
+
+# =============================================================================
+# CONTEXTOS NARRATIVOS (regla #11: >= 6 plantillas, >= 5 estructuras distintas)
+# =============================================================================
+contextos <- list(
+  # Tipo: narración escolar directa (estructura del ítem oficial)
+  list(
+    plantilla = function(doc, sop) paste0(
+      "En clase de Geometría, ", doc, " comentó que dos rectas en el plano serán ",
+      "paralelas siempre y cuando sus pendientes sean iguales y ofreció el ",
+      "siguiente ejemplo en ", sop, ":"),
+    docentes = c("la profesora", "el profesor"),
+    soportes = c("el tablero"),
+    borro = function(doc) paste0(
+      ifelse(grepl("^la ", doc), "La profesora", "El profesor"),
+      " borró la información del punto")
+  ),
+  # Tipo: circunstancia temporal + acción
+  list(
+    plantilla = function(doc, sop) paste0(
+      "Durante el repaso previo a la evaluación de geometría analítica, ", doc,
+      " recordó que dos rectas del plano son paralelas exactamente cuando sus ",
+      "pendientes coinciden, y dejó escrito este ejemplo en ", sop, ":"),
+    docentes = c("la docente del área", "el docente del área"),
+    soportes = c("la pizarra digital", "el tablero"),
+    borro = function(doc) "Al terminar la sesión se borró la información del punto"
+  ),
+  # Tipo: situación problema institucional
+  list(
+    plantilla = function(doc, sop) paste0(
+      "El club de matemáticas del colegio prepara una guía sobre rectas paralelas. ",
+      doc, " explicó que la condición es que las pendientes sean iguales y dejó ",
+      "este ejemplo en ", sop, " del salón:"),
+    docentes = c("La monitora del club", "El monitor del club"),
+    soportes = c("el tablero", "la pizarra digital"),
+    borro = function(doc) "Antes de fotografiar la guía se borró la información del punto"
+  ),
+  # Tipo: perspectiva del estudiante
+  list(
+    plantilla = function(doc, sop) paste0(
+      "Para su proyecto de geometría analítica, ", doc, " copió ", de_contraido(sop),
+      " el ejemplo con el que su profesora explicó que dos rectas son paralelas ",
+      "cuando sus pendientes son iguales:"),
+    docentes = c("Valentina", "Santiago", "Isabela", "Mateo"),
+    soportes = c("el tablero", "la pizarra digital"),
+    borro = function(doc) "Al copiarlo quedó incompleta la información del punto"
+  ),
+  # Tipo: contexto de taller técnico
+  list(
+    plantilla = function(doc, sop) paste0(
+      "En el taller de dibujo técnico se trabaja con rectas que nunca se cortan. ",
+      doc, " recordó que eso ocurre justamente cuando las pendientes son iguales ",
+      "y anotó el siguiente ejemplo en ", sop, ":"),
+    docentes = c("La instructora", "El instructor"),
+    soportes = c("el tablero", "la pizarra digital"),
+    borro = function(doc) "Un movimiento accidental borró la información del punto"
+  ),
+  # Tipo: pregunta retórica
+  list(
+    plantilla = function(doc, sop) paste0(
+      "¿Cuándo dos rectas del plano no llegan a cortarse nunca? ", doc,
+      " respondió que eso pasa exactamente cuando sus pendientes son iguales, y ",
+      "escribió en ", sop, " este ejemplo:"),
+    docentes = c("La profesora de matemáticas", "El profesor de matemáticas"),
+    soportes = c("el tablero", "la pizarra digital"),
+    borro = function(doc) "Después se borró la información del punto"
+  )
+)
+
+stopifnot(length(contextos) >= 6L)
+
+# =============================================================================
+# GENERACION (Familia 1: bucle ACOTADO, nunca `repeat` sin cota)
+# =============================================================================
+# Pendientes objetivo como fracciones irreducibles p/q (q > 0, p != 0, |p| != |q|).
+# El denominador q > 1 es lo que da a la CLAVE un paso horizontal comparable al de
+# los distractores: con pendiente entera la clave avanzaba siempre 1 o 2 en x
+# mientras un distractor llegaba a 10, y "descartar las lejanas en x" resolvia el
+# item sin calcular ninguna pendiente (regla #22 §P4/§P5).
+PEND_POOL <- list(
+  c(-4L,1L), c(-3L,1L), c(-2L,1L), c( 2L,1L), c( 3L,1L), c( 4L,1L),
+  c(-5L,2L), c(-3L,2L), c(-1L,2L), c( 1L,2L), c( 3L,2L), c( 5L,2L),
+  c(-5L,3L), c(-4L,3L), c(-2L,3L), c(-1L,3L), c( 1L,3L), c( 2L,3L), c( 4L,3L), c( 5L,3L)
+)
+# Peso por pendiente. El pool tiene 14 entradas con |m| > 1 y solo 6 con |m| < 1.
+# Como la clave es K = H + t*(q, p), se cumple |dy| > |dx| exactamente cuando
+# |m| > 1. CIFRAS, con el estado del código sobre el que se midieron (N = 1200):
+#   · contra la versión previa a los cuatro fixes: la clave cumplía |dy| > |dx|
+#     en el 72,4 % de las versiones y "quedarse con las opciones de |dy| > |dx|"
+#     resolvía el ítem al 38,3 % (azar 25 %), por encima de cualquier otra regla
+#     geométrica medida;
+#   · control AISLADO (solo los pesos revertidos a planos): 66,9 % y 39,3 %;
+#   · vigente: 52,7 % y 31,2 %.
+# Se igualan los pesos de los dos grupos para que la desigualdad deje de ser
+# informativa por sí sola.
+PEND_W <- vapply(PEND_POOL,
+                 function(z) if (abs(z[1]) > z[2]) 1 else 14 / 6, numeric(1))
+# Paso de los distractores. DEBE tener el mismo soporte que CAND_T_CLAVE. Con
+# CAND_T limitado a |t| <= 2 mientras la clave llegaba a |t| = 3, el |dx| de la
+# clave (= q*|t|) accedia a multiplos de 3 que los distractores casi no
+# alcanzaban — |dx| = 9 solo lo producia la clave —, y "quedarse con las
+# opciones de |dx| multiplo de 3" resolvia el item al 38,5 % (azar 25 %) sin
+# calcular ninguna pendiente. Igualar los soportes lo baja a 27,7 % y no
+# desplaza el canal del signo (32,7 % -> 33,1 %). Regla #22 §P5.
+#
+# EL SOPORTE SUBE DE |t| <= 3 A |t| <= 5 (2026-08-15) Y A |t| <= 6 (2026-08-15b;
+# la segunda subida es por PARIDAD: ver la rectificación de LIM_COORD más abajo).
+# Con el tope en 3, el |dx|
+# de la CLAVE era q*|t| con |t| in {1,2,3}, es decir |dx| in {q, 2q, 3q} en el
+# 100 % de las versiones — por construcción, no por azar. Y los dos errores que
+# el filtro de celda mete SIEMPRE en la terna llevan |dx| = (q+1)*t (FUN-PEN-08)
+# y (2q-1)*t (FUN-PEN-09), que caen en ese conjunto solo el 16,7 % y el 20,0 %
+# de las veces. Resultado medido (N = 400, sin canónicas): "quedarse con las
+# opciones cuyo |dx| esta en {q,2q,3q}" acertaba el 47,9 % (azar 25 %) SIN
+# calcular ninguna pendiente, y el triplete que lo contiene llegaba al 69,6 %,
+# 35 pp por encima de su techo nulo. El tope de 3 es un ARTEFACTO del generador:
+# el estudiante no puede deducirlo del enunciado.
+# Con |t| <= 5 el |dx| de la clave deja de estar en ese conjunto en el 44 % de
+# las versiones y la regla baja a 35,7 %; el triplete, a 61 % (+25 pp sobre su
+# nulo). Lo que queda es `q | dx`, que es una consecuencia NECESARIA de que la
+# pendiente sea p/q con coordenadas enteras: matemáticas correctas, no atajo.
+CAND_T       <- c(1L, -1L, 2L, -2L, 3L, -3L, 4L, -4L, 5L, -5L, 6L, -6L)
+# La CLAVE usa el MISMO soporte que los distractores. Tenerlo más amplio en la
+# clave que en los distractores fue un canal cerrado antes (su |dx| accedía a
+# múltiplos que ellos no alcanzaban); tenerlo más estrecho reabre el mismo canal
+# en espejo. La igualdad de soporte es la invariante, no el valor concreto.
+CAND_T_CLAVE <- c(1L, -1L, 2L, -2L, 3L, -3L, 4L, -4L, 5L, -5L, 6L, -6L)
+# LIM_COORD SUBE DE 14 A 24 (2026-08-15). NO es un ajuste cosmético ni
+# independiente del cambio anterior: es lo que HACE VIABLE el soporte ampliado.
+# Los dos se midieron por separado y por separado empeoran el ítem:
+#   · subir solo LIM_COORD (14 -> 24, con |t| <= 3): la regla artefacto pasa de
+#     46 % a 52 %, la mejor conjunción de 61 % a 66 % y el triplete de 70 % a
+#     75 %. La caja mayor deja a los distractores más sitio, y el filtro de rango
+#     empuja la clave a |t| = 3 todavía más (37,9 % -> 46,3 %). PEOR.
+#   · ampliar solo el soporte (|t| <= 5, con LIM_COORD = 14): los distractores
+#     siguen clavados en |t| = 1 porque no caben, mientras la clave —que usa el
+#     vector primitivo (q, p), el más corto de todos— sí se mueve. La asimetría
+#     de divisibilidad se agranda: `celda + gcd máximo` sube de 44,3 % a 50,2 %
+#     (N = 400, sin canónicas). PEOR.
+# Juntos: regla artefacto 46 % -> 41 %, mejor par 61 % -> 52 %, triplete 70 % ->
+# 61 % (exceso sobre el techo nulo 35 pp -> 25 pp).
+# POR QUE 24 Y NO OTRO VALOR.
+# RECTIFICACION (2026-08-15b). Este comentario afirmaba que 24 es "el mínimo que
+# hace UNIFORME el reparto de |t| de la clave". ERA FALSO, y lo era ya con las
+# cifras que el propio comentario citaba: 16,9/18,0/21,0/18,5/25,6 % no es un
+# reparto uniforme —el extremo superior pesa 1,5 veces el inferior—, y una
+# medición independiente sobre la misma versión del código dio 13,0/17,4/21,7/
+# 16,3/31,5 %, con el 66,2 % de la masa en los valores impares. Esa asimetría NO
+# era inocua: alimentaba la regla "quedarse con las opciones cuyo cociente dx/q
+# es impar", que acertaba el 44,6 % (azar 25 %, N = 100 sin canónicas).
+# LO QUE 24 HACE DE VERDAD, que sigue siendo la razón para elegirlo: es el mínimo
+# que deja caber el soporte ampliado de |t| en la caja. Con LIM_COORD = 14 los
+# distractores —de vector más largo que el primitivo (q, p) de la clave— quedan
+# clavados en |t| = 1 mientras la clave sí se mueve, y esa asimetría es la que
+# abre el canal de divisibilidad. Es un PRERREQUISITO del soporte, no un
+# regulador de la forma del reparto.
+# EL REPARTO SE EQUILIBRA POR OTRA VIA, no por LIM_COORD (2026-08-15b):
+#   · el soporte pasa de |t| <= 5 a |t| <= 6, que reparte la paridad 3 a 3 en vez
+#     de 3 a 2 — "cociente dx/q impar" cae de 44,6 % a 29,1 % y su gemela par
+#     queda en 36,1 %;
+#   · el rango del gcd de la clave se sortea y se filtra (`gcd_obj`), que es lo
+#     único que neutraliza la asimetría en las DOS direcciones.
+# El reparto de |t_c| resultante SIGUE SIN SER UNIFORME (6,5/18,5/26,1/22,8/10,9/
+# 15,2 % para |t| = 1..6, N = 100 sin canónicas) porque los tres filtros de rango
+# lo condicionan; se declara tal cual y se vigila por sus CONSECUENCIAS medibles
+# —el auditor mide gcd máximo, gcd mínimo y las dos paridades del cociente—, no
+# por la forma del histograma, que no es lo que el estudiante ve.
+# Coste declarado del valor elegido: la coordenada máxima pasa de +-14 a +-24
+# (media 17,3, p90 23), que es una malla de papel milimetrado corriente para
+# 8.o-9.o.
+LIM_COORD    <- 24L
+# LOS TRES TOPES SUBEN (2026-08-15b) porque el bucle pasa de UN filtro de rango a
+# TRES (|dx| entre las cuatro, distancia a 1 dentro de la celda, gcd entre las
+# cuatro). Con los valores anteriores el consumo medido subia de 5,1 a 57,2
+# intentos de media y el MÁXIMO llegaba a 340, por encima de RANGO_LIBRE = 320:
+# es decir, la rama de escape —que el archivo declaraba como garantia de término
+# NO ejercitada— pasaba a ejercitarse, y con ella el equilibrio de rango dejaba
+# de cumplirse en el 100 % de las versiones. Se suben los topes en vez de relajar
+# los filtros: el auditor imprime media, máximo y el recuento de versiones que
+# alcanzan la rama, de modo que la afirmación sigue siendo verificable.
+MAX_INTENTOS <- 3000L
+RANGO_LIBRE  <- 2000L  # tras este intento se suelta el equilibrio de rango
+MAX_SEL      <- 40L    # reintentos de la TERNA de errores dentro de una config.
+
+es_canonica <- (sample.int(12L, 1L) == 1L)
+
+if (es_canonica) {
+  # --- Instancia canonica: reproduce el item oficial verbatim ----------------
+  # Los tres distractores son los del cuadernillo, NO salen de `calcula()`. Por
+  # eso los codigos se cablean a mano y su atribución es CONCEPTUAL, no
+  # generativa: nombran el error que cada opción ilustra, no el error que la
+  # produjo. El bloque (G) de auditoria_propia.R lo comprueba opción por opción
+  # e IMPRIME cual es generable y cual no, en vez de dejarlo asumido:
+  #   (-1,-1) -> FUN-PEN-01  GENERABLE: es exactamente el reciproco, d = (p, q).
+  #   (-4, 0) -> FUN-PEN-04  CONCEPTUAL: pendiente -2/5, mismo signo que -2 y
+  #             valor distinto, que ES el error de FUN-PEN-04; pero la versión
+  #             bucket-segura de ese error multiplica cuando |m| > 1, y por
+  #             multiplicación no se alcanza (-4, 0). La versión que dividia
+  #             siempre lo generaba con k = 5; se cambio para cerrar el atajo de
+  #             dos bits, y esta es la contrapartida asumida.
+  #   ( 6, 5) -> FUN-PEN-05  CONCEPTUAL: es el punto más separado de H y con el
+  #             signo cambiado, que es el razonamiento de FUN-PEN-05; su fórmula
+  #             da d = (3t, 4t) y (6,5) exigiria 3t = 5, sin solución entera.
+  #             Nunca fue generable — no es un efecto del cambio de FUN-PEN-04.
+  # Esta instancia NO pasa por el filtro de celda: la clave es la única de su
+  # celda y ahí el atajo de dos bits acierta el 100 %. Es una propiedad del ITEM
+  # OFICIAL, no del generador, y por eso el auditor publica siempre las cifras
+  # con y sin canonicas. Pesa 1/12.
+  p_m <- -2L; q_m <- 1L; hx <- 1L; hy <- -2L; K04 <- 5L
+  puntos    <- list(c(0L, 0L), c(-4L, 0L), c(-1L, -1L), c(6L, 5L))
+  pend_frac <- list(simplificar(-2L, 1L), simplificar(2L, -5L),
+                    simplificar(1L, -2L), simplificar(7L, 5L))
+  codigos   <- c("CORRECTA", "FUN-PEN-04", "FUN-PEN-01", "FUN-PEN-05")
+  ok <- TRUE
+} else {
+  ok <- FALSE
+  # Rango objetivo de |dx| de la CLAVE entre las 4 opciones. Se sortea UNA SOLA
+  # VEZ, FUERA del bucle, y la configuración solo se acepta si lo alcanza.
+  # Sorteado DENTRO del bucle el mecanismo era INERTE: rango y configuración se
+  # sorteaban de forma independiente, así que la probabilidad de aceptación era
+  # 1/4 para toda configuración y la distribución aceptada resultaba idéntica a
+  # la no filtrada (chi2 del vigente contra el filtro desactivado: p = 0,64).
+  # CIFRAS, con el estado del código sobre el que se midieron (N = 1200):
+  #   · contra la versión PREVIA A LOS CUATRO FIXES: la clave era la más cercana
+  #     a H en x el 38,9 % de las veces y la más lejana solo el 12,1 %
+  #     (uniforme = 25 %);
+  #   · control AISLADO (solo este fix revertido, con PEND_W ya activo):
+  #     rango 4 en el 14,4 %, y chi2 contra la distribución vigente
+  #     p = 1,4e-09.
+  # En ambos casos "descartar las lejanas en x" resolvía parte del ítem sin
+  # calcular pendiente alguna (regla #22 §P4/§P5).
+  # A partir de RANGO_LIBRE se suelta la restricción para garantizar término.
+  # ESA RAMA NO SE EJERCITA: medido sobre N = 1200, el bucle consume 4,5 intentos
+  # de media y 25 como máximo, muy por debajo de RANGO_LIBRE = 320, así que
+  # ninguna versión llega a soltar el equilibrio. Es una garantía de término, no
+  # un camino vivo, y se declara como tal — el auditor imprime media, máximo y el
+  # recuento de versiones que la alcanzan (bloque M). NO se elimina: sin ella el
+  # bucle podría agotar MAX_INTENTOS y disparar el `stopifnot(ok)`.
+  # COROLARIO: el equilibrio de rango se cumple en el 100 % de las versiones, de
+  # modo que las cifras de rango de |dx| que publica el auditor son las del
+  # filtro, no una mezcla de filtro y escape.
+  rango_objetivo <- sample.int(4L, 1L)
+  # --- Los otros DOS ranks que se sortean fuera del bucle (2026-08-15b) --------
+  # Mismo mecanismo que `rango_objetivo` y por la misma razón: si una magnitud
+  # ordena a la clave siempre en el mismo lugar respecto de sus companeras, esa
+  # posición la identifica sin calcular ninguna pendiente. Se sortea el RANGO
+  # objetivo y la configuración solo se acepta si lo alcanza.
+  #
+  #   pos_d1_obj — lugar de la clave, por distancia a 1, DENTRO de su celda.
+  #     Sin este filtro la clave quedaba en medio en el 66,3 % de las versiones
+  #     (N = 100, sin canonicas): FUN-PEN-08 acerca a 1 y FUN-PEN-04/-09 alejan,
+  #     así que 4 de las 6 parejas posibles la dejaban en el centro y ninguna la
+  #     dejaba en el extremo lejano. La regla "dentro de la celda, quedarse con
+  #     la que no es ni la más cercana ni la más lejana de 1" acertaba ese 66,3 %
+  #     (azar 25 %, techo nulo 35 %). FUN-PEN-10 hace alcanzable el rango 3.
+  #
+  #   gcd_obj — rango del gcd(dx, dy) de la clave entre las CUATRO opciones.
+  #     La clave usa el vector PRIMITIVO (q, p), así que su gcd es exactamente
+  #     |t_c| mientras que a los distractores —de vector más largo— la caja les
+  #     recorta el paso. "Quedarse con la de mayor factor comun dentro de la
+  #     celda" acertaba el 48,2 %. OJO A LA SEÑAL INVERSA: no se fuerza que la
+  #     clave tenga gcd bajo, que reabriria el canal en espejo (`gcd mínimo`);
+  #     se sortea el RANGO, que es lo único que lo neutraliza en las dos
+  #     direcciones. El auditor mide max Y min, precisamente por eso.
+  #
+  # SEIS VARIANTES MEDIDAS, UNA ELEGIDA (2026-08-15b, N = 100 sin canonicas,
+  # bateria ampliada + helper §P7). Se dejan escritas porque la siguiente pasada
+  # NO tiene por que repetir el barrido — y porque dos de ellas parecian mejores
+  # sobre el papel y son peores medidas:
+  #
+  #   variante                                   max regla   exceso   intentos
+  #   -------------------------------------------------------------------------
+  #   (0) línea base, sin estos dos filtros         66,3 %   +31,0 pp     5,1
+  #   (1) FACTOR DE ESCALA COMUN `s`                91,3 %   +56,0 pp   169,0   <- PEOR
+  #   (2) rango de gcd de 4 niveles, |t| <= 5       46,7 %   +11,4 pp    91,6
+  #   (3) gcd binario, |t| <= 5                     46,6 %    +8,2 pp    10,6
+  #   (4) gcd binario, |t| <= 6   <-- ELEGIDA       47,0 %    +8,1 pp    16,9
+  #   (5) rango de gcd dentro de la celda, 3 niv.   47,8 %   +12,3 pp    82,0
+  #   (6) gcd binario dentro de la celda            45,7 %   +10,3 pp   145,3
+  #
+  # POR QUE EL FACTOR `s` NO SE APLICA, pese a que su diagnostico era correcto.
+  # La idea era sortear un factor de escala UNA sola vez por versión y aplicarlo
+  # a TODAS las opciones, con |t| = 1 para todas: así el gcd pasaba a valer
+  # s * gcd(v) para todas y dejaba de discriminar. Y en efecto lo cerraba —gcd
+  # máximo 33,5 -> 13,7 %, celda + gcd máximo 48,2 -> 20,1 %—, pero DESPLAZA el
+  # defecto a la familia de MAGNITUD en vez de eliminarlo: con el paso igualado,
+  # la clave —que usa el vector PRIMITIVO (q, p), el más corto de todos— pasa a
+  # ser la más cercana a H dentro de su celda en el 91,3 % de las versiones. Es
+  # el mismo modo de fallo que la regla #22 v1.3 describe: un fix de una
+  # dimensión puede empujar la señal a otra. Además abre la señal INVERSA del
+  # gcd (gcd mínimo 14,3 -> 27,3 %, celda + gcd mínimo 17,2 -> 37,1 %) y el
+  # consumo del bucle sube de 5,1 a 169 intentos de media, tocando la rama de
+  # escape. Es una tensión ESTRUCTURAL, no un detalle de implementación: gcd
+  # constante entre opciones exige longitudes proporcionales a los vectores
+  # base, y el de la clave es el mínimo de los cuatro por construcción.
+  pos_d1_obj <- sample.int(3L, 1L)
+  gcd_obj    <- sample.int(2L, 1L)
+  for (intento in seq_len(MAX_INTENTOS)) {
+    pq0 <- PEND_POOL[[sample.int(length(PEND_POOL), 1L, prob = PEND_W)]]
+    p_m <- pq0[1]; q_m <- pq0[2]
+    hx  <- pick_int(-3L, 3L)
+    hy  <- pick_int(-4L, 4L)   # hy = 0 SI puede salir: entonces FUN-PEN-07 queda
+                               # excluido por su precondición (Capa A operativa)
+    params <- list(p = p_m, q = q_m, hy = hy)
+    # Lado de 1 en que cae la pendiente objetivo: +1 si |m| > 1, -1 si |m| < 1.
+    # Nunca 0, porque PEND_POOL excluye |p| = q.
+    bk_obj <- sign(abs(p_m) - q_m)
+
+    # k del error FUN-PEN-04. YA NO hace falta excluir ningun k: con la versión
+    # bucket-segura la opción vale k*m (si |m| > 1) o m/k (si |m| < 1), así que
+    # |pendiente| nunca es 1 (colisión con FUN-PEN-06) ni iguala la clave (eso
+    # exigiria k = 1). Lo que si hay que acotar es el TAMAÑO: la coordenada
+    # escalada no puede pasar de LIM_COORD - 4, margen que cubre el peor |hx|/|hy|
+    # y garantiza que el error se pueda colocar al menos con |t| = 1.
+    k_base <- c(2L, 3L, 5L)
+    k_ok   <- k_base[k_base * (if (abs(p_m) > q_m) abs(p_m) else q_m) <= LIM_COORD - 4L]
+    # k = 2 siempre cabe: el peor max(|p|, q) del pool es 5, y 2 * 5 = 10 <= 20.
+    # LIMITACION MEDIDA Y NO CORREGIDA: `k_ok` toma el mayor k que quepa en UN
+    # paso, así que para max(|p|, q) >= 3 el error queda clavado en |t| = 1 sea
+    # cual sea LIM_COORD — subir la caja solo admite un k04 mayor, que vuelve a
+    # consumir el presupuesto. Por eso P(gcd > 1) de FUN-PEN-04 se queda ~30 pp
+    # por debajo de la clave. Se probó exigir holgura para |t| >= 2
+    # (`k_base * max(|p|,q) * 2 <= LIM_COORD - 4`, que solo es satisfacible con
+    # LIM_COORD >= 24) y NO cierra el canal: `celda + gcd máximo` queda en 50 %
+    # con un exceso de +13,3 pp sobre su techo nulo, frente a +16,3 pp sin la
+    # holgura. Se descarta por no compensar el estrechamiento del pool de k04.
+    stopifnot(length(k_ok) >= 1L)
+    K04 <- safe_sample(k_ok, 1L)
+
+    # --- Punto correcto: K = H + t * (q, p)  =>  pendiente exactamente p/q ---
+    t_c <- safe_sample(CAND_T_CLAVE, 1L)
+    kx  <- hx + q_m * t_c
+    ky  <- hy + p_m * t_c
+    if (max(abs(c(kx, ky))) > LIM_COORD) next
+
+    # --- Distractores ---
+    idx_aplicables <- which(vapply(errores_conceptuales,
+      function(e) isTRUE(e$precondicion(params)), logical(1)))
+    # Guarda ESTRUCTURAL, hoy INALCANZABLE: la única precondición que puede
+    # excluir es la de FUN-PEN-07 (hy != 0), así que quedan 8 o 9 errores. Lo
+    # COMPRUEBA el bloque (A)/(B) de auditoria_propia.R sobre el espacio completo
+    # (p/q, hy) — imprime el mínimo y el máximo y falla si el mínimo baja de 3 —,
+    # de modo que la afirmación es verificable y no una nota de fe. Se conserva
+    # porque `safe_sample(idx_aplicables, 3L)` necesita al menos 3 elementos y un
+    # pool futuro con más precondiciones podría bajar de ahí; NO cuenta como
+    # defensa activa.
+    if (length(idx_aplicables) < 3L) next
+
+    # El equilibrio de la celda se busca reintentando la TERNA de errores DENTRO
+    # de la misma configuración (p/q, H). Rechazar la configuración entera
+    # sesgaría el signo de la pendiente objetivo, porque las ternas equilibradas
+    # son más frecuentes cuando p > 0 (FUN-PEN-06 solo conserva el signo en ese
+    # caso).
+    # LO REDUCE, NO LO ELIMINA — dato medido, no supuesto. Sobre N = 1200 el
+    # generador da P(p > 0) = 48,9 % sin instancias canónicas. El residuo no
+    # viene del agotamiento de MAX_SEL sino del acoplamiento con el filtro de
+    # rango posterior, que sí rechaza la configuración entera. El agregado CON
+    # canónicas baja a ~45 % porque la canónica tiene m = -2 fija y pesa 1/12;
+    # esa parte no es sesgo del generador. El auditor publica las dos cifras en
+    # su bloque (M). Impacto pedagógico: ninguno — el signo de la pendiente no
+    # cambia la dificultad ni informa sobre cuál opción es correcta.
+    viable <- FALSE
+    for (reintento_sel in seq_len(MAX_SEL)) {
+      puntos    <- list(c(kx, ky))
+      pend_frac <- list(simplificar(p_m, q_m))
+      codigos   <- "CORRECTA"
+      sel <- safe_sample(idx_aplicables, 3L)
+
+      completo <- TRUE
+      for (i in sel) {
+        err <- errores_conceptuales[[i]]
+        colocado <- FALSE
+        for (tt in safe_sample(CAND_T, length(CAND_T))) {
+          d <- err$calcula(hx, hy, p_m, q_m, tt, K04)
+          # Guarda ESTRUCTURAL, hoy INALCANZABLE: ningún error del pool devuelve
+          # dx = 0. Lo CUENTA el bloque (B) de auditoria_propia.R, que enumera
+          # el espacio completo y falla si alguna vez se alcanza; la cifra sale
+          # impresa en su salida. Se conserva porque un error nuevo con dx = 0
+          # daría pendiente infinita, pero NO cuenta como defensa activa.
+          if (d[1] == 0) next
+          px <- hx + d[1]; py <- hy + d[2]
+          if (max(abs(c(px, py))) > LIM_COORD) next
+          fr <- simplificar(d[2], d[1])
+          ya_pto  <- any(vapply(puntos,    function(z) all(z == c(px, py)), logical(1)))
+          ya_pend <- any(vapply(pend_frac, function(z) all(z == fr),        logical(1)))
+          if (ya_pto || ya_pend) next
+          puntos[[length(puntos) + 1L]]       <- c(px, py)
+          pend_frac[[length(pend_frac) + 1L]] <- fr
+          codigos <- c(codigos, err$codigo)
+          colocado <- TRUE
+          break
+        }
+        if (!colocado) { completo <- FALSE; break }
+      }
+      if (!completo) next
+
+      # --- Equilibrio de la CELDA (signo, lado de 1) — regla #22 §P5 ---------
+      # Al menos 3 de las 4 opciones deben compartir CON LA CLAVE las dos cosas
+      # que un estudiante puede leer SIN dividir: el signo de dy/dx y si |dy| es
+      # mayor o menor que |dx| (o sea, de que lado de 1 cae |m|). Eso acota a 1/3
+      # el acierto del atajo de dos bits. CIFRAS (N = 1200, azar 25 %):
+      #   · pool de 7 y guarda de solo-signo : SIGNO+BUCKET 73,4 %
+      #   · vigente (pool de 9 y esta guarda): ver el bloque (L) de
+      #     auditoria_propia.R, que la mide y falla por encima del 45 %.
+      # La componente de SIGNO por separado ya estaba acotada antes por
+      # `sum(sg == sign(p_m)) >= 3`; esa condición queda IMPLICADA aquí, porque
+      # `en_celda` es un subconjunto de las opciones del mismo signo. Se elimina
+      # la línea anterior para no dejar una guarda que no puede disparar nunca.
+      # El atajo del signo lo declara erróneo el propio ítem: FUN-PEN-04 ES ese
+      # error, y la Solution pide comparar "en signo y valor, no solo en signo".
+      #
+      # SIEMPRE ALCANZABLE: FUN-PEN-04, -08 y -09 están en la celda POR
+      # CONSTRUCCION (ver sus comentarios), así que basta con que la terna
+      # contenga dos de esos tres. FUN-PEN-10 se suma a ellos cuando su
+      # precondición se cumple, y FUN-PEN-07 cae en ella a veces: ambos anaden
+      # holgura, ninguno es necesario para que la guarda sea satisfacible.
+      #
+      # LO QUE ESTA GUARDA CUESTA, declarado (vecino del Error 27). Al exigir dos
+      # de {04, 08, 09}, esos tres errores se vuelven frecuentes y los otros seis
+      # compiten por UNA sola ranura. Las cifras medidas del reparto y del número
+      # de ternas alcanzables se publican en el bloque (E) de auditoria_propia.R,
+      # que falla si aparecen menos de 4 errores distintos. Es el precio de cerrar
+      # un atajo que resolvia tres de cada cuatro versiones; se paga a sabiendas.
+      #
+      # POR QUE LA CLAVE QUEDA EN MEDIO DE SU CELDA: 08 ACERCA a 1 —su cociente
+      # (|p|+1)/(q+1) cae entre |m| y 1— mientras 04 y 09 se ALEJAN —k*m o m/k, y
+      # (2|p|-1)/(2q-1)—. Si los tres cayeran del mismo lado que la clave respecto
+      # de 1, la clave sería la extrema de su celda y "quedarse con la extrema"
+      # volvería a identificarla. Con 08 más cerca de 1 que la clave y 04/09 más
+      # lejos, la clave queda ENTRE ellos. El bloque (L) mide esa familia de
+      # reglas intra-celda.
+      # CORREGIDO en la 5a pasada de la FASE 2C: este comentario afirmaba que
+      # "08 Y 09 ACERCAN", y 09 aleja. La conclusión (la clave queda en medio) era
+      # correcta; la razón que se daba, no. El comentario de FUN-PEN-09 sí lo
+      # decía bien, así que el archivo se contradecía a sí mismo.
+      sg <- vapply(pend_frac, function(z) sign(z[1]), numeric(1))
+      # Tres valores (-1, 0, +1): la opción de pendiente exactamente +-1
+      # (FUN-PEN-06) no esta en NINGUN lado y no cuenta como celda.
+      bk <- vapply(pend_frac, function(z) sign(abs(z[1]) - z[2]), numeric(1))
+      en_celda <- (sg == sign(p_m)) & (bk == bk_obj)
+      if (sum(en_celda) < 3L) next
+
+      # --- Lugar de la CLAVE dentro de su celda, por distancia a 1 -----------
+      # La clave es SIEMPRE el elemento 1 de `pend_frac` en este punto (la mezcla
+      # ocurre después), y esta SIEMPRE en su propia celda, así que ocupa la
+      # primera posición del subvector filtrado y su rango es `rank(...)[1]`.
+      # Escala logarítmica: |m| y 1/|m| quedan a la misma distancia de 1, que es
+      # la comparación que un estudiante hace de un vistazo.
+      d1v   <- abs(log(vapply(pend_frac, function(z) abs(z[1]) / z[2], numeric(1))))
+      rk_d1 <- as.integer(rank(d1v[en_celda], ties.method = "min")[1])
+      if (rk_d1 != pos_d1_obj) next
+
+      # --- Rango del gcd(dx, dy) de la clave entre las CUATRO opciones -------
+      gv <- vapply(seq_along(puntos), function(z)
+              mcd(puntos[[z]][1] - hx, puntos[[z]][2] - hy), numeric(1))
+      # BINARIO, no rango de 4, y MEDIDO: con el rango exacto de 4 el bucle
+      # consumia 91,6 intentos de media y llegaba a 2004 —por encima de
+      # RANGO_LIBRE—, porque gcd_obj = 1 exige |t_c| pequeño y rango_objetivo
+      # alto exige |dx| = q*|t_c| grande: son peticiones contradictorias. La
+      # versión binaria (mitad baja / mitad alta) baja el consumo a 16,9 de
+      # media y 288 de máximo, y cierra el canal IGUAL de bien: gcd máximo
+      # 33,5 -> 18,8 %, celda + gcd máximo 48,2 -> 31,7 %, sin abrir la señal
+      # inversa (gcd mínimo 14,3 -> 9,1 %).
+      rk_g <- as.integer(rank(gv, ties.method = "min")[1])
+      if ((if (rk_g <= 2L) 1L else 2L) != gcd_obj) next
+
+      # --- Rango del |dx| de la clave entre las CUATRO opciones --------------
+      # SE EVALUA AQUÍ, no tras salir del bucle de terna (2026-08-15b). Estaba
+      # fuera, así que una terna que superaba los otros dos filtros se descartaba
+      # entera por el tercero y el reintento de terna no servía para nada: el
+      # consumo medio del bucle era de 108 intentos y el máximo llegaba a 2007.
+      # Con los tres filtros en el mismo punto, los MAX_SEL reintentos cubren los
+      # tres a la vez. La rama de escape conserva su semántica exacta.
+      dxs <- vapply(puntos, function(z) abs(z[1] - hx), numeric(1))
+      if (intento <= RANGO_LIBRE &&
+          as.integer(rank(dxs, ties.method = "min")[1]) != rango_objetivo) next
+
+      viable <- TRUE
+      break
+    }
+    if (!viable) next
+
+    ok <- TRUE
+    break
+  }
+}
+stopifnot(ok)
+
+# ---- Invariantes duras -------------------------------------------------------
+pend_obj <- simplificar(p_m, q_m)
+stopifnot(length(puntos) == 4L, length(pend_frac) == 4L, length(codigos) == 4L)
+# I-1: la pendiente del punto correcto es exactamente la pendiente objetivo
+stopifnot(all(pend_frac[[1]] == pend_obj))
+# I-2: ningun distractor iguala la pendiente objetivo (unicidad de la clave)
+stopifnot(all(vapply(pend_frac[-1], function(z) !all(z == pend_obj), logical(1))))
+# I-3: las 4 pendientes son distintas entre si
+stopifnot(!anyDuplicated(vapply(pend_frac, paste, character(1), collapse = "/")))
+# I-4: los 4 puntos son distintos y ninguno comparte abscisa con H
+stopifnot(!anyDuplicated(vapply(puntos, paste, character(1), collapse = ",")))
+stopifnot(all(vapply(puntos, function(z) z[1] != hx, logical(1))))
+# I-5: coordenadas enteras dentro del recuadro admitido
+stopifnot(all(vapply(puntos, function(z) all(z == round(z)) &&
+                       max(abs(z)) <= LIM_COORD, logical(1))))
+# I-6: la pendiente declarada de cada opción coincide con la del par ordenado
+stopifnot(all(vapply(seq_len(4L), function(j) {
+  fr <- simplificar(puntos[[j]][2] - hy, puntos[[j]][1] - hx)
+  all(fr == pend_frac[[j]])
+}, logical(1))))
+
+# ---- Mezcla interna y vector solución ---------------------------------------
+orden     <- sample.int(4L)
+puntos    <- puntos[orden]
+pend_frac <- pend_frac[orden]
+codigos   <- codigos[orden]
+
+opciones <- vapply(puntos, function(z) fmt_punto(z[1], z[2]), character(1))
+sol      <- as.integer(codigos == "CORRECTA")
+stopifnot(sum(sol) == 1L, length(unique(opciones)) == 4L)
+
+idx_correcto   <- which(sol == 1L)
+punto_correcto <- puntos[[idx_correcto]]
+texto_correcto <- opciones[idx_correcto]
+
+# ---- Contexto narrativo ------------------------------------------------------
+if (es_canonica) {
+  ctx     <- contextos[[1]]
+  docente <- "la profesora"
+  soporte <- "el tablero"
+} else {
+  ctx     <- contextos[[sample.int(length(contextos), 1L)]]
+  docente <- safe_sample(ctx$docentes, 1L)
+  soporte <- safe_sample(ctx$soportes, 1L)
+}
+enunciado_intro <- ctx$plantilla(docente, soporte)
+frase_borrado   <- ctx$borro(docente)
+
+reflexiones_metacognitivas <- c(
+  paste0("Antes de elegir una opción conviene preguntarse qué condición exacta pide ",
+         "el problema: aquí no basta con que la pendiente se parezca, tiene que ser ",
+         "la misma."),
+  paste0("Calcular las cuatro pendientes y compararlas con la pedida cuesta poco y ",
+         "convierte una elección intuitiva en una verificación."),
+  paste0("Cuando una fórmula tiene numerador y denominador distintos, escribir cuál ",
+         "es cuál antes de sustituir evita el error más frecuente en este tema."),
+  paste0("Revisar el signo del resultado y también su valor es lo que separa una ",
+         "respuesta correcta de otra que solo se le parece.")
+)
+reflexion <- safe_sample(reflexiones_metacognitivas, 1L)
+
+# ---- Textos derivados --------------------------------------------------------
+pend_txt   <- fmt_pend(p_m, q_m)
+exsolution <- paste(sol, collapse = "")
+```
+
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado_intro, "\n\n")
+
+# --- Reproducción NATIVA del recuadro del tablero (regla #24, H-1/H-2) -------
+# Inventario de rotulos preservado: F, x1, y1, G, x2, y2, L1, m, L2, L3, H, K,
+# el valor de la pendiente de L2 y las coordenadas de H.
+# DOS sustituciones deliberadas respecto al escaneo, ninguna más:
+#   1. el icono del borrador azul -> hueco subrayado (la prosa posterior lo
+#      explicita, igual que el item oficial);
+#   2. el recuadro azul del tablero -> blockquote Markdown (el recuadro es
+#      soporte visual, no un rotulo; ningun rotulo se pierde ni se agrega).
+# No se agrega ningun rotulo que el original no tenga (H-3).
+# La concordancia "que pertenece" es del original y NO se corrige (H-2).
+#
+# El HUECO de K se emite FUERA de math, con guiones bajos ESCAPADOS, y SIN
+# ninguna rama por formato. Tres hechos MEDIDOS lo obligan:
+#   1. Dentro de math no funciona: pandoc convierte $...$ a MathML y el
+#      espaciado \qquad NO sobrevive, así que a 360 px el hueco se veía como un
+#      guion bajo diminuto (era el defecto M-2).
+#   2. `knitr::is_latex_output()` NO sirve para ramificar aquí: medido sobre el
+#      artefacto intermedio, devuelve FALSE en los CUATRO pipelines —
+#      exams2html, exams2pdf, exams2nops y exams2moodle—, porque R/exams teje el
+#      .Rmd a MARKDOWN y es pandoc quien produce el .tex después. Una rama
+#      `if (is_latex_output())` sería código muerto en todos los formatos.
+#   3. Un <span> con border-bottom tampoco vale: pandoc DESCARTA el HTML crudo
+#      al escribir DOCX, y el hueco desaparecería del .docx por completo.
+# Contrapartida declarada: en PDF se pierde la regla tipográfica \underline del
+# escaneo y queda una fila de guiones bajos. Es el precio de que el hueco se vea
+# igual en los cinco formatos.
+hueco_K <- "$K =$ \\_\\_\\_\\_\\_\\_\\_\\_\\_\\_"
+
+cat("> Teniendo los puntos $F = (x_1,\\, y_1)$, y $G = (x_2,\\, y_2)$ que pertenece a la recta $L_1$, la pendiente m equivale a:\n>\n")
+cat("> $$m = \\frac{y_2 - y_1}{x_2 - x_1}$$\n>\n")
+cat(paste0("> Las rectas $L_2$ y $L_3$ son paralelas, y la pendiente de la recta $L_2$ equivale a $",
+           pend_txt, "$; dos puntos que pertenecen a $L_3$ son $H(", hx, ",\\, ", hy,
+           ")$ y ", hueco_K, "\n\n"))
+
+cat(paste0(frase_borrado, " $K$. ¿Cuál de las siguientes pudo haber sido la pareja ordenada ",
+           "del punto $K$ que hace paralelas a las rectas $L_2$ y $L_3$?\n"))
+```
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(opciones, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+# --- Respuesta correcta identificada por CONTENIDO, nunca por letra (regla #19)
+cat("### Respuesta correcta {-}\n\n")
+cat(paste0("El punto buscado es ", texto_correcto, ".\n\n"))
+
+cat("### Procedimiento correcto {-}\n\n")
+cat(paste0(
+  "Dos rectas son paralelas cuando sus pendientes son **iguales**. Como la ",
+  "pendiente de $L_2$ vale $", pend_txt, "$, el punto $K$ debe hacer que la ",
+  "pendiente de $L_3$ valga exactamente $", pend_txt, "$.\n\n"))
+
+cat(paste0(
+  "Se aplica la fórmula del recuadro tomando $H(", hx, ",\\, ", hy,
+  ")$ como primer punto y $K$ como segundo punto:\n\n"))
+
+cat(eq_display(paste0(
+  "m = \\frac{y_2 - y_1}{x_2 - x_1} = \\frac{(", punto_correcto[2],
+  ") - (", hy, ")}{(", punto_correcto[1], ") - (", hx, ")} = ",
+  fmt_reduccion(punto_correcto[2] - hy, punto_correcto[1] - hx))))
+
+cat(paste0(
+  "\nEse valor coincide con la pendiente de $L_2$, de modo que $L_3$ resulta ",
+  "paralela a $L_2$.\n\n"))
+
+# --- Análisis de cada opción errada, identificada por su PAR ORDENADO --------
+# (Incidente Q: no se enumera en orden ni se usa lenguaje ordinal.)
+cat("### Por qué las demás parejas no sirven {-}\n\n")
+for (j in seq_along(opciones)) {
+  if (sol[j] == 1L) next
+  cod <- codigos[j]
+  err <- errores_conceptuales[[which(vapply(errores_conceptuales,
+                                            function(e) e$codigo == cod, logical(1)))]]
+  pz <- puntos[[j]]
+  fr <- pend_frac[[j]]
+  cat(paste0("**", fmt_punto(pz[1], pz[2]), " — ", err$nombre, " (", err$codigo, ")**\n\n"))
+  # `descripcion_corta` SE EMITE. Un campo que no se emite no está probado por
+  # nada (Incidente O): el U+2212 latente de otro ejercicio del repo sobrevivió
+  # meses en un campo muerto y reventó `exams2pdf()` al reutilizar el pool.
+  cat(paste0("*Argumento:* ", err$descripcion_corta, "\n\n"))
+  cat(paste0("Con esta pareja la pendiente de $L_3$ sería $",
+             "\\frac{(", pz[2], ") - (", hy, ")}{(", pz[1], ") - (", hx, ")} = ",
+             fmt_reduccion(pz[2] - hy, pz[1] - hx),
+             "$, distinta de $", pend_txt, "$.\n\n"))
+  cat(paste0(err$descripcion_larga, "\n\n"))
+  cat(paste0("*Origen del error:* ", err$causa_raiz, "\n\n"))
+}
+
+cat("### Estrategia para evitar el error {-}\n\n")
+cat(paste0(
+  "1. Escribir la fórmula antes de sustituir, señalando cuál diferencia va en el ",
+  "numerador y cuál en el denominador.\n",
+  "2. Calcular la pendiente de cada pareja candidata, sin descartar ninguna a simple vista.\n",
+  "3. Comparar el resultado con la pendiente pedida en **signo y valor**, no solo en signo.\n\n"))
+
+cat("### Reflexión {-}\n\n")
+cat(paste0(reflexion, "\n"))
+```
+
+Meta-information
+================
+exname: pendiente_rectas_paralelas_numerico_variacional_formulacion_ejecucion_n4_schoice_v1
+extype: schoice
+exsolution: `r exsolution`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulacion y ejecucion
+exextra[Componente]: Numerico-variacional
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Ejecuta un plan de solución para un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 4
+exextra[Descriptor]: D4.5 — Manipula expresiones algebraicas o aritméticas haciendo uso de las propiedades de las operaciones.
+exextra[Contenido]: Álgebra y Cálculo
+exextra[Estandar]: Identifico relaciones entre propiedades de las gráficas y propiedades de las ecuaciones algebraicas. (8°-9°, Pensamiento variacional)
+exextra[TemaEspecifico]: Pendiente de rectas paralelas — plano cartesiano
+exextra[DOK]: 2
+exextra[Bloom]: Aplicar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
+exextra[ItemOriginal]: ERA-2026-S2-P43 (= MAT-2026-1-129 del corpus 2026-1)
+exextra[GradoSugerido]: 8-9

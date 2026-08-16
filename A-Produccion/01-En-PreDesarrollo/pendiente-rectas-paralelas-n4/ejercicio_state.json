@@ -1,0 +1,59 @@
+{
+  "version": "2.0",
+  "ejercicio": "pendiente_rectas_paralelas_numerico_variacional_formulacion_ejecucion_n4_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-08-15T09:06:56.730759-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-15T21:46:00-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-15T09:07:01.934725-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-08-15T09:12:38.073977-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-08-15T10:16:13.650141-05:00",
+      "archivo": "pendiente_rectas_paralelas_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-08-15T10:16:13.707908-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-08-15T18:29:04.638200-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-08-15T18:29:04.638200-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": false,
+      "timestamp": "2026-08-15T18:29:04.638200-05:00",
+      "veredicto": "PENDIENTE",
+      "nota": "4a pasada FASE 2C (2026-08-15, tarde). Cambios auditados: pool 9->10 (FUN-PEN-10, unico error que ACERCA a 1 dentro de la celda junto a 08), filtros pos_d1_obj y gcd_obj, soporte |t|<=6, topes del bucle. Comentario FALSO de LIM_COORD rectificado. Factor de escala comun `s` MEDIDO Y DESCARTADO (desplaza el canal a magnitud: 91,3 %). VEREDICTO: RECHAZAR. Hallazgo mayor del detractor (O-1): el cierre por pares y tripletes de auditoria_propia.R no incluia las reglas intra-celda de (L); al cruzarlas el item alcanza 67,0-72,8 %, marginal +21 a +27,6 pp sobre la deduccion necesaria. md5 del .Rmd auditado: 1e3817c74661a6439ed816e17442c481"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-08-15T18:29:04.638200-05:00"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-08-15T18:29:04.638200-05:00",
+      "versiones_unicas": 292
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-15T18:29:04.638200-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}
