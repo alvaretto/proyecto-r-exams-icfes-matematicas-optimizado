@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 ```{r data_generation, echo = FALSE, results = "hide"}
 # =========================================================================
 # EJERCICIO: Información insuficiente en el reparto de un lote (SCHOICE N4)
