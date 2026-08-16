@@ -35,8 +35,8 @@ Este archivo funciona como **índice central** del sistema. Para información de
 15. **Stress Test Visual** (FASE 2H: renderizado masivo + análisis anomalías) → @.claude/skills/stress-test-visual/SKILL.md
 16. **Workflow State Enforcement** (gate mecánico PreToolUse + estado persistente) → @.claude/rules/workflow-state-enforcement.md
 17. **Infraestructura `.claude/` protegida** (backups + verificación de invariantes I-1 a I-7 antes/después de plataformas externas) → @.claude/rules/infraestructura-protegida.md
-18. **Markdown-imágenes-PDF (anti `\pandocbounded`)** → @.claude/rules/markdown-imagenes-pdf.md
-    Toda imagen `.png/.jpg/.svg/.pdf` emitida vía Markdown (directa o `cat()`) en `.Rmd` DEBE incluir atributo `{width=...}`. Pandoc 3.x sin width genera `\pandocbounded` no definido en LaTeX → rompe `exams2pdf()`. Coupled con regla #6 ampliada (`exshuffle: FALSE` para Solution con letra explícita). Errores 16-17 documentados.
+18. **Markdown-imágenes-PDF (atributo `{width=...}` obligatorio)** → @.claude/rules/markdown-imagenes-pdf.md
+    Toda imagen `.png/.jpg/.svg/.pdf` emitida vía Markdown (directa o `cat()`) en `.Rmd` DEBE incluir atributo `{width=...}`. Pandoc ≥3.2.1 sin width envuelve el `\includegraphics` en `\pandocbounded`. **Actualizado 2026-08-15**: R/exams ≥ 2.4-1 ya define ese macro como **no-op** en todas sus plantillas, así que el `Undefined control sequence` **ya no se reproduce** con las plantillas del paquete (sí con plantilla propia). La regla sigue vigente por otra razón: al ser no-op, `\pandocbounded` **no controla el tamaño**. En la misma pasada se retiró el **Patrón B** (condicional `is_latex_output()`), que **pierde la imagen en el PDF**. Coupled con regla #6 ampliada. Errores 16-17 documentados.
 19. **Solution letter-independence** (NUNCA `r letra_correcta` ni "Opción [A-D]" en Solution) → @.claude/rules/solution-letter-independence.md
     Defensa permanente contra Error 19. La sección Solution debe identificar opciones por contenido/código de error, NUNCA por letra/posición, porque Moodle (y otros LMS) pueden re-shufflear las opciones de forma independiente al `exshuffle` de R-exams, rompiendo coherencia letra ↔ contenido para el estudiante. Capas: hook FASE 2J + test_letter_independence.R + detractor.
 20. **Markdown-tablas-pandoc (guard contador `none`)** → @.claude/rules/markdown-tablas-pandoc.md
@@ -44,9 +44,14 @@ Este archivo funciona como **índice central** del sistema. Para información de
 21. **Familias de Soluciones Reutilizables** → @.claude/rules/familias-soluciones-rmd.md
     Índice operativo de patrones probados + librería de helpers `@.claude/scripts/snippets_familias_rmd.R`. Aplicar las familias relevantes en toda generación/corrección: **F1** generación sin cuelgue (`pick_int`/`construir_valores_con_rango`, nunca `repeat` sin cota — Error 22); **F2** tablas responsivas cross-formato (`tabla_responsiva`, fenced div `::: {style=overflow-x:auto}` que sobrevive DOCX como `<w:tbl>` y PDF como longtable); **F3** ecuaciones display responsivas (`eq_display`); **F4** coherencia de marcas en CLOZE (sol alineado por construcción + verificación marca-vs-verdad); **F5** trampa `sample(escalar)` (`pick_int`/`safe_sample`); **F6** opciones gráficas de diagramas vectoriales cardinales (`dibujar_diagrama_cardinal`/`orientaciones_cardinales`/`seleccionar_combinacion_con_cascada`/`renombrar_opciones_neutral`: orientación sorteada por versión, cascada de umbrales de legibilidad en vez de umbral único con `stopifnot`, renombrado neutral POST-mezcla y distractores que conserven la magnitud de la correcta — Errores 23-26). Test: test_data_generation_no_hang.R.
 22. **Diversidad Sustantiva** (respuesta correcta debe variar entre versiones, no solo el envoltorio narrativo) → @.claude/rules/diversidad-sustantiva.md
-    Defensa contra diversidad cosmética. Un conteo alto de "versiones únicas del render" NO garantiza que los datos numéricos / contenido gráfico de la respuesta correcta cambien entre semillas. Prohibido: parámetros hardcoded como literales, PNGs de opciones copiados con `file.copy`. Defensa: hook FASE 2N (`WARN_DIV_ESTATICA`) + script `validar_diversidad_sustantiva.R --n 100` en orquestador paso 9 (`ERR_DIV_COSMETICA` bloqueante) + test_diversidad_sustantiva.R. Incidente: `desplazamiento-avion-aeropuerto` (2026-06-27) — 288/300 versiones únicas con respuesta correcta invariante.
+    Defensa contra diversidad cosmética. Un conteo alto de "versiones únicas del render" NO garantiza que los datos numéricos / contenido gráfico de la respuesta correcta cambien entre semillas. Prohibido: parámetros hardcoded como literales, PNGs de opciones copiados con `file.copy`. Defensa: hook FASE 2N (`WARN_DIV_ESTATICA`) + script `validar_diversidad_sustantiva.R --n 100` en orquestador paso 9 (`ERR_DIV_COSMETICA` bloqueante) + test_diversidad_sustantiva.R. Incidente: `desplazamiento-avion-aeropuerto` (2026-06-27) — 288/300 versiones únicas con respuesta correcta invariante. **§P7 (v1.5, 2026-08-15) — cierre por familias de dimensión**: a diferencia de P1-P6, no nombra un canal de fuga sino un defecto **del verificador**. Toda batería de reglas de eliminación debe cerrar por las **seis familias** (magnitud, divisibilidad, signo, posición, formato, léxico), declarando las inaplicables; calibrar contra el **techo nulo** permutando la clave (un máximo sobre muchas reglas está inflado por selección: 69,6 % observado contra 34,8 % de techo); y declarar **NO CONCLUYENTE** cuando el máximo cae a menos de 5 pp del umbral. *Una batería incompleta no mide «sin señal», mide «sin sonda»* — el canal real (47,4 %) estaba en la única familia sin sonda. Helper: `.claude/scripts/bateria_eliminacion.R`; test: test_bateria_eliminacion.R (suite 32).
 23. **Muestra estándar de validación: N = 100** → @.claude/rules/muestra-estandar-validacion.md
     **Toda medición estadística sobre versiones usa `N = 100`.** Un único número, cableado en código ejecutable, NO elegible por sesión, agente ni handoff. Aplica a `validar_diagnosticidad.R`, `validar_diversidad_sustantiva.R`, `validar_multisemilla.R`, verificadores propios del ejercicio y smokes: invocarlos **sin `--n`** ya da el estándar. Origen: el repo tenía **cinco tamaños rivales** (5/10/20/30/40) y ninguna fuente única, así que cada agente elegía el suyo —algunos 400—; la instrucción verbal del profesor no se sostuvo porque no vivía en nada ejecutable. Excepción **declarada**: las muestras de **renderizado real** (`stress_test_visual.R`, `auditor-visual-html`) cuestan un PDF o una captura por unidad — su N debe **declararse siempre en el reporte** junto al resultado. NO confundir con el umbral de producto de 250+ versiones únicas sobre 300 (regla #3), que no cambia. Timeout del hook subido a 300 s para que quepa (170 s medidos). Test: test_muestra_estandar.R (suite 29).
+24. **Hermes — triaje y fidelidad de figuras de cuadernillo** → @.claude/rules/hermes-imagenes-icfes.md
+    Estrategia importada desde Todo-Pajaro (`motor-hermes`, v1.9.0, 13 lecciones validadas sobre lotes reales 2026-07-03 → 2026-08-05). Antes de reproducir CUALQUIER figura de un ítem escaneado hay que **mirar el recorte del JPG**: la descripción textual (`[FIGURA: …]`, ficha de alineación) SOBRE-clasifica sistemáticamente. Cinco exigencias: **H-1** gate visual (la decisión `flujo_b` se justifica con lo VISTO, no con el `.md`); **H-2** ⛔ la trampa deliberada ES la pregunta — reproducir la figura *incluidos sus errores*, jamás normalizar (incidente Q067: "corregir" la gráfica habría hecho verdadera una opción falsa), con screening de 7 patrones de enunciado; **H-3** gate de fidelidad **por tipo** en 4 ramas — celda-a-celda para tablas, **inventario bidireccional de rótulos** para geometría (atrapa la etiqueta *agregada* que un checklist de forma no ve), checklist dirigido para curvas; **H-4** ancla en el número IMPRESO (los mapeos página↔pregunta tienen desfase acumulado) y crop al borde del contenido; **H-5** asimetría de seguridad — endurecer es autónomo, **relajar nunca**. El motor ejecutable NO se forkea aquí: fuente única en `$MOTOR_HERMES` de Todo-Pajaro. Copia congelada de la estrategia: `.claude/skills/hermes-imagenes/SKILL.md`.
+
+25. **Glifos Unicode que rompen pdflatex** → @.claude/rules/glifos-latex-prohibidos.md
+    Un `✓` (U+2713) **literal** en texto Markdown visible impide compilar el PDF, y el fallo es **invisible en HTML** porque no pasa por LaTeX: por eso sobrevivió meses en `03-En-Produccion/` sin que nada lo detectara — ningún validador del arsenal miraba los caracteres del fuente. **110 glifos medidos** con `exams2pdf()`, y tres resultados contradicen la intuición: las flechas `← ↑ →` **compilan** pero `↔ ⇒ ⇔ ↺` no (el bloque Unicode no es homogéneo); el modo math **no salva** (`$a ≤ b$` falla igual, hay que usar `$\le$`); y un glifo **sólo en comentario R** es inocuo. La severidad está **calibrada**, no elegida, midiendo causalmente los 63 `.Rmd` afectados (render del original vs. del mismo archivo con los glifos sustituidos): en **Markdown** acierta 16/16 → `ERR_GLIFO_LATEX` bloqueante; en **código R** sólo 1/24 → `WARN_GLIFO_LATEX`, porque bloquear ahí habría marcado 23 archivos que sí compilan (una cadena R puede no emitirse nunca). Tildes españolas y `× ÷ ° ² → — •` están medidos como seguros y NO se tocan. Capas: detector único `validar_glifos_latex.R` + hook FASE 2O + `test_glifos_latex.R` (suite 33) con allowlist de 29 legacy que **no admite altas**.
 
 ### 🛠️ Comandos y Skills
 @.claude/docs/COMANDOS_Y_SKILLS.md
@@ -147,9 +152,373 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.20.8 (un formato que solo vive en un documento pierde contra uno que vive en un regex)
-**Fecha**: 2026-08-10
+**Versión**: 3.22.0 (un umbral absoluto mide, en parte, el tamaño de tu propia batería)
+**Fecha**: 2026-08-15
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.22.0 (2026-08-16)
+
+> El repositorio llevaba meses juzgando la diagnosticidad de sus ítems contra un umbral que
+> **nadie había calibrado contra nada**. Al medirlo sobre 468 ítems oficiales del ICFES resultó
+> ser inalcanzable —ninguna población, con 19 a 91 reglas, pasó del 47 %— y, peor, resultó medir
+> en parte **el tamaño de la propia batería**. Un ítem no puede estar aprobado y rechazado a la
+> vez, y hasta hoy lo estaba.
+
+- **LA VARA QUE FALTABA: 468 ítems oficiales, 6 cuadernillos.** Se midió la batería de reglas de
+  eliminación sobre el corpus real para saber si el 47 %/67 % de un ejercicio generado era un
+  defecto nuestro o el nivel normal de un ítem bien construido. **La métrica ya traía su propio
+  nulo exacto** y eso es lo que hizo comparables las poblaciones sin inventar equivalencias: con
+  `score = 1/|S|` si la clave sobrevive, `E[score] = 1/n` **para toda regla, en toda instancia**,
+  sea cual sea su selectividad (verificado por enumeración).
+- **RESULTADO: en lo comparable, EN LÍNEA.** Vara universal limpia: oficiales **+0,4 pp**, nuestro
+  ejercicio **−1,1 pp**. Vara de valor: oficiales **−2,1 pp**, nuestro **+0,9 pp**. Las cuatro son
+  ruido alrededor del techo nulo. **El 47 %/67 % no tiene contraparte medible**: exige la
+  estructura «punto H + pendiente p/q», y en 468 ítems oficiales existe **exactamente uno** con
+  ella. No es que los oficiales pasen la prueba — es que la prueba no se les puede aplicar.
+- **DOS AUTOCORRECCIONES DEL PROPIO MEDIDOR**, ambas en contra de su primer titular. (a) Su lectura
+  inicial ponía el ítem oficial en el **percentil 100** de explotabilidad; al deduplicar vio que en
+  ese ítem la celda contiene **una sola** opción, de modo que 15 reglas distintas compartían
+  superviviente y se contaban 15 veces — con dedup baja al **percentil 27**, y **82 % de nuestras
+  versiones son iguales o peores**. (b) Detectó un sesgo posicional en el corpus (clave en C el
+  34,8 %, χ²=42,26) y **lo retiró como afirmación sobre el ICFES**: ninguna clave de ese corpus es
+  oficial, se derivaron por votación de modelos, y un sesgo de los modelos es indistinguible del
+  editorial con esos datos.
+- **§P7 → v1.6: EL VEREDICTO LO DECIDE EL EXCESO**, no la tasa absoluta. Razón medida: la misma
+  población da **27,4 % con 19 reglas y 34,8 % con 25**, y el techo nulo se mueve con ella
+  (27,0 → 27,8). **El exceso es invariante; la tasa no.** Cortes calibrados por simulación bajo H0
+  (500 réplicas, k ∈ {6,19,25,74,91}, N ∈ {30,100,300}): **+2 pp ≈ 1 sd** a N=100 y **+8 pp ≈
+  p99,5**. El +7,0 pp del corpus oficial **no es ruido** —a N=468 la sd baja a 1,0 pp, son ~7 sd—
+  y por eso queda en zona gris: *un ítem que no filtra más que el examen real no se declara
+  defectuoso, pero tampoco se absuelve*.
+- **RECONCILIACIÓN MECÁNICA, NO POR PROSA.** El helper daba `PASS` (43,5 % < 70 %) al mismo
+  artefacto que `auditoria_propia.R` rechazaba por su 45 %. Ahora el verificador hace `source()`
+  del helper y **aborta si no lo encuentra**: los cortes tienen **una sola fuente**. Se unificó
+  además la convención de puntuación, que era la otra mitad del problema — el propio archivo
+  declaraba que las dos cifras «no son comparables aunque coincidan».
+- **EL TECHO NULO DEL CIERRE CRUZADO, QUE NUNCA SE CALCULÓ BIEN.** `(K4)` lo estimaba con **`max`
+  sobre 3 réplicas**: un estimador sesgado al alza, e inflar el techo **rebaja** el exceso, así que
+  **el sesgo iba a favor del artefacto auditado**. Con media sobre 8 réplicas: 67,0 % contra
+  **36,3 %** (sd 1,0) ⇒ exceso **+30,8 pp**, casi 4× el corte.
+- **EL BORDE DE 0,1 pp NO EXISTÍA.** Se había reportado el ejercicio en +8,1 pp contra un corte de
+  +8 — la clase de coincidencia que hace sospechar de quien refija un umbral. Era **artefacto de
+  la convención vieja**, que deprimía el máximo e inflaba el techo. Con nulo exacto, la misma
+  batería sobre los mismos datos mide **+13,4 pp**. **El cambio de criterio endureció el ejercicio,
+  no lo indultó**: pasó de 4 a 5 errores y el helper de `PASS` a `BLOQUEA`.
+- **RESIDUO DECLARADO POR EL PROPIO CAMBIO**: el criterio por exceso abre un vector que el absoluto
+  no tenía — **rellenar la batería con reglas implausibles sube el techo nulo sin mover el máximo**
+  y erosiona el exceso. El helper no puede detectarlo (no sabe qué regla es plausible). Mitigado
+  con regla de conducta en §P7 y publicando `exceso_atomico`, independiente de k.
+
+- **REGLA #25 — GLIFOS UNICODE QUE ROMPEN pdflatex** (`glifos-latex-prohibidos.md`). Un ejercicio
+  de `03-En-Produccion/` llevaba tiempo sin compilar en PDF por un `✓` (U+2713) en encabezados
+  Markdown de su Solution, y **ningún validador miraba los caracteres del fuente**.
+- **SE MIDIERON 110 GLIFOS UNO A UNO en vez de suponer**, y la mayoría de los «sospechosos»
+  **compilan**: `← ↑ →` sí y `↔ ⇒ ⇔` no; `•` sí y `▪ ‣` no; **todos** los tipográficos
+  (`— – " " … ° ‰`) sí; `± × ÷` sí. De **213** `.Rmd` con no-ASCII, **196 no requerían nada**.
+- **CLASIFICACIÓN CAUSAL, no correlación**: sólo cuenta como roto si el original falla **y** el
+  mismo archivo con el glifo sustituido compila. **17 rotos de 63 candidatos.** Y el dato que
+  calibra el gate: zona **Markdown 16 rotos / 0 inocuos (100 %)** frente a zona **código R 1 / 23
+  (4 %)** — de ahí las dos severidades. Bloquear en código R habría marcado 23 archivos sanos.
+- **UN BUG DEL PROPIO GATE, cazado por su control end-to-end**: la fase se escribió con ruta
+  relativa y el hook no hace `cd`, así que **nunca se ejecutaba**. El test del detector aislado
+  pasaba en verde. *Un gate mudo se ve igual que un gate limpio.*
+
+- **EL CORRECTOR DE ORTOGRAFÍA NO SÓLO CALLABA: CORROMPÍA.** Además del exit ciego (v3.21.0),
+  `esta_en_string()` trataba **todo lo entrecomillado** como texto visible corregible, sin
+  distinguir el valor de un atributo HTML de la prosa. `class="ex-opcion"` se reportaba como falta
+  y `--fix` lo «corregía» a `class="ex-opción"`: **una tilde dentro de un identificador CSS**.
+  Detectado al revisar el diff antes de commitear, cuando ya había entrado en 3 `.Rmd` de
+  producción dejándolos inconsistentes con el cuarto de su familia.
+- **EL FIX PROTEGE, NO EXCLUYE**: blinda el bloque `atributo="valor"` completo durante el
+  reemplazo, así que en una **línea mixta** corrige el texto visible y deja el atributo intacto.
+  Excluir la línea entera habría apagado el corrector del que depende la regla #7 — el control
+  negativo anti-sobre-exclusión es el que autoriza el cambio.
+- **LA PRUEBA DE QUE EL DEFECTO ERA DE LA HERRAMIENTA**: un cuarto `.Rmd` de la misma familia,
+  **sin modificar en el repositorio**, también estaba bloqueado y **se desbloqueó sin tocarlo**.
+  Si se hubieran «corregido» los archivos para que pasaran, hoy habría tildes en identificadores
+  CSS en cuatro ficheros de producción y el defecto seguiría vivo.
+
+- **PRODUCCIÓN: la tabla de la Solution no llegaba a HTML/Moodle** en 3 `.Rmd` de
+  `Probabilidad-Intervalos-Curva-13-S1-2024B` (inmutabilidad levantada por autorización explícita
+  del profesor). `include_tikz()` con su `markup="tex"` por defecto emite LaTeX crudo que **pandoc
+  descarta al escribir HTML**, y la pérdida **no deja señal visual**: queda un `<p></p>` y el texto
+  fluye alrededor. Medido 5 → **6 `<img>`**, verificado por hash perceptual; PDF byte-idéntico.
+  El XML exportado (39 MB, 300 preguntas) tenía **0 menciones** de `tabla_solucion`.
+  Despliegue bajado a **100** (`copias <- 300`, `archivos = 250`) por el estándar del profesor.
+- **DEUDA DECLARADA, NO SALDADA**: los bloques `(I)` y `(K)` de `auditoria_propia.R` siguen con
+  umbrales **absolutos** sin techo nulo propio. Hoy rechazan igualmente, así que no cambian ningún
+  veredicto — pero arrastran el mismo defecto de escala que esta versión corrige.
+
+### Cambios v3.21.0 (2026-08-15)
+
+> Tres encargos independientes con un hilo común: **un verificador que no puede fallar no
+> verifica**. Uno salía con 0 imprimiendo sus propios errores; otro medía complejidad con una
+> regla que confundía dos escalas distintas; el tercero declaraba «sin señal» lo que en realidad
+> era «sin sonda».
+
+- **TERCER GATE CIEGO DEL REPOSITORIO, MEDIDO Y CERRADO** (tras la FASE 2G y la FASE 2I).
+  `corregir_ortografia_espanol.R` imprimía `ERRORES ORTOGRÁFICOS ENCONTRADOS: 15` y **salía con
+  exit 0**. No era una hipótesis: se midió con fixture y redirección a archivo (nunca por tubería).
+  Causa en el código: `corregir_archivo()` devuelve `invisible(FALSE)`, pero el bloque
+  `if (!interactive())` **descartaba ese retorno y nunca llamaba a `quit()`**, así que Rscript se
+  caía por el final del script con 0.
+- **CONTRATO DE EXIT NUEVO**: `0` nada pendiente · `1` errores auto-corregibles sin aplicar ·
+  `2` sólo casos ambiguos (`REVISION_MANUAL`, que `--fix` no toca por diseño). Los cinco escenarios
+  verificados uno a uno, y el mutante sobre **copia** (revertir a `quit(status = 0)`) confirma que
+  la aserción distingue: mutante 0, real 1.
+- **LOS CONSUMIDORES SE COMPROBARON ANTES DE TOCAR EL EXIT**, que era la parte con riesgo:
+  `.git/hooks/pre-commit` tiene `set -e` pero neutraliza el status con `|| true` y decide por
+  `grep "ERRORES"`; el hook plantilla usa **tubería**, cuyo exit es el del `grep`; y
+  `run_one_suite.R` sólo cuenta `failed`/`error`, no *warnings*. **Ninguno se rompe** — verificado
+  simulando ambos hooks y corriendo las dos suites que invocan el script.
+- **EL ESTADO NO VIAJA POR EL VALOR DE RETORNO**, a propósito: `corregir_directorio()` lo consume
+  con `sapply` + `sum(!resultados)`, así que cambiarlo a entero **invertiría en silencio** el
+  conteo del resumen. Va por un entorno propio y el contrato lógico queda intacto.
+- **5 tests nuevos** en `test_ortografia_espanol.R` con control positivo (faltas → exit ≠ 0),
+  negativo (limpio → 0), ambiguo (→ 2), post-`--fix`, y **uno que comprueba que el `pre-commit`
+  sigue leyendo la salida y no el exit** — es el que autoriza el cambio.
+
+- **LA TABLA DOK↔NIVEL LLEVABA 6 MESES EQUIVOCADA** (regla de ejercicios metacognitivos → **v1.1**).
+  Marcaba **DOK 2 como «incompatible» con N3/N4**, lo que sólo es cierto si el Nivel mide
+  complejidad del ítem. **No la mide.** Verificado contra el catálogo canónico
+  (`niveles-mat.json`, `CANONICO_INMUTABLE`), no citado de segunda mano:
+
+  | Evidencia | Cita literal |
+  |---|---|
+  | `puntajes_oficiales` | `"N1": "0 a 35"` · `"N2": "36 a 50"` · `"N3": "51 a 70"` · `"N4": "71 a 100"` |
+  | `encabezado_oficial` | `"El evaluado que se ubica en el nivel {N}, demuestra que…"` |
+  | `grep -ri 'DOK\|Bloom\|Webb'` sobre los 6 archivos del catálogo | **cero coincidencias** |
+
+- **EL SUJETO GRAMATICAL ES «El evaluado», no la pregunta**: el Nivel es una **banda de puntaje**
+  del estudiante, no una escala cognitiva del ítem. De ahí que **un ítem rutinario pueda ser
+  empíricamente difícil** (pendiente fraccionaria negativa, manejo de signos) y discriminar en N4
+  con DOK 2. La tabla vieja empujaba a **inflar el DOK declarado** para cuadrar con el Nivel: el
+  ítem no cambiaba, cambiaba la etiqueta.
+- **SE CONSERVA LO QUE SÍ SE SOSTIENE**: `DOK ≥ 3 ⇒ Nivel ≥ 3` es una implicación **en una sola
+  dirección** y sigue vigente; la recíproca `Nivel ≥ 3 ⇒ DOK ≥ 3` queda declarada **falsa**, con
+  tabla de las cuatro implicaciones y su veredicto.
+- **CHECKLIST CORREGIDO**: «¿Bloom incluye Analizar/Evaluar?» exigía algo que un ítem legítimo de
+  la competencia **Formulación y ejecución** no cumple (su verbo es *Aplicar*). Pasa a comprobar la
+  **correspondencia** entre el verbo declarado y lo que el ítem exige.
+- **ALCANCE VERIFICADO, no supuesto**: `grep -rn 'DOK' .claude/scripts/ SOURCES/scripts_validacion/
+  tests/ .claude/hooks/` → **0 coincidencias**. Ningún gate ejecutable leía la tabla, así que la
+  corrección es documental. Esa misma ausencia es la razón por la que la redacción importa: es lo
+  único que sostiene el criterio.
+
+- **REGLA #22 → v1.5, NUEVO §P7: cierre por familias de dimensión.** A diferencia de P1–P6, no
+  nombra un canal de fuga: nombra un defecto **del verificador**. La lección ya había salido en
+  **dos ejercicios distintos** y sólo vivía en el verificador de uno.
+  *Una batería incompleta no mide «sin señal», mide **SIN SONDA**.* En el incidente, seis reglas
+  intra-celda y **ninguna** tocaba la divisibilidad — donde estaba el canal real (**47,4 %**).
+- **TRES EXIGENCIAS**: (1) **cobertura** de las seis familias (magnitud, divisibilidad, signo,
+  posición, formato, léxico), con declaración justificada para las inaplicables; (2) **techo nulo**
+  por permutación de la clave con las reglas intactas —medido: máximo **69,6 %** contra techo
+  **34,8 %**, exceso **+35 pp**; sin esa calibración el número no significa nada—; (3) **banda de
+  incertidumbre** de 5 pp, porque a N = 100 un máximo sobre ~19 reglas no es reproducible tirada a
+  tirada. `NO_CONCLUYENTE` sale con **exit 1**: redondearlo a `PASS` es justo el fallo a evitar.
+- **NUEVO HELPER**: `.claude/scripts/bateria_eliminacion.R` (`nueva_regla`, `evaluar_bateria`,
+  `imprimir_bateria`, `exit_bateria`). Sólo la parte **genérica**; las reglas siguen siendo por
+  ejercicio, porque la divisibilidad sólo aplica a claves enteras y el signo sólo donde hay
+  negativos.
+- **CUARTO GUARDIÁN, aparecido al construirlo**: `UMBRAL_DEGENERADO`. Si el techo nulo alcanza el
+  umbral, **el umbral no discrimina** —hasta una batería de ruido lo cruzaría—. Un gate que
+  siempre falla se aprende a ignorar igual que uno que nunca falla.
+- **NO SE CABLEÓ EN `validar_diagnosticidad.R`, y se explica por qué**: una batería automática de
+  divisibilidad sobre opciones textuales no aplicaría nunca y el script imprimiría `PASS` sobre una
+  familia que jamás sondeó — recreando el defecto que §P7 cierra. Mismo criterio que fijó H3b:
+  **declarar la ceguera vale más que añadir una sonda débil.**
+- **NUEVA SUITE (32 en el runner)**: `test_bateria_eliminacion.R`, 33 aserciones. Control decisivo:
+  **«mismos datos, sonda retirada»** — con el canal real al 100 %, quitar esa sonda hace que la
+  batería reporte **19 %** (cifra baja y tranquilizadora) y el helper **siga negándose a dar PASS**.
+- **DOS BUGS DEL PROPIO TEST, cazados por sus controles**: (a) `expect_lt`/`expect_gt` **no aceptan
+  `info =`**; tres aserciones reventaban por eso y no por el helper. (b) El caso de la banda se
+  construyó acercando el umbral al máximo de un ítem **sano**, lo que hunde el umbral por debajo del
+  techo nulo y hace que el veredicto correcto sea `UMBRAL_DEGENERADO`: **el helper tenía razón y el
+  escenario estaba mal**. Además, sortear el canal con probabilidad 0,66 aterrizó en **61 %** y sacó
+  al test de su propia banda — la irreproducibilidad de la exigencia (3), reproducida dentro del
+  test que la prueba. El fixture pasa a un conteo **exacto**.
+
+- **VECTOR DE REINYECCIÓN QUE SEGUÍA ABIERTO**: el barrido de `is_latex_output` dejó las 12
+  referencias de `.claude/` como históricas con advertencia, **salvo `snippets_familias_rmd.R`** —
+  la librería de helpers que la regla #21 manda **copiar dentro del `.Rmd`**, y que conservaba el
+  patrón desnudo mientras su copia en el `.md` sí llevaba el aviso de «RAMA MUERTA». Anotadas ambas
+  ocurrencias sin tocar el comportamiento (la decisión de no tocar las Familias 2 y 3 se respeta).
+
+- **VERIFICACIÓN DE CIERRE DE DOS FIXES AJENOS** (ningún agente anterior los había comprobado):
+  - **`markup = "markdown"` en producción: FUNCIONA**, con control negativo. HTML **5 → 6 `<img>`**
+    en los 3 `.Rmd`, reproducible. **Pero la hipótesis compuesta sólo se cumple en 1 de 3**: los dos
+    CLOZE **no compilan a PDF ni con el fix ni sin él**, por un `✓` (U+2713) en los encabezados de
+    su Solution — defecto **preexistente e independiente**, que nadie había visto porque nadie había
+    ejecutado `exams2pdf()` real sobre ellos.
+  - **Los `n` de despliegue SÍ se habían bajado**: `archivos = 250 → 100` y `copias <- 300 → 100`
+    (confirmado por `git diff`). El grep que no los encontraba buscaba `n = 300`, y el patrón real
+    es `copias <-` / `archivos =`.
+  - **Declarado, no corregido**: esos 5 archivos están modificados **sin commitear dentro de
+    `03-En-Produccion/`**, que la regla #2 declara inmutable.
+
+> La v3.20.9 midió que dos patrones documentados pierden la figura y los retiró. Faltaba la
+> pregunta que de verdad importa: **¿cuántos ejercicios los estaban usando?** El barrido encontró
+> que los dos patrones retirados **no tienen ni una instancia viva** — y, buscándolos, apareció un
+> tercer modo de pérdida que nadie había descrito, activo en **tres ejercicios de producción**.
+
+- **BARRIDO COMPLETO DE `A-Produccion/`**: 139 `.Rmd` con `include_tikz` o `is_latex_output`
+  (59 en `01-`, 16 en `02-`, 30 en `03-`, 34 en `Ejemplos-Funcionales`); **218 usos** de
+  `include_tikz` y **21 bloques** `is_latex_output`, clasificados uno a uno con medición cuando la
+  lectura no bastaba.
+- **LOS DOS PATRONES RETIRADOS NO ESTÁN INSTANCIADOS**: cero `.Rmd` con el Patrón B de la regla #18
+  (`is_latex_output()` ? `\includegraphics` : `<img>`) y cero con el de `codigo-rmd.md` #1
+  (`include_tikz` : `include_graphics`). El único fichero que combina ambos símbolos —
+  `ortocentro_alturas_triangulo_geometria_n2_v1.Rmd` — tiene su `include_graphics` **comentado**.
+  Las correcciones de la v3.20.9 son **preventivas**: no hay deuda que pagar en los ejercicios.
+- **TERCER MODO DE PÉRDIDA, NO DOCUMENTADO HASTA HOY — `include_tikz()` sin `markup`.** Su valor por
+  defecto es `markup = "tex"`, que emite **`\includegraphics` LaTeX crudo**; por la misma regla de
+  enrutado que la v3.20.9 midió, eso **se descarta en HTML y en Moodle**. Medido sobre fixture:
+  HTML de **544 B con 0 `<img>`** (un `<p></p>` vacío donde iba la figura) frente a **16.439 B con
+  1 `<img>`** usando `markup = "markdown"`; en Moodle, **XML de 1.321 B con 0 `<img>`** frente a
+  17.268 B con 1. PDF y DOCX conservan la imagen en ambos casos — por eso el defecto sobrevive a
+  cualquier revisión que mire el PDF.
+- **CONFIRMACIÓN NORMATIVA**: en los `.Rmd` **oficiales** de R/exams (`SOURCES/plantillas/`)
+  `include_tikz` lleva **siempre** `markup = "markdown"` o `"none"`; el default `"tex"` solo aparece
+  en los `.Rnw`, donde el destino sí es LaTeX. El default está pensado para Rnw, no para Rmd.
+- **TRES EJERCICIOS DE `03-En-Produccion/` AFECTADOS** (familia `probabilidad_intervalos_curva`,
+  6 usos): el chunk `solution_table`, con `results='asis'`, llama `include_tikz` sin `markup`, así
+  que **la tabla de la Solution no llega al estudiante** en HTML ni en Moodle. Control positivo
+  sobre **copia** mutada con `markup = "markdown"`: **5 → 6 `<img>`** (146.791 → 170.313 B). El
+  enunciado y sus cuatro opciones **sí** llegan: se emiten aparte con `![](…){width=40%}`. Son
+  **inmutables** (regla #2): se reportan, no se tocan.
+- **EL CRITERIO QUE EVITA EL FALSO POSITIVO ES `results=`**, y costó dos pasadas descubrirlo: de los
+  218 usos, **14 no pasan `markup`** y por tanto emiten LaTeX crudo — pero **8 de esos 14 viven en
+  chunks `results="hide"`**, donde `include_tikz` actúa solo como **generador del PNG** y su markup
+  se descarta (la imagen se emite después con `![](…){width=…}`, Patrón A). Clasificar por la
+  llamada, sin mirar el chunk, habría marcado como rotos tres archivos de producción que funcionan.
+  Reparto medido: **171** `markdown/asis` · **20** `none/hide` · **8** `ausente/hide` · **7**
+  `markdown/hide` · **6** `variable/asis` (rama muerta) · **6 `ausente/asis` → ROTO**.
+- **DOS DEFECTOS DE LA PROPIA SONDA, CAZADOS POR SUS CONTROLES**: (a) contaba `include_tikz()`
+  mencionado en **comentarios** (`# NO llamamos a include_tikz() aquí`) — 4 falsos positivos, uno
+  de ellos en un archivo que se habría reportado como roto sin serlo; (b) marcaba como «sin markup»
+  las llamadas con `markup = <variable>`. Tras corregir ambas, el conjunto pasó de **8 archivos
+  sospechosos a 3 rotos reales**.
+- **`markup = markup_tikz` ES RAMA MUERTA, NO BUG**: 6 usos calculan
+  `if (identical(typ,"moodle")) "moodle" else "markdown"`, y `"moodle"` **no es un valor válido**
+  (`match.arg` lo rechaza: *'arg' should be one of "tex", "markdown", "none"*). No explota porque
+  **`typ` nunca vale `"moodle"`**: verificado ejecutando `exams2moodle()` sobre el ejercicio real →
+  **OK, 5 `<img>`**. Es el mismo idioma de rama muerta que la v3.20.9 marcó en las Familias 2 y 3.
+- **LOS 21 BLOQUES `is_latex_output` SON INOCUOS**: 15 son los fenced div de `eq_display`/
+  `tabla_responsiva` (ambas ramas emiten el mismo `$$…$$`; solo cambia el div que pandoc descarta),
+  4 tienen la **rama viva en `markup = "markdown"`** — que sirve a los cinco destinos — y **2 no son
+  usos: son comentarios** que documentan por qué NO usar el patrón. Medido sobre
+  `volumen_cilindro_…_n2_v1.Rmd`: HTML con 1 `<img>`, 0 fugas de `includegraphics`.
+- **EL RESIDUO DE LA v3.20.9 SON 7 UBICACIONES, NO 6 — Y UNA ES EJECUTABLE**:
+  `.claude/skills/diagnosticar-errores/scripts/diagnosticar-error.R:33` responde al error `ERR_G1`
+  («Graficas no visualizadas») con la recomendación literal *«Usar renderizado condicional con
+  `is_latex_output()`»*. No es prosa: es el mecanismo por el que el patrón retirado **se reinyecta
+  automáticamente** justo cuando alguien tiene una figura perdida. Debería ser el primero de los
+  siete en corregirse.
+- **VERIFICADO**: runner completo con `R_TESTS_FULL=1` → **31 suites ejecutadas de 31 declaradas,
+  0 saltadas, 0 fallidas, cobertura 100 %, exit real 0** (medido por redirección a archivo, no por
+  tubería). Invariantes **I-1..I-10 en verde** (214 aserciones, exit real 0), re-ejecutadas
+  **después** de editar este archivo. Las dos suites de la v3.20.9 (30 y 31) están enganchadas al
+  runner y pasan. Snapshot previo de `.claude/` disponible en
+  `.claude.pre-fix-gates-20260815-111825.tar.gz`.
+- **NUEVA REGLA #24 — HERMES, triaje y fidelidad de figuras de cuadernillo** (importada el
+  2026-08-15 desde Todo-Pajaro, `motor-hermes` v1.9.0, 13 lecciones validadas sobre lotes reales
+  2026-07-03 → 2026-08-05). Entró en el índice sin quedar registrada en el changelog, que es la
+  misma deriva documental que la v3.20.0 tuvo que remediar en bloque. Cinco exigencias: **H-1** gate
+  visual — la decisión `flujo_b` se justifica con el **recorte del JPG**, nunca con el `[FIGURA: …]`
+  de la ficha, que SOBRE-clasifica; **H-2** la trampa deliberada **ES** la pregunta, así que la
+  figura se reproduce *incluidos sus errores* (incidente Q067: «corregir» la gráfica habría vuelto
+  verdadera una opción falsa); **H-3** gate de fidelidad **por tipo** en 4 ramas, con inventario
+  **bidireccional** de rótulos en geometría — el que atrapa la etiqueta *agregada* que un checklist
+  de forma no ve; **H-4** anclar en el número **impreso** (los mapeos página↔pregunta acumulan
+  desfase); **H-5** asimetría de seguridad — endurecer es autónomo, **relajar nunca**. El motor
+  ejecutable **no se forkea**: fuente única en `$MOTOR_HERMES`. Copia congelada de la estrategia en
+  `.claude/skills/hermes-imagenes/SKILL.md` (21 KB) — puntero verificado, existe.
+- **CORRECCIÓN AL DIAGNÓSTICO HEREDADO — `git worktree add` NO FALLA.** Se daba por inhabilitado el
+  aislamiento en worktree para todo agente futuro. Ejecutado de verdad: **exit 0**, worktree usable
+  (`git status` limpio, 499 `.Rmd`, PNGs materializados como binarios reales, 1139 archivos LFS).
+  Lo que hay son **dos errores cosméticos** de `.git/hooks/post-checkout`, que es un **heredoc mal
+  cerrado**: el propio `EOF` y la línea `chmod +x .git/hooks/post-checkout` quedaron **dentro** del
+  script (de ahí `línea 6: EOF: orden no encontrada` y un `chmod` que falla porque en un worktree
+  `.git` es un archivo, no un directorio). `core/poblar_ontologia.R` **sí existe** y el hook cumple
+  su función antes de fallar. Fix: borrar las tres líneas sobrantes. **No commiteado**: `.git/hooks/`
+  no está bajo control de versiones y el fichero es del entorno local del usuario.
+
+### Cambios v3.20.9 (2026-08-15)
+
+> Dos defectos de infraestructura que llevaban meses en pie **por la misma razón**: nadie había
+> medido lo que la documentación afirmaba. Uno hacía que un gate bloqueante fallara siempre; el
+> otro, que una rama documentada no se ejecutara nunca. Ambos pasaron todas las revisiones porque
+> su efecto era invisible en la salida que se inspecciona.
+
+- **LA FASE 2I MARCABA `ERROR 16` EN TODO `.Rmd`, TUVIERA O NO IMÁGENES.** El bloque 2I.2 usaba
+  `grep -l 'pandocbounded'`, que **no distingue la definición del uso**. Desde **R/exams 2.4-1**
+  todas las plantillas del paquete traen `\providecommand{\pandocbounded}[1]{#1}` (verificado en
+  `exams/tex/{plain,plain8,exam,form,solution,plain-highlight}.tex` de la 2.4-2 instalada), así que
+  ese `grep` casaba en cualquier `.tex`. Medido sobre `pendiente-rectas-paralelas-n4`, ejercicio
+  **sin una sola imagen**: **6 de sus 8 `.tex` disparaban; usos reales = 0**. Y sobre un fixture con
+  un chunk que dibuja: 2 disparos, ambos inocuos. Es la patología que este repo ya sufrió con la
+  FASE 2G en falso rojo permanente — el día que aparezca un `\pandocbounded{\includegraphics…}` real
+  sin definición, nadie lo mirará.
+- **EL FIX NO ES «AFINAR EL GREP», ES MODELAR LA CONDICIÓN DE FALLO**: el `Undefined control
+  sequence` exige **uso** (`\pandocbounded{`) **y ausencia de definición** en el conjunto del render.
+  Se comprueban las dos cosas por separado, y la definición se busca en **todos** los `.tex` del
+  render porque el preámbulo vive en `plain*.tex` mientras el uso está en `exercise*.tex`. Con eso
+  el gate se auto-calibra: verde con las plantillas del paquete, rojo con plantilla propia o con
+  exams < 2.4-1, que es exactamente el residuo que la regla #18 ya declaraba.
+- **LAS DOS FIRMAS SE DECLARAN COMO VARIABLES** (`PB_USO_RE`, `PB_DEF_RE`) para que el test las
+  **extraiga del hook real** en vez de mantener una copia paralela que podría divergir en silencio.
+- **`ERROR 16` YA NO ES UN FALLO DE COMPILACIÓN, Y CONVIENE SABERLO**: medido con
+  `cat("![](fig.png)\n")` **sin** width bajo `exams2pdf()` → el `.tex` lleva
+  `\pandocbounded{\includegraphics[keepaspectratio]{fig.png}}` y **compila** (PDF de 15 KB con la
+  imagen). La regla #18 **no se relaja**: el `NEWS.md` de exams dice que el macro es no-op y que el
+  tamaño «still has to be controlled in one of the previously available ways», así que `{width=...}`
+  sigue siendo obligatorio — por **tamaño**, no por compilación.
+
+- **`knitr::is_latex_output()` ES SIEMPRE FALSE BAJO R/exams — la regla #21 afirmaba lo contrario.**
+  Decía literalmente que es «el ÚNICO discriminador (TRUE = PDF/NOPS; FALSE = HTML/Moodle/DOCX)».
+  Medido con una sonda que escribe el valor a disco desde `data_generation`, por los cinco
+  pipelines: **html FALSE · pdf FALSE · docx FALSE · nops FALSE · moodle FALSE**. Causa
+  arquitectónica, no bug de nadie: R/exams **siempre** teje a Markdown y delega la conversión en
+  **pandoc**, de modo que durante el `knit` no hay destino LaTeX que detectar.
+- **QUIEN ENRUTA ES PANDOC, POR TIPO DE BLOQUE** (medido con fixtures renderizados): Markdown
+  `![](f.png){width=}` llega a los dos destinos; **LaTeX crudo** sobrevive solo a LaTeX y se
+  descarta en HTML; **HTML crudo** sobrevive solo a HTML y **se descarta al escribir LaTeX**.
+- **CONSECUENCIA MEDIDA — DOS PATRONES DOCUMENTADOS PERDÍAN LA FIGURA EN EL PDF**, y los dos en
+  silencio (compilan, sin warning, ningún validador lo ve):
+  - **Regla #18 Patrón B** (`is_latex_output()` ? `\includegraphics` : `<img>`): `.tex` con **0
+    `\includegraphics` y 0 `<img>`**. PDF de 9 KB frente a 15 KB del mismo ejercicio con imagen.
+    **RETIRADO.** Sustituto **Patrón B'** verificado: emitir **ambos** sin condicional y dejar que
+    pandoc descarte el que no toca → PDF 1 `\includegraphics` / 0 `<img>`; HTML 1 `<img>` / 0
+    `includegraphics`. Cero fuga cruzada.
+  - **`codigo-rmd.md` regla #1** (`is_latex_output()` ? `include_tikz` : `include_graphics`): la
+    rama TikZ nunca corre, y `knitr::include_graphics()` bajo R/exams emite un
+    `<div class="figure"><img …></div>` que el escritor LaTeX descarta — en el `.tex` solo queda el
+    texto literal `plot of chunk <nombre>`. **El patrón «corregía» una figura perdida en HTML
+    perdiéndola en PDF.** Sustituto medido: `include_tikz(..., markup = "markdown")`, **una sola
+    llamada sin condicional** → PDF `\includegraphics[width=8cm,…]{g.png}`, HTML `<img>`.
+- **LAS FAMILIAS 2 y 3 NO SE TOCAN, Y SE EXPLICA POR QUÉ**: sus ramas `is_latex_output()` son código
+  muerto, pero el efecto es **inocuo por accidente** — se emite siempre el fenced div y el escritor
+  LaTeX lo descarta. Verificado sobre el repositorio completo: **0 de 487 `.tex` contienen
+  `overflow-x`**, frente a 6 HTML que sí lo llevan. Cambiar los helpers habría divergido de las
+  copias embebidas en los `.Rmd` sin arreglar nada. Se marcan las ramas como `RAMA MUERTA` para que
+  nadie **copie el idioma** a un sitio donde las dos ramas emitan cosas distintas.
+- **DOS SUITES NUEVAS (30 y 31 en el runner)**: `test_fase2i_pandocbounded_detector.R` (18
+  aserciones; control positivo uso-sin-definición, dos controles negativos, el caso real
+  uso+definición, y una aserción de regresión que **deja constancia medible** de que el detector
+  viejo fallaba en 2 de 3 casos inocuos) y `test_is_latex_output_rexams.R` (17 aserciones; vuelve a
+  **medir** el valor en runtime con `exams2html`/`exams2pandoc(latex)`/`exams2pdf`, más una guarda
+  documental que impide que una regla vuelva a mostrar el condicional sin declarar que es FALSE).
+  Ambos detectores son **funciones de la ruta**, ejercitados con mutantes en `tempdir()`; mutar
+  archivos reales ya dejó una vez el arsenal roto en disco.
+- **VERIFICADO**: `bash -n` del hook OK · suites nuevas 18/18 y 17/17 · mutante del hook (revertir al
+  `grep` ingenuo) **cazado**, nombrando las tres aserciones que fallan · invariantes I-1..I-10 en
+  verde · detector nuevo sobre `.tex` reales: 0 disparos donde el viejo daba 6.
+- **RESIDUO DECLARADO, NO OCULTADO**: la creencia falsa sobre `is_latex_output()` está **propagada a
+  otros seis archivos** que esta pasada NO corrige — `.claude/skills/corregir-error-imagen/`,
+  `.claude/skills/corregir-graficos/`, `.claude/skills/diagnosticar-errores/` (los tres prescriben
+  el condicional a la hora de **generar** código) y `.claude/docs/patrones-errores-conocidos.md`
+  (§Error 1 y §Error 16). Cada uno usa una variante distinta del patrón y merece su propia
+  medición antes de reescribirlo.
 
 ### Cambios v3.20.8 (2026-08-10)
 
