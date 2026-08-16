@@ -20,6 +20,7 @@
 # FASE 2L: Gráficas-opción en gap CLOZE (V5, Incidente G, regla graficos-como-opciones)
 # FASE 2M: Auditoría visual HTML masiva (recordatorio — workflow)
 # FASE 2N: Detección ESTÁTICA de diversidad cosmética (regla #22 — WARN_DIV_ESTATICA)
+# FASE 2O: Glifos Unicode que rompen pdflatex (ERR_GLIFO_LATEX)
 #
 # GARANTÍA: Toda renderización activa TODAS las fases
 # PERMANENTE: No hay forma de saltarse estas validaciones
@@ -337,15 +338,47 @@ if [ -f "$RMD_FILE" ]; then
 fi
 
 # 2I.2 — \pandocbounded en .tex generados durante este render
+#
+# ⚠️ HAY QUE DISTINGUIR **DEFINICIÓN** DE **USO**. Desde R/exams 2.4-1 TODAS las
+#    plantillas LaTeX del paquete traen la definición no-op
+#        \providecommand{\pandocbounded}[1]{#1}
+#    (exams/tex/{plain,plain8,exam,form,solution,plain-highlight}.tex).
+#    Un `grep pandocbounded` a secas casa esa DEFINICIÓN y marcaba ERROR 16 en
+#    CUALQUIER .tex, tuviera o no imágenes -> gate que siempre falla, que se
+#    aprende a ignorar (misma patología que la FASE 2G en falso rojo).
+#    El fallo real (`Undefined control sequence`) exige USO **sin** definición,
+#    que es lo que ocurre con una plantilla propia o con exams < 2.4-1.
+#
+#    Las dos firmas se declaran como variables para que el test de regresión
+#    las extraiga del propio hook y no derive una copia paralela.
+PB_USO_RE='\\pandocbounded[[:space:]]*\{'
+PB_DEF_RE='\\(providecommand|newcommand|renewcommand|def)[[:space:]]*\{?\\pandocbounded'
+
+PB_USOS=""
+PB_DEFINIDO=0
 TEX_FILES=$(find "$CWD" -maxdepth 4 -name "*.tex" -newer "$RMD_FILE" 2>/dev/null)
 if [ -n "$TEX_FILES" ]; then
   for tex in $TEX_FILES; do
-    if grep -l 'pandocbounded' "$tex" >/dev/null 2>&1; then
-      PANDOC_BUG_FOUND=1
-      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
-      echo "  ❌ ERROR 16: \\pandocbounded encontrado en $(basename "$tex")"
+    if grep -qE "$PB_USO_RE" "$tex" 2>/dev/null; then
+      PB_USOS="${PB_USOS} $(basename "$tex")"
+    fi
+    # El preámbulo vive en plain*.tex y el uso en exercise*.tex: la definición
+    # se busca en TODO el conjunto del render, no fichero a fichero.
+    if grep -qE "$PB_DEF_RE" "$tex" 2>/dev/null; then
+      PB_DEFINIDO=1
     fi
   done
+fi
+
+if [ -n "$PB_USOS" ] && [ $PB_DEFINIDO -eq 0 ]; then
+  PANDOC_BUG_FOUND=1
+  ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+  echo "  ❌ ERROR 16: uso de \\pandocbounded{...} SIN definición en el preámbulo"
+  echo "     .tex con uso:${PB_USOS}"
+  echo "     Fix: dar {width=...} a la imagen (regla #18), o usar una plantilla"
+  echo "          que defina el macro. Ver .claude/rules/markdown-imagenes-pdf.md"
+elif [ -n "$PB_USOS" ]; then
+  echo "  ✓ \\pandocbounded en uso pero DEFINIDO en el preámbulo (R/exams >= 2.4-1): no bloquea"
 fi
 
 # 2I.3 — exshuffle: TRUE + Solution con letra explícita (estático)
@@ -589,6 +622,69 @@ if [ -n "$RMD_FILE" ]; then
     echo "    Nota: verificación sustantiva COMPLETA solo via validar_diversidad_sustantiva.R (orquestador paso 9)."
   fi
   ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + DIV_WARN))
+  echo ""
+fi
+
+# =============================================================================
+# FASE 2O: GLIFOS UNICODE QUE ROMPEN pdflatex (ERR_GLIFO_LATEX)
+# =============================================================================
+# Un `✓` (U+2713) LITERAL en texto visible impide compilar el PDF:
+#   ! LaTeX Error: Unicode character ✓ (U+2713) not set up for use with LaTeX
+# El defecto es INVISIBLE en HTML (no pasa por LaTeX) y ningun validador del
+# arsenal miraba los caracteres del fuente: por eso sobrevivio meses en
+# ejercicios de 03-En-Produccion.
+#
+# DOS SEVERIDADES, CALIBRADAS midiendo los 63 .Rmd del repo que tenian glifos
+# rompedores (render del original vs. del mismo archivo con los glifos
+# sustituidos, para no atribuir al glifo un fallo ajeno):
+#
+#   glifo en texto MARKDOWN  -> ERR_GLIFO_LATEX  : 16/16 concluyentes rotos (100 %)
+#   glifo en CODIGO R        -> WARN_GLIFO_LATEX : 1/24 rotos (96 % falsos positivos)
+#   glifo en COMENTARIO R    -> informativo      : medido inocuo (compila)
+#
+# Bloquear tambien en codigo R habria marcado 23 archivos que SI compilan: la
+# cadena puede no emitirse nunca. Por eso avisa pero no suma error.
+#
+# POR QUE BLOQUEAR EN MARKDOWN NO PUEDE "ROMPER UN RENDER": este hook corre
+# DESPUES del render, no puede impedirlo, solo marcar el resultado. Su valor es
+# cazar el caso en que solo se hizo exams2html() -- que NO falla -- y el defecto
+# quedaria latente. Que es exactamente lo que paso.
+#
+# Detector unico compartido con tests/testthat/test_glifos_latex.R.
+
+# OJO: se usa $RMD_PATH (ABSOLUTA), no $RMD_FILE (relativa al cwd del comando).
+# El hook no hace cd al cwd, así que `-f "$RMD_FILE"` es falso siempre que el
+# comando use ruta relativa — la fase entera quedaría muda sin que nada avisara.
+if [ -f "$RMD_PATH" ]; then
+  echo "┌───────────────────────────────────────────────────────────────┐"
+  echo "│ FASE 2O: Glifos que rompen pdflatex (ERR_GLIFO_LATEX)         │"
+  echo "└───────────────────────────────────────────────────────────────┘"
+
+  DETECTOR_GLIFOS="$PROJECT_DIR/.claude/scripts/validar_glifos_latex.R"
+  if [ -f "$DETECTOR_GLIFOS" ]; then
+    GLIFOS_OUT=$(Rscript --vanilla "$DETECTOR_GLIFOS" "$RMD_PATH" 2>&1)
+    GLIFOS_EXIT=$?
+    if [ $GLIFOS_EXIT -eq 1 ]; then
+      ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
+      echo "  ❌ ERR_GLIFO_LATEX (bloqueante) — glifo en texto Markdown visible"
+      echo "$GLIFOS_OUT" | grep -v '^$' | sed 's/^/     /'
+      echo "     Ver .claude/rules/glifos-latex-prohibidos.md"
+    elif [ $GLIFOS_EXIT -eq 0 ]; then
+      if echo "$GLIFOS_OUT" | grep -q "WARN_GLIFO_LATEX"; then
+        ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + 1))
+        echo "$GLIFOS_OUT" | grep -v '^$' | sed 's/^/  ⚠️   /'
+      elif echo "$GLIFOS_OUT" | grep -q "INFO_GLIFO_COMENTARIO"; then
+        echo "$GLIFOS_OUT" | grep INFO_GLIFO_COMENTARIO | sed 's/^/  ⊘ /'
+        echo "     No suma nada: los comentarios R no llegan a LaTeX (medido)."
+      else
+        echo "  ✓ FASE 2O: sin glifos que rompan pdflatex"
+      fi
+    else
+      echo "  ⊘ FASE 2O: el detector no pudo analizar el archivo (exit $GLIFOS_EXIT)"
+    fi
+  else
+    echo "  ⊘ FASE 2O: detector no encontrado en $DETECTOR_GLIFOS"
+  fi
   echo ""
 fi
 

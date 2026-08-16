@@ -1,0 +1,48 @@
+# Allowlist LEGACY de glifos que rompen pdflatex — NO ADMITE ALTAS
+#
+# Archivos anteriores al 2026-08-15, cuando se midió que ciertos caracteres
+# Unicode literales impiden compilar el PDF:
+#   ! LaTeX Error: Unicode character ✓ (U+2713) not set up for use with LaTeX
+#
+# Sólo entran aquí los BLOQUEANTES: glifo rompedor en texto Markdown visible
+# (zona medida con 16/16 de acierto). Los que sólo lo tienen en código R son
+# advertencia, no falla, y no necesitan figurar.
+#
+# Esta lista SOLO PUEDE DECRECER. Cuando un ejercicio legacy se toque por
+# cualquier motivo, se le quitan los glifos y se borra de aquí.
+# Los de 03-En-Produccion son inmutables (regla #2) y permanecen hasta que el
+# usuario levante la inmutabilidad, como hizo con Probabilidad-Intervalos-Curva.
+#
+# La mayoría de 01-En-PreDesarrollo está en Lab-Manjaro/, banco de experimentos.
+#
+# Fuente única del criterio: .claude/scripts/validar_glifos_latex.R
+# Rutas relativas a la raíz del repositorio.
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op*_v1/Copia de gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op*_v1/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op*_v1/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opC_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/02-Geometria/test_replica_tikz.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/02-S1-2024B/ganancias_comerciales_formulacion_ejecucion_n2_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/07-S2-2025-SEDQ/test_visual_all07.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/10-S1-2024B/00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/10-S1-2024B/01-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/10-S1-2024B/Copia de 00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/10-S1-2024B/Copia de 01-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/17_2/17_2.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/17/test_replica_avanzada.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/17/test_replica_simple.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/17/test_replica_tikz.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/17/test_visual_funcional.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/19/test_replica_tikz.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/36/36.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/Copia de 01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op*_v1/Copia de gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/Copia de 01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op*_v1/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opA_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/Copia de 01-S1-2024B/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_op*_v1/gastos_carro_graficas_comparacion_interpretacion_representacion_n2_opC_cloze_v1.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/Evaluacion-Gemini-CLI-MCP/archivos-prueba/original/archivo2_cloze_tikz.Rmd
+A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/Evaluacion-Gemini-CLI-MCP/archivos-prueba/original/archivo3_mixto_avanzado.Rmd
+A-Produccion/02-En-Desarrollo/consumo_telefonico_adicional/ejemplo_exams2forms.Rmd
+A-Produccion/02-En-Desarrollo/probabilidad_condicional_diagrama_arbol_aleatorio_argumentacion/01-probabilidad_condicional_diagrama_arbol_aleatorio_argumentacion_n3_v1.Rmd
+A-Produccion/03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/01-Variables-Cualitativas_Distribucion-De-Frecuencias/ExportacionesGraficos-Tebailandia/exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1/ExportacionesGraficosEstadisticaInterpretacion_n3_cloze_v1.Rmd
+A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Avances-Pedagogicos/Gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_v1/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd
+A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Avances-Pedagogicos/Gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_v1/Copia de consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_v1.Rmd
+A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Rmd/cloze/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1.Rmd
+A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Rmd/cloze/consumo_gas_natural_porcentaje_maximo_aleatorio_interpretacion_representacion_n2_cloze_v1/costo_promedio_diario_numerico_variacional_formulacion_ejecucion_n2_cloze_v1.Rmd
