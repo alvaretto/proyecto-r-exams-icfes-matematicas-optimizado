@@ -360,3 +360,264 @@ test_that("Corrección ortográfica preserva código inline", {
 
   unlink(temp_file)
 })
+
+# =============================================================================
+# CONTRATO DE EXIT STATUS (2026-08-15)
+# =============================================================================
+# Hasta esta fecha el script imprimía "ERRORES ORTOGRÁFICOS ENCONTRADOS: N" y
+# SALÍA CON 0. Un orquestador que midiera el exit —en vez de grepear la salida—
+# leía "archivo limpio" sobre un archivo que el pre-commit habría rechazado.
+# Tercer gate ciego del repositorio, tras la FASE 2G y la FASE 2I.
+#
+# Contrato fijado aquí: 0 = nada pendiente | 1 = errores auto-corregibles sin
+# aplicar | 2 = solo casos ambiguos (REVISION_MANUAL, que --fix nunca toca).
+#
+# `stdout=FALSE, stderr=FALSE` hace que system2() devuelva el STATUS, no el texto:
+# es lo único que mide de verdad el exit. Con stdout=TRUE devolvería el texto y el
+# status quedaría en un atributo, que es justo como se pierde en una comprobación
+# descuidada.
+exit_de <- function(lineas, extra = character(0)) {
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(lineas, f, useBytes = TRUE)
+  on.exit(unlink(f), add = TRUE)
+  system2("Rscript", c(SCRIPT_ORTO, f, extra), stdout = FALSE, stderr = FALSE)
+}
+
+test_that("CONTROL POSITIVO: un archivo con faltas sale con exit != 0", {
+  st <- exit_de(c(
+    "Question", "========",
+    "La formula del area de un triangulo es conocida.",
+    "Ademas, la funcion lineal tiene una solucion unica.",
+    "", "Meta-information", "================",
+    "exname: exit_sucio", "extype: schoice"
+  ))
+  expect_false(identical(as.integer(st), 0L),
+               info = "el corrector volvió a salir con 0 teniendo faltas: gate ciego reintroducido")
+  expect_equal(as.integer(st), 1L,
+               info = "faltas auto-corregibles pendientes deben dar exit 1")
+})
+
+test_that("CONTROL NEGATIVO: un archivo limpio sale con exit 0", {
+  st <- exit_de(c(
+    "Question", "========",
+    "La fórmula del área de un triángulo es conocida.",
+    "Además, la función lineal tiene una solución única.",
+    "", "Meta-information", "================",
+    "exname: exit_limpio", "extype: schoice"
+  ))
+  expect_equal(as.integer(st), 0L,
+               info = "un archivo sin faltas NO puede fallar el gate (falso rojo)")
+})
+
+test_that("Solo casos ambiguos: exit 2, distinto del 1 de las faltas reales", {
+  # 'formula' es ambiguo (sustantivo 'fórmula' vs verbo 'él formula'): se reporta
+  # como REVISION_MANUAL y --fix no lo toca. No debe confundirse con una falta.
+  st <- exit_de(c(
+    "Question", "========",
+    "La formula aparece en el enunciado.",
+    "", "Meta-information", "================",
+    "exname: exit_ambiguo", "extype: schoice"
+  ))
+  expect_equal(as.integer(st), 2L,
+               info = "los ambiguos deben tener su propio código, ni 0 (limpio) ni 1 (falta)")
+})
+
+test_that("--fix deja de reportar las faltas que ya escribió en disco", {
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "Question", "========",
+    "La solucion tiene una funcion lineal. Ademas es unica.",
+    "", "Meta-information", "================",
+    "exname: exit_fix", "extype: schoice"
+  ), f, useBytes = TRUE)
+
+  # Tras --fix las faltas ya no están pendientes -> no puede seguir dando 1.
+  system2("Rscript", c(SCRIPT_ORTO, f, "--fix"), stdout = FALSE, stderr = FALSE)
+  st2 <- system2("Rscript", c(SCRIPT_ORTO, f), stdout = FALSE, stderr = FALSE)
+
+  txt <- paste(readLines(f, encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl("solución", txt), info = "--fix no escribió la corrección")
+  expect_false(identical(as.integer(st2), 1L),
+               info = "sigue reportando faltas pendientes después de aplicarlas")
+
+  unlink(f)
+})
+
+test_that("El pre-commit sigue leyendo la salida, no el exit (no se rompió)", {
+  # El hook real hace `$(Rscript ... || true)` + grep "ERRORES": el cambio de exit
+  # NO debe alterar su veredicto. Este control es lo que autoriza el cambio.
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c("Question", "========", "La formula del area es conocida.",
+               "", "Meta-information", "================",
+               "exname: exit_hook", "extype: schoice"), f, useBytes = TRUE)
+  salida <- paste(system2("Rscript", c(SCRIPT_ORTO, f), stdout = TRUE, stderr = TRUE),
+                  collapse = "\n")
+  expect_true(grepl("ERRORES", salida),
+              info = "el hook pre-commit dejaría pasar un archivo con faltas")
+  unlink(f)
+})
+
+# =============================================================================
+# ATRIBUTOS HTML (class=, id=, ...): identificadores, no texto visible (2026-08-15)
+# =============================================================================
+# El corrector marcaba "opcion" dentro de `class="ex-opcion"` como falta y,
+# con --fix, escribía `class="ex-opción"` — una tilde dentro de un
+# identificador CSS. Detectado en 3 .Rmd de 03-En-Produccion/
+# Probabilidad-Intervalos-Curva-13-S1-2024B/ que bloqueaban el commit y, más
+# grave, cuyo --fix ya había corrompido el atributo (revertido a mano). Ver
+# cabecera del script (SOURCES/scripts_validacion/corregir_ortografia_espanol.R).
+#
+# La ruta real es un symlink (invariante I-10): SCRIPT_ORTO apunta a
+# .claude/scripts/..., que resuelve de forma transparente al archivo fuente
+# en SOURCES/scripts_validacion/. Los tests leen y ejecutan por esa ruta como
+# cualquier consumidor real; el fix en sí vive únicamente en SOURCES/.
+SCRIPT_ORTO_FUENTE <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/SOURCES/scripts_validacion/corregir_ortografia_espanol.R"
+
+test_that("CONTROL POSITIVO: class=\"ex-opcion\" no se reporta y --fix no toca el archivo", {
+  # Línea real del bug: HTML embebido en un string R de comillas simples con
+  # el atributo en comillas dobles — sin ninguna otra palabra visible.
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "```{r data_generation, echo=FALSE, results=\"hide\"}",
+    "tabla_renderizada <- sprintf('<table class=\"ex-opcion\" style=\"border-collapse:collapse;\">%s%s</table>', header, rows)",
+    "```",
+    "",
+    "Question",
+    "========",
+    "Observa la tabla."
+  ), f, useBytes = TRUE)
+  on.exit(unlink(f), add = TRUE)
+
+  md5_antes <- unname(tools::md5sum(f))
+
+  salida <- paste(system2("Rscript", c(SCRIPT_ORTO, f), stdout = TRUE, stderr = TRUE),
+                  collapse = "\n")
+  expect_false(grepl("ERRORES", salida),
+               info = "reportó como falta un identificador dentro de class=\"...\"")
+  expect_true(grepl("No se encontraron errores", salida))
+
+  system2("Rscript", c(SCRIPT_ORTO, f, "--fix"), stdout = FALSE, stderr = FALSE)
+  md5_despues <- unname(tools::md5sum(f))
+  expect_identical(md5_antes, md5_despues,
+                    info = "--fix modificó el archivo aunque no había faltas reales")
+
+  txt <- paste(readLines(f, encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl('class="ex-opcion"', txt, fixed = TRUE),
+              info = "--fix acentuó el identificador: class=\"ex-opción\" rompe cualquier selector CSS/JS")
+
+  unlink(f)
+})
+
+test_that("CONTROL NEGATIVO (anti-sobre-exclusión): 'opcion' en texto visible SÍ se corrige", {
+  # Si la exclusión fuera demasiado ancha (cualquier cosa entre comillas),
+  # este caso —sin ningún atributo HTML— dejaría de detectarse. Debe seguir
+  # detectándose: la regla #7 depende de que el corrector NO se apague entero.
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "```{r mostrar, echo=FALSE, results='asis'}",
+    "cat(\"La opcion correcta es la que tiene mayor valor.\")",
+    "```",
+    "",
+    "Question",
+    "========",
+    "* La opcion correcta es la que tiene mayor valor."
+  ), f, useBytes = TRUE)
+  on.exit(unlink(f), add = TRUE)
+
+  salida <- paste(system2("Rscript", c(SCRIPT_ORTO, f), stdout = TRUE, stderr = TRUE),
+                  collapse = "\n")
+  expect_true(grepl("ERRORES", salida),
+              info = "dejó de detectar una falta real por sobre-excluir texto entre comillas")
+  expect_true(grepl("opcion.*opción|opción", salida))
+
+  system2("Rscript", c(SCRIPT_ORTO, f, "--fix"), stdout = FALSE, stderr = FALSE)
+  txt <- paste(readLines(f, encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl("opción", txt), info = "--fix no corrigió el texto visible")
+
+  unlink(f)
+})
+
+test_that("CASO MIXTO (el real): atributo Y texto visible en la misma línea", {
+  # sprintf('<table class="ex-opcion">%s</table>', "la opcion elegida")
+  # Debe reportar EXACTAMENTE una falta (la del texto), no dos, no cero — y
+  # --fix debe corregir SOLO la aparición visible, dejando class="ex-opcion"
+  # intacto.
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "```{r data_generation, echo=FALSE, results=\"hide\"}",
+    "tabla_renderizada <- sprintf('<table class=\"ex-opcion\">%s</table>', \"la opcion elegida\")",
+    "```",
+    "",
+    "Question",
+    "========",
+    "Observa la tabla."
+  ), f, useBytes = TRUE)
+  on.exit(unlink(f), add = TRUE)
+
+  salida <- paste(system2("Rscript", c(SCRIPT_ORTO, f), stdout = TRUE, stderr = TRUE),
+                  collapse = "\n")
+  n_reportes <- length(gregexpr("Línea \\d+: 'opcion'", salida, perl = TRUE)[[1]])
+  # gregexpr devuelve -1 (length 1, valor -1) cuando no hay match: normalizar.
+  if (identical(gregexpr("Línea \\d+: 'opcion'", salida, perl = TRUE)[[1]][1], -1L)) n_reportes <- 0L
+  expect_equal(n_reportes, 1L,
+               info = paste("se esperaba exactamente 1 reporte de 'opcion', hubo", n_reportes))
+
+  system2("Rscript", c(SCRIPT_ORTO, f, "--fix"), stdout = FALSE, stderr = FALSE)
+  txt <- paste(readLines(f, encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl('class="ex-opcion"', txt, fixed = TRUE),
+              info = "--fix corrompió el atributo en la línea mixta")
+  expect_true(grepl("la opción elegida", txt, fixed = TRUE),
+              info = "--fix no corrigió el texto visible en la línea mixta")
+
+  unlink(f)
+})
+
+test_that("MUTACIÓN: sin el reconocimiento de atributos HTML, --fix SÍ corrompe class=\"...\"", {
+  # Control de que el mecanismo hace algo (no es un cheque vacío). El fix
+  # tiene DOS capas independientes que dependen ambas de
+  # ATRIBUTOS_HTML_IDENTIFICADOR / patron_valor_atributo_html():
+  #   1) es_atributo_html() — decide si se REPORTA la palabra.
+  #   2) proteger_atributos_html()/restaurar_atributos_html() — blindan el
+  #      bloque atributo="valor" en el momento del gsub, INCONDICIONALMENTE
+  #      (es la razón de que la "línea mixta" corrija el texto visible sin
+  #      tocar el atributo).
+  # Mutar solo (1) no basta para demostrar corrupción: (2) sigue protegiendo.
+  # Se muta la RAÍZ compartida por ambas capas — la lista de atributos — en
+  # una COPIA del script en tempdir() (NUNCA el archivo real), y se
+  # comprueba que, sin ella, el mismo fixture del control positivo SÍ queda
+  # corrompido por --fix.
+  script_original <- readLines(SCRIPT_ORTO_FUENTE, encoding = "UTF-8", warn = FALSE)
+  linea_raiz <- 'ATRIBUTOS_HTML_IDENTIFICADOR <- "class|id|name|for|href|src|data-[a-zA-Z0-9_-]+"'
+  expect_true(any(script_original == linea_raiz),
+              info = "no se encontró la línea exacta de la raíz compartida: ajustar el texto mutado")
+
+  script_mutado <- script_original
+  script_mutado[script_original == linea_raiz] <-
+    'ATRIBUTOS_HTML_IDENTIFICADOR <- "NUNCA_COINCIDE_XYZ"  # MUTADO por el test'
+  expect_false(identical(script_original, script_mutado),
+               info = "la mutación no cambió nada: el test no estaría probando el mecanismo real")
+
+  script_copia <- tempfile(fileext = ".R")
+  writeLines(script_mutado, script_copia, useBytes = TRUE)
+  on.exit(unlink(script_copia), add = TRUE)
+
+  f <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "```{r data_generation, echo=FALSE, results=\"hide\"}",
+    "tabla_renderizada <- sprintf('<table class=\"ex-opcion\">%s</table>', header)",
+    "```",
+    "",
+    "Question",
+    "========",
+    "Observa la tabla."
+  ), f, useBytes = TRUE)
+  on.exit(unlink(f), add = TRUE)
+
+  system2("Rscript", c(script_copia, f, "--fix"), stdout = FALSE, stderr = FALSE)
+  txt <- paste(readLines(f, encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl("ex-opción", txt),
+              info = paste("sin la raíz compartida el fixture NO se corrompió:",
+                           "el test no está ejercitando el mecanismo real, revisar linea_raiz"))
+
+  unlink(f)
+})

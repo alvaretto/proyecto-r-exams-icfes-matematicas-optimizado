@@ -658,6 +658,75 @@ en_seccion_markdown <- function(lineas, num_linea) {
   return(FALSE)
 }
 
+# -----------------------------------------------------------------------------
+# Atributos HTML (class=, id=, ...): identificadores, NUNCA texto visible.
+#
+# El valor de un atributo HTML es un identificador CSS/JS, no prosa en
+# español. Acentuarlo (p.ej. `class="ex-opcion"` -> `class="ex-opción"`) no es
+# un "casi correcto": es una corrupción activa — desincroniza el HTML de
+# cualquier selector CSS que referencie esa clase. Distinto del resto de
+# filtros de esta lista (que son "no tocar"), este par de funciones PROTEGE Y
+# RESTAURA el bloque completo `atributo="valor"` alrededor de la sustitución,
+# para que una "línea mixta" (el mismo atributo Y, aparte, texto visible con
+# la misma palabra) corrija solo la aparición visible y deje el atributo
+# intacto — ver "línea con atributo Y texto visible" en
+# tests/testthat/test_ortografia_espanol.R.
+#
+# Cubre el patrón real de este repo: HTML embebido en un string R de comillas
+# simples con el atributo en comillas dobles
+# (`sprintf('<table class="ex-opcion" ...>', ...)`), y también comillas
+# dobles escapadas dentro de un string R de comillas dobles
+# (`"<table class=\"ex-opcion\">"`).
+ATRIBUTOS_HTML_IDENTIFICADOR <- "class|id|name|for|href|src|data-[a-zA-Z0-9_-]+"
+
+patron_valor_atributo_html <- function() {
+  # Regex resultante: \\?"[^"]*\\?"  (comilla doble, opcionalmente escapada)
+  comilla_doble  <- "\\\\?\"[^\"]*\\\\?\""
+  # Regex resultante: \\?'[^']*\\?'  (comilla simple, opcionalmente escapada)
+  comilla_simple <- "\\\\?'[^']*\\\\?'"
+  paste0("\\b(?:", ATRIBUTOS_HTML_IDENTIFICADOR, ")\\s*=\\s*(?:",
+         comilla_doble, "|", comilla_simple, ")")
+}
+
+# Sustituye cada bloque `atributo="valor"` completo por un token opaco (sin
+# letras que puedan colisionar con ningún patrón de corrección) y devuelve la
+# línea protegida junto con los bloques originales para restaurarlos después.
+proteger_atributos_html <- function(linea) {
+  m <- gregexpr(patron_valor_atributo_html(), linea, perl = TRUE, ignore.case = TRUE)
+  bloques <- regmatches(linea, m)[[1]]
+  if (length(bloques) == 0) {
+    return(list(linea = linea, bloques = character(0), tokens = character(0)))
+  }
+  tokens <- paste0("HTMLATTR", seq_along(bloques), "")
+  linea_protegida <- linea
+  regmatches(linea_protegida, m) <- list(tokens)
+  list(linea = linea_protegida, bloques = bloques, tokens = tokens)
+}
+
+# Inversa de proteger_atributos_html(): cada token opaco vuelve a ser el
+# bloque `atributo="valor"` original, verbatim — nunca pasó por ninguna
+# sustitución de ortografía.
+restaurar_atributos_html <- function(linea, info) {
+  if (length(info$bloques) == 0) return(linea)
+  for (i in seq_along(info$bloques)) {
+    linea <- sub(info$tokens[i], info$bloques[i], linea, fixed = TRUE)
+  }
+  linea
+}
+
+# TRUE solo si TODAS las apariciones de `palabra` en la línea están dentro de
+# un valor de atributo HTML. Si la palabra TAMBIÉN aparece fuera de un
+# atributo (línea mixta), esta función devuelve FALSE a propósito: esa
+# aparición visible debe seguir evaluándose por el resto de los filtros y
+# corrigiéndose — la protección puntual del atributo ocurre en el punto de
+# reemplazo (ver proteger_atributos_html() en corregir_archivo()), no aquí.
+es_atributo_html <- function(linea, palabra) {
+  patron <- paste0("\\b", palabra, "\\b")
+  if (!grepl(patron, linea, perl = TRUE, ignore.case = TRUE)) return(FALSE)
+  linea_protegida <- proteger_atributos_html(linea)$linea
+  !grepl(patron, linea_protegida, perl = TRUE, ignore.case = TRUE)
+}
+
 # Filtros de contexto compartidos por los dos diccionarios.
 # Devuelve TRUE si la ocurrencia está en texto VISIBLE al estudiante (o en un
 # comentario, que también debe estar bien escrito) y por tanto debe reportarse.
@@ -685,6 +754,16 @@ ocurrencia_es_texto_visible <- function(contenido, num_linea, palabra) {
   # pero solo se aplicaba a la lista `palabras_excluir_en_codigo`; desde
   # 2026-08-06 aplica a TODAS las palabras.
   if (esta_en_codigo_inline(linea, palabra)) return(FALSE)
+  # 3f. No corregir si TODAS las apariciones de la palabra en esta línea están
+  # dentro de un valor de atributo HTML (class=, id=, name=, href=, src=,
+  # for=, data-*=): son identificadores, no texto visible. Si la palabra
+  # TAMBIÉN aparece fuera del atributo (línea mixta), esta función devuelve
+  # FALSE a propósito y la aparición visible sigue su ruta normal — la
+  # protección del atributo durante el reemplazo ocurre aparte, en
+  # proteger_atributos_html()/restaurar_atributos_html() dentro de
+  # corregir_archivo(), para no corromper el identificador aunque la línea sí
+  # se corrija.
+  if (es_atributo_html(linea, palabra)) return(FALSE)
   # 5. No corregir en metadatos YAML genéricos (excepto en valores de texto)
   if (grepl("^\\s*\\w+:", linea) && !grepl(':\\s*["\']', linea)) {
     if (grepl(paste0(":\\s*", palabra, "\\s*$"), linea)) return(FALSE)
@@ -714,6 +793,36 @@ es_referencia_externa <- function(archivo) {
   any(vapply(RUTAS_EXCLUIDAS_ORTOGRAFIA,
              function(p) grepl(p, ruta, fixed = TRUE),
              logical(1)))
+}
+
+# -----------------------------------------------------------------------------
+# Estado de la corrida — alimenta el EXIT STATUS del bloque CLI.
+#
+# Hasta 2026-08-15 el script imprimía "ERRORES ORTOGRÁFICOS ENCONTRADOS: N" y aun
+# así salía con exit 0: el bloque `if (!interactive())` descartaba el valor de
+# retorno de corregir_archivo() y nunca llamaba a quit(). Era el tercer gate ciego
+# del repositorio (tras la FASE 2G y la FASE 2I): quien midiera el exit —en vez de
+# grepear la salida— leía "limpio" sobre un archivo con 15 faltas.
+#
+# NO uso el valor de retorno de corregir_archivo() para esto: `corregir_directorio`
+# lo consume con `sapply` + `sum(!resultados)`, así que cambiar su tipo (a entero o
+# a cadena) invertiría en silencio el conteo del resumen. El contrato lógico de la
+# función queda intacto y el estado viaja por este entorno.
+.orto_estado <- new.env(parent = emptyenv())
+
+orto_reset_estado <- function() {
+  .orto_estado$archivos_con_errores  <- 0L
+  .orto_estado$archivos_con_ambiguos <- 0L
+  invisible(NULL)
+}
+orto_reset_estado()
+
+# 0 = sin nada pendiente | 1 = quedan errores auto-corregibles sin aplicar
+# 2 = solo quedan casos ambiguos (REVISION_MANUAL: --fix nunca los toca)
+orto_exit_status <- function() {
+  if (.orto_estado$archivos_con_errores > 0L) return(1L)
+  if (.orto_estado$archivos_con_ambiguos > 0L) return(2L)
+  0L
 }
 
 # Función para detectar y corregir
@@ -776,11 +885,18 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
         # "reflexion" la caza el diccionario léxico y la cazaría otra vez la
         # regla morfológica -xion.
         {
+          # Proteger bloques `atributo="valor"` ANTES de sustituir: en una
+          # línea mixta (la palabra aparece dentro de un atributo Y, aparte,
+          # en texto visible) el gsub de abajo solo debe tocar la aparición
+          # visible. Ver es_atributo_html() más arriba.
+          .prot_html <- proteger_atributos_html(contenido[num_linea])
+          .linea_trabajo <- .prot_html$linea
+
           # Reemplazar preservando mayúsculas/minúsculas del original
-          contenido[num_linea] <- gsub(
+          .linea_trabajo <- gsub(
             paste0("\\b", palabra_mal, "\\b"),
             palabra_bien,
-            contenido[num_linea],
+            .linea_trabajo,
             perl = TRUE
           )
           # También manejar versión con primera mayúscula
@@ -788,10 +904,10 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
                                     substr(palabra_mal, 2, nchar(palabra_mal)))
           palabra_bien_cap <- paste0(toupper(substr(palabra_bien, 1, 1)),
                                      substr(palabra_bien, 2, nchar(palabra_bien)))
-          contenido[num_linea] <- gsub(
+          .linea_trabajo <- gsub(
             paste0("\\b", palabra_mal_cap, "\\b"),
             palabra_bien_cap,
-            contenido[num_linea],
+            .linea_trabajo,
             perl = TRUE
           )
           # Y la versión en MAYÚSCULAS (bug corregido 2026-08-06): la detección
@@ -799,12 +915,14 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
           # Capitalizada, así que "OPCION" se reportaba en cada pasada y no se
           # corregía nunca — el hook pre-commit rechazaba el archivo para
           # siempre. En español la mayúscula CONSERVA la tilde (RAE).
-          contenido[num_linea] <- gsub(
+          .linea_trabajo <- gsub(
             paste0("\\b", toupper(palabra_mal), "\\b"),
             toupper(palabra_bien),
-            contenido[num_linea],
+            .linea_trabajo,
             perl = TRUE
           )
+
+          contenido[num_linea] <- restaurar_atributos_html(.linea_trabajo, .prot_html)
         }
       }
     }
@@ -829,8 +947,13 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
         linea = num_linea, texto = linea,
         mal = regla$nombre, bien = paste0(regla$reemplazo, "  [", regla$motivo, "]")
       )
-      contenido[num_linea] <- gsub(regla$patron, regla$reemplazo,
-                                   contenido[num_linea], perl = TRUE)
+      # Misma protección que en el pase 1: no dejar que una regla contextual
+      # (p.ej. la morfológica -sion -> -sión) toque un valor de atributo HTML
+      # que conviva en la línea con el texto visible que sí debe corregirse.
+      .prot_html2 <- proteger_atributos_html(contenido[num_linea])
+      .linea_trabajo2 <- gsub(regla$patron, regla$reemplazo,
+                              .prot_html2$linea, perl = TRUE)
+      contenido[num_linea] <- restaurar_atributos_html(.linea_trabajo2, .prot_html2)
     }
   }
 
@@ -897,12 +1020,21 @@ corregir_archivo <- function(archivo, aplicar_fix = FALSE) {
     } else {
       cat("\n⚠ Para aplicar correcciones, ejecute con --fix:\n")
       cat(sprintf("  Rscript corregir_ortografia_espanol.R %s --fix\n", archivo))
+      # Sin --fix las faltas SIGUEN en el archivo: eso es lo que hace fallar al
+      # gate. Con --fix ya quedaron escritas, así que el archivo no se cuenta.
+      .orto_estado$archivos_con_errores <- .orto_estado$archivos_con_errores + 1L
+    }
+
+    # Los ambiguos sobreviven a --fix por diseño, así que se cuentan en ambos modos.
+    if (length(casos_ambiguos) > 0) {
+      .orto_estado$archivos_con_ambiguos <- .orto_estado$archivos_con_ambiguos + 1L
     }
 
     return(invisible(FALSE))
   } else if (length(casos_ambiguos) > 0) {
     cat("\n⚠ Sin correcciones automáticas pendientes, pero quedan",
         length(casos_ambiguos), "caso(s) ambiguo(s) por revisar a mano en:", archivo, "\n")
+    .orto_estado$archivos_con_ambiguos <- .orto_estado$archivos_con_ambiguos + 1L
     return(invisible(TRUE))
   } else {
     cat("\n✓ No se encontraron errores ortográficos en:", archivo, "\n")
@@ -958,4 +1090,23 @@ if (!interactive()) {
     cat("Error: No se encontró el archivo o directorio:", objetivo, "\n")
     quit(status = 1)
   }
+
+  # EXIT STATUS REAL (2026-08-15). Antes se caía por el final del script y Rscript
+  # devolvía 0 SIEMPRE, incluso imprimiendo "ERRORES ORTOGRÁFICOS ENCONTRADOS: 15".
+  # Un gate que nunca falla se aprende a ignorar; peor, aquí *mentía* en verde.
+  #
+  # Ningún consumidor vigente se rompe con este cambio (verificado 2026-08-15):
+  #   - .git/hooks/pre-commit          -> `$(Rscript ... || true)` + grep "ERRORES"
+  #   - .claude/hooks/pre-commit-ortografia.sh -> tubería a `grep -q` (exit del pipe)
+  #   - tests/run_one_suite.R          -> solo cuenta failed/error, no warnings
+  #   - tests/testthat/test_*.R        -> system2() sin comprobar el status
+  estado <- orto_exit_status()
+  if (estado == 1L) {
+    cat("\nEXIT 1: quedan errores ortográficos sin corregir.",
+        "Ejecute con --fix o corrija a mano.\n")
+  } else if (estado == 2L) {
+    cat("\nEXIT 2: solo quedan casos ambiguos (REVISION_MANUAL).",
+        "--fix no los toca: exigen juicio humano.\n")
+  }
+  quit(status = estado)
 }
