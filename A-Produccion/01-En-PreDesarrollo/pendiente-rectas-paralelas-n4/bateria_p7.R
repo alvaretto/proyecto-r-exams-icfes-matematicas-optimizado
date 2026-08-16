@@ -40,6 +40,22 @@ ETQ <- if (length(args) >= 3) args[3] else "vigente"
 REPO <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"
 source(file.path(REPO, ".claude/scripts/bateria_eliminacion.R"))
 
+# =============================================================================
+# RESIDUO ACEPTADO — decision del profesor (2026-08-16). Misma linea base y
+# misma tolerancia que en `auditoria_propia.R` (constante DUPLICADA a proposito:
+# los dos scripts corren en procesos R separados y no comparten estado; el
+# motivo completo, las cuatro cifras y la evidencia contra 468 items oficiales
+# estan documentados junto a RESIDUO_ACEPTADO en `auditoria_propia.R`). Cubre
+# UNICAMENTE la cifra "SIN canonicas" de la bateria de 91 reglas (§P7 atomico):
+# max 47,0 %, techo nulo 33,6 %, exceso +13,4 pp. NO apaga el veredicto de
+# `evaluar_bateria()` (que se sigue calculando e imprimiendo tal cual el helper
+# lo reporta) — solo decide si ESE veredicto, cuando es BLOQUEA/NO_CONCLUYENTE
+# por exceso, sigue siendo un fallo real o cae dentro de la linea base aceptada.
+# =============================================================================
+FECHA_RESIDUO_P7 <- "2026-08-16"
+TOL_RESIDUO_P7    <- 0.03
+RESIDUO_P7_ATOMICO_BASE <- 0.134  # exceso, sin canonicas
+
 rmd <- readLines(RMD, warn = FALSE)
 i0  <- grep("^```\\{r data_generation", rmd)[1]
 i1  <- i0 + which(grepl("^```[[:space:]]*$", rmd[(i0 + 1):length(rmd)]))[1]
@@ -244,8 +260,34 @@ for (par in list(list(reg, "CON canonicas"), list(reg_nc, "SIN canonicas"))) {
 cat(sprintf("    familias con sonda: %s | sin sonda: %s\n",
             paste(res_p7$familias_con_sonda, collapse=", "),
             if (length(res_p7$familias_sin_sonda)) paste(res_p7$familias_sin_sonda, collapse=", ") else "(ninguna)"))
+
+# --- (R) RESIDUO ACEPTADO — SIEMPRE impreso, decida o no el exit -------------
+tope_p7 <- RESIDUO_P7_ATOMICO_BASE + TOL_RESIDUO_P7
+cat(sprintf("\n(R) RESIDUO ACEPTADO [p7_atomico.exceso] %s: linea base %+.1f pp + tolerancia %.1f pp -> tope %+.1f pp | medido ahora %+.1f pp\n",
+            FECHA_RESIDUO_P7, 100 * RESIDUO_P7_ATOMICO_BASE, 100 * TOL_RESIDUO_P7,
+            100 * tope_p7, 100 * res_p7$exceso))
+p7_en_zona_exceso <- res_p7$veredicto %in% c("BLOQUEA", "NO_CONCLUYENTE") && res_p7$exceso >= res_p7$corte_canal
+if (p7_en_zona_exceso) {
+  p7_aceptado <- res_p7$exceso <= tope_p7
+  cat(sprintf("    -> §P7 atomico (91 reglas, sin canonicas): %s\n",
+              if (p7_aceptado) "dentro de linea base + tolerancia -> RESIDUO ACEPTADO, no bloquea"
+              else "POR ENCIMA de linea base + tolerancia -> EXCEDE lo aceptado, SIGUE bloqueando"))
+} else {
+  p7_aceptado <- NA
+  cat("    -> §P7 atomico: el veredicto del helper no esta en zona de exceso sobre el\n")
+  cat("       corte de canal (mejor que la linea base o SIN_COBERTURA/UMBRAL_DEGENERADO):\n")
+  cat("       no se evalua el residuo, no es una casilla vacia.\n")
+}
 cat("\nEXIT: el veredicto que gobierna este ejercicio es el de auditoria_propia.R,\n")
 cat("que cierra por CONJUNCIONES. Este bloque acredita solo la parte ATOMICA, con\n")
 cat("el mismo criterio (exceso sobre el techo nulo) y los mismos cortes: si los dos\n")
 cat("discrepan ahora, es porque miden ambitos distintos, no varas distintas.\n")
-quit(status = exit_bateria(res_p7))
+# El exit real respeta el residuo aceptado: si `evaluar_bateria()` bloqueaba SOLO
+# por estar dentro de linea_base + tolerancia, el exit pasa a 0 e imprime por que.
+# Si el bloqueo es por otra causa (SIN_COBERTURA, UMBRAL_DEGENERADO, o un exceso
+# que SI supera la linea base + tolerancia), el exit se queda en 1 sin excepcion.
+exit_p7 <- if (isTRUE(p7_aceptado)) 0L else exit_bateria(res_p7)
+if (isTRUE(p7_aceptado))
+  cat("EXIT 0 por residuo aceptado (ver bloque (R) arriba); sin el, este script\n",
+      "habria salido con exit ", exit_bateria(res_p7), ".\n", sep = "")
+quit(status = exit_p7)

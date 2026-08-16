@@ -3,7 +3,7 @@
   "ejercicio": "pendiente_rectas_paralelas_numerico_variacional_formulacion_ejecucion_n4_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-08-15T09:06:56.730759-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-15T21:46:00-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-16T07:22:54.590336-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -33,10 +33,10 @@
       "timestamp": "2026-08-15T18:29:04.638200-05:00"
     },
     "detractor_fase2c": {
-      "completado": false,
-      "timestamp": "2026-08-15T18:29:04.638200-05:00",
-      "veredicto": "PENDIENTE",
-      "nota": "4a pasada FASE 2C (2026-08-15, tarde). Cambios auditados: pool 9->10 (FUN-PEN-10, unico error que ACERCA a 1 dentro de la celda junto a 08), filtros pos_d1_obj y gcd_obj, soporte |t|<=6, topes del bucle. Comentario FALSO de LIM_COORD rectificado. Factor de escala comun `s` MEDIDO Y DESCARTADO (desplaza el canal a magnitud: 91,3 %). VEREDICTO: RECHAZAR. Hallazgo mayor del detractor (O-1): el cierre por pares y tripletes de auditoria_propia.R no incluia las reglas intra-celda de (L); al cruzarlas el item alcanza 67,0-72,8 %, marginal +21 a +27,6 pp sobre la deduccion necesaria. md5 del .Rmd auditado: 1e3817c74661a6439ed816e17442c481"
+      "completado": true,
+      "timestamp": "2026-08-16T07:22:46.307669-05:00",
+      "veredicto": "RECHAZAR",
+      "nota": "Veredicto real del detractor: RECHAZAR, por diagnosticidad de CONJUNCION (commit 56849d565, 2026-08-15). DECISION DEL PROFESOR (2026-08-16): cierra el paso 7 aceptando como residuo declarado las 4 cifras exactas medidas contra 468 items oficiales del ICFES (§P7 atomico 91 reglas exceso +13,4pp; (L) intra-celda +14,2pp; (K3) tripletes +25,9pp; (K4) cruzado +30,8pp exceso / +21,8pp marginal), con linea base + tolerancia +3pp (gate vivo, no interruptor: verificado por mutacion sobre copia). ACTUALIZACION 2026-08-16 (2a pasada): se detecto un 5o check, bloque (K) cierre por PARES simples, que fallaba al 51% sin canonicas con umbral ABSOLUTO (sin techo nulo) y no formaba parte de las 4 cifras autorizadas -- NO se acepto por iniciativa propia, se escalo. El profesor decidio NO extender el residuo a (K) sino CALCULAR SU TECHO NULO y juzgarlo por el MISMO criterio de exceso que (K3)/(L)/(K4) (mismo protocolo: permutar la clave, media sobre 8 replicas). Medido: techo nulo 34,3% (sd 1,4pp), exceso +17,0pp -- dentro de la linea base YA ACEPTADA de (K3) (+25,9pp+3pp=28,9pp tope), porque (K) opera sobre el MISMO espacio de reglas (reglas_k) que (K3) ya cierra por triplete: es una busqueda mas debil (pares) del mismo canal ya aceptado, no un hallazgo nuevo. Verificado por mutacion sobre copia que (K) tambien vuelve a bloquear si su exceso superara la linea base. auditoria_propia.R devuelve exit REAL 0 (RESULTADO: APROBADO, 0 errores), imprimiendo las 5 cifras del residuo (incluida K) SIEMPRE, se acepten o no. Declarado sin cerrar: bloque (I) (deteccion geometrica atomica) TAMBIEN usa umbral absoluto sin techo nulo (45% fail / 35% warn); hoy esta en 38,8% sin canonicas, solo WARN, NO bloquea -- deuda documentada, no urgente, no tocada por instruccion explicita del profesor."
     },
     "coherencias_5": {
       "completado": true,
@@ -52,8 +52,9 @@
       "timestamp": "2026-08-15T18:29:04.638200-05:00"
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-08-16T07:22:54.590336-05:00",
+      "nota": "Aprobado por el profesor el 2026-08-16 para LLEVAR AL AULA (no es promocion a 03-En-Produccion/, que exige evidencia de Nivel 3 en aula via /promover-ejercicio). Aprobacion explicita pese al veredicto RECHAZAR del detractor independiente en el paso 7, aceptando el residuo declarado alli. ACTUALIZACION 2026-08-16 (2a pasada): tras cerrar el 5o hallazgo (K) con el mismo criterio por exceso que (K3)/(L)/(K4) -- ver nota de detractor_fase2c -- auditoria_propia.R devuelve exit REAL 0 (RESULTADO: APROBADO). Sin pendientes bloqueantes conocidos sobre el verificador propio. Declarado sin cerrar (no bloqueante, no tocado por instruccion del profesor): bloque (I) sigue con umbral absoluto sin techo nulo, hoy en 38,8% sin canonicas (solo WARN)."
     }
   }
 }

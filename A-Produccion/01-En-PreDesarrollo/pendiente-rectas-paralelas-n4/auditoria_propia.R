@@ -68,6 +68,81 @@ source(HELPER_P7)
 # Replicas del nulo en los bloques que enumeran decenas de miles de conjunciones.
 K_PERM <- as.integer(Sys.getenv("R_K4_PERM", "8"))
 
+# =============================================================================
+# RESIDUO ACEPTADO — decision del profesor (2026-08-16), tras la 4a pasada de
+# endurecimiento y una medicion sobre 468 items oficiales del ICFES.
+#
+# NO ES UN INTERRUPTOR DEL GATE. Fija la MEDICION VIGENTE del 2026-08-15
+# (commit 56849d565) como LINEA BASE, con una TOLERANCIA de ruido, y el gate
+# SIGUE VIVO contra esa linea base: una corrida futura que mida POR ENCIMA de
+# linea_base + tolerancia vuelve a fallar. No se toca ningun umbral compartido
+# (CORTE_CANAL/CORTE_RUIDO siguen siendo los del helper §P7); lo que cambia es
+# contra QUE se compara el exceso una vez que YA cruzo ese corte.
+#
+# MOTIVO (no "se deja pasar"). Sobre 468 items oficiales, en TODO lo comparable
+# el ejercicio esta EN LINEA con el corpus: vara universal, oficiales +0,4 pp
+# vs este item -1,1 pp; vara de valor, oficiales -2,1 pp vs este item +0,9 pp —
+# las cuatro cifras son ruido alrededor del techo nulo (ver cabecera del helper
+# §P7). El residuo del 67 % (K4 cruzado) NO TIENE CONTRAPARTE MEDIBLE: la regla
+# que lo produce exige la estructura "punto H + pendiente p/q", y de 468 items
+# oficiales EXISTE EXACTAMENTE UNO con esa estructura — no es que los oficiales
+# pasen la prueba, es que la prueba no se les puede aplicar. Es una propiedad
+# ESTRUCTURAL de los bancos parametricos (cien versiones del mismo item tienen
+# regularidades que un item unico, visto una sola vez en un examen real, no
+# tiene), no un defecto propio de este item. El ejercicio MEJORO en cada pasada
+# (maximo 66,3 % -> 47,0 %, exceso +31,0 -> +13,4 pp) y NUNCA empeoro; lo que
+# crecio fue la bateria, de 19 a 91 reglas.
+#
+# Lo que sigue verificado y NO entra en este residuo: correctitud 12.320/12.320
+# ((A)+(B) arriba), unicidad sin colisiones, 5 formatos en R limpio, arsenal
+# compartido N=100 en verde, multisemilla 100/100, literalidad ICFES caracter a
+# caracter, instancia canonica verbatim ((G) abajo). Un fallo en cualquiera de
+# esos bloques SIGUE bloqueando: este residuo cubre unicamente las 4 cifras de
+# diagnosticidad por CONJUNCION que se citan abajo, medidas y no recalculadas.
+#
+# TOLERANCIA = +3 pp sobre cada exceso medido (~1,4 sd del ruido a N=100,
+# sd=2,2 pp segun la calibracion del helper §P7 sobre 500 replicas de H0).
+# La MISMA constante se declara en `bateria_p7.R`, que corre en un proceso R
+# separado y no comparte estado con este archivo: es la unica forma de que las
+# dos corridas apliquen la misma linea base sin volver a duplicar los cortes
+# compartidos (CORTE_CANAL/CORTE_RUIDO SI siguen viniendo del helper §P7,
+# fuente unica; solo la linea base de ESTE residuo se repite a proposito).
+# =============================================================================
+FECHA_RESIDUO <- "2026-08-16"
+TOL_RESIDUO   <- 0.03
+RESIDUO_ACEPTADO <- list(
+  p7_atomico  = list(max = 0.470, techo = 0.336, exceso = 0.134),  # bateria_p7.R
+  l_celda     = list(max = 0.470, techo = 0.328, exceso = 0.142),  # bloque (L)
+  k3_triplete = list(max = 0.617, techo = 0.358, exceso = 0.259),  # bloque (K3)
+  k4_cruzado  = list(max = 0.670, techo = 0.363, exceso = 0.308),  # bloque (K4) GATE 1
+  k4_marginal = list(marginal = 0.218),                            # bloque (K4) GATE 2
+  # (K) pares simples. Anadida el 2026-08-16 por decision explicita del profesor.
+  # POR QUE TIENE ENTRADA PROPIA Y NO SE DEDUCE DE (K3): es cierto que (K) esta
+  # dominado por (K3) POR CONSTRUCCION -- ambos buscan sobre `reglas_k`, y anadir
+  # una tercera regla a una conjuncion solo puede restringir mas el conjunto
+  # superviviente, asi que max(tripletes) >= max(pares) siempre (medido: 61,7 %
+  # vs 51,0 %; +25,9 pp vs +17,0 pp). Pero deducirlo en cascada dejaba a (K) sin
+  # vigilancia propia: si algun dia (K3) baja, (K) podria quedar por encima sin
+  # que nada lo notara, porque su unica referencia era la linea base ajena.
+  # Con entrada propia, (K) se compara consigo mismo y vuelve a bloquear si
+  # empeora, aunque (K3) siga igual.
+  k_pares     = list(max = 0.510, techo = 0.343, exceso = 0.170)    # bloque (K)
+)
+# Devuelve TRUE (residuo aceptado, no bloquea) o FALSE (excede la linea base:
+# SIGUE bloqueando). Imprime SIEMPRE la comparacion, se acepte o no, para que
+# la cifra jamas quede oculta detras de un veredicto silencioso.
+residuo_ok <- function(clave, campo, valor_actual, etiqueta) {
+  base_valor <- RESIDUO_ACEPTADO[[clave]][[campo]]
+  tope <- base_valor + TOL_RESIDUO
+  cat(sprintf("    [RESIDUO ACEPTADO %s | %s.%s] linea base %+.1f pp + tolerancia %.1f pp -> tope %+.1f pp | medido ahora %+.1f pp\n",
+              FECHA_RESIDUO, clave, campo, 100 * base_valor, 100 * TOL_RESIDUO, 100 * tope, 100 * valor_actual))
+  ok <- valor_actual <= tope
+  cat(sprintf("    -> %s: %s\n", etiqueta,
+              if (ok) "dentro de linea base + tolerancia -> RESIDUO ACEPTADO, no bloquea"
+              else "POR ENCIMA de linea base + tolerancia -> EXCEDE lo aceptado, SIGUE bloqueando"))
+  ok
+}
+
 errores <- character(0); avisos <- character(0)
 fail <- function(...) errores <<- c(errores, paste0(...))
 warn <- function(...) avisos  <<- c(avisos,  paste0(...))
@@ -570,9 +645,20 @@ cat("    control positivo (clave unica de su signo): 100.0 % -> sonda viva\n")
 #     individualmente pasan: SOLO-SIGNO (32,7 %) y |dy|>|dx| (31,2 %) pasan las
 #     dos y su conjuncion alcanza el 44,2 %, a 0,8 pp del umbral de FALLO que
 #     este mismo archivo fija para reglas simples.
-#     Umbral propio y mas alto que el atomico (fail 50 %, warn 40 %): una
-#     conjuncion tiene mas poder de filtrado que un atomo POR CONSTRUCCION, asi
-#     que reusar el umbral de (I) marcaria en rojo cualquier item.
+#
+#     UMBRAL ABSOLUTO -> CRITERIO POR EXCESO (2026-08-16, decision del
+#     profesor). Este bloque juzgaba con un umbral ABSOLUTO (fail 50 %, warn
+#     40 %) sin techo nulo — el MISMO criterio que la medicion sobre 468 items
+#     oficiales del ICFES demostro que mide, en parte, el TAMANO de la
+#     bateria (45 reglas aqui frente a las 19-91 medidas en esa poblacion).
+#     Es la deuda que quedo declarada al cerrar (K3)/(K4)/(L) el 2026-08-15:
+#     "el cierre por pares y tripletes de auditoria_propia.R no incluia las
+#     reglas intra-celda de (L)" llevaba implicito que (K) seguia con el
+#     criterio viejo mientras sus vecinos ya usaban el nuevo. Mismo protocolo
+#     que (K3)/(L)/(K4): permutar cual opcion es la clave dejando las reglas
+#     intactas, MEDIA sobre K_PERM replicas (nunca max — sobreestimar el techo
+#     REBAJA el exceso, el mismo sesgo a favor del artefacto que se corrigio
+#     en (K4)), juzgado por los cortes calibrados del helper §P7.
 # =============================================================================
 cat("\n(K) Cierre por PARES sobre (I)+(J) (azar 25.0 %):\n")
 # Se incluye tambien la regla CONDICIONADA por |m| (bloque L): asi el cierre por
@@ -634,14 +720,78 @@ for (k in ord[1:5])
   cat(sprintf("      %-26s AND %-26s : %5.1f %%\n",
               nk[pares[1, k]], nk[pares[2, k]], 100 * res_k[k]))
 peor_k <- max(res_k)
-peor_k_sc <- max(apply(pares, 2L, function(ij)
-  acierto(reg_nc, function(r) reglas_k[[ij[1]]](r) & reglas_k[[ij[2]]](r))))
+res_k_sc  <- apply(pares, 2L, function(ij)
+  acierto(reg_nc, function(r) reglas_k[[ij[1]]](r) & reglas_k[[ij[2]]](r)))
+ord_sc    <- order(res_k_sc, decreasing = TRUE)
+peor_k_sc <- res_k_sc[ord_sc[1]]
 cat(sprintf("    MAXIMO con canonicas %.1f %%  |  SIN canonicas %.1f %%\n",
             100 * peor_k, 100 * peor_k_sc))
-if (peor_k_sc >= 0.50) fail("Una CONJUNCION de dos reglas alcanza ", round(100 * peor_k_sc),
-                            " % sin canonicas (azar 25 %)")
-if (peor_k >= 0.40) warn("Una CONJUNCION de dos reglas alcanza ", round(100 * peor_k),
-                         " % (azar 25 %): ", nk[pares[1, ord[1]]], " AND ", nk[pares[2, ord[1]]])
+cat(sprintf("    [historico, NO decide] umbral absoluto anterior (fail 50 %%, warn 40 %%) -> %s\n",
+            if (peor_k_sc >= 0.50) "fail lo hubiera cruzado"
+            else if (peor_k_sc >= 0.40) "warn lo hubiera cruzado"
+            else "ninguno se hubiera cruzado"))
+# --- TECHO NULO DE (K): de UMBRAL ABSOLUTO a CRITERIO POR EXCESO (2026-08-16,
+# decision del profesor). Hasta esta fecha (K) era el UNICO de los cuatro
+# cierres de esta bateria ((K),(K3),(K4),(L)) que seguia juzgando con un
+# umbral ABSOLUTO (fail 50 %, warn 40 %) sin techo nulo -- el mismo criterio
+# que la medicion sobre 468 items oficiales del ICFES (cabecera del helper
+# §P7) demostro que mide, en parte, el TAMANO de la propia bateria: la misma
+# poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y el techo nulo se mueve
+# con ella. Mismo protocolo que (K3)/(L)/(K4): se permuta cual opcion es la
+# clave dejando las reglas intactas, se toma la MEDIA sobre K_PERM replicas
+# (NUNCA `max` de un punado de replicas: el maximo de pocas replicas es un
+# estimador SESGADO AL ALZA del techo, y sobreestimar el techo REBAJA el
+# exceso -- el mismo sesgo a favor del artefacto auditado que se encontro y
+# corrigio en (K4)), con su `sd` siempre publicada.
+set.seed(20260815L)
+nulos_k <- vapply(seq_len(K_PERM), function(i) {
+  perm  <- sample.int(4L, length(reg_nc), replace = TRUE)
+  reg_p <- lapply(seq_along(reg_nc), function(z) { r <- reg_nc[[z]]; r$j <- perm[z]; r })
+  max(apply(pares, 2L, function(ij)
+    acierto(reg_p, function(r) reglas_k[[ij[1]]](r) & reglas_k[[ij[2]]](r))))
+}, numeric(1))
+techo_nulo_k <- mean(nulos_k)
+sd_k <- if (K_PERM > 1L) stats::sd(nulos_k) else NA_real_
+exceso_k <- peor_k_sc - techo_nulo_k
+cat(sprintf("    techo NULO (K) sin canonicas (clave permutada, %d replicas, media sobre %d pares) : %5.1f %%  (sd %.1f pp)\n",
+            K_PERM, ncol(pares), 100 * techo_nulo_k, 100 * sd_k))
+cat(sprintf("    EXCESO sin canonicas sobre el nulo : %+5.1f pp  (corte de canal %+.1f pp, corte de ruido %+.1f pp)\n",
+            100 * exceso_k, 100 * CORTE_CANAL, 100 * CORTE_RUIDO))
+if (!is.na(sd_k) && exceso_k >= CORTE_CANAL && exceso_k - K_SIGMA * sd_k <= CORTE_RUIDO) {
+  warn("Una CONJUNCION de dos reglas alcanza ", round(100 * peor_k_sc), " % sin canonicas, exceso ",
+       round(100 * exceso_k), " pp, pero el ruido (sd ", round(100 * sd_k, 1),
+       " pp) lo devuelve a la zona gris: NO CONCLUYENTE — ",
+       nk[pares[1, ord_sc[1]]], " AND ", nk[pares[2, ord_sc[1]]])
+  k_aceptado <- NA
+} else if (exceso_k >= CORTE_CANAL) {
+  # (K) TIENE ENTRADA PROPIA en RESIDUO_ACEPTADO desde el 2026-08-16, por
+  # decision explicita del profesor, y se juzga CONTRA ELLA -- nunca en cascada
+  # desde (K3). El argumento de dominancia es cierto (max(tripletes) >=
+  # max(pares) por construccion sobre el mismo `reglas_k`: medido 61,7 % vs
+  # 51,0 %), pero deducir la aceptacion de (K3) dejaba a (K) SIN VIGILANCIA
+  # PROPIA: si (K3) bajara, (K) podria quedar por encima sin que nada lo notara,
+  # porque su unica referencia era una linea base ajena. Con entrada propia,
+  # (K) se compara consigo mismo y vuelve a bloquear si empeora, aunque (K3)
+  # siga igual. Ver el comentario de `k_pares` en RESIDUO_ACEPTADO.
+  k_aceptado <- residuo_ok("k_pares", "exceso", exceso_k,
+                           "(K) cierre por pares (exceso sobre su techo nulo)")
+  if (!k_aceptado) {
+    fail("Una CONJUNCION de dos reglas alcanza ", round(100 * peor_k_sc),
+         " % sin canonicas (techo nulo ", round(100 * techo_nulo_k),
+         " %, exceso ", round(100 * exceso_k), " pp, corte de canal ",
+         round(100 * CORTE_CANAL), " pp), y EXCEDE su PROPIA linea base de ",
+         "residuo aceptado: ",
+         nk[pares[1, ord_sc[1]]], " AND ", nk[pares[2, ord_sc[1]]])
+  }
+} else {
+  k_aceptado <- NA
+  cat(sprintf("    -> SIN canal: exceso %+.1f pp por debajo del corte de canal (%+.1f pp) -> (K) no bloquea\n",
+              100 * exceso_k, 100 * CORTE_CANAL))
+}
+if (exceso_k > CORTE_RUIDO && exceso_k < CORTE_CANAL)
+  warn("Una CONJUNCION de dos reglas queda en ZONA GRIS: ", round(100 * peor_k_sc),
+       " % sin canonicas, exceso ", round(100 * exceso_k), " pp — ",
+       nk[pares[1, ord_sc[1]]], " AND ", nk[pares[2, ord_sc[1]]])
 # Control positivo: la conjuncion de la regla omnisciente consigo misma da 100 %.
 omni <- function(r) seq_along(r$dx) == r$j
 if (abs(acierto(reg, function(r) omni(r) & omni(r)) - 1) > 1e-9)
@@ -704,14 +854,20 @@ cat(sprintf("    EXCESO : %+5.1f pp  (corte de canal %+.1f pp, corte de ruido %+
 cat("      El techo nulo es cuanto alcanza el MEJOR de los ", ncol(trip),
     " tripletes cuando NO\n", sep = "")
 cat("      hay canal alguno. Restarlo es lo que separa senal de seleccion.\n")
-if (peor_t >= techo_nulo + CORTE_CANAL)
-  fail("Un TRIPLETE alcanza ", round(100 * peor_t), " %, ",
-       round(100 * (peor_t - techo_nulo)), " pp por encima del techo nulo (",
-       round(100 * techo_nulo), " %): ", nk[trip[1, ordt[1]]], " AND ",
-       nk[trip[2, ordt[1]]], " AND ", nk[trip[3, ordt[1]]])
-if (peor_t >= techo_nulo + CORTE_RUIDO && peor_t < techo_nulo + CORTE_CANAL)
+exceso_k3 <- peor_t - techo_nulo
+if (exceso_k3 >= CORTE_CANAL) {
+  k3_aceptado <- residuo_ok("k3_triplete", "exceso", exceso_k3, "(K3) cierre por tripletes")
+  if (!k3_aceptado)
+    fail("Un TRIPLETE alcanza ", round(100 * peor_t), " %, ",
+         round(100 * exceso_k3), " pp por encima del techo nulo (",
+         round(100 * techo_nulo), " %), EXCEDE la linea base de residuo aceptado: ",
+         nk[trip[1, ordt[1]]], " AND ", nk[trip[2, ordt[1]]], " AND ", nk[trip[3, ordt[1]]])
+} else {
+  k3_aceptado <- NA
+}
+if (exceso_k3 >= CORTE_RUIDO && exceso_k3 < CORTE_CANAL)
   warn("Un TRIPLETE queda en ZONA GRIS: ", round(100 * peor_t), " %, ",
-       round(100 * (peor_t - techo_nulo)), " pp sobre el techo nulo: ",
+       round(100 * exceso_k3), " pp sobre el techo nulo: ",
        nk[trip[1, ordt[1]]], " AND ", nk[trip[2, ordt[1]]], " AND ", nk[trip[3, ordt[1]]])
 # Control positivo: el triplete omnisciente consigo mismo debe dar 100 %.
 Mo <- Smat(omni)
@@ -903,12 +1059,18 @@ if (!is.na(sd_l) && exceso_l >= CORTE_CANAL && exceso_l - K_SIGMA * sd_l <= CORT
   warn("Una regla condicionada alcanza ", round(100 * peor_l_sc), " % sin canonicas, exceso ",
        round(100 * exceso_l), " pp, pero el ruido (sd ", round(100 * sd_l, 1),
        " pp) lo devuelve a la zona gris: NO CONCLUYENTE — ", peor_l_sc_nm)
+  l_aceptado <- NA
 } else if (exceso_l >= CORTE_CANAL) {
-  fail("Una regla condicionada alcanza ", round(100 * peor_l_sc),
-       " % sin canonicas (techo nulo ", round(100 * techo_nulo_l),
-       " %, exceso ", round(100 * exceso_l), " pp, corte ", round(100 * CORTE_CANAL),
-       " pp): ", peor_l_sc_nm)
-} else if (exceso_l > CORTE_RUIDO) {
+  l_aceptado <- residuo_ok("l_celda", "exceso", exceso_l, "(L) intra-celda")
+  if (!l_aceptado)
+    fail("Una regla condicionada alcanza ", round(100 * peor_l_sc),
+         " % sin canonicas (techo nulo ", round(100 * techo_nulo_l),
+         " %, exceso ", round(100 * exceso_l), " pp, corte ", round(100 * CORTE_CANAL),
+         " pp), EXCEDE la linea base de residuo aceptado: ", peor_l_sc_nm)
+} else {
+  l_aceptado <- NA
+}
+if (exceso_l > CORTE_RUIDO && exceso_l < CORTE_CANAL) {
   warn("Una regla condicionada queda en ZONA GRIS: ", round(100 * peor_l_sc),
        " % sin canonicas, exceso ", round(100 * exceso_l), " pp — ", peor_l_sc_nm)
 }
@@ -1017,30 +1179,79 @@ if (!is.na(sd_x) && exceso_x >= CORTE_CANAL && exceso_x - K_SIGMA * sd_x <= CORT
   warn("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, exceso ",
        round(100 * exceso_x), " pp, pero el ruido del techo nulo (sd ",
        round(100 * sd_x, 1), " pp) lo devuelve a la zona gris: NO CONCLUYENTE")
+  k4x_aceptado <- NA
 } else if (exceso_x >= CORTE_CANAL) {
-  fail("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * exceso_x),
-       " pp SOBRE su techo nulo (", round(100 * nulo_x), " %; corte ",
-       round(100 * CORTE_CANAL), " pp): ", nx[tripx[1, ot[1]]], " AND ",
-       nx[tripx[2, ot[1]]], " AND ", nx[tripx[3, ot[1]]])
-} else if (exceso_x > CORTE_RUIDO) {
-  warn("El cierre CRUZADO queda en ZONA GRIS: exceso ", round(100 * exceso_x),
-       " pp sobre el techo nulo (", round(100 * nulo_x), " %) — ni cero medido ni canal")
+  k4x_aceptado <- residuo_ok("k4_cruzado", "exceso", exceso_x,
+                             "(K4) cierre cruzado, GATE 1 (existencia del canal)")
+  if (!k4x_aceptado)
+    fail("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * exceso_x),
+         " pp SOBRE su techo nulo (", round(100 * nulo_x), " %; corte ",
+         round(100 * CORTE_CANAL), " pp), EXCEDE la linea base de residuo aceptado: ",
+         nx[tripx[1, ot[1]]], " AND ", nx[tripx[2, ot[1]]], " AND ", nx[tripx[3, ot[1]]])
+} else {
+  k4x_aceptado <- NA
+  if (exceso_x > CORTE_RUIDO)
+    warn("El cierre CRUZADO queda en ZONA GRIS: exceso ", round(100 * exceso_x),
+         " pp sobre el techo nulo (", round(100 * nulo_x), " %) — ni cero medido ni canal")
 }
 # GATE 2 — APORTE PEDAGOGICO: marginal sobre la deduccion necesaria (independiente).
-if (marg_x >= 0.10)
-  fail("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * marg_x),
-       " pp SOBRE la deduccion necesaria (", round(100 * a_qp), " %; techo nulo ",
-       round(100 * nulo_x), " %): ", nx[tripx[1, ot[1]]], " AND ", nx[tripx[2, ot[1]]],
-       " AND ", nx[tripx[3, ot[1]]])
-if (marg_x >= 0.05 && marg_x < 0.10)
-  warn("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * marg_x),
-       " pp sobre la deduccion necesaria")
+if (marg_x >= 0.10) {
+  k4m_aceptado <- residuo_ok("k4_marginal", "marginal", marg_x,
+                             "(K4) cierre cruzado, GATE 2 (aporte pedagogico)")
+  if (!k4m_aceptado)
+    fail("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * marg_x),
+         " pp SOBRE la deduccion necesaria (", round(100 * a_qp), " %; techo nulo ",
+         round(100 * nulo_x), " %), EXCEDE la linea base de residuo aceptado: ",
+         nx[tripx[1, ot[1]]], " AND ", nx[tripx[2, ot[1]]], " AND ", nx[tripx[3, ot[1]]])
+} else {
+  k4m_aceptado <- NA
+  if (marg_x >= 0.05)
+    warn("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * marg_x),
+         " pp sobre la deduccion necesaria")
+}
 # Control positivo: la regla omnisciente esta en `reglas_x`? NO — se inyecta a
 # proposito, porque un cierre que no puntua 100 % una terna omnisciente esta
 # muerto y su "sin hallazgos" no distinguiria de "sin sonda".
 if (abs(acierto_M(Mo & Mo & Mo) - 1) > 1e-9)
   fail("CONTROL POSITIVO ROTO: el cierre cruzado no puntua 100 % una terna omnisciente")
 cat("    control positivo (omnisciente x3): 100.0 % -> cierre cruzado vivo\n")
+
+# =============================================================================
+# (R) RESIDUO ACEPTADO — resumen, SIEMPRE impreso (decision del profesor,
+#     FECHA_RESIDUO, ver comentario junto a RESIDUO_ACEPTADO al inicio del
+#     archivo). Se imprime pase o falle cada bloque individual, para que la
+#     cifra nunca dependa de haber entrado en la rama de fallo.
+# =============================================================================
+cat("\n(R) RESIDUO ACEPTADO — decision del profesor (", FECHA_RESIDUO, "):\n", sep = "")
+cat("    linea base = medicion del commit 56849d565 (2026-08-15) + tolerancia ",
+    sprintf("%.1f pp\n", 100 * TOL_RESIDUO), sep = "")
+imprimir_residuo_resumen <- function(clave, campo, base, valor_actual, aceptado) {
+  cat(sprintf("      %-11s : base %+5.1f pp  tope %+5.1f pp  medido %+5.1f pp  -> %s\n",
+              clave, 100 * base, 100 * (base + TOL_RESIDUO), 100 * valor_actual,
+              if (is.na(aceptado)) "no alcanzo el corte de canal (no se evalua)"
+              else if (aceptado) "RESIDUO ACEPTADO"
+              else "EXCEDE LO ACEPTADO"))
+}
+imprimir_residuo_resumen("l_celda",     "exceso",   RESIDUO_ACEPTADO$l_celda$exceso,     exceso_l, l_aceptado)
+imprimir_residuo_resumen("k3_triplete", "exceso",   RESIDUO_ACEPTADO$k3_triplete$exceso, exceso_k3, k3_aceptado)
+imprimir_residuo_resumen("k4_cruzado",  "exceso",   RESIDUO_ACEPTADO$k4_cruzado$exceso,  exceso_x, k4x_aceptado)
+imprimir_residuo_resumen("k4_marginal", "marginal", RESIDUO_ACEPTADO$k4_marginal$marginal, marg_x, k4m_aceptado)
+# (K) tiene ENTRADA PROPIA en RESIDUO_ACEPTADO desde el 2026-08-16: pasa de
+# umbral absoluto a criterio por exceso y se juzga contra SU PROPIA linea base,
+# no en cascada desde (K3). Ver el comentario de `k_pares` en RESIDUO_ACEPTADO.
+cat(sprintf("      %-11s : base %+5.1f pp  tope %+5.1f pp  medido %+5.1f pp  -> %s\n",
+            "k_pares", 100 * RESIDUO_ACEPTADO$k_pares$exceso,
+            100 * (RESIDUO_ACEPTADO$k_pares$exceso + TOL_RESIDUO), 100 * exceso_k,
+            if (is.na(k_aceptado)) "no alcanzo el corte de canal (no se evalua)"
+            else if (k_aceptado) "RESIDUO ACEPTADO"
+            else "EXCEDE LO ACEPTADO"))
+cat("    'no alcanzo el corte de canal' es BUENA noticia (mejor que la linea base),\n")
+cat("    no una casilla vacia: significa que esa corrida no necesito el residuo.\n")
+cat("    §P7 atomico (91 reglas) se mide en bateria_p7.R, PROCESO SEPARADO: ejecutar\n")
+cat("    ese script para ver su propia comparacion contra la misma linea base.\n")
+cat("    Bloques que NO entran en NINGUN residuo (si fallan, BLOQUEAN sin excepcion):\n")
+cat("    (A)-(H), (I) atomico simple (umbral absoluto, deuda declarada y NO cerrada),\n")
+cat("    (J) signo, (M)-(N).\n")
 
 # --- (I)/(J)/(K)/(L) SIN la instancia canonica -------------------------------
 # La canonica reproduce el item oficial y no es corregible, pero pesa 1/12 y

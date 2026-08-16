@@ -171,6 +171,84 @@ de_contraido <- function(sop) {
 # fuerza un reintento de la terna. No sesga la clave, pero explica por que esas
 # dos frecuencias caen juntas en las pendientes de numerador +-1.
 # =============================================================================
+
+# =============================================================================
+# RESIDUO DECLARADO — decisión del profesor (2026-08-16). Los pasos 7
+# (detractor_fase2c) y 11 (aprobación_usuario) se CIERRAN aceptando el residuo
+# de diagnosticidad por CONJUNCION medido abajo, tras cuatro pasadas de
+# endurecimiento (FASE 2C) y una medición sobre 468 ítems oficiales del ICFES
+# (6 cuadernillos de Matemáticas). El detractor independiente había emitido
+# RECHAZAR por este mismo hallazgo (commit 56849d565, 2026-08-15); el profesor
+# revisó esa evidencia y autorizó el cierre. Esto NO reemplaza la evidencia de
+# Nivel 3 en aula que exige `/promover-ejercicio` — el ejercicio queda
+# "aprobado para llevar al AULA", no promovido a 03-En-Produccion/.
+#
+# LAS CUATRO CIFRAS (verificadas por enumeración exhaustiva, N=100 sin
+# canónicas salvo donde se indica; ver `auditoria_propia.R` y `bateria_p7.R`,
+# que aplican esta misma línea base con tolerancia +3 pp — el gate SIGUE VIVO:
+# una medición futura por encima de línea_base + tolerancia vuelve a bloquear):
+#
+#   bloque             máximo   techo nulo   exceso
+#   ---------------------------------------------------
+#   §P7 atomico (91)    47,0 %     33,6 %   +13,4 pp
+#   (L) intra-celda      47,0 %     32,8 %   +14,2 pp
+#   (K3) tripletes       61,7 %     35,8 %   +25,9 pp
+#   (K4) cruzado         67,0 %     36,3 %   +30,8 pp  (marginal +21,8 pp
+#                                                        sobre la deducción
+#                                                        necesaria, umbral 10 pp)
+#
+# EL FUNDAMENTO, no "se deja pasar":
+#   1. Sobre 468 items oficiales, en TODO lo comparable el ejercicio esta EN
+#      LÍNEA con el corpus: vara universal, oficiales +0,4 pp vs este item
+#      -1,1 pp; vara de valor, oficiales -2,1 pp vs este item +0,9 pp. Las
+#      cuatro cifras son ruido alrededor del techo nulo (sd ~2,2 pp a N=100).
+#   2. El residuo del 67 % (K4 cruzado) NO TIENE CONTRAPARTE MEDIBLE: la regla
+#      que lo produce exige la estructura "punto H + pendiente p/q", y de 468
+#      items oficiales EXISTE EXACTAMENTE UNO con esa estructura (el propio
+#      item canonico de este ejercicio) — no es que los oficiales PASEN la
+#      prueba, es que la prueba NO SE LES PUEDE APLICAR.
+#   3. Es una propiedad ESTRUCTURAL de los bancos parametricos: cien versiones
+#      del mismo item comparten regularidades combinatorias que un item único,
+#      visto una sola vez en un examen real, no tiene. No es un defecto propio
+#      de este item frente al corpus oficial.
+#   4. El ejercicio MEJORO en cada una de las cuatro pasadas de endurecimiento
+#      (máximo 66,3 % -> 47,0 %, exceso +31,0 -> +13,4 pp) y NUNCA empeoro; lo
+#      que crecio fue la bateria de detección, de 19 a 91 reglas.
+#
+# LO QUE SIGUE VERIFICADO Y NO ENTRA EN ESTE RESIDUO (sigue bloqueando si
+# falla): correctitud exhaustiva 12.320/12.320 combinaciones, unicidad sin
+# colisiones sobre 293.396 candidatos enumerados, 5 formatos en R limpio
+# (HTML/PDF/DOCX/NOPS + LaTeX), arsenal compartido N=100 completo en verde,
+# multisemilla 100/100, literalidad ICFES caracter a caracter, Hermes H-3
+# 15/15 rotulos sin añadidos, instancia canonica verbatim contra el item
+# oficial (ERA-2026 Sesión 2, pregunta 43 = MAT-2026-1-129).
+#
+# HALLAZGO ADICIONAL, NO CUBIERTO POR ESTE RESIDUO (declarado, no resuelto
+# aquí): `auditoria_propia.R` bloque (K) — cierre por PARES simples sobre
+# `reglas_k` SIN cruzar con (L) — reporta una conjunción al 51,4 % sin canónicas
+# ("|p| | dy AND |dx| en q*(1..T)"). Era el quinto hallazgo, ausente de las
+# cuatro cifras que el profesor autorizó por su nombre y número exacto.
+#
+# CERRADO el 2026-08-16 por decisión explícita del profesor, y por la puerta
+# correcta: (K) juzgaba con umbral ABSOLUTO (fail >= 50 %) sin techo nulo — el
+# criterio que la medición sobre 468 ítems oficiales demostró que mide en parte
+# el tamaño de la propia batería. Se le calculó su techo nulo con el mismo
+# protocolo que los demás (permutar la clave, media sobre 8 réplicas, nunca
+# max): 51,4 % observado, techo nulo 34,3 % (sd 1,4 pp), EXCESO +17,0 pp.
+#
+# Tiene ENTRADA PROPIA en RESIDUO_ACEPTADO (`k_pares`), no una deducción en
+# cascada desde (K3). El argumento de dominancia es cierto —max(tripletes) >=
+# max(pares) por construcción sobre el mismo `reglas_k`: 61,7 % vs 51,4 %— pero
+# deducir su aceptación dejaba a (K) SIN VIGILANCIA PROPIA: si (K3) bajara, (K)
+# podría quedar por encima sin que nada lo notara. Con línea base propia se
+# compara consigo mismo y vuelve a bloquear si empeora, aunque (K3) siga igual.
+# Verificado por mutación: original exit 0, mutante (línea base a 0) exit 1.
+#
+# DEUDA QUE SIGUE ABIERTA: el bloque (I) conserva umbral absoluto sin techo
+# nulo (fail >= 45 %). Hoy mide 38,8 % — solo aviso, no bloquea — así que no
+# cambia ningún veredicto, pero arrastra el mismo defecto de escala que (K)
+# acaba de dejar atrás.
+# =============================================================================
 errores_conceptuales <- list(
   list(
     codigo = "FUN-PEN-01",
