@@ -9,14 +9,19 @@
 # corrida, con sus reglas declaradas por familia y su semilla fija.
 #
 # QUE ACREDITA Y QUE NO — leer antes de citar su veredicto:
-#   · su umbral es 70 %, no el 45 % de `auditoria_propia.R`: un PASS aqui NO
-#     contradice un RECHAZADO alli, miden cosas distintas;
-#   · su convencion de puntuacion es 0/1 (la regla elige UNA opcion), mientras
-#     `auditoria_propia.R` usa 1/n sobre los supervivientes. Las dos cifras no
-#     son comparables aunque coincidan;
+#   · RECONCILIADO 2026-08-15. Antes este bloque declaraba que su cifra y la de
+#     `auditoria_propia.R` NO eran comparables, por dos razones que ya no existen:
+#     (a) umbrales distintos (70 % aqui, 45 % alli) — los dos eran ABSOLUTOS y la
+#     medicion sobre 468 items oficiales mostro que un umbral absoluto mide, en
+#     parte, el tamano de la bateria; ahora ambos juzgan por el EXCESO sobre el
+#     techo nulo, con los mismos cortes leidos del helper; y (b) convenciones de
+#     puntuacion distintas (0/1 aqui, 1/|S| alli) — el helper adopto la de 1/|S|,
+#     que es la unica con nulo EXACTO (E[score] = 1/n para toda regla), asi que
+#     estas reglas se le pasan tal cual, sin sortear entre supervivientes.
 #   · mide ATOMOS. El cierre por conjunciones vive en (K)/(K3)/(K4) del auditor,
-#     y ahi es donde este item falla (67 % cruzado). Un PASS aqui NO acredita
-#     ausencia de canal.
+#     y ahi es donde este item falla (67 % cruzado, +31 pp sobre su techo nulo).
+#     Un PASS aqui NO acredita ausencia de canal: acredita ausencia de canal
+#     ATOMICO, que es una afirmacion estrictamente mas debil.
 #
 #   Uso:  Rscript bateria_p7.R [ruta_al_.Rmd] [N]      (por defecto: este, N=100)
 # =============================================================================
@@ -220,23 +225,27 @@ cat(sprintf("   %-16s : max coord %d\n", "caja",
 
 # ---- helper §P7 -------------------------------------------------------------
 set.seed(4242L)
+# Las reglas se pasan TAL CUAL: devuelven el conjunto superviviente (logico) y el
+# helper lo puntua 1/|S|. Antes se sorteaba una opcion entre los supervivientes
+# para encajar en la convencion 0/1, lo que anadia varianza gratis y era la razon
+# declarada de que esta cifra y la de auditoria_propia.R fueran incomparables.
 mk <- function(x) nueva_regla(names(R)[x], R[[x]]$fam, local({ ff <- R[[x]]$f
-  function(op) { r <- attr(op, "reg"); S <- ff(r); w <- which(S)
-    if (!length(w)) NA_integer_ else if (length(w) == 1L) w else sample(w, 1L) } }))
+  function(op) as.logical(ff(attr(op, "reg"))) }))
 reglas_p7 <- lapply(seq_along(R), mk)
 mk_op <- function(rg) lapply(rg, function(r) structure(as.character(seq_along(r$dx)), reg = r))
 for (par in list(list(reg, "CON canonicas"), list(reg_nc, "SIN canonicas"))) {
   res <- evaluar_bateria(reglas_p7, mk_op(par[[1]]),
-                         vapply(par[[1]], function(r) r$j, integer(1)),
-                         umbral = 0.70, n_perm = 200L)
-  cat(sprintf("\n>>> HELPER §P7 [%s]: %s | max %.1f %% (%s) | nulo %.1f %% | exceso %+.1f pp\n",
+                         vapply(par[[1]], function(r) r$j, integer(1)))
+  cat(sprintf("\n>>> HELPER §P7 [%s]: %s | max %.1f %% (%s) | nulo %.1f %% | exceso %+.1f pp (ruido %.1f pp, corte %+.1f pp)\n",
               par[[2]], res$veredicto, 100*res$max_obs, res$regla_top,
-              100*res$techo_nulo, 100*res$exceso))
+              100*res$techo_nulo, 100*res$exceso, 100*res$ruido, 100*res$corte_canal))
   if (identical(par[[2]], "SIN canonicas")) assign("res_p7", res)
 }
 cat(sprintf("    familias con sonda: %s | sin sonda: %s\n",
             paste(res_p7$familias_con_sonda, collapse=", "),
             if (length(res_p7$familias_sin_sonda)) paste(res_p7$familias_sin_sonda, collapse=", ") else "(ninguna)"))
-cat("\nEXIT: el veredicto que gobierna este ejercicio es el de auditoria_propia.R;\n")
-cat("este bloque solo acredita la parte ATOMICA y con umbral 70 %.\n")
+cat("\nEXIT: el veredicto que gobierna este ejercicio es el de auditoria_propia.R,\n")
+cat("que cierra por CONJUNCIONES. Este bloque acredita solo la parte ATOMICA, con\n")
+cat("el mismo criterio (exceso sobre el techo nulo) y los mismos cortes: si los dos\n")
+cat("discrepan ahora, es porque miden ambitos distintos, no varas distintas.\n")
 quit(status = exit_bateria(res_p7))

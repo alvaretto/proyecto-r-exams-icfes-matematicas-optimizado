@@ -42,6 +42,32 @@ MIN_ESTRATO <- 20L
 N_STRAT     <- 300L
 RMD <- "pendiente_rectas_paralelas_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd"
 
+# --- CORTES DEL EXCESO: UNA sola fuente de verdad (2026-08-15) ----------------
+# Este archivo y el helper §P7 juzgaban el MISMO artefacto con umbrales distintos
+# (45 % aqui, 70 % alli) y daban veredictos opuestos. La medicion sobre 468 items
+# oficiales mostro por que: la tasa absoluta crece con el numero de reglas, asi
+# que un umbral absoluto mide, en parte, el tamano de la bateria. Lo comparable es
+# el EXCESO sobre el techo nulo, y sus cortes se leen del helper para que no puedan
+# volver a divergir. Ver `.claude/rules/diversidad-sustantiva.md` §P7.
+REPO_ROOT <- tryCatch(suppressWarnings(system("git rev-parse --show-toplevel",
+                                              intern = TRUE, ignore.stderr = TRUE)),
+                      error = function(e) character(0))
+# Candidatas en orden: raiz del repo y los dos saltos relativos conocidos. Si
+# ninguna existe se ABORTA: duplicar los cortes aqui es justo la divergencia que
+# este cambio cerro, asi que un fallback silencioso seria peor que no correr.
+CANDIDATAS <- c(if (length(REPO_ROOT) == 1L && nzchar(REPO_ROOT))
+                  file.path(REPO_ROOT, ".claude/scripts/bateria_eliminacion.R"),
+                "../../../.claude/scripts/bateria_eliminacion.R",
+                ".claude/scripts/bateria_eliminacion.R")
+HELPER_P7 <- CANDIDATAS[file.exists(CANDIDATAS)][1]
+if (is.na(HELPER_P7))
+  stop("No se encontro el helper §P7 en ninguna de: ",
+       paste(CANDIDATAS, collapse = " | "), ". Los cortes del exceso NO pueden ",
+       "duplicarse aqui: es la divergencia que se cerro el 2026-08-15.")
+source(HELPER_P7)
+# Replicas del nulo en los bloques que enumeran decenas de miles de conjunciones.
+K_PERM <- as.integer(Sys.getenv("R_K4_PERM", "8"))
+
 errores <- character(0); avisos <- character(0)
 fail <- function(...) errores <<- c(errores, paste0(...))
 warn <- function(...) avisos  <<- c(avisos,  paste0(...))
@@ -660,22 +686,31 @@ for (k in ordt[1:5])
   cat(sprintf("      %-24s AND %-24s AND %-24s : %5.1f %%\n",
               nk[trip[1, k]], nk[trip[2, k]], nk[trip[3, k]], 100 * res_t[k]))
 peor_t <- max(res_t)
+# Techo nulo por MEDIA, no por maximo de replicas (2026-08-15): el maximo de un
+# puñado de replicas sobreestima el techo, y sobreestimar el techo REBAJA el
+# exceso — sesgo a favor del artefacto auditado. Cortes leidos del helper §P7:
+# este bloque ya juzgaba por exceso, pero con cortes propios (+10/+5) que nadie
+# habia calibrado contra nada.
 set.seed(20260815L)
-techo_nulo <- max(vapply(1:5, function(i)
-  max(val_trip(sample.int(4L, length(reg_nc), replace = TRUE))), numeric(1)))
+nulos_t <- vapply(seq_len(K_PERM), function(i)
+  max(val_trip(sample.int(4L, length(reg_nc), replace = TRUE))), numeric(1))
+techo_nulo <- mean(nulos_t)
+sd_t <- if (K_PERM > 1L) stats::sd(nulos_t) else NA_real_
 cat(sprintf("    maximo observado : %5.1f %%\n", 100 * peor_t))
-cat(sprintf("    techo NULO (clave permutada, 5 replicas, mismo n de tripletes) : %5.1f %%\n",
-            100 * techo_nulo))
+cat(sprintf("    techo NULO (clave permutada, %d replicas, media) : %5.1f %%  (sd %.1f pp)\n",
+            K_PERM, 100 * techo_nulo, 100 * sd_t))
+cat(sprintf("    EXCESO : %+5.1f pp  (corte de canal %+.1f pp, corte de ruido %+.1f pp)\n",
+            100 * (peor_t - techo_nulo), 100 * CORTE_CANAL, 100 * CORTE_RUIDO))
 cat("      El techo nulo es cuanto alcanza el MEJOR de los ", ncol(trip),
     " tripletes cuando NO\n", sep = "")
 cat("      hay canal alguno. Restarlo es lo que separa senal de seleccion.\n")
-if (peor_t >= techo_nulo + 0.10)
+if (peor_t >= techo_nulo + CORTE_CANAL)
   fail("Un TRIPLETE alcanza ", round(100 * peor_t), " %, ",
        round(100 * (peor_t - techo_nulo)), " pp por encima del techo nulo (",
        round(100 * techo_nulo), " %): ", nk[trip[1, ordt[1]]], " AND ",
        nk[trip[2, ordt[1]]], " AND ", nk[trip[3, ordt[1]]])
-if (peor_t >= techo_nulo + 0.05)
-  warn("Un TRIPLETE alcanza ", round(100 * peor_t), " %, ",
+if (peor_t >= techo_nulo + CORTE_RUIDO && peor_t < techo_nulo + CORTE_CANAL)
+  warn("Un TRIPLETE queda en ZONA GRIS: ", round(100 * peor_t), " %, ",
        round(100 * (peor_t - techo_nulo)), " pp sobre el techo nulo: ",
        nk[trip[1, ordt[1]]], " AND ", nk[trip[2, ordt[1]]], " AND ", nk[trip[3, ordt[1]]])
 # Control positivo: el triplete omnisciente consigo mismo debe dar 100 %.
@@ -831,38 +866,63 @@ for (nm in c("celda (signo+bucket)", "solo signo", "solo bucket")) {
 # `peor_l` es un MAXIMO sobre 19 reglas a N = 100: como en (K3), parte de su
 # valor es SELECCION, no senal, y sin nulo no se distingue una de otra. Mismo
 # protocolo que (K3): se permuta la clave y se toma el mejor de las 19 reglas.
-# Medido: nulo 31-36 %, asi que un 47 % observado son +16 pp de senal REAL, no
-# 22 pp sobre el azar de 25 %. La cifra se PUBLICA; el umbral de FALLO sigue
-# siendo el 45 % absoluto y NO se toca — bajar la puerta con el mismo cambio que
-# deberia atravesarla es justo lo que un detractor debe rechazar. Se publica para
-# que quien lea el veredicto sepa cuanto del exceso es atribuible al metodo.
+#
+# TRES CORRECCIONES (2026-08-15b), todas en la direccion SEVERA:
+#   1. El nulo se calculaba sobre `reg` (CON canonicas) y se comparaba contra
+#      `peor_l_sc`, que es SIN canonicas: nulo y observado salian de poblaciones
+#      distintas. La politica D-5 dice que lo bloqueante opera sobre `reg_nc`, asi
+#      que el nulo pasa a calcularse ahi tambien.
+#   2. `max` sobre replicas -> `mean`: el maximo de un puñado de replicas
+#      sobreestima el techo, y un techo alto REBAJA el exceso.
+#   3. El veredicto pasa del 45 % ABSOLUTO al EXCESO, con los cortes del helper.
+#      No es bajar la puerta: la medicion sobre 468 items oficiales mostro que la
+#      tasa absoluta crece con el numero de reglas y por eso no es comparable —
+#      este mismo bloque paso de 6 reglas a 19 sin que su umbral se moviera. El
+#      45 % se sigue IMPRIMIENDO como referencia historica, pero no decide.
 set.seed(20260815L)
-techo_nulo_l <- max(vapply(1:5, function(i) {
-  perm  <- sample.int(4L, length(reg), replace = TRUE)
-  reg_p <- lapply(seq_along(reg), function(z) { r <- reg[[z]]; r$j <- perm[z]; r })
+nulos_l <- vapply(seq_len(K_PERM), function(i) {
+  perm  <- sample.int(4L, length(reg_nc), replace = TRUE)
+  reg_p <- lapply(seq_along(reg_nc), function(z) { r <- reg_nc[[z]]; r$j <- perm[z]; r })
   max(vapply(reglas_l, function(f) acierto(reg_p, f), numeric(1)))
-}, numeric(1)))
-cat(sprintf("    techo NULO (L) (clave permutada, 5 replicas, max sobre %d reglas) : %5.1f %%\n",
-            length(reglas_l), 100 * techo_nulo_l))
-cat(sprintf("    EXCESO del maximo observado sobre el nulo : %+5.1f pp\n",
-            100 * (peor_l - techo_nulo_l)))
+}, numeric(1))
+techo_nulo_l <- mean(nulos_l)
+sd_l <- if (K_PERM > 1L) stats::sd(nulos_l) else NA_real_
 peor_l_sc <- 0; peor_l_sc_nm <- ""
 for (nm in names(reglas_l)) { a <- acierto(reg_nc, reglas_l[[nm]])
   if (a > peor_l_sc) { peor_l_sc <- a; peor_l_sc_nm <- nm } }
+exceso_l <- peor_l_sc - techo_nulo_l
+cat(sprintf("    techo NULO (L) sin canonicas (clave permutada, %d replicas, media sobre %d reglas) : %5.1f %%  (sd %.1f pp)\n",
+            K_PERM, length(reglas_l), 100 * techo_nulo_l, 100 * sd_l))
 cat(sprintf("    MAXIMO con canonicas %.1f %%  |  SIN canonicas %.1f %% (%s)\n",
             100 * peor_l, 100 * peor_l_sc, peor_l_sc_nm))
-if (peor_l_sc >= 0.45) fail("Una regla condicionada alcanza ", round(100 * peor_l_sc),
-                         " % sin canonicas (techo nulo ", round(100 * techo_nulo_l),
-                         " %, exceso ", round(100 * (peor_l_sc - techo_nulo_l)), " pp): ", peor_l_sc_nm)
-if (peor_l_sc >= 0.40) warn("Una regla condicionada alcanza ", round(100 * peor_l_sc),
-                         " % sin canonicas: ", peor_l_sc_nm)
+cat(sprintf("    EXCESO sin canonicas sobre el nulo : %+5.1f pp  (corte de canal %+.1f pp)\n",
+            100 * exceso_l, 100 * CORTE_CANAL))
+cat(sprintf("    [historico, NO decide] umbral absoluto 45 %% -> %s\n",
+            if (peor_l_sc >= 0.45) "lo cruzaria" else "no lo cruzaria"))
+if (!is.na(sd_l) && exceso_l >= CORTE_CANAL && exceso_l - K_SIGMA * sd_l <= CORTE_RUIDO) {
+  warn("Una regla condicionada alcanza ", round(100 * peor_l_sc), " % sin canonicas, exceso ",
+       round(100 * exceso_l), " pp, pero el ruido (sd ", round(100 * sd_l, 1),
+       " pp) lo devuelve a la zona gris: NO CONCLUYENTE — ", peor_l_sc_nm)
+} else if (exceso_l >= CORTE_CANAL) {
+  fail("Una regla condicionada alcanza ", round(100 * peor_l_sc),
+       " % sin canonicas (techo nulo ", round(100 * techo_nulo_l),
+       " %, exceso ", round(100 * exceso_l), " pp, corte ", round(100 * CORTE_CANAL),
+       " pp): ", peor_l_sc_nm)
+} else if (exceso_l > CORTE_RUIDO) {
+  warn("Una regla condicionada queda en ZONA GRIS: ", round(100 * peor_l_sc),
+       " % sin canonicas, exceso ", round(100 * exceso_l), " pp — ", peor_l_sc_nm)
+}
 # O-11: el estadistico es un MAXIMO sobre ~19 reglas y a N=100 arrastra varios pp
 # de ruido, asi que un veredicto decidido por 1-2 pp no es reproducible: reparticiones
 # distintas de la misma muestra caen a los dos lados del umbral. Se DECLARA la
 # incertidumbre en vez de subir N (la regla #23 fija N=100 y sus excepciones).
-if (abs(peor_l - 0.45) < 0.05)
-  cat(sprintf("    [INCERTIDUMBRE] el maximo (%.1f %%) esta a menos de 5 pp del umbral de\n      FALLO (45 %%) y es un maximo sobre %d reglas: a N=%d el veredicto de este\n      bloque NO es reproducible tirada a tirada. Leer con el marginal, no solo\n      con el umbral.\n",
-              100 * peor_l, length(reglas_l), N_STD))
+# O-11 reformulado sobre el EXCESO (2026-08-15): la incertidumbre ya no se mide
+# contra un umbral absoluto sino contra los cortes, y su anchura NO es una
+# constante inventada — es el `sd` del propio techo nulo medido en esta corrida.
+if (!is.na(sd_l) && (abs(exceso_l - CORTE_CANAL) < K_SIGMA * sd_l ||
+                     abs(exceso_l - CORTE_RUIDO) < K_SIGMA * sd_l))
+  cat(sprintf("    [INCERTIDUMBRE] el exceso (%+.1f pp) esta a menos de %.1f sd del ruido\n      (sd %.1f pp) de uno de los cortes, y es un maximo sobre %d reglas: a N=%d el\n      veredicto de este bloque NO es reproducible tirada a tirada. Leer con el\n      marginal, no solo con el corte.\n",
+              100 * exceso_l, K_SIGMA, 100 * sd_l, length(reglas_l), N_STD))
 # Control positivo: sin el, un 33 % no distingue "sin senal" de "sonda muerta"
 # (Incidente P / INC-MUTANTE-SONDA). Se fabrica un registro en que la clave es la
 # UNICA de su celda; ahi SIGNO+BUCKET debe puntuar exactamente 100 %.
@@ -921,21 +981,58 @@ for (k in ot[1:3])
   cat(sprintf("      %-22s AND %-22s AND %-22s : %5.1f %%\n",
               nx[tripx[1, k]], nx[tripx[2, k]], nx[tripx[3, k]], 100 * res_tx[k]))
 peor_x <- max(res_tx)
+# TECHO NULO DEL CIERRE CRUZADO — la laguna concreta que quedaba (2026-08-15).
+# Habia dos defectos, y el segundo se comia al primero:
+#   1. Se estimaba con `max` sobre 3 replicas. El maximo de un puñado de replicas
+#      es un estimador SESGADO AL ALZA del techo: infla el nulo y por tanto REBAJA
+#      el exceso, es decir, favorece al artefacto auditado. Pasa a `mean` sobre
+#      K_PERM replicas, con su `sd` publicada — el mismo protocolo del helper §P7.
+#   2. Se imprimia y NO DECIDIA NADA: el veredicto lo daba el marginal sobre la
+#      deduccion necesaria. Un 67 % contra el azar del 25 % no significa lo mismo
+#      que contra su propio techo, y este cierre es el mas ancho del archivo
+#      (2701 pares + 64.824 tripletes), asi que su techo nulo es el mas alto.
+# Ahora el exceso DECIDE, con los cortes leidos del helper (fuente unica).
 set.seed(20260815L)
-nulo_x <- max(vapply(1:3, function(i)
-  max(val_trip_x(sample.int(4L, length(reg_nc), replace = TRUE))), numeric(1)))
-marg_x <- peor_x - a_qp
+nulos_x <- vapply(seq_len(K_PERM), function(i)
+  max(val_trip_x(sample.int(4L, length(reg_nc), replace = TRUE))), numeric(1))
+nulo_x   <- mean(nulos_x)
+sd_x     <- if (K_PERM > 1L) stats::sd(nulos_x) else NA_real_
+exceso_x <- peor_x - nulo_x
+marg_x   <- peor_x - a_qp
 cat(sprintf("    maximo observado          : %5.1f %%\n", 100 * peor_x))
-cat(sprintf("    techo NULO (clave permutada, 3 replicas) : %5.1f %%\n", 100 * nulo_x))
+cat(sprintf("    techo NULO (clave permutada, %d replicas, media) : %5.1f %%  (sd %.1f pp, max %.1f %%)\n",
+            K_PERM, 100 * nulo_x, 100 * sd_x, 100 * max(nulos_x)))
+cat(sprintf("    EXCESO sobre el techo nulo               : %+5.1f pp  (corte de canal %+.1f pp)\n",
+            100 * exceso_x, 100 * CORTE_CANAL))
 cat(sprintf("    deduccion NECESARIA q|dx AND |p||dy      : %5.1f %%\n", 100 * a_qp))
 cat(sprintf("    MARGINAL sobre la deduccion necesaria    : %+5.1f pp  (umbral 10 pp)\n",
             100 * marg_x))
+cat("      Los dos criterios responden a preguntas DISTINTAS y ninguno sustituye al\n")
+cat("      otro: el EXCESO dice si hay canal (existencia estadistica, comparable\n")
+cat("      entre bloques y poblaciones); el MARGINAL dice cuanto anade el atajo a\n")
+cat("      quien ya razona (pregunta pedagogica). Cualquiera de los dos puede\n")
+cat("      RECHAZAR por su cuenta; ninguno absuelve de lo que dice el otro.\n")
+# GATE 1 — EXISTENCIA DEL CANAL: exceso sobre el techo nulo, cortes del helper.
+if (!is.na(sd_x) && exceso_x >= CORTE_CANAL && exceso_x - K_SIGMA * sd_x <= CORTE_RUIDO) {
+  warn("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, exceso ",
+       round(100 * exceso_x), " pp, pero el ruido del techo nulo (sd ",
+       round(100 * sd_x, 1), " pp) lo devuelve a la zona gris: NO CONCLUYENTE")
+} else if (exceso_x >= CORTE_CANAL) {
+  fail("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * exceso_x),
+       " pp SOBRE su techo nulo (", round(100 * nulo_x), " %; corte ",
+       round(100 * CORTE_CANAL), " pp): ", nx[tripx[1, ot[1]]], " AND ",
+       nx[tripx[2, ot[1]]], " AND ", nx[tripx[3, ot[1]]])
+} else if (exceso_x > CORTE_RUIDO) {
+  warn("El cierre CRUZADO queda en ZONA GRIS: exceso ", round(100 * exceso_x),
+       " pp sobre el techo nulo (", round(100 * nulo_x), " %) — ni cero medido ni canal")
+}
+# GATE 2 — APORTE PEDAGOGICO: marginal sobre la deduccion necesaria (independiente).
 if (marg_x >= 0.10)
   fail("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * marg_x),
        " pp SOBRE la deduccion necesaria (", round(100 * a_qp), " %; techo nulo ",
        round(100 * nulo_x), " %): ", nx[tripx[1, ot[1]]], " AND ", nx[tripx[2, ot[1]]],
        " AND ", nx[tripx[3, ot[1]]])
-if (marg_x >= 0.05)
+if (marg_x >= 0.05 && marg_x < 0.10)
   warn("El cierre CRUZADO alcanza ", round(100 * peor_x), " %, ", round(100 * marg_x),
        " pp sobre la deduccion necesaria")
 # Control positivo: la regla omnisciente esta en `reglas_x`? NO — se inyecta a

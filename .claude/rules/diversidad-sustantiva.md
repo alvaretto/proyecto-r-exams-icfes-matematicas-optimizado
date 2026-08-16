@@ -208,32 +208,80 @@ Es el mismo modo de fallo que la ceguera de H2/H3 documentada en §P4-bis, un pi
 arriba: allí eran dos sondas concretas las que dejaban de medir en silencio; aquí es una
 familia entera de reglas que nadie escribió.
 
-#### Las tres exigencias (ninguna es opcional)
+#### Las cuatro exigencias (ninguna es opcional)
 
 **1. Cobertura declarada.** Cada una de las seis familias debe tener sonda, o estar
 declarada **no aplicable con su justificación** (`signo = "todas las magnitudes son
 positivas"`). Una familia sin sonda ni declaración **invalida el veredicto completo**: el
 resultado es `SIN_COBERTURA`, nunca `PASS`.
 
-**2. Techo nulo.** Un máximo sobre miles de combinaciones **está inflado por selección**:
-con 4 opciones una regla acierta ~25 % por azar, pero el *máximo* de ~19 reglas ronda el
-35 %. Se calibra **permutando cuál opción es la clave y dejando las reglas intactas**.
-Medición del ejercicio que originó la lección:
-
-| Estadístico | Valor |
-|---|---|
-| Máximo observado | **69,6 %** |
-| Techo nulo (clave permutada) | **34,8 %** |
-| **Exceso** | **+35 pp** |
+**2. Techo nulo, y el veredicto SOBRE EL EXCESO — nunca sobre la tasa absoluta.** Un máximo
+sobre miles de combinaciones **está inflado por selección**: con 4 opciones una regla acierta
+~25 % por azar, pero el *máximo* de ~19 reglas ronda el 35 %. Se calibra **permutando cuál
+opción es la clave y dejando las reglas intactas**. Medición del ejercicio que originó la
+lección: máximo **69,6 %**, techo nulo **34,8 %**, exceso **+35 pp**.
 
 **Sin esa calibración el número no significa nada.** Comparar el 69,6 % contra el 25 % del
 azar puro exagera el hallazgo; compararlo contra su techo nulo lo mide.
 
-**3. Declaración de incertidumbre.** Cuando el máximo cae a **menos de 5 pp del umbral**,
-con N = 100 el estadístico es un **máximo sobre ~19 reglas** y **no es reproducible tirada a
-tirada**. Hay que decirlo: el veredicto es `NO_CONCLUYENTE` —ni verde ni rojo—, y la salida
-es subir N o reducir la batería. **PROHIBIDO redondearlo a `PASS`.** Es la misma disciplina
-que la regla #23 impone a los estratos con n < 20.
+> **El umbral absoluto medía, en parte, el TAMAÑO DE LA BATERÍA.** Medición sobre **468 ítems
+> oficiales únicos** de 6 cuadernillos de Matemáticas ICFES:
+
+| Población | k reglas | tasa atómica | techo nulo | **exceso** |
+|---|---|---|---|---|
+| Oficiales 468, vara universal | 25 | 34,8 % | 27,8 % | **+7,0** |
+| Oficiales 468, sin familia posición | 19 | 27,4 % | 27,0 % | **+0,4** |
+| Ejercicio en revisión, vara universal | 25 | 30,4 % | 31,5 % | **−1,1** |
+| Ejercicio en revisión, vara valor | 20 | 31,5 % | 30,6 % | **+0,9** |
+| Oficiales 42 numéricos, vara valor | 20 | 31,0 % | 33,0 % | **−2,1** |
+| Ejercicio en revisión, batería completa | 91 | 47,0 % | 33,6 % | **+13,4** |
+
+> La última fila está medida con la convención de nulo exacto (exigencia 4). Con la
+> convención 0/1 que el helper usaba antes —y que sorteaba una opción entre los
+> supervivientes— la MISMA batería sobre los MISMOS datos leía 43,5 % / 35,4 % / **+8,1 pp**:
+> el sorteo deprimía el máximo e inflaba el techo, y dejaba el ítem justo en el corte. **El
+> borde era un artefacto de la puntuación**, y se resolvió en contra del ítem.
+
+La **misma población** da 27,4 % con 19 reglas y 34,8 % con 25, y su techo nulo se mueve con
+ella (27,0 → 27,8). **El exceso es invariante; la tasa absoluta no.** Y ningún ítem de
+ninguna población, con 19 a 91 reglas, superó el **47,0 %**: un umbral del 70 % exigía aislar
+la clave en 3 de cada 4 instancias, es decir era **inalcanzable, no severo** — y una puerta
+que no se puede cruzar se aprende a ignorar igual que una que siempre está en rojo.
+
+**Los cortes (calibrados, no elegidos):**
+
+| Exceso | Veredicto | Por qué ahí |
+|---|---|---|
+| **≤ +2 pp** | sin canal | Ahí caen las **cuatro comparaciones limpias** (+0,4 · −1,1 · +0,9 · −2,1). Bajo H0 a N = 100 el exceso mide media +0,1 pp y **sd 2,2 pp**: +2 pp es ~1 sd, cero medido |
+| **+2 a +8 pp** | **zona gris** | Ahí cae el **+7,0 pp de los 468 ítems oficiales**, que no es ruido (a N = 468 la sd baja a 1,0 pp) sino el **sesgo posicional real de los cuadernillos**. Un ítem que no filtra más que el corpus oficial no se declara defectuoso, pero tampoco se absuelve |
+| **≥ +8 pp** | canal real | ~p99,5 del ruido a N = 100 (p95 = +4,0 pp; máximo de 500 réplicas H0 = +9,6 pp) y justo por encima de lo que filtra el corpus oficial |
+
+**El nulo es UNIFORME sobre las posiciones, y eso es deliberado.** Permutar el vector de
+claves observado preservaría su marginal y volvería invisible el canal posicional puro
+(«la clave siempre está en la primera»), que es justo uno de los que la familia `posicion`
+existe para cazar. El precio es que un sesgo posicional real cuenta como exceso — y por eso
+los oficiales miden +7,0 pp: está **contemplado en la calibración**, no es un defecto.
+
+**3. Declaración de incertidumbre, con la anchura MEDIDA.** La banda ya no es una constante:
+es `k_sigma × sd(techo nulo)` de la propia corrida, y el helper la publica. Un `PASS` exige
+que el exceso siga por debajo del corte de canal **incluso sumándole 2 sd del ruido**; un
+`BLOQUEA` exige que siga por encima del corte de ruido **incluso restándoselas**. A N = 100
+la sd ronda 2,2 pp y la zona gris (6 pp de ancho) la cubre; a **N = 30 la sd sube a 4-5 pp** y
+entonces ni la ausencia se acredita → `NO_CONCLUYENTE`. Es la misma disciplina que la regla
+#23 impone a los estratos con n < 20, y hace que la muestra estándar N = 100 sea **exigible
+por el estadístico**, no sólo por decreto. **PROHIBIDO redondearlo a `PASS`.**
+
+**4. La convención de puntuación tiene nulo EXACTO — y por eso las tasas son comparables.**
+
+> `score = 1/|S|` si la clave sobrevive · `0` si no · `1/n` si `|S| = 0`
+
+Con clave uniforme, **`E[score] = 1/n` exactamente para toda regla**, sea cual sea su
+selectividad: `P(clave ∈ S) = |S|/n` y el pago es `1/|S|`. Verificable por enumeración (lo
+hace el test). La convención 0/1 con la abstención puntuando 0 **no** la tiene: el nulo de
+cada regla depende de cuánto se abstenga, así que el máximo mezclaba reglas con nulos
+distintos. Es además la convención de `acierto()` en los verificadores por ejercicio: las dos
+cifras **son** ahora la misma magnitud, que es lo que antes obligaba a declararlas
+incomparables y a que un `PASS` del helper conviviera con un `RECHAZADO` del auditor.
 
 #### Helper (la parte genérica ya está resuelta)
 
@@ -244,23 +292,51 @@ enteras, el signo sólo donde hay negativos y la posición sólo donde hay dispo
 espacial. Veredictos: `PASS` (exit 0) · `BLOQUEA` · `SIN_COBERTURA` · `NO_CONCLUYENTE` ·
 `UMBRAL_DEGENERADO` (exit 1).
 
-`UMBRAL_DEGENERADO` es un cuarto guardián que salió al construir el helper: **si el techo
-nulo alcanza el umbral, el umbral no discrimina nada** —hasta una batería de puro ruido lo
-cruzaría—. Un umbral por debajo del ruido produce rojos que no significan nada, que es la
-otra forma de que un gate se aprenda a ignorar.
+`UMBRAL_DEGENERADO` es un cuarto guardián que salió al construir el helper. **Cambió de
+causa, no de espíritu**: cuando el veredicto era absoluto disparaba si el techo nulo
+alcanzaba el umbral (una batería de puro ruido lo cruzaría); ahora dispara cuando el techo
+nulo **satura** y deja menos margen que el propio corte —`1 − techo_nulo < corte_canal`—, con
+lo que ni una regla omnisciente al 100 % produciría un exceso suficiente. Las dos formas
+dicen lo mismo: **el criterio no discrimina nada**. Se llega ahí por *demasiadas reglas para
+demasiado pocas versiones*, así que el guardián acabó siendo una defensa de la regla #23:
+con 3 versiones y 200 reglas el techo nulo roza el 100 % y el helper se niega a opinar.
 
 ```r
 source(".claude/scripts/bateria_eliminacion.R")
 bateria <- list(
+  # `fn` devuelve el CONJUNTO superviviente: lógico de longitud n, un índice, o NA.
   nueva_regla("la mayor",     "magnitud",      function(o) which.max(as.numeric(o))),
   nueva_regla("la unica par", "divisibilidad", function(o) {
     i <- which(as.numeric(o) %% 2 == 0); if (length(i) == 1L) i else NA_integer_ }),
+  nueva_regla("dentro de la celda", "signo",   function(o) f_cell(o)),   # lógico: 1/|S|
   # ... una por familia, o declararla no aplicable
 )
-res <- evaluar_bateria(bateria, opciones, claves, umbral = 0.70,
+res <- evaluar_bateria(bateria, opciones, claves,          # cortes: los calibrados
                        familias_no_aplicables = c(signo = "todas las magnitudes son positivas"))
 imprimir_bateria(res); quit(status = exit_bateria(res))
 ```
+
+**El argumento `umbral` sigue existiendo pero NO decide**: se conserva para poder imprimir la
+cifra absoluta que los verificadores antiguos citaban, y para dejar constancia impresa de que
+ya no gobierna. Un test fija que cambiarlo no puede mover el veredicto.
+
+#### Residuo declarado: la batería RELLENADA
+
+El criterio por exceso tiene un vector de evasión que el absoluto no tenía. **Añadir reglas
+que ningún estudiante usaría sube el techo nulo sin mover el máximo observado**, así que el
+exceso baja y un canal real puede acabar en la zona gris. El helper **no puede detectarlo**:
+no sabe qué regla es plausible para un estudiante, y esa es exactamente la clase de juicio
+que §P7 deja —a propósito— en manos de quien escribe la batería.
+
+Dos mitigaciones, ninguna automática:
+
+1. **Regla de conducta**: las reglas de una batería son *estrategias que un estudiante podría
+   descubrir*, no relleno. Ampliar la batería para cubrir una familia sin sonda es lo que §P7
+   pide; ampliarla con variantes que nadie aplicaría es hacerle trampa al verificador.
+2. **La cifra que lo hace visible**: el helper publica también `exceso_atomico` —la regla top
+   contra su **propio nulo exacto** (`1/n`), que **no depende de k**—. En una batería
+   rellenada esa cifra se queda grande mientras el exceso sobre el techo se desploma; verlas
+   juntas delata el relleno. Un test fija el mecanismo para que nadie lo descubra por sorpresa.
 
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
@@ -364,10 +440,10 @@ El paso 9 (`validar_diversidad`) de ambos orquestadores (`orquestador-schoice.md
 | `WARN_DIV_BAJA` | Script (exit 0) | La respuesta varía pero poco (< 30%) | Informativo |
 | `WARN_DIV_INDET` | Script (exit 0) | No se pudo identificar la respuesta correcta para fingerprint | Informativo |
 | `WARN_DIV_ESTATICA` | Hook FASE 2N | `file.copy(` para PNGs de opciones o ausencia de funciones aleatorias en data_generation | Advertencia (hook) |
-| `BLOQUEA` (§P7) | `bateria_eliminacion.R` (exit 1) | Una regla de eliminación supera el umbral con exceso positivo sobre el techo nulo | **BLOQUEANTE** |
+| `BLOQUEA` (§P7) | `bateria_eliminacion.R` (exit 1) | El **exceso** sobre el techo nulo alcanza el corte de canal (**≥ +8 pp**) incluso descontando 2 sd del ruido medido | **BLOQUEANTE** |
 | `SIN_COBERTURA` (§P7) | `bateria_eliminacion.R` (exit 1) | Una familia de dimensión sin sonda ni declaración: la batería no mide, sólo calla | **BLOQUEANTE** |
-| `NO_CONCLUYENTE` (§P7) | `bateria_eliminacion.R` (exit 1) | El máximo cae a menos de 5 pp del umbral: no reproducible a esta N | **NO es PASS** |
-| `UMBRAL_DEGENERADO` (§P7) | `bateria_eliminacion.R` (exit 1) | El techo nulo alcanza el umbral: el umbral no discrimina nada | **BLOQUEANTE** |
+| `NO_CONCLUYENTE` (§P7) | `bateria_eliminacion.R` (exit 1) | El exceso cae en la **zona gris** (+2 a +8 pp), o el ruido medido es tan ancho que la muestra no acredita ni la ausencia | **NO es PASS** |
+| `UMBRAL_DEGENERADO` (§P7) | `bateria_eliminacion.R` (exit 1) | El techo nulo **satura**: deja menos margen que el corte, así que ni una regla omnisciente lo cruzaría. Demasiadas reglas para demasiado pocas versiones | **BLOQUEANTE** |
 
 ---
 
@@ -376,7 +452,7 @@ El paso 9 (`validar_diversidad`) de ambos orquestadores (`orquestador-schoice.md
 | Test | Suite | Verifica |
 |------|-------|---------|
 | `tests/testthat/test_diversidad_sustantiva.R` | Nueva (suite #20) | Fixture con respuesta FIJA → exit 1 / `ERR_DIV_COSMETICA`; fixture con respuesta ALEATORIA → exit 0 / `PASS` |
-| `tests/testthat/test_bateria_eliminacion.R` | Suite #32 | §P7: control positivo (canal real cazado y atribuido a su familia), control negativo (ítem sano = `PASS`), **«mismos datos, sonda retirada»** (19 % y aun así `SIN_COBERTURA`), banda de incertidumbre, umbral degenerado, inflación del techo nulo sobre el 25 % del azar |
+| `tests/testthat/test_bateria_eliminacion.R` | Suite #32 | §P7: control positivo (canal real cazado y atribuido a su familia), control negativo (ítem sano = `PASS`), **«mismos datos, sonda retirada»** (`SIN_COBERTURA` con una cifra baja y tranquilizadora), **«más reglas de ruido suben la tasa pero NO el exceso»**, nulo exacto de la convención por enumeración, zona gris, muestra corta, techo nulo saturado, y que `umbral` no pueda mover el veredicto. **79 aserciones**, verificadas por mutación (5 mutantes, 5 cazados) |
 
 ---
 
@@ -412,11 +488,85 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.5
+**Versión:** 1.6
 **Fecha:** 2026-08-15
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.6 (2026-08-15) — §P7: el veredicto pasa de la TASA al EXCESO
+
+> El umbral del 70 % duró un día. Una medición sobre **468 ítems oficiales únicos** de 6
+> cuadernillos de Matemáticas ICFES demostró que **medía la cosa equivocada**: en buena parte,
+> el tamaño de la batería. Este cambio no se hace para que un ejercicio pase — el ejercicio
+> que lo destapó sigue **RECHAZADO**, y con más errores que antes.
+
+- **LA DERIVA, MEDIDA**: la misma población da **27,4 %** con 19 reglas y **34,8 %** con 25, y
+  su techo nulo se mueve con ella (27,0 → 27,8). **El exceso es invariante; la tasa no.**
+  Las cuatro comparaciones limpias de la tabla caen todas en |exceso| ≤ 2,1 pp.
+- **EL UMBRAL ERA INALCANZABLE, NO SEVERO**: ningún ítem de ninguna población, con 19 a 91
+  reglas, superó el **47,0 %**. Pedir 70 % era pedir aislar la clave en 3 de cada 4
+  instancias. Una puerta que no se puede cruzar se aprende a ignorar igual que una que
+  siempre está en rojo — es la misma patología que la FASE 2G en falso ROJO permanente.
+- **DOS UMBRALES CONTRADICTORIOS SOBRE EL MISMO ARTEFACTO, cerrados**: el helper daba `PASS`
+  (43,5 % < 70 %) mientras el `auditoria_propia.R` del ejercicio **RECHAZABA** por su propio
+  45 %. Ahora los dos juzgan por el exceso y **leen los cortes del helper**, que es la única
+  fuente; el auditor hace `source()` del helper y **aborta si no lo encuentra**, para que la
+  duplicación no pueda reaparecer en silencio.
+- **CORTES CALIBRADOS, no elegidos**: ≤ +2 pp sin canal · +2 a +8 pp **zona gris** · ≥ +8 pp
+  canal real. El +2 es ~1 sd del ruido a N = 100 (medido: media +0,1 pp, sd 2,2 pp); el +8 es
+  ~p99,5 de ese ruido **y** queda justo por encima del **+7,0 pp que filtran los propios
+  cuadernillos oficiales**. La referencia no es «cero fuga», es «no más que el examen real».
+- **EL +7,0 pp DEL CORPUS NO ES RUIDO**: a N = 468 la sd baja a 1,0 pp, así que son ~7 sd. Es
+  el **sesgo posicional real** de los cuadernillos, que aparece porque el nulo es uniforme
+  sobre las posiciones. Se mantiene uniforme **a propósito**: permutar el vector de claves
+  observado volvería invisible el canal posicional puro, que es justo lo que la familia
+  `posicion` existe para cazar.
+- **CONVENCIÓN CON NULO EXACTO**: `score = 1/|S|` · `0` · `1/n` si nadie sobrevive da
+  `E[score] = 1/n` **exactamente para toda regla**, sea cual sea su selectividad. La 0/1 con
+  la abstención valiendo 0 no lo cumple —el nulo de cada regla dependía de cuánto se
+  abstuviera— y era, junto con los umbrales, la razón declarada de que las dos cifras fueran
+  «incomparables aunque coincidan». Ahora son la misma magnitud.
+- **LA BANDA DEJA DE SER UNA CONSTANTE**: pasa a `2 × sd(techo nulo)` **medido en la corrida**.
+  Un `PASS` exige que el exceso no alcance el corte ni sumándole 2 sd; un `BLOQUEA`, que no
+  baje del corte de ruido restándoselas. Efecto colateral útil: a **N = 30** la sd sube a
+  4-5 pp y ni la ausencia se acredita, así que **la muestra estándar N = 100 (regla #23) pasa
+  a ser exigible por el estadístico**, no sólo por decreto.
+- **`UMBRAL_DEGENERADO` cambia de causa, no de espíritu**: ahora dispara si `1 − techo_nulo <
+  corte_canal`, es decir si el techo **satura** y ni una regla omnisciente produciría exceso
+  suficiente. Se llega ahí con demasiadas reglas para demasiado pocas versiones.
+- **LA LAGUNA DEL CIERRE CRUZADO, cerrada y medida**: el bloque `(K4)` del ejercicio reportaba
+  **67,0 %** con un techo nulo que (a) se estimaba con `max` sobre 3 réplicas —estimador
+  **sesgado al alza**, y un techo alto **rebaja** el exceso, o sea favorece al artefacto
+  auditado— y (b) **no decidía nada**. Recalibrado con `mean` sobre 8 réplicas:
+  **techo nulo 36,3 % (sd 1,0 pp) → EXCESO +30,8 pp**, casi 4× el corte. Mismo tratamiento a
+  `(K3)` (+25,9 pp) y a `(L)` (+14,2 pp), donde además el nulo se calculaba sobre la población
+  **con** canónicas y se comparaba contra un observado **sin** ellas.
+- **DOS CRITERIOS, NINGUNO SUSTITUYE AL OTRO**: el **exceso** dice si hay canal (existencia
+  estadística, comparable entre bloques y poblaciones); el **marginal sobre la deducción
+  necesaria** dice cuánto añade el atajo a quien ya razona (pregunta pedagógica). Cualquiera
+  puede rechazar por su cuenta; ninguno absuelve de lo que dice el otro.
+- **TEST: 33 → 79 aserciones**, con dos controles nuevos que son la lección hecha aserción:
+  **«más reglas de ruido suben la tasa pero NO el exceso»** (y se comprueba que con un umbral
+  absoluto intermedio las dos baterías caerían a lados distintos sobre los MISMOS datos), y el
+  **nulo exacto por enumeración** para n = 3, 4, 5 y todo |S|. Verificado por **mutación: 5
+  mutantes, 5 cazados** (veredicto por tasa absoluta, corte descalibrado, abstención
+  puntuando 0, techo nulo por máximo, margen de ruido retirado), sobre **copias** del helper.
+- **UN BUG DEL PROPIO FIXTURE, cazado por su control**: las reglas de ruido derivaban su
+  índice de `i` con aritmética lineal y **colapsaban en cuatro comportamientos distintos**, así
+  que ni el máximo subía ni el techo nulo saturaba: el fixture decía tener k reglas y tenía
+  cuatro. Se detectó porque `UMBRAL_DEGENERADO` no disparaba con 200 reglas y 3 versiones.
+  Ahora cada regla lleva su tabla de consulta sorteada al construirla.
+- **RESIDUO DECLARADO 1 — la batería rellenada**: el criterio por exceso abre un vector de
+  evasión que el absoluto no tenía. Añadir reglas que nadie usaría **sube el techo nulo sin
+  mover el máximo**, así que erosiona el exceso y puede empujar un canal real a la zona gris.
+  El helper no puede detectarlo —no sabe qué es plausible— y por eso publica `exceso_atomico`
+  (la regla top contra su propio nulo exacto `1/n`, independiente de k): en una batería
+  rellenada esa cifra se queda alta mientras el exceso se desploma. Test que fija el mecanismo.
+- **RESIDUO DECLARADO 2**: los bloques `(I)` (reglas atómicas) y `(K)` (pares) del auditor siguen
+  con umbrales absolutos (45 % y 50 %) sin techo nulo propio. También son máximos sobre
+  baterías, así que arrastran el mismo defecto de escala; hoy **rechazan igualmente**, de modo
+  que la deuda no cambia ningún veredicto, pero no está saldada.
 
 ### Cambios v1.5 (2026-08-15) — §P7: cierre por familias de dimensión
 
