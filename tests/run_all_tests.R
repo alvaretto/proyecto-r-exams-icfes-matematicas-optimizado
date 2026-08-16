@@ -283,6 +283,35 @@ suites <- list(
     critico = TRUE,
     watch = c("grafica-circular-consumo-agua", "grafica_circular_consumo_agua",
               "test_diversidad_grafica_circular")
+  ),
+  list(
+    nombre = "FASE 2I: detector \\pandocbounded distingue definicion de uso",
+    archivo = "tests/testthat/test_fase2i_pandocbounded_detector.R",
+    critico = TRUE,
+    watch = c("post-exams2-validation", "markdown-imagenes-pdf",
+              "test_fase2i_pandocbounded_detector")
+  ),
+  list(
+    nombre = "is_latex_output() es FALSE en los pipelines de R/exams",
+    archivo = "tests/testthat/test_is_latex_output_rexams.R",
+    critico = TRUE,
+    watch = c("familias-soluciones-rmd", "markdown-imagenes-pdf", "codigo-rmd",
+              "snippets_familias_rmd", "test_is_latex_output_rexams")
+  ),
+  list(
+    nombre = "Bateria de eliminacion: cierre por familias + techo nulo (regla #22 P7)",
+    archivo = "tests/testthat/test_bateria_eliminacion.R",
+    critico = TRUE,
+    watch = c("bateria_eliminacion", "diversidad-sustantiva",
+              "test_bateria_eliminacion")
+  ),
+  list(
+    nombre = "FASE 2O: glifos Unicode que rompen pdflatex (ERR_GLIFO_LATEX)",
+    archivo = "tests/testthat/test_glifos_latex.R",
+    critico = TRUE,
+    watch = c("validar_glifos_latex", "post-exams2-validation",
+              "glifos-latex-legacy", "glifos-latex-prohibidos",
+              "test_glifos_latex")
   )
 )
 
