@@ -488,6 +488,26 @@ No son intercambiables en su salida: el primero reporta por dominios ICFES; el
 segundo, hallazgos con convicción epistémica. Para un `.Rmd` en workflow, el
 canónico es `AgenteDetractor`.
 
+### Regla de spawn: SIN `name:` (OBLIGATORIA, medida 2026-08-16)
+
+**El detractor se lanza SIEMPRE sin el parámetro `name:`.** No es una preferencia de estilo: el
+`name` cambia el **modo de entrega**, no sólo la etiqueta.
+
+| Invocación | Qué recibe quien invoca |
+|---|---|
+| `Task(subagent_type="AgenteDetractor", …)` **sin `name`** | El **reporte íntegro** como `tool_result` |
+| `Agent(subagent_type="AgenteDetractor", name="…", …)` | `"Spawned successfully"` (275-307 chars) y, al terminar, un `idle_notification`. **El reporte no llega jamás** |
+
+Con `name`, el agente pasa a ser un *teammate* (`taskKind: "in_process_teammate"`), cuyo único
+canal hacia arriba es `SendMessage({to: "main"})`. Medición que lo fija: en una misma sesión,
+**20 de 20** spawns con nombre devolvieron metadata, y los spawns sin nombre devolvieron reportes
+de **5.738 a 31.056** caracteres — la variable que discrimina es el `name`, no el tamaño ni el
+tipo de agente. Un teammate tampoco puede lanzar otros teammates (*«the team roster is flat»*).
+
+Consecuencia para esta regla: **un `VEREDICTO_DETRACTOR:` ausente tras un spawn con `name` no es
+una no-entrega del detractor** — es un error de invocación del coordinador, y se corrige
+relanzando sin `name`, no aplicando el protocolo de reintentos.
+
 ---
 
 ## Protocolo de no-entrega (OBLIGATORIO)
@@ -509,6 +529,34 @@ venir truncado. El contrato que lo obliga vive en `.claude/agents/agente-detract
 
 ### Qué hacer
 
+**Paso 0 — RECUPERAR ANTES DE RECLAMAR (obligatorio; añadido 2026-08-16).**
+Un reporte que no llegó **casi siempre existe**: en la sesión del 2026-08-15/16, los **11**
+subagentes que «no entregaron» habían escrito su reporte completo, con marcador. Reclamar sin
+comprobarlo cuesta ~300k tokens de detractor y puede disparar una pasada innecesaria. Antes de
+gastar un reintento, buscar el reporte en la transcripción del agente:
+
+```bash
+D=~/.claude/projects/<proyecto-slug>/<session-id>/subagents
+ls -t "$D"/*<nombre-agente>*.jsonl | head -1
+# extraer el ÚLTIMO content[].text de role: assistant de ese .jsonl
+```
+
+Si el reporte está ahí y cierra con `VEREDICTO_DETRACTOR:`, **la FASE 2C está cumplida**: se usa
+ese reporte y no se reclama nada. Dos cautelas medidas:
+
+- **Comprobar el timestamp del bloque recuperado.** Si es *posterior* al momento en que se recibió
+  el `tool_result`, el agente seguía trabajando cuando el harness cortó, y ese reporte llegó fuera
+  de plazo — es entrega válida, pero el corte fue real (agotamiento de `maxTurns`), no un problema
+  de canal.
+- **Si el `tool_result` empezaba por `"Spawned successfully"`**, el detractor se lanzó **con
+  `name:`** y por tanto como *teammate*, que no tiene canal de entrega hacia arriba. Eso no es una
+  no-entrega del agente sino un error de invocación: relanzarlo **sin `name`** en vez de reclamar.
+
+`TaskOutput` **NO** sirve para esto: está deprecado y su propia descripción desaconseja leer el
+`.output` de un `local_agent` (es un symlink a la transcripción íntegra y desborda el contexto).
+
+Sólo si el Paso 0 no encuentra reporte:
+
 1. **Reintento 1** — reclamar el reporte al mismo agente (`SendMessage`), recordándole
    el contrato de entrega y avisándole de cualquier cambio del artefacto desde su
    lanzamiento.
@@ -529,7 +577,10 @@ venir truncado. El contrato que lo obliga vive en `.claude/agents/agente-detract
 
 ```
 ❌ El detractor no devolvió nada → audito yo → "Veredicto: APROBAR" → sello el paso 7
-✓  El detractor no devolvió nada → 2 intentos → escalo al usuario → paso 7 sigue abierto
+✓  El detractor no devolvió nada → Paso 0 (recuperar) → 2 intentos → escalo al usuario
+                                 → paso 7 sigue abierto
+❌ El detractor no devolvió nada → le reclamo → le reclamo otra vez → escalo
+   ...cuando su reporte estaba entero en su transcripción, o cuando lo lancé con `name:`
 ```
 
 ---
@@ -547,12 +598,48 @@ Con el detractor obligatorio:
 
 ---
 
-**Versión**: 1.2
-**Fecha**: 2026-08-09
+**Versión**: 1.3
+**Fecha**: 2026-08-16
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
 **Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
+
+### Cambios v1.3 (2026-08-16)
+
+> La v1.2 diagnosticó bien el síntoma —detractores que terminan sin reporte— y cableó la defensa
+> correcta para el caso en que el agente calla. Pero **el agente casi nunca callaba**: al medir la
+> sesión del 2026-08-15/16, los **11** subagentes que «no entregaron» tenían su reporte completo,
+> con marcador, en su transcripción. La defensa se estaba aplicando sobre falsos negativos.
+
+- **DOS CAUSAS MEDIDAS, ninguna era «el agente no entregó»**:
+  - **(A) el `name:` cambia el modo de entrega.** `Agent` con `name` crea un *teammate*
+    (`taskKind: "in_process_teammate"`), cuyo `tool_result` es siempre `"Spawned successfully"`
+    y **cuyo texto final no viaja al padre** — sólo llega un `idle_notification`. Control
+    positivo en la misma sesión y el mismo harness: los spawns **sin** `name` devolvieron
+    reportes de **5.738 a 31.056** caracteres; los 20 spawns **con** `name`, 275-307 de metadata.
+    *La variable que discrimina es el `name`*, no el tamaño ni el tipo de agente — las dos
+    hipótesis que quedaban abiertas.
+  - **(B) agotamiento de `maxTurns`.** Tres detractores gastaron **33, 34 y 43** usos de
+    herramienta contra un `maxTurns: 30`; el harness cerró su entrega con un texto de
+    razonamiento intermedio de 96-336 caracteres **mientras seguían ejecutando herramientas**, y
+    el reporte real (18-28 KB) apareció en su transcripción minutos después. `maxTurns` sube a
+    **60** y el contrato del agente le exige emitir al 70 % del presupuesto.
+- **POR ESO «MÁS PROSA EN EL PROMPT» NO ARREGLÓ NADA**: el contrato de la v3.20.2 dice *«tu texto
+  final ES el reporte»*, lo cual es **cierto en modo bloqueante y falso para un teammate**.
+  Describía un canal que ese modo de arranque no tiene. Los 11 llevaban el contrato en su encargo.
+- **NUEVA SECCIÓN — Regla de spawn**: el detractor se lanza SIEMPRE **sin `name:`**, con la tabla
+  de qué recibe quien invoca en cada modo. Corolario que evita quemar un detractor entero: un
+  `VEREDICTO_DETRACTOR:` ausente tras un spawn con `name` **no es una no-entrega**, es un error de
+  invocación; se relanza, no se reclama.
+- **NUEVO PASO 0 del protocolo — recuperar antes de reclamar**, con sus dos cautelas medidas
+  (comparar el timestamp del bloque recuperado contra el del `tool_result`; y reconocer el
+  `"Spawned successfully"` como error de invocación). `TaskOutput` **no sirve**: está deprecado y
+  desaconseja leer el `.output` de un `local_agent`.
+- **CORRECCIÓN a lo registrado en la v1.2**: era falso que un orquestador hubiera reclamado a su
+  detractor «un marcador que sí estaba presente». Reconstruido minuto a minuto: al reclamar
+  (15:16:01) el reporte con marcador **aún no existía** — se escribió a las 15:19:15. En esos tres
+  casos el protocolo de reintentos **funcionó y era correcto**.
 
 ### Cambios v1.2 (2026-08-09)
 - **NUEVA SECCIÓN — Independencia del detractor**: el detractor DEBE ser un agente

@@ -27,6 +27,12 @@ Este archivo funciona como **índice central** del sistema. Para información de
    artefacto (autoevaluación ≠ FASE 2C), su reporte se considera entregado sólo si cierra con
    el marcador `VEREDICTO_DETRACTOR:`, y si no entrega tras 2 intentos se **escala al usuario**
    — PROHIBIDO sustituirlo por la auditoría propia del coordinador y sellar `detractor_fase2c`.
+   **Desde la v1.3 (2026-08-16): el detractor se lanza SIEMPRE sin `name:`** — el `name` lo
+   convierte en *teammate* y su texto final **no llega jamás** a quien lo invoca (sólo
+   `"Spawned successfully"` + `idle_notification`), así que un veredicto ausente ahí es un
+   **error de invocación**, no una no-entrega: se relanza, no se reclama. Y antes de gastar
+   reintentos rige el **Paso 0 — recuperar el reporte de la transcripción**: los 11 casos
+   medidos lo tenían escrito entero.
 10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
@@ -152,9 +158,62 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.22.0 (un umbral absoluto mide, en parte, el tamaño de tu propia batería)
-**Fecha**: 2026-08-15
+**Versión**: 3.23.0 (el `name:` no era una etiqueta: era el modo de entrega)
+**Fecha**: 2026-08-16
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.23.0 (2026-08-16)
+
+> El repositorio llevaba desde la v3.20.2 tratando «el subagente terminó sin reporte» como un
+> problema del agente, y respondiendo con más prosa en su prompt. **Los agentes nunca callaron.**
+> Al medir la sesión del 2026-08-15/16, los **once** que «no entregaron» tenían su reporte
+> completo, con marcador, escrito en su transcripción. Se estaba endureciendo el contrato
+> equivocado.
+
+- **CAUSA A — el parámetro `name:` cambia el CANAL, no la etiqueta.** `Agent` con `name` no crea
+  un subagente bloqueante sino un **teammate** (`taskKind: "in_process_teammate"`), cuyo
+  `tool_result` es *siempre* `"Spawned successfully"` y **cuyo texto final no viaja al padre**:
+  lo único que llega es `{"type":"idle_notification","idleReason":"available"}`. Su único canal
+  hacia arriba es que él mismo llame `SendMessage({to: "main"})`.
+- **CONTROL POSITIVO, mismo harness y misma sesión**: los `Task` lanzados **sin** `name`
+  devolvieron el reporte íntegro — **5.738 · 6.010 · 8.000 · 13.630 · 22.264 · 27.787 · 28.552 ·
+  31.047 · 31.056** caracteres; los **20 de 20** lanzados con `name`, 275-307 de metadata. *La
+  variable que discrimina es el `name`*, no el tamaño del reporte ni el tipo de agente — las dos
+  hipótesis que la investigación previa había dejado abiertas. Prueba lateral: dos spawns *named*
+  desde dentro de un teammate devolvieron `"Teammates cannot spawn other teammates — the team
+  roster is flat."`
+- **POR ESO EL CONTRATO DE LA v3.20.7 NO PODÍA FUNCIONAR**: dice *«tu texto final de retorno ES el
+  reporte»*, y eso es **cierto en modo bloqueante y falso para un teammate**. Describía un canal
+  que ese modo de arranque no tiene, así que los once lo cumplieron al pie de la letra y aun así
+  no entregaron. *Un contrato correcto sobre un canal inexistente no es una defensa.*
+- **CAUSA B, INDEPENDIENTE — agotamiento de `maxTurns`.** Tres detractores devolvieron 293-336
+  caracteres de razonamiento intermedio. Reconstruido minuto a minuto en `a67410f9ee2e19e56`: a
+  las **15:14:27** el agente emite 96 caracteres y **sigue ejecutando herramientas** (Bash ×3,
+  Read); el harness **cierra ahí el `tool_result`** con el agente vivo; a las **15:19:15** el
+  agente entrega el reporte real de **18.127 caracteres con `VEREDICTO_DETRACTOR:`**. Sus
+  `<usage>` marcan `tool_uses` **33 · 34 · 43** contra el `maxTurns: 30` declarado.
+- **`maxTurns` del detractor: 30 → 60**, y su contrato le exige ahora **dejar de investigar y
+  emitir al 70 % del presupuesto**. Un reporte que existe pero llega tras el corte equivale a no
+  entregarlo.
+- **REGLA #9 → v1.3**, dos secciones nuevas. **Regla de spawn**: el detractor se lanza SIEMPRE sin
+  `name:`, con la tabla de qué recibe quien invoca en cada modo; corolario que ahorra ~300k tokens
+  por incidente — un `VEREDICTO_DETRACTOR:` ausente tras un spawn con `name` **no es una
+  no-entrega**, es un error de invocación, y se relanza en vez de reclamarse. **Paso 0 del
+  protocolo — recuperar antes de reclamar**, con sus dos cautelas medidas: comparar el timestamp
+  del bloque recuperado contra el del `tool_result` (distingue la causa A de la B), y reconocer el
+  `"Spawned successfully"`. `TaskOutput` **no sirve** para esto: está deprecado y su propia
+  descripción desaconseja leer el `.output` de un `local_agent` (symlink a la transcripción
+  íntegra, desborda el contexto).
+- **AMBOS ORQUESTADORES** ganan las dos mitades, porque son a la vez entregadores y lanzadores:
+  cómo entregan **según cómo los lanzaron**, y cómo deben lanzar ellos a sus propios subagentes.
+- **CORRECCIÓN a lo que la v1.2 dejó registrado**: era falso que un orquestador hubiera reclamado
+  a su detractor «un marcador que sí estaba presente». Al reclamar (15:16:01) ese reporte **aún no
+  existía** — se escribió a las 15:19:15. En los tres casos de la causa B el protocolo de
+  reintentos **funcionó y era correcto**; lo que fallaba era aplicarlo también a los de la causa A.
+- **VERIFICADO**: `test_contrato_detractor.R` 16/16 · `test_contrato_entrega_orquestadores.R` 33/33
+  (marcador y vocabulario `exit_status` intactos) · invariantes **I-1..I-10 en verde** (214
+  aserciones, exit real 0 medido por redirección, sin tubería). Snapshot previo en
+  `.claude.pre-fix-contrato-entrega-20260816-081344.tar.gz`.
 
 ### Cambios v3.22.0 (2026-08-16)
 

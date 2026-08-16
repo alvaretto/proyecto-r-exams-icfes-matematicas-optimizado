@@ -55,6 +55,41 @@ volvió a ocurrir el 2026-08-10 en un dry-run de `MAT-2026-1-010` (en el gemelo 
 archivo recibe la misma defensa por paridad, antes de que le toque a él). Ver
 `.claude/rules/detractor-obligatorio.md` § "Protocolo de no-entrega".
 
+### El canal depende de CÓMO me lanzaron (medido 2026-08-16)
+
+Los puntos 1-6 describen el canal de un **subagente bloqueante**. Existe un segundo modo de
+arranque en el que **ese canal no existe**, y confundirlos causó **11 no-entregas consecutivas**
+el 2026-08-15/16 — todas con el reporte escrito, con marcador, y ninguna recibida:
+
+| Cómo me lanzaron | Mi canal de entrega |
+|---|---|
+| `Agent`/`Task` **SIN** `name:` (subagente bloqueante) | Mi **texto final** llega intacto a quien me invoca |
+| `Agent` **CON** `name:` (teammate, `taskKind: in_process_teammate`) | Mi texto final **NO llega a nadie**. Quien me invocó recibe `"Spawned successfully"` y luego un `idle_notification`. Mi único canal es `SendMessage({to: "main", …})` |
+
+**Si corro como teammate** (tengo nombre propio, o puedo dirigirme a `main` con `SendMessage`),
+emitir el reporte como texto final **no basta**: debo enviarlo íntegro por
+`SendMessage({to: "main"})` antes de terminar. Emitirlo sólo como texto de retorno equivale a
+escribirlo en un archivo que nadie abrirá — el caso que el punto 2 prohíbe.
+
+Medición: en una misma sesión, **20 de 20** spawns *con* nombre devolvieron 275-307 caracteres de
+metadata; los spawns *sin* nombre devolvieron reportes de **5.738 a 31.056** caracteres. La
+variable que discrimina es el `name`, no el tamaño del reporte ni el tipo de agente.
+
+### Cómo lanzo YO a mis subagentes (regla de spawn, OBLIGATORIA)
+
+La otra mitad de lo mismo, porque yo lanzo detractores y auditores:
+
+1. **Si necesito su reporte de vuelta —que es siempre—, los lanzo SIN `name:`.** El `name` es
+   exclusivamente para trabajo colaborativo con mensajería bidireccional, y **me cuesta el
+   reporte**.
+2. **PROHIBIDO** lanzar al `AgenteDetractor` con `name:`. La FASE 2C se cierra con su
+   `VEREDICTO_DETRACTOR:`, y un teammate no me lo va a entregar nunca.
+3. Un `tool_result` que empieza por `"Spawned successfully"` **no es un reporte**: significa que
+   lo lancé mal. Relanzarlo sin `name` es más barato que reclamarle.
+4. Antes de aplicar el protocolo de no-entrega (2 reintentos + escalado), **recupero primero de
+   su transcripción** — ver `detractor-obligatorio.md` § "Protocolo de no-entrega", Paso 0.
+   Reclamar sin comprobar quema ~300k tokens de un detractor que quizá sí entregó.
+
 ## Identidad y misión
 
 Soy el orquestador autónomo del workflow de generación de ejercicios CLOZE
