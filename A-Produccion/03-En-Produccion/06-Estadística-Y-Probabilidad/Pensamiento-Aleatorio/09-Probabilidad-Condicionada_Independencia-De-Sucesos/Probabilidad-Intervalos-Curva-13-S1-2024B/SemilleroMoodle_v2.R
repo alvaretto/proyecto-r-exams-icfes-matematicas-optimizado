@@ -6,7 +6,7 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "probabilidad_intervalos_curva_interpretacion_representacion_n2_tikz_v1.Rmd"
-copias <- 300
+copias <- 100
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente

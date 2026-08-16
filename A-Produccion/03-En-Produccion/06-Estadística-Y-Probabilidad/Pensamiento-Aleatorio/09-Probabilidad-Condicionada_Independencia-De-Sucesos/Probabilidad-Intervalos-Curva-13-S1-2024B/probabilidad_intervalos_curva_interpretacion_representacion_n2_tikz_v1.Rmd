@@ -474,6 +474,7 @@ if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
   # Para PDF/LaTeX: generar PDF vectorial
   include_tikz(codigo_tabla_solucion,
                name = "tabla_solucion",
+               markup = "markdown",
                format = "pdf",
                packages = c("tikz"),
                width = "3cm")
@@ -481,6 +482,7 @@ if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
   # Para HTML/Moodle: generar PNG
   include_tikz(codigo_tabla_solucion,
                name = "tabla_solucion",
+               markup = "markdown",
                format = "png",
                packages = c("tikz"),
                width = "3cm")

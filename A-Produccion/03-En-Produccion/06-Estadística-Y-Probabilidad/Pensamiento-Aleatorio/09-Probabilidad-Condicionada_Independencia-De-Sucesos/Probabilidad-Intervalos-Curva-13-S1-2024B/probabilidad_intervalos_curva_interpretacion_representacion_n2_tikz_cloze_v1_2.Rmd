@@ -756,37 +756,37 @@ Este problema de **interpretación de gráficos de distribución de probabilidad
 - **Consistencia**: Mismo formato en enunciado, opciones y respuestas
 - **Precisión**: Se requiere mayor exactitud en los cálculos
 
-### Paso 1: Lectura correcta de probabilidades - Primer intervalo (extremo izquierdo) ✓
+### Paso 1: Lectura correcta de probabilidades - Primer intervalo (extremo izquierdo)
 
 **Respuesta correcta:** `r formato_estandar(datos$p_lateral_1, 2)`
 
 El primer intervalo va desde $x=0$ hasta $x=`r datos$limite1`$. La lectura cuidadosa del gráfico muestra que la probabilidad en esta sección extrema izquierda es **`r formato_estandar(datos$p_lateral_1, 2)`**.
 
-### Paso 2: Lectura correcta de probabilidades - Segundo intervalo (región intermedia) ✓
+### Paso 2: Lectura correcta de probabilidades - Segundo intervalo (región intermedia)
 
 **Respuesta correcta:** `r formato_estandar(datos$p_central, 2)`
 
 El segundo intervalo (región intermedia) va desde $x=`r datos$limite1`$ hasta $x=`r datos$limite2`$. La probabilidad en esta sección intermedia es **`r formato_estandar(datos$p_central, 2)`**.
 
-### Paso 3: Lectura correcta de probabilidades - Tercer intervalo (extremo derecho) ✓
+### Paso 3: Lectura correcta de probabilidades - Tercer intervalo (extremo derecho)
 
 **Respuesta correcta:** `r formato_estandar(datos$p_lateral_3, 2)`
 
 El tercer intervalo va desde $x=`r datos$limite2`$ hasta $x=`r datos$limite_sup`$. La probabilidad en esta sección extrema derecha es **`r formato_estandar(datos$p_lateral_3, 2)`**.
 
-### Paso 4: Identificación correcta de límites - Límite inferior ✓
+### Paso 4: Identificación correcta de límites - Límite inferior
 
 **Respuesta correcta:** `r formato_estandar(datos$limite1, 0)`
 
 El límite inferior del segundo intervalo (región intermedia) es **`r datos$limite1`**.
 
-### Paso 5: Identificación correcta de límites - Límite superior ✓
+### Paso 5: Identificación correcta de límites - Límite superior
 
 **Respuesta correcta:** `r formato_estandar(datos$limite2, 0)`
 
 El límite superior del segundo intervalo (región intermedia) es **`r datos$limite2`**.
 
-### Paso 6: Verificación matemática correcta - Suma total de probabilidades ✓
+### Paso 6: Verificación matemática correcta - Suma total de probabilidades
 
 **Respuesta correcta:** `r formato_estandar(1.00, 3)`
 
@@ -796,7 +796,7 @@ $$`r formato_estandar(datos$p_lateral_1, 3)` + `r formato_estandar(datos$p_centr
 
 Esta suma confirma que las probabilidades están correctamente leídas, ya que **la suma total de todas las probabilidades en una distribución completa debe ser igual a 1.000**. Esto valida que hemos identificado correctamente la probabilidad de la unión de estos tres intervalos disjuntos que cubren todo el espacio muestral.
 
-### Paso 7: Análisis comparativo correcto - Diferencia entre probabilidades extremas ✓
+### Paso 7: Análisis comparativo correcto - Diferencia entre probabilidades extremas
 
 **Respuesta correcta:** `r formato_estandar(abs(datos$p_lateral_1 - datos$p_lateral_3), 3)`
 
@@ -807,7 +807,7 @@ $$|\text{Diferencia}| = |P(\text{primer intervalo}) - P(\text{tercer intervalo})
 
 Esta medida indica qué tan simétrica o asimétrica es la distribución en los extremos.
 
-### Paso 8: Análisis comparativo correcto - Intervalo con mayor probabilidad ✓
+### Paso 8: Análisis comparativo correcto - Intervalo con mayor probabilidad
 
 **Respuesta correcta:** `r respuesta_8`
 
@@ -823,7 +823,7 @@ if (datos$p_central > datos$p_lateral_1 && datos$p_central > datos$p_lateral_3) 
 }
 ```
 
-### Paso 9: Confirmación mediante selección múltiple ✓ (CON PUNTUACIÓN)
+### Paso 9: Confirmación mediante selección múltiple (CON PUNTUACIÓN)
 
 ```{r mostrar_tabla_solucion, echo=FALSE, results='asis'}
 # Generar tabla de solución con la misma configuración TikZ que las opciones
@@ -847,6 +847,7 @@ if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
   # Para PDF/LaTeX: generar PDF vectorial
   include_tikz(codigo_tabla_solucion,
                name = "tabla_solucion",
+               markup = "markdown",
                format = "pdf",
                packages = c("tikz"),
                width = "3cm")
@@ -854,6 +855,7 @@ if (identical(typ, "pdf") || identical(typ, "nops") || identical(typ, "tex")) {
   # Para HTML/Moodle: generar PNG
   include_tikz(codigo_tabla_solucion,
                name = "tabla_solucion",
+               markup = "markdown",
                format = "png",
                packages = c("tikz"),
                width = "3cm")
