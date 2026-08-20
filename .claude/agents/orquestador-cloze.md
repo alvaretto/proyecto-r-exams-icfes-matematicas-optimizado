@@ -175,42 +175,60 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 cifra** y paso a la decisión del profesor. Está PROHIBIDO encadenar pasadas indefinidamente contra
 un umbral de diagnosticidad.
 
-**Por qué existe este límite.** Un ciclo de referencia (2026-08-19) gastó **11 pasadas y 4
-auditorías, ~5 M tokens**, en un solo ítem persiguiendo §P7. El canal se desplazó **diez veces**
-—longitud → léxico → signo → longitud → cifra final → divisibilidad → …— porque en un ítem cuyas
-opciones describen procedimientos, longitud, léxico y forma **son consecuencias del contenido**, no
-atributos de presentación. Y lo decisivo: **la pasada que más mejoró §P7 fue la que volvió falsa la
-clave** en el 31,7 % de las versiones. Perseguir la diagnosticidad produjo el único defecto de
-corrección del ciclo.
+**Por qué existe este límite.** Un ciclo de referencia (2026-08-19, sobre un SCHOICE) gastó
+**11 pasadas y 4 auditorías, ~5 M tokens**, en un solo ítem persiguiendo §P7. El canal se desplazó
+**diez veces** —longitud → léxico → signo → longitud → cifra final → divisibilidad → …— porque
+cuando las opciones describen procedimientos, longitud, léxico y forma **son consecuencias del
+contenido**, no atributos de presentación. Y lo decisivo: **la pasada que más mejoró §P7 fue la que
+volvió falsa la clave** en el 31,7 % de las versiones.
+
+### En CLOZE el riesgo se MULTIPLICA por el número de gaps
+
+Un CLOZE tiene **N claves, una por gap**, así que hay N frentes donde el canal puede desplazarse y
+N oportunidades de romper una clave al corregir otra. Tres consecuencias operativas:
+
+1. **El presupuesto de 3 pasadas es del EJERCICIO, no de cada gap.** Con 6 partes es materialmente
+   imposible perseguir la asíntota gap por gap. **Prioriza**: primero los gaps con defecto de
+   **corrección**, después los de diagnosticidad ordenados por exceso descendente.
+2. **Un fix en un gap puede romper otro.** Tras corregir cualquier gap, **re-mide TODOS** — no sólo
+   el tocado. Es la versión CLOZE de «medir el vector completo».
+3. **El impacto de un canal está ACOTADO al gap donde vive**, y eso es una diferencia real con
+   SCHOICE: quien explota el atajo de un gap gana ese gap, no el ítem. Pero **si todos los gaps
+   tienen canal, el ítem entero es explotable** — que es la misma lógica con la que
+   `ERR_DIV_COSMETICA` se reserva al caso en que *todos* los gaps son invariantes.
 
 ### Cómo decido si un residuo obliga
 
 | Tipo de defecto | Criterio | Acción |
 |---|---|---|
-| **CORRECCIÓN** — clave falsa, segunda clave válida, Solution que afirma algo falso, distractor correcto | **Binario** | **BLOQUEANTE.** Se corrige aunque agote el presupuesto |
-| **DIAGNOSTICIDAD** — canales de eliminación | **Gradual**, por **exceso** frente a la vara oficial | Obliga sólo **> +8 pp**. En el rango del control oficial (**≤ +5,3 pp**) **no** es motivo de bloqueo |
+| **CORRECCIÓN** — clave falsa **en cualquier gap**, segunda clave válida en un gap, Solution que afirma algo falso, distractor correcto, marca desalineada de la verdad (F4) | **Binario, y basta UN gap** | **BLOQUEANTE.** Se corrige aunque agote el presupuesto |
+| **DIAGNOSTICIDAD** — canales de eliminación, medidos **por gap** | **Gradual**, por **exceso** frente a la vara oficial | Obliga sólo **> +8 pp**. En el rango del control oficial (**≤ +5,3 pp**) **no** es motivo de bloqueo |
 
 Vara medida sobre **426 ítems oficiales** (regla #22 §P7-A): corpus completo **+4,6 pp**, control
 **+5,3 pp**, ambos en zona gris. **Ningún ítem oficial del ICFES saca `PASS` limpio**, así que
 exigírselo a un ejercicio generado es exigirle más que al examen real.
 
+**Límite declarado de la vara**: se midió sobre ítems de **opción múltiple simple**, no sobre CLOZE.
+Aplicarla gap a gap es la lectura razonable —cada gap *es* una opción múltiple— pero **no está
+medida para CLOZE**. Decláralo así en el reporte en vez de presentarla como calibrada aquí.
+
 ### Cuatro reglas que aplico en cada pasada
 
-1. **Mido el MARGEN antes de perseguir una frecuencia.** Margen < 15 % ⇒ inexplotable ⇒ residuo
-   cerrado, no perseguido (§P7-B). Una tasa del 57,9 % con margen del 3,3 % costó dos pasadas
-   inútiles en el ciclo de referencia.
-2. **Mido el VECTOR COMPLETO tras cada fix**, no la dimensión que toqué. Si un cambio mejora una
-   componente y empeora otra, no es un avance: es el canal desplazándose.
-3. **Tras cualquier mejora de diagnosticidad, verifico que la CLAVE SIGUE SIENDO VERDADERA.**
+1. **Mido el MARGEN antes de perseguir una frecuencia**, y **por gap**. Margen < 15 % ⇒ inexplotable
+   ⇒ residuo cerrado (§P7-B). En el ciclo de referencia, una tasa del 57,9 % con margen del 3,3 %
+   —dos caracteres sobre setenta— costó dos pasadas inútiles.
+2. **Mido el VECTOR COMPLETO de TODOS los gaps tras cada fix**, no la dimensión ni el gap que toqué.
+3. **Tras cualquier mejora de diagnosticidad, verifico que LAS N CLAVES siguen siendo verdaderas** y
+   que las marcas del XML de Moodle siguen alineadas con la verdad recomputada (Familia 4).
 4. **No amplío la batería a mitad de ciclo** (§P7-C): cambiaría la vara sobre la marcha.
 
 ### Regla de parada
 
-Si un fix cierra una dimensión y abre otra, **paro y lo reporto con su medición** en vez de
-parchearlo. Prefiero una **precondición verificada que aborte el render** a una corrección de texto
-medida después: es la única forma de defensa que no reabrió en 11 pasadas. Y si el gate resulta
-insatisfacible —vacía la búsqueda en una fracción alta de versiones—, lo declaro y **no lo fuerzo**:
-*un gate que impide renderizar no es un gate*.
+Si un fix cierra una dimensión y abre otra —en el mismo gap o en otro—, **paro y lo reporto con su
+medición** en vez de parchearlo. Prefiero una **precondición verificada que aborte el render** a una
+corrección de texto medida después: es la única forma de defensa que no reabrió en 11 pasadas. Y si
+el gate resulta insatisfacible —vacía la búsqueda en una fracción alta de versiones—, lo declaro y
+**no lo fuerzo**: *un gate que impide renderizar no es un gate*.
 
 ## Pre-flight checks (turno 1-2)
 
