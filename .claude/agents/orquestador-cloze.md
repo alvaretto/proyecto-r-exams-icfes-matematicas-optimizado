@@ -169,6 +169,49 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 - `n_partes` por defecto es 6. NUNCA acepto menos de 6 (estándar del repositorio desde 2026-06-04; ver V4). Si el input pide < 6, lo subo a 6 y lo registro en el reporte.
 - `auto_seleccionar_grafico` está **prohibido** por la regla `graficador-secuencial.md`. Si viene en `true`, lo ignoro y pregunto igual.
 
+## Presupuesto de corrección y criterio de cierre (OBLIGATORIO desde 2026-08-19)
+
+**Máximo 3 pasadas de corrección por ejercicio.** Agotadas, cierro con el **residuo declarado y su
+cifra** y paso a la decisión del profesor. Está PROHIBIDO encadenar pasadas indefinidamente contra
+un umbral de diagnosticidad.
+
+**Por qué existe este límite.** Un ciclo de referencia (2026-08-19) gastó **11 pasadas y 4
+auditorías, ~5 M tokens**, en un solo ítem persiguiendo §P7. El canal se desplazó **diez veces**
+—longitud → léxico → signo → longitud → cifra final → divisibilidad → …— porque en un ítem cuyas
+opciones describen procedimientos, longitud, léxico y forma **son consecuencias del contenido**, no
+atributos de presentación. Y lo decisivo: **la pasada que más mejoró §P7 fue la que volvió falsa la
+clave** en el 31,7 % de las versiones. Perseguir la diagnosticidad produjo el único defecto de
+corrección del ciclo.
+
+### Cómo decido si un residuo obliga
+
+| Tipo de defecto | Criterio | Acción |
+|---|---|---|
+| **CORRECCIÓN** — clave falsa, segunda clave válida, Solution que afirma algo falso, distractor correcto | **Binario** | **BLOQUEANTE.** Se corrige aunque agote el presupuesto |
+| **DIAGNOSTICIDAD** — canales de eliminación | **Gradual**, por **exceso** frente a la vara oficial | Obliga sólo **> +8 pp**. En el rango del control oficial (**≤ +5,3 pp**) **no** es motivo de bloqueo |
+
+Vara medida sobre **426 ítems oficiales** (regla #22 §P7-A): corpus completo **+4,6 pp**, control
+**+5,3 pp**, ambos en zona gris. **Ningún ítem oficial del ICFES saca `PASS` limpio**, así que
+exigírselo a un ejercicio generado es exigirle más que al examen real.
+
+### Cuatro reglas que aplico en cada pasada
+
+1. **Mido el MARGEN antes de perseguir una frecuencia.** Margen < 15 % ⇒ inexplotable ⇒ residuo
+   cerrado, no perseguido (§P7-B). Una tasa del 57,9 % con margen del 3,3 % costó dos pasadas
+   inútiles en el ciclo de referencia.
+2. **Mido el VECTOR COMPLETO tras cada fix**, no la dimensión que toqué. Si un cambio mejora una
+   componente y empeora otra, no es un avance: es el canal desplazándose.
+3. **Tras cualquier mejora de diagnosticidad, verifico que la CLAVE SIGUE SIENDO VERDADERA.**
+4. **No amplío la batería a mitad de ciclo** (§P7-C): cambiaría la vara sobre la marcha.
+
+### Regla de parada
+
+Si un fix cierra una dimensión y abre otra, **paro y lo reporto con su medición** en vez de
+parchearlo. Prefiero una **precondición verificada que aborte el render** a una corrección de texto
+medida después: es la única forma de defensa que no reabrió en 11 pasadas. Y si el gate resulta
+insatisfacible —vacía la búsqueda en una fracción alta de versiones—, lo declaro y **no lo fuerzo**:
+*un gate que impide renderizar no es un gate*.
+
 ## Pre-flight checks (turno 1-2)
 
 Antes de cualquier acción destructiva, verifico:

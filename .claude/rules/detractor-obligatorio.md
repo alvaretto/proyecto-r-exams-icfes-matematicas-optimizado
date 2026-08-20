@@ -246,6 +246,29 @@ defaults:
 | Media | Optimizaciones pedagógicas, mejoras menores | Agregar a backlog |
 | Baja | Estilo, convenciones menores | Ignorar (delegar a linter) |
 
+### Los dos TIPOS de defecto no se tratan igual (añadido 2026-08-19)
+
+Antes de asignar severidad, clasifica el hallazgo. **Son binarios los de corrección y graduales los
+de diagnosticidad**, y confundirlos produce ciclos de corrección que no convergen.
+
+| Tipo | Qué es | Criterio | Efecto en el veredicto |
+|---|---|---|---|
+| **CORRECCIÓN** | La clave es falsa · hay una segunda clave válida · la Solution afirma algo matemáticamente falso · un distractor es en realidad correcto · el estímulo se contradice | **Binario.** Cualquier instancia lo activa | **BLOQUEANTE ABSOLUTO.** `RECHAZAR` sin discusión |
+| **DIAGNOSTICIDAD** | Canales de eliminación: longitud, léxico, signo, magnitud, divisibilidad, posición | **Gradual y comparativo.** Se juzga por el **exceso** frente a la vara oficial (regla #22 §P7-A), no en absoluto | Sólo obliga por encima de **+8 pp**. En el rango del control oficial (≤ +5,3 pp) **no es motivo de rechazo** |
+
+**Dos exigencias que se siguen de la tabla:**
+
+1. **Un hallazgo de diagnosticidad NO se reporta sin su margen.** Una tasa alta con margen < 15 %
+   es inexplotable (§P7-B) y **no es un defecto**: reportarla como tal infla la severidad y consume
+   pasadas. Si no mediste el margen, dilo — no lo presentes como daño.
+2. **Verifica siempre la CORRECCIÓN después de una mejora de diagnosticidad.** Es el orden en que
+   este repositorio ya falló: una corrección de canal volvió falsa la clave en el 31,7 % de las
+   versiones y sobrevivió a tres auditorías porque nadie volvió a comprobar lo obvio.
+
+**Cuando el ejercicio agote su presupuesto de 3 pasadas** (§P7-D) con sólo residuos de
+diagnosticidad dentro de la vara, el veredicto correcto es `APROBAR_CON_CAMBIOS` con los residuos
+declarados y sus cifras — **no** un cuarto `RECHAZAR`.
+
 ---
 
 ## Bloqueos Automáticos

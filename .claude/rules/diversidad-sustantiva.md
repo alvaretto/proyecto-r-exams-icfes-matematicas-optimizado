@@ -338,6 +338,67 @@ Dos mitigaciones, ninguna automática:
    rellenada esa cifra se queda grande mientras el exceso sobre el techo se desploma; verlas
    juntas delata el relleno. Un test fija el mecanismo para que nadie lo descubra por sorpresa.
 
+#### §P7-A — CRITERIO DE ACEPTACIÓN: la vara es el examen real, no el cero
+
+> **Añadido 2026-08-19 tras un ciclo de 11 pasadas y 4 auditorías (~5 M tokens) sobre un solo
+> ítem.** §P7 nació como **diagnóstico** —«¿hay canal?»— y se estaba aplicando como **condición de
+> aprobación** —«corregir hasta que dé PASS»—. Esa lectura no tiene condición de parada, y la
+> medición dice por qué: **es inalcanzable por construcción.**
+
+**EL DATO QUE FIJA LA VARA** (426 ítems oficiales de Matemáticas deduplicados, batería universal de
+28 reglas, pre-registro sellado antes de tocar datos — ver `ref_vara_p7_items_ecuacion`):
+
+| Población | n | exceso | veredicto del helper |
+|---|---:|---:|---|
+| **Corpus oficial ICFES completo** | 426 | **+4,6 pp** | zona gris → `NO_CONCLUYENTE` |
+| Control oficial | 399 | **+5,3 pp** | zona gris → `NO_CONCLUYENTE` |
+
+**Los ítems del ICFES no sacan `PASS` limpio.** Exigírselo a un ejercicio generado es exigirle más
+que al examen real, y contradice lo que la propia §P7 declara: *un ítem que no filtra más que el
+examen real no se declara defectuoso*.
+
+**Criterio vigente, en tres escalones:**
+
+| Exceso | Veredicto de ACEPTACIÓN |
+|---|---|
+| ≤ **+5,3 pp** (rango del control oficial) | **ACEPTABLE.** No se persigue más. `NO_CONCLUYENTE` aquí **no** es motivo de rechazo |
+| +5,3 a **+8 pp** | Aceptable **declarando el residuo con su cifra** en el reporte |
+| > **+8 pp** | Corregir — es la única franja que obliga |
+
+#### §P7-B — Frecuencia sin margen NO es un defecto
+
+**Ninguna sonda de eliminación se persigue sin medir antes su margen relativo.** Si el margen de la
+clave sobre su rival más próximo es **< 15 %** (el umbral que este repositorio ya calibró para H1),
+la señal **no es explotable** y el residuo se declara cerrado.
+
+Medido en el ciclo de referencia: una tasa del **57,9 %** con margen del **3,3 %** —dos caracteres
+sobre setenta— se persiguió durante dos pasadas antes de que una auditoría demostrara que ningún
+estudiante puede usarla. **La frecuencia sin margen engaña**, y perseguirla cuesta pasadas enteras.
+
+#### §P7-C — La batería se CONGELA al inicio del ejercicio
+
+Las reglas se fijan **antes** de la primera medición y no se amplían a mitad de ciclo. Añadir sondas
+entre pasadas **cambia la vara sobre la marcha**: el máximo sube porque hay más reglas, no porque el
+ítem haya empeorado, y el `exceso_atomico` deja de ser comparable entre pasadas.
+
+Si una auditoría descubre una familia sin sonda —lo cual es legítimo y esperable—, la sonda se añade
+y **se re-mide el histórico completo con la batería nueva**, o se declara que las cifras anteriores
+no son comparables. Lo que está prohibido es encadenar pasadas con baterías distintas y tratar sus
+excesos como una serie.
+
+#### §P7-D — Presupuesto: 3 pasadas de corrección
+
+Agotadas, el ejercicio **se cierra con el residuo declarado** y pasa a la decisión del profesor.
+Está PROHIBIDO encadenar pasadas indefinidamente contra un umbral.
+
+**La razón no es el coste, es el riesgo medido:** en el ciclo de referencia, la pasada que llevó §P7
+de +17,8 a +6,3 pp fue la que volvió **matemáticamente falsa la clave** en el 31,7 % de las
+versiones. **Perseguir la diagnosticidad introdujo el único defecto de corrección del ciclo**, y
+ningún gate automático lo detectó — lo encontró la auditoría independiente, cuatro pasadas después.
+
+Corolario operativo: **tras cualquier mejora de diagnosticidad, verificar que la clave sigue siendo
+verdadera.** No es una comprobación redundante; es la que este repositorio se saltó.
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden

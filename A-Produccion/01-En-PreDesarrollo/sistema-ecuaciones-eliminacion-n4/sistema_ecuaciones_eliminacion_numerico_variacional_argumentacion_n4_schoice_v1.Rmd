@@ -1,0 +1,764 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+library(exams)
+
+## ===========================================================================
+## sistema_ecuaciones_eliminacion_..._n4_schoice_v1
+## Origen: MAT-2026-1-044 (ERA-2026 Sesión 2, pregunta impresa 44).
+## Reglas locales del subproyecto: ./.claude/CLAUDE.md (L-1 .. L-6). LEER antes de editar.
+## PROHIBIDO set.seed() aquí: el control del RNG es del llamador (Incidente INC-RNG-RESEED).
+## ===========================================================================
+
+## --- helpers (copias inline; regla #21 exige auto-contención del .Rmd) -----
+eq_display <- function(tex) {
+  paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
+         "$$", tex, "$$\n\n:::\n")
+}
+fmt <- function(x) formatC(as.numeric(x), format = "f", digits = 0, big.mark = ".",
+                            decimal.mark = ",")
+pick <- function(x) x[sample.int(length(x), 1L)]          # Familia 5: seguro con length 1
+
+## ===========================================================================
+## 1. CONTEXTOS NARRATIVOS (regla #11: 6 plantillas, 6 estructuras distintas)
+## ===========================================================================
+contextos <- list(
+  list(
+    id = "canónico", sujeto = "Adriana", revisor = "Ana",
+    o1 = "libros", o2 = "revistas", s1 = "L", s2 = "R", u2 = "revista",
+    lote = "promoción", lotes = "promociones",
+    plantilla = function(ctx, n1a, n2a, n1b, n2b, p1, p2) paste0(
+      ctx$sujeto, " compra en línea dos promociones de libros y revistas de segunda mano. ",
+      "En la primera vienen ", n1a, " libros y ", n1b, " revistas y en el segundo ",
+      n2a, " libros y ", n2b, " revistas, pagando $ ", fmt(p1), " por la primera y $ ",
+      fmt(p2), " por la segunda.")
+  ),
+  list(
+    id = "vivero", sujeto = "Marcela", revisor = "Tomás",
+    o1 = "árboles", o2 = "arbustos", s1 = "A", s2 = "B", u2 = "arbusto",
+    lote = "pedido", lotes = "pedidos",
+    plantilla = function(ctx, n1a, n2a, n1b, n2b, p1, p2) paste0(
+      "Para reforestar dos parques, el vivero municipal despachó dos pedidos. ",
+      "El primero llevaba ", n1a, " árboles y ", n1b, " arbustos; el segundo, ",
+      n2a, " árboles y ", n2b, " arbustos. Las facturas fueron de $ ", fmt(p1),
+      " y $ ", fmt(p2), ", respectivamente, y ", ctx$sujeto,
+      " debe reportar cuánto cuesta cada especie.")
+  ),
+  list(
+    id = "papeleria", sujeto = "Julián", revisor = "Sofía",
+    o1 = "cuadernos", o2 = "lapiceros", s1 = "C", s2 = "P", u2 = "lapicero",
+    lote = "combo", lotes = "combos",
+    plantilla = function(ctx, n1a, n2a, n1b, n2b, p1, p2) paste0(
+      "Una papelería escolar vende dos combos y no publica los precios por unidad. ",
+      "El combo grande trae ", n1a, " cuadernos y ", n1b, " lapiceros por $ ", fmt(p1),
+      "; el combo pequeño trae ", n2a, " cuadernos y ", n2b, " lapiceros por $ ", fmt(p2),
+      ". ", ctx$sujeto, " quiere deducir el precio de cada artículo.")
+  ),
+  list(
+    id = "panaderia", sujeto = "Beatriz", revisor = "Camilo",
+    o1 = "panes", o2 = "galletas", s1 = "P", s2 = "G", u2 = "galleta",
+    lote = "bandeja", lotes = "bandejas",
+    plantilla = function(ctx, n1a, n2a, n1b, n2b, p1, p2) paste0(
+      "Al cerrar la caja, la panadería registró dos ventas al por mayor: una bandeja con ",
+      n1a, " panes y ", n1b, " galletas por $ ", fmt(p1), ", y otra con ",
+      n2a, " panes y ", n2b, " galletas por $ ", fmt(p2), ". ", ctx$sujeto,
+      " necesita el precio unitario para actualizar la lista.")
+  ),
+  list(
+    id = "ferreteria", sujeto = "Hernán", revisor = "Lucía",
+    o1 = "tornillos", o2 = "tuercas", s1 = "T", s2 = "N", u2 = "tuerca",
+    lote = "paquete", lotes = "paquetes",
+    plantilla = function(ctx, n1a, n2a, n1b, n2b, p1, p2) paste0(
+      "En una ferretería los repuestos solo se venden por paquete. ",
+      "El paquete grande contiene ", n1a, " tornillos y ", n1b, " tuercas y cuesta $ ", fmt(p1),
+      "; el paquete pequeño contiene ", n2a, " tornillos y ", n2b, " tuercas y cuesta $ ", fmt(p2),
+      ". ", ctx$sujeto, " pregunta cuánto vale cada pieza por separado.")
+  ),
+  list(
+    id = "cafeteria", sujeto = "Valentina", revisor = "Mateo",
+    o1 = "cafés", o2 = "panecillos", s1 = "K", s2 = "M", u2 = "panecillo",
+    lote = "pedido", lotes = "pedidos",
+    plantilla = function(ctx, n1a, n2a, n1b, n2b, p1, p2) paste0(
+      "El comité de bienestar hizo dos pedidos a la cafetería para las jornadas de la semana. ",
+      "En el primero pidió ", n1a, " cafés y ", n1b, " panecillos, y pagó $ ", fmt(p1),
+      "; en el segundo pidió ", n2a, " cafés y ", n2b, " panecillos, y pagó $ ", fmt(p2),
+      ". ", ctx$sujeto, " revisa las cuentas para saber el precio de cada cosa.")
+  )
+)
+
+## ===========================================================================
+## 2. POOL DE ERRORES CONCEPTUALES (6 entradas, 3 ramas equiprobables)
+##    Cada entrada declara: paso, precondición (función pura) y la MUTACIÓN del
+##    procedimiento correcto que la produce. calcula() es PURA (Capa D).
+## ===========================================================================
+errores_conceptuales <- list(
+  list(codigo = "ERR-ALG-01", conserva_igualdad = FALSE, apto_real = TRUE, paso = 1L,
+       nombre = "Multiplicar un solo término de la ecuación",
+       causa_raiz = paste("Trata la ecuación como una lista de términos independientes y no como",
+                          "una igualdad: no aplica la propiedad uniforme de la multiplicación."),
+       precondicion = function(p) TRUE,
+       calcula = function(p) p$c * p$k),
+  list(codigo = "ERR-ALG-02", conserva_igualdad = TRUE, apto_real = FALSE, paso = 1L,
+       nombre = "Multiplicar por un factor que no iguala los coeficientes",
+       causa_raiz = paste("Elige el factor sin comprobar que el producto reproduzca el coeficiente",
+                          "de la incógnita que se quiere eliminar."),
+       precondicion = function(p) p$b != p$k2 * p$d,
+       calcula = function(p) p$c * p$k2),
+  list(codigo = "ERR-ALG-03", conserva_igualdad = TRUE, apto_real = FALSE, paso = 1L,
+       nombre = "Igualar los coeficientes de la incógnita equivocada",
+       causa_raiz = paste("Confunde la incógnita que se quiere hallar con la que se debe eliminar,",
+                          "y termina despejando la que no se pedía."),
+       precondicion = function(p) p$b %% p$d == 0L && p$f != p$k,
+       calcula = function(p) p$c * p$f),
+  list(codigo = "ERR-ALG-04", conserva_igualdad = FALSE, apto_real = TRUE, paso = 2L,
+       nombre = "Restar sin cambiar el signo de todos los términos",
+       causa_raiz = paste("Aplica el signo de la resta solo a los términos con incógnita y deja",
+                          "intacto el término independiente del sustraendo."),
+       precondicion = function(p) TRUE,
+       calcula = function(p) p$P1 + p$k * p$P2),
+  list(codigo = "ERR-ALG-05", conserva_igualdad = TRUE, apto_real = FALSE, paso = 2L,
+       nombre = "Sumar cuando los coeficientes tienen igual signo",
+       causa_raiz = paste("Memoriza que en la eliminación se suman las ecuaciones, sin la condición",
+                          "de que los coeficientes por cancelar tengan signos opuestos."),
+       precondicion = function(p) TRUE,
+       calcula = function(p) p$b + p$k * p$d),
+  list(codigo = "ERR-ALG-07", conserva_igualdad = FALSE, apto_real = TRUE, paso = 3L,
+       nombre = "Dividir entre el coeficiente de la incognita ya eliminada",
+       causa_raiz = paste("Toma el primer coeficiente que ve en el sistema en vez del que",
+                          "acompaña a la incógnita que queda tras la eliminación."),
+       precondicion = function(p) p$a != 0L && p$b - p$k * p$d != p$a,
+       calcula = function(p) (p$P1 - p$k * p$P2) / p$a),
+  list(codigo = "ERR-ALG-06", conserva_igualdad = FALSE, apto_real = TRUE, paso = 3L,
+       nombre = "Multiplicar en vez de dividir al despejar",
+       causa_raiz = paste("Invierte la operación que deshace el producto: cree que el coeficiente",
+                          "pasa al otro lado multiplicando."),
+       precondicion = function(p) TRUE,
+       calcula = function(p) (p$P1 - p$k * p$P2) * (p$b - p$k * p$d))
+)
+stopifnot(length(errores_conceptuales) >= 4L)          # regla #1 linea 188 (pool 4-6)
+
+## --- Capa D: calcula() y las funciones del procedimiento DEBEN ser puras ----
+for (e in errores_conceptuales) {
+  cuerpo <- paste(deparse(e$calcula), collapse = " ")
+  if (grepl("sample\\(|runif\\(|rnorm\\(|rbinom\\(|rpois\\(|Sys\\.time|proc\\.time", cuerpo))
+    stop("ERR_SEM_D: calcula() de ", e$codigo, " no es determinista")
+}
+
+## ===========================================================================
+## 3. MODELO EJECUTABLE DEL PROCEDIMIENTO (funciones puras)
+## ===========================================================================
+proc_correcto <- function(par) list(ambito = "toda", factor = par$k, objetivo = "L",
+                                    op2 = "restar", signo_completo = TRUE, op3 = "dividir")
+
+mutar <- function(pr, cod, par) {
+  if (cod == "ERR-ALG-01") pr$ambito <- "primer"
+  if (cod == "ERR-ALG-02") pr$factor <- par$k2
+  if (cod == "ERR-ALG-03") { pr$objetivo <- "R"; pr$factor <- par$f }
+  if (cod == "ERR-ALG-04") pr$signo_completo <- FALSE
+  if (cod == "ERR-ALG-05") pr$op2 <- "sumar"
+  if (cod == "ERR-ALG-06") pr$op3 <- "multiplicar"
+  if (cod == "ERR-ALG-07") pr$op3 <- "coef_eliminado"
+  pr
+}
+
+eq_paso1 <- function(pr, par) {
+  f <- pr$factor
+  if (identical(pr$ambito, "toda")) list(cL = f * par$c, cR = f * par$d, ci = f * par$P2)
+  else                              list(cL = f * par$c, cR = par$d,     ci = par$P2)
+}
+eq_paso2 <- function(pr, par) {
+  e <- eq_paso1(pr, par)
+  if (identical(pr$op2, "sumar"))
+    list(cL = par$a + e$cL, cR = par$b + e$cR, ci = par$P1 + e$ci)
+  else if (identical(pr$op2, "restar_invertido"))
+    list(cL = -(par$a - e$cL), cR = -(par$b - e$cR), ci = par$P1 - e$ci)
+  else if (isTRUE(pr$signo_completo))
+    list(cL = par$a - e$cL, cR = par$b - e$cR, ci = par$P1 - e$ci)
+  else
+    list(cL = par$a - e$cL, cR = par$b - e$cR, ci = par$P1 + e$ci)   # olvida un signo
+}
+ejecutar_proc <- function(pr, par) {
+  e <- eq_paso2(pr, par)
+  coef <- if (e$cR == 0) e$cL else e$cR       # si R se cancelo, sobrevive L
+  if (coef == 0) return(NA_real_)
+  if (identical(pr$op3, "coef_eliminado")) return(e$ci / par$a)   # ERR-ALG-07
+  if (identical(pr$op3, "dividir")) e$ci / coef else e$ci * coef
+}
+
+## ===========================================================================
+## 4. SELECCIÓN DE PARÁMETROS  (Familia 1: búsqueda acotada, sin repeat libre)
+## ===========================================================================
+is_canonical <- (sample.int(12L, 1L) == 1L)
+
+## ERR-ALG-02 se RETIRA como senuelo (OBJ 5): su texto dice multiplicar TODA LA PRIMERA
+## ecuación y `proc_de_opcion` no puede modelarlo sin complicar el modelo; la salida
+## honesta es retirarlo, no verificar un sustituto. Sigue en el pool como error catalogado.
+cods_paso <- function(p) vapply(errores_conceptuales[
+    vapply(errores_conceptuales,
+           function(e) e$paso == p && e$codigo != "ERR-ALG-02", logical(1))],
+    function(e) e$codigo, character(1))
+
+## Solo son APTOS COMO ERROR REAL los que dejan una cadena de 3 pasos coherente:
+## ERR-ALG-02 y ERR-ALG-05 no cancelan la primera incognita (el Paso 3 la haría
+## desaparecer sin justificación -> el estimulo tendría DOS errores, y el enunciado
+## afirma que hay UNO); ERR-ALG-03 cancela la OTRA incognita y calcula un valor que
+## es VERDADERO (el de la primera), lo que vuelve discutible que haya "error".
+## Los tres siguen en el pool como SENUELOS. (Detractor 2026-08-19, objeciones 2-4.)
+cods_paso_real <- function(p) vapply(errores_conceptuales[
+    vapply(errores_conceptuales, function(e) e$paso == p && isTRUE(e$apto_real), logical(1))],
+    function(e) e$codigo, character(1))
+
+## rama EQUIPROBABLE entre los 3 pasos (regla #23: estratos >= 20 con N = 100)
+paso_real <- if (is_canonical) 1L else pick(c(1L, 2L, 3L))
+cod_real  <- if (is_canonical) "ERR-ALG-01" else pick(cods_paso_real(paso_real))
+i_real    <- which(vapply(errores_conceptuales, function(e) e$codigo == cod_real, logical(1)))
+err_real  <- errores_conceptuales[[i_real]]
+
+## variante de redacción (vocabulario): el canónico usa SIEMPRE la 1 (verbatim del cuadernillo)
+RED <- if (is_canonical) 1L else pick(2:3)
+
+estructuras <- list()
+for (k in c(2L, 3L, 4L)) for (cc in c(5L, 10L, 15L, 20L))
+  for (d in c(10L, 15L, 20L, 25L, 30L)) for (b in c(60L, 80L, 100L, 120L, 150L)) {
+    a  <- k * cc
+    k2 <- k + 1L
+    ## NO se exige b > k*d: ese filtro hacia que e2c fuera SIEMPRE positivo y, por
+    ## tanto, que la clave no llevara nunca un signo "-" (canal de eliminación medido
+    ## en +16 pp por el detractor). El canonico mismo tiene b < k*d y su Paso 2
+    ## correcto es -60R = -300.000. Solo se excluye la degeneración b == k*d.
+    if (b == k * d)   next
+    if (b %% d != 0L) next        # ERR-ALG-03 necesita f = b/d entero
+    if (b == k2 * d)  next        # ERR-ALG-02 necesita b != k2*d
+    if (b <= d)       next
+    estructuras[[length(estructuras) + 1L]] <-
+      list(k = k, c = cc, d = d, b = b, a = a, k2 = k2, f = b %/% d)
+  }
+stopifnot(length(estructuras) > 0L)
+
+Lgrid <- seq(8000L, 40000L, by = 500L)
+Rgrid <- seq(1500L,  9000L, by = 250L)
+
+## El filtro depende del ERROR CONCRETO, no solo del paso: se ejecuta el
+## procedimiento defectuoso y se exige que su resultado sea creible y != R.
+elegir_par <- function(cod) {
+  ie <- which(vapply(errores_conceptuales, function(e) e$codigo == cod, logical(1)))
+  for (t in seq_len(600L)) {
+    s <- estructuras[[sample.int(length(estructuras), 1L)]]
+    L <- Lgrid[sample.int(length(Lgrid), 1L)]
+    R <- Rgrid[sample.int(length(Rgrid), 1L)]
+    if (L <= 2L * R) next
+    p <- c(s, list(L = L, R = R, P1 = s$a * L + s$b * R, P2 = s$c * L + s$d * R))
+    if (!isTRUE(errores_conceptuales[[ie]]$precondicion(p))) next
+    if (ejecutar_proc(proc_correcto(p), p) != p$R) next
+    v <- suppressWarnings(ejecutar_proc(mutar(proc_correcto(p), cod, p), p))
+    if (length(v) != 1L || is.na(v) || !is.finite(v)) next
+    ## v puede ser NEGATIVO: un procedimiento erróneo que arroja un precio negativo es
+    ## justo la señal de alarma que el item ensena a detectar, y devuelve b < k*d a la
+    ## mitad de las versiones del paso 2 -> la clave deja de no llevar nunca signo "-".
+    if (v == 0 || v != round(v) || v == p$R) next
+    ## OBJ 1(b)/8: sin cota, |v|/R tenía mediana 3.600 en el paso 3 -> "si el número es
+    ## absurdo, el error es del paso 3" clasificaba con sensibilidad 100 %.
+    if (abs(v) > 40 * p$R) next
+    return(p)
+  }
+  NULL
+}
+
+if (is_canonical) {
+  ## L-3: el canónico viola b > k*d y b %% d != 0; se exceptua por fidelidad (regla #24 H-2)
+  par <- list(k = 3L, c = 10L, d = 40L, b = 60L, a = 30L, k2 = 4L, f = 2L,
+              L = 20000L, R = 5000L, P1 = 900000L, P2 = 400000L)
+} else {
+  ## la cota de plausibilidad puede vaciar la busqueda de un código concreto
+  ## (ERR-ALG-06 multiplica y su |v| es un producto): se prueban los demás aptos
+  ## del mismo paso antes de rendirse, en vez de abortar el render.
+  par <- NULL
+  for (cc in c(cod_real, setdiff(cods_paso_real(paso_real), cod_real))) {
+    par <- elegir_par(cc)
+    if (!is.null(par)) { cod_real <- cc; break }
+  }
+  stopifnot(!is.null(par))
+  i_real   <- which(vapply(errores_conceptuales, function(e) e$codigo == cod_real, logical(1)))
+  err_real <- errores_conceptuales[[i_real]]
+}
+stopifnot(par$a * par$L + par$b * par$R == par$P1,
+          par$c * par$L + par$d * par$R == par$P2,
+          par$a == par$k * par$c,
+          isTRUE(err_real$precondicion(par)),
+          err_real$paso == paso_real)
+
+## ===========================================================================
+## 5. PROCEDIMIENTO MOSTRADO EN EL ESTIMULO
+## ===========================================================================
+pr_ok   <- proc_correcto(par)
+pr_show <- mutar(pr_ok, err_real$codigo, par)
+e1s <- eq_paso1(pr_show, par); e2s <- eq_paso2(pr_show, par)
+e1c <- eq_paso1(pr_ok,   par); e2c <- eq_paso2(pr_ok,   par)
+
+valor_mostrado <- ejecutar_proc(pr_show, par)
+valor_correcto <- ejecutar_proc(pr_ok,   par)
+stopifnot(valor_correcto == par$R)                       # Nivel 5B
+## L-1: el senuelo ERR-ALG-05 debe derivarse de la ecuación MOSTRADA en el Paso 1
+## (E1 + e1s), nunca de E2 original. Es lo que hace exacta la opción D del cuadernillo
+## (30+30=60, 60+40=100, 900.000+400.000=1.300.000). Blindaje que L-1 anuncia:
+stopifnot(par$a + e1s$cL == 2L * par$a || e1s$cL != par$c * par$k)
+stopifnot(!is.na(valor_mostrado), valor_mostrado != par$R)   # el estimulo SI tiene error
+stopifnot(valor_mostrado == round(valor_mostrado), valor_mostrado != 0)
+
+ctx <- if (is_canonical) contextos[[1]] else contextos[[sample.int(length(contextos), 1L)]]
+S1 <- ctx$s1; S2 <- ctx$s2
+
+## helpers de escritura de ecuaciones (todo con guion ASCII, regla #25)
+term <- function(co, sim) paste0(if (co < 0) "-" else "", abs(co), sim)
+## NORMALIZACION DE SIGNO (frente 1): toda ecuación se presenta con TODOS los términos
+## positivos, moviendo al otro miembro los negativos. Así "llevar un guion" deja de
+## existir como rasgo y no puede correlacionar con el rol de la opción (§P7, familia
+## signo: la clave llevaba "-" el 3 % y los senuelos el 46 %). La instancia CANONICA
+## se exceptua: reproduce el cuadernillo verbatim (regla #24 H-2, L-1).
+ecu  <- function(e) {
+  if (is_canonical) {
+    izq <- if (e$cL == 0) term(e$cR, S2)
+           else paste0(term(e$cL, S1), if (e$cR < 0) " - " else " + ", abs(e$cR), S2)
+    return(paste0(izq, " = ", fmt(e$ci)))
+  }
+  iz <- character(0); de <- character(0)
+  if (e$cL > 0) iz <- c(iz, paste0(e$cL, S1)) else if (e$cL < 0) de <- c(de, paste0(abs(e$cL), S1))
+  if (e$cR > 0) iz <- c(iz, paste0(e$cR, S2)) else if (e$cR < 0) de <- c(de, paste0(abs(e$cR), S2))
+  if (e$ci >= 0) de <- c(de, fmt(e$ci)) else iz <- c(iz, fmt(abs(e$ci)))
+  if (!length(iz)) iz <- "0"
+  if (!length(de)) de <- "0"
+  paste0(paste(iz, collapse = " + "), " = ", paste(de, collapse = " + "))
+}
+ecu_lat <- function(e) {
+  izq <- if (e$cL == 0) paste0(e$cR, S2)
+         else paste0(e$cL, S1, if (e$cR < 0) " - " else " + ", abs(e$cR), S2)
+  paste0(izq, " = ", fmt(e$ci))
+}
+
+## ===========================================================================
+## 6. OPCIONES  (2 del paso del error real + 2 de un paso senuelo; nunca la
+##    clave sola en su paso -> sin fuga posicional)
+## ===========================================================================
+## MOLDE ÚNICO Y PARALELO: clave y senuelo del MISMO paso comparten estructura y
+## vocabulario ("factor", "toda la ecuación", "resta", "signo", "despejar",
+## "coeficiente", "término independiente"); solo difiere la AFIRMACION sustantiva.
+## Es lo que impide (a) que la clave sea sistematicamente más larga (H1) y (b) que
+## algun token sea exclusivo de la clave (Error 32).
+## ===========================================================================
+## OPCIONES DE TEXTO CONSTANTE — solo varía la ECUACIÓN
+##   "En el paso {N}, la ecuación debió ser: {ECUACIÓN}"
+## Longitud y lexico dejan de ser dimensiones (son constantes por construcción), que
+## es lo que cinco pasadas de parches no lograron: son CONSECUENCIA del procedimiento
+## que cada opción describe, así que la única salida era dejar de describirlo.
+## El canal se traslada a las PROPIEDADES NUMERICAS de la ecuación, que es justo lo
+## que las familias de §P7 sondean (magnitud, divisibilidad, formato, signo).
+## La instancia CANONICA se exceptua y conserva sus cuatro opciones VERBATIM
+## (regla #24 H-2, L-1): la fidelidad al cuadernillo la garantiza esa excepción, NO
+## el formato — el original mezcla dos moldes (A y C describen, B y D son escuetas).
+## ===========================================================================
+molde <- function(paso, eq) paste0("En el paso ", paso, ", la ecuación debió ser: ", eq)
+
+## --- textos VERBATIM del cuadernillo, solo para la instancia canonica -------
+txt_canon <- function(cod, rol, var = 1L) {
+  if (rol == "clave")
+    paste0("En el paso 1, puesto que se debió multiplicar toda la ecuación por ", par$k,
+           " y no solo un término de ella, así: ", ecu(e1c))
+  else if (cod == "ERR-ALG-01")
+    paste0("En el paso 1, puesto que debió multiplicar por -", par$k,
+           " el primer término para no tener que restar, así: ",
+           ecu(list(cL = -e1s$cL, cR = par$d, ci = par$P2)))
+  else if (cod == "ERR-ALG-04")
+    paste0("En el paso 2, puesto que al restar las ecuaciones el resultado debería ser: ",
+           ecu(list(cL = 0, cR = -e2s$cR, ci = e2s$ci)))
+  else
+    paste0("En el paso 2, puesto que debió sumar las ecuaciones para obtener: ",
+           ecu(list(cL = par$a + e1s$cL, cR = par$b + e1s$cR, ci = par$P1 + e1s$ci)))
+}
+
+## --- ecuación que propone cada opción --------------------------------------
+## ESTRUCTURA DE CITACIÓN UNIFORME (pasada 8): toda opción muestra la ecuación
+## REDUCIDA y el valor que se sigue de ella, cite el paso que cite. Medido en la
+## pasada 7: la diferencia de longitud NO venía de la matemática sino de QUÉ PASO
+## citaba la opción (planteamiento = larga, despeje = corta), y eso es redacción,
+## no consecuencia. Con esta forma la longitud deja de correlacionar con el paso.
+## Efecto colateral buscado: texto y `proc` pasan a ser coherentes POR CONSTRUCCIÓN
+## (los dos salen del mismo procedimiento), que era la objeción 5 del detractor.
+eq_de <- function(cod, rol, var = 1L) {
+  pr   <- if (rol == "clave") pr_ok else proc_de_opcion(cod, "senuelo", var)
+  paso <- if (rol == "clave") err_real$paso else paso_de(cod, "senuelo")
+  ## El paso 1 MULTIPLICA una ecuación: su resultado tiene DOS incógnitas. Citar ahí la
+  ## reducida (como hacia la pasada 8) afirma algo falso en el 100 % de esas opciones.
+  if (paso == 1L) {
+    e1 <- eq_paso1(pr, par)
+    return(ecu(list(cL = e1$cL, cR = e1$cR, ci = e1$ci)))
+  }
+  e2  <- eq_paso2(pr, par)
+  v   <- suppressWarnings(ejecutar_prop(pr))
+  if (length(v) != 1L || is.na(v) || !is.finite(v)) v <- 0
+  ## el simbolo debe ser el de la incógnita que SOBREVIVE a la eliminación (objeción 6)
+  sim <- if (e2$cR == 0) S1 else S2
+  paste0(ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci)),
+         ", de donde ", sim, " = ", fmt(v))
+}
+
+paso_de <- function(cod, rol) {
+  if (rol == "clave") return(err_real$paso)
+  errores_conceptuales[[which(vapply(errores_conceptuales,
+      function(e) e$codigo == cod, logical(1)))]]$paso
+}
+
+txt_clave <- function(cod, RED = 2L) {
+  if (is_canonical) txt_canon(cod, "clave") else molde(err_real$paso, eq_de(cod, "clave"))
+}
+txt_senuelo <- function(cod, var = 1L, RED = 2L) {
+  if (is_canonical) txt_canon(cod, "senuelo", var)
+  else molde(paso_de(cod, "senuelo"), eq_de(cod, "senuelo", var))
+}
+
+## procedimiento que cada opción PROPONE (para verificación semántica ejecutable)
+proc_de_opcion <- function(cod, tipo, var = 1L) {
+  if (identical(tipo, "clave")) return(pr_ok)             # repara el error real
+  p <- pr_show
+  ## L-7: si el proc de un senuelo saliera identico al del estimulo, ejecutar_prop()
+  ## comprobaria "el estimulo no llega a R", que ya esta aseverado antes: la sonda se
+  ## verificaria a si misma (vacua en 27/100 antes de esta guarda).
+  if (cod == "ERR-ALG-01") { p$ambito <- "primer"; p$factor <- -par$k; p$op2 <- "sumar" }
+  if (cod == "ERR-ALG-02") { p$factor <- par$k * par$k }  # aplica el factor otra vez
+  if (cod == "ERR-ALG-03") { p$objetivo <- "R"; p$factor <- par$f; p$ambito <- "toda" }
+  if (cod == "ERR-ALG-04") { p$op2 <- "restar_invertido"; p$signo_completo <- TRUE }
+  if (cod == "ERR-ALG-05") { p$op2 <- "sumar" }
+  if (cod == "ERR-ALG-06") { p$op3 <- if (var == 1L) "invertir" else "restar" }
+  if (cod == "ERR-ALG-07") { p$op3 <- "coef_eliminado" }
+  if (identical(p, pr_show))
+    stop("L-7: el proc del senuelo ", cod, " es identico al del estimulo -> no se verifica")
+  p
+}
+ejecutar_prop <- function(pr) {
+  if (identical(pr$op3, "invertir")) { e <- eq_paso2(pr, par)
+    coef <- if (e$cR == 0) e$cL else e$cR; return(if (e$ci == 0) NA_real_ else coef / e$ci) }
+  if (identical(pr$op3, "restar")) { e <- eq_paso2(pr, par)
+    coef <- if (e$cR == 0) e$cL else e$cR; return(e$ci - coef) }
+  ejecutar_proc(pr, par)
+}
+
+## --- construcción de las 4 opciones ---------------------------------------
+## --- construcción de las 4 opciones, con reintentos ACOTADOS (Familia 1) ---
+eqs_estimulo <- c(ecu(e1s), ecu(e2s))
+cola <- function(x) sub("^.*así: |^.*ser: |^.*obtener: ", "", x)
+
+construir_opciones <- function() {
+  paso_senuelo <- if (is_canonical) 2L else pick(setdiff(c(1L, 2L, 3L), paso_real))
+  ## el senuelo del mismo paso se elige para que su CIFRA FINAL empate con la de la
+  ## clave: sin esto, "la de menor cifra final" identifica la clave (bateria §P7, magnitud)
+  cod_mismo    <- if (is_canonical) "ERR-ALG-01"
+                  else if (paso_real == 2L) "ERR-ALG-05"   # NO 04: con cod_real=04 su
+                  ## proc saldria identico al del estimulo y la sonda no verificaria nada (L-7)
+                  else if (paso_real == 3L) setdiff(c("ERR-ALG-06", "ERR-ALG-07"), cod_real)[1]
+                  else pick(setdiff(cods_paso(paso_real), cod_real))
+  if (paso_senuelo == 3L) {
+    sen <- list(list(cod = "ERR-ALG-06", var = 1L), list(cod = "ERR-ALG-06", var = 2L))
+  } else {
+    cs <- cods_paso(paso_senuelo)
+    cs <- if (is_canonical) c("ERR-ALG-04", "ERR-ALG-05") else cs[sample.int(length(cs))][1:2]
+    sen <- list(list(cod = cs[1], var = 1L), list(cod = cs[2], var = 1L))
+  }
+  ## en el paso 3 la variante 2 termina en el COEFICIENTE, igual que la clave
+  var_mismo <- 1L   # var 1 empata en numero de terminos con la clave (var 2 anade uno)
+  ## La redacción se sortea POR OPCIÓN, no por versión: si fuera global, la longitud
+  ## quedaría correlacionada con el ROL y "la más corta"/"la más larga" identificarian
+  ## la clave (bateria §P7, familia magnitud, en sus DOS direcciones).
+  rd <- function() if (is_canonical) 1L else pick(2:3)   # RED=1 es la VERBATIM canonica
+  ## OBJ 3: clave y señuelo nunca comparten código. EXCEPCION canonica: la opción A del
+  ## cuadernillo ES el señuelo del propio ERR-ALG-01 (L-1), así que ahí coinciden a propósito.
+  stopifnot(is_canonical || !identical(cod_mismo, cod_real))
+  ops <- list(
+    list(rol = "clave",   cod = err_real$codigo, var = 1L,
+         texto = txt_clave(err_real$codigo, rd()), proc = proc_de_opcion(err_real$codigo, "clave")),
+    list(rol = "senuelo", cod = cod_mismo, var = var_mismo,
+         texto = txt_senuelo(cod_mismo, var_mismo, rd()),
+         proc  = proc_de_opcion(cod_mismo, "senuelo", var_mismo)),
+    list(rol = "senuelo", cod = sen[[1]]$cod, var = sen[[1]]$var,
+         texto = txt_senuelo(sen[[1]]$cod, sen[[1]]$var, rd()),
+         proc  = proc_de_opcion(sen[[1]]$cod, "senuelo", sen[[1]]$var)),
+    list(rol = "senuelo", cod = sen[[2]]$cod, var = sen[[2]]$var,
+         texto = txt_senuelo(sen[[2]]$cod, sen[[2]]$var, rd()),
+         proc  = proc_de_opcion(sen[[2]]$cod, "senuelo", sen[[2]]$var)))
+  txt <- vapply(ops, function(o) o$texto, character(1))
+  vs  <- vapply(ops, function(o) {
+    v <- suppressWarnings(ejecutar_prop(o$proc)); if (length(v) != 1L) NA_real_ else as.numeric(v)
+  }, numeric(1))
+  colas <- vapply(txt, cola, character(1), USE.NAMES = FALSE)
+  ## --- INVARIANTES DEL MOLDE: se VERIFICAN, no se esperan ---------------------
+  tok_op <- function(x) { x <- tolower(x); x <- gsub("[^a-záéíóúñü ]", " ", x)
+                          u <- unique(unlist(strsplit(x, "\\s+"))); u[nchar(u) > 2L] }
+  lleva_guion <- function(x) grepl("-", x, fixed = TRUE)
+  tks <- lapply(txt, tok_op)
+  ## inv_lex se mide contra las opciones DEL MISMO PASO, no contra las cuatro: dos de
+  ## ellas describen OTRO paso y por tanto otra operación ("dividir" vs "multiplicar"),
+  ## así que exigir vocabulario comun entre pasos distintos es imposible por
+  ## construcción (medido: 40/40). Lo que si debe cumplirse es que, DENTRO del paso que
+  ## el estudiante ya identificó, ninguna palabra distinga la clave.
+  mismo   <- which(vapply(ops, function(o) o$cod %in% cods_paso(paso_real) ||
+                                           o$rol == "clave", logical(1)))
+  mismo   <- setdiff(mismo, 1L)
+  inv_lex <- length(mismo) == 0L ||
+             length(setdiff(tks[[1]], unlist(tks[mismo]))) == 0L
+  inv_len <- diff(range(nchar(txt))) <= 12L
+  inv_sig <- length(unique(vapply(txt, lleva_guion, logical(1)))) == 1L
+  ## H1 no exige que la clave sea corta: exige que sea la ÚNICA más corta. Basta con
+  ## que ALGUN senuelo tenga una longitud equivalente. Precondición verificada, no
+  ## tendencia esperada: es lo que funciono con la semántica, la única dimensión que
+  ## nunca reabrio en seis pasadas.
+  ## condición LITERAL de lo que H1 mide: la clave no puede ser la ÚNICA más corta
+  ## ni la ÚNICA más larga. Basta con que algun senuelo la iguale o la supere/rebaje.
+  lc <- nchar(txt[1]); ls <- nchar(txt[-1])
+  empate <- any(ls <= lc) && any(ls >= lc)
+  ## MEDIDO (pasada 7): exigir el empate como gate deja 39/100 versiones sin ninguna
+  ## combinación viable -> el render no se produce. El pool no ofrece, en cada versión,
+  ## un señuelo que iguale o rebaje la longitud de la clave. Queda como DIAGNOSTICO.
+  ## PRECONDICIÓN NUMÉRICA (pasada 10): las cuatro cifras finales deben compartir
+  ## divisibilidad por 50 — la familia que tenía canal ('descartar valor no
+  ## entero-plausible', 43,5 %). NO se exige uniformidad de signo: sólo el 24 % de las
+  ## versiones la cumple y forzarla vaciaría la búsqueda. El número de dígitos ya es
+  ## uniforme en el 100 % de las versiones, así que no necesita precondición.
+  ult_n <- function(x) {
+    z <- regmatches(x, gregexpr("-?[0-9][0-9.]*", x))[[1]]
+    z <- suppressWarnings(as.numeric(gsub("\\.", "", z)))
+    if (!length(z)) NA_real_ else z[length(z)]
+  }
+  vfin    <- vapply(txt, ult_n, numeric(1), USE.NAMES = FALSE)
+  inv_num <- !any(is.na(vfin)) && length(unique(vfin %% 50 == 0)) == 1L
+
+  ## invariante OBJ 1: toda opción que nombre el paso 1 debe mostrar DOS incógnitas
+  n_inc <- function(e) length(unique(regmatches(e, gregexpr("[0-9][A-Z]", e))[[1]]))
+  inv_p1 <- all(vapply(txt, function(x) {
+    if (!grepl("^En el paso 1,", x)) return(TRUE)
+    n_inc(sub("^.*ser: (.*)$", "\\1", x)) >= 2L }, logical(1)))
+  ## MEDIDO (pasada 10): exigir inv_num como gate deja 33 de 100 versiones sin ninguna
+  ## combinación viable -> el render no se produce. Queda como DIAGNÓSTICO. El canal de
+  ## divisibilidad es el residuo vivo declarado del ejercicio.
+  ok <- (is_canonical || inv_p1) &&
+        length(unique(txt)) == 4L &&
+        length(unique(colas)) == 4L &&
+        !any(colas %in% eqs_estimulo) &&
+        isTRUE(all.equal(vs[1], as.numeric(par$R))) &&
+        all(is.na(vs[-1]) | vs[-1] != par$R)
+  ## NOTA (pasada 5): inv_lex/inv_len/inv_sig NO se usan como gate. Medido: exigirlas a
+  ## la vez deja 0 combinaciones viables en 40/40 semillas -> el render no se produciria.
+  ## El molde rigido SI cerro el canal de signo por construcción; longitud y lexico
+  ## quedan como diagnostico declarado, no como precondición. Ver reporte pasada 5.
+  ok_inv <- inv_lex && inv_len && inv_sig
+  if (ok) ops else NULL
+}
+
+opciones_pre <- NULL
+for (intento in seq_len(400L)) {
+  opciones_pre <- construir_opciones()
+  if (!is.null(opciones_pre)) break
+}
+if (is.null(opciones_pre))
+  stop("No se pudo construir un conjunto de 4 opciones valido para estos parámetros")
+
+## --- VERIFICACIÓN SEMÁNTICA EJECUTABLE (ningun validador del arsenal la cubre)
+valores_prop <- vapply(opciones_pre, function(o) {
+  v <- suppressWarnings(ejecutar_prop(o$proc)); if (length(v) != 1L) NA_real_ else as.numeric(v)
+}, numeric(1))
+stopifnot(isTRUE(all.equal(valores_prop[1], as.numeric(par$R))))
+stopifnot(all(is.na(valores_prop[-1]) | valores_prop[-1] != par$R))
+
+textos_pre <- vapply(opciones_pre, function(o) o$texto, character(1))
+stopifnot(length(unique(textos_pre)) == 4L,
+          length(unique(vapply(textos_pre, cola, character(1), USE.NAMES = FALSE))) == 4L)
+
+## --- mezcla interna + solución --------------------------------------------
+ord <- sample.int(4L)
+opciones_mezcladas <- opciones_pre[ord]
+sol <- as.integer(vapply(opciones_mezcladas, function(o) o$rol == "clave", logical(1)))
+stopifnot(length(sol) == length(opciones_mezcladas), sum(sol) == 1L)
+opciones <- vapply(opciones_mezcladas, function(o) o$texto, character(1))
+
+reflexiones <- c(
+  paste("Revisar el procedimiento de otra persona obliga a explicitar la regla que se está",
+        "usando; cuando el error es propio, esa regla suele quedarse implícita."),
+  paste("Una operación algebraica solo es válida si se aplica a la igualdad completa: el",
+        "control útil no es 'me dio bonito', sino 'la igualdad se mantiene'."),
+  paste("Sustituir el resultado obtenido en las dos ecuaciones originales detecta el error",
+        "sin necesidad de rehacer todo el procedimiento."),
+  paste("Identificar en qué paso se rompió el razonamiento es más útil que repetir el",
+        "ejercicio desde el principio, porque señala qué regla hay que reaprender.")
+)
+reflexion <- reflexiones[sample.int(length(reflexiones), 1L)]
+
+enunciado <- ctx$plantilla(ctx, par$a, par$c, par$b, par$d, par$P1, par$P2)
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado, "\n\n")
+cat("Las ecuaciones que relacionan el precio de cada ", ctx$lote,
+    " según el número de ", ctx$o1, ", **", S1, "**, y ", ctx$o2, ", **", S2,
+    "**, están dadas por:\n\n", sep = "")
+cat(eq_display(paste0("\\begin{aligned}",
+                      par$a, S1, " + ", par$b, S2, " &= ", fmt(par$P1), "\\\\",
+                      par$c, S1, " + ", par$d, S2, " &= ", fmt(par$P2),
+                      "\\end{aligned}")))
+cat("\n", ctx$sujeto, " quiere saber el precio que paga por cada ", ctx$u2,
+    ", así que hace el siguiente procedimiento:\n\n", sep = "")
+
+## --- los 3 pasos: LISTA con vinetas (fidelidad H-3), ecuaciones INDENTADAS
+## --- 3 espacios dentro del item (INC-ECUACIÓN-LISTA: a columna 0 pandoc cierra la lista)
+paso1_txt <- {
+  if (identical(pr_show$ambito, "primer")) {
+    paste0("Multiplicar por ", pr_show$factor, " el primer término de la segunda ecuación.")
+  } else if (identical(pr_show$objetivo, "R")) {
+    paste0("Multiplicar por ", pr_show$factor,
+           " toda la segunda ecuación para igualar los coeficientes de ", S2, ".")
+  } else {
+    paste0("Multiplicar por ", pr_show$factor, " toda la segunda ecuación.")
+  }
+}
+
+paso2_txt <- {
+  if (identical(pr_show$op2, "sumar")) {
+    "Sumar la ecuación anterior con la primera ecuación original para eliminar la primera incógnita:"
+  } else {
+    "Restar la ecuación anterior a la primera ecuación original para eliminar la primera incógnita:"
+  }
+}
+
+signo_op <- if (identical(pr_show$op2, "sumar")) "+" else "-"
+inc_final <- if (e2s$cR == 0) S1 else S2
+coef_final <- if (e2s$cR == 0) e2s$cL else e2s$cR
+
+cat("-  **Paso 1:** ", paso1_txt, "\n\n", sep = "")
+cat("   $$", ecu_lat(e1s), "$$\n\n", sep = "")
+cat("-  **Paso 2:** ", paso2_txt, "\n\n", sep = "")
+## el cuadernillo SUBRAYA la segunda ecuación; \\hline dentro de array NO lo pinta
+## MathJax (medido: 8/8 versiones sin línea), así que se usa \\underline, que además
+## es más fiel al original.
+cat("   $$\\begin{array}{r@{\\;}l}",
+    signo_op, " & ", par$a, S1, " + ", par$b, S2, " = ", fmt(par$P1), "\\\\",
+    " & \\underline{", ecu_lat(e1s), "} \\\\",
+    " & ", ecu_lat(e2s),
+    "\\end{array}$$\n\n", sep = "")
+cat("-  **Paso 3:** Despejar $", inc_final, "$ de la ecuación:\n\n", sep = "")
+if (identical(pr_show$op3, "multiplicar")) {
+  cat("   $$", inc_final, " = ", fmt(e2s$ci), " \\times ", coef_final, " = ",
+      fmt(valor_mostrado), "$$\n\n", sep = "")
+} else {
+  cat("   $$", inc_final, " = \\dfrac{", fmt(e2s$ci), "}{", coef_final, "} = ",
+      fmt(valor_mostrado), "$$\n\n", sep = "")
+}
+
+cat(ctx$revisor, " ve el procedimiento y se percata de que hubo un error y lo corrige, ",
+    "&iquest;en qué paso ", ctx$sujeto,
+    " cometió el error y cómo se realizaría correctamente?\n", sep = "")
+```
+
+Answerlist
+----------
+
+```{r opciones, echo = FALSE, results = "asis"}
+for (o in opciones) cat("* ", o, "\n", sep = "")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+cat("### Qué se pedía verificar\n\n")
+cat("El procedimiento busca el precio de cada ", ctx$u2, " eliminando la incógnita $", S1,
+    "$. Para eliminarla hay que conseguir que las dos ecuaciones tengan el **mismo",
+    " coeficiente** en $", S1, "$ y después restarlas.\n\n", sep = "")
+
+cat("### El procedimiento correcto\n\n")
+cat("1. Multiplicar **toda** la segunda ecuación por $", par$k,
+    "$, que es el factor que convierte $", par$c, S1, "$ en $", par$a, S1, "$:\n\n", sep = "")
+cat("   $$", ecu_lat(e1c), "$$\n\n", sep = "")
+cat("2. Restar esa ecuación de la primera, cambiando el signo de **todos** sus términos:\n\n")
+cat("   $$", ecu_lat(e2c), "$$\n\n", sep = "")
+cat("3. Despejar $", S2, "$ dividiendo entre su coeficiente:\n\n", sep = "")
+cat("   $$", S2, " = \\dfrac{", fmt(e2c$ci), "}{", e2c$cR, "} = ", fmt(par$R), "$$\n\n", sep = "")
+cat("Sustituyendo en la segunda ecuación original se obtiene $", S1, " = ", fmt(par$L),
+    "$, y ambas igualdades se cumplen: la solución es consistente.\n\n", sep = "")
+
+cat("### Dónde estaba el error\n\n")
+cat("**", err_real$codigo, " - ", err_real$nombre, "** (paso ", err_real$paso, ").\n\n", sep = "")
+cat("*Causa:* ", err_real$causa_raiz, "\n\n", sep = "")
+cat("Por eso el procedimiento llega a $", inc_final, " = ", fmt(valor_mostrado),
+    "$ en lugar de $", fmt(par$R), "$. El argumento válido es el que sostiene que ",
+    "**", sub("^En el paso [0-9]+, puesto que ", "", sub(", así:.*$", "",
+        sub(" para obtener:.*$", "", sub(" el resultado debería ser:.*$", "",
+        opciones_pre[[1]]$texto)))), "**.\n\n", sep = "")
+
+cat("### Por qué los demás argumentos no corrigen el procedimiento\n\n")
+cat("Se agrupan por el tipo de afirmación que hacen, no por el orden en que aparecen:\n\n")
+otros <- opciones_pre[-1]
+grupos <- split(otros, vapply(otros, function(o) o$cod, character(1)))
+for (g in names(grupos)) {
+  ent <- errores_conceptuales[[which(vapply(errores_conceptuales,
+          function(e) e$codigo == g, logical(1)))]]
+  cat("- **", g, " - ", ent$nombre, ".** ", sep = "")
+  if (ent$paso != err_real$paso) {
+    ## la cláusula causal depende del ORDEN relativo: decir "ya se había roto antes"
+    ## sobre un paso ANTERIOR al error es falso (45/100 versiones antes de este fix)
+    if (ent$paso > err_real$paso) {
+      cat("Señala el paso ", ent$paso, ", que está bien ejecutado: cuando se llega ahí el ",
+          "razonamiento ya se había roto en el paso ", err_real$paso,
+          ", así que corregirlo no recupera el valor correcto.", sep = "")
+    } else {
+      cat("Señala el paso ", ent$paso, ", que está bien ejecutado: modificarlo introduce un ",
+          "error nuevo donde no lo había y deja intacto el del paso ", err_real$paso, ".",
+          sep = "")
+    }
+  } else {
+    if (isTRUE(ent$conserva_igualdad)) {
+      cat("Señala el paso correcto y la operación que propone sí conserva la igualdad, ",
+          "pero no elimina la incógnita que hay que eliminar, así que el resultado sigue ",
+          "sin ser ", fmt(par$R), ".", sep = "")
+    } else {
+      cat("Señala el paso correcto, pero la modificación que propone rompe la igualdad ",
+          "entre los dos miembros, y el resultado sigue sin ser ", fmt(par$R), ".", sep = "")
+    }
+  }
+  cat(" *", ent$causa_raiz, "*\n", sep = "")
+}
+cat("\n")
+
+cat("### Cómo verificarlo sin rehacer todo\n\n")
+cat("Con un solo valor no basta sustituir: para cualquier $", S2, "$ existe un $", S1,
+    "$ que satisface una de las ecuaciones. Hay que despejar $", S1, "$ en **cada** ecuación ",
+    "y comparar los dos resultados: con $", S2, " = ", fmt(par$R), "$ ambos dan $", S1, " = ",
+    fmt(par$L), "$; con $", S2, " = ", fmt(valor_mostrado), "$ no coinciden.\n\n", sep = "")
+
+cat("### Reflexión\n\n", reflexion, "\n", sep = "")
+```
+
+Meta-information
+================
+exname: sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_schoice_v1
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exshuffle: TRUE
+exsection: Numerico-Variacional/Argumentacion
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Argumenta a favor o en contra de un procedimiento para resolver un problema a la luz de criterios presentados o establecidos.
+exextra[Descriptor]: D4.5 — Manipula expresiones algebraicas o aritméticas haciendo uso de las propiedades de las operaciones.
+exextra[Nivel]: 4
+exextra[Estandar]: Identifico diferentes métodos para solucionar sistemas de ecuaciones lineales.
+exextra[Grado]: 8°-9°
+exextra[Generico]: No
+exextra[TemaEspecifico]: Sistema de ecuaciones lineales — error algebraico en procedimiento de eliminación
+exextra[Contenido]: Álgebra y Cálculo
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
+exextra[Origen]: MAT-2026-1-044
