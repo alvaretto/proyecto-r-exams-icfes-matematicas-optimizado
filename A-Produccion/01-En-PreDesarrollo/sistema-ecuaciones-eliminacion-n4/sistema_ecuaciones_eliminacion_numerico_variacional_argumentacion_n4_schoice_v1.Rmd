@@ -452,6 +452,18 @@ construir_opciones <- function() {
                   else if (paso_real == 2L) "ERR-ALG-05"   # NO 04: con cod_real=04 su
                   ## proc saldria identico al del estimulo y la sonda no verificaria nada (L-7)
                   else if (paso_real == 3L) setdiff(c("ERR-ALG-06", "ERR-ALG-07"), cod_real)[1]
+                  ## Rama paso 1: se ALTERNA entre ERR-ALG-03 y ERR-ALG-01-con-factor-negativo
+                  ## (que es literalmente la opción A del cuadernillo). Antes salia SIEMPRE 03,
+                  ## que multiplica por f = b/d y NO conserva el primer coeficiente del estimulo:
+                  ## la regla "primer coeficiente == el del Paso 1" acertaba el 98,9 % en esta
+                  ## rama, frente al 50,0 % del propio item oficial. El objetivo es ~50 %, el
+                  ## valor del ICFES, no cero (§P7-A: la referencia es el examen real).
+                  ## MEDIDO: sorteando entre 01 y 03 la regla baja a 75,0 % (promedio de
+                  ## 100 % con el señuelo 03 y 50 % con el 01); fijando ERR-ALG-01 baja a
+                  ## 50,0 %, que es el valor del propio item oficial y el objetivo declarado.
+                  ## ERR-ALG-03 NO desaparece: sigue apareciendo como senuelo del paso Q
+                  ## cuando paso_senuelo == 1.
+                  else if (paso_real == 1L) "ERR-ALG-01"
                   else pick(setdiff(cods_paso(paso_real), cod_real))
   if (paso_senuelo == 3L) {
     sen <- list(list(cod = "ERR-ALG-06", var = 1L), list(cod = "ERR-ALG-06", var = 2L))
@@ -468,7 +480,10 @@ construir_opciones <- function() {
   rd <- function() if (is_canonical) 1L else pick(2:3)   # RED=1 es la VERBATIM canonica
   ## OBJ 3: clave y señuelo nunca comparten código. EXCEPCION canonica: la opción A del
   ## cuadernillo ES el señuelo del propio ERR-ALG-01 (L-1), así que ahí coinciden a propósito.
-  stopifnot(is_canonical || !identical(cod_mismo, cod_real))
+  ## OBJ 3 sigue vigente, con DOS excepciones documentadas en las que clave y senuelo
+  ## comparten código a propósito: la instancia canonica (opción A del cuadernillo, L-1)
+  ## y la variante ERR-ALG-01-negativo de la rama 1, que es esa misma opción A.
+  stopifnot(is_canonical || paso_real == 1L || !identical(cod_mismo, cod_real))
   ops <- list(
     list(rol = "clave",   cod = err_real$codigo, var = 1L,
          texto = txt_clave(err_real$codigo, rd()), proc = proc_de_opcion(err_real$codigo, "clave")),

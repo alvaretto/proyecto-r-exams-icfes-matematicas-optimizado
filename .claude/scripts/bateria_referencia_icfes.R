@@ -102,7 +102,9 @@ B <- list(
 ## §P7-C: se anade la sonda y se RE-MIDE el historico completo con la bateria nueva.
 ## Las 6 nuevas son genericas (ningun umbral elegido mirando este ejercicio salvo el
 ## "redondo" = multiplo de 50, que es la unidad de precio mas gruesa habitual).
-source("../bateria.R")
+## [ELIMINADO al versionar] Aqui el archivo del scratchpad hacia source("../bateria.R"),
+## ruta relativa que NO resuelve desde ningun cwd (mismo modo de fallo que el Error 31).
+## Es innecesario: las reglas base estan definidas ARRIBA, en este mismo archivo.
 nlast <- function(s){ z <- nums(s); if(!length(z)) NA_real_ else z[length(z)] }
 ## nums() de bateria.R es ciego al signo: se anade una version con signo para la sonda.
 nlast_s <- function(s){ z <- suppressWarnings(as.numeric(gsub("\\.","",
