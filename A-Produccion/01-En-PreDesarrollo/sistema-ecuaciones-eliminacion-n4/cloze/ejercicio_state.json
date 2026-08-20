@@ -1,36 +1,36 @@
 {
   "version": "2.0",
-  "ejercicio": "sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_schoice_v1",
-  "tipo": "schoice",
-  "timestamp_inicio": "2026-08-19T15:18:06.803134-05:00",
+  "ejercicio": "sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_cloze_v1",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-08-20T07:09:50.755637-05:00",
   "timestamp_ultima_actualizacion": "2026-08-20T10:50:48.391017-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
-      "timestamp": "2026-08-19T15:21:36.887862-05:00",
+      "timestamp": "2026-08-20T07:09:50.790464-05:00",
       "resultado": null
     },
     "flujo_b": {
       "requerido": false,
       "completado": true,
-      "timestamp": "2026-08-19T15:21:36.948444-05:00"
+      "timestamp": "2026-08-20T07:09:50.846450-05:00"
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-08-19T15:30:09.029392-05:00",
-      "archivo": "sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_schoice_v1.Rmd"
+      "timestamp": "2026-08-20T07:30:11.698295-05:00",
+      "archivo": "sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_cloze_v1.Rmd"
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-08-19T15:30:09.085668-05:00"
+      "timestamp": "2026-08-20T07:30:11.753733-05:00"
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-08-19T15:57:53.170313-05:00"
+      "timestamp": "2026-08-20T07:30:11.808803-05:00"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-08-19T15:58:13.880292-05:00"
+      "timestamp": "2026-08-20T07:30:11.864244-05:00"
     },
     "detractor_fase2c": {
       "completado": false,
@@ -40,16 +40,16 @@
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-08-19T15:58:13.939260-05:00"
+      "timestamp": "2026-08-20T07:30:11.921604-05:00"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-08-19T15:59:58.721035-05:00",
+      "timestamp": "2026-08-20T07:30:11.978594-05:00",
       "versiones_unicas": "100/100"
     },
     "validar_icfes": {
       "completado": true,
-      "timestamp": "2026-08-19T15:59:58.777243-05:00"
+      "timestamp": "2026-08-20T07:30:12.035171-05:00"
     },
     "aprobacion_usuario": {
       "completado": false,
@@ -59,6 +59,6 @@
   },
   "apto_para_aula": false,
   "apto_para_aula_nota": "NO APTO. Correccion limpia (claves 100/100, 0 segundas claves, canonica verbatim verificada contra pagina_013.jpg), pero diagnosticidad BLOQUEA: +21,3 pp agregado y canales al 100 % en los estratos 2 y 3. Ver HANDOFF §10.12.",
-  "bateria_congelada": "bateria_congelada.R (pre-registro §P7-C, 2026-08-20)",
-  "handoff": "HANDOFF.md — cubre los dos gemelos"
+  "handoff": "../HANDOFF.md — cubre los dos gemelos",
+  "bateria_congelada": "bateria_congelada.R (pre-registro §P7-C, 2026-08-20)"
 }

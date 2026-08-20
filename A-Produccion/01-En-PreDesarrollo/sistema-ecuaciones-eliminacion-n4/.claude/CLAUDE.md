@@ -49,3 +49,40 @@ Decisión del profesor: verbatim, sin nota editorial.
 
 Prohibido `sample`/`runif`/`rnorm` dentro (Capa D, `ERR_SEM_D`). El veredicto de cada opción se
 obtiene EJECUTANDO su propuesta, no declarándolo.
+
+## L-7 — Guarda contra verificación semántica vacua
+
+Si el `proc` de un señuelo saliera idéntico al del estímulo (`proc == pr_show`), `ejecutar_prop()`
+comprobaría «el estímulo no llega a R», que ya está aseverado antes: la sonda se verificaría a sí
+misma. Medido vacuo en 27/100 versiones antes de la guarda. `proc_de_opcion()` aborta si ocurre.
+
+## L-8 — La batería de §P7 está CONGELADA en `bateria_congelada.R`. No se le añaden reglas.
+
+Pre-registro §P7-C del 2026-08-20. Cubre las seis familias y mide **por estrato**, porque las tres
+ramas de este ítem son estructuralmente distintas y el agregado esconde canales al 100 %.
+
+Si una auditoría descubre una familia sin sonda, se añade y **se re-mide el histórico completo**, o
+se declara que las cifras anteriores no son comparables. Encadenar pasadas con baterías distintas y
+tratar sus excesos como una serie es exactamente lo que §P7-C prohíbe, y ya pasó una vez aquí: la
+batería anterior dio V4 por bueno en todo cuando había empeorado tres reglas.
+
+Los cortes salen del helper `.claude/scripts/bateria_eliminacion.R`, **fuente única**. Este script
+aborta si no lo encuentra en vez de inventarlos.
+
+## L-9 — `V1` (divisor = coeficiente de su propia ecuación) es TECHO ESTRUCTURAL, no un canal más.
+
+Medido: **100 % en el estrato del paso 3**, exceso +75,0 pp, margen 50-75 %.
+
+**No se corrige eligiendo otros divisores.** Dividir entre el coeficiente *es* la operación
+correcta: si la opción muestra la ecuación **y** el divisor, comprobar su coherencia identifica la
+clave sin resolver nada. La única salida es no mostrar la ecuación — variante V3, medida, que
+reintroduce el canal de escala (`M5` −15,5 pp con margen del 68,6 %).
+
+**No gastar pasadas persiguiéndolo.** Es la decisión estructural de `HANDOFF.md` §10.7.1(c) y le
+corresponde al profesor, no al verificador.
+
+## L-10 — Tras un borrado por patrón, comprobar PRESENCIA DE SÍMBOLOS, no que el código parsee.
+
+El 2026-08-20 un regex demasiado amplio borró cinco funciones vivas (`proc_de_opcion`,
+`ejecutar_prop`, `paso_de`, `txt_clave`, `txt_senuelo`) y **el chunk seguía parseando**. Una
+comprobación de sintaxis no lo habría visto. Lo cazó `grep -c '^<fn> <- function'`.

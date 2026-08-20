@@ -260,12 +260,6 @@ elegir_par <- function(cod) {
     ## OBJ 1(b)/8: sin cota, |v|/R tenía mediana 3.600 en el paso 3 -> "si el número es
     ## absurdo, el error es del paso 3" clasificaba con sensibilidad 100 %.
     if (abs(v) > 40 * p$R) next
-    ## 2026-08-20: celda DETERMINISTA del grid. Si |b - k*d| coincide con a, d o b, el
-    ## divisor de la clave iguala al de un senuelo y —como ambas opciones de paso 3
-    ## imprimen la MISMA ecuación reducida— los dos textos quedan identicos: falla
-    ## unique(txt)==4 y el render aborta 400/400 sin recuperarse. Medido por dos
-    ## verificadores independientes: 20/1000 (2 %) frente a 0/1000 antes de V4.
-    if (abs(p$b - p$k * p$d) %in% abs(c(p$a, p$d, p$b))) next
     return(p)
   }
   NULL
@@ -363,15 +357,7 @@ ecu_lat <- function(e) {
 ## (regla #24 H-2, L-1): la fidelidad al cuadernillo la garantiza esa excepción, NO
 ## el formato — el original mezcla dos moldes (A y C describen, B y D son escuetas).
 ## ===========================================================================
-molde <- function(paso, eq) {
-  ## 2026-08-20 (vía §3.1). El paso 3 nombra el DIVISOR —un error de despeje no se puede
-  ## expresar con la ecuación, que es la misma que la de la clave— pero la frase termina
-  ## igualmente en la ECUACIÓN, para que las cuatro opciones cierren en la MISMA ESCALA.
-  ## Medido: con unas terminando en divisor (~1e2) y otras en constante (~1e6), la regla
-  ## "elegir/descartar el menor número" da -15,5 pp con margen del 68,6 %.
-  if (paso == 3L) paste0("En el paso ", paso, ", se debió dividir entre ", eq)
-  else            paste0("En el paso ", paso, ", la ecuación debió ser: ", eq)
-}
+molde <- function(paso, eq) paste0("En el paso ", paso, ", la ecuación debió ser: ", eq)
 
 ## --- textos VERBATIM del cuadernillo, solo para la instancia canonica -------
 txt_canon <- function(cod, rol, var = 1L) {
@@ -408,37 +394,36 @@ eq_de <- function(cod, rol, var = 1L) {
     return(ecu(list(cL = e1$cL, cR = e1$cR, ci = e1$ci)))
   }
   e2  <- eq_paso2(pr, par)
-  ## --- ESCALA UNIFORME (2026-08-20) -----------------------------------------------------
-  ## Se retira la cláusula ", de donde X = ...". Historial medido de por qué:
-  ##  · con el valor sin la operación -> la conclusión no se seguía de la ecuación: +28,6 pp
-  ##  · con la operación a la vista   -> cerró la falsedad ARITMÉTICA, no la LÓGICA
-  ##  · suprimiéndola sólo si quedan 2 incógnitas -> sólo concluye quien elimina bien, y la
-  ##    clave elimina bien por definición: "elegir la que concluye" +6,7 pp, y la mezcla de
-  ##    escalas (precio ~1e3 frente a constante ~1e6) daba "menor número" +31,0 pp.
-  ## Toda opción termina ahora en la constante de una ecuación. Vector medido tras el cambio:
-  ## M5 +7,3 · N3 +0,8 · M3 -0,8 · CC +0,0 · L1 +3,8 (antes +31,0 · +17,8 · +2,1 · +6,7 · -18,2).
-  if (paso == 3L) {
-    coef <- if (e2$cR == 0) e2$cL else e2$cR
-    den  <- if (identical(pr$op3, "coef_eliminado")) par$a
-            else if (identical(pr$op3, "div_orig_d")) par$d
-            else if (identical(pr$op3, "div_orig_b")) par$b
-            else coef
-    ## abs(): un divisor negativo es ruido de presentación (3/120 medidas), no contenido
-    return(paste0(abs(den), " la ecuación reducida ",
-                  ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci))))
-  }
-  ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci))
+  v   <- suppressWarnings(ejecutar_prop(pr))
+  if (length(v) != 1L || is.na(v) || !is.finite(v)) v <- 0
+  ## el simbolo debe ser el de la incógnita que SOBREVIVE a la eliminación (objeción 6)
+  sim <- if (e2$cR == 0) S1 else S2
+  ## OBJ 1b: una ecuación que conserva DOS incógnitas no determina un valor. Concluir uno
+  ## es falso aunque la aritmética cuadre (60/400 opciones lo hacían). Se suprime la
+  ## cláusula, como ya hacen las opciones del paso 1 que retornan antes. NO delata a la
+  ## clave: ésta también carece de conclusión cuando cita el paso 1.
+  if (e2$cL != 0 && e2$cR != 0)
+    return(ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci)))
+  ## OBJ 1 (2026-08-20) — SE IMPRIME LA OPERACIÓN, NO SOLO SU RESULTADO.
+  ## Antes `ecu(e2)` salia de eq_paso2() y `v` de ejecutar_prop(), que aplica OTRO
+  ## despeje: la conclusión NO se seguia de la ecuación impresa, y la clave era la única
+  ## coherente consigo misma. Medido por dos detractores independientes: la regla "elegir
+  ## la opción cuya conclusión se sigue de su propia ecuación" rendia 53,9 % contra un
+  ## techo nulo de 25,3 % (exceso +28,6 pp, 10 sd, 3,6x el corte de §P7). ⚠️ Esto cierra la
+  ## forma ARITMÉTICA de la falsedad; la LÓGICA la cierra la guarda de OBJ 1b de arriba. NO
+  ## afirmar que "las cuatro opciones son verdaderas" sin medir AMBAS: la redacción anterior
+  ## de este comentario era falsa y el auditor la usó, con razón, para rechazar. Con la operación
+  ## a la vista las cuatro opciones son verdaderas y la regla cae al techo nulo.
+  ## `op_txt` espeja rama por rama a `ejecutar_prop`; el stopifnot lo comprueba.
+  stopifnot(isTRUE(all.equal(op_val(pr, e2), v)))
+  paste0(ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci)),
+         ", de donde ", sim, " = ", op_txt(pr, e2), " = ", fmt_v(v))
 }
 
-## --- RAMA MUERTA desde 2026-08-20: op_val/op_txt/fmt_v servían a la cláusula
-## --- ", de donde ...", ya retirada. Se conservan porque `ejecutar_prop` sigue
-## --- siendo la fuente de verdad de la verificación semántica ejecutable.
+## --- la operación de despeje que EJECUTA cada procedimiento -----------------
 ## op_val y op_txt DEBEN espejar a ejecutar_prop()/ejecutar_proc() rama por rama: si
-## divergen, la igualdad impresa vuelve a ser falsa. ⚠️ SIN USO desde V4: la clausula
-## ", de donde ..." se retiro y con ella el stopifnot que aseveraba ese acuerdo. NO
-## reinstalar una clausula que las use sin restaurar antes esa aserción: nada las
-## mantiene ya sincronizadas con ejecutar_prop(). Lo que sigue
-## no se ejecuta ya en ninguna llamada.
+## divergen, la igualdad impresa vuelve a ser falsa. Por eso `eq_de` asevera su acuerdo
+## en cada llamada, en vez de confiar en que dos funciones se mantengan sincronizadas.
 op_val <- function(pr, e2) {
   coef <- if (e2$cR == 0) e2$cL else e2$cR
   if (identical(pr$op3, "div_orig_d"))     return(e2$ci / par$d)
