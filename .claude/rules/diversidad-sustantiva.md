@@ -357,6 +357,22 @@ Dos mitigaciones, ninguna automática:
 que al examen real, y contradice lo que la propia §P7 declara: *un ítem que no filtra más que el
 examen real no se declara defectuoso*.
 
+**LA BATERÍA DE LA VARA ESTÁ VERSIONADA** en `.claude/scripts/bateria_referencia_icfes.R`, con su
+pre-registro en `.claude/docs/PRE-REGISTRO-vara-p7.md`. Hasta el 2026-08-19 vivía sólo en un
+scratchpad, de modo que las cifras de arriba **no eran reproducibles**. Para comparar contra la vara
+hay que usar **esa** batería: un exceso medido con una batería propia del ejercicio **no es
+comparable** (§P7-C).
+
+> ⚠️ **CEGUERA MEDIDA Y CORREGIDA — `n1()` vs `nlast()`.** La versión original extraía el valor con
+> el **primer** número de la opción. En cualquier molde que empiece por un numeral —«En el paso
+> **2**, la ecuación debió ser: 90R = 630.000»— eso lee el **número de paso**, no el valor. Medido:
+> **aplicabilidad 0 %** en sus cinco reglas de divisibilidad, un canal real del **41,9 %** pasando
+> por debajo, y un `PASS` de **−4,2 pp** sobre un ítem que con la sonda correcta mide **+9,4 pp**.
+> El corpus oficial contiene ítems con ese molde, así que **la ceguera afectaba también a la vara**.
+> Para el valor, usar **`nlast()`**; `n1()` sólo sirve si la opción es una cifra desnuda.
+> Es el mismo modo de fallo que §P7 nombra —*sin sonda leído como sin señal*— dentro del propio
+> instrumento que fija la vara.
+
 **Criterio vigente, en tres escalones:**
 
 | Exceso | Veredicto de ACEPTACIÓN |

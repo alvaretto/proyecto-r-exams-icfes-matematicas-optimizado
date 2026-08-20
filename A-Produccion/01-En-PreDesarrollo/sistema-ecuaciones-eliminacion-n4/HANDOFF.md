@@ -35,12 +35,33 @@ Todo medido por ejecución, con semillas independientes entre orquestador (`1000
 
 ## 2. Qué está ABIERTO
 
-1. **§P7 `BLOQUEA`**, exceso **+13,9 pp** (techo nulo 30,8 · sd 2,4 · atómico +19,7). Máximo en
-   familia **divisibilidad**: `el valor es múltiplo de 50` al **44,7 %**. **Residuo principal.**
-2. **H1 rama 3 al 67,9 % (más larga)** — décimo desplazamiento; su margen **no está medido**, así
-   que **no** se declara inexplotable. H1 rama 1 (50,0 %) sí se midió: margen **3,3 %**, por debajo
-   del umbral de 15 % ⇒ **inexplotable, declarado y no perseguido**. ⚠️ **Mide siempre el margen
-   antes de perseguir una frecuencia** — ver §5.1.
+> ⚠️ **ACTUALIZADO por la 5.ª auditoría (2026-08-19). El «+13,9 pp BLOQUEA» que este documento
+> declaraba NO ES REPRODUCIBLE con una vara homogénea.** Salía de `auditoria_propia.R`, cuya batería
+> **creció durante el ciclo** — justo la serie que §P7-C prohíbe encadenar. Medido con la batería
+> **congelada** de la vara: **−4,2 pp (PASS)**.
+
+1. **§P7 — el residuo real, con su banda.** La batería congelada resultó **ciega al valor** en este
+   molde (`n1()` toma el primer número, que aquí es el **número de paso**: aplicabilidad **0 %** en
+   sus cinco reglas de divisibilidad). Corregida la ceguera y aplicada **la misma ampliación a las
+   tres poblaciones**:
+
+   | Población | n | máx | techo nulo | sd | **exceso** |
+   |---|---:|---:|---:|---:|---:|
+   | **Ejercicio (actual)** | 100 | 41,9 % | 32,5 % | 2,80 | **+9,4 pp** |
+   | Control oficial | 399 | 33,6 % | 28,4 % | 1,15 | **+5,2 pp** |
+   | Corpus oficial | 426 | 32,9 % | 28,3 % | 1,11 | **+4,6 pp** |
+
+   Frente al control: **+4,2 pp de diferencia, 1,4 sd → no significativa.** Frente al corte de +8:
+   **0,5 sd**, con intervalo a 2 sd de **[+3,8; +15,0]**. Y el umbral de la sonda decisiva
+   (`múltiplo de 50 y positivo`, 41,9 %) **lo fijó el auditor conociendo el ejercicio** — lo declara
+   él mismo. **La cifra honesta no es una, son las dos.**
+2. **H1: CERRADO.** Todos los márgenes entre **3,4 % y 5,7 %**, contra el umbral de 15 %. La rama 3
+   bajó además de 67,9 % a 54,8 % con la citación uniforme. `validar_diagnosticidad.R` reporta
+   **H1 = 0 % en ambas direcciones** y `PASS`. ⚠️ **Mide siempre el margen antes de perseguir una
+   frecuencia** — ver §5.1.
+3. **L-4 / objeción 4: CERRADA.** H3b contenido al **17 %** (el bloqueo está en 90 %).
+4. **«Canal de divisibilidad ×50 al 44,7 %»: REFORMULADO.** La sonda simple da 27-35 % (azar 25 %):
+   ahí no hay canal. Vive en la **conjunción** con «positivo».
 3. **19 tokens con soporte < 20** declarados `NO CONCLUYENTE` (`N_necesario` 200 agregado / 76 rama 1).
 4. **FASE 2C abierta** — 4 veredictos `RECHAZAR`, el último con la objeción crítica ya cerrada.
 5. **`ejercicio_state.json` con sellos stale** (anteriores al `.Rmd`) y `versiones_unicas: 97`, que

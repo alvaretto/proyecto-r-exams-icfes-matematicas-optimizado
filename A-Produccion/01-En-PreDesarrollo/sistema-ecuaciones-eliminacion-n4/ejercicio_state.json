@@ -3,7 +3,7 @@
   "ejercicio": "sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-08-19T15:18:06.803134-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-19T15:59:58.777243-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-19T22:58:39.333269-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -33,9 +33,9 @@
       "timestamp": "2026-08-19T15:58:13.880292-05:00"
     },
     "detractor_fase2c": {
-      "completado": false,
-      "timestamp": null,
-      "veredicto": null
+      "completado": true,
+      "timestamp": "2026-08-19T22:56:36.461086-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS"
     },
     "coherencias_5": {
       "completado": true,
@@ -44,15 +44,15 @@
     "validar_diversidad": {
       "completado": true,
       "timestamp": "2026-08-19T15:59:58.721035-05:00",
-      "versiones_unicas": 97
+      "versiones_unicas": "100/100"
     },
     "validar_icfes": {
       "completado": true,
       "timestamp": "2026-08-19T15:59:58.777243-05:00"
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-08-19T22:58:39.333269-05:00"
     }
   }
 }
