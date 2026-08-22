@@ -75,15 +75,21 @@ jobs:
         echo "--- politica PDF de ImageMagick ---"
         (convert -list policy 2>/dev/null | grep -A2 -i pdf || echo "sin politica PDF explicita")
         echo "--- reproduccion minima de include_tikz, con log de LaTeX ---"
-        Rscript -e 'options(tinytex.verbose = TRUE); \
-          tikz <- "\\begin{tikzpicture}\\draw (0,0) -- (1,1);\\end{tikzpicture}"; \
-          for (fmt in c("pdf", "png")) { \
-            cat("\n### format =", fmt, "\n"); \
-            r <- tryCatch(exams::include_tikz(tikz, name = paste0("probe_", fmt), \
-                     markup = "markdown", format = fmt, \
-                     packages = c("tikz", "colortbl", "xcolor"), width = "3cm"), \
-                   error = function(e) paste("ERROR:", conditionMessage(e))); \
-            cat(r, "\n") }'
+        cat > /tmp/probe_tikz.R <<'EOF'
+        options(tinytex.verbose = TRUE)
+        tikz <- "\\begin{tikzpicture}\\draw (0,0) -- (1,1);\\end{tikzpicture}"
+        for (fmt in c("pdf", "png")) {
+          cat("\n### format =", fmt, "\n")
+          r <- tryCatch(
+            exams::include_tikz(tikz, name = paste0("probe_", fmt),
+                                markup = "markdown", format = fmt,
+                                packages = c("tikz", "colortbl", "xcolor"),
+                                width = "3cm"),
+            error = function(e) paste("ERROR:", conditionMessage(e)))
+          cat(r, "\n")
+        }
+        EOF
+        Rscript /tmp/probe_tikz.R 2>&1 | tail -80
 
     - name: Run full test suite
       run: Rscript tests/run_all_tests.R
