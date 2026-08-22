@@ -50,11 +50,14 @@ if (require("reticulate", quietly = TRUE)) {
   })
 }
 
-# mcptools: auto-registro MCP para Claude Code
-source("~/.R/mcp-session-autoconnect.R")
-
-# Abrir archivos encolados por rstudio-open como pestanas nuevas
-source("~/.R/open-queue-watcher.R")
+# Utilidades locales de la maquina de desarrollo (mcptools, rstudio-open).
+# Se cargan SOLO si existen: en CI (GitHub Actions) no estan presentes y su
+# ausencia no debe abortar la sesion de R con "Execution halted".
+for (.local_helper in c("~/.R/mcp-session-autoconnect.R",
+                        "~/.R/open-queue-watcher.R")) {
+  if (file.exists(path.expand(.local_helper))) source(.local_helper)
+}
+rm(.local_helper)
 
 # Mensaje de bienvenida
 cat("R configurado para VSCode\n")
