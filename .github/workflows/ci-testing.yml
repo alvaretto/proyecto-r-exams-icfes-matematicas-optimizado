@@ -26,6 +26,17 @@ jobs:
       with:
         r-version: '4.3.0'
 
+    - name: Setup Pandoc
+      # Ubuntu 24.04 trae pandoc ~3.1.3, que para cada seccion emite
+      # \hypertarget{...}{%. La plantilla de exams no carga hyperref, asi que esa
+      # macro queda indefinida y exams2pdf muere con "Undefined control sequence"
+      # justo en {anuxe1lisis-del-error-parte-1}. Pandoc >= 3.6 emite
+      # \subsection{...}\label{...}, que no necesita hyperref: es lo que hace que
+      # el mismo ejercicio compile sin problemas en la maquina de desarrollo.
+      uses: r-lib/actions/setup-pandoc@v2
+      with:
+        pandoc-version: '3.6.1'
+
     - name: Install system dependencies
       run: |
         sudo apt-get update
@@ -34,16 +45,73 @@ jobs:
           texlive-fonts-recommended \
           texlive-fonts-extra \
           texlive-latex-extra \
-          pandoc \
-          imagemagick
+          texlive-latex-recommended \
+          texlive-pictures \
+          texlive-extra-utils \
+          imagemagick \
+          libmagick++-dev \
+          ghostscript \
+          poppler-utils \
+          python3-numpy \
+          python3-matplotlib
+        # exams::include_tikz() compila con tikz/colortbl/xcolor y convierte el
+        # PDF resultante a imagen. Sin texlive-pictures no hay tikz.sty, y la
+        # politica por defecto de ImageMagick en Ubuntu prohibe leer PDF, lo que
+        # rompe esa conversion aunque LaTeX haya compilado bien.
+        for pol in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
+          if [ -f "$pol" ]; then
+            sudo sed -i 's|<policy domain="coder" rights="none" pattern="PDF" */>|<policy domain="coder" rights="read\|write" pattern="PDF" />|' "$pol"
+          fi
+        done
+
 
     - name: Install R dependencies
       run: |
         install.packages(c(
           "exams", "testthat", "knitr", "rmarkdown", "tinytex",
-          "jsonlite", "digest", "stringr", "xml2"
+          "jsonlite", "digest", "stringr", "xml2",
+          # Requeridos por las suites de graficos y por los .Rmd con Python:
+          # su ausencia dejaba en rojo a "Distintividad Visual" (ggplot2) y a
+          # "CLOZE N3 (Trigonometria)" (reticulate).
+          "ggplot2", "png", "reticulate",
+          # Usados por los .Rmd que renderizan las suites de regresion y CLOZE N3.
+          "dplyr", "magick"
         ))
       shell: Rscript {0}
+
+    - name: Registrar el texmf de R en TEXINPUTS
+      run: |
+        # exams compila sus .tex con \usepackage{Sweave}, y Sweave.sty lo aporta
+        # la instalacion de R, no texlive. En una distro el paquete de R deja ese
+        # .sty dentro del arbol texmf del sistema; aqui setup-r instala R bajo
+        # /opt/R/<version>, cuyo texmf LaTeX no conoce -> "File `Sweave.sty' not
+        # found" y las suites con include_tikz() caen en bloque.
+        # Ojo: "Rscript -e" arrastra todo lo que el .Rprofile del repo imprime al
+        # arrancar, asi que sustituirlo dentro de $(...) devuelve esa parrafada
+        # ademas de la ruta. "R RHOME" no carga perfiles.
+        R_HOME_DIR="$(R RHOME)"
+        echo "R.home(): $R_HOME_DIR"
+        SWEAVE="$(find "$R_HOME_DIR" -name Sweave.sty -print -quit)"
+        if [ -z "$SWEAVE" ]; then
+          echo "::error::No se encontro Sweave.sty bajo $R_HOME_DIR"
+          exit 1
+        fi
+        echo "Sweave.sty: $SWEAVE"
+        echo "TEXINPUTS=.:$(dirname "$SWEAVE")//:" >> "$GITHUB_ENV"
+
+    - name: Diagnostico del entorno LaTeX (no bloqueante)
+      continue-on-error: true
+      run: |
+        # Deja en el log de que dispone el runner. Los fallos historicos de esta
+        # suite venian de cosas que la maquina de desarrollo tenia y el runner no
+        # (Sweave.sty, tikz, pdfcrop, la version de pandoc); tenerlo a la vista
+        # ahorra un ciclo entero de diagnostico si vuelve a pasar.
+        pandoc --version | head -1
+        for sty in Sweave tikz colortbl xcolor standalone; do
+          printf '%-12s %s\n' "$sty" "$(kpsewhich $sty.sty || echo AUSENTE)"
+        done
+        printf '%-12s %s\n' pdfcrop "$(command -v pdfcrop || echo AUSENTE)"
+        printf '%-12s %s\n' imagemagick "$(command -v magick || command -v convert || echo AUSENTE)"
 
     - name: Run full test suite
       run: Rscript tests/run_all_tests.R

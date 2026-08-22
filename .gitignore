@@ -468,3 +468,6 @@ A-Produccion/02-En-Desarrollo/**/*.docx
 # Logs de Excalidraw embebido
 **/excalidraw.log
 .positai
+
+# Clon local de yay (AUR helper): quedo dentro del repo como gitlink huerfano
+Auxiliares/yay/
