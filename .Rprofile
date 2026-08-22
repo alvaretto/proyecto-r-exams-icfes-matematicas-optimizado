@@ -1,8 +1,15 @@
 # Configuración R para VSCode
 # Este archivo se carga automáticamente al iniciar R
 
-# Configurar biblioteca personal
-.libPaths(c("~/R/library", .libPaths()))
+# Biblioteca personal: anteponerla SOLO si existe.
+# .libPaths() descarta en silencio las rutas inexistentes, asi que en un runner
+# de CI (donde ~/R/library no existe) esta linea dejaba la biblioteca del
+# sistema en primer lugar y pisaba el R_LIBS_USER escribible que configura
+# r-lib/actions/setup-r -> install.packages() moria con "lib is not writable".
+local({
+  lib_personal <- path.expand("~/R/library")
+  if (dir.exists(lib_personal)) .libPaths(c(lib_personal, .libPaths()))
+})
 
 # Configurar opciones de R
 options(
