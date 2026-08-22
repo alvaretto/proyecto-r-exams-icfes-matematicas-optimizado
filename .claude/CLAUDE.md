@@ -51,7 +51,7 @@ Este archivo funciona como **índice central** del sistema. Para información de
     Índice operativo de patrones probados + librería de helpers `@.claude/scripts/snippets_familias_rmd.R`. Aplicar las familias relevantes en toda generación/corrección: **F1** generación sin cuelgue (`pick_int`/`construir_valores_con_rango`, nunca `repeat` sin cota — Error 22); **F2** tablas responsivas cross-formato (`tabla_responsiva`, fenced div `::: {style=overflow-x:auto}` que sobrevive DOCX como `<w:tbl>` y PDF como longtable); **F3** ecuaciones display responsivas (`eq_display`); **F4** coherencia de marcas en CLOZE (sol alineado por construcción + verificación marca-vs-verdad); **F5** trampa `sample(escalar)` (`pick_int`/`safe_sample`); **F6** opciones gráficas de diagramas vectoriales cardinales (`dibujar_diagrama_cardinal`/`orientaciones_cardinales`/`seleccionar_combinacion_con_cascada`/`renombrar_opciones_neutral`: orientación sorteada por versión, cascada de umbrales de legibilidad en vez de umbral único con `stopifnot`, renombrado neutral POST-mezcla y distractores que conserven la magnitud de la correcta — Errores 23-26). Test: test_data_generation_no_hang.R.
 22. **Diversidad Sustantiva** (respuesta correcta debe variar entre versiones, no solo el envoltorio narrativo) → @.claude/rules/diversidad-sustantiva.md
     **§P7-A..D (2026-08-19) — CRITERIO DE ACEPTACIÓN, no sólo de diagnóstico.** Medido sobre **426 ítems oficiales**: el corpus del ICFES marca **+4,6 pp** y su control **+5,3 pp**, ambos en zona gris — **ningún ítem oficial saca `PASS` limpio**, así que exigírselo a un ejercicio generado es exigirle más que al examen real. Aceptable **≤ +5,3 pp**; obliga sólo **> +8 pp**. **§P7-B**: frecuencia con margen < 15 % es **inexplotable** y no es defecto. **§P7-C**: la batería se **congela** al inicio (ampliarla a mitad de ciclo cambia la vara). **§P7-D**: **3 pasadas** de corrección como máximo, luego cierre con residuo declarado — porque en el ciclo que originó la política la pasada que más mejoró §P7 fue la que **volvió falsa la clave** en el 31,7 % de las versiones. *Perseguir la diagnosticidad produjo el único defecto de corrección.*
-    Defensa contra diversidad cosmética. Un conteo alto de "versiones únicas del render" NO garantiza que los datos numéricos / contenido gráfico de la respuesta correcta cambien entre semillas. Prohibido: parámetros hardcoded como literales, PNGs de opciones copiados con `file.copy`. Defensa: hook FASE 2N (`WARN_DIV_ESTATICA`) + script `validar_diversidad_sustantiva.R --n 100` en orquestador paso 9 (`ERR_DIV_COSMETICA` bloqueante) + test_diversidad_sustantiva.R. Incidente: `desplazamiento-avion-aeropuerto` (2026-06-27) — 288/300 versiones únicas con respuesta correcta invariante. **§P7 (v1.5, 2026-08-15) — cierre por familias de dimensión**: a diferencia de P1-P6, no nombra un canal de fuga sino un defecto **del verificador**. Toda batería de reglas de eliminación debe cerrar por las **seis familias** (magnitud, divisibilidad, signo, posición, formato, léxico), declarando las inaplicables; calibrar contra el **techo nulo** permutando la clave (un máximo sobre muchas reglas está inflado por selección: 69,6 % observado contra 34,8 % de techo); y declarar **NO CONCLUYENTE** cuando el máximo cae a menos de 5 pp del umbral. *Una batería incompleta no mide «sin señal», mide «sin sonda»* — el canal real (47,4 %) estaba en la única familia sin sonda. Helper: `.claude/scripts/bateria_eliminacion.R`; test: test_bateria_eliminacion.R (suite 32).
+    Defensa contra diversidad cosmética. Un conteo alto de "versiones únicas del render" NO garantiza que los datos numéricos / contenido gráfico de la respuesta correcta cambien entre semillas. Prohibido: parámetros hardcoded como literales, PNGs de opciones copiados con `file.copy`. Defensa: hook FASE 2N (`WARN_DIV_ESTATICA`) + script `validar_diversidad_sustantiva.R --n 100` en orquestador paso 9 (`ERR_DIV_COSMETICA` bloqueante) + test_diversidad_sustantiva.R. Incidente: `desplazamiento-avion-aeropuerto` (2026-06-27) — 288/300 versiones únicas con respuesta correcta invariante. **§P7-E (v1.7, 2026-08-22)**: la cobertura por familias no basta si todas las reglas miran las opciones **por separado** — hace falta al menos una **relacional entre pares** (Errores 33-34), y todo canal se mide también sobre la **instancia canónica** por enumeración exacta antes de perseguirlo. **§P7 (v1.5, 2026-08-15) — cierre por familias de dimensión**: a diferencia de P1-P6, no nombra un canal de fuga sino un defecto **del verificador**. Toda batería de reglas de eliminación debe cerrar por las **seis familias** (magnitud, divisibilidad, signo, posición, formato, léxico), declarando las inaplicables; calibrar contra el **techo nulo** permutando la clave (un máximo sobre muchas reglas está inflado por selección: 69,6 % observado contra 34,8 % de techo); y declarar **NO CONCLUYENTE** cuando el máximo cae a menos de 5 pp del umbral. *Una batería incompleta no mide «sin señal», mide «sin sonda»* — el canal real (47,4 %) estaba en la única familia sin sonda. Helper: `.claude/scripts/bateria_eliminacion.R`; test: test_bateria_eliminacion.R (suite 32).
 23. **Muestra estándar de validación: N = 100** → @.claude/rules/muestra-estandar-validacion.md
     **Toda medición estadística sobre versiones usa `N = 100`.** Un único número, cableado en código ejecutable, NO elegible por sesión, agente ni handoff. Aplica a `validar_diagnosticidad.R`, `validar_diversidad_sustantiva.R`, `validar_multisemilla.R`, verificadores propios del ejercicio y smokes: invocarlos **sin `--n`** ya da el estándar. Origen: el repo tenía **cinco tamaños rivales** (5/10/20/30/40) y ninguna fuente única, así que cada agente elegía el suyo —algunos 400—; la instrucción verbal del profesor no se sostuvo porque no vivía en nada ejecutable. Excepción **declarada**: las muestras de **renderizado real** (`stress_test_visual.R`, `auditor-visual-html`) cuestan un PDF o una captura por unidad — su N debe **declararse siempre en el reporte** junto al resultado. NO confundir con el umbral de producto de 250+ versiones únicas sobre 300 (regla #3), que no cambia. Timeout del hook subido a 300 s para que quepa (170 s medidos). Test: test_muestra_estandar.R (suite 29).
 24. **Hermes — triaje y fidelidad de figuras de cuadernillo** → @.claude/rules/hermes-imagenes-icfes.md
@@ -159,9 +159,66 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.23.0 (el `name:` no era una etiqueta: era el modo de entrega)
-**Fecha**: 2026-08-16
+**Versión**: 3.24.0 (el verificador contestaba una pregunta más estrecha que la que importaba)
+**Fecha**: 2026-08-22
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.24.0 (2026-08-22)
+
+> Un ejercicio nuevo —`tasa-caminata-velocidad-maxima-n4`, derivado de la pregunta **impresa 47**
+> de ERA-2026— consumió **seis pasadas de detractor** y destapó dos cegueras del mismo tipo en dos
+> pisos distintos: un verificador y una batería que **contestaban una pregunta más estrecha que la
+> que importaba**, y por eso daban verde. Ninguna de las dos era un bug de implementación.
+
+- **ERROR 33 — el predicado de unicidad comprobaba IDENTIDAD con la clave, no SOLIDEZ.** El
+  `.Rmd` abortaba el render si un distractor era «igual» al argumento de la clave (misma cota,
+  mismo sentido, mismo veredicto). Esa es la pregunta equivocada: **un argumento puede ser sólido
+  sin ser el mismo argumento**. Un distractor que sustituía el horizonte por «un día» tenía las
+  dos premisas **verdaderas y derivables del mismo criterio**, y en dos regiones del espacio la
+  conclusión **se seguía**: **11/400 versiones con SEGUNDA CLAVE**, con todo el arsenal en verde.
+- **LO INTRODUJO UNA PASADA DE DIAGNOSTICIDAD**, que es la segunda vez que ocurre y en otro
+  ejercicio: es literalmente lo que §P7-D nombra. Corolario cableado en el Error 33: **verificar la
+  corrección DESPUÉS de cada mejora de diagnosticidad, y ANTES que ella** en el orden de
+  comprobación. El fix es estructural —predicado de solidez con `horizonte` declarado— y cubre
+  cualquier error futuro con cota alternativa sin que nadie anticipe la región.
+- **ERROR 34 / REGLA #22 → §P7-E — la batería miraba las opciones POR SEPARADO.** Las seis
+  familias estaban declaradas CON SONDA y un canal de **+20,6 pp** pasaba por debajo: «hay dos
+  opciones que citan los mismos números, elige una de las dos». Todas las reglas eran función de
+  cada opción (`which.max`, «única que…»); **ninguna del conjunto**. Tercera repetición de la misma
+  lección en un solo ejercicio —faltó «menor primer número» en `magnitud`, faltó «dos cotas» en
+  `formato`, faltaba la familia relacional entera—. *No basta con declarar las familias: hay que
+  preguntarse qué FORMA de regla no se ha escrito.*
+- **NUEVA VARA, y ahorra pasadas: medir la regla sobre la INSTANCIA CANÓNICA.** En el ítem oficial
+  47, «elige la única que calcula una cota» **resuelve el ítem** —la clave B es la única
+  cuantitativa—, y el ejercicio generado lo bajó al **31,1 %**. El máximo explotable pasó de
+  resolver el ítem a **41,5 %**: filtra MENOS que su fuente. Rechazarlo obligaría a rechazar el
+  ítem del ICFES. La canónica es **determinista**, así que es **enumeración exacta** y NO le aplica
+  el mínimo de 20 por estrato de la regla #23.
+- **FIGURA NUEVA: el OVERRIDE registrado.** El canal restante **no queda exento por §P7-B** —que
+  exime lo imperceptible, no lo contable—. Se cierra igualmente por §P7-D, y eso es un **override
+  deliberado de un criterio calibrado**, no una absolución: por **H-5** exige decisión humana
+  escrita, con su cifra, y **la batería se deja en ROJO**. *El día que alguien la haga reportar
+  `PASS` para poder cerrar, el gate queda apagado para siempre.*
+- **UN FUNDAMENTO PROPIO RETIRADO POR NO SER COSTEABLE.** El cierre se había argumentado en que
+  cerrar el canal exigiría homogeneizar las cuatro opciones y perder la función diagnóstica de las
+  cualitativas. El detractor lo refutó: bastaría un **tercer** miembro del grupo de numerales para
+  bajar el score de 1/2 a 1/3, y la alternativa que no toca ninguna opción cualitativa **no se
+  costeó**. *Un argumento de diseño no costeado no sostiene un override.* Se sustituyó por dos
+  fundamentos verificables.
+- **REINCIDENCIA DEL MISMO INSTRUMENTO**: el regex de `ver_op()` que detecta el veredicto por
+  enumeración de cierres quedó ciego **por segunda vez** al añadirse una opción (41,1 % la primera,
+  14,0 % la segunda), y las dos en silencio. Fix estructural en el `.Rmd`: `stopifnot` que compara
+  el **texto emitido** contra el `veredicto(M)` declarado, de modo que la próxima ceguera **aborte
+  el render** en vez de producir cifras mal etiquetadas.
+- **CONTROL POSITIVO, otra vez la pieza que da valor al cero**: la sonda de solidez encuentra
+  **5-8/400** segundas claves en la versión anterior y **0/600** en la corregida. Un cero sin
+  control positivo no distingue «limpio» de «sonda ciega».
+- **EJERCICIO**: `tasa_caminata_velocidad_maxima_..._n4_schoice_v1` — **10/11**, FASE 2C cerrada
+  con `APROBAR_CON_CAMBIOS`. Corrección 0/600 con predicado, muestra y semillas independientes;
+  6/6 formatos; unicidad 296/300; canónica verbatim contra el **escaneo** (no contra la ficha, que
+  diverge: dice «la decisión de suspensión» donde el impreso dice «de la suspensión»). Pendiente
+  sólo la aprobación del profesor. Su `HANDOFF.md` registra el override y **lo que el detractor
+  declaró NO haber auditado**.
 
 ### Cambios v3.23.0 (2026-08-16)
 

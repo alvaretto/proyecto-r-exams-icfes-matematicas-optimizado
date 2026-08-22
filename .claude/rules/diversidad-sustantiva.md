@@ -415,6 +415,45 @@ ningún gate automático lo detectó — lo encontró la auditoría independient
 Corolario operativo: **tras cualquier mejora de diagnosticidad, verificar que la clave sigue siendo
 verdadera.** No es una comprobación redundante; es la que este repositorio se saltó.
 
+#### §P7-E — Cobertura RELACIONAL, y la vara de la instancia canónica
+
+> **Añadido 2026-08-22.** §P7 exigía cerrar por las seis familias. Se cumplía —las seis
+> declaradas CON SONDA— y aun así un canal de **+20,6 pp** pasaba por debajo, porque **todas las
+> reglas de la batería eran función de cada opción POR SEPARADO** y ninguna del **conjunto**.
+
+**La exigencia.** Además de las seis familias, toda batería debe incluir al menos una regla
+**relacional entre opciones**: conjunto de numerales idéntico entre dos de ellas, prefijo o molde
+compartido, longitud gemela. Las reglas por separado (`which.max`, `which.min`, «única que…») no
+pueden expresar «hay dos opciones que se parecen entre sí, elige una de las dos», que es una de
+las heurísticas más baratas que un estudiante puede aplicar.
+
+Medido en `tasa-caminata-velocidad-maxima-n4`: la clave y el distractor que invierte el sentido de
+su misma cota citan **el mismo conjunto de numerales** —por construcción, porque es la misma
+cota—, y ninguna otra opción coincide: «elige una de las dos gemelas» acertaba el **45,6 %**. La
+batería tenía 25 reglas en verde. *Tercera repetición de la misma lección en un solo ejercicio: no
+basta con declarar las familias, hay que preguntarse qué **forma** de regla no se ha escrito.*
+
+**La vara que hay que medir ANTES de perseguir un canal.** Toda regla que dispare debe medirse
+también sobre la **instancia canónica**, que reproduce el ítem oficial verbatim:
+
+| Regla | Ítem OFICIAL (enumeración exacta) | Versiones generadas |
+|---|---|---|
+| «elige la única que calcula una cota» | **resuelve el ítem** | 31,1 % (+6,1 pp) |
+| «elige del par con los mismos numerales» | falla | 41,5 % (+16,5 pp) |
+
+Si la fuente oficial tiene el canal **más fuerte** que el ejercicio generado, perseguirlo es
+exigirle al ítem más que al examen real, y §P7-A ya lo resuelve. La instancia canónica es
+**determinista**, así que su medición es **enumeración exacta** y no una tasa muestral: **no le
+aplica** el mínimo de 20 por estrato de la regla #23. Presentarla como «100 % con n=18» invita a
+una objeción que no procede; se escribe como enumeración.
+
+**Cuando el canal no se puede cerrar sin dañar el ítem.** Un canal por encima de +8 pp con margen
+explotable **no queda exento por §P7-B** —que exime lo imperceptible, no lo contable—. Cerrar la
+medición aceptándolo es un **OVERRIDE deliberado de un criterio calibrado**, no una absolución, y
+por la regla #24 **H-5 relajar nunca es autónomo**: exige decisión humana registrada por escrito,
+con la cifra, y **la batería se deja en rojo**. El día que alguien la haga reportar `PASS` para
+poder cerrar, el gate queda apagado para siempre.
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden
@@ -565,8 +604,12 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.6
-**Fecha:** 2026-08-15
+**Versión:** 1.7
+**Fecha:** 2026-08-22 (v1.7 — nuevo **§P7-E**: cobertura RELACIONAL entre opciones, la vara de la
+instancia canónica por enumeración exacta, y la figura del **OVERRIDE** registrado cuando un canal
+no se puede cerrar sin dañar el ítem. Origen: `tasa-caminata-velocidad-maxima-n4`, donde 25 reglas
+en verde dejaban pasar un canal de +20,6 pp porque todas miraban las opciones por separado.
+Ver Errores 33 y 34; v1.6 2026-08-15)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.

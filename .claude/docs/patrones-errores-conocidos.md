@@ -3152,3 +3152,123 @@ En el caso corregido devuelve el conjunto vacío; el token más frecuente («pro
 - Errores 29 y 30 (el fix que lo originó y el desplazamiento de canal previo).
 - Regla #22 §P6 — el principio general: ningún rasgo que revele el rol de la opción.
 - Haladyna, Downing & Rodriguez (2002), *Applied Measurement in Education* 15(3):309-334 — «Avoid giving clues to the right answer»: *word repeats* entre enunciado y clave.
+
+---
+
+## Error 33: El verificador de unicidad comprueba IDENTIDAD con la clave, no SOLIDEZ — y deja pasar una segunda clave
+
+### ❌ Síntoma
+
+El `.Rmd` tiene una verificación semántica ejecutable que aborta el render si algún distractor resulta ser un argumento válido. Está en verde en el 100 % de las versiones, todo el arsenal aprueba, y sin embargo **el ítem tiene dos respuestas correctas** en una fracción de las versiones.
+
+Caso medido (`tasa-caminata-velocidad-maxima-n4`, 2026-08-22): **11/400 versiones (2,8 %)** con un segundo argumento sólido. Con `copias = 300`, unos 8 ítems con dos claves llegando al aula.
+
+### 🔍 Causa Raíz
+
+El predicado natural para «este distractor no es la clave» compara **contra el argumento de la clave**:
+
+```r
+## ❌ IDENTIDAD — la pregunta equivocada
+es_malo <- !(cota_km == cota && sentido == "superior" && veredicto == excede)
+```
+
+Eso contesta *«¿es este el argumento que yo escribí?»*, que no es la pregunta. La pregunta es *«¿es este argumento correcto?»*. **Un argumento puede ser sólido sin ser el mismo argumento**: una cota más floja pero verdadera, que aun así baste para la conclusión, sustenta la decisión igual de bien.
+
+En el caso medido, el distractor sustituía el horizonte del enunciado por «un día». Sus dos premisas eran **verdaderas y derivables del mismo criterio que la clave**, y en dos regiones del espacio de parámetros la inferencia se completaba:
+
+| Región | Por qué la conclusión se sigue |
+|---|---|
+| `H < 24` ∧ `R > 24·vel` | Si no se caminan `24·vel` km en un día entero, menos aún `R` km en menos horas |
+| `H > 24` ∧ `R < 24·vel` | `R < 24·vel < vel·H = cota`, luego el criterio no permite descartar |
+
+**Por qué ningún gate lo ve:** el arsenal compartido no evalúa la validez lógica de los distractores —es responsabilidad del verificador propio del ejercicio—, y el verificador propio estaba contestando la pregunta estrecha. La ceguera es del predicado, no de su implementación.
+
+### ✅ Solución Verificada
+
+El predicado correcto tiene **dos partes**, y exige que cada distractor declare el **horizonte** sobre el que afirma su cota, no sólo la cota:
+
+```r
+## ✅ SOLIDEZ — premisa verdadera + conclusión que se sigue
+es_solido <- function(e) {
+  ck <- e$cota_km(M);  if (is.na(ck)) return(FALSE)
+  if (!identical(e$sentido, "superior")) return(FALSE)   # cota inferior: premisa falsa
+  Th <- if (is.null(e$horizonte)) H else e$horizonte(M)
+  if (ck < vel * Th) return(FALSE)                       # cota por debajo de la real
+  if (isTRUE(e$veredicto(M))) reporte > ck && Th >= H    # "no pudo" se sigue
+  else                        reporte < ck && ck <= vel * H
+}
+stopifnot(all(!vapply(sel, function(i) es_solido(errores_conceptuales[[i]]), logical(1))))
+stopifnot(isTRUE(es_solido(<la clave>)))                 # control positivo del predicado
+```
+
+Cubre además cualquier error **futuro** que introduzca una cota alternativa, sin que nadie tenga que anticipar la región exacta — que es lo que distingue un fix estructural de un parche.
+
+### 🧪 Cómo detectarlo (y por qué el control positivo no es opcional)
+
+1. Verificador **independiente**, con **serie de semillas distinta** de la del generador.
+2. Clasificar por el **TEXTO EMITIDO**, no por los campos declarados del pool: un rediseño de redacción puede desalinear el texto de sus metadatos, y el estudiante lee el texto.
+3. **Control positivo obligatorio**: la sonda debe encontrar el defecto en la versión anterior. Medido aquí: **5-8/400 antes, 0/400 después**. Un cero sin control positivo no distingue «limpio» de «sonda ciega» — es el mismo criterio que fijó la regla #22 §P7 para las baterías.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-08-22 | `tasa_caminata_velocidad_maxima_..._n4_schoice_v1.Rmd` | predicado por identidad con la clave; distractor con horizonte alternativo | precondición por regiones + predicado por solidez con `horizonte` declarado | 11/400 → **0/600** segundas claves |
+
+### 📚 Referencias
+
+- **Lo introdujo una pasada de diagnosticidad**: es el caso que la regla #22 §P7-D nombra —*perseguir la diagnosticidad produjo el único defecto de corrección*— ocurrido por segunda vez y en otro ejercicio. Corolario operativo: **tras cada mejora de diagnosticidad, re-verificar la corrección**, y hacerlo **antes** que la diagnosticidad en el orden de comprobación.
+- Regla #9 (detractor obligatorio): lo encontró un detractor independiente, no el arsenal automático ni la auditoría propia. Es la clase de hallazgo que depende de una mirada externa.
+- Error 34 — la ceguera gemela, un piso más arriba: la batería que mira las opciones por separado.
+- Errores 29 y 32 — la misma familia: un fix que desplaza el defecto a un canal que nadie sondeaba.
+
+---
+
+## Error 34: La batería de eliminación mira las opciones POR SEPARADO y no ve las relaciones entre pares
+
+### ❌ Síntoma
+
+La batería §P7 declara las seis familias «CON SONDA», su veredicto es `NO_CONCLUYENTE` o `PASS`, y sin embargo el ítem se resuelve con una regla trivial que ninguna de sus reglas expresa.
+
+Caso medido (`tasa-caminata-velocidad-maxima-n4`, 2026-08-22): 25 reglas en verde y un canal de **+20,6 pp** —«hay dos opciones que citan los mismos números, elige una de las dos»— acertando el 45,6 % frente al 25 % de azar.
+
+### 🔍 Causa Raíz
+
+Todas las reglas habituales son **funciones de cada opción por separado**: `which.max`, `which.min`, «única que…», «la de más cifras». Ninguna es **función del conjunto**. El canal vivía justo ahí: la clave y el distractor que invierte el sentido de su misma cota citan **el mismo conjunto de numerales** —por construcción, porque es la misma cota— y ninguna otra opción coincide.
+
+Es la tercera repetición de la misma lección en un solo ejercicio: faltó «menor primer número» en `magnitud`, faltó «dos cotas» en `formato`, y faltaba **la familia relacional entera**. *Una batería incompleta no mide «sin señal», mide **sin sonda**.*
+
+### ✅ Solución Verificada
+
+Añadir al menos una regla **relacional** a la batería propia:
+
+```r
+nueva_regla("par que cita los MISMOS numerales", "formato",
+            function(o) { cj <- vapply(o, function(t) paste(sort(unique(gsub("[.,]", "",
+                            regmatches(t, gregexpr("[0-9][0-9.,]*", t))[[1]]))), collapse = "|"), "")
+              tb <- table(cj); g <- names(tb)[tb >= 2L]
+              if (!length(g)) return(NA); cj %in% g })
+```
+
+### ⚖️ Y antes de perseguirlo: medir la regla sobre la INSTANCIA CANÓNICA
+
+Dato que cambió el veredicto en el caso medido, y que conviene obtener **antes** de gastar una pasada:
+
+| Regla | Ítem OFICIAL (canónica, enumeración exacta) | Versiones generadas |
+|---|---|---|
+| «elige la única que calcula una cota» | **resuelve el ítem** | 31,1 % (+6,1 pp) |
+| «elige del par con los mismos numerales» | falla (el par no contiene la clave) | 41,5 % (+16,5 pp) |
+
+Si el ítem oficial tiene el canal **más fuerte** que la versión generada, perseguirlo es exigirle al ejercicio más que al examen real (§P7-A). La instancia canónica es **determinista**, así que su medición es **enumeración exacta**, no una tasa con `n` pequeño: no le aplica el mínimo de 20 de la regla #23.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-08-22 | `tasa_caminata_velocidad_maxima_..._n4_schoice_v1.Rmd` | batería sin familia relacional | sonda de pares cableada + ampliación del pool | +20,6 → +14,7 pp; residuo cerrado por **override** declarado |
+
+### 📚 Referencias
+
+- Regla #22 §P7-E — la exigencia permanente que nace de este caso.
+- Error 33 — la ceguera gemela un piso más abajo (el predicado de unicidad).
+- Regla #24 H-5 — cerrar con un canal medido por encima del corte es un **override**, y relajar nunca es autónomo: debe quedar por escrito.
