@@ -17,8 +17,13 @@ local({
 # desde fuente y la instalacion de 'fs' moria con "fatal error: uv.h: No such
 # file or directory", arrastrando a pkgload, rmarkdown, exams y testthat.
 local({
+  # r-lib/actions/setup-r NO llama a options(repos): solo exporta RSPM al
+  # entorno. Si esa variable esta, mandan los binarios precompilados.
+  rspm <- Sys.getenv("RSPM")
   cran <- getOption("repos")[["CRAN"]]
-  if (is.null(cran) || !nzchar(cran) || identical(cran, "@CRAN@")) {
+  if (nzchar(rspm)) {
+    options(repos = c(CRAN = rspm))
+  } else if (is.null(cran) || !nzchar(cran) || identical(cran, "@CRAN@")) {
     options(repos = c(CRAN = "https://cran.r-project.org"))
   }
 })
