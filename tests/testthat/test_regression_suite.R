@@ -304,17 +304,21 @@ test_that("Ciclo de validación completo funciona end-to-end", {
 
   expect_true(fase2a, info = "FASE 2A (validación matemática) falló")
 
-  # FASE 2B: Preview visual (verificar que magick está disponible)
-  magick_disponible <- tryCatch({
-    system2("magick", "--version", stdout = FALSE, stderr = FALSE)
-    TRUE
-  }, error = function(e) FALSE)
+  # FASE 2B: Preview visual (verificar que ImageMagick está disponible)
+  # system2() NO lanza error si el binario no existe: devuelve 127 con un warning,
+  # asi que el tryCatch anterior daba "disponible" siempre y el test caia despues
+  # con "error in running command". Ademas, ImageMagick 7 instala "magick" y el 6
+  # -- el de Ubuntu 24.04, donde corre el CI -- instala "convert".
+  magick_bin <- Sys.which(c("magick", "convert"))
+  magick_bin <- magick_bin[nzchar(magick_bin)]
+  magick_disponible <- length(magick_bin) > 0
+  if (magick_disponible) magick_bin <- unname(magick_bin[1])
 
   if (magick_disponible && fase1_pdf) {
     fase2b <- tryCatch({
       pdf_path <- file.path(temp_dir, "ciclo_pdf1.pdf")
       png_path <- file.path(temp_dir, "ciclo_preview.png")
-      system2("magick", c("-density", "150", pdf_path, "-quality", "90", png_path),
+      system2(magick_bin, c("-density", "150", pdf_path, "-quality", "90", png_path),
               stdout = FALSE, stderr = FALSE)
       file.exists(png_path)
     }, error = function(e) FALSE)

@@ -38,6 +38,7 @@ jobs:
           texlive-pictures \
           pandoc \
           imagemagick \
+          libmagick++-dev \
           ghostscript \
           poppler-utils \
           python3-numpy \
@@ -61,7 +62,9 @@ jobs:
           # Requeridos por las suites de graficos y por los .Rmd con Python:
           # su ausencia dejaba en rojo a "Distintividad Visual" (ggplot2) y a
           # "CLOZE N3 (Trigonometria)" (reticulate).
-          "ggplot2", "png", "reticulate"
+          "ggplot2", "png", "reticulate",
+          # Usados por los .Rmd que renderizan las suites de regresion y CLOZE N3.
+          "dplyr", "magick"
         ))
       shell: Rscript {0}
 
