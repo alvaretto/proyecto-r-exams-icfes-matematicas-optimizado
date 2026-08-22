@@ -113,6 +113,23 @@ jobs:
         }
         EOF
         Rscript /tmp/probe_tikz.R 2>&1 | tail -80
+        echo "--- exams2pdf del ejercicio Media-Mediana-Moda, con log de LaTeX ---"
+        EX="$(find A-Produccion -name 'Media-Mediana-Moda.Rmd' -print -quit)"
+        if [ -n "$EX" ]; then
+          rm -rf /tmp/exmmm && mkdir -p /tmp/exmmm
+          cp -r "$(dirname "$EX")"/. /tmp/exmmm/
+          cat > /tmp/probe_pdf.R <<'EOF'
+        options(tinytex.verbose = TRUE)
+        r <- tryCatch(
+          exams::exams2pdf("/tmp/exmmm/Media-Mediana-Moda.Rmd", n = 1,
+                           dir = "/tmp/exmmm_out", name = "probe_mmm"),
+          error = function(e) paste("ERROR:", conditionMessage(e)))
+        cat("resultado:", class(r)[1], "\n")
+        EOF
+          Rscript /tmp/probe_pdf.R 2>&1 | tail -60
+        else
+          echo "no se encontro el .Rmd"
+        fi
 
     - name: Run full test suite
       run: Rscript tests/run_all_tests.R
