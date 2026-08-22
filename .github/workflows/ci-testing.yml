@@ -26,6 +26,17 @@ jobs:
       with:
         r-version: '4.3.0'
 
+    - name: Setup Pandoc
+      # Ubuntu 24.04 trae pandoc ~3.1.3, que para cada seccion emite
+      # \hypertarget{...}{%. La plantilla de exams no carga hyperref, asi que esa
+      # macro queda indefinida y exams2pdf muere con "Undefined control sequence"
+      # justo en {anuxe1lisis-del-error-parte-1}. Pandoc >= 3.6 emite
+      # \subsection{...}\label{...}, que no necesita hyperref: es lo que hace que
+      # el mismo ejercicio compile sin problemas en la maquina de desarrollo.
+      uses: r-lib/actions/setup-pandoc@v2
+      with:
+        pandoc-version: '3.6.1'
+
     - name: Install system dependencies
       run: |
         sudo apt-get update
@@ -36,7 +47,7 @@ jobs:
           texlive-latex-extra \
           texlive-latex-recommended \
           texlive-pictures \
-          pandoc \
+          texlive-extra-utils \
           imagemagick \
           libmagick++-dev \
           ghostscript \
