@@ -72,9 +72,14 @@ jobs:
         # .sty dentro del arbol texmf del sistema; aqui setup-r instala R bajo
         # /opt/R/<version>, cuyo texmf LaTeX no conoce -> "File `Sweave.sty' not
         # found" y las suites con include_tikz() caen en bloque.
-        SWEAVE="$(find "$(Rscript -e 'cat(R.home())')" -name Sweave.sty -print -quit)"
+        # Ojo: "Rscript -e" arrastra todo lo que el .Rprofile del repo imprime al
+        # arrancar, asi que sustituirlo dentro de $(...) devuelve esa parrafada
+        # ademas de la ruta. "R RHOME" no carga perfiles.
+        R_HOME_DIR="$(R RHOME)"
+        echo "R.home(): $R_HOME_DIR"
+        SWEAVE="$(find "$R_HOME_DIR" -name Sweave.sty -print -quit)"
         if [ -z "$SWEAVE" ]; then
-          echo "::error::No se encontro Sweave.sty bajo $(Rscript -e 'cat(R.home())')"
+          echo "::error::No se encontro Sweave.sty bajo $R_HOME_DIR"
           exit 1
         fi
         echo "Sweave.sty: $SWEAVE"
