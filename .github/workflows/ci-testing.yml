@@ -35,13 +35,19 @@ jobs:
           texlive-fonts-extra \
           texlive-latex-extra \
           pandoc \
-          imagemagick
+          imagemagick \
+          python3-numpy \
+          python3-matplotlib
 
     - name: Install R dependencies
       run: |
         install.packages(c(
           "exams", "testthat", "knitr", "rmarkdown", "tinytex",
-          "jsonlite", "digest", "stringr", "xml2"
+          "jsonlite", "digest", "stringr", "xml2",
+          # Requeridos por las suites de graficos y por los .Rmd con Python:
+          # su ausencia dejaba en rojo a "Distintividad Visual" (ggplot2) y a
+          # "CLOZE N3 (Trigonometria)" (reticulate).
+          "ggplot2", "png", "reticulate"
         ))
       shell: Rscript {0}
 

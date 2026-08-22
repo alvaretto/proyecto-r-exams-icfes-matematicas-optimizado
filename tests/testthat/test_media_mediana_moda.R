@@ -20,7 +20,9 @@ EX_REL <- file.path(
   "Calificaciones-Universitarias",
   "Media-Mediana-Moda.Rmd"
 )
-EX_PATH <- normalizePath(file.path("..", "..", EX_REL), winslash = "/", mustWork = TRUE)
+# Ruta corta: la tematica real supera los 255 bytes al aplanarla xexams.
+# Ver ex_path_corto() en helper-repo-paths.R.
+EX_PATH <- ex_path_corto(EX_REL)
 
 # Helper: generar 1 instancia con xexams
 .gen_one <- function(seed = NULL) {

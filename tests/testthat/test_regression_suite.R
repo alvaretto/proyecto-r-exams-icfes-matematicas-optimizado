@@ -6,7 +6,7 @@ library(exams)
 
 test_that("Ejemplos funcionales de referencia continúan renderizando", {
   # Obtener ejemplos funcionales de referencia
-  ejemplos_dir <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd"
+  ejemplos_dir <- repo_path("A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd")
 
   # Verificar que el directorio existe
   skip_if_not(dir.exists(ejemplos_dir), "Directorio de ejemplos no encontrado")
@@ -41,7 +41,7 @@ test_that("Ejemplos funcionales de referencia continúan renderizando", {
 
 test_that("Script de validación matemática mantiene compatibilidad", {
   # Verificar que el script de validación no ha cambiado su interfaz
-  script_path <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R"
+  script_path <- repo_path(".claude/scripts/validar_coherencia_matematica.R")
 
   expect_true(file.exists(script_path),
               info = "Script de validación matemática no encontrado")
@@ -60,7 +60,7 @@ test_that("Script de validación matemática mantiene compatibilidad", {
 })
 
 test_that("Script de ortografía mantiene compatibilidad", {
-  script_path <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/corregir_ortografia_espanol.R"
+  script_path <- repo_path(".claude/scripts/corregir_ortografia_espanol.R")
 
   expect_true(file.exists(script_path),
               info = "Script de ortografía no encontrado")
@@ -92,7 +92,7 @@ test_that("Script de ortografía mantiene compatibilidad", {
 })
 
 test_that("Hook post-exams2-validation mantiene funcionalidad", {
-  hook_path <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/hooks/post-exams2-validation.sh"
+  hook_path <- repo_path(".claude/hooks/post-exams2-validation.sh")
 
   expect_true(file.exists(hook_path),
               info = "Hook post-exams2-validation no encontrado")
@@ -297,7 +297,7 @@ test_that("Ciclo de validación completo funciona end-to-end", {
 
   # FASE 2A: Validación matemática (simulada)
   fase2a <- tryCatch({
-    source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R",
+    source(repo_path(".claude/scripts/validar_coherencia_matematica.R"),
            local = TRUE)
     TRUE
   }, error = function(e) FALSE)
