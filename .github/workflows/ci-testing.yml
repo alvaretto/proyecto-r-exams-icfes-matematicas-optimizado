@@ -34,10 +34,33 @@ jobs:
           texlive-fonts-recommended \
           texlive-fonts-extra \
           texlive-latex-extra \
+          texlive-latex-recommended \
+          texlive-pictures \
           pandoc \
           imagemagick \
+          ghostscript \
+          poppler-utils \
           python3-numpy \
           python3-matplotlib
+        # exams::include_tikz() compila con tikz/colortbl/xcolor y convierte el
+        # PDF resultante a imagen. Sin texlive-pictures no hay tikz.sty, y la
+        # politica por defecto de ImageMagick en Ubuntu prohibe leer PDF, lo que
+        # rompe esa conversion aunque LaTeX haya compilado bien.
+        for pol in /etc/ImageMagick-6/policy.xml /etc/ImageMagick-7/policy.xml; do
+          if [ -f "$pol" ]; then
+            sudo sed -i 's|<policy domain="coder" rights="none" pattern="PDF" */>|<policy domain="coder" rights="read\|write" pattern="PDF" />|' "$pol"
+          fi
+        done
+
+    - name: Diagnostico LaTeX (no bloqueante)
+      run: |
+        echo "--- .sty requeridos por include_tikz ---"
+        for sty in tikz colortbl xcolor standalone preview; do
+          printf '%-12s %s\n' "$sty" "$(kpsewhich $sty.sty || echo AUSENTE)"
+        done
+        echo "--- politica PDF de ImageMagick ---"
+        (convert -list policy 2>/dev/null | grep -A2 -i pdf || echo "sin politica PDF explicita")
+      continue-on-error: true
 
     - name: Install R dependencies
       run: |
