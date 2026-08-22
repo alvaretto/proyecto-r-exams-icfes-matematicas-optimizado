@@ -99,48 +99,19 @@ jobs:
         echo "Sweave.sty: $SWEAVE"
         echo "TEXINPUTS=.:$(dirname "$SWEAVE")//:" >> "$GITHUB_ENV"
 
-    - name: Diagnostico LaTeX (no bloqueante)
+    - name: Diagnostico del entorno LaTeX (no bloqueante)
       continue-on-error: true
       run: |
-        echo "--- .sty requeridos por include_tikz ---"
-        for sty in tikz colortbl xcolor standalone preview; do
+        # Deja en el log de que dispone el runner. Los fallos historicos de esta
+        # suite venian de cosas que la maquina de desarrollo tenia y el runner no
+        # (Sweave.sty, tikz, pdfcrop, la version de pandoc); tenerlo a la vista
+        # ahorra un ciclo entero de diagnostico si vuelve a pasar.
+        pandoc --version | head -1
+        for sty in Sweave tikz colortbl xcolor standalone; do
           printf '%-12s %s\n' "$sty" "$(kpsewhich $sty.sty || echo AUSENTE)"
         done
-        echo "--- politica PDF de ImageMagick ---"
-        (convert -list policy 2>/dev/null | grep -A2 -i pdf || echo "sin politica PDF explicita")
-        echo "--- reproduccion minima de include_tikz, con log de LaTeX ---"
-        cat > /tmp/probe_tikz.R <<'EOF'
-        options(tinytex.verbose = TRUE)
-        tikz <- "\\begin{tikzpicture}\\draw (0,0) -- (1,1);\\end{tikzpicture}"
-        for (fmt in c("pdf", "png")) {
-          cat("\n### format =", fmt, "\n")
-          r <- tryCatch(
-            exams::include_tikz(tikz, name = paste0("probe_", fmt),
-                                markup = "markdown", format = fmt,
-                                packages = c("tikz", "colortbl", "xcolor"),
-                                width = "3cm"),
-            error = function(e) paste("ERROR:", conditionMessage(e)))
-          cat(r, "\n")
-        }
-        EOF
-        Rscript /tmp/probe_tikz.R 2>&1 | tail -80
-        echo "--- exams2pdf del ejercicio Media-Mediana-Moda, con log de LaTeX ---"
-        EX="$(find A-Produccion -name 'Media-Mediana-Moda.Rmd' -print -quit)"
-        if [ -n "$EX" ]; then
-          rm -rf /tmp/exmmm && mkdir -p /tmp/exmmm
-          cp -r "$(dirname "$EX")"/. /tmp/exmmm/
-          cat > /tmp/probe_pdf.R <<'EOF'
-        options(tinytex.verbose = TRUE)
-        r <- tryCatch(
-          exams::exams2pdf("/tmp/exmmm/Media-Mediana-Moda.Rmd", n = 1,
-                           dir = "/tmp/exmmm_out", name = "probe_mmm"),
-          error = function(e) paste("ERROR:", conditionMessage(e)))
-        cat("resultado:", class(r)[1], "\n")
-        EOF
-          Rscript /tmp/probe_pdf.R 2>&1 | tail -60
-        else
-          echo "no se encontro el .Rmd"
-        fi
+        printf '%-12s %s\n' pdfcrop "$(command -v pdfcrop || echo AUSENTE)"
+        printf '%-12s %s\n' imagemagick "$(command -v magick || command -v convert || echo AUSENTE)"
 
     - name: Run full test suite
       run: Rscript tests/run_all_tests.R
