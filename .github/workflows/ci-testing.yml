@@ -65,6 +65,21 @@ jobs:
         ))
       shell: Rscript {0}
 
+    - name: Registrar el texmf de R en TEXINPUTS
+      run: |
+        # exams compila sus .tex con \usepackage{Sweave}, y Sweave.sty lo aporta
+        # la instalacion de R, no texlive. En una distro el paquete de R deja ese
+        # .sty dentro del arbol texmf del sistema; aqui setup-r instala R bajo
+        # /opt/R/<version>, cuyo texmf LaTeX no conoce -> "File `Sweave.sty' not
+        # found" y las suites con include_tikz() caen en bloque.
+        SWEAVE="$(find "$(Rscript -e 'cat(R.home())')" -name Sweave.sty -print -quit)"
+        if [ -z "$SWEAVE" ]; then
+          echo "::error::No se encontro Sweave.sty bajo $(Rscript -e 'cat(R.home())')"
+          exit 1
+        fi
+        echo "Sweave.sty: $SWEAVE"
+        echo "TEXINPUTS=.:$(dirname "$SWEAVE")//:" >> "$GITHUB_ENV"
+
     - name: Diagnostico LaTeX (no bloqueante)
       continue-on-error: true
       run: |
