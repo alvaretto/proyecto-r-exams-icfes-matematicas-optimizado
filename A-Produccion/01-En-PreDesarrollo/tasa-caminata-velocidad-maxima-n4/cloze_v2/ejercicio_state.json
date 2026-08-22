@@ -1,0 +1,65 @@
+{
+  "version": "2.0",
+  "ejercicio": "tasa_caminata_velocidad_maxima_numerico_variacional_argumentacion_n4_cloze_v2",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-08-22T15:44:33.659899-05:00",
+  "timestamp_ultima_actualizacion": "2026-08-22T16:52:02.260626-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-22T15:51:14.852941-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-08-22T15:51:15.267186-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:30:04-05:00",
+      "archivo": "tasa_caminata_velocidad_maxima_numerico_variacional_argumentacion_n4_cloze_v2.Rmd",
+      "nota": "mtime del .Rmd tras la pasada (pool P4 6->9 + predicado de solidez)"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-08-22T15:51:14.966600-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:31:33-05:00",
+      "nota": "mtime de salida/moodlequiz.xml; 5/5 formatos, NOPS N/A"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:33:10-05:00",
+      "nota": "coherencia APROBADO + multisemilla 100/100 + glifos exit 0"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:52:00-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "nota": "Detractor independiente, sin name:, sobre md5 ac35e809. 5 objeciones (0 criticas, 0 altas). O1 y O2 APLICADAS (neutrales en medicion, re-verificado). O3/O4 aplicadas al reporte. O5 nota para pasada 3. md5 vigente 67b6500b: los cambios prescritos NO estan re-auditados por un tercero."
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:34:20-05:00",
+      "nota": "V1-V9 + inspeccion visual del PDF (2 escenarios) + pandoc 3.8.3 de RStudio"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:32:05-05:00",
+      "versiones_unicas": 300,
+      "nota": "V8 6/6 gaps + unicidad 300/300"
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:34:50-05:00",
+      "nota": "V1-V9 + canonica H-3 verbatim 0 divergencias"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-08-22T16:52:02.260626-05:00"
+    }
+  }
+}

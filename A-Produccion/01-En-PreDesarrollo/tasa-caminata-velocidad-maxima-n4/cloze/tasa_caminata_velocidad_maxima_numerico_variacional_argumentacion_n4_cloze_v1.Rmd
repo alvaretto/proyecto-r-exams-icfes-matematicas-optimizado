@@ -1,0 +1,1187 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+library(exams)
+
+## ============================================================================
+## tasa_caminata_velocidad_maxima — CLOZE Nivel 4, competencia Argumentación
+## Variante CLOZE de `..._n4_schoice_v1.Rmd` (mismo directorio padre).
+## Derivado de MAT-2026-1-047 (ERA-2026 Sesión 2, pregunta IMPRESA 47; ítem
+## verbatim de la pregunta 133 del cuadernillo Matemáticas 2026-1).
+##
+## GATE VISUAL HERMES (regla #24) re-ejecutado sobre `pagina_014.jpg` para esta
+## variante, no heredado del hermano:
+##   H-4 — el número IMPRESO es 47 (el folio impreso de la página es 19).
+##   H-1 — la pregunta 47 NO CONTIENE FIGURA: es texto puro. La única tabla de
+##         esa página (calificaciones de Raúl) pertenece a la pregunta 48.
+##   H-2 — screening de trampa deliberada NEGATIVO (ninguno de los 7 patrones).
+##   H-3 — enunciado, pregunta y las 4 opciones de la Parte 5 verificados
+##         carácter a carácter contra el escaneo, incluida la coma
+##         idiosincrásica de la opción C y "la decisión DE LA suspensión".
+##   => flujo_b.requerido = FALSE, justificado por lo VISTO.
+##
+## NÚCLEO MATEMÁTICO: "más de `tasa` minutos por kilómetro" es una cota
+## SUPERIOR de velocidad: v < 60/tasa km/h, y por tanto en H horas se recorren
+## menos de (60/tasa)*H km.
+##
+## PROGRESSIVE DISCLOSURE (6 partes, V4):
+##   P1 schoice  IDENTIFICAR  qué tipo de cota fija el criterio (techo/piso)
+##   P2 num      CALCULAR     la cota de velocidad
+##   P3 num      CALCULAR     la cota de distancia en el horizonte
+##   P4 schoice  EVALUAR      qué se concluye al comparar con lo reportado
+##   P5 schoice  ARGUMENTAR   el ítem oficial: qué argumento sustenta la decisión
+##   P6 mchoice  TRANSFERIR   propiedades del razonamiento con cotas
+## ============================================================================
+
+## --- helpers inline (regla #21: el .Rmd debe ser AUTO-CONTENIDO) ------------
+fmt <- function(x) formatC(as.numeric(x), format = "f", digits = 0,
+                           big.mark = ".", decimal.mark = ",")
+
+## Familia 5: PROHIBIDO sample(x, k) cuando length(x) puede colapsar a 1.
+tomar <- function(x, k) {
+  if (length(x) == 0L) stop("tomar(): vector vacío o NULL")
+  x[sample.int(length(x), k)]
+}
+
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+
+## Familia 3: ecuación display responsiva (el fenced div lo descarta LaTeX).
+eq_display <- function(tex) {
+  paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
+         "$$", tex, "$$\n\n:::\n")
+}
+
+## Familia 2: tabla Markdown nativa dentro de fenced div (sobrevive a los 5
+## formatos). Exige el guard \newcounter{none} al inicio de Question (regla #20).
+tabla_responsiva <- function(df, align = NULL) {
+  df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE,
+                    check.names = FALSE)
+  md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+  paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
+         md, "\n\n:::\n")
+}
+
+## ============================================================================
+## 1. PARÁMETROS  (regla #22: TODO lo que determina una clave se aleatoriza)
+## ============================================================================
+TASAS <- c(6L, 10L, 12L, 15L)   # minutos por kilómetro; 60 %% tasa == 0
+
+HORIZONTES <- list(
+  list(h = 12L, corta = "12 horas", en = "en 12 horas", en2 = "en 12 horas", dur = "una jornada de 12 horas"),
+  list(h = 18L, corta = "18 horas", en = "en 18 horas", en2 = "en 18 horas", dur = "una jornada de 18 horas"),
+  list(h = 24L, corta = "un día",   en = "al día",      en2 = "en un día",   dur = "un día"),
+  list(h = 36L, corta = "36 horas", en = "en 36 horas", en2 = "en 36 horas", dur = "día y medio"),
+  list(h = 48L, corta = "dos días", en = "en dos días", en2 = "en dos días", dur = "dos días")
+)
+
+## Instancia canónica: reproduce MAT-2026-1-047 VERBATIM (trazabilidad).
+is_canonical <- (sample.int(25L, 1L) == 1L)
+
+if (is_canonical) {
+  tasa <- 6L
+  hz   <- HORIZONTES[[3L]]
+  excede <- TRUE
+} else {
+  tasa <- tomar(TASAS, 1L)
+  hz   <- HORIZONTES[[sample.int(length(HORIZONTES), 1L)]]
+  ## §P4-bis: si la afirmación evaluada fuera SIEMPRE falsa, el veredicto de la
+  ## clave de las Partes 4 y 5 sería invariante y el estudiante acertaría sin leer.
+  excede <- sample(c(TRUE, FALSE), 1L)
+}
+
+H    <- hz$h
+vel  <- 60L %/% tasa                 # km/h — cota ESTRICTA de velocidad
+cota <- vel * H                      # km  — cota ESTRICTA de distancia
+stopifnot(60L %% tasa == 0L, vel * tasa == 60L, cota == vel * H)
+
+if (is_canonical) {
+  reporte <- 300L
+} else if (excede) {
+  reporte <- cota + 10L * pick_int(1L, max(1L, as.integer(0.8 * cota) %/% 10L))
+} else {
+  reporte <- cota - 10L * pick_int(1L, max(1L, as.integer(0.45 * cota) %/% 10L))
+}
+
+## ---------------------------------------------------------------------------
+## VERIFICACIÓN DE CORRECCIÓN DE LAS CLAVES. En CLOZE hay SEIS claves, una por
+## gap, así que hay seis frentes donde una clave puede volverse falsa. Este
+## bloque fija los invariantes de los que dependen todas.
+## ---------------------------------------------------------------------------
+stopifnot(reporte > 0L, reporte != cota, identical(excede, reporte > cota))
+
+## ============================================================================
+## 2. POOL DE ERRORES CONCEPTUALES DE LA PARTE 5  (regla #1: mínimo 4-6; aquí 11)
+##    Heredado íntegro del SCHOICE hermano, incluida la maquinaria que le costó
+##    ocho pasadas de FASE 2C. Los campos `horizonte` y `precondición` por
+##    REGIONES de NUM-TAS-08 NO se simplifican: son la defensa contra la SEGUNDA
+##    CLAVE del Error 33.
+##    `cota_km`  : cota en km que la opción AFIRMA (NA si no calcula ninguna)
+##    `sentido`  : "superior" | "inferior" | NA — dirección de la desigualdad
+##    `veredicto`: TRUE si la opción concluye "no pudo hacerse a pie"
+## ============================================================================
+errores_conceptuales <- list(
+
+  list(codigo = "NUM-TAS-01",
+       nombre = "Inversión del sentido de la desigualdad",
+       cuantitativo = FALSE,
+       abre = "tasa",
+       descripcion_corta = "lee \"más de\" como \"apenas\" y concluye que se podría recorrer todavía más",
+       causa_raiz = paste("Trata la cota superior de velocidad como si fuera un rendimiento",
+                          "garantizado. Al pasar de minutos por kilómetro a kilómetros por hora,",
+                          "invierte el sentido de la desigualdad: \"más tiempo por kilómetro\"",
+                          "significa MENOS velocidad, no más."),
+       cota_km = function(M) NA_real_,
+       sentido = NA_character_,
+       veredicto = function(M) TRUE,
+       precondicion = function(M) TRUE,
+       texto = function(M) if (isTRUE(M$canon)) paste0(
+         "Lo dicho implica que ", M$actor, " debe reportar mayor distancia porque un kilómetro se cubre ",
+         "en apenas ", M$tasa, " minutos; un recorrido así, corresponde entonces a un medio motorizado.")
+       else paste0(
+         "Lo dicho implica que ", M$actor, " debe reportar mayor distancia porque un kilómetro se cubre ",
+         "en apenas ", M$tasa, " minutos: en ", M$H, " horas podría recorrer todavía más de los ",
+         fmt(M$R), " kilómetros que registró, y un recorrido así corresponde entonces a un medio motorizado.")),
+
+  list(codigo = "NUM-TAS-02",
+       nombre = "Juicio subjetivo en lugar de cota calculada",
+       cuantitativo = FALSE,
+       abre = "R",
+       descripcion_corta = "admite la cifra como alcanzable y la descarta por \"increíble\", sin calcular nada",
+       causa_raiz = paste("Sustituye el criterio cuantitativo por una impresión personal.",
+                          "\"Increíble\" no es verificable con los datos del enunciado; la tasa",
+                          "citada sí permite calcular una cota y contrastarla."),
+       cota_km = function(M) NA_real_,
+       sentido = NA_character_,
+       veredicto = function(M) TRUE,
+       precondicion = function(M) M$R >= 0.75 * M$cota,
+       texto = function(M) if (isTRUE(M$canon)) paste0(
+         "Lo dicho implica que ", fmt(M$R), " kilómetros ", M$en2, " son posibles pero requieren ",
+         "caminar sin descanso y eso es increíble para una persona.")
+       else paste0(
+         "Lo dicho implica que ", fmt(M$R), " kilómetros en ", M$H, " horas, a más de ", M$tasa,
+         " minutos por kilómetro, son posibles pero requieren caminar sin descanso y eso es ",
+         "increíble para una persona.")),
+
+  list(codigo = "NUM-TAS-03",
+       nombre = "El dato se declara irrelevante",
+       cuantitativo = FALSE,
+       abre = "R",
+       descripcion_corta = "niega que la tasa citada tenga relación con la distancia reportada",
+       causa_raiz = paste("No reconoce que una tasa unitaria y un horizonte temporal bastan para",
+                          "acotar la distancia. Descartar el dato como \"mensaje automático\"",
+                          "renuncia al único criterio verificable disponible."),
+       cota_km = function(M) NA_real_,
+       sentido = NA_character_,
+       veredicto = function(M) FALSE,
+       precondicion = function(M) TRUE,
+       texto = function(M) if (isTRUE(M$canon)) paste0(
+         "Lo dicho implica una falta de relación con los ", fmt(M$R), " kilómetros reportados por ",
+         M$actor, " y es solo un mensaje automático ", M$sistema, ".")
+       else paste0(
+         "Lo dicho implica que los ", M$tasa, " minutos por kilómetro no tienen relación con los ",
+         fmt(M$R), " kilómetros que ", M$actor, " reportó en ", M$H,
+         " horas: es solo un mensaje automático ", M$sistema, ".")),
+
+  list(codigo = "NUM-TAS-04",
+       nombre = "Confusión de unidades: minutos por kilómetro leídos como kilómetros por hora",
+       cuantitativo = TRUE,
+       abre = "tasa",
+       descripcion_corta = "toma el número de minutos por kilómetro como si fuera la velocidad en km/h",
+       causa_raiz = paste("Copia el número de la tasa sin convertirlo. Minutos por kilómetro y",
+                          "kilómetros por hora son magnitudes INVERSAS: una crece cuando la otra",
+                          "decrece, y pasar de una a otra exige dividir 60 entre la tasa."),
+       cota_km = function(M) as.numeric(M$tasa * M$H),
+       sentido = "superior",
+       veredicto = function(M) M$R > M$tasa * M$H,
+       precondicion = function(M) (M$R > M$tasa * M$H) != (M$R > M$cota),
+       texto = function(M) paste0(
+         if (M$av[4L] == 1L) paste0(
+           "Lo dicho implica que la velocidad máxima es de ", M$tasa, " kilómetros por hora y hasta ",
+           fmt(M$tasa * M$H), " kilómetros ", M$en)
+         else if (M$av[4L] == 2L) paste0(
+           "Lo dicho implica que en cada hora se avanzan ", M$tasa, " kilómetros y que ", M$en,
+           " se llega hasta ", fmt(M$tasa * M$H), " kilómetros")
+         else paste0(
+           "Lo dicho implica que se recorren ", M$tasa, " kilómetros en cada hora y hasta ",
+           fmt(M$tasa * M$H), " kilómetros ", M$en),
+         "; los ", fmt(M$R), " kilómetros reportados ",
+         if (M$R > M$tasa * M$H) M$tT[4L] else M$tF[4L])),
+
+  list(codigo = "NUM-TAS-05",
+       nombre = "La cota superior usada como cota inferior",
+       cuantitativo = TRUE,
+       abre = "vel",
+       descripcion_corta = "convierte \"menos de\" en \"al menos\" y da la distancia por alcanzable",
+       causa_raiz = paste("Calcula bien la velocidad pero le cambia el sentido: la tasa fija un",
+                          "TECHO, no un piso. Con la desigualdad invertida, cualquier distancia",
+                          "parece alcanzable y el criterio deja de servir para descartar nada."),
+       cota_km = function(M) as.numeric(M$cota),
+       sentido = "inferior",
+       veredicto = function(M) FALSE,
+       precondicion = function(M) TRUE,
+       texto = function(M) paste0(
+         if (M$av[5L] == 1L) paste0(
+           "Lo dicho implica que la velocidad máxima es de al menos ", M$vel,
+           " kilómetros por hora, nunca menos de esa cifra, y más de ", fmt(M$cota),
+           " kilómetros ", M$en)
+         else if (M$av[5L] == 2L) paste0(
+           "Lo dicho implica que en cada hora se avanzan al menos ", M$vel,
+           " kilómetros, nunca menos de esa cifra, y que ", M$en, " se recorren más de ",
+           fmt(M$cota), " kilómetros")
+         else paste0(
+           "Lo dicho implica que se recorren al menos ", M$vel,
+           " kilómetros en cada hora, nunca menos de esa cifra, y más de ",
+           fmt(M$cota), " kilómetros ", M$en),
+         "; los ", fmt(M$R), " kilómetros reportados ", M$tF5)),
+
+  list(codigo = "NUM-TAS-06",
+       nombre = "Omisión del horizonte temporal",
+       cuantitativo = TRUE,
+       abre = "vel",
+       descripcion_corta = "compara la distancia reportada contra la velocidad, sin multiplicar por las horas",
+       causa_raiz = paste("Confunde una velocidad (kilómetros POR HORA) con una distancia total.",
+                          "Comparar kilómetros contra kilómetros por hora es comparar magnitudes",
+                          "de distinta naturaleza: falta multiplicar por el número de horas."),
+       cota_km = function(M) NA_real_,
+       sentido = NA_character_,
+       veredicto = function(M) TRUE,
+       precondicion = function(M) M$R >= 3L * M$vel,
+       texto = function(M) paste0(
+         abre_vel_frase(M$vel, M$av[6L]),
+         ", es decir menos de un kilómetro cada ", M$tasa,
+         " minutos; los ", fmt(M$R), " kilómetros reportados ", M$tT[6L])),
+
+  list(codigo = "NUM-TAS-07",
+       nombre = "Minutos contados como horas",
+       cuantitativo = TRUE,
+       abre = "tasa",
+       descripcion_corta = "multiplica distancia por tasa y llama horas al resultado, que está en minutos",
+       causa_raiz = paste("El producto distancia por minutos-por-kilómetro da MINUTOS. Leerlo como",
+                          "horas infla el tiempo necesario sesenta veces y hace \"imposible\"",
+                          "cualquier recorrido, incluso uno perfectamente compatible con la cota."),
+       cota_km = function(M) NA_real_,
+       sentido = NA_character_,
+       veredicto = function(M) TRUE,
+       precondicion = function(M) M$R * M$tasa > M$H,
+       texto = function(M) paste0(
+         "Lo dicho implica que, a no menos de ", M$tasa, " minutos por kilómetro y con esa velocidad ",
+         "máxima, recorrer los ", fmt(M$R), " kilómetros reportados toma más de ",
+         fmt(M$R * M$tasa), " horas, muy por encima de las ", M$H, " horas disponibles, ",
+         M$tT7)),
+
+  list(codigo = "NUM-TAS-08",
+       nombre = "Horizonte del enunciado sustituido por un día",
+       cuantitativo = TRUE,
+       abre = "vel",
+       descripcion_corta = "convierte bien la velocidad pero la multiplica por 24 horas, y no por el tiempo que da el enunciado",
+       causa_raiz = paste("La conversión de la tasa es correcta, pero el horizonte se toma de",
+                          "memoria en lugar de leerlo: el enunciado fija un intervalo propio y",
+                          "el argumento razona sobre un día. Una cota sólo acota lo que se",
+                          "calculó sobre el tiempo realmente disponible."),
+       cota_km = function(M) as.numeric(M$vel * 24L),
+       sentido = "superior",
+       veredicto = function(M) M$R > M$vel * 24L,
+       horizonte = function(M) 24L,
+       ## ERROR 33 — SEGUNDA CLAVE. Las dos premisas de este error son VERDADERAS
+       ## (se deducen del mismo criterio que la clave; sólo cambia el horizonte) y
+       ## en dos regiones la conclusión SE SIGUE. Excluir H == 24 no basta: hay que
+       ## excluir AMBAS regiones. NO SIMPLIFICAR.
+       precondicion = function(M) M$H != 24L &&
+         (if (M$H < 24L) M$R < M$vel * 24L else M$R > M$vel * 24L),
+       texto = function(M) paste0(
+         frase_cota(M$vel, M$vel * 24L, "en un día", M$av[8L]),
+         "los ", fmt(M$R), " kilómetros reportados ",
+         if (M$R > M$vel * 24L) M$tT[8L] else M$tF[8L])),
+
+  list(codigo = "NUM-TAS-09",
+       nombre = "Premisa añadida que el enunciado no autoriza",
+       cuantitativo = TRUE,
+       abre = "vel",
+       descripcion_corta = "descuenta por su cuenta la mitad del tiempo suponiendo descansos que el criterio no menciona",
+       causa_raiz = paste("Un argumento debe sostenerse en lo que el enunciado afirma. Suponer",
+                          "que sólo se camina la mitad del tiempo puede sonar razonable, pero",
+                          "es un dato que nadie dio: la cota resultante ya no se sigue del",
+                          "criterio citado y no puede sustentar ninguna decisión sobre él."),
+       cota_km = function(M) as.numeric(M$cota %/% 2L),
+       sentido = "superior",
+       veredicto = function(M) M$R > M$cota %/% 2L,
+       precondicion = function(M) TRUE,
+       texto = function(M) paste0(
+         abre_vel_frase(M$vel, M$av[9L]),
+         ", pero como nadie camina sin detenerse hay que contar solo la mitad ",
+         "del tiempo: el tope queda en menos de ", fmt(M$cota %/% 2L), " kilómetros ", M$en, "; los ",
+         fmt(M$R), " kilómetros reportados ",
+         if (M$R > M$cota %/% 2L) M$tT[9L] else M$tF[9L])),
+
+  list(codigo = "NUM-TAS-10",
+       nombre = "Compara la distancia con la velocidad, no con la cota",
+       cuantitativo = TRUE, abre = "vel",
+       descripcion_corta = "calcula bien el techo pero compara los kilómetros reportados con la velocidad máxima",
+       causa_raiz = paste("Enuncia la cota correcta y después no la usa: compara una DISTANCIA",
+                          "con una VELOCIDAD. Son magnitudes de distinta naturaleza; la cota",
+                          "calculada es la única cifra comparable con lo reportado."),
+       cota_km = function(M) NA_real_,     # su conclusión NO se apoya en la cota
+       sentido = NA_character_,
+       veredicto = function(M) TRUE,
+       precondicion = function(M) M$R > M$vel,
+       texto = function(M) paste0(
+         frase_cota(M$vel, M$cota, M$en, M$av[10L]),
+         "como los ", fmt(M$R), " kilómetros reportados superan los ", M$vel,
+         " kilómetros por hora de velocidad máxima, no pueden hacerse a pie.")),
+
+  list(codigo = "NUM-TAS-11",
+       nombre = "Exige que el reporte alcance la cota",
+       cuantitativo = TRUE, abre = "vel",
+       descripcion_corta = "toma la cota como una cifra que hay que alcanzar y descarta el reporte por quedarse corto",
+       causa_raiz = paste("Una cota superior marca un techo, no un objetivo. Que lo reportado",
+                          "quede por debajo no lo invalida: es justamente lo que resulta",
+                          "compatible con el criterio."),
+       cota_km = function(M) as.numeric(M$cota),
+       sentido = "superior",
+       veredicto = function(M) TRUE,
+       precondicion = function(M) !M$excede,
+       texto = function(M) paste0(
+         frase_cota(M$vel, M$cota, M$en, M$av[11L]),
+         "como los ", fmt(M$R), " kilómetros reportados no llegan a ese límite, ",
+         "el registro está incompleto y debe descartarse."))
+)
+stopifnot(length(errores_conceptuales) >= 4L)   # regla #1, línea 188
+
+## Capa D: `cota_km`, `veredicto`, `precondición` y `texto` DEBEN ser puras.
+invisible(lapply(errores_conceptuales, function(e) {
+  cuerpo <- paste(c(deparse(e$cota_km), deparse(e$veredicto),
+                    deparse(e$precondicion), deparse(e$texto)), collapse = " ")
+  stopifnot(!grepl("sample\\(|runif\\(|rnorm\\(|rbinom\\(|Sys\\.time|proc\\.time", cuerpo))
+}))
+
+## ============================================================================
+## 3. PLANTILLAS NARRATIVAS  (regla #11: 6 plantillas, 6 estructuras distintas)
+## ============================================================================
+PLANTILLAS <- list(
+
+  ## (1) OFICIAL — descripción del sistema + caso. Instancia canónica verbatim.
+  list(actor = "el jugador", sistema = "del juego",
+       gen = function(M) paste0(
+         "En un conocido juego virtual, una forma de progresar es caminar y que un dispositivo mida ",
+         "la distancia recorrida. Lo importante es que debe ser a pie y no en un medio motorizado ",
+         "de transporte.\n\n",
+         if (M$excede) paste0(
+           "La empresa administradora del juego, preocupada por la conducta irregular de algunos de ",
+           "sus participantes, suspendió la cuenta de uno de sus jugadores por reportar ", fmt(M$R),
+           " kilómetros caminados ", M$en2, ", dando como argumento: \"Es conocido que a cualquier ",
+           "persona le toma, en trayectos medios a largos, más de ", M$tasa,
+           " minutos caminar un kilómetro\".")
+         else paste0(
+           "La empresa administradora del juego recibió una alerta por un jugador que reportó ",
+           fmt(M$R), " kilómetros caminados ", M$en2, ". El equipo de revisión estudió el caso con ",
+           "el criterio \"Es conocido que a cualquier persona le toma, en trayectos medios a largos, ",
+           "más de ", M$tasa, " minutos caminar un kilómetro\" y decidió mantener activa la cuenta."))),
+
+  ## (2) SITUACIÓN PROBLEMA — una necesidad abre el texto.
+  list(actor = "el participante", sistema = "de la plataforma",
+       gen = function(M) paste0(
+         "El comité de moderación de una plataforma de retos deportivos necesita decidir si un reporte ",
+         "de distancia se hizo a pie o con ayuda de un medio motorizado, porque solo cuentan los ",
+         "recorridos caminados.\n\n",
+         "El reporte en discusión es de ", fmt(M$R), " kilómetros ", M$en2, ", y el único criterio ",
+         "técnico del que dispone el comité dice: \"a cualquier persona le toma, en trayectos medios ",
+         "a largos, más de ", M$tasa, " minutos caminar un kilómetro\". ",
+         if (M$excede) "Con ese criterio, el comité suspendió la cuenta del participante."
+         else "Con ese criterio, el comité dejó la cuenta del participante sin sanción.")),
+
+  ## (3) NARRACIÓN PERIODÍSTICA — lugar y evento antes que las cifras.
+  list(actor = "el corredor", sistema = "del programa",
+       gen = function(M) paste0(
+         "En la edición de este año del reto \"Ciudad en movimiento\", los habitantes acumulan ",
+         "kilómetros caminados con una aplicación del celular y los cambian por descuentos en el ",
+         "transporte público. El reglamento prohíbe los trayectos hechos en vehículo.\n\n",
+         "Al cerrar la jornada, uno de los inscritos figuraba con ", fmt(M$R), " kilómetros ", M$en2,
+         ". Los organizadores recordaron el criterio publicado en las bases: \"a cualquier persona le ",
+         "toma, en trayectos medios a largos, más de ", M$tasa, " minutos caminar un kilómetro\", y ",
+         if (M$excede) "retiraron el registro de la tabla de posiciones."
+         else "confirmaron el registro en la tabla de posiciones.")),
+
+  ## (4) PERSPECTIVA DEL ESTUDIANTE — motivación personal.
+  list(actor = "el usuario", sistema = "de la aplicación",
+       gen = function(M) paste0(
+         "Para su proyecto de estadística, Valentina analiza los datos abiertos de una aplicación que ",
+         "premia con puntos cada kilómetro caminado. La aplicación no otorga puntos por trayectos ",
+         "hechos en un medio motorizado.\n\n",
+         "Un registro le llama la atención: ", fmt(M$R), " kilómetros ", M$en2,
+         ". En la documentación de la aplicación encuentra el criterio de control: \"a cualquier ",
+         "persona le toma, en trayectos medios a largos, más de ", M$tasa,
+         " minutos caminar un kilómetro\". ",
+         if (M$excede) "Valentina concluye que ese registro debe anularse."
+         else "Valentina concluye que ese registro debe conservarse.")),
+
+  ## (5) DIÁLOGO IMPLÍCITO — cita directa que abre la escena.
+  list(actor = "el afiliado", sistema = "del sistema",
+       gen = function(M) paste0(
+         "—Estos kilómetros no me cuadran —dijo la coordinadora del programa de bienestar de una caja ",
+         "de compensación, que reconoce bonos por caminar y excluye los desplazamientos en vehículo.\n\n",
+         "El registro señalado marcaba ", fmt(M$R), " kilómetros ", M$en2, ". El manual del programa ",
+         "fija un solo criterio de verificación: \"a cualquier persona le toma, en trayectos medios a ",
+         "largos, más de ", M$tasa, " minutos caminar un kilómetro\". ",
+         if (M$excede) "Tras aplicarlo, el bono fue anulado."
+         else "Tras aplicarlo, el bono fue autorizado.")),
+
+  ## (6) PREGUNTA RETÓRICA — la pregunta encabeza el texto.
+  list(actor = "el trabajador", sistema = "de la empresa",
+       gen = function(M) paste0(
+         "¿Cuánto puede caminar realmente una persona ", M$en2, "? Una empresa se lo preguntó al ",
+         "revisar el reto interno de pasos, en el que solo cuentan los recorridos hechos a pie.\n\n",
+         "Uno de los equipos reportó ", fmt(M$R), " kilómetros ", M$en2, " para uno de sus ",
+         "integrantes. El área de talento humano tomó como referencia el criterio \"a cualquier ",
+         "persona le toma, en trayectos medios a largos, más de ", M$tasa,
+         " minutos caminar un kilómetro\" y ",
+         if (M$excede) "descartó ese reporte del conteo final."
+         else "mantuvo ese reporte en el conteo final."))
+)
+
+pl_idx <- if (is_canonical) 1L else sample.int(length(PLANTILLAS), 1L)
+pl <- PLANTILLAS[[pl_idx]]
+
+## --- magnitudes que ven las opciones y las plantillas ----------------------
+M <- list(tasa = tasa, H = H, vel = vel, cota = cota, R = reporte, excede = excede,
+          canon = is_canonical,
+          en = hz$en, en2 = hz$en2, corta = hz$corta, dur = hz$dur,
+          actor = pl$actor, sistema = pl$sistema)
+
+## CIERRES INTERCAMBIABLES compartidos por clave y distractores de la Parte 5.
+TAILS_T <- c("superan ese límite y no pueden hacerse a pie.",
+             "quedan por encima de ese límite y no pueden hacerse a pie.",
+             "rebasan ese límite y no pueden hacerse a pie.")
+## La cota es condición NECESARIA, no suficiente: de que el reporte quepa en
+## ella NO se sigue que el recorrido fuera a pie (falacia medida en el 45,8 %
+## de las versiones del hermano antes de corregirse).
+TAILS_F <- c("quedan por debajo de ese límite, de modo que ese criterio no basta para descartar un recorrido a pie.",
+             "no llegan a ese límite, de modo que ese criterio no basta para descartar un recorrido a pie.")
+M$tT  <- TAILS_T[sample.int(3L, length(errores_conceptuales), replace = TRUE)]
+M$tF  <- TAILS_F[sample.int(2L, length(errores_conceptuales), replace = TRUE)]
+M$tTk <- TAILS_T[sample.int(3L, 1L)]
+M$tFk <- TAILS_F[sample.int(2L, 1L)]
+
+## NUM-TAS-05 afirma una cota INFERIOR: los cierres del pool compartido lo
+## vuelven internamente FALSO cuando R > C. Cierre propio y coherente.
+TAILS_F5 <- c("quedan por debajo de lo que se puede caminar, de modo que ese criterio no basta para descartar un recorrido a pie.",
+              "no llegan a lo que se puede caminar, de modo que ese criterio no basta para descartar un recorrido a pie.")
+M$tF5 <- TAILS_F5[sample.int(2L, 1L)]
+
+## APERTURAS INTERCAMBIABLES: con molde FIJO por opción, el grupo que comparte
+## los primeros ~45 caracteres contenía SIEMPRE a la clave (95,5 %, +20 pp).
+frase_cota <- function(v, C, en, var) {
+  if (var == 1L) paste0("Lo dicho implica que la velocidad máxima es menos de ", v,
+                        " kilómetros por hora y menos de ", fmt(C), " kilómetros ", en, "; ")
+  else if (var == 2L) paste0("Lo dicho implica que en cada hora se avanzan menos de ", v,
+                        " kilómetros y que ", en, " son menos de ", fmt(C), " kilómetros; ")
+  else           paste0("Lo dicho implica que se recorren menos de ", v,
+                        " kilómetros en cada hora y menos de ", fmt(C), " kilómetros ", en, "; ")
+}
+abre_vel_frase <- function(v, var) {
+  if (var == 1L) paste0("Lo dicho implica que la velocidad máxima es menos de ", v,
+                        " kilómetros por hora")
+  else if (var == 2L) paste0("Lo dicho implica que en cada hora se avanzan menos de ", v,
+                        " kilómetros")
+  else           paste0("Lo dicho implica que se recorren menos de ", v,
+                        " kilómetros en cada hora")
+}
+TAILS_T7 <- c("así que esos kilómetros no pueden hacerse a pie.",
+              "de modo que ese recorrido no pudo hacerse a pie.",
+              "y por eso ese recorrido no pudo hacerse a pie.")
+M$tT7 <- TAILS_T7[sample.int(3L, 1L)]
+M$av  <- sample.int(3L, length(errores_conceptuales), replace = TRUE)
+M$avk <- sample.int(3L, 1L)
+
+## ============================================================================
+## 4. PARTE 1 (schoice) — IDENTIFICAR el TIPO de cota que fija el criterio
+##    §P4-bis: si la Parte 1 preguntara SIEMPRE por la velocidad, su clave sería
+##    invariante ("un valor máximo") en el 100 % de las versiones y H3b la
+##    cazaría con razón. Se sortea el EJE de la pregunta, de modo que la clave
+##    alterna entre "máximo" (eje velocidad) y "mínimo" (eje tiempo). No es una
+##    variación cosmética: son dos lecturas distintas del MISMO criterio, y
+##    distinguirlas es justamente lo que el ítem evalúa.
+## ============================================================================
+eje_p1 <- if (is_canonical) "velocidad" else sample(c("velocidad", "tiempo"), 1L)
+
+## MOLDE DE APERTURA COMPARTIDO. Con "Un valor máximo:" / "Un valor mínimo:" la
+## clave abría por "Un" en el 100 % de las versiones y sólo otra opción lo hacía:
+## "elige la que empieza por Un" acertaba el 50 % frente al 25 % de azar (+25 pp,
+## muy por encima del corte de §P7-A). Ahora las CUATRO abren igual, de modo que
+## la apertura deja de correlacionar con el rol. H2/H3 quedan ciegas por diseño
+## —el propio validador lo declara— y la invariancia del tipo de clave la mide
+## H3b, que aquí sale ~50 % porque el EJE se sortea.
+## PASADA 2: además del molde, el LÉXICO. Con "al menos" la clave era la única
+## opción que contenía el token "menos" en la rama del eje "tiempo" -> acierto
+## del 100 % ahí, +30,9 pp de exceso sobre el techo nulo. Ahora los pares
+## mínimo/máximo y debajo/encima son SIMÉTRICOS: ningún token discrimina.
+## PASADA 3: esa misma simetría creó un PAR GEMELO de longitud (clave e inversa
+## difieren en una palabra), y "elige una de las dos casi idénticas" rendía el
+## 50 % (+10,5 pp). La simetría NO se puede deshacer —un distractor que invierte
+## la desigualdad tiene que ser paralelo a la clave o se descarta por forma
+## (regla #22 §P5)—, así que la vía es romper la UNICIDAD del par: las CUATRO
+## opciones quedan de longitud equivalente y el grupo pasa de 2 a 4 (score 1/4,
+## que es el azar). Es la vía que el HANDOFF del hermano declara costeable.
+if (identical(eje_p1, "velocidad")) {
+  pregunta_p1 <- "¿Qué establece el criterio citado sobre la velocidad a la que se puede caminar?"
+  opciones_p1_pre <- list(
+    list(rol = "clave",      codigo = "P1-CLAVE",
+         texto = paste0("La velocidad al caminar queda por debajo de ", vel, " kilómetros por hora.")),
+    list(rol = "distractor", codigo = "P1-INV",
+         texto = paste0("La velocidad al caminar queda por encima de ", vel, " kilómetros por hora.")),
+    list(rol = "distractor", codigo = "P1-EXA",
+         texto = paste0("La velocidad al caminar es de ", vel, " kilómetros por hora, exactamente.")),
+    list(rol = "distractor", codigo = "P1-NADA",
+         ## O5: "no puede deducirse" es VERDADERO bajo lectura estricta (lo que se
+         ## deduce es una cota, no la velocidad) — justo la distinción que el ítem
+         ## evalúa. Se reformula a un enunciado inequívocamente falso.
+         texto = paste0("La velocidad al caminar no queda limitada por el criterio citado."))
+  )
+} else {
+  pregunta_p1 <- "¿Qué establece el criterio citado sobre el tiempo que toma caminar un kilómetro?"
+  opciones_p1_pre <- list(
+    list(rol = "clave",      codigo = "P1-CLAVE",
+         texto = paste0("Cada kilómetro de caminata toma ", tasa, " minutos como mínimo.")),
+    list(rol = "distractor", codigo = "P1-INV",
+         texto = paste0("Cada kilómetro de caminata toma ", tasa, " minutos como máximo.")),
+    list(rol = "distractor", codigo = "P1-EXA",
+         texto = paste0("Cada kilómetro de caminata toma ", tasa, " minutos justamente.")),
+    list(rol = "distractor", codigo = "P1-NADA",
+         ## O5 (rama tiempo): "indeterminado" es verdadero — el tiempo exacto lo es.
+         texto = paste0("Cada kilómetro de caminata toma un tiempo sin límite inferior."))
+  )
+}
+op_p1_mez  <- opciones_p1_pre[sample.int(4L)]
+opciones_p1 <- vapply(op_p1_mez, function(o) o$texto, character(1))
+sol_p1      <- as.integer(vapply(op_p1_mez, function(o) o$rol == "clave", logical(1)))
+stopifnot(sum(sol_p1) == 1L, length(unique(opciones_p1)) == 4L)
+
+## ============================================================================
+## 5. PARTES 2 y 3 (num) — la cadena de cálculo
+## ============================================================================
+resp_p2 <- vel     # km/h
+resp_p3 <- cota    # km
+stopifnot(resp_p2 == 60L %/% tasa, resp_p3 == resp_p2 * H,
+          resp_p2 == as.integer(resp_p2), resp_p3 == as.integer(resp_p3))
+
+## ============================================================================
+## 6. PARTE 4 (schoice) — EVALUAR la comparación
+##    El veredicto de la clave alterna con `excede` (§P4-bis). El pool exige,
+##    como en el hermano, DOS distractores con el veredicto de la clave y UNO
+##    opuesto: con un solo distractor del mismo veredicto, "elige la distinta"
+##    resolvía el gap sin hacer una cuenta.
+## ============================================================================
+## MOLDE DE APERTURA COMPARTIDO (mismo defecto que la Parte 1, y aquí peor):
+## la clave abría por "Los" y en la rama "cabe en la cota" podía quedar como la
+## ÚNICA que lo hacía -> hasta el 100 % de acierto sin razonar. Las siete
+## opciones (clave + 6 del pool) abren ahora citando los kilómetros reportados.
+conclusiones <- list(
+  list(codigo = "CON-01", defecto = "inferencia", nombre = "Falacia: condición necesaria leída como suficiente",
+       veredicto = FALSE,
+       causa_raiz = paste("Que la distancia quepa en la cota es condición NECESARIA para un",
+                          "recorrido a pie, no suficiente. De no poder refutar algo no se sigue",
+                          "haberlo demostrado."),
+       precondicion = function() !excede,
+       texto = paste0("Los ", fmt(reporte), " kilómetros no llegan a esa cota de distancia, de modo ",
+                      "que queda demostrado que el recorrido se hizo a pie.")),
+
+  list(codigo = "CON-02", defecto = "inferencia", nombre = "La cota leída como objetivo que hay que alcanzar",
+       veredicto = TRUE,
+       causa_raiz = paste("Una cota superior marca un techo, no una meta. Quedar por debajo de",
+                          "ella es justamente lo que resulta compatible con el criterio."),
+       precondicion = function() !excede,
+       texto = paste0("Los ", fmt(reporte), " kilómetros no llegan a esa cota de distancia, de modo ",
+                      "que el registro se quedó corto y debe descartarse.")),
+
+  list(codigo = "CON-03", defecto = "premisa", nombre = "Sentido de la cota invertido",
+       veredicto = FALSE,
+       causa_raiz = paste("Toma la cota como la distancia MÍNIMA que puede recorrerse. Con la",
+                          "desigualdad invertida ninguna cifra resulta descartable y el criterio",
+                          "deja de servir para decidir nada."),
+       precondicion = function() TRUE,
+       texto = paste0("Los ", fmt(reporte), " kilómetros superan la distancia mínima que fija esa ",
+                      "cota, de modo que son compatibles con un recorrido a pie.")),
+
+  list(codigo = "CON-04", defecto = "premisa", nombre = "Distancia comparada contra la velocidad",
+       veredicto = TRUE,
+       causa_raiz = paste("Compara kilómetros con kilómetros por hora. Son magnitudes de distinta",
+                          "naturaleza: la única cifra comparable con lo reportado es la cota de",
+                          "distancia, no la de velocidad."),
+       precondicion = function() reporte > vel,
+       ## O1 del detractor: ni CON-04 ni CON-05 mencionaban "cota", y ambos
+       ## aparecen en el 100 % de la rama "supera", así que "elige entre las que
+       ## hablan de la cota" aislaba clave+1 (+12,2 pp). Ahora la citan las cuatro.
+       texto = paste0("Los ", fmt(reporte), " kilómetros superan los ", vel, " kilómetros por hora ",
+                      "que fija esa cota de velocidad, de modo que el recorrido no pudo hacerse a pie.")),
+
+  list(codigo = "CON-05", defecto = "premisa", nombre = "Juicio subjetivo en lugar de comparación",
+       veredicto = TRUE,
+       causa_raiz = paste("Sustituye la comparación con la cota por una impresión personal sobre",
+                          "lo creíble de la cifra. Una impresión no es verificable con los datos",
+                          "del enunciado; la cota sí."),
+       precondicion = function() reporte >= 0.75 * cota,
+       texto = paste0("Los ", fmt(reporte), " kilómetros son demasiados para lo que aguanta una ",
+                      "persona, más allá de lo que diga esa cota, de modo que el recorrido no ",
+                      "pudo hacerse a pie.")),
+
+  list(codigo = "CON-06", defecto = "premisa", nombre = "La cota se calcula y luego se desestima",
+       veredicto = FALSE,
+       causa_raiz = paste("Calcular una cota y después declararla aproximada deja la decisión sin",
+                          "criterio. La cota se deduce del dato del enunciado: si se la desestima,",
+                          "no queda nada verificable sobre lo que decidir."),
+       precondicion = function() TRUE,
+       texto = paste0("Los ", fmt(reporte), " kilómetros no se pueden juzgar con esa cota, que es ",
+                      "solo aproximada."))
+)
+
+## APERTURA SORTEADA DE LA CLAVE. Igualar el prefijo no basta si la clave ocupa
+## siempre el mismo rango de longitud: H1 más-corta marcaba el 50 % con margen
+## del 21 % (explotable, §P7-B exige >= 15 %). Con tres variantes de distinta
+## extensión la clave deja de ocupar una posición fija en el orden de longitud.
+avk4 <- sample.int(3L, 1L)
+texto_p4_clave <- if (excede) {
+  if (avk4 == 1L)      paste0("Los ", fmt(reporte), " kilómetros superan esa cota, de modo que el ",
+                              "recorrido no pudo hacerse a pie.")
+  else if (avk4 == 2L) paste0("Los ", fmt(reporte), " kilómetros quedan por encima de esa cota de ",
+                              "distancia, de modo que el recorrido no pudo hacerse a pie.")
+  else                 paste0("Los ", fmt(reporte), " kilómetros rebasan la cota de distancia ",
+                              "calculada, de modo que el recorrido no pudo hacerse a pie.")
+} else {
+  if (avk4 == 1L)      paste0("Los ", fmt(reporte), " kilómetros no llegan a esa cota, de modo que ",
+                              "ese criterio no basta para descartar un recorrido a pie.")
+  else if (avk4 == 2L) paste0("Los ", fmt(reporte), " kilómetros quedan por debajo de esa cota de ",
+                              "distancia, de modo que ese criterio no basta para descartar un ",
+                              "recorrido a pie.")
+  else                 paste0("Los ", fmt(reporte), " kilómetros no alcanzan la cota de distancia ",
+                              "calculada, de modo que ese criterio no basta para descartar un ",
+                              "recorrido a pie.")
+}
+
+apl_p4 <- which(vapply(conclusiones, function(c) isTRUE(c$precondicion()), logical(1)))
+ver_p4 <- vapply(apl_p4, function(i) isTRUE(conclusiones[[i]]$veredicto), logical(1))
+mismo_p4   <- apl_p4[ver_p4 == excede]
+opuesto_p4 <- apl_p4[ver_p4 != excede]
+stopifnot(length(mismo_p4) >= 2L, length(opuesto_p4) >= 1L)
+sel_p4 <- c(tomar(mismo_p4, 2L), tomar(opuesto_p4, 1L))
+stopifnot(length(sel_p4) == 3L, !anyDuplicated(sel_p4))
+
+## Ninguna conclusión del pool puede ser correcta. Cada una declara DÓNDE falla:
+##   "premisa"    -> lo que afirma es falso (la cota no es mínima, compara contra
+##                   una velocidad, la declara aproximada, o la sustituye por un
+##                   juicio subjetivo)
+##   "inferencia" -> la premisa es verdadera pero la conclusión NO se sigue de
+##                   ella (falacia necesario => suficiente; techo leído como meta)
+## El defecto de tipo "inferencia" es de FUERZA de la afirmación, no de veredicto
+## binario: por eso NO es decidible con un regex y se declara explícitamente.
+invisible(lapply(seq_along(conclusiones), function(i) {
+  stopifnot(conclusiones[[i]]$defecto %in% c("premisa", "inferencia"),
+            !identical(conclusiones[[i]]$texto, texto_p4_clave))
+}))
+
+op_p4_pre <- c(list(list(rol = "clave", codigo = "P4-CLAVE", texto = texto_p4_clave)),
+               lapply(sel_p4, function(i) list(rol = "distractor",
+                                               codigo = conclusiones[[i]]$codigo,
+                                               texto  = conclusiones[[i]]$texto)))
+op_p4_mez  <- op_p4_pre[sample.int(4L)]
+opciones_p4 <- vapply(op_p4_mez, function(o) o$texto, character(1))
+sol_p4      <- as.integer(vapply(op_p4_mez, function(o) o$rol == "clave", logical(1)))
+stopifnot(sum(sol_p4) == 1L, length(unique(opciones_p4)) == 4L)
+
+## ============================================================================
+## 7. PARTE 5 (schoice) — el ÍTEM OFICIAL
+## ============================================================================
+texto_clave <- if (is_canonical) {
+  ## VERBATIM del cuadernillo (opción B de MAT-2026-1-047).
+  paste0("Lo dicho implica que la velocidad máxima es menos de ", vel,
+         " kilómetros por hora y menos de ", fmt(cota), " kilómetros ", hz$en,
+         "; un recorrido mayor corresponde entonces a un medio motorizado.")
+} else {
+  paste0(frase_cota(vel, cota, hz$en, M$avk),
+         "los ", fmt(reporte), " kilómetros reportados ",
+         if (excede) M$tTk else M$tFk)
+}
+
+aplicables <- which(vapply(errores_conceptuales,
+                           function(e) isTRUE(e$precondicion(M)), logical(1)))
+stopifnot(length(aplicables) >= 3L)
+
+cuant <- aplicables[vapply(errores_conceptuales[aplicables],
+                           function(e) isTRUE(e$cuantitativo), logical(1))]
+stopifnot(length(cuant) >= 2L)
+
+ver_d  <- vapply(aplicables, function(i) isTRUE(errores_conceptuales[[i]]$veredicto(M)), logical(1))
+mismo   <- aplicables[ver_d == excede]
+opuesto <- aplicables[ver_d != excede]
+stopifnot(length(mismo) >= 2L, length(opuesto) >= 1L)
+
+elegir_sel <- function() {
+  m2  <- tomar(mismo, 2L)
+  pref <- intersect(opuesto, cuant)
+  op1 <- if (sum(m2 %in% cuant) < 2L && length(pref) > 0L) tomar(pref, 1L) else tomar(opuesto, 1L)
+  c(m2, op1)
+}
+abre_vel <- vapply(errores_conceptuales, function(e) identical(e$abre, "vel"), logical(1))
+n_num  <- function(t) length(regmatches(t, gregexpr("[0-9][0-9.,]*", t))[[1]])
+nnum_k <- n_num(texto_clave)
+nnum_e <- vapply(seq_along(errores_conceptuales),
+                 function(i) n_num(errores_conceptuales[[i]]$texto(M)), integer(1))
+
+sel <- elegir_sel()
+intentos <- 0L                      # Familia 1: bucle SIEMPRE acotado
+while ((sum(sel %in% cuant) < 2L || sum(abre_vel[sel]) < 2L ||
+        sum(nnum_e[sel] >= nnum_k) < 2L) && intentos < 80L) {
+  sel <- elegir_sel(); intentos <- intentos + 1L
+}
+## El bucle NO puede rendirse en silencio: un canal reabierto sin aviso es peor
+## que un render que aborta ruidosamente.
+stopifnot(sum(sel %in% cuant) >= 2L, sum(abre_vel[sel]) >= 2L,
+          sum(nnum_e[sel] >= nnum_k) >= 2L)
+
+if (is_canonical) sel <- c(1L, 2L, 3L)   # excepción canónica: opciones C, A, D
+stopifnot(length(sel) == 3L, !anyDuplicated(sel))
+
+## --- PREDICADO DE SOLIDEZ (Error 33) --------------------------------------
+## NO comprueba identidad con el argumento de la clave: comprueba SOLIDEZ.
+## Un argumento puede ser sólido sin ser el mismo argumento; comprobar identidad
+## fue lo que dejó pasar una SEGUNDA CLAVE en el 2,8 % de las versiones.
+es_solido <- function(e) {
+  ck <- e$cota_km(M)
+  if (is.na(ck)) return(FALSE)                          # no enuncia cota
+  if (!identical(e$sentido, "superior")) return(FALSE)  # cota inferior: premisa falsa
+  Th <- if (is.null(e$horizonte)) H else e$horizonte(M)
+  if (ck < vel * Th) return(FALSE)                      # cota por debajo de la real
+  if (isTRUE(e$veredicto(M))) reporte > ck && Th >= H        # "no pudo a pie" se sigue
+  else                        reporte < ck && ck <= vel * H  # "no basta" se sigue
+}
+es_malo <- !vapply(sel, function(i) es_solido(errores_conceptuales[[i]]), logical(1))
+stopifnot(all(es_malo))
+## Control positivo: la CLAVE sí es sólida bajo el mismo predicado. Sin él, un
+## cero no distingue "limpio" de "sonda ciega".
+stopifnot(isTRUE(es_solido(list(cota_km = function(M) as.numeric(cota), sentido = "superior",
+                                horizonte = NULL, veredicto = function(M) excede))))
+stopifnot(vel == 60L / tasa, cota == vel * H, identical(excede, reporte > cota))
+
+## COHERENCIA INTERNA DEL CIERRE (INC-SINO-BINARIO patrón A).
+polaridad <- function(txt) {
+  pos <- grepl("superan ese límite|por encima de ese límite|rebasan ese límite", txt)
+  neg <- grepl("no superan ese límite|por debajo de ese límite|no llegan a ese límite", txt)
+  if (neg) FALSE else if (pos) TRUE else NA
+}
+stopifnot(identical(polaridad(texto_clave), if (is_canonical) NA else excede))
+if (4L %in% sel) {
+  t4 <- errores_conceptuales[[4L]]$texto(M)
+  stopifnot(identical(polaridad(t4), reporte > tasa * H))
+}
+## COHERENCIA TEXTO <-> VEREDICTO DECLARADO. El regex que detecta el veredicto
+## por enumeración de cierres quedó ciego DOS veces en el hermano (41,1 % y
+## 14,0 %), las dos en silencio. Aquí la ceguera ABORTA EL RENDER.
+ver_txt <- function(t) grepl(paste0("medio motorizado|no pueden hacerse a pie|",
+                                    "no pudo hacerse a pie|increíble|debe descartarse"), t)
+for (i in seq_along(errores_conceptuales)) {
+  e_i <- errores_conceptuales[[i]]
+  if (!isTRUE(e_i$precondicion(M))) next
+  stopifnot(identical(ver_txt(e_i$texto(M)), isTRUE(e_i$veredicto(M))))
+}
+stopifnot(identical(ver_txt(texto_clave), isTRUE(excede)))
+for (k in intersect(sel, c(8L, 9L))) {
+  ek <- errores_conceptuales[[k]]
+  stopifnot(identical(polaridad(ek$texto(M)), reporte > ek$cota_km(M)))
+}
+## Misma guarda para el pool de la Parte 4: si un texto nuevo no fuera
+## reconocible por el regex, el render aborta en vez de etiquetar mal.
+ver_p4_txt <- function(t) grepl("no pudo hacerse a pie|debe descartarse", t)
+for (i in sel_p4) {
+  stopifnot(identical(ver_p4_txt(conclusiones[[i]]$texto),
+                      isTRUE(conclusiones[[i]]$veredicto)))
+}
+stopifnot(identical(ver_p4_txt(texto_p4_clave), isTRUE(excede)))
+
+opciones_pre <- c(
+  list(list(rol = "clave", codigo = "CLAVE", texto = texto_clave)),
+  lapply(sel, function(i) list(rol = "distractor", codigo = errores_conceptuales[[i]]$codigo,
+                               texto = errores_conceptuales[[i]]$texto(M)))
+)
+stopifnot(length(opciones_pre) == 4L,
+          length(unique(vapply(opciones_pre, function(o) o$texto, character(1)))) == 4L)
+
+op_p5_mez  <- opciones_pre[sample.int(4L)]
+sol_p5     <- as.integer(vapply(op_p5_mez, function(o) o$rol == "clave", logical(1)))
+opciones_p5 <- vapply(op_p5_mez, function(o) o$texto, character(1))
+stopifnot(sum(sol_p5) == 1L, length(sol_p5) == 4L)
+
+## ============================================================================
+## 8. PARTE 6 (mchoice) — TRANSFERIR: propiedades del razonamiento con cotas
+##    Incidente D: pools que colapsan. Se muestrea con x[sample.int(length(x),n)]
+##    y se verifica unicidad de CONTENIDO, no de índice.
+## ============================================================================
+cota_baja <- max(1L, cota - 10L * pick_int(1L, max(1L, as.integer(0.3 * cota) %/% 10L)))
+cota_alta <- cota + 10L * pick_int(1L, max(1L, as.integer(0.5 * cota) %/% 10L))
+stopifnot(cota_baja < cota, cota_alta > cota)
+
+afirm_V <- c(
+  ## O3 del detractor: esta afirmación imprimía `vel` —la respuesta de la Parte
+  ## 2— en el 46,7 % de las versiones, y la Parte 2 pregunta exactamente ese
+  ## número. Un gap de cálculo NO puede autocontestarse desde otro gap. Sigue
+  ## siendo VERDADERA y ya no cita la cifra.
+  paste0("Si cada kilómetro toma más de ", tasa, " minutos, el criterio fija un techo de ",
+         "velocidad y no un piso."),
+  paste0("Multiplicar la velocidad máxima por el tiempo disponible da una cota para la distancia, ",
+         "no la distancia realmente recorrida."),
+  paste0("Que la distancia reportada quede por debajo de la cota no demuestra que el recorrido ",
+         "se hiciera a pie."),
+  paste0("Comparar una distancia en kilómetros con una velocidad en kilómetros por hora es ",
+         "comparar magnitudes de distinta naturaleza."),
+  paste0("Si el tiempo que toma cada kilómetro aumenta, la velocidad correspondiente disminuye."),
+  paste0("Para acotar la distancia hacen falta dos datos: la velocidad máxima y el tiempo ",
+         "disponible."),
+  paste0("Un recorrido de ", fmt(cota_baja), " kilómetros en ", H,
+         " horas es compatible con el criterio citado.")
+)
+
+afirm_F <- c(
+  paste0("El criterio citado permite calcular exactamente cuántos kilómetros se caminaron."),
+  paste0("Como el criterio habla de más de ", tasa, " minutos por kilómetro, la velocidad máxima ",
+         "es de ", tasa, " kilómetros por hora."),
+  paste0("La cota de distancia es la misma cualquiera que sea el tiempo del que se disponga."),
+  paste0("Una distancia reportada por debajo de la cota debe descartarse por quedarse corta."),
+  paste0("Cuantos más minutos toma cada kilómetro, mayor es la distancia que se puede recorrer."),
+  paste0("Si la distancia reportada supera la cota, el criterio citado no permite concluir nada."),
+  paste0("Un recorrido de ", fmt(cota_alta), " kilómetros en ", H,
+         " horas es compatible con el criterio citado.")
+)
+stopifnot(length(afirm_V) >= 6L, length(afirm_F) >= 6L)
+## BLINDAJE DEL POOL DE LA PARTE 6. Mi verificador comprueba que la MARCA
+## coincide con la pertenencia al pool, pero eso no prueba que el pool esté bien
+## CLASIFICADO: si una "falsa" fuera verdadera en alguna región de parámetros,
+## habría una clave falsa y nada lo vería. Se fijan aquí las dos condiciones de
+## las que depende esa clasificación, para que ampliar TASAS no la rompa en
+## silencio:
+##   - afirm_F[2] ("la velocidad máxima es `tasa` km/h") es falsa <=> tasa != vel
+##   - afirm_V[7]/afirm_F[7] son disjuntas <=> cota_baja < cota < cota_alta
+stopifnot(tasa != vel, cota_baja < cota, cota < cota_alta,
+          length(intersect(afirm_V, afirm_F)) == 0L)
+
+n_V_p6 <- sample(2:4, 1L)            # entre 2 y 4 verdaderas de 6 -> nunca degenera
+n_F_p6 <- 6L - n_V_p6
+stopifnot(n_V_p6 >= 1L, n_F_p6 >= 1L,
+          length(afirm_V) >= n_V_p6, length(afirm_F) >= n_F_p6)
+sel_V <- afirm_V[sample.int(length(afirm_V), n_V_p6)]
+sel_F <- afirm_F[sample.int(length(afirm_F), n_F_p6)]
+
+p6_pre <- c(lapply(sel_V, function(t) list(v = 1L, texto = t)),
+            lapply(sel_F, function(t) list(v = 0L, texto = t)))
+p6_mez <- p6_pre[sample.int(6L)]
+afirmaciones_p6 <- vapply(p6_mez, function(o) o$texto, character(1))
+sol_p6          <- as.integer(vapply(p6_mez, function(o) o$v, integer(1)))
+## Incidente D: unicidad de CONTENIDO y no degeneración a todas-V / todas-F.
+stopifnot(length(unique(afirmaciones_p6)) == 6L,
+          sum(sol_p6) >= 1L, sum(sol_p6) <= 5L, length(sol_p6) == 6L)
+
+## --- ALIAS DE COBERTURA PARA V8 (regla #22) -------------------------------
+## `validar_diversidad_sustantiva.R` descubre las claves por gap con la
+## convención sol_pN / opciones_pN / exsol_pN. Sin estos alias medía 3 de 6 y
+## emitía NOTA DE COBERTURA: tres gaps quedaban SIN VERIFICAR. No cambian el
+## comportamiento del ejercicio; sólo hacen medible lo que ya existía.
+opciones_p6 <- afirmaciones_p6      # gap 6 (mchoice)
+exsol_p2 <- resp_p2                 # gap 2 (num)
+exsol_p3 <- resp_p3                 # gap 3 (num)
+
+## ============================================================================
+## 9. ENSAMBLADO exclozetype / exsolution / extol  (V1, V3)
+## ============================================================================
+exclozetype_str <- "schoice|num|num|schoice|schoice|mchoice"
+exsolution_str  <- paste(paste(sol_p1, collapse = ""),
+                         resp_p2,
+                         resp_p3,
+                         paste(sol_p4, collapse = ""),
+                         paste(sol_p5, collapse = ""),
+                         paste(sol_p6, collapse = ""),
+                         sep = "|")
+extol_str <- paste(rep("0", 6L), collapse = "|")
+stopifnot(
+  length(strsplit(exclozetype_str, "|", fixed = TRUE)[[1]]) == 6L,
+  length(strsplit(exsolution_str,  "|", fixed = TRUE)[[1]]) == 6L,
+  length(strsplit(extol_str,       "|", fixed = TRUE)[[1]]) == 6L
+)
+## Contrato del Answerlist: el del ENUNCIADO lista sólo los gaps de elección
+## (4+4+4+6 = 18); el de la SOLUTION añade un feedback por cada gap `num`
+## (4+1+1+4+4+6 = 20). La asimetría 18 != 20 es el contrato de R/exams, no un
+## defecto: es un falso positivo recurrente de los auditores.
+n_al_enunciado <- length(opciones_p1) + length(opciones_p4) +
+                  length(opciones_p5) + length(afirmaciones_p6)
+n_al_solution  <- n_al_enunciado + 2L
+stopifnot(n_al_enunciado == 18L, n_al_solution == 20L)
+
+## ============================================================================
+## 10. REFLEXIONES METACOGNITIVAS
+## ============================================================================
+reflexiones <- c(
+  paste("Antes de aceptar o rechazar una cifra conviene preguntarse qué cota permite",
+        "calcular el dato disponible: un argumento vale cuando se puede verificar, no",
+        "cuando suena razonable."),
+  paste("Al convertir una tasa hay que revisar hacia dónde apunta la desigualdad. Más",
+        "tiempo por unidad recorrida significa menos velocidad, y ese cambio de sentido",
+        "es donde se pierde la mitad de los razonamientos."),
+  paste("Una velocidad no es una distancia. Comparar kilómetros con kilómetros por hora",
+        "es comparar cosas distintas: falta siempre multiplicar por el tiempo disponible."),
+  paste("Que una cota no se supere no demuestra que el recorrido se hiciera a pie; solo",
+        "muestra que ese dato no basta para descartarlo. Distinguir entre refutar y no",
+        "poder refutar es el centro de la argumentación matemática."),
+  paste("Escribir las unidades en cada paso —minutos, horas, kilómetros— cuesta unos",
+        "segundos y evita el error más frecuente de este tipo de problemas.")
+)
+reflexion <- reflexiones[sample.int(length(reflexiones), 1L)]
+
+enunciado <- pl$gen(M)
+
+pregunta_p5 <- if (is_canonical) {
+  "¿Cuál de los siguientes argumentos sustenta la decisión de la suspensión del jugador?"
+} else {
+  "¿Cuál de los siguientes argumentos sustenta la decisión tomada sobre ese reporte?"
+}
+
+horiz_txt <- if (identical(hz$corta, paste0(H, " horas"))) {
+  paste0(H, " horas")
+} else {
+  paste0(hz$corta, " (", H, " horas)")
+}
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado, "\n\n")
+cat("A continuación se analiza este caso paso a paso.\n\n")
+cat("**Parte 1.** ", pregunta_p1, "\n", sep = "")
+```
+
+##ANSWER1##
+
+```{r parte2, echo = FALSE, results = "asis"}
+cat("**Parte 2.** Según ese criterio, la velocidad al caminar es **menor que** cierto número de ",
+    "kilómetros por hora. ¿Cuál es ese número? Responda con un número entero, solo dígitos.\n", sep = "")
+```
+
+##ANSWER2##
+
+```{r parte3, echo = FALSE, results = "asis"}
+cat("**Parte 3.** Con esa velocidad y las ", H, " horas de las que se dispone, la distancia ",
+    "recorrida es **menor que** cierto número de kilómetros. ¿Cuál es ese número? Responda con un ",
+    "número entero, solo dígitos y sin puntos de separación de miles.\n", sep = "")
+```
+
+##ANSWER3##
+
+```{r parte4, echo = FALSE, results = "asis"}
+## O4: pedir "la conclusión que se sigue" invita a juzgar la CONCLUSIÓN, y en la
+## rama "supera" tres de las cuatro opciones concluyen algo materialmente
+## verdadero: lo que discrimina es la PREMISA. Se alinea la instrucción con lo
+## que el gap realmente evalúa. No toca ninguna opción.
+cat("**Parte 4.** Compare ahora esa cota de distancia con los ", fmt(reporte),
+    " kilómetros reportados. ¿Cuál de los siguientes razonamientos describe correctamente esa ",
+    "comparación y lo que de ella se concluye?\n", sep = "")
+```
+
+##ANSWER4##
+
+```{r parte5, echo = FALSE, results = "asis"}
+cat("**Parte 5.** ", pregunta_p5, "\n", sep = "")
+```
+
+##ANSWER5##
+
+**Parte 6.** De las siguientes afirmaciones, seleccione **todas** las que sean **verdaderas**.
+
+##ANSWER6##
+
+Answerlist
+----------
+```{r answerlist_q, echo = FALSE, results = "asis"}
+## Sólo los gaps de ELECCIÓN, en el orden de sus partes. Las Partes 2 y 3 son
+## `num`: el estudiante escribe, no elige.
+for (t in opciones_p1)     cat("* ", t, "\n", sep = "")
+for (t in opciones_p4)     cat("* ", t, "\n", sep = "")
+for (t in opciones_p5)     cat("* ", t, "\n", sep = "")
+for (t in afirmaciones_p6) cat("* ", t, "\n", sep = "")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+## Regla #19: PROHIBIDO nombrar la letra o la posición de una opción.
+## Incidente Q: la prosa NO enumera en el orden interno del pool; agrupa por
+## contenido y por código de error.
+
+cat("### Qué hay que decidir\n\n")
+cat("El criterio del enunciado dice que caminar un kilómetro toma **más de ", tasa,
+    " minutos**. Eso no da la velocidad exacta: da un **techo**. Todo el problema ",
+    "consiste en convertir ese techo en una distancia máxima y compararla con los ",
+    fmt(reporte), " kilómetros reportados.\n\n", sep = "")
+
+## --- Parte 1 -------------------------------------------------------------
+cat("### Parte 1 — qué tipo de valor fija el criterio\n\n")
+if (identical(eje_p1, "velocidad")) {
+  cat("El criterio fija un **valor máximo** para la velocidad: si cada kilómetro toma *más de* ",
+      tasa, " minutos, la velocidad no alcanza los ", vel, " kilómetros por hora.\n\n", sep = "")
+  cat("Los otros enunciados fallan por razones distintas: uno invierte la desigualdad y convierte ",
+      "el techo en un piso; otro toma la cota como si fuera un valor exacto, cuando el criterio ",
+      "dice \"más de\" y no \"exactamente\"; y el último renuncia al único dato verificable ",
+      "disponible.\n\n", sep = "")
+} else {
+  cat("El criterio fija un **valor mínimo** para el tiempo: cada kilómetro toma *al menos* ",
+      tasa, " minutos. Ese mínimo de tiempo es exactamente lo que produce un máximo de ",
+      "velocidad.\n\n", sep = "")
+  cat("Los otros enunciados fallan por razones distintas: uno invierte la desigualdad y convierte ",
+      "el piso en un techo; otro toma la cota como si fuera un valor exacto, cuando el criterio ",
+      "dice \"más de\" y no \"exactamente\"; y el último renuncia al único dato verificable ",
+      "disponible.\n\n", sep = "")
+}
+
+## --- Partes 2 y 3: el procedimiento --------------------------------------
+cat("### Partes 2 y 3 — el cálculo\n\n")
+cat("**Paso 1.** Si cada kilómetro toma más de ", tasa, " minutos, en una hora ",
+    "(60 minutos) se recorren menos de:\n\n", sep = "")
+cat(eq_display(paste0("v < \\dfrac{60 \\text{ min}}{", tasa,
+                      " \\text{ min/km}} = ", vel, " \\text{ km/h}")))
+cat("\n**Paso 2.** En ", horiz_txt, " la distancia queda acotada por:\n\n", sep = "")
+cat(eq_display(paste0("d < ", vel, " \\text{ km/h} \\times ", H,
+                      " \\text{ h} = ", fmt(cota), " \\text{ km}")))
+cat("\nLa respuesta de la Parte 2 es **", vel, "** y la de la Parte 3 es **", fmt(cota),
+    "**. Conviene notar que ninguna de las dos es la distancia recorrida: son cotas, es decir ",
+    "cifras que el recorrido no puede alcanzar.\n\n", sep = "")
+
+## --- Parte 4: la comparación ---------------------------------------------
+cat("### Parte 4 — la comparación\n\n")
+tab <- data.frame(
+  "Magnitud" = c("Tiempo por kilómetro (criterio)",
+                 "Velocidad máxima que se deduce",
+                 paste0("Distancia máxima en ", hz$corta),
+                 "Distancia reportada"),
+  "Valor"    = c(paste0("más de ", tasa, " min/km"),
+                 paste0("menos de ", vel, " km/h"),
+                 paste0("menos de ", fmt(cota), " km"),
+                 paste0(fmt(reporte), " km")),
+  check.names = FALSE)
+cat(tabla_responsiva(tab, align = c("l", "r")))
+cat("\n")
+if (excede) {
+  cat("Los ", fmt(reporte), " kilómetros reportados **superan** la cota de ", fmt(cota),
+      " kilómetros. Ninguna caminata compatible con el criterio dado alcanza esa cifra, ",
+      "de modo que el recorrido tuvo que hacerse en un medio motorizado.\n\n", sep = "")
+} else {
+  cat("Los ", fmt(reporte), " kilómetros reportados **no superan** la cota de ", fmt(cota),
+      " kilómetros. El criterio citado, por sí solo, no permite descartar que el recorrido ",
+      "se hiciera a pie. Obsérvese que eso **no demuestra** que se hiciera a pie: la cota es una ",
+      "condición necesaria, no suficiente.\n\n", sep = "")
+}
+cat("Las demás conclusiones ofrecidas fallan así:\n\n")
+for (i in sort(sel_p4)) {
+  cc <- conclusiones[[i]]
+  cat("- **", cc$codigo, " — ", cc$nombre, ".** ", cc$causa_raiz, "\n", sep = "")
+}
+cat("\n")
+
+## --- Parte 5: el argumento válido ----------------------------------------
+cat("### Parte 5 — el argumento válido\n\n")
+cat("Es el único que hace las dos cosas que el problema exige: **calcular la cota** (menos de ",
+    vel, " kilómetros por hora y menos de ", fmt(cota), " kilómetros en ", hz$corta,
+    ") y **compararla con lo reportado** para concluir ",
+    if (excede) "que la cifra no cabe en un recorrido a pie."
+    else "que ese criterio, por sí solo, no basta para descartar un recorrido a pie.",
+    "\n\n", sep = "")
+cat("**Por qué los demás argumentos no sirven**\n\n")
+## Se recorre el pool AGRUPANDO por código, nunca por la posición que ve el
+## estudiante (el orden de las opciones lo fija `exshuffle`).
+for (i in sort(sel)) {
+  e <- errores_conceptuales[[i]]
+  cat("**", e$codigo, " — ", e$nombre, "**\n\n", sep = "")
+  cat("*Qué afirma:* ", e$descripcion_corta, ".\n\n", sep = "")
+  cat(e$causa_raiz, "\n\n", sep = "")
+}
+
+## --- Parte 6: propiedades ------------------------------------------------
+## Incidente Q: se AGRUPA por veredicto. Reproducir la lista en su orden interno
+## la desincronizaría respecto de lo que ve el estudiante, sin que nada falle.
+cat("### Parte 6 — propiedades del razonamiento con cotas\n\n")
+cat("**Son verdaderas:**\n\n")
+for (t in sort(afirmaciones_p6[sol_p6 == 1L])) cat("- ", t, "\n", sep = "")
+cat("\n**Son falsas:**\n\n")
+for (t in sort(afirmaciones_p6[sol_p6 == 0L])) cat("- ", t, "\n", sep = "")
+cat("\n")
+
+cat("### Reflexión metacognitiva\n\n")
+cat(reflexion, "\n\n")
+
+cat("### Cómo evitar el error la próxima vez\n\n")
+cat("**Primero.** Escribir la tasa con sus unidades y convertirla explícitamente: de minutos por ",
+    "kilómetro a kilómetros por hora se pasa dividiendo 60 entre la tasa.\n", sep = "")
+cat("\n**Segundo.** Revisar el sentido de la desigualdad después de convertir: si el tiempo por ",
+    "kilómetro tiene un mínimo, la velocidad tiene un máximo.\n", sep = "")
+cat("\n**Tercero.** Multiplicar la velocidad por **todo** el horizonte de tiempo antes de comparar; ",
+    "una velocidad nunca se compara directamente con una distancia.\n", sep = "")
+cat("\n**Cuarto.** Comprobar que la conclusión enunciada se sigue de la cota calculada, y no de una ",
+    "impresión sobre lo creíble que resulte la cifra.\n", sep = "")
+```
+
+Answerlist
+----------
+```{r answerlist_s, echo = FALSE, results = "asis"}
+## Feedback por opción. Orden: P1 (4), P2 (1, num), P3 (1, num), P4 (4), P5 (4),
+## P6 (6) = 20 entradas.
+for (i in seq_along(opciones_p1)) {
+  cat("* ", if (sol_p1[i] == 1L) "Correcta." else "Incorrecta.",
+      " ", if (sol_p1[i] == 1L)
+        paste0("El criterio fija ", if (identical(eje_p1, "velocidad")) "un techo de velocidad."
+                                    else "un piso de tiempo por kilómetro.")
+      else "No es lo que se deduce de \"más de\" en el criterio citado.", "\n", sep = "")
+}
+cat("* La velocidad queda acotada por $60 \\div ", tasa, " = ", vel, "$ kilómetros por hora.\n", sep = "")
+cat("* La distancia queda acotada por $", vel, " \\times ", H, " = ", fmt(cota), "$ kilómetros.\n", sep = "")
+for (i in seq_along(opciones_p4)) {
+  cod <- op_p4_mez[[i]]$codigo
+  cat("* ", if (sol_p4[i] == 1L) "Correcta. Es el único que describe bien la comparación y concluye lo que de ella se sigue."
+      else paste0("Incorrecta (", cod, "). ",
+                  conclusiones[[which(vapply(conclusiones, function(c) identical(c$codigo, cod), logical(1)))]]$nombre, "."),
+      "\n", sep = "")
+}
+for (i in seq_along(opciones_p5)) {
+  cod <- op_p5_mez[[i]]$codigo
+  cat("* ", if (sol_p5[i] == 1L) "Correcta. Calcula la cota y la compara con lo reportado."
+      else paste0("Incorrecta (", cod, "). ",
+                  errores_conceptuales[[which(vapply(errores_conceptuales, function(e) identical(e$codigo, cod), logical(1)))]]$nombre, "."),
+      "\n", sep = "")
+}
+for (i in seq_along(afirmaciones_p6)) {
+  cat("* ", if (sol_p6[i] == 1L) "Verdadera." else "Falsa.", "\n", sep = "")
+}
+```
+
+Meta-information
+================
+exname: tasa_caminata_velocidad_maxima_numerico_variacional_argumentacion_n4_cloze_v1
+extype: cloze
+exclozetype: `r exclozetype_str`
+exsolution: `r exsolution_str`
+extol: `r extol_str`
+exshuffle: TRUE
+exsection: Numerico-Variacional/Argumentacion
+exextra[Type]: CLOZE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Establece la validez o pertinencia de una solución propuesta a un problema dado.
+exextra[Descriptor]: D4.2 — Realiza transformaciones de subconjuntos de información que pueden requerir el uso de operaciones complejas (cálculos de porcentajes).
+exextra[Nivel]: 4
+exextra[Estandar]: Resuelvo y formulo problemas en contextos de medidas relativas y de variaciones en las medidas.
+exextra[Grado]: 7°-8°
+exextra[Generico]: No
+exextra[TemaEspecifico]: Razonamiento con tasas y proporcionalidad — velocidad máxima de caminata
+exextra[Contenido]: Álgebra y Cálculo
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional-Extendido
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[Origen]: MAT-2026-1-047
