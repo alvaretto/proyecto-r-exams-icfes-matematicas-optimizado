@@ -11,9 +11,20 @@ local({
   if (dir.exists(lib_personal)) .libPaths(c(lib_personal, .libPaths()))
 })
 
+# repos: respetar el que ya venga configurado por el entorno.
+# En CI, r-lib/actions/setup-r apunta a Posit Package Manager, que sirve
+# binarios precompilados para el runner. Forzar CRAN aqui obligaba a compilar
+# desde fuente y la instalacion de 'fs' moria con "fatal error: uv.h: No such
+# file or directory", arrastrando a pkgload, rmarkdown, exams y testthat.
+local({
+  cran <- getOption("repos")[["CRAN"]]
+  if (is.null(cran) || !nzchar(cran) || identical(cran, "@CRAN@")) {
+    options(repos = c(CRAN = "https://cran.r-project.org"))
+  }
+})
+
 # Configurar opciones de R
 options(
-  repos = c(CRAN = "https://cran.r-project.org"),
   scipen = 999,
   digits = 4,
   width = 120,
