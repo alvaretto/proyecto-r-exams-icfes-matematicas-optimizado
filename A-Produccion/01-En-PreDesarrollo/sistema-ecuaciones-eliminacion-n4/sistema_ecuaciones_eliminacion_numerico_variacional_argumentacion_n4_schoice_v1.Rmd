@@ -109,9 +109,15 @@ errores_conceptuales <- list(
        precondicion = function(p) p$b %% p$d == 0L && p$f != p$k,
        calcula = function(p) p$c * p$f),
   list(codigo = "ERR-ALG-04", conserva_igualdad = FALSE, apto_real = TRUE, paso = 2L,
-       nombre = "Restar sin cambiar el signo de todos los términos",
-       causa_raiz = paste("Aplica el signo de la resta solo a los términos con incógnita y deja",
-                          "intacto el término independiente del sustraendo."),
+       ## V6 (OBJ 1-bis): el rotulo describia SOLO el comportamiento como error real
+       ## (ci = P1 + e1i). Como señuelo, `restar_invertido` niega los dos términos con
+       ## incógnita y resta bien el independiente — 50/50 versiones con el rotulo falso.
+       ## La redacción nueva cubre las dos formas: en ambas la resta se aplica por partes
+       ## y no a la igualdad completa, que es la causa comun.
+       nombre = "Aplicar la resta por partes y no a la igualdad completa",
+       causa_raiz = paste("Trata la resta de ecuaciones como una operación que se aplica término",
+                          "a término y no a la igualdad entera, así que cambia el signo de unos",
+                          "términos y no de otros."),
        precondicion = function(p) TRUE,
        calcula = function(p) p$P1 + p$k * p$P2),
   list(codigo = "ERR-ALG-05", conserva_igualdad = TRUE, apto_real = FALSE, paso = 2L,
@@ -120,19 +126,70 @@ errores_conceptuales <- list(
                           "de que los coeficientes por cancelar tengan signos opuestos."),
        precondicion = function(p) TRUE,
        calcula = function(p) p$b + p$k * p$d),
-  list(codigo = "ERR-ALG-07", conserva_igualdad = FALSE, apto_real = TRUE, paso = 3L,
+  ## C2 (2026-08-20). HERMANO SIMÉTRICO de ERR-ALG-04, anadido para EMPATAR LA FORMA en
+  ## el estrato 2. Motivo medido: 04 es el único apto_real de su paso, luego alli la clave
+  ## es SIEMPRE la reparación de 04 —una incógnita, 3 números, independiente ci = coef*R—
+  ## y su único companero de paso era 05 —sumar, DOS incógnitas, 4 números, independiente
+  ## P1+k*P2—. Resultado: "la más corta" 30/30 y "menos números" 30/30. Este error también
+  ## cancela la incógnita Y conserva el mismo independiente ci, así que su ecuación tiene
+  ## la MISMA forma, los MISMOS números y prácticamente la misma longitud que la de la
+  ## clave: difiere solo en el coeficiente (b + k*d frente a b - k*d). Para distinguirlas
+  ## hay que hacer la resta de coeficientes, que es justo lo que el paso 2 evalua.
+  ## 04 aplica el signo a los términos con incógnita y no al independiente; 08 lo aplica
+  ## solo al término que se quiere cancelar. Son los dos errores de signo complementarios.
+  ## V6 (detractor FASE 2C, OBJ 2). SUSTITUYE a ERR-ALG-08, retirado. Aquel empataba la
+  ## FORMA con la clave pero su coeficiente era b + k*d, y como |b - k*d| < b + k*d es una
+  ## IDENTIDAD (119/119 estructuras), la clave del paso 2 llevaba SIEMPRE el coeficiente
+  ## menor: "entre las de paso 2, elige la del coeficiente menor" acertaba el 100 % de ese
+  ## estrato sin contenido matemático alguno (+15,5 pp agregado), y "el mayor cociente
+  ## constante/coeficiente" +33,2 pp. Este error tiene el coeficiente CORRECTO —cancela la
+  ## incógnita igual que la clave— y se equivoca SOLO en el término independiente, que es
+  ## donde el paso 2 se juega de verdad. Dos variantes, sorteadas, para que el cociente de
+  ## la clave quede EN MEDIO y ningun extremo la identifique:
+  ##   var 1: resta el independiente SIN el factor del paso 1  -> P1 - P2      (mayor)
+  ##   var 2: le aplica un factor de más                       -> P1 - k2*P2   (menor)
+  ## V7 (pasada de confirmación V6, detractor CLOZE OBJ A). PASA A apto_real = TRUE.
+  ## Con el estrato 3 retirado, `cods_paso_real` dejaba EXACTAMENTE UN código por paso
+  ## (01 y 04): `paso_real` y `cod_real` eran una biyección y la clave de la Parte 4 del
+  ## gemelo CLOZE solo podía tomar 2 de los 7 textos del pool -> "elige la que habla de
+  ## multiplicar todos los términos o de cambiar el signo de todos" acertaba el 74-77,5 %
+  ## (+49 a +52,5 pp, tres muestras de N = 100).
+  ## POR QUE 09 SI ES APTO Y 02/03/05 NO: el criterio es que la cadena de tres pasos quede
+  ## COHERENTE CON UN SOLO ERROR. 09 CANCELA la primera incógnita (cL = a - k*c = 0), así
+  ## que el Paso 3 divide legitimamente entre el coeficiente superviviente; el fallo esta
+  ## solo en el término independiente. 02 y 05 no cancelan (el Paso 3 haría desaparecer la
+  ## incógnita sin justificación -> dos errores) y 03 cancela la OTRA y calcula un valor
+  ## VERDADERO. La distinción es de estructura, no de conveniencia.
+  list(codigo = "ERR-ALG-09", conserva_igualdad = FALSE, apto_real = TRUE, paso = 2L,
+       nombre = "Restar el término independiente con un factor distinto del que se aplicó a los coeficientes",
+       causa_raiz = paste("Trata el término independiente como si no formara parte de la ecuación que",
+                          "multiplicó: le aplica un factor distinto del que usó en los términos con",
+                          "incógnita, de modo que la resta ya no opera sobre la misma igualdad."),
+       precondicion = function(p) TRUE,
+       calcula = function(p) (p$P1 - p$P2) / (p$b - p$k * p$d)),
+  list(codigo = "ERR-ALG-07", conserva_igualdad = TRUE, apto_real = TRUE, paso = 3L,
        nombre = "Dividir entre el coeficiente de la incógnita ya eliminada",
        causa_raiz = paste("Toma el primer coeficiente que ve en el sistema en vez del que",
                           "acompaña a la incógnita que queda tras la eliminación."),
        precondicion = function(p) p$a != 0L && p$b - p$k * p$d != p$a,
        calcula = function(p) (p$P1 - p$k * p$P2) / p$a),
-  list(codigo = "ERR-ALG-06", conserva_igualdad = FALSE, apto_real = TRUE, paso = 3L,
-       ## OBJ 4 (2026-08-20): el rotulo decía "multiplicar", operación que los senuelos de
+  ## conserva_igualdad = TRUE desde V6 (detractor FASE 2C, OBJ 1). Era FALSE porque su
+  ## señuelo MULTIPLICABA un miembro; desde C4 DIVIDE la ecuación completa, operación que
+  ## SI conserva la igualdad. Con FALSE la Solution imprimia "rompe la igualdad entre los
+  ## dos miembros" —matemáticamente falso— en el 28,5 % de las versiones, y se contradecia
+  ## con su propia causa_raiz dos líneas después. La rama TRUE dice lo correcto: conserva
+  ## la igualdad pero NO elimina la incógnita que había que eliminar.
+  list(codigo = "ERR-ALG-06", conserva_igualdad = TRUE, apto_real = TRUE, paso = 3L,
+       ## OBJ 4 (2026-08-20): el rotulo decía "multiplicar", operación que los señuelos de
        ## este código NUNCA ejecutan (92/100 usan sumar_coef o restar). La Solution
        ## atribuia así al estudiante un error distinto del que la opción le muestra.
-       nombre = "Operar con el coeficiente en vez de dividir entre él",
-       causa_raiz = paste("No reconoce que un coeficiente que multiplica se deshace dividiendo:",
-                          "opera con él —lo suma, lo resta o lo multiplica— en vez de dividir."),
+       ## C4: el rotulo describe lo que la opción MUESTRA. Sus señuelos dividen entre el
+       ## coeficiente que la incógnita tiene en una ecuación ORIGINAL, y desde C4 citan esa
+       ## ecuación: el error visible es despejar de una ecuación con dos incógnitas.
+       nombre = "Despejar de una ecuación que todavía tiene dos incógnitas",
+       causa_raiz = paste("Busca el coeficiente de la incógnita en cualquiera de las ecuaciones",
+                          "del sistema y divide entre él, sin advertir que el despeje solo es",
+                          "válido una vez que la otra incógnita ha sido eliminada."),
        precondicion = function(p) TRUE,
        calcula = function(p) (p$P1 - p$k * p$P2) * (p$b - p$k * p$d))
 )
@@ -157,6 +214,7 @@ mutar <- function(pr, cod, par) {
   if (cod == "ERR-ALG-03") { pr$objetivo <- "R"; pr$factor <- par$f }
   if (cod == "ERR-ALG-04") pr$signo_completo <- FALSE
   if (cod == "ERR-ALG-05") pr$op2 <- "sumar"
+  if (cod == "ERR-ALG-09") pr$op2 <- "indep_sin_factor"
   if (cod == "ERR-ALG-06") pr$op3 <- "multiplicar"
   if (cod == "ERR-ALG-07") pr$op3 <- "coef_eliminado"
   pr
@@ -171,6 +229,14 @@ eq_paso2 <- function(pr, par) {
   e <- eq_paso1(pr, par)
   if (identical(pr$op2, "sumar"))
     list(cL = par$a + e$cL, cR = par$b + e$cR, ci = par$P1 + e$ci)
+  else if (identical(pr$op2, "indep_sin_factor"))
+    ## V6: coeficientes CORRECTOS (cancela la incógnita, misma forma que la clave); el
+    ## error esta solo en el independiente, al que no se le aplicó el factor del paso 1.
+    list(cL = par$a - e$cL, cR = par$b - e$cR, ci = par$P1 - par$P2)
+  else if (identical(pr$op2, "indep_factor_extra"))
+    ## V6, variante 2: al independiente se le aplica un factor de más (k+1). Existe para
+    ## que el cociente de la clave quede ENTRE los dos señuelos y no en un extremo.
+    list(cL = par$a - e$cL, cR = par$b - e$cR, ci = par$P1 - par$k2 * par$P2)
   else if (identical(pr$op2, "restar_invertido"))
     list(cL = -(par$a - e$cL), cR = -(par$b - e$cR), ci = par$P1 - e$ci)
   else if (isTRUE(pr$signo_completo))
@@ -189,9 +255,15 @@ ejecutar_proc <- function(pr, par) {
 ## ===========================================================================
 ## 4. SELECCIÓN DE PARÁMETROS  (Familia 1: búsqueda acotada, sin repeat libre)
 ## ===========================================================================
-is_canonical <- (sample.int(12L, 1L) == 1L)
+## V8-bis (FASE 2C pasada 3, objeción 1 del detractor CLOZE). La frecuencia canónica y el
+## peso `pc_canon` del sorteo de `cod_real` son DOS constantes acopladas: si una cambia sin la
+## otra, la marginal se desbalancea EN SILENCIO (medido: sample.int(6L) dejando pc_canon=1/12
+## lleva ERR-ALG-01 de 31,5 % a 39,5 %, reabriendo ~8 pp del canal que V8 cerró, sin que
+## ninguna guarda dispare y con 0 fallos de corrección). Fuente única + guarda ejecutable.
+K_CANON      <- 12L
+is_canonical <- (sample.int(K_CANON, 1L) == 1L)
 
-## ERR-ALG-02 se RETIRA como senuelo (OBJ 5): su texto dice multiplicar TODA LA PRIMERA
+## ERR-ALG-02 se RETIRA como señuelo (OBJ 5): su texto dice multiplicar TODA LA PRIMERA
 ## ecuación y `proc_de_opcion` no puede modelarlo sin complicar el modelo; la salida
 ## honesta es retirarlo, no verificar un sustituto. Sigue en el pool como error catalogado.
 cods_paso <- function(p) vapply(errores_conceptuales[
@@ -199,10 +271,10 @@ cods_paso <- function(p) vapply(errores_conceptuales[
            function(e) e$paso == p && e$codigo != "ERR-ALG-02", logical(1))],
     function(e) e$codigo, character(1))
 
-## Solo son APTOS COMO ERROR REAL los que dejan una cadena de 3 pasos coherente:
-## ERR-ALG-02 y ERR-ALG-05 no cancelan la primera incognita (el Paso 3 la haría
-## desaparecer sin justificación -> el estimulo tendría DOS errores, y el enunciado
-## afirma que hay UNO); ERR-ALG-03 cancela la OTRA incognita y calcula un valor que
+## Solo son APTOS CÓMO ERROR REAL los que dejan una cadena de 3 pasos coherente:
+## ERR-ALG-02 y ERR-ALG-05 no cancelan la primera incógnita (el Paso 3 la haría
+## desaparecer sin justificación -> el estímulo tendría DOS errores, y el enunciado
+## afirma que hay UNO); ERR-ALG-03 cancela la OTRA incógnita y calcula un valor que
 ## es VERDADERO (el de la primera), lo que vuelve discutible que haya "error".
 ## Los tres siguen en el pool como SENUELOS. (Detractor 2026-08-19, objeciones 2-4.)
 cods_paso_real <- function(p) vapply(errores_conceptuales[
@@ -210,29 +282,89 @@ cods_paso_real <- function(p) vapply(errores_conceptuales[
     function(e) e$codigo, character(1))
 
 ## rama EQUIPROBABLE entre los 3 pasos (regla #23: estratos >= 20 con N = 100)
-paso_real <- if (is_canonical) 1L else pick(c(1L, 2L, 3L))
-cod_real  <- if (is_canonical) "ERR-ALG-01" else pick(cods_paso_real(paso_real))
+## V6 (detractor FASE 2C, OBJ 2). EL ERROR REAL YA NO CAE EN EL PASO 3, y el paso 3
+## tampoco aporta señuelos: el ítem queda con el MOLDE DEL CUADERNILLO, cuyas cuatro
+## opciones son dos de paso 1 y dos de paso 2 (verificado sobre pagina_013.jpg).
+## Razón medida: TODOS los canales que este ejercicio ha peleado durante trece pasadas
+## —V1, E2, V5, DEN, U1, M5 y finalmente G1— vivian en el estrato del paso 3, que es una
+## extensión NUESTRA. Las opciones de paso 3 nombran un divisor y citan una ecuación, dos
+## grados de libertad que las de paso 1 y 2 no tienen, y cada cierre en uno abria el otro.
+## Con el estrato retirado: G1 +22,5 -> +0,0 · G10 +25,2 -> -1,5 · V1/E2/V5/DEN -> +0,0,
+## sin perder diversidad (99/100 versiones unicas, 94/100 claves, identico).
+## ERR-ALG-06 y ERR-ALG-07 permanecen en el catalogo como errores documentados, pero ya
+## no se instancian como opciones.
+## V8 (FASE 2C pasada 2, objeción 1 del detractor CLOZE). Sortear uniforme sobre el PASO
+## desbalancea la clave: el paso 1 tiene UN código apto_real y el paso 2 tiene DOS, y la
+## canónica además fuerza el paso 1. Marginal resultante P(ERR-ALG-01) = 1/12 + (11/12)/2
+## = 0,542, y en el gemelo CLOZE "marcar siempre la propiedad de multiplicar" acertaba la
+## Parte 4 el 55-60 % (+26 a +31 pp sobre el techo nulo; 3 bases x N = 100).
+## Se sortea el CÓDIGO con pesos que dejan la marginal EXACTAMENTE en 1/K por código, que
+## es el piso estructural declarado en HANDOFF §13.2 (|S| = K, pago 1/K):
+##   p(canonico) = (1/K - pc)/(1 - pc)   ;   p(resto) = (1/K)/(1 - pc)   ;   suma = 1 exacta.
+## ⚠️ El detractor propuso dividir el peso del paso 2 entre sus dos codigos. Eso deja los
+## pesos sumando 0,636; sample() los normaliza y la marginal cae en 0,476, NO en 1/3
+## (verificado antes de aplicar). El peso 4/11 ya es el de CADA código del paso 2.
+## El estrato 3 sigue retirado (L-13): solo se sortea entre los aptos de los pasos 1 y 2.
+cods_aptos <- unlist(lapply(1:2, cods_paso_real), use.names = FALSE)
+K_aptos    <- length(cods_aptos)
+pc_canon   <- 1 / K_CANON                ## acoplado a is_canonical por construcción (V8-bis)
+w_aptos    <- ifelse(cods_aptos == "ERR-ALG-01",
+                     (1/K_aptos - pc_canon) / (1 - pc_canon),
+                     (1/K_aptos) / (1 - pc_canon))
+stopifnot(abs(sum(w_aptos) - 1) < 1e-12, all(w_aptos > 0),
+          abs(pc_canon - 1/K_CANON) < 1e-12)   ## el acoplamiento, ejecutable (V8-bis)
+cod_real  <- if (is_canonical) "ERR-ALG-01" else
+             cods_aptos[sample.int(K_aptos, 1L, prob = w_aptos)]
 i_real    <- which(vapply(errores_conceptuales, function(e) e$codigo == cod_real, logical(1)))
 err_real  <- errores_conceptuales[[i_real]]
+paso_real <- err_real$paso               ## V8: se DERIVA del codigo, ya no se sortea aparte
+stopifnot(is.integer(paso_real), paso_real %in% c(1L, 2L),
+          !is_canonical || (identical(cod_real, "ERR-ALG-01") && paso_real == 1L))
 
 ## variante de redacción (vocabulario): el canónico usa SIEMPRE la 1 (verbatim del cuadernillo)
 RED <- if (is_canonical) 1L else pick(2:3)
 
 estructuras <- list()
+## C3 (2026-08-20): rejillas de d y b AMPLIADAS (antes d in {10,15,20,25,30} y
+## b in {60,80,100,120,150}, 152 estructuras). Motivo: con la rejilla estrecha solo
+## 40 estructuras (26 %) tenian |b-k*d| y b+k*d con el MISMO número de digitos, y esa
+## es la condición que empata la longitud de la clave con la de su señuelo hermano en
+## el estrato 2. Exigirla sobre la rejilla vieja dejaba 10 combinaciones (k,d,b) y
+## habría hundido la diversidad; sobre la ampliada quedan 200 estructuras y 50
+## combinaciones. La ampliación sube además el espacio total de 152 a 424.
 for (k in c(2L, 3L, 4L)) for (cc in c(5L, 10L, 15L, 20L))
-  for (d in c(10L, 15L, 20L, 25L, 30L)) for (b in c(60L, 80L, 100L, 120L, 150L)) {
+  for (d in seq(10L, 40L, by = 5L)) for (b in seq(50L, 200L, by = 10L)) {
     a  <- k * cc
     k2 <- k + 1L
     ## NO se exige b > k*d: ese filtro hacia que e2c fuera SIEMPRE positivo y, por
     ## tanto, que la clave no llevara nunca un signo "-" (canal de eliminación medido
-    ## en +16 pp por el detractor). El canonico mismo tiene b < k*d y su Paso 2
+    ## en +16 pp por el detractor). El canónico mismo tiene b < k*d y su Paso 2
     ## correcto es -60R = -300.000. Solo se excluye la degeneración b == k*d.
     if (b == k * d)   next
     if (b %% d != 0L) next        # ERR-ALG-03 necesita f = b/d entero
-    if (b == k2 * d)  next        # ERR-ALG-02 necesita b != k2*d
+    ## C6: filtro RETIRADO. Solo servía a ERR-ALG-02, que `cods_paso` excluye SIEMPRE del
+    ## pool de señuelos (OBJ 5), y cuya precondición ya declara la condición por su cuenta.
+    ## Su coste: prohibia f = k+1, o sea justamente las estructuras con coef == d, que son
+    ## las que impiden que "el divisor de la clave nunca es un coeficiente del sistema".
     if (b <= d)       next
+    ## dig_ok: |b-k*d| y b+k*d tienen el mismo número de digitos. Es la condición que
+    ## iguala la longitud de la clave del paso 2 con la de su señuelo ERR-ALG-08, cuyo
+    ## coeficiente es b+k*d. Solo se EXIGE cuando el error real es del paso 2 (ver
+    ## elegir_par): imponerla siempre reduciria el espacio sin necesidad.
     estructuras[[length(estructuras) + 1L]] <-
-      list(k = k, c = cc, d = d, b = b, a = a, k2 = k2, f = b %/% d)
+      list(k = k, c = cc, d = d, b = b, a = a, k2 = k2, f = b %/% d,
+           dig_ok = nchar(as.character(abs(b - k * d))) == nchar(as.character(b + k * d)),
+           ## coef_sis: el coeficiente de la ecuación reducida coincide con alguno de los
+           ## coeficientes del sistema. Solo se EXIGE cuando el error real es del paso 3
+           ## (ver elegir_par): sin el, el divisor de la clave es SIEMPRE un número que no
+           ## aparece en el enunciado y "descartar la opción que divide entre un número del
+           ## sistema" aísla la clave en 29/29. No crea ambiguedad: la clave despeja de la
+           ## reducida y el señuelo de una original que aun tiene DOS incógnitas.
+           ## ⛔ INALCANZABLE DESDE V6 — se calcula para las 476 estructuras y su único
+           ## consumidor es el filtro `paso == 3L` de `elegir_par`, que ya no se invoca
+           ## (L-13). Se conserva porque documenta la condición que habría que exigir si
+           ## alguien reintrodujera el estrato del paso 3; borrarla perdería esa información.
+           coef_sis = abs(b - k * d) %in% c(a, cc, d, b))
   }
 stopifnot(length(estructuras) > 0L)
 
@@ -245,6 +377,11 @@ elegir_par <- function(cod) {
   ie <- which(vapply(errores_conceptuales, function(e) e$codigo == cod, logical(1)))
   for (t in seq_len(600L)) {
     s <- estructuras[[sample.int(length(estructuras), 1L)]]
+    ## C3: en el estrato del paso 2 la clave compite en longitud con ERR-ALG-08, cuyo
+    ## coeficiente es b+k*d. Sin este filtro "la más corta" acierta 81,7 % en ese estrato.
+    if (errores_conceptuales[[ie]]$paso == 2L && !isTRUE(s$dig_ok)) next
+    ## ⛔ INALCANZABLE DESDE V6: `elegir_par` solo se llama con códigos de paso 1 y 2.
+    if (errores_conceptuales[[ie]]$paso == 3L && !isTRUE(s$coef_sis)) next
     L <- Lgrid[sample.int(length(Lgrid), 1L)]
     R <- Rgrid[sample.int(length(Rgrid), 1L)]
     if (L <= 2L * R) next
@@ -254,18 +391,28 @@ elegir_par <- function(cod) {
     v <- suppressWarnings(ejecutar_proc(mutar(proc_correcto(p), cod, p), p))
     if (length(v) != 1L || is.na(v) || !is.finite(v)) next
     ## v puede ser NEGATIVO: un procedimiento erróneo que arroja un precio negativo es
-    ## justo la señal de alarma que el item ensena a detectar, y devuelve b < k*d a la
+    ## justo la señal de alarma que el ítem ensena a detectar, y devuelve b < k*d a la
     ## mitad de las versiones del paso 2 -> la clave deja de no llevar nunca signo "-".
     if (v == 0 || v != round(v) || v == p$R) next
     ## OBJ 1(b)/8: sin cota, |v|/R tenía mediana 3.600 en el paso 3 -> "si el número es
     ## absurdo, el error es del paso 3" clasificaba con sensibilidad 100 %.
     if (abs(v) > 40 * p$R) next
     ## 2026-08-20: celda DETERMINISTA del grid. Si |b - k*d| coincide con a, d o b, el
-    ## divisor de la clave iguala al de un senuelo y —como ambas opciones de paso 3
+    ## divisor de la clave iguala al de un señuelo y —como ambas opciones de paso 3
     ## imprimen la MISMA ecuación reducida— los dos textos quedan identicos: falla
     ## unique(txt)==4 y el render aborta 400/400 sin recuperarse. Medido por dos
     ## verificadores independientes: 20/1000 (2 %) frente a 0/1000 antes de V4.
-    if (abs(p$b - p$k * p$d) %in% abs(c(p$a, p$d, p$b))) next
+    ## C5 (2026-08-20): FILTRO RETIRADO. Existía porque, cuando el divisor de la clave
+    ## igualaba al de un señuelo y AMBAS opciones imprimian la misma ecuación reducida,
+    ## los dos textos quedaban identicos y el render abortaba. Desde C4 cada opción cita
+    ## la ecuación de la que su divisor es coeficiente, así que dos divisores iguales ya
+    ## NO producen textos iguales. Y el filtro tenía un coste medido: garantizaba que el
+    ## divisor de la clave nunca fuera uno de los coeficientes del sistema, con lo que
+    ## "descartar toda opción que divida entre un número del enunciado" aislaba la clave
+    ## en 29/29 versiones del estrato 3 (+21,8 pp agregado). Se conserva solo la guarda
+    ## contra la colisión REAL que queda: coef == a con el señuelo coef_eliminado, que si
+    ## cita ecuaciones distintas pero podría confundir la lectura del paso 1.
+    if (abs(p$b - p$k * p$d) == 0L) next
     return(p)
   }
   NULL
@@ -305,7 +452,7 @@ e1c <- eq_paso1(pr_ok,   par); e2c <- eq_paso2(pr_ok,   par)
 valor_mostrado <- ejecutar_proc(pr_show, par)
 valor_correcto <- ejecutar_proc(pr_ok,   par)
 stopifnot(valor_correcto == par$R)                       # Nivel 5B
-## L-1: el senuelo ERR-ALG-05 debe derivarse de la ecuación MOSTRADA en el Paso 1
+## L-1: el señuelo ERR-ALG-05 debe derivarse de la ecuación MOSTRADA en el Paso 1
 ## (E1 + e1s), nunca de E2 original. Es lo que hace exacta la opción D del cuadernillo
 ## (30+30=60, 60+40=100, 900.000+400.000=1.300.000). Blindaje que L-1 anuncia:
 stopifnot(par$a + e1s$cL == 2L * par$a || e1s$cL != par$c * par$k)
@@ -317,10 +464,10 @@ S1 <- ctx$s1; S2 <- ctx$s2
 
 ## helpers de escritura de ecuaciones (todo con guion ASCII, regla #25)
 term <- function(co, sim) paste0(if (co < 0) "-" else "", abs(co), sim)
-## NORMALIZACION DE SIGNO (frente 1): toda ecuación se presenta con TODOS los términos
+## NORMALIZACIÓN DE SIGNO (frente 1): toda ecuación se presenta con TODOS los términos
 ## positivos, moviendo al otro miembro los negativos. Así "llevar un guion" deja de
 ## existir como rasgo y no puede correlacionar con el rol de la opción (§P7, familia
-## signo: la clave llevaba "-" el 3 % y los senuelos el 46 %). La instancia CANONICA
+## signo: la clave llevaba "-" el 3 % y los señuelos el 46 %). La instancia CANONICA
 ## se exceptua: reproduce el cuadernillo verbatim (regla #24 H-2, L-1).
 ecu  <- function(e) {
   if (is_canonical) {
@@ -343,12 +490,12 @@ ecu_lat <- function(e) {
 }
 
 ## ===========================================================================
-## 6. OPCIONES  (2 del paso del error real + 2 de un paso senuelo; nunca la
+## 6. OPCIONES  (2 del paso del error real + 2 de un paso señuelo; nunca la
 ##    clave sola en su paso -> sin fuga posicional)
 ## ===========================================================================
-## MOLDE ÚNICO Y PARALELO: clave y senuelo del MISMO paso comparten estructura y
+## MOLDE ÚNICO Y PARALELO: clave y señuelo del MISMO paso comparten estructura y
 ## vocabulario ("factor", "toda la ecuación", "resta", "signo", "despejar",
-## "coeficiente", "término independiente"); solo difiere la AFIRMACION sustantiva.
+## "coeficiente", "término independiente"); solo difiere la AFIRMACIÓN sustantiva.
 ## Es lo que impide (a) que la clave sea sistematicamente más larga (H1) y (b) que
 ## algun token sea exclusivo de la clave (Error 32).
 ## ===========================================================================
@@ -373,7 +520,7 @@ molde <- function(paso, eq) {
   else            paste0("En el paso ", paso, ", la ecuación debió ser: ", eq)
 }
 
-## --- textos VERBATIM del cuadernillo, solo para la instancia canonica -------
+## --- textos VERBATIM del cuadernillo, solo para la instancia canónica -------
 txt_canon <- function(cod, rol, var = 1L) {
   if (rol == "clave")
     paste0("En el paso 1, puesto que se debió multiplicar toda la ecuación por ", par$k,
@@ -417,14 +564,36 @@ eq_de <- function(cod, rol, var = 1L) {
   ##    escalas (precio ~1e3 frente a constante ~1e6) daba "menor número" +31,0 pp.
   ## Toda opción termina ahora en la constante de una ecuación. Vector medido tras el cambio:
   ## M5 +7,3 · N3 +0,8 · M3 -0,8 · CC +0,0 · L1 +3,8 (antes +31,0 · +17,8 · +2,1 · +6,7 · -18,2).
+  ## ⛔ BLOQUE INALCANZABLE DESDE V6: ninguna opción cita el paso 3 (L-13). Se conserva
+  ## porque documenta CÓMO debe citarse la ecuación que acompaña a cada divisor —la lección
+  ## de C4/L-9— y borrarlo perdería esa información sin ganar nada.
   if (paso == 3L) {
     coef <- if (e2$cR == 0) e2$cL else e2$cR
-    den  <- if (identical(pr$op3, "coef_eliminado")) par$a
-            else if (identical(pr$op3, "div_orig_d")) par$d
-            else if (identical(pr$op3, "div_orig_b")) par$b
-            else coef
+    ## C4 (2026-08-20). CADA OPCIÓN CITA LA ECUACIÓN DE LA QUE SU PROPIO DIVISOR ES
+    ## COEFICIENTE. Antes todas citaban la reducida, y entonces la única opción cuyo
+    ## divisor aparecia en la ecuación que ella misma imprimia era la CLAVE: "elegir la
+    ## opción cuyo divisor coincide con el coeficiente de su ecuación" acertaba 29/29 en
+    ## el estrato del paso 3 sin resolver nada -- emparejar dos números impresos a diez
+    ## caracteres uno de otro. Las tres ecuaciones citadas EXISTEN en el enunciado y son
+    ## VERDADERAS (la reducida del paso 2 y las dos originales del sistema), así que esto
+    ## no imprime ninguna falsedad: el error del señuelo es despejar de una ecuación que
+    ## TODAVÍA TIENE DOS INCOGNITAS, que es lo que su rotulo declara.
+    if (identical(pr$op3, "div_orig_d"))
+      return(paste0(abs(par$d), " la ecuación ",
+                    ecu(list(cL = par$c, cR = par$d, ci = par$P2))))
+    if (identical(pr$op3, "div_orig_b"))
+      return(paste0(abs(par$b), " la ecuación ",
+                    ecu(list(cL = par$a, cR = par$b, ci = par$P1))))
+    if (identical(pr$op3, "coef_eliminado")) {
+      e1 <- eq_paso1(pr, par)
+      return(paste0(abs(par$a), " la ecuación ",
+                    ecu(list(cL = e1$cL, cR = e1$cR, ci = e1$ci))))
+    }
     ## abs(): un divisor negativo es ruido de presentación (3/120 medidas), no contenido
-    return(paste0(abs(den), " la ecuación reducida ",
+    ## C6: "reducida" retirado. Anadia 9 caracteres SOLO a la opción que cita la ecuación
+    ## del paso 2 —que en el estrato 3 es la clave—, y con ello "la más larga" acertaba
+    ## 86,2 % en ese estrato. La ecuación se imprime entera, así que cual es se ve.
+    return(paste0(abs(coef), " la ecuación ",
                   ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci))))
   }
   ecu(list(cL = e2$cL, cR = e2$cR, ci = e2$ci))
@@ -484,17 +653,29 @@ txt_senuelo <- function(cod, var = 1L, RED = 2L) {
 proc_de_opcion <- function(cod, tipo, var = 1L) {
   if (identical(tipo, "clave")) return(pr_ok)             # repara el error real
   p <- pr_show
-  ## L-7: si el proc de un senuelo saliera identico al del estimulo, ejecutar_prop()
-  ## comprobaria "el estimulo no llega a R", que ya esta aseverado antes: la sonda se
-  ## verificaria a si misma (vacua en 27/100 antes de esta guarda).
+  ## L-7: si el proc de un señuelo saliera identico al del estímulo, ejecutar_prop()
+  ## comprobaria "el estímulo no llega a R", que ya esta aseverado antes: la sonda se
+  ## verificaría a si misma (vacua en 27/100 antes de esta guarda).
   if (cod == "ERR-ALG-01") { p$ambito <- "primer"; p$factor <- -par$k; p$op2 <- "sumar" }
   if (cod == "ERR-ALG-02") { p$factor <- par$k * par$k }  # aplica el factor otra vez
   if (cod == "ERR-ALG-03") { p$objetivo <- "R"; p$factor <- par$f; p$ambito <- "toda" }
-  if (cod == "ERR-ALG-04") { p$op2 <- "restar_invertido"; p$signo_completo <- TRUE }
+  ## V7. La forma CANONICA del error 04 es olvidar el cambio de signo en el término
+  ## independiente (`signo_completo = FALSE`), y su ecuación tiene cL = 0 y DOS números,
+  ## como la clave del paso 2. La variante `restar_invertido` niega los dos términos con
+  ## incógnita y deja ci con el MISMO signo que el coeficiente: `ecu()` manda entonces
+  ## todo a un miembro y escribe "0 = ...", un TERCER número que aislaba a la clave en la
+  ## regla NTm. Solo se usa cuando el estímulo YA comete 04, porque alli la forma canónica
+  ## sería idéntica a pr_show y la sonda no verificaría nada (L-7).
+  if (cod == "ERR-ALG-04") {
+    if (isFALSE(pr_show$signo_completo)) { p$op2 <- "restar_invertido"; p$signo_completo <- TRUE }
+    else                                 { p$op2 <- "restar";           p$signo_completo <- FALSE }
+  }
   if (cod == "ERR-ALG-05") { p$op2 <- "sumar" }
+  if (cod == "ERR-ALG-09") { p$op2 <- if (var == 1L) "indep_sin_factor" else "indep_factor_extra"
+                             p$signo_completo <- TRUE }
   ## OBJ 1: la variante "invertir" (coef/ci) se RETIRA. Era la única cuyo valor no es
   ## entero —siempre sub-unitario, ~1e-4— y `fmt(digits = 0)` lo colapsaba a "0": el
-  ## senuelo imprimia "de donde X = 0" siendo falso en 69/100 versiones del schoice y
+  ## señuelo imprimia "de donde X = 0" siendo falso en 69/100 versiones del schoice y
   ## 60/100 del cloze. "sumar_coef" es entera, distinta de "restar" y nombra un error
   ## real (operar con el coeficiente en vez de dividir entre el).
   ## 2026-08-20 (2.o intento). "sumar_coef"/"restar" fueron un ERROR MEDIDO: dan ci +- coef
@@ -511,6 +692,9 @@ proc_de_opcion <- function(cod, tipo, var = 1L) {
   p
 }
 ejecutar_prop <- function(pr) {
+  ## ⛔ INALCANZABLE: ningun `op3` fija "invertir" ni "restar" desde que la clausula
+  ## ", de donde X = ..." se retiro. Se conservan porque `ejecutar_prop` debe espejar
+  ## rama por rama a `eq_de`, y borrar aquí sin borrar allá rompe esa correspondencia.
   if (identical(pr$op3, "invertir")) { e <- eq_paso2(pr, par)
     coef <- if (e$cR == 0) e$cL else e$cR; return(if (e$ci == 0) NA_real_ else coef / e$ci) }
   if (identical(pr$op3, "restar")) { e <- eq_paso2(pr, par)
@@ -527,44 +711,110 @@ ejecutar_prop <- function(pr) {
 eqs_estimulo <- c(ecu(e1s), ecu(e2s))
 cola <- function(x) sub("^.*así: |^.*ser: |^.*obtener: ", "", x)
 
+## --- GUARD DEL "0" ESPURIO DE ERR-ALG-09 (pasada de confirmación V6, 2026-08-20) ----
+## MOTOR COMPARTIDO con el gemelo: cualquier cambio va a los dos o divergen (I-10).
+## (b) EL DEFECTO. `ecu()` escribe "0" en el miembro que quede VACIO. Con ERR-ALG-09 eso
+## puede pasar: su coeficiente de la incógnita eliminada es 0 y, si el signo del que
+## sobrevive coincide con el del independiente, TODOS los términos caen en el mismo
+## miembro. Ese 0 CUENTA CÓMO NÚMERO: el señuelo pasa a 3 números frente a los 2 de la
+## clave y la clave queda SOLA como la de menos números (regla NTm de la batería:
+## |S| = 1, no 2). Medido por el detractor sobre 137 versiones del estrato 2: ocurre en
+## 21 (15,3 %) y son EXACTAMENTE las 21 en que |S| = 1.
+## (a) LA RESTRICCION QUE EL FIX PROPUESTO NO MIRABA, Y QUE CUESTA EL RENDER ENTERO. La
+## ecuación de una opción no puede coincidir con una del estímulo (gate del bucle). Con
+## el error real en el paso 1, la var 1 de ERR-ALG-09 ES la ecuación del Paso 2 del
+## estímulo -- 174/174 versiones (detractor CLOZE, OBJ G) -- y el bucle de 400 reintentos
+## la rechaza siempre. Fijar la variante sin mirar (a): 27 ABORTOS DE 100 medidos.
+## PRIORIDAD (a) > (b): (a) es condición de EXISTENCIA del ítem; (b) es diagnosticidad.
+## Si (a) deja las dos variantes, se sortea entre las que además cumplen (b); si ninguna
+## cumple (b), se sortea entre las que cumplen (a). NO toca la clave, ni el pool, ni el
+## verbatim canónico: solo decide cual de dos variantes YA EXISTENTES se instancia.
+ecu_vacia <- function(e) !(e$cL > 0 || e$cR > 0 || e$ci <  0) ||
+                         !(e$cL < 0 || e$cR < 0 || e$ci >= 0)
+var09 <- function() {
+  eqv  <- vapply(1:2, function(v) eq_de("ERR-ALG-09", "senuelo", v), character(1))
+  cero <- vapply(1:2, function(v) ecu_vacia(
+            eq_paso2(proc_de_opcion("ERR-ALG-09", "senuelo", v), par)), logical(1))
+  a <- which(!(eqv %in% eqs_estimulo)); if (!length(a)) a <- 1:2   # (a) gate del bucle
+  b <- a[!cero[a]];                     if (!length(b)) b <- a     # (b) guard del "0"
+  if (length(b) >= 2L) pick(b) else b[1]
+}
+
+
 construir_opciones <- function() {
-  paso_senuelo <- if (is_canonical) 2L else pick(setdiff(c(1L, 2L, 3L), paso_real))
-  ## el senuelo del mismo paso se elige para que su CIFRA FINAL empate con la de la
-  ## clave: sin esto, "la de menor cifra final" identifica la clave (bateria §P7, magnitud)
+  ## C7 (2026-08-20): cuando el error real es del paso 3, el otro paso es el 2 y sus dos
+  ## señuelos son los que SI cancelan la incógnita (04 y 08). Motivo medido: la clave del
+  ## paso 3 cita la ecuación reducida —una incógnita— y su companera de paso cita una
+  ## original —dos—, así que si las otras dos opciones también traian dos incógnitas la
+  ## clave era la ÚNICA con una: "su ecuación tiene una sola incógnita" acertaba 77 % en
+  ## ese estrato. Con 04 y 08 hay tres opciones con una incógnita y la regla cae a 33 %.
+  paso_senuelo <- if (paso_real == 1L) 2L else 1L   ## V6: solo pasos 1 y 2
+  ## el señuelo del mismo paso se elige para que su CIFRA FINAL empate con la de la
+  ## clave: sin esto, "la de menor cifra final" identifica la clave (batería §P7, magnitud)
   cod_mismo    <- if (is_canonical) "ERR-ALG-01"
-                  else if (paso_real == 2L) "ERR-ALG-05"   # NO 04: con cod_real=04 su
-                  ## proc saldria identico al del estimulo y la sonda no verificaria nada (L-7)
+                  ## NO 04: con cod_real=04 su proc saldria identico al del estímulo y la
+                  ## sonda no verificaría nada (L-7). C2: se usa 08, que empata en forma,
+                  ## números y magnitud con la clave. Con 05 —el único companero que había—
+                  ## "la más corta" y "menos números" acertaban 30/30 en este estrato.
+                  ## V7: con 09 apto_real, el paso 2 tiene DOS claves posibles y el
+                  ## companero es el otro código que CANCELA la incógnita. Los dos
+                  ## imprimen una ecuación de una incógnita y dos números, igual que la
+                  ## clave, así que "menos números"/"la más corta" nunca la aislan.
+                  else if (paso_real == 2L)
+                    if (identical(cod_real, "ERR-ALG-09")) "ERR-ALG-04" else "ERR-ALG-09"
+                  ## ⛔ INALCANZABLE DESDE V6: `paso_real` es 1 o 2 (L-13).
                   else if (paso_real == 3L) setdiff(c("ERR-ALG-06", "ERR-ALG-07"), cod_real)[1]
                   ## Rama paso 1: se ALTERNA entre ERR-ALG-03 y ERR-ALG-01-con-factor-negativo
                   ## (que es literalmente la opción A del cuadernillo). Antes salia SIEMPRE 03,
-                  ## que multiplica por f = b/d y NO conserva el primer coeficiente del estimulo:
+                  ## que multiplica por f = b/d y NO conserva el primer coeficiente del estímulo:
                   ## la regla "primer coeficiente == el del Paso 1" acertaba el 98,9 % en esta
-                  ## rama, frente al 50,0 % del propio item oficial. El objetivo es ~50 %, el
+                  ## rama, frente al 50,0 % del propio ítem oficial. El objetivo es ~50 %, el
                   ## valor del ICFES, no cero (§P7-A: la referencia es el examen real).
                   ## MEDIDO: sorteando entre 01 y 03 la regla baja a 75,0 % (promedio de
                   ## 100 % con el señuelo 03 y 50 % con el 01); fijando ERR-ALG-01 baja a
-                  ## 50,0 %, que es el valor del propio item oficial y el objetivo declarado.
-                  ## ERR-ALG-03 NO desaparece: sigue apareciendo como senuelo del paso Q
+                  ## 50,0 %, que es el valor del propio ítem oficial y el objetivo declarado.
+                  ## ERR-ALG-03 NO desaparece: sigue apareciendo como señuelo del paso Q
                   ## cuando paso_senuelo == 1.
                   else if (paso_real == 1L) "ERR-ALG-01"
                   else pick(setdiff(cods_paso(paso_real), cod_real))
+  ## ⛔ INALCANZABLE DESDE V6: `paso_senuelo` es 1 o 2 (L-13). Conservada porque describe
+  ## la composición que habría que restaurar si el estrato 3 volviera.
   if (paso_senuelo == 3L) {
     sen <- list(list(cod = "ERR-ALG-06", var = 1L), list(cod = "ERR-ALG-06", var = 2L))
   } else {
     cs <- cods_paso(paso_senuelo)
-    cs <- if (is_canonical) c("ERR-ALG-04", "ERR-ALG-05") else cs[sample.int(length(cs))][1:2]
-    sen <- list(list(cod = cs[1], var = 1L), list(cod = cs[2], var = 1L))
+    cs <- if (is_canonical) c("ERR-ALG-04", "ERR-ALG-05")
+          ## V6: uno de los dos señuelos de paso 2 es SIEMPRE ERR-ALG-09, que cancela la
+          ## incógnita y tiene por tanto el mismo número de términos que la clave de ese
+          ## paso. Sin esta garantia, con el error real en el paso 1 la clave podía quedar
+          ## empatada como la de menos números.
+          else if (paso_senuelo == 2L)
+            c("ERR-ALG-09", pick(setdiff(cods_paso(2L), "ERR-ALG-09")))
+          else cs[sample.int(length(cs))][1:2]
+    ## V6: los códigos con DOS variantes (06 y 09) sortean la suya también aquí. Con var
+    ## fija, ERR-ALG-09 usaría siempre "P1 - P2" y su cociente sería siempre mayor que el
+    ## de la clave: el extremo volveria a ser informativo.
+    ## var09(): guard del "0" espurio (ver arriba). ERR-ALG-06 sigue sorteando libre.
+    vr  <- function(cod) if (cod == "ERR-ALG-09") var09()
+                         else if (cod == "ERR-ALG-06") pick(1:2) else 1L
+    sen <- list(list(cod = cs[1], var = vr(cs[1])), list(cod = cs[2], var = vr(cs[2])))
   }
   ## en el paso 3 la variante 2 termina en el COEFICIENTE, igual que la clave
-  var_mismo <- 1L   # var 1 empata en numero de terminos con la clave (var 2 anade uno)
+  ## C1 (2026-08-20): la variante FIJA 1 hacia que el divisor del señuelo fuese SIEMPRE
+  ## par$d (10-30) mientras el de la clave es coef = d*|f-k| (20-120): "dividir entre el
+  ## número más grande" acertaba 29/29 en el estrato 3. La variante 2 usa par$b (60-150),
+  ## que es MAYOR que coef siempre que f > k/2. Sorteada, ninguna dirección gana.
+  var_mismo <- if (is_canonical) 1L
+               else if (identical(cod_mismo, "ERR-ALG-09")) var09()   # guard del "0"
+               else pick(1:2)
   ## La redacción se sortea POR OPCIÓN, no por versión: si fuera global, la longitud
   ## quedaría correlacionada con el ROL y "la más corta"/"la más larga" identificarian
-  ## la clave (bateria §P7, familia magnitud, en sus DOS direcciones).
+  ## la clave (batería §P7, familia magnitud, en sus DOS direcciones).
   rd <- function() if (is_canonical) 1L else pick(2:3)   # RED=1 es la VERBATIM canonica
-  ## OBJ 3: clave y señuelo nunca comparten código. EXCEPCION canonica: la opción A del
+  ## OBJ 3: clave y señuelo nunca comparten código. EXCEPCIÓN canónica: la opción A del
   ## cuadernillo ES el señuelo del propio ERR-ALG-01 (L-1), así que ahí coinciden a propósito.
-  ## OBJ 3 sigue vigente, con DOS excepciones documentadas en las que clave y senuelo
-  ## comparten código a propósito: la instancia canonica (opción A del cuadernillo, L-1)
+  ## OBJ 3 sigue vigente, con DOS excepciones documentadas en las que clave y señuelo
+  ## comparten código a propósito: la instancia canónica (opción A del cuadernillo, L-1)
   ## y la variante ERR-ALG-01-negativo de la rama 1, que es esa misma opción A.
   stopifnot(is_canonical || paso_real == 1L || !identical(cod_mismo, cod_real))
   ops <- list(
@@ -602,11 +852,11 @@ construir_opciones <- function() {
   inv_len <- diff(range(nchar(txt))) <= 12L
   inv_sig <- length(unique(vapply(txt, lleva_guion, logical(1)))) == 1L
   ## H1 no exige que la clave sea corta: exige que sea la ÚNICA más corta. Basta con
-  ## que ALGUN senuelo tenga una longitud equivalente. Precondición verificada, no
+  ## que ALGUN señuelo tenga una longitud equivalente. Precondición verificada, no
   ## tendencia esperada: es lo que funciono con la semántica, la única dimensión que
   ## nunca reabrio en seis pasadas.
   ## condición LITERAL de lo que H1 mide: la clave no puede ser la ÚNICA más corta
-  ## ni la ÚNICA más larga. Basta con que algun senuelo la iguale o la supere/rebaje.
+  ## ni la ÚNICA más larga. Basta con que algun señuelo la iguale o la supere/rebaje.
   lc <- nchar(txt[1]); ls <- nchar(txt[-1])
   empate <- any(ls <= lc) && any(ls >= lc)
   ## MEDIDO (pasada 7): exigir el empate como gate deja 39/100 versiones sin ninguna
@@ -708,7 +958,7 @@ cat("\n", ctx$sujeto, " quiere saber el precio que paga por cada ", ctx$u2,
     ", así que hace el siguiente procedimiento:\n\n", sep = "")
 
 ## --- los 3 pasos: LISTA con vinetas (fidelidad H-3), ecuaciones INDENTADAS
-## --- 3 espacios dentro del item (INC-ECUACIÓN-LISTA: a columna 0 pandoc cierra la lista)
+## --- 3 espacios dentro del ítem (INC-ECUACIÓN-LISTA: a columna 0 pandoc cierra la lista)
 paso1_txt <- {
   if (identical(pr_show$ambito, "primer")) {
     paste0("Multiplicar por ", pr_show$factor, " el primer término de la segunda ecuación.")
@@ -799,10 +1049,14 @@ cat("### Dónde estaba el error\n\n")
 cat("**", err_real$codigo, " - ", err_real$nombre, "** (paso ", err_real$paso, ").\n\n", sep = "")
 cat("*Causa:* ", err_real$causa_raiz, "\n\n", sep = "")
 cat("Por eso el procedimiento llega a $", inc_final, " = ", fmt(valor_mostrado),
-    "$ en lugar de $", fmt(par$R), "$. El argumento válido es el que sostiene que ",
-    "**", sub("^En el paso [0-9]+, puesto que ", "", sub(", así:.*$", "",
-        sub(" para obtener:.*$", "", sub(" el resultado debería ser:.*$", "",
-        opciones_pre[[1]]$texto)))), "**.\n\n", sep = "")
+    "$ en lugar de $", fmt(par$R), "$.\n\n", sep = "")
+## V6 (detractor FASE 2C, OBJ 3). Antes esta frase intentaba RECORTAR la opción con cuatro
+## `sub()` encadenados que sólo conocían los moldes canónicos; con el molde vigente ninguno
+## casaba y la opción entera quedaba incrustada dentro de una subordinada, con mayúscula
+## intercalada: «…es el que sostiene que **En el paso 2, la ecuación debió ser: …**».
+## Medido por el detractor en el 91,5 % de las versiones. Se cita entera y entrecomillada,
+## que además no depende de qué molde se use.
+cat("El argumento válido es: «", opciones_pre[[1]]$texto, "».\n\n", sep = "")
 
 cat("### Por qué los demás argumentos no corrigen el procedimiento\n\n")
 cat("Se agrupan por el tipo de afirmación que hacen, no por el orden en que aparecen:\n\n")
@@ -811,6 +1065,26 @@ grupos <- split(otros, vapply(otros, function(o) o$cod, character(1)))
 for (g in names(grupos)) {
   ent <- errores_conceptuales[[which(vapply(errores_conceptuales,
           function(e) e$codigo == g, logical(1)))]]
+  ## V8 (FASE 2C pasada 2, objeción 1 del detractor SCHOICE). Cuando el senuelo comparte
+  ## código con el error real —el 100 % de la rama de paso 1, canonicas incluidas: 161/300
+  ## versiones medidas— repetir el rotulo hacia que la Solution nombrara el MISMO código
+  ## como diagnostico ("Donde estaba el error") y como argumento rechazado ("por que los
+  ## demás no corrigen"). Ninguna de las dos frases es falsa —hablan de objetos distintos—
+  ## pero el lector concluye que el documento se contradice, y se desperdicia el mejor
+  ## punto pedagogico: ese senuelo VUELVE A COMETER el error que dice corregir.
+  ## VERIFICADO por ejecución antes de escribir esta prosa (161/161 casos): el senuelo que
+  ## comparte código lleva SIEMPRE ambito="primer" y op2="sumar" (variantes 1 y 2, factores
+  ## -2/-3/-4), así que la afirmación "opera sobre un solo término" es verdadera en todos.
+  ## Si vuelve el estrato del paso 3 (L-13), esta rama debe re-verificarse.
+  if (identical(g, err_real$codigo)) {
+    cat("- **Una segunda versión del mismo error (paso ", ent$paso, ").** ",
+        "Este argumento señala el paso correcto, pero la corrección que propone vuelve a ",
+        "operar sobre un solo término en lugar de sobre la igualdad completa: **repite el ",
+        "error que pretende corregir**, y el resultado sigue sin ser ", fmt(par$R), ".",
+        sep = "")
+    cat(" *", ent$causa_raiz, "*\n", sep = "")
+    next
+  }
   cat("- **", g, " - ", ent$nombre, ".** ", sep = "")
   if (ent$paso != err_real$paso) {
     ## la cláusula causal depende del ORDEN relativo: decir "ya se había roto antes"
@@ -825,6 +1099,9 @@ for (g in names(grupos)) {
           sep = "")
     }
   } else {
+    ## ⛔ RAMA INALCANZABLE DESDE V6 (0/200 medido por el detractor): los únicos señuelos
+    ## que pueden senalar el paso correcto son 01, 04 y 09, y los tres tienen el flag en
+    ## FALSE. Solo revive si se reintroduce el estrato 3 (06/07 lo tienen en TRUE).
     if (isTRUE(ent$conserva_igualdad)) {
       cat("Señala el paso correcto y la operación que propone sí conserva la igualdad, ",
           "pero no elimina la incógnita que hay que eliminar, así que el resultado sigue ",

@@ -3,7 +3,7 @@
   "ejercicio": "sistema_ecuaciones_eliminacion_numerico_variacional_argumentacion_n4_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-08-20T07:09:50.755637-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-20T10:50:48.391017-05:00",
+  "timestamp_ultima_actualizacion": "2026-09-12T12:12:04.274835-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -33,10 +33,10 @@
       "timestamp": "2026-08-20T07:30:11.864244-05:00"
     },
     "detractor_fase2c": {
-      "completado": false,
-      "timestamp": null,
-      "veredicto": "RECHAZAR",
-      "nota": "4 auditorias independientes el 2026-08-20 (detractor de cierre, detractor sobre V4, auditor visual —murio sin reporte por agotamiento de turnos—, y Codex como motor distinto). Veredicto vigente: RECHAZAR. 2026-08-20, cierre de sesion. Bateria AMPLIADA Y CONGELADA (bateria_congelada.R, pre-registro §P7-C): linea base BLOQUEA, maximo agregado +21,3 pp. Canal en los TRES estratos por mecanismos independientes; V1 (divisor = coeficiente) es TECHO ESTRUCTURAL al 100 % en paso 3 — ver L-9 y HANDOFF §10.12. Cerrados en esta sesion: fallos de render (0/60, era 2 %) y la afirmacion falsa del comentario de eq_de. PENDIENTE: fix de divisores (OBJ 1), alternancia de cod_mismo (OBJ 3) y la decision estructural §10.7.1(c)."
+      "completado": true,
+      "timestamp": "2026-09-12T12:11:57.649683-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "nota": "FASE 2C CERRADA el 2026-09-12. Presupuesto §P7-D agotado (3 de 3 pasadas) con dos APROBAR_CON_CAMBIOS en la pasada 3 (SCHOICE y CLOZE, detractores independientes, sin `name:`, semillas ajenas) y NINGUN defecto de correccion en ninguna de las tres pasadas: 0/300 con control positivo por mutacion 267/300 (schoice) y 0/300 + 0/60 en XML de Moodle con la verdad recomputada del propio XML (cloze). V8 aplico: (1) fix de muestreo de cod_real con marginal 1/K exacta —cierra el canal de la Parte 4 del CLOZE, que medía +26 a +31 pp—, (2) fix de la prosa de Solution que repetia el codigo del diagnostico como argumento rechazado (161/300 versiones), y (3) guarda K_CANON que acopla la frecuencia canonica con pc_canon. RESIDUOS DECLARADOS, no perseguidos (ver HANDOFF §14.8): schoice M6c +8,2 pp, NTm +8,6, U1 +6,7 (canal de mezcla de estratos, incompatible con cerrar el del CLOZE por L-17), L1 +23,8 EXENTO por §P7-B (margen 3,9 %); cloze regla lexica de P4 +8,3 pp = piso exacto de |S|=3. Decision del profesor del 2026-09-12 sobre X1: coste aceptado de la fidelidad verbatim; el barrido de frecuencias (§14.2) mostro que 1/12 ya esta en el minimo y ninguna desbloquea."
     },
     "coherencias_5": {
       "completado": true,
@@ -54,7 +54,7 @@
     "aprobacion_usuario": {
       "completado": false,
       "timestamp": null,
-      "nota": "Requiere cerrar la FASE 2C. No apto para aula."
+      "nota": "Requiere aprobacion del profesor (paso 11). Despues, evidencia de Nivel 3 (aplicacion en aula) antes de promover. apto_para_aula sigue en false hasta ambas cosas."
     }
   },
   "apto_para_aula": false,
