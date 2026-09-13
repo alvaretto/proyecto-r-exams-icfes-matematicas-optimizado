@@ -8,13 +8,61 @@ Origen: pregunta impresa **No. 50** del cuadernillo ERA-2026 Matemáticas (`pagi
 pie impreso 20). Anclado por el **número impreso**, no por el mapeo: `mapa-paginas.md` y el OCR
 inducían al ítem equivocado (la tabla de límites de velocidad, que es la Q49).
 
-## I-1 · La discordancia de notación ES la tarea. NO armonizar.
+## I-1 · La fórmula usa las LETRAS DE LA FIGURA, para un lado DISTINTO del pedido
 
-El enunciado imprime la fórmula general con `a, b, c, α` mientras la figura usa `q, r, s` y
-`Q, R, S`. **Esa discordancia es la demanda cognitiva del ítem**: el estudiante debe transferir
-la fórmula genérica a la notación de la figura. Unificar las notaciones —el impulso «limpiador»
-natural— convierte un ítem de transferencia en uno de sustitución mecánica.
-Regla #24 H-2: se reproduce tal cual, incluidos sus rasgos incómodos.
+> **REESCRITA el 2026-09-13. Decisión del profesor**, comunicada a través del invocador del
+> orquestador. Cambia de sentido respecto de la versión anterior, que ordenaba **no** armonizar
+> la notación. Regla #24 **H-5** (relajar nunca es autónomo): queda por escrito quién lo decidió,
+> cuándo, y qué variante se descartó y por qué.
+
+### Lo que rige ahora
+
+La fórmula del enunciado se escribe con las **letras de la figura de esa versión**, pero
+**planteada para un lado distinto del que se pregunta**, sorteado entre los otros dos. Si se pide
+`q`, el enunciado muestra por ejemplo `s² = q² + r² − 2 · q · r · cos S`.
+
+Consecuencias operativas, todas con guardia mecánica en `data_generation`:
+
+| Exigencia | Guardia |
+|---|---|
+| La fórmula NUNCA se plantea para el lado pedido | `stopifnot(!identical(lado_formula, x))` y `stopifnot(!identical(W_formula, X))` |
+| El lado de la fórmula se **sortea**, no se fija | `lado_formula <- safe_sample(otros, 1L)` |
+| El **orden de los dos sumandos** también se sortea | `pf <- safe_sample(setdiff(LADOS_T, lado_formula), 2L)` |
+| La canónica conserva la fórmula genérica impresa | `stopifnot(identical(formula_enunciado, "a^2 = ..."))` |
+
+**Por qué el lado se sortea y no se fija.** Un lado fijo (siempre el «siguiente» de la familia)
+sería un patrón aprendible y, con él, un canal nuevo. Lo mismo vale para el orden de los sumandos:
+sin sortearlo, el primero sería **siempre** el lado pedido — rasgo constante y por tanto explotable.
+
+**Por qué hay que DECIRLO en el enunciado.** La rama general añade «Con los nombres del triángulo
+de la figura, aplicado al lado **w**, la relación se escribe así:». Sin ese puente el ítem sería
+engañoso: el estudiante podría creer que la fórmula dada es la que debe usar tal cual. La tarea es
+trasladar, no adivinar que hay que trasladar.
+
+### La variante que se DESCARTÓ, y por qué
+
+Se le advirtió al profesor que hacer coincidir las letras **para el lado que se pregunta**
+—`q² = r² + s² − 2 · r · s · cos Q` cuando se pide `q`— **disolvería el ítem**: la fórmula
+nombraría exactamente los tres datos de la clave (`r`, `s`, `Q`) y bastaría emparejar símbolos
+entre enunciado y opciones, sin geometría alguna. Sería DOK 1. **El profesor eligió la vía
+intermedia** que aquí se describe. La guardia `stopifnot` de arriba impide que alguien reintroduzca
+la variante literal «arreglando» el ítem dentro de seis meses.
+
+### Qué se conserva de la versión anterior
+
+La **exclusión de A, B y C** de las familias de letras (I-11) sigue vigente, y ahora importa más,
+no menos: si la figura usara `a, b, c` y la fórmula también, volveríamos al caso literal por la
+puerta de atrás.
+
+La **instancia canónica NO cambia**: conserva `a² = b² + c² − 2 · b · c · cos α`, porque reproduce
+el cuadernillo **verbatim** y esa fidelidad sostiene el gate H-3 (regla #24, H-2/H-5). Decisión
+tomada por el invocador y declarada aquí.
+
+### Coste medido del cambio: ver I-16
+
+El cambio convierte la fórmula en un **estímulo con letras**, y por tanto en una fuente de canal
+que antes no existía. Las cifras están en **I-16**, incluido un canal nuevo que **supera el corte
+de +8 pp** y que se declara sin rebaja.
 
 ## I-2 · Inventario de rótulos cerrado: exactamente 6, `{Q, R, S, q, r, s}`
 
@@ -223,10 +271,15 @@ cubierto por este override.
 
 ## I-11 · Las familias de letras EXCLUYEN A, B y C (operativa de I-1)
 
-La fórmula genérica del enunciado es `a² = b² + c² − 2bc·cos α`. Una familia de vértices
-`{A, B, C}` daría lados `a, b, c` **idénticos** a los de la fórmula y disolvería la tarea de
+La fórmula de la instancia **canónica** es `a² = b² + c² − 2bc·cos α`. Una familia de vértices
+`{A, B, C}` daría lados `a, b, c` **idénticos** a los de esa fórmula y disolvería la tarea de
 transferencia, que es la demanda cognitiva del ítem según **I-1**. Estaba en el pool y se
 retiró el 2026-09-13.
+
+**Tras la reescritura de I-1 esta exclusión importa MÁS, no menos.** Ahora la fórmula de la rama
+general lleva las letras de la figura; si la figura usara `a, b, c`, coincidiría además con la
+notación de la fórmula genérica del impreso y volveríamos al caso literal —el que el profesor
+descartó— por la puerta de atrás.
 
 Se excluyen además **I, L y O** por ambigüedad de glifo con `1` y `0` en la figura.
 
@@ -314,9 +367,15 @@ El cuadernillo imprime la fórmula con **puntos de multiplicación** (`a² = b²
 y los **rótulos de las opciones en negrita** (`Lado **r** y ángulos **R** y **Q**.`). Ambos se
 reproducen desde 2026-09-13.
 
-**Esto NO contradice I-1**: lo que I-1 prohíbe es armonizar las **letras** de la fórmula genérica
-con las de la figura —eso disolvería la tarea de transferencia—, no imitar su **composición
-tipográfica**.
+**Esto NO contradice I-1**: lo que I-1 gobierna es **qué letras** lleva la fórmula y **para qué
+lado** se plantea; esta invariante gobierna su **composición tipográfica** (puntos de
+multiplicación, rótulos en negrita). Son dimensiones distintas y ambas se copian del impreso.
+
+> ⚠️ **Corregido el 2026-09-13.** Esta invariante decía que «I-1 prohíbe armonizar las letras de la
+> fórmula genérica con las de la figura». **Eso dejó de ser cierto** cuando I-1 se reescribió: hoy
+> I-1 **ordena** usar las letras de la figura, para un lado distinto del pedido. La frase antigua
+> habría llevado a un lector futuro a revertir el cambio del profesor creyendo que respetaba una
+> invariante.
 
 El realce en negrita se aplica **sólo al emitir** el Answerlist (`realzar_rotulos()`): el vector
 `opciones` se deja sin markup a propósito, para que guardias, `stopifnot` canónicos y validadores
@@ -484,3 +543,194 @@ Y una evidencia de Nivel 1 sobre I-7 que conviene no perder: **el propio cuadern
 cláusula**. Su opción C (`Lados r y s y ángulo R`) es exactamente el patrón `GEO-COS-01` —dos lados
 y un ángulo adyacente— y el ICFES **no** la da por clave. Eso zanja la ambigüedad con la fuente
 oficial, no con un argumento.
+
+---
+
+## I-16 · Coste MEDIDO del cambio de I-1: un canal NUEVO de fórmula, declarado sin rebaja
+
+> **Medido el 2026-09-13**, inmediatamente después de aplicar el cambio de I-1. N = 100 (regla #23),
+> dos semillas independientes, convención canónica `score = 1/|S|` (nulo exacto por regla = 25,0 %).
+> Artefacto medido: md5 `d1f7b91675eac2af8129dcd3ebaa8e5c`.
+
+### Lo que NO se movió
+
+La **batería §P7 de 21 reglas se dejó CONGELADA** (§P7-C: ampliarla a mitad de ciclo cambiaría la
+vara) y se corrió idéntica sobre el artefacto anterior y el nuevo:
+
+| | Máximo | Techo nulo | Exceso | Veredicto |
+|---|---:|---:|---:|---|
+| Antes del cambio | 50,0 % (D1) | 31,4 % | **+18,6 pp** | BLOQUEA |
+| **Después** | 50,0 % (D1) | 31,3 % | **+18,7 pp** | BLOQUEA |
+
+Diferencia dentro del ruido (sd 2,8 pp). **Y era previsible**: la batería §P7 sólo recibe las
+OPCIONES, y el cambio no tocó ni una. Es la ceguera que I-10 ya declaraba. *Un `sin cambio` de esa
+batería no acredita que el cambio fuese inocuo* — por eso existe el bloque siguiente.
+
+Tampoco se movió nada de `validar_diagnosticidad.R`, por la misma razón (sus cuatro sondas miran
+las opciones): **H1 = 0 % · H2 = 0 % · H3 = 100 % · H3b = 16 %**, idénticos antes y después. El
+`ERR_DIAG_SUPERFICIAL` sigue siendo el de H3, amparado por **I-10**.
+
+### Lo que SÍ se movió: la fórmula pasó a ser un estímulo con letras
+
+| Regla estímulo → opción | Antes | Después (2 semillas) | Ítem impreso | Exceso s/ impreso |
+|---|---:|---:|---:|---:|
+| **F1** «no cita el ángulo que aparece en la fórmula» | **inerte** (25,0 %) | **42,4 % / 40,7 %** | 25,0 % | **+16 a +17 pp** |
+| **F6** «F1 **y además** no repite letra» (F1 ∧ D1) | **inerte** = D1, 50,0 % | **77,2 % / 72,0 %**; con filtro vacuo **80,5 % / 75,0 %** | 50,0 % | **+25 a +30 pp** |
+| F5 «de las de un ángulo, la que no cita el de la fórmula» | 50,0 % | 46,8 % / 47,0 % | 50,0 % | −3 pp |
+| F3 «la que más comparte con la fórmula» | 25,0 % | 3,2 % / 3,0 % | — | canal **inverso**, inofensivo |
+| E3 «empieza por el ángulo homónimo» (residuo de I-15 §D2) | 100,0 % | 100,0 % | 100,0 % | 0 pp |
+
+**«Inerte» tiene un significado exacto:** en el artefacto anterior y en el cuadernillo impreso la
+fórmula es genérica (`a, b, c, α`), así que no cita **ningún** rótulo de la figura y el filtro por
+su ángulo no descarta a nadie. La regla existía pero no podía disparar. Ese es el valor de partida
+honesto, no un cero inventado.
+
+### El hallazgo: F6 supera el corte de +8 pp y es un canal NUESTRO
+
+`F6` deja **una sola candidata en el 85 % de las versiones de la rama general**. Su mecanismo es
+puramente tipográfico y no exige geometría alguna:
+
+1. El ángulo de la fórmula `W` es `Y` o `Z` — nunca `X`, por la regla del profesor.
+2. `GEO-COS-01` y `-02` van **forzados** (I-12) y citan justamente `Y` y `Z`. Luego `F1` descarta
+   siempre a uno de los dos **gratis**.
+3. `D1` («no repite letra») descarta a **los dos**, porque ambos repiten (`y,z,Y` y `y,z,Z`).
+4. El tercer hueco está restringido por **I-12** a los no-repetidores `{4, 6, 9}`, dos de los cuales
+   citan `Y` o `Z`. Cuando ese tercero cita `W`, la conjunción aísla la clave.
+
+### El MARGEN, que es lo que decide si el canal es explotable (§P7-B)
+
+Una tasa alta con margen pequeño **no** es un defecto: la regla #22 §P7-B exime lo imperceptible.
+**Aquí no aplica la exención.** Medido sobre 173 versiones no canónicas:
+
+| Tamaño del conjunto que sobrevive a `F6` | Frecuencia |
+|---|---:|
+| **1 candidata → acierto SEGURO sin razonar** | **63,0 %** |
+| 2 candidatas → 50 % | 37,0 % |
+| 3 ó 4 candidatas | **0 %** |
+
+Y **la clave sobrevive al filtro en el 100 % de las versiones**: la heurística nunca la descarta por
+error, así que es *fiable* para quien la descubra. Score medio en la rama general: **81,5 %**. El
+mismo filtro sobre el ítem impreso deja **2** candidatas → 50,0 %.
+
+No es una señal marginal: es un descarte a **candidata única en casi 2 de cada 3 versiones**.
+
+**Es el ciclo de desplazamiento de canal de la regla #22 §P7, en su forma más clara:** I-12 cerró el
+canal léxico restringiendo el tercer hueco a los no-repetidores, y ese mismo cierre es lo que hoy
+permite que `F1` lo remate. Se optimizó lo que la batería medía y se abrió lo que no miraba.
+
+### Por qué NO se persiguió
+
+Instrucción explícita del invocador al pedir el cambio: *«Si el cambio abre un canal > +8 pp sobre
+el ítem impreso, **no lo persigas**: mídelo, decláralo con su cifra y repórtalo — la decisión de
+aceptarlo es del profesor.»* Además:
+
+- **Es estructural dado el diseño pedido.** La fórmula del coseno para el lado `w` cita
+  necesariamente el ángulo `W`, y `W ∈ {Y, Z}` son exactamente los ángulos de los distractores que
+  **I-12 obliga a forzar**. Cerrarlo exigiría reabrir I-12 o I-10, que están **firmados**.
+- **H-5**: relajar nunca es autónomo; y aceptar un canal medido tampoco lo es.
+
+### Cautela sobre la vara (heredada de I-15, y aquí importa)
+
+La vara del ítem impreso es **una sola instancia de 4 opciones**, así que *cualquier* regla que
+aísle su clave mide 100 % allí. **Control positivo medido:** «elige la última» da **100,0 % en el
+impreso** y **29,0 %** aquí. La vara de n = 1 **infla** hacia arriba — y aun así `F6` la supera por
++30,5 pp. Es decir: la cautela juega **en contra** del ejercicio, no a su favor, y el hallazgo
+sobrevive.
+
+### Lo que NO se degradó (verificado, no supuesto)
+
+| Comprobación | Resultado |
+|---|---|
+| Clave verdadera / segunda clave | **0 / 200** y **0 / 200** |
+| La fórmula nunca se plantea para el lado pedido | **0 violaciones / 200** |
+| `validar_multisemilla.R` | **APROBADO**, 0 fallos en 100 |
+| `validar_diversidad_sustantiva.R` | **PASS**, 33 valores únicos |
+| Umbral de producto 250/300 (regla #3) | **295 / 300** completa · **266 / 300** sólo texto |
+| Fórmulas de enunciado distintas | **69 / 300** |
+| Ortografía | limpio (el `--fix` sólo tocó comentarios) |
+| `\pandocbounded` en uso / `LTcaptype` | **0 / 0**, con `includegraphics[width=0.62\linewidth…]` y **control positivo** de la sonda |
+
+### Guardias nuevas: probadas por MUTACIÓN, no supuestas
+
+Contrato del incidente `INC-MUTANTE-SONDA` (cada mutante declara su sonda y debe morir **por
+ella**), sobre **copias en `/tmp`** — nunca el archivo real:
+
+| Mutante | Qué revierte | Sonda esperada | Abortos / 60 | Veredicto |
+|---|---|---|---:|---|
+| M1 | `lado_formula <- x` (la fórmula se plantea para el lado pedido) | `lado_formula` | **49** (los 11 restantes son canónicas, donde no aplica) | cazado por SU sonda |
+| M2 | la canónica pierde la fórmula genérica impresa | `formula_enunciado` | **11** (= exactamente las canónicas) | cazado por SU sonda |
+| M3 | `W_formula <- X` (el ángulo pasa a ser el del lado pedido) | `W_formula` | **49** | cazado por SU sonda |
+| — | **control sin mutar** | — | **0** | correcto |
+
+Ninguno murió por una sonda ajena, así que las guardias **no son tautológicas**.
+
+### Veracidad matemática de la fórmula nueva (defecto de CORRECCIÓN, binario)
+
+La fórmula del enunciado pasó de ser un enunciado genérico a una **afirmación matemática con letras
+concretas**. Si fuese falsa sería bloqueante. Verificada numéricamente sobre el triángulo
+**efectivamente dibujado** en 172 versiones no canónicas: **0 malformadas**, **0 planteadas para el
+lado pedido**, error relativo máximo de la identidad del coseno **1,02 × 10⁻¹⁵** (precisión de
+máquina). Se comprueba además que el ángulo citado es el **opuesto** al lado despejado y que los dos
+lados multiplicados son exactamente los otros dos.
+
+### FASE 2C del cambio — objeciones del detractor (2026-09-13, veredicto `APROBAR_CON_CAMBIOS`)
+
+**0 críticas · 1 alta · 3 medias · 3 bajas · 0 defectos de CORRECCIÓN.** Detractor independiente
+(no escribió ni corrigió el artefacto), con criterio construido desde cero: batería propia de **351
+reglas por enumeración exacta**, calibrada porque reproduce **diez** cifras ya publicadas aquí.
+
+| Obj. | Qué era | Estado |
+|---|---|---|
+| **1 (ALTA)** | La reflexión metacognitiva «traducir una fórmula **general** a la notación de la figura» describía un paso que la rama general **ya no exige**: **19,0 %** de las versiones. El cambio actualizó `intro_teorema`, el puente y el punto 2 de la estrategia, y **se saltó el pool de reflexiones** | **APLICADA**: `reflexion_de_rama` condicionada a `es_canonica`. Verificado **0/254** en rama general |
+| 2 (media) | En el **100 %** de la rama general, uno de los distractores forzados por I-12 **es exactamente el conjunto de datos que consume la fórmula mostrada** | **DECLARADA** abajo |
+| 3 (media) | La canónica (1/8) pasa a plantear una **tarea cognitiva distinta**: traducir notación, frente a intercambiar papeles en las otras 7/8 | **DECLARADA** abajo |
+| 4 (media) | El residuo que el orquestador declaró (F6) **apunta a la regla equivocada** | **CORREGIDO** abajo |
+| 5 (baja) | `pandoc3.docx` era anterior al `.Rmd` | **APLICADA**: los 3 DOCX regenerados y verificados |
+| 6 (baja) | La guardia canónica de la fórmula compara contra **el mismo literal** asignado 15 líneas antes: mata una edición de un sitio, no una coordinada | **MATIZADA**: es más débil que la de `lado_formula`, que sí es estructural |
+| 7 (baja) | El puente negaba y afirmaba lo mismo («no es sustituir letra por letra: hay que cambiar los papeles») | **APLICADA**: «No basta con copiar la fórmula tal como viene dada: hay que **intercambiar los papeles**» |
+
+#### §2 — un distractor es siempre el input de la fórmula mostrada (declarado, no revertido)
+
+La fórmula muestra `w² = x² + v² − 2·x·v·cos W`; despejar `x` **con ella** exigiría `{w, v, W}`, que
+es exactamente `GEO-COS-01` o `-02`, forzados por **I-12**. Doble filo, y por eso se declara en vez
+de revertirse: **a favor**, es un distractor fuerte que diagnostica la concepción «uso la fórmula tal
+como me la dan»; **en contra**, el aviso de que hay que **reescribirla** vive en la Solution, que el
+estudiante ve después.
+
+#### §3 — coste de equivalencia de la canónica: 1 de cada 8
+
+Antes del cambio las 8/8 versiones pedían lo mismo. Ahora la canónica pide **traducir notación** y la
+rama general **intercambiar papeles**. Un estudiante de cada ocho resuelve una tarea que no es la de
+sus compañeros. Es una tensión con **H-2** (la fidelidad al impreso no se negocia) y se resuelve a
+favor de H-2, declarando el coste.
+
+#### §4 — CORRECCIÓN del residuo: la cifra limpia es **F1**, no F6
+
+> El orquestador declaró `F6 = 77-80 %` con «+30,5 pp sobre el impreso». **Esa lectura estaba mal
+> planteada en dos sentidos, y se corrige aquí.**
+
+1. **F1/F6 NO TIENEN VARA.** El ítem impreso mide 25,0 % / 50,0 % en ellas **no porque resista el
+   canal, sino porque el canal no se puede formular allí**: su fórmula es genérica, luego «el ángulo
+   que aparece en la fórmula» no existe y el valor es el de **filtro vacuo**. Presentar la diferencia
+   como «exceso sobre la vara» confunde *«el impreso resiste»* con *«ahí la regla no es evaluable»*.
+   §P7-A no puede absolver ni condenar; el único criterio disponible es el **nulo atómico del 25 %**.
+2. **El TECHO NO SE MOVIÓ, y F6 está dominada.** Barrido de 351 reglas buscando alguna que sature
+   aquí sin saturar en el impreso: **ninguna**. El máximo era y sigue siendo **100 %**, vía `E3` y
+   `E4`, ambas **preexistentes** y ya declaradas en I-15.
+
+| Regla | Global (exacto) | Rama general | Exceso **atómico** | ¿Vara? |
+|---|---:|---:|---:|---|
+| **F1** «no cita el ángulo de la fórmula» | **42,0 %** | 44,4 % | **+17,0 pp** | **no** |
+| F6 = D1∧F1 (lo que se había declarado) | 79,2 % | 83,3 % | +54,2 pp | no |
+| D1∧F5 · E3∧F2i (no probadas por el orquestador) | 93,8 % · 90,6 % | **100 %** · **100 %** | — | no |
+
+**La cifra honesta del coste del cambio es `F1 = 42,0 %, +17,0 pp atómicos`**, por encima del corte
+de +8 pp. Las conjunciones son **argmax sobre 351 reglas**: sesgo de selección, justo lo que la
+memoria del repositorio advierte («el residuo §P7 no es el máximo de la batería»).
+
+3. **Hallazgo que debilita un argumento de I-15.** `A1∧D1` —«la que cita dos lados y cuyas tres
+   letras son distintas»— mide **100 %**, no usa la fórmula, y es **extensionalmente idéntica a E4**.
+   I-15 absuelve a E4 diciendo *«quien la aplica ha razonado»*; **ese argumento no sobrevive a la
+   re-expresión**: la misma partición se ejecuta contando letras repetidas, sin concepto de «ángulo
+   comprendido». La tasa no cambia; la **justificación** declarada es más débil de lo que I-15 afirma.
+   Se registra sin perseguirlo: §P7-D lo prohíbe y el canal es **preexistente al cambio**.

@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ```{r data_generation, echo = FALSE, results = "hide", message = FALSE, warning = FALSE}
 library(exams)
 
@@ -209,6 +214,50 @@ otros <- setdiff(letras_min, x)
 y <- otros[1]; z <- otros[2]
 Y <- toupper(y); Z <- toupper(z)
 LADOS_T <- c(x, y, z); ANGULOS_T <- c(X, Y, Z)
+
+## ===========================================================================
+## FÓRMULA DEL ENUNCIADO — invariante local I-1 (REESCRITA el 2026-09-13 por
+## DECISION DEL PROFESOR). La fórmula ya NO es generica: usa las LETRAS DE LA
+## FIGURA de esta versión. Para que el item no colapse a emparejar simbolos, se
+## plantea para un lado DISTINTO del que se pregunta, sorteado entre los otros
+## dos. Así el estudiante conserva la tarea: trasladar el patrón "los dos lados
+## que concurren en el vertice del ángulo" al lado que si se le pide.
+## EXCEPCION CANONICA (Hermes H-2): la instancia que reproduce el cuadernillo
+## conserva la fórmula generica impresa `a^2 = b^2 + c^2 - 2bc cos alfa`.
+## El ORDEN de los dos sumandos se sortea: dejarlo fijo haría que el primero
+## fuese SIEMPRE el lado pedido, un rasgo constante y por tanto aprendible.
+## ===========================================================================
+if (es_canonica) {
+  lado_formula      <- NA_character_
+  W_formula         <- NA_character_
+  formula_enunciado <- "a^2 = b^2 + c^2 - 2 \\cdot b \\cdot c \\cdot \\cos \\alpha"
+} else {
+  lado_formula      <- safe_sample(otros, 1L)
+  W_formula         <- toupper(lado_formula)
+  pf                <- safe_sample(setdiff(LADOS_T, lado_formula), 2L)
+  formula_enunciado <- paste0(lado_formula, "^2 = ", pf[1], "^2 + ", pf[2],
+                              "^2 - 2 \\cdot ", pf[1], " \\cdot ", pf[2],
+                              " \\cdot \\cos ", W_formula)
+}
+## GUARDIA DE I-1: la fórmula NUNCA se plantea para el lado que se pide. Si
+## alguien "mejora" el item haciendola coincidir, el render ABORTA: nombraria
+## los tres datos de la clave y bastaria emparejar simbolos (DOK 1).
+stopifnot(is.na(lado_formula) || !identical(lado_formula, x))
+stopifnot(is.na(W_formula)    || !identical(W_formula, X))
+## GUARDIA H-2: la canonica conserva la fórmula IMPRESA, verbatim.
+if (es_canonica)
+  stopifnot(identical(formula_enunciado,
+                      "a^2 = b^2 + c^2 - 2 \\cdot b \\cdot c \\cdot \\cos \\alpha"))
+
+## Puente de redacción: en la rama general hay que DECIR para que lado esta
+## escrita la fórmula. Callarlo volveria enganoso el item (el estudiante podría
+## creer que la fórmula dada es la que debe usar tal cual).
+intro_teorema <- if (es_canonica) {
+  "En un triángulo cualquiera, el teorema del Coseno relaciona uno de sus lados con los otros dos y el ángulo que forman estos. Está dada por la fórmula:"
+} else {
+  paste0("En un triángulo cualquiera, el teorema del Coseno relaciona uno de sus lados con los otros dos y el ángulo que forman estos. Con los nombres del triángulo de la figura, aplicado al lado **",
+         lado_formula, "**, la relación se escribe así:")
+}
 
 archivo_fig <- "triangulo_enunciado.png"
 dibujar_triangulo_rotulado(ang_apice = ang_apice, ang_izq = ang_izq,
@@ -468,13 +517,26 @@ sol      <- as.integer(seq_len(4L) == which(orden == 1L))
 stopifnot(sum(sol) == 1L, length(sol) == 4L)
 stopifnot(identical(opciones[which(sol == 1L)], clave_texto))
 
-reflexiones <- c(
+## OBJECION 1 (ALTA) del detractor, 2026-09-13. La cuarta reflexión hablaba de
+## "traducir una fórmula general a la notación de la figura": un paso que la rama
+## general YA NO EXIGE, porque desde el cambio de I-1 la fórmula llega con las
+## letras de la figura. Medido por el detractor: describía un paso inexistente en
+## el 19,0 % de las versiones. El cambio actualizó `intro_teorema`, el puente de
+## la Solution y el punto 2 de la estrategia, y se salto este pool.
+## Las otras cuatro son neutrales respecto de la rama y se dejan intactas.
+reflexiones_comunes <- c(
   "Antes de elegir una fórmula conviene preguntarse qué magnitudes relaciona, no sólo cuántos datos hay disponibles.",
   "Contar los datos no basta: dos problemas con la misma cantidad de datos pueden exigir herramientas distintas.",
   "Reconocer cuándo NO se puede aplicar un procedimiento es tan valioso como saber aplicarlo.",
-  "Traducir una fórmula general a la notación concreta de una figura es un paso que conviene escribir, no hacer de memoria.",
   "Cuando una vía deja más incógnitas que ecuaciones, el problema no es de cálculo sino de elección de estrategia."
 )
+reflexion_de_rama <- if (es_canonica) {
+  "Traducir una fórmula general a la notación concreta de una figura es un paso que conviene escribir, no hacer de memoria."
+} else {
+  "Reescribir una fórmula para el elemento que sí se pide, en vez de copiarla tal como viene dada, es un paso que conviene hacer por escrito."
+}
+reflexiones <- c(reflexiones_comunes, reflexion_de_rama)
+stopifnot(length(reflexiones) == 5L)
 reflexion  <- safe_sample(reflexiones, 1L)
 sol_marcas <- ifelse(sol == 1L, "Correcto", "Incorrecto")
 ```
@@ -482,9 +544,10 @@ sol_marcas <- ifelse(sol == 1L, "Correcto", "Incorrecto")
 Question
 ========
 
-En un triángulo cualquiera, el teorema del Coseno relaciona uno de sus lados con los otros dos y el ángulo que forman estos. Está dada por la fórmula:
-
-$$a^2 = b^2 + c^2 - 2 \cdot b \cdot c \cdot \cos \alpha$$
+```{r intro_formula, echo = FALSE, results = "asis"}
+cat(intro_teorema, "\n\n", sep = "")
+cat("$$", formula_enunciado, "$$\n", sep = "")
+```
 
 Observe el triángulo de la figura,
 
@@ -524,7 +587,23 @@ Solution
 El teorema del Coseno vincula **tres lados y un ángulo** de un mismo triángulo. En la notación de la figura, con cada lado en minúscula opuesto al ángulo en mayúscula del mismo nombre, la relación se escribe así:
 
 ```{r formula_solucion, echo = FALSE, results = "asis"}
-cat("$$", formula_clave, "$$\n", sep = "")
+cat("$$", formula_clave, "$$\n\n", sep = "")
+## PUENTE (2026-09-13). El enunciado ya NO da la fórmula generica en la rama
+## general: la da con las letras de la figura pero planteada para OTRO lado.
+## Decirlo aquí es lo que convierte el item en una tarea de traslado explicita
+## en vez de en una trampa tipografica.
+if (es_canonica) {
+  cat("El enunciado la presenta con letras genéricas ($a$, $b$, $c$ y $\\alpha$); ",
+      "el primer paso es traducirla a los nombres de la figura.\n\n", sep = "")
+} else {
+  cat("El enunciado presenta esta misma relación, pero escrita para el lado **",
+      lado_formula, "**:\n\n", sep = "")
+  cat("$$", formula_enunciado, "$$\n\n", sep = "")
+  cat("No basta con copiar la fórmula tal como viene dada: hay que **intercambiar los papeles**. ",
+      "El lado que se despeja pasa a ser **", x, "**, los que lo acompañan son los otros dos, ",
+      "y el ángulo que interviene es siempre el **opuesto al lado que se despeja** — aquí **",
+      X, "**, no **", W_formula, "**.\n\n", sep = "")
+}
 ```
 
 ### Respuesta correcta
@@ -581,10 +660,19 @@ cat(reflexion, "\n")
 
 ### Estrategia para evitar el error
 
-1. Identificar primero **qué se pide** y **qué teorema se nombra**: no todo conjunto que determine el triángulo sirve para el teorema pedido.
-2. Escribir la relación con la notación **de la figura**, no con las letras de la fórmula general.
-3. Comprobar que el ángulo disponible es el **comprendido** entre los dos lados conocidos, y no uno adyacente al lado buscado.
-4. Contar las incógnitas que quedan en la expresión: si queda más de una, el teorema no basta por sí solo.
+```{r estrategia, echo = FALSE, results = "asis"}
+## El paso 2 depende de COMO venga escrita la fórmula del enunciado: con letras
+## genéricas (canónica) hay que traducir la notación; con las letras de la
+## figura pero para otro lado (rama general) hay que re-plantearla.
+cat("1. Identificar primero **qué se pide** y **qué teorema se nombra**: no todo conjunto que determine el triángulo sirve para el teorema pedido.\n")
+if (es_canonica) {
+  cat("2. Escribir la relación con la notación **de la figura**, no con las letras de la fórmula general.\n")
+} else {
+  cat("2. Volver a escribir la relación **para el lado que se pide**: la del enunciado está planteada para otro lado, así que hay que cambiar los papeles antes de usarla.\n")
+}
+cat("3. Comprobar que el ángulo disponible es el **comprendido** entre los dos lados conocidos, y no uno adyacente al lado buscado.\n")
+cat("4. Contar las incógnitas que quedan en la expresión: si queda más de una, el teorema no basta por sí solo.\n")
+```
 
 Answerlist
 ----------

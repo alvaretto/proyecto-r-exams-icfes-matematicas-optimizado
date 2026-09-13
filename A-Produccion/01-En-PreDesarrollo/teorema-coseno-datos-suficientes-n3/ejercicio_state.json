@@ -3,7 +3,7 @@
   "ejercicio": "teorema_coseno_datos_suficientes_geometrico_metrico_formulacion_ejecucion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-09-13T09:06:37.862112-05:00",
-  "timestamp_ultima_actualizacion": "2026-09-13T12:00:28.265813-05:00",
+  "timestamp_ultima_actualizacion": "2026-09-13T13:03:33.219757-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -26,36 +26,37 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-09-13T09:33:20.921703-05:00"
+      "timestamp": "2026-09-13T12:55:29.690420-05:00"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-09-13T09:33:20.978140-05:00"
+      "timestamp": "2026-09-13T12:55:29.690420-05:00"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-09-13T11:57:29.801867-05:00",
-      "veredicto": "APROBAR_CON_CAMBIOS (7 objeciones aplicadas y verificadas)"
+      "timestamp": "2026-09-13T12:55:29.690420-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS (0 criticas, 1 alta, 3 medias, 3 bajas, 0 defectos de CORRECCION). Detractor independiente, sin name. Objeciones 1, 5 y 7 APLICADAS y verificadas; 2, 3, 4 y 6 DECLARADAS en .claude/CLAUDE.md (FASE 2C del cambio)"
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-09-13T11:57:29.857848-05:00",
-      "nota": "5 coherencias verificadas sobre render posterior al .Rmd | gate Hermes H-3 inventario bidireccional cerrado en 6 rotulos (6 familias + 4 extremos del pool) | auditoria visual auditor-visual-html APTO_VISUAL con N=24 declarado"
+      "timestamp": "2026-09-13T12:55:29.690420-05:00",
+      "nota": "5 coherencias verificadas sobre render posterior al .Rmd | gate Hermes H-3: inventario bidireccional cerrado en 6 rotulos y canonica verbatim contra el escaneo pagina_015.jpg (ancla H-4: numero impreso 50), verificada end-to-end en PDF | auditoria visual N=24 desktop + 8 movil (chromium 1024px/360px): APTO_CON_OBSERVACIONES, unica observacion cosmetica el tamano del diagrama en 360px"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-09-13T10:51:34.756859-05:00",
+      "timestamp": "2026-09-13T12:36:53.561164-05:00",
       "versiones_unicas": 295,
       "diversidad_sustantiva_valores_unicos": 33,
-      "nota": "295/300 unicas (regla #3, umbral 250; re-medido tras el fix de orden de angulos, antes 281) | 33 textos de clave distintos /100 (diversidad sustantiva, umbral 30) | multisemilla 100/100 APROBADO"
+      "nota": "Re-medido tras el cambio de I-1 (formula con letras de la figura). 295/300 firma completa y 266/300 solo texto (regla #3, umbral 250) | 33 textos de clave distintos /100 (umbral 30, PASS) | multisemilla 100/100 APROBADO | diagnosticidad: ERR_DIAG_SUPERFICIAL por H3=100% -- residuo AMPARADO por el override firmado I-10; H1=0% H2=0% H3b=16%, identicos antes y despues"
     },
     "validar_icfes": {
       "completado": true,
-      "timestamp": "2026-09-13T10:51:34.814102-05:00"
+      "timestamp": "2026-09-13T12:36:53.561164-05:00",
+      "nota": "Descriptor, Evidencia y Afirmacion verificados LITERALES contra el catalogo canonico (niveles-mat.json / evidencias-mat.json). Coherencia DOK 3 => Nivel 3 OK. Verificacion de juicio humano: ningun script del arsenal compara los exextra contra el catalogo"
     },
     "aprobacion_usuario": {
       "completado": true,
-      "timestamp": "2026-09-13T12:00:28.265813-05:00"
+      "timestamp": "2026-09-13T13:03:33.219757-05:00"
     }
   }
 }
