@@ -469,3 +469,11 @@ A-Produccion/02-En-Desarrollo/**/*.docx
 **/excalidraw.log
 .positai
 .posit/assistant
+
+# Backups locales de infraestructura .claude/ (regla #17: se CREAN antes de tocar
+# plataformas externas y NO se borran, pero tampoco se versionan: son snapshots
+# de máquina, pesados y reconstruibles. El tarball pre-ruflo ya estaba ignorado).
+.claude/_backups/
+.claude/*.bak-*
+.claude/settings*.bak*
+.claude/skills-ruflo-backup-*.tar.gz
