@@ -232,10 +232,15 @@ test_that("ninguna cita del repo describe el formato viejo con 'metacognitivo'",
   # patron_metacognitivo, TipoMetacognicion, prosa pedagógica); el discriminador
   # de abajo se encarga de distinguirlos.
   excepciones <- c(
-    # Estos dos NARRAN la historia de la deriva: tienen que poder citar el
+    # Estos tres NARRAN la historia de la deriva: tienen que poder citar el
     # formato viejo para explicar por qué se abandonó.
     file.path(repo_root, ".claude", "docs", "NOMENCLATURA_ARCHIVOS_RMD.md"),
-    file.path(repo_root, ".claude", "CLAUDE.md")
+    file.path(repo_root, ".claude", "CLAUDE.md"),
+    # El CHANGELOG narra la MISMA deriva. El regex de exclusión de más abajo se
+    # escribió para `CHANGELOG.md` y no cubría `CHANGELOG_CLAUDE_MD.md`, así que
+    # marcaba como deuda lo que es narración histórica legítima (rojo falso,
+    # medido 2026-09-11 replicando la lógica del test sobre 384 archivos).
+    file.path(repo_root, ".claude", "docs", "CHANGELOG_CLAUDE_MD.md")
   )
   citas <- list.files(file.path(repo_root, ".claude"), pattern = "\\.md$",
                       recursive = TRUE, full.names = TRUE)
