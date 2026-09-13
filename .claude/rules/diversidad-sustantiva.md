@@ -470,6 +470,49 @@ es el caso **«mismos datos, sonda retirada»**: con el canal real al 100 % en d
 al quitar esa sonda la batería reporta **19 %** —una cifra baja y tranquilizadora— y el
 helper igualmente **se niega a declarar PASS**.
 
+**Nota de cobertura NOMINAL (añadida 2026-09-13).** Una regla puede estar presente en la
+lista de §P7-E y aun así no cubrir nada: si su condición de disparo nunca se cumple con los
+datos concretos del ejercicio, la familia queda **formalmente cubierta y materialmente
+incumplida**. Medido: una regla relacional con **aplicabilidad 0,0 %**. Declarar la familia
+«CON SONDA» no basta — hay que declarar también que la sonda **puede disparar**; si no puede,
+es peor que declararla no aplicable, porque simula una cobertura que no existe. Ver Error 37
+en `patrones-errores-conocidos.md`.
+
+#### §P7-F — El espacio de diseño puede tener UNA SOLA combinación viable: enumérala antes de rediseñar
+
+Ante un canal estructural, el impulso es añadir una segunda rama al ítem para que el tipo de
+clave varíe. **Antes de hacerlo hay que enumerar el espacio**, porque puede no existir ninguna
+rama alternativa válida.
+
+Medido en `teorema-coseno-datos-suficientes-n3` sobre las cuatro combinaciones
+*teorema × magnitud pedida*:
+
+| Rama | Claves | Distractores del mismo molde | Viable |
+|---|---:|---:|:--:|
+| Coseno pide LADO (la del ítem oficial) | 1 | 2 | ✅ |
+| Coseno pide ÁNGULO | 1 | 0 | ❌ |
+| Seno pide LADO | **6** | 0 | ❌ |
+| Seno pide ÁNGULO | 2 | 4 | ❌ |
+
+**Sólo una combinación admite clave única Y al menos un distractor de su mismo molde — y es
+exactamente la que eligió el ICFES.** Corolario: cualquier segunda rama carece de distractor
+del mismo molde y bloquea §P7 al 100 % dentro de ella.
+
+Consecuencias operativas, las tres:
+
+1. **Cuando la enumeración demuestra que no hay segunda rama, el canal es ESTRUCTURAL**, no un
+   defecto corregible. Corresponde un **override registrado** (§P7-E), no una pasada de
+   corrección.
+2. **Enumerar cuesta menos que rediseñar.** En este caso la enumeración se hizo *antes* de
+   tocar el `.Rmd` y evitó una pasada completa sobre una rama imposible.
+3. **La enumeración se versiona como evidencia**: un override cita un archivo, y ese archivo
+   debe existir en el repositorio o el override no es auditable.
+
+La misma enumeración fijó, por el mismo camino, el criterio de unicidad de la clave: fue al
+recorrer las cuatro ramas que se hizo evidente que el criterio «una única aplicación del
+teorema» admitía dos lecturas y dejaba pasar una segunda clave en la rama elegida — ver Error
+35 en `patrones-errores-conocidos.md` y regla #24 H-4 (este mismo ejercicio).
+
 ---
 
 ## Patrón Correcto
@@ -604,8 +647,14 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.7
-**Fecha:** 2026-08-22 (v1.7 — nuevo **§P7-E**: cobertura RELACIONAL entre opciones, la vara de la
+**Versión:** 1.8
+**Fecha:** 2026-09-13 (v1.8 — nuevo **§P7-F**: el espacio de diseño puede tener UNA SOLA
+combinación viable (matriz `teorema × magnitud pedida` de `teorema-coseno-datos-suficientes-n3`,
+donde sólo la rama oficial admite clave única y distractor del mismo molde); enumerar antes de
+rediseñar, en vez de perseguir una rama estructuralmente imposible. Nota de **cobertura NOMINAL**
+añadida a §P7-E: una regla puede estar «CON SONDA» y tener aplicabilidad 0,0 %, formalmente
+cubierta y materialmente incumplida. Ver Errores 35 y 37 en `patrones-errores-conocidos.md`; v1.7
+2026-08-22 — nuevo **§P7-E**: cobertura RELACIONAL entre opciones, la vara de la
 instancia canónica por enumeración exacta, y la figura del **OVERRIDE** registrado cuando un canal
 no se puede cerrar sin dañar el ítem. Origen: `tasa-caminata-velocidad-maxima-n4`, donde 25 reglas
 en verde dejaban pasar un canal de +20,6 pp porque todas miraban las opciones por separado.
@@ -613,6 +662,27 @@ Ver Errores 33 y 34; v1.6 2026-08-15)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.8 (2026-09-13) — §P7-F: enumerar el espacio antes de rediseñar
+
+- **NUEVO §P7-F**, hermano de §P7-E pero de otra naturaleza: no exige una regla más, exige
+  **enumerar el espacio de diseño** antes de abrir una segunda rama para "arreglar" un canal
+  estructural. Medido en `teorema-coseno-datos-suficientes-n3`: de las cuatro combinaciones
+  posibles (`teorema × magnitud pedida`), **sólo la rama oficial** (coseno pide lado) admite
+  clave única Y al menos un distractor de su mismo molde. Las otras tres o no tienen clave
+  única (seno pide lado: 6 claves) o carecen de distractor del mismo molde (coseno pide ángulo:
+  0; seno pide ángulo: 2 claves y ninguna combinación viable con la única del mismo molde).
+- **Consecuencia**: cuando la enumeración cierra el espacio a una sola combinación, el canal
+  que esa combinación deja pasar es **estructural**, no un defecto de redacción — corresponde
+  un override registrado (§P7-E), no otra pasada de corrección persiguiendo una rama imposible.
+- **Nota de cobertura NOMINAL** añadida a §P7-E: una regla puede figurar «CON SONDA» en la
+  batería y tener **aplicabilidad 0,0 %** — presente en la lista, incapaz de disparar con los
+  datos del ejercicio. Formalmente cubierta, materialmente incumplida; peor que declararla no
+  aplicable, porque simula una cobertura que no existe.
+- **Origen**: mismo ciclo que introdujo Errores 35-37 en `patrones-errores-conocidos.md`
+  (`teorema-coseno-datos-suficientes-n3`, commits `d5e9a76c` y `dd3d59d1`, 2026-09-13). La misma
+  enumeración que fija §P7-F fue la que expuso, de paso, la ambigüedad del criterio «una única
+  aplicación del teorema» documentada en el Error 35.
 
 ### Cambios v1.6 (2026-08-15) — §P7: el veredicto pasa de la TASA al EXCESO
 

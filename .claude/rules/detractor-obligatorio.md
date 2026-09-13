@@ -506,10 +506,32 @@ el terreno donde la independencia importa.
 |---|---|---|
 | `AgenteDetractor` (`.claude/agents/agente-detractor.md`) | opus | FASE 2C estándar: los 8 dominios de esta regla sobre un `.Rmd` |
 | `adversario` (global, `~/.claude/agents/adversario.md`) | sonnet | Cuando se quiera además el framework anti-sicofancia (6 dimensiones, ToF, resistencia multi-turno) o el objeto no sea un `.Rmd` |
+| Detractor heterogéneo (`/detractor-hetero`, `.claude/scripts/detractor-hetero.sh`) | DeepSeek → GLM → GPT → local (otra familia) | FASE 2C-bis: segunda lectura con otro sesgo, recomendada antes de promover y tras cada ciclo RECHAZAR → corrección. Complementa; **nunca sustituye** al `AgenteDetractor` (ver § «Segundo detractor heterogéneo») |
 
 No son intercambiables en su salida: el primero reporta por dominios ICFES; el
 segundo, hallazgos con convicción epistémica. Para un `.Rmd` en workflow, el
 canónico es `AgenteDetractor`.
+
+### Alcance de la auditoría: overrides firmados e invariantes locales, no sólo el `.Rmd` (desde v1.5)
+
+**El detractor audita también los overrides firmados y las invariantes locales del
+subproyecto** (`.claude/CLAUDE.md` local, regla #17 / `INC-CLAUDE-LOCAL`), no únicamente el
+código del `.Rmd`. Un override o una invariante mal fundamentados son tan peligrosos como un
+distractor roto: prometen una garantía que el código no sostiene, y nada más en el arsenal los
+revisa.
+
+Caso medido (`teorema-coseno-datos-suficientes-n3`, 2026-09-13): un override registraba un
+exceso de **+4,4 pp** medido con una batería §P7 **ciega** al canal que ese mismo override
+aceptaba; con la sonda correspondiente incluida, la cifra real era **+18,8 pp** y el veredicto
+`BLOQUEA`. La invariante prometía zona gris donde un auditor futuro encontraría rojo. Ver Error
+37 en `patrones-errores-conocidos.md`.
+
+En ese mismo ciclo, el detractor independiente encontró **cuatro defectos que ningún validador
+del arsenal vio**: una segunda clave por ambigüedad del criterio del enunciado (Error 35), una
+afirmación falsa en el 90 % de las versiones, un distractor rotulado con un ángulo ausente de
+sus propios datos, y dos invariantes que eran prosa sin guardia ejecutable (Error 36). Ninguno
+de los cuatro es detectable por un validador genérico: los cuatro exigen razonar sobre el
+significado del artefacto, que es precisamente el terreno que justifica esta regla.
 
 ### Regla de spawn: SIN `name:` (OBLIGATORIA, medida 2026-08-16)
 
@@ -530,6 +552,48 @@ tipo de agente. Un teammate tampoco puede lanzar otros teammates (*«the team ro
 Consecuencia para esta regla: **un `VEREDICTO_DETRACTOR:` ausente tras un spawn con `name` no es
 una no-entrega del detractor** — es un error de invocación del coordinador, y se corrige
 relanzando sin `name`, no aplicando el protocolo de reintentos.
+
+---
+
+## Segundo detractor heterogéneo (FASE 2C-bis, desde v1.4)
+
+**Qué es.** Una segunda auditoría adversarial hecha por un modelo de **otra familia** (DeepSeek,
+GLM, GPT o un modelo local), con el **mismo** prompt de sistema (`.claude/agents/agente-detractor.md`
+sin frontmatter), los mismos 8 dominios, el mismo formato de reporte y el mismo marcador. Se lanza
+con `/detractor-hetero <ruta.Rmd|directorio>` o directamente con
+`bash .claude/scripts/detractor-hetero.sh <objetivo> [--motor deepseek|ollama-cloud|codex|local] [--modelo id] [--sin-codex]`.
+
+**Por qué.** Dos modelos de la misma familia comparten sesgos de entrenamiento y, con ellos, puntos
+ciegos. El defecto del incidente 2026-08-09 era semántico (un distractor que en una rama resolvía el
+problema) y sobrevivió a todo el arsenal automático: un segundo lector con otro sesgo es la defensa
+más barata contra esa clase de error. Y cuesta una fracción: DeepSeek V4 Flash factura 0,22/0,66 USD
+por millón de tokens (entrada/salida) frente a 5/25 de Opus 5 (precios verificados el 2026-09-07).
+
+**Cómo cuenta.**
+
+| Pregunta | Respuesta |
+|---|---|
+| ¿Es independiente? | Sí: es un agente distinto del que escribió o corrigió el `.Rmd`, y además de otra familia. |
+| ¿Sustituye a la FASE 2C? | **No.** `AgenteDetractor` (Opus) sigue siendo el canónico y obligatorio del paso 7 (`detractor_fase2c`). El heterogéneo es un complemento; **nunca se sella `detractor_fase2c` con su veredicto**. |
+| ¿Cuándo se lanza? | **Recomendado**: antes de `/promover-ejercicio` y tras cada ciclo RECHAZAR → corrección. **Opcional**: post-generación. Nunca en lugar del primero. |
+| ¿Qué obliga? | Un hallazgo de **CORRECCIÓN** (clave falsa, segunda clave válida, Solution falsa, distractor correcto) bloquea igual que si lo hallara el primero: es binario y no importa quién lo vio. Un hallazgo de **DIAGNOSTICIDAD** sigue la vara de §P7 (obliga sólo por encima de +8 pp). |
+| ¿Dónde queda el reporte? | `<dir del ejercicio>/detractor-hetero-<motor>-<fecha>.md`, con cabecera de motor, modelo, duración y motores previos saturados. Su última línea es el marcador; el script devuelve la ruta por stdout. |
+| ¿Y si ningún motor entrega? | El script sale con código 3 y deja `.detractor-hetero-<motor>-<fecha>.fallido.log` junto al ejercicio. Se informa al usuario; **no** se reemplaza por revisión propia (sería no independiente). |
+
+**Motores, en el orden de la cascada** (`--motor` fija uno; `--sin-codex` omite Codex; se detiene en
+el primero que entrega reporte con marcador):
+
+| Orden | Motor | Modelo por defecto | Cómo llega | Estado medido el 2026-09-08 |
+|---|---|---|---|---|
+| 1 | `deepseek` | `deepseek-v4-flash` (`--modelo deepseek-v4-pro` para más fuerza) | `claude -p` contra `api.deepseek.com/anthropic`; clave de `~/.credenciales [deepseek]` o `DEEPSEEK_API_KEY` | **Vivo** (saldo prepagado) |
+| 2 | `ollama-cloud` | `glm-5.3:cloud` | `claude -p` vía Ollama local (`:11434`) como proxy de ollama.com | Sin créditos («requires a subscription or extra usage») |
+| 3 | `codex` | `gpt-5.6-terra` | `codex exec --sandbox read-only` | Sin cuota hasta el 19-09-2026 |
+| 4 | `local` | `qwen3:14b` | Una sola pasada sin herramientas contra Ollama local (CPU: lento) | Vivo, último recurso |
+
+El motor **nunca escribe**: sólo `Read`, `Glob`, `Grep`, `Rscript` de lectura y `WebFetch`, con
+`--permission-mode dontAsk`, sin persistencia de sesión y con salida limitada a 16 000 tokens.
+Desde OpenClaw, el equivalente es un `sessions_spawn` con `model: "deepseek/deepseek-v4-flash"` y el
+cuerpo del agente como encargo. Las claves se leen dentro del proceso y nunca se imprimen.
 
 ---
 
@@ -621,12 +685,39 @@ Con el detractor obligatorio:
 
 ---
 
-**Versión**: 1.3
-**Fecha**: 2026-08-16
+**Versión**: 1.5
+**Fecha**: 2026-09-13
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
 **Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
+**Detractor heterogéneo**: `.claude/scripts/detractor-hetero.sh` · `/detractor-hetero`
+
+### Cambios v1.5 (2026-09-13)
+
+- **NUEVA SECCIÓN — Alcance de la auditoría**: el detractor DEBE auditar también los overrides
+  firmados y las invariantes locales del subproyecto (`.claude/CLAUDE.md` local, regla #17),
+  no sólo el `.Rmd`. Un override mal fundamentado promete una garantía que el código no sostiene.
+- **Origen**: `teorema-coseno-datos-suficientes-n3` (2026-09-13). Un override declaraba **+4,4 pp**
+  con una batería ciega al canal que aceptaba; con la sonda correspondiente, **+18,8 pp** y
+  `BLOQUEA` (Error 37). En el mismo ciclo el detractor independiente encontró **cuatro defectos**
+  invisibles al arsenal automático: segunda clave por ambigüedad del criterio (Error 35), una
+  afirmación falsa en el 90 % de las versiones, un distractor con un ángulo ausente de sus propios
+  datos, y dos invariantes en prosa sin guardia ejecutable (Error 36).
+- **Referencias cruzadas nuevas**: Errores 35, 36 y 37 en `patrones-errores-conocidos.md`.
+
+### Cambios v1.4 (2026-09-08)
+
+- **NUEVA SECCIÓN — Segundo detractor heterogéneo (FASE 2C-bis)**: una segunda auditoría por un
+  modelo de otra familia (cascada `deepseek → ollama-cloud → codex → local`), con el mismo prompt de
+  sistema, dominios y marcador que `AgenteDetractor`. Recomendada pre-promoción y tras cada ciclo
+  RECHAZAR → corrección; **complementa y nunca sustituye** la FASE 2C ni sella `detractor_fase2c`.
+  Un hallazgo de CORRECCIÓN bloquea sin importar qué detractor lo vio.
+- **Tabla «cuál de los detractores usar»** gana una tercera fila.
+- **Origen**: plan de costos del 2026-09-07 (segundo adversario de otra familia a coste marginal).
+  El plan preveía GPT-5.6 vía Codex; al medirse el 2026-09-08 Codex estaba sin cuota hasta el 19-09
+  y Ollama Cloud sin créditos, así que el motor vivo es DeepSeek directo (saldo prepagado). La cascada
+  se reordena sola cuando esos proveedores vuelvan.
 
 ### Cambios v1.3 (2026-08-16)
 

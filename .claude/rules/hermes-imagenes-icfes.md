@@ -110,6 +110,20 @@ opción. H-3 añade el gemelo: que la figura no delate ni contradiga nada por lo
 - Si el crop cae en una página sin la figura (enunciado partido en dos páginas, `q038`), la reproducción
   se estaría **fabricando desde el texto**, sin original contra el cual verificar → PARAR.
 
+**El desfase no siempre es numérico — puede ser que el mapa OMITA de qué pregunta es cola una plana.**
+Caso medido (`teorema-coseno-datos-suficientes-n3`, 2026-09-13, `pagina_015.jpg` de ERA-2026): **dos
+fuentes apuntaban a la vez al ítem equivocado**. El `mapa-paginas.md` declaraba «Q49–Q50» para esa
+plana **sin mencionar que arranca con las opciones de la Q48** (su enunciado vive en la plana
+anterior), y el OCR desordenaba los bloques de modo que asociaba el rótulo «50.» al enunciado de la
+**49**. El pie impreso decía **20** mientras el mapa decía «página PDF 19». Sólo abrir el JPG y
+anclar por el **número impreso** dio con el ítem correcto — ver Error 35 en
+`patrones-errores-conocidos.md` (el ítem que se habría construido sobre la pregunta equivocada si
+el mapeo se hubiera dado por bueno).
+
+**Lección:** dos fuentes derivadas **coincidiendo** no son confirmación — ambas derivan del mismo
+mapeo, así que su acuerdo no añade evidencia independiente. Sólo el escaneo mismo, anclado por el
+número impreso, es la fuente primaria.
+
 ### H-5 — Asimetría de seguridad (regla de oro)
 
 **Solo se permite ENDURECER de forma autónoma** (añadir un patrón de trampa, subir el piso de riesgo de
@@ -159,8 +173,11 @@ fidelidad — pero esa declaración es un juicio que hay que escribir, no un sil
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-08-15
+**Versión:** 1.1
+**Fecha:** 2026-09-13 (v1.1 — H-4 reforzada con el caso `teorema-coseno-datos-suficientes-n3`:
+dos fuentes derivadas (`mapa-paginas.md` + OCR) coincidían en el ítem equivocado porque ambas
+derivan del mismo mapeo; sólo el número impreso del escaneo lo resolvió. Ver Error 35 en
+`patrones-errores-conocidos.md`; v1.0 2026-08-15)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Origen:** importación permanente de la estrategia Hermes desde Todo-Pajaro
 (`motor-hermes/skill-hermes/SKILL.md` v1.9.0, 13 lecciones validadas 2026-07-03 → 2026-08-05)

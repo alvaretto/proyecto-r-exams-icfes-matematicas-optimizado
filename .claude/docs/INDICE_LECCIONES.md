@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-07-28 (Errores 21-24 agregados retroactivamente al catálogo §2 — existían en `patrones-errores-conocidos.md` pero faltaban en el índice; secuencia numérica 21-26 ahora continua)
+**Última actualización:** 2026-09-13 (Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -27,6 +27,7 @@
 | Errores de pipeline render PDF + coherencia Solution | `.claude/docs/patrones-errores-conocidos.md` (Errores 16-21) | Catálogo |
 | Errores de diseño de opciones gráficas | `.claude/docs/patrones-errores-conocidos.md` (Errores 18 y 20) + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado | Catálogo + Normativo |
 | Errores de legibilidad geométrica y fuga de información en diagramas dinámicos | `.claude/docs/patrones-errores-conocidos.md` (Errores 23-26) + `.claude/rules/graficos-como-opciones.md` §Canal de fuga + `.claude/rules/diversidad-sustantiva.md` §P4/P5/P6 + regla local `A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/.claude/rules/diagramas-vectoriales.md` | Catálogo + Normativo |
+| Errores de diseño de ítem: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal | `.claude/docs/patrones-errores-conocidos.md` (Errores 35-37) + `.claude/rules/diversidad-sustantiva.md` §P7-F + `.claude/rules/hermes-imagenes-icfes.md` H-4 + `.claude/rules/detractor-obligatorio.md` §Alcance de la auditoría + regla local `A-Produccion/01-En-PreDesarrollo/teorema-coseno-datos-suficientes-n3/.claude/CLAUDE.md` (I-1..I-15) | Catálogo + Normativo |
 | Reglas absolutas (20) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
 | Decisiones arquitectónicas | `.claude/docs/ADR/*.md` | Inmutable |
 | Casos resueltos individuales | `.claude/docs/casos-resueltos/*.md` | Histórico |
@@ -94,6 +95,14 @@
 | **24** | **Respuesta correcta predecible por posición/cuadrante aunque su valor varíe entre versiones** | **Orientación/cuadrante de la escena fijo (siempre `"ne"`); la diversidad por VALOR enmascara la predictibilidad posicional** | **Aleatorizar la orientación global (NE/NO/SE/SO) con la misma transformación para todas las opciones + texto coherente; distractor de dirección = reflejo este↔oeste a la distancia correcta (no outlier de 180°)** | **§Error 24 + regla `diversidad-sustantiva.md` §P4 y §P5 (regla #22)** |
 | **25** | **El nombre del archivo PNG revela la opción correcta en el XML de `exams2moodle()`** | **PNGs guardados con nombre semántico (`diagrama_correcta.png`) en vez de letra neutral; invisible en HTML/PDF (imagen embebida/base64) pero visible en texto plano dentro del XML de Moodle** | **Renombrar a letra neutral (`diagrama_a.png`) DESPUÉS de la mezcla `sample()`; verificar con `exams2moodle()` + `grep` del XML** | **§Error 25 + regla `graficos-como-opciones.md` §Canal de fuga + regla #22 §P6** |
 | **26** | **Diagrama con vector casi nulo (~17 px) cuando una magnitud es pequeña respecto a la escena total** | **Escala de dibujo calculada sobre la SUMA de magnitudes, sin piso de legibilidad por vector individual** | **Filtro de proporción mínima `(mayor - menor) >= 0.25*(mayor + menor)` (f=0.25 por barrido) + línea guía punteada cuando la etiqueta se separa del marcador** | **§Error 26** |
+
+### 2.7 Diseño de ítem, cobertura de reglas y guardas sin mutante (sesión `teorema-coseno-datos-suficientes-n3`, 2026-09-13)
+
+| # | Síntoma | Causa raíz | Fix | Fuente |
+|---|---|---|---|---|
+| **35** | **Segunda clave en 28/200 versiones (14 %; 36 % de la rama afectada)** | **El criterio «una única aplicación del teorema» admite dos lecturas razonables, y una opción del pool satisface la más laxa** | **Invariante local escrita con la cláusula explícita ("sin medir ni comparar magnitudes sobre la figura") + precondición ejecutable que cierra la rama ambigua** | **§Error 35 + regla `diversidad-sustantiva.md` §P7-F (regla #22) + regla `hermes-imagenes-icfes.md` H-4 (regla #24)** |
+| **36** | **Dos invariantes documentadas con razón y cifra no abortaban ni un solo render al revertirlas (0/60)** | **La invariante vivía como prosa en el `.claude/CLAUDE.md` local, sin guarda ejecutable ni mutante que la probara** | **`stopifnot()` cableado en `data_generation` + prueba de mutación (control positivo Y negativo) por invariante** | **§Error 36 + regla `detractor-obligatorio.md` §Alcance de la auditoría (regla #9) + regla `infraestructura-protegida.md` (regla #17)** |
+| **37** | **Un `PASS` de la batería §P7-E y un «0 usos de `\pandocbounded`» que no significaban nada** | **(a) Regla relacional con aplicabilidad 0,0 % — cobertura NOMINAL. (b) Grep sobre un `.tex` que `exams2pdf()` ya había borrado — cero sin control positivo** | **(a) 3 reglas relacionales vivas sustituyen a la muerta (20→21 reglas, veredicto `BLOQUEA +18,6 pp`). (b) Regenerar con `exams2pandoc(type="latex")` + control positivo (3 `includegraphics`)** | **§Error 37 + regla `diversidad-sustantiva.md` §P7-E/§P7-F (regla #22) + regla `detractor-obligatorio.md` §Alcance de la auditoría (regla #9)** |
 
 ---
 
@@ -194,6 +203,9 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 | "¿Mi distractor de dirección/posición se elimina de un vistazo?" | Error 24 + regla #22 §P5 — no usar outlier obvio (180°, longitud/formato único); usar cuasi-acierto plausible (reflejo este↔oeste a la distancia correcta). Gemelo del Formato Equilibrado |
 | "¿El nombre de archivo de mis opciones gráficas puede filtrar la respuesta?" | Error 25 + regla #22 §P6 + `graficos-como-opciones.md` §Canal de fuga — invisible en HTML/PDF, visible en el XML de `exams2moodle()`; renombrar a letra POST-mezcla y verificar con `grep` |
 | "¿Mi diagrama dinámico se ve degenerado (vector casi nulo) en algunas versiones?" | Error 26 — filtro de proporción mínima entre magnitudes de la escena (f=0.25 por barrido), no solo validez matemática |
+| "¿El criterio del enunciado admite más de una lectura y puede haber una segunda clave?" | Error 35 + regla #22 §P7-F — enumerar el espacio de diseño y fijar el criterio de desambiguación por escrito, como invariante ejecutable |
+| "¿Mi invariante local (`.claude/CLAUDE.md` del subproyecto) realmente impide el defecto que describe?" | Error 36 — probarla por mutación (revertirla y ver si el render aborta); sin guarda ejecutable, es sólo documentación |
+| "¿Un `PASS` o un `0` de mi batería/sonda significan lo que creo?" | Error 37 — medir la aplicabilidad de cada regla y exigir un control positivo antes de confiar en un cero |
 | "¿Cómo evito patrones detectables en opciones gráficas?" | Error 18 + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado |
 | "¿Cómo diseño un buen distractor de barras?" | Error 20 (GRAF-BAR-01) — alturas permutadas |
 | "¿Por qué solo se generan N versiones únicas?" | Error 8 + regla `codigo-rmd.md` #10 |
@@ -227,5 +239,5 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 
 ---
 
-**Versión del índice:** 1.2 (2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
+**Versión del índice:** 1.3 (2026-09-13 — agregada §2.7 "Diseño de ítem, cobertura de reglas y guardas sin mutante" con Errores 35-37 (`teorema-coseno-datos-suficientes-n3`); fila nueva en §1 y tres filas nuevas en §8; v1.2 2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
 **Próxima revisión:** cuando se agregue una nueva categoría o el catálogo de errores supere los 30 entries.

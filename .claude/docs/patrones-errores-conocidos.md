@@ -3272,3 +3272,180 @@ Si el ítem oficial tiene el canal **más fuerte** que la versión generada, per
 - Regla #22 §P7-E — la exigencia permanente que nace de este caso.
 - Error 33 — la ceguera gemela un piso más abajo (el predicado de unicidad).
 - Regla #24 H-5 — cerrar con un canal medido por encima del corte es un **override**, y relajar nunca es autónomo: debe quedar por escrito.
+
+---
+
+## Error 35: Segunda clave cuando el criterio «una única aplicación del teorema» admite dos lecturas
+
+### ❌ Síntoma
+
+Un SCHOICE de geometría (teorema del Coseno) declara clave única bajo el criterio del enunciado:
+«¿con cuál de los siguientes datos es posible calcular... usando **una única vez** el teorema del
+Coseno?». Una opción del pool, `GEO-COS-08` — «Lados *x*, *y* y ángulo *Z*», el caso **LAL** (el
+ángulo es el comprendido entre los dos lados) — resulta también resoluble bajo una lectura
+distinta del mismo criterio. Medido: **28 de 200 versiones (14 %; 36 % de la rama afectada)** con
+segunda clave.
+
+### 🔍 Causa Raíz
+
+El criterio «una única aplicación» admite dos lecturas razonables, y discrepan:
+
+| Lectura | ¿`GEO-COS-08` (LAL) satisface el enunciado? |
+|---|---|
+| «Una aplicación **del teorema nombrado** entrega lo pedido» | No — hace falta además **ley de senos** para llegar al ángulo pedido |
+| «El teorema se usa exactamente una vez **en algún punto** de la solución» | Sí — el coseno resuelve el tercer lado y el ángulo sale después por senos |
+
+Bajo la segunda lectura, `GEO-COS-08` **también resuelve el ítem**. Su justificación agravaba el
+defecto: afirmaba que habría que aplicar el teorema **dos veces**, lo cual es **falso** —se aplica
+una vez (coseno) y se completa con un teorema distinto (senos)— e incoherente con otra opción del
+mismo pool que sí trataba la ley de senos como vía legítima para completar una solución.
+
+**Lo que lo hace transferible**: la ambigüedad no vive en el código, vive en el **enunciado**.
+Ningún test la detecta, porque las dos lecturas son sintácticamente válidas de la misma frase y
+sólo una comparación deliberada entre ambas revela que producen veredictos distintos.
+
+### ✅ Solución Verificada
+
+El criterio de desambiguación se fija **por escrito, como invariante local**, no queda implícito
+en el código ni en el criterio tácito de quien escribió el ítem. En este ejercicio, la invariante
+I-7 lo resolvió así:
+
+> «...con valor único a partir de los datos enunciados, **sin medir ni comparar magnitudes sobre
+> la figura**.»
+
+Sin esa cláusula el criterio queda ambiguo, y **otra opción del pool habría sido segunda clave en
+400/400 versiones** — el defecto no es hipotético: es exactamente el que la cláusula existe para
+cerrar.
+
+### 🧪 Cómo detectarlo
+
+Un verificador que **enumere el espacio completo** de combinaciones dato→teorema y pruebe unicidad
+de la clave contra el criterio ESCRITO, no contra la intuición de quien lo programó. `stopifnot`
+que impida por construcción los conjuntos problemáticos (en este ejercicio,
+`resuelve_un_coseno()` + `!any(vapply(distractores, resuelve_un_coseno, ...))`, ver I-6 del
+`.claude/CLAUDE.md` local del subproyecto). Ningún validador del arsenal general lo detectó: es
+semántico, del tipo que sólo aparece razonando sobre el significado de las opciones.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-09-13 | `teorema_coseno_datos_suficientes_geometrico_metrico_formulacion_ejecucion_n3_schoice_v1.Rmd` | criterio «una única aplicación» ambiguo entre dos lecturas razonables | invariante local I-7 con cláusula explícita + precondición `resuelve_un_coseno()` que cierra la rama ángulo (I-6) | `GEO-COS-08` y su gemela dejan de ser alcanzables por construcción |
+
+### 📚 Referencias
+
+- Regla #22 §P7-F — la enumeración del espacio de diseño de este mismo ítem demostró que sólo una
+  rama es viable; enumerar antes hubiera evitado perseguir una rama condenada por este mismo
+  defecto.
+- Regla #24 H-4 — este mismo ejercicio se ancló por el número impreso de la plana
+  (`pagina_015.jpg`), evitando construirse sobre la pregunta equivocada (Q49 en vez de Q50); ver
+  el caso reforzado en esa sección.
+- Regla #9 (detractor obligatorio) — lo encontró la objeción de un detractor independiente, no el
+  arsenal automático ni la auditoría propia.
+- Error 33 — la misma familia: un predicado por identidad o una lectura estrecha del criterio deja
+  pasar una segunda clave.
+- Error 36 y Error 37 — mismo ciclo, mismo ejercicio.
+
+---
+
+## Error 36: Una invariante escrita en prosa no aborta nada — falta el mutante que la pruebe
+
+### ❌ Síntoma
+
+Dos invariantes locales de un ejercicio estaban documentadas con su razón y su cifra de respaldo,
+pero nada en el código las hacía cumplir. Un detractor las probó por **mutación** (revertir la
+invariante y observar si el render aborta): revertirlas **no abortaba ni un solo render (0/60)**.
+
+### 🔍 Causa Raíz
+
+La invariante existía como texto explicativo en el `.claude/CLAUDE.md` del subproyecto, no como
+`stopifnot()`/guarda en `data_generation`. Documentar una regla no la hace cumplir; sólo el código
+que aborta ante su violación la hace cumplir. El texto describía correctamente el defecto que
+prevenía — no era un error de redacción — pero nadie había verificado que la prevención fuera real.
+
+### ✅ Solución Verificada
+
+Cablear cada invariante como guarda ejecutable. Tras hacerlo: **52/60** y **60/60** disparos
+correctos (en el primer caso, los 8 restantes son instancias canónicas, exentas por diseño — no es
+un residuo, es la excepción declarada).
+
+### 🧪 Cómo detectarlo (y por qué el control negativo es igual de obligatorio)
+
+Toda invariante que afirme «X nunca ocurre» necesita (a) una guarda que lo impida por construcción
+y (b) un **mutante que la viole**, para demostrar que la guarda dispara. Si el mutante no muere, la
+invariante no existe: es documentación. El **control negativo** —el archivo SIN mutar, que NO debe
+disparar— es igual de obligatorio: sin él no se distingue una guarda que funciona de una que aborta
+siempre (falso positivo permanente que un día alguien silenciaría).
+
+Emparenta con la lección ya documentada de que un valor que sólo vive en la prosa pierde contra uno
+que vive en código ejecutable (nomenclatura v3.20.8, muestra estándar N=100 de la regla #23).
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-09-13 | `teorema_coseno_datos_suficientes_..._n3_schoice_v1.Rmd` (invariantes locales) | invariante documentada sin guarda ejecutable, sin mutante que la probara | `stopifnot()` cableado en `data_generation` + prueba de mutación para cada invariante | 0/60 → 52/60 y 60/60 (8 canónicas exentas por diseño) |
+
+### 📚 Referencias
+
+- Regla #9 (detractor obligatorio) — lo encontró un detractor independiente probando por
+  **mutación**, no leyendo el texto de la invariante.
+- Regla #17 (`infraestructura-protegida.md`) — precedente directo: las invariantes I-1..I-10 ya
+  exigen verificación ejecutable, el mismo principio aplicado aquí a nivel de subproyecto.
+- Regla #23 (`muestra-estandar-validacion.md`) y nomenclatura v3.20.8 — la lección madre: un valor
+  que sólo vive en la prosa pierde contra uno que vive en código ejecutable.
+- Error 35 y Error 37 — mismo ciclo, mismo ejercicio.
+
+---
+
+## Error 37: Un cero que no prueba nada — cobertura nominal y sondas sin control positivo
+
+### ❌ Síntoma
+
+Dos manifestaciones del mismo defecto, medidas en el mismo ciclo:
+
+**(a) Cobertura NOMINAL.** La única regla relacional de la batería §P7-E de un ejercicio tenía
+**aplicabilidad 0,0 %**: estaba presente en la lista de reglas y no podía disparar nunca con los
+datos del ejercicio. §P7-E quedaba **formalmente cubierta y materialmente incumplida**.
+
+**(b) Sonda sin control positivo.** Se reportó «**0 usos de `\pandocbounded`**» ejecutando un
+`grep` sobre `salida/pdf/*.tex` — directorio **que no existía**, porque `exams2pdf()` borra el
+`.tex` intermedio tras compilar. Era un cero sobre **cero archivos**, no un cero sobre contenido
+verificado.
+
+### 🔍 Causa Raíz
+
+**(a)** La regla relacional exigida por §P7-E existía en el código, pero su condición de disparo
+nunca se cumplía con los datos concretos del ejercicio: quedaba «cubierta» en la lista de reglas
+sin cubrir nada en la práctica. Al sustituirla por tres reglas vivas, la batería pasó a **21
+reglas** y el veredicto a **BLOQUEA, +18,6 pp**.
+
+**(b)** `exams2pdf()` no conserva el `.tex` intermedio; el `grep` corría sobre un directorio vacío
+o inexistente y su cero no distinguía «no hay usos» de «no hay archivos que mirar». Al regenerar
+con `exams2pandoc(type="latex")` (que sí conserva el `.tex`) y repetir la sonda con un **control
+positivo** —**3 `includegraphics` encontrados**, confirmando que el grep sí detecta contenido
+real cuando lo hay—, el cero pasó a significar algo: 0 usos de `\pandocbounded` sobre 3
+`includegraphics` verificados.
+
+### ✅ Solución Verificada
+
+Ninguna sonda ni regla se acepta sin **dos piezas**: (1) su **aplicabilidad medida** —¿en cuántos
+casos puede disparar, dado el estado actual de los datos?— y (2) un **control positivo** que
+demuestre que sí dispara cuando corresponde. Un cero sin esas dos piezas es indistinguible de «la
+sonda nunca corrió».
+
+### 📅 Historial
+
+| Fecha | Archivo/Componente | Causa | Fix | Resultado |
+|-------|---------------------|-------|-----|-----------|
+| 2026-09-13 | Batería §P7-E de `teorema_coseno_datos_suficientes_..._n3_schoice_v1.Rmd` | regla relacional con aplicabilidad 0,0 % | 3 reglas relacionales vivas sustituyen a la muerta | 20 → 21 reglas; veredicto: `BLOQUEA, +18,6 pp` |
+| 2026-09-13 | Sonda `\pandocbounded` sobre el mismo ejercicio | grep sobre `salida/pdf/*.tex` inexistente (`exams2pdf()` borra el `.tex`) | regenerar con `exams2pandoc(type="latex")` + control positivo | 0 usos sobre 3 `includegraphics` verificados (cero con significado) |
+
+### 📚 Referencias
+
+- Regla #22 §P7-E (nota de cobertura nominal) y §P7-F — «una batería incompleta no mide «sin
+  señal», mide «sin sonda»»: Error 37 es la instancia concreta de ese principio, aplicada a una
+  regla individual y a una sonda de render.
+- Regla #9 (detractor obligatorio) — el alcance ampliado de la auditoría (overrides e invariantes,
+  no sólo el `.Rmd`) encontró ambas manifestaciones.
+- Error 35 y Error 36 — mismo ciclo, mismo ejercicio.
