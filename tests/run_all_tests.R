@@ -312,6 +312,13 @@ suites <- list(
     watch = c("validar_glifos_latex", "post-exams2-validation",
               "glifos-latex-legacy", "glifos-latex-prohibidos",
               "test_glifos_latex")
+  ),
+  list(
+    nombre = "render_html_shots: capturas moviles truncadas en silencio",
+    archivo = "tests/testthat/test_render_html_shots_truncamiento.R",
+    critico = TRUE,
+    watch = c("render_html_shots", "auditor-visual-html",
+              "test_render_html_shots_truncamiento")
   )
 )
 
