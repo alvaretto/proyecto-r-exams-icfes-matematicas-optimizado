@@ -1,0 +1,614 @@
+```{r data_generation, echo = FALSE, results = "hide", message = FALSE, warning = FALSE}
+library(exams)
+
+## ===========================================================================
+## FUNCIÓN DE DIBUJO — autocontenida (Flujo B, lenguaje R nativo elegido por
+## el profesor). Solo graphics/grDevices: sin ggplot2, sin TikZ, sin Python.
+## NO extraer a un archivo externo: R/exams copia solo el .Rmd a un edir
+## temporal, así que un source() por ruta relativa se rompe.
+## Invariante local I-2: exactamente 6 rotulos {Q,R,S,q,r,s}, sin cotas.
+## Invariante local I-4: `lado_pedido` NO altera el dibujo.
+## ===========================================================================
+dibujar_triangulo_rotulado <- function(ang_apice, ang_izq, letras_vertices, incl_base,
+                                        lado_pedido, archivo, ancho_px = 950, alto_px = 680) {
+
+  stopifnot(is.character(letras_vertices), length(letras_vertices) == 3)
+  ang_der <- 180 - ang_apice - ang_izq
+  stopifnot(ang_apice > 0, ang_izq > 0, ang_der > 0)
+
+  ## `lado_pedido` se acepta por contrato de la firma y se IGNORA a propósito:
+  ## resaltar el lado buscado delataria la respuesta correcta (I-4).
+  invisible(lado_pedido)
+
+  to_rad <- function(grados) grados * pi / 180
+
+  Qletra <- letras_vertices[1]  # apice
+  Rletra <- letras_vertices[2]  # inferior izquierdo
+  Sletra <- letras_vertices[3]  # inferior derecho
+
+  ## 1. Geometria por ley de senos (base q = 1).
+  ##    Convención (regla): cada lado minuscula es OPUESTO al ángulo mayuscula homonimo.
+  Qd <- ang_apice; Rd <- ang_izq; Sd <- ang_der
+  q_len <- 1
+  r_len <- sin(to_rad(Rd)) / sin(to_rad(Qd))  # lado Q-S
+  s_len <- sin(to_rad(Sd)) / sin(to_rad(Qd))  # lado R-Q
+
+  Rp <- c(0, 0)
+  ang_base <- to_rad(incl_base)
+  Sp <- Rp + q_len * c(cos(ang_base), sin(ang_base))
+  ang_RQ <- ang_base + to_rad(Rd)
+  Qp <- Rp + s_len * c(cos(ang_RQ), sin(ang_RQ))
+
+  pts <- rbind(Q = Qp, R = Rp, S = Sp)
+
+  ## 2. Escala derivada del triángulo EFECTIVAMENTE dibujado (nunca de una
+  ##    constante ni del valor de un lado concreto — Error 26). Se centra por
+  ##    el CENTRO DEL BOUNDING BOX, no por el centroide: para triángulos muy
+  ##    sesgados el centroide se aleja del centro del bbox y un vertice puede
+  ##    quedar fuera del lienzo.
+  rango_x <- range(pts[, 1]); rango_y <- range(pts[, 2])
+  bbox_w <- diff(rango_x); bbox_h <- diff(rango_y)
+  bbox_centro <- c(mean(rango_x), mean(rango_y))
+  margen <- 0.09
+  escala <- min(ancho_px * (1 - 2 * margen) / bbox_w,
+                alto_px  * (1 - 2 * margen) / bbox_h)
+
+  pts_px <- sweep(pts, 2, bbox_centro, "-") * escala
+  pts_px <- sweep(pts_px, 2, c(ancho_px, alto_px) / 2, "+")
+  Qp <- pts_px["Q", ]; Rp <- pts_px["R", ]; Sp <- pts_px["S", ]
+  centro_px <- colMeans(pts_px)   # el centroide SI es siempre interior
+
+  tol <- 1e-6
+  stopifnot(all(pts_px[, 1] >= -tol), all(pts_px[, 1] <= ancho_px + tol),
+            all(pts_px[, 2] >= -tol), all(pts_px[, 2] <= alto_px + tol))
+
+  col_trazo  <- "#1E3282"   # RGB(30,50,130) medido sobre el escaneo original
+  lwd_trazo  <- 2.4
+  cex_letra  <- 1.55
+
+  grDevices::png(archivo, width = ancho_px, height = alto_px, res = 100, bg = "white")
+  on.exit(if (!is.null(grDevices::dev.list())) grDevices::dev.off(), add = TRUE)
+  graphics::par(mar = c(0, 0, 0, 0), xaxs = "i", yaxs = "i")
+  graphics::plot.new()
+  graphics::plot.window(xlim = c(0, ancho_px), ylim = c(0, alto_px), asp = 1)
+
+  clamp_lienzo <- function(pos, aire = 14) {
+    c(min(max(pos[1], aire), ancho_px - aire),
+      min(max(pos[2], aire), alto_px  - aire))
+  }
+
+  ## 3. Los tres lados
+  graphics::segments(Qp[1], Qp[2], Rp[1], Rp[2], col = col_trazo, lwd = lwd_trazo, lend = 1)
+  graphics::segments(Rp[1], Rp[2], Sp[1], Sp[2], col = col_trazo, lwd = lwd_trazo, lend = 1)
+  graphics::segments(Sp[1], Sp[2], Qp[1], Qp[2], col = col_trazo, lwd = lwd_trazo, lend = 1)
+
+  ## 4. Ángulo interior: arco + rotulo mayuscula. El radio del rotulo escala
+  ##    con 1/sin(ángulo/2) y considera el ancho/alto del texto, con piso
+  ##    generoso R_min = 50 (Error 23: un piso bajo reabrio el incidente).
+  dibujar_angulo <- function(V, A, B, letra, ang_grados) {
+    uA <- (A - V) / sqrt(sum((A - V)^2))
+    uB <- (B - V) / sqrt(sum((B - V)^2))
+    a1 <- atan2(uA[2], uA[1]); a2 <- atan2(uB[2], uB[1])
+    d  <- a2 - a1
+    d  <- (d + pi) %% (2 * pi) - pi
+    a2 <- a1 + d
+
+    lado_min <- min(sqrt(sum((A - V)^2)), sqrt(sum((B - V)^2)))
+    arc_r <- max(24, min(0.16 * lado_min, 55))
+    ang_seq <- seq(a1, a2, length.out = 40)
+    arco <- cbind(V[1] + arc_r * cos(ang_seq), V[2] + arc_r * sin(ang_seq))
+    graphics::lines(arco[, 1], arco[, 2], col = col_trazo, lwd = lwd_trazo * 0.72)
+
+    bis  <- uA + uB
+    bis  <- bis / sqrt(sum(bis^2))
+    semi <- to_rad(ang_grados) / 2
+    mw <- graphics::strwidth(letra,  cex = cex_letra, font = 2) / 2
+    mh <- graphics::strheight(letra, cex = cex_letra, font = 2) / 2
+    holgura <- 9
+    rango_calc <- (holgura + mw * cos(semi) + mh * sin(semi)) / sin(semi)
+    R_min <- 50
+    r_label <- max(R_min, rango_calc, arc_r * 1.45)
+    r_label <- min(r_label, 0.42 * lado_min)
+    pos <- clamp_lienzo(V + r_label * bis)
+    graphics::text(pos[1], pos[2], letra, col = col_trazo, font = 2, cex = cex_letra)
+  }
+
+  dibujar_angulo(Qp, Rp, Sp, Qletra, Qd)
+  dibujar_angulo(Rp, Qp, Sp, Rletra, Rd)
+  dibujar_angulo(Sp, Qp, Rp, Sletra, Sd)
+
+  ## 5. Rotulo de lado (minuscula): q dentro (sobre la base), r y s fuera.
+  dibujar_lado <- function(P1, P2, letra, hacia_adentro, frac_offset) {
+    medio <- (P1 + P2) / 2
+    dir_lado <- (P2 - P1) / sqrt(sum((P2 - P1)^2))
+    normal <- c(-dir_lado[2], dir_lado[1])
+    hacia_centro <- centro_px - medio
+    if (sum(normal * hacia_centro) < 0) normal <- -normal
+    if (!hacia_adentro) normal <- -normal
+    offset <- frac_offset * min(ancho_px, alto_px)
+    pos <- clamp_lienzo(medio + normal * offset)
+    graphics::text(pos[1], pos[2], letra, col = col_trazo, font = 2, cex = cex_letra)
+  }
+
+  ## I-3 / H-3: en el original q va DEBAJO de la base, fuera del triángulo,
+  ## igual que r y s. Ponerlo dentro era una desviación de fidelidad.
+  dibujar_lado(Rp, Sp, tolower(Qletra), hacia_adentro = FALSE, frac_offset = 0.045)
+  dibujar_lado(Qp, Sp, tolower(Rletra), hacia_adentro = FALSE, frac_offset = 0.055)
+  dibujar_lado(Rp, Qp, tolower(Sletra), hacia_adentro = FALSE, frac_offset = 0.055)
+
+  invisible(archivo)
+}
+
+## ===========================================================================
+## HELPERS SEGUROS (regla #21, Familia 5: la trampa de sample() con escalar)
+## ===========================================================================
+pick_int    <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+safe_sample <- function(x, size, replace = FALSE) {
+  if (length(x) == 0L) stop("safe_sample(): vector vacio o NULL")
+  if (length(x) == 1L) return(rep(x, size))
+  x[sample.int(length(x), size, replace = replace)]
+}
+
+## ===========================================================================
+## FAMILIAS DE LETRAS
+## Invariante local I-1: la figura NO debe compartir notación con la fórmula
+## generica del enunciado (a, b, c, alfa). Por eso quedan EXCLUIDAS las letras
+## A, B y C: una familia {A,B,C} daria lados a, b, c identicos a los de la
+## fórmula y disolveria la tarea de transferencia, que ES la demanda del item.
+## Se excluyen además I, L y O por ambiguedad de glifo con 1 y 0.
+## 12 familias x 3 lados pedidos = 36 textos de clave distintos, por encima del
+## umbral 30 de validar_diversidad_sustantiva.R (antes 5 x 3 = 15 -> WARN).
+## ===========================================================================
+familias_letras <- list(
+  c("Q", "R", "S"), c("M", "N", "T"), c("P", "U", "V"), c("D", "E", "F"),
+  c("G", "H", "K"), c("R", "S", "T"), c("E", "F", "G"), c("K", "M", "N"),
+  c("N", "P", "Q"), c("U", "V", "W"), c("D", "G", "H"), c("T", "W", "X")
+)
+stopifnot(!any(vapply(familias_letras, function(f) any(f %in% c("A", "B", "C", "I", "L", "O")), NA)))
+
+## ===========================================================================
+## SORTEO DE PARAMETROS (regla #22: lo que determina CUAL opción es correcta
+## debe aleatorizarse). Aquí varían la familia de letras, el lado pedido, la
+## geometria del dibujo y el tercer distractor.
+##
+## RAMA ÚNICA: coseno pide LADO. Ver invariante local I-10 (override firmado
+## por el profesor el 2026-09-13) y salida/enumeracion/: de las cuatro
+## combinaciones teorema x magnitud, es la única que admite clave ÚNICA y al
+## menos un distractor de su mismo molde.
+## ===========================================================================
+es_canonica <- (sample.int(8L, 1L) == 1L)
+
+if (es_canonica) {
+  V         <- c("Q", "R", "S")
+  pedido    <- "q"
+  ang_apice <- 96.6
+  ang_izq   <- 43.9
+  incl_base <- 6.8
+} else {
+  V         <- familias_letras[[sample.int(length(familias_letras), 1L)]]
+  pedido    <- safe_sample(tolower(V), 1L)
+  ## FIDELIDAD DE FORMA (Hermes H-3; objeción 7b del detractor, 2026-09-13).
+  ## Sin cota inferior, el 13,0 % de las versiones dibujaba una "astilla" con un
+  ## ángulo de hasta 14,5 grados -- muy lejos de los 39,6 del impreso -- en la que
+  ## cuesta percibir el ángulo COMPRENDIDO entre dos lados, que es el concepto
+  ## evaluado. Se ENUMERA la rejilla y se sortea sobre lo ya filtrado: nada de
+  ## `repeat` sin cota (regla #21 Familia 1, Error 22).
+  rejilla_ang <- expand.grid(ap = seq(85, 110.5, by = 0.5),
+                             iz = seq(35,  55.5, by = 0.5))
+  rejilla_ang <- rejilla_ang[(180 - rejilla_ang$ap - rejilla_ang$iz) >= 30, , drop = FALSE]
+  stopifnot(nrow(rejilla_ang) > 0)
+  k_geo     <- sample.int(nrow(rejilla_ang), 1L)
+  ang_apice <- rejilla_ang$ap[k_geo]
+  ang_izq   <- rejilla_ang$iz[k_geo]
+  incl_base <- pick_int(3, 10)
+}
+
+letras_min <- tolower(V)
+x <- pedido; X <- toupper(x)
+otros <- setdiff(letras_min, x)
+y <- otros[1]; z <- otros[2]
+Y <- toupper(y); Z <- toupper(z)
+LADOS_T <- c(x, y, z); ANGULOS_T <- c(X, Y, Z)
+
+archivo_fig <- "triangulo_enunciado.png"
+dibujar_triangulo_rotulado(ang_apice = ang_apice, ang_izq = ang_izq,
+                           letras_vertices = V, incl_base = incl_base,
+                           lado_pedido = x, archivo = archivo_fig)
+
+## ===========================================================================
+## MOTOR DE SUFICIENCIA — la defensa anti-segunda-clave, POR CONSTRUCCION.
+## Criterio (invariante local I-7): "una única vez el teorema del Coseno"
+## significa que UNA sustitución en la fórmula entrega lo pedido con valor
+## único. Para un lado hacen falta los otros dos lados y el ángulo comprendido
+## entre ellos, que es el OPUESTO al lado buscado.
+## La suma de ángulos internos es aritmetica libre, no una aplicación.
+## ===========================================================================
+cierre_angulos <- function(angs) if (length(angs) == 2L) union(angs, setdiff(ANGULOS_T, angs)) else angs
+
+resuelve_un_coseno <- function(lados, angs, objetivo = x) {
+  a <- cierre_angulos(angs)
+  all(setdiff(LADOS_T, objetivo) %in% lados) && (toupper(objetivo) %in% a)
+}
+
+## Redacción uniforme de cualquier conjunto de datos, con el molde del
+## cuadernillo. Que el texto salga SIEMPRE de aquí evita que la clave adquiera
+## un registro propio (regla #22, canal lexico).
+texto_conjunto <- function(lados, angs) {
+  ## FIDELIDAD AL IMPRESO (Hermes H-2/H-3) Y CIERRE DE CANAL DE ORDEN.
+  ## El cuadernillo lista el ángulo del lado PEDIDO en ULTIMO lugar
+  ## ("Lado **r** y ángulos **R** y **Q**." con q pedido). El generador lo
+  ## ponía primero, de modo que en las versiones no canónicas la clave era la
+  ## sola opción terminada en ese ángulo: la regla "elige la que termina en el
+  ## ángulo homónimo del lado pedido" acertaba el 100 % (89,7 % global).
+  ## Normalizar aquí el orden lo baja al 47,4 % y, de paso, hace que la rama
+  ## canónica genere los cuatro textos impresos VERBATIM, sin cablearlos.
+  angs <- c(setdiff(angs, X), intersect(angs, X))
+  if (length(lados) == 2L && length(angs) == 1L)
+    paste0("Lados ", lados[1], " y ", lados[2], " y ángulo ", angs[1])
+  else if (length(lados) == 1L && length(angs) == 2L)
+    paste0("Lado ", lados[1], " y ángulos ", angs[1], " y ", angs[2])
+  else if (length(lados) == 0L && length(angs) == 3L)
+    paste0("Ángulos ", angs[1], ", ", angs[2], " y ", angs[3])
+  else stop("texto_conjunto(): molde no contemplado")
+}
+molde_de <- function(lados, angs) paste0(length(lados), "L+", length(angs), "A")
+
+## ===========================================================================
+## POOL DE ERRORES CONCEPTUALES (regla #1: mínimo 4-6 entradas; aquí 9 escritas,
+## de las cuales 6 son ALCANZABLES: GEO-COS-05, -07 y -08 no aparecen nunca
+## porque I-12 restringe el tercer hueco a {4, 6, 9}. Medido: 0 apariciones en
+## 300 versiones. Es un residuo DECLARADO, no un descuido -- ver I-15 §P1.
+## Lleva la forma que el arsenal reconoce -- `errores_conceptuales` con
+## los campos que el arsenal busca (descripción corta y larga, precondición,
+## cálculo) -- para que las Capas de
+## validar_coherencia_matematica.R lo lean de verdad. Antes el pool se
+## llamaba `pool_lado`/`pool_angulo` y el Nivel 4 semántico NUNCA lo miro.
+##   `calcula` devuelve el CONJUNTO DE DATOS que propone el error (su texto),
+##   de modo que la Capa C comprueba algo con sentido aquí: que ese conjunto no
+##   coincide con el de la clave.
+## Espacio COMPLETO enumerado en salida/enumeracion/: de los 10 subconjuntos de
+## 3 datos, exactamente 1 es clave y los otros 9 son estos. No falta ninguno.
+## TODAS las opciones llevan 3 datos, como las cuatro del cuadernillo oficial:
+## así no hay canal de recuento (la versión anterior tenía una opción de 2).
+## ===========================================================================
+errores_conceptuales <- list(
+  list(codigo = "GEO-COS-01", descripcion_corta = "los dos lados correctos con un ángulo adyacente al lado buscado", nombre = "Ángulo adyacente en vez del comprendido",
+       lados = c(y, z), angulos = c(Y),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(y, z), c(Y)),
+       descripcion_larga = "Aporta los dos lados correctos, pero el ángulo dado no es el comprendido entre ellos, sino uno adyacente al lado buscado. El teorema se puede plantear, y al hacerlo queda una ecuación de **segundo grado** en el lado pedido. Esa ecuación no garantiza solución única: según los valores concretos puede haber dos triángulos compatibles, uno solo o ninguno. Lo que el ítem evalúa es la **disposición** de los datos, y esta disposición no asegura que una sustitución determine el lado, a diferencia del ángulo comprendido, que lo determina siempre.",
+       causa_raiz = "Se memoriza la forma de la fórmula sin retener que el ángulo debe ser el que forman los dos lados conocidos."),
+  list(codigo = "GEO-COS-02", descripcion_corta = "los mismos dos lados, con el otro ángulo adyacente", nombre = "Ángulo adyacente por el otro vértice",
+       lados = c(y, z), angulos = c(Z),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(y, z), c(Z)),
+       descripcion_larga = "Mismo error por el vértice contrario: los lados son los correctos y el ángulo vuelve a ser adyacente al lado buscado. Reaparece la ecuación de segundo grado, con la misma falta de garantía de solución única. Lo que decide no es cuántos datos hay, sino la posición del ángulo respecto de los lados conocidos.",
+       causa_raiz = "Se cuenta la cantidad de datos (dos lados y un ángulo) sin comprobar su disposición."),
+  list(codigo = "GEO-COS-03", descripcion_corta = "un solo lado acompañado de dos ángulos", nombre = "Un lado con el ángulo opuesto y otro ángulo",
+       lados = c(y), angulos = c(X, Y),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(y), c(X, Y)),
+       descripcion_larga = "Con un lado y dos ángulos el triángulo queda determinado, pero la vía es la ley de senos, no el teorema del Coseno. Con una sola longitud conocida, la expresión del coseno conserva dos lados desconocidos a la vez.",
+       causa_raiz = "Se confunden las dos herramientas: se recuerda que el triángulo queda determinado y se asume que cualquier teorema sirve."),
+  list(codigo = "GEO-COS-04", descripcion_corta = "ese mismo lado con otra pareja de ángulos", nombre = "Un lado y dos ángulos (otra combinación)",
+       lados = c(y), angulos = c(X, Z),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(y), c(X, Z)),
+       descripcion_larga = "Variante de la anterior que confirma el punto: el número de datos no decide. El teorema del Coseno vincula tres lados y un ángulo, de modo que con un solo lado nunca basta, por bien elegidos que estén los ángulos.",
+       causa_raiz = "Se generaliza desde casos resueltos con ley de senos sin distinguir que relaciona cada teorema."),
+  list(codigo = "GEO-COS-05", descripcion_corta = "un lado junto a dos ángulos, uno de los cuales sí lo delimita", nombre = "Un lado con dos ángulos, sin el opuesto a él",
+       lados = c(y), angulos = c(Y, Z),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(y), c(Y, Z)),
+       descripcion_larga = "De nuevo el triángulo queda determinado y de nuevo la vía correcta es la ley de senos. Conviene notar que el tercer ángulo siempre se deduce por la suma de los ángulos internos, así que dar dos ángulos equivale a darlos los tres.",
+       causa_raiz = "No se distingue entre 'el triángulo queda determinado' y 'puedo calcularlo con este teorema concreto'."),
+  ## El rótulo decía "con su ángulo opuesto", pero los datos son {z, X, Y} y el
+  ## opuesto de z es Z, que NO figura. Contradecía la convención que la propia
+  ## Solution enuncia ("cada lado en minúscula opuesto al ángulo del mismo
+  ## nombre") en el 48,5 % de las versiones. Objeción 1 del detractor, 2026-09-13.
+  list(codigo = "GEO-COS-06", descripcion_corta = "el otro lado, acompañado de dos ángulos que no incluyen el suyo opuesto", nombre = "El otro lado con dos ángulos, sin el opuesto a él",
+       lados = c(z), angulos = c(X, Y),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(z), c(X, Y)),
+       descripcion_larga = "Cambia cuál de los dos lados se conoce, pero el obstáculo es el mismo: una sola longitud no permite despejar otra con el teorema del Coseno, porque la fórmula relaciona tres lados entre sí.",
+       causa_raiz = "Se atiende a que los datos 'rodean' al lado buscado y no a que magnitudes entran en la fórmula."),
+  list(codigo = "GEO-COS-07", descripcion_corta = "el otro lado acompañado de dos ángulos", nombre = "El otro lado y dos ángulos",
+       lados = c(z), angulos = c(X, Z),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(z), c(X, Z)),
+       descripcion_larga = "El lado conocido viene acompañado de su propio ángulo opuesto y del ángulo del lado buscado: es exactamente la pareja que pide la ley de senos, y precisamente por eso no sirve para el teorema del Coseno en una sola aplicación.",
+       causa_raiz = "Se reconoce una configuración útil y se atribuye al teorema equivocado."),
+  list(codigo = "GEO-COS-08", descripcion_corta = "el otro lado con dos ángulos, uno de los cuales sí lo delimita", nombre = "El otro lado con dos ángulos, sin el opuesto a él",
+       lados = c(z), angulos = c(Y, Z),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(c(z), c(Y, Z)),
+       descripcion_larga = "Última de las combinaciones de un lado con dos ángulos. Todas comparten el mismo diagnóstico: determinan el triángulo, pero por la vía de la ley de senos.",
+       causa_raiz = "Se agota la búsqueda probando combinaciones en lugar de mirar qué magnitudes relaciona la fórmula."),
+  list(codigo = "GEO-COS-09", descripcion_corta = "únicamente la medida de los tres ángulos", nombre = "Sólo los tres ángulos: forma sin tamaño",
+       lados = character(0), angulos = c(X, Y, Z),
+       precondicion = function(params) TRUE,
+       calcula = function(...) texto_conjunto(character(0), c(X, Y, Z)),
+       descripcion_larga = "Tres ángulos fijan la forma del triángulo, no su tamaño: existen infinitos triángulos semejantes con esos mismos ángulos y lados de cualquier longitud. Sin ninguna medida de longitud no puede obtenerse ninguna otra.",
+       causa_raiz = "Se confunde semejanza con congruencia: se cree que fijar la forma fija también las medidas.")
+)
+
+## --- La clave ---------------------------------------------------------------
+clave_lados   <- c(y, z)
+clave_angulos <- c(X)
+clave_texto   <- texto_conjunto(clave_lados, clave_angulos)
+clave_corta   <- paste0("los dos lados que concurren en el vértice ", X,
+                        " junto con el ángulo ", X, ", comprendido entre ellos")
+valor_correcto <- clave_texto   # nombre que el arsenal reconoce (Capas C y 5B)
+## Los puntos de multiplicación reproducen la tipografía de la fórmula IMPRESA
+## en el cuadernillo (`a² = b² + c² − 2 · b · c · cos α`). Reproducir el formato
+## del impreso NO contradice I-1: lo que I-1 prohíbe es armonizar las LETRAS de
+## la fórmula con las de la figura, no imitar su composición tipográfica.
+formula_clave  <- paste0(x, "^2 = ", y, "^2 + ", z, "^2 - 2 \\cdot ", y, " \\cdot ", z, " \\cdot \\cos ", X)
+
+## --- Selección de distractores ---------------------------------------------
+## Se FUERZAN los dos únicos distractores del mismo molde que la clave
+## (GEO-COS-01 y GEO-COS-02, ambos "2 lados + 1 ángulo"). Sin ellos, la regla
+## "elige la que cita más lados" acierta el 62,3 % (+30,8 pp sobre el techo
+## nulo: BLOQUEA). Con uno solo -- que es el diseño del ITEM OFICIAL -- acierta
+## el 50,0 % (+18,6 pp: también BLOQUEA). Con los dos baja al 35,5 %.
+## OJO: esa lectura de "+4,2 pp" salía de una batería CIEGA al canal léxico
+## intra-opción. Con la sonda D1 incorporada (19 reglas) el máximo de la batería
+## es 50,0 % con techo nulo 31,2 %: EXCESO +18,8 pp, BLOQUEA. Es el residuo que
+## el override I-12 acepta en rojo, y coincide con el 50,0 % del ítem impreso.
+## Medido con .claude/scripts/bateria_eliminacion.R, N = 100; ver salida/enumeracion/.
+## El tercer hueco sortea entre los 7 restantes, de modo que el TIPO de error
+## varia entre versiones y no solo sus letras (Incidente N).
+if (es_canonica) {
+  ## Excepción canónica (Incidente N): en 1 de cada 8 versiones se reproduce el
+  ## ítem impreso VERBATIM. Manda la fidelidad Hermes sobre la diversidad.
+  sel <- c(3L, 6L, 1L)   # GEO-COS-03, GEO-COS-06, GEO-COS-01 (orden del cuadernillo)
+} else {
+  ## INVARIANTE LOCAL I-12 (override firmado por el profesor, 2026-09-13).
+  ## El tercer hueco se restringe a los errores que NO repiten letra entre sus
+  ## lados y su ángulo: GEO-COS-04 (y,X,Z), -06 (z,X,Y) y -09. Motivo medido:
+  ## `GEO-COS-01` y `-02` van forzados y AMBOS repiten letra (r,s,R y r,s,S), de
+  ## modo que con un tercer distractor repetidor la clave queda siendo la ÚNICA
+  ## opción sin letra repetida. La regla «elige la que no repite letra» acertaba
+  ## el 73-75 % (+23 pp sobre el ítem oficial impreso, que mide 50,0 %).
+  ## Con esta restricción baja a 50,0 % = exactamente el ítem oficial.
+  sel <- c(1L, 2L, sample(c(4L, 6L, 9L), 1L))
+}
+distractores <- errores_conceptuales[sel]
+
+## --- Textos de las opciones -------------------------------------------------
+## UNA SOLA RUTA para las dos ramas. Antes la rama canónica cableaba los tres
+## textos impresos a mano porque el generador ordenaba los ángulos al revés que
+## el cuadernillo; corregido ese orden en texto_conjunto(), la rama canónica los
+## produce verbatim y el cableado sobra. Eliminarlo suprime además la asimetría
+## canónica/general que dejó pasar 31 renders con guardias tautológicas.
+textos_distractores <- vapply(distractores, function(d) d$calcula(), character(1))
+## El TEXTO MOSTRADO se adhiere a cada distractor y es el que cita la Solution.
+for (i in seq_along(distractores)) distractores[[i]]$texto <- textos_distractores[i]
+
+## --- GUARDIAS, sobre la lista DEFINITIVA -------------------------------------
+## Antes corrían sobre una lista que la rama canónica reasignaba DESPUÉS, y el
+## `stopifnot` final era tautológico: comprobaba que la asignación de la línea
+## anterior se había ejecutado, de modo que no podía fallar nunca. Con los textos
+## canónicos permutados a propósito, 31 renders pasaban todas las guardias.
+stopifnot(resuelve_un_coseno(clave_lados, clave_angulos, x))
+stopifnot(!any(vapply(distractores,
+                      function(d) resuelve_un_coseno(d$lados, d$angulos, x), NA)))
+stopifnot(!any(vapply(distractores, function(d) x %in% d$lados, NA)))
+n_datos <- c(length(clave_lados) + length(clave_angulos),
+             vapply(distractores, function(d) length(d$lados) + length(d$angulos), 0L))
+stopifnot(all(n_datos == 3L))
+moldes <- c(molde_de(clave_lados, clave_angulos),
+            vapply(distractores, function(d) molde_de(d$lados, d$angulos), ""))
+n_molde_clave <- sum(moldes == moldes[1])
+stopifnot(n_molde_clave >= if (es_canonica) 2L else 3L)
+
+## EMPAREJAMIENTO REAL texto <-> conjunto: el texto mostrado sale del closure
+## `calcula()` y se compara contra los CAMPOS declarativos de ese mismo error.
+## Son dos rutas distintas hacia el mismo dato, así que la
+## comprobación NO es tautológica: caza cualquier divergencia entre lo que una
+## entrada del pool dice ser y lo que emite. Ya no admite un orden alternativo
+## de los ángulos porque texto_conjunto() lo normaliza (ángulo del lado pedido
+## al final), que es justo el orden del cuadernillo.
+stopifnot(all(vapply(distractores, function(d) {
+  identical(d$texto, texto_conjunto(d$lados, d$angulos))
+}, NA)))
+
+opciones <- c(clave_texto, textos_distractores)
+stopifnot(length(unique(opciones)) == 4L)
+
+## GUARDIA DE I-12 (override firmado): el tercer hueco NO puede repetir letra
+## entre los lados que cita y sus ángulos. Sin ella, sustituir {4,6,9} por
+## {5,7,8} devolvía el canal léxico intra-opción al 73-75 % y NADA abortaba
+## (mutante M7 del detractor: 0/60). I-6: una precondición verificada vale más
+## que una corrección de texto medida después.
+repite_letra <- function(lad, ang) any(tolower(ang) %in% lad)
+if (!es_canonica) {
+  d3 <- errores_conceptuales[[sel[3]]]
+  stopifnot(!repite_letra(d3$lados, d3$angulos))
+}
+
+## GUARDIA DE I-4: el dibujo NO puede depender de `lado_pedido` (resaltar el lado
+## buscado delataría la respuesta). Se comprueba sobre el ARTEFACTO, no sobre el
+## texto de la función: dos renders que sólo difieren en `lado_pedido` deben ser
+## idénticos byte a byte. Mutante M9 del detractor: antes 0/60 abortos.
+.g1 <- tempfile(fileext = ".png"); .g2 <- tempfile(fileext = ".png")
+dibujar_triangulo_rotulado(ang_apice, ang_izq, V, incl_base, x,        .g1)
+dibujar_triangulo_rotulado(ang_apice, ang_izq, V, incl_base, otros[1], .g2)
+stopifnot(identical(tools::md5sum(.g1)[[1]], tools::md5sum(.g2)[[1]]))
+unlink(c(.g1, .g2))
+
+## --- Enunciado: UNA plantilla con dos huecos --------------------------------
+## [TEOREMA] queda fijo en "Coseno" al no existir segunda rama viable (I-10),
+## pero el hueco se conserva parametrizado. [MAGNITUD] varia entre los 3 lados.
+TEOREMA  <- "Coseno"
+pregunta <- paste0("¿Con cuál de los siguientes datos es posible calcular el valor de **",
+                   x, "** usando una única vez el teorema del ", TEOREMA, "?")
+if (es_canonica) {
+  stopifnot(identical(
+    pregunta,
+    "¿Con cuál de los siguientes datos es posible calcular el valor de **q** usando una única vez el teorema del Coseno?"))
+  ## Las CUATRO opciones impresas en el cuadernillo, verbatim y en su orden.
+  ## Ya no se cablean: se comprueba que el generador las PRODUCE. Si alguien
+  ## altera texto_conjunto(), el pool o la selección canónica, el render aborta
+  ## en vez de emitir una reproducción infiel (Hermes H-2: la figura y el texto
+  ## del original se reproducen tal cual, incluidos sus rasgos incómodos).
+  stopifnot(identical(clave_texto, "Lados r y s y ángulo Q"))
+  stopifnot(identical(textos_distractores,
+                      c("Lado r y ángulos R y Q",
+                        "Lado s y ángulos R y Q",
+                        "Lados r y s y ángulo R")))
+}
+
+## --- Mezcla interna ---------------------------------------------------------
+## `exshuffle: TRUE` volvera a mezclar, y es correcto: la Solution no cita
+## letras ni posiciones (regla #19) ni enumera en orden (Incidente Q).
+orden    <- sample.int(4L)
+opciones <- opciones[orden]
+sol      <- as.integer(seq_len(4L) == which(orden == 1L))
+stopifnot(sum(sol) == 1L, length(sol) == 4L)
+stopifnot(identical(opciones[which(sol == 1L)], clave_texto))
+
+reflexiones <- c(
+  "Antes de elegir una fórmula conviene preguntarse qué magnitudes relaciona, no sólo cuántos datos hay disponibles.",
+  "Contar los datos no basta: dos problemas con la misma cantidad de datos pueden exigir herramientas distintas.",
+  "Reconocer cuándo NO se puede aplicar un procedimiento es tan valioso como saber aplicarlo.",
+  "Traducir una fórmula general a la notación concreta de una figura es un paso que conviene escribir, no hacer de memoria.",
+  "Cuando una vía deja más incógnitas que ecuaciones, el problema no es de cálculo sino de elección de estrategia."
+)
+reflexion  <- safe_sample(reflexiones, 1L)
+sol_marcas <- ifelse(sol == 1L, "Correcto", "Incorrecto")
+```
+
+Question
+========
+
+En un triángulo cualquiera, el teorema del Coseno relaciona uno de sus lados con los otros dos y el ángulo que forman estos. Está dada por la fórmula:
+
+$$a^2 = b^2 + c^2 - 2 \cdot b \cdot c \cdot \cos \alpha$$
+
+Observe el triángulo de la figura,
+
+```{r figura, echo = FALSE, results = "asis"}
+cat("![](", archivo_fig, "){width=62%}\n", sep = "")
+```
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(pregunta, "\n")
+```
+
+Answerlist
+----------
+
+```{r answerlist, echo = FALSE, results = "asis"}
+## El cuadernillo imprime los ROTULOS de las opciones en negrita
+## ("Lado **r** y ángulos **R** y **Q**."). El realce se aplica SOLO al emitir:
+## el vector `opciones` se deja sin markup a propósito, para que las guardias,
+## los stopifnot canonicos y los validadores (diagnosticidad, bateria §P7) sigan
+## midiendo el MISMO texto de antes y sus cifras sean comparables entre ciclos.
+## El realce es uniforme (todos los rotulos de las cuatro opciones), así que no
+## introduce ningun canal que permita descartar opciones.
+## OJO: la "y" que une los rotulos es también una letra suelta y NO es un
+## rotulo; se deja fuera del realce de forma expresa. Ninguna familia de I-11
+## usa la letra Y, así que dejarla fuera no puede tragarse un rotulo real --
+## y el stopifnot de abajo lo garantiza.
+stopifnot(!any(vapply(familias_letras, function(f) any(f == "Y"), NA)))
+realzar_rotulos <- function(txt) {
+  gsub("(?<![[:alpha:]])(?!y\\b)([[:alpha:]])(?![[:alpha:]])", "**\\1**", txt, perl = TRUE)
+}
+for (o in opciones) cat("* ", realzar_rotulos(o), ".\n", sep = "")
+```
+
+Solution
+========
+
+El teorema del Coseno vincula **tres lados y un ángulo** de un mismo triángulo. En la notación de la figura, con cada lado en minúscula opuesto al ángulo en mayúscula del mismo nombre, la relación se escribe así:
+
+```{r formula_solucion, echo = FALSE, results = "asis"}
+cat("$$", formula_clave, "$$\n", sep = "")
+```
+
+### Respuesta correcta
+
+```{r respuesta_correcta, echo = FALSE, results = "asis"}
+cat("**Datos suficientes:** ", clave_corta, ".\n\n", sep = "")
+cat("Los dos lados conocidos son precisamente los que **concurren** en el vértice ", X,
+    ", y el ángulo dado es el **comprendido** entre ellos. Esa disposición es la única que permite ",
+    "sustituir directamente en la fórmula y despejar ", x, " con una sola aplicación del teorema, ",
+    "obteniendo además un valor único.\n\n", sep = "")
+```
+
+### Por qué los demás argumentos fallan
+
+```{r analisis_distractores, echo = FALSE, results = "asis"}
+for (d in distractores) {
+  cat("**", d$codigo, " - ", d$nombre, "**\n\n", sep = "")
+  cat("*Datos propuestos:* ", d$texto, " — ", d$descripcion_corta, ".\n\n", sep = "")
+  cat(d$descripcion_larga, "\n\n", sep = "")
+  cat("*Origen del error:* ", d$causa_raiz, "\n\n", sep = "")
+}
+```
+
+### La propiedad que decide
+
+```{r propiedad_decide, echo = FALSE, results = "asis"}
+## Generado desde `distractores`: antes era prosa ESTATICA y describia opciones
+## que no estaban en pantalla. Medido: el bullet de "sólo los tres ángulos"
+## era falso en el 87 % de las versiones (y en el 100 % de las canonicas),
+## porque esa opción sólo aparece cuando es el tercer distractor sorteado.
+n1L2A <- sum(vapply(distractores, function(d) length(d$lados) == 1L, NA))
+n2L1A <- sum(vapply(distractores, function(d) length(d$lados) == 2L, NA))
+n3A   <- sum(vapply(distractores, function(d) length(d$lados) == 0L, NA))
+cat("Ninguno de los conjuntos anteriores es absurdo, y conviene decirlo con precisión:\n\n")
+if (n1L2A > 0L) cat(if (n1L2A == 1L)
+  "- El que da **un lado y dos ángulos** **sí determina** el triángulo por completo. Lo que ocurre es que la vía para resolverlo es la **ley de senos**, no el teorema del Coseno.\n"
+  else
+  "- Los que dan **un lado y dos ángulos** **sí determinan** el triángulo por completo. Lo que ocurre es que la vía para resolverlos es la **ley de senos**, no el teorema del Coseno.\n")
+if (n2L1A > 0L) cat(if (n2L1A == 1L)
+  "- El que da **dos lados y un ángulo adyacente** **sí admite** plantear el teorema, pero deja una ecuación de segundo grado que no garantiza solución única.\n"
+  else
+  "- Los que dan **dos lados y un ángulo adyacente** **sí admiten** plantear el teorema, pero dejan una ecuación de segundo grado que no garantiza solución única.\n")
+if (n3A > 0L) cat("- El que da **sólo los tres ángulos** fija la forma pero no el tamaño: no permite obtener ninguna longitud.\n")
+cat("\n")
+```
+
+No es la **cantidad** de datos lo que decide, sino **cuáles** son y **cómo** están dispuestos. Para calcular un lado con una sola aplicación del teorema hacen falta los otros dos lados y el ángulo **comprendido** entre ellos, que es el opuesto al lado buscado.
+
+### Reflexión metacognitiva
+
+```{r reflexion_meta, echo = FALSE, results = "asis"}
+cat(reflexion, "\n")
+```
+
+### Estrategia para evitar el error
+
+1. Identificar primero **qué se pide** y **qué teorema se nombra**: no todo conjunto que determine el triángulo sirve para el teorema pedido.
+2. Escribir la relación con la notación **de la figura**, no con las letras de la fórmula general.
+3. Comprobar que el ángulo disponible es el **comprendido** entre los dos lados conocidos, y no uno adyacente al lado buscado.
+4. Contar las incógnitas que quedan en la expresión: si queda más de una, el teorema no basta por sí solo.
+
+Answerlist
+----------
+
+```{r answerlist_solution, echo = FALSE, results = "asis"}
+for (m in sol_marcas) cat("* ", m, ".\n", sep = "")
+```
+
+Meta-information
+================
+exname: teorema_coseno_datos_suficientes_n3
+extype: schoice
+exsolution: `r paste(sol, collapse = "")`
+exshuffle: TRUE
+exsection: Geometrico-Metrico/Formulacion-Ejecucion
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulacion y ejecucion
+exextra[Componente]: Geometrico-metrico
+exextra[Afirmacion]: Frente a un problema que involucre informacion cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Disena planes para la solucion de problemas que involucran informacion cuantitativa o esquematica.
+exextra[Nivel]: 3
+exextra[Descriptor]: Selecciona informacion necesaria para resolver problemas que involucran caracteristicas medibles de figuras geometricas elementales (triangulos, cuadrilateros y circunferencias).
+exextra[Estandar]: Uso argumentos geometricos para resolver y formular problemas en contextos matematicos y en otras ciencias.
+exextra[DOK]: 3
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_suficiencia_datos

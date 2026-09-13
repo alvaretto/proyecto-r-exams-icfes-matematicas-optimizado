@@ -1,0 +1,63 @@
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 100 | Reglas: 21 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  la que no repite letra entre sus rotulos [lexico       ] tasa 50.0 %   aplicable 100.0 %
+  la mas parecida a las demas (Jaccard de rotulos) [formato      ] tasa 42.2 %   aplicable 87.0 %
+  la mas larga                 [magnitud     ] tasa 38.0 %   aplicable 100.0 %
+  la de mas palabras           [lexico       ] tasa 38.0 %   aplicable 100.0 %
+  la que cita mas lados        [formato      ] tasa 35.5 %   aplicable 100.0 %
+  del grupo mayoritario por lados citados [formato      ] tasa 35.5 %   aplicable 100.0 %
+  la que empieza por Lados     [lexico       ] tasa 35.5 %   aplicable 100.0 %
+  la primera                   [posicion     ] tasa 34.0 %   aplicable 100.0 %
+  del grupo mayoritario por molde [formato      ] tasa 29.0 %   aplicable 100.0 %
+  la segunda                   [posicion     ] tasa 26.0 %   aplicable 100.0 %
+  la mas corta                 [magnitud     ] tasa 25.0 %   aplicable 100.0 %
+  descartar la mas corta       [magnitud     ] tasa 25.0 %   aplicable 100.0 %
+  la de menos palabras         [lexico       ] tasa 25.0 %   aplicable 100.0 %
+  la ultima                    [posicion     ] tasa 23.0 %   aplicable 100.0 %
+  descartar la mas larga       [magnitud     ] tasa 20.7 %   aplicable 100.0 %
+  la tercera                   [posicion     ] tasa 17.0 %   aplicable 100.0 %
+  la del molde raro (odd-one-out) [formato      ] tasa 3.2 %    aplicable 87.0 %
+  la unica con su 1a palabra   [lexico       ] tasa 3.2 %    aplicable 87.0 %
+  la que cita menos lados      [formato      ] tasa 0.0 %    aplicable 100.0 %
+  la que cita mas angulos      [formato      ] tasa 0.0 %    aplicable 100.0 %
+  la que si repite letra (inverso de la anterior) [lexico       ] tasa 0.0 %    aplicable 100.0 %
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 50.0 %  (regla 'la que no repite letra entre sus rotulos')
+  Techo nulo       : 31.4 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 37.0 %
+  Ruido (sd)       : 2.8 %   -> margen exigido 2.0 sd = +5.5 pp
+  EXCESO           : +18.6 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +25.0 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 50.0 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  no aplicable (declarada)   estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          no aplicable (declarada)   signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+
+  Justificaciones declaradas:
+    divisibilidad: las opciones no contienen cifras: son conjuntos de rotulos
+    signo: no hay magnitudes con signo ni conclusiones si/no
+
+-- VEREDICTO --
+  BLOQUEA (exit 1)
+  'la que no repite letra entre sus rotulos' [lexico] acierta el 50.0 %: +18.6 pp sobre el techo nulo,
+  con el corte de canal en +8.0 pp y 2.0 sd de ruido descontadas.
+  Hay un canal real de eliminacion: el item se resuelve sin razonar, y por
+  encima de lo que filtran los propios cuadernillos oficiales (+7,0 pp).
+

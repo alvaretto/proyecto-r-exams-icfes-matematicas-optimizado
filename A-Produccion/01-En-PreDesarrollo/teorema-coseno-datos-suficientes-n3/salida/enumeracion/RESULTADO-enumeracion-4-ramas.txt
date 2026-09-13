@@ -1,0 +1,118 @@
+python:         /usr/bin/python3
+libpython:      /usr/lib/libpython3.14.so
+pythonhome:     //usr://usr
+version:        3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]
+numpy:          /usr/lib/python3.14/site-packages/numpy
+numpy_version:  2.5.2
+
+NOTE: Python version was forced by RETICULATE_PYTHON
+R configurado para VSCode
+Biblioteca personal: /home/bootcamp/R/library 
+Usa load_common_packages() para cargar paquetes comunes
+CONTROL POSITIVO (LLA r=5,s=7,R=40 grados): q admite 2 valores: 3.182 / 7.543 
+  -> LLA queda confirmado AMBIGUO por via numerica, no por autoridad.
+
+=====================================================================
+A. COSENO pide LADO   (= el item oficial)   [objetivo: x | teorema: coseno ]
+=====================================================================
+ conjunto molde  config una_del_T una_del_otro determina                 rol
+    X,y,z 2L+1A     LAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    X,Y,Z 0L+3A     AAA     FALSE        FALSE     FALSE distractor legitimo
+    X,y,Y 1L+2A ALA/AAL     FALSE         TRUE      TRUE distractor legitimo
+    X,y,Z 1L+2A ALA/AAL     FALSE         TRUE      TRUE distractor legitimo
+    y,Y,Z 1L+2A ALA/AAL     FALSE         TRUE      TRUE distractor legitimo
+    X,Y,z 1L+2A ALA/AAL     FALSE         TRUE      TRUE distractor legitimo
+    X,z,Z 1L+2A ALA/AAL     FALSE         TRUE      TRUE distractor legitimo
+    Y,z,Z 1L+2A ALA/AAL     FALSE         TRUE      TRUE distractor legitimo
+    y,Y,z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+    y,z,Z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+
+  RESULTADO:
+   claves (conjuntos que el teorema resuelve en UNA aplicacion): 1  -> X,y,z 
+   molde(s) de la clave: 2L+1A 
+   distractores legitimos totales: 9 
+   distractores DEL MISMO MOLDE que la clave: 2  -> y,Y,z | y,z,Z 
+   [clave unica]             OK 
+   [>=3 distractores]        OK 
+   [>=1 distractor mismo molde (P7-E)] OK 
+
+=====================================================================
+B. COSENO pide ANGULO (rama eliminada)   [objetivo: X | teorema: coseno ]
+=====================================================================
+ conjunto molde  config una_del_T una_del_otro determina                 rol
+    x,y,z 3L+0A     LLL      TRUE        FALSE      TRUE       *** CLAVE ***
+    x,Y,Z 1L+2A ALA/AAL     FALSE        FALSE      TRUE distractor legitimo
+    y,Y,Z 1L+2A ALA/AAL     FALSE        FALSE      TRUE distractor legitimo
+    Y,z,Z 1L+2A ALA/AAL     FALSE        FALSE      TRUE distractor legitimo
+    x,y,Y 2L+1A     LLA     FALSE         TRUE     FALSE distractor legitimo
+    x,y,Z 2L+1A     LAL     FALSE        FALSE      TRUE distractor legitimo
+    x,Y,z 2L+1A     LAL     FALSE        FALSE      TRUE distractor legitimo
+    x,z,Z 2L+1A     LLA     FALSE         TRUE     FALSE distractor legitimo
+    y,Y,z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+    y,z,Z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+
+  RESULTADO:
+   claves (conjuntos que el teorema resuelve en UNA aplicacion): 1  -> x,y,z 
+   molde(s) de la clave: 3L+0A 
+   distractores legitimos totales: 9 
+   distractores DEL MISMO MOLDE que la clave: 0  -> NINGUNO 
+   [clave unica]             OK 
+   [>=3 distractores]        OK 
+   [>=1 distractor mismo molde (P7-E)] FALLA <-- canal de formato 100% determinista 
+
+=====================================================================
+C. SENO   pide LADO   (rama propuesta)   [objetivo: x | teorema: seno ]
+=====================================================================
+ conjunto molde  config una_del_T una_del_otro determina                 rol
+    X,y,Y 1L+2A ALA/AAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    X,y,Z 1L+2A ALA/AAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    y,Y,Z 1L+2A ALA/AAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    X,Y,z 1L+2A ALA/AAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    X,z,Z 1L+2A ALA/AAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    Y,z,Z 1L+2A ALA/AAL      TRUE        FALSE      TRUE       *** CLAVE ***
+    X,Y,Z 0L+3A     AAA     FALSE        FALSE     FALSE distractor legitimo
+    X,y,z 2L+1A     LAL     FALSE         TRUE      TRUE distractor legitimo
+    y,Y,z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+    y,z,Z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+
+  RESULTADO:
+   claves (conjuntos que el teorema resuelve en UNA aplicacion): 6  -> X,y,Y | X,y,Z | y,Y,Z | X,Y,z | X,z,Z | Y,z,Z 
+   molde(s) de la clave: 1L+2A 
+   distractores legitimos totales: 4 
+   distractores DEL MISMO MOLDE que la clave: 0  -> NINGUNO 
+   [clave unica]             FALLA 
+   [>=3 distractores]        OK 
+   [>=1 distractor mismo molde (P7-E)] FALLA <-- canal de formato 100% determinista 
+
+=====================================================================
+D. SENO   pide ANGULO   [objetivo: X | teorema: seno ]
+=====================================================================
+ conjunto molde  config una_del_T una_del_otro determina                 rol
+    x,y,Y 2L+1A     LLA      TRUE        FALSE     FALSE       *** CLAVE ***
+    x,z,Z 2L+1A     LLA      TRUE        FALSE     FALSE       *** CLAVE ***
+    x,Y,Z 1L+2A ALA/AAL     FALSE        FALSE      TRUE distractor legitimo
+    y,Y,Z 1L+2A ALA/AAL     FALSE        FALSE      TRUE distractor legitimo
+    Y,z,Z 1L+2A ALA/AAL     FALSE        FALSE      TRUE distractor legitimo
+    x,y,Z 2L+1A     LAL     FALSE        FALSE      TRUE distractor legitimo
+    x,Y,z 2L+1A     LAL     FALSE        FALSE      TRUE distractor legitimo
+    y,Y,z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+    y,z,Z 2L+1A     LLA     FALSE        FALSE     FALSE distractor legitimo
+    x,y,z 3L+0A     LLL     FALSE         TRUE      TRUE distractor legitimo
+
+  RESULTADO:
+   claves (conjuntos que el teorema resuelve en UNA aplicacion): 2  -> x,y,Y | x,z,Z 
+   molde(s) de la clave: 2L+1A 
+   distractores legitimos totales: 8 
+   distractores DEL MISMO MOLDE que la clave: 4  -> x,y,Z | x,Y,z | y,Y,z | y,z,Z 
+   [clave unica]             FALLA 
+   [>=3 distractores]        OK 
+   [>=1 distractor mismo molde (P7-E)] OK 
+
+=====================================================================
+RESUMEN DE LAS 4 RAMAS
+=====================================================================
+                                          claves distractores mismo_molde viable
+A. COSENO pide LADO   (= el item oficial)      1            9           2      1
+B. COSENO pide ANGULO (rama eliminada)         1            9           0      0
+C. SENO   pide LADO   (rama propuesta)         6            4           0      0
+D. SENO   pide ANGULO                          2            8           4      0

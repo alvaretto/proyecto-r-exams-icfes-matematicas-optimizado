@@ -1,0 +1,31 @@
+=============================================================
+VERIFICADOR PROPIO — teorema-coseno-datos-suficientes-n3
+archivo: teorema_coseno_datos_suficientes_geometrico_metrico_formulacion_ejecucion_n3_schoice_v1.Rmd | N = 100 
+=============================================================
+
+PARTE 1 — espacio completo de conjuntos de 3 datos
+  subconjuntos posibles : 10 
+  claves                : 1  -> y,z,X 
+  distractores legitimos: 9 
+  del mismo molde que la clave: 2 
+  [clave unica en el espacio] OK
+
+PARTE 2 — verificacion sobre 100 versiones generadas
+  instancias canonicas        : 13 
+  textos de clave distintos   : 33 
+  opciones con el molde clave :moldes_tab
+ 2  3 
+13 87 
+
+PARTE 3 — pruebas de mutacion (contrato: cada mutante muere por SU sonda)
+  M1  la clave lleva un angu esperada=CLAVE_NO_RESUELVE   real=CLAVE_NO_RESUELVE            cazado_por_su_sonda
+  M2  un distractor incluye  esperada=SEGUNDA_CLAVE       real=SEGUNDA_CLAVE                cazado_por_su_sonda
+  M3  un distractor con solo esperada=N_DATOS             real=N_DATOS+MOLDE_INSUFICIENTE   cazado_por_su_sonda
+  M5  un distractor cita el  esperada=PEDIDO_EN_OPCION    real=PEDIDO_EN_OPCION             cazado_por_su_sonda
+  M4  se retira uno de los d esperada=MOLDE_INSUFICIENTE  real=MOLDE_INSUFICIENTE           cazado_por_su_sonda
+
+=============================================================
+RESULTADO: APROBADO (0 errores)
+  clave unica en el espacio completo Y en las 4 opciones de las 100 versiones
+   5 mutantes, todos cazados por su propia sonda
+=============================================================

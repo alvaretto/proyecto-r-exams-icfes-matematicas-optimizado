@@ -1,0 +1,58 @@
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 100 | Reglas: 17 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  la que cita mas lados        [formato      ] tasa 35.5 %   aplicable 100.0 %
+  la que empieza por Lados     [lexico       ] tasa 35.5 %   aplicable 100.0 %
+  la mas larga                 [magnitud     ] tasa 34.0 %   aplicable 100.0 %
+  la de mas palabras           [lexico       ] tasa 34.0 %   aplicable 100.0 %
+  la mas corta                 [magnitud     ] tasa 32.0 %   aplicable 100.0 %
+  la primera                   [posicion     ] tasa 32.0 %   aplicable 100.0 %
+  la de menos palabras         [lexico       ] tasa 32.0 %   aplicable 100.0 %
+  la ultima                    [posicion     ] tasa 29.0 %   aplicable 100.0 %
+  del par con el mismo molde   [formato      ] tasa 25.0 %   aplicable 0.0 %
+  descartar la mas corta       [magnitud     ] tasa 22.7 %   aplicable 100.0 %
+  descartar la mas larga       [magnitud     ] tasa 22.0 %   aplicable 100.0 %
+  la segunda                   [posicion     ] tasa 21.0 %   aplicable 100.0 %
+  la tercera                   [posicion     ] tasa 18.0 %   aplicable 100.0 %
+  la del molde raro (odd-one-out) [formato      ] tasa 3.2 %    aplicable 87.0 %
+  la unica con su 1a palabra   [lexico       ] tasa 3.2 %    aplicable 87.0 %
+  la que cita menos lados      [formato      ] tasa 0.0 %    aplicable 100.0 %
+  la que cita mas angulos      [formato      ] tasa 0.0 %    aplicable 100.0 %
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 35.5 %  (regla 'la que cita mas lados')
+  Techo nulo       : 31.0 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 36.0 %
+  Ruido (sd)       : 2.7 %   -> margen exigido 2.0 sd = +5.5 pp
+  EXCESO           : +4.5 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +10.5 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 35.5 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  no aplicable (declarada)   estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          no aplicable (declarada)   signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+
+  Justificaciones declaradas:
+    divisibilidad: las opciones no contienen cifras: son conjuntos de rotulos
+    signo: no hay magnitudes con signo ni conclusiones si/no
+
+-- VEREDICTO --
+  NO_CONCLUYENTE (exit 1)
+  El exceso (+4.5 pp) cae en la ZONA GRIS (+2.0 a +8.0 pp): por encima
+  del ruido pero por debajo de lo que acredita un canal. Ni verde ni rojo.
+  PROHIBIDO redondearlo a PASS: sale con exit 1 igual que el bloqueo.
+

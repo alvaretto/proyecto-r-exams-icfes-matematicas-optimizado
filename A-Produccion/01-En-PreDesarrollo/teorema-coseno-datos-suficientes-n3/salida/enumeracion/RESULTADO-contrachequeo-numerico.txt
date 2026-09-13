@@ -1,0 +1,24 @@
+python:         /usr/bin/python3
+libpython:      /usr/lib/libpython3.14.so
+pythonhome:     //usr://usr
+version:        3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]
+numpy:          /usr/lib/python3.14/site-packages/numpy
+numpy_version:  2.5.2
+
+NOTE: Python version was forced by RETICULATE_PYTHON
+R configurado para VSCode
+Biblioteca personal: /home/bootcamp/R/library 
+Usa load_common_packages() para cargar paquetes comunes
+RECONSTRUCCION DE x CON UNA SOLA APLICACION DE LA LEY DE SENOS
+triangulos probados: 5000 
+
+  conjunto {y,X,Y  }  fallos:     0   error relativo maximo: 3.35e-16   -> RESUELVE (es CLAVE)
+  conjunto {y,X,Z  }  fallos:     0   error relativo maximo: 6.16e-16   -> RESUELVE (es CLAVE)
+  conjunto {y,Y,Z  }  fallos:     0   error relativo maximo: 1.14e-15   -> RESUELVE (es CLAVE)
+  conjunto {z,X,Y  }  fallos:     0   error relativo maximo: 2.87e-16   -> RESUELVE (es CLAVE)
+  conjunto {z,X,Z  }  fallos:     0   error relativo maximo: 2.87e-16   -> RESUELVE (es CLAVE)
+  conjunto {z,Y,Z  }  fallos:     0   error relativo maximo: 9.78e-16   -> RESUELVE (es CLAVE)
+
+VEREDICTO: 6 de 6 conjuntos '1 lado + 2 angulos' entregan x.
+
+CONTROL NEGATIVO (razon invertida): error relativo 0.278 -> el chequeo SI detecta formulas falsas

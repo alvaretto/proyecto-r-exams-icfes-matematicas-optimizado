@@ -1,0 +1,78 @@
+python:         /usr/bin/python3
+libpython:      /usr/lib/libpython3.14.so
+pythonhome:     //usr://usr
+version:        3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]
+numpy:          /usr/lib/python3.14/site-packages/numpy
+numpy_version:  2.5.2
+
+NOTE: Python version was forced by RETICULATE_PYTHON
+R configurado para VSCode
+Biblioteca personal: /home/bootcamp/R/library 
+Usa load_common_packages() para cargar paquetes comunes
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 100 | Reglas: 25 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  la que cita mas lados        [formato      ] tasa 62.3 %   aplicable 100.0 %
+  la que empieza por Lados     [lexico       ] tasa 62.3 %   aplicable 100.0 %
+  la unica que empieza por Lados [lexico       ] tasa 43.5 %   aplicable 38.0 %
+  la mas larga                 [magnitud     ] tasa 36.0 %   aplicable 100.0 %
+  la de mas palabras           [lexico       ] tasa 36.0 %   aplicable 100.0 %
+  la unica con su 1a palabra   [lexico       ] tasa 33.0 %   aplicable 24.0 %
+  la que cita mas letras       [formato      ] tasa 32.9 %   aplicable 67.0 %
+  descartar la mas corta       [magnitud     ] tasa 31.0 %   aplicable 100.0 %
+  la segunda                   [posicion     ] tasa 31.0 %   aplicable 100.0 %
+  del par con el mismo molde   [formato      ] tasa 30.5 %   aplicable 56.0 %
+  la ultima                    [posicion     ] tasa 30.0 %   aplicable 100.0 %
+  la unica con 2 lados         [formato      ] tasa 26.2 %   aplicable 15.0 %
+  la unica con su molde        [formato      ] tasa 26.2 %   aplicable 15.0 %
+  la unica sin 'angulo'        [formato      ] tasa 25.0 %   aplicable 0.0 %
+  del par con las mismas letras [formato      ] tasa 25.0 %   aplicable 0.0 %
+  la primera                   [posicion     ] tasa 23.0 %   aplicable 100.0 %
+  descartar la mas larga       [magnitud     ] tasa 21.3 %   aplicable 100.0 %
+  la unica con 1 angulo        [formato      ] tasa 20.2 %   aplicable 39.0 %
+  la tercera                   [posicion     ] tasa 16.0 %   aplicable 100.0 %
+  la unica que cita 3 letras   [formato      ] tasa 15.2 %   aplicable 39.0 %
+  la que cita menos letras     [formato      ] tasa 8.2 %    aplicable 67.0 %
+  la mas corta                 [magnitud     ] tasa 7.0 %    aplicable 100.0 %
+  la de menos palabras         [lexico       ] tasa 7.0 %    aplicable 100.0 %
+  la que cita menos lados      [formato      ] tasa 0.0 %    aplicable 100.0 %
+  la que cita mas angulos      [formato      ] tasa 0.0 %    aplicable 100.0 %
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 62.3 %  (regla 'la que cita mas lados')
+  Techo nulo       : 31.5 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 36.0 %
+  Ruido (sd)       : 2.6 %   -> margen exigido 2.0 sd = +5.2 pp
+  EXCESO           : +30.8 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +37.3 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 62.3 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  no aplicable (declarada)   estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          no aplicable (declarada)   signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+
+  Justificaciones declaradas:
+    divisibilidad: las opciones no contienen cifras: son conjuntos de rotulos
+    signo: no hay magnitudes con signo ni conclusiones si/no
+
+-- VEREDICTO --
+  BLOQUEA (exit 1)
+  'la que cita mas lados' [formato] acierta el 62.3 %: +30.8 pp sobre el techo nulo,
+  con el corte de canal en +8.0 pp y 2.0 sd de ruido descontadas.
+  Hay un canal real de eliminacion: el item se resuelve sin razonar, y por
+  encima de lo que filtran los propios cuadernillos oficiales (+7,0 pp).
+

@@ -1,0 +1,20 @@
+python:         /usr/bin/python3
+libpython:      /usr/lib/libpython3.14.so
+pythonhome:     //usr://usr
+version:        3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]
+numpy:          /usr/lib/python3.14/site-packages/numpy
+numpy_version:  2.5.2
+
+NOTE: Python version was forced by RETICULATE_PYTHON
+R configurado para VSCode
+Biblioteca personal: /home/bootcamp/R/library 
+Usa load_common_packages() para cargar paquetes comunes
+Numero de triangulos compatibles con (dos lados + angulo ADYACENTE):
+
+    0     1     2 
+ 5532 13301  1167 
+
+maximo observado: 2 
+VEREDICTO del claim 'hasta dos triangulos':  CIERTO -- el maximo es 2 y hay casos con 0; 'hasta dos' es la cota correcta 
+
+La clave (angulo COMPRENDIDO) entrega un valor unico y positivo en 20000 / 20000 casos

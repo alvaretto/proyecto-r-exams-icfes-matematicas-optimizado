@@ -1,0 +1,22 @@
+python:         /usr/bin/python3
+libpython:      /usr/lib/libpython3.14.so
+pythonhome:     //usr://usr
+version:        3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]
+numpy:          /usr/lib/python3.14/site-packages/numpy
+numpy_version:  2.5.2
+
+NOTE: Python version was forced by RETICULATE_PYTHON
+R configurado para VSCode
+Biblioteca personal: /home/bootcamp/R/library 
+Usa load_common_packages() para cargar paquetes comunes
+ENUMERACION EXHAUSTIVA DEL ESPACIO DE VERSIONES
+configuraciones examinadas: 252 (12 familias x 3 lados x 7 terceros)
+textos de clave distintos  : 36 
+opciones del molde de la clave: moldes
+  3 
+252 
+fallos: 0 
+
+VEREDICTO: en las 252 configuraciones posibles la clave es UNICA,
+           las 4 opciones llevan 3 datos, ninguna contiene el lado pedido,
+           no hay duplicadas y siempre hay 3 opciones del molde de la clave.

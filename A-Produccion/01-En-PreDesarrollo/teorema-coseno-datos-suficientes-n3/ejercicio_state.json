@@ -1,0 +1,61 @@
+{
+  "version": "2.0",
+  "ejercicio": "teorema_coseno_datos_suficientes_geometrico_metrico_formulacion_ejecucion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-09-13T09:06:37.862112-05:00",
+  "timestamp_ultima_actualizacion": "2026-09-13T12:00:28.265813-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-09-13T09:08:30.922550-05:00",
+      "resultado": null
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-09-13T09:07:27.943516-05:00"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-09-13T09:32:01.620181-05:00",
+      "archivo": "teorema_coseno_datos_suficientes_geometrico_metrico_formulacion_ejecucion_n3_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-09-13T09:32:01.678439-05:00"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-09-13T09:33:20.921703-05:00"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-09-13T09:33:20.978140-05:00"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-09-13T11:57:29.801867-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS (7 objeciones aplicadas y verificadas)"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-09-13T11:57:29.857848-05:00",
+      "nota": "5 coherencias verificadas sobre render posterior al .Rmd | gate Hermes H-3 inventario bidireccional cerrado en 6 rotulos (6 familias + 4 extremos del pool) | auditoria visual auditor-visual-html APTO_VISUAL con N=24 declarado"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-09-13T10:51:34.756859-05:00",
+      "versiones_unicas": 295,
+      "diversidad_sustantiva_valores_unicos": 33,
+      "nota": "295/300 unicas (regla #3, umbral 250; re-medido tras el fix de orden de angulos, antes 281) | 33 textos de clave distintos /100 (diversidad sustantiva, umbral 30) | multisemilla 100/100 APROBADO"
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-09-13T10:51:34.814102-05:00"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-09-13T12:00:28.265813-05:00"
+    }
+  }
+}
