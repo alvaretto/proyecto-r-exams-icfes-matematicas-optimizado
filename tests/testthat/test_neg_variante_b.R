@@ -18,7 +18,7 @@ library(testthat)
 library(exams)
 library(digest)
 
-source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
+source(repo_path(".claude/scripts/validar_coherencia_matematica.R"))
 
 # Helper: escribe un .Rmd temporal y devuelve su ruta. El prefijo controla si el
 # nombre contiene "_neg_" (necesario para activar la rama _neg_ del validador).

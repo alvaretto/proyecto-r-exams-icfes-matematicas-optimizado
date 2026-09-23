@@ -186,6 +186,11 @@ test_that("I-6: hooks .sh son ejecutables y tienen sintaxis bash válida", {
 # ============================================================
 
 test_that("I-7: backup pre-Ruflo existe (red de seguridad)", {
+  # El backup esta en .gitignore (.claude.pre-*.tar.gz, linea 362): es una red
+  # de seguridad de la maquina de desarrollo, no un artefacto del repositorio.
+  # Un runner de CI hace checkout limpio y jamas lo tendra, asi que exigirlo
+  # alli deja la suite en rojo permanente sin senalar ningun defecto real.
+  skip_on_ci()
   backup <- ".claude.pre-ruflo-20260425-123652.tar.gz"
   expect_true(file.exists(backup),
               info = paste("Backup faltante:", backup,

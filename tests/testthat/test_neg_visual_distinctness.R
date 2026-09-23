@@ -129,7 +129,7 @@ test_that("Errores válidos del pool _neg_ producen diagramas distintos al corre
 
 test_that("Ejercicio _neg_ excluye EST-BOX-03 del pool", {
   rmd_path <- file.path(
-    "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
+    repo_root(),
     "A-Produccion/03-En-Produccion",
     "06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/06-Medidas-De-Posición",
     "diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_neg_v1.Rmd"
@@ -138,7 +138,7 @@ test_that("Ejercicio _neg_ excluye EST-BOX-03 del pool", {
   # Fallback a ubicación previa si aún no se ha promovido
   if (!file.exists(rmd_path)) {
     rmd_path <- file.path(
-      "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams",
+      repo_root(),
       "A-Produccion/01-En-PreDesarrollo/Lab-Manjaro/50",
       "diagrama_caja_estaturas_metacognitivo_interpretacion_n2_schoice_neg_v1.Rmd"
     )

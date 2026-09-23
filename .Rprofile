@@ -1,12 +1,35 @@
 # Configuración R para VSCode
 # Este archivo se carga automáticamente al iniciar R
 
-# Configurar biblioteca personal
-.libPaths(c("~/R/library", .libPaths()))
+# Biblioteca personal: anteponerla SOLO si existe.
+# .libPaths() descarta en silencio las rutas inexistentes, asi que en un runner
+# de CI (donde ~/R/library no existe) esta linea dejaba la biblioteca del
+# sistema en primer lugar y pisaba el R_LIBS_USER escribible que configura
+# r-lib/actions/setup-r -> install.packages() moria con "lib is not writable".
+local({
+  lib_personal <- path.expand("~/R/library")
+  if (dir.exists(lib_personal)) .libPaths(c(lib_personal, .libPaths()))
+})
+
+# repos: respetar el que ya venga configurado por el entorno.
+# En CI, r-lib/actions/setup-r apunta a Posit Package Manager, que sirve
+# binarios precompilados para el runner. Forzar CRAN aqui obligaba a compilar
+# desde fuente y la instalacion de 'fs' moria con "fatal error: uv.h: No such
+# file or directory", arrastrando a pkgload, rmarkdown, exams y testthat.
+local({
+  # r-lib/actions/setup-r NO llama a options(repos): solo exporta RSPM al
+  # entorno. Si esa variable esta, mandan los binarios precompilados.
+  rspm <- Sys.getenv("RSPM")
+  cran <- getOption("repos")[["CRAN"]]
+  if (nzchar(rspm)) {
+    options(repos = c(CRAN = rspm))
+  } else if (is.null(cran) || !nzchar(cran) || identical(cran, "@CRAN@")) {
+    options(repos = c(CRAN = "https://cran.r-project.org"))
+  }
+})
 
 # Configurar opciones de R
 options(
-  repos = c(CRAN = "https://cran.r-project.org"),
   scipen = 999,
   digits = 4,
   width = 120,
@@ -50,11 +73,14 @@ if (require("reticulate", quietly = TRUE)) {
   })
 }
 
-# mcptools: auto-registro MCP para Claude Code
-source("~/.R/mcp-session-autoconnect.R")
-
-# Abrir archivos encolados por rstudio-open como pestanas nuevas
-source("~/.R/open-queue-watcher.R")
+# Utilidades locales de la maquina de desarrollo (mcptools, rstudio-open).
+# Se cargan SOLO si existen: en CI (GitHub Actions) no estan presentes y su
+# ausencia no debe abortar la sesion de R con "Execution halted".
+for (.local_helper in c("~/.R/mcp-session-autoconnect.R",
+                        "~/.R/open-queue-watcher.R")) {
+  if (file.exists(path.expand(.local_helper))) source(.local_helper)
+}
+rm(.local_helper)
 
 # Mensaje de bienvenida
 cat("R configurado para VSCode\n")

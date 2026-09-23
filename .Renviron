@@ -1,4 +1,7 @@
-R_LIBS_USER="~/R/library"
+# Respeta un R_LIBS_USER ya definido por el entorno (r-lib/actions/setup-r
+# lo apunta a un directorio escribible del runner). Forzarlo a ~/R/library
+# -- inexistente en CI -- dejaba install.packages() sin destino escribible.
+R_LIBS_USER=${R_LIBS_USER-'~/R/library'}
 RETICULATE_PYTHON="/usr/bin/python3"
 RETICULATE_PYTHON_FALLBACK="/usr/bin/python3"
 RETICULATE_USE_MANAGED_VENV="no"

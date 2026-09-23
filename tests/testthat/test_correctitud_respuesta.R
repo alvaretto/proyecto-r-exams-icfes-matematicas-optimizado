@@ -6,7 +6,7 @@ library(testthat)
 library(exams)
 
 # Cargar funciones
-source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
+source(repo_path(".claude/scripts/validar_coherencia_matematica.R"))
 
 # ============================================================
 # Nivel 5A: Evaluación de exsolution dinámico
