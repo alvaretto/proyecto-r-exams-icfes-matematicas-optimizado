@@ -23,7 +23,7 @@ Verificar TODOS los items antes de avanzar:
 - **Patron metacognitivo seleccionado** (Error Ajeno / Afirmacion / Comparacion)
 - **Pool de errores conceptuales definido (minimo 4)**
 - Ejemplo funcional similar identificado y leido
-- Nomenclatura calculada (incluye "metacognitivo")
+- Nomenclatura calculada: `[ejercicio]_[componente]_[competencia]_n[nivel]_schoice_v[N]` — `metacognitivo` NO va en el nombre (fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`)
 - Carpeta destino creada en `02-En-Desarrollo/`
 
 ### Durante generacion

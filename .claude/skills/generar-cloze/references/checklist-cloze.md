@@ -25,7 +25,7 @@
 - **Pool de afirmaciones V/F definido (minimo 6+6)**
 - **Pool de enunciados V/F definido (minimo 4)**
 - Ejemplo funcional CLOZE metacognitivo identificado y leido
-- Nomenclatura calculada (incluye "metacognitivo" y "cloze")
+- Nomenclatura calculada: `[ejercicio]_[componente]_[competencia]_n[nivel]_cloze_v[N]` — `metacognitivo` NO va en el nombre (fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`)
 - Carpeta destino creada en `02-En-Desarrollo/`
 
 ### Durante generacion
@@ -58,7 +58,7 @@ NO terminar con errores inesperados (error de NOPS con num/string es esperado, n
 ## Metadatos OBLIGATORIOS CLOZE Metacognitivo
 
 ```yaml
-exname: [nombre]_metacognitivo_argumentacion_n3_cloze_v1
+exname: [ejercicio]_[componente]_argumentacion_n3_cloze_v1
 extype: cloze
 exclozetype: schoice|num|mchoice|schoice
 exsolution: [sol_p1]|[sol_p2]|[sol_p3]|[sol_p4]

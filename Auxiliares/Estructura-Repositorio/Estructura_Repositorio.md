@@ -104,7 +104,9 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       │   └── 2024-CB-S1_S2-P02-calculo-de-ganancias/    [ejercicio legacy]
 │       ├── 04-Propiedades-Expresiones-Decimales/
 │       ├── 05-Conjunto-Reales-Desigualdades/
-│       └── 06-Valor-Absoluto/
+│       ├── 06-Valor-Absoluto/
+│       └── 07-Proporcionalidad-Directa-E-Inversa/
+│           └── excedente_almuerzo_proporcional_n4/            [reservado]
 │
 ├── 02-Funciones/
 │   └── Pensamiento-Variacional-Espacial/
@@ -220,8 +222,10 @@ Leyenda: `[N .Rmd]` = ejercicios activos | (vacio) = estructura de destino plani
 │       │   └── Probabilidad-Bolas-Colores/                      [2 .Rmd]
 │       ├── 08-Probabilidad-De-La-Union-De-Sucesos/
 │       │   └── diagrama_venn_encuesta_metacognitivo_*/          [3 .Rmd]
-│       └── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
-│           └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
+│       ├── 09-Probabilidad-Condicionada_Independencia-De-Sucesos/
+│       │   └── Probabilidad-Intervalos-Curva-13-S1-2024B/       [~5 .Rmd]
+│       └── 10-Combinatoria_Permutaciones-Variaciones-Combinaciones/
+│           └── permutaciones_pescadores_venia_n4/               [reservado]
 │
 │ ══════════════════════════════════════════════════════
 │  RECURSOS Y PLANTILLAS
@@ -433,9 +437,16 @@ Cada ejercicio debe superar verificacion en:
 - **Estandares MEN**: Estandares Basicos de Competencias en Matematicas
 - **R-exams**: https://www.R-exams.org/
 - **Fuente de verdad**: `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
-- **Reglas del sistema**: `.claude/rules/` (15 reglas obligatorias)
-- **Testing**: `tests/testthat/` (12 suites)
+- **Reglas del sistema**: `.claude/CLAUDE.md` (22 reglas obligatorias; 21 tienen archivo propio en
+  `.claude/rules/` — la #5, las «5 Coherencias», se define en el propio indice)
+- **Testing**: `tests/testthat/` (22 suites enganchadas a `tests/run_all_tests.R`)
 
 ---
 
-*Actualizado: 2026-02-27 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*
+*Actualizado: 2026-07-30 | Alineado con Marco ICFES Matematicas 2026 | Estructura fisica verificada con .gitkeep*
+
+*Cambio 2026-07-30: nuevo nodo `10-Combinatoria_Permutaciones-Variaciones-Combinaciones/` bajo
+`06-Estadistica-Y-Probabilidad/Pensamiento-Aleatorio/`, para conteo combinatorio (permutaciones,
+variaciones, combinaciones). Se crea aparte del `07-` —que pese a llamarse «...-Conteo» solo
+contiene probabilidad y diagramas de Venn— y se numera `10-` en vez de insertarse antes del `07-`
+para no renumerar rutas ya citadas del arbol inmutable `03-En-Produccion/`.*

@@ -70,6 +70,86 @@ Aun cuando el **valor** de la respuesta correcta varíe entre versiones (distint
 
 **Defensa**: aleatorizar la orientación/posición global de la escena por versión (p.ej. cuadrante ∈ {NE, NO, SE, SO}), aplicando la MISMA transformación a todas las opciones (preserva la estructura relativa correcta) y reflejándola en el texto del enunciado (la descripción de dirección/posición debe ser coherente con la transformación elegida). Verificación: renderizar ≥8 versiones y confirmar que la respuesta correcta aparece en posiciones/orientaciones distintas.
 
+#### P4-bis — Variante SEMÁNTICA: el VEREDICTO de la clave es invariante (2026-08-08)
+
+El caso más traicionero de P4 no es visual sino textual, y estaba descrito en la lista de arriba («la afirmación correcta siempre con cierta estructura») sin que **ningún validador lo midiera**.
+
+En un ítem de conclusión binaria —opciones que empiezan por «Sí, porque…» / «No, porque…»— la clave puede tener **siempre el mismo veredicto** aunque su valor numérico varíe en cada versión. Ocurre cuando la afirmación que el estudiante debe evaluar es falsa **por construcción**: si el enunciado siempre propone un valor obtenido con el procedimiento erróneo, la respuesta correcta es siempre «No».
+
+```r
+# ❌ PROHIBIDO — la afirmación evaluada es falsa en el 100 % de las versiones
+afirmacion_min <- comp_largo_max   # complemento lineal: nunca coincide con el
+afirmacion_max <- comp_largo_min   # complemento del producto -> clave siempre "No"
+
+# ✅ CORRECTO — se sortea si la afirmación es verdadera o falsa
+afirmacion_es_verdadera <- if (is_canonical) FALSE else sample(c(TRUE, FALSE), 1)
+```
+
+**Por qué ninguna defensa previa lo veía:**
+
+| Validación | Qué mide | Por qué no lo detecta |
+|---|---|---|
+| `validar_diagnosticidad.R` H2 | Que la clave sea la **única** con su prefijo, dentro de una versión | Con balance 2+2 nunca es única → 0 % |
+| `validar_diversidad_sustantiva.R` | Que el **valor** de la clave varíe | Varía (decenas de valores únicos); el veredicto no es un valor |
+| Balance Sí/No 2+2 | Que cada versión tenga 2 y 2 | Es intra-versión: se cumple en todas y aun así la clave es siempre «No» |
+
+**Impacto:** el estudiante que aprende el patrón descarta la mitad de las opciones sin razonar — de 25 % a 50 % de acierto por azar.
+
+**Defensa cableada:** sonda **H3** de `validar_diagnosticidad.R` (cross-versión). Mide la frecuencia de la primera palabra de la clave a lo largo de las versiones: 100 % → `ERR_DIAG_SUPERFICIAL` (bloqueante, exit 1); ≥90 % → aviso. Descarta las versiones en que todas las opciones comparten prefijo, para no penalizar ítems donde el prefijo no informa.
+
+**Nota de diseño:** si el ítem reproduce un cuadernillo oficial, la instancia canónica conserva el veredicto del ítem real (allí la clave es la que es) y son las **demás versiones** las que alternan. Cuando se añade una clave alternativa con el veredicto opuesto, hay que **excluir del pool a su gemela**: dos opciones con el mismo rango y veredictos contrarios convierten el ítem en irresoluble.
+
+#### La propia defensa crea deuda — tres cosas que hay que revisar DESPUÉS de aplicarla
+
+Añadir una clave alternativa no es un cambio local: **cambia qué significa el enunciado** en la mitad de las versiones, y con ello la premisa sobre la que se escribió el pool existente. Verificado en `area-jardin-lote-porcentaje-n4` (2026-08-09), donde los tres puntos fallaron a la vez y todo el arsenal seguía en verde.
+
+1. **Las guardas anti-colisión deben recorrer TODAS las claves, no la vigente.** Una guarda que compara cada candidato contra `descripcion_corta` de la clave de esa versión solo protege la rama cuya clave comparte plantilla con el distractor. En la otra rama la clave se redacta distinto, el literal no coincide y el distractor pasa afirmando el rango correcto con el veredicto contrario. La clave **NO vigente** es la firma exacta de esa colisión. → Error 28.
+
+2. **Los distractores escritos para una sola clave pueden quedar incoherentes.** Si eran coherentes porque la afirmación del enunciado *era* lo que ellos afirman, al alternar la afirmación dejan de serlo: declaran un veredicto y su justificación apoya el contrario (`INC-SINO-BINARIO`, defecto 1). Medido: 81 de 600 versiones (13,5 %), todas en la rama nueva. → Error 29.
+
+3. **La sonda H1 no ve lo que pasa dentro de cada rama.** Un ítem con clave alternante tiene **dos ramas estructuralmente distintas**, y H1/H2 promedian sobre todas las versiones sin condicionar por rama: un reparto 100 % / 0 % se lee como ~50 % y queda bajo el umbral del 70 %. Al corregir el punto 2 excluyendo un distractor, si ese era el único más largo que la clave, la clave pasa a ser **determinísticamente** la más larga de su rama. Medido: 100 % dentro de la rama, `PASS` en el agregado, **50,5 % de acierto sin razonar** frente al 25 % de azar. → Error 30.
+
+**Regla operativa:** tras aplicar §P4-bis, medir H1/H2 **condicionando por rama** (agrupar por el flag que la define y recalcular dentro de cada grupo). El `PASS` agregado de `validar_diagnosticidad.R` no acredita ese caso; hoy es verificación manual. Y al igualar longitudes, comprobar que no se crea la **señal inversa**: si la clave pasa a no ser NUNCA la más larga, «descartar la más larga» sube el azar de 25 % a 33 %.
+
+#### El molde uniforme de opciones ciega a H2 y a H3 — sonda H3b (2026-08-10)
+
+Cuando las cuatro opciones comparten primera palabra —el caso típico es un ítem cuyas opciones son
+**preguntas** (`¿Cuál es…?`), o cualquier molde con encabezado común— **dos de las tres sondas dejan
+de medir, y el script lo callaba**. Verificado en el código, no en la documentación:
+
+| Mecanismo | Consecuencia |
+|---|---|
+| `pw` descarta el `¿` inicial y toma el primer token alfanumérico | las 4 opciones dan `cuál` |
+| H2 exige que la clave sea la **única** con su prefijo | **0 % por construcción**, nunca dispara |
+| La guarda de H3 exige ≥2 prefijos distintos | `pwc` queda vacío |
+| La impresión de H3 va bajo `if (length(pwc) >= 5L)` | **la fila H3 no se imprime**: no sale «0 %», no sale nada |
+
+Un `PASS` en esas condiciones **no acredita** que el tipo de clave varíe: es «sin medición»
+disfrazado de «sin señal». Es el mismo modo de fallo que dio origen a H3, un piso más abajo.
+
+**Defensa cableada — sonda H3b (cross-versión, por contenido).** Mide lo mismo que H3 —¿la clave es
+siempre del mismo tipo?— pero sobre la **firma de contenido** de la opción: texto en minúsculas, sin
+dígitos ni puntuación, espacios colapsados. Así, «¿Cuál es la ubicación…?» y «¿Cuál es el área del
+lote de 50 por 120 metros?» tienen firmas distintas aunque compartan prefijo, y los parámetros
+numéricos no cuentan como variación.
+
+- **Guarda análoga a la de H3**: la firma debe discriminar *dentro* de la versión
+  (`length(unique(sg)) >= 2`). Las opciones puramente numéricas colapsan a cadena vacía al quitar
+  dígitos, así que quedan excluidas — es la misma razón por la que H3 exige ≥2 prefijos.
+- **Bloquea solo cuando es relevo de una sonda ciega** (prefijo uniforme en ≥90 % de las versiones).
+  Si H3 puede medir, H3b es una segunda lectura del mismo fenómeno y se queda en aviso. No es
+  timidez: con H3b bloqueando siempre, un fixture de `test_diagnosticidad.R` que existe para probar
+  que H1 **no** dispara pasaba a ROJO — es decir, una sonda nueva cambiaba el veredicto de un caso
+  ya revisado por un motivo que nadie había mirado.
+- **La ceguera se declara siempre**, dispare o no H3b: el reporte imprime `H2/H3 CIEGAS` con el
+  porcentaje de versiones afectadas y la frase «el 0 % de H2 NO es ausencia de señal, es ausencia de
+  medición». Si además la firma no discrimina, imprime `H3b: NO MEDIBLE` y exige un verificador
+  propio del ejercicio. **Nunca se deja un hueco pasando por aprobado.**
+
+Origen: dry-run de `MAT-2026-1-010` (2026-08-10), ítem cuyas cuatro opciones son preguntas.
+Tests: `tests/testthat/test_diagnosticidad.R` (4 casos nuevos: ceguera declarada, H3b caza clave
+invariante con exit 1, H3b calla con clave sorteada de un pool, H3b no gobierna cuando H3 aplica).
+
 ---
 
 ### ❌ P5: Distractor direccional/posicional como OUTLIER obvio (eliminable de un vistazo)
@@ -235,11 +315,66 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-07-28
+**Versión:** 1.4
+**Fecha:** 2026-08-10
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.4 (2026-08-10)
+- **NUEVA SUBSECCIÓN en §P4-bis — «El molde uniforme de opciones ciega a H2 y a H3»**, con la tabla
+  del mecanismo verificada contra el código de `validar_diagnosticidad.R` (no contra su
+  documentación): `pw` descarta el `¿`, H2 sale 0 % por construcción, la guarda de H3 deja `pwc`
+  vacío y el `if (length(pwc) >= 5L)` hace que **la fila H3 ni se imprima**.
+- **NUEVA SONDA H3b** (cross-versión, por **contenido normalizado** de la clave: sin dígitos ni
+  puntuación). Mide la invariancia del **tipo** de clave cuando el prefijo no puede.
+- **Calibración de relevo, deliberada**: H3b bloquea **solo** si el prefijo es uniforme en ≥90 % de
+  las versiones; si H3 puede medir, se queda en aviso. Con H3b bloqueando siempre, un fixture de
+  `test_diagnosticidad.R` que existe para probar que H1 **no** dispara pasaba a ROJO. Una sonda
+  nueva que cambia el veredicto de casos ya revisados no es más rigor: es ruido.
+- **La ceguera se declara siempre**, dispare o no la sonda: `H2/H3 CIEGAS` con su porcentaje, y
+  `H3b: NO MEDIBLE` cuando la firma tampoco discrimina, exigiendo verificador propio del ejercicio.
+- **4 tests nuevos** en `tests/testthat/test_diagnosticidad.R` (10 → 24 aserciones), incluido el
+  control de que el fixture prueba lo que dice (H2 en 0 % y H3 sin medir) y el de no-regresión de
+  la calibración de relevo.
+- **Origen**: dry-run de `MAT-2026-1-010`, ítem cuyas cuatro opciones son preguntas `¿Cuál es…?`.
+
+### Cambios v1.3 (2026-08-09)
+- **NUEVA SUBSECCIÓN en §P4-bis — «La propia defensa crea deuda»**: tres verificaciones
+  obligatorias DESPUÉS de introducir una clave alternativa. La v1.2 describía qué defensa aplicar
+  pero no que aplicarla **cambia la premisa sobre la que se escribió el pool existente**.
+- **Origen**: `area-jardin-lote-porcentaje-n4` (2026-08-09). Los tres puntos fallaron a la vez
+  con el arsenal completo en verde: (1) la guarda anti-colisión solo cubría la clave vigente
+  (3/600 versiones con dos opciones del mismo rango y veredictos opuestos); (2) los distractores
+  escritos para la clave única quedaron declarando un veredicto que su justificación contradice
+  (81/600 = 13,5 %); (3) al corregir (2) excluyendo el único distractor más largo que la clave,
+  la clave quedó siendo **determinísticamente** la más larga de su rama — 100 % dentro de la
+  rama, `PASS` en el agregado de H1, **50,5 % de acierto sin razonar** frente al 25 % de azar.
+- **Punto ciego del arsenal declarado**: H1/H2 promedian sobre versiones **sin condicionar por
+  rama**. En un ítem con clave alternante las dos ramas son estructuralmente distintas y un
+  reparto 100 %/0 % se lee como ~50 %. Hoy la medición por rama es manual.
+- **Advertencia de la señal inversa**: igualar longitudes hasta que la clave no sea NUNCA la más
+  larga tampoco es neutro — habilita una heurística de eliminación que sube el azar a 33 %.
+- **Errores nuevos en el catálogo**: 28, 29 y 30 de `patrones-errores-conocidos.md`.
+
+### Cambios v1.2 (2026-08-08)
+- **NUEVO SUB-PATRÓN PROHIBIDO**: §P4-bis — Variante **semántica** de P4: el **veredicto** de la
+  clave es invariante entre versiones aunque su **valor** cambie. Ocurre en ítems de conclusión
+  binaria («Sí, porque…»/«No, porque…», verdadero/falso, aumenta/disminuye) cuando la afirmación
+  evaluada es falsa por construcción.
+- **Origen**: `area-jardin-lote-porcentaje-n4` — **60/60 versiones con clave "No"** y todo el
+  arsenal en verde. §P4 ya describía el caso en una frase («la afirmación correcta siempre con
+  cierta estructura») sin que **nada** lo midiera.
+- **Por qué las defensas previas no lo veían**: H2 exige que la clave sea la única con su prefijo
+  dentro de una versión — con balance 2+2 nunca lo es (0 %); `validar_diversidad_sustantiva.R` mide
+  el VALOR de la clave, que sí variaba; y el balance 2+2 es **intra-versión**, se cumple en todas
+  mientras el veredicto sigue constante. Impacto: 25 % → 50 % de acierto por azar.
+- **Defensa cableada nueva**: sonda **H3** de `.claude/scripts/validar_diagnosticidad.R`, la
+  **primera cross-versión** del arsenal — 100 % → `ERR_DIAG_SUPERFICIAL` (exit 1, bloqueante);
+  ≥90 % → aviso.
+- **Corrección de deriva documental**: §P4-bis entró con el commit `162063c0` (2026-08-08) sin
+  actualizar este pie, que siguió declarando v1.1 (2026-07-28) sobre un cuerpo ya modificado.
+  Detectado al auditar los orquestadores el 2026-08-08.
 
 ### Cambios v1.1 (2026-07-28)
 - **NUEVO PATRÓN PROHIBIDO**: P6 — Fuga de la respuesta por metadato NO VISUAL (nombre de archivo, orden alfabético/de creación, id del elemento, cualquier atributo que revele el rol de la opción)

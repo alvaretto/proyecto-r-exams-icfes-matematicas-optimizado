@@ -4,10 +4,10 @@ title: "Gráfica Circular - Consumo de Agua"
 author: "ICFES - Matemáticas"
 date: "`r format(Sys.Date(), '%Y')`"
 output:
-  html_document:
-    pandoc_args: ["--standalone"]
   pdf_document:
     latex_engine: xelatex
+  html_document:
+    pandoc_args: ["--standalone"]
 ---
 
 Question

@@ -2687,3 +2687,430 @@ Barrido de `f` en {0.20, 0.25, 0.30} sobre la grilla COMPLETA de combinaciones v
 - Función `dibujar_diagrama()` / filtro de generación de parámetros del ejercicio (chunk `data_generation`).
 - Error 23 (solape de etiquetas por cuña angular) — mismo ejercicio, defecto complementario de legibilidad geométrica (ambos derivan del mismo piso `rtext`/`R_fit`).
 - Regla #22 `diversidad-sustantiva.md` — la legibilidad visual de cada elemento no debe sacrificarse al maximizar el número de combinaciones matemáticamente válidas.
+
+## Error 27: Pool de errores conceptuales del mismo tamaño que el número de distractores
+
+### ❌ Síntoma
+
+No hay ningún mensaje de error. El ejercicio pasa TODO el arsenal en verde: `validar_coherencia_matematica.R` reporta APROBADO 0 errores (incluidas las Capas A/B/C de validación semántica y el Nivel 5A-5E de correctitud de respuesta), `validar_diversidad_sustantiva.R` sale con exit 0, y el render compila sin fallos en los 4 formatos. Y aun así, el **tipo** de error conceptual que ve el estudiante es idéntico en el 100 % de las versiones: entre semilla y semilla solo cambia el valor numérico sustituido, nunca cuál distractor conceptual aparece.
+
+### 🔍 Causa Raíz
+
+`errores_conceptuales` se declaraba con exactamente tantas entradas como distractores tiene el ítem (3 para un SCHOICE de 4 opciones), y las tres se usaban siempre, sin ningún `sample()` sobre el pool. La diversidad del render puede seguir siendo alta por otras vías (contextos narrativos, mezcla de opciones, reflexiones metacognitivas), lo que enmascara por completo la pobreza real del pool de errores.
+
+**Por qué ningún validador lo detecta**:
+- `validar_diversidad_sustantiva.R` (regla #22) mide la variación del **valor** de la respuesta correcta entre versiones, no la variación del **tipo** de distractor conceptual seleccionado.
+- `validar_coherencia_matematica.R` valida cada error individualmente (que su `precondicion` se cumpla, que `calcula()` sea determinista, que el distractor difiera de la respuesta correcta), pero nunca evalúa **cuántas entradas** tiene el pool completo ni si se está muestreando un subconjunto de él.
+- La Capa B (escáner de 21 keywords semánticas) cubre propiedades de conjuntos de datos estadísticos — paridad, cuartiles, outliers, modalidad. En dominios de **combinatoria** no existe ninguna regla aplicable: su APROBADO no certifica la corrección conceptual del pool, es simplemente un dominio fuera de su cobertura. Es un punto ciego del validador por dominio, no una garantía universal.
+
+### ✅ Solución Verificada
+
+Ampliar el pool más allá del número de distractores y seleccionar un subconjunto por versión con `sample()` sobre los índices que cumplen su `precondicion`:
+
+```r
+# ❌ ANTES — pool del mismo tamaño que los distractores, sin sample()
+errores_conceptuales <- list(
+  list(codigo = "COMB-PER-01", ...),
+  list(codigo = "COMB-PER-02", ...),
+  list(codigo = "COMB-PER-03", ...)
+)
+vals <- vapply(errores_conceptuales, function(e) e$calcula(n), numeric(1))
+```
+
+```r
+# ✅ DESPUÉS — pool ampliado (5) + selección aleatoria de 3 por versión
+errores_conceptuales <- list(
+  list(codigo = "COMB-PER-01", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-02", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-03", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-04", precondicion = function(p) TRUE, ...),
+  list(codigo = "COMB-PER-05", precondicion = function(p) TRUE, ...)
+)
+aplicables <- which(sapply(errores_conceptuales, function(e) e$precondicion(list(n = n))))
+sel <- sort(safe_sample(aplicables, 3L, replace = FALSE))
+errores_sel <- errores_conceptuales[sel]
+```
+
+**Excepción canónica**: cuando la versión debe reproducir verbatim un ítem oficial del cuadernillo ICFES, se fuerzan los distractores oficiales en lugar de sortear el pool:
+
+```r
+# Excepción: si la versión es la instancia canónica del ítem original (contexto 1, n=4),
+# se fuerzan los códigos oficiales del cuadernillo en vez de sortear
+es_canonica <- (ctx_idx == 1L && n == 4L)
+if (es_canonica) {
+  sel <- which(sapply(errores_conceptuales, function(e) e$codigo) %in%
+               c("COMB-PER-01", "COMB-PER-02", "COMB-PER-04"))
+} else {
+  sel <- sort(safe_sample(aplicables, 3L, replace = FALSE))
+}
+all_vals <- c(24L, 64L, 16L, 4L)  # clave + 3 distractores oficiales del cuadernillo
+stopifnot(setequal(all_vals, c(24L, 64L, 16L, 4L)))
+```
+
+### 🧪 Validación de la Solución
+
+Mediciones reales del caso que motivó este error (`permutaciones-pescadores-venia-n4`, 2026-07-29):
+
+| Métrica | Antes | Después |
+|---|---|---|
+| Entradas del pool | 3 | 5 |
+| Ternas de error distintas alcanzadas en 300 versiones | 1 | 10 de 10 posibles |
+| Versiones únicas en 300 evaluaciones | 280/300 | 297/300 |
+| Rango de la respuesta correcta por magnitud | siempre el 3.º | 3.º o 4.º |
+| Combinaciones verificadas por el verificador | 3 valores del parámetro | 30 (3 valores × C(5,3)=10), enumeración exhaustiva |
+
+Tras el cambio: `validar_coherencia_matematica.R` → APROBADO 0 errores; `verificar_render.R` → V1-V8 todo verde; `validar_diversidad_sustantiva.R --n 40` → exit 0.
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. ¿El número de entradas de primer nivel de `errores_conceptuales` es igual al número de distractores del ítem?
+2. ¿Existe un `sample()` (o `safe_sample()`) sobre los índices aplicables antes de fijar los errores usados en la versión, o se usa siempre el pool completo?
+3. Si el ítem debe reproducir un cuadernillo ICFES verbatim, ¿está declarada explícitamente la excepción canónica con su propio `stopifnot` de verificación?
+4. Tras ampliar el pool, ¿se re-enumeró el espacio COMPLETO de combinaciones (pool × slots × valores del parámetro), verificando unicidad de opciones y coherencia de la razón máx/clave?
+5. ¿Se re-ejecutó el arsenal completo (coherencia matemática, diversidad sustantiva, render 4 formatos) después de ampliar el pool?
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-07-29 | permutaciones_pescadores_metacognitivo_formulacion_n4_schoice_v1.Rmd | pool de 3 errores == número de distractores, sin `sample()` — detectado por auditoría adversarial | pool ampliado a 5 + `sample()` sobre índices aplicables + excepción canónica para el ítem oficial verbatim | 10/10 ternas alcanzadas, 297/300 versiones únicas, arsenal completo APROBADO |
+
+### 📚 Referencias
+
+- Regla #1 `ejercicios-metacognitivos.md` (línea 188 — «Mínimo 4-6 errores por ejercicio», sección OBLIGATORIA «Pool de Errores Conceptuales»).
+- Regla #22 `diversidad-sustantiva.md` — mide diversidad de VALOR, no de TIPO de distractor; punto ciego complementario a este error.
+- Incidente N de `.claude/agents/orquestador-schoice.md` / Incidente P de `.claude/agents/orquestador-cloze.md`.
+- `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/.claude/rules/permutaciones-parametricas.md`.
+
+---
+
+## Error 28: La exclusión por texto solo cubre la clave VIGENTE cuando el ítem tiene dos claves mutuamente excluyentes
+
+### ❌ Síntoma
+
+El estudiante ve **dos opciones que afirman el mismo rango numérico con veredictos opuestos**: una marcada correcta y otra incorrecta. Sin mensaje de error: el render compila, la unicidad textual pasa (los textos difieren), el balance 2 Sí + 2 No se cumple y el arsenal completo da verde.
+
+### 🔍 Causa Raíz
+
+El ítem implementa la defensa de la regla #22 §P4-bis con **dos claves mutuamente excluyentes**: una de veredicto «No» cuando la afirmación del enunciado es falsa, y una alternativa de veredicto «Sí» cuando es verdadera. La guarda anti-colisión comparaba cada candidato contra `txt_clave`, es decir contra la clave **vigente en esa versión**:
+
+```r
+# ❌ ANTES — solo cubre la rama cuya clave comparte plantilla con el distractor
+txt_clave <- errores_conceptuales[[idx_ok]]$descripcion_corta
+sin_colision <- function(idx) idx[vapply(idx, function(i)
+  errores_conceptuales[[i]]$descripcion_corta != txt_clave, logical(1L))]
+```
+
+Funciona en la rama donde la clave y el distractor comparten plantilla. En la otra rama la clave se redacta distinto, el literal ya no coincide y el distractor **pasa el filtro afirmando el rango correcto con el veredicto contrario**. El resultado es una opción que se contradice a sí misma (declara «No» mientras su justificación reafirma lo afirmado), lo que además la vuelve descartable por absurda.
+
+La clave NO vigente es la firma exacta de la colisión: comparte plantilla con el distractor, así que cuando los rangos coinciden sus textos son **idénticos**.
+
+### ✅ Solución Verificada
+
+```r
+# ✅ DESPUÉS — comparar contra AMBAS claves, vigente y excluida
+txt_claves <- c(errores_conceptuales[[idx_ok_no]]$descripcion_corta,
+                errores_conceptuales[[idx_ok_si]]$descripcion_corta)
+sin_colision <- function(idx) idx[vapply(idx, function(i)
+  !(errores_conceptuales[[i]]$descripcion_corta %in% txt_claves), logical(1L))]
+```
+
+### 🧪 Validación de la Solución
+
+Enumeración de 600 versiones + prueba de mutación con contrato de sonda (Incidente P):
+
+- Sano: 0 violaciones sobre 600 versiones.
+- Mutante M1 (revertir a comparar solo contra la clave vigente): la mutación llegó al **entorno** (`txt_claves` colapsa a un valor único) y murió por **su propia sonda**, `I6_rango_clave`, con 3 casos y sin ruido de otras sondas → `cazado_por_su_sonda`.
+- Los 3 casos son exactamente las combinaciones con `(pmin + pmax) · pa == 1`.
+
+### 📋 Checklist de Corrección
+
+1. ¿El ítem tiene más de una clave posible (defensa §P4-bis)? Si sí, toda guarda anti-colisión debe recorrer **todas** las claves, no la vigente.
+2. ¿La guarda compara por lo que el estudiante LEE, no por código de error?
+3. ¿Hay una prueba de mutación que revierta la guarda y muera por su propia sonda?
+
+### 📚 Referencias
+
+- Regla #22 `diversidad-sustantiva.md` §P4-bis; Incidente F (`INC-DIV-COSMETICA`) y P (`INC-MUTANTE-SONDA`) de `orquestador-schoice.md`.
+- Memoria `feedback_colision_textual_distractor_clave.md` — este error es su continuación: la colisión no era solo textual.
+
+---
+
+## Error 29: La clave alternativa de §P4-bis reabre INC-SINO-BINARIO en distractores escritos para una sola clave
+
+### ❌ Síntoma
+
+Una opción declara «Sí» (endosa la afirmación del enunciado) mientras su justificación afirma **un rango distinto del afirmado**. Es decir, su justificación apoya la conclusión contraria a la que declara. Todo el arsenal en verde.
+
+### 🔍 Causa Raíz
+
+Los distractores se escribieron cuando la afirmación del enunciado era **siempre** el rango del complemento lineal, que es justamente lo que ellos afirman: eran coherentes por construcción. Al introducir la clave alternativa para que el veredicto no sea invariante (regla #22 §P4-bis), la afirmación pasa a ser en la mitad de las versiones el rango **correcto**, y esos distractores quedan diciendo «Sí, porque [otro rango]».
+
+Es la lección general: **una defensa nueva puede invalidar la premisa sobre la que se escribió el pool existente**. §P4-bis cambia qué significa el enunciado, no solo cuál opción es la clave.
+
+### ✅ Solución Verificada
+
+Declarar explícitamente qué opciones afirman un rango propio y excluirlas de la rama donde ya no son coherentes:
+
+```r
+# en cada entrada "si" del pool
+veredicto = "si",
+afirma_rango_area = TRUE,   # o FALSE si solo enuncia un método, sin rango propio
+
+# en la selección
+if (afirmacion_es_verdadera) {
+  idx_si <- idx_si[!vapply(idx_si, function(i)
+    isTRUE(errores_conceptuales[[i]]$afirma_rango_area), logical(1L))]
+}
+```
+
+### 🧪 Validación de la Solución
+
+Sonda **auto-verificada** antes de usarla (extrae el rango de la ÚLTIMA construcción `entre X % y Y %`, porque la primera puede ser lo que la opción dice que *ocupa*, no lo que queda libre) y con **control negativo** (al revertir el fix del Error 28 vuelve a detectar sus 3 casos):
+
+| | antes | después |
+|---|---|---|
+| Opciones cuya justificación contradice su conclusión | **81 / 600 (13,5 %)** | **0 / 600** |
+
+Una primera versión de esta sonda daba 280 falsos positivos por tomar los dos primeros números del texto. Sin el control negativo, un «0 incoherencias» no distingue «no hay defecto» de «la sonda no mide».
+
+### ⚠️ Efecto colateral — leer el Error 30
+
+Este fix **desplazó el defecto de canal**. Ver Error 30 antes de aplicarlo tal cual.
+
+### 📚 Referencias
+
+- Incidente D (`INC-SINO-BINARIO`) de `orquestador-schoice.md`; regla #22 §P4-bis.
+
+---
+
+## Error 30: La sonda de diagnosticidad agrega sobre versiones sin condicionar por rama
+
+### ❌ Síntoma
+
+`validar_diagnosticidad.R` reporta `PASS` (H1 en torno al 40-50 %, umbral 70 %) y sin embargo, **dentro de una de las ramas estructurales del ítem, la clave es identificable en el 100 % de las versiones** por una señal de superficie.
+
+### 🔍 Causa Raíz
+
+Un ítem con clave alternante (regla #22 §P4-bis) tiene **dos ramas estructuralmente distintas**. Las sondas H1/H2 promedian sobre todas las versiones sin condicionar por rama, así que un reparto 100 % / 0 % se lee como ~50 % y queda por debajo del umbral. Es el mismo punto ciego que dio origen a la sonda H3: un patrón que solo existe *entre* versiones no lo ve una sonda que mira *cada* versión.
+
+**Agravante — el defecto lo introdujo el fix del Error 29.** El distractor excluido de la rama verdadera era el único más largo que la clave; al quitarlo, la clave quedó siendo **determinísticamente** la opción más larga de esa rama.
+
+### 📊 Medición
+
+Medido de forma independiente por dos auditores con semillas distintas (concordancia dentro del ruido de muestreo):
+
+| | rama verdadera | rama falsa |
+|---|---|---|
+| clave = única opción más larga | **100 %** | 0 % |
+| token del procedimiento identifica la clave | **100 %** | — |
+
+Acierto **sin razonar** (azar = 25 %): heurística «la más larga» **50,5 %**; heurística «la que nombra el procedimiento» **62,9 %**.
+
+Longitudes medianas del pool: clave alternativa 125 caracteres; su rival más largo disponible en esa rama, 99.
+
+### ✅ Tratamiento
+
+1. **Medir condicionando por rama**, no solo el agregado del validador. Mientras `validar_diagnosticidad.R` no lo soporte, es verificación manual: agrupar por el flag que define la rama y recalcular H1/H2 dentro de cada grupo.
+2. Al igualar la extensión de las opciones, comprobar que no se crea la **señal inversa**: si la clave pasa a no ser NUNCA la más larga, «descartar la más larga» se convierte en una heurística de eliminación que sube el azar de 25 % a 33 %.
+3. Regla general: **un fix de diagnosticidad puede desplazar el defecto de canal** (de la semántica a la longitud, de la longitud al léxico). Medir el ítem completo después de cada fix, no solo la dimensión que se corrigió.
+
+### 📚 Referencias
+
+- Regla #22 `diversidad-sustantiva.md` §P4-bis; `validar_diagnosticidad.R` (sondas H1/H2/H3).
+- Error 29 — el fix que lo introdujo.
+
+---
+
+## Error 31: `validar_multisemilla.R` falla siempre bajo `Rscript` — la guarda de su fallback es código inalcanzable
+
+### ❌ Mensaje de Error
+
+```
+Error en sys.frame(1): no hay tantas estructuras en la pila
+Calls: dirname -> sys.frame
+Ejecución interrumpida
+```
+
+### 🔍 Causa Raíz
+
+`.claude/scripts/validar_multisemilla.R`, línea 21:
+
+```r
+script_dir <- dirname(sys.frame(1)$ofile)
+if (is.null(script_dir) || script_dir == "") {   # <- INALCANZABLE
+  ...fallback por rutas conocidas...
+}
+```
+
+Bajo `Rscript` no existe el frame 1, así que `sys.frame(1)` **lanza un error** antes de que `dirname()` devuelva nada: la comprobación `is.null()` de la línea siguiente nunca llega a evaluarse. El fallback existe, está bien escrito y es **código muerto**.
+
+Es el mismo modo de fallo que la «guarda inalcanzable» ya documentada en memoria: una condición escrita para un valor que nunca llega porque la expresión revienta primero.
+
+### 📊 Alcance
+
+Verificado que el fallo es **del script, no del ejercicio**:
+
+| Invocación | exit |
+|---|---|
+| con el `.Rmd` auditado | 1 |
+| con un ejemplo canónico intacto de `Ejemplos-Funcionales-Rmd/` | 1 |
+| sin argumentos | 1 |
+
+`post-exams2-validation.sh` (FASE 2G) lo invoca exactamente así:
+
+```bash
+MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 20 2>&1)
+```
+
+y luego incrementa `ERRORES_TOTALES` si el exit no es 0. La consecuencia es un **falso ROJO permanente**: la FASE 2G suma un error en todo ejercicio del repositorio. Un gate que siempre falla es un gate que se aprende a ignorar.
+
+### ✅ Solución Verificada (aplicada 2026-08-09)
+
+El archivo real es `SOURCES/scripts_validacion/validar_multisemilla.R`; `.claude/scripts/` solo
+contiene un **symlink** (modo `120000` en git). Editar la ruta de `.claude/scripts/` no funciona.
+
+La resolución de la propia ruta pasa a cuatro pasos por orden de fiabilidad, cada uno aislado:
+
+```r
+.resolver_script_dir <- function() {
+  args <- commandArgs(trailingOnly = FALSE)          # 1. Rscript
+  hit <- grep("^--file=", args, value = TRUE)
+  if (length(hit) > 0) {
+    d <- tryCatch(dirname(normalizePath(sub("^--file=", "", hit[1]), mustWork = TRUE)),
+                  error = function(e) "")
+    if (length(d) == 1L && nzchar(d)) return(d)
+  }
+  d <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")   # 2. source()
+  if (!is.null(d) && length(d) == 1L && nzchar(d)) return(d)
+  ""
+}
+```
+
+más `git rev-parse --show-toplevel` (3) y las rutas relativas conocidas (4) dentro de
+`.cargar_dependencia()`, que **aborta con `stop()`** si ninguna candidata existe.
+
+**Segundo defecto corregido a la vez**: la versión anterior recorría las rutas relativas y, si
+ninguna existía, terminaba el bucle **sin cargar nada** y continuaba. El fallo aparecía mucho
+después como «no se pudo encontrar la función», que no apunta a la causa.
+
+### 🧪 Validación de la Solución
+
+Los cuatro modos de invocación, con el exit real medido sin tuberías que lo enmascaren:
+
+| Invocación | Antes | Después |
+|---|---|---|
+| sin argumentos | exit 1 (crash) | **exit 2** + imprime el uso (contrato declarado en su cabecera) |
+| desde la raíz, por el symlink | exit 1 | **APROBADO** |
+| desde un cwd ajeno (`/tmp`) | exit 1 | **APROBADO** |
+| vía `source()` | — | función disponible |
+
+**Prueba de mutación sobre una COPIA en `/tmp`**, no sobre el archivo del repo: el mutante con el
+patrón viejo sale con exit 1 y su salida contiene `sys.frame`, así que ambas aserciones del test
+disparan. *(Lección aparte: la primera vez se mutó el archivo real y el paso de restaurar quedó en
+un job en segundo plano — durante unos minutos el repo tuvo en disco el validador roto. Mutar
+siempre una copia.)*
+
+### 🛡️ Defensa permanente
+
+`tests/testthat/test_validar_multisemilla_invocable.R` (enganchado al runner, suite crítica):
+
+1. **Barrido de todo el arsenal** — ningún `.R` de `.claude/scripts/` ni de
+   `SOURCES/scripts_validacion/` puede usar `sys.frame(<literal>)` fuera de un `tryCatch`.
+2. **Invocabilidad real** bajo `Rscript` desde un `tempdir()`, por el symlink y por la ruta real:
+   la salida no contiene `sys.frame`, el exit es 2 y aparece el uso.
+3. **Contrato del fix**: el fuente declara `--file=`, `tryCatch` y el mensaje de aborto.
+
+**El detector es del índice LITERAL, no de `sys.frame` a secas.** La primera versión marcaba
+cualquier `sys.frame(`, y daba un **falso positivo** en `stress_test_visual.R:34`, que usa
+`sys.frame(i)` dentro de `for (i in seq_len(sys.nframe()))` — bajo `Rscript` el cuerpo simplemente
+no se ejecuta, y además prueba `--file=` primero. Ese script es correcto: sale con 2, no con 1.
+
+### 📋 Checklist
+
+1. Toda resolución de la propia ruta bajo `Rscript` debe ir en `tryCatch`, o resolverse desde `commandArgs()` (como hace `validar_diagnosticidad.R`, que no tiene el problema).
+2. Una guarda cuya condición se evalúa DESPUÉS de la expresión que puede reventar no es una guarda.
+3. Al leer la salida de un hook, distinguir «falló» de «no se pudo ejecutar».
+
+### 📅 Historial
+
+| Fecha | Componente | Causa | Estado |
+|-------|-----------|-------|--------|
+| 2026-08-09 | `SOURCES/scripts_validacion/validar_multisemilla.R` | `sys.frame(1)` revienta antes de la guarda `is.null()`; y el bucle de rutas relativas podía terminar sin cargar nada | **RESUELTO** — resolución en 4 pasos + aborto explícito + `test_validar_multisemilla_invocable.R` en el runner. FASE 2G deja de ser un falso ROJO |
+
+---
+
+## Error 32: Un fix de coherencia introduce una fuga LÉXICA, y ninguna sonda del arsenal la ve
+
+### ❌ Síntoma
+
+Se corrige un defecto semántico sustituyendo cadenas homogéneas por justificaciones redactadas en lenguaje natural, una por cada caso. El arsenal completo sigue en verde —coherencia `APROBADO`, `validar_diagnosticidad.R` `PASS`, diversidad, ortografía, todos los formatos— y sin embargo el ítem pasa a resolverse **sin leer el enunciado**, solo comparando las palabras de las cuatro opciones.
+
+Caso medido (`area-jardin-lote-porcentaje-n4/cloze`, 2026-08-09): **88,4 % de acierto frente al 25 % de azar**, peor que el defecto §P4-bis que el diseño ya vigilaba (que daría 50 %).
+
+### 🔍 Causa Raíz
+
+Al redactar cada justificación «a su aire» se cuelan **regularidades léxicas y gramaticales que correlacionan con el rol de la opción**:
+
+1. **Token exclusivo de la clave.** Solo la justificación del método correcto contenía la palabra «jardín», y ese método nunca es distractor. Consecuencia doble: la opción con «jardín» era la clave en el 100 % de una rama, y su **ausencia** anunciaba que la otra rama estaba activa — la presencia del token predecía la rama en 800/800 versiones.
+2. **Forma gramatical que separa clave de distractores.** Cuatro de las seis justificaciones erróneas eran prescriptivas («hay que sumar…», «basta restar…») y la correcta declarativa («el área **es** el producto…»). «Entre los dos Sí, elige el declarativo» acertaba el 100 % de las veces en que aplicaba.
+3. **Sesgo algebraico del pool**, que el fix no creó pero cuyo peso aumentó: para `a, b ∈ (0,1)` se cumple `1-ab > max{1-a, 1-b, (1-a)(1-b), 1-(a+b)/2}` y `1-ab < (1-a)+(1-b)`. Es decir, 4 de 6 métodos erróneos producen **siempre** un rango menor que el correcto, 1 siempre mayor y 1 mixto: «elige el rango mayor» acertaba el 77 %.
+
+**Por qué el arsenal no lo detecta:** `validar_diagnosticidad.R` calcula `pw <- primera palabra de cada opción`. Con opciones que empiezan por «Sí»/«No», **H2 mide exactamente eso y da 0 %**, y H3 mide invariancia del veredicto, que estaba equilibrada. **Ninguna sonda inspecciona los tokens del cuerpo de la opción.** Es el mismo punto ciego que la regla #22 §P6 generaliza —«cualquier metadato que revele el rol de la opción»—, solo que aquí el metadato es léxico en vez de un nombre de archivo.
+
+### ✅ Solución Verificada
+
+**Molde único y paralelo**: todas las justificaciones comparten sujeto, verbo y vocabulario, y se diferencian **solo en la operación**, que es lo que el ítem evalúa.
+
+```r
+# ❌ ANTES — cada una a su aire: "jardín" solo en la correcta, y 4 prescriptivas
+producto   = "el área del jardín es el producto de sus dos fracciones",
+lineal     = "basta restar del 100 % el porcentaje del largo",
+suma       = "hay que sumar el complemento del largo y el del ancho",
+```
+
+```r
+# ✅ DESPUÉS — mismo molde "el área sin jardín es …", todas declarativas
+producto   = "el área sin jardín es el complemento del producto de las dos fracciones",
+lineal     = "el área sin jardín es el complemento de la fracción del largo",
+suma       = "el área sin jardín es la suma de los complementos de las dos fracciones",
+```
+
+Y **estratificar por el lado del rango** cuando el pool está algebraicamente sesgado: sortear primero si el distractor irá por encima o por debajo del valor correcto, y elegir el método después.
+
+### 🧪 Validación de la Solución
+
+| medida (800 versiones) | antes | después |
+|---|---|---|
+| la presencia de un token predice la rama | 100 % | 48,8 % (= azar) |
+| «entre los dos Sí, elige el declarativo» | 100 % | N/A: ya no hay dos formas |
+| rama «No»: la clave es el rango mayor | 77,3 % | 54,6 % |
+| **acierto sin leer el enunciado** | **88,4 %** | **24,2 %** |
+
+### 📋 Prueba de aceptación (ejecutable)
+
+Ningún token de más de 2 caracteres puede ser exclusivo de la clave en ≥70 % de las versiones, **ni dentro de cada rama por separado**:
+
+```r
+tok <- function(t) unique(tolower(unlist(strsplit(
+  gsub("[^[:alnum:]áéíóúñü ]", " ", t), " +"))))
+# por versión: setdiff(tok(clave), unlist(lapply(distractores, tok)))
+```
+
+En el caso corregido devuelve el conjunto vacío; el token más frecuente («producto») baja al 31 %.
+
+### ⚠️ Lección transferible
+
+**Al sustituir cadenas homogéneas por texto redactado, se cambia un eje de variación por otro.** Antes de dar por bueno el fix hay que medir el ítem **completo**, no solo la dimensión corregida: es la tercera vez en la misma sesión que un fix desplaza el defecto de canal (semántica → longitud → léxico). Y `PASS` de `validar_diagnosticidad.R` **no** acredita ausencia de fuga léxica: sus sondas miran la primera palabra y la longitud, nunca el vocabulario.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-08-09 | `area_jardin_lote_..._n4_cloze_v1.Rmd` | justificaciones redactadas sin molde común tras corregir `INC-SINO-BINARIO` | molde declarativo paralelo + estratificación del distractor por lado del rango | acierto sin razonar 88,4 % → 24,2 % |
+
+### 📚 Referencias
+
+- Errores 29 y 30 (el fix que lo originó y el desplazamiento de canal previo).
+- Regla #22 §P6 — el principio general: ningún rasgo que revele el rol de la opción.
+- Haladyna, Downing & Rodriguez (2002), *Applied Measurement in Education* 15(3):309-334 — «Avoid giving clues to the right answer»: *word repeats* entre enunciado y clave.

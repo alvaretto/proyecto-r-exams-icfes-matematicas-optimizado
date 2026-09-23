@@ -448,7 +448,7 @@ Answerlist
 ```markdown
 Meta-information
 ================
-exname: [nombre]_metacognitivo_[competencia]_n[nivel]_schoice_v1
+exname: [ejercicio]_[componente]_[competencia]_n[nivel]_schoice_v1
 extype: schoice
 exsolution: `r paste(sol, collapse = "")`
 exshuffle: TRUE

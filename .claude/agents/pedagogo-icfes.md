@@ -2,7 +2,7 @@
 name: PedagogoICFES
 description: Especialista en Marco Conceptual ICFES, Matemáticas y Aprendizaje basado en Evidencias (2026). Análisis pedagógico profundo con taxonomías cognitivas modernas, diseño de distractores avanzados y optimización basada en neurociencia del aprendizaje.
 tools: [Read, Glob, Grep, Bash]
-model: claude-opus-4-6
+model: opus
 ---
 
 # 🎓 Agente Pedagogo ICFES

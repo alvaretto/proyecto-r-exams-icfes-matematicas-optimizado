@@ -451,6 +451,89 @@ bloqueos:
 
 ---
 
+## Independencia del detractor (OBLIGATORIA)
+
+**El detractor DEBE ser un agente distinto del que escribió o corrigió el artefacto.
+Una revisión hecha por el mismo agente sobre su propio trabajo NO es FASE 2C: es
+autoevaluación, y el sesgo de confirmación que el detractor existe para romper es
+precisamente el suyo.**
+
+### Qué cuenta y qué no
+
+| Situación | ¿Es FASE 2C válida? |
+|---|---|
+| `Task(subagent_type="AgenteDetractor")` lanzado por el coordinador, que devuelve reporte con `VEREDICTO_DETRACTOR:` | **Sí** |
+| `/adversario <archivo>` en sesión propia (framework anti-sicofancia) | **Sí** |
+| El coordinador ejecuta los validadores y redacta él las objeciones | **No** — es auditoría propia |
+| El coordinador corrigió el `.Rmd` y después lo revisa él mismo | **No** — autoevaluación |
+| Un detractor previo que auditó una versión ANTERIOR del archivo | **No** — caducó al editar |
+
+Un veredicto de FASE 2C sellado sin independencia es peor que no tenerlo: da por
+verificado justo el punto ciego del autor. Origen: incidente 2026-08-09
+(`excedente-almuerzo-proporcional-n4`), donde el defecto de mayor severidad
+—un distractor que en una de las tres ramas señalaba información que SÍ resolvía
+el problema, rompiendo la unicidad de la clave— era **semántico**, invisible para
+todo el arsenal automático (coherencia, diagnosticidad y diversidad en verde), y
+apareció solo al razonar sobre el significado de las opciones. Ese es exactamente
+el terreno donde la independencia importa.
+
+### Cuál de los dos detractores usar
+
+| Agente | Modelo | Cuándo |
+|---|---|---|
+| `AgenteDetractor` (`.claude/agents/agente-detractor.md`) | opus | FASE 2C estándar: los 8 dominios de esta regla sobre un `.Rmd` |
+| `adversario` (global, `~/.claude/agents/adversario.md`) | sonnet | Cuando se quiera además el framework anti-sicofancia (6 dimensiones, ToF, resistencia multi-turno) o el objeto no sea un `.Rmd` |
+
+No son intercambiables en su salida: el primero reporta por dominios ICFES; el
+segundo, hallazgos con convicción epistémica. Para un `.Rmd` en workflow, el
+canónico es `AgenteDetractor`.
+
+---
+
+## Protocolo de no-entrega (OBLIGATORIO)
+
+Un subagente puede terminar su turno sin emitir reporte (notificación de "idle" o
+"disponible" sin contenido). Eso **no** es un veredicto y **no** cierra la FASE 2C.
+
+### Cómo se detecta
+
+El reporte se considera entregado sólo si su última línea es el marcador:
+
+```
+VEREDICTO_DETRACTOR: APROBAR | APROBAR_CON_CAMBIOS | RECHAZAR
+```
+
+Sin esa línea, el reporte está **NO ENTREGADO** aunque contenga análisis: puede
+venir truncado. El contrato que lo obliga vive en `.claude/agents/agente-detractor.md`
+§ "Contrato de entrega".
+
+### Qué hacer
+
+1. **Reintento 1** — reclamar el reporte al mismo agente (`SendMessage`), recordándole
+   el contrato de entrega y avisándole de cualquier cambio del artefacto desde su
+   lanzamiento.
+2. **Reintento 2** — lanzar un agente **nuevo** (contexto limpio) sobre la versión
+   vigente. No reanudar el anterior: si ya falló en entregar, su contexto arrastra
+   el mismo estado.
+3. **Tras 2 fallos — PARAR y escalar al usuario.** Está PROHIBIDO:
+   - sustituir el detractor por la auditoría propia del coordinador y llamarla FASE 2C;
+   - sellar `detractor_fase2c` en `ejercicio_state.json`;
+   - declarar el ejercicio listo para la aprobación del paso 11.
+
+   El coordinador **sí puede** revisar por su cuenta y reportar lo que encuentre —
+   es trabajo útil—, pero debe **declararlo explícitamente como no independiente**
+   y dejar la FASE 2C abierta. Registrar en el reporte al usuario:
+   `detractor_fase2c: NO ENTREGADO tras 2 intentos — revisión propia, no independiente`.
+
+### Antipatrón PROHIBIDO
+
+```
+❌ El detractor no devolvió nada → audito yo → "Veredicto: APROBAR" → sello el paso 7
+✓  El detractor no devolvió nada → 2 intentos → escalo al usuario → paso 7 sigue abierto
+```
+
+---
+
 ## Garantías del Sistema
 
 Con el detractor obligatorio:
@@ -464,12 +547,34 @@ Con el detractor obligatorio:
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-02-07
+**Versión**: 1.2
+**Fecha**: 2026-08-09
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
 **Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
+
+### Cambios v1.2 (2026-08-09)
+- **NUEVA SECCIÓN — Independencia del detractor**: el detractor DEBE ser un agente
+  distinto del que escribió o corrigió el artefacto. Tabla de qué cuenta como FASE 2C
+  válida y qué no (autoevaluación, detractor caducado por edición posterior).
+- **NUEVA SECCIÓN — Protocolo de no-entrega**: marcador `VEREDICTO_DETRACTOR:` como
+  criterio mecánico de entrega; 2 reintentos (reclamo + agente nuevo) y escalado
+  obligatorio al usuario. PROHIBIDO sustituir el detractor por la auditoría propia
+  y sellar `detractor_fase2c`.
+- **NUEVA TABLA — cuál de los dos detractores usar**: `AgenteDetractor` (canónico
+  para `.Rmd` en workflow) vs `adversario` global (anti-sicofancia). La regla no lo
+  decía y ambos existían.
+- **Contrato de entrega** añadido a `.claude/agents/agente-detractor.md` (+ `maxTurns: 30`,
+  que era el único agente de reporte sin declararlo).
+- **Origen**: incidente 2026-08-09 en `excedente-almuerzo-proporcional-n4` — tres
+  invocaciones consecutivas terminaron en notificación de "disponible" sin reporte,
+  y la revisión adversarial acabó haciéndola el mismo agente que había escrito las
+  correcciones. El defecto de mayor severidad del ejercicio era **semántico**
+  (un distractor que rompía la unicidad de la clave en una de las tres ramas) con
+  todo el arsenal automático en verde: es justo el hallazgo que depende de una
+  mirada independiente.
+- **Test asociado**: `tests/testthat/test_contrato_detractor.R`.
 
 ### Cambios v1.1 (2026-02-07)
 - **3 nuevos dominios agregados**: coherencia matemática, ICFES metacognitivo, testing

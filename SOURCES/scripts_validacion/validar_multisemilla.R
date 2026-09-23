@@ -17,23 +17,72 @@
 #   2 = Error de ejecución del script
 # =============================================================================
 
-# Cargar la validación principal
-script_dir <- dirname(sys.frame(1)$ofile)
-if (is.null(script_dir) || script_dir == "") {
-  # Fallback: buscar el script por ruta conocida
-  posibles_rutas <- c(
-    ".claude/scripts/validar_coherencia_matematica.R",
-    "SOURCES/scripts_validacion/validar_coherencia_matematica.R"
-  )
-  for (ruta in posibles_rutas) {
+# =============================================================================
+# Resolución de la propia ruta (Error 31, corregido 2026-08-09)
+# -----------------------------------------------------------------------------
+# La versión anterior era `script_dir <- dirname(sys.frame(1)$ofile)` seguida de
+# la guarda `if (is.null(script_dir) || script_dir == "")`. Bajo `Rscript` NO
+# existe el frame 1, así que `sys.frame(1)` LANZA UN ERROR y la guarda nunca
+# llega a evaluarse: el fallback era código inalcanzable y el script abortaba con
+# «Error en sys.frame(1): no hay tantas estructuras en la pila» ante CUALQUIER
+# entrada, incluido sin argumentos. Como el hook lo invoca así en la FASE 2G, esa
+# fase era un falso ROJO permanente en todo el repositorio, y un gate que siempre
+# falla se aprende a ignorar.
+#
+# Segundo defecto de la versión anterior: si NINGUNA ruta relativa existía, el
+# bucle terminaba sin cargar nada y el script continuaba. El fallo aparecía mucho
+# después como «no se pudo encontrar la función», que no apunta a la causa.
+#
+# Se resuelve por orden de fiabilidad, cada paso aislado en tryCatch:
+#   1. `--file=` de commandArgs  -> el caso real bajo Rscript.
+#   2. `sys.frame(1)$ofile`      -> el caso real bajo source().
+#   3. raíz del repo vía git     -> independiente del directorio de trabajo.
+#   4. rutas relativas conocidas -> último recurso, depende del cwd.
+# Nota: este archivo se invoca normalmente por el symlink .claude/scripts/…, y
+# normalizePath() lo resuelve al destino real en SOURCES/scripts_validacion/,
+# donde la dependencia también vive. Si al final no se cargó, se ABORTA.
+# =============================================================================
+
+.resolver_script_dir <- function() {
+  args <- commandArgs(trailingOnly = FALSE)
+  hit <- grep("^--file=", args, value = TRUE)
+  if (length(hit) > 0) {
+    d <- tryCatch(
+      dirname(normalizePath(sub("^--file=", "", hit[1]), mustWork = TRUE)),
+      error = function(e) "")
+    if (length(d) == 1L && nzchar(d)) return(d)
+  }
+  d <- tryCatch(dirname(sys.frame(1)$ofile), error = function(e) "")
+  if (!is.null(d) && length(d) == 1L && nzchar(d)) return(d)
+  ""
+}
+
+.cargar_dependencia <- function(nombre = "validar_coherencia_matematica.R") {
+  candidatas <- character(0)
+  sd <- .resolver_script_dir()
+  if (nzchar(sd)) candidatas <- c(candidatas, file.path(sd, nombre))
+  raiz <- tryCatch(
+    suppressWarnings(system("git rev-parse --show-toplevel",
+                            intern = TRUE, ignore.stderr = TRUE)),
+    error = function(e) character(0))
+  if (length(raiz) == 1L && nzchar(raiz)) {
+    candidatas <- c(candidatas, file.path(raiz, ".claude", "scripts", nombre))
+  }
+  candidatas <- c(candidatas,
+                  file.path(".claude", "scripts", nombre),
+                  file.path("SOURCES", "scripts_validacion", nombre))
+  for (ruta in candidatas) {
     if (file.exists(ruta)) {
       source(ruta)
-      break
+      return(invisible(ruta))
     }
   }
-} else {
-  source(file.path(script_dir, "validar_coherencia_matematica.R"))
+  stop("validar_multisemilla.R: no se pudo localizar '", nombre,
+       "'. Rutas probadas:\n  ", paste(candidatas, collapse = "\n  "),
+       call. = FALSE)
 }
+
+.cargar_dependencia()
 
 #' Ejecuta validación multi-semilla sobre un archivo .Rmd
 #'

@@ -511,7 +511,7 @@ errores_conceptuales <- list(
 # SELECCIÓN DE OPCIONES (4 de 6 errores) con BALANCE Sí/No FORZADO
 # Opción correcta: GRAF-ARG-02 (índice fijo 2, conclusión = afirmacion_es_verdadera)
 #
-# Conclusión final de cada distractor (depende del flag afirmacion):
+# Conclusión final de cada distractor (depende del flag afirmación):
 #   D1 (cercanía):            "No" siempre
 #   D3 (subperíodo perdedor): "No" si afirmacion=TRUE / "Sí" si afirmacion=FALSE
 #                              (fix bug #1: evita incoherencia interna conclusión-justificación)

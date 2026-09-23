@@ -160,7 +160,10 @@ test_that("I-6: hooks .sh son ejecutables y tienen sintaxis bash válida", {
   hooks <- c(
     ".claude/hooks/pre-write-rmd-gate.sh",
     ".claude/hooks/post-exams2-validation.sh",
-    ".claude/hooks/pre-commit-ortografia.sh"
+    ".claude/hooks/pre-commit-ortografia.sh",
+    # Canónico versionado del hook git pre-push (2026-07-29). El que git ejecuta
+    # es .git/hooks/pre-push, no versionable, que debe delegar aquí.
+    ".claude/hooks/pre-push.sh"
   )
 
   for (h in hooks) {
@@ -179,6 +182,74 @@ test_that("I-6: hooks .sh son ejecutables y tienen sintaxis bash válida", {
     expect_equal(sintaxis_ok, 0,
                  info = paste("Hook con sintaxis inválida:", h))
   }
+})
+
+# ============================================================
+# I-6b: contrato de stdin del pre-push (anti falso verde)
+# ============================================================
+# git entrega las refs del push por stdin y ese stdin se lee UNA SOLA VEZ.
+# `git lfs pre-push` lo consume hasta EOF: si se le pasa el stdin real, el
+# cálculo del rango del push queda ciego, R_TESTS_CHANGED_FILES sale vacío o
+# parcial y el modo quick salta las suites del commit reportando
+# "TODOS LOS TESTS PASARON / Cobertura 100%". Incidente 2026-07-29 (b2144d2d).
+
+test_that("I-6b: pre-push.sh captura stdin antes de invocar git-lfs", {
+  hook <- ".claude/hooks/pre-push.sh"
+  expect_true(file.exists(hook), info = paste("Hook faltante:", hook))
+  lineas <- readLines(hook, warn = FALSE)
+  # Escanear SOLO código: el propio hook documenta la trampa en comentarios que
+  # mencionan `git lfs pre-push`, y contarlos daría falsos positivos.
+  es_codigo <- !grepl("^\\s*#", lineas)
+  grep_codigo <- function(patron) {
+    i <- grep(patron, lineas)
+    i[es_codigo[i]]
+  }
+
+  # 1) Captura de stdin una sola vez
+  idx_captura <- grep_codigo("PREPUSH_STDIN=\\$\\(cat")
+  expect_gt(length(idx_captura), 0,
+            label = "pre-push.sh sin captura de stdin (PREPUSH_STDIN=$(cat ...))")
+
+  # 2) git-lfs alimentado desde la copia, NO del stdin real
+  idx_lfs <- grep_codigo("git lfs pre-push")
+  expect_gt(length(idx_lfs), 0, label = "pre-push.sh no invoca git lfs pre-push")
+  for (i in idx_lfs) {
+    expect_match(lineas[i], "PREPUSH_STDIN",
+                 info = paste0("Línea ", i, ": `git lfs pre-push` recibe el stdin real; ",
+                               "debe alimentarse de la copia capturada. ",
+                               "Ver .claude/rules/testing-obligatorio.md §Contrato de stdin"))
+  }
+
+  # 3) La captura ocurre ANTES de git-lfs (si no, la copia llega vacía)
+  if (length(idx_captura) > 0 && length(idx_lfs) > 0) {
+    expect_lt(min(idx_captura), min(idx_lfs),
+              label = "La captura de stdin debe preceder a `git lfs pre-push`")
+  }
+
+  # 4) El bucle de refs lee de la copia, no de stdin
+  idx_while <- grep_codigo("^\\s*while\\s+read")
+  expect_gt(length(idx_while), 0, label = "pre-push.sh sin bucle de parseo de refs")
+  expect_gt(length(grep_codigo("done\\s*<<<\\s*\"?\\$PREPUSH_STDIN")), 0,
+            label = "El bucle de refs debe alimentarse de $PREPUSH_STDIN (here-string)")
+
+  # 5) Detección incompleta NO se exporta como confiable
+  idx_export <- grep_codigo("export R_TESTS_CHANGED_FILES")
+  expect_gt(length(idx_export), 0, label = "pre-push.sh no exporta R_TESTS_CHANGED_FILES")
+  expect_true(any(grepl("REFS_PARSED", lineas[es_codigo])),
+              info = paste("El export de R_TESTS_CHANGED_FILES debe estar condicionado a",
+                           "haber parseado al menos una ref; una lista parcial es peor",
+                           "que ninguna (el runner la trata como confiable)"))
+})
+
+test_that("I-6b: .git/hooks/pre-push delega en el canónico versionado", {
+  wrapper <- ".git/hooks/pre-push"
+  if (!file.exists(wrapper)) {
+    skip("Wrapper .git/hooks/pre-push no instalado (clon nuevo: ver testing-obligatorio.md)")
+  }
+  contenido <- paste(readLines(wrapper, warn = FALSE), collapse = "\n")
+  expect_match(contenido, "\\.claude/hooks/pre-push\\.sh",
+               info = paste("El wrapper NO delega en .claude/hooks/pre-push.sh:",
+                            "el hook corregido no se está aplicando aunque I-6 pase"))
 })
 
 # ============================================================
@@ -305,5 +376,51 @@ test_that("EXTRA: patrones-errores-conocidos.md tiene Errores 11-15 (sesión Ruf
                  fixed = TRUE, useBytes = TRUE,
                  info = paste("Falta documentar Error", n,
                               "(lecciones sesión Ruflo 2026-05-03)"))
+  }
+})
+
+# =============================================================================
+# I-10: los scripts de .claude/scripts/ que son SYMLINKS resuelven a un archivo
+#       existente en SOURCES/scripts_validacion/
+# -----------------------------------------------------------------------------
+# Origen: sesión 2026-08-09. Al corregir el Error 31 se intentó editar
+# `.claude/scripts/validar_multisemilla.R` y la escritura fue rechazada por ser un
+# symlink. Cuatro validadores del arsenal viven así (modo 120000 en git), de modo
+# que **editar la ruta de `.claude/` no surte ningún efecto sobre el código que se
+# ejecuta** — o peor, si alguien reemplaza el symlink por un archivo regular, el
+# repo pasa a tener dos copias divergentes del mismo validador y la que corre
+# depende de qué ruta se invoque.
+#
+# Este invariante fija las dos mitades: el enlace apunta a algo que existe, y
+# ningún archivo regular ha suplantado a un symlink conocido.
+# =============================================================================
+
+test_that("I-10: los symlinks de .claude/scripts/ resuelven a SOURCES/scripts_validacion/", {
+  dir_scripts <- ".claude/scripts"
+  skip_if_not(dir.exists(dir_scripts), "no existe .claude/scripts")
+
+  # Validadores que HOY son symlinks. Si alguno deja de serlo, el test avisa:
+  # puede ser deliberado, pero exige actualizar esta lista a conciencia.
+  canonicos <- c("validar_multisemilla.R", "validar_coherencia_matematica.R",
+                 "corregir_ortografia_espanol.R", "arsenal_validacion_completa.R")
+
+  for (nombre in canonicos) {
+    ruta <- file.path(dir_scripts, nombre)
+    expect_true(file.exists(ruta), info = paste("falta", ruta))
+
+    es_symlink <- nzchar(Sys.readlink(ruta))
+    expect_true(es_symlink,
+      info = paste0(ruta, " dejó de ser un symlink. Si es deliberado, actualiza I-10; ",
+                    "si no, el repo tiene dos copias divergentes del mismo validador ",
+                    "y cuál corre depende de la ruta que se invoque."))
+
+    if (es_symlink) {
+      destino <- normalizePath(ruta, mustWork = FALSE)
+      expect_true(file.exists(destino),
+        info = paste0(ruta, " apunta a un destino inexistente: ", destino))
+      expect_true(grepl("SOURCES/scripts_validacion", destino, fixed = TRUE),
+        info = paste0(ruta, " debería resolver dentro de SOURCES/scripts_validacion/, ",
+                      "y resuelve a: ", destino))
+    }
   }
 })

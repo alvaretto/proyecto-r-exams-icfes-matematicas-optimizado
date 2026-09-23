@@ -1,0 +1,705 @@
+```{r data_generation, echo=FALSE, results='hide'}
+# ==========================================================================
+# excedente_almuerzo_numerico_variacional_argumentacion_n4_v1
+# Familia parametrica del item MAT-2026-1-017 (ERA-2026)
+# Descriptor D4.9 -- Suficiencia de información + proporcionalidad
+# RUTA (a): alterna caso logico (determinable / no determinable)
+# Invariantes I-1..I-8 verificadas por verificar_render.R
+# ==========================================================================
+
+# --- Helpers (Familia 1 + 5, snippets_familias_rmd.R) ---
+pick_int <- function(a, b) if (a >= b) a else sample(a:b, 1L)
+safe_sample <- function(x, size, replace = FALSE) {
+  if (length(x) == 0L)
+    stop("safe_sample(): vector vacio (campo inexistente o mal escrito?).")
+  if (length(x) == 1L) {
+    if (size == 1L) return(x)
+    if (replace) return(rep(x, size))
+    stop("safe_sample(): size > 1 con vector de longitud 1 y replace=FALSE.")
+  }
+  sample(x, size, replace = replace)
+}
+fmt_cop <- function(x) {
+  paste0("\\$", formatC(x, format = "f", digits = 0,
+                        big.mark = ".", decimal.mark = ","))
+}
+# Número crudo para modo matemático. `paste0()` usa as.character(), que emite
+# notación científica en cuanto es más corta: as.character(300000) -> "3e+05".
+# Eso llegaba al estudiante dentro de la fórmula ("\times 3e+05") y ningún
+# validador del arsenal lo ve: solo aparece en la inspección visual.
+fmt_num <- function(x) formatC(x, format = "d")
+eq_display <- function(tex) {
+  is_latex <- tryCatch(knitr::is_latex_output(), error = function(e) FALSE)
+  if (is_latex) paste0("$$", tex, "$$")
+  else paste0(
+    "::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n",
+    "$$", tex, "$$\n\n:::\n")
+}
+
+# --- Contextos narrativos (regla #11: >=6 plantillas, >=5 tipos) ----------
+contextos <- list(
+  # Tipo 1: Narración directa (canonica)
+  list(
+    sujeto_indef = "Una empresa", sujeto_det = "la empresa",
+    miembros = "empleados", miembro_sg = "empleado",
+    miembro_det = "el empleado", miembro_indef = "un empleado",
+    pronombre_dem = "este",
+    evento = "un almuerzo", lugar = "un restaurante",
+    articulos = c("un jugo", "una bebida", "un postre", "una entrada"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0(s, " destina ", pf, " para invitar a sus ", nv, " ", m,
+             " a ", ev, " en ", lu, ".")
+    }
+  ),
+  # Tipo 2: Situación problema
+  list(
+    sujeto_indef = "Una cooperativa", sujeto_det = "la cooperativa",
+    miembros = "socios", miembro_sg = "socio",
+    miembro_det = "el socio", miembro_indef = "un socio",
+    pronombre_dem = "este",
+    evento = "una cena de integración", lugar = "un salón de eventos",
+    articulos = c("una limonada", "un aperitivo", "un postre", "una sopa"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0(s, " dispone de ", pf, " para cubrir ", ev,
+             " de sus ", nv, " ", m, " en ", lu, ".")
+    }
+  ),
+  # Tipo 3: Contexto institucional
+  list(
+    sujeto_indef = "Un colegio", sujeto_det = "el colegio",
+    miembros = "profesores", miembro_sg = "profesor",
+    miembro_det = "el profesor", miembro_indef = "un profesor",
+    pronombre_dem = "este",
+    evento = "una salida pedagógica", lugar = "un parque temático",
+    articulos = c("una bebida", "un refrigerio", "un helado", "un sándwich"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0("Para ", ev, " de sus ", nv, " ", m, ", ",
+             tolower(s), " asigna un presupuesto de ", pf, " en ", lu, ".")
+    }
+  ),
+  # Tipo 4: Descubrimiento / hallazgo
+  list(
+    sujeto_indef = "Una junta de acción comunal",
+    sujeto_det = "la junta",
+    miembros = "vecinos", miembro_sg = "vecino",
+    miembro_det = "el vecino", miembro_indef = "un vecino",
+    pronombre_dem = "este",
+    evento = "una celebración comunitaria", lugar = "un club social",
+    articulos = c("un refresco", "una porción de torta", "un jugo", "una empanada"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0(s, " reserva ", pf, " para organizar ", ev,
+             " con ", nv, " ", m, " en ", lu, ".")
+    }
+  ),
+  # Tipo 5: Perspectiva del organizador
+  list(
+    sujeto_indef = "Un departamento de ventas",
+    sujeto_det = "el departamento",
+    miembros = "vendedores", miembro_sg = "vendedor",
+    miembro_det = "el vendedor", miembro_indef = "un vendedor",
+    pronombre_dem = "este",
+    evento = "un almuerzo de premiación", lugar = "un hotel",
+    articulos = c("una ensalada", "un jugo natural", "un postre", "una sopa"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0("El gerente autoriza ", pf, " del presupuesto de ",
+             tolower(s), " para ", ev, " de sus ", nv, " ", m, " en ", lu, ".")
+    }
+  ),
+  # Tipo 6: Dialogo implicito
+  list(
+    sujeto_indef = "Un consejo estudiantil",
+    sujeto_det = "el consejo",
+    miembros = "delegados", miembro_sg = "delegado",
+    miembro_det = "el delegado", miembro_indef = "un delegado",
+    pronombre_dem = "este",
+    evento = "un encuentro de integración", lugar = "un centro recreativo",
+    articulos = c("un agua embotellada", "un pasabocas", "un helado", "una galleta"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0("—Tenemos ", pf, " para ", ev,
+             " —anuncia la representante de ", tolower(s),
+             " a los ", nv, " ", m, " reunidos en ", lu, ".")
+    }
+  ),
+  # Tipo 7: Narración periodistica
+  list(
+    sujeto_indef = "Una fundación educativa",
+    sujeto_det = "la fundación",
+    miembros = "voluntarios", miembro_sg = "voluntario",
+    miembro_det = "el voluntario", miembro_indef = "un voluntario",
+    pronombre_dem = "este",
+    evento = "un taller de capacitación",
+    lugar = "un centro de convenciones",
+    articulos = c("un café", "un refrigerio", "un jugo", "una galleta"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0("En el marco de ", ev, ", ", tolower(s),
+             " destina ", pf, " para la alimentación de ",
+             nv, " ", m, " en ", lu, ".")
+    }
+  ),
+  # Tipo 8: Pregunta retorica
+  list(
+    sujeto_indef = "Una asociación de padres",
+    sujeto_det = "la asociación",
+    miembros = "asistentes", miembro_sg = "asistente",
+    miembro_det = "el asistente", miembro_indef = "un asistente",
+    pronombre_dem = "este",
+    evento = "un bazar escolar", lugar = "un colegio",
+    articulos = c("un jugo", "una empanada", "un postre", "una limonada"),
+    plantilla = function(s, nv, m, ev, lu, pf) {
+      paste0("¿Cómo repartir los costos de ", ev, "? ",
+             s, " aporta ", pf, " para cubrir la comida de ",
+             nv, " ", m, " en ", lu, ".")
+    }
+  )
+)
+
+# --- Seleccionar tipo de versión (RUTA a) ---------------------------------
+tipo <- safe_sample(c("1", "2a", "2b"), 1L)
+
+# --- Construir espacio parametrico ----------------------------------------
+n_pool <- c(5, 6, 8, 10, 12, 15, 20)
+P_grid <- seq(150000, 600000, by = 50000)
+
+# Tope de verosimilitud del consumo individual. `c` es el precio de UN artículo
+# de restaurante (jugo, café, postre, sándwich...): la cota puramente numérica
+# c < q = P/n lo dejaba llegar a $117.000 (mediana $13.500, p90 $32.650), y de
+# ahí salían enunciados como "un jugo de $51.000". Con el tope, el espacio
+# TIPO 1 pasa de 3948 a 2291 combinaciones -- muy por encima de las 250
+# versiones que exige el repositorio -- y conserva tanto la instancia canónica
+# (c = $5.000) como la cobertura completa de P, n y T.
+C_MAX_VEROSIMIL <- 15000
+
+pn_pares <- expand.grid(P = P_grid, n = n_pool, stringsAsFactors = FALSE)
+pn_pares$q <- pn_pares$P / pn_pares$n
+pn_pares <- pn_pares[pn_pares$q == floor(pn_pares$q) & pn_pares$q >= 5000, ]
+
+if (tipo == "1") {
+  # --- TIPO 1: determinable. Enumerar (P, n, T, a, c) validos ---
+  combos_list <- list()
+  counter <- 0L
+  for (i in seq_len(nrow(pn_pares))) {
+    Pi <- pn_pares$P[i]; ni <- pn_pares$n[i]; qi <- pn_pares$q[i]
+    for (Tj in seq(Pi + 50000, min(Pi + 500000, 1200000), by = 50000)) {
+      Ej <- Tj - Pi
+      a_upper <- floor(qi * Ej / Tj)
+      if (a_upper < 500) next
+      a_cands <- seq(500, min(10000, a_upper), by = 500)
+      c_exact <- a_cands * Tj / Ej
+      c_round <- round(c_exact)
+      es_entero <- abs(c_exact - c_round) < 0.01
+      es_mult500 <- (c_round %% 500) == 0
+      en_rango  <- c_round > 0 & c_round < qi & c_round <= C_MAX_VEROSIMIL
+      valido <- es_entero & es_mult500 & en_rango
+      for (k in which(valido)) {
+        counter <- counter + 1L
+        combos_list[[counter]] <- c(Pi, ni, Tj, a_cands[k],
+                                    c_round[k], qi, Ej)
+      }
+    }
+  }
+  stopifnot(counter > 0L)
+  combos <- as.data.frame(do.call(rbind, combos_list))
+  names(combos) <- c("P", "n", "Ttotal", "a_val", "c_val", "q", "E")
+
+  idx <- sample.int(nrow(combos), 1L)
+  P      <- combos$P[idx]
+  n_emp  <- combos$n[idx]
+  Ttotal <- combos$Ttotal[idx]
+  a_val  <- combos$a_val[idx]
+  c_val  <- combos$c_val[idx]
+  q      <- combos$q[idx]
+  E      <- combos$E[idx]
+
+  # Verificación I-1..I-5
+  stopifnot(E > 0, q == floor(q), c_val < q, c_val <= C_MAX_VEROSIMIL,
+            abs(a_val - c_val * E / Ttotal) < 0.01, a_val > 0,
+            a_val == floor(a_val),
+            P %% 50000 == 0, Ttotal %% 50000 == 0, c_val %% 500 == 0)
+
+} else if (tipo == "2a") {
+  # --- TIPO 2a: T omitido ---
+  idx <- sample.int(nrow(pn_pares), 1L)
+  P     <- pn_pares$P[idx]
+  n_emp <- pn_pares$n[idx]
+  q     <- pn_pares$q[idx]
+  c_pool <- seq(500, min(q - 500, C_MAX_VEROSIMIL), by = 500)
+  c_val  <- safe_sample(c_pool, 1L)
+  # T, E, a no aplican en TIPO 2a (sentinelas, nunca emitidos)
+  Ttotal <- 0; E <- 0; a_val <- 0
+
+  stopifnot(P %% 50000 == 0, c_val %% 500 == 0, c_val < q,
+            c_val <= C_MAX_VEROSIMIL)
+
+} else {
+  # --- TIPO 2b: c omitido ---
+  idx <- sample.int(nrow(pn_pares), 1L)
+  P     <- pn_pares$P[idx]
+  n_emp <- pn_pares$n[idx]
+  q     <- pn_pares$q[idx]
+  T_pool <- seq(P + 50000, min(P + 500000, 1200000), by = 50000)
+  Ttotal <- safe_sample(T_pool, 1L)
+  E      <- Ttotal - P
+  # c, a no aplican en TIPO 2b (sentinelas, nunca emitidos)
+  c_val  <- 0; a_val <- 0
+
+  stopifnot(P %% 50000 == 0, Ttotal %% 50000 == 0, E > 0)
+}
+
+# --- Seleccionar contexto narrativo ----------------------------------------
+ctx <- contextos[[sample.int(length(contextos), 1L)]]
+
+es_canonico <- (tipo == "1" && P == 300000 && n_emp == 10 &&
+                Ttotal == 500000 && c_val == 5000)
+if (es_canonico) ctx <- contextos[[1L]]
+
+articulo <- safe_sample(ctx$articulos, 1L)
+if (es_canonico) articulo <- "un jugo"
+
+# Preposición contracta: "un jugo" -> "al jugo", "una bebida" -> "a la bebida"
+articulo_det <- sub("^un ", "al ", sub("^una ", "a la ", articulo))
+
+# --- Construir enunciado --------------------------------------------------
+P_fmt <- fmt_cop(P)
+enunciado_p1 <- ctx$plantilla(ctx$sujeto_indef, n_emp, ctx$miembros,
+                              ctx$evento, ctx$lugar, P_fmt)
+
+if (tipo == "1" || tipo == "2b") {
+  T_fmt <- fmt_cop(Ttotal)
+  enunciado_p2 <- paste0(
+    "Debido a que el total de la cuenta por pagar fue de ", T_fmt,
+    ", se propone que el excedente sea pagado de manera proporcional ",
+    "al valor del pedido que hizo cada ", ctx$miembro_sg, ".")
+} else {
+  # TIPO 2a: T omitido (I-8)
+  enunciado_p2 <- paste0(
+    "Debido a que la cuenta superó el presupuesto, se propone que ",
+    "el excedente sea pagado de manera proporcional al valor del pedido ",
+    "que hizo cada ", ctx$miembro_sg, ".")
+}
+
+if (tipo == "1" || tipo == "2a") {
+  c_fmt <- fmt_cop(c_val)
+  enunciado_p3 <- paste0(
+    "De acuerdo con la propuesta, si ", ctx$miembro_indef,
+    " consumió solamente ", articulo, " de ", c_fmt,
+    ", ¿es posible determinar el valor que ",
+    ctx$pronombre_dem, " ", ctx$miembro_sg, " debe pagar?")
+} else {
+  # TIPO 2b: c omitido (I-8)
+  enunciado_p3 <- paste0(
+    "De acuerdo con la propuesta, ¿es posible determinar el valor que ",
+    ctx$miembro_indef, " debe pagar?")
+}
+
+enunciado_completo <- paste0(enunciado_p1, " ", enunciado_p2,
+                             "\n\n", enunciado_p3)
+
+# --- Pool de errores conceptuales (8 errores, regla #1 línea 188) ---------
+# El pool NOMINAL no basta: lo que importa es el pool APLICABLE por categoría
+# en cada tipo, porque se eligen 2 opciones "Sí" y 2 "No" (Incidente N).
+q_fmt <- fmt_cop(q)
+
+errores_conceptuales <- list(
+  list(
+    codigo = "PRO-SUF-01",
+    nombre = "Consumo menor que la cuota implica no pagar",
+    categoria = "si",
+    descripcion_corta = paste0(
+      "Sí, porque ", ctx$miembro_det,
+      " consumió menos de lo que le correspondía y, ",
+      "por lo tanto, esta persona no debe pagar nada."),
+    descripcion_larga = paste0(
+      "Aplica una regla práctica: «si gasté menos que la cuota ",
+      "equitativa, no pago». Sin embargo, la propuesta es que el excedente ",
+      "se reparta PROPORCIONALMENTE al consumo, no que se exima a quienes ",
+      "consumieron poco. Todo consumo, por pequeño que sea, genera una ",
+      "fracción calculable del excedente."),
+    causa_raiz = paste0(
+      "Confusión entre «consumo inferior a la cuota» y ",
+      "«exención de pago»."),
+    precondicion = function(params) params$tipo %in% c("1", "2a"),
+    calcula = function(params) 0
+  ),
+  list(
+    codigo = "PRO-SUF-02",
+    nombre = "Umbral mínimo de la cuota equitativa",
+    categoria = "no",
+    descripcion_corta = paste0(
+      "No, porque el procedimiento planteado no contemplaba que uno de los ",
+      ctx$miembros, " pudiera tener un consumo inferior a ", q_fmt, "."),
+    descripcion_larga = paste0(
+      "Compara el consumo individual con la cuota equitativa q = P/n = ",
+      q_fmt, " y concluye que por debajo de ese umbral el procedimiento ",
+      "no aplica. Confunde el reparto PROPORCIONAL AL CONSUMO con un reparto ",
+      "IGUALITARIO con piso mínimo."),
+    causa_raiz = paste0(
+      "Confusión entre proporcionalidad y cuota equitativa como piso."),
+    precondicion = function(params) TRUE,
+    calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-03",
+    nombre = "Faltan los pedidos de los demás",
+    categoria = "no",
+    descripcion_corta = paste0(
+      "No, porque falta conocer los valores de los pedidos de los demás ",
+      ctx$miembros, " para saber quién debe pagar más y ",
+      "quién debe pagar menos."),
+    descripcion_larga = paste0(
+      "Cree que la regla proporcional exige el desglose individual de cada ",
+      "uno de los demás ", ctx$miembros, ". Sin embargo, la fórmula ",
+      "$a = c/T \\times E$ solo requiere el consumo individual c y el total de la ",
+      "cuenta T; los consumos de los demás no son necesarios (ya están ",
+      "implícitos en T)."),
+    causa_raiz = paste0(
+      "No reconoce que T ya contiene la información agregada de todos ",
+      "los consumos."),
+    # NO aplica a TIPO 2a. Ahí el dato omitido es T, y T es exactamente la SUMA
+    # de todos los pedidos: conocer los de los demás (más c, que si se da)
+    # determinaria T y con el la respuesta. En 2a esta opción dejaria de ser un
+    # distractor falso para ser una segunda respuesta defendible, y el item
+    # perderia la unicidad de la clave. En TIPO 1 (donde T se conoce y los demás
+    # son irrelevantes) y en TIPO 2b (donde falta c, que no se deduce de los
+    # pedidos ajenos) sigue siendo claramente falsa.
+    precondicion = function(params) params$tipo != "2a",
+    calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-04",
+    nombre = "El presupuesto sustituye al total de la cuenta",
+    categoria = "si",
+    descripcion_corta = paste0(
+      "Sí, porque se conoce el presupuesto de ", ctx$sujeto_det,
+      " y con esa cifra se puede calcular la proporción que le ",
+      "corresponde ", ifelse(grepl("^el ", ctx$miembro_det), "al", "a la"),
+      " ", ctx$miembro_sg, "."),
+    descripcion_larga = paste0(
+      "Usa P (lo que aporta ", ctx$sujeto_det, ") en vez de T (el total ",
+      "de la cuenta) como referente de la proporción. Calcularía ",
+      "$c/P \\times E$ en lugar de $c/T \\times E$. P y T son cantidades distintas con ",
+      "roles distintos en la fórmula."),
+    causa_raiz = paste0(
+      "Confusión entre el presupuesto de la entidad y el total de la cuenta."),
+    precondicion = function(params) params$tipo == "2a",
+    calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-05",
+    nombre = "El excedente se reparte en partes iguales",
+    categoria = "si",
+    descripcion_corta = paste0(
+      "Sí, porque basta dividir el excedente en partes iguales entre los ",
+      n_emp, " ", ctx$miembros,
+      " sin importar cuánto consumió cada uno."),
+    descripcion_larga = paste0(
+      "Ignora la proporcionalidad al consumo y propone un reparto igualitario ",
+      "del excedente: cada ", ctx$miembro_sg, " pagaría la misma cantidad ",
+      "E/n. Esto contradice la propuesta, que establece explícitamente que ",
+      "el excedente se paga «de manera proporcional al valor del pedido»."),
+    causa_raiz = paste0(
+      "Omisión de la cláusula de proporcionalidad de la propuesta."),
+    precondicion = function(params) TRUE,
+    calcula = function(params) {
+      if (params$tipo == "2a") return(NA)  # E desconocido en TIPO 2a
+      params$E / params$n_emp
+    }
+  ),
+  list(
+    codigo = "PRO-SUF-06",
+    nombre = "El dato omitido se puede deducir",
+    categoria = "si",
+    # Solo hay dos ramas emisibles: este error no aplica a tipo 1. La tercera
+    # rama es NA (no texto), para que ningun literal viaje sin haber sido nunca
+    # emitido ni probado contra LaTeX (Incidente O -- INC-CAMPO-NO-EMITIDO).
+    # La guarda de NA esta junto a la unicidad de opciones_texto.
+    descripcion_corta = if (tipo == "2a") {
+      paste0("Sí, porque el valor total de la cuenta se puede deducir ",
+             "de los demás datos disponibles.")
+    } else if (tipo == "2b") {
+      paste0("Sí, porque el valor del consumo ",
+             ifelse(grepl("^el ", ctx$miembro_det), "del", "de la"), " ",
+             ctx$miembro_sg,
+             " se puede deducir de los demás datos disponibles.")
+    } else {
+      NA_character_
+    },
+    descripcion_larga = paste0(
+      "Afirma que el dato omitido se deduce de los restantes, pero confunde ",
+      "un dato DERIVABLE (como E = T - P, que sí se calcula a partir de otros) ",
+      "con un dato AUSENTE que no puede obtenerse sin información adicional. ",
+      "El dato faltante es un dato primario, no uno derivado."),
+    causa_raiz = paste0(
+      "No distingue entre dato derivable y dato ausente/primario."),
+    precondicion = function(params) params$tipo %in% c("2a", "2b"),
+    calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-07",
+    nombre = "Supone cargos no declarados en la cuenta",
+    categoria = "no",
+    descripcion_corta = paste0(
+      "No, porque no se sabe si el valor de la cuenta incluye impuestos o ",
+      "propina, lo que cambiaría el excedente que se debe repartir."),
+    descripcion_larga = paste0(
+      "Introduce una condición que el enunciado no plantea. La propuesta ",
+      "reparte el excedente sobre la cuenta tal como se enuncia; suponer ",
+      "cargos adicionales no declarados no es un problema de SUFICIENCIA de ",
+      "información, sino una premisa añadida por quien responde. La pregunta ",
+      "es si los datos DADOS bastan, no si el escenario podría ser otro."),
+    causa_raiz = paste0(
+      "Confunde un dato ausente del problema con una suposición externa ",
+      "no declarada."),
+    precondicion = function(params) TRUE,
+    calcula = function(params) NA
+  ),
+  list(
+    codigo = "PRO-SUF-08",
+    nombre = "La cuota equitativa como valor a pagar",
+    categoria = "si",
+    descripcion_corta = paste0(
+      "Sí, porque con el presupuesto y el número de ", ctx$miembros,
+      " se obtiene la cuota que le corresponde pagar a cada ",
+      ctx$miembro_sg, "."),
+    descripcion_larga = paste0(
+      "Calcula la cuota equitativa q = P/n = ", q_fmt, " y la presenta como ",
+      "el valor que debe pagar ", ctx$miembro_det, ". Pero q es la parte del ",
+      "PRESUPUESTO que cubre a cada ", ctx$miembro_sg, ", no el aporte sobre ",
+      "el EXCEDENTE, que la propuesta reparte de manera proporcional al ",
+      "consumo individual. Son dos cantidades distintas."),
+    causa_raiz = paste0(
+      "Confusión entre la cuota equitativa del presupuesto y el aporte ",
+      "proporcional sobre el excedente."),
+    precondicion = function(params) TRUE,
+    calcula = function(params) params$q
+  )
+)
+
+# --- Construir opción correcta y seleccionar distractores ------------------
+params <- list(tipo = tipo, P = P, n_emp = n_emp, Ttotal = Ttotal,
+               c_val = c_val, q = q, E = E, a_val = a_val)
+
+errores_aplicables_idx <- which(sapply(errores_conceptuales, function(err) {
+  err$precondicion(params)
+}))
+
+if (tipo == "1") {
+  opcion_correcta <- paste0(
+    "Sí, porque se conoce el valor total de la cuenta y se puede calcular ",
+    "la proporción de esta que corresponde ", articulo_det,
+    " que consumió ", ctx$miembro_det, ".")
+  categoria_correcta <- "si"
+} else if (tipo == "2a") {
+  opcion_correcta <- paste0(
+    "No, porque sin conocer el valor total de la cuenta no es posible calcular ",
+    "el excedente ni la proporción que le corresponde ",
+    ifelse(grepl("^el ", ctx$miembro_det), "al", "a la"),
+    " ", ctx$miembro_sg, ".")
+  categoria_correcta <- "no"
+} else {
+  opcion_correcta <- paste0(
+    "No, porque sin conocer el valor del consumo ",
+    ifelse(grepl("^el ", ctx$miembro_det), "del", "de la"), " ",
+    ctx$miembro_sg,
+    " no es posible calcular la proporción del excedente que le corresponde.")
+  categoria_correcta <- "no"
+}
+
+# Separar errores aplicables por categoría
+idx_si <- errores_aplicables_idx[sapply(errores_aplicables_idx, function(i) {
+  errores_conceptuales[[i]]$categoria == "si"
+})]
+idx_no <- errores_aplicables_idx[sapply(errores_aplicables_idx, function(i) {
+  errores_conceptuales[[i]]$categoria == "no"
+})]
+
+# Seleccionar distractores: 2 Si + 2 No en total (1 correcta + 3 distractores)
+if (categoria_correcta == "si") {
+  n_si_err <- 1L; n_no_err <- 2L
+} else {
+  n_si_err <- 2L; n_no_err <- 1L
+}
+stopifnot(length(idx_si) >= n_si_err, length(idx_no) >= n_no_err)
+
+idx_de <- function(cod) {
+  i <- which(vapply(errores_conceptuales, function(e) e$codigo, "") == cod)
+  stopifnot(length(i) == 1L)
+  i
+}
+
+if (es_canonico) {
+  # EXCEPCION CANONICA (pre-flight check 20 del orquestador-schoice).
+  # El item oficial MAT-2026-1-017 trae 3 distractores fijos; sortearlos del
+  # pool reproduciria el enunciado pero NO las 4 opciones oficiales, que es
+  # lo que exige I-6 y ESPECIFICACION.md 3 ("reproducir VERBATIM").
+  sel_si <- idx_de("PRO-SUF-01")
+  sel_no <- c(idx_de("PRO-SUF-02"), idx_de("PRO-SUF-03"))
+  stopifnot(length(sel_si) == n_si_err, length(sel_no) == n_no_err)
+} else {
+  sel_si <- safe_sample(idx_si, n_si_err)
+  sel_no <- safe_sample(idx_no, n_no_err)
+}
+sel_distractores <- c(sel_si, sel_no)
+stopifnot(length(sel_distractores) == 3L)
+
+# Construir lista de opciones: correcta primero, luego distractores
+opciones <- c(
+  list(list(texto = opcion_correcta, es_correcta = TRUE, codigo = "CORRECTA")),
+  lapply(sel_distractores, function(i) {
+    list(texto = errores_conceptuales[[i]]$descripcion_corta,
+         es_correcta = FALSE,
+         codigo = errores_conceptuales[[i]]$codigo)
+  })
+)
+
+sol <- c(TRUE, rep(FALSE, length(sel_distractores)))
+opciones_texto  <- sapply(opciones, function(o) o$texto)
+opciones_codigo <- sapply(opciones, function(o) o$codigo)
+
+# Verificar unicidad de opciones y que ninguna arrastre texto no emisible
+stopifnot(length(unique(opciones_texto)) == length(opciones_texto),
+          !anyNA(opciones_texto), all(nzchar(opciones_texto)))
+
+# --- Reflexiones metacognitivas -------------------------------------------
+reflexiones <- c(
+  "Antes de resolver un problema, identifica qué datos tienes y cuáles necesitas. Esta estrategia te evita errores de suficiencia de información.",
+  "Cuando un problema pregunta «¿es posible determinar...?», analiza la fórmula: ¿todos sus componentes están disponibles?",
+  "Confundir un dato derivable (que se obtiene de otros) con un dato ausente (que no está ni se puede obtener) es una fuente frecuente de error en problemas de suficiencia.",
+  "La proporcionalidad al consumo y el reparto igualitario son dos reglas distintas. Verificar cuál aplica es parte del razonamiento estratégico.",
+  "Evaluar si una afirmación es correcta o incorrecta requiere más que intuición: exige verificar la coherencia entre las premisas y la conclusión.",
+  "Los problemas de suficiencia de información evalúan tu capacidad de análisis estructural, no tu habilidad de cálculo."
+)
+reflexion <- reflexiones[sample.int(length(reflexiones), 1L)]
+
+# Info auxiliar para Solution
+errores_sel_si <- lapply(sel_si, function(i) errores_conceptuales[[i]])
+errores_sel_no <- lapply(sel_no, function(i) errores_conceptuales[[i]])
+```
+
+Question
+========
+
+```{r enunciado, echo=FALSE, results='asis'}
+cat(enunciado_completo, "\n")
+```
+
+Answerlist
+----------
+
+```{r opciones_q, echo=FALSE, results='asis'}
+for (txt in opciones_texto) {
+  cat("* ", txt, "\n")
+}
+```
+
+Solution
+========
+
+```{r solucion, echo=FALSE, results='asis'}
+# --- Respuesta correcta (por contenido, NUNCA por letra -- regla #19) ------
+cat("### Respuesta correcta\n\n")
+
+if (tipo == "1") {
+  cat(paste0(
+    "**Argumento válido:** \"", opcion_correcta, "\"\n\n",
+    "Con los datos del enunciado se puede determinar el valor que ",
+    ctx$miembro_det, " debe pagar. La fórmula del aporte proporcional es:\n\n"))
+  cat(eq_display("a = \\frac{c}{T} \\times E = \\frac{c}{T} \\times (T - P)"), "\n\n")
+  cat(paste0(
+    "Sustituyendo: $a = \\frac{", fmt_num(c_val), "}{", fmt_num(Ttotal),
+    "} \\times ", fmt_num(E), " = ", fmt_num(a_val),
+    "$, es decir, ", fmt_cop(a_val), ".\n\n",
+    "La fórmula solo requiere **c** (consumo individual) y **T** ",
+    "(total de la cuenta); ambos están disponibles en el enunciado. ",
+    "Los consumos de los demás ", ctx$miembros, " no son necesarios ",
+    "porque ya están implícitos en T.\n\n"))
+} else if (tipo == "2a") {
+  cat(paste0(
+    "**Argumento válido:** \"", opcion_correcta, "\"\n\n",
+    "Sin el valor total de la cuenta **T**, no se puede calcular:\n\n",
+    "- El excedente $E = T - P$ (diferencia entre la cuenta y el presupuesto).\n",
+    "- La razón $c/T$ (proporción del consumo individual sobre el total).\n",
+    "- El aporte $a = (c/T) \\times E$.\n\n",
+    "**T es un dato primario** que no se puede deducir de P, n ni c: ",
+    "el total de la cuenta depende de lo que pidieron TODOS los ", ctx$miembros,
+    " y no se puede reconstruir sin esa información.\n\n"))
+} else {
+  cat(paste0(
+    "**Argumento válido:** \"", opcion_correcta, "\"\n\n",
+    "Sin el valor del consumo individual **c**, no se puede calcular:\n\n",
+    "- La razón $c/T$ (proporción del consumo individual sobre el total).\n",
+    "- El aporte $a = (c/T) \\times E$.\n\n",
+    "Aunque se conocen T y E, el aporte proporcional depende de c. ",
+    "**c es un dato primario** que no se puede deducir de P, n ni T: ",
+    "el consumo individual depende exclusivamente de lo que pidió ",
+    ctx$miembro_det, ".\n\n"))
+}
+
+# --- Análisis de distractores agrupados por categoría (regla #19) ----------
+cat("### Análisis de los argumentos erróneos\n\n")
+
+if (length(errores_sel_si) > 0) {
+  cat("#### Argumentos \"Sí\" erróneos\n\n")
+  for (err in errores_sel_si) {
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n",
+      "*Causa raíz:* ", err$causa_raiz, "\n\n"))
+  }
+}
+
+if (length(errores_sel_no) > 0) {
+  cat("#### Argumentos \"No\" erróneos\n\n")
+  for (err in errores_sel_no) {
+    cat(paste0(
+      "**", err$codigo, " — ", err$nombre, "**\n\n",
+      "*Argumento:* \"", err$descripcion_corta, "\"\n\n",
+      err$descripcion_larga, "\n\n",
+      "*Causa raíz:* ", err$causa_raiz, "\n\n"))
+  }
+}
+
+# --- Reflexión metacognitiva -----------------------------------------------
+cat("### Reflexión metacognitiva\n\n")
+cat(reflexion, "\n\n")
+
+# --- Estrategia para evitar el error ---------------------------------------
+cat("### Estrategia para evitar el error\n\n")
+cat("1. **Identifica la fórmula** que necesitas: $a = (c/T) \\times (T - P)$.\n")
+cat("2. **Lista los datos** del enunciado y marca los que aparecen en la fórmula.\n")
+cat("3. **Verifica** si cada componente de la fórmula está disponible o se puede derivar de los demás.\n")
+cat("4. **Concluye**: si todos están, la respuesta es determinable; si falta uno que no se puede derivar, no lo es.\n\n")
+```
+
+Answerlist
+----------
+
+```{r sol_answerlist, echo=FALSE, results='asis'}
+for (i in seq_along(opciones)) {
+  if (opciones[[i]]$es_correcta) {
+    cat("* Correcto.", opciones[[i]]$texto, "\n")
+  } else {
+    cat("* Incorrecto.", opciones[[i]]$texto, "\n")
+  }
+}
+```
+
+Meta-information
+================
+exname: excedente_almuerzo_proporcional_argumentacion_n4
+extype: schoice
+exsolution: `r paste(as.integer(sol), collapse = "")`
+exshuffle: TRUE
+extol: 0.01
+
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentacion
+exextra[Componente]: Numerico-variacional
+exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solucion a problemas.
+exextra[Evidencia]: Establece la validez o pertinencia de una solucion propuesta a un problema dado.
+exextra[Nivel]: 4
+exextra[Descriptor]: D4.9
+exextra[DOK]: 3
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion

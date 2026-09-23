@@ -84,12 +84,12 @@ test_nivel2_v1.Rmd
 Correcto:
 
 ```
-area_rectangulo_geometrico_metrico_formulacion_ejecucion_n1_v1.Rmd
+area_rectangulo_geometrico_metrico_formulacion_ejecucion_n1_schoice_v1.Rmd
 ```
 
-Formato: `[ejercicio]_[componente]_[competencia]_n[nivel]_v[version].Rmd`
+Formato: `[ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_v[version].Rmd`
 
-Ver: .claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md
+Fuente única: `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`
 
 ## Error 5: No Validar Diversidad de Versiones
 

@@ -6,6 +6,25 @@ library(exams)
 
 # Definición del archivo de examen y configuración inicial
 archivo_examen <- "desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1.Rmd"
+# 300 = TAMANO DEL BANCO que se exporta a Moodle. Es el valor original del
+# script y se documenta aqui porque estuvo a punto de perderse: alguien lo bajo
+# a 100 sin explicacion y el code-review del 2026-07-29 tuvo que revertirlo
+# (defecto #8). El problema no era el numero, sino que un valor cambiado SIN
+# comentario es indistinguible de un descuido. Si lo cambias, deja escrito por que.
+#
+# NO confundir con la regla #3 de .claude/rules/codigo-rmd.md ("NO crear
+# ejercicios con < 200 versiones unicas"): esa regla habla de la CAPACIDAD del
+# ejercicio y se valida con exams2html(archivo, n = 200) — aqui esta medida y
+# cumplida con holgura (xexams(n = 200) -> 200/200 unicas el 2026-07-28, sobre un
+# espacio sustantivo de 1332 enunciados distintos; ver HANDOFF.md §5). Cuantas
+# preguntas se exportan al banco es una decision de uso que ninguna regla fija.
+# (El README del repo dice "minima de 300 versiones unicas"; esta desactualizado
+# —el umbral vigente es 200+— y es probablemente el origen historico de este 300.)
+#
+# Ojo al leer el XML resultante: 300 copias NO son 300 preguntas distintas. El
+# muestreo es CON reemplazo sobre un espacio finito, asi que por el problema del
+# cumpleanos aparecen algunas colisiones; eso es esperado y no indica falta de
+# variedad del generador.
 copias <- 300
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)

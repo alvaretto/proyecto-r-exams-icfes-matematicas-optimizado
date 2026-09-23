@@ -1,5 +1,5 @@
 ```{r data_generation, echo = FALSE, results = "hide"}
-# Configuracion inicial
+# Configuración inicial
 Sys.setlocale("LC_ALL", "C")
 options(OutDec = ".")
 options(scipen = 999)
@@ -35,7 +35,7 @@ contextos <- list(
 
 contexto_seleccionado <- sample(contextos, 1)[[1]]
 
-# Generar numero de calificaciones (entre 4 y 6)
+# Generar número de calificaciones (entre 4 y 6)
 num_calificaciones <- sample(4:6, 1)
 
 # Generar calificaciones realistas (entre 2.5 y 5.0)
@@ -54,13 +54,13 @@ if(mediana_calculada != media_correcta) {
   distractores_valores <- c(distractores_valores, mediana_calculada)
 }
 
-# Distractor 2: Usar solo la primera y ultima calificacion
+# Distractor 2: Usar solo la primera y ultima calificación
 promedio_extremos <- round((calificaciones[1] + calificaciones[length(calificaciones)]) / 2, 1)
 if(promedio_extremos != media_correcta) {
   distractores_valores <- c(distractores_valores, promedio_extremos)
 }
 
-# Distractor 3: Valor maximo
+# Distractor 3: Valor máximo
 valor_maximo <- max(calificaciones)
 if(valor_maximo != media_correcta) {
   distractores_valores <- c(distractores_valores, valor_maximo)
@@ -80,9 +80,9 @@ distractores_seleccionados <- unique(distractores_valores)[1:3]
 # Crear opciones con justificaciones
 opciones <- c()
 
-# Opcion correcta
+# Opción correcta
 opciones[1] <- paste0(media_correcta, 
-                     " porque se suman todas las calificaciones y se divide por el numero total de evaluaciones")
+                     " porque se suman todas las calificaciones y se divide por el número total de evaluaciones")
 
 # Distractores con justificaciones incorrectas
 opciones[2] <- paste0(distractores_seleccionados[1],
@@ -92,7 +92,7 @@ opciones[3] <- paste0(distractores_seleccionados[2],
                      " porque es el resultado de sumar todas las calificaciones")
 
 opciones[4] <- paste0(distractores_seleccionados[3],
-                     " porque es el promedio entre la calificacion mas alta y la mas baja")
+                     " porque es el promedio entre la calificación más alta y la más baja")
 
 # Determinar respuesta correcta y mezclar opciones
 solutions <- c(TRUE, FALSE, FALSE, FALSE)
@@ -108,7 +108,7 @@ En el `r contexto_seleccionado$periodo` de `r contexto_seleccionado$materia`, `r
 
 `r paste(calificaciones, collapse = ", ")`
 
-¿Cual es la media aritmetica de estas calificaciones?
+¿Cuál es la media aritmetica de estas calificaciones?
 
 ```{r questionlist, echo = FALSE, results = "asis"}
 answerlist(opciones, markup = "markdown")
@@ -121,7 +121,7 @@ Para calcular la media aritmetica de las calificaciones de `r contexto_seleccion
 
 1. Sumar todas las calificaciones: `r paste(calificaciones, collapse = " + ")` = `r suma_total`
 
-2. Dividir la suma por el numero de calificaciones: `r suma_total` / `r num_calificaciones` = `r media_correcta`
+2. Dividir la suma por el número de calificaciones: `r suma_total` / `r num_calificaciones` = `r media_correcta`
 
 Por lo tanto, la media aritmetica es `r media_correcta`.
 

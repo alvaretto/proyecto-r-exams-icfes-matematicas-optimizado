@@ -23,6 +23,10 @@ Este archivo funciona como **índice central** del sistema. Para información de
 7. **Ortografía española** con tildes → @.claude/rules/ortografia-espanol.md
 8. **Testing automático** permanente → @.claude/rules/testing-obligatorio.md
 9. **Detractor obligatorio** en fases de revisión → @.claude/rules/detractor-obligatorio.md
+   Desde la v1.2: el detractor DEBE ser un agente **distinto** del que escribió o corrigió el
+   artefacto (autoevaluación ≠ FASE 2C), su reporte se considera entregado sólo si cierra con
+   el marcador `VEREDICTO_DETRACTOR:`, y si no entrega tras 2 intentos se **escala al usuario**
+   — PROHIBIDO sustituirlo por la auditoría propia del coordinador y sellar `detractor_fase2c`.
 10. **Validación _neg_ opciones repetidas** → @.claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → @.claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → @.claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
@@ -133,16 +137,562 @@ A-Produccion/
 
 - **Settings Claude**: @.claude/settings.json
 - **CI/CD**: @.github/workflows/ci-testing.yml
-- **Tests**: `tests/testthat/` (12 suites)
+- **Tests**: `tests/testthat/` (25 suites enganchadas a `tests/run_all_tests.R`)
 - **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.17.1 (fix WAIT_USER en orquestadores subagente + ambos agentes aceptan SendMessage)
-**Fecha**: 2026-06-27
+**Versión**: 3.20.8 (un formato que solo vive en un documento pierde contra uno que vive en un regex)
+**Fecha**: 2026-08-10
 **Basado en**: Documentación oficial Claude Code (nov 2025)
+
+### Cambios v3.20.8 (2026-08-10)
+
+> El repositorio tenía **dos nomenclaturas de archivo rivales conviviendo en nueve sitios**, y
+> ninguna reconciliaba a la otra. Ganaba la equivocada por una razón puramente mecánica: era la
+> única cableada en comprobaciones ejecutables. La pregunta del profesor —«¿estás nombrando el
+> `.Rmd` según la nomenclatura oficial vigente?»— destapó que yo mismo acababa de reproducirla.
+
+- **LA DERIVA, MEDIDA**: `NOMENCLATURA_ARCHIVOS_RMD.md` prescribía
+  `[ejercicio]_[componente]_[competencia]_n[nivel]_v[N]` y **no estaba cableado en ningún sitio**.
+  En paralelo, desde la regla de ejercicios metacognitivos (v3.1, 2026-02-06) creció un formato de
+  facto, `[ejercicio]_metacognitivo_[competencia_corta]_n[nivel]_[tipo]_v[N]`, **sí cableado** en el
+  regex de los dos comandos orquestadores, los dos skills generadores y la regla #10. Sobre los 142
+  `.Rmd` tocados desde febrero: **53 seguían el de facto, 10 el documentado**.
+- **QUÉ SE HABÍA PERDIDO**: la palabra `metacognitivo` es **constante** en todos los ejercicios
+  desde que la regla #1 la hizo universal, así que ocupaba la ranura del **componente ICFES** sin
+  aportar un bit; y la competencia se acortó, perdiendo su forma oficial.
+- **DECISIÓN DEL PROFESOR**: vuelve a regir el formato documentado, **extendido con la ranura de
+  tipo** y sin `metacognitivo`:
+  `[ejercicio]_[componente]_[competencia]_n[nivel]_[tipo]_v[N].Rmd` (+ `_neg` opcional).
+- **LA RANURA DE TIPO NO ES OPCIONAL, Y SE DEMOSTRÓ**: adoptar el formato documentado *literalmente*
+  era **imposible**. El repo tiene **13 familias** con dos o tres variantes del mismo enunciado
+  (`area_jardin_lote_…` schoice + cloze; `diagrama_caja_estaturas_…` con tres), que sin la ranura
+  colisionan en el mismo nombre de archivo. Medido antes de proponer, no supuesto.
+- **ALCANCE — de aquí en adelante**: allowlist legacy de **299 archivos** en
+  `tests/testthat/nomenclatura-legacy.txt`, con cabecera que declara que **no admite altas y solo
+  puede decrecer**. Los de `03-En-Produccion/` son inmutables (regla #2) y permanecen indefinidamente.
+  Conformes hoy: 13.
+- **TRES CAPAS, no prosa**: (1) **gate PreToolUse** que bloquea la **creación** de un `.Rmd` fuera de
+  formato con un mensaje que enumera los cuatro errores frecuentes; (2) `test_nomenclatura_rmd.R`
+  (**25 aserciones**, suite **28** del runner); (3) verificación de que las **citas** del formato en
+  skills, comandos y reglas no vuelvan a divergir de la fuente única.
+- **EL GATE SOLO MIRA AL CREAR**, nunca al editar: bloquear la edición dejaría **congelados** los 299
+  legacy. Es lo que hace que «de aquí en adelante» sea implementable sin allowlist dentro del hook.
+- **`NOMENCLATURA_ARCHIVOS_RMD.md` → v2.0**: fuente única declarada en la cabecera, semántica del
+  sufijo `_neg` como **disparador mecánico** (`validar_5c_unicidad` hace
+  `grepl("_neg_", basename(...))`, así que ponerlo en un ítem que no cumple la regla #10 vuelca al
+  validador a la rama contraria), tabla nombre ↔ `exextra[...]`, rutas actualizadas a `01-/02-/03-`
+  y §Historial con la medición de la deriva.
+- **TRES BUGS DEL PROPIO TEST, cazados por sus controles**: (a) `system2(stdin=)` espera **una ruta
+  de archivo**, no una conexión — con `textConnection()` el hook ni se ejecutaba y el fallo salía
+  como «sh: línea 1: 5: No existe el fichero», que no parece un bug del test; (b) el discriminador
+  de citas marcaba **referencias a archivos legacy reales** (`promedios_borrados_…` vive en
+  `03-En-Produccion` y es inmutable: «corregirlas» habría roto punteros vivos); (c) y marcaba
+  también la línea que **prohíbe** el patrón viejo — no distinguía «usa el patrón» de «advierte
+  contra el patrón», castigando justo la documentación que arregla el problema. El discriminador
+  final exige `_metacognitivo_` **entre guiones bajos** más un marcador de plantilla, y lleva sus
+  dos controles negativos escritos.
+- **Verificado**: `test_nomenclatura_rmd.R` 25/25 con el gate ejercitado de verdad (JSON por stdin,
+  bloqueo real en 2 nombres inválidos, no-bloqueo en el válido y en la edición de un legacy).
+  Runner completo: **28/28 suites, 0 fallidas, cobertura 100 %, exit real 0**.
+
+- **REGLA #20 VERIFICADA EMPÍRICAMENTE POR PRIMERA VEZ (y una objeción refutada).** Una auditoría
+  reportó que el guard `\newcounter{none}` era **inerte**, porque no aparece en
+  `out_tex/pandoc1.latex`. La observación es cierta pero la inferencia era falsa: ese archivo es
+  artefacto de `exams2pandoc(type="latex")`, **otra ruta de conversión** que la de `exams2pdf`.
+  A/B controlado por el pipeline real (pandoc 3.8.3 de RStudio, misma tabla Markdown, única
+  variable el guard):
+
+  | Variante | Resultado |
+  |---|---|
+  | Sin guard | **FALLA** — `! LaTeX Error: No counter 'none' defined.` |
+  | `` ```{=latex} `` (el que prescribe la regla #20) | **COMPILA** |
+  | Chunk R con `results='asis'` | FALLA |
+  | LaTeX crudo en línea | COMPILA |
+
+  Conclusiones: (a) el **Error 21 sigue reproduciéndose** con pandoc ≥3.8.1, así que la regla #20
+  protege algo real; (b) la forma prescrita **funciona**; (c) la variante por chunk **no** sirve
+  —conviene saberlo antes de que alguien la proponga como alternativa «más limpia»—; y (d) que el
+  hook FASE 2K compruebe el `.Rmd` y no el `.tex` es **correcto**, porque el guard actúa a nivel de
+  fuente. Se había llegado a calificar ese check de «verde que no significa nada» por dar por buena
+  la causa ajena sin comprobarla.
+  **Residuo declarado**: en la salida de `exams2pandoc(type="latex")` el guard efectivamente no
+  aparece; quien compile ESE `.latex` a mano no está protegido. No es la ruta con la que el repo
+  produce PDFs.
+
+### Cambios v3.20.7 (2026-08-10)
+
+> La v3.20.2 diagnosticó bien el agujero —un agente de reporte que termina el turno en silencio— y
+> lo cerró **solo en `agente-detractor.md`**. Los dos orquestadores, que son igual de agentes de
+> reporte y además los que más caro salen por corrida, se quedaron fuera. Volvió a pasar hoy.
+
+- **INCIDENTE 2026-08-10**: un `dry-run` de `orquestador-schoice` sobre `MAT-2026-1-010` terminó
+  **dos veces consecutivas** en notificación de «disponible» sin reporte —una tras el reclamo del
+  protocolo de no-entrega, con agente nuevo y contexto limpio—. En `dry-run` el daño es total: el
+  plan auditado es el **único** producto y no deja rastro en disco, así que no hay nada que
+  reconstruir. El disco vacío es además **el estado correcto** de un dry-run, de modo que
+  «no dejó archivos» no distingue «auditó y calló» de «no hizo nada».
+- **CONTRATO DE ENTREGA en AMBOS ORQUESTADORES**, calcado del que ya funciona en el detractor: el
+  texto final de retorno ES el reporte; prohibido terminar sin él, escribirlo a un archivo o
+  anunciarlo; entrega parcial declarada si se agota el presupuesto. Cierra con el marcador
+  `VEREDICTO_ORQUESTADOR: completado | parcial | abortado | dry_run | preflight_failed`.
+- **EL MARCADOR REUSA EL VOCABULARIO EXISTENTE**, no inventa uno paralelo: sus cinco valores son
+  los mismos del campo `exit_status` del contrato de salida, y el test compara ambos **como
+  conjuntos**. Dos sitios espejo del mismo vocabulario es justo la forma de deriva que este repo
+  ya sufrió con el «mínimo 4» de WAIT_USER #3 frente al V4 de 6.
+- **CLÁUSULA EXPLÍCITA DE `dry-run`**: el contrato dice que también aplica ahí. Sin esa frase, un
+  agente puede leer «reporte final» como «reporte de la ejecución» y considerar que un dry-run no
+  lo necesita — que es exactamente lo que se observó.
+- **NUEVA SUITE (27 en el runner)**: `test_contrato_entrega_orquestadores.R`, 33 aserciones.
+  Verifica sección, marcador, prohibición del silencio, cláusula dry-run, `maxTurns`, coherencia
+  marcador↔`exit_status` por archivo, que **los gemelos compartan marcador** entre sí, y que el
+  detractor **conserve el suyo distinto** (unificarlos rompería la validación de quien invoca).
+- **EL DETECTOR ES UNA FUNCIÓN DE LA RUTA**, no un bloque con rutas fijas: eso permite el control
+  positivo con **4 mutantes sobre fixtures en `tempdir()`** —sin sección, sin marcador, vocabulario
+  divergente, sin cláusula dry-run— sin tocar los archivos reales. Mutar el archivo real y
+  restaurarlo después ya dejó una vez el arsenal roto en disco (`validar_multisemilla.R`, 2026-08-09).
+- **DOS BUGS DEL PROPIO TEST, cazados por su control positivo**: (a) la frase de la cláusula
+  dry-run lleva `**` y backticks, que como regex son operadores de repetición inválidos — hay que
+  compararla con `fixed = TRUE`; (b) el control positivo usaba **un solo `&&` encadenado** y, al
+  fallar, el mensaje culpó al sub-check equivocado (`vocabulario_ok`, cuando el roto era
+  `cubre_dry_run`). Ahora comprueba sub-check por sub-check y nombra al culpable. Un control
+  positivo que miente sobre QUÉ falló es media defensa.
+- **Verificado**: suite nueva 33/33 con los 4 mutantes cazados · invariantes I-1..I-10 en verde
+  (214/214) · `test_contrato_detractor.R` 16/16 sin regresión.
+- **LÍMITE DECLARADO**: un subagente carga su definición **desde HEAD**, no desde el disco, así que
+  este contrato NO rige para agentes ya registrados ni para la corrida que lo motivó. Empieza a
+  aplicar tras el commit, en sesión nueva.
+- **CORRECCIÓN AL DIAGNÓSTICO, medida**: el contrato NO era la causa del silencio. Recuperando la
+  transcripción del subagente (`…/subagents/agent-<nombre>-<hash>.jsonl`, 267 KB) se comprobó que
+  el agente **sí emitió** el reporte completo y **sí cerró con el marcador**: lo que falló fue el
+  canal de entrega al padre, que solo transmitió la notificación de «disponible». El contrato queda
+  como higiene correcta —el hueco existía— pero no habría evitado este fallo. **Vía de recuperación
+  cuando vuelva a pasar: leer el último bloque `text` de esa transcripción.**
+
+- **PUNTO CIEGO DEL ARSENAL CERRADO — regla #22 → v1.4, nueva sonda H3b.** Lo encontró el propio
+  dry-run: cuando las cuatro opciones comparten primera palabra (ítems cuyas opciones son
+  **preguntas**, `¿Cuál es…?`), **dos de las tres sondas dejan de medir y el script lo callaba**.
+  Verificado en el código: `pw` descarta el `¿` → las 4 dan `cuál`; H2 exige que la clave sea la
+  única con su prefijo → **0 % por construcción**; la guarda de H3 exige ≥2 prefijos → `pwc` vacío
+  y, bajo `if (length(pwc) >= 5L)`, **la fila H3 ni se imprime**. Un `PASS` así es «sin medición»
+  leído como «sin señal» — el mismo modo de fallo que originó H3, un piso más abajo.
+- **H3b mide por CONTENIDO** (texto en minúsculas, sin dígitos ni puntuación), con guarda análoga a
+  la de H3 (la firma debe discriminar dentro de la versión; las opciones numéricas colapsan y
+  quedan fuera). Medido sobre fixtures: clave de tipo fijo **100 % → exit 1**; tipo sorteado de un
+  pool de 4 → **33 %, PASS**.
+- **CALIBRACIÓN DE RELEVO, y por qué**: H3b bloquea **solo** si el prefijo es uniforme en ≥90 % de
+  las versiones. La primera versión bloqueaba siempre y puso en **ROJO un fixture existente** que
+  existe para probar que H1 *no* dispara —sus opciones llevan prefijos distintos, así que H2/H3 sí
+  aplican ahí—. Una sonda nueva que cambia el veredicto de casos ya revisados no es más rigor.
+- **LA CEGUERA SE DECLARA SIEMPRE**, dispare o no: `H2/H3 CIEGAS` con su porcentaje y la frase «el
+  0 % de H2 NO es ausencia de señal, es ausencia de medición»; y `H3b: NO MEDIBLE` cuando la firma
+  tampoco discrimina, exigiendo verificador propio del ejercicio.
+- **`test_diagnosticidad.R`: 10 → 24 aserciones** (4 casos nuevos), con control de que el fixture
+  prueba lo que dice —H2 en 0 % y H3 sin medir— y no-regresión de la calibración de relevo.
+- **TRAMPA REINCIDENTE, cometida y corregida aquí mismo**: se midió el exit de `Rscript … | grep |
+  tail` y salió 0 sobre un caso que **sí** bloqueaba. Es la trampa que la v3.20.5 ya documentó
+  (`cmd | grep …; echo $?` mide el exit del **pipe**). El exit real —1 y 0— se confirmó redirigiendo
+  a archivo, sin tubería.
+- **DECISIÓN DE ALCANCE (documentada a petición del usuario)**: el dry-run proponía un verificador
+  *ad-hoc* del ejercicio. Se decidió **cerrar antes el punto ciego en el arsenal compartido**,
+  porque un verificador por ejercicio dejaría a H2/H3 igual de ciegas para todo ítem futuro con
+  molde uniforme de opciones. El verificador propio sigue siendo necesario para el caso en que
+  H3b resulte `NO MEDIBLE`; ya no lo es para éste.
+
+### Cambios v3.20.6 (2026-08-09)
+
+> Auditoría del gemelo CLOZE de `area-jardin-lote-porcentaje-n4` con la misma vara que su hermano.
+> Encontró un defecto al **100 %** de las versiones, y **la corrección introdujo uno peor** que solo
+> apareció porque el detractor la auditó. Es la tercera vez en la misma sesión que un fix desplaza
+> el defecto de canal: semántica → longitud → **léxico**.
+
+- **DEFECTO ORIGINAL, 600/600 versiones**: en la Parte 6 (conclusión binaria) una opción decía
+  «**Sí**, porque queda libre [un rango que desmiente lo afirmado]». No era descuido sino una
+  **restricción imposible**: con balance 2 Sí + 2 No y todas las opciones justificadas por un rango,
+  solo el rango afirmado hace coherente un «Sí», así que el segundo tenía que mentirse.
+  Decisión del profesor entre tres alternativas: **los «Sí» se justifican por MÉTODO, los «No» por
+  RANGO**. Resultado: 600/600 → **0/600**.
+- **NUEVO PATRÓN — ERROR 32, la fuga léxica**: al sustituir cuatro cadenas homogéneas por siete
+  justificaciones redactadas a mano, el ítem pasó a resolverse **sin leer el enunciado al 88,4 %**
+  (azar 25 %) — peor que el defecto §P4-bis que el diseño ya vigila. Tres causas medidas: (a) solo
+  la justificación correcta contenía «jardín», y ese método nunca es distractor, así que su
+  **presencia o ausencia predecía la rama en 800/800**; (b) 4 de 6 erróneas eran prescriptivas
+  («hay que…», «basta…») y la correcta declarativa, con lo que «elige el declarativo» acertaba el
+  100 %; (c) sesgo algebraico del pool —`1-ab` supera a 4 de los 6 métodos— con lo que «elige el
+  rango mayor» acertaba el 77 %. Fix: **molde único y paralelo** más **estratificación del
+  distractor por el lado del rango**. Medido: **88,4 % → 24,2 %**.
+- **PUNTO CIEGO NUEVO, declarado en ambos orquestadores**: un `PASS` de `validar_diagnosticidad.R`
+  **no acredita ausencia de fuga léxica**. H2 mide la **primera palabra** y H3 la invariancia del
+  veredicto; **ninguna sonda inspecciona el vocabulario del cuerpo de la opción**. Prueba de
+  aceptación ejecutable en el Error 32: ningún token de más de 2 caracteres puede ser exclusivo de
+  la clave en ≥70 % de las versiones, ni dentro de cada rama por separado.
+- **Otras tres objeciones del detractor, cerradas y medidas**: la Solution imprimía «entre 45 % y
+  45 %» cuando el rango afirmado es puntual (10,7 % de las versiones → 0/40, aplicando el
+  `fmt_rango()` que el propio archivo declara para eso); y su prosa de verificación recorría el
+  orden **pre**-permutación, con lo que la clave encabezaba la lista en 300/300 mientras el
+  estudiante veía otro orden (→ 26 %, lo esperable al azar). Vecino del Incidente Q.
+- **Correcciones a lo que yo mismo había reportado**: el `ejercicio_state.json` del CLOZE declaraba
+  **60 versiones únicas** y lo di por incumplimiento de la regla #3; medido, son **300/300**. Y el
+  `set.seed` que detecté era un **comentario** que dice «PROHIBIDO set.seed()».
+- **Lo que el CLOZE hace MEJOR que su hermano**: la colisión de rangos (Error 28) está prevenida
+  **por construcción** — filtra los métodos con rango duplicado y el que iguale al correcto. 0/600.
+- **Pendiente declarado**: `WARN_DIV_BAJA` en el gap p3 (7 valores únicos de 40), preexistente y no
+  bloqueante. El CLOZE queda en **10/11**: su aprobación es del profesor.
+
+### Cambios v3.20.5 (2026-08-09)
+
+> Cierre definitivo del bloque. Se aplica el refinamiento que la v3.20.4 dejó medido pero sin
+> aplicar, y las lecciones que solo vivían en la memoria privada del asistente pasan al repositorio,
+> donde cualquier agente las lee. **Una lección que solo está en la memoria de quien la aprendió no
+> es una defensa: es una anécdota.**
+
+- **REFINAMIENTO DE SALENCIA APLICADO**: `GEO-ARE-07` (145 → 81 caracteres) y `GEO-ARE-02`
+  (99 → 65). Resultado medido sobre 800 versiones, **mejor que la proyección del detractor**:
+  ventaja de la opción más larga sobre la segunda **+25,3 % → +12,9 %** (mediana), p90
+  **+76,8 % → +27,1 %** — por debajo del margen del 15 % con el que el repo calibró la sonda H1, es
+  decir, deja de ser perceptible. Y lo que la proyección no anticipaba: **la clave pasa a ser a
+  veces la más larga (9,2 %)**, así que «descartar la más larga» deja de ser gratis y pasa a ser
+  arriesgada. El validador oficial confirma la caída: margen H1 **26 % → 3 %**.
+- **NUEVO INVARIANTE I-10** (regla #17 → v1.4): los cuatro validadores compartidos de
+  `.claude/scripts/` son **symlinks** a `SOURCES/scripts_validacion/`. El invariante fija sus dos
+  mitades: que el enlace resuelva a un archivo existente, y que **ningún archivo regular haya
+  suplantado a un symlink conocido** —eso dejaría dos copias divergentes del mismo validador, y cuál
+  se ejecuta dependería de la ruta invocada—. Detector verificado sobre un fixture temporal con los
+  tres casos (enlace correcto, archivo regular suplantando, enlace roto).
+- **CUATRO TRAMPAS DE MEDICIÓN** añadidas a la tabla «Puntos ciegos de mi propio arsenal» de **ambos**
+  orquestadores. Las cuatro producen verdes o rojos falsos y las cuatro se cometieron en esta sesión:
+  `cmd | grep …; echo $?` mide el exit del **pipe**, no del comando; editar `.claude/scripts/` no
+  toca el código que corre; mutar el archivo **real** deja el repo roto si el paso de restaurar se va
+  a segundo plano; y un `grep` que no encuentra nada puede ser «no hay defecto» o «el patrón no
+  coincide» —comillas tipográficas, `.latex` en vez de `.tex`, un glob contando 0 sobre CERO
+  archivos—, así que **toda sonda necesita un control positivo que demuestre que dispara**.
+- **`area-jardin-lote-porcentaje-n4` → 11/11**: aprobación humana explícita el 2026-08-09. Queda
+  **listo para llevar al aula**; sigue en `01-En-PreDesarrollo/` porque el gate de
+  `/promover-ejercicio` es la evidencia de Nivel 3 con estudiantes, no la aprobación del profesor.
+- **DEUDA DEL ÁRBOL DE TRABAJO SALDADA**: se commitean los cambios acumulados de otros subproyectos
+  tras verificarlos uno a uno — `excedente-almuerzo-proporcional-n4` (su propio `verificar_render.R`
+  da APROBADO con los mutantes muriendo cada uno por su sonda), el PNG LFS de
+  `migraciones-exteriores-lineas-n2` (inspeccionado visualmente), el reordenamiento del bloque
+  `output:` de `grafica-circular-consumo-agua`, el destino reservado en `Estructura_Repositorio` y
+  `.gitignore`. **Revertido** el `archivos = 1200` de `permutaciones-…/cloze/SemilleroCloze.R`: era
+  resto de un experimento local, fuera del rango de todos sus hermanos (10–500).
+
+### Cambios v3.20.4 (2026-08-09)
+
+> Cierre del bloque anterior: se aplican las dos objeciones que el detractor dejó abiertas y se
+> resuelve de raíz el Error 31, que la v3.20.3 solo había documentado.
+
+- **ERROR 31 RESUELTO — `validar_multisemilla.R`**. Resolución de la propia ruta en cuatro pasos
+  aislados (`--file=` de `commandArgs` → `sys.frame` dentro de `tryCatch` → `git rev-parse
+  --show-toplevel` → rutas relativas) y **aborto con `stop()`** si ninguna candidata existe. Esto
+  último corrige un **segundo defecto latente** que la v3.20.3 no había visto: el bucle de rutas
+  relativas podía terminar sin cargar nada y continuar, y el fallo salía mucho después como «no se
+  pudo encontrar la función». Verificado en los cuatro modos de invocación —sin argumentos, desde la
+  raíz por el symlink, desde un cwd ajeno y vía `source()`—, midiendo el exit **real**, sin tuberías
+  que lo enmascaren. **La FASE 2G informa de verdad por primera vez**: 20/20 semillas, exit 0.
+- **TRAMPA DE EDICIÓN**: el archivo real es `SOURCES/scripts_validacion/validar_multisemilla.R`;
+  `.claude/scripts/` contiene solo un **symlink** (modo `120000` en git). Editar la ruta de
+  `.claude/scripts/` no surte efecto. Lo mismo vale para `validar_coherencia_matematica.R`,
+  `corregir_ortografia_espanol.R` y `arsenal_validacion_completa.R`.
+- **NUEVA SUITE CRÍTICA (26 en el runner)**: `test_validar_multisemilla_invocable.R`. Barre TODO el
+  arsenal buscando `sys.frame(<literal>)` fuera de `tryCatch`, comprueba la invocabilidad real bajo
+  `Rscript` desde un `tempdir()` y fija el contrato del fix. **El detector es del índice literal, no
+  de `sys.frame` a secas**: la primera versión daba un falso positivo en `stress_test_visual.R:34`,
+  que usa `sys.frame(i)` dentro de `for (i in seq_len(sys.nframe()))` y es correcto. Verificado por
+  mutación sobre una **copia en `/tmp`** — la primera vez se mutó el archivo real y el paso de
+  restaurar quedó pendiente en un job en segundo plano, dejando unos minutos el validador roto en
+  disco. Mutar siempre una copia.
+- **OBJECIÓN 1 DEL DETRACTOR APLICADA**: la clave alternativa `GEO-ARE-09` pasa a **conclusión
+  desnuda**, con el mismo registro que `GEO-ARE-04`. Medido sobre 800 versiones: «elegir la más
+  larga» **50,5 % → 0,0 %**; «la que dice *producto*» **62,9 % → 25,0 %** (= azar). H1 del validador
+  oficial: 50 % → **0 %**.
+- **RESIDUO DECLARADO, NO OCULTADO**: la clave pasa a no ser NUNCA la más larga, así que «descartar
+  la más larga» rinde **33,3 %** frente al 25 % de azar. Es la señal inversa que la regla #22 v1.3
+  advierte, y baja la ventaja de 25 puntos a 8. Su causa es estructural del formato: todas las
+  justificaciones «Sí» son más largas que todas las «No». Queda abierto.
+- **PASADA DE CONFIRMACIÓN DEL DETRACTOR** (aplicar sus cambios vuelve a caducar su veredicto, así
+  que se le pidió confirmar su propia implementación). Cerró 1, 2 y 3 **por ejecución** —1584
+  corridas, 0 errores— y encontró **dos defectos en la entrada que se había añadido para resolver
+  su objeción 2**, ambos corregidos:
+  - **Comparar intervalos donde la propiedad es puntual**: `descripcion_larga` de `GEO-ARE-10`
+    yuxtaponía `[correct_min, correct_max]` y `[comp_largo_max, comp_largo_min]` y afirmaba que el
+    primero «supera a ambos». Es cierto **valor a valor**, pero como intervalos **se solapan en 30
+    de los 99 combos**, así que el estudiante leía una contradicción. Reescrito en forma puntual,
+    explicando además por qué los extremos pueden solaparse.
+  - **La única opción sin cifras**: `GEO-ARE-10` era la única sin ningún dígito en el 100 % de las
+    versiones en que aparecía (49,9 % del total) y, como nunca es la clave, se descartaba de un
+    vistazo. El residuo real era **36,2 %**, no 33,3 %. Ahora cita el complemento del ancho —un
+    porcentaje **lineal**, no de área, así que `afirma_rango_area` sigue siendo `FALSE` con la misma
+    lógica que `GEO-ARE-02`—. Medido: versiones con una sola opción sin dígitos **49,9 % → 0 %**;
+    heurística combinada **36,2 % → 33,3 %**; coherencia conclusión↔justificación 0/600 con el
+    control negativo activo.
+- **REFINAMIENTO NO APLICADO, con su medición**: acortar `GEO-ARE-07` (145→~80) y `GEO-ARE-02`
+  (99→~72) **no baja** la tasa del 33,3 %, pero hunde la ventaja perceptible de la opción más larga
+  sobre la segunda de **+25,3 % a +7,3 %** (mediana) — por debajo del margen ≥15 % con el que el
+  propio repo calibró la sonda H1, es decir, por debajo de lo explotable. Verificado sobre copia
+  (1188 corridas). No se aplica porque su efecto pedagógico sobre esos dos distractores es juicio
+  humano.
+- **OBJECIÓN 2 APLICADA**: `GEO-ARE-01` se marca `afirma_rango_area = TRUE` — emite exactamente los
+  mismos dos números que `GEO-ARE-07`, así que arrastraba el mismo defecto en 391 de 1584 versiones;
+  el criterio anterior para distinguirlos (¿dice «del área»?) era de superficie. Como eso dejaba el
+  pool «sí» de esa rama con **un solo** elemento y margen 0, se añade **`GEO-ARE-10`** (error
+  conceptualmente distinto, sin rango de área propio, coherente en ambas ramas). Pool: 9 → **10**.
+  Márgenes medidos: `min(idx_si) = 2`, `min(idx_no_d) = 3`.
+- **Verificado tras los cambios**: 5 formatos + LaTeX en R limpio, `pandocbounded` 0, coherencia
+  `APROBADO`, diversidad `PASS`, diagnosticidad `PASS` (H1 0 % · H2 0 % · H3 50 %), multisemilla
+  20/20, ortografía limpia, 600/600 versiones sin violar invariantes, mutante
+  `cazado_por_su_sonda`, 0 incoherencias Sí/No con control negativo activo, instancia canónica
+  intacta.
+
+### Cambios v3.20.3 (2026-08-09)
+
+> Primera aplicación real del contrato de entrega de la v3.20.2, y funcionó: el detractor falló la
+> primera vez, el marcador `VEREDICTO_DETRACTOR:` lo detectó como NO ENTREGADO, el reclamo del
+> protocolo lo recuperó y su objeción ALTA resultó ser **contra la corrección que había aplicado el
+> coordinador**. Es exactamente para eso que la regla #9 v1.2 exige independencia.
+
+- **REGLA #22 → v1.3**, nueva subsección en §P4-bis: **«La propia defensa crea deuda»**. La v1.2
+  decía qué defensa aplicar contra el veredicto invariante, pero no que aplicarla **cambia la
+  premisa sobre la que se escribió el pool existente**. Tres verificaciones obligatorias después de
+  introducir una clave alternativa, medidas en `area-jardin-lote-porcentaje-n4` sobre 600 versiones:
+  (a) las guardas anti-colisión deben recorrer **todas** las claves — comparar contra la vigente
+  solo protege una rama, y la clave NO vigente es la firma exacta de la colisión (3/600 con dos
+  opciones del mismo rango y veredictos opuestos); (b) los distractores escritos para la clave única
+  quedan declarando un veredicto que su justificación contradice (81/600 = **13,5 %**); (c) al
+  corregir (b) excluyendo el único distractor más largo que la clave, la clave queda
+  **determinísticamente** la más larga de su rama.
+- **PUNTO CIEGO DEL ARSENAL DECLARADO**: `validar_diagnosticidad.R` **agrega sobre versiones sin
+  condicionar por rama**. En un ítem con clave alternante las dos ramas son estructuralmente
+  distintas, así que un reparto 100 %/0 % se lee como ~50 % y pasa bajo el umbral del 70 %. Medido:
+  clave identificable por longitud en el **100 %** de una rama con `PASS` en el agregado, y
+  **50,5 %** de acierto sin razonar frente al 25 % de azar. Es el mismo punto ciego que dio origen a
+  la sonda H3 — un patrón que solo existe *entre* versiones no lo ve una sonda que mira *cada* una.
+  Hoy la medición por rama es **manual**; queda declarada como tal, no simulada.
+- **ADVERTENCIA DE LA SEÑAL INVERSA**: igualar longitudes hasta que la clave no sea NUNCA la más
+  larga tampoco es neutro — habilita «descartar la más larga», que sube el azar de 25 % a 33 %.
+  Un fix de diagnosticidad puede **desplazar el defecto de canal** (semántica → longitud → léxico);
+  hay que volver a medir el ítem completo tras cada fix, no solo la dimensión corregida.
+- **4 PATRONES NUEVOS** en `patrones-errores-conocidos.md`: **28** (exclusión por texto que solo
+  cubre la clave vigente), **29** (§P4-bis reabre `INC-SINO-BINARIO`), **30** (la sonda agrega sin
+  condicionar por rama), **31** (`validar_multisemilla.R` roto).
+- **`validar_multisemilla.R` ESTÁ ROTO** (Error 31): la línea 21 resuelve su propia ruta con
+  `dirname(sys.frame(1)$ofile)`, que bajo `Rscript` **revienta antes** de que la guarda `is.null()`
+  de la línea 22 pueda ejecutarse — el fallback por rutas conocidas es **código inalcanzable**.
+  Verificado que falla con cualquier `.Rmd`, incluido un ejemplo canónico intacto, y **sin
+  argumentos**. El hook lo invoca así en FASE 2G, de modo que esa fase es un **falso ROJO
+  permanente** en todo el repositorio, y un gate que siempre falla se aprende a ignorar. Fix de una
+  línea (`tryCatch`) **pendiente de aplicar**: es infraestructura compartida y quedó fuera del
+  alcance de la sesión que lo detectó. Mientras tanto, ambos orquestadores tienen instrucción de
+  declarar la cobertura multisemilla como **NO VERIFICABLE**, nunca como verde.
+- **AMBOS ORQUESTADORES** ganan los incidentes gemelos `INC-CLAVE-ALTERNATIVA` (R en SCHOICE, U en
+  CLOZE) e `INC-MULTISEMILLA-ROTO` (S / V), con sus dos filas en la tabla de IDs estables. Ninguno
+  lleva `—`: el mecanismo de la clave alternante es del ítem binario, no del tipo, y el del script
+  roto es del arsenal, así que **los dos aplican a los dos gemelos**.
+- **EJERCICIO**: `area_jardin_lote_..._n4_schoice_v1` — 6 correcciones verificadas por enumeración de
+  600 versiones, prueba de mutación con contrato de sonda (`cazado_por_su_sonda`) y control negativo.
+  Incluye literalidad del paso 10 restaurada contra el catálogo canónico (Afirmación y Evidencia
+  estaban de-acentuadas) y una contracción `a el`/`de el` visible al estudiante en 8,5 % de las
+  versiones que el corrector de ortografía no ve. **Sigue en 10/11**: dos objeciones del detractor
+  quedan abiertas a decisión del profesor, porque tocan el texto de la clave.
+
+### Cambios v3.20.2 (2026-08-09)
+
+> Un agente cuyo trabajo es romper el sesgo de confirmación no servía de nada si su reporte no
+> llegaba: la FASE 2C acababa cerrándose con la autoevaluación del mismo agente que había escrito
+> el código. El agujero no era el análisis — era **el canal de entrega y la falta de una regla de
+> independencia**.
+
+- **CONTRATO DE ENTREGA en `agente-detractor.md`**: su texto final **es** el reporte. Prohibido
+  terminar el turno sin él, escribirlo a un archivo, o anunciar que lo entregará. Si se queda sin
+  presupuesto, entrega parcial declarando los dominios `no auditado`. Cierra siempre con
+  `VEREDICTO_DETRACTOR: APROBAR | APROBAR_CON_CAMBIOS | RECHAZAR`, marcador que permite a quien
+  invoca comprobar **mecánicamente** que el reporte llegó entero: sin esa línea, NO ENTREGADO
+  aunque contenga análisis. Añadido además `maxTurns: 30` — era el único agente de reporte que no
+  declaraba presupuesto (el `adversario` global sí).
+- **REGLA #9 → v1.2**, dos secciones nuevas. **Independencia**: el detractor DEBE ser un agente
+  distinto del que escribió o corrigió el artefacto, con tabla de qué cuenta como FASE 2C válida
+  (incluye el caso del detractor **caducado** por una edición posterior). **Protocolo de
+  no-entrega**: 2 reintentos (reclamo al mismo agente → agente nuevo con contexto limpio) y luego
+  **escalado obligatorio al usuario**; PROHIBIDO sustituir el detractor por la auditoría propia y
+  sellar `detractor_fase2c`. El coordinador puede revisar por su cuenta, pero debe declararlo
+  **no independiente** y dejar la fase abierta.
+- **TABLA — cuál de los dos detractores usar**: `AgenteDetractor` (canónico para `.Rmd` en
+  workflow, 8 dominios) vs `adversario` global (anti-sicofancia). Ambos existían y ninguna regla
+  decía cuándo usar cada uno.
+- **NUEVO TEST**: `tests/testthat/test_contrato_detractor.R` (16 aserciones) — verifica el
+  contrato, `maxTurns`, ambas secciones de la regla, y que agente y regla usen **el mismo**
+  marcador (si divergen, la comprobación de entrega se rompe en silencio). Runner: **25 suites**.
+  Verificado por mutación: al renombrar el marcador en el agente, el test falla nombrando la causa.
+- **Origen**: incidente 2026-08-09 en `excedente-almuerzo-proporcional-n4`. Tres invocaciones
+  consecutivas terminaron en notificación de «disponible» sin reporte. El defecto de mayor
+  severidad del ejercicio era **semántico** —un distractor que en una de las tres ramas señalaba
+  información que SÍ resolvía el problema, rompiendo la unicidad de la clave— y todo el arsenal
+  automático estaba en verde: coherencia APROBADO, diagnosticidad PASS, diversidad sin objeción.
+  Es exactamente la clase de hallazgo que depende de una mirada independiente.
+
+### Cambios v3.20.1 (2026-08-08)
+
+> Segunda pasada completa de `mega-prompt-endurecimiento-orquestadores.md` sobre cada gemelo, ahora
+> con las 9 fases y las 8 puertas. Los 7 hallazgos son del **mismo tipo**: exigencias documentadas
+> en un pre-flight o un incidente que luego **no aparecen en la checklist que se ejecuta**, o que no
+> tienen **ningún campo donde declararse** en el contrato de salida. No son reglas nuevas: son
+> reglas que existían sin punto de cumplimiento.
+
+- **`orquestador-schoice` — la validación realista no comprobaba tres cosas que el propio archivo
+  exige**: (a) el guard del contador `none` (Incidente E, regla #20), que es un fallo que **solo se
+  manifiesta en el entorno del usuario** — RStudio bundlea pandoc ≥3.7 y la terminal 3.6 —, así que
+  si no se comprueba ahí no se comprueba en ninguna parte; (b) el barrido de U+2212 al reutilizar un
+  pool ajeno (Incidente O); (c) la fuga por nombre de archivo en el XML de Moodle (§P6 / Error 25).
+  Los tres estaban en el gemelo CLOZE y aquí faltaban.
+- **`orquestador-cloze` — el punto 8 de su validación realista ya ejecutaba `exams2moodle()`** para
+  comprobar que ningún gap contiene imágenes, es decir, **tenía el XML abierto delante**, y no le
+  hacía el `grep` de nombres que su propio pre-flight 15 exige. Nuevo paso **8b**, que reutiliza ese
+  XML sin re-exportar.
+- **Contratos de salida — exigencias sin campo donde declararse**: SCHOICE gana `graficas_opcion`,
+  `formato_equilibrado` y `fuga_nombre_moodle`; CLOZE gana `fuga_nombre_moodle`. El pre-flight pedía
+  verificaciones cuyo resultado no se reportaba en ningún sitio.
+- **Paso 5 del SCHOICE**: añade `exams2moodle` cuando hay opciones gráficas — es el **único** canal
+  que expone el nombre de archivo (HTML y PDF embeben la imagen).
+- **La literalidad ICFES queda marcada como JUICIO HUMANO en ambos**: ningún script del arsenal
+  compara los `exextra[…]` contra los JSON del catálogo canónico. Con V1-V9 automatizadas alrededor,
+  era fácil suponer que un «paso 10 OK» certificaba también el descriptor, y no lo hace.
+- **Dos rangos `FASES 2A-2J` blindados como dato histórico, no «corregidos»**: en mayo de 2026 ese
+  era el arsenal completo. Reescribirlos a 2N habría falseado la crónica del incidente; llevan ahora
+  la aclaración de la fecha.
+- **Referencias falsas introducidas y corregidas en la misma pasada**: «pre-flight 15b» y «21c»
+  apuntaban a checks inexistentes, porque ambos archivos tienen checks **numerados** `12b`, `12c` y
+  `16b`. Son apartados `(b)` y `(c)`, y así se escriben.
+- **Mutación (G5) sobre casos que NINGÚN hook cubre**: SCHOICE 4 mutantes —fuga de nombre en el XML
+  y **veredicto invariante cazado nominalmente por H3** (100 % de 40 versiones frente al 55 % del
+  control sano)—; CLOZE 3 nuevos (fuga, H3 por gap, V4 con 5 partes), 7 acumulados. **0 desviados**
+  en ambos.
+- **El Incidente S se reprodujo dentro del propio verificador, dos veces**: primero un harness que
+  daba tres falsos negativos porque el comando simulado llevaba comillas escapadas que el regex del
+  hook no reconoce (salía en silencio), y después un mutante que **no mutaba el artefacto** — el
+  nombre del PNG se genera con `paste0`, no como literal, así que el `sed` no tocaba nada. Ambos los
+  atrapó la guarda que distingue «sonda limpia» de «sonda nunca ejecutada». Sin esa guarda, las dos
+  veces habrían contado como verde.
+- **Verificación**: SCHOICE +1.5 %, CLOZE +0.7 % (presupuesto +8 %); 25/25 y 26/26 pre-flight
+  declarados = reales; 16 filas en ambas máquinas de estados; 0 referencias muertas fuera de los
+  bloques marcados como ilustrativos; runner completo 24/24 suites, 0 fallidas; I-1..I-9 en verde.
+
+### Cambios v3.20.0 (2026-08-08)
+
+> Esta entrada cubre los **15 commits** del bloque 2026-08-06 → 2026-08-08. El changelog se había
+> quedado en la v3.19.0 mientras entraban V8, V9, la sonda H3 y la ampliación del corrector: es
+> deriva documental, no cambios nuevos. Se registra en bloque para que el índice deje de omitirlos.
+
+- **NUEVO VALIDADOR — DIAGNOSTICIDAD (V9)**: `.claude/scripts/validar_diagnosticidad.R`. El arsenal
+  medía corrección, formato, unicidad y diversidad, pero **nada medía si los distractores
+  discriminan**: un ítem puede tener opciones únicas, clave correcta y datos que cambian en cada
+  versión, y aun así resolverse sin leer el contenido. Sondas **H1** más-larga/más-corta, **H2**
+  prefijo y **H3** veredicto invariante. `ERR_DIAG_SUPERFICIAL` (exit 1) cuando la clave se
+  identifica así en el 100 % de las versiones; `WARN_DIAG_SUPERFICIAL` entre el umbral y el 99 %.
+- **EL MARGEN ES PARTE DE LA SONDA**: H1 exige además un margen relativo **≥ 15 %** sobre el rival
+  más próximo. Sin él, un gap ya igualado a propósito (8 caracteres medianos sobre 115 → 7 %) seguía
+  reportando 100 % y quedaba bloqueado por una diferencia que ningún estudiante puede explotar.
+  Umbral calibrado contra las dos versiones medidas del mismo gap: original 32 % y 21 % siguen
+  cazadas, corregido 7 % y 5 % ya no. Se imprime siempre el margen mediano y una **NOTA DE ORDEN**,
+  para que «no dispara» no se confunda con «no hay señal».
+- **NUEVA SONDA H3 — regla #22 §P4-bis** (`diversidad-sustantiva.md`): en un ítem de conclusión
+  binaria («Sí, porque…»/«No, porque…») la clave puede tener SIEMPRE el mismo veredicto aunque su
+  valor numérico cambie. Medido en `area-jardin-lote-porcentaje-n4`: **60/60 versiones con clave
+  "No"** y todo el arsenal en verde. Las tres defensas que parecían cubrirlo miran otra cosa — H2
+  exige que la clave sea la única con su prefijo (con balance 2+2 nunca lo es → 0 %),
+  `validar_diversidad_sustantiva.R` mide el VALOR (que sí variaba) y el balance 2+2 es
+  intra-versión. Impacto: 25 % → 50 % de acierto por azar. **Primera sonda cross-versión** del
+  arsenal.
+- **DIVERSIDAD POR GAP (V8)**: `validar_diversidad_sustantiva.R` opera en **modo CLOZE** — descubre
+  las claves por gap (`sol_pN`/`opciones_pN`/`exsol_pN`), declara su **cobertura** y emite
+  `WARN_DIV_GAP_FIJO` nombrando los invariantes. `ERR_DIV_COSMETICA` queda reservado al caso en que
+  **todos** los gaps son invariantes. Límite declarado: en gaps cuyo texto interpola el contexto
+  narrativo, el script cuenta variación de envoltorio como sustantiva, así que V8 exige declaración
+  explícita por gap (`variable` | `fija-justificada`).
+- **VALIDACIONES CLOZE V1–V7 → V1–V9** en `orquestador-cloze`, con V8 y V9 cableadas en el paso 9,
+  el contrato de salida y el checklist de aprobación.
+- **CORRECTOR DE ORTOGRAFÍA — el agujero era la FORMA de la lista, no su longitud**:
+  `corregir_ortografia_espanol.R` firmaba «✓ limpio» sobre un `.Rmd` que emitía al estudiante
+  `formula`×14, `Si, porque`×11, `demas`×7 y `consumio`×4; la regla #7 y el hook de pre-commit se
+  apoyan en esa salida, así que el defecto atravesaba las tres capas con un limpio firmado. Ahora:
+  regla **morfológica** por sufijo `-ción/-sión/-xión` (cubre vocabulario abierto sin enumerarlo),
+  reglas **contextuales** auto-corregibles solo donde la lectura alternativa es gramaticalmente
+  imposible (`Si,`/`Si.` → `Sí`, interrogativos tras `¿`), y un segundo diccionario
+  **`diccionario_ambiguo`** cuyas formas se reportan como `REVISION_MANUAL` y que `--fix` **nunca**
+  toca. Un archivo con ambiguos ya no se declara limpio. Barrido `--fix` aplicado a los `.Rmd` sin
+  código embebido de `01-` y `02-`.
+- **ROUTING — alias genérico en los 10 agentes**: `claude-opus-4-6` seguía activo, pero el Opus de
+  agosto 2026 es Claude Opus 5, tres generaciones por delante. Los IDs pinneados envejecen en
+  silencio, así que los 10 agentes pasan a `opus`/`sonnet`/`haiku`, que resuelven al modelo vigente
+  de cada tier. Arrastró dos Sonnet 4.5 pinneados que no estaban reportados.
+- **CICLO DE ENDURECIMIENTO DE LOS DOS ORQUESTADORES** (`35d7d2e0`, `1ca6f6ad`, `f5b4f88c`,
+  `93b24724`), guiado por `.claude/docs/mega-prompt-endurecimiento-orquestadores.md` (movido desde
+  `.claude/agents/`, donde confundía la auditoría del directorio, y parametrizado por
+  ARTEFACTO_UNICO/GEMELO_SOLO_LECTURA). En CLOZE, el hallazgo con consecuencias operativas fueron
+  **cinco residuos** de la versión vieja del Incidente E («NOPS N/A esperado con gaps num/string»),
+  falsa desde el 2026-07-30: `exams2nops()` rechaza **cualquier** `extype: cloze` antes de mirar
+  `exclozetype`, así que un orquestador que leyera la máquina de estados habría tratado como error
+  real un rechazo esperado. Más: `WAIT_USER #3` imprimía «mínimo 4» contra el V4 de 6 — el único
+  sitio espejo donde el umbral se MUESTRA en vez de gobernar una decisión, y por eso sobrevivió;
+  conteo de pre-flight 24→26 reales; FASE 2N ausente del check 12; `decisiones_humanas` sin declarar
+  en el esquema de inputs; bloque «Qué se persiste y qué no» (2b/2c/6b no los registra
+  `workflow-state.sh`); fuga por nombre de PNG en el XML de Moodle (§P6), que **mover las gráficas al
+  enunciado no elimina**. En SCHOICE: dry-run que no podía fallar, `preflight_failed` ausente de su
+  propio contrato de salida, reporte sin bloque de mutantes pese a que el Incidente P lo exige, y
+  citas cruzadas al gemelo **por letra** (las letras no coinciden entre gemelos).
+- **UN `—` SIN RAZÓN ES UNA HIPÓTESIS**: la tabla de IDs `INC-*` marcaba `INC-SOLUTION-ORDEN` como
+  N/A para SCHOICE y era falso — el mecanismo es de `exshuffle`, no del tipo de ítem. Ahora los `—`
+  de ambos gemelos llevan su razón escrita en las dos direcciones.
+- **CORRECCIÓN DE POLÍTICA — paso 11** (`7f3abf69` revierte `1ca6f6ad`): se había cableado que
+  `aprobacion_usuario` «exige evidencia de aula (Nivel 3)». Es falso. El paso 11 es la aprobación
+  **del profesor** y se sella ANTES del aula: es lo que habilita llevar el ejercicio a estudiantes.
+  La evidencia de Nivel 3 es el gate de `/promover-ejercicio` hacia `03-En-Produccion/`. Evidencia
+  en disco: `permutaciones-pescadores-venia-n4` tiene `aprobacion_usuario: true` (11/11) y vive en
+  `02-En-Desarrollo/`; con la política revertida ese estado sería inalcanzable.
+- **NUEVOS SUBPROYECTOS**: `excedente-almuerzo-proporcional-n4` (SCHOICE + CLOZE v1, y **CLOZE v2
+  aprobado para aula**, 11/11, D1-D5 cerrados) y `area-jardin-lote-porcentaje-n4` (SCHOICE N4 de
+  argumentación derivado de `MAT-2026-1-026`, con los porcentajes redondeados **en el origen** para
+  que el ruido de coma flotante no llegue al enunciado).
+- **VERIFICACIÓN DEL BLOQUE**: runner completo **24/24 suites, 0 fallidas**; invariantes I-1..I-9 en
+  verde; 10 agentes; 21 archivos en `.claude/rules/` (22 reglas en este índice).
+
+### Cambios v3.19.0 (2026-07-30)
+- **NUEVA VARIANTE CLOZE**: `permutaciones-pescadores-venia-n4/cloze/` — 6 partes Progressive
+  Disclosure (`schoice|num|schoice|num|mchoice|schoice`) sobre el mismo contrato paramétrico que su
+  SCHOICE hermano (I-1..I-7 + instancia canónica), más tres invariantes propias **C-1..C-3**.
+  Verificador propio `cloze/verificar_render.R` (**V1-V11**). Verificado: V1-V11 verde, 300/300
+  versiones únicas, coherencia APROBADO, diversidad exit 0, ortografía limpia, y **prueba de
+  mutación** que confirma que V5 detecta una clave falsa y V11 detecta la desincronización de orden.
+- **CORRECCIÓN FACTUAL — Incidente E del `orquestador-cloze`**: decía que el N/A de NOPS era
+  «esperado **con gaps num/string**» y que un CLOZE 100 % schoice/mchoice **sí** debía renderizar
+  NOPS. **Era falso.** `exams2nops()` rechaza **cualquier `extype: cloze`** antes de mirar
+  `exclozetype` (verificado en el código de `exams` 2.4.2). Un orquestador que siguiera la versión
+  vieja habría marcado como error real un rechazo esperado. La restricción **no está documentada
+  oficialmente** por R/exams (consultado 2026-07-30).
+- **CORRECCIÓN DE DERIVA — V4 del `orquestador-cloze`**: exigía «mínimo 4 partes» cuando el estándar
+  del repositorio subió a **6** el 2026-06-04. La subida se había aplicado a los skills pero no a
+  esta validación, así que el orquestador habría aprobado un CLOZE que el estándar rechaza.
+- **NUEVO INCIDENTE Q** (`orquestador-cloze`): la **prosa** de la Solution enumera opciones en orden
+  y `exshuffle` la desincroniza. Modo de fallo **vecino a la regla #19 pero distinto**: la #19
+  prohíbe citar la **letra**; esto es enumerar en un **orden** que R/exams cambia después. Medido
+  sobre el HTML. Fix: la prosa agrupa por categoría, nunca reproduce la lista. **Nueva validación
+  V6** (empareja veredictos **por contenido**, no por posición).
+- **NUEVO INCIDENTE R / O** (`orquestador-cloze` y `orquestador-schoice`): *un campo que no se emite
+  no está probado*. `descripcion_corta` era dato muerto en el SCHOICE y contenía **U+2212**, que
+  rompe LaTeX; explotó al crear la variante CLOZE, que sí lo emite. Comprobación cableada en los
+  pre-flight de ambos orquestadores.
+- **NUEVA VALIDACIÓN V7** (`orquestador-cloze`): unicidad **ampliada** cuando una parte ofrece
+  opciones tomadas de fuera del conjunto ya mostrado. La unicidad habitual no lo cubre porque solo
+  mira los elementos seleccionados.
+
+### Cambios v3.18.0 (2026-07-29)
+- **NUEVO PATRÓN DE ERROR 27**: pool de errores conceptuales del mismo tamaño que el número de distractores. Verde en todo el arsenal y aun así el tipo de error nunca varía entre versiones. Documentado en `patrones-errores-conocidos.md`.
+- **CABLEADO DE ORQUESTADORES**: `orquestador-schoice.md` gana el pre-flight check 20 y el Incidente N; `orquestador-cloze.md` gana el pre-flight check 24 y el Incidente P. Ambos exigen pool ≥4-6 con `sample()` y re-enumeración exhaustiva del espacio de combinaciones tras ampliarlo.
+- **PUNTO CIEGO DOCUMENTADO**: la Capa B (21 keywords semánticas) es específica de estadística descriptiva; en combinatoria no tiene reglas aplicables y su APROBADO no acredita corrección conceptual del pool. En esos dominios la carga de la prueba recae en invariantes propias del ejercicio y en un verificador que enumere el espacio completo.
+- **NUEVO SUBPROYECTO**: `permutaciones-pescadores-venia-n4` — SCHOICE N4, descriptor D4.8, derivado del ítem real `MAT-2026-1-004` (ERA-2026 Sesión 1, pregunta 4). Familia paramétrica n∈{4,5,6} con clave n!; pool de 5 errores y excepción canónica que reproduce el ítem oficial verbatim (enunciado + las 4 opciones). Verificado: 4 formatos + Moodle 12/12 clave = n!, 30/30 ternas, 297/300 versiones únicas, coherencia APROBADO, letter-independence limpio.
+- **DESTINO RESERVADO**: `03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/10-Combinatoria_Permutaciones-Variaciones-Combinaciones/permutaciones_pescadores_venia_n4/`.
 
 ### Cambios v3.17.1 (2026-06-27)
 - **FIX WAIT_USER MODO SUBAGENTE**: `orquestador-schoice` y `orquestador-cloze` rechazaban respuestas humanas reenviadas vía `SendMessage` durante `WAIT_USER` ("no puedo aceptar una confirmación reenviada por el coordinador"). **Causa raíz**: los agentes no tenían instrucciones para el caso subagente, donde `SendMessage` es el único canal de entrada. **Fix**: nueva sección "Regla fundamental WAIT_USER en modo subagente" en ambos agentes — aceptan `SendMessage` como input humano válido, nunca rechazan por "venir del coordinador", interpretan contenido literalmente. Resuelve ciclo infinito de 3+ reintentos fallidos por WAIT_USER.

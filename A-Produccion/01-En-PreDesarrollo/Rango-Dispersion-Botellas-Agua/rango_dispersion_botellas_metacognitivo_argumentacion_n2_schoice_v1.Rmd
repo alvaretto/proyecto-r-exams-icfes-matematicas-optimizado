@@ -396,7 +396,7 @@ pasos2_distractores <- sapply(distractores_idx[1:3], function(idx) {
 }, USE.NAMES = FALSE)
 
 # Texto completo: formato original ICFES "Paso 1: ... Paso 2: ..." en una
-# sola línea por opcion. R-exams + pandoc colapsan saltos de línea dentro
+# sola línea por opción. R-exams + pandoc colapsan saltos de línea dentro
 # de items del Answerlist en PDF, así que mantenemos formato compacto y
 # consistente en los 4 formatos (HTML, PDF, DOCX, NOPS).
 texto_correcto <- paste0(paso1_comun, " ", paso2_correcto)
