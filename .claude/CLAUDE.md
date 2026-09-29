@@ -16,10 +16,11 @@ Este archivo entra en el contexto de **cada sesión y de cada subagente**, así 
 - **Sin importaciones `@`.** Las rutas de este índice son punteros: se leen con `Read` cuando la tarea lo requiere. Un `@` aquí vuelve a cargar ese archivo en todas las sesiones y en todos los subagentes.
 - **Changelog fuera del índice.** Toda entrada de cambios va a `.claude/docs/CHANGELOG_CLAUDE_MD.md`, arriba del todo. Aquí solo se actualizan **Versión** y **Fecha** de la sección Metainformación.
 - **Presupuesto**: este índice no debe superar ~15 000 tokens (~60 KB). Una regla nueva = una entrada de un párrafo aquí + su archivo en `.claude/rules/`.
+- **Reglas en dos capas (desde v3.28.0).** Claude Code carga **todo** `.claude/rules/*.md` en cada sesión y subagente, con un límite de 150 000 caracteres para el conjunto de instrucciones. Por eso `.claude/rules/<regla>.md` es la **versión compacta** (sólo la norma, ≤ 5 000 caracteres, ≤ 60 000 entre todas) y `.claude/docs/reglas/<regla>.md` guarda el **texto íntegro** (origen, mediciones, ejemplos, historial), que se lee con `Read` antes de aplicar una regla en un caso no trivial o de modificarla. Cambiar una norma = actualizar las dos; ampliar la explicación = sólo el íntegro. Guardia: `tests/testthat/test_presupuesto_contexto_reglas.R`.
 - Los gates que garantizan la calidad son mecánicos (hooks de `.claude/settings.json`, `tests/run_all_tests.R`, invariantes I-1..I-10) y no dependen de que un documento esté en contexto.
 
 ### ⛔ Reglas Críticas (OBLIGATORIAS)
-Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda).
+Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.claude/rules/X.md` de abajo es la versión compacta; su texto íntegro está en `.claude/docs/reglas/X.md`.
 
 **Resumen de reglas fundamentales:**
 1. **Ejercicios metacognitivos** con Progressive Disclosure → .claude/rules/ejercicios-metacognitivos.md
@@ -171,15 +172,15 @@ A-Produccion/
 
 - **Settings Claude**: `.claude/settings.json`
 - **CI/CD**: `.github/workflows/ci-testing.yml`
-- **Tests**: `tests/testthat/` (25 suites enganchadas a `tests/run_all_tests.R`)
+- **Tests**: `tests/testthat/` (suites enganchadas a `tests/run_all_tests.R`)
 - **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.27.0 (§P7-F enumerar el espacio · alcance del detractor a overrides e invariantes · H-4 reforzada)
-**Fecha**: 2026-09-13
+**Versión**: 3.28.0 (reglas en dos capas: compactas en `rules/`, texto íntegro en `docs/reglas/`)
+**Fecha**: 2026-09-29
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

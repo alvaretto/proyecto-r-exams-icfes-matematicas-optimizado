@@ -8,6 +8,37 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.28.0 (2026-09-29)
+
+> Claude Code avisó al arrancar: *«28 instruction files add up to 394.1k chars, over the 150.0k-char
+> total limit · largest: diversidad-sustantiva.md (62.0k), detractor-obligatorio.md (34.0k),
+> ejercicios-metacognitivos.md (26.2k)»*. Claude Code carga **todo** `.claude/rules/*.md` en cada
+> sesión y en cada subagente, y las 24 reglas sumaban **349 KB**: cada ciclo de corrección les había
+> ido añadiendo origen, tablas de medición e historial de versiones.
+
+- **Reglas en dos capas.** Las 24 reglas se movieron con `git mv` a `.claude/docs/reglas/` (texto
+  íntegro, historial de git conservado, con una cabecera que apunta a su versión compacta) y en
+  `.claude/rules/` quedó una **versión compacta** de cada una con la norma, los códigos de error, los
+  gates y los tests, más el puntero al íntegro. Resultado medido: **349 327 B → ~36 500 caracteres**
+  en `rules/` (−90 %); lo cargado desde el repo (reglas + `CLAUDE.md` raíz + este índice +
+  `CLAUDE.local.md`) queda en ~70 000 caracteres, bajo el límite de 150 000 incluso sumando el
+  `~/.claude/CLAUDE.md` global (~20 000).
+- **Nada normativo se perdió**: el íntegro está completo y es la referencia para casos no triviales;
+  la compacta conserva todo lo que los tests leen de las reglas (marcadores `ERR_DIV_COSMETICA`,
+  `WARN_DIV_ESTATICA`, `VEREDICTO_DETRACTOR:`, versión ≥ 1.2 y secciones de la regla #9, declaración
+  de que `is_latex_output()` es FALSE, cita de `NOMENCLATURA_ARCHIVOS_RMD.md`). Verificado: 0 fallos
+  en `test_infraestructura_claude` (214), `test_contrato_detractor`, `test_is_latex_output_rexams`,
+  `test_diversidad_sustantiva`, `test_nomenclatura_rmd`, `test_muestra_estandar`,
+  `test_markdown_tablas_none_guard`, `test_neg_variante_b`, `test_letter_independence`.
+- **Guardia nueva**: `tests/testthat/test_presupuesto_contexto_reglas.R`, enganchada al runner sin
+  `watch` (corre siempre, es barata). Falla si las compactas suman > 60 000 caracteres, si una pasa de
+  5 000, si lo cargado desde el repo pasa de 110 000, o si una compacta no tiene (o no cita) su
+  íntegro. Control positivo incluido. **Subir los topes para que pase es reintroducir el problema.**
+- **Backup previo** (regla #17): `.claude.pre-compactar-reglas-20260929-154726.tar.gz` (ignorado por
+  git). Reversión: `tar -xzf` de ese archivo, o `git revert` del commit.
+- **Referencias `rules/X.md §sección`** en hooks, scripts y agentes siguen siendo válidas como
+  puntero: la sección citada vive ahora en `docs/reglas/X.md`, al que la compacta enlaza.
+
 ### Cambios v3.27.0 (2026-09-13)
 
 > Ciclo completo de `teorema-coseno-datos-suficientes-n3` (pregunta **impresa** 50 de ERA-2026),

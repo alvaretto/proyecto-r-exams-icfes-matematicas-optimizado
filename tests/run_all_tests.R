@@ -319,6 +319,11 @@ suites <- list(
     critico = TRUE,
     watch = c("render_html_shots", "auditor-visual-html",
               "test_render_html_shots_truncamiento")
+  ),
+  list(
+    nombre = "Presupuesto de contexto de .claude/rules/ (compactas + texto integro)",
+    archivo = "tests/testthat/test_presupuesto_contexto_reglas.R",
+    critico = TRUE
   )
 )
 
