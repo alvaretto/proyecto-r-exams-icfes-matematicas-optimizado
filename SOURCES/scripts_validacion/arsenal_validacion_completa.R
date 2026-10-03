@@ -211,27 +211,44 @@ for (meta in metadatos_obligatorios) {
   }
 }
 
-# Verificar exshuffle: TRUE, salvo SCHOICE con opciones gráficas (regla #4).
-# La excepción vive en validar_coherencia_matematica.R (fuente única, Error 38).
-# Si no se puede cargar, se aplica la regla estricta: nunca se relaja en silencio.
-extype_2e <- tolower(trimws(sub("^extype:\\s*", "", grep("^extype:", contenido, value = TRUE)[1])))
-excepcion_graficas_2e <- tryCatch({
+# Verificar exshuffle, salvo SCHOICE con opciones gráficas (regla #4). La lectura del
+# metadato y la excepción viven en validar_coherencia_matematica.R (fuente única,
+# Error 38). Si no se puede cargar, se aplica la regla estricta: nunca se relaja en silencio.
+ev_2e <- tryCatch({
   ruta_script <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
   validador <- file.path(dirname(normalizePath(ruta_script)), "validar_coherencia_matematica.R")
   entorno_validador <- new.env()
   sys.source(validador, envir = entorno_validador)
-  entorno_validador$es_schoice_opciones_graficas(contenido, extype_2e)
+  entorno_validador$evaluar_exshuffle_2e(rmd_file)
 }, error = function(e) {
   cat("  ⚠️  No se pudo cargar la excepción de opciones gráficas:", conditionMessage(e), "\n")
-  FALSE
+  NULL
 })
-if (grepl("exshuffle:\\s*FALSE", contenido_texto, ignore.case = TRUE) && excepcion_graficas_2e) {
+if (is.null(ev_2e)) {
+  # Regla estricta de respaldo (sin excepción).
+  if (grepl("exshuffle:\\s*FALSE", contenido_texto, ignore.case = TRUE)) {
+    cat("  ❌ ERROR CRÍTICO: exshuffle debe ser TRUE (OBLIGATORIO)\n")
+    fase_2e_errores <- fase_2e_errores + 1
+  } else if (grepl("exshuffle:\\s*TRUE", contenido_texto, ignore.case = TRUE)) {
+    cat("  ✓ exshuffle: TRUE (correcto)\n")
+  } else {
+    cat("  ⚠️  exshuffle no encontrado explícitamente\n")
+    advertencias_totales <- advertencias_totales + 1
+  }
+} else if (ev_2e$estado == "mezcla") {
+  cat("  ✓ exshuffle:", ev_2e$valor, "(correcto)\n")
+} else if (ev_2e$estado == "sin_mezcla_aceptado") {
   cat("  ✓ exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>.png, regla #4)\n")
-} else if (grepl("exshuffle:\\s*FALSE", contenido_texto, ignore.case = TRUE)) {
+} else if (ev_2e$estado == "sin_mezcla") {
   cat("  ❌ ERROR CRÍTICO: exshuffle debe ser TRUE (OBLIGATORIO)\n")
   fase_2e_errores <- fase_2e_errores + 1
-} else if (grepl("exshuffle:\\s*TRUE", contenido_texto, ignore.case = TRUE)) {
-  cat("  ✓ exshuffle: TRUE (correcto)\n")
+} else if (ev_2e$estado == "invalido") {
+  cat("  ❌ ERROR CRÍTICO: exshuffle con valor no válido:", ev_2e$valor,
+      "(R/exams solo admite TRUE, FALSE o un entero, sin comentarios)\n")
+  fase_2e_errores <- fase_2e_errores + 1
+} else if (ev_2e$estado == "fuera_de_seccion") {
+  cat("  ❌ ERROR CRÍTICO: exshuffle fuera de la sección Meta-information (R/exams no lo lee)\n")
+  fase_2e_errores <- fase_2e_errores + 1
 } else {
   cat("  ⚠️  exshuffle no encontrado explícitamente\n")
   advertencias_totales <- advertencias_totales + 1

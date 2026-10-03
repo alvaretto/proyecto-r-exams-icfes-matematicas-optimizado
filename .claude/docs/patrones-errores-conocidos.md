@@ -3525,6 +3525,7 @@ corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.pn
 | 2026-10-03 | `validar_coherencia_matematica()` (`SOURCES/scripts_validacion/`) | regex `!\[\]\(diagrama_` exige alt vacío | `!\[.*\]\(diagrama_` + 2 tests | mutantes: regex vieja falla 2/2 tests nuevos; `[^]]*` falla 1/2; final 12/12 PASS; `.Rmd` real: 0 errores |
 | 2026-10-03 | Mismo validador (4.º detractor) | `.*` sin ancla oculta ERR_C4 en SCHOICE de texto con `diagrama_contexto.png`; 3 mutantes («cualquier imagen», `diagrama_`, `\(diagrama_`) sobrevivían | ancla `diagrama_[a-z]\.png` + control negativo | 7/7 mutantes mueren; 13/13 PASS; corpus 427 `.Rmd`: 0 SCHOICE con `exshuffle: FALSE` pierden la excepción (los 13 que dejan de activarla son CLOZE o `exshuffle: TRUE`) |
 | 2026-10-03 | CLI del validador + FASE 2E del arsenal (rutas del hook) | sin excepción de la regla #4 | helper único `es_schoice_opciones_graficas()` usado por función, CLI y 2E; regla estricta si no carga | hook: barras `APROBADO` + 2E `OK`; 6/427 `.Rmd` exentos (los 6 de opciones gráficas); tras el 5.º detractor (marcador positivo, sin caída, mensaje condicionado, ruta relativa): 25/25 PASS y los 4 mutantes mueren |
+| 2026-10-03 | Excepción y lectura de `exshuffle` (CLI, función, 2E) | excepción con 1 sola letra; el CLI no aceptaba enteros; la 2E leía el texto completo; 1.ª versión del arreglo trataba `FALSE # x` como «sin mezcla» (R/exams mezcla) | ≥ 2 letras distintas; lectura con `extract_environment`/`extract_command` de R/exams; comentarios y `NA` = valor no válido; «fuera de sección» = error | CLI y 2E: 0 discrepancias (antes 8); 0 discordancias con `read_metainfo()`; exentos sin cambio; 68/68 PASS; 11/11 mutantes mueren |
 
 ### ✅ Deuda del hook — RESUELTA (2026-10-03)
 
@@ -3555,15 +3556,57 @@ medido por el 5.º detractor). El CLI solo anuncia la aceptación si de verdad f
 `testthat::test_path()`, no es absoluta. Mutantes: caída en la rama gráfica → 2 fallos;
 mensaje incondicional → 1; CLI revertido → 4; arsenal revertido → 3; versión final 25/25 PASS.
 
-Pendiente (backlog, no son regresión de este cambio):
-- La excepción se activa con **una** sola línea `diagrama_<letra>.png`; una figura de contexto
-  mal nombrada `diagrama_a.png` en un SCHOICE de texto quedaría exenta. Hoy ninguna en el corpus
-  (los 6 exentos tienen las 4 letras). Endurecer a ≥ 2 letras distintas.
-- El CLI y la FASE 2E **detectan `exshuffle`** de forma distinta (metadato frente a `grepl`
-  sobre todo el texto). 8 discrepancias medidas: `exshuffle: 5` (válido en R/exams; 4 plantillas)
-  y `exshuffle: TRUE # comentario` (3 archivos) dan un ERR_C4 falso en el CLI; un CLOZE con
-  `exshuffle: TRUE` y el texto `exshuffle: FALSE` en un comentario da ERROR falso en la 2E. La
-  2E debería reutilizar `extraer_meta()` del validador, que ya carga.
+Los dos pendientes que dejó este cambio quedaron **resueltos el mismo día**:
+
+- **≥ 2 letras.** La excepción exige al menos dos letras **distintas** de `diagrama_<letra>.png`
+  (`letras_opciones_graficas()`, con `.*?` perezoso para admitir varias imágenes por línea). Una
+  figura de contexto `diagrama_a.png` en un SCHOICE de texto ya no lo exime, aunque se cite dos
+  veces (enunciado y Solution).
+- **`exshuffle` se lee exactamente como R/exams.** `leer_exshuffle_rexams()` llama a
+  `exams:::extract_environment()` y `exams:::extract_command()`, las mismas funciones que usa
+  `exams:::read_metainfo()` (exams 2.4.2); `clasificar_exshuffle()` reproduce su conversión: si el
+  valor es numérico, mezcla de ese tamaño (se exige un entero ≥ 1); si no, `as.logical()`. Lo usan
+  la función, el CLI y la FASE 2E (`evaluar_exshuffle_2e()`), así que las tres rutas coinciden en
+  los 427 `.Rmd`.
+
+  **Trampa medida: R/exams no admite comentarios en el metadato.** `exshuffle: FALSE # x` da
+  `as.logical(...) = NA`, y como `NA` no es idéntico a `FALSE`, R/exams **mezcla**. Con
+  `set.seed(1)` y 6 versiones, la clave cae en las posiciones `1 1 1 1 1 1` con `FALSE` y en
+  `1 5 6 1 6 2` con `FALSE # x` y con `TRUE # comentario` (6 opciones, `exams:::read_exercise()`;
+  medido por el 6.º detractor y repetido de forma independiente). La primera versión de este arreglo
+  quitaba el comentario y trataba `FALSE # x` como «sin mezcla»: un SCHOICE de opciones gráficas
+  con esa línea habría pasado la excepción mientras R/exams volvía a mezclar sus PNG. Ahora
+  cualquier valor que R/exams convierte en `NA` (comentarios, texto libre) es un ERR_C4 propio,
+  «exshuffle con valor no válido», que la excepción **no** retira. Decisión de diseño: también
+  `TRUE # x`, aunque R/exams mezcle, porque el valor escrito no es el que R/exams lee.
+- **`exshuffle` fuera de la sección.** R/exams solo lee la sección cuyo encabezado, sin
+  mayúsculas ni guiones, es `metainformation` y va seguido de `====` o `----`. Si hay una línea
+  `exshuffle:` pero la sección no se reconoce (p. ej. `Meta information`), R/exams no la ve: con
+  ese archivo `read_metainfo()` aborta («no exsolution specified»). Ahora es un ERR_C4 propio en
+  vez de pasar por «ausente».
+
+Medido sobre los 427 `.Rmd`, antes frente a después, con la misma lógica que ejecutan el CLI y la
+2E:
+- **CLI:** desaparecen 4 ERR_C4 falsos (las plantillas `erres` con `exshuffle: 5`). Los 3
+  `exshuffle: TRUE # comentario` de Lab-Manjaro siguen en error, ahora con el mensaje correcto.
+- **2E:** el CLOZE de permutaciones-pescadores pasa de ERROR falso a correcto; las 4 plantillas
+  `erres`, de «no encontrado» a «exshuffle: 5 (correcto)»; los 3 de Lab-Manjaro pasan de correcto
+  a ERROR (antes la 2E solo buscaba `exshuffle: TRUE` en el texto).
+- CLI y 2E discrepan en **0** archivos (antes, 8). Exentos con `exshuffle: FALSE`: los mismos 6.
+- Contraste con R/exams archivo por archivo (`exams:::read_metainfo()`): **0** archivos donde el
+  validador diga «sin mezcla» y R/exams mezcle, o al revés.
+
+Tests: 68/68 PASS, incluido uno que compara la clasificación con `read_metainfo()` para 7 valores.
+Mutantes, en un banco que copia los scripts a un directorio propio: patrón voraz → 1 fallo; sin
+`unique()` → 1; una sola letra → 2; quitar el comentario → 7; no aceptar enteros → 3; aceptar 0 →
+1; excepción que retira cualquier error de `exshuffle` → 2; sin «fuera de sección» → 2; la 2E
+ignora `extype` → 1; rama de valor no válido de la 2E sin contar el error → 2; `validar_metadatos`
+sin el encabezado reconstruido → 2. Mueren los 11.
+
+Pendiente (backlog, no es regresión): un `exshuffle` ausente sigue siendo solo un aviso, aunque
+para R/exams equivale a `FALSE` (no mezcla). Y si la sección Meta-information no se reconoce,
+`validar_coherencia_matematica()` aborta al no encontrar `extype` antes de llegar a `exshuffle`
+(fallo previo; la 2E sí lo reporta).
 
 Falsos negativos conocidos de la excepción (siguen dando ERR_C4 en las tres rutas; ninguno es
 regresión de esta entrada): nombre de archivo interpolado `cat("* ![](", nombre_archivo, ")…")` —real en

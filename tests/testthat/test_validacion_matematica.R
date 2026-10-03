@@ -253,7 +253,8 @@ expect_sin_caida <- function(salida) {
 
 rmd_hook <- function(opciones_graficas) {
   temp_file <- rmd_opciones_graficas(
-    if (opciones_graficas) "* ![`r alt_op[1]`](diagrama_a.png){width=60%}&#8203;"
+    if (opciones_graficas) c("* ![`r alt_op[1]`](diagrama_a.png){width=60%}&#8203;",
+                             "* ![`r alt_op[2]`](diagrama_b.png){width=60%}&#8203;")
     else c("* Opción 1", "* Opción 2"))
   lineas <- readLines(temp_file, encoding = "UTF-8")
   if (!opciones_graficas) {
@@ -310,6 +311,135 @@ test_that("FASE 2E sin acceso al validador aplica la regla estricta", {
   salida <- ejecutar_script_hook(aislado, graf)
   expect_true(grepl("ERROR CRÍTICO: exshuffle", salida))
   expect_true(grepl("No se pudo cargar la excepción", salida))
+})
+
+# Lectura de exshuffle unificada (Error 38): se lee exactamente como R/exams 2.4
+# (exams:::read_metainfo). R/exams NO admite comentarios: "FALSE # x" da NA y mezcla.
+test_that("clasificar_exshuffle convierte el valor como R/exams", {
+  expect_equal(clasificar_exshuffle("TRUE"), "mezcla")
+  expect_equal(clasificar_exshuffle("true"), "mezcla")
+  expect_equal(clasificar_exshuffle("T"), "mezcla")
+  expect_equal(clasificar_exshuffle("5"), "mezcla")
+  expect_equal(clasificar_exshuffle("FALSE"), "sin_mezcla")
+  expect_equal(clasificar_exshuffle("F"), "sin_mezcla")
+  expect_equal(clasificar_exshuffle("TRUE # se mezclan"), "invalido")
+  expect_equal(clasificar_exshuffle("FALSE  # mezcla interna"), "invalido")
+  expect_equal(clasificar_exshuffle("0"), "invalido")
+  expect_equal(clasificar_exshuffle("quizas"), "invalido")
+  expect_equal(clasificar_exshuffle(NA_character_), "ausente")
+})
+
+con_exshuffle <- function(valor, answerlist = c("* Opción 1", "* Opción 2"), extra = character(0),
+                          extype = "schoice", encabezado = "Meta-information") {
+  f <- rmd_opciones_graficas(answerlist)
+  l <- readLines(f, encoding = "UTF-8")
+  l <- sub("^exshuffle: FALSE$", paste0("exshuffle: ", valor), l)
+  l <- sub("^extype: schoice$", paste0("extype: ", extype), l)
+  l <- sub("^Meta-information$", encabezado, l)
+  writeLines(c(l, extra), f)
+  f
+}
+
+test_that("La clasificación coincide con lo que R/exams hace al leer el archivo", {
+  # Guardia contra la deriva: para cada valor, ¿R/exams mezcla? (shuffle no idéntico a FALSE)
+  for (v in c("TRUE", "FALSE", "5", "T", "F", "TRUE # x", "FALSE # x")) {
+    f <- con_exshuffle(v)
+    mezcla_rexams <- !identical(exams:::read_metainfo(f)$shuffle, FALSE)
+    estado <- evaluar_exshuffle(readLines(f, encoding = "UTF-8"))$estado
+    expect_equal(estado == "sin_mezcla", !mezcla_rexams, info = v)
+    unlink(f)
+  }
+})
+
+test_that("La función acepta exshuffle entero y rechaza comentarios y valores no válidos", {
+  f <- con_exshuffle("5")
+  expect_false(any(grepl("exshuffle", validar_coherencia_matematica(f)$errores)))
+  unlink(f)
+  for (v in c("TRUE # se mezclan", "FALSE # regla 4", "quizas")) {
+    f <- con_exshuffle(v)
+    expect_true(any(grepl("exshuffle con valor no válido", validar_coherencia_matematica(f)$errores)),
+                info = v)
+    unlink(f)
+  }
+})
+
+test_that("La excepción de opciones gráficas no oculta un valor no válido (ni FALSE comentado)", {
+  for (v in c("quizas", "FALSE # regla 4")) {
+    f <- con_exshuffle(v, c("* ![](diagrama_a.png){width=60%}", "* ![](diagrama_b.png){width=60%}"))
+    expect_true(any(grepl("exshuffle con valor no válido", validar_coherencia_matematica(f)$errores)),
+                info = v)
+    unlink(f)
+  }
+})
+
+test_that("exshuffle fuera de la sección Meta-information es error (R/exams no lo lee)", {
+  # Sin sección reconocible, parsear_rmd() no ve ningún metadato; se prueba la lectura
+  # de exshuffle directamente y por la ruta de la FASE 2E.
+  f <- con_exshuffle("TRUE", encabezado = "Meta information")
+  l <- readLines(f, encoding = "UTF-8")
+  expect_true(any(grepl("fuera de la sección Meta-information", validar_metadatos(character(0), l))))
+  expect_equal(evaluar_exshuffle_2e(f)$estado, "fuera_de_seccion")
+  expect_error(exams:::read_metainfo(f), "no exsolution")  # R/exams no ve la sección
+  unlink(f)
+})
+
+test_that("Una sola letra diagrama_<letra>.png, aunque se repita, no basta para la excepción", {
+  for (repeticiones in 1:2) {
+    f <- rmd_opciones_graficas(c("* Opción 1", "* Opción 2"))
+    l <- readLines(f, encoding = "UTF-8")
+    l <- append(l, rep("![Mapa](diagrama_a.png){width=60%}&#8203;", repeticiones), after = which(l == "Test")[1])
+    writeLines(l, f)
+    expect_true(any(grepl("ERR_C4: exshuffle debe ser TRUE", validar_coherencia_matematica(f)$errores)),
+                info = paste("repeticiones:", repeticiones))
+    unlink(f)
+  }
+})
+
+test_that("validar_metadatos sin el archivo completo sigue leyendo exshuffle", {
+  # parsear_rmd()$meta llega sin encabezado: no debe confundirse con "fuera de sección".
+  f <- con_exshuffle("TRUE")
+  expect_length(grep("exshuffle", validar_metadatos(parsear_rmd(f)$meta), value = TRUE), 0)
+  f2 <- con_exshuffle("FALSE")
+  expect_true(ERR_EXSHUFFLE_FALSE %in% validar_metadatos(parsear_rmd(f2)$meta))
+  unlink(c(f, f2))
+})
+
+test_that("Dos opciones gráficas en la misma línea activan la excepción", {
+  f <- rmd_opciones_graficas("* ![](diagrama_a.png){width=40%} ![](diagrama_b.png){width=40%}")
+  expect_false(any(grepl("exshuffle", validar_coherencia_matematica(f)$errores)))
+  unlink(f)
+})
+
+test_that("FASE 2E lee el metadato como R/exams: comentarios, enteros, CLOZE y valores no válidos", {
+  script <- file.path(dir_scripts_hook, "arsenal_validacion_completa.R")
+  ext <- c("exextra[Competencia]: a", "exextra[Componente]: b", "exextra[Nivel]: 1")
+  graficas <- c("* ![](diagrama_a.png){width=60%}", "* ![](diagrama_b.png){width=60%}")
+  # exshuffle: TRUE con "exshuffle: FALSE" citado en un comentario del cuerpo.
+  f1 <- con_exshuffle("TRUE", extra = ext)
+  l <- readLines(f1, encoding = "UTF-8")
+  writeLines(append(l, "<!-- antes se usaba `exshuffle: FALSE` -->", after = which(l == "Test")[1]), f1)
+  f2 <- con_exshuffle("5", extra = ext)
+  f3 <- con_exshuffle("FALSE", graficas, extra = ext, extype = "cloze")
+  f4 <- con_exshuffle("quizas", extra = ext)
+  f5 <- con_exshuffle("FALSE # regla 4", graficas, extra = ext)
+  on.exit(unlink(c(f1, f2, f3, f4, f5)), add = TRUE)
+  out1 <- ejecutar_script_hook(script, f1)
+  expect_sin_caida(out1)
+  expect_false(grepl("ERROR CRÍTICO: exshuffle", out1))
+  expect_match(out1, "exshuffle: TRUE (correcto)", fixed = TRUE)
+  out2 <- ejecutar_script_hook(script, f2)
+  expect_sin_caida(out2)
+  expect_match(out2, "exshuffle: 5 (correcto)", fixed = TRUE)
+  # Además del mensaje, la fase debe quedar en ERROR (el error cuenta, no solo se imprime).
+  fase_2e_error <- "FASE 2E \\(Metadatos ICFES\\):\\s+ERROR"
+  out3 <- ejecutar_script_hook(script, f3)
+  expect_match(out3, "ERROR CRÍTICO: exshuffle debe ser TRUE", fixed = TRUE)
+  expect_match(out3, fase_2e_error)
+  for (f in c(f4, f5)) {
+    out <- ejecutar_script_hook(script, f)
+    expect_match(out, "ERROR CRÍTICO: exshuffle con valor no válido", fixed = TRUE)
+    expect_match(out, fase_2e_error)
+  }
 })
 
 test_that("Validación CLOZE detecta inconsistencias de tipos", {
