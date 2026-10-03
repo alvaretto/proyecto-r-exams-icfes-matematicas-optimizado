@@ -3458,9 +3458,20 @@ sonda nunca corrió».
 
 Al dar texto alternativo (accesibilidad, WCAG 2.2 criterio 1.1.1) a las imágenes de un `.Rmd`
 —`![Gráfica de barras apiladas](diagrama_a.png){width=85%}`—, el PDF muestra bajo cada opción
-un pie visible **«Figure 1: Gráfica de barras apiladas»**, «Figure 2: …», y el HTML emite
-`<figure>` + `<figcaption>`. No hay error ni warning: solo texto nuevo, en inglés, visible al
-estudiante. Con `![](…)` (alt vacío) no ocurría, por eso nunca había aparecido en el repo.
+un pie visible **«Figure 1: Gráfica de barras apiladas»**, «Figure 2: …». No hay error ni
+warning: solo texto nuevo, visible al estudiante, en todos los formatos. Medido sin el arreglo
+(4 opciones + Solution con alt, semilla 5):
+
+| Formato | Pie que aparece |
+|---|---|
+| PDF examen | 4 «Figure N: <alt>» |
+| PDF solución | 5 «Figure N: <alt>» |
+| NOPS | 4 «Figure N: <alt>» |
+| HTML (`exams2html`) | 5 `<div class="figcaption">` con el alt, **sin** «Figure N» ni `<figure>` |
+| DOCX (`exams2pandoc`) | 5 párrafos de estilo `ImageCaption` |
+| Moodle XML | 5 `figcaption` |
+
+Con `![](…)` (alt vacío) no ocurría, por eso nunca había aparecido en el repo.
 
 Efecto colateral en el arsenal: la excepción de `exshuffle: FALSE` para opciones gráficas
 (regla #4) en `validar_coherencia_matematica()` buscaba el literal `!\[\]\(diagrama_` y dejaba de
@@ -3479,8 +3490,9 @@ corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.pn
 ### ✅ Solución Verificada
 
 1. Terminar la imagen con un **espacio de ancho cero** `&#8203;` para que deje de estar sola en
-   el párrafo. Pandoc lo emite como `\hspace{0pt}` en LaTeX y como U+200B invisible en
-   HTML/DOCX; no es un glifo de la regla #25 (en el fuente es una entidad ASCII).
+   el párrafo. Pandoc lo emite como `\hspace{0pt}` en LaTeX y como U+200B invisible en HTML;
+   en el DOCX de `exams2pandoc` no queda ningún carácter (0 U+200B medidos) y el pie desaparece
+   igual (0 `ImageCaption`). No es un glifo de la regla #25: en el fuente es una entidad ASCII.
 
    ```markdown
    * ![`r alt_op[1]`](diagrama_a.png){width=85%}&#8203;
@@ -3497,9 +3509,13 @@ corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.pn
    pregunta evalúa —la excepción «prueba o ejercicio» de WCAG 1.1.1 lo permite—. En el
    **enunciado** y en **Solution**, el alt sí lleva los datos.
 
-3. Validador: `grepl("!\\[.*\\]\\(diagrama_", …)` (búsqueda por línea, sin clase negada), con un
-   `test_that` por forma de alt —en línea con `` `r …` `` y literal— para que `any()` no deje pasar
-   una con la otra. Tests en `tests/testthat/test_validacion_matematica.R`.
+3. Validador: `grepl("!\\[.*\\]\\(diagrama_[a-z]\\.png", …)` (búsqueda por línea, sin clase
+   negada, anclada al nombre neutral de la regla #4). Sin el ancla, `.*` también reconocía como
+   opción gráfica una figura de contexto (`diagrama_contexto.png`) en el enunciado o la Solution
+   de un SCHOICE de **texto**, y ocultaba su ERR_C4 legítimo. Tests en
+   `tests/testthat/test_validacion_matematica.R`: uno por forma de alt —en línea con
+   `` `r …` `` y literal, para que `any()` no deje pasar una con la otra— y un **control
+   negativo** (SCHOICE de texto + `diagrama_contexto.png` debe seguir dando ERR_C4).
 
 ### 📅 Historial
 
@@ -3507,6 +3523,7 @@ corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.pn
 |-------|---------------------|-------|-----|-----------|
 | 2026-10-03 | `barras_campeonato_baloncesto_..._n3_schoice_v1.Rmd` | alt en 4 opciones + Solution | `&#8203;` tras cada imagen | sin `&#8203;`: 4 «Figure» en el PDF y 5 `figcaption` en el HTML; con él: 0 y 0 en HTML (semillas 1, 2, 5), PDF examen+solución, DOCX, NOPS y Moodle; páginas 4/7/5 sin cambio |
 | 2026-10-03 | `validar_coherencia_matematica()` (`SOURCES/scripts_validacion/`) | regex `!\[\]\(diagrama_` exige alt vacío | `!\[.*\]\(diagrama_` + 2 tests | mutantes: regex vieja falla 2/2 tests nuevos; `[^]]*` falla 1/2; final 12/12 PASS; `.Rmd` real: 0 errores |
+| 2026-10-03 | Mismo validador (4.º detractor) | `.*` sin ancla oculta ERR_C4 en SCHOICE de texto con `diagrama_contexto.png`; 3 mutantes («cualquier imagen», `diagrama_`, `\(diagrama_`) sobrevivían | ancla `diagrama_[a-z]\.png` + control negativo | 7/7 mutantes mueren; 13/13 PASS; corpus 427 `.Rmd`: 0 SCHOICE con `exshuffle: FALSE` pierden la excepción (los 13 que dejan de activarla son CLOZE o `exshuffle: TRUE`) |
 
 ### ⚠️ Deuda declarada (no resuelta por esta entrada)
 
@@ -3517,6 +3534,13 @@ la excepción, y la FASE 2E de `arsenal_validacion_completa.R` rechaza `exshuffl
 excepción. Es un falso positivo previo, no un PASS; el arreglo de la regex solo cubre la ruta
 de la función (tests). Pendiente: sacar la excepción a un helper común y un test que ejecute el
 CLI con `system2`.
+
+Falsos negativos conocidos de la excepción (siguen dando ERR_C4; ninguno es regresión de esta
+entrada): nombre de archivo interpolado `cat("* ![](", nombre_archivo, ")…")` —real en
+`02-En-Desarrollo/diagrama_caja_estaturas_…_n2_schoice_v1.Rmd`—, rutas `./diagrama_a.png` o
+`img/diagrama_a.png`, nombres que no siguen `diagrama_<letra>.png`, `knitr::include_graphics()`,
+y una referencia comentada `<!-- ![…](diagrama_a.png) -->` que sí la activa (falso positivo).
+La excepción no es exhaustiva.
 
 ### 📚 Referencias
 

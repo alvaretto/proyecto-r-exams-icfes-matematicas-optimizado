@@ -1337,10 +1337,12 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
   # permite exshuffle:FALSE porque sample() interno ya aleatoriza
   # y TRUE rompería la referencia a letra_correcta en Solution
   contenido_completo <- readLines(archivo_rmd, warn = FALSE, encoding = "UTF-8")
-  # El texto alternativo es opcional: "![](diagrama_", "![Gráfica de ...](diagrama_"
-  # y "![`r alt_op[1]`](diagrama_" son la misma opción gráfica. Sin clase negada:
-  # "[^]]*" se cortaba en el "]" de "alt_op[1]". La búsqueda es por línea.
-  tiene_opciones_graficas_png <- any(grepl("!\\[.*\\]\\(diagrama_", contenido_completo))
+  # El texto alternativo es opcional: "![](diagrama_a.png", "![Gráfica de ...](diagrama_a.png"
+  # y "![`r alt_op[1]`](diagrama_a.png" son la misma opción gráfica. Sin clase negada:
+  # "[^]]*" se cortaba en el "]" de "alt_op[1]". El nombre se ancla al neutral de la
+  # regla #4 (diagrama_<letra>.png): "diagrama_contexto.png" en el enunciado o la
+  # Solution de un SCHOICE de texto no debe ocultar su ERR_C4. La búsqueda es por línea.
+  tiene_opciones_graficas_png <- any(grepl("!\\[.*\\]\\(diagrama_[a-z]\\.png", contenido_completo))
   if (tiene_opciones_graficas_png && extype == "schoice") {
     todos_errores <- todos_errores[!grepl("exshuffle", todos_errores)]
   }

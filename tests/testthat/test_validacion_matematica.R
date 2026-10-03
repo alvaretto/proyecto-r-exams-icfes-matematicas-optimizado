@@ -216,6 +216,21 @@ test_that("Excepción de exshuffle con alt literal", {
   unlink(temp_file)
 })
 
+test_that("Una imagen diagrama_* que no es opción no activa la excepción de exshuffle", {
+  # Control negativo: SCHOICE de TEXTO con exshuffle: FALSE y una figura de contexto
+  # en el enunciado. Debe seguir dando ERR_C4; mata a los mutantes que aceptan
+  # cualquier imagen o cualquier "diagrama_".
+  temp_file <- rmd_opciones_graficas(c("* Opción 1", "* Opción 2"))
+  lineas <- readLines(temp_file, encoding = "UTF-8")
+  i <- which(lineas == "Test")[1]
+  lineas <- append(lineas, "![Mapa del barrio](diagrama_contexto.png){width=60%}&#8203;", after = i)
+  writeLines(lineas, temp_file)
+  result <- validar_coherencia_matematica(temp_file)
+  expect_true(any(grepl("exshuffle", result$errores, ignore.case = TRUE)),
+    info = "una figura de contexto no convierte un SCHOICE de texto en uno de opciones gráficas")
+  unlink(temp_file)
+})
+
 test_that("Validación CLOZE detecta inconsistencias de tipos", {
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(
