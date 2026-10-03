@@ -1,0 +1,21 @@
+args <- commandArgs(FALSE)
+f <- sub("--file=", "", args[grep("--file=", args)])
+dir <- if (length(f)) dirname(normalizePath(f)) else getwd()
+source(file.path(dir, "generador_r.R"))
+cats <- c("Partidos ganados", "Partidos perdidos")
+grp <- c("Grado sexto", "Grado séptimo")
+col <- c("#F2501E", "#1EAAD8")
+tit <- "Informe de partidos del campeonato"; ey <- "Número de partidos"
+out <- function(n) file.path(dir, paste0("r_", n, ".png"))
+barras_simples(c(8, 4), cats, c("#FF1A8C", "#00B33C"),
+               "Gráfica de información del\ncampeonato para grado séptimo", ey, out("barras_septimo"))
+# matriz filas = grupos (sexto, séptimo), columnas = categorías
+A <- rbind(c(8, 4), c(5, 7)); B <- rbind(c(4, 4.5), c(8, 5))
+C <- rbind(c(5, 7), c(8, 4)); D <- rbind(c(5, 8), c(7, 4))
+barras_opcion(A, grp, cats, col, "apilada", tit, ey, out("opcion_A"))
+barras_opcion(B, grp, cats, col, "apilada", tit, ey, out("opcion_B"), ymax = 13)
+barras_opcion(C, grp, cats, col, "agrupada", tit, ey, out("opcion_C"))
+barras_opcion(D, grp, cats, col, "agrupada", tit, ey, out("opcion_D"))
+P <- rbind(c(3, 11), c(9, 6))
+barras_opcion(P, grp, cats, col, "agrupada", tit, ey, out("param_agrupada"))
+barras_opcion(P, grp, cats, col, "apilada", tit, ey, out("param_apilada"))

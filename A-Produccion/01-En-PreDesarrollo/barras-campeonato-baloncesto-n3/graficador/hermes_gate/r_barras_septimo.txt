@@ -1,0 +1,47 @@
+{
+  "veredicto": "FIEL",
+  "confianza": "alta",
+  "auto_insertable": true,
+  "estrategia": "numerica",
+  "datos_gen": {
+    "series": {
+      "Partidos": {
+        "Partidos ganados": 8,
+        "Partidos perdidos": 4
+      }
+    },
+    "valores_sueltos": [],
+    "etiquetas_ejes": [
+      "",
+      "Número de partidos"
+    ],
+    "titulo": "Gráfica de información del campeonato para grado séptimo"
+  },
+  "datos_desc": {
+    "series": {
+      "Número de partidos": {
+        "Partidos ganados": 8,
+        "Partidos perdidos": 4
+      }
+    },
+    "valores_sueltos": [],
+    "etiquetas_ejes": [
+      "",
+      "Número de partidos"
+    ],
+    "titulo": "Gráfica de información del campeonato para grado séptimo"
+  },
+  "comparacion": {
+    "gen_vs_desc": {
+      "coinciden": true,
+      "faltan_en_gen": [],
+      "extra_en_gen": [],
+      "n_gen": 2,
+      "n_otro": 2
+    }
+  },
+  "checklist": {
+    "ok": true,
+    "fallas": []
+  }
+}

@@ -1,0 +1,22 @@
+REPORTE GRAFICADOR R/ggplot2 - barras-campeonato-baloncesto-n3
+Rubrica: Colores 20, Posiciones 20, Valores 20, Proporciones 15, Estilos 15, Elementos 10
+
+Figura                 Similitud  Iteraciones  Valores
+barras_septimo         98         2            20/20
+opcion_A (apilada)     98         2            20/20
+opcion_B (apilada)     98         2            20/20 (9,5 reproducido tal cual; ymax=13 via parametro)
+opcion_C (agrupada)    98         2            20/20
+opcion_D (agrupada)    98         2            20/20
+
+Desviaciones residuales:
+1. Tipografia: sans-serif del sistema en vez de la condensada del impreso (Estilos -1).
+2. Fondo blanco liso: el original es foto de pantalla con ruido/moire (Estilos -1).
+3. Anchos de barra y proporcion del panel levemente distintos al escaneo (Proporciones -1).
+4. Titulo de opciones centrado sobre el panel; en el impreso queda alineado a la izquierda (Posiciones -0,5).
+5. Leyenda con cuadrados algo mayores y mas separados que el impreso (Elementos -0,5).
+6. Cuadricula gris neutra (#BFBFBF), sin el tono rosado del enunciado original.
+7. Parametrizacion: si ymax es impar y paso 2 (>15), el ultimo tick es el par inferior (ej. 17 -> ticks hasta 16).
+8. Se anade el parametro opcional ymax (default NULL = max de valores/totales) para B, cuyo eje impreso llega a 13 con totales 12.
+
+Ventajas: ggsave a tamano fijo 900x630 px (6x4,2 in a 150 dpi); codigo corto (2,9 KB), sin dependencias externas; apilado/agrupado con un solo parametro; leyenda y orden de apilado garantizados por niveles de factor.
+Desventajas: tipografia/estilo no igual al impreso sin instalar fuentes; menor control fino de posicion que TikZ; dependencia de ggplot2>=3.5 (legend.key.spacing.y).

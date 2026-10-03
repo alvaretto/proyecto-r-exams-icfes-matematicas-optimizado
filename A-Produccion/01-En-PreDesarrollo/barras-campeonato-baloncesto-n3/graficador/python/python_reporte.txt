@@ -1,0 +1,9 @@
+Graficador Python/matplotlib - barras-campeonato-baloncesto-n3
+Similitud (rubrica 6 categorias; estimacion visual, Valores 20/20 en todas) | iteraciones
+barras_septimo 98 | 2
+opcion_A       98 | 2
+opcion_B       98 | 2  (eje 0..13 via ymax=13; 4,5 reproducido)
+opcion_C       98 | 2
+opcion_D       98 | 2
+Desviaciones residuales (Estilos/Elementos): tipografia DejaVu Sans (el impreso usa sans condensada); sin ruido/moire del escaneo; sin letra "A."/"B."... (intencional, regla #4); anchos de barra aproximados (+-3 px).
+Ventajas: reticulate directo (source_python con matriz de R), tamano fijo 900x630 px, solo matplotlib+numpy. Desventajas: sin fuente condensada portable; tipografia y cuadricula ligeramente distintas del impreso.

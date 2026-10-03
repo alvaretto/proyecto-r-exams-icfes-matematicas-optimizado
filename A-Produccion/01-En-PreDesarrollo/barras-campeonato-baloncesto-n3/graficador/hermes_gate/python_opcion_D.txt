@@ -1,0 +1,57 @@
+{
+  "veredicto": "DUDOSO",
+  "confianza": "baja",
+  "auto_insertable": false,
+  "estrategia": "numerica",
+  "datos_gen": {
+    "series": {
+      "Grado sexto": {
+        "Partidos ganados": 5,
+        "Partidos perdidos": 8
+      },
+      "Grado séptimo": {
+        "Partidos ganados": 7,
+        "Partidos perdidos": 4
+      }
+    },
+    "valores_sueltos": [],
+    "etiquetas_ejes": [
+      "Partidos ganados | Partidos perdidos",
+      "Número de partidos"
+    ],
+    "titulo": "Informe de partidos del campeonato"
+  },
+  "datos_desc": {
+    "series": {
+      "Partidos ganados": {
+        "Grado sexto": 5,
+        "Grado séptimo": 7
+      },
+      "Partidos perdidos": {
+        "Grado sexto": 8,
+        "Grado séptimo": 4
+      }
+    },
+    "valores_sueltos": [],
+    "etiquetas_ejes": [
+      "Grado sexto / Grado séptimo",
+      "0 a 8"
+    ],
+    "titulo": "Informe de partidos del campeonato"
+  },
+  "comparacion": {
+    "gen_vs_desc": {
+      "coinciden": true,
+      "faltan_en_gen": [],
+      "extra_en_gen": [],
+      "n_gen": 4,
+      "n_otro": 4
+    }
+  },
+  "checklist": {
+    "ok": false,
+    "fallas": [
+      "checklist sin respuesta parseable → a humano"
+    ]
+  }
+}

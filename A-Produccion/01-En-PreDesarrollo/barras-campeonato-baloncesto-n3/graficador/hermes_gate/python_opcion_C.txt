@@ -1,0 +1,1 @@
+DATOS= {"series": {"Grado sexto": {"Partidos ganados": 5, "Partidos perdidos": 7}, "Grado séptimo": {"Partidos ganados": 8, "Partidos perdidos": 4}}, "valores_sueltos": [], "etiquetas_ejes": ["Partidos ganados, Partidos perdidos", "Número de partidos"], "titulo": "Informe de partidos del campeonato"}

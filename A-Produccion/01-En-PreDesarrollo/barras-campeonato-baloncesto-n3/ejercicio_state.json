@@ -1,0 +1,89 @@
+{
+  "version": "2.0",
+  "ejercicio": "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-10-02T20:31:40.605123-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-02T21:42:20.664814-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-02T20:31:40.642316-05:00",
+      "resultado": null,
+      "competencia": "Interpretación y representación",
+      "componente": "Aleatorio",
+      "nivel": 3,
+      "descriptor": "D3.1 (N3 #1 de niveles-mat.json)",
+      "dok": 2,
+      "bloom": "Analizar",
+      "solo": "Relacional",
+      "clave_oficial": "C",
+      "fuente": "MAT-2026-1-015 pagina_016.jpg+pagina_017.jpg"
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-10-02T20:55:11.013381-05:00",
+      "decision_humana": "s (WAIT_USER #1, 2026-10-02)",
+      "nota": "requerido=true; 2b/2c pendientes - completado se sella tras la eleccion de lenguaje (WAIT_USER #2)",
+      "lenguaje_elegido": "tikz",
+      "decision_humana_lenguaje": "tikz (WAIT_USER #2, 2026-10-02)",
+      "similitud_tikz": "94 (no alcanza 98; usuario eligio igual)",
+      "opcion_b_canonica": "literal_4.5 (decision H-5 del usuario)",
+      "lenguaje": "tikz"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:00:31.486226-05:00",
+      "archivo": "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:00:31.542917-05:00",
+      "nota": "Solution con 6 secciones metacognitivas + analisis por contenido de cada distractor"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:09:24.618906-05:00",
+      "artefactos": "salida/final/{html,pdf,tex,docx,nops,moodle}",
+      "pandocbounded_uso": 0,
+      "moodle_nombres": "solo diagrama_a..d + grafica_enunciado",
+      "rstudio_pandoc_pdf": "OK"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:09:24.676918-05:00",
+      "nota": "2A ERR_C4 exshuffle FALSE (conflicto regla #4); 2D OK tras quitar backtick; 2E idem C4; 2G 100/100 manual; 2H 10/10 PASA manual; 2I/2J/2K/2N/2O OK"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:29:10.896195-05:00",
+      "veredicto": "APROBAR",
+      "nota": "3 AgenteDetractor distintos sin name: APROBAR_CON_CAMBIOS -> RECHAZAR (frase falsa E7 encadenado) -> APROBAR; 2 pasadas de correccion de 3"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:29:10.953397-05:00",
+      "nota": "AgenteValidadorVisual: 4/5 OK + colision de color (corregida en pasada 1, verificada por detractor 2 y 3); auditor-visual-html N=24 APTO_CON_OBSERVACIONES"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:29:11.011300-05:00",
+      "versiones_unicas": null,
+      "versiones_unicas_clave": "87/100",
+      "diversidad": "PASS",
+      "diagnosticidad": "PASS H1 0 H2 0 H3 52",
+      "p7": "PASS exceso -0.4 pp"
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:29:11.068320-05:00",
+      "nota": "metadatos literales vs catalogo (IyR_E2, D3.1, estandar 4-5 aleatorio); DOK2/N3 coherente"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-10-02T21:42:20.664814-05:00",
+      "nota": "aprobado por el usuario condicionado a 4 correcciones, aplicadas y verificadas",
+      "detractor_diff": "APROBAR_CON_CAMBIOS (0 criticas/altas); sus 2 MEDIAS de CSS en Moodle aplicadas (selector acotado a div.tabla-datos)"
+    }
+  }
+}

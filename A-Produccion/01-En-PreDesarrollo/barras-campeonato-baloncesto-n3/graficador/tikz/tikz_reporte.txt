@@ -1,0 +1,11 @@
+Reporte TikZ (TikZ puro, sin pgfplots) - barras-campeonato-baloncesto-n3 - iteracion 3
+Fig | Colores20 Pos20 Valores20 Prop15 Estilos15 Elem10 | Total
+barras_septimo | 19 19 20 13 13 10 | 94
+opcion_A       | 19 19 20 13 13 10 | 94  (eje a 13: OK)
+opcion_B       | 19 19 20 13 13 10 | 94  (eje a 13 via ymax=13: OK; B reproduce 4,5)
+opcion_C       | 19 19 20 13 13 10 | 94  (eje a 8: OK)
+opcion_D       | 19 19 20 13 13 10 | 94  (eje a 8: OK)
+param_agrupada / param_apilada: sin original; misma maquetacion (ejes 11 y 17 segun datos).
+Cambios iter 3: titulo 15.5 pt negrita (~63 % del ancho, como R/Python), eje Y 14.5 pt negrita, ticks 12 pt, categorias y leyenda 11.5 pt; ejes x0=1.5, yb=1.0, yt=9.0; parametro ymax opcional en barras_opcion_tikz.
+Desviaciones residuales: Helvetica ancha vs fuente condensada del impreso (titulo y rotulos algo mas anchos/menos densos); titulo centrado (impreso mas a la izquierda); sin textura/ruido de foto; marco del eje Y sobresale 0.35 cm; en los impresos A/B el eje parte desde un recorte distinto y los ticks son mas pequenos; en param_apilada (max 17) el ultimo tick rotulado es 16 (paso 2).
+Similitud observada ~94 %, no 98 (Prop/Estilos penalizan la tipografia sustituida).

@@ -1,0 +1,610 @@
+```{r data_generation, echo = FALSE, results = "hide", message = FALSE, warning = FALSE}
+library(exams)
+
+## ===========================================================================
+## barras-campeonato-baloncesto-n3 — SCHOICE con opciones GRÁFICAS (regla #4)
+## Origen: MAT-2026-1-015 (cuadernillo 2026-1, páginas 16-17, clave C).
+##
+## Diseño (auditado en el paso 2b/2c del orquestador):
+##  * M es la matriz 2x2 de datos reales: fila 1 = grado de la TABLA,
+##    fila 2 = grado de la GRÁFICA; columna 1 = ganados, columna 2 = perdidos.
+##  * Cada opción es una matriz 2x2 dibujada como barras AGRUPADAS o APILADAS.
+##    La clave es la ÚNICA opción cuya matriz es idéntica a M (0 segundas
+##    claves por construcción: un formato distinto con la misma matriz SÍ
+##    contendría la información, por eso se exige matriz distinta).
+##  * Formato de la clave sorteado 50/50; reparto 2+2 de formatos.
+##  * Topología de centro aleatorio (§P7-E, canal medoide): en el 25 % de las
+##    versiones los tres distractores derivan de la clave por un error; en el
+##    75 % un distractor W deriva de la clave y los otros dos derivan de W.
+##    Medido en prototipo: acierto por "elegir la opción más central" = 22 %
+##    (azar 25 %), frente al 59,5 % de la topología en estrella.
+##  * Instancia canónica (1 de cada 8): datos, formatos y orden A-D del
+##    cuadernillo, clave C. Decisión H-5 del profesor: la opción B conserva el
+##    4,5 LITERAL del impreso (total 9,5) solo en esa instancia.
+##  * Ejes compartidos por formato (como en el impreso: A y B a 13; C y D a 8).
+## ===========================================================================
+
+## ---- Utilidades -----------------------------------------------------------
+fmt_num <- function(x) {
+  vapply(x, function(v) {
+    if (abs(v - round(v)) < 1e-9) formatC(round(v), format = "d")
+    else sub(".", ",", formatC(v, format = "f", digits = 1), fixed = TRUE)
+  }, character(1))
+}
+tex_acentos <- function(s) {
+  reps <- c("á" = "\\'{a}", "é" = "\\'{e}", "í" = "\\'{\\i}", "ó" = "\\'{o}",
+            "ú" = "\\'{u}", "ñ" = "\\~{n}", "Á" = "\\'{A}", "É" = "\\'{E}",
+            "Í" = "\\'{I}", "Ó" = "\\'{O}", "Ú" = "\\'{U}", "Ñ" = "\\~{N}")
+  for (k in names(reps)) s <- gsub(k, reps[[k]], s, fixed = TRUE)
+  s
+}
+elegir <- function(x) x[[sample.int(length(x), 1L)]]
+
+## ---- Instancia canónica ---------------------------------------------------
+es_canonica <- (sample.int(8L, 1L) == 1L)
+
+## ---- Contexto narrativo (regla #11) ----------------------------------------
+pares_grados <- list(c("sexto", "séptimo"), c("séptimo", "octavo"),
+                     c("octavo", "noveno"), c("noveno", "décimo"),
+                     c("décimo", "undécimo"))
+deportes <- list(
+  list(dep = "baloncesto",    evento = "campeonato", unidad = "partidos",
+       cats = c("Partidos ganados", "Partidos perdidos")),
+  list(dep = "voleibol",      evento = "torneo",     unidad = "partidos",
+       cats = c("Partidos ganados", "Partidos perdidos")),
+  list(dep = "microfútbol",   evento = "campeonato", unidad = "partidos",
+       cats = c("Partidos ganados", "Partidos perdidos")),
+  list(dep = "balonmano",     evento = "torneo",     unidad = "partidos",
+       cats = c("Partidos ganados", "Partidos perdidos")),
+  list(dep = "ajedrez",       evento = "torneo",     unidad = "partidas",
+       cats = c("Partidas ganadas", "Partidas perdidas")),
+  list(dep = "tenis de mesa", evento = "campeonato", unidad = "partidos",
+       cats = c("Partidos ganados", "Partidos perdidos"))
+)
+organizadores <- list(
+  list(suj = "El profesor de Educación Física",        min = "el profesor de Educación Física",        pron = "el profesor"),
+  list(suj = "La profesora de Educación Física",       min = "la profesora de Educación Física",       pron = "la profesora"),
+  list(suj = "El coordinador de deportes",             min = "el coordinador de deportes",             pron = "el coordinador"),
+  list(suj = "La docente encargada del club deportivo", min = "la docente encargada del club deportivo", pron = "la docente"),
+  list(suj = "El comité deportivo",                    min = "el comité deportivo",        pron = "el comité"),
+  list(suj = "La monitora de deportes",               min = "la monitora de deportes",               pron = "la monitora")
+)
+nombres_estudiantes <- c("Mariana", "Julián", "Valentina", "Samuel", "Daniela", "Tomás")
+
+contextos <- list(
+  list(tipo = "accion_en_curso", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0(o$suj, " de un colegio organizó un ", d$evento, " de ", d$dep,
+                   " con todos los grados; los resultados para los grados ", g1, " y ", g2,
+                   " los representó en una tabla y una gráfica, respectivamente."),
+    pregunta = paste0("¿Cuál de las siguientes gráficas contiene la información de la tabla y la gráfica que hizo ",
+                      o$pron, "?"))),
+  list(tipo = "descubrimiento", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0("Al revisar la cartelera del colegio, ", est, " encontró los resultados del ", d$evento,
+                   " de ", d$dep, ": los del grado ", g1, " aparecían en una tabla y los del grado ", g2,
+                   ", en una gráfica de barras."),
+    pregunta = paste0(est, " quiere reunir toda esa información en una sola gráfica. ",
+                      "¿Cuál de las siguientes gráficas contiene la información de la tabla y la de la gráfica?"))),
+  list(tipo = "situacion_problema", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0(o$suj, " debe entregar a la rectoría un único informe del ", d$evento, " de ", d$dep,
+                   ". Tiene los resultados del grado ", g1, " en una tabla y los del grado ", g2,
+                   " en una gráfica de barras."),
+    pregunta = "¿Cuál de las siguientes gráficas reúne correctamente la información de la tabla y la de la gráfica?")),
+  list(tipo = "narracion_periodistica", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0("El periódico escolar publicó los resultados del ", d$evento, " interno de ", d$dep,
+                   ": los del grado ", g1, ", en una tabla, y los del grado ", g2, ", en una gráfica de barras."),
+    pregunta = "¿Cuál de las siguientes gráficas presenta la misma información de la tabla y la gráfica publicadas?")),
+  list(tipo = "perspectiva_estudiante", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0("Haces parte del comité que organizó el ", d$evento, " de ", d$dep,
+                   " del colegio. Te entregaron los resultados del grado ", g1,
+                   " en una tabla y los del grado ", g2, " en una gráfica de barras."),
+    pregunta = "¿Cuál de las siguientes gráficas contiene la información de la tabla y la gráfica que te entregaron?")),
+  list(tipo = "contexto_institucional", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0("En la izada de bandera de la semana deportiva, ", o$min, " presentó los resultados del ",
+                   d$evento, " de ", d$dep, ": los del grado ", g1, " en una tabla y los del grado ", g2,
+                   " en una gráfica de barras."),
+    pregunta = paste0("¿Cuál de las siguientes gráficas contiene la información de la tabla y la gráfica que presentó ",
+                      o$pron, "?"))),
+  list(tipo = "pregunta_retorica", plantilla = function(o, d, g1, g2, est) list(
+    intro = paste0("¿Cómo se reúnen en una sola gráfica dos registros hechos de manera distinta? Para el ",
+                   d$evento, " de ", d$dep, ", ", o$min, " anotó los resultados del grado ", g1,
+                   " en una tabla y los del grado ", g2, " en una gráfica de barras."),
+    pregunta = "¿Cuál de las siguientes gráficas contiene la información de ambos registros?"))
+)
+
+if (es_canonica) {
+  ctx <- contextos[[1]]; dep <- deportes[[1]]; org <- organizadores[[1]]
+  grados <- c("sexto", "séptimo")
+} else {
+  ctx <- elegir(contextos); dep <- elegir(deportes); org <- elegir(organizadores)
+  grados <- elegir(pares_grados)
+  if (sample.int(2L, 1L) == 2L) grados <- rev(grados)   # qué grado va en la tabla
+}
+estudiante <- elegir(as.list(nombres_estudiantes))
+g1 <- grados[1]   # grado de la TABLA  (fila 1 de M)
+g2 <- grados[2]   # grado de la GRÁFICA (fila 2 de M)
+textos <- ctx$plantilla(org, dep, g1, g2, estudiante)
+cats <- dep$cats
+cats_min <- tolower(cats)
+
+## ---- Pool de errores conceptuales (regla #1; 7 entradas, Incidente N) -----
+## calcula() es PURA: recibe params (M y, para E7, la dirección d7) y devuelve
+## la matriz que dibuja quien comete el error.
+errores_conceptuales <- list(
+  list(codigo = "E1", nombre = "Grados intercambiados",
+       descripcion_corta = "Atribuye a cada grado los resultados del otro grado.",
+       descripcion_larga = "Las cuatro cantidades son las de las fuentes, pero las de la tabla quedaron en el color del grado de la gráfica y viceversa: se leyó la leyenda al revés.",
+       causa_raiz = "No se verifica qué color representa a cada grado antes de leer las barras.",
+       precondicion = function(params) TRUE,
+       calcula = function(params) params$M[2:1, , drop = FALSE]),
+  list(codigo = "E2", nombre = "Categorías invertidas en el grado de la tabla",
+       descripcion_corta = "Intercambia ganados y perdidos del grado de la tabla.",
+       descripcion_larga = "Los datos del grado de la tabla aparecen, pero el valor de ganados quedó en la columna de perdidos y al revés: se trasladó la fila de la tabla sin mirar los encabezados de columna.",
+       causa_raiz = "Se copian los números de la tabla en orden sin relacionarlos con su encabezado.",
+       precondicion = function(params) TRUE,
+       calcula = function(params) { M <- params$M; M[1, ] <- M[1, 2:1]; M }),
+  list(codigo = "E3", nombre = "Categorías invertidas en el grado de la gráfica",
+       descripcion_corta = "Intercambia ganados y perdidos del grado de la gráfica.",
+       descripcion_larga = "Las alturas de las dos barras de la gráfica original se asignaron a la categoría equivocada: no se leyó el rótulo que hay debajo de cada barra.",
+       causa_raiz = "Se lee la altura de las barras sin leer el rótulo del eje horizontal.",
+       precondicion = function(params) TRUE,
+       calcula = function(params) { M <- params$M; M[2, ] <- M[2, 2:1]; M }),
+  list(codigo = "E4", nombre = "Cruce entre los ganados de la gráfica y los perdidos de la tabla",
+       descripcion_corta = "Intercambia los ganados del grado de la gráfica con los perdidos del grado de la tabla.",
+       descripcion_larga = "Dos de los cuatro valores cambiaron de casilla en diagonal: los ganados de un grado pasaron a ser los perdidos del otro. Las otras dos casillas sí coinciden, por eso la gráfica parece correcta a primera vista.",
+       causa_raiz = "Se comprueba solo una parte de la información y se da por buena la gráfica completa.",
+       precondicion = function(params) TRUE,
+       calcula = function(params) { M <- params$M; t <- M[2, 1]; M[2, 1] <- M[1, 2]; M[1, 2] <- t; M }),
+  list(codigo = "E5", nombre = "Cruce entre los ganados de la tabla y los perdidos de la gráfica",
+       descripcion_corta = "Intercambia los ganados del grado de la tabla con los perdidos del grado de la gráfica.",
+       descripcion_larga = "Dos valores cambiaron de casilla en diagonal: los ganados del grado de la tabla aparecen como perdidos del grado de la gráfica y al revés. Las otras dos casillas coinciden, lo que engaña a quien revisa solo una barra por grado.",
+       causa_raiz = "Se verifica la gráfica de forma parcial en lugar de cotejar las cuatro casillas.",
+       precondicion = function(params) TRUE,
+       calcula = function(params) { M <- params$M; t <- M[1, 1]; M[1, 1] <- M[2, 2]; M[2, 2] <- t; M }),
+  list(codigo = "E6", nombre = "Categorías invertidas en ambos grados",
+       descripcion_corta = "Intercambia ganados y perdidos en los dos grados.",
+       descripcion_larga = "Cada grado conserva su pareja de valores, pero en las dos categorías equivocadas: es como si los rótulos del eje horizontal estuvieran intercambiados.",
+       causa_raiz = "Se compara la forma general de la gráfica sin leer los rótulos de las categorías.",
+       precondicion = function(params) TRUE,
+       calcula = function(params) params$M[, 2:1, drop = FALSE]),
+  list(codigo = "E7", nombre = "Lectura imprecisa de la altura de una barra",
+       descripcion_corta = "Lee una barra de la gráfica una unidad por encima o por debajo.",
+       descripcion_larga = "Uno de los valores del grado de la gráfica difiere en una unidad del real: la altura de la barra se leyó en la línea de la cuadrícula vecina.",
+       causa_raiz = "No se sigue con cuidado la línea horizontal desde el extremo de la barra hasta el eje.",
+       precondicion = function(params) {
+         v <- params$M[2, params$d7$col] + params$d7$s
+         v >= 1
+       },
+       calcula = function(params) {
+         M <- params$M; M[2, params$d7$col] <- M[2, params$d7$col] + params$d7$s; M
+       })
+)
+codigos_pool <- vapply(errores_conceptuales, function(e) e$codigo, character(1))
+
+## E7 solo puede alterar una casilla que contenga un dato de la GRÁFICA (en una
+## cadena, tras E1/E4/E5 esa fila puede tener datos de la tabla, que no se leen
+## con una barra) y su resultado no puede coincidir con ningún dato real (si
+## coincidiera, la Solution no podría atribuir el valor sin ambigüedad).
+## Detractor FASE 2C, re-auditoría, objeción 1.
+aplicar_error <- function(k, Mbase) {
+  e <- errores_conceptuales[[k]]
+  if (e$codigo == "E7") {
+    cols_graf <- which(Mbase[2, ] %in% M[2, ])
+    if (!length(cols_graf)) return(NULL)
+    col7 <- cols_graf[sample.int(length(cols_graf), 1L)]
+    p <- list(M = Mbase, d7 = list(col = col7, s = c(-1L, 1L)[sample.int(2L, 1L)]))
+  } else {
+    p <- list(M = Mbase, d7 = list(col = 1L, s = 1L))
+  }
+  if (!isTRUE(e$precondicion(p))) return(NULL)
+  e7 <- NULL
+  if (e$codigo == "E7") {
+    v <- Mbase[2, p$d7$col]; nv <- v + p$d7$s
+    if (nv %in% M) return(NULL)
+    e7 <- list(v = v, nv = nv)
+  }
+  list(M = e$calcula(p), codigo = e$codigo, e7 = e7)
+}
+
+## ---- Generación de datos y distractores (F1: bucle con cota) --------------
+if (es_canonica) {
+  M <- matrix(c(5, 7, 8, 4), 2L, byrow = TRUE)
+  mat_A <- errores_conceptuales[[1]]$calcula(list(M = M))            # A: grados intercambiados
+  mat_B <- matrix(c(4, 4.5, 8, 5), 2L, byrow = TRUE)                  # B: literal del impreso
+  mat_D <- errores_conceptuales[[4]]$calcula(list(M = M))            # D: cruce diagonal
+  mats_distr <- list(mat_A, mat_B, mat_D)
+  rutas <- list("E1", "CANON_B", "E4")
+  e7_distr <- list(NULL, NULL, NULL)
+  centro_es_clave <- TRUE
+  fmt_pre <- c("agrupada", "apilada", "apilada", "agrupada")         # clave, A, B, D
+  orden <- c(2L, 3L, 1L, 4L)                                          # A, B, C(clave), D
+  intentos <- 0L
+} else {
+  max_intentos <- 400L; intentos <- 0L; ok <- FALSE
+  while (!ok && intentos < max_intentos) {
+    intentos <- intentos + 1L
+    M <- matrix(sample(2:9, 4L), 2L, byrow = TRUE)
+    centro_es_clave <- (runif(1) < 0.25)
+    if (centro_es_clave) {
+      idx <- sample.int(7L, 3L)
+      res <- lapply(idx, aplicar_error, Mbase = M)
+      rutas <- as.list(codigos_pool[idx])
+    } else {
+      a <- sample.int(7L, 1L)
+      W <- aplicar_error(a, M)
+      if (is.null(W)) next
+      resto <- setdiff(seq_len(7L), a)
+      idx <- resto[sample.int(length(resto), 2L)]
+      res <- c(list(W), lapply(idx, aplicar_error, Mbase = W$M))
+      rutas <- list(codigos_pool[a], codigos_pool[c(a, idx[1])], codigos_pool[c(a, idx[2])])
+    }
+    if (any(vapply(res, is.null, logical(1)))) next
+    mats_distr <- lapply(res, function(r) r$M)
+    e7_distr <- lapply(res, function(r) r$e7)
+    if (!centro_es_clave && !is.null(res[[1]]$e7))      # E7 aplicado primero: su valor viaja con la cadena
+      for (q in 2:3) if (is.null(e7_distr[[q]])) e7_distr[q] <- list(res[[1]]$e7)
+    todas <- c(list(M), mats_distr)
+    vec <- lapply(todas, as.vector)
+    ok <- !any(vapply(mats_distr, function(X) identical(as.vector(X), as.vector(M)), logical(1))) &&
+      !any(duplicated(vec)) &&
+      all(unlist(vec) >= 1) && all(unlist(vec) <= 14) &&
+      all(vapply(todas, function(X) max(colSums(X)) <= 15, logical(1)))
+  }
+  stopifnot(ok)
+  fmt_clave <- c("agrupada", "apilada")[sample.int(2L, 1L)]
+  fmt_otro <- setdiff(c("agrupada", "apilada"), fmt_clave)
+  resto_fmt <- c(fmt_clave, fmt_otro, fmt_otro)
+  fmt_pre <- c(fmt_clave, resto_fmt[sample.int(3L, 3L)])
+  ## Compensación posicional (detractor FASE 2C, objeción 1): la canónica fija la
+  ## clave en C en 1/8 de las versiones; fuera de ella P(C) = 1/7 y las demás 2/7,
+  ## de modo que la marginal es exactamente 1/4 en cada posición:
+  ## 1/8 + 7/8 * 1/7 = 1/4 ; 7/8 * 2/7 = 1/4.
+  pos_clave <- sample.int(4L, 1L, prob = c(2, 2, 1, 2))
+  otras <- (2:4)[sample.int(3L, 3L)]
+  orden <- integer(4L); orden[pos_clave] <- 1L; orden[-pos_clave] <- otras
+}
+
+mats_pre <- c(list(M), mats_distr)          # índice 1 = clave
+es_clave_pre <- c(TRUE, FALSE, FALSE, FALSE)
+
+## Garantías (regla #4 formato equilibrado; 0 segundas claves; unicidad)
+stopifnot(sum(fmt_pre == fmt_pre[1]) >= 2L, sum(fmt_pre == "agrupada") == 2L)
+stopifnot(sum(vapply(mats_pre, function(X) identical(as.vector(X), as.vector(M)), logical(1))) == 1L)
+stopifnot(!any(duplicated(lapply(mats_pre, as.vector))))
+
+## ---- Mezcla interna (exshuffle: FALSE, regla #4) -------------------------
+mats_op <- mats_pre[orden]
+fmt_op <- fmt_pre[orden]
+sol <- es_clave_pre[orden]
+solucion <- sol
+rutas_op <- c(list("CLAVE"), rutas)[orden]
+e7_op <- c(list(NULL), e7_distr)[orden]
+letra_correcta <- c("a", "b", "c", "d")[which(sol)]   # solo para logs; nunca en Solution
+if (es_canonica) stopifnot(identical(letra_correcta, "c"))
+
+## Ejes compartidos por formato (como el impreso)
+ymax_por_fmt <- c(
+  agrupada = max(unlist(mats_op[fmt_op == "agrupada"])),
+  apilada  = max(vapply(mats_op[fmt_op == "apilada"], function(X) max(colSums(X)), numeric(1)))
+)
+ymax_por_fmt <- ceiling(ymax_por_fmt)
+stopifnot(all(ymax_por_fmt <= 15))
+
+## ---- Paletas -------------------------------------------------------------
+## Combinaciones (opciones, enunciado) SIN tonos parecidos entre ambas paletas:
+## el color de las opciones codifica el GRADO y el del enunciado la CATEGORÍA, y
+## un mismo tono con dos significados sería un distractor involuntario.
+combinaciones_color <- list(
+  list(op = c("#F2501E", "#1EAAD8"), en = c("#FF1A8C", "#00B33C")),   # canónica
+  list(op = c("#F2501E", "#1EAAD8"), en = c("#8C564B", "#6B6B6B")),
+  list(op = c("#7B3FA0", "#F2A71E"), en = c("#16A085", "#8C564B")),
+  list(op = c("#2E8B57", "#E0457B"), en = c("#3366CC", "#8C564B")),
+  list(op = c("#1F5FBF", "#F28C28"), en = c("#FF1A8C", "#00B33C"))
+)
+comb_color <- if (es_canonica) combinaciones_color[[1]] else elegir(combinaciones_color)
+col_op <- comb_color$op; col_enun <- comb_color$en
+
+## ---- Títulos -------------------------------------------------------------
+titulo_tabla <- paste0("Tabla de información del ", dep$evento, " para grado ", g1)
+titulo_grafica <- paste0("Gráfica de información del\\\\", dep$evento, " para grado ", g2)
+titulo_opciones <- paste0("Informe de ", dep$unidad, " del ", dep$evento)
+etiqueta_y <- paste0("Número de ", dep$unidad)
+leyenda <- paste("Grado", c(g1, g2))
+
+## ---- Representación textual de cada opción (para los validadores) --------
+## Lo que distingue a una opción-gráfica es su FORMATO y sus 4 valores.
+describe_mat <- function(X) paste0(g1, ": ", fmt_num(X[1, 1]), " y ", fmt_num(X[1, 2]),
+                                   "; ", g2, ": ", fmt_num(X[2, 1]), " y ", fmt_num(X[2, 2]))
+opciones_mezcladas <- paste0(fmt_op, " | ", vapply(mats_op, describe_mat, character(1)))
+opciones <- opciones_mezcladas
+respuesta_correcta <- opciones_mezcladas[which(sol)]   # contenido de la clave (formato + 4 valores)
+stopifnot(length(unique(opciones_mezcladas)) == 4L, sum(sol) == 1L)
+
+params <- list(M = M, d7 = list(col = 1L, s = 1L))
+
+## ---- Diagnóstico de cada distractor (Solution, por CONTENIDO) -------------
+## Clasifica una matriz respecto de M: ¿la produce un único error del pool?
+clasificar <- function(X) {
+  hits <- character(0)
+  for (k in seq_along(errores_conceptuales)) {
+    e <- errores_conceptuales[[k]]
+    variantes <- if (e$codigo == "E7")
+      list(list(col = 1L, s = 1L), list(col = 1L, s = -1L), list(col = 2L, s = 1L), list(col = 2L, s = -1L))
+    else list(list(col = 1L, s = 1L))
+    for (dd in variantes) {
+      p <- list(M = M, d7 = dd)
+      if (isTRUE(e$precondicion(p)) && identical(as.vector(e$calcula(p)), as.vector(X))) hits <- c(hits, e$codigo)
+    }
+  }
+  unique(hits)
+}
+nombre_celda <- function(i, j) paste0("grado ", grados[i], ", ", cats_min[j])
+diferencias <- function(X, e7 = NULL) {
+  out <- character(0)
+  for (i in 1:2) for (j in 1:2) {
+    if (abs(X[i, j] - M[i, j]) > 1e-9) {
+      origen <- which(abs(M - X[i, j]) < 1e-9, arr.ind = TRUE)
+      nota <- if (!is.null(e7) && abs(X[i, j] - e7$nv) < 1e-9)
+        paste0("es el dato ", fmt_num(e7$v), " del ", nombre_celda(2L, which(M[2, ] == e7$v)),
+               ", leído una unidad ", if (e7$nv > e7$v) "por encima" else "por debajo",
+               ": la barra se leyó en la línea vecina de la cuadrícula")
+      else if (nrow(origen) > 0)
+        paste0("ese valor es el dato del ", nombre_celda(origen[1, 1], origen[1, 2]))
+      else "ese valor no aparece en ninguna de las dos fuentes"
+      out <- c(out, paste0(nombre_celda(i, j), ": la gráfica muestra ", fmt_num(X[i, j]),
+                           ", pero el dato real es ", fmt_num(M[i, j]), " (", nota, ")"))
+    }
+  }
+  out
+}
+nombre_formato <- function(f) if (f == "agrupada") "barras agrupadas" else "barras apiladas"
+
+reflexiones <- c(
+  "Antes de elegir, ¿comprobaste las cuatro casillas de la información o te detuviste cuando las dos primeras coincidieron?",
+  "¿Identificaste primero qué color representa a cada grado, o leíste las barras suponiendo el orden de la leyenda?",
+  "Cuando una gráfica apila dos grados, ¿leíste la altura de cada segmento o la altura a la que llega su borde superior?",
+  "Si cambiaras el tipo de gráfica, ¿cambiaría la información que contiene? ¿Qué es lo que realmente tienes que comparar?"
+)
+reflexion <- reflexiones[sample.int(length(reflexiones), 1L)]
+
+message("barras-campeonato: canonica=", es_canonica, " clave=", letra_correcta,
+        " fmt_clave=", fmt_pre[1], " centro_clave=", centro_es_clave, " intentos=", intentos)
+```
+
+```{r graficos, echo = FALSE, results = "hide", message = FALSE, warning = FALSE}
+## Figuras TikZ (lenguaje elegido por el profesor en WAIT_USER #2).
+## TikZ puro, sin pgfplots. Lienzo fijo 15,24 x 10,67 cm: todas las opciones
+## salen del mismo tamaño en píxeles. Nombres neutrales diagrama_a..d
+## asignados DESPUÉS de la mezcla (regla #22 §P6).
+## Solo se compila dentro de knitr (exams2*): los validadores que evalúan los
+## chunks en crudo (multisemilla, coherencia) no necesitan las imágenes y,
+## con 5 compilaciones por versión, no cabrían en el timeout del hook.
+.f3 <- function(x) formatC(x, format = "f", digits = 3)
+.rgb <- function(h) { v <- as.integer(grDevices::col2rgb(h)); paste0("{rgb,255:red,", v[1], ";green,", v[2], ";blue,", v[3], "}") }
+
+cuerpo_tikz <- function(barras, ymax, titulo, etq_y, categorias, leyenda_txt, leyenda_col, x1) {
+  W <- 15.24; H <- 10.67; x0 <- 1.5; yb <- 1.0; yt <- 9.0
+  paso <- if (ymax <= 15) 1 else 2
+  esc <- (yt - yb) / ymax
+  L <- sprintf("\\useasboundingbox (0,0) rectangle (%s,%s);", .f3(W), .f3(H))
+  L <- c(L, sprintf("\\fill[white] (0,0) rectangle (%s,%s);", .f3(W), .f3(H)))
+  for (t in seq(0, ymax, by = paso)) {
+    y <- yb + t * esc
+    if (t > 0) L <- c(L, sprintf("\\draw[gray!55,line width=0.4pt] (%s,%s) -- (%s,%s);", .f3(x0), .f3(y), .f3(x1), .f3(y)))
+    L <- c(L, sprintf("\\node[anchor=east,font=\\fontsize{14}{16}\\selectfont,inner sep=2pt] at (%s,%s) {%d};", .f3(x0 - 0.05), .f3(y), as.integer(t)))
+  }
+  for (b in barras)
+    L <- c(L, sprintf("\\fill[fill=%s] (%s,%s) rectangle (%s,%s);", .rgb(b$col), .f3(b$x0), .f3(yb + b$y0 * esc), .f3(b$x1), .f3(yb + b$y1 * esc)))
+  L <- c(L, sprintf("\\draw[line width=0.8pt,black!85] (%s,%s) -- (%s,%s) -- (%s,%s);", .f3(x0), .f3(yt + 0.35), .f3(x0), .f3(yb), .f3(x1), .f3(yb)))
+  slot <- (x1 - x0) / 2
+  for (i in 1:2) L <- c(L, sprintf("\\node[font=\\fontsize{13.5}{15}\\selectfont] at (%s,%s) {%s};", .f3(x0 + (i - 0.5) * slot), .f3(yb - 0.5), tex_acentos(categorias[i])))
+  L <- c(L, sprintf("\\node[rotate=90,font=\\bfseries\\fontsize{14.5}{16}\\selectfont] at (0.45,%s) {%s};", .f3((yb + yt) / 2), tex_acentos(etq_y)))
+  L <- c(L, sprintf("\\node[font=\\bfseries\\fontsize{15.5}{18}\\selectfont,align=center] at (%s,%s) {%s};", .f3((x0 + x1) / 2 + 0.5), .f3(10.0), tex_acentos(titulo)))
+  if (!is.null(leyenda_txt)) for (i in 1:2) {
+    yy <- 5.4 - (i - 1) * 0.95
+    L <- c(L, sprintf("\\fill[fill=%s] (%s,%s) rectangle (%s,%s);", .rgb(leyenda_col[i]), .f3(x1 + 0.4), .f3(yy - 0.17), .f3(x1 + 0.74), .f3(yy + 0.17)))
+    L <- c(L, sprintf("\\node[anchor=west,font=\\fontsize{13.5}{15}\\selectfont] at (%s,%s) {%s};", .f3(x1 + 0.85), .f3(yy), tex_acentos(leyenda_txt[i])))
+  }
+  paste(L, collapse = "\n")
+}
+
+tikz_barras_simples <- function(valores, categorias, colores, titulo, etq_y) {
+  x0 <- 1.5; x1 <- 14.6; slot <- (x1 - x0) / 2; w <- 0.4 * slot
+  barras <- lapply(1:2, function(i) { c0 <- x0 + (i - 0.5) * slot
+    list(x0 = c0 - w / 2, x1 = c0 + w / 2, y0 = 0, y1 = valores[i], col = colores[i]) })
+  cuerpo_tikz(barras, as.integer(ceiling(max(valores))), titulo, etq_y, categorias, NULL, NULL, x1)
+}
+
+## X[grupo, categoría]; grupo 1 = grado de la tabla, grupo 2 = grado de la gráfica.
+## Agrupada: grupo 1 a la izquierda. Apilada: grupo 2 ABAJO, grupo 1 ARRIBA.
+tikz_barras_opcion <- function(X, grupos, categorias, colores, modo, titulo, etq_y, ymax) {
+  x0 <- 1.5; x1 <- 10.4; slot <- (x1 - x0) / 2
+  barras <- list()
+  for (j in 1:2) { c0 <- x0 + (j - 0.5) * slot
+    if (modo == "agrupada") { w <- 0.3 * slot
+      barras[[length(barras) + 1]] <- list(x0 = c0 - w, x1 = c0, y0 = 0, y1 = X[1, j], col = colores[1])
+      barras[[length(barras) + 1]] <- list(x0 = c0, x1 = c0 + w, y0 = 0, y1 = X[2, j], col = colores[2])
+    } else { w <- 0.36 * slot
+      barras[[length(barras) + 1]] <- list(x0 = c0 - w / 2, x1 = c0 + w / 2, y0 = 0, y1 = X[2, j], col = colores[2])
+      barras[[length(barras) + 1]] <- list(x0 = c0 - w / 2, x1 = c0 + w / 2, y0 = X[2, j], y1 = X[2, j] + X[1, j], col = colores[1])
+    } }
+  cuerpo_tikz(barras, as.integer(ymax), titulo, etq_y, categorias, grupos, colores, x1)
+}
+
+if (isTRUE(getOption("knitr.in.progress"))) {
+  include_tikz(tikz_barras_simples(M[2, ], cats, col_enun, titulo_grafica, etiqueta_y),
+               name = "grafica_enunciado", format = "png", markup = "none")
+  for (i in 1:4) {
+    include_tikz(tikz_barras_opcion(mats_op[[i]], leyenda, cats, col_op, fmt_op[i], titulo_opciones,
+                                    etiqueta_y, ymax_por_fmt[[fmt_op[i]]]),
+                 name = paste0("diagrama_", c("a", "b", "c", "d")[i]), format = "png", markup = "none")
+  }
+}
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{=html}
+<style>
+div.tabla-datos table { border-collapse: collapse; margin: 0.5em 0; }
+div.tabla-datos table th, div.tabla-datos table td { border: 1px solid #555; padding: 4px 14px; }
+</style>
+```
+
+`r textos$intro`
+
+**`r titulo_tabla`**
+
+::: {.tabla-datos}
+|  | `r cats[1]` | `r cats[2]` |
+|:---|:---:|:---:|
+| **Grado `r g1`** | `r fmt_num(M[1, 1])` | `r fmt_num(M[1, 2])` |
+:::
+
+![](grafica_enunciado.png){width=65%}
+
+`r textos$pregunta`
+
+Answerlist
+----------
+* ![](diagrama_a.png){width=85%}
+* ![](diagrama_b.png){width=85%}
+* ![](diagrama_c.png){width=85%}
+* ![](diagrama_d.png){width=85%}
+
+Solution
+========
+
+```{r sol_respuesta, echo = FALSE, results = "asis"}
+k_clave <- which(sol)
+cat("### Respuesta correcta\n\n")
+cat("La gráfica correcta es la de **", nombre_formato(fmt_op[k_clave]), "** que muestra, para el grado ", g1, ", ",
+    fmt_num(M[1, 1]), " ", cats_min[1], " y ", fmt_num(M[1, 2]), " ", cats_min[2],
+    " (datos de la tabla) y, para el grado ", g2, ", ", fmt_num(M[2, 1]), " ", cats_min[1], " y ",
+    fmt_num(M[2, 2]), " ", cats_min[2], " (datos de la gráfica). Es la única de las cuatro gráficas que coincide con las dos fuentes en las cuatro casillas.\n\n", sep = "")
+if (fmt_op[k_clave] == "apilada") {
+  cat("En esta gráfica cada barra apila los dos grados: el segmento inferior corresponde al grado ", g2,
+      " y el superior al grado ", g1, ". Por ejemplo, en ", cats_min[1], " el segmento inferior llega a ",
+      fmt_num(M[2, 1]), " y el superior va de ", fmt_num(M[2, 1]), " a ", fmt_num(M[2, 1] + M[1, 1]),
+      ", es decir, mide ", fmt_num(M[1, 1]), ". La altura total de la barra (", fmt_num(M[2, 1] + M[1, 1]),
+      ") es la suma de los dos grados, no el dato de ninguno de ellos.\n\n", sep = "")
+} else {
+  cat("En esta gráfica cada categoría tiene una barra por grado, una al lado de la otra, y la altura de cada barra se lee directamente en el eje vertical.\n\n")
+}
+```
+
+### Análisis del error
+
+Elegir una gráfica incorrecta casi nunca se debe a no saber leer una barra: suele deberse a **comprobar solo una parte de la información**, o a **confundir los colores de la leyenda**; otro error frecuente con barras apiladas, aunque no siempre aparece entre las opciones, es leer el borde superior de un segmento como si fuera su dato. Cada gráfica incorrecta de esta pregunta falla en al menos una de las cuatro casillas:
+
+```{r sol_distractores, echo = FALSE, results = "asis"}
+for (k in which(!sol)) {
+  X <- mats_op[[k]]
+  cat("**Gráfica de ", nombre_formato(fmt_op[k]), " que asigna al grado ", g1, " ", fmt_num(X[1, 1]), " y ",
+      fmt_num(X[1, 2]), ", y al grado ", g2, " ", fmt_num(X[2, 1]), " y ", fmt_num(X[2, 2]),
+      " (", cats_min[1], " y ", cats_min[2], ", respectivamente).**\n\n", sep = "")
+  cl <- clasificar(X)
+  if (length(cl) >= 1) {
+    e <- errores_conceptuales[[match(cl[1], codigos_pool)]]
+    cat("*", e$codigo, " — ", e$nombre, ".* ", e$descripcion_larga, " *Causa raíz:* ", e$causa_raiz, "\n\n", sep = "")
+  } else if (all(rutas_op[[k]] %in% codigos_pool)) {
+    ea <- errores_conceptuales[[match(rutas_op[[k]][1], codigos_pool)]]
+    eb <- errores_conceptuales[[match(rutas_op[[k]][2], codigos_pool)]]
+    cat("*Dos confusiones encadenadas: ", ea$codigo, " — ", ea$nombre, ", y ", eb$codigo, " — ", eb$nombre,
+        ".* Una sola confusión no basta para producir esta gráfica; la lista indica qué casillas quedaron mal y de dónde sale cada valor. ",
+        if (identical(ea$causa_raiz, eb$causa_raiz)) paste0("*Causa raíz:* ", ea$causa_raiz)
+        else paste0("*Causas raíz:* (", ea$codigo, ") ", ea$causa_raiz, " (", eb$codigo, ") ", eb$causa_raiz),
+        "\n\n", sep = "")
+  } else {
+    cat("*Datos que no provienen de las fuentes.* Esta gráfica conserva algún dato real, pero mezcla datos cambiados de casilla con valores que no figuran en la tabla ni en la gráfica; quien la elige arma la información de memoria en lugar de cotejarla casilla por casilla.\n\n", sep = "")
+  }
+  for (d in diferencias(X, e7 = e7_op[[k]])) cat("- ", d, ".\n", sep = "")
+  cat("\n")
+}
+```
+
+### Procedimiento correcto
+
+1. Leer la tabla: el grado `r g1` tiene `r fmt_num(M[1, 1])` `r cats_min[1]` y `r fmt_num(M[1, 2])` `r cats_min[2]`.
+2. Leer la gráfica: la barra de `r cats_min[1]` del grado `r g2` llega a `r fmt_num(M[2, 1])` y la de `r cats_min[2]`, a `r fmt_num(M[2, 2])`.
+3. Reunir las dos fuentes en una sola tabla de doble entrada (la que aparece debajo).
+4. En cada gráfica de las opciones, identificar primero el tipo (agrupadas o apiladas) y el color de cada grado en la leyenda.
+5. Leer las cuatro casillas según el tipo de gráfica: en barras agrupadas, la altura de cada barra; en barras apiladas, la altura de cada segmento, que es la diferencia entre su borde superior y su borde inferior.
+6. Descartar toda gráfica que falle en una sola casilla.
+
+```{r sol_tabla, echo = FALSE, results = "asis"}
+cat("::: {.tabla-datos}\n")
+cat("|  | ", cats[1], " | ", cats[2], " |\n", sep = "")
+cat("|:---|:---:|:---:|\n")
+cat("| **Grado ", g1, "** | ", fmt_num(M[1, 1]), " | ", fmt_num(M[1, 2]), " |\n", sep = "")
+cat("| **Grado ", g2, "** | ", fmt_num(M[2, 1]), " | ", fmt_num(M[2, 2]), " |\n", sep = "")
+cat(":::\n\n")
+```
+
+### Propiedades del concepto
+
+- Una gráfica de **barras agrupadas** y una de **barras apiladas** pueden contener exactamente la misma tabla de doble entrada; lo que cambia es la forma de leerla, no la información.
+- En barras agrupadas se comparan con facilidad los grados dentro de cada categoría; en barras apiladas se lee además el total de cada categoría (la altura completa de la barra).
+- En una barra apilada solo el segmento inferior empieza en cero; los demás se leen restando.
+- La leyenda es parte de la información: el mismo par de valores con los colores intercambiados representa otra situación.
+
+### Caso específico
+
+```{r sol_caso, echo = FALSE, results = "asis"}
+cat("Con los datos de esta versión, el total de ", cats_min[1], " de los dos grados es ",
+    fmt_num(M[1, 1]), " + ", fmt_num(M[2, 1]), " = ", fmt_num(M[1, 1] + M[2, 1]),
+    " y el total de ", cats_min[2], " es ", fmt_num(M[1, 2]), " + ", fmt_num(M[2, 2]), " = ",
+    fmt_num(M[1, 2] + M[2, 2]), ". Esas son las alturas completas que tendría la versión apilada correcta",
+    "; la versión agrupada correcta, en cambio, tendría cuatro barras de alturas ",
+    fmt_num(M[1, 1]), ", ", fmt_num(M[2, 1]), ", ", fmt_num(M[1, 2]), " y ", fmt_num(M[2, 2]), ".\n\n", sep = "")
+```
+
+### Reflexión metacognitiva
+
+`r reflexion`
+
+### Estrategia para evitar el error
+
+- Antes de mirar las opciones, escribe la tabla de doble entrada con los cuatro datos.
+- En cada opción, ubica primero la leyenda y nombra en voz baja qué color es cada grado.
+- Si la gráfica es apilada, resta para obtener el segmento superior; nunca leas su borde superior como si fuera el dato.
+- Marca una opción solo cuando hayas comprobado las cuatro casillas; una coincidencia parcial no basta.
+
+Answerlist
+----------
+```{r sol_answerlist, echo = FALSE, results = "asis"}
+for (k in 1:4) {
+  if (sol[k]) {
+    cat("* Verdadero. Gráfica de ", nombre_formato(fmt_op[k]), " que coincide con la tabla y con la gráfica en las cuatro casillas.\n", sep = "")
+  } else {
+    nd <- length(diferencias(mats_op[[k]]))
+    cat("* Falso. Gráfica de ", nombre_formato(fmt_op[k]), " que no coincide con las fuentes en ", nd,
+        if (nd == 1) " casilla" else " casillas", ".\n", sep = "")
+  }
+}
+```
+
+Meta-information
+================
+exname: barras_campeonato_baloncesto_n3
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: FALSE
+exsection: Aleatorio/Interpretacion-Representacion
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretacion y representacion
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la informacion cuantitativa y esquematica presentada en distintos formatos.
+exextra[Evidencia]: Transforma la representacion de una o mas piezas de informacion.
+exextra[Nivel]: 3
+exextra[Descriptor]: Selecciona la grafica (que puede ser de doble entrada correspondiente a la informacion de una tabla, o a partir de verbalizaciones (caracteristicas de crecimiento o decrecimiento deseadas), teniendo en cuenta para la seleccion la escala, el tipo de variable y el tipo de grafica.
+exextra[Estandar]: Represento datos usando tablas y graficas (pictogramas, graficas de barras, diagramas de lineas, diagramas circulares).
+exextra[DOK]: 2
+exextra[Bloom]: Analizar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: monitoreo_lectura_representaciones
+exextra[Fuente]: MAT-2026-1-015 (cuadernillo 2026-1, paginas 16-17, clave C)
