@@ -231,6 +231,87 @@ test_that("Una imagen diagrama_* que no es opción no activa la excepción de ex
   unlink(temp_file)
 })
 
+# Rutas del hook: post-exams2-validation.sh ejecuta el CLI del validador y el
+# arsenal (FASE 2E) como scripts, no la función. Antes ninguna aplicaba la
+# excepción de la regla #4 y el hook daba ERR_C4 en todo SCHOICE de opciones
+# gráficas (Error 38). Se ejecutan por el symlink de .claude/scripts, como el hook.
+# DIR_SCRIPTS_HOOK permite apuntar a copias mutadas al verificar que los tests muerden.
+dir_scripts_hook <- Sys.getenv("DIR_SCRIPTS_HOOK",
+  normalizePath(file.path(testthat::test_path(), "..", "..", ".claude", "scripts"), mustWork = FALSE))
+
+ejecutar_script_hook <- function(script, rmd) {
+  salida <- suppressWarnings(system2("Rscript", c(shQuote(script), shQuote(rmd)),
+                                     stdout = TRUE, stderr = TRUE))
+  paste(salida, collapse = "\n")
+}
+
+# El script no debe abortar: un test que solo mira la AUSENCIA del error pasaría
+# también si el script se cae en la rama gráfica.
+expect_sin_caida <- function(salida) {
+  expect_false(grepl("Execution halted|Error in |Error en ", salida), info = salida)
+}
+
+rmd_hook <- function(opciones_graficas) {
+  temp_file <- rmd_opciones_graficas(
+    if (opciones_graficas) "* ![`r alt_op[1]`](diagrama_a.png){width=60%}&#8203;"
+    else c("* Opción 1", "* Opción 2"))
+  lineas <- readLines(temp_file, encoding = "UTF-8")
+  if (!opciones_graficas) {
+    i <- which(lineas == "Test")[1]
+    lineas <- append(lineas, "![Mapa del barrio](diagrama_contexto.png){width=60%}&#8203;", after = i)
+  }
+  writeLines(c(lineas, "exextra[Competencia]: a", "exextra[Componente]: b", "exextra[Nivel]: 1"),
+             temp_file)
+  temp_file
+}
+
+test_that("CLI del validador: acepta opciones gráficas y rechaza SCHOICE de texto", {
+  script <- file.path(dir_scripts_hook, "validar_coherencia_matematica.R")
+  graf <- rmd_hook(TRUE); texto <- rmd_hook(FALSE)
+  on.exit(unlink(c(graf, texto)), add = TRUE)
+  out_graf <- ejecutar_script_hook(script, graf)
+  expect_sin_caida(out_graf)
+  expect_match(out_graf, "exshuffle: FALSE aceptado", fixed = TRUE)
+  expect_false(grepl("ERR_C4: exshuffle", out_graf),
+    info = "el CLI debe aplicar la excepción de la regla #4")
+  out_texto <- ejecutar_script_hook(script, texto)
+  expect_true(grepl("ERR_C4: exshuffle", out_texto),
+    info = "una figura de contexto no exime a un SCHOICE de texto")
+  expect_false(grepl("exshuffle: FALSE aceptado", out_texto, fixed = TRUE))
+  # Con exshuffle: TRUE no hay nada que aceptar: el CLI no debe anunciarlo.
+  graf_true <- rmd_hook(TRUE)
+  on.exit(unlink(graf_true), add = TRUE)
+  writeLines(sub("^exshuffle: FALSE$", "exshuffle: TRUE", readLines(graf_true, encoding = "UTF-8")),
+             graf_true)
+  expect_false(grepl("exshuffle: FALSE aceptado", ejecutar_script_hook(script, graf_true), fixed = TRUE))
+})
+
+test_that("FASE 2E del arsenal: acepta opciones gráficas y rechaza SCHOICE de texto", {
+  script <- file.path(dir_scripts_hook, "arsenal_validacion_completa.R")
+  graf <- rmd_hook(TRUE); texto <- rmd_hook(FALSE)
+  on.exit(unlink(c(graf, texto)), add = TRUE)
+  out_graf <- ejecutar_script_hook(script, graf)
+  expect_sin_caida(out_graf)
+  expect_match(out_graf, "FASE 2E \\(Metadatos ICFES\\):\\s+OK")
+  expect_false(grepl("ERROR CRÍTICO: exshuffle", out_graf),
+    info = "la FASE 2E debe aplicar la excepción de la regla #4")
+  out_texto <- ejecutar_script_hook(script, texto)
+  expect_true(grepl("ERROR CRÍTICO: exshuffle", out_texto),
+    info = "una figura de contexto no exime a un SCHOICE de texto en la FASE 2E")
+})
+
+test_that("FASE 2E sin acceso al validador aplica la regla estricta", {
+  # Si no puede cargar la excepción, no la relaja en silencio (regla #24 H-5).
+  aislado <- file.path(tempfile("arsenal_aislado_"), "arsenal_validacion_completa.R")
+  dir.create(dirname(aislado))
+  file.copy(file.path(dir_scripts_hook, "arsenal_validacion_completa.R"), aislado)
+  graf <- rmd_hook(TRUE)
+  on.exit(unlink(c(graf, dirname(aislado)), recursive = TRUE), add = TRUE)
+  salida <- ejecutar_script_hook(aislado, graf)
+  expect_true(grepl("ERROR CRÍTICO: exshuffle", salida))
+  expect_true(grepl("No se pudo cargar la excepción", salida))
+})
+
 test_that("Validación CLOZE detecta inconsistencias de tipos", {
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(

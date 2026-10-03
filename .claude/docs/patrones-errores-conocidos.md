@@ -3524,19 +3524,49 @@ corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.pn
 | 2026-10-03 | `barras_campeonato_baloncesto_..._n3_schoice_v1.Rmd` | alt en 4 opciones + Solution | `&#8203;` tras cada imagen | sin `&#8203;`: 4 «Figure» en el PDF y 5 `figcaption` en el HTML; con él: 0 y 0 en HTML (semillas 1, 2, 5), PDF examen+solución, DOCX, NOPS y Moodle; páginas 4/7/5 sin cambio |
 | 2026-10-03 | `validar_coherencia_matematica()` (`SOURCES/scripts_validacion/`) | regex `!\[\]\(diagrama_` exige alt vacío | `!\[.*\]\(diagrama_` + 2 tests | mutantes: regex vieja falla 2/2 tests nuevos; `[^]]*` falla 1/2; final 12/12 PASS; `.Rmd` real: 0 errores |
 | 2026-10-03 | Mismo validador (4.º detractor) | `.*` sin ancla oculta ERR_C4 en SCHOICE de texto con `diagrama_contexto.png`; 3 mutantes («cualquier imagen», `diagrama_`, `\(diagrama_`) sobrevivían | ancla `diagrama_[a-z]\.png` + control negativo | 7/7 mutantes mueren; 13/13 PASS; corpus 427 `.Rmd`: 0 SCHOICE con `exshuffle: FALSE` pierden la excepción (los 13 que dejan de activarla son CLOZE o `exshuffle: TRUE`) |
+| 2026-10-03 | CLI del validador + FASE 2E del arsenal (rutas del hook) | sin excepción de la regla #4 | helper único `es_schoice_opciones_graficas()` usado por función, CLI y 2E; regla estricta si no carga | hook: barras `APROBADO` + 2E `OK`; 6/427 `.Rmd` exentos (los 6 de opciones gráficas); tras el 5.º detractor (marcador positivo, sin caída, mensaje condicionado, ruta relativa): 25/25 PASS y los 4 mutantes mueren |
 
-### ⚠️ Deuda declarada (no resuelta por esta entrada)
+### ✅ Deuda del hook — RESUELTA (2026-10-03)
 
-El hook `post-exams2-validation.sh` sigue mostrando `ERR_C4` y FASE 2E en rojo para **todo**
-SCHOICE con opciones gráficas y `exshuffle: FALSE`: el **modo CLI** de
-`validar_coherencia_matematica.R` (bloque `archivo_rmd <- args[1]`) duplica la lógica sin aplicar
-la excepción, y la FASE 2E de `arsenal_validacion_completa.R` rechaza `exshuffle: FALSE` sin
-excepción. Es un falso positivo previo, no un PASS; el arreglo de la regex solo cubre la ruta
-de la función (tests). Pendiente: sacar la excepción a un helper común y un test que ejecute el
-CLI con `system2`.
+Hasta este día el hook `post-exams2-validation.sh` mostraba `ERR_C4` y la FASE 2E en rojo para
+**todo** SCHOICE con opciones gráficas y `exshuffle: FALSE`. El **modo CLI** de
+`validar_coherencia_matematica.R` (bloque `archivo_rmd <- args[1]`, el que ejecuta el hook)
+duplicaba la lógica sin la excepción, y la FASE 2E de `arsenal_validacion_completa.R` rechazaba
+`exshuffle: FALSE` sin excepción alguna. La excepción solo vivía en la función, que en el repo
+únicamente llaman tres tests.
 
-Falsos negativos conocidos de la excepción (siguen dando ERR_C4; ninguno es regresión de esta
-entrada): nombre de archivo interpolado `cat("* ![](", nombre_archivo, ")…")` —real en
+Ahora hay **una sola fuente**: `PATRON_OPCION_GRAFICA_PNG`, `es_schoice_opciones_graficas()` y
+`aplicar_excepcion_exshuffle()` en `validar_coherencia_matematica.R`. Las usan la función, el
+CLI y la FASE 2E. El arsenal las carga con `sys.source()` desde el directorio real del script; si
+no puede cargarlas, avisa y aplica la regla **estricta** (nunca relaja en silencio, H-5).
+
+Medido: el ejercicio de barras pasa de `ERR_C4` + FASE 2E `ERROR` a `APROBADO (0 errores)` +
+FASE 2E `OK`. En los 427 `.Rmd`, quedan exentos exactamente los **6** SCHOICE con opciones
+gráficas de la regla #4 (barras, distribución-contagiados, SAI2 y los 3 Venn de producción). Un
+SCHOICE de texto con `diagrama_contexto.png`, o sin imágenes, sigue dando `ERR_C4` y FASE 2E
+`ERROR`. Tests nuevos ejecutan el CLI y el arsenal con `system2` por el symlink de
+`.claude/scripts/`, como el hook, más uno que aísla el arsenal para comprobar la regla estricta.
+Los tests de la rama gráfica exigen además el **marcador positivo** («exshuffle: FALSE
+aceptado» en el CLI, «FASE 2E … OK» en el arsenal) y que el script **no aborte**: un test que solo
+mira la ausencia del error pasaba también con un `stop()` inyectado en esa rama (19/19 en verde,
+medido por el 5.º detractor). El CLI solo anuncia la aceptación si de verdad filtró un ERR_C4
+(antes lo decía también con `exshuffle: TRUE`, p. ej. en el ejemplo funcional
+`estadistica_diagramas_caja_…_Nivel2_v2.Rmd`). La ruta de los scripts se deriva de
+`testthat::test_path()`, no es absoluta. Mutantes: caída en la rama gráfica → 2 fallos;
+mensaje incondicional → 1; CLI revertido → 4; arsenal revertido → 3; versión final 25/25 PASS.
+
+Pendiente (backlog, no son regresión de este cambio):
+- La excepción se activa con **una** sola línea `diagrama_<letra>.png`; una figura de contexto
+  mal nombrada `diagrama_a.png` en un SCHOICE de texto quedaría exenta. Hoy ninguna en el corpus
+  (los 6 exentos tienen las 4 letras). Endurecer a ≥ 2 letras distintas.
+- El CLI y la FASE 2E **detectan `exshuffle`** de forma distinta (metadato frente a `grepl`
+  sobre todo el texto). 8 discrepancias medidas: `exshuffle: 5` (válido en R/exams; 4 plantillas)
+  y `exshuffle: TRUE # comentario` (3 archivos) dan un ERR_C4 falso en el CLI; un CLOZE con
+  `exshuffle: TRUE` y el texto `exshuffle: FALSE` en un comentario da ERROR falso en la 2E. La
+  2E debería reutilizar `extraer_meta()` del validador, que ya carga.
+
+Falsos negativos conocidos de la excepción (siguen dando ERR_C4 en las tres rutas; ninguno es
+regresión de esta entrada): nombre de archivo interpolado `cat("* ![](", nombre_archivo, ")…")` —real en
 `02-En-Desarrollo/diagrama_caja_estaturas_…_n2_schoice_v1.Rmd`—, rutas `./diagrama_a.png` o
 `img/diagrama_a.png`, nombres que no siguen `diagrama_<letra>.png`, `knitr::include_graphics()`,
 y una referencia comentada `<!-- ![…](diagrama_a.png) -->` que sí la activa (falso positivo).

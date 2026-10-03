@@ -1305,6 +1305,27 @@ validar_codigo <- function(contenido) {
   return(errores)
 }
 
+# --- Excepción de exshuffle: FALSE para opciones gráficas (regla #4) ---
+# Fuente única: la usan validar_coherencia_matematica(), el modo CLI de este script
+# (el que ejecuta el hook) y la FASE 2E de arsenal_validacion_completa.R. Antes
+# cada ruta tenía su propia lógica y solo la función aplicaba la excepción (Error 38).
+#
+# SCHOICE con opciones gráficas PNG usa mezcla interna con sample() y
+# exshuffle: FALSE. El texto alternativo es opcional ("![](diagrama_a.png",
+# "![Gráfica de ...](diagrama_a.png", "![`r alt_op[1]`](diagrama_a.png"): sin clase
+# negada, porque "[^]]*" se cortaba en el "]" de "alt_op[1]". El nombre se ancla al
+# neutral de la regla #4 (diagrama_<letra>.png): una figura de contexto en un
+# SCHOICE de texto no debe ocultar su ERR_C4. La búsqueda es por línea.
+PATRON_OPCION_GRAFICA_PNG <- "!\\[.*\\]\\(diagrama_[a-z]\\.png"
+
+es_schoice_opciones_graficas <- function(lineas, extype) {
+  identical(extype, "schoice") && any(grepl(PATRON_OPCION_GRAFICA_PNG, lineas))
+}
+
+aplicar_excepcion_exshuffle <- function(errores, lineas, extype) {
+  if (es_schoice_opciones_graficas(lineas, extype)) errores[!grepl("exshuffle", errores)] else errores
+}
+
 # --- Función callable (para source() desde tests y otros scripts) ---
 
 #' Valida coherencia matemática de un archivo .Rmd
@@ -1333,19 +1354,9 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
 
   todos_errores <- c(todos_errores, validar_metadatos(parsed$meta))
 
-  # Excepción exshuffle: SCHOICE con opciones gráficas PNG (diagrama_*.png)
-  # permite exshuffle:FALSE porque sample() interno ya aleatoriza
-  # y TRUE rompería la referencia a letra_correcta en Solution
+  # Excepción exshuffle: SCHOICE con opciones gráficas PNG (regla #4)
   contenido_completo <- readLines(archivo_rmd, warn = FALSE, encoding = "UTF-8")
-  # El texto alternativo es opcional: "![](diagrama_a.png", "![Gráfica de ...](diagrama_a.png"
-  # y "![`r alt_op[1]`](diagrama_a.png" son la misma opción gráfica. Sin clase negada:
-  # "[^]]*" se cortaba en el "]" de "alt_op[1]". El nombre se ancla al neutral de la
-  # regla #4 (diagrama_<letra>.png): "diagrama_contexto.png" en el enunciado o la
-  # Solution de un SCHOICE de texto no debe ocultar su ERR_C4. La búsqueda es por línea.
-  tiene_opciones_graficas_png <- any(grepl("!\\[.*\\]\\(diagrama_[a-z]\\.png", contenido_completo))
-  if (tiene_opciones_graficas_png && extype == "schoice") {
-    todos_errores <- todos_errores[!grepl("exshuffle", todos_errores)]
-  }
+  todos_errores <- aplicar_excepcion_exshuffle(todos_errores, contenido_completo, extype)
 
   if (extype == "schoice") {
     todos_errores <- c(todos_errores,
@@ -1424,6 +1435,12 @@ if (length(resultado$warnings) > 0) {
 # 3. Validar metadatos
 cat("\n--- Validando metadatos ---\n")
 err_meta <- validar_metadatos(parsed$meta)
+n_err_meta <- length(err_meta)
+err_meta <- aplicar_excepcion_exshuffle(err_meta, parsed$contenido, extype)
+if (length(err_meta) < n_err_meta) {
+  # Solo se anuncia si de verdad se filtró un ERR_C4 (con exshuffle: TRUE no hay nada que aceptar).
+  cat("  exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>.png, regla #4)\n")
+}
 if (length(err_meta) > 0) {
   for (e in err_meta) cat("  ", e, "\n")
   todos_errores <- c(todos_errores, err_meta)

@@ -211,8 +211,23 @@ for (meta in metadatos_obligatorios) {
   }
 }
 
-# Verificar exshuffle: TRUE
-if (grepl("exshuffle:\\s*FALSE", contenido_texto, ignore.case = TRUE)) {
+# Verificar exshuffle: TRUE, salvo SCHOICE con opciones gráficas (regla #4).
+# La excepción vive en validar_coherencia_matematica.R (fuente única, Error 38).
+# Si no se puede cargar, se aplica la regla estricta: nunca se relaja en silencio.
+extype_2e <- tolower(trimws(sub("^extype:\\s*", "", grep("^extype:", contenido, value = TRUE)[1])))
+excepcion_graficas_2e <- tryCatch({
+  ruta_script <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE)[1])
+  validador <- file.path(dirname(normalizePath(ruta_script)), "validar_coherencia_matematica.R")
+  entorno_validador <- new.env()
+  sys.source(validador, envir = entorno_validador)
+  entorno_validador$es_schoice_opciones_graficas(contenido, extype_2e)
+}, error = function(e) {
+  cat("  ⚠️  No se pudo cargar la excepción de opciones gráficas:", conditionMessage(e), "\n")
+  FALSE
+})
+if (grepl("exshuffle:\\s*FALSE", contenido_texto, ignore.case = TRUE) && excepcion_graficas_2e) {
+  cat("  ✓ exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>.png, regla #4)\n")
+} else if (grepl("exshuffle:\\s*FALSE", contenido_texto, ignore.case = TRUE)) {
   cat("  ❌ ERROR CRÍTICO: exshuffle debe ser TRUE (OBLIGATORIO)\n")
   fase_2e_errores <- fase_2e_errores + 1
 } else if (grepl("exshuffle:\\s*TRUE", contenido_texto, ignore.case = TRUE)) {
