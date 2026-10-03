@@ -438,6 +438,12 @@ if (isTRUE(getOption("knitr.in.progress"))) {
                                     etiqueta_y, ymax_por_fmt[[fmt_op[i]]]),
                  name = paste0("diagrama_", c("a", "b", "c", "d")[i]), format = "png", markup = "none")
   }
+  ## Copia de la clave para Solution con nombre neutral propio: referenciar
+  ## diagrama_<letra> ataría la Solution a una posición (reglas #19 y #22 §P6).
+  k_sol <- which(sol)
+  include_tikz(tikz_barras_opcion(mats_op[[k_sol]], leyenda, cats, col_op, fmt_op[k_sol], titulo_opciones,
+                                  etiqueta_y, ymax_por_fmt[[fmt_op[k_sol]]]),
+               name = "grafica_solucion", format = "png", markup = "none")
 }
 ```
 
@@ -486,6 +492,7 @@ cat("La gráfica correcta es la de **", nombre_formato(fmt_op[k_clave]), "** que
     fmt_num(M[1, 1]), " ", cats_min[1], " y ", fmt_num(M[1, 2]), " ", cats_min[2],
     " (datos de la tabla) y, para el grado ", g2, ", ", fmt_num(M[2, 1]), " ", cats_min[1], " y ",
     fmt_num(M[2, 2]), " ", cats_min[2], " (datos de la gráfica). Es la única de las cuatro gráficas que coincide con las dos fuentes en las cuatro casillas.\n\n", sep = "")
+cat("![](grafica_solucion.png){width=85%}\n\n")
 if (fmt_op[k_clave] == "apilada") {
   cat("En esta gráfica cada barra apila los dos grados: el segmento inferior corresponde al grado ", g2,
       " y el superior al grado ", g1, ". Por ejemplo, en ", cats_min[1], " el segmento inferior llega a ",
