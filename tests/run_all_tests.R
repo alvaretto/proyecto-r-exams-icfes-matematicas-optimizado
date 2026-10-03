@@ -321,6 +321,13 @@ suites <- list(
               "test_render_html_shots_truncamiento")
   ),
   list(
+    nombre = "workflow-state: flujo_b no se sella con la sola decision (regla #16)",
+    archivo = "tests/testthat/test_workflow_state_flujo_b.R",
+    critico = TRUE,
+    watch = c("workflow-state", "pre-write-rmd-gate", "ejercicio_state.schema",
+              "test_workflow_state_flujo_b")
+  ),
+  list(
     nombre = "Presupuesto de contexto de .claude/rules/ (compactas + texto integro)",
     archivo = "tests/testthat/test_presupuesto_contexto_reglas.R",
     critico = TRUE

@@ -130,6 +130,9 @@ mkdir -p A-Produccion/02-En-Desarrollo/[nombre_ejercicio]
 .claude/scripts/workflow-state.sh init A-Produccion/02-En-Desarrollo/[nombre_ejercicio] --tipo cloze --nombre "[nombre_ejercicio]"
 .claude/scripts/workflow-state.sh complete A-Produccion/02-En-Desarrollo/[nombre_ejercicio] analisis_icfes
 .claude/scripts/workflow-state.sh complete A-Produccion/02-En-Desarrollo/[nombre_ejercicio] flujo_b --requerido [true|false]
+# Si requerido=true, la línea anterior SOLO registra la decisión (flujo_b pendiente,
+# gate del .Rmd cerrado). Tras el Flujo B y la elección del usuario:
+# .claude/scripts/workflow-state.sh complete A-Produccion/02-En-Desarrollo/[nombre_ejercicio] flujo_b --lenguaje [tikz|python|r]
 ```
 
 ### PASO 8: Generar codigo .Rmd CLOZE METACOGNITIVO

@@ -261,6 +261,7 @@ ts         = sys.argv[3]
 extras_raw = sys.argv[4]
 
 extras = json.loads(extras_raw)  # lista de pares [key, val_str]
+LENGUAJES = ("tikz", "python", "r")
 
 with open(sf, 'r', encoding='utf-8') as fh:
     state = json.load(fh)
@@ -270,21 +271,58 @@ if paso not in state["pasos"]:
     print(f"Pasos válidos: {', '.join(state['pasos'].keys())}", file=sys.stderr)
     sys.exit(1)
 
-state["pasos"][paso]["completado"] = True
-state["pasos"][paso]["timestamp"]  = ts
-state["timestamp_ultima_actualizacion"] = ts
-
-# Aplicar extras: intentar parsear como JSON, sino guardar como string
+# Parsear extras: intentar como JSON, sino guardar como string
+parsed = []
 for key, val_str in extras:
     try:
         val = json.loads(val_str)
     except (json.JSONDecodeError, ValueError):
         val = val_str
-    state["pasos"][paso][key] = val
+    parsed.append((key, val))
 
-with open(sf, 'w', encoding='utf-8') as fh:
-    json.dump(state, fh, indent=2, ensure_ascii=False)
-    fh.write('\n')
+info = state["pasos"][paso]
+
+def guardar():
+    with open(sf, 'w', encoding='utf-8') as fh:
+        json.dump(state, fh, indent=2, ensure_ascii=False)
+        fh.write('\n')
+
+# flujo_b: registrar la decisión (WAIT_USER #1) NO es terminar el Flujo B.
+# Con requerido=true sólo se sella cuando el usuario eligió lenguaje
+# (WAIT_USER #2, --lenguaje tikz|python|r); antes, el gate del .Rmd debe
+# seguir cerrado. Sellar en la decisión abría el gate sin gráfico elegido.
+if paso == "flujo_b":
+    nuevos = dict(parsed)
+    req = nuevos.get("requerido", info.get("requerido"))
+    lenguaje = nuevos.get("lenguaje", info.get("lenguaje"))
+    if "lenguaje" in nuevos and lenguaje not in LENGUAJES:
+        print(f"ERROR: --lenguaje debe ser uno de: {', '.join(LENGUAJES)} "
+              f"(recibido: {lenguaje!r})", file=sys.stderr)
+        sys.exit(2)
+    if req is None:
+        print("ERROR: flujo_b sin decidir. Preguntar al usuario y registrar "
+              "--requerido true|false.", file=sys.stderr)
+        sys.exit(3)
+    if req is True and lenguaje not in LENGUAJES:
+        for key, val in parsed:
+            info[key] = val
+        info["completado"] = False
+        state["timestamp_ultima_actualizacion"] = ts
+        guardar()
+        print("⏸  Decisión registrada: flujo_b.requerido = true. El paso sigue "
+              "PENDIENTE (el gate del .Rmd sigue cerrado).")
+        print("   Tras generar TikZ→Python→R y la elección del usuario "
+              "(WAIT_USER #2), sellar con:")
+        print("   workflow-state.sh complete <dir> flujo_b --lenguaje tikz|python|r")
+        sys.exit(0)
+
+info["completado"] = True
+info["timestamp"]  = ts
+state["timestamp_ultima_actualizacion"] = ts
+for key, val in parsed:
+    info[key] = val
+
+guardar()
 
 print(f"✅ Paso '{paso}' marcado como completado.")
 PYEOF
@@ -469,6 +507,7 @@ for paso in ORDEN:
             print(f"⬜ Siguiente: flujo_b")
             print(f"   Acción   : Completar el Flujo B (Graficador Experto)")
             print(f"   Comando  : /auto-refinar-grafico")
+            print(f"   Luego    : workflow-state.sh complete <dir> flujo_b --lenguaje tikz|python|r")
             sys.exit(0)
         # req is False → skip (no requiere gráficos), continuar al siguiente
         continue
@@ -534,7 +573,10 @@ PASOS DEL WORKFLOW (en orden):
   11. aprobacion_usuario     → Pedir aprobación al usuario
 
 CAMPOS ESPECIALES POR PASO:
-  flujo_b           : --requerido true|false|null
+  flujo_b           : --requerido true|false  (decisión, WAIT_USER #1)
+                      --lenguaje tikz|python|r (elección, WAIT_USER #2)
+                      Con requerido=true el paso SOLO se sella con --lenguaje;
+                      sin él se registra la decisión y queda pendiente.
   generacion_rmd    : --archivo nombre_archivo.Rmd
   detractor_fase2c  : --veredicto APROBAR|"APROBAR CON CAMBIOS"|RECHAZAR
   validar_diversidad: --versiones_unicas N

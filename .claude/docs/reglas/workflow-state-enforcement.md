@@ -139,10 +139,20 @@ El campo `flujo_b.requerido` puede ser `null`, `true` o `false`. El valor `null`
    # Si no requiere gráficos:
    workflow-state.sh complete <dir> flujo_b --requerido false
 
-   # Si sí requiere gráficos:
+   # Si sí requiere gráficos (registra la decisión; el paso queda PENDIENTE):
    workflow-state.sh complete <dir> flujo_b --requerido true
-   # → Luego ejecutar /auto-refinar-grafico y marcar:
-   # workflow-state.sh complete <dir> flujo_b
+   # → Luego /auto-refinar-grafico y, cuando el usuario elija lenguaje, sellar:
+   workflow-state.sh complete <dir> flujo_b --lenguaje tikz|python|r
+   ```
+
+   **Desde 2026-10-02 la CLI no sella `flujo_b` con la sola decisión.** Antes,
+   `--requerido true` marcaba `completado = true` en el mismo acto y abría el gate
+   del `.Rmd` sin gráfico elegido (incidente `barras-campeonato-baloncesto-n3`,
+   revertido a mano por el orquestador). Ahora, con `requerido = true`, sólo
+   `--lenguaje tikz|python|r` sella el paso; un lenguaje inválido se rechaza
+   (exit 2) y completar sin decisión es un error (exit 3). Guardia:
+   `tests/testthat/test_workflow_state_flujo_b.R`.
+   ```bash
    ```
 
 **Antipatrón PROHIBIDO:**

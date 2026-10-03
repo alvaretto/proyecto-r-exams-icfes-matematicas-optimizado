@@ -179,8 +179,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.28.0 (reglas en dos capas: compactas en `rules/`, texto íntegro en `docs/reglas/`)
-**Fecha**: 2026-09-29
+**Versión**: 3.28.1 (`workflow-state.sh`: `flujo_b` sólo se sella con `--lenguaje`)
+**Fecha**: 2026-10-02
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

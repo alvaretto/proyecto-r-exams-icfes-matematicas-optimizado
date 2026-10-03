@@ -10,4 +10,6 @@
 
 **`flujo_b.requerido = null`:** PREGUNTAR al usuario si requiere gráficos; nunca asumirlo.
 
-**Versión**: 1.0 · compacta desde 2026-09-29.
+**Sellado del Flujo B:** `--requerido true` sólo registra la decisión (paso pendiente, gate cerrado); se sella con `complete <dir> flujo_b --lenguaje tikz|python|r` tras la elección del usuario. Nunca editar `completado` a mano. Test: `test_workflow_state_flujo_b.R`.
+
+**Versión**: 1.1 · compacta desde 2026-09-29.

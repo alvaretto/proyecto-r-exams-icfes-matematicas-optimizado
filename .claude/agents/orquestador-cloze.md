@@ -1228,6 +1228,9 @@ Responder s o n.
 
 Espero respuesta. Registro: `workflow-state.sh complete <dir> flujo_b --requerido <true|false>`.
 
+- Con `--requerido true` la CLI **sólo registra la decisión**: `flujo_b` queda PENDIENTE (`completado = false`) y el gate del `.Rmd` sigue cerrado hasta el WAIT_USER #2. Lo verifico con `workflow-state.sh check <dir> flujo_b` (debe dar exit 1). NUNCA edito `completado` a mano.
+- Con `--requerido false` el paso queda sellado en el acto.
+
 ### WAIT_USER #2 — Selección de lenguaje gráfico (paso 2c, sólo si #1 = sí)
 
 Imprimo tabla comparativa al estilo `graficador-secuencial.md` §FASE 4:
@@ -1249,6 +1252,8 @@ Previews PNG generados:
 ```
 
 PROHIBIDO auto-elegir. Espero respuesta literal.
+
+**Registro (obligatorio, paso 2c):** con la respuesta literal, `workflow-state.sh complete <dir> flujo_b --lenguaje <tikz|python|r>`. Es el ÚNICO acto que sella `flujo_b` cuando `requerido = true`; después verifico `workflow-state.sh check <dir> flujo_b` (exit 0) antes del paso 3. Sin `--lenguaje` la CLI deja el paso pendiente y el gate del `.Rmd` cerrado: eso es lo correcto, no un fallo a corregir a mano.
 
 ### WAIT_USER #3 — Aprobación final (paso 11)
 

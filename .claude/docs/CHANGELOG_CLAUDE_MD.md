@@ -8,6 +8,24 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.28.1 (2026-10-02)
+
+- **`workflow-state.sh` ya no sella `flujo_b` con la sola decisión.** `complete <dir> flujo_b
+  --requerido true` marcaba `completado = true` en el mismo acto del WAIT_USER #1, antes de generar
+  TikZ/Python/R y de la elección del usuario: el gate del `.Rmd` quedaba abierto sin gráfico elegido
+  (incidente `barras-campeonato-baloncesto-n3`, revertido a mano por el orquestador). Ahora, con
+  `requerido = true`, el paso sólo se sella con `--lenguaje tikz|python|r` (WAIT_USER #2); sin él se
+  registra la decisión y el paso queda pendiente (exit 0, compatible con las llamadas existentes).
+  Lenguaje inválido → exit 2; completar sin decisión → exit 3.
+- Orquestadores SCHOICE y CLOZE: registro del WAIT_USER #2 con `--lenguaje` y verificación con
+  `check` antes del paso 3; prohibido editar `completado` a mano. Skills `generar-schoice` y
+  `generar-cloze`, regla #16 (compacta 1.1 + íntegro) y schema (`flujo_b.lenguaje`) alineados.
+- Guardia: `tests/testthat/test_workflow_state_flujo_b.R` (25 expectativas, incluye el gate
+  `pre-write-rmd-gate.sh` con el motivo exacto del bloqueo). Mutación: contra la CLI anterior falla
+  9 de 25.
+- Pendiente fuera de alcance: el mensaje `BLOCK:flujo_b_incompleto` del gate (hook protegido) aún
+  sugiere `complete <dir> flujo_b` sin `--lenguaje`; la CLI responde con la instrucción correcta.
+
 ### Cambios v3.28.0 (2026-09-29)
 
 > Claude Code avisó al arrancar: *«28 instruction files add up to 394.1k chars, over the 150.0k-char

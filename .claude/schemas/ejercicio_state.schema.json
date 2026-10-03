@@ -90,7 +90,12 @@
             },
             "completado": {
               "type": "boolean",
-              "description": "Indica si el Flujo B fue completado (irrelevante si requerido=false)"
+              "description": "Indica si el Flujo B fue completado (irrelevante si requerido=false). Con requerido=true sólo se sella junto con 'lenguaje'."
+            },
+            "lenguaje": {
+              "type": ["string", "null"],
+              "enum": ["tikz", "python", "r", null],
+              "description": "Lenguaje gráfico elegido por el usuario (WAIT_USER #2). Obligatorio para sellar flujo_b cuando requerido=true."
             },
             "timestamp": {
               "type": ["string", "null"],
