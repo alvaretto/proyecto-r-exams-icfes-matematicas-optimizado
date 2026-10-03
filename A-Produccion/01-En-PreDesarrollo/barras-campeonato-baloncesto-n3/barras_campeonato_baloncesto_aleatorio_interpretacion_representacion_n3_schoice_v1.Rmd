@@ -357,6 +357,17 @@ diferencias <- function(X, e7 = NULL) {
   out
 }
 nombre_formato <- function(f) if (f == "agrupada") "barras agrupadas" else "barras apiladas"
+## Texto alternativo (accesibilidad). En las opciones solo nombra el tipo de
+## gráfica, que ya se ve: dar los cuatro valores en texto eliminaría la lectura
+## de segmentos apilados que la pregunta evalúa. En Solution sí van los datos.
+alt_op <- paste("Gráfica de", vapply(fmt_op, nombre_formato, character(1)))
+## La gráfica del enunciado es dato, no lo que se evalúa: su alt lleva los valores
+## (WCAG 1.1.1; la excepción de "prueba" solo cubre las opciones).
+alt_enun <- paste0("Gráfica de barras del grado ", g2, ": ", fmt_num(M[2, 1]), " ", cats_min[1],
+                   " y ", fmt_num(M[2, 2]), " ", cats_min[2])
+## Con texto alternativo, pandoc convierte una imagen sola en su párrafo en
+## figura con pie visible ("Figure 1: ..."); el &#8203; final (espacio de ancho
+## cero, \hspace{0pt} en LaTeX) la deja en línea. Medido con pandoc 3.10.2.
 
 reflexiones <- c(
   "Antes de elegir, ¿comprobaste las cuatro casillas de la información o te detuviste cuando las dos primeras coincidieron?",
@@ -471,16 +482,16 @@ div.tabla-datos table th, div.tabla-datos table td { border: 1px solid #555; pad
 | **Grado `r g1`** | `r fmt_num(M[1, 1])` | `r fmt_num(M[1, 2])` |
 :::
 
-![](grafica_enunciado.png){width=65%}
+![`r alt_enun`](grafica_enunciado.png){width=65%}&#8203;
 
 `r textos$pregunta`
 
 Answerlist
 ----------
-* ![](diagrama_a.png){width=85%}
-* ![](diagrama_b.png){width=85%}
-* ![](diagrama_c.png){width=85%}
-* ![](diagrama_d.png){width=85%}
+* ![`r alt_op[1]`](diagrama_a.png){width=85%}&#8203;
+* ![`r alt_op[2]`](diagrama_b.png){width=85%}&#8203;
+* ![`r alt_op[3]`](diagrama_c.png){width=85%}&#8203;
+* ![`r alt_op[4]`](diagrama_d.png){width=85%}&#8203;
 
 Solution
 ========
@@ -492,7 +503,9 @@ cat("La gráfica correcta es la de **", nombre_formato(fmt_op[k_clave]), "** que
     fmt_num(M[1, 1]), " ", cats_min[1], " y ", fmt_num(M[1, 2]), " ", cats_min[2],
     " (datos de la tabla) y, para el grado ", g2, ", ", fmt_num(M[2, 1]), " ", cats_min[1], " y ",
     fmt_num(M[2, 2]), " ", cats_min[2], " (datos de la gráfica). Es la única de las cuatro gráficas que coincide con las dos fuentes en las cuatro casillas.\n\n", sep = "")
-cat("![](grafica_solucion.png){width=85%}\n\n")
+cat("![Gráfica correcta, de ", nombre_formato(fmt_op[k_clave]), ": grado ", g1, ", ", fmt_num(M[1, 1]), " ", cats_min[1],
+    " y ", fmt_num(M[1, 2]), " ", cats_min[2], "; grado ", g2, ", ", fmt_num(M[2, 1]), " ", cats_min[1], " y ",
+    fmt_num(M[2, 2]), " ", cats_min[2], "](grafica_solucion.png){width=85%}&#8203;\n\n", sep = "")
 if (fmt_op[k_clave] == "apilada") {
   cat("En esta gráfica cada barra apila los dos grados: el segmento inferior corresponde al grado ", g2,
       " y el superior al grado ", g1, ". Por ejemplo, en ", cats_min[1], " el segmento inferior llega a ",

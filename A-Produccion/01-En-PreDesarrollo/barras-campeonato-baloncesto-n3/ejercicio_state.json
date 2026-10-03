@@ -3,7 +3,7 @@
   "ejercicio": "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-10-02T20:31:40.605123-05:00",
-  "timestamp_ultima_actualizacion": "2026-10-02T21:42:20.664814-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-03T12:17:58.328571-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -43,22 +43,25 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-02T21:09:24.618906-05:00",
+      "timestamp": "2026-10-03T12:17:58.154159-05:00",
       "artefactos": "salida/final/{html,pdf,tex,docx,nops,moodle}",
       "pandocbounded_uso": 0,
       "moodle_nombres": "solo diagrama_a..d + grafica_enunciado",
-      "rstudio_pandoc_pdf": "OK"
+      "rstudio_pandoc_pdf": "OK",
+      "ciclo_2026_10_03": "grafica_solucion + alt (opciones solo tipo; enunciado y Solution con datos) + &#8203;: HTML s1/s2/s5, PDF exam+solution s1/s5, DOCX, NOPS, Moodle; 0 figcaption/Figure; paginas 4/7/5; Moodle solo nombres neutrales"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-02T21:09:24.676918-05:00",
-      "nota": "2A ERR_C4 exshuffle FALSE (conflicto regla #4); 2D OK tras quitar backtick; 2E idem C4; 2G 100/100 manual; 2H 10/10 PASA manual; 2I/2J/2K/2N/2O OK"
+      "timestamp": "2026-10-03T12:17:58.211044-05:00",
+      "nota": "2A ERR_C4 exshuffle FALSE (conflicto regla #4); 2D OK tras quitar backtick; 2E idem C4; 2G 100/100 manual; 2H 10/10 PASA manual; 2I/2J/2K/2N/2O OK",
+      "ciclo_2026_10_03": "2D/2I/2J/2K/2N/2O OK; 2G 100/100; P7 PASS -0.4 pp; ERR_C4/2E por exshuffle FALSE = falso positivo previo del CLI (Error 38, deuda)"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-10-02T21:29:10.896195-05:00",
+      "timestamp": "2026-10-03T12:17:58.271760-05:00",
       "veredicto": "APROBAR",
-      "nota": "3 AgenteDetractor distintos sin name: APROBAR_CON_CAMBIOS -> RECHAZAR (frase falsa E7 encadenado) -> APROBAR; 2 pasadas de correccion de 3"
+      "nota": "3 AgenteDetractor distintos sin name: APROBAR_CON_CAMBIOS -> RECHAZAR (frase falsa E7 encadenado) -> APROBAR; 2 pasadas de correccion de 3",
+      "ciclo_2026_10_03": "3 AgenteDetractor distintos sin name: grafica_solucion APROBAR; alt APROBAR_CON_CAMBIOS (alt enunciado + regex validador, aplicadas); 3o APROBAR_CON_CAMBIOS (.Rmd correcto; regex [^]]* corregida a .* con mutantes, no re-auditada)"
     },
     "coherencias_5": {
       "completado": true,
@@ -81,9 +84,10 @@
     },
     "aprobacion_usuario": {
       "completado": true,
-      "timestamp": "2026-10-02T21:42:20.664814-05:00",
+      "timestamp": "2026-10-03T12:17:58.328571-05:00",
       "nota": "aprobado por el usuario condicionado a 4 correcciones, aplicadas y verificadas",
-      "detractor_diff": "APROBAR_CON_CAMBIOS (0 criticas/altas); sus 2 MEDIAS de CSS en Moodle aplicadas (selector acotado a div.tabla-datos)"
+      "detractor_diff": "APROBAR_CON_CAMBIOS (0 criticas/altas); sus 2 MEDIAS de CSS en Moodle aplicadas (selector acotado a div.tabla-datos)",
+      "ciclo_2026_10_03": "usuario 2026-10-03: registrar aprobacion del cambio en Solution y corregir las observaciones del detractor"
     }
   }
 }
