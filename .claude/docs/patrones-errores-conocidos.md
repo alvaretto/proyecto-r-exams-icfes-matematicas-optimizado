@@ -3449,3 +3449,78 @@ sonda nunca corrió».
 - Regla #9 (detractor obligatorio) — el alcance ampliado de la auditoría (overrides e invariantes,
   no sólo el `.Rmd`) encontró ambas manifestaciones.
 - Error 35 y Error 36 — mismo ciclo, mismo ejercicio.
+
+---
+
+## Error 38: Texto alternativo en una imagen sola → pandoc la convierte en figura con pie «Figure N»
+
+### ❌ Síntoma
+
+Al dar texto alternativo (accesibilidad, WCAG 2.2 criterio 1.1.1) a las imágenes de un `.Rmd`
+—`![Gráfica de barras apiladas](diagrama_a.png){width=85%}`—, el PDF muestra bajo cada opción
+un pie visible **«Figure 1: Gráfica de barras apiladas»**, «Figure 2: …», y el HTML emite
+`<figure>` + `<figcaption>`. No hay error ni warning: solo texto nuevo, en inglés, visible al
+estudiante. Con `![](…)` (alt vacío) no ocurría, por eso nunca había aparecido en el repo.
+
+Efecto colateral en el arsenal: la excepción de `exshuffle: FALSE` para opciones gráficas
+(regla #4) en `validar_coherencia_matematica()` buscaba el literal `!\[\]\(diagrama_` y dejaba de
+reconocer las opciones en cuanto llevaban alt.
+
+### 🔍 Causa Raíz
+
+La extensión `implicit_figures` de pandoc (activa por defecto en `markdown`) convierte en
+**figura** toda imagen que sea lo único de su párrafo, y usa el alt como pie. En un Answerlist de
+R/exams cada opción se procesa como un párrafo propio, así que la regla aplica también dentro de
+las viñetas. Medido con pandoc 3.10.2 (terminal) y el bundleado de RStudio.
+
+En el validador, el primer arreglo `!\[[^]]*\]\(diagrama_` también fallaba: la clase negada se
+corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.png) ``.
+
+### ✅ Solución Verificada
+
+1. Terminar la imagen con un **espacio de ancho cero** `&#8203;` para que deje de estar sola en
+   el párrafo. Pandoc lo emite como `\hspace{0pt}` en LaTeX y como U+200B invisible en
+   HTML/DOCX; no es un glifo de la regla #25 (en el fuente es una entidad ASCII).
+
+   ```markdown
+   * ![`r alt_op[1]`](diagrama_a.png){width=85%}&#8203;
+   ```
+   ```r
+   cat("![", alt_sol, "](grafica_solucion.png){width=85%}&#8203;\n\n", sep = "")
+   ```
+   Alternativas probadas solo con pandoc directo: `\ ` (espacio duro) también evita la figura,
+   pero depende de un espacio final que cualquier editor puede recortar (no se midió dentro de
+   R/exams); `\` final se convierte en salto de línea (`\\` en LaTeX, `<br />` en HTML).
+
+2. **Qué poner en el alt** en un ítem de lectura de gráficas: en las **opciones**, solo lo que ya
+   se ve sin leer valores (el tipo de gráfica). Dar los valores en texto anularía lo que la
+   pregunta evalúa —la excepción «prueba o ejercicio» de WCAG 1.1.1 lo permite—. En el
+   **enunciado** y en **Solution**, el alt sí lleva los datos.
+
+3. Validador: `grepl("!\\[.*\\]\\(diagrama_", …)` (búsqueda por línea, sin clase negada), con un
+   `test_that` por forma de alt —en línea con `` `r …` `` y literal— para que `any()` no deje pasar
+   una con la otra. Tests en `tests/testthat/test_validacion_matematica.R`.
+
+### 📅 Historial
+
+| Fecha | Archivo/Componente | Causa | Fix | Resultado |
+|-------|---------------------|-------|-----|-----------|
+| 2026-10-03 | `barras_campeonato_baloncesto_..._n3_schoice_v1.Rmd` | alt en 4 opciones + Solution | `&#8203;` tras cada imagen | sin `&#8203;`: 4 «Figure» en el PDF y 5 `figcaption` en el HTML; con él: 0 y 0 en HTML (semillas 1, 2, 5), PDF examen+solución, DOCX, NOPS y Moodle; páginas 4/7/5 sin cambio |
+| 2026-10-03 | `validar_coherencia_matematica()` (`SOURCES/scripts_validacion/`) | regex `!\[\]\(diagrama_` exige alt vacío | `!\[.*\]\(diagrama_` + 2 tests | mutantes: regex vieja falla 2/2 tests nuevos; `[^]]*` falla 1/2; final 12/12 PASS; `.Rmd` real: 0 errores |
+
+### ⚠️ Deuda declarada (no resuelta por esta entrada)
+
+El hook `post-exams2-validation.sh` sigue mostrando `ERR_C4` y FASE 2E en rojo para **todo**
+SCHOICE con opciones gráficas y `exshuffle: FALSE`: el **modo CLI** de
+`validar_coherencia_matematica.R` (bloque `archivo_rmd <- args[1]`) duplica la lógica sin aplicar
+la excepción, y la FASE 2E de `arsenal_validacion_completa.R` rechaza `exshuffle: FALSE` sin
+excepción. Es un falso positivo previo, no un PASS; el arreglo de la regex solo cubre la ruta
+de la función (tests). Pendiente: sacar la excepción a un helper común y un test que ejecute el
+CLI con `system2`.
+
+### 📚 Referencias
+
+- Regla #18 (`{width=...}` sigue siendo obligatorio; el `&#8203;` va después del atributo).
+- Regla #4 (opciones gráficas, `exshuffle: FALSE`) y regla #22 §P6 (el alt de una opción no puede
+  contener la clave ni un dato que la delate).
+- WCAG 2.2, criterio 1.1.1: https://www.w3.org/TR/WCAG22/#non-text-content

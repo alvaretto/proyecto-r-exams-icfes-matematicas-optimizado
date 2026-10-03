@@ -162,6 +162,60 @@ test_that("Validación acepta exshuffle = FALSE en SCHOICE con opciones gráfica
   unlink(temp_file)
 })
 
+# La excepción de exshuffle = FALSE (regla #4) debe sobrevivir al texto
+# alternativo de las opciones. Un test por forma de alt: con las dos formas en
+# el mismo archivo, any() dejaba pasar la que fallaba.
+rmd_opciones_graficas <- function(lineas_answerlist) {
+  temp_file <- tempfile(fileext = ".Rmd")
+  writeLines(c(
+    "```{r data generation, echo = FALSE, results = \"hide\"}",
+    "alt_op <- c(\"Gráfica de barras agrupadas\", \"Gráfica de barras apiladas\")",
+    "```",
+    "",
+    "Question",
+    "========",
+    "Test",
+    "",
+    "Answerlist",
+    "----------",
+    lineas_answerlist,
+    "",
+    "Solution",
+    "========",
+    "Test",
+    "",
+    "Meta-information",
+    "================",
+    "exname: test_shuffle_graficos_alt",
+    "extype: schoice",
+    "exsolution: 10",
+    "exshuffle: FALSE"
+  ), temp_file)
+  temp_file
+}
+
+test_that("Excepción de exshuffle con alt calculado en línea (`r alt_op[i]`)", {
+  temp_file <- rmd_opciones_graficas(c(
+    "* ![`r alt_op[1]`](diagrama_a.png){width=60%}&#8203;",
+    "* ![`r alt_op[2]`](diagrama_b.png){width=60%}&#8203;"
+  ))
+  result <- validar_coherencia_matematica(temp_file)
+  expect_false(any(grepl("exshuffle", result$errores, ignore.case = TRUE)),
+    info = "el alt `r alt_op[i]` no debe desactivar la excepción de la regla #4")
+  unlink(temp_file)
+})
+
+test_that("Excepción de exshuffle con alt literal", {
+  temp_file <- rmd_opciones_graficas(c(
+    "* ![Gráfica de barras agrupadas](diagrama_a.png){width=60%}&#8203;",
+    "* ![Gráfica de barras apiladas](diagrama_b.png){width=60%}&#8203;"
+  ))
+  result <- validar_coherencia_matematica(temp_file)
+  expect_false(any(grepl("exshuffle", result$errores, ignore.case = TRUE)),
+    info = "el alt literal no debe desactivar la excepción de la regla #4")
+  unlink(temp_file)
+})
+
 test_that("Validación CLOZE detecta inconsistencias de tipos", {
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(

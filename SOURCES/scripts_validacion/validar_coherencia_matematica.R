@@ -1337,7 +1337,10 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
   # permite exshuffle:FALSE porque sample() interno ya aleatoriza
   # y TRUE rompería la referencia a letra_correcta en Solution
   contenido_completo <- readLines(archivo_rmd, warn = FALSE, encoding = "UTF-8")
-  tiene_opciones_graficas_png <- any(grepl("!\\[\\]\\(diagrama_", contenido_completo))
+  # El texto alternativo es opcional: "![](diagrama_", "![Gráfica de ...](diagrama_"
+  # y "![`r alt_op[1]`](diagrama_" son la misma opción gráfica. Sin clase negada:
+  # "[^]]*" se cortaba en el "]" de "alt_op[1]". La búsqueda es por línea.
+  tiene_opciones_graficas_png <- any(grepl("!\\[.*\\]\\(diagrama_", contenido_completo))
   if (tiene_opciones_graficas_png && extype == "schoice") {
     todos_errores <- todos_errores[!grepl("exshuffle", todos_errores)]
   }
