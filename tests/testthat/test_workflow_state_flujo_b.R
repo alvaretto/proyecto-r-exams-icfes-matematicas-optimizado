@@ -82,6 +82,8 @@ test_that("la decisión requerido=true NO sella flujo_b y el gate sigue cerrado"
   g <- gate(dir)
   expect_equal(g$exit, 2L)
   expect_true(any(grepl("Flujo B pendiente", g$out)))
+  # El mensaje debe indicar el sello correcto: sin --lenguaje la CLI no sella.
+  expect_true(any(grepl("flujo_b --lenguaje", g$out, fixed = TRUE)))
 })
 
 test_that("--lenguaje sella flujo_b y abre el gate", {

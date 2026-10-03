@@ -23,8 +23,9 @@
 - Guardia: `tests/testthat/test_workflow_state_flujo_b.R` (25 expectativas, incluye el gate
   `pre-write-rmd-gate.sh` con el motivo exacto del bloqueo). Mutación: contra la CLI anterior falla
   9 de 25.
-- Pendiente fuera de alcance: el mensaje `BLOCK:flujo_b_incompleto` del gate (hook protegido) aún
-  sugiere `complete <dir> flujo_b` sin `--lenguaje`; la CLI responde con la instrucción correcta.
+- Gate `pre-write-rmd-gate.sh` (autorizado por el usuario): el mensaje `BLOCK:flujo_b_incompleto`
+  ya no sugiere `complete <dir> flujo_b` a secas; indica esperar la elección del usuario y sellar
+  con `--lenguaje`. El test fija también ese texto.
 
 ### Cambios v3.28.0 (2026-09-29)
 

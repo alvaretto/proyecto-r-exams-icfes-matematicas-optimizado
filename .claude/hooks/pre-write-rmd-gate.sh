@@ -260,13 +260,16 @@ El ejercicio requiere gráficos (flujo_b.requerido = true) pero el Flujo B
 no está completado.
 
 ACCIÓN REQUERIDA:
-  1. Completar el Flujo B (Graficador Experto):
+  1. Completar el Flujo B (Graficador Experto): TikZ → Python → R
      /auto-refinar-grafico
 
-  2. Una vez completado, marcar:
-     .claude/scripts/workflow-state.sh complete "$(dirname "$FILE_PATH")" flujo_b
+  2. Presentar la tabla comparativa y esperar que el USUARIO elija lenguaje
+     (WAIT_USER #2). Nunca elegirlo por él.
 
-  3. Recién entonces crear el .Rmd.
+  3. Con su respuesta, sellar el paso (sin --lenguaje la CLI NO lo sella):
+     .claude/scripts/workflow-state.sh complete "$(dirname "$FILE_PATH")" flujo_b --lenguaje tikz|python|r
+
+  4. Recién entonces crear el .Rmd. Nunca editar flujo_b.completado a mano.
 
 Ver: .claude/rules/flujo-b-obligatorio.md
 
