@@ -3,7 +3,7 @@
   "ejercicio": "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-10-02T20:31:40.605123-05:00",
-  "timestamp_ultima_actualizacion": "2026-10-03T12:17:58.328571-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-04T13:27:48.592524-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -43,25 +43,28 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-03T12:17:58.154159-05:00",
+      "timestamp": "2026-10-04T13:27:48.476026-05:00",
       "artefactos": "salida/final/{html,pdf,tex,docx,nops,moodle}",
       "pandocbounded_uso": 0,
-      "moodle_nombres": "solo diagrama_a..d + grafica_enunciado",
+      "moodle_nombres": "diagrama_<letra>_<fig_id> + grafica_enunciado_<fig_id> + grafica_solucion_<fig_id> (regla #4 v6.1)",
       "rstudio_pandoc_pdf": "OK",
-      "ciclo_2026_10_03": "grafica_solucion + alt (opciones solo tipo; enunciado y Solution con datos) + &#8203;: HTML s1/s2/s5, PDF exam+solution s1/s5, DOCX, NOPS, Moodle; 0 figcaption/Figure; paginas 4/7/5; Moodle solo nombres neutrales"
+      "ciclo_2026_10_03": "grafica_solucion + alt (opciones solo tipo; enunciado y Solution con datos) + &#8203;: HTML s1/s2/s5, PDF exam+solution s1/s5, DOCX, NOPS, Moodle; 0 figcaption/Figure; paginas 4/7/5; Moodle solo nombres neutrales",
+      "ciclo_2026_10_04": "md5 0aec92ad: HTML/PDF/DOCX/NOPS/Moodle OK; varias copias PDF 18/18 (x3) y 60/120 (Semillero x10), NOPS 50/100, DOCX 60/60; pandoc RStudio 3.10 forzado OK; 0 '0.0.'; ids de encabezado unicos"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-03T12:17:58.211044-05:00",
+      "timestamp": "2026-10-04T13:27:48.534295-05:00",
       "nota": "2A ERR_C4 exshuffle FALSE (conflicto regla #4); 2D OK tras quitar backtick; 2E idem C4; 2G 100/100 manual; 2H 10/10 PASA manual; 2I/2J/2K/2N/2O OK",
-      "ciclo_2026_10_03": "2D/2I/2J/2K/2N/2O OK; 2G 100/100; P7 PASS -0.4 pp; ERR_C4/2E por exshuffle FALSE = falso positivo previo del CLI (Error 38, deuda)"
+      "ciclo_2026_10_03": "2D/2I/2J/2K/2N/2O OK; 2G 100/100; P7 PASS -0.4 pp; ERR_C4/2E por exshuffle FALSE = falso positivo previo del CLI (Error 38, deuda)",
+      "ciclo_2026_10_04": "hook invocado a mano (no se dispara con rep()): 0 errores, 5 WARN 2F preexistentes; 2G 100/100; 2H 10/10 PASA; 2I/2J/2K/2N/2O OK; verificar_dibujo_clave.R 100/100"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-10-03T12:17:58.271760-05:00",
-      "veredicto": "APROBAR",
+      "timestamp": "2026-10-04T13:27:48.592524-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS (aplicadas y verificadas)",
       "nota": "3 AgenteDetractor distintos sin name: APROBAR_CON_CAMBIOS -> RECHAZAR (frase falsa E7 encadenado) -> APROBAR; 2 pasadas de correccion de 3",
-      "ciclo_2026_10_03": "3 AgenteDetractor distintos sin name: grafica_solucion APROBAR; alt APROBAR_CON_CAMBIOS (alt enunciado + regex validador, aplicadas); 3o APROBAR_CON_CAMBIOS (.Rmd correcto; regex [^]]* corregida a .* con mutantes, no re-auditada)"
+      "ciclo_2026_10_03": "3 AgenteDetractor distintos sin name: grafica_solucion APROBAR; alt APROBAR_CON_CAMBIOS (alt enunciado + regex validador, aplicadas); 3o APROBAR_CON_CAMBIOS (.Rmd correcto; regex [^]]* corregida a .* con mutantes, no re-auditada)",
+      "ciclo_2026_10_04": "AgenteDetractor 1: APROBAR_CON_CAMBIOS (3 MEDIAS + 2 BAJAS); detractor-hetero deepseek-v4-flash: APROBAR_CON_CAMBIOS, 0 CORRECCION; AgenteDetractor 2 (re-auditoria de la version final): APROBAR_CON_CAMBIOS (1 ALTA ortografia de ids, 1 MEDIA, 1 BAJA) aplicadas; 0 defectos de correccion en las tres"
     },
     "coherencias_5": {
       "completado": true,

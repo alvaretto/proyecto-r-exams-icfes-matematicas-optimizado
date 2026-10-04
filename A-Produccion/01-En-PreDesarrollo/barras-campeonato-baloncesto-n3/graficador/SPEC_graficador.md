@@ -42,3 +42,15 @@ Texto en español con tildes ("Número de partidos", "Grado séptimo", "Gráfica
 ## Bucle
 
 Itera automáticamente (máx. 10 iteraciones) hasta ≥ 98 en CADA figura. Compara mirando las dos imágenes (Read del original y del render). La cifra de VALORES debe ser 20/20 siempre: un valor de barra mal es fallo, no desviación. Prohibido pedir aprobación intermedia.
+
+## Estado de la implementación en el `.Rmd` (actualizado 2026-10-04)
+
+- Lenguaje elegido: **TikZ** (WAIT_USER #2, 2026-10-02; 94 % de similitud, decisión firmada).
+- Funciones: `tikz_barras_simples()` y `tikz_barras_opcion()` sobre `cuerpo_tikz()`, lienzo fijo de
+  15,24 × 10,67 cm; ejes compartidos por formato (`ymax_por_fmt`).
+- **Nombres de archivo** (regla #4 v6.1, Error 39): `grafica_enunciado_<fig_id>.png`,
+  `diagrama_<letra>_<fig_id>.png` y `grafica_solucion_<fig_id>.png`, con `fig_id` hexadecimal de
+  8 cifras sorteado al final de `data_generation`, el mismo en las seis figuras de la versión.
+  Sin el sufijo, un examen de varias preguntas mostraba en todas las figuras de una sola versión.
+- Verificación de que el dibujo representa los datos: `verificar_dibujo_clave.R` (lee el TikZ
+  emitido, N = 100) y `tests/testthat/test_barras_campeonato_clave.R`.

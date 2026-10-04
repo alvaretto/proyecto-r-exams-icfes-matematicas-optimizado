@@ -331,6 +331,13 @@ suites <- list(
     nombre = "Presupuesto de contexto de .claude/rules/ (compactas + texto integro)",
     archivo = "tests/testthat/test_presupuesto_contexto_reglas.R",
     critico = TRUE
+  ),
+  list(
+    nombre = "barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+5 mutantes)",
+    archivo = "tests/testthat/test_barras_campeonato_clave.R",
+    critico = TRUE,
+    watch = c("barras-campeonato-baloncesto-n3", "verificar_dibujo_clave",
+              "test_barras_campeonato_clave")
   )
 )
 
