@@ -27,7 +27,13 @@ parsear_rmd <- function(archivo) {
   # Localizar secciones clave
   linea_question <- grep("^Question$", contenido)
   linea_solution <- grep("^Solution$", contenido)
-  linea_meta <- grep("^Meta-information$", contenido)
+  # La sección de metadatos se ubica como R/exams (extract_environment: sin distinguir
+  # mayúsculas ni guiones, con subrayado ==== o ----). Antes se exigía el literal
+  # "Meta-information" y la función abortaba con "Meta-Information" o "Metainformation".
+  linea_meta <- tryCatch(
+    exams:::extract_environment(contenido, "metainformation", value = FALSE, markup = "markdown")[1],
+    error = function(e) NULL)
+  if (length(linea_meta) == 0 || is.na(linea_meta)) linea_meta <- grep("^Meta-information$", contenido)
   lineas_answerlist <- grep("^Answerlist$", contenido)
 
   # Extraer metadatos exams (después de Meta-information)
@@ -96,15 +102,19 @@ extraer_meta <- function(meta_lineas, campo) {
 # Medido con exams 2.4.2 (Error 38).
 ERR_EXSHUFFLE_FALSE <- "ERR_C4: exshuffle debe ser TRUE (ICFES requiere mezcla)"
 
-# Valor crudo de exshuffle tal como lo ve R/exams (NA si no lo ve).
-leer_exshuffle_rexams <- function(lineas) {
-  x <- tryCatch(exams:::extract_environment(lineas, "metainformation", markup = "markdown"),
-                error = function(e) NULL)
-  if (is.null(x)) return(NA_character_)
-  v <- tryCatch(exams:::extract_command(x, "exshuffle", "character", markup = "markdown"),
-                error = function(e) NULL)
-  if (is.null(v) || length(v) == 0) NA_character_ else v[1]
+# Valor crudo de un metadato tal como lo ve R/exams. Devuelve NA si R/exams no lo ve y
+# NA con atributo "error" si no se pudo leer (p. ej. cambió la API interna de exams:
+# extract_environment/extract_command no son exportadas). `ns` permite simular ese fallo.
+leer_meta_rexams <- function(lineas, campo, ns = asNamespace("exams")) {
+  tryCatch({
+    x <- ns$extract_environment(lineas, "metainformation", markup = "markdown")
+    if (is.null(x)) return(NA_character_)
+    v <- ns$extract_command(x, campo, "character", markup = "markdown")
+    if (is.null(v) || length(v) == 0) NA_character_ else v[1]
+  }, error = function(e) structure(NA_character_, error = conditionMessage(e)))
 }
+
+leer_exshuffle_rexams <- function(lineas, ns = asNamespace("exams")) leer_meta_rexams(lineas, "exshuffle", ns)
 
 # "mezcla" | "sin_mezcla" | "invalido" | "ausente", con la conversión de R/exams.
 clasificar_exshuffle <- function(valor) {
@@ -115,24 +125,59 @@ clasificar_exshuffle <- function(valor) {
   if (identical(lg, TRUE)) "mezcla" else if (identical(lg, FALSE)) "sin_mezcla" else "invalido"
 }
 
-# Estado de exshuffle para el archivo completo. "fuera_de_seccion": hay una línea
-# "exshuffle:" pero R/exams no la lee (sección Meta-information mal escrita o ausente),
-# así que para R/exams no hay exshuffle y NO mezcla.
-evaluar_exshuffle <- function(lineas) {
-  valor <- leer_exshuffle_rexams(lineas)
+# ¿Le importa exshuffle a este ejercicio? R/exams (read_exercise) solo mezcla opciones en
+# schoice/mchoice y, en cloze, en los huecos schoice/mchoice; en num/string no tiene efecto.
+# Un exclozetype calculado con R en línea no se puede leer: se trata como relevante.
+# Sin extype no hay ejercicio que R/exams pueda leer (read_metainfo aborta): no aplica.
+exshuffle_relevante <- function(extype, exclozetype) {
+  extype <- tolower(trimws(extype))
+  if (is.na(extype)) return(FALSE)
+  if (extype %in% c("schoice", "mchoice")) return(TRUE)
+  if (extype != "cloze") return(FALSE)
+  if (is.na(exclozetype) || grepl("`r ", exclozetype, fixed = TRUE)) return(TRUE)
+  any(trimws(strsplit(tolower(exclozetype), "|", fixed = TRUE)[[1]]) %in% c("schoice", "mchoice"))
+}
+
+# Plantillas de referencia (R/exams oficiales y demostraciones de TikZ/tablas), inmutables
+# por regla del repo: un exshuffle ausente ahí es un aviso, no un error que nadie puede corregir.
+RUTAS_EXENTAS_EXSHUFFLE_AUSENTE <- "/Ejemplos-Funcionales-Rmd/Plantillas/"
+
+# Estado de exshuffle para el archivo completo.
+#   "fuera_de_seccion": hay "exshuffle:" pero R/exams no lo lee (y no mezcla).
+#   "error_lectura": no se pudo leer con las funciones de exams (falla en cerrado).
+#   "no_aplica": el tipo de ejercicio no tiene opciones que mezclar.
+evaluar_exshuffle <- function(lineas, archivo = NULL, ns = asNamespace("exams")) {
+  valor <- leer_exshuffle_rexams(lineas, ns)
+  if (!is.null(attr(valor, "error"))) {
+    return(list(estado = "error_lectura", valor = NA_character_, error = attr(valor, "error")))
+  }
+  extype <- leer_meta_rexams(lineas, "extype", ns)
+  exclozetype <- leer_meta_rexams(lineas, "exclozetype", ns)
   estado <- clasificar_exshuffle(valor)
   if (estado == "ausente" && any(grepl("^exshuffle:", lineas))) estado <- "fuera_de_seccion"
-  list(estado = estado, valor = trimws(valor))
+  if (estado == "invalido" && grepl("`r ", valor, fixed = TRUE)) estado <- "dinamico"
+  if (!exshuffle_relevante(extype, exclozetype) && estado != "fuera_de_seccion") estado <- "no_aplica"
+  if (estado == "ausente" && !is.null(archivo) &&
+      grepl(RUTAS_EXENTAS_EXSHUFFLE_AUSENTE, normalizePath(archivo, mustWork = FALSE), fixed = TRUE)) {
+    estado <- "ausente_plantilla"
+  }
+  list(estado = estado, valor = trimws(valor), error = NULL)
 }
 
 errores_exshuffle <- function(ev) {
   switch(ev$estado,
     sin_mezcla = ERR_EXSHUFFLE_FALSE,
+    ausente = paste0("ERR_C4: exshuffle ausente: R/exams lo toma como FALSE y no mezcla ",
+                     "las opciones (declarar exshuffle: TRUE)"),
     invalido = paste0("ERR_C4: exshuffle con valor no válido: '", ev$valor,
                       "' (R/exams solo admite TRUE, FALSE o un entero, sin comentarios; ",
                       "con este valor R/exams mezcla igual)"),
+    dinamico = paste0("ERR_C4: exshuffle calculado con R en línea ('", ev$valor,
+                      "'): el validador lee el .Rmd sin tejer y no puede comprobarlo"),
     fuera_de_seccion = paste0("ERR_C4: exshuffle fuera de la sección Meta-information: ",
                               "R/exams no lo lee y no mezcla"),
+    error_lectura = paste0("ERR_C4: no se pudo leer exshuffle con exams ",
+                           as.character(utils::packageVersion("exams")), ": ", ev$error),
     character(0))
 }
 
@@ -168,7 +213,7 @@ ejecutar_chunks <- function(chunks_r) {
 
 # `contenido`: el archivo completo, para leer exshuffle como R/exams. Si falta, se
 # reconstruye la sección: parsear_rmd() entrega los metadatos SIN su encabezado.
-validar_metadatos <- function(meta_lineas, contenido = NULL) {
+validar_metadatos <- function(meta_lineas, contenido = NULL, archivo = NULL) {
   if (is.null(contenido)) contenido <- c("Meta-information", "================", meta_lineas)
   errores <- character(0)
 
@@ -189,7 +234,7 @@ validar_metadatos <- function(meta_lineas, contenido = NULL) {
   # Excepción: SCHOICE con opciones gráficas PNG + Solution que referencia letra_correcta
   # En ese caso, exshuffle: FALSE es correcto porque sample() interno ya aleatoriza
   # y TRUE rompería la referencia en Solution. Ver .claude/rules/graficos-como-opciones.md
-  errores <- c(errores, errores_exshuffle(evaluar_exshuffle(contenido)))
+  errores <- c(errores, errores_exshuffle(evaluar_exshuffle(contenido, archivo)))
 
   # ICFES 6 dimensiones
   icfes <- c("Type", "Competencia", "Componente", "Afirmacion", "Evidencia", "Nivel")
@@ -1389,11 +1434,12 @@ aplicar_excepcion_exshuffle <- function(errores, lineas, extype) {
 # estado: "mezcla" | "sin_mezcla" | "sin_mezcla_aceptado" | "invalido" | "ausente".
 evaluar_exshuffle_2e <- function(archivo_rmd) {
   lineas <- readLines(archivo_rmd, warn = FALSE, encoding = "UTF-8")
-  ev <- evaluar_exshuffle(lineas)
-  extype <- tolower(trimws(extraer_meta(parsear_rmd(archivo_rmd)$meta, "extype")))
+  ev <- evaluar_exshuffle(lineas, archivo_rmd)
+  extype <- tolower(trimws(leer_meta_rexams(lineas, "extype")))
   if (ev$estado == "sin_mezcla" && es_schoice_opciones_graficas(lineas, extype)) {
     ev$estado <- "sin_mezcla_aceptado"
   }
+  ev$errores <- errores_exshuffle(ev)
   ev
 }
 
@@ -1423,7 +1469,7 @@ validar_coherencia_matematica <- function(archivo_rmd, strict = FALSE) {
   todos_errores <- c(todos_errores, resultado$errores)
   todos_warnings <- c(todos_warnings, resultado$warnings)
 
-  todos_errores <- c(todos_errores, validar_metadatos(parsed$meta, parsed$contenido))
+  todos_errores <- c(todos_errores, validar_metadatos(parsed$meta, parsed$contenido, archivo_rmd))
 
   # Excepción exshuffle: SCHOICE con opciones gráficas PNG (regla #4)
   contenido_completo <- readLines(archivo_rmd, warn = FALSE, encoding = "UTF-8")
@@ -1505,7 +1551,7 @@ if (length(resultado$warnings) > 0) {
 
 # 3. Validar metadatos
 cat("\n--- Validando metadatos ---\n")
-err_meta <- validar_metadatos(parsed$meta, parsed$contenido)
+err_meta <- validar_metadatos(parsed$meta, parsed$contenido, archivo_rmd)
 n_err_meta <- length(err_meta)
 err_meta <- aplicar_excepcion_exshuffle(err_meta, parsed$contenido, extype)
 if (length(err_meta) < n_err_meta) {

@@ -3526,6 +3526,7 @@ corta en el `]` de un alt calculado en línea, `` ![`r alt_op[1]`](diagrama_a.pn
 | 2026-10-03 | Mismo validador (4.º detractor) | `.*` sin ancla oculta ERR_C4 en SCHOICE de texto con `diagrama_contexto.png`; 3 mutantes («cualquier imagen», `diagrama_`, `\(diagrama_`) sobrevivían | ancla `diagrama_[a-z]\.png` + control negativo | 7/7 mutantes mueren; 13/13 PASS; corpus 427 `.Rmd`: 0 SCHOICE con `exshuffle: FALSE` pierden la excepción (los 13 que dejan de activarla son CLOZE o `exshuffle: TRUE`) |
 | 2026-10-03 | CLI del validador + FASE 2E del arsenal (rutas del hook) | sin excepción de la regla #4 | helper único `es_schoice_opciones_graficas()` usado por función, CLI y 2E; regla estricta si no carga | hook: barras `APROBADO` + 2E `OK`; 6/427 `.Rmd` exentos (los 6 de opciones gráficas); tras el 5.º detractor (marcador positivo, sin caída, mensaje condicionado, ruta relativa): 25/25 PASS y los 4 mutantes mueren |
 | 2026-10-03 | Excepción y lectura de `exshuffle` (CLI, función, 2E) | excepción con 1 sola letra; el CLI no aceptaba enteros; la 2E leía el texto completo; 1.ª versión del arreglo trataba `FALSE # x` como «sin mezcla» (R/exams mezcla) | ≥ 2 letras distintas; lectura con `extract_environment`/`extract_command` de R/exams; comentarios y `NA` = valor no válido; «fuera de sección» = error | CLI y 2E: 0 discrepancias (antes 8); 0 discordancias con `read_metainfo()`; exentos sin cambio; 68/68 PASS; 11/11 mutantes mueren |
+| 2026-10-03 | Pendientes del 7.º detractor | error de lectura informado como «fuera de sección»; `parsear_rmd` exigía el literal del encabezado; exshuffle ausente solo era aviso | `error_lectura`; sección vía `extract_environment`; ausente = error en schoice/mchoice/cloze con huecos de elección, `no_aplica` en el resto, aviso en plantillas; `dinamico` | 0 discordancias con `read_metainfo()` en 427 `.Rmd` (`tests/contraste_exshuffle_rexams.R`); +6 errores reales (SCHOICE propios sin exshuffle); 91/91 PASS; 20/20 mutantes mueren |
 
 ### ✅ Deuda del hook — RESUELTA (2026-10-03)
 
@@ -3603,10 +3604,39 @@ Mutantes, en un banco que copia los scripts a un directorio propio: patrón vora
 ignora `extype` → 1; rama de valor no válido de la 2E sin contar el error → 2; `validar_metadatos`
 sin el encabezado reconstruido → 2. Mueren los 11.
 
-Pendiente (backlog, no es regresión): un `exshuffle` ausente sigue siendo solo un aviso, aunque
-para R/exams equivale a `FALSE` (no mezcla). Y si la sección Meta-information no se reconoce,
-`validar_coherencia_matematica()` aborta al no encontrar `extype` antes de llegar a `exshuffle`
-(fallo previo; la 2E sí lo reporta).
+Los pendientes que dejó este paso se cerraron tras el **7.º detractor** (APROBAR_CON_CAMBIOS,
+aplicados):
+
+- **Fallo de lectura ≠ exshuffle mal ubicado.** `extract_environment` y `extract_command` no
+  son exportadas por exams y pueden cambiar sin aviso. Si fallan, el estado es `error_lectura`
+  con el mensaje de exams y su versión; antes se informaba como «fuera de la sección» en todos
+  los archivos. Un test comprueba que ambas existen con los argumentos que se usan.
+- **La sección se ubica como R/exams también en `parsear_rmd()`.** Antes exigía el literal
+  `Meta-information` y la función abortaba con `Meta-Information`, `Metainformation` o espacios
+  finales, encabezados que R/exams sí reconoce.
+- **exshuffle ausente = error, solo donde importa.** Para R/exams ausente es `FALSE`: no mezcla.
+  `read_exercise` mezcla opciones solo en `schoice`/`mchoice` y en los huecos `schoice`/`mchoice`
+  de un `cloze`; en `num`/`string`, en un `cloze` sin huecos de elección o en un archivo sin
+  `extype`, el estado es `no_aplica` (también para `FALSE`). Las plantillas de referencia de
+  `Ejemplos-Funcionales-Rmd/Plantillas/` (inmutables) dan aviso, no error.
+- **R en línea en exshuffle** (`` exshuffle: `r x` ``): estado `dinamico`, error. El validador
+  lee el `.Rmd` sin tejer; R/exams lee el `.md` tejido, y no se puede comprobar qué valor saldrá.
+
+Contraste con R/exams, reproducible con `Rscript tests/contraste_exshuffle_rexams.R`:
+`exams:::read_metainfo()` lee el `.md` tejido y sobre el `.Rmd` crudo aborta si `exsolution` o
+`extype` llevan R en línea o faltan, así que el script los sustituye por valores válidos sin tocar
+`exshuffle` ni la sección. Resultado sobre 427 `.Rmd`: **0** archivos donde el validador diga «no
+mezcla» y R/exams mezcle, y **0** al revés. La cifra anterior («0 discordancias») se había medido
+solo sobre los archivos que `read_metainfo()` podía leer en crudo.
+
+Impacto en el corpus frente al commit anterior: aparecen **6** errores nuevos, todos SCHOICE propios
+sin `exshuffle` (`Lab-Manjaro/estadistica_media_*`, R/exams no mezcla sus opciones); 3 plantillas
+SCHOICE sin `exshuffle` quedan como aviso; 60 archivos sin `extype` (salidas `*_interactivo.Rmd`,
+`test_*`) y los `cloze`/`num`/`string` sin huecos de elección pasan de «no encontrado» a «no
+aplica». CLI y 2E siguen sin discrepar. Tests: 91/91. Mutantes: los 10 nuevos (sin estado de error
+de lectura, sección por literal, todo relevante, `extype` ausente relevante, todo `cloze`
+relevante, sin exención de plantillas, sin `dinamico`, ausente sin error, rama de error de la 2E
+sin contar) y los 10 anteriores que siguen aplicando mueren todos.
 
 Falsos negativos conocidos de la excepción (siguen dando ERR_C4 en las tres rutas; ninguno es
 regresión de esta entrada): nombre de archivo interpolado `cat("* ![](", nombre_archivo, ")…")` —real en

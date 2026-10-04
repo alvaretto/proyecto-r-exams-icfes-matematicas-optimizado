@@ -239,19 +239,20 @@ if (is.null(ev_2e)) {
   cat("  ✓ exshuffle:", ev_2e$valor, "(correcto)\n")
 } else if (ev_2e$estado == "sin_mezcla_aceptado") {
   cat("  ✓ exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>.png, regla #4)\n")
+} else if (ev_2e$estado == "no_aplica") {
+  cat("  ✓ exshuffle: no aplica (el tipo de ejercicio no tiene opciones que mezclar)\n")
+} else if (ev_2e$estado == "ausente_plantilla") {
+  cat("  ⚠️  exshuffle ausente (plantilla de referencia inmutable, no se modifica)\n")
+  advertencias_totales <- advertencias_totales + 1
 } else if (ev_2e$estado == "sin_mezcla") {
   cat("  ❌ ERROR CRÍTICO: exshuffle debe ser TRUE (OBLIGATORIO)\n")
   fase_2e_errores <- fase_2e_errores + 1
-} else if (ev_2e$estado == "invalido") {
-  cat("  ❌ ERROR CRÍTICO: exshuffle con valor no válido:", ev_2e$valor,
-      "(R/exams solo admite TRUE, FALSE o un entero, sin comentarios)\n")
-  fase_2e_errores <- fase_2e_errores + 1
-} else if (ev_2e$estado == "fuera_de_seccion") {
-  cat("  ❌ ERROR CRÍTICO: exshuffle fuera de la sección Meta-information (R/exams no lo lee)\n")
-  fase_2e_errores <- fase_2e_errores + 1
 } else {
-  cat("  ⚠️  exshuffle no encontrado explícitamente\n")
-  advertencias_totales <- advertencias_totales + 1
+  # invalido, dinamico, fuera_de_seccion, ausente, error_lectura: mismo texto que el CLI.
+  for (m in ev_2e$errores) cat("  ❌ ERROR CRÍTICO:", sub("^ERR_C4: ", "", m), "\n")
+  # Si el chequeo de metadatos obligatorios ya contó la falta de exshuffle, no se cuenta dos veces.
+  ya_contado <- ev_2e$estado == "ausente" && !grepl("exshuffle", contenido_texto)
+  if (!ya_contado) fase_2e_errores <- fase_2e_errores + max(1L, length(ev_2e$errores))
 }
 
 # Verificar metadatos ICFES

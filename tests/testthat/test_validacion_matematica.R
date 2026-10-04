@@ -333,7 +333,7 @@ con_exshuffle <- function(valor, answerlist = c("* Opción 1", "* Opción 2"), e
                           extype = "schoice", encabezado = "Meta-information") {
   f <- rmd_opciones_graficas(answerlist)
   l <- readLines(f, encoding = "UTF-8")
-  l <- sub("^exshuffle: FALSE$", paste0("exshuffle: ", valor), l)
+  l <- if (is.na(valor)) l[l != "exshuffle: FALSE"] else sub("^exshuffle: FALSE$", paste0("exshuffle: ", valor), l)
   l <- sub("^extype: schoice$", paste0("extype: ", extype), l)
   l <- sub("^Meta-information$", encabezado, l)
   writeLines(c(l, extra), f)
@@ -402,6 +402,92 @@ test_that("validar_metadatos sin el archivo completo sigue leyendo exshuffle", {
   f2 <- con_exshuffle("FALSE")
   expect_true(ERR_EXSHUFFLE_FALSE %in% validar_metadatos(parsear_rmd(f2)$meta))
   unlink(c(f, f2))
+})
+
+# Pendientes del Error 38 (7.º detractor): error de lectura, sección como R/exams,
+# relevancia por tipo y exshuffle calculado con R en línea.
+test_that("Las funciones internas de exams que reproduce el validador existen con su firma", {
+  ns <- asNamespace("exams")
+  expect_true(all(c("x", "env", "value", "markup") %in% names(formals(ns$extract_environment))))
+  expect_true(all(c("x", "command", "type", "markup") %in% names(formals(ns$extract_command))))
+})
+
+test_that("Un fallo al leer con exams es 'error_lectura', no 'fuera de sección'", {
+  f <- con_exshuffle("TRUE")
+  l <- readLines(f, encoding = "UTF-8")
+  ns_roto <- list(extract_command = asNamespace("exams")$extract_command)  # sin extract_environment
+  ev <- evaluar_exshuffle(l, ns = ns_roto)
+  expect_equal(ev$estado, "error_lectura")
+  expect_match(errores_exshuffle(ev), "no se pudo leer exshuffle con exams", fixed = TRUE)
+  expect_false(any(grepl("fuera de la sección", errores_exshuffle(ev))))
+  unlink(f)
+})
+
+test_that("Encabezados que R/exams reconoce no hacen abortar la función", {
+  for (enc in c("Meta-Information", "Metainformation", "Meta-information  ")) {
+    f <- con_exshuffle("FALSE", encabezado = enc)
+    r <- validar_coherencia_matematica(f)
+    expect_true(ERR_EXSHUFFLE_FALSE %in% r$errores, info = enc)
+    unlink(f)
+  }
+})
+
+test_that("exshuffle ausente es error solo donde R/exams mezclaría opciones", {
+  ausente <- function(extype, extra = character(0)) {
+    f <- con_exshuffle(NA, extype = extype, extra = extra)
+    on.exit(unlink(f))
+    evaluar_exshuffle(readLines(f, encoding = "UTF-8"), f)$estado
+  }
+  expect_equal(ausente("schoice"), "ausente")
+  expect_equal(ausente("mchoice"), "ausente")
+  expect_equal(ausente("num"), "no_aplica")
+  expect_equal(ausente("cloze", "exclozetype: num|string"), "no_aplica")
+  expect_equal(ausente("cloze", "exclozetype: schoice|num"), "ausente")
+  f <- con_exshuffle(NA)
+  expect_match(validar_coherencia_matematica(f)$errores, "exshuffle ausente", all = FALSE)
+  unlink(f)
+})
+
+test_that("Un archivo sin extype (no es un ejercicio) no exige exshuffle", {
+  # p. ej. salida/*_interactivo.Rmd o test_*.Rmd: R/exams no podría leerlo como ejercicio.
+  f <- con_exshuffle(NA)
+  l <- readLines(f, encoding = "UTF-8")
+  expect_equal(evaluar_exshuffle(l[!grepl("^extype:", l)])$estado, "no_aplica")
+  unlink(f)
+})
+
+test_that("Un CLOZE sin huecos de elección no exige exshuffle: TRUE", {
+  f <- con_exshuffle("FALSE", extype = "cloze", extra = "exclozetype: num|num")
+  expect_equal(evaluar_exshuffle(readLines(f, encoding = "UTF-8"))$estado, "no_aplica")
+  unlink(f)
+})
+
+test_that("Plantillas de referencia: exshuffle ausente es aviso, no error", {
+  f <- con_exshuffle(NA)
+  l <- readLines(f, encoding = "UTF-8")
+  ruta <- "/repo/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/erres/x.Rmd"
+  ev <- evaluar_exshuffle(l, ruta)
+  expect_equal(ev$estado, "ausente_plantilla")
+  expect_length(errores_exshuffle(ev), 0)
+  unlink(f)
+})
+
+test_that("exshuffle calculado con R en línea no se da por bueno", {
+  f <- con_exshuffle("`r mezclar`")
+  ev <- evaluar_exshuffle(readLines(f, encoding = "UTF-8"))
+  expect_equal(ev$estado, "dinamico")
+  expect_match(errores_exshuffle(ev), "R en línea", fixed = TRUE)
+  unlink(f)
+})
+
+test_that("FASE 2E: exshuffle ausente en un SCHOICE es error de la fase", {
+  script <- file.path(dir_scripts_hook, "arsenal_validacion_completa.R")
+  f <- con_exshuffle(NA, extra = c("exextra[Competencia]: a", "exextra[Componente]: b", "exextra[Nivel]: 1"))
+  on.exit(unlink(f))
+  out <- ejecutar_script_hook(script, f)
+  expect_sin_caida(out)
+  expect_match(out, "ERROR CRÍTICO: exshuffle ausente", fixed = TRUE)
+  expect_match(out, "FASE 2E \\(Metadatos ICFES\\):\\s+ERROR")
 })
 
 test_that("Dos opciones gráficas en la misma línea activan la excepción", {
