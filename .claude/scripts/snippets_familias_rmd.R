@@ -131,11 +131,16 @@ seleccionar_combinacion_con_cascada <- function(n_candidatos, k, es_valida,
 # Los archivos se generan con nombres semánticos (depurables) y solo DESPUÉS de sample() se
 # renombran a diagrama_a/b/c/d.png. Hacerlo antes vuelve la letra predecible; no hacerlo filtra
 # la respuesta en el XML de exams2moodle(), que referencia los recursos por nombre.
+# `sufijo` (regla #4 v6.1): identificador por versión, el MISMO para las cuatro opciones
+# (p. ej. 8 dígitos hexadecimales sorteados al final de data_generation). Sin él,
+# exams2pdf(rep(archivo, n)) muestra en todas las preguntas las figuras de una sola versión.
 renombrar_opciones_neutral <- function(opciones_mezcladas, campo = "archivo",
-                                       prefijo = "diagrama_", letras = c("A","B","C","D")) {
+                                       prefijo = "diagrama_", letras = c("A","B","C","D"),
+                                       sufijo = NULL) {
   stopifnot(length(opciones_mezcladas) == length(letras))
+  stopifnot(is.null(sufijo) || grepl("^[0-9a-f]+$", sufijo))
   for (i in seq_along(letras)) {
-    neutral <- paste0(prefijo, tolower(letras[i]), ".png")
+    neutral <- paste0(prefijo, tolower(letras[i]), if (!is.null(sufijo)) paste0("_", sufijo), ".png")
     if (file.exists(opciones_mezcladas[[i]][[campo]])) {
       file.rename(opciones_mezcladas[[i]][[campo]], neutral)
     }

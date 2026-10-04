@@ -65,7 +65,7 @@ cat("─────────────────────────
 fase_2c_errores <- 0
 
 # Verificar si es ejercicio con gráficos como opciones
-tiene_graficos_opciones <- grepl("diagrama_[a-d]\\.png|plot_[A-D]|opciones_graficos", contenido_texto)
+tiene_graficos_opciones <- grepl("diagrama_[a-d](_([0-9a-f]+|`r [^`]+`))?\\.png|plot_[A-D]|opciones_graficos", contenido_texto)
 
 if (tiene_graficos_opciones) {
   # Verificar patrón de validación de unicidad
@@ -88,7 +88,7 @@ if (tiene_graficos_opciones) {
   }
 
   # Verificar archivos individuales
-  tiene_pngs_individuales <- grepl("diagrama_a\\.png.*diagrama_b\\.png|ggsave.*diagrama_.*\\.png", contenido_texto)
+  tiene_pngs_individuales <- grepl("diagrama_a(_([0-9a-f]+|`r [^`]+`))?\\.png.*diagrama_b(_([0-9a-f]+|`r [^`]+`))?\\.png|ggsave.*diagrama_.*\\.png", contenido_texto)
   if (!tiene_pngs_individuales) {
     cat("  ⚠️  ADVERTENCIA: No se detectan archivos PNG individuales por opción\n")
     advertencias_totales <- advertencias_totales + 1
@@ -238,7 +238,7 @@ if (is.null(ev_2e)) {
 } else if (ev_2e$estado == "mezcla") {
   cat("  ✓ exshuffle:", ev_2e$valor, "(correcto)\n")
 } else if (ev_2e$estado == "sin_mezcla_aceptado") {
-  cat("  ✓ exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>.png, regla #4)\n")
+  cat("  ✓ exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>[_<id>].png, regla #4)\n")
 } else if (ev_2e$estado == "no_aplica") {
   cat("  ✓ exshuffle: no aplica (el tipo de ejercicio no tiene opciones que mezclar)\n")
 } else if (ev_2e$estado == "ausente_plantilla") {

@@ -496,6 +496,39 @@ test_that("Dos opciones gráficas en la misma línea activan la excepción", {
   unlink(f)
 })
 
+# Nombres con sufijo por versión (regla #4 v6.1): en exams2pdf(rep(archivo, n)) todas las
+# copias comparten el directorio de LaTeX y, con "&#8203;" tras la imagen, el renombrado de
+# duplicados de R/exams no reescribe la referencia: todas las preguntas mostraban las figuras
+# de una sola versión. El sufijo es hexadecimal o un `r ...` en línea.
+test_that("Excepción de exshuffle con sufijo por versión calculado en línea", {
+  f <- rmd_opciones_graficas(c(
+    "* ![`r alt_op[1]`](diagrama_a_`r fig_id`.png){width=60%}&#8203;",
+    "* ![`r alt_op[2]`](diagrama_b_`r fig_id`.png){width=60%}&#8203;"
+  ))
+  expect_false(any(grepl("exshuffle", validar_coherencia_matematica(f)$errores)))
+  expect_setequal(letras_opciones_graficas(readLines(f, encoding = "UTF-8")), c("a", "b"))
+  unlink(f)
+})
+
+test_that("Excepción de exshuffle con sufijo hexadecimal literal", {
+  f <- rmd_opciones_graficas(c(
+    "* ![](diagrama_a_3f9c0b12.png){width=60%}&#8203;",
+    "* ![](diagrama_b_3f9c0b12.png){width=60%}&#8203;"
+  ))
+  expect_false(any(grepl("exshuffle", validar_coherencia_matematica(f)$errores)))
+  unlink(f)
+})
+
+test_that("Un sufijo semántico no cuenta como nombre neutral de opción", {
+  # "_correcta" filtraría la clave en el XML de Moodle (regla #22 §P6); no es el formato neutral.
+  f <- rmd_opciones_graficas(c(
+    "* ![](diagrama_a_correcta.png){width=60%}&#8203;",
+    "* ![](diagrama_b_distractor.png){width=60%}&#8203;"
+  ))
+  expect_true(any(grepl("ERR_C4: exshuffle debe ser TRUE", validar_coherencia_matematica(f)$errores)))
+  unlink(f)
+})
+
 test_that("FASE 2E lee el metadato como R/exams: comentarios, enteros, CLOZE y valores no válidos", {
   script <- file.path(dir_scripts_hook, "arsenal_validacion_completa.R")
   ext <- c("exextra[Competencia]: a", "exextra[Componente]: b", "exextra[Nivel]: 1")

@@ -3651,3 +3651,84 @@ La excepción no es exhaustiva.
 - Regla #4 (opciones gráficas, `exshuffle: FALSE`) y regla #22 §P6 (el alt de una opción no puede
   contener la clave ni un dato que la delate).
 - WCAG 2.2, criterio 1.1.1: https://www.w3.org/TR/WCAG22/#non-text-content
+
+---
+
+## Error 39: En un examen de varias preguntas, todas muestran las figuras de una sola versión
+
+### ❌ Síntoma
+
+`exams2pdf(rep("archivo.Rmd", 10))` (los Semilleros, y lo mismo con `exams2nops` y
+`exams2pandoc`) genera un PDF en el que **los textos cambian de pregunta en pregunta pero las
+figuras no**: enunciado, opciones y gráfica de Solution son las de una sola versión. En 9 de cada
+10 preguntas las opciones no corresponden a la tabla y la Solution contradice su gráfica (caso
+real: «La gráfica correcta es la de barras apiladas … noveno 8 y 7» bajo una gráfica agrupada
+8 y 5). No hay error ni aviso; HTML, Moodle y el examen de una sola pregunta salen bien, así que
+ningún validador lo ve: todos renderizan `n = 1`.
+
+Medición (`barras-campeonato-baloncesto-n3`, 2026-10-04): PDF de 10 preguntas con **120 imágenes
+colocadas y solo 6 distintas** (`pdfimages -list`, columna de objeto).
+
+### 🔍 Causa Raíz
+
+Todas las copias escriben sus figuras con el mismo nombre (`diagrama_a.png`,
+`grafica_solucion.png`, …) y comparten el directorio de LaTeX. R/exams 2.4-2 **sí** renombra los
+duplicados (`diagrama_a-2.png`, `diagrama_a-8.png`…), pero en `exams:::make_exams_write_pdf` solo
+reescribe la referencia si la línea, tras quitarle `\includegraphics[...]{...}`, es exactamente el
+nombre del archivo. El `&#8203;` que sigue a cada imagen (Error 38) llega como `\hspace{0pt}` en la
+misma línea, la comparación falla y el `.tex` sigue apuntando al primer archivo:
+
+```r
+inclg <- "(\\\\includegraphics)(\\[[^]]+\\])*(\\{)([^\\}]+)(\\})"
+gsub(inclg, "\\4", "\\includegraphics[...]{diagrama_a.png}\\hspace{0pt}") == "diagrama_a.png"  # FALSE
+gsub(inclg, "\\4", "\\includegraphics[...]{diagrama_a.png}")              == "diagrama_a.png"  # TRUE
+```
+
+### ✅ Solución Verificada
+
+Un sufijo hexadecimal **por versión**, el mismo en todas las figuras de la versión, sorteado al
+final de `data_generation` (último sorteo: no cambia los datos de ninguna semilla, A/B 100/100):
+
+```r
+# ANTES
+include_tikz(..., name = paste0("diagrama_", letra), ...)        # ![](diagrama_a.png)
+# DESPUÉS
+fig_id <- paste(sample(c(0:9, letters[1:6]), 8, replace = TRUE), collapse = "")
+include_tikz(..., name = paste0("diagrama_", letra, "_", fig_id), ...)
+# Answerlist: * ![`r alt_op[1]`](diagrama_a_`r fig_id`.png){width=85%}&#8203;
+```
+
+Es neutral (no distingue opciones, regla #22 §P6). Los validadores aceptan el sufijo solo
+hexadecimal o `` `r ...` `` en línea (regla #4 v6.1). Mismo síntoma menor: los encabezados de
+Solution repiten `\label`/`id` en cada copia («Label multiply defined», `id` duplicado en HTML);
+se resuelve con `### Título {.unnumbered #slug-`r fig_id`}`.
+
+### 🧪 Validación
+
+| Formato | Antes | Después |
+|---|---|---|
+| `exams2pdf(rep(f, 10))` (Semillero) | 6 imágenes distintas de 120 | 60 distintas de 120 |
+| `exams2nops(rep(f, 10))` | — | 50 distintas (5 por pregunta) |
+| `exams2pandoc(rep(f, 10), type = "docx")` | — | 60 de 60 distintas |
+| `exams2html(rep(f, 3))` | `id` de encabezado repetidos | 21 de 21 únicos |
+| `exams2moodle(f, n = 5)` | sin defecto | 0 violaciones del grep de la regla #4 v6.1 |
+| pandoc de RStudio 3.10 (forzado con `rmarkdown::find_pandoc(dir = ...)`) | — | PDF 18/18 con 3 copias |
+
+Regresión permanente: `tests/testthat/test_barras_campeonato_clave.R` (mutante «sin fig_id»).
+
+### ✔️ Checklist
+
+- [ ] Toda figura del `.Rmd` lleva `_<fig_id>`, el mismo en las de la versión.
+- [ ] `exams2pdf(rep(f, 3))` + `pdfimages -list`: las imágenes distintas crecen con las copias.
+- [ ] Grep de Moodle de la regla #4 v6.1 (el anterior `diagrama_[a-z]+\.png` no ve el sufijo).
+- [ ] El hook NO se dispara con `exams2*(rep(...))`: esta comprobación se hace a mano.
+
+### 📁 Ejemplo funcional
+
+`A-Produccion/01-En-PreDesarrollo/barras-campeonato-baloncesto-n3/barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd`
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-10-04 | Detectado por el profesor en el PDF impreso del Semillero; causa medida en el código de R/exams 2.4-2; sufijo `fig_id` y regla #4 v6.1. Los ejercicios con opciones gráficas sin sufijo siguen afectados en exámenes de varias copias. |

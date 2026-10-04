@@ -115,11 +115,11 @@ Por eso este defecto puede pasar **completamente desapercibido** si la validaci�
 # 1. Exportar a Moodle
 Rscript -e 'library(exams); exams2moodle("archivo.Rmd", n = 1, dir = "moodle_output")'
 
-# 2. Grep del XML buscando nombres semánticos filtrados
-grep -oE 'diagrama_[a-z]+\.png' moodle_output/*.xml | sort -u
+# 2. Grep del XML buscando nombres semánticos filtrados (vacío = sin fuga)
+grep -ohE 'diagrama_[^."/]+\.png' moodle_output/*.xml | sort -u | grep -vE '^diagrama_[a-z](_[0-9a-f]+)?\.png$'
 ```
 
-El resultado DEBE contener **únicamente** `diagrama_a.png`, `diagrama_b.png`, `diagrama_c.png`, `diagrama_d.png` (letras). Cualquier coincidencia con un nombre de rol (`correcta`, `distractor`, `perp`, `recorrida`, `suma`, `error`, etc.) es un defecto bloqueante — ver Error 25 en `patrones-errores-conocidos.md`.
+Los nombres admitidos son **únicamente** `diagrama_<letra>.png` o, desde la v6.1, `diagrama_<letra>_<id hexadecimal>.png`; la línea anterior imprime todo lo que no tenga esa forma y debe salir vacía. (Hasta la v6.0 el grep era `diagrama_[a-z]+\.png`, que no ve los nombres con sufijo: con ellos devuelve vacío sin haber revisado nada.) Cualquier coincidencia con un nombre de rol (`correcta`, `distractor`, `perp`, `recorrida`, `suma`, `error`, etc.) es un defecto bloqueante — ver Error 25 en `patrones-errores-conocidos.md`.
 
 **El renombrado a letra DEBE ocurrir POST-mezcla**, nunca antes:
 
@@ -398,10 +398,18 @@ Ver Error 20 en `patrones-errores-conocidos.md` para el patrón GRAF-BAR-01.
 
 ---
 
-**Versión**: 6.0
-**Fecha**: 2026-07-28
+**Versión**: 6.1
+**Fecha**: 2026-10-04
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver regla general en `codigo-rmd.md` para otros tipos de ejercicios
+
+### Cambios v6.1 (2026-10-04)
+- **Sufijo por versión obligatorio**: `diagrama_<letra>_<id>.png` (y `grafica_enunciado_<id>.png`, `grafica_solucion_<id>.png`), con `<id>` hexadecimal sorteado al final de `data_generation` (`fig_id <- paste(sample(c(0:9, letters[1:6]), 8, replace = TRUE), collapse = "")`), **el mismo** para todas las figuras de la versión. Neutral (no distingue opciones), así que §P6 se conserva.
+- **Hallazgo** (`barras-campeonato-baloncesto-n3`, `SemilleroUnico_v2.R`): con `exams2pdf(rep(archivo, 10))` el PDF traía 120 imágenes colocadas y **solo 6 distintas**: las 10 preguntas mostraban el enunciado, las opciones y la gráfica de la Solution de **una sola versión**, mientras los textos sí cambiaban. En 9 de cada 10 preguntas las opciones no correspondían a la tabla.
+- **Causa medida** (exams 2.4-2, `make_exams_write_pdf`): R/exams sí renombra los suplementos duplicados (`diagrama_a-2.png`), pero solo reescribe la referencia si la línea, tras quitar `\includegraphics[...]{...}`, es exactamente el nombre. El `&#8203;` que va tras cada imagen (pie «Figure N») llega como `\hspace{0pt}` en la misma línea y la comparación falla: el `.tex` sigue apuntando al primer archivo. Moodle no se afecta (incrusta cada pregunta aparte) ni una sola copia.
+- **Validadores**: `PATRON_OPCION_GRAFICA_PNG` (excepción de `exshuffle`) y las FASES 2C/2E del arsenal aceptan el sufijo **solo** hexadecimal o `` `r ...` `` en línea; un sufijo semántico (`_correcta`) no cuenta como nombre neutral. Tests en `test_validacion_matematica.R`.
+- **Verificación con varias copias**: `exams2pdf(rep("archivo.Rmd", 3), ...)` + `pdfimages -list`: el número de imágenes distintas debe crecer con las copias.
+- **Legado**: los ejercicios con `diagrama_a.png` sin sufijo siguen validando, pero tienen el defecto en exámenes de varias copias.
 
 ### Cambios v6.0 (2026-07-28)
 - **NUEVA SECCIÓN**: "⚠️ CANAL DE FUGA: el NOMBRE DE ARCHIVO delata la respuesta en Moodle" (Error 25)

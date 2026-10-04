@@ -1413,11 +1413,14 @@ validar_codigo <- function(contenido) {
 # Se exigen al menos DOS letras distintas: una figura de contexto mal nombrada
 # "diagrama_a.png" en un SCHOICE de texto no lo convierte en uno de opciones gráficas.
 # ".*?" (perezoso) permite varias imágenes por línea y alt con "]" dentro.
-PATRON_OPCION_GRAFICA_PNG <- "!\\[.*?\\]\\(diagrama_[a-z]\\.png"
+# Sufijo opcional por versión (regla #4 v6.1): "diagrama_a_3f9c0b12.png" o
+# "diagrama_a_`r fig_id`.png". Solo hexadecimal o R en línea: un sufijo semántico
+# ("_correcta") no es el nombre neutral.
+PATRON_OPCION_GRAFICA_PNG <- "!\\[.*?\\]\\(diagrama_[a-z](?:_(?:[0-9a-f]+|`r [^`]+`))?\\.png"
 
 letras_opciones_graficas <- function(lineas) {
   m <- unlist(regmatches(lineas, gregexpr(PATRON_OPCION_GRAFICA_PNG, lineas, perl = TRUE)))
-  unique(sub("^.*diagrama_([a-z])\\.png$", "\\1", m))
+  unique(sub("^.*\\(diagrama_([a-z])(?:_[^)]*)?\\.png$", "\\1", m, perl = TRUE))
 }
 
 es_schoice_opciones_graficas <- function(lineas, extype) {
@@ -1556,7 +1559,7 @@ n_err_meta <- length(err_meta)
 err_meta <- aplicar_excepcion_exshuffle(err_meta, parsed$contenido, extype)
 if (length(err_meta) < n_err_meta) {
   # Solo se anuncia si de verdad se filtró un ERR_C4 (con exshuffle: TRUE no hay nada que aceptar).
-  cat("  exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>.png, regla #4)\n")
+  cat("  exshuffle: FALSE aceptado (SCHOICE con opciones gráficas diagrama_<letra>[_<id>].png, regla #4)\n")
 }
 if (length(err_meta) > 0) {
   for (e in err_meta) cat("  ", e, "\n")
