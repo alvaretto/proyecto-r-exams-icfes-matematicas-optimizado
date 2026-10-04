@@ -36,7 +36,12 @@ mutantes <- list(
   d_solution_valor_falso = list('" (datos de la tabla) y, para el grado ", g2, ", ", fmt_num(M[2, 1])',
                                 '" (datos de la tabla) y, para el grado ", g2, ", ", fmt_num(M[2, 1] + 1)'),
   e_figura_solucion_ajena = list("include_tikz(tikz_barras_opcion(mats_op[[k_sol]],",
-                                 "include_tikz(tikz_barras_opcion(mats_op[[if (k_sol == 1L) 2L else 1L]],")
+                                 "include_tikz(tikz_barras_opcion(mats_op[[if (k_sol == 1L) 2L else 1L]],"),
+  # Sin el rótulo, la apilada E8 es idéntica a barras superpuestas de los datos correctos.
+  f_sin_rotulo          = list('subtitulo_op <- function(f) if (es_canonica) NULL else paste0("(", nombre_formato(f), ")")',
+                               'subtitulo_op <- function(f) NULL'),
+  g_rotulo_invertido    = list('subtitulo_op <- function(f) if (es_canonica) NULL else paste0("(", nombre_formato(f), ")")',
+                               'subtitulo_op <- function(f) if (es_canonica) NULL else paste0("(", nombre_formato(setdiff(c("agrupada", "apilada"), f)), ")")')
 )
 
 for (nm in names(mutantes)) {
@@ -55,8 +60,12 @@ for (nm in names(mutantes)) {
     writeLines(sub(m[[1]], m[[2]], txt, fixed = TRUE), f, useBytes = TRUE)
     r <- correr(f)
     expect_equal(r$status, 1L, info = paste(tail(r$salida, 6), collapse = "\n"))
-    expect_true(any(grepl("RESULTADO: 0/100 versiones sin fallos", r$salida)),
-                info = paste("el mutante debe fallar en las 100 versiones:", tail(r$salida, 1)))
+    pasan <- as.integer(sub("^RESULTADO: ([0-9]+)/.*$", "\\1", grep("^RESULTADO:", r$salida, value = TRUE)))
+    # Los mutantes del rótulo no pueden fallar en la canónica (allí el rótulo debe faltar):
+    # deben pasar exactamente las versiones canónicas y fallar todas las demás.
+    n_canon <- as.integer(sub("^.*TRUE=([0-9]+).*$", "\\1", grep("^  canonica", r$salida, value = TRUE)))
+    esperado <- if (startsWith(nm, "f_") || startsWith(nm, "g_")) n_canon else 0L
+    expect_identical(pasan, esperado, info = paste("versiones sin fallos con el mutante:", tail(r$salida, 1)))
     unlink(f)
   })
 }

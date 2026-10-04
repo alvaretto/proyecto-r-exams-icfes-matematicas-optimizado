@@ -115,7 +115,7 @@ verificar_version <- function(seed) {
   }, error = function(e) { falla("ERROR al tejer: ", conditionMessage(e)); NULL })
   if (is.null(md)) return(list(seed = seed, fallos = fallos))
   txt <- paste(md, collapse = "\n")
-  estrato <- list(canonica = isTRUE(env$es_canonica), fmt_clave = env$fmt_op[which(env$sol)],
+  estrato <- list(canonica = isTRUE(env$es_canonica), rama_e8 = isTRUE(env$rama_e8), fmt_clave = env$fmt_op[which(env$sol)],
                   centro = isTRUE(env$centro_es_clave),
                   e7 = any(vapply(env$e7_op, Negate(is.null), logical(1))),
                   cadena = any(lengths(env$rutas_op) == 2L))
@@ -173,6 +173,16 @@ verificar_version <- function(seed) {
   ## Solution: la figura y el texto describen la opción que dibuja los datos
   ds <- matriz_dibujada(leer_tikz(figs[[esperados[6]]]))
   if (!igual(ds)) falla("la gráfica de Solution no dibuja los datos mostrados")
+  ## Rótulo del tipo (decisión del profesor 2026-10-04): sin él, E8 apilada es idéntica a
+  ## barras superpuestas de los datos correctos y sería clave. Fuera de la canónica debe
+  ## estar y coincidir con el DIBUJO en las 4 opciones y en la copia de Solution; en la
+  ## canónica, ausente (idéntica al impreso).
+  rotulo_de <- function(code) { m <- regmatches(code, regexpr("\\{\\(barras (agrupadas|apiladas)\\)\\}", code))
+    if (length(m)) sub("^\\{\\(barras (agrupadas|apiladas)\\)\\}$", "\\1", m) else NA_character_ }
+  for (k in 1:5) { f <- esperados[k + 1L]; d <- if (k <= 4L) dib[[k]] else ds
+    esperado <- if (estrato$canonica) NA_character_ else if (d$formato == "apilada") "apiladas" else "agrupadas"
+    r <- rotulo_de(figs[[f]])
+    if (!identical(r, esperado)) falla(f, ": rótulo «", r, "» con dibujo ", d$formato, if (estrato$canonica) " (la canónica no lleva rótulo)") }
   if (length(coinciden) == 1L && ds$formato != dib[[coinciden]]$formato) falla("la gráfica de Solution es ", ds$formato, " y la clave es ", dib[[coinciden]]$formato)
   rc <- regmatches(txt, regexec("La gráfica correcta es la de \\*\\*barras (agrupadas|apiladas)\\*\\* que muestra, para el grado ([^,]+), ([0-9,]+) [^0-9]+ y ([0-9,]+) [^(]+\\(datos de la tabla\\) y, para el grado ([^,]+), ([0-9,]+) [^0-9]+ y ([0-9,]+) ", txt))[[1]]
   if (length(rc) < 8) falla("no se pudo leer el párrafo de la respuesta correcta") else {

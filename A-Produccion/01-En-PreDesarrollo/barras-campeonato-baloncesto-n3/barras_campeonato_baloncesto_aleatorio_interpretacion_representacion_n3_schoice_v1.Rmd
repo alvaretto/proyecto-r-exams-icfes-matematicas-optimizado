@@ -184,7 +184,18 @@ errores_conceptuales <- list(
        },
        calcula = function(params) {
          M <- params$M; M[2, params$d7$col] <- M[2, params$d7$col] + params$d7$s; M
-       })
+       }),
+  ## E8 (decisión del profesor, 2026-10-04): el error emblemático de las barras
+  ## apiladas. Solo atrapa si la opción es APILADA y las DOS columnas se
+  ## transforman: el segmento inferior (grado de la gráfica) está bien y el
+  ## superior mide M[1,j] - M[2,j], así que su borde llega al dato de la tabla.
+  ## No entra en el sorteo general (sample.int(7L)): tiene su propia rama.
+  list(codigo = "E8", nombre = "Borde superior leído como dato",
+       descripcion_corta = "En una barra apilada, toma la altura a la que llega el borde superior del segmento como si fuera su dato.",
+       descripcion_larga = "La gráfica es apilada y el segmento inferior está bien, pero el segmento superior solo mide la diferencia entre el dato de la tabla y el de la gráfica: su borde superior llega justo al dato del grado de la tabla. Quien lee hasta dónde llega el borde, en lugar de cuánto mide el segmento, cree que la gráfica coincide.",
+       causa_raiz = "En una barra apilada solo el segmento inferior empieza en cero; los de arriba se leen restando, y aquí no se restó.",
+       precondicion = function(params) all(params$M[1, ] - params$M[2, ] >= 1),
+       calcula = function(params) { M <- params$M; M[1, ] <- M[1, ] - M[2, ]; M })
 )
 codigos_pool <- vapply(errores_conceptuales, function(e) e$codigo, character(1))
 
@@ -223,13 +234,34 @@ if (es_canonica) {
   rutas <- list("E1", "CANON_B", "E4")
   e7_distr <- list(NULL, NULL, NULL)
   centro_es_clave <- TRUE
+  rama_e8 <- FALSE
   fmt_pre <- c("agrupada", "apilada", "apilada", "agrupada")         # clave, A, B, D
   orden <- c(2L, 3L, 1L, 4L)                                          # A, B, C(clave), D
   intentos <- 0L
 } else {
   max_intentos <- 400L; intentos <- 0L; ok <- FALSE
+  ## Rama E8: clave, E8(M) apilada, E2(M) y E6(M). La tabla debe superar a la
+  ## gráfica en las dos categorías para que E8 exista. ÚNICA topología viable
+  ## (§P7-F, enumeración de los 1 176 tríos de errores simples y cadenas de dos):
+  ##  - E8 comparte con la clave la fila de la gráfica (gemelas): con distractores
+  ##    en cadena, «elige del par» acertaba el 51 % (+19,7 pp sobre el techo nulo).
+  ##  - Con E1 (grados intercambiados) la clave quedaba como la única con el grado
+  ##    de la tabla dominante: +50,3 pp.
+  ##  - Con E2 y E6 la moda y el medoide apuntan a E2/E6, nunca a la clave, y el
+  ##    máximo de la batería es el empate de «mayor suma total» (1/3).
+  ## P_E8 se calibra midiendo §P7 por rama, no por plausibilidad.
+  P_E8 <- 1 / 3
+  rama_e8 <- (runif(1) < P_E8)
   while (!ok && intentos < max_intentos) {
     intentos <- intentos + 1L
+    if (rama_e8) {
+      v <- matrix(sample(2:9, 4L), 2L)
+      M <- rbind(pmax(v[1, ], v[2, ]), pmin(v[1, ], v[2, ]))
+      centro_es_clave <- FALSE
+      res <- list(list(M = errores_conceptuales[[8]]$calcula(list(M = M)), codigo = "E8", e7 = NULL),
+                  aplicar_error(2L, M), aplicar_error(6L, M))
+      rutas <- list("E8", "E2", "E6")
+    } else {
     M <- matrix(sample(2:9, 4L), 2L, byrow = TRUE)
     centro_es_clave <- (runif(1) < 0.25)
     if (centro_es_clave) {
@@ -245,10 +277,11 @@ if (es_canonica) {
       res <- c(list(W), lapply(idx, aplicar_error, Mbase = W$M))
       rutas <- list(codigos_pool[a], codigos_pool[c(a, idx[1])], codigos_pool[c(a, idx[2])])
     }
+    }
     if (any(vapply(res, is.null, logical(1)))) next
     mats_distr <- lapply(res, function(r) r$M)
     e7_distr <- lapply(res, function(r) r$e7)
-    if (!centro_es_clave && !is.null(res[[1]]$e7))      # E7 aplicado primero: su valor viaja con la cadena
+    if (!rama_e8 && !centro_es_clave && !is.null(res[[1]]$e7))      # E7 aplicado primero: su valor viaja con la cadena
       for (q in 2:3) if (is.null(e7_distr[[q]])) e7_distr[q] <- list(res[[1]]$e7)
     todas <- c(list(M), mats_distr)
     vec <- lapply(todas, as.vector)
@@ -261,7 +294,12 @@ if (es_canonica) {
   fmt_clave <- c("agrupada", "apilada")[sample.int(2L, 1L)]
   fmt_otro <- setdiff(c("agrupada", "apilada"), fmt_clave)
   resto_fmt <- c(fmt_clave, fmt_otro, fmt_otro)
-  fmt_pre <- c(fmt_clave, resto_fmt[sample.int(3L, 3L)])
+  if (rama_e8) {                     # E8 (índice 2) solo atrapa dibujada apilada
+    resto_fmt <- resto_fmt[-match("apilada", resto_fmt)]
+    fmt_pre <- c(fmt_clave, "apilada", resto_fmt[sample.int(2L, 2L)])
+  } else {
+    fmt_pre <- c(fmt_clave, resto_fmt[sample.int(3L, 3L)])
+  }
   ## Compensación posicional (detractor FASE 2C, objeción 1): la canónica fija la
   ## clave en C en 1/8 de las versiones; fuera de ella P(C) = 1/7 y las demás 2/7,
   ## de modo que la marginal es exactamente 1/4 en cada posición:
@@ -278,6 +316,7 @@ es_clave_pre <- c(TRUE, FALSE, FALSE, FALSE)
 stopifnot(sum(fmt_pre == fmt_pre[1]) >= 2L, sum(fmt_pre == "agrupada") == 2L)
 stopifnot(sum(vapply(mats_pre, function(X) identical(as.vector(X), as.vector(M)), logical(1))) == 1L)
 stopifnot(!any(duplicated(lapply(mats_pre, as.vector))))
+if (rama_e8) stopifnot(fmt_pre[2] == "apilada", identical(unlist(rutas), c("E8", "E2", "E6")))
 
 ## ---- Mezcla interna (exshuffle: FALSE, regla #4) -------------------------
 mats_op <- mats_pre[orden]
@@ -350,12 +389,15 @@ clasificar <- function(X) {
   unique(hits)
 }
 nombre_celda <- function(i, j) paste0("grado ", grados[i], ", ", cats_min[j])
-diferencias <- function(X, e7 = NULL) {
+diferencias <- function(X, e7 = NULL, e8 = FALSE) {
   out <- character(0)
   for (i in 1:2) for (j in 1:2) {
     if (abs(X[i, j] - M[i, j]) > 1e-9) {
       origen <- which(abs(M - X[i, j]) < 1e-9, arr.ind = TRUE)
-      nota <- if (!is.null(e7) && abs(X[i, j] - e7$nv) < 1e-9)
+      nota <- if (e8 && i == 1L && abs(X[2, j] - M[2, j]) < 1e-9 && abs(X[1, j] + X[2, j] - M[1, j]) < 1e-9)
+        paste0("el segmento va de ", fmt_num(X[2, j]), " a ", fmt_num(M[1, j]),
+               ": su borde superior llega al dato real, y quien lee hasta dónde llega el borde en lugar de cuánto mide el segmento cree que coincide")
+      else if (!is.null(e7) && abs(X[i, j] - e7$nv) < 1e-9)
         paste0("es el dato ", fmt_num(e7$v), " del ", nombre_celda(2L, which(M[2, ] == e7$v)),
                ", leído una unidad ", if (e7$nv > e7$v) "por encima" else "por debajo",
                ": la barra se leyó en la línea vecina de la cuadrícula")
@@ -437,7 +479,7 @@ if (!isTRUE(get0(".exams_generation_mode", envir = globalenv(), inherits = FALSE
   })
 }
 
-message("barras-campeonato: canonica=", es_canonica, " clave=", letra_correcta,
+message("barras-campeonato: rama_e8=", rama_e8, " canonica=", es_canonica, " clave=", letra_correcta,
         " fmt_clave=", fmt_pre[1], " centro_clave=", centro_es_clave, " intentos=", intentos)
 ```
 
@@ -452,7 +494,7 @@ message("barras-campeonato: canonica=", es_canonica, " clave=", letra_correcta,
 .f3 <- function(x) formatC(x, format = "f", digits = 3)
 .rgb <- function(h) { v <- as.integer(grDevices::col2rgb(h)); paste0("{rgb,255:red,", v[1], ";green,", v[2], ";blue,", v[3], "}") }
 
-cuerpo_tikz <- function(barras, ymax, titulo, etq_y, categorias, leyenda_txt, leyenda_col, x1) {
+cuerpo_tikz <- function(barras, ymax, titulo, etq_y, categorias, leyenda_txt, leyenda_col, x1, subtitulo = NULL) {
   W <- 15.24; H <- 10.67; x0 <- 1.5; yb <- 1.0; yt <- 9.0
   paso <- if (ymax <= 15) 1 else 2
   esc <- (yt - yb) / ymax
@@ -469,7 +511,9 @@ cuerpo_tikz <- function(barras, ymax, titulo, etq_y, categorias, leyenda_txt, le
   slot <- (x1 - x0) / 2
   for (i in 1:2) L <- c(L, sprintf("\\node[font=\\fontsize{13.5}{15}\\selectfont] at (%s,%s) {%s};", .f3(x0 + (i - 0.5) * slot), .f3(yb - 0.5), tex_acentos(categorias[i])))
   L <- c(L, sprintf("\\node[rotate=90,font=\\bfseries\\fontsize{14.5}{16}\\selectfont] at (0.45,%s) {%s};", .f3((yb + yt) / 2), tex_acentos(etq_y)))
-  L <- c(L, sprintf("\\node[font=\\bfseries\\fontsize{15.5}{18}\\selectfont,align=center] at (%s,%s) {%s};", .f3((x0 + x1) / 2 + 0.5), .f3(10.0), tex_acentos(titulo)))
+  L <- c(L, sprintf("\\node[font=\\bfseries\\fontsize{15.5}{18}\\selectfont,align=center] at (%s,%s) {%s};", .f3((x0 + x1) / 2 + 0.5), .f3(if (is.null(subtitulo)) 10.0 else 10.2), tex_acentos(titulo)))
+  if (!is.null(subtitulo))
+    L <- c(L, sprintf("\\node[font=\\fontsize{12.5}{14}\\selectfont] at (%s,%s) {%s};", .f3((x0 + x1) / 2 + 0.5), .f3(9.62), tex_acentos(subtitulo)))
   if (!is.null(leyenda_txt)) for (i in 1:2) {
     yy <- 5.4 - (i - 1) * 0.95
     L <- c(L, sprintf("\\fill[fill=%s] (%s,%s) rectangle (%s,%s);", .rgb(leyenda_col[i]), .f3(x1 + 0.4), .f3(yy - 0.17), .f3(x1 + 0.74), .f3(yy + 0.17)))
@@ -487,7 +531,7 @@ tikz_barras_simples <- function(valores, categorias, colores, titulo, etq_y) {
 
 ## X[grupo, categoría]; grupo 1 = grado de la tabla, grupo 2 = grado de la gráfica.
 ## Agrupada: grupo 1 a la izquierda. Apilada: grupo 2 ABAJO, grupo 1 ARRIBA.
-tikz_barras_opcion <- function(X, grupos, categorias, colores, modo, titulo, etq_y, ymax) {
+tikz_barras_opcion <- function(X, grupos, categorias, colores, modo, titulo, etq_y, ymax, subtitulo = NULL) {
   x0 <- 1.5; x1 <- 10.4; slot <- (x1 - x0) / 2
   barras <- list()
   for (j in 1:2) { c0 <- x0 + (j - 0.5) * slot
@@ -498,22 +542,29 @@ tikz_barras_opcion <- function(X, grupos, categorias, colores, modo, titulo, etq
       barras[[length(barras) + 1]] <- list(x0 = c0 - w / 2, x1 = c0 + w / 2, y0 = 0, y1 = X[2, j], col = colores[2])
       barras[[length(barras) + 1]] <- list(x0 = c0 - w / 2, x1 = c0 + w / 2, y0 = X[2, j], y1 = X[2, j] + X[1, j], col = colores[1])
     } }
-  cuerpo_tikz(barras, as.integer(ymax), titulo, etq_y, categorias, grupos, colores, x1)
+  cuerpo_tikz(barras, as.integer(ymax), titulo, etq_y, categorias, grupos, colores, x1, subtitulo)
 }
+
+## Rótulo del tipo de gráfica bajo el título de cada opción (decisión del
+## profesor, 2026-10-04): sin él, una apilada E8 es idéntica píxel a píxel a una
+## gráfica de barras SUPERPUESTAS de los datos correctos (Excel, superposición
+## 100 %), y bajo esa convención E8 sería clave. La canónica no lo lleva: queda
+## idéntica al impreso. No delata la clave: el formato ya se ve y el reparto es 2+2.
+subtitulo_op <- function(f) if (es_canonica) NULL else paste0("(", nombre_formato(f), ")")
 
 if (isTRUE(getOption("knitr.in.progress"))) {
   include_tikz(tikz_barras_simples(M[2, ], cats, col_enun, titulo_grafica, etiqueta_y),
                name = paste0("grafica_enunciado_", fig_id), format = "png", markup = "none")
   for (i in 1:4) {
     include_tikz(tikz_barras_opcion(mats_op[[i]], leyenda, cats, col_op, fmt_op[i], titulo_opciones,
-                                    etiqueta_y, ymax_por_fmt[[fmt_op[i]]]),
+                                    etiqueta_y, ymax_por_fmt[[fmt_op[i]]], subtitulo_op(fmt_op[i])),
                  name = paste0("diagrama_", c("a", "b", "c", "d")[i], "_", fig_id), format = "png", markup = "none")
   }
   ## Copia de la clave para Solution con nombre neutral propio: referenciar
   ## diagrama_<letra> ataría la Solution a una posición (reglas #19 y #22 §P6).
   k_sol <- which(sol)
   include_tikz(tikz_barras_opcion(mats_op[[k_sol]], leyenda, cats, col_op, fmt_op[k_sol], titulo_opciones,
-                                  etiqueta_y, ymax_por_fmt[[fmt_op[k_sol]]]),
+                                  etiqueta_y, ymax_por_fmt[[fmt_op[k_sol]]], subtitulo_op(fmt_op[k_sol])),
                name = paste0("grafica_solucion_", fig_id), format = "png", markup = "none")
 }
 ```
@@ -604,7 +655,7 @@ for (k in which(!sol)) {
   } else {
     cat("*Datos que no provienen de las fuentes.* Esta gráfica conserva algún dato real, pero mezcla datos cambiados de casilla con valores que no figuran en la tabla ni en la gráfica; quien la elige arma la información de memoria en lugar de cotejarla casilla por casilla.\n\n", sep = "")
   }
-  for (d in diferencias(X, e7 = e7_op[[k]])) cat("- ", d, ".\n", sep = "")
+  for (d in diferencias(X, e7 = e7_op[[k]], e8 = "E8" %in% rutas_op[[k]])) cat("- ", d, ".\n", sep = "")
   cat("\n")
 }
 ```

@@ -3732,3 +3732,69 @@ Regresión permanente: `tests/testthat/test_barras_campeonato_clave.R` (mutante 
 | Fecha | Cambio |
 |---|---|
 | 2026-10-04 | Detectado por el profesor en el PDF impreso del Semillero; causa medida en el código de R/exams 2.4-2; sufijo `fig_id` y regla #4 v6.1. Los ejercicios con opciones gráficas sin sufijo siguen afectados en exámenes de varias copias. |
+
+---
+
+## Error 40: El distractor «borde superior» de una barra apilada es una gráfica de barras superpuestas correcta
+
+### ❌ Síntoma
+
+El distractor que evalúa el error emblemático de las barras apiladas («leer hasta dónde llega el
+borde del segmento en lugar de cuánto mide») se construye con el segmento inferior correcto y el
+superior de altura M[1,j] − M[2,j], de modo que su borde llega al dato. Ese dibujo es **idéntico
+píxel a píxel** a una gráfica de barras **superpuestas** (Excel, superposición de series al 100 %)
+de los datos correctos: la barra alta detrás, la corta delante, ambas desde cero. Bajo esa
+convención documentada el distractor es clave. Ningún validador lo ve: todos leen la figura como
+apilada. Medido en `barras-campeonato-baloncesto-n3` (2026-10-04): en la rama del distractor, 2
+claves en el 47 % de las versiones y el distractor como única clave en el 53 % (~29 % del total).
+
+### 🔍 Causa Raíz
+
+La condición que hace posible el distractor (dato de la tabla > dato de la gráfica en cada
+categoría) es la misma que hace válido el dibujo superpuesto. Sin una marca que fije la
+convención, la figura no distingue «apilada con error» de «superpuesta correcta».
+
+### ✅ Solución Verificada
+
+Rótulo del tipo bajo el título de cada opción, fuera de la instancia canónica (que conserva el
+impreso, donde no hay distractor de este tipo):
+
+```r
+subtitulo_op <- function(f) if (es_canonica) NULL else paste0("(", nombre_formato(f), ")")
+include_tikz(tikz_barras_opcion(..., subtitulo_op(fmt_op[i])), ...)   # nodo propio, y = 9,62
+```
+
+No delata la clave (el formato ya se ve y el reparto es 2+2) y no desactiva la trampa: quien sabe
+que la gráfica es apilada pero lee el borde cae igual. **El rótulo necesita guarda ejecutable**: sin
+ella, quitarlo o invertirlo pasaba todo el arsenal 100/100 (`verificar_dibujo_clave.R` lo comprueba
+ahora; mutantes «sin rótulo» e «invertido» en `tests/testthat/test_barras_campeonato_clave.R`).
+
+Lección de diseño asociada (§P7-F): el distractor comparte con la clave la fila del grado de la
+gráfica, así que forma con ella un **par gemelo**; con distractores en cadena, «elige del par»
+acertaba el 51 % (+19,7 pp). La única topología viable entre los 1 176 tríos enumerados fue
+{clave, E8, E2(M), E6(M)} (+1,6 pp).
+
+### 🧪 Validación
+
+| Formato | Resultado |
+|---|---|
+| `exams2pdf` (plantilla `solpcielo`, 1 y 3 copias) | rótulo legible, sin choque con barras al tope del eje; canónica sin rótulo, byte a byte igual |
+| `exams2html` / `exams2pandoc(docx)` / `exams2nops` / `exams2moodle` | 9/9 renders OK; nombres de archivo neutrales sin cambio |
+| Semillero ×10 (PDF / NOPS) | 60/120 y 50/100 imágenes distintas |
+| `verificar_dibujo_clave.R` | 106/106; mutantes de rótulo detectados |
+
+### ✔️ Checklist
+
+- [ ] Un distractor de «borde superior» exige rótulo del tipo (o convención explícita) en las opciones.
+- [ ] El rótulo tiene guarda que falla si desaparece o se invierte.
+- [ ] §P7 medido por rama: el distractor y la clave son gemelos de fila.
+
+### 📁 Ejemplo funcional
+
+`A-Produccion/01-En-PreDesarrollo/barras-campeonato-baloncesto-n3/barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd`
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-10-04 | Detectado por el AgenteDetractor (FASE 2C) al incorporar E8; rótulo decidido por el profesor; guarda añadida tras la re-auditoría. |

@@ -55,7 +55,7 @@ reglas <- list(
     if (length(t) < 2 || t[1] == t[2]) return(NA); f == names(t)[which.max(t)] })
 )
 res <- evaluar_bateria(reglas, lapply(vers, `[[`, "ops"), sapply(vers, `[[`, "clave"),
-                       familias_no_aplicables = c(lexico = "opciones-imagen sin texto propio: comparten título, ejes, rótulos y leyenda"))
+                       familias_no_aplicables = c(lexico = "opciones-imagen: el único texto propio es el rótulo del tipo, función uno a uno del formato (cubierto por la familia formato)"))
 imprimir_bateria(res)
 
 cat("\n--- Instancia canónica (semilla ", i, ", enumeración exacta) ---\n", sep = "")
