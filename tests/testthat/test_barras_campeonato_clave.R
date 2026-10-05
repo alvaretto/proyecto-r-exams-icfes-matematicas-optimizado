@@ -69,3 +69,85 @@ for (nm in names(mutantes)) {
     unlink(f)
   })
 }
+
+# ---------------------------------------------------------------------------------------
+# Cotejo con la ficha de origen (2026-10-05). La instancia canónica reproduce el ítem
+# MAT-2026-1-015 del cuadernillo; su ficha de alineación vive en Todo-Pajaro. Ese día se
+# cotejaron a mano: la clave coincidía (C, sexto 5/7, séptimo 8/4), pero el «¿Qué evalúa?» de
+# la ficha decía «8 ganados, 3 perdidos» y nada lo había detectado. Este test repite el
+# cotejo: si el .Rmd o la ficha cambian por separado, falla. Se omite si Todo-Pajaro no está
+# (CI); la ruta puede fijarse con TODO_PAJARO_DIR.
+# ---------------------------------------------------------------------------------------
+ficha_md <- file.path(
+  Sys.getenv("TODO_PAJARO_DIR", file.path(dirname(raiz), "Todo-Pajaro")),
+  "Alineacion-curricular-de-items", "Matematicas", "Alineacion-Curricular-de-Items-Matematicas-2026-1",
+  "Alineacion-curricular-de-items-Matematicas-2026-1.md")
+
+## Lee de la ficha la letra de la clave y los pares (ganados, perdidos) que declaran sus
+## campos «Clave» y «¿Qué evalúa?»: sexto primero, séptimo después.
+leer_ficha_015 <- function(lineas) {
+  ini <- grep("^### MAT-2026-1-015 ", lineas)
+  fin <- grep("^### MAT-2026-1-016 ", lineas)
+  stopifnot(length(ini) == 1L, length(fin) == 1L, fin > ini)
+  sec <- lineas[ini:(fin - 1L)]
+  campo <- function(nombre) {
+    l <- grep(paste0("^- \\*\\*", nombre, "\\*\\*:"), sec, value = TRUE)
+    stopifnot(length(l) == 1L)
+    l
+  }
+  pares <- function(txt) {
+    m <- regmatches(txt, gregexpr("([0-9]+) ganados,? y? ?([0-9]+) perdidos", txt))[[1]]
+    t(vapply(m, function(s) as.numeric(regmatches(s, gregexpr("[0-9]+", s))[[1]]), numeric(2)))
+  }
+  clave <- campo("Clave")
+  list(letra = sub("^- \\*\\*Clave\\*\\*: *([A-D]).*$", "\\1", clave),
+       clave = unname(pares(clave)), que_evalua = unname(pares(campo("¿Qué evalúa\\?"))))
+}
+
+test_that("el lector de la ficha detecta el «8 ganados, 3 perdidos» del 2026-10-04", {
+  vieja <- c("### MAT-2026-1-015 — x",
+             "- **¿Qué evalúa?**: … de la tabla (5 ganados, 7 perdidos) con los de la gráfica original (8 ganados, 3 perdidos) para grado 7°",
+             "- **Clave**: C — Grado sexto: 5 ganados y 7 perdidos (tabla); grado séptimo: 8 ganados y 4 perdidos (gráfica).",
+             "### MAT-2026-1-016 — y")
+  f <- leer_ficha_015(vieja)
+  expect_identical(f$letra, "C")
+  expect_equal(f$clave, matrix(c(5, 8, 7, 4), 2L))
+  expect_false(isTRUE(all.equal(f$que_evalua, f$clave)))   # la incoherencia que se escapó
+})
+
+test_that("la instancia canónica coincide con la ficha MAT-2026-1-015 (letra y cuatro valores)", {
+  skip_if_not(file.exists(rmd), "subproyecto ausente")
+  skip_if_not(file.exists(ficha_md), "Todo-Pajaro ausente (fijar TODO_PAJARO_DIR)")
+  f <- leer_ficha_015(readLines(ficha_md, encoding = "UTF-8", warn = FALSE))
+  expect_equal(f$que_evalua, f$clave, info = "«¿Qué evalúa?» y «Clave» de la ficha no dicen los mismos valores")
+
+  lin <- readLines(rmd, encoding = "UTF-8", warn = FALSE)
+  ini <- grep("^```\\{r data_generation", lin)
+  fin <- grep("^```\\s*$", lin)
+  fin <- fin[fin > ini][1]
+  codigo <- parse(text = lin[(ini + 1L):(fin - 1L)])
+
+  hay_seed <- exists(".Random.seed", envir = globalenv(), inherits = FALSE)
+  if (hay_seed) seed_previa <- get(".Random.seed", envir = globalenv())
+  hay_modo <- exists(".exams_generation_mode", envir = globalenv(), inherits = FALSE)
+  if (hay_modo) modo_previo <- get(".exams_generation_mode", envir = globalenv())
+  assign(".exams_generation_mode", TRUE, envir = globalenv())   # omite los test_that internos
+  on.exit({
+    if (hay_seed) assign(".Random.seed", seed_previa, envir = globalenv())
+    else if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) rm(".Random.seed", envir = globalenv())
+    if (hay_modo) assign(".exams_generation_mode", modo_previo, envir = globalenv())
+    else rm(".exams_generation_mode", envir = globalenv())
+  }, add = TRUE)
+
+  e <- NULL
+  for (s in 1:200) {
+    set.seed(s)
+    en <- new.env(parent = globalenv())
+    suppressMessages(suppressWarnings(for (x in codigo) eval(x, en)))
+    if (isTRUE(en$es_canonica)) { e <- en; break }
+  }
+  expect_false(is.null(e), info = "ninguna de 200 semillas produjo la instancia canónica")
+  expect_identical(toupper(e$letra_correcta), f$letra)
+  expect_equal(unname(e$M), f$clave)
+  expect_equal(unname(e$mats_op[[which(e$sol)]]), f$clave)
+})

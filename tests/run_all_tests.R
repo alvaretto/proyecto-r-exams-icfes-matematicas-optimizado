@@ -333,7 +333,7 @@ suites <- list(
     critico = TRUE
   ),
   list(
-    nombre = "barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+5 mutantes)",
+    nombre = "barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+7 mutantes) y cotejo con la ficha MAT-2026-1-015",
     archivo = "tests/testthat/test_barras_campeonato_clave.R",
     critico = TRUE,
     watch = c("barras-campeonato-baloncesto-n3", "verificar_dibujo_clave",

@@ -1,4 +1,4 @@
-# HANDOFF — barras-campeonato-baloncesto-n3 (última actualización: 2026-10-04)
+# HANDOFF — barras-campeonato-baloncesto-n3 (última actualización: 2026-10-05)
 
 **Disparador:** «Continúa con barras-campeonato-baloncesto-n3»
 **Ciclo vigente:** `mega-prompt-barras-campeonato-baloncesto.md` (alcance: solo SCHOICE, decisión del usuario 2026-10-04).
@@ -52,6 +52,11 @@ batería D-1…D-14 verde con salida real. Además: fidelidad al ítem oficial y
 - **E8 + rótulo del tipo** (decisiones del usuario): ver «Rama E8». El verificador comprueba también el rótulo (presente y fiel al dibujo fuera de la canónica, ausente en ella); la suite 37 suma 2 mutantes de rótulo (sin rótulo, invertido): 7 mutantes en total.
 - Commits: ver `git log -- .` (Fase 6).
 
+## Cotejo de la clave con la ficha de origen (2026-10-05)
+- **La clave coincide** en las tres fuentes: plana del cuadernillo (`Originales/pagina_016.jpg` y `pagina_017.jpg`), ficha `MAT-2026-1-015` de Todo-Pajaro e instancia canónica del `.Rmd` **ejecutada** (C · sexto 5/7 · séptimo 8/4 · agrupadas). A, B y D de la canónica también reproducen la plana. N = 100: 100/100 con exactamente una opción igual a M, y es la marcada.
+- **La ficha se corrigió** (Todo-Pajaro `969815be9`, `593c1a7e5`, `d7047461a`, `2737c0638`, `ab2a0f9f2`; bitácora `Matematicas/BACKLOG.md` §A143): «¿Qué evalúa?» decía «8 ganados, 3 perdidos» (es 4); la JustMeta de B, «4 y 5 perdidos» (es 4,5 de sexto y 5 de séptimo); y cinco frases presentaban el formato agrupado como criterio de la clave o el apilado como error de A. Ahora coinciden con el diseño de este `.Rmd`: la clave la hacen sus cuatro valores, y una apilada con esos mismos valores también «contiene la información» (por eso el `.Rmd` exige matriz distinta a los distractores y sortea el formato de la clave 50/50).
+- **Guardia nueva** en la suite 37 (`tests/testthat/test_barras_campeonato_clave.R`): la instancia canónica debe coincidir con la ficha en letra y cuatro valores, y «¿Qué evalúa?» con «Clave». Lee la ficha de `../Todo-Pajaro` (o `TODO_PAJARO_DIR`); sin ella, se omite. Probada con dos fichas mutantes (la cifra 3 y la clave B): las dos la hacen fallar.
+
 ## Siguiente paso concreto
 1. Que el profesor revise la Solution en `salida/…_1.pdf` (Semillero de 10 preguntas) y responda la PREGUNTA_AL_RETOMAR.
 2. Si aprueba: `workflow-state.sh complete <dir> aprobacion_usuario --ciclo_2026_10_04 "..."`. §P7-D: queda 1 pasada de corrección de diagnosticidad.
@@ -65,7 +70,7 @@ batería D-1…D-14 verde con salida real. Además: fidelidad al ítem oficial y
   - El hook `post-exams2-validation.sh` no se dispara con `exams2*(rep(...))`, `file.path()` ni variables.
   - La FASE 2D del arsenal corta los chunks en la primera comilla invertida: un comentario con backticks expone código como prosa.
   - Los demás ejercicios con opciones gráficas sin `fig_id` tienen el Error 39 en exámenes de varias preguntas.
-  - Ficha Q15 de Todo-Pajaro: «¿Qué evalúa?» dice «8 ganados, 3 perdidos» (es 4).
+  - ~~Ficha Q15 de Todo-Pajaro: «¿Qué evalúa?» dice «8 ganados, 3 perdidos» (es 4).~~ Corregida el 2026-10-05 (ver «Cotejo de la clave con la ficha de origen»).
 
 ## Cómo verificar que todo sigue sano
 ```bash
