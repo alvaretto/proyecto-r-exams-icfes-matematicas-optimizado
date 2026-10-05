@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "ejercicio": "razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n2_cloze_v1",
+  "ejercicio": "razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-03-24T15:14:07.913988-05:00",
   "timestamp_ultima_actualizacion": "2026-03-24T15:28:09.502219-05:00",
@@ -18,7 +18,7 @@
     "generacion_rmd": {
       "completado": true,
       "timestamp": "2026-03-24T15:14:08.060729-05:00",
-      "archivo": "razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n2_cloze_v1.Rmd"
+      "archivo": "razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n3_cloze_v1.Rmd"
     },
     "retroalimentacion": {
       "completado": true,
