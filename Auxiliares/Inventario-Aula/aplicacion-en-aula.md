@@ -8,7 +8,7 @@ Ultima revision automatica: 2026-10-05
 
 | Ejercicio | Tipo | Ruta | Aprobado el | Dias esperando |
 |---|---|---|---|---|
-| razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n2_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/29-2025-2 | 2026-03-24 | 195 |
+| razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/29-2025-2 | 2026-03-24 | 195 |
 | interseccion_ingresos_gastos_metacognitivo_interpretacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/interseccion-ingresos-gastos-v1 | 2026-05-03 | 155 |
 | migraciones_exteriores_metacognitivo_interpretacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/migraciones-exteriores-lineas-n2 | 2026-05-04 | 154 |
 | rango_dispersion_botellas_metacognitivo_argumentacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/Rango-Dispersion-Botellas-Agua | 2026-05-05 | 153 |
@@ -25,7 +25,7 @@ Ultima revision automatica: 2026-10-05
 
 | Ejercicio | Fecha de aplicacion | Grupo | Nº de estudiantes | ¿TODOS? | Observaciones |
 |---|---|---|---|---|---|
-| desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1 | 2026-08-05 | 11b-mat | 13 de 13 | Sí | Moodle icfes, cuestionario «Actividad 25 - Barco - Avión» (id 150); intentos terminados 2026-08-05 a 2026-09-21. Registrado desde la BD el 2026-10-05 |
-| desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1 | 2026-08-03 | p3c-mat | 18 de 18 | Sí | Moodle icfes, cuestionario «Actividad 30 - Barco - Avión» (id 143); intentos terminados 2026-08-03 a 2026-09-22. Registrado desde la BD el 2026-10-05 |
-| coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1 | 2026-08-05 | 11b-mat | 13 de 13 | Sí | Moodle icfes, cuestionario «Actividad 25 - Barco - Avión» (id 150); intentos terminados 2026-08-05 a 2026-09-21. Registrado desde la BD el 2026-10-05 |
-| coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1 | 2026-08-03 | p3c-mat | 18 de 18 | Sí | Moodle icfes, cuestionario «Actividad 30 - Barco - Avión» (id 143); intentos terminados 2026-08-03 a 2026-09-22. Registrado desde la BD el 2026-10-05 |
+| desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1 | 2026-08-05 | 11b-mat | 13 de 13 | Sí | Moodle icfes, cuestionario «Actividad 25 - Barco - Avión» (id 150). Primer intento terminado: 10 el 2026-08-05, 1 el 2026-08-06, 1 el 2026-09-10 y 1 el 2026-09-21. Los 13 respondieron la pregunta (ninguna quedó sin contestar); las únicas bajas del curso fueron 2 cuentas de prueba creadas y borradas el 2026-09-29. Registrado desde la BD el 2026-10-05 |
+| desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1 | 2026-08-03 | p3c-mat | 18 de 18 | Sí | Moodle icfes, cuestionario «Actividad 30 - Barco - Avión» (id 143). Primer intento terminado: 12 el 2026-08-03, 2 el 2026-08-04, 1 el 2026-08-10, 1 el 2026-09-04, 1 el 2026-09-17 y 1 el 2026-09-22. Los 18 respondieron la pregunta (ninguna quedó sin contestar); las 2 bajas del curso fueron en marzo, antes de la aplicación. Registrado desde la BD el 2026-10-05 |
+| coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1 | 2026-08-05 | 11b-mat | 13 de 13 | Sí | Moodle icfes, cuestionario «Actividad 25 - Barco - Avión» (id 150). Primer intento terminado: 10 el 2026-08-05, 1 el 2026-08-06, 1 el 2026-09-10 y 1 el 2026-09-21. Los 13 respondieron la pregunta (ninguna quedó sin contestar); las únicas bajas del curso fueron 2 cuentas de prueba creadas y borradas el 2026-09-29. Registrado desde la BD el 2026-10-05 |
+| coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1 | 2026-08-03 | p3c-mat | 18 de 18 | Sí | Moodle icfes, cuestionario «Actividad 30 - Barco - Avión» (id 143). Primer intento terminado: 12 el 2026-08-03, 2 el 2026-08-04, 1 el 2026-08-10, 1 el 2026-09-04, 1 el 2026-09-17 y 1 el 2026-09-22. Los 18 respondieron la pregunta (ninguna quedó sin contestar); las 2 bajas del curso fueron en marzo, antes de la aplicación. Registrado desde la BD el 2026-10-05 |
