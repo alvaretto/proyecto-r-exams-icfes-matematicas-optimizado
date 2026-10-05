@@ -25,3 +25,7 @@ Ultima revision automatica: 2026-10-05
 
 | Ejercicio | Fecha de aplicacion | Grupo | Nº de estudiantes | ¿TODOS? | Observaciones |
 |---|---|---|---|---|---|
+| desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1 | 2026-08-05 | 11b-mat | 13 de 13 | Sí | Moodle icfes, cuestionario «Actividad 25 - Barco - Avión» (id 150); intentos terminados 2026-08-05 a 2026-09-21. Registrado desde la BD el 2026-10-05 |
+| desplazamiento_avion_aeropuerto_metacognitivo_interpretacion_n3_schoice_v1 | 2026-08-03 | p3c-mat | 18 de 18 | Sí | Moodle icfes, cuestionario «Actividad 30 - Barco - Avión» (id 143); intentos terminados 2026-08-03 a 2026-09-22. Registrado desde la BD el 2026-10-05 |
+| coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1 | 2026-08-05 | 11b-mat | 13 de 13 | Sí | Moodle icfes, cuestionario «Actividad 25 - Barco - Avión» (id 150); intentos terminados 2026-08-05 a 2026-09-21. Registrado desde la BD el 2026-10-05 |
+| coordenadas_vertices_plano_cartesiano_metacognitivo_interpretacion_n2_schoice_v1 | 2026-08-03 | p3c-mat | 18 de 18 | Sí | Moodle icfes, cuestionario «Actividad 30 - Barco - Avión» (id 143); intentos terminados 2026-08-03 a 2026-09-22. Registrado desde la BD el 2026-10-05 |
