@@ -18,7 +18,7 @@ test_that("Corrección ortográfica detecta tildes faltantes", {
   # Ejecutar corrección (modo verificación)
   result <- system2(
     "Rscript",
-    c("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/corregir_ortografia_espanol.R",
+    c(repo_path(".claude/scripts/corregir_ortografia_espanol.R"),
       temp_file),
     stdout = TRUE,
     stderr = TRUE
@@ -48,7 +48,7 @@ test_that("Corrección ortográfica NO modifica metadatos R-exams", {
   # Ejecutar corrección (modo fix)
   system2(
     "Rscript",
-    c("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/corregir_ortografia_espanol.R",
+    c(repo_path(".claude/scripts/corregir_ortografia_espanol.R"),
       temp_file, "--fix"),
     stdout = FALSE,
     stderr = FALSE
@@ -85,7 +85,7 @@ test_that("Corrección ortográfica NO modifica nombres de variables R", {
   # Ejecutar corrección (modo fix)
   system2(
     "Rscript",
-    c("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/corregir_ortografia_espanol.R",
+    c(repo_path(".claude/scripts/corregir_ortografia_espanol.R"),
       temp_file, "--fix"),
     stdout = FALSE,
     stderr = FALSE
@@ -110,7 +110,7 @@ test_that("Corrección ortográfica aplica correcciones automáticas", {
   # Ejecutar corrección (modo fix)
   system2(
     "Rscript",
-    c("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/corregir_ortografia_espanol.R",
+    c(repo_path(".claude/scripts/corregir_ortografia_espanol.R"),
       temp_file, "--fix"),
     stdout = FALSE,
     stderr = FALSE
@@ -142,7 +142,7 @@ test_that("Corrección ortográfica preserva código inline", {
   # Ejecutar corrección (modo fix)
   system2(
     "Rscript",
-    c("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/corregir_ortografia_espanol.R",
+    c(repo_path(".claude/scripts/corregir_ortografia_espanol.R"),
       temp_file, "--fix"),
     stdout = FALSE,
     stderr = FALSE

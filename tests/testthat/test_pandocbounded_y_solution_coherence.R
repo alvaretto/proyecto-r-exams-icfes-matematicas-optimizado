@@ -356,16 +356,43 @@ test_that("Si hay .tex generados HOY, ninguno contiene \\pandocbounded", {
     skip("No hay .tex generados; el test pasa por defecto")
   }
 
-  # Solo .tex modificados en las últimas 24 horas
-  ahora <- Sys.time()
-  un_dia <- as.difftime(24, units = "hours")
-  texs_recientes <- texs[sapply(texs, function(t) {
-    info <- file.info(t)
-    !is.na(info$mtime) && (ahora - info$mtime) < un_dia
-  })]
+  # Conjunto objetivo anclado a git, NO a mtime.
+  #
+  # El filtro anterior era "modificados en las ultimas 24 h". En la maquina de
+  # desarrollo eso aproxima "lo que acabas de renderizar", pero en un checkout
+  # limpio -- el del runner de CI -- git escribe TODOS los archivos con fecha de
+  # hoy, asi que el filtro no discriminaba nada y el test acusaba de golpe los
+  # .tex historicos ya versionados (68 al escribir esto), dejando la suite en
+  # rojo permanente sin senalar nada nuevo.
+  #
+  # Lo que este test debe impedir es SUBIR un .tex con el bug, asi que el
+  # conjunto correcto es el de archivos con cambios sin commitear.
+  # Con PANDOCBOUNDED_AUDIT_ALL=1 se audita el repositorio completo (util para
+  # atacar la deuda historica de forma deliberada).
+  auditar_todo <- identical(Sys.getenv("PANDOCBOUNDED_AUDIT_ALL"), "1")
+
+  if (auditar_todo) {
+    texs_recientes <- texs
+  } else {
+    cambiados <- tryCatch(
+      system2("git", c("-C", shQuote(.repo_root), "status", "--porcelain",
+                       "--untracked-files=all", "--", "*.tex"),
+              stdout = TRUE, stderr = FALSE),
+      error = function(e) character(0)
+    )
+    # Formato porcelain: "XY <ruta>"; se toma la ruta y se hace absoluta.
+    rutas <- sub("^..\\s+", "", cambiados)
+    rutas <- rutas[nzchar(rutas)]
+    rutas <- normalizePath(file.path(.repo_root, rutas),
+                           winslash = "/", mustWork = FALSE)
+    texs_recientes <- intersect(texs, rutas)
+  }
 
   if (length(texs_recientes) == 0) {
-    skip("No hay .tex modificados en las últimas 24h; el test pasa por defecto")
+    skip(paste(
+      "Sin .tex nuevos o modificados que revisar.",
+      "Para auditar el repositorio completo: PANDOCBOUNDED_AUDIT_ALL=1"
+    ))
   }
 
   archivos_con_bug <- character(0)
@@ -382,7 +409,7 @@ test_that("Si hay .tex generados HOY, ninguno contiene \\pandocbounded", {
   expect_equal(
     length(archivos_con_bug), 0,
     info = paste(
-      ".tex RECIENTES (<24h) con \\pandocbounded undefined detectados:",
+      ".tex con \\pandocbounded undefined detectados:",
       paste(archivos_con_bug, collapse = "\n  "),
       "Re-renderizar el .Rmd correspondiente tras aplicar fix de Error 16.",
       sep = "\n"

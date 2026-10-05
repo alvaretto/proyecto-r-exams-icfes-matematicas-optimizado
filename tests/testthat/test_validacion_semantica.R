@@ -6,7 +6,7 @@
 library(testthat)
 
 # Cargar funciones del script de validación
-source("/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/.claude/scripts/validar_coherencia_matematica.R")
+source(repo_path(".claude/scripts/validar_coherencia_matematica.R"))
 
 # ============================================================
 # TESTS DE INFRAESTRUCTURA
