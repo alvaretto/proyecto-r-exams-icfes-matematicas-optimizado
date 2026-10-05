@@ -374,18 +374,27 @@ test_that("Si hay .tex generados HOY, ninguno contiene \\pandocbounded", {
   if (auditar_todo) {
     texs_recientes <- texs
   } else {
+    # core.quotePath=false: con el valor por defecto git escapa en octal las
+    # rutas con tildes ("05-Geometr\303\255a/...") y esos .tex no casaban con
+    # list.files(): el test daba verde sin haberlos mirado.
     cambiados <- tryCatch(
-      system2("git", c("-C", shQuote(.repo_root), "status", "--porcelain",
-                       "--untracked-files=all", "--", "*.tex"),
+      system2("git", c("-C", shQuote(.repo_root), "-c", "core.quotePath=false",
+                       "status", "--porcelain", "--untracked-files=all",
+                       "--", "*.tex"),
               stdout = TRUE, stderr = FALSE),
       error = function(e) character(0)
     )
-    # Formato porcelain: "XY <ruta>"; se toma la ruta y se hace absoluta.
-    rutas <- sub("^..\\s+", "", cambiados)
+    # Formato porcelain: "XY <ruta>", o "XY <origen> -> <destino>" en un
+    # renombrado. Las rutas con comillas o barras invertidas siguen entre
+    # comillas aun con quotePath=false.
+    rutas <- sub("^.. ", "", cambiados)
+    rutas <- sub("^.* -> ", "", rutas)
+    rutas <- sub('^"(.*)"$', "\\1", rutas)
     rutas <- rutas[nzchar(rutas)]
     rutas <- normalizePath(file.path(.repo_root, rutas),
                            winslash = "/", mustWork = FALSE)
-    texs_recientes <- intersect(texs, rutas)
+    texs_recientes <- texs[normalizePath(texs, winslash = "/",
+                                         mustWork = FALSE) %in% rutas]
   }
 
   if (length(texs_recientes) == 0) {

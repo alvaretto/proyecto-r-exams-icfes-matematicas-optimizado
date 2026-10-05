@@ -191,7 +191,17 @@ test_that("I-7: backup pre-Ruflo existe (red de seguridad)", {
   # Un runner de CI hace checkout limpio y jamas lo tendra, asi que exigirlo
   # alli deja la suite en rojo permanente sin senalar ningun defecto real.
   skip_on_ci()
-  backup <- ".claude.pre-ruflo-20260425-123652.tar.gz"
+  # Un git worktree tampoco lo trae: vive en el checkout principal, cuya raiz es
+  # el padre del directorio comun de git. Se acepta en cualquiera de las dos.
+  nombre <- ".claude.pre-ruflo-20260425-123652.tar.gz"
+  git_comun <- suppressWarnings(tryCatch(
+    system2("git", c("rev-parse", "--path-format=absolute", "--git-common-dir"),
+            stdout = TRUE, stderr = FALSE),
+    error = function(e) character(0)
+  ))
+  candidatos <- c(nombre, if (length(git_comun) == 1 && nzchar(git_comun))
+    file.path(dirname(git_comun), nombre))
+  backup <- c(candidatos[file.exists(candidatos)], nombre)[1]
   expect_true(file.exists(backup),
               info = paste("Backup faltante:", backup,
                            "— sin él no se puede restaurar el estado pre-Ruflo"))
