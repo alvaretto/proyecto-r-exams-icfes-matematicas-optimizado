@@ -1,0 +1,105 @@
+{
+  "version": "2.0",
+  "ejercicio": "cloze",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-10-04T18:57:17.647101-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-04T20:44:52.780917-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-04T18:57:17.683595-05:00",
+      "resultado": null,
+      "competencia": "Interpretación y representación",
+      "componente": "Aleatorio",
+      "nivel": 3,
+      "descriptor": "D3.1 (N3 #1 de niveles-mat.json)",
+      "dok": 2,
+      "bloom": "Analizar",
+      "solo": "Relacional",
+      "clave_oficial": "C",
+      "fuente": "MAT-2026-1-015 pagina_016.jpg+pagina_017.jpg",
+      "nota": "Heredado del SCHOICE hermano (../ejercicio_state.json)"
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-10-04T18:57:17.740695-05:00",
+      "lenguaje": "tikz",
+      "decision_humana": "Reutilizar el TikZ del SCHOICE (usuario, 2026-10-04)",
+      "nota": "Heredado; tambien rama E8 P=1/3 y rotulo del tipo (usuario, 2026-10-04)"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:44:52.546870-05:00",
+      "archivo": "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd",
+      "md5": "791f4178",
+      "partes": "schoice|num|num|schoice|mchoice|schoice",
+      "nota": "Parte 1 = generacion del SCHOICE (identica en 100/100 semillas); P3/P4/P6 sobre caso de practica independiente; rotulo Grafica I-IV dibujado en la figura",
+      "override_exshuffle_false": "FIRMADO por el profesor 2026-10-04 (H-5): con TRUE el gap Grafica I-IV salia mezclado y la hoja del PDF pide (a)-(d); mezcla interna orden/perm4/perm5. ERR_C4 de 2A/2E DECLARADO, no silenciado",
+      "ciclo_detractor_1": "obj. 1-7 aplicadas: exshuffle FALSE, verificador lee Solution P2/P3/P4/P6 (10/10 mutantes), lexico P5 equilibrado, P4 sin ambiguedad, registro tu",
+      "plantilla_pdf": "solpcielo_cloze.tex (copia de ../solpcielo.tex + instruccion de lectura de opciones separadas por /)",
+      "p7d_cloze": "2 pasadas de 3 consumidas (lexico P5 en ciclo 1 y ciclo 2)",
+      "ciclo_3_mega_prompt": "2026-10-04: solo Solution P5 (parrafo Por que, objecion 1 del detractor ciclo 3); no consume RNG ni pasada P7-D; P1 = SCHOICE 0 diferencias en 100 semillas"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:44:52.604863-05:00",
+      "nota": "Solution: respuesta por parte (6) + Analisis del error + Procedimiento + Propiedades + Caso especifico + Reflexion + Estrategia; Answerlist 17 = 15 + 2 num",
+      "ciclo_3": "Solution P5 con explicacion por concepto (5 pares); guardia nueva en el verificador + mutante i del test"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:44:52.722199-05:00",
+      "artefactos": "scratchpad r5: HTML x3, PDF x3 (solpcielo), DOCX x2, Moodle x5; PDF x3 con pandoc RStudio 3.10 OK",
+      "nops": "N/A: R/exams rechaza cloze en exams2nops (precedente permutaciones/tasa-caminata)",
+      "multicopia": "PDF x3: 15 imagenes distintas = 5 por copia (la de Solution repite la clave en su misma copia)",
+      "docx": "##ANSWERi## literales: comportamiento de exams2pandoc con cloze, igual en los CLOZE aprobados",
+      "ciclo_3": "salida/ regenerada con md5 791f4178: HTML x3, PDF x3, DOCX x3, Moodle x5, PDF x3 con pandoc RStudio 3.10 FORZADO (find_pandoc dir=); Semillero 10 preguntas: PDF 63 pags 60 imagenes 50 distintas, DOCX 60 media, Moodle, webquiz; NOPS rechaza cloze"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:44:52.780917-05:00",
+      "nota": "hook a mano (ruta absoluta): 0 errores; 2A APROBADO; 2G 100/100; 2H PASA; 2I/2J/2K/2L/2N/2O OK; 5 WARN 2F heredados. Con ruta relativa la 2N da WARN_DIV_ESTATICA falso (deuda del hook)",
+      "verificador": "verificar_dibujo_clave_cloze.R 100/100; 7/7 mutantes detectados (10/10 cada uno)",
+      "moodle": "0 etiquetas en 30 gaps; nombres neutrales",
+      "p7": "PASS +1.4 pp (bateria congelada del SCHOICE)",
+      "ciclo_3": "verificador 100/100 + 9 mutantes permanentes (tests/testthat/test_barras_campeonato_cloze.R); multisemilla 100/100; hook: solo ERR_C4 (override); 2H PASA 10"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:44:52.661927-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS (ciclo 3, aplicadas y verificadas)",
+      "ciclo_1": "AgenteDetractor sin name, md5 5f6a4b31: 0 CORRECCION; 1 ALTA (gap mezclado vs hoja (a)-(d)) -> exshuffle FALSE firmado; 3 MEDIA + 3 BAJA aplicadas",
+      "ciclo_2": "AgenteDetractor nuevo sin name, md5 918ad098: 0 CORRECCION, 0 ALTA; 3 MEDIA (Answerlist Solution P4-P6 sin guardia, pares complementarios P5, opciones sin letra en PDF) + 2 BAJA aplicadas",
+      "verificacion": "verificador 100/100; 14/14 mutantes detectados; P5 lexico: maximo 0,644 vs techo nulo por par 0,772 (-12,8 pp)",
+      "nota": "No re-auditado por un tercer detractor; /detractor-hetero (2C-bis) recomendado antes de promover",
+      "ciclo_3": "AgenteDetractor nuevo sin name, md5 17df2bfc: 0 CORRECCION/CRITICA/ALTA; 3 MEDIA (P5 sin por que, P3/P4/P6 sin mutante permanente, SemilleroCloze.R) -> 1 y 2 aplicadas, 3 declarada (plantilla ajena, decision del usuario)",
+      "hetero_2c_bis": "deepseek-v4-flash, detractor-hetero-deepseek-20261004-202613.md: APROBAR_CON_CAMBIOS, 0 CORRECCION; obj. D-16 +13,2 pp refutada con medicion (canonica <=> 4,5 visible en P1, 2000/2000; formato de la clave constante en la canonica)"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:07:22.050133-05:00",
+      "semantica": "contextos y concordancia partidos/partidas heredados del SCHOICE; P4 sin ambiguedad (leidos correctamente)",
+      "visual_texto": "rotulo Grafica I-IV dibujado en cada figura (antes se separaba en el PDF); PDF x3 y HTML 360/1024 revisados; Solution = dibujo (verificador)",
+      "matematica": "6 claves recalculadas desde lo mostrado: verificador 100/100, multisemilla 100/100",
+      "codigo": "hook: solo ERR_C4 (override firmado); 2I/2J/2K/2L/2O OK; stress test PASA (10)",
+      "general": "DOK 2 / Nivel 3 heredados; evidencia de Nivel 3 de aula se toma del SCHOICE (P2-P5 andamian la trampa de P1)"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:07:22.107943-05:00",
+      "versiones_unicas": null,
+      "resultado": "p1 88, p5 51 unicas de 100; p2 13, p3 8, p4 8, p6 2: WARN_DIV_BAJA no bloqueante (claves categoricas: 6 errores, V/F; enteros 2-9); P4 uniforme E1-E6, P6 45/55",
+      "p7_parte1": "PASS +1,4 pp (bateria congelada del SCHOICE)"
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-04T20:07:22.166666-05:00",
+      "resultado": "11/11 exextra ICFES identicos al SCHOICE (triangulado con la ficha Q15 en su ciclo); Type CLOZE"
+    },
+    "aprobacion_usuario": {
+      "completado": false,
+      "timestamp": null
+    }
+  }
+}
