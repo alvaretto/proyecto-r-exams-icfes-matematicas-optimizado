@@ -338,6 +338,13 @@ suites <- list(
     critico = TRUE,
     watch = c("barras-campeonato-baloncesto-n3", "verificar_dibujo_clave",
               "test_barras_campeonato_clave")
+  ),
+  list(
+    nombre = "barras-campeonato-baloncesto-n3 CLOZE: 6 claves leidas del dibujo y del texto (+5 mutantes, Semilleros)",
+    archivo = "tests/testthat/test_barras_campeonato_cloze.R",
+    critico = TRUE,
+    watch = c("barras-campeonato-baloncesto-n3", "verificar_dibujo_clave",
+              "test_barras_campeonato_cloze")
   )
 )
 
