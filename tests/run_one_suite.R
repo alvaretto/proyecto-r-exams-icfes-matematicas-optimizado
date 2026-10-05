@@ -29,6 +29,14 @@ repo_root <- tryCatch(system("git rev-parse --show-toplevel", intern = TRUE),
 if (length(repo_root) == 1 && nzchar(repo_root)) setwd(repo_root)
 Sys.setenv(TESTING = "TRUE")
 
+# Dentro de un hook (pre-push) git exporta GIT_DIR sin GIT_WORK_TREE. test_file()
+# cambia el cwd a tests/testthat, y ahí el `git rev-parse --show-toplevel` de cada
+# suite toma ese cwd como raíz: las rutas relativas dejan de existir y la suite
+# falla solo en el push (en un worktree se ve siempre). Ya resuelta la raíz, se
+# quitan para que git vuelva a descubrir el repo desde el cwd.
+Sys.unsetenv(c("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
+               "GIT_COMMON_DIR", "GIT_PREFIX"))
+
 res <- tryCatch(
   as.data.frame(test_file(archivo, reporter = "summary", stop_on_failure = FALSE)),
   error = function(e) { message("SCRIPT ERROR: ", conditionMessage(e)); NULL }
