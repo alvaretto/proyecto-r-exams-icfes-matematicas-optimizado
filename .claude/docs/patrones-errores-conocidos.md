@@ -2687,3 +2687,153 @@ Barrido de `f` en {0.20, 0.25, 0.30} sobre la grilla COMPLETA de combinaciones v
 - Función `dibujar_diagrama()` / filtro de generación de parámetros del ejercicio (chunk `data_generation`).
 - Error 23 (solape de etiquetas por cuña angular) — mismo ejercicio, defecto complementario de legibilidad geométrica (ambos derivan del mismo piso `rtext`/`R_fit`).
 - Regla #22 `diversidad-sustantiva.md` — la legibilidad visual de cada elemento no debe sacrificarse al maximizar el número de combinaciones matemáticamente válidas.
+
+---
+
+> **Numeración:** los Errores 27–40 están en ramas todavía sin fusionar en `main`
+> (`feat/plantillas-oficiales-rexams` llega al 40). La numeración es global para que no choquen
+> al fusionar; por eso aquí se salta del 26 al 41.
+
+## Error 41: Suite en rojo solo dentro del `git push`: el hook exporta `GIT_DIR`
+
+### ❌ Síntoma
+
+`test_infraestructura_claude.R` pasaba al correrlo a mano y fallaba dentro del `pre-push`,
+siempre desde un git worktree: decía que no existían `CLAUDE.md`, `.claude/settings.json` ni los
+hooks, aunque estaban. Caso real: push del inventario de aula, 2026-10-05.
+
+### 🔍 Causa Raíz
+
+Dentro de un hook, git exporta `GIT_DIR` sin `GIT_WORK_TREE`. `testthat::test_file()` cambia el
+cwd a `tests/testthat`, y desde ahí el `git rev-parse --show-toplevel` de la suite devuelve **el
+cwd** como raíz del repo. La suite hace `setwd()` a esa carpeta y todas las rutas relativas
+desaparecen. Fuera del hook la variable no existe, así que el fallo no se reproduce a mano.
+Diez suites resuelven la raíz así.
+
+### ✅ Solución Verificada
+
+En `tests/run_one_suite.R`, por donde pasan todas las suites, una vez resuelta la raíz:
+
+```r
+Sys.unsetenv(c("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
+               "GIT_COMMON_DIR", "GIT_PREFIX"))
+```
+
+### 🧪 Validación de la Solución
+
+Reproducir el hook a mano, sin empujar nada:
+
+```bash
+printf 'refs/heads/x %s refs/heads/main %s\n' "$(git rev-parse HEAD)" "$(git rev-parse origin/main)" \
+  | GIT_DIR="$(git rev-parse --git-dir)" bash .claude/hooks/pre-push.sh origin x
+```
+
+Con el arreglo, 7 de 7 suites en el push. Las 10 suites que resuelven la raíz con git pasan con
+`GIT_DIR` exportado.
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. ¿El rojo aparece solo en el push o solo en un worktree? Sospechar del entorno que pasa git.
+2. Volcar `env | grep ^GIT_` desde un hook de prueba que termine en `exit 1`.
+3. Un `git -c core.hooksPath=…` también se hereda (`GIT_CONFIG_PARAMETERS`).
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-10-05 | `tests/run_one_suite.R` | `GIT_DIR` del hook + cwd `tests/testthat` | `Sys.unsetenv()` tras resolver la raíz | 7/7 en el push; CI 21/21 |
+
+## Error 42: Verde sin mirar: `git status` escapa en octal las rutas con tildes
+
+### ❌ Síntoma
+
+El test de `\pandocbounded` (Error 16) revisa los `.tex` sin commitear. Un `.tex` con el defecto
+en `03-En-Produccion/05-Geometría/` pasaba en verde; el mismo archivo en una carpeta sin tildes,
+no.
+
+### 🔍 Causa Raíz
+
+Con `core.quotePath` por defecto, `git status --porcelain` escribe
+`"A-Produccion/03-En-Produccion/05-Geometr\303\255a/x.tex"`. Esa cadena no coincide con la ruta
+que devuelve `list.files()`, así que el archivo quedaba fuera del conjunto revisado sin aviso.
+Afecta a toda carpeta con tilde: `05-Geometría`, `06-Estadística-Y-Probabilidad`…
+
+### ✅ Solución Verificada
+
+```r
+system2("git", c("-C", shQuote(.repo_root), "-c", "core.quotePath=false",
+                 "status", "--porcelain", "--untracked-files=all", "--", "*.tex"),
+        stdout = TRUE, stderr = FALSE)
+# y luego: quitar "XY ", resolver "origen -> destino" y quitar comillas residuales
+```
+
+### 🧪 Validación de la Solución
+
+Mutantes: un `.tex` con `\pandocbounded` en `05-Geometría` y otro en `02-En-Desarrollo`. Antes
+del arreglo solo se detectaba el segundo; después, los dos. Con un `.tex` limpio el test pasa, y
+sin cambios se salta.
+
+### 📋 Checklist de Corrección (generalizable)
+
+1. Todo `git status`, `ls-files` o `diff --name-only` que alimente un filtro de rutas lleva
+   `-c core.quotePath=false`.
+2. Probarlo con un mutante en una carpeta con tilde: que el filtro no encuentre nada no prueba
+   que no haya nada.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-10-05 | `test_pandocbounded_y_solution_coherence.R` | rutas escapadas en octal | `core.quotePath=false` + parseo de renombrados y comillas | detecta el mutante con tilde |
+
+## Error 43: `ejercicio_state.json` con el nombre viejo tras renombrar el `.Rmd`
+
+### ❌ Síntoma
+
+La rutina semanal de inventario de aula pedía aplicar en clase
+`razones_trigonometricas_…_n2_cloze_v1`, que no existe: en el repo solo hay `_n3_cloze_v1` y
+`_n3_schoice_v1`.
+
+### 🔍 Causa Raíz
+
+El detractor aprobó con cambios («exname n2→n3») y el commit `f3a75757` renombró los `.Rmd` un
+minuto después de la aprobación, pero el `ejercicio_state.json` se versionó en ese mismo commit
+con el nombre viejo. La rutina lee el campo `ejercicio`. En `Lentes-radio` pasaba lo mismo solo
+en `ejercicio`. En `distribucion-contagiados-v1` el estado aprobaba un `_v1` que nunca se versionó;
+solo estaba el `_v2`, que es otro ítem (la clave es un diagrama de barras, no la torta).
+
+### ✅ Solución Verificada
+
+- Al renombrar un `.Rmd`, actualizar en su estado `ejercicio` y `pasos.generacion_rmd.archivo`.
+- **Nunca** apuntar un estado aprobado a un `_vN` con otra clave: eso traslada la aprobación a un
+  ítem que nadie aprobó. Si falta el archivo aprobado, recuperarlo (así se hizo con el `_v1` de
+  contagiados, desde el repo `free-claude-code`).
+
+Auditoría de todos los estados (debe imprimir `ninguno`):
+
+```bash
+python3 - <<'PY'
+import json, glob, os
+malos = []
+for p in glob.glob('A-Produccion/**/ejercicio_state.json', recursive=True):
+    d, s = os.path.dirname(p), json.load(open(p, encoding='utf-8'))
+    arch = (s.get('pasos', {}).get('generacion_rmd') or {}).get('archivo')
+    ej = s.get('ejercicio')
+    if (arch and not os.path.exists(os.path.join(d, arch))) or \
+       (ej and not os.path.exists(os.path.join(d, ej + '.Rmd'))):
+        malos.append(p)
+print('desincronizados:', malos or 'ninguno')
+PY
+```
+
+### 🧪 Validación de la Solución
+
+El 2026-10-05 la auditoría encontró 3 de 20 estados desincronizados; tras corregir dos y versionar
+el `_v1`, imprime `ninguno`. El `_v1` traído se renderizó con 10 semillas y, en 2000 ejecuciones
+de su generación de datos, la opción marcada fue siempre la única gráfica fiel a la tabla.
+
+### 📅 Historial
+
+| Fecha | Archivo | Causa | Fix | Resultado |
+|-------|---------|-------|-----|-----------|
+| 2026-10-05 | `29-2025-2`, `Lentes-radio`, `distribucion-contagiados-v1` | estado no actualizado al renombrar; `_v1` aprobado sin versionar | estados corregidos; `_v1` versionado | 20/20 estados sincronizados |
